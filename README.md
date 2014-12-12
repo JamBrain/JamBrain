@@ -1,7 +1,7 @@
 ludumdare
 =========
 
-The new Ludum Dare website (Project: LD2015). Currently, 
+The new Ludum Dare website (Project: LD2015). Currently, it is NOT live on ludumdare.com.
 
 This is the LIVE WEBSITE code, as customized for ludumdare.com by the Ludum Dare web team. 
 
