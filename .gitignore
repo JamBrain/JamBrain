@@ -2,4 +2,4 @@
 .vagrant
 public/utils
 public/phpmyadmin
-
+config.php
