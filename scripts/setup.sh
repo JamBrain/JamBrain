@@ -9,4 +9,4 @@ SCRIPT=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
 cd $SCRIPTPATH
 
-./add-ports.sh
+sudo sh add-ports.sh
