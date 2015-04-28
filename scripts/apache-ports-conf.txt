@@ -1,7 +1,7 @@
 
 # More Ports (LDJAM)
 
-Listen 8080		# API
-Listen 8081		# STATIC
-Listen 8082		# TV
-Listen 8083		# SCENE
+Listen 8080
+Listen 8081
+Listen 8082
+Listen 8083

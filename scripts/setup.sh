@@ -5,4 +5,8 @@
 
 # TODO: Check if it's Apache or nginx.
 
+SCRIPT=$(readlink -f "$0")
+SCRIPTPATH=$(dirname "$SCRIPT")
+cd $SCRIPTPATH
+
 ./add-ports.sh
