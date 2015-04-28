@@ -3,8 +3,9 @@
 include "config.php";
 
 if ( !isset($cfg_dbo) ) {
-	error_log( "No database configuration found." );
-	echo "<strong>ERROR:</strong> " . "No database configuration found." );
+	$msg = "No database configuration found.";
+	error_log( $msg );
+	echo "<strong>ERROR:</strong> " . $msg );
 }
 
 ?>
