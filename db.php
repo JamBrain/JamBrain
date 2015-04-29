@@ -32,7 +32,7 @@ function db_isConnected() {
 }
 // Connect to the Database //
 function db_connect() {
-	if ( db_isConnected() ) {
+	if ( !db_isConnected() ) {
 		$db = new mysqli($cfg_db_host,$cfg_db_name,$cfg_db_login,$cfg_db_password);
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
