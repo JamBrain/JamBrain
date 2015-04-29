@@ -1,7 +1,7 @@
 <?php
 
 // Load the configuration //
-include "config.php";
+include "../config.php";
 
 // **** GLOBAL DATABASE VARIABLE **** //
 $db = null;
@@ -28,7 +28,7 @@ if ( !isset($cfg_db_password) ) {
 
 // Connect to the Database //
 function db_init() {
-	if ( !$db ) {
+	if ( db_isReady() ) {
 		$db = new mysqli($cfg_db_host,$cfg_db_name,$cfg_db_login,$cfg_db_password);
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
