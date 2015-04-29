@@ -34,18 +34,21 @@ function db_isConnected() {
 // Connect to the Database //
 function db_connect() {
 	global $db;
+	
 	global $cfg_db_host;
 	global $cfg_db_name;
 	global $cfg_db_login;
 	global $cfg_db_password;
 
 	if ( !db_isConnected() ) {
+		db_log( "Connecting...");
 		$db = new mysqli($cfg_db_host,$cfg_db_login,$cfg_db_password,$cfg_db_name);
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
 		if ($db->connect_errno) {
     		db_log( "Failed to connect to MySQL: (" . $db->connect_errno . ") " . $db->connect_error );
     	}
+    	db_log("done");
 	}
 	else {
 		db_log( "Database connection already initialized" );
