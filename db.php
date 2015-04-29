@@ -8,8 +8,8 @@ $db = null;
 
 // Logging function specific to database operations //
 function db_log( $msg ) {
-	error_log( "LD-CMW DB ERROR: " . $msg );
-	echo "<strong>LD-CMW DB ERROR:</strong> " . $msg . "<br />";
+	error_log( "CMW DB ERROR: " . $msg );
+	echo "<strong>CMW DB ERROR:</strong> " . $msg . "<br />";
 }
 
 // Check database config //
