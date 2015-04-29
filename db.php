@@ -1,15 +1,9 @@
 <?php
 
-global $cfg_db_host;
-global $cfg_db_name;
-global $cfg_db_login;
-global $cfg_db_password;
-
 // Load the configuration //
 include "config.php";
 
 // **** GLOBAL DATABASE VARIABLE **** //
-global $db;
 $db = null;
 
 // Logging function specific to database operations //
@@ -34,10 +28,17 @@ if ( !isset($cfg_db_password) ) {
 
 // Are we connected and ready to use the Database? //
 function db_isConnected() {
+	global $db;
 	return isset($db);
 }
 // Connect to the Database //
 function db_connect() {
+	global $db;
+	global $cfg_db_host;
+	global $cfg_db_name;
+	global $cfg_db_login;
+	global $cfg_db_password;
+
 	if ( !db_isConnected() ) {
 		$db = new mysqli($cfg_db_host,$cfg_db_name,$cfg_db_login,$cfg_db_password);
 		

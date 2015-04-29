@@ -2,8 +2,8 @@ So. It has come to this...<br />
 <br />
 <?php
 
-include "../db.php";
-include "../lib.php";
+require "../db.php";
+require "../lib.php";
 
 
 $berg = apcu_fetch( "Hamburg" );
