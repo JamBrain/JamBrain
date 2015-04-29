@@ -28,7 +28,7 @@ if ( !isset($cfg_db_password) ) {
 
 // Are we connected and ready to use the Database? //
 function db_isConnected() {
-	return ( isset($db) && (gettype($db) != "null") );
+	return isset($db);
 }
 // Connect to the Database //
 function db_connect() {
