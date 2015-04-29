@@ -17,15 +17,10 @@ else {
 
 apcu_store( "Hamburg", $berg );
 
-echo "Mr Berg: " . $berg . "<br /";
+echo "Mr Berg: " . $berg . "<br />";
 
 db_connect();
 
-echo "pp";
-
 var_dump( db_isConnected() );
 
-echo "nemo\n<br />";
 ?>
-
-pools
