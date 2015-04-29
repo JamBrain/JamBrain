@@ -40,7 +40,7 @@ function db_connect() {
 	global $cfg_db_password;
 
 	if ( !db_isConnected() ) {
-		$db = new mysqli($cfg_db_host,$cfg_db_name,$cfg_db_login,$cfg_db_password);
+		$db = new mysqli($cfg_db_host,$cfg_db_login,$cfg_db_password,$cfg_db_name);
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
 		if ($db->connect_errno) {
