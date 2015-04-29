@@ -1,5 +1,10 @@
 <?php
 
+global $cfg_db_host;
+global $cfg_db_name;
+global $cfg_db_login;
+global $cfg_db_password;
+
 // Load the configuration //
 include "config.php";
 
@@ -10,7 +15,7 @@ $db = null;
 // Logging function specific to database operations //
 function db_log( $msg ) {
 	error_log( "LD-CMW DB ERROR: " . $msg );
-	echo "<strong>LD-CMW DB ERROR:</strong> " . $msg;
+	echo "<strong>LD-CMW DB ERROR:</strong> " . $msg . "<br />";
 }
 
 // Check database config //
