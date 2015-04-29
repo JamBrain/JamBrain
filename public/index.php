@@ -23,5 +23,5 @@ db_connect();
 
 var_dump( db_isConnected() );
 
-
+echo "nemo";
 ?>
