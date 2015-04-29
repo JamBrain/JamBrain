@@ -4,7 +4,8 @@
 include "../config.php";
 
 // **** GLOBAL DATABASE VARIABLE **** //
-global $db = null;
+global $db;
+$db = null;
 
 // Logging function specific to database operations //
 function db_log( $msg ) {
