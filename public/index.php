@@ -22,6 +22,7 @@ echo "Mr Berg: " . $berg;
 echo "<br />";
 
 db_connect();
-echo "<br/>DB Active: " . db_isConnected();
+var_dump( db_isConnected() );
+
 
 ?>
