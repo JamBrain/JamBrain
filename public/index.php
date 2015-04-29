@@ -21,6 +21,8 @@ echo "Mr Berg: " . $berg . "<br /";
 
 db_connect();
 
+echo "pp";
+
 var_dump( db_isConnected() );
 
 echo "nemo\n<br />";
