@@ -19,9 +19,9 @@ apcu_store( "Hamburg", $berg );
 
 echo "Mr Berg: " . $berg;
 
-echo "";
+echo "<br />";
 
-db_init();
-echo "DB Active: " . db_isReady();
+db_connect();
+echo "<br/>DB Active: " . db_isConnected();
 
 ?>

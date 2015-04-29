@@ -26,9 +26,13 @@ if ( !isset($cfg_db_password) ) {
 	db_log( "No database password set." );
 }
 
+// Are we connected and ready to use the Database? //
+function db_isConnected() {
+	return ( isset($db) && ($db != null) );
+}
 // Connect to the Database //
-function db_init() {
-	if ( db_isReady() ) {
+function db_connect() {
+	if ( db_isConnected() ) {
 		$db = new mysqli($cfg_db_host,$cfg_db_name,$cfg_db_login,$cfg_db_password);
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
@@ -39,10 +43,6 @@ function db_init() {
 	else {
 		db_log( "Database connection already initialized" );
 	}
-}
-// Are we connected/ready? //
-function db_isReady() {
-	return ( isset($db) && ($db != null) );
 }
 
 
