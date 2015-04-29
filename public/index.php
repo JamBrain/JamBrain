@@ -25,3 +25,5 @@ var_dump( db_isConnected() );
 
 echo "nemo\n<br />";
 ?>
+
+pools
