@@ -17,4 +17,6 @@ else {
 
 apcu_store( "Hamburg", $berg );
 
+echo "Mr Berg: " . $berg;
+
 ?>
