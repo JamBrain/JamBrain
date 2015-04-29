@@ -1,7 +1,7 @@
 <?php
 
 // Load the configuration //
-include "../config.php";
+include "config.php";
 
 // **** GLOBAL DATABASE VARIABLE **** //
 global $db;
