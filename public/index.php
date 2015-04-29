@@ -21,7 +21,14 @@ echo "Mr Berg: " . $berg;
 
 echo "<br />";
 
+var_dump( $db );
+
 db_connect();
+
+echo "<br />";
+
+var_dump( $db );
+
 var_dump( db_isConnected() );
 
 
