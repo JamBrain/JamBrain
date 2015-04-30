@@ -9,9 +9,13 @@ $out = array(
 			'chebble' => 'scorn'
 			)
 		);
-	
+
+$out_format = 0;
+if ( isset($_GET['pretty']) ) {
+	$out_format |= JSON_PRETTY_PRINT;
+} 
 
 header('Content-Type: application/json');
-echo json_encode($out,JSON_PRETTY_PRINT);
+echo json_encode($out,$out_format);
 
 ?>
