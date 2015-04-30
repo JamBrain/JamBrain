@@ -5,7 +5,7 @@ $out = array(
 		'bort' => 17,
 		'court' => 'westby'
 		'zome' => array(
-			'themby' => true,
+			'themby' => 4,
 			'chebble' => 'scorn'
 			)
 		);
