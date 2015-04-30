@@ -11,6 +11,6 @@ $out = array(
 		);
 	
 
-print_r( json_encode($out,true) );
+print_r( json_encode($out,JSON_PRETTY_PRINT) );
 
 ?>
