@@ -11,6 +11,7 @@ $out = array(
 		);
 	
 
-print_r( json_encode($out,JSON_PRETTY_PRINT) );
+header('Content-Type: application/json');
+echo json_encode($out,JSON_PRETTY_PRINT);
 
 ?>
