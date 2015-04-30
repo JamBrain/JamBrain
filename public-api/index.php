@@ -3,9 +3,9 @@
 
 $out = array(
 		'bort' => 17,
-		'court' => 'westby'
+		'court' => 'westby',
 		'zome' => array(
-			'themby' => 4,
+			'themby' => true,
 			'chebble' => 'scorn'
 			)
 		);
