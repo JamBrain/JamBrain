@@ -5,14 +5,14 @@ RewriteBase /1.0/
 RewriteCond %{REQUEST_FILENAME} !\.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([^/]+)(.*)$ $1.php?u=$2 [QSA,L]
+RewriteRule ^([^/]+)(.*)$ $1.php?u=$2 [QSA,END]
 
 # With .php/ #
-RewriteCond %{REQUEST_FILENAME} \.php/
-RewriteRule ^([^/]+)(.*)$ $1?u=$2 [QSA,L]
+#RewriteCond %{REQUEST_FILENAME} \.php/
+#RewriteRule ^([^/]+)(.*)$ $1?u=$2 [QSA,L]
 
 
 # Bad URLs #
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.php [QSA,END]
