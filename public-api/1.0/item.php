@@ -5,7 +5,6 @@ $out = array(
 		'game' => 1
 		);
 
-$out['url'] = $_GET['u'];
 $out['args'] = $_GET;
 
 $out_format = 0;

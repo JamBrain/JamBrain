@@ -1,6 +1,8 @@
 RewriteEngine on
 RewriteBase /1.0/
 
+
+
 RewriteCond %{REQUEST_FILENAME}.php -f
 RewriteCond %{REQUEST_FILENAME} !\.php
 RewriteCond %{REQUEST_FILENAME} !-f
