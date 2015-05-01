@@ -35,12 +35,12 @@ $out['env'] = array(
 	'URL' => getenv('REDIRECT_URL')
 );
 
-$out_format = 0;
+$out_format = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;//0;
 if ( isset($_GET['pretty']) ) {
 	$out_format |= JSON_PRETTY_PRINT;
 } 
 
 header('Content-Type: application/json');
-echo json_encode($out,$out_format);
+echo str_replace('</', '<\/', json_encode($out,$out_format));
 
 ?>
