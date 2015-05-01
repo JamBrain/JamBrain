@@ -2,6 +2,9 @@
 // Default API //
 $url = getenv('REDIRECT_URL');
 $query = getenv('REDIRECT_QUERY_STRING');
+if ( !$query ) {
+	$query = "";	// getenv returns false on error //
+}
 
 $out = array(
 	'response' => 'ok'
