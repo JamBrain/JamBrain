@@ -1,11 +1,13 @@
 <?php
 // Default API //
 $url = getenv('REDIRECT_URL');
+$query = getenv('REDIRECT_QUERY_STRING');
 
 $out = array(
 	'response' => 'ok'
 );
 $out['url'] = $url;
+$out['query'] = $query;
 
 // By default, PHP will make '/' slashes in to '\/'. These flags fix that //
 $out_format = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
