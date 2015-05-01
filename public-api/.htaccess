@@ -3,7 +3,7 @@ RewriteEngine on
 RewriteBase /
 
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^game/(.*)$ /game.php?u=$1
+RewriteRule ^game/(.*)$ /game.php?u=$1 [NC,PT]
 
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ /index.php?u=$1
+RewriteRule ^(.*)$ /index.php?u=$1 [NC,PT]
