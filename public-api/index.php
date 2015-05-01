@@ -1,40 +1,15 @@
 <?php
-// CMW API //
-
-$response = 0;
-if ( isset($_GET['r']) ) {
-	$response = intval($_GET['r']);
-}
+// Default API //
+$url = getenv('REDIRECT_URL');
 
 $out = array(
-	'response' => 17,
-	'court' => 'westby',
-	'zome' => array(
-		'themby' => true,
-		'chebble' => 'scorn'
-		)
-	);
-
-$out['args'] = $_GET;
-
-if ( isset($_GET['u']) ) {
-	$out['url'] = $_GET['u'];
-}
-
-$out['env'] = array(
-	'HTTP_ACCEPT' => getenv('REDIRECT_HTTP_ACCEPT'),
-	'HTTP_USER_AGENT' => getenv('REDIRECT_HTTP_USER_AGENT'),
-	'PATH' => getenv('REDIRECT_PATH'),
-	'QUERY_STRING' => getenv('REDIRECT_QUERY_STRING'),
-	'REMOTE_ADDR' => getenv('REDIRECT_REMOTE_ADDR'),
-	'REMOTE_HOST' => getenv('REDIRECT_REMOTE_HOST'),
-	'SERVER_NAME' => getenv('REDIRECT_SERVER_NAME'),
-	'SERVER_PORT' => getenv('REDIRECT_SERVER_PORT'),
-	'SERVER_SOFTWARE' => getenv('REDIRECT_SERVER_SOFTWARE'),
-	'URL' => getenv('REDIRECT_URL')
+	'response' => 'ok'
 );
+$out['url'] = $url;
 
-$out_format = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;//0;
+// By default, PHP will make '/' slashes in to '\/'. These flags fix that //
+$out_format = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
+// If 'pretty' mode (i.e. readable) //
 if ( isset($_GET['pretty']) ) {
 	$out_format |= JSON_PRETTY_PRINT;
 } 
