@@ -3,8 +3,8 @@ RewriteEngine on
 RewriteBase /
 
 #RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^game/(.*)$ /game.php?u=$1 [NC,L]
+#RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^item/(.*)$ /api.php?u=$1 [NC,QSA,L]
 
 #RewriteCond %{REQUEST_FILENAME} !-f
-#RewriteCond "%{REQUEST_URI}" !=/index.php
-RewriteRule ^(.*)$ /index.php?u=$1 [NC,L]
+RewriteRule ^(.*)$ /index.php?u=$1 [QSA,L]
