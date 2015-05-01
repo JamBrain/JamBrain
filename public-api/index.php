@@ -20,7 +20,18 @@ if ( isset($_GET['u']) ) {
 	$out['url'] = $_GET['u'];
 }
 
-$out['env'] = getenv('REDIRECT_QUERY_STRING');
+$out['env'] = array(
+	'HTTP_ACCEPT' => getenv('REDIRECT_HTTP_ACCEPT'),
+	'HTTP_USER_AGENT' => getenv('REDIRECT_HTTP_USER_AGENT'),
+	'PATH' => getenv('REDIRECT_PATH'),
+	'QUERY_STRING' => getenv('REDIRECT_QUERY_STRING'),
+	'REMOTE_ADDR' => getenv('REDIRECT_REMOTE_ADDR'),
+	'REMOTE_HOST' => getenv('REDIRECT_REMOTE_HOST'),
+	'SERVER_NAME' => getenv('REDIRECT_SERVER_NAME'),
+	'SERVER_PORT' => getenv('REDIRECT_SERVER_PORT'),
+	'SERVER_SOFTWARE' => getenv('REDIRECT_SERVER_SOFTWARE'),
+	'URL' => getenv('REDIRECT_URL')
+);
 
 $out_format = 0;
 if ( isset($_GET['pretty']) ) {
