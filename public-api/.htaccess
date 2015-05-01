@@ -3,9 +3,9 @@ RewriteEngine on
 RewriteBase /
 
 # Good URLs #
-RewriteCond %{REQUEST_FILENAME}.php -f
-RewriteRule ^(.*)$ $1.php [NC,QSA,END]
-RewriteRule ^(.*)/(.*)$ $1.php?q=$2 [NC,QSA,END]
+#RewriteCond %{REQUEST_FILENAME}.php -f
+#RewriteRule ^(.*)$ $1.php [NC,QSA,END]
+#RewriteRule ^(.*)/(.*)$ $1.php?q=$2 [NC,QSA,END]
 
 
 # Bad URLs #
