@@ -4,7 +4,7 @@ RewriteBase /
 
 #RewriteCond %{REQUEST_FILENAME} !-f
 #RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^item/(.*)$ /api.php?u=$1 [NC,QSA,END]
+RewriteRule ^item/(.*)$ /api.php?u=$1 [QSA,END]
 
 #RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ /index.php?u=$1 [QSA,END]
