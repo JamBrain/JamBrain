@@ -1,15 +1,15 @@
 RewriteEngine on
 RewriteBase /1.0/
 
-
-
-#RewriteCond %{REQUEST_FILENAME}.php -f
-#RewriteCond %{REQUEST_FILENAME} !\.php
+# Without .php #
+RewriteCond %{REQUEST_FILENAME} !\.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^([^/]+)(.*)$ $1.php?u=$2 [QSA,L]
 
-
+# With .php/ #
+RewriteCond %{REQUEST_FILENAME} !\.php/
+RewriteRule ^([^/]+)(.*)$ $1?u=$2 [QSA,L]
 
 
 # Bad URLs #
