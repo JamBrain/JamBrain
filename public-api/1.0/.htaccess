@@ -8,5 +8,6 @@ RewriteBase /1.0/
 #RewriteRule ^(.*)/(.*)$ $1.php?q=$2 [NC,QSA,END]
 
 
-RewriteCond %{REQUEST_URI} !(.*)\.php/(.*)$
+#RewriteCond %{REQUEST_URI} !(.*)\.php/(.*)$
+RewriteCond %{REQUEST_URI} /
 RewriteRule ^(.*)/(.*)$ $1.php?u=$2 [NC,QSA,END]
