@@ -20,8 +20,8 @@ if ( isset($_GET['u']) ) {
 	$out['url'] = $_GET['u'];
 }
 
-if ( isset($_ENV('REDIRECT_QUERY_STRING')) ) {
-	$out['phil'] = $_ENV('REDIRECT_QUERY_STRING');
+if ( isset($_ENV['REDIRECT_QUERY_STRING']) ) {
+	$out['phil'] = $_ENV['REDIRECT_QUERY_STRING'];
 }
 
 $out_format = 0;
