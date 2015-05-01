@@ -1,14 +1,18 @@
 <?php
-// Default API //
-$url = getenv('REDIRECT_URL');
-$query = getenv('REDIRECT_QUERY_STRING');
-
-
+// Default API (for catching errors). Never fails. //
 $out = array(
 	'status' => 'OK'
 );
-if ( $url )		$out['url'] = $url;
-if ( $query )	$out['query'] = $query;
+
+// TODO: Disable the redirect info on the real server //
+
+$url = getenv('REDIRECT_URL');
+if ( $url )
+	$out['url'] = $url;
+
+$query = getenv('REDIRECT_QUERY_STRING');
+if ( $query )
+	$out['query'] = $query;
 
 
 // By default, PHP will make '/' slashes in to '\/'. These flags fix that //
@@ -19,6 +23,7 @@ if ( isset($_GET['pretty']) ) {
 } 
 
 
+// Output the Page //
 header('Content-Type: application/json');
 echo str_replace('</', '<\/', json_encode($out,$out_format));
 
