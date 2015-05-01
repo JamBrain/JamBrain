@@ -10,7 +10,7 @@ $out = array(
 			)
 		);
 
-$out['url'] = $_GET['u']
+$out['url'] = $_GET['u'];
 
 $out_format = 0;
 if ( isset($_GET['pretty']) ) {
