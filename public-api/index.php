@@ -11,6 +11,7 @@ $out = array(
 		);
 
 $out['url'] = $_GET['u'];
+$out['args'] = $_GET;
 
 $out_format = 0;
 if ( isset($_GET['pretty']) ) {
