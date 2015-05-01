@@ -1,12 +1,14 @@
 <?php
 // CMW API //
 
-if ( isset($_GET['e']) ) {
-	
+
+$response = 0;
+if ( isset($_GET['r']) ) {
+	$response = intval($_GET['r']);
 }
 
 $out = array(
-	'bort' => 17,
+	'response' => 17,
 	'court' => 'westby',
 	'zome' => array(
 		'themby' => true,

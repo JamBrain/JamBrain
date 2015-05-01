@@ -9,4 +9,6 @@ RewriteRule ^item/(.*)$ /api.php?u=$1 [NC,QSA,END]
 #RewriteCond %{REQUEST_FILENAME} !-f
 #RewriteRule ^(.*)$ /index.php?u=$1 [QSA,END]
 
-ErrorDocument 404 /index.php?e=404
+#ErrorDocument 404 /index.php?e=404
+
+RewriteRule . /index.php?f=%{REQUEST_FILENAME}&u=%{REQUEST_URI}&r= [QSA,END]
