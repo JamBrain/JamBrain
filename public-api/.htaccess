@@ -2,6 +2,5 @@
 RewriteEngine on
 RewriteBase /
 
-#RewriteCond %{HTTP_HOST} (.*)\
-
+RewriteCond %{HTTP_HOST} *
 RewriteRule ^game/?$ /index.php?u=%1
