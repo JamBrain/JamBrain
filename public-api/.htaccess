@@ -1,6 +1,6 @@
 
 RewriteEngine on
-RewriteBase /
+#RewriteBase /
 
 #RewriteCond %{HTTP_HOST} (.*)\
 
