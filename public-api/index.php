@@ -1,7 +1,7 @@
 <?php
 // CMW API //
 
-if ( isset($_GET['e']) {
+if ( isset($_GET['e']) ) {
 	
 }
 
@@ -16,6 +16,7 @@ $out = array(
 
 $out['url'] = $_GET['u'];
 $out['args'] = $_GET;
+$out['phil'] = $_ENV('REDIRECT_QUERY_STRING');
 
 $out_format = 0;
 if ( isset($_GET['pretty']) ) {
