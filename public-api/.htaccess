@@ -6,4 +6,4 @@ RewriteBase /
 RewriteRule ^item/(.*)$ /api.php?m=item&u=$1 [NC,QSA,END]
 
 # Bad URLs #
-RewriteRule . /index.php?u=%{REQUEST_URI} [QSA,END]
+RewriteRule . /index.php [QSA,END]
