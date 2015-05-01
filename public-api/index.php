@@ -20,7 +20,7 @@ if ( isset($_GET['u']) ) {
 	$out['url'] = $_GET['u'];
 }
 
-$out['env'] = $getenv('REDIRECT_QUERY_STRING');
+$out['env'] = getenv('REDIRECT_QUERY_STRING');
 
 $out_format = 0;
 if ( isset($_GET['pretty']) ) {
