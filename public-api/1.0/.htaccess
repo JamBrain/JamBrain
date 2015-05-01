@@ -1,17 +1,8 @@
 RewriteEngine on
 RewriteBase /1.0/
 
-# Good URLs #
-#RewriteCond %{REQUEST_FILENAME}.php -f
-#RewriteRule ^(.*)$ $1.php [NC,QSA,END]
-#RewriteCond ^(.*).php/(.*)$ -f
-#RewriteRule ^(.*)/(.*)$ $1.php?q=$2 [NC,QSA,END]
-
-#RewriteCond %{REQUEST_URI} !(.*)\.php/(.*)$
-#RewriteCond %{REQUEST_URI} !\.php
-#RewriteCond %{REQUEST_URI} /
 RewriteCond %{REQUEST_FILENAME}.php -f
 RewriteCond %{REQUEST_FILENAME} !\.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([^/]+)(.*)$ $1.php?u=$2 [QSA,END]
+RewriteRule ^([^/]+)(.*)$ $1.php?u=$2 [QSA,L]
