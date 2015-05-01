@@ -1,0 +1,7 @@
+
+RewriteEngine on
+RewriteBase /
+
+#RewriteCond %{HTTP_HOST} (.*)\
+
+RewriteRule ^$ /index.php?u=%1 [L,QSA]
