@@ -4,7 +4,9 @@ RewriteBase /
 
 # Good URLs #
 RewriteCond %{REQUEST_FILENAME}.php -f
-RewriteRule ^(.*)$ $1.php?u=$1&q=$2 [NC,QSA,END]
+RewriteRule ^(.*)$ $1.php [NC,QSA,END]
+RewriteRule ^(.*)/(.*)$ $1.php?q=$2 [NC,QSA,END]
+
 
 # Bad URLs #
 RewriteCond %{REQUEST_FILENAME} !-f
