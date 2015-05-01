@@ -7,12 +7,15 @@ $out = array(
 // TODO: Disable the redirect info on the real server //
 
 $url = getenv('REDIRECT_URL');
-if ( $url )
-	$out['url'] = $url;
+if ( $url ) {
+	$out['debug'] = array();
+	$out['debug']['url'] = $url;
+}
 
 $query = getenv('REDIRECT_QUERY_STRING');
-if ( $query )
-	$out['query'] = $query;
+if ( $query ) {
+	$out['debug']['query'] = $query;
+}
 
 
 // By default, PHP will make '/' slashes in to '\/'. These flags fix that //
