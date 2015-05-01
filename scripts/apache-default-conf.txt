@@ -17,13 +17,21 @@
 
 <VirtualHost *:8082>
         ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-tv
+        DocumentRoot /var/www/public-ldj.am
 
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 
 <VirtualHost *:8083>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/public-tv
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+<VirtualHost *:8084>
         ServerAdmin webmaster@localhost
         DocumentRoot /var/www/public-scene
 
