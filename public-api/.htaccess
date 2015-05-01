@@ -1,7 +1,8 @@
 
 RewriteEngine on
-#RewriteBase /
+RewriteBase /
 
 #RewriteCond %{HTTP_HOST} (.*)\
 
+RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ /index.php?u=$1
