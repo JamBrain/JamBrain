@@ -1,7 +1,6 @@
 <?php
 // CMW API //
 
-
 $response = 0;
 if ( isset($_GET['r']) ) {
 	$response = intval($_GET['r']);
