@@ -5,7 +5,7 @@ $query = getenv('REDIRECT_QUERY_STRING');
 
 
 $out = array(
-//	'response' => 'ok'
+	'status' => 'OK'
 );
 if ( $url )		$out['url'] = $url;
 if ( $query )	$out['query'] = $query;
