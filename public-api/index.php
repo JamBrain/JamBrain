@@ -6,17 +6,23 @@ if ( isset($_GET['e']) ) {
 }
 
 $out = array(
-		'bort' => 17,
-		'court' => 'westby',
-		'zome' => array(
-			'themby' => true,
-			'chebble' => 'scorn'
-			)
-		);
+	'bort' => 17,
+	'court' => 'westby',
+	'zome' => array(
+		'themby' => true,
+		'chebble' => 'scorn'
+		)
+	);
 
-$out['url'] = $_GET['u'];
 $out['args'] = $_GET;
-$out['phil'] = $_ENV('REDIRECT_QUERY_STRING');
+
+if ( isset($_GET['u']) ) {
+	$out['url'] = $_GET['u'];
+}
+
+if ( isset($_ENV('REDIRECT_QUERY_STRING')) ) {
+	$out['phil'] = $_ENV('REDIRECT_QUERY_STRING');
+}
 
 $out_format = 0;
 if ( isset($_GET['pretty']) ) {
