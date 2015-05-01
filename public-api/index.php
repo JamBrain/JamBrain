@@ -10,6 +10,8 @@ $out = array(
 			)
 		);
 
+$out['url'] = $_GET['u']
+
 $out_format = 0;
 if ( isset($_GET['pretty']) ) {
 	$out_format |= JSON_PRETTY_PRINT;
