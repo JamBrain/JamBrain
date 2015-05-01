@@ -9,7 +9,10 @@ RewriteBase /1.0/
 
 
 #RewriteCond %{REQUEST_URI} !(.*)\.php/(.*)$
-RewriteCond %{REQUEST_URI} !\.php
-RewriteCond %{REQUEST_URI} /
-RewriteRule ^([^/]+)(.*)$ $1.php?$2 [L]
+#RewriteCond %{REQUEST_URI} !\.php
+#RewriteCond %{REQUEST_URI} /
+RewriteCond %{REQUEST_FILENAME} !\.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)(.*)$ $1.php?u=$2 [L]
 #RewriteRule ^(.*)/(.*)$ $1.php?u=$2 [NC,QSA,L]
