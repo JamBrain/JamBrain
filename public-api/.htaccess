@@ -2,7 +2,7 @@
 RewriteEngine on
 RewriteBase /
 
-#RewriteCond %{HTTP_HOST} (.*)\
-
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^(.*)$ /index.php?u=$1%1
+RewriteRule ^?$ /index.php?u=$1
+
+RewriteRule ^(.*)$ /game.php?u=$1
