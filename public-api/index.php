@@ -1,6 +1,10 @@
 <?php
 // CMW API //
 
+if ( isset($_GET['e']) {
+	
+}
+
 $out = array(
 		'bort' => 17,
 		'court' => 'westby',
