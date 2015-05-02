@@ -9,6 +9,6 @@ $out = array(
 
 $out['args'] = $_GET;
 
-api_emitJSON( $out );
+api_emitJSON( $out, true );
 
 ?>

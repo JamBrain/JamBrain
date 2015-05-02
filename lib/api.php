@@ -17,7 +17,7 @@ function api_isValidJSONPCallback($subject) {
          && ! in_array(mb_strtolower($subject, 'UTF-8'), $reserved_words);
 }
 
-function api_emitJSON( $out ) {
+function api_emitJSON( $out, $debug ) {
 	// By default, PHP will make '/' slashes in to '\/'. These flags fix that //
 	$out_format = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
 	
@@ -26,6 +26,20 @@ function api_emitJSON( $out ) {
 		$out_format |= JSON_PRETTY_PRINT;
 	}
 	
+	// Debug Info //
+	if ( $debug ) {
+		$url = getenv('REDIRECT_URL');
+		if ( $url ) {
+			$out['debug'] = array();
+			$out['debug']['url'] = $url;
+		}
+		$query = getenv('REDIRECT_QUERY_STRING');
+		if ( $query ) {
+			$out['debug']['query'] = $query;
+		}
+	}
+	
+	// JSONp //
 	$prefix = "";
 	$suffix = "";
 	if ( isset($_GET['callback']) ) {
