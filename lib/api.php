@@ -30,13 +30,14 @@ function api_emitJSON( $out, $debug ) {
 	if ( $debug ) {
 		$out['debug'] = array();
 		
-		$url = getenv('REDIRECT_URL');
-		if ( $url ) {
-			$out['debug']['redirect_url'] = $url;
+		if ( isset($_SERVER['PATH_INFO']) ) {
+			$out['debug']['url'] = $_SERVER['PATH_INFO'];
 		}
-		$query = getenv('REDIRECT_QUERY_STRING');
-		if ( $query ) {
-			$out['debug']['redirect_query'] = $query;
+		if ( getenv('REDIRECT_URL') ) {
+			$out['debug']['redirect_url'] = getenv('REDIRECT_URL');
+		}
+		if ( getenv('REDIRECT_QUERY_STRING') ) {
+			$out['debug']['redirect_query'] = getenv('REDIRECT_QUERY_STRING');
 		}
 	}
 	
