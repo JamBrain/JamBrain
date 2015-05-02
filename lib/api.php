@@ -17,8 +17,8 @@ function api_isValidJSONPCallback($subject) {
          && ! in_array(mb_strtolower($subject, 'UTF-8'), $reserved_words);
 }
 
-// Get the Action URL //
-function api_getURL() {
+// Get the API Action URL (single string with slashes) //
+function api_getActionURL() {
 	if ( isset($_SERVER['PATH_INFO']) ) {
 		return $_SERVER['PATH_INFO'];
 	}
@@ -27,8 +27,8 @@ function api_getURL() {
 	}
 }
 
-// Parse the Action URL //
-function api_parseURL() {
+// Parse the API Action URL (array of strings) //
+function api_parseActionURL() {
 	if ( isset($_SERVER['PATH_INFO']) ) {
 		return explode('/',ltrim(rtrim($_SERVER['PATH_INFO'],'/'),'/'));
 	}
