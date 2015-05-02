@@ -37,7 +37,7 @@ function api_parseURL() {
 	}
 }
 
-function api_emitJSON( $out, $debug ) {
+function api_emitJSON( $out, $debug=false ) {
 	// By default, PHP will make '/' slashes in to '\/'. These flags fix that //
 	$out_format = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
 	
