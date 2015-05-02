@@ -4,8 +4,8 @@ $out = array(
 	'status' => 'OK'
 );
 
-// TODO: Disable the redirect info on the real server //
 
+// TODO: Disable this on the real server //
 $url = getenv('REDIRECT_URL');
 if ( $url ) {
 	$out['debug'] = array();
@@ -18,15 +18,9 @@ if ( $query ) {
 }
 
 
-// By default, PHP will make '/' slashes in to '\/'. These flags fix that //
-$out_format = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
-// If 'pretty' mode (i.e. readable) //
-if ( isset($_GET['pretty']) ) {
-	$out_format |= JSON_PRETTY_PRINT;
-}
 
 // http://stackoverflow.com/questions/3128062/is-this-safe-for-providing-jsonp
-function is_valid_callback($subject) {
+function api_isValidCallback($subject) {
      $identifier_syntax
        = '/^[$_\p{L}][$_\p{L}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\x{200C}\x{200D}]*+$/u';
 
@@ -42,24 +36,33 @@ function is_valid_callback($subject) {
          && ! in_array(mb_strtolower($subject, 'UTF-8'), $reserved_words);
 }
 
-
-$prefix = "";
-$suffix = "";
-if ( isset($_GET['callback']) ) {
-	$callback = $_GET['callback'];
-	if ( is_valid_callback($callback) ) {
-		$prefix = $callback . "(";
-		$suffix = ");";
+function api_emitJSON( $out ) {
+	// By default, PHP will make '/' slashes in to '\/'. These flags fix that //
+	$out_format = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
+	// If 'pretty' mode (i.e. readable) //
+	if ( isset($_GET['pretty']) ) {
+		$out_format |= JSON_PRETTY_PRINT;
 	}
-	else {
-		http_response_code(400);
-		exit(1);
+	
+	$prefix = "";
+	$suffix = "";
+	if ( isset($_GET['callback']) ) {
+		$callback = $_GET['callback'];
+		if ( api_isValidCallback($callback) ) {
+			$prefix = $callback . "(";
+			$suffix = ");";
+		}
+		else {
+			http_response_code(400);
+			exit(1);
+		}
 	}
+	
+	// Output the Page //
+	header('Content-Type: application/json');
+	echo $prefix . str_replace('</', '<\/', json_encode($out,$out_format)) . $suffix;
 }
 
-
-// Output the Page //
-header('Content-Type: application/json');
-echo $prefix . str_replace('</', '<\/', json_encode($out,$out_format)) . $suffix;
+emit_json( $out );
 
 ?>
