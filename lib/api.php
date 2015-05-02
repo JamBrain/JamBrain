@@ -72,7 +72,8 @@ function api_emitJSON( $out, $debug=false ) {
 		}
 		else {
 			http_response_code(400);
-			exit(1);
+			$out = array( 'status' => 'ERROR' );
+			//exit(1);
 		}
 	}
 	
