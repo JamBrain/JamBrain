@@ -30,7 +30,7 @@ function api_getURL() {
 // Parse the Action URL //
 function api_parseURL() {
 	if ( isset($_SERVER['PATH_INFO']) ) {
-		return explode('/',$_SERVER['PATH_INFO']);
+		return explode('/',ltrim(rtrim($_SERVER['PATH_INFO'],'/'),'/'));
 	}
 	else {
 		return array();
