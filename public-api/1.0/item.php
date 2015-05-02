@@ -3,9 +3,8 @@ require "../../lib/api.php";
 
 // CMW API //
 
-$out = array(
-		'item' => 1
-		);
+$out = api_newResponse();
+$out['item'] = 1;
 
 //$out['args'] = $_GET;
 //$out['server'] = $_SERVER;

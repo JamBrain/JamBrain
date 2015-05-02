@@ -1,5 +1,10 @@
 <?php
 
+include "../config.php";
+if ( !isset($cfg_no_debug) ) {
+	$cfg_no_debug = false;
+}
+
 // http://stackoverflow.com/questions/3128062/is-this-safe-for-providing-jsonp
 function api_isValidJSONPCallback($subject) {
      $identifier_syntax
@@ -37,12 +42,19 @@ function api_parseActionURL() {
 	}
 }
 
-function api_emitError( $code = 400 ) {
-	http_response_code($code);
-	return array( 'status' => 'ERROR' );
+// At the top of an API program, use newResponse to create an array //
+function api_newResponse( $msg = 'OK' ) {
+	return array('status' => $msg);
 }
 
-function api_emitJSON( $out, $debug=false ) {
+// On error, overwrite your response with an error //
+function api_newError( $code = 400, $msg = 'ERROR' ) {
+	http_response_code($code);
+	return array( 'status' => $msg );
+}
+
+// Finally, at the bottom of your API program, emit the 
+function api_emitJSON( $out ) {
 	// By default, PHP will make '/' slashes in to '\/'. These flags fix that //
 	$out_format = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
 	
@@ -61,12 +73,12 @@ function api_emitJSON( $out, $debug=false ) {
 			$suffix = ");";
 		}
 		else {
-			$out = api_emitError(400);
+			$out = api_newError(400);
 		}
 	}
 		
 	// Debug Info //
-	if ( $debug ) {
+	if ( !$cfg_no_debug && isset($_GET['debug']) ) {
 		$out['debug'] = array();
 		
 		if ( isset($_SERVER['PATH_INFO']) ) {
