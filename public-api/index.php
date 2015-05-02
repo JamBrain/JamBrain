@@ -63,6 +63,6 @@ function api_emitJSON( $out ) {
 	echo $prefix . str_replace('</', '<\/', json_encode($out,$out_format)) . $suffix;
 }
 
-emit_json( $out );
+api_emitJSON( $out );
 
 ?>
