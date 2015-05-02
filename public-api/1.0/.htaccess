@@ -12,7 +12,7 @@ RewriteRule ^([^/]+)(.*)$ $1.php?u=$2 [QSA,L]
 #RewriteRule ^([^/]+)(.*)$ $1?u=$2 [QSA,L]
 
 #RewriteCond %{REQUEST_FILENAME} -f
-#RewriteRule ^.*$ - [END]
+#RewriteRule . - [END]
 
 
 # Bad URLs #
