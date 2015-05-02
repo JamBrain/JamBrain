@@ -2,13 +2,9 @@
 RewriteEngine on
 RewriteBase /
 
-# Good URLs #
-#RewriteCond %{REQUEST_FILENAME}.php -f
-#RewriteRule ^(.*)$ $1.php [NC,QSA,END]
-#RewriteRule ^(.*)/(.*)$ $1.php?q=$2 [NC,QSA,END]
-
-
 # Bad URLs #
 RewriteCond %{REQUEST_FILENAME} !-f
 #RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.php [QSA,END]
+
+#DirectoryIndex /index.php
