@@ -1,9 +1,6 @@
 <?php
 
 include "../config.php";
-if ( !isset($cfg_no_debug) ) {
-	$_GLOBAL['cfg_no_debug'] = false;
-}
 
 // http://stackoverflow.com/questions/3128062/is-this-safe-for-providing-jsonp
 function api_isValidJSONPCallback($subject) {
@@ -78,7 +75,7 @@ function api_emitJSON( $out ) {
 	}
 		
 	// Debug Info //
-	if ( !$cfg_no_debug && isset($_GET['debug']) ) {
+	if ( (!isset($cfg_no_debug) || !$cfg_no_debug) && isset($_GET['debug']) ) {
 		$out['debug'] = array();
 		
 		if ( isset($_SERVER['PATH_INFO']) ) {
