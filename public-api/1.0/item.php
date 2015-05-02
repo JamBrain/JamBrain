@@ -9,6 +9,7 @@ $out = array(
 
 $out['args'] = $_GET;
 //$out['server'] = $_SERVER;
+$out['parsed'] = api_parseURL();
 
 api_emitJSON( $out, true );
 

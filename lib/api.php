@@ -17,6 +17,26 @@ function api_isValidJSONPCallback($subject) {
          && ! in_array(mb_strtolower($subject, 'UTF-8'), $reserved_words);
 }
 
+// Get the Action URL //
+function api_getURL() {
+	if ( isset($_SERVER['PATH_INFO']) ) {
+		return $_SERVER['PATH_INFO'];
+	}
+	else {
+		return '/';
+	}
+}
+
+// Parse the Action URL //
+function api_parseURL() {
+	if ( isset($_SERVER['PATH_INFO']) ) {
+		return explode('/',$_SERVER['PATH_INFO']);
+	}
+	else {
+		return array();
+	}
+}
+
 function api_emitJSON( $out, $debug ) {
 	// By default, PHP will make '/' slashes in to '\/'. These flags fix that //
 	$out_format = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
