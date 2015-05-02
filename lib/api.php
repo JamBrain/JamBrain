@@ -2,7 +2,7 @@
 
 include "../config.php";
 if ( !isset($cfg_no_debug) ) {
-	$cfg_no_debug = false;
+	$_GLOBAL['cfg_no_debug'] = false;
 }
 
 // http://stackoverflow.com/questions/3128062/is-this-safe-for-providing-jsonp
