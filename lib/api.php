@@ -28,14 +28,15 @@ function api_emitJSON( $out, $debug ) {
 	
 	// Debug Info //
 	if ( $debug ) {
+		$out['debug'] = array();
+		
 		$url = getenv('REDIRECT_URL');
 		if ( $url ) {
-			$out['debug'] = array();
-			$out['debug']['url'] = $url;
+			$out['debug']['redirect_url'] = $url;
 		}
 		$query = getenv('REDIRECT_QUERY_STRING');
 		if ( $query ) {
-			$out['debug']['query'] = $query;
+			$out['debug']['redirect_query'] = $query;
 		}
 	}
 	

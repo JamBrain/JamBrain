@@ -8,6 +8,7 @@ $out = array(
 		);
 
 $out['args'] = $_GET;
+$out['server'] = $_SERVER;
 
 api_emitJSON( $out, true );
 
