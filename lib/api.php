@@ -46,21 +46,6 @@ function api_emitJSON( $out, $debug=false ) {
 		$out_format |= JSON_PRETTY_PRINT;
 	}
 	
-	// Debug Info //
-	if ( $debug ) {
-		$out['debug'] = array();
-		
-		if ( isset($_SERVER['PATH_INFO']) ) {
-			$out['debug']['url'] = $_SERVER['PATH_INFO'];
-		}
-		if ( getenv('REDIRECT_URL') ) {
-			$out['debug']['redirect_url'] = getenv('REDIRECT_URL');
-		}
-		if ( getenv('REDIRECT_QUERY_STRING') ) {
-			$out['debug']['redirect_query'] = getenv('REDIRECT_QUERY_STRING');
-		}
-	}
-	
 	// JSONp //
 	$prefix = "";
 	$suffix = "";
@@ -74,6 +59,21 @@ function api_emitJSON( $out, $debug=false ) {
 			http_response_code(400);
 			$out = array( 'status' => 'ERROR' );
 			//exit(1);
+		}
+	}
+		
+	// Debug Info //
+	if ( $debug ) {
+		$out['debug'] = array();
+		
+		if ( isset($_SERVER['PATH_INFO']) ) {
+			$out['debug']['url'] = $_SERVER['PATH_INFO'];
+		}
+		if ( getenv('REDIRECT_URL') ) {
+			$out['debug']['redirect_url'] = getenv('REDIRECT_URL');
+		}
+		if ( getenv('REDIRECT_QUERY_STRING') ) {
+			$out['debug']['redirect_query'] = getenv('REDIRECT_QUERY_STRING');
 		}
 	}
 	
