@@ -2,6 +2,12 @@
 RewriteEngine on
 RewriteBase /
 
+RewriteCond %{REQUEST_FILENAME} !\.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)(.*)$ $1.php?u=$2 [QSA,L]
+
+
 # Good URLs #
 #RewriteCond %{REQUEST_FILENAME}.php -f
 #RewriteRule ^(.*)$ $1.php [NC,QSA,END]
