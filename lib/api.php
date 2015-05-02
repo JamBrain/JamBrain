@@ -37,6 +37,11 @@ function api_parseActionURL() {
 	}
 }
 
+function api_emitError( $code = 400 ) {
+	http_response_code($code);
+	return array( 'status' => 'ERROR' );
+}
+
 function api_emitJSON( $out, $debug=false ) {
 	// By default, PHP will make '/' slashes in to '\/'. These flags fix that //
 	$out_format = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
@@ -46,7 +51,7 @@ function api_emitJSON( $out, $debug=false ) {
 		$out_format |= JSON_PRETTY_PRINT;
 	}
 	
-	// JSONp //
+	// JSONP //
 	$prefix = "";
 	$suffix = "";
 	if ( isset($_GET['callback']) ) {
@@ -56,9 +61,7 @@ function api_emitJSON( $out, $debug=false ) {
 			$suffix = ");";
 		}
 		else {
-			http_response_code(400);
-			$out = array( 'status' => 'ERROR' );
-			//exit(1);
+			$out = api_emitError(400);
 		}
 	}
 		
