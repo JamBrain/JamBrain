@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__) . "/../../lib/api.php";
+require_once __DIR__ . "/../../lib/api.php";
 
 // CMW API //
 

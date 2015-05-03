@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__FILE__) . "/../db.php";
-require_once dirname(__FILE__) . "/../lib.php";
+require_once __DIR__ . "/../db.php";
+require_once __DIR__ . "/../lib.php";
 ?>
 So. It has come to this...<br />
 <br />
