@@ -1,5 +1,5 @@
 <?php
-include_once dirname(__FILE__) . include "/config.php";
+include_once dirname(__FILE__) . "/config.php";
 // NOTE: More includes follow //
 
 // Load the required Database code //
