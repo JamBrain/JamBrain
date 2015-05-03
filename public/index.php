@@ -2,8 +2,8 @@ So. It has come to this...<br />
 <br />
 <?php
 
-require "../db.php";
-require "../lib.php";
+require_once dirname(__FILE__) . "/../db.php";
+require_once dirname(__FILE__) . "/../lib.php";
 
 
 $berg = apcu_fetch( "Hamburg" );
