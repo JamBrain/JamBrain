@@ -1,15 +1,14 @@
 <?php
-
-// Load the configuration //
-include "config.php";
+include_once dirname(__FILE__) . include "/config.php";
+// NOTE: More includes follow //
 
 // Load the required Database code //
 //if ( !isset($cfg_uses_pdo) ) {
-//	require "lib/db_pdo.php";
+//	require_once dirname(__FILE__) . "/lib/db_pdo.php";
 //}
 //else
 //{
-	require "lib/db_mysql.php";
+	require_once dirname(__FILE__) . "/lib/db_mysql.php";
 //}
 
 ?>
