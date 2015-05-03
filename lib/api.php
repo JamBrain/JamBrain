@@ -1,6 +1,8 @@
 <?php
 
-include "../config.php";
+// Support library for web API //
+
+include dirname(__FILE__) . "../config.php";
 
 // http://stackoverflow.com/questions/3128062/is-this-safe-for-providing-jsonp
 function api_isValidJSONPCallback($subject) {
