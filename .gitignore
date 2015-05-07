@@ -1,0 +1,5 @@
+.DS_STORE
+.vagrant
+public/utils
+public/phpmyadmin
+config.php

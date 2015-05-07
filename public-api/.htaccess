@@ -1,0 +1,10 @@
+
+RewriteEngine on
+RewriteBase /
+
+# Bad URLs #
+RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [QSA,END]
+
+#DirectoryIndex /index.php

@@ -1,0 +1,16 @@
+RewriteEngine on
+RewriteBase /1.0/
+
+# Append .php to URL #
+RewriteCond %{REQUEST_FILENAME} !\.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)(.*)$ $1.php$2 [QSA,L]
+
+# If file exists (including PHP) then we are done #
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule . - [END]
+
+# Bad URLs #
+RewriteRule . /index.php [QSA,END]
+DirectoryIndex /index.php
