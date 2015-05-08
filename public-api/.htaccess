@@ -1,3 +1,6 @@
+<Location "/apache-status">
+    SetHandler server-status
+</Location>
 
 RewriteEngine on
 RewriteBase /
