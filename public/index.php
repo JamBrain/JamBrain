@@ -19,7 +19,13 @@ apcu_store( "Hamburg", $berg );
 
 echo "Mr Berg: " . $berg . "<br />";
 
-db_connect();
-var_dump( db_isConnected() );
+session_start();
+
+if ( !isset($_SESSION['uid']) ) {
+	$_SESSION['uid'] = 200;
+}
+else {
+	$_SESSION['uid']++;
+}
 
 ?>

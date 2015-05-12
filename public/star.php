@@ -2,6 +2,7 @@
 // Check for arguments, and exit immediately if none //
 
 // retrieve session
+session_start();
 
 // if logged in, grab id, otherwise exit
 
