@@ -6,7 +6,7 @@ session_start();
 
 // if logged in, grab id, otherwise zero.
 
-require_once __DIR__ . "/../db.php";
+require_once __DIR__ . "/../../db.php";
 
 db_connect();
 
