@@ -19,13 +19,13 @@ apcu_store( "Hamburg", $berg );
 
 echo "Mr Berg: " . $berg . "<br />";
 
-session_start();
+user_start();
 
-if ( !isset($_SESSION['uid']) ) {
-	$_SESSION['uid'] = 200;
+if ( user_getId() === 0 ) {
+	user_setId( 200 );
 }
 else {
-	$_SESSION['uid']++;
+	user_setId( user_getId()+1 );
 }
 
 ?>

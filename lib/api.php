@@ -1,7 +1,7 @@
 <?php
 include_once __DIR__ . "/../config.php";
 
-// Support library for web API //
+// Support library for web APIs (emitting JSON) //
 
 // http://stackoverflow.com/questions/3128062/is-this-safe-for-providing-jsonp
 function api_isValidJSONPCallback($subject) {
