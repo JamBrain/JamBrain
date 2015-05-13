@@ -1,19 +1,20 @@
 <?php
 
-$_user_session_started = null;
+$__user_session_started = null;
 
 function user_isActive() {
-	global $_user_session_started;
-	return $_user_session_started;//return (session_status() == PHP_SESSION_NONE);
+	global $__user_session_started;
+	return $__user_session_started;//return (session_status() == PHP_SESSION_NONE);
 }
 
 function user_start() {
-	global $_user_session_started;
-	if ( !isset($_user_session_started) ) {
+	global $__user_session_started;
+	if ( !isset($__user_session_started) ) {
 		//session_set_cookie_params(60);
+		
 		session_start();
 		
-		$_user_session_started = true;
+		$__user_session_started = true;
 	}
 }
 
@@ -30,6 +31,21 @@ function user_setId( $uid ) {
 	$_SESSION['uid'] = $uid;
 	
 	// Should I return the old Id? //
+}
+
+
+// Reference: http://blog.nic0.me/post/63180966453/php-5-5-0s-password-hash-api-a-deeper-look
+
+function user_hashPassword($password) {
+	return password_hash($password, PASSWORD_DEFAULT); //, ['cost'=>10] );
+}
+
+function user_verifyPassword($password,$hash) {
+	return password_verify($password,$hash);
+}
+
+function user_doesPasswordNeedRehash($hash) {
+	return password_needs_rehash($hash, PASSWORD_DEFAULT); //, ['cost'=>10] );
 }
 
 ?>

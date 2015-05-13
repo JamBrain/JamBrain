@@ -210,8 +210,12 @@ Thing {
 			mail VARCHAR(255) NOT NULL UNIQUE,
 				INDEX(mail),
 				
-			hash TEXT NOT NULL
+			hash VARCHAR(128) NOT NULL
 		)" . $dbtype_default . ";");
+	// As of PHP 5.5, password_hash uses bcrypt which needs 60 chars.
+	// Various articles recommend making it 255 chars, but as of 2015 we don't need it yet.
+	// My compromise is to set it to 128 chars, though we don't need more than 64.
+	// When PHP switches to a fancier algorithm, then we'll do an alter-table to add more space.
 	
 	// Love Table. If a user has given a +1 to something. //
 	db_query(
