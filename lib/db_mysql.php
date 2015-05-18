@@ -38,12 +38,17 @@ function db_connect(/*$no_log=false*/) {
 		global $cfg_db_login;
 		global $cfg_db_password;
 
+		// Connect to the database //
 		$db = new mysqli($cfg_db_host,$cfg_db_login,$cfg_db_password,$cfg_db_name);
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
 		if ($db->connect_errno) {
     		db_log( "Failed to connect to MySQL: (" . $db->connect_errno . ") " . $db->connect_error );
     	}
+    	
+    	// Set character set to utf8mb4 mode (default is utf8mb3 (utf8). mb4 is required for Emoji)
+    	$db->set_charset('utf8mb4');
+    	// More info: http://stackoverflow.com/questions/279170/utf-8-all-the-way-through
 	}
 //	else {
 //		if ( !$no_log ) {

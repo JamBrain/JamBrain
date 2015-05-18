@@ -4,6 +4,19 @@ require_once __DIR__ . "/../db.php";
 db_connect();
 echo "Connected: " . db_isConnected() . "\n";
 
+// NOTE: Indexes must be less than 767 bytes!
+//   That means 255 (255.666~) for strings in UTF8 (UTF8mb3)
+//   or 191 (191.75) for strings in UTF8mb4 (What I am using).
+//   This *can* be bumped to 3072 with --innodb_large_prefix, but
+//   the implications of this are not well understood (by me).
+
+// https://dev.mysql.com/doc/refman/5.5/en/innodb-restrictions.html
+// https://make.wordpress.org/core/2015/04/02/the-utf8mb4-upgrade/
+
+// Consider using a simpler charset and coalation for slugs and slug-lookup tables (they only need ASCII 0-127)
+
+// http://code.openark.org/blog/mysql/mysqls-character-sets-and-collations-demystified
+
 	$table_prefix = "cmw_";
 
 	$node_table = $table_prefix . "node";
@@ -23,12 +36,18 @@ echo "Connected: " . db_isConnected() . "\n";
 //	db_query("SET collation_server=utf8_unicode_ci;");
 //	db_query("SET character_set_server=utf8;");
 	
-	$dbtype_innodb = " ENGINE=InnoDB";
-	$dbtype_myisam = " ENGINE=MyISAM";
-	$dbtype_archive = " ENGINE=Archive";
-	$charset_utf8 = " CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+	const DBTYPE_INNODB = " ENGINE=InnoDB";
+	const DBTYPE_MYISAM = " ENGINE=MyISAM";
+	const DBTYPE_ARCHIVE = " ENGINE=Archive";
+	// NOTE: utf8 is 3 byte unicode. utf8mb4 is 4 byte. Required for Emoji.
+	const CSTYPE_UTF8 = " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+	const CSTYPE_LATIN = " CHARACTER SET latin1 COLLATE latin1_swedish_ci";		// Case Insensitive
+	//const CSTYPE_LATIN = " CHARACTER SET latin1 COLLATE latin1_bin";			// Case Sensitive
 	
-	$dbtype_default = $dbtype_innodb . $charset_utf8;
+	// https://dev.mysql.com/doc/refman/5.5/en/case-sensitivity.html
+	
+	
+	$dbtype_default = DBTYPE_INNODB . CSTYPE_UTF8;
 
 	// id - The Unique ID of the Node
 	// parent - Who I'm a child of (if anyone)
@@ -55,7 +74,7 @@ echo "Connected: " . db_isConnected() . "\n";
 			author BIGINT UNSIGNED NOT NULL DEFAULT 0,
 				INDEX (author),
 
-			type VARCHAR(16) NOT NULL DEFAULT '',
+			type VARCHAR(16) CHARSET latin1 NOT NULL DEFAULT '',
 				INDEX (type),
 			
 			time_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -63,8 +82,8 @@ echo "Connected: " . db_isConnected() . "\n";
 			time_published DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 				INDEX (time_published),
 
-			slug VARCHAR(64) NOT NULL DEFAULT '',
-			name VARCHAR(255) NOT NULL DEFAULT '',
+			slug VARCHAR(64) CHARSET latin1 NOT NULL DEFAULT '',
+			name VARCHAR(191) NOT NULL DEFAULT '',
 			body MEDIUMTEXT NOT NULL,
 
 			
@@ -99,9 +118,9 @@ echo "Connected: " . db_isConnected() . "\n";
 			id_b BIGINT UNSIGNED NOT NULL DEFAULT 0,
 				INDEX(id_b),
 
-			type VARCHAR(16) NOT NULL DEFAULT '',
+			type VARCHAR(16) CHARSET latin1 NOT NULL DEFAULT '',
 				INDEX (type),
-			subtype VARCHAR(16) NOT NULL DEFAULT '',
+			subtype VARCHAR(16) CHARSET latin1 NOT NULL DEFAULT '',
 			
 			/*INDEX(id_a,id_b,type),*/
 				
@@ -207,7 +226,7 @@ Thing {
 			id BIGINT UNSIGNED NOT NULL UNIQUE,
 				INDEX(id),
 
-			mail VARCHAR(255) NOT NULL UNIQUE,
+			mail VARCHAR(191) NOT NULL UNIQUE,
 				INDEX(mail),
 				
 			hash VARCHAR(128) NOT NULL
