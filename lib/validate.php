@@ -57,6 +57,7 @@ function validate_url($url) {
 			$url = 'http://' . $url;
 			$protocol = 'http';
 		}
+		// TBD: Do we limit this feature to url's prefixed with 'www.'?
 	}
 	if ( $protocol === false ) {
 		// ERROR: Unknown URL scheme.
@@ -65,7 +66,8 @@ function validate_url($url) {
 	// We now know the protocol. It will always be lower case.
 	
 	// Step 3. Escape URL.
-	$url = htmlspecialchars($url,ENT_QUOTES,'UTF-8',false);
+	$url = htmlspecialchars($url,ENT_QUOTES|ENT_HTML5,'UTF-8',false);
+	// TBD: do we want ENT_HTML5 above? http://stackoverflow.com/a/14532168
 //	if ( $url === false ) {
 //		// ERROR: Invalid URL.
 //		return false;
