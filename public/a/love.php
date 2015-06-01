@@ -22,31 +22,15 @@ require_once __DIR__ . "/../../db.php";
 //   This will be called "Magic".
 // To be clear: Scoring here is a sorting score, not a rating. It's how we decide to prioritize.
 
+// TODO: Limit access to certain data to user level
+
 $response = api_newResponse();
-
-// Retrieve action //
-$action = api_parseActionURL();
-
-// If no item is set, exit
-if ( !isset($action[1]) ) {
-	api_emitJSON(api_newError());
-	exit();
-}
-
-// Store Item
-$response['item'] = intval($action[1]);
-
-// If the item has an invalid Id, exit
-if ( $response['item'] === 0 ) {
-	api_emitJSON(api_newError());
-	exit();
-}
 
 // Retrieve session, store UID
 user_start();
 $response['uid'] = user_getId();
 
-// Store IP if not logged in (That way, we don't store uniques if you change IPs)
+// Store IP if no UID set (That way, we don't store uniques if you change IPs)
 if ( $response['uid'] === 0 ) {
 	$response['ip'] = $_SERVER['REMOTE_ADDR'];
 }
@@ -54,12 +38,99 @@ else {
 	$response['ip'] = "0.0.0.0";
 }
 
+// Retrieve Action and Arguments
+$arg = api_parseActionURL();
+$action = array_shift($arg);
+$arg_count = count($arg);
+
+$offset = 0;
+$limit = 50;
+
+// Confirm we have enough arguments
+if ( $arg_count === 0 ) {
+	if ( $action === 'me' ) {
+		// do nothing //
+	}
+	else { 
+		api_emitErrorAndExit(); 
+	}
+}
+else if ( $arg_count === 1 ) {
+	if ( $action === 'uid' ) {
+		$response['uid'] = intval($arg[0]);
+		
+		// Even though this will work, UID=0 should be an error
+		if ( $response['uid'] === 0 ) {
+			api_emitErrorAndExit();
+		}
+	}
+	else if ( $action === 'ip' ) {
+		if ( filter_var($arg[0],FILTER_VALIDATE_IP) ) {
+			$response['ip'] = $arg[0];
+			$response['uid'] = 0;
+			
+			// Even though this will work, IP=0.0.0.0 should be an error
+			if ( ip2long($response['ip']) === 0 ) {
+				api_emitErrorAndExit();
+			}
+		}
+		else {
+			api_emitErrorAndExit();
+		}
+	}
+	else if ( $action === 'me' ) {
+		$offset = abs(intval($arg[0]));
+	}
+	else if ( $action === 'add' || $action === 'remove' ) {
+		$response['item'] = intval($arg[0]);
+		
+		if ( $response['item'] === 0 ) {
+			api_emitErrorAndExit();
+		}
+	}
+	else { 
+		api_emitErrorAndExit(); 
+	}
+}
+else if ( $arg_count === 2 ) {
+	if ( $action === 'uid' ) {
+		$response['uid'] = intval($arg[0]);
+		$offset = abs(intval($arg[1]));
+
+		// Even though this will work, UID=0 should be an error
+		if ( $response['uid'] === 0 ) {
+			api_emitErrorAndExit();
+		}
+	}
+	else if ( $action === 'ip' ) {
+		if ( filter_var($arg[0],FILTER_VALIDATE_IP) ) {
+			$response['ip'] = $arg[0];
+			$response['uid'] = 0;
+			$offset = abs(intval($arg[1]));
+
+			// Even though this will work, IP=0.0.0.0 should be an error
+			if ( ip2long($response['ip']) === 0 ) {
+				api_emitErrorAndExit();
+			}
+		}
+		else {
+			api_emitErrorAndExit();
+		}
+	}
+	else { 
+		api_emitErrorAndExit();
+	}
+}
+else {
+	api_emitErrorAndExit();
+}
+
 
 // Table
 $table_name = "cmw_love";
 
-// On Add Action, insert in to the database
-if ( $action[0] === 'add' ) {
+// On 'add' Action, insert in to the database
+if ( $action === 'add' ) {
 	db_connect();
 
 	db_query(
@@ -76,7 +147,7 @@ if ( $action[0] === 'add' ) {
 
 	$response['success'] = empty(db_affectedRows()) ? false : true;
 }
-// On Remove Action, remove from the database
+// On 'remove' Action, remove from the database
 else if ( $action[0] === 'remove' ) {
 	db_connect();
 
@@ -89,21 +160,19 @@ else if ( $action[0] === 'remove' ) {
 
 	$response['success'] = empty(db_affectedRows()) ? false : true;
 }
-//else if ( $action[0] === 'me' ) {
-//	db_connect();
-//
-//	db_query( 
-//		"SELECT FROM `" . $table_name . "` WHERE ".
-//			"`node`=" . $response['item'] . " AND " .
-//			"`user`=" . $response['uid'] . " AND " .
-//			"`ip`=INET_ATON('" . $response['ip'] . "')" .
-//		";");
-//
-//	$response['success'] = empty(db_numRows()) ? false : true;	
-//}
+else if ( $action === 'me' || $action === 'uid' || $action === 'ip' ) {
+	db_connect();
+
+	$response['result'] = db_fetchSingle( 
+		"SELECT `node` FROM `" . $table_name . "` WHERE ".
+			"`user`=" . $response['uid'] . " AND " .
+			"`ip`=INET_ATON('" . $response['ip'] . "') " .
+		"LIMIT " . $limit . " OFFSET " . $offset . ";");
+
+	$response['success'] = true;	
+}
 else {
-	api_emitJSON(api_newError());
-	exit();
+	api_emitErrorAndExit();
 }
 
 api_emitJSON($response);

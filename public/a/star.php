@@ -16,6 +16,8 @@ require_once __DIR__ . "/../../db.php";
 //   exploit, but it ensure that opinions of users are worth more than anyonymous people.
 // To be clear: Scoring here is a sorting score, not a rating. It's how we decide to prioritize.
 
+// TODO: Limit access to certain data to user level
+
 $response = api_newResponse();
 
 // Retrieve session, store UID
@@ -44,7 +46,7 @@ else if ( $arg_count === 1 ) {
 		$response['uid'] = intval($arg[0]);
 	}
 	else if ( $action === 'me' ) {
-		$offset = intval($arg[0]);
+		$offset = abs(intval($arg[0]));
 	}
 	else if ( $action === 'add' || $action === 'remove' ) {
 		$response['item'] = intval($arg[0]);
@@ -60,7 +62,7 @@ else if ( $arg_count === 1 ) {
 else if ( $arg_count === 2 ) {
 	if ( $action === 'uid' ) {
 		$response['uid'] = intval($arg[0]);
-		$offset = intval($arg[1]);
+		$offset = abs(intval($arg[1]));
 	}
 	else { 
 		api_emitErrorAndExit(); 
