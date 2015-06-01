@@ -53,7 +53,7 @@ $table_name = "cmw_star";
 if ( $action[0] === 'add' ) {
 	db_connect();
 	
-	$ret = db_query( 
+	db_query( 
 		"INSERT IGNORE `" . $table_name . "` (".
 			"`node`,".
 			"`user`".
@@ -69,7 +69,7 @@ if ( $action[0] === 'add' ) {
 else if ( $action[0] === 'remove' ) {
 	db_connect();
 
-	$ret = db_query( 
+	db_query( 
 		"DELETE FROM `" . $table_name . "` WHERE ".
 			"`node`=" . $response['item'] . " AND " .
 			"`user`=" . $response['uid'] .
