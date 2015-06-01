@@ -1,6 +1,8 @@
 <?php
 
-// Validate and Sanitize Things. //
+// Validate and Sanitize Things
+// - Validate functions return whether they are valid or not
+// - Sanitize functions return a legal string, or false on failure
 
 
 // Given a URL, returns a valid (escaped) URL, or false if it's bad. //
@@ -88,18 +90,17 @@ function sanitize_email($mail) {
 }
 
 function sanitize_slug($slug) {
-	$slug = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $slug);
-	$slug = strip_tags($slug);
-	$slug = strtolower($slug);
-	$slug = preg_replace("/[^a-z0-9\/_|'. -]/", '', $slug);
-	$slug = preg_replace("/[\/_| -'.]+/", '-', $slug);
-	$slug = trim($slug, '-');
+	$slug = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $slug);	// Remove accents
+	$slug = strip_tags($slug);									// No HTML/XML tags
+	$slug = strtolower($slug);									// Lower case only
+	$slug = preg_replace("/[^a-z0-9\/_|'. -]/", '', $slug);		// Keep only these
+	$slug = preg_replace("/[\/_| -'.]+/", '-', $slug);			// All of these to a single dash
+	$slug = trim($slug, '-');									// Remove dashes from start and end
 	
-	if ( empty($slug) ) {
+	if ( empty($slug) )
 		return false;
-	}
-		
-	return $slug;
+	else
+		return $slug;
 }
 
 ?>
