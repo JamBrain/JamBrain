@@ -22,15 +22,33 @@ require_once __DIR__ . "/../../db.php";
 //   This will be called "Magic".
 // To be clear: Scoring here is a sorting score, not a rating. It's how we decide to prioritize.
 
+$response = api_newResponse();
+
 // Retrieve action //
 $action = api_parseActionURL();
 
-// Retrieve session
-user_start();
+// If no item is set, exit
+if ( !isset($action[1]) ) {
+	api_emitJSON(api_newError());
+	exit();
+}
 
-$response = [];
+// Store Item
+$response['item'] = intval($action[1]);
+
+// If the item has an invalid Id, exit
+if ( $response['item'] === 0 ) {
+	api_emitJSON(api_newError());
+	exit();
+}
+
+// Retrieve session, store UID
+user_start();
 $response['uid'] = user_getId();
+
+// Store IP
 $response['ip'] = $_SERVER['REMOTE_ADDR'];
+
 
 if ( $response['uid'] === 0 ) {
 	// <3 By IP Address //
@@ -39,6 +57,7 @@ else {
 	// <3 By UID //
 }
 
+// On Add Action, insert in to the database
 if ( $action[0] === 'add' ) {
 	// Connect to database
 	db_connect();
@@ -49,8 +68,9 @@ if ( $action[0] === 'add' ) {
 	
 	$success = true;
 
-	$response['add'] = $success;
+	$response['success'] = $success;
 }
+// On Remove Action, remove from the database
 else if ( $action[0] === 'remove' ) {
 	// Connect to database
 	db_connect();
@@ -61,10 +81,10 @@ else if ( $action[0] === 'remove' ) {
 
 	$success = true;
 
-	$response['remove'] = $success;
+	$response['success'] = $success;
 }
 else {
-	api_emitJSON([]);
+	api_emitJSON(api_newError());
 	exit();
 }
 

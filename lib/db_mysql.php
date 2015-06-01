@@ -78,6 +78,9 @@ function db_fetchArray($query) {
 }
 
 
-
+function db_affectedRows() {
+	global $db;
+	return $db->affected_rows;
+}
 
 ?>
