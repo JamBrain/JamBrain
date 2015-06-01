@@ -1,5 +1,7 @@
 <?php
 
+// TODO: user_isAdmin(), user_isSuper()
+
 $__user_session_started = null;
 
 function user_isActive() {
