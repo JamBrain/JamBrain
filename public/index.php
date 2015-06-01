@@ -85,7 +85,7 @@ echo '<br />';
 
 $str2 = htmlspecialchars($str,ENT_QUOTES);
 
-echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . validate_url($str2);
+echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_url($str2);
 
 echo '<br />';
 echo '<br />';
@@ -93,7 +93,7 @@ echo '<br />';
 
 $str2 = htmlspecialchars("http://ludumdare.com/EAT MY PHAT D[LK",ENT_QUOTES);
 
-echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . validate_url($str2);
+echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_url($str2);
 
 echo '<br />';
 echo '<br />';
@@ -101,7 +101,7 @@ echo '<br />';
 
 $str2 = htmlspecialchars("gozer://google.com/shempy",ENT_QUOTES);
 
-echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . validate_url($str2);
+echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_url($str2);
 
 ?>
 

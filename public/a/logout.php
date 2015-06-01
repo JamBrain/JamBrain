@@ -1,9 +1,10 @@
 <?php
 require_once __DIR__ . "/../../lib.php";
 
-user_start();		// Retrieve Session //
-
 $response = api_newResponse();
+
+// Retrieve Session, store UID
+user_start();
 $response['uid'] = user_getId();
 
 session_unset();	// Remove Session Variables //

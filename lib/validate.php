@@ -1,10 +1,12 @@
 <?php
+require_once __DIR__ . "/external/wordpress/wp_validate.php";
 
-// Validate Things. //
+// Validate and Sanitize Things. //
 
 
 // Given a URL, returns a valid (escaped) URL, or false if it's bad. //
-function validate_url($url) {
+//function validate_url($url) {
+function sanitize_url($url) {
 	// Step 0. Confirm that the input is UTF-8 encoded.
 	if ( !mb_check_encoding($url, 'UTF-8') ) {
 		// ERROR: Expected URL in UTF-8 encoding.
@@ -77,8 +79,19 @@ function validate_url($url) {
 }
 
 // TODO: this
-function validate_email($mail) {
+function sanitize_email($mail) {
+	$mail = trim($mail);
+	
+	if ( !filter_var($mail, FILTER_VALIDATE_EMAIL) ) {
+		return false;
+	}
+	
 	return $mail;
+}
+
+// TODO: this
+function sanitize_slug($name) {
+	return wp_sanitize_title_with_dashes($name);
 }
 
 ?>
