@@ -91,7 +91,7 @@ echo '<br />';
 echo '<br />';
 
 
-$str2 = htmlspecialchars("http://ludumdare.com/EAT MY PHAT D[LK",ENT_QUOTES);
+$str2 = htmlspecialchars("http://ludumdare.com/EAT ME ]ZHVWOOOT[",ENT_QUOTES);
 
 echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_url($str2);
 
