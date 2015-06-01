@@ -16,16 +16,27 @@ if ( $response['uid'] !== 0 ) {
 	$response['uid'] = 0;
 }
 
+// Generic Error Function for everything (so to not offer any hints if abusing)
+function my_loginError() {
+	api_emitErrorAndExit(400,"BAD LOGIN");
+}
+
 // Check the APCU cache if access attempts for this IP address is > 5, deny access.
 
 // On failure, increase the access attempt (APCU). Timeout in 5 minutes. Log attempt.
 
 
 // Get login and password from $_POST //
-//$login = $_POST['l'];
-//$password = $_POST['p'];
-$login = trim($_REQUEST['l']);
-$password = trim($_REQUEST['p']);
+if ( isset($_REQUEST['l']) && isset($_REQUEST['p']) ) {
+//if ( isset($_POST['l']) && isset($_POST['p']) ) {
+//	$login = $_POST['l'];
+//	$password = $_POST['p'];
+	$login = trim($_REQUEST['l']);
+	$password = trim($_REQUEST['p']);
+}
+else {
+	my_loginError();
+}
 
 // Sanitize the data
 $mail = sanitize_email($login);
@@ -36,8 +47,12 @@ if ( !$mail ) {
 	}
 }
 
-$response['mail'] = $mail;
-$response['login'] = $login;
+if ( $mail ) {
+	$response['mail'] = $mail;
+}
+else {
+	$response['login'] = $login;
+}
 $response['pw'] = $password;
 
 

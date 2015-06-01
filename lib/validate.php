@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . "/external/wordpress/wp_validate.php";
 
 // Validate and Sanitize Things. //
 
@@ -78,9 +77,8 @@ function sanitize_url($url) {
 	return $url;
 }
 
-// TODO: this
 function sanitize_email($mail) {
-	$mail = trim($mail);
+	$mail = trim(strip_tags($mail));
 	
 	if ( !filter_var($mail, FILTER_VALIDATE_EMAIL) ) {
 		return false;
@@ -89,9 +87,19 @@ function sanitize_email($mail) {
 	return $mail;
 }
 
-// TODO: this
-function sanitize_slug($name) {
-	return wp_sanitize_title_with_dashes($name);
+function sanitize_slug($slug) {
+	$slug = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $slug);
+	$slug = strip_tags($slug);
+	$slug = strtolower($slug);
+	$slug = preg_replace("/[^a-z0-9\/_|'. -]/", '', $slug);
+	$slug = preg_replace("/[\/_| -'.]+/", '-', $slug);
+	$slug = trim($slug, '-');
+	
+	if ( empty($slug) ) {
+		return false;
+	}
+		
+	return $slug;
 }
 
 ?>
