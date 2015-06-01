@@ -46,42 +46,48 @@ if ( $response['item'] === 0 ) {
 user_start();
 $response['uid'] = user_getId();
 
-// Store IP
-$response['ip'] = $_SERVER['REMOTE_ADDR'];
-
-
+// Store IP if not logged in (That way, we don't store uniques if you change IPs)
 if ( $response['uid'] === 0 ) {
-	// <3 By IP Address //
+	$response['ip'] = $_SERVER['REMOTE_ADDR'];
 }
 else {
-	// <3 By UID //
+	$response['ip'] = "0.0.0.0";
 }
+
+
+// Table
+$table_name = "cmw_love";
 
 // On Add Action, insert in to the database
 if ( $action[0] === 'add' ) {
-	// Connect to database
 	db_connect();
 
-	// if action == add
-	//    add/overwrite the like for id,user,ip
-	//    return success/failure
-	
-	$success = true;
+	db_query(
+		"INSERT IGNORE `" . $table_name . "` (".
+			"`node`,".
+			"`user`,".
+			"`ip`".
+		") ".
+		"VALUES (" .
+			$response['item'] . "," .
+			$response['uid'] . "," .
+			"INET_ATON('" . $response['ip'] . "')" .
+		");");
 
-	$response['success'] = $success;
+	$response['success'] = empty(db_affectedRows()) ? false : true;
 }
 // On Remove Action, remove from the database
 else if ( $action[0] === 'remove' ) {
-	// Connect to database
 	db_connect();
 
-	// if action == remove
-	//    remove like for id,user,ip
-	//    return success/failure
+	db_query( 
+		"DELETE FROM `" . $table_name . "` WHERE ".
+			"`node`=" . $response['item'] . " AND " .
+			"`user`=" . $response['uid'] . " AND " .
+			"`ip`=INET_ATON('" . $response['ip'] . "')" .
+		";");
 
-	$success = true;
-
-	$response['success'] = $success;
+	$response['success'] = empty(db_affectedRows()) ? false : true;
 }
 else {
 	api_emitJSON(api_newError());

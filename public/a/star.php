@@ -77,6 +77,10 @@ else if ( $action[0] === 'remove' ) {
 
 	$response['success'] = empty(db_affectedRows()) ? false : true;
 }
+else {
+	api_emitJSON(api_newError());
+	exit();
+}
 
 api_emitJSON($response);
 ?>
