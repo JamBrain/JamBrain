@@ -175,5 +175,14 @@ else {
 	api_emitErrorAndExit();
 }
 
+// Result optimization: Remove UID or IP if zero.
+if ( $response['uid'] === 0 ) {
+	unset($response['uid']);
+}
+else {
+	unset($response['ip']);
+}
+
+// Done. Output the response.
 api_emitJSON($response);
 ?>

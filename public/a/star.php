@@ -125,5 +125,6 @@ else {
 	api_emitErrorAndExit();
 }
 
+// Done. Output the response.
 api_emitJSON($response);
 ?>
