@@ -14,15 +14,7 @@ $arg = api_parseActionURL();
 $action = array_shift($arg);
 $arg_count = count($arg);
 
-// Default action
-if ( empty($action) ) {
-	$action = 'login';
-}
 
-// Generic Error Function for everything (so to not offer any hints if abusing)
-function my_loginError() {
-	api_emitErrorAndExit(400,"BAD LOGIN");
-}
 function my_logout() {
 	session_unset();	// Remove Session Variables //
 	session_destroy();	// Destroy the Session //	
@@ -37,6 +29,11 @@ if ( $arg_count > 1 ) {
 
 // On 'login' Action, attempt to log-in given POST data.
 if ( $action === 'login' ) {
+	// Generic Error Function for everything (so to not offer any hints if abusing)
+	function my_loginError() {
+		api_emitErrorAndExit(400,"BAD LOGIN");
+	}
+
 	// Bail if not an HTTP POST
 //	if ( $_SERVER['REQUEST_METHOD'] !== 'POST' ) {
 //		my_loginError();
@@ -45,6 +42,7 @@ if ( $action === 'login' ) {
 	// If already logged in, dispose of the active session.
 	if ( $response['uid'] !== 0 ) {
 		my_logout();		// Destroy Session
+		
 		user_start();		// New Session!
 		$response['uid'] = user_getId();
 	}
@@ -120,16 +118,26 @@ else if ( $action === 'register' ) {
 else if ( $action === 'verify' ) {	
 	// Verify a previously added user given a verification URL.
 }
+else if ( $action === 'resend' ) {	
+	// Resend verification e-mail.
+}
+else if ( $action === 'lost-password' ) {	
+	// Send a password recovery e-mail.
+}
+else if ( $action === 'verify-user' ) {	
+	// *** Admin Only *** //
+	// Verify a user.
+}
+else if ( $action === 'delete-user' ) {	
+	// *** Admin Only *** //
+	// Remove a user.
+}
 else if ( $action === 'purge-retry-cache' ) {	
 	// *** Admin Only *** //
 	// Clear the Login retries cache of a specific user.
 }
-else if ( $action === 'verify-user' ) {	
-	// *** Admin Only *** //
-	// Explicitly verify a user.
-}
 else {
-	my_loginError();
+	api_emitErrorAndExit();
 }
 
 // Done. Output the response.
