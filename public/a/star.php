@@ -16,6 +16,8 @@ require_once __DIR__ . "/../../db.php";
 //   exploit, but it ensure that opinions of users are worth more than anyonymous people.
 // To be clear: Scoring here is a sorting score, not a rating. It's how we decide to prioritize.
 
+// Retrieve action //
+$action = api_parseActionURL();
 
 // Retrieve session
 user_start();
@@ -29,7 +31,7 @@ if ( $uid === 0 ) {
 	exit();
 }
 
-if ( isset($_GET['add']) ) {
+if ( $action[0] === 'add' ) {
 	// Connect to database
 	db_connect();
 	$response['uid'] = $uid;
@@ -42,7 +44,7 @@ if ( isset($_GET['add']) ) {
 
 	$response['add'] = $success;
 }
-else if ( isset($_GET['remove']) ) {
+else if ( $action[0] === 'remove' ) {
 	// Connect to database
 	db_connect();
 	$response['uid'] = $uid;

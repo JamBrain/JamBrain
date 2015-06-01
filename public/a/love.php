@@ -22,6 +22,8 @@ require_once __DIR__ . "/../../db.php";
 //   This will be called "Magic".
 // To be clear: Scoring here is a sorting score, not a rating. It's how we decide to prioritize.
 
+// Retrieve action //
+$action = api_parseActionURL();
 
 // Retrieve session
 user_start();
@@ -37,7 +39,7 @@ else {
 	// <3 By UID //
 }
 
-if ( isset($_GET['add']) ) {
+if ( $action[0] === 'add' ) {
 	// Connect to database
 	db_connect();
 
@@ -49,7 +51,7 @@ if ( isset($_GET['add']) ) {
 
 	$response['add'] = $success;
 }
-else if ( isset($_GET['remove']) ) {
+else if ( $action[0] === 'remove' ) {
 	// Connect to database
 	db_connect();
 
