@@ -43,11 +43,15 @@ else if ( $arg_count === 1 ) {
 	if ( $action === 'uid' ) {
 		$response['uid'] = intval($arg[0]);
 	}
-	else if ( $action === 'remove' || $action === 'uid' ) {
-		$response['item'] = intval($arg[0]);
-	}
 	else if ( $action === 'me' ) {
 		$offset = intval($arg[0]);
+	}
+	else if ( $action === 'add' || $action === 'remove' ) {
+		$response['item'] = intval($arg[0]);
+		
+		if ( $response['item'] === 0 ) {
+			api_emitErrorAndExit(); 
+		}
 	}
 	else { 
 		api_emitErrorAndExit(); 
@@ -77,7 +81,7 @@ if ( $response['uid'] === 0 ) {
 $table_name = "cmw_star";
 
 // On 'add' Action, insert in to the database
-if ( $action[0] === 'add' ) {
+if ( $action === 'add' ) {
 	db_connect();
 	
 	db_query( 
