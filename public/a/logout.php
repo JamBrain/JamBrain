@@ -3,7 +3,7 @@ require_once __DIR__ . "/../../lib.php";
 
 user_start();		// Retrieve Session //
 
-$response = array();
+$response = [];
 $response['uid'] = user_getId();
 
 session_unset();	// Remove Session Variables //

@@ -30,5 +30,11 @@ if ( $uid === 0 ) {
 	// Password Failed //
 //}
 
+
+// ** Successfully Logged in ** //
+// Retrieve my info //
+
+// Retrieve my list of Favourites, and a list of most recent posts I've loved. //
+
 api_emitJSON($response);
 ?>
