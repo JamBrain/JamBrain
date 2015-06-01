@@ -51,6 +51,7 @@ function api_newError( $code = 400, $msg = 'ERROR' ) {
 	return array( 'status' => $msg );
 }
 
+
 // Finally, at the bottom of your API program, emit the 
 function api_emitJSON( $out ) {
 	// By default, PHP will make '/' slashes in to '\/'. These flags fix that //
@@ -93,6 +94,12 @@ function api_emitJSON( $out ) {
 	// Output the Page //
 	header('Content-Type: application/json');
 	echo $prefix . str_replace('</', '<\/', json_encode($out,$out_format)) . $suffix;
+}
+
+// All-In-One failure function for APIs //
+function api_emitErrorAndExit( $code = 400, $msg = 'ERROR' ) {
+	api_emitJSON(api_newError($code,$msg));
+	exit;
 }
 
 ?>

@@ -67,20 +67,48 @@ function db_query($query,$ignore_errors=false) {
 function db_fetch($query) {
 	global $db;
 	$result = $db->query($query);
-	return $result->fetch_array(MYSQLI_ASSOC);
+	$rows = [];
+	while ( $row = $result->mysql_fetch_assoc() ) {
+		$rows[] = $row;
+	};
+	return $rows;
+	//return $result->fetch_array(MYSQLI_ASSOC);
 }
 
 // Unsafe "run any fetch query" function. Returns a Numeric Array. //
 function db_fetchArray($query) {
 	global $db;
 	$result = $db->query($query);
-	return $result->fetch_array(MYSQLI_NUM);
+	$rows = [];
+	while ( $row = $result->fetch_row() ) {
+		$rows[] = $row;
+	}
+	return $rows;
+	//return $result->fetch_array(MYSQLI_NUM);
+}
+
+// Unsafe "run any fetch query" function. Returns a Numeric Array. //
+function db_fetchSingle($query) {
+	global $db;
+
+	$result = $db->query($query);
+	$rows = [];
+	while ( $row = $result->fetch_row()[0] ) {
+		$rows[] = $row;
+	}
+
+	return $rows;
 }
 
 
 function db_affectedRows() {
 	global $db;
 	return $db->affected_rows;
+}
+
+function db_numRows() {
+	global $db;
+	return $db->num_rows;
 }
 
 ?>

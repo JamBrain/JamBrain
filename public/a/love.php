@@ -89,6 +89,18 @@ else if ( $action[0] === 'remove' ) {
 
 	$response['success'] = empty(db_affectedRows()) ? false : true;
 }
+//else if ( $action[0] === 'me' ) {
+//	db_connect();
+//
+//	db_query( 
+//		"SELECT FROM `" . $table_name . "` WHERE ".
+//			"`node`=" . $response['item'] . " AND " .
+//			"`user`=" . $response['uid'] . " AND " .
+//			"`ip`=INET_ATON('" . $response['ip'] . "')" .
+//		";");
+//
+//	$response['success'] = empty(db_numRows()) ? false : true;	
+//}
 else {
 	api_emitJSON(api_newError());
 	exit();
