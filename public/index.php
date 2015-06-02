@@ -1,4 +1,9 @@
 <?php 
+require_once __DIR__ . "/../db.php";
+require_once __DIR__ . "/../lib.php";
+require_once __DIR__ . "/../lib/validate.php";
+
+user_start();
 header("Content-Type: text/html; charset=utf-8"); 
 ?>
 
@@ -11,12 +16,6 @@ header("Content-Type: text/html; charset=utf-8");
 
 <body>
 
-<?php
-require_once __DIR__ . "/../db.php";
-require_once __DIR__ . "/../lib.php";
-require_once __DIR__ . "/../lib/validate.php";
-
-?>
 So. It has come to this...<br />
 <br />
 <?php
@@ -33,8 +32,6 @@ else {
 apcu_store( "Hamburg", $berg );
 
 echo "Mr Berg: " . $berg . "<br />";
-
-user_start();
 
 if ( user_getId() === 0 ) {
 	user_setId( 200 );
