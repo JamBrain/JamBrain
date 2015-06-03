@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/../../lib.php";
+require_once __DIR__ . "/../../api.php";
 require_once __DIR__ . "/../../core/love.php";
 
 // Love is Likes. If you like something, you give it a Love.

@@ -22,11 +22,11 @@ function user_start() {
 
 function user_end() {
 	global $__user_session_started;
-	if ( !isset($__user_session_started) ) {
+	if ( isset($__user_session_started) ) {
 		session_unset();	// Remove Session Variables //
 		session_destroy();	// Destroy the Session //
 
-		$__user_session_started = true;
+		$__user_session_started = false;
 	}		
 }
 

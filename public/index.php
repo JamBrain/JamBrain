@@ -1,7 +1,7 @@
 <?php 
 require_once __DIR__ . "/../db.php";
-require_once __DIR__ . "/../lib.php";
-require_once __DIR__ . "/../lib/validate.php";
+require_once __DIR__ . "/../html.php";
+require_once __DIR__ . "/../core/lib/validate.php";
 
 user_start();
 header("Content-Type: text/html; charset=utf-8"); 

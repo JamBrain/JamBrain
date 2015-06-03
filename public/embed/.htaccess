@@ -1,0 +1,18 @@
+RewriteEngine on
+RewriteBase /embed/
+
+# TODO: Rewrite this so all requests are fed to index.php
+
+# Append .php to URL #
+RewriteCond %{REQUEST_FILENAME} !\.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)(.*)$ $1.php$2 [QSA,L]
+
+# If file exists (including PHP) then we are done #
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule . - [END]
+
+# Bad URLs #
+RewriteRule . /embed/index.php [QSA,END]
+DirectoryIndex /embed/index.php

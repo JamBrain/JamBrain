@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . "/../config.php";
+include_once __DIR__ . "/../../config.php";
 
 // Support library for web APIs (emitting JSON) //
 

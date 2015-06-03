@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/../../lib/api.php";
+require_once __DIR__ . "/../../api.php";
 
 // CMW API //
 

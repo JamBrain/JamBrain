@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . "/../../lib.php";
+require_once __DIR__ . "/../../api.php";
 require_once __DIR__ . "/../../db.php";
-require_once __DIR__ . "/../../lib/validate.php";
+require_once __DIR__ . "/../../core/lib/validate.php";
 
 $response = api_newResponse();
 
