@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . "/../../lib.php";
-//require_once __DIR__ . "/../../db.php";
 require_once __DIR__ . "/../../core/love.php";
 
 // Love is Likes. If you like something, you give it a Love.
@@ -127,55 +126,17 @@ else {
 }
 
 
-// Table
-$table_name = "cmw_love";
-
 // On 'add' Action, insert in to the database
 if ( $action === 'add' ) {
-/*	db_connect();
-
-	db_query(
-		"INSERT IGNORE `" . $table_name . "` (".
-			"`node`,".
-			"`user`,".
-			"`ip`".
-		") ".
-		"VALUES (" .
-			$response['item'] . "," .
-			$response['uid'] . "," .
-			"INET_ATON('" . $response['ip'] . "')" .
-		");");*/
-
 	$response['success'] = love_add($response['item'],$response['uid'],$response['ip']);
-
-//	$response['success'] = empty(db_affectedRows()) ? false : true;
 }
 // On 'remove' Action, remove from the database
 else if ( $action[0] === 'remove' ) {
-/*	db_connect();
-
-	db_query( 
-		"DELETE FROM `" . $table_name . "` WHERE ".
-			"`node`=" . $response['item'] . " AND " .
-			"`user`=" . $response['uid'] . " AND " .
-			"`ip`=INET_ATON('" . $response['ip'] . "')" .
-		";");*/
 	$response['success'] = love_remove($response['item'],$response['uid'],$response['ip']);
-
-//	$response['success'] = empty(db_affectedRows()) ? false : true;
 }
 else if ( $action === 'me' || $action === 'uid' || $action === 'ip' ) {
-//	db_connect();
-//
-//	$response['result'] = db_fetchSingle( 
-//		"SELECT `node` FROM `" . $table_name . "` WHERE ".
-//			"`user`=" . $response['uid'] . " AND " .
-//			"`ip`=INET_ATON('" . $response['ip'] . "') " .
-//		"LIMIT " . $limit . " OFFSET " . $offset . ";");
-
 	$response['result'] = love_fetch( $response['uid'], $response['ip'], $offset, $limit );
-
-	$response['success'] = true;	
+//	$response['success'] = true;	
 }
 else {
 	api_emitErrorAndExit();
