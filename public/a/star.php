@@ -18,14 +18,14 @@ require_once __DIR__ . "/../../core/star.php";
 
 // TODO: Limit access to certain data to user level
 
-$response = api_newResponse();
+$response = api_NewResponse();
 
 // Retrieve session, store UID
-user_start();
-$response['uid'] = user_getId();
+user_StartSession();
+$response['uid'] = user_GetId();
 
 // Retrieve Action and Arguments
-$arg = api_parseActionURL();
+$arg = api_ParseActionURL();
 $action = array_shift($arg);
 $arg_count = count($arg);
 
@@ -38,7 +38,7 @@ if ( $arg_count === 0 ) {
 		// do nothing //
 	}
 	else { 
-		api_emitErrorAndExit(); 
+		api_EmitErrorAndExit(); 
 	}
 }
 else if ( $arg_count === 1 ) {
@@ -52,11 +52,11 @@ else if ( $arg_count === 1 ) {
 		$response['item'] = intval($arg[0]);
 		
 		if ( $response['item'] === 0 ) {
-			api_emitErrorAndExit(); 
+			api_EmitErrorAndExit(); 
 		}
 	}
 	else { 
-		api_emitErrorAndExit(); 
+		api_EmitErrorAndExit(); 
 	}
 }
 else if ( $arg_count === 2 ) {
@@ -65,36 +65,36 @@ else if ( $arg_count === 2 ) {
 		$offset = abs(intval($arg[1]));
 	}
 	else { 
-		api_emitErrorAndExit(); 
+		api_EmitErrorAndExit(); 
 	}
 }
 else {
-	api_emitErrorAndExit();
+	api_EmitErrorAndExit();
 }
 
 
 // If no UID specified, exit
 if ( $response['uid'] === 0 ) {
-	api_emitErrorAndExit();
+	api_EmitErrorAndExit();
 }
 
 
 // On 'add' Action, insert in to the database
 if ( $action === 'add' ) {
-	$response['success'] = star_add($response['item'],$response['uid']);
+	$response['success'] = star_Add($response['item'],$response['uid']);
 }
 // On 'remove' Action, remove from the database
 else if ( $action === 'remove' ) {
-	$response['success'] = star_remove($response['item'],$response['uid']);
+	$response['success'] = star_Remove($response['item'],$response['uid']);
 }
 // On 'uid' or 'me' Action, get a list of favourites 
 else if ( $action === 'me' || $action === 'uid' ) {
-	$response['result'] = star_fetch( $response['uid'], $offset, $limit );
+	$response['result'] = star_Fetch( $response['uid'], $offset, $limit );
 }
 else {
-	api_emitErrorAndExit();
+	api_EmitErrorAndExit();
 }
 
 // Done. Output the response.
-api_emitJSON($response);
+api_EmitJSON($response);
 ?>

@@ -4,33 +4,33 @@
 $db = null;
 
 // Logging function specific to database operations //
-function db_log( $msg ) {
+function db_Log( $msg ) {
 	error_log( "CMW DB ERROR: " . $msg );
 	echo "<strong>CMW DB ERROR:</strong> " . $msg . "<br />";
 }
 
 // Check database config //
 if ( !isset($cfg_db_host) ) {
-	db_log( "No database host name set." );
+	db_Log( "No database host name set." );
 }
 if ( !isset($cfg_db_name) ) {
-	db_log( "No database name set." );
+	db_Log( "No database name set." );
 }
 if ( !isset($cfg_db_login) ) {
-	db_log( "No database login set." );
+	db_Log( "No database login set." );
 }
 if ( !isset($cfg_db_password) ) {
-	db_log( "No database password set." );
+	db_Log( "No database password set." );
 }
 
 // Are we connected and ready to use the Database? //
-function db_isConnected() {
+function db_IsConnected() {
 	global $db;
 	return isset($db);
 }
 // Connect to the Database - Pass true if you don't want to log an error if already connected //
-function db_connect(/*$no_log=false*/) {
-	if ( !db_isConnected() ) {
+function db_Connect(/*$no_log=false*/) {
+	if ( !db_IsConnected() ) {
 		global $db;
 
 		global $cfg_db_host;
@@ -58,13 +58,13 @@ function db_connect(/*$no_log=false*/) {
 }
 
 // Unsafe "run any query" function. Queries don't return results. Use db_fetch instead. //
-function db_query($query,$ignore_errors=false) {
+function db_Query($query,$ignore_errors=false) {
 	global $db;
 	return $db->query($query) or $ignore_errors or die(mysqli_error($db)."\n");
 }
 
 // Unsafe "run any fetch query" function. Returns an Associative Array. //
-function db_fetch($query) {
+function db_Fetch($query) {
 	global $db;
 	$result = $db->query($query);
 	$rows = [];
@@ -76,7 +76,7 @@ function db_fetch($query) {
 }
 
 // Unsafe "run any fetch query" function. Returns a Numeric Array. //
-function db_fetchArray($query) {
+function db_FetchArray($query) {
 	global $db;
 	$result = $db->query($query);
 	$rows = [];
@@ -88,7 +88,7 @@ function db_fetchArray($query) {
 }
 
 // Unsafe "run any fetch query" function. Returns a Numeric Array. //
-function db_fetchSingle($query) {
+function db_FetchSingle($query) {
 	global $db;
 
 	$result = $db->query($query);
@@ -101,12 +101,12 @@ function db_fetchSingle($query) {
 }
 
 
-function db_affectedRows() {
+function db_AffectedRows() {
 	global $db;
 	return $db->affected_rows;
 }
 
-function db_numRows() {
+function db_NumRows() {
 	global $db;
 	return $db->num_rows;
 }

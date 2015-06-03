@@ -14,13 +14,13 @@ $urlhash_salt = 'This SALT will be used to hash Ludum Dare URLs... I guess';
 $urlhash_Hashids = new Hashids\Hashids($urlhash_salt);
 
 // Given a number, do a YouTube style encode as a string //
-function urlhash_encode( $in ) {
+function urlhash_Encode( $in ) {
 	global $urlhash_Hashids;
 	return $urlhash_Hashids->encode($in);
 }
 
 // Given a string, do a YouTube style decode in to a number //
-function urlhash_decode( $in ) {
+function urlhash_Decode( $in ) {
 	global $urlhash_Hashids;
 	return $urlhash_Hashids->decode($in)[0];	// NOTE: always returns an array
 }

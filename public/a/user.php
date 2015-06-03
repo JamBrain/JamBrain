@@ -6,8 +6,8 @@ require_once __DIR__ . "/../../core/lib/validate.php";
 $response = api_newResponse();
 
 // Retrieve Session, store UID
-user_start();
-$response['uid'] = user_getId();
+user_StartSession();
+$response['uid'] = user_GetId();
 
 // Retrieve Action and Arguments
 $arg = api_parseActionURL();
@@ -35,10 +35,10 @@ if ( $action === 'login' ) {
 	
 	// If already logged in, dispose of the active session.
 	if ( $response['uid'] !== 0 ) {
-		user_end();			// Destroy Session
+		user_EndSession();		// Destroy Session
 		
-		user_start();		// New Session!
-		$response['uid'] = user_getId();
+		user_StartSession();	// New Session!
+		$response['uid'] = user_GetId();
 	}
 		
 	// Check the APCU cache if access attempts for this IP address is > 5, deny access.
@@ -59,9 +59,9 @@ if ( $action === 'login' ) {
 	}
 	
 	// Sanitize the data
-	$mail = sanitize_email($login);
+	$mail = sanitize_Email($login);
 	if ( !$mail ) {
-		$login = sanitize_slug($login);
+		$login = sanitize_Slug($login);
 		if ( !$login ) {
 			my_loginError();
 		}
@@ -104,7 +104,7 @@ if ( $action === 'login' ) {
 }
 // On 'logout' action, Destroy the Session
 else if ( $action === 'logout' ) {
-	user_end();			// Destroy session
+	user_EndSession();		// Destroy session
 }
 else if ( $action === 'register' ) {
 	// Add a user (if legal), send a verification e-mail.

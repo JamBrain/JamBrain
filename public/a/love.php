@@ -24,11 +24,11 @@ require_once __DIR__ . "/../../core/love.php";
 
 // TODO: Limit access to certain data to user level
 
-$response = api_newResponse();
+$response = api_NewResponse();
 
 // Retrieve session, store UID
-user_start();
-$response['uid'] = user_getId();
+user_StartSession();
+$response['uid'] = user_GetId();
 
 // Store IP if no UID set (That way, we don't store uniques if you change IPs)
 if ( $response['uid'] === 0 ) {
@@ -39,7 +39,7 @@ else {
 }
 
 // Retrieve Action and Arguments
-$arg = api_parseActionURL();
+$arg = api_ParseActionURL();
 $action = array_shift($arg);
 $arg_count = count($arg);
 
@@ -52,7 +52,7 @@ if ( $arg_count === 0 ) {
 		// do nothing //
 	}
 	else { 
-		api_emitErrorAndExit(); 
+		api_EmitErrorAndExit(); 
 	}
 }
 else if ( $arg_count === 1 ) {
@@ -61,7 +61,7 @@ else if ( $arg_count === 1 ) {
 		
 		// Even though this will work, UID=0 should be an error
 		if ( $response['uid'] === 0 ) {
-			api_emitErrorAndExit();
+			api_EmitErrorAndExit();
 		}
 	}
 	else if ( $action === 'ip' ) {
@@ -71,11 +71,11 @@ else if ( $arg_count === 1 ) {
 			
 			// Even though this will work, IP=0.0.0.0 should be an error
 			if ( ip2long($response['ip']) === 0 ) {
-				api_emitErrorAndExit();
+				api_EmitErrorAndExit();
 			}
 		}
 		else {
-			api_emitErrorAndExit();
+			api_EmitErrorAndExit();
 		}
 	}
 	else if ( $action === 'me' ) {
@@ -85,11 +85,11 @@ else if ( $arg_count === 1 ) {
 		$response['item'] = intval($arg[0]);
 		
 		if ( $response['item'] === 0 ) {
-			api_emitErrorAndExit();
+			api_EmitErrorAndExit();
 		}
 	}
 	else { 
-		api_emitErrorAndExit(); 
+		api_EmitErrorAndExit(); 
 	}
 }
 else if ( $arg_count === 2 ) {
@@ -99,7 +99,7 @@ else if ( $arg_count === 2 ) {
 
 		// Even though this will work, UID=0 should be an error
 		if ( $response['uid'] === 0 ) {
-			api_emitErrorAndExit();
+			api_EmitErrorAndExit();
 		}
 	}
 	else if ( $action === 'ip' ) {
@@ -110,35 +110,35 @@ else if ( $arg_count === 2 ) {
 
 			// Even though this will work, IP=0.0.0.0 should be an error
 			if ( ip2long($response['ip']) === 0 ) {
-				api_emitErrorAndExit();
+				api_EmitErrorAndExit();
 			}
 		}
 		else {
-			api_emitErrorAndExit();
+			api_EmitErrorAndExit();
 		}
 	}
 	else { 
-		api_emitErrorAndExit();
+		api_EmitErrorAndExit();
 	}
 }
 else {
-	api_emitErrorAndExit();
+	api_EmitErrorAndExit();
 }
 
 
 // On 'add' Action, insert in to the database
 if ( $action === 'add' ) {
-	$response['success'] = love_add($response['item'],$response['uid'],$response['ip']);
+	$response['success'] = love_Add($response['item'],$response['uid'],$response['ip']);
 }
 // On 'remove' Action, remove from the database
-else if ( $action[0] === 'remove' ) {
-	$response['success'] = love_remove($response['item'],$response['uid'],$response['ip']);
+else if ( $action === 'remove' ) {
+	$response['success'] = love_Remove($response['item'],$response['uid'],$response['ip']);
 }
 else if ( $action === 'me' || $action === 'uid' || $action === 'ip' ) {
-	$response['result'] = love_fetch( $response['uid'], $response['ip'], $offset, $limit );
+	$response['result'] = love_Fetch( $response['uid'], $response['ip'], $offset, $limit );
 }
 else {
-	api_emitErrorAndExit();
+	api_EmitErrorAndExit();
 }
 
 // Result optimization: Remove UID or IP if zero.
@@ -150,5 +150,5 @@ else {
 }
 
 // Done. Output the response.
-api_emitJSON($response);
+api_EmitJSON($response);
 ?>

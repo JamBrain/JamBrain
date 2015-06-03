@@ -7,7 +7,7 @@
 
 // Given a URL, returns a valid (escaped) URL, or false if it's bad. //
 //function validate_url($url) {
-function sanitize_url($url) {
+function sanitize_Url($url) {
 	// Step 0. Confirm that the input is UTF-8 encoded.
 	if ( !mb_check_encoding($url, 'UTF-8') ) {
 		// ERROR: Expected URL in UTF-8 encoding.
@@ -79,7 +79,7 @@ function sanitize_url($url) {
 	return $url;
 }
 
-function sanitize_email($mail) {
+function sanitize_Email($mail) {
 	$mail = trim(strip_tags($mail));
 	
 	if ( !filter_var($mail, FILTER_VALIDATE_EMAIL) ) {
@@ -89,7 +89,7 @@ function sanitize_email($mail) {
 	return $mail;
 }
 
-function sanitize_slug($slug) {
+function sanitize_Slug($slug) {
 	$slug = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $slug);	// Remove accents
 	$slug = strip_tags($slug);									// No HTML/XML tags
 	$slug = strtolower($slug);									// Lower case only

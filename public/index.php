@@ -2,7 +2,7 @@
 require_once __DIR__ . "/../html.php";
 require_once __DIR__ . "/../core/lib/validate.php";
 
-user_start();
+user_StartSession();
 header("Content-Type: text/html; charset=utf-8"); 
 ?>
 
@@ -81,7 +81,7 @@ echo '<br />';
 
 $str2 = htmlspecialchars($str,ENT_QUOTES);
 
-echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_url($str2);
+echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_Url($str2);
 
 echo '<br />';
 echo '<br />';
@@ -89,7 +89,7 @@ echo '<br />';
 
 $str2 = htmlspecialchars("http://ludumdare.com/EAT ME ]ZHVWOOOT[",ENT_QUOTES);
 
-echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_url($str2);
+echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_Url($str2);
 
 echo '<br />';
 echo '<br />';
@@ -97,7 +97,7 @@ echo '<br />';
 
 $str2 = htmlspecialchars("gozer://google.com/shempy",ENT_QUOTES);
 
-echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_url($str2);
+echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_Url($str2);
 
 ?>
 
