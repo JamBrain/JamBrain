@@ -14,10 +14,20 @@ function user_start() {
 	if ( !isset($__user_session_started) ) {
 		//session_set_cookie_params(60);
 		
-		session_start();
+		session_start();	// Start Session //
 		
 		$__user_session_started = true;
 	}
+}
+
+function user_end() {
+	global $__user_session_started;
+	if ( !isset($__user_session_started) ) {
+		session_unset();	// Remove Session Variables //
+		session_destroy();	// Destroy the Session //
+
+		$__user_session_started = true;
+	}		
 }
 
 function user_getId() {

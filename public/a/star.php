@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/../../lib.php";
+require_once __DIR__ . "/../../api.php";
 require_once __DIR__ . "/../../db.php";
 
 // Stars are Favourites or Bookmarks. If you want to remember/save something, you Star it.

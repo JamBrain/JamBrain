@@ -15,12 +15,6 @@ $action = array_shift($arg);
 $arg_count = count($arg);
 
 
-function my_logout() {
-	session_unset();	// Remove Session Variables //
-	session_destroy();	// Destroy the Session //	
-}
-
-
 // Confirm we have a legal number of arguments
 if ( $arg_count > 1 ) {
 	my_loginError();
@@ -41,7 +35,7 @@ if ( $action === 'login' ) {
 	
 	// If already logged in, dispose of the active session.
 	if ( $response['uid'] !== 0 ) {
-		my_logout();		// Destroy Session
+		user_end();			// Destroy Session
 		
 		user_start();		// New Session!
 		$response['uid'] = user_getId();
@@ -110,7 +104,7 @@ if ( $action === 'login' ) {
 }
 // On 'logout' action, Destroy the Session
 else if ( $action === 'logout' ) {
-	my_logout();
+	user_end();			// Destroy session
 }
 else if ( $action === 'register' ) {
 	// Add a user (if legal), send a verification e-mail.
