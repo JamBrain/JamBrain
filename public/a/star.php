@@ -79,54 +79,17 @@ if ( $response['uid'] === 0 ) {
 }
 
 
-// Table
-//$table_name = "cmw_star";
-
 // On 'add' Action, insert in to the database
 if ( $action === 'add' ) {
-//	db_connect();
-//	
-//	db_query( 
-//		"INSERT IGNORE `" . $table_name . "` (".
-//			"`node`,".
-//			"`user`".
-//		") ".
-//		"VALUES (" .
-//			$response['item'] . "," .
-//			$response['uid'] .
-//		");");
-//
-//	$response['success'] = empty(db_affectedRows()) ? false : true;
-
 	$response['success'] = star_add($response['item'],$response['uid']);
 }
 // On 'remove' Action, remove from the database
 else if ( $action === 'remove' ) {
-//	db_connect();
-//
-//	db_query( 
-//		"DELETE FROM `" . $table_name . "` WHERE ".
-//			"`node`=" . $response['item'] . " AND " .
-//			"`user`=" . $response['uid'] .
-//		";");
-//
-//	$response['success'] = empty(db_affectedRows()) ? false : true;
-
 	$response['success'] = star_remove($response['item'],$response['uid']);
 }
 // On 'uid' or 'me' Action, get a list of favourites 
 else if ( $action === 'me' || $action === 'uid' ) {
-//	db_connect();
-//
-//	$response['result'] = db_fetchSingle( 
-//		"SELECT `node` FROM `" . $table_name . "` WHERE ".
-//			"`user`=" . $response['uid'] . " " .
-//		"LIMIT " . $limit . " OFFSET " . $offset . ";");
-//
-//	$response['success'] = true;	
-
 	$response['result'] = star_fetch( $response['uid'], $offset, $limit );
-//	$response['success'] = true;	
 }
 else {
 	api_emitErrorAndExit();

@@ -136,7 +136,6 @@ else if ( $action[0] === 'remove' ) {
 }
 else if ( $action === 'me' || $action === 'uid' || $action === 'ip' ) {
 	$response['result'] = love_fetch( $response['uid'], $response['ip'], $offset, $limit );
-//	$response['success'] = true;	
 }
 else {
 	api_emitErrorAndExit();
