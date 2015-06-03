@@ -1,5 +1,4 @@
 <?php 
-require_once __DIR__ . "/../db.php";
 require_once __DIR__ . "/../html.php";
 require_once __DIR__ . "/../core/lib/validate.php";
 
