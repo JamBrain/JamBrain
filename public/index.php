@@ -1,6 +1,7 @@
 <?php 
 require_once __DIR__ . "/../html.php";
 require_once __DIR__ . "/../core/lib/validate.php";
+require_once __DIR__ . "/../core/lib/emoji.php";
 
 user_StartSession();
 header("Content-Type: text/html; charset=utf-8"); 
@@ -10,7 +11,10 @@ header("Content-Type: text/html; charset=utf-8");
 
 <html lang="en">
 <head>
-  <meta charset="utf-8">
+	<meta charset="utf-8">
+<!--	<script src="//cdn.jsdelivr.net/emojione/1.3.0/lib/js/emojione.min.js"></script>-->
+	<script src="/static/emojione/emojione.js"></script>
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/emojione/1.3.0/assets/css/emojione.min.css" />
 </head>
 
 <body>
@@ -66,7 +70,31 @@ echo '<br />';
 const happypoo = '💩';
 
 
-echo happypoo . happypoo;
+echo emoji_ToShort(happypoo . happypoo . ":D You smell ") . happypoo;
+
+echo "<script>emojione.ascii = true;</script>";
+echo "<script>
+var MyAscii = {
+	'^_^':'1F49A',
+	'KeyWord':'1f636'
+};
+
+for(var Key in MyAscii) {
+	emojione.asciiList[Key] = MyAscii[Key];
+}
+
+var MyCode = {
+	':dpad:':['custom/dpad'],
+};
+
+for(var Key in MyCode) {
+	emojione.emojioneList[Key] = MyCode[Key];
+}
+</script>";
+
+echo "<div id='zork'></zork>";
+echo "<script>document.getElementById('zork').innerHTML = emojione.toImage(emojione.toShort(
+	'can you believe that there is 💩  everywhere! :D :| ^_^ :> :( KeyWord :dpad:'));</script>";
 
 echo '<br />';
 echo '<br />';
