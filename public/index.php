@@ -2,6 +2,7 @@
 require_once __DIR__ . "/../html.php";
 require_once __DIR__ . "/../core/lib/validate.php";
 require_once __DIR__ . "/../core/lib/emoji.php";
+require_once __DIR__ . "/../core/post.php";
 
 user_StartSession();
 header("Content-Type: text/html; charset=utf-8"); 
@@ -92,7 +93,7 @@ for(var Key in MyCode) {
 }
 </script>";
 
-echo "<div id='zork'></zork>";
+echo "<div id='zork'></div>";
 echo "<script>document.getElementById('zork').innerHTML = emojione.toImage(emojione.toShort(
 	'can you believe that there is 💩  everywhere! :D :| ^_^ :> :( KeyWord :dpad:'));</script>";
 
@@ -126,6 +127,35 @@ echo '<br />';
 $str2 = htmlspecialchars("gozer://google.com/shempy",ENT_QUOTES);
 
 echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_Url($str2);
+
+echo "<br>\n";
+echo "<br>\n";
+
+echo "<div>\n";
+echo post_Prepare("
+<h1>My Greatness!</h1>
+Let me tell you about how <strong>GREAT</strong> I am. It began in the <del>1960's</del> 1970's.<br>
+<br/>
+<br/>
+<p>Well, really that was it. <img src='tom.png'></p>
+noobs.
+get a job
+  now!
+
+```c++
+source code
+  saucy!!
+```
+
+<code>This HTML is da <b>REAL DEAL</b></code>
+
+* Lets eat
+  * I eat more
+  * he does
+* Oh my!
+");
+
+echo "</div>\n";
 
 ?>
 
