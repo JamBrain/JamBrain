@@ -131,8 +131,10 @@ echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_Url($str2);
 echo "<br>\n";
 echo "<br>\n";
 
-echo "<div>\n";
+echo "<div>";
 echo post_Prepare("
+
+
 <h1>My Greatness!</h1>
 Let me tell you about how <strong>GREAT</strong> I am. It began in the <del>1960's</del> 1970's.<br>
 <br/>
@@ -149,10 +151,18 @@ source code
 
 <code>This HTML is da <b>REAL DEAL</b></code>
 
+<code>
+int main(void) {
+	return 10;
+}
+</code>
+
 * Lets eat
   * I eat more
   * he does
 * Oh my!
+
+
 ");
 
 echo "</div>\n";
