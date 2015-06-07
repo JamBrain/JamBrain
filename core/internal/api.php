@@ -3,21 +3,27 @@ include_once __DIR__ . "/../../config.php";
 
 // Support library for web APIs (emitting JSON) //
 
-// http://stackoverflow.com/questions/3128062/is-this-safe-for-providing-jsonp
-function api_IsValidJSONPCallback($subject) {
+/**
+ *	Confirms if a string is a valid name for a JSONP callback.
+ *
+ *	http://stackoverflow.com/questions/3128062/is-this-safe-for-providing-jsonp
+ *
+ *	@param string $name Desired callback name
+**/
+function api_IsValidJSONPCallback($name) {
      $identifier_syntax
        = '/^[$_\p{L}][$_\p{L}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\x{200C}\x{200D}]*+$/u';
 
-     $reserved_words = array('break', 'do', 'instanceof', 'typeof', 'case',
+     $reserved_words = ['break', 'do', 'instanceof', 'typeof', 'case',
        'else', 'new', 'var', 'catch', 'finally', 'return', 'void', 'continue', 
        'for', 'switch', 'while', 'debugger', 'function', 'this', 'with', 
        'default', 'if', 'throw', 'delete', 'in', 'try', 'class', 'enum', 
        'extends', 'super', 'const', 'export', 'import', 'implements', 'let', 
        'private', 'public', 'yield', 'interface', 'package', 'protected', 
-       'static', 'null', 'true', 'false');
+       'static', 'null', 'true', 'false'];
 
-     return preg_match($identifier_syntax, $subject)
-         && ! in_array(mb_strtolower($subject, 'UTF-8'), $reserved_words);
+     return preg_match($identifier_syntax, $name)
+         && ! in_array(mb_strtolower($name, 'UTF-8'), $reserved_words);
 }
 
 // Get the API Action URL (single string with slashes) //
@@ -36,19 +42,19 @@ function api_ParseActionURL() {
 		return explode('/',ltrim(rtrim($_SERVER['PATH_INFO'],'/'),'/'));
 	}
 	else {
-		return array();
+		return [];
 	}
 }
 
 // At the top of an API program, use newResponse to create an array //
 function api_NewResponse( $msg = 'OK' ) {
-	return array('status' => $msg);
+	return ['status' => $msg];
 }
 
 // On error, overwrite your response with an error //
 function api_NewError( $code = 400, $msg = 'ERROR' ) {
 	http_response_code($code);
-	return array( 'status' => $msg );
+	return ['status' => $msg];
 }
 
 
@@ -78,7 +84,7 @@ function api_EmitJSON( $out ) {
 		
 	// Debug Info //
 	if ( !defined('CMW_NO_DEBUG') && isset($_GET['debug']) ) {
-		$out['debug'] = array();
+		$out['debug'] = [];
 		
 		if ( isset($_SERVER['PATH_INFO']) ) {
 			$out['debug']['url'] = $_SERVER['PATH_INFO'];
