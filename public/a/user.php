@@ -1,24 +1,18 @@
 <?php
-require_once __DIR__ . "/../../lib.php";
+require_once __DIR__ . "/../../api.php";
 require_once __DIR__ . "/../../db.php";
-require_once __DIR__ . "/../../lib/validate.php";
+require_once __DIR__ . "/../../core/internal/validate.php";
 
 $response = api_newResponse();
 
 // Retrieve Session, store UID
-user_start();
-$response['uid'] = user_getId();
+user_StartSession();
+$response['uid'] = user_GetId();
 
 // Retrieve Action and Arguments
 $arg = api_parseActionURL();
 $action = array_shift($arg);
 $arg_count = count($arg);
-
-
-function my_logout() {
-	session_unset();	// Remove Session Variables //
-	session_destroy();	// Destroy the Session //	
-}
 
 
 // Confirm we have a legal number of arguments
@@ -41,10 +35,10 @@ if ( $action === 'login' ) {
 	
 	// If already logged in, dispose of the active session.
 	if ( $response['uid'] !== 0 ) {
-		my_logout();		// Destroy Session
+		user_EndSession();		// Destroy Session
 		
-		user_start();		// New Session!
-		$response['uid'] = user_getId();
+		user_StartSession();	// New Session!
+		$response['uid'] = user_GetId();
 	}
 		
 	// Check the APCU cache if access attempts for this IP address is > 5, deny access.
@@ -65,9 +59,9 @@ if ( $action === 'login' ) {
 	}
 	
 	// Sanitize the data
-	$mail = sanitize_email($login);
+	$mail = sanitize_Email($login);
 	if ( !$mail ) {
-		$login = sanitize_slug($login);
+		$login = sanitize_Slug($login);
 		if ( !$login ) {
 			my_loginError();
 		}
@@ -110,7 +104,7 @@ if ( $action === 'login' ) {
 }
 // On 'logout' action, Destroy the Session
 else if ( $action === 'logout' ) {
-	my_logout();
+	user_EndSession();		// Destroy session
 }
 else if ( $action === 'register' ) {
 	// Add a user (if legal), send a verification e-mail.

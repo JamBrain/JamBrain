@@ -1,0 +1,79 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Possible Composer autoload paths.
+ */
+$paths = array(
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../autoload.php',
+);
+
+foreach ($paths as $path) {
+    if (file_exists($path)) {
+        include $path;
+        break;
+    }
+}
+
+/**
+ * Time to parse arguments...
+ */
+
+$arguments = $argv;
+array_shift($arguments);
+
+/**
+ * Let's re-index the arguments array.
+ */
+$arguments = array_values($arguments);
+
+$positional = array();
+
+$named = array(
+    'lt' => '%c.md',
+);
+
+for ($i = 0; $i < count($arguments); $i++) {
+    if (substr($arguments[$i], 0, 2) === '--') {
+        $named[substr($arguments[$i], 2)] = $arguments[$i + 1];
+        $i++;
+    } else {
+        $positional[] = $arguments[$i];
+    }
+}
+
+if (count($positional) < 1) {
+    include(__DIR__ . '/../src/usage.inc.php');
+    die();
+
+}
+
+$input = $positional[0];
+
+$outputDir = '.';
+
+if (isset($positional[1])) {
+    $outputDir = $positional[1];
+}
+
+$parser = new PHPDocMD\Parser($input);
+
+echo "Parsing structure.xml\n";
+
+$classDefinitions = $parser->run();
+
+$templateDir = __DIR__ . '/../templates/';
+
+$generator = new PHPDocMD\Generator(
+    $classDefinitions,
+    $outputDir,
+    $templateDir,
+    $named['lt']
+);
+
+echo "Generating pages\n";
+
+$generator->run();
+
+echo "Complete\n";

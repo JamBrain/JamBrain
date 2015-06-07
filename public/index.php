@@ -1,9 +1,10 @@
 <?php 
-require_once __DIR__ . "/../db.php";
-require_once __DIR__ . "/../lib.php";
-require_once __DIR__ . "/../lib/validate.php";
+require_once __DIR__ . "/../html.php";
+require_once __DIR__ . "/../core/internal/validate.php";
+require_once __DIR__ . "/../core/internal/emoji.php";
+require_once __DIR__ . "/../core/post.php";
 
-user_start();
+user_StartSession();
 header("Content-Type: text/html; charset=utf-8"); 
 ?>
 
@@ -11,7 +12,10 @@ header("Content-Type: text/html; charset=utf-8");
 
 <html lang="en">
 <head>
-  <meta charset="utf-8">
+	<meta charset="utf-8">
+	<script src="<?php STATIC_URL() ?>/external/emojione/emojione.js<?php VERSION_QUERY() ?>"></script>
+<!--	<script src="//cdn.jsdelivr.net/emojione/1.3.0/lib/js/emojione.min.js"></script>-->
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/emojione/1.3.0/assets/css/emojione.min.css" />
 </head>
 
 <body>
@@ -67,7 +71,31 @@ echo '<br />';
 const happypoo = '💩';
 
 
-echo happypoo . happypoo;
+echo emoji_ToShort(happypoo . happypoo . ":D You smell ") . happypoo;
+
+echo "<script>emojione.ascii = true;</script>";
+echo "<script>
+var MyAscii = {
+	'^_^':'1F49A',
+	'KeyWord':'1f636'
+};
+
+for(var Key in MyAscii) {
+	emojione.asciiList[Key] = MyAscii[Key];
+}
+
+var MyCode = {
+	':dpad:':['custom/dpad'],
+};
+
+for(var Key in MyCode) {
+	emojione.emojioneList[Key] = MyCode[Key];
+}
+</script>";
+
+echo "<div id='zork'></div>";
+echo "<script>document.getElementById('zork').innerHTML = emojione.toImage(emojione.toShort(
+	'can you believe that there is 💩  everywhere! :D :| ^_^ :> :( KeyWord :dpad:'));</script>";
 
 echo '<br />';
 echo '<br />';
@@ -82,7 +110,7 @@ echo '<br />';
 
 $str2 = htmlspecialchars($str,ENT_QUOTES);
 
-echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_url($str2);
+echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_Url($str2);
 
 echo '<br />';
 echo '<br />';
@@ -90,7 +118,7 @@ echo '<br />';
 
 $str2 = htmlspecialchars("http://ludumdare.com/EAT ME ]ZHVWOOOT[",ENT_QUOTES);
 
-echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_url($str2);
+echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_Url($str2);
 
 echo '<br />';
 echo '<br />';
@@ -98,9 +126,50 @@ echo '<br />';
 
 $str2 = htmlspecialchars("gozer://google.com/shempy",ENT_QUOTES);
 
-echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_url($str2);
+echo "<a href='" . $str2 . "'>" . $str2 . "</a> : " . sanitize_Url($str2);
+
+echo "<br>\n";
+echo "<br>\n";
+
+echo "<div>";
+echo post_Prepare("
+
+
+<h1>My Greatness!</h1>
+Let me tell you about how <strong>GREAT</strong> I am. It began in the <del>1960's</del> 1970's.<br>
+<br/>
+<br/>
+<p>Well, really that was it. <img src='tom.png'></p>
+noobs.
+get a job
+  now!
+
+```c++
+source code
+  saucy!!
+```
+
+<code>This HTML is da <b>REAL DEAL</b></code>
+
+<code>
+int main(void) {
+	return 10;
+}
+</code>
+
+* Lets eat
+  * I eat more
+  * he does
+* Oh my!
+
+
+");
+
+echo "</div>\n";
 
 ?>
+
+<div class="miiverse-post" lang="en" data-miiverse-cite="https://miiverse.nintendo.net/posts/AYMHAAACAAADVHkJJYjfzQ" data-miiverse-embedded-version="1"><noscript>You must have JavaScript enabled on your device to view Miiverse posts that have been embedded in a website. <a class="miiverse-post-link" href="https://miiverse.nintendo.net/posts/AYMHAAACAAADVHkI56BLCQ">View post in Miiverse.</a></noscript></div><script async src="https://miiverse.nintendo.net/js/embedded.min.js" charset="utf-8"></script>
 
 </body>
 </html>

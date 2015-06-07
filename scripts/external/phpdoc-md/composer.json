@@ -1,0 +1,33 @@
+{
+    "name": "evert/phpdoc-md",
+    "description" : "PHP documentation generator, with markdown output",
+    "keywords" : [ "PHP", "Markdown", "PHPDoc" ],
+    "homepage" : "https://github.com/evert/phpdoc-md",
+    "license" : "MIT",
+    "require" : {
+        "php" : ">=5.3.1",
+        "twig/twig" : "~1.18.0"
+    },
+    "require-dev" : {
+        "phpdocumentor/phpdocumentor" : "~2.8.0"
+    },
+    "authors" : [
+        {
+            "name" : "Evert Pot",
+            "email" : "evert@rooftopsolutions.nl",
+            "homepage" : "http://www.rooftopsolutions.nl/",
+            "role" : "Developer"
+        }
+    ],
+    "autoload" : {
+        "psr-4" : {
+            "PHPDocMD\\" : "src/"
+        }
+    },
+    "bin" : [
+        "bin/phpdocmd"
+    ],
+    "config" : {
+        "bin-dir" : "bin"
+    }
+}

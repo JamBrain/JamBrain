@@ -1,17 +1,19 @@
 <?php
 
 // Database Configuration //
-$cfg_db_host = "localhost";
-$cfg_db_name = "database";
-$cfg_db_login = "login";
-$cfg_db_password = "password";
-
+const CMW_DB_HOST = "localhost";
+const CMW_DB_NAME = "database";
+const CMW_DB_LOGIN = "login";
+const CMW_DB_PASSWORD = "password";
+const CMW_TABLE_PREFIX = "cmw_";
 
 // Disable Debug Mode //
-//$cfg_no_debug = true;
-
+//const CMW_NO_DEBUG = true;
 
 // By default we use MySQL. Enable this flag to use PDO. //
-//$cfg_uses_pdo = true;
+//const CMW_USES_PDO = true;
+
+// Paths //
+const CMW_STATIC_URL = "/static";
 
 ?>

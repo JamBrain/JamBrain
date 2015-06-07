@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . "/../../lib.php";
-require_once __DIR__ . "/../../db.php";
+require_once __DIR__ . "/../../api.php";
+require_once __DIR__ . "/../../core/star.php";
 
 // Stars are Favourites or Bookmarks. If you want to remember/save something, you Star it.
 // Stars belong only to users (UID>0). You cannot Star if you are not logged in.
@@ -18,14 +18,14 @@ require_once __DIR__ . "/../../db.php";
 
 // TODO: Limit access to certain data to user level
 
-$response = api_newResponse();
+$response = api_NewResponse();
 
 // Retrieve session, store UID
-user_start();
-$response['uid'] = user_getId();
+user_StartSession();
+$response['uid'] = user_GetId();
 
 // Retrieve Action and Arguments
-$arg = api_parseActionURL();
+$arg = api_ParseActionURL();
 $action = array_shift($arg);
 $arg_count = count($arg);
 
@@ -38,7 +38,7 @@ if ( $arg_count === 0 ) {
 		// do nothing //
 	}
 	else { 
-		api_emitErrorAndExit(); 
+		api_EmitErrorAndExit(); 
 	}
 }
 else if ( $arg_count === 1 ) {
@@ -52,11 +52,11 @@ else if ( $arg_count === 1 ) {
 		$response['item'] = intval($arg[0]);
 		
 		if ( $response['item'] === 0 ) {
-			api_emitErrorAndExit(); 
+			api_EmitErrorAndExit(); 
 		}
 	}
 	else { 
-		api_emitErrorAndExit(); 
+		api_EmitErrorAndExit(); 
 	}
 }
 else if ( $arg_count === 2 ) {
@@ -65,66 +65,36 @@ else if ( $arg_count === 2 ) {
 		$offset = abs(intval($arg[1]));
 	}
 	else { 
-		api_emitErrorAndExit(); 
+		api_EmitErrorAndExit(); 
 	}
 }
 else {
-	api_emitErrorAndExit();
+	api_EmitErrorAndExit();
 }
 
 
 // If no UID specified, exit
 if ( $response['uid'] === 0 ) {
-	api_emitErrorAndExit();
+	api_EmitErrorAndExit();
 }
 
-
-// Table
-$table_name = "cmw_star";
 
 // On 'add' Action, insert in to the database
 if ( $action === 'add' ) {
-	db_connect();
-	
-	db_query( 
-		"INSERT IGNORE `" . $table_name . "` (".
-			"`node`,".
-			"`user`".
-		") ".
-		"VALUES (" .
-			$response['item'] . "," .
-			$response['uid'] .
-		");");
-
-	$response['success'] = empty(db_affectedRows()) ? false : true;
+	$response['success'] = star_Add($response['item'],$response['uid']);
 }
 // On 'remove' Action, remove from the database
 else if ( $action === 'remove' ) {
-	db_connect();
-
-	db_query( 
-		"DELETE FROM `" . $table_name . "` WHERE ".
-			"`node`=" . $response['item'] . " AND " .
-			"`user`=" . $response['uid'] .
-		";");
-
-	$response['success'] = empty(db_affectedRows()) ? false : true;
+	$response['success'] = star_Remove($response['item'],$response['uid']);
 }
 // On 'uid' or 'me' Action, get a list of favourites 
 else if ( $action === 'me' || $action === 'uid' ) {
-	db_connect();
-
-	$response['result'] = db_fetchSingle( 
-		"SELECT `node` FROM `" . $table_name . "` WHERE ".
-			"`user`=" . $response['uid'] . " " .
-		"LIMIT " . $limit . " OFFSET " . $offset . ";");
-
-	$response['success'] = true;	
+	$response['result'] = star_Fetch( $response['uid'], $offset, $limit );
 }
 else {
-	api_emitErrorAndExit();
+	api_EmitErrorAndExit();
 }
 
 // Done. Output the response.
-api_emitJSON($response);
+api_EmitJSON($response);
 ?>
