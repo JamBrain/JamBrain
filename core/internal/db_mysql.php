@@ -1,8 +1,7 @@
 <?php
-include_once __DIR__ . "/../../config.php";
+//include_once __DIR__ . "/../../config.php";
 
-// **** GLOBAL DATABASE VARIABLE **** //
-$db = null;
+$db = null;				// ** Global Database Variable **** //
 
 // Logging function specific to database operations //
 function db_Log( $msg ) {
@@ -11,16 +10,16 @@ function db_Log( $msg ) {
 }
 
 // Check database config //
-if ( !defined('CFG_DB_HOST') ) {
+if ( !defined('CMW_DB_HOST') ) {
 	db_Log( "No database host name set." );
 }
-if ( !defined('CFG_DB_NAME') ) {
+if ( !defined('CMW_DB_NAME') ) {
 	db_Log( "No database name set." );
 }
-if ( !defined('CFG_DB_LOGIN') ) {
+if ( !defined('CMW_DB_LOGIN') ) {
 	db_Log( "No database login set." );
 }
-if ( !defined('CFG_DB_PASSWORD') ) {
+if ( !defined('CMW_DB_PASSWORD') ) {
 	db_Log( "No database password set." );
 }
 
@@ -35,11 +34,11 @@ function db_Connect(/*$no_log=false*/) {
 		global $db;
 
 		// Connect to the database //
-		$db = new mysqli(CFG_DB_HOST,CFG_DB_LOGIN,CFG_DB_PASSWORD,CFG_DB_NAME);
+		$db = new mysqli(CMW_DB_HOST,CMW_DB_LOGIN,CMW_DB_PASSWORD,CMW_DB_NAME);
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
 		if ($db->connect_errno) {
-    		db_log( "Failed to connect to MySQL: (" . $db->connect_errno . ") " . $db->connect_error );
+    		db_Log( "Failed to connect to MySQL: (" . $db->connect_errno . ") " . $db->connect_error );
     	}
     	
     	// Set character set to utf8mb4 mode (default is utf8mb3 (utf8). mb4 is required for Emoji)
@@ -48,7 +47,7 @@ function db_Connect(/*$no_log=false*/) {
 	}
 //	else {
 //		if ( !$no_log ) {
-//			db_log( "Database already connected" );
+//			db_Log( "Database already connected" );
 //		}
 //	}
 }
