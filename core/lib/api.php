@@ -77,7 +77,7 @@ function api_EmitJSON( $out ) {
 	}
 		
 	// Debug Info //
-	if ( (!isset($cfg_no_debug) || !$cfg_no_debug) && isset($_GET['debug']) ) {
+	if ( !defined(CFG_NO_DEBUG) && isset($_GET['debug']) ) {
 		$out['debug'] = array();
 		
 		if ( isset($_SERVER['PATH_INFO']) ) {
