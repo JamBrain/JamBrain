@@ -1,5 +1,5 @@
 RewriteEngine on
-RewriteBase /embed/
+RewriteBase /m/
 
 # TODO: Rewrite this so all requests are fed to index.php
 
@@ -14,5 +14,5 @@ RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule . - [END]
 
 # Bad URLs #
-RewriteRule . /embed/index.php [QSA,END]
-DirectoryIndex /embed/index.php
+RewriteRule . /m/index.php [QSA,END]
+DirectoryIndex /m/index.php
