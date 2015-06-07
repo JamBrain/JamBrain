@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . "/external/hashids/HashGenerator.php";
-require_once __DIR__ . "/external/hashids/Hashids.php";
+require_once __DIR__ . "/../external/hashids/HashGenerator.php";
+require_once __DIR__ . "/../external/hashids/Hashids.php";
 
 // NOTE: Consider *NOT* using Hashids for this, because protecting our IDs is not important.
 //       What's actually important is consistency. These URLs should never change.

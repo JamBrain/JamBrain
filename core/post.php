@@ -1,23 +1,6 @@
 <?php
-require_once __DIR__ . "/lib/emoji.php";
-require_once __DIR__ . "/lib/markdown.php";
-
-//
-//// The easy-to-convert codes //
-//$htmlcodes = [
-//	'<br>' => "\n",
-//	'<br/>' => "\n",
-//	'<b>' => "**",
-//	'</b>' => "**",
-//	'<strong>' => "**",
-//	'</strong>' => "**",
-//	'<i>' => "*",
-//	'</i>' => "*",
-//	'<em>' => "*",
-//	'</em>' => "*",
-//	'<u>' => "__",
-//	'</u>' => "__",
-//];
+require_once __DIR__ . "/internal/emoji.php";
+require_once __DIR__ . "/internal/markdown.php";
 
 function post_Prepare($text) {
 	$text = emoji_ToShort($text); 		// Convert Emoji to Short Codes

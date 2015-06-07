@@ -1,7 +1,7 @@
 <?php 
 require_once __DIR__ . "/../html.php";
-require_once __DIR__ . "/../core/lib/validate.php";
-require_once __DIR__ . "/../core/lib/emoji.php";
+require_once __DIR__ . "/../core/internal/validate.php";
+require_once __DIR__ . "/../core/internal/emoji.php";
 require_once __DIR__ . "/../core/post.php";
 
 user_StartSession();
@@ -13,7 +13,7 @@ header("Content-Type: text/html; charset=utf-8");
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<script src="<?php STATIC_URL() ?>/lib/emojione/emojione.js<?php VERSION_QUERY() ?>"></script>
+	<script src="<?php STATIC_URL() ?>/external/emojione/emojione.js<?php VERSION_QUERY() ?>"></script>
 <!--	<script src="//cdn.jsdelivr.net/emojione/1.3.0/lib/js/emojione.min.js"></script>-->
 	<link rel="stylesheet" href="//cdn.jsdelivr.net/emojione/1.3.0/assets/css/emojione.min.css" />
 </head>

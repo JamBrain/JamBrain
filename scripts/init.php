@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . "/../db.php";
 
-db_connect();
-echo "Connected: " . db_isConnected() . "\n";
+db_Connect();
+echo "Connected: " . db_IsConnected() . "\n";
 
 // NOTE: Indexes must be less than 767 bytes!
 //   That means 255 (255.666~) for strings in UTF8 (UTF8mb3)
@@ -26,15 +26,15 @@ echo "Connected: " . db_isConnected() . "\n";
 	$love_table = $table_prefix . "love";
 	$star_table = $table_prefix . "star";
 		
-	db_query("DROP TABLE " . $node_table . ";",true);
-	db_query("DROP TABLE " . $link_table . ";",true);
-	db_query("DROP TABLE " . $user_table . ";",true);
-	db_query("DROP TABLE " . $love_table . ";",true);
-	db_query("DROP TABLE " . $star_table . ";",true);
+	db_Query("DROP TABLE " . $node_table . ";",true);
+	db_Query("DROP TABLE " . $link_table . ";",true);
+	db_Query("DROP TABLE " . $user_table . ";",true);
+	db_Query("DROP TABLE " . $love_table . ";",true);
+	db_Query("DROP TABLE " . $star_table . ";",true);
 		
-	db_query("SET storage_engine=InnoDB;");
-//	db_query("SET collation_server=utf8_unicode_ci;");
-//	db_query("SET character_set_server=utf8;");
+	db_Query("SET storage_engine=InnoDB;");
+//	db_Query("SET collation_server=utf8_unicode_ci;");
+//	db_Query("SET character_set_server=utf8;");
 	
 	const DBTYPE_INNODB = " ENGINE=InnoDB";
 	const DBTYPE_MYISAM = " ENGINE=MyISAM";
@@ -65,7 +65,7 @@ echo "Connected: " . db_isConnected() . "\n";
 	// popularity - some metric used to single out posts ** (may want to sort by)
 
 	// link_cache - cached list of references (links) in JSON format.
-	db_query(
+	db_Query(
 		"CREATE TABLE " . $node_table . " (
 			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
 			parent BIGINT UNSIGNED NOT NULL DEFAULT 0,
@@ -111,7 +111,7 @@ echo "Connected: " . db_isConnected() . "\n";
 	// Download -- Parent=Game, Info=Platform, Body=URL, Name=Title (if not Parent name)
 	
 	
-	db_query(
+	db_Query(
 		"CREATE TABLE " . $link_table . " (
 			id_a BIGINT UNSIGNED NOT NULL DEFAULT 0,
 				INDEX(id_a),
@@ -221,7 +221,7 @@ Thing {
 	
 	
 	// Private Data (Email, Password Hash). Never send these. //
-	db_query(
+	db_Query(
 		"CREATE TABLE " . $user_table . " (
 			id BIGINT UNSIGNED NOT NULL UNIQUE,
 				INDEX(id),
@@ -237,7 +237,7 @@ Thing {
 	// When PHP switches to a fancier algorithm, then we'll do an alter-table to add more space.
 	
 	// Love Table. If a user has given a +1 to something. //
-	db_query(
+	db_Query(
 		"CREATE TABLE " . $love_table . " (
 			node BIGINT UNSIGNED NOT NULL,
 				INDEX(node),
@@ -251,7 +251,7 @@ Thing {
 	// ipv6 forget about it for now //
 
 	// Star Table. If a user has favourited something (so they can view it later). //
-	db_query(
+	db_Query(
 		"CREATE TABLE " . $star_table . " (
 			node BIGINT UNSIGNED NOT NULL,
 				INDEX(node),

@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__ . "/external/mobile-detect/Mobile_Detect.php";
+include_once __DIR__ . "/../external/mobile-detect/Mobile_Detect.php";
 
 /* core/lib/device.php - Detect what device  */
 

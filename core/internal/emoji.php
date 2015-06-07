@@ -1,9 +1,7 @@
 <?php
-require_once __DIR__ . "/external/emojione/autoload.php";
+require_once __DIR__ . "/../external/emojione/autoload.php";
 
 // the Emoji library uses EmojiOne: http://emojione.com/
-
-use Emojione\Emojione;
 
 // NOTE: It's not clear how we switch to ASCII mode on the PHP side,
 //   especially since the client loading is deprecated. That said, it's
@@ -11,7 +9,7 @@ use Emojione\Emojione;
 
 // On the PHP side we *ONLY* convert Unicode Emoji to Short Codes.
 function emoji_ToShort($str) {
-	return Emojione::toShort($str);
+	return Emojione\Emojione::toShort($str);
 }
 
 // This should not be used. For testing only.

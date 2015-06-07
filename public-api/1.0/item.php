@@ -11,5 +11,4 @@ $out['item'] = 1;
 $out['parsed'] = api_ParseActionURL();
 
 api_EmitJSON( $out );
-
 ?>

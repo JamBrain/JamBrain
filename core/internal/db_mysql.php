@@ -1,4 +1,5 @@
 <?php
+include_once __DIR__ . "/../../config.php";
 
 // **** GLOBAL DATABASE VARIABLE **** //
 $db = null;
@@ -10,16 +11,16 @@ function db_Log( $msg ) {
 }
 
 // Check database config //
-if ( !defined(CFG_DB_HOST) ) {
+if ( !defined('CFG_DB_HOST') ) {
 	db_Log( "No database host name set." );
 }
-if ( !defined(CFG_DB_NAME) ) {
+if ( !defined('CFG_DB_NAME') ) {
 	db_Log( "No database name set." );
 }
-if ( !defined(CFG_DB_LOGIN) ) {
+if ( !defined('CFG_DB_LOGIN') ) {
 	db_Log( "No database login set." );
 }
-if ( !defined(CFG_DB_PASSWORD) ) {
+if ( !defined('CFG_DB_PASSWORD') ) {
 	db_Log( "No database password set." );
 }
 
