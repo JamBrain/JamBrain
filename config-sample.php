@@ -1,17 +1,18 @@
 <?php
 
 // Database Configuration //
-$cfg_db_host = "localhost";
-$cfg_db_name = "database";
-$cfg_db_login = "login";
-$cfg_db_password = "password";
-
+const CFG_DB_HOST = "localhost";
+const CFG_DB_NAME = "database";
+const CFG_DB_LOGIN = "login";
+const CFG_DB_PASSWORD = "password";
 
 // Disable Debug Mode //
-//$cfg_no_debug = true;
-
+//const CFG_NO_DEBUG = true;
 
 // By default we use MySQL. Enable this flag to use PDO. //
-//$cfg_uses_pdo = true;
+//const CFG_USES_PDO = true;
+
+// Paths //
+const CFG_STATIC_URL = "/static";
 
 ?>

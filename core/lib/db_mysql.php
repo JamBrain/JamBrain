@@ -10,16 +10,16 @@ function db_Log( $msg ) {
 }
 
 // Check database config //
-if ( !isset($cfg_db_host) ) {
+if ( !defined(CFG_DB_HOST) ) {
 	db_Log( "No database host name set." );
 }
-if ( !isset($cfg_db_name) ) {
+if ( !defined(CFG_DB_NAME) ) {
 	db_Log( "No database name set." );
 }
-if ( !isset($cfg_db_login) ) {
+if ( !defined(CFG_DB_LOGIN) ) {
 	db_Log( "No database login set." );
 }
-if ( !isset($cfg_db_password) ) {
+if ( !defined(CFG_DB_PASSWORD) ) {
 	db_Log( "No database password set." );
 }
 
@@ -33,13 +33,8 @@ function db_Connect(/*$no_log=false*/) {
 	if ( !db_IsConnected() ) {
 		global $db;
 
-		global $cfg_db_host;
-		global $cfg_db_name;
-		global $cfg_db_login;
-		global $cfg_db_password;
-
 		// Connect to the database //
-		$db = new mysqli($cfg_db_host,$cfg_db_login,$cfg_db_password,$cfg_db_name);
+		$db = new mysqli(CFG_DB_HOST,CFG_DB_LOGIN,CFG_DB_PASSWORD,CFG_DB_NAME);
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
 		if ($db->connect_errno) {

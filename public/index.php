@@ -14,7 +14,7 @@ header("Content-Type: text/html; charset=utf-8");
 <head>
 	<meta charset="utf-8">
 <!--	<script src="//cdn.jsdelivr.net/emojione/1.3.0/lib/js/emojione.min.js"></script>-->
-	<script src="/static/lib/emojione/emojione.js"></script>
+	<script src="<?php STATIC_URL() ?>/lib/emojione/emojione.js<?php VERSION_QUERY() ?>"></script>
 	<link rel="stylesheet" href="//cdn.jsdelivr.net/emojione/1.3.0/assets/css/emojione.min.css" />
 </head>
 
