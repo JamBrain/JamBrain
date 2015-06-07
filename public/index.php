@@ -169,5 +169,7 @@ echo "</div>\n";
 
 ?>
 
+<div class="miiverse-post" lang="en" data-miiverse-cite="https://miiverse.nintendo.net/posts/AYMHAAACAAADVHkJJYjfzQ" data-miiverse-embedded-version="1"><noscript>You must have JavaScript enabled on your device to view Miiverse posts that have been embedded in a website. <a class="miiverse-post-link" href="https://miiverse.nintendo.net/posts/AYMHAAACAAADVHkI56BLCQ">View post in Miiverse.</a></noscript></div><script async src="https://miiverse.nintendo.net/js/embedded.min.js" charset="utf-8"></script>
+
 </body>
 </html>
