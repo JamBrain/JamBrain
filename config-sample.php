@@ -14,6 +14,8 @@ const CMW_JS_DEBUG = true;			// JavaScript Debug Mode: Not minified, src include
 const CMW_CSS_DEBUG = true;			// CSS Debug Mode: Not minified, src includes.
 
 // Paths //
+const CMW_STATIC_DIR = "/public/static";
 const CMW_STATIC_URL = "/static";
+const CMW_THEME_BASE = "/themes";
 
 ?>
