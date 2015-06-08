@@ -1,16 +1,19 @@
 <?php
+/**
+ * Starship Core
+ */
 
 /**
  * **INTERNAL**: Name of the current theme.
-*/
+ */
 $_cmw_theme = "default";
 
 /**
  * **INTERNAL**: Includes template files (.php) and sets up the environment.
  *
- * @param {string} - Fully qualified path to a file.
- * @param {bool} - Should we use include_once? (default: false)
-*/
+ * @param	string	$path_to_file Fully qualified path to a file.
+ * @param	bool	$include_once Should we use include_once? (default: false)
+ */
 function _template_Include( $path_to_file, $include_once = false ) {
 	// Make certain global variables implicitly available to the template.
 	//global $db;
@@ -27,15 +30,20 @@ function _template_Include( $path_to_file, $include_once = false ) {
 /**
  * Instance a template.
  *
- * @param {string} - File to load.
- * @param {string} - Theme to use (default: "default")
- * @param {bool} - Should we use include_once? (default: false)
-*/
+ * @param	string	$file File to load.
+ * @param	string	$theme Theme to use (default: "default")
+ * @param	bool	$include_once Should we use include_once? (default: false)
+ */
 function template_Get( $file, $theme = null, $include_once = false ) {
 	_template_Include( __DIR__."/..".CMW_STATIC_DIR.CMW_THEME_BASE."/".template_GetTheme($theme).$file, $include_once );
 }
 
 
+/**
+ * dummy
+ *
+ * @param	string	$theme Theme to use (default: "default")
+ */
 function template_SetTheme( $theme = null ) {
 	global $_cmw_theme;
 	if ( is_null($theme) ) {
@@ -44,6 +52,11 @@ function template_SetTheme( $theme = null ) {
 	$_cmw_theme = $theme;
 }
 
+/**
+ * dummy
+ *
+ * @param	string	$theme Theme to use (default: "default")
+ */
 function template_GetTheme( $theme = null ) {
 	global $_cmw_theme;
 	if ( is_null($theme) ) {
@@ -56,10 +69,21 @@ function template_GetTheme( $theme = null ) {
 }
 
 
+/**
+ * dummy
+ *
+ * @param	string	$theme Theme to use (default: "default")
+ * @param	bool	$include_once Should we use include_once? (default: true)
+ */
 function template_GetHeader( $theme = null, $include_once = true ) {
 	template_Get( "/header.php", $theme, $include_once );
 }
-
+/**
+ * dummy
+ *
+ * @param	string	$theme Theme to use (default: "default")
+ * @param	bool	$include_once Should we use include_once? (default: true)
+ */
 function template_GetFooter( $theme = null, $include_once = true ) {
 	template_Get( "/footer.php", $theme, $include_once );	
 }
