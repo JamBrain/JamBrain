@@ -1,16 +1,12 @@
 <?php
 require_once __DIR__ . "/../db.php";
 
-$__star_table = "cmw_star";
-
 // Returns true if the star was added (false if it already existed) //
 function star_Add( &$node, &$user ) {
-	global $__star_table;
-	
 	db_Connect();
 
 	db_Query( 
-		"INSERT IGNORE `" . $__star_table . "` (".
+		"INSERT IGNORE `" . CMW_TABLE_STAR . "` (".
 			"`node`,".
 			"`user`".
 		") ".
@@ -27,12 +23,10 @@ function star_Add( &$node, &$user ) {
 
 // Returns true if the star was removed (false if there was no row to remove) //
 function star_Remove( &$node, &$user ) {
-	global $__star_table;
-	
 	db_Connect();
 
 	db_Query( 
-		"DELETE FROM `" . $__star_table . "` WHERE ".
+		"DELETE FROM `" . CMW_TABLE_STAR . "` WHERE ".
 			"`node`=" . $node . " AND " .
 			"`user`=" . $user .
 		";");
@@ -45,12 +39,10 @@ function star_Remove( &$node, &$user ) {
 
 // Returns an array of NodeIDs that are Starred by UserID
 function star_Fetch( &$user = 0, $offset = null, $limit = null ) {
-	global $__star_table;
-	
 	db_Connect();
 
 	return db_FetchSingle( 
-		"SELECT `node` FROM `" . $__star_table . "` WHERE ".
+		"SELECT `node` FROM `" . CMW_TABLE_STAR . "` WHERE ".
 			"`user`=" . $user .
 		(is_null($limit) ? "" : (" LIMIT " . $limit)) . 
 		(is_null($offset) ? "" : (" OFFSET " . $offset)) . 

@@ -18,20 +18,20 @@ echo "Connected: " . db_IsConnected() . "\n";
 
 // http://code.openark.org/blog/mysql/mysqls-character-sets-and-collations-demystified
 
-	$table_prefix = "cmw_";
-
-	$node_table = $table_prefix . "node";
-	$link_table = $table_prefix . "link";
-
-	$user_table = $table_prefix . "user";
-	$love_table = $table_prefix . "love";
-	$star_table = $table_prefix . "star";
+//	$table_prefix = "cmw_";
+//
+//	$node_table = $table_prefix . "node";
+//	$link_table = $table_prefix . "link";
+//
+//	$user_table = $table_prefix . "user";
+//	$love_table = $table_prefix . "love";
+//	$star_table = $table_prefix . "star";
 		
-	db_Query("DROP TABLE " . $node_table . ";",true);
-	db_Query("DROP TABLE " . $link_table . ";",true);
-	db_Query("DROP TABLE " . $user_table . ";",true);
-	db_Query("DROP TABLE " . $love_table . ";",true);
-	db_Query("DROP TABLE " . $star_table . ";",true);
+	db_Query("DROP TABLE " . CMW_TABLE_NODE . ";",true);
+	db_Query("DROP TABLE " . CMW_TABLE_LINK . ";",true);
+	db_Query("DROP TABLE " . CMW_TABLE_USER . ";",true);
+	db_Query("DROP TABLE " . CMW_TABLE_LOVE . ";",true);
+	db_Query("DROP TABLE " . CMW_TABLE_STAR . ";",true);
 		
 	db_Query("SET storage_engine=InnoDB;");
 //	db_Query("SET collation_server=utf8_unicode_ci;");
@@ -67,7 +67,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 
 	// link_cache - cached list of references (links) in JSON format.
 	db_Query(
-		"CREATE TABLE " . $node_table . " (
+		"CREATE TABLE " . CMW_TABLE_NODE . " (
 			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
 			parent BIGINT UNSIGNED NOT NULL DEFAULT 0,
 			root BIGINT UNSIGNED NOT NULL DEFAULT 0,
@@ -113,7 +113,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 	
 	
 	db_Query(
-		"CREATE TABLE " . $link_table . " (
+		"CREATE TABLE " . CMW_TABLE_LINK . " (
 			id_a BIGINT UNSIGNED NOT NULL DEFAULT 0,
 				INDEX(id_a),
 			id_b BIGINT UNSIGNED NOT NULL DEFAULT 0,
@@ -223,7 +223,7 @@ Thing {
 	
 	// Private Data (Email, Password Hash). Never send these. //
 	db_Query(
-		"CREATE TABLE " . $user_table . " (
+		"CREATE TABLE " . CMW_TABLE_USER . " (
 			id BIGINT UNSIGNED NOT NULL UNIQUE,
 				INDEX(id),
 
@@ -239,7 +239,7 @@ Thing {
 	
 	// Love Table. If a user has given a +1 to something. //
 	db_Query(
-		"CREATE TABLE " . $love_table . " (
+		"CREATE TABLE " . CMW_TABLE_LOVE . " (
 			node BIGINT UNSIGNED NOT NULL,
 				INDEX(node),
 			user BIGINT UNSIGNED NOT NULL,
@@ -253,7 +253,7 @@ Thing {
 
 	// Star Table. If a user has favourited something (so they can view it later). //
 	db_Query(
-		"CREATE TABLE " . $star_table . " (
+		"CREATE TABLE " . CMW_TABLE_STAR . " (
 			node BIGINT UNSIGNED NOT NULL,
 				INDEX(node),
 			user BIGINT UNSIGNED NOT NULL,

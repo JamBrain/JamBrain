@@ -1,8 +1,6 @@
 <?php
 require_once __DIR__ . "/../db.php";
 
-$__love_table = "cmw_love";
-
 // Returns true if the love was added (false if it already existed) //
 function love_Add( &$node, &$user = 0, &$ip = '0.0.0.0' ) {
 	global $__love_table;
@@ -10,7 +8,7 @@ function love_Add( &$node, &$user = 0, &$ip = '0.0.0.0' ) {
 	db_Connect();
 
 	db_Query(
-		"INSERT IGNORE `" . $__love_table . "` (".
+		"INSERT IGNORE `" . CMW_TABLE_LOVE . "` (".
 			"`node`,".
 			"`user`,".
 			"`ip`".
@@ -29,12 +27,10 @@ function love_Add( &$node, &$user = 0, &$ip = '0.0.0.0' ) {
 
 // Returns true if the love was removed (false if there was no row to remove) //
 function love_Remove( &$node, &$user = 0, &$ip = '0.0.0.0' ) {
-	global $__love_table;
-	
 	db_Connect();
 
 	db_Query( 
-		"DELETE FROM `" . $__love_table . "` WHERE ".
+		"DELETE FROM `" . CMW_TABLE_LOVE . "` WHERE ".
 			"`node`=" . $node . " AND " .
 			"`user`=" . $user . " AND " .
 			"`ip`=INET_ATON('" . $ip . "')" .
@@ -48,12 +44,10 @@ function love_Remove( &$node, &$user = 0, &$ip = '0.0.0.0' ) {
 
 // Returns an array of NodeIDs that are Loved by UserID or IP.
 function love_Fetch( &$user = 0, &$ip = '0.0.0.0', $offset = null, $limit = null ) {
-	global $__love_table;
-
 	db_Connect();
 
 	return db_FetchSingle( 
-		"SELECT `node` FROM `" . $__love_table . "` WHERE ".
+		"SELECT `node` FROM `" . CMW_TABLE_LOVE . "` WHERE ".
 			"`user`=" . $user . " AND " .
 			"`ip`=INET_ATON('" . $ip . "')" .
 		(is_null($limit) ? "" : (" LIMIT " . $limit)) . 
