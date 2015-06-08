@@ -8,7 +8,7 @@ const INTERNAL_VERSION = '0.1.1';
 
 // Helper Functions used to create Paths and URLs. //
 function STATIC_URL() {
-	echo CFG_STATIC_URL;
+	echo CMW_STATIC_URL;
 }
 
 function VERSION_QUERY( $my_version = null ) {

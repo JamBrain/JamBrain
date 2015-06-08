@@ -4,3 +4,4 @@ public/utils
 public/phpmyadmin
 public/static
 config.php
+node_modules/
