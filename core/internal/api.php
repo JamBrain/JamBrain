@@ -83,7 +83,7 @@ function api_EmitJSON( $out ) {
 	}
 		
 	// Debug Info //
-	if ( !defined('CMW_NO_DEBUG') && isset($_GET['debug']) ) {
+	if ( defined('CMW_PHP_DEBUG') && isset($_GET['debug']) ) {
 		$out['debug'] = [];
 		
 		if ( isset($_SERVER['PATH_INFO']) ) {
