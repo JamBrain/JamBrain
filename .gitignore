@@ -1,7 +1,6 @@
 .DS_STORE
 .vagrant
-public/utils
-public/phpmyadmin
+public/dev
 public/static
 config.php
 node_modules/
