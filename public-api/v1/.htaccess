@@ -13,5 +13,8 @@ RewriteRule . - [END]
 
 # Bad URLs #
 RewriteRule . /404.json [R=404,QSA,END]
+
+# Responses #
+DirectoryIndex /200.json
 ErrorDocument 404 /404.json
-DirectoryIndex /404.json
+ErrorDocument 500 /500.json

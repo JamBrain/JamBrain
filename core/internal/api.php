@@ -1,14 +1,15 @@
 <?php
-include_once __DIR__ . "/../../config.php";
-
 // Support library for web APIs (emitting JSON) //
 
+include_once __DIR__ . "/../../config.php";
+
 /**
- *	Confirms if a string is a valid name for a JSONP callback.
+ *	Confirms if a string is a valid name for a JSON-P callback.
  *
  *	http://stackoverflow.com/questions/3128062/is-this-safe-for-providing-jsonp
  *
- *	@param string $name Desired callback name
+ *	@param {String} $name Desired callback name
+ *  @returns {Boolean} 
 **/
 function api_IsValidJSONPCallback($name) {
      $identifier_syntax
@@ -46,20 +47,54 @@ function api_ParseActionURL() {
 	}
 }
 
+$HTTP_RESPONSE_TEXT = [
+	// Success Responses
+	200=>"OK",
+	201=>"Created",					// Successfully created.
+	202=>"Accepted",				// Request accepted, will be fullfilled later.
+	// Redirect Respones
+	301=>"Moved Permanently",		// Redirections.
+	304=>"Not Modified",			// ** 
+	// User Error Responeses
+	400=>"Bad Request",				// Syntax Error.
+	401=>"Unauthorized",			// Insufficent permission to do something
+	403=>"Forbidden",				// ** Resource is protected.
+	404=>"Not Found",				// Resource not found.
+	409=>"Conflict",				// **
+	412=>"Precondition Failed",		// **
+	// Server Error Responses
+	500=>"Internal Server Error",	// Something is wrong on our end.
+	503=>"Service Unavailable",		// Maintenence.
+];
+
 // At the top of an API program, use newResponse to create an array //
-function api_NewResponse( $msg = 'OK' ) {
-	return ['status' => $msg];
+function api_NewResponse() {
+	return [];
 }
 
 // On error, overwrite your response with an error //
-function api_NewError( $code = 400, $msg = 'ERROR' ) {
+function api_NewError( $code = 400, $msg = null ) {
+	global $HTTP_RESPONSE_TEXT;
+	
 	http_response_code($code);
-	return ['status' => $msg];
+	if ( is_string($msg) ) {
+		return [
+			'status' => $code,
+			'response' => $HTTP_RESPONSE_TEXT[$code],
+			'message' => $msg
+		];
+	}
+	else {
+		return [
+			'status' => $code,
+			'response' => $HTTP_RESPONSE_TEXT[$code]
+		];
+	}
 }
 
 
 // Finally, at the bottom of your API program, emit the 
-function api_EmitJSON( $out ) {
+function api_EmitJSON( $out, $allow_jsonp = true ) {
 	// By default, PHP will make '/' slashes in to '\/'. These flags fix that //
 	$out_format = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
 	
@@ -68,17 +103,19 @@ function api_EmitJSON( $out ) {
 		$out_format |= JSON_PRETTY_PRINT;
 	}
 	
-	// JSONP //
-	$prefix = "";
-	$suffix = "";
-	if ( isset($_GET['callback']) ) {
-		$callback = $_GET['callback'];
-		if ( api_IsValidJSONPCallback($callback) ) {
-			$prefix = $callback . "(";
-			$suffix = ");";
-		}
-		else {
-			$out = api_NewError(400);
+	// JSON-P //
+	if ( $allow_jsonp ) {
+		$prefix = "";
+		$suffix = "";
+		if ( isset($_GET['callback']) ) {
+			$callback = $_GET['callback'];
+			if ( api_IsValidJSONPCallback($callback) ) {
+				$prefix = $callback . "(";
+				$suffix = ");";
+			}
+			else {
+				$out = api_NewError(400);
+			}
 		}
 	}
 		
@@ -99,12 +136,17 @@ function api_EmitJSON( $out ) {
 	
 	// Output the Page //
 	header('Content-Type: application/json');
-	echo $prefix . str_replace('</', '<\/', json_encode($out,$out_format)) . $suffix;
+	echo $prefix,str_replace('</', '<\/', json_encode($out,$out_format)),$suffix;
 }
 
 // All-In-One failure function for APIs //
-function api_EmitErrorAndExit( $code = 400, $msg = 'ERROR' ) {
-	api_emitJSON(api_newError($code,$msg));
+function api_EmitErrorAndExit( $code = 400, $msg = null ) {
+	api_EmitJSON(api_newError($code,$msg));
+	exit;
+}
+
+function api_EmitServerError( $msg = null ) {
+	api_EmitJSON(api_newError(500,$msg));
 	exit;
 }
 
