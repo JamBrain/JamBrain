@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . "/../lib/urlhash.php";
 require_once __DIR__ . "/../db.php";
+require_once __DIR__ . "/../core/internal/urlhash.php";
 
 
 // Parse the URL //

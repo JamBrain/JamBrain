@@ -1,3 +1,3 @@
-<?php header('Content-Type: text/css'); ?>
+<?php require_once __DIR__."/../../../style.php"; ?>
 body {
 }
