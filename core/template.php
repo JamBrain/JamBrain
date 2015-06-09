@@ -44,7 +44,7 @@ function _template_Include( $path_to_file, $include_once = false ) {
  * @param	bool	$include_once Should we use include_once? (default: false)
  */
 function template_Get( $file, $theme = null, $include_once = false ) {
-	_template_Include( __DIR__."/..".CMW_STATIC_DIR.CMW_THEME_BASE."/".template_GetTheme($theme).$file, $include_once );
+	_template_Include( __DIR__."/../public-static".CMW_THEME_BASE."/".template_GetTheme($theme)."/template".$file, $include_once );
 }
 
 
@@ -85,7 +85,7 @@ function template_GetTheme( $theme = null ) {
  * @param	bool	$include_once Should we use include_once? (default: true)
  */
 function template_GetHeader( $theme = null, $include_once = true ) {
-	template_Get( "/header.php", $theme, $include_once );
+	template_Get( "/header.html.php", $theme, $include_once );
 }
 /**
  * dummy
@@ -94,7 +94,7 @@ function template_GetHeader( $theme = null, $include_once = true ) {
  * @param	bool	$include_once Should we use include_once? (default: true)
  */
 function template_GetFooter( $theme = null, $include_once = true ) {
-	template_Get( "/footer.php", $theme, $include_once );	
+	template_Get( "/footer.html.php", $theme, $include_once );	
 }
 
 ?>
