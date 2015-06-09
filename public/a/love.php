@@ -126,14 +126,73 @@ else {
 }
 
 
-// On 'add' Action, insert in to the database
+/**
+ * @api {GET} /a/love/add/:nodeid /a/love/add
+ * @apiName AddLove
+ * @apiGroup Love
+ * @apiVersion 0.1.0
+ * @apiPermission Everyone
+ *
+ * @apiDescription Give a '+1' to content you like
+ *
+ * If you are logged in, your UserID will be credited for the '+1'. If you are not, your IP address will.
+ *
+ * @apiParam {Number} nodeid The NodeID of the item to '+1'
+ *
+ * @apiSuccess {String} status "OK"
+ * @apiSuccess {Number} uid (If logged in) Your UserID
+ * @apiSuccess {String} ip (If not logged in) Your IPv4 address
+ * @apiSuccess {Number} item The NodeID of the item
+ * @apiSuccess {Boolean} success Whether the operation did anything (i.e. you can only have one '+1' per NodeID)
+ *
+ * @apiSuccessExample {json} On Success (logged in):
+ * HTTP/1.1 200 Success
+ * {"status":"OK","uid":4226,"item":8414,"success":true}
+ *
+ * @apiSuccessExample {json} On Success (not logged in):
+ * HTTP/1.1 200 Success
+ * {"status":"OK","ip":"192.168.48.1","item":33,"success":true}
+ *
+ * @apiErrorExample {json} On Failure (bad input, etc):
+ * HTTP/1.1 400 Bad Request
+ * {"status":"ERROR"}
+*/
 if ( $action === 'add' ) {
 	$response['success'] = love_Add($response['item'],$response['uid'],$response['ip']);
 }
-// On 'remove' Action, remove from the database
+/**
+ * @api {GET} /a/love/remove/:nodeid /a/love/remove
+ * @apiName RemoveLove
+ * @apiGroup Love
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+ 
+ * @apiDescription On 'remove' Action, remove from the database
+*/
 else if ( $action === 'remove' ) {
 	$response['success'] = love_Remove($response['item'],$response['uid'],$response['ip']);
 }
+/**
+ * @api {GET} /a/love/me[/:offset] /a/love/me
+ * @apiName MyLove
+ * @apiGroup Love
+ * @apiPermission Member
+ * @apiVersion 0.1.0
+*/
+/**
+ * @api {GET} /a/love/uid/:userid[/:offset] /a/love/uid
+ * @apiName UserLove
+ * @apiGroup Love
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+*/
+/**
+ * @api {GET} /a/love/ip/:ip[/:offset] /a/love/ip
+ * @apiName IPLove
+ * @apiGroup Love
+ * @apiPermission Admin
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'me' || $action === 'uid' || $action === 'ip' ) {
 	$response['result'] = love_Fetch( $response['uid'], $response['ip'], $offset, $limit );
 }
@@ -148,6 +207,16 @@ if ( $response['uid'] === 0 ) {
 else {
 	unset($response['ip']);
 }
+
+/**
+ * @apiDefine Admin Administrators only
+ * This feature is only available to Administrators.
+*/
+/**
+ * @apiDefine Member Members only
+ * This feature requires an account.
+*/
+
 
 // Done. Output the response.
 api_EmitJSON($response);

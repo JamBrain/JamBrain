@@ -80,14 +80,42 @@ if ( $response['uid'] === 0 ) {
 
 
 // On 'add' Action, insert in to the database
+/**
+ * @api {GET} /a/star/add/:nodeid /a/star/add
+ * @apiName AddStar
+ * @apiGroup Star
+ * @apiPermission Member
+ * @apiVersion 0.1.0
+*/
 if ( $action === 'add' ) {
 	$response['success'] = star_Add($response['item'],$response['uid']);
 }
 // On 'remove' Action, remove from the database
+/**
+ * @api {GET} /a/star/remove/:nodeid /a/star/remove
+ * @apiName RemoveStar
+ * @apiGroup Star
+ * @apiPermission Member
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'remove' ) {
 	$response['success'] = star_Remove($response['item'],$response['uid']);
 }
 // On 'uid' or 'me' Action, get a list of favourites 
+/**
+ * @api {GET} /a/star/me[/:offset] /a/star/me
+ * @apiName MyStars
+ * @apiGroup Star
+ * @apiPermission Member
+ * @apiVersion 0.1.0
+*/
+/**
+ * @api {GET} /a/star/uid/:userid[/:offset] /a/star/uid
+ * @apiName UserStars
+ * @apiGroup Star
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'me' || $action === 'uid' ) {
 	$response['result'] = star_Fetch( $response['uid'], $offset, $limit );
 }

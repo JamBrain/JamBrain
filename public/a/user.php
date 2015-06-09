@@ -22,6 +22,13 @@ if ( $arg_count > 1 ) {
 
 
 // On 'login' Action, attempt to log-in given POST data.
+/**
+ * @api {POST} /a/user/login /a/user/login
+ * @apiName UserLogin
+ * @apiGroup User
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+*/
 if ( $action === 'login' ) {
 	// Generic Error Function for everything (so to not offer any hints if abusing)
 	function my_loginError() {
@@ -103,30 +110,86 @@ if ( $action === 'login' ) {
 	// Retrieve my list of Favourites, and a list of most recent posts I've loved. //
 }
 // On 'logout' action, Destroy the Session
+/**
+ * @api {POST} /a/user/logout /a/user/logout
+ * @apiName UserLogout
+ * @apiGroup User
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'logout' ) {
 	user_EndSession();		// Destroy session
 }
+/**
+ * @api {POST} /a/user/register /a/user/register
+ * @apiName UserRegister
+ * @apiGroup User
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'register' ) {
 	// Add a user (if legal), send a verification e-mail.
 }
+/**
+ * @api {POST} /a/user/verify /a/user/verify
+ * @apiName UserVerify
+ * @apiGroup User
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'verify' ) {	
 	// Verify a previously added user given a verification URL.
 }
+/**
+ * @api {POST} /a/user/resend /a/user/resend
+ * @apiName UserResendMail
+ * @apiGroup User
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'resend' ) {	
 	// Resend verification e-mail.
 }
+/**
+ * @api {POST} /a/user/lost-password /a/user/lost-password
+ * @apiName UserLostPassword
+ * @apiGroup User
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'lost-password' ) {	
 	// Send a password recovery e-mail.
 }
+/**
+ * @api {POST} /a/user/admin/verify-user /a/user/admin/verify-user
+ * @apiName AdminVerifyUser
+ * @apiGroup User
+ * @apiPermission Admin
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'verify-user' ) {	
 	// *** Admin Only *** //
 	// Verify a user.
 }
+/**
+ * @api {POST} /a/user/admin/delete-user /a/user/admin/delete-user
+ * @apiName AdminDeleteUser
+ * @apiGroup User
+ * @apiPermission Admin
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'delete-user' ) {	
 	// *** Admin Only *** //
 	// Remove a user.
 }
-else if ( $action === 'purge-retry-cache' ) {	
+/**
+ * @api {POST} /a/user/admin/purge-cache /a/user/admin/purge-cache
+ * @apiName AdminPurgeCache
+ * @apiGroup User
+ * @apiPermission Admin
+ * @apiVersion 0.1.0
+*/
+else if ( $action === 'purge-cache' ) {	
 	// *** Admin Only *** //
 	// Clear the Login retries cache of a specific user.
 }

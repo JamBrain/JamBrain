@@ -1,5 +1,5 @@
 RewriteEngine on
-RewriteBase /1.0/
+RewriteBase /v1/
 
 # Append .php to URL #
 RewriteCond %{REQUEST_FILENAME} !\.php
