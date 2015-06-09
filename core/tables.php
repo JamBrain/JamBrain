@@ -1,6 +1,8 @@
 <?php
 /**
  * List of Database Tables
+ *
+ * @file
 */
 
 include_once __DIR__ . "/../config.php";

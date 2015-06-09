@@ -1,5 +1,7 @@
 <?php
-/* core/util.php - Utilities Library. */
+/** core/util.php - Utilities Library.
+@file
+*/
 
 require_once __DIR__ . "/../config.php";	// Configuration and Settings //
 

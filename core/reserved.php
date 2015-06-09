@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Reserved
+ *
+ * @file
+ */
+ 
 $__reserved_words = [
 	'a',	// Action URL //
 	'api',

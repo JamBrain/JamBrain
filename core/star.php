@@ -1,4 +1,9 @@
 <?php
+/**
+ * Star
+ *
+ * @file
+ */
 require_once __DIR__ . "/../db.php";
 
 // Returns true if the star was added (false if it already existed) //

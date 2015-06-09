@@ -1,7 +1,14 @@
 <?php
 /**
- * Starship Core
+ * Template
+ *
+ * @file
  */
+
+/** @name Internal
+ *  @subpage
+ */
+/**@{*/
 
 /**
  * **INTERNAL**: Name of the current theme.
@@ -26,6 +33,8 @@ function _template_Include( $path_to_file, $include_once = false ) {
 		include $path_to_file;
 	}
 }
+
+/**@}*/
 
 /**
  * Instance a template.

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Post
+ *
+ * @file
+ */
 require_once __DIR__ . "/internal/emoji.php";
 require_once __DIR__ . "/internal/markdown.php";
 

@@ -8,11 +8,11 @@ echo "API-Public (Public REST API Documentation): output/index.html and output/R
 echo ""
 
 echo "PHP (Server Side Source Code): output/index.html"
-#$(cd php; sh make.sh)
+$(cd php; sh make.sh)
 echo ""
 
 echo "JavaScript (Client Side Source Code): output/index.html output/README.md"
-#$(cd javascript; sh make.sh)
+$(cd javascript; sh make.sh)
 echo ""
 
 echo "You need NodeJS and PHP installed locally to make the docs."

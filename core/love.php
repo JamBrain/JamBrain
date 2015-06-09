@@ -1,4 +1,10 @@
 <?php
+/**
+ * Love
+ *
+ * @file
+ */
+ 
 require_once __DIR__ . "/../db.php";
 
 // Returns true if the love was added (false if it already existed) //
