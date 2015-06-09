@@ -1,5 +1,5 @@
 <?php 
-require_once __DIR__ . "/../html.php";
+require_once __DIR__ . "/../web.php";
 require_once __DIR__ . "/../core/internal/validate.php";
 require_once __DIR__ . "/../core/internal/emoji.php";
 require_once __DIR__ . "/../core/post.php";

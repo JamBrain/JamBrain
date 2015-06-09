@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/../../api.php";
 require_once __DIR__ . "/../../core/star.php";
+require_once __DIR__ . "/../../core/user.php";
 
 // Stars are Favourites or Bookmarks. If you want to remember/save something, you Star it.
 // Stars belong only to users (UID>0). You cannot Star if you are not logged in.
@@ -18,14 +19,14 @@ require_once __DIR__ . "/../../core/star.php";
 
 // TODO: Limit access to certain data to user level
 
-$response = api_NewResponse();
+$response = json_NewResponse();
 
 // Retrieve session, store UID
 user_StartSession();
 $response['uid'] = user_GetId();
 
 // Retrieve Action and Arguments
-$arg = api_ParseActionURL();
+$arg = util_ParseActionURL();
 $action = array_shift($arg);
 $arg_count = count($arg);
 
@@ -38,7 +39,7 @@ if ( $arg_count === 0 ) {
 		// do nothing //
 	}
 	else { 
-		api_EmitErrorAndExit(); 
+		json_EmitError(); 
 	}
 }
 else if ( $arg_count === 1 ) {
@@ -52,11 +53,11 @@ else if ( $arg_count === 1 ) {
 		$response['item'] = intval($arg[0]);
 		
 		if ( $response['item'] === 0 ) {
-			api_EmitErrorAndExit(); 
+			json_EmitError(); 
 		}
 	}
 	else { 
-		api_EmitErrorAndExit(); 
+		json_EmitError(); 
 	}
 }
 else if ( $arg_count === 2 ) {
@@ -65,17 +66,17 @@ else if ( $arg_count === 2 ) {
 		$offset = abs(intval($arg[1]));
 	}
 	else { 
-		api_EmitErrorAndExit(); 
+		json_EmitError(); 
 	}
 }
 else {
-	api_EmitErrorAndExit();
+	json_EmitError();
 }
 
 
 // If no UID specified, exit
 if ( $response['uid'] === 0 ) {
-	api_EmitErrorAndExit();
+	json_EmitError();
 }
 
 
@@ -120,9 +121,9 @@ else if ( $action === 'me' || $action === 'uid' ) {
 	$response['result'] = star_Fetch( $response['uid'], $offset, $limit );
 }
 else {
-	api_EmitErrorAndExit();
+	json_EmitError();
 }
 
 // Done. Output the response.
-api_EmitJSON($response);
+json_Emit($response);
 ?>

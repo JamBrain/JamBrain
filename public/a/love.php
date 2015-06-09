@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/../../api.php";
 require_once __DIR__ . "/../../core/love.php";
+require_once __DIR__ . "/../../core/user.php";
 
 // Love is Likes. If you like something, you give it a Love.
 // Love either belongs to to a user, or an IP address (to allow more love).
@@ -24,7 +25,7 @@ require_once __DIR__ . "/../../core/love.php";
 
 // TODO: Limit access to certain data to user level
 
-$response = api_NewResponse();
+$response = json_NewResponse();
 
 // Retrieve session, store UID
 user_StartSession();
@@ -39,7 +40,7 @@ else {
 }
 
 // Retrieve Action and Arguments
-$arg = api_ParseActionURL();
+$arg = util_ParseActionURL();
 $action = array_shift($arg);
 $arg_count = count($arg);
 
@@ -52,7 +53,7 @@ if ( $arg_count === 0 ) {
 		// do nothing //
 	}
 	else { 
-		api_EmitErrorAndExit(); 
+		json_EmitError(); 
 	}
 }
 else if ( $arg_count === 1 ) {
@@ -61,7 +62,7 @@ else if ( $arg_count === 1 ) {
 		
 		// Even though this will work, UID=0 should be an error
 		if ( $response['uid'] === 0 ) {
-			api_EmitErrorAndExit();
+			json_EmitError();
 		}
 	}
 	else if ( $action === 'ip' ) {
@@ -71,11 +72,11 @@ else if ( $arg_count === 1 ) {
 			
 			// Even though this will work, IP=0.0.0.0 should be an error
 			if ( ip2long($response['ip']) === 0 ) {
-				api_EmitErrorAndExit();
+				json_EmitError();
 			}
 		}
 		else {
-			api_EmitErrorAndExit();
+			json_EmitError();
 		}
 	}
 	else if ( $action === 'me' ) {
@@ -85,11 +86,11 @@ else if ( $arg_count === 1 ) {
 		$response['item'] = intval($arg[0]);
 		
 		if ( $response['item'] === 0 ) {
-			api_EmitErrorAndExit();
+			json_EmitError();
 		}
 	}
 	else { 
-		api_EmitErrorAndExit(); 
+		json_EmitError(); 
 	}
 }
 else if ( $arg_count === 2 ) {
@@ -99,7 +100,7 @@ else if ( $arg_count === 2 ) {
 
 		// Even though this will work, UID=0 should be an error
 		if ( $response['uid'] === 0 ) {
-			api_EmitErrorAndExit();
+			json_EmitError();
 		}
 	}
 	else if ( $action === 'ip' ) {
@@ -110,19 +111,19 @@ else if ( $arg_count === 2 ) {
 
 			// Even though this will work, IP=0.0.0.0 should be an error
 			if ( ip2long($response['ip']) === 0 ) {
-				api_EmitErrorAndExit();
+				json_EmitError();
 			}
 		}
 		else {
-			api_EmitErrorAndExit();
+			json_EmitError();
 		}
 	}
 	else { 
-		api_EmitErrorAndExit();
+		json_EmitError();
 	}
 }
 else {
-	api_EmitErrorAndExit();
+	json_EmitError();
 }
 
 
@@ -197,7 +198,7 @@ else if ( $action === 'me' || $action === 'uid' || $action === 'ip' ) {
 	$response['result'] = love_Fetch( $response['uid'], $response['ip'], $offset, $limit );
 }
 else {
-	api_EmitErrorAndExit();
+	json_EmitError();
 }
 
 // Result optimization: Remove UID or IP if zero.
@@ -219,5 +220,5 @@ else {
 
 
 // Done. Output the response.
-api_EmitJSON($response);
+json_Emit($response);
 ?>

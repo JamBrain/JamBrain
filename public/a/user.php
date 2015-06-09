@@ -1,23 +1,30 @@
 <?php
 require_once __DIR__ . "/../../api.php";
 require_once __DIR__ . "/../../db.php";
+require_once __DIR__ . "/../../core/user.php";
 require_once __DIR__ . "/../../core/internal/validate.php";
 
-$response = api_newResponse();
+$response = json_NewResponse();
 
 // Retrieve Session, store UID
 user_StartSession();
 $response['uid'] = user_GetId();
 
 // Retrieve Action and Arguments
-$arg = api_parseActionURL();
+$arg = util_ParseActionURL();
 $action = array_shift($arg);
 $arg_count = count($arg);
 
+// Bail if not an HTTP POST
+//if ( $action !== 'verify' ) {
+//	if ( $_SERVER['REQUEST_METHOD'] !== 'POST' ) {
+//		json_EmitError();
+//	}
+//}
 
 // Confirm we have a legal number of arguments
 if ( $arg_count > 1 ) {
-	my_loginError();
+	json_EmitError();
 }
 
 
@@ -31,14 +38,9 @@ if ( $arg_count > 1 ) {
 */
 if ( $action === 'login' ) {
 	// Generic Error Function for everything (so to not offer any hints if abusing)
-	function my_loginError() {
-		api_emitErrorAndExit(400,"BAD LOGIN");
+	function my_LoginError() {
+		json_EmitError(401,"Invalid Login or Password");
 	}
-
-	// Bail if not an HTTP POST
-//	if ( $_SERVER['REQUEST_METHOD'] !== 'POST' ) {
-//		my_loginError();
-//	}
 	
 	// If already logged in, dispose of the active session.
 	if ( $response['uid'] !== 0 ) {
@@ -62,7 +64,7 @@ if ( $action === 'login' ) {
 		$password = trim($_REQUEST['p']);
 	}
 	else {
-		my_loginError();
+		my_LoginError();
 	}
 	
 	// Sanitize the data
@@ -70,7 +72,7 @@ if ( $action === 'login' ) {
 	if ( !$mail ) {
 		$login = sanitize_Slug($login);
 		if ( !$login ) {
-			my_loginError();
+			my_LoginError();
 		}
 	}
 	
@@ -194,9 +196,9 @@ else if ( $action === 'purge-cache' ) {
 	// Clear the Login retries cache of a specific user.
 }
 else {
-	api_emitErrorAndExit();
+	json_EmitError();
 }
 
 // Done. Output the response.
-api_emitJSON($response);
+json_Emit($response);
 ?>

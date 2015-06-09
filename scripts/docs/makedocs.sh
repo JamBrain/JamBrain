@@ -14,8 +14,3 @@ echo ""
 echo "JavaScript (Client Side Source Code): output/index.html output/README.md"
 $(cd javascript; sh make.sh)
 echo ""
-
-echo "You need NodeJS and PHP installed locally to make the docs."
-echo "You need: "
-echo "sudo npm install -g jsdoc-to-markdown"
-

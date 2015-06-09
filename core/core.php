@@ -1,5 +1,5 @@
 <?php
-/** core/util.php - Utilities Library.
+/** core.php - Starship Helpers
 @file
 */
 

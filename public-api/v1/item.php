@@ -3,12 +3,12 @@ require_once __DIR__ . "/../../api.php";
 
 // CMW API //
 
-$out = api_NewResponse();
+$out = json_NewResponse();
 $out['item'] = 1;
 
 //$out['args'] = $_GET;
 //$out['server'] = $_SERVER;
-$out['parsed'] = api_ParseActionURL();
+$out['parsed'] = util_ParseActionURL();
 
 /**
  * @api {GET} /v1/get/:item /v1/get
@@ -49,5 +49,5 @@ $out['parsed'] = api_ParseActionURL();
 */
 
 
-api_EmitJSON( $out );
+json_Emit( $out );
 ?>
