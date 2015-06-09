@@ -1,6 +1,6 @@
 <?php
-/** core.php - Starship Helpers
-@file
+/** @file core.php 
+	@brief Starship Helpers
 */
 
 require_once __DIR__ . "/../config.php";	// Configuration and Settings //

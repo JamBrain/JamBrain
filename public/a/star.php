@@ -1,4 +1,8 @@
 <?php
+/**	@file
+*	@brief Internal AJAX API for managing Star's (Favourites)
+**/
+
 require_once __DIR__ . "/../../api.php";
 require_once __DIR__ . "/../../core/star.php";
 require_once __DIR__ . "/../../core/user.php";

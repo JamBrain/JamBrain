@@ -1,4 +1,8 @@
 <?php
+/** @file
+*	@brief Public RESTful API for retrieving Items
+**/
+
 require_once __DIR__ . "/../../api.php";
 
 // CMW API //

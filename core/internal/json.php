@@ -1,5 +1,5 @@
 <?php
-/** Support library for emitting JSON (typically for making APIs) 
+/** @brief Support library for emitting JSON (typically for making APIs) 
 *	@file
 **/
 

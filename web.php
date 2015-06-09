@@ -1,5 +1,7 @@
 <?php
-/* web.php - a General Library Include for making Web pages */
+/** @file web.php 
+	@brief a General Include for making Web pages 
+**/
 
 require_once __DIR__ . "/core/internal/html.php";	
 

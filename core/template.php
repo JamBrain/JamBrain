@@ -1,9 +1,7 @@
 <?php
-/**
- * Template
- *
- * @file
- */
+/** @file template.php
+*	@brief Helper library for instancing templates (themes)
+**/
 
 /** @name Internal
  *  @subpage
