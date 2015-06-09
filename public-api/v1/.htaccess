@@ -12,5 +12,6 @@ RewriteCond %{REQUEST_FILENAME} -f
 RewriteRule . - [END]
 
 # Bad URLs #
-RewriteRule . /index.php [QSA,END]
-DirectoryIndex /index.php
+RewriteRule . /404.json [R=404,QSA,END]
+ErrorDocument 404 /404.json
+DirectoryIndex /404.json
