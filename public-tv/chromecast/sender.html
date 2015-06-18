@@ -133,12 +133,12 @@ function receiverMessage(namespace, message) {
  * receiver listener during initialization
  */
 function receiverListener(e) {
+  console.log(e);
   if( e === 'available' ) {
     appendMessage("receiver found");
   }
   else {
     appendMessage("receiver list empty");
-    console.log(e);
   }
 }
 
