@@ -1,5 +1,7 @@
 .DS_STORE
 .vagrant
+.ftpquota
+error_log
 public/dev
 public/static
 config.php
