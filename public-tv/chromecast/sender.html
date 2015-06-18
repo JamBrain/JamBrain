@@ -62,10 +62,11 @@ if (!chrome.cast || !chrome.cast.isAvailable) {
  */
 function initializeCastApi() {
   var sessionRequest = new chrome.cast.SessionRequest(applicationID);
+  console.log(sessionRequest);
   var apiConfig = new chrome.cast.ApiConfig(sessionRequest,
     sessionListener,
     receiverListener);
-
+  console.log(apiConfig);
   chrome.cast.initialize(apiConfig, onInitSuccess, onError);
 };
 
