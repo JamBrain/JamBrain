@@ -1,0 +1,89 @@
+<html data-cast-api-enabled="true">
+	<head>
+		<title>Hello World Chrome Sender</title>
+		<link rel="stylesheet" type="text/css" href="sender.css" />
+	</head>
+	<body>
+		<div class="receiver-div">
+			<h3>Choose A Receiver</h3>
+			<ul class="receiver-list">
+				<li>Looking for receivers...</li>
+			</ul>
+		</div>
+		<button class="kill" disabled>Kill the Connection</button>
+	</body>
+
+	<script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+	<script src="//underscorejs.org/underscore-min.js"></script>
+
+	<script>
+		var cast_api,
+			cv_activity,
+			receiverList,
+			$killSwitch = $('.kill');
+
+		window.addEventListener('message', function(event) {
+			if (event.source === window && event.data &&
+					event.data.source === 'CastApi' &&
+					event.data.event === 'Hello') {
+				initializeApi();
+			}
+		});
+
+		initializeApi = function() {
+			if (!cast_api) {
+				cast_api = new cast.Api();
+				cast_api.addReceiverListener('B685B335', onReceiverList);
+			}
+		};
+
+		onReceiverList = function(list) {
+			if (list.length > 0) {
+				receiverList = list;
+				$('.receiver-list').empty();
+				receiverList.forEach(function(receiver) {
+					$listItem = $('<li><a href="#" data-id="' + receiver.id + '">' + receiver.name + '</a></li>');
+					$listItem.on('click', receiverClicked);
+					$('.receiver-list').append($listItem);
+				});
+			}
+		};
+
+		receiverClicked = function(e) {
+			e.preventDefault();
+
+			var $target = $(e.target),
+				receiver = _.find(receiverList, function(receiver) {
+					return receiver.id === $target.data('id');
+				});
+
+			doLaunch(receiver);
+		};
+
+		doLaunch = function(receiver) {
+			if (!cv_activity) {
+				var request = new cast.LaunchRequest('B685B335', receiver);
+
+				$killSwitch.prop('disabled', false);
+
+				cast_api.launch(request, onLaunch);
+			}
+		};
+
+		onLaunch = function(activity) {
+			if (activity.status === 'running') {
+				cv_activity = activity;
+				
+				cast_api.sendMessage(cv_activity.activityId, 'com.sykhronics.ldtv', {type: 'HelloWorld'});
+			}
+		};
+
+		$killSwitch.on('click', function() {
+			cast_api.stopActivity(cv_activity.activityId, function(){
+				cv_activity = null;
+			
+				$killSwitch.prop('disabled', true);
+			});
+		});
+	</script>
+</html>

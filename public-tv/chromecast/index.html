@@ -1,0 +1,32 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="receiver.css" />
+<body class="initial">
+	<div class="messages">
+		<h1>Waiting for Messages...</h1>
+	</div>
+</body>
+
+<script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+<script src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+<script>
+	$(function() {
+		var receiver = new cast.receiver.Receiver('B685B335', ['com.sykhronics.ldtv']),
+			channelHandler = new cast.receiver.ChannelHandler('com.sykhronics.ldtv'),
+			$messages = $('.messages'),
+			$body = $('body');
+		
+		channelHandler.addChannelFactory(
+			receiver.createChannelFactory('com.sykhronics.ldtv'));
+
+		receiver.start();
+
+		channelHandler.addEventListener(cast.receiver.Channel.EventType.MESSAGE, onMessage.bind(this));
+
+		function onMessage(event) {
+			$messages.html(event.message.type);
+		}
+	});
+</script>
+
+</html>
