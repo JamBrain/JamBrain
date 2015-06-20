@@ -9,8 +9,6 @@ require_once __DIR__ . "/../db.php";
 
 // Returns true if the love was added (false if it already existed) //
 function love_Add( &$node, &$user = 0, &$ip = '0.0.0.0' ) {
-	global $__love_table;
-	
 	db_Connect();
 
 	db_Query(

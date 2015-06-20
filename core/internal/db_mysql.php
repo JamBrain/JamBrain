@@ -98,12 +98,29 @@ function db_FetchSingle($query) {
 
 function db_AffectedRows() {
 	global $db;
+
+	if (!isset($db->affected_rows))
+		return null;
+
 	return $db->affected_rows;
 }
 
 function db_NumRows() {
 	global $db;
+
+	if (!isset($db->num_rows))
+		return null;
+
 	return $db->num_rows;
+}
+
+function db_GetId() {
+	global $db;
+	
+	if (!isset($db->insert_id))
+		return null;
+	
+	return $db->insert_id;
 }
 
 ?>

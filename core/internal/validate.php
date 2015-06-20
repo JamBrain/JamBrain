@@ -89,6 +89,17 @@ function sanitize_Email($mail) {
 	return $mail;
 }
 
+function sanitize_NodeType($type) {
+	$type = mb_strtolower($type);
+	switch ($type) {
+		case "post": return $type;
+		case "comment": return $type;
+		case "game": return $type;
+		case "redirect": return $type;
+	};
+	return false;
+}
+
 function sanitize_Slug($slug) {
 	$slug = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $slug);	// Remove accents
 	$slug = strip_tags($slug);									// No HTML/XML tags
