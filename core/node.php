@@ -52,7 +52,7 @@ function node_AddUser( $id, $mail, $password ) {
 
 	db_Query(
 		"INSERT `" . CMW_TABLE_USER . "` (".
-			"`id`,".
+			"`node`,".
 			"`mail`,".
 			"`hash`".
 		") ".
@@ -88,7 +88,7 @@ function user_GetHashById( $id ) {
 
 	$hash = db_FetchSingle( 
 		"SELECT `hash` FROM `" . CMW_TABLE_USER . "` WHERE ".
-			"`id`=" . $id .
+			"`node`=" . $id .
 			" LIMIT 1" .
 		";");
 	

@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
-require_once __DIR__ . "/../db.php";
+require_once __DIR__ . "/../../db.php";
+require_once __DIR__ . "/../../core/node.php";
 
 db_Connect();
 echo "Connected: " . db_IsConnected() . "\n";
@@ -28,10 +29,13 @@ echo "Connected: " . db_IsConnected() . "\n";
 //	$star_table = $table_prefix . "star";
 		
 	db_Query("DROP TABLE " . CMW_TABLE_NODE . ";",true);
-	db_Query("DROP TABLE " . CMW_TABLE_LINK . ";",true);
+	db_Query("DROP TABLE " . CMW_TABLE_NODE_LINK . ";",true);
+	db_Query("DROP TABLE " . CMW_TABLE_NODE_DIFF . ";",true);
+	db_Query("DROP TABLE " . CMW_TABLE_NODE_LOVE . ";",true);
+	db_Query("DROP TABLE " . CMW_TABLE_NODE_STAR . ";",true);
 	db_Query("DROP TABLE " . CMW_TABLE_USER . ";",true);
-	db_Query("DROP TABLE " . CMW_TABLE_LOVE . ";",true);
-	db_Query("DROP TABLE " . CMW_TABLE_STAR . ";",true);
+	db_Query("DROP TABLE " . CMW_TABLE_COMMENT . ";",true);
+	db_Query("DROP TABLE " . CMW_TABLE_COMMENT_LOVE . ";",true);
 		
 	db_Query("SET storage_engine=InnoDB;");
 //	db_Query("SET collation_server=utf8_unicode_ci;");
@@ -98,6 +102,14 @@ echo "Connected: " . db_IsConnected() . "\n";
 		)" . $dbtype_default . ";");
 	//			INDEX(root,parent,slug),
 	
+	// Reserve the first 32 nodes for special use //
+	node_Add("group","root","/root","");
+	node_Add("group","user","/user","");
+
+	for ( $idx = 3; $idx <= 32; $idx++ ) {
+		node_Add("null","reserved-".$idx,"??","");
+	}
+	
 	// Posts (everything) -- Get, is PUBLISHED=true, sort by PUBLISHED, LIMIT 10
 	// Posts (popular) -- Get, is PUBLISHED=true, is LOVE >= 6 sort by PUBLISHED, LIMIT 10
 	// Posts (favourites) -- Get Favourites (INT), is PUBLISHED=true, is AUTHOR=(IN Favourites), sort by PUBLISHED, LIMIT 10
@@ -113,7 +125,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 	
 	
 	db_Query(
-		"CREATE TABLE " . CMW_TABLE_LINK . " (
+		"CREATE TABLE " . CMW_TABLE_NODE_LINK . " (
 			id_a BIGINT UNSIGNED NOT NULL DEFAULT 0,
 				INDEX(id_a),
 			id_b BIGINT UNSIGNED NOT NULL DEFAULT 0,
@@ -175,11 +187,6 @@ Thing {
 */
 	// id author_id "author,creator" ""              **STORE ID_B**
 
-
-
-
-
-
 	
 	// Need to be able to describe:
 	// var->key->key = value
@@ -192,6 +199,12 @@ Thing {
 	// id 0 0 "social,twitch,name" "povrazor"
 	// id 0 0 "social,twitch,id" "1920470160614"
 	// id 0 0 "avatar,," "image.png"	
+
+	// Alternative format (dashes create namespaces)
+	// id 0 0 "social-twitter,name" "mikekasprzak"			json['social']['twitter']['name']
+	// id 0 0 "social-facebook,name" "chubby wubby"
+	// id 0 0 "social-twitch,name" "povrazor"
+	// id 0 0 "social-twitch,id" "1920470160614"
 	
 	// GAME
 	   // Who worked on it? Who can edit it?
@@ -219,13 +232,41 @@ Thing {
 	   // How many Teams? How many Solo Devs?
 	// an SQL query that does a count.
 	   // All games made by teams?
-	
+
+
+
+	db_Query(
+		"CREATE TABLE " . CMW_TABLE_COMMENT . " (
+			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,
+			parent BIGINT UNSIGNED NOT NULL DEFAULT 0,
+			node BIGINT UNSIGNED NOT NULL DEFAULT 0,
+				INDEX (node),
+				
+			author BIGINT UNSIGNED NOT NULL DEFAULT 0,
+				/*INDEX (author),*/
+			
+			time_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+			time_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+			time_published DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+				INDEX (time_published),
+
+			body TEXT NOT NULL,
+
+			/*comment_count INT NOT NULL DEFAULT 0,*/
+			love_count INT NOT NULL DEFAULT 0 /*,*/
+			/*favourite_count INT NOT NULL DEFAULT 0,*/
+			/*popularity INT NOT NULL DEFAULT 0,*/
+			
+			/*link_cache TEXT NOT NULL,*/
+			/*favourite_cache TEXT NOT NULL*/
+		)" . $dbtype_default . ";");
+
 	
 	// Private Data (Email, Password Hash). Never send these. //
 	db_Query(
 		"CREATE TABLE " . CMW_TABLE_USER . " (
-			id BIGINT UNSIGNED NOT NULL UNIQUE,
-				INDEX(id),
+			node BIGINT UNSIGNED NOT NULL UNIQUE,
+				INDEX(node),
 
 			mail VARCHAR(191) NOT NULL UNIQUE,
 				INDEX(mail),
@@ -244,7 +285,7 @@ Thing {
 	
 	// Love Table. If a user has given a +1 to something. //
 	db_Query(
-		"CREATE TABLE " . CMW_TABLE_LOVE . " (
+		"CREATE TABLE " . CMW_TABLE_NODE_LOVE . " (
 			node BIGINT UNSIGNED NOT NULL,
 				INDEX(node),
 			user BIGINT UNSIGNED NOT NULL,
@@ -256,9 +297,20 @@ Thing {
 	// http://dev.mysql.com/doc/refman/5.0/en/miscellaneous-functions.html#function_inet-aton
 	// ipv6 forget about it for now //
 
+	// Comment Love Table. If a user has given a +1 to something. //
+	db_Query(
+		"CREATE TABLE " . CMW_TABLE_COMMENT_LOVE . " (
+			comment BIGINT UNSIGNED NOT NULL,
+				INDEX(comment),
+			user BIGINT UNSIGNED NOT NULL,
+				INDEX comment_user(comment,user),
+			ip INT UNSIGNED NOT NULL,
+				UNIQUE comment_user_ip(comment,user,ip)
+		)" . $dbtype_default . ";");
+
 	// Star Table. If a user has favourited something (so they can view it later). //
 	db_Query(
-		"CREATE TABLE " . CMW_TABLE_STAR . " (
+		"CREATE TABLE " . CMW_TABLE_NODE_STAR . " (
 			node BIGINT UNSIGNED NOT NULL,
 				INDEX(node),
 			user BIGINT UNSIGNED NOT NULL,
@@ -280,5 +332,5 @@ Thing {
 	// MyISAM (Server Default) - 
 	// Archive - 
 	
-	echo "This script doesn't do mich\n";
+	echo "Done\n";
 ?>

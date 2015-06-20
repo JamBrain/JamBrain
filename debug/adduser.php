@@ -56,7 +56,7 @@
 	
 			$id = node_Add(
 				$type,$slug,$name,$body,
-				0,0,0,
+				0,0,2,
 				$publish
 			);
 			

@@ -11,7 +11,7 @@ function star_Add( &$node, &$user ) {
 	db_Connect();
 
 	db_Query( 
-		"INSERT IGNORE `" . CMW_TABLE_STAR . "` (".
+		"INSERT IGNORE `" . CMW_TABLE_NODE_STAR . "` (".
 			"`node`,".
 			"`user`".
 		") ".
@@ -31,7 +31,7 @@ function star_Remove( &$node, &$user ) {
 	db_Connect();
 
 	db_Query( 
-		"DELETE FROM `" . CMW_TABLE_STAR . "` WHERE ".
+		"DELETE FROM `" . CMW_TABLE_NODE_STAR . "` WHERE ".
 			"`node`=" . $node . " AND " .
 			"`user`=" . $user .
 		";");
@@ -47,7 +47,7 @@ function star_Fetch( &$user = 0, $offset = null, $limit = null ) {
 	db_Connect();
 
 	return db_FetchSingle( 
-		"SELECT `node` FROM `" . CMW_TABLE_STAR . "` WHERE ".
+		"SELECT `node` FROM `" . CMW_TABLE_NODE_STAR . "` WHERE ".
 			"`user`=" . $user .
 		(is_null($limit) ? "" : (" LIMIT " . $limit)) . 
 		(is_null($offset) ? "" : (" OFFSET " . $offset)) . 

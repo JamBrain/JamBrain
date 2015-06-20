@@ -12,12 +12,14 @@ if ( !defined('CMW_TABLE_PREFIX') ) {
 	define('CMW_TABLE_PREFIX',"cmw_");	
 }
 
-// TODO: Once we upgrade to PHP 5.6, change the logic below.
+define('CMW_TABLE_NODE',CMW_TABLE_PREFIX."node");
+define('CMW_TABLE_NODE_LINK',CMW_TABLE_PREFIX."node_link");
+define('CMW_TABLE_NODE_DIFF',CMW_TABLE_PREFIX."node_diff");
+define('CMW_TABLE_NODE_LOVE',CMW_TABLE_PREFIX."node_love");
+define('CMW_TABLE_NODE_STAR',CMW_TABLE_PREFIX."node_star");
 
-define('CMW_TABLE_NODE',CMW_TABLE_PREFIX."node");//const CMW_TABLE_NODE = CMW_TABLE_PREFIX."node";
-define('CMW_TABLE_LINK',CMW_TABLE_PREFIX."link");//const CMW_TABLE_LINK = CMW_TABLE_PREFIX."link";
+define('CMW_TABLE_USER',CMW_TABLE_PREFIX."user");
 
-define('CMW_TABLE_USER',CMW_TABLE_PREFIX."user");//const CMW_TABLE_USER = CMW_TABLE_PREFIX."user";
-define('CMW_TABLE_LOVE',CMW_TABLE_PREFIX."love");//const CMW_TABLE_LOVE = CMW_TABLE_PREFIX."love";
-define('CMW_TABLE_STAR',CMW_TABLE_PREFIX."star");//const CMW_TABLE_STAR = CMW_TABLE_PREFIX."star";
+define('CMW_TABLE_COMMENT',CMW_TABLE_PREFIX."comment");
+define('CMW_TABLE_COMMENT_LOVE',CMW_TABLE_PREFIX."comment_love");
 ?>

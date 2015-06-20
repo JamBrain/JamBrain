@@ -12,7 +12,7 @@ function love_Add( &$node, &$user = 0, &$ip = '0.0.0.0' ) {
 	db_Connect();
 
 	db_Query(
-		"INSERT IGNORE `" . CMW_TABLE_LOVE . "` (".
+		"INSERT IGNORE `" . CMW_TABLE_NODE_LOVE . "` (".
 			"`node`,".
 			"`user`,".
 			"`ip`".
@@ -34,7 +34,7 @@ function love_Remove( &$node, &$user = 0, &$ip = '0.0.0.0' ) {
 	db_Connect();
 
 	db_Query( 
-		"DELETE FROM `" . CMW_TABLE_LOVE . "` WHERE ".
+		"DELETE FROM `" . CMW_TABLE_NODE_LOVE . "` WHERE ".
 			"`node`=" . $node . " AND " .
 			"`user`=" . $user . " AND " .
 			"`ip`=INET_ATON('" . $ip . "')" .
@@ -51,7 +51,7 @@ function love_Fetch( &$user = 0, &$ip = '0.0.0.0', $offset = null, $limit = null
 	db_Connect();
 
 	return db_FetchSingle( 
-		"SELECT `node` FROM `" . CMW_TABLE_LOVE . "` WHERE ".
+		"SELECT `node` FROM `" . CMW_TABLE_NODE_LOVE . "` WHERE ".
 			"`user`=" . $user . " AND " .
 			"`ip`=INET_ATON('" . $ip . "')" .
 		(is_null($limit) ? "" : (" LIMIT " . $limit)) . 
