@@ -16,6 +16,7 @@
 	// TODO: Include time with hash, and use it to hash. Give a window of 2-5 minutes for valid time
 	//	hashes. This is to prevent people from using an extracted hash without knowing the true
 	//	password, as ideally the true password is never transmitted.
+	//	EDIT: No, this doesn't work. Time only works if encoding/decoding, not hashing.
 	
 	function main() {
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {

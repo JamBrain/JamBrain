@@ -68,12 +68,18 @@
 			<option value="game">Game</option>
 			<option value="redirect">Redirect</option>
 		</select><br />
-		Slug: <input type="text" name="slug" value=""> (omit, and we'll generate one from Name)<br />
 		Name: <input type="text" name="name" value="" required><br />
+		Slug: <input type="text" name="slug" value=""> (omit, and we'll generate one from Name)<br />
 		Body:<br /><textarea name="body"></textarea><br />
-		Author Id: <input type="text" name="author" value="0" required><br />
-		Parent Id: <input type="text" name="parent" value="0" required><br />
-		Root Id: <input type="text" name="root" value="0" required><br />
+		Author Id: <input type="text" name="author" value="0" required> (who created the item)<br />
+		Parent Id: <input type="text" name="parent" value="0" required> (heiarchical sorting only)<br />
+		Root Id:
+		<input list="root" name="root" value="0" required />
+		<datalist id="root">
+			<option value="1">1 (root)</option>
+			<option value="2">2 (user)</option>
+		</datalist> (I belong to this node (owner?))<br />
+		<!--<input type="text" name="root" value="0" required><br />-->
 		Published: 
 		<select name="publish" required>
 			<option value="false">no</option>
