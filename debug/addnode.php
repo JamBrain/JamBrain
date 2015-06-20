@@ -66,7 +66,10 @@
 			<option value="post">Post</option>
 			<option value="comment">Comment</option>
 			<option value="game">Game</option>
+			<option value="event">Event</option>
+			<option value="group">Group</option>
 			<option value="redirect">Redirect</option>
+			<!--<option value="null">Null</option>-->
 		</select><br />
 		Name: <input type="text" name="name" value="" required><br />
 		Slug: <input type="text" name="slug" value=""> (omit, and we'll generate one from Name)<br />
