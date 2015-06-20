@@ -96,7 +96,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 			link_cache TEXT NOT NULL,
 			favourite_cache TEXT NOT NULL
 		)" . $dbtype_default . ";");
-	
+	//			INDEX(root,parent,slug),
 	
 	// Posts (everything) -- Get, is PUBLISHED=true, sort by PUBLISHED, LIMIT 10
 	// Posts (popular) -- Get, is PUBLISHED=true, is LOVE >= 6 sort by PUBLISHED, LIMIT 10
@@ -232,6 +232,11 @@ Thing {
 				
 			hash VARCHAR(128) NOT NULL
 		)" . $dbtype_default . ";");
+
+//			slug VARCHAR(64) CHARSET latin1 NOT NULL UNIQUE,
+//				INDEX(slug),
+	// NOTE: Slug must exactly match the slug of the Node with the same Id 
+
 	// As of PHP 5.5, password_hash uses bcrypt which needs 60 chars.
 	// Various articles recommend making it 255 chars, but as of 2015 we don't need it yet.
 	// My compromise is to set it to 128 chars, though we don't need more than 64.
