@@ -9,5 +9,5 @@ SCRIPT=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
 cd $SCRIPTPATH
 
-$(cd apache ; sudo sh add-ports.sh)
-$(cd mysql ; ./dbsetup)
+(cd apache ; sh add-ports.sh)
+(cd mysql ; php dbsetup)
