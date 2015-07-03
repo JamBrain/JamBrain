@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * User/Session
+ *
+ * @file
+ */
+ 
 // TODO: user_IsAdmin(), user_IsSuper()
 
 $__session_started = false;

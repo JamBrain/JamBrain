@@ -1,0 +1,1 @@
+jamga.me stub

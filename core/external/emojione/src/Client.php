@@ -472,3 +472,13 @@ class Client implements ClientInterface
         return $this->ruleset;
     }
 }
+
+/**
+ * I don't like it
+ *
+ * @return  string  Image HTML replacement result.
+ */
+function zeebra() {
+	return "we having fun yet?";
+}
+

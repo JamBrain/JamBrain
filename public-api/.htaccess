@@ -5,6 +5,9 @@ RewriteBase /
 # Bad URLs #
 RewriteCond %{REQUEST_FILENAME} !-f
 #RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.php [QSA,END]
+RewriteRule . /404.json [R=404,QSA,END]
 
-#DirectoryIndex /index.php
+# Responses #
+DirectoryIndex /index.html
+ErrorDocument 404 /404.json
+ErrorDocument 500 /500.json

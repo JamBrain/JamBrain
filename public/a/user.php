@@ -1,37 +1,50 @@
 <?php
+/**	@file
+*	@brief Internal AJAX API for managing Users (Login, Logout, Register, Delete, etc)
+**/
+
 require_once __DIR__ . "/../../api.php";
 require_once __DIR__ . "/../../db.php";
+require_once __DIR__ . "/../../core/user.php";
 require_once __DIR__ . "/../../core/internal/validate.php";
 
-$response = api_newResponse();
+$response = json_NewResponse();
 
 // Retrieve Session, store UID
 user_StartSession();
 $response['uid'] = user_GetId();
 
 // Retrieve Action and Arguments
-$arg = api_parseActionURL();
+$arg = util_ParseActionURL();
 $action = array_shift($arg);
 $arg_count = count($arg);
 
+// Bail if not an HTTP POST
+//if ( $action !== 'verify' ) {
+//	if ( $_SERVER['REQUEST_METHOD'] !== 'POST' ) {
+//		json_EmitError();
+//	}
+//}
 
 // Confirm we have a legal number of arguments
 if ( $arg_count > 1 ) {
-	my_loginError();
+	json_EmitError();
 }
 
 
 // On 'login' Action, attempt to log-in given POST data.
+/**
+ * @api {POST} /a/user/login /a/user/login
+ * @apiName UserLogin
+ * @apiGroup User
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+*/
 if ( $action === 'login' ) {
 	// Generic Error Function for everything (so to not offer any hints if abusing)
-	function my_loginError() {
-		api_emitErrorAndExit(400,"BAD LOGIN");
+	function my_LoginError() {
+		json_EmitError(401,"Invalid Login or Password");
 	}
-
-	// Bail if not an HTTP POST
-//	if ( $_SERVER['REQUEST_METHOD'] !== 'POST' ) {
-//		my_loginError();
-//	}
 	
 	// If already logged in, dispose of the active session.
 	if ( $response['uid'] !== 0 ) {
@@ -55,7 +68,7 @@ if ( $action === 'login' ) {
 		$password = trim($_REQUEST['p']);
 	}
 	else {
-		my_loginError();
+		my_LoginError();
 	}
 	
 	// Sanitize the data
@@ -63,7 +76,7 @@ if ( $action === 'login' ) {
 	if ( !$mail ) {
 		$login = sanitize_Slug($login);
 		if ( !$login ) {
-			my_loginError();
+			my_LoginError();
 		}
 	}
 	
@@ -103,37 +116,93 @@ if ( $action === 'login' ) {
 	// Retrieve my list of Favourites, and a list of most recent posts I've loved. //
 }
 // On 'logout' action, Destroy the Session
+/**
+ * @api {POST} /a/user/logout /a/user/logout
+ * @apiName UserLogout
+ * @apiGroup User
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'logout' ) {
 	user_EndSession();		// Destroy session
 }
+/**
+ * @api {POST} /a/user/register /a/user/register
+ * @apiName UserRegister
+ * @apiGroup User
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'register' ) {
 	// Add a user (if legal), send a verification e-mail.
 }
+/**
+ * @api {POST} /a/user/verify /a/user/verify
+ * @apiName UserVerify
+ * @apiGroup User
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'verify' ) {	
 	// Verify a previously added user given a verification URL.
 }
+/**
+ * @api {POST} /a/user/resend /a/user/resend
+ * @apiName UserResendMail
+ * @apiGroup User
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'resend' ) {	
 	// Resend verification e-mail.
 }
+/**
+ * @api {POST} /a/user/lost-password /a/user/lost-password
+ * @apiName UserLostPassword
+ * @apiGroup User
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'lost-password' ) {	
 	// Send a password recovery e-mail.
 }
+/**
+ * @api {POST} /a/user/admin/verify-user /a/user/admin/verify-user
+ * @apiName AdminVerifyUser
+ * @apiGroup User
+ * @apiPermission Admin
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'verify-user' ) {	
 	// *** Admin Only *** //
 	// Verify a user.
 }
+/**
+ * @api {POST} /a/user/admin/delete-user /a/user/admin/delete-user
+ * @apiName AdminDeleteUser
+ * @apiGroup User
+ * @apiPermission Admin
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'delete-user' ) {	
 	// *** Admin Only *** //
 	// Remove a user.
 }
-else if ( $action === 'purge-retry-cache' ) {	
+/**
+ * @api {POST} /a/user/admin/purge-cache /a/user/admin/purge-cache
+ * @apiName AdminPurgeCache
+ * @apiGroup User
+ * @apiPermission Admin
+ * @apiVersion 0.1.0
+*/
+else if ( $action === 'purge-cache' ) {	
 	// *** Admin Only *** //
 	// Clear the Login retries cache of a specific user.
 }
 else {
-	api_emitErrorAndExit();
+	json_EmitError();
 }
 
 // Done. Output the response.
-api_emitJSON($response);
+json_Emit($response);
 ?>

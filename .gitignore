@@ -1,6 +1,10 @@
 .DS_STORE
 .vagrant
-public/utils
-public/phpmyadmin
+.ftpquota
+error_log
+public/dev
 public/static
 config.php
+node_modules/
+output/
+obj/

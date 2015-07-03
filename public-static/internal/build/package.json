@@ -1,0 +1,30 @@
+{
+  "name": "starship-core",
+  "version": "0.1.1",
+  "description": "Ludum Dare JavaScript Core",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.5.2",
+    "gulp-debug": "^2.0.1",
+    "gulp-file": "^0.2.0",
+    "gulp-uglify": "^1.2.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-util": "^3.0.5",
+    "gulp-wrapper": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ludumdare/ludumdare.git"
+  },
+  "author": "Mike Kasprzak",
+  "license": "TBD",
+  "bugs": {
+    "url": "https://github.com/ludumdare/ludumdare/issues"
+  },
+  "homepage": "https://github.com/ludumdare/ludumdare"
+}

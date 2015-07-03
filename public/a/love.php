@@ -1,6 +1,11 @@
 <?php
+/**	@file
+*	@brief Internal AJAX API for managing Love (+1's)
+**/
+
 require_once __DIR__ . "/../../api.php";
 require_once __DIR__ . "/../../core/love.php";
+require_once __DIR__ . "/../../core/user.php";
 
 // Love is Likes. If you like something, you give it a Love.
 // Love either belongs to to a user, or an IP address (to allow more love).
@@ -24,7 +29,7 @@ require_once __DIR__ . "/../../core/love.php";
 
 // TODO: Limit access to certain data to user level
 
-$response = api_NewResponse();
+$response = json_NewResponse();
 
 // Retrieve session, store UID
 user_StartSession();
@@ -39,7 +44,7 @@ else {
 }
 
 // Retrieve Action and Arguments
-$arg = api_ParseActionURL();
+$arg = util_ParseActionURL();
 $action = array_shift($arg);
 $arg_count = count($arg);
 
@@ -52,7 +57,7 @@ if ( $arg_count === 0 ) {
 		// do nothing //
 	}
 	else { 
-		api_EmitErrorAndExit(); 
+		json_EmitError(); 
 	}
 }
 else if ( $arg_count === 1 ) {
@@ -61,7 +66,7 @@ else if ( $arg_count === 1 ) {
 		
 		// Even though this will work, UID=0 should be an error
 		if ( $response['uid'] === 0 ) {
-			api_EmitErrorAndExit();
+			json_EmitError();
 		}
 	}
 	else if ( $action === 'ip' ) {
@@ -71,11 +76,11 @@ else if ( $arg_count === 1 ) {
 			
 			// Even though this will work, IP=0.0.0.0 should be an error
 			if ( ip2long($response['ip']) === 0 ) {
-				api_EmitErrorAndExit();
+				json_EmitError();
 			}
 		}
 		else {
-			api_EmitErrorAndExit();
+			json_EmitError();
 		}
 	}
 	else if ( $action === 'me' ) {
@@ -85,11 +90,11 @@ else if ( $arg_count === 1 ) {
 		$response['item'] = intval($arg[0]);
 		
 		if ( $response['item'] === 0 ) {
-			api_EmitErrorAndExit();
+			json_EmitError();
 		}
 	}
 	else { 
-		api_EmitErrorAndExit(); 
+		json_EmitError(); 
 	}
 }
 else if ( $arg_count === 2 ) {
@@ -99,7 +104,7 @@ else if ( $arg_count === 2 ) {
 
 		// Even though this will work, UID=0 should be an error
 		if ( $response['uid'] === 0 ) {
-			api_EmitErrorAndExit();
+			json_EmitError();
 		}
 	}
 	else if ( $action === 'ip' ) {
@@ -110,35 +115,94 @@ else if ( $arg_count === 2 ) {
 
 			// Even though this will work, IP=0.0.0.0 should be an error
 			if ( ip2long($response['ip']) === 0 ) {
-				api_EmitErrorAndExit();
+				json_EmitError();
 			}
 		}
 		else {
-			api_EmitErrorAndExit();
+			json_EmitError();
 		}
 	}
 	else { 
-		api_EmitErrorAndExit();
+		json_EmitError();
 	}
 }
 else {
-	api_EmitErrorAndExit();
+	json_EmitError();
 }
 
 
-// On 'add' Action, insert in to the database
+/**
+ * @api {GET} /a/love/add/:nodeid /a/love/add
+ * @apiName AddLove
+ * @apiGroup Love
+ * @apiVersion 0.1.0
+ * @apiPermission Everyone
+ *
+ * @apiDescription Give a '+1' to content you like
+ *
+ * If you are logged in, your UserID will be credited for the '+1'. If you are not, your IP address will.
+ *
+ * @apiParam {Number} nodeid The NodeID of the item to '+1'
+ *
+ * @apiSuccess {String} status "OK"
+ * @apiSuccess {Number} uid (If logged in) Your UserID
+ * @apiSuccess {String} ip (If not logged in) Your IPv4 address
+ * @apiSuccess {Number} item The NodeID of the item
+ * @apiSuccess {Boolean} success Whether the operation did anything (i.e. you can only have one '+1' per NodeID)
+ *
+ * @apiSuccessExample {json} On Success (logged in):
+ * HTTP/1.1 200 Success
+ * {"status":"OK","uid":4226,"item":8414,"success":true}
+ *
+ * @apiSuccessExample {json} On Success (not logged in):
+ * HTTP/1.1 200 Success
+ * {"status":"OK","ip":"192.168.48.1","item":33,"success":true}
+ *
+ * @apiErrorExample {json} On Failure (bad input, etc):
+ * HTTP/1.1 400 Bad Request
+ * {"status":"ERROR"}
+*/
 if ( $action === 'add' ) {
 	$response['success'] = love_Add($response['item'],$response['uid'],$response['ip']);
 }
-// On 'remove' Action, remove from the database
+/**
+ * @api {GET} /a/love/remove/:nodeid /a/love/remove
+ * @apiName RemoveLove
+ * @apiGroup Love
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+ 
+ * @apiDescription On 'remove' Action, remove from the database
+*/
 else if ( $action === 'remove' ) {
 	$response['success'] = love_Remove($response['item'],$response['uid'],$response['ip']);
 }
+/**
+ * @api {GET} /a/love/me[/:offset] /a/love/me
+ * @apiName MyLove
+ * @apiGroup Love
+ * @apiPermission Member
+ * @apiVersion 0.1.0
+*/
+/**
+ * @api {GET} /a/love/uid/:userid[/:offset] /a/love/uid
+ * @apiName UserLove
+ * @apiGroup Love
+ * @apiPermission Everyone
+ * @apiVersion 0.1.0
+*/
+/**
+ * @api {GET} /a/love/ip/:ip[/:offset] /a/love/ip
+ * @apiName IPLove
+ * @apiGroup Love
+ * @apiPermission Admin
+ * @apiVersion 0.1.0
+*/
 else if ( $action === 'me' || $action === 'uid' || $action === 'ip' ) {
 	$response['result'] = love_Fetch( $response['uid'], $response['ip'], $offset, $limit );
 }
 else {
-	api_EmitErrorAndExit();
+	json_EmitError();
 }
 
 // Result optimization: Remove UID or IP if zero.
@@ -149,6 +213,16 @@ else {
 	unset($response['ip']);
 }
 
+/**
+ * @apiDefine Admin Administrators only
+ * This feature is only available to Administrators.
+*/
+/**
+ * @apiDefine Member Members only
+ * This feature requires an account.
+*/
+
+
 // Done. Output the response.
-api_EmitJSON($response);
+json_Emit($response);
 ?>

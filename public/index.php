@@ -1,22 +1,16 @@
 <?php 
-require_once __DIR__ . "/../html.php";
+require_once __DIR__ . "/../web.php";
 require_once __DIR__ . "/../core/internal/validate.php";
 require_once __DIR__ . "/../core/internal/emoji.php";
 require_once __DIR__ . "/../core/post.php";
 
 user_StartSession();
-header("Content-Type: text/html; charset=utf-8"); 
+header("Content-Type: text/html; charset=utf-8");
+
+//template_SetTheme("embed");
+
 ?>
-
-<!doctype html>
-
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<script src="<?php STATIC_URL() ?>/external/emojione/emojione.js<?php VERSION_QUERY() ?>"></script>
-<!--	<script src="//cdn.jsdelivr.net/emojione/1.3.0/lib/js/emojione.min.js"></script>-->
-	<link rel="stylesheet" href="//cdn.jsdelivr.net/emojione/1.3.0/assets/css/emojione.min.css" />
-</head>
+<?php template_GetHeader(); ?>
 
 <body>
 
@@ -172,4 +166,4 @@ echo "</div>\n";
 <div class="miiverse-post" lang="en" data-miiverse-cite="https://miiverse.nintendo.net/posts/AYMHAAACAAADVHkJJYjfzQ" data-miiverse-embedded-version="1"><noscript>You must have JavaScript enabled on your device to view Miiverse posts that have been embedded in a website. <a class="miiverse-post-link" href="https://miiverse.nintendo.net/posts/AYMHAAACAAADVHkI56BLCQ">View post in Miiverse.</a></noscript></div><script async src="https://miiverse.nintendo.net/js/embedded.min.js" charset="utf-8"></script>
 
 </body>
-</html>
+<?php template_GetFooter(); ?>

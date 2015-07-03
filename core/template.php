@@ -1,23 +1,98 @@
 <?php
+/** @file template.php
+*	@brief Helper library for instancing templates (themes)
+**/
 
-function template_Include( $template_file, $require_once = true ) {
+/** @name Internal
+ *  @subpage
+ */
+/**@{*/
+
+/**
+ * **INTERNAL**: Name of the current theme.
+ */
+$_cmw_theme = "default";
+
+/**
+ * **INTERNAL**: Includes template files (.php) and sets up the environment.
+ *
+ * @param	string	$path_to_file Fully qualified path to a file.
+ * @param	bool	$include_once Should we use include_once? (default: false)
+ */
+function _template_Include( $path_to_file, $include_once = false ) {
 	// Make certain global variables implicitly available to the template.
 	//global $db;
 	
-	// Include (Require) the template file.
-	if ( $require_once )
-		require_once $template_file;
-	else
-		require $template_file;
+	// Include the template file.
+	if ( $include_once ) {
+		include_once $path_to_file;
+	}
+	else {
+		include $path_to_file;
+	}
 }
 
-function template_Load( $template_names, $require_once = true ) {
-	foreach ( (array)$template_names as $name ) {
-		if ( file_exists(TEMPLATEPATH.'/'.$name) ) {
-			return template_Include( TEMPLATEPATH.'/'.$name, $require_once );
-		}
+/**@}*/
+
+/**
+ * Instance a template.
+ *
+ * @param	string	$file File to load.
+ * @param	string	$theme Theme to use (default: "default")
+ * @param	bool	$include_once Should we use include_once? (default: false)
+ */
+function template_Get( $file, $theme = null, $include_once = false ) {
+	_template_Include( __DIR__."/../public-static".CMW_THEME_BASE."/".template_GetTheme($theme)."/template".$file, $include_once );
+}
+
+
+/**
+ * dummy
+ *
+ * @param	string	$theme Theme to use (default: "default")
+ */
+function template_SetTheme( $theme = null ) {
+	global $_cmw_theme;
+	if ( is_null($theme) ) {
+		$_cmw_theme = "default";
 	}
-	return "";
+	$_cmw_theme = $theme;
+}
+
+/**
+ * dummy
+ *
+ * @param	string	$theme Theme to use (default: "default")
+ */
+function template_GetTheme( $theme = null ) {
+	global $_cmw_theme;
+	if ( is_null($theme) ) {
+		if ( !is_null($_cmw_theme) ) {
+			return $_cmw_theme;
+		}
+		return "default";
+	}
+	return $theme;
+}
+
+
+/**
+ * dummy
+ *
+ * @param	string	$theme Theme to use (default: "default")
+ * @param	bool	$include_once Should we use include_once? (default: true)
+ */
+function template_GetHeader( $theme = null, $include_once = true ) {
+	template_Get( "/header.html.php", $theme, $include_once );
+}
+/**
+ * dummy
+ *
+ * @param	string	$theme Theme to use (default: "default")
+ * @param	bool	$include_once Should we use include_once? (default: true)
+ */
+function template_GetFooter( $theme = null, $include_once = true ) {
+	template_Get( "/footer.html.php", $theme, $include_once );	
 }
 
 ?>

@@ -62,11 +62,11 @@ if (!chrome.cast || !chrome.cast.isAvailable) {
  */
 function initializeCastApi() {
   var sessionRequest = new chrome.cast.SessionRequest(applicationID);
-  console.log(sessionRequest);
+
   var apiConfig = new chrome.cast.ApiConfig(sessionRequest,
     sessionListener,
     receiverListener);
-  console.log(apiConfig);
+
   chrome.cast.initialize(apiConfig, onInitSuccess, onError);
 };
 
@@ -133,7 +133,6 @@ function receiverMessage(namespace, message) {
  * receiver listener during initialization
  */
 function receiverListener(e) {
-  console.log(e);
   if( e === 'available' ) {
     appendMessage("receiver found");
   }
