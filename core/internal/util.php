@@ -15,12 +15,24 @@
 
 // Parse the API Action URL (array of strings) //
 function util_ParseActionURL() {
+	// If PATH_INFO is set, then Apache figured out our parts for us //
 	if ( isset($_SERVER['PATH_INFO']) ) {
 		return explode('/',ltrim(rtrim($_SERVER['PATH_INFO'],'/'),'/'));
 	}
-	else {
-		return [];
+
+	// If not, we have to extract them from the REQUEST_URI //
+	// Logic borrowed from here: https://coderwall.com/p/gdam2w/get-request-path-in-php-for-routing
+	$request_uri = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
+    $script_name = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
+    $parts = array_diff_assoc($request_uri, $script_name);
+    if (empty($parts)) {
+        return [];
+    }
+	$path = implode('/', $parts);
+	if (($position = strpos($path, '?')) !== FALSE) {
+	    $path = substr($path, 0, $position);
 	}
+    return explode('/',ltrim(rtrim($path,'/'),'/'));
 }
 
 

@@ -26,4 +26,5 @@
 	<link rel="stylesheet" href="<?php STATIC_URL() ?>/external/emojione/emojione.min.css<?php VERSION_QUERY() ?>" />
 	<!--<link rel="stylesheet" href="//cdn.jsdelivr.net/emojione/1.3.0/assets/css/emojione.min.css" />-->
 <?php } /* defined('CMW_CSS_DEBUG') */ ?>
+	<link rel="stylesheet" href="<?php STATIC_URL() ?>/themes/default/style.css.php<?php VERSION_QUERY() ?>" />
 </head>
