@@ -5,7 +5,6 @@ require_once __DIR__ . "/../core/internal/emoji.php";
 require_once __DIR__ . "/../core/post.php";
 
 user_StartSession();
-header("Content-Type: text/html; charset=utf-8");
 
 //template_SetTheme("embed");
 

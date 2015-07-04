@@ -1,7 +1,7 @@
 
 <VirtualHost *:8080>
         ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-api
+        DocumentRoot /var/www/public-static
 
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
@@ -9,7 +9,7 @@
 
 <VirtualHost *:8081>
         ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-static
+        DocumentRoot /var/www/public-api
 
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
