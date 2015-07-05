@@ -56,6 +56,15 @@ if ( isset($_GET['preview']) ) {
 	}
 }
 
+// Show the Jammer header //
+$header = true;
+// If in 'preview' mode, allow URL to override invert status //
+if ( isset($_GET['preview']) ) {
+	if ( isset($_GET['noheader']) ) {
+		$header = false;
+	}
+}
+
 
 db_Connect();
 
@@ -98,9 +107,11 @@ body {
 }
 </style>
 <body>
+<?php if ( $header ) { ?>
 <div class="header">
 	<img src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo112<?php echo $img; ?>.png" height="56" />
 </div>
+<?php } /* $header */ ?>
 <div class="body">
 	<?php
 		if ( $arg_count > 0 ) {
