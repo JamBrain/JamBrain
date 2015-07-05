@@ -10,9 +10,11 @@ $arg_count = count($arg);
 
 
 // Hack: Color Customizing.
-$theme_color = "000";
+$dark_color = "622";
+$light_color = "CBB";
 if ( isset($_GET['color']) ) {
-	$theme_color = $_GET['color'];
+	$dark_color = $_GET['color'];
+	$light_color = "CCC";
 }
 
 db_Connect();
@@ -23,25 +25,42 @@ db_Connect();
 
 ?>
 <?php template_GetHeader(); ?>
+<style>
+body {
+	background:#<?php echo $dark_color; ?>
+}
+.header {
+	height:38px;
+	text-align:center;
+	margin-top:8px;
+}
+.body {
+	background:#<?php echo $light_color; ?>;
+	text-align:center;
+	padding-top:16px;
+}
+</style>
 <body>
+<div class="header">
+	<img src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo112W.png" height="56" />
+</div>
+<div class="body">
+	<?php
+		if ( $arg_count > 0 ) {
+			echo $arg[0] . " by " . $user;
+		}
+		else {
+			echo $user . "'s home page";
+		}
+	?>
 	
-<?php
-	if ( $arg_count > 0 ) {
-		echo $arg[0] . " by " . $user;
-	}
-	else {
-		echo $user . "'s home page";
-	}
-?>
-
-<br />
-<br />
-<br />
-<br />
-
+	<br />
+	<br />
+	<br />
+	<br />
+</div>
 <style>
 .footer {
-	background:#<?php echo $theme_color; ?>;
 	color:#FFF;
 	text-align:center;
 	padding:8px;
