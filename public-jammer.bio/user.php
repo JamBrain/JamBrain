@@ -50,15 +50,13 @@ db_Connect();
 .footer img {
 	vertical-align:middle;
 }
-/*.footer .jammer { }*/
 .footer .mike {
-	margin-bottom:4px;
+	margin-bottom:4px; /* "Hair" is 4px tall, so offset the baseline for better centering */
 	mix-blend-mode:screen;
 }
-/*.footer .ludumdare { }*/
 </style>
 <div class="footer">
-	<a href="//jammer.bio"><img class="jammer" src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo28W.png" height="28" alt="Jammer" title="Jammer" /></a> by <a href="http://twitter.com/mikekasprzak" target="_blank"><img class="mike" src="<?php STATIC_URL(); ?>/logo/mike/Chicken16W.png" width="16" height="16" alt="Mike Kasprzak" title="Mike Kasprzak"></a> &nbsp;|&nbsp; powered by &nbsp;<a href="http://ludumdare.com" target="_blank"><img class="ludumdare" src="<?php STATIC_URL(); ?>/logo/ludumdare/2009/LudumDareLogo20W.png" height="20" alt="Ludum Dare" title="Ludum Dare" /></a>
+	<a href="//jammer.bio"><img class="jammer" src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo56W.png" height="28" alt="Jammer" title="Jammer" /></a> by <a href="http://twitter.com/mikekasprzak" target="_blank"><img class="mike" src="<?php STATIC_URL(); ?>/logo/mike/Chicken32W.png" width="16" height="16" alt="Mike Kasprzak" title="Mike Kasprzak"></a> &nbsp;|&nbsp; powered by &nbsp;<a href="http://ludumdare.com" target="_blank"><img class="ludumdare" src="<?php STATIC_URL(); ?>/logo/ludumdare/2009/LudumDareLogo40W.png" height="20" alt="Ludum Dare" title="Ludum Dare" /></a>
 </div>
 
 </body>
