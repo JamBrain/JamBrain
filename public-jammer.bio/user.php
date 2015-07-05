@@ -10,25 +10,55 @@ $arg_count = count($arg);
 
 
 // Hack: Color Customizing.
-$dark_color = "622";
-$light_color = "CBB";
-if ( isset($_GET['color']) ) {
-	$dark_color = $_GET['color'];
-	$light_color = "CCC";
+$dark_bg = "622";
+$light_bg = "CBB";
+$dark_text = "FFF";
+$light_text = "000";
+
+// Dark BG //
+if ( isset($_GET['db']) )
+	$dark_bg = $_GET['db'];
+
+// Light BG //
+if ( isset($_GET['lb']) )
+	$light_bg = $_GET['lb'];
+
+// Dark Text, with fallback
+if ( isset($_GET['dt']) )
+	$dark_text = $_GET['dt'];
+else if ( isset($_GET['lb']) )
+	$dark_text = $_GET['lb'];
+
+// Light text, with fallback
+if ( isset($_GET['lt']) )
+	$light_text = $_GET['lt'];
+else if ( isset($_GET['db']) )
+	$light_text = $_GET['db'];
+
+// Hack: Image Inverting
+$img = "W";
+if ( isset($_GET['inv']) ) {
+	$img = "B";
+	
+	$tmp = $dark_bg;
+	$dark_bg = $light_bg;
+	$light_bg = $tmp;
+
+	$tmp = $dark_text;
+	$dark_text = $light_text;
+	$light_text = $tmp;
 }
 
+
 db_Connect();
-
-//jammer.bio stub
-
-//<strong>jammer<strong>, powered by <a href="http://ludumdare.com">Ludum Dare</a>
 
 ?>
 <?php template_GetHeader(); ?>
 <style>
 img, a {border:none; outline:none;} /* CSS RESET */
 body {
-	background:#<?php echo $dark_color; ?>
+	color:#<?php echo $dark_text; ?>;
+	background:#<?php echo $dark_bg; ?>
 }
 .header {
 	height:38px;
@@ -36,14 +66,33 @@ body {
 	margin-top:8px;
 }
 .body {
-	background:#<?php echo $light_color; ?>;
+	color:#<?php echo $light_text; ?>;
+	background:#<?php echo $light_bg; ?>;
 	text-align:center;
 	padding-top:16px;
+	padding-bottom:16px;
+}
+.footer {
+	/*color:#<?php echo $dark_text; ?>;	/* TODO: Should be 80% of value (premultiplying the alpha) */
+	text-align:center;
+	padding:8px;
+	font-variant:small-caps;
+}
+.footer img {
+	vertical-align:middle;
+	opacity:0.8;
+}
+.footer img:hover {
+	opacity:1.0;
+}
+.footer .mike {
+	margin-bottom:4px; /* "Hair" is 4px tall, so offset the baseline for better centering */
+	mix-blend-mode:screen;
 }
 </style>
 <body>
 <div class="header">
-	<img src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo112W.png" height="56" />
+	<img src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo112<?php echo $img; ?>.png" height="56" />
 </div>
 <div class="body">
 	<?php
@@ -54,29 +103,9 @@ body {
 			echo $user . "'s home page";
 		}
 	?>
-	
-	<br />
-	<br />
-	<br />
-	<br />
 </div>
-<style>
-.footer {
-	color:#FFF;
-	text-align:center;
-	padding:8px;
-	font-variant:small-caps;
-}
-.footer img {
-	vertical-align:middle;
-}
-.footer .mike {
-	margin-bottom:4px; /* "Hair" is 4px tall, so offset the baseline for better centering */
-	mix-blend-mode:screen;
-}
-</style>
 <div class="footer">
-	<a href="//jammer.bio"><img class="jammer" src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo56W.png" height="28" alt="Jammer" title="Jammer" /></a> by <a href="http://twitter.com/mikekasprzak" target="_blank"><img class="mike" src="<?php STATIC_URL(); ?>/logo/mike/Chicken32W.png" width="16" height="16" alt="Mike Kasprzak" title="Mike Kasprzak"></a> &nbsp;|&nbsp; powered by &nbsp;<a href="http://ludumdare.com" target="_blank"><img class="ludumdare" src="<?php STATIC_URL(); ?>/logo/ludumdare/2009/LudumDareLogo40W.png" height="20" alt="Ludum Dare" title="Ludum Dare" /></a>
+	<a href="//jammer.bio"><img class="jammer" src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo56<?php echo $img; ?>.png" height="28" alt="Jammer" title="Jammer" /></a> by <a href="http://twitter.com/mikekasprzak" target="_blank"><img class="mike" src="<?php STATIC_URL(); ?>/logo/mike/Chicken32W.png" width="16" height="16" alt="Mike Kasprzak" title="Mike Kasprzak"></a> &nbsp;|&nbsp; powered by &nbsp;<a href="http://ludumdare.com" target="_blank"><img class="ludumdare" src="<?php STATIC_URL(); ?>/logo/ludumdare/2009/LudumDareLogo40<?php echo $img; ?>.png" height="20" alt="Ludum Dare" title="Ludum Dare" /></a>
 </div>
 
 </body>
