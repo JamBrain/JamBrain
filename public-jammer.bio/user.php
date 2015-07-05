@@ -26,7 +26,7 @@ db_Connect();
 ?>
 <?php template_GetHeader(); ?>
 <style>
-img, a {border:none, outline: none;}
+img, a {border:none; outline:none;} /* CSS RESET */
 body {
 	background:#<?php echo $dark_color; ?>
 }
