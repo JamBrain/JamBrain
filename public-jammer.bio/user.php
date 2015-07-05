@@ -29,7 +29,7 @@ db_Connect();
 
 <br />
 <br />
-<div style="text-align:center;background:#000;color:#FFF;padding:8px;font-variant:small-caps"><strong>JAMMER<strong> | by <a href="http://twitter.com/mikekasprzak" target="_blank"><img src="http://www.gravatar.com/avatar/8266e6e52fe185d057db55021ac7bb86?s=16" width="16" height="16"></a> | powered by <a href="http://ludumdare.com">LUDUM DARE</a></div>
+<div style="text-align:center;background:#000;color:#FFF;padding:8px;font-variant:small-caps"><img src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo28W.png" height="28" alt="Jammer" title="Jammer" style="vertical-align:middle;" /> by <a href="http://twitter.com/mikekasprzak" target="_blank"><img src="http://www.gravatar.com/avatar/8266e6e52fe185d057db55021ac7bb86?s=16" width="16" height="16" style="vertical-align:middle;"></a> | powered by <a href="http://ludumdare.com" target="_blank"><img src="<?php STATIC_URL(); ?>/logo/ludumdare/2009/LudumDareLogo20W.png" height="20" alt="Ludum Dare" title="Ludum Dare" style="vertical-align:middle;" /></a></div>
 
 </body>
 <?php template_GetFooter(); ?>
