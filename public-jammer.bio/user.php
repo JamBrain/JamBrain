@@ -9,44 +9,51 @@ $user = array_shift($arg);
 $arg_count = count($arg);
 
 
-// Hack: Color Customizing.
+// Color Customizing //
 $dark_bg = "622";
 $light_bg = "CBB";
 $dark_text = "FFF";
 $light_text = "000";
 
-// Dark BG //
-if ( isset($_GET['db']) )
-	$dark_bg = $_GET['db'];
-
-// Light BG //
-if ( isset($_GET['lb']) )
-	$light_bg = $_GET['lb'];
-
-// Dark Text, with fallback
-if ( isset($_GET['dt']) )
-	$dark_text = $_GET['dt'];
-else if ( isset($_GET['lb']) )
-	$dark_text = $_GET['lb'];
-
-// Light text, with fallback
-if ( isset($_GET['lt']) )
-	$light_text = $_GET['lt'];
-else if ( isset($_GET['db']) )
-	$light_text = $_GET['db'];
-
-// Hack: Image Inverting
-$img = "W";
-if ( isset($_GET['inv']) ) {
-	$img = "B";
+// If in 'preview' mode, allow URL to override colors //
+if ( isset($_GET['preview']) ) {
+	// Dark BG //
+	if ( isset($_GET['db']) )
+		$dark_bg = $_GET['db'];
 	
-	$tmp = $dark_bg;
-	$dark_bg = $light_bg;
-	$light_bg = $tmp;
+	// Light BG //
+	if ( isset($_GET['lb']) )
+		$light_bg = $_GET['lb'];
+	
+	// Dark Text, with fallback
+	if ( isset($_GET['dt']) )
+		$dark_text = $_GET['dt'];
+	else if ( isset($_GET['lb']) )
+		$dark_text = $_GET['lb'];
+	
+	// Light text, with fallback
+	if ( isset($_GET['lt']) )
+		$light_text = $_GET['lt'];
+	else if ( isset($_GET['db']) )
+		$light_text = $_GET['db'];
+}
 
-	$tmp = $dark_text;
-	$dark_text = $light_text;
-	$light_text = $tmp;
+// Inverting (Logos and Colors)
+$img = "W";
+
+// If in 'preview' mode, allow URL to override invert status //
+if ( isset($_GET['preview']) ) {
+	if ( isset($_GET['inv']) ) {
+		$img = "B";
+		
+		$tmp = $dark_bg;
+		$dark_bg = $light_bg;
+		$light_bg = $tmp;
+	
+		$tmp = $dark_text;
+		$dark_text = $light_text;
+		$light_text = $tmp;
+	}
 }
 
 
