@@ -71,7 +71,6 @@ db_Connect();
 ?>
 <?php template_GetHeader(); ?>
 <style>
-img, a {border:none; outline:none;} /* CSS RESET */
 body {
 	color:#<?php echo $dark_text; ?>;
 	background:#<?php echo $dark_bg; ?>
