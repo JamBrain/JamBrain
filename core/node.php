@@ -10,7 +10,7 @@ require_once __DIR__ . "/user.php";
 
 // NOTE: None of these functions sanitize. Make sure you sanitize first! //
 
-function node_Add( $type, $slug, $name, $body, $author = 0, $parent = 0, $root = 0, $publish = false ) {
+function node_Add( $type, $slug, $name, $body, $author = 0, $parent = 0, $publish = false ) {
 	db_Connect();
 
 	db_Query(
@@ -21,7 +21,6 @@ function node_Add( $type, $slug, $name, $body, $author = 0, $parent = 0, $root =
 			"`body`,".
 			"`author`,".
 			"`parent`,".
-			"`root`,".
 			"`time_created`,".
 			"`time_modified`,".
 			"`time_published`".
@@ -33,7 +32,6 @@ function node_Add( $type, $slug, $name, $body, $author = 0, $parent = 0, $root =
 			"\"".$body."\"," .
 			$author."," .
 			$parent."," .
-			$root."," .
 			"NOW()," .
 			"NOW()," .
 			($publish ? "NOW()" : "\"0000-00-00 00:00:00\"") .
@@ -67,8 +65,20 @@ function node_AddUser( $id, $mail, $password ) {
 	return db_GetId();
 }
 
-//function node_GetById( $id ) {	
-//}
+function node_GetNodeById( $id ) {
+	db_Connect();
+
+	$item = db_Fetch( 
+		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
+			"`id`=" . $id .
+			" LIMIT 1" .
+		";");
+	
+	if ( count($item) ) {
+		return $item[0];
+	}
+	return null;
+}
 
 //// NOTE: This is not fast. Slugs are not indexed. //
 //function node_GetIdBySlug( $slug ) {
@@ -80,6 +90,71 @@ function node_AddUser( $id, $mail, $password ) {
 //			" LIMIT 1" .
 //		";");	
 //}
+
+function node_GetUserBySlug( $slug ) {
+	db_Connect();
+
+	$user = db_Fetch( 
+		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
+			"`parent`=" . CMW_NODE_USER . " AND " .
+			"`slug`=\"" . $slug . "\"" .
+			" LIMIT 1" .
+		";");
+	
+	if ( count($user) ) {
+		return $user[0];
+	}
+	return null;
+}
+
+function node_GetUserById( $id ) {
+	db_Connect();
+
+	$user = db_Fetch(
+		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
+			"`parent`=" . CMW_NODE_USER . " AND " .
+			"`id`=" . $id .
+			" LIMIT 1" .
+		";");
+	
+	if ( count($user) ) {
+		return $user[0];
+	}
+	return null;
+}
+
+function node_GetNodeByParentIdAndSlug( $parent, $slug ) {
+	db_Connect();
+
+	$item = db_Fetch( 
+		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
+			"`parent`=" . $parent . " AND " .
+			"`slug`=\"" . $slug . "\"" .
+			" LIMIT 1" .
+		";");
+	
+	if ( count($item) ) {
+		return $item[0];
+	}
+	return null;
+}
+
+function node_GetNodeByAuthorIdAndSlug( $author, $slug ) {
+	db_Connect();
+
+	$item = db_Fetch( 
+		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
+			"`author`=" . $author . " AND " .
+			"`slug`=\"" . $slug . "\"" .
+			" LIMIT 1" .
+		";");
+	
+	if ( count($item) ) {
+		return $item[0];
+	}
+	return null;
+}
+
 
 function user_GetHashById( $id ) {
 	db_Connect();

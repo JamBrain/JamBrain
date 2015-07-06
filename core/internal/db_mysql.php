@@ -63,9 +63,11 @@ function db_Fetch($query) {
 	global $db;
 	$result = $db->query($query);
 	$rows = [];
-	while ( $row = $result->mysql_fetch_assoc() ) {
-		$rows[] = $row;
-	};
+	if ( !empty($result) ) {
+		while ( $row = $result->fetch_assoc() ) {
+			$rows[] = $row;
+		};
+	}
 	return $rows;
 	//return $result->fetch_array(MYSQLI_ASSOC);
 }
@@ -75,8 +77,10 @@ function db_FetchArray($query) {
 	global $db;
 	$result = $db->query($query);
 	$rows = [];
-	while ( $row = $result->fetch_row() ) {
-		$rows[] = $row;
+	if ( !empty($result) ) {
+		while ( $row = $result->fetch_row() ) {
+			$rows[] = $row;
+		}
 	}
 	return $rows;
 	//return $result->fetch_array(MYSQLI_NUM);

@@ -66,8 +66,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
 				UNIQUE,
 			parent BIGINT UNSIGNED NOT NULL DEFAULT 0,
-			root BIGINT UNSIGNED NOT NULL DEFAULT 0,
-				
+				INDEX (parent),
 			author BIGINT UNSIGNED NOT NULL DEFAULT 0,
 				INDEX (author),
 
@@ -80,6 +79,8 @@ echo "Connected: " . db_IsConnected() . "\n";
 				INDEX (time_published),
 
 			slug VARCHAR(64) CHARSET latin1 NOT NULL DEFAULT '',
+				INDEX parent_slug(parent,slug),
+				INDEX author_slug(author,slug),
 			name VARCHAR(191) NOT NULL DEFAULT '',
 			body MEDIUMTEXT NOT NULL,
 

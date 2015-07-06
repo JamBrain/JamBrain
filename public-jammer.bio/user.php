@@ -2,21 +2,80 @@
 require_once __DIR__ . "/../web.php";
 require_once __DIR__ . "/../core/node.php";
 require_once __DIR__ . "/../core/internal/util.php";
+require_once __DIR__ . "/../core/internal/validate.php";
+
+// Modes //
+//const M_NULL = 0;		// Unknown State //
+const M_DEFAULT = 1;	// Default State //
+const M_USER = 2;		// User Page //
+const M_ITEM = 3;		// Item //
+const M_NO_USER = -2;	// No User Found //
+const M_NO_ITEM = -3;	// No Item Found //
+const M_ERROR = -255;	// Other Error //
+
+$mode = M_DEFAULT;
+
 
 // Retrieve Action and Arguments
 $arg = util_ParseActionURL();
-$user = array_shift($arg);
+$user_name = array_shift($arg);
 $arg_count = count($arg);
 
+// Sanitize Input
+$user_name = sanitize_Slug($user_name);
+if ( empty($user_name) ) {
+	$mode = M_ERROR;
+}
+if ( $arg_count > 0 ) {
+	$arg[0] = sanitize_Slug($arg[0]);
+	if ( empty($arg[0]) ) {
+		$mode = M_ERROR;
+	}
+}
 
+$user = [];
+$item = [];
+
+if ( $mode > 0 ) {
+	// Item Mode //
+	if ( $arg_count > 0 ) {
+		$user = node_GetUserBySlug($user_name);
+		if ( empty($user) ) {
+			$mode = M_NO_USER;
+		}
+		else {
+			$item = node_GetNodeByAuthorIdAndSlug($user['id'],$arg[0]);
+			$mode = empty($item) ? M_NO_ITEM : M_ITEM;
+		}
+	}
+	// User Mode //
+	else {
+		$user = node_GetUserBySlug($user_name);
+		$mode = empty($user) ? M_NO_USER : M_USER;
+	}
+}
+
+// - Styles ------------------------ //
 // Color Customizing //
 $dark_bg = "622";
 $light_bg = "CBB";
 $dark_text = "FFF";
 $light_text = "000";
 
-// If in 'preview' mode, allow URL to override colors //
+// Inverting (Logos and Colors)
+$img = "W";
+
+// Show the Jammer header //
+$header = true;
+
+// If Mode is valid, use Jammer settings found in user config //
+if ( $mode > 0 ) {
+	// TODO: this
+}
+
+// If in 'preview' mode, allow URL to override settings //
 if ( isset($_GET['preview']) ) {
+	// Allow URL to override colors //
 	// Dark BG //
 	if ( isset($_GET['db']) )
 		$dark_bg = $_GET['db'];
@@ -36,13 +95,8 @@ if ( isset($_GET['preview']) ) {
 		$light_text = $_GET['lt'];
 	else if ( isset($_GET['db']) )
 		$light_text = $_GET['db'];
-}
 
-// Inverting (Logos and Colors)
-$img = "W";
-
-// If in 'preview' mode, allow URL to override invert status //
-if ( isset($_GET['preview']) ) {
+	// Allow URL to override invert status //
 	if ( isset($_GET['inv']) ) {
 		$img = "B";
 		
@@ -54,19 +108,12 @@ if ( isset($_GET['preview']) ) {
 		$dark_text = $light_text;
 		$light_text = $tmp;
 	}
-}
 
-// Show the Jammer header //
-$header = true;
-// If in 'preview' mode, allow URL to override invert status //
-if ( isset($_GET['preview']) ) {
+	// Allow URL to override to hide header //
 	if ( isset($_GET['noheader']) ) {
 		$header = false;
 	}
 }
-
-
-db_Connect();
 
 ?>
 <?php template_GetHeader(); ?>
@@ -107,23 +154,56 @@ body {
 </style>
 <body>
 <?php if ( $header ) { ?>
-<div class="header">
-	<img src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo112<?php echo $img; ?>.png" height="56" />
-</div>
+	<div class="header">
+		<img src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo112<?php echo $img; ?>.png" height="56" />
+	</div>
 <?php } /* $header */ ?>
-<div class="body">
-	<?php
-		if ( $arg_count > 0 ) {
-			echo $arg[0] . " by " . $user;
-		}
-		else {
-			echo $user . "'s home page";
-		}
-	?>
-</div>
-<div class="footer">
-	<a href="//jammer.bio"><img class="jammer" src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo56<?php echo $img; ?>.png" height="28" alt="Jammer" title="Jammer" /></a> by <a href="http://twitter.com/mikekasprzak" target="_blank"><img class="mike" src="<?php STATIC_URL(); ?>/logo/mike/Chicken32W.png" width="16" height="16" alt="Mike Kasprzak" title="Mike Kasprzak"></a> &nbsp;|&nbsp; powered by &nbsp;<a href="http://ludumdare.com" target="_blank"><img class="ludumdare" src="<?php STATIC_URL(); ?>/logo/ludumdare/2009/LudumDareLogo40<?php echo $img; ?>.png" height="20" alt="Ludum Dare" title="Ludum Dare" /></a>
-</div>
 
+	<div class="body">
+	<?php switch ($mode) { 
+			  default: { ?>
+			<?php echo "Unknown Error (" . $mode . ")<br />"; ?>
+		<?php } break; ?>
+		<?php case M_USER: { ?>
+			<div id="title"><?php echo $user['name'] . "'s home page<br />"; ?></div>
+			<!--<?php print_r($user); ?>-->
+			<br />
+			<div id="about"><?php echo $user['body']; ?></div>
+		<?php } break; ?>
+		<?php case M_ITEM: { ?>
+			<div id="title"><?php echo $item['name'] . " by <strong>" . $user['name'] . "</strong><br />"; ?></div>
+			<!--<?php print_r($user); ?>-->
+			<!--<?php print_r($item); ?>-->		
+			<br />
+			<div id="about"><?php echo $item['body']; ?></div>
+		<?php } break; ?>
+		<?php case M_NO_USER: { ?>
+			<?php echo $user_name . " not found!<br />"; ?>
+		<?php } break; ?>
+		<?php case M_NO_ITEM: { ?>
+			<?php echo $arg[0] . " by <strong>" . $user['name'] . "</strong> not found!<br />"; ?>
+			<!--<?php print_r($user); ?>-->
+		<?php } break; ?>
+	<?php }; ?>
+	</div>
+
+	<script>
+		emojione.ascii = true;
+		
+		// Process Emoji on all the following sections //
+		var Section = [
+			'about','title'
+		];
+		for(var Key in Section) {
+			var el = document.getElementById(Section[Key]);
+			if ( el ) {
+				el.innerHTML = emojione.toImage(el.innerHTML);
+			}
+		}
+	</script>
+
+	<div class="footer">
+		<a href="//jammer.bio"><img class="jammer" src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo56<?php echo $img; ?>.png" height="28" alt="Jammer" title="Jammer" /></a> by <a href="http://twitter.com/mikekasprzak" target="_blank"><img class="mike" src="<?php STATIC_URL(); ?>/logo/mike/Chicken32W.png" width="16" height="16" alt="Mike Kasprzak" title="Mike Kasprzak"></a> &nbsp;|&nbsp; powered by &nbsp;<a href="http://ludumdare.com" target="_blank"><img class="ludumdare" src="<?php STATIC_URL(); ?>/logo/ludumdare/2009/LudumDareLogo40<?php echo $img; ?>.png" height="20" alt="Ludum Dare" title="Ludum Dare" /></a>
+	</div>
 </body>
 <?php template_GetFooter(); ?>

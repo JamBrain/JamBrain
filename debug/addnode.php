@@ -18,7 +18,6 @@
 			if ( !isset($_POST['name']) ) return;
 			if ( !isset($_POST['author']) ) return;
 			if ( !isset($_POST['parent']) ) return;
-			if ( !isset($_POST['root']) ) return;
 			if ( !isset($_POST['publish']) ) return;
 	
 			// Node Type //
@@ -42,7 +41,6 @@
 			// Relationships //
 			$author = intval($_POST['author']);
 			$parent = intval($_POST['parent']);
-			$root = intval($_POST['root']);
 			
 			// Do we publish? //
 			$publish = mb_strtolower($_POST['publish']) == "true";
@@ -50,7 +48,7 @@
 	
 			$id = node_Add(
 				$type,$slug,$name,$body,
-				$author,$parent,$root,
+				$author,$parent,
 				$publish
 			);
 	
@@ -75,14 +73,12 @@
 		Slug: <input type="text" name="slug" value=""> (omit, and we'll generate one from Name)<br />
 		Body:<br /><textarea name="body"></textarea><br />
 		Author Id: <input type="text" name="author" value="0" required> (who created the item)<br />
-		Parent Id: <input type="text" name="parent" value="0" required> (heiarchical sorting only)<br />
-		Root Id:
-		<input list="root" name="root" value="0" required />
-		<datalist id="root">
+		Parent Id: 
+		<input list="parent" name="parent" value="0" required />
+		<datalist id="parent">
 			<option value="1">1 (root)</option>
 			<option value="2">2 (user)</option>
 		</datalist> (I belong to this node (owner?))<br />
-		<!--<input type="text" name="root" value="0" required><br />-->
 		Published: 
 		<select name="publish" required>
 			<option value="false">no</option>
