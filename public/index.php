@@ -100,6 +100,9 @@ if ( $mode > 0 ) {
 		#nav .proxy {
 			background:#DFD;
 		}
+		#nav .link {
+			background:#FDD;
+		}
 		
 		#content {
 			margin:16px;
@@ -143,7 +146,7 @@ if ( $mode > 0 ) {
 			foreach( $nodes as $node ) {
 				echo "<div class='row ".$node['type']."'>\n";
 				if ( $node['type'] === 'link' ) {
-					echo "<div class='slug'><a href='".$node['name']."/'>" . $node['slug'] . "/</a></div> <div class='id'>*".$node['id']."*</div><br />\n";
+					echo "<div class='slug'><a href='".$node['name']."/'>" . $node['slug'] . "/</a></div> <div class='id'>*".$node['id']."*</div> <div class='type'>(".$node['type'].")</div><br />\n";
 				}
 				else {
 					echo "<div class='slug'><a href='".$node['slug']."/'>" . $node['slug'] . "/</a></div> <div class='id'>[".$node['id']."]</div> <div class='name'>".$node['name']."</div> <div class='type'>(".$node['type'].")</div><br />\n";

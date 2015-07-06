@@ -167,7 +167,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 		node_Add("event","7dfps","7 Day FPS","",0,CMW_NODE_OTHER_JAM);
 		node_Add("event","7drl","7 Day Roguelike","",0,CMW_NODE_OTHER_JAM);
 
-		node_Add("event","tojam","ToJam (Toronto)","",0,CMW_NODE_OTHER_JAM);
+		node_Add("event","tojam","ToJam","Toronto!",0,CMW_NODE_OTHER_JAM);
 		node_Add("event","no-more-sweden","No More Sweden","",0,CMW_NODE_OTHER_JAM);
 		node_Add("link","nms","/other/jam/no-more-sweden","",0,CMW_NODE_OTHER_JAM);
 		
