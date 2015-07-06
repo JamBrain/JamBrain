@@ -122,17 +122,17 @@ echo "Connected: " . db_IsConnected() . "\n";
 	$n = node_Add("group","october","October Challenge","",0,CMW_NODE_EVENT);		// 26 (CMW_NODE_EVENT_OCTOBER)
 	$n = node_Add("group","scene","LD Scene","",0,CMW_NODE_EVENT);					// 27 (CMW_NODE_EVENT_SCENE)
 
-	$n = node_Add("group","game","Other Games","",0,CMW_NODE_OTHER);				// 28 (CMW_NODE_OTHER_GAME)
-	$n = node_Add("group","demo","Other Demos","",0,CMW_NODE_OTHER);				// 29 (CMW_NODE_OTHER_DEMO)
-	$n = node_Add("group","craft","Other Crafts","",0,CMW_NODE_OTHER);				// 30 (CMW_NODE_OTHER_CRAFTs)
+	$n = node_Add("event","game","Other Games","",0,CMW_NODE_OTHER);				// 28 (CMW_NODE_OTHER_GAME)
+	$n = node_Add("event","demo","Other Demos","",0,CMW_NODE_OTHER);				// 29 (CMW_NODE_OTHER_DEMO)
+	$n = node_Add("event","craft","Other Crafts","",0,CMW_NODE_OTHER);				// 30 (CMW_NODE_OTHER_CRAFTs)
 	$n = node_Add("group","jam","Other Jam Games","",0,CMW_NODE_OTHER);				// 31 (CMW_NODE_OTHER_JAM)
 	$n = node_Add("group","scene","Other Demoscene Events","",0,CMW_NODE_OTHER);	// 32 (CMW_NODE_OTHER_SCENE)
 	$n = node_Add("group","reserved-".($n+1),"","",0,0);							// 33
 
-	$n = node_Add("group","dev","Development Tools","",0,CMW_NODE_TOOL);			// 34 (CMW_NODE_TOOL_DEV)
-	$n = node_Add("group","art","Art Tools","",0,CMW_NODE_TOOL);					// 35 (CMW_NODE_TOOL_ART)
-	$n = node_Add("group","content","Content Creation Tools","",0,CMW_NODE_TOOL);	// 36 (CMW_NODE_TOOL_CONTENT)
-	$n = node_Add("group","other","Other Tools","",0,CMW_NODE_TOOL);				// 37 (CMW_NODE_TOOL_OTHER)
+	$n = node_Add("event","dev","Development Tools","",0,CMW_NODE_TOOL);			// 34 (CMW_NODE_TOOL_DEV)
+	$n = node_Add("event","art","Art Tools","",0,CMW_NODE_TOOL);					// 35 (CMW_NODE_TOOL_ART)
+	$n = node_Add("event","content","Content Creation Tools","",0,CMW_NODE_TOOL);	// 36 (CMW_NODE_TOOL_CONTENT)
+	$n = node_Add("event","other","Other Tools","",0,CMW_NODE_TOOL);				// 37 (CMW_NODE_TOOL_OTHER)
 
 	for ( $idx = $n; $idx < 32; $idx++ ) {
 		node_Add("null","reserved-".($idx+1),"??","",0,0);
