@@ -244,6 +244,10 @@ echo "Connected: " . db_IsConnected() . "\n";
 	
 	db_Query(
 		"CREATE TABLE " . CMW_TABLE_NODE_LINK . " (
+			/* For Indexing Only, generally unused */
+			_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
+				UNIQUE,
+
 			id_a BIGINT UNSIGNED NOT NULL DEFAULT 0,
 				INDEX(id_a),
 			id_b BIGINT UNSIGNED NOT NULL DEFAULT 0,
@@ -253,7 +257,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 				INDEX (type),
 			subtype VARCHAR(16) CHARSET latin1 NOT NULL DEFAULT '',
 			
-			/*INDEX(id_a,id_b,type),*/
+			/*UNIQUE id_ab_type_subtype(id_a,id_b,type,subtype),*/
 				
 			data TEXT NOT NULL
 		)" . $dbtype_default . ";");
@@ -303,8 +307,58 @@ Thing {
 
 
 */
-	// id author_id "author,creator" ""              **STORE ID_B**
+	// USER
+	// id 0 "avatar,image" "image.png"
+	// id 0 "twitter,name" "mikekasprzak"
+	// id 0 "twitch,name" "povrazor"
+	// id 0 "twitch,id" "1920470160614"
+	// id 0 "real,name" "Mike Kasprzak"
+	// id 0 "jammer,real-name" "1"
+	// id 0 "jammer,header" "1"
+	// id 0 "jammer,dark-color" "842"
+	// id 0 "jammer,light-color" "BD8"
 
+	// team_id id "member," "admin"
+	// team_id id "member," "contributor"
+	// (foreach team with my id)
+/*
+	User {
+		'avatar':{
+			'image':'image.png'
+		},
+		'twitter':{
+			'name':'mikekasprzak'
+		},
+		'twitch':{
+			'name:'povrazor',
+			'id':"1920470160614"
+		},
+		'real':{
+			'name':"Mike Kasprzak"
+		},
+		'jammer':{
+			real-name
+			header
+			dark-color
+			light-color
+		},
+		'member':{ // No Subtype
+			'192746':"contributor',
+			'4424':"admin"
+		}
+	}
+	
+	Team {
+		'member':{	// No Subtype
+			'84":"admin",
+			'8214":"contributor",
+			'12740":"contributor",
+			'13221":"contributor"
+		}
+	}
+*/
+	
+	// id author_id "author,creator" ""              **STORE ID_B**
 	
 	// Need to be able to describe:
 	// var->key->key = value

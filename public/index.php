@@ -125,12 +125,18 @@ if ( $mode > 0 ) {
 		<?php if ( !empty($this_node['body']) ) { ?><div class="body"><?php echo $this_node['body']; ?></div><?php } ?>
 		<?php
 			if ( $this_node['type'] === 'user' ) {
+				echo "<br />";
 				echo '<div id="games"><h3>Games:</h3>';
 				$games = node_GetNodesByAuthorIdAndType($this_node['id'],'game');
 				foreach( $games as $game ) {
 					echo "<a href=\"/user/" . $this_node['slug'] . "/" . $game['slug'] . "\">" . $game['name'] . "</a><br/>"; 
 				}
 				echo '</div>';
+				echo "<br />";
+				echo '<div id="games"><h3>Links ('.$this_node['id'].'):</h3>' ;
+				$links = node_GetLinksById( $this_node['id'] );
+				print_r($links);
+				echo "</div>";
 			}
 		?>	
 	</div>
