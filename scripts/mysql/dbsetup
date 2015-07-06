@@ -337,6 +337,29 @@ Thing {
 	// Various articles recommend making it 255 chars, but as of 2015 we don't need it yet.
 	// My compromise is to set it to 128 chars, though we don't need more than 64.
 	// When PHP switches to a fancier algorithm, then we'll do an alter-table to add more space.
+
+	
+	{
+		// Add Dummy User //
+		$user_id = node_Add(
+			'user','pov','PoV','I am the PoV. :smile:',
+			0,CMW_NODE_USER,
+			true
+		);	
+		node_AddUser($user_id,'mike@sykhronics.com','blahblah');
+	
+		// Add Dummy Games //
+		node_Add(
+			'game','bearly-seasoned','Bearly:bear:Seasoned',"It's about a :bear:. The :bear: wants :fish:. Eat :fish: then go :house:.",
+			$user_id,CMW_NODE_OTHER,
+			true
+		);
+		node_Add(
+			'game','phat-js','Phat JS',"It's just phat",
+			$user_id,CMW_NODE_OTHER,
+			true
+		);
+	}
 	
 	// Love Table. If a user has given a +1 to something. //
 	db_Query(
