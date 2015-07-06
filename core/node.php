@@ -155,7 +155,7 @@ function node_GetNodeByAuthorIdAndSlug( $author, $slug ) {
 	return null;
 }
 
-function node_GetNodesByAuthorId( $author, $limit = 50, $offset = 0 ) {
+function node_GetNodesByAuthorId( $author, $limit = 100, $offset = 0 ) {
 	db_Connect();
 
 	$items = db_Fetch( 
@@ -167,7 +167,7 @@ function node_GetNodesByAuthorId( $author, $limit = 50, $offset = 0 ) {
 	
 	return $items;
 }
-function node_GetNodesByParentId( $parent, $limit = 50, $offset = 0 ) {
+function node_GetNodesByParentId( $parent, $limit = 100, $offset = 0 ) {
 	db_Connect();
 
 	$items = db_Fetch( 
@@ -181,7 +181,7 @@ function node_GetNodesByParentId( $parent, $limit = 50, $offset = 0 ) {
 }
 
 
-function node_GetNodesByAuthorIdAndType( $author, $type, $limit = 50, $offset = 0 ) {
+function node_GetNodesByAuthorIdAndType( $author, $type, $limit = 100, $offset = 0 ) {
 	db_Connect();
 
 	$items = db_Fetch( 
@@ -194,7 +194,7 @@ function node_GetNodesByAuthorIdAndType( $author, $type, $limit = 50, $offset = 
 	
 	return $items;
 }
-function node_GetNodesByParentIdAndType( $parent, $type, $limit = 50, $offset = 0 ) {
+function node_GetNodesByParentIdAndType( $parent, $type, $limit = 100, $offset = 0 ) {
 	db_Connect();
 
 	$items = db_Fetch( 

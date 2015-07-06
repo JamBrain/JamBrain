@@ -79,19 +79,26 @@ if ( $mode > 0 ) {
 		#nav .row:hover {
 			background:#DDF;
 		}
-		#nav .slug, #nav .id, #nav .name {
-			display:inline;
-		}
 		#nav .slug {
-			font-family: monospace;
+			display:inline;
+			font-family:monospace;
+		}
+		#nav .id, #nav .name, #nav .type {
+			display:inline;
+			position:absolute;
 		}
 		#nav .id {
-			position:absolute;
 			left:256px;
 		}
 		#nav .name {
-			position:absolute;
-			left:320px;
+			left:360px;
+		}
+		#nav .type {
+			left:720px;
+		}
+		
+		#nav .proxy {
+			background:#DFD;
 		}
 		
 		#content {
@@ -134,8 +141,13 @@ if ( $mode > 0 ) {
 				echo "</div>\n";	
 			}
 			foreach( $nodes as $node ) {
-				echo "<div class='row'>\n";
-				echo "<div class='slug'><a href='".$node['slug']."/'>" . $node['slug'] . "/</a></div> <div class='id'>[".$node['id']."]</div> <div class='name'>".$node['name']."</div><br />\n";
+				echo "<div class='row ".$node['type']."'>\n";
+				if ( $node['type'] === 'link' ) {
+					echo "<div class='slug'><a href='".$node['name']."/'>" . $node['slug'] . "/</a></div> <div class='id'>*".$node['id']."*</div><br />\n";
+				}
+				else {
+					echo "<div class='slug'><a href='".$node['slug']."/'>" . $node['slug'] . "/</a></div> <div class='id'>[".$node['id']."]</div> <div class='name'>".$node['name']."</div> <div class='type'>(".$node['type'].")</div><br />\n";
+				}
 				echo "</div>\n";	
 			}
 		?>

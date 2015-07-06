@@ -32,12 +32,27 @@ const CMW_NODE_TEAM = 4;				// Teams (uncategorized only, i.e. Admin)
 const CMW_NODE_GAME = 5;				// Games (uncategorized only)
 const CMW_NODE_POST = 6;				// Posts (uncategorized only)
 const CMW_NODE_MEDIA = 7;				// Media (uncategorized only)
-// --- //
-const CMW_NODE_EVENT = 16;				// Ludum Dare Main Events
-const CMW_NODE_EXTRA = 17;				// Ludum Dare Extra Events (MiniLD, October Challenge)
-const CMW_NODE_OTHER = 18;				// Other Games and Game Jams (GGJ)
-const CMW_NODE_TOOL = 19;				// Tools (Unity, etc)
-const CMW_NODE_CUSTOM = 20;				// Custom User Generated Jams
-const CMW_NODE_HOSTED = 21;				// Events we host (3rd party, or sponsored)
 
+// --- //
+
+const CMW_NODE_EVENT = 16;				// Ludum Dare Events
+const CMW_NODE_OTHER = 17;				// Other Games and Game Jams (GGJ)
+const CMW_NODE_TOOL = 18;				// Tools (Unity, etc)
+const CMW_NODE_CUSTOM = 19;				// Custom User Generated Jams
+const CMW_NODE_HOSTED = 20;				// Events we host (3rd party, or sponsored)
+
+const CMW_NODE_EVENT_LD = 24;
+const CMW_NODE_EVENT_MINILD = 25;
+const CMW_NODE_EVENT_OCTOBER = 26;
+const CMW_NODE_EVENT_SCENE = 27;
+
+const CMW_NODE_OTHER_GAME = 28;			// Other Games (not from a Jam)
+const CMW_NODE_OTHER_DEMO = 29;			// Other Demos (from Demoscene Events we haven't added)
+const CMW_NODE_OTHER_JAM = 30;			// Other Game Jams
+const CMW_NODE_OTHER_SCENE = 31;		// Other Demoscene Events
+
+const CMW_NODE_TOOL_DEV = 32;
+const CMW_NODE_TOOL_ART = 33;
+const CMW_NODE_TOOL_CONTENT = 34;
+const CMW_NODE_TOOL_OTHER = 35;
 ?>
