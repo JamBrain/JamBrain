@@ -29,9 +29,11 @@ const CMW_NODE_ROOT = 1;				// The root of our Node tree
 const CMW_NODE_USER = 2;				// Users
 const CMW_NODE_ADMIN = 3;				// Administrator Control Panel
 const CMW_NODE_TEAM = 4;				// Teams (uncategorized only, i.e. Admin)
-const CMW_NODE_GAME = 5;				// Games (uncategorized only)
-const CMW_NODE_POST = 6;				// Posts (uncategorized only)
-const CMW_NODE_MEDIA = 7;				// Media (uncategorized only)
+const CMW_NODE_GAME = 5;				// Games (proxy)
+const CMW_NODE_DEMO = 6;				// Demos (proxy)
+const CMW_NODE_CRAFT = 7;				// Crafts (proxy)
+const CMW_NODE_POST = 8;				// Posts (proxy)
+const CMW_NODE_MEDIA = 9;				// Media (proxy)
 
 // --- //
 
@@ -48,11 +50,12 @@ const CMW_NODE_EVENT_SCENE = 27;
 
 const CMW_NODE_OTHER_GAME = 28;			// Other Games (not from a Jam)
 const CMW_NODE_OTHER_DEMO = 29;			// Other Demos (from Demoscene Events we haven't added)
-const CMW_NODE_OTHER_JAM = 30;			// Other Game Jams
-const CMW_NODE_OTHER_SCENE = 31;		// Other Demoscene Events
+const CMW_NODE_OTHER_CRAFT = 30;		// Other Crafts
+const CMW_NODE_OTHER_JAM = 31;			// Other Game Jams
+const CMW_NODE_OTHER_SCENE = 32;		// Other Demoscene Events
 
-const CMW_NODE_TOOL_DEV = 32;
-const CMW_NODE_TOOL_ART = 33;
-const CMW_NODE_TOOL_CONTENT = 34;
-const CMW_NODE_TOOL_OTHER = 35;
+const CMW_NODE_TOOL_DEV = 34;
+const CMW_NODE_TOOL_ART = 35;
+const CMW_NODE_TOOL_CONTENT = 36;
+const CMW_NODE_TOOL_OTHER = 37;
 ?>
