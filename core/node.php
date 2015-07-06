@@ -156,6 +156,20 @@ function node_GetNodeByAuthorIdAndSlug( $author, $slug ) {
 }
 
 
+function node_GetNodesByAuthorIdAndType( $author, $type, $limit = 25, $offset = 0 ) {
+	db_Connect();
+
+	$items = db_Fetch( 
+		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
+			"`author`=" . $author . " AND " .
+			"`type`=\"" . $type . "\"" .
+			" LIMIT " . $limit . " OFFSET " . $offset .
+		";");
+	
+	return $items;
+}
+
+
 function user_GetHashById( $id ) {
 	db_Connect();
 

@@ -35,6 +35,7 @@ if ( $arg_count > 0 ) {
 
 $user = [];
 $item = [];
+$back_url = "";
 
 if ( $mode > 0 ) {
 	// Item Mode //
@@ -46,12 +47,19 @@ if ( $mode > 0 ) {
 		else {
 			$item = node_GetNodeByAuthorIdAndSlug($user['id'],$arg[0]);
 			$mode = empty($item) ? M_NO_ITEM : M_ITEM;
+			
+			$back_url = "/" . $user_name;
 		}
 	}
 	// User Mode //
 	else {
 		$user = node_GetUserBySlug($user_name);
 		$mode = empty($user) ? M_NO_USER : M_USER;
+		
+		if ( $mode === M_USER ) {
+			// TODO: For each type
+			$item['game'] = node_GetNodesByAuthorIdAndType($user['id'],'game');
+		}
 	}
 }
 
@@ -155,7 +163,9 @@ body {
 <body>
 <?php if ( $header ) { ?>
 	<div class="header">
-		<img src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo112<?php echo $img; ?>.png" height="56" />
+		<?php if ( !empty($back_url) ) echo "<a href=\"" . $back_url . "\">"; ?>
+			<img src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo112<?php echo $img; ?>.png" height="56" />
+		<?php if ( !empty($back_url) ) echo "</a>"; ?>
 	</div>
 <?php } /* $header */ ?>
 
@@ -167,8 +177,17 @@ body {
 		<?php case M_USER: { ?>
 			<div id="title"><?php echo $user['name'] . "'s home page<br />"; ?></div>
 			<!--<?php print_r($user); ?>-->
+			<!--<?php print_r($item); ?>-->		
 			<br />
 			<div id="about"><?php echo $user['body']; ?></div>
+			<br />
+			<div id="games"><h2>Games:</h2>
+				<?php 
+				foreach( $item['game'] as $game ) {
+					echo "<a href=\"" . $user['slug'] . "/" . $game['slug'] . "\">" . $game['name'] . "</a><br/>"; 
+				}
+				?>
+			</div>
 		<?php } break; ?>
 		<?php case M_ITEM: { ?>
 			<div id="title"><?php echo $item['name'] . " by <strong>" . $user['name'] . "</strong><br />"; ?></div>
@@ -192,7 +211,7 @@ body {
 		
 		// Process Emoji on all the following sections //
 		var Section = [
-			'about','title'
+			'title','about','games',
 		];
 		for(var Key in Section) {
 			var el = document.getElementById(Section[Key]);
