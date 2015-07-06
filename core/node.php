@@ -65,11 +65,11 @@ function node_AddUser( $id, $mail, $password ) {
 	return db_GetId();
 }
 
-function node_AddLink( $id_a, $id_b, $type, $subtype = "", $data = "" ) {
+function node_AddMeta( $id_a, $id_b, $type, $subtype = "", $data = "" ) {
 	db_Connect();
 	
 	db_Query(
-		"INSERT `" . CMW_TABLE_NODE_LINK . "` (".
+		"INSERT `" . CMW_TABLE_NODE_META . "` (".
 			"`id_a`,".
 			"`id_b`,".
 			"`type`,".
@@ -263,95 +263,95 @@ function node_GetNodeIdByParentIdAndSlug( $parent, $slug ) {
 	return null;
 }
 
-function node_GetLinksById( $id ) {
+function node_GetMetasById( $id ) {
 	db_Connect();
 
-	$links = db_Fetch(
-		"SELECT id_a,id_b,type,subtype,data FROM `" . CMW_TABLE_NODE_LINK . "` WHERE ".
+	$metas = db_Fetch(
+		"SELECT id_a,id_b,type,subtype,data FROM `" . CMW_TABLE_NODE_META . "` WHERE ".
 			"`id_a`=" . $id . " OR " .
 			"`id_b`=" . $id .
 		";");
 
-	//print_r($links);
+	//print_r($metas);
 	
 	// TODO: support prefixes. # for number, ! for boolean, [] always an array, ? for time-date (maybe)
 
-	if ( count($links) ) {
+	if ( count($metas) ) {
 		$ret = [];
-		foreach ( $links as $link ) {
-			// A-Id Links //
-			if ( $link['id_a'] === $id ) {
+		foreach ( $metas as $meta ) {
+			// A-Id Meta //
+			if ( $meta['id_a'] === $id ) {
 				// No B-Id //
-				if ( empty($link['id_b']) ) {
+				if ( empty($meta['id_b']) ) {
 					// No Subtype //
-					if ( empty($link['subtype']) ) {
+					if ( empty($meta['subtype']) ) {
 						// If data is already set, we need to make an array //
-						if ( isset($ret[$link['type']]) ) {
+						if ( isset($ret[$meta['type']]) ) {
 							// If not an array, insert old value in to an array //
-							if ( !is_array($ret[$link['type']]) ) {
-								$ret[$link['type']] = array($ret[$link['type']]);
+							if ( !is_array($ret[$meta['type']]) ) {
+								$ret[$meta['type']] = array($ret[$meta['type']]);
 							}
 							// Append the new value //
-							$ret[$link['type']][] = $link['data'];
+							$ret[$meta['type']][] = $meta['data'];
 						}
 						// Otherwise, assign the value //
 						else {
-							$ret[$link['type']] = $link['data'];
+							$ret[$meta['type']] = $meta['data'];
 						}
 					}
 					// With Subtype //
 					else {
 						// If type not set, add an array to hold subtypes //
-						if ( !isset($ret[$link['type']]) ) {
-							$ret[$link['type']] = [];
+						if ( !isset($ret[$meta['type']]) ) {
+							$ret[$meta['type']] = [];
 						}
 						// If SubType is set, make it an array //
-						if ( isset($ret[$link['type']][$link['subtype']]) ) {
+						if ( isset($ret[$meta['type']][$meta['subtype']]) ) {
 							// If not an array, insert old value in to an array //
-							if ( !is_array($ret[$link['type']][$link['subtype']]) ) {
-								$ret[$link['type']][$link['subtype']] = array($ret[$link['type']][$link['subtype']]);
+							if ( !is_array($ret[$meta['type']][$meta['subtype']]) ) {
+								$ret[$meta['type']][$meta['subtype']] = array($ret[$meta['type']][$meta['subtype']]);
 							}
 							// Append the new value //
-							$ret[$link['type']][$link['subtype']][] = $link['data'];
+							$ret[$meta['type']][$meta['subtype']][] = $meta['data'];
 						}
 						// Othewise, assign the value //
 						else {
-							$ret[$link['type']][$link['subtype']] = $link['data'];
+							$ret[$meta['type']][$meta['subtype']] = $meta['data'];
 						}
 					}
 				}
 				// With B-Id //
 				else {
 					// If type not set, add an array to hold B-Id's //
-					if ( !isset($ret[$link['type']]) ) {
-						$ret[$link['type']] = [];
+					if ( !isset($ret[$meta['type']]) ) {
+						$ret[$meta['type']] = [];
 					}
 					// If no subtype, we add values directly under B-Ids
-					if ( empty($link['subtype']) ) {
+					if ( empty($meta['subtype']) ) {
 						// If B-Id already exists, we need to make it an array //
-						if ( isset($ret[$link['type']][$link['id_b']]) ) {
+						if ( isset($ret[$meta['type']][$meta['id_b']]) ) {
 							// If not an array, insert the old value in to an array //
-							if (!is_array($ret[$link['type']][$link['id_b']])) {
-								$ret[$link['type']][$link['id_b']] = array($ret[$link['type']][$link['id_b']]);
+							if (!is_array($ret[$meta['type']][$meta['id_b']])) {
+								$ret[$meta['type']][$meta['id_b']] = array($ret[$meta['type']][$meta['id_b']]);
 							}
 							// Append the new value //
-							$ret[$link['type']][$link['id_b']][] = $link['data'];
+							$ret[$meta['type']][$meta['id_b']][] = $meta['data'];
 						}
 						// Otherwise, assign it. //
 						else {
-							$ret[$link['type']][$link['id_b']] = $link['data'];
+							$ret[$meta['type']][$meta['id_b']] = $meta['data'];
 						}
 					}
 					// Has a Subtype //
 					else {
 //					// If B-Id not found, add an array to hold  //
-//					if ( !isset($ret[$link['type']][$link['id_b']]) ) {
-//						$ret[$link['type']][$link['id_b']] = [];
+//					if ( !isset($ret[$meta['type']][$meta['id_b']]) ) {
+//						$ret[$meta['type']][$meta['id_b']] = [];
 //					}
 					}
 				}
 			}
-			// B-Id Links //
+			// B-Id Metas //
 			else {
 				
 			}

@@ -20,7 +20,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 // http://code.openark.org/blog/mysql/mysqls-character-sets-and-collations-demystified
 		
 	db_Query("DROP TABLE " . CMW_TABLE_NODE . ";",true);
-	db_Query("DROP TABLE " . CMW_TABLE_NODE_LINK . ";",true);
+	db_Query("DROP TABLE " . CMW_TABLE_NODE_META . ";",true);
 	db_Query("DROP TABLE " . CMW_TABLE_NODE_DIFF . ";",true);
 	db_Query("DROP TABLE " . CMW_TABLE_NODE_LOVE . ";",true);
 	db_Query("DROP TABLE " . CMW_TABLE_NODE_STAR . ";",true);
@@ -60,7 +60,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 	// favourite_count - How many Favourites
 	// popularity - some metric used to single out posts ** (may want to sort by)
 
-	// link_cache - cached list of references (links) in JSON format.
+	// meta_cache - cached list of references (metas) in JSON format.
 	db_Query(
 		"CREATE TABLE " . CMW_TABLE_NODE . " (
 			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
@@ -90,7 +90,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 			favourite_count INT NOT NULL DEFAULT 0,
 			popularity INT NOT NULL DEFAULT 0,
 			
-			link_cache TEXT NOT NULL,
+			meta_cache TEXT NOT NULL,
 			favourite_cache TEXT NOT NULL
 		)" . $dbtype_default . ";");
 	//			INDEX(root,parent,slug),
@@ -243,7 +243,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 	
 	
 	db_Query(
-		"CREATE TABLE " . CMW_TABLE_NODE_LINK . " (
+		"CREATE TABLE " . CMW_TABLE_NODE_META . " (
 			/* For Indexing Only, generally unused */
 			_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
 				UNIQUE,
@@ -429,7 +429,7 @@ Thing {
 			/*favourite_count INT NOT NULL DEFAULT 0,*/
 			/*popularity INT NOT NULL DEFAULT 0,*/
 			
-			/*link_cache TEXT NOT NULL,*/
+			/*meta_cache TEXT NOT NULL,*/
 			/*favourite_cache TEXT NOT NULL*/
 		)" . $dbtype_default . ";");
 
@@ -476,6 +476,17 @@ Thing {
 			$user_id,CMW_NODE_OTHER_DEMO,
 			true
 		);
+		
+		// Add Dummy Metadata //
+		node_AddMeta($user_id,0,"twitter","","mikekasprzak");
+		node_AddMeta($user_id,0,"twitch","name","povrazor");
+		node_AddMeta($user_id,0,"twitch","id","1920470160614");
+		node_AddMeta($user_id,0,"real","name","Mike Kasprzak");
+		node_AddMeta($user_id,0,"jammer","real-name","1");
+		node_AddMeta($user_id,0,"jammer","dark-color","428");
+		node_AddMeta($user_id,0,"jammer","light-color","A9F");
+		node_AddMeta($user_id,0,"jammer","header","1");
+		node_AddMeta(4,$user_id,"member","","admin");
 	}
 	
 	// Love Table. If a user has given a +1 to something. //

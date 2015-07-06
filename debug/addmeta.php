@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Add Link (<?php echo $_SERVER['REQUEST_METHOD']; ?>)</title>
+	<title>Add Node Meta (<?php echo $_SERVER['REQUEST_METHOD']; ?>)</title>
 </head>
 <body>
 <?php
@@ -28,13 +28,13 @@
 			$data = $_POST['data'];
 
 	
-			$id = node_AddLink(
+			$id = node_AddMeta(
 				$id_a,$id_b,
 				$type,$subtype,
 				$data
 			);
 	
-			echo "Added Link " . $id . ".<br />";
+			echo "Added Meta " . $id . ".<br />";
 			echo "<br />";
 		}
 	}

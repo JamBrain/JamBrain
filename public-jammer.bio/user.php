@@ -35,6 +35,8 @@ if ( $arg_count > 0 ) {
 
 $user = [];
 $item = [];
+$meta = [];
+$config = [];
 $back_url = "";
 
 if ( $mode > 0 ) {
@@ -45,6 +47,8 @@ if ( $mode > 0 ) {
 			$mode = M_NO_USER;
 		}
 		else {
+			$meta = node_GetMetasById($user['id']);
+			
 			$item = node_GetNodeByAuthorIdAndSlug($user['id'],$arg[0]);
 			$mode = empty($item) ? M_NO_ITEM : M_ITEM;
 			
@@ -57,11 +61,27 @@ if ( $mode > 0 ) {
 		$mode = empty($user) ? M_NO_USER : M_USER;
 		
 		if ( $mode === M_USER ) {
+			$meta = node_GetMetasById($user['id']);
+			
 			// TODO: For each type
 			$item['game'] = node_GetNodesByAuthorIdAndType($user['id'],'game');
 		}
 	}
 }
+
+// If Jammer metadata is set, use it as our configuration //
+if ( isset($meta['jammer']) ) {
+	$config = &$meta['jammer'];
+}
+
+// Use our real name if config tells us to //
+$display_name = $user['name'];
+if ( isset($meta['real']) && isset($meta['real']['name']) ) {
+	if ( isset($config['real-name']) && intval($config['real-name']) ) {
+		$display_name = $meta['real']['name'] . " (" . $user['name'] . ")";
+	}
+}
+
 
 // - Styles ------------------------ //
 // Color Customizing //
@@ -78,7 +98,30 @@ $header = true;
 
 // If Mode is valid, use Jammer settings found in user config //
 if ( $mode > 0 ) {
-	// TODO: this
+	if ( isset($config['header']) ) {
+		$header = intval($config['header']) !== 0;
+	}
+	
+	if ( isset($config['dark-color']) ) {
+		$dark_bg = $config['dark-color'];
+	}
+	if ( isset($config['light-color']) ) {
+		$light_bg = $config['light-color'];
+	}
+	
+	if ( isset($config['dark-text']) ) {
+		$dark_text = $config['dark-text'];
+	}
+	else if ( isset($config['light-color']) ) {
+		$dark_text = $config['light-color'];
+	}
+
+	if ( isset($config['light-text']) ) {
+		$light_text = $config['light-text'];
+	}
+	else if ( isset($config['dark-color']) ) {
+		$light_text = $config['dark-color'];
+	}
 }
 
 // If in 'preview' mode, allow URL to override settings //
@@ -175,7 +218,7 @@ body {
 			<?php echo "Unknown Error (" . $mode . ")<br />"; ?>
 		<?php } break; ?>
 		<?php case M_USER: { ?>
-			<div id="title"><?php echo $user['name'] . "'s home page<br />"; ?></div>
+			<div id="title"><?php echo $display_name . "'s home page<br />"; ?></div>
 			<!--<?php print_r($user); ?>-->
 			<!--<?php print_r($item); ?>-->		
 			<br />
@@ -190,7 +233,7 @@ body {
 			</div>
 		<?php } break; ?>
 		<?php case M_ITEM: { ?>
-			<div id="title"><?php echo $item['name'] . " by <strong>" . $user['name'] . "</strong><br />"; ?></div>
+			<div id="title"><?php echo $item['name'] . " by <strong>" . $display_name . "</strong><br />"; ?></div>
 			<!--<?php print_r($user); ?>-->
 			<!--<?php print_r($item); ?>-->		
 			<br />
@@ -200,7 +243,7 @@ body {
 			<?php echo $user_name . " not found!<br />"; ?>
 		<?php } break; ?>
 		<?php case M_NO_ITEM: { ?>
-			<?php echo $arg[0] . " by <strong>" . $user['name'] . "</strong> not found!<br />"; ?>
+			<?php echo $arg[0] . " by <strong>" . $display_name . "</strong> not found!<br />"; ?>
 			<!--<?php print_r($user); ?>-->
 		<?php } break; ?>
 	<?php }; ?>

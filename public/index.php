@@ -118,11 +118,11 @@ if ( $mode > 0 ) {
 			margin-top:12px;
 		}
 		
-		#links .node {
+		#metas .node {
 			padding-left:24px;
 			font-family:monospace;
 		}
-		#links .key {
+		#metas .key {
 			display:inline;
 			font-weight:bold;
 		}
@@ -142,17 +142,17 @@ if ( $mode > 0 ) {
 				}
 				echo '</div>';
 				echo "<br />";
-				echo '<div id="links"><h3>Links ('.$this_node['id'].'):</h3>' ;
-				$links = node_GetLinksById( $this_node['id'] );
-				function process_link( $link ) {
+				echo '<div id="metas"><h3>Metadata ('.$this_node['id'].'):</h3>' ;
+				$metas = node_GetMetasById( $this_node['id'] );
+				function process_meta( $meta ) {
 					echo "<div class='node'>";
-					foreach( $link as $key => $value ) {
+					foreach( $meta as $key => $value ) {
 						if ( is_array($value) ) {
 							if ( is_string($key) )
 								$key = "\"".$key."\"";
 
 							echo "<div class='key'>".$key . ":</div><br/>";
-							process_link($value);
+							process_meta($value);
 						}
 						else {
 							if ( is_string($key) )
@@ -166,9 +166,9 @@ if ( $mode > 0 ) {
 					}
 					echo "</div>";
 				}
-				process_link($links);
+				process_meta($metas);
 				
-//				print_r($links);
+//				print_r($metas);
 				echo "</div>";
 			}
 		?>	

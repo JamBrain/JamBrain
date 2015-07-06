@@ -14,7 +14,7 @@ if ( !defined('CMW_TABLE_PREFIX') ) {
 
 // Tables //
 define('CMW_TABLE_NODE',CMW_TABLE_PREFIX."node");
-define('CMW_TABLE_NODE_LINK',CMW_TABLE_PREFIX."node_link");
+define('CMW_TABLE_NODE_META',CMW_TABLE_PREFIX."node_meta");
 define('CMW_TABLE_NODE_DIFF',CMW_TABLE_PREFIX."node_diff");
 define('CMW_TABLE_NODE_LOVE',CMW_TABLE_PREFIX."node_love");
 define('CMW_TABLE_NODE_STAR',CMW_TABLE_PREFIX."node_star");
