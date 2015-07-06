@@ -112,7 +112,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 	$n = node_Add("group","other","Other Events","",0,CMW_NODE_ROOT);				// 17 (CMW_NODE_OTHER)
 	$n = node_Add("group","tool","Tools","",0,CMW_NODE_ROOT);						// 18 (CMW_NODE_TOOL)
 	$n = node_Add("group","custom","Custom Events","",0,CMW_NODE_ROOT);				// 19 (CMW_NODE_CUSTOM)
-	$n = node_Add("group","presents","/presents","",0,CMW_NODE_ROOT);				// 20 (CMW_NODE_HOSTED)
+	$n = node_Add("group","extra","/extra","",0,CMW_NODE_ROOT);						// 20 (CMW_NODE_HOSTED)
 	$n = node_Add("group","reserved-".($n+1),"","",0,0);							// 21
 	$n = node_Add("group","reserved-".($n+1),"","",0,0);							// 22
 	$n = node_Add("group","reserved-".($n+1),"","",0,0);							// 23

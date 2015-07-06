@@ -41,7 +41,7 @@ const CMW_NODE_EVENT = 16;				// Ludum Dare Events
 const CMW_NODE_OTHER = 17;				// Other Games and Game Jams (GGJ)
 const CMW_NODE_TOOL = 18;				// Tools (Unity, etc)
 const CMW_NODE_CUSTOM = 19;				// Custom User Generated Jams
-const CMW_NODE_HOSTED = 20;				// Events we host (3rd party, or sponsored)
+const CMW_NODE_HOSTED = 20;				// Extra Events we host (3rd party, or sponsored)
 
 const CMW_NODE_EVENT_LD = 24;
 const CMW_NODE_EVENT_MINILD = 25;
