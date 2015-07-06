@@ -112,7 +112,17 @@ if ( $mode > 0 ) {
 	<?php if ( $mode === M_DEFAULT ) { ?>	
 	<div id="content">
 		<div class="title"><h1><?php echo $this_node['name']; ?></h1><?php if ( $author_node ) { echo "<h3>by <a href='/user/".$author_node['slug']."'>" . $author_node['name'] . "</a></h3>"; } ?></div>
-	<?php if ( !empty($this_node['body']) ) { ?><div class="body"><?php echo $this_node['body']; ?></div><?php } ?>
+		<?php if ( !empty($this_node['body']) ) { ?><div class="body"><?php echo $this_node['body']; ?></div><?php } ?>
+		<?php
+			if ( $this_node['type'] === 'user' ) {
+				echo '<div id="games"><h3>Games:</h3>';
+				$games = node_GetNodesByAuthorIdAndType($this_node['id'],'game');
+				foreach( $games as $game ) {
+					echo "<a href=\"/user/" . $this_node['slug'] . "/" . $game['slug'] . "\">" . $game['name'] . "</a><br/>"; 
+				}
+				echo '</div>';
+			}
+		?>	
 	</div>
 	
 	<div id='nav' style="padding:16px;">
@@ -133,7 +143,7 @@ if ( $mode > 0 ) {
 
 	<?php } else if ( $mode === M_ERROR ) { ?>	
 		<div id="content">
-			<div class="title"><h1>Nope</h1></div>
+			<div class="title"><h1><a href=".">Nope</a></h1></div>
 		</div>
 
 	<?php } /* $mode */ ?>	
