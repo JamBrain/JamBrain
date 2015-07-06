@@ -155,20 +155,89 @@ function node_GetNodeByAuthorIdAndSlug( $author, $slug ) {
 	return null;
 }
 
-
-function node_GetNodesByAuthorIdAndType( $author, $type, $limit = 25, $offset = 0 ) {
+function node_GetNodesByAuthorId( $author, $limit = 50, $offset = 0 ) {
 	db_Connect();
 
 	$items = db_Fetch( 
 		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
-			"`author`=" . $author . " AND " .
-			"`type`=\"" . $type . "\"" .
+			"`author`=" . $author .
+			" ORDER BY `id` ASC " .
+			" LIMIT " . $limit . " OFFSET " . $offset .
+		";");
+	
+	return $items;
+}
+function node_GetNodesByParentId( $parent, $limit = 50, $offset = 0 ) {
+	db_Connect();
+
+	$items = db_Fetch( 
+		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
+			"`parent`=" . $parent .
+			" ORDER BY `id` ASC " .
 			" LIMIT " . $limit . " OFFSET " . $offset .
 		";");
 	
 	return $items;
 }
 
+
+function node_GetNodesByAuthorIdAndType( $author, $type, $limit = 50, $offset = 0 ) {
+	db_Connect();
+
+	$items = db_Fetch( 
+		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
+			"`author`=" . $author . " AND " .
+			"`type`=\"" . $type . "\"" .
+			" ORDER BY `id` ASC " .
+			" LIMIT " . $limit . " OFFSET " . $offset .
+		";");
+	
+	return $items;
+}
+function node_GetNodesByParentIdAndType( $parent, $type, $limit = 50, $offset = 0 ) {
+	db_Connect();
+
+	$items = db_Fetch( 
+		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
+			"`parent`=" . $parent . " AND " .
+			"`type`=\"" . $type . "\"" .
+			" ORDER BY `id` ASC " .
+			" LIMIT " . $limit . " OFFSET " . $offset .
+		";");
+	
+	return $items;
+}
+
+function node_GetNodeIdByAuthorIdAndSlug( $author, $slug ) {
+	db_Connect();
+
+	$item = db_FetchSingle( 
+		"SELECT `id` FROM `" . CMW_TABLE_NODE . "` WHERE ".
+			"`author`=" . $author . " AND " .
+			"`slug`=\"" . $slug . "\"" .
+			" LIMIT 1" .
+		";");
+	
+	if ( count($item) ) {
+		return $item[0];
+	}
+	return null;
+}
+function node_GetNodeIdByParentIdAndSlug( $parent, $slug ) {
+	db_Connect();
+
+	$item = db_FetchSingle( 
+		"SELECT `id` FROM `" . CMW_TABLE_NODE . "` WHERE ".
+			"`parent`=" . $parent . " AND " .
+			"`slug`=\"" . $slug . "\"" .
+			" LIMIT 1" .
+		";");
+	
+	if ( count($item) ) {
+		return $item[0];
+	}
+	return null;
+}
 
 function user_GetHashById( $id ) {
 	db_Connect();

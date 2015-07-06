@@ -98,18 +98,20 @@ echo "Connected: " . db_IsConnected() . "\n";
 	// Reserve the first 32 nodes for special use //
 	$n = node_Add("group","root","/root","",0,0);						// 1 (CMW_NODE_ROOT)
 	$n = node_Add("group","user","/user","",0,CMW_NODE_ROOT);			// 2 (CMW_NODE_USER)
-	$n = node_Add("group","team","/team","",0,CMW_NODE_ROOT);			// 3 (CMW_NODE_TEAM)
-	$n = node_Add("group","game","/game","",0,CMW_NODE_ROOT);			// 4 (CMW_NODE_GAME)
-	$n = node_Add("group","post","/post","",0,CMW_NODE_ROOT);			// 5 (CMW_NODE_POST)
-	$n = node_Add("group","media","/media","",0,CMW_NODE_ROOT);			// 6 (CMW_NODE_MEDIA)
+	$n = node_Add("group","admin","/admin","",0,CMW_NODE_ROOT);			// 3 (CMW_NODE_ADMIN)
+	$n = node_Add("group","team","/team","",0,CMW_NODE_ROOT);			// 4 (CMW_NODE_TEAM)
+	$n = node_Add("group","game","/game","",0,CMW_NODE_ROOT);			// 5 (CMW_NODE_GAME)
+	$n = node_Add("group","post","/post","",0,CMW_NODE_ROOT);			// 6 (CMW_NODE_POST)
+	$n = node_Add("group","media","/media","",0,CMW_NODE_ROOT);			// 7 (CMW_NODE_MEDIA)
 	for ( $idx = $n; $idx < 15; $idx++ ) {
 		node_Add("null","reserved-".($idx+1),"??","",0,0);
 	}
 	$n = node_Add("group","event","/event","",0,CMW_NODE_ROOT);			// 16 (CMW_NODE_EVENT)
 	$n = node_Add("group","extra","/extra","",0,CMW_NODE_ROOT);			// 17 (CMW_NODE_EXTRA)
 	$n = node_Add("group","other","/other","",0,CMW_NODE_ROOT);			// 18 (CMW_NODE_OTHER)
-	$n = node_Add("group","custom","/custom","",0,CMW_NODE_ROOT);		// 19 (CMW_NODE_CUSTOM)
-	$n = node_Add("group","presents","/presents","",0,CMW_NODE_ROOT);	// 20 (CMW_NODE_HOSTED)
+	$n = node_Add("group","tool","/tool","",0,CMW_NODE_ROOT);			// 19 (CMW_NODE_TOOL)
+	$n = node_Add("group","custom","/custom","",0,CMW_NODE_ROOT);		// 20 (CMW_NODE_CUSTOM)
+	$n = node_Add("group","presents","/presents","",0,CMW_NODE_ROOT);	// 21 (CMW_NODE_HOSTED)
 	for ( $idx = $n; $idx < 32; $idx++ ) {
 		node_Add("null","reserved-".($idx+1),"??","",0,0);
 	}
@@ -123,7 +125,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 		}
 		// Reserve up to Ludum Dare 48
 		for ( $idx = $latest_event+1; $idx <= 48; $idx++ ) {
-			node_Add("null","ld".$idx,"Ludum Dare ".$idx,"(placeholder)",0,CMW_NODE_EVENT);
+			node_Add("null","ld".$idx,"Ludum Dare ".$idx,"(placeholder)",0,0);
 		}
 	}
 	
@@ -131,7 +133,6 @@ echo "Connected: " . db_IsConnected() . "\n";
 	{
 		node_Add("event","ld8-5","Ludum Dare 8.5 (24 Hour Relaxed Event)","",0,CMW_NODE_EXTRA);
 		node_Add("event","ld10-5","Ludum Dare 10.5 (Relaxed Event)","",0,CMW_NODE_EXTRA);
-		
 		
 		$latest_event = 64;		// MiniLD //
 	}

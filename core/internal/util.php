@@ -17,7 +17,11 @@
 function util_ParseActionURL() {
 	// If PATH_INFO is set, then Apache figured out our parts for us //
 	if ( isset($_SERVER['PATH_INFO']) ) {
-		return explode('/',ltrim(rtrim($_SERVER['PATH_INFO'],'/'),'/'));
+		$ret = ltrim(rtrim($_SERVER['PATH_INFO'],'/'),'/');
+		if ( empty($ret) )
+			return [];
+		else
+			return explode('/',$ret);
 	}
 
 	// If not, we have to extract them from the REQUEST_URI //
@@ -32,7 +36,11 @@ function util_ParseActionURL() {
 	if (($position = strpos($path, '?')) !== FALSE) {
 	    $path = substr($path, 0, $position);
 	}
-    return explode('/',ltrim(rtrim($path,'/'),'/'));
+	$ret = ltrim(rtrim($path,'/'),'/');
+	if ( empty($ret) )
+		return [];
+	else
+		return explode('/',$ret);
 }
 
 
