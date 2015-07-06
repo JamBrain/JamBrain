@@ -15,6 +15,7 @@
 			
 			// Required Fields in the POST data //			
 			if ( !isset($_POST['type']) ) return;
+			if ( !isset($_POST['subtype']) ) return;
 			if ( !isset($_POST['name']) ) return;
 			if ( !isset($_POST['author']) ) return;
 			if ( !isset($_POST['parent']) ) return;
@@ -23,6 +24,8 @@
 			// Node Type //
 			$type = sanitize_NodeType($_POST['type']);
 			if ( empty($type) ) return;	
+
+			$subtype = sanitize_NodeType($_POST['subtype']);
 	
 			// Name/Title //
 			$name = $_POST['name'];	// TODO: Sanitize
@@ -47,7 +50,7 @@
 
 	
 			$id = node_Add(
-				$type,$slug,$name,$body,
+				$type,$subtype,$slug,$name,$body,
 				$author,$parent,
 				$publish
 			);
@@ -69,6 +72,7 @@
 			<option value="redirect">Redirect</option>
 			<!--<option value="null">Null</option>-->
 		</select><br />
+		SubType: <input type="text" name="subtype" value=""> (optional)<br />
 		Name: <input type="text" name="name" value="" required><br />
 		Slug: <input type="text" name="slug" value=""> (omit, and we'll generate one from Name)<br />
 		Body:<br /><textarea name="body"></textarea><br />

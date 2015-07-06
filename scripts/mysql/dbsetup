@@ -72,6 +72,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 
 			type VARCHAR(16) CHARSET latin1 NOT NULL DEFAULT '',
 				INDEX (type),
+			subtype VARCHAR(16) CHARSET latin1 NOT NULL DEFAULT '',
 			
 			time_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 			time_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -96,107 +97,322 @@ echo "Connected: " . db_IsConnected() . "\n";
 	//			INDEX(root,parent,slug),
 	
 	// Reserve the first 32 nodes for special use //
-	$n = node_Add("group","root","/root","",0,0);									// 1 (CMW_NODE_ROOT)
-	$n = node_Add("settings","user","/user","User Settings",0,CMW_NODE_ROOT);		// 2 (CMW_NODE_USER)
-	$n = node_Add("admin","admin","/admin","Admin Settings",0,CMW_NODE_ROOT);		// 3 (CMW_NODE_ADMIN)
-	$n = node_Add("proxy","team","/team","",0,CMW_NODE_ROOT);						// 4 (CMW_NODE_TEAM)
-	$n = node_Add("proxy","game","/game","",0,CMW_NODE_ROOT);						// 5 (CMW_NODE_GAME)
-	$n = node_Add("proxy","demo","/demo","",0,CMW_NODE_ROOT);						// 6 (CMW_NODE_DEMO)
-	$n = node_Add("proxy","craft","/craft","",0,CMW_NODE_ROOT);						// 7 (CMW_NODE_CRAFT)
-	$n = node_Add("proxy","post","/post","",0,CMW_NODE_ROOT);						// 8 (CMW_NODE_POST)
-	$n = node_Add("proxy","media","/media","",0,CMW_NODE_ROOT);						// 9 (CMW_NODE_MEDIA)
+	$n = node_Add("group","","root","/root","",0,0);									// 1 (CMW_NODE_ROOT)
+	$n = node_Add("settings","","user","/user","User Settings",0,CMW_NODE_ROOT);		// 2 (CMW_NODE_USER)
+	$n = node_Add("admin","","admin","/admin","Admin Settings",0,CMW_NODE_ROOT);		// 3 (CMW_NODE_ADMIN)
+//	$n = node_Add("proxy","","team","/team","",0,CMW_NODE_ROOT);						// x (CMW_NODE_TEAM)
+//	$n = node_Add("proxy","","game","/game","",0,CMW_NODE_ROOT);						// x (CMW_NODE_GAME)
+//	$n = node_Add("proxy","","demo","/demo","",0,CMW_NODE_ROOT);						// x (CMW_NODE_DEMO)
+//	$n = node_Add("proxy","","craft","/craft","",0,CMW_NODE_ROOT);						// x (CMW_NODE_CRAFT)
+//	$n = node_Add("proxy","","post","/post","",0,CMW_NODE_ROOT);						// x (CMW_NODE_POST)
+//	$n = node_Add("proxy","","media","/media","",0,CMW_NODE_ROOT);						// x (CMW_NODE_MEDIA)
 	for ( $idx = $n; $idx < 15; $idx++ ) {
-		node_Add("null","reserved-".($idx+1),"??","",0,0);
+		node_Add("null","","reserved-".($idx+1),"??","",0,0);
 	}
-	$n = node_Add("group","event","Ludum Dare Events","",0,CMW_NODE_ROOT);			// 16 (CMW_NODE_EVENT)
-	$n = node_Add("group","other","Other Events","",0,CMW_NODE_ROOT);				// 17 (CMW_NODE_OTHER)
-	$n = node_Add("group","tool","Tools","",0,CMW_NODE_ROOT);						// 18 (CMW_NODE_TOOL)
-	$n = node_Add("group","custom","Custom Events","",0,CMW_NODE_ROOT);				// 19 (CMW_NODE_CUSTOM)
-	$n = node_Add("group","extra","/extra","",0,CMW_NODE_ROOT);						// 20 (CMW_NODE_HOSTED)
-	$n = node_Add("group","reserved-".($n+1),"","",0,0);							// 21
-	$n = node_Add("group","reserved-".($n+1),"","",0,0);							// 22
-	$n = node_Add("group","reserved-".($n+1),"","",0,0);							// 23
-
-	$n = node_Add("group","ld","Ludum Dare","",0,CMW_NODE_EVENT);					// 24 (CMW_NODE_EVENT_LD)
-	$n = node_Add("group","minild","MiniLD","",0,CMW_NODE_EVENT);					// 25 (CMW_NODE_EVENT_MINILD)
-	$n = node_Add("group","october","October Challenge","",0,CMW_NODE_EVENT);		// 26 (CMW_NODE_EVENT_OCTOBER)
-	$n = node_Add("group","scene","LD Scene","",0,CMW_NODE_EVENT);					// 27 (CMW_NODE_EVENT_SCENE)
-
-	$n = node_Add("event","game","Other Games","",0,CMW_NODE_OTHER);				// 28 (CMW_NODE_OTHER_GAME)
-	$n = node_Add("event","demo","Other Demos","",0,CMW_NODE_OTHER);				// 29 (CMW_NODE_OTHER_DEMO)
-	$n = node_Add("event","craft","Other Crafts","",0,CMW_NODE_OTHER);				// 30 (CMW_NODE_OTHER_CRAFTs)
-	$n = node_Add("group","jam","Other Jam Games","",0,CMW_NODE_OTHER);				// 31 (CMW_NODE_OTHER_JAM)
-	$n = node_Add("group","scene","Other Demoscene Events","",0,CMW_NODE_OTHER);	// 32 (CMW_NODE_OTHER_SCENE)
-	$n = node_Add("group","reserved-".($n+1),"","",0,0);							// 33
-
-	$n = node_Add("event","dev","Development Tools","",0,CMW_NODE_TOOL);			// 34 (CMW_NODE_TOOL_DEV)
-	$n = node_Add("event","art","Art Tools","",0,CMW_NODE_TOOL);					// 35 (CMW_NODE_TOOL_ART)
-	$n = node_Add("event","content","Content Creation Tools","",0,CMW_NODE_TOOL);	// 36 (CMW_NODE_TOOL_CONTENT)
-	$n = node_Add("event","other","Other Tools","",0,CMW_NODE_TOOL);				// 37 (CMW_NODE_TOOL_OTHER)
-
-	for ( $idx = $n; $idx < 32; $idx++ ) {
-		node_Add("null","reserved-".($idx+1),"??","",0,0);
+	$n = node_Add("group","","event","Ludum Dare Events","",0,CMW_NODE_ROOT);			// 16 (CMW_NODE_EVENT)
+	$n = node_Add("group","","platform","Platforms","",0,CMW_NODE_ROOT);				// 17 (CMW_NODE_PLATFORM)
+	$n = node_Add("group","","tool","Tools","",0,CMW_NODE_ROOT);						// 18 (CMW_NODE_TOOL)
+	$n = node_Add("group","","other","Other Games and Events","",0,CMW_NODE_ROOT);		// 19 (CMW_NODE_OTHER)
+	$n = node_Add("group","","custom","Custom Events","",0,CMW_NODE_ROOT);				// 20 (CMW_NODE_CUSTOM)
+	$n = node_Add("group","","extra","/extra","",0,CMW_NODE_ROOT);						// 21 (CMW_NODE_HOSTED)
+	for ( $idx = $n; $idx < 31; $idx++ ) {
+		node_Add("null","","reserved-".($idx+1),"??","",0,0);
 	}
-	
-	// Add Historic Events
+
+	$n = node_Add("group","","ld","Ludum Dare","",0,CMW_NODE_EVENT);					// 32 (CMW_NODE_EVENT_LD)
+	$n = node_Add("group","","minild","MiniLD","",0,CMW_NODE_EVENT);					// 33 (CMW_NODE_EVENT_MINILD)
+	$n = node_Add("group","","october","October Challenge","",0,CMW_NODE_EVENT);		// 34 (CMW_NODE_EVENT_OCTOBER)
+	$n = node_Add("group","","scene","It's a secret to everyone","",0,CMW_NODE_EVENT);	// 35 (CMW_NODE_EVENT_SCENE)
+
+	$n = node_Add("group","","game","Other Games","",0,CMW_NODE_OTHER);					// 36 (CMW_NODE_OTHER_GAME)
+	$n = node_Add("group","","demo","Other Demos","",0,CMW_NODE_OTHER);					// 37 (CMW_NODE_OTHER_DEMO)
+	$n = node_Add("group","","craft","Other Crafts","",0,CMW_NODE_OTHER);				// 38 (CMW_NODE_OTHER_CRAFT)
+	$n = node_Add("group","","jam","Other Jam Games","",0,CMW_NODE_OTHER);				// 39 (CMW_NODE_OTHER_JAM)
+	$n = node_Add("group","","scene","Other Demoscene Events","",0,CMW_NODE_OTHER);		// 40 (CMW_NODE_OTHER_SCENE)
+
+	$n = node_Add("event","","dev","Development Tools","",0,CMW_NODE_TOOL);				// 41 (CMW_NODE_TOOL_DEV)
+	$n = node_Add("event","","art","Art Tools","",0,CMW_NODE_TOOL);						// 42 (CMW_NODE_TOOL_ART)
+	$n = node_Add("event","","content","Content Creation Tools","",0,CMW_NODE_TOOL);	// 43 (CMW_NODE_TOOL_CONTENT)
+	$n = node_Add("event","","other","Other Tools","",0,CMW_NODE_TOOL);					// 44 (CMW_NODE_TOOL_OTHER)
+	for ( $idx = $n; $idx < 63; $idx++ ) {
+		node_Add("null","","reserved-".($idx+1),"??","",0,0);
+	}
+
+	// Calculate now //
+	$latest_year = 2015;
+	$latest_month = 7;
+
+	$months = [
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December",
+		"Smarch"
+	];	
+	// Add Historic Ludum Dare Events
 	{
-		node_Add("event","00","Ludum Dare 0 (24 Hour Event)","",0,CMW_NODE_EVENT_LD);
+		// Ludum Dare Events //
+		node_Add("event","","00","Ludum Dare 0 (24 Hour Event)","",0,CMW_NODE_EVENT_LD);
 		$latest_event = 33;		// Main Event //
 		for ( $idx = 1; $idx <= $latest_event; $idx++ ) {
-			node_Add("event", (($idx < 10)?"0":"").$idx,"Ludum Dare ".$idx,"",0,CMW_NODE_EVENT_LD);
+			node_Add("event","", (($idx < 10)?"0":"").$idx,"Ludum Dare ".$idx,"",0,CMW_NODE_EVENT_LD);
 		}
 		// Reserve up to Ludum Dare 48
 		for ( $idx = $latest_event+1; $idx <= 48; $idx++ ) {
-			node_Add("null","".$idx,"Ludum Dare ".$idx,"(placeholder)",0,0);
+			node_Add("null","","".$idx,"Ludum Dare ".$idx,"(placeholder)",0,0);
+		}
+
+		// Relaxed Events (pre MiniLD) //
+		node_Add("event","","ld08-5","Ludum Dare 8.5 (24 Hour Relaxed Event)","",0,CMW_NODE_EVENT_MINILD);
+		node_Add("event","","ld10-5","Ludum Dare 10.5 (Relaxed Event)","",0,CMW_NODE_EVENT_MINILD);
+		
+		// MiniLD Events //
+		$latest_event = 64;
+		for ( $idx = 1; $idx <= $latest_event; $idx++ ) {
+			node_Add("event","",(($idx < 10)?"0":"").$idx,"MiniLD #".$idx,"",0,CMW_NODE_EVENT_MINILD);
+		}
+		
+		// October Challenge Events //
+		for ( $idx = 2010; $idx <= $latest_year; $idx++ ) {
+			node_Add("event","",$idx,"October Challenge ".$idx,"",0,CMW_NODE_EVENT_OCTOBER);
+		}
+
+		// LD Scene Events //
+		for ( $idx = 2015; $idx <= $latest_year; $idx++ ) {
+			//node_Add("event","",$idx,"LD Scene ".$idx,"",0,CMW_NODE_EVENT_SCENE);
 		}
 	}
 	
-	// Add Historic Extra Events
+	// Add Historic Proxies //
 	{
-		node_Add("event","ld08-5","Ludum Dare 8.5 (24 Hour Relaxed Event)","",0,CMW_NODE_EVENT_MINILD);
-		node_Add("event","ld10-5","Ludum Dare 10.5 (Relaxed Event)","",0,CMW_NODE_EVENT_MINILD);
-		
-		$latest_event = 64;		// MiniLD //
-		for ( $idx = 1; $idx <= $latest_event; $idx++ ) {
-			node_Add("event",(($idx < 10)?"0":"").$idx,"MiniLD #".$idx,"",0,CMW_NODE_EVENT_MINILD);
+		node_Add("event","","1980s","Game from 1980-1989","",0,CMW_NODE_OTHER_GAME);
+		for ( $idx = 1990; $idx <= $latest_year; $idx++ ) {
+			node_Add("event","",$idx,"Game from ".$idx,"",0,CMW_NODE_OTHER_GAME);
 		}
+		node_Add("event","","unreleased","Unreleased Game","",0,CMW_NODE_OTHER_GAME);
+		
+		node_Add("event","","1980s","Demo/Intro/Cracktro from 1980-1989","",0,CMW_NODE_OTHER_DEMO);
+		for ( $idx = 1990; $idx <= $latest_year; $idx++ ) {
+			node_Add("event","",$idx,"Demo/Intro/Cracktro from ".$idx,"",0,CMW_NODE_OTHER_DEMO);
+		}
+		node_Add("event","","unreleased","Unreleased Demo/Intro/Cracktro","",0,CMW_NODE_OTHER_DEMO);
+
+		node_Add("event","","1980s","Craft from 1980-1989","",0,CMW_NODE_OTHER_CRAFT);
+		node_Add("event","","1990s","Craft from 1990-1999","",0,CMW_NODE_OTHER_CRAFT);
+		for ( $idx = 2000; $idx <= $latest_year; $idx++ ) {
+			node_Add("event","",$idx,"Craft from ".$idx,"",0,CMW_NODE_OTHER_CRAFT);
+		}		
+		node_Add("event","","unreleased","Unreleased Craft","",0,CMW_NODE_OTHER_CRAFT);
 	}
 	
 	// Add Other Game Jams //
 	{
-		node_Add("event","1gam","One Game a Month","",0,CMW_NODE_OTHER_JAM);
-		node_Add("event","global-game-jam","Global Game Jam","",0,CMW_NODE_OTHER_JAM);
-		node_Add("link","ggj","/other/jam/global-game-jam","",0,CMW_NODE_OTHER_JAM);
-		node_Add("event","7dfps","7 Day FPS","",0,CMW_NODE_OTHER_JAM);
-		node_Add("event","7drl","7 Day Roguelike","",0,CMW_NODE_OTHER_JAM);
+		$n = node_Add("event","","1gam","One Game a Month","",0,CMW_NODE_OTHER_JAM);
+		for ( $idx = 2013; $idx <= $latest_year; $idx++ ) {
+			$n2 = node_Add("event","",$idx,"One Game a Month ".$idx,"",0,$n);
+			//for ( $idx2 = 1; $idx2 <= (($idx===$latest_year) ? $latest_month : 12); $idx2++ ) {
+			for ( $idx2 = 1; $idx2 <= 12; $idx2++ ) {
+				node_Add("event","",($idx2<10?"0":"").$idx2,"One Game a Month - ".$months[$idx2-1]." ".$idx,"",0,$n2);
+			}
+		}
 
-		node_Add("event","tojam","ToJam","Toronto!",0,CMW_NODE_OTHER_JAM);
-		node_Add("event","no-more-sweden","No More Sweden","",0,CMW_NODE_OTHER_JAM);
-		node_Add("link","nms","/other/jam/no-more-sweden","",0,CMW_NODE_OTHER_JAM);
+		$n = node_Add("event","","itch-io","itch.io Hosted Jam","",0,CMW_NODE_OTHER_JAM);
+		for ( $idx = 2014; $idx <= $latest_year; $idx++ ) {
+			$n2 = node_Add("event","",$idx,"itch.io Hosted Jam ".$idx,"",0,$n);
+//			for ( $idx2 = ($idx===2014?2:1); $idx2 <= 12; $idx2++ ) {
+//				node_Add("event","",($idx2<10?"0":"").$idx2,"itch.io - ".$months[$idx2-1]." ".$idx,"",0,$n2);
+//			}
+		}
 		
+		node_Add("event","","7dfps","7 Day FPS","",0,CMW_NODE_OTHER_JAM);
+		node_Add("event","","7drl","7 Day Roguelike","",0,CMW_NODE_OTHER_JAM);
+
+		$n = node_Add("event","","tojam","TOJam","Toronto Game Jam",0,CMW_NODE_OTHER_JAM);
+		for ( $idx = 2006; $idx <= $latest_year; $idx++ ) {
+			node_Add("event","","" . $idx,"TOJam ".$idx,"",0,$n);
+		}
+		$n = node_Add("event","","nordic-game-jam","Nordic Game Jam","",0,CMW_NODE_OTHER_JAM);
+		for ( $idx = 2006; $idx <= $latest_year; $idx++ ) {
+			node_Add("event","","" . $idx,"Nordic Game Jam ".$idx,"",0,$n);
+		}
+		$n = node_Add("event","","no-more-sweden","No More Sweden","",0,CMW_NODE_OTHER_JAM);
+		for ( $idx = 2008; $idx <= $latest_year; $idx++ ) {
+			node_Add("event","","" . $idx,"No More Sweden ".$idx,"",0,$n);
+		}
+
+		$n = node_Add("event","","global-game-jam","Global Game Jam","",0,CMW_NODE_OTHER_JAM);
+		for ( $idx = 2009; $idx <= $latest_year; $idx++ ) {
+			node_Add("event","","" . $idx,"Global Game Jam ".$idx,"",0,$n);
+		}
+
 		// Historic //
-		node_Add("event","72hgdc","72 Hour Game Development Compo","",0,CMW_NODE_OTHER_JAM);
-		node_Add("event","speedhack","Allegro Speedhack","",0,CMW_NODE_OTHER_JAM);
-		node_Add("event","indie-game-jam","Indie Game Jam","",0,CMW_NODE_OTHER_JAM);
+		node_Add("event","","speedhack","Allegro Speedhack","",0,CMW_NODE_OTHER_JAM);
+		node_Add("event","","indie-game-jam","Indie Game Jam","",0,CMW_NODE_OTHER_JAM);
 		
-		// Placeholder //
-		node_Add("event","other","Other Jam (not listed)","",0,CMW_NODE_OTHER_JAM);
+		// Other Game Jam by Year //
+		node_Add("event","","1980s","Other Game Jam from 1980-1989","",0,CMW_NODE_OTHER_JAM);
+		for ( $idx = 1990; $idx <= $latest_year; $idx++ ) {
+			node_Add("event","","" . $idx,"Other Game Jam in ".$idx,"",0,CMW_NODE_OTHER_JAM);
+		}
 	}
 
 	// Add Other Demoscene //
 	{
-		$n = node_Add("event","assembly","Assembly","",0,CMW_NODE_OTHER_SCENE);
-		node_Add("event","2015","Assembly 2015","",0,$n);
-		$n = node_Add("event","revision","Revision","",0,CMW_NODE_OTHER_SCENE);
-		node_Add("event","2015","Revision 2015","",0,$n);
-		$n = node_Add("event","nvscene","NV Scene","",0,CMW_NODE_OTHER_SCENE);
-		node_Add("event","2015","NV Scene 2015","",0,$n);
+		$n = node_Add("event","","assembly","Assembly","",0,CMW_NODE_OTHER_SCENE);
+		for ( $idx = 1992; $idx <= $latest_year; $idx++ ) {
+			node_Add("event","","" . $idx,"Assembly ".$idx,"",0,$n);
+		}
+		$n = node_Add("event","","revision","Revision","",0,CMW_NODE_OTHER_SCENE);
+		for ( $idx = 2011; $idx <= $latest_year; $idx++ ) {
+			node_Add("event","","" . $idx,"Revision ".$idx,"",0,$n);
+		}
 
 		// Historic //
-		node_Add("event","breakpoint","Breakpoint","",0,CMW_NODE_OTHER_SCENE);
+		$n = node_Add("event","","breakpoint","Breakpoint","",0,CMW_NODE_OTHER_SCENE);
+		for ( $idx = 2003; $idx <= 2010; $idx++ ) {
+			node_Add("event","","" . $idx,"Breakpoint ".$idx,"",0,$n);
+		}
+		$n = node_Add("event","","mekka-symposium","mekka & symposium","",0,CMW_NODE_OTHER_SCENE);
+		for ( $idx = 1995; $idx <= 2002; $idx++ ) {
+			node_Add("event","","" . $idx,"mekka & symposium ".$idx,"",0,$n);
+		}
+		$n = node_Add("event","","the-party","The Party","",0,CMW_NODE_OTHER_SCENE);
+		for ( $idx = 1991; $idx <= 2002; $idx++ ) {
+			node_Add("event","","" . $idx,"The Party ".$idx,"",0,$n);
+		}
+		$n = node_Add("event","","the-gathering","The Gathering","",0,CMW_NODE_OTHER_SCENE);
+		for ( $idx = 1992; $idx <= 2001; $idx++ ) {
+			node_Add("event","","" . $idx,"The Gathering ".$idx,"",0,$n);
+		}
 
-		// Placeholder //
-		node_Add("event","other","Other Event (not listed)","",0,CMW_NODE_OTHER_SCENE);
+		// Other Demoscene Events by Year //
+		node_Add("event","","1980s","Other Demoscene Event from 1980-1989","",0,CMW_NODE_OTHER_SCENE);
+		for ( $idx = 1990; $idx <= $latest_year; $idx++ ) {
+			node_Add("event","","" . $idx,"Other Demoscene Event in ".$idx,"",0,CMW_NODE_OTHER_SCENE);
+		}
+	}
+
+	// Add Platforms //
+	{
+		$n = node_Add("platform","","windows","Windows","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","winrt","WinRT (Windows 8+)","",$n,CMW_NODE_PLATFORM);
+
+		$n = node_Add("platform","","linux","Linux","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","debian","Debian","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","ubuntu","Ubuntu","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","mint","Linux Mint","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","steamos","SteamOS","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","fedora","Fedora","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","centos","CentOS","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","opensuse","openSUSE","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","arch","Arch Linux","",$n,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","android","Google Android","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","webos","WebOS","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","chrome-os","Google Chrome OS","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","firefox-os","Mozilla Firefox OS","",$n,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","symbian","Symbian","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","brew","Brew","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","j2me","J2ME","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","mophun","Mophun","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","palm-os","Palm OS","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","windows-ce","Windows CE","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","bada","Samsung Bada","",0,CMW_NODE_PLATFORM);
+
+		$n = node_Add("platform","","web","Web Browser","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","html5","HTML5","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","chrome","Google Chrome","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","firefox","Mozilla Firefox","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","internet-explorer","Microsoft Internet Explorer","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","opera","Opera","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","safari","Apple Safari","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","webkit","Webkit","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","netscape","Mozilla Netscape","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","mosaic","NCSA Mosaic","",$n,CMW_NODE_PLATFORM);
+
+		$n = node_Add("platform","","unix","Unix","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","freebsd","FreeBSD","",$n,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","osx","Mac OS X","",0,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","ios","Apple iOS","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","iphone","Apple iPhone","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","ipad","Apple iPad","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","ipod","Apple iPod","",$n,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","kindle","Amazon Kindle (eReader)","",$n,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","nes","Nintendo Entertainment System","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","snes","Super Nintendo Entertainment System","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","n64","Nintendo 64","",0,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","gamecube","Nintendo GameCube","",0,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","wii","Nintendo Wii","",$n,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","wii-u","Nintendo Wii U","",$n,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","gameboy","Nintendo GameBoy","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","super-gameboy","Nintendo Super GameBoy","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","gameboy-color","Nintendo GameBoy Color","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","gameboy-advance","Nintendo GameBoy Advance","",0,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","nds","Nintendo DS","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","ndsi","Nintendo DSi","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","3ds","Nintendo 3DS","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","virtual-boy","Nintendo Virtual Boy","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","nx","Nintendo NX","",0,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","ps1","Sony PlayStation","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","ps2","Sony PlayStation 2","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","ps3","Sony PlayStation 3","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","ps4","Sony PlayStation 4","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","psp","Sony PlayStation Portable","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","ps-vita","Sony PlayStation Vita/PlayStation TV","",0,CMW_NODE_PLATFORM);
+
+		$n = node_Add("platform","","sms","Sega Master System","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","game-gear","Sega Game Gear","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","genesis","Sega Genesis/Mega Drive/32x","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","saturn","Sega Saturn","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","dreamcast","Sega Dreamcast","",0,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","pc-engine","NEC PC Engine/Turbo Grafx 16","",0,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","neogeo","SNK NeoGeo","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","neogeo-pocket","SNK NeoGeo Pocket/Color","",0,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","wonderswan","Bandia Wonderswan/Color/Crystal","",0,CMW_NODE_PLATFORM);
+		
+		node_Add("platform","","pet","Commodore PET","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","vic20","Commodore Vic20","",0,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","c64","Commodore 64","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","c128","Commodore 128","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","amiga","Commodore Amiga","",0,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","zx-spectrum","ZX Spectrum","",0,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","2600","Atari 2600","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","5200","Atari 5200","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","7800","Atari 7800","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","jaguar","Atari Jaguar","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","lynx","Atari Lynx","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","atari-st","Atari ST","",0,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","msx","MSX","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","xbox","Microsoft Xbox","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","xbox-360","Microsoft Xbox 360","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","xbox-one","Microsoft Xbox One","",0,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","fm-towns","FM Towns","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","cd-i","Philips CD-i","",0,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","arcade","Arcade","",0,CMW_NODE_PLATFORM);
+		
+		node_Add("platform","","arduino","Arduino","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","custom","Custom","",0,CMW_NODE_PLATFORM);
 	}
 	
 	// Posts (everything) -- Get, is PUBLISHED=true, sort by PUBLISHED, LIMIT 10
@@ -459,7 +675,7 @@ Thing {
 	{
 		// Add Dummy User //
 		$user_id = node_Add(
-			'user','pov','PoV','I am the PoV. :smile:',
+			'user',"",'pov','PoV','I am the PoV. :smile:',
 			0,CMW_NODE_USER,
 			true
 		);	
@@ -467,12 +683,12 @@ Thing {
 	
 		// Add Dummy Games //
 		node_Add(
-			'game','bearly-seasoned','Bearly:bear:Seasoned',"It's about a :bear:. The :bear: wants :fish:. Eat :fish: then go :house:.",
+			'game',"",'bearly-seasoned','Bearly:bear:Seasoned',"It's about a :bear:. The :bear: wants :fish:. Eat :fish: then go :house:.",
 			$user_id,CMW_NODE_OTHER_GAME,
 			true
 		);
 		node_Add(
-			'game','phat-js','Phat JS',"It's just phat",
+			'game',"",'phat-js','Phat JS',"It's just phat",
 			$user_id,CMW_NODE_OTHER_DEMO,
 			true
 		);

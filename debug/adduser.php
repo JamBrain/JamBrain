@@ -17,6 +17,7 @@
 			
 			// Required Fields in the POST data //			
 			if ( !isset($_POST['_type']) ) return;
+			if ( !isset($_POST['_subtype']) ) return;
 			if ( !isset($_POST['_name']) ) return;
 			if ( !isset($_POST['_mail']) ) return;
 			if ( !isset($_POST['_password']) ) return;
@@ -25,6 +26,8 @@
 			// Node Type //
 			$type = sanitize_NodeType($_POST['_type']);
 			if ( empty($type) ) return;	
+
+			$subtype = sanitize_NodeType($_POST['_subtype']);
 	
 			// Name/Title //
 			$name = $_POST['_name'];	// TODO: Sanitize
@@ -55,7 +58,7 @@
 
 	
 			$id = node_Add(
-				$type,$slug,$name,$body,
+				$type,$subtype,$slug,$name,$body,
 				0,2,
 				$publish
 			);
@@ -70,6 +73,7 @@
 ?>
 	<form method="POST" autocomplete="off">
 		<input type="hidden" name="_type" value="user">
+		<input type="hidden" name="_subtype" value="">
 		Name: <input type="text" name="_name" value="" required><br />
 		Username (slug): <input type="text" name="_slug" value=""> (if omitted, will try a sanitized Name)<br />
 		E-Mail: <input type="text" name="_mail" value="" required><br />

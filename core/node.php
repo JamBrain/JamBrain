@@ -10,12 +10,13 @@ require_once __DIR__ . "/user.php";
 
 // NOTE: None of these functions sanitize. Make sure you sanitize first! //
 
-function node_Add( $type, $slug, $name, $body, $author = 0, $parent = 0, $publish = false ) {
+function node_Add( $type, $subtype, $slug, $name, $body, $author, $parent, $publish = false ) {
 	db_Connect();
 
 	db_Query(
 		"INSERT `" . CMW_TABLE_NODE . "` (".
 			"`type`,".
+			"`subtype`,".
 			"`slug`,".
 			"`name`,".
 			"`body`,".
@@ -27,6 +28,7 @@ function node_Add( $type, $slug, $name, $body, $author = 0, $parent = 0, $publis
 		") ".
 		"VALUES (" .
 			"\"".$type."\"," .
+			"\"".$subtype."\"," .
 			"\"".$slug."\"," .
 			"\"".$name."\"," .
 			"\"".$body."\"," .
@@ -65,7 +67,7 @@ function node_AddUser( $id, $mail, $password ) {
 	return db_GetId();
 }
 
-function node_AddMeta( $id_a, $id_b, $type, $subtype = "", $data = "" ) {
+function node_AddMeta( $id_a, $id_b, $type, $subtype, $data ) {
 	db_Connect();
 	
 	db_Query(
