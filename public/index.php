@@ -117,6 +117,15 @@ if ( $mode > 0 ) {
 		#content .body {
 			margin-top:12px;
 		}
+		
+		#links .node {
+			padding-left:24px;
+			font-family:monospace;
+		}
+		#links .key {
+			display:inline;
+			font-weight:bold;
+		}
 	</style>
 
 	<?php if ( $mode === M_DEFAULT ) { ?>	
@@ -133,9 +142,33 @@ if ( $mode > 0 ) {
 				}
 				echo '</div>';
 				echo "<br />";
-				echo '<div id="games"><h3>Links ('.$this_node['id'].'):</h3>' ;
+				echo '<div id="links"><h3>Links ('.$this_node['id'].'):</h3>' ;
 				$links = node_GetLinksById( $this_node['id'] );
-				print_r($links);
+				function process_link( $link ) {
+					echo "<div class='node'>";
+					foreach( $link as $key => $value ) {
+						if ( is_array($value) ) {
+							if ( is_string($key) )
+								$key = "\"".$key."\"";
+
+							echo "<div class='key'>".$key . ":</div><br/>";
+							process_link($value);
+						}
+						else {
+							if ( is_string($key) )
+								$key = "\"".$key."\"";
+							
+							if ( is_string($value) )
+								echo "<div class='key'>".$key . ":</div> \"" . $value . "\"<br />";
+							else
+								echo "<div class='key'>".$key . ":</div> " . $value . "<br />";
+						}
+					}
+					echo "</div>";
+				}
+				process_link($links);
+				
+//				print_r($links);
 				echo "</div>";
 			}
 		?>	
