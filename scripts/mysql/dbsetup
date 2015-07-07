@@ -111,10 +111,11 @@ echo "Connected: " . db_IsConnected() . "\n";
 	}
 	$n = node_Add("group","","event","Ludum Dare Events","",0,CMW_NODE_ROOT);			// 16 (CMW_NODE_EVENT)
 	$n = node_Add("group","","platform","Platforms","",0,CMW_NODE_ROOT);				// 17 (CMW_NODE_PLATFORM)
-	$n = node_Add("group","","tool","Tools","",0,CMW_NODE_ROOT);						// 18 (CMW_NODE_TOOL)
-	$n = node_Add("group","","other","Other Games and Events","",0,CMW_NODE_ROOT);		// 19 (CMW_NODE_OTHER)
-	$n = node_Add("group","","custom","Custom Events","",0,CMW_NODE_ROOT);				// 20 (CMW_NODE_CUSTOM)
-	$n = node_Add("group","","extra","/extra","",0,CMW_NODE_ROOT);						// 21 (CMW_NODE_HOSTED)
+	$n = node_Add("group","","tag","Tags","",0,CMW_NODE_ROOT);							// 18 (CMW_NODE_TAG)
+	$n = node_Add("group","","tool","Tools","",0,CMW_NODE_ROOT);						// 19 (CMW_NODE_TOOL)
+	$n = node_Add("group","","other","Other Games and Events","",0,CMW_NODE_ROOT);		// 20 (CMW_NODE_OTHER)
+	$n = node_Add("group","","custom","Custom Events","",0,CMW_NODE_ROOT);				// 21 (CMW_NODE_CUSTOM)
+	$n = node_Add("group","","extra","/extra","",0,CMW_NODE_ROOT);						// 22 (CMW_NODE_HOSTED)
 	for ( $idx = $n; $idx < 31; $idx++ ) {
 		node_Add("null","","reserved-".($idx+1),"??","",0,0);
 	}
@@ -478,6 +479,51 @@ echo "Connected: " . db_IsConnected() . "\n";
 
 		node_Add("platform","","source","Source Code","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","other","Other","",0,CMW_NODE_PLATFORM);
+	}
+
+	{
+		$n = node_Add("tag","","vr","Virtual Reality","",0,CMW_NODE_TAG);
+		node_Add("tag","","rift","Oculus Rift","",$n,CMW_NODE_TAG);
+		node_Add("tag","","dk1","Oculus Rift DK1 (Dev Kit)","",$n,CMW_NODE_TAG);
+		node_Add("tag","","dk2","Oculus Rift DK2 (Dev Kit)","",$n,CMW_NODE_TAG);
+		node_Add("tag","","gear-vr","Samsung GearVR","",$n,CMW_NODE_TAG);
+		node_Add("tag","","vive","HTC Vive","",$n,CMW_NODE_TAG);
+		node_Add("tag","","steam-vr","Steam VR","",$n,CMW_NODE_TAG);
+		node_Add("tag","","cardboard","Google Cardboard","",$n,CMW_NODE_TAG);
+
+		node_Add("tag","","ar","Augmented Reality","",0,CMW_NODE_TAG);
+
+		node_Add("tag","","keyboard","Keyboard","",0,CMW_NODE_TAG);
+		node_Add("tag","","mouse","Mouse","",0,CMW_NODE_TAG);
+		node_Add("tag","","touch","Touch","",0,CMW_NODE_TAG);
+		$n = node_Add("tag","","pen","Pressure Sensitive Pen/Stylus","",0,CMW_NODE_TAG);
+		node_Add("tag","","wacom","Wacom Tablet","",$n,CMW_NODE_TAG);
+		node_Add("tag","","printer","Printer","",0,CMW_NODE_TAG);
+		node_Add("tag","","mic","Microphone","",0,CMW_NODE_TAG);
+
+		$n = node_Add("tag","","game-pad","Game Pad","",0,CMW_NODE_TAG);
+		node_Add("tag","","xbox-360-pad","Xbox 360 Game Pad","",$n,CMW_NODE_TAG);
+		node_Add("tag","","xbox-one-pad","Xbox One Game Pad","",$n,CMW_NODE_TAG);
+		node_Add("tag","","ps4-pad","PlayStation 4 Game Pad","",$n,CMW_NODE_TAG);
+		node_Add("tag","","wiimote","Wiimote","",0,CMW_NODE_TAG);
+		node_Add("tag","","ps-move","PlayStation Move Controller","",0,CMW_NODE_TAG);
+		
+		node_Add("tag","","camera","Camera","",0,CMW_NODE_TAG);
+		
+		$n = node_Add("tag","","body-tracking","Body Tracking","",0,CMW_NODE_TAG);
+		node_Add("tag","","kinect","Microsoft Kinect","",$n,CMW_NODE_TAG);
+		node_Add("tag","","leap-motion","Leap Motion","",$n,CMW_NODE_TAG);
+		node_Add("tag","","realsense","Intel RealSense","",$n,CMW_NODE_TAG);
+		
+		$n = node_Add("tag","","eye-tracking","Eye Tracking","",0,CMW_NODE_TAG);
+		node_Add("tag","","tobii","Tobii EyeX/SteelSeries Sentry","",$n,CMW_NODE_TAG);
+		node_Add("tag","","eye-tribe","Eye Tribe Tracker","",$n,CMW_NODE_TAG);
+	
+		node_Add("tag","","local-multiplayer","Local Multiplayer","",0,CMW_NODE_TAG);
+		node_Add("tag","","online-multiplayer","Online Multiplayer","",0,CMW_NODE_TAG);
+
+		node_Add("tag","","moddable","Moddable","",0,CMW_NODE_TAG);
+		
 	}
 	
 	// Posts (everything) -- Get, is PUBLISHED=true, sort by PUBLISHED, LIMIT 10

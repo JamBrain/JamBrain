@@ -39,10 +39,11 @@ const CMW_NODE_ADMIN = 3;				// Administrator Control Panel
 
 const CMW_NODE_EVENT = 16;				// Ludum Dare Events
 const CMW_NODE_PLATFORM = 17;			// Platforms
-const CMW_NODE_TOOL = 18;				// Tools (Unity, etc)
-const CMW_NODE_OTHER = 19;				// Other Games and Game Jams (GGJ)
-const CMW_NODE_CUSTOM = 20;				// Custom User Generated Jams
-const CMW_NODE_HOSTED = 21;				// Extra Events we host (3rd party, or sponsored)
+const CMW_NODE_TAG = 18;				// Tags
+const CMW_NODE_TOOL = 19;				// Tools (Unity, etc)
+const CMW_NODE_OTHER = 20;				// Other Games and Game Jams (GGJ)
+const CMW_NODE_CUSTOM = 21;				// Custom User Generated Jams
+const CMW_NODE_HOSTED = 22;				// Extra Events we host (3rd party, or sponsored)
 
 // --- //
 
