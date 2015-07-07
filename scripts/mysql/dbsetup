@@ -491,24 +491,25 @@ echo "Connected: " . db_IsConnected() . "\n";
 		node_Add("tag","","steam-vr","Steam VR","",$n,CMW_NODE_TAG);
 		node_Add("tag","","cardboard","Google Cardboard","",$n,CMW_NODE_TAG);
 
-		node_Add("tag","","ar","Augmented Reality","",0,CMW_NODE_TAG);
-
 		node_Add("tag","","keyboard","Keyboard","",0,CMW_NODE_TAG);
 		node_Add("tag","","mouse","Mouse","",0,CMW_NODE_TAG);
 		node_Add("tag","","touch","Touch","",0,CMW_NODE_TAG);
 		$n = node_Add("tag","","pen","Pressure Sensitive Pen/Stylus","",0,CMW_NODE_TAG);
 		node_Add("tag","","wacom","Wacom Tablet","",$n,CMW_NODE_TAG);
 		node_Add("tag","","printer","Printer","",0,CMW_NODE_TAG);
-		node_Add("tag","","mic","Microphone","",0,CMW_NODE_TAG);
+		$n = node_Add("tag","","microphone","Microphone","",0,CMW_NODE_TAG);
+		node_Add("tag","","voice-recognition","Voice Recognition","",$n,CMW_NODE_TAG);
 
 		$n = node_Add("tag","","game-pad","Game Pad","",0,CMW_NODE_TAG);
 		node_Add("tag","","xbox-360-pad","Xbox 360 Game Pad","",$n,CMW_NODE_TAG);
 		node_Add("tag","","xbox-one-pad","Xbox One Game Pad","",$n,CMW_NODE_TAG);
 		node_Add("tag","","ps4-pad","PlayStation 4 Game Pad","",$n,CMW_NODE_TAG);
+		node_Add("tag","","game-pad-required","Game Pad Required","",$n,CMW_NODE_TAG);
 		node_Add("tag","","wiimote","Wiimote","",0,CMW_NODE_TAG);
 		node_Add("tag","","ps-move","PlayStation Move Controller","",0,CMW_NODE_TAG);
 		
-		node_Add("tag","","camera","Camera","",0,CMW_NODE_TAG);
+		$n = node_Add("tag","","camera","Camera","",0,CMW_NODE_TAG);
+		node_Add("tag","","ar","Augmented Reality","",$n,CMW_NODE_TAG);
 		
 		$n = node_Add("tag","","body-tracking","Body Tracking","",0,CMW_NODE_TAG);
 		node_Add("tag","","kinect","Microsoft Kinect","",$n,CMW_NODE_TAG);
@@ -519,11 +520,33 @@ echo "Connected: " . db_IsConnected() . "\n";
 		node_Add("tag","","tobii","Tobii EyeX/SteelSeries Sentry","",$n,CMW_NODE_TAG);
 		node_Add("tag","","eye-tribe","Eye Tribe Tracker","",$n,CMW_NODE_TAG);
 	
-		node_Add("tag","","local-multiplayer","Local Multiplayer","",0,CMW_NODE_TAG);
-		node_Add("tag","","online-multiplayer","Online Multiplayer","",0,CMW_NODE_TAG);
+		$n = node_Add("tag","","multiplayer","Multiplayer","",0,CMW_NODE_TAG);
+		node_Add("tag","","local-multiplayer","Local Multiplayer","",$n,CMW_NODE_TAG);
+		node_Add("tag","","online-multiplayer","Online Multiplayer","",$n,CMW_NODE_TAG);
 
 		node_Add("tag","","moddable","Moddable","",0,CMW_NODE_TAG);
+		node_Add("tag","","mod","Mod","",0,CMW_NODE_TAG);
 		
+		$n = node_Add("tag","","accessible","Accessible","",0,CMW_NODE_TAG);
+		node_Add("tag","","colorblind-mode","Colorblind Mode","",$n,CMW_NODE_TAG);
+		node_Add("tag","","one-button","One Button Controls","",$n,CMW_NODE_TAG);
+		node_Add("tag","","two-button","Two Buttons Controls","",$n,CMW_NODE_TAG);
+		
+		node_Add("tag","","platformer","Platformer","",0,CMW_NODE_TAG);
+		$n = node_Add("tag","","role-playing","Role Playing","",0,CMW_NODE_TAG);
+		node_Add("tag","","rpg-elements","RPG Elements","",$n,CMW_NODE_TAG);
+		node_Add("tag","","fighting","Fighting","",0,CMW_NODE_TAG);
+		node_Add("tag","","crafting","Crafting","",0,CMW_NODE_TAG);
+		node_Add("tag","","permadeath","Permadeath","",0,CMW_NODE_TAG);
+		$n = node_Add("tag","","story","Story","",0,CMW_NODE_TAG);
+		node_Add("tag","","visual-novel","Visual Novel","",$n,CMW_NODE_TAG);
+
+		$n = node_Add("tag","","2d","2D","",0,CMW_NODE_TAG);
+		node_Add("tag","","pixel-art","Pixel Art","",$n,CMW_NODE_TAG);
+		$n = node_Add("tag","","3d","3D","",0,CMW_NODE_TAG);
+		node_Add("tag","","voxel-art","Voxel Art","",$n,CMW_NODE_TAG);
+
+		node_Add("tag","","spoilers","Spoilers","",0,CMW_NODE_TAG);
 	}
 	
 	// Posts (everything) -- Get, is PUBLISHED=true, sort by PUBLISHED, LIMIT 10
