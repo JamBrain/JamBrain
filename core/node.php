@@ -106,16 +106,6 @@ function node_GetNodeById( $id ) {
 	return null;
 }
 
-//// NOTE: This is not fast. Slugs are not indexed. //
-//function node_GetIdBySlug( $slug ) {
-//	db_Connect();
-//
-//	return db_FetchSingle( 
-//		"SELECT `id` FROM `" . CMW_TABLE_NODE . "` WHERE ".
-//			"`slug`=" . $slug .
-//			" LIMIT 1" .
-//		";");	
-//}
 
 function node_GetUserBySlug( $slug ) {
 	db_Connect();

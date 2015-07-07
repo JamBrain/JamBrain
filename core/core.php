@@ -20,4 +20,12 @@ function VERSION_QUERY( $my_version = null ) {
 		echo "?v=",INTERNAL_VERSION;
 }	
 
+// Pads 1-digit numbers with a 0 //
+function PADNUM( $number ) {
+	if ( $number >= 0 && $number <= 10 ) {
+		return "0".$number;
+	}
+	return "".$number;
+}
+
 ?>

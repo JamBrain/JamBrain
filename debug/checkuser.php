@@ -34,12 +34,13 @@
 
 			$login = $_POST['login'];
 			// Can Login 3 ways:
-			// - Username
+			// - Username (slug)
 			// - Email
 			// - UID
 			
 			$mail = sanitize_Email($login);
 			$uid = sanitize_Id($login);
+			$slug = sanitize_Slug($login);
 			
 			$hash = "";
 			
@@ -51,9 +52,16 @@
 				echo "By UID<br />";
 				$hash = user_GetHashById($uid);
 			}
-			else {
-				// by Login (slug) doesn't work yet //
-				echo "Login not supported<br />";
+			else if ( !empty($slug) ) {
+				echo "By Slug<br />";
+				
+				$id = node_GetNodeIdByParentIdAndSlug(CMW_NODE_USER, $slug);
+				if ( $id > 0 ) {
+					$hash = user_GetHashById($id);
+				}
+			}
+			else {	
+				echo "Bad Login Method<br />";
 			}
 			echo "Verify: " . (user_VerifyPassword($password,$hash) ? "Success!" : "failed") . "<br />";
 	

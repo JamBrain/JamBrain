@@ -164,7 +164,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 		node_Add("event","","00","Ludum Dare 0 (24 Hour Event)","",0,CMW_NODE_EVENT_LD);
 		$latest_event = 33;		// Main Event //
 		for ( $idx = 1; $idx <= $latest_event; $idx++ ) {
-			node_Add("event","", (($idx < 10)?"0":"").$idx,"Ludum Dare ".$idx,"",0,CMW_NODE_EVENT_LD);
+			node_Add("event","", PADNUM($idx),"Ludum Dare ".$idx,"",0,CMW_NODE_EVENT_LD);
 		}
 		// Reserve up to Ludum Dare 48
 		for ( $idx = $latest_event+1; $idx <= 48; $idx++ ) {
@@ -178,7 +178,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 		// MiniLD Events //
 		$latest_event = 64;
 		for ( $idx = 1; $idx <= $latest_event; $idx++ ) {
-			node_Add("event","",(($idx < 10)?"0":"").$idx,"MiniLD #".$idx,"",0,CMW_NODE_EVENT_MINILD);
+			node_Add("event","",PADNUM($idx),"MiniLD #".$idx,"",0,CMW_NODE_EVENT_MINILD);
 		}
 		
 		// October Challenge Events //
@@ -221,7 +221,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 			$n2 = node_Add("event","",$idx,"One Game a Month ".$idx,"",0,$n);
 			//for ( $idx2 = 1; $idx2 <= (($idx===$latest_year) ? $latest_month : 12); $idx2++ ) {
 			for ( $idx2 = 1; $idx2 <= 12; $idx2++ ) {
-				node_Add("event","",($idx2<10?"0":"").$idx2,"One Game a Month - ".$months[$idx2-1]." ".$idx,"",0,$n2);
+				node_Add("event","",PADNUM($idx2),"One Game a Month - ".$months[$idx2-1]." ".$idx,"",0,$n2);
 			}
 		}
 
@@ -229,7 +229,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 		for ( $idx = 2014; $idx <= $latest_year; $idx++ ) {
 			$n2 = node_Add("event","",$idx,"itch.io Hosted Jam ".$idx,"",0,$n);
 //			for ( $idx2 = ($idx===2014?2:1); $idx2 <= 12; $idx2++ ) {
-//				node_Add("event","",($idx2<10?"0":"").$idx2,"itch.io - ".$months[$idx2-1]." ".$idx,"",0,$n2);
+//				node_Add("event","",PADNUM($idx2),"itch.io - ".$months[$idx2-1]." ".$idx,"",0,$n2);
 //			}
 		}
 		
