@@ -536,6 +536,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 		$n = node_Add("tag","","role-playing","Role Playing","",0,CMW_NODE_TAG);
 		node_Add("tag","","rpg-elements","RPG Elements","",$n,CMW_NODE_TAG);
 		node_Add("tag","","fighting","Fighting","",0,CMW_NODE_TAG);
+		node_Add("tag","","versus","Versus","",0,CMW_NODE_TAG);
 		node_Add("tag","","crafting","Crafting","",0,CMW_NODE_TAG);
 		node_Add("tag","","permadeath","Permadeath","",0,CMW_NODE_TAG);
 		$n = node_Add("tag","","story","Story","",0,CMW_NODE_TAG);
