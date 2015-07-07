@@ -22,7 +22,7 @@ function VERSION_QUERY( $my_version = null ) {
 
 // Pads 1-digit numbers with a 0 //
 function PADNUM( $number ) {
-	if ( $number >= 0 && $number <= 10 ) {
+	if ( $number >= 0 && $number < 10 ) {
 		return "0".$number;
 	}
 	return "".$number;

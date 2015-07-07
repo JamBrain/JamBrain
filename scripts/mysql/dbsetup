@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 require_once __DIR__ . "/../../db.php";
+require_once __DIR__ . "/../../core/core.php";
 require_once __DIR__ . "/../../core/node.php";
 
 db_Connect();
@@ -216,52 +217,58 @@ echo "Connected: " . db_IsConnected() . "\n";
 	
 	// Add Other Game Jams //
 	{
-		$n = node_Add("event","","1gam","One Game a Month","",0,CMW_NODE_OTHER_JAM);
+		$n = node_Add("group","","1gam","One Game a Month","",0,CMW_NODE_OTHER_JAM);
 		for ( $idx = 2013; $idx <= $latest_year; $idx++ ) {
-			$n2 = node_Add("event","",$idx,"One Game a Month ".$idx,"",0,$n);
+			$n2 = node_Add("group","",$idx,"One Game a Month ".$idx,"",0,$n);
 			//for ( $idx2 = 1; $idx2 <= (($idx===$latest_year) ? $latest_month : 12); $idx2++ ) {
 			for ( $idx2 = 1; $idx2 <= 12; $idx2++ ) {
 				node_Add("event","",PADNUM($idx2),"One Game a Month - ".$months[$idx2-1]." ".$idx,"",0,$n2);
 			}
 		}
 
-		$n = node_Add("event","","itch-io","itch.io Hosted Jam","",0,CMW_NODE_OTHER_JAM);
+		$n = node_Add("group","","itch-io","itch.io Hosted Jam","",0,CMW_NODE_OTHER_JAM);
 		for ( $idx = 2014; $idx <= $latest_year; $idx++ ) {
 			$n2 = node_Add("event","",$idx,"itch.io Hosted Jam ".$idx,"",0,$n);
 //			for ( $idx2 = ($idx===2014?2:1); $idx2 <= 12; $idx2++ ) {
 //				node_Add("event","",PADNUM($idx2),"itch.io - ".$months[$idx2-1]." ".$idx,"",0,$n2);
 //			}
 		}
-		
-		$n = node_Add("event","","tojam","TOJam","Toronto Game Jam",0,CMW_NODE_OTHER_JAM);
+	
+	
+		$n = node_Add("group","","pyweek","Python PyWeek","",0,CMW_NODE_OTHER_JAM);
+		for ( $idx = 1; $idx <= 20; $idx++ ) {
+			node_Add("event","",PADNUM($idx),"PyWeek ".$idx,"",0,$n);
+		}
+	
+		$n = node_Add("group","","tojam","TOJam","Toronto Game Jam",0,CMW_NODE_OTHER_JAM);
 		for ( $idx = 2006; $idx <= $latest_year; $idx++ ) {
 			node_Add("event","",$idx,"TOJam ".$idx,"",0,$n);
 		}
-		$n = node_Add("event","","nordic-game-jam","Nordic Game Jam","",0,CMW_NODE_OTHER_JAM);
+		$n = node_Add("group","","nordic-game-jam","Nordic Game Jam","",0,CMW_NODE_OTHER_JAM);
 		for ( $idx = 2006; $idx <= $latest_year; $idx++ ) {
 			node_Add("event","",$idx,"Nordic Game Jam ".$idx,"",0,$n);
 		}
-		$n = node_Add("event","","no-more-sweden","No More Sweden","",0,CMW_NODE_OTHER_JAM);
+		$n = node_Add("group","","no-more-sweden","No More Sweden","",0,CMW_NODE_OTHER_JAM);
 		for ( $idx = 2008; $idx <= $latest_year; $idx++ ) {
 			node_Add("event","",$idx,"No More Sweden ".$idx,"",0,$n);
 		}
 
-		$n = node_Add("event","","global-game-jam","Global Game Jam","",0,CMW_NODE_OTHER_JAM);
+		$n = node_Add("group","","global-game-jam","Global Game Jam","",0,CMW_NODE_OTHER_JAM);
 		for ( $idx = 2009; $idx <= $latest_year; $idx++ ) {
 			node_Add("event","",$idx,"Global Game Jam ".$idx,"",0,$n);
 		}
 
-		$n = node_Add("event","","7dfps","7DFPS (7 Day FPS)","",0,CMW_NODE_OTHER_JAM);
+		$n = node_Add("group","","7dfps","7DFPS","",0,CMW_NODE_OTHER_JAM);
 		for ( $idx = 2012; $idx <= $latest_year; $idx++ ) {
-			node_Add("event","",$idx,"7DFPS (7 Day FPS) ".$idx,"",0,$n);
+			node_Add("event","",$idx,"7DFPS ".$idx,"",0,$n);
 		}
 
-		$n =node_Add("event","","7drl","7DRL (7 Day Roguelike)","",0,CMW_NODE_OTHER_JAM);
+		$n =node_Add("group","","7drl","7DRL","",0,CMW_NODE_OTHER_JAM);
 		for ( $idx = 2013; $idx <= $latest_year; $idx++ ) {
-			node_Add("event","",$idx,"7DRL (7 Day Roguelike) ".$idx,"",0,$n);
+			node_Add("event","",$idx,"7DRL ".$idx,"",0,$n);
 		}
 
-		$n = node_Add("event","","speedhack","Allegro Speedhack","",0,CMW_NODE_OTHER_JAM);
+		$n = node_Add("group","","speedhack","Allegro Speedhack","",0,CMW_NODE_OTHER_JAM);
 		for ( $idx = 1999; $idx <= 2007; $idx++ ) {
 			node_Add("event","",$idx,"Allegro Speedhack ".$idx,"",0,$n);
 		}
@@ -272,7 +279,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 		}
 
 		// Historic //
-		$n = node_Add("event","","indie-game-jam","Indie Game Jam","",0,CMW_NODE_OTHER_JAM);
+		$n = node_Add("group","","indie-game-jam","Indie Game Jam","",0,CMW_NODE_OTHER_JAM);
 		for ( $idx = 2002; $idx <= 2004; $idx++ ) {
 			node_Add("event","",$idx,"Indie Game Jam ".$idx,"",0,$n);
 		}
@@ -286,29 +293,29 @@ echo "Connected: " . db_IsConnected() . "\n";
 
 	// Add Other Demoscene //
 	{
-		$n = node_Add("event","","assembly","Assembly","",0,CMW_NODE_OTHER_SCENE);
+		$n = node_Add("grou","","assembly","Assembly","",0,CMW_NODE_OTHER_SCENE);
 		for ( $idx = 1992; $idx <= $latest_year; $idx++ ) {
 			node_Add("event","",$idx,"Assembly ".$idx,"",0,$n);
 		}
-		$n = node_Add("event","","revision","Revision","",0,CMW_NODE_OTHER_SCENE);
+		$n = node_Add("group","","revision","Revision","",0,CMW_NODE_OTHER_SCENE);
 		for ( $idx = 2011; $idx <= $latest_year; $idx++ ) {
 			node_Add("event","",$idx,"Revision ".$idx,"",0,$n);
 		}
 
 		// Historic //
-		$n = node_Add("event","","breakpoint","Breakpoint","",0,CMW_NODE_OTHER_SCENE);
+		$n = node_Add("group","","breakpoint","Breakpoint","",0,CMW_NODE_OTHER_SCENE);
 		for ( $idx = 2003; $idx <= 2010; $idx++ ) {
 			node_Add("event","",$idx,"Breakpoint ".$idx,"",0,$n);
 		}
-		$n = node_Add("event","","mekka-symposium","mekka & symposium","",0,CMW_NODE_OTHER_SCENE);
+		$n = node_Add("group","","mekka-symposium","mekka & symposium","",0,CMW_NODE_OTHER_SCENE);
 		for ( $idx = 1995; $idx <= 2002; $idx++ ) {
 			node_Add("event","",$idx,"mekka & symposium ".$idx,"",0,$n);
 		}
-		$n = node_Add("event","","the-party","The Party","",0,CMW_NODE_OTHER_SCENE);
+		$n = node_Add("group","","the-party","The Party","",0,CMW_NODE_OTHER_SCENE);
 		for ( $idx = 1991; $idx <= 2002; $idx++ ) {
 			node_Add("event","",$idx,"The Party ".$idx,"",0,$n);
 		}
-		$n = node_Add("event","","the-gathering","The Gathering","",0,CMW_NODE_OTHER_SCENE);
+		$n = node_Add("group","","the-gathering","The Gathering","",0,CMW_NODE_OTHER_SCENE);
 		for ( $idx = 1992; $idx <= 2001; $idx++ ) {
 			node_Add("event","",$idx,"The Gathering ".$idx,"",0,$n);
 		}
