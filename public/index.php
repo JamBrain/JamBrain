@@ -65,7 +65,7 @@ if ( $mode > 0 ) {
 <?php template_GetHeader(); ?>
 <body>
 	<div id='message' style="padding:16px;">
-		:D :grin: :ca: :se: :football: :poop: :house:
+		:D :ca: :football: :se: :house: :grin:
 	</div>
 	
 	<style>
@@ -94,7 +94,7 @@ if ( $mode > 0 ) {
 			left:360px;
 		}
 		#nav .type {
-			left:720px;
+			left:960px;
 		}
 		
 		#nav .proxy {
@@ -102,6 +102,9 @@ if ( $mode > 0 ) {
 		}
 		#nav .link {
 			background:#FDD;
+		}
+		#nav .authored {
+			background:#FCF;
 		}
 		
 		#content {
@@ -183,7 +186,7 @@ if ( $mode > 0 ) {
 				echo "</div>\n";	
 			}
 			foreach( $nodes as $node ) {
-				echo "<div class='row ".$node['type']."'>\n";
+				echo "<div class='row ".$node['type'].($node['author']>0?" authored":"")."'>\n";
 				if ( $node['type'] === 'link' ) {
 					echo "<div class='slug'><a href='".$node['name']."/'>" . $node['slug'] . "/</a></div> <div class='id'>*".$node['id']."*</div> <div class='type'>(".$node['type'].")</div><br />\n";
 				}

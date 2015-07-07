@@ -232,35 +232,54 @@ echo "Connected: " . db_IsConnected() . "\n";
 //			}
 		}
 		
-		node_Add("event","","7dfps","7 Day FPS","",0,CMW_NODE_OTHER_JAM);
-		node_Add("event","","7drl","7 Day Roguelike","",0,CMW_NODE_OTHER_JAM);
-
 		$n = node_Add("event","","tojam","TOJam","Toronto Game Jam",0,CMW_NODE_OTHER_JAM);
 		for ( $idx = 2006; $idx <= $latest_year; $idx++ ) {
-			node_Add("event","","" . $idx,"TOJam ".$idx,"",0,$n);
+			node_Add("event","",$idx,"TOJam ".$idx,"",0,$n);
 		}
 		$n = node_Add("event","","nordic-game-jam","Nordic Game Jam","",0,CMW_NODE_OTHER_JAM);
 		for ( $idx = 2006; $idx <= $latest_year; $idx++ ) {
-			node_Add("event","","" . $idx,"Nordic Game Jam ".$idx,"",0,$n);
+			node_Add("event","",$idx,"Nordic Game Jam ".$idx,"",0,$n);
 		}
 		$n = node_Add("event","","no-more-sweden","No More Sweden","",0,CMW_NODE_OTHER_JAM);
 		for ( $idx = 2008; $idx <= $latest_year; $idx++ ) {
-			node_Add("event","","" . $idx,"No More Sweden ".$idx,"",0,$n);
+			node_Add("event","",$idx,"No More Sweden ".$idx,"",0,$n);
 		}
 
 		$n = node_Add("event","","global-game-jam","Global Game Jam","",0,CMW_NODE_OTHER_JAM);
 		for ( $idx = 2009; $idx <= $latest_year; $idx++ ) {
-			node_Add("event","","" . $idx,"Global Game Jam ".$idx,"",0,$n);
+			node_Add("event","",$idx,"Global Game Jam ".$idx,"",0,$n);
+		}
+
+		$n = node_Add("event","","7dfps","7DFPS (7 Day FPS)","",0,CMW_NODE_OTHER_JAM);
+		for ( $idx = 2012; $idx <= $latest_year; $idx++ ) {
+			node_Add("event","",$idx,"7DFPS (7 Day FPS) ".$idx,"",0,$n);
+		}
+
+		$n =node_Add("event","","7drl","7DRL (7 Day Roguelike)","",0,CMW_NODE_OTHER_JAM);
+		for ( $idx = 2013; $idx <= $latest_year; $idx++ ) {
+			node_Add("event","",$idx,"7DRL (7 Day Roguelike) ".$idx,"",0,$n);
+		}
+
+		$n = node_Add("event","","speedhack","Allegro Speedhack","",0,CMW_NODE_OTHER_JAM);
+		for ( $idx = 1999; $idx <= 2007; $idx++ ) {
+			node_Add("event","",$idx,"Allegro Speedhack ".$idx,"",0,$n);
+		}
+		node_Add("event","","2009","Allegro Speedhack 2009","",0,$n);
+		node_Add("event","","2011","Allegro Speedhack 2011","",0,$n);
+		for ( $idx = 2014; $idx <= $latest_year; $idx++ ) {
+			node_Add("event","",$idx,"Allegro Speedhack ".$idx,"",0,$n);
 		}
 
 		// Historic //
-		node_Add("event","","speedhack","Allegro Speedhack","",0,CMW_NODE_OTHER_JAM);
-		node_Add("event","","indie-game-jam","Indie Game Jam","",0,CMW_NODE_OTHER_JAM);
+		$n = node_Add("event","","indie-game-jam","Indie Game Jam","",0,CMW_NODE_OTHER_JAM);
+		for ( $idx = 2002; $idx <= 2004; $idx++ ) {
+			node_Add("event","",$idx,"Indie Game Jam ".$idx,"",0,$n);
+		}
 		
 		// Other Game Jam by Year //
 		node_Add("event","","1980s","Other Game Jam from 1980-1989","",0,CMW_NODE_OTHER_JAM);
 		for ( $idx = 1990; $idx <= $latest_year; $idx++ ) {
-			node_Add("event","","" . $idx,"Other Game Jam in ".$idx,"",0,CMW_NODE_OTHER_JAM);
+			node_Add("event","",$idx,"Other Game Jam in ".$idx,"",0,CMW_NODE_OTHER_JAM);
 		}
 	}
 
@@ -268,131 +287,159 @@ echo "Connected: " . db_IsConnected() . "\n";
 	{
 		$n = node_Add("event","","assembly","Assembly","",0,CMW_NODE_OTHER_SCENE);
 		for ( $idx = 1992; $idx <= $latest_year; $idx++ ) {
-			node_Add("event","","" . $idx,"Assembly ".$idx,"",0,$n);
+			node_Add("event","",$idx,"Assembly ".$idx,"",0,$n);
 		}
 		$n = node_Add("event","","revision","Revision","",0,CMW_NODE_OTHER_SCENE);
 		for ( $idx = 2011; $idx <= $latest_year; $idx++ ) {
-			node_Add("event","","" . $idx,"Revision ".$idx,"",0,$n);
+			node_Add("event","",$idx,"Revision ".$idx,"",0,$n);
 		}
 
 		// Historic //
 		$n = node_Add("event","","breakpoint","Breakpoint","",0,CMW_NODE_OTHER_SCENE);
 		for ( $idx = 2003; $idx <= 2010; $idx++ ) {
-			node_Add("event","","" . $idx,"Breakpoint ".$idx,"",0,$n);
+			node_Add("event","",$idx,"Breakpoint ".$idx,"",0,$n);
 		}
 		$n = node_Add("event","","mekka-symposium","mekka & symposium","",0,CMW_NODE_OTHER_SCENE);
 		for ( $idx = 1995; $idx <= 2002; $idx++ ) {
-			node_Add("event","","" . $idx,"mekka & symposium ".$idx,"",0,$n);
+			node_Add("event","",$idx,"mekka & symposium ".$idx,"",0,$n);
 		}
 		$n = node_Add("event","","the-party","The Party","",0,CMW_NODE_OTHER_SCENE);
 		for ( $idx = 1991; $idx <= 2002; $idx++ ) {
-			node_Add("event","","" . $idx,"The Party ".$idx,"",0,$n);
+			node_Add("event","",$idx,"The Party ".$idx,"",0,$n);
 		}
 		$n = node_Add("event","","the-gathering","The Gathering","",0,CMW_NODE_OTHER_SCENE);
 		for ( $idx = 1992; $idx <= 2001; $idx++ ) {
-			node_Add("event","","" . $idx,"The Gathering ".$idx,"",0,$n);
+			node_Add("event","",$idx,"The Gathering ".$idx,"",0,$n);
 		}
 
 		// Other Demoscene Events by Year //
 		node_Add("event","","1980s","Other Demoscene Event from 1980-1989","",0,CMW_NODE_OTHER_SCENE);
 		for ( $idx = 1990; $idx <= $latest_year; $idx++ ) {
-			node_Add("event","","" . $idx,"Other Demoscene Event in ".$idx,"",0,CMW_NODE_OTHER_SCENE);
+			node_Add("event","",$idx,"Other Demoscene Event in ".$idx,"",0,CMW_NODE_OTHER_SCENE);
 		}
 	}
 
 	// Add Platforms //
 	{
 		$n = node_Add("platform","","windows","Windows","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","winrt","WinRT (Windows 8+)","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","ms-dos","MS-DOS","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","windows-3-1","Windows 3.1","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","windows-95","Windows 95/98/ME","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","windows-xp","Windows XP","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","windows-7","Windows 7","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","winrt","WinRT (Windows 8+)","",0,CMW_NODE_PLATFORM);
+
+		$n = node_Add("platform","","android","Android","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","ouya","Ouya","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","android-tv","Android TV","",$n,CMW_NODE_PLATFORM);
 
 		$n = node_Add("platform","","linux","Linux","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","debian","Debian","",$n,CMW_NODE_PLATFORM);
 		node_Add("platform","","ubuntu","Ubuntu","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","mint","Linux Mint","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","debian","Debian","",$n,CMW_NODE_PLATFORM);
 		node_Add("platform","","steamos","SteamOS","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","fedora","Fedora","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","centos","CentOS","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","opensuse","openSUSE","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","fedora","Fedora/Redhat/CentOS","",$n,CMW_NODE_PLATFORM);
+		//node_Add("platform","","opensuse","openSUSE","",$n,CMW_NODE_PLATFORM);
 		node_Add("platform","","arch","Arch Linux","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","unix","Unix","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","freebsd","FreeBSD","",$n,CMW_NODE_PLATFORM);
+		//node_Add("platform","","solaris","Solaris","",$n,CMW_NODE_PLATFORM);
 
-		node_Add("platform","","android","Google Android","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","webos","WebOS","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","chrome-os","Google Chrome OS","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","firefox-os","Mozilla Firefox OS","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","mac-os","Mac OS","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","osx","Mac OS X","",0,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","ios","iOS","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","iphone","Apple iPhone","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","ipad","Apple iPad","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","ipod","Apple iPod","",$n,CMW_NODE_PLATFORM);
 
+		$n = node_Add("platform","","web","Web","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","html5","HTML5","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","flash","Flash","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","unity","Unity Web Player","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","java","Java (web)","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","silverlight","Silverlight","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","chrome","Chrome","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","safari","Safari","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","opera","Opera","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","webkit","WebKit","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","internet-explorer","Internet Explorer","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","firefox","Firefox","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","netscape","Netscape","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","mosaic","Mosaic","",$n,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","chrome-os","Chrome OS","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","firefox-os","Firefox OS","",$n,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","telnet","Telnet","",0,CMW_NODE_PLATFORM);
+
+		$n = node_Add("platform","","webos","WebOS","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","webos-tv","WebOS TV","",$n,CMW_NODE_PLATFORM);
+
+		$n = node_Add("platform","","blackberry","BlackBerry","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","bb10","BlackBerry 10","",$n,CMW_NODE_PLATFORM);
 		node_Add("platform","","symbian","Symbian","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","brew","Brew","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","j2me","J2ME","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","mophun","Mophun","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","palm-os","Palm OS","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","windows-ce","Windows CE","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","bada","Samsung Bada","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","bada","Bada","",0,CMW_NODE_PLATFORM);
 
-		$n = node_Add("platform","","web","Web Browser","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","html5","HTML5","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","chrome","Google Chrome","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","firefox","Mozilla Firefox","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","internet-explorer","Microsoft Internet Explorer","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","opera","Opera","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","safari","Apple Safari","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","webkit","Webkit","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","netscape","Mozilla Netscape","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","mosaic","NCSA Mosaic","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","beos","BeOS/Haiku","",0,CMW_NODE_PLATFORM);
 
-		$n = node_Add("platform","","unix","Unix","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","freebsd","FreeBSD","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","kindle","Amazon Kindle (eReader)","",0,CMW_NODE_PLATFORM);
 
-		node_Add("platform","","osx","Mac OS X","",0,CMW_NODE_PLATFORM);
-		$n = node_Add("platform","","ios","Apple iOS","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","iphone","Apple iPhone","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","ipad","Apple iPad","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","ipod","Apple iPod","",$n,CMW_NODE_PLATFORM);
-
-		node_Add("platform","","kindle","Amazon Kindle (eReader)","",$n,CMW_NODE_PLATFORM);
-
-		node_Add("platform","","nes","Nintendo Entertainment System","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","snes","Super Nintendo Entertainment System","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","nes","Nintendo Entertainment System/Famicom","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","snes","Super Nintendo Entertainment System/Super Famicom","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","n64","Nintendo 64","",0,CMW_NODE_PLATFORM);
-		$n = node_Add("platform","","gamecube","Nintendo GameCube","",0,CMW_NODE_PLATFORM);
-		$n = node_Add("platform","","wii","Nintendo Wii","",$n,CMW_NODE_PLATFORM);
-		$n = node_Add("platform","","wii-u","Nintendo Wii U","",$n,CMW_NODE_PLATFORM);
-		$n = node_Add("platform","","gameboy","Nintendo GameBoy","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","super-gameboy","Nintendo Super GameBoy","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","gameboy-color","Nintendo GameBoy Color","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","gameboy-advance","Nintendo GameBoy Advance","",0,CMW_NODE_PLATFORM);
-		$n = node_Add("platform","","nds","Nintendo DS","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","ndsi","Nintendo DSi","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","3ds","Nintendo 3DS","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","gamecube","Nintendo GameCube","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","wii","Nintendo Wii","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","wii-u","Nintendo Wii U","",0,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","gameboy","Nintendo Game Boy","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","super-gameboy","Nintendo Super Game Boy","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","gameboy-color","Nintendo Game Boy Color","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","gameboy-advance","Nintendo Game Boy Advance","",0,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","ds","Nintendo DS","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","dsi","Nintendo DSi","",$n,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","3ds","Nintendo 3DS/2DS","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","new-3ds","New Nintendo 3DS","",$n,CMW_NODE_PLATFORM);
 		node_Add("platform","","virtual-boy","Nintendo Virtual Boy","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","nx","Nintendo NX","",0,CMW_NODE_PLATFORM);
 
-		node_Add("platform","","ps1","Sony PlayStation","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","ps2","Sony PlayStation 2","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","ps3","Sony PlayStation 3","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","ps4","Sony PlayStation 4","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","psp","Sony PlayStation Portable","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","ps-vita","Sony PlayStation Vita/PlayStation TV","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","psx","PlayStation","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","ps2","PlayStation 2","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","ps3","PlayStation 3","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","ps4","PlayStation 4","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","psp","PlayStation Portable","",0,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","ps-vita","PlayStation Vita","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","ps-tv","PlayStation TV/Vita TV","",$n,CMW_NODE_PLATFORM);
 
-		$n = node_Add("platform","","sms","Sega Master System","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","game-gear","Sega Game Gear","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","genesis","Sega Genesis/Mega Drive/32x","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","xbox","Xbox","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","xbox-360","Xbox 360","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","xbox-one","Xbox One","",0,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","master-system","Sega Master System","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","game-gear","Sega Game Gear","",0,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","genesis","Sega Genesis/Mega Drive","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","sega-cd","Sega CD/Mega-CD","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","32x","Sega 32X","",$n,CMW_NODE_PLATFORM);
 		node_Add("platform","","saturn","Sega Saturn","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","dreamcast","Sega Dreamcast","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","vmu","Sega VMU","",0,CMW_NODE_PLATFORM);
 
-		node_Add("platform","","pc-engine","NEC PC Engine/Turbo Grafx 16","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","pc-engine","PC Engine/TurboGrafx-16","",0,CMW_NODE_PLATFORM);
 
-		node_Add("platform","","neogeo","SNK NeoGeo","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","neogeo-pocket","SNK NeoGeo Pocket/Color","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","neo-geo","Neo Geo","",0,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","neo-geo-pocket","Neo Geo Pocket","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","neo-geo-pocket-color","Neo Geo Pocket Color","",$n,CMW_NODE_PLATFORM);
 
-		node_Add("platform","","wonderswan","Bandia Wonderswan/Color/Crystal","",0,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","wonderswan","WonderSwan","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","wonderswan-color","WonderSwan Color/Crystal","",$n,CMW_NODE_PLATFORM);
 		
-		node_Add("platform","","pet","Commodore PET","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","vic20","Commodore Vic20","",0,CMW_NODE_PLATFORM);
+		//node_Add("platform","","pet","Commodore PET","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","vic-20","Commodore VIC-20","",0,CMW_NODE_PLATFORM);
 		$n = node_Add("platform","","c64","Commodore 64","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","c128","Commodore 128","",$n,CMW_NODE_PLATFORM);
+		//node_Add("platform","","c128","Commodore 128","",$n,CMW_NODE_PLATFORM);
 		node_Add("platform","","amiga","Commodore Amiga","",0,CMW_NODE_PLATFORM);
-
-		node_Add("platform","","zx-spectrum","ZX Spectrum","",0,CMW_NODE_PLATFORM);
 
 		node_Add("platform","","2600","Atari 2600","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","5200","Atari 5200","",0,CMW_NODE_PLATFORM);
@@ -401,18 +448,31 @@ echo "Connected: " . db_IsConnected() . "\n";
 		node_Add("platform","","lynx","Atari Lynx","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","atari-st","Atari ST","",0,CMW_NODE_PLATFORM);
 
+		node_Add("platform","","zx-spectrum","ZX Spectrum","",0,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","trs-80","Tandy TRS-80","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","coco","Tandy TRS-80 Color Computer","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","apple-ii","Apple II","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","bbc-micro","BBC Micro","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","msx","MSX","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","xbox","Microsoft Xbox","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","xbox-360","Microsoft Xbox 360","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","xbox-one","Microsoft Xbox One","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","ti-83","TI-83 Calculator","",0,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","vectrex","Vectrex","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","intellivision","Intellivision","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","colecovision","ColecoVision","",0,CMW_NODE_PLATFORM);
+		$n = node_Add("platform","","odyssey","Magnavox Odyssey","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","odyssey2","Magnavox Odyssey²/Philips Videopac","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","cd-i","Philips CD-i","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","3do","3DO","",0,CMW_NODE_PLATFORM);
 
 		node_Add("platform","","fm-towns","FM Towns","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","cd-i","Philips CD-i","",0,CMW_NODE_PLATFORM);
 
 		node_Add("platform","","arcade","Arcade","",0,CMW_NODE_PLATFORM);
 		
 		node_Add("platform","","arduino","Arduino","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","custom","Custom","",0,CMW_NODE_PLATFORM);
+
+		node_Add("platform","","source","Source Code","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","other","Other","",0,CMW_NODE_PLATFORM);
 	}
 	
 	// Posts (everything) -- Get, is PUBLISHED=true, sort by PUBLISHED, LIMIT 10
