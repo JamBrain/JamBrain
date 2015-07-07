@@ -327,11 +327,13 @@ echo "Connected: " . db_IsConnected() . "\n";
 		node_Add("platform","","windows-95","Windows 95/98/ME","",$n,CMW_NODE_PLATFORM);
 		node_Add("platform","","windows-xp","Windows XP","",$n,CMW_NODE_PLATFORM);
 		node_Add("platform","","windows-7","Windows 7","",$n,CMW_NODE_PLATFORM);
-		node_Add("platform","","winrt","WinRT (Windows 8+)","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","winrt","Windows Runtime (WinRT/Metro, Windows 8+)","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","windows-phone","Windows Phone","",0,CMW_NODE_PLATFORM);
 
 		$n = node_Add("platform","","android","Android","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","ouya","Ouya","",$n,CMW_NODE_PLATFORM);
 		node_Add("platform","","android-tv","Android TV","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","android-wear","Android Wear","",0,CMW_NODE_PLATFORM);
 
 		$n = node_Add("platform","","linux","Linux","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","ubuntu","Ubuntu","",$n,CMW_NODE_PLATFORM);
@@ -350,6 +352,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 		node_Add("platform","","iphone","Apple iPhone","",$n,CMW_NODE_PLATFORM);
 		node_Add("platform","","ipad","Apple iPad","",$n,CMW_NODE_PLATFORM);
 		node_Add("platform","","ipod","Apple iPod","",$n,CMW_NODE_PLATFORM);
+		node_Add("platform","","watchos","watchOS","",0,CMW_NODE_PLATFORM);
 
 		$n = node_Add("platform","","web","Web","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","html5","HTML5","",$n,CMW_NODE_PLATFORM);
@@ -382,6 +385,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 		node_Add("platform","","mophun","Mophun","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","palm-os","Palm OS","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","windows-ce","Windows CE","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","windows-mobile","Windows Mobile","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","bada","Bada","",0,CMW_NODE_PLATFORM);
 
 		node_Add("platform","","beos","BeOS/Haiku","",0,CMW_NODE_PLATFORM);
@@ -403,7 +407,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 		$n = node_Add("platform","","3ds","Nintendo 3DS/2DS","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","new-3ds","New Nintendo 3DS","",$n,CMW_NODE_PLATFORM);
 		node_Add("platform","","virtual-boy","Nintendo Virtual Boy","",0,CMW_NODE_PLATFORM);
-		node_Add("platform","","nx","Nintendo NX","",0,CMW_NODE_PLATFORM);
+		//node_Add("platform","","nx","Nintendo NX","",0,CMW_NODE_PLATFORM);
 
 		node_Add("platform","","psx","PlayStation","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","ps2","PlayStation 2","",0,CMW_NODE_PLATFORM);
@@ -453,6 +457,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 		node_Add("platform","","coco","Tandy TRS-80 Color Computer","",$n,CMW_NODE_PLATFORM);
 		node_Add("platform","","apple-ii","Apple II","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","bbc-micro","BBC Micro","",0,CMW_NODE_PLATFORM);
+		node_Add("platform","","amstrad-cpc","Amstrad CPC","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","msx","MSX","",0,CMW_NODE_PLATFORM);
 		node_Add("platform","","ti-83","TI-83 Calculator","",0,CMW_NODE_PLATFORM);
 
