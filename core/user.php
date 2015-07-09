@@ -46,7 +46,17 @@ function user_StartSession( $force_regen = false, $preserve_id = false ) {
 	if (session_status() !== PHP_SESSION_ACTIVE) {
 		session_set_cookie_params( 0, CMW_COOKIE_PATH,NULL,CMW_USE_HTTPS, true );	// HTTPOnly //
 		session_name( CMW_SESSION_NAME );
+
 		session_start();							// Start Session //
+		
+		// If session is not HTTPonly, nuke it and start over //
+		if ( !session_get_cookie_params()['httponly'] ) {
+			// TODO: Log this to error report //
+			//$_SESSION['ERROR'] = "Session not set to HTTPonly for " . $_SERVER['REMOTE_ADDR'] . " (" . session_id() . ")";
+			session_unset();
+			session_destroy();
+			session_start();
+		}
 		
 		// If session previously existed //
 		if ( isset($_SESSION['__created']) ) {
@@ -123,6 +133,8 @@ function user_StartLogin( $force_regen = false ) {
 //}
 function user_Logout() {
 	if (session_status() == PHP_SESSION_ACTIVE) {
+		unset($_COOKIE['TOKEN']);
+		setcookie( 'TOKEN',null, 1 /* Epoch+1 */, CMW_COOKIE_PATH );
 		session_unset();							// Remove Session Variables //
 		session_destroy();							// Destroy the Session //
 	}
@@ -130,7 +142,7 @@ function user_Logout() {
 
 function user_SetLoginToken() {
 	$token = token_Get();
-	setcookie( 'TOKEN',$token, NULL,CMW_COOKIE_PATH,NULL,CMW_USE_HTTPS, true );	// HTTPOnly //
+	setcookie( 'TOKEN',$token, NULL, CMW_COOKIE_PATH,NULL,CMW_USE_HTTPS, true );	// HTTPOnly //
 	$_SESSION['TOKEN'] = $token;
 }
 function user_IsLoginTokenValid() {
@@ -140,6 +152,8 @@ function user_IsLoginTokenValid() {
 	return false;
 }
 function user_ClearLogin() {
+	unset($_COOKIE['TOKEN']);
+	setcookie( 'TOKEN',null, 1 /* Epoch+1 */, CMW_COOKIE_PATH );
 	unset($_SESSION['TOKEN']);
 	unset($_SESSION['ID']);
 }

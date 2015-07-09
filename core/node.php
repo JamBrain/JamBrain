@@ -377,7 +377,7 @@ function user_GetIdByMail( $mail ) {
 	db_Connect();
 
 	$id = db_FetchSingle(
-		"SELECT `id` FROM `" . CMW_TABLE_USER . "` WHERE ".
+		"SELECT `node` AS `id` FROM `" . CMW_TABLE_USER . "` WHERE ".
 			"`mail`=\"" . $mail . "\"".
 			" LIMIT 1" .
 		";");
@@ -411,7 +411,7 @@ function user_GetIdAndHashByMail( $mail ) {
 	// TODO: Use time-attack safe fetch function
 
 	$data = db_Fetch(
-		"SELECT `id`,`hash` FROM `" . CMW_TABLE_USER . "` WHERE ".
+		"SELECT `node` AS `id`,`hash` FROM `" . CMW_TABLE_USER . "` WHERE ".
 			"`mail`=\"" . $mail . "\"".
 			" LIMIT 1" .
 		";");

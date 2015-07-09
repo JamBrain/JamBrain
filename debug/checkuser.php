@@ -21,7 +21,7 @@
 			// Required Fields in the POST data //			
 			if ( !isset($_POST['login']) ) return;
 			if ( !isset($_POST['password']) ) return;
-			//if ( !isset($_POST['hashed_password']) ) return;
+			//if ( !isset($_POST['hashword']) ) return;
 			
 			// Password //
 			$password = $_POST['password'];
@@ -41,9 +41,10 @@
 			
 			if ( !empty($mail) ) {
 				$out .= "By Mail<br />";
-				$hash = user_GetHashByMail($mail);
-				
-				// TODO: Get ID too
+				$data = user_GetIdAndHashByMail($mail);
+
+				$id = $data['id'];
+				$hash = $data['hash'];
 			}
 			else if ( !empty($id) ) {
 				$out .= "By User ID<br />";
@@ -51,7 +52,7 @@
 			}
 			else if ( !empty($slug) ) {
 				$out .= "By Slug<br />";
-				
+
 				$id = node_GetNodeIdByParentIdAndSlug(CMW_NODE_USER, $slug);
 				if ( $id > 0 ) {
 					$hash = user_GetHashById($id);
@@ -60,8 +61,10 @@
 			else {	
 				$out .= "Bad Login Method<br />";
 			}
+
 			$success = user_VerifyPassword($password,$hash);
 			$out .= "Verify: " . ($success ? "Success!" : "failed") . "<br />";
+
 			if ( $success ) {
 				user_StartSession(true);
 				user_SetLoginToken();
@@ -71,8 +74,11 @@
 	
 			$out .= "<br />";
 		}
+
 		return $out;
 	}
+
+	// Do it! //
 	$out = main();
 ?>
 <!DOCTYPE html>

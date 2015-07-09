@@ -10,9 +10,9 @@ require_once __DIR__ . "/../../core/internal/validate.php";
 
 $response = json_NewResponse();
 
-// Retrieve Session, store UID
-user_StartSession();
-$response['uid'] = user_GetId();
+// Retrieve Session, store User ID
+user_Start();
+$response['id'] = user_GetID();
 
 // Retrieve Action and Arguments
 $arg = util_ParseActionURL();
@@ -47,11 +47,11 @@ if ( $action === 'login' ) {
 	}
 	
 	// If already logged in, dispose of the active session.
-	if ( $response['uid'] !== 0 ) {
-		user_EndSession();		// Destroy Session
+	if ( $response['id'] !== 0 ) {
+		user_Logout();			// Destroy Session
 		
-		user_StartSession();	// New Session!
-		$response['uid'] = user_GetId();
+		user_Start();	// New Session!
+		$response['id'] = user_GetID();
 	}
 		
 	// Check the APCU cache if access attempts for this IP address is > 5, deny access.
@@ -94,7 +94,7 @@ if ( $action === 'login' ) {
 	else {
 		// Search for a user-type node matching the sanitized login.
 		
-		// Search user_table for the matching UID
+		// Search user_table for the matching User ID
 	
 		// if none found, fail
 	}
@@ -124,7 +124,7 @@ if ( $action === 'login' ) {
  * @apiVersion 0.1.0
 */
 else if ( $action === 'logout' ) {
-	user_EndSession();		// Destroy session
+	user_Logout();		// Destroy session
 }
 /**
  * @api {POST} /a/user/register /a/user/register
