@@ -64,8 +64,8 @@ if ( $action === 'login' ) {
 	
 	// If already logged in, dispose of the active session.
 	if ( $response['id'] !== 0 ) {
-		user_Logout();	// Destroy Session
-		user_Start();	// New Session!
+		user_DoLogout();	// Destroy Session
+		user_Start();		// New Session!
 		$response['id'] = user_GetID();
 	}
 		
@@ -126,8 +126,7 @@ if ( $action === 'login' ) {
 	// If found, verify password against the stored hash.
 	if ( user_VerifyPassword($password,$hash) ) {
 		// Success! //
-		user_SetLoginToken();
-		user_setID( $response['id'] );
+		user_DoLogin( $response['id'] );
 		user_End();
 		
 		// TODO: Clear login attempt cache //
@@ -151,7 +150,7 @@ if ( $action === 'login' ) {
  * @apiVersion 0.1.0
 */
 else if ( $action === 'logout' ) {
-	user_Logout();		// Destroy session
+	user_DoLogout();		// Destroy session
 }
 /**
  * @api {POST} /a/user/register /a/user/register
