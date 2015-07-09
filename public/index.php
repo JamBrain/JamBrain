@@ -6,7 +6,8 @@ require_once __DIR__ . "/../core/internal/validate.php";
 require_once __DIR__ . "/../core/internal/emoji.php";
 require_once __DIR__ . "/../core/post.php";
 
-user_StartSession();
+user_StartEnd();
+
 //template_SetTheme("embed");
 
 // Modes //
@@ -375,6 +376,19 @@ if ( $mode > 0 ) {
 				echo "</div>\n";	
 			}
 		?>
+	</div>
+
+	<div id="debug">
+		<h2>Debug S:</h2>
+		<?php
+			print_r($_SESSION);
+			echo "<br />";
+			echo "Login token is " . (user_IsLoginTokenValid() ? "valid" : "invalid") . ".";
+		?>
+		<h2>Debug C:</h2>
+		<script>
+			document.getElementById('debug').innerHTML += document.cookie;
+		</script>
 	</div>
 
 	<?php } else if ( $mode === M_ERROR ) { ?>	

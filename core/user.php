@@ -7,46 +7,161 @@
  
 // TODO: user_IsAdmin(), user_IsSuper()
 
-$__session_started = false;
+define('CMW_SESSION_NAME','SESSID');				// Name of the Session //
+define('CMW_SESSION_REGENERATE',60*15);				// When to automatically Regenerate session (in seconds) //
+define('CMW_SESSION_STAYLOGGEDIN',60*60*24*7*2);	// How long 'stay logged in' will persist your session //
 
-function user_IsSessionActive() {
-	global $__session_started;
-	return $__session_started;//return (session_status() == PHP_SESSION_NONE);
+define('CMW_COOKIE_PATH','/');
+if (!defined('CMW_USE_HTTPS')) {
+	define('CMW_USE_HTTPS',false);					// If HTTPS is available, we can require it in the cookie //
 }
-function user_StartSession() {
-	global $__session_started;
-	if ( !$__session_started ) {
-		//session_set_cookie_params(60);
+
+define('CMW_TOKEN_SIZE',64);						// How many bytes long a token is //
+
+
+// Normal use, retrieve the active session and login //
+function user_StartEnd( $force_regen = false, $preserve_id = false ) {
+	user_Start($force_regen,$preserve_id);
+	user_End();
+}
+// If you manually want to open and close the session and login //
+function user_Start( $force_regen = false, $preserve_id = false ) {
+	$session_regenerated_id = user_StartSession($force_regen,$preserve_id);
+	user_StartLogin($session_regenerated_id);
+}
+function user_End() {
+//	user_EndLogin();
+	user_EndSession();
+}
+
+// NOT RECOMMENDED!
+// If you only want to start and end the session, disregarding login //
+function user_StartEndSession( $force_regen = false, $preserve_id = false ) {
+	user_StartSession($force_regen,$preserve_id);
+	user_EndSession();
+}
+// Start and Manage the PHP Session //
+// Returns true if the ID was regenerated //
+function user_StartSession( $force_regen = false, $preserve_id = false ) {
+	if (session_status() !== PHP_SESSION_ACTIVE) {
+		session_set_cookie_params( 0, CMW_COOKIE_PATH,NULL,CMW_USE_HTTPS, true );	// HTTPOnly //
+		session_name( CMW_SESSION_NAME );
+		session_start();							// Start Session //
 		
-		session_start();	// Start Session //
-		
-		$__session_started = true;
+		// If session previously existed //
+		if ( isset($_SESSION['__created']) ) {
+			// As long as we don't require that the ID be preserved, regenerate it if forced or when time expires //
+			if ( !$preserve_id && ($force_regen || (time()-$_SESSION['__created'] > CMW_SESSION_REGENERATE)) ) {
+				session_regenerate_id(true); 		// Regenerate and delete old session file //
+				$_SESSION['__created'] = time();	// Store the current time //
+
+				// ID was regenerated //
+				return true;
+			}
+		}
+		// If session is new //
+		else {
+			session_unset();						// It should be empty, but remove all variables anyway //
+			$_SESSION['__created'] = time();		// Store the current time //
+		}
 	}
+
+	// ID was not regenerated //
+	return false;
 }
+// End the PHP Session (an optimization) //
 function user_EndSession() {
-	global $__session_started;
-	if ( $__session_started ) {
-		session_unset();	// Remove Session Variables //
-		session_destroy();	// Destroy the Session //
-
-		$__session_started = false;
-	}		
-}
-
-
-function user_GetId() {
-	if ( isset($_SESSION['uid']) ) {
-		return intval($_SESSION['uid']);
-	}
-	else {
-		return 0;
+	if (session_status() == PHP_SESSION_ACTIVE) {
+		session_write_close();
 	}
 }
 
-function user_SetId( $uid ) {
-	$_SESSION['uid'] = $uid;
-	
-	// Should I return the old Id? //
+// From inside the session, verify the login detials //
+function user_StartLogin( $force_regen = false ) {
+	// If the token is set, that means we are potentially logged in //
+	if ( isset($_SESSION['TOKEN']) ) {
+		// Confirm that the tokens match //
+		if ( user_IsLoginTokenValid() ) {
+			// Confirm that we have an ID //
+			if ( isset($_SESSION['ID']) ) {
+				// Confirm that the ID is a number //
+				if ( is_numeric($_SESSION['ID']) ) {
+					// If we were asked to regenerate the token, do that now //
+					if ( $force_regen ) {
+						user_SetLoginToken();
+					}
+
+					return;	// Everything is OK!
+				}
+				else {
+					// TODO: Log this to error report //
+					//$_SESSION['ERROR'] = "Login ID isn't numeric by " . $_SERVER['REMOTE_ADDR'] . " (" . session_id() . ")";
+				}
+			}
+			else {
+				// TODO: Log this to error report //
+				//$_SESSION['ERROR'] = "Login ID unset by " . $_SERVER['REMOTE_ADDR'] . " (" . session_id() . ")";
+			}
+		}
+		// If not, to stop brute force attacks, clear the login parts of the session //
+		else {
+			// TODO: Log this to error report //
+			//$_SESSION['ERROR'] = "Login token mismatch for user " . (isset($_SESSION['ID'])?$_SESSION['ID']:"N/A") . " by " . $_SERVER['REMOTE_ADDR'] . " (" . session_id() . ")";
+		}
+	}
+
+	// If we get here, there was a problem validating or confirming the Login //
+	user_ClearLogin();
+}
+//function user_EndLogin() {
+//	// Not much to do here //
+//}
+
+
+//function user_IsActive() {
+//	return session_status() == PHP_SESSION_ACTIVE;
+//}
+function user_Logout() {
+	if (session_status() == PHP_SESSION_ACTIVE) {
+		session_unset();							// Remove Session Variables //
+		session_destroy();							// Destroy the Session //
+	}
+}
+
+function user_SetLoginToken() {
+	$token = token_Get();
+	setcookie( 'TOKEN',$token, NULL,CMW_COOKIE_PATH,NULL,CMW_USE_HTTPS, true );	// HTTPOnly //
+	$_SESSION['TOKEN'] = $token;
+}
+function user_IsLoginTokenValid() {
+	if ( isset($_SESSION['TOKEN']) && isset($_COOKIE['TOKEN']) ) {
+		return $_SESSION['TOKEN'] === $_COOKIE['TOKEN'];
+	}
+	return false;
+}
+function user_ClearLogin() {
+	unset($_SESSION['TOKEN']);
+	unset($_SESSION['ID']);
+}
+
+
+function token_Get() {
+	return bin2hex(openssl_random_pseudo_bytes(CMW_TOKEN_SIZE >> 1));
+}
+
+
+
+function user_GetID() {
+	if ( isset($_SESSION['ID']) ) {
+		return $_SESSION['ID'];
+	}
+	return 0;
+}
+function user_SetID( $id ) {
+	$old_id = user_GetID();
+	$_SESSION['ID'] = $id;
+
+	return $old_id;
 }
 
 

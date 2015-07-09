@@ -94,7 +94,7 @@ function node_AddMeta( $id_a, $id_b, $type, $subtype, $data ) {
 function node_GetNodeById( $id ) {
 	db_Connect();
 
-	$item = db_Fetch( 
+	$item = db_Fetch(
 		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
 			"`id`=" . $id .
 			" LIMIT 1" .
@@ -110,7 +110,7 @@ function node_GetNodeById( $id ) {
 function node_GetUserBySlug( $slug ) {
 	db_Connect();
 
-	$user = db_Fetch( 
+	$user = db_Fetch(
 		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
 			"`parent`=" . CMW_NODE_USER . " AND " .
 			"`slug`=\"" . $slug . "\"" .
@@ -142,7 +142,7 @@ function node_GetUserById( $id ) {
 function node_GetNodeByParentIdAndSlug( $parent, $slug ) {
 	db_Connect();
 
-	$item = db_Fetch( 
+	$item = db_Fetch(
 		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
 			"`parent`=" . $parent . " AND " .
 			"`slug`=\"" . $slug . "\"" .
@@ -158,7 +158,7 @@ function node_GetNodeByParentIdAndSlug( $parent, $slug ) {
 function node_GetNodeByAuthorIdAndSlug( $author, $slug ) {
 	db_Connect();
 
-	$item = db_Fetch( 
+	$item = db_Fetch(
 		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
 			"`author`=" . $author . " AND " .
 			"`slug`=\"" . $slug . "\"" .
@@ -174,7 +174,7 @@ function node_GetNodeByAuthorIdAndSlug( $author, $slug ) {
 function node_GetNodesByAuthorId( $author, $limit = 128, $offset = 0 ) {
 	db_Connect();
 
-	$items = db_Fetch( 
+	$items = db_Fetch(
 		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
 			"`author`=" . $author .
 			" ORDER BY `id` ASC " .
@@ -186,7 +186,7 @@ function node_GetNodesByAuthorId( $author, $limit = 128, $offset = 0 ) {
 function node_GetNodesByParentId( $parent, $limit = 128, $offset = 0 ) {
 	db_Connect();
 
-	$items = db_Fetch( 
+	$items = db_Fetch(
 		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
 			"`parent`=" . $parent .
 			" ORDER BY `id` ASC " .
@@ -200,7 +200,7 @@ function node_GetNodesByParentId( $parent, $limit = 128, $offset = 0 ) {
 function node_GetNodesByAuthorIdAndType( $author, $type, $limit = 128, $offset = 0 ) {
 	db_Connect();
 
-	$items = db_Fetch( 
+	$items = db_Fetch(
 		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
 			"`author`=" . $author . " AND " .
 			"`type`=\"" . $type . "\"" .
@@ -213,7 +213,7 @@ function node_GetNodesByAuthorIdAndType( $author, $type, $limit = 128, $offset =
 function node_GetNodesByParentIdAndType( $parent, $type, $limit = 128, $offset = 0 ) {
 	db_Connect();
 
-	$items = db_Fetch( 
+	$items = db_Fetch(
 		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
 			"`parent`=" . $parent . " AND " .
 			"`type`=\"" . $type . "\"" .
@@ -227,7 +227,7 @@ function node_GetNodesByParentIdAndType( $parent, $type, $limit = 128, $offset =
 function node_GetNodeIdByAuthorIdAndSlug( $author, $slug ) {
 	db_Connect();
 
-	$item = db_FetchSingle( 
+	$item = db_FetchSingle(
 		"SELECT `id` FROM `" . CMW_TABLE_NODE . "` WHERE ".
 			"`author`=" . $author . " AND " .
 			"`slug`=\"" . $slug . "\"" .
@@ -242,7 +242,7 @@ function node_GetNodeIdByAuthorIdAndSlug( $author, $slug ) {
 function node_GetNodeIdByParentIdAndSlug( $parent, $slug ) {
 	db_Connect();
 
-	$item = db_FetchSingle( 
+	$item = db_FetchSingle(
 		"SELECT `id` FROM `" . CMW_TABLE_NODE . "` WHERE ".
 			"`parent`=" . $parent . " AND " .
 			"`slug`=\"" . $slug . "\"" .
@@ -360,7 +360,7 @@ function user_GetHashById( $id ) {
 
 	// TODO: Use time-attack safe fetch function
 
-	$hash = db_FetchSingle( 
+	$hash = db_FetchSingle(
 		"SELECT `hash` FROM `" . CMW_TABLE_USER . "` WHERE ".
 			"`node`=" . $id .
 			" LIMIT 1" .
@@ -372,19 +372,52 @@ function user_GetHashById( $id ) {
 	return null;
 }
 
+
+function user_GetIdByMail( $mail ) {
+	db_Connect();
+
+	$id = db_FetchSingle(
+		"SELECT `id` FROM `" . CMW_TABLE_USER . "` WHERE ".
+			"`mail`=\"" . $mail . "\"".
+			" LIMIT 1" .
+		";");
+
+	if ( count($id) ) {
+		return $id[0];
+	}
+	return null;
+}
+
 function user_GetHashByMail( $mail ) {
 	db_Connect();
 	
 	// TODO: Use time-attack safe fetch function
 
-	$hash = db_FetchSingle( 
+	$hash = db_FetchSingle(
 		"SELECT `hash` FROM `" . CMW_TABLE_USER . "` WHERE ".
 			"`mail`=\"" . $mail . "\"".
 			" LIMIT 1" .
-		";");	
+		";");
 
 	if ( count($hash) ) {
 		return $hash[0];
+	}
+	return null;
+}
+
+function user_GetIdAndHashByMail( $mail ) {
+	db_Connect();
+
+	// TODO: Use time-attack safe fetch function
+
+	$data = db_Fetch(
+		"SELECT `id`,`hash` FROM `" . CMW_TABLE_USER . "` WHERE ".
+			"`mail`=\"" . $mail . "\"".
+			" LIMIT 1" .
+		";");
+
+	if ( count($data) ) {
+		return $data[0];
 	}
 	return null;
 }

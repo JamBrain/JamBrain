@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Check User (<?php echo $_SERVER['REQUEST_METHOD']; ?>)</title>
-</head>
-<body>
 <?php
 	require_once __DIR__ . "/../../core/node.php";
 	require_once __DIR__ . "/../../core/internal/validate.php";
@@ -19,9 +13,10 @@
 	//	EDIT: No, this doesn't work. Time only works if encoding/decoding, not hashing.
 	
 	function main() {
+		$out = "";
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-			print_r($_POST);
-			echo "<br />";
+			$out .= print_r($_POST,true);
+			$out .= "<br />";
 			
 			// Required Fields in the POST data //			
 			if ( !isset($_POST['login']) ) return;
@@ -34,26 +29,28 @@
 
 			$login = $_POST['login'];
 			// Can Login 3 ways:
-			// - Username (slug)
+			// - User Name (slug)
 			// - Email
-			// - UID
+			// - User ID
 			
 			$mail = sanitize_Email($login);
-			$uid = sanitize_Id($login);
+			$id = sanitize_Id($login);
 			$slug = sanitize_Slug($login);
 			
 			$hash = "";
 			
 			if ( !empty($mail) ) {
-				echo "By Mail<br />";
+				$out .= "By Mail<br />";
 				$hash = user_GetHashByMail($mail);
+				
+				// TODO: Get ID too
 			}
-			else if ( !empty($uid) ) {
-				echo "By UID<br />";
-				$hash = user_GetHashById($uid);
+			else if ( !empty($id) ) {
+				$out .= "By User ID<br />";
+				$hash = user_GetHashById($id);
 			}
 			else if ( !empty($slug) ) {
-				echo "By Slug<br />";
+				$out .= "By Slug<br />";
 				
 				$id = node_GetNodeIdByParentIdAndSlug(CMW_NODE_USER, $slug);
 				if ( $id > 0 ) {
@@ -61,15 +58,32 @@
 				}
 			}
 			else {	
-				echo "Bad Login Method<br />";
+				$out .= "Bad Login Method<br />";
 			}
-			echo "Verify: " . (user_VerifyPassword($password,$hash) ? "Success!" : "failed") . "<br />";
+			$success = user_VerifyPassword($password,$hash);
+			$out .= "Verify: " . ($success ? "Success!" : "failed") . "<br />";
+			if ( $success ) {
+				user_StartSession(true);
+				user_SetLoginToken();
+				user_SetID($id);
+				user_EndSession();
+			}
 	
-			echo "<br />";
+			$out .= "<br />";
 		}
+		return $out;
 	}
-	main();
+	$out = main();
 ?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Check User (<?php echo $_SERVER['REQUEST_METHOD']; ?>)</title>
+</head>
+<body>
+	<?php
+		echo $out;
+	?>
 	<form method="POST" autocomplete="off">
 		Login: <input type="text" name="login" value="" required><br />
 		Password: <input type="text" name="password" value="" required><br />
