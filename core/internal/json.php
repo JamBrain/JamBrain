@@ -6,6 +6,40 @@
 include_once __DIR__ . "/../../config.php";
 require_once __DIR__ . "/util.php";
 
+/*
+// In the case of JSON out, I want us to emit 500 errors on PHP syntax errors //
+function json_ErrorHandler( $num, $msg, $file, $line, $context = null ) {
+	$errnames = [
+		E_ERROR => "Error",
+		E_WARNING => "Warning",
+		E_PARSE => "Parse",
+		E_NOTICE => "Notice",
+		E_CORE_ERROR => "Core Error",
+		E_CORE_WARNING => "Core Warning",
+		E_COMPILE_ERROR => "Compile Error",
+		E_COMPILE_WARNING => "Compile Warning",
+		E_USER_ERROR => "User Error",
+		E_USER_WARNING => "User Warning",
+		E_USER_NOTICE => "User Notice",
+		E_STRICT => "Strict",
+		E_RECOVERABLE_ERROR => "Recoverable Error",
+		E_DEPRECATED => "Deprecated",
+		E_USER_DEPRECATED => "User Deprecated",
+		E_ALL => "All",
+	];
+	header('HTTP/1.1 500 Internal Server Error');
+	print $errnames[$num] . ": $msg in $file on line $line\n";
+	die();
+}
+
+set_error_handler(json_ErrorHandler, ~0);//E_ALL | E_NOTICE | E_DEPRECATED | E_STRICT );
+register_shutdown_function(function() {
+	echo "HEEEEEEEEEEEEEEEEEE";
+	$error = error_get_last();
+	json_ErrorHandler( $error['type'],$error['message'],$error['file'],$error['line'] );
+});
+*/
+
 /** Returns a response. It is empty. You should fill it with things.
 *
 *		$MyResponse = json_NewResponse();

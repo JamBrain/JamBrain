@@ -12,7 +12,7 @@ require_once __DIR__ . "/../../core/internal/validate.php";
 $response = json_NewResponse();
 
 // Retrieve Session, store User ID
-user_Start();
+user_StartEnd();
 $response['id'] = user_GetID();
 
 // Retrieve Action and Arguments
@@ -49,8 +49,8 @@ if ( $action === 'login' ) {
 	
 	// Get login and password from $_POST //
 	if ( isset($_POST['l']) && isset($_POST['p']) ) {
-		$login = $_POST['l'];
-		$password = $_POST['p'];
+		$login = trim($_POST['l']);
+		$password = trim($_POST['p']);
 	}
 //	if ( isset($_REQUEST['l']) && isset($_REQUEST['p']) ) {
 //		$login = trim($_REQUEST['l']);
@@ -58,15 +58,14 @@ if ( $action === 'login' ) {
 //	}
 	else {
 		json_EmitError();	// Emit a regular error, since we haven't attempted a login yet //
-		//my_LoginError();
 	}
 
 	
 	// If already logged in, dispose of the active session.
 	if ( $response['id'] !== 0 ) {
+		user_Start();
 		user_DoLogout();	// Destroy Session
-		user_Start();		// New Session!
-		$response['id'] = user_GetID();
+		$response['id'] = 0;
 	}
 		
 	// Check the APCU cache if access attempts for this IP address is > 5, deny access.
@@ -126,8 +125,9 @@ if ( $action === 'login' ) {
 	// If found, verify password against the stored hash.
 	if ( user_VerifyPassword($password,$hash) ) {
 		// Success! //
+		user_StartSession(false);
 		user_DoLogin( $response['id'] );
-		user_End();
+		user_EndSession();
 		
 		// TODO: Clear login attempt cache //
 	}
@@ -150,6 +150,7 @@ if ( $action === 'login' ) {
  * @apiVersion 0.1.0
 */
 else if ( $action === 'logout' ) {
+	user_Start();
 	user_DoLogout();		// Destroy session
 }
 /**

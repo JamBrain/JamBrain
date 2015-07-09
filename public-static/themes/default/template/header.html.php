@@ -10,6 +10,8 @@
 	<!--<script src="//cdn.jsdelivr.net/emojione/1.3.0/lib/js/emojione.min.js"></script>--><!-- min only -->
 	
 	<!-- Internal JavaScript -->
+	<script src="<?php STATIC_URL() ?>/internal/src/xhr.js<?php VERSION_QUERY() ?>"></script>
+	<script src="<?php STATIC_URL() ?>/internal/src/cache.js<?php VERSION_QUERY() ?>"></script>
 	<script src="<?php STATIC_URL() ?>/internal/src/love.js<?php VERSION_QUERY() ?>"></script>
 	<script src="<?php STATIC_URL() ?>/internal/src/star.js<?php VERSION_QUERY() ?>"></script>
 

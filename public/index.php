@@ -217,39 +217,64 @@ if ( $mode > 0 ) {
 	
 	<script>
 		function SendLogin() {
-			var xhr = new XMLHttpRequest();
-			xhr.open("POST","/a/user/login/",true);
-			xhr.onreadystatechange = function() {
-				//console.log( "readyState: " + xhr.readyState + " (" + xhr.status + ")" );
-				// Login Successful //
-				if ( (xhr.readyState == 4) && (xhr.status == 200) ) {
-					var data = JSON.parse( xhr.responseText );
-					document.getElementById("ldbar-notifications").innerHTML = data['id'];
+			xhr_PostJSON( "/a/user/login/", "l=pov&p=blahblah",
+				function( response, code ) {
+					if ( code == 200 ) {
+						document.getElementById("ldbar-notifications").innerHTML = response['id'];
+					}
+					else if ( code == 401 ) {
+						document.getElementById("ldbar-notifications").innerHTML = ":(";
+					}
+					else {
+						document.getElementById("ldbar-notifications").innerHTML = "x";
+					}
 				}
-				// Login Failed //
-				else if ( (xhr.readyState == 4) && (xhr.status == 401) ) {
-					document.getElementById("ldbar-notifications").innerHTML = ":(";
-				}
-				// Error //
-				else if ( (xhr.readyState == 4) ) {
-					document.getElementById("ldbar-notifications").innerHTML = "x";
-				}
-			}
-			xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-			xhr.send("l=pov&p=blahblah");
+			);
+			
+//			var xhr = new XMLHttpRequest();
+//			xhr.open("POST","/a/user/login/",true);
+//			xhr.onreadystatechange = function() {
+//				//console.log( "readyState: " + xhr.readyState + " (" + xhr.status + ")" );
+//				// Login Successful //
+//				if ( (xhr.readyState == 4) && (xhr.status == 200) ) {
+//					var data = JSON.parse( xhr.responseText );
+//					document.getElementById("ldbar-notifications").innerHTML = data['id'];
+//				}
+//				// Login Failed //
+//				else if ( (xhr.readyState == 4) && (xhr.status == 401) ) {
+//					document.getElementById("ldbar-notifications").innerHTML = ":(";
+//				}
+//				// Error //
+//				else if ( (xhr.readyState == 4) ) {
+//					document.getElementById("ldbar-notifications").innerHTML = "x";
+//				}
+//			}
+//			xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+//			xhr.send("l=pov&p=blahblah");
 		}
 
 		function SendLogout() {
-			var xhr = new XMLHttpRequest();
-			xhr.open("POST","/a/user/logout/",true);
-			xhr.onreadystatechange = function() {
-				if ( (xhr.readyState == 4) && (xhr.status == 200) ) {
-					var data = JSON.parse( xhr.responseText );
-					document.getElementById("ldbar-notifications").innerHTML = 0;//data['id'];
+			xhr_PostJSON( "/a/user/logout/", "",
+				function( response, code ) {
+					if ( code == 200 ) {
+						document.getElementById("ldbar-notifications").innerHTML = 0;
+					}
+					else {
+						document.getElementById("ldbar-notifications").innerHTML = "x";
+					}
 				}
-			}
-			xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-			xhr.send();
+			);
+
+//			var xhr = new XMLHttpRequest();
+//			xhr.open("POST","/a/user/logout/",true);
+//			xhr.onreadystatechange = function() {
+//				if ( (xhr.readyState == 4) && (xhr.status == 200) ) {
+//					var data = JSON.parse( xhr.responseText );
+//					document.getElementById("ldbar-notifications").innerHTML = 0;//data['id'];
+//				}
+//			}
+//			xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+//			xhr.send();
 		}
 		
 		function updateLDBar() {
@@ -417,8 +442,10 @@ if ( $mode > 0 ) {
 	<div id="debug">
 		<h2>Debug S:</h2>
 		<?php
-			print_r($_SESSION);
-			echo "<br />";
+			if ( isset($_SESSION) ) {
+				print_r($_SESSION);
+				echo "<br />";
+			}
 			echo "Login token is " . (_user_IsLoginTokenValid() ? "valid" : "invalid") . ".";
 		?>
 		<h2>Debug C:</h2>

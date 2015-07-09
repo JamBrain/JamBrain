@@ -35,24 +35,27 @@ function user_End() {
 }
 
 // Start and Manage the PHP Session (NOTE: USE ONLY IF YOU KNOW WHAT YOU'RE DOING) //
-function user_StartSession() {
-	if (session_status() !== PHP_SESSION_ACTIVE) {
-		session_set_cookie_params( 0, CMW_COOKIE_PATH,NULL,CMW_USE_HTTPS, true );	// HTTPOnly //
-		session_name( CMW_SESSION_NAME );
-
-		session_start();											// Start Session //
-		
-		// If session is not HTTPonly, nuke it and start over //
-		if ( !session_get_cookie_params()['httponly'] ) {
-			//LogError "Session not set to HTTPonly for " . $_SERVER['REMOTE_ADDR'] . " (" . session_id() . ")";
-			user_DoLogout();
-			session_start();
-		}
-		
-		// If session is new, empty it and store the creation time //
-		if ( !isset($_SESSION['__created']) ) {
-			session_unset();										// It should be empty, but make sure //
-			$_SESSION['__created'] = time();						// Store the current time //
+function user_StartSession( $require_cookie = true ) {
+	if ( ($require_cookie && isset($_COOKIE['TOKEN'])) || !$require_cookie ) {
+		if (session_status() !== PHP_SESSION_ACTIVE) {
+			session_set_cookie_params( 0, CMW_COOKIE_PATH,NULL,CMW_USE_HTTPS, true );	// HTTPOnly //
+			session_name( CMW_SESSION_NAME );
+	
+			session_start();											// Start Session //
+			
+			// If session is not HTTPonly, nuke it and start over //
+			if ( !session_get_cookie_params()['httponly'] ) {
+				//LogError "Session not set to HTTPonly for " . $_SERVER['REMOTE_ADDR'] . " (" . session_id() . ")";
+				user_DoLogout();
+				session_start();
+			}
+			
+			// If session is new, empty it and store the creation time //
+			if ( !isset($_SESSION['__created']) ) {
+				session_unset();										// It should be empty, but make sure //
+				$_SESSION['__created'] = time();						// Store the current time //
+				$_SESSION['__creator'] = $_SERVER['REMOTE_ADDR'];		// Who created the session //
+			}
 		}
 	}
 }
@@ -121,8 +124,10 @@ function user_DoLogin( $id = null ) {
 }
 function user_DoLogout() {
 	if (session_status() == PHP_SESSION_ACTIVE) {
+		$sc = session_get_cookie_params();
+		setcookie( 'SESSID',null, 1 /* Epoch+1 */, $sc['path'], $sc['domain'], $sc['secure'], isset($sc['httponly']) );
+		setcookie( 'TOKEN',null, 1 /* Epoch+1 */, CMW_COOKIE_PATH,NULL,CMW_USE_HTTPS, true );
 		unset($_COOKIE['TOKEN']);
-		setcookie( 'TOKEN',null, 1 /* Epoch+1 */, CMW_COOKIE_PATH );
 		session_unset();							// Remove Session Variables //
 		session_destroy();							// Destroy the Session //
 	}
@@ -143,14 +148,16 @@ function _user_IsLoginTokenValid() {
 }
 // Similar to logging out, but doesn't nuke the session //
 function _user_ClearLogin() {
+	setcookie( 'TOKEN',null, 1 /* Epoch+1 */, CMW_COOKIE_PATH,NULL,CMW_USE_HTTPS, true );
 	unset($_COOKIE['TOKEN']);
-	setcookie( 'TOKEN',null, 1 /* Epoch+1 */, CMW_COOKIE_PATH );
-	unset($_SESSION['__lastlogin']);
-	unset($_SESSION['__generated']);
-	unset($_SESSION['__ip']);
-
-	unset($_SESSION['TOKEN']);
-	unset($_SESSION['ID']);
+	if ( isset($_SESSION) ) {
+		unset($_SESSION['__lastlogin']);
+		unset($_SESSION['__generated']);
+		unset($_SESSION['__ip']);
+	
+		unset($_SESSION['TOKEN']);
+		unset($_SESSION['ID']);
+	}
 }
 
 
