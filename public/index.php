@@ -206,8 +206,8 @@ if ( $mode > 0 ) {
 					<div id='ldbar-logo' class='cell'><img src="<?php STATIC_URL(); ?>/logo/ludumdare/2009/LudumDareLogo80W.png" height="30" /></div>
 				</div>
 				<div class='rightnav'>
-					<div class='cell size32'><img src="<?php STATIC_URL(); ?>/logo/mike/Chicken64W.png" width="32" height="32" style="mix-blend-mode:screen" /></div>
-					<div id='ldbar-notifications' class='cell' >5</div>
+					<div class='cell size32' onclick='SendLogin();'><img src="<?php STATIC_URL(); ?>/logo/mike/Chicken64W.png" width="32" height="32" style="mix-blend-mode:screen" /></div>
+					<div id='ldbar-notifications' class='cell' onclick='SendLogout();'>0</div>
 					<div id='ldbar-toggle' class='cell' onclick='toggleLDBar();' title='Toggle Sticky Bar'>[x]</div>
 				</div>
 			</div>
@@ -216,6 +216,32 @@ if ( $mode > 0 ) {
 	</div>
 	
 	<script>
+		function SendLogin() {
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST","/a/user/login/",true);
+			xhr.onreadystatechange = function() {
+				if ( (xhr.readyState == 4) && (xhr.status == 200) ) {
+					var data = JSON.parse( xhr.responseText );
+					document.getElementById("ldbar-notifications").innerHTML = data['id'];
+				}
+			}
+			xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+			xhr.send("l=pov&p=blahblah");
+		}
+
+		function SendLogout() {
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST","/a/user/logout/",true);
+			xhr.onreadystatechange = function() {
+				if ( (xhr.readyState == 4) && (xhr.status == 200) ) {
+					var data = JSON.parse( xhr.responseText );
+					document.getElementById("ldbar-notifications").innerHTML = 0;//data['id'];
+				}
+			}
+			xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+			xhr.send();
+		}
+		
 		function updateLDBar() {
 			if ( getCookie('ldbar') === '1' ) {
 				document.getElementById('ldbar-outer').style.position = '';
