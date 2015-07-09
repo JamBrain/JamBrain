@@ -6,6 +6,7 @@
 require_once __DIR__ . "/../../api.php";
 require_once __DIR__ . "/../../db.php";
 require_once __DIR__ . "/../../core/user.php";
+require_once __DIR__ . "/../../core/node.php";
 require_once __DIR__ . "/../../core/internal/validate.php";
 
 $response = json_NewResponse();
@@ -48,8 +49,7 @@ if ( $action === 'login' ) {
 	
 	// If already logged in, dispose of the active session.
 	if ( $response['id'] !== 0 ) {
-		user_Logout();			// Destroy Session
-		
+		user_Logout();	// Destroy Session
 		user_Start();	// New Session!
 		$response['id'] = user_GetID();
 	}
@@ -60,10 +60,11 @@ if ( $action === 'login' ) {
 	
 	
 	// Get login and password from $_POST //
-	if ( isset($_REQUEST['l']) && isset($_REQUEST['p']) ) {
 	//if ( isset($_POST['l']) && isset($_POST['p']) ) {
 	//	$login = $_POST['l'];
 	//	$password = $_POST['p'];
+	//}
+	if ( isset($_REQUEST['l']) && isset($_REQUEST['p']) ) {
 		$login = trim($_REQUEST['l']);
 		$password = trim($_REQUEST['p']);
 	}
@@ -80,35 +81,59 @@ if ( $action === 'login' ) {
 		}
 	}
 	
+	$hash = null;
+	
+/*
+	// Debug //
 	if ( $mail )
 		$response['mail'] = $mail;
 	else
 		$response['login'] = $login;
 	$response['pw'] = $password;
+*/
 	
+	// By E-mail //
 	if ( $mail ) {
 		// Search user_table for a matching e-mail.
+		$data = user_GetIdAndHashByMail($mail);
 		
-		// if none found, fail
+		if ( $data ) {
+			$response['id'] = intval($data['id']);
+			$hash = $data['hash'];
+		}		
+		// If none found, fail //
+		else {
+			my_LoginError();
+		}
 	}
+	// By Name (slug) //
 	else {
-		// Search for a user-type node matching the sanitized login.
+		// Search for the user's node by slug //
+		$response['id'] = intval(node_GetNodeIdByParentIdAndSlug(CMW_NODE_USER, $login));
 		
-		// Search user_table for the matching User ID
-	
-		// if none found, fail
+		// If a valid ID, retrieve the hash
+		if ( $response['id'] > 0 ) {
+			$hash = user_GetHashById($response['id']);
+		}
+		// If not a valid ID, fail //
+		else {
+			my_LoginError();
+		}
 	}
 	
-	// if found, verify password against the stored hash.
-	
-	//if ( user_verifyPassword($password,$hash) ) {
+	// If found, verify password against the stored hash.
+	if ( user_VerifyPassword($password,$hash) ) {
 		// Success! //
-	//	user_setId( $that_user_id );
-	//}
-	//else {
-		// Password Failed //
-	//}
-	
+		user_SetLoginToken();
+		user_setID( $response['id'] );
+		user_End();
+		
+		// TODO: Clear login attempt cache //
+	}
+	// Password Failed //
+	else {
+		my_LoginError();
+	}
 	
 	// ** Successfully Logged in ** //
 	// Retrieve my info //
