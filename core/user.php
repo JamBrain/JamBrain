@@ -8,7 +8,7 @@
 // TODO: user_IsAdmin(), user_IsSuper()
 
 define('CMW_SESSION_NAME','SESSID');				// Name of the Session //
-define('CMW_SESSION_REGENERATE',60*1);				// When to automatically Regenerate TOKEN (in seconds) //
+define('CMW_SESSION_REGENERATE',60*10);				// When to automatically Regenerate TOKEN (in seconds) //
 define('CMW_SESSION_PERMISSION',60*60*1);			// How long a login is good for when doing permissive things //
 define('CMW_SESSION_STAYLOGGEDIN',60*60*24*7*2);	// How long 'stay logged in' will persist your session //
 
@@ -27,19 +27,15 @@ function user_StartEnd( $force_regen = false, $preserve_token = false ) {
 }
 // If you manually want to open and close the session and login //
 function user_Start( $force_regen = false, $preserve_token = false ) {
-	//$session_regenerated_id = user_StartSession($force_regen,$preserve_id);
-	//user_StartLogin($session_regenerated_id);
 	user_StartSession();
 	user_StartLogin($force_regen,$preserve_token);
 }
 function user_End() {
-//	user_EndLogin();
 	user_EndSession();
 }
 
-// Start and Manage the PHP Session //
-// Returns true if the ID was regenerated //
-function user_StartSession( /*$force_regen = false, $preserve_id = false*/ ) {
+// Start and Manage the PHP Session (NOTE: USE ONLY IF YOU KNOW WHAT YOU'RE DOING) //
+function user_StartSession() {
 	if (session_status() !== PHP_SESSION_ACTIVE) {
 		session_set_cookie_params( 0, CMW_COOKIE_PATH,NULL,CMW_USE_HTTPS, true );	// HTTPOnly //
 		session_name( CMW_SESSION_NAME );
@@ -48,34 +44,17 @@ function user_StartSession( /*$force_regen = false, $preserve_id = false*/ ) {
 		
 		// If session is not HTTPonly, nuke it and start over //
 		if ( !session_get_cookie_params()['httponly'] ) {
-			// TODO: Log this to error report //
-			//$_SESSION['ERROR'] = "Session not set to HTTPonly for " . $_SERVER['REMOTE_ADDR'] . " (" . session_id() . ")";
+			//LogError "Session not set to HTTPonly for " . $_SERVER['REMOTE_ADDR'] . " (" . session_id() . ")";
 			user_DoLogout();
 			session_start();
 		}
 		
-		// If session previously existed //
-		if ( isset($_SESSION['__created']) ) {
-			/*
-			// As long as we don't require that the ID be preserved, regenerate it if forced or when time expires //
-			if ( !$preserve_id && ($force_regen || (time()-$_SESSION['__created'] > CMW_SESSION_REGENERATE)) ) {
-				session_regenerate_id(true); 						// Regenerate and delete old session file //
-				$_SESSION['__created'] = time();					// Store the current time //
-
-				// ID was regenerated //
-				return true;
-			}
-			*/
-		}
-		// If session is new //
-		else {
+		// If session is new, empty it and store the creation time //
+		if ( !isset($_SESSION['__created']) ) {
 			session_unset();										// It should be empty, but make sure //
 			$_SESSION['__created'] = time();						// Store the current time //
 		}
 	}
-
-	// ID was not regenerated //
-//	return false;
 }
 // End the PHP Session (an optimization) //
 function user_EndSession() {
@@ -89,7 +68,7 @@ function user_StartLogin( $force_regen = false, $preserve_token = false ) {
 	// If the token is set, that means we are potentially logged in //
 	if ( isset($_SESSION['TOKEN']) ) {
 		// Confirm that the tokens match //
-		if ( user_IsLoginTokenValid() ) {
+		if ( _user_IsLoginTokenValid() ) {
 			// Confirm that we have an ID //
 			if ( isset($_SESSION['ID']) ) {
 				// Confirm that the ID is a number //
@@ -98,7 +77,7 @@ function user_StartLogin( $force_regen = false, $preserve_token = false ) {
 					if ( isset($_SESSION['__generated']) ) {
 						// If it's time to regenerate the token (or explicitly NOT regenerate it) //
 						if ( !$preserve_token && ($force_regen || (time()-$_SESSION['__generated'] > CMW_SESSION_REGENERATE)) ) {
-							user_SetLoginToken();
+							_user_SetLoginToken();
 						}
 	
 						return;	// Everything is OK!
@@ -122,11 +101,8 @@ function user_StartLogin( $force_regen = false, $preserve_token = false ) {
 	}
 
 	// If we get here, there was a problem validating or confirming the Login //
-	user_ClearLogin();
+	_user_ClearLogin();
 }
-//function user_EndLogin() {
-//	// Not much to do here //
-//}
 
 
 // If the user has permission to do permissive actions (change password, etc) //
@@ -138,9 +114,9 @@ function user_HasPermission() {
 function user_DoLogin( $id = null ) {
 	session_regenerate_id(true);
 	$_SESSION['__lastlogin'] = time();
-	user_SetLoginToken();
+	_user_SetLoginToken();
 	if ( $id ) {
-		user_SetID( $id );
+		$_SESSION['ID'] = $id;
 	}
 }
 function user_DoLogout() {
@@ -152,25 +128,28 @@ function user_DoLogout() {
 	}
 }
 
-function user_SetLoginToken() {
+function _user_SetLoginToken() {
 	$token = token_Get();
 	setcookie( 'TOKEN',$token, NULL, CMW_COOKIE_PATH,NULL,CMW_USE_HTTPS, true );	// HTTPOnly //
 	$_SESSION['__generated'] = time();
 	$_SESSION['__ip'] = $_SERVER['REMOTE_ADDR'];
 	$_SESSION['TOKEN'] = $token;
 }
-function user_IsLoginTokenValid() {
+function _user_IsLoginTokenValid() {
 	if ( isset($_SESSION['TOKEN']) && isset($_COOKIE['TOKEN']) ) {
 		return $_SESSION['TOKEN'] === $_COOKIE['TOKEN'];
 	}
 	return false;
 }
-function user_ClearLogin() {
+// Similar to logging out, but doesn't nuke the session //
+function _user_ClearLogin() {
 	unset($_COOKIE['TOKEN']);
 	setcookie( 'TOKEN',null, 1 /* Epoch+1 */, CMW_COOKIE_PATH );
+	unset($_SESSION['__lastlogin']);
 	unset($_SESSION['__generated']);
-	unset($_SESSION['TOKEN']);
+	unset($_SESSION['__ip']);
 
+	unset($_SESSION['TOKEN']);
 	unset($_SESSION['ID']);
 }
 
@@ -187,12 +166,7 @@ function user_GetID() {
 	}
 	return 0;
 }
-function user_SetID( $id ) {
-	$old_id = user_GetID();
-	$_SESSION['ID'] = $id;
 
-	return $old_id;
-}
 
 
 // Reference: http://blog.nic0.me/post/63180966453/php-5-5-0s-password-hash-api-a-deeper-look

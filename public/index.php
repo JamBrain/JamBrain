@@ -419,7 +419,7 @@ if ( $mode > 0 ) {
 		<?php
 			print_r($_SESSION);
 			echo "<br />";
-			echo "Login token is " . (user_IsLoginTokenValid() ? "valid" : "invalid") . ".";
+			echo "Login token is " . (_user_IsLoginTokenValid() ? "valid" : "invalid") . ".";
 		?>
 		<h2>Debug C:</h2>
 		<script>
