@@ -230,27 +230,6 @@ if ( $mode > 0 ) {
 					}
 				}
 			);
-			
-//			var xhr = new XMLHttpRequest();
-//			xhr.open("POST","/a/user/login/",true);
-//			xhr.onreadystatechange = function() {
-//				//console.log( "readyState: " + xhr.readyState + " (" + xhr.status + ")" );
-//				// Login Successful //
-//				if ( (xhr.readyState == 4) && (xhr.status == 200) ) {
-//					var data = JSON.parse( xhr.responseText );
-//					document.getElementById("ldbar-notifications").innerHTML = data['id'];
-//				}
-//				// Login Failed //
-//				else if ( (xhr.readyState == 4) && (xhr.status == 401) ) {
-//					document.getElementById("ldbar-notifications").innerHTML = ":(";
-//				}
-//				// Error //
-//				else if ( (xhr.readyState == 4) ) {
-//					document.getElementById("ldbar-notifications").innerHTML = "x";
-//				}
-//			}
-//			xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-//			xhr.send("l=pov&p=blahblah");
 		}
 
 		function SendLogout() {
@@ -264,17 +243,6 @@ if ( $mode > 0 ) {
 					}
 				}
 			);
-
-//			var xhr = new XMLHttpRequest();
-//			xhr.open("POST","/a/user/logout/",true);
-//			xhr.onreadystatechange = function() {
-//				if ( (xhr.readyState == 4) && (xhr.status == 200) ) {
-//					var data = JSON.parse( xhr.responseText );
-//					document.getElementById("ldbar-notifications").innerHTML = 0;//data['id'];
-//				}
-//			}
-//			xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-//			xhr.send();
 		}
 		
 		function updateLDBar() {
