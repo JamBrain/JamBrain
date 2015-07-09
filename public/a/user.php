@@ -45,7 +45,22 @@ if ( $action === 'login' ) {
 	// Generic Error Function for everything (so to not offer any hints if abusing)
 	function my_LoginError() {
 		json_EmitError(401,"Invalid Login or Password");
+	}	
+	
+	// Get login and password from $_POST //
+	if ( isset($_POST['l']) && isset($_POST['p']) ) {
+		$login = $_POST['l'];
+		$password = $_POST['p'];
 	}
+//	if ( isset($_REQUEST['l']) && isset($_REQUEST['p']) ) {
+//		$login = trim($_REQUEST['l']);
+//		$password = trim($_REQUEST['p']);
+//	}
+	else {
+		json_EmitError();	// Emit a regular error, since we haven't attempted a login yet //
+		//my_LoginError();
+	}
+
 	
 	// If already logged in, dispose of the active session.
 	if ( $response['id'] !== 0 ) {
@@ -57,20 +72,7 @@ if ( $action === 'login' ) {
 	// Check the APCU cache if access attempts for this IP address is > 5, deny access.
 	
 	// On failure, increase the access attempt (APCU). Timeout in 5 minutes. Log attempt.
-	
-	
-	// Get login and password from $_POST //
-	//if ( isset($_POST['l']) && isset($_POST['p']) ) {
-	//	$login = $_POST['l'];
-	//	$password = $_POST['p'];
-	//}
-	if ( isset($_REQUEST['l']) && isset($_REQUEST['p']) ) {
-		$login = trim($_REQUEST['l']);
-		$password = trim($_REQUEST['p']);
-	}
-	else {
-		my_LoginError();
-	}
+
 	
 	// Sanitize the data
 	$mail = sanitize_Email($login);

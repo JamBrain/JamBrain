@@ -220,9 +220,18 @@ if ( $mode > 0 ) {
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST","/a/user/login/",true);
 			xhr.onreadystatechange = function() {
+				// Login Successful //
 				if ( (xhr.readyState == 4) && (xhr.status == 200) ) {
 					var data = JSON.parse( xhr.responseText );
 					document.getElementById("ldbar-notifications").innerHTML = data['id'];
+				}
+				// Login Failed //
+				else if ( (xhr.readyState == 4) && (xhr.status == 401) ) {
+					document.getElementById("ldbar-notifications").innerHTML = ":(";
+				}
+				// Error //
+				else if ( (xhr.readyState == 4) ) {
+					document.getElementById("ldbar-notifications").innerHTML = "x";
 				}
 			}
 			xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
