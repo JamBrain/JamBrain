@@ -8,7 +8,7 @@ require_once __DIR__ . "/../../core/star.php";
 require_once __DIR__ . "/../../core/user.php";
 
 // Stars are Favourites or Bookmarks. If you want to remember/save something, you Star it.
-// Stars belong only to users (UID>0). You cannot Star if you are not logged in.
+// Stars belong only to users (ID>0). You cannot Star if you are not logged in.
 
 // Potential Exploits:
 // - Multiple User Accounts
@@ -25,9 +25,9 @@ require_once __DIR__ . "/../../core/user.php";
 
 $response = json_NewResponse();
 
-// Retrieve session, store UID
-user_StartSession();
-$response['uid'] = user_GetId();
+// Retrieve session, store User ID
+user_StartEnd();
+$response['id'] = user_GetID();
 
 // Retrieve Action and Arguments
 $arg = util_ParseActionURL();
@@ -47,8 +47,8 @@ if ( $arg_count === 0 ) {
 	}
 }
 else if ( $arg_count === 1 ) {
-	if ( $action === 'uid' ) {
-		$response['uid'] = intval($arg[0]);
+	if ( $action === 'id' ) {
+		$response['id'] = intval($arg[0]);
 	}
 	else if ( $action === 'me' ) {
 		$offset = abs(intval($arg[0]));
@@ -65,8 +65,8 @@ else if ( $arg_count === 1 ) {
 	}
 }
 else if ( $arg_count === 2 ) {
-	if ( $action === 'uid' ) {
-		$response['uid'] = intval($arg[0]);
+	if ( $action === 'id' ) {
+		$response['id'] = intval($arg[0]);
 		$offset = abs(intval($arg[1]));
 	}
 	else { 
@@ -78,8 +78,8 @@ else {
 }
 
 
-// If no UID specified, exit
-if ( $response['uid'] === 0 ) {
+// If no User ID specified, exit
+if ( $response['id'] === 0 ) {
 	json_EmitError();
 }
 
@@ -93,7 +93,7 @@ if ( $response['uid'] === 0 ) {
  * @apiVersion 0.1.0
 */
 if ( $action === 'add' ) {
-	$response['success'] = star_Add($response['item'],$response['uid']);
+	$response['success'] = star_Add($response['item'],$response['id']);
 }
 // On 'remove' Action, remove from the database
 /**
@@ -104,9 +104,9 @@ if ( $action === 'add' ) {
  * @apiVersion 0.1.0
 */
 else if ( $action === 'remove' ) {
-	$response['success'] = star_Remove($response['item'],$response['uid']);
+	$response['success'] = star_Remove($response['item'],$response['id']);
 }
-// On 'uid' or 'me' Action, get a list of favourites 
+// On 'id' or 'me' Action, get a list of favourites 
 /**
  * @api {GET} /a/star/me[/:offset] /a/star/me
  * @apiName MyStars
@@ -115,14 +115,14 @@ else if ( $action === 'remove' ) {
  * @apiVersion 0.1.0
 */
 /**
- * @api {GET} /a/star/uid/:userid[/:offset] /a/star/uid
+ * @api {GET} /a/star/id/:userid[/:offset] /a/star/id
  * @apiName UserStars
  * @apiGroup Star
  * @apiPermission Everyone
  * @apiVersion 0.1.0
 */
-else if ( $action === 'me' || $action === 'uid' ) {
-	$response['result'] = star_Fetch( $response['uid'], $offset, $limit );
+else if ( $action === 'me' || $action === 'id' ) {
+	$response['result'] = star_Fetch( $response['id'], $offset, $limit );
 }
 else {
 	json_EmitError();
