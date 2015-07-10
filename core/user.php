@@ -104,7 +104,8 @@ function user_StartLogin( $force_regen = false, $preserve_token = false ) {
 	}
 
 	// If we get here, there was a problem validating or confirming the Login //
-	_user_ClearLogin();
+	//_user_ClearLogin();
+	user_DoLogout();
 }
 
 
