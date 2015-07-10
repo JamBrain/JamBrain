@@ -4,5 +4,5 @@
 **/
 
 require_once __DIR__."/core/internal/json.php";		// JSON Output //
-require_once __DIR__."/core/core.php";
+require_once __DIR__."/core/internal/core.php";
 ?>
