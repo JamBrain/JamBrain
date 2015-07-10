@@ -12,6 +12,7 @@ This snapshot isn't necessarily the latest version, but something deemed stable 
 Other WIP Ludum Dare service URLs:
 
 * https://static-wip.ludumdare.com - static content
+* http://api-wip.ludumdare.org/v1/ - Ludum Dare API (soon https)
 * https://wip.jammer.bio - Jammer
 * https://wip.ludumdare.tv - LDtv standalone
 * http://wip.ldj.am - ludumdare.com URL shortener
