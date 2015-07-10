@@ -84,10 +84,10 @@ if ( isset($meta['real']) && isset($meta['real']['name']) ) {
 
 // - Styles ------------------------ //
 // Color Customizing //
-$dark_bg = "622";
-$light_bg = "CBB";
-$dark_text = "FFF";
-$light_text = "000";
+$dark_bg = "F32";
+$light_bg = "FCB";
+$dark_text = "FCB";
+$light_text = "F32";
 
 // Inverting (Logos and Colors)
 $img = "W";
@@ -193,6 +193,9 @@ body {
 .footer img {
 	vertical-align:middle;
 	opacity:0.8;
+
+	-webkit-transition:all 0.125s;
+	transition:all 0.125s;
 }
 .footer img:hover {
 	opacity:1.0;
