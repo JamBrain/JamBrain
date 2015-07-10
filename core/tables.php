@@ -12,7 +12,7 @@ if ( !defined('CMW_TABLE_PREFIX') ) {
 	define('CMW_TABLE_PREFIX',"cmw_");	
 }
 
-// Tables //
+// Database Tables //
 define('CMW_TABLE_NODE',CMW_TABLE_PREFIX."node");
 define('CMW_TABLE_NODE_META',CMW_TABLE_PREFIX."node_meta");
 define('CMW_TABLE_NODE_DIFF',CMW_TABLE_PREFIX."node_diff");
@@ -23,6 +23,13 @@ define('CMW_TABLE_USER',CMW_TABLE_PREFIX."user");
 
 define('CMW_TABLE_COMMENT',CMW_TABLE_PREFIX."comment");
 define('CMW_TABLE_COMMENT_LOVE',CMW_TABLE_PREFIX."comment_love");
+
+// Field constants for Schema //
+const CMW_FIELD_TYPE_IGNORE = 0;		// Field will be unset (NOTE: Prefer a custom query) //
+const CMW_FIELD_TYPE_STRING = 1;
+const CMW_FIELD_TYPE_INT = 2;
+const CMW_FIELD_TYPE_FLOAT = 3;
+const CMW_FIELD_TYPE_DATETIME = 4;
 
 // Node Constants //
 const CMW_NODE_ROOT = 1;				// The root of our Node tree

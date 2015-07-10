@@ -10,6 +10,22 @@ require_once __DIR__ . "/user.php";
 
 // NOTE: None of these functions sanitize. Make sure you sanitize first! //
 
+$NODE_SCHEMA = [
+	'id' => CMW_FIELD_TYPE_INT,
+	'parent' => CMW_FIELD_TYPE_INT,
+	'author' => CMW_FIELD_TYPE_INT,
+
+	'time_created' => CMW_FIELD_TYPE_DATETIME,
+	'time_modified' => CMW_FIELD_TYPE_DATETIME,
+	'time_published' => CMW_FIELD_TYPE_DATETIME,
+
+	'comment_count' => CMW_FIELD_TYPE_INT,
+	'love_count' => CMW_FIELD_TYPE_INT,
+	'favourite_count' => CMW_FIELD_TYPE_INT,
+	'popularity' => CMW_FIELD_TYPE_INT,
+];
+
+
 function node_Add( $type, $subtype, $slug, $name, $body, $author, $parent, $publish = false ) {
 	db_Connect();
 
@@ -92,13 +108,14 @@ function node_AddMeta( $id_a, $id_b, $type, $subtype, $data ) {
 }
 
 function node_GetNodeById( $id ) {
+	global $NODE_SCHEMA;
 	db_Connect();
 
 	$item = db_Fetch(
 		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
 			"`id`=" . $id .
 			" LIMIT 1" .
-		";");
+		";", $NODE_SCHEMA);
 	
 	if ( count($item) ) {
 		return $item[0];
@@ -106,12 +123,13 @@ function node_GetNodeById( $id ) {
 	return null;
 }
 function node_GetNodesByIds( $ids ) {
+	global $NODE_SCHEMA;
 	db_Connect();
 
 	$items = db_Fetch(
 		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
 			"`id` in (" . implode(',',$ids) . ")" .
-		";");
+		";", $NODE_SCHEMA);
 	
 	return $items;
 }

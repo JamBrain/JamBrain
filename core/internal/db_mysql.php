@@ -29,7 +29,8 @@ function db_IsConnected() {
 	return isset($db);
 }
 // Connect to the Database - Pass true if you don't want to log an error if already connected //
-function db_Connect(/*$no_log=false*/) {
+function db_Connect() {
+	// Safely call this multiple times, only the first time has any effect //
 	if ( !db_IsConnected() ) {
 		global $db;
 
@@ -45,11 +46,37 @@ function db_Connect(/*$no_log=false*/) {
     	$db->set_charset('utf8mb4');
     	// More info: http://stackoverflow.com/questions/279170/utf-8-all-the-way-through
 	}
-//	else {
-//		if ( !$no_log ) {
-//			db_Log( "Database already connected" );
-//		}
-//	}
+}
+
+// Because MySQL returns everything as a string, here's a lightweight schema decoder //
+function db_DoSchema( &$row, &$schema ) {
+	foreach( $row as $key => $value ) {
+		if ( isset($schema[$key]) ) {
+			switch( $schema[$key] ) {
+				//case CMW_FIELD_TYPE_STRING: {
+				//	// Do nothing for Strings (they're already strings) //
+				//	break;
+				//}
+				case CMW_FIELD_TYPE_INT: {
+					$row[$key] = intval($value);
+					break;
+				}
+				case CMW_FIELD_TYPE_FLOAT: {
+					$row[$key] = floatval($value);
+					break;
+				}
+				case CMW_FIELD_TYPE_DATETIME: {
+					$row[$key] = strtotime($value);
+					break;
+				}
+				case CMW_FIELD_TYPE_IGNORE: {
+					// NOTE: This is not ideal. You should instead use a modified query. //
+					unset($row[$key]);
+					break;
+				}
+			};
+		}
+	}
 }
 
 // Unsafe "run any query" function. Queries don't return results. Use db_fetch instead. //
@@ -58,21 +85,28 @@ function db_Query($query,$ignore_errors=false) {
 	return $db->query($query) or $ignore_errors or die(mysqli_error($db)."\n");
 }
 
-// Unsafe "run any fetch query" function. Returns an Associative Array. //
-function db_Fetch($query) {
+// Unsafe "run any fetch query" function. Returns fields as an Associative Array. //
+function db_Fetch($query,$schema=null) {
 	global $db;
 	$result = $db->query($query);
 	$rows = [];
 	if ( !empty($result) ) {
-		while ( $row = $result->fetch_assoc() ) {
-			$rows[] = $row;
-		};
+		if ( is_array($schema) ) {
+			while ( $row = $result->fetch_assoc() ) {
+				db_DoSchema( $row, $schema );
+				$rows[] = $row;
+			};
+		}
+		else {
+			while ( $row = $result->fetch_assoc() ) {
+				$rows[] = $row;
+			};
+		}
 	}
 	return $rows;
-	//return $result->fetch_array(MYSQLI_ASSOC);
 }
 
-// Unsafe "run any fetch query" function. Returns a Numeric Array. //
+// Unsafe "run any fetch query" function. Returns fields as a Numeric Array. //
 function db_FetchArray($query) {
 	global $db;
 	$result = $db->query($query);
@@ -83,17 +117,16 @@ function db_FetchArray($query) {
 		}
 	}
 	return $rows;
-	//return $result->fetch_array(MYSQLI_NUM);
 }
 
-// Unsafe "run any fetch query" function. Returns a Numeric Array. //
+// Unsafe "run any fetch query" function. Returns an array of values from a single field. //
 function db_FetchSingle($query) {
 	global $db;
 
 	$result = $db->query($query);
 	$rows = [];
-	while ( $row = $result->fetch_row()[0] ) {
-		$rows[] = $row;
+	while ( $row = $result->fetch_row() ) {
+		$rows[] = $row[0];
 	}
 
 	return $rows;
