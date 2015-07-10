@@ -17,7 +17,7 @@ const M_ERROR = -255;	// Other Error //
 $mode = M_DEFAULT;
 
 
-$args = util_ParseActionURL();
+$args = core_ParseActionURL();
 $args_count = count($args);
 
 // Sanitize Input

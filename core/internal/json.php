@@ -4,7 +4,7 @@
 **/
 
 include_once __DIR__ . "/../../config.php";
-require_once __DIR__ . "/util.php";
+include_once __DIR__ . "/../core.php";
 
 /*
 // In the case of JSON out, I want us to emit 500 errors on PHP syntax errors //
@@ -77,14 +77,14 @@ function json_NewErrorResponse( $code = 400, $msg = null ) {
 	if ( is_string($msg) ) {
 		return [
 			'status' => $code,
-			'response' => util_GetHTTPResponseText($code),
+			'response' => core_GetHTTPResponseText($code),
 			'message' => $msg
 		];
 	}
 	else {
 		return [
 			'status' => $code,
-			'response' => util_GetHTTPResponseText($code)
+			'response' => core_GetHTTPResponseText($code)
 		];
 	}
 }

@@ -1,9 +1,9 @@
 #!/usr/bin/env php
 <?php
-require_once __DIR__ . "/../../db.php";
-require_once __DIR__ . "/../../core/core.php";
-require_once __DIR__ . "/../../core/node.php";
-require_once __DIR__ . "/../../core/users.php";
+require_once __DIR__."/../../db.php";
+require_once __DIR__."/../../core/core.php";
+require_once __DIR__."/../../core/node.php";
+require_once __DIR__."/../../core/users.php";
 
 db_Connect();
 echo "Connected: " . db_IsConnected() . "\n";

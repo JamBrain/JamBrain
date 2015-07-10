@@ -44,7 +44,7 @@ else {
 }
 
 // Retrieve Action and Arguments
-$arg = util_ParseActionURL();
+$arg = core_ParseActionURL();
 $action = array_shift($arg);
 $arg_count = count($arg);
 
