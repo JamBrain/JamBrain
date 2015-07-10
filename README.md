@@ -3,8 +3,6 @@ ludumdare.com
 
 The new Ludum Dare website (codename: Starship, formerly LD2015).
 
-This is the LIVE WEBSITE code, as customized for ludumdare.com by Mike and the Ludum Dare web team. 
-
 The code is not yet live, but a WIP snapshot can be viewed here:
 
 https://wip.ludumdare.com
