@@ -105,6 +105,16 @@ function node_GetNodeById( $id ) {
 	}
 	return null;
 }
+function node_GetNodesByIds( $ids ) {
+	db_Connect();
+
+	$items = db_Fetch(
+		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
+			"`id` in (" . implode(',',$ids) . ")" .
+		";");
+	
+	return $items;
+}
 
 
 function node_GetUserBySlug( $slug ) {
