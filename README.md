@@ -14,7 +14,7 @@ Other WIP Ludum Dare service URLs:
 * https://static-wip.ludumdare.com - static content
 * https://wip.jammer.bio - Jammer
 * https://wip.ludumdare.tv - LDtv standalone
-* http://wip.ldj.am - URL shortener
+* http://wip.ldj.am - ludumdare.com URL shortener
 
 Things we can't test locally using DairyBox: Cloudflare/CDN features, HTTPS, email (?).
 
