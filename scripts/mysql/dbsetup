@@ -818,7 +818,7 @@ Thing {
 	{
 		// Add Dummy User //
 		$user_id = node_Add(
-			'user',"",'pov','PoV','I am the PoV. :smile:',
+			'user',"",'pov','PoV',htmlspecialchars('I am the PoV. :smile:\n\nHear me PoV! :grin:\n\n```10 print "hello world"\n20 goto 10\n```\n:pizza:'),
 			0,CMW_NODE_USER,
 			true
 		);	
@@ -846,6 +846,17 @@ Thing {
 		node_AddMeta($user_id,0,"jammer","light-color","A9F");
 		node_AddMeta($user_id,0,"jammer","header","1");
 		node_AddMeta(4,$user_id,"member","","admin");
+	}
+
+	{
+		// More dummy users //
+		$user_id = node_Add(
+			'user',"",'testuser','TestUser',htmlspecialchars("*This* is a test of the ~~emergency~~ `broadcast :whale2:` system. This is `only a test :whale: :dolphin:`:whale:.\n\nBoop! :ship:\n\n# Headline\nThis is **important**.\n\n```\nfor ( var idx=0; idx < 10; idx++ ) { /* :pig: */\n\tconsole.log(\"Hello World :turtle: :D (\"+idx+\")\\\\n\");\n}\n```\n\nCool 'eh? :dolphin: :(\n\n`:ox::blowfish:`\n\n:ox::blowfish:\n\n```\n:octopus:\n:horse:\n```\n\n```\n:octopus::horse:\n```\n\n`:octopus:\n:horse:`"),
+			0,CMW_NODE_USER,
+			true
+		);	
+		user_Add($user_id,'test@user.com','test');
+		
 	}
 	
 	// Love Table. If a user has given a +1 to something. //

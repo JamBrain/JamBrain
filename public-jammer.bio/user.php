@@ -224,8 +224,9 @@ body {
 			<!--<?php print_r($user); ?>-->
 			<!--<?php print_r($item); ?>-->		
 			<br />
-			<div id="about"><?php echo $user['body']; ?></div>
-			<br />
+			<div id="about"><?php echo html_ParseText($user['body']); ?></div>
+			<?php
+			if ( count($item['game']) > 0 ) { ?>
 			<div id="games"><h2>Games:</h2>
 				<?php 
 				foreach( $item['game'] as $game ) {
@@ -233,6 +234,8 @@ body {
 				}
 				?>
 			</div>
+			<?php
+			} ?>
 		<?php } break; ?>
 		<?php case M_ITEM: { ?>
 			<div id="title"><?php echo $item['name'] . " by <strong>" . $display_name . "</strong><br />"; ?></div>
