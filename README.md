@@ -1,8 +1,16 @@
 ludumdare.com
 =============
 
-The new Ludum Dare website (Project: LD2015). NOTE: Currently NOT live on ludumdare.com.
+The new Ludum Dare website (codename: Starship, formerly LD2015).
 
-This is the LIVE WEBSITE code, as customized for ludumdare.com by the Ludum Dare web team. 
+This is the LIVE WEBSITE code, as customized for ludumdare.com by Mike and the Ludum Dare web team. 
 
-It contains a snapshot of LD-CMW (Ludum Dare Content Management Wiki), and customizations by the web team. It may ocassionally contain updates not found in in ld-cmw (or vice versa), but the goal is to keep both code-bases up to date.
+The code is not yet live, but a WIP snapshot can be viewed here:
+
+https://wip.ludumdare.com
+
+This snapshot isn't necessarily the latest version, but something deemed stable enough to push to the live server for testing.
+
+Things we can't test locally using DairyBox: Cloudflare/CDN features, HTTPS, email (?).
+
+Once it matures, portions of this code may eventually become the LD-CMW project.
