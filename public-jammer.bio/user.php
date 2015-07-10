@@ -2,7 +2,7 @@
 require_once __DIR__ . "/../web.php";
 require_once __DIR__ . "/../core/node.php";
 require_once __DIR__ . "/../core/internal/util.php";
-require_once __DIR__ . "/../core/internal/validate.php";
+require_once __DIR__ . "/../core/internal/sanitize.php";
 
 // Modes //
 //const M_NULL = 0;		// Unknown State //

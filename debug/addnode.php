@@ -6,7 +6,7 @@
 <body>
 <?php
 	require_once __DIR__ . "/../../core/node.php";
-	require_once __DIR__ . "/../../core/internal/validate.php";
+	require_once __DIR__ . "/../../core/internal/sanitize.php";
 	
 	function main() {
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {

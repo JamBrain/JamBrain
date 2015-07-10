@@ -1,6 +1,6 @@
 <?php
 	require_once __DIR__ . "/../../core/node.php";
-	require_once __DIR__ . "/../../core/internal/validate.php";
+	require_once __DIR__ . "/../../core/internal/sanitize.php";
 	
 	// A better solution to autocomplete: http://stackoverflow.com/a/218453
 	

@@ -4,6 +4,8 @@
  *
  * @file
  */
+
+require_once __DIR__ . "/../db.php";
  
 // TODO: user_IsAdmin(), user_IsSuper()
 
@@ -189,6 +191,96 @@ function user_VerifyPassword($password,$hash) {
 
 function user_DoesPasswordNeedRehash($hash) {
 	return password_needs_rehash($hash, PASSWORD_DEFAULT); //, ['cost'=>10] );
+}
+
+function user_Add( $id, $mail, $password ) {
+	db_Connect();
+	
+	$password_hash = user_HashPassword($password);
+
+	db_Query(
+		"INSERT `" . CMW_TABLE_USER . "` (".
+			"`node`,".
+			"`mail`,".
+			"`hash`".
+		") ".
+		"VALUES (" .
+			$id."," .
+			"\"".$mail."\"," .
+			"\"".$password_hash."\"" .
+		");");
+		
+	// TODO: do something on db_query error
+
+	return db_GetId();
+}
+
+
+function user_GetHashById( $id ) {
+	db_Connect();
+
+	// TODO: Use time-attack safe fetch function
+
+	$hash = db_FetchSingle(
+		"SELECT `hash` FROM `" . CMW_TABLE_USER . "` WHERE ".
+			"`node`=" . $id .
+			" LIMIT 1" .
+		";");
+	
+	if ( count($hash) ) {
+		return $hash[0];
+	}
+	return null;
+}
+
+
+function user_GetIdByMail( $mail ) {
+	db_Connect();
+
+	$id = db_FetchSingle(
+		"SELECT `node` AS `id` FROM `" . CMW_TABLE_USER . "` WHERE ".
+			"`mail`=\"" . $mail . "\"".
+			" LIMIT 1" .
+		";");
+
+	if ( count($id) ) {
+		return $id[0];
+	}
+	return null;
+}
+
+function user_GetHashByMail( $mail ) {
+	db_Connect();
+	
+	// TODO: Use time-attack safe fetch function
+
+	$hash = db_FetchSingle(
+		"SELECT `hash` FROM `" . CMW_TABLE_USER . "` WHERE ".
+			"`mail`=\"" . $mail . "\"".
+			" LIMIT 1" .
+		";");
+
+	if ( count($hash) ) {
+		return $hash[0];
+	}
+	return null;
+}
+
+function user_GetIdAndHashByMail( $mail ) {
+	db_Connect();
+
+	// TODO: Use time-attack safe fetch function
+
+	$data = db_Fetch(
+		"SELECT `node` AS `id`,`hash` FROM `" . CMW_TABLE_USER . "` WHERE ".
+			"`mail`=\"" . $mail . "\"".
+			" LIMIT 1" .
+		";");
+
+	if ( count($data) ) {
+		return $data[0];
+	}
+	return null;
 }
 
 ?>

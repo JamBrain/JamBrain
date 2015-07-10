@@ -3,6 +3,7 @@
 require_once __DIR__ . "/../../db.php";
 require_once __DIR__ . "/../../core/core.php";
 require_once __DIR__ . "/../../core/node.php";
+require_once __DIR__ . "/../../core/users.php";
 
 db_Connect();
 echo "Connected: " . db_IsConnected() . "\n";
@@ -821,7 +822,7 @@ Thing {
 			0,CMW_NODE_USER,
 			true
 		);	
-		node_AddUser($user_id,'mike@sykhronics.com','blahblah');
+		user_Add($user_id,'mike@sykhronics.com','blahblah');
 	
 		// Add Dummy Games //
 		node_Add(

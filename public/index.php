@@ -1,8 +1,8 @@
 <?php 
 require_once __DIR__ . "/../web.php";
-require_once __DIR__ . "/../core/tables.php";
+require_once __DIR__ . "/../core/constants.php";
 require_once __DIR__ . "/../core/node.php";
-require_once __DIR__ . "/../core/internal/validate.php";
+require_once __DIR__ . "/../core/internal/sanitize.php";
 require_once __DIR__ . "/../core/internal/emoji.php";
 require_once __DIR__ . "/../core/post.php";
 

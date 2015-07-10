@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/core/tables.php";
+require_once __DIR__ . "/core/constants.php";
 //include_once __DIR__ . "/config.php";
 //
 // Load the requested Database library //

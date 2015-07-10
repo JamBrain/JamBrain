@@ -5,7 +5,7 @@
 
 require_once __DIR__ . "/../../api.php";
 require_once __DIR__ . "/../../core/star.php";
-require_once __DIR__ . "/../../core/user.php";
+require_once __DIR__ . "/../../core/users.php";
 
 // Stars are Favourites or Bookmarks. If you want to remember/save something, you Star it.
 // Stars belong only to users (ID>0). You cannot Star if you are not logged in.
