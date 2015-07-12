@@ -20,6 +20,9 @@ window.html_Parse = function(text) {
 	for (var idx = 0, len = block.length; idx < len; ++idx ) {
 		// Odd: Do syntax highlighting //
 		if ( idx & 1 ) {
+			// TODO: exctract first word (block[idx].split("\\s+",1)
+			// then scan Prism.languages for a match.
+			
 			out += "<pre><code class='language-clike'>";
 			out += Prism.highlight(block[idx],Prism.languages.clike);
 			out += "</code></pre>";
