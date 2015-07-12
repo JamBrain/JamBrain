@@ -452,9 +452,7 @@ if ( $mode > 0 ) {
 			}
 		}
 		var el = document.getElementById('content');
-		console.log(el);
 		var bodies = el.getElementsByClassName('body');
-		console.log(bodies);
 		for(var idx = 0, len = bodies.length; idx < len; ++idx) {
 			if ( bodies[idx] ) {
 				bodies[idx].innerHTML = html_Parse(bodies[idx].innerHTML);
