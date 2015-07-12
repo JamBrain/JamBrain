@@ -348,6 +348,7 @@ if ( $mode > 0 ) {
 
 	<?php if ( $mode === M_DEFAULT ) { ?>	
 	<div id="content">
+		<!-- <? echo print_r($this_node); ?> -->
 		<div class="title"><h1><?php echo $this_node['name']; ?></h1><?php if ( $author_node ) { echo "<h3>by <a href='/user/".$author_node['slug']."'>" . $author_node['name'] . "</a></h3>"; } ?></div>
 		<?php 
 			if ( !empty($this_node['body']) ) { 
