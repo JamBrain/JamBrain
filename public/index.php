@@ -269,6 +269,14 @@ if ( $mode > 0 ) {
 		}
 		updateLDBar();
 		
+		function post_ShowEdit( id ) {
+			document.getElementById('edit-'+id).style.display = '';
+			document.getElementById('preview-'+id).style.display = 'none';
+		}
+		function post_ShowPreview( id ) {
+			document.getElementById('edit-'+id).style.display = 'none';
+			document.getElementById('preview-'+id).style.display = '';
+		}
 	</script>
 	
 	<!-- *************** -->
@@ -314,7 +322,6 @@ if ( $mode > 0 ) {
 		
 		#content .post {
 			margin:16px;
-			padding:8px;
 			border:2px solid #000;
 			background:#FFF;
 		}
@@ -322,8 +329,16 @@ if ( $mode > 0 ) {
 		#content .post h1, .post h3 {
 			margin:0;
 		}
+		
+		#content .post .header {
+			margin:8px;		
+		}
 		#content .post .body {
-			margin-top:12px;
+			margin:8px;
+		}
+		#content .post .footer {
+			background:#CCC;
+			padding:8px;			
 		}
 		
 		#metas .node {
@@ -356,8 +371,8 @@ if ( $mode > 0 ) {
 			$authors = node_GetNodeArrayByIds($author_ids);
 			
 			foreach($posts as $post) {
-				echo '<div class="post">';
-				echo '<div class="title">';
+				echo '<div class="post" id="post-"'.$post['id'].'>';
+				echo '<div class="header">';
 					echo '<h1>' . $post['name'] .'</h1>';
 					echo '<small>[Local time goes here] (' . date('l, d F Y H:i:s T',$post['time_published']) . ')</small>';
 					if ( !empty($post['author']) ) { 
@@ -366,9 +381,14 @@ if ( $mode > 0 ) {
 				echo "</div>\n";
 				echo '<div class="body">';
 					if ( !empty($post) ) { 
-						echo '<textarea class="edit" rows="24" cols="120" style="display:none;">' . $post['body'] . '</textarea>';
-						echo '<div class="preview"></div>';
+						echo '<textarea class="edit" id="edit-'.$post['id'].'" rows="24" cols="120" style="display:none;">' . $post['body'] . '</textarea>';
+						echo '<div class="preview" id="preview-'.$post['id'].'"></div>';
 					}
+				echo '</div>';
+				echo '<div class="footer">';
+					echo '<span onclick="post_ShowEdit('.$post['id'].');">PATCH</span>';
+					echo ' | ';
+					echo '<span onclick="post_ShowPreview('.$post['id'].');post_Parse('.$post['id'].');">PREVIEW</span>';
 				echo '</div>';
 				echo '</div>';
 			}
@@ -500,7 +520,17 @@ if ( $mode > 0 ) {
 		for(var idx = 0, len = original.length; idx < len; ++idx) {
 			preview[idx].innerHTML = html_Parse(original[idx].innerHTML);
 		}
-
+		
+		function post_Parse(id) {
+			console.log(id);
+			var src = document.getElementById('edit-'+id);
+			var dest = document.getElementById('preview-'+id);
+			console.log(src);
+			console.log(dest);
+			var out = html_Parse(src.value);
+			console.log(out);
+			dest.innerHTML = out;
+		}
 	</script>
 </body>
 <?php template_GetFooter(); ?>
