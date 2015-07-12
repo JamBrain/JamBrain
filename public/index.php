@@ -203,7 +203,7 @@ if ( $mode > 0 ) {
 		<div id='ldbar-outer' style='position:fixed;'>
 			<div id='ldbar-inner'>
 				<div class='leftnav'>
-					<div id='ldbar-logo' class='cell'><img src="<?php STATIC_URL(); ?>/logo/ludumdare/2009/LudumDareLogo80W.png" height="30" /></div>
+					<div id='ldbar-logo' class='cell'><a href="/"><img src="<?php STATIC_URL(); ?>/logo/ludumdare/2009/LudumDareLogo80W.png" height="30" /></a></div>
 				</div>
 				<div class='rightnav'>
 					<div class='cell size32' onclick='SendLogin();'><img src="<?php STATIC_URL(); ?>/logo/mike/Chicken64W.png" width="32" height="32" style="mix-blend-mode:screen" /></div>
@@ -346,7 +346,42 @@ if ( $mode > 0 ) {
 		}
 	</style>
 
-	<?php if ( $mode === M_DEFAULT ) { ?>	
+	<?php if ( $mode === M_DEFAULT ) { ?>
+	
+	<?php if ( $this_node['type'] === 'root' ) { ?>
+	<div id="content">
+		<?php
+			$posts = node_GetPosts(10);
+			$author_ids = [];
+			foreach($posts as $post) {
+				$author_ids[] = $post['author'];
+			}
+			$author_ids = array_unique($author_ids);
+			$authors = node_GetNodeArrayByIds($author_ids);
+			
+			foreach($posts as $post) {
+				echo '<div class="post">';
+				echo '<div class="title">';
+					echo '<h1>' . $post['name'] .'</h1>';
+					echo '<small>' . $post['time_published'] . '</small>';
+					if ( !empty($post['author']) ) { 
+						echo "<h3>by <a href='/user/".$authors[$post['author']]['slug']."'>" . $authors[$post['author']]['name'] . "</a></h3>"; 
+					}
+				echo "</div>\n";
+				echo '<div class="body">';
+					if ( !empty($post) ) { 
+						echo '<textarea class="edit" rows="24" cols="120" style="display:none;">' . $post['body'] . '</textarea>';
+						echo '<div class="preview"></div>';
+					}
+				echo '</div>';
+				echo '</div>';
+			}
+		?>
+		<!-- <?php print_r($posts); ?> -->
+		<!-- <?php print_r($author_ids); ?> -->
+		<!-- <?php print_r($authors); ?> -->
+	</div>
+	<?php } else { ?>
 	<div id="content">
 		<div class="node">
 			<div class="title"><h1><?php echo $this_node['name']; ?></h1><?php if ( $author_node ) { echo "<h3>by <a href='/user/".$author_node['slug']."'>" . $author_node['name'] . "</a></h3>"; } ?></div>
@@ -397,6 +432,7 @@ if ( $mode > 0 ) {
 			?>	
 		</div>
 	</div>
+	<?php } /* type */ ?>
 	
 	<div id='nav' style="padding:16px;">
 		<?php
@@ -461,6 +497,14 @@ if ( $mode > 0 ) {
 		for(var idx = 0, len = original.length; idx < len; ++idx) {
 			preview[idx].innerHTML = html_Parse(original[idx].innerHTML);
 		}
+		
+		var el = document.getElementById('content');
+		var original = el.getElementsByClassName('edit');
+		var preview = el.getElementsByClassName('preview');
+		for(var idx = 0, len = original.length; idx < len; ++idx) {
+			preview[idx].innerHTML = html_Parse(original[idx].innerHTML);
+		}
+
 	</script>
 </body>
 <?php template_GetFooter(); ?>

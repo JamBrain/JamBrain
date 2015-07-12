@@ -111,6 +111,24 @@ function node_GetNodesByIds( $ids ) {
 	return $items;
 }
 
+function node_GetNodeArrayByIds( $ids ) {
+	global $NODE_SCHEMA;
+	db_Connect();
+
+	$items = db_Fetch(
+		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
+			"`id` in (" . implode(',',$ids) . ")" .
+		";", $NODE_SCHEMA);
+	
+	$ret = [];
+	foreach( $items as $item ) {
+		$ret[$item['id']] = $item;
+	}
+	
+	return $ret;
+	
+}
+
 
 function node_GetUserBySlug( $slug ) {
 	db_Connect();
@@ -359,4 +377,19 @@ function node_GetMetasById( $id ) {
 	return [];
 }
 
+
+function node_GetPosts( $limit = 10, $offset = 0 ) {
+	global $NODE_SCHEMA;
+	db_Connect();
+
+	$items = db_Fetch(
+	//echo(
+		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
+			"`time_published` != " . "'0000-00-00 00:00:00'" . " AND " .
+			"`type`=" . "\"post\"" .
+			" LIMIT " . $limit . " OFFSET " . $offset .
+		";", $NODE_SCHEMA);
+	
+	return $items;
+}
 ?>
