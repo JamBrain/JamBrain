@@ -224,7 +224,7 @@ body {
 			<!--<?php print_r($user); ?>-->
 			<!--<?php print_r($item); ?>-->		
 			<br />
-			<div id="about"><?php echo html_ParseText($user['body']); ?></div>
+			<div id="about"><?php echo /*html_ParseText*/($user['body']); ?></div>
 			<?php
 			if ( count($item['game']) > 0 ) { ?>
 			<div id="games"><h2>Games:</h2>
@@ -264,7 +264,7 @@ body {
 		for(var Key in Section) {
 			var el = document.getElementById(Section[Key]);
 			if ( el ) {
-				el.innerHTML = emojione.toImage(el.innerHTML);
+				el.innerHTML = html_Parse(el.innerHTML);
 			}
 		}
 	</script>

@@ -855,7 +855,7 @@ Renderer.prototype.em = function(text) {
 };
 
 Renderer.prototype.codespan = function(text) {
-  return '<code>' + text + '</code>';
+  return '<span><code>' + text.replace('\n','') + '</code></span>';
 };
 
 Renderer.prototype.br = function() {

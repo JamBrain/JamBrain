@@ -338,6 +338,12 @@ if ( $mode > 0 ) {
 			display:inline;
 			font-weight:bold;
 		}
+		
+		#content span code {
+			background:#FDC;
+			padding:3px;
+			margin:0 3px;
+		}
 	</style>
 
 	<?php if ( $mode === M_DEFAULT ) { ?>	
@@ -345,7 +351,7 @@ if ( $mode > 0 ) {
 		<div class="title"><h1><?php echo $this_node['name']; ?></h1><?php if ( $author_node ) { echo "<h3>by <a href='/user/".$author_node['slug']."'>" . $author_node['name'] . "</a></h3>"; } ?></div>
 		<?php 
 			if ( !empty($this_node['body']) ) { 
-				?><div class="body"><?php echo html_ParseText($this_node['body']); ?></div><?php 
+				?><div class="body"><?php echo /*html_ParseText*/($this_node['body']); ?></div><?php 
 			} ?>
 		<?php
 			if ( $this_node['type'] === 'user' ) {
@@ -437,12 +443,21 @@ if ( $mode > 0 ) {
 	
 		// Process Emoji on all the following sections //
 		var Section = [
-			'nav','message','content'
+			'nav','message','games'
 		];
 		for(var Key in Section) {
 			var el = document.getElementById(Section[Key]);
 			if ( el ) {
 				el.innerHTML = emojione.toImage(el.innerHTML);
+			}
+		}
+		var el = document.getElementById('content');
+		console.log(el);
+		var bodies = el.getElementsByClassName('body');
+		console.log(bodies);
+		for(var idx = 0, len = bodies.length; idx < len; ++idx) {
+			if ( bodies[idx] ) {
+				bodies[idx].innerHTML = html_Parse(bodies[idx].innerHTML);
 			}
 		}
 	</script>
