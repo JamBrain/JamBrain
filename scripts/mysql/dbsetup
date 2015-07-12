@@ -855,22 +855,32 @@ Thing {
 		
 		node_Add(
 			'post','',
-			"this-is-a-post-post-or-is-it","This is a post post, or is it?",
+			"this-is-a-post","This is a post",
 			htmlspecialchars("This is an *example* post.\n\nIt's here to demonstrate that yes, posts are still a thing.\n\nAll posted content, be it posts, comments, games, tools, really any piece of written content on the website is now written using **Markdown** (a GitHub styled one at that).\n\nWe also support Emoji and Emoji codes. Using `:bear: :dog: :dolphin:` outputs :bear: :dog: :dolphin:. For a complete list, visit [emoji.codes](http://emoji.codes). Eventually we will support auto-completion, and a library of gaming/gamedev specific Emoji codes, such as `:key-wasd: :key-arrows: :key-space: :key-a: :mouse-lmb: :xbox-y: :playstation-triangle:` for documenting your game controls.\n\nThat's pretty cool.\n\nYou can add source code too, and that source code gets highlighted.\n\n```\n10 PRINT \"Hello World\"\n20 GOTO 10\n```\nRemember GOTO? ;)\n\nYou can also *edit* and *patch* **any** piece of written content on the website, **ANY**, like a WIKI. But unlike a WIKI, changes need to be approved by either the original author, a member the team a thing is assigned to, or a moderator. I think that's pretty neato. Click the `PATCH` button to see the markdown code.\n\nFinally, I ... haven't figured out this last part yet."),
 			$user_id,$user_id,
-			true
+			true, -10
 		);
 	}
 
 	{
 		// More dummy users //
 		$user_id = node_Add(
-			'user',"",'testuser','TestUser',htmlspecialchars("*This* is a test of the ~~emergency~~ `markdown :whale2:` system. This is `only a test :whale: :dolphin:`:whale:.\n\nBoop! :ship:\n\n# :blowfish:Blowfish:blowfish:\nThis is **important**.\n\n```\nfor ( var idx=0; idx < 10; idx++ ) {    /* :pig: */\n\tconsole.log(\"Hello World :turtle: :D (\"+idx+\")\\\\n\");\n}\n```\n\nCool 'eh? :dolphin: :(\n\n`:ox::blowfish:`\n\n:ox::blowfish:\n\n```\n:octopus:\n:horse:\n```\n\n```\n:octopus::horse:\n```\n\n`:octopus:\n:horse:`"),
+			'user',"",
+			'testuser','TestUser',
+			htmlspecialchars("*This* is a test of the ~~emergency~~ `markdown :whale2:` system. This is `only a test :whale: :dolphin:`:whale:.\n\nBoop! :ship:\n\n# :blowfish:Blowfish:blowfish:\nThis is **important**.\n\n```\nfor ( var idx=0; idx < 10; idx++ ) {    /* :pig: */\n\tconsole.log(\"Hello World :turtle: :D (\"+idx+\")\\\\n\");\n}\n```\n\nCool 'eh? :dolphin: :(\n\n`:ox::blowfish:`\n\n:ox::blowfish:\n\n```\n:octopus:\n:horse:\n```\n\n```\n:octopus::horse:\n```\n\n`:octopus:\n:horse:`"),
 			0,CMW_NODE_USER,
 			true
 		);	
 		user_Add($user_id,'test@user.com','test');
 		
+		node_Add(
+			'post','',
+			"i-m-in","I'm in!",
+			htmlspecialchars("I am a fake Ludum Dare participant, and though I am not real, **I am in!**\n\n:sailboat: :ca: :D"),
+			$user_id,$user_id,
+			true
+		);
+
 	}
 	
 	// Love Table. If a user has given a +1 to something. //

@@ -273,10 +273,6 @@ if ( $mode > 0 ) {
 	
 	<!-- *************** -->
 	
-	<div id='message' style="padding:16px;">
-		:D :ca: :football: :se: :house: :grin:
-	</div>
-	
 	<style>
 		body {
 			background: #EEE;
@@ -316,17 +312,17 @@ if ( $mode > 0 ) {
 			background:#FCF;
 		}
 		
-		#content {
+		#content .post {
 			margin:16px;
 			padding:8px;
 			border:2px solid #000;
 			background:#FFF;
 		}
 		
-		#content h1, #content h3 {
+		#content .post h1, .post h3 {
 			margin:0;
 		}
-		#content .body {
+		#content .post .body {
 			margin-top:12px;
 		}
 		
@@ -339,7 +335,7 @@ if ( $mode > 0 ) {
 			font-weight:bold;
 		}
 		
-		#content span code {
+		#content .post span code {
 			background:#FDC;
 			padding:3px;
 			margin:0 3px;
@@ -363,7 +359,7 @@ if ( $mode > 0 ) {
 				echo '<div class="post">';
 				echo '<div class="title">';
 					echo '<h1>' . $post['name'] .'</h1>';
-					echo '<small>' . $post['time_published'] . '</small>';
+					echo '<small>[Local time goes here] (' . date('l, d F Y H:i:s T',$post['time_published']) . ')</small>';
 					if ( !empty($post['author']) ) { 
 						echo "<h3>by <a href='/user/".$authors[$post['author']]['slug']."'>" . $authors[$post['author']]['name'] . "</a></h3>"; 
 					}
@@ -383,7 +379,7 @@ if ( $mode > 0 ) {
 	</div>
 	<?php } else { ?>
 	<div id="content">
-		<div class="node">
+		<div class="post">
 			<div class="title"><h1><?php echo $this_node['name']; ?></h1><?php if ( $author_node ) { echo "<h3>by <a href='/user/".$author_node['slug']."'>" . $author_node['name'] . "</a></h3>"; } ?></div>
 			<?php 
 				if ( !empty($this_node['body']) ) { 
@@ -482,7 +478,7 @@ if ( $mode > 0 ) {
 	
 		// Process Emoji on all the following sections //
 		var Section = [
-			'nav','message','games'
+			'nav','games'
 		];
 		for(var Key in Section) {
 			var el = document.getElementById(Section[Key]);

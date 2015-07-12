@@ -26,8 +26,10 @@ $NODE_SCHEMA = [
 ];
 
 
-function node_Add( $type, $subtype, $slug, $name, $body, $author, $parent, $publish = false ) {
+function node_Add( $type, $subtype, $slug, $name, $body, $author, $parent, $publish = false, $publish_offset = 0 ) {
 	db_Connect();
+	
+	$time = "DATE_ADD(NOW(),INTERVAL " . $publish_offset . " SECOND)";
 
 	db_Query(
 		"INSERT `" . CMW_TABLE_NODE . "` (".
@@ -50,9 +52,9 @@ function node_Add( $type, $subtype, $slug, $name, $body, $author, $parent, $publ
 			"\"".$body."\"," .
 			$author."," .
 			$parent."," .
-			"NOW()," .
-			"NOW()," .
-			($publish ? "NOW()" : "\"0000-00-00 00:00:00\"") .
+			$time . "," .
+			$time . "," .
+			($publish ? $time : "\"0000-00-00 00:00:00\"") .
 		");");
 		
 	// TODO: do something on db_query error
@@ -387,6 +389,7 @@ function node_GetPosts( $limit = 10, $offset = 0 ) {
 		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
 			"`time_published` != " . "'0000-00-00 00:00:00'" . " AND " .
 			"`type`=" . "\"post\"" .
+			" ORDER BY `time_published` DESC" .
 			" LIMIT " . $limit . " OFFSET " . $offset .
 		";", $NODE_SCHEMA);
 	
