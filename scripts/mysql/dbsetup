@@ -851,7 +851,7 @@ Thing {
 	{
 		// More dummy users //
 		$user_id = node_Add(
-			'user',"",'testuser','TestUser',htmlspecialchars("*This* is a test of the ~~emergency~~ `broadcast :whale2:` system. This is `only a test :whale: :dolphin:`:whale:.\n\nBoop! :ship:\n\n# :blowfish:Blowfish:blowfish:\nThis is **important**.\n\n```\nfor ( var idx=0; idx < 10; idx++ ) { /* :pig: */\n\tconsole.log(\"Hello World :turtle: :D (\"+idx+\")\\\\n\");\n}\n```\n\nCool 'eh? :dolphin: :(\n\n`:ox::blowfish:`\n\n:ox::blowfish:\n\n```\n:octopus:\n:horse:\n```\n\n```\n:octopus::horse:\n```\n\n`:octopus:\n:horse:`"),
+			'user',"",'testuser','TestUser',htmlspecialchars("*This* is a test of the ~~emergency~~ `markdown :whale2:` system. This is `only a test :whale: :dolphin:`:whale:.\n\nBoop! :ship:\n\n# :blowfish:Blowfish:blowfish:\nThis is **important**.\n\n```\nfor ( var idx=0; idx < 10; idx++ ) {    /* :pig: */\n\tconsole.log(\"Hello World :turtle: :D (\"+idx+\")\\\\n\");\n}\n```\n\nCool 'eh? :dolphin: :(\n\n`:ox::blowfish:`\n\n:ox::blowfish:\n\n```\n:octopus:\n:horse:\n```\n\n```\n:octopus::horse:\n```\n\n`:octopus:\n:horse:`"),
 			0,CMW_NODE_USER,
 			true
 		);	
