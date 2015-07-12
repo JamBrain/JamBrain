@@ -348,52 +348,55 @@ if ( $mode > 0 ) {
 
 	<?php if ( $mode === M_DEFAULT ) { ?>	
 	<div id="content">
-		<!-- <? echo print_r($this_node); ?> -->
-		<div class="title"><h1><?php echo $this_node['name']; ?></h1><?php if ( $author_node ) { echo "<h3>by <a href='/user/".$author_node['slug']."'>" . $author_node['name'] . "</a></h3>"; } ?></div>
-		<?php 
-			if ( !empty($this_node['body']) ) { 
-				?><div class="body"><?php echo /*html_ParseText*/($this_node['body']); ?></div><?php 
-			} ?>
-		<?php
-			if ( $this_node['type'] === 'user' ) {
-				echo "<br />";
-				echo '<div id="games"><h3>Games:</h3>';
-				$games = node_GetNodesByAuthorIdAndType($this_node['id'],'game');
-				foreach( $games as $game ) {
-					echo "<a href=\"/user/" . $this_node['slug'] . "/" . $game['slug'] . "\">" . $game['name'] . "</a><br/>"; 
-				}
-				echo '</div>';
-				echo "<br />";
-				echo '<div id="metas"><h3>Metadata ('.$this_node['id'].'):</h3>' ;
-				$metas = node_GetMetasById( $this_node['id'] );
-				function process_meta( $meta ) {
-					echo "<div class='node'>";
-					foreach( $meta as $key => $value ) {
-						if ( is_array($value) ) {
-							if ( is_string($key) )
-								$key = "\"".$key."\"";
-
-							echo "<div class='key'>".$key . ":</div><br/>";
-							process_meta($value);
-						}
-						else {
-							if ( is_string($key) )
-								$key = "\"".$key."\"";
-							
-							if ( is_string($value) )
-								echo "<div class='key'>".$key . ":</div> \"" . $value . "\"<br />";
-							else
-								echo "<div class='key'>".$key . ":</div> " . $value . "<br />";
-						}
+		<div class="node">
+			<!-- <? echo print_r($this_node); ?> -->
+			<div class="title"><h1><?php echo $this_node['name']; ?></h1><?php if ( $author_node ) { echo "<h3>by <a href='/user/".$author_node['slug']."'>" . $author_node['name'] . "</a></h3>"; } ?></div>
+			<?php 
+				if ( !empty($this_node['body']) ) { 
+					?><textarea class="body-edit" rows="24" cols="120"><?php echo $this_node['body']; ?></textarea>
+					<div class="body"></div><?php 
+				} ?>
+			<?php
+				if ( $this_node['type'] === 'user' ) {
+					echo "<br />";
+					echo '<div id="games"><h3>Games:</h3>';
+					$games = node_GetNodesByAuthorIdAndType($this_node['id'],'game');
+					foreach( $games as $game ) {
+						echo "<a href=\"/user/" . $this_node['slug'] . "/" . $game['slug'] . "\">" . $game['name'] . "</a><br/>"; 
 					}
+					echo '</div>';
+					echo "<br />";
+					echo '<div id="metas"><h3>Metadata ('.$this_node['id'].'):</h3>' ;
+					$metas = node_GetMetasById( $this_node['id'] );
+					function process_meta( $meta ) {
+						echo "<div class='node'>";
+						foreach( $meta as $key => $value ) {
+							if ( is_array($value) ) {
+								if ( is_string($key) )
+									$key = "\"".$key."\"";
+	
+								echo "<div class='key'>".$key . ":</div><br/>";
+								process_meta($value);
+							}
+							else {
+								if ( is_string($key) )
+									$key = "\"".$key."\"";
+								
+								if ( is_string($value) )
+									echo "<div class='key'>".$key . ":</div> \"" . $value . "\"<br />";
+								else
+									echo "<div class='key'>".$key . ":</div> " . $value . "<br />";
+							}
+						}
+						echo "</div>";
+					}
+					process_meta($metas);
+					
+//					print_r($metas);
 					echo "</div>";
 				}
-				process_meta($metas);
-				
-//				print_r($metas);
-				echo "</div>";
-			}
-		?>	
+			?>	
+		</div>
 	</div>
 	
 	<div id='nav' style="padding:16px;">
@@ -452,12 +455,12 @@ if ( $mode > 0 ) {
 				el.innerHTML = emojione.toImage(el.innerHTML);
 			}
 		}
+		
 		var el = document.getElementById('content');
-		var bodies = el.getElementsByClassName('body');
-		for(var idx = 0, len = bodies.length; idx < len; ++idx) {
-			if ( bodies[idx] ) {
-				bodies[idx].innerHTML = html_Parse(bodies[idx].innerHTML);
-			}
+		var original = el.getElementsByClassName('body-edit');
+		var preview = el.getElementsByClassName('body');
+		for(var idx = 0, len = original.length; idx < len; ++idx) {
+			preview[idx].innerHTML = html_Parse(original[idx].innerHTML);
 		}
 	</script>
 </body>
