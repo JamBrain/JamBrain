@@ -548,7 +548,7 @@ if ( $mode > 0 ) {
 		?>
 	</div>
 	<div>
-		<img src="http://192.168.48.48:8080/upload/image.php/2015/03.png?h=640000">
+		<img src="//192.168.48.48:8080/img/logo/mike/Chicken16.png?crop&w=256&h=128">
 	</div>
 <?php /*
 	<div id="debug">

@@ -2,8 +2,9 @@
 .vagrant
 .ftpquota
 error_log
-public/dev
-public/static
+public/dev/
+public/static/
+public-static/upload/
 config.php
 node_modules/
 output/
