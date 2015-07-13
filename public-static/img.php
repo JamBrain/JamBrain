@@ -97,32 +97,35 @@ $change_size = $crop || $out_width || $out_height;
 // If the operation we're performing changes the output //
 $change_output = $jpeg || $png;
 
-// TODO: add "p" character for percentages //
-// TODO: strip non-ascii characters from $image //
-//$key_name = "img\$" .
-//	$image .
-//	($out_width ? "\$w".$out_width : "") .
-//	($out_height ? "\$h".$out_height : "") .
-//	($crop ? "\$crop" : "") .
-//	($jpeg ? "\$jpeg" : "") .
-//	($png ? "\$png" : "") .
-//	"";
-//
-//header("X-Cache-Key: ".$key_name);
-
-// For compatibility with Memcached, keys must be:
-// - no more than to 250 characters
-// - not null (0x0)
-// - not space or tab (0x20,0x09)
-// - not newline or carriage-return (0x0a,0x0d)
-// - UTF-8 symbols are ok
-
 // If we were given an operation //
 if ( $change_size || $change_output ) {
 	$docroot = $_SERVER['DOCUMENT_ROOT'];
 	$filename = $docroot.$base.$image;
-	
+
+	// TODO: add "p" character for percentages //
+	// TODO: strip non-ascii characters from $image //
+//	$cache_key = "img\$" .
+//		$image .
+//		($out_width ? "\$w".$out_width : "") .
+//		($out_height ? "\$h".$out_height : "") .
+//		($crop ? "\$crop" : "") .
+//		($jpeg ? "\$jpeg" : "") .
+//		($png ? "\$png" : "") .
+//		"";
+//	header("X-Cache-Key: ".$cache_key);
+
+	// For compatibility with Memcached, keys must be:
+	// - no more than to 250 characters
+	// - not null (0x0)
+	// - not space or tab (0x20,0x09)
+	// - not newline or carriage-return (0x0a,0x0d)
+	// - UTF-8 symbols are ok (but I want to avoid them)
+
+	// TODO: Check if key exists in cache, if so return cached data instead.
+
+	// Otherwise, we have to generate the file. Check if it exists first. //	
 	if ( file_exists($filename) ) {
+		// Fetch File Info //
 		$info = getimagesize( $filename );
 		$in_width = $info[0];	// ['width'] is a string, but the index is not
 		$in_height = $info[1];	// ['height'] is a string, but the index is not
