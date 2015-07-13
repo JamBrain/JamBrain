@@ -45,6 +45,9 @@ $bottom = isset($_GET['bottom']);
 $jpeg = isset($_GET['jpeg']);
 $png = isset($_GET['png']);
 
+// Emit a CORS header, to avoid a Chrome warning //
+// NOTE: This should really be done in the Apache config //
+//header("Access-Control-Allow-Origin: *");	// Should probably not be so broad (*) //
 
 // Confirm we have legal dimensions //
 if ( (($out_width !== null) && ($out_width <= 0)) || (($out_height !== null) && ($out_height <= 0)) ) {

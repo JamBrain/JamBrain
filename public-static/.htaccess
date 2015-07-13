@@ -1,0 +1,7 @@
+Header set Access-Control-Allow-Origin *
+
+RewriteEngine on 
+#Options +FollowSymlinks
+RewriteBase / 
+
+RewriteRule ^img/(.*) img.php/$1
