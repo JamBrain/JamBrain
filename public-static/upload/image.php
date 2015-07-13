@@ -12,10 +12,16 @@ $image = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : null;
 //print_r($_GET);
 
 
-
 // If there is a query string, we do something //
 if ( count($_GET) > 0 ) {
+	$data = imagecreate(128,128);
+	imagecolorallocate($data,255,0,0);
 	
+	//imagepng($data);
+	//imagejpeg($data);
+	//imagegif($data);
+	header('Content-type: image/webp');
+	imagewebp($data);
 }
 // No image path was specified //
 else if ( empty($image) ) {
