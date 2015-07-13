@@ -270,12 +270,17 @@ if ( $mode > 0 ) {
 		updateLDBar();
 		
 		function post_ShowEdit( id ) {
-			document.getElementById('edit-'+id).style.display = '';
+			document.getElementById('flextext-'+id).style.display = '';
 			document.getElementById('preview-'+id).style.display = 'none';
 		}
 		function post_ShowPreview( id ) {
-			document.getElementById('edit-'+id).style.display = 'none';
+			document.getElementById('flextext-'+id).style.display = 'none';
 			document.getElementById('preview-'+id).style.display = '';
+		}
+		
+		function post_UpdateEdit( o ) {
+			var rows = o.value.split("\n").length;
+			o.rows = (rows > 4) ? rows : 4;
 		}
 	</script>
 	
@@ -355,6 +360,66 @@ if ( $mode > 0 ) {
 			padding:3px;
 			margin:0 3px;
 		}
+		
+		
+		/* FlexText */
+		.flextext {
+		    position: relative;
+		    *zoom: 1;
+		}
+
+		textarea,
+		.flextext {
+		    outline: 0;
+		    margin: 0;
+		    border: none;
+		    padding: 0;
+		
+		    *padding-bottom: 0 !important;
+		}
+
+		.flextext textarea,
+		.flextext pre {
+		    white-space: pre-wrap;
+		    width: 100%;
+		    -webkit-box-sizing: border-box;
+		    -moz-box-sizing: border-box;
+		    box-sizing: border-box;
+		
+		    *white-space: pre;
+		    *word-wrap: break-word;
+		}
+
+		.flextext textarea {
+		    overflow: hidden;
+		    position: absolute;
+		    top: 0;
+		    left: 0;
+		    height: 100%;
+		    width: 100%;
+		    resize: none;
+		
+		    /* IE7 box-sizing fudge factor */
+		    *height: 94%;
+		    *width: 94%;
+		}
+
+		.flextext pre {
+		    display: block;
+		    visibility: hidden;
+		}
+
+		textarea,
+		.flextext pre {
+			/*margin: 0;*/
+		    border: 1px solid #000;
+		    padding: 4px;
+		    background:#EED;
+		    /*
+		     * Add custom styling here
+		     * Ensure that typography, padding, border-width (and optionally min-height) are identical across textarea & pre
+		     */
+		}
 	</style>
 
 	<?php if ( $mode === M_DEFAULT ) { ?>
@@ -380,8 +445,13 @@ if ( $mode > 0 ) {
 					}
 				echo "</div>\n";
 				echo '<div class="body">';
-					if ( !empty($post) ) { 
-						echo '<textarea class="edit" id="edit-'.$post['id'].'" rows="24" cols="120" style="display:none;">' . $post['body'] . '</textarea>';
+					if ( !empty($post) ) {
+						// http://alistapart.com/article/expanding-text-areas-made-elegant
+						// https://github.com/alexdunphy/flexText
+						echo '<div class="flextext" id="flextext-'.$post['id'].'" style="display:none;">';
+							echo '<pre><span id="flextext-span-'.$post['id'].'"></span><br /><br /></pre>';
+							echo '<textarea class="edit" id="edit-'.$post['id'].'" oninput="flextext_Update('.$post['id'].');" onpropertychange="flextext_Update('.$post['id'].');" onkeyup="flextext_Update('.$post['id'].');" onchange="flextext_Update('.$post['id'].');">' . $post['body'] . '</textarea>';
+						echo '</div>';
 						echo '<div class="preview" id="preview-'.$post['id'].'"></div>';
 					}
 				echo '</div>';
@@ -522,14 +592,25 @@ if ( $mode > 0 ) {
 		}
 		
 		function post_Parse(id) {
-			console.log(id);
 			var src = document.getElementById('edit-'+id);
 			var dest = document.getElementById('preview-'+id);
-			console.log(src);
-			console.log(dest);
-			var out = html_Parse(src.value);
-			console.log(out);
-			dest.innerHTML = out;
+			dest.innerHTML = html_Parse(src.value);
+		}
+		
+		function flextext_Update(id) {
+			console.log(id);
+			var src = document.getElementById('edit-'+id);
+			var dest = document.getElementById('flextext-span-'+id);
+			dest.innerHTML = src.value;
+		}
+		
+		var AllFlexTexts = document.getElementsByClassName("flextext");
+		for ( var idx = 0, len = AllFlexTexts.length; idx < len; ++idx ) {
+			var AllSpans = AllFlexTexts[idx].getElementsByTagName("span");
+			var AllTextAreas = AllFlexTexts[idx].getElementsByTagName("textarea");
+			for ( var idx2 = 0, len2 = AllTextAreas.length; idx2 < len2; ++idx2 ) {
+				AllSpans[idx2].innerHTML = AllTextAreas[idx2].value;
+			}
 		}
 	</script>
 </body>
