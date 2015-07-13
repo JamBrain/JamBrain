@@ -12,6 +12,15 @@
 	will automatically cache the file, and never attempt to fetch it again (unless expired).
 */
 
+// NOTE: As it turns out, Cloudflare doesn't always cache files. It often takes a few requests
+//	before those files are cached. So instead, we may want to temporarily cache the generated
+//	file to memory. Give the file a short lifetime, so not to waste RAM.
+// 
+//	To do this, use output buffering. Wrap the imagepng (or equiv) calls in an ob_start followed
+//	by either an ob_end_flush or ob_end_clear. Call ob_get_contents to fetch the output.
+//	http://php.net/manual/en/function.ob-start.php
+//	http://stackoverflow.com/a/9371996
+
 // On WebP:
 // 	WebP is currently not supported by php's image library. It is mostly supported, but
 // 	none of the calls like getimagesize will acknowledge them. 
@@ -85,6 +94,26 @@ if ( $out_height > MAX_HEIGHT ) $out_height = MAX_HEIGHT;
 $change_size = $crop || $out_width || $out_height;
 // If the operation we're performing changes the output //
 $change_output = $jpeg || $png;
+
+// TODO: add "p" character for percentages //
+// TODO: strip non-ascii characters from $image //
+//$key_name = "img\$" .
+//	$image .
+//	($out_width ? "\$w".$out_width : "") .
+//	($out_height ? "\$h".$out_height : "") .
+//	($crop ? "\$crop" : "") .
+//	($jpeg ? "\$jpeg" : "") .
+//	($png ? "\$png" : "") .
+//	"";
+//
+//header("X-Cache-Key: ".$key_name);
+
+// For compatibility with Memcached, keys must be:
+// - no more than to 250 characters
+// - not null (0x0)
+// - not space or tab (0x20,0x09)
+// - not newline or carriage-return (0x0a,0x0d)
+// - UTF-8 symbols are ok
 
 // If we were given an operation //
 if ( $change_size || $change_output ) {
