@@ -6,9 +6,34 @@
  */
  
 require_once __DIR__ . "/../db.php";
+require_once __DIR__ . "/constants.php";
 require_once __DIR__ . "/users.php";
 
 // NOTE: None of these functions sanitize. Make sure you sanitize first! //
+
+$NODES = [];
+$ID_BY_PARENT_SLUG = [];
+$ID_BY_AUTHOR_SLUG = [];
+
+define('NODE_TTL',60*3);
+
+function node_Resolve( $action ) {
+	$paths = [ CMW_NODE_ROOT ];
+	foreach( $action as $key => $slug ) {
+		$id = node_GetNodeIdByParentIdAndSlug($paths[$key],$slug);
+		if ( !empty($id) )
+			$paths[] = $id;
+		else
+			return null;		
+	}
+	
+	return $paths;
+}
+
+// Prefetch Node Data 
+function node_Prefetch( $nodes ) {
+	
+}
 
 $NODE_SCHEMA = [
 	'id' => CMW_FIELD_TYPE_INT,
@@ -24,7 +49,6 @@ $NODE_SCHEMA = [
 	'favourite_count' => CMW_FIELD_TYPE_INT,
 	'popularity' => CMW_FIELD_TYPE_INT,
 ];
-
 
 function node_Add( $type, $subtype, $slug, $name, $body, $author, $parent, $publish = false, $publish_offset = 0 ) {
 	db_Connect();
@@ -87,6 +111,19 @@ function node_AddMeta( $id_a, $id_b, $type, $subtype, $data ) {
 }
 
 function node_GetNodeById( $id ) {
+	global $NODES;	
+	if ( isset($NODES[$id]) )
+		return $NODES[$id];
+	return node_DBGetNodeByID( $id );
+}
+
+function node_DBGetNodeById( $id ) {
+	$cached = apcu_fetch( "node$".$id );
+	if ( $cached ) {
+		$NODES[$id] = $cached;
+		return $cached;
+	}
+	
 	global $NODE_SCHEMA;
 	db_Connect();
 
@@ -96,7 +133,9 @@ function node_GetNodeById( $id ) {
 			" LIMIT 1" .
 		";", $NODE_SCHEMA);
 	
-	if ( count($item) ) {
+	if ( !empty($item) ) {
+		$NODES[$id] = $item[0];
+		apcu_store( "node$".$item[0]['id'], $item[0], NODE_TTL );	// apcu_store overwrites data, apcu_add doesn't //
 		return $item[0];
 	}
 	return null;
@@ -142,7 +181,7 @@ function node_GetUserBySlug( $slug ) {
 			" LIMIT 1" .
 		";");
 	
-	if ( count($user) ) {
+	if ( !empty($user) ) {
 		return $user[0];
 	}
 	return null;
@@ -158,7 +197,7 @@ function node_GetUserById( $id ) {
 			" LIMIT 1" .
 		";");
 	
-	if ( count($user) ) {
+	if ( !empty($user) ) {
 		return $user[0];
 	}
 	return null;
@@ -174,7 +213,7 @@ function node_GetNodeByParentIdAndSlug( $parent, $slug ) {
 			" LIMIT 1" .
 		";");
 	
-	if ( count($item) ) {
+	if ( !empty($item) ) {
 		return $item[0];
 	}
 	return null;
@@ -190,7 +229,7 @@ function node_GetNodeByAuthorIdAndSlug( $author, $slug ) {
 			" LIMIT 1" .
 		";");
 	
-	if ( count($item) ) {
+	if ( !empty($item) ) {
 		return $item[0];
 	}
 	return null;
@@ -259,7 +298,7 @@ function node_GetNodeIdByAuthorIdAndSlug( $author, $slug ) {
 			" LIMIT 1" .
 		";");
 	
-	if ( count($item) ) {
+	if ( !empty($item) ) {
 		return $item[0];
 	}
 	return null;
@@ -274,7 +313,7 @@ function node_GetNodeIdByParentIdAndSlug( $parent, $slug ) {
 			" LIMIT 1" .
 		";");
 	
-	if ( count($item) ) {
+	if ( !empty($item) ) {
 		return $item[0];
 	}
 	return null;
