@@ -12,6 +12,8 @@
 	will automatically cache the file, and never attempt to fetch it again (unless expired).
 */
 
+require_once __DIR__."/../core/internal/core.php";
+
 // NOTE: As it turns out, Cloudflare doesn't always cache files. It often takes a few requests
 //	before those files are cached. So instead, we may want to temporarily cache the generated
 //	file to memory. Give the file a short lifetime, so not to waste RAM.
@@ -37,8 +39,8 @@
 $host = "//" . $_SERVER['HTTP_HOST'];
 $self = substr($_SERVER['SCRIPT_NAME'],strrpos($_SERVER['SCRIPT_NAME'],'/')+1);
 $base = substr($_SERVER['SCRIPT_NAME'],0,strrpos($_SERVER['SCRIPT_NAME'],'/'));
-// TODO: Use ActionURL decoder for image path //
-$image = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : null;
+$image = "/" . implode('/',core_ParseActionURL());
+//header("X-Real-URL: " . $image);
 
 // To Crop or not to Crop //
 $crop = isset($_GET['crop']);
@@ -151,7 +153,7 @@ if ( $change_size || $change_output ) {
 			die();
 		}
 		
-		//header('X-Image-Info: ' . trim(preg_replace('/\s+/', ' ', print_r( $info, true))) );
+		//header('X-Image-Info: ' . return_r($info) );
 		if ( $info ) {
 			$raw_data = file_get_contents($filename);//,FILE_USE_INCLUDE_PATH);
 			@$data = imagecreatefromstring($raw_data);

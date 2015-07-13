@@ -28,6 +28,11 @@ function PADNUM( $number ) {
 	return "".$number;
 }
 
+// Shorthand that does a print_r on data, removes newlines, and returns the result //
+function return_r( $data ) {
+	return trim(preg_replace('/\s+/',' ',print_r( $data, true)));
+}
+
 // Parse the API Action URL (array of strings) //
 function core_ParseActionURL() {
 	// If PATH_INFO is set, then Apache figured out our parts for us //
@@ -36,7 +41,9 @@ function core_ParseActionURL() {
 		if ( empty($ret) )
 			return [];
 		else
-			return explode('/',$ret);
+			return array_values(array_filter(explode('/',$ret),function ($val) {
+				return !(empty($val) || ($val[0] === '.'));
+			}));
 	}
 
 	// If not, we have to extract them from the REQUEST_URI //
@@ -55,7 +62,9 @@ function core_ParseActionURL() {
 	if ( empty($ret) )
 		return [];
 	else
-		return explode('/',$ret);
+		return array_values(array_filter(explode('/',$ret),function ($val) {
+			return !(empty($val) || ($val[0] === '.'));
+		}));
 }
 // Convert response codes in to text //
 function core_GetHTTPResponseText($code){
