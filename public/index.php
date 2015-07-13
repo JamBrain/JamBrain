@@ -445,6 +445,13 @@ if ( $mode > 0 ) {
 					}
 				echo "</div>\n";
 				echo '<div class="body">';
+					// TODO: replace all the textarea related code with a function call for generating one. JS and PHP.
+					// TODO: Add TAB support (and ESC to de-focus the textbox, since otherwise keyboard can't de-focus)
+					// TODO: Emoji Autocompletion
+					// TODO: Image Autocompletion (once uploaded)
+					// TODO: Jumbomoji support (i.e. my *bigger* custom emoji. :key-wasd: etc)
+					// TODO: Jumbomoji Autocompletion
+					// TODO: Fix smileys surrounded by \n's (not working if an \n is on either side)
 					if ( !empty($post) ) {
 						// http://alistapart.com/article/expanding-text-areas-made-elegant
 						// https://github.com/alexdunphy/flexText
