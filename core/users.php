@@ -9,17 +9,17 @@ require_once __DIR__ . "/../db.php";
  
 // TODO: user_IsAdmin(), user_IsSuper()
 
-const CMW_SESSION_NAME = 'SESSID';				// Name of the Session //
-const CMW_SESSION_REGENERATE = 60*10;			// When to automatically Regenerate TOKEN (in seconds) //
-const CMW_SESSION_PERMISSION = 60*60*1;			// How long a login is good for when doing permissive things //
-const CMW_SESSION_STAYLOGGEDIN = 60*60*24*7*2;	// How long 'stay logged in' will persist your session //
+define('CMW_SESSION_NAME','SESSID');				// Name of the Session //
+define('CMW_SESSION_REGENERATE',60*10);				// When to automatically Regenerate TOKEN (in seconds) //
+define('CMW_SESSION_PERMISSION',60*60*1);			// How long a login is good for when doing permissive things //
+define('CMW_SESSION_STAYLOGGEDIN',60*60*24*7*2);	// How long 'stay logged in' will persist your session //
 
-const CMW_COOKIE_PATH = '/';
+define('CMW_COOKIE_PATH','/');
 if (!defined('CMW_USE_HTTPS')) {
-	define('CMW_USE_HTTPS',false);				// If HTTPS is available, we can require it in the cookie //
+	define('CMW_USE_HTTPS',false);					// If HTTPS is available, we can require it in the cookie //
 }
 
-const CMW_TOKEN_SIZE = 64;						// How many bytes long a token is //
+define('CMW_TOKEN_SIZE',64);						// How many bytes long a token is //
 
 
 // Normal use, retrieve the active session and login //

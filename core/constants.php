@@ -13,16 +13,16 @@ if ( !defined('CMW_TABLE_PREFIX') ) {
 }
 
 // Database Tables //
-const CMW_TABLE_NODE = CMW_TABLE_PREFIX."node";
-const CMW_TABLE_NODE_META = CMW_TABLE_PREFIX."node_meta";
-const CMW_TABLE_NODE_DIFF = CMW_TABLE_PREFIX."node_diff";
-const CMW_TABLE_NODE_LOVE = CMW_TABLE_PREFIX."node_love";
-const CMW_TABLE_NODE_STAR = CMW_TABLE_PREFIX."node_star";
+define('CMW_TABLE_NODE',CMW_TABLE_PREFIX."node");
+define('CMW_TABLE_NODE_META',CMW_TABLE_PREFIX."node_meta");
+define('CMW_TABLE_NODE_DIFF',CMW_TABLE_PREFIX."node_diff");
+define('CMW_TABLE_NODE_LOVE',CMW_TABLE_PREFIX."node_love");
+define('CMW_TABLE_NODE_STAR',CMW_TABLE_PREFIX."node_star");
 
-const CMW_TABLE_USER = CMW_TABLE_PREFIX."user";
+define('CMW_TABLE_USER',CMW_TABLE_PREFIX."user");
 
-const CMW_TABLE_COMMENT = CMW_TABLE_PREFIX."comment";
-const CMW_TABLE_COMMENT_LOVE = CMW_TABLE_PREFIX."comment_love";
+define('CMW_TABLE_COMMENT',CMW_TABLE_PREFIX."comment");
+define('CMW_TABLE_COMMENT_LOVE',CMW_TABLE_PREFIX."comment_love");
 
 // Field constants for Schema //
 const CMW_FIELD_TYPE_IGNORE = 0;		// Field will be unset (NOTE: Prefer a custom query) //

@@ -15,7 +15,7 @@ $NODES = [];
 $ID_BY_PARENT_SLUG = [];
 $ID_BY_AUTHOR_SLUG = [];
 
-const NODE_TTL = 60*3;
+define('NODE_TTL',60*3);
 
 function node_Resolve( $action ) {
 	$paths = [ CMW_NODE_ROOT ];
