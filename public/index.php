@@ -250,8 +250,8 @@ if ( $mode > 0 ) {
 		<div id='ldbar-pad'></div>
 	</div>
 	
-	<div id='warning'>
-		<strong>NOTE:</strong> This WIP website is <strong>pre-alpha</strong> quality. It is buggy, glitchy, and not pretty. Feedback is welcome, but do understand that I am <strong>NOT</strong> focusing on style or look. At this time, I am focusing entirely on <strong>user</strong> features, function/flow, performance, and security. We will be live later this year.
+	<div id='warning' <?php if ( isset($_COOKIE['hide-warning']) ) { echo 'style="display:none;"'; } ?> >
+		<strong>NOTE:</strong> This WIP website is <strong>pre-alpha</strong> quality. It is buggy, glitchy, and not pretty. Feedback is welcome, but do understand that I am <strong>NOT</strong> focusing on style or look. Currently I am working on <strong>user</strong> features, function/flow, performance, and security. We'll make it pretty later. The website will be live later this year. <strong><span onclick="warning_Hide();">[close]</span></strong>
 	</div>
 	
 	<script>
@@ -322,6 +322,11 @@ if ( $mode > 0 ) {
 		function item_UpdateEdit( o ) {
 			var rows = o.value.split("\n").length;
 			o.rows = (rows > 4) ? rows : 4;
+		}
+		
+		function warning_Hide() {
+			document.getElementById('warning').style.display = 'none';
+			document.cookie = "hide-warning=1";
 		}
 	</script>
 	
