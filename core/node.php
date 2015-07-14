@@ -5,9 +5,10 @@
  * @file
  */
  
-require_once __DIR__ . "/../db.php";
-require_once __DIR__ . "/constants.php";
-require_once __DIR__ . "/users.php";
+require_once __DIR__."/../db.php";
+require_once __DIR__."/internal/cache.php";
+require_once __DIR__."/constants.php";
+require_once __DIR__."/users.php";
 
 // NOTE: None of these functions sanitize. Make sure you sanitize first! //
 
@@ -118,7 +119,7 @@ function node_GetNodeById( $id ) {
 }
 
 function node_DBGetNodeById( $id ) {
-	$cached = apcu_fetch( "node$".$id );
+	$cached = cache_Fetch( "node$".$id );
 	if ( $cached ) {
 		$NODES[$id] = $cached;
 		return $cached;
@@ -135,7 +136,7 @@ function node_DBGetNodeById( $id ) {
 	
 	if ( !empty($item) ) {
 		$NODES[$id] = $item[0];
-		apcu_store( "node$".$item[0]['id'], $item[0], NODE_TTL );	// apcu_store overwrites data, apcu_add doesn't //
+		cache_Store( "node$".$item[0]['id'], $item[0], NODE_TTL );
 		return $item[0];
 	}
 	return null;

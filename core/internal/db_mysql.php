@@ -3,6 +3,12 @@
 
 $db = null;				// ** Global Database Variable **** //
 
+$DB_QUERY_COUNT = 0;
+function db_GetQueryCount() {
+	global $DB_QUERY_COUNT;
+	return $DB_QUERY_COUNT;
+}
+
 // Logging function specific to database operations //
 function db_Log( $msg ) {
 	error_log( "CMW DB ERROR: " . $msg );
@@ -82,12 +88,17 @@ function db_DoSchema( &$row, &$schema ) {
 // Unsafe "run any query" function. Queries don't return results. Use db_fetch instead. //
 function db_Query($query,$ignore_errors=false) {
 	global $db;
+	global $DB_QUERY_COUNT;
+	$DB_QUERY_COUNT++;
 	return $db->query($query) or $ignore_errors or die(mysqli_error($db)."\n");
 }
 
 // Unsafe "run any fetch query" function. Returns fields as an Associative Array. //
 function db_Fetch($query,$schema=null) {
 	global $db;
+	global $DB_QUERY_COUNT;
+	$DB_QUERY_COUNT++;
+
 	$result = $db->query($query);
 	$rows = [];
 	if ( !empty($result) ) {
@@ -109,6 +120,9 @@ function db_Fetch($query,$schema=null) {
 // Unsafe "run any fetch query" function. Returns fields as a Numeric Array. //
 function db_FetchArray($query) {
 	global $db;
+	global $DB_QUERY_COUNT;
+	$DB_QUERY_COUNT++;
+
 	$result = $db->query($query);
 	$rows = [];
 	if ( !empty($result) ) {
@@ -122,6 +136,8 @@ function db_FetchArray($query) {
 // Unsafe "run any fetch query" function. Returns an array of values from a single field. //
 function db_FetchSingle($query) {
 	global $db;
+	global $DB_QUERY_COUNT;
+	$DB_QUERY_COUNT++;
 
 	$result = $db->query($query);
 	$rows = [];
