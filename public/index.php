@@ -95,7 +95,34 @@ if ( $mode > 0 ) {
 			
 			/* shadow */
 			border-bottom:1px solid #000;/*rgba(96,96,96,0.2);*/
+
+			/*-webkit-animation: slidein 3s;*/
+			/*-moz-animation: slidein 3s;*/
+			/*animation: slidein 3s;*/
 		}
+		@-webkit-keyframes slidein {
+		    from{ top: -52px; }
+		    50% { top: -52px; }
+		    75%	{ top: 8px; }
+		    90%	{ top: -4px; }
+		    to	{ top: 0; }
+		}
+		@-moz-keyframes slidein {
+		    from { top: -52px; }
+		    50% { top: -52px; }
+		    75%	{ top: 8px; }
+		    90%	{ top: -4px; }
+		    to   { top: 0; }
+		}
+		@keyframes slidein {
+		    from { top: -52px; }
+		    50% { top: -52px; }
+		    75%	{ top: 8px; }
+		    90%	{ top: -4px; }
+		    to   { top: 0; }
+		}
+
+		
 		#ldbar-inner {
 			color:#fff;
 			background:/*#765*/ rgba(96,96,96,1.0);
@@ -272,10 +299,12 @@ if ( $mode > 0 ) {
 		function item_ShowEdit( id ) {
 			document.getElementById('flextext-'+id).style.display = '';
 			document.getElementById('preview-'+id).style.display = 'none';
+//			document.getElementById('item-'+id).style.maxHeight = document.getElementById('item-'+id).scrollHeight +"px";
 		}
 		function item_ShowPreview( id ) {
 			document.getElementById('flextext-'+id).style.display = 'none';
 			document.getElementById('preview-'+id).style.display = '';
+//			document.getElementById('item-'+id).style.maxHeight = document.getElementById('item-'+id).scrollHeight +"px";
 		}
 		
 		function item_UpdateEdit( o ) {
@@ -288,14 +317,14 @@ if ( $mode > 0 ) {
 	
 	<style>
 		body {
-			background: #EEE;
+			background: #DDD;
 		}
 		#nav .row {
 			margin-left:16px;
 			padding:2px;
 		}
 		#nav .row:hover {
-			background:#DDF;
+			background:#CCF;
 		}
 		#nav .slug {
 			display:inline;
@@ -316,10 +345,10 @@ if ( $mode > 0 ) {
 		}
 		
 		#nav .proxy {
-			background:#DFD;
+			background:#CFC;
 		}
 		#nav .link {
-			background:#FDD;
+			background:#FCC;
 		}
 		#nav .authored {
 			background:#FCF;
@@ -327,14 +356,21 @@ if ( $mode > 0 ) {
 		
 		#content .item {
 			margin:16px;
-			border:2px solid #000;
+			/*border:2px solid #000;*/
 			background:#FFF;
+			
+			overflow:hidden;
+			/*max-height:0;*/
+			
+			-moz-transition: max-height 1s;
+			-webkit-transition: max-height 1s;
+			transition: max-height 1s;
 		}
 		
 		#content .item-post {
 		}
 		#content .item-game {
-			background:#DDF;
+			background:#CCF;
 			margin:16px 64px;
 		}
 		
@@ -349,7 +385,7 @@ if ( $mode > 0 ) {
 			margin:8px;
 		}
 		#content .item .footer {
-			background:rgba(0,0,0,0.2);
+			background:rgba(0,0,0,0.3);
 			padding:8px;			
 		}
 		
@@ -443,7 +479,7 @@ if ( $mode > 0 ) {
 			$authors = node_GetNodesByIds($author_ids);
 			
 			foreach($items as $item) {
-				echo '<div class="item item-'.$item['type'].'" id="item-"'.$item['id'].'>';
+				echo '<div class="item item-'.$item['type'].'" id="item-'.$item['id'].'">';
 				if ( $item['type'] === 'post' ) {
 					echo '<div class="header">';
 						echo '<h1>' . $item['name'] .'</h1>';
@@ -473,7 +509,7 @@ if ( $mode > 0 ) {
 					echo '<div class="footer">';
 						echo '<span onclick="item_ShowEdit('.$item['id'].');">PATCH</span>';
 						echo ' | ';
-						echo '<span onclick="item_ShowPreview('.$item['id'].');item_Parse('.$item['id'].');">PREVIEW</span>';
+						echo '<span onclick="item_Parse('.$item['id'].');item_ShowPreview('.$item['id'].');">PREVIEW</span>';
 					echo '</div>';
 				}
 				else if ( $item['type'] === 'game' ) {
@@ -548,7 +584,7 @@ if ( $mode > 0 ) {
 	</div>
 	<?php } /* type */ ?>
 	
-	<div id='nav' style="padding:16px;">
+	<div id='nav' style="padding:16px;display:none;">
 		<?php
 			echo "/" . $args_merged . " [".$this_node_id."]<br />\n";
 			if ( $args_count >= 1 ) {
@@ -569,7 +605,7 @@ if ( $mode > 0 ) {
 		?>
 	</div>
 	<div>
-		<img src="//192.168.48.48:8080/img/logo/mike/Chicken16.png?crop&w=256&h=128">
+		<img src="//192.168.48.48:8080/img/logo/mike/Chicken16.png?crop&w=256&h=128" onclick="document.getElementById('nav').style.display='';">
 	</div>
 <?php /*
 	<div id="debug">
@@ -643,6 +679,14 @@ if ( $mode > 0 ) {
 				AllSpans[idx2].innerHTML = AllTextAreas[idx2].value;
 			}
 		}
+
+//		var el = document.getElementById('content');
+//		var original = el.getElementsByClassName('item');
+//		for(var idx = 0, len = original.length; idx < len; ++idx) {
+//			//console.dir(original[idx]);
+//			original[idx].style.maxHeight = original[idx].scrollHeight + "px";
+//		}
+		
 	</script>
 </body>
 <?php template_GetFooter(); ?>
