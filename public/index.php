@@ -223,6 +223,14 @@ if ( $mode > 0 ) {
 			height:32px;
 			top:8px;
 		}
+		
+		#warning {
+			text-align:center;
+			padding:12px 16px;
+			margin:16px 0;
+			background:#F53;
+			color:#FFF;
+		}
 
 	</style>
 	
@@ -240,6 +248,10 @@ if ( $mode > 0 ) {
 			</div>
 		</div>
 		<div id='ldbar-pad'></div>
+	</div>
+	
+	<div id='warning'>
+		<strong>NOTE:</strong> This WIP website is <strong>pre-alpha</strong> quality. It is buggy, glitchy, and not pretty. Feedback is welcome, but do understand that I am <strong>NOT</strong> focusing on style or look. At this time, I am focusing entirely on <strong>user</strong> features, function/flow, performance, and security. We will be live later this year.
 	</div>
 	
 	<script>

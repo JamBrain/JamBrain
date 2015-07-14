@@ -2,6 +2,8 @@
 /* CSS RESET */
 body {
 	margin:0;
+	
+	font-family: Trebuchet MS,Lucida Grande,Lucida Sans Unicode,Lucida Sans,Tahoma,sans-serif; 
 }
 img, a {
 	border:none;
