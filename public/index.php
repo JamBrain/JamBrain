@@ -605,7 +605,7 @@ if ( $mode > 0 ) {
 		?>
 	</div>
 	<div>
-		<img src="//192.168.48.48:8080/img/logo/mike/Chicken16.png?crop&w=256&h=128" onclick="document.getElementById('nav').style.display='';">
+		<img src="<?php STATIC_URL(); ?>/img/logo/mike/Chicken16.png?crop&w=256&h=128" onclick="document.getElementById('nav').style.display='';">
 	</div>
 <?php /*
 	<div id="debug">
