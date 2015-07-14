@@ -256,7 +256,7 @@ if ( $mode > 0 ) {
 	
 	<script>
 		function SendLogin() {
-			xhr_PostJSON( "/a/user/login/", "l=pov&p=blahblah",
+			xhr_PostJSON( "/a/user/login/", "l=testuser&p=test",
 				function( response, code ) {
 					if ( code == 200 ) {
 						document.getElementById("ldbar-notifications").innerHTML = response['id'];
