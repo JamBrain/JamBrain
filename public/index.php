@@ -433,7 +433,7 @@ if ( $mode > 0 ) {
 				$author_ids[] = $post['author'];
 			}
 			$author_ids = array_unique($author_ids);
-			$authors = node_GetNodeArrayByIds($author_ids);
+			$authors = node_GetNodesByIds($author_ids);
 			
 			foreach($posts as $post) {
 				echo '<div class="post" id="post-"'.$post['id'].'>';

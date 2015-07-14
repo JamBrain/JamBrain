@@ -111,66 +111,84 @@ function node_AddMeta( $id_a, $id_b, $type, $subtype, $data ) {
 	return db_GetId();
 }
 
+
 function node_GetNodeById( $id ) {
 	global $NODES;	
-	if ( isset($NODES[$id]) )
-		return $NODES[$id];
-	return node_DBGetNodeByID( $id );
-}
-
-function node_DBGetNodeById( $id ) {
-	$cached = cache_Fetch( "node$".$id );
-	if ( $cached ) {
-		$NODES[$id] = $cached;
-		return $cached;
+	if ( isset($NODES[$id]) ) {
+		$ret = &$NODES[$id];
+		return $ret;
 	}
-	
-	global $NODE_SCHEMA;
-	db_Connect();
-
-	$item = db_Fetch(
-		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
-			"`id`=" . $id .
-			" LIMIT 1" .
-		";", $NODE_SCHEMA);
-	
-	if ( !empty($item) ) {
-		$NODES[$id] = $item[0];
-		cache_Store( "node$".$item[0]['id'], $item[0], NODE_TTL );
-		return $item[0];
+	$node = node_DBGetNodesByIds( [$id] );
+	if ( !empty($node) ) {
+		return $node[$id];
 	}
 	return null;
 }
 function node_GetNodesByIds( $ids ) {
-	global $NODE_SCHEMA;
-	db_Connect();
-
-	$items = db_Fetch(
-		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
-			"`id` in (" . implode(',',$ids) . ")" .
-		";", $NODE_SCHEMA);
-	
-	return $items;
-}
-
-function node_GetNodeArrayByIds( $ids ) {
-	global $NODE_SCHEMA;
-	db_Connect();
-
-	$items = db_Fetch(
-		"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
-			"`id` in (" . implode(',',$ids) . ")" .
-		";", $NODE_SCHEMA);
-	
+	global $NODES;
 	$ret = [];
-	foreach( $items as $item ) {
-		$ret[$item['id']] = $item;
+	foreach( $ids as $key => &$id ) {
+		if ( isset($NODES[$id]) ) {
+			$ret[$id] = &$NODES[$id];
+			unset($ids[$key]);
+		}
 	}
 	
-	return $ret;
-	
+	// All nodes found in RAM //
+	if ( count($ids) == 0 )
+		return $ret;
+
+ 	return array_replace($ret,node_DBGetNodesByIds($ids));
 }
 
+function node_DBGetNodesByIds( $ids ) {
+	global $NODES;
+	$ret = [];
+	
+	// Fetch from Cache
+	foreach( $ids as $key => &$id ) {
+		$cached = cache_Fetch( "node$".$id );
+		if ( $cached ) {
+			$NODES[$id] = $cached;
+			$ret[$id] = &$NODES[$id];
+			unset($ids[$key]);
+		}
+	}
+	$id_count = count($ids);
+	
+	// All nodes found in Cache //
+	if ( $id_count === 0 )
+		return $ret;
+	
+	// Fetch remaining nodes //
+	global $NODE_SCHEMA;
+	db_Connect();
+
+	if ( $id_count === 1 ) {
+		$items = db_Fetch(
+			"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
+				"`id`=" . $id .
+				" LIMIT 1" .
+			";", $NODE_SCHEMA);
+	}
+	else {
+		$items = db_Fetch(
+			"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
+				"`id` in (" . implode(',',$ids) . ")" .
+			";", $NODE_SCHEMA);
+	}
+
+	// Cache them as needed //
+	foreach( $items as $item ) {
+		$id = &$item['id'];
+		$NODES[$id] = $item;
+		cache_Store( "node$".$id, $item, NODE_TTL );
+		$ret[$id] = &$NODES[$id];
+	}
+
+	// Finished //
+	return $ret;
+}
 
 function node_GetUserBySlug( $slug ) {
 	db_Connect();
