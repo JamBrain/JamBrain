@@ -16,7 +16,8 @@ $NODES = [];
 $ID_BY_PARENT_SLUG = [];
 $ID_BY_AUTHOR_SLUG = [];
 
-define('NODE_TTL',60*3);
+define('CACHE_TTL_NODE',60*3);
+define('CACHE_TTL_PUBLISHED_IDS',30);
 
 function node_Resolve( $action ) {
 	$paths = [ CMW_NODE_ROOT ];
@@ -111,7 +112,8 @@ function node_AddMeta( $id_a, $id_b, $type, $subtype, $data ) {
 	return db_GetId();
 }
 
-
+// - ----------------------------------------------------------------------------------------- - //
+// Returns a reference to a node //
 function node_GetNodeById( $id ) {
 	global $NODES;	
 	if ( isset($NODES[$id]) ) {
@@ -124,23 +126,32 @@ function node_GetNodeById( $id ) {
 	}
 	return null;
 }
+// Returns an array of references to nodes //
 function node_GetNodesByIds( $ids ) {
 	global $NODES;
-	$ret = [];
+	$ids_copy = $ids;
+	$nodes = [];
+	
 	foreach( $ids as $key => &$id ) {
 		if ( isset($NODES[$id]) ) {
-			$ret[$id] = &$NODES[$id];
+			$nodes[$id] = &$NODES[$id];
 			unset($ids[$key]);
 		}
 	}
 	
-	// All nodes found in RAM //
+	// All nodes found in RAM, and the key order is already good //
 	if ( count($ids) == 0 )
-		return $ret;
+		return $nodes;
 
- 	return array_replace($ret,node_DBGetNodesByIds($ids));
+	// Recombine all node lists, and build new array in original key order //
+	$nodes = array_replace($nodes,node_DBGetNodesByIds($ids));
+	$ret = [];
+	foreach( $ids_copy as &$id ) {
+		$ret[$id] = $nodes[$id];
+	}
+	return $ret;
 }
-
+// When not in RAM, check cache, then the database //
 function node_DBGetNodesByIds( $ids ) {
 	global $NODES;
 	$ret = [];
@@ -167,7 +178,7 @@ function node_DBGetNodesByIds( $ids ) {
 	if ( $id_count === 1 ) {
 		$items = db_Fetch(
 			"SELECT * FROM `" . CMW_TABLE_NODE . "` WHERE ".
-				"`id`=" . $id .
+				"`id`=" . array_pop($ids) .
 				" LIMIT 1" .
 			";", $NODE_SCHEMA);
 	}
@@ -179,16 +190,18 @@ function node_DBGetNodesByIds( $ids ) {
 	}
 
 	// Cache them as needed //
-	foreach( $items as $item ) {
+	foreach( $items as &$item ) {
 		$id = &$item['id'];
 		$NODES[$id] = $item;
-		cache_Store( "node$".$id, $item, NODE_TTL );
+		// TODO: Consider using cache_Create here instead, to NOT overwrite in case of thread collisions //
+		cache_Store( "node$".$id, $item, CACHE_TTL_NODE );
 		$ret[$id] = &$NODES[$id];
 	}
 
 	// Finished //
 	return $ret;
 }
+// - ----------------------------------------------------------------------------------------- - //
 
 function node_GetUserBySlug( $slug ) {
 	db_Connect();
@@ -437,6 +450,37 @@ function node_GetMetasById( $id ) {
 	return [];
 }
 
+function node_GetPublishedNodeIdsByTypes( $types, $limit = 50, $offset = 0 ) {
+	// Sort the types, to make sure we get a consistent key name //
+	if ( is_array($types) )
+		sort($types,SORT_STRING);
+	else
+		$types = [$types];
+
+	$cache_key = "published-ids$" . $offset . "$" . $limit . "$" .
+		implode("$",$types);
+
+	// Fetch from cache //
+	$cached = cache_Fetch( $cache_key );
+	if ( $cached )
+		return $cached;
+
+	// Fetch from database //	
+	global $NODE_SCHEMA;
+	db_Connect();
+
+	$items = db_FetchSingle(
+		"SELECT `id` FROM `" . CMW_TABLE_NODE . "` WHERE ".
+			("`time_published` != " . "'0000-00-00 00:00:00'" . " AND ") .
+			(is_array($types) ? ("`type` in  (\"" . implode("\",\"",$types) . "\")") : ("`type`=" . "\"post\"")) .
+			" ORDER BY `time_published` DESC" .
+			(" LIMIT " . $limit . " OFFSET " . $offset) .
+		";", $NODE_SCHEMA);
+
+	// Cache it //
+	cache_Store( $cache_key, $items, CACHE_TTL_PUBLISHED_IDS );
+	return $items;
+}
 
 function node_GetPosts( $limit = 10, $offset = 0 ) {
 	global $NODE_SCHEMA;

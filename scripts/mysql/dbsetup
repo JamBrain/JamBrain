@@ -832,14 +832,14 @@ Thing {
 			'bearly-seasoned','Bearly:bear:Seasoned',
 			"It's about a :bear:. The :bear: wants :fish:. Eat :fish: then go :house:.",
 			$user_id,CMW_NODE_OTHER_GAME,
-			true
+			true, 2200
 		);
 		node_Add(
 			'game',"",
 			'phat-js','Phat JS',
 			"It's just phat",
 			$user_id,CMW_NODE_OTHER_DEMO,
-			true
+			true, 33
 		);
 		
 		// Add Dummy Metadata //
@@ -856,9 +856,9 @@ Thing {
 		node_Add(
 			'post','',
 			"this-is-a-post","This is a post",
-			htmlspecialchars("This is an *example* post.\n\nIt's here to demonstrate that yes, posts are still a thing.\n\n**NOTE:** Please ignore the styles and layout. I'm focusing on features, **NOT** the look.\n\nAll posted content, be it posts, comments, games, tools, really any piece of written content on the website is now written using **Markdown** (a GitHub styled one at that).\n\nWe also support Emoji and Emoji codes. Using `:bear: :dog: :dolphin:` outputs :bear: :dog: :dolphin:. For a complete list, visit [emoji.codes](http://emoji.codes). Eventually we will support auto-completion, and a library of gaming/gamedev specific Emoji codes, such as `:key-wasd: :key-arrows: :key-space: :key-a: :mouse-lmb: :xbox-y: :playstation-triangle:` for documenting your game controls.\n\nThat's pretty cool.\n\nYou can add source code too, and that source code gets highlighted.\n\n```\n10 PRINT \"Hello World\"\n20 GOTO 10\n```\nRemember GOTO? ;)\n\nYou can also *edit* and *patch* **any** piece of written content on the website, **ANY**, like a WIKI. But unlike a WIKI, changes need to be approved by either the original author, a member the team a thing is assigned to, or a moderator. I think that's pretty neato. Click the `PATCH` button to see the markdown code.\n\nFinally, I ... haven't figured out this last part yet."),
+			htmlspecialchars("This is an *example* post.\n\nIt's here to demonstrate that yes, posts are still a thing.\n\n**NOTE:** Please ignore the styles and layout. I'm focusing on features, **NOT** the look.\n\nAll posted content, be it posts, comments, games, tools, really any piece of written content on the website is now written using **Markdown** (a GitHub styled one at that).\n\nWe also support Emoji and Emoji codes. Using `:bear: :dog: :dolphin:` outputs :bear: :dog: :dolphin:. For a complete list, visit [emoji.codes](http://emoji.codes). Eventually we will support auto-completion, and a library of gaming/gamedev specific Emoji codes, such as `:key-wasd: :key-arrows: :key-space: :key-a: :mouse-lmb: :xbox-y: :playstation-triangle:` for documenting your game controls.\n\nThat's pretty cool.\n\nYou can add source code too, and that source code gets highlighted.\n\n```\n10 PRINT \"Hello World\"\n20 GOTO 10\n```\nRemember GOTO? ;) \n\nYou can also *edit* and *patch* **any** piece of written content on the website, **ANY**, like a WIKI. But unlike a WIKI, changes need to be approved by either the original author, a member the team a thing is assigned to, or a moderator. I think that's pretty neato. Click the `PATCH` button to see the markdown code.\n\nFinally, I ... haven't figured out this last part yet."),
 			$user_id,$user_id,
-			true, -10
+			true, 1182
 		);
 	}
 
@@ -876,9 +876,16 @@ Thing {
 		node_Add(
 			'post','',
 			"i-m-in","I'm in!",
-			htmlspecialchars("I am a fake Ludum Dare participant, and though I am not real, **I am in!**\n\n:sailboat: :ca: :D"),
+			htmlspecialchars("I am a fake Ludum Dare participant, and though I am not real, **I am in!**\n\n:sailboat: :se: :D "),
 			$user_id,$user_id,
-			true
+			true, 4411
+		);
+		node_Add(
+			'post','',
+			"i-forgot","I forgot!",
+			htmlspecialchars("Oh, and I'm using Python because :snake: :airplane:"),
+			$user_id,$user_id,
+			true, 5411
 		);
 
 	}

@@ -269,16 +269,16 @@ if ( $mode > 0 ) {
 		}
 		updateLDBar();
 		
-		function post_ShowEdit( id ) {
+		function item_ShowEdit( id ) {
 			document.getElementById('flextext-'+id).style.display = '';
 			document.getElementById('preview-'+id).style.display = 'none';
 		}
-		function post_ShowPreview( id ) {
+		function item_ShowPreview( id ) {
 			document.getElementById('flextext-'+id).style.display = 'none';
 			document.getElementById('preview-'+id).style.display = '';
 		}
 		
-		function post_UpdateEdit( o ) {
+		function item_UpdateEdit( o ) {
 			var rows = o.value.split("\n").length;
 			o.rows = (rows > 4) ? rows : 4;
 		}
@@ -325,24 +325,31 @@ if ( $mode > 0 ) {
 			background:#FCF;
 		}
 		
-		#content .post {
+		#content .item {
 			margin:16px;
 			border:2px solid #000;
 			background:#FFF;
 		}
 		
-		#content .post h1, .post h3 {
+		#content .item-post {
+		}
+		#content .item-game {
+			background:#DDF;
+			margin:16px 64px;
+		}
+		
+		#content .item h1, .item h3 {
 			margin:0;
 		}
 		
-		#content .post .header {
+		#content .item .header {
 			margin:8px;		
 		}
-		#content .post .body {
+		#content .item .body {
 			margin:8px;
 		}
-		#content .post .footer {
-			background:#CCC;
+		#content .item .footer {
+			background:rgba(0,0,0,0.2);
 			padding:8px;			
 		}
 		
@@ -355,7 +362,7 @@ if ( $mode > 0 ) {
 			font-weight:bold;
 		}
 		
-		#content .post span code {
+		#content .item span code {
 			background:#FDC;
 			padding:3px;
 			margin:0 3px;
@@ -427,56 +434,70 @@ if ( $mode > 0 ) {
 	<?php if ( $this_node['type'] === 'root' ) { ?>
 	<div id="content">
 		<?php
-			$posts = node_GetPosts(10);
+			$items = node_GetNodesByIds(node_GetPublishedNodeIdsByTypes(['post','game']));
 			$author_ids = [];
-			foreach($posts as $post) {
-				$author_ids[] = $post['author'];
+			foreach($items as $item) {
+				$author_ids[] = $item['author'];
 			}
 			$author_ids = array_unique($author_ids);
 			$authors = node_GetNodesByIds($author_ids);
 			
-			foreach($posts as $post) {
-				echo '<div class="post" id="post-"'.$post['id'].'>';
-				echo '<div class="header">';
-					echo '<h1>' . $post['name'] .'</h1>';
-					echo '<small>[Local time goes here] (' . date('l, d F Y H:i:s T',$post['time_published']) . ')</small>';
-					if ( !empty($post['author']) ) { 
-						echo "<h3>by <a href='/user/".$authors[$post['author']]['slug']."'>" . $authors[$post['author']]['name'] . "</a></h3>"; 
-					}
-				echo "</div>\n";
-				echo '<div class="body">';
-					// TODO: replace all the textarea related code with a function call for generating one. JS and PHP.
-					// TODO: Add TAB support (and ESC to de-focus the textbox, since otherwise keyboard can't de-focus)
-					// TODO: Emoji Autocompletion
-					// TODO: Image Autocompletion (once uploaded)
-					// TODO: Jumbomoji support (i.e. my *bigger* custom emoji. :key-wasd: etc)
-					// TODO: Jumbomoji Autocompletion
-					// TODO: Fix smileys surrounded by \n's (not working if an \n is on either side)
-					if ( !empty($post) ) {
-						// http://alistapart.com/article/expanding-text-areas-made-elegant
-						// https://github.com/alexdunphy/flexText
-						echo '<div class="flextext" id="flextext-'.$post['id'].'" style="display:none;">';
-							echo '<pre><span id="flextext-span-'.$post['id'].'"></span><br /><br /></pre>';
-							echo '<textarea class="edit" id="edit-'.$post['id'].'" oninput="flextext_Update('.$post['id'].');" onpropertychange="flextext_Update('.$post['id'].');" onkeyup="flextext_Update('.$post['id'].');" onchange="flextext_Update('.$post['id'].');">' . $post['body'] . '</textarea>';
-						echo '</div>';
-						echo '<div class="preview" id="preview-'.$post['id'].'"></div>';
-					}
-				echo '</div>';
-				echo '<div class="footer">';
-					echo '<span onclick="post_ShowEdit('.$post['id'].');">PATCH</span>';
-					echo ' | ';
-					echo '<span onclick="post_ShowPreview('.$post['id'].');post_Parse('.$post['id'].');">PREVIEW</span>';
-				echo '</div>';
+			foreach($items as $item) {
+				echo '<div class="item item-'.$item['type'].'" id="item-"'.$item['id'].'>';
+				if ( $item['type'] === 'post' ) {
+					echo '<div class="header">';
+						echo '<h1>' . $item['name'] .'</h1>';
+						echo '<small>[Local time goes here] (' . date('l, d F Y H:i:s T',$item['time_published']) . ')</small>';
+						if ( !empty($item['author']) ) { 
+							echo "<h3>by <a href='/user/".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></h3>"; 
+						}
+					echo "</div>\n";
+					echo '<div class="body">';
+						// TODO: replace all the textarea related code with a function call for generating one. JS and PHP.
+						// TODO: Add TAB support (and ESC to de-focus the textbox, since otherwise keyboard can't de-focus)
+						// TODO: Emoji Autocompletion
+						// TODO: Image Autocompletion (once uploaded)
+						// TODO: Jumbomoji support (i.e. my *bigger* custom emoji. :key-wasd: etc)
+						// TODO: Jumbomoji Autocompletion
+						// TODO: Fix smileys surrounded by \n's (not working if an \n is on either side)
+						if ( !empty($item) ) {
+							// http://alistapart.com/article/expanding-text-areas-made-elegant
+							// https://github.com/alexdunphy/flexText
+							echo '<div class="flextext" id="flextext-'.$item['id'].'" style="display:none;">';
+								echo '<pre><span id="flextext-span-'.$item['id'].'"></span><br /><br /></pre>';
+								echo '<textarea class="edit" id="edit-'.$item['id'].'" oninput="flextext_Update('.$item['id'].');" onpropertychange="flextext_Update('.$item['id'].');" onkeyup="flextext_Update('.$item['id'].');" onchange="flextext_Update('.$item['id'].');">' . $item['body'] . '</textarea>';
+							echo '</div>';
+							echo '<div class="preview" id="preview-'.$item['id'].'"></div>';
+						}
+					echo '</div>';
+					echo '<div class="footer">';
+						echo '<span onclick="item_ShowEdit('.$item['id'].');">PATCH</span>';
+						echo ' | ';
+						echo '<span onclick="item_ShowPreview('.$item['id'].');item_Parse('.$item['id'].');">PREVIEW</span>';
+					echo '</div>';
+				}
+				else if ( $item['type'] === 'game' ) {
+					echo '<div class="header">';
+						echo '<h1>' . $item['name'] .'</h1>';
+						echo '<small>Submitted on ' . date('l, d F Y H:i:s T',$item['time_published']) . '</small>';
+						if ( !empty($item['author']) ) { 
+							echo "<h3>by <a href='/user/".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></h3>"; 
+						}
+					echo "</div>\n";
+					echo '<div class="body">';
+						echo "This is a game submission part of the main timeline. Screenshots and other presentable elements go here.";
+					echo '</div>';					
+				}
 				echo '</div>';
 			}
 		?>
-		<!-- <?php print_r($posts); ?> -->
+		<!-- <?php print_r($items); ?> -->
 		<!-- <?php print_r($author_ids); ?> -->
 		<!-- <?php print_r($authors); ?> -->
 	</div>
 	<?php } else { ?>
 	<div id="content">
-		<div class="post">
+		<div class="item">
 			<div class="title"><h1><?php echo $this_node['name']; ?></h1><?php if ( $author_node ) { echo "<h3>by <a href='/user/".$author_node['slug']."'>" . $author_node['name'] . "</a></h3>"; } ?></div>
 			<?php 
 				if ( !empty($this_node['body']) ) { 
@@ -601,7 +622,7 @@ if ( $mode > 0 ) {
 			preview[idx].innerHTML = html_Parse(original[idx].innerHTML);
 		}
 		
-		function post_Parse(id) {
+		function item_Parse(id) {
 			var src = document.getElementById('edit-'+id);
 			var dest = document.getElementById('preview-'+id);
 			dest.innerHTML = html_Parse(src.value);
