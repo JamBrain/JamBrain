@@ -3,6 +3,8 @@ require_once __DIR__ . "/../web.php";
 require_once __DIR__ . "/../core/node.php";
 require_once __DIR__ . "/../core/internal/sanitize.php";
 
+$HIDE_FOOTER_STATS = true;
+
 // Modes //
 //const M_NULL = 0;		// Unknown State //
 const M_DEFAULT = 1;	// Default State //
@@ -13,7 +15,6 @@ const M_NO_ITEM = -3;	// No Item Found //
 const M_ERROR = -255;	// Other Error //
 
 $mode = M_DEFAULT;
-
 
 // Retrieve Action and Arguments
 $arg = core_ParseActionURL();
@@ -170,7 +171,7 @@ if ( isset($_GET['preview']) ) {
 <style>
 body {
 	color:#<?php echo $dark_text; ?>;
-	background:#<?php echo $dark_bg; ?>
+	background:#<?php echo $dark_bg; ?>;
 }
 .header {
 	height:38px;
@@ -184,6 +185,10 @@ body {
 	padding-top:16px;
 	padding-bottom:16px;
 }
+.body-content {
+	margin:0 auto;
+	width:1024px;
+}
 .footer {
 	/*color:#<?php echo $dark_text; ?>;	/* TODO: Should be 80% of value (premultiplying the alpha) */
 	text-align:center;
@@ -193,7 +198,7 @@ body {
 .footer img {
 	vertical-align:middle;
 	mix-blend-mode:screen;
-	opacity:0.8;
+	opacity:0.7;
 
 	-webkit-transition:all 0.125s;
 	transition:all 0.125s;
@@ -215,6 +220,7 @@ body {
 <?php } /* $header */ ?>
 
 	<div class="body">
+	<div class="body-content">
 	<?php switch ($mode) { 
 			  default: { ?>
 			<?php echo "Unknown Error (" . $mode . ")<br />"; ?>
@@ -253,6 +259,7 @@ body {
 		<?php } break; ?>
 	<?php }; ?>
 	</div>
+	</div>
 
 	<script>
 		emojione.ascii = true;
@@ -269,8 +276,8 @@ body {
 		}
 	</script>
 
-	<div class="footer">
+	<div><div class="footer">
 		<a href="/"><img class="jammer" src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo56<?php echo $img; ?>.png" height="28" alt="Jammer" title="Jammer" /></a> by <a href="http://twitter.com/mikekasprzak" target="_blank"><img class="mike" src="<?php STATIC_URL(); ?>/logo/mike/Chicken32W.png" width="16" height="16" alt="Mike Kasprzak" title="Mike Kasprzak"></a> &nbsp;|&nbsp; <a href="//twitter.com/jammerbio" target="_blank"><img class="jammer" src="<?php STATIC_URL(); ?>/logo/twitter/Twitter32<?php echo $img; ?>.png" height="16" alt="Twitter" title="Twitter" /></a> &nbsp;|&nbsp; powered by &nbsp;<a href="http://ludumdare.com" target="_blank"><img class="ludumdare" src="<?php STATIC_URL(); ?>/logo/ludumdare/2009/LudumDareLogo40<?php echo $img; ?>.png" height="20" alt="Ludum Dare" title="Ludum Dare" /></a>
-	</div>
+	</div></div>
 </body>
 <?php template_GetFooter(); ?>

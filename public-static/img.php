@@ -13,6 +13,7 @@
 */
 
 require_once __DIR__."/../core/internal/core.php";
+require_once __DIR__."/../core/internal/cache.php";
 
 // NOTE: As it turns out, Cloudflare doesn't always cache files. It often takes a few requests
 //	before those files are cached. So instead, we may want to temporarily cache the generated
@@ -35,6 +36,8 @@ require_once __DIR__."/../core/internal/core.php";
 // TODO: Support percentages (i.e. any time a number ends with a %, use that instead of pixels)
 // TODO: Add sub-cropping (i.e. return 50% of the image, at offset 25%)
 // TODO: Add sprites (i.e. given cell sizes, give me sprite 4)
+
+define('CACHE_TTL_IMAGE',60);
 
 $host = "//" . $_SERVER['HTTP_HOST'];
 $self = substr($_SERVER['SCRIPT_NAME'],strrpos($_SERVER['SCRIPT_NAME'],'/')+1);
@@ -104,15 +107,14 @@ if ( $change_size || $change_output ) {
 
 	// TODO: add "p" character for percentages //
 	// TODO: strip non-ascii characters from $image //
-//	$cache_key = "img\$" .
-//		$image .
-//		($out_width ? "\$w".$out_width : "") .
-//		($out_height ? "\$h".$out_height : "") .
-//		($crop ? "\$crop" : "") .
-//		($jpeg ? "\$jpeg" : "") .
-//		($png ? "\$png" : "") .
-//		"";
-//	header("X-Cache-Key: ".$cache_key);
+	$cache_key = "img\$" .
+		$image .
+		($out_width ? "\$w".$out_width : "") .
+		($out_height ? "\$h".$out_height : "") .
+		($crop ? "\$crop" : "") .
+		($jpeg ? "\$jpeg" : "") .
+		($png ? "\$png" : "") .
+		"";
 
 	// For compatibility with Memcached, keys must be:
 	// - no more than to 250 characters
@@ -121,7 +123,14 @@ if ( $change_size || $change_output ) {
 	// - not newline or carriage-return (0x0a,0x0d)
 	// - UTF-8 symbols are ok (but I want to avoid them)
 
-	// TODO: Check if key exists in cache, if so return cached data instead.
+	// If cached, output data //
+	$cached = cache_Fetch($cache_key);
+	if ( $cached ) {
+		header($cached['header']);
+		header("X-Cache-Key: ".$cache_key);
+		echo $cached['data'];
+		die;
+	}
 
 	// Otherwise, we have to generate the file. Check if it exists first. //	
 	if ( file_exists($filename) ) {
@@ -273,10 +282,16 @@ if ( $change_size || $change_output ) {
 
 			// We're done with the original, so destroy it (to save memory) //
 			imagedestroy($data);
+			
+			// Begin Output Buffering //
+			ob_start();
+			
+			$content_type = "";
 		
 			// Output the data //
 			if ( $jpeg || ($info['mime'] === "image/jpeg") ) {
-				header('Content-type: image/jpeg');
+				$content_type = 'Content-type: image/jpeg';
+				header($content_type);
 				imagejpeg($out_data);
 			}
 			// WebP support isn't stable, so it's disabled //
@@ -291,9 +306,12 @@ if ( $change_size || $change_output ) {
 			//}
 			// Output a PNG for all other cases //
 			else {
-				header('Content-type: image/png');
+				$content_type = 'Content-type: image/png';
+				header($content_type);
 				imagepng($out_data);
 			}
+			
+			cache_Store( $cache_key, ['header' => $content_type, 'data' => ob_get_flush() ], CACHE_TTL_IMAGE );
 			
 			// Finished //
 			imagedestroy($out_data);
