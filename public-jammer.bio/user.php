@@ -189,6 +189,11 @@ body {
 	margin:0 auto;
 	width:1024px;
 }
+.body span code {
+	background:rgba(255,255,255,0.3);	
+	padding:3px;
+	margin:0 3px;
+}
 .footer {
 	/*color:#<?php echo $dark_text; ?>;	/* TODO: Should be 80% of value (premultiplying the alpha) */
 	text-align:center;
