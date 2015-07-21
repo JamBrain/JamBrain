@@ -685,7 +685,7 @@ if ( $mode > 0 ) {
 			//console.log(id);
 			var src = document.getElementById('edit-'+id);
 			var dest = document.getElementById('flextext-span-'+id);
-			dest.innerHTML = src.value;
+			dest.innerHTML = src.value.replace("<","_");	// To stop it from emitting code blocks (causes bad layout)
 		}
 		
 		var AllFlexTexts = document.getElementsByClassName("flextext");
