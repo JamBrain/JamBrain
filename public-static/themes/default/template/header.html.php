@@ -6,7 +6,8 @@
 <?php if ( defined('CMW_JS_DEBUG') ) { ?>
 
 	<!-- External JavaScript -->
-	<script src="<?php STATIC_URL() ?>/external/emojione/emojione.js<?php VERSION_QUERY() ?>"></script>
+	<script src="<?php STATIC_URL() ?>/external/emojione/emojione.custom.js<?php VERSION_QUERY() ?>"></script>
+	<!--<script src="<?php STATIC_URL() ?>/external/emojione/emojione.js<?php VERSION_QUERY() ?>"></script>-->
 	<!--<script src="//cdn.jsdelivr.net/emojione/1.3.0/lib/js/emojione.min.js"></script>--><!-- min only -->
 	<script src="<?php STATIC_URL() ?>/external/prism/prism.js<?php VERSION_QUERY() ?>"></script>
 	<script src="<?php STATIC_URL() ?>/external/marked/marked.js<?php VERSION_QUERY() ?>"></script>

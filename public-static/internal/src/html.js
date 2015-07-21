@@ -29,7 +29,7 @@ window.html_Parse = function(text) {
 		}
 		// Even: Do Markdown and Emoji //
 		else {
-			out += emojione.toImage(marked.parse(block[idx]));
+			out += emojione.shortnameToImage(marked.parse(block[idx]));
 		}
 	}
 	

@@ -657,7 +657,7 @@ if ( $mode > 0 ) {
 		for(var Key in Section) {
 			var el = document.getElementById(Section[Key]);
 			if ( el ) {
-				el.innerHTML = emojione.toImage(el.innerHTML);
+				el.innerHTML = emojione.shortnameToImage(el.innerHTML);
 			}
 		}
 		
@@ -682,7 +682,7 @@ if ( $mode > 0 ) {
 		}
 		
 		function flextext_Update(id) {
-			console.log(id);
+			//console.log(id);
 			var src = document.getElementById('edit-'+id);
 			var dest = document.getElementById('flextext-span-'+id);
 			dest.innerHTML = src.value;

@@ -97,6 +97,14 @@ echo "Connected: " . db_IsConnected() . "\n";
 			favourite_cache TEXT NOT NULL
 		)" . $dbtype_default . ";");
 	//			INDEX(root,parent,slug),
+
+	// TODO: consider adding time_ping, which is a copy of the time_publish, but
+	// supports being reassigned a time, while still remembering the publish time.
+	// It's mainly used for Leagues, once a post breaks the popularity barier, 
+	// ping it, so it gets highlighted.
+	
+	// Also, you should probably only PING a post that's not very old (30 minutes),
+	// so again, knowing the Publish time is important.
 	
 	// Reserve the first 32 nodes for special use //
 	$n = node_Add("root","","root","/root","",0,0);										// 1 (CMW_NODE_ROOT)
