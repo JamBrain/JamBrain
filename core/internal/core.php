@@ -3,7 +3,7 @@
 	@brief Starship Helpers
 */
 
-require_once __DIR__ . "/../../config.php";	// Configuration and Settings //
+include_once __DIR__ . "/../../config.php";	// Configuration and Settings //
 
 // Bump this whenever you want to force a refresh. //
 const INTERNAL_VERSION = '0.1.1';
