@@ -9,7 +9,7 @@ require_once __DIR__."/../api.php";
 
 $response = json_NewResponse();
 
-user_StartEnd();
+//user_StartEnd();
 
 // Retrieve Action and Arguments
 $arg = core_ParseActionURL();
