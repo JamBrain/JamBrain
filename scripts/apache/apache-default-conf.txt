@@ -33,7 +33,7 @@
 
 <VirtualHost *:8084>
         ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-tv
+        DocumentRoot /var/www/public-jam.host
 
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
@@ -41,13 +41,21 @@
 
 <VirtualHost *:8085>
         ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-jamga.me
+        DocumentRoot /var/www/public-tv
 
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 
 <VirtualHost *:8086>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/public-jamga.me
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+<VirtualHost *:8087>
         ServerAdmin webmaster@localhost
         DocumentRoot /var/www/public-scene
 
