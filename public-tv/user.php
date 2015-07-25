@@ -55,7 +55,7 @@ if ( isset($meta['tv']) ) {
 if ( isset($meta['twitch']) ) {
 	$service['twitch'] = &$meta['twitch'];
 	$service['twitch']['embed'] = '<iframe id="player" src="http://www.twitch.tv/'.$service['twitch']['name'].'/embed" frameborder="0" scrolling="no" allowfullscreen></iframe>';
-	$service['twitch']['chat'] = '<iframe src="http://www.twitch.tv/'.$service['twitch']['name'].'/chat?popout=" frameborder="0" scrolling="no"></iframe>';
+	$service['twitch']['chat'] = '<iframe id="chat" src="http://www.twitch.tv/'.$service['twitch']['name'].'/chat?popout=" frameborder="0" scrolling="no"></iframe>';
 	$service['twitch']['bar-height'] = 32;
 	if ( !isset($config['default']) ) {
 		$config['default'] = 'twitch';
@@ -64,7 +64,7 @@ if ( isset($meta['twitch']) ) {
 if ( isset($meta['hitbox']) ) {
 	$service['hitbox'] = &$meta['hitbox'];
 	$service['hitbox']['embed'] = '<iframe id="player" src="http://www.twitch.tv/'.$service['hitbox']['name'].'/embed" frameborder="0" scrolling="no" allowfullscreen></iframe>';
-	$service['hitbox']['chat'] = '<iframe src="http://www.twitch.tv/'.$service['hitbox']['name'].'/chat?popout=" frameborder="0" scrolling="no"></iframe>';
+	$service['hitbox']['chat'] = '<iframe id="chat" src="http://www.twitch.tv/'.$service['hitbox']['name'].'/chat?popout=" frameborder="0" scrolling="no"></iframe>';
 	$service['hitbox']['bar-height'] = 32;
 	if ( !isset($config['default']) ) {
 		$config['default'] = 'hitbox';
@@ -85,7 +85,7 @@ if ( isset($user['name']) ) {
 
 // - Styles ------------------------ //
 // Color Customizing //
-$dark_bg = "F32";
+$dark_bg = "545";
 $light_bg = "000";
 $dark_text = "FCB";
 $light_text = "F32";
@@ -172,6 +172,10 @@ if ( isset($_GET['preview']) ) {
 body {
 	color:#<?php echo $dark_text; ?>;
 	background:#<?php echo $dark_bg; ?>;
+	overflow:hidden;
+}
+a {
+	color:#<?php echo $dark_text; ?>;
 }
 .header {
 	height:38px;
@@ -182,8 +186,9 @@ body {
 	color:#<?php echo $light_text; ?>;
 	background:#<?php echo $light_bg; ?>;
 	text-align:center;
-	padding-top:16px;
-	padding-bottom:16px;
+	padding:0;
+	/*padding-top:16px;*/
+	/*padding-bottom:16px;*/
 }
 .body-content {
 	margin:0 auto;
@@ -202,6 +207,7 @@ body {
 	text-align:center;
 	padding:8px;
 	font-variant:small-caps;
+	line-height:28px;
 }
 .footer img {
 	vertical-align:middle;
@@ -231,10 +237,22 @@ body {
 				<!--<?php print_r($item); ?>-->		
 				<?php 
 					if ( isset($config['default']) ) {
-						echo $service[$config['default']]['embed']; 
+						if (isset($config['chat'])) {
+							$chat_layout = intval($config['chat']);
+							if ( $chat_layout > 0 ) {
+								echo ($chat_layout === 1 ? "<div style='float:right'>" : "<div style='float:left'>");
+								echo $service[$config['default']]['chat'];
+								echo "</div>";
+							}
+						}
+						echo "<div>";
+						echo $service[$config['default']]['embed'];
+						echo "</div>";
 					}
 					else {
+						echo "<div>";
 						echo $user_name . " has not configured LDtv";
+						echo "</div>";
 					}
 				?>
 			<?php } break; ?>
@@ -246,16 +264,36 @@ body {
 	</div>
 
 	<div><div class="footer">
-		<a href="/"><img class="jammer" src="<?php STATIC_URL(); ?>/logo/ldtv/LDtvLogo56<?php echo $img; ?>.png" height="28" alt="LDtv" title="LDtv" /></a> by <a href="http://twitter.com/mikekasprzak" target="_blank"><img class="mike" src="<?php STATIC_URL(); ?>/logo/mike/Chicken32W.png" width="16" height="16" alt="Mike Kasprzak" title="Mike Kasprzak"></a> &nbsp;|&nbsp; <a href="//twitter.com/jammerbio" target="_blank"><img class="jammer" src="<?php STATIC_URL(); ?>/logo/twitter/Twitter32<?php echo $img; ?>.png" height="16" alt="Twitter" title="Twitter" /></a> &nbsp;|&nbsp; powered by &nbsp;<a href="http://ludumdare.com" target="_blank"><img class="ludumdare" src="<?php STATIC_URL(); ?>/logo/ludumdare/2009/LudumDareLogo40<?php echo $img; ?>.png" height="20" alt="Ludum Dare" title="Ludum Dare" /></a>
+		<div style="float:left;line-height:28px;"><?php 
+			echo '<a href="//ludumdare.com/user/'.$user_name.'" target="_blank">'.$display_name.'</a>';
+			echo " | +follow | +love";
+			if (isset($meta['twitter'])) {
+				echo ' | <a href="//twitter.com/'.($meta['twitter']).'" target="_blank">@'.($meta['twitter']).'</a>';
+			}
+			?>
+		</div>
+		<div style="float:right">
+			<a href="/"><img class="jammer" src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo56<?php echo $img; ?>.png" height="28" alt="Jammer" title="Jammer" /></a> powered by &nbsp;<a href="http://ludumdare.com" target="_blank"><img class="ludumdare" src="<?php STATIC_URL(); ?>/logo/ludumdare/2009/LudumDareLogo40<?php echo $img; ?>.png" height="20" alt="Ludum Dare" title="Ludum Dare" /></a>
+		</div>
+		LUDUM DARE 34 | THEME: ??? | countdown clock
 	</div></div>
 </body>
 <script>
 	function ResizePlayer() {		
 		var footer = document.getElementsByClassName("footer")[0];
+
+		var ChatWidth = 0;
+		
+		var chat = document.getElementById("chat");
+		if ( chat ) {
+			ChatWidth = Math.floor(window.innerWidth*0.25);
+			chat.width = ChatWidth;
+			chat.height = window.innerHeight - footer.clientHeight;
+		}
 		
 		var player = document.getElementById("player");
-		player.width = window.innerWidth - 32;
-		player.height = window.innerHeight - 32 - footer.clientHeight;
+		player.width = window.innerWidth - ChatWidth;
+		player.height = window.innerHeight - footer.clientHeight;
 	}
 	ResizePlayer();
 	window.onresize = ResizePlayer;
