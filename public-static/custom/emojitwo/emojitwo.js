@@ -168,6 +168,7 @@
     ns.imageType = 'png'; // or svg
     ns.cacheBustParam = '?v=1.2.4'; // you can [optionally] modify this to force browsers to refresh their cache. it will be appended to the send of the filenames
     
+    // TODO: Remove me or fix me (it doesn't add to the regex) //
     ns.addAscii = function(key,code) {
     	ns.asciiList[key] = code;
     	console.log(key);
