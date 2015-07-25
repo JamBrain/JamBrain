@@ -6,9 +6,9 @@
 // MK: Customized version of emojione. 
 // - Sprite support (spans with offsets) is removed. 
 // - Titles are set (to show the emoji code on hover).
-// - ASCII is enabled by default.
+// - ASCII is enabled by default, and now an argument of shortnameToImage.
 // - ns.unicodeAlt removed. Assumed true.
-// - ASCII Regex change to (()("+ns.asciiRegexp+")()) to fix newline prefix/suffix bug.
+// - ASCII regex change to (()("+ns.asciiRegexp+")()) to fix newline prefix/suffix bug.
 // - ns.shortnameToAscii removed.
 // - ns.unifyUnicode removed.
 // - ns.shortnameToUnicode removed.
@@ -166,7 +166,6 @@
     ns.imagePathPNG = '//cdn.jsdelivr.net/emojione/assets/png/';
     ns.imagePathSVG = '//cdn.jsdelivr.net/emojione/assets/svg/';
     ns.imageType = 'png'; // or svg
-    ns.ascii = true; // change to true to convert ascii smileys
     ns.cacheBustParam = '?v=1.2.4'; // you can [optionally] modify this to force browsers to refresh their cache. it will be appended to the send of the filenames
     
     ns.addAscii = function(key,code) {
@@ -174,7 +173,7 @@
     	console.log(key);
     };
 
-    ns.shortnameToImage = function(str) {
+    ns.shortnameToImage = function(str,ascii) {
         // replace regular shortnames first
         var replaceWith,unicode,alt;
         str = str.replace(new RegExp("<object[^>]*>.*?<\/object>|<span[^>]*>.*?<\/span>|<(?:object|embed|svg|img|div|span|p|a)[^>]*>|("+ns.shortnameRegexp+")", "gi"),function(shortname) {
@@ -199,7 +198,7 @@
         });
 
         // if ascii smileys are turned on, then we'll replace them!
-        if (ns.ascii) {
+        if (ascii || ascii === null) {
             str = str.replace(new RegExp("<object[^>]*>.*?<\/object>|<span[^>]*>.*?<\/span>|<(?:object|embed|svg|img|div|span|p|a)[^>]*>|(()("+ns.asciiRegexp+")())","g"),function(entire, m1, m2, m3) {
 //            	// Debug //
 //            	if (entire[0] !== "<") {
