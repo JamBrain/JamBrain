@@ -860,6 +860,9 @@ Thing {
 		node_AddMeta($user_id,0,"jammer","light-color","A9F");
 		node_AddMeta($user_id,0,"jammer","header","1");
 		node_AddMeta(4,$user_id,"member","","admin");
+
+		node_AddMeta($user_id,0,"tv","default","twitch");
+		node_AddMeta($user_id,0,"tv","chat","1");
 		
 		node_Add(
 			'post','',
@@ -896,6 +899,10 @@ Thing {
 			true, 5411
 		);
 
+		node_AddMeta($user_id,0,"twitch","name","monstercat");
+
+		node_AddMeta($user_id,0,"tv","default","twitch");
+		node_AddMeta($user_id,0,"tv","chat","0");
 	}
 	
 	// Love Table. If a user has given a +1 to something. //
