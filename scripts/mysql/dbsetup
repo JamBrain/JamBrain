@@ -1069,8 +1069,9 @@ Thing {
 				
 			priority FLOAT NOT NULL DEFAULT 0.0,
 			
-			type VARCHAR(8) CHARSET latin1 NOT NULL DEFAULT '',
+			type VARCHAR(16) CHARSET latin1 NOT NULL DEFAULT '',
 				INDEX (type),
+			subtype VARCHAR(16) CHARSET latin1 NOT NULL DEFAULT '',
 
 			start DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
 				INDEX (start),
@@ -1090,11 +1091,15 @@ Thing {
 	//		In the unlikely case a big worldwide event conflicts with Ludum Dare (main event only), omit this.
 	//		- ld
 	//		- minild
-	//		- warmup
 	//		- october
 	//		- ggj
 	//		- 7dfps
 	//		- etc...
+	// subtype  - the subtype of the event. Typically only used by Ludum Dare to define certain time-blocks of an event.
+	//		- season (the entire 8 week block)
+	//		- countdown (the 5 week countdown to the event)
+	//		- theme	(theme voting)
+	//		- warmup (warmup weekend)
 	// start - start date and time
 	// end   - end date and time
 	// name  - name of the event, including digits (i.e. Ludum Dare 33, Global Game Jam 2016)
@@ -1104,16 +1109,130 @@ Thing {
 	
 	{
 		$ld_start_hour = " 9:00 PM America/New_York";
+
+		$hour = 60*60;
+		$day = 60*60*24;
+		$week = 60*60*24*7;
 		
-		schedule_Add(
-			date(DATE_W3C,strtotime("August 21, 2015".$ld_start_hour)),
-			date(DATE_W3C,strtotime("August 24, 2015".$ld_start_hour)),
+		$ld_start = strtotime("August 21, 2015".$ld_start_hour);
+		$ld_end = strtotime("August 24, 2015".$ld_start_hour);
+		$ld_compo_end = $ld_end - ($hour*24);
+		
+		$event = schedule_Add(
+			date(DATE_W3C,$ld_start),
+			date(DATE_W3C,$ld_end),
 			"Ludum Dare 33",
 			[
 				'theme' => '???',
 				'url' => 'https://ludumdare.com/ld/33/'
 			],
-			"ld"
+			"ld",""
+		);
+		
+		$season_start = $ld_start - ($week*5) - ($hour*12);
+		$season_end = $ld_end + ($week*3) + ($hour*2);
+
+		// Entire block (the season)
+		schedule_Add(
+			date(DATE_W3C,$season_start),
+			date(DATE_W3C,$season_end),
+			"Ludum Dare Season 33",
+			[],
+			"ld","season",
+			$event,
+			100.0
+		);
+
+		schedule_Add(
+			date(DATE_W3C,$season_start),
+			date(DATE_W3C,$ld_end+($hour*12)),
+			"Signup Window",
+			[],
+			"ld","signup",
+			$event,
+			1000.0
+		);
+
+		schedule_Add(
+			date(DATE_W3C,$season_start),
+			date(DATE_W3C,$ld_start),
+			"Countdown to Ludum Dare 33",
+			[],
+			"ld","countdown",
+			$event,
+			10.0
+		);
+		schedule_Add(
+			date(DATE_W3C,$ld_start - ($week*2)),
+			date(DATE_W3C,$ld_start - ($hour)),
+			"Theme Voting",
+			[],
+			"ld","theme",
+			$event,
+			5.0
+		);
+		
+		// Submission Hours //
+		schedule_Add(
+			date(DATE_W3C,$ld_compo_end),
+			date(DATE_W3C,$ld_compo_end + $hour),
+			"Submission Hour",
+			[],
+			"ld","hour",
+			$event,
+			5.0
+		);
+		schedule_Add(
+			date(DATE_W3C,$ld_end),
+			date(DATE_W3C,$ld_end + $hour),
+			"Submission Hour",
+			[],
+			"ld","hour",
+			$event,
+			5.0
+		);
+		
+		// Submission Windows
+		schedule_Add(
+			date(DATE_W3C,$ld_start),
+			date(DATE_W3C,$ld_compo_end + ($hour*4)),
+			"Compo Submission Window",
+			[],
+			"ld","compo",
+			$event,
+			500.0
+		);
+		schedule_Add(
+			date(DATE_W3C,$ld_start),
+			date(DATE_W3C,$ld_end + ($hour*12)),
+			"Jam Submission Window",
+			[],
+			"ld","jam",
+			$event,
+			500.0
+		);
+
+		// Judging Window //		
+		schedule_Add(
+			date(DATE_W3C,$ld_compo_end + ($hour*1)),
+			date(DATE_W3C,$ld_end + ($week*3)),
+			"Judging",
+			[],
+			"ld","judging",
+			$event,
+			10.0
+		);
+
+		// Warmup Weekend is a separate event (borrowing times) //
+		schedule_Add(
+			date(DATE_W3C,$ld_start - ($week*1) - ($day*1) - ($hour*12)),
+			date(DATE_W3C,$ld_compo_end - ($week*1) + ($day*1) + ($hour*12)),
+			"Warmup Weekend",
+			[
+				'info' => 'Practice for Ludum Dare 33',
+				'url' => 'https://ludumdare.com/ld/33/warmup/'
+			],
+			"ld","warmup"
 		);
 	}
 	
