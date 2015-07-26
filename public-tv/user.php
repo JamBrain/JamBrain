@@ -335,7 +335,8 @@ a {
 	<div><div class="footer">
 		<div style="float:left;line-height:28px;"><?php 
 			echo '<a href="//ludumdare.com/user/'.$user_name.'" target="_blank">'.$display_name.'</a>';
-			echo " | +follow | +love";
+			// NOTE: Reminders should only be an option while participating in an event??
+			echo " | +follow | +love | +add reminder";
 			if (isset($meta['twitter'])) {
 				echo ' | <a href="//twitter.com/'.($meta['twitter']).'" target="_blank">@'.($meta['twitter']).'</a>';
 			}
