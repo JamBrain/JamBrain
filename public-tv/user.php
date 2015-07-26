@@ -72,7 +72,7 @@ if ( isset($meta['youtube']) ) {
 }
 if ( isset($meta['hitbox']) ) {
 	$service['hitbox'] = &$meta['hitbox'];
-	$service['hitbox']['embed'] = '<iframe id="player" src="http://www.hitbox.tv/embed/'.$service['hitbox']['name'].'" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+	$service['hitbox']['embed'] = '<iframe id="player" src="http://www.hitbox.tv/embed/'.$service['hitbox']['name'].'?autoplay=true" frameborder="0" scrolling="no" allowfullscreen></iframe>';
 	$service['hitbox']['chat'] = '<iframe id="chat" src="http://www.hitbox.tv/embedchat/'.$service['hitbox']['name'].'" frameborder="0" scrolling="no"></iframe>';
 	if ( !isset($config['default']) ) {
 		$config['default'] = 'hitbox';
