@@ -946,6 +946,65 @@ Thing {
 
 		node_AddMeta($user_id,0,"youtube","name","smitegame");
 		node_AddMeta($user_id,0,"tv","chat","1");
+
+
+		// More dummy users //
+		$user_id = node_Add(
+			'user',"",
+			'mlger','MLGer',
+			htmlspecialchars("This is a test user that uses MLG"),
+			0,CMW_NODE_USER,
+			true
+		);	
+		user_Add($user_id,'test.mlg@user.com','test');
+
+		node_AddMeta($user_id,0,"mlg","name","playcevo");
+		node_AddMeta($user_id,0,"tv","chat","1");
+
+
+		// More dummy users //
+		$user_id = node_Add(
+			'user',"",
+			'azubur','Azubur',
+			htmlspecialchars("This is a test user that uses Azubu"),
+			0,CMW_NODE_USER,
+			true
+		);	
+		user_Add($user_id,'test.azubu@user.com','test');
+
+		node_AddMeta($user_id,0,"azubu","name","sirt");
+		node_AddMeta($user_id,0,"tv","chat","1");
+
+
+
+		// More dummy users //
+		$user_id = node_Add(
+			'user',"",
+			'ustreamer','UStreamer',
+			htmlspecialchars("This is a test user that uses UStream"),
+			0,CMW_NODE_USER,
+			true
+		);	
+		user_Add($user_id,'test.ustream@user.com','test');
+
+		node_AddMeta($user_id,0,"ustream","name","NASAHDTV");
+		node_AddMeta($user_id,0,"ustream","id","6540154");
+		node_AddMeta($user_id,0,"tv","chat","1");
+
+
+		// More dummy users //
+		$user_id = node_Add(
+			'user',"",
+			'livestreamer','LiveStreamer',
+			htmlspecialchars("This is a test user that uses LiveStream"),
+			0,CMW_NODE_USER,
+			true
+		);	
+		user_Add($user_id,'test.livestream@user.com','test');
+
+		node_AddMeta($user_id,0,"livestream","name","mysportlive");
+		node_AddMeta($user_id,0,"livestream","id","2687950");
+		node_AddMeta($user_id,0,"tv","chat","1");
 	}
 	
 	// Love Table. If a user has given a +1 to something. //
