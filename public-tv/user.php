@@ -56,20 +56,39 @@ if ( isset($meta['twitch']) ) {
 	$service['twitch'] = &$meta['twitch'];
 	$service['twitch']['embed'] = '<iframe id="player" src="http://www.twitch.tv/'.$service['twitch']['name'].'/embed" frameborder="0" scrolling="no" allowfullscreen></iframe>';
 	$service['twitch']['chat'] = '<iframe id="chat" src="http://www.twitch.tv/'.$service['twitch']['name'].'/chat?popout=" frameborder="0" scrolling="no"></iframe>';
-	$service['twitch']['bar-height'] = 32;
 	if ( !isset($config['default']) ) {
 		$config['default'] = 'twitch';
 	}
 }
+if ( isset($meta['youtube']) ) {
+	$service['youtube'] = &$meta['youtube'];
+	// TODO: Fetch stream id internal data //
+	$service['youtube']['stream'] = "hj-uGSaH1og";
+	$service['youtube']['embed'] = '<iframe id="player" src="//www.youtube.com/embed/'.$service['youtube']['stream'].'?rel=0&autoplay=1" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+	// YouTube has no chat //
+	if ( !isset($config['default']) ) {
+		$config['default'] = 'youtube';
+	}
+}
 if ( isset($meta['hitbox']) ) {
 	$service['hitbox'] = &$meta['hitbox'];
-	$service['hitbox']['embed'] = '<iframe id="player" src="http://www.twitch.tv/'.$service['hitbox']['name'].'/embed" frameborder="0" scrolling="no" allowfullscreen></iframe>';
-	$service['hitbox']['chat'] = '<iframe id="chat" src="http://www.twitch.tv/'.$service['hitbox']['name'].'/chat?popout=" frameborder="0" scrolling="no"></iframe>';
-	$service['hitbox']['bar-height'] = 32;
+	$service['hitbox']['embed'] = '<iframe id="player" src="http://www.hitbox.tv/embed/'.$service['hitbox']['name'].'" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+	$service['hitbox']['chat'] = '<iframe id="chat" src="http://www.hitbox.tv/embedchat/'.$service['hitbox']['name'].'" frameborder="0" scrolling="no"></iframe>';
 	if ( !isset($config['default']) ) {
 		$config['default'] = 'hitbox';
 	}
 }
+if ( isset($meta['beam']) ) {
+	$service['beam'] = &$meta['beam'];
+	$service['beam']['embed'] = '<iframe id="player" src="https://beam.pro/embed/player/'.$service['beam']['name'].'" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+	$service['beam']['chat'] = '<iframe id="chat" src="https://beam.pro/embed/chat/'.$service['beam']['name'].'" frameborder="0" scrolling="no"></iframe>';
+	if ( !isset($config['default']) ) {
+		$config['default'] = 'beam';
+	}
+}
+
+//www.youtube.com/embed/{$media_id}?rel=0&autoplay=1
+
 
 
 // Use our real name if config tells us to //
@@ -237,7 +256,8 @@ a {
 				<!--<?php print_r($item); ?>-->		
 				<?php 
 					if ( isset($config['default']) ) {
-						if (isset($config['chat'])) {
+						// If chat is enabled and is available in this streaming method //
+						if (isset($config['chat']) && isset($service[$config['default']]['chat'])) {
 							$chat_layout = intval($config['chat']);
 							if ( $chat_layout > 0 ) {
 								echo ($chat_layout === 1 ? "<div style='float:right'>" : "<div style='float:left'>");

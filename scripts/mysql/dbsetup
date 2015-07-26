@@ -904,6 +904,49 @@ Thing {
 		node_AddMeta($user_id,0,"tv","default","twitch");
 		node_AddMeta($user_id,0,"tv","chat","0");
 	}
+
+	{
+		// More dummy users //
+		$user_id = node_Add(
+			'user',"",
+			'hitboxer','Hitboxer',
+			htmlspecialchars("This is a test user that uses Hitbox"),
+			0,CMW_NODE_USER,
+			true
+		);	
+		user_Add($user_id,'test.hitbox@user.com','test');
+
+		node_AddMeta($user_id,0,"hitbox","name","r1seTV");
+		node_AddMeta($user_id,0,"tv","chat","1");
+		
+
+		// More dummy users //
+		$user_id = node_Add(
+			'user',"",
+			'beamer','Beamer',
+			htmlspecialchars("This is a test user that uses Beam"),
+			0,CMW_NODE_USER,
+			true
+		);	
+		user_Add($user_id,'test.beam@user.com','test');
+
+		node_AddMeta($user_id,0,"beam","name","MartysGames");
+		node_AddMeta($user_id,0,"tv","chat","1");
+
+
+		// More dummy users //
+		$user_id = node_Add(
+			'user',"",
+			'youtuber','YouTuber',
+			htmlspecialchars("This is a test user that uses YouTube"),
+			0,CMW_NODE_USER,
+			true
+		);	
+		user_Add($user_id,'test.youtube@user.com','test');
+
+		node_AddMeta($user_id,0,"youtube","name","smitegame");
+		node_AddMeta($user_id,0,"tv","chat","1");
+	}
 	
 	// Love Table. If a user has given a +1 to something. //
 	db_Query(
