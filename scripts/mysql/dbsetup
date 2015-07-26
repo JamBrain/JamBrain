@@ -1107,26 +1107,38 @@ Thing {
 	//		'theme' - the theme of the event.
 	//		'url' - url to more information about the event
 	
-	{
+	function MakeLudumDare( $number, $start_date, $theme_name ) {
 		$ld_start_hour = " 9:00 PM America/New_York";
 
 		$hour = 60*60;
 		$day = 60*60*24;
 		$week = 60*60*24*7;
 		
-		$ld_start = strtotime("August 21, 2015".$ld_start_hour);
-		$ld_end = strtotime("August 24, 2015".$ld_start_hour);
+		$ld_start = strtotime($start_date.$ld_start_hour);
+		$ld_end = strtotime($start_date.$ld_start_hour)+($day*3);
 		$ld_compo_end = $ld_end - ($hour*24);
 		
-		$event = schedule_Add(
+		$ludumdare = schedule_Add(
 			date(DATE_W3C,$ld_start),
 			date(DATE_W3C,$ld_end),
-			"Ludum Dare 33",
+			"Ludum Dare ".$number,
 			[
-				'theme' => 'Potato Kittens',
-				'url' => 'https://ludumdare.com/ld/33/'
+				'theme' => $theme_name,
+				'url' => 'https://ludumdare.com/ld/'.$number.'/'
 			],
 			"ld",""
+		);
+
+		// Warmup Weekend is a separate event (borrowing times) //
+		schedule_Add(
+			date(DATE_W3C,$ld_start - ($week*1) - ($day*1) - ($hour*12)),
+			date(DATE_W3C,$ld_compo_end - ($week*1) + ($day*1) + ($hour*12)),
+			"Warmup Weekend",
+			[
+				'info' => 'Practice for Ludum Dare '.$number,
+				'url' => 'https://ludumdare.com/ld/'.$number.'/warmup/'
+			],
+			"warmup",""
 		);
 		
 		$season_start = $ld_start - ($week*5) - ($hour*12);
@@ -1136,10 +1148,10 @@ Thing {
 		schedule_Add(
 			date(DATE_W3C,$season_start),
 			date(DATE_W3C,$season_end),
-			"Ludum Dare Season 33",
+			"Ludum Dare Season ".$number,
 			[],
 			"ld","season",
-			$event,
+			$ludumdare,
 			100.0
 		);
 
@@ -1149,17 +1161,17 @@ Thing {
 			"Signup Window",
 			[],
 			"ld","signup",
-			$event,
+			$ludumdare,
 			1000.0
 		);
 
 		schedule_Add(
 			date(DATE_W3C,$season_start),
 			date(DATE_W3C,$ld_start),
-			"Countdown to Ludum Dare 33",
+			"Countdown to Ludum Dare ".$number,
 			[],
 			"ld","countdown",
-			$event,
+			$ludumdare,
 			10.0
 		);
 		schedule_Add(
@@ -1168,7 +1180,7 @@ Thing {
 			"Theme Voting",
 			[],
 			"ld","theme",
-			$event,
+			$ludumdare,
 			5.0
 		);
 		
@@ -1179,7 +1191,7 @@ Thing {
 			"Submission Hour",
 			[],
 			"ld","extra",
-			$event,
+			$ludumdare,
 			5.0
 		);
 		schedule_Add(
@@ -1188,7 +1200,7 @@ Thing {
 			"Submission Hour",
 			[],
 			"ld","extra",
-			$event,
+			$ludumdare,
 			5.0
 		);
 
@@ -1199,7 +1211,7 @@ Thing {
 			"Compo Submission Window",
 			[],
 			"ld","submit",
-			$event,
+			$ludumdare,
 			1000.0
 		);
 		$event = schedule_Add(
@@ -1211,7 +1223,7 @@ Thing {
 				'type' => 'compo',
 			],
 			"ld","event",
-			$event,
+			$ludumdare,
 			500.0
 		);
 		schedule_SetExtra($submit_window,
@@ -1224,11 +1236,11 @@ Thing {
 		// Add the Jam //
 		$submit_window = schedule_Add(
 			date(DATE_W3C,$ld_start),
-			date(DATE_W3C,$ld_end),
+			date(DATE_W3C,$ld_end + ($hour*12)),
 			"Jam Submission Window",
 			[],
 			"ld","submit",
-			$event,
+			$ludumdare,
 			1000.0
 		);
 		$event = schedule_Add(
@@ -1240,7 +1252,7 @@ Thing {
 				'type' => 'jam',
 			],
 			"ld","event",
-			$event,
+			$ludumdare,
 			500.0
 		);
 		schedule_SetExtra($submit_window,
@@ -1257,22 +1269,96 @@ Thing {
 			"Judging",
 			[],
 			"ld","judging",
-			$event,
+			$ludumdare,
 			10.0
 		);
-
-		// Warmup Weekend is a separate event (borrowing times) //
-		schedule_Add(
-			date(DATE_W3C,$ld_start - ($week*1) - ($day*1) - ($hour*12)),
-			date(DATE_W3C,$ld_compo_end - ($week*1) + ($day*1) + ($hour*12)),
-			"Warmup Weekend",
-			[
-				'info' => 'Practice for Ludum Dare 33',
-				'url' => 'https://ludumdare.com/ld/33/warmup/'
-			],
-			"warmup",""
-		);
 	}
+	
+	function MakeGlobalGameJam( $number, $start_date, $theme ) {
+		$start_hour = " 5:00 PM Pacific/Honolulu";
+
+		$hour = 60*60;
+		$day = 60*60*24;
+		$week = 60*60*24*7;
+		
+		$jam_start = strtotime($start_date.$start_hour);
+		$jam_end = strtotime($start_date.$start_hour)+($day*2);
+		
+		$jam = schedule_Add(
+			date(DATE_W3C,$jam_start),
+			date(DATE_W3C,$jam_end),
+			"Global Game Jam ".$number,
+			[
+				'theme' => $theme,
+				//'url' => 'https://ludumdare.com/ld/'.$number.'/'
+			],
+			"ggj",""
+		);
+
+		// If 2016.. //
+		if ( $number >= 2016 ) {		
+			$jam = schedule_Add(
+				date(DATE_W3C,$jam_start),
+				date(DATE_W3C,$jam_end),
+				"Jam @ Home ".$number,
+				[
+					'theme' => $theme,
+					//'url' => 'https://ludumdare.com/ld/'.$number.'/'
+				],
+				"home",""
+			);
+
+	
+			$submit_window = schedule_Add(
+				date(DATE_W3C,$jam_start),
+				date(DATE_W3C,$jam_end),
+				"Submission Window",
+				[],
+				"home","submit",
+				$jam,
+				1000.0
+			);
+			$event = schedule_Add(
+				date(DATE_W3C,$jam_start),
+				date(DATE_W3C,$jam_end + ($hour*4)),
+				"Entry",
+				[
+					'submit' => $submit_window,
+					'type' => 'entry',
+				],
+				"home","event",
+				$jam,
+				500.0
+			);
+			schedule_SetExtra($submit_window,
+				[
+					'event' => $event,
+					'type' => 'entry',
+				]
+			);
+			
+			schedule_Add(
+				date(DATE_W3C,$jam_end),
+				date(DATE_W3C,$jam_end + $hour),
+				"Submission Hour",
+				[],
+				"home","extra",
+				$jam,
+				5.0
+			);
+		}
+	}
+	
+	MakeGlobalGameJam( 2014, "January 24, 2014", "We don't see things as they are, we see them as we are." );
+	MakeLudumDare( 29, "April 25, 2014", "Beneath the Surface" );
+	MakeLudumDare( 30, "August 22, 2014", "Connected Worlds" );
+	MakeLudumDare( 31, "December 5, 2014", "Entire Game on One Screen" );
+	MakeGlobalGameJam( 2015, "January 23, 2015", "What do we do now?" );
+	MakeLudumDare( 32, "August 17, 2015", "An Unconventional Weapon" );
+	MakeLudumDare( 33, "August 21, 2015", "Potato Kittens" );
+	//MakeLudumDare( 34, "December 25, 2015", "Beiber Feiber" );
+	MakeGlobalGameJam( 2016, "January 29, 2016", "How is babby formed? How girl get pragnent?" );
+	
 	
 	echo "Table Create's Done.\n";
 ?>
