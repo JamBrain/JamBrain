@@ -73,7 +73,8 @@ if ( isset($meta['youtube']) ) {
 if ( isset($meta['hitbox']) ) {
 	$service['hitbox'] = &$meta['hitbox'];
 	$service['hitbox']['embed'] = '<iframe id="player" src="http://www.hitbox.tv/embed/'.$service['hitbox']['name'].'?autoplay=true" frameborder="0" scrolling="no" allowfullscreen></iframe>';
-	$service['hitbox']['chat'] = '<iframe id="chat" src="http://www.hitbox.tv/embedchat/'.$service['hitbox']['name'].'" frameborder="0" scrolling="no"></iframe>';
+	$service['hitbox']['chat'] = '<iframe id="chat" src="http://www.hitbox.tv/embedchat/'.$service['hitbox']['name'].'?autoconnect=true" frameborder="0" scrolling="no"></iframe>';
+	$service['hitbox']['chatwidth'] = 300;
 	if ( !isset($config['default']) ) {
 		$config['default'] = 'hitbox';
 	}
@@ -234,6 +235,10 @@ if ( isset($_GET['preview']) ) {
 	}
 }
 
+function GravatarHash($mail) {
+	return md5(strtolower(trim( $mail )));
+}
+
 ?>
 <?php template_GetHeader(); ?>
 <style>
@@ -280,13 +285,13 @@ a {
 .footer img {
 	vertical-align:middle;
 	mix-blend-mode:screen;
-	opacity:0.7;
+	/*opacity:0.7;*/
 
-	-webkit-transition:all 0.125s;
-	transition:all 0.125s;
+	/*-webkit-transition:all 0.125s;*/
+	/*transition:all 0.125s;*/
 }
 .footer img:hover {
-	opacity:1.0;
+	/*opacity:1.0;*/
 }
 .footer .mike {
 	margin-bottom:4px; /* "Hair" is 4px tall, so offset the baseline for better centering */
@@ -333,17 +338,21 @@ a {
 	</div>
 
 	<div><div class="footer">
-		<div style="float:left;line-height:28px;"><?php 
-			echo '<a href="//ludumdare.com/user/'.$user_name.'" target="_blank">'.$display_name.'</a>';
-			// NOTE: Reminders should only be an option while participating in an event??
-			echo " | +follow | +love | +add reminder";
+		<div style="float:left;line-height:28px;"><?php
+			echo '<img src="http://www.gravatar.com/avatar/'.GravatarHash( $user_name==="pov"?"mike@sykhronics.com":"banana@what.de" ).'?s=56" width="28" height="28" />';
+			echo '<a href="//ludumdare.com/user/'.$user_name.'" target="_blank" title="'.$user_name.'" alt="'.$user_name.'" >'.$display_name.'</a>';
+
 			if (isset($meta['twitter'])) {
-				echo ' | <a href="//twitter.com/'.($meta['twitter']).'" target="_blank">@'.($meta['twitter']).'</a>';
+				echo ' | <a href="//twitter.com/'.($meta['twitter']).'" target="_blank"><img src="'.CMW_STATIC_URL.'/logo/twitter/Twitter32'.$img.'.png" height="16" alt="'.($meta['twitter']).'" title="'.($meta['twitter']).'" /></a>';
 			}
+
+			// NOTE: Reminders are a star for the item you are working on. If not participating, no reminder.
+			echo " | +follow | +love | +add reminder";
 			?>
 		</div>
 		<div style="float:right">
-			<a href="/"><img class="jammer" src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo56<?php echo $img; ?>.png" height="28" alt="Jammer" title="Jammer" style="display:none;" /></a> powered by &nbsp;<a href="http://ludumdare.com" target="_blank"><img class="ludumdare" src="<?php STATIC_URL(); ?>/logo/ludumdare/2009/LudumDareLogo40<?php echo $img; ?>.png" height="20" alt="Ludum Dare" title="Ludum Dare" /></a>
+			<div id="tools" style="display:inline-block;"></div>
+			<a href="/"><img class="jammer" src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo56<?php echo $img; ?>.png" height="28" alt="Jammer" title="Jammer" /></a>
 		</div>
 		LUDUM DARE 34 | THEME: ??? | countdown clock
 	</div></div>
@@ -353,10 +362,17 @@ a {
 		var footer = document.getElementsByClassName("footer")[0];
 
 		var ChatWidth = 0;
+		var FixedChatWidth = <?php echo isset($service[$config['default']]['chatwidth']) ? $service[$config['default']]['chatwidth'] : 0; ?>;
 		
 		var chat = document.getElementById("chat");
 		if ( chat ) {
-			ChatWidth = Math.floor(window.innerWidth*0.25);
+			ChatWidth = Math.floor(window.innerWidth*0.20);
+			if ( ChatWidth < 100 ) {
+				// Disable //
+			}
+			if ( FixedChatWidth ) {
+				ChatWidth = FixedChatWidth;
+			}
 			chat.width = ChatWidth;
 			chat.height = window.innerHeight - footer.clientHeight;
 		}
@@ -367,5 +383,56 @@ a {
 	}
 	ResizePlayer();
 	window.onresize = ResizePlayer;
+	
+	
+	// http://www.sitepoint.com/use-html5-full-screen-api/
+	
+	function CanFullScreen() {
+		return document.fullscreenEnabled || 
+		    document.webkitFullscreenEnabled || 
+		    document.mozFullScreenEnabled ||
+		    document.msFullscreenEnabled;
+	}
+	function IsFullScreen() {
+		return document.fullscreenElement ||
+		    document.webkitFullscreenElement ||
+		    document.mozFullScreenElement ||
+		    document.msFullscreenElement;
+	}
+	function SetFullScreen(el) {
+		if (el.requestFullscreen)
+			el.requestFullscreen();
+		else if (el.webkitRequestFullscreen)
+			el.webkitRequestFullscreen();
+		else if (el.mozRequestFullScreen)
+			el.mozRequestFullScreen();
+		else if (el.msRequestFullscreen)
+			el.msRequestFullscreen();		
+	}
+	function ExitFullScreen() {
+		if (document.exitFullscreen)
+			document.exitFullscreen();
+		else if (document.webkitExitFullscreen)
+			document.webkitExitFullscreen();
+		else if (document.mozCancelFullScreen)
+			document.mozCancelFullScreen();
+		else if (document.msExitFullscreen)
+			document.msExitFullscreen();
+	}
+	function ToggleFullScreen() {
+		if ( IsFullScreen() ) {
+			ExitFullScreen();
+		}
+		else {
+			SetFullScreen( document.documentElement );
+		}
+	}
+	if ( CanFullScreen() ) {
+		var tools = document.getElementById("tools");
+		var el = document.createElement("div");
+		el.addEventListener('click',ToggleFullScreen,false);
+		el.appendChild( document.createTextNode("[ FULL ]") );
+		tools.appendChild(el);
+	}
 </script>
 <?php template_GetFooter(); ?>
