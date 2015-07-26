@@ -23,7 +23,7 @@ function schedule_Add( $start, $end, $name, $extra = null, $type = "", $subtype 
 	}
 
 	db_Query(
-		"INSERT IGNORE `" . CMW_TABLE_SCHEDULE . "` (".
+		"INSERT `" . CMW_TABLE_SCHEDULE . "` (".
 			"`parent`,".
 			"`priority`,".
 			"`type`,".
@@ -43,6 +43,32 @@ function schedule_Add( $start, $end, $name, $extra = null, $type = "", $subtype 
 			"\"".db_EscapeString($name)."\"," .
 			"\"".db_EscapeString($json)."\"" .
 		");");
+		
+	// TODO: do something on db_query error
+
+	return db_GetId();
+}
+
+function schedule_SetExtra( $id, $extra = null ) {
+	db_Connect();
+	
+	// Turn EXTRA in to a JSON string //
+	if ( empty($extra) ) {
+		$json = "";
+	}
+	else {
+		$json = json_encode($extra);
+		if ( empty($json) )
+			$json = "";
+	}
+
+	db_Query(
+//	echo(
+		"UPDATE `" . CMW_TABLE_SCHEDULE . "`" .
+		" SET " .
+			"`extra`=\"".db_EscapeString($json)."\"" .
+		" WHERE " .
+		"`id`=".intval($id).";");
 		
 	// TODO: do something on db_query error
 

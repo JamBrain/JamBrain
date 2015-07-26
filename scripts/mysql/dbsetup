@@ -1123,7 +1123,7 @@ Thing {
 			date(DATE_W3C,$ld_end),
 			"Ludum Dare 33",
 			[
-				'theme' => '???',
+				'theme' => 'Potato Kittens',
 				'url' => 'https://ludumdare.com/ld/33/'
 			],
 			"ld",""
@@ -1178,7 +1178,7 @@ Thing {
 			date(DATE_W3C,$ld_compo_end + $hour),
 			"Submission Hour",
 			[],
-			"ld","extra-hour",
+			"ld","extra",
 			$event,
 			5.0
 		);
@@ -1187,51 +1187,69 @@ Thing {
 			date(DATE_W3C,$ld_end + $hour),
 			"Submission Hour",
 			[],
-			"ld","extra-hour",
+			"ld","extra",
 			$event,
 			5.0
 		);
 
-		// Event Times
-		schedule_Add(
-			date(DATE_W3C,$ld_start),
-			date(DATE_W3C,$ld_compo_end),
-			"Compo",
-			[],
-			"ld","event",
-			$event,
-			500.0
-		);
-		schedule_Add(
-			date(DATE_W3C,$ld_start),
-			date(DATE_W3C,$ld_end),
-			"Jam",
-			[],
-			"ld","event",
-			$event,
-			500.0
-		);
-		
-		// Submission Windows
-		schedule_Add(
+		// Add the Compo //
+		$submit_window = schedule_Add(
 			date(DATE_W3C,$ld_start),
 			date(DATE_W3C,$ld_compo_end + ($hour*4)),
 			"Compo Submission Window",
-			[],
-			"ld","submit-compo",
-			$event,
-			1000.0
-		);
-		schedule_Add(
-			date(DATE_W3C,$ld_start),
-			date(DATE_W3C,$ld_end + ($hour*12)),
-			"Submission Window",
 			[],
 			"ld","submit",
 			$event,
 			1000.0
 		);
-
+		$event = schedule_Add(
+			date(DATE_W3C,$ld_start),
+			date(DATE_W3C,$ld_compo_end),
+			"Compo",
+			[
+				'submit' => $submit_window,
+				'type' => 'compo',
+			],
+			"ld","event",
+			$event,
+			500.0
+		);
+		schedule_SetExtra($submit_window,
+			[
+				'event' => $event,
+				'type' => 'compo',
+			]
+		);
+		
+		// Add the Jam //
+		$submit_window = schedule_Add(
+			date(DATE_W3C,$ld_start),
+			date(DATE_W3C,$ld_end),
+			"Jam Submission Window",
+			[],
+			"ld","submit",
+			$event,
+			1000.0
+		);
+		$event = schedule_Add(
+			date(DATE_W3C,$ld_start),
+			date(DATE_W3C,$ld_end),
+			"Jam",
+			[
+				'submit' => $submit_window,
+				'type' => 'jam',
+			],
+			"ld","event",
+			$event,
+			500.0
+		);
+		schedule_SetExtra($submit_window,
+			[
+				'event' => $event,
+				'type' => 'jam',
+			]
+		);
+		
 		// Judging Window //		
 		schedule_Add(
 			date(DATE_W3C,$ld_compo_end + ($hour*1)),
@@ -1252,7 +1270,7 @@ Thing {
 				'info' => 'Practice for Ludum Dare 33',
 				'url' => 'https://ludumdare.com/ld/33/warmup/'
 			],
-			"ld","warmup"
+			"warmup",""
 		);
 	}
 	
