@@ -24,6 +24,8 @@ define('CMW_TABLE_USER',CMW_TABLE_PREFIX."user");
 define('CMW_TABLE_COMMENT',CMW_TABLE_PREFIX."comment");
 define('CMW_TABLE_COMMENT_LOVE',CMW_TABLE_PREFIX."comment_love");
 
+define('CMW_TABLE_SCHEDULE',CMW_TABLE_PREFIX."schedule");
+
 // Field constants for Schema //
 const CMW_FIELD_TYPE_IGNORE = 0;		// Field will be unset (NOTE: Prefer a custom query) //
 const CMW_FIELD_TYPE_STRING = 1;

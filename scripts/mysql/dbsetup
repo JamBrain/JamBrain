@@ -4,6 +4,7 @@ require_once __DIR__."/../../db.php";
 require_once __DIR__."/../../core/internal/core.php";
 require_once __DIR__."/../../core/node.php";
 require_once __DIR__."/../../core/users.php";
+require_once __DIR__."/../../core/schedule.php";
 
 db_Connect();
 echo "Connected: " . db_IsConnected() . "\n";
@@ -29,6 +30,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 	db_Query("DROP TABLE " . CMW_TABLE_USER . ";",true);
 	db_Query("DROP TABLE " . CMW_TABLE_COMMENT . ";",true);
 	db_Query("DROP TABLE " . CMW_TABLE_COMMENT_LOVE . ";",true);
+	db_Query("DROP TABLE " . CMW_TABLE_SCHEDULE . ";",true);
 		
 	db_Query("SET storage_engine=InnoDB;");
 //	db_Query("SET collation_server=utf8_unicode_ci;");
@@ -1055,6 +1057,65 @@ Thing {
 	// InnoDB (DairyBox Default) - 
 	// MyISAM (Server Default) - 
 	// Archive - 
+
+
+	// Schedule //
+	db_Query(
+		"CREATE TABLE " . CMW_TABLE_SCHEDULE . " (
+			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
+				UNIQUE,
+			parent BIGINT UNSIGNED NOT NULL DEFAULT 0,
+				INDEX (parent),
+				
+			priority FLOAT NOT NULL DEFAULT 0.0,
+			
+			type VARCHAR(8) CHARSET latin1 NOT NULL DEFAULT '',
+				INDEX (type),
+
+			start DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+				INDEX (start),
+			end DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+				INDEX (end),
+
+			name VARCHAR(191) NOT NULL DEFAULT '',
+			extra TEXT NOT NULL
+		)" . $dbtype_default . ";");
+
+	// id       - unique id of this Schedule Node
+	// parent   - if it's a child, then who's the parent? (otherwise 0)
+	// priority - used to sort amongst children. FLOAT.
+	//		We use the items with the lowest INTEGER part, and decide what to do given the FRACTION part.
+	// type     - the type or class of event (NOTE: Trending events are separate.
+	//		Leave blank if not an internal LD event, or a big worldwide event.
+	//		In the unlikely case a big worldwide event conflicts with Ludum Dare (main event only), omit this.
+	//		- ld
+	//		- minild
+	//		- warmup
+	//		- october
+	//		- ggj
+	//		- 7dfps
+	//		- etc...
+	// start - start date and time
+	// end   - end date and time
+	// name  - name of the event, including digits (i.e. Ludum Dare 33, Global Game Jam 2016)
+	// extra - additional information stored in JSON format.
+	//		'theme' - the theme of the event.
+	//		'url' - url to more information about the event
 	
-	echo "Done\n";
+	{
+		$ld_start_hour = " 9:00 PM America/New_York";
+		
+		schedule_Add(
+			date(DATE_W3C,strtotime("August 21, 2015".$ld_start_hour)),
+			date(DATE_W3C,strtotime("August 24, 2015".$ld_start_hour)),
+			"Ludum Dare 33",
+			[
+				'theme' => '???',
+				'url' => 'https://ludumdare.com/ld/33/'
+			],
+			"ld"
+		);
+	}
+	
+	echo "Table Create's Done.\n";
 ?>

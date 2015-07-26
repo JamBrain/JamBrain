@@ -176,4 +176,9 @@ function db_GetId() {
 	return $db->insert_id;
 }
 
+function db_EscapeString( $in ) {
+	global $db;
+	return $db->real_escape_string($in);
+}
+
 ?>

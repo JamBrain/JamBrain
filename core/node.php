@@ -10,7 +10,7 @@ require_once __DIR__."/internal/cache.php";
 require_once __DIR__."/constants.php";
 require_once __DIR__."/users.php";
 
-// NOTE: None of these functions sanitize. Make sure you sanitize first! //
+// NOTE: None of these functions sanitize. Make sure you sanitize your input! //
 
 $NODES = [];
 $ID_BY_PARENT_SLUG = [];

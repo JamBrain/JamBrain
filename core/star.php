@@ -6,6 +6,8 @@
  */
 require_once __DIR__ . "/../db.php";
 
+// NOTE: None of these functions sanitize. Make sure you sanitize your input! //
+
 // Returns true if the star was added (false if it already existed) //
 function star_Add( &$node, &$user ) {
 	db_Connect();

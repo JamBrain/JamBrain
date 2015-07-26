@@ -7,6 +7,8 @@
  
 require_once __DIR__ . "/../db.php";
 
+// NOTE: None of these functions sanitize. Make sure you sanitize your input! //
+
 // Returns true if the love was added (false if it already existed) //
 function love_Add( &$node, &$user = 0, &$ip = '0.0.0.0' ) {
 	db_Connect();
