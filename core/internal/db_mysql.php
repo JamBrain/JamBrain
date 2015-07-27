@@ -76,7 +76,7 @@ function db_DoSchema( &$row, &$schema ) {
 					break;
 				}
 				case CMW_FIELD_TYPE_JSON: {
-					$row[$key] = json_decode($value);
+					$row[$key] = json_decode($value,true);
 					break;
 				}
 				case CMW_FIELD_TYPE_IGNORE: {
@@ -154,7 +154,7 @@ function db_FetchSingle($query,$type = null) {
 			else if ( $type === CMW_FIELD_TYPE_DATETIME )
 				$rows[] = strtotime($row[0]);
 			else if ( $type === CMW_FIELD_TYPE_JSON )
-				$rows[] = json_decode($row[0]);
+				$rows[] = json_decode($row[0],true);
 			else if ( $type === CMW_FIELD_TYPE_IGNORE ) {
 			}
 			else {

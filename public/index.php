@@ -487,7 +487,14 @@ if ( $mode > 0 ) {
 
 <?php	
 	echo "<!-- Schedule\n";
-	print_r( schedule_GetActiveIds() );
+	$scheduled_events = schedule_GetActiveIds();
+	print_r( $scheduled_events );
+	
+	$schedules = schedule_GetByIds( $scheduled_events );
+	print_r( $schedules );
+	
+	$family = schedule_GetFamilyByIds( [55,69] );
+	print_r( $family );
 	echo " -->";
 ?>
 	<?php if ( $this_node['type'] === 'root' ) { ?>

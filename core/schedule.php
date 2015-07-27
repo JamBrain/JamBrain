@@ -105,6 +105,76 @@ function schedule_GetActiveIds( $fuzz = 0 ) {
 	return $items;		
 }
 
-//	global $SCHEDULE_SCHEMA;
-//, $SCHEDULE_SCHEMA);
+
+function schedule_GetByIds( $ids ) {
+	global $SCHEDULE_SCHEMA;
+	$ret = [];
+
+	db_Connect();
+
+	$id_count = count($ids);
+
+	if ( $id_count === 1 ) {
+		$items = db_Fetch(
+			"SELECT * FROM `" . CMW_TABLE_SCHEDULE . "` WHERE ".
+				"`id`=" . array_pop($ids) .
+				" LIMIT 1" .
+			";", $SCHEDULE_SCHEMA);
+	}
+	else {
+		$items = db_Fetch(
+			"SELECT * FROM `" . CMW_TABLE_SCHEDULE . "` WHERE ".
+				"`id` in (" . implode(',',$ids) . ")" .
+			";", $SCHEDULE_SCHEMA);
+	}
+
+	
+	// Resort using the Id as the key //
+	foreach( $items as &$item ) {
+		$id = &$item['id'];
+		$ret[$id] = &$item;
+	}
+
+	return $ret;
+}
+
+
+function schedule_GetFamilyByIds( $ids ) {
+	global $SCHEDULE_SCHEMA;
+	$ret = [];
+
+	db_Connect();
+
+	$id_count = count($ids);
+
+	if ( $id_count === 1 ) {
+		if ( is_array($ids) )
+			$id = array_pop($ids);
+		else
+			$id = $ids;
+		
+		$items = db_Fetch(
+			"SELECT * FROM `" . CMW_TABLE_SCHEDULE . "` WHERE ".
+				"`id`=" . $id .
+				" OR `parent`=" . $id .
+			";", $SCHEDULE_SCHEMA);
+	}
+	else {
+		$id_string = implode(',',$ids);
+		$items = db_Fetch(
+			"SELECT * FROM `" . CMW_TABLE_SCHEDULE . "` WHERE ".
+				"`id` in (" . $id_string . ")" .
+				" OR `parent` in (" . $id_string . ")" .
+			";", $SCHEDULE_SCHEMA);
+	}
+
+	// Resort using the Id as the key //
+	foreach( $items as &$item ) {
+		$id = &$item['id'];
+		$ret[$id] = &$item;
+	}
+
+	return $ret;
+}
+
 ?>
