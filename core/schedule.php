@@ -20,7 +20,25 @@ $SCHEDULE_SCHEMA = [
 ];
 
 
-function schedule_Add( $start, $end, $name, $extra = null, $type = "", $subtype = "", $parent = 0, $priority = 0.0 ) {
+function schedule_AddSubscription( $user, $period ) {
+	db_Connect();
+
+	db_Query(
+		"INSERT `" . CMW_TABLE_SCHEDULE_SUBSCRIPTION . "` (".
+			"`user`,".
+			"`period`".
+		") ".
+		"VALUES (" .
+			intval($user) . "," .
+			intval($period) . "" .
+		");");
+		
+	// TODO: do something on db_query error
+
+	return db_GetId();
+}
+
+function schedule_Add( $start, $end, $name, $extra = null, $type = "", $subtype = "", $parent = 0, $priority = 0.0, $author = 0 ) {
 	db_Connect();
 	
 	// Turn EXTRA in to a JSON string //
@@ -34,9 +52,10 @@ function schedule_Add( $start, $end, $name, $extra = null, $type = "", $subtype 
 	}
 
 	db_Query(
-		"INSERT `" . CMW_TABLE_SCHEDULE . "` (".
+		"INSERT `" . CMW_TABLE_SCHEDULE_PERIOD . "` (".
 			"`parent`,".
 			"`priority`,".
+			"`author`,".
 			"`type`,".
 			"`subtype`,".
 			"`start`,".
@@ -47,6 +66,7 @@ function schedule_Add( $start, $end, $name, $extra = null, $type = "", $subtype 
 		"VALUES (" .
 			intval($parent) . "," .
 			floatval($priority) . "," .
+			intval($author) . "," .
 			"\"".db_EscapeString($type)."\"," .
 			"\"".db_EscapeString($subtype)."\"," .
 			"\"".db_EscapeString($start)."\"," .
@@ -74,7 +94,7 @@ function schedule_SetExtra( $id, $extra = null ) {
 	}
 
 	db_Query(
-		"UPDATE `" . CMW_TABLE_SCHEDULE . "`" .
+		"UPDATE `" . CMW_TABLE_SCHEDULE_PERIOD . "`" .
 		" SET " .
 			"`extra`=\"".db_EscapeString($json)."\"" .
 		" WHERE " .
@@ -97,7 +117,7 @@ function schedule_GetActiveIds( $fuzz = 0 ) {
 	$fuzz = intval($fuzz);
 
 	$items = db_FetchSingle(
-		"SELECT `id` FROM `" . CMW_TABLE_SCHEDULE . "` WHERE ".
+		"SELECT `id` FROM `" . CMW_TABLE_SCHEDULE_PERIOD . "` WHERE ".
 			"`start` <= DATE_ADD(NOW(),INTERVAL ".$fuzz." SECOND) AND " .
 			"`end` >= DATE_SUB(NOW(),INTERVAL ".$fuzz." SECOND) " .
 		";", CMW_FIELD_TYPE_INT);
@@ -105,6 +125,27 @@ function schedule_GetActiveIds( $fuzz = 0 ) {
 	return $items;		
 }
 
+function schedule_GetActiveParentsByIds( $fuzz = 0 ) {
+	global $SCHEDULE_SCHEMA;
+
+	db_Connect();
+
+	$fuzz = intval($fuzz);
+
+	$items = db_Fetch(
+		"SELECT `id`,`parent` FROM `" . CMW_TABLE_SCHEDULE_PERIOD . "` WHERE ".
+			"`start` <= DATE_ADD(NOW(),INTERVAL ".$fuzz." SECOND) AND " .
+			"`end` >= DATE_SUB(NOW(),INTERVAL ".$fuzz." SECOND) " .
+		";", $SCHEDULE_SCHEMA);
+	
+	$ret = [];
+
+	foreach( $items as &$item ) {
+		$ret[$item['id']] = $item['parent'];
+	}
+	
+	return $ret;		
+}
 
 function schedule_GetByIds( $ids ) {
 	global $SCHEDULE_SCHEMA;
@@ -116,14 +157,14 @@ function schedule_GetByIds( $ids ) {
 
 	if ( $id_count === 1 ) {
 		$items = db_Fetch(
-			"SELECT * FROM `" . CMW_TABLE_SCHEDULE . "` WHERE ".
+			"SELECT * FROM `" . CMW_TABLE_SCHEDULE_PERIOD . "` WHERE ".
 				"`id`=" . array_pop($ids) .
 				" LIMIT 1" .
 			";", $SCHEDULE_SCHEMA);
 	}
 	else {
 		$items = db_Fetch(
-			"SELECT * FROM `" . CMW_TABLE_SCHEDULE . "` WHERE ".
+			"SELECT * FROM `" . CMW_TABLE_SCHEDULE_PERIOD . "` WHERE ".
 				"`id` in (" . implode(',',$ids) . ")" .
 			";", $SCHEDULE_SCHEMA);
 	}
@@ -154,7 +195,7 @@ function schedule_GetFamilyByIds( $ids ) {
 			$id = $ids;
 		
 		$items = db_Fetch(
-			"SELECT * FROM `" . CMW_TABLE_SCHEDULE . "` WHERE ".
+			"SELECT * FROM `" . CMW_TABLE_SCHEDULE_PERIOD . "` WHERE ".
 				"`id`=" . $id .
 				" OR `parent`=" . $id .
 			";", $SCHEDULE_SCHEMA);
@@ -162,7 +203,7 @@ function schedule_GetFamilyByIds( $ids ) {
 	else {
 		$id_string = implode(',',$ids);
 		$items = db_Fetch(
-			"SELECT * FROM `" . CMW_TABLE_SCHEDULE . "` WHERE ".
+			"SELECT * FROM `" . CMW_TABLE_SCHEDULE_PERIOD . "` WHERE ".
 				"`id` in (" . $id_string . ")" .
 				" OR `parent` in (" . $id_string . ")" .
 			";", $SCHEDULE_SCHEMA);
@@ -176,5 +217,23 @@ function schedule_GetFamilyByIds( $ids ) {
 
 	return $ret;
 }
+
+
+function schedule_GetSubscriptionsByUserIds( $ids ) {
+	if ( is_array($ids) ) {
+		$id_string = implode(',',$ids);
+	}
+	else {
+		$id_string = "".$ids;
+	}
+	
+	$items = db_FetchSingle(
+		"SELECT `period` FROM `" . CMW_TABLE_SCHEDULE_SUBSCRIPTION . "` WHERE ".
+			"`user` in (" . $id_string . ")" .
+		";", CMW_FIELD_TYPE_INT);
+
+	return $items;
+}
+
 
 ?>

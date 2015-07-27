@@ -2,6 +2,7 @@
 require_once __DIR__ . "/../web.php";
 require_once __DIR__ . "/../core/node.php";
 require_once __DIR__ . "/../core/internal/sanitize.php";
+require_once __DIR__ . "/../core/schedule.php";
 
 $HIDE_FOOTER_STATS = true;
 
@@ -354,7 +355,66 @@ a {
 			<div id="tools" style="display:inline-block;"></div>
 			<a href="/"><img class="jammer" src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo56<?php echo $img; ?>.png" height="28" alt="Jammer" title="Jammer" /></a>
 		</div>
-		LUDUM DARE 34 | THEME: ??? | countdown clock
+		<div>&nbsp;
+		<?php
+			$subscription = schedule_GetSubscriptionsByUserIds($user['id']);
+			
+			if ( count($subscription) ) {
+				$active = schedule_GetActiveParentsByIds();
+				
+				$event_ids = [];
+				foreach ( $subscription as &$event ) {
+					foreach ( $active as $key => &$value ) {
+						if ( $event === $value ) {
+							$event_ids[] = $key;
+						}
+						else if ( $event === $key ) {
+							$event_ids[] = $key;
+						}
+					}
+				}
+				//print_r($event_ids);
+				
+				$events = schedule_GetByIds( $event_ids );
+
+				$priority = array_pop($events);
+				foreach ( $events as &$event ) {
+					if ( $priority['priority'] > $event['priority'] ) {
+						$priority = &$event;
+					}
+				}
+				// NOTE: First highest priority event we come across will get selected
+				
+				echo "<strong>";
+				echo $priority['name'];
+				echo "</strong>";
+				
+				if ( isset($priority['extra']['countdown']) ) {
+					echo " ends in";
+				
+					$time_now = time();
+					$time_end = $priority['end'];
+					$time = $time_end - $time_now;
+					
+					$seconds = floor($time) % 60;
+					$minutes = floor($time / 60) % 60;
+					$hours = floor($time / (60*60)) % 24;
+					$days = floor($time / (60*60*24));
+					echo  "" . ($days ? (" ".$days." days, ") : "") .
+						" " . str_pad($hours,2,'0') . ":" . str_pad($minutes,2,'0') . ":" . str_pad($seconds,2,'0');
+				}
+
+				if ( isset($priority['extra']['theme']) ) {
+					echo " | Theme: <strong>";
+					echo $priority['extra']['theme'];
+					echo "</strong>";
+				}
+			}
+			else {
+				echo "&nbsp;";
+			}
+		?>
+		</div>
 	</div></div>
 </body>
 <script>

@@ -487,14 +487,33 @@ if ( $mode > 0 ) {
 
 <?php	
 	echo "<!-- Schedule\n";
-	$scheduled_events = schedule_GetActiveIds();
-	print_r( $scheduled_events );
+	$active_events = schedule_GetActiveIds();
+	$events = schedule_GetByIds( $active_events );	// cacheme
 	
-	$schedules = schedule_GetByIds( $scheduled_events );
-	print_r( $schedules );
+	$active_parents = [];
+	foreach ( $events as &$event ) {
+		$active_parents[] = $event['parent'];
+	}
+	$active = array_unique(array_merge($active_parents,$active_events));
+	print_r($active);
 	
-	$family = schedule_GetFamilyByIds( [55,69] );
-	print_r( $family );
+	$subscriptions = schedule_GetSubscriptionsByUserIds(699);
+	print_r($subscriptions);
+
+	$mine = array_intersect($active,$subscriptions);
+	print_r($mine);
+	
+	
+	
+	
+//	$scheduled_events = schedule_GetActiveIds();
+//	print_r( $scheduled_events );
+//	
+//	$schedules = schedule_GetByIds( $scheduled_events );
+//	print_r( $schedules );
+//	
+//	$family = schedule_GetFamilyByIds( [55,69] );
+//	print_r( $family );
 	echo " -->";
 ?>
 	<?php if ( $this_node['type'] === 'root' ) { ?>

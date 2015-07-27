@@ -30,7 +30,8 @@ echo "Connected: " . db_IsConnected() . "\n";
 	db_Query("DROP TABLE " . CMW_TABLE_USER . ";",true);
 	db_Query("DROP TABLE " . CMW_TABLE_COMMENT . ";",true);
 	db_Query("DROP TABLE " . CMW_TABLE_COMMENT_LOVE . ";",true);
-	db_Query("DROP TABLE " . CMW_TABLE_SCHEDULE . ";",true);
+	db_Query("DROP TABLE " . CMW_TABLE_SCHEDULE_PERIOD . ";",true);
+	db_Query("DROP TABLE " . CMW_TABLE_SCHEDULE_SUBSCRIPTION . ";",true);
 		
 	db_Query("SET storage_engine=InnoDB;");
 //	db_Query("SET collation_server=utf8_unicode_ci;");
@@ -835,6 +836,7 @@ Thing {
 			true
 		);	
 		user_Add($user_id,'mike@sykhronics.com','blahblah');
+		$pov_id = $user_id;
 	
 		// Add Dummy Games //
 		node_Add(
@@ -1061,11 +1063,13 @@ Thing {
 
 	// Schedule //
 	db_Query(
-		"CREATE TABLE " . CMW_TABLE_SCHEDULE . " (
+		"CREATE TABLE " . CMW_TABLE_SCHEDULE_PERIOD . " (
 			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
 				UNIQUE,
 			parent BIGINT UNSIGNED NOT NULL DEFAULT 0,
 				INDEX (parent),
+
+			author BIGINT UNSIGNED NOT NULL DEFAULT 0,
 				
 			priority FLOAT NOT NULL DEFAULT 0.0,
 			
@@ -1124,7 +1128,8 @@ Thing {
 			"Ludum Dare ".$number,
 			[
 				'theme' => $theme_name,
-				'url' => 'https://ludumdare.com/ld/'.$number.'/'
+				'url' => 'https://ludumdare.com/ld/'.$number.'/',
+				'countdown' => 1
 			],
 			"ld",""
 		);
@@ -1169,7 +1174,9 @@ Thing {
 			date(DATE_W3C,$season_start),
 			date(DATE_W3C,$ld_start),
 			"Countdown to Ludum Dare ".$number,
-			[],
+			[
+				'countdown' => 1
+			],
 			"ld","countdown",
 			$ludumdare,
 			10.0
@@ -1189,7 +1196,9 @@ Thing {
 			date(DATE_W3C,$ld_compo_end),
 			date(DATE_W3C,$ld_compo_end + $hour),
 			"Submission Hour",
-			[],
+			[
+				'countdown' => 1
+			],
 			"ld","extra",
 			$ludumdare,
 			5.0
@@ -1198,7 +1207,9 @@ Thing {
 			date(DATE_W3C,$ld_end),
 			date(DATE_W3C,$ld_end + $hour),
 			"Submission Hour",
-			[],
+			[
+				'countdown' => 1
+			],
 			"ld","extra",
 			$ludumdare,
 			5.0
@@ -1267,11 +1278,15 @@ Thing {
 			date(DATE_W3C,$ld_compo_end + ($hour*1)),
 			date(DATE_W3C,$ld_end + ($week*3)),
 			"Judging",
-			[],
+			[
+				'countdown' => 1
+			],
 			"ld","judging",
 			$ludumdare,
 			10.0
 		);
+		
+		return $ludumdare;
 	}
 	
 	function MakeGlobalGameJam( $number, $start_date, $theme ) {
@@ -1350,12 +1365,12 @@ Thing {
 	}
 	
 	MakeGlobalGameJam( 2014, "January 24, 2014", "We don't see things as they are, we see them as we are." );
-	MakeLudumDare( 29, "April 25, 2014", "Beneath the Surface" );
-	MakeLudumDare( 30, "August 22, 2014", "Connected Worlds" );
-	MakeLudumDare( 31, "December 5, 2014", "Entire Game on One Screen" );
+	$ld29 = MakeLudumDare( 29, "April 25, 2014", "Beneath the Surface" );
+	$ld30 = MakeLudumDare( 30, "August 22, 2014", "Connected Worlds" );
+	$ld31 = MakeLudumDare( 31, "December 5, 2014", "Entire Game on One Screen" );
 	MakeGlobalGameJam( 2015, "January 23, 2015", "What do we do now?" );
-	MakeLudumDare( 32, "April 17, 2015", "An Unconventional Weapon" );
-	MakeLudumDare( 33, "August 21, 2015", "Potato Kittens" );
+	$ld32 = MakeLudumDare( 32, "April 17, 2015", "An Unconventional Weapon" );
+	$ld33 = MakeLudumDare( 33, "August 21, 2015", "Potato Kittens" );
 	//MakeLudumDare( 34, "December 25, 2015", "Beiber Feiber" );
 	MakeGlobalGameJam( 2016, "January 29, 2016", "How is babby formed? How girl get pragnent?" );
 	
@@ -1368,6 +1383,23 @@ Thing {
 		],
 		"uppy",""
 	);
+
+
+	// Schedule Subscriptions //
+	db_Query(
+		"CREATE TABLE " . CMW_TABLE_SCHEDULE_SUBSCRIPTION . " (
+			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
+				UNIQUE,			
+			user BIGINT UNSIGNED NOT NULL DEFAULT 0,
+				INDEX (user),
+			period BIGINT UNSIGNED NOT NULL DEFAULT 0
+		)" . $dbtype_default . ";");
+
+	// user - the user id the subscription belongs to
+	// period - the id of the period being subscribed to
+	
+	schedule_AddSubscription($pov_id, $ld30);
+	schedule_AddSubscription($pov_id, $ld33);
 	
 	echo "Table Create's Done.\n";
 ?>
