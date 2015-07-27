@@ -1354,11 +1354,20 @@ Thing {
 	MakeLudumDare( 30, "August 22, 2014", "Connected Worlds" );
 	MakeLudumDare( 31, "December 5, 2014", "Entire Game on One Screen" );
 	MakeGlobalGameJam( 2015, "January 23, 2015", "What do we do now?" );
-	MakeLudumDare( 32, "August 17, 2015", "An Unconventional Weapon" );
+	MakeLudumDare( 32, "April 17, 2015", "An Unconventional Weapon" );
 	MakeLudumDare( 33, "August 21, 2015", "Potato Kittens" );
 	//MakeLudumDare( 34, "December 25, 2015", "Beiber Feiber" );
 	MakeGlobalGameJam( 2016, "January 29, 2016", "How is babby formed? How girl get pragnent?" );
 	
+	schedule_Add(
+		date(DATE_W3C,time()+(60*3)),
+		date(DATE_W3C,time()+(60*6)),
+		"Upcoming Jam",
+		[
+			'theme' => "baking"
+		],
+		"uppy",""
+	);
 	
 	echo "Table Create's Done.\n";
 ?>

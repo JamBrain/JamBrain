@@ -32,6 +32,7 @@ const CMW_FIELD_TYPE_STRING = 1;
 const CMW_FIELD_TYPE_INT = 2;
 const CMW_FIELD_TYPE_FLOAT = 3;
 const CMW_FIELD_TYPE_DATETIME = 4;
+const CMW_FIELD_TYPE_JSON = 5;
 
 // Node Constants //
 const CMW_NODE_ROOT = 1;				// The root of our Node tree

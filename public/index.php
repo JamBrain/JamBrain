@@ -5,6 +5,7 @@ require_once __DIR__ . "/../core/node.php";
 require_once __DIR__ . "/../core/internal/sanitize.php";
 require_once __DIR__ . "/../core/internal/emoji.php";
 require_once __DIR__ . "/../core/post.php";
+require_once __DIR__ . "/../core/schedule.php";
 
 user_StartEnd();
 
@@ -483,7 +484,12 @@ if ( $mode > 0 ) {
 	</style>
 
 	<?php if ( $mode === M_DEFAULT ) { ?>
-	
+
+<?php	
+	echo "<!-- Schedule\n";
+	print_r( schedule_GetActiveIds() );
+	echo " -->";
+?>
 	<?php if ( $this_node['type'] === 'root' ) { ?>
 	<div id="content">
 		<?php

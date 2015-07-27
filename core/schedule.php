@@ -9,6 +9,17 @@ require_once __DIR__ . "/../db.php";
 
 // NOTE: None of these functions sanitize. Make sure you sanitize your input! //
 
+$SCHEDULE_SCHEMA = [
+	'id' => CMW_FIELD_TYPE_INT,
+	'parent' => CMW_FIELD_TYPE_INT,
+
+	'start' => CMW_FIELD_TYPE_DATETIME,
+	'end' => CMW_FIELD_TYPE_DATETIME,
+	
+	'extra' => CMW_FIELD_TYPE_JSON,
+];
+
+
 function schedule_Add( $start, $end, $name, $extra = null, $type = "", $subtype = "", $parent = 0, $priority = 0.0 ) {
 	db_Connect();
 	
@@ -63,7 +74,6 @@ function schedule_SetExtra( $id, $extra = null ) {
 	}
 
 	db_Query(
-//	echo(
 		"UPDATE `" . CMW_TABLE_SCHEDULE . "`" .
 		" SET " .
 			"`extra`=\"".db_EscapeString($json)."\"" .
@@ -75,5 +85,26 @@ function schedule_SetExtra( $id, $extra = null ) {
 	return db_GetId();
 }
 
+// Optionally specify how many seconds to fuzz the result. Useful for caching.
+// Positive values mean push the range. A fuzz of 60 means events that 
+//	start in a minute, or ended a minute ago will be included.
+// Negative values to to pull the range. A fuzz of -60 means events that
+//  started less than a minute ago will be ignored, more than a minute
+//  ago will be included, end in less than a minute will be ignored, etc.
+function schedule_GetActiveIds( $fuzz = 0 ) {
+	db_Connect();
 
+	$fuzz = intval($fuzz);
+
+	$items = db_FetchSingle(
+		"SELECT `id` FROM `" . CMW_TABLE_SCHEDULE . "` WHERE ".
+			"`start` <= DATE_ADD(NOW(),INTERVAL ".$fuzz." SECOND) AND " .
+			"`end` >= DATE_SUB(NOW(),INTERVAL ".$fuzz." SECOND) " .
+		";", CMW_FIELD_TYPE_INT);
+	
+	return $items;		
+}
+
+//	global $SCHEDULE_SCHEMA;
+//, $SCHEDULE_SCHEMA);
 ?>

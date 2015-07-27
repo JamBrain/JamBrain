@@ -75,6 +75,10 @@ function db_DoSchema( &$row, &$schema ) {
 					$row[$key] = strtotime($value);
 					break;
 				}
+				case CMW_FIELD_TYPE_JSON: {
+					$row[$key] = json_decode($value);
+					break;
+				}
 				case CMW_FIELD_TYPE_IGNORE: {
 					// NOTE: This is not ideal. You should instead use a modified query. //
 					unset($row[$key]);
@@ -134,15 +138,34 @@ function db_FetchArray($query) {
 }
 
 // Unsafe "run any fetch query" function. Returns an array of values from a single field. //
-function db_FetchSingle($query) {
+function db_FetchSingle($query,$type = null) {
 	global $db;
 	global $DB_QUERY_COUNT;
 	$DB_QUERY_COUNT++;
 
 	$result = $db->query($query);
 	$rows = [];
-	while ( $row = $result->fetch_row() ) {
-		$rows[] = $row[0];
+	if ( !empty($type) ) {
+		while ( $row = $result->fetch_row() ) {
+			if ( $type === CMW_FIELD_TYPE_INT )
+				$rows[] = intval($row[0]);
+			else if ( $type === CMW_FIELD_TYPE_FLOAT )
+				$rows[] = floatval($row[0]);
+			else if ( $type === CMW_FIELD_TYPE_DATETIME )
+				$rows[] = strtotime($row[0]);
+			else if ( $type === CMW_FIELD_TYPE_JSON )
+				$rows[] = json_decode($row[0]);
+			else if ( $type === CMW_FIELD_TYPE_IGNORE ) {
+			}
+			else {
+				$rows[] = $row[0];
+			}
+		}
+	}
+	else {
+		while ( $row = $result->fetch_row() ) {
+			$rows[] = $row[0];
+		}
 	}
 
 	return $rows;
