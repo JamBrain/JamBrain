@@ -339,25 +339,9 @@ a {
 	</div>
 
 	<div><div class="footer">
-		<div style="float:left;line-height:28px;"><?php
-			echo '<img src="http://www.gravatar.com/avatar/'.GravatarHash( $user_name==="pov"?"mike@sykhronics.com":"banana@what.de" ).'?s=56" width="28" height="28" />';
-			echo '<a href="//ludumdare.com/user/'.$user_name.'" target="_blank" title="'.$user_name.'" alt="'.$user_name.'" >'.$display_name.'</a>';
-
-			if (isset($meta['twitter'])) {
-				echo ' | <a href="//twitter.com/'.($meta['twitter']).'" target="_blank"><img src="'.CMW_STATIC_URL.'/logo/twitter/Twitter32'.$img.'.png" height="16" alt="'.($meta['twitter']).'" title="'.($meta['twitter']).'" /></a>';
-			}
-
-			// NOTE: Reminders are a star for the item you are working on. If not participating, no reminder.
-			echo " | +follow | +love | +add reminder";
-			?>
-		</div>
-		<div style="float:right">
-			<div id="tools" style="display:inline-block;"></div>
-			<a href="/"><img class="jammer" src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo56<?php echo $img; ?>.png" height="28" alt="Jammer" title="Jammer" /></a>
-		</div>
-		<div>&nbsp;
 		<?php
 			$subscription = schedule_GetSubscriptionsByUserIds($user['id']);
+			$current_event;
 			
 			if ( count($subscription) ) {
 				$active = schedule_GetActiveParentsByIds();
@@ -377,23 +361,49 @@ a {
 				
 				$events = schedule_GetByIds( $event_ids );
 
-				$priority = array_pop($events);
+				$current_event = array_pop($events);
 				foreach ( $events as &$event ) {
-					if ( $priority['priority'] > $event['priority'] ) {
-						$priority = &$event;
+					if ( $current_event['priority'] > $event['priority'] ) {
+						$current_event = &$event;
 					}
 				}
 				// NOTE: First highest priority event we come across will get selected
-				
+			}
+		?>
+		<div style="float:left;line-height:28px;"><?php
+			echo '<img src="http://www.gravatar.com/avatar/'.GravatarHash( $user_name==="pov"?"mike@sykhronics.com":"banana@what.de" ).'?s=56" width="28" height="28" />';
+			echo '<a href="//ludumdare.com/user/'.$user_name.'" target="_blank" title="'.$user_name.'" alt="'.$user_name.'" >'.$display_name.'</a>';
+
+			if (isset($meta['twitter'])) {
+				echo ' | <a href="//twitter.com/'.($meta['twitter']).'" target="_blank"><img src="'.CMW_STATIC_URL.'/logo/twitter/Twitter32'.$img.'.png" height="16" alt="'.($meta['twitter']).'" title="'.($meta['twitter']).'" /></a>';
+			}
+
+			// NOTE: Reminders are a star for the item you are working on. If not participating, no reminder.
+			echo " | +love | +follow";
+			
+			global $current_event;
+			if ( $current_event ) {
+				echo " | +add reminder";
+			}
+			?>
+		</div>
+		<div style="float:right">
+			<div id="tools" style="display:inline-block;"></div>
+			<a href="/"><img class="jammer" src="<?php STATIC_URL(); ?>/logo/jammer/JammerLogo56<?php echo $img; ?>.png" height="28" alt="Jammer" title="Jammer" /></a>
+		</div>
+		<div>&nbsp;
+		<?php
+			global $current_event;
+			if ( $current_event ) {
 				echo "<strong>";
-				echo $priority['name'];
+				echo $current_event['name'];
 				echo "</strong>";
 				
-				if ( isset($priority['extra']['countdown']) ) {
+				if ( isset($current_event['extra']['countdown']) ) {
 					echo " ends in";
 				
 					$time_now = time();
-					$time_end = $priority['end'];
+					$time_end = $current_event['end'];
 					$time = $time_end - $time_now;
 					
 					$seconds = floor($time) % 60;
@@ -404,9 +414,9 @@ a {
 						" " . str_pad($hours,2,'0') . ":" . str_pad($minutes,2,'0') . ":" . str_pad($seconds,2,'0');
 				}
 
-				if ( isset($priority['extra']['theme']) ) {
+				if ( isset($current_event['extra']['theme']) ) {
 					echo " | Theme: <strong>";
-					echo $priority['extra']['theme'];
+					echo $current_event['extra']['theme'];
 					echo "</strong>";
 				}
 			}
