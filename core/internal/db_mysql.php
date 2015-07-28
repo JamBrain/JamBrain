@@ -56,7 +56,7 @@ function db_Connect() {
 
 // Because MySQL returns everything as a string, here's a lightweight schema decoder //
 function db_DoSchema( &$row, &$schema ) {
-	foreach( $row as $key => $value ) {
+	foreach( $row as $key => &$value ) {
 		if ( isset($schema[$key]) ) {
 			switch( $schema[$key] ) {
 				//case CMW_FIELD_TYPE_STRING: {
@@ -260,6 +260,186 @@ function db_GetId() {
 function db_EscapeString( $in ) {
 	global $db;
 	return $db->real_escape_string($in);
+}
+
+
+function _db_BuildMySQLParamString( $field, $schema = null ) {
+	$paramstr = "";
+	
+	// CHEAT: Make it an array to simplify the following code //
+	if ( !is_array($field) )
+		$field = [$field];
+
+	// With a schema, decode the fields //
+	if ( isset($schema) ) {
+		foreach( $field as $key => &$value ) {
+			if ( isset($schema[$key]) ) {
+				switch( $schema[$key] ) {
+					case CMW_FIELD_TYPE_IGNORE:
+						// TODO: Error
+						break;
+					case CMW_FIELD_TYPE_INT:
+					case CMW_FIELD_TYPE_DATETIME:
+						$paramstr .= 'i';
+						break;
+					case CMW_FIELD_TYPE_FLOAT:
+						$paramstr .= 'd';
+						break;
+					case CMW_FIELD_TYPE_JSON:
+					case CMW_FIELD_TYPE_STRING:
+					default:
+						$paramstr .= 's';
+						break;
+				};
+			}
+			else {
+				$paramstr .= 's';
+			}
+		}
+	}
+	// If no Schema, assume everything is a string
+	else {
+		foreach( $field as &$value ) {
+			$paramstr .= 's';
+		}
+	}
+
+	return $paramstr;
+}
+
+// Given 1 or more fields, build the query string //
+// - Use the % sign for the field placement identifier in your query.
+// - Use a number to insert that many comma delimited '?' symbols 
+function _db_BuildQueryString( $query, ...$fields ) {
+	foreach ( $fields as &$field ) {
+		if ( is_array($field) ) {
+			$field_str[] = implode(',',array_map(
+					function( $el ) {
+						return '`'.$el.'`';
+					},
+					$field
+				));
+		}
+		else if ( is_integer($field) ) {
+			if ( $field > 0 ) {
+				$str = '?';
+				for ( $idx = 1; $idx < $field; ++$idx ) {
+					$str .= ',?';
+				}
+				$field_str[] = $str;
+			}
+			else {
+				// TODO: ERROR
+				$field_str[] = "";
+			} 
+		}
+		else {
+			if ( $field == '*' )
+				$field_str[] = $field;
+			else
+				$field_str[] = '`'.$field.'`';
+		}
+	}
+	
+	$field_str_count = count($field_str);
+		
+	// TODO: for each %, insert a field string
+	// Fastest relpace method according to http://stackoverflow.com/a/1252710
+	while ( $pos = strpos($query,'%') ) {
+		$query = substr_replace($query,array_shift($field_str),$pos,1/*strlen('%')*/);
+	}
+//	if ($pos !== false) {
+//	    return substr_replace($query,$field_str,$pos,1/*strlen('%')*/);
+//	}
+//
+//	// TODO: ERROR
+//	
+	return $query;
+}
+
+function _db_BuildArgList( $args ) {
+	$out = [];
+	foreach( $args as &$arg ) {
+		if ( is_integer($arg) ) {
+			$endval = end($out);
+			for ( $idx = 1; $idx < $arg; ++$idx ) {
+				$out[] = $endval;
+			}
+		}
+		else {
+			$out[] = $arg;
+		}
+	}
+	return $out;
+}
+
+// Build a list of schema operations //
+function _db_ParseArgList( $args, $schema ) {
+	$out = [];
+	foreach( $args as &$arg ) {
+		// If it's an Integer, repeat the previous value so there are that many copies.
+		if ( is_integer($arg) ) {
+			$endval = end($out);
+			
+			for ( $idx = 1; $idx < $arg; ++$idx ) {
+				$out[] = $endval;
+			}
+		}
+		// If it's a string, lookup the name in the schema. If not found, assume a string.
+		else {
+			if ( isset($schema[$arg]) )
+				$out[] = $schema[$arg];
+			else
+				$out[] = CMW_FIELD_TYPE_STRING;
+		}
+	}
+	return $out;
+}
+
+
+// NOTE: Prepare statements are only useful in places you DON'T use "in".
+//	Prepared statements are an optimization when the query itself is identical.
+
+function db_Query2( $query, $args ) {
+	global $db;
+	
+	global $DB_QUERY_COUNT;
+	$DB_QUERY_COUNT++;
+	
+	$arg_string = "";
+	foreach ( $args as &$arg ) {
+		if ( is_integer($arg) ) {
+			$arg_string .= 'i';
+		}
+		else if ( is_float($arg) ) {
+			$arg_string .= 'd';
+		}
+		else if ( is_string($arg) ) {
+			$arg_string .= 's';
+		}
+		else if ( is_bool($arg) ) {
+			$arg_string .= 'i';
+			$arg = $arg ? 1 : 0;
+		}
+		else if ( is_array($arg) ) {
+			$arg_string .= 's';
+			$arg = json_encode($arg,true);
+		}
+		// date+time?
+	}
+	
+	$new_args[] = $arg_string;
+	$final_args = array_merge($new_args,$args);
+	
+	$st = $db->prepare($query);
+	call_user_func_array( $st->bind_params, $final_args );
+	$ret = $st->execute();
+	//$st->bind_result
+	// $st->reset(); // repeats
+	
+	$st->close();
+	
+	return $ret or die(mysqli_error($db)."\n");
 }
 
 ?>

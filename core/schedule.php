@@ -115,6 +115,13 @@ function schedule_GetActiveIds( $fuzz = 0 ) {
 	db_Connect();
 
 	$fuzz = intval($fuzz);
+//	$args = [ time()+$fuzz, time()-$fuzz ];
+//
+//	$items = db_FetchSingle(
+//		"SELECT `id` FROM `" . CMW_TABLE_SCHEDULE_TIMESPAN . "` WHERE ".
+//			"`start` <= DATE_ADD(NOW(),INTERVAL ".$fuzz." SECOND) AND " .
+//			"`end` >= DATE_SUB(NOW(),INTERVAL ".$fuzz." SECOND) " .
+//		";", CMW_FIELD_TYPE_INT);
 
 	$items = db_FetchSingle(
 		"SELECT `id` FROM `" . CMW_TABLE_SCHEDULE_TIMESPAN . "` WHERE ".

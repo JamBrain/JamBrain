@@ -486,22 +486,49 @@ if ( $mode > 0 ) {
 	<?php if ( $mode === M_DEFAULT ) { ?>
 
 <?php	
-	echo "<!-- Schedule\n";
-	$active_events = schedule_GetActiveIds();
-	$events = schedule_GetByIds( $active_events );	// cacheme
+	echo "<!-- Debug\n";
 	
-	$active_parents = [];
-	foreach ( $events as &$event ) {
-		$active_parents[] = $event['parent'];
-	}
-	$active = array_unique(array_merge($active_parents,$active_events));
-	print_r($active);
+	$query = 
+		'SELECT % FROM % WHERE'.
+			' % in (%)' .
+			' AND % = ?' .
+			';';
+	$args = [
+		'id',4,
+		'type'
+	];
+		
+	echo _db_BuildQueryString(
+		$query,
+		'*',CMW_TABLE_SCHEDULE_SUBSCRIPTION,
+		'id',4,
+		'type'
+	);
+	echo "\n";
 	
-	$subscriptions = schedule_GetSubscriptionsByUserIds(699);
-	print_r($subscriptions);
-
-	$mine = array_intersect($active,$subscriptions);
-	print_r($mine);
+	print_r( _db_BuildArgList($args) );
+	
+	global $NODE_SCHEMA;
+	print_r( _db_ParseArgList($args,$NODE_SCHEMA) );
+	
+	
+	
+	
+//	$active_events = schedule_GetActiveIds();
+//	$events = schedule_GetByIds( $active_events );	// cacheme
+//	
+//	$active_parents = [];
+//	foreach ( $events as &$event ) {
+//		$active_parents[] = $event['parent'];
+//	}
+//	$active = array_unique(array_merge($active_parents,$active_events));
+//	print_r($active);
+//	
+//	$subscriptions = schedule_GetSubscriptionsByUserIds(699);
+//	print_r($subscriptions);
+//
+//	$mine = array_intersect($active,$subscriptions);
+//	print_r($mine);
 	
 	
 	
