@@ -172,6 +172,64 @@ function db_FetchSingle($query,$type = null) {
 }
 
 
+// Unsafe "run any fetch query" function. Returns an array of values from a single field. //
+function db_FetchPair( $query, $typeA = null, $typeB = null ) {
+	global $db;
+	global $DB_QUERY_COUNT;
+	$DB_QUERY_COUNT++;
+
+	$result = $db->query($query);
+	$rows = [];
+	while ( $row = $result->fetch_row() ) {
+		// Key //
+		switch( $typeA ) {
+			case CMW_FIELD_TYPE_INT:
+				$a = intval($row[0]);
+				break;
+			case CMW_FIELD_TYPE_FLOAT:
+				$a = floatval($row[0]);
+				break;
+			case CMW_FIELD_TYPE_DATETIME:
+				$a = strtotime($row[0]);
+				break;
+			case CMW_FIELD_TYPE_JSON:
+				$a = json_decode($row[0],true);
+				break;
+			case CMW_FIELD_TYPE_IGNORE:
+				continue;
+				break;
+			default:
+				$a = $row[0];
+				break;
+		}
+		// Value //
+		switch( $typeB ) {
+			case CMW_FIELD_TYPE_INT:
+				$b = intval($row[0]);
+				break;
+			case CMW_FIELD_TYPE_FLOAT:
+				$b = floatval($row[0]);
+				break;
+			case CMW_FIELD_TYPE_DATETIME:
+				$b = strtotime($row[0]);
+				break;
+			case CMW_FIELD_TYPE_JSON:
+				$b = json_decode($row[0],true);
+				break;
+			case CMW_FIELD_TYPE_IGNORE:
+				continue;
+				break;
+			default:
+				$b = $row[0];
+				break;
+		}
+		
+		$rows[$a] = $b;
+	}
+
+	return $rows;
+}
+
 function db_AffectedRows() {
 	global $db;
 

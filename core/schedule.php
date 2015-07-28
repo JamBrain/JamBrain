@@ -20,17 +20,17 @@ $SCHEDULE_SCHEMA = [
 ];
 
 
-function schedule_AddSubscription( $user, $period ) {
+function schedule_AddSubscription( $user, $timespan ) {
 	db_Connect();
 
 	db_Query(
 		"INSERT `" . CMW_TABLE_SCHEDULE_SUBSCRIPTION . "` (".
 			"`user`,".
-			"`period`".
+			"`timespan`".
 		") ".
 		"VALUES (" .
 			intval($user) . "," .
-			intval($period) . "" .
+			intval($timespan) . "" .
 		");");
 		
 	// TODO: do something on db_query error
@@ -52,7 +52,7 @@ function schedule_Add( $start, $end, $name, $extra = null, $type = "", $subtype 
 	}
 
 	db_Query(
-		"INSERT `" . CMW_TABLE_SCHEDULE_PERIOD . "` (".
+		"INSERT `" . CMW_TABLE_SCHEDULE_TIMESPAN . "` (".
 			"`parent`,".
 			"`priority`,".
 			"`author`,".
@@ -94,7 +94,7 @@ function schedule_SetExtra( $id, $extra = null ) {
 	}
 
 	db_Query(
-		"UPDATE `" . CMW_TABLE_SCHEDULE_PERIOD . "`" .
+		"UPDATE `" . CMW_TABLE_SCHEDULE_TIMESPAN . "`" .
 		" SET " .
 			"`extra`=\"".db_EscapeString($json)."\"" .
 		" WHERE " .
@@ -117,7 +117,7 @@ function schedule_GetActiveIds( $fuzz = 0 ) {
 	$fuzz = intval($fuzz);
 
 	$items = db_FetchSingle(
-		"SELECT `id` FROM `" . CMW_TABLE_SCHEDULE_PERIOD . "` WHERE ".
+		"SELECT `id` FROM `" . CMW_TABLE_SCHEDULE_TIMESPAN . "` WHERE ".
 			"`start` <= DATE_ADD(NOW(),INTERVAL ".$fuzz." SECOND) AND " .
 			"`end` >= DATE_SUB(NOW(),INTERVAL ".$fuzz." SECOND) " .
 		";", CMW_FIELD_TYPE_INT);
@@ -133,7 +133,7 @@ function schedule_GetActiveParentsByIds( $fuzz = 0 ) {
 	$fuzz = intval($fuzz);
 
 	$items = db_Fetch(
-		"SELECT `id`,`parent` FROM `" . CMW_TABLE_SCHEDULE_PERIOD . "` WHERE ".
+		"SELECT `id`,`parent` FROM `" . CMW_TABLE_SCHEDULE_TIMESPAN . "` WHERE ".
 			"`start` <= DATE_ADD(NOW(),INTERVAL ".$fuzz." SECOND) AND " .
 			"`end` >= DATE_SUB(NOW(),INTERVAL ".$fuzz." SECOND) " .
 		";", $SCHEDULE_SCHEMA);
@@ -157,14 +157,14 @@ function schedule_GetByIds( $ids ) {
 
 	if ( $id_count === 1 ) {
 		$items = db_Fetch(
-			"SELECT * FROM `" . CMW_TABLE_SCHEDULE_PERIOD . "` WHERE ".
+			"SELECT * FROM `" . CMW_TABLE_SCHEDULE_TIMESPAN . "` WHERE ".
 				"`id`=" . array_pop($ids) .
 				" LIMIT 1" .
 			";", $SCHEDULE_SCHEMA);
 	}
 	else {
 		$items = db_Fetch(
-			"SELECT * FROM `" . CMW_TABLE_SCHEDULE_PERIOD . "` WHERE ".
+			"SELECT * FROM `" . CMW_TABLE_SCHEDULE_TIMESPAN . "` WHERE ".
 				"`id` in (" . implode(',',$ids) . ")" .
 			";", $SCHEDULE_SCHEMA);
 	}
@@ -195,7 +195,7 @@ function schedule_GetFamilyByIds( $ids ) {
 			$id = $ids;
 		
 		$items = db_Fetch(
-			"SELECT * FROM `" . CMW_TABLE_SCHEDULE_PERIOD . "` WHERE ".
+			"SELECT * FROM `" . CMW_TABLE_SCHEDULE_TIMESPAN . "` WHERE ".
 				"`id`=" . $id .
 				" OR `parent`=" . $id .
 			";", $SCHEDULE_SCHEMA);
@@ -203,7 +203,7 @@ function schedule_GetFamilyByIds( $ids ) {
 	else {
 		$id_string = implode(',',$ids);
 		$items = db_Fetch(
-			"SELECT * FROM `" . CMW_TABLE_SCHEDULE_PERIOD . "` WHERE ".
+			"SELECT * FROM `" . CMW_TABLE_SCHEDULE_TIMESPAN . "` WHERE ".
 				"`id` in (" . $id_string . ")" .
 				" OR `parent` in (" . $id_string . ")" .
 			";", $SCHEDULE_SCHEMA);
@@ -228,7 +228,7 @@ function schedule_GetSubscriptionsByUserIds( $ids ) {
 	}
 	
 	$items = db_FetchSingle(
-		"SELECT `period` FROM `" . CMW_TABLE_SCHEDULE_SUBSCRIPTION . "` WHERE ".
+		"SELECT `timespan` FROM `" . CMW_TABLE_SCHEDULE_SUBSCRIPTION . "` WHERE ".
 			"`user` in (" . $id_string . ")" .
 		";", CMW_FIELD_TYPE_INT);
 

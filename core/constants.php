@@ -24,7 +24,7 @@ define('CMW_TABLE_USER',CMW_TABLE_PREFIX."user");
 define('CMW_TABLE_COMMENT',CMW_TABLE_PREFIX."comment");
 define('CMW_TABLE_COMMENT_LOVE',CMW_TABLE_PREFIX."comment_love");
 
-define('CMW_TABLE_SCHEDULE_PERIOD',CMW_TABLE_PREFIX."schedule_period");
+define('CMW_TABLE_SCHEDULE_TIMESPAN',CMW_TABLE_PREFIX."schedule_timespan");
 define('CMW_TABLE_SCHEDULE_SUBSCRIPTION',CMW_TABLE_PREFIX."schedule_subscription");
 
 // Field constants for Schema //

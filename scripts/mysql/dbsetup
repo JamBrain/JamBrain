@@ -30,7 +30,7 @@ echo "Connected: " . db_IsConnected() . "\n";
 	db_Query("DROP TABLE " . CMW_TABLE_USER . ";",true);
 	db_Query("DROP TABLE " . CMW_TABLE_COMMENT . ";",true);
 	db_Query("DROP TABLE " . CMW_TABLE_COMMENT_LOVE . ";",true);
-	db_Query("DROP TABLE " . CMW_TABLE_SCHEDULE_PERIOD . ";",true);
+	db_Query("DROP TABLE " . CMW_TABLE_SCHEDULE_TIMESPAN . ";",true);
 	db_Query("DROP TABLE " . CMW_TABLE_SCHEDULE_SUBSCRIPTION . ";",true);
 		
 	db_Query("SET storage_engine=InnoDB;");
@@ -1063,7 +1063,7 @@ Thing {
 
 	// Schedule //
 	db_Query(
-		"CREATE TABLE " . CMW_TABLE_SCHEDULE_PERIOD . " (
+		"CREATE TABLE " . CMW_TABLE_SCHEDULE_TIMESPAN . " (
 			id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
 				UNIQUE,
 			parent BIGINT UNSIGNED NOT NULL DEFAULT 0,
@@ -1392,11 +1392,11 @@ Thing {
 				UNIQUE,			
 			user BIGINT UNSIGNED NOT NULL DEFAULT 0,
 				INDEX (user),
-			period BIGINT UNSIGNED NOT NULL DEFAULT 0
+			timespan BIGINT UNSIGNED NOT NULL DEFAULT 0
 		)" . $dbtype_default . ";");
 
 	// user - the user id the subscription belongs to
-	// period - the id of the period being subscribed to
+	// timespan - the id of the timespan being subscribed to
 	
 	schedule_AddSubscription($pov_id, $ld30);
 	schedule_AddSubscription($pov_id, $ld33);
