@@ -6,6 +6,8 @@ require_once __DIR__ . "/../core/internal/sanitize.php";
 require_once __DIR__ . "/../core/internal/emoji.php";
 require_once __DIR__ . "/../core/post.php";
 require_once __DIR__ . "/../core/schedule.php";
+require_once __DIR__ . "/../core/internal/ichart.php";
+
 
 user_StartEnd();
 
@@ -619,6 +621,50 @@ if ( $mode > 0 ) {
 			<?php
 				if ( $this_node['type'] === 'user' ) {
 					echo "<br />";
+				?>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+          ['Mushrooms', 4],
+          ['Onions', 3],
+          ['Olives', 2],
+          ['Zucchini', 1],
+          ['Pepperoni', 7]
+        ]);
+
+        // Set chart options
+        var options = {'title':'How Much Pizza I Ate Last Minute',
+                       'width':400,
+                       'height':300};
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+    <div id="chart_div" style="display:inline-block;"></div><img src="<?php 
+    	echo ichart_GetPie(400,300,[10,12,15],['ham','hem','hom']);
+    ?>" />
+    <?php
+    echo "<br>";
+					
+					
 					echo '<div id="games"><h3>Games:</h3>';
 					$games = node_GetNodesByAuthorIdAndType($this_node['id'],'game');
 					foreach( $games as $game ) {
