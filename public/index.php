@@ -492,7 +492,7 @@ if ( $mode > 0 ) {
 
 <?php	
 	echo "<!-- Debug\n";
-	
+/*	
 	$query = 
 		'SELECT % FROM % WHERE'.
 			' % in (%)' .
@@ -515,7 +515,7 @@ if ( $mode > 0 ) {
 	
 	global $NODE_SCHEMA;
 	print_r( _db_ParseArgList($args,$NODE_SCHEMA) );
-	
+*/	
 	
 	
 	
