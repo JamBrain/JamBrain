@@ -483,6 +483,10 @@ if ( $mode > 0 ) {
 		     * Ensure that typography, padding, border-width (and optionally min-height) are identical across textarea & pre
 		     */
 		}
+		
+		.date {
+			font-size: 11px;
+		}
 	</style>
 
 	<?php if ( $mode === M_DEFAULT ) { ?>
@@ -561,7 +565,7 @@ if ( $mode > 0 ) {
 				if ( $item['type'] === 'post' ) {
 					echo '<div class="header">';
 						echo '<h1>' . $item['name'] .'</h1>';
-						echo '<small>[Local time goes here] (' . date('l, d F Y H:i:s T',$item['time_published']) . ')</small>';
+						echo '<div class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</div>';
 						if ( !empty($item['author']) ) { 
 							echo "<h3>by <a href='/user/".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></h3>"; 
 						}
@@ -753,8 +757,148 @@ if ( $mode > 0 ) {
 	<?php } /* $mode */ ?>	
 
 	<script>
-		emojione.ascii = true;
-	
+		function UpdateDate( el ) {
+			var PostDate = new Date(el.getAttribute('data'));
+			var DiffDate = (Date.now() - PostDate);
+			
+			var DateString = '<span class="date-diff">';
+			if ( DiffDate < 0 ) {
+				DateString += "In the future";
+			}
+			else if ( DiffDate < 1000*60*2 ) { 
+				DateString += "Right now";
+			}
+			else if ( DiffDate < 1000*60*60 ) {
+				DateString += Math.floor(DiffDate/(1000*60)) + " minutes ago";
+			}
+			else if ( DiffDate < 1000*60*60*2 ) {
+				if ( DiffDate < 1000*60*30*3 )
+					DateString += "an hour ago";
+				else
+					DateString += "an hour and a half ago";
+			}
+			else if ( DiffDate < 1000*60*60*24 ) {
+				DateString += Math.floor(DiffDate/(1000*60*60)) + " hours ago";
+			}
+			else if ( DiffDate < 1000*60*60*24*2 ) {
+				if ( DiffDate < 1000*60*60*12*3 )
+					DateString += "a day ago";
+				else
+					DateString += "a day and a half ago";
+			}
+			else if ( DiffDate < 1000*60*60*24*7*2 ) {				// 2 weeks of days
+				DateString += Math.floor(DiffDate/(1000*60*60*24)) + " days ago";
+			}
+			else if ( DiffDate < 1000*60*60*24*((7*4*3)+7.5) ) {	// 12 weeks (briefly 13)
+				DateString += Math.floor(DiffDate/(1000*60*60*24*7)) + " weeks ago";
+			}
+			else if ( DiffDate < 1000*60*60*24*182*3 ) {
+				DateString += Math.floor(DiffDate/(1000*60*60*24*30.5)) + " months ago";
+			}
+			else if ( DiffDate < 1000*60*60*24*365*2 ) {
+				DateString += "a year and a half ago";
+			}
+			else {
+				DateString += Math.floor(DiffDate/(1000*60*60*24*365)) + " years ago";
+			}
+			DateString += '</span>';
+			DateString += ' | ';
+			DateString += '<span class="date-local">';
+			{
+//				console.log("toString: " + PostDate.toString());
+//				console.log("toLocaleString: " + PostDate.toLocaleString());
+//				console.log("toLocaleTimeString: " + PostDate.toLocaleTimeString());
+
+				var Parts = PostDate.toString().split(" ");
+
+				// Pass only if the length is 9, and the GMT slot is in the correct spot.
+				if ( (Parts.length == 7) && (Parts[5].indexOf('GMT') != -1) ) {
+					var DaysOfWeek = {
+						'sun':"Sunday",
+						'mon':"Monday",
+						'tue':"Tuesday",
+						'wed':"Wednesday",
+						'thu':"Thursday",
+						'fri':"Friday",
+						'sat':"Saturday",
+					};
+					var MonthsOfYear = {
+						'jan':"January",
+						'feb':"February",
+						'mar':"March",
+						'apr':"April",
+						'may':"May",
+						'jun':"June",
+						'jul':"July",
+						'aug':"Augoost",	// Har har
+						'sep':"September",
+						'oct':"October",
+						'nov':"November",
+						'dec':"December",
+					};
+					
+					// Day of the week //
+					if ( DaysOfWeek.hasOwnProperty(Parts[0].toLowerCase()) ) 
+						DateString += DaysOfWeek[Parts[0].toLowerCase()] + ", ";
+					else
+						DateString += Parts[0] + ", ";
+
+					// Month of the year //
+					if ( MonthsOfYear.hasOwnProperty(Parts[1].toLowerCase()) ) 
+						DateString += MonthsOfYear[Parts[1].toLowerCase()] + " ";
+					else
+						DateString += Parts[1] + " ";
+					
+					DateString += Parts[2] + ", ";			// Day //
+					DateString += Parts[3] + " ";			// Year //
+										
+					// 12 hour Timezone (if we can detect it) //
+					if ( PostDate.toLocaleTimeString().split(" ").length > 1 ) {
+						var TimeParts = Parts[4].split(':');
+						var Hour = parseInt(TimeParts[0]);
+						var AMPM = 'AM';
+						if ( Hour == 0 ) {
+							Hour = 12;
+						}
+						else if ( Hour == 12 ) {
+							AMPM = 'PM';
+						}
+						else if ( Hour > 12 ) {
+							Hour -= 12;
+							AMPM = 'PM';
+						}
+						DateString += Hour + ":";
+						DateString += TimeParts[1] + " ";
+						DateString += AMPM + " ";
+					}
+					// 24 hour Timezone //
+					else {
+						var TimeParts = Parts[4].split(':');
+						DateString += TimeParts[0] + ":" + TimeParts[1] + " ";
+					}
+					
+					// Skip 6 (the GMT specifier)
+					
+					DateString += Parts[6];	// TimeZone
+				}
+				// Can't detect a standard format, so just use toString.
+				else {
+					DateString += PostDate.toString();
+				}
+			}
+			DateString += '</span>';
+			
+			el.innerHTML = DateString;
+		}
+		function UpdateDates() {
+			var el = document.getElementsByClassName('date');
+			for(var idx = 0, len = el.length; idx < len; ++idx) {
+				UpdateDate(el[idx]);
+			}
+		}
+		UpdateDates();
+		setInterval(UpdateDates,1000*60);	// Update clocks every 60 seconds
+		
 		// Process Emoji on all the following sections //
 		var Section = [
 			'nav','games'

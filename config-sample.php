@@ -18,4 +18,8 @@ const CMW_STATIC_DIR = '/public-static';
 const CMW_STATIC_URL = '/static';
 const CMW_THEME_BASE = '/themes';
 
+// API Keys //
+const GOOGLE_API_KEY = '';
+const TWITCH_API_KEY = '';
+
 ?>
