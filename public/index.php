@@ -831,7 +831,7 @@ if ( $mode > 0 ) {
 						'may':"May",
 						'jun':"June",
 						'jul':"July",
-						'aug':"Augoost",	// Har har
+						'aug':"August",
 						'sep':"September",
 						'oct':"October",
 						'nov':"November",
