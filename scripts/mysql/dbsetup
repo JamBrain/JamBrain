@@ -878,6 +878,32 @@ Thing {
 	}
 
 	{
+		node_Add(
+			'page','',
+			"rules","Rules :blowfish:",
+			htmlspecialchars("These are the rules for Ludum Dare.\n\n**Rule #1:** No :airplane:\n\nMake sure you follow the rules."),
+			CMW_NODE_ADMIN,CMW_NODE_ROOT,
+			true
+		);
+		
+		node_Add(
+			'page','',
+			"faq","FAQ :dolphin:",
+			htmlspecialchars("facts for you"),
+			CMW_NODE_ADMIN,CMW_NODE_ROOT,
+			true
+		);
+		
+		node_Add(
+			'page','',
+			"about","About :ca:",
+			htmlspecialchars("Aboot"),
+			CMW_NODE_ADMIN,CMW_NODE_ROOT,
+			true
+		);
+	}
+	
+	{
 		// More dummy users //
 		$user_id = node_Add(
 			'user',"",

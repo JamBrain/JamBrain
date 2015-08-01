@@ -483,7 +483,7 @@ if ( $mode > 0 ) {
 		     */
 		}
 		
-		.date, .date-text {
+		.date-text {
 			font-size: 11px;
 		}
 	</style>
@@ -564,9 +564,9 @@ if ( $mode > 0 ) {
 				if ( $item['type'] === 'post' ) {
 					echo '<div class="header emoji">';
 						echo '<h1>' . $item['name'] .'</h1>';
-						echo '<span class="date-text">Posted </span><span class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</span>';
+						echo '<div class="date-text">Posted <span class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</span></div>';
 						if ( !empty($item['author']) ) { 
-							echo "<h3>by <a href='/user/".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></h3>"; 
+							echo "<h3>by <a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></h3>"; 
 						}
 					echo "</div>\n";
 					echo '<div class="body format">';
@@ -596,9 +596,9 @@ if ( $mode > 0 ) {
 				else if ( $item['type'] === 'game' ) {
 					echo '<div class="header emoji">';
 						echo '<h1>' . $item['name'] .'</h1>';
-						echo '<span class="date-text">Submitted </span><span class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</span>';
+						echo '<div class="date-text">Submitted <span class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</span></div>';
 						if ( !empty($item['author']) ) { 
-							echo "<h3>by <a href='/user/".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></h3>"; 
+							echo "<h3>by <a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></h3>"; 
 						}
 					echo "</div>\n";
 					echo '<div class="body format">';
@@ -614,17 +614,30 @@ if ( $mode > 0 ) {
 	</div>
 	<?php } else { ?>
 	<div id="content">
-		<div class="item">
-			<div class="title"><h1><?php echo $this_node['name']; ?></h1><?php if ( $author_node ) { echo "<h3>by <a href='/user/".$author_node['slug']."'>" . $author_node['name'] . "</a></h3>"; } ?></div>
-			<?php 
-				if ( !empty($this_node['body']) ) { 
-					?><textarea class="body-edit" rows="24" cols="120" style="display:none;"><?php echo $this_node['body']; ?></textarea>
-					<div class="body format"></div><?php 
-				} ?>
-			<?php
-				if ( $this_node['type'] === 'user' ) {
-					echo "<br />";
-				?>
+	<?php
+		$item = &$this_node;
+		if ( $item['type'] === 'page' ) {
+			echo '<div class="item item-'.$item['type'].'" id="item-'.$item['id'].'">';
+				echo '<div class="header emoji"><h1>'.$item['name'].'</h1></div>';
+				if ( !empty($item['body']) ) { 
+					echo '<textarea class="body-edit" rows="24" cols="120" style="display:none;">'.$this_node['body'].'</textarea>';
+					echo '<div class="body format"></div>';
+				}
+			echo '</div>';
+		}
+		else if ( $item['type'] === 'user' ) {
+	?>
+			<div class="item">
+				<div class="title"><h1><?php echo $this_node['name']; ?></h1><?php if ( $author_node ) { echo "<h3>by <a href='/user/".$author_node['slug']."'>" . $author_node['name'] . "</a></h3>"; } ?></div>
+				<?php 
+					if ( !empty($this_node['body']) ) { 
+						?><textarea class="body-edit" rows="24" cols="120" style="display:none;"><?php echo $this_node['body']; ?></textarea>
+						<div class="body format"></div><?php 
+					} ?>
+				<?php
+					if ( $this_node['type'] === 'user' ) {
+						echo "<br />";
+					?>
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
 
@@ -708,6 +721,9 @@ if ( $mode > 0 ) {
 		</div>
 	</div>
 	<?php } /* type */ ?>
+	<?php
+		}
+	?>
 	
 	<div id='nav' class='emoji' style="padding:16px;display:none;">
 		<?php

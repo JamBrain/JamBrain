@@ -879,11 +879,15 @@ Renderer.prototype.link = function(href, title, text) {
       return '';
     }
   }
-  var out = '<a href="' + href + '"';
+  // Span to protect it from the emoji decoder //
+  var out = '<span class="link" data="'+ href +'"><a href="' + href + '"';
   if (title) {
     out += ' title="' + title + '"';
   }
-  out += '>' + text + '</a>';
+  if ( href.indexOf('//') != -1 ) { // External link //
+  	out += ' target="_blank"';
+  }
+  out += '>' + text + '</a></span>';
   return out;
 };
 
