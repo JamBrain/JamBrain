@@ -8,7 +8,6 @@ require_once __DIR__ . "/../core/post.php";
 require_once __DIR__ . "/../core/schedule.php";
 require_once __DIR__ . "/../core/internal/ichart.php";
 
-
 user_StartEnd();
 
 //template_SetTheme("embed");
@@ -805,6 +804,8 @@ if ( $mode > 0 ) {
 			DateString += ' | ';
 			DateString += '<span class="date-local">';
 			{
+				// http://stackoverflow.com/a/20463521
+				
 //				console.log("toString: " + PostDate.toString());
 //				console.log("toLocaleString: " + PostDate.toLocaleString());
 //				console.log("toLocaleTimeString: " + PostDate.toLocaleTimeString());
