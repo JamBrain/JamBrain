@@ -20,6 +20,5 @@ const CMW_THEME_BASE = '/themes';
 
 // API Keys //
 const GOOGLE_API_KEY = '';
-const TWITCH_API_KEY = '';
 
 ?>
