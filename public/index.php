@@ -483,7 +483,7 @@ if ( $mode > 0 ) {
 		     */
 		}
 		
-		.date {
+		.date, .date-text {
 			font-size: 11px;
 		}
 	</style>
@@ -562,14 +562,14 @@ if ( $mode > 0 ) {
 			foreach($items as $item) {
 				echo '<div class="item item-'.$item['type'].'" id="item-'.$item['id'].'">';
 				if ( $item['type'] === 'post' ) {
-					echo '<div class="header">';
+					echo '<div class="header emoji">';
 						echo '<h1>' . $item['name'] .'</h1>';
-						echo '<div class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</div>';
+						echo '<span class="date-text">Posted </span><span class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</span>';
 						if ( !empty($item['author']) ) { 
 							echo "<h3>by <a href='/user/".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></h3>"; 
 						}
 					echo "</div>\n";
-					echo '<div class="body">';
+					echo '<div class="body format">';
 						// TODO: replace all the textarea related code with a function call for generating one. JS and PHP.
 						// TODO: Add TAB support (and ESC to de-focus the textbox, since otherwise keyboard can't de-focus)
 						// TODO: Emoji Autocompletion
@@ -594,14 +594,14 @@ if ( $mode > 0 ) {
 					echo '</div>';
 				}
 				else if ( $item['type'] === 'game' ) {
-					echo '<div class="header">';
+					echo '<div class="header emoji">';
 						echo '<h1>' . $item['name'] .'</h1>';
-						echo '<small>Submitted on ' . date('l, d F Y H:i:s T',$item['time_published']) . '</small>';
+						echo '<span class="date-text">Submitted </span><span class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</span>';
 						if ( !empty($item['author']) ) { 
 							echo "<h3>by <a href='/user/".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></h3>"; 
 						}
 					echo "</div>\n";
-					echo '<div class="body">';
+					echo '<div class="body format">';
 						echo "This is a game submission part of the main timeline. Screenshots and other presentable elements go here.";
 					echo '</div>';					
 				}
@@ -619,7 +619,7 @@ if ( $mode > 0 ) {
 			<?php 
 				if ( !empty($this_node['body']) ) { 
 					?><textarea class="body-edit" rows="24" cols="120" style="display:none;"><?php echo $this_node['body']; ?></textarea>
-					<div class="body"></div><?php 
+					<div class="body format"></div><?php 
 				} ?>
 			<?php
 				if ( $this_node['type'] === 'user' ) {
@@ -668,7 +668,7 @@ if ( $mode > 0 ) {
     echo "<br>";
 					
 					
-					echo '<div id="games"><h3>Games:</h3>';
+					echo '<div id="games" class="emoji"><h3>Games:</h3>';
 					$games = node_GetNodesByAuthorIdAndType($this_node['id'],'game');
 					foreach( $games as $game ) {
 						echo "<a href=\"/user/" . $this_node['slug'] . "/" . $game['slug'] . "\">" . $game['name'] . "</a><br/>"; 
@@ -709,7 +709,7 @@ if ( $mode > 0 ) {
 	</div>
 	<?php } /* type */ ?>
 	
-	<div id='nav' style="padding:16px;display:none;">
+	<div id='nav' class='emoji' style="padding:16px;display:none;">
 		<?php
 			echo "/" . $args_merged . " [".$this_node_id."]<br />\n";
 			if ( $args_count >= 1 ) {
@@ -801,7 +801,7 @@ if ( $mode > 0 ) {
 				DateString += Math.floor(DiffDate/(1000*60*60*24*365)) + " years ago";
 			}
 			DateString += '</span>';
-			DateString += ' | ';
+			DateString += '. ';
 			DateString += '<span class="date-local">';
 			{
 				// http://stackoverflow.com/a/20463521
@@ -878,9 +878,9 @@ if ( $mode > 0 ) {
 						DateString += TimeParts[0] + ":" + TimeParts[1] + " ";
 					}
 					
-					// Skip 6 (the GMT specifier)
-					
-					DateString += Parts[6];	// TimeZone
+					DateString += '<span title="'+Parts[5]+'">';	// GMT
+					DateString += Parts[6];							// TimeZone
+					DateString += '</span>';
 				}
 				// Can't detect a standard format, so just use toString.
 				else {
@@ -891,24 +891,22 @@ if ( $mode > 0 ) {
 			
 			el.innerHTML = DateString;
 		}
-		function UpdateDates() {
-			var el = document.getElementsByClassName('date');
+		function UpdateDates( elroot ) {
+			if ( typeof elroot == 'undefined' ) {
+				elroot = document.documentElement;
+			}
+			var el = elroot.getElementsByClassName('date');
 			for(var idx = 0, len = el.length; idx < len; ++idx) {
 				UpdateDate(el[idx]);
 			}
 		}
 		UpdateDates();
-		setInterval(UpdateDates,1000*60);	// Update clocks every 60 seconds
+		var MinuteClock = setInterval(UpdateDates,1000*60);	// Update clocks every 60 seconds
 		
 		// Process Emoji on all the following sections //
-		var Section = [
-			'nav','games'
-		];
-		for(var Key in Section) {
-			var el = document.getElementById(Section[Key]);
-			if ( el ) {
-				el.innerHTML = emojione.shortnameToImage(el.innerHTML);
-			}
+		var emoji_el = document.getElementsByClassName('emoji');
+		for (var idx = 0, len = emoji_el.length; idx < len; ++idx) {
+			emoji_el[idx].innerHTML = emojione.shortnameToImage(emoji_el[idx].innerHTML);
 		}
 		
 		var el = document.getElementById('content');
@@ -935,7 +933,10 @@ if ( $mode > 0 ) {
 			//console.log(id);
 			var src = document.getElementById('edit-'+id);
 			var dest = document.getElementById('flextext-span-'+id);
-			dest.innerHTML = src.value.replace("<","_");	// To stop it from emitting code blocks (causes bad layout)
+			if (document.body.hasOwnProperty('textContent'))
+				dest.textContent = src.value;	// Everyone else
+			else
+				dest.innerText = src.value;		// IE < 9
 		}
 		
 		var AllFlexTexts = document.getElementsByClassName("flextext");

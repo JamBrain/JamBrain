@@ -175,7 +175,7 @@
     };
 
     ns.shortnameToImage = function(str,ascii) {
-        // replace regular shortnames first
+    	// replace regular shortnames first
         var replaceWith,unicode,alt;
         str = str.replace(new RegExp("<object[^>]*>.*?<\/object>|<span[^>]*>.*?<\/span>|<(?:object|embed|svg|img|div|span|p|a)[^>]*>|("+ns.shortnameRegexp+")", "gi"),function(shortname) {
             if( (typeof shortname === 'undefined') || (shortname === '') || (!(shortname in ns.emojioneList)) ) {
@@ -199,7 +199,7 @@
         });
 
         // if ascii smileys are turned on, then we'll replace them!
-        if (ascii || ascii === null) {
+        if ( ascii || typeof ascii === 'undefined' ) {
             str = str.replace(new RegExp("<object[^>]*>.*?<\/object>|<span[^>]*>.*?<\/span>|<(?:object|embed|svg|img|div|span|p|a)[^>]*>|(()("+ns.asciiRegexp+")())","g"),function(entire, m1, m2, m3) {
 //            	// Debug //
 //            	if (entire[0] !== "<") {
