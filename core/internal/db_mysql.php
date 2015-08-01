@@ -307,55 +307,57 @@ function _db_BuildMySQLParamString( $field, $schema = null ) {
 	return $paramstr;
 }
 
-// Given 1 or more fields, build the query string //
-// - Use the % sign for the field placement identifier in your query.
-// - Use a number to insert that many comma delimited '?' symbols 
-function _db_BuildQueryString( $query, ...$fields ) {
-	foreach ( $fields as &$field ) {
-		if ( is_array($field) ) {
-			$field_str[] = implode(',',array_map(
-					function( $el ) {
-						return '`'.$el.'`';
-					},
-					$field
-				));
-		}
-		else if ( is_integer($field) ) {
-			if ( $field > 0 ) {
-				$str = '?';
-				for ( $idx = 1; $idx < $field; ++$idx ) {
-					$str .= ',?';
-				}
-				$field_str[] = $str;
-			}
-			else {
-				// TODO: ERROR
-				$field_str[] = "";
-			} 
-		}
-		else {
-			if ( $field == '*' )
-				$field_str[] = $field;
-			else
-				$field_str[] = '`'.$field.'`';
-		}
-	}
-	
-	$field_str_count = count($field_str);
-		
-	// TODO: for each %, insert a field string
-	// Fastest relpace method according to http://stackoverflow.com/a/1252710
-	while ( $pos = strpos($query,'%') ) {
-		$query = substr_replace($query,array_shift($field_str),$pos,1/*strlen('%')*/);
-	}
-//	if ($pos !== false) {
-//	    return substr_replace($query,$field_str,$pos,1/*strlen('%')*/);
+// NOTE: ...$var requires PHP 5.6
+
+//// Given 1 or more fields, build the query string //
+//// - Use the % sign for the field placement identifier in your query.
+//// - Use a number to insert that many comma delimited '?' symbols 
+//function _db_BuildQueryString( $query, ...$fields ) {
+//	foreach ( $fields as &$field ) {
+//		if ( is_array($field) ) {
+//			$field_str[] = implode(',',array_map(
+//					function( $el ) {
+//						return '`'.$el.'`';
+//					},
+//					$field
+//				));
+//		}
+//		else if ( is_integer($field) ) {
+//			if ( $field > 0 ) {
+//				$str = '?';
+//				for ( $idx = 1; $idx < $field; ++$idx ) {
+//					$str .= ',?';
+//				}
+//				$field_str[] = $str;
+//			}
+//			else {
+//				// TODO: ERROR
+//				$field_str[] = "";
+//			} 
+//		}
+//		else {
+//			if ( $field == '*' )
+//				$field_str[] = $field;
+//			else
+//				$field_str[] = '`'.$field.'`';
+//		}
 //	}
-//
-//	// TODO: ERROR
 //	
-	return $query;
-}
+//	$field_str_count = count($field_str);
+//		
+//	// TODO: for each %, insert a field string
+//	// Fastest relpace method according to http://stackoverflow.com/a/1252710
+//	while ( $pos = strpos($query,'%') ) {
+//		$query = substr_replace($query,array_shift($field_str),$pos,1/*strlen('%')*/);
+//	}
+////	if ($pos !== false) {
+////	    return substr_replace($query,$field_str,$pos,1/*strlen('%')*/);
+////	}
+////
+////	// TODO: ERROR
+////	
+//	return $query;
+//}
 
 function _db_BuildArgList( $args ) {
 	$out = [];
