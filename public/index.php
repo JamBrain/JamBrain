@@ -778,10 +778,10 @@ if ( $mode > 0 ) {
 			
 			var DateString = '<span class="date-diff">';
 			if ( DiffDate < 0 ) {
-				DateString += "In the future";
+				DateString += "in the future";
 			}
 			else if ( DiffDate < 1000*60*2 ) { 
-				DateString += "Right now";
+				DateString += "right now";
 			}
 			else if ( DiffDate < 1000*60*60 ) {
 				DateString += Math.floor(DiffDate/(1000*60)) + " minutes ago";
