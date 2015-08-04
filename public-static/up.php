@@ -20,7 +20,7 @@ $arg_count = count($arg);
 $response['node'] = $node_id;
 
 $redis = new Redis();
-$redis->connect('127.0.0.1');
+$redis->connect(CMW_REDIS_HOST);
 
 $val = $redis->incr('key');
 $response['value'] = $val;

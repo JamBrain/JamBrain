@@ -9,3 +9,4 @@ config.php
 node_modules/
 output/
 obj/
+*.gz
