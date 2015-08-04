@@ -3,8 +3,8 @@
 // General Config Information //
 const CMW_USING_DB = true;
 const CMW_USING_APCU = true;
-#const CMW_USING_MEMCACHED = true;
-#const CMW_USING_REDIS = true;
+//const CMW_USING_MEMCACHED = true;
+//const CMW_USING_REDIS = true;
 
 // Database Config //
 const CMW_DB_HOST = 'localhost';
