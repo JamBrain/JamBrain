@@ -54,6 +54,16 @@ function db_Connect() {
 	}
 }
 
+// Close Database Connection //
+function db_Close() {
+	// Safely call this multiple times, only the first time has any effect //
+	if ( !db_IsConnected() ) {
+		global $db;
+		
+		$db->close();
+	}	
+}
+
 // Because MySQL returns everything as a string, here's a lightweight schema decoder //
 function db_DoSchema( &$row, &$schema ) {
 	foreach( $row as $key => &$value ) {
@@ -136,6 +146,23 @@ function db_FetchArray($query) {
 	}
 	return $rows;
 }
+
+// Unsafe "run any fetch query" function. Returns fields as a Numeric Array. //
+function db_FetchArrayPair($query) {
+	global $db;
+	global $DB_QUERY_COUNT;
+	$DB_QUERY_COUNT++;
+
+	$result = $db->query($query);
+	$rows = [];
+	if ( !empty($result) ) {
+		while ( $row = $result->fetch_row() ) {
+			$rows[$row[0]] = $row[1];
+		}
+	}
+	return $rows;
+}
+
 
 // Unsafe "run any fetch query" function. Returns an array of values from a single field. //
 function db_FetchSingle($query,$type = null) {

@@ -16,6 +16,7 @@ const CMW_TABLE_PREFIX = 'cmw_';
 
 // Memcached Config //
 const CMW_MEMCACHED_HOST = 'localhost';
+const CMW_MEMCACHED_PORT = 11211;
 
 // Redis Config //
 const CMW_REDIS_HOST = 'localhost';
