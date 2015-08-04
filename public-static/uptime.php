@@ -8,6 +8,7 @@ error_reporting(-1);
 require_once __DIR__."/../config.php";
 require_once __DIR__."/../api.php";
 
+// REMEMBER: The CloudFlare IPs are not whitelisted //
 if ( !ON_WHITELIST($_SERVER['REMOTE_ADDR'],CMW_ACCESS_DATA) ) {
 	json_EmitError(401);
 }
