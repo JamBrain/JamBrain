@@ -33,6 +33,20 @@ function return_r( $data ) {
 	return trim(preg_replace('/\s+/',' ',print_r( $data, true)));
 }
 
+// Shorthand function for checking a configuration whitelist //
+function ON_WHITELIST( $ip, $list ) {
+	if ( is_string($list) ) {
+		$list = [$list];
+	}
+	
+	foreach ( $list as $item ) {
+		if ( $item == $ip )
+			return true;
+	}
+	
+	return false;
+}
+
 // Parse the API Action URL (array of strings) //
 function core_ParseActionURL() {
 	// If PATH_INFO is set, then Apache figured out our parts for us //

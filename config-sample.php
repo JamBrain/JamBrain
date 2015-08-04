@@ -31,7 +31,7 @@ const CMW_STATIC_DIR = '/public-static';
 const CMW_STATIC_URL = '/static';
 const CMW_THEME_BASE = '/themes';
 
-// Access Permission Whitelist //
+// Access Permission Whitelist (Can be arrays on PHP 5.6+) //
 const CMW_ACCESS_DATA = "127.0.0.1";
 
 // API Keys //
