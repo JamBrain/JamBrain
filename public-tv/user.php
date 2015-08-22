@@ -64,7 +64,7 @@ if ( isset($meta['twitch']) ) {
 if ( isset($meta['youtube']) ) {
 	$service['youtube'] = &$meta['youtube'];
 	// TODO: Fetch stream id internal data //
-	$service['youtube']['stream'] = "hj-uGSaH1og";
+	$service['youtube']['stream'] = "Y7YHCaVePtE";
 	$service['youtube']['embed'] = '<iframe id="player" src="//www.youtube.com/embed/'.$service['youtube']['stream'].'?rel=0&autoplay=1&controls=0" frameborder="0" scrolling="no" allowfullscreen></iframe>';
 	// No Chat Embed //
 	if ( !isset($config['default']) ) {
