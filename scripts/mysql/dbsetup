@@ -1049,6 +1049,7 @@ Thing {
 		$quill_id = $user_id;
 
 		node_AddMeta($user_id,0,"twitch","name","quill18");
+		node_AddMeta($user_id,0,"youtube","name","quill18");
 
 		node_AddMeta($user_id,0,"tv","default","twitch");
 		node_AddMeta($user_id,0,"tv","chat","1");
