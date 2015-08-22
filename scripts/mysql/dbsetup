@@ -1035,6 +1035,23 @@ Thing {
 		node_AddMeta($user_id,0,"livestream","name","mysportlive");
 		node_AddMeta($user_id,0,"livestream","id","2687950");
 		node_AddMeta($user_id,0,"tv","chat","1");
+
+
+		// Add Test User //
+		$user_id = node_Add(
+			'user',"",
+			'quill18','Quill18',
+			htmlspecialchars('Test user'),
+			0,CMW_NODE_USER,
+			true
+		);	
+		user_Add($user_id,'quill@18.com','blahblah');
+		$quill_id = $user_id;
+
+		node_AddMeta($user_id,0,"twitch","name","quill18");
+
+		node_AddMeta($user_id,0,"tv","default","twitch");
+		node_AddMeta($user_id,0,"tv","chat","1");
 	}
 	
 	// Love Table. If a user has given a +1 to something. //
@@ -1426,6 +1443,7 @@ Thing {
 	
 	schedule_AddSubscription($pov_id, $ld30);
 	schedule_AddSubscription($pov_id, $ld33);
+	schedule_AddSubscription($quill_id, $ld33);
 	
 	echo "Table Create's Done.\n";
 ?>
