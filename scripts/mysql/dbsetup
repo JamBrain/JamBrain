@@ -1054,6 +1054,23 @@ Thing {
 		node_AddMeta($user_id,0,"tv","default","twitch");
 		node_AddMeta($user_id,0,"tv","chat","1");
 	}
+
+	{
+		// Add Proxy Users //
+		$user_id = node_Add(
+			'user',"",
+			'timelapse','The Timelapse Channel',
+			htmlspecialchars('Watch Game Development Timelapse Videos!'),
+			0,CMW_NODE_USER,
+			true
+		);	
+		
+		//node_AddMeta($user_id,0,"youtube","name","timelapse");
+
+		node_AddMeta($user_id,0,"tv","default","playlist");
+		node_AddMeta($user_id,0,"tv","playlist","some_id");
+		node_AddMeta($user_id,0,"tv","chat","1");
+	}
 	
 	// Love Table. If a user has given a +1 to something. //
 	db_Query(

@@ -18,6 +18,24 @@
 			'eygNgryTDXM'	// Thanks Bro
 		];
 
+//		https://www.youtube.com/embed/-lnAehkIVQk?
+//		autohide=0&
+//		autoplay=1&
+//		controls=0&
+//		disablekb=1&
+//		enablejsapi=1&
+//		fs=1&
+//		loop=0&
+//		modestbranding=0&
+//		playsinline=1&
+//		quality=default&
+//		rel=0&
+//		showinfo=0&
+//		start=299&
+//		volume=100&
+//		wmode=opaque&
+//		origin=https%3A%2F%2Flive.monstercat.com
+
 	</script>
 </head>
 <body>
