@@ -39,7 +39,7 @@
 			player = new YT.Player('player', {
 				height: '576',
 				width: '1024',
-				videoId: ShortVideos[0],
+				//videoId: ShortVideos[0],
 				playerVars: {
 					'rel': 0,
 					'controls':0,
@@ -60,13 +60,13 @@
 			vid_active = Date.now() + 1000;
 			console.log("ready");
 			
-			event.target.loadPlaylist(ShortVideos);
+			//event.target.loadPlaylist(ShortVideos);
+			event.target.cuePlaylist(ShortVideos);
 		}
 	
 		// 5. The API calls this function when the player's state changes.
 		//    The function indicates that when playing a video (state=1),
 		//    the player should play for six seconds and then stop.
-//		var done = false;
 
 		var vid_seeking = false;
 		var vid_length = 0;
@@ -80,15 +80,13 @@
 		}
 
 		function onPlayerStateChange(event) {
-			console.log(event.data);
-			
 			if (event.data == YT.PlayerState.PLAYING) {
 				vid_length = player.getDuration();
 				vid_index = player.getPlaylistIndex();
 
 				var seek = (Date.now()-vid_active)/1000;
 				
-				console.log( "Playing: " + vid_index + " (" + Math.floor(vid_length/60) + ":" + padZero(vid_length%60) + ") [" + seek + "]" ); 
+				console.log( "Playing: " + vid_index + " (" + Math.floor(vid_length/60) + ":" + padZero(vid_length%60) + ") [" + player.getCurrentTime() + "] [" + seek + "]" ); 
 				
 				if ( !vid_seeking && (seek > 0) ) {
 					console.log("SeekTo: " + seek);
@@ -99,12 +97,10 @@
 					vid_seeking = false;
 				}
 			}
-
-			if (event.data == YT.PlayerState.PAUSED) {
+			else if (event.data == YT.PlayerState.PAUSED) {
 				vid_seeking = false;
 			}
-		
-			if (event.data == YT.PlayerState.ENDED) {
+			else if (event.data == YT.PlayerState.ENDED) {
 				vid_seeking = false;
 				vid_active += (vid_length+1)*1000;
 				
@@ -117,6 +113,12 @@
 				//event.target.playVideo();
 				//console.log("poo");
 				//player.loadVideoById("gvdf5n-zI14");
+			}
+			else if (event.data == YT.PlayerState.CUED) {
+				player.playVideo();
+			}
+			else {
+				console.log(event.data);
 			}
 		}
 		function stopVideo() {
