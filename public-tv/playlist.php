@@ -10,6 +10,14 @@
 			"_MRDp2RHGEc",	// Let me save you (~3)
 			"U57lgpx1YeU",	// Tom Jackson (~7)
 		];
+		
+		var ShortVideos = [
+			'-QB6lckA3y0',	// C64
+			'gvdf5n-zI14',	// Nope
+			'CjhrIsSCcjs',	// Float
+			'eygNgryTDXM'	// Thanks Bro
+		];
+
 	</script>
 </head>
 <body>
@@ -29,9 +37,9 @@
 		var player;
 		function onYouTubeIframeAPIReady() {
 			player = new YT.Player('player', {
-				height: '390',
-				width: '640',
-				//videoId: '-QB6lckA3y0',//'M7lc1UVf-VE',
+				height: '576',
+				width: '1024',
+				videoId: ShortVideos[0],
 				playerVars: {
 					'rel': 0,
 					'controls':0,
@@ -52,16 +60,7 @@
 			vid_active = Date.now() + 1000;
 			console.log("ready");
 			
-			event.target.loadPlaylist(
-			[
-				'-QB6lckA3y0',
-				'gvdf5n-zI14',
-				'CjhrIsSCcjs',
-				'eygNgryTDXM'
-			]
-			);
-			
-			//event.target.playVideo();
+			event.target.loadPlaylist(ShortVideos);
 		}
 	
 		// 5. The API calls this function when the player's state changes.
