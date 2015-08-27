@@ -37,10 +37,30 @@
 //		origin=https%3A%2F%2Flive.monstercat.com
 
 	</script>
+	<style>
+		#wrapper {
+			position:relative;
+		}
+		
+		#player {
+/*			position:absolute;*/
+			margin:auto;
+			left:0;
+			right:0;
+		}
+		
+		#dummy {
+			position:absolute;
+			left:0;
+			top:0;
+			width:100%;
+			height:100%;
+		}
+	</style>
 </head>
 <body>
 	<!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
-	<div id="player"></div>
+	<div id="wrapper"><div id="player"></div><div id="dummy"></div></div>
 
 	<script>
 		// 2. This code loads the IFrame Player API code asynchronously.
@@ -71,21 +91,45 @@
 			});
 		}
 		
-		var vid_active = null;
+		var vid_time = null;
 	
 		// 4. The API will call this function when the video player is ready.
 		function onPlayerReady(event) {
-			vid_active = Date.now() + 1000;
+			vid_time = Date.now() + 1000;
 			console.log("ready");
+
+			document.getElementById("dummy").addEventListener("click",onCapturedClick);
 			
 			//event.target.loadPlaylist(ShortVideos);
 			event.target.cuePlaylist(ShortVideos);
+		}
+		
+		function onCapturedClick(e) {
+			console.log(e);
+			if ( vid_active ) {
+				player.pauseVideo();
+			}
+			else {
+				var seek = (Date.now()-vid_time)/1000;
+				
+//				console.log( "Playing: " + vid_index + " (" + Math.floor(vid_length/60) + ":" + padZero(vid_length%60) + ") [" + player.getCurrentTime() + "] [" + seek + "]" ); 
+				
+//				if ( !vid_seeking && (seek > 0) ) {
+					console.log("SeekTo: " + seek);
+					player.seekTo(seek,true);
+//					vid_seeking = true;
+//				}
+				
+				player.playVideo();
+			}
 		}
 	
 		// 5. The API calls this function when the player's state changes.
 		//    The function indicates that when playing a video (state=1),
 		//    the player should play for six seconds and then stop.
 
+		var vid_active = false;
+		var vid_playing = true;
 		var vid_seeking = false;
 		var vid_length = 0;
 		var vid_index = -1;
@@ -98,29 +142,33 @@
 		}
 
 		function onPlayerStateChange(event) {
+			vid_active = false;
 			if (event.data == YT.PlayerState.PLAYING) {
+				vid_active = true;
+				vid_playing = true;
 				vid_length = player.getDuration();
 				vid_index = player.getPlaylistIndex();
 
-				var seek = (Date.now()-vid_active)/1000;
-				
-				console.log( "Playing: " + vid_index + " (" + Math.floor(vid_length/60) + ":" + padZero(vid_length%60) + ") [" + player.getCurrentTime() + "] [" + seek + "]" ); 
-				
-				if ( !vid_seeking && (seek > 0) ) {
-					console.log("SeekTo: " + seek);
-					player.seekTo(seek,true);
-					vid_seeking = true;
-				}
-				else {
-					vid_seeking = false;
-				}
+//				var seek = (Date.now()-vid_time)/1000;
+//				
+//				console.log( "Playing: " + vid_index + " (" + Math.floor(vid_length/60) + ":" + padZero(vid_length%60) + ") [" + player.getCurrentTime() + "] [" + seek + "]" ); 
+//				
+//				if ( !vid_seeking && (seek > 0) ) {
+//					console.log("SeekTo: " + seek);
+//					player.seekTo(seek,true);
+//					vid_seeking = true;
+//				}
+//				else {
+//					vid_seeking = false;
+//				}
 			}
 			else if (event.data == YT.PlayerState.PAUSED) {
+				vid_playing = false;
 				vid_seeking = false;
 			}
 			else if (event.data == YT.PlayerState.ENDED) {
 				vid_seeking = false;
-				vid_active += (vid_length+1)*1000;
+				vid_time += (vid_length+1)*1000;
 				
 				console.log( "Ended: " + vid_index + " (" + player.getPlaylist().length + ")" );
 				

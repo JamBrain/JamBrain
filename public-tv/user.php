@@ -55,7 +55,9 @@ if ( isset($meta['tv']) ) {
 // If services are set //
 if ( isset($meta['twitch']) ) {
 	$service['twitch'] = &$meta['twitch'];
-	$service['twitch']['embed'] = '<iframe id="player" src="http://www.twitch.tv/'.$service['twitch']['name'].'/embed" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+	// <script>document.domain="twitch.tv";</script>
+//	$service['twitch']['embed'] = '<iframe id="jplayer" src="http://player.twitch.tv/?channel='.$service['twitch']['name'].'" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+	$service['twitch']['embed'] = '<iframe id="jplayer" src="http://www.twitch.tv/'.$service['twitch']['name'].'/embed" frameborder="0" scrolling="no" allowfullscreen></iframe>';
 	$service['twitch']['chat'] = '<iframe id="chat" src="http://www.twitch.tv/'.$service['twitch']['name'].'/chat?popout=" frameborder="0" scrolling="no"></iframe>';
 	if ( !isset($config['default']) ) {
 		$config['default'] = 'twitch';
@@ -65,7 +67,7 @@ if ( isset($meta['youtube']) ) {
 	$service['youtube'] = &$meta['youtube'];
 	// TODO: Fetch stream id internal data //
 	$service['youtube']['stream'] = "Y7YHCaVePtE";
-	$service['youtube']['embed'] = '<iframe id="player" src="//www.youtube.com/embed/'.$service['youtube']['stream'].'?rel=0&autoplay=1&controls=0" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+	$service['youtube']['embed'] = '<iframe id="jplayer" src="//www.youtube.com/embed/'.$service['youtube']['stream'].'?rel=0&autoplay=1&controls=0" frameborder="0" scrolling="no" allowfullscreen></iframe>';
 	// No Chat Embed //
 	if ( !isset($config['default']) ) {
 		$config['default'] = 'youtube';
@@ -73,7 +75,7 @@ if ( isset($meta['youtube']) ) {
 }
 if ( isset($meta['hitbox']) ) {
 	$service['hitbox'] = &$meta['hitbox'];
-	$service['hitbox']['embed'] = '<iframe id="player" src="http://www.hitbox.tv/embed/'.$service['hitbox']['name'].'?autoplay=true" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+	$service['hitbox']['embed'] = '<iframe id="jplayer" src="http://www.hitbox.tv/embed/'.$service['hitbox']['name'].'?autoplay=true" frameborder="0" scrolling="no" allowfullscreen></iframe>';
 	$service['hitbox']['chat'] = '<iframe id="chat" src="http://www.hitbox.tv/embedchat/'.$service['hitbox']['name'].'?autoconnect=true" frameborder="0" scrolling="no"></iframe>';
 	$service['hitbox']['chatwidth'] = 300;
 	if ( !isset($config['default']) ) {
@@ -82,7 +84,7 @@ if ( isset($meta['hitbox']) ) {
 }
 if ( isset($meta['beam']) ) {
 	$service['beam'] = &$meta['beam'];
-	$service['beam']['embed'] = '<iframe id="player" src="https://beam.pro/embed/player/'.$service['beam']['name'].'" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+	$service['beam']['embed'] = '<iframe id="jplayer" src="https://beam.pro/embed/player/'.$service['beam']['name'].'" frameborder="0" scrolling="no" allowfullscreen></iframe>';
 	$service['beam']['chat'] = '<iframe id="chat" src="https://beam.pro/embed/chat/'.$service['beam']['name'].'" frameborder="0" scrolling="no"></iframe>';
 	if ( !isset($config['default']) ) {
 		$config['default'] = 'beam';
@@ -91,7 +93,7 @@ if ( isset($meta['beam']) ) {
 // Not actually embedded, but their weird popout player 
 if ( isset($meta['picarto']) ) {
 	$service['picarto'] = &$meta['picarto'];
-	$service['picarto']['embed'] = '<iframe id="player" src="https://picarto.tv/live/playerpopout.php?popit='.$service['picarto']['name'].'&off=1&token=0" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+	$service['picarto']['embed'] = '<iframe id="jplayer" src="https://picarto.tv/live/playerpopout.php?popit='.$service['picarto']['name'].'&off=1&token=0" frameborder="0" scrolling="no" allowfullscreen></iframe>';
 	// No Chat Embed //
 	if ( !isset($config['default']) ) {
 		$config['default'] = 'picarto';
@@ -100,7 +102,7 @@ if ( isset($meta['picarto']) ) {
 // livecoding.tv DOESN'T EVEN SUPPORTE EMBEDDING!?
 //if ( isset($meta['livecoding']) ) {
 //	$service['livecoding'] = &$meta['livecoding'];
-//	$service['livecoding']['embed'] = '<iframe id="player" src="https://beam.pro/embed/player/'.$service['livecoding']['name'].'" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+//	$service['livecoding']['embed'] = '<iframe id="jplayer" src="https://beam.pro/embed/player/'.$service['livecoding']['name'].'" frameborder="0" scrolling="no" allowfullscreen></iframe>';
 //	$service['livecoding']['chat'] = '<iframe id="chat" src="https://beam.pro/embed/chat/'.$service['livecoding']['name'].'" frameborder="0" scrolling="no"></iframe>';
 //	if ( !isset($config['default']) ) {
 //		$config['default'] = 'livecoding';
@@ -108,7 +110,7 @@ if ( isset($meta['picarto']) ) {
 //}
 if ( isset($meta['mlg']) ) {
 	$service['mlg'] = &$meta['mlg'];
-	$service['mlg']['embed'] = '<iframe id="player" src="http://tv.majorleaguegaming.com/player/embed/'.$service['mlg']['name'].'" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+	$service['mlg']['embed'] = '<iframe id="jplayer" src="http://tv.majorleaguegaming.com/player/embed/'.$service['mlg']['name'].'" frameborder="0" scrolling="no" allowfullscreen></iframe>';
 	// No Chat Embed //
 	if ( !isset($config['default']) ) {
 		$config['default'] = 'mlg';
@@ -116,7 +118,7 @@ if ( isset($meta['mlg']) ) {
 }
 if ( isset($meta['azubu']) ) {
 	$service['azubu'] = &$meta['azubu'];
-	$service['azubu']['embed'] = '<iframe id="player" src="http://www.azubu.tv/azubulink/embed='.$service['azubu']['name'].'" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+	$service['azubu']['embed'] = '<iframe id="jplayer" src="http://www.azubu.tv/azubulink/embed='.$service['azubu']['name'].'" frameborder="0" scrolling="no" allowfullscreen></iframe>';
 	// No Chat Embed //
 	if ( !isset($config['default']) ) {
 		$config['default'] = 'azubu';
@@ -124,7 +126,7 @@ if ( isset($meta['azubu']) ) {
 }
 if ( isset($meta['ustream']) ) {
 	$service['ustream'] = &$meta['ustream'];
-	$service['ustream']['embed'] = '<iframe id="player" src="http://www.ustream.tv/embed/'.$service['ustream']['id'].'?v=3&wmode=direct&autoplay=true" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+	$service['ustream']['embed'] = '<iframe id="jplayer" src="http://www.ustream.tv/embed/'.$service['ustream']['id'].'?v=3&wmode=direct&autoplay=true" frameborder="0" scrolling="no" allowfullscreen></iframe>';
 	// No Chat Embed //
 	if ( !isset($config['default']) ) {
 		$config['default'] = 'ustream';
@@ -134,7 +136,7 @@ if ( isset($meta['livestream']) ) {
 	$service['livestream'] = &$meta['livestream'];
 	// TODO: Figure this out via tracking
 	$service['livestream']['event'] = "4194793";
-	$service['livestream']['embed'] = '<iframe id="player" src="http://livestream.com/accounts/'.$service['livestream']['id'].'/events/'.$service['livestream']['event'].'/player?autoPlay=true&mute=false" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+	$service['livestream']['embed'] = '<iframe id="jplayer" src="http://livestream.com/accounts/'.$service['livestream']['id'].'/events/'.$service['livestream']['event'].'/player?autoPlay=true&mute=false" frameborder="0" scrolling="no" allowfullscreen></iframe>';
 	// No Chat Embed //
 	if ( !isset($config['default']) ) {
 		$config['default'] = 'livestream';
@@ -447,7 +449,7 @@ a {
 			chat.height = window.innerHeight - footer.clientHeight;
 		}
 		
-		var player = document.getElementById("player");
+		var player = document.getElementById("jplayer");
 		player.width = window.innerWidth - ChatWidth;
 		player.height = window.innerHeight - footer.clientHeight;
 	}
