@@ -88,7 +88,7 @@ if ( $mode > 0 ) {
 		/* Top Navigation Bar */
 		#ldbar-outer {			
 			width:100%;
-			height:48px;
+			height:56px;
 
 			/*position:fixed;*/
 			left:0;
@@ -96,7 +96,8 @@ if ( $mode > 0 ) {
 			z-index:1000;
 			
 			/* shadow */
-			border-bottom:1px solid #000;/*rgba(96,96,96,0.2);*/
+			/*border-bottom:1px solid #000;/*rgba(96,96,96,0.2);*/
+			box-shadow:0px -1px 8px rgba(0,0,0,0.7);
 
 			/*-webkit-animation: slidein 3s;*/
 			/*-moz-animation: slidein 3s;*/
@@ -127,9 +128,9 @@ if ( $mode > 0 ) {
 		
 		#ldbar-inner {
 			color:#fff;
-			background:/*#765*/ rgba(96,96,96,1.0);
+			background:/*#765*/ rgba(64,64,64,1.0);
 			
-			line-height:47px;
+			line-height:56px;
 			
 			position:relative;
 			width:100%;
@@ -137,7 +138,7 @@ if ( $mode > 0 ) {
 		/* Padding in the main document */
 		#ldbar-pad {			
 			width:100%;
-			height:49px; /* plus shadow */
+			height:56px; /* plus shadow */
 		}
 
 		.noselect {
