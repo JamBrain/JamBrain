@@ -312,6 +312,15 @@ if ( $mode > 0 ) {
 		}
 		updateLDBar();
 		
+		function bar_Hide( self ) {
+			if ( self.style.height=="8px") { 
+				self.style.height=""; 
+			} 
+			else { 
+				self.style.height="8px"; 
+			}
+		}
+		
 		function item_ShowEdit( id ) {
 			document.getElementById('flextext-'+id).style.display = '';
 			document.getElementById('preview-'+id).style.display = 'none';
@@ -420,12 +429,21 @@ if ( $mode > 0 ) {
 		#content .item .footer {
 			background:#888;/*#CCC;/*rgba(0,0,0,0.1);*/
 			color:#FFF;
-			padding:16px 32px;
 			/*border-top:1px solid #AAA;*/
 			/*border-left:8px solid #AAA;*/
 			/*border-right:8px solid #AAA;*/
-		}
 
+		    -webkit-touch-callout: none;
+		    -webkit-user-select: none;
+		    -khtml-user-select: none;
+		    -moz-user-select: none;
+		    -ms-user-select: none;
+		    user-select: none;
+		}
+		#content .item .footer div {
+			padding:16px 32px;
+		}
+		
 		#content .item-post .header {
 			padding-bottom:24px;
 			border-bottom:1px dashed rgba(0,0,0,0.5);
@@ -623,10 +641,12 @@ if ( $mode > 0 ) {
 							echo '<div class="preview" id="preview-'.$item['id'].'"></div>';
 						}
 					echo '</div>';
-					echo '<div class="footer">';
+					echo '<div class="footer" onclick="bar_Hide(this);" style="height:8px">';
+						echo '<div>';
 						echo '<span onclick="item_ShowEdit('.$item['id'].');">PATCH</span>';
 						echo ' | ';
 						echo '<span onclick="item_Parse('.$item['id'].');item_ShowPreview('.$item['id'].');">PREVIEW</span>';
+						echo '</div>';
 					echo '</div>';
 				}
 				else if ( $item['type'] === 'game' ) {
