@@ -32,4 +32,8 @@
 <?php } /* defined('CMW_CSS_DEBUG') */ ?>
 	<link rel="stylesheet" href="<?php STATIC_URL() ?>/external/prism/prism.css<?php VERSION_QUERY() ?>" />
 	<link rel="stylesheet" href="<?php STATIC_URL() ?>/themes/default/style.css.php<?php VERSION_QUERY() ?>" />
+	
+	<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic' rel='stylesheet' type='text/css'>
+	<!--<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic|Inconsolata' rel='stylesheet' type='text/css'>-->
+	<!--<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic,400|Inconsolata:400,700' rel='stylesheet' type='text/css'>-->
 </head>

@@ -11,6 +11,18 @@ img, a {
 }
 
 /* Styles */
+html {
+}
+
+body {
+	font-family: 'Lato', sans-serif;
+
+/*	font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; */
+/*   	font-weight:300;*/
+	font-size: 20px;
+	color:#333;
+}
+
 body > .footer {
 	text-align:center;
 	color:rgba(0,0,0,0.5);

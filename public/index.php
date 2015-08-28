@@ -153,7 +153,7 @@ if ( $mode > 0 ) {
 		}
 		
 		#ldbar-toggle {
-			font-family:monospace;
+			font-family:'Inconsolata',monospace;
 			margin-left:32px;
 			cursor:pointer;
 		}
@@ -169,7 +169,7 @@ if ( $mode > 0 ) {
 			height:32px;
 			line-height:32px;
 			text-align:center;
-			font-family:monospace;
+			font-family:'Inconsolata',monospace;
 			position:relative;
 			text-shadow:0 2px rgba(0,0,0,0.5);
 			
@@ -227,6 +227,7 @@ if ( $mode > 0 ) {
 		}
 		
 		#warning {
+			font-size:26px;
 			text-align:center;
 			padding:12px 16px;
 			margin:16px 0;
@@ -336,7 +337,7 @@ if ( $mode > 0 ) {
 	
 	<style>
 		body {
-			background: #DDD;
+			background: #EEE;
 		}
 		#nav .row {
 			margin-left:16px;
@@ -347,7 +348,7 @@ if ( $mode > 0 ) {
 		}
 		#nav .slug {
 			display:inline;
-			font-family:monospace;
+			font-family:'Inconsolata',monospace;
 		}
 		#nav .id, #nav .name, #nav .type {
 			display:inline;
@@ -374,12 +375,14 @@ if ( $mode > 0 ) {
 		}
 		
 		#content .item {
-			margin:16px;
+			margin:16px auto;
 			/*border:2px solid #000;*/
 			background:#FFF;
 			
 			overflow:hidden;
 			/*max-height:0;*/
+
+			box-shadow: 0 0 3px rgba(0,0,0,0.2);
 			
 			-moz-transition: max-height 1s;
 			-webkit-transition: max-height 1s;
@@ -387,10 +390,17 @@ if ( $mode > 0 ) {
 		}
 		
 		#content .item-post {
+			width:900px;
 		}
 		#content .item-game {
-			background:#CCF;
-			margin:16px 64px;
+			width:800px;
+
+			border: 1px solid #89C;
+			background:#CDF;
+			/*margin:16px 64px;*/
+			margin:16px auto;
+			border-left: 8px solid #89C;
+			border-right: 8px solid #89C;
 		}
 		
 		#content .item h1, .item h3 {
@@ -398,19 +408,23 @@ if ( $mode > 0 ) {
 		}
 		
 		#content .item .header {
-			margin:8px;		
+			margin:16px 32px;		
 		}
 		#content .item .body {
-			margin:8px;
+			margin:16px 32px;
 		}
 		#content .item .footer {
-			background:rgba(0,0,0,0.3);
-			padding:8px;			
+			background:#888;/*#CCC;/*rgba(0,0,0,0.1);*/
+			color:#FFF;
+			padding:16px 32px;
+			/*border-top:1px solid #AAA;*/
+			/*border-left:8px solid #AAA;*/
+			/*border-right:8px solid #AAA;*/
 		}
 		
 		#metas .node {
 			padding-left:24px;
-			font-family:monospace;
+			font-family:'Inconsolata',monospace;
 		}
 		#metas .key {
 			display:inline;
@@ -484,7 +498,8 @@ if ( $mode > 0 ) {
 		}
 		
 		.date-text {
-			font-size: 11px;
+			font-size: 13px;
+			line-height:16px;
 		}
 	</style>
 
@@ -563,11 +578,18 @@ if ( $mode > 0 ) {
 				echo '<div class="item item-'.$item['type'].'" id="item-'.$item['id'].'">';
 				if ( $item['type'] === 'post' ) {
 					echo '<div class="header emoji">';
-						echo '<h1>' . $item['name'] .'</h1>';
-						echo '<div class="date-text">Posted <span class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</span></div>';
-						if ( !empty($item['author']) ) { 
-							echo "<h3>by <a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></h3>"; 
+						if ( !empty($item['author']) && $authors[$item['author']]['slug'] == 'pov' ) {
+							echo '<img src="//192.168.48.48:8080/logo/mike/Chicken64.png" style="float:right;" />';
 						}
+						echo '<h1>' . $item['name'] .'</h1>';
+						echo '<div class="date-text">';
+						if ( !empty($item['author']) ) { 
+							echo "by <span class='author-text'><a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></span>. "; 
+						}
+						echo 'Posted <span class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</span></div>';
+//						if ( !empty($item['author']) ) { 
+//							echo "<h3>by <a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></h3>"; 
+//						}
 					echo "</div>\n";
 					echo '<div class="body format">';
 						// TODO: replace all the textarea related code with a function call for generating one. JS and PHP.
@@ -596,10 +618,11 @@ if ( $mode > 0 ) {
 				else if ( $item['type'] === 'game' ) {
 					echo '<div class="header emoji">';
 						echo '<h1>' . $item['name'] .'</h1>';
-						echo '<div class="date-text">Submitted <span class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</span></div>';
+						echo '<div class="date-text">';
 						if ( !empty($item['author']) ) { 
-							echo "<h3>by <a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></h3>"; 
+							echo "by <a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a>. "; 
 						}
+						echo 'Submitted <span class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</span></div>';
 					echo "</div>\n";
 					echo '<div class="body format">';
 						echo "This is a game submission part of the main timeline. Screenshots and other presentable elements go here.";
