@@ -359,7 +359,7 @@ if ( $mode > 0 ) {
 			max-width:900px;
 		}
 		
-		@media (min-device-width : 1600px)  {
+		@media (min-width : 1600px)  {
 			#content {
 				max-width:1300px;
 			}

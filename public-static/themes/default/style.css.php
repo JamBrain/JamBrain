@@ -39,7 +39,7 @@ body {
 .is-hires { display:none; }
 
 /* High Resolution Display */
-@media (min-device-width : 1600px)  {
+@media (min-width : 1600px)  {
 	body {
 		font-size: 30rem;
 	}
