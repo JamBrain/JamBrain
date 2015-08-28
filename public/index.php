@@ -243,6 +243,10 @@ if ( $mode > 0 ) {
 			<div id='ldbar-inner'>
 				<div class='leftnav'>
 					<div id='ldbar-logo' class='cell'><a href="/"><img src="<?php STATIC_URL(); ?>/logo/ludumdare/2009/LudumDareLogo80W.png" height="30" /></a></div>
+					<div class='is-mobile'>[Mobile]</div>
+					<div class='is-tablet'>[Tablet]</div>
+					<div class='is-normal'>[Normal]</div>
+					<div class='is-hires'>[HiRes]</div>
 				</div>
 				<div class='rightnav'>
 					<div class='cell size32' onclick='SendLogin();'><img src="<?php STATIC_URL(); ?>/logo/mike/Chicken64W.png" width="32" height="32" style="mix-blend-mode:screen" /></div>
@@ -353,6 +357,12 @@ if ( $mode > 0 ) {
 		#content {
 			margin:0 auto;
 			max-width:900px;
+		}
+		
+		@media (min-device-width : 1600px)  {
+			#content {
+				max-width:1300px;
+			}
 		}
 		
 		#content .item {

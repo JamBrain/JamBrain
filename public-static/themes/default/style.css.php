@@ -33,23 +33,37 @@ p {
 body {
 	font-size: 21px; font-size: 21rem;
 }
+.is-mobile { display:none; }
+.is-tablet { display:none; }
+.is-normal { display:inline-block; }
+.is-hires { display:none; }
+
+/* High Resolution Display */
+@media (min-device-width : 1600px)  {
+	body {
+		font-size: 30rem;
+	}
+	.is-normal { display:none; }
+	.is-hires { display:inline-block; }
+}
 /* Tablet */
-@media  (max-device-width : 800px)  {
+@media (min-device-width : 601px) AND (max-device-width : 800px)  {
 	body {
 		font-size: 17rem;
 	}
-	.no-tablet {
-		display:none;
-	}
+	.no-tablet { display:none; }
+	.is-normal { display:none; }
+	.is-tablet { display:inline-block; }
 }
 /* Mobile */
-@media  (max-device-width : 600px)  {
+@media (max-device-width : 600px)  {
 	body {
 		font-size: 14rem;
 	}
-	.no-mobile {
-		display:none;
-	}
+	.no-tablet { display:none; }
+	.no-mobile { display:none; }
+	.is-normal { display:none; }
+	.is-mobile { display:inline-block; }
 }
 
 body > .footer {
