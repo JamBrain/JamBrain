@@ -364,7 +364,7 @@ if ( $mode > 0 ) {
 		
 		@media (min-width : 1600px)  {
 			#content {
-				max-width:1300px;
+				max-width:1286px; /*1300*/
 			}
 		}
 		
