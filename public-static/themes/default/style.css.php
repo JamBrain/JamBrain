@@ -15,7 +15,7 @@ html {
 	/* Weight (400 is Normal, 300 is Light/Book) */
 	font-weight:300;
 }
-strong, h1 {
+strong, h1, h2, h3, h4, h5, h6 {
 	font-weight:700;
 }
 
