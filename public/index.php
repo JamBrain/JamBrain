@@ -349,89 +349,50 @@ if ( $mode > 0 ) {
 		body {
 			background: #EEE;
 		}
-		#nav .row {
-			margin-left:16px;
-			padding:2px;
-		}
-		#nav .row:hover {
-			background:#CCF;
-		}
-		#nav .slug {
-			display:inline;
-			font-family:'Inconsolata',monospace;
-		}
-		#nav .id, #nav .name, #nav .type {
-			display:inline;
-			position:absolute;
-		}
-		#nav .id {
-			left:256px;
-		}
-		#nav .name {
-			left:360px;
-		}
-		#nav .type {
-			left:960px;
-		}
-		
-		#nav .proxy {
-			background:#CFC;
-		}
-		#nav .link {
-			background:#FCC;
-		}
-		#nav .authored {
-			background:#FCF;
+				
+		#content {
+			margin:0 auto;
+			max-width:900px;
 		}
 		
 		#content .item {
 			margin:16px auto;
-			/*border:2px solid #000;*/
+
 			background:#FFF;
-			
 			overflow:hidden;
-			/*max-height:0;*/
 
 			box-shadow: 0 0 3px rgba(0,0,0,0.2);
 			
+			/*max-height:0;*/
 			-moz-transition: max-height 1s;
 			-webkit-transition: max-height 1s;
 			transition: max-height 1s;
 		}
 		
 		#content .item-post {
-			width:900px;
 		}
 		#content .item-game {
-			width:800px;
+			width:90%;
 
-			border: 1px solid #89C;
 			background:#CDF;
-			/*margin:16px 64px;*/
-			margin:16px auto;
-			/*border-left: 8px solid #89C;*/
-			/*border-right: 8px solid #89C;*/
-			border-bottom: 8px solid #89C;
+			border: 1px solid #89C;
+			border-bottom: 8px solid #89C; /* Hack, until controls */
 		}
-		
-		#content .item h1, .item h3 {
-			margin:0;
-		}
-		
+
 		#content .item .header {
-			margin:16px 32px;
-			margin-bottom:0;
+			padding:0 1.5em;
+			margin:1em 0;
+		}
+		#content .item .separator {
+			border-top:1px dashed rgba(0,0,0,0.5);
 		}
 		#content .item .body {
-			margin:16px 32px;
-			margin-top:16px;
+			padding:0 1.5em;
+			margin:1em 0;
 		}
 		#content .item .footer {
 			background:#888;/*#CCC;/*rgba(0,0,0,0.1);*/
 			color:#FFF;
-			/*border-top:1px solid #AAA;*/
-			/*border-left:8px solid #AAA;*/
-			/*border-right:8px solid #AAA;*/
 
 		    -webkit-touch-callout: none;
 		    -webkit-user-select: none;
@@ -440,18 +401,52 @@ if ( $mode > 0 ) {
 		    -ms-user-select: none;
 		    user-select: none;
 		}
-		#content .item .footer div {
-			padding:16px 32px;
+
+		/* Item Header */
+		#content .item .header h1 {
+			font-size:2em;
+			line-height:1.2;
+			margin:0;
 		}
-		
-		#content .item-post .header {
-			padding-bottom:24px;
-			border-bottom:1px dashed rgba(0,0,0,0.5);
+		#content .item .header .info {
+			font-size:0.7em;
+			line-height:1;
+			/* line-height is typically 1.2, so this is to compensate for the 2x top of <h1> */
+			padding-bottom:0.4em;
+		}
+		#content .item .header .avatar {
+			float:right;
+
+			width:3.1em;
+			max-width:64px;
+			height:3.1em;
+			max-height:64px;
+
+			background-size:cover;	/* DIV only */
 		}
 
-		.preview > p {
-			margin-top:16px;
+		/* Item Footer */
+		#content .item .footer div {
+			padding:1em 1.5em;
 		}
+
+		/* On Mobile, less edge margin */
+		@media  (max-device-width : 600px)  {
+			#content .item-game {
+				width:95%;
+			}
+
+			#content .item .header {
+				padding:0 0.75em;
+			}
+			#content .item .body {
+				padding:0 0.75em;
+			}
+			#content .item .footer div {
+				padding:1em 0.75em;
+			}
+		}
+
 		
 		#metas .node {
 			padding-left:24px;
@@ -528,13 +523,46 @@ if ( $mode > 0 ) {
 		     * Ensure that typography, padding, border-width (and optionally min-height) are identical across textarea & pre
 		     */
 		}
-		
-		.date-text {
-			font-size: 14px;
-			line-height:18px;
-		}
 	</style>
 
+	<style>
+		/* Chicken Navigation */
+		#nav .row {
+			margin-left:16px;
+			padding:2px;
+		}
+		#nav .row:hover {
+			background:#CCF;
+		}
+		#nav .slug {
+			display:inline;
+			font-family:'Inconsolata',monospace;
+		}
+		#nav .id, #nav .name, #nav .type {
+			display:inline;
+			position:absolute;
+		}
+		#nav .id {
+			left:256px;
+		}
+		#nav .name {
+			left:360px;
+		}
+		#nav .type {
+			left:960px;
+		}
+		
+		#nav .proxy {
+			background:#CFC;
+		}
+		#nav .link {
+			background:#FCC;
+		}
+		#nav .authored {
+			background:#FCF;
+		}
+	</style>
+	
 	<?php if ( $mode === M_DEFAULT ) { ?>
 
 <?php	
@@ -611,18 +639,22 @@ if ( $mode > 0 ) {
 				if ( $item['type'] === 'post' ) {
 					echo '<div class="header emoji">';
 						if ( !empty($item['author']) && $authors[$item['author']]['slug'] == 'pov' ) {
-							echo '<img src="//192.168.48.48:8080/logo/mike/Chicken64.png" style="float:right;width:72px;height:72px;" />';
+							// Image Version //
+							echo '<img class="avatar" src="//192.168.48.48:8080/logo/mike/Chicken64.png" />';
+							// Div Version //
+							//echo '<div class="avatar" style="background-image:url(//192.168.48.48:8080/logo/mike/Chicken64.png);"></div>';
 						}
 						echo '<h1>' . $item['name'] .'</h1>';
-						echo '<div class="date-text">';
+						echo '<div class="info">';
 						if ( !empty($item['author']) ) { 
-							echo "by <span class='author-text'><a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></span>. "; 
+							echo "by <span class='author'><a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></span>. "; 
 						}
 						echo 'Posted <span class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</span></div>';
 //						if ( !empty($item['author']) ) { 
 //							echo "<h3>by <a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></h3>"; 
 //						}
 					echo "</div>\n";
+					echo '<div class="separator"></div>';
 					echo '<div class="body format">';
 						// TODO: replace all the textarea related code with a function call for generating one. JS and PHP.
 						// TODO: Add TAB support (and ESC to de-focus the textbox, since otherwise keyboard can't de-focus)
@@ -652,11 +684,12 @@ if ( $mode > 0 ) {
 				else if ( $item['type'] === 'game' ) {
 					echo '<div class="header emoji">';
 						echo '<h1>' . $item['name'] .'</h1>';
-						echo '<div class="date-text">';
+						echo '<div class="info">';
 						if ( !empty($item['author']) ) { 
-							echo "by <a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a>. "; 
+							echo "by <span class='author'><a href='/user/".$authors[$item['author']]['slug']."' title='".$authors[$item['author']]['slug']."'>" . $authors[$item['author']]['name'] . "</a></span>. "; 
 						}
-						echo 'Submitted <span class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</span></div>';
+						echo 'Submitted <span class="date" data="'.date(DATE_W3C,$item['time_published']).'" title="'.date('l, F d, Y H:i:s (T)',$item['time_published']).'">'.date('l, F d, Y H:i:s (T)',$item['time_published']).'</span>';
+						echo '</div>';
 					echo "</div>\n";
 					echo '<div class="body format">';
 						echo "This is a game submission part of the main timeline. Screenshots and other presentable elements go here.";
@@ -951,8 +984,8 @@ if ( $mode > 0 ) {
 						DateString += TimeParts[0] + ":" + TimeParts[1] + " ";
 					}
 					
-					DateString += '<span title="'+Parts[5]+'">';	// GMT
-					DateString += Parts[6];							// TimeZone
+					DateString += '<span class="no-mobile" title="'+Parts[5]+'">';	// GMT
+					DateString += Parts[6];											// TimeZone
 					DateString += '</span>';
 				}
 				// Can't detect a standard format, so just use toString.
