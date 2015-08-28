@@ -67,7 +67,7 @@ if ( isset($meta['youtube']) ) {
 	$service['youtube'] = &$meta['youtube'];
 	// TODO: Fetch stream id internal data //
 	$service['youtube']['stream'] = "FJcgzceGsFE";
-	$service['youtube']['embed'] = '<iframe id="tv-player" src="//www.youtube.com/embed/'.$service['youtube']['stream'].'?rel=0&autoplay=1&controls=0" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+	$service['youtube']['embed'] = '<iframe id="tv-player" src="//www.youtube.com/embed/'.$service['youtube']['stream'].'?rel=0&autoplay=1&modestbranding=1" frameborder="0" scrolling="no" allowfullscreen></iframe>';
 	$service['youtube']['chat'] = '<iframe id="chat" src="https://www.youtube.com/live_chat?v='.$service['youtube']['stream'].'&dark_theme=1&client_version=1.0" frameborder="0" scrolling="no"></iframe>';
 	if ( !isset($config['default']) ) {
 		$config['default'] = 'youtube';
