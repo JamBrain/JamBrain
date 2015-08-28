@@ -400,8 +400,9 @@ if ( $mode > 0 ) {
 			background:#CDF;
 			/*margin:16px 64px;*/
 			margin:16px auto;
-			border-left: 8px solid #89C;
-			border-right: 8px solid #89C;
+			/*border-left: 8px solid #89C;*/
+			/*border-right: 8px solid #89C;*/
+			border-bottom: 8px solid #89C;
 		}
 		
 		#content .item h1, .item h3 {
@@ -409,10 +410,12 @@ if ( $mode > 0 ) {
 		}
 		
 		#content .item .header {
-			margin:16px 32px;		
+			margin:16px 32px;
+			margin-bottom:0;
 		}
 		#content .item .body {
 			margin:16px 32px;
+			margin-top:16px;
 		}
 		#content .item .footer {
 			background:#888;/*#CCC;/*rgba(0,0,0,0.1);*/
@@ -421,6 +424,15 @@ if ( $mode > 0 ) {
 			/*border-top:1px solid #AAA;*/
 			/*border-left:8px solid #AAA;*/
 			/*border-right:8px solid #AAA;*/
+		}
+
+		#content .item-post .header {
+			padding-bottom:24px;
+			border-bottom:1px dashed rgba(0,0,0,0.5);
+		}
+
+		.preview > p {
+			margin-top:16px;
 		}
 		
 		#metas .node {
@@ -433,9 +445,10 @@ if ( $mode > 0 ) {
 		}
 		
 		#content .item span code {
-			background:#FDC;
-			padding:3px;
-			margin:0 3px;
+			background:#EEE;/*#FDC;*/
+			padding:4px 8px;
+			margin:0 4px;
+			border-radius:8px;
 		}
 		
 		
@@ -499,8 +512,8 @@ if ( $mode > 0 ) {
 		}
 		
 		.date-text {
-			font-size: 13px;
-			line-height:16px;
+			font-size: 14px;
+			line-height:18px;
 		}
 	</style>
 
@@ -580,7 +593,7 @@ if ( $mode > 0 ) {
 				if ( $item['type'] === 'post' ) {
 					echo '<div class="header emoji">';
 						if ( !empty($item['author']) && $authors[$item['author']]['slug'] == 'pov' ) {
-							echo '<img src="//192.168.48.48:8080/logo/mike/Chicken64.png" style="float:right;" />';
+							echo '<img src="//192.168.48.48:8080/logo/mike/Chicken64.png" style="float:right;width:72px;height:72px;" />';
 						}
 						echo '<h1>' . $item['name'] .'</h1>';
 						echo '<div class="date-text">';

@@ -19,8 +19,12 @@ body {
 
 /*	font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; */
 /*   	font-weight:300;*/
-	font-size: 20px;
+	font-size: 21px;
 	color:#333;
+}
+
+p {
+	line-height:32px;
 }
 
 body > .footer {
