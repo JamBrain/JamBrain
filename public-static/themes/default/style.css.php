@@ -53,7 +53,7 @@ body {
 	.is-hires { display:inline-block; }
 }
 /* Tablet */
-@media (min-device-width : 601px) AND (max-device-width : 800px)  {
+@media (min-width : 601px) AND (max-width : 800px)  {
 	body {
 		font-size: 17rem;
 	}
@@ -62,7 +62,7 @@ body {
 	.is-tablet { display:inline-block; }
 }
 /* Mobile */
-@media (max-device-width : 600px)  {
+@media (max-width : 600px)  {
 	body {
 		font-size: 14rem;
 	}

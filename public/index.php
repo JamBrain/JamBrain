@@ -358,6 +358,7 @@ if ( $mode > 0 ) {
 			margin:0 auto;
 			max-width:900px;
 
+			-webkit-transition: max-width 1s;
 			transition: max-width 1s;
 		}
 		
@@ -443,7 +444,7 @@ if ( $mode > 0 ) {
 		}
 
 		/* On Mobile, less edge margin */
-		@media  (max-device-width : 600px)  {
+		@media  (max-width : 600px)  {
 			#content .item-game {
 				width:95%;
 			}
