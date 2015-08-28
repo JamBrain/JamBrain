@@ -15,6 +15,9 @@ html {
 	/* Weight (400 is Normal, 300 is Light/Book) */
 	font-weight:300;
 }
+strong, h1 {
+	font-weight:700;
+}
 
 body {
 	margin:0;
