@@ -357,6 +357,8 @@ if ( $mode > 0 ) {
 		#content {
 			margin:0 auto;
 			max-width:900px;
+
+			transition: max-width 1s;
 		}
 		
 		@media (min-width : 1600px)  {
