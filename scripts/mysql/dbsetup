@@ -1006,6 +1006,19 @@ Thing {
 		node_AddMeta($user_id,0,"tv","chat","1");
 
 
+		// More dummy users //
+		$user_id = node_Add(
+			'user',"",
+			'dailymotioner','DailyMotioner',
+			htmlspecialchars("This is a test user that uses DailyMotion"),
+			0,CMW_NODE_USER,
+			true
+		);	
+		user_Add($user_id,'test.dailymotion@user.com','test');
+
+		node_AddMeta($user_id,0,"dailymotion","name","LevelDownTV");
+		node_AddMeta($user_id,0,"tv","chat","1");
+
 
 		// More dummy users //
 		$user_id = node_Add(
