@@ -152,6 +152,17 @@ if ( isset($meta['livestream']) ) {
 		$config['default'] = 'livestream';
 	}
 }
+if ( isset($meta['redbull']) ) {
+	// Red Bull is a custom Brightcove client. They use Twitch chat, and co-stream on Twitch, co-store archives on YouTube.
+	// Red Bull only ever streams 1 event at a time, so this is a cheat to get an embed.
+	// redbull.tv streams other events, but embed code is not easy to figure out.
+	$service['redbull'] = &$meta['redbull'];
+	$service['redbull']['embed'] = '<iframe id="tv-player" src="http://battlegrounds.redbull.com/video/?embed=js" frameborder="0" scrolling="no" allowfullscreen></iframe>';
+	// No Chat Embed //
+	if ( !isset($config['default']) ) {
+		$config['default'] = 'redbull';
+	}
+}
 
 
 // Use our real name if config tells us to //

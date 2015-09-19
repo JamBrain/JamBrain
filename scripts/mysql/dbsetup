@@ -1049,6 +1049,19 @@ Thing {
 		node_AddMeta($user_id,0,"livestream","id","2687950");
 		node_AddMeta($user_id,0,"tv","chat","1");
 
+		// More dummy users //
+		$user_id = node_Add(
+			'user',"",
+			'redbuller','RedBuller',
+			htmlspecialchars("This is a test user that uses Red Bull"),
+			0,CMW_NODE_USER,
+			true
+		);	
+		user_Add($user_id,'test.redbull@user.com','test');
+
+		node_AddMeta($user_id,0,"redbull","","");
+		node_AddMeta($user_id,0,"tv","chat","1");
+
 
 		// Add Test User //
 		$user_id = node_Add(
