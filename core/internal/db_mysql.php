@@ -1,6 +1,8 @@
 <?php
 //include_once __DIR__ . "/../../config.php";
 
+$dbin = null;
+$dbout = null;
 $db = null;				// ** Global Database Variable **** //
 
 $DB_QUERY_COUNT = 0;
@@ -11,22 +13,34 @@ function db_GetQueryCount() {
 
 // Logging function specific to database operations //
 function db_Log( $msg ) {
-	error_log( "CMW DB ERROR: " . $msg );
-	echo "<strong>CMW DB ERROR:</strong> " . $msg . "<br />";
+	error_log( "CMW CORE INTERNAL DB ERROR: " . $msg );
+	echo "<strong>CMW CORE INTERNAL DB ERROR:</strong> " . $msg . "<br />";
 }
 
 // Check database config //
-if ( !defined('CMW_DB_HOST') ) {
-	db_Log( "No database host name set." );
+if ( !defined('CMW_DBIN_HOST') ) {
+	db_Log( "CMW_DBIN_HOST not set" );
 }
-if ( !defined('CMW_DB_NAME') ) {
-	db_Log( "No database name set." );
+if ( !defined('CMW_DBIN_NAME') ) {
+	db_Log( "CMW_DBIN_NAME not set." );
 }
-if ( !defined('CMW_DB_LOGIN') ) {
-	db_Log( "No database login set." );
+if ( !defined('CMW_DBIN_LOGIN') ) {
+	db_Log( "CMW_DBIN_LOGIN not set." );
 }
-if ( !defined('CMW_DB_PASSWORD') ) {
-	db_Log( "No database password set." );
+if ( !defined('CMW_DBIN_PASSWORD') ) {
+	db_Log( "CMW_DBIN_PASSWORD not set." );
+}
+if ( !defined('CMW_DBOUT_HOST') ) {
+	db_Log( "CMW_DBOUT_HOST not set" );
+}
+if ( !defined('CMW_DBOUT_NAME') ) {
+	db_Log( "CMW_DBOUT_NAME not set." );
+}
+if ( !defined('CMW_DBOUT_LOGIN') ) {
+	db_Log( "CMW_DBOUT_LOGIN not set." );
+}
+if ( !defined('CMW_DBOUT_PASSWORD') ) {
+	db_Log( "CMW_DBOUT_PASSWORD not set." );
 }
 
 // Are we connected and ready to use the Database? //
@@ -41,7 +55,7 @@ function db_Connect() {
 		global $db;
 
 		// Connect to the database //
-		$db = new mysqli(CMW_DB_HOST,CMW_DB_LOGIN,CMW_DB_PASSWORD,CMW_DB_NAME);
+		$db = new mysqli(CMW_DBIN_HOST,CMW_DBIN_LOGIN,CMW_DBIN_PASSWORD,CMW_DBIN_NAME);
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
 		if ($db->connect_errno) {
