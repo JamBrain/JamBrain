@@ -13,14 +13,11 @@ const CMW_USING_IMAGEMAGICK = true;
 //const CMW_USING_GRAPHICSMAGICK = true;
 
 // Database Config //
-const CMW_DBIN_HOST = 'localhost';
-const CMW_DBIN_NAME = 'database';
-const CMW_DBIN_LOGIN = 'login';
-const CMW_DBIN_PASSWORD = 'password';
-const CMW_DBOUT_HOST = CMW_DBIN_HOST;
-const CMW_DBOUT_NAME = CMW_DBIN_NAME
-const CMW_DBOUT_LOGIN = CMW_DBIN_LOGIN;
-const CMW_DBOUT_PASSWORD = CMW_DBIN_PASSWORD;
+const CMW_DB_HOST = 'localhost';
+const CMW_DB_NAME = 'database';
+const CMW_DB_LOGIN = 'login';
+const CMW_DB_PASSWORD = 'password';
+//const CMW_DB_PORT = 3306;
 
 const CMW_TABLE_PREFIX = 'cmw_';
 
@@ -33,8 +30,8 @@ const CMW_REDIS_HOST = 'localhost';
 
 // Debug Flags //
 const CMW_PHP_DEBUG = true;			// PHP Debug Mode: Extra logging, query debug features.
-const CMW_JS_DEBUG = true;			// JavaScript Debug Mode: Not minified, src includes.
 const CMW_CSS_DEBUG = true;			// CSS Debug Mode: Not minified, src includes.
+const CMW_JS_DEBUG = true;			// JavaScript Debug Mode: Not minified, src includes.
 
 // Paths //
 const CMW_STATIC_DIR = '/public-static';

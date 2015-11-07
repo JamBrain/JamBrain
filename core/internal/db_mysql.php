@@ -2,8 +2,6 @@
 // Be sure to include your configuration before including this file.
 // Configuration is not auto-included, in case you want to customize
 
-$dbin = null;
-$dbout = null;
 $db = null;				// ** Global Database Variable **** //
 
 $DB_QUERY_COUNT = 0;
@@ -13,99 +11,76 @@ function db_GetQueryCount() {
 }
 
 // Logging function specific to database operations //
-function db_Log( $msg ) {
+function db_Log( $msg, $echo_too ) {
 	error_log( "CMW CORE INTERNAL DB ERROR: " . $msg );
-	echo "<strong>CMW CORE INTERNAL DB ERROR:</strong> " . $msg . "<br />";
+	if ( is_bool($echo_too) && $echo_too == true ) {
+		echo "<strong>CMW CORE INTERNAL DB ERROR:</strong> " . $msg . "<br />";
+	}
 }
 
 // Check database config //
-if ( !defined('CMW_DBIN_HOST') ) {
-	db_Log( "CMW_DBIN_HOST not set" );
+if ( !defined('CMW_DB_HOST') ) {
+	db_Log( "CMW_DB_HOST not set" );
 }
-if ( !defined('CMW_DBIN_NAME') ) {
-	db_Log( "CMW_DBIN_NAME not set." );
+if ( !defined('CMW_DB_NAME') ) {
+	db_Log( "CMW_DB_NAME not set." );
 }
-if ( !defined('CMW_DBIN_LOGIN') ) {
-	db_Log( "CMW_DBIN_LOGIN not set." );
+if ( !defined('CMW_DB_LOGIN') ) {
+	db_Log( "CMW_DB_LOGIN not set." );
 }
-if ( !defined('CMW_DBIN_PASSWORD') ) {
-	db_Log( "CMW_DBIN_PASSWORD not set." );
-}
-if ( !defined('CMW_DBOUT_HOST') ) {
-	db_Log( "CMW_DBOUT_HOST not set" );
-}
-if ( !defined('CMW_DBOUT_NAME') ) {
-	db_Log( "CMW_DBOUT_NAME not set." );
-}
-if ( !defined('CMW_DBOUT_LOGIN') ) {
-	db_Log( "CMW_DBOUT_LOGIN not set." );
-}
-if ( !defined('CMW_DBOUT_PASSWORD') ) {
-	db_Log( "CMW_DBOUT_PASSWORD not set." );
+if ( !defined('CMW_DB_PASSWORD') ) {
+	db_Log( "CMW_DB_PASSWORD not set." );
 }
 
 // Are we connected and ready to use the Database? //
-function dbin_IsConnected() {
-	global $dbin;
-	return isset($dbin);
-}
-function dbout_IsConnected() {
-	global $dbout;
-	return isset($dbout);
+function db_IsConnected() {
+	global $db;
+	return isset($db);
 }
 // Connect to the Database - Pass true if you don't want to log an error if already connected //
-function dbin_Connect() {
+function db_Connect() {
 	// Safely call this multiple times, only the first time has any effect //
-	if ( !dbin_IsConnected() ) {
-		global $dbin;
+	if ( !db_IsConnected() ) {
+		global $db;
+		$db = mysqli_init();
+		
+		//mysqli_options($db, ...);
+
+		if ( defined('CMW_DB_PORT') )
+			$port = CMW_DB_PORT;
+		else
+			$port = ini_get("mysqli.default_port");
+
+		if ( defined('CMW_DB_SOCKET') )
+			$socket = CMW_DB_SOCKET;
+		else
+			$socket = ini_get("mysqli.default_socket");	
+		
+		$flags = null;
 
 		// Connect to the database //
-		$dbin = new mysqli(CMW_DBIN_HOST,CMW_DBIN_LOGIN,CMW_DBIN_PASSWORD,CMW_DBIN_NAME);
+		mysqli_real_connect($db,CMW_DB_HOST,CMW_DB_LOGIN,CMW_DB_PASSWORD,CMW_DB_NAME,$port,$socket,$flags);
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
-		if ($dbin->connect_errno) {
-    		db_Log( "Failed to connect: (" . $dbin->connect_errno . ") " . $dbin->connect_error );
+		if ($db->connect_errno) {
+    		db_Log( "Failed to connect: (" . $db->connect_errno . ") " . $db->connect_error );
     	}
     	
     	// Set character set to utf8mb4 mode (default is utf8mb3 (utf8). mb4 is required for Emoji)
-    	$dbin->set_charset('utf8mb4');
-    	// More info: http://stackoverflow.com/questions/279170/utf-8-all-the-way-through
-	}
-}
-function dbout_Connect() {
-	// Safely call this multiple times, only the first time has any effect //
-	if ( !dbout_IsConnected() ) {
-		global $dbout;
-
-		// Connect to the database //
-		$dbout = new mysqli(CMW_DBOUT_HOST,CMW_DBOUT_LOGIN,CMW_DBOUT_PASSWORD,CMW_DBOUT_NAME);
-		
-		// http://php.net/manual/en/mysqli.quickstart.connections.php
-		if ($dbout->connect_errno) {
-    		db_Log( "Failed to connect: (" . $dbout->connect_errno . ") " . $dbout->connect_error );
-    	}
-    	
-    	// Set character set to utf8mb4 mode (default is utf8mb3 (utf8). mb4 is required for Emoji)
-    	$dbout->set_charset('utf8mb4');
+    	mysqli_set_charset($db,'utf8mb4');
     	// More info: http://stackoverflow.com/questions/279170/utf-8-all-the-way-through
 	}
 }
 
 // Close Database Connection //
-function dbin_Close() {
+function db_Close() {
 	// Safely call this multiple times, only the first time has any effect //
-	if ( !dbin_IsConnected() ) {
-		global $dbin;
-		$dbin->close();
+	if ( !db_IsConnected() ) {
+		global $db;
+		mysqli_close($db);
 	}
 }
-function dbout_Close() {
-	// Safely call this multiple times, only the first time has any effect //
-	if ( !dbout_IsConnected() ) {
-		global $dbout;
-		$dbout->close();
-	}
-}
+
 
 // Because MySQL returns everything as a string, here's a lightweight schema decoder //
 function db_DoSchema( &$row, &$schema ) {
@@ -147,7 +122,7 @@ function db_Query($query,$ignore_errors=false) {
 	global $db;
 	global $DB_QUERY_COUNT;
 	$DB_QUERY_COUNT++;
-	return $db->query($query) or $ignore_errors or die(mysqli_error($db)."\n");
+	return mysqli_query($db,$query) or $ignore_errors or die(mysqli_error($db)."\n");
 }
 
 // Unsafe "run any fetch query" function. Returns fields as an Associative Array. //
@@ -156,7 +131,7 @@ function db_Fetch($query,$schema=null) {
 	global $DB_QUERY_COUNT;
 	$DB_QUERY_COUNT++;
 
-	$result = $db->query($query);
+	$result = mysqli_query($db,$query);
 	$rows = [];
 	if ( !empty($result) ) {
 		if ( is_array($schema) ) {
@@ -180,7 +155,7 @@ function db_FetchArray($query) {
 	global $DB_QUERY_COUNT;
 	$DB_QUERY_COUNT++;
 
-	$result = $db->query($query);
+	$result = mysqli_query($db,$query);
 	$rows = [];
 	if ( !empty($result) ) {
 		while ( $row = $result->fetch_row() ) {
@@ -196,7 +171,7 @@ function db_FetchArrayPair($query) {
 	global $DB_QUERY_COUNT;
 	$DB_QUERY_COUNT++;
 
-	$result = $db->query($query);
+	$result = mysqli_query($db,$query);
 	$rows = [];
 	if ( !empty($result) ) {
 		while ( $row = $result->fetch_row() ) {
@@ -213,7 +188,7 @@ function db_FetchSingle($query,$type = null) {
 	global $DB_QUERY_COUNT;
 	$DB_QUERY_COUNT++;
 
-	$result = $db->query($query);
+	$result = mysqli_query($db,$query);
 	$rows = [];
 	if ( !empty($type) ) {
 		while ( $row = $result->fetch_row() ) {
@@ -248,7 +223,7 @@ function db_FetchPair( $query, $typeA = null, $typeB = null ) {
 	global $DB_QUERY_COUNT;
 	$DB_QUERY_COUNT++;
 
-	$result = $db->query($query);
+	$result = mysqli_query($db,$query);
 	$rows = [];
 	while ( $row = $result->fetch_row() ) {
 		// Key //
@@ -329,7 +304,7 @@ function db_GetId() {
 
 function db_EscapeString( $in ) {
 	global $db;
-	return $db->real_escape_string($in);
+	return mysqli_real_escape_string($db,$in);
 }
 
 
@@ -503,7 +478,7 @@ function db_Query2( $query, $args ) {
 	$new_args[] = $arg_string;
 	$final_args = array_merge($new_args,$args);
 	
-	$st = $db->prepare($query);
+	$st = mysqli_prepare($db,$query);
 	call_user_func_array( $st->bind_params, $final_args );
 	$ret = $st->execute();
 	//$st->bind_result
