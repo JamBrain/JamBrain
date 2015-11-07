@@ -1,5 +1,6 @@
 <?php
-//include_once __DIR__ . "/../../config.php";
+// Be sure to include your configuration before including this file.
+// Configuration is not auto-included, in case you want to customize
 
 $dbin = null;
 $dbout = null;
@@ -44,38 +45,66 @@ if ( !defined('CMW_DBOUT_PASSWORD') ) {
 }
 
 // Are we connected and ready to use the Database? //
-function db_IsConnected() {
-	global $db;
-	return isset($db);
+function dbin_IsConnected() {
+	global $dbin;
+	return isset($dbin);
+}
+function dbout_IsConnected() {
+	global $dbout;
+	return isset($dbout);
 }
 // Connect to the Database - Pass true if you don't want to log an error if already connected //
-function db_Connect() {
+function dbin_Connect() {
 	// Safely call this multiple times, only the first time has any effect //
-	if ( !db_IsConnected() ) {
-		global $db;
+	if ( !dbin_IsConnected() ) {
+		global $dbin;
 
 		// Connect to the database //
-		$db = new mysqli(CMW_DBIN_HOST,CMW_DBIN_LOGIN,CMW_DBIN_PASSWORD,CMW_DBIN_NAME);
+		$dbin = new mysqli(CMW_DBIN_HOST,CMW_DBIN_LOGIN,CMW_DBIN_PASSWORD,CMW_DBIN_NAME);
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
-		if ($db->connect_errno) {
-    		db_Log( "Failed to connect to MySQL: (" . $db->connect_errno . ") " . $db->connect_error );
+		if ($dbin->connect_errno) {
+    		db_Log( "Failed to connect: (" . $dbin->connect_errno . ") " . $dbin->connect_error );
     	}
     	
     	// Set character set to utf8mb4 mode (default is utf8mb3 (utf8). mb4 is required for Emoji)
-    	$db->set_charset('utf8mb4');
+    	$dbin->set_charset('utf8mb4');
+    	// More info: http://stackoverflow.com/questions/279170/utf-8-all-the-way-through
+	}
+}
+function dbout_Connect() {
+	// Safely call this multiple times, only the first time has any effect //
+	if ( !dbout_IsConnected() ) {
+		global $dbout;
+
+		// Connect to the database //
+		$dbout = new mysqli(CMW_DBOUT_HOST,CMW_DBOUT_LOGIN,CMW_DBOUT_PASSWORD,CMW_DBOUT_NAME);
+		
+		// http://php.net/manual/en/mysqli.quickstart.connections.php
+		if ($dbout->connect_errno) {
+    		db_Log( "Failed to connect: (" . $dbout->connect_errno . ") " . $dbout->connect_error );
+    	}
+    	
+    	// Set character set to utf8mb4 mode (default is utf8mb3 (utf8). mb4 is required for Emoji)
+    	$dbout->set_charset('utf8mb4');
     	// More info: http://stackoverflow.com/questions/279170/utf-8-all-the-way-through
 	}
 }
 
 // Close Database Connection //
-function db_Close() {
+function dbin_Close() {
 	// Safely call this multiple times, only the first time has any effect //
-	if ( !db_IsConnected() ) {
-		global $db;
-		
-		$db->close();
-	}	
+	if ( !dbin_IsConnected() ) {
+		global $dbin;
+		$dbin->close();
+	}
+}
+function dbout_Close() {
+	// Safely call this multiple times, only the first time has any effect //
+	if ( !dbout_IsConnected() ) {
+		global $dbout;
+		$dbout->close();
+	}
 }
 
 // Because MySQL returns everything as a string, here's a lightweight schema decoder //
