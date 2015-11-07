@@ -8,6 +8,13 @@ require_once __DIR__ . "/../core/post.php";
 require_once __DIR__ . "/../core/schedule.php";
 require_once __DIR__ . "/../core/internal/ichart.php";
 
+// HTML Library Configuration //
+const HTML_USE_EMOJI = true;
+const HTML_USE_MARKUP = true;
+const HTML_USE_HIGHLIGHT = true;
+const HTML_USE_INTERNAL = true;
+const HTML_SHOW_FOOTER = true;
+
 user_StartEnd();
 
 //template_SetTheme("embed");
@@ -66,7 +73,6 @@ if ( $mode > 0 ) {
 
 ?>
 <?php template_GetHeader(); ?>
-<body>
 	<script>
 		// Cookie Functions //
 		function getCookie(name) {
@@ -1075,5 +1081,4 @@ if ( $mode > 0 ) {
 //		}
 		
 	</script>
-</body>
 <?php template_GetFooter(); ?>

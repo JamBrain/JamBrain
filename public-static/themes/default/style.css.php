@@ -36,8 +36,8 @@ p {
 body {
 	font-size: 21px; font-size: 21rem;
 	
-	-webkit-transition: font-size 1s;
-	transition: font-size 1s;
+/*	-webkit-transition: font-size 1s;*/
+/*	transition: font-size 1s;*/
 }
 .is-mobile { display:none; }
 .is-tablet { display:none; }
