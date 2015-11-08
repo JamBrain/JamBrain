@@ -47,6 +47,8 @@ body {
 .is-normal { display:inline-block; }
 .is-hires { display:none; }
 
+.hide-on-mobile {}
+
 /* High Resolution Display */
 @media (min-width : 1600px)  {
 	body {
@@ -73,11 +75,13 @@ body {
 	.no-mobile { display:none; }
 	.is-normal { display:none; }
 	.is-mobile { display:inline-block; }
+
+	.hide-on-mobile { display:none }
 }
 
 body > .footer {
 	text-align:center;
 	color:rgba(0,0,0,0.5);
 	font-size:0.6em;
-	padding:4px;
+	padding:4px 0;
 }

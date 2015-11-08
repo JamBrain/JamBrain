@@ -22,7 +22,7 @@ const HTML_SHOW_FOOTER = true;
 		?>
 	</div>
 	<div class="body">
-		<div class="side">
+		<div class="side hide-on-mobile">
 			My Suggestions:<br />
 			Themes I like:<br />
 		</div>
