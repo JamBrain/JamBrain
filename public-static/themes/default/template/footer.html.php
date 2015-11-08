@@ -4,13 +4,21 @@
 		
 		$FOOTER_DATA_POINT=0; 
 		
-		echo "Generated in <strong>".php_GetExecutionTime()."</strong>";
+		if (function_exists('opcache_is_script_cached')) {
+			if ($FOOTER_DATA_POINT++ > 0) { echo ','; } 
+			echo ' ' . (opcache_is_script_cached() ? "Executed" : "Compiled and Executed");
+		}
+		else {
+			echo "Generated";
+		}
 		
-		if ( function_exists('db_GetQueryCount') ) { 
+		echo " in <strong>".php_GetExecutionTime()."</strong>";
+		
+		if (function_exists('db_GetQueryCount')) { 
 			if ($FOOTER_DATA_POINT++ > 0) { echo ','; } 
 			echo ' using ' . db_GetQueryCount() . ' queries';
 		}
-		if ( function_exists('cache_GetReads') ) {
+		if (function_exists('cache_GetReads')) {
 			if ($FOOTER_DATA_POINT++ > 0) { echo ','; } 
 			echo ' ' . cache_GetReads() . ' cache read(s), '. cache_GetWrites() .' cache write(s)';
 		}
