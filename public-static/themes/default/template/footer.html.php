@@ -17,12 +17,12 @@
 		if (function_exists('opcache_is_script_cached')) {
 			if (!opcache_is_script_cached(__FILE__)) {
 				if ($FOOTER_DATA_POINT++ > 0) { echo ','; }
-				echo "with opcache disabled");
+				echo " with opcache disabled";
 			}
 		}
 		else {
 			if ($FOOTER_DATA_POINT++ > 0) { echo ','; }
-			echo "without opcache";
+			echo " without opcache";
 		}
 
 		echo (isset($GLOBALS['HTML_SHOW_FOOTER'])) ? ' -->' : '</div>'; 
