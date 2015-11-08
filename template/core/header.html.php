@@ -47,6 +47,14 @@
 	echo "	<link rel='stylesheet' href='".CMW_STATIC_URL."/style/core.css.php".VERSION_STRING."' />\n";
 	echo "	<link href='//fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic' rel='stylesheet' type='text/css'>";
 
+	if ( defined('HTML_CSS_INCLUDE') ) {
+		$css_includes = HTML_CSS_INCLUDE;
+		if ( is_array($css_includes) ) {
+			foreach ($css_includes as $include) {
+				echo "	<link rel='stylesheet' href='".CMW_STATIC_URL.$include.VERSION_STRING."' />\n";
+			}
+		}
+	}
 	//<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic|Inconsolata' rel='stylesheet' type='text/css'>
 	//<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic,400|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 ?>
