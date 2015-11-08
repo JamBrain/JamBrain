@@ -5,8 +5,7 @@
 		$FOOTER_DATA_POINT=0; 
 		
 		if (function_exists('opcache_is_script_cached')) {
-			if ($FOOTER_DATA_POINT++ > 0) { echo ','; } 
-			echo ' ' . (opcache_is_script_cached() ? "Executed" : "Compiled and Executed");
+			echo ' ' . (opcache_is_script_cached(__FILE__) ? "Executed" : "Compiled and Executed");
 		}
 		else {
 			echo "Generated";
