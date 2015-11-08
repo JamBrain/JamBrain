@@ -11,7 +11,7 @@
 /**
  * **INTERNAL**: Name of the current theme.
  */
-$_cmw_theme = "default";
+$_cmw_theme = "core";
 
 /**
  * **INTERNAL**: Includes template files (.php) and sets up the environment.
@@ -20,9 +20,6 @@ $_cmw_theme = "default";
  * @param	bool	$include_once Should we use include_once? (default: false)
  */
 function _template_Include( $path_to_file, $include_once = false ) {
-	// Make certain global variables implicitly available to the template.
-	//global $db;
-	
 	// Include the template file.
 	if ( $include_once ) {
 		include_once $path_to_file;
@@ -42,19 +39,19 @@ function _template_Include( $path_to_file, $include_once = false ) {
  * @param	bool	$include_once Should we use include_once? (default: false)
  */
 function template_Get( $file, $theme = null, $include_once = false ) {
-	_template_Include( __DIR__."/../public-static".CMW_THEME_BASE."/".template_GetTheme($theme)."/template".$file, $include_once );
+	_template_Include( __DIR__."/../template/".template_GetTheme($theme).$file, $include_once );
 }
 
 
 /**
  * dummy
  *
- * @param	string	$theme Theme to use (default: "default")
+ * @param	string	$theme Theme to use (default: "core")
  */
 function template_SetTheme( $theme = null ) {
 	global $_cmw_theme;
 	if ( is_null($theme) ) {
-		$_cmw_theme = "default";
+		$_cmw_theme = "core";
 	}
 	$_cmw_theme = $theme;
 }
@@ -62,7 +59,7 @@ function template_SetTheme( $theme = null ) {
 /**
  * dummy
  *
- * @param	string	$theme Theme to use (default: "default")
+ * @param	string	$theme Theme to use (default: "core")
  */
 function template_GetTheme( $theme = null ) {
 	global $_cmw_theme;
@@ -70,7 +67,7 @@ function template_GetTheme( $theme = null ) {
 		if ( !is_null($_cmw_theme) ) {
 			return $_cmw_theme;
 		}
-		return "default";
+		return "core";
 	}
 	return $theme;
 }
@@ -79,7 +76,7 @@ function template_GetTheme( $theme = null ) {
 /**
  * dummy
  *
- * @param	string	$theme Theme to use (default: "default")
+ * @param	string	$theme Theme to use (default: "core")
  * @param	bool	$include_once Should we use include_once? (default: true)
  */
 function template_GetHeader( $theme = null, $include_once = true ) {
@@ -88,7 +85,7 @@ function template_GetHeader( $theme = null, $include_once = true ) {
 /**
  * dummy
  *
- * @param	string	$theme Theme to use (default: "default")
+ * @param	string	$theme Theme to use (default: "core")
  * @param	bool	$include_once Should we use include_once? (default: true)
  */
 function template_GetFooter( $theme = null, $include_once = true ) {

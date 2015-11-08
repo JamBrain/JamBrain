@@ -1,4 +1,4 @@
-<?php require_once __DIR__."/../../../style.php"; ?>
+<?php require_once __DIR__."/../../style.php"; ?>
 /* Styles */
 html {
 	/* REMs to Pixels */

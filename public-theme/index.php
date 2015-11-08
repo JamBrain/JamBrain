@@ -5,9 +5,9 @@ require_once __DIR__ . "/../web.php";
 const EVENT_NAME = "Ludum Dare 34";
 
 const HTML_TITLE = "Theme Hub: ".EVENT_NAME;
-//const HTML_USE_EMOJI = true;
-//const HTML_USE_MARKUP = true;
-//const HTML_USE_HIGHLIGHT = true;
+const HTML_CSS_INCLUDE = [
+	"/style/theme-hub.css.php"
+];
 const HTML_SHOW_FOOTER = true;
 
 ?>

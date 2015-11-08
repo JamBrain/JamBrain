@@ -12,8 +12,8 @@
 	will automatically cache the file, and never attempt to fetch it again (unless expired).
 */
 
-require_once __DIR__."/../core/internal/core.php";
-require_once __DIR__."/../core/internal/cache.php";
+require_once __DIR__."/../../core/internal/core.php";
+require_once __DIR__."/../../core/internal/cache.php";
 
 // NOTE: As it turns out, Cloudflare doesn't always cache files. It often takes a few requests
 //	before those files are cached. So instead, we may want to temporarily cache the generated

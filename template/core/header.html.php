@@ -44,8 +44,8 @@
 	if ( defined('HTML_USE_HIGHLIGHT') ) { echo "	<link rel='stylesheet' href='".CMW_STATIC_URL."/external/prism/prism.css".VERSION_STRING."' />\n"; }
 
 	// Stylesheet and Font //
-	echo "	<link rel='stylesheet' href='".CMW_STATIC_URL."/themes/default/style.css.php".VERSION_STRING."' />\n";
-	echo "	<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic' rel='stylesheet' type='text/css'>";
+	echo "	<link rel='stylesheet' href='".CMW_STATIC_URL."/style/core.css.php".VERSION_STRING."' />\n";
+	echo "	<link href='//fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic' rel='stylesheet' type='text/css'>";
 
 	//<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic|Inconsolata' rel='stylesheet' type='text/css'>
 	//<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic,400|Inconsolata:400,700' rel='stylesheet' type='text/css'>
