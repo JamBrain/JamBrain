@@ -2,4 +2,4 @@ Header set Access-Control-Allow-Origin *
 
 RewriteEngine on 
 
-RewriteRule ^img/(.*) img.php/$1
+RewriteRule ^up/(.*) up.php/$1
