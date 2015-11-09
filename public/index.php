@@ -12,7 +12,8 @@ require_once __DIR__ . "/../core/internal/ichart.php";
 const HTML_USE_EMOJI = true;
 const HTML_USE_MARKUP = true;
 const HTML_USE_HIGHLIGHT = true;
-const HTML_USE_INTERNAL = true;
+const HTML_USE_CORE = true;
+const HTML_USE_STARSHIP = true;
 const HTML_SHOW_FOOTER = true;
 
 user_StartEnd();
