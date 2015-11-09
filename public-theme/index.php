@@ -18,6 +18,56 @@ const HTML_SHOW_FOOTER = true;
 // Announcement (start to +3 weeks)
 // Coming Soon (next event scheduled)
 
+const THEME_MODE_NAMES = [
+	"Inactive",
+	"Theme Suggestion Round",
+	"Theme Slaughter Round",
+	"Theme Voting Round",
+	"Final Round Theme Voting",
+	"Theme Announcement",
+	"Coming Soon"
+];
+
+const THEME_MODE_SHORTNAMES = [
+	"Inactive",
+	"Suggestion",
+	"Slaughter",
+	"Voting",
+	"Final Voting",
+	"Announcement",
+	"Coming Soon"
+];
+
+$active_mode = 1;
+
+
+function ShowMode() {
+	global $active_mode;
+	echo "<div class='bigger'><strong>".THEME_MODE_NAMES[$active_mode]."</strong></div>";
+	echo "Round ends in: X days, 12 hours<br /><br />";
+}
+
+function ShowLogin() {
+	
+}
+function ShowComingSoon() {
+	
+}
+function ShowThemeSuggestion() {
+?>
+			<div class="big">Suggest a Theme</div>
+			<input type="text" class="single-input" id="input-theme" placeholder="your suggestion" />
+			<button type="button" class="submit-button" onclick="SubmitThemeForm();">Submit</button>
+			<br />
+			<small>You have <strong><span id="suggestions-left-count">10</span></strong> suggestion(s) left.</small><br />
+			<br />
+			<div class="info">
+				<div class="big">My Suggestions</div><br />
+				<div id="suggestions"></div>
+			</div>
+<?php
+}
+
 ?>
 <?php template_GetHeader(); ?>
 	<div class="header">
@@ -26,8 +76,18 @@ const HTML_SHOW_FOOTER = true;
 			if ( defined('EVENT_NAME') ) {
 				echo "<div class='page'>";
 				echo "<div class='event'>Event: <strong>".EVENT_NAME."</strong></div>";
-				echo "<div class='mode'><strong>Suggestion</strong> | Slaughter | Voting | Final Voting | Announcement</div>";
-				echo "</div>";
+				$theme_mode_count = count(THEME_MODE_SHORTNAMES);
+				echo "<div class='mode'>";
+				for ( $idx = 1; $idx < $theme_mode_count-1; $idx++ ) {
+					if ($idx !== 1)
+						echo " | ";
+					if ($idx === $active_mode)
+						echo "<strong>".THEME_MODE_SHORTNAMES[$idx]."</strong>";
+					else
+						echo THEME_MODE_SHORTNAMES[$idx];
+				}
+				//echo "<div class='mode'><strong>Suggestion</strong> | Slaughter | Voting | Final Voting | Announcement</div>";
+				echo "</div></div>";
 			}
 		?>
 	</div>
@@ -47,11 +107,18 @@ const HTML_SHOW_FOOTER = true;
 			};
 			console.log(Data);
 			
+			// Set Loading state //
+			
+			
+			// On success //
 			SuggestionsLeftCount--;
 
 			document.getElementById('suggestions-left-count').innerHTML = SuggestionsLeftCount;			
 			
 			document.getElementById('suggestions').innerHTML = Data.Theme + "<br />" + document.getElementById('suggestions').innerHTML;
+			
+			// On failure //
+			// popup error //
 		}
 	</script>
 	<div class="body">
@@ -62,19 +129,10 @@ const HTML_SHOW_FOOTER = true;
 		</div>
 */ ?>
 		<div class="main">
-			<div class="bigger"><strong>Theme Suggestion Round</strong></div>
-			Round ends in: X days, 12 hours<br />
-			<br />
-			<div class="big">Suggest a Theme</div>
-			<input type="text" class="single-input" id="input-theme" placeholder="your suggestion" />
-			<button type="button" class="submit-button" onclick="SubmitThemeForm();">Submit</button>
-			<br />
-			<small>You have <strong><span id="suggestions-left-count">10</span></strong> suggestion(s) left.</small><br />
-			<br />
-			<div class="info">
-				<div class="big">My Suggestions</div><br />
-				<div id="suggestions"></div>
-			</div>
+			<?php
+				ShowMode();
+				ShowThemeSuggestion();
+			?>
 		</div>
 	</div>
 	<br />
