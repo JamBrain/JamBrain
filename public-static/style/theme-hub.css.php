@@ -1,5 +1,18 @@
 <?php require_once __DIR__."/../../style.php"; ?>
 
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.caps {
+	font-variant: small-caps;
+}
+
 body {
 	color:#444;
 	background:#DDD;
@@ -55,9 +68,11 @@ body {
 	font-size:1.8em;
 }
 
-h2, h3, h4 {
+h1, h2, h3, h4, h5, h6 {
 	margin:0;
+	font-variant: small-caps;
 }
+
 
 .info {
 	background:#CCC;
@@ -65,14 +80,23 @@ h2, h3, h4 {
 }
 
 
+.form {
+}
+.form > div, .form > input, .form > button {
+    display:inline;
+	vertical-align:middle;
+}
+
 .single-input {
 	border:0;
-	padding:8px 16px;
+	padding:12px 20px;
 	margin:8px;
-	border-radius:32px;
+	border-radius:40px;
 	font-size:1em;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 	background:#EEE;
+	
+	outline: none;
 }
 .single-input:focus {
 	background:#FFF;
@@ -80,19 +104,39 @@ h2, h3, h4 {
 }
 
 .submit-button {
-	border:2px solid #000;
+	background:#BBB;
+	border:2px solid #888;
+	color:#444;
+
 	padding:8px 24px;
 	margin:8px;
 	border-radius:32px;
-	background:#BBB;
 	font-weight:700;
+	
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    
+    outline: none;
 }
-.submit-button:hover {
+.submit-button:hover, .submit-button:focus {
 	background:#F84;
-	color:#FFF;
+	border:2px solid #A42;
+	color:#420;
+	
 	cursor:pointer;
 	box-shadow: 0 0 4px rgba(0,0,0,0.3);
 }
 .submit-button:active {
-	background:#48F;
+	background:#A42;
+	border:2px solid #F84;
+	color:#F84;
+
+/*	background:#48F;*/
+/*	border:6px solid #000;*/
+	
+	padding:8px 24px;
 }

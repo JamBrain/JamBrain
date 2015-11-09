@@ -19,13 +19,13 @@ const HTML_SHOW_FOOTER = true;
 // Coming Soon (next event scheduled)
 
 const THEME_MODE_NAMES = [
-	"Inactive",
-	"Theme Suggestion Round",
-	"Theme Slaughter Round",
-	"Theme Voting Round",
-	"Final Round Theme Voting",
-	"Theme Announcement",
-	"Coming Soon"
+	"Inactive",						// no event scheduled
+	"Theme Suggestion Round",		// weeks -5 to -2
+	"Theme Slaughter Round",		// weeks -2 to -1
+	"Theme Voting Round",			// week -1 to day -2
+	"Final Round Theme Voting",		// day -2 to start -30 minutes
+	"Theme Announcement",			// start
+	"Coming Soon"					// week +3
 ];
 
 const THEME_MODE_SHORTNAMES = [
@@ -43,7 +43,7 @@ $active_mode = 1;
 
 function ShowMode() {
 	global $active_mode;
-	echo "<div class='bigger'><strong>".THEME_MODE_NAMES[$active_mode]."</strong></div>";
+	echo "<div class='bigger'><strong>".strtoupper(THEME_MODE_NAMES[$active_mode])."</strong></div>";
 	echo "Round ends in: X days, 12 hours<br /><br />";
 }
 
@@ -56,9 +56,10 @@ function ShowComingSoon() {
 function ShowThemeSuggestion() {
 ?>
 			<div class="big">Suggest a Theme</div>
-			<input type="text" class="single-input" id="input-theme" placeholder="your suggestion" />
-			<button type="button" class="submit-button" onclick="SubmitThemeForm();">Submit</button>
-			<br />
+			<div class="form">
+				<input type="text" class="single-input" id="input-theme" placeholder="your suggestion" maxlength="64" />
+				<button type="button" class="submit-button" onclick="SubmitThemeForm();">Submit</button>
+			</div>
 			<small>You have <strong><span id="suggestions-left-count">10</span></strong> suggestion(s) left.</small><br />
 			<br />
 			<div class="info">
@@ -71,13 +72,12 @@ function ShowThemeSuggestion() {
 ?>
 <?php template_GetHeader(); ?>
 	<div class="header">
-		<div class="title">Theme Hub</div>
 		<?php 
 			if ( defined('EVENT_NAME') ) {
 				echo "<div class='page'>";
-				echo "<div class='event'>Event: <strong>".EVENT_NAME."</strong></div>";
+				echo "<div class='event'>Event: <strong class='caps'>".EVENT_NAME."</strong></div>";
 				$theme_mode_count = count(THEME_MODE_SHORTNAMES);
-				echo "<div class='mode'>";
+				echo "<div class='mode caps'>";
 				for ( $idx = 1; $idx < $theme_mode_count-1; $idx++ ) {
 					if ($idx !== 1)
 						echo " | ";
