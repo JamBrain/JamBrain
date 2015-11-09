@@ -9,6 +9,15 @@ const HTML_CSS_INCLUDE = [ "/style/theme-hub.css.php" ];
 const HTML_USE_CORE = true;
 const HTML_SHOW_FOOTER = true;
 
+// ** Modes ** //
+// Inactive (no event scheduled)
+// Suggestion (week 5-2)
+// Slaughter (week 2-1)
+// Voting (week 1 to 2 days)
+// Final Voting 2 days to start - 30 minutes)
+// Announcement (start to +3 weeks)
+// Coming Soon (next event scheduled)
+
 ?>
 <?php template_GetHeader(); ?>
 	<div class="header">
