@@ -4,7 +4,9 @@
 			echo "<!-- ";
 		}
 		else {
-			echo "<script>function __(){alert('Helpful debug message goes here');}</script>";
+			if (isset($_GET['debug'])) {
+				echo "<script>function __(){alert('Helpful debug message goes here');}</script>";
+			}
 			echo "<div class='footer'>";
 		}
 		
