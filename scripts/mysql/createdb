@@ -6,11 +6,91 @@ require_once __DIR__."/../../core/internal/core.php";
 db_ConnectOnly();
 
 if ( !db_IsConnected() ) {
-	exit 1;
+	db_Log("Failed to connect to Server");
+	exit(1);
 }
 
 if ( !db_DatabaseExists(CMW_DB_NAME) ) {
 	db_Query("CREATE DATABASE IF NOT EXISTS ".CMW_DB_NAME.";",true);
-	db_Log("Database '".CMW_DB_NAME."' created");
+	echo("Database '".CMW_DB_NAME."' created\n");
 }
+
+db_Close();
+db_Connect();
+
+if ( !db_IsConnected() ) {
+	db_Log("Failed to connect to Database '".CMW_DB_NAME."'");
+	exit(1);
+}
+
+// Database Setup //
+db_Query("SET storage_engine=InnoDB;");
+//db_Query("SET collation_server=utf8_unicode_ci;");
+//db_Query("SET character_set_server=utf8;");
+
+const DBTYPE_INNODB = " ENGINE=InnoDB";
+// NOTE: utf8 is 3 byte unicode. utf8mb4 is 4 byte. Required for Emoji.
+const CSTYPE_UTF8 = " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+const CSTYPE_LATIN = " CHARACTER SET latin1 COLLATE latin1_swedish_ci";		// Case Insensitive
+//const CSTYPE_LATIN = " CHARACTER SET latin1 COLLATE latin1_bin";			// Case Sensitive
+
+// https://dev.mysql.com/doc/refman/5.5/en/case-sensitivity.html
+
+const DBTYPE_DEFAULT = DBTYPE_INNODB . CSTYPE_UTF8;
+
+
+// Fetch Internal Config (State, Table Versions) //
+$Internal = [
+//	'version-cmw_suggestion' <= 1
+];
+
+function SaveInternal( $key ) {
+	global $Internal;
+	
+	// Write key
+	echo $key."\n";
+}
+
+
+{
+	// Suggestion Table //
+	$table_name = "cmw_suggestion";
+	$table_version = 0;
+	$original_version = 0;
+	if ( isset($Internal['version-'.$table_name]) ) {
+		$original_version = intval($Internal['version-'.$table_name]);
+		$table_version = $original_version;
+	}
+	$break_on = null;
+	
+	// NOTE: Break is optional!
+	switch ( $table_version ) {
+		case 0: {
+			echo("Create\n");
+			//db_Query("");
+			
+			if ( ++$table_version == $break_on ) break;
+		}
+		case 1: {
+			echo("Alter\n");
+			
+			if ( ++$table_version == $break_on ) break;
+		}
+		case 2: {
+			echo("Alter\n");
+			
+			if ( ++$table_version == $break_on ) break;
+		}
+	}
+	if ( $original_version != $table_version ) {
+		$Internal['version-'.$table_name] = $table_version;
+		SaveInternal('version-'.$table_name);
+		
+		echo("Upgraded '".$table_name."' from ".$original_version." to ".$table_version."\n");
+		
+		// TODO: SQL Dump Table nice format??
+	}
+}
+
+
 

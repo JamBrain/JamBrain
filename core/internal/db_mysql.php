@@ -13,7 +13,7 @@ function db_GetQueryCount() {
 // Logging function specific to database operations //
 function db_Log( $msg, $echo_too ) {
 	error_log( "CMW CORE INTERNAL DB ERROR: " . $msg );
-	if ( is_bool($echo_too) && $echo_too == true ) {
+	if ( isset($echo_too) && $echo_too == true ) {
 		echo "<strong>CMW CORE INTERNAL DB ERROR:</strong> " . $msg . "<br />";
 	}
 }
@@ -118,14 +118,14 @@ function db_Close() {
 function db_TableExists($name) {
 	if ( !db_IsConnected() ) {
 		global $db;
-		return mysqli_query($db,"SHOW TABLES LIKE '".$name."'")->num_rows) == 1;
+		return mysqli_query($db,"SHOW TABLES LIKE '".$name."'")->num_rows == 1;
 	}
 	return false;
 }
 function db_DatabaseExists($name) {
 	if ( !db_IsConnected() ) {
 		global $db;
-		return mysqli_query($db,"SHOW DATABASES LIKE '".$name."'")->num_rows) == 1;
+		return mysqli_query($db,"SHOW DATABASES LIKE '".$name."'")->num_rows == 1;
 	}
 	return false;
 }
