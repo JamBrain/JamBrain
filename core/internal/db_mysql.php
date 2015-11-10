@@ -37,7 +37,7 @@ function db_IsConnected() {
 	global $db;
 	return isset($db);
 }
-// Connect to the Database - Pass true if you don't want to log an error if already connected //
+// Connect to the Database //
 function db_Connect() {
 	// Safely call this multiple times, only the first time has any effect //
 	if ( !db_IsConnected() ) {
@@ -71,6 +71,40 @@ function db_Connect() {
     	// More info: http://stackoverflow.com/questions/279170/utf-8-all-the-way-through
 	}
 }
+// Connect to MySQL Server only //
+function db_ConnectOnly() {
+	// Safely call this multiple times, only the first time has any effect //
+	if ( !db_IsConnected() ) {
+		global $db;
+		$db = mysqli_init();
+		
+		//mysqli_options($db, ...);
+
+		if ( defined('CMW_DB_PORT') )
+			$port = CMW_DB_PORT;
+		else
+			$port = ini_get("mysqli.default_port");
+
+		if ( defined('CMW_DB_SOCKET') )
+			$socket = CMW_DB_SOCKET;
+		else
+			$socket = ini_get("mysqli.default_socket");	
+		
+		$flags = null;
+
+		// Connect to the database //
+		mysqli_real_connect($db,CMW_DB_HOST,CMW_DB_LOGIN,CMW_DB_PASSWORD,"",$port,$socket,$flags);
+		
+		// http://php.net/manual/en/mysqli.quickstart.connections.php
+		if ($db->connect_errno) {
+    		db_Log( "Failed to connect: (" . $db->connect_errno . ") " . $db->connect_error );
+    	}
+    	
+    	// Set character set to utf8mb4 mode (default is utf8mb3 (utf8). mb4 is required for Emoji)
+    	mysqli_set_charset($db,'utf8mb4');
+    	// More info: http://stackoverflow.com/questions/279170/utf-8-all-the-way-through
+	}
+}
 
 // Close Database Connection //
 function db_Close() {
@@ -79,6 +113,21 @@ function db_Close() {
 		global $db;
 		mysqli_close($db);
 	}
+}
+
+function db_TableExists($name) {
+	if ( !db_IsConnected() ) {
+		global $db;
+		return mysqli_query($db,"SHOW TABLES LIKE '".$name."'")->num_rows) == 1;
+	}
+	return false;
+}
+function db_DatabaseExists($name) {
+	if ( !db_IsConnected() ) {
+		global $db;
+		return mysqli_query($db,"SHOW DATABASES LIKE '".$name."'")->num_rows) == 1;
+	}
+	return false;
 }
 
 

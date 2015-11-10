@@ -1,0 +1,16 @@
+#!/usr/bin/env php
+<?php
+require_once __DIR__."/../../db.php";
+require_once __DIR__."/../../core/internal/core.php";
+
+db_ConnectOnly();
+
+if ( !db_IsConnected() ) {
+	exit 1;
+}
+
+if ( !db_DatabaseExists(CMW_DB_NAME) ) {
+	db_Query("CREATE DATABASE IF NOT EXISTS ".CMW_DB_NAME.";",true);
+	db_Log("Database '".CMW_DB_NAME."' created");
+}
+
