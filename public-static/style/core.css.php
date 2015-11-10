@@ -52,7 +52,7 @@ body {
 .view-mode:after { content: "[N]"; }
 
 /* High Resolution Display */
-@media (min-width : 1600px)  {
+@media <?php echo HIGHRES_QUERY; ?>  {
 	body {
 		font-size: 30rem;
 	}
@@ -62,7 +62,7 @@ body {
 	.view-mode:after { content: "[H]"; }
 }
 /* Tablet */
-@media (min-width : 601px) AND (max-width : 800px)  {
+@media <?php echo TABLET_QUERY; ?> {
 	body {
 		font-size: 17rem;
 	}
@@ -73,7 +73,7 @@ body {
 	.view-mode:after { content: "[T]"; }
 }
 /* Mobile */
-@media (max-width : 600px)  {
+@media <?php echo MOBILE_QUERY; ?> {
 	body {
 		font-size: 14rem;
 	}

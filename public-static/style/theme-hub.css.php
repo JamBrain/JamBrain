@@ -191,7 +191,7 @@ body > .footer {
 }
 
 /* Tablet and Mobile */
-@media (max-width : 800px) {
+@media <?php echo MOBILE_AND_TABLET_QUERY; ?> {
 	.body .main {
 		float:none;
 		width:auto;
