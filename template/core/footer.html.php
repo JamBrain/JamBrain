@@ -1,9 +1,15 @@
 <?php 
 	if (!isset($GLOBALS['HTML_NO_FOOTER'])) {
-		echo (isset($GLOBALS['HTML_SHOW_FOOTER'])) ? '<!-- ' : '<div class="footer">';
+		if (isset($GLOBALS['HTML_SHOW_FOOTER'])) {
+			echo "<!-- ";
+		}
+		else {
+			echo "<script>function __(){alert('Helpful debug message goes here');}</script>";
+			echo "<div class='footer'>";
+		}
 		
 		$FOOTER_DATA_POINT=0; 		
-		echo "Generated in <strong>".php_GetExecutionTime()."</strong>";
+		echo "Generated in <strong onclick='__();'>".php_GetExecutionTime()."</strong>";
 		
 		if (function_exists('db_GetQueryCount')) { 
 			if ($FOOTER_DATA_POINT++ > 0) { echo ','; } 
