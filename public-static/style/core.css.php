@@ -85,3 +85,11 @@ body > .footer {
 	font-size:0.6em;
 	padding:4px 0;
 }
+
+.left {
+	float:left;
+}
+.right {
+	float:right;
+}
+

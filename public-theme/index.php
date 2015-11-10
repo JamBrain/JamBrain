@@ -41,10 +41,12 @@ const THEME_MODE_SHORTNAMES = [
 $active_mode = 1;
 
 
-function ShowMode() {
+function ShowHeadline() {
 	global $active_mode;
-	echo "<div class='bigger'><strong>".strtoupper(THEME_MODE_NAMES[$active_mode])."</strong></div>";
-	echo "Round ends in: X days, 12 hours<br /><br />";
+	echo "<div class='headline'>";
+	echo "<div class='title bigger'><strong>".strtoupper(THEME_MODE_NAMES[$active_mode])."</strong></div>";
+	echo "<div class='clock' id='headline-clock'>Round ends in <span id='headline-time'>X days, 12 hours</span></div>";
+	echo "</div>";
 }
 
 function ShowLogin() {
@@ -55,29 +57,33 @@ function ShowComingSoon() {
 }
 function ShowThemeSuggestion() {
 ?>
-			<div class="big">Suggest a Theme</div>
-			<div class="form">
-				<input type="text" class="single-input" id="input-theme" placeholder="your suggestion" maxlength="64" />
-				<button type="button" class="submit-button" onclick="SubmitThemeForm();">Submit</button>
-			</div>
-			<small>You have <strong><span id="suggestions-left-count">10</span></strong> suggestion(s) left.</small><br />
-			<br />
-			<div class="info">
-				<div class="big">My Suggestions</div><br />
-				<div id="suggestions"></div>
-			</div>
+	<div class="action" id="action-suggest">
+		<div class="title bigger">Suggest a Theme</div>
+		<div class="form">
+			<input type="text" class="single-input" id="input-theme" placeholder="your suggestion" maxlength="64" />
+			<button type="button" class="submit-button" onclick="SubmitThemeForm();">Submit</button>
+		</div>
+		<div class="footnote small">You have <strong><span id="suggestions-left-count">10</span></strong> suggestion(s) left</div>
+	</div>
 <?php
 }
-
+function ShowExtra() {
+?>
+	<div class="suggestions" id="extra-my-suggestions">
+		<div class="title big">My Suggestions</div>
+		<div id="suggestions"></div>
+	</div>
+<?php
+}
 ?>
 <?php template_GetHeader(); ?>
 	<div class="header">
 		<?php 
 			if ( defined('EVENT_NAME') ) {
-				echo "<div class='page'>";
-				echo "<div class='event'>Event: <strong class='caps'>".EVENT_NAME."</strong></div>";
+				echo "<div class='event big inv'>Event: <strong class='caps' id='event-name'>".EVENT_NAME."</strong></div>";
+
+				echo "<div class='mode small caps'>";
 				$theme_mode_count = count(THEME_MODE_SHORTNAMES);
-				echo "<div class='mode caps'>";
 				for ( $idx = 1; $idx < $theme_mode_count-1; $idx++ ) {
 					if ($idx !== 1)
 						echo " | ";
@@ -86,8 +92,9 @@ function ShowThemeSuggestion() {
 					else
 						echo THEME_MODE_SHORTNAMES[$idx];
 				}
-				//echo "<div class='mode'><strong>Suggestion</strong> | Slaughter | Voting | Final Voting | Announcement</div>";
-				echo "</div></div>";
+				echo "</div>";
+
+				echo "<div class='date normal inv caps' id='event-date'>Starts at <strong>9:00 PM</strong> on Friday <strong>December 11th, 2015</strong> (EST)</strong></div>";
 			}
 		?>
 	</div>
@@ -115,25 +122,23 @@ function ShowThemeSuggestion() {
 
 			document.getElementById('suggestions-left-count').innerHTML = SuggestionsLeftCount;			
 			
-			document.getElementById('suggestions').innerHTML = Data.Theme + "<br />" + document.getElementById('suggestions').innerHTML;
+			document.getElementById('suggestions').innerHTML = "<div><span class='right'>✕</span><span>" + Data.Theme + "</span></div>" + document.getElementById('suggestions').innerHTML;
 			
 			// On failure //
 			// popup error //
 		}
 	</script>
 	<div class="body">
-<?php /*
-		<div class="side hide-on-mobile">
-			My Suggestions:<br />
-			Themes I like:<br />
-		</div>
-*/ ?>
 		<div class="main">
 			<?php
-				ShowMode();
+				ShowHeadline();
 				ShowThemeSuggestion();
 			?>
 		</div>
+		<div class="extra">
+			<?php
+				ShowExtra();
+			?>
+		</div>
 	</div>
-	<br />
 <?php template_GetFooter(); ?>

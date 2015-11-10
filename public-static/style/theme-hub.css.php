@@ -13,34 +13,44 @@
 	font-variant: small-caps;
 }
 
+.small {
+	font-size:0.7em;
+}
+.normal {
+	font-size:1.0em;
+}
+.big {
+	font-size:1.4em;
+}
+.bigger {
+	font-size:1.8em;
+}
+
 body {
 	color:#444;
-	background:#DDD;
+	background:#BBB;
 }
 
 /* Header */
 .header { 
 	text-align:center;
-	margin:0 0 1.0em 0;
-}
 
-.header .title { 
-	font-size:2.4em;
-	font-weight:700;
-}
-.header .event {
-	color:#FFF;
-	font-size:1.2em;
-}
-.header .mode { 
-	font-size:0.6em;
-	margin:0.3em 0;
-}
-
-
-.header .page {
 	background:#BBB;
 	padding:0.5em 0;
+}
+
+/* Invented Color */
+.header .inv {
+	color:#FFF;
+}
+
+.header .event {
+}
+.header .mode { 
+	margin:0.3em 0;
+}
+.header .date {
+	margin:0.3em 0;
 }
 
 /* Body */
@@ -48,8 +58,16 @@ body {
 }
 
 .body .main {
-/*	padding-left:5%;*/
+	background:#DDD;
+	padding:1em 0;
 	text-align:center;
+}
+
+.body .headline {
+	margin-bottom:1.0em;
+}
+.body .action {
+	margin-top:1.0em;
 }
 
 .body .side {
@@ -61,36 +79,45 @@ body {
 	width:20%;
 }
 
-.body .big {
-	font-size:1.4em;
-}
-.body .bigger {
-	font-size:1.8em;
-}
-
 h1, h2, h3, h4, h5, h6 {
 	margin:0;
 	font-variant: small-caps;
 }
 
-
-.info {
+.extra {
 	background:#CCC;
-	padding:12px;
+	padding:0.5em 0;
+}
+.extra .title {
+	margin-bottom:0.5em;
+}
+.extra > div {
+	width:24em;
+	margin:0 auto;
+}
+.extra > div > div > div {
+	text-overflow: ellipsis;
+	overflow:hidden;
+	white-space: nowrap;
 }
 
-
-.form {
+.action .title {
+	margin:0.5em 0;
 }
-.form > div, .form > input, .form > button {
+.action .form {
+}
+.action .form > div, .form > input, .form > button {
     display:inline;
 	vertical-align:middle;
+}
+.action .footnote {
+	margin-top:1.0em;
 }
 
 .single-input {
 	border:0;
 	padding:12px 20px;
-	margin:8px;
+	margin:0 0.5em;
 	border-radius:40px;
 	font-size:1em;
 	box-shadow: 0 1px 3px rgba(0,0,0,0.2);
@@ -109,7 +136,7 @@ h1, h2, h3, h4, h5, h6 {
 	color:#444;
 
 	padding:8px 24px;
-	margin:8px;
+	margin:0.5em;
 	border-radius:32px;
 	font-weight:700;
 	
@@ -139,4 +166,8 @@ h1, h2, h3, h4, h5, h6 {
 /*	border:6px solid #000;*/
 	
 	padding:8px 24px;
+}
+
+body > .footer {
+	padding:1.0em 0;
 }
