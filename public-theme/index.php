@@ -128,6 +128,8 @@ function ShowExtra() {
 			
 			// On failure //
 			// popup error //
+			
+			document.getElementById('input-theme').focus();
 		}
 	</script>
 	<div class="body">

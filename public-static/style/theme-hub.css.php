@@ -55,6 +55,7 @@ body {
 
 /* Body */
 .body {
+	background:#DDD;
 }
 
 .body .main {
@@ -85,14 +86,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .extra {
-	background:#CCC;
-	padding:0.5em 0;
+	padding:0.5em;
 }
 .extra .title {
 	margin-bottom:0.5em;
 }
 .extra > div {
-	width:24em;
+/*	width:20em;*/
 	margin:0 auto;
 }
 .extra > div > div > div {
@@ -170,4 +170,35 @@ h1, h2, h3, h4, h5, h6 {
 
 body > .footer {
 	padding:1.0em 0;
+}
+
+
+/* Normal and HiRes */
+.body {
+	overflow:hidden;
+}
+.body .main {
+	float:left;
+	width:65%;
+	padding-left:2.5%;
+	padding-right:2.5%;
+}
+.body .extra {
+	float:left;
+	width:25%;
+	padding-left:2.5%;
+	padding-right:2.5%;
+}
+
+/* Tablet and Mobile */
+@media (max-width : 800px) {
+	.body .main {
+		float:none;
+		width:auto;
+	}
+	.body .extra {
+		float:none;
+		width:auto;
+		background:#CCC;
+	}
 }
