@@ -1,31 +1,5 @@
 <?php require_once __DIR__."/../../style.php"; ?>
 
-.noselect {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.caps {
-	font-variant: small-caps;
-}
-
-.small {
-	font-size:0.7em;
-}
-.normal {
-	font-size:1.0em;
-}
-.big {
-	font-size:1.4em;
-}
-.bigger {
-	font-size:1.8em;
-}
-
 body {
 	color:#444;
 	background:#BBB;
@@ -34,8 +8,6 @@ body {
 /* Header */
 .header { 
 	text-align:center;
-
-	background:#BBB;
 	padding:0.5em 0;
 }
 
@@ -53,14 +25,14 @@ body {
 	margin:0.3em 0;
 }
 
+
 /* Body */
 .body {
 	background:#DDD;
 }
 
 .body .main {
-	background:#DDD;
-	padding:1em 0;
+	padding:1.0em 2.0em;
 	text-align:center;
 }
 
@@ -71,28 +43,15 @@ body {
 	margin-top:1.0em;
 }
 
-.body .side {
-/*	padding-right:5%;*/
-	/*hack*/
-	height:200px;
-	
-	float:right;
-	width:20%;
-}
-
-h1, h2, h3, h4, h5, h6 {
-	margin:0;
-	font-variant: small-caps;
-}
-
 .extra {
-	padding:0.5em;
+	padding:1.0em;
+	background:#CCC;
+	box-shadow: 0 0px 3px rgba(0,0,0,0.2);
 }
 .extra .title {
 	margin-bottom:0.5em;
 }
 .extra > div {
-/*	width:20em;*/
 	margin:0 auto;
 }
 .extra > div > div > div {
@@ -120,7 +79,7 @@ h1, h2, h3, h4, h5, h6 {
 	margin:0 0.5em;
 	border-radius:40px;
 	font-size:1em;
-	box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+	box-shadow: 0 1px 4px rgba(0,0,0,0.2);
 	background:#EEE;
 	
 	outline: none;
@@ -139,13 +98,6 @@ h1, h2, h3, h4, h5, h6 {
 	margin:0.5em;
 	border-radius:32px;
 	font-weight:700;
-	
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
     
     outline: none;
 }
@@ -161,9 +113,6 @@ h1, h2, h3, h4, h5, h6 {
 	background:#A42;
 	border:2px solid #F84;
 	color:#F84;
-
-/*	background:#48F;*/
-/*	border:6px solid #000;*/
 	
 	padding:8px 24px;
 }
@@ -172,33 +121,63 @@ body > .footer {
 	padding:1.0em 0;
 }
 
+.sg-item {
+}
+.sg-item-x {
+	float:right;
+	margin-left:1.0em;
+	padding:0 0.25em;
+	text-shadow: 0 0px 2px rgba(0,0,0,0.3);
+	cursor:pointer;
+}
+.sg-item-x:hover {
+	color:#F00;
+}
+.sg-item-x:active {
+	color:#FF0;
+}
+
+/* Can't Select This */
+.submit-button, .sg-item-x {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 
 /* Normal and HiRes */
 .body {
+	position:relative;
+	
 	overflow:hidden;
+	text-align:center;
+	white-space:nowrap;
+}
+.body > div {
+	display:inline-block;
+	vertical-align:top;
 }
 .body .main {
-	float:left;
-	width:65%;
-	padding-left:2.5%;
-	padding-right:2.5%;
 }
 .body .extra {
-	float:left;
-	width:25%;
-	padding-left:2.5%;
-	padding-right:2.5%;
+	min-width:12em;
+	max-width:30%;
+	text-align:left;
+	margin:1em 0;
 }
 
 /* Tablet and Mobile */
-@media <?php echo MOBILE_AND_TABLET_QUERY; ?> {
+@media <?= MOBILE_AND_TABLET_QUERY ?> {
+	.body > div {
+		display:block;
+	}
 	.body .main {
-		float:none;
-		width:auto;
 	}
 	.body .extra {
-		float:none;
-		width:auto;
-		background:#CCC;
+		max-width:none;
+		font-size:1.4em;
+		margin:0;
 	}
 }

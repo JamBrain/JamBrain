@@ -14,6 +14,8 @@ html {
 	
 	/* Weight (400 is Normal, 300 is Light/Book) */
 	font-weight:300;
+
+	color:#333;
 }
 strong, h1, h2, h3, h4, h5, h6 {
 	font-weight:700;
@@ -24,7 +26,6 @@ small {
 
 body {
 	margin:0;
-	color:#333;
 }
 img, a {
 	border:none;
@@ -52,7 +53,7 @@ body {
 .view-mode:after { content: "[N]"; }
 
 /* High Resolution Display */
-@media <?php echo HIGHRES_QUERY; ?>  {
+@media <?= HIGHRES_QUERY ?>  {
 	body {
 		font-size: 30rem;
 	}
@@ -62,7 +63,7 @@ body {
 	.view-mode:after { content: "[H]"; }
 }
 /* Tablet */
-@media <?php echo TABLET_QUERY; ?> {
+@media <?= TABLET_QUERY ?> {
 	body {
 		font-size: 17rem;
 	}
@@ -73,7 +74,7 @@ body {
 	.view-mode:after { content: "[T]"; }
 }
 /* Mobile */
-@media <?php echo MOBILE_QUERY; ?> {
+@media <?= MOBILE_QUERY ?> {
 	body {
 		font-size: 14rem;
 	}
@@ -101,3 +102,29 @@ body > .footer {
 	float:right;
 }
 
+
+.no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.caps {
+	font-variant: small-caps;
+}
+
+.small {
+	font-size:0.7em;
+}
+.normal {
+	font-size:1.0em;
+}
+.big {
+	font-size:1.4em;
+}
+.bigger {
+	font-size:1.8em;
+}

@@ -11,7 +11,7 @@
 		}
 		
 		$FOOTER_DATA_POINT=0; 		
-		echo "Generated in <strong onclick='__();'>".php_GetExecutionTime()."</strong>";
+		echo "Generated in <strong onclick='__();'>".core_GetExecutionTime()."</strong>";
 		
 		if (function_exists('db_GetQueryCount')) { 
 			if ($FOOTER_DATA_POINT++ > 0) { echo ','; } 

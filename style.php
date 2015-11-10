@@ -6,23 +6,7 @@
 **/
 
 // Benchmarking //
-$PHP_SCRIPT_TIMER = microtime(true);
-function php_GetExecutionTime( $print = false ) {
-	global $PHP_SCRIPT_TIMER;
-	
-	$timediff = microtime(true) - $PHP_SCRIPT_TIMER;
-	
-	if ( $timediff < 1.0 )
-		$ret = number_format( $timediff * 1000.0, 2 ) . ' ms';
-	else if ( $timediff === 1.0 )
-		$ret = "1 second";
-	else
-		$ret = number_format( $timediff, 4 ) . ' seconds';
-
-	if ( $print )
-		echo $ret;
-	return $ret;
-}
+$_CORE_SCRIPT_TIMER = microtime(true);
 
 // Emit the CSS content type //
 header("Content-Type: text/css; charset: UTF-8");

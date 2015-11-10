@@ -32,6 +32,18 @@ function core_OnWhitelist( $ip, $list ) {
 	return false;
 }
 
+function core_GetExecutionTime() {
+	global $_CORE_SCRIPT_TIMER;
+	
+	$timediff = microtime(true) - $_CORE_SCRIPT_TIMER;
+	
+	if ( $timediff < 1.0 )
+		return number_format( $timediff * 1000.0, 2 ) . ' ms';
+	else if ( $timediff === 1.0 )
+		return "1 second";
+	return number_format( $timediff, 4 ) . ' seconds';
+}
+
 // Parse the API Action URL (array of strings) //
 function core_ParseActionURL() {
 	// If PATH_INFO is set, then Apache figured out our parts for us //
@@ -141,4 +153,3 @@ function base48_Fix( $str, $chars='0123456789abdeghjkmnopqrsvwxyzABDEHJKLMNPQRVW
 	return preg_replace("/[^".$chars."]/", '', $str );
 }
 // - ----------------------------------------------------------------------------------------- - //
-?>
