@@ -25,6 +25,8 @@
 			if ($FOOTER_DATA_POINT++ > 0) { echo ','; }
 			echo " without opcache";
 		}
+		
+		echo " <span class='view-mode'></span>";
 
 		echo (isset($GLOBALS['HTML_SHOW_FOOTER'])) ? ' -->' : '</div>'; 
 	}

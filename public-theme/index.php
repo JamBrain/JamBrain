@@ -122,7 +122,9 @@ function ShowExtra() {
 
 			document.getElementById('suggestions-left-count').innerHTML = SuggestionsLeftCount;			
 			
-			document.getElementById('suggestions').innerHTML = "<div><span class='right'>✕</span><span>" + Data.Theme + "</span></div>" + document.getElementById('suggestions').innerHTML;
+			document.getElementById('suggestions').innerHTML = 
+				"<div class='item'><span class='right'>✕</span><span>" + Data.Theme + "</span></div>" +
+				document.getElementById('suggestions').innerHTML;
 			
 			// On failure //
 			// popup error //

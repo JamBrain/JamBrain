@@ -64,7 +64,7 @@ body {
 }
 
 .body .headline {
-	margin-bottom:1.0em;
+	margin-bottom:2.0em;
 }
 .body .action {
 	margin-top:1.0em;

@@ -49,6 +49,8 @@ body {
 
 .hide-on-mobile {}
 
+.view-mode:after { content: "[N]"; }
+
 /* High Resolution Display */
 @media (min-width : 1600px)  {
 	body {
@@ -56,6 +58,8 @@ body {
 	}
 	.is-normal { display:none; }
 	.is-hires { display:inline-block; }
+
+	.view-mode:after { content: "[H]"; }
 }
 /* Tablet */
 @media (min-width : 601px) AND (max-width : 800px)  {
@@ -65,6 +69,8 @@ body {
 	.no-tablet { display:none; }
 	.is-normal { display:none; }
 	.is-tablet { display:inline-block; }
+
+	.view-mode:after { content: "[T]"; }
 }
 /* Mobile */
 @media (max-width : 600px)  {
@@ -77,6 +83,8 @@ body {
 	.is-mobile { display:inline-block; }
 
 	.hide-on-mobile { display:none }
+	
+	.view-mode:after { content: "[M]"; }
 }
 
 body > .footer {
