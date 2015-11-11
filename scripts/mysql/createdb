@@ -101,7 +101,7 @@ else
 
 // Create/Upgrade Table //
 $table_name = CMW_TABLE_CONFIG;
-echo "* ".CMW_TABLE_CONFIG."\n";
+echo "* ".$table_name."\n";
 $version = intval($CONFIG[$table_name]);
 switch ($version) {
 	case 0:
@@ -135,6 +135,54 @@ if ( $version != intval($CONFIG[$table_name]) ) {
 	echo $table_name." upgraded (version ".$CONFIG[$table_name]." -> ".$version.")\n";
 	$CONFIG[$table_name] = $version;
 }
+
+
+
+
+// Create/Upgrade Table //
+$table_name = CMW_TABLE_THEME_IDEA;
+echo "* ".$table_name."\n";
+$version = intval($CONFIG[$table_name]);
+switch ($version) {
+	case 0:
+		db_DoQuery(
+			"CREATE TABLE ".$table_name." (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
+					UNIQUE,
+				theme VARCHAR(64) NOT NULL DEFAULT '',
+				uid BIGINT UNSIGNED NOT NULL,
+					INDEX(uid),
+				`timestamp` DATETIME NOT NULL
+			);");
+		echo $table_name." created\n";
+		$version++; if (isset($max_version) && $version == $max_version) break;
+};
+if ( $version != intval($CONFIG[$table_name]) ) {
+	db_DoQuery(
+		"INSERT ".CMW_TABLE_CONFIG." (
+			`key`, `value`, `timestamp`
+		)
+		VALUES ( 
+			?, ?, NOW()
+		);",
+		$table_name,
+		strval($version)
+	);
+	
+	echo $table_name." upgraded (version ".$CONFIG[$table_name]." -> ".$version.")\n";
+	$CONFIG[$table_name] = $version;
+}
+
+
+db_DoQuery(
+	"INSERT ".CMW_TABLE_THEME_IDEA." (
+		uid, theme, `timestamp`
+	)
+	VALUES ( 
+		?, ?, NOW()
+	)",
+	225, "hoo haw"
+);
 
 
 

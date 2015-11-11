@@ -113,9 +113,11 @@ function ShowExtra() { ?>
 			return;
 		
 		var Data = {
-			"Theme":Theme
+			"theme":Theme
 		};
 		console.log(Data);
+		
+		xhr_PostJSON("/api-theme.php","uid=255&theme="+Data.theme, function() {console.log("I DID IT");});
 		
 		// Set Loading state //
 		
@@ -126,7 +128,7 @@ function ShowExtra() { ?>
 		sg_UpdateCount();
 
 		document.getElementById('suggestions').innerHTML = 
-			"<div class='sg-item' id='sg-item-"+Id+"'><span class='sg-item-x' onclick='sg_Delete("+Id+")'>✕</span><span>" + Data.Theme + "</span></div>" +
+			"<div class='sg-item' id='sg-item-"+Id+"'><span class='sg-item-x' onclick='sg_Delete("+Id+")'>✕</span><span>" + Data.theme + "</span></div>" +
 			document.getElementById('suggestions').innerHTML;
 		
 		// On failure //
