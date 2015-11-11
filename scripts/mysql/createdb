@@ -59,13 +59,14 @@ function DoCreate( $table_name, ...$args ) {
 
 // Load Configuration //
 config_Load();
+global $CONFIG;
 
 // Create/Upgrade Table //
 {
 	$table_name = CMW_TABLE_CONFIG;
 
 	echo "* ".$table_name."\n";
-	$version = intval($CONFIG[$table_name]);
+	$version = isset($CONFIG[$table_name])?intval($CONFIG[$table_name]):0;
 	$old_version = $version;
 
 	switch ($version) {
@@ -76,7 +77,7 @@ config_Load();
 					UNIQUE,
 				`key` VARCHAR(64) CHARSET latin1 NOT NULL DEFAULT '',
 					INDEX(`key`),
-				`value` VARCHAR(64) NOT NULL DEFAULT '',
+				`value` VARCHAR(128) NOT NULL DEFAULT '',
 				`timestamp` DATETIME NOT NULL
 			);");
 		$version++; if (isset($max_version) && $version == $max_version) break;
@@ -86,6 +87,27 @@ config_Load();
 	if ( config_Set($table_name,strval($version)) ) {
 		echo $table_name." upgraded (version ".$old_version." -> ".$version.")\n";	
 	}
+	
+	$DIFF_CONFIG = array_diff_key(DEFAULT_CONFIG,$CONFIG);
+	$DIFF_CONFIG_COUNT = count($DIFF_CONFIG);
+	if ( $DIFF_CONFIG_COUNT > 0 ) {
+		echo "Adding ".$DIFF_CONFIG_COUNT." missing element(s) to ".$table_name."\n";
+		
+		foreach ( $DIFF_CONFIG as $key => $value ) {
+			echo "  * ".$key." = ".(is_string($value)?("\"".$value."\"\n"):($value."\n"));
+			config_Set($key,$value);
+		}
+	}
+	
+	$DIFF_CONFIG = array_diff_key($CONFIG,DEFAULT_CONFIG);
+	$DIFF_CONFIG_COUNT = count($DIFF_CONFIG);
+	if ( $DIFF_CONFIG_COUNT > 0 ) {
+		echo "NOTE: There are ".$DIFF_CONFIG_COUNT." element(s) not found in DEFAULT_CONFIG\n";
+		
+		foreach ( $DIFF_CONFIG as $key => $value ) {
+			echo "  * ".$key." = ".(is_string($value)?("\"".$value."\"\n"):($value."\n"));
+		}
+	}
 }
 
 
@@ -94,7 +116,7 @@ config_Load();
 	$table_name = CMW_TABLE_THEME_IDEA;
 
 	echo "* ".$table_name."\n";
-	$version = intval($CONFIG[$table_name]);
+	$version = isset($CONFIG[$table_name])?intval($CONFIG[$table_name]):0;
 	$old_version = $version;
 
 	switch ($version) {
@@ -105,8 +127,8 @@ config_Load();
 					UNIQUE,
 				node BIGINT UNSIGNED NOT NULL,
 					INDEX(node),
-				uid BIGINT UNSIGNED NOT NULL,
-					INDEX(uid),
+				author BIGINT UNSIGNED NOT NULL,
+					INDEX(author),
 				theme VARCHAR(64) NOT NULL,
 				`timestamp` DATETIME NOT NULL
 			);");
@@ -119,7 +141,7 @@ config_Load();
 
 //db_DoQuery(
 //	"INSERT ".CMW_TABLE_THEME_IDEA." (
-//		node, uid, theme, `timestamp`
+//		node, author, theme, `timestamp`
 //	)
 //	VALUES ( 
 //		?, ?, NOW()

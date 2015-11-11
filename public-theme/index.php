@@ -122,7 +122,10 @@ function ShowExtra() { ?>
 		};
 		console.log(Data);
 		
-		xhr_PostJSON("/api-theme.php","action=SUBMIT&uid=255&theme="+Data.theme, function() {console.log("I DID IT");});
+		var node_id = 100;
+		var author_id = 255;
+		
+		xhr_PostJSON("/api-theme.php","action=SUBMIT&node="+node_id+"&author="+author_id+"&theme="+Data.theme, function() {console.log("I DID IT");});
 		
 		// Set Loading state //
 		

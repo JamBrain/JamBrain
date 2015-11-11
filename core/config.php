@@ -2,6 +2,8 @@
 /**
  * Config Library
  *
+ * The Configuration Library is a smart key-value store that keeps a record of all changes.
+ *
  * @file
  */
 require_once __DIR__ . "/../db.php";
@@ -9,18 +11,20 @@ require_once __DIR__ . "/../db.php";
 // Default Configuration //
 const DEFAULT_CONFIG = [
 	'active' => '1',
-	CMW_TABLE_CONFIG => '0',
 
-	CMW_TABLE_NODE => '0',
-	CMW_TABLE_NODE_META => '0',
-	CMW_TABLE_NODE_DIFF => '0',
-	CMW_TABLE_NODE_LOVE => '0',				// Like
-	CMW_TABLE_NODE_STAR => '0',				// Bookmark
+	// Database Table Versions //
+	CMW_TABLE_CONFIG => '0',				// Configuration Table (i.e. this)
+
+//	CMW_TABLE_NODE => '0',
+//	CMW_TABLE_NODE_META => '0',
+//	CMW_TABLE_NODE_DIFF => '0',
+//	CMW_TABLE_NODE_LOVE => '0',				// Like
+//	CMW_TABLE_NODE_STAR => '0',				// Bookmark
 	                               
-	CMW_TABLE_USER => '0',
-	                               
-	CMW_TABLE_COMMENT => '0',
-	CMW_TABLE_COMMENT_LOVE => '0',			// Like
+//	CMW_TABLE_USER => '0',
+//	                               
+//	CMW_TABLE_COMMENT => '0',
+//	CMW_TABLE_COMMENT_LOVE => '0',			// Like
 	
 	CMW_TABLE_SCHEDULE_TIMESPAN => '0',
 	CMW_TABLE_SCHEDULE_SUBSCRIPTION => '0',
@@ -33,8 +37,16 @@ const DEFAULT_CONFIG = [
 	
 	CMW_TABLE_PROXY_USER => '0',			// Placeholder Legacy User List
 	
-	'event-active' => '0',
+	'event-active' => '0',					// Currently Active Event
+	
+	'alert' => "",							// Alert message across all sites
+	'main-alert' => "",						// Alert message for main site
+	'theme-alert' => "",					// Alert message for the theme micro-site
+	'api-alert' => "",						// Alert message for API site
+	'jammer.bio-alert' => "",				// Alert message for the jammer.bio
+	'jammer.tv-alert' => "",				// Alert message for the jammer.tv
 ];
+
 
 function _config_Set($key,$value) {
 	return db_DoQuery(
@@ -49,7 +61,7 @@ function _config_Set($key,$value) {
 	);
 }
 function config_Set($key,$value) {
-	if ( $GLOBALS['CONFIG'][$key] !== $value ) {
+	if ( !isset($GLOBALS['CONFIG'][$key]) || $GLOBALS['CONFIG'][$key] !== $value ) {
 		if ( !_config_Set($key,$value) )
 			return false;
 		$GLOBALS['CONFIG'][$key] = $value;
@@ -67,10 +79,11 @@ function _config_Load() {
 	);
 }
 function config_Load() {
-	$DB_CONFIG = _config_Load();
-	
-	if (!empty($DB_CONFIG))
-		$GLOBALS['CONFIG'] = array_replace(DEFAULT_CONFIG,$DB_CONFIG);
-	else
-		$GLOBALS['CONFIG'] = DEFAULT_CONFIG;
+	$GLOBALS['CONFIG'] = _config_Load();
+//	$DB_CONFIG = _config_Load();
+//	
+//	if (!empty($DB_CONFIG))
+//		$GLOBALS['CONFIG'] = array_replace(DEFAULT_CONFIG,$DB_CONFIG);
+//	else
+//		$GLOBALS['CONFIG'] = DEFAULT_CONFIG;
 }

@@ -21,22 +21,22 @@ function theme_GetUser() {
 }
 
 // Query Functions - PLEASE SANITIZE BEFORE CALLING //
-function theme_Submit($uid, $theme) {
+function theme_Submit($node, $uid, $theme) {
 	return db_DoQuery(
 		"INSERT INTO ".CMW_TABLE_THEME_IDEA." (
-			uid, theme, `timestamp`
+			node, author, theme, `timestamp`
 		)
 		VALUES ( 
-			?, ?, NOW()
+			?, ?, ?, NOW()
 		)",
-		$uid, $theme
+		$node, $uid, $theme
 	);
 }
-function theme_GetMyIdeas($uid) {
+function theme_GetMyIdeas($node, $uid) {
 	return db_DoFetch(
 		"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
-		WHERE `uid`=?",
-		$uid
+		WHERE node=? AND author=?",
+		$node, $uid
 	);
 }
 
@@ -45,9 +45,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$action = trim($_POST['action']);			// TODO: sanitize
 	
 //	$uid = theme_GetUser();
-	$uid = isset($_POST['uid']) ? intval($_POST['uid']) : 0;
+	$uid = isset($_POST['author']) ? intval($_POST['author']) : 0;
 	
-	if ( $uid > 0 ) {
+	$node = isset($_POST['node']) ? intval($_POST['node']) : 0;
+	// TODO: Validate node as an active event
+	
+	if ( ($uid > 0) && ($node > 0) ) {
 		if ( $action == "LOGIN" ) {
 		}
 		else if ( $action == "SUBMIT" ) {
@@ -59,14 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	
 				db_Connect();
 	
-				theme_Submit($uid,$theme);
+				theme_Submit($node,$uid,$theme);
 			}
 		}
 		else if ( $action == "GET" ) {
 			db_Connect();
 			
 			// Return my themes //
-			$response['themes'] = theme_GetMyIdeas($uid);
+			$response['themes'] = theme_GetMyIdeas($node,$uid);
 		}
 	}
 }
