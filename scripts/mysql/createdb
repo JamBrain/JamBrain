@@ -83,7 +83,14 @@ $DEFAULT_CONFIG = [
 
 // Load Config Table from File //
 if ( db_TableExists(CMW_TABLE_CONFIG) ) {
-	$DB_CONFIG = db_DoFetchPair("SELECT `key`,`value` FROM ".CMW_TABLE_CONFIG.";");
+//	var_dump( db_DoFetch( "SELECT MAX(id) FROM ".CMW_TABLE_CONFIG." GROUP BY `key`" );
+	
+	$DB_CONFIG = db_DoFetchPair(
+		"SELECT `key`,`value` FROM ".CMW_TABLE_CONFIG."
+		WHERE id IN (
+			SELECT MAX(id) FROM ".CMW_TABLE_CONFIG." GROUP BY `key`
+		);"
+	);
 }
 
 // Merge Config Tables, assuming it existed //
@@ -91,7 +98,6 @@ if (!empty($DB_CONFIG))
 	$CONFIG = array_replace($DEFAULT_CONFIG,$DB_CONFIG);
 else
 	$CONFIG = $DEFAULT_CONFIG;
-
 
 // Create/Upgrade Table //
 $table_name = CMW_TABLE_CONFIG;
@@ -115,16 +121,6 @@ switch ($version) {
 		$version++; if (isset($max_version) && $version == $max_version) break;
 };
 if ( $version != intval($CONFIG[$table_name]) ) {
-//	db_DoQuery(
-//		"INSERT IGNORE ".CMW_TABLE_CONFIG." (
-//			`key`, `value`
-//		)
-//		VALUES ( 
-//			?, ? 
-//		)
-//		ON DUPLICATE KEY UPDATE
-//			`value`=VALUES(`value`)
-//		;",
 	db_DoQuery(
 		"INSERT ".CMW_TABLE_CONFIG." (
 			`key`, `value`, `timestamp`
@@ -142,78 +138,23 @@ if ( $version != intval($CONFIG[$table_name]) ) {
 
 
 
-/*
-exit(0);
+//	"CREATE TABLE ".$table_name." (
+//		id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
+//			UNIQUE,
+//		`key` VARCHAR(64) CHARSET latin1 NOT NULL DEFAULT '',
+//			INDEX(`key`),
+//		`value` VARCHAR(64) NOT NULL DEFAULT ''
+//	);");
 
-//$data = db_DoFetchKey("id","SELECT id,type,name FROM cmw_node WHERE type=? LIMIT ?;",
-//	"game",
-//	"4"
-//);
-$data = db_DoFetch("SELECT id,type,name FROM cmw_node WHERE type=? LIMIT ?;",
-	"event",
-	3
-);
+// 	$DB_CONFIG = db_DoFetchPair("SELECT `key`,`value` FROM ".CMW_TABLE_CONFIG.";");
 
-if ( !empty($data) ) {
-	print_r($data);
-}
-else {
-	echo "nope";
-}
-
-
-
-
-// Fetch Internal Config (State, Table Versions) //
-$Internal = [
-//	'version-cmw_suggestion' <= 1
-];
-
-function SaveInternal( $key ) {
-	global $Internal;
-	
-	// Write key
-	echo $key."\n";
-}
-
-{
-	// Suggestion Table //
-	$table_name = "cmw_suggestion";
-	$table_version = 0;
-	$original_version = 0;
-	if ( isset($Internal['version-'.$table_name]) ) {
-		$original_version = intval($Internal['version-'.$table_name]);
-		$table_version = $original_version;
-	}
-	$break_on = null;
-	
-	// NOTE: Break is optional!
-	switch ( $table_version ) {
-		case 0: {
-			echo("Create\n");
-			//db_Query("");
-			
-			if ( ++$table_version == $break_on ) break;
-		}
-		case 1: {
-			echo("Alter\n");
-			
-			if ( ++$table_version == $break_on ) break;
-		}
-		case 2: {
-			echo("Alter\n");
-			
-			if ( ++$table_version == $break_on ) break;
-		}
-	}
-	if ( $original_version != $table_version ) {
-		$Internal['version-'.$table_name] = $table_version;
-		SaveInternal('version-'.$table_name);
-		
-		echo("Upgraded '".$table_name."' from ".$original_version." to ".$table_version."\n");
-		
-		// TODO: SQL Dump Table nice format??
-	}
-}
-
-*/
+//	db_DoQuery(
+//		"INSERT IGNORE ".CMW_TABLE_CONFIG." (
+//			`key`, `value`
+//		)
+//		VALUES ( 
+//			?, ? 
+//		)
+//		ON DUPLICATE KEY UPDATE
+//			`value`=VALUES(`value`)
+//		;",
