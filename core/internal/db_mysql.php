@@ -11,25 +11,30 @@ function db_GetQueryCount() {
 }
 
 // Logging function specific to database operations //
-function db_Log( $msg, $echo_too ) {
-	error_log( "CMW CORE DB ERROR: " . $msg );
+function db_Log( $msg, $echo_too = false ) {
+	error_log( "CMW DB ERROR: " . $msg );
 	if ( isset($echo_too) && $echo_too == true ) {
-		echo "<strong>CMW CORE DB ERROR:</strong> " . $msg . "<br />";
+		echo "<strong>CMW DB ERROR:</strong> " . $msg . "<br />";
 	}
+}
+function db_LogError( $echo_too = false ) {
+	global $db;
+	if ( isset($db) )
+		db_Log( mysqli_error($db), $echo_too );
 }
 
 // Check database config //
 if ( !defined('CMW_DB_HOST') ) {
-	db_Log( "CMW_DB_HOST not set" );
+	die(db_Log("CMW_DB_HOST not set"));
 }
 if ( !defined('CMW_DB_NAME') ) {
-	db_Log( "CMW_DB_NAME not set." );
+	die(db_Log("CMW_DB_NAME not set."));
 }
 if ( !defined('CMW_DB_LOGIN') ) {
-	db_Log( "CMW_DB_LOGIN not set." );
+	die(db_Log("CMW_DB_LOGIN not set."));
 }
 if ( !defined('CMW_DB_PASSWORD') ) {
-	db_Log( "CMW_DB_PASSWORD not set." );
+	die(db_Log("CMW_DB_PASSWORD not set."));
 }
 
 // Are we connected and ready to use the Database? //
@@ -37,8 +42,15 @@ function db_IsConnected() {
 	global $db;
 	return isset($db);
 }
+
+define('_INI_MYSQLI_DEFAULT_PORT',ini_get("mysqli.default_port"));
+define('_INI_MYSQLI_DEFAULT_SOCKET',ini_get("mysqli.default_socket"));
+
 // Connect to the Database //
-function db_Connect() {
+function db_Connect(
+	$host=CMW_DB_HOST,$login=CMW_DB_LOGIN,$password=CMW_DB_PASSWORD,$name=CMW_DB_NAME,
+	$port=_INI_MYSQLI_DEFAULT_PORT,$socket=_INI_MYSQLI_DEFAULT_SOCKET
+) {
 	// Safely call this multiple times, only the first time has any effect //
 	if ( !db_IsConnected() ) {
 		global $db;
@@ -48,18 +60,14 @@ function db_Connect() {
 
 		if ( defined('CMW_DB_PORT') )
 			$port = CMW_DB_PORT;
-		else
-			$port = ini_get("mysqli.default_port");
 
 		if ( defined('CMW_DB_SOCKET') )
 			$socket = CMW_DB_SOCKET;
-		else
-			$socket = ini_get("mysqli.default_socket");	
 		
 		$flags = null;
 
 		// Connect to the database //
-		mysqli_real_connect($db,CMW_DB_HOST,CMW_DB_LOGIN,CMW_DB_PASSWORD,CMW_DB_NAME,$port,$socket,$flags);
+		mysqli_real_connect($db,$host,$login,$password,$name,$port,$socket,$flags);
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
 		if ($db->connect_errno) {
@@ -72,38 +80,11 @@ function db_Connect() {
 	}
 }
 // Connect to MySQL Server only //
-function db_ConnectOnly() {
-	// Safely call this multiple times, only the first time has any effect //
-	if ( !db_IsConnected() ) {
-		global $db;
-		$db = mysqli_init();
-		
-		//mysqli_options($db, ...);
-
-		if ( defined('CMW_DB_PORT') )
-			$port = CMW_DB_PORT;
-		else
-			$port = ini_get("mysqli.default_port");
-
-		if ( defined('CMW_DB_SOCKET') )
-			$socket = CMW_DB_SOCKET;
-		else
-			$socket = ini_get("mysqli.default_socket");	
-		
-		$flags = null;
-
-		// Connect to the database //
-		mysqli_real_connect($db,CMW_DB_HOST,CMW_DB_LOGIN,CMW_DB_PASSWORD,"",$port,$socket,$flags);
-		
-		// http://php.net/manual/en/mysqli.quickstart.connections.php
-		if ($db->connect_errno) {
-    		db_Log( "Failed to connect: (" . $db->connect_errno . ") " . $db->connect_error );
-    	}
-    	
-    	// Set character set to utf8mb4 mode (default is utf8mb3 (utf8). mb4 is required for Emoji)
-    	mysqli_set_charset($db,'utf8mb4');
-    	// More info: http://stackoverflow.com/questions/279170/utf-8-all-the-way-through
-	}
+function db_ConnectOnly(
+	$host=CMW_DB_HOST,$login=CMW_DB_LOGIN,$password=CMW_DB_PASSWORD,
+	$port=_INI_MYSQLI_DEFAULT_PORT,$socket=_INI_MYSQLI_DEFAULT_SOCKET
+) {
+	return db_Connect($host,$login,$password,"",$port,$socket);
 }
 
 // Close Database Connection //
@@ -153,10 +134,9 @@ function db_DoSchema( &$row, &$schema ) {
 
 // Unsafe "run any query" function. Queries don't return results. Use db_fetch instead. //
 function db_Query($query,$ignore_errors=false) {
-	global $db;
 	global $DB_QUERY_COUNT;
 	$DB_QUERY_COUNT++;
-	return mysqli_query($db,$query) or $ignore_errors or die(mysqli_error($db)."\n");
+	return mysqli_query($GLOBALS['db'],$query) or $ignore_errors or die(mysqli_error($GLOBALS['db'])."\n");
 }
 
 // Unsafe "run any fetch query" function. Returns fields as an Associative Array. //
@@ -478,13 +458,14 @@ function _db_ParseArgList( $args, $schema ) {
 }
 
 
+/* *********************************************************************************************** */
+
 
 // NOTE: Prepare statements are only faster in places you DON'T use the "in" keyword.
 //	Prepared statements are an optimization when the query itself is identical.
 
 function _db_Prepare( $query ) {
-	global $db;
-	return mysqli_prepare($db,$query);
+	return mysqli_prepare($GLOBALS['db'],$query);
 }
 
 function _db_BindExecute( &$st, $args ) {
@@ -517,15 +498,17 @@ function _db_BindExecute( &$st, $args ) {
 		
 		$st->bind_param($arg_types_string,...$args);
 	}
-	
+
 	$GLOBALS['DB_QUERY_COUNT']++;
-	if ( $st->execute() ) {
-		return true;
+	$ret = $st->execute();
+	
+	if ( !$ret || $st->errno ) {
+		db_LogError();
+		$st->close();
+		return false;
 	}
 
-	db_Log(mysqli_error($db));
-	$st->close();
-	return false;
+	return true;
 }
 
 // Underscore version doesn't close //
@@ -701,60 +684,13 @@ function db_DoFetchStringKey( $key, $query, ...$args ) {
 function db_TableExists($name) {
 	if ( db_IsConnected() ) {
 		global $db;
-		return mysqli_query($db,"SHOW TABLES LIKE '".$name."'")->num_rows == 1;
+		return mysqli_query($GLOBALS['db'],'SHOW TABLES LIKE "'.$GLOBALS['db']->real_escape_string($name).'";')->num_rows == 1;
 	}
 	return false;
 }
 function db_DatabaseExists($name) {
 	if ( db_IsConnected() ) {
-		global $db;
-		return mysqli_query($db,"SHOW DATABASES LIKE '".$name."'")->num_rows == 1;
+		return mysqli_query($GLOBALS['db'],'SHOW DATABASES LIKE "'.$GLOBALS['db']->real_escape_string($name).'";')->num_rows == 1;
 	}
 	return false;
 }
-
-/*
-function db_Query2( $query, ...$args ) {
-	global $db;
-	
-	global $DB_QUERY_COUNT;
-	$DB_QUERY_COUNT++;
-	
-	$arg_string = "";
-	foreach ( $args as &$arg ) {
-		if ( is_integer($arg) ) {
-			$arg_string .= 'i';
-		}
-		else if ( is_float($arg) ) {
-			$arg_string .= 'd';
-		}
-		else if ( is_string($arg) ) {
-			$arg_string .= 's';
-		}
-		else if ( is_bool($arg) ) {
-			$arg_string .= 'i';
-			$arg = $arg ? 1 : 0;
-		}
-		else if ( is_array($arg) ) {
-			$arg_string .= 's';
-			$arg = json_encode($arg,true);
-		}
-		// date+time?
-	}
-	
-//	$new_args[] = $arg_string;
-//	$final_args = array_merge($new_args,$args);
-	
-	$st = mysqli_prepare($db,$query);
-	//call_user_func_array( $st->bind_param, $final_args );
-	$st->bind_param($arg_string,...$args);
-	$ret = $st->execute();
-	//$st->bind_result
-	// $st->reset(); // repeats
-	
-	$st->close();
-	
-	return $ret or die(mysqli_error($db)."\n");
-}
-
-*/

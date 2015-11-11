@@ -2,9 +2,8 @@
 
 // General Config Information //
 const CMW_USING_DB = true;
-const CMW_USING_MYSQL = true;		// True if MySQL, PerconaDB, and MariaDB
+const CMW_USING_MYSQL = true;			// True if MySQL, PerconaDB, and MariaDB
 //const CMW_USING_MARIADB = true;
-//const CMW_USING_PDO = true;		// Default Database is MySQL. Enable this to use PDO.
 const CMW_USING_APCU = true;
 //const CMW_USING_MEMCACHED = true;
 //const CMW_USING_REDIS = true;

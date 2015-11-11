@@ -14,8 +14,10 @@ if ( !db_IsConnected() ) {
 		db_Log("Failed to connect to Server");
 		exit(1);
 	}
+	
+	echo "Connected.\n";
 
-	// If DB doesn't exist, create it //
+	// If database doesn't exist, create it //
 	if ( !db_DatabaseExists(CMW_DB_NAME) ) {
 		db_DoQuery("CREATE DATABASE IF NOT EXISTS ?;",CMW_DB_NAME);
 		echo("Database '".CMW_DB_NAME."' created.\n");
@@ -32,9 +34,116 @@ if ( !db_IsConnected() ) {
 		echo "Reconnected.\n";
 	}
 }
+else {
+	echo "Connected.\n";
+}
 
-echo "Connected.\n";
+// Database Setup //
+db_DoQuery("SET storage_engine=InnoDB;");
+db_DoQuery("SET collation_server=utf8_unicode_ci;");
+db_DoQuery("SET character_set_server=utf8;");
 
+// NOTE: utf8 is 3 byte unicode. utf8mb4 is 4 byte. Required for Emoji.
+const CSTYPE_UTF8 = " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
+const CSTYPE_LATIN = " CHARACTER SET latin1 COLLATE latin1_swedish_ci";		// Case Insensitive
+//const CSTYPE_LATIN = " CHARACTER SET latin1 COLLATE latin1_bin";			// Case Sensitive
+
+// https://dev.mysql.com/doc/refman/5.5/en/case-sensitivity.html
+
+
+// Default Configuration (use this as a base, and to introduce new configuration variables) //
+$DEFAULT_CONFIG = [
+	'active' => '1',
+	CMW_TABLE_CONFIG => '0',
+
+	CMW_TABLE_NODE => '0',
+	CMW_TABLE_NODE_META => '0',
+	CMW_TABLE_NODE_DIFF => '0',
+	CMW_TABLE_NODE_LOVE => '0',				// Like
+	CMW_TABLE_NODE_STAR => '0',				// Bookmark
+	                               
+	CMW_TABLE_USER => '0',
+	                               
+	CMW_TABLE_COMMENT => '0',
+	CMW_TABLE_COMMENT_LOVE => '0',			// Like
+	
+	CMW_TABLE_SCHEDULE_TIMESPAN => '0',
+	CMW_TABLE_SCHEDULE_SUBSCRIPTION => '0',
+	
+	CMW_TABLE_THEME_IDEA => '0',			// Suggestions
+	CMW_TABLE_THEME_IDEA_VOTE => '0',		// Slaughter
+	CMW_TABLE_THEME_IDEA_LOVE => '0',		// Like
+	CMW_TABLE_THEME => '0',					// Themes
+	CMW_TABLE_THEME_VOTE => '0',			// Theme Votes
+	
+	CMW_TABLE_PROXY_USER => '0',			// Placeholder Legacy User List
+	
+	'event-active' => '0',
+];
+
+// Load Config Table from File //
+if ( db_TableExists(CMW_TABLE_CONFIG) ) {
+	$DB_CONFIG = db_DoFetchPair("SELECT `key`,`value` FROM ".CMW_TABLE_CONFIG.";");
+}
+
+// Merge Config Tables, assuming it existed //
+if (!empty($DB_CONFIG))
+	$CONFIG = array_replace($DEFAULT_CONFIG,$DB_CONFIG);
+else
+	$CONFIG = $DEFAULT_CONFIG;
+
+
+// Create/Upgrade Table //
+$table_name = CMW_TABLE_CONFIG;
+echo "* ".CMW_TABLE_CONFIG."\n";
+$version = intval($CONFIG[$table_name]);
+switch ($version) {
+	case 0:
+		db_DoQuery(
+			"CREATE TABLE ".$table_name." (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
+					UNIQUE,
+				`key` VARCHAR(64) CHARSET latin1 NOT NULL DEFAULT '',
+					INDEX(`key`),
+				`value` VARCHAR(64) NOT NULL DEFAULT '',
+				`timestamp` DATETIME NOT NULL
+			);");
+		echo $table_name." created\n";
+		$version++; if (isset($max_version) && $version == $max_version) break;
+	case 1:
+		echo "Latest Version\n";
+		$version++; if (isset($max_version) && $version == $max_version) break;
+};
+if ( $version != intval($CONFIG[$table_name]) ) {
+//	db_DoQuery(
+//		"INSERT IGNORE ".CMW_TABLE_CONFIG." (
+//			`key`, `value`
+//		)
+//		VALUES ( 
+//			?, ? 
+//		)
+//		ON DUPLICATE KEY UPDATE
+//			`value`=VALUES(`value`)
+//		;",
+	db_DoQuery(
+		"INSERT ".CMW_TABLE_CONFIG." (
+			`key`, `value`, `timestamp`
+		)
+		VALUES ( 
+			?, ?, NOW()
+		);",
+		$table_name,
+		strval($version)
+	);
+	
+	echo $table_name." upgraded (version ".$CONFIG[$table_name]." -> ".$version.")\n";
+	$CONFIG[$table_name] = $version;
+}
+
+
+
+/*
+exit(0);
 
 //$data = db_DoFetchKey("id","SELECT id,type,name FROM cmw_node WHERE type=? LIMIT ?;",
 //	"game",
@@ -53,24 +162,6 @@ else {
 }
 
 
-// Database Setup //
-db_DoQuery("SET storage_engine=InnoDB;");
-//db_Query("SET collation_server=utf8_unicode_ci;");
-//db_Query("SET character_set_server=utf8;");
-
-print_r( db_DoFetchFirst("SHOW tables;") );
-
-exit(0);
-
-const DBTYPE_INNODB = " ENGINE=InnoDB";
-// NOTE: utf8 is 3 byte unicode. utf8mb4 is 4 byte. Required for Emoji.
-const CSTYPE_UTF8 = " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
-const CSTYPE_LATIN = " CHARACTER SET latin1 COLLATE latin1_swedish_ci";		// Case Insensitive
-//const CSTYPE_LATIN = " CHARACTER SET latin1 COLLATE latin1_bin";			// Case Sensitive
-
-// https://dev.mysql.com/doc/refman/5.5/en/case-sensitivity.html
-
-const DBTYPE_DEFAULT = DBTYPE_INNODB . CSTYPE_UTF8;
 
 
 // Fetch Internal Config (State, Table Versions) //
@@ -84,7 +175,6 @@ function SaveInternal( $key ) {
 	// Write key
 	echo $key."\n";
 }
-
 
 {
 	// Suggestion Table //
@@ -126,5 +216,4 @@ function SaveInternal( $key ) {
 	}
 }
 
-
-
+*/

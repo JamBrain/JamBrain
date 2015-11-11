@@ -13,19 +13,29 @@ if ( !defined('CMW_TABLE_PREFIX') ) {
 }
 
 // Database Tables //
-define('CMW_TABLE_NODE',CMW_TABLE_PREFIX."node");
-define('CMW_TABLE_NODE_META',CMW_TABLE_PREFIX."node_meta");
-define('CMW_TABLE_NODE_DIFF',CMW_TABLE_PREFIX."node_diff");
-define('CMW_TABLE_NODE_LOVE',CMW_TABLE_PREFIX."node_love");
-define('CMW_TABLE_NODE_STAR',CMW_TABLE_PREFIX."node_star");
+const CMW_TABLE_CONFIG =				CMW_TABLE_PREFIX."config";
 
-define('CMW_TABLE_USER',CMW_TABLE_PREFIX."user");
+const CMW_TABLE_NODE =					CMW_TABLE_PREFIX."node";
+const CMW_TABLE_NODE_META =				CMW_TABLE_PREFIX."node_meta";
+const CMW_TABLE_NODE_DIFF =				CMW_TABLE_PREFIX."node_diff";
+const CMW_TABLE_NODE_LOVE =				CMW_TABLE_PREFIX."node_love";
+const CMW_TABLE_NODE_STAR =				CMW_TABLE_PREFIX."node_star";
 
-define('CMW_TABLE_COMMENT',CMW_TABLE_PREFIX."comment");
-define('CMW_TABLE_COMMENT_LOVE',CMW_TABLE_PREFIX."comment_love");
+const CMW_TABLE_USER =					CMW_TABLE_PREFIX."user";
 
-define('CMW_TABLE_SCHEDULE_TIMESPAN',CMW_TABLE_PREFIX."schedule_timespan");
-define('CMW_TABLE_SCHEDULE_SUBSCRIPTION',CMW_TABLE_PREFIX."schedule_subscription");
+const CMW_TABLE_COMMENT =				CMW_TABLE_PREFIX."comment";
+const CMW_TABLE_COMMENT_LOVE =			CMW_TABLE_PREFIX."comment_love";
+
+const CMW_TABLE_SCHEDULE_TIMESPAN =		CMW_TABLE_PREFIX."schedule_timespan";
+const CMW_TABLE_SCHEDULE_SUBSCRIPTION =	CMW_TABLE_PREFIX."schedule_subscription";
+
+const CMW_TABLE_THEME_IDEA =			CMW_TABLE_PREFIX."theme_idea";
+const CMW_TABLE_THEME_IDEA_VOTE =		CMW_TABLE_PREFIX."theme_idea_vote";
+const CMW_TABLE_THEME_IDEA_LOVE =		CMW_TABLE_PREFIX."theme_idea_love";
+const CMW_TABLE_THEME =					CMW_TABLE_PREFIX."theme";
+const CMW_TABLE_THEME_VOTE =			CMW_TABLE_PREFIX."theme_vote";
+
+const CMW_TABLE_PROXY_USER =			CMW_TABLE_PREFIX."proxy_user";
 
 // Field constants for Schema //
 const CMW_FIELD_TYPE_IGNORE = 0;		// Field will be unset (NOTE: Prefer a custom query) //
