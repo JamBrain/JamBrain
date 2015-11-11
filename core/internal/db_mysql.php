@@ -12,9 +12,9 @@ function db_GetQueryCount() {
 
 // Logging function specific to database operations //
 function db_Log( $msg, $echo_too ) {
-	error_log( "CMW CORE INTERNAL DB ERROR: " . $msg );
+	error_log( "CMW CORE DB ERROR: " . $msg );
 	if ( isset($echo_too) && $echo_too == true ) {
-		echo "<strong>CMW CORE INTERNAL DB ERROR:</strong> " . $msg . "<br />";
+		echo "<strong>CMW CORE DB ERROR:</strong> " . $msg . "<br />";
 	}
 }
 
@@ -113,21 +113,6 @@ function db_Close() {
 		global $db;
 		mysqli_close($db);
 	}
-}
-
-function db_TableExists($name) {
-	if ( !db_IsConnected() ) {
-		global $db;
-		return mysqli_query($db,"SHOW TABLES LIKE '".$name."'")->num_rows == 1;
-	}
-	return false;
-}
-function db_DatabaseExists($name) {
-	if ( !db_IsConnected() ) {
-		global $db;
-		return mysqli_query($db,"SHOW DATABASES LIKE '".$name."'")->num_rows == 1;
-	}
-	return false;
 }
 
 
@@ -493,10 +478,243 @@ function _db_ParseArgList( $args, $schema ) {
 }
 
 
-// NOTE: Prepare statements are only useful in places you DON'T use "in".
+
+// NOTE: Prepare statements are only faster in places you DON'T use the "in" keyword.
 //	Prepared statements are an optimization when the query itself is identical.
 
-function db_Query2( $query, $args ) {
+function _db_Prepare( $query ) {
+	global $db;
+	return mysqli_prepare($db,$query);
+}
+
+function _db_BindExecute( &$st, $args ) {
+	if ( count($args) > 0 ) {
+		// Build the type string //
+		$arg_types_string = "";
+		foreach ( $args as &$arg ) {
+			if ( is_integer($arg) ) {
+				$arg_types_string .= 'i';
+			}
+			else if ( is_float($arg) ) {
+				$arg_types_string .= 'd';
+			}
+			else if ( is_string($arg) ) {
+				$arg_types_string .= 's';
+			}
+			else if ( is_bool($arg) ) {
+				$arg_types_string .= 'i';
+				$arg = $arg ? 1 : 0;
+			}
+			else if ( is_array($arg) ) {
+				$arg_types_string .= 's';
+				$arg = json_encode($arg,true);
+			}
+			// date+time?
+			else {
+				db_Log("Unable to parse ".gettype($arg));
+			}
+		}
+		
+		$st->bind_param($arg_types_string,...$args);
+	}
+	
+	$GLOBALS['DB_QUERY_COUNT']++;
+	if ( $st->execute() ) {
+		return true;
+	}
+
+	db_Log(mysqli_error($db));
+	$st->close();
+	return false;
+}
+
+// Underscore version doesn't close //
+function _db_DoQuery( $query, $args ) {
+	$st = _db_Prepare($query);
+	if ( $st && _db_BindExecute($st,$args) ) {
+		return $st;
+	}
+	return false;
+}
+function db_DoQuery( $query, ...$args ) {
+	if ( db_IsConnected() ) {
+		$st = _db_DoQuery($query,$args);
+		if ( $st ) {
+			return $st->close();
+		}
+	}
+	return false;
+}
+
+// Theoretically this should work, but disabling it until I need it //
+//function db_DoMultiQuery( $query,/*array*/ ...$args ) {
+//	if ( db_IsConnected() ) {
+//		$st = _db_Prepare($query);
+//		if (!empty($st)) {
+//			foreach ( $args as $arg ) {
+//				if ( _db_BindExecute($st,$arg) )
+//					$st->reset();		// Reset internal state for next iteration
+//				else
+//					return false; 		// Close called automatically //
+//			}
+//			$st->close();
+//			return true;
+//		}
+//	}
+//	return false;
+//}
+
+function _db_GetAssoc(&$st) {
+	$result = $st->get_result();
+	$ret = [];
+	while ($row = $result->fetch_array(MYSQLI_ASSOC /*MYSQLI_NUM*/)) {
+		$ret[] = $row;
+	}
+	return $ret;
+}
+// Given a key (field name), populate an array using the value of the key as the index
+function _db_GetAssocStringKey($key,&$st) {
+	$result = $st->get_result();
+	$ret = [];
+	while ($row = $result->fetch_array(MYSQLI_ASSOC /*MYSQLI_NUM*/)) {
+		$ret[$row[$key]] = $row;
+	}
+	return $ret;
+}
+// Same, but assume the key is a number, not a string //
+function _db_GetAssocKey($key,&$st) {
+	$result = $st->get_result();
+	$ret = [];
+	while ($row = $result->fetch_array(MYSQLI_ASSOC /*MYSQLI_NUM*/)) {
+		$ret[intval($row[$key])] = $row;
+	}
+	return $ret;
+}
+// Get an array of just the first element //
+function _db_GetFirst(&$st) {
+	$result = $st->get_result();
+	$ret = [];
+	while ($row = $result->fetch_array(MYSQLI_NUM)) {
+		$ret[] = $row[0];
+	}
+	return $ret;
+}
+// Make a key=value pair array, where 0 is the key, and 1 is the value 
+function _db_GetPair(&$st) {
+	$result = $st->get_result();
+	$ret = [];
+	while ($row = $result->fetch_array(MYSQLI_NUM)) {
+		$ret[$row[0]] = $row[1];
+	}
+	return $ret;
+}
+// Same as above, but make sure the key is an integer
+function _db_GetIntPair(&$st) {
+	$result = $st->get_result();
+	$ret = [];
+	while ($row = $result->fetch_array(MYSQLI_NUM)) {
+		$ret[intval($row[0])] = $row[1];
+	}
+	return $ret;
+}
+
+
+function db_DoFetch( $query, ...$args ) {
+	if ( db_IsConnected() ) {
+		$st = _db_DoQuery($query,$args);
+		if ( $st ) {
+			$ret = _db_GetAssoc($st);
+			$st->close();
+			return $ret;
+		}
+	}
+	return null;
+}
+// Fetch a single row
+function db_DoFetchSingle( $query, ...$args ) {
+	$ret = db_DoFetch($query,...$args);
+	if ( isset($ret[0]) )
+		return $ret[0];
+	return null;
+}
+
+// Fetch only the first element in each row, and make an array
+function db_DoFetchFirst( $query, ...$args ) {
+	if ( db_IsConnected() ) {
+		$st = _db_DoQuery($query,$args);
+		if ( $st ) {
+			$ret = _db_GetFirst($st);
+			$st->close();
+			return $ret;
+		}
+	}
+	return null;
+}
+// Fetch a pair of elements, using the 1st as the key, 2nd as value
+function db_DoFetchPair( $query, ...$args ) {
+	if ( db_IsConnected() ) {
+		$st = _db_DoQuery($query,$args);
+		if ( $st ) {
+			$ret = _db_GetPair($st);
+			$st->close();
+			return $ret;
+		}
+	}
+	return null;
+}
+function db_DoFetchIntPair( $query, ...$args ) {
+	if ( db_IsConnected() ) {
+		$st = _db_DoQuery($query,$args);
+		if ( $st ) {
+			$ret = _db_GetIntPair($st);
+			$st->close();
+			return $ret;
+		}
+	}
+	return null;
+}
+
+function db_DoFetchKey( $key, $query, ...$args ) {
+	if ( db_IsConnected() ) {
+		$st = _db_DoQuery($query,$args);
+		if ( $st ) {
+			$ret = _db_GetAssocKey($key,$st);
+			$st->close();
+			return $ret;
+		}
+	}
+	return null;
+}
+function db_DoFetchStringKey( $key, $query, ...$args ) {
+	if ( db_IsConnected() ) {
+		$st = _db_DoQuery($query,$args);
+		if ( $st ) {
+			$ret = _db_GetAssocStringKey($key,$st);
+			$st->close();
+			return $ret;
+		}
+	}
+	return null;
+}
+
+// TODO: Move these to prepare statement
+function db_TableExists($name) {
+	if ( db_IsConnected() ) {
+		global $db;
+		return mysqli_query($db,"SHOW TABLES LIKE '".$name."'")->num_rows == 1;
+	}
+	return false;
+}
+function db_DatabaseExists($name) {
+	if ( db_IsConnected() ) {
+		global $db;
+		return mysqli_query($db,"SHOW DATABASES LIKE '".$name."'")->num_rows == 1;
+	}
+	return false;
+}
+
+/*
+function db_Query2( $query, ...$args ) {
 	global $db;
 	
 	global $DB_QUERY_COUNT;
@@ -524,11 +742,12 @@ function db_Query2( $query, $args ) {
 		// date+time?
 	}
 	
-	$new_args[] = $arg_string;
-	$final_args = array_merge($new_args,$args);
+//	$new_args[] = $arg_string;
+//	$final_args = array_merge($new_args,$args);
 	
 	$st = mysqli_prepare($db,$query);
-	call_user_func_array( $st->bind_params, $final_args );
+	//call_user_func_array( $st->bind_param, $final_args );
+	$st->bind_param($arg_string,...$args);
 	$ret = $st->execute();
 	//$st->bind_result
 	// $st->reset(); // repeats
@@ -538,4 +757,4 @@ function db_Query2( $query, $args ) {
 	return $ret or die(mysqli_error($db)."\n");
 }
 
-?>
+*/

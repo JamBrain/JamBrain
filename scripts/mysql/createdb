@@ -3,30 +3,64 @@
 require_once __DIR__."/../../db.php";
 require_once __DIR__."/../../core/internal/core.php";
 
-db_ConnectOnly();
-
-if ( !db_IsConnected() ) {
-	db_Log("Failed to connect to Server");
-	exit(1);
-}
-
-if ( !db_DatabaseExists(CMW_DB_NAME) ) {
-	db_Query("CREATE DATABASE IF NOT EXISTS ".CMW_DB_NAME.";",true);
-	echo("Database '".CMW_DB_NAME."' created\n");
-}
-
-db_Close();
 db_Connect();
 
 if ( !db_IsConnected() ) {
-	db_Log("Failed to connect to Database '".CMW_DB_NAME."'");
-	exit(1);
+	echo "Failed to connect to Database. Retrying as server only...";
+	
+	db_ConnectOnly();
+
+	if ( !db_IsConnected() ) {
+		db_Log("Failed to connect to Server");
+		exit(1);
+	}
+
+	// If DB doesn't exist, create it //
+	if ( !db_DatabaseExists(CMW_DB_NAME) ) {
+		db_DoQuery("CREATE DATABASE IF NOT EXISTS ?;",CMW_DB_NAME);
+		echo("Database '".CMW_DB_NAME."' created.\n");
+	
+		// Reconnect //
+		db_Close();
+		db_Connect();
+	
+		if ( !db_IsConnected() ) {
+			db_Log("Failed to reconnect to Database '".CMW_DB_NAME."'");
+			exit(1);
+		}
+		
+		echo "Reconnected.\n";
+	}
 }
 
+echo "Connected.\n";
+
+
+//$data = db_DoFetchKey("id","SELECT id,type,name FROM cmw_node WHERE type=? LIMIT ?;",
+//	"game",
+//	"4"
+//);
+$data = db_DoFetch("SELECT id,type,name FROM cmw_node WHERE type=? LIMIT ?;",
+	"event",
+	3
+);
+
+if ( !empty($data) ) {
+	print_r($data);
+}
+else {
+	echo "nope";
+}
+
+
 // Database Setup //
-db_Query("SET storage_engine=InnoDB;");
+db_DoQuery("SET storage_engine=InnoDB;");
 //db_Query("SET collation_server=utf8_unicode_ci;");
 //db_Query("SET character_set_server=utf8;");
+
+print_r( db_DoFetchFirst("SHOW tables;") );
+
+exit(0);
 
 const DBTYPE_INNODB = " ENGINE=InnoDB";
 // NOTE: utf8 is 3 byte unicode. utf8mb4 is 4 byte. Required for Emoji.
