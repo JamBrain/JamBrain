@@ -80,10 +80,4 @@ function _config_Load() {
 }
 function config_Load() {
 	$GLOBALS['CONFIG'] = _config_Load();
-//	$DB_CONFIG = _config_Load();
-//	
-//	if (!empty($DB_CONFIG))
-//		$GLOBALS['CONFIG'] = array_replace(DEFAULT_CONFIG,$DB_CONFIG);
-//	else
-//		$GLOBALS['CONFIG'] = DEFAULT_CONFIG;
 }

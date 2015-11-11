@@ -1,0 +1,25 @@
+#!/usr/bin/env php
+<?php
+require_once __DIR__."/../../db.php";
+require_once __DIR__."/../../core/internal/core.php";
+require_once __DIR__."/../../core/config.php";
+
+if (count($argv) <= 1) {
+	echo "Usage: ".$argv[0]." config-key-name\n";
+	exit(1);
+}
+
+$key = trim($argv[1]);
+
+db_Connect();
+
+if ( db_IsConnected() ) {
+	config_Load();
+	
+	if ( isset($CONFIG[$key]) ) {
+		echo $CONFIG[$key];
+		exit(0);
+	}
+}
+
+exit(1);

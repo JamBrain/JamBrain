@@ -1,0 +1,37 @@
+#!/bin/sh
+
+if [ $# -lt 2 ]; then
+	echo "Usage: $0 db_name table_name [additional arguments for mysqldump]"
+	exit 1
+fi
+
+COMMAND=$0
+FULL_ARGS=$@
+DB=$1
+TABLE=$2
+shift
+shift
+ARGS=$@
+
+TABLE_VERSION=`./get-config-value $TABLE`
+if [ $? -ne 0 ]; then
+	echo "Error: Unable to fetch table version from config"
+	exit 1
+fi
+
+echo "-- $COMMAND -- Starship table dump script"
+echo "-- Options: $FULL_ARGS"
+echo
+
+mysqldump $DB $TABLE $ARGS
+
+# Only add commands for setting the version if NOT the config table 
+if [ "$TABLE" != "cmw_config" ]; then
+	echo
+	echo "-- Set the table version inside the config"
+	echo "LOCK TABLES \`cmw_config\` WRITE;"
+	echo "INSERT INTO \`cmw_config\` (\`key\`,\`value\`) VALUES ('$TABLE','$TABLE_VERSION');"
+	echo "UNLOCK TABLES;"
+fi
+
+exit 0
