@@ -13,7 +13,7 @@ shift
 shift
 ARGS=$@
 
-TABLE_VERSION=`./get-config-value $TABLE`
+TABLE_VERSION=`./config-get-value $TABLE`
 if [ $? -ne 0 ]; then
 	echo "Error: Unable to fetch table version from config"
 	exit 1

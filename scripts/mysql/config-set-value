@@ -1,0 +1,34 @@
+#!/usr/bin/env php
+<?php
+require_once __DIR__."/../../db.php";
+require_once __DIR__."/../../core/internal/core.php";
+require_once __DIR__."/../../core/config.php";
+
+if (count($argv) <= 2) {
+	echo "Usage: ".$argv[0]." config-key-name \"value\"\n";
+	exit(1);
+}
+
+if (posix_getuid() != 0) {
+    echo "ERROR: Requires root\n";
+    exit(1);
+}
+
+$key = trim($argv[1]);
+$value = trim($argv[2]);
+
+if ( empty($key) || empty($value) ) {
+	exit(1);
+}
+
+db_Connect();
+
+if ( db_IsConnected() ) {
+	config_Load();
+	
+	if ( config_Set($key,$value) ) {
+		exit(0);
+	}
+}
+
+exit(1);
