@@ -6,6 +6,9 @@ if [ $# -lt 2 ]; then
 fi
 
 COMMAND=$0
+COMMAND_PATH=`pwd -P`
+# >&2 echo $COMMAND_PATH
+
 FULL_ARGS=$@
 DB=$1
 TABLE=$2
@@ -13,7 +16,7 @@ shift
 shift
 ARGS=$@
 
-TABLE_VERSION=`./config-get-value $TABLE`
+TABLE_VERSION=`$COMMAND_PATH/config-get-value $TABLE`
 if [ $? -ne 0 ]; then
 	echo "Error: Unable to fetch table version from config"
 	exit 1
