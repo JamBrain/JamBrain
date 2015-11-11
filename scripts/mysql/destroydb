@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+require_once __DIR__."/../../db.php";
+require_once __DIR__."/../../core/internal/core.php";
+
+db_Connect();
+
+if ( !db_IsConnected() ) {
+	db_Log("Unable to connect");
+	exit(0);
+}
+
+db_DoQuery("DROP TABLE ".CMW_TABLE_CONFIG.";");
+db_DoQuery("DROP TABLE ".CMW_TABLE_THEME_IDEA.";");
