@@ -102,6 +102,10 @@ function ShowExtra() { ?>
 		document.getElementById('sg-count').innerHTML = SuggestionsLeftCount;			
 	}
 	
+	function EscapeQuotes(value) {
+		return String(value).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); //" // <- kill the weird quoting
+	}
+	
 	var SuggestionsLeftCount = 10;
 	function SubmitThemeForm() {
 		if ( SuggestionsLeftCount <= 0 )
@@ -117,7 +121,7 @@ function ShowExtra() { ?>
 		};
 		console.log(Data);
 		
-		xhr_PostJSON("/api-theme.php","uid=255&theme="+Data.theme, function() {console.log("I DID IT");});
+		xhr_PostJSON("/api-theme.php","action=SUBMIT&uid=255&theme="+Data.theme, function() {console.log("I DID IT");});
 		
 		// Set Loading state //
 		
@@ -128,7 +132,7 @@ function ShowExtra() { ?>
 		sg_UpdateCount();
 
 		document.getElementById('suggestions').innerHTML = 
-			"<div class='sg-item' id='sg-item-"+Id+"'><span class='sg-item-x' onclick='sg_Delete("+Id+")'>✕</span><span>" + Data.theme + "</span></div>" +
+			"<div class='sg-item' id='sg-item-"+Id+"'><span class='sg-item-x' onclick='sg_Delete("+Id+")'>✕</span><span title='"+EscapeQuotes(Data.theme)+"'>"+Data.theme+"</span></div>" +
 			document.getElementById('suggestions').innerHTML;
 		
 		// On failure //
