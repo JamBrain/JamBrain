@@ -3,6 +3,11 @@
 require_once __DIR__."/../../db.php";
 require_once __DIR__."/../../core/internal/core.php";
 
+array_shift($argv);
+foreach ($argv as $value) {
+	$table_list[$value]=true;
+}
+
 db_Connect();
 
 if ( !db_IsConnected() ) {
@@ -10,5 +15,13 @@ if ( !db_IsConnected() ) {
 	exit(0);
 }
 
-db_DoQuery("DROP TABLE ".CMW_TABLE_CONFIG.";");
-db_DoQuery("DROP TABLE ".CMW_TABLE_THEME_IDEA.";");
+function table_Drop($table) {
+	global $table_list;
+	if ( !isset($table_list) || isset($table_list[$table]) ) { 
+		$ret = db_DoQuery("DROP TABLE ".$table.";"); 
+		echo "* ".$table." [".(($ret)?("yes"):("no"))."]\n"; 
+	}
+}
+
+table_Drop(CMW_TABLE_CONFIG);
+table_Drop(CMW_TABLE_THEME_IDEA);

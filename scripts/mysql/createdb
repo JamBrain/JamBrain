@@ -4,6 +4,11 @@ require_once __DIR__."/../../db.php";
 require_once __DIR__."/../../core/internal/core.php";
 require_once __DIR__."/../../core/config.php";
 
+array_shift($argv);
+foreach ($argv as $value) {
+	$table_list[$value]=true;
+}
+
 db_Connect();
 
 if ( !db_IsConnected() ) {
@@ -50,29 +55,41 @@ const CSTYPE_LATIN = " CHARACTER SET latin1 COLLATE latin1_swedish_ci";		// Case
 // https://dev.mysql.com/doc/refman/5.5/en/case-sensitivity.html
 
 
-function DoCreate( $table_name, ...$args ) {
-	$ret = db_DoQuery( ...$args );
-	echo $table_name." created\n";
-	return $ret;
-}
-
+global $CONFIG, $version, $old_version;
 
 // Load Configuration //
 config_Load();
-global $CONFIG;
+
+
+function DoInit($table) {
+	global $CONFIG, $version, $old_version;
+	
+	echo "* ".$table."\n";
+	$version = isset($CONFIG[$table])?intval($CONFIG[$table]):0;
+	$old_version = $version;	
+}
+function DoCreate( $table, ...$args ) {
+	$ret = db_DoQuery( ...$args );
+	echo $table." created\n";
+	return $ret;
+}
+function DoExit($table) {
+	global $CONFIG, $version, $old_version;
+	
+	if ( config_Set($table,strval($version)) ) {
+		echo $table." upgraded (version ".$old_version." -> ".$version.")\n";	
+	}
+}
+
 
 // Create/Upgrade Table //
-{
-	$table_name = CMW_TABLE_CONFIG;
-
-	echo "* ".$table_name."\n";
-	$version = isset($CONFIG[$table_name])?intval($CONFIG[$table_name]):0;
-	$old_version = $version;
-
+$table = CMW_TABLE_CONFIG;
+if ( !isset($table_list) || isset($table_list[$table]) ) {
+	DoInit($table);
 	switch ($version) {
 	case 0:
-		DoCreate( $table_name,
-			"CREATE TABLE ".$table_name." (
+		DoCreate( $table,
+			"CREATE TABLE ".$table." (
 				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
 					UNIQUE,
 				`key` VARCHAR(64) CHARSET latin1 NOT NULL DEFAULT '',
@@ -84,14 +101,12 @@ global $CONFIG;
 	case 1:
 		$version++; if (isset($max_version) && $version == $max_version) break;
 	};
-	if ( config_Set($table_name,strval($version)) ) {
-		echo $table_name." upgraded (version ".$old_version." -> ".$version.")\n";	
-	}
+	DoExit($table);
 	
 	$DIFF_CONFIG = array_diff_key(DEFAULT_CONFIG,$CONFIG);
 	$DIFF_CONFIG_COUNT = count($DIFF_CONFIG);
 	if ( $DIFF_CONFIG_COUNT > 0 ) {
-		echo "Adding ".$DIFF_CONFIG_COUNT." missing element(s) to ".$table_name."\n";
+		echo "Adding ".$DIFF_CONFIG_COUNT." missing element(s) to ".$table."\n";
 		
 		foreach ( $DIFF_CONFIG as $key => $value ) {
 			echo "  * ".$key." = ".(is_string($value)?("\"".$value."\"\n"):($value."\n"));
@@ -112,17 +127,13 @@ global $CONFIG;
 
 
 // Create/Upgrade Table //
-{
-	$table_name = CMW_TABLE_THEME_IDEA;
-
-	echo "* ".$table_name."\n";
-	$version = isset($CONFIG[$table_name])?intval($CONFIG[$table_name]):0;
-	$old_version = $version;
-
+$table = CMW_TABLE_THEME_IDEA;
+if ( !isset($table_list) || isset($table_list[$table]) ) {
+	DoInit($table);
 	switch ($version) {
 	case 0:
-		DoCreate( $table_name,
-			"CREATE TABLE ".$table_name." (
+		DoCreate( $table,
+			"CREATE TABLE ".$table." (
 				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
 					UNIQUE,
 				node BIGINT UNSIGNED NOT NULL,
@@ -134,9 +145,7 @@ global $CONFIG;
 			);");
 		$version++; if (isset($max_version) && $version == $max_version) break;
 	};
-	if ( config_Set($table_name,strval($version)) ) {
-		echo $table_name." upgraded (version ".$old_version." -> ".$version.")\n";	
-	}
+	DoExit($table);
 }
 
 //db_DoQuery(
@@ -151,7 +160,7 @@ global $CONFIG;
 
 
 
-//	"CREATE TABLE ".$table_name." (
+//	"CREATE TABLE ".$table." (
 //		id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
 //			UNIQUE,
 //		`key` VARCHAR(64) CHARSET latin1 NOT NULL DEFAULT '',
