@@ -60,6 +60,15 @@ body {
 	white-space: nowrap;
 }
 
+.extra .sg-item-text {
+	position:relative;
+}
+.extra .sg-item-x {
+	z-index:100;
+	position:relative;
+}
+
+
 .action .title {
 	margin:0.5em 0;
 }

@@ -102,6 +102,7 @@ function ShowExtra() { ?>
 		document.getElementById('sg-count').innerHTML = SuggestionsLeftCount;			
 	}
 	
+	// http://stackoverflow.com/a/12562097
 	function EscapeQuotes(value) {
 		return String(value).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); //" // <- kill the weird quoting
 	}
@@ -132,7 +133,10 @@ function ShowExtra() { ?>
 		sg_UpdateCount();
 
 		document.getElementById('suggestions').innerHTML = 
-			"<div class='sg-item' id='sg-item-"+Id+"'><span class='sg-item-x' onclick='sg_Delete("+Id+")'>✕</span><span title='"+EscapeQuotes(Data.theme)+"'>"+Data.theme+"</span></div>" +
+			"<div class='sg-item' id='sg-item-"+Id+"'>" +
+				"<span class='sg-item-x' onclick='sg_Delete("+Id+")'>✕</span>" +
+				"<span class='.sg-item-text' title='"+EscapeQuotes(Data.theme)+"'>"+Data.theme+"</span>" +
+			"</div>" +
 			document.getElementById('suggestions').innerHTML;
 		
 		// On failure //
