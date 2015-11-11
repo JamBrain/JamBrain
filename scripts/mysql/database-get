@@ -1,0 +1,7 @@
+#!/usr/bin/env php
+<?php
+require_once __DIR__."/../../config.php";
+
+echo CMW_DB_NAME;
+
+exit(0);

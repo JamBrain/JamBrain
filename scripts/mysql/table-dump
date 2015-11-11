@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if [ $# -lt 2 ]; then
-	echo "Usage: $0 db_name table_name [additional arguments for mysqldump]"
+if [ $# -lt 1 ]; then
+	echo "Usage: $0 table_name [additional arguments for mysqldump]"
 	exit 1
 fi
 
@@ -10,11 +10,15 @@ COMMAND_PATH=`pwd -P`
 # >&2 echo $COMMAND_PATH
 
 FULL_ARGS=$@
-DB=$1
-TABLE=$2
-shift
+TABLE=$1
 shift
 ARGS=$@
+
+DB=`$COMMAND_PATH/database-get`
+if [ $? -ne 0 ]; then
+	echo "Error: Unable to fetch database name"
+	exit 1
+fi
 
 TABLE_VERSION=`$COMMAND_PATH/config-get-value $TABLE`
 if [ $? -ne 0 ]; then
