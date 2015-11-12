@@ -1,7 +1,10 @@
 <?php
 
-const LEGACY_FETCH_URL = "http://google.com";
+const LEGACY_DEBUG = true;
+
+const LEGACY_FETCH_URL = "/api-legacy.php";
+const LEGACY_LOGIN_URL = "/api-legacy.php?action=LEGACY_LOGIN";
 
 const IP_WHITELIST = [
-	"192.168.1.24"
+	"0.0.0.0"
 ];

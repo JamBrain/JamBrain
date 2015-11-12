@@ -1,10 +1,9 @@
 <?php
-require_once __DIR__ . "/../web.php";
-require_once __DIR__ . "/../core/config.php";
+require_once __DIR__."/../web.php";
+require_once __DIR__."/../core/config.php";
+require_once __DIR__."/../legacy-config.php";
 
 const EVENT_NAME = "Ludum Dare 34";
-
-const LOGIN_URL = "http://ludumdare.com/compo/wp-content/plugins/ldjam/validate-user.php";
 
 define('HTML_TITLE',EVENT_NAME." - Theme Hub");
 const HTML_CSS_INCLUDE = [ "/style/theme-hub.css.php" ];
@@ -108,7 +107,7 @@ function ShowHeadline() {
 function ShowLogin() {
 ?>
 	<div class="action" id="action-login">
-		<a href="<?= LOGIN_URL ?>"><button type="button" class="submit-button">Login</button></a>
+		<a href="<?= LEGACY_LOGIN_URL ?>"><button type="button" class="submit-button">Login</button></a>
 	</div>	
 <?php
 }

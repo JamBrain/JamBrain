@@ -7,7 +7,7 @@
 require_once __DIR__."/../db.php";
 require_once __DIR__."/internal/core.php";
 require_once __DIR__."/../legacy-config.php";
-
+/*
 function legacy_GetUserFromCookie() {
 	if (isset($_COOKIE['lusha'])) {
 		return 100;
@@ -24,6 +24,7 @@ function legacy_GetUserFromCookie() {
 	}
 	return 0;	
 }
+*/
 
 function legacy_GetUser($id) {
 	return db_DoFetchSingle(
@@ -62,6 +63,7 @@ function legacy_GenerateUserHash($id) {
 
 function legacy_FetchUserInfo($id) {	
 	$data = [
+		'action'=>"LEGACY_FETCH",
 		'id'=>$id
 	];
 	
