@@ -17,9 +17,11 @@ function legacy_GetUserFromCookie() {
 		
 		$id = intval($part[0]);
 		
-		// TODO: Confirm User Id and HASH match //
+		$user = legacy_GetUser($id);
 		
-		return $id;
+		if ( isset($user['hash']) && $user['hash'] == $hash ) {
+			return $id;
+		}
 	}
 	return 0;	
 }
@@ -39,6 +41,7 @@ function legacy_GetUserWithInfo($id) {
 		$id
 	);
 }
+
 
 function legacy_GenerateUserHash($id) {
 	$hash = bin2hex(openssl_random_pseudo_bytes(24));
