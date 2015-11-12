@@ -38,7 +38,45 @@ function ShowHeadline() {
 	global $active_mode;
 	echo "<div class='headline'>";
 	echo "<div class='title bigger'><strong>".strtoupper(THEME_MODE_NAMES[$active_mode])."</strong></div>";
-	echo "<div class='clock' id='headline-clock'>Round ends in <span id='headline-time'>X days, 12 hours</span></div>";
+	
+	// Date Hack //
+//	$TargetDate = strtotime("2015-12-12T02:00:00Z");	// LD Time //
+	$TargetDate = strtotime("2015-11-27T23:00:00Z");
+	$DateDiff = $TargetDate - time();
+	
+	$SEC = $DateDiff % 60;
+	$MIN = ($DateDiff / 60) % 60;
+	$HOUR = ($DateDiff / (60*60)) % 24;
+	$DAY = ($DateDiff / (60*60*24)) % 7;
+	$WEEK = floor($DateDiff / (60*60*24*7));
+	
+	$OutTime = "";
+	if ( $WEEK > 0 ) {
+		if ( $WEEK > 1 )
+			$OutTime .= $WEEK." weeks";
+		else if ( $WEEK == 1 )
+			$OutTime .= $WEEK." week";
+	}
+
+	if ( $DAY > 0 ) {
+		if ( !empty($OutTime) )
+			$OutTime .= ", ";
+		if ( $DAY > 1 )
+			$OutTime .= $DAY." days";
+		else if ( $DAY == 1 )
+			$OutTime .= $DAY." day";
+	}
+
+	if ( $HOUR > 0 ) {
+		if ( !empty($OutTime) )
+			$OutTime .= ", ";
+		if ( $HOUR > 1 )
+			$OutTime .= $HOUR." hours";
+		else if ( $HOUR == 1 )
+			$OutTime .= $HOUR." hour";
+	}
+
+	echo "<div class='clock' id='headline-clock'>Round ends in <span id='headline-time'>".$OutTime."</span></div>";
 	echo "</div>";
 }
 
