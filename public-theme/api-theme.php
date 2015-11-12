@@ -1,76 +1,73 @@
 <?php
 require_once __DIR__."/../api.php";
 require_once __DIR__."/../db.php";
+require_once __DIR__."/../core/theme.php";
 
 $response = json_NewResponse();
 
-function theme_GetUser() {
+function legacy_GetUser() {
 	if (isset($_COOKIE['lusha'])) {
 		$part = explode("|",$_COOKIE['lusha'],2);
 		
 		if (count($part) !== 2)
 			return 0;
 		
-		$uid = intval(base48_Decode($part[0]));
+		$user_id = intval(base48_Decode($part[0]));
 		
-		// Confirm UID and HASH match //
+		// Confirm User Id and HASH match //
 		
-		return $uid;
+		return $user_id;
 	}
 	return 0;	
 }
 
-// Query Functions - PLEASE SANITIZE BEFORE CALLING //
-function theme_Submit($node, $uid, $theme) {
-	return db_DoQuery(
-		"INSERT INTO ".CMW_TABLE_THEME_IDEA." (
-			node, author, theme, `timestamp`
-		)
-		VALUES ( 
-			?, ?, ?, NOW()
-		)",
-		$node, $uid, $theme
-	);
-}
-function theme_GetMyIdeas($node, $uid) {
-	return db_DoFetch(
-		"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
-		WHERE node=? AND author=?",
-		$node, $uid
-	);
-}
-
 // MAIN (Only accept POST requests) //
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$action = trim($_POST['action']);			// TODO: sanitize
-	
-//	$uid = theme_GetUser();
-	$uid = isset($_POST['author']) ? intval($_POST['author']) : 0;
-	
-	$node = isset($_POST['node']) ? intval($_POST['node']) : 0;
-	// TODO: Validate node as an active event
-	
-	if ( ($uid > 0) && ($node > 0) ) {
-		if ( $action == "LOGIN" ) {
+	$action = trim($_POST['action']);
+	$node = 100;//intval($CONFIG['event-active']);//isset($_POST['node']) ? intval($_POST['node']) : 0;
+	$user_id = 255;//legacy_GetUser();//isset($_POST['user']) ? intval($_POST['user']) : 0;
+	$max_ideas = 10;
+
+	if ( ($user_id > 0) && ($node > 0) ) {
+		if ( $action == "GET" ) {
+			db_Connect();
+			
+			$response['ideas'] = theme_GetIdeas($node,$user_id);
+			$response['ideas_left'] = $max_ideas - count($response['ideas']);
 		}
 		else if ( $action == "SUBMIT" ) {
 			// Confirm valid Input //
-			$theme = trim($_POST['theme']);		// TODO: sanitize
+			$idea = trim($_POST['idea']);		// TODO: sanitize
 	
-			if ( !empty($theme) ) {
-				mail("mike@sykhronics.com","loggy2",print_r($_POST,true));
-	
+			if ( !empty($idea) ) {
 				db_Connect();
 	
-				theme_Submit($node,$uid,$theme);
+				$id = theme_AddIdea($idea,$node,$user_id);
+				
+				$response['id'] = $id;
+				$response['idea'] = $idea;
+
+				// TODO: Add count ideas function
+				$response['ideas_left'] = $max_ideas - count(theme_GetIdeas($node,$user_id));
 			}
 		}
-		else if ( $action == "GET" ) {
+		else if ( $action == "DELETE" ) {
 			db_Connect();
 			
-			// Return my themes //
-			$response['themes'] = theme_GetMyIdeas($node,$uid);
+			$id = intval($_POST['id']);
+			if ( $id > 0 ) {
+				theme_RemoveIdea($id);
+				//theme_RemoveMyIdea($id,$user_id);
+
+				$response['id'] = $id;
+
+				// TODO: Add count ideas function
+				$response['ideas_left'] = $max_ideas - count(theme_GetIdeas($node,$user_id));
+			}
 		}
+//		else {
+//			mail("mike@sykhronics.com","loggy2",print_r($_POST,true));
+//		}
 	}
 }
 

@@ -529,6 +529,19 @@ function db_DoQuery( $query, ...$args ) {
 	return false;
 }
 
+// Do an INSERT query, return the Id //
+function db_DoInsertQuery( $query, ...$args ) {
+	if ( db_IsConnected() ) {
+		$st = _db_DoQuery($query,$args);
+		if ( $st ) {
+			$index = $st->insert_id;
+			$st->close();
+			return $index;
+		}
+	}
+	return false;
+}
+
 // Theoretically this should work, but disabling it until I need it //
 //function db_DoMultiQuery( $query,/*array*/ ...$args ) {
 //	if ( db_IsConnected() ) {

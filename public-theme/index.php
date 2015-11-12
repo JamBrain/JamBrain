@@ -12,7 +12,7 @@ const HTML_SHOW_FOOTER = true;
 // ** Modes ** //
 const THEME_MODE_NAMES = [
 	"Inactive",						// no event scheduled
-	"Theme Suggestion Round",		// weeks -5 to -2
+	"Theme Suggestion Round",		// weeks -5 to -2 (AKA: Ideas)
 	"Theme Slaughter Round",		// weeks -2 to -1
 	"Theme Voting Round",			// week -1 to day -2
 	"Final Round Theme Voting",		// day -2 to start -30 minutes
@@ -48,21 +48,21 @@ function ShowLogin() {
 function ShowComingSoon() {
 	
 }
-function ShowThemeSuggestion() { ?>
-	<div class="action" id="action-suggest">
+function ShowIdeas() { ?>
+	<div class="action" id="action-idea">
 		<div class="title bigger">Suggest a Theme</div>
 		<div class="form">
-			<input type="text" class="single-input" id="input-theme" placeholder="your suggestion" maxlength="64" />
-			<button type="button" class="submit-button" onclick="SubmitThemeForm();">Submit</button>
+			<input type="text" class="single-input" id="input-idea" placeholder="your suggestion" maxlength="64" />
+			<button type="button" class="submit-button" onclick="SubmitIdeaForm();">Submit</button>
 		</div>
 		<div class="footnote small">You have <strong><span id="sg-count">??</span></strong> suggestion(s) left</div>
 	</div>
 <?php
 }
 function ShowExtra() { ?>
-	<div class="suggestions" id="extra-my-suggestions">
+	<div class="sg" id="extra-sg">
 		<div class="title big">My Suggestions</div>
-		<div id="suggestions"></div>
+		<div id="sg"></div>
 	</div>
 <?php 
 } ?>
@@ -93,76 +93,87 @@ function ShowExtra() { ?>
 	}
 ?>
 <script>
-	function sg_Delete(Id) {
+	function sg_AddIdea(Id,Idea) {
 		Id = Number(Id);
-		
-		var el = document.getElementById('sg-item-'+Id);
-		if ( el ) {
-			el.remove();
-			SuggestionsLeftCount++;
-			sg_UpdateCount();
+		Idea = escapeQuotes(Idea);
+		document.getElementById('sg').innerHTML = 
+			"<div class='sg-item' id='sg-item-"+Id+"'>" +
+				"<span class='sg-item-x' onclick='sg_RemoveIdea("+Id+",\""+Idea+"\")'>✕</span>" +
+				"<span class='sg-item-text' title='"+Idea+"'>"+Idea+"</span>" +
+			"</div>" +
+			document.getElementById('sg').innerHTML;
+	}
+
+	function sg_RemoveIdea(Id,Idea) {
+		Id = Number(Id);
+		if ( window.confirm(Idea+"\n\nAre you sure you want to delete this?") ) {
+			xhr_PostJSON(
+				"/api-theme.php",
+				serialize({"action":"DELETE","id":Id}),
+				// On success //
+				function(response,code) {
+					console.log(response);
+					var el = document.getElementById('sg-item-'+response.id);
+					if ( el ) {
+						el.remove();
+					}
+					sg_UpdateCount(response.ideas_left);
+				}
+			);			
 		}
 	}
 	
-	function sg_UpdateCount() {
-		document.getElementById('sg-count').innerHTML = SuggestionsLeftCount;			
+	function sg_UpdateCount(count) {
+		document.getElementById('sg-count').innerHTML = count;			
 	}
-	
-	// http://stackoverflow.com/a/12562097
-	function EscapeQuotes(value) {
-		return String(value).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); //" // <- kill the weird quoting
-	}
-	
-	var SuggestionsLeftCount = 10;
-	function SubmitThemeForm() {
-		if ( SuggestionsLeftCount <= 0 )
+		
+	function SubmitIdeaForm() {
+		var elm = document.getElementById('input-idea');
+		var Idea = elm.value.trim();
+		elm.value = "";
+		
+		if ( Idea === "" )
 			return;
-		
-		var Theme = document.getElementById('input-theme').value.trim();
-		document.getElementById('input-theme').value = "";
-		if ( Theme === "" )
-			return;
-		
-		var Data = {
-			"theme":Theme
-		};
-		console.log(Data);
-		
-		var node_id = 100;
-		var author_id = 255;
-		
-		xhr_PostJSON("/api-theme.php","action=SUBMIT&node="+node_id+"&author="+author_id+"&theme="+Data.theme, function() {console.log("I DID IT");});
-		
-		// Set Loading state //
-		
-		var Id = SuggestionsLeftCount; // HACK
-		
-		// On success //
-		SuggestionsLeftCount--;
-		sg_UpdateCount();
 
-		document.getElementById('suggestions').innerHTML = 
-			"<div class='sg-item' id='sg-item-"+Id+"'>" +
-				"<span class='sg-item-x' onclick='sg_Delete("+Id+")'>✕</span>" +
-				"<span class='.sg-item-text' title='"+EscapeQuotes(Data.theme)+"'>"+Data.theme+"</span>" +
-			"</div>" +
-			document.getElementById('suggestions').innerHTML;
+		xhr_PostJSON(
+			"/api-theme.php",
+			serialize({"action":"SUBMIT","idea":Idea}),
+			// On success //
+			function(response,code) {
+				console.log(code,response);
+				
+				var Id = Number(response.id);
+				var Idea = response.idea;
+				
+				sg_UpdateCount(Number(response.ideas_left));
 		
-		// On failure //
-		// popup error //
-		
-		document.getElementById('input-theme').focus();
+				sg_AddIdea(Id,Idea);
+			}
+		);
+
+		elm.focus();
 	}
 	
 	window.onload = function() {
-		sg_UpdateCount();
+		xhr_PostJSON(
+			"/api-theme.php",
+			serialize({"action":"GET"}),
+			// On success //
+			function(response,code) {
+				response.ideas.forEach(function(response) {
+					sg_AddIdea(response.id,response.theme);
+				});
+				
+				sg_UpdateCount(response.ideas_left);
+			}
+		);
 	}
 </script>
 <div class="body">
 	<div class="main">
 		<?php
 			ShowHeadline();
-			ShowThemeSuggestion();
+			ShowIdeas();
 		?>
 	</div>
 	<div class="extra">

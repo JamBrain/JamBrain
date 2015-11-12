@@ -112,8 +112,10 @@ body {
 }
 .submit-button:hover, .submit-button:focus {
 	background:#E44;
-	border:2px solid #A22;
-	padding:8px 24px;
+	border:0;
+	padding:10px 26px;
+/*	border:2px solid #A22;*/
+/*	padding:8px 24px;*/
 	color:#FFB;
 	
 	cursor:pointer;
@@ -122,9 +124,9 @@ body {
 .submit-button:active {
 	background:#A22;
 	border:2px solid #E44;
+	padding:8px 24px;
 	color:#E44;
 	
-	padding:8px 24px;
 }
 
 body > .footer {
