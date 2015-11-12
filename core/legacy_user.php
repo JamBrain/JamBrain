@@ -18,7 +18,7 @@ function legacy_GetUserFromCookie() {
 		$id = intval($part[0]);
 		
 		$user = legacy_GetUser($id);
-		var_log($user);
+		var_dump($user);
 		
 		if ( isset($user['hash']) && ($user['hash'] == $hash) ) {
 			return $id;
