@@ -112,7 +112,7 @@ function ShowExtra() { ?>
 				serialize({"action":"REMOVE","id":Id}),
 				// On success //
 				function(response,code) {
-					console.log(response);
+					console.log("REMOVE:",response);
 					var el = document.getElementById('sg-item-'+response.id);
 					if ( el ) {
 						el.remove();
@@ -140,7 +140,7 @@ function ShowExtra() { ?>
 			serialize({"action":"ADD","idea":Idea}),
 			// On success //
 			function(response,code) {
-				console.log(code,response);
+				console.log("ADD:",response);
 				
 				response.id = Number(response.id);
 				response.ideas_left = Number(response.ideas_left);
@@ -166,6 +166,7 @@ function ShowExtra() { ?>
 			serialize({"action":"GET"}),
 			// On success //
 			function(response,code) {
+				console.log("GET:",response);
 				response.ideas.forEach(function(response) {
 					sg_AddIdea(response.id,response.theme);
 				});
