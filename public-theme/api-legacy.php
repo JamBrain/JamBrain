@@ -24,17 +24,13 @@ $response = json_NewResponse();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 	$action = trim($_POST['action']);
 	
-	$response['action']=$action;
-
 	if ( $action == "LOGOUT" ) {
 		setcookie( "lusha", "", 0, "/", str_replace("theme","",$_SERVER['SERVER_NAME']) );
 		$response['logout'] = 1;
 	}
 	else if ( $action == "GET_HASH" ) {
-		$response['you']=$_SERVER['REMOTE_ADDR'];
 		// This is only available to whitelisted clients, or while debugging //
 		if ( defined('LEGACY_DEBUG') || defined('IP_WHITELIST') && core_OnWhitelist($_SERVER['REMOTE_ADDR'],IP_WHITELIST) ) {
-			$response['in']="yes";
 			$id = intval($_POST['id']);
 			if ( $id > 0 ) {
 				$user = legacy_GetUser($id);
