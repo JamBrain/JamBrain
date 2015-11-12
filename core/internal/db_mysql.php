@@ -696,7 +696,6 @@ function db_DoFetchStringKey( $key, $query, ...$args ) {
 // TODO: Move these to prepare statement
 function db_TableExists($name) {
 	if ( db_IsConnected() ) {
-		global $db;
 		return mysqli_query($GLOBALS['db'],'SHOW TABLES LIKE "'.$GLOBALS['db']->real_escape_string($name).'";')->num_rows == 1;
 	}
 	return false;

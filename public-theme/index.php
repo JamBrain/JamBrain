@@ -48,7 +48,7 @@ function ShowLogin() {
 function ShowComingSoon() {
 	
 }
-function ShowIdeas() { ?>
+function ShowSubmitIdea() { ?>
 	<div class="action" id="action-idea">
 		<div class="title bigger">Suggest a Theme</div>
 		<div class="form">
@@ -109,7 +109,7 @@ function ShowExtra() { ?>
 		if ( window.confirm(Idea+"\n\nAre you sure you want to delete this?") ) {
 			xhr_PostJSON(
 				"/api-theme.php",
-				serialize({"action":"DELETE","id":Id}),
+				serialize({"action":"REMOVE","id":Id}),
 				// On success //
 				function(response,code) {
 					console.log(response);
@@ -137,17 +137,23 @@ function ShowExtra() { ?>
 
 		xhr_PostJSON(
 			"/api-theme.php",
-			serialize({"action":"SUBMIT","idea":Idea}),
+			serialize({"action":"ADD","idea":Idea}),
 			// On success //
 			function(response,code) {
 				console.log(code,response);
 				
-				var Id = Number(response.id);
-				var Idea = response.idea;
+				response.id = Number(response.id);
+				response.ideas_left = Number(response.ideas_left);
 				
-				sg_UpdateCount(Number(response.ideas_left));
-		
-				sg_AddIdea(Id,Idea);
+				// Success //
+				if ( response.id > 0 ) {
+					sg_UpdateCount(response.ideas_left);
+					sg_AddIdea(response.id,response.idea);
+				}
+				// Failure //
+				else {
+					console.log("No ideas left");
+				}
 			}
 		);
 
@@ -173,7 +179,7 @@ function ShowExtra() { ?>
 	<div class="main">
 		<?php
 			ShowHeadline();
-			ShowIdeas();
+			ShowSubmitIdea();
 		?>
 	</div>
 	<div class="extra">
