@@ -5,7 +5,6 @@ require_once __DIR__ . "/../core/config.php";
 const EVENT_NAME = "Ludum Dare 34";
 
 const LOGIN_URL = "http://ludumdare.com/compo/wp-content/plugins/ldjam/validate-user.php";
-//document.cookie="lusha=12345";
 
 define('HTML_TITLE',EVENT_NAME." - Theme Hub");
 const HTML_CSS_INCLUDE = [ "/style/theme-hub.css.php" ];
@@ -153,8 +152,15 @@ function ShowExtra() { ?>
 ?>
 <script>
 	function DoLogout() {
-		document.cookie = 'lusha' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-		location.reload();
+		xhr_PostJSON(
+			"/api-legacy.php",
+			serialize({"action":"LOGOUT"}),
+			// On success //
+			function(response,code) {
+				console.log(response);
+				location.reload();
+			}
+		);			
 	}
 	
 	function sg_AddIdea(Id,Idea) {
@@ -183,7 +189,7 @@ function ShowExtra() { ?>
 					}
 					sg_UpdateCount(response.ideas_left);
 				}
-			);			
+			);
 		}
 	}
 	
