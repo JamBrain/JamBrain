@@ -1,0 +1,18 @@
+#!/usr/bin/env php
+<?php
+require_once __DIR__."/../../db.php";
+require_once __DIR__."/../../core/internal/core.php";
+require_once __DIR__."/../../core/config.php";
+
+db_Connect();
+
+if ( db_IsConnected() ) {
+	config_Load();
+	
+	if ( isset($CONFIG) ) {
+		echo json_encode($CONFIG,JSON_PRETTY_PRINT)."\n";
+		exit(0);
+	}
+}
+
+exit(1);

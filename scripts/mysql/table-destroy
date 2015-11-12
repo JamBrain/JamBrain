@@ -4,9 +4,30 @@ require_once __DIR__."/../../db.php";
 require_once __DIR__."/../../core/internal/core.php";
 require_once __DIR__."/../../core/config.php";
 
+if (posix_getuid() != 0) {
+    echo "ERROR: Requires root\n";
+    exit(1);
+}
+
 array_shift($argv);
 foreach ($argv as $value) {
 	$table_list[$value]=true;
+}
+
+print "\n*** WARNING ***\n\n";
+if (isset($table_list)) {
+	print "You are about to DESTROY the following table(s):\n";
+	print implode(", ",$argv)."\n";
+}
+else {
+	print "You are about to DESTROY ALL TABLES!!\n";
+}
+print "\nAre you sure [type 'YES']? ";
+flush();
+$input = trim(fgets(STDIN));
+if ( $input != "YES" ) {
+	print "Aborting...\n";
+	exit(1);
 }
 
 db_Connect();

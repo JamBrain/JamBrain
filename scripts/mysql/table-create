@@ -4,15 +4,36 @@ require_once __DIR__."/../../db.php";
 require_once __DIR__."/../../core/internal/core.php";
 require_once __DIR__."/../../core/config.php";
 
+if (posix_getuid() != 0) {
+    error_log("Error: Requires root");
+    exit(1);
+}
+
 array_shift($argv);
 foreach ($argv as $value) {
 	$table_list[$value]=true;
 }
 
+print "\n*** WARNING ***\n\n";
+if (isset($table_list)) {
+	print "You are about to create/update the following table(s):\n";
+	print implode(", ",$argv)."\n";
+}
+else {
+	print "You are about to create/update ALL tables.\n";
+}
+print "\nAre you sure [type 'YES']? ";
+flush();
+$input = trim(fgets(STDIN));
+if ( $input != "YES" ) {
+	print "Aborting...\n";
+	exit(1);
+}
+
 db_Connect();
 
 if ( !db_IsConnected() ) {
-	echo "Failed to connect to Database. Retrying as server only...";
+	print "Failed to connect to Database. Retrying as server only...";
 	
 	db_ConnectOnly();
 
@@ -21,12 +42,12 @@ if ( !db_IsConnected() ) {
 		exit(1);
 	}
 	
-	echo "Connected.\n";
+	print "Connected.\n";
 
 	// If database doesn't exist, create it //
 	if ( !db_DatabaseExists(CMW_DB_NAME) ) {
 		db_DoQuery("CREATE DATABASE IF NOT EXISTS ?;",CMW_DB_NAME);
-		echo("Database '".CMW_DB_NAME."' created.\n");
+		print("Database '".CMW_DB_NAME."' created.\n");
 	
 		// Reconnect //
 		db_Close();
@@ -37,7 +58,7 @@ if ( !db_IsConnected() ) {
 			exit(1);
 		}
 		
-		echo "Reconnected.\n";
+		print "Reconnected.\n";
 	}
 }
 
@@ -64,20 +85,20 @@ config_Load();
 function DoInit($table) {
 	global $CONFIG, $version, $old_version;
 	
-	echo "* ".$table."\n";
+	print "* ".$table."\n";
 	$version = isset($CONFIG[$table])?intval($CONFIG[$table]):0;
 	$old_version = $version;	
 }
 function DoCreate( $table, ...$args ) {
 	$ret = db_DoQuery( ...$args );
-	echo $table." created\n";
+	print $table." created\n";
 	return $ret;
 }
 function DoExit($table) {
 	global $CONFIG, $version, $old_version;
 	
 	if ( config_Set($table,strval($version)) ) {
-		echo $table." upgraded (version ".$old_version." -> ".$version.")\n";	
+		print $table." upgraded (version ".$old_version." -> ".$version.")\n";	
 	}
 }
 
@@ -106,10 +127,10 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 	$DIFF_CONFIG = array_diff_key(DEFAULT_CONFIG,$CONFIG);
 	$DIFF_CONFIG_COUNT = count($DIFF_CONFIG);
 	if ( $DIFF_CONFIG_COUNT > 0 ) {
-		echo "Adding ".$DIFF_CONFIG_COUNT." missing element(s) to ".$table."\n";
+		print "Adding ".$DIFF_CONFIG_COUNT." missing element(s) to ".$table."\n";
 		
 		foreach ( $DIFF_CONFIG as $key => $value ) {
-			echo "  * ".$key." = ".(is_string($value)?("\"".$value."\"\n"):($value."\n"));
+			print "  * ".$key." = ".(is_string($value)?("\"".$value."\"\n"):($value."\n"));
 			config_Set($key,$value);
 		}
 	}
@@ -117,10 +138,10 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 	$DIFF_CONFIG = array_diff_key($CONFIG,DEFAULT_CONFIG);
 	$DIFF_CONFIG_COUNT = count($DIFF_CONFIG);
 	if ( $DIFF_CONFIG_COUNT > 0 ) {
-		echo "NOTE: There are ".$DIFF_CONFIG_COUNT." element(s) not found in DEFAULT_CONFIG\n";
+		print "NOTE: There are ".$DIFF_CONFIG_COUNT." element(s) not found in DEFAULT_CONFIG\n";
 		
 		foreach ( $DIFF_CONFIG as $key => $value ) {
-			echo "  * ".$key." = ".(is_string($value)?("\"".$value."\"\n"):($value."\n"));
+			print "  * ".$key." = ".(is_string($value)?("\"".$value."\"\n"):($value."\n"));
 		}
 	}
 }
@@ -180,3 +201,5 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 //		ON DUPLICATE KEY UPDATE
 //			`value`=VALUES(`value`)
 //		;",
+
+print "Done.\n";
