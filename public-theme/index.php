@@ -34,6 +34,27 @@ config_Load();
 
 $active_mode = 1;
 
+function ShowHeader() {
+	global $active_mode;
+	if ( defined('EVENT_NAME') ) {
+		echo "<div class='event big inv'>Event: <strong class='caps' id='event-name'>".EVENT_NAME."</strong></div>";
+
+		echo "<div class='mode small caps'>";
+		$theme_mode_count = count(THEME_MODE_SHORTNAMES);
+		for ( $idx = 1; $idx < $theme_mode_count-1; $idx++ ) {
+			if ($idx !== 1)
+				echo " | ";
+			if ($idx === $active_mode)
+				echo "<strong>".THEME_MODE_SHORTNAMES[$idx]."</strong>";
+			else
+				echo THEME_MODE_SHORTNAMES[$idx];
+		}
+		echo "</div>";
+
+		echo "<div class='date normal inv caps' id='event-date'>Starts at <strong id='ev-time'>9:00 PM</strong> on <span id='ev-day'>Friday</span> <strong id='ev-date'>December 11th, 2015</strong> (<span id='ev-zone'>EST</span>)</strong></div>";
+	}
+}
+
 function ShowHeadline() {
 	global $active_mode;
 	echo "<div class='headline'>";
@@ -105,24 +126,8 @@ function ShowExtra() { ?>
 <?php 
 } ?>
 <?php template_GetHeader(); ?>
-<div class="header"><?php 
-	if ( defined('EVENT_NAME') ) {
-		echo "<div class='event big inv'>Event: <strong class='caps' id='event-name'>".EVENT_NAME."</strong></div>";
-
-		echo "<div class='mode small caps'>";
-		$theme_mode_count = count(THEME_MODE_SHORTNAMES);
-		for ( $idx = 1; $idx < $theme_mode_count-1; $idx++ ) {
-			if ($idx !== 1)
-				echo " | ";
-			if ($idx === $active_mode)
-				echo "<strong>".THEME_MODE_SHORTNAMES[$idx]."</strong>";
-			else
-				echo THEME_MODE_SHORTNAMES[$idx];
-		}
-		echo "</div>";
-
-		echo "<div class='date normal inv caps' id='event-date'>Starts at <strong>9:00 PM</strong> on Friday <strong>December 11th, 2015</strong> (EST)</strong></div>";
-	}
+<div class="header"><?php
+	ShowHeader();
 ?>
 </div>
 <?php
@@ -168,10 +173,11 @@ function ShowExtra() { ?>
 	function SubmitIdeaForm() {
 		var elm = document.getElementById('input-idea');
 		var Idea = elm.value.trim();
-		elm.value = "";
 		
 		if ( Idea === "" )
 			return;
+
+		elm.value = "";
 
 		xhr_PostJSON(
 			"/api-theme.php",
@@ -190,6 +196,7 @@ function ShowExtra() { ?>
 				}
 				// Failure //
 				else {
+					elm.value = Idea;	// Restore
 					console.log("No ideas left");
 				}
 			}

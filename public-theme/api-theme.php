@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		}
 		else if ( $action == "ADD" ) {
 			if ( $ideas_left > 0 ) {
-				$idea = trim($_POST['idea']);		// TODO: sanitize
+				$idea = trim(strip_tags($_POST['idea']));		// TODO: sanitize
 		
 				if ( !empty($idea) ) {
 					$ret = theme_AddMyIdea($idea,$node,$user_id);
@@ -37,8 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			}
 		}
 		else if ( $action == "REMOVE" ) {
-			$id = intval($_POST['id']);				// TODO: validate
+			$id = intval($_POST['id']);
 			if ( $id > 0 ) {
+				// TODO: Is id valid?
+				
 				theme_RemoveMyIdea($id,$user_id);
 				
 				$response['id'] = $id;
