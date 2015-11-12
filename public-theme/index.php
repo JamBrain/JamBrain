@@ -4,6 +4,9 @@ require_once __DIR__ . "/../core/config.php";
 
 const EVENT_NAME = "Ludum Dare 34";
 
+const LOGIN_URL = "http://ludumdare.com/compo";
+//document.cookie="lusha=12345";
+
 define('HTML_TITLE',EVENT_NAME." - Theme Hub");
 const HTML_CSS_INCLUDE = [ "/style/theme-hub.css.php" ];
 const HTML_USE_CORE = true;
@@ -61,8 +64,8 @@ function ShowHeadline() {
 	echo "<div class='title bigger'><strong>".strtoupper(THEME_MODE_NAMES[$active_mode])."</strong></div>";
 	
 	// Date Hack //
-//	$TargetDate = strtotime("2015-12-12T02:00:00Z");	// LD Time //
-	$TargetDate = strtotime("2015-11-27T23:00:00Z");
+	$EventDate = strtotime("2015-12-12T02:00:00Z");
+	$TargetDate = $EventDate - (2*7*24*60*60) - (6*60*60);
 	$DateDiff = $TargetDate - time();
 	
 	$SEC = $DateDiff % 60;
@@ -96,13 +99,26 @@ function ShowHeadline() {
 		else if ( $HOUR == 1 )
 			$OutTime .= $HOUR." hour";
 	}
+	
+	$UTCDate = date(DATE_RFC850,$TargetDate);
 
-	echo "<div class='clock' id='headline-clock'>Round ends in <span id='headline-time'>".$OutTime."</span></div>";
+	echo "<div class='clock' id='headline-clock'>Round ends in <span id='headline-time' title=\"".$UTCDate."\">".$OutTime."</span></div>";
 	echo "</div>";
 }
 
 function ShowLogin() {
-	
+?>
+	<div class="action" id="action-login">
+		<a href="<?= LOGIN_URL ?>"><button type="button" class="submit-button">Login</button></a>
+	</div>	
+<?php
+}
+function ShowLogout() {
+?>
+	<div class="action" id="action-logout">
+		<button type="button" class="submit-button" onclick="DoLogout()">Logout</button>
+	</div>	
+<?php
 }
 function ShowComingSoon() {
 	
@@ -136,6 +152,11 @@ function ShowExtra() { ?>
 	}
 ?>
 <script>
+	function DoLogout() {
+		document.cookie = 'lusha' + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+		location.reload();
+	}
+	
 	function sg_AddIdea(Id,Idea) {
 		Id = Number(Id);
 		Idea = escapeQuotes(Idea);
@@ -197,7 +218,7 @@ function ShowExtra() { ?>
 				// Failure //
 				else {
 					elm.value = Idea;	// Restore
-					console.log("No ideas left");
+					alert("Out of Suggestions");
 				}
 			}
 		);
@@ -206,6 +227,9 @@ function ShowExtra() { ?>
 	}
 	
 	window.onload = function() {
+	<?php
+	if ( isset($_COOKIE['lusha']) ) {
+	?>
 		xhr_PostJSON(
 			"/api-theme.php",
 			serialize({"action":"GET"}),
@@ -219,19 +243,30 @@ function ShowExtra() { ?>
 				sg_UpdateCount(response.ideas_left);
 			}
 		);
+	<?php
+	}
+	?>
 	}
 </script>
 <div class="body">
 	<div class="main">
 		<?php
 			ShowHeadline();
-			ShowSubmitIdea();
+			if ( isset($_COOKIE['lusha']) ) {
+				ShowSubmitIdea();
+				ShowLogout();
+			}
+			else {
+				ShowLogin();
+			}
 		?>
 	</div>
-	<div class="extra">
-		<?php
+	<?php
+		if ( isset($_COOKIE['lusha']) ) {
+			echo "<div class='extra'>";
 			ShowExtra();
-		?>
-	</div>
+			echo "</div>";
+		}
+	?>
 </div>
 <?php template_GetFooter();
