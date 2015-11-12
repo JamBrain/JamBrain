@@ -513,31 +513,30 @@ function _db_BindExecute( &$st, $args ) {
 
 // Underscore version doesn't close //
 function _db_DoQuery( $query, $args ) {
+	db_Connect();
+
 	$st = _db_Prepare($query);
 	if ( $st && _db_BindExecute($st,$args) ) {
 		return $st;
 	}
+	db_LogError();
 	return false;
 }
 function db_DoQuery( $query, ...$args ) {
-	if ( db_IsConnected() ) {
-		$st = _db_DoQuery($query,$args);
-		if ( $st ) {
-			return $st->close();
-		}
+	$st = _db_DoQuery($query,$args);
+	if ( $st ) {
+		return $st->close();
 	}
 	return false;
 }
 
 // Do an INSERT query, return the Id //
 function db_DoInsertQuery( $query, ...$args ) {
-	if ( db_IsConnected() ) {
-		$st = _db_DoQuery($query,$args);
-		if ( $st ) {
-			$index = $st->insert_id;
-			$st->close();
-			return $index;
-		}
+	$st = _db_DoQuery($query,$args);
+	if ( $st ) {
+		$index = $st->insert_id;
+		$st->close();
+		return $index;
 	}
 	return false;
 }
@@ -636,59 +635,49 @@ function db_DoFetchSingle( $query, ...$args ) {
 
 // Fetch only the first element in each row, and make an array
 function db_DoFetchFirst( $query, ...$args ) {
-	if ( db_IsConnected() ) {
-		$st = _db_DoQuery($query,$args);
-		if ( $st ) {
-			$ret = _db_GetFirst($st);
-			$st->close();
-			return $ret;
-		}
+	$st = _db_DoQuery($query,$args);
+	if ( $st ) {
+		$ret = _db_GetFirst($st);
+		$st->close();
+		return $ret;
 	}
 	return null;
 }
 // Fetch a pair of elements, using the 1st as the key, 2nd as value
 function db_DoFetchPair( $query, ...$args ) {
-	if ( db_IsConnected() ) {
-		$st = _db_DoQuery($query,$args);
-		if ( $st ) {
-			$ret = _db_GetPair($st);
-			$st->close();
-			return $ret;
-		}
+	$st = _db_DoQuery($query,$args);
+	if ( $st ) {
+		$ret = _db_GetPair($st);
+		$st->close();
+		return $ret;
 	}
 	return null;
 }
 function db_DoFetchIntPair( $query, ...$args ) {
-	if ( db_IsConnected() ) {
-		$st = _db_DoQuery($query,$args);
-		if ( $st ) {
-			$ret = _db_GetIntPair($st);
-			$st->close();
-			return $ret;
-		}
+	$st = _db_DoQuery($query,$args);
+	if ( $st ) {
+		$ret = _db_GetIntPair($st);
+		$st->close();
+		return $ret;
 	}
 	return null;
 }
 
 function db_DoFetchKey( $key, $query, ...$args ) {
-	if ( db_IsConnected() ) {
-		$st = _db_DoQuery($query,$args);
-		if ( $st ) {
-			$ret = _db_GetAssocKey($key,$st);
-			$st->close();
-			return $ret;
-		}
+	$st = _db_DoQuery($query,$args);
+	if ( $st ) {
+		$ret = _db_GetAssocKey($key,$st);
+		$st->close();
+		return $ret;
 	}
 	return null;
 }
 function db_DoFetchStringKey( $key, $query, ...$args ) {
-	if ( db_IsConnected() ) {
-		$st = _db_DoQuery($query,$args);
-		if ( $st ) {
-			$ret = _db_GetAssocStringKey($key,$st);
-			$st->close();
-			return $ret;
-		}
+	$st = _db_DoQuery($query,$args);
+	if ( $st ) {
+		$ret = _db_GetAssocStringKey($key,$st);
+		$st->close();
+		return $ret;
 	}
 	return null;
 }

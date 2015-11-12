@@ -35,7 +35,7 @@ const CMW_TABLE_THEME_IDEA_LOVE =		CMW_TABLE_PREFIX."theme_idea_love";
 const CMW_TABLE_THEME =					CMW_TABLE_PREFIX."theme";
 const CMW_TABLE_THEME_VOTE =			CMW_TABLE_PREFIX."theme_vote";
 
-const CMW_TABLE_PROXY_USER =			CMW_TABLE_PREFIX."proxy_user";
+const CMW_TABLE_LEGACY_USER =			CMW_TABLE_PREFIX."legacy_user";
 
 // Field constants for Schema //
 const CMW_FIELD_TYPE_IGNORE = 0;		// Field will be unset (NOTE: Prefer a custom query) //

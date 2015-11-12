@@ -35,7 +35,7 @@ const DEFAULT_CONFIG = [
 	CMW_TABLE_THEME => '0',					// Themes
 	CMW_TABLE_THEME_VOTE => '0',			// Theme Votes
 	
-	CMW_TABLE_PROXY_USER => '0',			// Placeholder Legacy User List
+	CMW_TABLE_LEGACY_USER => '0',			// Placeholder Legacy User List
 	
 	'event-active' => '0',					// Currently Active Event
 	

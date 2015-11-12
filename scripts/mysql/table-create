@@ -63,17 +63,18 @@ if ( !db_IsConnected() ) {
 }
 
 // Database Setup //
-db_DoQuery("SET storage_engine=InnoDB;");
-db_DoQuery("SET collation_server=utf8_unicode_ci;");
-db_DoQuery("SET character_set_server=utf8;");
+//db_DoQuery("SET storage_engine=InnoDB;");
+//db_DoQuery("SET collation_server=utf8mb4_unicode_ci;");
+//db_DoQuery("SET character_set_server=utf8mb4;");
 
 // NOTE: utf8 is 3 byte unicode. utf8mb4 is 4 byte. Required for Emoji.
 const CSTYPE_UTF8 = " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
-const CSTYPE_LATIN = " CHARACTER SET latin1 COLLATE latin1_swedish_ci";		// Case Insensitive
-//const CSTYPE_LATIN_S = " CHARACTER SET latin1 COLLATE latin1_bin";		// Case Sensitive
-//const CSTYPE_ASCII = " CHARACTER SET ????? COLLATE ?????";				// ASCII code Sensitive
-
+//const CSTYPE_LATIN = " CHARACTER SET latin1 COLLATE latin1_swedish_ci";		// Case Insensitive
+//const CSTYPE_LATIN_S = " CHARACTER SET latin1 COLLATE latin1_bin";			// Case Sensitive
+//const CSTYPE_ASCII = " CHARACTER SET ????? COLLATE ?????";					// ASCII code Sensitive
 // https://dev.mysql.com/doc/refman/5.5/en/case-sensitivity.html
+
+const DEFAULT_CS_ENGINE = CSTYPE_UTF8." ENGINE=InnoDB";
 
 
 global $CONFIG, $version, $old_version;
@@ -91,7 +92,10 @@ function DoInit($table) {
 }
 function DoCreate( $table, ...$args ) {
 	$ret = db_DoQuery( ...$args );
-	print $table." created\n";
+	if ( $ret )
+		print $table." created\n";
+	else
+		print "Error creating ".$table."\n";
 	return $ret;
 }
 function DoExit($table) {
@@ -109,7 +113,7 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 	DoInit($table);
 	switch ($version) {
 	case 0:
-		DoCreate( $table,
+		$ok = DoCreate( $table,
 			"CREATE TABLE ".$table." (
 				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
 					UNIQUE,
@@ -117,10 +121,10 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 					INDEX(`key`),
 				`value` VARCHAR(128) NOT NULL DEFAULT '',
 				`timestamp` DATETIME NOT NULL
-			);");
-		$version++; if (isset($max_version) && $version == $max_version) break;
+			)".DEFAULT_CS_ENGINE.";");
+		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
 	case 1:
-		$version++; if (isset($max_version) && $version == $max_version) break;
+		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
 	};
 	DoExit($table);
 	
@@ -153,7 +157,7 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 	DoInit($table);
 	switch ($version) {
 	case 0:
-		DoCreate( $table,
+		$ok = DoCreate( $table,
 			"CREATE TABLE ".$table." (
 				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
 					UNIQUE,
@@ -163,21 +167,33 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 					INDEX(author),
 				theme VARCHAR(64) NOT NULL,
 				`timestamp` DATETIME NOT NULL
-			);");
-		$version++; if (isset($max_version) && $version == $max_version) break;
+			)".DEFAULT_CS_ENGINE.";");
+		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
 	};
 	DoExit($table);
 }
 
-//db_DoQuery(
-//	"INSERT ".CMW_TABLE_THEME_IDEA." (
-//		node, author, theme, `timestamp`
-//	)
-//	VALUES ( 
-//		?, ?, NOW()
-//	)",
-//	225, "hoo haw"
-//);
+
+// Create/Upgrade Table //
+$table = CMW_TABLE_LEGACY_USER;
+if ( !isset($table_list) || isset($table_list[$table]) ) {
+	DoInit($table);
+	switch ($version) {
+	case 0:
+		$ok = DoCreate( $table,
+			"CREATE TABLE ".$table." (
+				id BIGINT UNSIGNED NOT NULL 
+					UNIQUE,
+				`hash` VARCHAR(128) CHARSET latin1 NOT NULL,
+				`timestamp` DATETIME NOT NULL,
+				bonus_votes INT NOT NULL,
+				num_events INT UNSIGNED NOT NULL,
+				gravatar VARCHAR(32) CHARSET latin1 NOT NULL
+			)".DEFAULT_CS_ENGINE.";");
+		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
+	};
+	DoExit($table);
+}
 
 
 

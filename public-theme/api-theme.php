@@ -2,7 +2,7 @@
 require_once __DIR__."/../api.php";
 require_once __DIR__."/../db.php";
 require_once __DIR__."/../core/theme.php";
-require_once __DIR__."/../core/legacy_user.php";
+require_once __DIR__."/.g./core/legacy_user.php";
 
 $response = json_NewResponse();
 
