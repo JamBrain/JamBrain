@@ -13,6 +13,11 @@ function PADNUM( $number ) {
 	return "".$number;
 }
 
+// Convert MySQL date strings to ISO format //
+function MYSQL_ISO_FORMAT($field) {
+	return "DATE_FORMAT(".$field.",'%Y-%m-%dT%TZ') AS ".$field;
+}
+
 // Shorthand that does a print_r on data, removes newlines, and returns the result //
 function return_r( $data ) {
 	return trim(preg_replace('/\s+/',' ',print_r( $data, true)));

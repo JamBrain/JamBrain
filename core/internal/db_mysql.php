@@ -531,7 +531,7 @@ function db_DoQuery( $query, ...$args ) {
 }
 
 // Do an INSERT query, return the Id //
-function db_DoInsertQuery( $query, ...$args ) {
+function db_DoInsert( $query, ...$args ) {
 	$st = _db_DoQuery($query,$args);
 	if ( $st ) {
 		$index = $st->insert_id;
@@ -615,13 +615,11 @@ function _db_GetIntPair(&$st) {
 
 
 function db_DoFetch( $query, ...$args ) {
-	if ( db_IsConnected() ) {
-		$st = _db_DoQuery($query,$args);
-		if ( $st ) {
-			$ret = _db_GetAssoc($st);
-			$st->close();
-			return $ret;
-		}
+	$st = _db_DoQuery($query,$args);
+	if ( $st ) {
+		$ret = _db_GetAssoc($st);
+		$st->close();
+		return $ret;
 	}
 	return null;
 }

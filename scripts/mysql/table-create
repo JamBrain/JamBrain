@@ -30,8 +30,8 @@ if ( $input != "YES" ) {
 	exit(1);
 }
 
+// Normally Connect isn't required, but done here to confirm existence of DB //
 db_Connect();
-
 if ( !db_IsConnected() ) {
 	print "Failed to connect to Database. Retrying as server only...";
 	
@@ -62,21 +62,8 @@ if ( !db_IsConnected() ) {
 	}
 }
 
-// Database Setup //
-//db_DoQuery("SET storage_engine=InnoDB;");
-//db_DoQuery("SET collation_server=utf8mb4_unicode_ci;");
-//db_DoQuery("SET character_set_server=utf8mb4;");
-
 // NOTE: utf8 is 3 byte unicode. utf8mb4 is 4 byte. Required for Emoji.
-const CSTYPE_UTF8 = " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
-//const CSTYPE_LATIN = " CHARACTER SET latin1 COLLATE latin1_swedish_ci";		// Case Insensitive
-//const CSTYPE_LATIN_S = " CHARACTER SET latin1 COLLATE latin1_bin";			// Case Sensitive
-//const CSTYPE_ASCII = " CHARACTER SET ????? COLLATE ?????";					// ASCII code Sensitive
-// https://dev.mysql.com/doc/refman/5.5/en/case-sensitivity.html
-
-const DEFAULT_CS_ENGINE = CSTYPE_UTF8." ENGINE=InnoDB";
-
-
+const DEFAULT_CS_ENGINE = " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE=InnoDB";
 global $CONFIG, $version, $old_version;
 
 // Load Configuration //
@@ -195,27 +182,5 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 	DoExit($table);
 }
 
-
-
-//	"CREATE TABLE ".$table." (
-//		id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
-//			UNIQUE,
-//		`key` VARCHAR(64) CHARSET latin1 NOT NULL DEFAULT '',
-//			INDEX(`key`),
-//		`value` VARCHAR(64) NOT NULL DEFAULT ''
-//	);");
-
-// 	$DB_CONFIG = db_DoFetchPair("SELECT `key`,`value` FROM ".CMW_TABLE_CONFIG.";");
-
-//	db_DoQuery(
-//		"INSERT IGNORE ".CMW_TABLE_CONFIG." (
-//			`key`, `value`
-//		)
-//		VALUES ( 
-//			?, ? 
-//		)
-//		ON DUPLICATE KEY UPDATE
-//			`value`=VALUES(`value`)
-//		;",
 
 print "Done.\n";

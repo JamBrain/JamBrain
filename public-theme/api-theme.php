@@ -7,7 +7,7 @@ require_once __DIR__."/.g./core/legacy_user.php";
 $response = json_NewResponse();
 
 // MAIN (Only accept POST requests) //
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 	$action = trim($_POST['action']);
 	$node = 100;//intval($CONFIG['event-active']);//isset($_POST['node']) ? intval($_POST['node']) : 0;
 	$user_id = 255;//legacy_GetUser();//isset($_POST['user']) ? intval($_POST['user']) : 0;
