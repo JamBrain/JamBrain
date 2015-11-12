@@ -242,11 +242,16 @@ function ShowExtra() { ?>
 			// On success //
 			function(response,code) {
 				console.log("GET:",response);
-				response.ideas.forEach(function(response) {
-					sg_AddIdea(response.id,response.theme);
-				});
-				
-				sg_UpdateCount(response.ideas_left);
+				if ( response.hasOwnProperty('ideas') ) {
+					response.ideas.forEach(function(response) {
+						sg_AddIdea(response.id,response.theme);
+					});
+					
+					sg_UpdateCount(response.ideas_left);
+				}
+				else {
+					sg_UpdateCount("ERROR");
+				}
 			}
 		);
 	<?php
