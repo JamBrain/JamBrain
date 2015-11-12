@@ -7,24 +7,23 @@
 require_once __DIR__."/../db.php";
 require_once __DIR__."/internal/core.php";
 require_once __DIR__."/../legacy-config.php";
-/*
+
 function legacy_GetUserFromCookie() {
 	if (isset($_COOKIE['lusha'])) {
-		return 100;
-//		$part = explode("|",$_COOKIE['lusha'],2);
-//		
-//		if (count($part) !== 2)
-//			return 0;
-//		
-//		$user_id = intval(base48_Decode($part[0]));
-//		
-//		// Confirm User Id and HASH match //
-//		
-//		return $user_id;
+		$part = explode(".",$_COOKIE['lusha'],2);
+		
+		if (count($part) !== 2)
+			return 0;
+		
+		$id = intval($part[0]);
+		
+		// TODO: Confirm User Id and HASH match //
+		
+		return $id;
 	}
 	return 0;	
 }
-*/
+
 
 function legacy_GetUser($id) {
 	return db_DoFetchSingle(
