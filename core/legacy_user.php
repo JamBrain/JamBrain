@@ -6,9 +6,11 @@
  */
 require_once __DIR__."/../db.php";
 require_once __DIR__."/internal/core.php";
+require_once __DIR__."/legacy-config.php";
 
-//function legacy_GetUser() {
-//	if (isset($_COOKIE['lusha'])) {
+function legacy_GetUserFromCookie() {
+	if (isset($_COOKIE['lusha'])) {
+		return 100;
 //		$part = explode("|",$_COOKIE['lusha'],2);
 //		
 //		if (count($part) !== 2)
@@ -19,9 +21,9 @@ require_once __DIR__."/internal/core.php";
 //		// Confirm User Id and HASH match //
 //		
 //		return $user_id;
-//	}
-//	return 0;	
-//}
+	}
+	return 0;	
+}
 
 function legacy_GetUser($id) {
 	return db_DoFetchSingle(
@@ -58,14 +60,12 @@ function legacy_GenerateUserHash($id) {
 	return $hash;
 }
 
-
-const FETCH_URL = "http://ludumdare.com/compo/wp-content/plugins/ldjam/fetch-user.php";
 function legacy_FetchUserInfo($id) {	
 	$data = [
 		'id'=>$id
 	];
 	
-	$result = http_post_fields(FETCH_URL,$data);
+	$result = http_post_fields(LEGACY_FETCH_URL,$data);
 	
 	if ( $result !== false ) {
 		var_dump($result);

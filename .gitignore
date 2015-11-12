@@ -8,6 +8,7 @@ error_log
 /public/static/
 /public-static/upload/
 /config.php
+/public-theme/legacy-config.php
 node_modules/
 output/
 obj/
