@@ -6,7 +6,7 @@
  */
 require_once __DIR__."/../db.php";
 require_once __DIR__."/internal/core.php";
-require_once __DIR__."/legacy-config.php";
+require_once __DIR__."/../legacy-config.php";
 
 function legacy_GetUserFromCookie() {
 	if (isset($_COOKIE['lusha'])) {
