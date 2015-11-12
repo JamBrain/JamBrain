@@ -46,7 +46,7 @@ body {
 .extra {
 	padding:1.0em;
 	background:#CCC;
-	box-shadow: 0 0px 3px rgba(0,0,0,0.2);
+	box-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
 .extra .title {
 	margin-bottom:0.5em;
@@ -99,11 +99,11 @@ body {
 }
 
 .submit-button {
-	background:#BBB;
-	border:2px solid #888;
-	color:#444;
+	background:#AAA;
+	border:0;
+	padding:10px 26px;
+	color:#DDD;
 
-	padding:8px 24px;
 	margin:0.5em;
 	border-radius:32px;
 	font-weight:700;
@@ -111,17 +111,18 @@ body {
     outline: none;
 }
 .submit-button:hover, .submit-button:focus {
-	background:#F84;
-	border:2px solid #A42;
-	color:#420;
+	background:#E44;
+	border:2px solid #A22;
+	padding:8px 24px;
+	color:#FFB;
 	
 	cursor:pointer;
 	box-shadow: 0 0 4px rgba(0,0,0,0.3);
 }
 .submit-button:active {
-	background:#A42;
-	border:2px solid #F84;
-	color:#F84;
+	background:#A22;
+	border:2px solid #E44;
+	color:#E44;
 	
 	padding:8px 24px;
 }
@@ -131,19 +132,37 @@ body > .footer {
 }
 
 .sg-item {
+	padding:0 0.25em;
 }
 .sg-item-x {
 	float:right;
 	margin-left:1.0em;
 	padding:0 0.25em;
-	text-shadow: 0 0px 2px rgba(0,0,0,0.3);
 	cursor:pointer;
 }
 .sg-item-x:hover {
 	color:#F00;
+	text-shadow: 0 0px 6px rgba(255,192,0,0.5);
 }
 .sg-item-x:active {
 	color:#FF0;
+}
+
+.alert {
+	background:#E87;
+	color:#FFD;
+	text-align:center;
+	padding:0.5em;
+}
+
+.alert a {
+	font-weight:bold;
+	color:#FF8;
+	text-decoration:none;
+}
+.alert a:hover {
+	color:#FFF;
+	text-decoration:underline;
 }
 
 /* Can't Select This */
@@ -163,6 +182,8 @@ body > .footer {
 	overflow:hidden;
 	text-align:center;
 	white-space:nowrap;
+	
+	box-shadow:0 0 4px rgba(0,0,0,0.3)
 }
 .body > div {
 	display:inline-block;

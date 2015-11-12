@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . "/../web.php";
-//require_once __DIR__ . "/../db.php";
+require_once __DIR__ . "/../core/config.php";
 
 const EVENT_NAME = "Ludum Dare 34";
 
@@ -30,8 +30,9 @@ const THEME_MODE_SHORTNAMES = [
 	"Coming Soon"
 ];
 
-$active_mode = 1;
+config_Load();
 
+$active_mode = 1;
 
 function ShowHeadline() {
 	global $active_mode;
@@ -86,6 +87,11 @@ function ShowExtra() { ?>
 	}
 ?>
 </div>
+<?php
+	if ( !empty($CONFIG['theme-alert']) ) {
+		echo "<div class='alert caps'>",$CONFIG['theme-alert'],"</div>";
+	}
+?>
 <script>
 	function sg_Delete(Id) {
 		Id = Number(Id);

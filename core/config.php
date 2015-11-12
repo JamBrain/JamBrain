@@ -79,5 +79,7 @@ function _config_Load() {
 	);
 }
 function config_Load() {
+	db_Connect();
+	
 	$GLOBALS['CONFIG'] = _config_Load();
 }
