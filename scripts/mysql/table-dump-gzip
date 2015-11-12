@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ $# -lt 1 ]; then
+	>&2 echo "Usage: $0 table_name [additional arguments for mysqldump] > table_name.sql.gz"
+	exit 1
+fi
+
+COMMAND=$0
+COMMAND_PATH=`pwd -P`
+
+$COMMAND_PATH/table-dump $@ | gzip
+
+exit $?

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ $# -lt 1 ]; then
-	echo "Usage: $0 my_database_file.sql.gz [other arguments to mysql]"
+	>&2 echo "Usage: $0 my_database_file.sql.gz [other arguments to mysql]"
 	exit 1
 fi
 
@@ -14,7 +14,7 @@ ARGS=$@
 
 DB=`$COMMAND_PATH/database-get`
 if [ $? -ne 0 ]; then
-	echo "Error: Unable to fetch database name"
+	>&2 echo "Error: Unable to fetch database name"
 	exit 1
 fi
 
