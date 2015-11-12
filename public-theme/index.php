@@ -4,7 +4,7 @@ require_once __DIR__ . "/../core/config.php";
 
 const EVENT_NAME = "Ludum Dare 34";
 
-const LOGIN_URL = "http://ludumdare.com/compo";
+const LOGIN_URL = "http://ludumdare.com/compo/wp-content/plugins/ldjam/validate-user.php";
 //document.cookie="lusha=12345";
 
 define('HTML_TITLE',EVENT_NAME." - Theme Hub");
