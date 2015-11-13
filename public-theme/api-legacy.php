@@ -37,11 +37,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 				// Not in Database yet
 				if ( empty($user) ) {
 					// Do handshake, confirm user exists //
-//					$result = legacy_FetchUserInfo($id);
-//					if ( !empty($result) ) {
+					$result = legacy_FetchUserInfo($id);
+					if ( isset($result['register_date']) ) {
 						// Generate Hash //
 						$user['hash'] = legacy_GenerateUserHash($id);
-//					}
+					}
 				}
 				
 				if ( $user ) {
