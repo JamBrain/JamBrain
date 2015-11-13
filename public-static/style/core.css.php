@@ -17,7 +17,8 @@ html {
 
 	color:#333;
 }
-strong, h1, h2, h3, h4, h5, h6 {
+strong, b, h1, h2, h3, h4, h5, h6 {
+	/* Bold at 700, but not all browsers know that */
 	font-weight:700;
 }
 small {
