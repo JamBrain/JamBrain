@@ -53,7 +53,7 @@ window.escapeAttribute = function(value) {
 		replace(/>/g, '&gt;');
 }
 
-window.escape = function(value) {
+window.escapeString = function(value) {
 	return String(value).
 		replace(/&/g, '&amp;').
 		replace(/"/g, '&quot;').		//" // <- kill the weird quoting

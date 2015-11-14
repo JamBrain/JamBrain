@@ -178,7 +178,7 @@ function ShowExtra() { ?>
 	
 	function sg_AddIdea(Id,Idea) {
 		Id = Number(Id);
-		Idea = escape(Idea);
+		Idea = escapeString(Idea);
 		IdeaAttr = escapeAttribute(Idea);
 		document.getElementById('sg').innerHTML = 
 			"<div class='sg-item' id='sg-item-"+Id+"'>" +
