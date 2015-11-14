@@ -82,7 +82,7 @@ function legacy_FetchUserInfo($id) {
 	
 	if ( $result !== false ) {
 		//var_dump($result);
-		return json_decode($result);
+		return json_decode($result,true);
 	}
 	return null;
 }
