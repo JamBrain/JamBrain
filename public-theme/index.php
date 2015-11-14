@@ -136,7 +136,13 @@ function ShowSubmitIdea() { ?>
 			<input type="text" class="single-input" id="input-idea" placeholder="your suggestion" maxlength="64" />
 			<button type="button" class="submit-button" onclick="SubmitIdeaForm();">Submit</button>
 		</div>
-		<div class="footnote small">You have <strong><span id="sg-count">??</span></strong> suggestion(s) left</div>
+		<div class="footnote small">You have <strong><span id="sg-count">?</span></strong> suggestion(s) left</div>
+		<script>
+			document.getElementById("input-idea").addEventListener("keydown", function(e) {
+				if (!e) { var e = window.event; }
+				if (e.keyCode == 13) { /*e.preventDefault();*/ SubmitIdeaForm(); }
+			}, false);
+		</script>
 	</div>
 <?php
 }
