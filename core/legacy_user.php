@@ -65,16 +65,23 @@ function legacy_GenerateUserHash($id) {
 	return $hash;
 }
 
-function legacy_FetchUserInfo($id) {	
-	$data = [
-		'action'=>"LEGACY_FETCH",
-		'id'=>$id
-	];
-	
-	$result = http_post_fields(LEGACY_FETCH_URL,$data);
+function legacy_FetchUserInfo($id) {
+	$curl = curl_init();
+
+	curl_setopt($curl, CURLOPT_URL, LEGACY_FETCH_URL);
+	curl_setopt($curl, CURLOPT_POST, 1);
+	curl_setopt($curl, CURLOPT_POSTFIELDS, 
+		http_build_query(['action'=>"LEGACY_FETCH",'id'=>$id]));
+
+	// receive server response ...
+	curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+	$result = curl_exec($curl);
+
+	curl_close ($curl);
 	
 	if ( $result !== false ) {
-		var_dump($result);
+		//var_dump($result);
 		return json_decode($result);
 	}
 	return null;
