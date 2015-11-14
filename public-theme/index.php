@@ -177,7 +177,7 @@ function ShowExtra() { ?>
 		document.getElementById('sg').innerHTML = 
 			"<div class='sg-item' id='sg-item-"+Id+"'>" +
 				"<span class='sg-item-x' onclick='sg_RemoveIdea("+Id+",\""+(IdeaAttr)+"\")'>✕</span>" +
-				"<span class='sg-item-text' title='"+(IdeaAttr)+"'>"+(Idea)+"</span>" +
+				"<span class='sg-item-text' title='"+(Idea)+"'>"+(Idea)+"</span>" +
 			"</div>" +
 			document.getElementById('sg').innerHTML;
 	}
