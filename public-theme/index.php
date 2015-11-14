@@ -10,6 +10,14 @@ const HTML_CSS_INCLUDE = [ "/style/theme-hub.css.php" ];
 const HTML_USE_CORE = true;
 const HTML_SHOW_FOOTER = true;
 
+
+// Extract Id from Cookie
+if ( isset($_COOKIE['lusha']) )
+	$cookie_id = intval(explode('.',$_COOKIE['lusha'],2)[0]);
+else
+	$cookie_id = 0;
+
+
 // ** Modes ** //
 const THEME_MODE_NAMES = [
 	"Inactive",						// no event scheduled
@@ -233,7 +241,7 @@ function ShowExtra() { ?>
 	
 	window.onload = function() {
 	<?php
-	if ( isset($_COOKIE['lusha']) ) {
+	if ( $cookie_id ) {
 	?>
 		xhr_PostJSON(
 			"/api-theme.php",
@@ -262,7 +270,7 @@ function ShowExtra() { ?>
 	<div class="main">
 		<?php
 			ShowHeadline();
-			if ( isset($_COOKIE['lusha']) ) {
+			if ( $cookie_id ) {
 				ShowSubmitIdea();
 				ShowLogout();
 			}
@@ -272,7 +280,7 @@ function ShowExtra() { ?>
 		?>
 	</div>
 	<?php
-		if ( isset($_COOKIE['lusha']) ) {
+		if ( $cookie_id ) {
 			echo "<div class='extra'>";
 			ShowExtra();
 			echo "</div>";
