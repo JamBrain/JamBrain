@@ -175,8 +175,8 @@ function ShowExtra() { ?>
 		Idea = escapeQuotes(Idea);
 		document.getElementById('sg').innerHTML = 
 			"<div class='sg-item' id='sg-item-"+Id+"'>" +
-				"<span class='sg-item-x' onclick='sg_RemoveIdea("+Id+",\""+escapeSlashes(Idea)+"\")'>✕</span>" +
-				"<span class='sg-item-text' title='"+escapeSlashes(Idea)+"'>"+Idea+"</span>" +
+				"<span class='sg-item-x' onclick='sg_RemoveIdea("+Id+",\""+(Idea)+"\")'>✕</span>" +
+				"<span class='sg-item-text' title='"+(Idea)+"'>"+Idea+"</span>" +
 			"</div>" +
 			document.getElementById('sg').innerHTML;
 	}
