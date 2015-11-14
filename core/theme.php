@@ -20,13 +20,13 @@ function theme_AddMyIdea($idea, $node, $user) {
 	);
 }
 function theme_RemoveIdea($id) {
-	return db_DoInsert(
+	return db_DoDelete(
 		"DELETE FROM ".CMW_TABLE_THEME_IDEA." WHERE id=?;",
 		$id
 	);
 }
 function theme_RemoveMyIdea($id,$user_id) {
-	return db_DoInsert(
+	return db_DoDelete(
 		"DELETE FROM ".CMW_TABLE_THEME_IDEA." WHERE id=? AND author=?;",
 		$id,$user_id
 	);

@@ -540,6 +540,16 @@ function db_DoInsert( $query, ...$args ) {
 	}
 	return false;
 }
+// Do a DELETE query, return the number of rows changed //
+function db_DoDelete( $query, ...$args ) {
+	$st = _db_DoQuery($query,$args);
+	if ( $st ) {
+		$index = $st->affected_rows;
+		$st->close();
+		return $index;
+	}
+	return false;
+}
 
 // Theoretically this should work, but disabling it until I need it //
 //function db_DoMultiQuery( $query,/*array*/ ...$args ) {

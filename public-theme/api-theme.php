@@ -38,10 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 		else if ( $action == "REMOVE" ) {
 			$theme_id = intval($_POST['id']);
 			if ( $theme_id > 0 ) {
-				theme_RemoveMyIdea($theme_id,$user_id);
+				$ret = theme_RemoveMyIdea($theme_id,$user_id);
 				
-				$response['id'] = $theme_id;
-				$response['ideas_left'] = $ideas_left + (($theme_id>0)?1:0);
+				$response['id'] = $ret ? $theme_id : 0;
+				$response['ideas_left'] = $ideas_left + $ret;
 			}
 		}
 	}
