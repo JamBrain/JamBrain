@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 		}
 		else if ( $action == "ADD" ) {
 			if ( $ideas_left > 0 ) {
-				$idea = trim(strip_tags($_POST['idea']));		// TODO: sanitize
+				$idea = preg_replace('/^[\pZ\pC]+|[\pZ\pC]+$/u','',strip_tags($_POST['idea']));
 		
 				if ( !empty($idea) ) {
 					$ret = theme_AddMyIdea($idea,$node,$user);
