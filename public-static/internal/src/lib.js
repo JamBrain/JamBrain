@@ -49,5 +49,9 @@ window.escapeQuotes = function(value) {
 		replace(/>/g, '&gt;');
 }
 
+window.escapeSlashes = function(value) {
+	return String(value).
+		replace(/\\/g, '\\');
+}
 
 })();
