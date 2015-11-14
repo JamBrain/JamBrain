@@ -8,7 +8,7 @@ $_CORE_SCRIPT_TIMER = microtime(true);
 
 // Detect Internet Explorer -- http://www.useragentstring.com/pages/Internet%20Explorer/
 $MSIE_VER = 0;
-if ( strpos($_SERVER['HTTP_USER_AGENT'], "MSIE") !== false ) {	// Faster, Broadphase //
+if ( isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], "MSIE") !== false ) {	// Faster, Broadphase //
 	if ( preg_match('/(?i)msie ([0-9]+)/',$_SERVER['HTTP_USER_AGENT'], $MATCHES) ) {
 		$MSIE_VER = intval($MATCHES[1]);
 	}
