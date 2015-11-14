@@ -10,27 +10,25 @@ $response = json_NewResponse();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 	$action = trim($_POST['action']);
 	
-	$user = legacy_GetUserFromCookie();
+	$user_id = legacy_GetUserFromCookie();
 	$node = 100;//intval($CONFIG['event-active']);//isset($_POST['node']) ? intval($_POST['node']) : 0;
 
-	if ( ($user > 0) && ($node > 0) ) {
-		$ideas_left = 10 - theme_CountMyIdeas($node,$user);
+	if ( ($user_id > 0) && ($node > 0) ) {
+		$ideas_left = 10 - theme_CountMyIdeas($node,$user_id);
 		
 		if ( $action == "GET" ) {
-			$response['ideas'] = theme_GetMyIdeas($node,$user);
+			$response['ideas'] = theme_GetMyIdeas($node,$user_id);
 			$response['ideas_left'] = $ideas_left;
 		}
-		else if ( $action == "ADD" ) {
-			if ( $ideas_left > 0 ) {
-				$idea = mb_trim(strip_tags($_POST['idea']));
-		
-				if ( !empty($idea) ) {
-					$ret = theme_AddMyIdea($idea,$node,$user);
-					
-					$response['id'] = $ret;
-					$response['idea'] = $idea;
-					$response['ideas_left'] = $ideas_left - (($ret>0)?1:0);
-				}
+		else if ( ($action == "ADD") && isset($_POST['idea']) ) {
+			$idea = mb_trim($_POST['idea']);
+	
+			if ( ($idea !== "") && ($ideas_left > 0) ) {
+				$ret = theme_AddMyIdea($idea,$node,$user_id);
+				
+				$response['id'] = intval($ret);		// Returns the Id changed //
+				$response['idea'] = $idea;
+				$response['ideas_left'] = $ideas_left - (($ret>0)?1:0);
 			}
 			else {
 				$response['id'] = 0;
@@ -38,19 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 			}
 		}
 		else if ( $action == "REMOVE" ) {
-			$id = intval($_POST['id']);
-			if ( $id > 0 ) {
-				// TODO: Is idea id valid?
+			$theme_id = intval($_POST['id']);
+			if ( $theme_id > 0 ) {
+				theme_RemoveMyIdea($theme_id,$user_id);
 				
-				theme_RemoveMyIdea($id,$user);
-				
-				$response['id'] = $id;
-				$response['ideas_left'] = $ideas_left + (($id>0)?1:0);
+				$response['id'] = $theme_id;
+				$response['ideas_left'] = $ideas_left + (($theme_id>0)?1:0);
 			}
 		}
-//		else {
-//			mail("mike@sykhronics.com","loggy2",print_r($_POST,true));
-//		}
 	}
 }
 
