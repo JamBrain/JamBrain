@@ -24,9 +24,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 			$idea = mb_trim($_POST['idea']);
 	
 			if ( ($idea !== "") && ($ideas_left > 0) ) {
+				$idea = substr($idea,0,64);				// Unnecessary, but it shortens the query and fixes the response 
 				$ret = theme_AddMyIdea($idea,$node,$user_id);
 				
-				$response['id'] = intval($ret);		// Returns the Id changed //
+				$response['id'] = intval($ret);			// Returns the Id changed //
 				$response['idea'] = $idea;
 				$response['ideas_left'] = $ideas_left - (($ret>0)?1:0);
 			}
