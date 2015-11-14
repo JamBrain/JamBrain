@@ -14,8 +14,8 @@
 		echo "Generated in <strong onclick='__();'>".core_GetExecutionTime()."</strong>";
 		
 		if (function_exists('db_GetQueryCount')) { 
-			if ($FOOTER_DATA_POINT++ > 0) { echo ','; } 
-			echo ' using ' . db_GetQueryCount() . ' queries';
+			if ($FOOTER_DATA_POINT++ > 0) { echo ','; }
+			echo ' using ' . db_GetQueryCount() . ((db_GetQueryCount() == 1)?' query':' queries');
 		}
 		if (function_exists('cache_GetReads')) {
 			if ($FOOTER_DATA_POINT++ > 0) { echo ','; } 
