@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__."/../db.php";
 require_once __DIR__."/../core/internal/core.php";
-//require_once __DIR__ . "/../core/internal/urlhash.php";
 
 
 // Parse the URL //
@@ -30,7 +29,6 @@ echo "<br />\n";
 echo "<br />\n";
 
 $rando = mt_rand();
-//echo "Rando: " . $rando . "     (" . urlhash_encode($rando) . ") => (" . urlhash_decode(urlhash_encode($rando)) .")<br />\n";
 echo "Rando: " . $rando . "     (" . base48_Encode($rando) . ") => (" . base48_Decode(base48_Encode($rando)) .")<br />\n";
 
 echo "<br />\n";

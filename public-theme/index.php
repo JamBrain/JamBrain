@@ -230,15 +230,19 @@ function ShowExtra() { ?>
 				response.id = Number(response.id);
 				response.ideas_left = Number(response.ideas_left);
 				
+				sg_UpdateCount(response.ideas_left);
+				
 				// Success //
 				if ( response.id > 0 ) {
-					sg_UpdateCount(response.ideas_left);
 					sg_AddIdea(response.id,response.idea);
 				}
 				// Failure //
-				else {
+				else if ( response.ideas_left === 0 ) {
 					elm.value = Idea;	// Restore
 					alert("Out of Suggestions");
+				}
+				else {
+					alert("Other Error "+print_r(response));
 				}
 			}
 		);
