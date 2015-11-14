@@ -42,8 +42,11 @@ window.serialize = function(obj, prefix) {
 // http://stackoverflow.com/a/12562097
 window.escapeQuotes = function(value) {
 	return String(value).
-		replace(/"/g,'&quot;'). //" // <- kill the weird quoting
-		replace(/'/g,'&#39;'); 	//' // <- kill the weird quoting
+		replace(/&/g, '&amp;').
+		replace(/"/g, '&quot;').	//" // <- kill the weird quoting
+		replace(/'/g, '&#39;').		//' // <- kill the weird quoting
+		replace(/</g, '&lt;').
+		replace(/>/g, '&gt;');
 }
 
 

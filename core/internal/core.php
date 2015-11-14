@@ -26,6 +26,7 @@ function return_r( $data ) {
 // Trim Spaces, Unicode Spaces, and Non-printables //
 function mb_trim($str) {
 	// http://www.utf8-chartable.de/
+	// https://www.cs.tut.fi/~jkorpela/chars/spaces.html
 	// U+2800 - Braille blank \u2800
 	return preg_replace('/^[\pZ\pC]+|[\pZ\pC]+$/u','',$str);
 }
