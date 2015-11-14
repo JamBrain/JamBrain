@@ -23,6 +23,13 @@ function return_r( $data ) {
 	return trim(preg_replace('/\s+/',' ',print_r( $data, true)));
 }
 
+// Trim Spaces, Unicode Spaces, and Non-printables //
+function mb_trim($str) {
+	// http://www.utf8-chartable.de/
+	// U+2800 - Braille blank
+	return preg_replace('/^[\u2800\pZ\pC]+|[\u2800\pZ\pC]+$/u','',$str);
+}
+
 // Shorthand function for checking a configuration whitelist //
 function core_OnWhitelist( $ip, $list ) {
 	if ( is_string($list) ) {
