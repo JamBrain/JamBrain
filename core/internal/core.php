@@ -26,8 +26,8 @@ function return_r( $data ) {
 // Trim Spaces, Unicode Spaces, and Non-printables //
 function mb_trim($str) {
 	// http://www.utf8-chartable.de/
-	// U+2800 - Braille blank
-	return preg_replace('/^[\u2800\pZ\pC]+|[\u2800\pZ\pC]+$/u','',$str);
+	// U+2800 - Braille blank \u2800
+	return preg_replace('/^[\pZ\pC]+|[\pZ\pC]+$/u','',$str);
 }
 
 // Shorthand function for checking a configuration whitelist //
