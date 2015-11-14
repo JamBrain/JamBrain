@@ -18,8 +18,13 @@ function legacy_GetUserFromCookie() {
 		$id = intval($part[0]);
 		$hash = $part[1];
 		
-		$user = legacy_GetUser($id);
-//		var_dump($id,$hash,$user,($user['hash'] == $hash));
+		if (defined('LEGACY_DEBUG')) {
+			$user = [];
+			$user['hash'] = "this_is_fake";
+		}
+		else {
+			$user = legacy_GetUser($id);
+		}
 		
 		if ( isset($user['hash']) && ($user['hash'] == $hash) ) {
 			return $id;
@@ -81,7 +86,6 @@ function legacy_FetchUserInfo($id) {
 	curl_close ($curl);
 	
 	if ( $result !== false ) {
-		//var_dump($result);
 		return json_decode($result,true);
 	}
 	return null;

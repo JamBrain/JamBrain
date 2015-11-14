@@ -40,18 +40,26 @@ window.serialize = function(obj, prefix) {
 
 // Change " and ' characters in a string for use in Attributes (title, etc)
 // http://stackoverflow.com/a/12562097
-window.escapeQuotes = function(value) {
+window.escapeAttribute = function(value) {
 	return String(value).
+        replace(/\\/g, '\\\\').			/* This MUST be the 1st replacement. */
+        replace(/\t/g, '\\t').			/* These 2 replacements protect whitespaces. */
+        replace(/\n/g, '\\n').
+        replace(/\u00A0/g, '\\u00A0').	/* Useful but not absolutely necessary. */
 		replace(/&/g, '&amp;').
-		replace(/"/g, '&quot;').	//" // <- kill the weird quoting
-		replace(/'/g, '&#39;').		//' // <- kill the weird quoting
+		replace(/"/g, '&quot;').		//" // <- kill the weird quoting
+		replace(/'/g, '&#39;').			//' // <- kill the weird quoting
 		replace(/</g, '&lt;').
 		replace(/>/g, '&gt;');
 }
 
-window.escapeSlashes = function(value) {
+window.escape = function(value) {
 	return String(value).
-		replace(/\\/g, '\\');
+		replace(/&/g, '&amp;').
+		replace(/"/g, '&quot;').		//" // <- kill the weird quoting
+		replace(/'/g, '&#39;').			//' // <- kill the weird quoting
+		replace(/</g, '&lt;').
+		replace(/>/g, '&gt;');
 }
 
 })();

@@ -172,11 +172,12 @@ function ShowExtra() { ?>
 	
 	function sg_AddIdea(Id,Idea) {
 		Id = Number(Id);
-		Idea = escapeQuotes(Idea);
+		Idea = escape(Idea);
+		IdeaAttr = escapeAttribute(Idea);
 		document.getElementById('sg').innerHTML = 
 			"<div class='sg-item' id='sg-item-"+Id+"'>" +
-				"<span class='sg-item-x' onclick='sg_RemoveIdea("+Id+",\""+(Idea)+"\")'>✕</span>" +
-				"<span class='sg-item-text' title='"+(Idea)+"'>"+Idea+"</span>" +
+				"<span class='sg-item-x' onclick='sg_RemoveIdea("+Id+",\""+(IdeaAttr)+"\")'>✕</span>" +
+				"<span class='sg-item-text' title='"+(IdeaAttr)+"'>"+(Idea)+"</span>" +
 			"</div>" +
 			document.getElementById('sg').innerHTML;
 	}
