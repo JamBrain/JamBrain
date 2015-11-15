@@ -132,7 +132,7 @@ body > .footer {
 	float:right;
 	z-index:1;
 	
-	font-size:0.9em;
+	line-height:1.0em;
 	margin-left:1.0em;
 	padding:0 0.25em;
 	cursor:pointer;
