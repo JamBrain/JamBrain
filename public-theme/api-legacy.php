@@ -4,7 +4,7 @@ if (defined('LEGACY_DEBUG')) {
 	if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
 		$action = trim($_GET['action']);
 		if ( $action == "LEGACY_LOGIN" ) {
-			setcookie( "lusha", "100.this_is_fake", time()+2*24*60*60, "/", str_replace("theme","",$_SERVER['SERVER_NAME']) );
+			setcookie( "lusha", "100.this_is_fake", time()+6*60*60, "/", str_replace("theme","",$_SERVER['SERVER_NAME']) );
 			header("Location: /");
 			die();
 		}
