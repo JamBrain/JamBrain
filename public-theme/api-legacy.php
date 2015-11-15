@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 				}
 				
 				if ( $user ) {
-					access_LogUser( $id, $ip )
+					access_LogUser( $id, $ip );
 					$response['hash'] = $user['hash'];
 				}
 			}
