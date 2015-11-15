@@ -224,10 +224,10 @@ button, .sg-item-x {
 
 
 .effect-fadein {
-    -webkit-animation: fadein 0.3s;
-       -moz-animation: fadein 0.3s;
-        -ms-animation: fadein 0.3s;
-            animation: fadein 0.3s;
+    -webkit-animation: fadein 0.4s;
+       -moz-animation: fadein 0.4s;
+        -ms-animation: fadein 0.4s;
+            animation: fadein 0.4s;
 }
 @keyframes fadein {
     from { opacity: 0; }
@@ -247,10 +247,10 @@ button, .sg-item-x {
 }
 
 .effect-fadeout {
-    -webkit-animation: fadeout 0.3s;
-       -moz-animation: fadeout 0.3s;
-        -ms-animation: fadeout 0.3s;
-            animation: fadeout 0.3s;
+    -webkit-animation: fadeout 0.4s;
+       -moz-animation: fadeout 0.4s;
+        -ms-animation: fadeout 0.4s;
+            animation: fadeout 0.4s;
 	visibility:hidden;
 }
 @keyframes fadeout {
@@ -305,10 +305,10 @@ button, .sg-item-x {
         -ms-animation: zoomout 0.3s;
     		animation: zoomout 0.3s;
 
-	-webkit-animation-timing-function: <?=BEZIER_NO_DIP?>;
-	   -moz-animation-timing-function: <?=BEZIER_NO_DIP?>;
-	    -ms-animation-timing-function: <?=BEZIER_NO_DIP?>;
-			animation-timing-function: <?=BEZIER_NO_DIP?>;
+	-webkit-animation-timing-function: <?=BEZIER_NO_DIP_NO_POP?>;
+	   -moz-animation-timing-function: <?=BEZIER_NO_DIP_NO_POP?>;
+	    -ms-animation-timing-function: <?=BEZIER_NO_DIP_NO_POP?>;
+			animation-timing-function: <?=BEZIER_NO_DIP_NO_POP?>;
 }
 @keyframes zoomout {
     from { transform: scale(1); }

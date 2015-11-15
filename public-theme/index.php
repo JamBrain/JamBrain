@@ -277,18 +277,14 @@ function ShowExtra() { ?>
 	}
 	
 	function dialog_ConfirmAlert(title,message,func /*,outside_cancel*/) {
-		// Bail if we're not hidden //
-//		if ( !dom_HasClass("dialog-back","hidden") )
-//			return;
+		// Bail if we've already faded in //
+		if ( dom_HasClass("dialog-back","effect-fadein") )
+			return;
 		
 		dialog_SetAction(func);
 		dom_SetText("dialog-title",title);
 		dom_SetText("dialog-text",message);
 		
-//		dom_AddClass("dialog","effect-zoomin");
-//		dom_AddClass("dialog-back","effect-fadein");
-//		dom_ToggleClass("dialog-back","hidden",false);
-
 		dom_SetClasses("dialog","effect-zoomin");
 		dom_SetClasses("dialog-back","effect-fadein");
 	}
@@ -297,19 +293,12 @@ function ShowExtra() { ?>
 		_dialog_action = func;
 	}
 	function dialog_DoAction() {
-		_dialog_action();
-		
+		_dialog_action();		
 		dialog_Close();
 	}
 	function dialog_Close() {
-		// Clear State //
-//		dom_RemoveClass("dialog","effect-zoomin");
-//		dom_RemoveClass("dialog-back","effect-fadein");
-//		
-//		dom_ToggleClass("dialog-back","hidden",true);
-
 		dom_SetClasses("dialog","effect-zoomout");
-		dom_SetClasses("dialog-back","effect-fadeout");//hidden");
+		dom_SetClasses("dialog-back","effect-fadeout");
 	}
 	
 	window.onload = function() {
