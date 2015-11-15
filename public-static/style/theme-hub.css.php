@@ -1,13 +1,44 @@
 <?php require_once __DIR__."/../../style.php"; ?>
 
 <?php
+const COL_DEEP = 0;
+const COL_BASE = 1;
+const COL_LIGHT = 2;
+const COL_BRIGHT = 3;
+
+const COL_MUTE = 4;
+const COL_MUTE_LIGHT = 5;
+const COL_MUTE_BRIGHT = 6;
+//const COL_??? = 7;
+
 const PAL_RED = [
 	"#622",		// Deep Color //
 	"#C44",		// Base Color //
-	"#F88",		// Light Color //
-	"#FFF",		// Brightest Color //
-	"#D88",		// Mute Base //
+	"#F88",		// Light Base Color //
+	"#FFF",		// Bright Color //
+	"#E55",		// Mute Base //
+	"#FAA",		// Mute Light //
 	"#FDD",		// Mute Bright //
+];
+
+const PAL_GREEN = [
+	"#262",		// Deep Color //
+	"#4C4",		// Base Color //
+	"#8F8",		// Light Base Color //
+	"#FFF",		// Bright Color //
+	"#5E5",		// Mute Base //
+	"#AFA",		// Mute Light //
+	"#DFD",		// Mute Bright //
+];
+
+const PAL_BLUE = [
+	"#226",		// Deep Color //
+	"#44C",		// Base Color //
+	"#88F",		// Light Base Color //
+	"#FFF",		// Bright Color //
+	"#55E",		// Mute Base //
+	"#AAF",		// Mute Light //
+	"#DDF",		// Mute Bright //
 ];
 
 
@@ -338,46 +369,105 @@ button, .sg-item-x {
 	z-index:1000;
 	
 	border-radius:1.0em;
-	background:<?=PAL_RED[1]?>;
 	box-shadow:0 2px 6px rgba(0,0,0,0.3);
 }
-
 #dialog img {
 	margin:0.5em;
 }
-
 #dialog .title {
-	color:<?=PAL_RED[3]?>;
 	font-weight:700;
 	
 	padding:0.5em 1.0em;
 	text-overflow:ellipsis;
 	overflow:hidden;
 }
-
 #dialog .body {
-	color:<?=PAL_RED[0]?>;
-	background:<?=PAL_RED[2]?>;
 	padding:0.5em 2.0em;
 }
 #dialog .buttons {
-	color:<?=PAL_RED[0]?>;
 	padding:0.5em 2.0em;
 }
 
-#dialog button {
-	background:<?=PAL_RED[4]?>;
-	color:<?=PAL_RED[5]?>;
+/* Red */
+.red_dialog {
+	background:<?=PAL_RED[COL_BASE]?>;
 }
-#dialog button:focus {
-	background:<?=PAL_RED[2]?>;
-	color:<?=PAL_RED[3]?>;
+.red_dialog .title {
+	color:<?=PAL_RED[COL_BRIGHT]?>;
 }
-#dialog button:active {
-	background:<?=PAL_RED[3]?>;
-	color:<?=PAL_RED[2]?>;
+.red_dialog .body {
+	color:<?=PAL_RED[COL_DEEP]?>;
+	background:<?=PAL_RED[COL_LIGHT]?>;
+}
+.red_dialog .buttons {
+	color:<?=PAL_RED[COL_DEEP]?>;
+}
+.red_dialog button {
+	background:<?=PAL_RED[COL_MUTE]?>;
+	color:<?=PAL_RED[COL_MUTE_BRIGHT]?>;
+}
+.red_dialog button:focus {
+	background:<?=PAL_RED[COL_MUTE_LIGHT]?>;
+	color:<?=PAL_RED[COL_BRIGHT]?>;
+}
+.red_dialog button:active {
+	background:<?=PAL_RED[COL_BRIGHT]?>;
+	color:<?=PAL_RED[COL_MUTE_LIGHT]?>;
 }
 
+/* Green */
+.green_dialog {
+	background:<?=PAL_GREEN[COL_BASE]?>;
+}
+.green_dialog .title {
+	color:<?=PAL_GREEN[COL_BRIGHT]?>;
+}
+.green_dialog .body {
+	color:<?=PAL_GREEN[COL_DEEP]?>;
+	background:<?=PAL_GREEN[COL_LIGHT]?>;
+}
+.green_dialog .buttons {
+	color:<?=PAL_GREEN[COL_DEEP]?>;
+}
+.green_dialog button {
+	background:<?=PAL_GREEN[COL_MUTE]?>;
+	color:<?=PAL_GREEN[COL_MUTE_BRIGHT]?>;
+}
+.green_dialog button:focus {
+	background:<?=PAL_GREEN[COL_MUTE_LIGHT]?>;
+	color:<?=PAL_GREEN[COL_BRIGHT]?>;
+}
+.green_dialog button:active {
+	background:<?=PAL_GREEN[COL_BRIGHT]?>;
+	color:<?=PAL_GREEN[COL_MUTE_LIGHT]?>;
+}
+
+/* Blue */
+.blue_dialog {
+	background:<?=PAL_BLUE[COL_BASE]?>;
+}
+.blue_dialog .title {
+	color:<?=PAL_BLUE[COL_BRIGHT]?>;
+}
+.blue_dialog .body {
+	color:<?=PAL_BLUE[COL_DEEP]?>;
+	background:<?=PAL_BLUE[COL_LIGHT]?>;
+}
+.blue_dialog .buttons {
+	color:<?=PAL_BLUE[COL_DEEP]?>;
+}
+.blue_dialog button {
+	background:<?=PAL_BLUE[COL_MUTE]?>;
+	color:<?=PAL_BLUE[COL_MUTE_BRIGHT]?>;
+}
+.blue_dialog button:focus {
+	background:<?=PAL_BLUE[COL_MUTE_LIGHT]?>;
+	color:<?=PAL_BLUE[COL_BRIGHT]?>;
+}
+.blue_dialog button:active {
+	background:<?=PAL_BLUE[COL_BRIGHT]?>;
+	color:<?=PAL_BLUE[COL_MUTE_LIGHT]?>;
+}
 
 
 /* Normal and HiRes */

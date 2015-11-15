@@ -174,9 +174,12 @@ function ShowExtra() { ?>
 			<div><img src="http://cdn.jsdelivr.net/emojione/assets/png/26A0.png?v=1.2.4" width=64 height=64"></div>
 			<div id="dialog-text">A... Are you sure? I'm not.</div>
 		</div>
-		<div class="buttons">
+		<div class="buttons hidden" id="dialog-yesno">
 			<button class="normal" onclick='dialog_DoAction();'>Yes</button>
 			<button class="normal" onclick='dialog_Close();'>No</button>
+		</div>
+		<div class="buttons hidden" id="dialog-ok">
+			<button class="normal" onclick='dialog_Close();'>OK</button>
 		</div>
 	</div>
 </div>
@@ -265,10 +268,10 @@ function ShowExtra() { ?>
 				// Failure //
 				else if ( response.ideas_left === 0 ) {
 					elm.value = Idea;	// Restore
-					alert("Out of Suggestions");
+					dialog_Alert("No Suggestions Left","");
 				}
 				else {
-					alert("Other Error "+print_r(response));
+					dialog_Alert("Other Error",return_r(response));
 				}
 			}
 		);
@@ -276,7 +279,7 @@ function ShowExtra() { ?>
 		elm.focus();
 	}
 	
-	function dialog_ConfirmAlert(title,message,func /*,outside_cancel*/) {
+	function dialog_ConfirmAlert(title,message,func /*,outside_close*/) {
 		// Bail if we've already faded in //
 		if ( dom_HasClass("dialog-back","effect-fadein") )
 			return;
@@ -285,7 +288,24 @@ function ShowExtra() { ?>
 		dom_SetText("dialog-title",title);
 		dom_SetText("dialog-text",message);
 		
-		dom_SetClasses("dialog","effect-zoomin");
+		dom_ToggleClass("dialog-yesno","hidden",false);
+		dom_ToggleClass("dialog-ok","hidden",true);
+		
+		dom_SetClasses("dialog","red_dialog effect-zoomin");
+		dom_SetClasses("dialog-back","effect-fadein");
+	}
+	function dialog_Alert(title,message /*,outside_close*/) {
+		// Bail if we've already faded in //
+		if ( dom_HasClass("dialog-back","effect-fadein") )
+			return;
+		
+		dom_SetText("dialog-title",title);
+		dom_SetText("dialog-text",message);
+
+		dom_ToggleClass("dialog-yesno","hidden",true);
+		dom_ToggleClass("dialog-ok","hidden",false);
+		
+		dom_SetClasses("dialog","blue_dialog effect-zoomin");
 		dom_SetClasses("dialog-back","effect-fadein");
 	}
 	var _dialog_action;
@@ -297,7 +317,8 @@ function ShowExtra() { ?>
 		dialog_Close();
 	}
 	function dialog_Close() {
-		dom_SetClasses("dialog","effect-zoomout");
+		dom_RemoveClass("dialog","effect-zoomin");
+		dom_AddClass("dialog","effect-zoomout");
 		dom_SetClasses("dialog-back","effect-fadeout");
 	}
 	
