@@ -247,7 +247,10 @@ button, .sg-item-x {
 #dialog {
 	text-align:center;
 	
-	overflow:hidden;	
+	overflow:hidden;
+	max-width:20em;
+	
+	z-index:1000;
 	
 	border-radius:1.0em;
 	background:<?=PAL_RED[1]?>;
@@ -268,7 +271,9 @@ button, .sg-item-x {
 	color:<?=PAL_RED[3]?>;
 	font-weight:700;
 	
-	padding:0.5em 2.0em;
+	padding:0.5em 1.0em;
+	text-overflow:ellipsis;
+	overflow:hidden;
 }
 
 #dialog .body {

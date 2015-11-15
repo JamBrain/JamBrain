@@ -62,6 +62,19 @@ window.escapeString = function(value) {
 		replace(/>/g, '&gt;');
 }
 
+window.dom_SetText = function(id,text) {
+	document.getElementById(id).innerHTML = text;
+}
+window.dom_GetText = function(id,text) {
+	return document.getElementById(id).innerHTML;
+}
+window.dom_SetAttribute = function(id,attr,value) {
+	document.getElementById(id)[attr] = value;
+}
+window.dom_GetAttribute = function(id,attr) {
+	return document.getElementById(id)[attr];
+}
+
 
 // http://stackoverflow.com/a/196038
 
@@ -72,6 +85,7 @@ window.dom_SetClasses = function(id,class_names) {
 window.dom_GetClasses = function(id) {
 	return document.getElementById(id).className;
 }
+
 window.dom_AddClass = function(id,class_name) {
 	document.getElementById(id).className += " "+class_name;
 }
@@ -96,13 +110,11 @@ window.dom_ToggleClass = function(id,class_name,value) {
 	
 	if ( action ) {
 		if ( !has ) {
-			console.log('!has');
 			dom_AddClass(id,class_name);
 		}
 	}
 	else {
 		if ( has ) {
-			console.log('has');
 			dom_RemoveClass(id,class_name);
 		}
 	}

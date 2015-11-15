@@ -108,7 +108,7 @@ function ShowHeadline() {
 	
 	$UTCDate = date(DATE_RFC850,$TargetDate);
 
-	echo "<div class='clock' onclick='dom_ToggleClass(\"dialog-back\",\"hidden\");' id='headline-clock'>Round ends in <span id='headline-time' title=\"".$UTCDate."\">".$OutTime."</span></div>";
+	echo "<div class='clock' id='headline-clock'>Round ends in <span id='headline-time' title=\"".$UTCDate."\">".$OutTime."</span></div>";
 	echo "</div>";
 }
 
@@ -167,16 +167,16 @@ function ShowExtra() { ?>
 <?php 
 } ?>
 <?php template_GetHeader(); ?>
-<div class="hidden" id="dialog-back">
+<div class="hidden" id="dialog-back" onclick='dialog_Close();'>
 	<div id="dialog">
-		<div class="title big">Wuht is this!?</div>
+		<div class="title big" id="dialog-title">Wuht is this!?</div>
 		<div class="body">
 			<div><img src="http://cdn.jsdelivr.net/emojione/assets/png/26A0.png?v=1.2.4" width=64 height=64"></div>
-			A... Are you sure? I'm not.
+			<div id="dialog-text">A... Are you sure? I'm not.</div>
 		</div>
 		<div class="buttons">
-			<button>Yup!</button>
-			<button onclick='dom_ToggleClass("dialog-back","hidden");'>Uh, Nope</button>
+			<button class="normal" onclick='dialog_DoAction();'>Yes</button>
+			<button class="normal" onclick='dialog_Close();'>No</button>
 		</div>
 	</div>
 </div>
@@ -216,7 +216,8 @@ function ShowExtra() { ?>
 
 	function sg_RemoveIdea(Id,Idea) {
 		Id = Number(Id);
-		if ( window.confirm(Idea+"\n\nAre you sure you want to delete this?") ) {
+		//if ( window.confirm(Idea+"\n\nAre you sure you want to delete this?") ) {
+		dialog_ConfirmAlert(Idea,"Are you sure you want to delete this?",function(){
 			xhr_PostJSON(
 				"/api-theme.php",
 				serialize({"action":"REMOVE","id":Id}),
@@ -230,7 +231,7 @@ function ShowExtra() { ?>
 					sg_UpdateCount(response.ideas_left);
 				}
 			);
-		}
+		});
 	}
 	
 	function sg_UpdateCount(count) {
@@ -274,6 +275,27 @@ function ShowExtra() { ?>
 		);
 
 		elm.focus();
+	}
+	
+	function dialog_ConfirmAlert(title,message,func,outside_cancel) {
+		// TODO: IF not showing
+		
+		dialog_SetAction(func);
+		dom_SetText("dialog-title",title);
+		dom_SetText("dialog-text",message);
+		dom_ToggleClass("dialog-back","hidden",false);
+	}
+	var _dialog_action;
+	function dialog_SetAction(func) {
+		_dialog_action = func;
+	}
+	function dialog_DoAction() {
+		_dialog_action();
+	}
+	function dialog_Close() {
+		// TODO: Clear State //
+		
+		dom_ToggleClass("dialog-back","hidden",true);
 	}
 	
 	window.onload = function() {
