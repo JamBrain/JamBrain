@@ -167,8 +167,8 @@ function ShowExtra() { ?>
 <?php 
 } ?>
 <?php template_GetHeader(); ?>
-<div class="hidden" id="dialog-back" onclick='dialog_Close();'>
-	<div id="dialog">
+<div class="invisible" id="dialog-back" onclick='dialog_Close();'>
+	<div id="dialog" onclick="event.stopPropagation();">
 		<div class="title big" id="dialog-title">Wuht is this!?</div>
 		<div class="body">
 			<div><img src="http://cdn.jsdelivr.net/emojione/assets/png/26A0.png?v=1.2.4" width=64 height=64"></div>
@@ -216,7 +216,6 @@ function ShowExtra() { ?>
 
 	function sg_RemoveIdea(Id,Idea) {
 		Id = Number(Id);
-		//if ( window.confirm(Idea+"\n\nAre you sure you want to delete this?") ) {
 		dialog_ConfirmAlert(Idea,"Are you sure you want to delete this?",function(){
 			xhr_PostJSON(
 				"/api-theme.php",
@@ -277,13 +276,21 @@ function ShowExtra() { ?>
 		elm.focus();
 	}
 	
-	function dialog_ConfirmAlert(title,message,func,outside_cancel) {
-		// TODO: IF not showing
+	function dialog_ConfirmAlert(title,message,func /*,outside_cancel*/) {
+		// Bail if we're not hidden //
+//		if ( !dom_HasClass("dialog-back","hidden") )
+//			return;
 		
 		dialog_SetAction(func);
 		dom_SetText("dialog-title",title);
 		dom_SetText("dialog-text",message);
-		dom_ToggleClass("dialog-back","hidden",false);
+		
+//		dom_AddClass("dialog","effect-zoomin");
+//		dom_AddClass("dialog-back","effect-fadein");
+//		dom_ToggleClass("dialog-back","hidden",false);
+
+		dom_SetClasses("dialog","effect-zoomin");
+		dom_SetClasses("dialog-back","effect-fadein");
 	}
 	var _dialog_action;
 	function dialog_SetAction(func) {
@@ -291,11 +298,18 @@ function ShowExtra() { ?>
 	}
 	function dialog_DoAction() {
 		_dialog_action();
+		
+		dialog_Close();
 	}
 	function dialog_Close() {
-		// TODO: Clear State //
-		
-		dom_ToggleClass("dialog-back","hidden",true);
+		// Clear State //
+//		dom_RemoveClass("dialog","effect-zoomin");
+//		dom_RemoveClass("dialog-back","effect-fadein");
+//		
+//		dom_ToggleClass("dialog-back","hidden",true);
+
+		dom_SetClasses("dialog","effect-zoomout");
+		dom_SetClasses("dialog-back","effect-fadeout");//hidden");
 	}
 	
 	window.onload = function() {

@@ -74,6 +74,19 @@ window.dom_SetAttribute = function(id,attr,value) {
 window.dom_GetAttribute = function(id,attr) {
 	return document.getElementById(id)[attr];
 }
+// Is supposed to work, but as far as I've seen does not //
+window.dom_RestartAnimation = function(id,class_name) {
+	element = document.getElementById(id);
+	element.classList.remove(class_name);
+	element.offsetWidth = element.offsetWidth;
+	element.classList.add(class_name);
+}
+
+window.dom_ForceReflow = function(id) {
+	element = document.getElementById(id);
+	element.offsetWidth = element.offsetWidth;
+	element.width = element.width;
+}
 
 
 // http://stackoverflow.com/a/196038
@@ -92,7 +105,8 @@ window.dom_AddClass = function(id,class_name) {
 window.dom_RemoveClass = function(id,class_name) {
 	document.getElementById(id).className =
 		document.getElementById(id).className.replace(
-			RegExp('(?:^|\\s)'+class_name+'(?!\\S)','g')
+			RegExp('(?:^|\\s)'+class_name+'(?!\\S)','g'),
+			""
 		);
 }
 window.dom_HasClass = function(id,class_name) {

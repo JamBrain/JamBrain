@@ -220,14 +220,24 @@ button, .sg-item-x {
 	display:flex;
 	justify-content:center;
 	align-items:center;
-	
+}
+
+
+.effect-fadein {
     -webkit-animation: fadein 0.3s;
        -moz-animation: fadein 0.3s;
         -ms-animation: fadein 0.3s;
             animation: fadein 0.3s;
 }
-
 @keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@-ms-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@-moz-keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
 }
@@ -236,28 +246,32 @@ button, .sg-item-x {
     to   { opacity: 1; }
 }
 
-@keyframes zoomin {
-    from { transform: scale(0); }
-    to   { transform: scale(1); }
+.effect-fadeout {
+    -webkit-animation: fadeout 0.3s;
+       -moz-animation: fadeout 0.3s;
+        -ms-animation: fadeout 0.3s;
+            animation: fadeout 0.3s;
+	visibility:hidden;
 }
-@-webkit-keyframes zoomin {
-    from { transform: scale(0); }
-    to   { transform: scale(1); }
+@keyframes fadeout {
+    from { opacity: 1; visibility:visible; }
+    to   { opacity: 0; visibility:hidden; }
+}
+@-ms-keyframes fadeout {
+    from { opacity: 1; visibility:visible; }
+    to   { opacity: 0; visibility:hidden; }
+}
+@-moz-keyframes fadeout {
+    from { opacity: 1; visibility:visible; }
+    to   { opacity: 0; visibility:hidden; }
+}
+@-webkit-keyframes fadeout {
+    from { opacity: 1; visibility:visible; }
+    to   { opacity: 0; visibility:hidden; }
 }
 
 
-#dialog {
-	text-align:center;
-	
-	overflow:hidden;
-	max-width:20em;
-	
-	z-index:1000;
-	
-	border-radius:1.0em;
-	background:<?=PAL_RED[1]?>;
-	box-shadow:0 2px 6px rgba(0,0,0,0.3);
-	
+.effect-zoomin {
     -webkit-animation: zoomin 0.3s;
        -moz-animation: zoomin 0.3s;
         -ms-animation: zoomin 0.3s;
@@ -267,6 +281,65 @@ button, .sg-item-x {
 	   -moz-animation-timing-function: <?=BEZIER_NO_DIP?>;
 	    -ms-animation-timing-function: <?=BEZIER_NO_DIP?>;
 			animation-timing-function: <?=BEZIER_NO_DIP?>;
+}
+@keyframes zoomin {
+    from { transform: scale(0); }
+    to   { transform: scale(1); }
+}
+@-ms-keyframes zoomin {
+    from { transform: scale(0); }
+    to   { transform: scale(1); }
+}
+@-moz-keyframes zoomin {
+    from { transform: scale(0); }
+    to   { transform: scale(1); }
+}
+@-webkit-keyframes zoomin {
+    from { transform: scale(0); }
+    to   { transform: scale(1); }
+}
+
+.effect-zoomout {
+    -webkit-animation: zoomout 0.3s;
+       -moz-animation: zoomout 0.3s;
+        -ms-animation: zoomout 0.3s;
+    		animation: zoomout 0.3s;
+
+	-webkit-animation-timing-function: <?=BEZIER_NO_DIP?>;
+	   -moz-animation-timing-function: <?=BEZIER_NO_DIP?>;
+	    -ms-animation-timing-function: <?=BEZIER_NO_DIP?>;
+			animation-timing-function: <?=BEZIER_NO_DIP?>;
+}
+@keyframes zoomout {
+    from { transform: scale(1); }
+    to   { transform: scale(0); visibility:hidden; }
+}
+@-ms-keyframes zoomout {
+    from { transform: scale(1); }
+    to   { transform: scale(0); visibility:hidden; }
+}
+@-moz-keyframes zoomout {
+    from { transform: scale(1); }
+    to   { transform: scale(0); visibility:hidden; }
+}
+@-webkit-keyframes zoomout {
+    from { transform: scale(1); }
+    to   { transform: scale(0); visibility:hidden; }
+}
+
+
+#dialog {
+	text-align:center;
+	/*pointer-events:none;*/
+	
+	overflow:hidden;
+	max-width:20em;
+	
+	z-index:1000;
+	
+	border-radius:1.0em;
+	background:<?=PAL_RED[1]?>;
+	box-shadow:0 2px 6px rgba(0,0,0,0.3);
 }
 
 #dialog img {
