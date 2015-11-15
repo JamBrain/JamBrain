@@ -33,9 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 		// This is only available to whitelisted clients, or while debugging //
 		if ( defined('LEGACY_DEBUG') || defined('IP_WHITELIST') && core_OnWhitelist($_SERVER['REMOTE_ADDR'],IP_WHITELIST) ) {
 			$id = intval($_POST['id']);
-			$ip = inet_pton($_POST['ip']);
-			if ( $id > 0 && ($ip !== false) ) {
-				error_log($ip." - ".$_POST['ip']);
+			$ip = ($_POST['ip']);
+			if ( $id > 0 && (inet_pton($ip) !== false) ) {
+				//error_log($ip." - ".$_POST['ip']);
 				$user = legacy_GetUser($id);
 				// Not in Database yet
 				if ( empty($user) ) {
