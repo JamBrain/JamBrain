@@ -90,3 +90,13 @@ function legacy_FetchUserInfo($id) {
 	}
 	return null;
 }
+
+function legacy_SetExtraInfo($id,$result) {
+	return db_DoDelete(
+		"UPDATE ".CMW_TABLE_LEGACY_USER."
+		SET num_events=? AND gravatar=?
+		WHERE id=?
+		;",
+		$result['num_events'],$result['gravatar'],$id
+	);
+}
