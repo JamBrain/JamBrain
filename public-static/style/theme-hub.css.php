@@ -10,6 +10,15 @@ const PAL_RED = [
 	"#FDD",		// Mute Bright //
 ];
 
+
+const BEZIER_NORMAL = 			"cubic-bezier(0.5,-1.0,0.1,2.0)";
+const BEZIER_NO_DIP = 			"cubic-bezier(0.5, 0.0,0.1,2.0)";
+const BEZIER_NO_POP = 			"cubic-bezier(0.5,-1.0,0.1,1.0)";
+const BEZIER_NO_DIP_NO_POP =	"cubic-bezier(0.5, 0.0,0.1,1.0)";
+
+const BEZIER_BIG_DIP = 			"cubic-bezier(0.5,-1.0,0.1,3.0)";
+const BEZIER_NO_DIP_BIG_POP = 	"cubic-bezier(0.5, 0.0,0.1,3.0)";
+
 ?>
 
 
@@ -116,8 +125,7 @@ button {
 	font-weight:700;
     outline: none;
 
-    /*transition: transform 0.2s cubic-bezier(0.5,-1,0.1,2);*/ /* With Dip and Pop */
-    transition: transform 0.2s cubic-bezier(0.5,0,0.1,3); /* With Pop */
+    transition: transform 0.2s <?=BEZIER_NO_DIP_BIG_POP?>;
 }
 button:hover {
 	transform: scale(1.25);
@@ -245,20 +253,11 @@ button, .sg-item-x {
 	background:<?=PAL_RED[1]?>;
 	box-shadow:0 2px 6px rgba(0,0,0,0.3);
 	
-	-webkit-transition: opacity 400ms ease-in;
-	-moz-transition: opacity 400ms ease-in;
-	transition: opacity 400ms ease-in;
-	
     -webkit-animation: zoomin 0.3s;
     		animation: zoomin 0.3s;
 
-	-webkit-animation-timing-function: cubic-bezier(0.5,0,0.1,2);
-			animation-timing-function: cubic-bezier(0.5,0,0.1,2);
-}
-#dialog:hover {
-/*	transition: transform 0.4s cubic-bezier(0.5,0,0.1,1);*/ /* No Dip or Pop */
-/*	transition: transform 0.4s cubic-bezier(0.5,0,0.1,2);*/ /* No Initial Dip */
-/*	transform: scale(1);*/
+	-webkit-animation-timing-function: <?=BEZIER_NO_DIP?>;
+			animation-timing-function: <?=BEZIER_NO_DIP?>;
 }
 
 #dialog img {
