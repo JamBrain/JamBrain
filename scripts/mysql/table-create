@@ -150,8 +150,8 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 					UNIQUE,
 				node BIGINT UNSIGNED NOT NULL,
 					INDEX(node),
-				author BIGINT UNSIGNED NOT NULL,
-					INDEX(author),
+				user BIGINT UNSIGNED NOT NULL,
+					INDEX(user),
 				theme VARCHAR(64) NOT NULL,
 				`timestamp` DATETIME NOT NULL
 			)".DEFAULT_CS_ENGINE.";");
@@ -173,9 +173,32 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 					UNIQUE,
 				`hash` VARCHAR(128) CHARSET latin1 NOT NULL,
 				`timestamp` DATETIME NOT NULL,
-				bonus_votes INT NOT NULL,
 				num_events INT UNSIGNED NOT NULL,
 				gravatar VARCHAR(32) CHARSET latin1 NOT NULL
+			)".DEFAULT_CS_ENGINE.";");
+		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
+	};
+	DoExit($table);
+}
+
+// Create/Upgrade Table //
+$table = CMW_TABLE_USER_ACCESS;
+if ( !isset($table_list) || isset($table_list[$table]) ) {
+	DoInit($table);
+	switch ($version) {
+	case 0:
+		$ok = DoCreate( $table,
+			"CREATE TABLE ".$table." (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
+					UNIQUE,
+				user BIGINT UNSIGNED NOT NULL,
+					INDEX(user),
+				ip VARBINARY(16) NOT NULL,
+					INDEX(ip),
+					UNIQUE `user_ip` (user,ip),
+				first_timestamp DATETIME NOT NULL,
+				last_timestamp DATETIME NOT NULL,
+				total BIGINT UNSIGNED NOT NULL
 			)".DEFAULT_CS_ENGINE.";");
 		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
 	};

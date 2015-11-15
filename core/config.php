@@ -22,7 +22,8 @@ const DEFAULT_CONFIG = [
 //	CMW_TABLE_NODE_STAR => '0',				// Bookmark
 	                               
 //	CMW_TABLE_USER => '0',
-//	                               
+	CMW_TABLE_USER_ACCESS => '0',			// User Account Access Log
+	                               
 //	CMW_TABLE_COMMENT => '0',
 //	CMW_TABLE_COMMENT_LOVE => '0',			// Like
 	
@@ -34,6 +35,7 @@ const DEFAULT_CONFIG = [
 	CMW_TABLE_THEME_IDEA_LOVE => '0',		// Like
 	CMW_TABLE_THEME => '0',					// Themes
 	CMW_TABLE_THEME_VOTE => '0',			// Theme Votes
+//	CMW_TABLE_THEME_NOTES => '0',			// Theme Notes (extra details, such as themes that previously won)
 	
 	CMW_TABLE_LEGACY_USER => '0',			// Placeholder Legacy User List
 	

@@ -14,6 +14,7 @@ if (defined('LEGACY_DEBUG')) {
 require_once __DIR__."/../api.php";
 require_once __DIR__."/../db.php";
 require_once __DIR__."/../core/legacy_user.php";
+require_once __DIR__."/../core/access.php";
 
 // IMPORTANT: This Legacy API is intended for use with the legacy LD website. 
 // *** This code will not work for you ***
@@ -49,6 +50,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 				}
 			}
 		}
+	}
+	else if ( $action == "ACCESS" ) {
+		$response['id'] = intval($_POST['id']);
+		$response['ip'] = $_SERVER['REMOTE_ADDR'];
+		
+		$response['ret'] = access_LogUser( intval($_POST['id']), $_SERVER['REMOTE_ADDR'] );
+	}
+	else if ( $action == "HAXCESS" ) {
+		$response['id'] = intval($_POST['id']);
+		$response['ret'] = access_GetUser( intval($_POST['id']) );
+	}
+	else if ( $action == "LAXCESS" ) {
+		$response['ret'] = access_GetIp( $_SERVER['REMOTE_ADDR'] );
 	}
 	else if ( $action == "LEGACY_FETCH" ) {
 		if (defined('LEGACY_DEBUG')) {
