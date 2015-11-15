@@ -129,3 +129,13 @@ body > .footer {
 .bigger {
 	font-size:1.8em;
 }
+
+.no-margin {
+	margin:0 !important;
+}
+.no-padding {
+	padding:0 !important;
+}
+.no-border {
+	border:0 !important;
+}

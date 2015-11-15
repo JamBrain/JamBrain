@@ -6,19 +6,19 @@ require_once __DIR__."/../../core/config.php";
 
 if (count($argv) <= 2) {
 	echo "Usage: ".$argv[0]." config-key-name \"value\"\n";
-	exit(1);
+	exit(-1);
 }
 
 if (posix_getuid() != 0) {
     echo "ERROR: Requires root\n";
-    exit(1);
+    exit(-2);
 }
 
 $key = trim($argv[1]);
 $value = trim($argv[2]);
 
-if ( empty($key) || empty($value) ) {
-	exit(1);
+if ( ($key === "") || ($value === "") ) {
+	exit(2);
 }
 
 db_Connect();
