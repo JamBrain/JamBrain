@@ -139,3 +139,7 @@ body > .footer {
 .no-border {
 	border:0 !important;
 }
+
+.hidden {
+	display:none !important;
+}

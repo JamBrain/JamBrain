@@ -61,8 +61,8 @@ body > .body .action {
 }
 .action .form {
 }
-.action .form > div, .form > input, .form > button {
-    display:inline;
+.action .form > div, .action .form > input, .action .form > button {
+	display:inline;
 	vertical-align:middle;
 }
 .action .footnote {
@@ -87,33 +87,43 @@ body > .body .action {
 
 .submit-button {
 	background:#AAA;
-	border:0;
-	padding:10px 26px;
+	color:#DDD;
+}
+
+button {
+	background:#AAA;
 	color:#DDD;
 
-	margin:0.5em;
-	border-radius:32px;
-	font-weight:700;
-    
-    outline: none;
-}
-.submit-button:hover, .submit-button:focus {
-	background:#E44;
 	border:0;
 	padding:10px 26px;
-/*	border:2px solid #A22;*/
-/*	padding:8px 24px;*/
-	color:#FFB;
-	
 	cursor:pointer;
-	box-shadow: 0 0 4px rgba(0,0,0,0.3);
+
+	margin:0.5em;
+	border-radius:2.0em;
+	font-weight:700;
+    outline: none;
+
+    transition: transform 0.2s cubic-bezier(0.5,-1,0.1,2); /* With Dip and Pop */
+}
+button:hover {
+	transform: scale(1.25);
+}
+button:focus {
+	background:#666;
+	color:#FFF;
+}
+button:active {
+	background:#FFF;
+	color:#666;
+}
+
+.submit-button:focus {
+	background:#E44;
+	color:#FFB;
 }
 .submit-button:active {
-	background:#A22;
-	border:2px solid #E44;
-	padding:8px 24px;
+	background:#FFB;
 	color:#E44;
-	
 }
 
 body > .footer {
@@ -164,7 +174,7 @@ body > .footer {
 }
 
 /* Can't Select This */
-.submit-button, .sg-item-x, #dialog-back {
+button, .sg-item-x, #dialog-back {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -207,6 +217,13 @@ body > .footer {
 	-webkit-transition: opacity 400ms ease-in;
 	-moz-transition: opacity 400ms ease-in;
 	transition: opacity 400ms ease-in;
+	
+	transition: transform 0.4s cubic-bezier(0.5,0,0.1,1); /* No Dip or Pop */
+	transform: scale(0.1);
+}
+#dialog:hover {
+	transition: transform 0.4s cubic-bezier(0.5,0,0.1,2); /* No Initial Dip */
+	transform: scale(1);
 }
 
 #dialog img {
@@ -234,21 +251,7 @@ body > .footer {
 
 #dialog button {
 	background:#D88;
-	border:0;
-	padding:10px 26px;
 	color:#FDD;
-
-	margin:0.5em;
-	border-radius:32px;
-	font-weight:700;
-    
-    outline: none;
-    cursor:pointer;
-    
-    transition: transform 0.125s ease-in;
-}
-#dialog button:hover {
-	transform: scale(1.25);
 }
 #dialog button:focus {
 	background:#F99;

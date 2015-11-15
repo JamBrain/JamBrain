@@ -115,14 +115,14 @@ function ShowHeadline() {
 function ShowLogin() {
 ?>
 	<div class="action" id="action-login">
-		<a href="<?= LEGACY_LOGIN_URL ?>"><button type="button" class="submit-button">Login</button></a>
+		<a href="<?= LEGACY_LOGIN_URL ?>"><button type="button" class="login-button">Login</button></a>
 	</div>	
 <?php
 }
 function ShowLogout() {
 ?>
 	<div class="action" id="action-logout">
-		<button type="button" class="submit-button" onclick="DoLogout()">Logout</button>
+		<button type="button" class="login-button" onclick="DoLogout()">Logout</button>
 	</div>	
 <?php
 }
@@ -167,7 +167,7 @@ function ShowExtra() { ?>
 <?php 
 } ?>
 <?php template_GetHeader(); ?>
-<div id="dialog-back">
+<div class="hidden" id="dialog-back">
 	<div id="dialog">
 		<div class="title big">Wuht is this!?</div>
 		<div class="body">
