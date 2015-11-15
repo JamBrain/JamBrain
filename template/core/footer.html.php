@@ -34,6 +34,8 @@
 			echo " without opcache";
 		}
 		
+		echo " [v".VERSION."]";
+		
 		echo " <span class='view-mode'></span>";
 
 		echo (isset($GLOBALS['HTML_SHOW_FOOTER'])) ? ' -->' : '</div>'; 

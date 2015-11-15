@@ -133,7 +133,7 @@ function ShowSubmitIdea() { ?>
 	<div class="action" id="action-idea">
 		<div class="title bigger">Suggest a Theme</div>
 		<div class="form">
-			<input type="text" class="single-input" id="input-idea" placeholder="your suggestion" maxlength="64" />
+			<input type="text" class="single-input" id="input-idea" placeholder="Your suggestion" maxlength="64" />
 			<button type="button" class="submit-button" onclick="SubmitIdeaForm();">Submit</button>
 		</div>
 		<div class="footnote small">You have <strong><span id="sg-count">?</span></strong> suggestion(s) left</div>
@@ -182,8 +182,8 @@ function ShowExtra() { ?>
 		IdeaAttr = escapeAttribute(Idea);
 		document.getElementById('sg').innerHTML = 
 			"<div class='sg-item' id='sg-item-"+Id+"'>" +
-				"<span class='sg-item-x' onclick='sg_RemoveIdea("+Id+",\""+(IdeaAttr)+"\")'>✕</span>" +
-				"<span class='sg-item-text' title='"+(Idea)+"'>"+(Idea)+"</span>" +
+				"<div class='sg-item-x' onclick='sg_RemoveIdea("+Id+",\""+(IdeaAttr)+"\")'>✕</div>" +
+				"<div class='sg-item-text' title='"+(Idea)+"'>"+(Idea)+"</div>" +
 			"</div>" +
 			document.getElementById('sg').innerHTML;
 	}

@@ -45,7 +45,7 @@ body {
 
 .extra {
 	padding:1.0em;
-	background:#CCC;
+	background:#EEE;
 	box-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
 .extra .title {
@@ -53,19 +53,6 @@ body {
 }
 .extra > div {
 	margin:0 auto;
-}
-.extra > div > div > div {
-	text-overflow: ellipsis;
-	overflow:hidden;
-	white-space: nowrap;
-}
-
-.extra .sg-item-text {
-	position:relative;
-}
-.extra .sg-item-x {
-	z-index:100;
-	position:relative;
 }
 
 
@@ -134,10 +121,18 @@ body > .footer {
 }
 
 .sg-item {
-	padding:0 0.25em;
+}
+.sg-item-text {
+	text-overflow: ellipsis;
+	overflow:hidden;
+	white-space: nowrap;
 }
 .sg-item-x {
+	position:relative;
 	float:right;
+	z-index:1;
+	
+	font-size:0.9em;
 	margin-left:1.0em;
 	padding:0 0.25em;
 	cursor:pointer;
@@ -149,6 +144,7 @@ body > .footer {
 .sg-item-x:active {
 	color:#FF0;
 }
+
 
 .alert {
 	background:#E87;
