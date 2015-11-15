@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 			$id = intval($_POST['id']);
 			$ip = inet_pton($_POST['ip']);
 			if ( $id > 0 && ($ip !== false) ) {
-				error_log($ip);
+				error_log($ip." - ".$_POST['ip']);
 				$user = legacy_GetUser($id);
 				// Not in Database yet
 				if ( empty($user) ) {
