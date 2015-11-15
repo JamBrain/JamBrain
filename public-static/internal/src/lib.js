@@ -62,4 +62,50 @@ window.escapeString = function(value) {
 		replace(/>/g, '&gt;');
 }
 
+
+// http://stackoverflow.com/a/196038
+
+// Change all classes //
+window.dom_SetClasses = function(id,class_names) {
+	document.getElementById(id).className = class_names;
+}
+window.dom_GetClasses = function(id) {
+	return document.getElementById(id).className;
+}
+window.dom_AddClass = function(id,class_name) {
+	document.getElementById(id).className += " "+class_name;
+}
+window.dom_RemoveClass = function(id,class_name) {
+	document.getElementById(id).className =
+		document.getElementById(id).className.replace(
+			RegExp('(?:^|\\s)'+class_name+'(?!\\S)','g')
+		);
+}
+window.dom_HasClass = function(id,class_name) {
+	return Boolean(document.getElementById(id).className.match(
+		RegExp('(?:^|\\s)'+class_name+'(?!\\S)','g')
+	));
+}
+// Add, Remove, or Toggle class, if not already set //
+window.dom_ToggleClass = function(id,class_name,value) {
+	var action = value;
+	var has = dom_HasClass(id,class_name);
+	if ( typeof action !== "boolean" ) {
+		action = !has;
+	}
+	
+	if ( action ) {
+		if ( !has ) {
+			console.log('!has');
+			dom_AddClass(id,class_name);
+		}
+	}
+	else {
+		if ( has ) {
+			console.log('has');
+			dom_RemoveClass(id,class_name);
+		}
+	}
+}
+
 })();

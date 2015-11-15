@@ -108,7 +108,7 @@ function ShowHeadline() {
 	
 	$UTCDate = date(DATE_RFC850,$TargetDate);
 
-	echo "<div class='clock' id='headline-clock'>Round ends in <span id='headline-time' title=\"".$UTCDate."\">".$OutTime."</span></div>";
+	echo "<div class='clock' onclick='dom_ToggleClass(\"dialog-back\",\"hidden\");' id='headline-clock'>Round ends in <span id='headline-time' title=\"".$UTCDate."\">".$OutTime."</span></div>";
 	echo "</div>";
 }
 
@@ -176,7 +176,7 @@ function ShowExtra() { ?>
 		</div>
 		<div class="buttons">
 			<button>Yup!</button>
-			<button>Uh, Nope</button>
+			<button onclick='dom_ToggleClass("dialog-back","hidden");'>Uh, Nope</button>
 		</div>
 	</div>
 </div>

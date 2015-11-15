@@ -143,3 +143,10 @@ body > .footer {
 .hidden {
 	display:none !important;
 }
+
+.visible {
+	visibility:visible !important;
+}
+.invisible {
+	visibility:hidden !important;
+}

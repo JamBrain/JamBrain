@@ -1,5 +1,18 @@
 <?php require_once __DIR__."/../../style.php"; ?>
 
+<?php
+const PAL_RED = [
+	"#622",		// Deep Color //
+	"#C44",		// Base Color //
+	"#F88",		// Light Color //
+	"#FFF",		// Brightest Color //
+	"#D88",		// Mute Base //
+	"#FDD",		// Mute Bright //
+];
+
+?>
+
+
 body {
 	color:#444;
 	background:#BBB;
@@ -103,7 +116,8 @@ button {
 	font-weight:700;
     outline: none;
 
-    transition: transform 0.2s cubic-bezier(0.5,-1,0.1,2); /* With Dip and Pop */
+    /*transition: transform 0.2s cubic-bezier(0.5,-1,0.1,2);*/ /* With Dip and Pop */
+    transition: transform 0.2s cubic-bezier(0.5,0,0.1,3); /* With Pop */
 }
 button:hover {
 	transform: scale(1.25);
@@ -174,7 +188,7 @@ body > .footer {
 }
 
 /* Can't Select This */
-button, .sg-item-x, #dialog-back {
+button, .sg-item-x {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -185,7 +199,6 @@ button, .sg-item-x, #dialog-back {
 
 #dialog-back {
 	background:rgba(64,48,48,0.7);
-	/*opacity:0.8;*/
 	
 	position:fixed;
 	left:0;
@@ -199,31 +212,53 @@ button, .sg-item-x, #dialog-back {
 	display:flex;
 	justify-content:center;
 	align-items:center;
+	
+    -webkit-animation: fadein 0.3s;
+            animation: fadein 0.3s;
 }
 
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes zoomin {
+    from { transform: scale(0); }
+    to   { transform: scale(1); }
+}
+@-webkit-keyframes zoomin {
+    from { transform: scale(0); }
+    to   { transform: scale(1); }
+}
+
+
 #dialog {
-	/*opacity:1.0;*/
 	text-align:center;
 	
 	overflow:hidden;	
 	
-	/*border:0px solid #C44;*/
-	/*border-bottom:3px solid #C44;*/
-	border-radius:1em;
-	/*padding:2em;*/
-	background:#C44;
+	border-radius:1.0em;
+	background:<?=PAL_RED[1]?>;
 	box-shadow:0 2px 6px rgba(0,0,0,0.3);
 	
 	-webkit-transition: opacity 400ms ease-in;
 	-moz-transition: opacity 400ms ease-in;
 	transition: opacity 400ms ease-in;
 	
-	transition: transform 0.4s cubic-bezier(0.5,0,0.1,1); /* No Dip or Pop */
-	transform: scale(0.1);
+    -webkit-animation: zoomin 0.3s;
+    		animation: zoomin 0.3s;
+
+	-webkit-animation-timing-function: cubic-bezier(0.5,0,0.1,2);
+			animation-timing-function: cubic-bezier(0.5,0,0.1,2);
 }
 #dialog:hover {
-	transition: transform 0.4s cubic-bezier(0.5,0,0.1,2); /* No Initial Dip */
-	transform: scale(1);
+/*	transition: transform 0.4s cubic-bezier(0.5,0,0.1,1);*/ /* No Dip or Pop */
+/*	transition: transform 0.4s cubic-bezier(0.5,0,0.1,2);*/ /* No Initial Dip */
+/*	transform: scale(1);*/
 }
 
 #dialog img {
@@ -231,35 +266,33 @@ button, .sg-item-x, #dialog-back {
 }
 
 #dialog .title {
-	color: #FFF;
+	color:<?=PAL_RED[3]?>;
 	font-weight:700;
-	background:#C44;
 	
 	padding:0.5em 2.0em;
 }
 
 #dialog .body {
-	color:#622;
-	background:#DBB;
+	color:<?=PAL_RED[0]?>;
+	background:<?=PAL_RED[2]?>;
 	padding:0.5em 2.0em;
 }
 #dialog .buttons {
-	color:#622;
-/*	background:#DBB;*/
+	color:<?=PAL_RED[0]?>;
 	padding:0.5em 2.0em;
 }
 
 #dialog button {
-	background:#D88;
-	color:#FDD;
+	background:<?=PAL_RED[4]?>;
+	color:<?=PAL_RED[5]?>;
 }
 #dialog button:focus {
-	background:#F99;
-	color:#FFF;
+	background:<?=PAL_RED[2]?>;
+	color:<?=PAL_RED[3]?>;
 }
 #dialog button:active {
-	background:#FFF;
-	color:#F99;
+	background:<?=PAL_RED[3]?>;
+	color:<?=PAL_RED[2]?>;
 }
 
 
