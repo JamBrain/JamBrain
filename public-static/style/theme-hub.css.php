@@ -27,19 +27,19 @@ body {
 
 
 /* Body */
-.body {
+body > .body {
 	background:#DDD;
 }
 
-.body .main {
+body > .body .main {
 	padding:1.0em 2.0em;
 	text-align:center;
 }
 
-.body .headline {
+body > .body .headline {
 	margin-bottom:2.0em;
 }
-.body .action {
+body > .body .action {
 	margin-top:2.0em;
 }
 
@@ -164,7 +164,7 @@ body > .footer {
 }
 
 /* Can't Select This */
-.submit-button, .sg-item-x {
+.submit-button, .sg-item-x, #dialog-back {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -173,8 +173,96 @@ body > .footer {
     user-select: none;
 }
 
+#dialog-back {
+	background:rgba(64,48,48,0.7);
+	/*opacity:0.8;*/
+	
+	position:fixed;
+	left:0;
+	right:0;
+	top:0;
+	bottom:0;
+	
+	z-index:999;
+	
+	display:-webkit-flex;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+}
+
+#dialog {
+	/*opacity:1.0;*/
+	text-align:center;
+	
+	overflow:hidden;	
+	
+	/*border:0px solid #C44;*/
+	/*border-bottom:3px solid #C44;*/
+	border-radius:1em;
+	/*padding:2em;*/
+	background:#C44;
+	box-shadow:0 2px 6px rgba(0,0,0,0.3);
+	
+	-webkit-transition: opacity 400ms ease-in;
+	-moz-transition: opacity 400ms ease-in;
+	transition: opacity 400ms ease-in;
+}
+
+#dialog img {
+	margin:0.5em;
+}
+
+#dialog .title {
+	color: #FFF;
+	font-weight:700;
+	background:#C44;
+	
+	padding:0.5em 2.0em;
+}
+
+#dialog .body {
+	color:#622;
+	background:#DBB;
+	padding:0.5em 2.0em;
+}
+#dialog .buttons {
+	color:#622;
+/*	background:#DBB;*/
+	padding:0.5em 2.0em;
+}
+
+#dialog button {
+	background:#D88;
+	border:0;
+	padding:10px 26px;
+	color:#FDD;
+
+	margin:0.5em;
+	border-radius:32px;
+	font-weight:700;
+    
+    outline: none;
+    cursor:pointer;
+    
+    transition: transform 0.125s ease-in;
+}
+#dialog button:hover {
+	transform: scale(1.25);
+}
+#dialog button:focus {
+	background:#F99;
+	color:#FFF;
+}
+#dialog button:active {
+	background:#FFF;
+	color:#F99;
+}
+
+
+
 /* Normal and HiRes */
-.body {
+body > .body {
 	position:relative;
 	
 	overflow:hidden;
@@ -183,13 +271,13 @@ body > .footer {
 	
 	box-shadow:0 0 4px rgba(0,0,0,0.3)
 }
-.body > div {
+body > .body > div {
 	display:inline-block;
 	vertical-align:top;
 }
-.body .main {
+body > .body .main {
 }
-.body .extra {
+body > .body .extra {
 	min-width:12em;
 	max-width:30%;
 	text-align:left;
@@ -198,12 +286,12 @@ body > .footer {
 
 /* Tablet and Mobile */
 @media <?= MOBILE_AND_TABLET_QUERY ?> {
-	.body > div {
+	body > .body > div {
 		display:block;
 	}
-	.body .main {
+	body > .body .main {
 	}
-	.body .extra {
+	body > .body .extra {
 		max-width:none;
 		font-size:1.4em;
 		margin:0;

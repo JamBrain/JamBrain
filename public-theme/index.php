@@ -167,6 +167,19 @@ function ShowExtra() { ?>
 <?php 
 } ?>
 <?php template_GetHeader(); ?>
+<div id="dialog-back">
+	<div id="dialog">
+		<div class="title big">Wuht is this!?</div>
+		<div class="body">
+			<div><img src="http://cdn.jsdelivr.net/emojione/assets/png/26A0.png?v=1.2.4" width=64 height=64"></div>
+			A... Are you sure? I'm not.
+		</div>
+		<div class="buttons">
+			<button>Yup!</button>
+			<button>Uh, Nope</button>
+		</div>
+	</div>
+</div>
 <div class="header"><?php
 	ShowHeader();
 ?>
