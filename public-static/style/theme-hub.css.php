@@ -222,6 +222,8 @@ button, .sg-item-x {
 	align-items:center;
 	
     -webkit-animation: fadein 0.3s;
+       -moz-animation: fadein 0.3s;
+        -ms-animation: fadein 0.3s;
             animation: fadein 0.3s;
 }
 
@@ -257,9 +259,13 @@ button, .sg-item-x {
 	box-shadow:0 2px 6px rgba(0,0,0,0.3);
 	
     -webkit-animation: zoomin 0.3s;
+       -moz-animation: zoomin 0.3s;
+        -ms-animation: zoomin 0.3s;
     		animation: zoomin 0.3s;
 
 	-webkit-animation-timing-function: <?=BEZIER_NO_DIP?>;
+	   -moz-animation-timing-function: <?=BEZIER_NO_DIP?>;
+	    -ms-animation-timing-function: <?=BEZIER_NO_DIP?>;
 			animation-timing-function: <?=BEZIER_NO_DIP?>;
 }
 
