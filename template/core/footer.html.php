@@ -9,6 +9,10 @@
 			}
 			echo "<div class='footer'>";
 		}
+
+		if (defined('VERSION')) {
+			echo "[v".VERSION."] ";
+		}
 		
 		$FOOTER_DATA_POINT=0; 		
 		echo "Generated in <strong onclick='__();'>".core_GetExecutionTime()."</strong>";
@@ -33,9 +37,7 @@
 			if ($FOOTER_DATA_POINT++ > 0) { echo ','; }
 			echo " without opcache";
 		}
-		
-		echo " [v".VERSION."]";
-		
+				
 		echo " <span class='view-mode'></span>";
 
 		echo (isset($GLOBALS['HTML_SHOW_FOOTER'])) ? ' -->' : '</div>'; 

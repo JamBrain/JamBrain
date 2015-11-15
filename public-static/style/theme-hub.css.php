@@ -40,7 +40,7 @@ body {
 	margin-bottom:2.0em;
 }
 .body .action {
-	margin-top:1.0em;
+	margin-top:2.0em;
 }
 
 .extra {
