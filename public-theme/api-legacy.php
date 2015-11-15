@@ -33,7 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 		// This is only available to whitelisted clients, or while debugging //
 		if ( defined('LEGACY_DEBUG') || defined('IP_WHITELIST') && core_OnWhitelist($_SERVER['REMOTE_ADDR'],IP_WHITELIST) ) {
 			$id = intval($_POST['id']);
-			if ( $id > 0 ) {
+			$ip = inet_pton($_POST['ip']);
+			if ( $id > 0 && ($ip !== false) ) {
 				$user = legacy_GetUser($id);
 				// Not in Database yet
 				if ( empty($user) ) {
@@ -46,24 +47,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 				}
 				
 				if ( $user ) {
+					access_LogUser( $id, $ip )
 					$response['hash'] = $user['hash'];
 				}
 			}
 		}
 	}
-	else if ( $action == "ACCESS" ) {
-		$response['id'] = intval($_POST['id']);
-		$response['ip'] = $_SERVER['REMOTE_ADDR'];
-		
-		$response['ret'] = access_LogUser( intval($_POST['id']), $_SERVER['REMOTE_ADDR'] );
-	}
-	else if ( $action == "HAXCESS" ) {
-		$response['id'] = intval($_POST['id']);
-		$response['ret'] = access_GetUser( intval($_POST['id']) );
-	}
-	else if ( $action == "LAXCESS" ) {
-		$response['ret'] = access_GetIp( $_SERVER['REMOTE_ADDR'] );
-	}
+//	else if ( $action == "ACCESS" ) {
+//		$response['id'] = intval($_POST['id']);
+//		$response['ip'] = $_SERVER['REMOTE_ADDR'];
+//		
+//		$response['ret'] = access_LogUser( intval($_POST['id']), $_SERVER['REMOTE_ADDR'] );
+//	}
+//	else if ( $action == "HAXCESS" ) {
+//		$response['id'] = intval($_POST['id']);
+//		$response['ret'] = access_GetUser( intval($_POST['id']) );
+//	}
+//	else if ( $action == "LAXCESS" ) {
+//		$response['ret'] = access_GetIp( $_SERVER['REMOTE_ADDR'] );
+//	}
 	else if ( $action == "LEGACY_FETCH" ) {
 		if (defined('LEGACY_DEBUG')) {
 			$id = intval($_POST['id']);
