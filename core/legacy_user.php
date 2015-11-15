@@ -94,9 +94,9 @@ function legacy_FetchUserInfo($id) {
 function legacy_SetExtraInfo($id,$result) {
 	return db_DoDelete(
 		"UPDATE ".CMW_TABLE_LEGACY_USER."
-		SET num_events=? AND gravatar=?
+		SET num_events=?,gravatar=?
 		WHERE id=?
 		;",
-		$result['num_events'],$result['gravatar'],$id
+		intval($result['num_events']),strval($result['gravatar']),intval($id)
 	);
 }
