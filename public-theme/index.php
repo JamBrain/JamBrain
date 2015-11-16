@@ -174,12 +174,12 @@ function ShowExtra() { ?>
 			<div><img src="http://cdn.jsdelivr.net/emojione/assets/png/26A0.png?v=1.2.4" width=64 height=64"></div>
 			<div id="dialog-text">A... Are you sure? I'm not.</div>
 		</div>
-		<div class="buttons hidden" id="dialog-yesno">
-			<button class="normal" onclick='dialog_DoAction();'>Yes</button>
-			<button class="normal" onclick='dialog_Close();'>No</button>
+		<div class="buttons hidden" id="dialog-yes_no">
+			<button id="dialog-yes" class="normal" onclick='dialog_DoAction();'>Yes</button>
+			<button id="dialog-no" class="normal" onclick='dialog_Close();'>No</button>
 		</div>
-		<div class="buttons hidden" id="dialog-ok">
-			<button class="normal" onclick='dialog_Close();'>OK</button>
+		<div id="dialog-ok_only" class="buttons hidden">
+			<button id="dialog-ok" class="normal" onclick='dialog_Close();'>OK</button>
 		</div>
 	</div>
 </div>
@@ -288,11 +288,13 @@ function ShowExtra() { ?>
 		dom_SetText("dialog-title",title);
 		dom_SetText("dialog-text",message);
 		
-		dom_ToggleClass("dialog-yesno","hidden",false);
-		dom_ToggleClass("dialog-ok","hidden",true);
+		dom_ToggleClass("dialog-yes_no","hidden",false);
+		dom_ToggleClass("dialog-ok_only","hidden",true);
 		
 		dom_SetClasses("dialog","red_dialog effect-zoomin");
 		dom_SetClasses("dialog-back","effect-fadein");
+
+		dom_SetFocus("dialog-no");
 	}
 	function dialog_Alert(title,message /*,outside_close*/) {
 		// Bail if we've already faded in //
@@ -302,11 +304,13 @@ function ShowExtra() { ?>
 		dom_SetText("dialog-title",title);
 		dom_SetText("dialog-text",message);
 
-		dom_ToggleClass("dialog-yesno","hidden",true);
-		dom_ToggleClass("dialog-ok","hidden",false);
+		dom_ToggleClass("dialog-yes_no","hidden",true);
+		dom_ToggleClass("dialog-ok_only","hidden",false);
 		
 		dom_SetClasses("dialog","blue_dialog effect-zoomin");
 		dom_SetClasses("dialog-back","effect-fadein");
+		
+		dom_SetFocus("dialog-ok");
 	}
 	var _dialog_action;
 	function dialog_SetAction(func) {

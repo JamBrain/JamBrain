@@ -90,6 +90,10 @@ window.dom_ForceReflow = function(id) {
 	element.width = element.width;
 }
 
+window.dom_SetFocus = function(id) {
+	return document.getElementById(id).focus();
+}
+
 
 // http://stackoverflow.com/a/196038
 
