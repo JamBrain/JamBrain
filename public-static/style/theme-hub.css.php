@@ -490,10 +490,8 @@ button, .sg-item-x {
 }
 
 
-.DummyFocus {
-	width: 0;
-	height: 0;
-	overflow: hidden;
+.action a {
+	border-bottom:0 !important;
 }
 
 
