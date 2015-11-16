@@ -498,6 +498,9 @@ button, .sg-item-x {
 .space {
 	letter-spacing:0.05em;
 }
+.big-space {
+	letter-spacing:0.25em;
+}
 
 
 /* Normal and HiRes */
