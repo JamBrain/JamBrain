@@ -290,8 +290,7 @@ function ShowExtra() { ?>
 	}
 	
 	function dialog_ConfirmAlert(title,message,func /*,outside_close*/) {
-		// Bail if we've already faded in //
-		if ( dom_HasClass("dialog-back","effect-fadein") )
+		if ( dialog_IsActive() )
 			return;
 		
 		dialog_SetAction(func);
@@ -307,8 +306,7 @@ function ShowExtra() { ?>
 		dom_SetFocus("dialog-no");
 	}
 	function dialog_Alert(title,message /*,outside_close*/) {
-		// Bail if we've already faded in //
-		if ( dom_HasClass("dialog-back","effect-fadein") )
+		if ( dialog_IsActive() )
 			return;
 		
 		dom_SetText("dialog-title",title);
@@ -329,6 +327,9 @@ function ShowExtra() { ?>
 	function dialog_DoAction() {
 		_dialog_action();		
 		dialog_Close();
+	}
+	function dialog_IsActive() {
+		return dom_HasClass("dialog-back","effect-fadein");
 	}
 	function dialog_Close() {
 		dom_RemoveClass("dialog","effect-zoomin");
@@ -369,6 +370,17 @@ function ShowExtra() { ?>
 					event.stopPropagation();
 					Focusable[idx].focus()
 					break;
+				}
+			}
+		});
+		
+		window.addEventListener("keydown",function(event){
+			if ( dialog_IsActive() ) {
+				if ( event.keyCode == 27 ) {
+					// TODO: Confirm that we are in a mode where pushing ESC is allowed
+					event.preventDefault();
+					event.stopPropagation();
+					dialog_Close();
 				}
 			}
 		});
