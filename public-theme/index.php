@@ -157,7 +157,7 @@ function ShowSubmitIdea() { ?>
 			<input type="text" class="single-input" id="input-idea" placeholder="Your suggestion" maxlength="64" />
 			<button type="button" class="submit-button" onclick="SubmitIdeaForm();">Submit</button>
 		</div>
-		<div class="footnote small">You have <strong><span class="effect-accent" id="sg-count">?</span></strong> suggestion(s) left</div>
+		<div class="footnote small">You have <strong><span id="sg-count">?</span></strong> suggestion(s) left</div>
 		<script>
 			document.getElementById("input-idea").addEventListener("keydown", function(e) {
 				if (!e) { var e = window.event; }
@@ -253,18 +253,20 @@ function ShowExtra() { ?>
 					if ( el ) {
 						el.remove();
 					}
-					sg_UpdateCount(response.count);
+					sg_UpdateCount(response.count,true);
 				}
 			);
 		});
 	}
 	
-	function sg_UpdateCount(count) {
+	function sg_UpdateCount(count,effect) {
 		var el = document.getElementById('sg-count');
 		var Total = 3 - count;
 		if ( Number(el.innerHTML) !== Total ) {
 			el.innerHTML = Total;
-			dom_RestartAnimation('sg-count','effect-accent');
+			if ( effect === true ) {
+				dom_RestartAnimation('sg-count','effect-accent');
+			}
 		}
 	}
 		
@@ -284,7 +286,7 @@ function ShowExtra() { ?>
 			function(response,code) {
 				console.log("ADD:",response);
 				
-				sg_UpdateCount(response.count);
+				sg_UpdateCount(response.count,true);
 				
 				// Success //
 				if ( response.id > 0 ) {
@@ -419,7 +421,7 @@ function ShowExtra() { ?>
 						sg_UpdateCount(response.count);
 					}
 					else {
-						sg_UpdateCount("ERROR");
+						sg_UpdateCount("ERROR",true);
 					}
 				}
 			);
