@@ -35,6 +35,8 @@ function legacy_GetUserFromCookie() {
 
 
 function legacy_GetUser($id) {
+	db_Connect();
+	
 	return db_DoFetchSingle(
 		"SELECT id,".MYSQL_ISO_FORMAT('timestamp').",hash
 		FROM ".CMW_TABLE_LEGACY_USER." WHERE id=? LIMIT 1;",
@@ -42,6 +44,8 @@ function legacy_GetUser($id) {
 	);
 }
 function legacy_GetUserWithInfo($id) {
+	db_Connect();
+	
 	return db_DoFetchSingle(
 		"SELECT id,".MYSQL_ISO_FORMAT('timestamp').",hash,bonus_votes,num_events,gravatar
 		FROM ".CMW_TABLE_LEGACY_USER." WHERE id=? LIMIT 1;",
@@ -52,6 +56,8 @@ function legacy_GetUserWithInfo($id) {
 
 function legacy_GenerateUserHash($id) {
 	$hash = bin2hex(openssl_random_pseudo_bytes(24));
+	
+	db_Connect();
 	
 	db_DoInsert(
 		"INSERT IGNORE ".CMW_TABLE_LEGACY_USER." (
@@ -92,6 +98,8 @@ function legacy_FetchUserInfo($id) {
 }
 
 function legacy_SetExtraInfo($id,$result) {
+	db_Connect();
+	
 	return db_DoDelete(
 		"UPDATE ".CMW_TABLE_LEGACY_USER."
 		SET num_events=?,gravatar=?

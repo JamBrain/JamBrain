@@ -2,6 +2,7 @@
 require_once __DIR__."/../web.php";
 require_once __DIR__."/../core/config.php";
 require_once __DIR__."/../legacy-config.php";
+require_once __DIR__."/../core/legacy_user.php";
 
 const EVENT_NAME = "Ludum Dare 34";
 
@@ -12,10 +13,17 @@ const HTML_SHOW_FOOTER = true;
 
 
 // Extract Id from Cookie
-if ( isset($_COOKIE['lusha']) )
-	$cookie_id = intval(explode('.',$_COOKIE['lusha'],2)[0]);
-else
+if ( isset($_COOKIE['lusha']) ) {
+	$cookie_id = legacy_GetUserFromCookie();
+	//intval(explode('.',$_COOKIE['lusha'],2)[0]);
+	
+	if ( $cookie_id === 0 ) {
+		?><script>DoLogout();</script><?php
+	}
+}
+else {
 	$cookie_id = 0;
+}
 
 
 // ** Modes ** //
