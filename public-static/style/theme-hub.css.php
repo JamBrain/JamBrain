@@ -184,11 +184,13 @@ button:focus {
 	color:#FFF;
 	
 	padding:10px 26px;
-	border:2px dotted #FFF;/*rgba(255,255,255,0.5);*/
+	/*border:2px dotted #FFF;*/
+	border:2px solid #FFF;
 }
 button:active {
 	background:#FFF;
 	color:#666;
+	/*transform: scale(1.5);*/
 }
 
 .submit-button:focus {
@@ -198,6 +200,7 @@ button:active {
 .submit-button:active {
 	background:<?=PAL_BLUE[COL_BRIGHT]?>;
 	color:<?=PAL_BLUE[COL_MUTE]?>;
+	box-shadow: 0 0px 6px <?=PAL_BLUE[COL_MUTE]?>;
 }
 
 .login-button:focus {
@@ -207,6 +210,7 @@ button:active {
 .login-button:active {
 	background:<?=PAL_RED[COL_BRIGHT]?>;
 	color:<?=PAL_RED[COL_MUTE]?>;
+	box-shadow: 0 0px 6px <?=PAL_RED[COL_MUTE]?>;
 }
 
 body > .footer {
@@ -239,7 +243,7 @@ body > .footer {
 }
 .sg-item-x:active {
 	color:#FFF;
-	transform: scale(1.5);
+	/*transform: scale(1.5);*/
 	text-shadow: 0 0px 6px #F00;
 }
 
@@ -446,6 +450,7 @@ button, .sg-item-x {
 .red_dialog button:active {
 	background:<?=PAL_RED[COL_BRIGHT]?>;
 	color:<?=PAL_RED[COL_MUTE_LIGHT]?>;
+	box-shadow: 0 0px 6px <?=PAL_RED[COL_MUTE_LIGHT]?>;
 }
 
 /* Green */
@@ -473,6 +478,7 @@ button, .sg-item-x {
 .green_dialog button:active {
 	background:<?=PAL_GREEN[COL_BRIGHT]?>;
 	color:<?=PAL_GREEN[COL_MUTE_LIGHT]?>;
+	box-shadow: 0 0px 6px <?=PAL_GREEN[COL_MUTE_LIGHT]?>;
 }
 
 /* Blue */
@@ -500,6 +506,7 @@ button, .sg-item-x {
 .blue_dialog button:active {
 	background:<?=PAL_BLUE[COL_BRIGHT]?>;
 	color:<?=PAL_BLUE[COL_MUTE_LIGHT]?>;
+	box-shadow: 0 0px 6px <?=PAL_BLUE[COL_MUTE_LIGHT]?>;
 }
 
 
