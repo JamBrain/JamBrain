@@ -1,0 +1,7 @@
+#!/bin/sh
+COMMAND=$0
+COMMAND_PATH=`pwd -P`
+
+$COMMAND_PATH/database-dump $@ | gzip
+
+exit $?

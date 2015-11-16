@@ -1,0 +1,17 @@
+#!/bin/sh
+
+COMMAND=$0
+COMMAND_PATH=`pwd -P`
+
+FULL_ARGS=$@
+ARGS=$@
+
+DB=`$COMMAND_PATH/database-get`
+if [ $? -ne 0 ]; then
+	>&2 echo "Error: Unable to fetch database name"
+	exit 1
+fi
+
+mysqldump $DB $ARGS
+
+exit 0
