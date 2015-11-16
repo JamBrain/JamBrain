@@ -337,6 +337,7 @@ function ShowExtra() { ?>
 			for ( var idx = Focusable.length-1; idx >= 0; idx-- ) {
 				if ( Focusable[idx].offsetParent !== null ) {
 					event.preventDefault();
+					event.stopPropagation();
 					Focusable[idx].focus()
 					break;
 				}
@@ -346,11 +347,24 @@ function ShowExtra() { ?>
 			for ( var idx = 0; idx < Focusable.length; idx++ ) {
 				if ( Focusable[idx].offsetParent !== null ) {
 					event.preventDefault();
+					event.stopPropagation();
 					Focusable[idx].focus()
 					break;
 				}
 			}
 		});
+		// For browsers that do otherwise //
+		window.addEventListener("focus",function(event){
+			for ( var idx = Focusable.length-1; idx >= 0; idx-- ) {
+				if ( Focusable[idx].offsetParent !== null ) {
+					event.preventDefault();
+					event.stopPropagation();
+					Focusable[idx].focus()
+					break;
+				}
+			}
+		});
+
 		
 		
 		<?php
