@@ -25,15 +25,9 @@ db_Connect();
 
 if ( db_IsConnected() ) {
 	config_Load();
-
-	global $CONFIG;
-	if ( isset($CONFIG[$key]) ) {
-		if ( config_Set($key,$value) ) {
-			exit(0);
-		}
-	}
-	else {
-		echo "Error: Key \"".$key."\" doesn't exist. Use config-force-value to set.\n";
+	
+	if ( config_Set($key,$value) ) {
+		exit(0);
 	}
 }
 

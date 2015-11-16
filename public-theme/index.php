@@ -281,7 +281,7 @@ function ShowExtra() { ?>
 					dialog_Alert("No Suggestions Left","");
 				}
 				else {
-					dialog_Alert("Other Error",return_r(response));
+					dialog_Alert("Other Error",JSON.stringify(response));
 				}
 			}
 		);
