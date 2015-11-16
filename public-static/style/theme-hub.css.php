@@ -113,7 +113,7 @@ body > .body .action {
 }
 
 .extra {
-	padding:1.0em;
+	padding:1.0em 0;
 	color:#630;
 	background: -webkit-linear-gradient(to bottom,#FEC 35%,#FDA 100%);
 	background: linear-gradient(to bottom,#FEC 35%,#FDA 100%);
@@ -121,6 +121,7 @@ body > .body .action {
 }
 .extra .title {
 	margin-bottom:0.5em;
+	padding:0 1.0em;
 }
 .extra > div {
 	margin:0 auto;
@@ -218,6 +219,7 @@ body > .footer {
 }
 
 .sg-item {
+	padding:0.125em 1.0em;
 }
 .sg-item-text {
 	text-overflow: ellipsis;
@@ -245,6 +247,10 @@ body > .footer {
 	color:#FFF;
 	/*transform: scale(1.5);*/
 	text-shadow: 0 0px 6px #F00;
+}
+
+#sg-count {
+	padding:0.25em;
 }
 
 
@@ -393,6 +399,31 @@ button, .sg-item-x {
 @-webkit-keyframes zoomout {
     from { transform: scale(1); }
     to   { transform: scale(0); visibility:hidden; }
+}
+
+.effect-accent {
+	background:rgba(255,0,0,0.0);
+
+    -webkit-animation: accent 0.8s;
+       -moz-animation: accent 0.8s;
+        -ms-animation: accent 0.8s;
+    		animation: accent 0.8s;
+}
+@keyframes accent {
+    from { background:rgba(255,0,0,0.5); }
+    to   { background:rgba(255,0,0,0.0); }
+}
+@-ms-keyframes accent {
+    from { background:rgba(255,0,0,0.5); }
+    to   { background:rgba(255,0,0,0.0); }
+}
+@-moz-keyframes accent {
+    from { background:rgba(255,0,0,0.5); }
+    to   { background:rgba(255,0,0,0.0); }
+}
+@-webkit-keyframes accent {
+    from { background:rgba(255,0,0,0.5); }
+    to   { background:rgba(255,0,0,0.0); }
 }
 
 

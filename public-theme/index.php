@@ -157,7 +157,7 @@ function ShowSubmitIdea() { ?>
 			<input type="text" class="single-input" id="input-idea" placeholder="Your suggestion" maxlength="64" />
 			<button type="button" class="submit-button" onclick="SubmitIdeaForm();">Submit</button>
 		</div>
-		<div class="footnote small">You have <strong><span id="sg-count">?</span></strong> suggestion(s) left</div>
+		<div class="footnote small">You have <strong><span class="effect-accent" id="sg-count">?</span></strong> suggestion(s) left</div>
 		<script>
 			document.getElementById("input-idea").addEventListener("keydown", function(e) {
 				if (!e) { var e = window.event; }
@@ -215,16 +215,29 @@ function ShowExtra() { ?>
 		);			
 	}
 	
-	function sg_AddIdea(Id,Idea) {
+	function sg_AddIdea(Id,Idea,accent) {
 		Id = Number(Id);
 		Idea = escapeString(Idea);
 		IdeaAttr = escapeAttribute(Idea);
-		document.getElementById('sg').innerHTML = 
-			"<div class='sg-item' id='sg-item-"+Id+"'>" +
-				"<div class='sg-item-x' onclick='sg_RemoveIdea("+Id+",\""+(IdeaAttr)+"\")'>✕</div>" +
-				"<div class='sg-item-text' title='"+(Idea)+"'>"+(Idea)+"</div>" +
-			"</div>" +
-			document.getElementById('sg').innerHTML;
+		
+		var sg_root = document.getElementById('sg');
+		
+		var node = document.createElement('div');
+		node.setAttribute("class",'sg-item'+((accent===true)?" effect-accent":""));
+		node.setAttribute("id","sg-item-"+Id);
+		node.innerHTML = 
+			"<div class='sg-item-x' onclick='sg_RemoveIdea("+Id+",\""+(IdeaAttr)+"\")'>✕</div>" +
+			"<div class='sg-item-text' title='"+(Idea)+"'>"+(Idea)+"</div>";
+		
+		sg_root.insertBefore( node, sg_root.childNodes[0] );
+		//sg_root.appendChild( node );
+		
+//		document.getElementById('sg').innerHTML = 
+//			"<div class='sg-item effect-accent' id='sg-item-"+Id+"'>" +
+//				"<div class='sg-item-x' onclick='sg_RemoveIdea("+Id+",\""+(IdeaAttr)+"\")'>✕</div>" +
+//				"<div class='sg-item-text' title='"+(Idea)+"'>"+(Idea)+"</div>" +
+//			"</div>" +
+//			document.getElementById('sg').innerHTML;
 	}
 
 	function sg_RemoveIdea(Id,Idea) {
@@ -247,7 +260,12 @@ function ShowExtra() { ?>
 	}
 	
 	function sg_UpdateCount(count) {
-		document.getElementById('sg-count').innerHTML = 3 - count;			
+		var el = document.getElementById('sg-count');
+		var Total = 3 - count;
+		if ( Number(el.innerHTML) !== Total ) {
+			el.innerHTML = Total;
+			dom_RestartAnimation('sg-count','effect-accent');
+		}
 	}
 		
 	function SubmitIdeaForm() {
@@ -270,7 +288,7 @@ function ShowExtra() { ?>
 				
 				// Success //
 				if ( response.id > 0 ) {
-					sg_AddIdea(response.id,response.idea);
+					sg_AddIdea(response.id,response.idea,true);
 				}
 				// Failure //
 				else if ( response.count === 3 ) {
