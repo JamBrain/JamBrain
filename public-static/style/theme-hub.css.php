@@ -499,7 +499,7 @@ button, .sg-item-x {
 	letter-spacing:0.05em;
 }
 .big-space {
-	letter-spacing:0.25em;
+	letter-spacing:0.2em;
 }
 
 
