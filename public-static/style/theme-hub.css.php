@@ -164,6 +164,9 @@ button:hover {
 button:focus {
 	background:#666;
 	color:#FFF;
+	
+	padding:8px 24px;
+	border:2px solid #FFF;/*rgba(255,255,255,0.5);*/
 }
 button:active {
 	background:#FFF;
