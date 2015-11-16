@@ -74,8 +74,8 @@ body {
 	padding:0.5em 0;
 	
 	color:#FD0;
-	background:-webkit-linear-gradient(to bottom, #d53 0%,#d83 50%,#eb5 85%,#ed5 100%);
-	background:linear-gradient(to bottom, #d53 0%,#d83 50%,#eb5 85%,#ed5 100%);
+	background:-webkit-linear-gradient(to bottom, #d53 0%,#d83 80%,#eb5 95%,#ed5 100%);
+	background:linear-gradient(to bottom, #d53 0%,#d83 80%,#eb5 95%,#ed5 100%);
 	text-shadow:0 1px 2px rgba(128,0,0,0.5);
 	border-bottom:2px solid #EB5;
 }
@@ -115,8 +115,8 @@ body > .body .action {
 .extra {
 	padding:1.0em;
 	color:#630;
-	background: -webkit-linear-gradient(to bottom,#FEC 25%,#FDA 100%);
-	background: linear-gradient(to bottom,#FEC 25%,#FDA 100%);
+	background: -webkit-linear-gradient(to bottom,#FEC 35%,#FDA 100%);
+	background: linear-gradient(to bottom,#FEC 35%,#FDA 100%);
 	box-shadow: 0 1px 6px rgba(0,0,0,0.2);
 }
 .extra .title {
