@@ -54,7 +54,7 @@ $active_mode = 1;
 function ShowHeader() {
 	global $active_mode;
 	if ( defined('EVENT_NAME') ) {
-		echo "<div class='event big inv'>Event: <strong class='caps' id='event-name'>".EVENT_NAME."</strong></div>";
+		echo "<div class='event big inv space'>Event: <strong class='caps' id='event-name'>".EVENT_NAME."</strong></div>";
 
 		echo "<div class='mode small caps'>";
 		$theme_mode_count = count(THEME_MODE_SHORTNAMES);
@@ -75,7 +75,7 @@ function ShowHeader() {
 function ShowHeadline() {
 	global $active_mode;
 	echo "<div class='headline'>";
-	echo "<div class='title bigger caps'><strong>".(THEME_MODE_NAMES[$active_mode])."</strong></div>";
+	echo "<div class='title bigger caps space'><strong>".(THEME_MODE_NAMES[$active_mode])."</strong></div>";
 	
 	// Date Hack //
 	$EventDate = strtotime("2015-12-12T02:00:00Z");
@@ -152,7 +152,7 @@ function ShowComingSoon() {
 }
 function ShowSubmitIdea() { ?>
 	<div class="action" id="action-idea">
-		<div class="title bigger">Suggest a Theme</div>
+		<div class="title bigger space">Suggest a Theme</div>
 		<div class="form">
 			<input type="text" class="single-input" id="input-idea" placeholder="Your suggestion" maxlength="64" />
 			<button type="button" class="submit-button" onclick="SubmitIdeaForm();">Submit</button>
@@ -169,7 +169,7 @@ function ShowSubmitIdea() { ?>
 }
 function ShowExtra() { ?>
 	<div class="sg" id="extra-sg">
-		<div class="title big caps">My Suggestions</div>
+		<div class="title big caps space">My Suggestions</div>
 		<div id="sg"></div>
 	</div>
 <?php 

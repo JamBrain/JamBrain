@@ -211,6 +211,7 @@ body > .footer {
 	text-overflow: ellipsis;
 	overflow:hidden;
 	white-space:nowrap;
+	padding:0 0.25em;
 }
 .sg-item-x {
 	position:relative;
@@ -492,6 +493,10 @@ button, .sg-item-x {
 
 .action a {
 	border-bottom:0 !important;
+}
+
+.space {
+	letter-spacing:0.05em;
 }
 
 
