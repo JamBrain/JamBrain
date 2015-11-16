@@ -114,6 +114,7 @@ body > .body .action {
 
 .extra {
 	padding:1.0em;
+	color:#630;
 	background: -webkit-linear-gradient(to bottom,#FEC 25%,#FDA 100%);
 	background: linear-gradient(to bottom,#FEC 25%,#FDA 100%);
 	box-shadow: 0 1px 6px rgba(0,0,0,0.2);
@@ -229,13 +230,17 @@ body > .footer {
 	margin-left:1.0em;
 	padding:0 0.25em;
 	cursor:pointer;
+	
+	transition: transform 0.2s <?=BEZIER_NO_DIP_BIG_POP?>;
 }
 .sg-item-x:hover {
 	color:#F00;
-	text-shadow: 0 0px 6px rgba(255,192,0,0.5);
+	transform: scale(1.25);
 }
 .sg-item-x:active {
-	color:#FF0;
+	color:#FFF;
+	transform: scale(1.5);
+	text-shadow: 0 0px 6px #F00;
 }
 
 

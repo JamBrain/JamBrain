@@ -17,7 +17,7 @@ if (posix_getuid() != 0) {
 $key = trim($argv[1]);
 $value = trim($argv[2]);
 
-if ( ($key === "") || ($value === "") ) {
+if ( $key === "" ) {
 	exit(2);
 }
 
