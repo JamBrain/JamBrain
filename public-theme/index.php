@@ -152,7 +152,7 @@ function ShowComingSoon() {
 }
 function ShowSubmitIdea() { ?>
 	<div class="action" id="action-idea">
-		<div class="title bigger space">Suggest a Theme</div>
+		<div class="title bigger">Suggest a Theme</div>
 		<div class="form">
 			<input type="text" class="single-input" id="input-idea" placeholder="Your suggestion" maxlength="64" />
 			<button type="button" class="submit-button" onclick="SubmitIdeaForm();">Submit</button>
