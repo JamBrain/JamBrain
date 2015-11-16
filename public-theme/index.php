@@ -174,13 +174,15 @@ function ShowExtra() { ?>
 			<div><img id="dialog-img" src="http://cdn.jsdelivr.net/emojione/assets/png/26A0.png?v=1.2.4" width=64 height=64"></div>
 			<div id="dialog-text">Text</div>
 		</div>
+		<a href="#" id="dialog-focusfirst"></a>
 		<div class="buttons hidden" id="dialog-yes_no">
-			<button id="dialog-yes" class="normal" onclick='dialog_DoAction();'>Yes</button>
-			<button id="dialog-no" class="normal" onclick='dialog_Close();'>No</button>
+			<button id="dialog-yes" class="normal focusable" onclick='dialog_DoAction();'>Yes</button>
+			<button id="dialog-no" class="normal focusable" onclick='dialog_Close();'>No</button>
 		</div>
 		<div id="dialog-ok_only" class="buttons hidden">
-			<button id="dialog-ok" class="normal" onclick='dialog_Close();'>OK</button>
+			<button id="dialog-ok" class="normal focusable" onclick='dialog_Close();'>OK</button>
 		</div>
+		<a href="#" id="dialog-focuslast"></a>
 	</div>
 </div>
 <div class="header"><?php
@@ -327,29 +329,53 @@ function ShowExtra() { ?>
 	}
 	
 	window.onload = function() {
-	<?php
-	if ( $CONFIG['active'] && $cookie_id ) {
-	?>
-		xhr_PostJSON(
-			"/api-theme.php",
-			serialize({"action":"GET"}),
-			// On success //
-			function(response,code) {
-				console.log("GET:",response);
-				if ( response.hasOwnProperty('ideas') ) {
-					response.ideas.forEach(function(response) {
-						sg_AddIdea(response.id,response.theme);
-					});
-					
-					sg_UpdateCount(response.ideas_left);
-				}
-				else {
-					sg_UpdateCount("ERROR");
+		// Dialog //
+		var Focusable = document.getElementsByClassName("focusable");
+		
+		// NOTE: If you tab in from the title bar, the last element will be selected
+		document.getElementById("dialog-focusfirst").addEventListener("focus",function(event){
+			for ( var idx = Focusable.length-1; idx >= 0; idx-- ) {
+				if ( Focusable[idx].offsetParent !== null ) {
+					event.preventDefault();
+					Focusable[idx].focus()
+					break;
 				}
 			}
-		);
-	<?php
-	}
+		});
+		document.getElementById("dialog-focuslast").addEventListener("focus",function(event){
+			for ( var idx = 0; idx < Focusable.length; idx++ ) {
+				if ( Focusable[idx].offsetParent !== null ) {
+					event.preventDefault();
+					Focusable[idx].focus()
+					break;
+				}
+			}
+		});
+		
+		
+		<?php
+		if ( $CONFIG['active'] && $cookie_id ) {
+		?>
+			xhr_PostJSON(
+				"/api-theme.php",
+				serialize({"action":"GET"}),
+				// On success //
+				function(response,code) {
+					console.log("GET:",response);
+					if ( response.hasOwnProperty('ideas') ) {
+						response.ideas.forEach(function(response) {
+							sg_AddIdea(response.id,response.theme);
+						});
+						
+						sg_UpdateCount(response.ideas_left);
+					}
+					else {
+						sg_UpdateCount("ERROR");
+					}
+				}
+			);
+		<?php
+		}
 	?>
 	}
 </script>

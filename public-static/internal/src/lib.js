@@ -94,9 +94,19 @@ window.dom_SetFocus = function(id) {
 	return document.getElementById(id).focus();
 }
 
+// Source: http://stackoverflow.com/a/7557433
+window.dom_InViewport = function(el) {
+	var rect = el.getBoundingClientRect();
+	
+	return
+		(rect.top >= 0) &&
+		(rect.left >= 0) &&
+		(rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)) &&
+		(rect.right <= (window.innerWidth || document.documentElement.clientWidth));
+}
 
-// http://stackoverflow.com/a/196038
 
+// Source: http://stackoverflow.com/a/196038
 // Change all classes //
 window.dom_SetClasses = function(id,class_names) {
 	document.getElementById(id).className = class_names;

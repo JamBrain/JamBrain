@@ -490,6 +490,13 @@ button, .sg-item-x {
 }
 
 
+.DummyFocus {
+	width: 0;
+	height: 0;
+	overflow: hidden;
+}
+
+
 /* Normal and HiRes */
 body > .body {
 	position:relative;
