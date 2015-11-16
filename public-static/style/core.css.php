@@ -4,6 +4,9 @@ html {
 	/* REMs to Pixels */
 	font-size:1px;
 	
+	color:#333;
+}
+html, button, input {
 	/* Lato - Our standard font (Google Fonts) */
 	/* Helvetica - Apple */
 	/* Roboto - Android */
@@ -14,8 +17,6 @@ html {
 	
 	/* Weight (400 is Normal, 300 is Light/Book) */
 	font-weight:300;
-
-	color:#333;
 }
 strong, b, h1, h2, h3, h4, h5, h6 {
 	/* font-weight:bold at 700, but not all browsers know that */
