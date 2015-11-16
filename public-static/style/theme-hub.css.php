@@ -41,6 +41,16 @@ const PAL_BLUE = [
 	"#DDF",		// Mute Bright //
 ];
 
+const PAL_YELLOW = [
+	"#662",		// Deep Color //
+	"#CC4",		// Base Color //
+	"#FF8",		// Light Base Color //
+	"#FFF",		// Bright Color //
+	"#EE5",		// Mute Base //
+	"#FFA",		// Mute Light //
+	"#FFD",		// Mute Bright //
+];
+
 
 const BEZIER_NORMAL = 			"cubic-bezier(0.5,-1.0,0.1,2.0)";
 const BEZIER_NO_DIP = 			"cubic-bezier(0.5, 0.0,0.1,2.0)";
@@ -222,20 +232,18 @@ body > .footer {
 
 
 .alert {
-	background:#E87;
-	color:#FFD;
+	background:<?=PAL_RED[COL_BASE]?>;
+	color:<?=PAL_RED[COL_MUTE_LIGHT]?>;
 	text-align:center;
 	padding:0.5em;
 }
 
 .alert a {
-	font-weight:bold;
-	color:#FF8;
-	text-decoration:none;
+	font-weight:700;
+	color:<?=PAL_YELLOW[COL_LIGHT]?>;
 }
-.alert a:hover {
-	color:#FFF;
-	text-decoration:underline;
+.alert a:focus {
+	color:<?=PAL_RED[COL_BRIGHT]?>;
 }
 
 /* Can't Select This */

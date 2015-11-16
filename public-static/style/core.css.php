@@ -150,3 +150,15 @@ body > .footer {
 .invisible {
 	visibility:hidden !important;
 }
+
+
+a {
+	text-decoration:none;
+	border-bottom:1px dotted;
+}
+a:hover {
+	border-bottom:1px solid;
+}
+a:focus {
+	border-bottom:2px solid;
+}
