@@ -169,10 +169,10 @@ function ShowExtra() { ?>
 <?php template_GetHeader(); ?>
 <div class="invisible" id="dialog-back" onclick='dialog_Close();'>
 	<div id="dialog" onclick="event.stopPropagation();">
-		<div class="title big" id="dialog-title">Wuht is this!?</div>
+		<div class="title big" id="dialog-title">Title</div>
 		<div class="body">
-			<div><img src="http://cdn.jsdelivr.net/emojione/assets/png/26A0.png?v=1.2.4" width=64 height=64"></div>
-			<div id="dialog-text">A... Are you sure? I'm not.</div>
+			<div><img id="dialog-img" src="http://cdn.jsdelivr.net/emojione/assets/png/26A0.png?v=1.2.4" width=64 height=64"></div>
+			<div id="dialog-text">Text</div>
 		</div>
 		<div class="buttons hidden" id="dialog-yes_no">
 			<button id="dialog-yes" class="normal" onclick='dialog_DoAction();'>Yes</button>

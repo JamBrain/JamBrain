@@ -374,9 +374,6 @@ button, .sg-item-x {
 	border-radius:1.0em;
 	box-shadow:0 2px 6px rgba(0,0,0,0.3);
 }
-#dialog img {
-	margin:0.5em;
-}
 #dialog .title {
 	font-weight:700;
 	
@@ -386,6 +383,9 @@ button, .sg-item-x {
 }
 #dialog .body {
 	padding:0.5em 2.0em;
+}
+#dialog .body > div {
+	margin:0.5em 0;
 }
 #dialog .buttons {
 	padding:0.5em 2.0em;
