@@ -160,5 +160,5 @@ a:hover {
 	border-bottom:1px solid;
 }
 a:focus {
-	border-bottom:2px solid;
+	border-bottom:2px dotted;
 }

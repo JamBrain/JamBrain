@@ -158,7 +158,7 @@ button {
 	color:#DDD;
 
 	border:0;
-	padding:10px 26px;
+	padding:12px 28px;
 	cursor:pointer;
 
 	margin:0.5em;
@@ -175,8 +175,8 @@ button:focus {
 	background:#666;
 	color:#FFF;
 	
-	padding:8px 24px;
-	border:2px solid #FFF;/*rgba(255,255,255,0.5);*/
+	padding:10px 26px;
+	border:2px dotted #FFF;/*rgba(255,255,255,0.5);*/
 }
 button:active {
 	background:#FFF;
