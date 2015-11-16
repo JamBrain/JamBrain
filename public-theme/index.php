@@ -62,9 +62,9 @@ function ShowHeader() {
 			if ($idx !== 1)
 				echo " | ";
 			if ($idx === $active_mode)
-				echo "<strong>".THEME_MODE_SHORTNAMES[$idx]."</strong>";
+				echo "<strong>".strtoupper(THEME_MODE_SHORTNAMES[$idx])."</strong>";
 			else
-				echo THEME_MODE_SHORTNAMES[$idx];
+				echo strtoupper(THEME_MODE_SHORTNAMES[$idx]);
 		}
 		echo "</div>";
 
@@ -75,7 +75,7 @@ function ShowHeader() {
 function ShowHeadline() {
 	global $active_mode;
 	echo "<div class='headline'>";
-	echo "<div class='title bigger'><strong>".strtoupper(THEME_MODE_NAMES[$active_mode])."</strong></div>";
+	echo "<div class='title bigger caps'><strong>".(THEME_MODE_NAMES[$active_mode])."</strong></div>";
 	
 	// Date Hack //
 	$EventDate = strtotime("2015-12-12T02:00:00Z");
@@ -169,7 +169,7 @@ function ShowSubmitIdea() { ?>
 }
 function ShowExtra() { ?>
 	<div class="sg" id="extra-sg">
-		<div class="title big">My Suggestions</div>
+		<div class="title big caps">My Suggestions</div>
 		<div id="sg"></div>
 	</div>
 <?php 
@@ -199,7 +199,7 @@ function ShowExtra() { ?>
 </div>
 <?php
 	if ( !empty($CONFIG['theme-alert']) ) {
-		echo "<div class='alert caps'>",$CONFIG['theme-alert'],"</div>";
+		echo "<div class='alert'>",$CONFIG['theme-alert'],"</div>";
 	}
 ?>
 <script>
