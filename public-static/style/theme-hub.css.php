@@ -174,12 +174,21 @@ button:active {
 }
 
 .submit-button:focus {
-	background:#E44;
-	color:#FFB;
+	background:<?=PAL_BLUE[COL_MUTE]?>;
+	color:<?=PAL_BLUE[COL_BRIGHT]?>;
 }
 .submit-button:active {
-	background:#FFB;
-	color:#E44;
+	background:<?=PAL_BLUE[COL_BRIGHT]?>;
+	color:<?=PAL_BLUE[COL_MUTE]?>;
+}
+
+.login-button:focus {
+	background:<?=PAL_RED[COL_MUTE]?>;
+	color:<?=PAL_RED[COL_BRIGHT]?>;
+}
+.login-button:active {
+	background:<?=PAL_RED[COL_BRIGHT]?>;
+	color:<?=PAL_RED[COL_MUTE]?>;
 }
 
 body > .footer {
