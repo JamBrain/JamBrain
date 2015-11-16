@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 	$node = 100;//intval($CONFIG['event-active']);//isset($_POST['node']) ? intval($_POST['node']) : 0;
 
 	if ( ($user_id > 0) && ($node > 0) ) {
-		$ideas_left = 10 - theme_CountMyIdeas($node,$user_id);
+		$ideas_left = 3 - theme_CountMyIdeas($node,$user_id);
 		
 		if ( $action == "GET" ) {
 			$response['ideas'] = theme_GetMyIdeas($node,$user_id);
