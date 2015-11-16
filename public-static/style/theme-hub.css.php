@@ -210,7 +210,7 @@ body > .footer {
 .sg-item-text {
 	text-overflow: ellipsis;
 	overflow:hidden;
-	white-space: nowrap;
+	white-space:nowrap;
 }
 .sg-item-x {
 	position:relative;
@@ -496,7 +496,6 @@ body > .body {
 	
 	overflow:hidden;
 	text-align:center;
-	white-space:nowrap;
 	
 	box-shadow:0 0 4px rgba(0,0,0,0.3)
 }
