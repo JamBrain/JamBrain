@@ -72,10 +72,15 @@ body {
 .header { 
 	text-align:center;
 	padding:0.5em 0;
+	
+	color:#FD0;
+	background:linear-gradient(to bottom, #d53 0%,#d83 50%,#eb5 85%,#ed5 100%);
+	text-shadow:0 1px 2px rgba(128,0,0,0.5);
+	border-bottom:2px solid #EB5;
 }
 
 /* Invented Color */
-.header .inv {
+.inv {
 	color:#FFF;
 }
 
@@ -108,8 +113,8 @@ body > .body .action {
 
 .extra {
 	padding:1.0em;
-	background:#EEE;
-	box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+	background: linear-gradient(to bottom,#FEC 25%,#FDA 100%);/*#FEC;*//*#EEE;*/
+	box-shadow: 0 1px 6px rgba(0,0,0,0.2);
 }
 .extra .title {
 	margin-bottom:0.5em;
@@ -138,7 +143,7 @@ body > .body .action {
 	margin:0 0.5em;
 	border-radius:40px;
 	font-size:1em;
-	box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+	box-shadow: 0 1px 6px rgba(0,0,0,0.2);
 	background:#EEE;
 	
 	outline: none;
@@ -502,6 +507,13 @@ button, .sg-item-x {
 	letter-spacing:0.2em;
 }
 
+.soft-shadow {
+	text-shadow:0 1px 6px rgba(0,0,0,0.2);
+}
+.shadow {
+	text-shadow:0 1px 2px rgba(0,0,0,0.2);
+}
+
 
 /* Normal and HiRes */
 body > .body {
@@ -510,7 +522,9 @@ body > .body {
 	overflow:hidden;
 	text-align:center;
 	
-	box-shadow:0 0 4px rgba(0,0,0,0.3)
+	/*box-shadow:0 0 4px rgba(0,0,0,0.3);*/
+	border-bottom:2px solid rgba(0,0,0,0.3);
+	border-top:2px solid rgba(255,255,255,0.5);
 }
 body > .body > div {
 	display:inline-block;

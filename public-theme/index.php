@@ -54,7 +54,7 @@ $active_mode = 1;
 function ShowHeader() {
 	global $active_mode;
 	if ( defined('EVENT_NAME') ) {
-		echo "<div class='event bigger inv big-space'>Event: <strong class='caps' id='event-name'>".EVENT_NAME."</strong></div>";
+		echo "<div class='event bigger big-space'>Event: <strong class='caps inv' id='event-name'>".EVENT_NAME."</strong></div>";
 
 		echo "<div class='mode small caps'>";
 		$theme_mode_count = count(THEME_MODE_SHORTNAMES);
@@ -75,7 +75,7 @@ function ShowHeader() {
 function ShowHeadline() {
 	global $active_mode;
 	echo "<div class='headline'>";
-	echo "<div class='title bigger caps space'><strong>".(THEME_MODE_NAMES[$active_mode])."</strong></div>";
+	echo "<div class='title bigger caps space inv soft-shadow'><strong>".(THEME_MODE_NAMES[$active_mode])."</strong></div>";
 	
 	// Date Hack //
 	$EventDate = strtotime("2015-12-12T02:00:00Z");
