@@ -19,6 +19,46 @@ function theme_AddMyIdea($idea, $node, $user) {
 		$idea, $node, $user
 	);
 }
+
+function theme_AddMyIdeaWithLimit($idea, $node, $user, $limit) {
+	db_Connect();	// Only because we're doing native DB ops, call connect //
+	
+	global $db;
+	$db->begin_transaction();
+	
+	$count = 0;
+	
+	try {
+		$count = theme_CountMyIdeas($node,$user," FOR UPDATE");
+		if ( $count === false ) throw new Exception();
+		if ( $count >= $limit ) throw new Exception();
+		
+		$result = db_DoInsert(
+			"INSERT INTO ".CMW_TABLE_THEME_IDEA." (
+				theme, node, user, `timestamp`
+			)
+			VALUES ( 
+				?, ?, ?, NOW()
+			)",
+			$idea, $node, $user
+		);
+		if ( empty($result) ) throw new Exception();
+
+		$count = theme_CountMyIdeas($node,$user);
+		if ( $count === false ) throw new Exception();
+		if ( $count > $limit ) throw new Exception();
+		
+		// We're good! Commit! We're finished //
+		$db->commit();
+		return ["id" => $result, "count" => $count];
+	}
+	catch (Exception $ex) {
+		// Bad! Do a rollback! //
+		$db->rollback();
+		return ["id" => 0, "count" => $count];
+	}
+}
+
 function theme_RemoveIdea($id) {
 	return db_DoDelete(
 		"DELETE FROM ".CMW_TABLE_THEME_IDEA." WHERE id=?;",
@@ -39,10 +79,10 @@ function theme_GetMyIdeas($node, $user) {
 		$node, $user
 	);
 }
-function theme_CountMyIdeas($node, $user) {
+function theme_CountMyIdeas($node, $user, $arg_string="") {
 	$ret = db_DoFetchFirst(
 		"SELECT count(id) FROM ".CMW_TABLE_THEME_IDEA." 
-		WHERE node=? AND user=?",
+		WHERE node=? AND user=? LIMIT 1".$arg_string,
 		$node, $user
 	);
 	if ( is_array($ret) )

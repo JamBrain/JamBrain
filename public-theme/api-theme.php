@@ -12,37 +12,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 	
 	$user_id = legacy_GetUserFromCookie();
 	$node = 100;//intval($CONFIG['event-active']);//isset($_POST['node']) ? intval($_POST['node']) : 0;
+	
+	$max_themes = 3;
 
 	if ( ($user_id > 0) && ($node > 0) ) {
-		$ideas_left = 3 - theme_CountMyIdeas($node,$user_id);
-		
 		if ( $action == "GET" ) {
 			$response['ideas'] = theme_GetMyIdeas($node,$user_id);
-			$response['ideas_left'] = $ideas_left;
+			$response['count'] = count($response['ideas']);
 		}
 		else if ( ($action == "ADD") && isset($_POST['idea']) ) {
 			$idea = mb_trim($_POST['idea']);
 	
-			if ( ($idea !== "") && ($ideas_left > 0) ) {
-				$idea = mb_substr($idea,0,64);			// Shorten the query and fix the response 
-				$ret = theme_AddMyIdea($idea,$node,$user_id);
-				
-				$response['id'] = intval($ret);			// Returns the Id changed //
-				$response['idea'] = $idea;
-				$response['ideas_left'] = $ideas_left - (($ret>0)?1:0);
+			if ( $idea !== "" ) {
+				$idea = mb_substr($idea,0,64);	// Shorten the query and fix the response 
+
+				$response = theme_AddMyIdeaWithLimit($idea,$node,$user_id,$max_themes);
+				if ( $response['id'] !== 0 ) {
+					$response['idea'] = $idea;
+				}
 			}
 			else {
 				$response['id'] = 0;
-				$response['ideas_left'] = $ideas_left;
 			}
 		}
 		else if ( $action == "REMOVE" ) {
 			$theme_id = intval($_POST['id']);
 			if ( $theme_id > 0 ) {
 				$ret = theme_RemoveMyIdea($theme_id,$user_id);
+				if ( $ret ) {
+					$response['id'] = $theme_id;
+				}
 				
-				$response['id'] = $ret ? $theme_id : 0;
-				$response['ideas_left'] = $ideas_left + $ret;
+				$response['count'] = theme_CountMyIdeas($node,$user_id);
+			}
+			else {
+				$response['id'] = 0;
 			}
 		}
 	}

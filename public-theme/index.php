@@ -240,14 +240,14 @@ function ShowExtra() { ?>
 					if ( el ) {
 						el.remove();
 					}
-					sg_UpdateCount(response.ideas_left);
+					sg_UpdateCount(response.count);
 				}
 			);
 		});
 	}
 	
 	function sg_UpdateCount(count) {
-		document.getElementById('sg-count').innerHTML = count;			
+		document.getElementById('sg-count').innerHTML = 3 - count;			
 	}
 		
 	function SubmitIdeaForm() {
@@ -266,17 +266,14 @@ function ShowExtra() { ?>
 			function(response,code) {
 				console.log("ADD:",response);
 				
-				response.id = Number(response.id);
-				response.ideas_left = Number(response.ideas_left);
-				
-				sg_UpdateCount(response.ideas_left);
+				sg_UpdateCount(response.count);
 				
 				// Success //
 				if ( response.id > 0 ) {
 					sg_AddIdea(response.id,response.idea);
 				}
 				// Failure //
-				else if ( response.ideas_left === 0 ) {
+				else if ( response.count === 3 ) {
 					elm.value = Idea;	// Restore
 					dialog_Alert("No Suggestions Left","");
 				}
@@ -401,7 +398,7 @@ function ShowExtra() { ?>
 							sg_AddIdea(response.id,response.theme);
 						});
 						
-						sg_UpdateCount(response.ideas_left);
+						sg_UpdateCount(response.count);
 					}
 					else {
 						sg_UpdateCount("ERROR");
