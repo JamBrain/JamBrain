@@ -79,7 +79,7 @@ function ShowHeadline() {
 	
 	// Date Hack //
 	$EventDate = strtotime("2015-12-12T02:00:00Z");
-	$TargetDate = $EventDate - (2*7*24*60*60) - (6*60*60);
+	$TargetDate = $EventDate - (2*7*24*60*60) + (18*60*60);
 	$DateDiff = $TargetDate - time();
 	
 	$SEC = $DateDiff % 60;
