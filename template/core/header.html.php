@@ -8,33 +8,33 @@
 		echo "<title>".HTML_TITLE."</title>\n";
 	}
 
-	const VERSION = '0.1.23';
+	const VERSION = '0.1.24';
 	const VERSION_STRING = '?v='.VERSION;
 
 	if ( defined('CMW_JS_DEBUG') ) {
 		echo "<!-- External JavaScript -->\n";
-		if ( defined('HTML_USE_EMOJI') ) { echo "<script src=".CMW_STATIC_URL."/custom/emojitwo/emojitwo.js".VERSION_STRING."></script>\n"; }
-		if ( defined('HTML_USE_MARKUP') ) { echo "<script src=".CMW_STATIC_URL."/external/marked/marked.js".VERSION_STRING."></script>\n"; }
-		if ( defined('HTML_USE_HIGHLIGHT') ) { echo "<script src=".CMW_STATIC_URL."/external/prism/prism.js".VERSION_STRING."></script>\n"; }
+		if ( defined('HTML_USE_EMOJI') ) { echo "<script src='".CMW_STATIC_URL."/custom/emojitwo/emojitwo.js".VERSION_STRING."'></script>\n"; }
+		if ( defined('HTML_USE_MARKUP') ) { echo "<script src='".CMW_STATIC_URL."/external/marked/marked.js".VERSION_STRING."'></script>\n"; }
+		if ( defined('HTML_USE_HIGHLIGHT') ) { echo "<script src='".CMW_STATIC_URL."/external/prism/prism.js".VERSION_STRING."'></script>\n"; }
 	
 		echo "<!-- Internal JavaScript -->\n";
 		if ( defined('HTML_USE_CORE') ) {
-			echo "<script src=".CMW_STATIC_URL."/internal/src/lib.js".VERSION_STRING."></script>\n";
-			echo "<script src=".CMW_STATIC_URL."/internal/src/xhr.js".VERSION_STRING."></script>\n";
+			echo "<script src='".CMW_STATIC_URL."/internal/src/lib.js".VERSION_STRING."'></script>\n";
+			echo "<script src='".CMW_STATIC_URL."/internal/src/xhr.js".VERSION_STRING."'></script>\n";
 		}
 		if ( defined('HTML_USE_STARSHIP') ) {
-			echo "<script src=".CMW_STATIC_URL."/internal/src/cache.js".VERSION_STRING."></script>\n";
-			echo "<script src=".CMW_STATIC_URL."/internal/src/html.js".VERSION_STRING."></script>\n";
-			echo "<script src=".CMW_STATIC_URL."/internal/src/love.js".VERSION_STRING."></script>\n";
-			echo "<script src=".CMW_STATIC_URL."/internal/src/star.js".VERSION_STRING."></script>\n";
+			echo "<script src='".CMW_STATIC_URL."/internal/src/cache.js".VERSION_STRING."'></script>\n";
+			echo "<script src='".CMW_STATIC_URL."/internal/src/html.js".VERSION_STRING."'></script>\n";
+			echo "<script src='".CMW_STATIC_URL."/internal/src/love.js".VERSION_STRING."'></script>\n";
+			echo "<script src='".CMW_STATIC_URL."/internal/src/star.js".VERSION_STRING."'></script>\n";
 		}
 	} 
 	else { /* defined('CMW_JS_DEBUG') */
-		if ( defined('HTML_USE_EMOJI') ) { echo "<script src=".CMW_STATIC_URL."/custom/emojitwo/emojitwo.min.js".VERSION_STRING."></script>\n"; }
-		if ( defined('HTML_USE_MARKUP') ) { echo "<script src=".CMW_STATIC_URL."/external/marked/marked.min.js".VERSION_STRING."></script>\n"; }
-		if ( defined('HTML_USE_HIGHLIGHT') ) { echo "<script src=".CMW_STATIC_URL."/external/prism/prism.js".VERSION_STRING."></script>\n"; }
+		if ( defined('HTML_USE_EMOJI') ) { echo "<script src='".CMW_STATIC_URL."/custom/emojitwo/emojitwo.min.js".VERSION_STRING."'></script>\n"; }
+		if ( defined('HTML_USE_MARKUP') ) { echo "<script src='".CMW_STATIC_URL."/external/marked/marked.min.js".VERSION_STRING."'></script>\n"; }
+		if ( defined('HTML_USE_HIGHLIGHT') ) { echo "<script src='".CMW_STATIC_URL."/external/prism/prism.js".VERSION_STRING."'></script>\n"; }
 		if ( defined('HTML_USE_INTERNAL') || defined('HTML_USE_CORE') || defined('HTML_USE_STARSHIP') ) { 
-			echo "<script src=".CMW_STATIC_URL."/internal/core.min.js".VERSION_STRING."></script>\n"; 
+			echo "<script src='".CMW_STATIC_URL."/internal/core.min.js".VERSION_STRING."'></script>\n"; 
 		}
 	} /* defined('CMW_JS_DEBUG') */
 
