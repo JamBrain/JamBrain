@@ -74,8 +74,10 @@ body {
 	padding:0.5em 0;
 	
 	color:#FD0;
-	background:-webkit-linear-gradient(to bottom, #d53 0%,#d83 80%,#eb5 95%,#ed5 100%);
-	background:linear-gradient(to bottom, #d53 0%,#d83 80%,#eb5 95%,#ed5 100%);
+/*	background:-webkit-linear-gradient(to bottom, #d53 0%,#d83 80%,#eb5 95%,#ed5 100%);*/
+/*	background:linear-gradient(to bottom, #d53 0%,#d83 80%,#eb5 95%,#ed5 100%);*/
+	background:-webkit-linear-gradient(to bottom, #d53 0%,#d83 80%);
+	background:linear-gradient(to bottom, #d53 0%,#d83 80%);
 	text-shadow:0 1px 2px rgba(128,0,0,0.5);
 	border-bottom:2px solid #EB5;
 }
