@@ -155,6 +155,8 @@ window.dom_ToggleClass = function(id,class_name,value) {
 // http://stackoverflow.com/a/12496442
 window.GetTZ = function( now ) {
 	now = now.toString();
+	now = now.replace("Argentina Standard Time","ART");
+	now = now.replace("W. Europe Standard Time","CET");
 	var TZ = now.indexOf('(') > -1 ?
 	now.match(/\([^\)]+\)/)[0].match(/[A-Z]/g).join('') :
 	now.match(/[A-Z]{3,4}/)[0];
