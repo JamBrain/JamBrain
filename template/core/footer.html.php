@@ -4,9 +4,16 @@
 			echo "<!-- ";
 		}
 		else {
-			if (isset($_GET['debug'])) {
-				echo "<script>function __(){alert('Helpful debug message goes here');}</script>";
-			}
+			//if (isset($_GET['debug'])) {
+				echo "<script>function __(){alert(
+					'Helpful Debug Info:\\n\\n'+
+					'window: '+window.innerWidth+' x '+window.innerHeight+' ('+window.outerWidth+' x '+window.outerHeight+')\\n'+
+					'screen: '+screen.width+' x '+screen.height+'\\n'+
+					'language: '+navigator.language+'\\n'+
+					'languages: '+navigator.languages+'\\n'+
+					''
+				);}</script>";
+			//}
 			echo "<div class='footer'>";
 		}
 

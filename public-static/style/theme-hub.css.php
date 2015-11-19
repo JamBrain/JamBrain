@@ -119,7 +119,7 @@ body > .body .action {
 	color:#630;
 	background: -webkit-linear-gradient(to bottom,#FEC 35%,#FDA 100%);
 	background: linear-gradient(to bottom,#FEC 35%,#FDA 100%);
-	box-shadow: 0 1px 6px rgba(0,0,0,0.2);
+	box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 .extra .title {
 	margin-bottom:0.5em;
@@ -584,6 +584,7 @@ body > .body .extra {
 	max-width:30%;
 	text-align:left;
 	margin:1em 0;
+	border-radius:2px;
 }
 
 /* Tablet and Mobile */
@@ -597,5 +598,6 @@ body > .body .extra {
 		max-width:none;
 		font-size:1.4em;
 		margin:0;
+		border-radius:0;
 	}
 }

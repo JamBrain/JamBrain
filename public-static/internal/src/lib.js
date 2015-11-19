@@ -152,4 +152,15 @@ window.dom_ToggleClass = function(id,class_name,value) {
 	}
 }
 
+// http://stackoverflow.com/a/12496442
+window.GetTZ = function( now ) {
+	now = now.toString();
+	var TZ = now.indexOf('(') > -1 ?
+	now.match(/\([^\)]+\)/)[0].match(/[A-Z]/g).join('') :
+	now.match(/[A-Z]{3,4}/)[0];
+	if (TZ == "GMT" && /(GMT\W*\d{4})/.test(now)) TZ = RegExp.$1;
+	return TZ;
+}
+
+
 })();

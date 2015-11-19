@@ -67,8 +67,89 @@ function ShowHeader() {
 				echo strtoupper(THEME_MODE_SHORTNAMES[$idx]);
 		}
 		echo "</div>";
+		
+		$EventDate = new DateTime("2015-12-12T02:00:00Z");
 
-		echo "<div class='date normal inv caps' id='event-date'>Starts at <strong id='ev-time'>9:00 PM</strong> on <span id='ev-day'>Friday</span> <strong id='ev-date'>December 11th, 2015</strong> (<span id='ev-zone'>EST</span>)</strong></div>";
+		//echo "<div class='date normal inv caps' id='event-date'>Starts at <strong id='ev-time'>9:00 PM</strong> on <span id='ev-day'>Friday</span> <strong id='ev-date'>December 11th, 2015</strong> (<span id='ev-zone'>EST</span>)</strong></div>";
+		echo "<div class='date normal inv caps' id='event-date' title=\"".$EventDate->format("G:i")." on ".$EventDate->format("l F jS, Y ")."(UTC)\">Starts at ".
+			"<strong id='ev-time' original='".$EventDate->format("G:i")."'></strong> on ".
+			"<span id='ev-day' original='".$EventDate->format("l")."'></span> ".
+			"<strong id='ev-date' original='".$EventDate->format("F jS, Y")."'></strong> ".
+			"(<span id='ev-zone' original='UTC'></span>)</strong></div>";
+
+?>
+		<script>
+			var EventDate = new Date("<?=$EventDate->format(DateTime::W3C)?>");
+			var time_locale = navigator.language;
+			
+			// Since official time standards don't necessarily match common use, remap time locales //
+			var LocaleRemapTable = {
+				'en-GB':'en-US'
+			};
+			if ( LocaleRemapTable.hasOwnProperty(navigator.language) ) {
+				time_locale = LocaleRemapTable[navigator.language];
+			}
+			
+			// If English //
+			if ( time_locale.indexOf("en-") >= 0 ) {
+				var DateSuffix = [
+					"th","st","nd","rd","th","th","th","th","th","th",
+					"th","th","th","th","th","th","th","th","th","th"
+				];
+				var EvDateSuffix = DateSuffix[EventDate.getDate() % 20];
+			}
+			else {
+				var EvDateSuffix = "";
+			}
+			
+			// NOTE: Safari does not support toLocaleString //
+//			if ( 'toLocaleString' in Date.prototype ) {
+//				var EvTime = EventDate.toLocaleTimeString(time_locale,{"hour":"2-digit","minute":"2-digit"});
+//				var EvDay = EventDate.toLocaleString(time_locale,{"weekday":"long"});
+//				if ( EvDateSuffix ) {
+//					var EvDate = EventDate.toLocaleString(time_locale,{"month":"long","day":"numeric"}) +
+//						EvDateSuffix + ", " +
+//						EventDate.toLocaleString(time_locale,{"year":"numeric"});
+//				}
+//				else {
+//					var EvDate = EventDate.toLocaleString(time_locale,{"month":"long","day":"numeric","year":"numeric"});
+//				}
+//				var EvTimeZone = GetTZ(EventDate);
+//			}
+
+			{
+				var DayOfTheWeek = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+				var MonthOfTheYear = [
+					"January","February","March","April","May","June","July",
+					"August","September","October","November","December"
+				];
+
+				// Check toLocaleTimeString for 12 hour clock, or if language English, assume 12 hour clock //				
+				if ( ('toLocaleTimeString' in Date.prototype)
+					&& (EventDate.toLocaleTimeString(time_locale).indexOf('M') > -1)
+					|| (time_locale.indexOf("en-") >= 0) ) 
+				{
+					var EvHalfDay = (EventDate.getHours() - 12) >= 0;
+					var EvTime = (EventDate.getHours() % 12) + ":" + 
+						new String("00"+EventDate.getMinutes()).slice(-2) + 
+						(EvHalfDay?" PM":" AM");
+				}
+				else {
+					var EvTime = EventDate.getHours() + ":" + new String("00"+EventDate.getMinutes()).slice(-2);
+				}
+				var EvDay = DayOfTheWeek[EventDate.getDay()];
+				var EvDate = MonthOfTheYear[EventDate.getMonth()] + " " + 
+					EventDate.getDate() + EvDateSuffix + ", " + 
+					EventDate.getFullYear();
+				var EvTimeZone = GetTZ(EventDate);
+			}
+			
+			dom_SetText( 'ev-time', EvTime );
+			dom_SetText( 'ev-day', EvDay );
+			dom_SetText( 'ev-date', EvDate );
+			dom_SetText( 'ev-zone', EvTimeZone );
+		</script>
+<?php
 	}
 }
 
