@@ -1,9 +1,9 @@
 ;(function(){
 	
 /**
-	Locale Library - Convert Date types to locale appropriate English strings.
+	Locale Library - Convert Date and Number types to locale appropriate English strings.
 	
-	NOTE: If using timestamps, convert them with 'new Date(MyTimestamp)'.
+	NOTE: If using timestamps, convert them with 'new Date(MyTimestamp)' first.
 */
 
 var DateSuffixTable = [
