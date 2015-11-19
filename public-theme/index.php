@@ -135,7 +135,7 @@ function ShowHeader() {
 						(EvHalfDay?" PM":" AM");
 				}
 				else {
-					var EvTime = EventDate.getHours() + ":" + new String("00"+EventDate.getMinutes()).slice(-2);
+					var EvTime = new String("00"+EventDate.getHours()).slice(-2) + ":" + new String("00"+EventDate.getMinutes()).slice(-2);
 				}
 				var EvDay = DayOfTheWeek[EventDate.getDay()];
 				var EvDate = MonthOfTheYear[EventDate.getMonth()] + " " + 
