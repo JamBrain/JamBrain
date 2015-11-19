@@ -20,6 +20,7 @@
 		echo "<!-- Internal JavaScript -->\n";
 		if ( defined('HTML_USE_CORE') ) {
 			echo "<script src='".CMW_STATIC_URL."/internal/src/lib.js".VERSION_STRING."'></script>\n";
+			echo "<script src='".CMW_STATIC_URL."/internal/src/locale.js".VERSION_STRING."'></script>\n";
 			echo "<script src='".CMW_STATIC_URL."/internal/src/xhr.js".VERSION_STRING."'></script>\n";
 		}
 		if ( defined('HTML_USE_STARSHIP') ) {

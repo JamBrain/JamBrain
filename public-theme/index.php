@@ -80,6 +80,8 @@ function ShowHeader() {
 ?>
 		<script>
 			var EventDate = new Date("<?=$EventDate->format(DateTime::W3C)?>");
+
+			/*
 			var time_locale = navigator.language;
 			
 			// Since official time standards don't necessarily match common use, remap time locales //
@@ -148,6 +150,12 @@ function ShowHeader() {
 			dom_SetText( 'ev-day', EvDay );
 			dom_SetText( 'ev-date', EvDate );
 			dom_SetText( 'ev-zone', EvTimeZone );
+			*/
+
+			dom_SetText( 'ev-time', getLocaleTime(EventDate) );
+			dom_SetText( 'ev-day', getLocaleDay(EventDate) );
+			dom_SetText( 'ev-date', getLocaleDate(EventDate) );
+			dom_SetText( 'ev-zone', getLocaleTimeZone(EventDate) );
 		</script>
 <?php
 	}
