@@ -11,6 +11,7 @@
 					'screen: '+screen.width+' x '+screen.height+'\\n'+
 					'language: '+navigator.language+'\\n'+
 					'languages: '+navigator.languages+'\\n'+
+					'date: '+Date(Date.now())+'\\n'+
 					''
 				);}</script>";
 			//}
