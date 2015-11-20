@@ -21,7 +21,7 @@ if ( isset($_COOKIE['lusha']) ) {
 
 	if ( $cookie_id === 0 ) {
 		echo "<script>DoLogout();</script>";
-		die;
+		//die; // Oops! This makes things go to hell.. heh
 	}
 }
 else {
