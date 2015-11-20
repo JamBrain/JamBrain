@@ -50,7 +50,10 @@ window.getLocaleTime = function( date ) {
 		|| (time_locale.indexOf("en-") >= 0) ) 
 	{
 		var HalfDay = (date.getHours() - 12) >= 0;
-		return (date.getHours() % 12) + ":" + 
+		var Hours = (date.getHours() % 12);
+		if ( Hours == 0 )
+			Hours = 12;
+		return Hours + ":" + 
 			new String("00"+date.getMinutes()).slice(-2) + 
 			(HalfDay?" PM":" AM");
 	}
