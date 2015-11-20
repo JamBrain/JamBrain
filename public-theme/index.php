@@ -21,7 +21,7 @@ if ( isset($_COOKIE['lusha']) ) {
 
 	if ( $cookie_id === 0 ) {
 		echo "<script>DoLogout();</script>";
-		//die; // Oops! This makes things go to hell.. heh
+		//die; // Ahh! this wont work, because DoLogout isn't defined yet.
 	}
 }
 else {
