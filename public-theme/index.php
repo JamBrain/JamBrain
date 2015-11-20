@@ -5,20 +5,23 @@ require_once __DIR__."/../legacy-config.php";
 require_once __DIR__."/../core/legacy_user.php";
 
 const EVENT_NAME = "Ludum Dare 34";
+$active_mode = 1;
 
 define('HTML_TITLE',EVENT_NAME." - Theme Hub");
 const HTML_CSS_INCLUDE = [ "/style/theme-hub.css.php" ];
 const HTML_USE_CORE = true;
 const HTML_SHOW_FOOTER = true;
 
+config_Load();
+
 
 // Extract Id from Cookie
 if ( isset($_COOKIE['lusha']) ) {
 	$cookie_id = legacy_GetUserFromCookie();
-	//intval(explode('.',$_COOKIE['lusha'],2)[0]);
-	
+
 	if ( $cookie_id === 0 ) {
-		?><script>DoLogout();</script><?php
+		echo "<script>DoLogout();</script>";
+		die;
 	}
 }
 else {
@@ -47,10 +50,6 @@ const THEME_MODE_SHORTNAMES = [
 	"Coming Soon"
 ];
 
-config_Load();
-
-$active_mode = 1;
-
 function ShowHeader() {
 	global $active_mode;
 	if ( defined('EVENT_NAME') ) {
@@ -70,13 +69,11 @@ function ShowHeader() {
 		
 		$EventDate = new DateTime("2015-12-12T02:00:00Z");
 
-		//echo "<div class='date normal inv caps' id='event-date'>Starts at <strong id='ev-time'>9:00 PM</strong> on <span id='ev-day'>Friday</span> <strong id='ev-date'>December 11th, 2015</strong> (<span id='ev-zone'>EST</span>)</strong></div>";
 		echo "<div class='date normal inv caps' id='event-date' title=\"".$EventDate->format("G:i")." on ".$EventDate->format("l F jS, Y ")."(UTC)\">Starts at ".
 			"<strong id='ev-time' original='".$EventDate->format("G:i")."'></strong> on ".
 			"<span id='ev-day' original='".$EventDate->format("l")."'></span> ".
 			"<strong id='ev-date' original='".$EventDate->format("F jS, Y")."'></strong> ".
 			"(<span id='ev-zone' original='UTC'></span>)</strong></div>";
-
 ?>
 		<script>
 			var EventDate = new Date("<?=$EventDate->format(DateTime::W3C)?>");
@@ -92,56 +89,28 @@ function ShowHeader() {
 
 function ShowHeadline() {
 	global $active_mode;
-	echo "<div class='headline'>";
-	echo "<div class='title bigger caps space inv soft-shadow'><strong>".(THEME_MODE_NAMES[$active_mode])."</strong></div>";
 	
 	// Date Hack //
 	$EventDate = strtotime("2015-12-12T02:00:00Z");
 	$TargetDate = $EventDate - (2*7*24*60*60) + (18*60*60);
 	$DateDiff = $TargetDate - time();
-	
-	$SEC = $DateDiff % 60;
-	$MIN = ($DateDiff / 60) % 60;
-	$HOUR = ($DateDiff / (60*60)) % 24;
-	$DAY = ($DateDiff / (60*60*24)) % 7;
-	$WEEK = floor($DateDiff / (60*60*24*7));
-	
-	$OutTime = "";
-	if ( $WEEK > 0 ) {
-		if ( $WEEK > 1 )
-			$OutTime .= $WEEK." weeks";
-		else if ( $WEEK == 1 )
-			$OutTime .= $WEEK." week";
-	}
 
-	if ( $DAY > 0 ) {
-		if ( !empty($OutTime) )
-			$OutTime .= ", ";
-		if ( $DAY > 1 )
-			$OutTime .= $DAY." days";
-		else if ( $DAY == 1 )
-			$OutTime .= $DAY." day";
-	}
-
-	if ( $HOUR > 0 ) {
-		if ( !empty($OutTime) )
-			$OutTime .= ", ";
-		if ( $HOUR > 1 )
-			$OutTime .= $HOUR." hours";
-		else if ( $HOUR == 1 )
-			$OutTime .= $HOUR." hour";
-	}
-	
 	$UTCDate = date(DATE_RFC850,$TargetDate);
-
-	echo "<div class='clock' id='headline-clock'>Round ends in <span id='headline-time' title=\"".$UTCDate."\">".$OutTime."</span></div>";
-	echo "</div>";
+?>
+	<div class='headline'>
+		<div class='title bigger caps space inv soft-shadow'><strong><?=THEME_MODE_NAMES[$active_mode]?></strong></div>
+		<div class='clock' id='headline-clock'>Round ends in <span id='headline-time' title="<?=$UTCDate?>"></span></div>
+		<script>
+			dom_SetText('headline-time',getCountdownInWeeks(<?=$DateDiff?>,3,true));
+		</script>
+	</div>
+<?php
 }
 
 function ShowLogin() {
 ?>
 	<div class="action" id="action-login">
-		<a href="<?= LEGACY_LOGIN_URL ?>"><button type="button" class="login-button">Login</button></a>
+		<a href="<?=LEGACY_LOGIN_URL?>"><button type="button" class="login-button">Login</button></a>
 	</div>	
 <?php
 }

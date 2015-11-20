@@ -60,6 +60,3 @@ function cache_Dec( $key, $step = 1 ) {
 	$CACHE_STORE_COUNT++;
 	return apcu_dec( $key, $step );
 }
-
-
-?>

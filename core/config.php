@@ -6,7 +6,8 @@
  *
  * @file
  */
-require_once __DIR__ . "/../db.php";
+require_once __DIR__."/../db.php";
+require_once __DIR__."/internal/cache.php";
 
 // Default Configuration //
 const DEFAULT_CONFIG = [
@@ -49,8 +50,12 @@ const DEFAULT_CONFIG = [
 	'jammer.tv-alert' => "",				// Alert message for the jammer.tv
 ];
 
+const _CONFIG_CACHE_KEY = "CMW_CORE_CONFIG";
+const _CONFIG_CACHE_TTY = 5*60;
 
 function _config_Set($key,$value) {
+	db_Connect();
+	
 	return db_DoQuery(
 		"INSERT ".CMW_TABLE_CONFIG." (
 			`key`, `value`, `timestamp`
@@ -67,21 +72,29 @@ function config_Set($key,$value) {
 		if ( !_config_Set($key,$value) )
 			return false;
 		$GLOBALS['CONFIG'][$key] = $value;
+		cache_Store(_CONFIG_CACHE_KEY,$GLOBALS['CONFIG'],_CONFIG_CACHE_TTY);
 		return true;
 	}
 	return false;
 }
 
 function _config_Load() {
-	return db_DoFetchPair(
-		"SELECT `key`,`value` FROM ".CMW_TABLE_CONFIG."
-		WHERE id IN (
-			SELECT MAX(id) FROM ".CMW_TABLE_CONFIG." GROUP BY `key`
-		);"
-	);
+	$ret = cache_Fetch(_CONFIG_CACHE_KEY);
+	
+	if ( $ret === false ) {
+		db_Connect();
+		
+		$ret = db_DoFetchPair(
+			"SELECT `key`,`value` FROM ".CMW_TABLE_CONFIG."
+			WHERE id IN (
+				SELECT MAX(id) FROM ".CMW_TABLE_CONFIG." GROUP BY `key`
+			);"
+		);
+		
+		cache_Store(_CONFIG_CACHE_KEY,$ret,_CONFIG_CACHE_TTY);
+	}
+	return $ret;
 }
 function config_Load() {
-	db_Connect();
-	
 	$GLOBALS['CONFIG'] = _config_Load();
 }
