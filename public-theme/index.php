@@ -166,7 +166,7 @@ function ShowExtra() { ?>
 	<div id="dialog" onclick="event.stopPropagation();">
 		<div class="title big" id="dialog-title">Title</div>
 		<div class="body">
-			<div><img id="dialog-img" src="http://cdn.jsdelivr.net/emojione/assets/png/26A0.png?v=1.2.4" width=64 height=64"></div>
+			<div><img id="dialog-img" src="<?=CMW_STATIC_URL?>/external/emojione/assets/png/26A0.png?v=1.2.4" width=64 height=64"></div>
 			<div id="dialog-text">Text</div>
 		</div>
 		<a href="#" id="dialog-focusfirst"></a>
