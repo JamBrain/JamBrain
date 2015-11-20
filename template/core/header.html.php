@@ -8,7 +8,7 @@
 		echo "<title>".HTML_TITLE."</title>\n";
 	}
 
-	const VERSION = '0.1.26';
+	const VERSION = '0.1.27';
 	const VERSION_STRING = '?v='.VERSION;
 
 	if ( defined('CMW_JS_DEBUG') ) {
