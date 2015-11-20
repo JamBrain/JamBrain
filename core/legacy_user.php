@@ -49,7 +49,7 @@ function legacy_GetUser($id) {
 			FROM ".CMW_TABLE_LEGACY_USER." WHERE id=? LIMIT 1;",
 			$id
 		);
-		cache_Store(_LEGACY_USER_CACHE_KEY.$id,$ret,_LEGACY_USER_CACHE_TTY);
+		cache_Store(_LEGACY_USER_CACHE_KEY.$id,$ret,_LEGACY_USER_CACHE_TTL);
 	}
 	return $ret;
 }
