@@ -51,7 +51,7 @@ const DEFAULT_CONFIG = [
 ];
 
 const _CONFIG_CACHE_KEY = "CMW_CORE_CONFIG";
-const _CONFIG_CACHE_TTY = 5*60;
+const _CONFIG_CACHE_TTL = 10*60;
 
 function _config_Set($key,$value) {
 	db_Connect();
@@ -72,7 +72,7 @@ function config_Set($key,$value) {
 		if ( !_config_Set($key,$value) )
 			return false;
 		$GLOBALS['CONFIG'][$key] = $value;
-		cache_Store(_CONFIG_CACHE_KEY,$GLOBALS['CONFIG'],_CONFIG_CACHE_TTY);
+		cache_Store(_CONFIG_CACHE_KEY,$GLOBALS['CONFIG'],_CONFIG_CACHE_TTL);
 		return true;
 	}
 	return false;
@@ -91,7 +91,7 @@ function _config_Load() {
 			);"
 		);
 		
-		cache_Store(_CONFIG_CACHE_KEY,$ret,_CONFIG_CACHE_TTY);
+		cache_Store(_CONFIG_CACHE_KEY,$ret,_CONFIG_CACHE_TTL);
 	}
 	return $ret;
 }

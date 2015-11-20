@@ -5,6 +5,7 @@
  * @file
  */
 require_once __DIR__."/../db.php";
+require_once __DIR__."/internal/cache.php";
 require_once __DIR__."/internal/core.php";
 require_once __DIR__."/../legacy-config.php";
 
@@ -33,15 +34,24 @@ function legacy_GetUserFromCookie() {
 	return 0;	
 }
 
+const _LEGACY_USER_CACHE_KEY = "CMW_LEGACY_USER_";
+const _LEGACY_USER_CACHE_TTL = 5*60;
+
 
 function legacy_GetUser($id) {
-	db_Connect();
+	$ret = cache_Fetch(_LEGACY_USER_CACHE_KEY.$id);
 	
-	return db_DoFetchSingle(
-		"SELECT id,".MYSQL_ISO_FORMAT('timestamp').",hash
-		FROM ".CMW_TABLE_LEGACY_USER." WHERE id=? LIMIT 1;",
-		$id
-	);
+	if ( $ret === false ) {
+		db_Connect();
+		
+		$ret = db_DoFetchSingle(
+			"SELECT id,".MYSQL_ISO_FORMAT('timestamp').",hash
+			FROM ".CMW_TABLE_LEGACY_USER." WHERE id=? LIMIT 1;",
+			$id
+		);
+		cache_Store(_LEGACY_USER_CACHE_KEY.$id,$ret,_LEGACY_USER_CACHE_TTY);
+	}
+	return $ret;
 }
 function legacy_GetUserWithInfo($id) {
 	db_Connect();
