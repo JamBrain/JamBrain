@@ -11,10 +11,16 @@ require_once __DIR__."/../legacy-config.php";
 
 function legacy_GetUserFromCookie() {
 	if (isset($_COOKIE['lusha'])) {
-		$part = explode(".",$_COOKIE['lusha'],2);
+		$part = explode(".",$_COOKIE['lusha'],3);
 		
-		if (count($part) !== 2)
+		if (count($part) < 2) {
+			$GLOBALS['ERROR'] = "Parse Error";
 			return 0;
+		}
+		else if (count($part) === 3 ) {
+			$GLOBALS['ERROR'] = "Error: ".$part[2];
+			return 0;
+		}
 		
 		$id = intval($part[0]);
 		$hash = $part[1];
@@ -28,8 +34,10 @@ function legacy_GetUserFromCookie() {
 		}
 		
 		if ( isset($user['hash']) && ($user['hash'] == $hash) ) {
+			unset($GLOBALS['ERROR']);
 			return $id;
 		}
+		$GLOBALS['ERROR'] = "Login Failed";
 	}
 	return 0;	
 }

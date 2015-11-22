@@ -14,20 +14,13 @@ const HTML_SHOW_FOOTER = true;
 
 config_Load();
 
-
 // Extract Id from Cookie
 if ( isset($_COOKIE['lusha']) ) {
-	$cookie_id = legacy_GetUserFromCookie();
-
-	if ( $cookie_id === 0 ) {
-		echo "<script>DoLogout();</script>";
-		//die; // Ahh! this wont work, because DoLogout isn't defined yet.
-	}
+	$cookie_id = legacy_GetUserFromCookie();	
 }
 else {
 	$cookie_id = 0;
 }
-
 
 // ** Modes ** //
 const THEME_MODE_NAMES = [
@@ -117,7 +110,7 @@ function ShowLogin() {
 function ShowLogout() {
 ?>
 	<div class="action" id="action-logout">
-		<button type="button" class="login-button" onclick="DoLogout()">Logout</button>
+		<button type="button" class="login-button" onclick="DoLogout(true)">Logout</button>
 	</div>	
 <?php
 }
@@ -188,19 +181,30 @@ function ShowExtra() { ?>
 	if ( !empty($CONFIG['theme-alert']) ) {
 		echo "<div class='alert'>",$CONFIG['theme-alert'],"</div>";
 	}
+	if ( isset($GLOBALS['ERROR']) ) {
+		echo "<div class='alert'>",$GLOBALS['ERROR'],"</div>";
+	}
 ?>
 <script>
-	function DoLogout() {
+	function DoLogout( reload ) {
 		xhr_PostJSON(
 			"/api-legacy.php",
 			serialize({"action":"LOGOUT"}),
 			// On success //
 			function(response,code) {
 				console.log(response);
-				location.reload();
+				if ( reload ) {
+					location.reload();
+				}
 			}
 		);			
 	}
+	
+<?php
+	if ( ($cookie_id === 0) && isset($GLOBALS['ERROR']) ) {
+		echo "DoLogout();";
+	}
+?>
 	
 	function sg_AddIdea(Id,Idea,accent) {
 		Id = Number(Id);
