@@ -81,7 +81,7 @@ function config_Set($key,$value) {
 function _config_Load() {
 	$ret = cache_Fetch(_CONFIG_CACHE_KEY);
 	
-	if ( $ret === false ) {
+	if ( $ret === null ) {
 		db_Connect();
 		
 		$ret = db_DoFetchPair(
