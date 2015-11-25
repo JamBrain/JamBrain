@@ -23,6 +23,7 @@ const CMW_TABLE_NODE_STAR =				CMW_TABLE_PREFIX."node_star";
 
 const CMW_TABLE_USER =					CMW_TABLE_PREFIX."user";
 const CMW_TABLE_USER_ACCESS =			CMW_TABLE_PREFIX."user_access";
+const CMW_TABLE_USER_STRIKE =			CMW_TABLE_PREFIX."user_strike";
 
 const CMW_TABLE_COMMENT =				CMW_TABLE_PREFIX."comment";
 const CMW_TABLE_COMMENT_LOVE =			CMW_TABLE_PREFIX."comment_love";

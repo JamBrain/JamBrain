@@ -24,6 +24,7 @@ const DEFAULT_CONFIG = [
 	                               
 //	CMW_TABLE_USER => '0',
 	CMW_TABLE_USER_ACCESS => '0',			// User Account Access Log
+	CMW_TABLE_USER_STRIKE => '0',			// User Strikes
 	                               
 //	CMW_TABLE_COMMENT => '0',
 //	CMW_TABLE_COMMENT_LOVE => '0',			// Like
