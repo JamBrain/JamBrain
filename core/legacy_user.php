@@ -49,7 +49,7 @@ const _LEGACY_USER_CACHE_TTL = 5*60;
 function legacy_GetUser($id) {
 	$ret = cache_Fetch(_LEGACY_USER_CACHE_KEY.$id);
 	
-	if ( $ret === false ) {
+	if ( $ret === null ) {
 		db_Connect();
 		
 		$ret = db_DoFetchSingle(

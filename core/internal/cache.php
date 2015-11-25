@@ -14,11 +14,13 @@ function cache_GetWrites() {
 	return $CACHE_STORE_COUNT;
 }
 
-// Fetch value(s) by key(s) //
+// Fetch value(s) by key(s), null on failure //
 function cache_Fetch( $key ) {
 	global $CACHE_FETCH_COUNT;
 	$CACHE_FETCH_COUNT++;
-	return apcu_fetch( $key );// || null;
+	$success = null;
+	$ret = apcu_fetch( $key, $success );
+	return $success ? $ret : null;
 }
 // Check if key(s) exist //
 function cache_Exists( $key ) {
