@@ -156,6 +156,13 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 				`timestamp` DATETIME NOT NULL
 			)".DEFAULT_CS_ENGINE.";");
 		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
+	case 1:
+		$ok = DoCreate( $table,
+			"ALTER TABLE ".$table."
+				ADD COLUMN parent BIGINT UNSIGNED NOT NULL,
+				ADD INDEX (parent)
+			;");
+		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
 	};
 	DoExit($table);
 }
