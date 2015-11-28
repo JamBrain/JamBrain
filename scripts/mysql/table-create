@@ -111,6 +111,8 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 			)".DEFAULT_CS_ENGINE.";");
 		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
 	case 1:
+		// Oops! I forgot to remove this test that bumped the version number.
+		// Therefor, config actually starts at version 2
 		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
 	};
 	DoExit($table);

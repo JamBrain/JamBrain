@@ -4,15 +4,16 @@ require_once __DIR__."/../core/config.php";
 require_once __DIR__."/../legacy-config.php";
 require_once __DIR__."/../core/legacy_user.php";
 
-const EVENT_NAME = "Ludum Dare 34";
-$active_mode = 1;
+config_Load();
 
-define('HTML_TITLE',EVENT_NAME." - Theme Hub");
+$EVENT_NAME = "Ludum Dare 34";
+$EVENT_MODE = 1;
+$EVENT_DATE = new DateTime("2015-12-12T02:00:00Z");
+
+define('HTML_TITLE',$EVENT_NAME." - Theme Hub");
 const HTML_CSS_INCLUDE = [ "/style/theme-hub.css.php" ];
 const HTML_USE_CORE = true;
 const HTML_SHOW_FOOTER = true;
-
-config_Load();
 
 // Extract Id from Cookie
 if ( isset($_COOKIE['lusha']) ) {
@@ -43,33 +44,57 @@ const THEME_MODE_SHORTNAMES = [
 	"Coming Soon"
 ];
 
+const THEME_MODE_TIMES = [
+	0,
+	(2*7*24*60*60) - (18*60*60),
+	(1*7*24*60*60) - (18*60*60),
+	(2*24*60*60) - (3*60*60),
+	(30*60),
+	0,
+	0,
+];
+
+const THEME_MODE_SHOW_TIMES = [
+	false,
+	true,
+	true,
+	true,
+	true,
+	false,
+	false,
+];
+
+
+// Date Hack //
+$EVENT_MODE_DATE = $EVENT_DATE->getTimestamp() - THEME_MODE_TIMES[$EVENT_MODE];
+$EVENT_MODE_DIFF = $EVENT_MODE_DATE - time();
+
+
 function ShowHeader() {
-	global $active_mode;
-	if ( defined('EVENT_NAME') ) {
-		echo "<div class='event bigger big-space'>Event: <strong class='caps inv' id='event-name'>".EVENT_NAME."</strong></div>";
+	global $EVENT_NAME, $EVENT_MODE, $EVENT_DATE;
+	if ( isset($EVENT_NAME) ) {
+		echo "<div class='event bigger big-space'>Event: <strong class='caps inv' id='event-name'>".$EVENT_NAME."</strong></div>";
 
 		echo "<div class='mode small caps'>";
 		$theme_mode_count = count(THEME_MODE_SHORTNAMES);
 		for ( $idx = 1; $idx < $theme_mode_count-1; $idx++ ) {
 			if ($idx !== 1)
 				echo " | ";
-			if ($idx === $active_mode)
+			if ($idx === $EVENT_MODE)
 				echo "<strong>".strtoupper(THEME_MODE_SHORTNAMES[$idx])."</strong>";
 			else
 				echo strtoupper(THEME_MODE_SHORTNAMES[$idx]);
 		}
 		echo "</div>";
 		
-		$EventDate = new DateTime("2015-12-12T02:00:00Z");
-
-		echo "<div class='date normal inv caps' id='event-date' title=\"".$EventDate->format("G:i")." on ".$EventDate->format("l F jS, Y ")."(UTC)\">Starts at ".
-			"<strong id='ev-time' original='".$EventDate->format("G:i")."'></strong> on ".
-			"<span id='ev-day' original='".$EventDate->format("l")."'></span> ".
-			"<strong id='ev-date' original='".$EventDate->format("F jS, Y")."'></strong> ".
+		echo "<div class='date normal inv caps' id='event-date' title=\"".$EVENT_DATE->format("G:i")." on ".$EVENT_DATE->format("l F jS, Y ")."(UTC)\">Starts at ".
+			"<strong id='ev-time' original='".$EVENT_DATE->format("G:i")."'></strong> on ".
+			"<span id='ev-day' original='".$EVENT_DATE->format("l")."'></span> ".
+			"<strong id='ev-date' original='".$EVENT_DATE->format("F jS, Y")."'></strong> ".
 			"(<span id='ev-zone' original='UTC'></span>)</strong></div>";
 ?>
 		<script>
-			var EventDate = new Date("<?=$EventDate->format(DateTime::W3C)?>");
+			var EventDate = new Date("<?=$EVENT_DATE->format(DateTime::W3C)?>");
 
 			dom_SetText( 'ev-time', getLocaleTime(EventDate) );
 			dom_SetText( 'ev-day', getLocaleDay(EventDate) );
@@ -81,21 +106,27 @@ function ShowHeader() {
 }
 
 function ShowHeadline() {
-	global $active_mode;
-	
-	// Date Hack //
-	$EventDate = strtotime("2015-12-12T02:00:00Z");
-	$TargetDate = $EventDate - (2*7*24*60*60) + (18*60*60);
-	$DateDiff = $TargetDate - time();
+	global $EVENT_MODE;
 
-	$UTCDate = date(DATE_RFC850,$TargetDate);
+	$UTCDate = date(DATE_RFC850,$GLOBALS['EVENT_MODE_DATE']);
 ?>
 	<div class='headline'>
-		<div class='title bigger caps space inv soft-shadow'><strong><?=THEME_MODE_NAMES[$active_mode]?></strong></div>
-		<div class='clock' id='headline-clock'>Round ends in <span id='headline-time' title="<?=$UTCDate?>"></span></div>
-		<script>
-			dom_SetText('headline-time',getCountdownInWeeks(<?=$DateDiff?>,3,true));
-		</script>
+		<div class='title bigger caps space inv soft-shadow'><strong><?=THEME_MODE_NAMES[$EVENT_MODE]?></strong></div>
+<?php
+	if ( THEME_MODE_SHOW_TIMES[$EVENT_MODE] ) {
+		if ($GLOBALS['EVENT_MODE_DIFF'] > 0 ) {
+?>
+			<div class='clock' id='headline-clock'>Round ends in <span id='headline-time' title="<?=$UTCDate?>"></span></div>
+			<script>
+				dom_SetText('headline-time',getCountdownInWeeks(<?=$GLOBALS['EVENT_MODE_DIFF']?>,3,true));
+			</script>
+<?php
+		}
+		else {
+			echo "<div class='clock' id='headline-clock'>Round has ended. The next Round will begin soon.</div>";
+		}
+	}
+?>
 	</div>
 <?php
 }
@@ -130,7 +161,9 @@ function ShowInactive() { ?>
 function ShowComingSoon() {
 	
 }
-function ShowSubmitIdea() { ?>
+function ShowSubmitIdea() { 
+	if ( $GLOBALS['EVENT_MODE_DIFF'] > 0 ) {
+?>
 	<div class="action" id="action-idea">
 		<div class="title bigger">Suggest a Theme</div>
 		<div class="form">
@@ -146,14 +179,26 @@ function ShowSubmitIdea() { ?>
 		</script>
 	</div>
 <?php
+	}
 }
-function ShowExtra() { ?>
+function ShowMyIdeas() { 
+?>
 	<div class="sg" id="extra-sg">
 		<div class="title big caps space">My Suggestions</div>
 		<div id="sg"></div>
 	</div>
 <?php 
-} ?>
+} 
+function ShowMyLikes() { 
+?>
+	<div class="sg-like" id="extra-sg-like">
+		<br />
+		<div class="title big caps space">Suggestions I Like</div>
+		<div id="sg-like"></div>
+	</div>
+<?php 
+} 
+?>
 <?php template_GetHeader(); ?>
 <div class="invisible" id="dialog-back" onclick='dialog_Close();'>
 	<div id="dialog" onclick="event.stopPropagation();">
@@ -216,19 +261,16 @@ function ShowExtra() { ?>
 		var node = document.createElement('div');
 		node.setAttribute("class",'sg-item'+((accent===true)?" effect-accent":""));
 		node.setAttribute("id","sg-item-"+Id);
-		node.innerHTML = 
-			"<div class='sg-item-x' onclick='sg_RemoveIdea("+Id+",\""+(IdeaAttr)+"\")'>✕</div>" +
-			"<div class='sg-item-text' title='"+(Idea)+"'>"+(Idea)+"</div>";
-		
+<?php 	if ( $EVENT_MODE === 1 && ($GLOBALS['EVENT_MODE_DIFF'] > 0) ) {	?>
+			node.innerHTML = 
+				"<div class='sg-item-x' onclick='sg_RemoveIdea("+Id+",\""+(IdeaAttr)+"\")'>✕</div>" +
+				"<div class='sg-item-text' title='"+(Idea)+"'>"+(Idea)+"</div>";
+<?php	} else { ?>
+			node.innerHTML = 
+				"<div class='sg-item-text' title='"+(Idea)+"'>"+(Idea)+"</div>";
+<?php	} ?>
 		sg_root.insertBefore( node, sg_root.childNodes[0] );
 		//sg_root.appendChild( node );
-		
-//		document.getElementById('sg').innerHTML = 
-//			"<div class='sg-item effect-accent' id='sg-item-"+Id+"'>" +
-//				"<div class='sg-item-x' onclick='sg_RemoveIdea("+Id+",\""+(IdeaAttr)+"\")'>✕</div>" +
-//				"<div class='sg-item-text' title='"+(Idea)+"'>"+(Idea)+"</div>" +
-//			"</div>" +
-//			document.getElementById('sg').innerHTML;
 	}
 
 	function sg_RemoveIdea(Id,Idea) {
@@ -253,7 +295,7 @@ function ShowExtra() { ?>
 	function sg_UpdateCount(count,effect) {
 		var el = document.getElementById('sg-count');
 		var Total = 3 - count;
-		if ( Number(el.innerHTML) !== Total ) {
+		if ( el && Number(el.innerHTML) !== Total ) {
 			el.innerHTML = Total;
 			if ( effect === true ) {
 				dom_RestartAnimation('sg-count','effect-accent');
@@ -427,11 +469,34 @@ function ShowExtra() { ?>
 			if ( $CONFIG['active'] ) {
 				ShowHeadline();
 				if ( $cookie_id ) {
-					ShowSubmitIdea();
-					ShowLogout();
+					switch( $EVENT_MODE ) {
+					case 0:	// Inactive //
+						break;
+					case 1:	// Theme Suggestions //
+						ShowSubmitIdea();
+						break;
+					case 2: // Theme Slaughter //
+						break;
+					case 3: // Theme Voting //
+						break;
+					case 4: // Final Voting //
+						break;
+					case 5: // Announcement //
+						break;
+					case 6: // Post Announcement //
+						break;
+					case 7: // Coming Soon //
+						break;
+					};
+					
+					if ( $EVENT_MODE !== 5 ) {	// Announcement //
+						ShowLogout();
+					}
 				}
 				else {
-					ShowLogin();
+					if ( $EVENT_MODE !== 5 ) { // Announcement //
+						ShowLogin();
+					}
 				}
 			}
 			else {
@@ -443,7 +508,8 @@ function ShowExtra() { ?>
 		if ( $CONFIG['active'] ) {
 			if ( $cookie_id ) {
 				echo "<div class='extra'>";
-				ShowExtra();
+				ShowMyIdeas();
+				//ShowMyLikes();
 				echo "</div>";
 			}
 		}
