@@ -89,3 +89,41 @@ function theme_CountMyIdeas($node, $user, $arg_string="") {
 		return intval($ret[0]);
 	return false;
 }
+
+// Ideas are associated with nodes //
+function theme_GetIdeas($node) {
+	return db_DoFetch(
+		"SELECT id,theme,user,parent FROM ".CMW_TABLE_THEME_IDEA." 
+		WHERE node=?",
+		$node
+	);
+}
+function theme_CountIdeas($node,$arg_string="") {
+	$ret = db_DoFetchFirst(
+		"SELECT count(id) FROM ".CMW_TABLE_THEME_IDEA." 
+		WHERE node=? LIMIT 1".$arg_string,
+		$node
+	);
+	if ( is_array($ret) )
+		return intval($ret[0]);
+	return false;
+}
+
+// An idea is considered original if it has no parent //
+function theme_GetOriginalIdeas($node) {
+	return db_DoFetch(
+		"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
+		WHERE node=? AND parent=0",
+		$node
+	);
+}
+function theme_CountOriginalIdeas($node,$arg_string="") {
+	$ret = db_DoFetchFirst(
+		"SELECT count(id) FROM ".CMW_TABLE_THEME_IDEA." 
+		WHERE node=? AND parent=0 LIMIT 1".$arg_string,
+		$node
+	);
+	if ( is_array($ret) )
+		return intval($ret[0]);
+	return false;
+}
