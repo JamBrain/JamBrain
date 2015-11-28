@@ -155,4 +155,18 @@ window.dom_ToggleClass = function(id,class_name,value) {
 }
 
 
+window.time_CallNextSecond = function( Func ) {
+	var Step = 1000;
+	var When = Step - (Date.now() % Step);
+	//console.log("S"+When);
+	setTimeout(Func,When+100);
+}
+window.time_CallNextMinute = function( Func ) {
+	var Step = 60*1000;
+	var When = Step - (Date.now() % Step);
+	//console.log("M"+When);
+	setTimeout(Func,When+1100);
+}
+
+
 })();

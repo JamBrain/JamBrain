@@ -114,17 +114,29 @@ function ShowHeadline() {
 		<div class='title bigger caps space inv soft-shadow'><strong><?=THEME_MODE_NAMES[$EVENT_MODE]?></strong></div>
 <?php
 	if ( THEME_MODE_SHOW_TIMES[$EVENT_MODE] ) {
-		if ($GLOBALS['EVENT_MODE_DIFF'] > 0 ) {
 ?>
-			<div class='clock' id='headline-clock'>Round ends in <span id='headline-time' title="<?=$UTCDate?>"></span></div>
-			<script>
-				dom_SetText('headline-time',getCountdownInWeeks(<?=$GLOBALS['EVENT_MODE_DIFF']?>,3,true));
-			</script>
+		<div class='clock' id='headline-clock'>Round ends in <span id='headline-time' title="<?=$UTCDate?>"></span></div>
+		<script>
+			var _SERVER_TIME_DIFF = <?=$GLOBALS['EVENT_MODE_DIFF']?>;
+			var _LOCAL_TIME = Date.now();
+			
+			function UpdateRoundClock() {
+				var LocalTimeDiff = Date.now() - _LOCAL_TIME;
+				var TotalTimeDiff = _SERVER_TIME_DIFF - Math.ceil(LocalTimeDiff*0.001);
+				if (TotalTimeDiff > 0) {
+					dom_SetText('headline-time',getCountdownInWeeks(TotalTimeDiff,3,true));
+					if ( TotalTimeDiff <= (24*60*60) )
+						time_CallNextSecond(UpdateRoundClock);
+					else
+						time_CallNextMinute(UpdateRoundClock);
+				}
+				else {
+					dom_SetText('headline-clock',"Round has ended. The next Round will begin soon.");
+				}
+			}
+			UpdateRoundClock();
+		</script>
 <?php
-		}
-		else {
-			echo "<div class='clock' id='headline-clock'>Round has ended. The next Round will begin soon.</div>";
-		}
 	}
 ?>
 	</div>
