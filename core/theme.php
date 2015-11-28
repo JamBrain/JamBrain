@@ -127,3 +127,13 @@ function theme_CountOriginalIdeas($node,$arg_string="") {
 		return intval($ret[0]);
 	return false;
 }
+
+// DO NOT USE THIS! It's too slow! For testing only. //
+function theme_GetRandom($node) {
+	return db_DoFetchSingle(
+		"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
+		WHERE node=?
+		ORDER BY rand() LIMIT 1",
+		$node
+	);
+}

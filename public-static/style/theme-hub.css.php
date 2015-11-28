@@ -114,7 +114,7 @@ body > .body .action {
 	margin-top:2.0em;
 }
 
-.extra {
+.extra, .kill-group {
 	padding:1.0em 0;
 	color:#630;
 	background: -webkit-linear-gradient(to bottom,#FEC 35%,#FDA 100%);
@@ -428,6 +428,31 @@ button, .sg-item-x {
     to   { background:rgba(255,0,0,0.0); }
 }
 
+#kill {
+	text-align:left;
+}
+
+.kill-group {
+	padding:0.5em;
+	border-radius:4px;
+}
+
+.item-left {
+	width:1.5em;
+	line-height:1em;
+	float:left;
+}
+.item-right {
+
+}
+
+.item-good {
+}
+.item-bad {
+}
+.item-flag {
+}
+
 
 #dialog {
 	text-align:center;
@@ -472,18 +497,32 @@ button, .sg-item-x {
 .red_dialog .buttons {
 	color:<?=PAL_RED[COL_DEEP]?>;
 }
-.red_dialog button {
+.red_dialog button, .red_button {
 	background:<?=PAL_RED[COL_MUTE]?>;
 	color:<?=PAL_RED[COL_MUTE_BRIGHT]?>;
 }
-.red_dialog button:focus {
+.red_dialog button:focus, .red_button:focus {
 	background:<?=PAL_RED[COL_MUTE_LIGHT]?>;
 	color:<?=PAL_RED[COL_BRIGHT]?>;
 }
-.red_dialog button:active {
+.red_dialog button:active, .red_button:active {
 	background:<?=PAL_RED[COL_BRIGHT]?>;
 	color:<?=PAL_RED[COL_MUTE_LIGHT]?>;
 	box-shadow: 0 0px 6px <?=PAL_RED[COL_MUTE_LIGHT]?>;
+}
+
+.red_button {
+	background:<?=PAL_RED[COL_BASE]?>;
+	color:<?=PAL_RED[COL_LIGHT]?>;
+}
+.red_button:focus {
+	background:<?=PAL_RED[COL_MUTE]?>;
+	color:<?=PAL_RED[COL_BRIGHT]?>;
+}
+.red_button:active {
+	background:<?=PAL_RED[COL_BRIGHT]?>;
+	color:<?=PAL_RED[COL_MUTE]?>;
+	box-shadow: 0 0px 6px <?=PAL_RED[COL_MUTE]?>;
 }
 
 /* Green */
@@ -514,6 +553,21 @@ button, .sg-item-x {
 	box-shadow: 0 0px 6px <?=PAL_GREEN[COL_MUTE_LIGHT]?>;
 }
 
+.green_button {
+	background:<?=PAL_GREEN[COL_BASE]?>;
+	color:<?=PAL_GREEN[COL_LIGHT]?>;
+}
+.green_button:focus {
+	background:<?=PAL_GREEN[COL_MUTE]?>;
+	color:<?=PAL_GREEN[COL_BRIGHT]?>;
+}
+.green_button:active {
+	background:<?=PAL_GREEN[COL_BRIGHT]?>;
+	color:<?=PAL_GREEN[COL_MUTE]?>;
+	box-shadow: 0 0px 6px <?=PAL_GREEN[COL_MUTE]?>;
+}
+
+
 /* Blue */
 .blue_dialog {
 	background:<?=PAL_BLUE[COL_BASE]?>;
@@ -528,18 +582,61 @@ button, .sg-item-x {
 .blue_dialog .buttons {
 	color:<?=PAL_BLUE[COL_DEEP]?>;
 }
-.blue_dialog button {
+.blue_dialog button, .blue_button {
 	background:<?=PAL_BLUE[COL_MUTE]?>;
 	color:<?=PAL_BLUE[COL_MUTE_BRIGHT]?>;
 }
-.blue_dialog button:focus {
+.blue_dialog button:focus, .blue_button:focus {
 	background:<?=PAL_BLUE[COL_MUTE_LIGHT]?>;
 	color:<?=PAL_BLUE[COL_BRIGHT]?>;
 }
-.blue_dialog button:active {
+.blue_dialog button:active, .blue_button:active {
 	background:<?=PAL_BLUE[COL_BRIGHT]?>;
 	color:<?=PAL_BLUE[COL_MUTE_LIGHT]?>;
 	box-shadow: 0 0px 6px <?=PAL_BLUE[COL_MUTE_LIGHT]?>;
+}
+
+
+/* Yellow */
+.yellow_dialog {
+	background:<?=PAL_YELLOW[COL_BASE]?>;
+}
+.yellow_dialog .title {
+	color:<?=PAL_YELLOW[COL_BRIGHT]?>;
+}
+.yellow_dialog .body {
+	color:<?=PAL_YELLOW[COL_DEEP]?>;
+	background:<?=PAL_YELLOW[COL_LIGHT]?>;
+}
+.yellow_dialog .buttons {
+	color:<?=PAL_YELLOW[COL_DEEP]?>;
+}
+.yellow_dialog button {
+	background:<?=PAL_YELLOW[COL_MUTE]?>;
+	color:<?=PAL_YELLOW[COL_MUTE_BRIGHT]?>;
+}
+.yellow_dialog button:focus {
+	background:<?=PAL_YELLOW[COL_MUTE_LIGHT]?>;
+	color:<?=PAL_YELLOW[COL_BRIGHT]?>;
+}
+.yellow_dialog button:active {
+	background:<?=PAL_YELLOW[COL_BRIGHT]?>;
+	color:<?=PAL_YELLOW[COL_MUTE_LIGHT]?>;
+	box-shadow: 0 0px 6px <?=PAL_YELLOW[COL_MUTE_LIGHT]?>;
+}
+
+.yellow_button {
+	background:<?=PAL_YELLOW[COL_BASE]?>;
+	color:<?=PAL_YELLOW[COL_LIGHT]?>;
+}
+.yellow_button:focus {
+	background:<?=PAL_YELLOW[COL_MUTE]?>;
+	color:<?=PAL_YELLOW[COL_BRIGHT]?>;
+}
+.yellow_button:active {
+	background:<?=PAL_YELLOW[COL_BRIGHT]?>;
+	color:<?=PAL_YELLOW[COL_MUTE]?>;
+	box-shadow: 0 0px 6px <?=PAL_YELLOW[COL_MUTE]?>;
 }
 
 

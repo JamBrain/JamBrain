@@ -51,5 +51,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 		}
 	}
 }
+else if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
+	$node = 100;//intval($CONFIG['event-active']);//isset($_POST['node']) ? intval($_POST['node']) : 0;
+
+	switch (trim($_GET['action'])) {
+	case "RANDOM":
+		$response = theme_GetRandom($node);
+		break;
+	};
+}
 
 json_Emit($response);

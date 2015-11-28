@@ -193,6 +193,19 @@ function ShowSubmitIdea() {
 <?php
 	}
 }
+function ShowMyStats() { 
+?>
+	<div class="sg-stats" id="extra-sg-stats">
+		<div class="title big caps space">Stats</div>
+		<div id="sg-stats">
+			<div>My votes: ?</div>
+			<?php /*<div>My total votes: ?</div>*/ ?>
+			<div>Total votes: ?</div>
+			<?php /*<div>All votes: ?</div>*/ ?>
+		</div>
+	</div>
+<?php 
+} 
 function ShowMyIdeas() { 
 ?>
 	<div class="sg" id="extra-sg">
@@ -213,15 +226,69 @@ function ShowMyLikes() {
 function ShowSlaughter() {
 ?>
 	<div class="action" id="action-kill">
-		<div class="title bigger" id="kill-theme">?</div>
-		<button id="kill-good" class="bigger focusable" onclick='' title='Good'>✓</button>
-		<button id="kill-bad" class="bigger focusable" onclick='' title='Bad'>❌</button>
-
-		<button id="kill-flag" class="bigger focusable" onclick='' title='Flag Innapropriate'>⚑</button>
-
-		<?php /*<div id="kill-love" class="bigger" onclick='' title='Love It'>❤</div>*/ ?>
+		<div class="kill-group">
+			<div class="title bigger" id="kill-theme">?</div>
+		</div>
+			<button id="kill-good" class="bigger green_button" onclick='kill_AddTheme(1,true)' title='Good'>✓</button>
+			<button id="kill-bad" class="bigger red_button" onclick='kill_AddTheme(2,true)' title='Bad'>❌</button>
+	
+			<button id="kill-flag" class="bigger yellow_button" onclick='kill_AddTheme(3,true)' title='Flag Innapropriate'>⚑</button>
+		<div>
+			<button id="kill-cancel" class="normal" onclick='' title=''>Cancel Edit</button>
+		</div>
+			<?php /*<div id="kill-love" class="bigger" onclick='' title='Love It'>❤</div>*/ ?>
 		
-		<div class="title" id="kill-theme">Previous Themes</div>
+		<div class="title big" id="kill-theme">Previous Themes</div>
+		<div class="" id="kill"></div>
+		
+		<script>
+			var _LastResponse = null;
+			function GetTheme() {
+				xhr_GetJSON(
+					"/api-theme.php?action=RANDOM",
+					// On success //
+					function(response,code) {
+						_LastResponse = response;
+						dom_SetText('kill-theme',response.theme);
+					}
+				);
+			}
+
+			function kill_AddTheme( action, accent ) {
+				var Id = Number(_LastResponse.id);
+				var Theme = escapeString(_LastResponse.theme);
+				var ThemeAttr = escapeAttribute(_LastResponse.theme);
+
+				var kill_root = document.getElementById('kill');
+				
+				var node = document.createElement('div');
+				node.setAttribute("class",'kill-item'+((accent===true)?" effect-accent":""));
+				node.setAttribute("id","kill-item-"+Id);
+
+
+//				node.innerHTML = 
+//					"<div class='sg-item-x' onclick='kill_RemoveTheme("+Id+",\""+(ThemeAttr)+"\")'>❤</div>";
+				switch( action ) {
+				case 1:
+					node.innerHTML += "<div class='item-left item-good' title='Good'>✓</div>";
+					break;
+				case 2:
+					node.innerHTML += "<div class='item-left item-bad' title='Bad'>❌</div>";
+					break;
+				case 3:
+					node.innerHTML += "<div class='item-left item-flag' title='Flag'>⚑</div>";
+					break;
+				};
+				node.innerHTML +=
+					"<div class='kill-item-text' title='"+(Theme)+"'>"+(Theme)+"</div>";
+				
+				kill_root.insertBefore( node, kill_root.childNodes[0] );
+							
+				GetTheme();
+			}
+			
+			GetTheme();	
+		</script>
 	</div>
 <?php 
 	
@@ -541,6 +608,7 @@ function ShowSlaughter() {
 				echo "<div class='extra'>";
 				ShowMyIdeas();
 				//ShowMyLikes();
+				//ShowMyStats();
 				echo "</div>";
 			}
 		}
