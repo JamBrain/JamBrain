@@ -113,7 +113,7 @@ function theme_CountIdeas($node,$arg_string="") {
 function theme_GetOriginalIdeas($node) {
 	return db_DoFetch(
 		"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
-		WHERE node=? AND parent=0",
+		WHERE node=? AND parent=0;",
 		$node
 	);
 }

@@ -46,7 +46,7 @@ const THEME_MODE_SHORTNAMES = [
 
 const THEME_MODE_TIMES = [
 	0,
-	(2*7*24*60*60) - (18*60*60),
+	(2*7*24*60*60) - ((24+21)*60*60),//- (18*60*60),
 	(1*7*24*60*60) - (18*60*60),
 	(2*24*60*60) - (3*60*60),
 	(30*60),
@@ -209,7 +209,25 @@ function ShowMyLikes() {
 		<div id="sg-like"></div>
 	</div>
 <?php 
-} 
+}
+function ShowSlaughter() {
+?>
+	<div class="action" id="action-kill">
+		<div class="title bigger" id="kill-theme">?</div>
+		<button id="kill-good" class="bigger focusable" onclick='' title='Good'>✓</button>
+		<button id="kill-bad" class="bigger focusable" onclick='' title='Bad'>❌</button>
+
+		<button id="kill-flag" class="bigger focusable" onclick='' title='Flag Innapropriate'>⚑</button>
+
+		<?php /*<div id="kill-love" class="bigger" onclick='' title='Love It'>❤</div>*/ ?>
+		
+		<div class="title" id="kill-theme">Previous Themes</div>
+	</div>
+<?php 
+	
+//	$ideas = theme_GetOriginalIdeas();
+//	print_r($ideas);
+}
 ?>
 <?php template_GetHeader(); ?>
 <div class="invisible" id="dialog-back" onclick='dialog_Close();'>
@@ -488,6 +506,7 @@ function ShowMyLikes() {
 						ShowSubmitIdea();
 						break;
 					case 2: // Theme Slaughter //
+						ShowSlaughter();
 						break;
 					case 3: // Theme Voting //
 						break;
