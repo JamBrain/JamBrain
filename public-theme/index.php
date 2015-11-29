@@ -10,6 +10,11 @@ $EVENT_NAME = "Ludum Dare 34";
 $EVENT_MODE = 1;
 $EVENT_DATE = new DateTime("2015-12-12T02:00:00Z");
 
+if ( isset($_GET['beta']) ) {
+	$EVENT_MODE = 2;
+	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Vote data will be <b>DELETED</b> • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
+}
+
 define('HTML_TITLE',$EVENT_NAME." - Theme Hub");
 const HTML_CSS_INCLUDE = [ "/style/theme-hub.css.php" ];
 const HTML_USE_CORE = true;
@@ -229,35 +234,37 @@ function ShowSlaughter() {
 		<div class="kill-group">
 			<div class="title bigger" id="kill-theme">?</div>
 		</div>
-			<button id="kill-good" class="bigger green_button" onclick='kill_AddTheme(1,true)' title='Good'>✓</button>
-			<button id="kill-bad" class="bigger red_button" onclick='kill_AddTheme(2,true)' title='Bad'>❌</button>
+			<button id="kill-good" class="bigger green_button" onclick='kill_VoteIdea(1)' title='Good'>✓</button>
+			<button id="kill-bad" class="bigger red_button" onclick='kill_VoteIdea(0)' title='Bad'>❌</button>
 	
-			<button id="kill-flag" class="bigger yellow_button" onclick='kill_AddTheme(3,true)' title='Flag Innapropriate'>⚑</button>
+			<button id="kill-flag" class="bigger yellow_button" onclick='kill_FlagIdea()' title='Flag Innapropriate'>⚑</button>
 		<div>
 			<button id="kill-cancel" class="normal" onclick='' title=''>Cancel Edit</button>
 		</div>
+			<?php /*<div id="kill-star" class="bigger" onclick='' title='Star It'>★</div>*/ ?>
 			<?php /*<div id="kill-love" class="bigger" onclick='' title='Love It'>❤</div>*/ ?>
 		
 		<div class="title big" id="kill-theme">Previous Themes</div>
 		<div class="" id="kill"></div>
 		
 		<script>
-			var _LastResponse = null;
+			var _LastSlaughterResponse = null;
 			function GetTheme() {
 				xhr_GetJSON(
 					"/api-theme.php?action=RANDOM",
 					// On success //
 					function(response,code) {
-						_LastResponse = response;
+						_LastSlaughterResponse = response;
 						dom_SetText('kill-theme',response.theme);
 					}
 				);
 			}
+			GetTheme(); // Call it!! //
 
 			function kill_AddTheme( action, accent ) {
-				var Id = Number(_LastResponse.id);
-				var Theme = escapeString(_LastResponse.theme);
-				var ThemeAttr = escapeAttribute(_LastResponse.theme);
+				var Id = _LastSlaughterResponse.id;
+				var Theme = escapeString(_LastSlaughterResponse.theme);
+				var ThemeAttr = escapeAttribute(_LastSlaughterResponse.theme);
 
 				var kill_root = document.getElementById('kill');
 				
@@ -272,22 +279,49 @@ function ShowSlaughter() {
 				case 1:
 					node.innerHTML += "<div class='item-left item-good' title='Good'>✓</div>";
 					break;
-				case 2:
+				case 0:
 					node.innerHTML += "<div class='item-left item-bad' title='Bad'>❌</div>";
 					break;
-				case 3:
+				case -1:
 					node.innerHTML += "<div class='item-left item-flag' title='Flag'>⚑</div>";
 					break;
 				};
 				node.innerHTML +=
-					"<div class='kill-item-text' title='"+(Theme)+"'>"+(Theme)+"</div>";
+					"<div class='kill-item-text item-text' title='"+(Theme)+"'>"+(Theme)+"</div>";
 				
 				kill_root.insertBefore( node, kill_root.childNodes[0] );
 							
 				GetTheme();
 			}
 			
-			GetTheme();	
+			function kill_VoteIdea(Value) {
+				Value = Number(Value);
+				xhr_PostJSON(
+					"/api-theme.php",
+					serialize({"action":"IDEA","id":_LastSlaughterResponse.id,"value":Value}),
+					// On success //
+					function(response,code) {
+						console.log("IDEA:",response);
+						kill_AddTheme(Value,true);
+						//kill_UpdateCount(response.count,true);
+					}
+				);
+			}
+			function kill_FlagIdea() {
+				var Idea = _LastSlaughterResponse.theme;
+				dialog_ConfirmAlert(Idea,"Are you sure you want to Flag this as inappropriate?",function(){
+					xhr_PostJSON(
+						"/api-theme.php",
+						serialize({"action":"IDEA","id":_LastSlaughterResponse.id,"value":-1}),
+						// On success //
+						function(response,code) {
+							console.log("IDEA:",response);
+							kill_AddTheme(-1,true);
+							//kill_UpdateCount(response.count,true);
+						}
+					);
+				});	
+			}
 		</script>
 	</div>
 <?php 
@@ -361,10 +395,10 @@ function ShowSlaughter() {
 <?php 	if ( $EVENT_MODE === 1 && ($GLOBALS['EVENT_MODE_DIFF'] > 0) ) {	?>
 			node.innerHTML = 
 				"<div class='sg-item-x' onclick='sg_RemoveIdea("+Id+",\""+(IdeaAttr)+"\")'>✕</div>" +
-				"<div class='sg-item-text' title='"+(Idea)+"'>"+(Idea)+"</div>";
+				"<div class='sg-item-text item-text' title='"+(Idea)+"'>"+(Idea)+"</div>";
 <?php	} else { ?>
 			node.innerHTML = 
-				"<div class='sg-item-text' title='"+(Idea)+"'>"+(Idea)+"</div>";
+				"<div class='sg-item-text item-text' title='"+(Idea)+"'>"+(Idea)+"</div>";
 <?php	} ?>
 		sg_root.insertBefore( node, sg_root.childNodes[0] );
 		//sg_root.appendChild( node );

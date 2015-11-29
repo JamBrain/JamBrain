@@ -6,3 +6,6 @@ if ( PHP_SAPI !== "cli" ) {
 }
 
 echo "Stub\n";
+
+// TODO: Set an event-node specific flag once the auto-associate process has completed
+// (i.e. remember the process has been done)

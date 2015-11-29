@@ -33,7 +33,7 @@ const CMW_TABLE_SCHEDULE_SUBSCRIPTION =	CMW_TABLE_PREFIX."schedule_subscription"
 
 const CMW_TABLE_THEME_IDEA =			CMW_TABLE_PREFIX."theme_idea";
 const CMW_TABLE_THEME_IDEA_VOTE =		CMW_TABLE_PREFIX."theme_idea_vote";
-const CMW_TABLE_THEME_IDEA_LOVE =		CMW_TABLE_PREFIX."theme_idea_love";
+const CMW_TABLE_THEME_IDEA_STAR =		CMW_TABLE_PREFIX."theme_idea_star";
 const CMW_TABLE_THEME =					CMW_TABLE_PREFIX."theme";
 const CMW_TABLE_THEME_VOTE =			CMW_TABLE_PREFIX."theme_vote";
 

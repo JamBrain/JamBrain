@@ -19,7 +19,7 @@ const DEFAULT_CONFIG = [
 //	CMW_TABLE_NODE => '0',
 //	CMW_TABLE_NODE_META => '0',
 //	CMW_TABLE_NODE_DIFF => '0',
-//	CMW_TABLE_NODE_LOVE => '0',				// Like
+//	CMW_TABLE_NODE_LOVE => '0',				// Likes
 //	CMW_TABLE_NODE_STAR => '0',				// Bookmark
 	                               
 //	CMW_TABLE_USER => '0',
@@ -27,14 +27,14 @@ const DEFAULT_CONFIG = [
 	CMW_TABLE_USER_STRIKE => '0',			// User Strikes
 	                               
 //	CMW_TABLE_COMMENT => '0',
-//	CMW_TABLE_COMMENT_LOVE => '0',			// Like
+//	CMW_TABLE_COMMENT_LOVE => '0',			// Likes
 	
 	CMW_TABLE_SCHEDULE_TIMESPAN => '0',
 	CMW_TABLE_SCHEDULE_SUBSCRIPTION => '0',
 	
 	CMW_TABLE_THEME_IDEA => '0',			// Suggestions
-	CMW_TABLE_THEME_IDEA_VOTE => '0',		// Slaughter
-	CMW_TABLE_THEME_IDEA_LOVE => '0',		// Like
+	CMW_TABLE_THEME_IDEA_VOTE => '0',		// Slaughter (Raw Votes)
+	CMW_TABLE_THEME_IDEA_STAR => '0',		// Bookmarks
 	CMW_TABLE_THEME => '0',					// Themes
 	CMW_TABLE_THEME_VOTE => '0',			// Theme Votes
 //	CMW_TABLE_THEME_NOTES => '0',			// Theme Notes (extra details, such as themes that previously won)

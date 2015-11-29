@@ -220,13 +220,16 @@ body > .footer {
 	padding:1.0em 0;
 }
 
+.item-text {
+	text-overflow: ellipsis;
+	overflow:hidden;
+	white-space:nowrap;
+}
+
 .sg-item {
 	padding:0.125em 1.0em;
 }
 .sg-item-text {
-	text-overflow: ellipsis;
-	overflow:hidden;
-	white-space:nowrap;
 	padding:0 0.25em;
 }
 .sg-item-x {
@@ -435,6 +438,7 @@ button, .sg-item-x {
 .kill-group {
 	padding:0.5em;
 	border-radius:4px;
+	max-width:24em;
 }
 
 .item-left {
