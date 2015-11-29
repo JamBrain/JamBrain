@@ -114,7 +114,7 @@ body > .body .action {
 	margin-top:2.0em;
 }
 
-.extra, .kill-group {
+.extra {
 	padding:1.0em 0;
 	color:#630;
 	background: -webkit-linear-gradient(to bottom,#FEC 35%,#FDA 100%);
@@ -435,11 +435,43 @@ button, .sg-item-x {
 	text-align:left;
 }
 
+#kill .selected {
+	background:<?=PAL_RED[COL_LIGHT]?>;
+}
+
 .kill-group {
 	padding:0.5em;
 	border-radius:4px;
 	max-width:24em;
 }
+
+.kill-item {
+	cursor:pointer;
+}
+.kill-item:hover {
+	background:<?=PAL_YELLOW[COL_LIGHT]?>;
+}
+
+.kill-group {
+	padding:1.0em 0;
+	color:#630;
+	background: -webkit-linear-gradient(to bottom,#FFF 35%,#EEE 100%);
+	background: linear-gradient(to bottom,#FFF 35%,#EEE 100%);
+	box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.edit .kill-group {
+	background: -webkit-linear-gradient(to bottom,#FEA 35%,#ECA 100%);
+	background: linear-gradient(to bottom,#FEA 35%,#ECA 100%);
+}
+
+.edit .edit-only {
+	display:block;
+}
+.edit-only {
+	display:none;
+}
+
 
 .item-left {
 	width:1.5em;

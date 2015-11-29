@@ -240,8 +240,8 @@ function ShowSlaughter() {
 			<button id="kill-bad" class="bigger red_button" onclick='kill_VoteIdea(0)' title='Bad'>❌</button>
 	
 			<button id="kill-flag" class="bigger yellow_button" onclick='kill_FlagIdea()' title='Flag Innapropriate'>⚑</button>
-		<div>
-			<button id="kill-cancel" class="normal" onclick='' title=''>Cancel Edit</button>
+		<div class="edit-only">
+			<button id="kill-cancel" class="normal" onclick='kill_CancelEditTheme()' title=''>Cancel Edit</button>
 		</div>
 			<?php /*<div id="kill-star" class="bigger" onclick='' title='Star It'>★</div>*/ ?>
 			<?php /*<div id="kill-love" class="bigger" onclick='' title='Love It'>❤</div>*/ ?>
@@ -262,6 +262,25 @@ function ShowSlaughter() {
 				);
 			}
 			GetTheme(); // Call it!! //
+			
+			var _RECENT_SELECTED_THEME = null;
+			function kill_EditTheme(Id) {
+				dom_ToggleClass('action-kill','edit',true);
+				
+				if ( _RECENT_SELECTED_THEME ) {
+					dom_ToggleClass("kill-item-"+_RECENT_SELECTED_THEME,'selected',false);
+				}
+				_RECENT_SELECTED_THEME = Id;
+				dom_ToggleClass("kill-item-"+_RECENT_SELECTED_THEME,'selected',true);
+			}
+			function kill_CancelEditTheme() {
+				dom_ToggleClass('action-kill','edit',false);
+				
+				if ( _RECENT_SELECTED_THEME ) {
+					dom_ToggleClass("kill-item-"+_RECENT_SELECTED_THEME,'selected',false);
+				}
+				_RECENT_SELECTED_THEME = null;
+			}
 
 			function kill_AddRecentTheme( Id, Idea, value, accent ) {
 				var Theme = escapeString(Idea);
@@ -272,7 +291,9 @@ function ShowSlaughter() {
 				var node = document.createElement('div');
 				node.setAttribute("class",'kill-item'+((accent===true)?" effect-accent":""));
 				node.setAttribute("id","kill-item-"+Id);
-
+				node.addEventListener('click',function(){
+					kill_EditTheme(Id);
+				});
 
 //				node.innerHTML = 
 //					"<div class='sg-item-x' onclick='kill_RemoveTheme("+Id+",\""+(ThemeAttr)+"\")'>❤</div>";
@@ -291,8 +312,6 @@ function ShowSlaughter() {
 					"<div class='kill-item-text item-text' theme_id="+Id+" title='"+(Theme)+"'>"+(Theme)+"</div>";
 				
 				kill_root.insertBefore( node, kill_root.childNodes[0] );
-							
-				GetTheme();
 			}
 			
 			function kill_VoteIdea(Value) {
@@ -309,7 +328,8 @@ function ShowSlaughter() {
 
 						console.log("IDEA:",response);
 						kill_AddRecentTheme(Id,Idea,Value,true);
-						//kill_UpdateCount(response.count,true);
+						
+						GetTheme();
 					}
 				);
 			}
@@ -325,6 +345,8 @@ function ShowSlaughter() {
 						function(response,code) {
 							console.log("IDEA:",response);
 							kill_AddRecentTheme(Id,Idea,-1,true);
+							
+							GetTheme();
 						}
 					);
 				});	
@@ -348,9 +370,6 @@ function ShowSlaughter() {
 		</script>
 	</div>
 <?php 
-	
-//	$ideas = theme_GetOriginalIdeas();
-//	print_r($ideas);
 }
 ?>
 <?php template_GetHeader(); ?>
