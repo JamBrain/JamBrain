@@ -4,9 +4,13 @@
  *
  * @file
  */
-require_once __DIR__ . "/../db.php";
+require_once __DIR__."/../db.php";
+require_once __DIR__."/internal/cache.php";
 
 // **** PLEASE SANITIZE BEFORE CALLING **** //
+
+const _THEME_CACHE_KEY = "CMW_THEME_";
+const _THEME_CACHE_TTL = 10*60;
 
 function theme_AddMyIdea($idea, $node, $user) {
 	return db_DoInsert(
@@ -136,4 +140,16 @@ function theme_GetRandom($node) {
 		ORDER BY rand() LIMIT 1",
 		$node
 	);
+}
+
+// The official list used by the Theme Slaughter
+function theme_GetIdeaList($node) {
+	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_LIST");
+	
+	if ( $ret === null ) {
+		$ret = theme_GetOriginalIdeas($node); // Hack: For now, just use all original ideas
+
+		cache_Store(_THEME_CACHE_KEY."IDEA_LIST",$ret,_THEME_CACHE_TTL);
+	}
+	return $ret;
 }

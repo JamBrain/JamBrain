@@ -9,6 +9,11 @@ require_once __DIR__."/internal/cache.php";
 require_once __DIR__."/internal/core.php";
 require_once __DIR__."/../legacy-config.php";
 
+// **** PLEASE SANITIZE BEFORE CALLING **** //
+
+const _LEGACY_USER_CACHE_KEY = "CMW_LEGACY_USER_";
+const _LEGACY_USER_CACHE_TTL = 5*60;
+
 function legacy_GetUserFromCookie() {
 	if (isset($_COOKIE['lusha'])) {
 		$part = explode(".",$_COOKIE['lusha'],3);
@@ -41,10 +46,6 @@ function legacy_GetUserFromCookie() {
 	}
 	return 0;	
 }
-
-const _LEGACY_USER_CACHE_KEY = "CMW_LEGACY_USER_";
-const _LEGACY_USER_CACHE_TTL = 5*60;
-
 
 function legacy_GetUser($id) {
 	$ret = cache_Fetch(_LEGACY_USER_CACHE_KEY.$id);

@@ -8,6 +8,7 @@ config_Load();
 
 $EVENT_NAME = "Ludum Dare 34";
 $EVENT_MODE = 1;
+$EVENT_NODE = 100;
 $EVENT_DATE = new DateTime("2015-12-12T02:00:00Z");
 
 if ( isset($_GET['beta']) ) {
@@ -49,6 +50,7 @@ const THEME_MODE_SHORTNAMES = [
 	"Coming Soon"
 ];
 
+// HACK, don't hardcode me! //
 const THEME_MODE_TIMES = [
 	0,
 	(2*7*24*60*60) - ((24+21)*60*60),//- (18*60*60),
@@ -573,10 +575,10 @@ function ShowSlaughter() {
 		?>
 			xhr_PostJSON(
 				"/api-theme.php",
-				serialize({"action":"GET"}),
+				serialize({"action":"GETMY"}),
 				// On success //
 				function(response,code) {
-					console.log("GET:",response);
+					console.log("GETMY:",response);
 					if ( response.hasOwnProperty('ideas') ) {
 						response.ideas.forEach(function(response) {
 							sg_AddIdea(response.id,response.theme);
