@@ -27,11 +27,11 @@ const THEME_MODE_TIMES = [
 $EVENT_MODE_DATE = $EVENT_DATE->getTimestamp() - THEME_MODE_TIMES[$EVENT_MODE];
 $EVENT_MODE_DIFF = $EVENT_MODE_DATE - time();
 
-function AreThemeIdeasOpen() {
+function IsThemeSuggestionsOpen() {
 	global $EVENT_MODE, $EVENT_MODE_DIFF;
 	return ($EVENT_MODE == 1) && ($EVENT_MODE_DIFF > 0);
 }
-function AreThemeSlaughterOpen() {
+function IsThemeSlaughterOpen() {
 	global $EVENT_MODE, $EVENT_MODE_DIFF;
 	return ($EVENT_MODE == 2) && ($EVENT_MODE_DIFF > 0);
 }
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 			$response['ideas'] = theme_GetMyIdeas($EVENT_NODE,$user_id);
 			$response['count'] = count($response['ideas']);
 		}
-		else if ( ($action == "ADD") && isset($_POST['idea']) && AreThemeIdeasOpen() ) {
+		else if ( ($action == "ADD") && isset($_POST['idea']) && IsThemeSuggestionsOpen() ) {
 			$idea = mb_trim($_POST['idea']);
 	
 			if ( $idea !== "" ) {
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 				$response['id'] = 0;
 			}
 		}
-		else if ( $action == "REMOVE" && AreThemeIdeasOpen() ) {
+		else if ( $action == "REMOVE" && IsThemeSuggestionsOpen() ) {
 			$theme_id = intval($_POST['id']);
 			if ( $theme_id > 0 ) {
 				$ret = theme_RemoveMyIdea($theme_id,$user_id);
@@ -84,8 +84,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 				$response['id'] = 0;
 			}
 		}
-		else if ( $action == "IDEA" /*&& AreThemeSuggestionOpen()*/ ) {
-			// TODO: Confirm theme is on valid list
+		else if ( $action == "IDEA" /*&& IsThemeSlaughterOpen()*/ ) {
+			$theme_id = intval($_POST['id']);
+			$value = intval($_POST['value']);
+			if ( $theme_id > 0 && ($value <= 1) && ($value >= -1) ) {
+				$id_list = theme_GetIdeaList($EVENT_NODE);
+				
+				// Confirm theme is on the list //
+				if ( isset($id_list[$theme_id]) ) {
+					$response['id'] = theme_AddIdeaVote($theme_id,$value,$user_id);
+					$response['idea_id'] = $theme_id;
+				}
+				else {
+					$response['id'] = 0;
+				}
+			}
+		}
+		else if ( $action == "GETIDEAS" /*&& IsThemeSlaughterOpen()*/ ) {
+			$idea_votes = theme_GetMyIdeaVotes($user_id,10);
+			
+			$idea_list = theme_GetIdeaList($EVENT_NODE);
+			$response['id'] = $user_id;
+			$response['ideas'] = [];
+			foreach ( $idea_votes as $vote ) {
+				$response['ideas'][] = ['id' => $vote['node'], 'idea' => $idea_list[$vote['node']], 'value' => $vote['value']];
+			}
 		}
 	}
 }

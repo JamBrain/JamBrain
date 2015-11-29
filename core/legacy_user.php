@@ -53,7 +53,7 @@ function legacy_GetUser($id) {
 	if ( $ret === null ) {
 		db_Connect();
 		
-		$ret = db_DoFetchSingle(
+		$ret = db_DoFetchFirst(
 			"SELECT id,".MYSQL_ISO_FORMAT('timestamp').",hash
 			FROM ".CMW_TABLE_LEGACY_USER." WHERE id=? LIMIT 1;",
 			$id
@@ -65,7 +65,7 @@ function legacy_GetUser($id) {
 function legacy_GetUserWithInfo($id) {
 	db_Connect();
 	
-	return db_DoFetchSingle(
+	return db_DoFetchFirst(
 		"SELECT id,".MYSQL_ISO_FORMAT('timestamp').",hash,bonus_votes,num_events,gravatar
 		FROM ".CMW_TABLE_LEGACY_USER." WHERE id=? LIMIT 1;",
 		$id

@@ -4,7 +4,7 @@ if (defined('LEGACY_DEBUG')) {
 	if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
 		$action = trim($_GET['action']);
 		if ( $action == "LEGACY_LOGIN" ) {
-			setcookie( "lusha", "100.this_is_fake", time()+6*60*60, "/", str_replace("theme","",$_SERVER['SERVER_NAME']) );
+			setcookie( "lusha", "111.this_is_fake", time()+6*60*60, "/", str_replace("theme","",$_SERVER['SERVER_NAME']) );
 			header("Location: /");
 			die();
 		}
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 	else if ( $action == "LEGACY_FETCH" ) {
 		if (defined('LEGACY_DEBUG')) {
 			$id = intval($_POST['id']);
-			if ( $id === 100 ) {
+			if ( $id === 111 ) {
 				// Fake Fetch URL
 				$data['hash'] = 'this_is_fake';
 			}

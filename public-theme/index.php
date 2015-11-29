@@ -263,7 +263,7 @@ function ShowSlaughter() {
 			}
 			GetTheme(); // Call it!! //
 
-			function kill_AddTheme( action, accent ) {
+			function kill_AddRecentTheme( action, accent ) {
 				var Id = _LastSlaughterResponse.id;
 				var Theme = escapeString(_LastSlaughterResponse.theme);
 				var ThemeAttr = escapeAttribute(_LastSlaughterResponse.theme);
@@ -289,7 +289,7 @@ function ShowSlaughter() {
 					break;
 				};
 				node.innerHTML +=
-					"<div class='kill-item-text item-text' title='"+(Theme)+"'>"+(Theme)+"</div>";
+					"<div class='kill-item-text item-text' theme_id="+Id+" title='"+(Theme)+"'>"+(Theme)+"</div>";
 				
 				kill_root.insertBefore( node, kill_root.childNodes[0] );
 							
@@ -303,8 +303,10 @@ function ShowSlaughter() {
 					serialize({"action":"IDEA","id":_LastSlaughterResponse.id,"value":Value}),
 					// On success //
 					function(response,code) {
+						// TODO: Respond to errors //
+						
 						console.log("IDEA:",response);
-						kill_AddTheme(Value,true);
+						kill_AddRecentTheme(Value,true);
 						//kill_UpdateCount(response.count,true);
 					}
 				);
@@ -318,12 +320,21 @@ function ShowSlaughter() {
 						// On success //
 						function(response,code) {
 							console.log("IDEA:",response);
-							kill_AddTheme(-1,true);
+							kill_AddRecentTheme(-1,true);
 							//kill_UpdateCount(response.count,true);
 						}
 					);
 				});	
 			}
+			
+			xhr_PostJSON(
+				"/api-theme.php",
+				serialize({"action":"GETIDEAS"}),
+				// On success //
+				function(response,code) {
+					console.log("GETIDEAS:",response);
+				}
+			);
 		</script>
 	</div>
 <?php 

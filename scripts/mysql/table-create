@@ -253,8 +253,8 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 				node BIGINT UNSIGNED NOT NULL,
 					INDEX(node),
 					UNIQUE `user_node` (user,node),
-				vote INT NOT NULL,
-				timestamp DATETIME NOT NULL
+				timestamp DATETIME NOT NULL,
+				value INT NOT NULL
 			)".DEFAULT_CS_ENGINE.";");
 		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
 	};

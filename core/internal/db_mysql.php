@@ -633,16 +633,16 @@ function db_DoFetch( $query, ...$args ) {
 	}
 	return null;
 }
-// Fetch a single row
-function db_DoFetchSingle( $query, ...$args ) {
+// Fetch the first row
+function db_DoFetchFirst( $query, ...$args ) {
 	$ret = db_DoFetch($query,...$args);
 	if ( isset($ret[0]) )
 		return $ret[0];
 	return null;
 }
 
-// Fetch only the first element in each row, and make an array
-function db_DoFetchFirst( $query, ...$args ) {
+// Fetch a single element in each row, and make it an array
+function db_DoFetchSingle( $query, ...$args ) {
 	$st = _db_DoQuery($query,$args);
 	if ( $st ) {
 		$ret = _db_GetFirst($st);
@@ -669,6 +669,14 @@ function db_DoFetchIntPair( $query, ...$args ) {
 		return $ret;
 	}
 	return null;
+}
+// Fetch a single value //
+function db_DoFetchValue( $query, ...$args ) {
+	$ret = db_DoFetchSingle($query,$args);
+	if ( isset($ret[0]) ) {
+		return $ret[0];
+	}
+	return null;	
 }
 
 function db_DoFetchKey( $key, $query, ...$args ) {

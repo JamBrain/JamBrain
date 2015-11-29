@@ -84,7 +84,7 @@ function theme_GetMyIdeas($node, $user) {
 	);
 }
 function theme_CountMyIdeas($node, $user, $arg_string="") {
-	$ret = db_DoFetchFirst(
+	$ret = db_DoFetchSingle(
 		"SELECT count(id) FROM ".CMW_TABLE_THEME_IDEA." 
 		WHERE node=? AND user=? LIMIT 1".$arg_string,
 		$node, $user
@@ -103,7 +103,7 @@ function theme_GetIdeas($node) {
 	);
 }
 function theme_CountIdeas($node,$arg_string="") {
-	$ret = db_DoFetchFirst(
+	$ret = db_DoFetchSingle(
 		"SELECT count(id) FROM ".CMW_TABLE_THEME_IDEA." 
 		WHERE node=? LIMIT 1".$arg_string,
 		$node
@@ -115,14 +115,14 @@ function theme_CountIdeas($node,$arg_string="") {
 
 // An idea is considered original if it has no parent //
 function theme_GetOriginalIdeas($node) {
-	return db_DoFetch(
+	return db_DoFetchPair(
 		"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
 		WHERE node=? AND parent=0;",
 		$node
 	);
 }
 function theme_CountOriginalIdeas($node,$arg_string="") {
-	$ret = db_DoFetchFirst(
+	$ret = db_DoFetchSingle(
 		"SELECT count(id) FROM ".CMW_TABLE_THEME_IDEA." 
 		WHERE node=? AND parent=0 LIMIT 1".$arg_string,
 		$node
@@ -134,7 +134,7 @@ function theme_CountOriginalIdeas($node,$arg_string="") {
 
 // DO NOT USE THIS! It's too slow! For testing only. //
 function theme_GetRandom($node) {
-	return db_DoFetchSingle(
+	return db_DoFetchFirst(
 		"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
 		WHERE node=?
 		ORDER BY rand() LIMIT 1",
@@ -152,4 +152,46 @@ function theme_GetIdeaList($node) {
 		cache_Store(_THEME_CACHE_KEY."IDEA_LIST",$ret,_THEME_CACHE_TTL);
 	}
 	return $ret;
+}
+
+function theme_AddIdeaVote($idea_id, $value, $user) {
+	return db_DoInsert(
+		"INSERT INTO ".CMW_TABLE_THEME_IDEA_VOTE." (
+			node, user, value, `timestamp`
+		)
+		VALUES ( 
+			?, ?, ?, NOW()
+		)
+		ON DUPLICATE KEY UPDATE 
+			value=VALUES(value),
+			`timestamp`=VALUES(`timestamp`)
+		",
+		$idea_id, $user, $value
+	);
+}
+function theme_RemoveIdeaVoteById($id) {
+	return db_DoDelete(
+		"DELETE FROM ".CMW_TABLE_THEME_IDEA_VOTE." WHERE id=?;",
+		$id
+	);
+}
+function theme_RemoveIdeaVoteByUser($idea_id,$user) {
+	return db_DoDelete(
+		"DELETE FROM ".CMW_TABLE_THEME_IDEA_VOTE." WHERE node=? AND user=?;",
+		$idea_id,$user
+	);
+}
+
+function theme_GetMyIdeaVotes($user,$limit) {
+	$suffix = "";
+	if ( isset($limit) ) {
+		$suffix = " LIMIT ".$limit;
+	}
+	return db_DoFetch(
+		"SELECT node,value FROM ".CMW_TABLE_THEME_IDEA_VOTE." 
+		WHERE user=?
+		ORDER BY id DESC
+		".$suffix,
+		$user
+	);
 }
