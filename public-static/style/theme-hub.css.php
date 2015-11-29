@@ -453,7 +453,7 @@ button, .sg-item-x {
 }
 
 .kill-group {
-	padding:1.0em 0;
+	padding:1.0em;
 	color:#630;
 	background: -webkit-linear-gradient(to bottom,#FFF 35%,#EEE 100%);
 	background: linear-gradient(to bottom,#FFF 35%,#EEE 100%);
@@ -461,8 +461,8 @@ button, .sg-item-x {
 }
 
 .edit .kill-group {
-	background: -webkit-linear-gradient(to bottom,#FEA 35%,#ECA 100%);
-	background: linear-gradient(to bottom,#FEA 35%,#ECA 100%);
+	background: -webkit-linear-gradient(to bottom,#FBA 35%,#E87 100%);
+	background: linear-gradient(to bottom,#FBA 35%,#E87 100%);
 }
 
 .edit .edit-only {

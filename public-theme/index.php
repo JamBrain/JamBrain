@@ -234,52 +234,62 @@ function ShowSlaughter() {
 ?>
 	<div class="action" id="action-kill">
 		<div class="kill-group">
-			<div class="title bigger" id="kill-theme">?</div>
+			<div class="bigger" id="kill-theme">?</div>
 		</div>
+		<div class="kill-buttons">
 			<button id="kill-good" class="bigger green_button" onclick='kill_VoteIdea(1)' title='Good'>✓</button>
 			<button id="kill-bad" class="bigger red_button" onclick='kill_VoteIdea(0)' title='Bad'>❌</button>
 	
 			<button id="kill-flag" class="bigger yellow_button" onclick='kill_FlagIdea()' title='Flag Innapropriate'>⚑</button>
-		<div class="edit-only">
-			<button id="kill-cancel" class="normal" onclick='kill_CancelEditTheme()' title=''>Cancel Edit</button>
-		</div>
+
+			<div class="edit-only">
+				<button id="kill-cancel" class="normal" onclick='kill_CancelEditTheme()' title=''>Cancel Edit</button>
+			</div>
+
 			<?php /*<div id="kill-star" class="bigger" onclick='' title='Star It'>★</div>*/ ?>
 			<?php /*<div id="kill-love" class="bigger" onclick='' title='Love It'>❤</div>*/ ?>
+		</div>
 		
 		<div class="title big" id="kill-theme">Previous Themes</div>
 		<div class="" id="kill"></div>
 		
 		<script>
-			var _LastSlaughterResponse = null;
-			function GetTheme() {
+			function SetSlaughterTheme(value) {
+				dom_SetText('kill-theme',value);
+			}
+			
+			var _LAST_SLAUGHTER_RESPONSE = null;
+			function GetSlaughterTheme() {
 				xhr_GetJSON(
 					"/api-theme.php?action=RANDOM",
 					// On success //
 					function(response,code) {
-						_LastSlaughterResponse = response;
-						dom_SetText('kill-theme',response.theme);
+						_LAST_SLAUGHTER_RESPONSE = response;
+						SetSlaughterTheme(response.theme);
 					}
 				);
 			}
-			GetTheme(); // Call it!! //
+			GetSlaughterTheme(); // Call it!! //
 			
-			var _RECENT_SELECTED_THEME = null;
-			function kill_EditTheme(Id) {
+			var _SELECTED_SLAUGHTER_THEME = null;
+			function kill_EditTheme(Id,Theme) {
 				dom_ToggleClass('action-kill','edit',true);
+				SetSlaughterTheme(Theme);
 				
-				if ( _RECENT_SELECTED_THEME ) {
-					dom_ToggleClass("kill-item-"+_RECENT_SELECTED_THEME,'selected',false);
+				if ( _SELECTED_SLAUGHTER_THEME ) {
+					dom_ToggleClass("kill-item-"+_SELECTED_SLAUGHTER_THEME,'selected',false);
 				}
-				_RECENT_SELECTED_THEME = Id;
-				dom_ToggleClass("kill-item-"+_RECENT_SELECTED_THEME,'selected',true);
+				_SELECTED_SLAUGHTER_THEME = Id;
+				dom_ToggleClass("kill-item-"+_SELECTED_SLAUGHTER_THEME,'selected',true);
 			}
 			function kill_CancelEditTheme() {
 				dom_ToggleClass('action-kill','edit',false);
+				SetSlaughterTheme(_LAST_SLAUGHTER_RESPONSE.theme);
 				
-				if ( _RECENT_SELECTED_THEME ) {
-					dom_ToggleClass("kill-item-"+_RECENT_SELECTED_THEME,'selected',false);
+				if ( _SELECTED_SLAUGHTER_THEME ) {
+					dom_ToggleClass("kill-item-"+_SELECTED_SLAUGHTER_THEME,'selected',false);
 				}
-				_RECENT_SELECTED_THEME = null;
+				_SELECTED_SLAUGHTER_THEME = null;
 			}
 
 			function kill_AddRecentTheme( Id, Idea, value, accent ) {
@@ -292,7 +302,7 @@ function ShowSlaughter() {
 				node.setAttribute("class",'kill-item'+((accent===true)?" effect-accent":""));
 				node.setAttribute("id","kill-item-"+Id);
 				node.addEventListener('click',function(){
-					kill_EditTheme(Id);
+					kill_EditTheme(Id,Idea);
 				});
 
 //				node.innerHTML = 
@@ -313,43 +323,95 @@ function ShowSlaughter() {
 				
 				kill_root.insertBefore( node, kill_root.childNodes[0] );
 			}
+			function kill_RemoveRecentTheme(id) {
+				document.getElementById('kill-item-'+id).remove();
+			}
 			
 			function kill_VoteIdea(Value) {
-				var Id = _LastSlaughterResponse.id;
-				var Idea = _LastSlaughterResponse.theme;
-				Value = Number(Value);
-
-				xhr_PostJSON(
-					"/api-theme.php",
-					serialize({"action":"IDEA","id":Id,"value":Value}),
-					// On success //
-					function(response,code) {
-						// TODO: Respond to errors //
-
-						console.log("IDEA:",response);
-						kill_AddRecentTheme(Id,Idea,Value,true);
-						
-						GetTheme();
-					}
-				);
-			}
-			function kill_FlagIdea() {
-				var Id = _LastSlaughterResponse.id;
-				var Idea = _LastSlaughterResponse.theme;
-
-				dialog_ConfirmAlert(Idea,"Are you sure you want to Flag this as inappropriate?",function(){
+				// Edit Mode //
+				if ( _SELECTED_SLAUGHTER_THEME ) {
+					var Id = _SELECTED_SLAUGHTER_THEME;
+					var Idea = dom_GetText('kill-theme');
+					Value = Number(Value);
+					
 					xhr_PostJSON(
 						"/api-theme.php",
-						serialize({"action":"IDEA","id":Id,"value":-1}),
+						serialize({"action":"IDEA","id":Id,"value":Value}),
 						// On success //
 						function(response,code) {
-							console.log("IDEA:",response);
-							kill_AddRecentTheme(Id,Idea,-1,true);
+							// TODO: Respond to errors //
+							console.log("IDEA*:",response);
 							
-							GetTheme();
+							kill_RemoveRecentTheme(Id);
+							kill_AddRecentTheme(Id,Idea,Value,true);
+
+							kill_CancelEditTheme();
 						}
 					);
-				});	
+				}
+				else {
+					var Id = _LAST_SLAUGHTER_RESPONSE.id;
+					var Idea = _LAST_SLAUGHTER_RESPONSE.theme;
+					Value = Number(Value);
+	
+					xhr_PostJSON(
+						"/api-theme.php",
+						serialize({"action":"IDEA","id":Id,"value":Value}),
+						// On success //
+						function(response,code) {
+							// TODO: Respond to errors //
+	
+							console.log("IDEA:",response);
+							kill_AddRecentTheme(Id,Idea,Value,true);
+							
+							GetSlaughterTheme();
+						}
+					);
+				}
+			}
+			function kill_FlagIdea() {
+				// Edit Mode //
+				if ( _SELECTED_SLAUGHTER_THEME ) {
+					var Id = _SELECTED_SLAUGHTER_THEME;
+					var Idea = dom_GetText('kill-theme');
+					var Value = -1;
+					
+					dialog_ConfirmAlert(Idea,"Are you sure you want to Flag this as inappropriate?",function(){
+						xhr_PostJSON(
+							"/api-theme.php",
+							serialize({"action":"IDEA","id":Id,"value":Value}),
+							// On success //
+							function(response,code) {
+								// TODO: Respond to errors //
+								console.log("IDEA*:",response);
+
+								kill_RemoveRecentTheme(Id);
+								kill_AddRecentTheme(Id,Idea,Value,true);
+
+								kill_CancelEditTheme();
+							}
+						);
+					});
+				}
+				else {
+					var Id = _LAST_SLAUGHTER_RESPONSE.id;
+					var Idea = _LAST_SLAUGHTER_RESPONSE.theme;
+					var Value = -1;
+	
+					dialog_ConfirmAlert(Idea,"Are you sure you want to Flag this as inappropriate?",function(){
+						xhr_PostJSON(
+							"/api-theme.php",
+							serialize({"action":"IDEA","id":Id,"value":Value}),
+							// On success //
+							function(response,code) {
+								console.log("IDEA:",response);
+								kill_AddRecentTheme(Id,Idea,Value,true);
+								
+								GetSlaughterTheme();
+							}
+						);
+					});
+				}
 			}
 			
 			function kill_GetRecentVotes() {
