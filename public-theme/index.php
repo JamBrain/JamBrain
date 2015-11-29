@@ -263,10 +263,9 @@ function ShowSlaughter() {
 			}
 			GetTheme(); // Call it!! //
 
-			function kill_AddRecentTheme( action, accent ) {
-				var Id = _LastSlaughterResponse.id;
-				var Theme = escapeString(_LastSlaughterResponse.theme);
-				var ThemeAttr = escapeAttribute(_LastSlaughterResponse.theme);
+			function kill_AddRecentTheme( Id, Idea, value, accent ) {
+				var Theme = escapeString(Idea);
+				var ThemeAttr = escapeAttribute(Idea);
 
 				var kill_root = document.getElementById('kill');
 				
@@ -277,7 +276,7 @@ function ShowSlaughter() {
 
 //				node.innerHTML = 
 //					"<div class='sg-item-x' onclick='kill_RemoveTheme("+Id+",\""+(ThemeAttr)+"\")'>❤</div>";
-				switch( action ) {
+				switch( value ) {
 				case 1:
 					node.innerHTML += "<div class='item-left item-good' title='Good'>✓</div>";
 					break;
@@ -297,44 +296,55 @@ function ShowSlaughter() {
 			}
 			
 			function kill_VoteIdea(Value) {
+				var Id = _LastSlaughterResponse.id;
+				var Idea = _LastSlaughterResponse.theme;
 				Value = Number(Value);
+
 				xhr_PostJSON(
 					"/api-theme.php",
-					serialize({"action":"IDEA","id":_LastSlaughterResponse.id,"value":Value}),
+					serialize({"action":"IDEA","id":Id,"value":Value}),
 					// On success //
 					function(response,code) {
 						// TODO: Respond to errors //
-						
+
 						console.log("IDEA:",response);
-						kill_AddRecentTheme(Value,true);
+						kill_AddRecentTheme(Id,Idea,Value,true);
 						//kill_UpdateCount(response.count,true);
 					}
 				);
 			}
 			function kill_FlagIdea() {
+				var Id = _LastSlaughterResponse.id;
 				var Idea = _LastSlaughterResponse.theme;
+
 				dialog_ConfirmAlert(Idea,"Are you sure you want to Flag this as inappropriate?",function(){
 					xhr_PostJSON(
 						"/api-theme.php",
-						serialize({"action":"IDEA","id":_LastSlaughterResponse.id,"value":-1}),
+						serialize({"action":"IDEA","id":Id,"value":-1}),
 						// On success //
 						function(response,code) {
 							console.log("IDEA:",response);
-							kill_AddRecentTheme(-1,true);
-							//kill_UpdateCount(response.count,true);
+							kill_AddRecentTheme(Id,Idea,-1,true);
 						}
 					);
 				});	
 			}
 			
-			xhr_PostJSON(
-				"/api-theme.php",
-				serialize({"action":"GETIDEAS"}),
-				// On success //
-				function(response,code) {
-					console.log("GETIDEAS:",response);
-				}
-			);
+			function kill_GetRecentVotes() {
+				xhr_PostJSON(
+					"/api-theme.php",
+					serialize({"action":"GETIDEAS"}),
+					// On success //
+					function(response,code) {
+						console.log("GETIDEAS:",response);
+						for ( var idx = response.ideas.length-1; idx >= 0; idx-- ) {
+							var idea = response.ideas[idx];
+							kill_AddRecentTheme(idea.id,idea.idea,idea.value);
+						}
+					}
+				);
+			}
+			kill_GetRecentVotes();
 		</script>
 	</div>
 <?php 
