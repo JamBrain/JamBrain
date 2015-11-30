@@ -4,8 +4,12 @@ if (defined('LEGACY_DEBUG')) {
 	if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
 		$action = trim($_GET['action']);
 		if ( $action == "LEGACY_LOGIN" ) {
+			$RETURN_URL = "/";
+			if ( isset($_GET['beta']) )
+				$RETURN_URL .= "?beta";
+			
 			setcookie( "lusha", "111.this_is_fake", time()+6*60*60, "/", str_replace("theme","",$_SERVER['SERVER_NAME']) );
-			header("Location: /");
+			header("Location: ".$RETURN_URL);
 			die();
 		}
 	}

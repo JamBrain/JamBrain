@@ -151,9 +151,12 @@ function ShowHeadline() {
 }
 
 function ShowLogin() {
+	$LOGIN_URL = LEGACY_LOGIN_URL;
+	if ( isset($_GET['beta']) )
+		$LOGIN_URL .= "&beta";
 ?>
 	<div class="action" id="action-login">
-		<a class="no-style" href="<?=LEGACY_LOGIN_URL?>"><button type="button" class="login-button">Login</button></a>
+		<a class="no-style" href="<?=$LOGIN_URL?>"><button type="button" class="login-button">Login</button></a>
 	</div>	
 <?php
 }
