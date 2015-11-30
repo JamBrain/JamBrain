@@ -110,8 +110,9 @@ body > .body .main {
 body > .body .headline {
 	margin-bottom:2.0em;
 }
-body > .body .action {
-	margin-top:2.0em;
+
+.gap {
+	margin-top:2.0em !important;
 }
 
 .extra {

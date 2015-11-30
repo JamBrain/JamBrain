@@ -232,7 +232,7 @@ function ShowMyLikes() {
 }
 function ShowSlaughter() {
 ?>
-	<div class="action" id="action-kill">
+	<div class="action gap" id="action-kill">
 		<div class="title big">Would this be a good Theme?</div>
 		<div class="kill-group">
 			<div class="bigger" id="kill-theme">?</div>
@@ -243,7 +243,7 @@ function ShowSlaughter() {
 	
 			<?php /*<button id="kill-flag" class="bigger yellow_button" onclick='kill_FlagIdea()' title='Flag Innapropriate'>⚑</button> */ ?>
 
-			<div>If innapropriate or offensive, <a href="javascript:void(0)" onclick='kill_FlagIdea()'>click here to Flag ⚑</a></div>
+			<div class="title">If innapropriate or offensive, <a href="javascript:void(0)" onclick='kill_FlagIdea()'>click here to Flag ⚑</a></div>
 
 			<div class="edit-only">
 				<button id="kill-cancel" class="normal" onclick='kill_CancelEditTheme()' title=''>Cancel Edit</button>
@@ -253,7 +253,7 @@ function ShowSlaughter() {
 			<?php /*<div id="kill-love" class="bigger" onclick='' title='Love It'>❤</div>*/ ?>
 		</div>
 		
-		<div class="title big" id="kill-theme">Previous Themes</div>
+		<div class="title big gap" id="kill-theme">Previous Themes</div>
 		<div class="" id="kill"></div>
 		
 		<script>
