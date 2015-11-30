@@ -758,6 +758,13 @@ function ShowSlaughter() {
 				if ( $admin && $cookie_id ) {
 					$all_themes = theme_GetIdeas($EVENT_NODE);
 					
+					$byid_themes = [];
+
+					foreach($all_themes as &$theme) {
+						$byid_themes[$theme['id']] = &$theme;
+					}
+					
+					
 					// Generate Slugs //
 					foreach($all_themes as &$theme) {
 						$theme['slug'] = sanitize_Slug($theme['theme']);
@@ -766,7 +773,7 @@ function ShowSlaughter() {
 					// Sort by Slugs+Parent+Id //
 					$sorted_themes = [];
 					foreach($all_themes as &$theme) {
-						$sort_slug = $theme['slug'].(($theme['parent']>0)?str_pad($theme['parent'],8,"0",STR_PAD_LEFT)."-":"").str_pad($theme['id'],8,"0",STR_PAD_LEFT);
+						$sort_slug = ($theme['parent']>0 ? $byid_themes[$theme['parent']]['slug']:$theme['slug']).(($theme['parent']>0)?str_pad($theme['parent'],8,"0",STR_PAD_LEFT)."-":"").str_pad($theme['id'],8,"0",STR_PAD_LEFT);
 						$sorted_themes[$sort_slug] = &$theme;
 						$theme['sort_slug'] = $sort_slug;
 					}
