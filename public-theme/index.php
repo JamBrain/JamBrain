@@ -354,6 +354,14 @@ function ShowSlaughter() {
 			function kill_RemoveRecentTheme(id) {
 				document.getElementById('kill-item-'+id).remove();
 			}
+			function kill_RemoveRecentThemes() {
+				var Themes = document.getElementsByClassName('kill-item');
+				//console.log(Themes);
+				
+				for ( var idx = 10; idx < Themes.length; idx++ ) {
+					Themes[idx].remove();
+				}
+			}
 			
 			var _SLAUGHTER_VOTE_ACTIVE = false;
 			function kill_ReactivateVote(delay) {
@@ -385,6 +393,7 @@ function ShowSlaughter() {
 							
 							kill_RemoveRecentTheme(Id);
 							kill_AddRecentTheme(Id,Idea,Value,true);
+							kill_RemoveRecentThemes();
 
 							kill_CancelEditTheme();
 
@@ -407,6 +416,7 @@ function ShowSlaughter() {
 	
 							console.log("IDEA:",response);
 							kill_AddRecentTheme(Id,Idea,Value,true);
+							kill_RemoveRecentThemes();
 							
 							GetSlaughterTheme(true);
 
@@ -437,6 +447,7 @@ function ShowSlaughter() {
 
 								kill_RemoveRecentTheme(Id);
 								kill_AddRecentTheme(Id,Idea,Value,true);
+								kill_RemoveRecentThemes();
 
 								kill_CancelEditTheme();
 								dom_RestartAnimation('kill-theme','effect-accent');
@@ -458,6 +469,7 @@ function ShowSlaughter() {
 							function(response,code) {
 								console.log("IDEA:",response);
 								kill_AddRecentTheme(Id,Idea,Value,true);
+								kill_RemoveRecentThemes();
 								
 								GetSlaughterTheme(true);
 							}
