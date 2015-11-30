@@ -147,7 +147,7 @@ function theme_CountOriginalIdeas($node,$arg_string="") {
 function theme_GetRandom($node) {
 	return db_DoFetchFirst(
 		"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
-		WHERE node=?
+		WHERE node=? AND parent=0
 		ORDER BY rand() LIMIT 1",
 		$node
 	);
