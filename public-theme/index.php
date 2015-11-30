@@ -241,7 +241,7 @@ function ShowSlaughter() {
 ?>
 	<div class="action" id="action-kill">
 		<div class="title big">Would this be a good Theme?</div>
-		<div class="kill-group" onclick="OpenLink()" title="Click to search Google for this">
+		<div class="kill-group" id="kill-theme-border" onclick="OpenLink()" title="Click to search Google for this">
 			<div class="bigger" id="kill-theme">?</div>
 		</div>
 		<div class="kill-buttons">
@@ -270,15 +270,15 @@ function ShowSlaughter() {
 			}
 			
 			var _LAST_SLAUGHTER_RESPONSE = null;
-			function GetSlaughterTheme() {
+			function GetSlaughterTheme(accent) {
 				xhr_GetJSON(
 					"/api-theme.php?action=RANDOM",
 					// On success //
 					function(response,code) {
 						_LAST_SLAUGHTER_RESPONSE = response;
 						SetSlaughterTheme(response.theme);
-						
-						dom_RestartAnimation('kill-theme','effect-accent');
+						if ( accent )
+							dom_RestartAnimation('kill-theme','effect-accent');
 					}
 				);
 			}
@@ -397,7 +397,7 @@ function ShowSlaughter() {
 							console.log("IDEA:",response);
 							kill_AddRecentTheme(Id,Idea,Value,true);
 							
-							GetSlaughterTheme();
+							GetSlaughterTheme(true);
 
 							kill_ReactivateVote();
 						}
@@ -447,7 +447,7 @@ function ShowSlaughter() {
 								console.log("IDEA:",response);
 								kill_AddRecentTheme(Id,Idea,Value,true);
 								
-								GetSlaughterTheme();
+								GetSlaughterTheme(true);
 							}
 						);
 					});

@@ -444,6 +444,7 @@ button, .sg-item-x {
     to   { background:rgba(255,0,0,0.0); }
 }
 
+
 #kill {
 	text-align:left;
 }
@@ -456,10 +457,12 @@ button, .sg-item-x {
 }
 
 .kill-group {
-	padding:0.5em;
 	border-radius:4px;
 	max-width:24em;
 	cursor:pointer;
+}
+#kill-theme {
+	padding:0.5em;
 }
 
 .kill-item {
@@ -471,7 +474,6 @@ button, .sg-item-x {
 }
 
 .kill-group {
-	padding:1.0em;
 	color:#630;
 	background: -webkit-linear-gradient(to bottom,#FFF 35%,#EEE 100%);
 	background: linear-gradient(to bottom,#FFF 35%,#EEE 100%);
