@@ -256,7 +256,7 @@ function ShowSlaughter() {
 		</div>
 		
 		<div class="action" id="action-recent">
-			<div class="title big" id="kill-theme">Recent Themes</div>
+			<div class="title big">Recent Themes</div>
 			<div class="" id="kill"></div>
 		</div>
 		
