@@ -766,7 +766,9 @@ function ShowSlaughter() {
 					// Sort by Slugs+Parent+Id //
 					$sorted_themes = [];
 					foreach($all_themes as &$theme) {
-						$sorted_themes[$theme['slug'].str_pad($theme['parent'],8,"0",STR_PAD_LEFT).str_pad($theme['id'],8,"0",STR_PAD_LEFT)] = &$theme;
+						$sort_slug = $theme['slug'].(($theme['parent']>0)?str_pad($theme['parent'],8,"0",STR_PAD_LEFT)."-":"").str_pad($theme['id'],8,"0",STR_PAD_LEFT);
+						$sorted_themes[$sort_slug] = &$theme;
+						$theme['sort_slug'] = $sort_slug;
 					}
 					ksort($sorted_themes);		
 					
@@ -777,13 +779,10 @@ function ShowSlaughter() {
 							$style .= "margin-left:1em;background:#FEA;";
 	
 						?>
-							<div class='item' style='<?=$style?>' id='admin-item-<?=$theme['id']?>' title='<?=$theme['slug']?>'>
+							<div class='item admin-item' style='<?=$style?>' id='admin-item-<?=$theme['id']?>' title='<?=$theme['sort_slug']?>'>
 								<input class='item-check' type="checkbox" id='admin-item-<?=$theme['id']?>' number='<?=$theme['id']?>' onclick="admin_OnCheck()">
 									<?=$theme['theme']?>
 									<div class="right">(<span><?=$theme['id']?></span>, <span><?=$theme['parent']?></span>)</div>
-									<?php if ( $theme['parent'] ) { ?>
-										<div class="right">[Unparent] &nbsp; </div>
-									<?php } ?>
 									<div class="right" onclick="admin_MakeParent(<?=$theme['id']?>)">[Make Parent] &nbsp; </div>
 									<div class="right" onclick="admin_DoStrike()">[STRIKE] &nbsp; </div>
 								</input>
@@ -845,9 +844,20 @@ function ShowSlaughter() {
 								Ids.push( Number(Selected[idx].getAttribute('number')) );
 							}
 							
-							console.log(Id,Ids);
+							//console.log(Id,Ids);
 							
 							//console.log( admin_GetSelected() );
+							
+							xhr_PostJSON(
+								"/api-theme.php",
+								serialize({"action":"SETPARENT","parent":Id,"children":Ids}),
+								// On success //
+								function(response,code) {
+									// TODO: Respond to errors //
+									console.log("SETPARENT:",response);
+									admin_Deselect();
+								}
+							);
 						}
 						
 						function admin_DoStrike() {

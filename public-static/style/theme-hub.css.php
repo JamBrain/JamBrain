@@ -514,6 +514,10 @@ button, .sg-item-x {
 }
 
 
+.admin-item:hover {
+	background:#F66 !important;
+}
+
 #dialog {
 	text-align:center;
 	/*pointer-events:none;*/

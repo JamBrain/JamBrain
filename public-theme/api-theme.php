@@ -44,6 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 	$action = trim($_POST['action']);
 	
 	$user_id = legacy_GetUserFromCookie();
+
+	$ADMIN = defined('LEGACY_DEBUG') || $user_id === 19;
 	
 	$max_themes = 3;
 	
@@ -109,6 +111,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 			foreach ( $idea_votes as $vote ) {
 				$response['ideas'][] = ['id' => $vote['node'], 'idea' => $idea_list[$vote['node']], 'value' => $vote['value']];
 			}
+		}
+		else if ( $action == "SETPARENT" && $ADMIN /*&& IsThemeSlaughterOpen()*/ ) {
+			$parent = intval($_POST['parent']);
+			$children = [];
+			foreach( $_POST['children'] as $child ) {
+				if ( intval($child) !== $parent )
+					$children[] = intval($child);
+			}
+			
+			foreach( $children as $child ) {
+				theme_SetParent($child,$parent);
+			}
+			theme_SetParent($parent,0);
+			
+			$response['parent'] = $parent;
+			$response['children'] = $children;
 		}
 	}
 }
