@@ -111,6 +111,9 @@ body > .body .headline {
 	margin-bottom:2.0em;
 }
 
+.action {
+	margin-top:2.0em;
+}
 .gap {
 	margin-top:2.0em !important;
 }
@@ -450,6 +453,7 @@ button, .sg-item-x {
 	padding:0.5em;
 	border-radius:4px;
 	max-width:24em;
+	cursor:pointer;
 }
 
 .kill-item {
@@ -683,7 +687,7 @@ button, .sg-item-x {
 }
 
 
-#dialog-focusfirst a, #dialog-focuslast a {
+#dialog-focusfirst a, #dialog-focuslast a, .no-style {
 	border-bottom:0 !important;
 }
 

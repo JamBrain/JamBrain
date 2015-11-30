@@ -153,7 +153,7 @@ function ShowHeadline() {
 function ShowLogin() {
 ?>
 	<div class="action" id="action-login">
-		<a href="<?=LEGACY_LOGIN_URL?>"><button type="button" class="login-button">Login</button></a>
+		<a class="no-style" href="<?=LEGACY_LOGIN_URL?>"><button type="button" class="login-button">Login</button></a>
 	</div>	
 <?php
 }
@@ -232,9 +232,9 @@ function ShowMyLikes() {
 }
 function ShowSlaughter() {
 ?>
-	<div class="action gap" id="action-kill">
+	<div class="action" id="action-kill">
 		<div class="title big">Would this be a good Theme?</div>
-		<div class="kill-group">
+		<div class="kill-group" onclick="OpenLink()" title="Click to search Google for this">
 			<div class="bigger" id="kill-theme">?</div>
 		</div>
 		<div class="kill-buttons">
@@ -253,10 +253,16 @@ function ShowSlaughter() {
 			<?php /*<div id="kill-love" class="bigger" onclick='' title='Love It'>❤</div>*/ ?>
 		</div>
 		
-		<div class="title big gap" id="kill-theme">Previous Themes</div>
-		<div class="" id="kill"></div>
+		<div class="action" id="action-previous">
+			<div class="title big" id="kill-theme">Previous Themes</div>
+			<div class="" id="kill"></div>
+		</div>
 		
 		<script>
+			function OpenLink() {
+				window.open("http://google.com/search?q="+escapeAttribute(dom_GetText('kill-theme')));
+			}
+			
 			function SetSlaughterTheme(value) {
 				dom_SetText('kill-theme',value);
 			}
