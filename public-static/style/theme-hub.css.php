@@ -231,6 +231,9 @@ body > .footer {
 }
 
 .item {
+	padding:0.125em;
+}
+.sg-item {
 	padding:0.125em 1.0em;
 }
 .sg-item-text {
