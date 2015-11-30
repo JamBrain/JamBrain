@@ -76,6 +76,17 @@ function theme_RemoveMyIdea($id,$user_id) {
 	);
 }
 
+function theme_SetParent($id, $value) {
+	return db_DoInsert(
+		"UPDATE ".CMW_TABLE_THEME_IDEA."
+		SET
+			parent=?
+		WHERE
+			id=?;",
+		$value, $id
+	);
+}
+
 function theme_GetMyIdeas($node, $user) {
 	return db_DoFetch(
 		"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 

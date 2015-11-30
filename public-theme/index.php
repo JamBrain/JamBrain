@@ -4,6 +4,8 @@ require_once __DIR__."/../core/config.php";
 require_once __DIR__."/../legacy-config.php";
 require_once __DIR__."/../core/legacy_user.php";
 
+require_once __DIR__."/../core/theme.php";
+
 config_Load();
 
 $EVENT_NAME = "Ludum Dare 34";
@@ -27,6 +29,13 @@ if ( isset($_COOKIE['lusha']) ) {
 }
 else {
 	$cookie_id = 0;
+}
+
+$admin = false;
+if ( isset($_GET['admin']) ) {
+	if ( defined('LEGACY_DEBUG') || $cookie_id === 19 ) {
+		$admin = true;
+	}
 }
 
 // ** Modes ** //
@@ -745,37 +754,47 @@ function ShowSlaughter() {
 	<div class="main">
 		<?php
 			if ( $CONFIG['active'] ) {
-				ShowHeadline();
-				if ( $cookie_id ) {
-					switch( $EVENT_MODE ) {
-					case 0:	// Inactive //
-						break;
-					case 1:	// Theme Suggestions //
-						ShowSubmitIdea();
-						break;
-					case 2: // Theme Slaughter //
-						ShowSlaughter();
-						break;
-					case 3: // Theme Voting //
-						break;
-					case 4: // Final Voting //
-						break;
-					case 5: // Announcement //
-						break;
-					case 6: // Post Announcement //
-						break;
-					case 7: // Coming Soon //
-						break;
-					};
+				if ( $admin && $cookie_id ) {
+					$all_themes = theme_GetIdeas($EVENT_NODE);
 					
-					if ( $EVENT_MODE !== 5 ) {	// Announcement //
-						ShowLogout();
+					foreach($all_themes as $theme) {
+						echo "<div class='item' id='admin-item-".$theme['id']."'>".$theme['id'].": ".$theme['theme']." [<span>".$theme['parent']."</span>]</div>";
 					}
 				}
 				else {
-					if ( $EVENT_MODE !== 5 ) { // Announcement //
-						ShowLogin();
+					ShowHeadline();
+					
+					if ( $cookie_id ) {
+						switch( $EVENT_MODE ) {
+						case 0:	// Inactive //
+							break;
+						case 1:	// Theme Suggestions //
+							ShowSubmitIdea();
+							break;
+						case 2: // Theme Slaughter //
+							ShowSlaughter();
+							break;
+						case 3: // Theme Voting //
+							break;
+						case 4: // Final Voting //
+							break;
+						case 5: // Announcement //
+							break;
+						case 6: // Post Announcement //
+							break;
+						case 7: // Coming Soon //
+							break;
+						};
 					}
+				}
+					
+				if ( $cookie_id ) {
+					if ( $EVENT_MODE !== 5 )	// Announcement //
+						ShowLogout();
+				}
+				else {
+					if ( $EVENT_MODE !== 5 )	// Announcement //
+						ShowLogin();
 				}
 			}
 			else {
@@ -785,7 +804,7 @@ function ShowSlaughter() {
 	</div>
 	<?php
 		if ( $CONFIG['active'] ) {
-			if ( $cookie_id ) {
+			if ( $cookie_id && !$admin ) {
 				echo "<div class='extra'>";
 				ShowMyIdeas();
 				//ShowMyLikes();
