@@ -461,6 +461,7 @@ button, .sg-item-x {
 
 .kill-item {
 	cursor:pointer;
+	max-width:24em;
 }
 .kill-item:hover {
 	background:<?=PAL_YELLOW[COL_LIGHT]?>;
