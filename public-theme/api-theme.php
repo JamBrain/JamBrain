@@ -109,7 +109,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 			$response['id'] = $user_id;
 			$response['ideas'] = [];
 			foreach ( $idea_votes as $vote ) {
-				$response['ideas'][] = ['id' => $vote['node'], 'idea' => $idea_list[$vote['node']], 'value' => $vote['value']];
+				if ( isset($idea_list[$vote['node']]) ) {
+					$response['ideas'][] = ['id' => $vote['node'], 'idea' => $idea_list[$vote['node']], 'value' => $vote['value']];
+				}
 			}
 		}
 		else if ( $action == "SETPARENT" && $ADMIN /*&& IsThemeSlaughterOpen()*/ ) {
