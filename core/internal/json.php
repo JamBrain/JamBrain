@@ -192,6 +192,9 @@ function json_Emit( $out, $allow_jsonp = true ) {
 	
 	// Output the Page //
 	header('Content-Type: application/json');
+	header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
+	//header("Pragma: no-cache"); // HTTP 1.0.
+	header("Expires: 0"); // Proxies.
 	echo $prefix,str_replace('</', '<\/', json_encode($out,$out_format)),$suffix;
 }
 
