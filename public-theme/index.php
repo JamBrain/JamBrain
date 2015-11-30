@@ -328,12 +328,12 @@ function ShowSlaughter() {
 			}
 			
 			var _SLAUGHTER_VOTE_ACTIVE = false;
-			function kill_ReactivateVote() {
+			function kill_ReactivateVote(delay) {
 				window.setTimeout(
 					function(){
 						_SLAUGHTER_VOTE_ACTIVE = false;
 					},
-					300
+					delay?delay:300
 				);
 			}
 			function kill_VoteIdea(Value) {
@@ -359,7 +359,7 @@ function ShowSlaughter() {
 							kill_AddRecentTheme(Id,Idea,Value,true);
 
 							kill_CancelEditTheme();
-							
+
 							kill_ReactivateVote();
 						}
 					);
@@ -410,11 +410,10 @@ function ShowSlaughter() {
 								kill_AddRecentTheme(Id,Idea,Value,true);
 
 								kill_CancelEditTheme();
-
-								kill_ReactivateVote();
 							}
 						);
 					});
+					kill_ReactivateVote(1000);
 				}
 				else {
 					var Id = _LAST_SLAUGHTER_RESPONSE.id;
@@ -431,11 +430,10 @@ function ShowSlaughter() {
 								kill_AddRecentTheme(Id,Idea,Value,true);
 								
 								GetSlaughterTheme();
-
-								kill_ReactivateVote();
 							}
 						);
 					});
+					kill_ReactivateVote(1000);
 				}
 			}
 			
