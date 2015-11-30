@@ -327,7 +327,20 @@ function ShowSlaughter() {
 				document.getElementById('kill-item-'+id).remove();
 			}
 			
+			var _SLAUGHTER_VOTE_ACTIVE = false;
+			function kill_ReactivateVote() {
+				window.setTimeout(
+					function(){
+						_SLAUGHTER_VOTE_ACTIVE = false;
+					},
+					300
+				);
+			}
 			function kill_VoteIdea(Value) {
+				if ( _SLAUGHTER_VOTE_ACTIVE )
+					return;
+				_SLAUGHTER_VOTE_ACTIVE = true;
+				
 				// Edit Mode //
 				if ( _SELECTED_SLAUGHTER_THEME ) {
 					var Id = _SELECTED_SLAUGHTER_THEME;
@@ -346,6 +359,8 @@ function ShowSlaughter() {
 							kill_AddRecentTheme(Id,Idea,Value,true);
 
 							kill_CancelEditTheme();
+							
+							kill_ReactivateVote();
 						}
 					);
 				}
@@ -365,11 +380,17 @@ function ShowSlaughter() {
 							kill_AddRecentTheme(Id,Idea,Value,true);
 							
 							GetSlaughterTheme();
+
+							kill_ReactivateVote();
 						}
 					);
 				}
 			}
 			function kill_FlagIdea() {
+				if ( _SLAUGHTER_VOTE_ACTIVE )
+					return;
+				_SLAUGHTER_VOTE_ACTIVE = true;
+
 				// Edit Mode //
 				if ( _SELECTED_SLAUGHTER_THEME ) {
 					var Id = _SELECTED_SLAUGHTER_THEME;
@@ -389,6 +410,8 @@ function ShowSlaughter() {
 								kill_AddRecentTheme(Id,Idea,Value,true);
 
 								kill_CancelEditTheme();
+
+								kill_ReactivateVote();
 							}
 						);
 					});
@@ -408,6 +431,8 @@ function ShowSlaughter() {
 								kill_AddRecentTheme(Id,Idea,Value,true);
 								
 								GetSlaughterTheme();
+
+								kill_ReactivateVote();
 							}
 						);
 					});
