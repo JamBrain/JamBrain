@@ -259,7 +259,7 @@ function ShowSlaughter() {
 			<button id="kill-bad" class="middle big red_button" onclick='kill_VoteIdea(0)' title='Bad'>NO ✕</button>
 			<button id="kill-cancel" class="middle normal edit-only-inline" onclick='kill_CancelEditTheme()' title='Cancel Edit'>Cancel</button>
 			
-			<div class="title">If innapropriate or offensive, <a href="javascript:void(0)" onclick='kill_FlagIdea()'>click here to Flag ⚑</a></div>
+			<div class="title">If inappropriate or offensive, <a href="javascript:void(0)" onclick='kill_FlagIdea()'>click here to Flag ⚑</a></div>
 
 			<?php /*<div id="kill-star" class="bigger" onclick='' title='Star It'>★</div>*/ ?>
 			<?php /*<div id="kill-love" class="bigger" onclick='' title='Love It'>❤</div>*/ ?>
