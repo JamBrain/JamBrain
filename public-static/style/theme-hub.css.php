@@ -483,10 +483,14 @@ button, .sg-item-x {
 	background: linear-gradient(to bottom,#FBA 35%,#E87 100%);
 }
 
+/* If the parent has an EDIT class, then show */
 .edit .edit-only {
 	display:block;
 }
-.edit-only {
+.edit .edit-only-inline {
+	display:inline-block;
+}
+.edit-only, .edit-only-inline {
 	display:none;
 }
 

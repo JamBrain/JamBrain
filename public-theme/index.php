@@ -245,23 +245,18 @@ function ShowSlaughter() {
 			<div class="bigger" id="kill-theme">?</div>
 		</div>
 		<div class="kill-buttons">
-			<button id="kill-good" class="bigger green_button" onclick='kill_VoteIdea(1)' title='Good'>YES ✓</button>
-			<button id="kill-bad" class="bigger red_button" onclick='kill_VoteIdea(0)' title='Bad'>NO ✕</button>
-	
-			<?php /*<button id="kill-flag" class="bigger yellow_button" onclick='kill_FlagIdea()' title='Flag Innapropriate'>⚑</button> */ ?>
-
+			<button id="kill-good" class="middle big green_button" onclick='kill_VoteIdea(1)' title='Good'>YES ✓</button>
+			<button id="kill-bad" class="middle big red_button" onclick='kill_VoteIdea(0)' title='Bad'>NO ✕</button>
+			<button id="kill-cancel" class="middle normal edit-only-inline" onclick='kill_CancelEditTheme()' title='Cancel Edit'>Cancel</button>
+			
 			<div class="title">If innapropriate or offensive, <a href="javascript:void(0)" onclick='kill_FlagIdea()'>click here to Flag ⚑</a></div>
-
-			<div class="edit-only">
-				<button id="kill-cancel" class="normal" onclick='kill_CancelEditTheme()' title=''>Cancel Edit</button>
-			</div>
 
 			<?php /*<div id="kill-star" class="bigger" onclick='' title='Star It'>★</div>*/ ?>
 			<?php /*<div id="kill-love" class="bigger" onclick='' title='Love It'>❤</div>*/ ?>
 		</div>
 		
-		<div class="action" id="action-previous">
-			<div class="title big" id="kill-theme">Previous Themes</div>
+		<div class="action" id="action-recent">
+			<div class="title big" id="kill-theme">Recent Themes</div>
 			<div class="" id="kill"></div>
 		</div>
 		
@@ -282,6 +277,8 @@ function ShowSlaughter() {
 					function(response,code) {
 						_LAST_SLAUGHTER_RESPONSE = response;
 						SetSlaughterTheme(response.theme);
+						
+						dom_RestartAnimation('kill-theme','effect-accent');
 					}
 				);
 			}

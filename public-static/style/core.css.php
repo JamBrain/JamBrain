@@ -104,6 +104,10 @@ body > .footer {
 	float:right;
 }
 
+.middle {
+	vertical-align:middle;
+}
+
 
 .no-select {
     -webkit-touch-callout: none;
