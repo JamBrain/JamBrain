@@ -14,10 +14,10 @@ $EVENT_MODE = 1;
 $EVENT_NODE = 100;
 $EVENT_DATE = new DateTime("2015-12-12T02:00:00Z");
 
-if ( isset($_GET['beta']) ) {
-	$EVENT_MODE = 2;
-	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Vote data will be <b>DELETED</b> • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
-}
+//if ( isset($_GET['beta']) ) {
+//	$EVENT_MODE = 2;
+//	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Vote data will be <b>DELETED</b> • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
+//}
 
 define('HTML_TITLE',$EVENT_NAME." - Theme Hub");
 const HTML_CSS_INCLUDE = [ "/style/theme-hub.css.php" ];
