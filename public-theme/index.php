@@ -379,6 +379,7 @@ function ShowSlaughter() {
 							kill_CancelEditTheme();
 
 							kill_ReactivateVote();
+							dom_RestartAnimation('kill-theme','effect-accent');
 						}
 					);
 				}
@@ -428,6 +429,7 @@ function ShowSlaughter() {
 								kill_AddRecentTheme(Id,Idea,Value,true);
 
 								kill_CancelEditTheme();
+								dom_RestartAnimation('kill-theme','effect-accent');
 							}
 						);
 					});
