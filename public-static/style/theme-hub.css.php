@@ -258,6 +258,15 @@ body > .footer {
 	padding:0.25em;
 }
 
+a {
+	color: #D53;
+}
+a:hover {
+	color: #FA3;
+}
+a:focus, a:active {
+	color: #FFF;
+}
 
 .alert {
 	background:<?=PAL_RED[COL_BASE]?>;
@@ -676,7 +685,7 @@ button, .sg-item-x {
 }
 
 
-.action a {
+#dialog-focusfirst a, #dialog-focuslast a {
 	border-bottom:0 !important;
 }
 

@@ -233,14 +233,17 @@ function ShowMyLikes() {
 function ShowSlaughter() {
 ?>
 	<div class="action" id="action-kill">
+		<div class="title big">Would this be a good Theme?</div>
 		<div class="kill-group">
 			<div class="bigger" id="kill-theme">?</div>
 		</div>
 		<div class="kill-buttons">
-			<button id="kill-good" class="bigger green_button" onclick='kill_VoteIdea(1)' title='Good'>✓</button>
-			<button id="kill-bad" class="bigger red_button" onclick='kill_VoteIdea(0)' title='Bad'>✕</button>
+			<button id="kill-good" class="bigger green_button" onclick='kill_VoteIdea(1)' title='Good'>YES ✓</button>
+			<button id="kill-bad" class="bigger red_button" onclick='kill_VoteIdea(0)' title='Bad'>NO ✕</button>
 	
-			<button id="kill-flag" class="bigger yellow_button" onclick='kill_FlagIdea()' title='Flag Innapropriate'>⚑</button>
+			<?php /*<button id="kill-flag" class="bigger yellow_button" onclick='kill_FlagIdea()' title='Flag Innapropriate'>⚑</button> */ ?>
+
+			<div>If innapropriate or offensive, <a href="#" onclick='kill_FlagIdea()'>click here <strong>Flag</strong> ⚑</a>.</div>
 
 			<div class="edit-only">
 				<button id="kill-cancel" class="normal" onclick='kill_CancelEditTheme()' title=''>Cancel Edit</button>
