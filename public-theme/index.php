@@ -289,6 +289,11 @@ function ShowSlaughter() {
 			
 			var _SELECTED_SLAUGHTER_THEME = null;
 			function kill_EditTheme(Id,Theme) {
+				if ( _SELECTED_SLAUGHTER_THEME === Id ) {
+					kill_CancelEditTheme();
+					return;
+				}
+				
 				dom_ToggleClass('action-kill','edit',true);
 				SetSlaughterTheme(Theme);
 				
@@ -315,7 +320,7 @@ function ShowSlaughter() {
 				var kill_root = document.getElementById('kill');
 				
 				var node = document.createElement('div');
-				node.setAttribute("class",'kill-item'+((accent===true)?" effect-accent":""));
+				node.setAttribute("class",'kill-item item'+((accent===true)?" effect-accent":""));
 				node.setAttribute("id","kill-item-"+Id);
 				node.addEventListener('click',function(){
 					kill_EditTheme(Id,Idea);
@@ -533,7 +538,7 @@ function ShowSlaughter() {
 		var sg_root = document.getElementById('sg');
 		
 		var node = document.createElement('div');
-		node.setAttribute("class",'sg-item'+((accent===true)?" effect-accent":""));
+		node.setAttribute("class",'sg-item item'+((accent===true)?" effect-accent":""));
 		node.setAttribute("id","sg-item-"+Id);
 <?php 	if ( $EVENT_MODE === 1 && ($GLOBALS['EVENT_MODE_DIFF'] > 0) ) {	?>
 			node.innerHTML = 

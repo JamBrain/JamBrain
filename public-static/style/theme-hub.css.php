@@ -230,7 +230,7 @@ body > .footer {
 	white-space:nowrap;
 }
 
-.sg-item {
+.item {
 	padding:0.125em 1.0em;
 }
 .sg-item-text {
@@ -447,6 +447,9 @@ button, .sg-item-x {
 
 #kill .selected {
 	background:<?=PAL_RED[COL_LIGHT]?>;
+}
+#kill .selected:hover {
+	background:<?=PAL_RED[COL_MUTE_LIGHT]?>;
 }
 
 .kill-group {
