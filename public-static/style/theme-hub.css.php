@@ -261,9 +261,6 @@ body > .footer {
 a {
 	color: #D53;
 }
-a:hover {
-	color: #FA3;
-}
 a:focus, a:active {
 	color: #FFF;
 }
@@ -696,7 +693,7 @@ button, .sg-item-x {
 	letter-spacing:0.2em;
 }
 
-.soft-shadow {
+.soft-shadow, a:focus {
 	text-shadow:0 1px 6px rgba(0,0,0,0.2);
 }
 .shadow {

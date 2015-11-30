@@ -243,7 +243,7 @@ function ShowSlaughter() {
 	
 			<?php /*<button id="kill-flag" class="bigger yellow_button" onclick='kill_FlagIdea()' title='Flag Innapropriate'>⚑</button> */ ?>
 
-			<div>If innapropriate or offensive, <a href="#" onclick='kill_FlagIdea()'>click here <strong>Flag</strong> ⚑</a>.</div>
+			<div>If innapropriate or offensive, <a href="javascript:void(0)" onclick='kill_FlagIdea()'>click here to Flag ⚑</a></div>
 
 			<div class="edit-only">
 				<button id="kill-cancel" class="normal" onclick='kill_CancelEditTheme()' title=''>Cancel Edit</button>
