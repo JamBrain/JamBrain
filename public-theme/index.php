@@ -721,6 +721,16 @@ function ShowSlaughter() {
 					dialog_Close();
 				}
 			}
+			else {
+				<?php if ( $EVENT_MODE === 2 ) { ?>
+					if ( event.keyCode == 37 ) {
+						document.getElementById('kill-good').focus();
+					}
+					else if ( event.keyCode == 39 ) {
+						document.getElementById('kill-bad').focus();
+					}
+				<?php } ?>
+			}
 		});
 
 		
