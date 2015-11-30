@@ -238,7 +238,7 @@ function ShowSlaughter() {
 		</div>
 		<div class="kill-buttons">
 			<button id="kill-good" class="bigger green_button" onclick='kill_VoteIdea(1)' title='Good'>✓</button>
-			<button id="kill-bad" class="bigger red_button" onclick='kill_VoteIdea(0)' title='Bad'>❌</button>
+			<button id="kill-bad" class="bigger red_button" onclick='kill_VoteIdea(0)' title='Bad'>✕</button>
 	
 			<button id="kill-flag" class="bigger yellow_button" onclick='kill_FlagIdea()' title='Flag Innapropriate'>⚑</button>
 
@@ -312,7 +312,7 @@ function ShowSlaughter() {
 					node.innerHTML += "<div class='item-left item-good' title='Good'>✓</div>";
 					break;
 				case 0:
-					node.innerHTML += "<div class='item-left item-bad' title='Bad'>❌</div>";
+					node.innerHTML += "<div class='item-left item-bad' title='Bad'>✕</div>";
 					break;
 				case -1:
 					node.innerHTML += "<div class='item-left item-flag' title='Flag'>⚑</div>";
