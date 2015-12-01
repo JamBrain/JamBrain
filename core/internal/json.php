@@ -179,6 +179,10 @@ function json_Emit( $out, $allow_jsonp = true ) {
 	if ( defined('CMW_PHP_DEBUG') && isset($_GET['debug']) ) {
 		$out['debug'] = [];
 		
+		if ( isset($GLOBALS['_CORE_SCRIPT_TIMER']) ) {
+			$out['debug']['execute_time'] = microtime(true) - $GLOBALS['_CORE_SCRIPT_TIMER'];
+		}
+		
 		if ( isset($_SERVER['PATH_INFO']) ) {
 			$out['debug']['url'] = $_SERVER['PATH_INFO'];
 		}

@@ -217,34 +217,48 @@ function theme_GetMyIdeaStats($user) {
 	);
 }
 function theme_GetIdeaStats() {
-	return db_DoFetchPair(
-		"SELECT value,COUNT(id) FROM ".CMW_TABLE_THEME_IDEA_VOTE."
-			GROUP BY value
-		"
-	);
+	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_STATS");
+	
+	if ( $ret === null ) {
+		$ret = db_DoFetchPair(
+			"SELECT value,COUNT(id) FROM ".CMW_TABLE_THEME_IDEA_VOTE."
+				GROUP BY value
+			"
+		);
+
+		cache_Store(_THEME_CACHE_KEY."IDEA_STATS",$ret,_THEME_CACHE_TTL);
+	}
+	return $ret;
 }
 
 function theme_GetIdeaHourlyStats() {
-	$result = db_DoFetch(
-		"SELECT value,COUNT(id) AS count,timestamp,HOUR(timestamp) as hour,DAYOFYEAR(timestamp) as day FROM ".CMW_TABLE_THEME_IDEA_VOTE."
-			GROUP BY day,hour,value
-		"
-	);
-	
-	$ret = [];
-	foreach( $result as $item ) {
-		$idx = ($item['day']*24)+$item['hour'];
+	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_HOURLYSTATS");
+
+	if ( $ret === null ) {
+		$result = db_DoFetch(
+			"SELECT value,COUNT(id) AS count,timestamp,HOUR(timestamp) as hour,DAYOFYEAR(timestamp) as day FROM ".CMW_TABLE_THEME_IDEA_VOTE."
+				GROUP BY day,hour,value
+			"
+		);
 		
-		$ret[$idx]['timestamp'] = $item['timestamp'];
-		$ret[$idx]['day'] = $item['day'];
-		$ret[$idx]['hour'] = $item['hour'];
-		$ret[$idx]['count'][$item['value']] = $item['count'];
-		if ( isset($ret[$idx]['total']) )
-			$ret[$idx]['total'] += $item['count'];
-		else
-			$ret[$idx]['total'] = $item['count'];
+		$ret = [];
+		foreach( $result as $item ) {
+			$idx = ($item['day']*24)+$item['hour'];
+			
+			$ret[$idx]['timestamp'] = $item['timestamp'];
+			$ret[$idx]['day'] = $item['day'];
+			$ret[$idx]['hour'] = $item['hour'];
+			$ret[$idx]['count'][$item['value']] = $item['count'];
+			if ( isset($ret[$idx]['total']) )
+				$ret[$idx]['total'] += $item['count'];
+			else
+				$ret[$idx]['total'] = $item['count'];
+		}
+		
+		$ret = array_values($ret);
+		
+		cache_Store(_THEME_CACHE_KEY."IDEA_HOURLYSTATS",$ret,_THEME_CACHE_TTL);
 	}
-	
-	return array_values($ret);
+	return $ret;
 }
 

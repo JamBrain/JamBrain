@@ -460,6 +460,7 @@ button, .sg-item-x {
 	border-radius:4px;
 	max-width:24em;
 	cursor:pointer;
+	margin:auto;
 }
 #kill-theme {
 	padding:0.5em;
@@ -468,6 +469,7 @@ button, .sg-item-x {
 .kill-item {
 	cursor:pointer;
 	max-width:24em;
+	margin:auto;
 }
 .kill-item:hover {
 	background:<?=PAL_YELLOW[COL_LIGHT]?>;
@@ -720,6 +722,10 @@ button, .sg-item-x {
 }
 .shadow {
 	text-shadow:0 1px 2px rgba(0,0,0,0.2);
+}
+
+#stats {
+	margin:1em 0;
 }
 
 

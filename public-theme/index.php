@@ -220,26 +220,30 @@ function ShowSubmitIdea() {
 }
 function ShowStats() { 
 ?>
-		<div class="action sg-stats" id="extra-sg-stats">
-			<div class="title bigger caps space">Stats</div>
-			<div id="sg-stats">
-				<div id="stats-my-votes" style="width:300px;height:300px;display:inline-block;"></div>
-				<div id="stats-votes" style="width:300px;height:300px;display:inline-block;"></div>
-				<div id="stats-hourly" style="width:600px;height:300px;margin:0 auto;"></div>
-			</div>
-			<?php /*<div class="normal">Last Updated: <strong>blahblah</strong></div>*/ ?>		
+	<div class="stats" id="stats">
+		<div class="title bigger caps space">Slaughter Statistics</div>
+		<div>
+			<div id="stats-my-votes" class="hidden" style="width:300px;height:300px;display:inline-block;"></div>
+			<div id="stats-votes" class="hidden" style="width:300px;height:300px;display:inline-block;"></div>
+			<div id="stats-hourly" class="hidden hide-on-mobile" style="width:600px;height:300px;margin:0 auto;"></div>
 		</div>
+		<?php /*<div class="normal">Last Updated: <strong>blahblah</strong></div>*/ ?>		
+	</div>
 		
 	<script>
 		google.load("visualization", "1", {packages:["corechart"]});
-		google.setOnLoadCallback(drawChart);
-		function drawChart() {
+		google.setOnLoadCallback(DrawStatsCharts);
+		
+		function DrawStatsCharts() {
 			var NumberFormat = new google.visualization.NumberFormat(
 				{groupingSymbol:',',fractionDigits:0}
 			);
-			var MyVotesChart = new google.visualization.PieChart(document.getElementById('stats-my-votes'));
-			var VotesChart = new google.visualization.PieChart(document.getElementById('stats-votes'));
-			var HourlyChart = new google.visualization.AreaChart(document.getElementById('stats-hourly'));
+			var MyVotesChart_el = document.getElementById('stats-my-votes');
+			var MyVotesChart = new google.visualization.PieChart(MyVotesChart_el);
+			var VotesChart_el = document.getElementById('stats-votes');
+			var VotesChart = new google.visualization.PieChart(VotesChart_el);
+			var HourlyChart_el = document.getElementById('stats-hourly');
+			var HourlyChart = new google.visualization.AreaChart(HourlyChart_el);
 			
 			var PieChartOptions = {
 				'titleTextStyle': {
@@ -277,7 +281,7 @@ function ShowStats() {
 				function(response,code) {
 					console.log("GETIDEASTATS:",response);
 					
-					if ( response.stats ) {
+					if ( response.mystats ) {
 						var Stats = response.mystats;
 						var Options = PieChartOptions;
 						var StatsSum = 0;
@@ -290,10 +294,12 @@ function ShowStats() {
 						if ( Stats[-1] ) { StatsSum+=Stats[-1];Data.addRow(['Flag',Stats[-1]]); }
 						NumberFormat.format(Data,1);
 						
-						Options.title = 'My "Slaughter" votes: '+addCommas(StatsSum);
+						Options.title = 'My votes: '+addCommas(StatsSum);
+						MyVotesChart_el.classList.remove('hidden');
 						MyVotesChart.draw(Data,Options);
+					}
 	
-	
+					if ( response.stats ) {
 						var Stats = response.stats;
 						var Options = PieChartOptions;
 						var StatsSum = 0;
@@ -306,10 +312,13 @@ function ShowStats() {
 						if ( Stats[-1] ) { StatsSum+=Stats[-1];Data.addRow(['Flag',Stats[-1]]); }
 						NumberFormat.format(Data,1);
 						
-						Options.title = 'All "Slaughter" votes: '+addCommas(StatsSum);
+						Options.title = 'All votes: '+addCommas(StatsSum);
 						Options.colors = ['#4C4','#C44','444'];
+						VotesChart_el.classList.remove('hidden');
 						VotesChart.draw(Data,Options);
-						
+					}
+					
+					if ( response.hourly ) {
 						var Stats = response.hourly;
 						var Options = AreaChartOptions;
 						var Data = new google.visualization.DataTable();
@@ -334,11 +343,9 @@ function ShowStats() {
 						NumberFormat.format(Data,3);
 						NumberFormat.format(Data,4);
 	
-						Options.title = 'All "Slaughter" votes by hour';
+						Options.title = 'All votes by hour';
+						HourlyChart_el.classList.remove('hidden');
 						HourlyChart.draw(Data,Options);
-					}
-					else {
-						// uh, stats fetch failed //
 					}
 				}
 			);
@@ -1111,7 +1118,7 @@ function ShowSlaughter() {
 			echo "</div>";
 		}
 		
-		//ShowStats();
+		ShowStats();
 	}
 	?>
 </div>

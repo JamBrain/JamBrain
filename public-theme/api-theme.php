@@ -52,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 	//$response['EVENT_MODE'] = $EVENT_MODE;
 	//$response['EVENT_MODE_DIFF'] = $EVENT_MODE_DIFF;
 
+	// User Account Required //
 	if ( ($user_id > 0) && ($EVENT_NODE > 0) ) {
 		if ( $action == "GETMY" ) {
 			$response['ideas'] = theme_GetMyIdeas($EVENT_NODE,$user_id);
@@ -114,11 +115,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 				}
 			}
 		}
-		else if ( $action == "GETIDEASTATS" ) {
-			$response['mystats'] = theme_GetMyIdeaStats($user_id);
-			$response['stats'] = theme_GetIdeaStats();
-			$response['hourly'] = theme_GetIdeaHourlyStats();
-		}
 		else if ( $action == "SETPARENT" && $ADMIN /*&& IsThemeSlaughterOpen()*/ ) {
 			$parent = intval($_POST['parent']);
 			$children = [];
@@ -134,6 +130,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 			
 			$response['parent'] = $parent;
 			$response['children'] = $children;
+		}
+	}
+	
+	// No User Account Required //
+	if ( $EVENT_NODE > 0 ) {
+		if ( $action == "GETIDEASTATS" ) {
+			if ( $user_id > 0 ) {
+				$response['mystats'] = theme_GetMyIdeaStats($user_id);
+			}
+			$response['stats'] = theme_GetIdeaStats();
+			$response['hourly'] = theme_GetIdeaHourlyStats();
 		}
 	}
 }
