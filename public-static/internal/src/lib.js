@@ -63,6 +63,13 @@ window.escapeString = function(value) {
 		replace(/>/g, '&gt;');
 }
 
+// http://stackoverflow.com/a/2901298
+window.addCommas = function(x) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+}
+
 
 window.dom_SetText = function(id,text) {
 	document.getElementById(id).innerHTML = text;

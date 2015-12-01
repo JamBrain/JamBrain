@@ -23,6 +23,7 @@ define('HTML_TITLE',$EVENT_NAME." - Theme Hub");
 const HTML_CSS_INCLUDE = [ "/style/theme-hub.css.php" ];
 const HTML_USE_CORE = true;
 const HTML_SHOW_FOOTER = true;
+const HTML_USE_GOOGLE = true;
 
 // Extract Id from Cookie
 if ( isset($_COOKIE['lusha']) ) {
@@ -217,17 +218,128 @@ function ShowSubmitIdea() {
 <?php
 	}
 }
-function ShowMyStats() { 
+function ShowStats() { 
 ?>
-	<div class="sg-stats" id="extra-sg-stats">
-		<div class="title big caps space">Stats</div>
-		<div id="sg-stats">
-			<div>My votes: ?</div>
-			<?php /*<div>My total votes: ?</div>*/ ?>
-			<div>Total votes: ?</div>
-			<?php /*<div>All votes: ?</div>*/ ?>
+		<div class="action sg-stats" id="extra-sg-stats">
+			<div class="title bigger caps space">Stats</div>
+			<div id="sg-stats">
+				<div id="stats-my-votes" style="width:300px;height:300px;display:inline-block;"></div>
+				<div id="stats-votes" style="width:300px;height:300px;display:inline-block;"></div>
+				<div id="stats-hourly" style="width:600px;height:300px;margin:0 auto;"></div>
+			</div>
+			<?php /*<div class="normal">Last Updated: <strong>blahblah</strong></div>*/ ?>		
 		</div>
-	</div>
+		
+	<script>
+		google.load("visualization", "1", {packages:["corechart"]});
+		google.setOnLoadCallback(drawChart);
+		function drawChart() {
+			var NumberFormat = new google.visualization.NumberFormat(
+				{groupingSymbol:',',fractionDigits:0}
+			);
+			var MyVotesChart = new google.visualization.PieChart(document.getElementById('stats-my-votes'));
+			var VotesChart = new google.visualization.PieChart(document.getElementById('stats-votes'));
+			var HourlyChart = new google.visualization.AreaChart(document.getElementById('stats-hourly'));
+			
+			var PieChartOptions = {
+				'titleTextStyle': {
+					'bold':false
+				},
+				'pieSliceTextStyle': {
+					'bold':true
+				},
+				'backgroundColor': { fill:'transparent' },
+				'chartArea': {'width':'100%', 'height':'80%'},
+				'legend':'bottom',
+				'fontName':'Lato',
+				'fontSize':20,
+				'is3D':true,
+				'colors':['#6D6','#D66','666'],
+			};
+			
+			var AreaChartOptions = {
+				'titleTextStyle': {
+					'bold':false
+				},
+				'backgroundColor': { 'fill':'transparent' },
+				'chartArea': {'width':'80%', 'height':'70%','left':'18%','top':'15%'},
+				'hAxis': { 'textPosition':'none' },
+				'legend':'bottom',
+				'fontName':'Lato',
+				'fontSize':20,
+				'colors':['#88F','#8F8','#F88','888'],
+			};
+			
+			xhr_PostJSON(
+				"/api-theme.php",
+				serialize({"action":"GETIDEASTATS"}),
+				// On success //
+				function(response,code) {
+					// TODO: Respond to errors //
+					console.log("GETIDEASTATS:",response);
+					
+					var Stats = response.mystats;
+					var Options = PieChartOptions;
+					var StatsSum = 0;
+					var Data = new google.visualization.DataTable();
+					Data.addColumn('string', 'Answer');
+					Data.addColumn('number', 'Votes');
+					
+					if ( Stats[1] ) { StatsSum+=Stats[1];Data.addRow(['Yes',Stats[1]]); }
+					if ( Stats[0] ) { StatsSum+=Stats[0];Data.addRow(['No',Stats[0]]); }
+					if ( Stats[-1] ) { StatsSum+=Stats[-1];Data.addRow(['Flag',Stats[-1]]); }
+					NumberFormat.format(Data,1);
+					
+					Options.title = 'My votes: '+addCommas(StatsSum);
+					MyVotesChart.draw(Data,Options);
+
+
+					var Stats = response.stats;
+					var Options = PieChartOptions;
+					var StatsSum = 0;
+					var Data = new google.visualization.DataTable();
+					Data.addColumn('string', 'Answer');
+					Data.addColumn('number', 'Votes');
+					
+					if ( Stats[1] ) { StatsSum+=Stats[1];Data.addRow(['Yes',Stats[1]]); }
+					if ( Stats[0] ) { StatsSum+=Stats[0];Data.addRow(['No',Stats[0]]); }
+					if ( Stats[-1] ) { StatsSum+=Stats[-1];Data.addRow(['Flag',Stats[-1]]); }
+					NumberFormat.format(Data,1);
+					
+					Options.title = 'All votes: '+addCommas(StatsSum);
+					Options.colors = ['#4C4','#C44','444'];
+					VotesChart.draw(Data,Options);
+					
+					var Stats = response.hourly;
+					var Options = AreaChartOptions;
+					var Data = new google.visualization.DataTable();
+					Data.addColumn('string', 'Hour');
+					Data.addColumn('number', 'Total');
+					Data.addColumn('number', 'Yes');
+					Data.addColumn('number', 'No');
+					Data.addColumn('number', 'Flag');
+					for ( var idx = 0; idx < Stats.length; idx++ ) {
+						var timestamp = new Date(Stats[idx].timestamp);
+						timestamp.setHours(timestamp.getHours(),0,0,0);
+						Data.addRow([
+							getLocaleMonthDay(timestamp) + " " + getLocaleTime(timestamp),
+							Stats[idx].count,
+							Stats[idx].count/2,
+							Stats[idx].count/3,
+							Stats[idx].count/5,
+						]);
+					}
+					NumberFormat.format(Data,1);
+					NumberFormat.format(Data,2);
+					NumberFormat.format(Data,3);
+					NumberFormat.format(Data,4);
+
+					Options.title = 'By hour';
+					HourlyChart.draw(Data,Options);
+				}
+			);
+		}
+	</script>
 <?php 
 } 
 function ShowMyIdeas() { 
@@ -955,15 +1067,16 @@ function ShowSlaughter() {
 		?>
 	</div>
 	<?php
-		if ( $CONFIG['active'] ) {
-			if ( $cookie_id && !$admin ) {
-				echo "<div class='extra'>";
-				ShowMyIdeas();
-				//ShowMyLikes();
-				//ShowMyStats();
-				echo "</div>";
-			}
+	if ( $CONFIG['active'] ) {
+		if ( $cookie_id && !$admin ) {
+			echo "<div class='extra'>";
+			ShowMyIdeas();
+			//ShowMyLikes();
+			echo "</div>";
 		}
+		
+		ShowStats();
+	}
 	?>
 </div>
 <?php template_GetFooter();

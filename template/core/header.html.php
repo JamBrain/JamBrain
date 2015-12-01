@@ -8,14 +8,15 @@
 		echo "<title>".HTML_TITLE."</title>\n";
 	}
 
-	const VERSION = '0.1.40';
+	const VERSION = '0.1.41';
 	const VERSION_STRING = '?v='.VERSION;
 
 	if ( defined('CMW_JS_DEBUG') ) {
 		echo "<!-- External JavaScript -->\n";
-		if ( defined('HTML_USE_EMOJI') ) { echo "<script src='".CMW_STATIC_URL."/custom/emojitwo/emojitwo.js".VERSION_STRING."'></script>\n"; }
-		if ( defined('HTML_USE_MARKUP') ) { echo "<script src='".CMW_STATIC_URL."/external/marked/marked.js".VERSION_STRING."'></script>\n"; }
-		if ( defined('HTML_USE_HIGHLIGHT') ) { echo "<script src='".CMW_STATIC_URL."/external/prism/prism.js".VERSION_STRING."'></script>\n"; }
+		if (defined('HTML_USE_EMOJI')) { echo "<script src='".CMW_STATIC_URL."/custom/emojitwo/emojitwo.js".VERSION_STRING."'></script>\n"; }
+		if (defined('HTML_USE_MARKUP')) { echo "<script src='".CMW_STATIC_URL."/external/marked/marked.js".VERSION_STRING."'></script>\n"; }
+		if (defined('HTML_USE_HIGHLIGHT')) { echo "<script src='".CMW_STATIC_URL."/external/prism/prism.js".VERSION_STRING."'></script>\n"; }
+		if (defined('HTML_USE_GOOGLE')) { echo "<script type='text/javascript' src='https://www.google.com/jsapi'></script>\n"; }
 	
 		echo "<!-- Internal JavaScript -->\n";
 		if ( defined('HTML_USE_CORE') ) {
@@ -41,13 +42,13 @@
 	} /* defined('CMW_JS_DEBUG') */
 
 	echo "<!-- External CSS -->\n";
-	if ( defined('CMW_CSS_DEBUG') ) {
-		if ( defined('HTML_USE_EMOJI') ) { echo "<link rel='stylesheet' href='".CMW_STATIC_URL."/custom/emojitwo/emojitwo.css".VERSION_STRING."' />\n"; }
+	if (defined('CMW_CSS_DEBUG')) {
+		if (defined('HTML_USE_EMOJI')) { echo "<link rel='stylesheet' href='".CMW_STATIC_URL."/custom/emojitwo/emojitwo.css".VERSION_STRING."' />\n"; }
 	} else { /* defined('CMW_CSS_DEBUG') */
-		if ( defined('HTML_USE_EMOJI') ) { echo "<link rel='stylesheet href='".CMW_STATIC_URL."/custom/emojitwo/emojitwo.min.css".VERSION_STRING."' />\n"; }
+		if (defined('HTML_USE_EMOJI')) { echo "<link rel='stylesheet href='".CMW_STATIC_URL."/custom/emojitwo/emojitwo.min.css".VERSION_STRING."' />\n"; }
 	} /* defined('CMW_CSS_DEBUG') */
 
-	if ( defined('HTML_USE_HIGHLIGHT') ) { echo "<link rel='stylesheet' href='".CMW_STATIC_URL."/external/prism/prism.css".VERSION_STRING."' />\n"; }
+	if (defined('HTML_USE_HIGHLIGHT')) { echo "<link rel='stylesheet' href='".CMW_STATIC_URL."/external/prism/prism.css".VERSION_STRING."' />\n"; }
 
 	echo "<link href='//fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic' rel='stylesheet' type='text/css'>\n";
 	//<link href='https://fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic|Inconsolata' rel='stylesheet' type='text/css'>

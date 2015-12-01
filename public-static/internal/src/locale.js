@@ -70,8 +70,14 @@ window.getLocaleDay = function( date ) {
 // Date (i.e. January 21st, 2015) //
 window.getLocaleDate = function( date ) {
 	return MonthOfTheYearTable[date.getMonth()] + " " + 
-		date.getDate() + DateSuffixTable[EventDate.getDate() % 20] + ", " + 
+		date.getDate() + DateSuffixTable[date.getDate() % 20] + ", " + 
 		date.getFullYear();
+}
+
+// Date (i.e. January 21st) //
+window.getLocaleMonthDay = function( date ) {
+	return MonthOfTheYearTable[date.getMonth()] + " " + 
+		date.getDate() + DateSuffixTable[date.getDate() % 20];
 }
 
 // Time Zone, short abbreviated form (i.e. EST, CET) //

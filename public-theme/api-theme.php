@@ -114,6 +114,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 				}
 			}
 		}
+		else if ( $action == "GETIDEASTATS" ) {
+			$response['mystats'] = theme_GetMyIdeaStats($user_id);
+			$response['stats'] = theme_GetIdeaStats();
+			$response['hourly'] = theme_GetIdeaHourlyStats();
+		}
 		else if ( $action == "SETPARENT" && $ADMIN /*&& IsThemeSlaughterOpen()*/ ) {
 			$parent = intval($_POST['parent']);
 			$children = [];

@@ -206,3 +206,29 @@ function theme_GetMyIdeaVotes($user,$limit) {
 		$user
 	);
 }
+
+function theme_GetMyIdeaStats($user) {
+	return db_DoFetchPair(
+		"SELECT value,COUNT(id) FROM ".CMW_TABLE_THEME_IDEA_VOTE."
+			WHERE user=?
+			GROUP BY value
+		",
+		$user
+	);
+}
+function theme_GetIdeaStats() {
+	return db_DoFetchPair(
+		"SELECT value,COUNT(id) FROM ".CMW_TABLE_THEME_IDEA_VOTE."
+			GROUP BY value
+		"
+	);
+}
+
+function theme_GetIdeaHourlyStats() {
+	return db_DoFetch(
+		"SELECT COUNT(id) AS count,timestamp,HOUR(timestamp) as hour,DAYOFYEAR(timestamp) as day FROM ".CMW_TABLE_THEME_IDEA_VOTE."
+			GROUP BY day,hour
+		"
+	);
+}
+

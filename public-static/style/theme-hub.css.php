@@ -735,12 +735,13 @@ body > .body {
 	border-top:2px solid rgba(255,255,255,0.5);
 }
 body > .body > div {
-	display:inline-block;
 	vertical-align:top;
 }
 body > .body .main {
+	display:inline-block;
 }
 body > .body .extra {
+	display:inline-block;
 	min-width:12em;
 	max-width:30%;
 	text-align:left;
@@ -751,11 +752,12 @@ body > .body .extra {
 /* Tablet and Mobile */
 @media <?= MOBILE_AND_TABLET_QUERY ?> {
 	body > .body > div {
-		display:block;
 	}
 	body > .body .main {
+		display:block;
 	}
 	body > .body .extra {
+		display:block;
 		max-width:none;
 		font-size:1.4em;
 		margin:0;
