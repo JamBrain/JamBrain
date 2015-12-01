@@ -318,23 +318,23 @@ function ShowStats() {
 					Data.addColumn('number', 'Yes');
 					Data.addColumn('number', 'No');
 					Data.addColumn('number', 'Flag');
-					for ( var idx = 0; idx < Stats.length; idx++ ) {
-						var timestamp = new Date(Stats[idx].timestamp);
+					Stats.forEach(function(currentValue,index,array){
+						var timestamp = new Date(currentValue.timestamp);
 						timestamp.setHours(timestamp.getHours(),0,0,0);
 						Data.addRow([
 							getLocaleMonthDay(timestamp) + " " + getLocaleTime(timestamp),
-							Stats[idx].count,
-							Stats[idx].count/2,
-							Stats[idx].count/3,
-							Stats[idx].count/5,
+							currentValue.total,
+							currentValue.count['1'] ? currentValue.count['1'] : 0,
+							currentValue.count['0'] ? currentValue.count['0'] : 0,
+							currentValue.count['-1'] ? currentValue.count['-1'] : 0,
 						]);
-					}
+					});
 					NumberFormat.format(Data,1);
 					NumberFormat.format(Data,2);
 					NumberFormat.format(Data,3);
 					NumberFormat.format(Data,4);
 
-					Options.title = 'By hour';
+					Options.title = 'All votes by hour';
 					HourlyChart.draw(Data,Options);
 				}
 			);

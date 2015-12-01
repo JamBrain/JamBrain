@@ -225,10 +225,26 @@ function theme_GetIdeaStats() {
 }
 
 function theme_GetIdeaHourlyStats() {
-	return db_DoFetch(
-		"SELECT COUNT(id) AS count,timestamp,HOUR(timestamp) as hour,DAYOFYEAR(timestamp) as day FROM ".CMW_TABLE_THEME_IDEA_VOTE."
-			GROUP BY day,hour
+	$result = db_DoFetch(
+		"SELECT value,COUNT(id) AS count,timestamp,HOUR(timestamp) as hour,DAYOFYEAR(timestamp) as day FROM ".CMW_TABLE_THEME_IDEA_VOTE."
+			GROUP BY day,hour,value
 		"
 	);
+	
+	$ret = [];
+	foreach( $result as $item ) {
+		$idx = ($item['day']*24)+$item['hour'];
+		
+		$ret[$idx]['timestamp'] = $item['timestamp'];
+		$ret[$idx]['day'] = $item['day'];
+		$ret[$idx]['hour'] = $item['hour'];
+		$ret[$idx]['count'][$item['value']] = $item['count'];
+		if ( isset($ret[$idx]['total']) )
+			$ret[$idx]['total'] += $item['count'];
+		else
+			$ret[$idx]['total'] = $item['count'];
+	}
+	
+	return array_values($ret);
 }
 
