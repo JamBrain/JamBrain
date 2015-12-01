@@ -275,67 +275,71 @@ function ShowStats() {
 				serialize({"action":"GETIDEASTATS"}),
 				// On success //
 				function(response,code) {
-					// TODO: Respond to errors //
 					console.log("GETIDEASTATS:",response);
 					
-					var Stats = response.mystats;
-					var Options = PieChartOptions;
-					var StatsSum = 0;
-					var Data = new google.visualization.DataTable();
-					Data.addColumn('string', 'Answer');
-					Data.addColumn('number', 'Votes');
-					
-					if ( Stats[1] ) { StatsSum+=Stats[1];Data.addRow(['Yes',Stats[1]]); }
-					if ( Stats[0] ) { StatsSum+=Stats[0];Data.addRow(['No',Stats[0]]); }
-					if ( Stats[-1] ) { StatsSum+=Stats[-1];Data.addRow(['Flag',Stats[-1]]); }
-					NumberFormat.format(Data,1);
-					
-					Options.title = 'My votes: '+addCommas(StatsSum);
-					MyVotesChart.draw(Data,Options);
-
-
-					var Stats = response.stats;
-					var Options = PieChartOptions;
-					var StatsSum = 0;
-					var Data = new google.visualization.DataTable();
-					Data.addColumn('string', 'Answer');
-					Data.addColumn('number', 'Votes');
-					
-					if ( Stats[1] ) { StatsSum+=Stats[1];Data.addRow(['Yes',Stats[1]]); }
-					if ( Stats[0] ) { StatsSum+=Stats[0];Data.addRow(['No',Stats[0]]); }
-					if ( Stats[-1] ) { StatsSum+=Stats[-1];Data.addRow(['Flag',Stats[-1]]); }
-					NumberFormat.format(Data,1);
-					
-					Options.title = 'All votes: '+addCommas(StatsSum);
-					Options.colors = ['#4C4','#C44','444'];
-					VotesChart.draw(Data,Options);
-					
-					var Stats = response.hourly;
-					var Options = AreaChartOptions;
-					var Data = new google.visualization.DataTable();
-					Data.addColumn('string', 'Hour');
-					Data.addColumn('number', 'Total');
-					Data.addColumn('number', 'Yes');
-					Data.addColumn('number', 'No');
-					Data.addColumn('number', 'Flag');
-					Stats.forEach(function(currentValue,index,array){
-						var timestamp = new Date(currentValue.timestamp);
-						timestamp.setHours(timestamp.getHours(),0,0,0);
-						Data.addRow([
-							getLocaleMonthDay(timestamp) + " " + getLocaleTime(timestamp),
-							currentValue.total,
-							currentValue.count['1'] ? currentValue.count['1'] : 0,
-							currentValue.count['0'] ? currentValue.count['0'] : 0,
-							currentValue.count['-1'] ? currentValue.count['-1'] : 0,
-						]);
-					});
-					NumberFormat.format(Data,1);
-					NumberFormat.format(Data,2);
-					NumberFormat.format(Data,3);
-					NumberFormat.format(Data,4);
-
-					Options.title = 'All votes by hour';
-					HourlyChart.draw(Data,Options);
+					if ( response.stats ) {
+						var Stats = response.mystats;
+						var Options = PieChartOptions;
+						var StatsSum = 0;
+						var Data = new google.visualization.DataTable();
+						Data.addColumn('string', 'Answer');
+						Data.addColumn('number', 'Votes');
+						
+						if ( Stats[1] ) { StatsSum+=Stats[1];Data.addRow(['Yes',Stats[1]]); }
+						if ( Stats[0] ) { StatsSum+=Stats[0];Data.addRow(['No',Stats[0]]); }
+						if ( Stats[-1] ) { StatsSum+=Stats[-1];Data.addRow(['Flag',Stats[-1]]); }
+						NumberFormat.format(Data,1);
+						
+						Options.title = 'My "Slaughter" votes: '+addCommas(StatsSum);
+						MyVotesChart.draw(Data,Options);
+	
+	
+						var Stats = response.stats;
+						var Options = PieChartOptions;
+						var StatsSum = 0;
+						var Data = new google.visualization.DataTable();
+						Data.addColumn('string', 'Answer');
+						Data.addColumn('number', 'Votes');
+						
+						if ( Stats[1] ) { StatsSum+=Stats[1];Data.addRow(['Yes',Stats[1]]); }
+						if ( Stats[0] ) { StatsSum+=Stats[0];Data.addRow(['No',Stats[0]]); }
+						if ( Stats[-1] ) { StatsSum+=Stats[-1];Data.addRow(['Flag',Stats[-1]]); }
+						NumberFormat.format(Data,1);
+						
+						Options.title = 'All "Slaughter" votes: '+addCommas(StatsSum);
+						Options.colors = ['#4C4','#C44','444'];
+						VotesChart.draw(Data,Options);
+						
+						var Stats = response.hourly;
+						var Options = AreaChartOptions;
+						var Data = new google.visualization.DataTable();
+						Data.addColumn('string', 'Hour');
+						Data.addColumn('number', 'Total');
+						Data.addColumn('number', 'Yes');
+						Data.addColumn('number', 'No');
+						Data.addColumn('number', 'Flag');
+						Stats.forEach(function(currentValue,index,array){
+							var timestamp = new Date(currentValue.timestamp);
+							timestamp.setHours(timestamp.getHours(),0,0,0);
+							Data.addRow([
+								getLocaleMonthDay(timestamp) + " " + getLocaleTime(timestamp),
+								currentValue.total,
+								currentValue.count['1'] ? currentValue.count['1'] : 0,
+								currentValue.count['0'] ? currentValue.count['0'] : 0,
+								currentValue.count['-1'] ? currentValue.count['-1'] : 0,
+							]);
+						});
+						NumberFormat.format(Data,1);
+						NumberFormat.format(Data,2);
+						NumberFormat.format(Data,3);
+						NumberFormat.format(Data,4);
+	
+						Options.title = 'All "Slaughter" votes by hour';
+						HourlyChart.draw(Data,Options);
+					}
+					else {
+						// uh, stats fetch failed //
+					}
 				}
 			);
 		}
@@ -500,17 +504,22 @@ function ShowSlaughter() {
 						serialize({"action":"IDEA","id":Id,"value":Value}),
 						// On success //
 						function(response,code) {
-							// TODO: Respond to errors //
 							console.log("IDEA*:",response);
 							
-							kill_RemoveRecentTheme(Id);
-							kill_AddRecentTheme(Id,Idea,Value,true);
-							kill_RemoveRecentThemes();
-
-							kill_CancelEditTheme();
-
+							if ( response.id > 0 ) {
+								kill_RemoveRecentTheme(Id);
+								kill_AddRecentTheme(Id,Idea,Value,true);
+								kill_RemoveRecentThemes();
+	
+								kill_CancelEditTheme();
+	
+								dom_RestartAnimation('kill-theme','effect-accent');
+							}
+							else {
+								dialog_Alert("Unable to Edit vote","Try refreshing your browser");
+							}
+							
 							kill_ReactivateVote();
-							dom_RestartAnimation('kill-theme','effect-accent');
 						}
 					);
 				}
@@ -526,12 +535,17 @@ function ShowSlaughter() {
 						function(response,code) {
 							// TODO: Respond to errors //
 	
-							console.log("IDEA:",response);
-							kill_AddRecentTheme(Id,Idea,Value,true);
-							kill_RemoveRecentThemes();
+							if ( response.id > 0 ) {
+								console.log("IDEA:",response);
+								kill_AddRecentTheme(Id,Idea,Value,true);
+								kill_RemoveRecentThemes();
+								
+								GetSlaughterTheme(true);
+							}
+							else {
+								dialog_Alert("Unable to Submit vote","Try refreshing your browser");
+							}
 							
-							GetSlaughterTheme(true);
-
 							kill_ReactivateVote();
 						}
 					);
@@ -554,15 +568,19 @@ function ShowSlaughter() {
 							serialize({"action":"IDEA","id":Id,"value":Value}),
 							// On success //
 							function(response,code) {
-								// TODO: Respond to errors //
 								console.log("IDEA*:",response);
 
-								kill_RemoveRecentTheme(Id);
-								kill_AddRecentTheme(Id,Idea,Value,true);
-								kill_RemoveRecentThemes();
-
-								kill_CancelEditTheme();
-								dom_RestartAnimation('kill-theme','effect-accent');
+								if ( response.id > 0 ) {
+									kill_RemoveRecentTheme(Id);
+									kill_AddRecentTheme(Id,Idea,Value,true);
+									kill_RemoveRecentThemes();
+	
+									kill_CancelEditTheme();
+									dom_RestartAnimation('kill-theme','effect-accent');
+								}
+								else {
+									dialog_Alert("Unable to Edit vote","Try refreshing your browser");
+								}
 							}
 						);
 					});
@@ -580,10 +598,16 @@ function ShowSlaughter() {
 							// On success //
 							function(response,code) {
 								console.log("IDEA:",response);
-								kill_AddRecentTheme(Id,Idea,Value,true);
-								kill_RemoveRecentThemes();
-								
-								GetSlaughterTheme(true);
+
+								if ( response.id > 0 ) {
+									kill_AddRecentTheme(Id,Idea,Value,true);
+									kill_RemoveRecentThemes();
+									
+									GetSlaughterTheme(true);
+								}
+								else {
+									dialog_Alert("Unable to Submit vote","Try refreshing your browser");
+								}
 							}
 						);
 					});
@@ -598,9 +622,15 @@ function ShowSlaughter() {
 					// On success //
 					function(response,code) {
 						console.log("GETIDEAS:",response);
-						for ( var idx = response.ideas.length-1; idx >= 0; idx-- ) {
-							var idea = response.ideas[idx];
-							kill_AddRecentTheme(idea.id,idea.idea,idea.value);
+
+						if ( response.ideas ) {
+							for ( var idx = response.ideas.length-1; idx >= 0; idx-- ) {
+								var idea = response.ideas[idx];
+								kill_AddRecentTheme(idea.id,idea.idea,idea.value);
+							}
+						}
+						else {
+							// Unable to get your ideas //
 						}
 					}
 				);
@@ -694,11 +724,17 @@ function ShowSlaughter() {
 				// On success //
 				function(response,code) {
 					console.log("REMOVE:",response);
-					var el = document.getElementById('sg-item-'+response.id);
-					if ( el ) {
-						el.remove();
+					
+					if ( response.id > 0 ) {
+						var el = document.getElementById('sg-item-'+response.id);
+						if ( el ) {
+							el.remove();
+						}
+						sg_UpdateCount(response.count,true);
 					}
-					sg_UpdateCount(response.count,true);
+					else {
+						// Invalid Response //	
+					}
 				}
 			);
 		});
@@ -1075,7 +1111,7 @@ function ShowSlaughter() {
 			echo "</div>";
 		}
 		
-		ShowStats();
+		//ShowStats();
 	}
 	?>
 </div>
