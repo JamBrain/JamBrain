@@ -406,7 +406,7 @@ function ShowSlaughter() {
 			var _LAST_SLAUGHTER_RESPONSE = null;
 			function GetSlaughterTheme(accent) {
 				xhr_GetJSON(
-					"/api-theme.php?action=RANDOM",
+					"/api-theme.php?action=RANDOM&debug",
 					// On success //
 					function(response,code) {
 						_LAST_SLAUGHTER_RESPONSE = response;
@@ -508,7 +508,7 @@ function ShowSlaughter() {
 					Value = Number(Value);
 					
 					xhr_PostJSON(
-						"/api-theme.php",
+						"/api-theme.php?debug",
 						serialize({"action":"IDEA","id":Id,"value":Value}),
 						// On success //
 						function(response,code) {
@@ -537,7 +537,7 @@ function ShowSlaughter() {
 					Value = Number(Value);
 	
 					xhr_PostJSON(
-						"/api-theme.php",
+						"/api-theme.php?debug",
 						serialize({"action":"IDEA","id":Id,"value":Value}),
 						// On success //
 						function(response,code) {
@@ -572,7 +572,7 @@ function ShowSlaughter() {
 					
 					dialog_ConfirmAlert(Idea,"Are you sure you want to Flag this as inappropriate?",function(){
 						xhr_PostJSON(
-							"/api-theme.php",
+							"/api-theme.php?debug",
 							serialize({"action":"IDEA","id":Id,"value":Value}),
 							// On success //
 							function(response,code) {
@@ -601,7 +601,7 @@ function ShowSlaughter() {
 	
 					dialog_ConfirmAlert(Idea,"Are you sure you want to Flag this as inappropriate?",function(){
 						xhr_PostJSON(
-							"/api-theme.php",
+							"/api-theme.php?debug",
 							serialize({"action":"IDEA","id":Id,"value":Value}),
 							// On success //
 							function(response,code) {
@@ -625,7 +625,7 @@ function ShowSlaughter() {
 			
 			function kill_GetRecentVotes() {
 				xhr_PostJSON(
-					"/api-theme.php",
+					"/api-theme.php?debug",
 					serialize({"action":"GETIDEAS"}),
 					// On success //
 					function(response,code) {
@@ -907,7 +907,7 @@ function ShowSlaughter() {
 		if ( $CONFIG['active'] && $cookie_id && !$admin ) {
 		?>
 			xhr_PostJSON(
-				"/api-theme.php",
+				"/api-theme.php?debug",
 				serialize({"action":"GETMY"}),
 				// On success //
 				function(response,code) {
