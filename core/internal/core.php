@@ -45,6 +45,16 @@ function core_OnWhitelist( $ip, $list ) {
 	return false;
 }
 
+function core_MicrotimeToString($time) {
+	$timediff = microtime(true) - $time;
+	
+	if ( $timediff < 1.0 )
+		return number_format( $timediff * 1000.0, 2 ) . ' ms';
+	else if ( $timediff === 1.0 )
+		return "1 second";
+	return number_format( $timediff, 4 ) . ' seconds';
+}
+
 function core_GetExecutionTime() {
 	global $_CORE_SCRIPT_TIMER;
 	

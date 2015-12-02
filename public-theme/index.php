@@ -227,6 +227,7 @@ function ShowStats() {
 			<div id="stats-votes" class="hidden" style="width:300px;height:300px;display:inline-block;"></div>
 			<div id="stats-hourly" class="hidden hide-on-mobile" style="width:600px;height:300px;margin:0 auto;"></div>
 		</div>
+		<div class="small">Statistics updated every 10 minutes</div>
 		<?php /*<div class="normal">Last Updated: <strong>blahblah</strong></div>*/ ?>		
 	</div>
 		
@@ -275,7 +276,7 @@ function ShowStats() {
 			};
 			
 			xhr_PostJSON(
-				"/api-theme.php",
+				"/api-theme.php?debug",
 				serialize({"action":"GETIDEASTATS"}),
 				// On success //
 				function(response,code) {

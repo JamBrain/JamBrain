@@ -180,7 +180,23 @@ function json_Emit( $out, $allow_jsonp = true ) {
 		$out['debug'] = [];
 		
 		if ( isset($GLOBALS['_CORE_SCRIPT_TIMER']) ) {
-			$out['debug']['execute_time'] = microtime(true) - $GLOBALS['_CORE_SCRIPT_TIMER'];
+			$out['debug']['execute_time'] = core_MicrotimeToString($GLOBALS['_CORE_SCRIPT_TIMER']);
+		}
+		if (function_exists('db_GetQueryCount')) {
+			$out['debug']['db_queries'] = db_GetQueryCount();
+		}
+		if (function_exists('cache_GetReads')) {
+			$out['debug']['cache_reads'] = cache_GetReads();
+			$out['debug']['cache_writes'] = cache_GetWrites();
+		}
+		if (function_exists('opcache_is_script_cached')) {
+			// Technically, this is checking if "json.php" isn't cached //
+			if (!opcache_is_script_cached(__FILE__)) {
+				$out['debug']['opcache'] = "disabled";
+			}
+		}
+		else {
+			$out['debug']['opcache'] = "unavailable";
 		}
 		
 		if ( isset($_SERVER['PATH_INFO']) ) {
