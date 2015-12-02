@@ -232,9 +232,9 @@ function theme_GetIdeaStats() {
 }
 
 function theme_GetIdeaHourlyStats() {
-//	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_HOURLYSTATS");
+	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_HOURLYSTATS");
 
-//	if ( $ret === null ) {
+	if ( $ret === null ) {
 		$result = db_DoFetch(
 			"SELECT value,COUNT(id) AS count,timestamp,HOUR(timestamp) as hour,DAYOFYEAR(timestamp) as day FROM ".CMW_TABLE_THEME_IDEA_VOTE."
 				GROUP BY day,hour,value
@@ -257,8 +257,8 @@ function theme_GetIdeaHourlyStats() {
 		
 		$ret = array_values($ret);
 		
-//		cache_Store(_THEME_CACHE_KEY."IDEA_HOURLYSTATS",$ret,_THEME_CACHE_TTL);
-//	}
+		cache_Store(_THEME_CACHE_KEY."IDEA_HOURLYSTATS",$ret,_THEME_CACHE_TTL);
+	}
 	return $ret;
 }
 
