@@ -136,9 +136,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 	// No User Account Required //
 	if ( $EVENT_NODE > 0 ) {
 		if ( $action == "GETIDEASTATS" ) {
-//			if ( $user_id > 0 ) {
-//				$response['mystats'] = theme_GetMyIdeaStats($user_id);
-//			}
+			if ( $user_id > 0 ) {
+				$response['mystats'] = theme_GetMyIdeaStats($user_id);
+			}
 			$response['stats'] = theme_GetIdeaStats();
 			$response['hourly'] = theme_GetIdeaHourlyStats();
 		}
