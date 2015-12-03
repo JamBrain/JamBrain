@@ -257,6 +257,12 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 				value INT NOT NULL
 			)".DEFAULT_CS_ENGINE.";");
 		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
+	case 1:
+		$ok = DoCreate( $table,
+			"ALTER TABLE ".$table."
+				ADD INDEX (value)
+			;");
+		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
 	};
 	DoExit($table);
 }
