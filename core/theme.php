@@ -217,17 +217,17 @@ function theme_GetMyIdeaStats($user) {
 	);
 }
 function theme_GetIdeaStats() {
-	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_STATS");
+//	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_STATS");
 	
-	if ( $ret === null ) {
+//	if ( $ret === null ) {
 		$ret = db_DoFetchPair(
 			"SELECT value,COUNT(id) FROM ".CMW_TABLE_THEME_IDEA_VOTE."
 				GROUP BY value
 			"
 		);
 
-		cache_Store(_THEME_CACHE_KEY."IDEA_STATS",$ret,_THEME_CACHE_TTL);
-	}
+//		cache_Store(_THEME_CACHE_KEY."IDEA_STATS",$ret,_THEME_CACHE_TTL);
+//	}
 	return $ret;
 }
 
