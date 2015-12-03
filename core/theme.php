@@ -236,7 +236,7 @@ function theme_GetIdeaHourlyStats() {
 
 	if ( $ret === null ) {
 		$result = db_DoFetch(
-			"SELECT value,COUNT(id) AS count,timestamp,HOUR(timestamp) as hour,DAYOFYEAR(timestamp) as day FROM ".CMW_TABLE_THEME_IDEA_VOTE."
+			"SELECT value,COUNT(id) AS count,".MYSQL_ISO_FORMAT('timestamp').",HOUR(timestamp) as hour,DAYOFYEAR(timestamp) as day FROM ".CMW_TABLE_THEME_IDEA_VOTE."
 				GROUP BY day,hour,value
 			"
 		);
