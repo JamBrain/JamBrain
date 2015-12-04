@@ -141,6 +141,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 			}
 			$response['stats'] = theme_GetIdeaStats();
 			$response['hourly'] = theme_GetIdeaHourlyStats();
+			
+			$idea_list = theme_GetIdeaList($EVENT_NODE);
+			
+			$response['count'] = count($idea_list);
+			$response['count_with_duplicates'] = theme_CountIdeas($EVENT_NODE);
+			
+			$response['users_with_ideas'] = theme_CountUsersWithIdeas($EVENT_NODE);
+			$response['users_that_kill'] = theme_CountUsersThatKill($EVENT_NODE);
 		}
 	}
 }

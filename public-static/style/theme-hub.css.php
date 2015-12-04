@@ -133,8 +133,11 @@ body > .body .headline {
 	margin:0 auto;
 }
 
+.bold {
+	font-weight:700;
+}
 
-.action .title {
+.action .title, .stats .title {
 	margin:0.5em 0;
 }
 .action .form {

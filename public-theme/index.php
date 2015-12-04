@@ -223,6 +223,11 @@ function ShowStats() {
 	<div class="stats" id="stats">
 		<div class="title bigger caps space">Slaughter Statistics</div>
 		<div>
+			<div id="stats-total" class="title hidden">
+				<div>Themes: <span class="bold" id="stats-total-all"></span> (<span id="stats-total-raw"></span> with duplicates)</div>
+				<div>Users who Suggested Themes: <span class="bold" id="stats-users-with-ideas"></span></div>
+				<div>Users who Slaughtered Themes: <span class="bold" id="stats-users-that-kill"></span></div>
+			</div>
 			<div id="stats-my-votes" class="hidden" style="width:300px;height:300px;display:inline-block;"></div>
 			<div id="stats-votes" class="hidden" style="width:300px;height:300px;display:inline-block;"></div>
 			<div id="stats-hourly" class="hidden hide-on-mobile" style="width:600px;height:300px;margin:0 auto;"></div>
@@ -281,6 +286,15 @@ function ShowStats() {
 				// On success //
 				function(response,code) {
 					console.log("GETIDEASTATS:",response);
+					
+					if ( response.count ) {
+						document.getElementById('stats-total-all').innerHTML = addCommas(response.count);
+						document.getElementById('stats-total-raw').innerHTML = addCommas(response.count_with_duplicates);
+						document.getElementById('stats-users-with-ideas').innerHTML = addCommas(response.users_with_ideas);
+						document.getElementById('stats-users-that-kill').innerHTML = addCommas(response.users_that_kill);
+
+						document.getElementById('stats-total').classList.remove('hidden');
+					}
 					
 					if ( response.mystats ) {
 						var Stats = response.mystats;

@@ -114,15 +114,47 @@ function theme_GetIdeas($node) {
 	);
 }
 function theme_CountIdeas($node,$arg_string="") {
-	$ret = db_DoFetchSingle(
-		"SELECT count(id) FROM ".CMW_TABLE_THEME_IDEA." 
-		WHERE node=? LIMIT 1".$arg_string,
-		$node
-	);
-	if ( is_array($ret) )
-		return intval($ret[0]);
-	return false;
+	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_COUNT");
+
+	if ( $ret === null ) {
+		$ret = db_DoFetchSingle(
+			"SELECT count(id) FROM ".CMW_TABLE_THEME_IDEA." 
+			WHERE node=? LIMIT 1".$arg_string,
+			$node
+		);
+		if ( is_array($ret) ) {
+			$ret = intval($ret[0]);
+			
+			cache_Store(_THEME_CACHE_KEY."IDEA_COUNT",$ret,_THEME_CACHE_TTL);
+		}
+		else {
+			return null;
+		}
+	}
+	return $ret;
 }
+
+function theme_CountUsersWithIdeas($node,$arg_string="") {
+	$ret = cache_Fetch(_THEME_CACHE_KEY."USERS_WITH_IDEAS");
+
+	if ( $ret === null ) {
+		$ret = db_DoFetchSingle(
+			"SELECT count(DISTINCT user) FROM ".CMW_TABLE_THEME_IDEA." 
+			WHERE node=?".$arg_string,
+			$node
+		);
+		if ( is_array($ret) ) {
+			$ret = intval($ret[0]);
+			
+			cache_Store(_THEME_CACHE_KEY."USERS_WITH_IDEAS",$ret,_THEME_CACHE_TTL);
+		}
+		else {
+			return null;
+		}
+	}
+	return $ret;
+}
+
 
 // An idea is considered original if it has no parent //
 function theme_GetOriginalIdeas($node) {
@@ -161,6 +193,25 @@ function theme_GetIdeaList($node) {
 		$ret = theme_GetOriginalIdeas($node); // Hack: For now, just use all original ideas
 
 		cache_Store(_THEME_CACHE_KEY."IDEA_LIST",$ret,_THEME_CACHE_TTL);
+	}
+	return $ret;
+}
+
+function theme_CountUsersThatKill($node,$arg_string="") {
+	$ret = cache_Fetch(_THEME_CACHE_KEY."USERS_THAT_KILL");
+
+	if ( $ret === null ) {
+		$ret = db_DoFetchSingle(
+			"SELECT count(DISTINCT user) FROM ".CMW_TABLE_THEME_IDEA_VOTE
+		);
+		if ( is_array($ret) ) {
+			$ret = intval($ret[0]);
+			
+			cache_Store(_THEME_CACHE_KEY."USERS_THAT_KILL",$ret,_THEME_CACHE_TTL);
+		}
+		else {
+			return null;
+		}
 	}
 	return $ret;
 }
