@@ -231,6 +231,7 @@ function ShowStats() {
 			<div id="stats-my-votes" class="hidden" style="width:300px;height:300px;display:inline-block;"></div>
 			<div id="stats-votes" class="hidden" style="width:300px;height:300px;display:inline-block;"></div>
 			<div id="stats-hourly" class="hidden hide-on-mobile" style="width:600px;height:300px;margin:0 auto;"></div>
+			<div id="stats-total-kills" class="hidden hide-on-mobile" style="width:600px;height:300px;margin:0 auto;"></div>
 		</div>
 		<div class="small">Statistics updated every 10 minutes</div>
 		<?php /*<div class="normal">Last Updated: <strong>blahblah</strong></div>*/ ?>		
@@ -250,6 +251,8 @@ function ShowStats() {
 			var VotesChart = new google.visualization.PieChart(VotesChart_el);
 			var HourlyChart_el = document.getElementById('stats-hourly');
 			var HourlyChart = new google.visualization.AreaChart(HourlyChart_el);
+			var TotalKillsChart_el = document.getElementById('stats-total-kills');
+			var TotalKillsChart = new google.visualization.ColumnChart(TotalKillsChart_el);
 			
 			var PieChartOptions = {
 				'titleTextStyle': {
@@ -278,6 +281,24 @@ function ShowStats() {
 				'fontName':'Lato',
 				'fontSize':20,
 				'colors':['#88F','#8F8','#F88','888'],
+			};
+
+			var BarChartOptions = {
+				'titleTextStyle': {
+					'bold':false
+				},
+				'backgroundColor': { 'fill':'transparent' },
+				'chartArea': {'width':'80%', 'height':'80%','left':'18%','top':'15%'},
+				'legend':'none',
+				'fontName':'Lato',
+				'fontSize':20,
+				'vAxis': {
+					'viewWindow':{
+						max:50,
+						min:0
+					}
+            	},
+            	'hAxis': { 'textPosition':'none' },
 			};
 			
 			xhr_PostJSON(
@@ -361,6 +382,24 @@ function ShowStats() {
 						Options.title = 'All votes by hour';
 						HourlyChart_el.classList.remove('hidden');
 						HourlyChart.draw(Data,Options);
+					}
+					
+					if ( response.kill_counts ) {
+						var Stats = response.kill_counts;
+						var Options = BarChartOptions;
+						var Data = new google.visualization.DataTable();
+						Data.addColumn('string', 'Count');
+						Data.addColumn('number', 'Users');
+						
+						Data.addRows(Stats);
+//						NumberFormat.format(Data,1);
+//						NumberFormat.format(Data,2);
+//						NumberFormat.format(Data,3);
+//						NumberFormat.format(Data,4);
+	
+						Options.title = 'Total users by average number of votes';
+						TotalKillsChart_el.classList.remove('hidden');
+						TotalKillsChart.draw(Data,Options);
 					}
 				}
 			);

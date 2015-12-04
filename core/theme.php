@@ -282,6 +282,21 @@ function theme_GetIdeaStats() {
 	return $ret;
 }
 
+function theme_GetUserKillCounts() {
+	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_KILL_COUNTS");
+	
+	if ( $ret === null ) {
+		$ret = db_DoFetchPair(
+			"SELECT user,COUNT(id) FROM ".CMW_TABLE_THEME_IDEA_VOTE."
+				GROUP BY user
+			"
+		);
+
+		cache_Store(_THEME_CACHE_KEY."IDEA_KILL_COUNTS",$ret,_THEME_CACHE_TTL);
+	}
+	return $ret;
+}
+
 function theme_GetIdeaHourlyStats() {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_HOURLYSTATS");
 
