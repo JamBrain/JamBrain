@@ -149,7 +149,7 @@ else if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
 	case "RANDOM":
 		$response = theme_GetRandom($EVENT_NODE);
 		break;
-	case "GetAllIdeas":
+	case "GET_ALL_IDEAS":
 		$response['ideas'] = theme_GetIdeaList($EVENT_NODE);
 		break;
 	};
