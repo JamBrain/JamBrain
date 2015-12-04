@@ -392,10 +392,7 @@ function ShowStats() {
 						Data.addColumn('number', 'Users');
 						
 						Data.addRows(Stats);
-//						NumberFormat.format(Data,1);
-//						NumberFormat.format(Data,2);
-//						NumberFormat.format(Data,3);
-//						NumberFormat.format(Data,4);
+						NumberFormat.format(Data,1);
 	
 						Options.title = 'Total users by average number of votes';
 						TotalKillsChart_el.classList.remove('hidden');
