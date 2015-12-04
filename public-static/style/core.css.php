@@ -29,6 +29,9 @@ small {
 body {
 	margin:0;
 }
+main { /* IE Fix */
+	display:block;
+}
 img, a {
 	border:none;
 	outline:none;
