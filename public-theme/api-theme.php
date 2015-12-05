@@ -15,9 +15,9 @@ $EVENT_DATE = new DateTime("2015-12-12T02:00:00Z");
 // HACK, don't hardcode me! //
 const THEME_MODE_TIMES = [
 	0,
-	(2*7*24*60*60) - ((24+21)*60*60),//- (18*60*60),
+	(2*7*24*60*60) - ((24+21)*60*60),
 	(1*7*24*60*60) - (18*60*60),
-	(2*24*60*60) - (3*60*60),
+	(2*24*60*60), /* - (3*60*60),*/
 	(30*60),
 	0,
 	0,
@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 				$response['id'] = 0;
 			}
 		}
-		else if ( $action == "IDEA" /*&& IsThemeSlaughterOpen()*/ ) {
+		else if ( $action == "IDEA" && IsThemeSlaughterOpen() ) {
 			$theme_id = intval($_POST['id']);
 			$value = intval($_POST['value']);
 			if ( $theme_id > 0 && ($value <= 1) && ($value >= -1) ) {
