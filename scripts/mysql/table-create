@@ -165,6 +165,12 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 				ADD INDEX (parent)
 			;");
 		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
+	case 2:
+		$ok = DoCreate( $table,
+			"ALTER TABLE ".$table."
+				ADD COLUMN score BIGINT UNSIGNED NOT NULL
+			;");
+		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
 	};
 	DoExit($table);
 }

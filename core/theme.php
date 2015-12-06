@@ -87,6 +87,17 @@ function theme_SetParent($id, $value) {
 	);
 }
 
+function theme_SetScore($id, $value) {
+	return db_DoInsert(
+		"UPDATE ".CMW_TABLE_THEME_IDEA."
+		SET
+			score=?
+		WHERE
+			id=?;",
+		$value, $id
+	);
+}
+
 function theme_GetMyIdeas($node, $user) {
 	return db_DoFetch(
 		"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
@@ -267,6 +278,15 @@ function theme_GetMyIdeaStats($user) {
 		$user
 	);
 }
+
+function theme_GetVotesForIdea($node) {
+	return db_DoFetchSingle(
+		"SELECT value FROM ".CMW_TABLE_THEME_IDEA_VOTE." 
+		WHERE node=?",
+		$node
+	);	
+}
+
 function theme_GetIdeaStats() {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_STATS");
 	
