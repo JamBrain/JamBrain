@@ -201,7 +201,11 @@ function theme_GetIdeaList($node) {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_LIST");
 	
 	if ( $ret === null ) {
-		$ret = theme_GetOriginalIdeas($node); // Hack: For now, just use all original ideas
+		$ret = db_DoFetchPair(
+			"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
+			WHERE node=? AND parent=0 AND score >= 0;",
+			$node
+		);
 
 		cache_Store(_THEME_CACHE_KEY."IDEA_LIST",$ret,_THEME_CACHE_TTL);
 	}

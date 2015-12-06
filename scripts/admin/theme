@@ -99,51 +99,50 @@ else if ( $argv[1] === "score" ) {
 	echo "Scoring...\n";
 	
 	// Stats //
-	$min_votes = -1;
-	$max_votes = -1;
+	$min_votes = null;
+	$max_votes = null;
 	
-	$min_score = -1;
-	$max_score = -1;
+	$min_score = null;
+	$max_score = null;
 	
-	$mins = [ -1 => -1, 0 => -1, 1 => -1 ];
-	$maxes = [ -1 => -1, 0 => -1, 1 => -1 ];
+	$mins = [ -1 => null, 0 => null, 1 => null ];
+	$maxes = [ -1 => null, 0 => null, 1 => null ];
 	
 	$hack = 10;
 	foreach ( $theme_list as $key => $value ) {
 		$votes = theme_GetVotesForIdea($key);
 		
 		$votes_count = count($votes);
-		if ( $min_votes < 0 || $votes_count < $min_votes )
+		if ( $min_votes === null || $votes_count < $min_votes )
 			$min_votes = $votes_count;
-		if ( $votes_count > $max_votes )
+		if ( $max_votes === null || $votes_count > $max_votes )
 			$max_votes = $votes_count;
 		
-		$score = 0;
+		$score_sum = 0;
 		$scores = [ -1 => 0, 0 => 0, 1 => 0 ];
 		
 		for ($idx = 0; $idx < $votes_count; $idx++ ) {
-			$score += $votes[$idx]*2;
+			$score_sum += intval($votes[$idx]);
 			$scores[$votes[$idx]]++;
 		}
 
-		if ( $min_score < 0 || $score < $min_score )
-			$min_score = $score;
-		if ( $votes_count > $max_score )
-			$max_score = $score;
+		if ( $min_score === null || $score_sum < $min_score )
+			$min_score = $score_sum;
+		if ( $max_score === null || $score_sum > $max_score )
+			$max_score = $score_sum;
 
 		foreach ( [1,0,-1] as $idx ) {
-			if ( $mins[$idx] < 0 || $scores[$idx] < $mins[$idx] )
+			if ( $mins[$idx] === null || $scores[$idx] < $mins[$idx] )
 				$mins[$idx] = $scores[$idx];
-			if ( $scores[$idx] > $maxes[$idx] )
+			if ( $maxes[$idx] === null || $scores[$idx] > $maxes[$idx] )
 				$maxes[$idx] = $scores[$idx];
 		}
 		
-		theme_SetScore($key,$score/2);
-		
-//		echo $key.": ".$value." (Total: ".$votes_count."): ".$score." [".$scores[1]." ".$scores[0]." ".$scores[-1]."]\n";
-//		
-//		if ( $hack-- == 0)
-//			break;
+		// Minimum 10 votes before we score an entry //
+		if ( $votes_count > 10 ) {
+			$score = ($score_sum / $votes_count) * 200.0;
+			theme_SetScore($key,$score);
+		}
 	}
 	
 	echo "Votes: ".$min_votes." ... ".$max_votes."\n";
