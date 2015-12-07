@@ -765,10 +765,12 @@ function ShowVoting() {
 			node.setAttribute("id","vote-item-"+id);
 
 			node.innerHTML = 
+				"<span>"+
 				"<button class='middle button normal yes_button' onclick='vote_SetVote("+id+",1);'>✓</button>"+
 				"<button class='middle button normal dunno_button' onclick='vote_SetVote("+id+",0);'>?</button>"+
 				"<button class='middle button normal no_button' onclick='vote_SetVote("+id+",-1);'>✕</button>"+
-				"<div class='middle label'>"+text+"</div>";
+				"</span>"+
+				"<span class='middle label'>"+text+"</span>";
 			
 			document.getElementById('vote-page-list-'+page).appendChild( node );
 		}

@@ -349,12 +349,13 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 }
 .action .page .list .label {
 	margin:0.15em;
+	padding:0 0.25em;
 	display:inline-block;
 }
 
 .action .page .list button {
 	padding:3px;
-	width:32px;
+	min-width:28px;
 	cursor:pointer;
 
 	margin:0.0125em;
@@ -874,5 +875,20 @@ body > .body #extra {
 		font-size:1.4em;
 		margin:0;
 		border-radius:0;
+	}
+	body > .body .main {
+		padding-left:0;
+		padding-right:0;
+	}
+}
+
+/* Tablet and Mobile */
+@media <?= MOBILE_QUERY ?> {
+	body > .body .main .list .item {
+		border-top:1px solid rgba(255,255,255,0.5);
+		border-bottom:1px solid rgba(0,0,0,0.5);
+	}
+	.action .tab {
+		border-radius:0.25em;
 	}
 }
