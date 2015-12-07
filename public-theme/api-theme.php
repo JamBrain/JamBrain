@@ -115,6 +115,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 				}
 			}
 		}
+		else if ( $action == "VOTE" /*&& IsThemeVotingOpen()*/ ) {
+			$theme_id = intval($_POST['id']);
+			$value = intval($_POST['value']);
+			if ( $theme_id > 0 && ($value <= 1) && ($value >= -1) ) {
+				$list = theme_GetThemeValidVotingList($EVENT_NODE);
+				
+				// Confirm theme is on the list //
+				if ( isset($list[$theme_id]) ) {
+					$response['id'] = theme_AddVote($theme_id,$value,$user_id);
+					$response['idea_id'] = $theme_id;
+				}
+				else {
+					$response['id'] = 0;
+				}
+			}
+		}
+		else if ( $action == "GETVOTES" /*&& IsThemeVotingOpen()*/ ) {
+			$votes = theme_GetMyVotes($user_id);
+			
+			$list = theme_GetThemeValidVotingList($EVENT_NODE);
+			$response['id'] = $user_id;
+			$response['votes'] = [];
+			foreach ( $votes as $vote ) {
+				if ( isset($list[$vote['node']]) ) {
+					$response['votes'][] = ['id' => $vote['node'], 'idea' => $list[$vote['node']], 'value' => $vote['value']];
+				}
+			}
+		}	
 		else if ( $action == "SETPARENT" && $ADMIN /*&& IsThemeSlaughterOpen()*/ ) {
 			$parent = intval($_POST['parent']);
 			$children = [];

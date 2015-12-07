@@ -779,8 +779,11 @@ function ShowVoting() {
 			
 			document.getElementById('vote-page-list-'+page).appendChild( node );
 		}
+		function vote_AddResult(page,id,text,data) {
+			console.log(page,id,text,data);
+		}
 		
-		function vote_SetVote(id,value) {
+		function vote_UpdateVote(id,value) {
 			dom_ToggleClass('vote-item-'+id,'green_selected',false);
 			dom_ToggleClass('vote-item-'+id,'yellow_selected',false);
 			dom_ToggleClass('vote-item-'+id,'red_selected',false);
@@ -793,6 +796,22 @@ function ShowVoting() {
 			else if (value === -1) {
 				dom_ToggleClass('vote-item-'+id,'red_selected',true);
 			}
+		}
+		
+		function vote_SetVote(id,value) {
+			xhr_PostJSON(
+				"/api-theme.php",
+				serialize({"action":"VOTE",'id':id,'value':value}),
+				// On success //
+				function(response,code) {
+					console.log("VOTE:",response);
+					
+					// Determine success //
+
+					// Refresh Display //
+					vote_UpdateVote(id,value);
+				}
+			);
 		}
 		
 		var VoteRoundStart = [
@@ -815,12 +834,35 @@ function ShowVoting() {
 			function(response,code) {
 				console.log("GET_VOTING_LIST:",response);
 				
+				// Populate Choices //
 				for( var idx = 0; idx < response.themes.length; idx++ ) {
-					var Round = Math.floor(idx/20);
-					if ( VoteRoundStart[Round] <= 0 ) {
-						vote_AddItem(Round,response.themes[idx].id,response.themes[idx].theme);
+					var Theme = response.themes[idx];
+					if ( VoteRoundStart[Theme.page] <= 0 ) {
+						vote_AddItem(Theme.page,Theme.id,Theme.theme);
+					}
+					else if ( VoteRoundEnd[Theme.page] <= 0 ) {
+						vote_AddResult(Theme.page,Theme.id,Theme.theme,[0,0,0]);
 					}
 				}
+				
+				// Update Choices with my selections //
+				xhr_PostJSON(
+					"/api-theme.php",
+					serialize({"action":"GETVOTES"}),
+					// On success //
+					function(response,code) {
+						console.log("GETVOTES:",response);
+						
+						// Determine success //
+	
+						// Refresh Display //
+						for ( var idx = 0; idx < response.votes.length; idx++ ) {
+							var Vote = response.votes[idx];
+							vote_UpdateVote(Vote.id,Vote.value);
+						}
+					}
+				);
+				
 			}
 		);
 		

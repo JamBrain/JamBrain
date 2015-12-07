@@ -384,11 +384,39 @@ function theme_GetIdeaHourlyStats() {
 	return $ret;
 }
 
+function theme_GetThemeValidVotingList($node,$limit=80) {
+	$ret = cache_Fetch(_THEME_CACHE_KEY."VALID_VOTE_LIST");
+
+	if ( $ret === null ) {
+		// HACK, until Theme Table is populated //
+		$result = db_DoFetch(
+			"SELECT id,theme,score FROM ".CMW_TABLE_THEME_IDEA." 
+			WHERE node=? AND parent=0
+			ORDER BY score DESC
+			LIMIT ".$limit,
+			$node
+		);
+		
+		// HACK: Add Pages //
+		$idx = 0;
+		$ret = [];
+		foreach ($result AS &$item) {
+			$item['page'] = floor($idx/20);
+			
+			$ret[$item['id']] = $item;
+			$idx++;
+		}
+
+		cache_Store(_THEME_CACHE_KEY."VALID_VOTE_LIST",$ret,_THEME_CACHE_TTL);
+	}
+	return $ret;
+}
+
 
 function theme_GetThemeVotingList($node,$limit=80) {
-	//$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_LIST");
+	$ret = cache_Fetch(_THEME_CACHE_KEY."VOTE_LIST");
 
-	//if ( $ret === null ) {
+	if ( $ret === null ) {
 		// HACK, until Theme Table is populated //
 		$ret = db_DoFetch(
 			"SELECT id,theme,score FROM ".CMW_TABLE_THEME_IDEA." 
@@ -397,8 +425,56 @@ function theme_GetThemeVotingList($node,$limit=80) {
 			LIMIT ".$limit,
 			$node
 		);
+		
+		// HACK: Add Pages //
+		$idx = 0;
+		foreach ($ret AS &$item) {
+			$item['page'] = floor($idx/20);
+			$idx++;
+		}
 
-		//cache_Store(_THEME_CACHE_KEY."IDEA_LIST",$ret,_THEME_CACHE_TTL);
-	//}
+		cache_Store(_THEME_CACHE_KEY."VOTE_LIST",$ret,_THEME_CACHE_TTL);
+	}
 	return $ret;
+}
+
+function theme_GetFinalVotingList($node) {
+	
+}
+
+function theme_AddVote($node, $value, $user) {
+	return db_DoInsert(
+		"INSERT INTO ".CMW_TABLE_THEME_VOTE." (
+			node, user, value, `timestamp`
+		)
+		VALUES ( 
+			?, ?, ?, NOW()
+		)
+		ON DUPLICATE KEY UPDATE 
+			value=VALUES(value),
+			`timestamp`=VALUES(`timestamp`)
+		",
+		$node, $user, $value
+	);
+}
+function theme_RemoveVoteById($id) {
+	return db_DoDelete(
+		"DELETE FROM ".CMW_TABLE_THEME_VOTE." WHERE id=?;",
+		$id
+	);
+}
+function theme_RemoveVoteByUser($idea_id,$user) {
+	return db_DoDelete(
+		"DELETE FROM ".CMW_TABLE_THEME_VOTE." WHERE node=? AND user=?;",
+		$idea_id,$user
+	);
+}
+
+function theme_GetMyVotes($user) {
+	return db_DoFetch(
+		"SELECT node,value FROM ".CMW_TABLE_THEME_VOTE." 
+		WHERE user=?
+		",
+		$user
+	);
 }
