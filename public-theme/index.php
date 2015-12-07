@@ -709,8 +709,17 @@ function ShowVoting() {
 		<div id="vote-tab-2" class="tab big" onclick="vote_ShowPage(2);">Round 3</div>
 		<div id="vote-tab-3" class="tab big" onclick="vote_ShowPage(3);">Round 4</div>
 		
-		<div id="vote-page-0" class="page hidden">Page 1</div>
-		<div id="vote-page-1" class="page hidden"></div>
+		<div id="vote-page-0" class="page hidden">
+			Round Ends in XX<br />
+			<br />
+			<div class="item">
+				<div class="button yes">✓</div><div class="button dunno">○</div><div class="button no">✕</div>
+				<div class="label">Moon Pods</div>
+			</div>
+		</div>
+		<div id="vote-page-1" class="page hidden">
+			Round Begins in XX
+		</div>
 		<div id="vote-page-2" class="page hidden"></div>
 		<div id="vote-page-3" class="page hidden"></div>
 	</div>

@@ -291,7 +291,7 @@ a:focus, a:active {
 }
 
 /* Can't Select This */
-button, .sg-item-x, .action .tab {
+button, .sg-item-x, .action .tab, .action .page .item .button {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -319,6 +319,41 @@ button, .sg-item-x, .action .tab {
 	z-index:10;
 	position:relative;
 	box-shadow:0 2px 6px rgba(0,0,0,0.2);
+	
+	border-radius:0 0 0.25em 0.25em;
+	
+	text-align:left;
+}
+
+.action .page .item .button {
+	padding:0.25em;
+	margin:0.125em;
+	min-width:1em;
+	background:#DDD;
+	border-radius:0.25em;
+	display:inline-block;
+	
+	font-weight:700;
+	text-align:center;
+	cursor:pointer;
+}
+.action .page .item .label {
+	margin:0.15em;
+	display:inline-block;
+}
+
+
+.action .page .item .yes {
+	color:#0F0;
+	background:#6C6;
+}
+.action .page .item .no {
+	color:#F00;
+	background:#C66;
+}
+.action .page .item .dunno {
+	color:#FF0;
+	background:#CC6;
 }
 
 #dialog-back {
