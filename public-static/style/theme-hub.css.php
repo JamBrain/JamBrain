@@ -315,7 +315,8 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 }
 .action .page {
 	background:#FFF;
-	padding:0.5em;
+	padding:0;
+	margin:0;
 	z-index:10;
 	position:relative;
 	box-shadow:0 2px 6px rgba(0,0,0,0.2);
@@ -325,8 +326,26 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 	text-align:left;
 }
 
+.action .page {
+	padding:0.5em 0;
+}
+.action .page .title {
+	padding:0.5em;
+	margin:0;
+}
+.action .page .list .item {
+	padding:0 0.5em;
+}
+
 .action .page .list .button {
 	margin:0.15em;
+	background:#DDD;
+	color:#EEE;
+}
+.action .page .list .button:hover {
+	margin:0.15em;
+	background:#AAA;
+	color:#DDD;
 }
 .action .page .list .label {
 	margin:0.15em;
@@ -632,16 +651,16 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 }
 
 .red_button, .red_selected .no_button {
-	background:<?=PAL_RED[COL_BASE]?>;
-	color:<?=PAL_RED[COL_LIGHT]?>;
+	background:<?=PAL_RED[COL_BASE]?> !important;
+	color:<?=PAL_RED[COL_LIGHT]?> !important;
 }
 .red_button:focus, .no_button:focus {
-	background:<?=PAL_RED[COL_MUTE]?>;
-	color:<?=PAL_RED[COL_BRIGHT]?>;
+	background:<?=PAL_RED[COL_MUTE]?> !important;
+	color:<?=PAL_RED[COL_BRIGHT]?> !important;
 }
 .red_button:active, .no_button:active {
-	background:<?=PAL_RED[COL_BRIGHT]?>;
-	color:<?=PAL_RED[COL_MUTE]?>;
+	background:<?=PAL_RED[COL_BRIGHT]?> !important;
+	color:<?=PAL_RED[COL_MUTE]?> !important;
 	box-shadow: 0 0px 6px <?=PAL_RED[COL_MUTE]?> !important;
 }
 
@@ -686,16 +705,16 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 }
 
 .green_button, .green_selected .yes_button {
-	background:<?=PAL_GREEN[COL_BASE]?>;
-	color:<?=PAL_GREEN[COL_LIGHT]?>;
+	background:<?=PAL_GREEN[COL_BASE]?> !important;
+	color:<?=PAL_GREEN[COL_LIGHT]?> !important;
 }
 .green_button:focus, .yes_button:focus {
-	background:<?=PAL_GREEN[COL_MUTE]?>;
-	color:<?=PAL_GREEN[COL_BRIGHT]?>;
+	background:<?=PAL_GREEN[COL_MUTE]?> !important;
+	color:<?=PAL_GREEN[COL_BRIGHT]?> !important;
 }
 .green_button:active, .yes_button:active {
-	background:<?=PAL_GREEN[COL_BRIGHT]?>;
-	color:<?=PAL_GREEN[COL_MUTE]?>;
+	background:<?=PAL_GREEN[COL_BRIGHT]?> !important;
+	color:<?=PAL_GREEN[COL_MUTE]?> !important;
 	box-shadow: 0 0px 6px <?=PAL_GREEN[COL_MUTE]?> !important;
 }
 
@@ -769,16 +788,16 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 }
 
 .yellow_button, .yellow_selected .dunno_button {
-	background:<?=PAL_YELLOW[COL_BASE]?>;
-	color:<?=PAL_YELLOW[COL_LIGHT]?>;
+	background:<?=PAL_YELLOW[COL_BASE]?> !important;
+	color:<?=PAL_YELLOW[COL_LIGHT]?> !important;
 }
 .yellow_button:focus, .dunno_button:focus {
-	background:<?=PAL_YELLOW[COL_MUTE]?>;
-	color:<?=PAL_YELLOW[COL_BRIGHT]?>;
+	background:<?=PAL_YELLOW[COL_MUTE]?> !important;
+	color:<?=PAL_YELLOW[COL_BRIGHT]?> !important;
 }
 .yellow_button:active, .dunno_button:active {
-	background:<?=PAL_YELLOW[COL_BRIGHT]?>;
-	color:<?=PAL_YELLOW[COL_MUTE]?>;
+	background:<?=PAL_YELLOW[COL_BRIGHT]?> !important;
+	color:<?=PAL_YELLOW[COL_MUTE]?> !important;
 	box-shadow: 0 0px 6px <?=PAL_YELLOW[COL_MUTE]?> !important;
 }
 
