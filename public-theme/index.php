@@ -66,7 +66,7 @@ const THEME_MODE_TIMES = [
 	0,
 	(2*7*24*60*60) - ((24+21)*60*60),
 	(1*7*24*60*60) - (18*60*60),
-	(2*24*60*60),// - (3*60*60),
+	(2*24*60*60),
 	(30*60),
 	0,
 	0,
@@ -704,8 +704,29 @@ function ShowVoting() {
 	if ( $GLOBALS['EVENT_MODE_DIFF'] > 0 ) {	// Confirm the round is still on
 ?>
 	<div class="action" id="action-vote">
-		<div class="title big">Starting soon</div>
+		<div id="vote-tab-0" class="tab big" onclick="vote_ShowPage(0);">Round 1</div>
+		<div id="vote-tab-1" class="tab big" onclick="vote_ShowPage(1);">Round 2</div>
+		<div id="vote-tab-2" class="tab big" onclick="vote_ShowPage(2);">Round 3</div>
+		<div id="vote-tab-3" class="tab big" onclick="vote_ShowPage(3);">Round 4</div>
+		
+		<div id="vote-page-0" class="page hidden">Page 1</div>
+		<div id="vote-page-1" class="page hidden"></div>
+		<div id="vote-page-2" class="page hidden"></div>
+		<div id="vote-page-3" class="page hidden"></div>
 	</div>
+	<script>
+		var ActivePage = 0;
+		function vote_ShowPage(num) {
+			dom_ToggleClass("vote-page-"+ActivePage,"hidden",true);
+			dom_ToggleClass("vote-tab-"+ActivePage,"active",false);
+			
+			ActivePage = num;
+			
+			dom_ToggleClass("vote-page-"+ActivePage,"hidden",false);
+			dom_ToggleClass("vote-tab-"+ActivePage,"active",true);
+		}
+		vote_ShowPage(ActivePage);
+	</script>
 <?php
 	}
 }
@@ -782,6 +803,8 @@ function ShowVoting() {
 <?php	} ?>
 		sg_root.insertBefore( node, sg_root.childNodes[0] );
 		//sg_root.appendChild( node );
+		
+		document.getElementById('extra').classList.remove("hidden");
 	}
 
 	function sg_RemoveIdea(Id,Idea) {
@@ -1175,9 +1198,9 @@ function ShowVoting() {
 	<?php
 	if ( $CONFIG['active'] ) {
 		if ( $cookie_id && !$admin ) {
-			echo "<div class='extra'>";
-			ShowMyIdeas();
-			//ShowMyLikes();
+			echo "<div id='extra' class='hidden'>";
+				ShowMyIdeas();
+				//ShowMyLikes();
 			echo "</div>";
 		}
 		

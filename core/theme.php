@@ -115,6 +115,38 @@ function theme_CountMyIdeas($node, $user, $arg_string="") {
 		return intval($ret[0]);
 	return false;
 }
+function theme_GetMyIdeasWithScores($node, $user) {
+	$ret = db_DoFetch(
+		"SELECT id,theme,parent,score FROM ".CMW_TABLE_THEME_IDEA." 
+		WHERE node=? AND user=?",
+		$node, $user
+	);
+	
+	$parents = [];
+	foreach( $ret as $idea ) {
+		if ( $idea['parent'] > 0 ) {
+			$parents[] = intval($idea['id']);
+		}
+	}
+	
+	if ( !empty($parents) ) {
+		$parent_scores = db_DoFetch(
+			"SELECT id,score FROM ".CMW_TABLE_THEME_IDEA." 
+			WHERE node IN ?",
+			$parents
+		);
+		
+		foreach( $ret as &$idea ) {
+			$idx = intval($idea['parent']);
+			if ( isset($parent_scores[$idx]) ) {
+				$idea['score'] = intval($parent_scores[$idx]);
+			}
+		}
+	}
+	
+	return $ret;
+}
+
 
 // Ideas are associated with nodes //
 function theme_GetIdeas($node) {

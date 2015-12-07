@@ -274,5 +274,28 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 	DoExit($table);
 }
 
+// Create/Upgrade Table //
+$table = CMW_TABLE_THEME_VOTE;
+if ( !isset($table_list) || isset($table_list[$table]) ) {
+	DoInit($table);
+	switch ($version) {
+	case 0:
+		$ok = DoCreate( $table,
+			"CREATE TABLE ".$table." (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
+					UNIQUE,
+				user BIGINT UNSIGNED NOT NULL,
+					INDEX(user),
+				node BIGINT UNSIGNED NOT NULL,
+					INDEX(node),
+					UNIQUE `user_node` (user,node),
+				timestamp DATETIME NOT NULL,
+				value INT NOT NULL,
+					ADD INDEX (value)
+			)".DEFAULT_CS_ENGINE.";");
+		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
+	DoExit($table);
+}
+
 
 print "Done.\n";

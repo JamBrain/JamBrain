@@ -118,18 +118,18 @@ body > .body .headline {
 	margin-top:2.0em !important;
 }
 
-.extra {
+#extra {
 	padding:1.0em 0;
 	color:#630;
 	background: -webkit-linear-gradient(to bottom,#FEC 35%,#FDA 100%);
 	background: linear-gradient(to bottom,#FEC 35%,#FDA 100%);
 	box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
-.extra .title {
+#extra .title {
 	margin-bottom:0.5em;
 	padding:0 1.0em;
 }
-.extra > div {
+#extra > div {
 	margin:0 auto;
 }
 
@@ -291,13 +291,34 @@ a:focus, a:active {
 }
 
 /* Can't Select This */
-button, .sg-item-x {
+button, .sg-item-x, .action .tab {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+.action .active {
+	background:#FFF;
+	box-shadow:0 2px 6px rgba(0,0,0,0.2);
+	z-index:10;
+}
+.action .tab {
+	display:inline-block;
+	padding:0.5em;
+	
+	cursor:pointer;
+	position:relative;
+	border-radius:0.25em 0.25em 0 0;
+}
+.action .page {
+	background:#FFF;
+	padding:0.5em;
+	z-index:10;
+	position:relative;
+	box-shadow:0 2px 6px rgba(0,0,0,0.2);
 }
 
 #dialog-back {
@@ -749,7 +770,7 @@ body > .body > div {
 body > .body .main {
 	display:inline-block;
 }
-body > .body .extra {
+body > .body #extra {
 	display:inline-block;
 	min-width:12em;
 	max-width:30%;
@@ -765,7 +786,7 @@ body > .body .extra {
 	body > .body .main {
 		display:block;
 	}
-	body > .body .extra {
+	body > .body #extra {
 		display:block;
 		max-width:none;
 		font-size:1.4em;
