@@ -87,10 +87,6 @@ const THEME_VOTE_START_TIMES = [
 	(5*24*60*60) - (24*60*60),
 	(4*24*60*60) - (12*60*60),
 	(4*24*60*60) - (24*60*60),
-//	(6*24*60*60) - (12*60*60),
-//	(6*24*60*60) - (24*60*60),
-//	(5*24*60*60) - (12*60*60),
-//	(5*24*60*60) - (24*60*60),
 ];
 
 const THEME_VOTE_END_TIMES = [
@@ -767,9 +763,6 @@ function ShowVoting() {
 			var node = document.createElement('div');
 			node.setAttribute("class",'item');
 			node.setAttribute("id","vote-item-"+id);
-//			node.addEventListener('click',function(){
-//				vote_EditTheme(Id,Idea);
-//			});
 
 			node.innerHTML = 
 				"<button class='middle button normal green_button' onclick='vote_SetVote("+id+",1);'>✓</button>"+
@@ -806,10 +799,13 @@ function ShowVoting() {
 				function(response,code) {
 					console.log("VOTE:",response);
 					
-					// Determine success //
-
-					// Refresh Display //
-					vote_UpdateVote(id,value);
+					// Success //
+					if ( response.id > 0 ) {
+						vote_UpdateVote(id,value);
+					}
+					else {
+						dialog_Alert("Unable to Vote","Try refreshing your browser");
+					}
 				}
 			);
 		}
@@ -854,11 +850,12 @@ function ShowVoting() {
 						console.log("GETVOTES:",response);
 						
 						// Determine success //
-	
-						// Refresh Display //
-						for ( var idx = 0; idx < response.votes.length; idx++ ) {
-							var Vote = response.votes[idx];
-							vote_UpdateVote(Vote.id,Vote.value);
+						if ( response.votes ) {
+							// Refresh Display //
+							for ( var idx = 0; idx < response.votes.length; idx++ ) {
+								var Vote = response.votes[idx];
+								vote_UpdateVote(Vote.id,Vote.value);
+							}
 						}
 					}
 				);
