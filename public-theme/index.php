@@ -765,9 +765,9 @@ function ShowVoting() {
 			node.setAttribute("id","vote-item-"+id);
 
 			node.innerHTML = 
-				"<button class='middle button normal green_button' onclick='vote_SetVote("+id+",1);'>✓</button>"+
-				"<button class='middle button normal yellow_button' onclick='vote_SetVote("+id+",0);'>?</button>"+
-				"<button class='middle button normal red_button' onclick='vote_SetVote("+id+",-1);'>✕</button>"+
+				"<button class='middle button normal yes_button' onclick='vote_SetVote("+id+",1);'>✓</button>"+
+				"<button class='middle button normal dunno_button' onclick='vote_SetVote("+id+",0);'>?</button>"+
+				"<button class='middle button normal no_button' onclick='vote_SetVote("+id+",-1);'>✕</button>"+
 				"<div class='middle label'>"+text+"</div>";
 			
 			document.getElementById('vote-page-list-'+page).appendChild( node );
@@ -791,7 +791,22 @@ function ShowVoting() {
 			}
 		}
 		
+		
+		var _VOTE_ACTIVE = false;
+		function vote_ReactivateVote(delay) {
+			window.setTimeout(
+				function(){
+					_VOTE_ACTIVE = false;
+				},
+				delay?delay:300
+			);
+		}
+		
 		function vote_SetVote(id,value) {
+			if ( _VOTE_ACTIVE )
+				return;
+			_VOTE_ACTIVE = true;
+			
 			xhr_PostJSON(
 				"/api-theme.php",
 				serialize({"action":"VOTE",'id':id,'value':value}),
@@ -803,11 +818,12 @@ function ShowVoting() {
 					if ( response.id > 0 ) {
 						vote_UpdateVote(id,value);
 					}
-					else {
-						dialog_Alert("Unable to Vote","Try refreshing your browser");
-					}
+//					else {
+//						dialog_Alert("Unable to Vote","Try refreshing your browser");
+//					}
 				}
 			);
+			vote_ReactivateVote();
 		}
 		
 		var VoteRoundStart = [

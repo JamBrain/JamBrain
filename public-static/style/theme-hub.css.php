@@ -326,7 +326,7 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 }
 
 .action .page .list .button {
-	margin:0 0.15em;
+	margin:0.15em;
 }
 .action .page .list .label {
 	margin:0.15em;
@@ -631,15 +631,15 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 	box-shadow: 0 0px 6px <?=PAL_RED[COL_MUTE_LIGHT]?>;
 }
 
-.red_button {
+.red_button, .red_selected .no_button {
 	background:<?=PAL_RED[COL_BASE]?>;
 	color:<?=PAL_RED[COL_LIGHT]?>;
 }
-.red_button:focus {
+.red_button:focus, .no_button:focus {
 	background:<?=PAL_RED[COL_MUTE]?>;
 	color:<?=PAL_RED[COL_BRIGHT]?>;
 }
-.red_button:active {
+.red_button:active, .no_button:active {
 	background:<?=PAL_RED[COL_BRIGHT]?>;
 	color:<?=PAL_RED[COL_MUTE]?>;
 	box-shadow: 0 0px 6px <?=PAL_RED[COL_MUTE]?> !important;
@@ -647,6 +647,8 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 
 .red_selected {
 	background:<?=PAL_RED[COL_MUTE_LIGHT]?>;
+	background:-webkit-linear-gradient(to left, <?=PAL_RED[COL_MUTE_LIGHT]?> 0%,#FFF 50%);
+	background:linear-gradient(to left, <?=PAL_RED[COL_MUTE_LIGHT]?> 0%,#FFF 50%);
 }
 .red_selected .red_button {
 	border:2px solid <?=PAL_RED[COL_DEEP]?> !important;
@@ -683,15 +685,15 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 	box-shadow: 0 0px 6px <?=PAL_GREEN[COL_MUTE_LIGHT]?>;
 }
 
-.green_button {
+.green_button, .green_selected .yes_button {
 	background:<?=PAL_GREEN[COL_BASE]?>;
 	color:<?=PAL_GREEN[COL_LIGHT]?>;
 }
-.green_button:focus {
+.green_button:focus, .yes_button:focus {
 	background:<?=PAL_GREEN[COL_MUTE]?>;
 	color:<?=PAL_GREEN[COL_BRIGHT]?>;
 }
-.green_button:active {
+.green_button:active, .yes_button:active {
 	background:<?=PAL_GREEN[COL_BRIGHT]?>;
 	color:<?=PAL_GREEN[COL_MUTE]?>;
 	box-shadow: 0 0px 6px <?=PAL_GREEN[COL_MUTE]?> !important;
@@ -699,6 +701,8 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 
 .green_selected {
 	background:<?=PAL_GREEN[COL_MUTE_LIGHT]?>;
+	background:-webkit-linear-gradient(to left, <?=PAL_GREEN[COL_MUTE_LIGHT]?> 0%,#FFF 50%);
+	background:linear-gradient(to left, <?=PAL_GREEN[COL_MUTE_LIGHT]?> 0%,#FFF 50%);
 }
 .green_selected .green_button {
 	border:2px solid <?=PAL_GREEN[COL_DEEP]?> !important;
@@ -764,15 +768,15 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 	box-shadow: 0 0px 6px <?=PAL_YELLOW[COL_MUTE_LIGHT]?>;
 }
 
-.yellow_button {
+.yellow_button, .yellow_selected .dunno_button {
 	background:<?=PAL_YELLOW[COL_BASE]?>;
 	color:<?=PAL_YELLOW[COL_LIGHT]?>;
 }
-.yellow_button:focus {
+.yellow_button:focus, .dunno_button:focus {
 	background:<?=PAL_YELLOW[COL_MUTE]?>;
 	color:<?=PAL_YELLOW[COL_BRIGHT]?>;
 }
-.yellow_button:active {
+.yellow_button:active, .dunno_button:active {
 	background:<?=PAL_YELLOW[COL_BRIGHT]?>;
 	color:<?=PAL_YELLOW[COL_MUTE]?>;
 	box-shadow: 0 0px 6px <?=PAL_YELLOW[COL_MUTE]?> !important;
@@ -780,6 +784,8 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 
 .yellow_selected {
 	background:<?=PAL_YELLOW[COL_MUTE_LIGHT]?>;
+	background:-webkit-linear-gradient(to left, <?=PAL_YELLOW[COL_MUTE_LIGHT]?> 0%,#FFF 50%);
+	background:linear-gradient(to left, <?=PAL_YELLOW[COL_MUTE_LIGHT]?> 0%,#FFF 50%);
 }
 .yellow_selected .yellow_button {
 	border:2px solid <?=PAL_YELLOW[COL_DEEP]?> !important;
