@@ -82,11 +82,45 @@ const THEME_MODE_SHOW_TIMES = [
 	false,
 ];
 
+const THEME_VOTE_START_TIMES = [
+	(5*24*60*60) - (12*60*60),
+	(5*24*60*60) - (24*60*60),
+	(4*24*60*60) - (12*60*60),
+	(4*24*60*60) - (24*60*60),
+//	(6*24*60*60) - (12*60*60),
+//	(6*24*60*60) - (24*60*60),
+//	(5*24*60*60) - (12*60*60),
+//	(5*24*60*60) - (24*60*60),
+];
+
+const THEME_VOTE_END_TIMES = [
+	(4*24*60*60) - (18*60*60),
+	(4*24*60*60) - (24*60*60),
+	(3*24*60*60) - (12*60*60),
+	(3*24*60*60) - (24*60*60),
+];
+
+$THEME_VOTE_START_DATE = [];
+$THEME_VOTE_START_DIFF = [];
+$THEME_VOTE_END_DATE = [];
+$THEME_VOTE_END_DIFF = [];
+
 
 // Date Hack //
 $EVENT_MODE_DATE = $EVENT_DATE->getTimestamp() - THEME_MODE_TIMES[$EVENT_MODE];
 $EVENT_MODE_DIFF = $EVENT_MODE_DATE - time();
 
+$EVENT_VOTE_ACTIVE = 3;
+for( $idx = 0; $idx < count(THEME_VOTE_START_TIMES); $idx++ ) {
+	$THEME_VOTE_START_DATE[$idx] = $EVENT_DATE->getTimestamp() - THEME_VOTE_START_TIMES[$idx];
+	$THEME_VOTE_START_DIFF[$idx] = $THEME_VOTE_START_DATE[$idx] - time();
+	$THEME_VOTE_END_DATE[$idx] = $EVENT_DATE->getTimestamp() - THEME_VOTE_END_TIMES[$idx];
+	$THEME_VOTE_END_DIFF[$idx] = $THEME_VOTE_END_DATE[$idx] - time();
+	
+	if ( $THEME_VOTE_START_DIFF[$idx] <= 0 ) {
+		$EVENT_VOTE_ACTIVE = $idx;
+	}
+}
 
 function ShowHeader() {
 	global $EVENT_NAME, $EVENT_MODE, $EVENT_DATE;
@@ -710,21 +744,109 @@ function ShowVoting() {
 		<div id="vote-tab-3" class="tab big" onclick="vote_ShowPage(3);">Round 4</div>
 		
 		<div id="vote-page-0" class="page hidden">
-			Round Ends in XX<br />
-			<br />
-			<div class="item">
-				<div class="button yes">✓</div><div class="button dunno">○</div><div class="button no">✕</div>
-				<div class="label">Moon Pods</div>
-			</div>
+			<div id="vote-page-when-0" class="title"></div>
+			<div id="vote-page-list-0" class="list title"></div>
 		</div>
 		<div id="vote-page-1" class="page hidden">
-			Round Begins in XX
+			<div id="vote-page-when-1" class="title"></div>
+			<div id="vote-page-list-1" class="list title"></div>
 		</div>
-		<div id="vote-page-2" class="page hidden"></div>
-		<div id="vote-page-3" class="page hidden"></div>
+		<div id="vote-page-2" class="page hidden">
+			<div id="vote-page-when-2" class="title"></div>
+			<div id="vote-page-list-2" class="list title"></div>
+		</div>
+		<div id="vote-page-3" class="page hidden">
+			<div id="vote-page-when-3" class="title"></div>
+			<div id="vote-page-list-3" class="list title"></div>
+		</div>
 	</div>
 	<script>
-		var ActivePage = 0;
+		function vote_AddItem(page,id,text) {
+			id = Number(id);
+			
+			var node = document.createElement('div');
+			node.setAttribute("class",'item');
+			node.setAttribute("id","vote-item-"+id);
+//			node.addEventListener('click',function(){
+//				vote_EditTheme(Id,Idea);
+//			});
+
+			node.innerHTML = 
+				"<button class='middle button normal green_button' onclick='vote_SetVote("+id+",1);'>✓</button>"+
+				"<button class='middle button normal yellow_button' onclick='vote_SetVote("+id+",0);'>?</button>"+
+				"<button class='middle button normal red_button' onclick='vote_SetVote("+id+",-1);'>✕</button>"+
+				"<div class='middle label'>"+text+"</div>";
+			
+			document.getElementById('vote-page-list-'+page).appendChild( node );
+		}
+		
+		function vote_SetVote(id,value) {
+			dom_ToggleClass('vote-item-'+id,'green_selected',false);
+			dom_ToggleClass('vote-item-'+id,'yellow_selected',false);
+			dom_ToggleClass('vote-item-'+id,'red_selected',false);
+			if (value === 1) {
+				dom_ToggleClass('vote-item-'+id,'green_selected',true);
+			}
+			else if (value === 0) {
+				dom_ToggleClass('vote-item-'+id,'yellow_selected',true);
+			}
+			else if (value === -1) {
+				dom_ToggleClass('vote-item-'+id,'red_selected',true);
+			}
+		}
+		
+		var VoteRoundStart = [
+			<?=$GLOBALS['THEME_VOTE_START_DIFF'][0]?>,
+			<?=$GLOBALS['THEME_VOTE_START_DIFF'][1]?>,
+			<?=$GLOBALS['THEME_VOTE_START_DIFF'][2]?>,
+			<?=$GLOBALS['THEME_VOTE_START_DIFF'][3]?>,
+		];
+		var VoteRoundEnd = [
+			<?=$GLOBALS['THEME_VOTE_END_DIFF'][0]?>,
+			<?=$GLOBALS['THEME_VOTE_END_DIFF'][1]?>,
+			<?=$GLOBALS['THEME_VOTE_END_DIFF'][2]?>,
+			<?=$GLOBALS['THEME_VOTE_END_DIFF'][3]?>,
+		];
+		
+		xhr_PostJSON(
+			"/api-theme.php",
+			serialize({"action":"GET_VOTING_LIST"}),
+			// On success //
+			function(response,code) {
+				console.log("GET_VOTING_LIST:",response);
+				
+				for( var idx = 0; idx < response.themes.length; idx++ ) {
+					var Round = Math.floor(idx/20);
+					if ( VoteRoundStart[Round] <= 0 ) {
+						vote_AddItem(Round,response.themes[idx].id,response.themes[idx].theme);
+					}
+				}
+			}
+		);
+		
+		function UpdateVoteRoundClocks() {
+			var LocalTimeDiff = Date.now() - _LOCAL_TIME;
+			
+			for ( var idx = 0; idx < 4; idx++ ) {
+				var StartDiff = VoteRoundStart[idx] - Math.ceil(LocalTimeDiff*0.001);
+				var EndDiff = VoteRoundEnd[idx] - Math.ceil(LocalTimeDiff*0.001);
+				
+				if ( StartDiff > 0 ) {
+					dom_SetText('vote-page-when-'+idx,"Voting starts in "+getCountdownInWeeks(StartDiff,3,true));
+				}
+				else if ( EndDiff > 0 ) {
+					dom_SetText('vote-page-when-'+idx,"Voting ends in "+getCountdownInWeeks(EndDiff,3,true));
+				}
+				else {
+					dom_SetText('vote-page-when-'+idx,"This voting round has ended.");
+				}
+			}
+			
+			time_CallNextSecond(UpdateVoteRoundClocks);
+		}
+		UpdateVoteRoundClocks();
+
+		var ActivePage = <?=$GLOBALS['EVENT_VOTE_ACTIVE'];?>;
 		function vote_ShowPage(num) {
 			dom_ToggleClass("vote-page-"+ActivePage,"hidden",true);
 			dom_ToggleClass("vote-tab-"+ActivePage,"active",false);

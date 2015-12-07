@@ -174,6 +174,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 			ksort($ret_kills);
 			$response['kill_counts'] = array_values($ret_kills);
 		}
+		else if ( $action == "GET_VOTING_LIST" ) {
+			$response['themes'] = theme_GetThemeVotingList($EVENT_NODE);
+		}
 	}
 }
 else if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
@@ -183,6 +186,9 @@ else if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
 		break;
 	case "GET_ALL_IDEAS":
 		$response['ideas'] = theme_GetIdeaList($EVENT_NODE);
+		break;
+	case "GET_VOTING_LIST":
+		$response['theme'] = theme_GetThemeVotingList($EVENT_NODE,100);
 		break;
 	};
 }

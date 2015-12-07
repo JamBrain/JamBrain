@@ -384,3 +384,21 @@ function theme_GetIdeaHourlyStats() {
 	return $ret;
 }
 
+
+function theme_GetThemeVotingList($node,$limit=80) {
+	//$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_LIST");
+
+	//if ( $ret === null ) {
+		// HACK, until Theme Table is populated //
+		$ret = db_DoFetch(
+			"SELECT id,theme,score FROM ".CMW_TABLE_THEME_IDEA." 
+			WHERE node=? AND parent=0
+			ORDER BY score DESC
+			LIMIT ".$limit,
+			$node
+		);
+
+		//cache_Store(_THEME_CACHE_KEY."IDEA_LIST",$ret,_THEME_CACHE_TTL);
+	//}
+	return $ret;
+}

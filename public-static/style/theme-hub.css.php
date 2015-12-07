@@ -291,7 +291,7 @@ a:focus, a:active {
 }
 
 /* Can't Select This */
-button, .sg-item-x, .action .tab, .action .page .item .button {
+button, .sg-item-x, .action .tab, .action .page .list .button {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -301,7 +301,7 @@ button, .sg-item-x, .action .tab, .action .page .item .button {
 }
 
 .action .active {
-	background:#FFF;
+	background:#EEE;
 	box-shadow:0 2px 6px rgba(0,0,0,0.2);
 	z-index:10;
 }
@@ -325,36 +325,31 @@ button, .sg-item-x, .action .tab, .action .page .item .button {
 	text-align:left;
 }
 
-.action .page .item .button {
-	padding:0.25em;
-	margin:0.125em;
-	min-width:1em;
-	background:#DDD;
-	border-radius:0.25em;
-	display:inline-block;
-	
-	font-weight:700;
-	text-align:center;
-	cursor:pointer;
+.action .page .list .button {
+	margin:0 0.15em;
 }
-.action .page .item .label {
+.action .page .list .label {
 	margin:0.15em;
 	display:inline-block;
 }
 
+.action .page .list button {
+	padding:3px;
+	width:32px;
+	cursor:pointer;
 
-.action .page .item .yes {
-	color:#0F0;
-	background:#6C6;
+	margin:0.0125em;
+	border-radius:0.25em;
 }
-.action .page .item .no {
-	color:#F00;
-	background:#C66;
+.action .page .list button:active {
+	padding:3px;
+	border:0;
 }
-.action .page .item .dunno {
-	color:#FF0;
-	background:#CC6;
+.action .page .list button:focus {
+	padding:3px;
+	border:0;
 }
+
 
 #dialog-back {
 	background:rgba(64,48,48,0.7);
@@ -622,15 +617,15 @@ button, .sg-item-x, .action .tab, .action .page .item .button {
 .red_dialog .buttons {
 	color:<?=PAL_RED[COL_DEEP]?>;
 }
-.red_dialog button, .red_button {
+.red_dialog button {
 	background:<?=PAL_RED[COL_MUTE]?>;
 	color:<?=PAL_RED[COL_MUTE_BRIGHT]?>;
 }
-.red_dialog button:focus, .red_button:focus {
+.red_dialog button:focus {
 	background:<?=PAL_RED[COL_MUTE_LIGHT]?>;
 	color:<?=PAL_RED[COL_BRIGHT]?>;
 }
-.red_dialog button:active, .red_button:active {
+.red_dialog button:active {
 	background:<?=PAL_RED[COL_BRIGHT]?>;
 	color:<?=PAL_RED[COL_MUTE_LIGHT]?>;
 	box-shadow: 0 0px 6px <?=PAL_RED[COL_MUTE_LIGHT]?>;
@@ -647,8 +642,18 @@ button, .sg-item-x, .action .tab, .action .page .item .button {
 .red_button:active {
 	background:<?=PAL_RED[COL_BRIGHT]?>;
 	color:<?=PAL_RED[COL_MUTE]?>;
-	box-shadow: 0 0px 6px <?=PAL_RED[COL_MUTE]?>;
+	box-shadow: 0 0px 6px <?=PAL_RED[COL_MUTE]?> !important;
 }
+
+.red_selected {
+	background:<?=PAL_RED[COL_MUTE_LIGHT]?>;
+}
+.red_selected .red_button {
+	border:2px solid <?=PAL_RED[COL_DEEP]?> !important;
+	padding:1px !important;
+}
+
+
 
 /* Green */
 .green_dialog {
@@ -689,8 +694,17 @@ button, .sg-item-x, .action .tab, .action .page .item .button {
 .green_button:active {
 	background:<?=PAL_GREEN[COL_BRIGHT]?>;
 	color:<?=PAL_GREEN[COL_MUTE]?>;
-	box-shadow: 0 0px 6px <?=PAL_GREEN[COL_MUTE]?>;
+	box-shadow: 0 0px 6px <?=PAL_GREEN[COL_MUTE]?> !important;
 }
+
+.green_selected {
+	background:<?=PAL_GREEN[COL_MUTE_LIGHT]?>;
+}
+.green_selected .green_button {
+	border:2px solid <?=PAL_GREEN[COL_DEEP]?> !important;
+	padding:1px !important;
+}
+
 
 
 /* Blue */
@@ -761,7 +775,15 @@ button, .sg-item-x, .action .tab, .action .page .item .button {
 .yellow_button:active {
 	background:<?=PAL_YELLOW[COL_BRIGHT]?>;
 	color:<?=PAL_YELLOW[COL_MUTE]?>;
-	box-shadow: 0 0px 6px <?=PAL_YELLOW[COL_MUTE]?>;
+	box-shadow: 0 0px 6px <?=PAL_YELLOW[COL_MUTE]?> !important;
+}
+
+.yellow_selected {
+	background:<?=PAL_YELLOW[COL_MUTE_LIGHT]?>;
+}
+.yellow_selected .yellow_button {
+	border:2px solid <?=PAL_YELLOW[COL_DEEP]?> !important;
+	padding:1px !important;
 }
 
 
