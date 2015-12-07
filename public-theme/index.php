@@ -818,9 +818,9 @@ function ShowVoting() {
 					if ( response.id > 0 ) {
 						vote_UpdateVote(id,value);
 					}
-//					else {
-//						dialog_Alert("Unable to Vote","Try refreshing your browser");
-//					}
+					else if ( response.id !== 0 ) {
+						dialog_Alert("Unable to Vote","Try refreshing your browser");
+					}
 				}
 			);
 			vote_ReactivateVote();
