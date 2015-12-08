@@ -1369,15 +1369,6 @@ function ShowVoting() {
 						};
 					}
 				}
-					
-				if ( $cookie_id ) {
-					if ( $EVENT_MODE !== 5 )	// Announcement //
-						ShowLogout();
-				}
-				else {
-					if ( $EVENT_MODE !== 5 )	// Announcement //
-						ShowLogin();
-				}
 			}
 			else {
 				ShowInactive();
@@ -1391,6 +1382,15 @@ function ShowVoting() {
 				ShowMyIdeas();
 				//ShowMyLikes();
 			echo "</div>";
+		}
+
+		if ( $cookie_id ) {
+			if ( $EVENT_MODE !== 5 )	// Announcement //
+				ShowLogout();
+		}
+		else {
+			if ( $EVENT_MODE !== 5 )	// Announcement //
+				ShowLogin();
 		}
 		
 		ShowStats();
