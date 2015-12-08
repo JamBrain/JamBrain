@@ -9,8 +9,11 @@ if ( PHP_SAPI !== "cli" ) {
 if ( count($argv) < 2 ) {
 	echo "Usage: ".$argv[0]." [command]\n";
 	echo "\n";
-	echo "  dupes - Remove Duplicate Ideas\n";
-	echo "  score - Score Ideas\n";
+	echo "  dupes   - Remove Duplicate Ideas\n";
+	echo "  score   - Score Ideas\n";
+	echo "  promote - Promote highest scored Ideas to Themes\n";
+	echo "  page    - Assign pages to themes\n";
+	echo "\n";
 	die;
 }
 
@@ -149,6 +152,53 @@ else if ( $argv[1] === "score" ) {
 	echo "Scores: ".$min_score." ... ".$max_score."\n";
 	foreach ( [1,0,-1] as $idx ) {
 		echo "[".$idx."]: ".$mins[$idx]." ... ".$maxes[$idx]."\n";
+	}
+}
+else if ( $argv[1] === "promote" ) {
+	print "\n*** WARNING ***\n\n";
+	print "You are about to promote the highest scored Ideas to Themes\n";
+	print "\nAre you sure [type 'YES']? ";
+	flush();
+	$input = trim(fgets(STDIN));
+	if ( $input != "YES" ) {
+		print "Aborting...\n";
+		exit(1);
+	}
+
+	echo "Fetching Theme List...\n";
+	
+	$theme_list = theme_GetScoredIdeaList($EVENT_NODE,110);
+	
+	echo "Copying Themes...\n";
+	foreach( $theme_list AS $theme ) {
+		theme_AddTheme($theme['id'],$EVENT_NODE,$theme['theme']);
+	}
+}
+else if ( $argv[1] === "page" ) {
+	print "\n*** WARNING ***\n\n";
+	print "You are about to page the Theme list\n";
+	print "\nAre you sure [type 'YES']? ";
+	flush();
+	$input = trim(fgets(STDIN));
+	if ( $input != "YES" ) {
+		print "Aborting...\n";
+		exit(1);
+	}
+
+	echo "Fetching Theme List...\n";
+	
+	$theme_list = theme_GetThemeVotingList($EVENT_NODE);
+	
+	if ( count($theme_list) === 80 ) {
+		$idx = 0;
+		foreach( $theme_list AS $theme ) {
+			theme_SetPage($theme['id'],floor($idx/20));
+			$idx++;
+		}
+	}
+	else {
+		print "Error: Not 80 Themes [".count($theme_list)."]\n";
+		exit(1);
 	}
 }
 else {

@@ -384,27 +384,19 @@ function theme_GetIdeaHourlyStats() {
 	return $ret;
 }
 
-function theme_GetThemeValidVotingList($node,$limit=80) {
+function theme_GetThemeValidVotingList($node) {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."VALID_VOTE_LIST");
 
 	if ( $ret === null ) {
-		// HACK, until Theme Table is populated //
 		$result = db_DoFetch(
-			"SELECT id,theme,score FROM ".CMW_TABLE_THEME_IDEA." 
-			WHERE node=? AND parent=0
-			ORDER BY score DESC
-			LIMIT ".$limit,
+			"SELECT id,theme,page FROM ".CMW_TABLE_THEME." 
+			WHERE node=? AND page<4",
 			$node
 		);
 		
-		// HACK: Add Pages //
-		$idx = 0;
 		$ret = [];
 		foreach ($result AS &$item) {
-			$item['page'] = floor($idx/20);
-			
 			$ret[$item['id']] = $item;
-			$idx++;
 		}
 
 		cache_Store(_THEME_CACHE_KEY."VALID_VOTE_LIST",$ret,_THEME_CACHE_TTL);
@@ -413,25 +405,15 @@ function theme_GetThemeValidVotingList($node,$limit=80) {
 }
 
 
-function theme_GetThemeVotingList($node,$limit=80) {
+function theme_GetThemeVotingList($node) {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."VOTE_LIST");
 
 	if ( $ret === null ) {
-		// HACK, until Theme Table is populated //
 		$ret = db_DoFetch(
-			"SELECT id,theme,score FROM ".CMW_TABLE_THEME_IDEA." 
-			WHERE node=? AND parent=0
-			ORDER BY score DESC
-			LIMIT ".$limit,
+			"SELECT id,theme,page FROM ".CMW_TABLE_THEME." 
+			WHERE node=? AND page<4",
 			$node
 		);
-		
-		// HACK: Add Pages //
-		$idx = 0;
-		foreach ($ret AS &$item) {
-			$item['page'] = floor($idx/20);
-			$idx++;
-		}
 
 		cache_Store(_THEME_CACHE_KEY."VOTE_LIST",$ret,_THEME_CACHE_TTL);
 	}
@@ -476,5 +458,41 @@ function theme_GetMyVotes($user) {
 		WHERE user=?
 		",
 		$user
+	);
+}
+
+
+function theme_GetScoredIdeaList($node,$limit=80) {
+	$ret = db_DoFetch(
+		"SELECT id,theme,score FROM ".CMW_TABLE_THEME_IDEA." 
+		WHERE node=? AND parent=0
+		ORDER BY score DESC
+		LIMIT ".$limit,
+		$node
+	);
+
+	return $ret;
+}
+
+function theme_AddTheme($id,$node,$theme) {
+	return db_DoInsert(
+		"INSERT INTO ".CMW_TABLE_THEME." (
+			id, node, theme, `timestamp`
+		)
+		VALUES ( 
+			?, ?, ?, NOW()
+		)",
+		$id, $node, $theme
+	);
+}
+
+function theme_SetPage($id, $value) {
+	return db_DoInsert(
+		"UPDATE ".CMW_TABLE_THEME."
+		SET
+			page=?
+		WHERE
+			id=?;",
+		$value, $id
 	);
 }
