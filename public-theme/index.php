@@ -1420,6 +1420,8 @@ function ShowAdmin() {
 			echo "</div>";
 		}
 
+		ShowStats();
+
 		if ( $cookie_id ) {
 			if ( $EVENT_MODE !== 5 )	// Announcement //
 				ShowLogout();
@@ -1428,8 +1430,6 @@ function ShowAdmin() {
 			if ( $EVENT_MODE !== 5 )	// Announcement //
 				ShowLogin();
 		}
-		
-		ShowStats();
 	}
 	?>
 </div>
