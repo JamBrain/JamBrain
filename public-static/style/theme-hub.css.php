@@ -330,8 +330,11 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 	padding:0.5em 0;
 }
 .action .page .title {
-	padding:0.5em;
+	padding:0 0.5em;
 	margin:0;
+}
+.action .page .list {
+	padding:0.5em 0;
 }
 .action .page .list .item {
 	padding:0 0.5em;
@@ -348,25 +351,24 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 	color:#DDD;
 }
 .action .page .list .label {
-	margin:0.15em;
 	padding:0 0.25em;
 	display:inline-block;
 }
 
 .action .page .list button {
-	padding:3px;
-	min-width:28px;
+	padding:2px;
+	min-width:22px;
 	cursor:pointer;
 
 	margin:0.0125em;
 	border-radius:0.25em;
 }
 .action .page .list button:active {
-	padding:3px;
+	padding:2px;
 	border:0;
 }
 .action .page .list button:focus {
-	padding:3px;
+	padding:2px;
 	border:0;
 }
 

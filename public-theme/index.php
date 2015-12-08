@@ -767,11 +767,11 @@ function ShowVoting() {
 
 			node.innerHTML = 
 				"<span>"+
-				"<button class='middle button normal yes_button' onclick='vote_SetVote("+id+",1);'>✓</button>"+
-				"<button class='middle button normal dunno_button' onclick='vote_SetVote("+id+",0);'>?</button>"+
-				"<button class='middle button normal no_button' onclick='vote_SetVote("+id+",-1);'>✕</button>"+
+				"<button class='middle button small yes_button' onclick='vote_SetVote("+id+",1);'>✓</button>"+
+				"<button class='middle button small dunno_button' onclick='vote_SetVote("+id+",0);'>?</button>"+
+				"<button class='middle button small no_button' onclick='vote_SetVote("+id+",-1);'>✕</button>"+
 				"</span>"+
-				"<span class='middle label'>"+text+"</span>";
+				"<span class='middle label normal'>"+text+"</span>";
 			
 			document.getElementById('vote-page-list-'+page).appendChild( node );
 		}
