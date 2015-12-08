@@ -237,8 +237,8 @@ function ShowInactive() { ?>
 function ShowComingSoon() {
 	
 }
-function ShowSubmitIdea() { 
-	if ( $GLOBALS['EVENT_MODE_DIFF'] > 0 ) {	// Confirm the round is still on
+function ShowSubmitIdea( $logged_in ) { 
+	if ( $logged_in && $GLOBALS['EVENT_MODE_DIFF'] > 0 ) {	// Confirm the round is still on
 ?>
 	<div class="action" id="action-idea">
 		<div class="title bigger">Suggest a Theme</div>
@@ -460,8 +460,8 @@ function ShowMyLikes() {
 	</div>
 <?php 
 }
-function ShowSlaughter() {
-	if ( $GLOBALS['EVENT_MODE_DIFF'] > 0 ) {	// Confirm the round is still on
+function ShowSlaughter( $logged_in ) {
+	if ( $logged_in && $GLOBALS['EVENT_MODE_DIFF'] > 0 ) {	// Confirm the round is still on
 ?>
 	<div class="action" id="action-kill">
 		<div class="title big">Would this be a good Theme?</div>
@@ -739,7 +739,7 @@ function ShowSlaughter() {
 <?php 
 	}
 }
-function ShowVoting() {
+function ShowVoting( $logged_in ) {
 	if ( $GLOBALS['EVENT_MODE_DIFF'] > 0 ) {	// Confirm the round is still on
 ?>
 	<div class="action" id="action-vote">
@@ -773,14 +773,26 @@ function ShowVoting() {
 			node.setAttribute("class",'item');
 			node.setAttribute("id","vote-item-"+id);
 
-			node.innerHTML = 
-				"<span>"+
-					"<button class='middle button small yes_button' onclick='vote_SetVote("+id+",1);'>✓</button>"+
-					"<button class='middle button small dunno_button' onclick='vote_SetVote("+id+",0);'>?</button>"+
-					"<button class='middle button small no_button' onclick='vote_SetVote("+id+",-1);'>✕</button>"+
-				"</span>"+
-				"<span class='middle label normal'>"+text+"</span>"+
-				"<span class='middle small myidea hidden' id='vote-myidea-"+id+"'>MY IDEA</span>";
+			<?php
+			if ( $logged_in ) {
+			?>
+				node.innerHTML = 
+					"<span>"+
+						"<button class='middle button small yes_button' onclick='vote_SetVote("+id+",1);'>✓</button>"+
+						"<button class='middle button small dunno_button' onclick='vote_SetVote("+id+",0);'>?</button>"+
+						"<button class='middle button small no_button' onclick='vote_SetVote("+id+",-1);'>✕</button>"+
+					"</span>"+
+					"<span class='middle label normal'>"+text+"</span>"+
+					"<span class='middle small myidea hidden' id='vote-myidea-"+id+"'>MY IDEA</span>";
+			<?php
+			}
+			else {
+			?>
+				node.innerHTML = 
+					"<span class='middle label normal'>"+text+"</span>";
+			<?php
+			}
+			?>
 			
 			document.getElementById('vote-page-list-'+page).appendChild( node );
 		}
@@ -916,7 +928,7 @@ function ShowVoting() {
 		var DefaultPage = <?=$GLOBALS['EVENT_VOTE_ACTIVE'];?>;
 		var ActivePage = -1;
 		function vote_ShowPage(num,keep_history) {
-			console.log(ActivePage,num);
+			//console.log(ActivePage,num);
 			if ( ActivePage === Number(num) ) {
 				return;
 			}
@@ -939,6 +951,141 @@ function ShowVoting() {
 	</script>
 <?php
 	}
+}
+function ShowAdmin() {
+	$all_themes = theme_GetIdeas($EVENT_NODE);
+	
+	$byid_themes = [];
+
+	foreach($all_themes as &$theme) {
+		$byid_themes[$theme['id']] = &$theme;
+	}
+	
+	
+	// Generate Slugs //
+	foreach($all_themes as &$theme) {
+		$theme['slug'] = sanitize_Slug($theme['theme']);
+	}
+	
+	// Sort by Slugs+Parent+Id //
+	$sorted_themes = [];
+	foreach($all_themes as &$theme) {
+		$sort_slug = ($theme['parent']>0 ? $byid_themes[$theme['parent']]['slug']:$theme['slug']).(($theme['parent']>0)?str_pad($theme['parent'],8,"0",STR_PAD_LEFT)."-":"").str_pad($theme['id'],8,"0",STR_PAD_LEFT);
+		$sorted_themes[$sort_slug] = &$theme;
+		$theme['sort_slug'] = $sort_slug;
+	}
+	ksort($sorted_themes);		
+	
+	echo "<div id='admin-list'>";
+	foreach($sorted_themes as &$theme) {
+		$style = "text-align:left;";
+		if ( $theme['parent'] )
+			$style .= "margin-left:1em;background:#FEA;";
+
+		?>
+			<div class='item admin-item' style='<?=$style?>' id='admin-item-<?=$theme['id']?>' title='<?=$theme['sort_slug']?>'>
+				<input class='item-check' type="checkbox" id='admin-item-<?=$theme['id']?>' number='<?=$theme['id']?>' onclick="admin_OnCheck()">
+					<?=$theme['theme']?>
+					<div class="right">(<span><?=$theme['id']?></span>, <span><?=$theme['parent']?></span>)</div>
+					<div class="right" onclick="admin_MakeParent(<?=$theme['id']?>)">[Make Parent] &nbsp; </div>
+					<div class="right" onclick="admin_DoStrike()">[STRIKE] &nbsp; </div>
+				</input>
+			</div>
+		<?php
+	}
+	echo "</div>";
+	
+	?>
+	<div style="background:#0BE;position:fixed;bottom:0;right:0;padding:1em;">
+		Selected: <span id="admin-selected">0</span> | <span onclick="admin_Deselect()">Deselect All</a>
+	</div>
+	
+	<script>
+		function admin_OnCheck() {
+			admin_UpdateSelected();
+		}
+		
+		function admin_UpdateSelected() {
+			dom_SetText('admin-selected',admin_CountSelected());
+		}
+		
+		function admin_Deselect() {
+			el = document.getElementsByClassName("item-check");
+			for ( var idx = 0; idx < el.length; idx++ ) {
+				el[idx].checked = false;
+			}
+			admin_UpdateSelected();
+		}
+		
+		function admin_GetSelected() {
+			el = document.getElementsByClassName("item-check");
+			var Selected = [];
+			for ( var idx = 0; idx < el.length; idx++ ) {
+				if ( el[idx].checked )
+					Selected.push( el[idx] );
+			}
+			return Selected;
+		}
+		function admin_CountSelected() {
+			el = document.getElementsByClassName("item-check");
+			var Count = 0;
+			for ( var idx = 0; idx < el.length; idx++ ) {
+				if ( el[idx].checked )
+					Count++;
+			}
+			return Count;
+		}
+		
+		function admin_MakeParent(Id) {
+			var Selected = admin_GetSelected();
+			
+			if ( Selected.length === 0 )
+				return;
+			
+			var Ids = [];
+			for (var idx = 0; idx < Selected.length; idx++ ) {
+				//Ids.push( Number(Selected[idx].id.substring(11)) );
+				Ids.push( Number(Selected[idx].getAttribute('number')) );
+			}
+			
+			//console.log(Id,Ids);
+			
+			//console.log( admin_GetSelected() );
+			
+			xhr_PostJSON(
+				"/api-theme.php",
+				serialize({"action":"SETPARENT","parent":Id,"children":Ids}),
+				// On success //
+				function(response,code) {
+					// TODO: Respond to errors //
+					console.log("SETPARENT:",response);
+					admin_Deselect();
+				}
+			);
+		}
+		
+		function admin_DoStrike() {
+			var Idea = "blah";
+			dialog_ConfirmAlert(Idea,"Are you sure you want to remove this, and give user a strike?",function(){
+//								xhr_PostJSON(
+//									"/api-theme.php",
+//									serialize({"action":"IDEA","id":Id,"value":Value}),
+//									// On success //
+//									function(response,code) {
+//										// TODO: Respond to errors //
+//										console.log("IDEA*:",response);
+//		
+//										kill_RemoveRecentTheme(Id);
+//										kill_AddRecentTheme(Id,Idea,Value,true);
+//		
+//										kill_CancelEditTheme();
+//										dom_RestartAnimation('kill-theme','effect-accent');
+//									}
+//								);
+			});						
+		}
+	</script>
+<?php
 }
 ?>
 <?php template_GetHeader(); ?>
@@ -1228,167 +1375,32 @@ function ShowVoting() {
 		<?php
 			if ( $CONFIG['active'] ) {
 				if ( $admin && $cookie_id ) {
-					$all_themes = theme_GetIdeas($EVENT_NODE);
-					
-					$byid_themes = [];
-
-					foreach($all_themes as &$theme) {
-						$byid_themes[$theme['id']] = &$theme;
-					}
-					
-					
-					// Generate Slugs //
-					foreach($all_themes as &$theme) {
-						$theme['slug'] = sanitize_Slug($theme['theme']);
-					}
-					
-					// Sort by Slugs+Parent+Id //
-					$sorted_themes = [];
-					foreach($all_themes as &$theme) {
-						$sort_slug = ($theme['parent']>0 ? $byid_themes[$theme['parent']]['slug']:$theme['slug']).(($theme['parent']>0)?str_pad($theme['parent'],8,"0",STR_PAD_LEFT)."-":"").str_pad($theme['id'],8,"0",STR_PAD_LEFT);
-						$sorted_themes[$sort_slug] = &$theme;
-						$theme['sort_slug'] = $sort_slug;
-					}
-					ksort($sorted_themes);		
-					
-					echo "<div id='admin-list'>";
-					foreach($sorted_themes as &$theme) {
-						$style = "text-align:left;";
-						if ( $theme['parent'] )
-							$style .= "margin-left:1em;background:#FEA;";
-	
-						?>
-							<div class='item admin-item' style='<?=$style?>' id='admin-item-<?=$theme['id']?>' title='<?=$theme['sort_slug']?>'>
-								<input class='item-check' type="checkbox" id='admin-item-<?=$theme['id']?>' number='<?=$theme['id']?>' onclick="admin_OnCheck()">
-									<?=$theme['theme']?>
-									<div class="right">(<span><?=$theme['id']?></span>, <span><?=$theme['parent']?></span>)</div>
-									<div class="right" onclick="admin_MakeParent(<?=$theme['id']?>)">[Make Parent] &nbsp; </div>
-									<div class="right" onclick="admin_DoStrike()">[STRIKE] &nbsp; </div>
-								</input>
-							</div>
-						<?php
-					}
-					echo "</div>";
-					
-					?>
-					<div style="background:#0BE;position:fixed;bottom:0;right:0;padding:1em;">
-						Selected: <span id="admin-selected">0</span> | <span onclick="admin_Deselect()">Deselect All</a>
-					</div>
-					
-					<script>
-						function admin_OnCheck() {
-							admin_UpdateSelected();
-						}
-						
-						function admin_UpdateSelected() {
-							dom_SetText('admin-selected',admin_CountSelected());
-						}
-						
-						function admin_Deselect() {
-							el = document.getElementsByClassName("item-check");
-							for ( var idx = 0; idx < el.length; idx++ ) {
-								el[idx].checked = false;
-							}
-							admin_UpdateSelected();
-						}
-						
-						function admin_GetSelected() {
-							el = document.getElementsByClassName("item-check");
-							var Selected = [];
-							for ( var idx = 0; idx < el.length; idx++ ) {
-								if ( el[idx].checked )
-									Selected.push( el[idx] );
-							}
-							return Selected;
-						}
-						function admin_CountSelected() {
-							el = document.getElementsByClassName("item-check");
-							var Count = 0;
-							for ( var idx = 0; idx < el.length; idx++ ) {
-								if ( el[idx].checked )
-									Count++;
-							}
-							return Count;
-						}
-						
-						function admin_MakeParent(Id) {
-							var Selected = admin_GetSelected();
-							
-							if ( Selected.length === 0 )
-								return;
-							
-							var Ids = [];
-							for (var idx = 0; idx < Selected.length; idx++ ) {
-								//Ids.push( Number(Selected[idx].id.substring(11)) );
-								Ids.push( Number(Selected[idx].getAttribute('number')) );
-							}
-							
-							//console.log(Id,Ids);
-							
-							//console.log( admin_GetSelected() );
-							
-							xhr_PostJSON(
-								"/api-theme.php",
-								serialize({"action":"SETPARENT","parent":Id,"children":Ids}),
-								// On success //
-								function(response,code) {
-									// TODO: Respond to errors //
-									console.log("SETPARENT:",response);
-									admin_Deselect();
-								}
-							);
-						}
-						
-						function admin_DoStrike() {
-							var Idea = "blah";
-							dialog_ConfirmAlert(Idea,"Are you sure you want to remove this, and give user a strike?",function(){
-//								xhr_PostJSON(
-//									"/api-theme.php",
-//									serialize({"action":"IDEA","id":Id,"value":Value}),
-//									// On success //
-//									function(response,code) {
-//										// TODO: Respond to errors //
-//										console.log("IDEA*:",response);
-//		
-//										kill_RemoveRecentTheme(Id);
-//										kill_AddRecentTheme(Id,Idea,Value,true);
-//		
-//										kill_CancelEditTheme();
-//										dom_RestartAnimation('kill-theme','effect-accent');
-//									}
-//								);
-							});						
-						}
-						
-					</script>
-					<?php
+					ShowAdmin();
 				}
 				else {
 					ShowHeadline();
 					
-					if ( $cookie_id ) {
-						switch( $EVENT_MODE ) {
-						case 0:	// Inactive //
-							break;
-						case 1:	// Theme Suggestions //
-							ShowSubmitIdea();
-							break;
-						case 2: // Theme Slaughter //
-							ShowSlaughter();
-							break;
-						case 3: // Theme Voting //
-							ShowVoting();
-							break;
-						case 4: // Final Voting //
-							break;
-						case 5: // Announcement //
-							break;
-						case 6: // Post Announcement //
-							break;
-						case 7: // Coming Soon //
-							break;
-						};
-					}
+					switch( $EVENT_MODE ) {
+					case 0:	// Inactive //
+						break;
+					case 1:	// Theme Suggestions //
+						ShowSubmitIdea($cookie_id > 0);
+						break;
+					case 2: // Theme Slaughter //
+						ShowSlaughter($cookie_id > 0);
+						break;
+					case 3: // Theme Voting //
+						ShowVoting($cookie_id > 0);
+						break;
+					case 4: // Final Voting //
+						break;
+					case 5: // Announcement //
+						break;
+					case 6: // Post Announcement //
+						break;
+					case 7: // Coming Soon //
+						break;
+					};
 				}
 			}
 			else {
