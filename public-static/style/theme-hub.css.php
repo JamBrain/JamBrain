@@ -338,6 +338,20 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 }
 .action .page .list .item {
 	padding:0 0.5em;
+	position:relative;
+}
+
+.action .page .list .myidea {
+	position:absolute;
+	right:0.5em;
+	top:50%;
+	transform:translate(0%,-50%);
+	font-weight:700;
+	background:#99F;
+	border:1px solid #44D;
+	color:#FFF;
+	padding:2px 8px;
+	border-radius:1em;
 }
 
 .action .page .list .button {

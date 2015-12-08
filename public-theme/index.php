@@ -15,6 +15,7 @@ $EVENT_NODE = 100;
 $EVENT_DATE = new DateTime("2015-12-12T02:00:00Z");
 
 if ( isset($_GET['beta']) ) {
+	$DO_BETA = true;
 	$EVENT_MODE = 3;
 //	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Vote data will be <b>DELETED</b> • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
 	$CONFIG['theme-alert'] = '<b>FINAL TEST</b> • Treat this as Live • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
@@ -119,6 +120,13 @@ for( $idx = 0; $idx < count(THEME_VOTE_START_TIMES); $idx++ ) {
 	}
 }
 
+if ( isset($_GET['page']) ) {
+	$page = intval($_GET['page']);
+	if ( $page > 0 && $page < 5 ) {
+		$EVENT_VOTE_ACTIVE = $page-1;
+	}
+}
+
 function ShowHeader() {
 	global $EVENT_NAME, $EVENT_MODE, $EVENT_DATE;
 	if ( isset($EVENT_NAME) ) {
@@ -194,7 +202,7 @@ function ShowHeadline() {
 
 function ShowLogin() {
 	$LOGIN_URL = LEGACY_LOGIN_URL;
-	if ( isset($_GET['beta']) ) {
+	if ( isset($GLOBALS['DO_BETA']) ) {
 		if ( strpos($LOGIN_URL,"?") === false )
 			$LOGIN_URL .= "?beta";
 		else
@@ -767,11 +775,12 @@ function ShowVoting() {
 
 			node.innerHTML = 
 				"<span>"+
-				"<button class='middle button small yes_button' onclick='vote_SetVote("+id+",1);'>✓</button>"+
-				"<button class='middle button small dunno_button' onclick='vote_SetVote("+id+",0);'>?</button>"+
-				"<button class='middle button small no_button' onclick='vote_SetVote("+id+",-1);'>✕</button>"+
+					"<button class='middle button small yes_button' onclick='vote_SetVote("+id+",1);'>✓</button>"+
+					"<button class='middle button small dunno_button' onclick='vote_SetVote("+id+",0);'>?</button>"+
+					"<button class='middle button small no_button' onclick='vote_SetVote("+id+",-1);'>✕</button>"+
 				"</span>"+
-				"<span class='middle label normal'>"+text+"</span>";
+				"<span class='middle label normal'>"+text+"</span>"+
+				"<span class='middle small myidea hidden' id='vote-myidea-"+id+"'>MY IDEA</span>";
 			
 			document.getElementById('vote-page-list-'+page).appendChild( node );
 		}
@@ -904,17 +913,29 @@ function ShowVoting() {
 		}
 		UpdateVoteRoundClocks();
 
-		var ActivePage = <?=$GLOBALS['EVENT_VOTE_ACTIVE'];?>;
-		function vote_ShowPage(num) {
-			dom_ToggleClass("vote-page-"+ActivePage,"hidden",true);
-			dom_ToggleClass("vote-tab-"+ActivePage,"active",false);
+		var DefaultPage = <?=$GLOBALS['EVENT_VOTE_ACTIVE'];?>;
+		var ActivePage = -1;
+		function vote_ShowPage(num,keep_history) {
+			console.log(ActivePage,num);
+			if ( ActivePage === Number(num) ) {
+				return;
+			}
 			
-			ActivePage = num;
+			if ( ActivePage >= 0 ) {
+				dom_ToggleClass("vote-page-"+ActivePage,"hidden",true);
+				dom_ToggleClass("vote-tab-"+ActivePage,"active",false);
+			}
+			
+			ActivePage = Number(num);
 			
 			dom_ToggleClass("vote-page-"+ActivePage,"hidden",false);
 			dom_ToggleClass("vote-tab-"+ActivePage,"active",true);
+			
+			if ( !keep_history ) {
+				window.history.replaceState({},null,"?<?=isset($GLOBALS['DO_BETA'])?'beta&':''?>page="+(ActivePage+1));
+			}
 		}
-		vote_ShowPage(ActivePage);
+		vote_ShowPage(DefaultPage,true);
 	</script>
 <?php
 	}
