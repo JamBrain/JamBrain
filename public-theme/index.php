@@ -16,7 +16,8 @@ $EVENT_DATE = new DateTime("2015-12-12T02:00:00Z");
 
 if ( isset($_GET['beta']) ) {
 	$EVENT_MODE = 3;
-	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Vote data will be <b>DELETED</b> • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
+//	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Vote data will be <b>DELETED</b> • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
+	$CONFIG['theme-alert'] = '<b>FINAL TEST</b> • Treat this as Live • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
 }
 
 define('HTML_TITLE',$EVENT_NAME." - Theme Hub");
