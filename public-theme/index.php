@@ -260,8 +260,15 @@ function ShowSubmitIdea( $logged_in ) {
 function ShowStats() { 
 ?>
 	<div class="stats" id="stats">
-		<div class="title bigger caps space">Slaughter Statistics</div>
-		<div>
+		<div class="title bigger caps space">Statistics</div>
+		<div id="stats-tab-0" class="tab big" onclick="stats_ShowPage(0);">Suggestion</div>
+		<div id="stats-tab-1" class="tab big active" onclick="stats_ShowPage(1);">Slaughter</div>
+		<div id="stats-tab-2" class="tab big" onclick="stats_ShowPage(2);">Voting</div>
+		
+		<div id="stats-page-0" class="page hidden">
+			<div class="title big">Coming Soon.</div>
+		</div>
+		<div id="stats-page-1" class="page">
 			<div id="stats-total" class="title hidden">
 				<div>Themes: <span class="bold" id="stats-total-all"></span> (<span id="stats-total-raw"></span> with duplicates)</div>
 				<div>Users who Suggested Themes: <span class="bold" id="stats-users-with-ideas"></span></div>
@@ -272,11 +279,32 @@ function ShowStats() {
 			<div id="stats-hourly" class="hidden hide-on-mobile" style="width:600px;height:300px;margin:0 auto;"></div>
 			<div id="stats-total-kills" class="hidden hide-on-mobile" style="width:600px;height:300px;margin:0 auto;"></div>
 		</div>
+		<div id="stats-page-2" class="page hidden">
+			<div class="title big">Coming Soon.</div>
+		</div>
+
 		<div class="small">Statistics updated every 10 minutes</div>
-		<?php /*<div class="normal">Last Updated: <strong>blahblah</strong></div>*/ ?>		
 	</div>
 		
 	<script>
+		var ActiveStatsPage = -1;
+		function stats_ShowPage(num,keep_history) {
+			if ( ActiveStatsPage === Number(num) ) {
+				return;
+			}
+			
+			if ( ActiveStatsPage >= 0 ) {
+				dom_ToggleClass("stats-page-"+ActiveStatsPage,"hidden",true);
+				dom_ToggleClass("stats-tab-"+ActiveStatsPage,"active",false);
+			}
+			
+			ActiveStatsPage = Number(num);
+			
+			dom_ToggleClass("stats-page-"+ActiveStatsPage,"hidden",false);
+			dom_ToggleClass("stats-tab-"+ActiveStatsPage,"active",true);
+		}
+		stats_ShowPage(1,true);	
+		
 		google.load("visualization", "1", {packages:["corechart"]});
 		google.setOnLoadCallback(DrawStatsCharts);
 		

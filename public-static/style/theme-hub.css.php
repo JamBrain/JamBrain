@@ -142,6 +142,20 @@ body > .body .headline {
 	font-weight:700;
 }
 
+.stats .active {
+	background:#EEE;
+	box-shadow:0 2px 6px rgba(0,0,0,0.2);
+	z-index:10;
+}
+.stats .tab {
+	display:inline-block;
+	padding:0.5em;
+	
+	cursor:pointer;
+	position:relative;
+	border-radius:0.5em 0.5em;
+}
+
 .action .title, .stats .title {
 	margin:0.5em 0;
 }
@@ -296,7 +310,7 @@ a:focus, a:active {
 }
 
 /* Can't Select This */
-button, .sg-item-x, .action .tab, .action .page .list .button {
+button, .sg-item-x, .tab, .action .page .list .button {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -320,7 +334,7 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 }
 .action .page {
 	background:#FFF;
-	padding:0;
+	padding:0.5em 0;
 	margin:0;
 	z-index:10;
 	position:relative;
@@ -329,10 +343,6 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 	border-radius:0 0 0.25em 0.25em;
 	
 	text-align:left;
-}
-
-.action .page {
-	padding:0.5em 0;
 }
 .action .page .title {
 	padding:0 0.5em;
