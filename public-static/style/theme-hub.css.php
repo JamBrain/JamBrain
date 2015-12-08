@@ -370,19 +370,19 @@ button, .sg-item-x, .action .tab, .action .page .list .button {
 }
 
 .action .page .list button {
-	padding:2px;
-	min-width:22px;
+	padding:0.14em;
+	min-width:1.5em;
 	cursor:pointer;
 
-	margin:0.0125em;
+	margin:0.015em;
 	border-radius:0.25em;
 }
 .action .page .list button:active {
-	padding:2px;
+	padding:0.14em;
 	border:0;
 }
 .action .page .list button:focus {
-	padding:2px;
+	padding:0.14em;
 	border:0;
 }
 
