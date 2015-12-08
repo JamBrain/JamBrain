@@ -118,6 +118,11 @@ body > .body .headline {
 	margin-top:2.0em !important;
 }
 
+.login {
+	margin:1.0em 0;
+}
+
+
 #extra {
 	padding:1.0em 0;
 	color:#630;

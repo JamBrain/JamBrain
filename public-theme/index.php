@@ -209,14 +209,14 @@ function ShowLogin() {
 			$LOGIN_URL .= "&beta";
 	}
 ?>
-	<div class="action" id="action-login">
+	<div class="login" id="action-login">
 		<a class="no-style" href="<?=$LOGIN_URL?>"><button type="button" class="login-button">Login</button></a>
 	</div>	
 <?php
 }
 function ShowLogout() {
 ?>
-	<div class="action" id="action-logout">
+	<div class="login" id="action-logout">
 		<button type="button" class="login-button" onclick="DoLogout(true)">Logout</button>
 	</div>	
 <?php
@@ -1378,6 +1378,9 @@ function ShowAdmin() {
 					ShowAdmin();
 				}
 				else {
+					if ( $cookie_id == 0 && $EVENT_MODE !== 5 )	// Announcement //
+						ShowLogin();
+					
 					ShowHeadline();
 					
 					switch( $EVENT_MODE ) {
