@@ -93,7 +93,7 @@ const THEME_VOTE_START_TIMES = [
 
 const THEME_VOTE_END_TIMES = [
 	(4*24*60*60) - (24*60*60),
-	(4*24*60*60) - (32*60*60),
+	(3*24*60*60) - (12*60*60),
 	(3*24*60*60) - (18*60*60),
 	(3*24*60*60) - (24*60*60),
 ];
@@ -102,7 +102,6 @@ $THEME_VOTE_START_DATE = [];
 $THEME_VOTE_START_DIFF = [];
 $THEME_VOTE_END_DATE = [];
 $THEME_VOTE_END_DIFF = [];
-
 
 // Date Hack //
 $EVENT_MODE_DATE = $EVENT_DATE->getTimestamp() - THEME_MODE_TIMES[$EVENT_MODE];
