@@ -211,7 +211,7 @@ function ShowLogin() {
 	<div class="login" id="action-login">
 		<div>You need to login to vote.</div>
 		<br />
-		<a class="no-style" href="<?=$LOGIN_URL?>"><button type="button" class="login-button">Login</button></a>
+		<a class="no-style" href="<?=$LOGIN_URL?>"><button type="button" class="login-button green_button">Login</button></a>
 	</div>	
 <?php
 }
