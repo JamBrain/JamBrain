@@ -209,6 +209,8 @@ function ShowLogin() {
 	}
 ?>
 	<div class="login" id="action-login">
+		<div>You need to login to vote.</div>
+		<br />
 		<a class="no-style" href="<?=$LOGIN_URL?>"><button type="button" class="login-button">Login</button></a>
 	</div>	
 <?php
@@ -1416,12 +1418,12 @@ function ShowAdmin() {
 				if ( $admin && $cookie_id ) {
 					ShowAdmin();
 				}
-				else {
+				else {					
+					ShowHeadline();
+	
 					if ( $cookie_id == 0 && $EVENT_MODE !== 5 )	// Announcement //
 						ShowLogin();
-					
-					ShowHeadline();
-					
+				
 					switch( $EVENT_MODE ) {
 					case 0:	// Inactive //
 						break;
