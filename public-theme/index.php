@@ -261,13 +261,13 @@ function ShowStats() {
 	<div class="stats" id="stats">
 		<div class="title bigger caps space">Statistics</div>
 		<div id="stats-tab-0" class="tab big" onclick="stats_ShowPage(0);">Suggestion</div>
-		<div id="stats-tab-1" class="tab big active" onclick="stats_ShowPage(1);">Slaughter</div>
+		<div id="stats-tab-1" class="tab big" onclick="stats_ShowPage(1);">Slaughter</div>
 		<div id="stats-tab-2" class="tab big" onclick="stats_ShowPage(2);">Voting</div>
 		
 		<div id="stats-page-0" class="page hidden">
 			<div class="title big">Coming Soon.</div>
 		</div>
-		<div id="stats-page-1" class="page">
+		<div id="stats-page-1" class="page hidden">
 			<div id="stats-total" class="title hidden">
 				<div>Themes: <span class="bold" id="stats-total-all"></span> (<span id="stats-total-raw"></span> with duplicates)</div>
 				<div>Users who Suggested Themes: <span class="bold" id="stats-users-with-ideas"></span></div>
