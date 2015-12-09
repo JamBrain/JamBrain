@@ -159,6 +159,9 @@ body > .body .headline {
 .action .title, .stats .title {
 	margin:0.5em 0;
 }
+.action .info {
+	margin:0.5em 0.5em 0;
+}
 .action .form {
 }
 .action .form > div, .action .form > input, .action .form > button {

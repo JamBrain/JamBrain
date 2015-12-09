@@ -777,6 +777,7 @@ function ShowVoting( $logged_in ) {
 		
 		<div id="vote-page-0" class="page hidden">
 			<div id="vote-page-when-0" class="title"></div>
+			<div class="info">Sorted by popularity.</div>
 			<div id="vote-page-list-0" class="list"></div>
 		</div>
 		<div id="vote-page-1" class="page hidden">
@@ -910,9 +911,7 @@ function ShowVoting( $logged_in ) {
 					
 					if ( VoteRoundEnd[Theme.page] <= 0 ) {
 						vote_AddItem(Theme.page,Theme.id,Theme.theme,
-							Theme.score ?
-								{'score':Theme.score} :
-								null
+							Theme.data ? Theme.data : null
 						);
 					}
 					else if ( VoteRoundStart[Theme.page] <= 0 ) {

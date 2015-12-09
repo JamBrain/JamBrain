@@ -410,8 +410,9 @@ function theme_GetThemeVotingList($node) {
 
 	if ( $ret === null ) {
 		$ret = db_DoFetch(
-			"SELECT id,theme,page,score FROM ".CMW_TABLE_THEME." 
-			WHERE node=? AND page<4",
+			"SELECT id,theme,page FROM ".CMW_TABLE_THEME." 
+			WHERE node=? AND page<4
+			ORDER BY page,score,id DESC",
 			$node
 		);
 
@@ -532,7 +533,7 @@ function theme_CalculateScores($node,$page) {
 		
 		$votes_count = count($votes);
 		for ($idx = 0; $idx < $votes_count; $idx++ ) {
-			$score_sum += intval($votes[$idx]['value']);
+			$score_sum += intval($votes[$idx]);
 			$scores[$votes[$idx]]++;
 		}
 		
