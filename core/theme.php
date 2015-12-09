@@ -412,7 +412,7 @@ function theme_GetThemeVotingList($node) {
 		$ret = db_DoFetch(
 			"SELECT id,theme,page FROM ".CMW_TABLE_THEME." 
 			WHERE node=? AND page<4
-			ORDER BY page,score,id DESC",
+			ORDER BY page ASC,score DESC,id DESC",
 			$node
 		);
 
