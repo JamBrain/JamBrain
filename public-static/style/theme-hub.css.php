@@ -141,6 +141,9 @@ body > .body .headline {
 .bold {
 	font-weight:700;
 }
+.del {
+	text-decoration:line-through; 
+}
 
 .stats .active {
 	background:#EEE;

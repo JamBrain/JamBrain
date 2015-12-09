@@ -770,8 +770,8 @@ function ShowVoting( $logged_in ) {
 	if ( $GLOBALS['EVENT_MODE_DIFF'] > 0 ) {	// Confirm the round is still on
 ?>
 	<div class="action" id="action-vote">
-		<div id="vote-tab-0" class="tab big" onclick="vote_ShowPage(0);">Round 1</div>
-		<div id="vote-tab-1" class="tab big" onclick="vote_ShowPage(1);">Round 2</div>
+		<div id="vote-tab-0" class="tab big del" onclick="vote_ShowPage(0);">Round 1</div>
+		<div id="vote-tab-1" class="tab big del" onclick="vote_ShowPage(1);">Round 2</div>
 		<div id="vote-tab-2" class="tab big" onclick="vote_ShowPage(2);">Round 3</div>
 		<div id="vote-tab-3" class="tab big" onclick="vote_ShowPage(3);">Round 4</div>
 		
