@@ -777,11 +777,12 @@ function ShowVoting( $logged_in ) {
 		
 		<div id="vote-page-0" class="page hidden">
 			<div id="vote-page-when-0" class="title"></div>
-			<div class="info">Sorted by popularity.</div>
+			<div class="info bold">Sorted by popularity.</div>
 			<div id="vote-page-list-0" class="list"></div>
 		</div>
 		<div id="vote-page-1" class="page hidden">
 			<div id="vote-page-when-1" class="title"></div>
+			<div class="info bold">Sorted by popularity.</div>
 			<div id="vote-page-list-1" class="list"></div>
 		</div>
 		<div id="vote-page-2" class="page hidden">
