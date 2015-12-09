@@ -302,7 +302,7 @@ function ShowStats() {
 			dom_ToggleClass("stats-page-"+ActiveStatsPage,"hidden",false);
 			dom_ToggleClass("stats-tab-"+ActiveStatsPage,"active",true);
 		}
-		stats_ShowPage(1,true);	
+		stats_ShowPage(2,true);	
 		
 		google.load("visualization", "1", {packages:["corechart"]});
 		google.setOnLoadCallback(DrawStatsCharts);
