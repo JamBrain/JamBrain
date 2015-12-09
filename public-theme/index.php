@@ -794,7 +794,20 @@ function ShowVoting( $logged_in ) {
 		</div>
 	</div>
 	<script>
-		function vote_AddItem(page,id,text) {
+		var VoteRoundStart = [
+			<?=$GLOBALS['THEME_VOTE_START_DIFF'][0]?>,
+			<?=$GLOBALS['THEME_VOTE_START_DIFF'][1]?>,
+			<?=$GLOBALS['THEME_VOTE_START_DIFF'][2]?>,
+			<?=$GLOBALS['THEME_VOTE_START_DIFF'][3]?>,
+		];
+		var VoteRoundEnd = [
+			<?=$GLOBALS['THEME_VOTE_END_DIFF'][0]?>,
+			<?=$GLOBALS['THEME_VOTE_END_DIFF'][1]?>,
+			<?=$GLOBALS['THEME_VOTE_END_DIFF'][2]?>,
+			<?=$GLOBALS['THEME_VOTE_END_DIFF'][3]?>,
+		];
+
+		function vote_AddItem(page,id,text,data) {
 			id = Number(id);
 			
 			var node = document.createElement('div');
@@ -804,14 +817,24 @@ function ShowVoting( $logged_in ) {
 			<?php
 			if ( $logged_in ) {
 			?>
-				node.innerHTML = 
-					"<span>"+
-						"<button class='middle button small yes_button' onclick='vote_SetVote("+id+",1);'>✓</button>"+
-						"<button class='middle button small dunno_button' onclick='vote_SetVote("+id+",0);'>?</button>"+
-						"<button class='middle button small no_button' onclick='vote_SetVote("+id+",-1);'>✕</button>"+
-					"</span>"+
-					"<span class='middle label normal'>"+text+"</span>"+
-					"<span class='middle small myidea hidden' id='vote-myidea-"+id+"'>MY IDEA</span>";
+				if ( VoteRoundEnd[page] > 0 ) {
+					node.innerHTML = 
+						"<span>"+
+							"<button class='middle button small yes_button' onclick='vote_SetVote("+id+",1);'>✓</button>"+
+							"<button class='middle button small dunno_button' onclick='vote_SetVote("+id+",0);'>?</button>"+
+							"<button class='middle button small no_button' onclick='vote_SetVote("+id+",-1);'>✕</button>"+
+						"</span>"+
+						"<span class='middle label normal'>"+text+"</span>"+
+						"<span class='middle small myidea hidden' id='vote-myidea-"+id+"'>MY IDEA</span>";
+				}
+				else {
+					node.innerHTML = 
+						"<span class='middle label normal'>"+text+"</span>";
+//					if ( data && data['score'] !== null ) {
+//						node.innerHTML +=
+//							"<span class='right'>"+data['score']+"</span>";
+//					}
+				}
 			<?php
 			}
 			else {
@@ -823,9 +846,6 @@ function ShowVoting( $logged_in ) {
 			?>
 			
 			document.getElementById('vote-page-list-'+page).appendChild( node );
-		}
-		function vote_AddResult(page,id,text,data) {
-			console.log(page,id,text,data);
 		}
 		
 		function vote_UpdateVote(id,value) {
@@ -878,19 +898,6 @@ function ShowVoting( $logged_in ) {
 			vote_ReactivateVote();
 		}
 		
-		var VoteRoundStart = [
-			<?=$GLOBALS['THEME_VOTE_START_DIFF'][0]?>,
-			<?=$GLOBALS['THEME_VOTE_START_DIFF'][1]?>,
-			<?=$GLOBALS['THEME_VOTE_START_DIFF'][2]?>,
-			<?=$GLOBALS['THEME_VOTE_START_DIFF'][3]?>,
-		];
-		var VoteRoundEnd = [
-			<?=$GLOBALS['THEME_VOTE_END_DIFF'][0]?>,
-			<?=$GLOBALS['THEME_VOTE_END_DIFF'][1]?>,
-			<?=$GLOBALS['THEME_VOTE_END_DIFF'][2]?>,
-			<?=$GLOBALS['THEME_VOTE_END_DIFF'][3]?>,
-		];
-		
 		xhr_PostJSON(
 			"/api-theme.php",
 			serialize({"action":"GET_VOTING_LIST"}),
@@ -901,11 +908,16 @@ function ShowVoting( $logged_in ) {
 				// Populate Choices //
 				for( var idx = 0; idx < response.themes.length; idx++ ) {
 					var Theme = response.themes[idx];
-					if ( VoteRoundStart[Theme.page] <= 0 ) {
-						vote_AddItem(Theme.page,Theme.id,Theme.theme);
+					
+					if ( VoteRoundEnd[Theme.page] <= 0 ) {
+						vote_AddItem(Theme.page,Theme.id,Theme.theme,
+							Theme.score ?
+								{'score':Theme.score} :
+								null
+						);
 					}
-					else if ( VoteRoundEnd[Theme.page] <= 0 ) {
-						vote_AddResult(Theme.page,Theme.id,Theme.theme,[0,0,0]);
+					else if ( VoteRoundStart[Theme.page] <= 0 ) {
+						vote_AddItem(Theme.page,Theme.id,Theme.theme);
 					}
 				}
 				

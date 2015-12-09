@@ -410,7 +410,7 @@ function theme_GetThemeVotingList($node) {
 
 	if ( $ret === null ) {
 		$ret = db_DoFetch(
-			"SELECT id,theme,page FROM ".CMW_TABLE_THEME." 
+			"SELECT id,theme,page,score FROM ".CMW_TABLE_THEME." 
 			WHERE node=? AND page<4",
 			$node
 		);
@@ -495,4 +495,50 @@ function theme_SetPage($id, $value) {
 			id=?;",
 		$value, $id
 	);
+}
+
+
+function theme_GetVotes($node) {
+	return db_DoFetchSingle(
+		"SELECT value FROM ".CMW_TABLE_THEME_VOTE." 
+		WHERE node=?",
+		$node
+	);	
+}
+
+function theme_SetVoteScore($id, $value) {
+	return db_DoInsert(
+		"UPDATE ".CMW_TABLE_THEME."
+		SET
+			score=?
+		WHERE
+			id=?;",
+		$value, $id
+	);
+}
+
+function theme_CalculateScores($node,$page) {
+	$themes = theme_GetThemeValidVotingList($node);
+	
+	$ret = [];
+	foreach( $themes AS $key => $value ) {
+		if ($value['page'] !== $page)
+			continue;
+			
+		$votes = theme_GetVotes($key);
+		
+		$score_sum = 0;
+		$scores = [ -1 => 0, 0 => 0, 1 => 0 ];
+		
+		$votes_count = count($votes);
+		for ($idx = 0; $idx < $votes_count; $idx++ ) {
+			$score_sum += intval($votes[$idx]['value']);
+			$scores[$votes[$idx]]++;
+		}
+		
+		theme_SetVoteScore($key,$score_sum);
+		$ret[$key] = [ 'score' => $score_sum, 'scores' => $scores, 'count' => $votes_count ];
+	}
+	
+	return $ret;
 }

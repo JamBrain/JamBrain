@@ -255,7 +255,22 @@ else if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
 	case "GET_VOTING_LIST":
 		$response['theme'] = theme_GetThemeVotingList($EVENT_NODE,100);
 		break;
+//	case "CALC":
+//		if ( isset($_GET['page']) ) {
+//			$GET_page = intval($_GET['page']);
+//			if ( $GET_page >= 0 && $GET_page <= 3 ) {
+//				$response['ret'] = theme_CalculateScores($EVENT_NODE,$GET_page);
+//			}
+//			else {
+//				$response['e'] = true;
+//			}
+//		}
+//		else {
+//			$response['e'] = false;
+//		}
+//		break;
 	};
 }
+
 
 json_Emit($response);
