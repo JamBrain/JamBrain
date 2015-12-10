@@ -232,20 +232,25 @@ else if ( $argv[1] === "calc" ) {
 	//var_dump($result);
 }
 else if ( $argv[1] === "finalize" ) {
-//	print "\n*** WARNING ***\n\n";
-//	print "You are about to Score Round ".$page."\n";
-//	print "\nAre you sure [type 'YES']? ";
-//	flush();
-//	$input = trim(fgets(STDIN));
-//	if ( $input != "YES" ) {
-//		print "Aborting...\n";
-//		exit(1);
-//	}
-//	
-//	print "Calculating Score...\n";
-//	
-//	$result = theme_CalculateScores($EVENT_NODE,$page-1);
-//	//var_dump($result);
+	$themes = theme_GetTopThemes($EVENT_NODE);
+	
+	foreach ( $themes as $theme ) {
+		print $theme['theme']." [".$theme['page']."]: ".$theme['score']."\n";
+	}
+	
+	print "\n*** WARNING ***\n\n";
+	print "You are about to make the above themes the Final Round\n";
+	print "\nAre you sure [type 'YES']? ";
+	flush();
+	$input = trim(fgets(STDIN));
+	if ( $input != "YES" ) {
+		print "Aborting...\n";
+		exit(1);
+	}
+	
+	foreach ( $themes as $theme ) {
+		theme_AddFinalTheme($theme['id'],$EVENT_NODE,$theme['theme']);
+	}
 }
 else {
 	echo "Error: Unknown command \"".$argv[1]."\"\n";

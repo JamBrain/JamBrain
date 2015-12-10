@@ -404,6 +404,17 @@ function theme_GetThemeValidVotingList($node) {
 	return $ret;
 }
 
+function theme_GetTopThemes($node) {
+	$ret = db_DoFetch(
+		"SELECT id,theme,page,score FROM ".CMW_TABLE_THEME." 
+		WHERE node=? AND page<4
+		ORDER BY score DESC
+		LIMIT 20",
+		$node
+	);
+	
+	return $ret;
+}
 
 function theme_GetThemeVotingList($node) {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."VOTE_LIST");
@@ -422,7 +433,19 @@ function theme_GetThemeVotingList($node) {
 }
 
 function theme_GetFinalVotingList($node) {
-	
+	$ret = cache_Fetch(_THEME_CACHE_KEY."FINAL_VOTE_LIST");
+
+	if ( $ret === null ) {
+		$ret = db_DoFetch(
+			"SELECT id,theme FROM ".CMW_TABLE_THEME_FINAL." 
+			WHERE node=?
+			ORDER BY score DESC,id ASC",
+			$node
+		);
+
+		cache_Store(_THEME_CACHE_KEY."FINAL_VOTE_LIST",$ret,_THEME_CACHE_TTL);
+	}
+	return $ret;	
 }
 
 function theme_AddVote($node, $value, $user) {
@@ -487,6 +510,18 @@ function theme_AddTheme($id,$node,$theme) {
 	);
 }
 
+function theme_AddFinalTheme($id,$node,$theme) {
+	return db_DoInsert(
+		"INSERT INTO ".CMW_TABLE_THEME_FINAL." (
+			id, node, theme
+		)
+		VALUES ( 
+			?, ?, ?
+		)",
+		$id, $node, $theme
+	);
+}
+
 function theme_SetPage($id, $value) {
 	return db_DoInsert(
 		"UPDATE ".CMW_TABLE_THEME."
@@ -542,4 +577,33 @@ function theme_CalculateScores($node,$page) {
 	}
 	
 	return $ret;
+}
+
+
+function theme_AddFinalVote($node, $value, $user) {
+	return db_DoInsert(
+		"INSERT INTO ".CMW_TABLE_THEME_VOTE_FINAL." (
+			node, user, value, `timestamp`
+		)
+		VALUES ( 
+			?, ?, ?, NOW()
+		)
+		ON DUPLICATE KEY UPDATE 
+			value=VALUES(value),
+			`timestamp`=VALUES(`timestamp`)
+		",
+		$node, $user, $value
+	);
+}
+function theme_RemoveFinalVoteById($id) {
+	return db_DoDelete(
+		"DELETE FROM ".CMW_TABLE_THEME_VOTE_FINAL." WHERE id=?;",
+		$id
+	);
+}
+function theme_RemoveFinalVoteByUser($idea_id,$user) {
+	return db_DoDelete(
+		"DELETE FROM ".CMW_TABLE_THEME_VOTE_FINAL." WHERE node=? AND user=?;",
+		$idea_id,$user
+	);
 }
