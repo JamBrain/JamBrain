@@ -89,6 +89,7 @@ const THEME_VOTE_START_TIMES = [
 	(5*24*60*60) - (24*60*60),
 	(4*24*60*60) - (12*60*60),
 	(4*24*60*60) - (18*60*60),
+//	(2*24*60*60),
 ];
 
 const THEME_VOTE_END_TIMES = [
@@ -96,6 +97,7 @@ const THEME_VOTE_END_TIMES = [
 	(3*24*60*60) - (12*60*60),
 	(3*24*60*60) - (18*60*60),
 	(3*24*60*60) - (24*60*60),
+//	(30*60),
 ];
 
 $THEME_VOTE_START_DATE = [];
@@ -769,7 +771,8 @@ function ShowSlaughter( $logged_in ) {
 	}
 }
 function ShowVoting( $logged_in ) {
-	if ( $GLOBALS['EVENT_MODE_DIFF'] > 0 ) {	// Confirm the round is still on
+	//if ( $GLOBALS['EVENT_MODE_DIFF'] > 0 ) 
+	{	// Confirm the round is still on
 ?>
 	<div class="action" id="action-vote">
 		<div id="vote-tab-0" class="tab big del" onclick="vote_ShowPage(0);">Round 1</div>
@@ -990,6 +993,176 @@ function ShowVoting( $logged_in ) {
 			}
 		}
 		vote_ShowPage(DefaultPage,true);
+	</script>
+<?php
+	}
+}
+function ShowFinalVoting( $logged_in ) {
+	if ( $GLOBALS['EVENT_MODE_DIFF'] > 0 ) {	// Confirm the round is still on
+?>
+	<div class="action" id="action-fvote">
+		<div id="fvote-page" class="page">
+			<div id="fvote-page-when" class="title"></div>
+			<div id="fvote-page-list" class="list"></div>
+		</div>
+	</div>
+	<script>
+		var VoteRoundStart = <?=$GLOBALS['THEME_VOTE_START_DIFF'][4]?>;
+		var VoteRoundEnd = <?=$GLOBALS['THEME_VOTE_END_DIFF'][4]?>;
+
+		function fvote_AddItem(page,id,text,data) {
+			id = Number(id);
+			
+			var node = document.createElement('div');
+			node.setAttribute("class",'item');
+			node.setAttribute("id","fvote-item-"+id);
+
+			<?php
+			if ( $logged_in ) {
+			?>
+				if ( VoteRoundEnd > 0 ) {
+					node.innerHTML = 
+						"<span>"+
+							"<button class='middle button small yes_button' onclick='fvote_SetVote("+id+",1);'>✓</button>"+
+							"<button class='middle button small dunno_button' onclick='fvote_SetVote("+id+",0);'>?</button>"+
+							"<button class='middle button small no_button' onclick='fvote_SetVote("+id+",-1);'>✕</button>"+
+						"</span>"+
+						"<span class='middle label normal'>"+text+"</span>"+
+						"<span class='middle small myidea hidden' id='fvote-myidea-"+id+"'>MY IDEA</span>";
+				}
+				else {
+					node.innerHTML = 
+						"<span class='middle label normal'>"+text+"</span>";
+//					if ( data && data['score'] !== null ) {
+//						node.innerHTML +=
+//							"<span class='right'>"+data['score']+"</span>";
+//					}
+				}
+			<?php
+			}
+			else {
+			?>
+				node.innerHTML = 
+					"<span class='middle label normal'>"+text+"</span>";
+			<?php
+			}
+			?>
+			
+			document.getElementById('fvote-page-list').appendChild( node );
+		}
+		
+		function fvote_UpdateVote(id,value) {
+			dom_ToggleClass('fvote-item-'+id,'green_selected',false);
+			dom_ToggleClass('fvote-item-'+id,'yellow_selected',false);
+			dom_ToggleClass('fvote-item-'+id,'red_selected',false);
+			if (value === 1) {
+				dom_ToggleClass('fvote-item-'+id,'green_selected',true);
+			}
+			else if (value === 0) {
+				dom_ToggleClass('fvote-item-'+id,'yellow_selected',true);
+			}
+			else if (value === -1) {
+				dom_ToggleClass('fvote-item-'+id,'red_selected',true);
+			}
+		}
+		
+		
+		var _VOTE_ACTIVE = false;
+		function fvote_ReactivateVote(delay) {
+			window.setTimeout(
+				function(){
+					_VOTE_ACTIVE = false;
+				},
+				delay?delay:300
+			);
+		}
+		
+		function fvote_SetVote(id,value) {
+			if ( _VOTE_ACTIVE )
+				return;
+			_VOTE_ACTIVE = true;
+			
+			xhr_PostJSON(
+				"/api-theme.php",
+				serialize({"action":"FVOTE",'id':id,'value':value}),
+				// On success //
+				function(response,code) {
+					console.log("FVOTE:",response);
+					
+					// Success //
+					if ( response.id > 0 ) {
+						fvote_UpdateVote(id,value);
+					}
+					else if ( response.id !== 0 ) {
+						dialog_Alert("Unable to Vote","Try refreshing your browser");
+					}
+				}
+			);
+			fvote_ReactivateVote();
+		}
+		
+		xhr_PostJSON(
+			"/api-theme.php",
+			serialize({"action":"GET_FVOTING_LIST"}),
+			// On success //
+			function(response,code) {
+				console.log("GET_FVOTING_LIST:",response);
+				
+				// Populate Choices //
+				for( var idx = 0; idx < response.themes.length; idx++ ) {
+					var Theme = response.themes[idx];
+					
+					if ( VoteRoundEnd <= 0 ) {
+						fvote_AddItem(Theme.page,Theme.id,Theme.theme,
+							Theme.data ? Theme.data : null
+						);
+					}
+					else if ( VoteRoundStart <= 0 ) {
+						fvote_AddItem(Theme.page,Theme.id,Theme.theme);
+					}
+				}
+				
+				// Update Choices with my selections //
+				xhr_PostJSON(
+					"/api-theme.php",
+					serialize({"action":"GETFVOTES"}),
+					// On success //
+					function(response,code) {
+						console.log("GETFVOTES:",response);
+						
+						// Determine success //
+						if ( response.votes ) {
+							// Refresh Display //
+							for ( var idx = 0; idx < response.votes.length; idx++ ) {
+								var Vote = response.votes[idx];
+								fvote_UpdateVote(Vote.id,Vote.value);
+							}
+						}
+					}
+				);
+				
+			}
+		);
+		
+		function fvote_UpdateRoundClocks() {
+			var LocalTimeDiff = Date.now() - _LOCAL_TIME;
+			
+			var StartDiff = VoteRoundStart - Math.ceil(LocalTimeDiff*0.001);
+			var EndDiff = VoteRoundEnd - Math.ceil(LocalTimeDiff*0.001);
+			
+			if ( StartDiff > 0 ) {
+				dom_SetText('fvote-page-when',"Voting starts in "+getCountdownInWeeks(StartDiff,3,true));
+			}
+			else if ( EndDiff > 0 ) {
+				dom_SetText('fvote-page-when',"Voting ends in "+getCountdownInWeeks(EndDiff,3,true));
+			}
+			else {
+				dom_SetText('fvote-page-when',"This voting round has ended.");
+			}
+			
+			time_CallNextSecond(fvote_UpdateRoundClocks);
+		}
+		fvote_UpdateRoundClocks();
 	</script>
 <?php
 	}
@@ -1438,6 +1611,7 @@ function ShowAdmin() {
 						ShowVoting($cookie_id > 0);
 						break;
 					case 4: // Final Voting //
+						ShowFinalVoting($cookie_id > 0);
 						break;
 					case 5: // Announcement //
 						break;
