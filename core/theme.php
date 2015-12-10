@@ -404,6 +404,26 @@ function theme_GetThemeValidVotingList($node) {
 	return $ret;
 }
 
+function theme_GetFinalThemeValidVotingList($node) {
+	$ret = cache_Fetch(_THEME_CACHE_KEY."FINAL_VALID_VOTE_LIST");
+
+	if ( $ret === null ) {
+		$result = db_DoFetch(
+			"SELECT id,theme FROM ".CMW_TABLE_THEME_FINAL." 
+			WHERE node=?",
+			$node
+		);
+		
+		$ret = [];
+		foreach ($result AS &$item) {
+			$ret[$item['id']] = $item;
+		}
+
+		cache_Store(_THEME_CACHE_KEY."FINAL_VALID_VOTE_LIST",$ret,_THEME_CACHE_TTL);
+	}
+	return $ret;
+}
+
 function theme_GetTopThemes($node) {
 	$ret = db_DoFetch(
 		"SELECT id,theme,page,score FROM ".CMW_TABLE_THEME." 
@@ -479,6 +499,15 @@ function theme_RemoveVoteByUser($idea_id,$user) {
 function theme_GetMyVotes($user) {
 	return db_DoFetch(
 		"SELECT node,value FROM ".CMW_TABLE_THEME_VOTE." 
+		WHERE user=?
+		",
+		$user
+	);
+}
+
+function theme_GetMyFinalVotes($user) {
+	return db_DoFetch(
+		"SELECT node,value FROM ".CMW_TABLE_THEME_FINAL_VOTE." 
 		WHERE user=?
 		",
 		$user
@@ -582,7 +611,7 @@ function theme_CalculateScores($node,$page) {
 
 function theme_AddFinalVote($node, $value, $user) {
 	return db_DoInsert(
-		"INSERT INTO ".CMW_TABLE_THEME_VOTE_FINAL." (
+		"INSERT INTO ".CMW_TABLE_THEME_FINAL_VOTE." (
 			node, user, value, `timestamp`
 		)
 		VALUES ( 

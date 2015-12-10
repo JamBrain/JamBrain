@@ -30,6 +30,8 @@ const THEME_VOTE_START_TIMES = [
 	(4*24*60*60) - (12*60*60),
 	(4*24*60*60) - (18*60*60),
 ];
+const FINAL_VOTE_START_TIME =
+	(2*24*60*60);
 
 const THEME_VOTE_END_TIMES = [
 	(4*24*60*60) - (24*60*60),
@@ -37,6 +39,8 @@ const THEME_VOTE_END_TIMES = [
 	(3*24*60*60) - (18*60*60),
 	(3*24*60*60) - (24*60*60),
 ];
+const FINAL_VOTE_END_TIME =
+	(30*60);
 
 $THEME_VOTE_START_DATE = [];
 $THEME_VOTE_START_DIFF = [];
@@ -58,6 +62,10 @@ for( $idx = 0; $idx < count(THEME_VOTE_START_TIMES); $idx++ ) {
 		$EVENT_VOTE_ACTIVE = $idx;
 	}
 }
+$FINAL_VOTE_START_DATE = $EVENT_DATE->getTimestamp() - FINAL_VOTE_START_TIME;
+$FINAL_VOTE_START_DIFF = $FINAL_VOTE_START_DATE - time();
+$FINAL_VOTE_END_DATE = $EVENT_DATE->getTimestamp() - FINAL_VOTE_END_TIME;
+$FINAL_VOTE_END_DIFF = $FINAL_VOTE_END_DATE - time();
 
 
 function IsThemeSuggestionsOpen() {
@@ -181,32 +189,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 			}
 		}
 		else if ( $action == "FVOTE" /*&& IsThemeVotingOpen()*/ ) {
-//			$theme_id = intval($_POST['id']);
-//			$value = intval($_POST['value']);
-//			if ( $theme_id > 0 && ($value <= 1) && ($value >= -1) ) {
-//				$list = theme_GetThemeValidVotingList($EVENT_NODE);
-//				
-//				// Confirm theme is on the list //
-//				if ( isset($list[$theme_id]) && $THEME_VOTE_START_DIFF[$list[$theme_id]['page']] <= 0 && $THEME_VOTE_END_DIFF[$list[$theme_id]['page']] > 0 ) {
-//					$response['id'] = theme_AddVote($theme_id,$value,$user_id);
-//					$response['idea_id'] = $theme_id;
-//				}
-//				else {
-//					$response['id'] = 0;
-//				}
-//			}
+			$theme_id = intval($_POST['id']);
+			$value = intval($_POST['value']);
+			if ( $theme_id > 0 && ($value <= 1) && ($value >= -1) ) {
+				$list = theme_GetFinalThemeValidVotingList($EVENT_NODE);
+				
+				// Confirm theme is on the list //
+				if ( isset($list[$theme_id]) && $FINAL_VOTE_START_DIFF <= 0 && $FINAL_VOTE_END_DIFF > 0 ) {
+					$response['id'] = theme_AddFinalVote($theme_id,$value,$user_id);
+					$response['idea_id'] = $theme_id;
+				}
+				else {
+					$response['id'] = 0;
+				}
+			}
 		}
 		else if ( $action == "GETFVOTES" /*&& IsThemeVotingOpen()*/ ) {
-//			$votes = theme_GetMyVotes($user_id);
-//			
-//			$list = theme_GetThemeValidVotingList($EVENT_NODE);
-//			$response['id'] = $user_id;
-//			$response['votes'] = [];
-//			foreach ( $votes as $vote ) {
-//				if ( isset($list[$vote['node']]) ) {
-//					$response['votes'][] = ['id' => $vote['node'], 'idea' => $list[$vote['node']], 'value' => $vote['value']];
-//				}
-//			}
+			$votes = theme_GetMyFinalVotes($user_id);
+			
+			$list = theme_GetFinalThemeValidVotingList($EVENT_NODE);
+			$response['id'] = $user_id;
+			$response['votes'] = [];
+			foreach ( $votes as $vote ) {
+				if ( isset($list[$vote['node']]) ) {
+					$response['votes'][] = ['id' => $vote['node'], 'idea' => $list[$vote['node']], 'value' => $vote['value']];
+				}
+			}
 		}	
 
 		else if ( $action == "SETPARENT" && $ADMIN /*&& IsThemeSlaughterOpen()*/ ) {
