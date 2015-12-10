@@ -9,11 +9,12 @@ if ( PHP_SAPI !== "cli" ) {
 if ( count($argv) < 2 ) {
 	echo "Usage: ".$argv[0]." [command]\n";
 	echo "\n";
-	echo "  dupes   - Remove Duplicate Ideas\n";
-	echo "  score   - Score Ideas\n";
-	echo "  promote - Promote highest scored Ideas to Themes\n";
-	echo "  page    - Assign pages to themes\n";
-	echo "  calc #  - Calculate Score for Page \"#\"\n";
+	echo "  dupes    - Remove Duplicate Ideas\n";
+	echo "  score    - Score Ideas\n";
+	echo "  promote  - Promote highest scored Ideas to Themes\n";
+	echo "  page     - Assign pages to themes\n";
+	echo "  calc #   - Calculate Score for Page \"#\"\n";
+	echo "  finalize - Take the top 20 themes and make a Final Round\n";
 	echo "\n";
 	die;
 }
@@ -229,6 +230,22 @@ else if ( $argv[1] === "calc" ) {
 	
 	$result = theme_CalculateScores($EVENT_NODE,$page-1);
 	//var_dump($result);
+}
+else if ( $argv[1] === "finalize" ) {
+//	print "\n*** WARNING ***\n\n";
+//	print "You are about to Score Round ".$page."\n";
+//	print "\nAre you sure [type 'YES']? ";
+//	flush();
+//	$input = trim(fgets(STDIN));
+//	if ( $input != "YES" ) {
+//		print "Aborting...\n";
+//		exit(1);
+//	}
+//	
+//	print "Calculating Score...\n";
+//	
+//	$result = theme_CalculateScores($EVENT_NODE,$page-1);
+//	//var_dump($result);
 }
 else {
 	echo "Error: Unknown command \"".$argv[1]."\"\n";

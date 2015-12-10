@@ -14,12 +14,12 @@ $EVENT_MODE = 3;
 $EVENT_NODE = 100;
 $EVENT_DATE = new DateTime("2015-12-12T02:00:00Z");
 
-//if ( isset($_GET['beta']) ) {
-//	$DO_BETA = true;
-//	$EVENT_MODE = 3;
-////	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Vote data will be <b>DELETED</b> • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
-//	$CONFIG['theme-alert'] = '<b>FINAL TEST</b> • Treat this as Live • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
-//}
+if ( isset($_GET['beta']) ) {
+	$DO_BETA = true;
+	$EVENT_MODE = 4;
+//	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Vote data will be <b>DELETED</b> • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
+	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Treat this as Live • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
+}
 
 define('HTML_TITLE',$EVENT_NAME." - Theme Hub");
 const HTML_CSS_INCLUDE = [ "/style/theme-hub.css.php" ];
@@ -89,16 +89,18 @@ const THEME_VOTE_START_TIMES = [
 	(5*24*60*60) - (24*60*60),
 	(4*24*60*60) - (12*60*60),
 	(4*24*60*60) - (18*60*60),
-//	(2*24*60*60),
 ];
+const FINAL_VOTE_START_TIME =
+	(2*24*60*60);
 
 const THEME_VOTE_END_TIMES = [
 	(4*24*60*60) - (24*60*60),
 	(3*24*60*60) - (12*60*60),
 	(3*24*60*60) - (18*60*60),
 	(3*24*60*60) - (24*60*60),
-//	(30*60),
 ];
+const FINAL_VOTE_END_TIME =
+	(30*60);
 
 $THEME_VOTE_START_DATE = [];
 $THEME_VOTE_START_DIFF = [];
@@ -120,6 +122,11 @@ for( $idx = 0; $idx < count(THEME_VOTE_START_TIMES); $idx++ ) {
 		$EVENT_VOTE_ACTIVE = $idx;
 	}
 }
+$FINAL_VOTE_START_DATE = $EVENT_DATE->getTimestamp() - FINAL_VOTE_START_TIME;
+$FINAL_VOTE_START_DIFF = $FINAL_VOTE_START_DATE - time();
+$FINAL_VOTE_END_DATE = $EVENT_DATE->getTimestamp() - FINAL_VOTE_END_TIME;
+$FINAL_VOTE_END_DIFF = $FINAL_VOTE_END_DATE - time();
+
 
 if ( isset($_GET['page']) ) {
 	$page = intval($_GET['page']);
@@ -267,6 +274,7 @@ function ShowStats() {
 		<div id="stats-tab-0" class="tab big" onclick="stats_ShowPage(0);">Suggestion</div>
 		<div id="stats-tab-1" class="tab big" onclick="stats_ShowPage(1);">Slaughter</div>
 		<div id="stats-tab-2" class="tab big" onclick="stats_ShowPage(2);">Voting</div>
+		<div id="stats-tab-3" class="tab big" onclick="stats_ShowPage(3);">Final Voting</div>
 		
 		<div id="stats-page-0" class="page hidden">
 			<div class="title big">Coming Soon.</div>
@@ -283,6 +291,9 @@ function ShowStats() {
 			<div id="stats-total-kills" class="hidden hide-on-mobile" style="width:600px;height:300px;margin:0 auto;"></div>
 		</div>
 		<div id="stats-page-2" class="page hidden">
+			<div class="title big">Coming Soon.</div>
+		</div>
+		<div id="stats-page-3" class="page hidden">
 			<div class="title big">Coming Soon.</div>
 		</div>
 
@@ -306,7 +317,7 @@ function ShowStats() {
 			dom_ToggleClass("stats-page-"+ActiveStatsPage,"hidden",false);
 			dom_ToggleClass("stats-tab-"+ActiveStatsPage,"active",true);
 		}
-		stats_ShowPage(2,true);	
+		stats_ShowPage(3,true);	
 		
 		google.load("visualization", "1", {packages:["corechart"]});
 		google.setOnLoadCallback(DrawStatsCharts);
@@ -1008,8 +1019,8 @@ function ShowFinalVoting( $logged_in ) {
 		</div>
 	</div>
 	<script>
-		var VoteRoundStart = <?=$GLOBALS['THEME_VOTE_START_DIFF'][4]?>;
-		var VoteRoundEnd = <?=$GLOBALS['THEME_VOTE_END_DIFF'][4]?>;
+		var VoteRoundStart = <?=$GLOBALS['FINAL_VOTE_START_DIFF']?>;
+		var VoteRoundEnd = <?=$GLOBALS['FINAL_VOTE_END_DIFF']?>;
 
 		function fvote_AddItem(page,id,text,data) {
 			id = Number(id);
