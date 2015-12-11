@@ -18,7 +18,7 @@ const THEME_MODE_TIMES = [
 	(2*7*24*60*60) - ((24+21)*60*60),
 	(1*7*24*60*60) - (18*60*60),
 	(2*24*60*60),
-	(30*60),
+	(60*60),
 	0,
 	0,
 ];
@@ -40,7 +40,7 @@ const THEME_VOTE_END_TIMES = [
 	(3*24*60*60) - (24*60*60),
 ];
 const FINAL_VOTE_END_TIME =
-	(30*60);
+	(60*60);
 
 $THEME_VOTE_START_DATE = [];
 $THEME_VOTE_START_DIFF = [];
