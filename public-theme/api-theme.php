@@ -84,13 +84,13 @@ function IsThemeVotingOpen() {
 
 $response = json_NewResponse();
 
+$ADMIN = defined('LEGACY_DEBUG') || $user_id === 19;
+
 // MAIN (Only accept POST requests) //
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 	$action = trim($_POST['action']);
 	
 	$user_id = legacy_GetUserFromCookie();
-
-	$ADMIN = defined('LEGACY_DEBUG') || $user_id === 19;
 	
 	$max_themes = 3;
 	
@@ -216,7 +216,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 				}
 			}
 		}	
-
 		else if ( $action == "SETPARENT" && $ADMIN /*&& IsThemeSlaughterOpen()*/ ) {
 			$parent = intval($_POST['parent']);
 			$children = [];
@@ -294,6 +293,11 @@ else if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
 		break;
 	case "GET_VOTING_LIST":
 		$response['theme'] = theme_GetThemeVotingList($EVENT_NODE,100);
+		break;
+	case "GET_RESULTS":
+		if ( $ADMIN ) {
+			$response['themes'] = theme_GetFinalScores($EVENT_NODE);
+		}
 		break;
 	};
 }

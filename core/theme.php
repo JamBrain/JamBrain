@@ -570,10 +570,27 @@ function theme_GetVotes($node) {
 		$node
 	);	
 }
+function theme_GetFinalVotes($node) {
+	return db_DoFetchSingle(
+		"SELECT value FROM ".CMW_TABLE_THEME_FINAL_VOTE." 
+		WHERE node=?",
+		$node
+	);	
+}
 
 function theme_SetVoteScore($id, $value) {
 	return db_DoInsert(
 		"UPDATE ".CMW_TABLE_THEME."
+		SET
+			score=?
+		WHERE
+			id=?;",
+		$value, $id
+	);
+}
+function theme_SetFinalVoteScore($id, $value) {
+	return db_DoInsert(
+		"UPDATE ".CMW_TABLE_THEME_FINAL."
 		SET
 			score=?
 		WHERE
@@ -607,6 +624,57 @@ function theme_CalculateScores($node,$page) {
 	
 	return $ret;
 }
+
+function theme_CalculateFinalScores($node) {
+	$themes = theme_GetFinalThemeValidVotingList($node);
+	
+	$ret = [];
+	foreach( $themes AS $key => $value ) {			
+		$votes = theme_GetFinalVotes($key);
+		
+		$score_sum = 0;
+		$scores = [ -1 => 0, 0 => 0, 1 => 0 ];
+		
+		$votes_count = count($votes);
+		for ($idx = 0; $idx < $votes_count; $idx++ ) {
+			$score_sum += intval($votes[$idx]);
+			$scores[$votes[$idx]]++;
+		}
+		
+		theme_SetFinalVoteScore($key,$score_sum);
+		$ret[$key] = [ 'id' => $key, 'theme' => $themes[$key]['theme'], 'score' => $score_sum, 'scores' => $scores, 'count' => $votes_count ];
+	}
+	
+	return $ret;
+}
+function theme_GetFinalScores($node) {
+	$themes = theme_GetFinalThemeValidVotingList($node);
+	
+	$ret = [];
+	foreach( $themes AS $key => $value ) {			
+		$votes = theme_GetFinalVotes($key);
+		
+		$score_sum = 0;
+		$scores = [ -1 => 0, 0 => 0, 1 => 0 ];
+		
+		$votes_count = count($votes);
+		for ($idx = 0; $idx < $votes_count; $idx++ ) {
+			$score_sum += intval($votes[$idx]);
+			$scores[$votes[$idx]]++;
+		}
+		
+		$ret[$key] = [ 'id' => $key, 'theme' => $themes[$key]['theme'], 'score' => $score_sum, 'scores' => $scores, 'count' => $votes_count ];
+	}
+	
+	usort($ret,function($a,$b){     
+		if ($a['score'] == $b['score'])
+			return 0;
+		return ($a['score'] > $b['score']) ? -1 : 1;
+	});
+
+	return $ret;
+}
+
 
 
 function theme_AddFinalVote($node, $value, $user) {

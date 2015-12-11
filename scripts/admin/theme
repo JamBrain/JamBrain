@@ -9,12 +9,13 @@ if ( PHP_SAPI !== "cli" ) {
 if ( count($argv) < 2 ) {
 	echo "Usage: ".$argv[0]." [command]\n";
 	echo "\n";
-	echo "  dupes    - Remove Duplicate Ideas\n";
-	echo "  score    - Score Ideas\n";
-	echo "  promote  - Promote highest scored Ideas to Themes\n";
-	echo "  page     - Assign pages to themes\n";
-	echo "  calc #   - Calculate Score for Page \"#\"\n";
-	echo "  finalize - Take the top 20 themes and make a Final Round\n";
+	echo "  dupes      - Remove Duplicate Ideas\n";
+	echo "  score      - Score Ideas\n";
+	echo "  promote    - Promote highest scored Ideas to Themes\n";
+	echo "  page       - Assign pages to themes\n";
+	echo "  calc #     - Calculate Score for Page \"#\"\n";
+	echo "  finalize   - Take the top 20 themes and make a Final Round\n";
+	echo "  calc-final - Calculate the Final Score\n";
 	echo "\n";
 	die;
 }
@@ -211,7 +212,7 @@ else if ( $argv[1] === "calc" ) {
 
 	$page = intval($argv[2]);
 	
-	if ( $page < 1 || $page > 5 ) {
+	if ( $page < 1 || $page > 4 ) {
 		print "Error: Invalid page"+$page+"\n";
 		exit(1);
 	}
@@ -250,6 +251,25 @@ else if ( $argv[1] === "finalize" ) {
 	
 	foreach ( $themes as $theme ) {
 		theme_AddFinalTheme($theme['id'],$EVENT_NODE,$theme['theme']);
+	}
+}
+else if ( $argv[1] === "calc-final" ) {
+	print "\n*** WARNING ***\n\n";
+	print "You are about to Score the Final Round ".$page."\n";
+	print "\nAre you sure [type 'YES']? ";
+	flush();
+	$input = trim(fgets(STDIN));
+	if ( $input != "YES" ) {
+		print "Aborting...\n";
+		exit(1);
+	}
+	
+	print "Calculating Final Scores...\n";
+	
+	$result = theme_CalculateFinalScores($EVENT_NODE);
+	
+	foreach ( $result as $theme ) {
+		print $theme['theme'].": ".$theme['score']."\n";
 	}
 }
 else {
