@@ -84,14 +84,13 @@ function IsThemeVotingOpen() {
 
 $response = json_NewResponse();
 
+$user_id = legacy_GetUserFromCookie();
 $ADMIN = defined('LEGACY_DEBUG') || $user_id === 19;
 
 // MAIN (Only accept POST requests) //
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 	$action = trim($_POST['action']);
-	
-	$user_id = legacy_GetUserFromCookie();
-	
+		
 	$max_themes = 3;
 	
 	//$response['EVENT_MODE'] = $EVENT_MODE;
