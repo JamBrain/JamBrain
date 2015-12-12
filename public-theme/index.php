@@ -10,16 +10,16 @@ require_once __DIR__."/../core/internal/sanitize.php";
 config_Load();
 
 $EVENT_NAME = "Ludum Dare 34";
-$EVENT_MODE = 4;
+$EVENT_MODE = 5;
 $EVENT_NODE = 100;
 $EVENT_DATE = new DateTime("2015-12-12T02:00:00Z");
 
-if ( isset($_GET['beta']) ) {
-	$DO_BETA = true;
-	$EVENT_MODE = 5;
-//	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Vote data will be <b>DELETED</b> • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
-	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Treat this as Live • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
-}
+//if ( isset($_GET['beta']) ) {
+//	$DO_BETA = true;
+//	$EVENT_MODE = 5;
+////	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Vote data will be <b>DELETED</b> • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
+//	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Treat this as Live • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
+//}
 
 define('HTML_TITLE',$EVENT_NAME." - Theme Hub");
 const HTML_CSS_INCLUDE = [ "/style/theme-hub.css.php" ];
@@ -1198,7 +1198,7 @@ function ShowAnnouncement() {
 		</div>
 		<div class="gap"></div>
 	</div>
-<?
+<?php
 }
 function ShowAdmin() {
 	$all_themes = theme_GetIdeas($EVENT_NODE);
@@ -1618,7 +1618,7 @@ function ShowAdmin() {
 	?>
 	}
 </script>
-<div class="body">
+<div class="body <?=($EVENT_MODE == 5)?'dark-body':''?>">
 	<div class="main">
 		<?php
 			if ( $CONFIG['active'] ) {
