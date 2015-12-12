@@ -14,12 +14,12 @@ $EVENT_MODE = 4;
 $EVENT_NODE = 100;
 $EVENT_DATE = new DateTime("2015-12-12T02:00:00Z");
 
-//if ( isset($_GET['beta']) ) {
-//	$DO_BETA = true;
-//	$EVENT_MODE = 4;
-////	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Vote data will be <b>DELETED</b> • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
-//	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Treat this as Live • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
-//}
+if ( isset($_GET['beta']) ) {
+	$DO_BETA = true;
+	$EVENT_MODE = 5;
+//	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Vote data will be <b>DELETED</b> • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
+	$CONFIG['theme-alert'] = '<b>BETA TEST</b> • Treat this as Live • Report bugs <a href="http://ludumdare.com/compo/">HERE</a>';
+}
 
 define('HTML_TITLE',$EVENT_NAME." - Theme Hub");
 const HTML_CSS_INCLUDE = [ "/style/theme-hub.css.php" ];
@@ -28,7 +28,7 @@ const HTML_SHOW_FOOTER = true;
 const HTML_USE_GOOGLE = true;
 
 // Extract Id from Cookie
-if ( isset($_COOKIE['lusha']) ) {
+if ( ($EVENT_MODE !== 5) && isset($_COOKIE['lusha']) ) {
 	$cookie_id = legacy_GetUserFromCookie();	
 }
 else {
@@ -80,7 +80,7 @@ const THEME_MODE_SHOW_TIMES = [
 	true,
 	true,
 	true,
-	false,
+	true,
 	false,
 ];
 
@@ -1180,6 +1180,26 @@ function ShowFinalVoting( $logged_in ) {
 <?php
 	}
 }
+function ShowAnnouncement() {
+?>
+	<div class="action" id="action-ann">
+		<div id="twitter-widget" style="width:28em">
+			<a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ludumdare" data-widget-id="665760712757657600">Tweets by @ludumdare</a>
+			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+      	</div>
+
+		<div id="ann-before" class="hidden">
+			<div>The Theme will be announced in</div>
+			<div>clock:clock:tick:tick</div>
+		</div>
+		<div id="ann-after" class="hidden">
+			<div>The Theme is</div>
+			<div>BAAAAAAAAAAAAAAAAAAAA</div>
+		</div>
+		<div class="gap"></div>
+	</div>
+<?
+}
 function ShowAdmin() {
 	$all_themes = theme_GetIdeas($EVENT_NODE);
 	
@@ -1598,7 +1618,7 @@ function ShowAdmin() {
 	?>
 	}
 </script>
-<div class="body">
+<div class="body <?=($EVENT_MODE == 5)?'dark-body':''?>">
 	<div class="main">
 		<?php
 			if ( $CONFIG['active'] ) {
@@ -1627,6 +1647,7 @@ function ShowAdmin() {
 						ShowFinalVoting($cookie_id > 0);
 						break;
 					case 5: // Announcement //
+						ShowAnnouncement();
 						break;
 					case 6: // Post Announcement //
 						break;
@@ -1641,7 +1662,7 @@ function ShowAdmin() {
 		?>
 	</div>
 	<?php
-	if ( $CONFIG['active'] ) {
+	if ( $CONFIG['active'] && ( $EVENT_MODE !== 5 ) ) {	// Announcement //
 		if ( $cookie_id && !$admin ) {
 			echo "<div id='extra' class='hidden'>";
 				ShowMyIdeas();
@@ -1652,12 +1673,10 @@ function ShowAdmin() {
 		ShowStats();
 
 		if ( $cookie_id ) {
-			if ( $EVENT_MODE !== 5 )	// Announcement //
-				ShowLogout();
+			ShowLogout();
 		}
 		else {
-			if ( $EVENT_MODE !== 5 )	// Announcement //
-				ShowLogin();
+			ShowLogin();
 		}
 	}
 	?>

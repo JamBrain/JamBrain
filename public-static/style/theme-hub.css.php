@@ -101,6 +101,11 @@ body {
 body > .body {
 	background:#DDD;
 }
+body > .dark-body {
+	background:#111;
+	color:#AAA;
+	border-top:0 !important;
+}
 
 body > .body .main {
 	padding:1.0em 2.0em;
@@ -250,6 +255,9 @@ button:active {
 
 body > .footer {
 	padding:1.0em 0;
+}
+body > .dark-footer {
+	background:#666;
 }
 
 .item-text {
