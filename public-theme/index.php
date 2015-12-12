@@ -1618,7 +1618,7 @@ function ShowAdmin() {
 	?>
 	}
 </script>
-<div class="body <?=($EVENT_MODE == 5)?'dark-body':''?>">
+<div class="body">
 	<div class="main">
 		<?php
 			if ( $CONFIG['active'] ) {
