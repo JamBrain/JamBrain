@@ -8,7 +8,7 @@ require_once __DIR__."/../core/legacy_user.php";
 config_Load();
 
 $EVENT_NAME = "Ludum Dare 34";
-$EVENT_MODE = 2;
+$EVENT_MODE = 4;
 $EVENT_NODE = 100;//intval($CONFIG['event-active']);//isset($_POST['node']) ? intval($_POST['node']) : 0;
 $EVENT_DATE = new DateTime("2015-12-12T02:00:00Z");
 
@@ -79,6 +79,10 @@ function IsThemeSlaughterOpen() {
 function IsThemeVotingOpen() {
 	global $EVENT_MODE, $EVENT_MODE_DIFF;
 	return ($EVENT_MODE == 3) && ($EVENT_MODE_DIFF > 0);
+}
+function IsFinalThemeVotingOpen() {
+	global $EVENT_MODE, $EVENT_MODE_DIFF;
+	return ($EVENT_MODE == 4) && ($EVENT_MODE_DIFF > 0);
 }
 
 
@@ -159,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 				}
 			}
 		}
-		else if ( $action == "VOTE" /*&& IsThemeVotingOpen()*/ ) {
+		else if ( $action == "VOTE" && IsThemeVotingOpen() ) {
 			$theme_id = intval($_POST['id']);
 			$value = intval($_POST['value']);
 			if ( $theme_id > 0 && ($value <= 1) && ($value >= -1) ) {
@@ -187,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 				}
 			}
 		}
-		else if ( $action == "FVOTE" /*&& IsThemeVotingOpen()*/ ) {
+		else if ( $action == "FVOTE" && IsFinalThemeVotingOpen() ) {
 			$theme_id = intval($_POST['id']);
 			$value = intval($_POST['value']);
 			if ( $theme_id > 0 && ($value <= 1) && ($value >= -1) ) {
