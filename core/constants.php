@@ -16,6 +16,7 @@ if ( !defined('CMW_TABLE_PREFIX') ) {
 const CMW_TABLE_CONFIG =				CMW_TABLE_PREFIX."config";
 
 const CMW_TABLE_NODE =					CMW_TABLE_PREFIX."node";
+const CMW_TABLE_NODE_LINK =				CMW_TABLE_PREFIX."node_link";
 const CMW_TABLE_NODE_META =				CMW_TABLE_PREFIX."node_meta";
 const CMW_TABLE_NODE_DIFF =				CMW_TABLE_PREFIX."node_diff";
 const CMW_TABLE_NODE_LOVE =				CMW_TABLE_PREFIX."node_love";
