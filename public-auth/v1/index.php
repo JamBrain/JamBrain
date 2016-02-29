@@ -5,8 +5,8 @@ $action = core_ParseActionURL();
 $endpoint = array_pop($action);
 
 switch ($endpoint) {
-case "hoof":
-	json_Emit(["hooves":10]);
+case "login":
+	json_Emit(["whoop" => 10]);
 	break;
 default:
 	json_Emit([]);
