@@ -93,12 +93,14 @@ function core_ParseActionURL() {
 	    $path = substr($path, 0, $position);
 	}
 	$ret = ltrim(rtrim($path,'/'),'/');
-	if ( empty($ret) )
+	if ( empty($ret) ) {
 		return [];
-	else
+	}
+	else {
 		return array_values(array_filter(explode('/',$ret),function ($val) {
 			return !(empty($val) || ($val[0] === '.'));
 		}));
+	}
 }
 // Convert response codes in to text //
 function core_GetHTTPResponseText($code){
