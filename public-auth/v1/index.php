@@ -2,7 +2,7 @@
 require_once __DIR__."/../../api.php";
 
 $action = core_ParseActionURL();
-$endpoint = array_pop($action);
+$endpoint = array_shift($action);
 
 switch ($endpoint) {
 case "login":
