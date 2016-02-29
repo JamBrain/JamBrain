@@ -6,7 +6,7 @@ $endpoint = array_shift($action);
 
 switch ($endpoint) {
 case "login":
-	json_Emit(["whoop" => 10]);
+	require_once __DIR__."/auth.php";
 	break;
 default:
 	json_Emit([]);
