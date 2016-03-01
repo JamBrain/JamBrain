@@ -7,8 +7,10 @@ Listen 8082
 Listen 8083
 Listen 8084
 Listen 8085
+Listen 8086
+Listen 8087
+Listen 8088
+Listen 8089
 
 Listen 8090
 Listen 8091
-Listen 8092
-Listen 8093
