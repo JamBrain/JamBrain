@@ -63,6 +63,7 @@ table_Drop(CMW_TABLE_THEME_IDEA_VOTE);
 
 table_Drop(CMW_TABLE_LEGACY_USER);
 
+table_Drop(CMW_TABLE_USER);
 table_Drop(CMW_TABLE_USER_ACCESS);
 table_Drop(CMW_TABLE_USER_STRIKE);
 

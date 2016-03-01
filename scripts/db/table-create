@@ -200,6 +200,28 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 }
 
 
+
+// Create/Upgrade Table //
+// NOTE: E-mail addresses are using UTF8mb3 encoding, meaning emoji domains and addresses aren't allowed.
+$table = CMW_TABLE_USER;
+if ( !isset($table_list) || isset($table_list[$table]) ) {
+	DoInit($table);
+	switch ($version) {
+	case 0:
+		$ok = DoCreate( $table,
+			"CREATE TABLE ".$table." (
+				node BIGINT UNSIGNED NOT NULL UNIQUE,
+					INDEX(node),
+				mail VARCHAR(255) CHARSET utf8 COLLATE utf8_unicode_ci NOT NULL UNIQUE,
+					INDEX(mail),
+				hash VARCHAR(128) CHARSET latin1 NOT NULL,
+				secret VARCHAR(128) CHARSET latin1 NOT NULL
+			)".DEFAULT_CS_ENGINE.";");
+		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
+	};
+	DoExit($table);
+}
+
 // Create/Upgrade Table //
 $table = CMW_TABLE_USER_ACCESS;
 if ( !isset($table_list) || isset($table_list[$table]) ) {
@@ -446,5 +468,6 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 	};
 	DoExit($table);
 }
+
 
 print "Done.\n";
