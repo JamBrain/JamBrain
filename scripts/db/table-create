@@ -30,6 +30,8 @@ if ( $input != "YES" ) {
 	exit(1);
 }
 
+print "\n";
+
 // Normally Connect isn't required, but done here to confirm existence of DB //
 db_Connect();
 if ( !db_IsConnected() ) {
@@ -437,7 +439,7 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 					UNIQUE,
 				node BIGINT UNSIGNED NOT NULL,
 					INDEX(node),
-				key VARCHAR(32) CHARSET latin1 NOT NULL,
+				`key` VARCHAR(32) CHARSET latin1 NOT NULL,
 				value TEXT NOT NULL
 			)".DEFAULT_CS_ENGINE.";");
 		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
