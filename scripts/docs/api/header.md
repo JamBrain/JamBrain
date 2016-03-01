@@ -1,4 +1,4 @@
-The public Ludum Dare REST API. 
+The Ludum Dare API. 
 
 [api.ludumdare.com](http://api.ludumdare.com)
 
