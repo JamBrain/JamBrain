@@ -8,8 +8,8 @@ require_once __DIR__."/../core/legacy_user.php";
 config_Load();
 
 $EVENT_NAME = "Ludum Dare 34";
-$EVENT_MODE = 5;
-$EVENT_NODE = 100;//intval($CONFIG['event-active']);//isset($_POST['node']) ? intval($_POST['node']) : 0;
+$EVENT_MODE = 0;
+$EVENT_NODE = 101;//intval($CONFIG['event-active']);//isset($_POST['node']) ? intval($_POST['node']) : 0;
 $EVENT_DATE = new DateTime("2015-12-12T02:00:00Z");
 
 // HACK, don't hardcode me! //
