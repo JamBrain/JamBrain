@@ -30,6 +30,8 @@ if ( $input != "YES" ) {
 	exit(1);
 }
 
+print "\n";
+
 // Normally Connect isn't required, but done here to confirm existence of DB //
 db_Connect();
 if ( !db_IsConnected() ) {
@@ -197,6 +199,26 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 	DoExit($table);
 }
 
+
+
+// Create/Upgrade Table //
+// NOTE: E-mail addresses are using UTF8mb3 encoding, meaning emoji domains and addresses aren't supported.
+$table = CMW_TABLE_USER;
+if ( !isset($table_list) || isset($table_list[$table]) ) {
+	DoInit($table);
+	switch ($version) {
+	case 0:
+		$ok = DoCreate( $table,
+			"CREATE TABLE ".$table." (
+				node BIGINT UNSIGNED NOT NULL UNIQUE,
+				mail VARCHAR(255) CHARSET utf8 COLLATE utf8_unicode_ci NOT NULL UNIQUE,
+				hash VARCHAR(128) CHARSET latin1 NOT NULL,
+				secret VARCHAR(128) CHARSET latin1 NOT NULL
+			)".DEFAULT_CS_ENGINE.";");
+		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
+	};
+	DoExit($table);
+}
 
 // Create/Upgrade Table //
 $table = CMW_TABLE_USER_ACCESS;
@@ -367,5 +389,83 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 	};
 	DoExit($table);
 }
+
+// Create/Upgrade Table //
+$table = CMW_TABLE_NODE;
+if ( !isset($table_list) || isset($table_list[$table]) ) {
+	DoInit($table);
+	switch ($version) {
+	case 0:
+		$ok = DoCreate( $table,
+			"CREATE TABLE ".$table." (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
+					UNIQUE,
+				parent BIGINT UNSIGNED NOT NULL,
+					INDEX(parent),
+				type VARCHAR(24) CHARSET latin1 NOT NULL,
+					INDEX(type),
+				subtype VARCHAR(24) CHARSET latin1 NOT NULL,
+					INDEX(subtype),
+				detail VARCHAR(24) CHARSET latin1 NOT NULL,
+					INDEX(detail),
+				published DATETIME NOT NULL,
+					INDEX(published),
+				created DATETIME NOT NULL,
+				modified DATETIME NOT NULL,
+				slug VARCHAR(96) CHARSET latin1 NOT NULL,
+					INDEX(slug),
+				title VARCHAR(96) NOT NULL,
+				body MEDIUMTEXT NOT NULL,
+				revision BIGINT UNSIGNED NOT NULL,
+				extra BIGINT UNSIGNED NOT NULL
+			)".DEFAULT_CS_ENGINE.";");
+		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
+	};
+	DoExit($table);
+}
+
+
+// Create/Upgrade Table //
+$table = CMW_TABLE_NODE_LINK;
+if ( !isset($table_list) || isset($table_list[$table]) ) {
+	DoInit($table);
+	switch ($version) {
+	case 0:
+		$ok = DoCreate( $table,
+			"CREATE TABLE ".$table." (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
+					UNIQUE,
+				a BIGINT UNSIGNED NOT NULL,
+					INDEX(a),
+				b BIGINT UNSIGNED NOT NULL,
+					INDEX(b),
+				type VARCHAR(24) CHARSET latin1 NOT NULL
+			)".DEFAULT_CS_ENGINE.";");
+		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
+	};
+	DoExit($table);
+}
+
+
+// Create/Upgrade Table //
+$table = CMW_TABLE_NODE_META;
+if ( !isset($table_list) || isset($table_list[$table]) ) {
+	DoInit($table);
+	switch ($version) {
+	case 0:
+		$ok = DoCreate( $table,
+			"CREATE TABLE ".$table." (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
+					UNIQUE,
+				node BIGINT UNSIGNED NOT NULL,
+					INDEX(node),
+				`key` VARCHAR(32) CHARSET latin1 NOT NULL,
+				value TEXT NOT NULL
+			)".DEFAULT_CS_ENGINE.";");
+		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
+	};
+	DoExit($table);
+}
+
 
 print "Done.\n";

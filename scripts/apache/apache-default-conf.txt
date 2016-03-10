@@ -9,7 +9,7 @@
 
 <VirtualHost *:8081>
         ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-pusher
+        DocumentRoot /var/www/public-auth
 
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
@@ -17,7 +17,7 @@
 
 <VirtualHost *:8082>
         ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-theme
+        DocumentRoot /var/www/public-api
 
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
@@ -25,7 +25,7 @@
 
 <VirtualHost *:8083>
         ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-api
+        DocumentRoot /var/www/public-pusher
 
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
@@ -41,7 +41,39 @@
 
 <VirtualHost *:8085>
         ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/public-com
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+<VirtualHost *:8086>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/public-net
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+<VirtualHost *:8087>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/public-org
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+<VirtualHost *:8088>
+        ServerAdmin webmaster@localhost
         DocumentRoot /var/www/public-jammer.bio
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+<VirtualHost *:8089>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/public-theme
 
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
@@ -64,20 +96,3 @@
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
-
-<VirtualHost *:8092>
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-jamga.me
-
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
-
-<VirtualHost *:8093>
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-scene
-
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
-

@@ -1,5 +1,5 @@
 {
-	"name": "Ludum Dare API",
+	"name": "Starship Core API",
 	"version": "0.1.0",
 	"header":{
 		"filename":"header.md"

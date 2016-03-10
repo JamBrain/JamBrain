@@ -30,6 +30,8 @@ if ( $input != "YES" ) {
 	exit(1);
 }
 
+print "\n";
+
 db_Connect();
 
 if ( !db_IsConnected() ) {
@@ -55,12 +57,21 @@ function table_Drop($table) {
 }
 
 table_Drop(CMW_TABLE_CONFIG);
+
 table_Drop(CMW_TABLE_THEME_IDEA);
 table_Drop(CMW_TABLE_THEME_IDEA_VOTE);
+
 table_Drop(CMW_TABLE_LEGACY_USER);
+
+table_Drop(CMW_TABLE_USER);
 table_Drop(CMW_TABLE_USER_ACCESS);
 table_Drop(CMW_TABLE_USER_STRIKE);
+
 table_Drop(CMW_TABLE_THEME_VOTE);
 table_Drop(CMW_TABLE_THEME);
 table_Drop(CMW_TABLE_THEME_FINAL);
 table_Drop(CMW_TABLE_THEME_FINAL_VOTE);
+
+table_Drop(CMW_TABLE_NODE);
+table_Drop(CMW_TABLE_NODE_LINK);
+table_Drop(CMW_TABLE_NODE_META);

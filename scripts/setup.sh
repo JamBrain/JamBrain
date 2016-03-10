@@ -10,4 +10,4 @@ SCRIPTPATH=$(dirname "$SCRIPT")
 cd $SCRIPTPATH
 
 (cd apache ; sh add-ports.sh)
-(cd mysql ; php dbsetup)
+(cd db ; echo YES | php table-create)

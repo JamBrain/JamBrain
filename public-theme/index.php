@@ -9,10 +9,10 @@ require_once __DIR__."/../core/internal/sanitize.php";
 
 config_Load();
 
-$EVENT_NAME = "Ludum Dare 34";
-$EVENT_MODE = 5;
-$EVENT_NODE = 100;
-$EVENT_DATE = new DateTime("2015-12-12T02:00:00Z");
+$EVENT_NAME = "Ludum Dare 35";
+$EVENT_MODE = 1;
+$EVENT_NODE = 101;
+$EVENT_DATE = new DateTime("2016-04-16T01:00:00Z");
 
 //if ( isset($_GET['beta']) ) {
 //	$DO_BETA = true;

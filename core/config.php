@@ -22,7 +22,7 @@ const DEFAULT_CONFIG = [
 //	CMW_TABLE_NODE_LOVE => '0',				// Likes
 //	CMW_TABLE_NODE_STAR => '0',				// Bookmark
 	                               
-//	CMW_TABLE_USER => '0',
+	CMW_TABLE_USER => '0',
 	CMW_TABLE_USER_ACCESS => '0',			// User Account Access Log
 	CMW_TABLE_USER_STRIKE => '0',			// User Strikes
 	                               
@@ -46,11 +46,11 @@ const DEFAULT_CONFIG = [
 	'event-active' => '0',					// Currently Active Event
 	
 	'alert' => "",							// Alert message across all sites
-	'main-alert' => "",						// Alert message for main site
+//	'main-alert' => "",						// Alert message for main site
 	'theme-alert' => "",					// Alert message for the theme micro-site
-	'api-alert' => "",						// Alert message for API site
+//	'api-alert' => "",						// Alert message for API site
 	'jammer.bio-alert' => "",				// Alert message for the jammer.bio
-	'jammer.tv-alert' => "",				// Alert message for the jammer.tv
+//	'jammer.tv-alert' => "",				// Alert message for the jammer.tv
 ];
 
 const _CONFIG_CACHE_KEY = "CMW_CORE_CONFIG";

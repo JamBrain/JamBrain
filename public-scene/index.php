@@ -1,1 +1,0 @@
-SCENE stub
