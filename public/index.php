@@ -249,14 +249,14 @@ if ( $mode > 0 ) {
 		<div id='ldbar-outer' style='position:fixed;'>
 			<div id='ldbar-inner'>
 				<div class='leftnav'>
-					<div id='ldbar-logo' class='cell'><a href="/"><img src="<?php STATIC_URL(); ?>/logo/ludumdare/2009/LudumDareLogo80W.png" height="30" /></a></div>
+					<div id='ldbar-logo' class='cell'><a href="/"><img src="<?=CMW_STATIC_URL?>/logo/ludumdare/2009/LudumDareLogo80W.png" height="30" /></a></div>
 					<div class='is-mobile'>[Mobile]</div>
 					<div class='is-tablet'>[Tablet]</div>
 					<div class='is-normal'>[Normal]</div>
 					<div class='is-hires'>[HiRes]</div>
 				</div>
 				<div class='rightnav'>
-					<div class='cell size32' onclick='SendLogin();'><img src="<?php STATIC_URL(); ?>/logo/mike/Chicken64W.png" width="32" height="32" style="mix-blend-mode:screen" /></div>
+					<div class='cell size32' onclick='SendLogin();'><img src="<?=CMW_STATIC_URL?>/logo/mike/Chicken64W.png" width="32" height="32" style="mix-blend-mode:screen" /></div>
 					<div id='ldbar-notifications' class='cell' onclick='SendLogout();'>0</div>
 					<div id='ldbar-toggle' class='cell' onclick='toggleLDBar();' title='Toggle Sticky Bar'>[x]</div>
 				</div>
@@ -856,7 +856,7 @@ if ( $mode > 0 ) {
 		?>
 	</div>
 	<div>
-		<img src="<?php STATIC_URL(); ?>/img/logo/mike/Chicken16.png?crop&w=256&h=128" onclick="document.getElementById('nav').style.display='';">
+		<img src="<?=CMW_STATIC_URL?>/img/logo/mike/Chicken16.png?crop&w=256&h=128" onclick="document.getElementById('nav').style.display='';">
 	</div>
 <?php /*
 	<div id="debug">
