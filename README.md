@@ -11,14 +11,17 @@ This snapshot isn't necessarily the latest version, but something deemed stable 
 
 Other Ludum Dare service URLs:
 
-* https://static.ldjam.org - static content
-* https://pusher.ldjam.com - uploads
-* https://api.ldjam.org/v1/ - Ludum Dare API
-* https://ldj.am - ludumdare.com URL shortener
-* https://jammer.bio - Jammer Bios
-* https://jammer.tv - Jammer TV
-* https://jam.host - Jam Hosting
+* https://api.ldjam.com/v1/    - Data API 
+* https://auth.ldjam.com/v1/ * - Authentication API (internal, HTTPS only)
+* https://pusher.ldjam.com/v1/ - Upload API 
+* https://static.ldjam.org     - Static content
+* https://static.jamdb.org     - Static content (mirror)
+* https://ldj.am               - URL shortener 
+* https://jammer.bio           - Jammer Bio's 
+* https://jam.host             - Jam Hosting
 
-Things we can't test locally using DairyBox: Cloudflare/CDN features, HTTPS, email (?).
+NOTE: At this time, HTTPS is broken (awaiting a fix in LSWS).
+
+Things we can't test locally using DairyBox: Cloudflare/CDN features, HTTPS.
 
 Once it matures, portions of this code may eventually become the LD-CMW project.
