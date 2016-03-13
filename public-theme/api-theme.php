@@ -29,6 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 			$response['ideas'] = theme_GetMyIdeas($EVENT_NODE,$user_id);
 			$response['count'] = count($response['ideas']);
 		}
+		else if ( $action == "GETMYOTHER" ) {
+			$response['ideas'] = theme_GetMyOtherIdeas($EVENT_NODE,$user_id);
+			$response['count'] = count($response['ideas']);
+		}
 		else if ( ($action == "ADD") && isset($_POST['idea']) && IsThemeSuggestionsOpen() ) {
 			$idea = mb_trim($_POST['idea']);
 	

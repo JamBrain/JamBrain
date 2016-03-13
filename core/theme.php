@@ -147,6 +147,14 @@ function theme_GetMyIdeasWithScores($node, $user) {
 	return $ret;
 }
 
+function theme_GetMyOtherIdeas($node, $user) {
+	return db_QueryFetch(
+		"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
+		WHERE node!=? AND user=?",
+		$node, $user
+	);
+}
+
 
 // Ideas are associated with nodes //
 function theme_GetIdeas($node) {
