@@ -11,6 +11,7 @@ var dataPrefix = "!!$";
 var storage = window.sessionStorage;
 var canWrite = false;
 
+// Confirm that we have sessionStorage //
 if ( storage ) {
 	// Confirm that writing works (i.e. will fail on Safari in Incogneto). //
 	// That said, we assume if there are ANY keys, then writing is allowed //
@@ -25,6 +26,7 @@ if ( storage ) {
 			canWrite = true;
 		}
 		catch (e) {
+			// Writing failed //
 		}
 	}
 	
@@ -40,7 +42,7 @@ if ( storage ) {
 			// Remove in reverse order, just in case //
 			storage.removeItem( dataPrefix+key );
 			storage.removeItem( ttlPrefix+key );
-			// removeItem does nothing on failure //
+
 			return false;
 		}
 		
@@ -78,7 +80,7 @@ if ( storage ) {
 					
 					// CLEVERNESS: If omitted, max_items is undefined, and
 					//   itemsRemoved will always be 1+.
-					if ( itemsRemoved == max_items ) {
+					if ( itemsRemoved === max_items ) {
 						return itemsRemoved;
 					}
 				}
@@ -94,23 +96,23 @@ else /* storage */ {
 } /* storage */
 
 if ( canWrite ) {
-	window.cache_Store = function( key, value, ttl ) {
+	window.cache_Store = function( key, value, new_ttl ) {
+		if ( typeof new_ttl === 'undefined' )
+			var ttl = Number.MAX_VALUE;
+		else
+			var ttl = Date.now()+new_ttl;
+
 		// Store TTL first, then Data //
 		try {
-			if ( ttl )
-				storage.setItem( ttlPrefix+key, Date.now()+ttl );
-			else
-				storage.setItem( ttlPrefix+key, Number.MAX_VALUE );
+			storage.setItem( ttlPrefix+key, ttl );
 			storage.setItem( dataPrefix+key, value );
 		}
 		catch (e) {
 			// Flush and try again //
 			cache_Flush();
+	
 			try {
-				if ( ttl )
-					storage.setItem( ttlPrefix+key, Date.now()+ttl );
-				else
-					storage.setItem( ttlPrefix+key, Number.MAX_VALUE );
+				storage.setItem( ttlPrefix+key, ttl );
 				storage.setItem( dataPrefix+key, value );
 			}
 			catch (e2) {
@@ -118,7 +120,6 @@ if ( canWrite ) {
 				storage.removeItem( dataPrefix+key );
 				storage.removeItem( ttlPrefix+key );
 				
-				// Failure //
 				return false;
 			}
 		}
@@ -127,35 +128,34 @@ if ( canWrite ) {
 		return true;
 	}
 
-	window.cache_Create = function( key, value, ttl ) {
+	window.cache_Create = function( key, value, new_ttl ) {
 		if ( cache_Exists(key) )
 			return false;
 		
-		return cache_Store( key, value, ttl );
+		return cache_Store( key, value, new_ttl );
 	}
 
 	window.cache_Touch = function( key, new_ttl ) {
 		if ( !cache_Exists(key) )
 			return false;
+			
+		if ( typeof new_ttl === 'undefined' )
+			var ttl = Number.MAX_VALUE;
+		else
+			var ttl = Date.now()+new_ttl;
 	
 		// Update the TTL //
 		try {
-			if ( new_ttl )
-				storage.setItem( ttlPrefix+key, Date.now()+new_ttl );
-			else
-				storage.setItem( ttlPrefix+key, Number.MAX_VALUE );
+			storage.setItem( ttlPrefix+key, ttl );
 		}
 		catch (e) {
 			// Flush and try again //
 			cache_Flush();
+
 			try {
-				if ( new_ttl )
-					storage.setItem( ttlPrefix+key, Date.now()+new_ttl );
-				else
-					storage.setItem( ttlPrefix+key, Number.MAX_VALUE );
+				storage.setItem( ttlPrefix+key, ttl );
 			}
 			catch (e2) {
-				// Failure //
 				return false;
 			}
 		}
