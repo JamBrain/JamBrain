@@ -19,7 +19,7 @@ function ShowLogin() {
 function ShowLogout() {
 ?>
 	<div class="login" id="action-logout">
-		<button type="button" class="login-button" onclick="DoLogout(true)">Logout</button>
+		<button type="button" class="login-button" onclick="legacy_DoLogout(true)">Logout</button>
 	</div>	
 <?php
 }

@@ -2,6 +2,7 @@
 
 function ShowHeader() {
 	global $EVENT_NAME, $EVENT_MODE, $EVENT_DATE;
+	echo '<div class="header">';
 	if ( isset($EVENT_NAME) ) {
 		echo "<div class='hidden'>Hi there! If you're seeing this, then your security software wont let you access 'static.ldjam.org'. If you're running McAfee, AVG, Norton, or such, add an exception for 'static.ldjam.org'.<br /></div>";
 		echo "<div class='event bigger big-space'>Event: <strong class='caps inv' id='event-name'>".$EVENT_NAME."</strong></div>";
@@ -34,6 +35,7 @@ function ShowHeader() {
 		</script>
 <?php
 	}
+	echo '</div>';
 }
 
 function ShowHeadline() {

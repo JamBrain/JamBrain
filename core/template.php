@@ -79,7 +79,7 @@ function template_GetTheme( $theme = null ) {
  * @param	string	$theme Theme to use (default: "core")
  * @param	bool	$include_once Should we use include_once? (default: true)
  */
-function template_GetHeader( $theme = null, $include_once = true ) {
+function template_GetPageHeader( $theme = null, $include_once = true ) {
 	template_Get( "/header.html.php", $theme, $include_once );
 }
 /**
@@ -88,7 +88,7 @@ function template_GetHeader( $theme = null, $include_once = true ) {
  * @param	string	$theme Theme to use (default: "core")
  * @param	bool	$include_once Should we use include_once? (default: true)
  */
-function template_GetFooter( $theme = null, $include_once = true ) {
+function template_GetPageFooter( $theme = null, $include_once = true ) {
 	template_Get( "/footer.html.php", $theme, $include_once );	
 }
 
