@@ -100,7 +100,7 @@ function ShowMyOldIdeas() {
 ?>
 	<div class="sg-old" id="extra-sg-old">
 		<br />
-		<div class="title big caps space">My Previous Suggestions</div>
+		<div class="title big caps space">Previous Suggestions</div>
 		<div id="sg-old"></div>
 	</div>
 <?php 
@@ -137,6 +137,7 @@ dialog_InsertScript();
 
 ?>
 <script src="api-legacy.js"></script>
+<script src="api-theme.js"></script>
 <script>
 <?php
 	if ( ($cookie_id === 0) && isset($GLOBALS['ERROR']) ) {
@@ -169,14 +170,29 @@ dialog_InsertScript();
 		
 		document.getElementById('extra').classList.remove("hidden");
 	}
+	
+	function sg_AddOldIdea(Id,Idea,accent) {
+		Id = Number(Id);
+		Idea = escapeString(Idea);
+		IdeaAttr = escapeAttribute(Idea);
+		
+		var sg_root = document.getElementById('sg-old');
+		
+		var node = document.createElement('div');
+		node.setAttribute("class",'sg-item item'+((accent===true)?" effect-accent":""));
+		node.setAttribute("id","sg-item-"+Id);
+		node.innerHTML = 
+			"<div class='sg-item-text item-text' title='"+(Idea)+"'>"+(Idea)+"</div>";
+		sg_root.insertBefore( node, sg_root.childNodes[0] );
+		//sg_root.appendChild( node );
+		
+		document.getElementById('extra').classList.remove("hidden");
+	}
 
 	function sg_RemoveIdea(Id,Idea) {
 		Id = Number(Id);
 		dialog_ConfirmAlert(Idea,"Are you sure you want to delete this?",function(){
-			xhr_PostJSON(
-				"/api-theme.php",
-				serialize({"action":"REMOVE","id":Id}),
-				// On success //
+			theme_RemoveIdea(Id,
 				function(response,code) {
 					console.log("REMOVE:",response);
 					
@@ -215,10 +231,7 @@ dialog_InsertScript();
 
 		elm.value = "";
 
-		xhr_PostJSON(
-			"/api-theme.php",
-			serialize({"action":"ADD","idea":Idea}),
-			// On success //
+		theme_AddIdea(Idea,
 			function(response,code) {
 				console.log("ADD:",response);
 				
@@ -303,10 +316,7 @@ dialog_InsertScript();
 		<?php
 		if ( $CONFIG['active'] && $cookie_id && !$admin ) {
 		?>
-			xhr_PostJSON(
-				"/api-theme.php?debug",
-				serialize({"action":"GETMY"}),
-				// On success //
+			theme_GetMyIdeas(
 				function(response,code) {
 					console.log("GETMY:",response);
 					if ( response.hasOwnProperty('ideas') ) {
@@ -318,6 +328,17 @@ dialog_InsertScript();
 					}
 					else {
 						sg_UpdateCount("ERROR",true);
+					}
+				}
+			);
+
+			theme_GetMyOtherIdeas(
+				function(response,code) {
+					console.log("GETMYOLD:",response);
+					if ( response.hasOwnProperty('ideas') ) {
+						response.ideas.forEach(function(response) {
+							sg_AddOldIdea(response.id,response.theme);
+						});
 					}
 				}
 			);
@@ -377,6 +398,7 @@ dialog_InsertScript();
 		if ( $cookie_id && !$admin ) {
 			echo "<div id='extra' class='hidden'>";
 				ShowMyIdeas();
+				ShowMyOldIdeas();
 				//ShowMyLikes();
 			echo "</div>";
 		}

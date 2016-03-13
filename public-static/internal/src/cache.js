@@ -4,8 +4,9 @@
 // Cache Library //
 // Designed to have a similar syntax as the the PHP caching library //
 
-var ttlPrefix = "!!#";
-var dataPrefix = "!!$";
+var ttlPrefix = "!!#";		// TTL variable prefix
+var dataPrefix = "!!$";		// Data variable prefix
+var userPrefix = "@";		// User Data variable prefix
 	
 // The cache uses Session Storage (free'd after closing browser) //
 var storage = window.sessionStorage;
@@ -54,7 +55,7 @@ if ( storage ) {
 			return null;
 	
 		// Return Data //
-		return storage.getItem( dataPrefix+key );
+		return JSON.parse(storage.getItem( dataPrefix+key ));
 	}
 		
 	// Remove expired items. 
@@ -88,6 +89,29 @@ if ( storage ) {
 		}
 		return itemsRemoved;
 	}
+	
+	// NOTE: User data is assumed to be any key prefixed with an @ sign.	
+	window.cache_FlushUserData = function() {
+		// Since we can't be 100% sure the browser isn't fragmenting the key order,
+		// we need to repeat until we are sure there are no user data keys left.
+		do {
+			var itemsRemoved = 0;
+			// Reverse order, just in case keys are like an array, so removing
+			// elements off the end wont give us bad indexes
+			for ( var idx = storage.length; idx--; ) {
+				var key = storage.key(idx);
+				if ( key.indexOf(ttlPrefix) === 0 ) {
+					key = key.substr(ttlPrefix.length);
+					if ( key.indexOf(userPrefix) === 0 ) {
+						// Remove in reverse order, just in case
+						storage.removeItem( dataPrefix+key );
+						storage.removeItem( ttlPrefix+key );
+						itemsRemoved++;
+					}
+				}
+			}
+		} while ( itemsRemoved == 0 );
+	}
 }
 else /* storage */ {
 	window.cache_Exists = function() { return false; }
@@ -105,7 +129,7 @@ if ( canWrite ) {
 		// Store TTL first, then Data //
 		try {
 			storage.setItem( ttlPrefix+key, ttl );
-			storage.setItem( dataPrefix+key, value );
+			storage.setItem( dataPrefix+key, JSON.stringify(value) );
 		}
 		catch (e) {
 			// Flush and try again //
@@ -113,7 +137,7 @@ if ( canWrite ) {
 	
 			try {
 				storage.setItem( ttlPrefix+key, ttl );
-				storage.setItem( dataPrefix+key, value );
+				storage.setItem( dataPrefix+key, JSON.stringify(value) );
 			}
 			catch (e2) {
 				// Cleanup - Only ttlPrefix should exist, but just in case //
