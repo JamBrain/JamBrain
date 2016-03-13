@@ -132,334 +132,8 @@ function db_DoSchema( &$row, &$schema ) {
 	}
 }
 
-// Unsafe "run any query" function. Queries don't return results. Use db_fetch instead. //
-function db_Query($query,$ignore_errors=false) {
-	global $DB_QUERY_COUNT;
-	$DB_QUERY_COUNT++;
-	return mysqli_query($GLOBALS['db'],$query) or $ignore_errors or die(mysqli_error($GLOBALS['db'])."\n");
-}
-
-// Unsafe "run any fetch query" function. Returns fields as an Associative Array. //
-function db_Fetch($query,$schema=null) {
-	global $db;
-	global $DB_QUERY_COUNT;
-	$DB_QUERY_COUNT++;
-
-	$result = mysqli_query($db,$query);
-	$rows = [];
-	if ( !empty($result) ) {
-		if ( is_array($schema) ) {
-			while ( $row = $result->fetch_assoc() ) {
-				db_DoSchema( $row, $schema );
-				$rows[] = $row;
-			};
-		}
-		else {
-			while ( $row = $result->fetch_assoc() ) {
-				$rows[] = $row;
-			};
-		}
-	}
-	return $rows;
-}
-
-// Unsafe "run any fetch query" function. Returns fields as a Numeric Array. //
-function db_FetchArray($query) {
-	global $db;
-	global $DB_QUERY_COUNT;
-	$DB_QUERY_COUNT++;
-
-	$result = mysqli_query($db,$query);
-	$rows = [];
-	if ( !empty($result) ) {
-		while ( $row = $result->fetch_row() ) {
-			$rows[] = $row;
-		}
-	}
-	return $rows;
-}
-
-// Unsafe "run any fetch query" function. Returns fields as a Numeric Array. //
-function db_FetchArrayPair($query) {
-	global $db;
-	global $DB_QUERY_COUNT;
-	$DB_QUERY_COUNT++;
-
-	$result = mysqli_query($db,$query);
-	$rows = [];
-	if ( !empty($result) ) {
-		while ( $row = $result->fetch_row() ) {
-			$rows[$row[0]] = $row[1];
-		}
-	}
-	return $rows;
-}
-
-
-// Unsafe "run any fetch query" function. Returns an array of values from a single field. //
-function db_FetchSingle($query,$type = null) {
-	global $db;
-	global $DB_QUERY_COUNT;
-	$DB_QUERY_COUNT++;
-
-	$result = mysqli_query($db,$query);
-	$rows = [];
-	if ( !empty($type) ) {
-		while ( $row = $result->fetch_row() ) {
-			if ( $type === CMW_FIELD_TYPE_INT )
-				$rows[] = intval($row[0]);
-			else if ( $type === CMW_FIELD_TYPE_FLOAT )
-				$rows[] = floatval($row[0]);
-			else if ( $type === CMW_FIELD_TYPE_DATETIME )
-				$rows[] = strtotime($row[0]);
-			else if ( $type === CMW_FIELD_TYPE_JSON )
-				$rows[] = json_decode($row[0],true);
-			else if ( $type === CMW_FIELD_TYPE_IGNORE ) {
-			}
-			else {
-				$rows[] = $row[0];
-			}
-		}
-	}
-	else {
-		while ( $row = $result->fetch_row() ) {
-			$rows[] = $row[0];
-		}
-	}
-
-	return $rows;
-}
-
-
-// Unsafe "run any fetch query" function. Returns an array of values from a single field. //
-function db_FetchPair( $query, $typeA = null, $typeB = null ) {
-	global $db;
-	global $DB_QUERY_COUNT;
-	$DB_QUERY_COUNT++;
-
-	$result = mysqli_query($db,$query);
-	$rows = [];
-	while ( $row = $result->fetch_row() ) {
-		// Key //
-		switch( $typeA ) {
-			case CMW_FIELD_TYPE_INT:
-				$a = intval($row[0]);
-				break;
-			case CMW_FIELD_TYPE_FLOAT:
-				$a = floatval($row[0]);
-				break;
-			case CMW_FIELD_TYPE_DATETIME:
-				$a = strtotime($row[0]);
-				break;
-			case CMW_FIELD_TYPE_JSON:
-				$a = json_decode($row[0],true);
-				break;
-			case CMW_FIELD_TYPE_IGNORE:
-				continue;
-				break;
-			default:
-				$a = $row[0];
-				break;
-		}
-		// Value //
-		switch( $typeB ) {
-			case CMW_FIELD_TYPE_INT:
-				$b = intval($row[0]);
-				break;
-			case CMW_FIELD_TYPE_FLOAT:
-				$b = floatval($row[0]);
-				break;
-			case CMW_FIELD_TYPE_DATETIME:
-				$b = strtotime($row[0]);
-				break;
-			case CMW_FIELD_TYPE_JSON:
-				$b = json_decode($row[0],true);
-				break;
-			case CMW_FIELD_TYPE_IGNORE:
-				continue;
-				break;
-			default:
-				$b = $row[0];
-				break;
-		}
-		
-		$rows[$a] = $b;
-	}
-
-	return $rows;
-}
-
-function db_AffectedRows() {
-	global $db;
-
-	if (!isset($db->affected_rows))
-		return null;
-
-	return $db->affected_rows;
-}
-
-function db_NumRows() {
-	global $db;
-
-	if (!isset($db->num_rows))
-		return null;
-
-	return $db->num_rows;
-}
-
-function db_GetId() {
-	global $db;
-	
-	if (!isset($db->insert_id))
-		return null;
-	
-	return $db->insert_id;
-}
-
-function db_EscapeString( $in ) {
-	global $db;
-	return mysqli_real_escape_string($db,$in);
-}
-
-
-function _db_BuildMySQLParamString( $field, $schema = null ) {
-	$paramstr = "";
-	
-	// CHEAT: Make it an array to simplify the following code //
-	if ( !is_array($field) )
-		$field = [$field];
-
-	// With a schema, decode the fields //
-	if ( isset($schema) ) {
-		foreach( $field as $key => &$value ) {
-			if ( isset($schema[$key]) ) {
-				switch( $schema[$key] ) {
-					case CMW_FIELD_TYPE_IGNORE:
-						// TODO: Error
-						break;
-					case CMW_FIELD_TYPE_INT:
-					case CMW_FIELD_TYPE_DATETIME:
-						$paramstr .= 'i';
-						break;
-					case CMW_FIELD_TYPE_FLOAT:
-						$paramstr .= 'd';
-						break;
-					case CMW_FIELD_TYPE_JSON:
-					case CMW_FIELD_TYPE_STRING:
-					default:
-						$paramstr .= 's';
-						break;
-				};
-			}
-			else {
-				$paramstr .= 's';
-			}
-		}
-	}
-	// If no Schema, assume everything is a string
-	else {
-		foreach( $field as &$value ) {
-			$paramstr .= 's';
-		}
-	}
-
-	return $paramstr;
-}
-
-// NOTE: ...$var requires PHP 5.6
-
-//// Given 1 or more fields, build the query string //
-//// - Use the % sign for the field placement identifier in your query.
-//// - Use a number to insert that many comma delimited '?' symbols 
-//function _db_BuildQueryString( $query, ...$fields ) {
-//	foreach ( $fields as &$field ) {
-//		if ( is_array($field) ) {
-//			$field_str[] = implode(',',array_map(
-//					function( $el ) {
-//						return '`'.$el.'`';
-//					},
-//					$field
-//				));
-//		}
-//		else if ( is_integer($field) ) {
-//			if ( $field > 0 ) {
-//				$str = '?';
-//				for ( $idx = 1; $idx < $field; ++$idx ) {
-//					$str .= ',?';
-//				}
-//				$field_str[] = $str;
-//			}
-//			else {
-//				// TODO: ERROR
-//				$field_str[] = "";
-//			} 
-//		}
-//		else {
-//			if ( $field == '*' )
-//				$field_str[] = $field;
-//			else
-//				$field_str[] = '`'.$field.'`';
-//		}
-//	}
-//	
-//	$field_str_count = count($field_str);
-//		
-//	// TODO: for each %, insert a field string
-//	// Fastest relpace method according to http://stackoverflow.com/a/1252710
-//	while ( $pos = strpos($query,'%') ) {
-//		$query = substr_replace($query,array_shift($field_str),$pos,1/*strlen('%')*/);
-//	}
-////	if ($pos !== false) {
-////	    return substr_replace($query,$field_str,$pos,1/*strlen('%')*/);
-////	}
-////
-////	// TODO: ERROR
-////	
-//	return $query;
-//}
-
-function _db_BuildArgList( $args ) {
-	$out = [];
-	foreach( $args as &$arg ) {
-		if ( is_integer($arg) ) {
-			$endval = end($out);
-			for ( $idx = 1; $idx < $arg; ++$idx ) {
-				$out[] = $endval;
-			}
-		}
-		else {
-			$out[] = $arg;
-		}
-	}
-	return $out;
-}
-
-// Build a list of schema operations //
-function _db_ParseArgList( $args, $schema ) {
-	$out = [];
-	foreach( $args as &$arg ) {
-		// If it's an Integer, repeat the previous value so there are that many copies.
-		if ( is_integer($arg) ) {
-			$endval = end($out);
-			
-			for ( $idx = 1; $idx < $arg; ++$idx ) {
-				$out[] = $endval;
-			}
-		}
-		// If it's a string, lookup the name in the schema. If not found, assume a string.
-		else {
-			if ( isset($schema[$arg]) )
-				$out[] = $schema[$arg];
-			else
-				$out[] = CMW_FIELD_TYPE_STRING;
-		}
-	}
-	return $out;
-}
-
 
 /* *********************************************************************************************** */
-
 
 // NOTE: Prepare statements are only faster in places you DON'T use the "in" keyword.
 //	Prepared statements are an optimization when the query itself is identical.
@@ -511,8 +185,10 @@ function _db_BindExecute( &$st, $args ) {
 	return true;
 }
 
+/* *********************************************************************************************** */
+
 // Underscore version doesn't close //
-function _db_DoQuery( $query, $args ) {
+function _db_Query( $query, $args ) {
 	db_Connect();
 
 	$st = _db_Prepare($query);
@@ -522,52 +198,8 @@ function _db_DoQuery( $query, $args ) {
 	db_LogError();
 	return false;
 }
-function db_DoQuery( $query, ...$args ) {
-	$st = _db_DoQuery($query,$args);
-	if ( $st ) {
-		return $st->close();
-	}
-	return false;
-}
 
-// Do an INSERT query, return the Id //
-function db_DoInsert( $query, ...$args ) {
-	$st = _db_DoQuery($query,$args);
-	if ( $st ) {
-		$index = $st->insert_id;
-		$st->close();
-		return $index;
-	}
-	return false;
-}
-// Do a DELETE query, return the number of rows changed //
-function db_DoDelete( $query, ...$args ) {
-	$st = _db_DoQuery($query,$args);
-	if ( $st ) {
-		$index = $st->affected_rows;
-		$st->close();
-		return $index;
-	}
-	return false;
-}
-
-// Theoretically this should work, but disabling it until I need it //
-//function db_DoMultiQuery( $query,/*array*/ ...$args ) {
-//	if ( db_IsConnected() ) {
-//		$st = _db_Prepare($query);
-//		if (!empty($st)) {
-//			foreach ( $args as $arg ) {
-//				if ( _db_BindExecute($st,$arg) )
-//					$st->reset();		// Reset internal state for next iteration
-//				else
-//					return false; 		// Close called automatically //
-//			}
-//			$st->close();
-//			return true;
-//		}
-//	}
-//	return false;
-//}
+/* *********************************************************************************************** */
 
 function _db_GetAssoc(&$st) {
 	$result = $st->get_result();
@@ -586,12 +218,21 @@ function _db_GetAssocStringKey($key,&$st) {
 	}
 	return $ret;
 }
-// Same, but assume the key is a number, not a string //
-function _db_GetAssocKey($key,&$st) {
+// Same, but assume the key is an integer, not a string //
+function _db_GetAssocIntKey($key,&$st) {
 	$result = $st->get_result();
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_ASSOC /*MYSQLI_NUM*/)) {
 		$ret[intval($row[$key])] = $row;
+	}
+	return $ret;
+}
+// Same, but assume the key is a float, not a string //
+function _db_GetAssocFloatKey($key,&$st) {
+	$result = $st->get_result();
+	$ret = [];
+	while ($row = $result->fetch_array(MYSQLI_ASSOC /*MYSQLI_NUM*/)) {
+		$ret[floatval($row[$key])] = $row;
 	}
 	return $ret;
 }
@@ -623,9 +264,52 @@ function _db_GetIntPair(&$st) {
 	return $ret;
 }
 
+/* *********************************************************************************************** */
 
-function db_DoFetch( $query, ...$args ) {
-	$st = _db_DoQuery($query,$args);
+// Basic Query. Don't care about the results. //
+function db_Query( $query, ...$args ) {
+	$st = _db_Query($query,$args);
+	if ( $st ) {
+		return $st->close();
+	}
+	return false;
+}
+
+// Do an INSERT query, return the Id //
+function db_QueryInsert( $query, ...$args ) {
+	$st = _db_Query($query,$args);
+	if ( $st ) {
+		$index = $st->insert_id;
+		$st->close();
+		return $index;
+	}
+	return false;
+}
+
+// Do a DELETE query, return the number of rows changed //
+function db_QueryDelete( $query, ...$args ) {
+	$st = _db_Query($query,$args);
+	if ( $st ) {
+		$index = $st->affected_rows;
+		$st->close();
+		return $index;
+	}
+	return false;
+}
+
+function db_QueryNumRows( $query, ...$args ) {
+	$st = _db_Query($query,$args);
+	if ( $st ) {
+		$ret = $st->num_rows;
+		$st->close();
+		return $ret;
+	}
+	return null;
+}
+
+// Return the result of the query
+function db_QueryFetch( $query, ...$args ) {
+	$st = _db_Query($query,$args);
 	if ( $st ) {
 		$ret = _db_GetAssoc($st);
 		$st->close();
@@ -633,17 +317,17 @@ function db_DoFetch( $query, ...$args ) {
 	}
 	return null;
 }
-// Fetch the first row
-function db_DoFetchFirst( $query, ...$args ) {
-	$ret = db_DoFetch($query,...$args);
+// Fetch the first row (not the first field). You should include a LIMIT 1.
+function db_QueryFetchFirst( $query, ...$args ) {
+	$ret = db_QueryFetch($query,...$args);
 	if ( isset($ret[0]) )
 		return $ret[0];
 	return null;
 }
 
-// Fetch a single element in each row, and make it an array
-function db_DoFetchSingle( $query, ...$args ) {
-	$st = _db_DoQuery($query,$args);
+// Fetch the first element in each row, and return them as an array
+function db_QueryFetchSingle( $query, ...$args ) {
+	$st = _db_Query($query,$args);
 	if ( $st ) {
 		$ret = _db_GetFirst($st);
 		$st->close();
@@ -651,9 +335,10 @@ function db_DoFetchSingle( $query, ...$args ) {
 	}
 	return null;
 }
+
 // Fetch a pair of elements, using the 1st as the key, 2nd as value
-function db_DoFetchPair( $query, ...$args ) {
-	$st = _db_DoQuery($query,$args);
+function db_QueryFetchPair( $query, ...$args ) {
+	$st = _db_Query($query,$args);
 	if ( $st ) {
 		$ret = _db_GetPair($st);
 		$st->close();
@@ -661,8 +346,9 @@ function db_DoFetchPair( $query, ...$args ) {
 	}
 	return null;
 }
-function db_DoFetchIntPair( $query, ...$args ) {
-	$st = _db_DoQuery($query,$args);
+// Same as above, but both values are integers
+function db_QueryFetchIntPair( $query, ...$args ) {
+	$st = _db_Query($query,$args);
 	if ( $st ) {
 		$ret = _db_GetIntPair($st);
 		$st->close();
@@ -670,26 +356,39 @@ function db_DoFetchIntPair( $query, ...$args ) {
 	}
 	return null;
 }
-// Fetch a single value //
-function db_DoFetchValue( $query, ...$args ) {
-	$ret = db_DoFetchSingle($query,$args);
+
+// Fetch a single value, when there is only one result //
+function db_QueryFetchValue( $query, ...$args ) {
+	$ret = db_QueryFetchSingle($query,$args);
 	if ( isset($ret[0]) ) {
 		return $ret[0];
 	}
 	return null;	
 }
 
-function db_DoFetchKey( $key, $query, ...$args ) {
-	$st = _db_DoQuery($query,$args);
+// Given a specific key, populate an array using that value as an integer key
+function db_QueryFetchWithIntKey( $key, $query, ...$args ) {
+	$st = _db_Query($query,$args);
 	if ( $st ) {
-		$ret = _db_GetAssocKey($key,$st);
+		$ret = _db_GetAssocIntKey($key,$st);
 		$st->close();
 		return $ret;
 	}
 	return null;
 }
-function db_DoFetchStringKey( $key, $query, ...$args ) {
-	$st = _db_DoQuery($query,$args);
+// Given a specific key, populate an array using that value as a float key
+function db_QueryFetchWithFloatKey( $key, $query, ...$args ) {
+	$st = _db_Query($query,$args);
+	if ( $st ) {
+		$ret = _db_GetAssocFloatKey($key,$st);
+		$st->close();
+		return $ret;
+	}
+	return null;
+}
+// Given a specific key, populate an array using that value as a string key
+function db_QueryFetchWithStringKey( $key, $query, ...$args ) {
+	$st = _db_Query($query,$args);
 	if ( $st ) {
 		$ret = _db_GetAssocStringKey($key,$st);
 		$st->close();
@@ -698,16 +397,12 @@ function db_DoFetchStringKey( $key, $query, ...$args ) {
 	return null;
 }
 
-// TODO: Move these to prepare statement
+/* *********************************************************************************************** */
+
+// TODO: Test these
 function db_TableExists($name) {
-	if ( db_IsConnected() ) {
-		return mysqli_query($GLOBALS['db'],'SHOW TABLES LIKE "'.$GLOBALS['db']->real_escape_string($name).'";')->num_rows == 1;
-	}
-	return false;
+	return db_QueryNumRows("SHOW TABLES LIKE ?;",$name) == 1;
 }
 function db_DatabaseExists($name) {
-	if ( db_IsConnected() ) {
-		return mysqli_query($GLOBALS['db'],'SHOW DATABASES LIKE "'.$GLOBALS['db']->real_escape_string($name).'";')->num_rows == 1;
-	}
-	return false;
+	return db_QueryNumRows("SHOW DATABASES LIKE ?;",$name) == 1;
 }

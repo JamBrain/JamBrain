@@ -57,9 +57,7 @@ const _CONFIG_CACHE_KEY = "CMW_CORE_CONFIG";
 const _CONFIG_CACHE_TTL = 10*60;
 
 function _config_Set($key,$value) {
-	db_Connect();
-	
-	return db_DoQuery(
+	return db_Query(
 		"INSERT ".CMW_TABLE_CONFIG." (
 			`key`, `value`, `timestamp`
 		)
@@ -85,9 +83,7 @@ function _config_Load() {
 	$ret = cache_Fetch(_CONFIG_CACHE_KEY);
 	
 	if ( $ret === null ) {
-		db_Connect();
-		
-		$ret = db_DoFetchPair(
+		$ret = db_QueryFetchPair(
 			"SELECT `key`,`value` FROM ".CMW_TABLE_CONFIG."
 			WHERE id IN (
 				SELECT MAX(id) FROM ".CMW_TABLE_CONFIG." GROUP BY `key`

@@ -13,7 +13,7 @@ const _THEME_CACHE_KEY = "CMW_THEME_";
 const _THEME_CACHE_TTL = 10*60;
 
 function theme_AddMyIdea($idea, $node, $user) {
-	return db_DoInsert(
+	return db_QueryInsert(
 		"INSERT INTO ".CMW_TABLE_THEME_IDEA." (
 			theme, node, user, `timestamp`
 		)
@@ -37,7 +37,7 @@ function theme_AddMyIdeaWithLimit($idea, $node, $user, $limit) {
 		if ( $count === false ) throw new Exception();
 		if ( $count >= $limit ) throw new Exception();
 		
-		$result = db_DoInsert(
+		$result = db_QueryInsert(
 			"INSERT INTO ".CMW_TABLE_THEME_IDEA." (
 				theme, node, user, `timestamp`
 			)
@@ -64,20 +64,20 @@ function theme_AddMyIdeaWithLimit($idea, $node, $user, $limit) {
 }
 
 function theme_RemoveIdea($id) {
-	return db_DoDelete(
+	return db_QueryDelete(
 		"DELETE FROM ".CMW_TABLE_THEME_IDEA." WHERE id=?;",
 		$id
 	);
 }
 function theme_RemoveMyIdea($id,$user_id) {
-	return db_DoDelete(
+	return db_QueryDelete(
 		"DELETE FROM ".CMW_TABLE_THEME_IDEA." WHERE id=? AND user=?;",
 		$id,$user_id
 	);
 }
 
 function theme_SetParent($id, $value) {
-	return db_DoInsert(
+	return db_QueryInsert(
 		"UPDATE ".CMW_TABLE_THEME_IDEA."
 		SET
 			parent=?
@@ -88,7 +88,7 @@ function theme_SetParent($id, $value) {
 }
 
 function theme_SetScore($id, $value) {
-	return db_DoInsert(
+	return db_QueryInsert(
 		"UPDATE ".CMW_TABLE_THEME_IDEA."
 		SET
 			score=?
@@ -99,14 +99,14 @@ function theme_SetScore($id, $value) {
 }
 
 function theme_GetMyIdeas($node, $user) {
-	return db_DoFetch(
+	return db_QueryFetch(
 		"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
 		WHERE node=? AND user=?",
 		$node, $user
 	);
 }
 function theme_CountMyIdeas($node, $user, $arg_string="") {
-	$ret = db_DoFetchSingle(
+	$ret = db_QueryFetchSingle(
 		"SELECT count(id) FROM ".CMW_TABLE_THEME_IDEA." 
 		WHERE node=? AND user=? LIMIT 1".$arg_string,
 		$node, $user
@@ -116,7 +116,7 @@ function theme_CountMyIdeas($node, $user, $arg_string="") {
 	return false;
 }
 function theme_GetMyIdeasWithScores($node, $user) {
-	$ret = db_DoFetch(
+	$ret = db_QueryFetch(
 		"SELECT id,theme,parent,score FROM ".CMW_TABLE_THEME_IDEA." 
 		WHERE node=? AND user=?",
 		$node, $user
@@ -130,7 +130,7 @@ function theme_GetMyIdeasWithScores($node, $user) {
 	}
 	
 	if ( !empty($parents) ) {
-		$parent_scores = db_DoFetch(
+		$parent_scores = db_QueryFetch(
 			"SELECT id,score FROM ".CMW_TABLE_THEME_IDEA." 
 			WHERE node IN ?",
 			$parents
@@ -150,7 +150,7 @@ function theme_GetMyIdeasWithScores($node, $user) {
 
 // Ideas are associated with nodes //
 function theme_GetIdeas($node) {
-	return db_DoFetch(
+	return db_QueryFetch(
 		"SELECT id,theme,user,parent FROM ".CMW_TABLE_THEME_IDEA." 
 		WHERE node=?",
 		$node
@@ -160,7 +160,7 @@ function theme_CountIdeas($node,$arg_string="") {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_COUNT");
 
 	if ( $ret === null ) {
-		$ret = db_DoFetchSingle(
+		$ret = db_QueryFetchSingle(
 			"SELECT count(id) FROM ".CMW_TABLE_THEME_IDEA." 
 			WHERE node=? LIMIT 1".$arg_string,
 			$node
@@ -181,7 +181,7 @@ function theme_CountUsersWithIdeas($node,$arg_string="") {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."USERS_WITH_IDEAS");
 
 	if ( $ret === null ) {
-		$ret = db_DoFetchSingle(
+		$ret = db_QueryFetchSingle(
 			"SELECT count(DISTINCT user) FROM ".CMW_TABLE_THEME_IDEA." 
 			WHERE node=?".$arg_string,
 			$node
@@ -201,14 +201,14 @@ function theme_CountUsersWithIdeas($node,$arg_string="") {
 
 // An idea is considered original if it has no parent //
 function theme_GetOriginalIdeas($node) {
-	return db_DoFetchPair(
+	return db_QueryFetchPair(
 		"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
 		WHERE node=? AND parent=0;",
 		$node
 	);
 }
 function theme_CountOriginalIdeas($node,$arg_string="") {
-	$ret = db_DoFetchSingle(
+	$ret = db_QueryFetchSingle(
 		"SELECT count(id) FROM ".CMW_TABLE_THEME_IDEA." 
 		WHERE node=? AND parent=0 LIMIT 1".$arg_string,
 		$node
@@ -220,7 +220,7 @@ function theme_CountOriginalIdeas($node,$arg_string="") {
 
 // DO NOT USE THIS! It's too slow! For testing only. //
 function theme_GetRandom($node) {
-	return db_DoFetchFirst(
+	return db_QueryFetchFirst(
 		"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
 		WHERE node=? AND parent=0
 		ORDER BY rand() LIMIT 1",
@@ -233,7 +233,7 @@ function theme_GetIdeaList($node) {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_LIST");
 	
 	if ( $ret === null ) {
-		$ret = db_DoFetchPair(
+		$ret = db_QueryFetchPair(
 			"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
 			WHERE node=? AND parent=0 AND score >= 0;",
 			$node
@@ -248,7 +248,7 @@ function theme_CountUsersThatKill($node,$arg_string="") {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."USERS_THAT_KILL");
 
 	if ( $ret === null ) {
-		$ret = db_DoFetchSingle(
+		$ret = db_QueryFetchSingle(
 			"SELECT count(DISTINCT user) FROM ".CMW_TABLE_THEME_IDEA_VOTE
 		);
 		if ( is_array($ret) ) {
@@ -264,7 +264,7 @@ function theme_CountUsersThatKill($node,$arg_string="") {
 }
 
 function theme_AddIdeaVote($idea_id, $value, $user) {
-	return db_DoInsert(
+	return db_QueryInsert(
 		"INSERT INTO ".CMW_TABLE_THEME_IDEA_VOTE." (
 			node, user, value, `timestamp`
 		)
@@ -279,13 +279,13 @@ function theme_AddIdeaVote($idea_id, $value, $user) {
 	);
 }
 function theme_RemoveIdeaVoteById($id) {
-	return db_DoDelete(
+	return db_QueryDelete(
 		"DELETE FROM ".CMW_TABLE_THEME_IDEA_VOTE." WHERE id=?;",
 		$id
 	);
 }
 function theme_RemoveIdeaVoteByUser($idea_id,$user) {
-	return db_DoDelete(
+	return db_QueryDelete(
 		"DELETE FROM ".CMW_TABLE_THEME_IDEA_VOTE." WHERE node=? AND user=?;",
 		$idea_id,$user
 	);
@@ -296,7 +296,7 @@ function theme_GetMyIdeaVotes($user,$limit) {
 	if ( isset($limit) ) {
 		$suffix = " LIMIT ".$limit;
 	}
-	return db_DoFetch(
+	return db_QueryFetch(
 		"SELECT node,value FROM ".CMW_TABLE_THEME_IDEA_VOTE." 
 		WHERE user=?
 		ORDER BY id DESC
@@ -306,7 +306,7 @@ function theme_GetMyIdeaVotes($user,$limit) {
 }
 
 function theme_GetMyIdeaStats($user) {
-	return db_DoFetchPair(
+	return db_QueryFetchPair(
 		"SELECT value,COUNT(id) FROM ".CMW_TABLE_THEME_IDEA_VOTE."
 			WHERE user=?
 			GROUP BY value
@@ -316,7 +316,7 @@ function theme_GetMyIdeaStats($user) {
 }
 
 function theme_GetVotesForIdea($node) {
-	return db_DoFetchSingle(
+	return db_QueryFetchSingle(
 		"SELECT value FROM ".CMW_TABLE_THEME_IDEA_VOTE." 
 		WHERE node=?",
 		$node
@@ -327,7 +327,7 @@ function theme_GetIdeaStats() {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_STATS");
 	
 	if ( $ret === null ) {
-		$ret = db_DoFetchPair(
+		$ret = db_QueryFetchPair(
 			"SELECT value,COUNT(id) FROM ".CMW_TABLE_THEME_IDEA_VOTE."
 				GROUP BY value
 			"
@@ -342,7 +342,7 @@ function theme_GetUserKillCounts() {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_KILL_COUNTS");
 	
 	if ( $ret === null ) {
-		$ret = db_DoFetchPair(
+		$ret = db_QueryFetchPair(
 			"SELECT user,COUNT(id) FROM ".CMW_TABLE_THEME_IDEA_VOTE."
 				GROUP BY user
 			"
@@ -357,7 +357,7 @@ function theme_GetIdeaHourlyStats() {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_HOURLYSTATS");
 
 	if ( $ret === null ) {
-		$result = db_DoFetch(
+		$result = db_QueryFetch(
 			"SELECT value,COUNT(id) AS count,".MYSQL_ISO_FORMAT('timestamp').",HOUR(timestamp) as hour,DAYOFYEAR(timestamp) as day FROM ".CMW_TABLE_THEME_IDEA_VOTE."
 				GROUP BY day,hour,value
 			"
@@ -388,7 +388,7 @@ function theme_GetThemeValidVotingList($node) {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."VALID_VOTE_LIST");
 
 	if ( $ret === null ) {
-		$result = db_DoFetch(
+		$result = db_QueryFetch(
 			"SELECT id,theme,page FROM ".CMW_TABLE_THEME." 
 			WHERE node=? AND page<4",
 			$node
@@ -408,7 +408,7 @@ function theme_GetFinalThemeValidVotingList($node) {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."FINAL_VALID_VOTE_LIST");
 
 	if ( $ret === null ) {
-		$result = db_DoFetch(
+		$result = db_QueryFetch(
 			"SELECT id,theme FROM ".CMW_TABLE_THEME_FINAL." 
 			WHERE node=?",
 			$node
@@ -425,7 +425,7 @@ function theme_GetFinalThemeValidVotingList($node) {
 }
 
 function theme_GetTopThemes($node) {
-	$ret = db_DoFetch(
+	$ret = db_QueryFetch(
 		"SELECT id,theme,page,score FROM ".CMW_TABLE_THEME." 
 		WHERE node=? AND page<4
 		ORDER BY score DESC
@@ -440,7 +440,7 @@ function theme_GetThemeVotingList($node) {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."VOTE_LIST");
 
 	if ( $ret === null ) {
-		$ret = db_DoFetch(
+		$ret = db_QueryFetch(
 			"SELECT id,theme,page FROM ".CMW_TABLE_THEME." 
 			WHERE node=? AND page<4
 			ORDER BY page ASC,score DESC,id ASC",
@@ -456,7 +456,7 @@ function theme_GetFinalVotingList($node) {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."FINAL_VOTE_LIST");
 
 	if ( $ret === null ) {
-		$ret = db_DoFetch(
+		$ret = db_QueryFetch(
 			"SELECT id,theme FROM ".CMW_TABLE_THEME_FINAL." 
 			WHERE node=?
 			ORDER BY score DESC,id ASC",
@@ -469,7 +469,7 @@ function theme_GetFinalVotingList($node) {
 }
 
 function theme_AddVote($node, $value, $user) {
-	return db_DoInsert(
+	return db_QueryInsert(
 		"INSERT INTO ".CMW_TABLE_THEME_VOTE." (
 			node, user, value, `timestamp`
 		)
@@ -484,20 +484,20 @@ function theme_AddVote($node, $value, $user) {
 	);
 }
 function theme_RemoveVoteById($id) {
-	return db_DoDelete(
+	return db_QueryDelete(
 		"DELETE FROM ".CMW_TABLE_THEME_VOTE." WHERE id=?;",
 		$id
 	);
 }
 function theme_RemoveVoteByUser($idea_id,$user) {
-	return db_DoDelete(
+	return db_QueryDelete(
 		"DELETE FROM ".CMW_TABLE_THEME_VOTE." WHERE node=? AND user=?;",
 		$idea_id,$user
 	);
 }
 
 function theme_GetMyVotes($user) {
-	return db_DoFetch(
+	return db_QueryFetch(
 		"SELECT node,value FROM ".CMW_TABLE_THEME_VOTE." 
 		WHERE user=?
 		",
@@ -506,7 +506,7 @@ function theme_GetMyVotes($user) {
 }
 
 function theme_GetMyFinalVotes($user) {
-	return db_DoFetch(
+	return db_QueryFetch(
 		"SELECT node,value FROM ".CMW_TABLE_THEME_FINAL_VOTE." 
 		WHERE user=?
 		",
@@ -516,7 +516,7 @@ function theme_GetMyFinalVotes($user) {
 
 
 function theme_GetScoredIdeaList($node,$limit=80) {
-	$ret = db_DoFetch(
+	$ret = db_QueryFetch(
 		"SELECT id,theme,score FROM ".CMW_TABLE_THEME_IDEA." 
 		WHERE node=? AND parent=0
 		ORDER BY score DESC
@@ -528,7 +528,7 @@ function theme_GetScoredIdeaList($node,$limit=80) {
 }
 
 function theme_AddTheme($id,$node,$theme) {
-	return db_DoInsert(
+	return db_QueryInsert(
 		"INSERT INTO ".CMW_TABLE_THEME." (
 			id, node, theme, `timestamp`
 		)
@@ -540,7 +540,7 @@ function theme_AddTheme($id,$node,$theme) {
 }
 
 function theme_AddFinalTheme($id,$node,$theme) {
-	return db_DoInsert(
+	return db_QueryInsert(
 		"INSERT INTO ".CMW_TABLE_THEME_FINAL." (
 			id, node, theme
 		)
@@ -552,7 +552,7 @@ function theme_AddFinalTheme($id,$node,$theme) {
 }
 
 function theme_SetPage($id, $value) {
-	return db_DoInsert(
+	return db_QueryInsert(
 		"UPDATE ".CMW_TABLE_THEME."
 		SET
 			page=?
@@ -564,14 +564,14 @@ function theme_SetPage($id, $value) {
 
 
 function theme_GetVotes($node) {
-	return db_DoFetchSingle(
+	return db_QueryFetchSingle(
 		"SELECT value FROM ".CMW_TABLE_THEME_VOTE." 
 		WHERE node=?",
 		$node
 	);	
 }
 function theme_GetFinalVotes($node) {
-	return db_DoFetchSingle(
+	return db_QueryFetchSingle(
 		"SELECT value FROM ".CMW_TABLE_THEME_FINAL_VOTE." 
 		WHERE node=?",
 		$node
@@ -579,7 +579,7 @@ function theme_GetFinalVotes($node) {
 }
 
 function theme_SetVoteScore($id, $value) {
-	return db_DoInsert(
+	return db_QueryInsert(
 		"UPDATE ".CMW_TABLE_THEME."
 		SET
 			score=?
@@ -589,7 +589,7 @@ function theme_SetVoteScore($id, $value) {
 	);
 }
 function theme_SetFinalVoteScore($id, $value) {
-	return db_DoInsert(
+	return db_QueryInsert(
 		"UPDATE ".CMW_TABLE_THEME_FINAL."
 		SET
 			score=?
@@ -678,7 +678,7 @@ function theme_GetFinalScores($node) {
 
 
 function theme_AddFinalVote($node, $value, $user) {
-	return db_DoInsert(
+	return db_QueryInsert(
 		"INSERT INTO ".CMW_TABLE_THEME_FINAL_VOTE." (
 			node, user, value, `timestamp`
 		)
@@ -693,13 +693,13 @@ function theme_AddFinalVote($node, $value, $user) {
 	);
 }
 function theme_RemoveFinalVoteById($id) {
-	return db_DoDelete(
+	return db_QueryDelete(
 		"DELETE FROM ".CMW_TABLE_THEME_VOTE_FINAL." WHERE id=?;",
 		$id
 	);
 }
 function theme_RemoveFinalVoteByUser($idea_id,$user) {
-	return db_DoDelete(
+	return db_QueryDelete(
 		"DELETE FROM ".CMW_TABLE_THEME_VOTE_FINAL." WHERE node=? AND user=?;",
 		$idea_id,$user
 	);
