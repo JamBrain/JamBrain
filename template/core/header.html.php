@@ -21,12 +21,13 @@
 		echo "<!-- Internal JavaScript -->\n";
 		if ( defined('HTML_USE_CORE') ) {
 			echo "<script src='".CMW_STATIC_URL."/internal/src/lib.js".VERSION_STRING."'></script>\n";
+			echo "<script src='".CMW_STATIC_URL."/internal/src/dom.js".VERSION_STRING."'></script>\n";
 			echo "<script src='".CMW_STATIC_URL."/internal/src/locale.js".VERSION_STRING."'></script>\n";
 			echo "<script src='".CMW_STATIC_URL."/internal/src/time.js".VERSION_STRING."'></script>\n";
 			echo "<script src='".CMW_STATIC_URL."/internal/src/xhr.js".VERSION_STRING."'></script>\n";
+			echo "<script src='".CMW_STATIC_URL."/internal/src/cache.js".VERSION_STRING."'></script>\n";
 		}
 		if ( defined('HTML_USE_STARSHIP') ) {
-			echo "<script src='".CMW_STATIC_URL."/internal/src/cache.js".VERSION_STRING."'></script>\n";
 			echo "<script src='".CMW_STATIC_URL."/internal/src/html.js".VERSION_STRING."'></script>\n";
 			echo "<script src='".CMW_STATIC_URL."/internal/src/love.js".VERSION_STRING."'></script>\n";
 			echo "<script src='".CMW_STATIC_URL."/internal/src/star.js".VERSION_STRING."'></script>\n";
