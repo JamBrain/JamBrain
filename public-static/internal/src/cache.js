@@ -92,7 +92,7 @@ if ( storage ) {
 else /* storage */ {
 	window.cache_Exists = function() { return false; }
 	window.cache_Fetch = function() { return null; }
-	window.cache_Flush = function() {}
+	window.cache_Flush = function() { return 0; }
 } /* storage */
 
 if ( canWrite ) {
