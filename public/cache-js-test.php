@@ -17,6 +17,8 @@ hey <br />
 <span onclick="console.log(this.innerHTML,cache_Exists('moofer'));">[Exists]</span>
 <span onclick="if ( cache_Touch('moofer',5000) ) console.log(this.innerHTML);">[Touch]</span>
 <span onclick="cache_Flush(); console.log(this.innerHTML);">[Flush]</span>
+
+<span onclick="if ( cache_Store('ooferdoo',33,7000) ) console.log(this.innerHTML);">[Other Store 33]</span>
 <br />
 <br />
 <?php template_GetFooter(); ?>

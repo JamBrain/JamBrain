@@ -81,10 +81,11 @@ window.cache_Flush = function( max_items ) {
 	var itemsRemoved = 0;
 	// Reverse order, just in case keys are like an array, so removing
 	// elements off the end wont give us bad indexes
-	for ( var idx = Storage.length; idx--; ) {
+	for ( var idx = storage.length; idx--; ) {
 		var key = storage.key(idx);
 		// For this, we only care about items with the ttlPrefix
 		if ( key.indexOf(ttlPrefix) === 0 ) {
+			key = key.substr(ttlPrefix.length);
 			if ( Date.now() > storage.getItem(ttlPrefix+key) ) {
 				// Remove in reverse order, just in case
 				storage.removeItem( dataPrefix+key );
