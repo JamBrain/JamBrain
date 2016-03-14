@@ -71,7 +71,7 @@ if ( storage ) {
 		for ( var idx = storage.length; idx--; ) {
 			var key = storage.key(idx);
 			// For this, we only care about items with the ttlPrefix
-			if ( key.indexOf(ttlPrefix) === 0 ) {
+			if ( key && key.indexOf(ttlPrefix) === 0 ) {
 				key = key.substr(ttlPrefix.length);
 				if ( Date.now() > storage.getItem(ttlPrefix+key) ) {
 					// Remove in reverse order, just in case
@@ -100,7 +100,7 @@ if ( storage ) {
 			// elements off the end wont give us bad indexes
 			for ( var idx = storage.length; idx--; ) {
 				var key = storage.key(idx);
-				if ( key.indexOf(ttlPrefix) === 0 ) {
+				if ( key && key.indexOf(ttlPrefix) === 0 ) {
 					key = key.substr(ttlPrefix.length);
 					if ( key.indexOf(userPrefix) === 0 ) {
 						// Remove in reverse order, just in case

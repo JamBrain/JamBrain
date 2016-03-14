@@ -468,4 +468,28 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 }
 
 
+//// Create/Upgrade Table //
+//$table = CMW_TABLE_SCHEDULE_TIMESPAN;
+//if ( !isset($table_list) || isset($table_list[$table]) ) {
+//	DoInit($table);
+//	switch ($version) {
+//	case 0:
+//		$ok = DoCreate( $table,
+//			"CREATE TABLE ".$table." (
+//				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
+//					UNIQUE,
+//				node BIGINT UNSIGNED NOT NULL,
+//					INDEX(node),
+//				`key` VARCHAR(32) CHARSET latin1 NOT NULL,
+//				value TEXT NOT NULL
+//			)".DEFAULT_CS_ENGINE.";");
+//		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
+//	};
+//	DoExit($table);
+//}
+//
+//
+//// CMW_TABLE_SCHEDULE_SUBSCRIPTION
+
+
 print "Done.\n";

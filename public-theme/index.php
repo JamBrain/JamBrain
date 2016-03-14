@@ -130,7 +130,7 @@ require_once __DIR__."/theme-admin.php";
 require_once __DIR__."/theme-dialog.php";
 
 
-template_GetPageHeader(); 
+template_GetPageHeader();
 
 dialog_InsertCode();
 ShowHeader();
