@@ -46,7 +46,7 @@ if ( isset($table_list) || !isset($table_list[CMW_TABLE_CONFIG]) ) {
 function table_Drop($table) {
 	global $table_list;
 	if ( !isset($table_list) || isset($table_list[$table]) ) { 
-		$ret = db_DoQuery("DROP TABLE ".$table.";");
+		$ret = db_Query("DROP TABLE ".$table.";");
 		
 		if ($ret && isset($GLOBALS['CONFIG'])) {
 			config_Set($table,'0');
