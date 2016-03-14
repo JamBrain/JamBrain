@@ -48,7 +48,7 @@ if ( !db_IsConnected() ) {
 
 	// If database doesn't exist, create it //
 	if ( !db_DatabaseExists(CMW_DB_NAME) ) {
-		db_DoQuery("CREATE DATABASE IF NOT EXISTS ?;",CMW_DB_NAME);
+		db_Query("CREATE DATABASE IF NOT EXISTS ?;",CMW_DB_NAME);
 		print("Database '".CMW_DB_NAME."' created.\n");
 	
 		// Reconnect //
@@ -80,7 +80,7 @@ function DoInit($table) {
 	$old_version = $version;	
 }
 function DoCreate( $table, ...$args ) {
-	$ret = db_DoQuery( ...$args );
+	$ret = db_Query( ...$args );
 	if ( $ret )
 		print $table." created\n";
 	else
