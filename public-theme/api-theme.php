@@ -7,84 +7,7 @@ require_once __DIR__."/../core/legacy_user.php";
 
 config_Load();
 
-$EVENT_NAME = "Ludum Dare 35";
-$EVENT_MODE = 0;
-$EVENT_NODE = 101;//intval($CONFIG['event-active']);//isset($_POST['node']) ? intval($_POST['node']) : 0;
-$EVENT_DATE = new DateTime("2015-12-12T02:00:00Z");
-
-// HACK, don't hardcode me! //
-const THEME_MODE_TIMES = [
-	0,
-	(2*7*24*60*60) - ((24+21)*60*60),
-	(1*7*24*60*60) - (18*60*60),
-	(2*24*60*60),
-	(60*60),
-	0,
-	0,
-];
-
-
-const THEME_VOTE_START_TIMES = [
-	(5*24*60*60) - (12*60*60),
-	(5*24*60*60) - (24*60*60),
-	(4*24*60*60) - (12*60*60),
-	(4*24*60*60) - (18*60*60),
-];
-const FINAL_VOTE_START_TIME =
-	(2*24*60*60);
-
-const THEME_VOTE_END_TIMES = [
-	(4*24*60*60) - (24*60*60),
-	(3*24*60*60) - (12*60*60),
-	(3*24*60*60) - (18*60*60),
-	(3*24*60*60) - (24*60*60),
-];
-const FINAL_VOTE_END_TIME =
-	(60*60);
-
-$THEME_VOTE_START_DATE = [];
-$THEME_VOTE_START_DIFF = [];
-$THEME_VOTE_END_DATE = [];
-$THEME_VOTE_END_DIFF = [];
-
-// Date Hack //
-$EVENT_MODE_DATE = $EVENT_DATE->getTimestamp() - THEME_MODE_TIMES[$EVENT_MODE];
-$EVENT_MODE_DIFF = $EVENT_MODE_DATE - time();
-
-$EVENT_VOTE_ACTIVE = 3;
-for( $idx = 0; $idx < count(THEME_VOTE_START_TIMES); $idx++ ) {
-	$THEME_VOTE_START_DATE[$idx] = $EVENT_DATE->getTimestamp() - THEME_VOTE_START_TIMES[$idx];
-	$THEME_VOTE_START_DIFF[$idx] = $THEME_VOTE_START_DATE[$idx] - time();
-	$THEME_VOTE_END_DATE[$idx] = $EVENT_DATE->getTimestamp() - THEME_VOTE_END_TIMES[$idx];
-	$THEME_VOTE_END_DIFF[$idx] = $THEME_VOTE_END_DATE[$idx] - time();
-	
-	if ( $THEME_VOTE_START_DIFF[$idx] <= 0 ) {
-		$EVENT_VOTE_ACTIVE = $idx;
-	}
-}
-$FINAL_VOTE_START_DATE = $EVENT_DATE->getTimestamp() - FINAL_VOTE_START_TIME;
-$FINAL_VOTE_START_DIFF = $FINAL_VOTE_START_DATE - time();
-$FINAL_VOTE_END_DATE = $EVENT_DATE->getTimestamp() - FINAL_VOTE_END_TIME;
-$FINAL_VOTE_END_DIFF = $FINAL_VOTE_END_DATE - time();
-
-
-function IsThemeSuggestionsOpen() {
-	global $EVENT_MODE, $EVENT_MODE_DIFF;
-	return ($EVENT_MODE == 1) && ($EVENT_MODE_DIFF > 0);
-}
-function IsThemeSlaughterOpen() {
-	global $EVENT_MODE, $EVENT_MODE_DIFF;
-	return ($EVENT_MODE == 2) && ($EVENT_MODE_DIFF > 0);
-}
-function IsThemeVotingOpen() {
-	global $EVENT_MODE, $EVENT_MODE_DIFF;
-	return ($EVENT_MODE == 3) && ($EVENT_MODE_DIFF > 0);
-}
-function IsFinalThemeVotingOpen() {
-	global $EVENT_MODE, $EVENT_MODE_DIFF;
-	return ($EVENT_MODE == 4) && ($EVENT_MODE_DIFF > 0);
-}
-
+require_once __DIR__."/common.php";
 
 $response = json_NewResponse();
 
@@ -104,6 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 	if ( ($user_id > 0) && ($EVENT_NODE > 0) ) {
 		if ( $action == "GETMY" ) {
 			$response['ideas'] = theme_GetMyIdeas($EVENT_NODE,$user_id);
+			$response['count'] = count($response['ideas']);
+		}
+		else if ( $action == "GETMYOTHER" ) {
+			$response['ideas'] = theme_GetMyOtherIdeas($EVENT_NODE,$user_id);
 			$response['count'] = count($response['ideas']);
 		}
 		else if ( ($action == "ADD") && isset($_POST['idea']) && IsThemeSuggestionsOpen() ) {
@@ -240,43 +167,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 	// No User Account Required //
 	if ( $EVENT_NODE > 0 ) {
 		if ( $action == "GETIDEASTATS" ) {
-			if ( $user_id > 0 ) {
-				$response['mystats'] = theme_GetMyIdeaStats($user_id);
-			}
-			$response['stats'] = theme_GetIdeaStats();
-			$response['hourly'] = theme_GetIdeaHourlyStats();
-			
-			$idea_list = theme_GetIdeaList($EVENT_NODE);
-			
-			$response['count'] = count($idea_list);
-			$response['count_with_duplicates'] = theme_CountIdeas($EVENT_NODE);
-			
-			$response['users_with_ideas'] = theme_CountUsersWithIdeas($EVENT_NODE);
-			$response['users_that_kill'] = theme_CountUsersThatKill($EVENT_NODE);
-			
-			$kill_counts = theme_GetUserKillCounts();
-			$ret_kills = [];
-			
-			foreach ( $kill_counts as $count ) {
-//				if ( $count < 400 ) {
-//					$idx = (floor($count/50)*50);
-//					$key = (floor($count/50)*50) . " - " . (((floor($count/50)+1)*50)-1);
-//				}
-//				else {
-//					$idx = (floor($count/200)*200);
-//					$key = (floor($count/200)*200) . " - " . (((floor($count/200)+1)*200)-1);
-//				}
-					$idx = (floor($count/100)*100);
-					$key = (floor($count/100)*100) . " - " . (((floor($count/100)+1)*100)-1);
-				
-				if ( isset($ret_kills[$idx]) )
-					$ret_kills[$idx][1]++;
-				else
-					$ret_kills[$idx] = [$key, 1];
+			if ( $EVENT_MODE >= 1 ) {
+				$response['idea_count'] = theme_CountIdeas($EVENT_NODE);
+				$response['total_idea_count'] = theme_CountTotalIdeas($EVENT_NODE);
+				$response['users_with_ideas'] = theme_CountUsersWithIdeas($EVENT_NODE);
 			}
 			
-			ksort($ret_kills);
-			$response['kill_counts'] = array_values($ret_kills);
+			if ( $EVENT_MODE >= 2 ) {
+				$idea_list = theme_GetIdeaList($EVENT_NODE);
+				$response['optimized_count'] = count($idea_list);
+				$response['users_that_kill'] = theme_CountUsersThatKill($EVENT_NODE);
+
+				if ( $user_id > 0 ) {
+					$response['my_kill_stats'] = theme_GetMyIdeaStats($user_id);
+				}
+				$response['all_kill_stats'] = theme_GetIdeaStats();
+				$response['kills_per_hour'] = theme_GetIdeaHourlyStats();
+							
+				{
+					$kill_counts = theme_GetUserKillCounts();
+					$ret_kills = [];
+					
+					foreach ( $kill_counts as $count ) {
+		//				if ( $count < 400 ) {
+		//					$idx = (floor($count/50)*50);
+		//					$key = (floor($count/50)*50) . " - " . (((floor($count/50)+1)*50)-1);
+		//				}
+		//				else {
+		//					$idx = (floor($count/200)*200);
+		//					$key = (floor($count/200)*200) . " - " . (((floor($count/200)+1)*200)-1);
+		//				}
+							$idx = (floor($count/100)*100);
+							$key = (floor($count/100)*100) . " - " . (((floor($count/100)+1)*100)-1);
+						
+						if ( isset($ret_kills[$idx]) )
+							$ret_kills[$idx][1]++;
+						else
+							$ret_kills[$idx] = [$key, 1];
+					}
+					
+					ksort($ret_kills);
+					$response['average_kill_counts'] = array_values($ret_kills);
+				}
+			}
 		}
 		else if ( $action == "GET_VOTING_LIST" ) {
 			$response['themes'] = theme_GetThemeVotingList($EVENT_NODE);

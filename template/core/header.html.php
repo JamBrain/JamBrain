@@ -21,12 +21,13 @@
 		echo "<!-- Internal JavaScript -->\n";
 		if ( defined('HTML_USE_CORE') ) {
 			echo "<script src='".CMW_STATIC_URL."/internal/src/lib.js".VERSION_STRING."'></script>\n";
+			echo "<script src='".CMW_STATIC_URL."/internal/src/dom.js".VERSION_STRING."'></script>\n";
 			echo "<script src='".CMW_STATIC_URL."/internal/src/locale.js".VERSION_STRING."'></script>\n";
 			echo "<script src='".CMW_STATIC_URL."/internal/src/time.js".VERSION_STRING."'></script>\n";
 			echo "<script src='".CMW_STATIC_URL."/internal/src/xhr.js".VERSION_STRING."'></script>\n";
+			echo "<script src='".CMW_STATIC_URL."/internal/src/cache.js".VERSION_STRING."'></script>\n";
 		}
 		if ( defined('HTML_USE_STARSHIP') ) {
-			echo "<script src='".CMW_STATIC_URL."/internal/src/cache.js".VERSION_STRING."'></script>\n";
 			echo "<script src='".CMW_STATIC_URL."/internal/src/html.js".VERSION_STRING."'></script>\n";
 			echo "<script src='".CMW_STATIC_URL."/internal/src/love.js".VERSION_STRING."'></script>\n";
 			echo "<script src='".CMW_STATIC_URL."/internal/src/star.js".VERSION_STRING."'></script>\n";
@@ -40,6 +41,23 @@
 			echo "<script src='".CMW_STATIC_URL."/internal/core.min.js".VERSION_STRING."'></script>\n"; 
 		}
 	} /* defined('CMW_JS_DEBUG') */
+
+	if ( defined('HTML_JS_INCLUDE') ) {
+		$css_includes = HTML_JS_INCLUDE;
+		if ( is_array($css_includes) ) {
+			foreach ($css_includes as $include) {
+				echo "<script src='".CMW_STATIC_URL.$include.VERSION_STRING."'></script>\n";
+			}
+		}
+	}
+	if ( defined('HTML_OTHER_JS_INCLUDE') ) {
+		$css_includes = HTML_OTHER_JS_INCLUDE;
+		if ( is_array($css_includes) ) {
+			foreach ($css_includes as $include) {
+				echo "<script src='".$include.VERSION_STRING."'></script>\n";
+			}
+		}
+	}
 
 	echo "<!-- External CSS -->\n";
 	if (defined('CMW_CSS_DEBUG')) {
@@ -63,6 +81,14 @@
 		if ( is_array($css_includes) ) {
 			foreach ($css_includes as $include) {
 				echo "<link rel='stylesheet' href='".CMW_STATIC_URL.$include.VERSION_STRING."' />\n";
+			}
+		}
+	}
+	if ( defined('HTML_OTHER_CSS_INCLUDE') ) {
+		$css_includes = HTML_OTHER_CSS_INCLUDE;
+		if ( is_array($css_includes) ) {
+			foreach ($css_includes as $include) {
+				echo "<link rel='stylesheet' href='".$include.VERSION_STRING."' />\n";
 			}
 		}
 	}
