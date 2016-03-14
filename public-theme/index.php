@@ -98,7 +98,7 @@ require_once __DIR__."/theme-stats.php";
 
 function ShowMyIdeas() { 
 ?>
-	<div class="sg" id="extra-sg">
+	<div class="sg hidden" id="extra-sg">
 		<div class="title big caps space">My Suggestions</div>
 		<div id="sg"></div>
 	</div>
@@ -106,7 +106,7 @@ function ShowMyIdeas() {
 } 
 function ShowMyOldIdeas() { 
 ?>
-	<div class="sg-old" id="extra-sg-old">
+	<div class="sg-old hidden" id="extra-sg-old">
 		<br />
 		<div class="title big caps space">Previous Suggestions</div>
 		<div id="sg-old"></div>
@@ -115,7 +115,7 @@ function ShowMyOldIdeas() {
 }
 function ShowMyLikes() { 
 ?>
-	<div class="sg-like" id="extra-sg-like">
+	<div class="sg-like hidden" id="extra-sg-like">
 		<br />
 		<div class="title big caps space">Suggestions I Like</div>
 		<div id="sg-like"></div>
@@ -176,6 +176,7 @@ dialog_InsertScript();
 		//sg_root.appendChild( node );
 		
 		document.getElementById('extra').classList.remove("hidden");
+		document.getElementById('extra-sg').classList.remove("hidden");
 	}
 	
 	function sg_AddOldIdea(Id,Idea,accent) {
@@ -194,6 +195,7 @@ dialog_InsertScript();
 		//sg_root.appendChild( node );
 		
 		document.getElementById('extra').classList.remove("hidden");
+		document.getElementById('extra-sg-old').classList.remove("hidden");
 	}
 
 	function sg_RemoveIdea(Id,Idea) {
