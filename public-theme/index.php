@@ -19,8 +19,16 @@ require_once __DIR__."/common.php";
 //}
 
 define('HTML_TITLE',$EVENT_NAME." - Theme Hub");
-const HTML_CSS_INCLUDE = [ "/style/theme-hub.css.php" ];
 const HTML_USE_CORE = true;
+const HTML_CSS_INCLUDE = [ 
+	"/style/theme-hub.css.php",
+];
+const HTML_OTHER_CSS_INCLUDE = [];
+const HTML_JS_INCLUDE = [];
+const HTML_OTHER_JS_INCLUDE = [ 
+	"api-legacy.js",
+	"api-theme.js",
+];
 const HTML_SHOW_FOOTER = true;
 const HTML_USE_GOOGLE = true;
 
@@ -123,6 +131,7 @@ require_once __DIR__."/theme-dialog.php";
 
 
 template_GetPageHeader(); 
+
 dialog_InsertCode();
 ShowHeader();
 
@@ -136,8 +145,6 @@ if ( isset($GLOBALS['ERROR']) ) {
 dialog_InsertScript();
 
 ?>
-<script src="api-legacy.js"></script>
-<script src="api-theme.js"></script>
 <script>
 <?php
 	if ( ($cookie_id === 0) && isset($GLOBALS['ERROR']) ) {

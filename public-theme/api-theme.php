@@ -167,43 +167,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 	// No User Account Required //
 	if ( $EVENT_NODE > 0 ) {
 		if ( $action == "GETIDEASTATS" ) {
-			if ( $user_id > 0 ) {
-				$response['mystats'] = theme_GetMyIdeaStats($user_id);
-			}
-			$response['stats'] = theme_GetIdeaStats();
-			$response['hourly'] = theme_GetIdeaHourlyStats();
-			
-			$idea_list = theme_GetIdeaList($EVENT_NODE);
-			
-			$response['count'] = count($idea_list);
-			$response['count_with_duplicates'] = theme_CountIdeas($EVENT_NODE);
-			
-			$response['users_with_ideas'] = theme_CountUsersWithIdeas($EVENT_NODE);
-			$response['users_that_kill'] = theme_CountUsersThatKill($EVENT_NODE);
-			
-			$kill_counts = theme_GetUserKillCounts();
-			$ret_kills = [];
-			
-			foreach ( $kill_counts as $count ) {
-//				if ( $count < 400 ) {
-//					$idx = (floor($count/50)*50);
-//					$key = (floor($count/50)*50) . " - " . (((floor($count/50)+1)*50)-1);
-//				}
-//				else {
-//					$idx = (floor($count/200)*200);
-//					$key = (floor($count/200)*200) . " - " . (((floor($count/200)+1)*200)-1);
-//				}
-					$idx = (floor($count/100)*100);
-					$key = (floor($count/100)*100) . " - " . (((floor($count/100)+1)*100)-1);
-				
-				if ( isset($ret_kills[$idx]) )
-					$ret_kills[$idx][1]++;
-				else
-					$ret_kills[$idx] = [$key, 1];
+			if ( $EVENT_MODE >= 1 ) {
+				$response['idea_count'] = theme_CountIdeas($EVENT_NODE);
+				$response['total_idea_count'] = theme_CountTotalIdeas($EVENT_NODE);
+				$response['users_with_ideas'] = theme_CountUsersWithIdeas($EVENT_NODE);
 			}
 			
-			ksort($ret_kills);
-			$response['kill_counts'] = array_values($ret_kills);
+			if ( $EVENT_MODE >= 2 ) {
+				$idea_list = theme_GetIdeaList($EVENT_NODE);
+				$response['optimized_count'] = count($idea_list);
+				$response['users_that_kill'] = theme_CountUsersThatKill($EVENT_NODE);
+
+				if ( $user_id > 0 ) {
+					$response['my_kill_stats'] = theme_GetMyIdeaStats($user_id);
+				}
+				$response['all_kill_stats'] = theme_GetIdeaStats();
+				$response['kills_per_hour'] = theme_GetIdeaHourlyStats();
+							
+				{
+					$kill_counts = theme_GetUserKillCounts();
+					$ret_kills = [];
+					
+					foreach ( $kill_counts as $count ) {
+		//				if ( $count < 400 ) {
+		//					$idx = (floor($count/50)*50);
+		//					$key = (floor($count/50)*50) . " - " . (((floor($count/50)+1)*50)-1);
+		//				}
+		//				else {
+		//					$idx = (floor($count/200)*200);
+		//					$key = (floor($count/200)*200) . " - " . (((floor($count/200)+1)*200)-1);
+		//				}
+							$idx = (floor($count/100)*100);
+							$key = (floor($count/100)*100) . " - " . (((floor($count/100)+1)*100)-1);
+						
+						if ( isset($ret_kills[$idx]) )
+							$ret_kills[$idx][1]++;
+						else
+							$ret_kills[$idx] = [$key, 1];
+					}
+					
+					ksort($ret_kills);
+					$response['average_kill_counts'] = array_values($ret_kills);
+				}
+			}
 		}
 		else if ( $action == "GET_VOTING_LIST" ) {
 			$response['themes'] = theme_GetThemeVotingList($EVENT_NODE);

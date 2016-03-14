@@ -184,6 +184,25 @@ function theme_CountIdeas($node,$arg_string="") {
 	}
 	return $ret;
 }
+function theme_CountTotalIdeas($node,$arg_string="") {
+	$ret = cache_Fetch(_THEME_CACHE_KEY."TOTAL_IDEA_COUNT");
+
+	if ( $ret === null ) {
+		$ret = db_QueryFetchSingle(
+			"SELECT count(id) FROM ".CMW_TABLE_THEME_IDEA." 
+			LIMIT 1".$arg_string
+		);
+		if ( is_array($ret) ) {
+			$ret = intval($ret[0]);
+			
+			cache_Store(_THEME_CACHE_KEY."TOTAL_IDEA_COUNT",$ret,_THEME_CACHE_TTL);
+		}
+		else {
+			return null;
+		}
+	}
+	return $ret;
+}
 
 function theme_CountUsersWithIdeas($node,$arg_string="") {
 	$ret = cache_Fetch(_THEME_CACHE_KEY."USERS_WITH_IDEAS");

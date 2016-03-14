@@ -42,6 +42,23 @@
 		}
 	} /* defined('CMW_JS_DEBUG') */
 
+	if ( defined('HTML_JS_INCLUDE') ) {
+		$css_includes = HTML_JS_INCLUDE;
+		if ( is_array($css_includes) ) {
+			foreach ($css_includes as $include) {
+				echo "<script src='".CMW_STATIC_URL.$include.VERSION_STRING."'></script>\n";
+			}
+		}
+	}
+	if ( defined('HTML_OTHER_JS_INCLUDE') ) {
+		$css_includes = HTML_OTHER_JS_INCLUDE;
+		if ( is_array($css_includes) ) {
+			foreach ($css_includes as $include) {
+				echo "<script src='".$include.VERSION_STRING."'></script>\n";
+			}
+		}
+	}
+
 	echo "<!-- External CSS -->\n";
 	if (defined('CMW_CSS_DEBUG')) {
 		if (defined('HTML_USE_EMOJI')) { echo "<link rel='stylesheet' href='".CMW_STATIC_URL."/custom/emojitwo/emojitwo.css".VERSION_STRING."' />\n"; }
@@ -64,6 +81,14 @@
 		if ( is_array($css_includes) ) {
 			foreach ($css_includes as $include) {
 				echo "<link rel='stylesheet' href='".CMW_STATIC_URL.$include.VERSION_STRING."' />\n";
+			}
+		}
+	}
+	if ( defined('HTML_OTHER_CSS_INCLUDE') ) {
+		$css_includes = HTML_OTHER_CSS_INCLUDE;
+		if ( is_array($css_includes) ) {
+			foreach ($css_includes as $include) {
+				echo "<link rel='stylesheet' href='".$include.VERSION_STRING."' />\n";
 			}
 		}
 	}
