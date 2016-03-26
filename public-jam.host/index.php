@@ -1,4 +1,7 @@
+Disabled
 <?php
+die();
+
 require_once __DIR__ . "/../web.php";
 require_once __DIR__ . "/../core/node.php";
 require_once __DIR__ . "/../core/internal/sanitize.php";
