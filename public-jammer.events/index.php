@@ -2,7 +2,15 @@
 require_once __DIR__."/../web.php";
 //require_once __DIR__."/../core/config.php";
 
+// http://php.net/manual/en/function.date.php
+
+$_day = intval(date("j"));
+$_weekday = intval(date("w"));	// How many days to subtract to get Sunday //
+$_dayofyear = intval(date("z"));
+
 template_GetPageHeader();
+
+echo $_day, " ** ", $_weekday, " ** ", $_dayofyear;
 ?>
 <style>
 	._hidden {
@@ -73,7 +81,9 @@ template_GetPageHeader();
 				$div_class .= " -next";
 			}
 			
-			?><div class="<?=$div_class?>"><?=$day?></div><?php
+			$daytext = strval($day);
+			
+			?><div class="<?=$div_class?>"><?=$daytext?></div><?php
 		}
 	?></div><?php
 	}

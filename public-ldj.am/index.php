@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>Emergency Mike Chat</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
 		body, html {
 			margin:0;
