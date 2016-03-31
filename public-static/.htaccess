@@ -3,6 +3,7 @@ Header set Access-Control-Allow-Origin *
 RewriteEngine on 
 
 RewriteRule ^img/(.*) img.php/$1
+RewriteRule ^info/(.*) info.php/$1
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^content/(.*) content.php/$1
