@@ -31,58 +31,83 @@ const CONVERT_TYPE = [
 	'webp' => ['png'],
 ];
 
+const ORIGIN_DIR = '/raw/';
+const CONTENT_DIR = '/content/';
+
 // NOTE: Input is sanitized. URLs can only be basic ASCII //
-$action = core_ParseActionURL();
-$in_path = implode('/',$action);
+$in_part = core_ParseActionURL();
+$in_path = implode('/',$in_part);
 $in_file = basename($in_path);
 $in_dir = dirname($in_path);
 
-$part = explode('.',$in_file);
-$part_count = count($part);
-if ( $part_count < 2 ) {
+$file_part = explode('.',$in_file);
+$file_part_count = count($file_part);
+if ( $file_part_count < 2 ) {
 	// bail if not fully qualified //
-	die;
+	exit;
 }
-$part_id = &$part[0];
-$part_ext = &$part[1];
-$origin_file = $part_id.'.'.$part_ext;
+$file_part_id = &$file_part[0];
+$file_part_ext = &$file_part[1];
+$origin_file = $file_part_id.'.'.$file_part_ext;
 
 // Operation //
-if ( $part_count >= 3 ) {
-	$part_op = &$part[2];
+if ( $file_part_count >= 3 ) {
+	$file_part_op = &$file_part[2];
 }
 else {
-	$part_op = null;
+	$file_part_op = null;
 }
 
 // Output Extension //
-if ( $part_count >= 4 ) {
-	$part_out_ext = &$part[3];
+if ( $file_part_count >= 4 ) {
+	$file_part_out_ext = &$file_part[3];
 }
 else {
-	$part_out_ext = null;
+	$file_part_out_ext = null;
 }
 
 
 $local_base = getcwd();
 
-$local_path = $local_base.'/content/'.$in_path;
-$origin_path = $local_base.'/raw/'.$in_dir.'/'.$origin_file;
+$local_dir = $local_base.CONTENT_DIR.$in_dir;
+$local_path = $local_base.CONTENT_DIR.$in_path;
 
-$local_exists = file_exists($local_path);
-$origin_exists = file_exists($origin_path);
+$origin_path = $local_base.ORIGIN_DIR.$in_dir.'/'.$origin_file;
 
-// If file already exists, assume it was accessed via an invalid URL //
-if ( $local_exists ) {
+function RedirectToSelf() {
 	// Force redirect to data //
 	header('Location: '.
 		$_SERVER['REQUEST_SCHEME'].
 		"://".
 		$_SERVER['HTTP_HOST'].
-		"/content/".
-		$in_path);
+		CONTENT_DIR.
+		$GLOBALS['in_path']);
+}
+
+// If file already exists, assume it was accessed via an invalid URL //
+if ( file_exists($local_path) ) {
+	RedirectToSelf();
 	exit;
 }
+
+// If the original exists //
+if ( file_exists($origin_path) ) {
+	// Create Directory //
+	if ( !file_exists($local_dir) ) {
+		mkdir($local_dir,0644,true);
+	}
+	
+	// if OP is null, then we're not doing any conversion, just linking //
+	if ( is_null($file_part_op) ) {
+		// CLEVERNESS: $in_part is 1 more than expected, because it contains the file name
+		$target = implode('/',array_fill(0,count($in_part),'..')).ORIGIN_DIR.$in_path;
+		symlink( $target, $local_path );
+		
+		RedirectToSelf();
+		exit;
+	}
+}
+
 
 	//$_SERVER['REQUEST_URI']);
 //	if ( isset(MIME_TYPE[$part_ext]) ) {
@@ -104,11 +129,11 @@ if ( $local_exists ) {
 //
 //echo "<br>\n<br>\n";
 
-echo $local_path,' | ',($local_exists ? 'yes':'no'),' | ',($origin_exists ? 'yes':'no');
+//echo $local_path,' | ',($local_exists ? 'yes':'no'),' | ',($origin_exists ? 'yes':'no');
 
 //echo "<br>\n<br>\n";
 //
-echo implode('/',core_RemovePathDotsFromArray(['hey','you','..','me','.','huh']));
+//echo implode('/',core_RemovePathDotsFromArray(['hey','you','..','me','.','huh']));
 
 
 //print_r($_SERVER);
