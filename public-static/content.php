@@ -43,6 +43,13 @@ function is_audio($ext) {
 }
 
 
+function EmitErrorAndExit($err,$code=404) {
+	http_response_code($code);
+	header("Content-Type: text/plain"); 
+	echo $err;
+	exit;
+}
+
 
 const ORIGIN_DIR = '/raw/';
 const CONTENT_DIR = '/content/';
@@ -56,7 +63,7 @@ $in_dir = dirname($in_path);
 $file_part = explode('.',$in_file);
 // Bail if our files don't have 2 parts //
 if ( count($file_part) < 2 ) {
-	exit;
+	EmitErrorAndExit("");
 }
 $file_id = array_shift($file_part);
 $file_ext = array_shift($file_part);
@@ -90,13 +97,13 @@ while ( count($file_part) ) {
 	if ( $var[0] == 'w' ) {
 		$file_out_width = intval(substr($var,1));
 		if ( $file_out_width <= 0 )
-			exit;
+			EmitErrorAndExit("ERROR: width <= 0");
 		$file_out_resize = true;
 	}
 	else if ( $var[0] == 'h' ) {
 		$file_out_height = intval(substr($var,1));
 		if ( $file_out_height <= 0 )
-			exit;
+			EmitErrorAndExit("ERROR: height <= 0");
 		$file_out_resize = true;
 	}
 	else if ( $var == 'o' ) {
@@ -109,10 +116,10 @@ while ( count($file_part) ) {
 		$file_out_optimize = true;
 		$file_out_max_quality = intval(substr($var,1));
 		if ( $file_out_max_quality > 100 ) {
-			exit;
+			EmitErrorAndExit("ERROR: quality > 100");
 		}
 		else if ( $file_out_max_quality < $file_out_min_quality ) {
-			exit;
+			EmitErrorAndExit("ERROR: quality < min");
 		}
 	}
 	else if ( $var == 'f' ) {
@@ -123,16 +130,15 @@ while ( count($file_part) ) {
 // If fitting... //
 const FIT_LIMIT = 1024;
 if ( $file_out_fit ) {
-
 	// Limit fit size to smaller than the fit limit //
 	if ( $file_out_width > FIT_LIMIT )
-		exit;
+		EmitErrorAndExit("ERROR: width > fit limit");
 	if ( $file_out_height > FIT_LIMIT )
-		exit;
+		EmitErrorAndExit("ERROR: width > fit limit");
 
 	// Fit requires both dimensions //
 	if ( !is_integer($file_out_width) || !is_integer($file_out_height) )
-		exit;
+		EmitErrorAndExit("ERROR: fit missing width or height");
 }
 
 
@@ -194,17 +200,15 @@ function do_proc($cmd,&$data) {
 	if ($proc) {
 		fwrite($pipes[0],$data);
 		fclose($pipes[0]);
-		
 		$ret = stream_get_contents($pipes[1]);
 		fclose($pipes[1]);
-		// check if empty, then bring output error //
-//		if ( count($data) ) {
-//			echo stream_get_contents($pipes[2]);
-//			exit;
-//		}
-		
+		$err = stream_get_contents($pipes[2]);
 		fclose($pipes[2]);
-		proc_close($proc);
+		$code = proc_close($proc);
+		
+		if ( $code ) {
+			EmitErrorAndExit('PROC ERROR ['.$code.']: '.$err);
+		}
 		
 		return $ret;
 	}
@@ -224,7 +228,7 @@ if ( file_exists($origin_path) ) {
 		if ( is_audio($file_ext) && is_audio($file_out_ext) ) {
 			// Bail if using any extra arguments (so we don't regenerate useless files) //
 //			if ( $file_out_args > 0 )
-//				exit;
+//				EmitErrorAndExit("ERROR: A2A extra Args");
 
 			header("Content-Type: text/plain"); 
 			print_r( get_media_info($origin_path) );
@@ -238,7 +242,7 @@ if ( file_exists($origin_path) ) {
 		else if ( ($file_ext == 'gif') && is_video($file_out_ext) ) {
 			// Bail if using any extra arguments (so we don't regenerate useless files) //
 			if ( $file_out_args > 0 )
-				exit;
+				EmitErrorAndExit("ERROR: G2V extra Args");
 				
 			// TODO
 		}
@@ -246,7 +250,7 @@ if ( file_exists($origin_path) ) {
 		else if ( is_video($file_ext) && is_video($file_out_ext) ) {
 			// Bail if using any extra arguments (so we don't regenerate useless files) //
 //			if ( $file_out_args > 0 )
-//				exit;
+//				EmitErrorAndExit("ERROR: V2V extra Args");
 				
 			// TODO
 			header("Content-Type: text/plain"); 
@@ -303,17 +307,17 @@ if ( file_exists($origin_path) ) {
 					else { //if ( is_integer($file_out_height) ) {
 						$option .= ' -resize x'.$file_out_height;
 					}
-				}
-				
-				// NOTE: modifiers append to resize strings, so this must come next //
-				if ( $file_out_fit ) {
-					// Fit to dimensions //
-					$option .= '^ -gravity center';
-					$option .= ' -extent '.$file_out_width.'x'.$file_out_height;
-				}
-				else {
-					// Don't allow resizing larger than original //
-					$option .= '\>';
+
+					// NOTE: modifiers append to resize strings, so this must come next //
+					if ( $file_out_fit ) {
+						// Fit to dimensions //
+						$option .= '^ -gravity center';
+						$option .= ' -extent '.$file_out_width.'x'.$file_out_height;
+					}
+					else {
+						// Don't allow resizing larger than original //
+						$option .= '\>';
+					}
 				}
 				
 				// Run ImageMagick //
@@ -327,6 +331,7 @@ if ( file_exists($origin_path) ) {
 			if ( $file_out_optimize ) {
 				if ( ($file_out_ext == 'gif') ) {
 					// http://www.lcdf.org/gifsicle/
+					EmitErrorAndExit("ERROR: Unsupported optimizer");
 				}
 				else if ( ($file_out_ext == 'png') ) {
 					// https://pngquant.org/
@@ -335,6 +340,12 @@ if ( file_exists($origin_path) ) {
 						'pngquant --quality='.$file_out_min_quality.'-'.$file_out_max_quality.' -',
 						$data
 					);
+				}
+				else if ( ($file_out_ext == 'jpg') || ($file_out_ext == 'jpeg') ) {
+					EmitErrorAndExit("ERROR: Unsupported optimizer");
+				}
+				else if ( ($file_out_ext == 'webp') ) {
+					EmitErrorAndExit("ERROR: Unsupported optimizer");
 				}
 			}
 			
@@ -353,6 +364,8 @@ if ( file_exists($origin_path) ) {
 		
 		RedirectToSelfAndExit();
 	}
+
+	EmitErrorAndExit("ERROR: Unknown op");
 }
 
-exit;
+EmitErrorAndExit("ERROR: Origin not found");
