@@ -163,7 +163,7 @@ if ( file_exists($local_path) ) {
 
 function get_media_info($file) {
 	$handle = popen(
-		'ffprobe -print_format json -show_format -loglevel quiet '.$file,
+		'ffprobe -print_format json -show_format -loglevel quiet -show_streams '.$file,
 		'r'
 	);
 	
