@@ -67,8 +67,28 @@ function core_GetExecutionTime() {
 	return number_format( $timediff, 4 ) . ' seconds';
 }
 
+// Handles "/./" and "/../" paths
+function core_RemovePathDotsFromArray($arr) {
+	// http://stackoverflow.com/a/14883803/5678759
+	$parents = [];
+	foreach( $arr as $dir) {
+	    switch( $dir ) {
+	        case '.':
+	        	// Don't need to do anything here
+	        break;
+	        case '..':
+	            array_pop( $parents);
+	        break;
+	        default:
+	            $parents[] = $dir;
+	        break;
+	    }
+	}
+	return $parents;
+}
+
 // Parse the API Action URL (array of strings) //
-function core_ParseActionURL() {
+function _core_ParseActionURL() {
 	// If PATH_INFO is set, then Apache figured out our parts for us //
 	if ( isset($_SERVER['PATH_INFO']) ) {
 		$ret = ltrim(rtrim(filter_var($_SERVER['PATH_INFO'],FILTER_SANITIZE_URL),'/'),'/');
@@ -102,6 +122,11 @@ function core_ParseActionURL() {
 		}));
 	}
 }
+// Wrapping this so we can sanitize further //
+function core_ParseActionURL() {
+	return core_RemovePathDotsFromArray(_core_ParseActionURL());
+}
+
 // Convert response codes in to text //
 function core_GetHTTPResponseText($code){
 	static $HTTP_RESPONSE_TEXT = [

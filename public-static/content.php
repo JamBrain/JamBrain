@@ -31,10 +31,7 @@ const CONVERT_TYPE = [
 	'webp' => ['png'],
 ];
 
-
-// TODO: Sanitize input //
-
-
+// NOTE: Input is sanitized. URLs can only be basic ASCII //
 $action = core_ParseActionURL();
 $in_path = implode('/',$action);
 $in_file = basename($in_path);
@@ -110,5 +107,8 @@ if ( $local_exists ) {
 echo $local_path,' | ',($local_exists ? 'yes':'no'),' | ',($origin_exists ? 'yes':'no');
 
 //echo "<br>\n<br>\n";
+//
+echo implode('/',core_RemovePathDotsFromArray(['hey','you','..','me','.','huh']));
+
 
 //print_r($_SERVER);
