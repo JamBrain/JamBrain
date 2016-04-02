@@ -176,7 +176,9 @@ function get_media_info($file) {
 // thumbnail
 // https://trac.ffmpeg.org/wiki/Create%20a%20thumbnail%20image%20every%20X%20seconds%20of%20the%20video
 
-// ffmpeg -i dum.mp4 -loglevel quiet -vframes 1 -f mjpeg pipe:1
+// tips
+// https://trac.ffmpeg.org/wiki/FFprobeTips
+
 
 function do_proc($cmd,&$data) {
 	$proc = proc_open(
