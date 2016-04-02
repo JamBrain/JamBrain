@@ -40,36 +40,6 @@ function is_audio($ext) {
 	return array_search($ext,AUDIO_TYPE) !== false;
 }
 
-// https://developer.mozilla.org/en-US/docs/Web/HTML/Supported_media_formats
-const MIME_TYPE = [
-	'png' => 'image/png',
-	'jpg' => 'image/jpeg',
-	'jpeg' => 'image/jpeg',
-	'gif' => 'image/gif',
-//	'webp' => 'image/webp',		// Chrome Only //
-
-	'mp3' => 'audio/mpeg',
-	'm4a' => 'audio/mp4',
-	'aac' => 'audio/mp4',		// for Firefox compatibility //
-//	'aac' => 'audio/aac',		// Unsupported MIME type by Firefox //
-//	'ogg' => 'audio/ogg',		// Firefox+Chrome Only (no Safari, IE, Edge) //
-//	'wav' => 'audio/wav',		// Unsupported in IE (works in Edge) //
-
-	'mp4' => 'video/mp4',
-	'm4v' => 'video/mp4',
-	'webm' => 'video/webm',
-//	'ogv' => 'video/ogg',
-//	'gifv' => '',				// Not actually real. You should reference mp4 and webm instead 
-
-//	'json' => 'application/json',
-//	'jsonp' => 'application/javascript',
-];
-
-//const CONVERT_TYPE = [
-//	'bmp' => ['png'],
-//	'webp' => ['png'],
-//];
-
 const ORIGIN_DIR = '/raw/';
 const CONTENT_DIR = '/content/';
 
@@ -138,12 +108,18 @@ while ( count($file_part) ) {
 	}
 }
 
-// If fitting, limit fit size to smaller than limit //
-const FIT_LIMIT = 1024;
+// If fitting... //
 if ( $file_out_fit ) {
+	const FIT_LIMIT = 1024;
+
+	// Limit fit size to smaller than the fit limit //
 	if ( $file_out_width > FIT_LIMIT )
 		exit;
 	if ( $file_out_height > FIT_LIMIT )
+		exit;
+
+	// Fit requires both dimensions //
+	if ( !is_integer($file_out_width) || !is_integer($file_out_height) )
 		exit;
 }
 
@@ -170,6 +146,38 @@ function RedirectToSelfAndExit() {
 // If file already exists, assume it was accessed via an invalid URL //
 if ( file_exists($local_path) ) {
 	RedirectToSelfAndExit();
+}
+
+
+function do_proc($cmd,&$data) {
+	$proc = proc_open(
+		$cmd,
+		[
+			['pipe','r'],
+			['pipe','w'],
+			['pipe','w']
+		],
+		$pipes
+	);
+	
+	if ($proc) {
+		fwrite($pipes[0],$data);
+		fclose($pipes[0]);
+		
+		$ret = stream_get_contents($pipes[1]);
+		fclose($pipes[1]);
+		// check if empty, then bring output error //
+//		if ( count($data) ) {
+//			echo stream_get_contents($pipes[2]);
+//			exit;
+//		}
+		
+		fclose($pipes[2]);
+		proc_close($proc);
+		
+		return $ret;
+	}
+	return null;
 }
 
 // If the original exists //
@@ -204,6 +212,7 @@ if ( file_exists($origin_path) ) {
 			
 			// Step 2: Resize, Crop, and/or Convert the file //
 			if ( $file_out_resize || $file_out_convert ) {
+				// Strip extra data //
 				$option = '-strip';
 				
 				// http://www.imagemagick.org/Usage/resize/
@@ -230,31 +239,11 @@ if ( file_exists($origin_path) ) {
 					$option .= '\>';
 				}
 				
-				$cmd = proc_open(
+				// Run ImageMagick //
+				$data = do_proc(
 					'convert - '.$option.' '.$file_out_ext.':-',
-					[
-						['pipe','r'],
-						['pipe','w'],
-						['pipe','w']
-					],
-					$pipes
+					$data
 				);
-				
-				if ($cmd) {
-					fwrite($pipes[0],$data);
-					fclose($pipes[0]);
-					
-					$data = stream_get_contents($pipes[1]);
-					fclose($pipes[1]);
-					// check if empty, then bring output error //
-//					if ( count($data) ) {
-//						echo stream_get_contents($pipes[2]);
-//						exit;
-//					}
-					
-					fclose($pipes[2]);
-					proc_close($cmd);
-				}
 			}
 			
 			// Step 3: Optimize (if requested) //
@@ -264,27 +253,11 @@ if ( file_exists($origin_path) ) {
 				}
 				else if ( ($file_out_ext == 'png') ) {
 					// https://pngquant.org/
-					// https://pngquant.org/php.html	
-					$cmd = proc_open(
+					// https://pngquant.org/php.html
+					$data = do_proc(
 						'pngquant --quality='.$file_out_min_quality.'-'.$file_out_max_quality.' -',
-						[
-							['pipe','r'],
-							['pipe','w'],
-							['pipe','w']
-						],
-						$pipes
-					);					
-
-					if ($cmd) {
-						fwrite($pipes[0],$data);
-						fclose($pipes[0]);
-						
-						$data = stream_get_contents($pipes[1]);
-						fclose($pipes[1]);
-						
-						fclose($pipes[2]);
-						proc_close($cmd);
-					}
+						$data
+					);
 				}
 			}
 			
@@ -305,32 +278,4 @@ if ( file_exists($origin_path) ) {
 	}
 }
 
-
-	//$_SERVER['REQUEST_URI']);
-//	if ( isset(MIME_TYPE[$part_ext]) ) {
-//		header("Content-type: ".MIME_TYPE[$part_ext]);
-//		
-//	}
-
-
-//$protocol = $_SERVER['REQUEST_SCHEME'];
-//$host = "//" . $_SERVER['HTTP_HOST'];
-//$self = substr($_SERVER['SCRIPT_NAME'],strrpos($_SERVER['SCRIPT_NAME'],'/')+1);
-//$base = substr($_SERVER['SCRIPT_NAME'],0,strrpos($_SERVER['SCRIPT_NAME'],'/'));
-//$image = "/" . implode('/',$action);
-
-//$request_exists = file_exists($basedir.'/content'.$image);
-//$original_exists = file_exists($basedir.'/raw'.$image);
-
-//echo $protocol,' | ',$host,' | ',$self,' | ',$base,' | ',$image;
-//
-//echo "<br>\n<br>\n";
-
-//echo $local_path,' | ',($local_exists ? 'yes':'no'),' | ',($origin_exists ? 'yes':'no');
-
-//echo "<br>\n<br>\n";
-//
-//echo implode('/',core_RemovePathDotsFromArray(['hey','you','..','me','.','huh']));
-
-
-//print_r($_SERVER);
+exit;
