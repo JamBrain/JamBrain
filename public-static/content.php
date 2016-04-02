@@ -173,6 +173,11 @@ function get_media_info($file) {
 	return json_decode($data,true);
 }
 
+// thumbnail
+// https://trac.ffmpeg.org/wiki/Create%20a%20thumbnail%20image%20every%20X%20seconds%20of%20the%20video
+
+// ffmpeg -i dum.mp4 -loglevel quiet -vframes 1 -f mjpeg pipe:1
+
 function do_proc($cmd,&$data) {
 	$proc = proc_open(
 		$cmd,
@@ -247,6 +252,26 @@ if ( file_exists($origin_path) ) {
 		}
 		// Video to Image (Thumbnails) //
 		else if ( is_video($file_ext) && is_image($file_out_ext) ) {
+			// Generate Thumbnail (PNG for good reference quality) //
+			$data = do_proc(
+				'ffmpeg -i '.$origin_path.' -loglevel quiet -vframes 1 -f apng pipe:1',
+				$data
+			);
+
+			$option = '-strip';
+			$option .= ' -resize "50%"';	// hack //
+			
+			// Run ImageMagick //
+			$data = do_proc(
+				'convert - '.$option.' '.$file_out_ext.':-',
+				$data
+			);
+
+			// Step 4: Write File //
+			file_put_contents($local_path, $data);
+			
+			// Step 5: Redirect to self and exit //
+			RedirectToSelfAndExit();
 		}
 		// Image to Image //
 		else if ( is_image($file_ext) && is_image($file_out_ext) ) {
