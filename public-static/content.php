@@ -4,13 +4,16 @@ require_once __DIR__."/../core/internal/core.php";
 
 // NOTE: By design, files in /content/ that are more than X days old can be purged!
 
+// NOTE: FFMPEG for Ubuntu 14.04 requires a special repo: https://launchpad.net/~mc3man/+archive/ubuntu/trusty-media
+//   Newer versions of Ubuntu do not require this. 
+//   FFMPEG was mainline, then it was AVCONV, now it's FFMPEG again.
+
 const IMAGE_TYPE = [
 	'png',
 	'jpg',
 	'jpeg',
 	'gif',
 	'webp',
-//	'bmp',
 ];
 function is_image($ext) {
 	return array_search($ext,IMAGE_TYPE) !== false;
@@ -33,12 +36,13 @@ const AUDIO_TYPE = [
 	'aac',
 //	'aac',
 //	'ogg',
-//	'wav',
 //	'weba',		// proxy
 ];
 function is_audio($ext) {
 	return array_search($ext,AUDIO_TYPE) !== false;
 }
+
+
 
 const ORIGIN_DIR = '/raw/';
 const CONTENT_DIR = '/content/';
@@ -84,10 +88,14 @@ while ( count($file_part) ) {
 	
 	if ( $var[0] == 'w' ) {
 		$file_out_width = intval(substr($var,1));
+		if ( $file_out_width <= 0 )
+			exit;
 		$file_out_resize = true;
 	}
 	else if ( $var[0] == 'h' ) {
 		$file_out_height = intval(substr($var,1));
+		if ( $file_out_height <= 0 )
+			exit;
 		$file_out_resize = true;
 	}
 	else if ( $var == 'o' ) {
@@ -143,7 +151,7 @@ function RedirectToSelfAndExit() {
 	exit;
 }
 
-// If file already exists, assume it was accessed via an invalid URL //
+// If file already exists, assume it was accessed via an invalid URL (i.e. the php script) //
 if ( file_exists($local_path) ) {
 	RedirectToSelfAndExit();
 }
@@ -189,14 +197,17 @@ if ( file_exists($origin_path) ) {
 
 	// If we have an output extension, then we know we're doing something //	
 	if ( $file_out_ext ) { 
+		// Audio to Audio //
+		if ( is_audio($file_ext) && is_audio($file_out_ext) ) {	
+		}
 		// GIF to Video //
-		if ( ($file_ext == 'gif') && is_video($file_out_ext) ) {
+		else if ( ($file_ext == 'gif') && is_video($file_out_ext) ) {
 		}
 		// Video to Video //
 		else if ( is_video($file_ext) && is_video($file_out_ext) ) {
 		}
-		// Audio to Audio //
-		else if ( is_audio($file_ext) && is_audio($file_out_ext) ) {	
+		// Video to Image (Thumbnails) //
+		else if ( is_video($file_ext) && is_image($file_out_ext) ) {
 		}
 		// Image to Image //
 		else if ( is_image($file_ext) && is_image($file_out_ext) ) {

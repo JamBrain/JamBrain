@@ -5,8 +5,8 @@
 .hg
 error_log
 /public/dev/
-/public/static/
-/public-static/upload/
+/public-static/raw/
+/public-static/content/
 /config.php
 /legacy-config.php
 node_modules/
