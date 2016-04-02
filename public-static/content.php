@@ -72,7 +72,7 @@ else {
 	$file_out_ext = null;
 }
 
-
+$file_out_args = count($file_part);
 $file_out_width = null;
 $file_out_height = null;
 $file_out_resize = false;
@@ -80,6 +80,7 @@ $file_out_fit = false;
 $file_out_optimize = false;
 $file_out_min_quality = 60;
 $file_out_max_quality = 90;
+$file_out_thumbnail = false;
 $file_out_convert = $file_ext !== $file_out_ext;
 
 // Check for other properties //
@@ -101,6 +102,9 @@ while ( count($file_part) ) {
 	else if ( $var == 'o' ) {
 		$file_out_optimize = true;
 	}
+	else if ( $var == 't' ) {
+		$file_out_thumbnail = true;
+	}
 	else if ( $var[0] == 'o' ) {
 		$file_out_optimize = true;
 		$file_out_max_quality = intval(substr($var,1));
@@ -117,8 +121,8 @@ while ( count($file_part) ) {
 }
 
 // If fitting... //
+const FIT_LIMIT = 1024;
 if ( $file_out_fit ) {
-	const FIT_LIMIT = 1024;
 
 	// Limit fit size to smaller than the fit limit //
 	if ( $file_out_width > FIT_LIMIT )
@@ -156,6 +160,18 @@ if ( file_exists($local_path) ) {
 	RedirectToSelfAndExit();
 }
 
+
+function get_media_info($file) {
+	$handle = popen(
+		'ffprobe -print_format json -show_format -loglevel quiet '.$file,
+		'r'
+	);
+	
+	$data = stream_get_contents($handle);
+	pclose($handle);
+	
+	return json_decode($data,true);
+}
 
 function do_proc($cmd,&$data) {
 	$proc = proc_open(
@@ -198,13 +214,36 @@ if ( file_exists($origin_path) ) {
 	// If we have an output extension, then we know we're doing something //	
 	if ( $file_out_ext ) { 
 		// Audio to Audio //
-		if ( is_audio($file_ext) && is_audio($file_out_ext) ) {	
+		if ( is_audio($file_ext) && is_audio($file_out_ext) ) {
+			// Bail if using any extra arguments (so we don't regenerate useless files) //
+//			if ( $file_out_args > 0 )
+//				exit;
+
+			header("Content-Type: text/plain"); 
+			print_r( get_media_info($origin_path) );
+			
+			// Video to Audio //
+			// ffmpeg -i input-video.avi -vn -acodec copy output-audio.aac
+			// -vn = no video
+			// -acoced copy = copy the audio
 		}
 		// GIF to Video //
 		else if ( ($file_ext == 'gif') && is_video($file_out_ext) ) {
+			// Bail if using any extra arguments (so we don't regenerate useless files) //
+			if ( $file_out_args > 0 )
+				exit;
+				
+			// TODO
 		}
 		// Video to Video //
 		else if ( is_video($file_ext) && is_video($file_out_ext) ) {
+			// Bail if using any extra arguments (so we don't regenerate useless files) //
+//			if ( $file_out_args > 0 )
+//				exit;
+				
+			// TODO
+			header("Content-Type: text/plain"); 
+			print_r( get_media_info($origin_path) );
 		}
 		// Video to Image (Thumbnails) //
 		else if ( is_video($file_ext) && is_image($file_out_ext) ) {
