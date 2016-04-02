@@ -71,18 +71,18 @@ function core_GetExecutionTime() {
 function core_RemovePathDotsFromArray($arr) {
 	// http://stackoverflow.com/a/14883803/5678759
 	$parents = [];
-	foreach( $arr as $dir) {
-	    switch( $dir ) {
-	        case '.':
-	        	// Don't need to do anything here
-	        break;
-	        case '..':
-	            array_pop( $parents);
-	        break;
-	        default:
-	            $parents[] = $dir;
-	        break;
-	    }
+	foreach( $arr as $dir ) {
+		switch( $dir ) {
+			case '.':
+				// Don't need to do anything here
+			break;
+			case '..':
+				array_pop( $parents );
+			break;
+			default:
+				$parents[] = $dir;
+			break;
+		}
 	}
 	return $parents;
 }
