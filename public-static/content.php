@@ -10,13 +10,18 @@ require_once __DIR__."/../core/internal/core.php";
 
 // Reference: Maybe look at this for the optimization settings. Nothing on webp though.
 //   https://www.smashingmagazine.com/2015/06/efficient-image-resizing-with-imagemagick/
+// FFMpeg Thumbnails
+//   https://trac.ffmpeg.org/wiki/Create%20a%20thumbnail%20image%20every%20X%20seconds%20of%20the%20video
+// FFMpeg Tips
+//   https://trac.ffmpeg.org/wiki/FFprobeTips
+
 
 const IMAGE_TYPE = [
 	'png',
 	'jpg',
 	'jpeg',
 	'gif',
-	'webp',
+	'webp',		// Output only //
 ];
 function is_image($ext) {
 	return array_search($ext,IMAGE_TYPE) !== false;
@@ -89,7 +94,7 @@ $file_out_fit = false;
 $file_out_optimize = false;
 //$file_out_min_quality = 60;
 //$file_out_max_quality = 95;
-$file_out_thumbnail = false;
+//$file_out_thumbnail = false;
 $file_out_convert = $file_ext !== $file_out_ext;
 
 // Check for other properties //
@@ -111,7 +116,7 @@ while ( count($file_part) ) {
 	else if ( $var == 'o' ) {
 		$file_out_optimize = true;
 	}
-//	else if ( $var == 't' ) {
+//	else if ( $var == 't' ) {	// Implicit //
 //		$file_out_thumbnail = true;
 //	}
 //	else if ( $var[0] == 'o' ) {
@@ -181,15 +186,49 @@ function get_media_info($file) {
 	$data = stream_get_contents($handle);
 	pclose($handle);
 	
-	return json_decode($data,true);
+	$ret = [];
+	$info = json_decode($data,true);
+	//$ret['raw'] = $info;
+
+
+	if ( is_array($info) ) {
+		$ret['streams'] = intval($info['format']['nb_streams']);
+		$ret['duration'] = intval($info['format']['duration']);
+		$ret['size'] = intval($info['format']['size']);
+		$ret['bit_rate'] = intval($info['format']['bit_rate']);
+
+		if ( strpos($info['format']['format_name'],'mp4') !== false ) {
+			$ret['container'] = 'mp4';
+		}
+		else if ( strpos($info['format']['format_name'],'webm') !== false ) {
+			$ret['container'] = 'webm';
+		}
+
+		// For all streams //
+		foreach( $info['streams'] as $stream ) {
+			// Get first Audio ID //
+			if ( $stream['codec_type'] == 'audio' ) {
+				if ( !isset($ret['audio_id']) ) {
+					$ret['audio_id'] = intval($stream['index']);
+					$ret['audio_codec'] = $stream['codec_name'];
+					$ret['audio_sample_rate'] = intval($stream['sample_rate']);
+					$ret['audio_channels'] = intval($stream['channels']);
+				}
+			}
+			// Get first Video ID //
+			else if ( $stream['codec_type'] == 'video' ) {
+				if ( !isset($ret['video_id']) ) {
+					$ret['video_id'] = intval($stream['index']);
+					$ret['video_codec'] = $stream['codec_name'];
+					$ret['video_width'] = intval($stream['width']);
+					$ret['video_height'] = intval($stream['height']);
+				}
+			}
+		}
+	}
+
+	return $ret;
 }
-
-// thumbnail
-// https://trac.ffmpeg.org/wiki/Create%20a%20thumbnail%20image%20every%20X%20seconds%20of%20the%20video
-
-// tips
-// https://trac.ffmpeg.org/wiki/FFprobeTips
-
 
 function do_proc($cmd,&$data) {
 	$proc = proc_open(
@@ -221,11 +260,11 @@ function do_proc($cmd,&$data) {
 }
 
 function do_symlink() {
-	global $in_part, $in_path, $local_path;
-	// CLEVERNESS: $in_part is 1 more than expected, because it contains the file name
-	$target = implode('/',array_fill(0,count($in_part),'..')).ORIGIN_DIR.$in_path;
-	symlink( $target, $local_path );
+	global $in_part, $in_path, $in_dir, $origin_file, $local_path;
 	
+	// CLEVERNESS: $in_part is 1 more than expected, because it contains the file name
+	$target = implode('/',array_fill(0,count($in_part),'..')).ORIGIN_DIR.$in_dir.'/'.$origin_file;
+	symlink( $target, $local_path );
 }
 
 // If the original exists //
@@ -244,8 +283,9 @@ if ( file_exists($origin_path) ) {
 		// Audio to Audio //
 		if ( $src_is_audio && is_audio($file_out_ext) ) {
 			// Bail if using any extra arguments (so we don't regenerate useless files) //
-//			if ( $file_out_args > 0 )
-//				EmitErrorAndExit("ERROR: A2A extra Args");
+			if ( $file_out_args > 0 ) {
+				EmitErrorAndExit("ERROR: A2A extra args");
+			}
 
 //			header("Content-Type: text/plain"); 
 //			print_r( get_media_info($origin_path) );
@@ -257,52 +297,65 @@ if ( file_exists($origin_path) ) {
 			// -vn = no video
 			// -acoced copy = copy the audio
 		}
-		// GIF to Video //
-		else if ( ($file_ext == 'gif') && is_video($file_out_ext) ) {
+		// Video/GIF to Video //
+		else if ( ($src_is_video || $file_ext == 'gif') && is_video($file_out_ext) ) {
 			// Bail if using any extra arguments (so we don't regenerate useless files) //
-//			if ( $file_out_args > 0 )
-//				EmitErrorAndExit("ERROR: G2V extra Args");
+			if ( $file_out_args > 0 ) {
+				EmitErrorAndExit("ERROR: V2V extra args");
+			}
+			
+			// Get info about input file //
+			$info = get_media_info($origin_path);
+			
+			if ( $file_out_ext == 'mp4' ) {
+				$out_codec = 'h264';
+			}
+			else if ( $file_out_ext == 'webm' ) {
+				$out_codec = 'vp9';
+				$alt_codec = 'vp8';				
+			}
 				
-			// TODO
-			EmitErrorAndExit("ERROR: G2V conversion not supported");
-		}
-		// Video to Video //
-		else if ( $src_is_video && is_video($file_out_ext) ) {
-			// Bail if using any extra arguments (so we don't regenerate useless files) //
-//			if ( $file_out_args > 0 )
-//				EmitErrorAndExit("ERROR: V2V extra Args");
+//			header("Content-Type: text/plain"); 	
+//			print_r( $info );
+
+			/*
+			// This works, but I've disabled it so we don't bog down the server with encodes //
+			
+			if ( isset($out_codec) ) {
+				// Same Codec (or compatible) //
+				if ( $info['video_codec'] === $out_codec || $info['video_codec'] === $alt_codec ) {
+					// If one stream //
+					if ( $info['streams'] == 1 ) {
+						do_symlink();
+					}
+					// If multiple streams //
+					else {
+						// Strip Audio, Copy video //
+						exec(
+							'ffmpeg -i '.$origin_path.' -vcodec copy -an '.$local_path
+						);
+					}
+					
+					// Step 5: Redirect to self and exit //
+					RedirectToSelfAndExit();
+				}
+				// Different Codec //
+				else {
+					// Strip Audio //
+					exec(
+						'ffmpeg -i '.$origin_path.' -vcodec '.$out_codec.' -an '.$local_path
+					);
+					
+					// Set Variable Bitrate w/ target: -b:v 512K
 				
-			// TODO
-//			header("Content-Type: text/plain"); 
-//			print_r( get_media_info($origin_path) );
+					// Step 5: Redirect to self and exit //
+					RedirectToSelfAndExit();				
+				}
+			}
+			*/
 
 			EmitErrorAndExit("ERROR: V2V conversion not supported");
 		}
-		// Video to Image (Thumbnails) //
-//		else if ( is_video($file_ext) && is_image($file_out_ext) ) {
-//			EmitErrorAndExit("ERROR: V2I conversion not supported");
-//
-////			// Generate Thumbnail (PNG for good reference quality) //
-////			$data = do_proc(
-////				'ffmpeg -i '.$origin_path.' -loglevel quiet -vframes 1 -f apng pipe:1',
-////				$data
-////			);
-////
-////			$option = '-strip';
-////			$option .= ' -resize "50%"';	// hack //
-////			
-////			// Run ImageMagick //
-////			$data = do_proc(
-////				'convert - '.$option.' '.$file_out_ext.':-',
-////				$data
-////			);
-////
-////			// Step 4: Write File //
-////			file_put_contents($local_path, $data);
-////			
-////			// Step 5: Redirect to self and exit //
-////			RedirectToSelfAndExit();
-//		}
 		// Image/Video to Image //
 		else if ( ($src_is_image || $src_is_video) && is_image($file_out_ext) ) {
 			// Step 0: Read file //
@@ -312,6 +365,8 @@ if ( file_exists($origin_path) ) {
 					'ffmpeg -i '.$origin_path.' -loglevel quiet -vframes 1 -f apng pipe:1',
 					$dummy
 				);
+				// Force conversion (even though it should be the case) //
+				$file_out_convert = true;
 			}
 			else { //if ( $src_is_image ) {
 				$data = file_get_contents($origin_path);
@@ -354,6 +409,7 @@ if ( file_exists($origin_path) ) {
 				}
 				
 				// Run ImageMagick //
+				// NOTE: This will fail if there exists a file named "png:-", "webp:-", etc.
 				$data = do_proc(
 					'convert - '.$option.' '.$file_out_ext.':-',
 					$data
