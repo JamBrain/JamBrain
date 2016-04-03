@@ -8,6 +8,9 @@ require_once __DIR__."/../core/internal/core.php";
 //   Newer versions of Ubuntu do not require this. 
 //   FFMPEG was mainline, then it was AVCONV, now it's FFMPEG again.
 
+// Reference: Maybe look at this for the optimization settings. Nothing on webp though.
+//   https://www.smashingmagazine.com/2015/06/efficient-image-resizing-with-imagemagick/
+
 const IMAGE_TYPE = [
 	'png',
 	'jpg',
@@ -24,7 +27,6 @@ const VIDEO_TYPE = [
 	'm4v',
 	'webm',
 //	'ogv',
-//	'gifv',		// proxy
 ];
 function is_video($ext) {
 	return array_search($ext,VIDEO_TYPE) !== false;
@@ -234,9 +236,13 @@ if ( file_exists($origin_path) ) {
 	}
 
 	// If we have an output extension, then we know we're doing something //	
-	if ( $file_out_ext ) { 
+	if ( $file_out_ext ) {
+		$src_is_image = is_image($file_ext);
+		$src_is_video = is_video($file_ext);
+		$src_is_audio = is_audio($file_ext);
+		
 		// Audio to Audio //
-		if ( is_audio($file_ext) && is_audio($file_out_ext) ) {
+		if ( $src_is_audio && is_audio($file_out_ext) ) {
 			// Bail if using any extra arguments (so we don't regenerate useless files) //
 //			if ( $file_out_args > 0 )
 //				EmitErrorAndExit("ERROR: A2A extra Args");
@@ -261,7 +267,7 @@ if ( file_exists($origin_path) ) {
 			EmitErrorAndExit("ERROR: G2V conversion not supported");
 		}
 		// Video to Video //
-		else if ( is_video($file_ext) && is_video($file_out_ext) ) {
+		else if ( $src_is_video && is_video($file_out_ext) ) {
 			// Bail if using any extra arguments (so we don't regenerate useless files) //
 //			if ( $file_out_args > 0 )
 //				EmitErrorAndExit("ERROR: V2V extra Args");
@@ -273,34 +279,43 @@ if ( file_exists($origin_path) ) {
 			EmitErrorAndExit("ERROR: V2V conversion not supported");
 		}
 		// Video to Image (Thumbnails) //
-		else if ( is_video($file_ext) && is_image($file_out_ext) ) {
-			EmitErrorAndExit("ERROR: V2I conversion not supported");
-
-//			// Generate Thumbnail (PNG for good reference quality) //
-//			$data = do_proc(
-//				'ffmpeg -i '.$origin_path.' -loglevel quiet -vframes 1 -f apng pipe:1',
-//				$data
-//			);
+//		else if ( is_video($file_ext) && is_image($file_out_ext) ) {
+//			EmitErrorAndExit("ERROR: V2I conversion not supported");
 //
-//			$option = '-strip';
-//			$option .= ' -resize "50%"';	// hack //
-//			
-//			// Run ImageMagick //
-//			$data = do_proc(
-//				'convert - '.$option.' '.$file_out_ext.':-',
-//				$data
-//			);
-//
-//			// Step 4: Write File //
-//			file_put_contents($local_path, $data);
-//			
-//			// Step 5: Redirect to self and exit //
-//			RedirectToSelfAndExit();
-		}
-		// Image to Image //
-		else if ( is_image($file_ext) && is_image($file_out_ext) ) {
+////			// Generate Thumbnail (PNG for good reference quality) //
+////			$data = do_proc(
+////				'ffmpeg -i '.$origin_path.' -loglevel quiet -vframes 1 -f apng pipe:1',
+////				$data
+////			);
+////
+////			$option = '-strip';
+////			$option .= ' -resize "50%"';	// hack //
+////			
+////			// Run ImageMagick //
+////			$data = do_proc(
+////				'convert - '.$option.' '.$file_out_ext.':-',
+////				$data
+////			);
+////
+////			// Step 4: Write File //
+////			file_put_contents($local_path, $data);
+////			
+////			// Step 5: Redirect to self and exit //
+////			RedirectToSelfAndExit();
+//		}
+		// Image/Video to Image //
+		else if ( ($src_is_image || $src_is_video) && is_image($file_out_ext) ) {
 			// Step 0: Read file //
-			$data = file_get_contents($origin_path);
+			if ( $src_is_video || $file_ext == 'gif' ) {
+				$dummy = "";
+				$data = do_proc(
+					'ffmpeg -i '.$origin_path.' -loglevel quiet -vframes 1 -f apng pipe:1',
+					$dummy
+				);
+			}
+			else { //if ( $src_is_image ) {
+				$data = file_get_contents($origin_path);
+			}
 			
 			// Step 1: Get File Info //
 //			$src = &$data;
