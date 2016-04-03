@@ -1,7 +1,7 @@
 <?php
 
 $EVENT_NAME = "Ludum Dare 35";
-$EVENT_MODE = 1;
+$EVENT_MODE = 2;
 $EVENT_NODE = 101;
 $EVENT_DATE = new DateTime("2016-04-16T01:00:00Z");
 
