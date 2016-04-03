@@ -49,7 +49,7 @@ function ShowStats() {
 <?php
 		global $EVENT_MODE;
 		// Show Statistics Tabs //
-		if ( $EVENT_MODE >= 2 ) {
+		if ( $EVENT_MODE >= 3 ) { // HACK! Disable stats until I fix them //
 			echo 'dom_ToggleClass("stats-tab-0","hidden",false);';
 			echo 'dom_ToggleClass("stats-tab-1","hidden",false);';
 		}
