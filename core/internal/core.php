@@ -67,11 +67,31 @@ function core_GetExecutionTime() {
 	return number_format( $timediff, 4 ) . ' seconds';
 }
 
+// Handles "/./" and "/../" paths
+function core_RemovePathDotsFromArray($arr) {
+	// http://stackoverflow.com/a/14883803/5678759
+	$parents = [];
+	foreach( $arr as $dir ) {
+		switch( $dir ) {
+			case '.':
+				// Don't need to do anything here
+			break;
+			case '..':
+				array_pop( $parents );
+			break;
+			default:
+				$parents[] = $dir;
+			break;
+		}
+	}
+	return $parents;
+}
+
 // Parse the API Action URL (array of strings) //
-function core_ParseActionURL() {
+function _core_ParseActionURL() {
 	// If PATH_INFO is set, then Apache figured out our parts for us //
 	if ( isset($_SERVER['PATH_INFO']) ) {
-		$ret = ltrim(rtrim($_SERVER['PATH_INFO'],'/'),'/');
+		$ret = ltrim(rtrim(filter_var($_SERVER['PATH_INFO'],FILTER_SANITIZE_URL),'/'),'/');
 		if ( empty($ret) )
 			return [];
 		else
@@ -82,8 +102,8 @@ function core_ParseActionURL() {
 
 	// If not, we have to extract them from the REQUEST_URI //
 	// Logic borrowed from here: https://coderwall.com/p/gdam2w/get-request-path-in-php-for-routing
-	$request_uri = explode('/', trim($_SERVER['REQUEST_URI'], '/'));
-    $script_name = explode('/', trim($_SERVER['SCRIPT_NAME'], '/'));
+	$request_uri = explode('/', trim(filter_var($_SERVER['REQUEST_URI'],FILTER_SANITIZE_URL), '/'));
+    $script_name = explode('/', trim(filter_var($_SERVER['SCRIPT_NAME'],FILTER_SANITIZE_URL), '/'));
     $parts = array_diff_assoc($request_uri, $script_name);
     if (empty($parts)) {
         return [];
@@ -102,6 +122,11 @@ function core_ParseActionURL() {
 		}));
 	}
 }
+// Wrapping this so we can sanitize further //
+function core_ParseActionURL() {
+	return core_RemovePathDotsFromArray(_core_ParseActionURL());
+}
+
 // Convert response codes in to text //
 function core_GetHTTPResponseText($code){
 	static $HTTP_RESPONSE_TEXT = [

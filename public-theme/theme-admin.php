@@ -3,6 +3,8 @@
 
 
 function ShowAdmin() {
+	global $EVENT_NODE;
+	
 	$all_themes = theme_GetIdeas($EVENT_NODE);
 	
 	$byid_themes = [];
