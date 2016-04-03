@@ -85,8 +85,8 @@ $file_out_height = null;
 $file_out_resize = false;
 $file_out_fit = false;
 $file_out_optimize = false;
-$file_out_min_quality = 60;
-$file_out_max_quality = 90;
+//$file_out_min_quality = 60;
+//$file_out_max_quality = 95;
 $file_out_thumbnail = false;
 $file_out_convert = $file_ext !== $file_out_ext;
 
@@ -109,19 +109,19 @@ while ( count($file_part) ) {
 	else if ( $var == 'o' ) {
 		$file_out_optimize = true;
 	}
-	else if ( $var == 't' ) {
-		$file_out_thumbnail = true;
-	}
-	else if ( $var[0] == 'o' ) {
-		$file_out_optimize = true;
-		$file_out_max_quality = intval(substr($var,1));
-		if ( $file_out_max_quality > 100 ) {
-			EmitErrorAndExit("ERROR: quality > 100");
-		}
-		else if ( $file_out_max_quality < $file_out_min_quality ) {
-			EmitErrorAndExit("ERROR: quality < min");
-		}
-	}
+//	else if ( $var == 't' ) {
+//		$file_out_thumbnail = true;
+//	}
+//	else if ( $var[0] == 'o' ) {
+//		$file_out_optimize = true;
+//		$file_out_max_quality = intval(substr($var,1));
+//		if ( $file_out_max_quality > 100 ) {
+//			EmitErrorAndExit("ERROR: quality > 100");
+//		}
+//		else if ( $file_out_max_quality < $file_out_min_quality ) {
+//			EmitErrorAndExit("ERROR: quality < min");
+//		}
+//	}
 	else if ( $var == 'f' ) {
 		$file_out_fit = true;
 	}
@@ -150,13 +150,16 @@ $local_path = $local_base.CONTENT_DIR.$in_path;
 $origin_path = $local_base.ORIGIN_DIR.$in_dir.'/'.$origin_file;
 
 function RedirectToSelfAndExit() {
+	global $in_path;
+	
 	// Force redirect to data //
 	header('Location: '.
 		$_SERVER['REQUEST_SCHEME'].
 		"://".
 		$_SERVER['HTTP_HOST'].
 		CONTENT_DIR.
-		$GLOBALS['in_path']);
+		$in_path
+	);
 	// Exit //
 	exit;
 }
@@ -215,6 +218,14 @@ function do_proc($cmd,&$data) {
 	return null;
 }
 
+function do_symlink() {
+	global $in_part, $in_path, $local_path;
+	// CLEVERNESS: $in_part is 1 more than expected, because it contains the file name
+	$target = implode('/',array_fill(0,count($in_part),'..')).ORIGIN_DIR.$in_path;
+	symlink( $target, $local_path );
+	
+}
+
 // If the original exists //
 if ( file_exists($origin_path) ) {
 	// Create Directory //
@@ -230,8 +241,10 @@ if ( file_exists($origin_path) ) {
 //			if ( $file_out_args > 0 )
 //				EmitErrorAndExit("ERROR: A2A extra Args");
 
-			header("Content-Type: text/plain"); 
-			print_r( get_media_info($origin_path) );
+//			header("Content-Type: text/plain"); 
+//			print_r( get_media_info($origin_path) );
+
+			EmitErrorAndExit("ERROR: A2A conversion not supported");
 			
 			// Video to Audio //
 			// ffmpeg -i input-video.avi -vn -acodec copy output-audio.aac
@@ -241,10 +254,11 @@ if ( file_exists($origin_path) ) {
 		// GIF to Video //
 		else if ( ($file_ext == 'gif') && is_video($file_out_ext) ) {
 			// Bail if using any extra arguments (so we don't regenerate useless files) //
-			if ( $file_out_args > 0 )
-				EmitErrorAndExit("ERROR: G2V extra Args");
+//			if ( $file_out_args > 0 )
+//				EmitErrorAndExit("ERROR: G2V extra Args");
 				
 			// TODO
+			EmitErrorAndExit("ERROR: G2V conversion not supported");
 		}
 		// Video to Video //
 		else if ( is_video($file_ext) && is_video($file_out_ext) ) {
@@ -253,31 +267,35 @@ if ( file_exists($origin_path) ) {
 //				EmitErrorAndExit("ERROR: V2V extra Args");
 				
 			// TODO
-			header("Content-Type: text/plain"); 
-			print_r( get_media_info($origin_path) );
+//			header("Content-Type: text/plain"); 
+//			print_r( get_media_info($origin_path) );
+
+			EmitErrorAndExit("ERROR: V2V conversion not supported");
 		}
 		// Video to Image (Thumbnails) //
 		else if ( is_video($file_ext) && is_image($file_out_ext) ) {
-			// Generate Thumbnail (PNG for good reference quality) //
-			$data = do_proc(
-				'ffmpeg -i '.$origin_path.' -loglevel quiet -vframes 1 -f apng pipe:1',
-				$data
-			);
+			EmitErrorAndExit("ERROR: V2I conversion not supported");
 
-			$option = '-strip';
-			$option .= ' -resize "50%"';	// hack //
-			
-			// Run ImageMagick //
-			$data = do_proc(
-				'convert - '.$option.' '.$file_out_ext.':-',
-				$data
-			);
-
-			// Step 4: Write File //
-			file_put_contents($local_path, $data);
-			
-			// Step 5: Redirect to self and exit //
-			RedirectToSelfAndExit();
+//			// Generate Thumbnail (PNG for good reference quality) //
+//			$data = do_proc(
+//				'ffmpeg -i '.$origin_path.' -loglevel quiet -vframes 1 -f apng pipe:1',
+//				$data
+//			);
+//
+//			$option = '-strip';
+//			$option .= ' -resize "50%"';	// hack //
+//			
+//			// Run ImageMagick //
+//			$data = do_proc(
+//				'convert - '.$option.' '.$file_out_ext.':-',
+//				$data
+//			);
+//
+//			// Step 4: Write File //
+//			file_put_contents($local_path, $data);
+//			
+//			// Step 5: Redirect to self and exit //
+//			RedirectToSelfAndExit();
 		}
 		// Image to Image //
 		else if ( is_image($file_ext) && is_image($file_out_ext) ) {
@@ -331,22 +349,26 @@ if ( file_exists($origin_path) ) {
 			if ( $file_out_optimize ) {
 				if ( ($file_out_ext == 'gif') ) {
 					// http://www.lcdf.org/gifsicle/
-					EmitErrorAndExit("ERROR: Unsupported optimizer");
+					EmitErrorAndExit("ERROR: Unsupported optimizer GIF");
 				}
 				else if ( ($file_out_ext == 'png') ) {
 					// https://pngquant.org/
 					// https://pngquant.org/php.html
+					
+					$file_out_min_quality = 60;
+					$file_out_max_quality = 95;
+
 					$data = do_proc(
 						'pngquant --quality='.$file_out_min_quality.'-'.$file_out_max_quality.' -',
 						$data
 					);
 				}
-				else if ( ($file_out_ext == 'jpg') || ($file_out_ext == 'jpeg') ) {
-					EmitErrorAndExit("ERROR: Unsupported optimizer");
-				}
-				else if ( ($file_out_ext == 'webp') ) {
-					EmitErrorAndExit("ERROR: Unsupported optimizer");
-				}
+//				else if ( ($file_out_ext == 'jpg') || ($file_out_ext == 'jpeg') ) {
+//					EmitErrorAndExit("ERROR: Unsupported optimizer JPEG");
+//				}
+//				else if ( ($file_out_ext == 'webp') ) {
+//					EmitErrorAndExit("ERROR: Unsupported optimizer WEBP");
+//				}
 			}
 			
 			// Step 4: Write File //
@@ -358,10 +380,8 @@ if ( file_exists($origin_path) ) {
 	}
 	// No operation, so create a symlink instead //
 	else {
-		// CLEVERNESS: $in_part is 1 more than expected, because it contains the file name
-		$target = implode('/',array_fill(0,count($in_part),'..')).ORIGIN_DIR.$in_path;
-		symlink( $target, $local_path );
-		
+		do_symlink();
+				
 		RedirectToSelfAndExit();
 	}
 

@@ -2,8 +2,47 @@ Header set Access-Control-Allow-Origin *
 
 RewriteEngine on 
 
+# Required otherwise my optimization rewrites wont work
+RewriteBase /
+
+# If webp support detected on a 'dot op' (optimized w/ png fallback)
+RewriteCond %{HTTP_ACCEPT} image/webp
+RewriteCond %{REQUEST_FILENAME} (.*)\.op$
+RewriteRule ^(.*)\.op$ $1.o.webp [R]
+# Otherwise, return an optimized png
+RewriteCond %{REQUEST_FILENAME} (.*)\.op$
+RewriteRule ^(.*)\.op$ $1.o.png [R]
+
+# If webp support detected on a 'dot oj' (optimized w/ jpeg fallback)
+RewriteCond %{HTTP_ACCEPT} image/webp
+RewriteCond %{REQUEST_FILENAME} (.*)\.oj$
+RewriteRule ^(.*)\.oj$ $1.o.webp [R]
+# Otherwise, return an optimized jpeg
+RewriteCond %{REQUEST_FILENAME} (.*)\.oj$
+RewriteRule ^(.*)\.oj$ $1.o.jpeg [R]
+
+# If webp support detected on a 'dot t' (thumbnail)
+RewriteCond %{HTTP_ACCEPT} image/webp
+RewriteCond %{REQUEST_FILENAME} (.*)\.t$
+RewriteRule ^(.*)\.t$ $1.o.webp [R]
+# Otherwise, return an optimized png
+RewriteCond %{REQUEST_FILENAME} (.*)\.op$
+RewriteRule ^(.*)\.t$ $1.o.jpeg [R]
+
+
+# For legacy support (removing this soon)
 RewriteRule ^img/(.*) img.php/$1
+
+# Everything under /info/ uses script
 RewriteRule ^info/(.*) info.php/$1
 
+# If file in /content/ doesn't exist, use script
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^content/(.*) content.php/$1
+
+# If status requested, use the status script
+RewriteRule ^status/(.*) status.php/$1
+
+
+# Missing MIME types
+AddType image/webp .webp
