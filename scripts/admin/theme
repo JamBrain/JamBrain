@@ -23,11 +23,7 @@ if ( count($argv) < 2 ) {
 require_once __DIR__."/../../db.php";
 require_once __DIR__."/../../core/theme.php";
 require_once __DIR__."/../../core/internal/sanitize.php";
-
-$EVENT_NAME = "Ludum Dare 34";
-$EVENT_MODE = 1;
-$EVENT_NODE = 100;
-$EVENT_DATE = new DateTime("2015-12-12T02:00:00Z");
+require_once __DIR__."/../../public-theme/common.php";
 
 
 if ( $argv[1] === "dupes" ) {
