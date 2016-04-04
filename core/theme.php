@@ -276,7 +276,8 @@ function theme_CountUsersThatKill($node,$arg_string="") {
 
 	if ( $ret === null ) {
 		$ret = db_QueryFetchSingle(
-			"SELECT count(DISTINCT user) FROM ".CMW_TABLE_THEME_IDEA_VOTE
+			"SELECT count(DISTINCT user) FROM ".CMW_TABLE_THEME_IDEA_VOTE."
+				WHERE timestamp >= curdate() - INTERVAL 5 WEEK"
 		);
 		if ( is_array($ret) ) {
 			$ret = intval($ret[0]);
