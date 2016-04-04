@@ -31,8 +31,10 @@ function ShowStats() {
 				<div class="big title">Graphs</div>
 				<div id="graph-my-votes" class="hidden" style="width:300px;height:300px;display:inline-block;"></div>
 				<div id="graph-votes" class="hidden" style="width:300px;height:300px;display:inline-block;"></div>
-				<div id="graph-hourly" class="hidden hide-on-mobile" style="width:600px;height:300px;margin:0 auto;"></div>
-				<div id="graph-total-kills" class="hidden hide-on-mobile" style="width:600px;height:300px;margin:0 auto;"></div>
+<?php
+//				<div id="graph-hourly" class="hidden hide-on-mobile" style="width:600px;height:300px;margin:0 auto;"></div>
+//				<div id="graph-total-kills" class="hidden hide-on-mobile" style="width:600px;height:300px;margin:0 auto;"></div>
+?>
 			</div>
 		</div>
 		<div id="stats-page-2" class="page hidden">
@@ -49,14 +51,14 @@ function ShowStats() {
 <?php
 		global $EVENT_MODE;
 		// Show Statistics Tabs //
-		if ( $EVENT_MODE >= 3 ) { // HACK! Disable stats until I fix them //
+		if ( $EVENT_MODE >= 2 ) {
 			echo 'dom_ToggleClass("stats-tab-0","hidden",false);';
 			echo 'dom_ToggleClass("stats-tab-1","hidden",false);';
 		}
-		if ( $EVENT_MODE >= 3 )
-			echo 'dom_ToggleClass("stats-tab-2","hidden",false);';
-		if ( $EVENT_MODE >= 4 )
-			echo 'dom_ToggleClass("stats-tab-3","hidden",false);';
+//		if ( $EVENT_MODE >= 3 )
+//			echo 'dom_ToggleClass("stats-tab-2","hidden",false);';
+//		if ( $EVENT_MODE >= 4 )
+//			echo 'dom_ToggleClass("stats-tab-3","hidden",false);';
 ?>			
 		
 		var ActiveStatsPage = -1;
@@ -75,7 +77,7 @@ function ShowStats() {
 			dom_ToggleClass("stats-page-"+ActiveStatsPage,"hidden",false);
 			dom_ToggleClass("stats-tab-"+ActiveStatsPage,"active",true);
 		}
-		stats_ShowPage(0,true);
+		stats_ShowPage(1,true);
 		
 		google.load("visualization", "1", {packages:["corechart"]});
 		google.setOnLoadCallback(DrawStatsCharts);
@@ -93,10 +95,10 @@ function ShowStats() {
 			var MyVotesChart = new google.visualization.PieChart(MyVotesChart_el);
 			var VotesChart_el = document.getElementById('graph-votes');
 			var VotesChart = new google.visualization.PieChart(VotesChart_el);
-			var HourlyChart_el = document.getElementById('graph-hourly');
-			var HourlyChart = new google.visualization.AreaChart(HourlyChart_el);
-			var TotalKillsChart_el = document.getElementById('graph-total-kills');
-			var TotalKillsChart = new google.visualization.ColumnChart(TotalKillsChart_el);
+//			var HourlyChart_el = document.getElementById('graph-hourly');
+//			var HourlyChart = new google.visualization.AreaChart(HourlyChart_el);
+//			var TotalKillsChart_el = document.getElementById('graph-total-kills');
+//			var TotalKillsChart = new google.visualization.ColumnChart(TotalKillsChart_el);
 			
 			var PieChartOptions = {
 				'titleTextStyle': {
@@ -224,54 +226,54 @@ function ShowStats() {
 						VotesChart.draw(Data,Options);
 					}
 					
-					if ( response.kills_per_hour ) {
-						document.getElementById('stats-1-graphs').classList.remove('hidden');
-
-						var Stats = response.kills_per_hour;
-						var Options = AreaChartOptions;
-						var Data = new google.visualization.DataTable();
-						Data.addColumn('string', 'Hour');
-						Data.addColumn('number', 'Total');
-						Data.addColumn('number', 'Yes');
-						Data.addColumn('number', 'No');
-						Data.addColumn('number', 'Flag');
-						Stats.forEach(function(currentValue,index,array){
-							var timestamp = new Date(currentValue.timestamp);
-							timestamp.setHours(timestamp.getHours(),0,0,0);
-							Data.addRow([
-								getLocaleMonthDay(timestamp) + " " + getLocaleTime(timestamp),
-								currentValue.total,
-								currentValue.count['1'] ? currentValue.count['1'] : 0,
-								currentValue.count['0'] ? currentValue.count['0'] : 0,
-								currentValue.count['-1'] ? currentValue.count['-1'] : 0,
-							]);
-						});
-						NumberFormat.format(Data,1);
-						NumberFormat.format(Data,2);
-						NumberFormat.format(Data,3);
-						NumberFormat.format(Data,4);
-	
-						Options.title = 'All votes by hour';
-						HourlyChart_el.classList.remove('hidden');
-						HourlyChart.draw(Data,Options);
-					}
-					
-					if ( response.average_kill_counts ) {
-						document.getElementById('stats-1-graphs').classList.remove('hidden');
-
-						var Stats = response.average_kill_counts;
-						var Options = BarChartOptions;
-						var Data = new google.visualization.DataTable();
-						Data.addColumn('string', 'Count');
-						Data.addColumn('number', 'Users');
-						
-						Data.addRows(Stats);
-						NumberFormat.format(Data,1);
-	
-						Options.title = 'Total users by average number of votes';
-						TotalKillsChart_el.classList.remove('hidden');
-						TotalKillsChart.draw(Data,Options);
-					}
+//					if ( response.kills_per_hour ) {
+//						document.getElementById('stats-1-graphs').classList.remove('hidden');
+//
+//						var Stats = response.kills_per_hour;
+//						var Options = AreaChartOptions;
+//						var Data = new google.visualization.DataTable();
+//						Data.addColumn('string', 'Hour');
+//						Data.addColumn('number', 'Total');
+//						Data.addColumn('number', 'Yes');
+//						Data.addColumn('number', 'No');
+//						Data.addColumn('number', 'Flag');
+//						Stats.forEach(function(currentValue,index,array){
+//							var timestamp = new Date(currentValue.timestamp);
+//							timestamp.setHours(timestamp.getHours(),0,0,0);
+//							Data.addRow([
+//								getLocaleMonthDay(timestamp) + " " + getLocaleTime(timestamp),
+//								currentValue.total,
+//								currentValue.count['1'] ? currentValue.count['1'] : 0,
+//								currentValue.count['0'] ? currentValue.count['0'] : 0,
+//								currentValue.count['-1'] ? currentValue.count['-1'] : 0,
+//							]);
+//						});
+//						NumberFormat.format(Data,1);
+//						NumberFormat.format(Data,2);
+//						NumberFormat.format(Data,3);
+//						NumberFormat.format(Data,4);
+//	
+//						Options.title = 'All votes by hour';
+//						HourlyChart_el.classList.remove('hidden');
+//						HourlyChart.draw(Data,Options);
+//					}
+//					
+//					if ( response.average_kill_counts ) {
+//						document.getElementById('stats-1-graphs').classList.remove('hidden');
+//
+//						var Stats = response.average_kill_counts;
+//						var Options = BarChartOptions;
+//						var Data = new google.visualization.DataTable();
+//						Data.addColumn('string', 'Count');
+//						Data.addColumn('number', 'Users');
+//						
+//						Data.addRows(Stats);
+//						NumberFormat.format(Data,1);
+//	
+//						Options.title = 'Total users by average number of votes';
+//						TotalKillsChart_el.classList.remove('hidden');
+//						TotalKillsChart.draw(Data,Options);
+//					}
 				}
 			);
 		}
