@@ -53,6 +53,20 @@ window.escapeAttribute = function(value) {
 		replace(/</g, '&lt;').
 		replace(/>/g, '&gt;');
 }
+// Variation that correctly encodes the apostrophy for Google
+window.escapeAttributeGoogle = function(value) {
+	return String(value).
+        replace(/\\/g, '\\\\').			/* This MUST be the 1st replacement. */
+        replace(/\t/g, '\\t').			/* These 2 replacements protect whitespaces. */
+        replace(/\n/g, '\\n').
+        replace(/\u00A0/g, '\\u00A0').	/* Useful but not absolutely necessary. */
+		replace(/&/g, '&amp;').
+		replace(/"/g, '&quot;').		//" // <- kill the weird quoting
+		replace(/'/g, '%27').			//' // <- kill the weird quoting
+		replace(/</g, '&lt;').
+		replace(/>/g, '&gt;');
+}
+
 
 window.escapeString = function(value) {
 	return String(value).
