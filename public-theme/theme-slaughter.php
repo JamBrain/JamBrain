@@ -26,7 +26,7 @@ function ShowSlaughter( $logged_in ) {
 		
 		<script>
 			function OpenLink() {
-				window.open("http://google.com/search?q="+escapeAttribute(dom_GetText('kill-theme')));
+				window.open("http://google.com/search?q="+escapeAttributeGoogle(dom_GetText('kill-theme')));
 			}
 			
 			function SetSlaughterTheme(value) {
