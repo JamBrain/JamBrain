@@ -17,6 +17,7 @@ function ShowSlaughter( $logged_in ) {
 
 			<?php /*<div id="kill-star" class="bigger" onclick='' title='Star It'>★</div>*/ ?>
 			<?php /*<div id="kill-love" class="bigger" onclick='' title='Love It'>❤</div>*/ ?>
+			<div class="tip"><strong>TIP:</strong> Use the arrow keys and space bar to quickly vote using the keyboard</div>
 		</div>
 		
 		<div class="action" id="action-recent">

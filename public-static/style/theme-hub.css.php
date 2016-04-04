@@ -668,6 +668,11 @@ button, .sg-item-x, .tab, .action .page .list .button {
 	padding:0.5em 2.0em;
 }
 
+.tip {
+	font-size:0.7em;
+	margin-top:2em;
+}
+
 /* Red */
 .red_dialog {
 	background:<?=PAL_RED[COL_BASE]?>;
