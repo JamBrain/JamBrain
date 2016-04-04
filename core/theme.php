@@ -333,9 +333,10 @@ function theme_GetMyIdeaVotes($user,$limit) {
 }
 
 function theme_GetMyIdeaStats($user) {
+	// HACK: only taking votes from the past 5 weeks isn't technically correct
 	return db_QueryFetchPair(
 		"SELECT value,COUNT(id) FROM ".CMW_TABLE_THEME_IDEA_VOTE."
-			WHERE user=?
+			WHERE user=? AND timestamp >= curdate() - INTERVAL 5 WEEK
 			GROUP BY value
 		",
 		$user
@@ -351,11 +352,13 @@ function theme_GetVotesForIdea($node) {
 }
 
 function theme_GetIdeaStats() {
+	// HACK: only taking votes from the past 5 weeks isn't technically correct
 	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_STATS");
 	
 	if ( $ret === null ) {
 		$ret = db_QueryFetchPair(
 			"SELECT value,COUNT(id) FROM ".CMW_TABLE_THEME_IDEA_VOTE."
+				WHERE timestamp >= curdate() - INTERVAL 5 WEEK
 				GROUP BY value
 			"
 		);
