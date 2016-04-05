@@ -1,5 +1,16 @@
 <?php
 
+// IMPORTANT NOTE! 
+//   There is a hardcoded threshold value in "/core/theme.php". Make sure
+//   you set it to -100.0 (or -50.0, -25.0, or such) before opening
+//   the slaughter. Eventually this value should be set automatically by
+//   the "theme score" script. i.e. every 100k votes raise the threshold.
+//   Threshold of 0 catches all offensive themes. Depending on scoring
+//   frequency, you may want to use negative values (i.e. -25) to allow
+//   all themes to temporarily dip due to aggressive flagging. But once
+//   we have enough data, setting it to 0 will remove the offensive ones.
+//   I'm assuming 100k is enough data, but I'll have to look at snapshots.
+
 $EVENT_NAME = "Ludum Dare 35";
 $EVENT_MODE = 2;
 $EVENT_NODE = 101;

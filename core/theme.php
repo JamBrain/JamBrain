@@ -12,6 +12,8 @@ require_once __DIR__."/internal/cache.php";
 const _THEME_CACHE_KEY = "CMW_THEME_";
 const _THEME_CACHE_TTL = 10*60;
 
+const _THEME_HACK_THRESHOLD = 10;//0;//-100;
+
 function theme_AddMyIdea($idea, $node, $user) {
 	return db_QueryInsert(
 		"INSERT INTO ".CMW_TABLE_THEME_IDEA." (
@@ -247,23 +249,33 @@ function theme_CountOriginalIdeas($node,$arg_string="") {
 
 // DO NOT USE THIS! It's too slow! For testing only. //
 function theme_GetRandom($node) {
+	$threshold = _THEME_HACK_THRESHOLD;
+	
+	// TODO: Get Threshold from metadata (populate it any time 'theme score' is called)
+	
 	return db_QueryFetchFirst(
 		"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
-		WHERE node=? AND parent=0
+		WHERE node=? AND parent=0 AND score>=?
 		ORDER BY rand() LIMIT 1",
-		$node
+		$node,
+		$threshold
 	);
 }
 
 // The official list used by the Theme Slaughter
 function theme_GetIdeaList($node) {
+	$threshold = _THEME_HACK_THRESHOLD;
+
+	// TODO: Get Threshold from metadata (populate it any time 'theme score' is called)
+	
 	$ret = cache_Fetch(_THEME_CACHE_KEY."IDEA_LIST");
 	
 	if ( $ret === null ) {
 		$ret = db_QueryFetchPair(
 			"SELECT id,theme FROM ".CMW_TABLE_THEME_IDEA." 
-			WHERE node=? AND parent=0 AND score >= 0;",
-			$node
+			WHERE node=? AND parent=0 AND score>=?;",
+			$node,
+			$threshold
 		);
 
 		cache_Store(_THEME_CACHE_KEY."IDEA_LIST",$ret,_THEME_CACHE_TTL);
