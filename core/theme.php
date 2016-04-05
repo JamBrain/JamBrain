@@ -12,7 +12,20 @@ require_once __DIR__."/internal/cache.php";
 const _THEME_CACHE_KEY = "CMW_THEME_";
 const _THEME_CACHE_TTL = 10*60;
 
-const _THEME_HACK_THRESHOLD = 10;//0;//-100;
+const _THEME_HACK_THRESHOLD = 30;//0;//-100;
+
+// ** Log of Ludum Dare 35 themes ** //
+// Score 10 of 4200 at 400,000 votes = 4100
+// Score 20 of 4200 at 400,000 votes = 3846
+// Score 30 of 4200 at 400,000 votes = 3332 ** Purge Value Tuesday 
+// Score 40 of 4200 at 400,000 votes = 2634
+// Score 50 of 4200 at 400,000 votes = 1846 ** Recommended Purge Value Thursday ?
+// Score 60 of 4200 at 400,000 votes = 1104
+// Score 70 of 4200 at 400,000 votes = 524
+// Score 80 of 4200 at 400,000 votes = 192
+// Score 90 of 4200 at 400,000 votes = 50   ** TOO LOW
+// Score 99 of 4200 at 400,000 votes = 10   ** TOO LOW
+// Highest Themes: >100 score at 400,000 votes
 
 function theme_AddMyIdea($idea, $node, $user) {
 	return db_QueryInsert(
