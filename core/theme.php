@@ -12,7 +12,7 @@ require_once __DIR__."/internal/cache.php";
 const _THEME_CACHE_KEY = "CMW_THEME_";
 const _THEME_CACHE_TTL = 10*60;
 
-const _THEME_HACK_THRESHOLD = 60;//0;//-100;
+const _THEME_HACK_THRESHOLD = 65;//0;//-100;
 
 // ** Log of Ludum Dare 35 themes ** //
 // Score 10 of 4200 at 400,000 votes = 4,100
@@ -30,8 +30,9 @@ const _THEME_HACK_THRESHOLD = 60;//0;//-100;
 // Score 30 of 4200 at 650,000 votes = 3,286
 // Score 40 of 4200 at 650,000 votes = 2,709
 // Score 50 of 4200 at 650,000 votes = 1,871 
-// Score 60 of 4200 at 650,000 votes = 1,086 ** Purge Value Friday (24 hours left)
-// Score 70 of 4200 at 650,000 votes = 460
+// Score 60 of 4200 at 650,000 votes = 1,086 ** Candidate
+// Score 65 of 4200 at 650,000 votes = 753   ** Purge Value Friday (24 hours left)
+// Score 70 of 4200 at 650,000 votes = 460   ** Candidate, but worried too few
 // Score 80 of 4200 at 650,000 votes = 126
 // Score 90 of 4200 at 650,000 votes = 19
 // Score 99 of 4200 at 650,000 votes = 1
