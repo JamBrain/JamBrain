@@ -166,7 +166,7 @@ else if ( $argv[1] === "promote" ) {
 
 	echo "Fetching Theme List...\n";
 	
-	$theme_list = theme_GetScoredIdeaList($EVENT_NODE,110);
+	$theme_list = theme_GetScoredIdeaList($EVENT_NODE,80);
 	
 	echo "Copying Themes...\n";
 	foreach( $theme_list AS $theme ) {
