@@ -19,11 +19,13 @@ $EVENT_DATE = new DateTime("2016-04-16T01:00:00Z");
 // HACK, don't hardcode me! //
 const THEME_MODE_TIMES = [
 	0,
-	(2*7*24*60*60) - ((24+21)*60*60),
-	(1*7*24*60*60) - (18*60*60),
-	(2*24*60*60),
-	(60*60),
-	0,
+	(2*7*24*60*60) + ((24+6)*60*60),	// Theme Suggestions (now ending Thursday afternoon)
+	(6*24*60*60) + (6*60*60),			// Theme Slaughter (ends Saturday afternoon)
+	//(7*24*60*60) + ((24+24+6)*60*60),	// TODO: Theme Slaughter (ends Wednesday afternoon)
+	//(6*24*60*60) + (6*60*60),			// TODO: Theme A/B (ends Saturday afternoon)
+	(2*24*60*60) + (3*60*60),			// Theme Voting (ends Wednesday night)
+	(60*60),							// Final Voting (ends 1 hour before)
+	0,									// Countdown (ends at start time)
 	0,
 ];
 
