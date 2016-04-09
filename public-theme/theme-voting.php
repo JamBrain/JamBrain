@@ -32,6 +32,8 @@ function ShowVoting( $logged_in ) {
 			<div id="vote-page-list-3" class="list"></div>
 		</div>
 	</div>
+	<div class="tip"><strong>NOTE:</strong> Votes are sent automatically. When the color changes, they've been accepted.</div>
+	<div class="tip hidden"><strong>TIP:</strong> You can use the arrow keys and space bar to vote using the keyboard.</div>
 	<script>
 		var VoteRoundStart = [
 			<?=$GLOBALS['THEME_VOTE_START_DIFF'][0]?>,
