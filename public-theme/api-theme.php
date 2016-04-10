@@ -235,6 +235,9 @@ else if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
 			$response['themes'] = theme_GetFinalScores($EVENT_NODE);
 		}
 		break;
+	case "HISTORY":
+		$response['theme'] = theme_GetHistory();
+		break;
 	};
 }
 

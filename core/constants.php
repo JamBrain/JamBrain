@@ -39,6 +39,7 @@ const CMW_TABLE_THEME =					CMW_TABLE_PREFIX."theme";
 const CMW_TABLE_THEME_VOTE =			CMW_TABLE_PREFIX."theme_vote";
 const CMW_TABLE_THEME_FINAL =			CMW_TABLE_PREFIX."theme_final";
 const CMW_TABLE_THEME_FINAL_VOTE =		CMW_TABLE_PREFIX."theme_final_vote";
+const CMW_TABLE_THEME_HISTORY =			CMW_TABLE_PREFIX."theme_history";
 
 const CMW_TABLE_LEGACY_USER =			CMW_TABLE_PREFIX."legacy_user";
 

@@ -641,7 +641,7 @@ function theme_GetFinalVotes($node) {
 		"SELECT value FROM ".CMW_TABLE_THEME_FINAL_VOTE." 
 		WHERE node=?",
 		$node
-	);	
+	);
 }
 
 function theme_SetVoteScore($id, $value) {
@@ -769,4 +769,21 @@ function theme_RemoveFinalVoteByUser($idea_id,$user) {
 		"DELETE FROM ".CMW_TABLE_THEME_VOTE_FINAL." WHERE node=? AND user=?;",
 		$idea_id,$user
 	);
+}
+
+function theme_GetHistory() {
+	$ret = cache_Fetch(_THEME_CACHE_KEY."THEME_HISTORY");
+
+	if ( $ret === null ) {
+		$ret = db_QueryFetch(
+			"SELECT node,shorthand,name,theme FROM ".CMW_TABLE_THEME_HISTORY
+		);
+		if ( is_array($ret) ) {
+			cache_Store(_THEME_CACHE_KEY."THEME_HISTORY",$ret,_THEME_CACHE_TTL);
+		}
+		else {
+			return null;
+		}
+	}
+	return $ret;
 }
