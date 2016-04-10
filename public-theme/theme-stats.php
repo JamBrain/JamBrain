@@ -200,9 +200,11 @@ function ShowStats() {
 						if ( Stats[-1] ) { StatsSum+=Stats[-1];Data.addRow(['Flag',Stats[-1]]); }
 						NumberFormat.format(Data,1);
 						
-						Options.title = 'My votes: '+addCommas(StatsSum);
-						MyVotesChart_el.classList.remove('hidden');
-						MyVotesChart.draw(Data,Options);
+						if ( StatsSum > 0 ) {
+							Options.title = 'My votes: '+addCommas(StatsSum);
+							MyVotesChart_el.classList.remove('hidden');
+							MyVotesChart.draw(Data,Options);
+						}
 					}
 	
 					if ( response.all_kill_stats ) {
@@ -220,10 +222,12 @@ function ShowStats() {
 						if ( Stats[-1] ) { StatsSum+=Stats[-1];Data.addRow(['Flag',Stats[-1]]); }
 						NumberFormat.format(Data,1);
 						
-						Options.title = 'All votes: '+addCommas(StatsSum);
-						Options.colors = ['#4C4','#C44','444'];
-						VotesChart_el.classList.remove('hidden');
-						VotesChart.draw(Data,Options);
+						if ( StatsSum > 0 ) {
+							Options.title = 'All votes: '+addCommas(StatsSum);
+							Options.colors = ['#4C4','#C44','444'];
+							VotesChart_el.classList.remove('hidden');
+							VotesChart.draw(Data,Options);
+						}
 					}
 					
 //					if ( response.kills_per_hour ) {
