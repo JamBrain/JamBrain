@@ -74,7 +74,8 @@ function ShowVoting( $logged_in ) {
 				}
 				else {
 					node.innerHTML = 
-						"<span class='middle label normal'>"+text+"</span>";
+						"<span class='middle label normal'>"+text+"</span>"+
+						"<sup class='hidden' id='vote-item-sup-"+id+"'></sup>";
 //					if ( data && data['score'] !== null ) {
 //						node.innerHTML +=
 //							"<span class='right'>"+data['score']+"</span>";
