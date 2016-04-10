@@ -391,6 +391,27 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 }
 
 // Create/Upgrade Table //
+$table = CMW_TABLE_THEME_HISTORY;
+if ( !isset($table_list) || isset($table_list[$table]) ) {
+	DoInit($table);
+	switch ($version) {
+	case 0:
+		$ok = DoCreate( $table,
+			"CREATE TABLE ".$table." (
+				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
+					UNIQUE,
+				node BIGINT UNSIGNED NOT NULL,
+				shorthand VARCHAR(20) CHARSET latin1 NOT NULL,
+				name VARCHAR(64) NOT NULL,
+				theme VARCHAR(64) NOT NULL
+			)".DEFAULT_CS_ENGINE.";");
+		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
+	};
+	DoExit($table);
+}
+
+
+// Create/Upgrade Table //
 $table = CMW_TABLE_NODE;
 if ( !isset($table_list) || isset($table_list[$table]) ) {
 	DoInit($table);
