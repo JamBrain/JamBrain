@@ -127,6 +127,11 @@ body > .body .headline {
 	margin:1.0em 0;
 }
 
+sup {
+	font-size:0.5em;
+	cursor: pointer;
+}
+
 
 #extra {
 	padding:1.0em 0;
