@@ -61,6 +61,7 @@ function ShowVoting( $logged_in ) {
 			<?php
 			if ( $logged_in ) {
 			?>
+				// Voting is Active!! //
 				if ( VoteRoundEnd[page] > 0 ) {
 					node.innerHTML = 
 						"<span>"+
@@ -72,6 +73,7 @@ function ShowVoting( $logged_in ) {
 						"<sup class='hidden' id='vote-item-sup-"+id+"'></sup>"+
 						"<span class='middle small myidea hidden' id='vote-myidea-"+id+"'>MY IDEA</span>";
 				}
+				// Voting is Inactive!! //
 				else {
 					node.innerHTML = 
 						"<span class='middle label normal'>"+text+"</span>"+
@@ -85,8 +87,10 @@ function ShowVoting( $logged_in ) {
 			}
 			else {
 			?>
+				// Not Logged In!! //
 				node.innerHTML = 
-					"<span class='middle label normal'>"+text+"</span>";
+					"<span class='middle label normal'>"+text+"</span>"+
+					"<sup class='hidden' id='vote-item-sup-"+id+"'></sup>";
 			<?php
 			}
 			?>
