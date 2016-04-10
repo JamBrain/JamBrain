@@ -55,6 +55,8 @@ function ShowVoting( $logged_in ) {
 			var node = document.createElement('div');
 			node.setAttribute("class",'item');
 			node.setAttribute("id","vote-item-"+id);
+			node.setAttribute("raw_id",""+id);
+			node.setAttribute("raw_value",text);
 
 			<?php
 			if ( $logged_in ) {
@@ -67,6 +69,7 @@ function ShowVoting( $logged_in ) {
 							"<button class='middle button small no_button' onclick='vote_SetVote("+id+",-1);'>✕</button>"+
 						"</span>"+
 						"<span class='middle label normal'>"+text+"</span>"+
+						"<sup class='hidden' id='vote-item-sup-"+id+"'></sup>"+
 						"<span class='middle small myidea hidden' id='vote-myidea-"+id+"'>MY IDEA</span>";
 				}
 				else {
@@ -161,6 +164,26 @@ function ShowVoting( $logged_in ) {
 					}
 				}
 				
+				// Mark which choices were prior themes //
+				theme_GetHistory(function(HashTable) {
+					//console.log("Theme Hashes:",HashTable);
+					
+					var item = document.getElementsByClassName("item");
+					
+					for ( var idx = 0; idx < item.length; idx++ ) {
+						var Hash = theme_MakeHash(""+item[idx].attributes.raw_value.value);
+						//console.log(idx,item[idx].attributes,Hash);
+						if ( HashTable[Hash] ) {
+							//var el = document.getElementById("vote-item-sup-"+item[idx].attributes.raw_id.value);
+							var el = "vote-item-sup-"+item[idx].attributes.raw_id.value;
+							dom_RemoveClass(el,"hidden");
+							dom_SetAttribute(el,"title","This theme was previously used by "+HashTable[Hash].name);
+							dom_SetText(el,HashTable[Hash].shorthand);
+							//console.log(idx, item[idx].attributes.raw_id, item[idx].attributes.raw_value);
+						}
+					}
+				});
+				
 				// Update Choices with my selections //
 				xhr_PostJSON(
 					"/api-theme.php",
@@ -181,7 +204,7 @@ function ShowVoting( $logged_in ) {
 				);
 				
 			}
-		);
+		);		
 		
 		function UpdateVoteRoundClocks() {
 			var LocalTimeDiff = Date.now() - _LOCAL_TIME;
