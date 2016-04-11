@@ -2,6 +2,8 @@
 	// NOTE: use 'del' style to cross out rounds that have ended //
 	// NOTE: be sure to hidden/un-hidden the "sorted by popularity" text when you score a round //
 
+	// TODO: Set different tab styles when a Theme Round is unavailable (i.e. coming soon)
+
 function ShowVoting( $logged_in ) {
 	//if ( $GLOBALS['EVENT_MODE_DIFF'] > 0 ) 
 	{	// Confirm the round is still on
