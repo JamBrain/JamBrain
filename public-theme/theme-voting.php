@@ -10,7 +10,7 @@ function ShowVoting( $logged_in ) {
 ?>
 	<div class="action" id="action-vote">
 		<div id="vote-tab-0" class="tab big del" onclick="vote_ShowPage(0);">Round 1</div>
-		<div id="vote-tab-1" class="tab big" onclick="vote_ShowPage(1);">Round 2</div>
+		<div id="vote-tab-1" class="tab big del" onclick="vote_ShowPage(1);">Round 2</div>
 		<div id="vote-tab-2" class="tab big" onclick="vote_ShowPage(2);">Round 3</div>
 		<div id="vote-tab-3" class="tab big" onclick="vote_ShowPage(3);">Round 4</div>
 		
@@ -21,7 +21,7 @@ function ShowVoting( $logged_in ) {
 		</div>
 		<div id="vote-page-1" class="page hidden">
 			<div id="vote-page-when-1" class="title"></div>
-			<div class="info bold hidden">Sorted by popularity (most popular to least)</div>
+			<div class="info bold">Sorted by popularity (most popular to least)</div>
 			<div id="vote-page-list-1" class="list"></div>
 		</div>
 		<div id="vote-page-2" class="page hidden">
