@@ -13,7 +13,7 @@ if ( count($argv) < 2 ) {
 	echo "  score      - Score Ideas\n";
 	echo "  promote    - Promote highest scored Ideas to Themes\n";
 	echo "  page       - Assign pages to themes\n";
-	echo "  calc #     - Calculate Score for Page \"#\"\n";
+	echo "  calc #     - Calculate Score for Page \"#\" (1-4)\n";
 	echo "  finalize   - Take the top 20 themes and make a Final Round\n";
 	echo "  calc-final - Calculate the Final Score\n";
 	echo "\n";
