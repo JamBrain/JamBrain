@@ -12,7 +12,7 @@
 //   I'm assuming 100k is enough data, but I'll have to look at snapshots.
 
 $EVENT_NAME = "Ludum Dare 35";
-$EVENT_MODE = 3;
+$EVENT_MODE = 4;
 $EVENT_NODE = 101;
 $EVENT_DATE = new DateTime("2016-04-16T01:00:00Z");
 
