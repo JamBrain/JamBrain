@@ -110,6 +110,9 @@ function sanitize_NodeType($type) {
 }
 
 function sanitize_Slug($slug) {
+	if ( empty($slug) )
+		return false;
+
 	$slug = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $slug);	// Remove accents
 	$slug = strip_tags($slug);									// No HTML/XML tags
 	$slug = strtolower($slug);									// Lower case only
