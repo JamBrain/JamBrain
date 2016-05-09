@@ -1,38 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Emergency Mike Chat</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<style>
-		body, html {
-			margin:0;
-			width:100%;
-			height:100%;
-			position:relative;
-		}
-		#framer {
-			position:fixed; 
-			top:0px; left:0px; bottom:0px; right:0px; 
-			width:100%; height:100%; 
-			border:none; 
-			margin:0; padding:0; 
-			overflow:hidden; z-index:999999;			
-		}
-		#eframer {
-			position: absolute;
-			top: 0px;
-			bottom: 0px;
-			width:100%;
-		}
-	</style>
-</head>
-<body>
-	<iframe id="framer" src="https://kiwiirc.afternet.org/#mike"></iframe>
-</body>
-</html>
-
 <?php
-/*
+
 require_once __DIR__."/../db.php";
 require_once __DIR__."/../core/internal/core.php";
 
@@ -52,8 +19,8 @@ require_once __DIR__."/../core/internal/core.php";
 
 
 // If no ID is present //
-echo "<strong>ldj.am</strong> - Ludum Dare URL shortener.";
-
+echo "<strong>ldj.am</strong>";
+/*
 echo "<br />\n";
 echo "<br />\n";
 
@@ -80,5 +47,5 @@ print_r( $_SERVER );
 echo '</pre>';
 */
 // If ID is bad //
-
+*/
 
