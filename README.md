@@ -1,6 +1,8 @@
 ludumdare.com
 =============
 
+[![Join the chat at https://gitter.im/ludumdare/ludumdare](https://badges.gitter.im/ludumdare/ludumdare.svg)](https://gitter.im/ludumdare/ludumdare?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 The new Ludum Dare website (codename: Starship, formerly LD2015).
 
 The code is not live on ludumdare.com, but instead here:
