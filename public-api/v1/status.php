@@ -1,17 +1,9 @@
 <?php
 /* Status/Uptime Check */
 
-require_once __DIR__."/../../config.php";
 require_once __DIR__."/../../api.php";
 
-// TODO: Confirm libraries are available (APCu, etc)
 // TODO: Check authentication. If not an administrator, limit what this returns.
-// TODO: Limited return by default, no authentication required.
-// TODO: "/status" is just name, PHP and PHP plugins (APCu)
-// TODO: "/status/db" for the DB status. Consider not doing DB status without it (for performance).
-// TODO: "/status/redis" and "/status/memcached" for redis and memcached status. Same reason.
-// TODO: "/status/full" or "/status/all" or "/status/admin" for the full display, authenticated.
-// TODO: Add Image Processing tool steps
 
 // REMEMBER: The CloudFlare IPs are not whitelisted //
 //if ( !core_OnWhitelist($_SERVER['REMOTE_ADDR'],CMW_ACCESS_DATA) ) {
@@ -59,9 +51,9 @@ foreach ( $action as $key => &$value ) {
 	}
 
 	if ( $action[$key] == "admin" ) {
-		$is_admin = true;	// hack
+		$is_admin = true;	// hack ***********************
+		$need_admin = true;
 	}
-	
 	
 	if ( $action[$key] == "db" || $action[$key] == "redis" || $action[$key] == "memcached" ) {
 		$show_specific = true;
@@ -82,15 +74,20 @@ if ( !$show_specific ) {
 }
 
 // OpCache //
-//if ( !$show_specific ) {
-//}
+if ( !$show_specific ) {
+	if (function_exists('opcache_is_script_cached')) {
+		// Technically, this is checking if this file is cached //
+		$response['opcache_enabled'] = opcache_is_script_cached(__FILE__);
+	}
+}
 
 // APCu //
 if ( defined('CMW_USING_APCU') && !$show_specific ) {
 	$response['apcu_api_version'] = phpversion('apcu');
 
-	$response['apcu_uptime'] = time() - intval(apcu_cache_info(true)['start_time']);
-//	$response['apcu'] = apcu_cache_info(true);
+	if (function_exists('apcu_cache_info')) {
+		$response['apcu_uptime'] = time() - intval(apcu_cache_info(true)['start_time']);
+	}
 }
 
 // Database //
@@ -113,22 +110,20 @@ if ( defined('CMW_USING_REDIS') && $show_redis ) {
 	$response['redis_api_version'] = phpversion('redis');
 
 	if ( $is_admin ) {
-		// TODO: Get Redis Server Version //
-
 		$redis = new Redis();
 		$redis->connect(CMW_REDIS_HOST);
-		$response['redis_uptime'] = time_offset() + intval($redis->info('default')['uptime_in_seconds']);
+		$info = $redis->info('default');
+		$response['redis_version'] = $info['redis_version'];
+		$response['redis_uptime'] = time_offset() + intval($info['uptime_in_seconds']);
 		$redis->close();
 	}
 }
 
 // Memcached //
 if ( defined('CMW_USING_MEMCACHED') && $show_memcached ) {
-	$response['memcached_version'] = phpversion('memcached');
+	$response['memcached_api_version'] = phpversion('memcached');
 
 	if ( $is_admin ) {
-		// TODO: Get Memcached Server Version //
-		
 		$m = new Memcached();
 		$m->addServer(CMW_MEMCACHED_HOST, CMW_MEMCACHED_PORT);
 		
@@ -137,6 +132,7 @@ if ( defined('CMW_USING_MEMCACHED') && $show_memcached ) {
 		
 		foreach ( $m_data as $key => $value ) {
 			//$response['memcached'][$key] = $value['uptime'];	// If multiple servers
+			$response['memcached_version'] = $value['version'];
 			$response['memcached_uptime'] = time_offset() + $value['uptime'];
 		}
 		
@@ -144,9 +140,13 @@ if ( defined('CMW_USING_MEMCACHED') && $show_memcached ) {
 	}
 }
 
+
 // Command Line Tools //
 if ( defined('CMW_USING_IMAGEMAGICK') && !$show_specific && $is_admin ) {
-	// TODO: this	
+	unset($out);
+	unset($ret);
+	exec("convert -version",$out,$ret);
+	$response['imagemagick_version'] = $ret ? "ERROR" : preg_split('/\s+/',$out[0])[2];
 }
 
 if ( defined('CMW_USING_PHP_IMAGEMAGICK') && !$show_specific && $is_admin ) {
@@ -155,11 +155,24 @@ if ( defined('CMW_USING_PHP_IMAGEMAGICK') && !$show_specific && $is_admin ) {
 }
 
 if ( defined('CMW_USING_PNGQUANT') && !$show_specific && $is_admin ) {
-	// TODO: this	
+	unset($out);
+	unset($ret);
+	exec("pngquant --help",$out,$ret);
+	$response['pngquant_version'] = $ret ? "ERROR" : preg_split('/\s+/',$out[0])[1];
 }
 
 if ( defined('CMW_USING_FFMPEG') && !$show_specific && $is_admin ) {
-	// TODO: this	
+	unset($out);
+	unset($ret);
+	exec("ffmpeg -version",$out,$ret);
+	$response['ffmpeg_version'] = $ret ? "ERROR" : preg_split('/\s+/',$out[0])[2];
+}
+
+if ( defined('CMW_USING_GIFSICLE') && !$show_specific && $is_admin ) {
+	unset($out);
+	unset($ret);
+	exec("gifsicle --version",$out,$ret);
+	$response['gifsicle_version'] = $ret ? "ERROR" : preg_split('/\s+/',$out[0])[2];
 }
 
 
