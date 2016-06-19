@@ -61,3 +61,17 @@ function user_HasCookie() {
 }
 
 //function user_IsAdmin
+
+
+// Reference: http://blog.nic0.me/post/63180966453/php-5-5-0s-password-hash-api-a-deeper-look
+
+function user_HashPassword($password) {
+	return password_hash($password, PASSWORD_DEFAULT); //, ['cost'=>10] );
+}
+function user_VerifyPassword($password,$hash) {
+	return password_verify($password,$hash);
+}
+function user_DoesPasswordNeedRehash($hash) {
+	return password_needs_rehash($hash, PASSWORD_DEFAULT); //, ['cost'=>10] );
+}
+

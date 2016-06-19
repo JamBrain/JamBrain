@@ -212,7 +212,8 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 			"CREATE TABLE ".$table." (
 				node BIGINT UNSIGNED NOT NULL UNIQUE,
 				mail VARCHAR(255) CHARSET utf8 COLLATE utf8_unicode_ci NOT NULL UNIQUE,
-				hash VARCHAR(128) CHARSET latin1 NOT NULL,
+				hash VARCHAR(255) CHARSET latin1 NOT NULL,
+				timestamp TIMESTAMP NOT NULL,
 				secret VARCHAR(128) CHARSET latin1 NOT NULL
 			)".DEFAULT_CS_ENGINE.";");
 		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;

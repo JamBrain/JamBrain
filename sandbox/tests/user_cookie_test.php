@@ -6,10 +6,10 @@ require_once __DIR__ . "/../../core/user.php";
 if ( isset($_POST['action']) ) {
 	switch ($_POST['action']) {
 		case "delete":
-			setcookie("SID","",time()-3600/*expire*/,""/*path*/,""/*domain*/,false/*https*/,true/*httponly*/);
+			setcookie("SID","",time()-60*60/*expire*/,"/"/*path*/,""/*domain*/,false/*https*/,true/*httponly*/);
 			break;
 		case "set":
-			setcookie("SID","Hello Wurld",time()+3600/*expire*/,""/*path*/,""/*domain*/,false/*https*/,true/*httponly*/);
+			setcookie("SID","Hello Wurld",time()+60*60/*expire*/,"/"/*path*/,""/*domain*/,false/*https*/,true/*httponly*/);
 			break;
 	};
 }
