@@ -1,11 +1,11 @@
 'use strict';
 
+require('es6-promise').polyfill();
+
 var gulp	= require('gulp');
 var newer	= require('gulp-newer');
 var concat	= require('gulp-concat');
 var notify	= require('gulp-notify');
-
-require('es6-promise').polyfill();
 
 // Ignore any file prefixed with an underscore //
 var less_files = ['src/**/*.less','!src/**/_*.less'];
