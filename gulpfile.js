@@ -17,26 +17,39 @@ var css_files = ['output/**/*.css','output/**/*.min.css','!output/'+css_output];
 
 var js_output = 'all.js';
 var js_min_output = 'all.min.js';
-var js_files = ['src/**/*.js','output/**/*.min.js','!output/'+js_output];
+var js_files = ['src/**/*.js','!src/**/_*.js','output/**/*.min.js','!output/'+js_output];
 
 /* Process the individual LESS files */
 gulp.task('less', function() {
-	var postcss = require('gulp-postcss');
-	var less	= require('gulp-less-sourcemap');
+	var sourcemaps	= require('gulp-sourcemaps');
+	var less		= require('gulp-less-sourcemap');
+	var autoprefix	= require('less-plugin-autoprefix');
+	// NOTE: We're running autoprefixer as a less plugin, due to a bug in postcss sourcemaps
 		
 	return gulp.src( less_files )
 		.pipe( newer({dest:'output',ext:".css"}) )
-		.pipe( postcss([ 
-			require('autoprefixer')
-		]) )
-		.pipe( less(/*{compress: true}*/) )
+		.pipe( sourcemaps.init() )
+			.pipe( less({
+				plugins:[
+					new autoprefix(/*{
+						browsers: ["last 2 versions"]
+					}*/)
+				]
+			}) )
+		.pipe( sourcemaps.write() )
 		.pipe( gulp.dest('output/') );
 });
 
 /* Next, combine the output CSS files */
 gulp.task('css', ['less'], function() {
+	// NOTE: PostCSS needs to be run here, due to a bug with sourcemaps
+	var postcss = require('gulp-postcss');
+
 	return gulp.src( css_files )
 		.pipe( newer( 'output/'+css_output) )
+		.pipe( postcss([ 
+//			require('autoprefixer')
+		]) )
 		.pipe( concat( css_output ) )
 		.pipe( gulp.dest( 'output/' ) );	
 });
