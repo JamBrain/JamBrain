@@ -13,7 +13,7 @@ var less_files = ['src/**/*.less','!src/**/_*.less'];
 // Ignore any min files, and the output file //
 var css_output = 'all.css';
 var css_min_output = 'all.min.css';
-var css_files = ['output/**/*.css','output/**/*.min.css','!output/'+css_output];
+var css_files = ['output/**/*.css','!output/**/_*.css','output/**/*.min.css','!output/'+css_output];
 
 var js_output = 'all.js';
 var js_min_output = 'all.min.js';
