@@ -27,7 +27,7 @@ gulp.task('less', function() {
 	// NOTE: We're running autoprefixer as a less plugin, due to a bug in postcss sourcemaps
 		
 	return gulp.src( less_files )
-		.pipe( newer({dest:'output',ext:".css"}) )
+		.pipe( newer({dest:"output",ext:".css"}) )
 		.pipe( sourcemaps.init() )
 			.pipe( less({
 				plugins:[
@@ -37,7 +37,7 @@ gulp.task('less', function() {
 				]
 			}) )
 		.pipe( sourcemaps.write() )
-		.pipe( gulp.dest('output/') );
+		.pipe( gulp.dest("output/") );
 });
 
 /* Next, combine the output CSS files */
@@ -46,43 +46,46 @@ gulp.task('css', ['less'], function() {
 	var postcss = require('gulp-postcss');
 
 	return gulp.src( css_files )
-		.pipe( newer( 'output/'+css_output) )
+		.pipe( newer( "output/"+css_output) )
 		.pipe( postcss([ 
 //			require('autoprefixer')
 		]) )
 		.pipe( concat( css_output ) )
-		.pipe( gulp.dest( 'output/' ) );	
+		.pipe( gulp.dest( "output/" ) );	
 });
 
 /* Finally, minifiy the CSS files */
 gulp.task('css-min', ['css'], function() {
-	var cssnano	= require('gulp-cssnano');
+	// Benchmarks: http://goalsmashers.github.io/css-minification-benchmark/
+	var cleancss	= require('gulp-cleancss');		// Faster, similar results
+//	var cssnano		= require('gulp-cssnano');
 
 	return gulp.src( "output/"+css_output )
-		.pipe( newer( 'output/'+css_min_output ) )
-		.pipe( cssnano() )
+		.pipe( newer( "output/"+css_min_output ) )
+		.pipe( cleancss() )
+//		.pipe( cssnano() )
 		.pipe( concat( css_min_output ) )
-		.pipe( gulp.dest('output/') );	
+		.pipe( gulp.dest( "output/" ) );	
 });
 
 
 /* Merge all JS files */
 gulp.task('js', function() {
 	return gulp.src( js_files )
-		.pipe( newer( 'output/'+js_output ) )
+		.pipe( newer( "output/"+js_output ) )
 		.pipe( concat( js_output ) )
-		.pipe( gulp.dest('output/') );
+		.pipe( gulp.dest( "output/" ) );
 });
 
 /* Minifiy merged file */
 gulp.task('js-min', ['js'], function() {
 	var uglify = require('gulp-uglify');
 	
-	return gulp.src( 'output/'+js_output )
-		.pipe( newer( 'output/'+js_min_output ) )
+	return gulp.src( "output/"+js_output )
+		.pipe( newer( "output/"+js_min_output ) )
 		.pipe( uglify() )
 		.pipe( concat( js_min_output ) )
-		.pipe( gulp.dest('output/') );
+		.pipe( gulp.dest( "output/" ) );
 });
 
 /* Nuke the output folder */
