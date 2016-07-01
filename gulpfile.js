@@ -3,6 +3,7 @@
 var gulp	= require('gulp');
 var newer	= require('gulp-newer');
 var concat	= require('gulp-concat');
+var notify	= require('gulp-notify');
 
 require('es6-promise').polyfill();
 
@@ -77,6 +78,10 @@ gulp.task('clean', function() {
 	
 	return del( 'output/**/*' );
 });
+
+// TODO: Popup notifications when a watch catches an error/linting error
+//		.pipe( notify("hello") )
+
 
 // NOTE: Use gulp-watch instead: https://www.npmjs.com/package/gulp-watch
 //gulp.task('less-watch', ['css','js'] function () {
