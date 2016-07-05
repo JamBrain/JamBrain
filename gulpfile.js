@@ -10,11 +10,11 @@ var notify	= require('gulp-notify');
 var gzip	= require('gulp-gzip');
 var size	= require('gulp-size');
 
-// Ignore any file prefixed with an underscore //
-var css_files		= ['src/**/*.css','!src/**/_*.css'];
+// Ignore any file prefixed with an underscore, or minified //
 var less_files		= ['src/**/*.less','!src/**/_*.less'];
-var js_in_files 	= ['src/**/*.js','!src/**/_*.js'];
+var css_files		= ['src/**/*.css','!src/**/_*.css','!src/**/*.min.css'];
 var es6_in_files	= ['src/**/*.es6','!src/**/_*.es6'];
+var js_in_files 	= ['src/**/*.js','!src/**/_*.js','!src/**/*.min.js'];
 
 // Ignore any min files, and the output file //
 var css_output 			= 'all.css';
