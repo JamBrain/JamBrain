@@ -11,20 +11,24 @@ var gzip	= require('gulp-gzip');
 var size	= require('gulp-size');
 
 // Ignore any file prefixed with an underscore //
+var css_files = ['src/**/*.css','!src/**/_*.css'];
 var less_files = ['src/**/*.less','!src/**/_*.less'];
+var js_in_files = ['src/**/*.js','!src/**/_*.js'];
+var es6_in_files = ['src/**/*.es6','!src/**/_*.es6'];
 
 // Ignore any min files, and the output file //
 var css_output = 'all.css';
 var css_min_output = 'all.min.css';
 var css_min_gz_output = 'all.min.css.gz';
-var css_files = ['output/**/*.css','!output/**/_*.css','!output/**/*.min.css','!output/'+css_output];
+var css_out_files = ['output/**/*.css','!output/**/_*.css','!output/**/*.min.css','!output/'+css_output];
 
 var js_output = 'all.js';
 var js_min_output = 'all.min.js';
 var js_min_gz_output = 'all.min.js.gz';
-var js_files = ['src/**/*.js','!src/**/_*.js','!output/**/*.min.js','!output/'+js_output];
+var js_out_files = ['output/**/*.js','!output/**/_*.js','!output/**/*.min.js','!output/'+js_output];
 
-/* Process the individual LESS files */
+
+/* LESS files to CSS */
 gulp.task('less', function() {
 //	var sourcemaps	= require('gulp-sourcemaps');
 	var less		= require('gulp-less');
@@ -46,65 +50,86 @@ gulp.task('less', function() {
 //		.pipe( sourcemaps.write() )
 		.pipe( gulp.dest("output/") );
 });
-
-/* Next, combine the output CSS files */
-gulp.task('css', ['less'], function() {
+/* Unprocessed CSS files */
+gulp.task('css', function() {
 	return gulp.src( css_files )
-		.pipe( newer( "output/"+css_output) )
+		.pipe( newer({dest:"output"}) )
+		.pipe( debug({title:'css:'}) )
+		.pipe( gulp.dest("output/") );
+});
+/* Concat CSS files */
+gulp.task('css-cat', ['less','css'], function() {
+	return gulp.src( css_out_files )
+		.pipe( newer({dest:"output/"+css_output}) )
 		.pipe( concat( css_output ) )
-		.pipe( size({title:'css:',showFiles:true}) )
+		.pipe( size({title:'css-cat:',showFiles:true}) )
 		.pipe( gulp.dest( "output/" ) );	
 });
-
-/* Finally, minifiy the CSS files */
-gulp.task('css-min', ['css'], function() {
+/* Minifiy the Concat CSS file */
+gulp.task('css-min', ['css-cat'], function() {
 	// Benchmarks: http://goalsmashers.github.io/css-minification-benchmark/
 	var cleancss	= require('gulp-cleancss');		// Faster, similar results
 //	var cssnano		= require('gulp-cssnano');
 
 	return gulp.src( "output/"+css_output )
-		.pipe( newer( "output/"+css_min_output ) )
+		.pipe( newer({dest:"output/"+css_min_output}) )
 		.pipe( cleancss() )
 //		.pipe( cssnano() )
 		.pipe( concat( css_min_output ) )
 		.pipe( size({title:'css-min:',showFiles:true}) )
 		.pipe( gulp.dest( "output/" ) );	
 });
-
-
+/* Gzip minified (for reference) */
 gulp.task('css-min-gz', ['css-min'], function() {
 	return gulp.src( "output/"+css_min_output )
-		.pipe( newer( "output/"+css_min_gz_output ) )
+		.pipe( newer({dest:"output/"+css_min_gz_output}) )
 		.pipe( gzip() )
 		.pipe( size({title:'css-min-gz:',showFiles:true}) )
 		.pipe( gulp.dest( "output/" ) );
 });
 
 
-/* Merge all JS files */
-gulp.task('js', function() {
-	return gulp.src( js_files )
-		.pipe( newer( "output/"+js_output ) )
-		.pipe( debug({title:'js:'}) )
-		.pipe( concat( js_output ) )
+/* Run JavaScript Process */
+gulp.task('es6', function() {
+	var babel = require("gulp-babel");
+	
+	return gulp.src( es6_in_files )
+		.pipe( newer({dest:"output",ext:".js"}) )
+		.pipe( debug({title:'es6:'}) )
+		.pipe( babel({presets:['es2015']}) )
+		// TODO: Remove "use strict"
 		.pipe( gulp.dest( "output/" ) );
 });
-
+/* Run JavaScript Process */
+gulp.task('js', function() {
+	return gulp.src( js_in_files )
+		.pipe( newer({dest:"output"}) )
+		.pipe( debug({title:'js:'}) )
+		.pipe( gulp.dest( "output/" ) );
+});
+/* Merge all JS files */
+gulp.task('js-cat', ['es6','js'], function() {
+	return gulp.src( js_out_files )
+		.pipe( newer({dest:"output/"+js_output}) )
+		.pipe( concat( js_output ) )
+		.pipe( size({title:'js-cat:',showFiles:true}) )
+		.pipe( gulp.dest( "output/" ) );
+});
 /* Minifiy merged file */
-gulp.task('js-min', ['js'], function() {
+gulp.task('js-min', ['js-cat'], function() {
 	var uglify = require('gulp-uglify');
 	
 	return gulp.src( "output/"+js_output )
-		.pipe( newer( "output/"+js_min_output ) )
+		.pipe( newer({dest:"output/"+js_min_output}) )
 		.pipe( uglify() )
 		.pipe( concat( js_min_output ) )
 		.pipe( size({title:'js-min:',showFiles:true}) )
 		.pipe( gulp.dest( "output/" ) );
 });
-
+/* Gzip files (for reference) */
 gulp.task('js-min-gz', ['js-min'], function() {
 	return gulp.src( "output/"+js_min_output )
-		.pipe( newer( "output/"+js_min_gz_output ) )
+		.pipe( newer({dest:"output/"+js_min_gz_output}) )
 		.pipe( gzip() )
 		.pipe( size({title:'js-min-gz:',showFiles:true}) )
 		.pipe( gulp.dest( "output/" ) );	
@@ -135,7 +160,7 @@ gulp.task('php-com', function() {
 // NOTE: Use gulp-watch instead: https://www.npmjs.com/package/gulp-watch
 //gulp.task('less-watch', ['css','js'] function () {
 //	gulp.watch(less_files, ['css'])
-//	gulp.watch(js_files, ['js'])
+//	gulp.watch(js_out_files, ['js'])
 //});
 
 gulp.task('default', ['css-min-gz','js-min-gz'], function() {
