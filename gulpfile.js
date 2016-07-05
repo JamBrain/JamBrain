@@ -11,30 +11,31 @@ var gzip	= require('gulp-gzip');
 var size	= require('gulp-size');
 
 // Ignore any file prefixed with an underscore //
-var css_files = ['src/**/*.css','!src/**/_*.css'];
-var less_files = ['src/**/*.less','!src/**/_*.less'];
-var js_in_files = ['src/**/*.js','!src/**/_*.js'];
-var es6_in_files = ['src/**/*.es6','!src/**/_*.es6'];
+var css_files		= ['src/**/*.css','!src/**/_*.css'];
+var less_files		= ['src/**/*.less','!src/**/_*.less'];
+var js_in_files 	= ['src/**/*.js','!src/**/_*.js'];
+var es6_in_files	= ['src/**/*.es6','!src/**/_*.es6'];
 
 // Ignore any min files, and the output file //
-var css_output = 'all.css';
-var css_min_output = 'all.min.css';
-var css_min_gz_output = 'all.min.css.gz';
-var css_out_files = ['output/**/*.css','!output/**/_*.css','!output/**/*.min.css','!output/'+css_output];
+var css_output 			= 'all.css';
+var css_min_output		= 'all.min.css';
+var css_min_gz_output	= 'all.min.css.gz';
+var css_out_files		= ['output/**/*.css','!output/**/_*.css','!output/**/*.min.css','!output/'+css_output];
 
-var js_output = 'all.js';
-var js_min_output = 'all.min.js';
-var js_min_gz_output = 'all.min.js.gz';
-var js_out_files = ['output/**/*.js','!output/**/_*.js','!output/**/*.min.js','!output/'+js_output];
+var js_output			= 'all.js';
+var js_min_output		= 'all.min.js';
+var js_min_gz_output	= 'all.min.js.gz';
+var js_out_files		= ['output/**/*.js','!output/**/_*.js','!output/**/*.min.js','!output/'+js_output];
 
 
 /* LESS files to CSS */
 gulp.task('less', function() {
-//	var sourcemaps	= require('gulp-sourcemaps');
 	var less		= require('gulp-less');
+	// NOTE: Sourcemaps is surpressing errors, so it's disabled for now
+//	var sourcemaps	= require('gulp-sourcemaps');
 //	var less		= require('gulp-less-sourcemap');
+	// NOTE: We're running autoprefixer as a LESS plugin, due to problems with postcss sourcemaps
 	var autoprefix	= require('less-plugin-autoprefix');
-	// NOTE: We're running autoprefixer as a less plugin, due to problems with postcss sourcemaps
 		
 	return gulp.src( less_files )
 		.pipe( newer({dest:"output",ext:".css"}) )
@@ -57,7 +58,7 @@ gulp.task('css', function() {
 		.pipe( debug({title:'css:'}) )
 		.pipe( gulp.dest("output/") );
 });
-/* Concat CSS files */
+/* Concatenate all CSS files */
 gulp.task('css-cat', ['less','css'], function() {
 	return gulp.src( css_out_files )
 		.pipe( newer({dest:"output/"+css_output}) )
@@ -65,7 +66,7 @@ gulp.task('css-cat', ['less','css'], function() {
 		.pipe( size({title:'css-cat:',showFiles:true}) )
 		.pipe( gulp.dest( "output/" ) );	
 });
-/* Minifiy the Concat CSS file */
+/* Minifiy the concatenated CSS file */
 gulp.task('css-min', ['css-cat'], function() {
 	// Benchmarks: http://goalsmashers.github.io/css-minification-benchmark/
 	var cleancss	= require('gulp-cleancss');		// Faster, similar results
@@ -79,7 +80,7 @@ gulp.task('css-min', ['css-cat'], function() {
 		.pipe( size({title:'css-min:',showFiles:true}) )
 		.pipe( gulp.dest( "output/" ) );	
 });
-/* Gzip minified (for reference) */
+/* GZIP minified (for reference) */
 gulp.task('css-min-gz', ['css-min'], function() {
 	return gulp.src( "output/"+css_min_output )
 		.pipe( newer({dest:"output/"+css_min_gz_output}) )
@@ -89,7 +90,7 @@ gulp.task('css-min-gz', ['css-min'], function() {
 });
 
 
-/* Run JavaScript Process */
+/* Use Babel to compile ES6 JS files to JS */
 gulp.task('es6', function() {
 	var babel = require("gulp-babel");
 	
@@ -100,14 +101,14 @@ gulp.task('es6', function() {
 		// TODO: Remove "use strict"
 		.pipe( gulp.dest( "output/" ) );
 });
-/* Run JavaScript Process */
+/* Unprocessed JS files */
 gulp.task('js', function() {
 	return gulp.src( js_in_files )
 		.pipe( newer({dest:"output"}) )
 		.pipe( debug({title:'js:'}) )
 		.pipe( gulp.dest( "output/" ) );
 });
-/* Merge all JS files */
+/* Concatenate all JS files */
 gulp.task('js-cat', ['es6','js'], function() {
 	return gulp.src( js_out_files )
 		.pipe( newer({dest:"output/"+js_output}) )
@@ -115,7 +116,7 @@ gulp.task('js-cat', ['es6','js'], function() {
 		.pipe( size({title:'js-cat:',showFiles:true}) )
 		.pipe( gulp.dest( "output/" ) );
 });
-/* Minifiy merged file */
+/* Minifiy the concatenated JS file */
 gulp.task('js-min', ['js-cat'], function() {
 	var uglify = require('gulp-uglify');
 	
@@ -126,7 +127,7 @@ gulp.task('js-min', ['js-cat'], function() {
 		.pipe( size({title:'js-min:',showFiles:true}) )
 		.pipe( gulp.dest( "output/" ) );
 });
-/* Gzip files (for reference) */
+/* GZIP minified (for reference) */
 gulp.task('js-min-gz', ['js-min'], function() {
 	return gulp.src( "output/"+js_min_output )
 		.pipe( newer({dest:"output/"+js_min_gz_output}) )
@@ -137,8 +138,6 @@ gulp.task('js-min-gz', ['js-min'], function() {
 
 
 
-
-
 /* Nuke the output folder */
 gulp.task('clean', function() {
 	var del = require('del');
@@ -146,11 +145,13 @@ gulp.task('clean', function() {
 	return del( 'output/**/*' );
 });
 
-gulp.task('php-com', function() {
-	var fs = require('fs');
-	
-	fs.writeFileSync('src/com/list.gen.php', "<?php\n// WARNING! DO NOT MODIFY! This file is automatically generated!\n\n");
-});
+
+// Testing generation of a file used by PHP
+//gulp.task('php-com', function() {
+//	var fs = require('fs');
+//	
+//	fs.writeFileSync('src/com/list.gen.php', "<?php\n// WARNING! DO NOT MODIFY! This file is automatically generated!\n\n");
+//});
 
 
 // TODO: Popup notifications when a watch catches an error/linting error
@@ -163,5 +164,7 @@ gulp.task('php-com', function() {
 //	gulp.watch(js_out_files, ['js'])
 //});
 
+
+// By default, GZIP the files, to report roughly how large things are when GZIPPED
 gulp.task('default', ['css-min-gz','js-min-gz'], function() {
 });
