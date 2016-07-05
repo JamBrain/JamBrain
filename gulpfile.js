@@ -3,9 +3,12 @@
 require('es6-promise').polyfill();
 
 var gulp	= require('gulp');
+var debug	= require('gulp-debug');
 var newer	= require('gulp-newer');
 var concat	= require('gulp-concat');
 var notify	= require('gulp-notify');
+var gzip	= require('gulp-gzip');
+var size	= require('gulp-size');
 
 // Ignore any file prefixed with an underscore //
 var less_files = ['src/**/*.less','!src/**/_*.less'];
@@ -13,22 +16,26 @@ var less_files = ['src/**/*.less','!src/**/_*.less'];
 // Ignore any min files, and the output file //
 var css_output = 'all.css';
 var css_min_output = 'all.min.css';
-var css_files = ['output/**/*.css','!output/**/_*.css','output/**/*.min.css','!output/'+css_output];
+var css_min_gz_output = 'all.min.css.gz';
+var css_files = ['output/**/*.css','!output/**/_*.css','!output/**/*.min.css','!output/'+css_output];
 
 var js_output = 'all.js';
 var js_min_output = 'all.min.js';
-var js_files = ['src/**/*.js','!src/**/_*.js','output/**/*.min.js','!output/'+js_output];
+var js_min_gz_output = 'all.min.js.gz';
+var js_files = ['src/**/*.js','!src/**/_*.js','!output/**/*.min.js','!output/'+js_output];
 
 /* Process the individual LESS files */
 gulp.task('less', function() {
 	var sourcemaps	= require('gulp-sourcemaps');
-	var less		= require('gulp-less-sourcemap');
+	var less		= require('gulp-less');
+//	var less		= require('gulp-less-sourcemap');
 	var autoprefix	= require('less-plugin-autoprefix');
 	// NOTE: We're running autoprefixer as a less plugin, due to a bug in postcss sourcemaps
 		
 	return gulp.src( less_files )
 		.pipe( newer({dest:"output",ext:".css"}) )
-		.pipe( sourcemaps.init() )
+		.pipe( debug({title:'less:'}) )
+//		.pipe( sourcemaps.init() )
 			.pipe( less({
 				plugins:[
 					new autoprefix(/*{
@@ -36,7 +43,7 @@ gulp.task('less', function() {
 					}*/)
 				]
 			}) )
-		.pipe( sourcemaps.write() )
+//		.pipe( sourcemaps.write() )
 		.pipe( gulp.dest("output/") );
 });
 
@@ -47,7 +54,9 @@ gulp.task('css', ['less'], function() {
 
 	return gulp.src( css_files )
 		.pipe( newer( "output/"+css_output) )
+		.pipe( debug({title:'css:'}) )
 		.pipe( postcss([ 
+//			require('postcss-media-minmax')
 //			require('autoprefixer')
 		]) )
 		.pipe( concat( css_output ) )
@@ -62,6 +71,7 @@ gulp.task('css-min', ['css'], function() {
 
 	return gulp.src( "output/"+css_output )
 		.pipe( newer( "output/"+css_min_output ) )
+		.pipe( debug({title:'css-min:'}) )
 		.pipe( cleancss() )
 //		.pipe( cssnano() )
 		.pipe( concat( css_min_output ) )
@@ -69,10 +79,21 @@ gulp.task('css-min', ['css'], function() {
 });
 
 
+gulp.task('css-min-gz', ['css-min'], function() {
+	return gulp.src( "output/"+css_min_output )
+		.pipe( newer( "output/"+css_min_gz_output ) )
+		.pipe( debug({title:'css-min-gz:'}) )
+		.pipe( gzip() )
+		.pipe( size({showFiles:true}) )
+		.pipe( gulp.dest( "output/" ) );
+});
+
+
 /* Merge all JS files */
 gulp.task('js', function() {
 	return gulp.src( js_files )
 		.pipe( newer( "output/"+js_output ) )
+		.pipe( debug({title:'js:'}) )
 		.pipe( concat( js_output ) )
 		.pipe( gulp.dest( "output/" ) );
 });
@@ -83,10 +104,24 @@ gulp.task('js-min', ['js'], function() {
 	
 	return gulp.src( "output/"+js_output )
 		.pipe( newer( "output/"+js_min_output ) )
+		.pipe( debug({title:'js-min:'}) )
 		.pipe( uglify() )
 		.pipe( concat( js_min_output ) )
 		.pipe( gulp.dest( "output/" ) );
 });
+
+gulp.task('js-min-gz', ['js-min'], function() {
+	return gulp.src( "output/"+js_min_output )
+		.pipe( newer( "output/"+js_min_gz_output ) )
+		.pipe( debug({title:'js-min-gz:'}) )
+		.pipe( gzip() )
+		.pipe( size({showFiles:true}) )
+		.pipe( gulp.dest( "output/" ) );	
+});
+
+
+
+
 
 /* Nuke the output folder */
 gulp.task('clean', function() {
@@ -94,7 +129,6 @@ gulp.task('clean', function() {
 	
 	return del( 'output/**/*' );
 });
-
 
 gulp.task('php-com', function() {
 	var fs = require('fs');
@@ -113,5 +147,5 @@ gulp.task('php-com', function() {
 //	gulp.watch(js_files, ['js'])
 //});
 
-gulp.task('default', ['css-min','js-min'], function() {
+gulp.task('default', ['css-min-gz','js-min-gz'], function() {
 });
