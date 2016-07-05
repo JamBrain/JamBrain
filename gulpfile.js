@@ -30,7 +30,7 @@ gulp.task('less', function() {
 	var less		= require('gulp-less');
 //	var less		= require('gulp-less-sourcemap');
 	var autoprefix	= require('less-plugin-autoprefix');
-	// NOTE: We're running autoprefixer as a less plugin, due to a bug in postcss sourcemaps
+	// NOTE: We're running autoprefixer as a less plugin, due to problems with postcss sourcemaps
 		
 	return gulp.src( less_files )
 		.pipe( newer({dest:"output",ext:".css"}) )
@@ -49,18 +49,10 @@ gulp.task('less', function() {
 
 /* Next, combine the output CSS files */
 gulp.task('css', ['less'], function() {
-	// NOTE: PostCSS needs to be run here, due to a bug with sourcemaps
-//	var postcss = require('gulp-postcss');
-//	var postcss = require('gulp-postcss-less');
-
 	return gulp.src( css_files )
 		.pipe( newer( "output/"+css_output) )
-		.pipe( debug({title:'css:'}) )
-//		.pipe( postcss([ 
-////			require('postcss-media-minmax')
-////			require('autoprefixer')
-//		]) )
 		.pipe( concat( css_output ) )
+		.pipe( size({title:'css:',showFiles:true}) )
 		.pipe( gulp.dest( "output/" ) );	
 });
 
@@ -72,10 +64,10 @@ gulp.task('css-min', ['css'], function() {
 
 	return gulp.src( "output/"+css_output )
 		.pipe( newer( "output/"+css_min_output ) )
-		.pipe( debug({title:'css-min:'}) )
 		.pipe( cleancss() )
 //		.pipe( cssnano() )
 		.pipe( concat( css_min_output ) )
+		.pipe( size({title:'css-min:',showFiles:true}) )
 		.pipe( gulp.dest( "output/" ) );	
 });
 
@@ -83,9 +75,8 @@ gulp.task('css-min', ['css'], function() {
 gulp.task('css-min-gz', ['css-min'], function() {
 	return gulp.src( "output/"+css_min_output )
 		.pipe( newer( "output/"+css_min_gz_output ) )
-		.pipe( debug({title:'css-min-gz:'}) )
 		.pipe( gzip() )
-		.pipe( size({showFiles:true}) )
+		.pipe( size({title:'css-min-gz:',showFiles:true}) )
 		.pipe( gulp.dest( "output/" ) );
 });
 
@@ -105,18 +96,17 @@ gulp.task('js-min', ['js'], function() {
 	
 	return gulp.src( "output/"+js_output )
 		.pipe( newer( "output/"+js_min_output ) )
-		.pipe( debug({title:'js-min:'}) )
 		.pipe( uglify() )
 		.pipe( concat( js_min_output ) )
+		.pipe( size({title:'js-min:',showFiles:true}) )
 		.pipe( gulp.dest( "output/" ) );
 });
 
 gulp.task('js-min-gz', ['js-min'], function() {
 	return gulp.src( "output/"+js_min_output )
 		.pipe( newer( "output/"+js_min_gz_output ) )
-		.pipe( debug({title:'js-min-gz:'}) )
 		.pipe( gzip() )
-		.pipe( size({showFiles:true}) )
+		.pipe( size({title:'js-min-gz:',showFiles:true}) )
 		.pipe( gulp.dest( "output/" ) );	
 });
 
