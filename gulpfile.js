@@ -17,7 +17,17 @@ var symlink	= require('gulp-symlink');	// Depricated in Gulp 4
 var glob	= require("glob")
 
 
-var is_debug = glob.sync('.gulpdebug').length > 0;
+const AUTOPREFIX_CONFIG = {
+//	browsers: ["last 2 versions"]
+};
+
+const BABEL_CONFIG = {
+	presets:['es2015'],
+	plugins:[
+		["transform-react-jsx", { "pragma":"h" }]
+	]
+};
+
 
 var babelignore_files = glob.sync('src/**/.babelignore').map(function(el){
 	return el.replace('.babelignore','');
@@ -57,6 +67,8 @@ var js_out_files		= [
 	'!'+build_folder+'/'+js_output
 ];
 
+const IS_DEBUG = glob.sync('.gulpdebug').length > 0;
+
 
 /* LESS files to CSS */
 gulp.task('less', function() {
@@ -73,9 +85,7 @@ gulp.task('less', function() {
 //		.pipe( sourcemaps.init() )
 			.pipe( less({
 				plugins:[
-					new autoprefix(/*{
-						browsers: ["last 2 versions"]
-					}*/)
+					new autoprefix(AUTOPREFIX_CONFIG)
 				]
 			}) )
 //		.pipe( sourcemaps.write() )
@@ -88,6 +98,14 @@ gulp.task('css', function() {
 		.pipe( debug({title:'css:'}) )
 		.pipe( gulp.dest(build_folder+'/') );
 });
+
+//gulp.task('css-symlink', function() {
+//	return gulp.src( build_folder+'/'+css_output )
+//		.pipe( gulp_if(IS_DEBUG,symlink( release_folder+'/'+css_output )) );
+////		.pipe( gulp.symlink( release_folder+'/'+css_output ) );
+//});
+
+
 /* Concatenate all CSS files */
 gulp.task('css-cat', ['less','css'], function() {
 //gulp.task('css-cat', gulp.series(['less','css'], function() {
@@ -95,8 +113,8 @@ gulp.task('css-cat', ['less','css'], function() {
 		.pipe( newer({dest:build_folder+'/'+css_output}) )
 		.pipe( concat( css_output ) )
 		.pipe( size({title:'css-cat:',showFiles:true}) )
-		.pipe( gulp.dest( build_folder+'/' ) )
-		.pipe( gulp_if(is_debug,symlink( release_folder+'/'+css_output )) );
+		.pipe( gulp.dest( build_folder+'/' ) );
+//		.pipe( gulp_if(IS_DEBUG,symlink( release_folder+'/'+css_output )) );
 //		.pipe( gulp.symlink( release_folder+'/'+css_output ) );
 });
 /* Minifiy the concatenated CSS file */
@@ -132,7 +150,7 @@ gulp.task('babel', function() {
 	return gulp.src( js_in_files, {base:'src'} )
 		.pipe( newer({dest:build_folder,ext:".o.js"}) )
 		.pipe( debug({title:'js (babel):'}) )
-		.pipe( babel({presets:['es2015']}) )
+		.pipe( babel(BABEL_CONFIG) )
 		.pipe( rename({extname: ".o.js"}) )
 		.pipe( gulp.dest( build_folder+'/' ) );
 });
@@ -150,8 +168,8 @@ gulp.task('js-cat', ['babel','js'], function() {
 		.pipe( newer({dest:build_folder+'/'+js_output}) )
 		.pipe( concat( js_output ) )
 		.pipe( size({title:'js-cat:',showFiles:true}) )
-		.pipe( gulp.dest( build_folder+'/' ) )
-		.pipe( gulp_if(is_debug,symlink( release_folder+'/'+js_output )) );
+		.pipe( gulp.dest( build_folder+'/' ) );
+//		.pipe( gulp_if(IS_DEBUG,symlink( release_folder+'/'+js_output )) );
 //		.pipe( gulp.symlink( release_folder+'/'+js_output ) );
 });
 /* Minifiy the concatenated JS file */
@@ -208,5 +226,18 @@ gulp.task('clean', function() {
 // By default, GZIP the files, to report roughly how large things are when GZIPPED
 gulp.task('default', ['css-min-gz','js-min-gz'], function(done) {
 //gulp.task('default', gulp.series(['css-min-gz','js-min-gz'], function(done) {
-	return done();
+	if ( IS_DEBUG ) {
+		// Only create symlinks if they don't exist //
+		if ( glob.sync(release_folder+'/'+js_output).length === 0 ) {
+			gulp.src( build_folder+'/'+css_output )
+				.pipe( symlink( release_folder+'/'+css_output ) );
+//				.pipe( gulp.symlink( release_folder+'/'+css_output ) );
+		}
+		if ( glob.sync(release_folder+'/'+js_output).length === 0 ) {
+			gulp.src( build_folder+'/'+js_output )
+				.pipe( symlink( release_folder+'/'+js_output ) );
+//				.pipe( gulp.symlink( release_folder+'/'+js_output ) );	
+		}
+	}
+//	return done();
 });
