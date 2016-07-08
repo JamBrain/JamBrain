@@ -5,16 +5,30 @@ require('es6-promise').polyfill();
 var gulp	= require('gulp');
 var debug	= require('gulp-debug');
 var newer	= require('gulp-newer');
+var rename	= require('gulp-rename');
 var concat	= require('gulp-concat');
 var notify	= require('gulp-notify');
 var gzip	= require('gulp-gzip');
 var size	= require('gulp-size');
 
+var glob	= require("glob")
+var babelignore_files = glob.sync('src/**/.babelignore');
+babelignore_files.forEach(function(el,idx,array){
+	array[idx] = el.replace('.babelignore','');
+});
+
 // Ignore any file prefixed with an underscore, or minified //
 var less_files		= ['src/**/*.less','!src/**/_*.less'];
 var css_files		= ['src/**/*.css','!src/**/_*.css','!src/**/*.min.css'];
-var es6_in_files	= ['src/**/*.es6','!src/**/_*.es6'];
-var js_in_files 	= ['src/**/*.js','!src/**/_*.js','!src/**/*.min.js'];
+
+var js_in_files 	= ['src/**/*.js','!src/**/_*.js','!src/**/*.min.js']
+						.concat(babelignore_files.map(function(el){return '!'+el+'*.*';}));
+var raw_js_in_files	= babelignore_files.map(function(el){return el+'**/*.js';})
+						.concat(babelignore_files.map(function(el){return '!'+el+'**/_*.js';}))
+						.concat(babelignore_files.map(function(el){return '!'+el+'**/*.min.js';}));
+
+//console.log(raw_js_in_files);
+
 
 // Ignore any min files, and the output file //
 var css_output 			= 'all.css';
@@ -36,7 +50,7 @@ gulp.task('less', function() {
 //	var less		= require('gulp-less-sourcemap');
 	// NOTE: We're running autoprefixer as a LESS plugin, due to problems with postcss sourcemaps
 	var autoprefix	= require('less-plugin-autoprefix');
-		
+
 	return gulp.src( less_files )
 		.pipe( newer({dest:"output",ext:".css"}) )
 		.pipe( debug({title:'less:'}) )
@@ -90,26 +104,26 @@ gulp.task('css-min-gz', ['css-min'], function() {
 });
 
 
-/* Use Babel to compile ES6 JS files to JS */
-gulp.task('es6', function() {
+/* Use Babel to compile ES2015 files to JS */
+gulp.task('babel', function() {
 	var babel = require("gulp-babel");
 	
-	return gulp.src( es6_in_files )
-		.pipe( newer({dest:"output",ext:".js"}) )
-		.pipe( debug({title:'es6:'}) )
+	return gulp.src( js_in_files, {base:'src'} )
+		.pipe( newer({dest:"output",ext:".o.js"}) )
+		.pipe( debug({title:'js (babel):'}) )
 		.pipe( babel({presets:['es2015']}) )
-		// TODO: Remove "use strict"
+		.pipe( rename({extname: ".o.js"}) )
 		.pipe( gulp.dest( "output/" ) );
 });
 /* Unprocessed JS files */
 gulp.task('js', function() {
-	return gulp.src( js_in_files )
+	return gulp.src( raw_js_in_files, {base:'src'} )
 		.pipe( newer({dest:"output"}) )
-		.pipe( debug({title:'js:'}) )
+		.pipe( debug({title:'js (raw):'}) )
 		.pipe( gulp.dest( "output/" ) );
 });
 /* Concatenate all JS files */
-gulp.task('js-cat', ['es6','js'], function() {
+gulp.task('js-cat', ['babel','js'], function() {
 	return gulp.src( js_out_files )
 		.pipe( newer({dest:"output/"+js_output}) )
 		.pipe( concat( js_output ) )
