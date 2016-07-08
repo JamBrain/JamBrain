@@ -19,9 +19,8 @@ var glob	= require("glob")
 
 var is_debug = glob.sync('.gulpdebug').length > 0;
 
-var babelignore_files = glob.sync('src/**/.babelignore');
-babelignore_files.forEach(function(el,idx,array){
-	array[idx] = el.replace('.babelignore','');
+var babelignore_files = glob.sync('src/**/.babelignore').map(function(el){
+	return el.replace('.babelignore','');
 });
 
 // Ignore any file prefixed with an underscore, or minified //
