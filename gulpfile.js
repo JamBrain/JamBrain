@@ -4,7 +4,7 @@ require('es6-promise').polyfill();
 
 // Gulp Includes //
 var gulp	= require('gulp');
-var gulp_if	= require('gulp-if');
+//var gulp_if	= require('gulp-if');
 var debug	= require('gulp-debug');
 var newer	= require('gulp-newer');
 var rename	= require('gulp-rename');
@@ -12,7 +12,6 @@ var concat	= require('gulp-concat');
 var notify	= require('gulp-notify');
 var gzip	= require('gulp-gzip');
 var size	= require('gulp-size');
-var symlink	= require('gulp-symlink');	// Depricated in Gulp 4
 // Other Includes //
 var glob	= require("glob")
 
@@ -29,19 +28,25 @@ const BABEL_CONFIG = {
 };
 
 
+var ignore_folders = glob.sync('src/_**/').map(function(el){return '!'+el+'**/*.*'});
+
 var babelignore_files = glob.sync('src/**/.babelignore').map(function(el){
 	return el.replace('.babelignore','');
 });
 
-// Ignore any file prefixed with an underscore, or minified //
-var less_files		= ['src/**/*.less','!src/**/_*.less'];
-var css_files		= ['src/**/*.css','!src/**/_*.css','!src/**/*.min.css'];
+// Ignore any minified files, or files/folders prefixed with an underscore //
+var less_files		= ['src/**/*.less','!src/**/_*.*']
+						.concat(ignore_folders);
+var css_files		= ['src/**/*.css','!src/**/*.min.css','!src/**/_*.*']
+						.concat(ignore_folders);
 
-var js_in_files 	= ['src/**/*.js','!src/**/_*.js','!src/**/*.min.js']
-						.concat(babelignore_files.map(function(el){return '!'+el+'*.*';}));
+var js_in_files 	= ['src/**/*.js','!src/**/*.min.js','!src/**/_*.*']
+						.concat(babelignore_files.map(function(el){return '!'+el+'*.*';}))
+						.concat(ignore_folders);
 var raw_js_in_files	= babelignore_files.map(function(el){return el+'**/*.js';})
-						.concat(babelignore_files.map(function(el){return '!'+el+'**/_*.js';}))
-						.concat(babelignore_files.map(function(el){return '!'+el+'**/*.min.js';}));
+						.concat(babelignore_files.map(function(el){return '!'+el+'**/*.min.js';}))
+						.concat(babelignore_files.map(function(el){return '!'+el+'**/_*.*';}))
+						.concat(ignore_folders);
 
 var build_folder		= 'output';
 var release_folder		= 'public-static/output';
@@ -66,9 +71,6 @@ var js_out_files		= [
 	'!'+build_folder+'/**/*.min.js',
 	'!'+build_folder+'/'+js_output
 ];
-
-const IS_DEBUG = glob.sync('.gulpdebug').length > 0;
-
 
 /* LESS files to CSS */
 gulp.task('less', function() {
@@ -98,14 +100,6 @@ gulp.task('css', function() {
 		.pipe( debug({title:'css:'}) )
 		.pipe( gulp.dest(build_folder+'/') );
 });
-
-//gulp.task('css-symlink', function() {
-//	return gulp.src( build_folder+'/'+css_output )
-//		.pipe( gulp_if(IS_DEBUG,symlink( release_folder+'/'+css_output )) );
-////		.pipe( gulp.symlink( release_folder+'/'+css_output ) );
-//});
-
-
 /* Concatenate all CSS files */
 gulp.task('css-cat', ['less','css'], function() {
 //gulp.task('css-cat', gulp.series(['less','css'], function() {
@@ -114,8 +108,6 @@ gulp.task('css-cat', ['less','css'], function() {
 		.pipe( concat( css_output ) )
 		.pipe( size({title:'css-cat:',showFiles:true}) )
 		.pipe( gulp.dest( build_folder+'/' ) );
-//		.pipe( gulp_if(IS_DEBUG,symlink( release_folder+'/'+css_output )) );
-//		.pipe( gulp.symlink( release_folder+'/'+css_output ) );
 });
 /* Minifiy the concatenated CSS file */
 gulp.task('css-min', ['css-cat'], function() {
@@ -169,8 +161,6 @@ gulp.task('js-cat', ['babel','js'], function() {
 		.pipe( concat( js_output ) )
 		.pipe( size({title:'js-cat:',showFiles:true}) )
 		.pipe( gulp.dest( build_folder+'/' ) );
-//		.pipe( gulp_if(IS_DEBUG,symlink( release_folder+'/'+js_output )) );
-//		.pipe( gulp.symlink( release_folder+'/'+js_output ) );
 });
 /* Minifiy the concatenated JS file */
 gulp.task('js-min', ['js-cat'], function() {
@@ -196,7 +186,7 @@ gulp.task('js-min-gz', ['js-min'], function() {
 
 
 
-/* Nuke the output folder */
+/* Nuke the output folders */
 gulp.task('clean', function() {
 	var del = require('del');
 	
@@ -226,6 +216,9 @@ gulp.task('clean', function() {
 // By default, GZIP the files, to report roughly how large things are when GZIPPED
 gulp.task('default', ['css-min-gz','js-min-gz'], function(done) {
 //gulp.task('default', gulp.series(['css-min-gz','js-min-gz'], function(done) {
+	var symlink	= require('gulp-symlink');	// Depricated in Gulp 4
+
+	const IS_DEBUG = glob.sync('.gulpdebug').length > 0;
 	if ( IS_DEBUG ) {
 		// Only create symlinks if they don't exist //
 		if ( glob.sync(release_folder+'/'+js_output).length === 0 ) {
