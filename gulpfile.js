@@ -8,7 +8,7 @@ var gulp	= require('gulp');
 var debug	= require('gulp-debug');
 var newer	= require('gulp-newer');
 var rename	= require('gulp-rename');
-var concat	= require('gulp-concat');
+var cat		= require('gulp-concat');
 var notify	= require('gulp-notify');
 var gzip	= require('gulp-gzip');
 var size	= require('gulp-size');
@@ -28,11 +28,18 @@ const BABEL_CONFIG = {
 };
 
 
-var ignore_folders = glob.sync('src/_**/').map(function(el){return '!'+el+'**/*.*'});
+var ignore_folders = glob.sync('src/**/')
+	.filter(function(val){ 
+		return val.indexOf('/_') >= 0;
+	})
+	.map(function(el){
+		return '!'+el+'**/*.*';
+	});
 
-var babelignore_files = glob.sync('src/**/.babelignore').map(function(el){
-	return el.replace('.babelignore','');
-});
+var babelignore_files = glob.sync('src/**/.babelignore')
+	.map(function(el){
+		return el.replace('.babelignore','');
+	});
 
 // Ignore any minified files, or files/folders prefixed with an underscore //
 var less_files		= ['src/**/*.less','!src/**/_*.*']
@@ -41,12 +48,21 @@ var css_files		= ['src/**/*.css','!src/**/*.min.css','!src/**/_*.*']
 						.concat(ignore_folders);
 
 var js_in_files 	= ['src/**/*.js','!src/**/*.min.js','!src/**/_*.*']
-						.concat(babelignore_files.map(function(el){return '!'+el+'*.*';}))
+						.concat(babelignore_files.map(function(el){
+							return '!'+el+'**/*.*';
+						}))
 						.concat(ignore_folders);
-var raw_js_in_files	= babelignore_files.map(function(el){return el+'**/*.js';})
-						.concat(babelignore_files.map(function(el){return '!'+el+'**/*.min.js';}))
-						.concat(babelignore_files.map(function(el){return '!'+el+'**/_*.*';}))
+var raw_js_in_files	= babelignore_files.map(function(el){
+							return el+'**/*.js';
+						})
+						.concat(babelignore_files.map(function(el){
+							return '!'+el+'**/*.min.js';
+						}))
+						.concat(babelignore_files.map(function(el){
+							return '!'+el+'**/_*.*';
+						}))
 						.concat(ignore_folders);
+						
 
 var build_folder		= 'output';
 var release_folder		= 'public-static/output';
@@ -57,8 +73,6 @@ var css_min_output		= 'all.min.css';
 var css_min_gz_output	= 'all.min.css.gz';
 var css_out_files		= [
 	build_folder+'/**/*.css',
-	'!'+build_folder+'/**/_*.css',
-	'!'+build_folder+'/**/*.min.css',
 	'!'+build_folder+'/'+css_output
 ];
 
@@ -67,8 +81,13 @@ var js_min_output		= 'all.min.js';
 var js_min_gz_output	= 'all.min.js.gz';
 var js_out_files		= [
 	build_folder+'/**/*.js',
-	'!'+build_folder+'/**/_*.js',
-	'!'+build_folder+'/**/*.min.js',
+	'!'+build_folder+'/**/*.o.js',
+	'!'+build_folder+'/'+js_output
+];
+
+var jso_output			= 'babel.js';
+var jso_out_files		= [
+	build_folder+'/**/*.o.js',
 	'!'+build_folder+'/'+js_output
 ];
 
@@ -105,7 +124,7 @@ gulp.task('css-cat', ['less','css'], function() {
 //gulp.task('css-cat', gulp.series(['less','css'], function() {
 	return gulp.src( css_out_files )
 		.pipe( newer({dest:build_folder+'/'+css_output}) )
-		.pipe( concat( css_output ) )
+		.pipe( cat( css_output ) )
 		.pipe( size({title:'css-cat:',showFiles:true}) )
 		.pipe( gulp.dest( build_folder+'/' ) );
 });
@@ -120,7 +139,7 @@ gulp.task('css-min', ['css-cat'], function() {
 		.pipe( newer({dest:release_folder+'/'+css_min_output}) )
 		.pipe( cleancss() )
 //		.pipe( cssnano() )
-		.pipe( concat( css_min_output ) )
+		.pipe( cat( css_min_output ) )
 		.pipe( size({title:'css-min:',showFiles:true}) )
 		.pipe( gulp.dest( release_folder+'/' ) );	
 });
@@ -146,6 +165,15 @@ gulp.task('babel', function() {
 		.pipe( rename({extname: ".o.js"}) )
 		.pipe( gulp.dest( build_folder+'/' ) );
 });
+/* Concatenate all Babel JS files */
+gulp.task('babel-cat', ['babel'], function() {
+//gulp.task('babel-cat', gulp.series(['babel'], function() {
+	return gulp.src( jso_out_files )
+		.pipe( newer({dest:build_folder+'/'+jso_output}) )
+		.pipe( cat( jso_output ) )
+		.pipe( size({title:'babel-cat:',showFiles:true}) )
+		.pipe( gulp.dest( build_folder+'/' ) );
+});
 /* Unprocessed JS files */
 gulp.task('js', function() {
 	return gulp.src( raw_js_in_files, {base:'src'} )
@@ -154,11 +182,11 @@ gulp.task('js', function() {
 		.pipe( gulp.dest( build_folder+'/' ) );
 });
 /* Concatenate all JS files */
-gulp.task('js-cat', ['babel','js'], function() {
+gulp.task('js-cat', ['babel-cat','js'], function() {
 //gulp.task('js-cat', gulp.series(['babel','js'], function() {
 	return gulp.src( js_out_files )
 		.pipe( newer({dest:build_folder+'/'+js_output}) )
-		.pipe( concat( js_output ) )
+		.pipe( cat( js_output ) )
 		.pipe( size({title:'js-cat:',showFiles:true}) )
 		.pipe( gulp.dest( build_folder+'/' ) );
 });
@@ -170,7 +198,7 @@ gulp.task('js-min', ['js-cat'], function() {
 	return gulp.src( build_folder+'/'+js_output )
 		.pipe( newer({dest:release_folder+'/'+js_min_output}) )
 		.pipe( uglify() )
-		.pipe( concat( js_min_output ) )
+		.pipe( cat( js_min_output ) )
 		.pipe( size({title:'js-min:',showFiles:true}) )
 		.pipe( gulp.dest( release_folder+'/' ) );
 });
