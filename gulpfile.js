@@ -84,14 +84,17 @@ gulp.task('css', function() {
 });
 /* Concatenate all CSS files */
 gulp.task('css-cat', ['less','css'], function() {
+//gulp.task('css-cat', gulp.series(['less','css'], function() {
 	return gulp.src( css_out_files )
 		.pipe( newer({dest:build_folder+'/'+css_output}) )
 		.pipe( concat( css_output ) )
 		.pipe( size({title:'css-cat:',showFiles:true}) )
-		.pipe( gulp.dest( build_folder+'/' ) );	
+		.pipe( gulp.dest( build_folder+'/' ) );
+//		.pipe( gulp.symlink( release_folder+'/' ) );
 });
 /* Minifiy the concatenated CSS file */
 gulp.task('css-min', ['css-cat'], function() {
+//gulp.task('css-min', gulp.series(['css-cat'], function() {
 	// Benchmarks: http://goalsmashers.github.io/css-minification-benchmark/
 	var cleancss	= require('gulp-cleancss');		// Faster, similar results
 //	var cssnano		= require('gulp-cssnano');
@@ -106,6 +109,7 @@ gulp.task('css-min', ['css-cat'], function() {
 });
 /* GZIP minified (for reference) */
 gulp.task('css-min-gz', ['css-min'], function() {
+//gulp.task('css-min-gz', gulp.series(['css-min'], function() {
 	return gulp.src( release_folder+'/'+css_min_output )
 		.pipe( newer({dest:build_folder+'/'+css_min_gz_output}) )
 		.pipe( gzip() )
@@ -134,6 +138,7 @@ gulp.task('js', function() {
 });
 /* Concatenate all JS files */
 gulp.task('js-cat', ['babel','js'], function() {
+//gulp.task('js-cat', gulp.series(['babel','js'], function() {
 	return gulp.src( js_out_files )
 		.pipe( newer({dest:build_folder+'/'+js_output}) )
 		.pipe( concat( js_output ) )
@@ -142,6 +147,7 @@ gulp.task('js-cat', ['babel','js'], function() {
 });
 /* Minifiy the concatenated JS file */
 gulp.task('js-min', ['js-cat'], function() {
+//gulp.task('js-min', gulp.series(['js-cat'], function() {
 	var uglify = require('gulp-uglify');
 	
 	return gulp.src( build_folder+'/'+js_output )
@@ -153,6 +159,7 @@ gulp.task('js-min', ['js-cat'], function() {
 });
 /* GZIP minified (for reference) */
 gulp.task('js-min-gz', ['js-min'], function() {
+//gulp.task('js-min-gz', gulp.series(['js-min'], function() {
 	return gulp.src( release_folder+'/'+js_min_output )
 		.pipe( newer({dest:build_folder+'/'+js_min_gz_output}) )
 		.pipe( gzip() )
@@ -190,5 +197,7 @@ gulp.task('clean', function() {
 
 
 // By default, GZIP the files, to report roughly how large things are when GZIPPED
-gulp.task('default', ['css-min-gz','js-min-gz'], function() {
+gulp.task('default', ['css-min-gz','js-min-gz'], function(done) {
+//gulp.task('default', gulp.series(['css-min-gz','js-min-gz'], function(done) {
+	return done();
 });
