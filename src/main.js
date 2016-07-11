@@ -1,5 +1,5 @@
-import { h, render } from '../external/preact/preact';
-import { diff_match_patch } from '../custom/diff_match_patch/diff_match_patch';
+import { h, render } from 'external/preact/preact';
+import { diff_match_patch } from 'custom/diff_match_patch/diff_match_patch';
 
 console.log("heyo");
 
