@@ -15,7 +15,6 @@ console.log("hey");
 var a = "The best\n\npart of waking up\nis folgers in your cup\nI think...\n\n???";
 var b = "The best\npart of waking up\nis fulgers in your cup\nI think...\n\n???\n";
 
-
 function diff_lineMode(text1, text2) {
 	var dmp = new diff_match_patch();
 	var a = dmp.diff_linesToChars(text1, text2);

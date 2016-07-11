@@ -151,7 +151,8 @@ gulp.task('buble', function() {
 
 	const BUBLE_CONFIG = {
 		transforms: {
-			modules: false		// ignore import/export's (
+			modules: false,		// ignore import/export's
+//			generator: false
 		},
 		jsx: "h"
 	};
