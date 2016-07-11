@@ -5,8 +5,7 @@
 	<link rel="stylesheet" href="//static.jam.dev/output/all.min.css?v=1.0">
 </head>
 
-<body>
-	<script src="//static.jam.dev/output/all.min.js"></script>
-	<div>Hello!</div>
+<body class="_static-nav-bar">
+	<script src="//static.jam.dev/output/all.js"></script>
 </body>
 </html>

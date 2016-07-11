@@ -1,0 +1,46 @@
+
+@NAV_BAR_HEIGHT: 48px;
+@NAV_BAR_SHADOW: 2px;
+@NAV_BAR_PAD: 6px;
+@NAV_BAR_CELL: @NAV_BAR_HEIGHT - @NAV_BAR_PAD * 2;
+
+.nav-bar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index:1000;
+	
+	border-bottom: @NAV_BAR_SHADOW solid #AAA;
+
+	height: @NAV_BAR_CELL;
+	background: #DDD;
+	
+	line-height: @NAV_BAR_CELL;
+	padding: @NAV_BAR_PAD;
+		
+	> .box {
+		line-height: @NAV_BAR_CELL - 2px;
+		border: 1px solid #000;
+		padding: 0 20px;
+		margin-right: @NAV_BAR_PAD;
+		display: inline-block;
+
+		&.-right {
+			margin-right: 0;
+			margin-left: @NAV_BAR_PAD;
+			float: right;
+		}
+	}
+};
+
+body {
+	position:relative;
+	top: @NAV_BAR_HEIGHT + @NAV_BAR_SHADOW;
+};
+
+body._static-nav-bar > .nav-bar {
+	position: absolute;
+	left: 0;
+	top: -@NAV_BAR_HEIGHT;
+}

@@ -1,16 +1,8 @@
 import { h, render } from 'external/preact/preact';
 import { diff_match_patch } from 'custom/diff_match_patch/diff_match_patch';
+import NavBar from './com/nav-bar/code';
 
-console.log("heyo");
-
-render((
-    <div id="foo">
-        <span>Hello, world!</span>
-        <button onClick={ e => alert("hi!") }>Click Me</button>
-    </div>
-), document.body);
-
-console.log("hey");
+render(<NavBar />, document.body);
 
 var a = "The best\n\npart of waking up\nis folgers in your cup\nI think...\n\n???";
 var b = "The best\npart of waking up\nis fulgers in your cup\nI think...\n\n???\n";
