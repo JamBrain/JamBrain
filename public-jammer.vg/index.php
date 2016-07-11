@@ -7,6 +7,6 @@
 
 <body>
 	<script src="//static.jam.dev/output/all.min.js"></script>
-	Hello
+	<div>Hello!</div>
 </body>
 </html>

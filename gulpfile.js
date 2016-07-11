@@ -16,18 +16,6 @@ var size	= require('gulp-size');
 var glob	= require("glob")
 
 
-const AUTOPREFIX_CONFIG = {
-//	browsers: ["last 2 versions"]
-};
-
-const BABEL_CONFIG = {
-	presets:['es2015'],
-	plugins:[
-		["transform-react-jsx", { "pragma":"h" }]
-	]
-};
-
-
 var ignore_folders = glob.sync('src/**/')
 	.filter(function(val){ 
 		return val.indexOf('/_') >= 0;
@@ -36,9 +24,9 @@ var ignore_folders = glob.sync('src/**/')
 		return '!'+el+'**/*.*';
 	});
 
-var babelignore_files = glob.sync('src/**/.babelignore')
+var esignore_files = glob.sync('src/**/.esignore')
 	.map(function(el){
-		return el.replace('.babelignore','');
+		return el.replace('.esignore','');
 	});
 
 // Ignore any minified files, or files/folders prefixed with an underscore //
@@ -48,17 +36,17 @@ var css_files		= ['src/**/*.css','!src/**/*.min.css','!src/**/_*.*']
 						.concat(ignore_folders);
 
 var js_in_files 	= ['src/**/*.js','!src/**/*.min.js','!src/**/_*.*']
-						.concat(babelignore_files.map(function(el){
+						.concat(esignore_files.map(function(el){
 							return '!'+el+'**/*.*';
 						}))
 						.concat(ignore_folders);
-var raw_js_in_files	= babelignore_files.map(function(el){
+var raw_js_in_files	= esignore_files.map(function(el){
 							return el+'**/*.js';
 						})
-						.concat(babelignore_files.map(function(el){
+						.concat(esignore_files.map(function(el){
 							return '!'+el+'**/*.min.js';
 						}))
-						.concat(babelignore_files.map(function(el){
+						.concat(esignore_files.map(function(el){
 							return '!'+el+'**/_*.*';
 						}))
 						.concat(ignore_folders);
@@ -85,11 +73,11 @@ var js_out_files		= [
 	'!'+build_folder+'/'+js_output
 ];
 
-var jso_output			= 'babel.js';
-var jso_out_files		= [
-	build_folder+'/**/*.o.js',
-	'!'+build_folder+'/'+js_output
-];
+//var jso_output			= 'babel.js';
+//var jso_out_files		= [
+//	build_folder+'/**/*.o.js',
+//	'!'+build_folder+'/'+js_output
+//];
 
 /* LESS files to CSS */
 gulp.task('less', function() {
@@ -99,6 +87,10 @@ gulp.task('less', function() {
 //	var less		= require('gulp-less-sourcemap');
 	// NOTE: We're running autoprefixer as a LESS plugin, due to problems with postcss sourcemaps
 	var autoprefix	= require('less-plugin-autoprefix');
+
+	const AUTOPREFIX_CONFIG = {
+	//	browsers: ["last 2 versions"]
+	};
 
 	return gulp.src( less_files )
 		.pipe( newer({dest:build_folder,ext:".css"}) )
@@ -153,27 +145,79 @@ gulp.task('css-min-gz', ['css-min'], function() {
 		.pipe( gulp.dest( build_folder+'/' ) );
 });
 
+/* Use Buble to compile ES2015 files to JS */
+gulp.task('buble', function() {
+	var buble = require("gulp-buble");
 
-/* Use Babel to compile ES2015 files to JS */
-gulp.task('babel', function() {
-	var babel = require("gulp-babel");
+	const BUBLE_CONFIG = {
+		transforms: {
+			modules: false		// ignore import/export's (
+		},
+		jsx: "h"
+	};
 	
 	return gulp.src( js_in_files, {base:'src'} )
 		.pipe( newer({dest:build_folder,ext:".o.js"}) )
-		.pipe( debug({title:'js (babel):'}) )
-		.pipe( babel(BABEL_CONFIG) )
+		.pipe( debug({title:'js (buble):'}) )
+		.pipe( buble(BUBLE_CONFIG) )
 		.pipe( rename({extname: ".o.js"}) )
 		.pipe( gulp.dest( build_folder+'/' ) );
 });
-/* Concatenate all Babel JS files */
-gulp.task('babel-cat', ['babel'], function() {
-//gulp.task('babel-cat', gulp.series(['babel'], function() {
-	return gulp.src( jso_out_files )
-		.pipe( newer({dest:build_folder+'/'+jso_output}) )
-		.pipe( cat( jso_output ) )
-		.pipe( size({title:'babel-cat:',showFiles:true}) )
-		.pipe( gulp.dest( build_folder+'/' ) );
+
+gulp.task('buble-rollup', ['buble'], function() {
+	var rollup = require('rollup-stream');
+	var source = require('vinyl-source-stream');
+
+	var includePaths	= require("rollup-plugin-includepaths");
+//	var nodeResolve		= require("rollup-plugin-node-resolve");
+
+	return rollup({
+			entry: './output/com/main.o.js',
+			plugins: [
+				includePaths({
+					paths: [
+						'src',
+					],
+					extensions:['.js','.o.js']
+				}),
+	//			nodeResolve({
+	//				jsnext: true,
+	////				extensions:['.js','.o.js']			
+	//			}),
+			]
+		})
+		.pipe(source('buble.js'))
+		.pipe(gulp.dest('./output'));
 });
+
+///* Use Babel to compile ES2015 files to JS */
+//gulp.task('babel', function() {
+//	var babel = require("gulp-babel");
+//
+//	const BABEL_CONFIG = {
+//		presets:['es2015'],
+//		plugins:[
+//			["transform-react-jsx", { "pragma":"h" }]
+//		]
+//	};
+//	
+//	return gulp.src( js_in_files, {base:'src'} )
+//		.pipe( newer({dest:build_folder,ext:".o.js"}) )
+//		.pipe( debug({title:'js (babel):'}) )
+//		.pipe( babel(BABEL_CONFIG) )
+//		.pipe( rename({extname: ".o.js"}) )
+//		.pipe( gulp.dest( build_folder+'/' ) );
+//});
+///* Concatenate all Babel JS files */
+//gulp.task('babel-cat', ['babel'], function() {
+////gulp.task('babel-cat', gulp.series(['babel'], function() {
+//	return gulp.src( jso_out_files )
+//		.pipe( newer({dest:build_folder+'/'+jso_output}) )
+//		.pipe( cat( jso_output ) )
+//		.pipe( size({title:'babel-cat:',showFiles:true}) )
+//		.pipe( gulp.dest( build_folder+'/' ) );
+//});
+
 /* Unprocessed JS files */
 gulp.task('js', function() {
 	return gulp.src( raw_js_in_files, {base:'src'} )
@@ -182,8 +226,8 @@ gulp.task('js', function() {
 		.pipe( gulp.dest( build_folder+'/' ) );
 });
 /* Concatenate all JS files */
-gulp.task('js-cat', ['babel-cat','js'], function() {
-//gulp.task('js-cat', gulp.series(['babel','js'], function() {
+gulp.task('js-cat', ['buble-rollup','js'], function() {
+//gulp.task('js-cat', gulp.series(['babel-cat','js'], function() {
 	return gulp.src( js_out_files )
 		.pipe( newer({dest:build_folder+'/'+js_output}) )
 		.pipe( cat( js_output ) )
