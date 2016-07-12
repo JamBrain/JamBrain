@@ -166,8 +166,8 @@ gulp.task('buble', function() {
 });
 
 gulp.task('buble-rollup', ['buble'], function() {
-	var rollup = require('rollup-stream');
-	var source = require('vinyl-source-stream');
+	var rollup	= require('rollup-stream');
+	var source	= require('vinyl-source-stream');
 
 	var includePaths	= require("rollup-plugin-includepaths");
 //	var nodeResolve		= require("rollup-plugin-node-resolve");
@@ -177,14 +177,17 @@ gulp.task('buble-rollup', ['buble'], function() {
 			plugins: [
 				includePaths({
 					paths: [
-						'src',
+						'output/external',
+						'output/custom',
 					],
+//					include: {
+//						'preact':'output/external/preact/preact.o.js'
+//					},
 					extensions:['.js','.o.js']
 				}),
-	//			nodeResolve({
-	//				jsnext: true,
-	////				extensions:['.js','.o.js']			
-	//			}),
+//				nodeResolve({
+//					jsnext: true
+//				}),
 			]
 		})
 		.pipe(source('buble.js'))

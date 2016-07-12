@@ -1,4 +1,4 @@
-import { h, Component } from '../../external/preact/preact';
+import { h, Component } from 'preact/preact';
 
 export default class NavBar extends Component {
 	render(props,state) {
