@@ -34,7 +34,7 @@
 	}
 };
 
-body {
+body._use-nav-bar {
 	position:relative;
 	top: @NAV_BAR_HEIGHT + @NAV_BAR_SHADOW;
 };
@@ -42,5 +42,5 @@ body {
 body._static-nav-bar > .nav-bar {
 	position: absolute;
 	left: 0;
-	top: -@NAV_BAR_HEIGHT;
+	top: -(@NAV_BAR_HEIGHT + @NAV_BAR_SHADOW);
 }
