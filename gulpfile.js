@@ -98,7 +98,10 @@ gulp.task('less', function() {
 		.pipe( debug({title:'less:'}) )
 //		.pipe( sourcemaps.init() )
 			.pipe( less({
-				plugins:[
+				'globalVars': {
+					'STATIC_DOMAIN':'static.jammer.work',
+				},
+				plugins: [
 					new autoprefix(AUTOPREFIX_CONFIG)
 				]
 			}) )
