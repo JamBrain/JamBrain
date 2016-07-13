@@ -8,7 +8,7 @@ export default class NavBar extends Component {
 				<div>
 					<CoreButton class="button" onClick={ navbar_Static }>Static</CoreButton>
 					<CoreButton class="button" onClick={ navbar_Float }>Float</CoreButton>
-					<CoreButton class="button">Blank</CoreButton>
+					<CoreButton class="button" onClick={ e => { document.activeElement.blur(); } }>Blank</CoreButton>
 				</div>
 				<div class="-right">
 					<CoreButton class="button">And that is it</CoreButton>
@@ -24,13 +24,6 @@ export default class NavBar extends Component {
 	componentWillUnmount() {
 		document.body.classList.remove('_use-nav-bar');
 		document.body.classList.remove('_static-nav-bar');
-	}
-	
-	actionOne() {
-		navbar_Static();
-	}
-	actionTwo() {
-		navbar_Float();
 	}
 }
 
