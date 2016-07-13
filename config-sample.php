@@ -10,6 +10,9 @@ const CMW_USING_APCU = true;
 const CMW_USING_MAGICK = true;
 const CMW_USING_IMAGEMAGICK = true;
 //const CMW_USING_GRAPHICSMAGICK = true;
+const CMW_USING_PNGQUANT = true;
+const CMW_USING_FFMPEG = true;
+//const CMW_USING_GIFSICLE = true;
 
 // Database Config //
 const CMW_DB_HOST = 'localhost';

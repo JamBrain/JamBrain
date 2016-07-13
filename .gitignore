@@ -3,6 +3,7 @@
 .ftpquota
 .svn
 .hg
+.gulpdebug
 error_log
 /public/dev/
 /public-static/raw/

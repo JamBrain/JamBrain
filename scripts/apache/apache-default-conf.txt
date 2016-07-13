@@ -1,98 +1,147 @@
+<VirtualHost *:80>
+        # The ServerName directive sets the request scheme, hostname and port that
+        # the server uses to identify itself. This is used when creating
+        # redirection URLs. In the context of virtual hosts, the ServerName
+        # specifies what hostname must appear in the request's Host: header to
+        # match this virtual host. For the default virtual host (this file) this
+        # value is not decisive as it is used as a last resort host regardless.
+        # However, you must set it for any further virtual host explicitly.
+        #ServerName www.example.com
 
-<VirtualHost *:8080>
         ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-static
+        DocumentRoot /var/www/public-404
+
+        # Available loglevels: trace8, ..., trace1, debug, info, notice, warn,
+        # error, crit, alert, emerg.
+        # It is also possible to configure the loglevel for particular
+        # modules, e.g.
+        #LogLevel info ssl:warn
 
         ErrorLog ${APACHE_LOG_DIR}/error.log
         CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+        # For most configuration files from conf-available/, which are
+        # enabled or disabled at a global level, it is possible to
+        # include a line for only one particular virtual host. For example the
+        # following line enables the CGI configuration for this host only
+        # after it has been globally disabled with "a2disconf".
+        #Include conf-available/serve-cgi-bin.conf
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+
+<VirtualHost *:8080>
+        DocumentRoot /var/www/common
 </VirtualHost>
 
 <VirtualHost *:8081>
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-auth
-
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
+        DocumentRoot /var/www/public-static
 </VirtualHost>
-
 <VirtualHost *:8082>
-        ServerAdmin webmaster@localhost
         DocumentRoot /var/www/public-api
-
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
-
 <VirtualHost *:8083>
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-pusher
-
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
+        DocumentRoot /var/www/public-auth
 </VirtualHost>
-
 <VirtualHost *:8084>
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-ldj.am
-
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
+        DocumentRoot /var/www/public-pusher
 </VirtualHost>
-
 <VirtualHost *:8085>
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-com
-
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
+        DocumentRoot /var/www/public-ludumdare.com
 </VirtualHost>
-
 <VirtualHost *:8086>
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-net
-
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
+        DocumentRoot /var/www/public-jammer.vg
 </VirtualHost>
-
 <VirtualHost *:8087>
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-org
-
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>
-
-<VirtualHost *:8088>
-        ServerAdmin webmaster@localhost
         DocumentRoot /var/www/public-jammer.bio
-
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
-
 <VirtualHost *:8089>
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-theme
-
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
+        DocumentRoot /var/www/public-url.shortener
 </VirtualHost>
-
 
 
 <VirtualHost *:8090>
-        ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-jam.host
-
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
+        DocumentRoot /var/www/public-theme
 </VirtualHost>
-
 <VirtualHost *:8091>
         ServerAdmin webmaster@localhost
-        DocumentRoot /var/www/public-jammer.events
-
-        ErrorLog ${APACHE_LOG_DIR}/error.log
-        CustomLog ${APACHE_LOG_DIR}/access.log combined
+        DocumentRoot /var/www/public-jam.host
 </VirtualHost>
+<VirtualHost *:8092>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/public-jammer.events
+</VirtualHost>
+<VirtualHost *:8099>
+        ServerAdmin webmaster@localhost
+        DocumentRoot /var/www/public-status
+</VirtualHost>
+
+
+<VirtualHost 192.168.48.48:80>
+	ServerName jammer.work
+	DocumentRoot /var/www/public-jammer.vg
+</VirtualHost>
+<VirtualHost 192.168.48.48:80>
+	ServerName bio.jammer.work
+    DocumentRoot /var/www/public-jammer.bio
+</VirtualHost>
+<VirtualHost 192.168.48.48:80>
+	ServerName host.jammer.work
+	DocumentRoot /var/www/public-jam.host
+</VirtualHost>
+<VirtualHost 192.168.48.48:80>
+	ServerName events.jammer.work
+	DocumentRoot /var/www/public-jammer.events
+</VirtualHost>
+<VirtualHost 192.168.48.48:80>
+	ServerName api.jammer.work
+	DocumentRoot /var/www/public-api
+</VirtualHost>
+<VirtualHost 192.168.48.48:80>
+	ServerName auth.jammer.work
+	DocumentRoot /var/www/public-auth
+</VirtualHost>
+<VirtualHost 192.168.48.48:80>
+	ServerName push.jammer.work
+	DocumentRoot /var/www/public-pusher
+</VirtualHost>
+<VirtualHost 192.168.48.48:80>
+	ServerName static.jammer.work
+	DocumentRoot /var/www/public-static
+</VirtualHost>
+<VirtualHost 192.168.48.48:80>
+	ServerName status.jammer.work
+	DocumentRoot /var/www/public-status
+</VirtualHost>
+
+
+
+<VirtualHost 192.168.48.48:80>
+	ServerName ludumdare.org
+	DocumentRoot /var/www/public-ludumdare.com
+</VirtualHost>
+<VirtualHost 192.168.48.48:80>
+	ServerName api.ludumdare.org
+	DocumentRoot /var/www/public-api
+</VirtualHost>
+<VirtualHost 192.168.48.48:80>
+	ServerName auth.ludumdare.org
+	DocumentRoot /var/www/public-auth
+</VirtualHost>
+<VirtualHost 192.168.48.48:80>
+	ServerName push.ludumdare.org
+	DocumentRoot /var/www/public-pusher
+</VirtualHost>
+<VirtualHost 192.168.48.48:80>
+	ServerName static.ludumdare.org
+	DocumentRoot /var/www/public-static
+</VirtualHost>
+<VirtualHost 192.168.48.48:80>
+	ServerName status.ludumdare.org
+	DocumentRoot /var/www/public-status
+</VirtualHost>
+<VirtualHost 192.168.48.48:80>
+	ServerName theme.ludumdare.org
+	DocumentRoot /var/www/public-theme
+</VirtualHost>
+

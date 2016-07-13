@@ -1,5 +1,5 @@
 
-# More Ports (LDJAM)
+# More Ports
 
 Listen 8080
 Listen 8081
@@ -14,3 +14,11 @@ Listen 8089
 
 Listen 8090
 Listen 8091
+Listen 8092
+Listen 8093
+Listen 8094
+Listen 8095
+Listen 8096
+Listen 8097
+Listen 8098
+Listen 8099

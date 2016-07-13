@@ -1,0 +1,72 @@
+
+@MAIN_BACKGROUND:		#F5F5F5;
+@MAIN_COLOR:			#2D2D2D;
+
+@MAIN_INV_BACKGROUND:	#3E3E3E;
+@MAIN_INV_COLOR:		#F5F2F0;
+
+/* Title BG:		#2D2D2D */
+/* Title Hover:		#3068CC */
+/* Title Text:		#FFFFFF */
+/* Gap:				#1F1F1F */
+/* Content BG:		#3E3E3E */
+/* Content Text:	#F5F2F0 (warm) */
+
+body {
+	background: @MAIN_BACKGROUND;
+	color: @MAIN_COLOR;
+}
+
+#layout {
+	margin: 16px auto 0;
+	width: 1280px;
+	display: flex;
+}
+
+@media (max-width: (1280px)) { 
+	#layout {
+		width: 100%;
+	}
+}
+@media (max-width: (1280px-320px)) { 
+	#sidebar {
+		display: none;
+	}
+}
+
+#sidebar {
+	flex: 1;
+
+	width:320px;
+	max-width:320px;
+	min-width:240px;
+	
+	border: 1px solid rgba(255,0,0,0.2);
+	padding: 10px;
+}
+
+#content {
+	flex: 3;
+
+	border: 1px solid rgba(0,0,0,0.2);
+	padding: 10px;
+}
+
+
+
+.twitter-box {
+	border: 3px solid #55ACEE;
+	
+	background-color: #FFF;
+	background-image: url('//static.jammer.work/other/logo/twitter/bird-logo-2012.svg');
+	background-repeat: no-repeat;
+	background-position: right 0px bottom -64px;
+	
+	border-radius: 20px;
+	width: 80%;
+	margin: auto;
+	
+	> div {
+		margin: 20px;
+	}
+}

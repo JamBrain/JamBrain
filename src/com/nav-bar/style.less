@@ -1,0 +1,74 @@
+
+@NAVBAR_HEIGHT: 48px;
+@NAVBAR_SHADOW: 2px;
+@NAVBAR_PAD: 6px;
+@NAVBAR_CELL: @NAVBAR_HEIGHT - @NAVBAR_PAD * 2;
+
+@NAVBAR_COLOR_BG: #3E3E3E;
+@NAVBAR_COLOR_SHADOW: #AAA;
+
+.nav-bar {
+	/* Needed for click-off and drag un-highlighting buttons to work (i.e. no selections) */
+	user-select: none;
+	
+	position: fixed;
+	top: -2px;								/* Mobile Scrolling Garbage Fix */
+	left: 0;
+	right: 0;
+	z-index:1000;
+	
+	border-top: 2px solid @NAVBAR_COLOR_BG;	/* Mobile Scrolling Garbage Fix */
+	border-bottom: @NAVBAR_SHADOW solid @NAVBAR_COLOR_SHADOW;
+
+	height: @NAVBAR_CELL;
+	background: @NAVBAR_COLOR_BG;
+	
+	line-height: @NAVBAR_CELL;
+	padding: @NAVBAR_PAD;
+	
+	> div {
+		display: inline-block;
+
+		> div {
+			margin-right: @NAVBAR_PAD;		
+			display: inline-block;
+		}
+		> .button {
+			line-height: @NAVBAR_CELL;/* - 2px;*/
+			padding: 0 20px;
+			
+			background: #2D2D2D;
+			color: #F5F2F0;
+			
+			transition: background 0.2s, color 0.2s;
+			
+			&:hover, &:focus, &:active {
+				background: #3068CC;
+				color: #FFF;
+			}
+			&:hover:active {
+				color: #3068CC;
+				background: #FFF;
+			}
+		}
+	}
+	> div.-right {
+		float: right;
+
+		> div {
+			margin-right: 0;
+			margin-left: @NAVBAR_PAD;
+		}
+	}
+};
+
+body._use-nav-bar {
+	position:relative;
+	top: @NAVBAR_HEIGHT + @NAVBAR_SHADOW;
+};
+
+body._static-nav-bar > .nav-bar {
+	position: absolute;
+	left: 0;
+	top: -(@NAVBAR_HEIGHT + @NAVBAR_SHADOW);
+}
