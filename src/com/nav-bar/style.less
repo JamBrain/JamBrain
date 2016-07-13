@@ -21,30 +21,37 @@
 	
 	line-height: @NAVBAR_CELL;
 	padding: @NAVBAR_PAD;
-		
-	> .button {
-		line-height: @NAVBAR_CELL;/* - 2px;*/
-		/*border: 1px solid #000;*/
-		padding: 0 20px;
-		margin-right: @NAVBAR_PAD;
+	
+	> div {
 		display: inline-block;
-		
-		background: #2D2D2D;
-		color: #F5F2F0;
-		
-		&:hover, &:active {
-			background: #3068CC;
-			color: #FFF;
-		}
-		&:hover:active {
-			color: #3068CC;
-			background: #FFF;
-		}
 
-		&.-right {
+		> div {
+			margin-right: @NAVBAR_PAD;		
+			display: inline-block;
+		}
+		> .button {
+			line-height: @NAVBAR_CELL;/* - 2px;*/
+			padding: 0 20px;
+			
+			background: #2D2D2D;
+			color: #F5F2F0;
+			
+			&:hover, &:focus, &:active {
+				background: #3068CC;
+				color: #FFF;
+			}
+			&:hover:active, &:focus:active {
+				color: #3068CC;
+				background: #FFF;
+			}
+		}
+	}
+	> div.-right {
+		float: right;
+
+		> div {
 			margin-right: 0;
 			margin-left: @NAVBAR_PAD;
-			float: right;
 		}
 	}
 };

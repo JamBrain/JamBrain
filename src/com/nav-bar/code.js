@@ -4,11 +4,15 @@ export default class NavBar extends Component {
 	render(props,state) {
 		return (
 			<div class="nav-bar">
-				<div class="button _button" onClick={ e => navbar_Static() }>Hullo</div>
-				<div class="button _button" onClick={ e => navbar_Float() }>C</div>
-				<div class="button _button">NOO</div>
-				<div class="button _button -right">Well...</div>
-				<div class="button _button -right">Sure</div>
+				<div>
+					<div tabIndex="0" class="button _button" onClick={ e => navbar_Static() }>Hullo</div>
+					<div tabIndex="0" class="button _button" onClick={ e => navbar_Float() }>C</div>
+					<div tabIndex="0" class="button _button">NOO</div>
+				</div>
+				<div class="-right">
+					<div tabIndex="0" class="button _button">Well...</div>
+					<div tabIndex="0" class="button _button">Sure</div>
+				</div>
 			</div>
 		);
 	}
