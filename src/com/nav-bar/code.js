@@ -1,17 +1,18 @@
 import { h, Component } from 'preact/preact';
+import CoreButton from '../core-button/code';
 
 export default class NavBar extends Component {
 	render(props,state) {
 		return (
 			<div class="nav-bar">
 				<div>
-					<div tabIndex="0" class="button _button" onClick={ e => navbar_Static() }>Hullo</div>
-					<div tabIndex="0" class="button _button" onClick={ e => navbar_Float() }>C</div>
-					<div tabIndex="0" class="button _button">NOO</div>
+					<CoreButton class="button" onClick={ navbar_Static }>Static</CoreButton>
+					<CoreButton class="button" onClick={ navbar_Float }>Float</CoreButton>
+					<CoreButton class="button">Blank</CoreButton>
 				</div>
 				<div class="-right">
-					<div tabIndex="0" class="button _button">Well...</div>
-					<div tabIndex="0" class="button _button">Sure</div>
+					<CoreButton class="button">And that is it</CoreButton>
+					<CoreButton class="button">Dude...?</CoreButton>
 				</div>
 			</div>
 		);
@@ -23,6 +24,13 @@ export default class NavBar extends Component {
 	componentWillUnmount() {
 		document.body.classList.remove('_use-nav-bar');
 		document.body.classList.remove('_static-nav-bar');
+	}
+	
+	actionOne() {
+		navbar_Static();
+	}
+	actionTwo() {
+		navbar_Float();
 	}
 }
 

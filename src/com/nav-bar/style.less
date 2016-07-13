@@ -8,6 +8,9 @@
 @NAVBAR_COLOR_SHADOW: #AAA;
 
 .nav-bar {
+	/* Needed for click-off and drag un-highlighting buttons to work (i.e. no selections) */
+	user-select: none;
+	
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -36,11 +39,13 @@
 			background: #2D2D2D;
 			color: #F5F2F0;
 			
+			transition: background 0.2s, color 0.2s;
+			
 			&:hover, &:focus, &:active {
 				background: #3068CC;
 				color: #FFF;
 			}
-			&:hover:active, &:focus:active {
+			&:hover:active {
 				color: #3068CC;
 				background: #FFF;
 			}
