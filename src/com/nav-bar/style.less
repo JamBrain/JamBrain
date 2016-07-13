@@ -12,11 +12,12 @@
 	user-select: none;
 	
 	position: fixed;
-	top: 0;
+	top: -2px;								/* Mobile Scrolling Garbage Fix */
 	left: 0;
 	right: 0;
 	z-index:1000;
 	
+	border-top: 2px solid @NAVBAR_COLOR_BG;	/* Mobile Scrolling Garbage Fix */
 	border-bottom: @NAVBAR_SHADOW solid @NAVBAR_COLOR_SHADOW;
 
 	height: @NAVBAR_CELL;

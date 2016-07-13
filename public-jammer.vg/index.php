@@ -2,7 +2,12 @@
 // TODO: Figure out if this is the live server or not //
 define('USE_MINIFIED',isset($_GET['debug']) ? '' : '.min');
 define('USE_VERSION','0.1');
-define('STATIC_DOMAIN','static.jammer.work');
+const STATIC_DOMAINS = [ 
+	'jammer.work'=>'static.jammer.work',
+	'jammer.dev'=>'static.jam.dev',
+	'jammer.vg'=>'static.jam.vg'
+];
+define('STATIC_DOMAIN', STATIC_DOMAINS[$_SERVER['SERVER_NAME']]);
 ?><!doctype html>
 <html lang="en">
 <head>
