@@ -1,8 +1,11 @@
 
-@NAV_BAR_HEIGHT: 48px;
-@NAV_BAR_SHADOW: 2px;
-@NAV_BAR_PAD: 6px;
-@NAV_BAR_CELL: @NAV_BAR_HEIGHT - @NAV_BAR_PAD * 2;
+@NAVBAR_HEIGHT: 48px;
+@NAVBAR_SHADOW: 2px;
+@NAVBAR_PAD: 6px;
+@NAVBAR_CELL: @NAVBAR_HEIGHT - @NAVBAR_PAD * 2;
+
+@NAVBAR_COLOR_BG: #3E3E3E;
+@NAVBAR_COLOR_SHADOW: #AAA;
 
 .nav-bar {
 	position: fixed;
@@ -11,24 +14,36 @@
 	right: 0;
 	z-index:1000;
 	
-	border-bottom: @NAV_BAR_SHADOW solid #AAA;
+	border-bottom: @NAVBAR_SHADOW solid @NAVBAR_COLOR_SHADOW;
 
-	height: @NAV_BAR_CELL;
-	background: #DDD;
+	height: @NAVBAR_CELL;
+	background: @NAVBAR_COLOR_BG;
 	
-	line-height: @NAV_BAR_CELL;
-	padding: @NAV_BAR_PAD;
+	line-height: @NAVBAR_CELL;
+	padding: @NAVBAR_PAD;
 		
-	> .box {
-		line-height: @NAV_BAR_CELL - 2px;
-		border: 1px solid #000;
+	> .button {
+		line-height: @NAVBAR_CELL;/* - 2px;*/
+		/*border: 1px solid #000;*/
 		padding: 0 20px;
-		margin-right: @NAV_BAR_PAD;
+		margin-right: @NAVBAR_PAD;
 		display: inline-block;
+		
+		background: #2D2D2D;
+		color: #F5F2F0;
+		
+		&:hover, &:active {
+			background: #3068CC;
+			color: #FFF;
+		}
+		&:hover:active {
+			color: #3068CC;
+			background: #FFF;
+		}
 
 		&.-right {
 			margin-right: 0;
-			margin-left: @NAV_BAR_PAD;
+			margin-left: @NAVBAR_PAD;
 			float: right;
 		}
 	}
@@ -36,11 +51,11 @@
 
 body._use-nav-bar {
 	position:relative;
-	top: @NAV_BAR_HEIGHT + @NAV_BAR_SHADOW;
+	top: @NAVBAR_HEIGHT + @NAVBAR_SHADOW;
 };
 
 body._static-nav-bar > .nav-bar {
 	position: absolute;
 	left: 0;
-	top: -(@NAV_BAR_HEIGHT + @NAV_BAR_SHADOW);
+	top: -(@NAVBAR_HEIGHT + @NAVBAR_SHADOW);
 }

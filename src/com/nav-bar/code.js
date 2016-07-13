@@ -4,11 +4,11 @@ export default class NavBar extends Component {
 	render(props,state) {
 		return (
 			<div class="nav-bar">
-				<div class="box _button" onClick={ e => navbar_Static() }>Hullo</div>
-				<div class="box _button" onClick={ e => navbar_Float() }>C</div>
-				<div class="box _button">NOO</div>
-				<div class="box _button -right">Well...</div>
-				<div class="box _button -right">Sure</div>
+				<div class="button _button" onClick={ e => navbar_Static() }>Hullo</div>
+				<div class="button _button" onClick={ e => navbar_Float() }>C</div>
+				<div class="button _button">NOO</div>
+				<div class="button _button -right">Well...</div>
+				<div class="button _button -right">Sure</div>
 			</div>
 		);
 	}

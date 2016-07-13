@@ -6,11 +6,12 @@ define('USE_VERSION','0.1');
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<link rel="stylesheet" href="//static.jammer.work/output/all<?=USE_MINIFIED?>.css?v=<?=USE_VERSION?>">
+	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic" type="text/css">
+	<link rel="stylesheet" href="//static.jammer.work/output/all<?=USE_MINIFIED?>.css?v=<?=USE_VERSION?>" type="text/css">
 </head>
 
 <body>
 	<script src="//static.jammer.work/output/all<?=USE_MINIFIED?>.js?v=<?=USE_VERSION?>"></script>
-	Hello
+	<span>Hello. <strong>Something</strong> is going to happen.</span>
 </body>
 </html>
