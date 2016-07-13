@@ -11,8 +11,8 @@ export default class NavBar extends Component {
 					<CoreButton class="button" onClick={ e => { document.activeElement.blur(); } }>Blank</CoreButton>
 				</div>
 				<div class="-right">
-					<CoreButton class="button">And that is it</CoreButton>
-					<CoreButton class="button">Dude...?</CoreButton>
+					<CoreButton class="button" onClick={ e => { console.log("moop"); } }>And that is it</CoreButton>
+					<CoreButton class="button" keepFocus>Dude...?</CoreButton>
 				</div>
 			</div>
 		);

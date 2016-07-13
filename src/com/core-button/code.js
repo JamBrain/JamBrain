@@ -11,7 +11,17 @@ export default class CoreButton extends Component {
 			props.class = "core-button";
 			
 		if ( props.hasOwnProperty('onClick') ) {
-			props.onKeyDown = e => {
+			// As long as you don't set the "keep focus" property //
+			if ( !props.hasOwnProperty('keepFocus') ) {
+				// Wrap onClick with a function that deselects current element //
+				let oldClick = props.onClick;
+				props.onClick = (e) => {
+					oldClick(e);
+					document.activeElement.blur();
+				}
+			}
+			
+			props.onKeyDown = (e) => {
 				if ( e.keyCode === 13 ) {
 					props.onClick()
 				}
