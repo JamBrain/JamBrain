@@ -88,7 +88,7 @@ gulp.task('less', function() {
 	// NOTE: We're running autoprefixer as a LESS plugin, due to problems with postcss sourcemaps
 	var autoprefix	= require('less-plugin-autoprefix');
 
-	const AUTOPREFIX_CONFIG = {
+	var AUTOPREFIX_CONFIG = {
 	//	browsers: ["last 2 versions"]
 	};
 
@@ -149,7 +149,7 @@ gulp.task('css-min-gz', ['css-min'], function() {
 gulp.task('buble', function() {
 	var buble = require("gulp-buble");
 
-	const BUBLE_CONFIG = {
+	var BUBLE_CONFIG = {
 		transforms: {
 			modules: false,		// ignore import/export's
 //			generator: false
@@ -198,7 +198,7 @@ gulp.task('buble-rollup', ['buble'], function() {
 //gulp.task('babel', function() {
 //	var babel = require("gulp-babel");
 //
-//	const BABEL_CONFIG = {
+//	var BABEL_CONFIG = {
 //		presets:['es2015'],
 //		plugins:[
 //			["transform-react-jsx", { "pragma":"h" }]
@@ -294,7 +294,7 @@ gulp.task('default', ['css-min-gz','js-min-gz'], function(done) {
 //gulp.task('default', gulp.series(['css-min-gz','js-min-gz'], function(done) {
 	var symlink	= require('gulp-symlink');	// Depricated in Gulp 4
 
-	const IS_DEBUG = glob.sync('.gulpdebug').length > 0;
+	var IS_DEBUG = glob.sync('.gulpdebug').length > 0;
 	if ( IS_DEBUG ) {
 		// Only create symlinks if they don't exist //
 		if ( glob.sync(release_folder+'/'+js_output).length === 0 ) {
