@@ -1,12 +1,39 @@
 
-._hidden {
-	display: none !important;
+/* For "button like" elements */
+._button {
+	cursor: pointer;
+	user-select: none;
 }
 
-._left {
-	float: left !important;
-}
+/* Hide an element */
+._hidden { display: none !important; }
 
-._right {
-	float: right !important;
-}
+._float-left { float: left !important; }
+._float-right { float: right !important; }
+
+/* Requires a parent with 'position' set */
+._align-top { top: 0; }
+._align-bottom { bottom: 0; }
+._align-middle { top: 0; bottom: 0; }
+
+._align-left { left: 0; }
+._align-right { right: 0; }
+._align-center { left: 0; right: 0; }
+
+._align-top-left { top: 0; left: 0; }
+._align-top-right { top: 0; right: 0; }
+._align-bottom-left { bottom: 0; left: 0; }
+._align-bottom-right { bottom: 0; right: 0; }
+._align-middle-center { top: 0; bottom: 0; left: 0; right: 0; }
+
+/* Remove Padding */
+._unpad-top { padding-top: 0; }
+._unpad-bottom { padding-bottom: 0; }
+._unpad-left { padding-left: 0; }
+._unpad-right { padding-right: 0; }
+
+/* Remove Margins */
+._unmargin-top { margin-top: 0; }
+._unmargin-bottom { margin-bottom: 0; }
+._unmargin-left { margin-left: 0; }
+._unmargin-right { margin-right: 0; }
