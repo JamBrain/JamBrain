@@ -1,11 +1,13 @@
 <?php
+@include __DIR__."/../output/git-version.php";
 // TODO: Figure out if this is the live server or not //
 define('USE_MINIFIED',isset($_GET['debug']) ? '' : '.min');
-define('USE_VERSION','0.1');
+define('VERSION_STRING',defined('GIT_VERSION') ? 'v='.GIT_VERSION : '');
 const STATIC_DOMAINS = [ 
 	'jammer.work'=>'static.jammer.work',
 	'jammer.dev'=>'static.jam.dev',
-	'jammer.vg'=>'static.jam.vg'
+	'jammer.vg'=>'static.jam.vg',
+	'direct.jammer.vg'=>'static.jam.vg'
 ];
 define('STATIC_DOMAIN', STATIC_DOMAINS[$_SERVER['SERVER_NAME']]);
 ?><!doctype html>
@@ -13,11 +15,11 @@ define('STATIC_DOMAIN', STATIC_DOMAINS[$_SERVER['SERVER_NAME']]);
 <head>
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic" type="text/css">
-	<link rel="stylesheet" href="//<?=STATIC_DOMAIN?>/output/all<?=USE_MINIFIED?>.css?v=<?=USE_VERSION?>" type="text/css">
+	<link rel="stylesheet" href="//<?=STATIC_DOMAIN?>/output/all<?=USE_MINIFIED?>.css?<?=VERSION_STRING?>" type="text/css">
 </head>
 
 <body>
-	<script src="//<?=STATIC_DOMAIN?>/output/all<?=USE_MINIFIED?>.js?v=<?=USE_VERSION?>"></script>
+	<script src="//<?=STATIC_DOMAIN?>/output/all<?=USE_MINIFIED?>.js?<?=VERSION_STRING?>"></script>
 	<div id="layout">
 		<div id="content">
 			<p class="_unmargin-top">Hello. <strong>Something</strong> is going to happen.</p>
