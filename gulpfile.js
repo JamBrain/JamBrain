@@ -3,6 +3,9 @@
 require('es6-promise').polyfill();
 require('es6');
 
+// Our Local Configuration //
+var config = require('./config.js');
+
 // Gulp Includes //
 var gulp	= require('gulp');
 //var gulp_if	= require('gulp-if');
@@ -98,9 +101,7 @@ gulp.task('less', function() {
 		.pipe( debug({title:'less:'}) )
 //		.pipe( sourcemaps.init() )
 			.pipe( less({
-				'globalVars': {
-					'STATIC_DOMAIN':'static.jammer.work',
-				},
+				'globalVars': config.LESS_GLOBALVARS,
 				plugins: [
 					new autoprefix(AUTOPREFIX_CONFIG)
 				]

@@ -6,10 +6,8 @@ define('VERSION_STRING',defined('GIT_VERSION') ? 'v='.GIT_VERSION : '');
 const STATIC_DOMAINS = [ 
 	'jammer.work'=>'static.jammer.work',
 	'jammer.dev'=>'static.jam.dev',
-	'jammer.vg'=>'static.jam.vg',
-	'direct.jammer.vg'=>'static.jam.vg'
 ];
-define('STATIC_DOMAIN', STATIC_DOMAINS[$_SERVER['SERVER_NAME']]);
+define('STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : 'static.jam.vg');
 ?><!doctype html>
 <html lang="en">
 <head>
