@@ -28,7 +28,8 @@
     "rollup-plugin-node-resolve": "*",
     "gulp-uglify": "*",
     "del": "*",
-    "gulp-symlink": "*"
+    "gulp-symlink": "*",
+    "shelljs": "*"
   },
   "devDependencies": {},
   "scripts": {
