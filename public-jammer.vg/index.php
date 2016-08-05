@@ -1,13 +1,19 @@
 <?php
 @include __DIR__."/../output/git-version.php";
 // TODO: Figure out if this is the live server or not //
-define('USE_MINIFIED',isset($_GET['debug']) ? '' : '.min');
-define('VERSION_STRING',defined('GIT_VERSION') ? 'v='.GIT_VERSION : '');
+define( 'USE_MINIFIED', isset($_GET['debug']) ? '' : '.min' );
+define( 'VERSION_STRING', defined('GIT_VERSION') ? 'v='.GIT_VERSION : '' );
 const STATIC_DOMAINS = [ 
-	'jammer.work'=>'static.jammer.work',
-	'jammer.dev'=>'static.jam.dev',
+	'jammer.work' => 'static.jammer.work',
+	'jammer.dev' => 'static.jam.dev',
 ];
-define('STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : 'static.jam.vg');
+define( 'STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : 'static.jam.vg' );
+define( 'LINK_SUFFIX', isset($_GET['nopush']) ? ' nopush' : '' );
+//header( "Link: </static/all".USE_MINIFIED.".js?".VERSION_STRING.">; rel=preload; as=script;".LINK_SUFFIX );
+//header( "Link: </static/all".USE_MINIFIED.".css?".VERSION_STRING.">; rel=preload; as=stylesheet;".LINK_SUFFIX );
+//header( "Link: </static/all".USE_MINIFIED.".svg?".VERSION_STRING.">; rel=preload; as=svg+xml".LINK_SUFFIX );
+//header( "Link: <//fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic>; rel=preload; as=stylesheet".LINK_SUFFIX );
+//header("Link: </blah">; rel=canonical;"); // https://yoast.com/rel-canonical/
 ?><!doctype html>
 <html lang="en">
 <head>
@@ -18,10 +24,12 @@ define('STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAIN
 
 <body>
 	<script src="//<?=STATIC_DOMAIN?>/output/all<?=USE_MINIFIED?>.js?<?=VERSION_STRING?>"></script>
+	<!--<svg class="icon icon-menu"><use xlink:href="//<?=STATIC_DOMAIN?>/other/asset/icon-defs.svg#icon-menu"></use></svg>-->
+	<!--<svg class="icon icon-menu"><use xlink:href="/static/all.min.svg?<?=VERSION_STRING?>#icon-menu"></use></svg>-->
 	<div id="layout">
 		<div id="content">
-			<p class="_unmargin-top">Hello. <strong>Something</strong> is going to happen.</p>
-			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc bibendum risus in lectus rutrum, sed dictum nisi rhoncus. Duis a tortor dictum, imperdiet erat vitae, bibendum ante. Praesent a neque luctus, vehicula magna at, suscipit eros. Ut vitae odio ex. Morbi fermentum diam at purus venenatis posuere. Aenean faucibus mollis nisl, eget faucibus lacus venenatis eu. Etiam a dui vel nisi cursus dictum. Mauris nec vestibulum turpis, sed faucibus libero. Quisque eget nulla quis velit molestie semper. Integer non ipsum nisi. Vivamus eget libero eu sapien sollicitudin cursus.</p>
+			<p class="_unmargin-top">Hello. <strong>Something</strong> is going to happen.<svg class="icon icon-twitter"><use xlink:href="#icon-twitter"></use></svg></p>
+			<p><svg class="icon icon-home3"><use xlink:href="#icon-home3"></use></svg>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc bibendum risus in lectus rutrum, sed dictum nisi rhoncus. Duis a tortor dictum, imperdiet erat vitae, bibendum ante. Praesent a neque luctus, vehicula magna at, suscipit eros. Ut vitae odio ex. Morbi fermentum diam at purus venenatis posuere. Aenean faucibus mollis nisl, eget faucibus lacus venenatis eu. Etiam a dui vel nisi cursus dictum. Mauris nec vestibulum turpis, sed faucibus libero. Quisque eget nulla quis velit molestie semper. Integer non ipsum nisi. Vivamus eget libero eu sapien sollicitudin cursus.</p>
 			<div class="twitter-box">
 				<div>Sed mattis lectus sed lobortis eleifend. Donec nec posuere lorem, sed feugiat quam. Nulla vitae odio at justo vehicula vehicula vitae sed magna. Aenean risus nisi, gravida non placerat quis, tincidunt a mauris. Nulla sagittis aliquet felis non posuere. Curabitur dapibus felis vel sem facilisis, at pretium justo sodales. Nunc malesuada, elit vel iaculis dignissim, urna dolor feugiat purus, tincidunt euismod sapien sapien ac magna. Pellentesque vel gravida ex.</div>
 			</div>

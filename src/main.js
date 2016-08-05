@@ -2,10 +2,34 @@ import { diff_match_patch } from 'custom/diff_match_patch/diff_match_patch';
 
 import { h, render }	from 'preact/preact';
 import NavBar 			from './com/nav-bar/code';
+import Icon 			from './com/icon/code';
 import DarkOverlay		from './com/dark-overlay/code';
+import Notify			from './internal/notify/notify';
+
+var xhr = new XMLHttpRequest();
+xhr.open('GET', "/static/all.min.svg?v=1017-d0abbd8",true);
+xhr.addEventListener('load',function(e){
+	console.log(xhr);
+	var body = document.body;
+	var x = document.createElement('x');
+	xhr.onload = null;
+	x.innerHTML = xhr.responseText;
+	var svg = x.getElementsByTagName('svg')[0];
+	if (svg) {
+		svg.setAttribute('aria-hidden', 'true');
+		svg.style.position = 'absolute';
+		svg.style.width = 0;
+		svg.style.height = 0;
+		svg.style.overflow = 'hidden';
+		body.insertBefore(svg, body.firstChild);
+	}
+});
+xhr.send();
 
 render(<NavBar />, document.body);
+render(<Icon src="steam2" />, document.body);
 //render(<DarkOverlay />, document.body);
+
 
 var a = "The best\n\npart of waking up\nis folgers in your cup\nI think...\n\n???";
 var b = "The best\npart of waking up\nis fulgers in your cup\nI think...\n\n???\n";
