@@ -6,25 +6,29 @@ import Icon 			from './com/icon/code';
 import DarkOverlay		from './com/dark-overlay/code';
 import Notify			from './internal/notify/notify';
 
-var xhr = new XMLHttpRequest();
-xhr.open('GET', "/static/all.min.svg?v=1017-d0abbd8",true);
-xhr.addEventListener('load',function(e){
-	console.log(xhr);
-	var body = document.body;
-	var x = document.createElement('x');
-	xhr.onload = null;
-	x.innerHTML = xhr.responseText;
-	var svg = x.getElementsByTagName('svg')[0];
-	if (svg) {
-		svg.setAttribute('aria-hidden', 'true');
-		svg.style.position = 'absolute';
-		svg.style.width = 0;
-		svg.style.height = 0;
-		svg.style.overflow = 'hidden';
-		body.insertBefore(svg, body.firstChild);
-	}
-});
-xhr.send();
+
+//var svg_file = "/static/all.min.svg";
+//var svg_version = "1017-d0abbd8";
+//
+//var xhr = new XMLHttpRequest();
+//xhr.open('GET', svg_file+"?v="+svg_version,true);
+//xhr.addEventListener('load',function(e){
+//	console.log(xhr);
+//	var body = document.body;
+//	var x = document.createElement('x');
+//	xhr.onload = null;
+//	x.innerHTML = xhr.responseText;
+//	var svg = x.getElementsByTagName('svg')[0];
+//	if (svg) {
+//		svg.setAttribute('aria-hidden', 'true');
+//		svg.style.position = 'absolute';
+//		svg.style.width = 0;
+//		svg.style.height = 0;
+//		svg.style.overflow = 'hidden';
+//		body.insertBefore(svg, body.firstChild);
+//	}
+//});
+//xhr.send();
 
 render(<NavBar />, document.body);
 render(<Icon src="steam2" />, document.body);
