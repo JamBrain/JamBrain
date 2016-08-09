@@ -2,7 +2,7 @@ import { diff_match_patch } from 'custom/diff_match_patch/diff_match_patch';
 
 import { h, render }	from 'preact/preact';
 import NavBar 			from './com/nav-bar/code';
-import Icon 			from './com/icon/code';
+import SVGIcon 			from './com/svg-icon/code';
 import DarkOverlay		from './com/dark-overlay/code';
 import Notify			from './internal/notify/notify';
 
@@ -31,7 +31,7 @@ import Notify			from './internal/notify/notify';
 //xhr.send();
 
 render(<NavBar />, document.body);
-render(<Icon src="steam2" />, document.body);
+render(<SVGIcon name="steam2" />, document.body);
 //render(<DarkOverlay />, document.body);
 
 

@@ -9,9 +9,9 @@ const STATIC_DOMAINS = [
 ];
 define( 'STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : 'static.jam.vg' );
 define( 'LINK_SUFFIX', isset($_GET['nopush']) ? '; nopush' : '' );
-//header( "Link: </static/all".USE_MINIFIED.".js?".VERSION_STRING.">; rel=preload; as=script".LINK_SUFFIX );
-//header( "Link: </static/all".USE_MINIFIED.".css?".VERSION_STRING.">; rel=preload; as=stylesheet".LINK_SUFFIX );
-//header( "Link: </static/all".USE_MINIFIED.".svg?".VERSION_STRING.">; rel=preload; as=image".LINK_SUFFIX );
+//header( "Link: </-/all".USE_MINIFIED.".js?".VERSION_STRING.">; rel=preload; as=script".LINK_SUFFIX );
+//header( "Link: </-/all".USE_MINIFIED.".css?".VERSION_STRING.">; rel=preload; as=stylesheet".LINK_SUFFIX );
+//header( "Link: </-/all".USE_MINIFIED.".svg?".VERSION_STRING.">; rel=preload; as=image".LINK_SUFFIX );
 //header( "Link: </static/preload-svg.js?".VERSION_STRING.">; rel=preload; as=script".LINK_SUFFIX );
 //header( "Link: <//fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic>; rel=preload; as=stylesheet" );
 //header("Link: </blah">; rel=canonical"); // https://yoast.com/rel-canonical/
@@ -30,32 +30,33 @@ define( 'LINK_SUFFIX', isset($_GET['nopush']) ? '; nopush' : '' );
 <body>
 	<!--<script src="/static/preload-svg.js" async></script>-->
 	<script>
-		var svg_file = "/static/all.min.svg";
-		var svg_version = "1017-d0abbd8";
-		
+	var VERSION_STRING = "<?=VERSION_STRING?>";
+
+	(function(svg_file){
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', svg_file+"?v="+svg_version,true);
-		xhr.addEventListener('load',function(e){
-			console.log(xhr);
-			var body = document.body;
-			var x = document.createElement('x');
-			xhr.onload = null;
-			x.innerHTML = xhr.responseText;
-			var svg = x.getElementsByTagName('svg')[0];
-			if (svg) {
-				svg.setAttribute('aria-hidden', 'true');
-				svg.style.position = 'absolute';
-				svg.style.width = 0;
-				svg.style.height = 0;
-				svg.style.overflow = 'hidden';
-				body.insertBefore(svg, body.firstChild);
+		xhr.open( 'GET', svg_file, true );
+		xhr.onreadystatechange = function() {
+			if ( (xhr.readyState === XMLHttpRequest.DONE) && (xhr.status === 200) ) {
+				xhr.onload = null;
+				var x = document.createElement('x');
+				x.innerHTML = xhr.responseText;
+				var svg = x.getElementsByTagName('svg')[0];
+				if ( svg ) {
+					svg.setAttribute( 'aria-hidden', 'true' );
+					svg.style.position = 'absolute';
+					svg.style.width = 0;
+					svg.style.height = 0;
+					svg.style.overflow = 'hidden';
+					document.body.insertBefore( svg, document.body.firstChild );
+				}
 			}
-		});
+		};
 		xhr.send();
+	})( "/-/all.min.svg?"+VERSION_STRING );
 	</script>
 	<script src="//<?=STATIC_DOMAIN?>/output/all<?=USE_MINIFIED?>.js?<?=VERSION_STRING?>"></script>
 	<!--<svg class="icon icon-menu"><use xlink:href="//<?=STATIC_DOMAIN?>/other/asset/icon-defs.svg#icon-menu"></use></svg>-->
-	<!--<svg class="icon icon-menu"><use xlink:href="/static/all.min.svg?<?=VERSION_STRING?>#icon-menu"></use></svg>-->
+	<!--<svg class="icon icon-menu"><use xlink:href="/-/all.min.svg?<?=VERSION_STRING?>#icon-menu"></use></svg>-->
 	<div id="layout">
 		<div id="content">
 			<p class="_unmargin-top">Hello. <strong>Something</strong> is going to happen.<svg class="icon icon-twitter"><use xlink:href="#icon-twitter"></use></svg></p>
