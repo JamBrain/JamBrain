@@ -39,7 +39,7 @@ function _template_Include( $path_to_file, $include_once = false ) {
  * @param	bool	$include_once Should we use include_once? (default: false)
  */
 function template_Get( $file, $theme = null, $include_once = false ) {
-	_template_Include( __DIR__."/../template/".template_GetTheme($theme).$file, $include_once );
+	_template_Include( __DIR__."/../public-theme/template/".template_GetTheme($theme).$file, $include_once );
 }
 
 
