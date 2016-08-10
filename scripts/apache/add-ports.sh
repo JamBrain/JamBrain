@@ -8,6 +8,7 @@ cd $SCRIPTPATH
 
 echo "Adding additional server ports to Apache"
 cat apache-ports-conf.txt>>/etc/apache2/ports.conf
+cat apache-default-conf.txt>/etc/apache2/sites-available/000-default.conf 
 
 echo "Adding additional virtual hosts"
 cat custom-port.conf>/etc/apache2/sites-available/custom-port.conf

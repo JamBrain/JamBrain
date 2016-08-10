@@ -12,6 +12,7 @@ error_log
 /legacy-config.php
 /config.js
 node_modules/
+phpmyadmin/
 output/
 obj/
 *.gz
