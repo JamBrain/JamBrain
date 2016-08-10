@@ -9,58 +9,68 @@ const STATIC_DOMAINS = [
 ];
 define( 'STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : 'static.jam.vg' );
 define( 'LINK_SUFFIX', isset($_GET['nopush']) ? '; nopush' : '' );
-//header( "Link: </-/all".USE_MINIFIED.".js?".VERSION_STRING.">; rel=preload; as=script".LINK_SUFFIX );
-//header( "Link: </-/all".USE_MINIFIED.".css?".VERSION_STRING.">; rel=preload; as=stylesheet".LINK_SUFFIX );
-//header( "Link: </-/all".USE_MINIFIED.".svg?".VERSION_STRING.">; rel=preload; as=image".LINK_SUFFIX );
-//header( "Link: </static/preload-svg.js?".VERSION_STRING.">; rel=preload; as=script".LINK_SUFFIX );
-//header( "Link: <//fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic>; rel=preload; as=stylesheet" );
+
+define( 'JS_FILE',   "/-/all".USE_MINIFIED.".js?".VERSION_STRING );
+define( 'CSS_FILE',  "/-/all".USE_MINIFIED.".css?".VERSION_STRING );
+define( 'SVG_FILE',  "/-/all".USE_MINIFIED.".svg?".VERSION_STRING );
+define( 'FONT_FILE', "//fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic" );
+
+//header( "Link: <".JS_FILE.">; rel=preload; as=script".LINK_SUFFIX );
+//header( "Link: <".CSS_FILE.">; rel=preload; as=stylesheet".LINK_SUFFIX );
+//header( "Link: <".SVG_FILE.">; rel=preload; as=image".LINK_SUFFIX );
+//header( "Link: <".FONT_FILE.">; rel=preload; as=stylesheet" );
 //header("Link: </blah">; rel=canonical"); // https://yoast.com/rel-canonical/
 
-//	<script><--?php
-//@include __DIR__."/static/preload-svg.js";
-//	?--></script>
+//TODO: Determine page, and populate title and meta tags before continuing //
+
+function SVGIcon( $name ) {
+	return '<svg class="icon icon-'.$name.'"><use xlink:href="#icon-'.$name.'"></use></svg>';
+}
+
 ?><!doctype html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic" type="text/css">
-	<link rel="stylesheet" href="//<?=STATIC_DOMAIN?>/output/all<?=USE_MINIFIED?>.css?<?=VERSION_STRING?>" type="text/css">
+	<link rel="stylesheet" href="<?=FONT_FILE?>" type="text/css">
+	<link rel="stylesheet" href="<?=CSS_FILE?>" type="text/css">
 </head>
 
 <body>
-	<!--<script src="/static/preload-svg.js" async></script>-->
 	<script>
+	// PHP Variables to JS //
 	var VERSION_STRING = "<?=VERSION_STRING?>";
+	var STATIC_DOMAIN = "<?=STATIC_DOMAIN?>";
+	var SVG_FILE = "<?=SVG_FILE?>";
+	
+	<?php include __DIR__."/embed/preload-svg.js"; ?>
 
-	(function(svg_file){
-		var xhr = new XMLHttpRequest();
-		xhr.open( 'GET', svg_file, true );
-		xhr.onreadystatechange = function() {
-			if ( (xhr.readyState === XMLHttpRequest.DONE) && (xhr.status === 200) ) {
-				xhr.onload = null;
-				var x = document.createElement('x');
-				x.innerHTML = xhr.responseText;
-				var svg = x.getElementsByTagName('svg')[0];
-				if ( svg ) {
-					svg.setAttribute( 'aria-hidden', 'true' );
-					svg.style.position = 'absolute';
-					svg.style.width = 0;
-					svg.style.height = 0;
-					svg.style.overflow = 'hidden';
-					document.body.insertBefore( svg, document.body.firstChild );
-				}
-			}
-		};
-		xhr.send();
-	})( "/-/all.min.svg?"+VERSION_STRING );
+//	(function(svg_file){
+//		var xhr = new XMLHttpRequest();
+//		xhr.open( 'GET', svg_file, true );
+//		xhr.onreadystatechange = function() {
+//			if ( (xhr.readyState === XMLHttpRequest.DONE) && (xhr.status === 200) ) {
+//				xhr.onload = null;
+//				var x = document.createElement('x');
+//				x.innerHTML = xhr.responseText;
+//				var svg = x.getElementsByTagName('svg')[0];
+//				if ( svg ) {
+//					svg.setAttribute( 'aria-hidden', 'true' );
+//					svg.style.position = 'absolute';
+//					svg.style.width = 0;
+//					svg.style.height = 0;
+//					svg.style.overflow = 'hidden';
+//					document.body.insertBefore( svg, document.body.firstChild );
+//				}
+//			}
+//		};
+//		xhr.send();
+//	})( SVG_FILE );
 	</script>
-	<script src="//<?=STATIC_DOMAIN?>/output/all<?=USE_MINIFIED?>.js?<?=VERSION_STRING?>"></script>
-	<!--<svg class="icon icon-menu"><use xlink:href="//<?=STATIC_DOMAIN?>/other/asset/icon-defs.svg#icon-menu"></use></svg>-->
-	<!--<svg class="icon icon-menu"><use xlink:href="/-/all.min.svg?<?=VERSION_STRING?>#icon-menu"></use></svg>-->
+	<script src="<?=JS_FILE?>"></script>
 	<div id="layout">
 		<div id="content">
-			<p class="_unmargin-top">Hello. <strong>Something</strong> is going to happen.<svg class="icon icon-twitter"><use xlink:href="#icon-twitter"></use></svg></p>
-			<p><svg class="icon icon-home3"><use xlink:href="#icon-home3"></use></svg>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc bibendum risus in lectus rutrum, sed dictum nisi rhoncus. Duis a tortor dictum, imperdiet erat vitae, bibendum ante. Praesent a neque luctus, vehicula magna at, suscipit eros. Ut vitae odio ex. Morbi fermentum diam at purus venenatis posuere. Aenean faucibus mollis nisl, eget faucibus lacus venenatis eu. Etiam a dui vel nisi cursus dictum. Mauris nec vestibulum turpis, sed faucibus libero. Quisque eget nulla quis velit molestie semper. Integer non ipsum nisi. Vivamus eget libero eu sapien sollicitudin cursus.</p>
+			<p class="_unmargin-top">Hello. <strong>Something</strong> is going to happen.<?= SVGIcon("twitter")?></p>
+			<p><?=SVGIcon("home3");?>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc bibendum risus in lectus rutrum, sed dictum nisi rhoncus. Duis a tortor dictum, imperdiet erat vitae, bibendum ante. Praesent a neque luctus, vehicula magna at, suscipit eros. Ut vitae odio ex. Morbi fermentum diam at purus venenatis posuere. Aenean faucibus mollis nisl, eget faucibus lacus venenatis eu. Etiam a dui vel nisi cursus dictum. Mauris nec vestibulum turpis, sed faucibus libero. Quisque eget nulla quis velit molestie semper. Integer non ipsum nisi. Vivamus eget libero eu sapien sollicitudin cursus.</p>
 			<div class="twitter-box">
 				<div>Sed mattis lectus sed lobortis eleifend. Donec nec posuere lorem, sed feugiat quam. Nulla vitae odio at justo vehicula vehicula vitae sed magna. Aenean risus nisi, gravida non placerat quis, tincidunt a mauris. Nulla sagittis aliquet felis non posuere. Curabitur dapibus felis vel sem facilisis, at pretium justo sodales. Nunc malesuada, elit vel iaculis dignissim, urna dolor feugiat purus, tincidunt euismod sapien sapien ac magna. Pellentesque vel gravida ex.</div>
 			</div>

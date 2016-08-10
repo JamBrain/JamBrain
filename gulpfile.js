@@ -26,7 +26,8 @@ var ignore_folders = glob.sync('src/**/')
 	})
 	.map(function(el){
 		return '!'+el+'**/*.*';
-	});
+	})
+	.concat(['src/embed/']);
 
 var esignore_files = glob.sync('src/**/.esignore')
 	.map(function(el){
