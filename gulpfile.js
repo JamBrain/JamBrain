@@ -29,9 +29,9 @@ var ignore_folders = glob.sync('src/**/')
 	})
 	.concat(['src/embed/']);
 
-var esignore_files = glob.sync('src/**/.esignore')
+var es6ignore_files = glob.sync('src/**/.es6ignore')
 	.map(function(el){
-		return el.replace('.esignore','');
+		return el.replace('.es6ignore','');
 	});
 
 // Ignore any minified files, or files/folders prefixed with an underscore //
@@ -41,17 +41,17 @@ var css_files		= ['src/**/*.css','!src/**/*.min.css','!src/**/_*.*']
 						.concat(ignore_folders);
 
 var js_in_files 	= ['src/**/*.js','!src/**/*.min.js','!src/**/_*.*']
-						.concat(esignore_files.map(function(el){
+						.concat(es6ignore_files.map(function(el){
 							return '!'+el+'**/*.*';
 						}))
 						.concat(ignore_folders);
-var raw_js_in_files	= esignore_files.map(function(el){
+var raw_js_in_files	= es6ignore_files.map(function(el){
 							return el+'**/*.js';
 						})
-						.concat(esignore_files.map(function(el){
+						.concat(es6ignore_files.map(function(el){
 							return '!'+el+'**/*.min.js';
 						}))
-						.concat(esignore_files.map(function(el){
+						.concat(es6ignore_files.map(function(el){
 							return '!'+el+'**/_*.*';
 						}))
 						.concat(ignore_folders);
