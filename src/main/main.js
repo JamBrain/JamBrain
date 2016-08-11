@@ -31,7 +31,7 @@ import Notify			from 'internal/notify/notify';
 //xhr.send();
 
 render(<NavBar />, document.body);
-render(<SVGIcon name="steam2" />, document.body);
+render(<SVGIcon name="firefox" />, document.body);
 //render(<DarkOverlay />, document.body);
 
 

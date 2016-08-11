@@ -1,5 +1,5 @@
 <?php
-@include __DIR__."/../output/git-version.php";
+@include __DIR__."/../../.output/git-version.php";
 // TODO: Figure out if this is the live server or not //
 define( 'USE_MINIFIED', isset($_GET['debug']) ? '' : '.min' );
 define( 'VERSION_STRING', defined('GIT_VERSION') ? 'v='.GIT_VERSION : '' );
@@ -70,7 +70,7 @@ function SVGIcon( $name ) {
 	<div id="layout">
 		<div id="content">
 			<p class="_unmargin-top">Hello. <strong>Something</strong> is going to happen.<?= SVGIcon("twitter")?></p>
-			<p><?=SVGIcon("home3");?>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc bibendum risus in lectus rutrum, sed dictum nisi rhoncus. Duis a tortor dictum, imperdiet erat vitae, bibendum ante. Praesent a neque luctus, vehicula magna at, suscipit eros. Ut vitae odio ex. Morbi fermentum diam at purus venenatis posuere. Aenean faucibus mollis nisl, eget faucibus lacus venenatis eu. Etiam a dui vel nisi cursus dictum. Mauris nec vestibulum turpis, sed faucibus libero. Quisque eget nulla quis velit molestie semper. Integer non ipsum nisi. Vivamus eget libero eu sapien sollicitudin cursus.</p>
+			<p><?=SVGIcon("chrome");?>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc bibendum risus in lectus rutrum, sed dictum nisi rhoncus. Duis a tortor dictum, imperdiet erat vitae, bibendum ante. Praesent a neque luctus, vehicula magna at, suscipit eros. Ut vitae odio ex. Morbi fermentum diam at purus venenatis posuere. Aenean faucibus mollis nisl, eget faucibus lacus venenatis eu. Etiam a dui vel nisi cursus dictum. Mauris nec vestibulum turpis, sed faucibus libero. Quisque eget nulla quis velit molestie semper. Integer non ipsum nisi. Vivamus eget libero eu sapien sollicitudin cursus.</p>
 			<div class="twitter-box">
 				<div>Sed mattis lectus sed lobortis eleifend. Donec nec posuere lorem, sed feugiat quam. Nulla vitae odio at justo vehicula vehicula vitae sed magna. Aenean risus nisi, gravida non placerat quis, tincidunt a mauris. Nulla sagittis aliquet felis non posuere. Curabitur dapibus felis vel sem facilisis, at pretium justo sodales. Nunc malesuada, elit vel iaculis dignissim, urna dolor feugiat purus, tincidunt euismod sapien sapien ac magna. Pellentesque vel gravida ex.</div>
 			</div>
