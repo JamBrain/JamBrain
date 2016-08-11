@@ -25,6 +25,8 @@ ALL_SVG_FILES		:=	$(filter-out %.min.svg,$(call FIND_FILE,$(SRC)/,*.svg))
 ALL_ES6IGNORE_FILES	:=	$(call FIND_FILE,$(SRC)/,.es6ignore)
 ES6IGNORE_FOLDERS	:=	$(addsuffix %,$(dir $(ALL_ES6IGNORE_FILES)))
 
+ALL_MAKEFILES		:=	$(call FIND_FILE,$(SRC)/,Makefile)
+
 # Transforms #
 ES6_FILES 			:=	$(filter-out $(ES6IGNORE_FOLDERS),$(ALL_JS_FILES))
 JS_FILES 			:=	$(filter $(ES6IGNORE_FOLDERS),$(ALL_JS_FILES))
@@ -42,16 +44,35 @@ OUT_FILES			:=	$(OUT_ES6_FILES) $(OUT_JS_FILES) $(OUT_LESS_FILES) $(OUT_CSS_FILE
 DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES6_FILES) $(OUT_LESS_FILES))
 OUT_FOLDERS			:=	$(sort $(dir $(OUT_FILES)))
 
-TARGETS				:=	$(OUT_FOLDERS) $(OUT_FILES)
+TARGET_DEPS			:=	$(OUT_FOLDERS) $(OUT_FILES)
+
+BUILDS				:=	$(subst $(SRC)/,$(OUT)/.obj/,$(ALL_MAKEFILES))
+
 
 # Tools #
-BUBLE				:=	
-ROLLUP				:=	
+BUBLE_ARGS			:=	--no modules --jsx h
+BUBLE				=	buble $(BUBLE_ARGS) $(1) -o $(2)
+# ES6 Compiler: https://buble.surge.sh/guide/
+ROLLUP_ARGS			:=	
+ROLLUP				=	rollup $(ROLLUP_ARGS) $(1)
+# ES6 Include/Require Resolver: http://rollupjs.org/guide/
+MINIFY_JS			=
+# ???
 
 LESS_COMMON			:=	--global-var='STATIC_DOMAIN=$(STATIC_DOMAIN)'
 LESS_ARGS			:=	--autoprefix
 LESS_DEP			=	lessc $(LESS_COMMON) --depends $(1) $(2)>$(2).dep
 LESS				=	lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
+# CSS Compiler: http://lesscss.org/
+MINIFY_CSS			=	cat $(1) | cleancss -o $(2)
+# CSS Minifier: https://github.com/jakubpawlowicz/clean-css/
+
+MINIFY_SVG			=
+# ???
+
+SIZE				=	cat $(1) | wc -c
+GZIP_SIZE			=	gzip -c $(1) | wc -c
+# Get size in bytes (compress and uncompressed)
 
 
 # Rules #
@@ -60,8 +81,13 @@ default: target
 clean:
 	rm -fr $(OUT)
 	
-target: $(TARGETS)
-	@echo "Done."
+ifndef TARGET
+target: $(BUILDS) #$(TARGET_DEPS)
+
+$(BUILDS):
+	@echo "[+] Building \"$(subst /Makefile,,$(subst $(OUT)/.obj/,,$@))\"..."
+	@$(MAKE) --no-print-directory -C . -f $(subst $(OUT)/.obj/,$(SRC)/,$@)
+endif
 
 # Folder Rules #
 $(OUT_FOLDERS):
@@ -69,8 +95,7 @@ $(OUT_FOLDERS):
 
 # File Rules #
 $(OUT)/%.es6.js:$(SRC)/%.js
-	@echo TODO: $@
-	@touch $@
+	$(call BUBLE,$<,$@)
 
 $(OUT)/%.o.js:$(SRC)/%.js
 	cp $< $@
@@ -85,7 +110,7 @@ $(OUT)/%.o.svg:$(SRC)/%.svg
 	cp $< $@
 
 # Phony Rules #
-.phony: default clean target
+.phony: default clean target $(BUILDS)
 
 # Dependencies #
 -include $(DEP_FILES)
