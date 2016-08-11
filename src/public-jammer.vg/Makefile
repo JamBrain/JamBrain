@@ -1,7 +1,7 @@
 
 TARGET				:=	public-jammer.vg
 
-MAIN_FOLDER			:=	src/$(TARGET)/
+MAIN_FOLDER			:=	src/$(TARGET)
 TARGET_FOLDER		:=	$(TARGET)/-/
 
 INCLUDE_FOLDERS		:=	src/com/ \
@@ -10,7 +10,7 @@ INCLUDE_FOLDERS		:=	src/com/ \
 						src/internal/ \
 						src/main/ \
 						src/icons/ \
-						$(MAIN_FOLDER)
+						$(MAIN_FOLDER)/
 
 MAIN_JS				:=	$(MAIN_FOLDER)/main.js
 

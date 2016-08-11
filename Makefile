@@ -4,11 +4,13 @@
 # Settings #
 SRC					?=	src
 OUT					?=	.output
+BUILD				?=	.build
 
 STATIC_DOMAIN		?=	static.jammer.work
 
 # Include Folders (modified by recursive scripts) #
 INCLUDE_FOLDERS		?=	$(SRC)/
+BUILD_FOLDER		:=	$(OUT)/$(BUILD)/$(TARGET)
 
 # Functions (must use '=', and not ':=') #
 REMOVE_UNDERSCORE	=	$(foreach v,$(1),$(if $(findstring /_,$(v)),,$(v)))
@@ -25,8 +27,6 @@ ALL_SVG_FILES		:=	$(filter-out %.min.svg,$(call FIND_FILE,$(SRC)/,*.svg))
 ALL_ES6IGNORE_FILES	:=	$(call FIND_FILE,$(SRC)/,.es6ignore)
 ES6IGNORE_FOLDERS	:=	$(addsuffix %,$(dir $(ALL_ES6IGNORE_FILES)))
 
-ALL_MAKEFILES		:=	$(call FIND_FILE,$(SRC)/,Makefile)
-
 # Transforms #
 ES6_FILES 			:=	$(filter-out $(ES6IGNORE_FOLDERS),$(ALL_JS_FILES))
 JS_FILES 			:=	$(filter $(ES6IGNORE_FOLDERS),$(ALL_JS_FILES))
@@ -42,11 +42,10 @@ OUT_SVG_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(SVG_FILES:.svg=.o.svg))
 
 OUT_FILES			:=	$(OUT_ES6_FILES) $(OUT_JS_FILES) $(OUT_LESS_FILES) $(OUT_CSS_FILES) $(OUT_SVG_FILES)
 DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES6_FILES) $(OUT_LESS_FILES))
-OUT_FOLDERS			:=	$(sort $(dir $(OUT_FILES)))
+OUT_FOLDERS			:=	$(sort $(dir $(OUT_FILES) $(BUILD_FOLDER)/))
 
-TARGET_DEPS			:=	$(OUT_FOLDERS) $(OUT_FILES)
-
-BUILDS				:=	$(subst $(SRC)/,$(OUT)/.obj/,$(ALL_MAKEFILES))
+TARGET_DEPS			:=	$(OUT_FOLDERS) $(BUILD_FOLDER)/all.min.js
+#$(OUT_FILES)
 
 
 # Tools #
@@ -54,10 +53,11 @@ BUBLE_ARGS			:=	--no modules --jsx h
 BUBLE				=	buble $(BUBLE_ARGS) $(1) -o $(2)
 # ES6 Compiler: https://buble.surge.sh/guide/
 ROLLUP_ARGS			:=	
-ROLLUP				=	rollup $(ROLLUP_ARGS) $(1)
+ROLLUP				=	rollup $(ROLLUP_ARGS) $(1) > $(2)
 # ES6 Include/Require Resolver: http://rollupjs.org/guide/
-MINIFY_JS			=
-# ???
+MINIFY_JS_ARGS		:=	--compress --mangle
+MINIFY_JS			=	uglifyjs $(MINIFY_JS_ARGS) -o $(2) -- $(1)
+# JS Minifier: https://github.com/mishoo/UglifyJS2
 
 LESS_COMMON			:=	--global-var='STATIC_DOMAIN=$(STATIC_DOMAIN)'
 LESS_ARGS			:=	--autoprefix
@@ -80,13 +80,17 @@ default: target
 
 clean:
 	rm -fr $(OUT)
-	
+
+# If not called recursively, figure out who the targes are and call them #
 ifndef TARGET
-target: $(BUILDS) #$(TARGET_DEPS)
+ALL_MAKEFILES		:=	$(call FIND_FILE,$(SRC)/,Makefile)
+BUILDS				:=	$(subst $(SRC)/,$(OUT)/$(BUILD)/,$(ALL_MAKEFILES))
+
+target: $(BUILDS)
 
 $(BUILDS):
-	@echo "[+] Building \"$(subst /Makefile,,$(subst $(OUT)/.obj/,,$@))\"..."
-	@$(MAKE) --no-print-directory -C . -f $(subst $(OUT)/.obj/,$(SRC)/,$@)
+	@echo "[+] Building \"$(subst /Makefile,,$(subst $(OUT)/$(BUILD)/,,$@))\"..."
+	@$(MAKE) --no-print-directory -C . -f $(subst $(OUT)/$(BUILD)/,$(SRC)/,$@)
 endif
 
 # Folder Rules #
@@ -108,6 +112,23 @@ $(OUT)/%.o.css:$(SRC)/%.css
 
 $(OUT)/%.o.svg:$(SRC)/%.svg
 	cp $< $@
+
+# Concat Rules #
+ifdef TARGET
+$(BUILD_FOLDER)/js.js: $(OUT_JS_FILES)
+	cat $< > $@
+
+$(BUILD_FOLDER)/buble.js: $(MAIN_JS) $(OUT_ES6_FILES)
+	$(call ROLLUP,$<,$@)
+
+$(BUILD_FOLDER)/all.js: $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js
+	cat $^ > $@
+	
+$(BUILD_FOLDER)/all.min.js: $(BUILD_FOLDER)/all.js
+	$(call MINIFY_JS,$<,$@)
+	@echo "[JS] GZIP: `$(call GZIP_SIZE,$@)`   [MIN: `$(call SIZE,$@)`]   [Original: `$(call SIZE,$<)`]"
+
+endif
 
 # Phony Rules #
 .phony: default clean target $(BUILDS)
