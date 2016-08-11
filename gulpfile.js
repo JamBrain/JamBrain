@@ -178,7 +178,7 @@ gulp.task('buble-rollup', ['buble'], function() {
 //	var nodeResolve		= require("rollup-plugin-node-resolve");
 
 	return rollup({
-			entry: './output/main.o.js',
+			entry: './output/main/main.o.js',
 			plugins: [
 				includePaths({
 					paths: [

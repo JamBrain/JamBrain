@@ -1,15 +1,20 @@
 
--include config.mk	# Create and use this file to override any of 'Settings'. Use '=', not ':=' #
+-include config.mk	# Create and use this file to override any of 'Settings' #
 
 # Settings #
-SRC					=	src
-OUT					=	.output
+SRC					?=	src
+OUT					?=	.output
 
-STATIC_DOMAIN		=	static.jammer.work
+STATIC_DOMAIN		?=	static.jammer.work
+
+# Include Folders (modified by recursive scripts) #
+INCLUDE_FOLDERS		?=	$(SRC)/
 
 # Functions (must use '=', and not ':=') #
 REMOVE_UNDERSCORE	=	$(foreach v,$(1),$(if $(findstring /_,$(v)),,$(v)))
-FIND_FILE			=	$(call REMOVE_UNDERSCORE,$(shell find $(1) -name '$(2)'))
+INCLUDE_INCLUDES	=	$(filter $(addsuffix %,$(dir $(INCLUDE_FOLDERS))),$(1))
+FIND_FILE			=	$(call REMOVE_UNDERSCORE,$(call INCLUDE_INCLUDES,$(shell find $(1) -name '$(2)')))
+# NOTE: My standard build tree rule is to ignore any file/folder prefixed with an underscore #
 
 # Files #
 ALL_JS_FILES		:=	$(filter-out %.min.js,$(call FIND_FILE,$(SRC)/,*.js))
@@ -18,8 +23,6 @@ ALL_CSS_FILES		:=	$(call FIND_FILE,$(SRC)/,*.css)
 ALL_SVG_FILES		:=	$(call FIND_FILE,$(SRC)/,*.svg)
 
 ALL_ES6IGNORE_FILES	:=	$(call FIND_FILE,$(SRC)/,.es6ignore)
-ALL_BUILD_FILES		:=	$(call FIND_FILE,$(SRC)/,build.json)
-
 ES6IGNORE_FOLDERS	:=	$(addsuffix %,$(dir $(ALL_ES6IGNORE_FILES)))
 
 # Transforms #
@@ -39,6 +42,8 @@ OUT_FILES			:=	$(OUT_ES6_FILES) $(OUT_JS_FILES) $(OUT_LESS_FILES) $(OUT_CSS_FILE
 DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES6_FILES) $(OUT_LESS_FILES))
 OUT_FOLDERS			:=	$(sort $(dir $(OUT_FILES)))
 
+TARGETS				:=	$(OUT_FOLDERS) $(OUT_FILES)
+
 # Tools #
 BUBLE				:=	
 ROLLUP				:=	
@@ -50,16 +55,19 @@ LESS				=	lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
 
 
 # Rules #
-default: $(OUT_FOLDERS) $(OUT_FILES)
-	@echo Done.
+default: target
 
 clean:
 	rm -fr $(OUT)
+	
+target: $(TARGETS)
+	@echo "Done."
 
+# Folder Rules #
 $(OUT_FOLDERS):
 	mkdir -p $@
 
-# File Types #
+# File Rules #
 $(OUT)/%.es6.js:$(SRC)/%.js
 	@echo TODO: $@
 	@touch $@
@@ -77,7 +85,7 @@ $(OUT)/%.o.svg:$(SRC)/%.svg
 	cp $< $@
 
 # Phony Rules #
-.phony: default clean
+.phony: default clean target
 
 # Dependencies #
 -include $(DEP_FILES)
