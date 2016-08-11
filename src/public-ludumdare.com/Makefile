@@ -1,5 +1,5 @@
 
-TARGET				:=	public-jammer.vg
+TARGET				:=	public-ludumdare.com
 
 MAIN_FOLDER			:=	src/$(TARGET)
 TARGET_FOLDER		:=	$(TARGET)/-/
