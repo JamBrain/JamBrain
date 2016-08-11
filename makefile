@@ -1,10 +1,11 @@
 
-SRC					:=	src
-OUT					:=	.output
+-include config.mk	# Create and use this file to override any of 'Settings'. Use '=', not ':=' #
 
-STATIC_DOMAIN		:=	static.jammer.work
-#STATIC_DOMAIN		:=	static.jam.dev
-#STATIC_DOMAIN		:=	static.jam.vg
+# Settings #
+SRC					=	src
+OUT					=	.output
+
+STATIC_DOMAIN		=	static.jammer.work
 
 # Functions (must use '=', and not ':=') #
 REMOVE_UNDERSCORE	=	$(foreach v,$(1),$(if $(findstring /_,$(v)),,$(v)))
@@ -41,14 +42,16 @@ OUT_FOLDERS			:=	$(sort $(dir $(OUT_FILES)))
 # Tools #
 BUBLE				:=	
 ROLLUP				:=	
-LESS_ARGS			:=	--global-var='STATIC_DOMAIN=$(STATIC_DOMAIN)'
-LESS				=	lessc $(LESS_ARGS) $(1) $(2)
-LESS_DEP			=	lessc $(LESS_ARGS) --depends $(1) $(2)>$(2).dep
+
+LESS_COMMON			:=	--global-var='STATIC_DOMAIN=$(STATIC_DOMAIN)'
+LESS_ARGS			:=	--autoprefix
+LESS_DEP			=	lessc $(LESS_COMMON) --depends $(1) $(2)>$(2).dep
+LESS				=	lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
+
 
 # Rules #
 default: $(OUT_FOLDERS) $(OUT_FILES)
-	@echo $(DEP_FILES)
-#	@echo Done.
+	@echo Done.
 
 clean:
 	rm -fr $(OUT)
@@ -75,3 +78,6 @@ $(OUT)/%.o.svg:$(SRC)/%.svg
 
 # Phony Rules #
 .phony: default clean
+
+# Dependencies #
+-include $(DEP_FILES)
