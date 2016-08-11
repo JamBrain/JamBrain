@@ -81,6 +81,12 @@ default: target
 
 clean-target:
 	rm -f $(TARGET_FILES)
+	
+report: $(TARGET_FILES)
+	@echo "[JS]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`]"
+	@echo "[CSS] GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.css 2>/dev/null)`]"
+	@echo "[SVG] GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`]"
+	
 
 # If not called recursively, figure out who the targes are and call them #
 ifndef TARGET # ---- #
@@ -137,7 +143,6 @@ $(BUILD_FOLDER)/all.js: $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js
 	cat $^ > $@
 $(TARGET_FOLDER)/all.min.js: $(BUILD_FOLDER)/all.js
 	$(call MINIFY_JS,$<,$@)
-	@echo "[JS] GZIP: `$(call GZIP_SIZE,$@)`   [MIN: `$(call SIZE,$@)`]   [Original: `$(call SIZE,$<)`]"
 
 # CSS #
 $(BUILD_FOLDER)/css.css: $(OUT_CSS_FILES)
@@ -167,7 +172,7 @@ $(OUT)/git-version.php:
 
 
 # Phony Rules #
-.phony: default clean target clean-target $(BUILDS)
+.phony: default clean target clean-target report $(BUILDS)
 
 
 # Dependencies #
