@@ -143,7 +143,7 @@ $(TARGET_FOLDER)/all.min.js: $(BUILD_FOLDER)/all.js
 $(BUILD_FOLDER)/css.css: $(OUT_CSS_FILES)
 	cat $< > $@
 $(BUILD_FOLDER)/less.css: $(OUT_LESS_FILES)
-	cat $< > $@
+	cat $^ > $@
 $(BUILD_FOLDER)/all.css: $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.css
 	cat $^ > $@
 $(TARGET_FOLDER)/all.min.css: $(BUILD_FOLDER)/all.css
