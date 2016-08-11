@@ -4,6 +4,8 @@
 .svn
 .hg
 .gulpdebug
+.output/
+.build/
 error_log
 /public/dev/
 /public-static/raw/
@@ -12,6 +14,8 @@ error_log
 /legacy-config.php
 /config.js
 node_modules/
+phpmyadmin/
 output/
 obj/
+-/
 *.gz
