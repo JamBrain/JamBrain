@@ -42,7 +42,7 @@ function SVGIcon( $name ) {
 	var STATIC_DOMAIN = "<?=STATIC_DOMAIN?>";
 	var SVG_FILE = "<?=SVG_FILE?>";
 	
-	<?php include __DIR__."/embed/preload-svg.js"; ?>
+	<?php include __DIR__."/../embed/preload-svg.js"; ?>
 
 //	(function(svg_file){
 //		var xhr = new XMLHttpRequest();

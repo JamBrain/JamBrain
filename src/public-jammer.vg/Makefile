@@ -12,7 +12,8 @@ INCLUDE_FOLDERS		:=	src/com/ \
 						src/icons/ \
 						$(MAIN_FOLDER)/
 
-MAIN_JS				:=	$(MAIN_FOLDER)/main.js
+MAIN_JS				:=	$(MAIN_FOLDER)/../main/main.js
+#MAIN_JS				:=	$(MAIN_FOLDER)/main.js
 
 # Include the main Makefile #
 -include Makefile	# NOTE: This Makefile should be run from the root folder, not here! #

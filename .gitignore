@@ -5,6 +5,7 @@
 .hg
 .gulpdebug
 .output/
+.build/
 error_log
 /public/dev/
 /public-static/raw/
@@ -16,4 +17,5 @@ node_modules/
 phpmyadmin/
 output/
 obj/
+-/
 *.gz

@@ -44,15 +44,14 @@ OUT_FILES			:=	$(OUT_ES6_FILES) $(OUT_JS_FILES) $(OUT_LESS_FILES) $(OUT_CSS_FILE
 DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES6_FILES) $(OUT_LESS_FILES))
 OUT_FOLDERS			:=	$(sort $(dir $(OUT_FILES) $(BUILD_FOLDER)/))
 
-TARGET_DEPS			:=	$(OUT_FOLDERS) $(BUILD_FOLDER)/all.min.js
-#$(OUT_FILES)
+TARGET_DEPS			:=	$(OUT_FOLDERS) $(TARGET_FOLDER)/all.min.js $(TARGET_FOLDER)/all.min.css $(TARGET_FOLDER)/all.min.svg
 
 
 # Tools #
 BUBLE_ARGS			:=	--no modules --jsx h
 BUBLE				=	buble $(BUBLE_ARGS) $(1) -o $(2)
 # ES6 Compiler: https://buble.surge.sh/guide/
-ROLLUP_ARGS			:=	
+ROLLUP_ARGS			:=	-c $(SRC)/rollup.config.js
 ROLLUP				=	rollup $(ROLLUP_ARGS) $(1) > $(2)
 # ES6 Include/Require Resolver: http://rollupjs.org/guide/
 MINIFY_JS_ARGS		:=	--compress --mangle
@@ -115,18 +114,40 @@ $(OUT)/%.o.svg:$(SRC)/%.svg
 
 # Concat Rules #
 ifdef TARGET
+OUT_MAIN_JS			:=	$(subst $(SRC)/,$(OUT)/,$(MAIN_JS:.js=.es6.js))
+
+# JavaScript #
 $(BUILD_FOLDER)/js.js: $(OUT_JS_FILES)
 	cat $< > $@
 
-$(BUILD_FOLDER)/buble.js: $(MAIN_JS) $(OUT_ES6_FILES)
+$(BUILD_FOLDER)/buble.js: $(OUT_MAIN_JS) $(OUT_ES6_FILES)
 	$(call ROLLUP,$<,$@)
 
 $(BUILD_FOLDER)/all.js: $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js
 	cat $^ > $@
 	
-$(BUILD_FOLDER)/all.min.js: $(BUILD_FOLDER)/all.js
+$(TARGET_FOLDER)/all.min.js: $(BUILD_FOLDER)/all.js
 	$(call MINIFY_JS,$<,$@)
 	@echo "[JS] GZIP: `$(call GZIP_SIZE,$@)`   [MIN: `$(call SIZE,$@)`]   [Original: `$(call SIZE,$<)`]"
+
+# CSS #
+$(BUILD_FOLDER)/css.css: $(OUT_CSS_FILES)
+	cat $< > $@
+
+$(BUILD_FOLDER)/less.css: $(OUT_LESS_FILES)
+	cat $< > $@
+
+$(BUILD_FOLDER)/all.css: $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.css
+	cat $^ > $@
+
+$(TARGET_FOLDER)/all.min.css: $(BUILD_FOLDER)/all.css
+	$(call MINIFY_CSS,$<,$@)
+	@echo "[CSS] GZIP: `$(call GZIP_SIZE,$@)`   [MIN: `$(call SIZE,$@)`]   [Original: `$(call SIZE,$<)`]"
+
+
+# SVG #
+$(TARGET_FOLDER)/all.min.svg: src/icons/icomoon/icons.svg
+	cp $< $@
 
 endif
 

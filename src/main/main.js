@@ -1,10 +1,10 @@
 import { diff_match_patch } from 'custom/diff_match_patch/diff_match_patch';
 
 import { h, render }	from 'preact/preact';
-import NavBar 			from './com/nav-bar/code';
-import SVGIcon 			from './com/svg-icon/code';
-import DarkOverlay		from './com/dark-overlay/code';
-import Notify			from './internal/notify/notify';
+import NavBar 			from 'com/nav-bar/code';
+import SVGIcon 			from 'com/svg-icon/code';
+import DarkOverlay		from 'com/dark-overlay/code';
+import Notify			from 'internal/notify/notify';
 
 
 //var svg_file = "/static/all.min.svg";
