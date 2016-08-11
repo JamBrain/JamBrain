@@ -8,7 +8,6 @@ var config = require('./config.js');
 
 // Gulp Includes //
 var gulp	= require('gulp');
-//var gulp_if	= require('gulp-if');
 var debug	= require('gulp-debug');
 var newer	= require('gulp-newer');
 var rename	= require('gulp-rename');
@@ -33,6 +32,12 @@ var es6ignore_files = glob.sync('src/**/.es6ignore')
 	.map(function(el){
 		return el.replace('.es6ignore','');
 	});
+	
+var build_files = glob.sync('src/**/build.json');
+var build_data = build_files.map(function(file){
+	return require('./'+file);
+});
+//console.log(build_data);
 
 // Ignore any minified files, or files/folders prefixed with an underscore //
 var less_files		= ['src/**/*.less','!src/**/_*.*']

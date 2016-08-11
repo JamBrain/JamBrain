@@ -4,6 +4,7 @@
 .svn
 .hg
 .gulpdebug
+.output/
 error_log
 /public/dev/
 /public-static/raw/
