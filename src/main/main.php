@@ -1,5 +1,10 @@
 <?php
 @include __DIR__."/../../.output/git-version.php";
+if ( !defined('GIT_VERSION') ) {
+	echo "<h1>Update in progress</h1><p>Please check back in a few minutes.</p>";
+	die();
+}
+
 // TODO: Figure out if this is the live server or not //
 define( 'USE_MINIFIED', isset($_GET['debug']) ? '' : '.min' );
 define( 'VERSION_STRING', defined('GIT_VERSION') ? 'v='.GIT_VERSION : '' );

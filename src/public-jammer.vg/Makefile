@@ -18,12 +18,3 @@ MAIN_JS				:=	$(MAIN_FOLDER)/../main/main.js
 # Include the main Makefile #
 -include Makefile	# NOTE: This Makefile should be run from the root folder, not here! #
 
-# Rules #
-fail:
-	@echo "[-] Failed to run \"$(TARGET)\""
-
-target: $(TARGET_DEPS) report
-	@echo "[-] Done \"$(TARGET)\""
-
-# Phony Rules #
-phony: fail target report
