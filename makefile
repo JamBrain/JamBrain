@@ -18,9 +18,9 @@ FIND_FILE			=	$(call REMOVE_UNDERSCORE,$(call INCLUDE_INCLUDES,$(shell find $(1)
 
 # Files #
 ALL_JS_FILES		:=	$(filter-out %.min.js,$(call FIND_FILE,$(SRC)/,*.js))
-ALL_LESS_FILES		:=	$(call FIND_FILE,$(SRC)/,*.less)
-ALL_CSS_FILES		:=	$(call FIND_FILE,$(SRC)/,*.css)
-ALL_SVG_FILES		:=	$(call FIND_FILE,$(SRC)/,*.svg)
+ALL_LESS_FILES		:=	$(filter-out %.min.less,$(call FIND_FILE,$(SRC)/,*.less))
+ALL_CSS_FILES		:=	$(filter-out %.min.css,$(call FIND_FILE,$(SRC)/,*.css))
+ALL_SVG_FILES		:=	$(filter-out %.min.svg,$(call FIND_FILE,$(SRC)/,*.svg))
 
 ALL_ES6IGNORE_FILES	:=	$(call FIND_FILE,$(SRC)/,.es6ignore)
 ES6IGNORE_FOLDERS	:=	$(addsuffix %,$(dir $(ALL_ES6IGNORE_FILES)))
