@@ -34,6 +34,19 @@ body {
 	}
 }
 
+.if-no-sidebar-block {
+	display: none !important;
+}
+.if-no-sidebar-inline {
+	display: none !important;
+}
+.if-sidebar-block {
+	display: block !important;
+}
+.if-sidebar-inline {
+	display: inline-block !important;
+}
+
 @media (max-width: (1280px)) { 
 	#layout {
 		width: 100%;
@@ -43,7 +56,27 @@ body {
 	#sidebar {
 		display: none;
 	}
+	
+	.if-no-sidebar-block {
+		display: block !important;
+	}
+	.if-no-sidebar-inline {
+		display: inline-block !important;
+	}
+	.if-sidebar-block {
+		display: none !important;
+	}
+	.if-sidebar-inline {
+		display: none !important;
+	}
 }
+
+@media (max-width: (1280px-320px-320px)) { 	
+	.if-small-hide {
+		display: none !important;
+	}
+}
+
 
 #footer {
 	padding:1em;
@@ -103,10 +136,25 @@ body {
 			padding: 1em;
 			padding-bottom:0;
 			
+			& svg {
+				vertical-align:middle;
+			}
+			
 			& > div {
 			}
 			& > .title {
 				padding-bottom: 0.5em;
+			}
+			& > .footer {
+				margin: 1em 0;
+				padding: 0.5em;
+				text-align: center;
+				cursor: pointer;
+				background: rgba(0,0,0,0.1);
+				
+				&:hover {
+					background: rgba(255,255,255,0.8);
+				}
 			}
 		}
 	}
@@ -114,10 +162,12 @@ body {
 	& > .tv {
 		background: rgba(0,0,0,0.1);
 		& > .active {
-			& > img {
-				max-width:95%;
+			& > div {
 				padding:0.5em;
-				display:block;
+				& > img {
+					max-width:100%;
+					display:block;
+				}
 			}
 		}
 		& > .detail {
@@ -133,11 +183,13 @@ body {
 				width:100%;
 				cursor:pointer;
 				
-				& > img {
-					max-width:94%;
-					display:block;
+				& > div {
 					padding:2px;
-					margin:auto;
+
+					& > img {
+						max-width:100%;
+						display:block;
+					}
 				}
 				
 				&.selected {
@@ -168,7 +220,7 @@ body {
 		box-shadow: 0px 0px 3px rgba(64,0,0,0.2);
 	
 		& > .header {
-			padding: 1em;
+			margin: 1em;
 			& > .title {
 				font-size: 2.0em;
 				font-weight:bold;
@@ -182,7 +234,7 @@ body {
 			}
 		}	
 		& > .body {
-			padding: 1em;
+			margin: 1em;
 		}	
 		& > .footer {
 			padding: 1em;
