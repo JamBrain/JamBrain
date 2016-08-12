@@ -57,7 +57,7 @@ function SVGIcon( $name ) {
 		<div id="content">
 			<div class="item post">
 				<div class="header">
-					<div class="_float-right"><img src="http://static.jammer.work/other/logo/mike/Chicken64W.png"></div>
+					<div class="avatar"><img src="//<?=STATIC_DOMAIN?>/other/logo/mike/Chicken64W.png"></div>
 					<div class="title">Interesting title of thing that's interesting</div>
 					<div class="subtext">Posted by <strong>PoV</strong> (<?= SVGIcon("twitter")?> <a href="http://twitter.com/mikekasprzak">mikekasprzak</a>): 7 hours ago, January 14th, 1974</div>
 				</div>
@@ -72,12 +72,12 @@ function SVGIcon( $name ) {
 					<p class="_unmargin-bottom">Pellentesque et arcu tempor, sagittis ipsum in, iaculis velit. Etiam laoreet erat luctus, suscipit mauris eu, egestas nulla. In vulputate tempor vulputate. Pellentesque dignissim, urna non iaculis consequat, nisi magna tincidunt eros, et interdum ligula dui eget est. Praesent a lacus quis odio consequat suscipit. Vivamus vitae ligula et velit laoreet euismod id non nulla. Etiam sollicitudin dui at nibh tristique ullamcorper. Mauris est nibh, semper vitae est eu, elementum tincidunt elit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque tempus ut nunc sit amet hendrerit. Nunc nec mattis diam, at rutrum eros. Donec finibus nisi vel nisi molestie, eu ornare justo rhoncus. Nam rutrum lacus quis est malesuada, sit amet pretium erat euismod. Nunc efficitur convallis leo id efficitur. Suspendisse potenti. Pellentesque euismod nulla vel purus interdum vestibulum.</p>
 				</div>
 				<div class="footer">
-					<div><?= SVGIcon("cog")?></div>
+					<div class="gear"><?= SVGIcon("cog")?></div>
 				</div>
 			</div>
 			<div class="item post">
 				<div class="header">
-					<div class="_float-right"><img src="http://static.jammer.work/other/logo/mike/Chicken64W.png"></div>
+					<div class="avatar"><img src="//<?=STATIC_DOMAIN?>/other/logo/mike/Chicken64W.png"></div>
 					<div class="title">Less interesting, but formidible</div>
 					<div class="subtext">Posted by <strong>PoV</strong> (<?= SVGIcon("twitter")?> <a href="http://twitter.com/mikekasprzak">mikekasprzak</a>): 4 days ago, January 11th, 1974</div>
 				</div>
@@ -85,21 +85,23 @@ function SVGIcon( $name ) {
 					<p class="_unmargin-bottom">Pellentesque et arcu tempor, sagittis ipsum in, iaculis velit. Etiam laoreet erat luctus, suscipit mauris eu, egestas nulla. In vulputate tempor vulputate. Pellentesque dignissim, urna non iaculis consequat, nisi magna tincidunt eros, et interdum ligula dui eget est. Praesent a lacus quis odio consequat suscipit. Vivamus vitae ligula et velit laoreet euismod id non nulla. Etiam sollicitudin dui at nibh tristique ullamcorper. Mauris est nibh, semper vitae est eu, elementum tincidunt elit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque tempus ut nunc sit amet hendrerit. Nunc nec mattis diam, at rutrum eros. Donec finibus nisi vel nisi molestie, eu ornare justo rhoncus. Nam rutrum lacus quis est malesuada, sit amet pretium erat euismod. Nunc efficitur convallis leo id efficitur. Suspendisse potenti. Pellentesque euismod nulla vel purus interdum vestibulum.</p>
 				</div>
 				<div class="footer">
-					<div><?= SVGIcon("cog")?></div>
+					<div class="gear"><?= SVGIcon("cog")?></div>
 				</div>
 			</div>
 
 		</div>
 		<div id="sidebar">
 			<div class="calender">
-				<div class="week">
-					<div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div class="selected">12</div><div>13</div>
-				</div>
-				<div class="week">
-					<div>14</div><div>15</div><div>16</div><div>17</div><div>18</div><div>19</div><div>20</div>
-				</div>
-				<div class="week">
-					<div>21</div><div>22</div><div>23</div><div>24</div><div>25</div><div class="event">26</div><div class="event">27</div>
+				<div class="grid">
+					<div class="week">
+						<div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div class="selected">12</div><div>13</div>
+					</div>
+					<div class="week">
+						<div>14</div><div>15</div><div>16</div><div>17</div><div>18</div><div>19</div><div>20</div>
+					</div>
+					<div class="week">
+						<div>21</div><div>22</div><div>23</div><div>24</div><div>25</div><div class="event">26</div><div class="event">27</div>
+					</div>
 				</div>
 				<div class="upcoming">
 					<div class="title"><?= SVGIcon("calendar")?> Coming Up</div>
