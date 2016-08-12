@@ -57,7 +57,7 @@ function SVGIcon( $name ) {
 		<div id="content">
 			<div class="item post">
 				<div class="header">
-					<div class="_float-right"><img src="//<?=STATIC_DOMAIN?>/other/logo/mike/Chicken64W.png"></div>
+					<div class="avatar"><img src="//<?=STATIC_DOMAIN?>/other/logo/mike/Chicken64W.png"></div>
 					<div class="title">Interesting title of thing that's interesting</div>
 					<div class="subtext">Posted by <strong>PoV</strong> (<?= SVGIcon("twitter")?> <a href="http://twitter.com/mikekasprzak">mikekasprzak</a>): 7 hours ago, January 14th, 1974</div>
 				</div>
@@ -77,7 +77,7 @@ function SVGIcon( $name ) {
 			</div>
 			<div class="item post">
 				<div class="header">
-					<div class="_float-right"><img src="//<?=STATIC_DOMAIN?>/other/logo/mike/Chicken64W.png"></div>
+					<div class="avatar"><img src="//<?=STATIC_DOMAIN?>/other/logo/mike/Chicken64W.png"></div>
 					<div class="title">Less interesting, but formidible</div>
 					<div class="subtext">Posted by <strong>PoV</strong> (<?= SVGIcon("twitter")?> <a href="http://twitter.com/mikekasprzak">mikekasprzak</a>): 4 days ago, January 11th, 1974</div>
 				</div>
