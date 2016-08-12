@@ -27,6 +27,11 @@ body {
 	margin: 16px auto 0;
 	width: 1280px;
 	display: flex;
+	
+	& .title {
+		font-family: 'Raleway', sans-serif;
+		font-size:1.5em;
+	}
 }
 
 @media (max-width: (1280px)) { 
@@ -97,6 +102,12 @@ body {
 		& > .upcoming {
 			padding: 1em;
 			padding-bottom:0;
+			
+			& > div {
+			}
+			& > .title {
+				padding-bottom: 0.5em;
+			}
 		}
 	}
 	
@@ -159,7 +170,6 @@ body {
 		& > .header {
 			padding: 1em;
 			& > .title {
-				font-family: 'Raleway', sans-serif;
 				font-size: 2.0em;
 				font-weight:bold;
 			}
@@ -177,6 +187,10 @@ body {
 		& > .footer {
 			padding: 1em;
 			background: darken(@MAIN_BACKGROUND,5%);
+			text-align:right;
+			& svg {
+				vertical-align:middle;
+			}
 		}
 	}
 }
