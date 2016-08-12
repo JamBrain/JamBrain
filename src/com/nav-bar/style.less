@@ -1,10 +1,11 @@
 
-@NAVBAR_HEIGHT: 48px;
+@NAVBAR_HEIGHT: 64px;
 @NAVBAR_SHADOW: 2px;
-@NAVBAR_PAD: 6px;
+@NAVBAR_PAD: 10px;
 @NAVBAR_CELL: @NAVBAR_HEIGHT - @NAVBAR_PAD * 2;
 
-@NAVBAR_COLOR_BG: #3E3E3E;
+@NAVBAR_COLOR_BG_TOP: rgba(80,76,66,.9);
+@NAVBAR_COLOR_BG_BOT: rgba(104,100,84,.9);
 @NAVBAR_COLOR_SHADOW: #AAA;
 
 .nav-bar {
@@ -17,13 +18,14 @@
 	right: 0;
 	z-index:1000;
 	
-	border-top: 2px solid @NAVBAR_COLOR_BG;	/* Mobile Scrolling Garbage Fix */
-	border-bottom: @NAVBAR_SHADOW solid @NAVBAR_COLOR_SHADOW;
+	border-top: 2px solid @NAVBAR_COLOR_BG_TOP;	/* Mobile Scrolling Garbage Fix */
+/*	border-bottom: @NAVBAR_SHADOW solid @NAVBAR_COLOR_SHADOW;*/
 
 	height: @NAVBAR_CELL;
-	background: @NAVBAR_COLOR_BG;
+	background: linear-gradient(top, @NAVBAR_COLOR_BG_TOP, @NAVBAR_COLOR_BG_BOT);
 	
 	line-height: @NAVBAR_CELL;
+	font-size: 20px;
 	padding: @NAVBAR_PAD;
 	
 	> div {
@@ -37,17 +39,17 @@
 			line-height: @NAVBAR_CELL;/* - 2px;*/
 			padding: 0 20px;
 			
-			background: #2D2D2D;
-			color: #F5F2F0;
+			background: #4D3D2D;
+			color: #E5D2C0;
 			
-			transition: background 0.2s, color 0.2s;
+			transition: background 0.1s, color 0.1s;
 			
 			&:hover, &:focus, &:active {
-				background: #3068CC;
+				background: #D63;
 				color: #FFF;
 			}
 			&:hover:active {
-				color: #3068CC;
+				color: #D63;
 				background: #FFF;
 			}
 		}
