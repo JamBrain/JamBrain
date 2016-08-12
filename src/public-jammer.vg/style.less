@@ -102,34 +102,37 @@ body {
 	}
 	
 	& > .calender {
-		& > .week {
-			display:flex;
-			align-items:stretch;
-			& > div {
-				width:100%;
-				margin-right:1px;
-				margin-bottom:1px;
-				background: rgba(0,0,0,0.10);
-				height: 2em;
-				padding: 4px;
-				cursor:pointer;
-				
-				&:hover, &:first-child:hover, &:last-child:hover {
-					background: rgba(0,0,0,0.05);
+		& > .grid {
+			box-shadow: 0px 0px 3px rgba(64,0,0,0.2);
+			& > .week {
+				display:flex;
+				align-items:stretch;
+				& > div {
+					width:100%;
+					margin-right:1px;
+					margin-bottom:1px;
+					background: rgba(0,0,0,0.10);
+					height: 2em;
+					padding: 4px;
+					cursor:pointer;
+					
+					&:hover, &:first-child:hover, &:last-child:hover {
+						background: rgba(0,0,0,0.05);
+					}
+					
+					&:first-child, &:last-child {
+						background: rgba(0,0,0,0.15);
+					}
+					&:last-child {
+						margin-right:0;
+					}
 				}
-				
-				&:first-child, &:last-child {
-					background: rgba(0,0,0,0.15);
+				& > .selected {
+					background: rgba(255,255,255,0.3);
 				}
-				&:last-child {
-					margin-right:0;
+				& > .event {
+					font-weight: bold;
 				}
-			}
-			& > .selected {
-				background: rgba(255,255,255,0.3);
-			}
-			& > .event {
-				font-weight: bold;
 			}
 		}
 		& > .upcoming {
@@ -161,6 +164,7 @@ body {
 	
 	& > .tv {
 		background: rgba(0,0,0,0.1);
+		box-shadow: 0px 0px 3px rgba(64,0,0,0.2);
 		& > .active {
 			& > div {
 				padding:0.5em;
@@ -213,6 +217,8 @@ body {
 	}
 
 	& > .post {
+		position: relative;
+		
 		/*border: 1px solid rgba(0,0,0,0.2);*/
 		border-top: 4px solid #653;
 		
@@ -237,9 +243,41 @@ body {
 			margin: 1em;
 		}	
 		& > .footer {
-			padding: 1em;
-			background: darken(@MAIN_BACKGROUND,5%);
-			text-align:right;
+			border-bottom:8px solid darken(@MAIN_BACKGROUND,10%);
+			color: rgba(0,0,0,0.5);
+			& > .gear {
+				position: absolute;
+				right:0;
+				bottom:0;
+				
+				padding: 1em;
+				background: darken(@MAIN_BACKGROUND,10%);
+				
+				&:before {
+					/* Trickery. Makes a diagonal piece */
+					content: '';
+					position: absolute;
+					width:0;
+					height:0;
+					top:0;
+					right:3em;
+					border-bottom: 3em solid darken(@MAIN_BACKGROUND,10%);
+					border-left: 3em solid transparent;
+				}
+			}
+			&:hover {
+				border-bottom-color: #D63;
+				color: #FFF;
+				cursor: pointer;
+				& > .gear {
+					background: #D63;
+					&:before {
+						border-bottom-color: #D63;
+					}
+				}
+			}
+			
+			/*text-align:right;*/
 			& svg {
 				vertical-align:middle;
 			}
