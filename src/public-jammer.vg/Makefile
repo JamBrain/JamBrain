@@ -18,3 +18,6 @@ MAIN_JS				:=	$(MAIN_FOLDER)/../main/main.js
 # Include the main Makefile #
 -include Makefile	# NOTE: This Makefile should be run from the root folder, not here! #
 
+# Rules #
+fail:
+	@echo "[-] Failed to run \"$(TARGET)\""
