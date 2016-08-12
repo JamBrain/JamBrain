@@ -40,6 +40,11 @@ body {
 	}
 }
 
+#footer {
+	padding:1em;
+	text-align:center;
+}
+
 #sidebar {
 	flex: 1;
 
@@ -53,7 +58,7 @@ body {
 	
 	& > div {
 		margin-top: 1em;
-		&:nth-child(1) {
+		&:first-child {
 			margin-top: 0;
 		}
 	}
@@ -71,14 +76,14 @@ body {
 				padding: 4px;
 				cursor:pointer;
 				
-				&:hover, &:nth-child(1):hover, &:nth-child(7):hover {
+				&:hover, &:first-child:hover, &:last-child:hover {
 					background: rgba(0,0,0,0.05);
 				}
 				
-				&:nth-child(1), &:nth-child(7) {
+				&:first-child, &:last-child {
 					background: rgba(0,0,0,0.15);
 				}
-				&:nth-child(7) {
+				&:last-child {
 					margin-right:0;
 				}
 			}
@@ -137,9 +142,9 @@ body {
 	
 	font-size: 18px;
 
-	& > .item {
+	& > div {
 		margin-top: 1em;
-		&.nth-item(1) {
+		&:first-child {
 			margin-top: 0;
 		}
 	}
