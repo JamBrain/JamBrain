@@ -103,18 +103,19 @@ function SVGIcon( $name ) {
 				</div>
 				<div class="upcoming">
 					<div class="title"><?= SVGIcon("calendar")?> Coming Up</div>
-					<div><strong>August 26th</strong> - Event Name</div>
+					<div><strong>August 26th</strong> - Event Name <?= SVGIcon("trophy")?></div>
 					<div><strong>September 4th</strong> - Event Name</div>
+					<div class="footer">Full Schedule</div>
 				</div>
 			</div>
 			
 			<div class="tv">
-				<div class="active"><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_sc2-320x180.jpg"></div>
+				<div class="active"><div><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_sc2-320x180.jpg"></div></div>
 				<div class="detail"><strong>LIVE</strong>: Someone Doing Stuff</div>
 				<div class="browse">
-					<div class="selected"><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_sc2-320x180.jpg"></div>
-					<div><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_dota2-320x180.jpg"></div>
-					<div><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_csgo-320x180.jpg"></div>
+					<div class="selected"><div><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_sc2-320x180.jpg"></div></div>
+					<div><div><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_dota2-320x180.jpg"></div></div>
+					<div><div><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_csgo-320x180.jpg"></div></div>
 				</div>
 			</div>
 			<div>
