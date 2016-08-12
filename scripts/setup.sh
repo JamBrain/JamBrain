@@ -5,9 +5,8 @@
 
 # TODO: Check if it's Apache or nginx.
 
-SCRIPT=$(readlink -f "$0")
-SCRIPTPATH=$(dirname "$SCRIPT")
-cd $SCRIPTPATH
-
+cd /var/www/scripts
 (cd apache ; sh add-ports.sh)
+
+cd /var/www/scripts
 (cd db ; echo YES | php table-create)
