@@ -7,7 +7,7 @@ import DarkOverlay		from 'com/dark-overlay/code';
 import Notify			from 'internal/notify/notify';
 
 render(<NavBar />, document.body);
-render(<SVGIcon name="firefox" />, document.body);
+//render(<SVGIcon name="firefox" />, document.body);
 //render(<DarkOverlay />, document.body);
 
 

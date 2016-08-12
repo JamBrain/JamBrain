@@ -1,5 +1,7 @@
 
-@MAIN_BACKGROUND:		#F5F5F5;
+/*@MAIN_BACKGROUND:		#F5F5F5;
+@MAIN_COLOR:			#2D2D2D;*/
+@MAIN_BACKGROUND:		#F0EEE0;
 @MAIN_COLOR:			#2D2D2D;
 
 @MAIN_INV_BACKGROUND:	#3E3E3E;
@@ -37,12 +39,13 @@ body {
 #sidebar {
 	flex: 1;
 
-	width:320px;
-	max-width:320px;
-	min-width:240px;
+	width: 320px;
+	max-width: 320px;
+	min-width: 240px;
 	
-	border: 1px solid rgba(255,0,0,0.2);
+	/*border: 1px solid rgba(255,0,0,0.2);*/
 	padding: 10px;
+	margin-left: 10px;
 }
 
 #content {
@@ -50,6 +53,8 @@ body {
 
 	border: 1px solid rgba(0,0,0,0.2);
 	padding: 10px;
+	
+	background: lighten(@MAIN_BACKGROUND,5%);
 }
 
 
