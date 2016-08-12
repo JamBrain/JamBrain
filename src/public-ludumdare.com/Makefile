@@ -21,9 +21,3 @@ MAIN_JS				:=	$(MAIN_FOLDER)/../main/main.js
 # Rules #
 fail:
 	@echo "[-] Failed to run \"$(TARGET)\""
-
-target: $(TARGET_DEPS) report
-	@echo "[-] Done \"$(TARGET)\""
-
-# Phony Rules #
-phony: fail target report

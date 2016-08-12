@@ -1,5 +1,10 @@
 <?php
 @include __DIR__."/../../.output/git-version.php";
+if ( !defined('GIT_VERSION') ) {
+	echo "<h1>Update in progress</h1><p>Please check back in a few minutes.</p>";
+	die();
+}
+
 // TODO: Figure out if this is the live server or not //
 define( 'USE_MINIFIED', isset($_GET['debug']) ? '' : '.min' );
 define( 'VERSION_STRING', defined('GIT_VERSION') ? 'v='.GIT_VERSION : '' );
@@ -15,10 +20,12 @@ define( 'CSS_FILE',  "/-/all".USE_MINIFIED.".css?".VERSION_STRING );
 define( 'SVG_FILE',  "/-/all".USE_MINIFIED.".svg?".VERSION_STRING );
 define( 'FONT_FILE', "//fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic" );
 
-header( "Link: <".JS_FILE.">; rel=preload; as=script".LINK_SUFFIX, false );
-header( "Link: <".CSS_FILE.">; rel=preload; as=style".LINK_SUFFIX, false );
-header( "Link: <".SVG_FILE.">; rel=preload".LINK_SUFFIX, false );
-header( "Link: <".FONT_FILE.">; rel=preload; as=style", false );
+if ( !isset($_GET['nopreload']) ) {
+	header( "Link: <".JS_FILE.">; rel=preload; as=script".LINK_SUFFIX, false );
+	header( "Link: <".CSS_FILE.">; rel=preload; as=style".LINK_SUFFIX, false );
+	header( "Link: <".SVG_FILE.">; rel=preload".LINK_SUFFIX, false );
+	header( "Link: <".FONT_FILE.">; rel=preload; as=style", false );
+}
 //header("Link: </blah">; rel=canonical"); // https://yoast.com/rel-canonical/
 
 //TODO: Determine page, and populate title and meta tags before continuing //
@@ -43,28 +50,6 @@ function SVGIcon( $name ) {
 	var SVG_FILE = "<?=SVG_FILE?>";
 	
 	<?php include __DIR__."/../embed/preload-svg.js"; ?>
-
-//	(function(svg_file){
-//		var xhr = new XMLHttpRequest();
-//		xhr.open( 'GET', svg_file, true );
-//		xhr.onreadystatechange = function() {
-//			if ( (xhr.readyState === XMLHttpRequest.DONE) && (xhr.status === 200) ) {
-//				xhr.onload = null;
-//				var x = document.createElement('x');
-//				x.innerHTML = xhr.responseText;
-//				var svg = x.getElementsByTagName('svg')[0];
-//				if ( svg ) {
-//					svg.setAttribute( 'aria-hidden', 'true' );
-//					svg.style.position = 'absolute';
-//					svg.style.width = 0;
-//					svg.style.height = 0;
-//					svg.style.overflow = 'hidden';
-//					document.body.insertBefore( svg, document.body.firstChild );
-//				}
-//			}
-//		};
-//		xhr.send();
-//	})( SVG_FILE );
 	</script>
 	<script src="<?=JS_FILE?>"></script>
 	<div id="layout">
