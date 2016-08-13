@@ -6,6 +6,9 @@ export default class NavBar extends Component {
 	render(props,state) {
 		return (
 			<div class="nav-bar">
+				<div>
+					<img class="logo" src={"//"+STATIC_DOMAIN+"/other/logo/jammer/JammerLogo56W.png"} height="48" style="opacity:0.5" />
+				</div>
 				<div class="-right">
 					<CoreButton class="button if-no-sidebar-inline"><SVGIcon name="calendar" /><span class="if-small-hide">Schedule</span></CoreButton>
 					<CoreButton class="button"><SVGIcon name="search" /></CoreButton>
