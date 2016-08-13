@@ -350,6 +350,7 @@ body {
 						width:100%;
 						height:100%;
 						color:darken(@MAIN_BACKGROUND,10%);
+						display:block;
 					}
 				}
 			}
@@ -373,6 +374,7 @@ body {
 						width:100%;
 						height:100%;
 						color:darken(@MAIN_BACKGROUND,10%);
+						display:block;
 					}
 				}
 				& > .heart {
@@ -394,11 +396,36 @@ body {
 						width:100%;
 						height:100%;
 						color:darken(@MAIN_BACKGROUND,15%);
+						display:block;
+					}
+				}
+
+				& > .comment {
+					width:auto;
+					padding-left:1rem;
+					padding-right:1rem;
+					background: darken(@MAIN_BACKGROUND,15%);
+				}
+				& > .comment-count {
+					width:auto;
+					padding-right:1rem;
+					background: darken(@MAIN_BACKGROUND,15%);
+					font-size:1.5em;
+					line-height:2.8rem;
+				}
+
+				& > .spacer2 {
+					background:darken(@MAIN_BACKGROUND,15%);
+					& > svg {
+						width:100%;
+						height:100%;
+						color:darken(@MAIN_BACKGROUND,20%);
+						display:block;
 					}
 				}
 				
 				& > .gear {
-					background: darken(@MAIN_BACKGROUND,15%);
+					background: darken(@MAIN_BACKGROUND,20%);
 					width:2.5em;
 /*					
 					&:before {
