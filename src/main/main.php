@@ -19,7 +19,7 @@ define( 'JS_FILE',   "/-/all".USE_MINIFIED.".js?".VERSION_STRING );
 define( 'CSS_FILE',  "/-/all".USE_MINIFIED.".css?".VERSION_STRING );
 define( 'SVG_FILE',  "/-/all".USE_MINIFIED.".svg?".VERSION_STRING );
 //define( 'FONT_FILE', "//fonts.googleapis.com/css?family=Lato:300,300italic,700,700italic|Crimson+Text:400italic" );
-define( 'FONT_FILE', "//fonts.googleapis.com/css?family=Raleway|Lato:300,700" );
+define( 'FONT_FILE', "//fonts.googleapis.com/css?family=Raleway|Lato:300,300italic,700,700italic" );
 
 if ( !isset($_GET['nopreload']) ) {
 	header( "Link: <".JS_FILE.">; rel=preload; as=script".LINK_SUFFIX, false );
@@ -59,7 +59,7 @@ function SVGIcon( $name ) {
 				<div class="header">
 					<div class="avatar"><img src="//<?=STATIC_DOMAIN?>/other/logo/mike/Chicken64W.png"></div>
 					<div class="title">Interesting title of thing that's interesting</div>
-					<div class="subtext">Posted by <strong>PoV</strong> (<?= SVGIcon("twitter")?> <a href="http://twitter.com/mikekasprzak">mikekasprzak</a>): 7 hours ago, January 14th, 1974</div>
+					<div class="subtext">Posted 7 hours ago on January 14th, 1974, by <strong>PoV</strong> (<?= SVGIcon("twitter")?> <a href="http://twitter.com/mikekasprzak">mikekasprzak</a>) of <em>Team Fishbowl</em> <?= SVGIcon("users")?></div>
 				</div>
 				<div class="body">
 					<p class="_unmargin-top">Hello. <strong>Something</strong> is going to happen.</p>
@@ -72,20 +72,36 @@ function SVGIcon( $name ) {
 					<p class="_unmargin-bottom">Pellentesque et arcu tempor, sagittis ipsum in, iaculis velit. Etiam laoreet erat luctus, suscipit mauris eu, egestas nulla. In vulputate tempor vulputate. Pellentesque dignissim, urna non iaculis consequat, nisi magna tincidunt eros, et interdum ligula dui eget est. Praesent a lacus quis odio consequat suscipit. Vivamus vitae ligula et velit laoreet euismod id non nulla. Etiam sollicitudin dui at nibh tristique ullamcorper. Mauris est nibh, semper vitae est eu, elementum tincidunt elit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque tempus ut nunc sit amet hendrerit. Nunc nec mattis diam, at rutrum eros. Donec finibus nisi vel nisi molestie, eu ornare justo rhoncus. Nam rutrum lacus quis est malesuada, sit amet pretium erat euismod. Nunc efficitur convallis leo id efficitur. Suspendisse potenti. Pellentesque euismod nulla vel purus interdum vestibulum.</p>
 				</div>
 				<div class="footer">
-					<div class="gear"><?= SVGIcon("cog")?></div>
+					<div class="left">
+						<div class="minmax"><?= SVGIcon("arrow-up")?></span></div>
+						<div class="edge"><?= SVGIcon("wedge-left")?></div>
+					</div>
+					<div class="right">
+						<div class="edge"><?= SVGIcon("wedge-right")?></div>
+						<div class="heart"><?= SVGIcon("heart")?></span></div>
+						<div class="heart-count">15</div>
+						<div class="spacer"><?= SVGIcon("wedge-right")?></div>
+						<div class="gear"><?= SVGIcon("cog")?></div>
+					</div>
 				</div>
 			</div>
 			<div class="item post">
 				<div class="header">
 					<div class="avatar"><img src="//<?=STATIC_DOMAIN?>/other/logo/mike/Chicken64W.png"></div>
 					<div class="title">Less interesting, but formidible</div>
-					<div class="subtext">Posted by <strong>PoV</strong> (<?= SVGIcon("twitter")?> <a href="http://twitter.com/mikekasprzak">mikekasprzak</a>): 4 days ago, January 11th, 1974</div>
+					<div class="subtext">Posted 4 days ago on January 11th, 1974, by <strong>PoV</strong> (<?= SVGIcon("twitter")?> <a href="http://twitter.com/mikekasprzak">mikekasprzak</a>) of <em>Team Fishbowl</em> <?= SVGIcon("users")?></div>
 				</div>
 				<div class="body">
 					<p class="_unmargin-bottom">Pellentesque et arcu tempor, sagittis ipsum in, iaculis velit. Etiam laoreet erat luctus, suscipit mauris eu, egestas nulla. In vulputate tempor vulputate. Pellentesque dignissim, urna non iaculis consequat, nisi magna tincidunt eros, et interdum ligula dui eget est. Praesent a lacus quis odio consequat suscipit. Vivamus vitae ligula et velit laoreet euismod id non nulla. Etiam sollicitudin dui at nibh tristique ullamcorper. Mauris est nibh, semper vitae est eu, elementum tincidunt elit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque tempus ut nunc sit amet hendrerit. Nunc nec mattis diam, at rutrum eros. Donec finibus nisi vel nisi molestie, eu ornare justo rhoncus. Nam rutrum lacus quis est malesuada, sit amet pretium erat euismod. Nunc efficitur convallis leo id efficitur. Suspendisse potenti. Pellentesque euismod nulla vel purus interdum vestibulum.</p>
 				</div>
 				<div class="footer">
-					<div class="gear"><?= SVGIcon("cog")?></div>
+					<div class="right">
+						<div class="edge"><?= SVGIcon("wedge-right")?></div>
+						<div class="heart"><?= SVGIcon("heart")?></span></div>
+						<div class="heart-count">2</div>
+						<div class="spacer"><?= SVGIcon("wedge-right")?></div>
+						<div class="gear"><?= SVGIcon("cog")?></div>
+					</div>
 				</div>
 			</div>
 
@@ -107,13 +123,18 @@ function SVGIcon( $name ) {
 					<div class="title"><?= SVGIcon("calendar")?> Coming Up</div>
 					<div><strong>August 26th</strong> - Event Name <?= SVGIcon("trophy")?></div>
 					<div><strong>September 4th</strong> - Event Name</div>
+					<div><strong>October 11th</strong> - Event Name</div>
 					<div class="footer">Full Schedule</div>
 				</div>
 			</div>
 			
 			<div class="tv">
-				<div class="active"><div><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_sc2-320x180.jpg"></div></div>
-				<div class="detail"><strong>LIVE</strong>: Someone Doing Stuff</div>
+				<div class="active">
+					<div class="img"><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_sc2-320x180.jpg"></div>
+					<div class="live"><?= SVGIcon("circle")?> <span>LIVE</span></div>
+					<div class="play"><?= SVGIcon("play")?></div>
+				</div>
+				<div class="detail"><?= SVGIcon("twitch")?> Doing Stuff! #GameDev</div>
 				<div class="browse">
 					<div class="selected"><div><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_sc2-320x180.jpg"></div></div>
 					<div><div><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_dota2-320x180.jpg"></div></div>
