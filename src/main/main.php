@@ -129,13 +129,13 @@ function SVGIcon( $name ) {
 						<div>21</div><div>22</div><div>23</div><div>24</div><div>25</div><div class="event">26</div><div class="event">27</div>
 					</div>
 				</div>
-				<div class="upcoming">
-					<div class="title"><?= SVGIcon("calendar")?> Coming Up</div>
-					<div><strong>August 26th</strong> - Event Name <?= SVGIcon("trophy")?></div>
-					<div><strong>September 4th</strong> - Event Name</div>
-					<div><strong>October 11th</strong> - Event Name</div>
-					<div class="footer">Full Schedule</div>
-				</div>
+			</div>
+			<div class="shortlist upcoming">
+				<div class="title"><?= SVGIcon("calendar")?> Coming Up</div>
+				<div><strong>August 26th</strong> - Event Name <?= SVGIcon("trophy")?></div>
+				<div><strong>September 4th</strong> - Event Name</div>
+				<div><strong>October 11th</strong> - Event Name</div>
+				<div class="footer">Full Schedule</div>
 			</div>
 			
 			<div class="tv">
@@ -151,6 +151,14 @@ function SVGIcon( $name ) {
 					<div><div><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_csgo-320x180.jpg"></div></div>
 				</div>
 			</div>
+			
+			<div class="shortlist trending">
+				<div class="title"><?= SVGIcon("fire")?> Live and Trending</div>
+				<div><strong>#LDJAM</strong> <?= SVGIcon("trophy")?></div>
+				<div><strong>#BaconJAM</strong></div>
+				<div class="footer">More Jams</div>
+			</div>
+			
 			<div>
 				<p class="_unmargin-bottom">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc bibendum risus in lectus rutrum, sed dictum nisi rhoncus. Duis a tortor dictum, imperdiet erat vitae, bibendum ante. Praesent a neque luctus, vehicula magna at, suscipit eros. Ut vitae odio ex. Morbi fermentum diam at purus venenatis posuere. Aenean faucibus mollis nisl, eget faucibus lacus venenatis eu. Etiam a dui vel nisi cursus dictum. Mauris nec vestibulum turpis, sed faucibus libero. Quisque eget nulla quis velit molestie semper. Integer non ipsum nisi. Vivamus eget libero eu sapien sollicitudin cursus.</p>
 			</div>

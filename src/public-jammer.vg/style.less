@@ -106,6 +106,37 @@ body {
 			margin-top: 0;
 		}
 	}
+
+	& > .shortlist {
+		margin: 1em;
+/*		padding-bottom:0;*/
+		
+		& svg {
+			vertical-align:middle;
+		}
+		
+		& > div {
+		}
+		& > .title {
+			padding-bottom: 0.5em;
+
+			& svg {
+				vertical-align:baseline;
+			}
+		}
+		& > .footer {
+			margin: 1em 0;
+			padding: 0.5em;
+			text-align: center;
+			cursor: pointer;
+			background: rgba(0,0,0,0.1);
+			
+			&:hover {
+				background: #D63;
+				color:#FFF;
+			}
+		}
+	}
 	
 	& > .calender {
 		& > .grid {
@@ -138,36 +169,6 @@ body {
 				}
 				& > .event {
 					font-weight: bold;
-				}
-			}
-		}
-		& > .upcoming {
-			padding: 1em;
-			padding-bottom:0;
-			
-			& svg {
-				vertical-align:middle;
-			}
-			
-			& > div {
-			}
-			& > .title {
-				padding-bottom: 0.5em;
-
-				& svg {
-					vertical-align:baseline;
-				}
-			}
-			& > .footer {
-				margin: 1em 0;
-				padding: 0.5em;
-				text-align: center;
-				cursor: pointer;
-				background: rgba(0,0,0,0.1);
-				
-				&:hover {
-					background: #D63;
-					color:#FFF;
 				}
 			}
 		}
