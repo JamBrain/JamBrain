@@ -5,6 +5,9 @@
 @MAIN_BACKGROUND2:		#CCC49D;
 @MAIN_COLOR:			#2D2D2D;
 
+/* #E92 -> #EB5 */
+/* #423F36    #56534A */
+
 @MAIN_INV_BACKGROUND:	#3E3E3E;
 @MAIN_INV_COLOR:		#F5F2F0;
 
@@ -169,13 +172,65 @@ body {
 	& > .tv {
 		background: rgba(0,0,0,0.1);
 		box-shadow: 0px 0px 3px rgba(64,0,0,0.2);
+
+		& .icon {
+			vertical-align: middle;
+		}
+
 		& > .active {
-			& > div {
+			position: relative;
+			cursor:pointer;
+
+			& > .img {
 				padding:0.5em;
 				& > img {
 					max-width:100%;
 					display:block;
 				}
+			}
+			& > .live {
+				position: absolute;
+				left:1em;
+				top:1em;
+				text-shadow: 0 0 3px black;
+
+				& > svg {
+					vertical-align: middle;
+					color:red;
+					animation: blinker 10s linear infinite;
+				}
+				@keyframes blinker { 
+					5% { opacity: 1.0; }
+					10% { opacity: 0.2; }
+					15% { opacity: 1.0; }
+				}
+				
+				& > span {
+					color: white;
+					font-weight:bold;
+				}
+			}
+			& > .play {
+				position:absolute;
+				top:50%;
+				left:50%;
+				transform: translate(-50%,-50%);
+				opacity:0.3;
+				font-size:3em;
+				color:white;
+				transition: opacity 0.2s, font-size 0.2s;
+				
+				& > svg {
+					display:block;
+				}
+			}
+			&:hover > .play {
+				opacity:1.0;
+				font-size:4em;
+			}
+			&:active > .play {
+				opacity:0.6;
+				font-size:2.5em;
 			}
 		}
 		& > .detail {
@@ -261,8 +316,41 @@ body {
 		& > .footer {
 			border-bottom:8px solid darken(@MAIN_BACKGROUND,10%);
 			color: rgba(0,0,0,0.5);
+			height: 1em;
+
+			& svg {
+				vertical-align:middle;
+			}
 			
-			& > div {
+			& > .left {
+				position: absolute;
+				left:0;
+				bottom:0;
+				display:flex;
+
+				& > div {
+					line-height:2.5rem;
+					width:2.5rem;
+					height:2.5rem;
+					text-align:center;
+				}
+
+				& > .minmax {
+					width:auto;
+					padding-left:1rem;
+					padding-right:1rem;
+					background: darken(@MAIN_BACKGROUND,10%);
+				}
+				& > .edge {
+					& > svg {
+						width:100%;
+						height:100%;
+						color:darken(@MAIN_BACKGROUND,10%);
+					}
+				}
+			}
+			
+			& > .right {
 				position: absolute;
 				right:0;
 				bottom:0;
@@ -333,11 +421,6 @@ body {
 					}
 				}
 			}*/
-			
-			/*text-align:right;*/
-			& svg {
-				vertical-align:middle;
-			}
 		}
 	}
 }
