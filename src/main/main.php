@@ -72,7 +72,13 @@ function SVGIcon( $name ) {
 					<p class="_unmargin-bottom">Pellentesque et arcu tempor, sagittis ipsum in, iaculis velit. Etiam laoreet erat luctus, suscipit mauris eu, egestas nulla. In vulputate tempor vulputate. Pellentesque dignissim, urna non iaculis consequat, nisi magna tincidunt eros, et interdum ligula dui eget est. Praesent a lacus quis odio consequat suscipit. Vivamus vitae ligula et velit laoreet euismod id non nulla. Etiam sollicitudin dui at nibh tristique ullamcorper. Mauris est nibh, semper vitae est eu, elementum tincidunt elit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque tempus ut nunc sit amet hendrerit. Nunc nec mattis diam, at rutrum eros. Donec finibus nisi vel nisi molestie, eu ornare justo rhoncus. Nam rutrum lacus quis est malesuada, sit amet pretium erat euismod. Nunc efficitur convallis leo id efficitur. Suspendisse potenti. Pellentesque euismod nulla vel purus interdum vestibulum.</p>
 				</div>
 				<div class="footer">
-					<div class="gear"><?= SVGIcon("cog")?></div>
+					<div class="right">
+						<div class="edge"><?= SVGIcon("wedge")?></div>
+						<div class="heart"><?= SVGIcon("heart")?></span></div>
+						<div class="heart-count">15</div>
+						<div class="spacer"><?= SVGIcon("wedge")?></div>
+						<div class="gear"><?= SVGIcon("cog")?></div>
+					</div>
 				</div>
 			</div>
 			<div class="item post">
@@ -85,7 +91,13 @@ function SVGIcon( $name ) {
 					<p class="_unmargin-bottom">Pellentesque et arcu tempor, sagittis ipsum in, iaculis velit. Etiam laoreet erat luctus, suscipit mauris eu, egestas nulla. In vulputate tempor vulputate. Pellentesque dignissim, urna non iaculis consequat, nisi magna tincidunt eros, et interdum ligula dui eget est. Praesent a lacus quis odio consequat suscipit. Vivamus vitae ligula et velit laoreet euismod id non nulla. Etiam sollicitudin dui at nibh tristique ullamcorper. Mauris est nibh, semper vitae est eu, elementum tincidunt elit. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque tempus ut nunc sit amet hendrerit. Nunc nec mattis diam, at rutrum eros. Donec finibus nisi vel nisi molestie, eu ornare justo rhoncus. Nam rutrum lacus quis est malesuada, sit amet pretium erat euismod. Nunc efficitur convallis leo id efficitur. Suspendisse potenti. Pellentesque euismod nulla vel purus interdum vestibulum.</p>
 				</div>
 				<div class="footer">
-					<div class="gear"><?= SVGIcon("cog")?></div>
+					<div class="right">
+						<div class="edge"><?= SVGIcon("wedge")?></div>
+						<div class="heart"><?= SVGIcon("heart")?></span></div>
+						<div class="heart-count">2</div>
+						<div class="spacer"><?= SVGIcon("wedge")?></div>
+						<div class="gear"><?= SVGIcon("cog")?></div>
+					</div>
 				</div>
 			</div>
 
