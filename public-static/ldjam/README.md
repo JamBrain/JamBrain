@@ -1,1 +1,0 @@
-# Ludum Dare static files
