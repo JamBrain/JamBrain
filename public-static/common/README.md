@@ -1,1 +1,0 @@
-# Common static files
