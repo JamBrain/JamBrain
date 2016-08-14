@@ -48,11 +48,9 @@ function SVGIcon( $name ) {
 	// PHP Variables to JS //
 	var VERSION_STRING = "<?=VERSION_STRING?>";
 	var STATIC_DOMAIN = "<?=STATIC_DOMAIN?>";
-	var SVG_FILE = "<?=SVG_FILE?>";
 	
-	<?php include __DIR__."/../embed/preload-svg.js"; ?>
+	<?php include __DIR__."/../embed/preload-svg.js.php"; ?>
 	</script>
-	<script src="<?=JS_FILE?>"></script>
 	<div id="layout">
 		<div id="content">
 			<div class="item post">
@@ -165,5 +163,6 @@ function SVGIcon( $name ) {
 		</div>
 	</div>
 	<div id="footer">Footer</div>
+	<script src="<?=JS_FILE?>"></script>
 </body>
 </html>

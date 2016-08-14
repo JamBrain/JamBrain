@@ -6,9 +6,28 @@ import SVGIcon 			from 'com/svg-icon/code';
 import DarkOverlay		from 'com/dark-overlay/code';
 import Notify			from 'internal/notify/notify';
 
+import ContentPost		from 'com/content-post/post';
+
 render(<NavBar />, document.body);
 //render(<SVGIcon name="firefox" />, document.body);
 //render(<DarkOverlay />, document.body);
+
+
+var User = {
+	'name':"PoV",
+	'slug':"pov",
+	'avatar':'/other/logo/mike/Chicken64.png',
+	'team':"Team Fishbowl",
+	'twitter':"mikekasprzak",
+};
+
+var Post = {
+	'id':200,
+	'title':"Better than you",
+	'text':<p>Blah blah <strong>breathing</strong></p>
+};
+
+render(<ContentPost post={Post} user={User}>{Post.text}</ContentPost>, document.getElementById("content"), 0);
 
 
 var a = "The best\n\npart of waking up\nis folgers in your cup\nI think...\n\n???";
@@ -39,3 +58,6 @@ lines.map( (el) => {
 }).map( (el) => {
 	console.log(el.replace('\n','¶'));
 });
+
+render(<div>World</div>, document.body);
+render(<div>Hello</div>, document.body);

@@ -18,4 +18,4 @@
 		}
 	};
 	xhr.send();
-})( SVG_FILE );
+})( "<?=SVG_FILE?>" );
