@@ -39,9 +39,10 @@ if ( !isset($_GET['nopreload']) ) {
 </head>
 <body>
 	<script>
-		// Output PHP Variables for JS //
+		<?php /* Output PHP Variables for JS */ ?>
 		var VERSION_STRING = "<?=VERSION_STRING?>";
-		var STATIC_DOMAIN = "<?=STATIC_DOMAIN?>";	
+		var STATIC_DOMAIN = "<?=STATIC_DOMAIN?>";
+		<?php /* Load SVG */ ?>
 		<?php include __DIR__."/../embed/preload-svg.js.php"; ?>
 	</script>
 	<script src="<?=JS_FILE?>"></script>
