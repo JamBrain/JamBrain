@@ -13,7 +13,7 @@ export default class ContentPost extends Component {
 		return (
 			<div class="content-item content-post">
 				<div class="-header">
-					<div class="-avatar"><img src={"//"+STATIC_DOMAIN+props.user.avatar} /></div>
+					<div class="-avatar"><img src={props.user.avatar ? "//"+STATIC_DOMAIN+props.user.avatar : ""} /></div>
 					<div class="-title _font2">{props.title}</div>
 					<div class="-subtext">
 						Posted <span class="-time">{props.relative_time}</span> ago
