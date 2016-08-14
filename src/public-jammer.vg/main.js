@@ -17,6 +17,10 @@ class Main extends Component {
 		];
 	}
 	
+	componentDidMount() {
+		// Startup //
+	}
+	
 	render( props, state ) {
 		return (
 			<div id="layout">
@@ -38,5 +42,7 @@ class Main extends Component {
 		);
 	}
 };
+
+//				<DarkOverlay />
 
 render(<Main />, document.body);
