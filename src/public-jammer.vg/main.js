@@ -4,9 +4,9 @@ import DarkOverlay						from 'com/dark-overlay/code';
 import ContentPost						from 'com/content-post/post';
 
 import SidebarCalendar					from 'com/sidebar-calendar/calendar';
-//import SidebarUpcoming					from 'com/sidebar-upcoming/upcoming';
-//import SidebarTV						from 'com/sidebar-tv/tv';
-//import SidebarTrending					from 'com/sidebar-trending/trending';
+import SidebarUpcoming					from 'com/sidebar-upcoming/upcoming';
+import SidebarTV						from 'com/sidebar-tv/tv';
+import SidebarTrending					from 'com/sidebar-trending/trending';
 
 class Main extends Component {
 	constructor() {
@@ -28,6 +28,9 @@ class Main extends Component {
 				}</div>
 				<div id="sidebar">
 					<SidebarCalendar />
+					<SidebarUpcoming />
+					<SidebarTV />
+					<SidebarTrending />
 				</div>
 				<div id="footer">
 				</div>

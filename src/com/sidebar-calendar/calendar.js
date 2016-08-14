@@ -10,7 +10,7 @@ export default class SidebarCalendar extends Component {
 			'day':0
 		};
 		
-		this.data = Array(this.rows).fill().map(() => Array.from( Array(this.columns),() => (Object.assign({},cell))) );
+		this.data = Array(...Array(this.rows)).map(() => Array.from( Array(this.columns),() => (Object.assign({},cell))) );
 
 		this.data[1][1].selected = true;
 	}
