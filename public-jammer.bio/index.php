@@ -1,2 +1,2 @@
 <?php
-include __DIR__."/../src/public-jammer.bio/main.php";
+include __DIR__."/../src/public-jammer.bio/main-bio.php";
