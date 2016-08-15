@@ -1,6 +1,6 @@
 import { h, render, Component }			from 'preact/preact';
-import NavBar 							from 'com/nav-bar/code';
-import DarkOverlay						from 'com/dark-overlay/code';
+import NavBar 							from 'com/nav-bar/bar';
+import DarkOverlay						from 'com/dark-overlay/overlay';
 import ContentPost						from 'com/content-post/post';
 
 import SidebarCalendar					from 'com/sidebar-calendar/calendar';
@@ -15,6 +15,10 @@ class Main extends Component {
 			"noof",
 			"foof"
 		];
+	}
+	
+	componentDidMount() {
+		// Startup //
 	}
 	
 	render( props, state ) {
@@ -38,5 +42,7 @@ class Main extends Component {
 		);
 	}
 };
+
+//				<DarkOverlay />
 
 render(<Main />, document.body);

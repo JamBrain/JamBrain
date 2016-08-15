@@ -1,5 +1,5 @@
 
-TARGET				:=	public-ludumdare.com
+TARGET				:=	public-jammer.bio
 
 MAIN_FOLDER			:=	src/$(TARGET)
 TARGET_FOLDER		:=	$(TARGET)/-/
@@ -12,7 +12,7 @@ INCLUDE_FOLDERS		:=	src/com/ \
 						src/icons/ \
 						$(MAIN_FOLDER)/
 
-MAIN_JS				:=	$(MAIN_FOLDER)/main-ld.js
+MAIN_JS				:=	$(MAIN_FOLDER)/main-bio.js
 
 # Include the main Makefile #
 -include Makefile	# NOTE: This Makefile should be run from the root folder, not here! #
