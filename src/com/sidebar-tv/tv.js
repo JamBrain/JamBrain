@@ -11,10 +11,10 @@ export default class SidebarTV extends Component {
 			<div class="sidebar-tv">
 				<div class="-active">
 					<div class="-img"><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_sc2-320x180.jpg" /></div>
-					<div class="-live"><SVGIcon name="circle" /> <span>LIVE</span></div>
-					<div class="-play"><SVGIcon name="play" /></div>
+					<div class="-live"><SVGIcon>circle</SVGIcon> <span>LIVE</span></div>
+					<div class="-play"><SVGIcon>play</SVGIcon></div>
 				</div>
-				<div class="-detail"><SVGIcon name="twitch" /> Doing Stuff! #GameDev</div>
+				<div class="-detail"><SVGIcon>twitch</SVGIcon> Doing Stuff! #GameDev</div>
 				<div class="-browse">
 					<div class="selected"><div><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_sc2-320x180.jpg" /></div></div>
 					<div><div><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_dota2-320x180.jpg" /></div></div>

@@ -7,8 +7,8 @@ export default class ContentPost extends Component {
 		props.title = (props.post && props.post.title) ? props.post.title : props.title;
 		props.user = props.user ? props.user : {};
 		
-		var hasTwitter = props.user.twitter ? <span class="-twitter"> (<SVGIcon name="twitter" /> {props.user.twitter})</span> : <span />;
-		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <SVGIcon name="users" /></span> : <span />;
+		var hasTwitter = props.user.twitter ? <span class="-twitter"> (<SVGIcon>twitter</SVGIcon> {props.user.twitter})</span> : <span />;
+		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <SVGIcon>users</SVGIcon></span> : <span />;
 		
 		return (
 			<div class="content-item content-post">
@@ -28,25 +28,23 @@ export default class ContentPost extends Component {
 				</div>
 				<div class="-footer">
 					<div class="-left">
-						<div class="-minmax"><SVGIcon name="arrow-up" /></div>
-						<div class="-edge"><SVGIcon name="wedge-left" /></div>
+						<div class="-minmax"><SVGIcon>arrow-up</SVGIcon></div>
+						<div class="-edge"><SVGIcon>wedge-left</SVGIcon></div>
 					</div>
 					<div class="-right">
-						<div class="-edge"><SVGIcon name="wedge-right" /></div>
-						<div class="-heart"><SVGIcon name="heart" /></div>
+						<div class="-edge"><SVGIcon>wedge-right</SVGIcon></div>
+						<div class="-heart"><SVGIcon>heart</SVGIcon></div>
 						<div class="-heart-count">151</div>
-						<div class="-spacer"><SVGIcon name="wedge-right" /></div>
-						<div class="-comment"><SVGIcon name="bubbles" /></div>
+						<div class="-spacer"><SVGIcon>wedge-right</SVGIcon></div>
+						<div class="-comment"><SVGIcon>bubbles</SVGIcon></div>
 						<div class="-comment-count">204</div>
-						<div class="-spacer2"><SVGIcon name="wedge-right" /></div>
-						<div class="-gear"><SVGIcon name="cog" /></div>
+						<div class="-spacer2"><SVGIcon>wedge-right</SVGIcon></div>
+						<div class="-gear"><SVGIcon>cog</SVGIcon></div>
 					</div>
 				</div>
 			</div>
 		);
 	}
-	// (<SVGIcon name="twitter" /> <a href="http://twitter.com/mikekasprzak">mikekasprzak</a>)
-	// of <em>Team Fishbowl</em> <SVGIcon name="users" />
 	// body: unmagin-top, unmargin-bottom. replace with selector
 	
 	componentDidMount() {
