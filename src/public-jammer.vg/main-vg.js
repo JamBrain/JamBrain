@@ -25,18 +25,22 @@ class Main extends Component {
 		return (
 			<div id="layout">
 				<NavBar />
-				<div id="content">{
-					state.posts.map(function(e) {
-						return <ContentPost title={e} />;
-					})
-				}</div>
-				<div id="sidebar">
-					<SidebarCalendar />
-					<SidebarUpcoming />
-					<SidebarTV />
-					<SidebarTrending />
+				<div id="header" />
+				<div id="content-sidebar">
+					<div id="content">{
+						state.posts.map(function(e) {
+							return <ContentPost title={e} />;
+						})
+					}</div>
+					<div id="sidebar">
+						<SidebarCalendar />
+						<SidebarUpcoming />
+						<SidebarTV />
+						<SidebarTrending />
+					</div>
 				</div>
 				<div id="footer">
+					<span>Test: </span><span class="_on-parent-hover-hide">Hello</span><span class="_on-parent-hover-show">World</span>
 				</div>
 			</div>
 		);
