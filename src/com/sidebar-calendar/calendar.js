@@ -7,10 +7,13 @@ export default class SidebarCalendar extends Component {
 		this.rows = 3;
 		this.columns = 7;
 
+		this.genCalendar( new Date() );
+	}
+
+	genCalendar( today ) {
 		// TODO: Adjust noted days based on timezone
 		// TODO: Adjust selected day/week when time itself rolls over
 
-		let today = new Date();
 		let thisDay = today.getDate();
 		
 		/* Months and Weeks start at 0. Years and Days start at 1. Using 0th day is like -1 */
