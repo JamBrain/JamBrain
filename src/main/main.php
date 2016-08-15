@@ -4,6 +4,10 @@ if ( !defined('GIT_VERSION') ) {
 	echo "<h1>Update in progress</h1><p>Please check back in a few minutes.</p>";
 	die();
 }
+if ( !isset($_GET['ignore']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE') !== false ) {
+	include __DIR__."/../embed/obsolete-browser.php";
+	die();
+}
 
 // TODO: Figure out if this is the live server or not //
 define( 'USE_MINIFIED', isset($_GET['debug']) ? '' : '.min' );
