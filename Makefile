@@ -68,8 +68,9 @@ LESS				=	lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
 MINIFY_CSS			=	cat $(1) | cleancss -o $(2)
 # CSS Minifier: https://github.com/jakubpawlowicz/clean-css/
 
-MINIFY_SVG			=
-# ???
+MINIFY_SVG_ARGS		:=	--multipass --disable=cleanupIDs -q
+MINIFY_SVG			=	svgo $(MINIFY_SVG_ARGS) -i $(1) -o $(2)
+# SVG Minifier: https://github.com/svg/svgo
 
 SIZE				=	cat $(1) | wc -c
 GZIP_SIZE			=	gzip -c $(1) | wc -c
@@ -83,10 +84,11 @@ clean-target:
 	rm -f $(TARGET_FILES)
 	
 report: $(TARGET_FILES)
-	@echo "[JS]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`]"
-	@echo "[CSS] GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.css 2>/dev/null)`]"
-	@echo "[SVG] GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`]"
-	
+	@echo \
+		"[JS]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)` (`$(call GZIP_SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`)	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`]\n" \
+		"[CSS] GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)` (`$(call GZIP_SIZE,$(BUILD_FOLDER)/all.css 2>/dev/null)`)	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.css 2>/dev/null)`]\n" \
+		"[SVG] GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)` (`$(call GZIP_SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`)	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`]\n" \
+		| column -t
 
 # If not called recursively, figure out who the targes are and call them #
 ifndef TARGET # ---- #
@@ -156,8 +158,12 @@ $(TARGET_FOLDER)/all.min.css: $(BUILD_FOLDER)/all.css
 	$(call MINIFY_CSS,$<,$@)
 
 # SVG #
-$(TARGET_FOLDER)/all.min.svg: src/icons/icomoon/icons.svg
-	cp $< $@
+$(BUILD_FOLDER)/svg.svg: src/icons/icomoon/icons.svg
+	cat $^ > $@
+$(BUILD_FOLDER)/all.svg: $(BUILD_FOLDER)/svg.svg
+	cat $^ > $@
+$(TARGET_FOLDER)/all.min.svg: $(BUILD_FOLDER)/all.svg
+	$(call MINIFY_SVG,$<,$@)
 
 # Target #
 target: $(TARGET_DEPS) report
