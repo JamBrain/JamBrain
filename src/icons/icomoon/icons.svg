@@ -442,12 +442,12 @@
 
 <symbol id="icon-wedge-right" viewBox="0 0 32 32">
 <title>wedge-right</title>
-<path class="path1" d="M-1 32L32 -1 32 32z" />
+<path class="path1" d="M-1 33L33 -1 33 33z" />
 </symbol>
 
 <symbol id="icon-wedge-left" viewBox="0 0 32 32">
 <title>wedge-left</title>
-<path class="path1" d="M-1 -1L32 32 -1 32z" />
+<path class="path1" d="M-1 -1L33 33 -1 33z" />
 </symbol>
 
 <symbol id="icon-circle" viewBox="0 0 32 32">

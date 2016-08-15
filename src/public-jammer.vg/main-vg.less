@@ -18,6 +18,10 @@
 /* Content BG:		#3E3E3E */
 /* Content Text:	#F5F2F0 (warm) */
 
+html {
+	font-size:16px;
+}
+
 body {
 	background: radial-gradient(ellipse, @MAIN_BACKGROUND 75%, @MAIN_BACKGROUND2 100%);
 	background-attachment: fixed;
@@ -26,7 +30,7 @@ body {
 
 /* Page Layout - Everything on a page goes here */
 #layout {
-	margin: 16px auto 0;
+	margin: 1rem auto 0;
 }
 
 /* Top of Layout */
@@ -35,15 +39,15 @@ body {
 
 /* Content with optional Sidebar */
 #content-sidebar {
-	display: flex;	
+	display: flex;
 }
 
 /* Content Section */
 #content {
 	flex: 3;
 	
-	font-size: 18px;
-
+	font-size: 1.125rem;
+	
 	& > div {
 		margin-top: 1rem;
 		&:first-child {
@@ -55,10 +59,13 @@ body {
 /* Content's Sidebar */
 #sidebar {
 	flex: 1;
+	
+	font-size: 1vw;
 
-	width: 320px;
-	max-width: 320px;
-	min-width: 240px;
+	width: 100%;
+	
+	max-width: 20em;
+	min-width: 16em;
 	margin-left: 1rem;
 	
 	& > div {
@@ -77,16 +84,17 @@ body {
 
 
 /* Fit to Browser Width, but cap at MAX_WIDTH */
-@MAX_WIDTH: 1280px;
+@MAX_WIDTH: 80em;
 
 #layout {
-	width: @MAX_WIDTH;
+	width: 100%;
+	max-width: @MAX_WIDTH;
 }
-@media (max-width: (@MAX_WIDTH)) { 
+/*@media (min-width: (@MAX_WIDTH)) { 
 	#layout {
-		width: 100%;
+		width: @MAX_WIDTH;
 	}
-}
+}*/
 
 
 /* Has Sidebar */
@@ -96,7 +104,7 @@ body {
 .if-no-sidebar-inline { display: none !important; }
 
 /* No Sidebar */
-@media (max-width: (@MAX_WIDTH - 320px)) { 
+@media (max-width: (@MAX_WIDTH - 20em)) { 
 	#sidebar {
 		display: none;
 	}

@@ -40,6 +40,7 @@ if ( !isset($_GET['nopreload']) ) {
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="<?=FONT_FILE?>" type="text/css">
 	<link rel="stylesheet" href="<?=CSS_FILE?>" type="text/css">
+	<meta name=viewport content="width=device-width, initial-scale=1">
 </head>
 <body>
 	<script>

@@ -1,7 +1,9 @@
 import { h, render, Component }			from 'preact/preact';
 import NavBar 							from 'com/nav-bar/bar';
 import DarkOverlay						from 'com/dark-overlay/overlay';
+
 import ContentPost						from 'com/content-post/post';
+import ContentPicture					from 'com/content-picture/picture';
 
 import SidebarCalendar					from 'com/sidebar-calendar/calendar';
 import SidebarUpcoming					from 'com/sidebar-upcoming/upcoming';
@@ -24,10 +26,13 @@ class Main extends Component {
 	render( props, state ) {
 		return (
 			<div id="layout">
-				<NavBar />
 				<div id="header" />
 				<div id="content-sidebar">
-					<div id="content">{
+					<div id="content">
+						<ContentPicture title="hola bola my gola" img={'//'+STATIC_DOMAIN+'/other/test/forest.jpg'}>
+							yo yo yo my hoodgy doodge!
+						</ContentPicture>
+					{
 						state.posts.map(function(e) {
 							return <ContentPost title={e} />;
 						})
@@ -46,6 +51,7 @@ class Main extends Component {
 		);
 	}
 };
+//				<NavBar />
 
 //				<DarkOverlay />
 

@@ -2,8 +2,8 @@ import { h, Component } from 'preact/preact';
 import CoreButton		from 'com/core-button/button';
 import SVGIcon 			from 'com/svg-icon/icon';
 
-export default class ContentPost extends Component {
-	render(props,state) {
+export default class ContentPicture extends Component {
+	render( props, state ) {
 		props.title = (props.post && props.post.title) ? props.post.title : props.title;
 		props.user = props.user ? props.user : {};
 		
@@ -11,7 +11,7 @@ export default class ContentPost extends Component {
 		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <SVGIcon>users</SVGIcon></span> : <span />;
 		
 		return (
-			<div class="content-item content-post">
+			<div class="content-item content-picture" style={'background:url('+props.img+')'}>
 				<div class="-header">
 					<div class="-avatar"><img src={props.user.avatar ? "//"+STATIC_DOMAIN+props.user.avatar : ""} /></div>
 					<div class="-title _font2">{props.title}</div>
@@ -23,29 +23,14 @@ export default class ContentPost extends Component {
 						{hasTeam}
 					</div>
 				</div>
-				<div class="-body">
-					{props.children}
+				<div class="-space">
+					<SVGIcon>image</SVGIcon>
 				</div>
 				<div class="-footer">
-					<div class="-left">
-						<div class="-minmax"><SVGIcon>arrow-up</SVGIcon></div>
-						<div class="-edge"><SVGIcon>wedge-left</SVGIcon></div>
-					</div>
-					<div class="-right">
-						<div class="-edge"><SVGIcon>wedge-right</SVGIcon></div>
-						<div class="-heart"><SVGIcon>heart</SVGIcon></div>
-						<div class="-text -heart-count">151</div>
-						<div class="-spacer"><SVGIcon>wedge-right</SVGIcon></div>
-						<div class="-comment"><SVGIcon>bubbles</SVGIcon></div>
-						<div class="-text -comment-count">204</div>
-						<div class="-gear"><SVGIcon>cog</SVGIcon></div>
-					</div>
 				</div>
 			</div>
 		);
 	}
-	// body: unmagin-top, unmargin-bottom. replace with selector
-//						<div class="-spacer2"><SVGIcon>wedge-right</SVGIcon></div>
 	
 	componentDidMount() {
 	}
