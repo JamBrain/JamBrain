@@ -137,7 +137,7 @@ OUT_MAIN_JS			:=	$(subst $(SRC)/,$(OUT)/,$(MAIN_JS:.js=.es6.js))
 
 # JavaScript #
 $(BUILD_FOLDER)/js.js: $(OUT_JS_FILES)
-	cat $< > $@
+	cat $^ > $@
 $(BUILD_FOLDER)/buble.js: $(OUT_MAIN_JS) $(OUT_ES6_FILES)
 	$(call ROLLUP,$<,$@)
 $(BUILD_FOLDER)/all.js: $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js
@@ -147,14 +147,13 @@ $(TARGET_FOLDER)/all.min.js: $(BUILD_FOLDER)/all.js
 
 # CSS #
 $(BUILD_FOLDER)/css.css: $(OUT_CSS_FILES)
-	cat $< > $@
+	cat $^ > $@
 $(BUILD_FOLDER)/less.css: $(OUT_LESS_FILES)
 	cat $^ > $@
 $(BUILD_FOLDER)/all.css: $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.css
 	cat $^ > $@
 $(TARGET_FOLDER)/all.min.css: $(BUILD_FOLDER)/all.css
 	$(call MINIFY_CSS,$<,$@)
-	@echo "[CSS] GZIP: `$(call GZIP_SIZE,$@)`   [MIN: `$(call SIZE,$@)`]   [Original: `$(call SIZE,$<)`]"
 
 # SVG #
 $(TARGET_FOLDER)/all.min.svg: src/icons/icomoon/icons.svg
