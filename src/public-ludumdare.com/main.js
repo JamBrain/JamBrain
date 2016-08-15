@@ -1,9 +1,9 @@
 import { diff_match_patch } from 'custom/diff_match_patch/diff_match_patch';
 
 import { h, render }	from 'preact/preact';
-import NavBar 			from 'com/nav-bar/code';
-import SVGIcon 			from 'com/svg-icon/code';
-import DarkOverlay		from 'com/dark-overlay/code';
+import NavBar 			from 'com/nav-bar/bar';
+import SVGIcon 			from 'com/svg-icon/icon';
+import DarkOverlay		from 'com/dark-overlay/overlay';
 import Notify			from 'internal/notify/notify';
 
 import ContentPost		from 'com/content-post/post';

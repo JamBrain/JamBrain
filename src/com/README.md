@@ -4,4 +4,4 @@ This directory contains Preact components (like React components, w/o all the fa
 
 
 
-Of note, the **Icon** component is special. It actually generates SVG.
+Of note, the **svg-icon** component is special. It actually generates SVG.

@@ -1,6 +1,6 @@
 import { h, Component } from 'preact/preact';
-import CoreButton		from '../core-button/code';
-import SVGIcon 			from 'com/svg-icon/code';
+import CoreButton		from 'com/core-button/button';
+import SVGIcon 			from 'com/svg-icon/icon';
 
 export default class SidebarCalendar extends Component {
 	constructor() {
