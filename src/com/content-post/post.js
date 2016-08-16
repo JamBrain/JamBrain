@@ -33,11 +33,11 @@ export default class ContentPost extends Component {
 					</div>
 					<div class="-right">
 						<div class="-edge"><SVGIcon>wedge-right</SVGIcon></div>
-						<div class="-heart"><SVGIcon>heart</SVGIcon></div>
-						<div class="-text -heart-count">151</div>
+						<div class="-heart"><SVGIcon>heart-empty</SVGIcon></div>
+						<div class="-text -heart-count">0</div>
 						<div class="-spacer"><SVGIcon>wedge-right</SVGIcon></div>
 						<div class="-comment"><SVGIcon>bubbles</SVGIcon></div>
-						<div class="-text -comment-count">204</div>
+						<div class="-text -comment-count">0</div>
 						<div class="-gear"><SVGIcon>cog</SVGIcon></div>
 					</div>
 				</div>
