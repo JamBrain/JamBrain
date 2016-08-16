@@ -6,7 +6,7 @@ export default class SVGIcon extends Component {
 //	}
 	
 	render( props, state ) {
-		let svg_props = { "class":"icon" };
+		let svg_props = { "class":"svg-icon" };
 		let use_props = {};
 		
 		// Alignment Args //
