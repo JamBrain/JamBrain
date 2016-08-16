@@ -15,7 +15,8 @@
     "less": "*",
     "less-plugin-autoprefix": "*",
     "clean-css": "*",
-    "svgo": "*"
+    "svgo": "*",
+    "svg-sprite": "*"
   },
   "devDependencies": {},
   "scripts": {

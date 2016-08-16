@@ -41,7 +41,6 @@ class Main extends Component {
 						<SidebarCalendar />
 						<SidebarUpcoming />
 						<SidebarTV />
-						<SidebarTrending />
 					</div>
 				</div>
 				<div id="footer">
@@ -54,5 +53,6 @@ class Main extends Component {
 //				<NavBar />
 
 //				<DarkOverlay />
+//						<SidebarTrending />
 
 render(<Main />, document.body);

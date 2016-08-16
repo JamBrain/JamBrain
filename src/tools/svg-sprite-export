@@ -1,0 +1,31 @@
+#!/usr/bin/env php
+<?php
+include __DIR__.'/../external/SimpleDOM/SimpleDOM.php';
+
+if ( count($argv) < 2 ) {
+	echo "Usage: ".$argv[0]." output_prefix < input_via_stdin\n";
+	die;
+}
+
+$output_base = $argv[1];
+$output_ext = '.svg';
+
+$in_file = file_get_contents("php://stdin");
+$xml = simpledom_load_string($in_file);
+
+$template_string = '<svg xmlns="http://www.w3.org/2000/svg"></svg>';
+$template = simpledom_load_string($template_string);
+
+foreach ( $xml->defs->symbol as $symbol ) {
+	$out = clone $template;
+	$out->cloneChildrenFrom($symbol,true);
+	
+	// Copy the viewBox //
+	$out->setAttributes([
+		'viewBox' => (string)$symbol->attributes()->viewBox
+	]);
+	
+	$out_file = $output_base.$symbol->title.$output_ext;
+	
+	file_put_contents($out_file,$out->asXML());
+}

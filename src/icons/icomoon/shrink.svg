@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+<title xmlns="http://www.w3.org/2000/svg">shrink</title>
+<path xmlns="http://www.w3.org/2000/svg" class="path1" d="M18 14h13l-5-5 6-6-3-3-6 6-5-5z"/>
+<path xmlns="http://www.w3.org/2000/svg" class="path2" d="M18 18v13l5-5 6 6 3-3-6-6 5-5z"/>
+<path xmlns="http://www.w3.org/2000/svg" class="path3" d="M14 18h-13l5 5-6 6 3 3 6-6 5 5z"/>
+<path xmlns="http://www.w3.org/2000/svg" class="path4" d="M14 14v-13l-5 5-6-6-3 3 6 6-5 5z"/>
+</svg>
