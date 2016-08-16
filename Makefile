@@ -38,7 +38,7 @@ OUT_ES6_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(ES6_FILES:.js=.es6.js))
 OUT_JS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(JS_FILES:.js=.o.js))
 OUT_LESS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(LESS_FILES:.less=.less.css))
 OUT_CSS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(CSS_FILES:.css=.o.css))
-OUT_SVG_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(SVG_FILES:.svg=.o.svg))
+OUT_SVG_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(SVG_FILES:.svg=.min.svg))
 
 OUT_FILES			:=	$(OUT_ES6_FILES) $(OUT_JS_FILES) $(OUT_LESS_FILES) $(OUT_CSS_FILES) $(OUT_SVG_FILES)
 DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES6_FILES) $(OUT_LESS_FILES))
@@ -70,9 +70,9 @@ MINIFY_CSS			=	cat $(1) | cleancss -o $(2)
 
 SVGO_ARGS			:=	-q
 SVGO				=	svgo $(SVGO_ARGS) -i $(1) -o $(2)
-# SVG Optimizer, same as the minifiier
+# SVG "Compiler", same as the minifier: https://github.com/svg/svgo
 SVG_PACK			=	src/tools/svg-sprite-pack $(1) > $(2)
-# Mike's SVG Sprite Packer
+# Mike's SVG Sprite Packer: https://github.com/povrazor/svg-sprite-tools
 MINIFY_SVG_ARGS		:=	--multipass --disable=cleanupIDs -q
 MINIFY_SVG			=	svgo $(MINIFY_SVG_ARGS) -i $(1) -o $(2)
 # SVG Minifier: https://github.com/svg/svgo
@@ -133,7 +133,7 @@ $(OUT)/%.less.css:$(SRC)/%.less
 $(OUT)/%.o.css:$(SRC)/%.css
 	cp $< $@
 
-$(OUT)/%.o.svg:$(SRC)/%.svg
+$(OUT)/%.min.svg:$(SRC)/%.svg
 	$(call SVGO,$<,$@)
 
 
