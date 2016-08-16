@@ -32,7 +32,7 @@ if ( !isset($_GET['nopreload']) ) {
 //TODO: Determine page, and populate title and meta tags before continuing //
 
 function SVGIcon( $name ) {
-	return '<svg class="icon icon-'.$name.'"><use xlink:href="#icon-'.$name.'"></use></svg>';
+	return '<svg class="svg-icon icon-'.$name.'"><use xlink:href="#icon-'.$name.'"></use></svg>';
 }
 
 ?><!doctype html>

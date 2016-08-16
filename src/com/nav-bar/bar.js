@@ -8,15 +8,15 @@ export default class NavBar extends Component {
 			<div class="nav-bar">
 				<div class="-content">
 					<div class="-left">
-						<img class="logo" src={"//"+STATIC_DOMAIN+"/other/logo/jammer/JammerLogo56W.png"} height="48" style="opacity:0.5" />
+						<SVGIcon>ludumdare-logo-w</SVGIcon>
 					</div>
 					<div class="-right">
-						<CoreButton class="button if-no-sidebar-inline"><SVGIcon>calendar</SVGIcon><span class="if-small-hide">Schedule</span></CoreButton>
-						<CoreButton class="button if-no-sidebar-inline"><SVGIcon>fire</SVGIcon><span class="if-small-hide">Trending</span></CoreButton>
-						<CoreButton class="button"><SVGIcon>search</SVGIcon></CoreButton>
-						<CoreButton class="button"><SVGIcon>question</SVGIcon> What is this?</CoreButton>
-						<CoreButton class="button" onClick={ e => { console.log("moop"); } }><SVGIcon>user</SVGIcon><span>Register</span></CoreButton>
-						<CoreButton class="button" keepFocus><SVGIcon>key</SVGIcon><span>Login</span></CoreButton>
+						<CoreButton class="-button if-no-sidebar-inline"><SVGIcon>calendar</SVGIcon><span class="if-small-hide">Schedule</span></CoreButton>
+						<CoreButton class="-button if-no-sidebar-inline"><SVGIcon>fire</SVGIcon><span class="if-small-hide">Trending</span></CoreButton>
+						<CoreButton class="-button"><SVGIcon>search</SVGIcon></CoreButton>
+						<CoreButton class="-button"><SVGIcon>question</SVGIcon> What is this?</CoreButton>
+						<CoreButton class="-button" onClick={ e => { console.log("moop"); } }><SVGIcon>user</SVGIcon><span>Register</span></CoreButton>
+						<CoreButton class="-button" keepFocus><SVGIcon>key</SVGIcon><span>Login</span></CoreButton>
 					</div>
 				</div>
 			</div>
