@@ -1,4 +1,4 @@
 #!/bin/sh
 
-../../../tools/svg-sprite-export ../ < icons.svg
+../../../tools/svg-sprite-unpack ../ < icons.svg
 
