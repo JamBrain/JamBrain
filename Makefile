@@ -68,6 +68,11 @@ LESS				=	lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
 MINIFY_CSS			=	cat $(1) | cleancss -o $(2)
 # CSS Minifier: https://github.com/jakubpawlowicz/clean-css/
 
+SVGO_ARGS			:=	-q
+SVGO				=	svgo $(SVGO_ARGS) -i $(1) -o $(2)
+# SVG Optimizer, same as the minifiier
+SVG_PACK			=	src/tools/svg-sprite-pack $(1) > $(2)
+# Mike's SVG Sprite Packer
 MINIFY_SVG_ARGS		:=	--multipass --disable=cleanupIDs -q
 MINIFY_SVG			=	svgo $(MINIFY_SVG_ARGS) -i $(1) -o $(2)
 # SVG Minifier: https://github.com/svg/svgo
@@ -129,7 +134,7 @@ $(OUT)/%.o.css:$(SRC)/%.css
 	cp $< $@
 
 $(OUT)/%.o.svg:$(SRC)/%.svg
-	cp $< $@
+	$(call SVGO,$<,$@)
 
 
 # Concat Rules #
@@ -157,9 +162,10 @@ $(BUILD_FOLDER)/all.css: $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.css
 $(TARGET_FOLDER)/all.min.css: $(BUILD_FOLDER)/all.css
 	$(call MINIFY_CSS,$<,$@)
 
-# SVG #
-$(BUILD_FOLDER)/svg.svg: src/icons/icomoon/icons.svg
-	cat $^ > $@
+# SVG # src/icons/icomoon/icons.svg
+$(BUILD_FOLDER)/svg.svg: $(OUT_SVG_FILES)
+	$(call SVG_PACK,$^,$@)
+#	cat $^ > $@
 $(BUILD_FOLDER)/all.svg: $(BUILD_FOLDER)/svg.svg
 	cat $^ > $@
 $(TARGET_FOLDER)/all.min.svg: $(BUILD_FOLDER)/all.svg
