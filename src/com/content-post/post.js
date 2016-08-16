@@ -11,7 +11,7 @@ export default class ContentPost extends Component {
 		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <SVGIcon>users</SVGIcon></span> : <span />;
 		
 		return (
-			<div class="content-item content-post">
+			<div class="content-base content-post">
 				<div class="-header">
 					<div class="-avatar"><img src={props.user.avatar ? "//"+STATIC_DOMAIN+props.user.avatar : ""} /></div>
 					<div class="-title _font2">{props.title}</div>

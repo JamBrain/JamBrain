@@ -8,7 +8,7 @@ export default class SidebarTrending extends Component {
 	
 	render( props, state ) {
 		return (
-			<div class="sidebar-trending sidebar-shortlist">
+			<div class="sidebar-base sidebar-shortlist sidebar-trending">
 				<div class="-title"><SVGIcon baseline>fire</SVGIcon> Live and Trending</div>
 				<div class="-item"><strong>#LDJAM</strong> <SVGIcon>trophy</SVGIcon></div>
 				<div class="-item"><strong>#BaconJAM</strong></div>

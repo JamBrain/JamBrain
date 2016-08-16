@@ -8,7 +8,7 @@ export default class SidebarTV extends Component {
 	
 	render( props, state ) {
 		return (
-			<div class="sidebar-tv">
+			<div class="sidebar-base sidebar-tv">
 				<div class="-active">
 					<div class="-img"><img src="https://static-cdn.jtvnw.net/previews-ttv/live_user_esl_sc2-320x180.jpg" /></div>
 					<div class="-live"><SVGIcon>circle</SVGIcon> <span>LIVE</span></div>

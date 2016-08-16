@@ -11,7 +11,7 @@ export default class ContentPicture extends Component {
 		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <SVGIcon>users</SVGIcon></span> : <span />;
 		
 		return (
-			<div class="content-item content-picture" style={'background:url('+props.img+')'}>
+			<div class="content-base content-picture" style={'background:url('+props.img+')'}>
 				<div class="-header">
 					<div class="-avatar"><img src={props.user.avatar ? "//"+STATIC_DOMAIN+props.user.avatar : ""} /></div>
 					<div class="-title _font2">{props.title}</div>

@@ -58,7 +58,7 @@ export default class SidebarCalendar extends Component {
 	
 	render( props, state ) {
 		return (
-			<div class="sidebar-calendar"> {
+			<div class="sidebar-base sidebar-calendar"> {
 				this.data.map(
 				row => (<div class="-week">{ this.genRow(row) }</div>) )
 			} </div>
