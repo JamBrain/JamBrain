@@ -9,13 +9,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="75"
+   width="70"
    height="82"
-   viewBox="0 0 75 82"
+   viewBox="0 0 70 82"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="LudumDare-Logo2016.svg">
+   sodipodi:docname="d-are.svg">
   <title
      id="title4159">d-are</title>
   <defs
@@ -27,9 +27,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.95127959"
-     inkscape:cx="257.29444"
-     inkscape:cy="124.95598"
+     inkscape:zoom="5.38125"
+     inkscape:cx="67.44775"
+     inkscape:cy="41.995062"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -63,6 +63,7 @@
     <path
        inkscape:connector-curvature="0"
        id="path4151"
-       d="m 0,1050.4627 c 14.07771,0 23.12767,0 37.09365,0 50.50101,0 50.50101,-78.20947 0,-78.20947 -13.96598,0 -23.01594,0 -37.09365,0 0,26.0326 0,52.17697 0,78.20947 z m 28.93752,-30.2782 c 0,-4.8043 0,-13.1839 0,-17.9882 l 8.71477,0 c 9.94378,0 10.05551,17.9882 0,17.9882 l -8.71477,0 z" />
+       d="m 0,1050.4627 31.09365,0 c 50.50101,0 50.50101,-78.20947 0,-78.20947 l -31.09365,0 z m 28.93752,-30.2782 0,-17.9882 2.71477,0 c 9.94378,0 10.05551,17.9882 0,17.9882 z"
+       sodipodi:nodetypes="cssccccssc" />
   </g>
 </svg>
