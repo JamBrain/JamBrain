@@ -52,7 +52,7 @@ export default class SidebarCalendar extends Component {
 				props.class = "selected";
 			}
 
-			return (<div {...props}>{col.day}</div>) 
+			return (<div {...props}><div class="-text">{col.day}</div></div>) 
 		});
 	}
 	

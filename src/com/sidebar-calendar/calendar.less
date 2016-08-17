@@ -5,13 +5,21 @@
 		display:flex;
 		align-items:stretch;
 		& > div {
+			position:relative;
+			
 			width:100%;
 			margin-right:1px;
 			margin-bottom:1px;
 			background: rgba(0,0,0,0.10);
-			height: 2em;
-			padding: 4px;
+			padding-bottom:14.28%;
+			
 			cursor:pointer;
+			
+			& > .-text {
+				position:absolute;
+				top:4px;
+				left:4px;
+			}
 			
 			&:hover, &:first-child:hover, &:last-child:hover {
 				background: rgba(0,0,0,0.05);
