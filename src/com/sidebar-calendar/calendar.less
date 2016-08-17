@@ -7,18 +7,22 @@
 		& > div {
 			position:relative;
 			
-			width:100%;
 			margin-right:1px;
 			margin-bottom:1px;
 			background: rgba(0,0,0,0.10);
-			padding-bottom:14.28%;
+
+			/* This is perfect square trickery */
+			width:100%;
+			padding-bottom:14.28%; /* 100% / 7 */
+			/* The trick is that padding/margin %'s are based on width. So we float */
+			/* the element above the parent (absolute positioning), and we get a box */
 			
 			cursor:pointer;
 			
 			& > .-text {
 				position:absolute;
-				top:4px;
-				left:4px;
+				top:0.25em;
+				left:0.25em;
 			}
 			
 			&:hover, &:first-child:hover, &:last-child:hover {
