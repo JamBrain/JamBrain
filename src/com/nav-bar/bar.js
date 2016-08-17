@@ -8,7 +8,7 @@ export default class NavBar extends Component {
 			<div class="nav-bar">
 				<div class="-content">
 					<div class="-left">
-						<SVGIcon>ludum</SVGIcon><SVGIcon>dare</SVGIcon> <SVGIcon>l-udum</SVGIcon><SVGIcon>d-are</SVGIcon>
+						<SVGIcon>ludum</SVGIcon><SVGIcon>dare</SVGIcon> <SVGIcon>l-udum</SVGIcon><SVGIcon>d-are</SVGIcon><SVGIcon>jam</SVGIcon>
 					</div>
 					<div class="-right">
 						<CoreButton class="-button if-no-sidebar-inline"><SVGIcon>calendar</SVGIcon><span class="if-small-hide">Schedule</span></CoreButton>
