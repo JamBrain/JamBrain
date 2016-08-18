@@ -70,7 +70,7 @@ export default class SidebarTV extends Component {
 				<div class="sidebar-base sidebar-tv">
 					<div class="-active">
 						<div class="-img"><img src={active.meta.thumbnail} /></div>
-						<div class="-live"><SVGIcon baseline>circle</SVGIcon> <span class="-text">LIVE</span></div>
+						<div class="-live"><SVGIcon baseline small>circle</SVGIcon> <span class="-text">LIVE</span></div>
 						<div class="-name">{this.services[active.service_id]} <span class="-text">{active.meta.name}</span></div>
 						<div class="-viewers"><SVGIcon baseline>tv</SVGIcon> <span class="-text">{active.viewers}</span></div>
 						<div class="-play"><SVGIcon>play</SVGIcon></div>

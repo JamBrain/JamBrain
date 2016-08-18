@@ -25,7 +25,8 @@ class Main extends Component {
 			'pov': {
 				name:'PoV',
 				slug:'pov',
-				avatar:'/other/logo/mike/Chicken64.png'
+				avatar:'/other/logo/mike/Chicken64.png',
+				twitter:'mikekasprzak',
 			}
 		};
 			
