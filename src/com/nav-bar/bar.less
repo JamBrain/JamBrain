@@ -28,14 +28,18 @@
 	font-size: 20px;
 	padding: @NAVBAR_PAD;
 		
-	> div {
+	& > .-content {
 		display: inline-block;
 
-		> div {
+		& .-left {
 			margin-right: @NAVBAR_PAD;		
 			display: inline-block;
+			
+			& .svg-icon {
+				font-size:1.8em;
+			}
 		}
-		> .button {
+		& .-button {
 			line-height: @NAVBAR_CELL;/* - 2px;*/
 			padding: 0 20px;
 			
@@ -53,13 +57,13 @@
 				background: #FFF;
 			}
 		}
-	}
-	> div.-right {
-		float: right;
-
-		> div {
-			margin-right: 0;
-			margin-left: @NAVBAR_PAD;
+		& .-right {
+			float: right;
+	
+			& > div {
+				margin-right: 0;
+				margin-left: @NAVBAR_PAD;
+			}
 		}
 	}
 };

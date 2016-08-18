@@ -38,7 +38,7 @@ OUT_ES6_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(ES6_FILES:.js=.es6.js))
 OUT_JS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(JS_FILES:.js=.o.js))
 OUT_LESS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(LESS_FILES:.less=.less.css))
 OUT_CSS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(CSS_FILES:.css=.o.css))
-OUT_SVG_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(SVG_FILES:.svg=.o.svg))
+OUT_SVG_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(SVG_FILES:.svg=.min.svg))
 
 OUT_FILES			:=	$(OUT_ES6_FILES) $(OUT_JS_FILES) $(OUT_LESS_FILES) $(OUT_CSS_FILES) $(OUT_SVG_FILES)
 DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES6_FILES) $(OUT_LESS_FILES))
@@ -68,8 +68,14 @@ LESS				=	lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
 MINIFY_CSS			=	cat $(1) | cleancss -o $(2)
 # CSS Minifier: https://github.com/jakubpawlowicz/clean-css/
 
-MINIFY_SVG			=
-# ???
+SVGO_ARGS			:=	-q
+SVGO				=	svgo $(SVGO_ARGS) -i $(1) -o $(2)
+# SVG "Compiler", same as the minifier: https://github.com/svg/svgo
+SVG_PACK			=	src/tools/svg-sprite-pack $(1) > $(2)
+# Mike's SVG Sprite Packer: https://github.com/povrazor/svg-sprite-tools
+MINIFY_SVG_ARGS		:=	--multipass --disable=cleanupIDs -q
+MINIFY_SVG			=	svgo $(MINIFY_SVG_ARGS) -i $(1) -o $(2)
+# SVG Minifier: https://github.com/svg/svgo
 
 SIZE				=	cat $(1) | wc -c
 GZIP_SIZE			=	gzip -c $(1) | wc -c
@@ -83,10 +89,11 @@ clean-target:
 	rm -f $(TARGET_FILES)
 	
 report: $(TARGET_FILES)
-	@echo "[JS]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`]"
-	@echo "[CSS] GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.css 2>/dev/null)`]"
-	@echo "[SVG] GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`]"
-	
+	@echo \
+		"[JS]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)` (`$(call GZIP_SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`)	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`]\n" \
+		"[CSS] GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)` (`$(call GZIP_SIZE,$(BUILD_FOLDER)/all.css 2>/dev/null)`)	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.css 2>/dev/null)`]\n" \
+		"[SVG] GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)` (`$(call GZIP_SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`)	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`]\n" \
+		| column -t
 
 # If not called recursively, figure out who the targes are and call them #
 ifndef TARGET # ---- #
@@ -126,8 +133,8 @@ $(OUT)/%.less.css:$(SRC)/%.less
 $(OUT)/%.o.css:$(SRC)/%.css
 	cp $< $@
 
-$(OUT)/%.o.svg:$(SRC)/%.svg
-	cp $< $@
+$(OUT)/%.min.svg:$(SRC)/%.svg
+	$(call SVGO,$<,$@)
 
 
 # Concat Rules #
@@ -155,9 +162,14 @@ $(BUILD_FOLDER)/all.css: $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.css
 $(TARGET_FOLDER)/all.min.css: $(BUILD_FOLDER)/all.css
 	$(call MINIFY_CSS,$<,$@)
 
-# SVG #
-$(TARGET_FOLDER)/all.min.svg: src/icons/icomoon/icons.svg
-	cp $< $@
+# SVG # src/icons/icomoon/icons.svg
+$(BUILD_FOLDER)/svg.svg: $(OUT_SVG_FILES)
+	$(call SVG_PACK,$^,$@)
+#	cat $^ > $@
+$(BUILD_FOLDER)/all.svg: $(BUILD_FOLDER)/svg.svg
+	cat $^ > $@
+$(TARGET_FOLDER)/all.min.svg: $(BUILD_FOLDER)/all.svg
+	$(call MINIFY_SVG,$<,$@)
 
 # Target #
 target: $(TARGET_DEPS) report

@@ -52,13 +52,13 @@ export default class SidebarCalendar extends Component {
 				props.class = "selected";
 			}
 
-			return (<div {...props}>{col.day}</div>) 
+			return (<div {...props}><div class="-text">{col.day}</div></div>) 
 		});
 	}
 	
 	render( props, state ) {
 		return (
-			<div class="sidebar-calendar"> {
+			<div class="sidebar-base sidebar-calendar"> {
 				this.data.map(
 				row => (<div class="-week">{ this.genRow(row) }</div>) )
 			} </div>

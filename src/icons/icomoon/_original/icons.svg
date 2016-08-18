@@ -438,22 +438,5 @@
 <title>html5</title>
 <path class="path1" d="M1.892 0l2.567 28.801 11.524 3.199 11.554-3.204 2.572-28.796h-28.216zM24.52 9.42h-13.517l0.322 3.617h12.874l-0.97 10.844-7.245 2.008-7.237-2.008-0.495-5.547h3.547l0.252 2.82 3.933 1.060 0.009-0.002 3.935-1.062 0.408-4.58h-12.242l-0.953-10.681h17.694l-0.316 3.532z"></path>
 </symbol>
-
-
-<symbol id="icon-wedge-right" viewBox="0 0 32 32">
-<title>wedge-right</title>
-<path class="path1" d="M-1 32L32 -1 32 32z" />
-</symbol>
-
-<symbol id="icon-wedge-left" viewBox="0 0 32 32">
-<title>wedge-left</title>
-<path class="path1" d="M-1 -1L32 32 -1 32z" />
-</symbol>
-
-<symbol id="icon-circle" viewBox="0 0 32 32">
-<title>circle</title>
-<circle cx="16" cy="16" r="16" fill="currentColor" />
-</symbol>
-
 </defs>
 </svg>

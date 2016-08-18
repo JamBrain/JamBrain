@@ -46,3 +46,25 @@
 ._unmargin-bottom { margin-bottom: 0; }
 ._unmargin-left { margin-left: 0; }
 ._unmargin-right { margin-right: 0; }
+
+/* Helpers for showing/hiding an element when parent is hovered/focused/active */
+* > ._on-parent-hover-hide, 
+* > ._on-parent-active-hide,
+* > ._on-parent-focus-hide {
+	display: inline;
+}
+*:hover > ._on-parent-hover-hide,
+*:active > ._on-parent-active-hide,
+*:focus > ._on-parent-focus-hide {
+	display: none !important;
+}
+* > ._on-parent-hover-show,
+* > ._on-parent-active-show,
+* > ._on-parent-focus-show {
+	display: none;
+}
+*:hover > ._on-parent-hover-show,
+*:active > ._on-parent-active-show,
+*:focus > ._on-parent-focus-show {
+	display: inline !important;
+}

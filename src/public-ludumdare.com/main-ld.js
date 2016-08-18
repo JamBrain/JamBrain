@@ -1,63 +1,115 @@
-import { diff_match_patch } from 'custom/diff_match_patch/diff_match_patch';
+import { h, render, Component }			from 'preact/preact';
+import NavBar 							from 'com/nav-bar/bar';
+import DarkOverlay						from 'com/dark-overlay/overlay';
 
-import { h, render }	from 'preact/preact';
-import NavBar 			from 'com/nav-bar/bar';
-import SVGIcon 			from 'com/svg-icon/icon';
-import DarkOverlay		from 'com/dark-overlay/overlay';
-import Notify			from 'internal/notify/notify';
+import ContentPost						from 'com/content-post/post';
+import ContentPicture					from 'com/content-picture/picture';
 
-import ContentPost		from 'com/content-post/post';
+import SidebarCalendar					from 'com/sidebar-calendar/calendar';
+import SidebarUpcoming					from 'com/sidebar-upcoming/upcoming';
+import SidebarTV						from 'com/sidebar-tv/tv';
+import SidebarTrending					from 'com/sidebar-trending/trending';
 
-render(<NavBar />, document.body);
-//render(<SVGIcon name="firefox" />, document.body);
-//render(<DarkOverlay />, document.body);
-
-
-var User = {
-	'name':"PoV",
-	'slug':"pov",
-	'avatar':'/other/logo/mike/Chicken64.png',
-	'team':"Team Fishbowl",
-	'twitter':"mikekasprzak",
-};
-
-var Post = {
-	'id':200,
-	'title':"Better than you",
-	'text':<p>Blah blah <strong>breathing</strong></p>
-};
-
-render(<ContentPost post={Post} user={User}>{Post.text}</ContentPost>, document.getElementById("content"), 0);
-
-
-var a = "The best\n\npart of waking up\nis folgers in your cup\nI think...\n\n???";
-var b = "The best\npart of waking up\nis fulgers in your cup\nI think...\n\n???\n";
-
-function diff_lineMode(text1, text2) {
-	var dmp = new diff_match_patch();
-	var a = dmp.diff_linesToChars(text1, text2);
-	var lineText1 = a[0];
-	var lineText2 = a[1];
-	var lineArray = a[2];
+class Main extends Component {
+	constructor() {
+		this.state = {};
+		this.state.posts = [ 
+			{
+				title:"The theme and color scheme sucks, I know",
+				slug:"the-theme-and-color-scheme-sucks-i-know",
+				author:'pov',
+				body:"Yeah, it's inconsistent and it stinks. I'm not working that part right now. :whale:\n\nThe site looks kinda weird on mobile too.\n\n## Navigation.\nNow that's waaaay more important than how pretty the buttons are."
+			},
+			{
+				title:"A dangerous place in SPAAAACE",
+				slug:"a-dangerous-place-in-space",
+				author:'pov',
+				body:"WHELP! they're here!\n\nI _didn't_ think it would happen, but :smile: it is.\n\n```\n  var Muffin = 10;\n  Muffin += 2;\n\n  echo \"The Wheel\";```\n\nWhoa."
+			}
+		];
+		this.state.users = {
+			'pov': {
+				name:'PoV',
+				slug:'pov',
+				avatar:'/other/logo/mike/Chicken64.png',
+				twitter:'mikekasprzak',
+			}
+		};
+			
+		
+		var that = this;
+		window.addEventListener('hashchange',that.onHashChange.bind(that));
+		
+		function make_slug( str ) {
+			str = str.toLowerCase();
+			str = str.replace(/%[a-f0-9]{2}/g,'-');
+			str = str.replace(/[^a-z0-9]/g,'-');
+			str = str.replace(/-+/g,'-');
+			str = str.replace(/^-|-$/g,'');
+			return str;
+		}
+		
+		var url = window.location.pathname.replace(/^\/|\/$/g,'');
+		
+		var url_parts = url.split('/');
+		url_parts = url_parts.map( part => make_slug(part) );
+		
+		console.log(url_parts);
+		
+		var clean_url = url_parts.join('/');
+		console.log(url);
+		console.log(clean_url);
+		if ( url !== clean_url ) {
+			console.log("bad url, cleaning...");
+			
+			let new_url = '/'+clean_url;
+			if ( new_url !== '/' )
+				new_url += '/';
+			if ( window.location.hash )
+				new_url += window.location.hash;
+				
+			window.history.replaceState(null,null,new_url);
+		}
+	}
 	
-	var diffs = dmp.diff_main(lineText1, lineText2, false);
+	componentDidMount() {
+		// Startup //
+	}
 	
-	dmp.diff_charsToLines(diffs, lineArray);
-	return diffs;
-}
+	onHashChange() {
+		console.log(window.location.hash);
+		this.setState({});
+	}
+	
+	render( props, state ) {
+		let hasHash = window.location.hash ? <div>{window.location.hash}</div> : <div />;
+		
+		return (
+			<div id="layout">
+				<div id="header" />
+				<div id="content-sidebar">
+					<div id="content">{
+						state.posts.map(function(item) {
+							return <ContentPost {...item} user={state.users[item.author]} />;
+						})
+					}</div>
+					<div id="sidebar">
+						<SidebarCalendar />
+						<SidebarUpcoming />
+						<SidebarTV />
+					</div>
+				</div>
+				<div id="footer">
+					<span>Test: </span><span class="_on-parent-hover-hide">Hello</span><span class="_on-parent-hover-show">World</span>
+					{hasHash}
+				</div>
+			</div>
+		);
+	}
+};
+//				<NavBar />
 
-var lines = diff_lineMode(a,b);
+//				<DarkOverlay />
+//						<SidebarTrending />
 
-lines.map( (el) => {
-	if ( el[0] == 0 )
-		return '  '+el[1];
-	else if ( el[0] == -1 )
-		return '- '+el[1];
-	else if ( el[0] == 1 )
-		return '+ '+el[1];
-}).map( (el) => {
-	console.log(el.replace('\n','¶'));
-});
-
-render(<div>World</div>, document.body);
-render(<div>Hello</div>, document.body);
+render(<Main />, document.body);

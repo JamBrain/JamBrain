@@ -1,11 +1,8 @@
 
 #sidebar > .sidebar-tv {
-	background: rgba(0,0,0,0.1);
-	box-shadow: 0px 0px 3px rgba(64,0,0,0.2);
-
-	& svg {
-		vertical-align: middle;
-	}
+	@TV_BACKGROUND: #d7d2ac;
+	background: @TV_BACKGROUND;
+	/*box-shadow: 0px 0px 3px rgba(64,0,0,0.2);*/
 
 	& > .-active {
 		position: relative;
@@ -22,10 +19,9 @@
 			position: absolute;
 			left:1em;
 			top:1em;
-			text-shadow: 0 0 3px black;
+			text-shadow: 0 0 5px black;
 
 			& > svg {
-				vertical-align: middle;
 				color:red;
 				animation: blinker 10s linear infinite;
 			}
@@ -40,6 +36,28 @@
 				font-weight:bold;
 			}
 		}
+		& > .-name {
+			position: absolute;
+			left:1em;
+			bottom:1em;
+
+			padding:0.05em 0.5em;
+			/*background:rgba(0,0,0,0.5);*/
+			background:rgba(100,65,165,0.7);
+			/*color: #6441a5;*/
+
+			color:white;
+		}
+		& > .-viewers {
+			position: absolute;
+			right:1em;
+			top:1em;
+			
+			padding:0.05em 0.5em;
+			background:rgba(0,0,0,0.5);
+
+			color: white;
+		}
 		& > .-play {
 			position:absolute;
 			top:50%;
@@ -53,6 +71,8 @@
 			& > svg {
 				display:block;
 			}
+			
+			background:rgba(0,0,0,0.5);
 		}
 		&:hover > .-play {
 			opacity:1.0;
@@ -64,8 +84,25 @@
 		}
 	}
 	& > .-detail {
-		padding:0.5em;
-		padding-top:0;
+		margin:0.5em;
+		margin-top:0;
+		
+		line-height:1.25em;
+		height:2.5em;
+		overflow:hidden;
+		
+		position:relative;
+/*		
+		& > .-fader {
+			position:absolute;
+			top:0;
+			left:0;
+			width:100%;
+			height:100%;
+		
+			background: linear-gradient(rgba(0,0,0,0),@TV_BACKGROUND);
+		}
+*/
 	}
 	& > .-browse {
 		display:flex;
@@ -77,7 +114,7 @@
 			cursor:pointer;
 			
 			& > div {
-				padding:2px;
+				padding:0.25em;
 
 				& > img {
 					max-width:100%;

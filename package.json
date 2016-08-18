@@ -14,7 +14,8 @@
     "uglify-js": "*",
     "less": "*",
     "less-plugin-autoprefix": "*",
-    "clean-css": "*"
+    "clean-css": "*",
+    "svgo": "*"
   },
   "devDependencies": {},
   "scripts": {

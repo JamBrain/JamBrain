@@ -1,16 +1,31 @@
-.icon {
+.svg-icon {
 	display: inline-block;
 	width: 1em;
 	height: 1em;
 	stroke-width: 0;
 	stroke: currentColor;
 	fill: currentColor;
+	vertical-align: middle;
+	
+	&.-baseline {
+		vertical-align: baseline !important;
+	}
+	&.-top {
+		vertical-align: top !important;
+	}
+	&.-bottom {
+		vertical-align: bottom !important;
+	}
+	&.-middle {
+		vertical-align: middle !important;
+	}
+	&.-text-top {
+		vertical-align: text-top !important;
+	}
+	&.-text-bottom {
+		vertical-align: text-bottom !important;
+	}
+	&.-small {
+		font-size: 0.7em;
+	}
 }
-
-/* ==========================================
-Single-colored icons can be modified like so:
-.icon-name {
-	font-size: 32px;
-	color: red;
-}
-========================================== */

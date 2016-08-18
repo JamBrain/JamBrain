@@ -5,13 +5,25 @@
 		display:flex;
 		align-items:stretch;
 		& > div {
-			width:100%;
+			position:relative;
+			
 			margin-right:1px;
 			margin-bottom:1px;
 			background: rgba(0,0,0,0.10);
-			height: 2em;
-			padding: 4px;
+
+			/* This is perfect square trickery */
+			width:100%;
+			padding-bottom:14.28%; /* 100% / 7 */
+			/* The trick is that padding/margin %'s are based on width. So we float */
+			/* the element above the parent (absolute positioning), and we get a box */
+			
 			cursor:pointer;
+			
+			& > .-text {
+				position:absolute;
+				top:0.25em;
+				left:0.25em;
+			}
 			
 			&:hover, &:first-child:hover, &:last-child:hover {
 				background: rgba(0,0,0,0.05);

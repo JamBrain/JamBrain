@@ -19,10 +19,6 @@
 		}
 		& > .-subtext {
 			font-size: 0.8em;
-			
-			& .icon {
-				vertical-align: middle;
-			}
 		}
 		& > .-avatar {
 			margin: -0.5em;
@@ -45,10 +41,6 @@
 		color: rgba(0,0,0,0.5);
 		height: 2em;
 
-		& svg {
-			vertical-align:middle;
-		}
-		
 		& > .-left {
 			position: absolute;
 			left:0;
@@ -151,6 +143,18 @@
 				background: darken(@MAIN_BACKGROUND,20%);
 				width:2.5em;
 			}
+		}
+	}
+	
+	@media (max-width: 26em) { 
+		& .-heart-count {
+			display: none !important;
+		}
+	}
+	
+	@media (max-width: 22em) { 
+		& .-comment-count {
+			display: none !important;
 		}
 	}
 }
