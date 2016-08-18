@@ -18,7 +18,7 @@ class Main extends Component {
 				title:"The theme and color scheme sucks, I know",
 				slug:"the-theme-and-color-scheme-sucks-i-know",
 				author:'pov',
-				body:"Yeah, it's inconsistent and it stinks. I'm not working that part right now. :whale:\n\n## Navigation.\nNow that's waaaay more important than how pretty the buttons are.\n\nThe site looks kinda weird on mobile too."
+				body:"Yeah, it's inconsistent and it stinks. I'm not working that part right now. :whale:\n\nThe site looks kinda weird on mobile too.\n\n## Navigation.\nNow that's waaaay more important than how pretty the buttons are."
 			},
 			{
 				title:"A dangerous place in SPAAAACE",
