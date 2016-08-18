@@ -75,7 +75,7 @@ block.normal = merge({}, block);
  */
 
 block.gfm = merge({}, block.normal, {
-  fences: /^ *(`{3,}|~{3,})[ \.]*(\S+)? *\n([\s\S]+?)\s*\1 *(?:\n+|$)/,
+  fences: /^ *(`{3,}|~{3,})[ \.]*(\S+)? *\n([\s\S]*?)\s*\1 *(?:\n+|$)/,
   paragraph: /^/,
   heading: /^ *(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)/
 });
@@ -189,7 +189,7 @@ Lexer.prototype.token = function(src, top, bq) {
       this.tokens.push({
         type: 'code',
         lang: cap[2],
-        text: cap[3]
+        text: cap[3] || ''
       });
       continue;
     }
@@ -456,7 +456,7 @@ var inline = {
   reflink: /^!?\[(inside)\]\s*\[([^\]]*)\]/,
   nolink: /^!?\[((?:\[[^\]]*\]|[^\[\]])*)\]/,
   strong: /^__([\s\S]+?)__(?!_)|^\*\*([\s\S]+?)\*\*(?!\*)/,
-  em: /^\b_((?:__|[\s\S])+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,
+  em: /^\b_((?:[^_]|__)+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,
   code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
   br: /^ {2,}\n(?!\s*$)/,
   del: noop,
@@ -855,7 +855,9 @@ Renderer.prototype.em = function(text) {
 };
 
 Renderer.prototype.codespan = function(text) {
-  return '<span><code>' + text.replace('\n','') + '</code></span>';
+  // Span it, to protect it from the emoji decoder //
+  return '<span><code>' + text + '</code></span>';
+  // text.replace('\n','') // ??
 };
 
 Renderer.prototype.br = function() {
@@ -880,12 +882,13 @@ Renderer.prototype.link = function(href, title, text) {
     }
   }
   // Span to protect it from the emoji decoder //
-  var out = '<span class="link" data="'+ href +'"><a href="' + href + '"';
+  var out = '<span><a href="' + href + '"';
   if (title) {
     out += ' title="' + title + '"';
   }
-  if ( href.indexOf('//') != -1 ) { // External link //
-  	out += ' target="_blank"';
+  // If it contains double slashes, consider it an external link //
+  if ( href.indexOf('//') != -1 ) {
+       out += ' target="_blank"';
   }
   out += '>' + text + '</a></span>';
   return out;
@@ -1098,7 +1101,8 @@ function escape(html, encode) {
 }
 
 function unescape(html) {
-  return html.replace(/&([#\w]+);/g, function(_, n) {
+	// explicitly match decimal, hex, and named HTML entities 
+  return html.replace(/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/g, function(_, n) {
     n = n.toLowerCase();
     if (n === 'colon') return ':';
     if (n.charAt(0) === '#') {
