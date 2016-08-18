@@ -1,6 +1,7 @@
 import { h, Component } from 'preact/preact';
 import CoreButton		from 'com/core-button/button';
 import SVGIcon 			from 'com/svg-icon/icon';
+import NavLink 			from 'com/nav-link/link';
 
 export default class ContentPost extends Component {
 	render(props,state) {
@@ -14,7 +15,7 @@ export default class ContentPost extends Component {
 			<div class="content-base content-post">
 				<div class="-header">
 					<div class="-avatar"><img src={props.user.avatar ? "//"+STATIC_DOMAIN+props.user.avatar : ""} /></div>
-					<div class="-title _font2">{props.title}</div>
+					<div class="-title _font2"><NavLink href="/borto">{props.title}</NavLink></div>
 					<div class="-subtext">
 						Posted <span class="-time">{props.relative_time}</span> ago
 						on <span class="-title" title={props.date}>{props.short_date}</span>,
