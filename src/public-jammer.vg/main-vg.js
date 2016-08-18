@@ -14,9 +14,21 @@ class Main extends Component {
 	constructor() {
 		this.state = {};
 		this.state.posts = [ 
-			"noof",
-			"foof"
+			{
+				title:"A dangerous place in SPAAAACE",
+				slug:"a-dangerous-place-in-space",
+				author:'pov',
+				body:"whelp! they're here!\n\nI didn't think it would happen, but :dolphin: it is.\n\n```\n  var Muffin = 10;\n```\n\nWhoa."
+			}
 		];
+		this.state.users = {
+			'pov': {
+				name:'PoV',
+				slug:'pov',
+				avatar:'/other/logo/mike/Chicken64.png'
+			}
+		};
+			
 		
 		var that = this;
 		window.addEventListener('hashchange',that.onHashChange.bind(that));
@@ -69,13 +81,9 @@ class Main extends Component {
 			<div id="layout">
 				<div id="header" />
 				<div id="content-sidebar">
-					<div id="content">
-						<ContentPicture title="hola bola my gola" img={'//'+STATIC_DOMAIN+'/other/test/forest.jpg'}>
-							yo yo yo my hoodgy doodge!
-						</ContentPicture>
-					{
-						state.posts.map(function(e) {
-							return <ContentPost title={e} />;
+					<div id="content">{
+						state.posts.map(function(item) {
+							return <ContentPost {...item} user={state.users[item.author]} />;
 						})
 					}</div>
 					<div id="sidebar">

@@ -11,22 +11,28 @@ export default class ContentPost extends Component {
 		var hasTwitter = props.user.twitter ? <span class="-twitter"> (<SVGIcon>twitter</SVGIcon> {props.user.twitter})</span> : <span />;
 		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <SVGIcon>users</SVGIcon></span> : <span />;
 		
+		// Build URL //
+		// TODO: append trailing '/' to base if missing
+		var url = props.slug+'/';
+		// TODO: if single post mode, prefix with '../'
+		
+		var parsedBody = emojione.shortnameToImage(marked.parse(props.body));
+		var dangerParsedBody = { __html:parsedBody };
+		
 		return (
 			<div class="content-base content-post">
 				<div class="-header">
 					<div class="-avatar"><img src={props.user.avatar ? "//"+STATIC_DOMAIN+props.user.avatar : ""} /></div>
-					<div class="-title _font2"><NavLink href="/borto?pillo">{props.title}</NavLink></div>
+					<div class="-title _font2"><NavLink href={url}>{props.title}</NavLink></div>
 					<div class="-subtext">
 						Posted <span class="-time">{props.relative_time}</span> ago
 						on <span class="-title" title={props.date}>{props.short_date}</span>,
-						by <span class="-name">{props.user.name}</span>
+						by <span class="-name"><NavLink href={'/u/'+props.user.slug+'/'}>{props.user.name}</NavLink></span>
 						{hasTwitter}
 						{hasTeam}
 					</div>
 				</div>
-				<div class="-body">
-					{props.children}
-				</div>
+				<div class="-body" dangerouslySetInnerHTML={dangerParsedBody} />
 				<div class="-footer">
 					<div class="-left">
 						<div class="-minmax"><SVGIcon>arrow-up</SVGIcon></div>
