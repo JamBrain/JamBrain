@@ -15,10 +15,16 @@ class Main extends Component {
 		this.state = {};
 		this.state.posts = [ 
 			{
+				title:"The theme and color scheme sucks, I know",
+				slug:"the-theme-and-color-scheme-sucks-i-know",
+				author:'pov',
+				body:"Yeah, it's inconsistent and it stinks. I'm not working that part right now. :whale:\n\n## Navigation.\nNow that's waaaay more important than how pretty the buttons are.\n\nThe site looks kinda weird on mobile too."
+			},
+			{
 				title:"A dangerous place in SPAAAACE",
 				slug:"a-dangerous-place-in-space",
 				author:'pov',
-				body:"whelp! they're here!\n\nI didn't think it would happen, but :dolphin: it is.\n\n```\n  var Muffin = 10;\n```\n\nWhoa."
+				body:"WHELP! they're here!\n\nI _didn't_ think it would happen, but :smile: it is.\n\n```\n  var Muffin = 10;\n  Muffin += 2;\n\n  echo \"The Wheel\";```\n\nWhoa."
 			}
 		];
 		this.state.users = {
