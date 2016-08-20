@@ -43,7 +43,22 @@
 			video_id+
 			'?rel=0" frameborder="0" allowfullscreen></iframe>';
 	}
-	
+
+	AutoEmbed.prototype.makeSVGIcon = function( name, args ) {
+		var svg_class = "svg-icon icon-"+name;
+		if ( args ) {
+			if ( args['class'] ) {
+				svg_class += ' '+args['class'];
+			}
+		}
+		return '<svg class="'+svg_class+'"><use xlink:href="#icon-'+name+'"></use></svg>';
+	}
+
+	// NOTE: Since these are all external, there's no need for the Navigation Capture code //
+	AutoEmbed.prototype.makeSmartLink = function( icon_name, full_url, part_url ) {
+		return '<span><a href="'+full_url+'" target="_blank">'+this.makeSVGIcon(icon_name,{'class':'-baseline -small'})+'/'+part_url+'</a></span>';
+	}
+		
 	AutoEmbed.prototype.hasEmbed = function( str ) {
 		if ( str.indexOf('youtube.com') !== -1 ) {
 			url = this.extractFromURL(str);
@@ -51,9 +66,24 @@
 				return this.makeYouTube( url.args.v );
 			}
 		}
+		else if ( str.indexOf('github.com') !== -1 ) {
+			url = this.extractFromURL(str);
+			return this.makeSmartLink( 'github', str, url.path.join('/') );
+		}
+		else if ( str.indexOf('twitch.tv') !== -1 ) {
+			url = this.extractFromURL(str);
+			return this.makeSmartLink( 'twitch', str, url.path.join('/') );
+		}
+		else if ( str.indexOf('reddit.com') !== -1 ) {
+			url = this.extractFromURL(str);
+			return this.makeSmartLink( 'reddit', str, url.path.join('/') );
+		}
+		else if ( str.indexOf('twitter.com') !== -1 ) {
+			url = this.extractFromURL(str);
+			return this.makeSmartLink( 'twitter', str, url.path.join('/') );
+		}
 		return false;
-	}
-	
+	}	
 	
 	window.autoEmbed = new AutoEmbed();
 }());
