@@ -40,8 +40,20 @@ export default class ContentPost extends Component {
 			
 			// TODO: attach the Navigation link code to the <a> tag above //
 		}
+		
+//		function parseURLs( str ) {
+////			return str.replace(/(\n)(http[s]?:\/\/\S+[^<>:])|^()(http[s]?:\/\/\S+[^<>:])/g,
+//			return str.replace(/^(http[s]?:\/\/\S+[^<>:])/gm,
+//				function(original,p1,offset,s) {
+//					console.log(original,p1,offset);
+//				
+//					return "<span><a href='"+p1+"'>"+p1+"</a></span>";
+//				});			
+//		}
 					
-		var parsedBody = emojione.shortnameToImage(parseNames(marked.parse(props.body)));
+//		var parsedBody = emojione.shortnameToImage(parseNames(marked.parse(props.body)));
+//		var parsedBody = parseNames(marked.parse(props.body));
+		var parsedBody = marked.parse(props.body);
 		var dangerParsedBody = { __html:parsedBody };
 		
 		return (

@@ -21,7 +21,7 @@ export default class SidebarTV extends Component {
 	}
 	
 	componentDidMount() {
-		fetch('//jammer.tv/v1/live.php/ludum-dare+game-jam+game-dev/')//,{mode:'no-cors'})
+		fetch('//direct.jammer.tv/v1/live.php/ludum-dare+game-jam+game-dev/')//,{mode:'no-cors'})
 			.then( r => r.json() )
 			.then( data => {
 				let state_copy = this.state;

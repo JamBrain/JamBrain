@@ -24,7 +24,7 @@ class Main extends Component {
 				title:"A dangerous place in SPAAAACE",
 				slug:"a-dangerous-place-in-space",
 				author:'pov',
-				body:"This is message for @PoV. Are you here @PoV? I need @help.\n\n```\n  var Muffin = 10;\n  Muffin += 2;\n\n  echo \"The Wheel\";```\n\nWhoa.\n\nAlso call @murr-DEATH-weasel."
+				body:"http://moo.com\n\nThis is message for @PoV. Are you here @PoV? I need @help.\n\n```\n  var Muffin = 10;\n  Muffin += 2;\n\n  echo \"The Wheel\";```\n\nWhoa.\n\nAlso call @murr-DEATH-weasel.\n\nhttps://www.youtube.com/watch?v=5vxYUr9e-GY"
 			}
 		];
 		this.state.users = {
