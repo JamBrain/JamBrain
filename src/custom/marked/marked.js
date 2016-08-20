@@ -871,7 +871,7 @@ Renderer.prototype.em = function(text) {
 };
 
 Renderer.prototype.emoji = function(text) {
-  return emojione.shortnameImage(':'+text+':');
+	return emoji.shortnameToImage(text);
 };
 
 Renderer.prototype.atname = function(text) {

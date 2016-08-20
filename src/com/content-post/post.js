@@ -16,43 +16,31 @@ export default class ContentPost extends Component {
 		var url = props.slug+'/';
 		// TODO: if single post mode, prefix with '../'
 		
-		function parseNames( str ) {
-			// Dummy: Use Global Object //
-			var users = {
-				'pov': {
-					name:'PoV',
-					slug:'pov',
-					avatar:'/other/logo/mike/Chicken64.png',
-					twitter:'mikekasprzak',
-				}
-			};
-			
-			return str.replace(/@([A-Za-z][A-Za-z0-9-]*)/g,function(original,p1,offset,s) {
-				//console.log(match,p1,offset);
-				var name = p1.toLowerCase();
-				if ( users[name] ) {
-					return "<span class='inline-name'><img src='//"+STATIC_DOMAIN+users[name].avatar+"'><a href='/u/"+users[name].slug+"'>"+users[name].name+"</a></span>";
-				}
-				else {
-					return original;
-				}
-			});
-			
-			// TODO: attach the Navigation link code to the <a> tag above //
-		}
-		
-//		function parseURLs( str ) {
-////			return str.replace(/(\n)(http[s]?:\/\/\S+[^<>:])|^()(http[s]?:\/\/\S+[^<>:])/g,
-//			return str.replace(/^(http[s]?:\/\/\S+[^<>:])/gm,
-//				function(original,p1,offset,s) {
-//					console.log(original,p1,offset);
-//				
-//					return "<span><a href='"+p1+"'>"+p1+"</a></span>";
-//				});			
+//		function parseNames( str ) {
+//			// Dummy: Use Global Object //
+//			var users = {
+//				'pov': {
+//					name:'PoV',
+//					slug:'pov',
+//					avatar:'/other/logo/mike/Chicken64.png',
+//					twitter:'mikekasprzak',
+//				}
+//			};
+//			
+//			return str.replace(/@([A-Za-z][A-Za-z0-9-]*)/g,function(original,p1,offset,s) {
+//				//console.log(match,p1,offset);
+//				var name = p1.toLowerCase();
+//				if ( users[name] ) {
+//					return "<span class='inline-name'><img src='//"+STATIC_DOMAIN+users[name].avatar+"'><a href='/u/"+users[name].slug+"'>"+users[name].name+"</a></span>";
+//				}
+//				else {
+//					return original;
+//				}
+//			});
+//			
+//			// TODO: attach the Navigation link code to the <a> tag above //
 //		}
-					
-//		var parsedBody = emojione.shortnameToImage(parseNames(marked.parse(props.body)));
-//		var parsedBody = parseNames(marked.parse(props.body));
+
 		var parsedBody = marked.parse(props.body);
 		var dangerParsedBody = { __html:parsedBody };
 		
