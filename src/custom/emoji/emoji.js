@@ -18,7 +18,7 @@
 		}
 		else {
 			// Requires no-array and remove-extra-unicodes optimization //
-			return '<img class="emoji" alt="'+shortname+'" src="'+ns.path+ns.emojiList[shortname]+ns.ext+'"/>';
+			return '<img class="emoji" alt="'+shortname+'" title=":'+shortname+':" src="'+ns.path+ns.emojiList[shortname]+ns.ext+'"/>';
 		}
 	}
 	
