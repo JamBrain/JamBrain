@@ -44,15 +44,17 @@ export default class ContentPost extends Component {
 		var parsedBody = marked.parse(props.body);
 		var dangerParsedBody = { __html:parsedBody };
 		
+		var avatar = props.user.avatar ? "//"+STATIC_DOMAIN+props.user.avatar : "";
+		
 		return (
 			<div class="content-base content-post">
 				<div class="-header">
-					<div class="-avatar"><img src={props.user.avatar ? "//"+STATIC_DOMAIN+props.user.avatar : ""} /></div>
+					<div class="-avatar"><img src={avatar} /></div>
 					<div class="-title _font2"><NavLink href={url}>{props.title}</NavLink></div>
 					<div class="-subtext">
 						Posted <span class="-time">{props.relative_time}</span> ago
 						on <span class="-title" title={props.date}>{props.short_date}</span>,
-						by <span class="-name"><NavLink href={'/u/'+props.user.slug+'/'}>{props.user.name}</NavLink></span>
+						by <span class="-name"><NavLink href={'/u/'+props.user.slug+'/'} class="-author"><img style="height:0.8em;padding-right:0.1em;" src={avatar} />{props.user.name}</NavLink></span>
 						{hasTwitter}
 						{hasTeam}
 					</div>
