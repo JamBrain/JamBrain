@@ -40,11 +40,11 @@ OUT_LESS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(LESS_FILES:.less=.less.css))
 OUT_CSS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(CSS_FILES:.css=.o.css))
 OUT_SVG_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(SVG_FILES:.svg=.min.svg))
 
-OUT_FILES			:=	$(OUT_ES6_FILES) $(OUT_JS_FILES) $(OUT_LESS_FILES) $(OUT_CSS_FILES) $(OUT_SVG_FILES)
+OUT_FILES			:=	$(OUT_SVG_FILES) $(OUT_CSS_FILES) $(OUT_LESS_FILES) $(OUT_JS_FILES) $(OUT_ES6_FILES)
 DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES6_FILES) $(OUT_LESS_FILES))
 OUT_FOLDERS			:=	$(sort $(dir $(OUT_FILES) $(BUILD_FOLDER)/))
 
-TARGET_FILES		:=	$(TARGET_FOLDER)/all.min.js $(TARGET_FOLDER)/all.min.css $(TARGET_FOLDER)/all.min.svg
+TARGET_FILES		:=	$(TARGET_FOLDER)/all.min.svg $(TARGET_FOLDER)/all.min.css $(TARGET_FOLDER)/all.min.js
 TARGET_DEPS			:=	$(OUT_FOLDERS) $(TARGET_FILES)
 
 

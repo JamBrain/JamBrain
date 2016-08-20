@@ -904,16 +904,22 @@ Renderer.prototype.link = function(href, title, text) {
       return '';
     }
   }
-  var out = '<a href="' + href + '"';
-  if (title) {
-    out += ' title="' + title + '"';
+  var HasEmbed = autoEmbed.hasEmbed(href);
+  if ( HasEmbed ) {
+    return HasEmbed;
   }
-  // If it contains double slashes, consider it an external link //
-  if ( href.indexOf('//') != -1 ) {
+  else {
+    var out = '<a href="' + href + '"';
+    if (title) {
+      out += ' title="' + title + '"';
+    }
+    // If it contains double slashes, consider it an external link //
+    if ( href.indexOf('//') != -1 ) {
        out += ' target="_blank"';
+    }
+    out += '>' + text + '</a>';
+    return out;
   }
-  out += '>' + text + '</a>';
-  return out;
 };
 
 Renderer.prototype.image = function(href, title, text) {
