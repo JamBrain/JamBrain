@@ -14,11 +14,6 @@ It's assumed Microsoft browsers are the most feature incomplete of the major bro
 * `/chrome/` - Chromium Browsers (Chrome, Chromium, Android, Chrome Books/Boxes)
 * `/moz/` - Mozilla Browsers (Firefox, Firefox OS, IceWeasel, SeaMonkey, etc)
 
-Patches/Polyfills for new features not (or poorly) supported by modern browsers are found here:
-* `/es6/` - (also known as ES2015) http://exploringjs.com/es6/
-* `/es2016/` - http://www.2ality.com/2016/01/ecmascript-2016.html
-* `/es2017/` - http://www.2ality.com/2016/02/ecmascript-2017.html
-
 (More info: http://kangax.github.io/compat-table/es6/)
 
 Of note, many of the available ES6 features are made available by the toolchain, thanks to Buble. The code is then transpiled back in to ES5.
