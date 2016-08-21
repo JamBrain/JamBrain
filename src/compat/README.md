@@ -36,12 +36,18 @@ We use a variety of Polyfills, and the Buble ES6 transpiler. For more details on
 
 * All ES5 Features
   * no known exceptions (put them here if we find them)
-* DOM classList
+* DOM classList (polyfill)
   * Nicer way to add/remove/toggle classes in the DOM
-* ES6 Arrays (Polyfill)
-  * New methods: ??
-* ES6 Lambda Functions (Buble)
-  * i.e. `function(name) { return 'hello '+name; } becomes `name => 'hello '+name`
+* DOM CustomEvent (polyfill)
+  * Primarily used to create our own global events
+* ES6+ES2016 Array's (polyfill)
+  * New methods ES6: `a.copyWithin`, `a.fill`, `a.find`, `a.findIndex`, `a.from`, `a.of` 
+  * New methods ES2016: `a.includes`
+* ES6 Object's (polyfill) 
+  * New methods: `o.assign`
+    * Used to clone objects. i.e. `var orig = {'name':'bob'}; var copy; copy.assign({},orig);`
+* ES6 Lambda/Arrow Functions (Buble)
+  * i.e. `function(name) { return 'hello '+name; }` becomes `name => 'hello '+name`
 * ES6 Classes (Buble)
   * NOTE: Buble's class support mirrors the ES6 spec. Babel extended features are unavailable.
     * `::` operator is unsupported (not part of the spec)
