@@ -18,7 +18,12 @@ class Main extends Component {
 				title:"The theme and color scheme sucks, I know",
 				slug:"the-theme-and-color-scheme-sucks-i-know",
 				author:'pov',
-				body:"Yeah, it's inconsistent and it stinks. I'm not working that part right now. :whale:\n\nSome test URLS:\n* https://github.com/ludumdare/ludumdare\n* https://twitter.com/mikekasprzak\n* https://reddit.com/r/ludumdare\n* https://twitch.tv/ludumdare\n* https://www.youtube.com/user/ButtonMasherBros\n* https://www.youtube.com/povrazor\n* http://moo.com\n* Hey @pov, I need @help.\n\nThis is **BOLD**. This is _ITALICS_. This is ***BOTH***.\n\nThis is a Youtube Video.\n\nhttps://www.youtube.com/watch?v=5vxYUr9e-GY\n\nNice."
+				body:"Yeah, it's inconsistent and it stinks. I'm not working that part right now. :whale:\n\n"+
+					"This is a quote.\n\n> Somebody is going to say this, some day\n\n"+
+					"This is a quote, from twitter (also a tweet):\n\nhttps://twitter.com/mikekasprzak/status/565641812703203328\n\n"+
+					"Some test URLS:\n* https://github.com/ludumdare/ludumdare\n* https://twitter.com/mikekasprzak\n* https://reddit.com/r/ludumdare\n* https://twitch.tv/ludumdare\n* https://www.youtube.com/user/ButtonMasherBros\n* https://www.youtube.com/povrazor\n* http://moo.com\n* Hey @pov, I need @help.\n\n"+
+					"This is **BOLD**. This is _ITALICS_. This is ***BOTH***.\n\n"+
+					"This is a Youtube Video.\n\nhttps://www.youtube.com/watch?v=5vxYUr9e-GY\n\nNice."
 			},
 			{
 				title:"A dangerous place in SPAAAACE",

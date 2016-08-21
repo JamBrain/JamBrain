@@ -59,7 +59,7 @@ export default class ContentPost extends Component {
 						{hasTeam}
 					</div>
 				</div>
-				<div class="-body" dangerouslySetInnerHTML={dangerParsedBody} />
+				<div class="-body markup" dangerouslySetInnerHTML={dangerParsedBody} />
 				<div class="-footer">
 					<div class="-left">
 						<div class="-minmax"><SVGIcon>arrow-up</SVGIcon></div>

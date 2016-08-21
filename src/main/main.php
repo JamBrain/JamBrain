@@ -43,7 +43,8 @@ define( 'LINK_SUFFIX', isset($_GET['nopush']) ? '; nopush' : '' );
 define( 'JS_FILE',   "/-/all".USE_MINIFIED.".js?".VERSION_STRING );
 define( 'CSS_FILE',  "/-/all".USE_MINIFIED.".css?".VERSION_STRING );
 define( 'SVG_FILE',  "/-/all".USE_MINIFIED.".svg?".VERSION_STRING );
-define( 'FONT_FILE', "//fonts.googleapis.com/css?family=Raleway|Lato:300,300italic,700,700italic" );
+//define( 'FONT_FILE', "//fonts.googleapis.com/css?family=Raleway|Lato:300,300italic,700,700italic" );
+define( 'FONT_FILE', "//fonts.googleapis.com/css?family=Raleway|Lato:300,300italic,700,700italic,900" );
 
 if ( !isset($_GET['nopreload']) ) {
 	header( "Link: <".JS_FILE.">; rel=preload; as=script".LINK_SUFFIX, false );
