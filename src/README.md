@@ -11,7 +11,7 @@ Welcome to the source folder!
 ## Internal
 
 * `/internal/` - Internal Libraries ??
-* `/com/` - Preact Components
+* `/com/` - Preact Components. https://preactjs.com/
 * `/embed/` - Code that gets embedded in to (PHP) scripts
 * `/main/` - The common Main used across sites
 
