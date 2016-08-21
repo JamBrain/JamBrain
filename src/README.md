@@ -4,7 +4,7 @@ Welcome to the source folder!
 
 ## Internal
 
-* `/com/` - Preact.js Components. This is most of the frontend. https://preactjs.com/
+* `/com/` - Preact.js Components. This is how most of the frontend is done. https://preactjs.com/
 * `/internal/` - Internal Libraries (??)
 * `/embed/` - Code that gets embedded in to (PHP) scripts
 * `/main/` - The common Main used across sites
