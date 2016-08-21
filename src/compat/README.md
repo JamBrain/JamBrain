@@ -10,9 +10,9 @@ It's assumed Microsoft browsers are the most feature incomplete of the major bro
 
 * `/ie11/` - Internet Explorer 11 (Windows 7, Windows Phone 8.1)
 * `/edge/` - Microsoft Edge (Windows 10, Windows Phone 10, Xbox One)
-* `/webkit/` - Webkit Browsers (Safari, Opera, etc...)
-* `/chrome/` - Chromium Browsers (Chrome, Chromium). These usually affect Webkit too
-* `/moz/` - Mozilla Browsers (Firefox, etc)
+* `/webkit/` - Webkit Browsers (Safari Mac/iOS, Opera, etc...)
+* `/chrome/` - Chromium Browsers (Chrome, Chromium, Android, Chrome Books/Boxes)
+* `/moz/` - Mozilla Browsers (Firefox, Firefox OS, IceWeasel, SeaMonkey, etc)
 
 Patches/Polyfills for new features not (or poorly) supported by modern browsers are found here:
 * `/es6/` - (also known as ES2015) http://exploringjs.com/es6/
