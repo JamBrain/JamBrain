@@ -9,6 +9,9 @@ BUILD				?=	.build
 STATIC_DOMAIN		?=	static.jammer.work
 
 # Include Folders (modified by recursive scripts) #
+ifdef INCLUDE_FOLDERS
+INCLUDE_FOLDERS		+=	src/compat/
+endif
 INCLUDE_FOLDERS		?=	$(SRC)/
 BUILD_FOLDER		:=	$(OUT)/$(BUILD)/$(TARGET)
 
