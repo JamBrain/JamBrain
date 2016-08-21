@@ -1,11 +1,11 @@
 <?php
-require_once __DIR__."/../web.php";
-require_once __DIR__."/../core/config.php";
-require_once __DIR__."/../legacy-config.php";
-require_once __DIR__."/../core/legacy_user.php";
+require_once __DIR__."/../../web.php";
+require_once __DIR__."/../../core/config.php";
+require_once __DIR__."/../../legacy-config.php";
+require_once __DIR__."/../../core/legacy_user.php";
 
-require_once __DIR__."/../core/theme.php";
-require_once __DIR__."/../core/internal/sanitize.php";
+require_once __DIR__."/../../core/theme.php";
+require_once __DIR__."/../../core/internal/sanitize.php";
 
 config_Load();
 
