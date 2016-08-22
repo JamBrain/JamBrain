@@ -8,17 +8,16 @@
 ;
 
 	ns.ext = '.png';
-	ns.path = '//cdn.jsdelivr.net/emojione/assets/png/';
+//	ns.path = '//twemoji.maxcdn.com/2/72x72/';					// Twitter's Emoji Library //
+	ns.path = '//cdn.jsdelivr.net/emojione/assets/png/';		// EmojiOne's Library //
 
 	// Converts a single shortname (without colons) in to an image //
 	ns.shortnameToImage = function(shortname) {
-		if( (typeof shortname === 'undefined') || (shortname === '') || (!(shortname in ns.emojiList)) ) {
-			// if the shortname doesnt exist just return the entire match
-			return ':'+shortname+':';
+		if( shortname && (shortname in ns.emojiList) ) {
+			return '<img class="emoji" alt="'+shortname+'" title=":'+shortname+':" src="'+ns.path+ns.emojiList[shortname]+ns.ext+'"/>';
 		}
 		else {
-			// Requires no-array and remove-extra-unicodes optimization //
-			return '<img class="emoji" alt="'+shortname+'" title=":'+shortname+':" src="'+ns.path+ns.emojiList[shortname]+ns.ext+'"/>';
+			return ':'+shortname+':';
 		}
 	}
 	

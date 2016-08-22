@@ -15,11 +15,11 @@ class Main extends Component {
 		this.state = {};
 		this.state.posts = [ 
 			{
-				title:"Ya, the _theme_ and **color** scheme sucks",
-				slug:"the-theme-and-color-scheme-sucks-i-know",
+				title:"**True Story:** The Internet is ~~DEAD~~ _REAL_",
+				slug:"true-story-the-internet-is-real",
 				author:'pov',
-				body:"Yeah yeah sure, it's inconsistent and it stinks. I'm not working that part right now. :whale:\n\n"+
-					"This is a quote.\n\n> Somebody is going to say \"this\", some day\n\n"+
+				body:"Even I can't believe it! I feel like a :whale:! :bird: :crocodile:\n\n"+
+					"# This is a quote :tiger: \n\n> Somebody is going to say \"this\", some day\n\n"+
 					"This is a quote, from twitter (also a tweet):\n\nhttps://twitter.com/mikekasprzak/status/565641812703203328\n\n"+
 					"Some test URLS:\n* https://github.com/ludumdare/ludumdare\n* https://twitter.com/mikekasprzak\n* https://reddit.com/r/ludumdare\n* https://twitch.tv/ludumdare\n* https://www.youtube.com/user/ButtonMasherBros\n* https://www.youtube.com/povrazor\n* http://moo.com\n* Hey @pov, I need @help.\n\n"+
 					"This is **BOLD**. This is _ITALICS_. This is ***BOTH***.\n\n"+
