@@ -1,44 +1,72 @@
 
-@NAVBAR_HEIGHT: 64px;
-@NAVBAR_SHADOW: 2px;
-@NAVBAR_PAD: 10px;
-@NAVBAR_CELL: @NAVBAR_HEIGHT - @NAVBAR_PAD * 2;
+@import "defs.less";
 
-@NAVBAR_COLOR_BG_TOP: rgba(80,76,66,.9);
-@NAVBAR_COLOR_BG_BOT: rgba(104,100,84,.9);
-@NAVBAR_COLOR_SHADOW: #AAA;
+@NAVBAR_HEIGHT: 4rem;
+@NAVBAR_SHADOW: 0.25rem;
+@NAVBAR_PAD: 0.5em;
+@NAVBAR_CELL: @NAVBAR_HEIGHT - @NAVBAR_PAD * 2;
 
 .nav-bar {
 	/* Needed for click-off and drag un-highlighting buttons to work (i.e. no selections) */
 	user-select: none;
 	
 	position: fixed;
-	top: -2px;								/* Mobile Scrolling Garbage Fix */
+	top: -@NAVBAR_SHADOW;							/* Mobile Scrolling Garbage Fix */
 	left: 0;
 	right: 0;
 	z-index:1000;
 	
-	border-top: 2px solid @NAVBAR_COLOR_BG_TOP;	/* Mobile Scrolling Garbage Fix */
+	border-top: @NAVBAR_SHADOW solid @NAVBAR_BG;	/* Mobile Scrolling Garbage Fix */
 
-	height: @NAVBAR_CELL;
-	background: @NAVBAR_COLOR_BG_BOT;
-	background: linear-gradient(top, @NAVBAR_COLOR_BG_TOP, @NAVBAR_COLOR_BG_BOT);
-	
-	line-height: @NAVBAR_CELL;
-	font-size: 20px;
-	padding: @NAVBAR_PAD;
+	height: @NAVBAR_HEIGHT;
+	background: @NAVBAR_BG;
 		
 	& > .-content {
-		display: inline-block;
+		margin: auto;
+		max-width: @BASE_WIDTH + 2rem; /* 2rem, so when we lose our full width, it's padded */
+		height: @NAVBAR_HEIGHT;
+		position: relative;
 
-		& .-left {
-			margin-right: @NAVBAR_PAD;		
-			display: inline-block;
+		& > .-left {
+			position: absolute;
+			left:1rem; /* 1rem, so when we lose our full width, it's padded */
+			bottom:0;
+			top:0;
+			margin:auto;
+			height: 2.5em; /* Required, otherwise top+bottom fills the whole parent div */
 			
-			& .svg-icon {
-				font-size:1.8em;
+			& > .-logo {
+				/*margin-right: @NAVBAR_PAD;*/		
+				font-size:2.5em;
+				display: flex;
+				
+				& > svg {
+					display:block;
+				}
+			
+				& > .icon-ludum, & > .icon-l-udum {
+					color: @MAJOR_MUTE;
+				}
+				& > .icon-dare, & > .icon-d-are {
+					color: @MAJOR_COLOR_MUTE;
+				}
+				&:hover > .icon-ludum, &:hover > .icon-l-udum {
+					color: @MAJOR_LIGHT;
+				}
+				&:hover > .icon-dare, &:hover > .icon-d-are {
+					color: @MAJOR_COLOR;
+				}
 			}
 		}
+		& > .-right {
+			position: absolute;
+			right:1rem;	/* 1rem, so when we lose our full width, it's padded */
+			bottom:0;
+			top:0;
+			margin:auto;
+			height: 3em; /* Required, otherwise top+bottom fills the whole parent div */
+		}
+
 		& .-button {
 			line-height: @NAVBAR_CELL;/* - 2px;*/
 			padding: 0 20px;
@@ -57,24 +85,17 @@
 				background: #FFF;
 			}
 		}
-		& .-right {
-			float: right;
-	
-			& > div {
-				margin-right: 0;
-				margin-left: @NAVBAR_PAD;
-			}
-		}
 	}
 };
 
-body._use-nav-bar {
+body /*._use-nav-bar*/ {
 	position:relative;
-	top: @NAVBAR_HEIGHT + @NAVBAR_SHADOW;
+	top: @NAVBAR_HEIGHT;
 };
-
+/*
 body._static-nav-bar > .nav-bar {
 	position: absolute;
 	left: 0;
 	top: -(@NAVBAR_HEIGHT + @NAVBAR_SHADOW);
 }
+*/

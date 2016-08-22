@@ -63,7 +63,7 @@ MINIFY_JS_ARGS		:=	--compress --mangle -r "$(MINIFY_JS_RESERVED)"
 MINIFY_JS			=	uglifyjs $(MINIFY_JS_ARGS) -o $(2) -- $(1)
 # JS Minifier: https://github.com/mishoo/UglifyJS2
 
-LESS_COMMON			:=	--global-var='STATIC_DOMAIN=$(STATIC_DOMAIN)'
+LESS_COMMON			:=	--global-var='STATIC_DOMAIN=$(STATIC_DOMAIN)' --include-path=$(MAIN_FOLDER)
 LESS_ARGS			:=	--autoprefix
 LESS_DEP			=	lessc $(LESS_COMMON) --depends $(1) $(2)>$(2).dep
 LESS				=	lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)

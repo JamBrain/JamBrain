@@ -92,6 +92,7 @@ class Main extends Component {
 		
 		return (
 			<div id="layout">
+				<NavBar />
 				<div id="header" />
 				<div id="content-sidebar">
 					<div id="content">{
@@ -113,7 +114,6 @@ class Main extends Component {
 		);
 	}
 };
-//				<NavBar />
 
 //				<DarkOverlay />
 //						<SidebarTrending />

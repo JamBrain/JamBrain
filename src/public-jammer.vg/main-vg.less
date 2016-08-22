@@ -1,16 +1,18 @@
 
+@import "defs.less";
+
 /*@MAIN_BACKGROUND:		#F5F5F5;
-@MAIN_COLOR:			#2D2D2D;*/
+@MAIN_COLOR:			#2D2D2D;
 @MAIN_BACKGROUND:		#F0EEE0;
 @MAIN_BACKGROUND2:		#CCC49D;
 @MAIN_COLOR:			#2D2D2D;
-
+*/
 /* #E92 -> #EB5 */
 /* #423F36    #56534A */
-
+/*
 @MAIN_INV_BACKGROUND:	#3E3E3E;
 @MAIN_INV_COLOR:		#F5F2F0;
-
+*/
 /* Title BG:		#2D2D2D */
 /* Title Hover:		#3068CC */
 /* Title Text:		#FFFFFF */
@@ -19,13 +21,13 @@
 /* Content Text:	#F5F2F0 (warm) */
 
 html {
-	font-size:16px;
+	font-size: @BASE_UNIT;
 }
 
 body {
-	background: radial-gradient(ellipse, @MAIN_BACKGROUND 75%, @MAIN_BACKGROUND2 100%);
+	background: @MAJOR_MUTE; /* radial-gradient(ellipse, @MAIN_BACKGROUND 75%, @MAIN_BACKGROUND2 100%); */
 	background-attachment: fixed;
-	color: @MAIN_COLOR;
+	color: @MAJOR_DARK;
 }
 
 /* Page Layout - Everything on a page goes here */
@@ -83,18 +85,11 @@ body {
 }
 
 
-/* Fit to Browser Width, but cap at MAX_WIDTH */
-@MAX_WIDTH: 80em;
-
+/* Fit to Browser Width, but cap at BASE_WIDTH */
 #layout {
 	width: 100%;
-	max-width: @MAX_WIDTH;
+	max-width: @BASE_WIDTH;
 }
-/*@media (min-width: (@MAX_WIDTH)) { 
-	#layout {
-		width: @MAX_WIDTH;
-	}
-}*/
 
 
 /* Has Sidebar */
@@ -104,7 +99,7 @@ body {
 .if-no-sidebar-inline { display: none !important; }
 
 /* No Sidebar */
-@media (max-width: (@MAX_WIDTH - 20em)) { 
+@media (max-width: (@BASE_WIDTH - 20em)) { 
 	#sidebar {
 		display: none;
 	}
@@ -123,7 +118,7 @@ body {
 .if-not-small-inline { display: inline-block !important; }
 
 /* Small Mode */
-@media (max-width: (@MAX_WIDTH - 320px - 320px)) { 	
+@media (max-width: (@BASE_WIDTH - 320px - 320px)) { 	
 	.if-small-block { display: block !important; }
 	.if-small-inline { display: inline-block !important; }
 	.if-not-small-block { display: none !important; }
