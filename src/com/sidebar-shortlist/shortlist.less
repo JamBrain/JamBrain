@@ -1,6 +1,9 @@
 
+@import "defs.less";
+
 #sidebar > .sidebar-shortlist {
 	margin: 1em;
+	color: @MAJOR_MUTE_D6;
 
 	& > .-title {
 		font-size:1.5em;
@@ -13,11 +16,12 @@
 		padding: 0.5em;
 		text-align: center;
 		cursor: pointer;
-		background: rgba(0,0,0,0.1);
+		background: @MAJOR_MUTE_D;
+		font-weight:bold;
 		
 		&:hover {
-			background: #D63;
-			color:#FFF;
+			background: @MAJOR_COLOR;
+			color: @MAJOR_LIGHT;
 		}
 	}
 }

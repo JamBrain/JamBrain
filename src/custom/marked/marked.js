@@ -460,7 +460,9 @@ var inline = {
   code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
   br: /^ {2,}\n(?!\s*$)/,
   del: noop,
-  text: /^[\s\S]+?(?=[\\<!\[_*`]| {2,}\n|$)/
+  text: /^[\s\S]+?(?=[\\<!\[_*`:@]| {2,}\n|$)/,		// Added : and @
+  emoji: /^:([a-z_]+):/,
+  atname: /^@([A-Za-z-]+)(?!@)/,
 };
 
 inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
@@ -679,6 +681,20 @@ InlineLexer.prototype.output = function(src) {
       continue;
     }
 
+    // emoji
+    if (cap = this.rules.emoji.exec(src)) {
+      src = src.substring(cap[0].length);
+      out += this.renderer.emoji(this.output(cap[2] || cap[1]));
+      continue;
+    }
+
+    // @names
+    if (cap = this.rules.atname.exec(src)) {
+      src = src.substring(cap[0].length);
+      out += this.renderer.atname(this.output(cap[2] || cap[1]));
+      continue;
+    }
+
     // text
     if (cap = this.rules.text.exec(src)) {
       src = src.substring(cap[0].length);
@@ -854,9 +870,16 @@ Renderer.prototype.em = function(text) {
   return '<em>' + text + '</em>';
 };
 
+Renderer.prototype.emoji = function(text) {
+	return emoji.shortnameToImage(text);
+};
+
+Renderer.prototype.atname = function(text) {
+  return '['+text+']';
+};
+
 Renderer.prototype.codespan = function(text) {
-  // Span it, to protect it from the emoji decoder //
-  return '<span><code>' + text + '</code></span>';
+  return '<code>' + text + '</code>';
   // text.replace('\n','') // ??
 };
 
@@ -881,17 +904,22 @@ Renderer.prototype.link = function(href, title, text) {
       return '';
     }
   }
-  // Span to protect it from the emoji decoder //
-  var out = '<span><a href="' + href + '"';
-  if (title) {
-    out += ' title="' + title + '"';
+  var HasEmbed = autoEmbed.hasEmbed(href);
+  if ( HasEmbed ) {
+    return HasEmbed;
   }
-  // If it contains double slashes, consider it an external link //
-  if ( href.indexOf('//') != -1 ) {
+  else {
+    var out = '<a href="' + href + '"';
+    if (title) {
+      out += ' title="' + title + '"';
+    }
+    // If it contains double slashes, consider it an external link //
+    if ( href.indexOf('//') != -1 ) {
        out += ' target="_blank"';
+    }
+    out += '>' + text + '</a>';
+    return out;
   }
-  out += '>' + text + '</a></span>';
-  return out;
 };
 
 Renderer.prototype.image = function(href, title, text) {

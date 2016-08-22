@@ -9,6 +9,9 @@ BUILD				?=	.build
 STATIC_DOMAIN		?=	static.jammer.work
 
 # Include Folders (modified by recursive scripts) #
+ifdef INCLUDE_FOLDERS
+INCLUDE_FOLDERS		+=	src/compat/
+endif
 INCLUDE_FOLDERS		?=	$(SRC)/
 BUILD_FOLDER		:=	$(OUT)/$(BUILD)/$(TARGET)
 
@@ -40,11 +43,11 @@ OUT_LESS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(LESS_FILES:.less=.less.css))
 OUT_CSS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(CSS_FILES:.css=.o.css))
 OUT_SVG_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(SVG_FILES:.svg=.min.svg))
 
-OUT_FILES			:=	$(OUT_ES6_FILES) $(OUT_JS_FILES) $(OUT_LESS_FILES) $(OUT_CSS_FILES) $(OUT_SVG_FILES)
+OUT_FILES			:=	$(OUT_SVG_FILES) $(OUT_CSS_FILES) $(OUT_LESS_FILES) $(OUT_JS_FILES) $(OUT_ES6_FILES)
 DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES6_FILES) $(OUT_LESS_FILES))
 OUT_FOLDERS			:=	$(sort $(dir $(OUT_FILES) $(BUILD_FOLDER)/))
 
-TARGET_FILES		:=	$(TARGET_FOLDER)/all.min.js $(TARGET_FOLDER)/all.min.css $(TARGET_FOLDER)/all.min.svg
+TARGET_FILES		:=	$(TARGET_FOLDER)/all.min.svg $(TARGET_FOLDER)/all.min.css $(TARGET_FOLDER)/all.min.js
 TARGET_DEPS			:=	$(OUT_FOLDERS) $(TARGET_FILES)
 
 
@@ -52,7 +55,7 @@ TARGET_DEPS			:=	$(OUT_FOLDERS) $(TARGET_FILES)
 BUBLE_ARGS			:=	--no modules --jsx h
 BUBLE				=	buble $(BUBLE_ARGS) $(1) -o $(2)
 # ES6 Compiler: https://buble.surge.sh/guide/
-ROLLUP_ARGS			:=	-c $(SRC)/rollup.config.js
+ROLLUP_ARGS			:=	-c config/rollup.config.js
 ROLLUP				=	rollup $(ROLLUP_ARGS) $(1) > $(2)
 # ES6 Include/Require Resolver: http://rollupjs.org/guide/
 MINIFY_JS_RESERVED	:=	VERSION_STRING,STATIC_DOMAIN
@@ -60,7 +63,7 @@ MINIFY_JS_ARGS		:=	--compress --mangle -r "$(MINIFY_JS_RESERVED)"
 MINIFY_JS			=	uglifyjs $(MINIFY_JS_ARGS) -o $(2) -- $(1)
 # JS Minifier: https://github.com/mishoo/UglifyJS2
 
-LESS_COMMON			:=	--global-var='STATIC_DOMAIN=$(STATIC_DOMAIN)'
+LESS_COMMON			:=	--global-var='STATIC_DOMAIN=$(STATIC_DOMAIN)' --include-path=$(MAIN_FOLDER)
 LESS_ARGS			:=	--autoprefix
 LESS_DEP			=	lessc $(LESS_COMMON) --depends $(1) $(2)>$(2).dep
 LESS				=	lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
@@ -193,4 +196,4 @@ $(OUT)/git-version.php:
 
 
 # Dependencies #
--include $(DEP_FILES)
+#-include $(DEP_FILES)

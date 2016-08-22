@@ -15,7 +15,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="ludum.svg">
+   sodipodi:docname="l-udum.svg">
   <title
      id="title4159">l-udum</title>
   <defs
@@ -28,7 +28,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.95127959"
-     inkscape:cx="86.488406"
+     inkscape:cx="41.811741"
      inkscape:cy="125.0457"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -62,7 +62,8 @@
      transform="translate(0,-970.36214)">
     <path
        inkscape:connector-curvature="0"
-       id="path4141"
-       d="m -1.9e-6,1050.4627 57.6515969,0 0,-28.2671 -28.602348,0 0,-49.94237 -29.0492489,0 0,78.20947 z" />
+       id="path4143-6"
+       d="m 34.014099,1020.1708 c -2.430082,0 -4.860163,-1.9553 -4.860163,-5.8658 l 0,-42.18532 L 0,972.25314 0,1017.9807 c 0,21.6194 16.284342,32.4825 32.568685,32.4825 l 25.083315,-2e-4 0,-30.2919 z"
+       sodipodi:nodetypes="ccccscccc" />
   </g>
 </svg>

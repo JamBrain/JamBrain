@@ -2,9 +2,9 @@ Disabled
 <?php
 die();
 
-require_once __DIR__ . "/../web.php";
-require_once __DIR__ . "/../core/node.php";
-require_once __DIR__ . "/../core/internal/sanitize.php";
+require_once __DIR__ . "/../../web.php";
+require_once __DIR__ . "/../../core/node.php";
+require_once __DIR__ . "/../../core/internal/sanitize.php";
 
 // Retrieve Action and Arguments
 $arg = core_ParseActionURL();

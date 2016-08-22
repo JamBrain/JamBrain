@@ -1,14 +1,14 @@
 import { h, Component } from 'preact/preact';
 
-export default class CoreButton extends Component {
+export default class ButtonBase extends Component {
 	render(props,state) {
 		if ( !props.hasOwnProperty('tabIndex') )
 			props.tabIndex="0";
 
 		if ( props.hasOwnProperty('class') )
-			props.class += " core-button";
+			props.class += " button-base";
 		else
-			props.class = "core-button";
+			props.class = "button-base";
 			
 		if ( props.hasOwnProperty('onClick') ) {
 			// As long as you don't set the "keep focus" property //

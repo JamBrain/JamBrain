@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__."/../web.php";
+require_once __DIR__."/../../web.php";
 //require_once __DIR__."/../core/config.php";
 
 // http://php.net/manual/en/function.date.php

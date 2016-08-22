@@ -173,6 +173,27 @@
     	ns.asciiList[key] = code;
     	console.log(key);
     };
+    
+    ns.shortnameImage = function(shortname) {
+        if( (typeof shortname === 'undefined') || (shortname === '') || (!(shortname in ns.emojioneList)) ) {
+            // if the shortname doesnt exist just return the entire match
+            return shortname;
+        }
+        else {
+            unicode = ns.emojioneList[shortname][ns.emojioneList[shortname].length-1].toUpperCase();
+
+            alt = ns.convert(unicode);
+            
+            if(ns.imageType === 'png') {
+                replaceWith = '<img class="emojione" alt="'+alt+'" title="'+shortname+'" src="'+ns.imagePathPNG+unicode+'.png'+ns.cacheBustParam+'"/>';
+            }
+            else {
+                replaceWith = '<object class="emojione" data="'+ns.imagePathSVG+unicode+'.svg'+ns.cacheBustParam+'" type="image/svg+xml" standby="'+alt+'">'+alt+'</object>';
+            }
+
+            return replaceWith;
+        }
+    }
 
     ns.shortnameToImage = function(str,ascii) {
     	// replace regular shortnames first

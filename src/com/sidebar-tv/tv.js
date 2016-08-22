@@ -1,5 +1,4 @@
 import { h, Component } from 'preact/preact';
-import CoreButton		from 'com/core-button/button';
 import SVGIcon 			from 'com/svg-icon/icon';
 
 export default class SidebarTV extends Component {
@@ -21,7 +20,7 @@ export default class SidebarTV extends Component {
 	}
 	
 	componentDidMount() {
-		fetch('//jammer.tv/v1/live.php/ludum-dare+game-jam+game-dev/')//,{mode:'no-cors'})
+		fetch('//direct.jammer.tv/v1/live.php/ludum-dare+game-jam+game-dev/')//,{mode:'no-cors'})
 			.then( r => r.json() )
 			.then( data => {
 				let state_copy = this.state;
@@ -75,7 +74,7 @@ export default class SidebarTV extends Component {
 						<div class="-viewers"><SVGIcon baseline>tv</SVGIcon> <span class="-text">{active.viewers}</span></div>
 						<div class="-play"><SVGIcon>play</SVGIcon></div>
 					</div>
-					<div class="-detail" title={active.meta.status}>{active.meta.status}</div>
+					<div class="-detail" title={active.meta.status}><SVGIcon top>quotes-left</SVGIcon><SVGIcon bottom>quotes-right</SVGIcon><div>{active.meta.status}</div></div>
 					<div class="-browse">
 						{this.showOthers(others,active)}
 					</div>

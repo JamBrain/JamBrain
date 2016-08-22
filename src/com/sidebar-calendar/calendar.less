@@ -1,6 +1,10 @@
 
+@import "defs.less";
+
 #sidebar > .sidebar-calendar {
-	box-shadow: 0px 0px 3px rgba(64,0,0,0.2);
+	/*box-shadow: 0px 0px 3px rgba(64,0,0,0.2);*/
+	color: @MAJOR_MUTE_D6;
+	
 	& > .-week {
 		display:flex;
 		align-items:stretch;
@@ -9,7 +13,7 @@
 			
 			margin-right:1px;
 			margin-bottom:1px;
-			background: rgba(0,0,0,0.10);
+			background: @MAJOR_MUTE_D;/*@MAJOR_COLOR_MUTE3;*/
 
 			/* This is perfect square trickery */
 			width:100%;
@@ -18,6 +22,7 @@
 			/* the element above the parent (absolute positioning), and we get a box */
 			
 			cursor:pointer;
+			transition: transform 0.1s, z-index 0.1s;
 			
 			& > .-text {
 				position:absolute;
@@ -26,18 +31,25 @@
 			}
 			
 			&:hover, &:first-child:hover, &:last-child:hover {
-				background: rgba(0,0,0,0.05);
+				background: @MAJOR_COLOR;
+				color: @MAJOR_LIGHT;
+				transform: scale(1.2, 1.2);
+				z-index:10;
+				font-weight: bold;
+			}
+			&:active, &:first-child:active, &:last-child:active {
+				transform: scale(0.9, 0.9);
 			}
 			
 			&:first-child, &:last-child {
-				background: rgba(0,0,0,0.15);
+				background: @MAJOR_MUTE_D2;/*@MAJOR_COLOR_MUTE2;*/
 			}
 			&:last-child {
 				margin-right:0;
 			}
 		}
 		& > .selected {
-			background: rgba(255,255,255,0.3);
+			background: @MAJOR_MUTE_L2;
 		}
 		& > .event {
 			font-weight: bold;
