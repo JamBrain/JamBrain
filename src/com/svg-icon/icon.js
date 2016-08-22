@@ -17,6 +17,7 @@ export default class SVGIcon extends Component {
 		if ( props['text-bottom'] )		svg_props['class'] += " -text-bottom";
 		if ( props['middle'] )			svg_props['class'] += " -middle";
 		if ( props['small'] )			svg_props['class'] += " -small";
+		if ( props['block'] )			svg_props['class'] += " -block";
 		
 		// What Icon //
 		if ( props.name ) {

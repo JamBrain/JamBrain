@@ -75,7 +75,7 @@ export default class SidebarTV extends Component {
 						<div class="-viewers"><SVGIcon baseline>tv</SVGIcon> <span class="-text">{active.viewers}</span></div>
 						<div class="-play"><SVGIcon>play</SVGIcon></div>
 					</div>
-					<div class="-detail" title={active.meta.status}>{active.meta.status}</div>
+					<div class="-detail" title={active.meta.status}><SVGIcon top>quotes-left</SVGIcon><SVGIcon bottom>quotes-right</SVGIcon><div>{active.meta.status}</div></div>
 					<div class="-browse">
 						{this.showOthers(others,active)}
 					</div>

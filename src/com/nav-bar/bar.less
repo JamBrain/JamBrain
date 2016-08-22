@@ -19,7 +19,7 @@
 	border-top: @NAVBAR_SHADOW solid @NAVBAR_BG;	/* Mobile Scrolling Garbage Fix */
 
 	height: @NAVBAR_HEIGHT;
-	background: @NAVBAR_BG;
+	background: @NAVBAR_BG_ALPHA;
 		
 	& > .-content {
 		margin: auto;
@@ -39,9 +39,11 @@
 				/*margin-right: @NAVBAR_PAD;*/		
 				font-size:2.5em;
 				display: flex;
+				transition: all 0.2s;
 				
 				& > svg {
 					display:block;
+					transition: all 0.2s;
 				}
 			
 				& > .icon-ludum, & > .icon-l-udum {
@@ -55,6 +57,13 @@
 				}
 				&:hover > .icon-dare, &:hover > .icon-d-are {
 					color: @MAJOR_COLOR;
+				}
+
+				&:hover {
+					transform: scale(1.1, 1.1);
+				}
+				&:active {
+					transform: scale(0.9, 0.9);
 				}
 			}
 		}

@@ -72,6 +72,7 @@ export default class ContentPost extends Component {
 						<div class="-spacer"><SVGIcon>wedge-right</SVGIcon></div>
 						<div class="-comment"><SVGIcon>bubble-empty</SVGIcon></div>
 						<div class="-text -comment-count">0</div>
+						<div class="-spacer2"><SVGIcon>wedge-right</SVGIcon></div>
 						<div class="-gear"><SVGIcon>cog</SVGIcon></div>
 					</div>
 				</div>
@@ -79,7 +80,6 @@ export default class ContentPost extends Component {
 		);
 	}
 	// body: unmagin-top, unmargin-bottom. replace with selector
-//						<div class="-spacer2"><SVGIcon>wedge-right</SVGIcon></div>
 	
 	componentDidMount() {
 	}
@@ -89,7 +89,10 @@ export default class ContentPost extends Component {
 
 marked.setOptions({
 	highlight: function( code, lang ) {
-		return Prism.highlight( code, Prism.languages.clike );
+		var language = Prism.languages.clike;
+		if ( Prism.languages[lang] )
+			language = Prism.languages[lang];
+		return Prism.highlight( code, language );
 	},
 	sanitize: true,			// disable HTML //
 	smartypants: true,		// enable automatic fancy quotes, ellipses, dashes //

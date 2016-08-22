@@ -1,20 +1,43 @@
-/**
- * okaidia theme for JavaScript, CSS and HTML
- * Loosely based on Monokai textmate theme by http://www.monokai.nl/
- * @author ocodia
- */
+/*
+ Solarized Color Schemes originally by Ethan Schoonover
+ http://ethanschoonover.com/solarized
+
+ Ported for PrismJS by Hector Matos
+ Website: https://krakendev.io
+ Twitter Handle: https://twitter.com/allonsykraken)
+*/
+
+/*
+SOLARIZED HEX
+--------- -------
+base03    #002b36
+base02    #073642
+base01    #586e75
+base00    #657b83
+base0     #839496
+base1     #93a1a1
+base2     #eee8d5
+base3     #fdf6e3
+yellow    #b58900
+orange    #cb4b16
+red       #dc322f
+magenta   #d33682
+violet    #6c71c4
+blue      #268bd2
+cyan      #2aa198
+green     #859900
+*/
 
 code[class*="language-"],
 pre[class*="language-"] {
-	color: #f8f8f2;
-	background: none;
-	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	color: #657b83; /* base00 */
 	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
 	text-align: left;
 	white-space: pre;
 	word-spacing: normal;
 	word-break: normal;
 	word-wrap: normal;
+
 	line-height: 1.5;
 
 	-moz-tab-size: 4;
@@ -27,6 +50,16 @@ pre[class*="language-"] {
 	hyphens: none;
 }
 
+pre[class*="language-"]::-moz-selection, pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection, code[class*="language-"] ::-moz-selection {
+	background: #073642; /* base02 */
+}
+
+pre[class*="language-"]::selection, pre[class*="language-"] ::selection,
+code[class*="language-"]::selection, code[class*="language-"] ::selection {
+	background: #073642; /* base02 */
+}
+
 /* Code blocks */
 pre[class*="language-"] {
 	padding: 1em;
@@ -37,25 +70,24 @@ pre[class*="language-"] {
 
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
-	background: #272822;
+	background-color: #fdf6e3; /* base3 */
 }
 
 /* Inline code */
 :not(pre) > code[class*="language-"] {
 	padding: .1em;
 	border-radius: .3em;
-	white-space: normal;
 }
 
 .token.comment,
 .token.prolog,
 .token.doctype,
 .token.cdata {
-	color: slategray;
+	color: #93a1a1; /* base1 */
 }
 
 .token.punctuation {
-	color: #f8f8f2;
+	color: #586e75; /* base01 */
 }
 
 .namespace {
@@ -64,15 +96,12 @@ pre[class*="language-"] {
 
 .token.property,
 .token.tag,
+.token.boolean,
+.token.number,
 .token.constant,
 .token.symbol,
 .token.deleted {
-	color: #f92672;
-}
-
-.token.boolean,
-.token.number {
-	color: #ae81ff;
+	color: #268bd2; /* blue */
 }
 
 .token.selector,
@@ -80,32 +109,30 @@ pre[class*="language-"] {
 .token.string,
 .token.char,
 .token.builtin,
+.token.url,
 .token.inserted {
-	color: #a6e22e;
+	color: #2aa198; /* cyan */
 }
 
-.token.operator,
-.token.entity,
-.token.url,
-.language-css .token.string,
-.style .token.string,
-.token.variable {
-	color: #f8f8f2;
+.token.entity {
+	color: #657b83; /* base00 */
+	background: #eee8d5; /* base2 */
 }
 
 .token.atrule,
 .token.attr-value,
-.token.function {
-	color: #e6db74;
+.token.keyword {
+	color: #859900; /* green */
 }
 
-.token.keyword {
-	color: #66d9ef;
+.token.function {
+	color: #b58900; /* yellow */
 }
 
 .token.regex,
-.token.important {
-	color: #fd971f;
+.token.important,
+.token.variable {
+	color: #cb4b16; /* orange */
 }
 
 .token.important,
@@ -119,4 +146,3 @@ pre[class*="language-"] {
 .token.entity {
 	cursor: help;
 }
-
