@@ -55,7 +55,7 @@ TARGET_DEPS			:=	$(OUT_FOLDERS) $(TARGET_FILES)
 BUBLE_ARGS			:=	--no modules --jsx h
 BUBLE				=	buble $(BUBLE_ARGS) $(1) -o $(2)
 # ES6 Compiler: https://buble.surge.sh/guide/
-ROLLUP_ARGS			:=	-c $(SRC)/rollup.config.js
+ROLLUP_ARGS			:=	-c config/rollup.config.js
 ROLLUP				=	rollup $(ROLLUP_ARGS) $(1) > $(2)
 # ES6 Include/Require Resolver: http://rollupjs.org/guide/
 MINIFY_JS_RESERVED	:=	VERSION_STRING,STATIC_DOMAIN
