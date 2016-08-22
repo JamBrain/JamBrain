@@ -41,8 +41,8 @@ export default class ContentPost extends Component {
 //			// TODO: attach the Navigation link code to the <a> tag above //
 //		}
 
-		var parsedBody = marked.parse(props.body);
-		var dangerParsedBody = { __html:parsedBody };
+		var dangerousParsedBody = { __html:marked.parse(props.body) };
+		var dangerousParsedTitle = { __html:titleParser.parse(props.title) };
 		
 		var avatar = props.user.avatar ? "//"+STATIC_DOMAIN+props.user.avatar : "";
 		
@@ -50,7 +50,7 @@ export default class ContentPost extends Component {
 			<div class="content-base content-post">
 				<div class="-header">
 					<div class="-avatar"><img src={avatar} /></div>
-					<div class="-title _font2"><NavLink href={url}>{props.title}</NavLink></div>
+					<div class="-title _font2"><NavLink href={url} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
 					<div class="-subtext">
 						Posted <span class="-time">{props.relative_time}</span> ago
 						on <span class="-title" title={props.date}>{props.short_date}</span>,
@@ -59,7 +59,7 @@ export default class ContentPost extends Component {
 						{hasTeam}
 					</div>
 				</div>
-				<div class="-body markup" dangerouslySetInnerHTML={dangerParsedBody} />
+				<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
 				<div class="-footer">
 					<div class="-left">
 						<div class="-minmax"><SVGIcon>arrow-up</SVGIcon></div>
@@ -86,3 +86,11 @@ export default class ContentPost extends Component {
 	componentWillUnmount() {
 	}
 }
+
+marked.setOptions({
+	highlight: function( code, lang ) {
+		return Prism.highlight( code, Prism.languages.clike );
+	},
+	sanitize: true,			// disable HTML //
+	smartypants: true,		// enable automatic fancy quotes, ellipses, dashes //
+});

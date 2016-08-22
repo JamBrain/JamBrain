@@ -13,11 +13,25 @@ html, button, input, ._font1 {
 	font-weight: 300;
 }
 strong, b, h1, h2, h3, h4, h5, h6, ._bold, ._strong {
-	/* font-weight:bold at 700, but not all browsers know that (IE) */
+	/* font-weight: bold is at 700, but not all browsers know that (IE) */
 	font-weight: 700;
 }
 ._font2 {
 	/* Raleway - Title font (Google Fonts) */
 	font-family: "Raleway", "Helvetica Neue", "Roboto", "Arial Nova", "Segoe UI", "Ubuntu Light", sans-serif;
-	font-weight: 400;
+	font-weight: 500;
+
+	/* slightly heavier bold */
+	& strong,
+	& b, 
+	& h1, 
+	& h2,
+	& h3, 
+	& h4,
+	& h5,
+	& h6, 
+	& ._bold, 
+	& ._strong {
+		font-weight: 800;
+	}
 }
