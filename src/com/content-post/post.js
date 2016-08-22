@@ -1,5 +1,4 @@
 import { h, Component } from 'preact/preact';
-import CoreButton		from 'com/core-button/button';
 import SVGIcon 			from 'com/svg-icon/icon';
 import NavLink 			from 'com/nav-link/link';
 

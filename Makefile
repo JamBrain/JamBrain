@@ -196,4 +196,4 @@ $(OUT)/git-version.php:
 
 
 # Dependencies #
--include $(DEP_FILES)
+#-include $(DEP_FILES)

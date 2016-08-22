@@ -15,16 +15,22 @@ class Main extends Component {
 		this.state = {};
 		this.state.posts = [ 
 			{
-				title:"The theme and color scheme sucks, I know",
-				slug:"the-theme-and-color-scheme-sucks-i-know",
+				title:"**True Story:** The Internet is ~~DEAD~~ _REAL_",
+				slug:"true-story-the-internet-is-real",
 				author:'pov',
-				body:"Yeah, it's inconsistent and it stinks. I'm not working that part right now. :whale:\n\nThe site looks kinda weird on mobile too.\n\n## Navigation.\nNow that's waaaay more important than how pretty the buttons are."
+				body:"Even I can't believe it! I feel like a :whale:! :bird: :crocodile:\n\n"+
+					"# This is a quote :tiger: \n\n> Somebody is going to say \"this\", some day\n\n"+
+					"This is a quote, from twitter (also a tweet):\n\nhttps://twitter.com/mikekasprzak/status/565641812703203328\n\n"+
+					"Some test URLS:\n* https://github.com/ludumdare/ludumdare\n* https://twitter.com/mikekasprzak\n* https://reddit.com/r/ludumdare\n* https://twitch.tv/ludumdare\n* https://www.youtube.com/user/ButtonMasherBros\n* https://www.youtube.com/povrazor\n* http://moo.com\n* Hey @pov, I need @help.\n\n"+
+					"This is **BOLD**. This is _ITALICS_. This is ***BOTH***.\n\n"+
+					"This is my <b>trying to use HTML</b>, and failing\n\n"+
+					"This is a Youtube Video.\n\nhttps://www.youtube.com/watch?v=5vxYUr9e-GY\n\nNice."
 			},
 			{
 				title:"A dangerous place in SPAAAACE",
 				slug:"a-dangerous-place-in-space",
 				author:'pov',
-				body:"WHELP! they're here!\n\nI _didn't_ think it would happen, but :smile: it is.\n\n```\n  var Muffin = 10;\n  Muffin += 2;\n\n  echo \"The Wheel\";```\n\nWhoa."
+				body:"This is message for @PoV. Are you here @PoV? I need @help.\n\n```js\n  var Muffin = 10;\n  Muffin += 2;\n\n  echo \"The Wheel\";```\n\nWhoa.\n\nAlso call @murr-DEATH-weasel."
 			}
 		];
 		this.state.users = {
@@ -86,6 +92,7 @@ class Main extends Component {
 		
 		return (
 			<div id="layout">
+				<NavBar />
 				<div id="header" />
 				<div id="content-sidebar">
 					<div id="content">{
@@ -107,7 +114,6 @@ class Main extends Component {
 		);
 	}
 };
-//				<NavBar />
 
 //				<DarkOverlay />
 //						<SidebarTrending />
