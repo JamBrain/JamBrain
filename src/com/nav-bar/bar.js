@@ -15,20 +15,18 @@ export default class NavBar extends Component {
 						</ButtonBase>
 					</div>
 					<div class="-right">
+						<ButtonBase class="-icon" onClick={e => console.log('search')}>
+							<SVGIcon baseline>search</SVGIcon>
+						</ButtonBase>
 						<ButtonBase class="-button" onClick={e => console.log('my game')}>
 							<SVGIcon>gamepad</SVGIcon>
 							<div>My Game</div>
 						</ButtonBase>
 						<ButtonBase class="-button" onClick={e => console.log('new post')}>
-							<SVGIcon>pencil</SVGIcon>
+							<SVGIcon>edit</SVGIcon>
 							<div>New Post</div>
 						</ButtonBase>
-						<ButtonBase class="-notice" onClick={e => console.log('notice')}>
-							<SVGIcon baseline>bullhorn</SVGIcon>
-							<div class="-new">1</div>
-							<div class="-count">3</div>
-						</ButtonBase>
-						<ButtonBase class="-notice" onClick={e => console.log('notification')}>
+						<ButtonBase class="-icon" onClick={e => console.log('notification')}>
 							<SVGIcon baseline>bubble</SVGIcon>
 							<div class="-new">2</div>
 							<div class="-count">24</div>

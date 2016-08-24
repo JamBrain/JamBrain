@@ -9,6 +9,7 @@ import SidebarCalendar					from 'com/sidebar-calendar/calendar';
 import SidebarUpcoming					from 'com/sidebar-upcoming/upcoming';
 import SidebarTV						from 'com/sidebar-tv/tv';
 import SidebarTrending					from 'com/sidebar-trending/trending';
+import SidebarSupport					from 'com/sidebar-support/support';
 
 class Main extends Component {
 	constructor() {
@@ -112,6 +113,7 @@ class Main extends Component {
 						<SidebarCalendar />
 						<SidebarUpcoming />
 						<SidebarTV />
+						<SidebarSupport />
 					</div>
 				</div>
 				<div id="footer">
