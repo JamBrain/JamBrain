@@ -74,6 +74,85 @@
 			top:0;
 			margin:auto;
 			height: 3em; /* Required, otherwise top+bottom fills the whole parent div */
+			
+			& > div {
+				margin-left: 0.5em;
+				float:left;
+			}
+			
+			& > .-user {
+				height: 3em;
+				width: 3em;
+				background: @MAJOR_MUTE;
+				position:relative;
+
+				& > img {
+					position:absolute;
+					top:0;
+					bottom:0;
+					left:0;
+					right:0;
+					margin:auto;
+					display:block;
+					
+					width: 2.5em;
+					height: 2.5em;
+				}
+			}
+			
+			& > .-notice {
+				height: 3em;
+				width: 3em;
+				background: @MAJOR_MUTE;
+				color: @MAJOR_LIGHT;
+				
+				position:relative;
+				
+				& > svg {
+					font-size: 2em;
+					position:absolute;
+					top:0;
+					bottom:0;
+					left:0;
+					right:0;
+					margin:auto;
+					display:block;
+
+					color: @MAJOR_MUTE_D4;
+				}
+
+				& > .-count {
+					font-size:0.75em;
+					z-index: 4;
+					
+					text-align:right;
+
+					position:absolute;
+					bottom:0.25rem;
+					right:0.25rem;
+					margin:auto;
+				}
+				
+				& > .-new {
+					font-weight: bold;
+					background: #F00;
+					
+					font-size:0.75em;
+					
+					width: 1.75em;
+					line-height: 1.75em;
+					height: 1.75em;
+					text-align:center;
+					border-radius:50%;
+
+					position:absolute;
+					top:0.25rem;
+					right:0.25rem;
+					margin:auto;
+					
+					z-index: 5;
+				}
+			}
 		}
 
 		& .-button {

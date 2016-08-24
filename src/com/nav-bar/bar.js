@@ -4,6 +4,8 @@ import SVGIcon 			from 'com/svg-icon/icon';
 
 export default class NavBar extends Component {
 	render( props, state ) {
+		var avatar = "//"+STATIC_DOMAIN+'/other/logo/mike/Chicken64.png';
+		
 		return (
 			<div class="nav-bar">
 				<div class="-content">
@@ -13,7 +15,19 @@ export default class NavBar extends Component {
 						</ButtonBase>
 					</div>
 					<div class="-right">
-						Hey
+						<ButtonBase class="-notice">
+							<SVGIcon baseline>bullhorn</SVGIcon>
+							<div class="-new">1</div>
+							<div class="-count">3</div>
+						</ButtonBase>
+						<ButtonBase class="-notice">
+							<SVGIcon baseline>bubble</SVGIcon>
+							<div class="-new">2</div>
+							<div class="-count">24</div>
+						</ButtonBase>
+						<ButtonBase class="-user">
+							<img src={avatar} />
+						</ButtonBase>
 					</div>
 				</div>
 			</div>
