@@ -16,6 +16,10 @@ export default class NavBar extends Component {
 					</div>
 					<div class="-right">
 						<ButtonBase class="-button">
+							<SVGIcon>gamepad</SVGIcon>
+							<div>My Game</div>
+						</ButtonBase>
+						<ButtonBase class="-button">
 							<SVGIcon>pencil</SVGIcon>
 							<div>New Post</div>
 						</ButtonBase>
