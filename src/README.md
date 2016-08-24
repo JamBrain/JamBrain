@@ -37,4 +37,4 @@ The data shared across sites is called the **Jammer Core**. Each site is a diffe
 Websites may have their own Externals, Components, etc.
 
 ## Other
-* `[/tools/](tools/) - Extra tools used by the toolchain
+* [/tools/](tools/) - Extra tools used by the toolchain
