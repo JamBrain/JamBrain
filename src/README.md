@@ -20,9 +20,11 @@ Welcome to the source folder!
 * `/icons/` - SVG Icons (baked in to a single file)
 
 ## Sites
-* `/public-ludumdare.com/` - Ludum Dare (ludumdare.com)
-* `/public-jammer.vg/` - Jammer (jammer.vg)
-* `/public-jammer.bio/` - Jammer.Bio
+Collectively, the data shared amongst websites it called the **Jammer Core**. Each website is a different interpretation or view of the **Jammer Core** data.
+
+* `/public-ludumdare.com/` - Ludum Dare (ludumdare.com) - Ludum Dare focused View
+* `/public-jammer.vg/` - Jammer (jammer.vg) - Normal View
+* `/public-jammer.bio/` - Jammer.Bio - User Page/Content View
 
 Websites may have their own Externals, Components, etc.
 
