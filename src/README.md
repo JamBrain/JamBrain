@@ -2,6 +2,14 @@
 
 Welcome to the source folder!
 
+Inside you will find a variety of code in a variety of formats.
+
+* `.php` - Backend code, and basic page generation
+* `.js` - JavaScript code, much of it in ES6 format (if there's an `.es6ignore` file, then it's ES5 format)
+* `.css` - CSS code
+* `.less` - LESS format CSS code (gets compiled in to normal CSS files)
+* `.svg` - SVG Images (used as sprites)
+
 ## Internal
 
 * `/com/` - Preact.js Components. This is how most of the frontend is done. https://preactjs.com/
