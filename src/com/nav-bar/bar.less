@@ -74,24 +74,127 @@
 			top:0;
 			margin:auto;
 			height: 3em; /* Required, otherwise top+bottom fills the whole parent div */
-		}
 
-		& .-button {
-			line-height: @NAVBAR_CELL;/* - 2px;*/
-			padding: 0 20px;
+			color: @MAJOR_MUTE_D4;
 			
-			background: #4D3D2D;
-			color: #E5D2C0;
+			& > div {
+				margin-left: 0.5em;
+				float:left;
+
+				transition: background 0.1s, color 0.1s;
 			
-			transition: background 0.1s, color 0.1s;
-			
-			&:hover, &:focus, &:active {
-				background: #D63;
-				color: #FFF;
+				&:hover, &:focus, &:active {
+					background: @MAJOR_COLOR;
+					color: @MAJOR_LIGHT;
+				}
+				&:hover:active {
+					color: @MAJOR_COLOR;
+					background: @MAJOR_LIGHT;
+				}
 			}
-			&:hover:active {
-				color: #D63;
-				background: #FFF;
+			
+			& > .-button {
+				background: @MAJOR_MUTE;
+				
+				line-height: 2em;
+				padding: 0.5em 1em;
+				padding-left: 1em+1.5em+0.5em;
+				
+				position: relative;
+				
+				& > svg {
+					font-size: 1.5em;
+					
+					position: absolute;
+					top: 0;
+					bottom: 0;
+					left: 1rem;
+					margin: auto;
+
+					display:block;
+				}
+				& > div {
+					font-size: 1.3em;
+					font-weight:400;
+				}
+			}
+			
+			& > .-user {
+				height: 3em;
+				width: 3em;
+				background: @MAJOR_MUTE;
+				position:relative;
+
+				& > img {
+					position:absolute;
+					top:0;
+					bottom:0;
+					left:0;
+					right:0;
+					margin:auto;
+					display:block;
+					
+					width: 2.5em;
+					height: 2.5em;
+				}
+			}
+			
+			& > .-icon {
+				height: 3em;
+				width: 3em;
+				background: @MAJOR_MUTE;
+				
+				position:relative;
+				
+				& > svg {
+					font-size: 2em;
+					position:absolute;
+					top:0;
+					bottom:0;
+					left:0;
+					right:0;
+					margin:auto;
+					display:block;
+				}
+
+				& > .-count {
+					font-size:0.75em;
+					z-index: 4;
+					
+					text-align:center;
+					height: 1em;
+
+					position:absolute;
+					top:0;
+					bottom:0.3em;
+					left:0;
+					right:0;
+					margin:auto;
+
+					color: @MAJOR_LIGHT;
+				}
+				
+				& > .-new {
+					font-weight: bold;
+					background: #F00;
+					
+					font-size:0.75em;
+					
+					width: 1.75em;
+					line-height: 1.75em;
+					height: 1.75em;
+					text-align:center;
+					border-radius:50%;
+
+					position:absolute;
+					top:0.25rem;
+					right:0.25rem;
+					margin:auto;
+					
+					z-index: 5;
+
+					color: @MAJOR_LIGHT;
+				}
 			}
 		}
 	}

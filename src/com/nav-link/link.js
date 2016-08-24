@@ -42,12 +42,19 @@ export default class NavLink extends Component {
 	}
 	
 	render( props, state ) {
-		if ( props.replace ) {
-			props.onclick = this.onClickReplace;
-			delete props.replace;
-		}
-		else {
-			props.onclick = this.onClickPush;
+		if ( props.href ) {
+			if ( props.href.indexOf('//') !== -1 ) {		
+				props.target = "_blank";
+			}
+			else {
+				if ( props.replace ) {
+					props.onclick = this.onClickReplace;
+					delete props.replace;
+				}
+				else {
+					props.onclick = this.onClickPush;
+				}
+			}
 		}
 		return (
 			<a {...props} />

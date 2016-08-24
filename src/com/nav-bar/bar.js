@@ -4,16 +4,36 @@ import SVGIcon 			from 'com/svg-icon/icon';
 
 export default class NavBar extends Component {
 	render( props, state ) {
+		var avatar = "//"+STATIC_DOMAIN+'/other/logo/mike/Chicken64.png';
+		
 		return (
 			<div class="nav-bar">
 				<div class="-content">
 					<div class="-left">
-						<ButtonBase class="-logo" onClick={e => console.log('hello')}>
+						<ButtonBase class="-logo" onClick={e => console.log('logo')}>
 							<SVGIcon baseline>ludum</SVGIcon><SVGIcon baseline>dare</SVGIcon>
 						</ButtonBase>
 					</div>
 					<div class="-right">
-						Hey
+						<ButtonBase class="-icon" onClick={e => console.log('search')}>
+							<SVGIcon baseline>search</SVGIcon>
+						</ButtonBase>
+						<ButtonBase class="-button" onClick={e => console.log('my game')}>
+							<SVGIcon>gamepad</SVGIcon>
+							<div>My Game</div>
+						</ButtonBase>
+						<ButtonBase class="-button" onClick={e => console.log('new post')}>
+							<SVGIcon>edit</SVGIcon>
+							<div>New Post</div>
+						</ButtonBase>
+						<ButtonBase class="-icon" onClick={e => console.log('notification')}>
+							<SVGIcon baseline>bubble</SVGIcon>
+							<div class="-new">2</div>
+							<div class="-count">24</div>
+						</ButtonBase>
+						<ButtonBase class="-user" onClick={e => console.log('user')}>
+							<img src={avatar} />
+						</ButtonBase>
 					</div>
 				</div>
 			</div>

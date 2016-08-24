@@ -35,12 +35,23 @@ class Main extends Component {
 		];
 		this.state.users = {
 			'pov': {
+				id:27,
 				name:'PoV',
 				slug:'pov',
 				avatar:'/other/logo/mike/Chicken64.png',
 				twitter:'mikekasprzak',
 			}
 		};
+		this.state.notice = [
+			{
+				id:11,
+				body:"Signups for Ludum Dare 37 are now open! Join now!",
+				type:"join",		/* The type, in this case, a JOIN button */
+				subject_id:253341,	/* What  */
+				start:0,			/* TimeStamp */
+				end:0,				/* TimeStamp */
+			}
+		];
 			
 		
 		var that = this;
