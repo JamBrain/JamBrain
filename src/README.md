@@ -20,7 +20,7 @@ Welcome to the source folder!
 * `/icons/` - SVG Icons (baked in to a single file)
 
 ## Sites
-Collectively, the data shared amongst websites it called the **Jammer Core**. Each website is a different interpretation or view of the **Jammer Core** data.
+Collectively, the data shared across sites is called the **Jammer Core**. Each site is a different interpretation of **Jammer Core**'s data.
 
 * `/public-ludumdare.com/` - Ludum Dare (ludumdare.com) - Ludum Dare focused View
 * `/public-jammer.vg/` - Jammer (jammer.vg) - Normal View
