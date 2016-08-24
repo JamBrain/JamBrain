@@ -11,4 +11,4 @@ Once logged in, you'll have a standard timeline view (similar to what you're use
 
 Twitter cards and page titles will make reference to upcoming events. Any content-aware website should not require the user to visit ludumdare.com to know something is coming soon.
 
-Accounts created on Ludum Dare (com) are "Jammer Accounts", used across the network of **Jammer Core** websites. User pages will make reference to Jammer.Bio pages.
+Accounts are "Jammer Accounts, and can be created on `jammer.vg` and `ludumdare.com`
