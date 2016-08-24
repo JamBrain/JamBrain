@@ -13,11 +13,11 @@ Welcome to the source folder!
 
 * `/external/` - 3rd party libraries
 * `/custom/` - Modified/customized versions of 3rd party libraries. Will require extra work to upgrade
-* `/compat/` - Compatibility (Polyfills) for modern/upcoming Ecmascript features
+* `/compat/` - Compatibility (Polyfills) for modern and upcoming features (Ecmascript, DOM, etc)
 
 ## Assets
 
-* `/icons/` - SVG Icons
+* `/icons/` - SVG Icons (baked in to a single file)
 
 ## Sites
 * `/public-ludumdare.com/` - Ludum Dare (ludumdare.com)
