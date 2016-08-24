@@ -15,6 +15,10 @@ export default class NavBar extends Component {
 						</ButtonBase>
 					</div>
 					<div class="-right">
+						<ButtonBase class="-button">
+							<SVGIcon>pencil</SVGIcon>
+							<div>New Post</div>
+						</ButtonBase>
 						<ButtonBase class="-notice">
 							<SVGIcon baseline>bullhorn</SVGIcon>
 							<div class="-new">1</div>

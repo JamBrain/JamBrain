@@ -78,6 +78,42 @@
 			& > div {
 				margin-left: 0.5em;
 				float:left;
+
+				transition: background 0.1s, color 0.1s;
+			
+				&:hover, &:focus, &:active {
+					background: @MAJOR_COLOR;
+					color: @MAJOR_LIGHT;
+				}
+				&:hover:active {
+					color: @MAJOR_COLOR;
+					background: @MAJOR_LIGHT;
+				}
+			}
+			
+			& > .-button {
+				background: @MAJOR_MUTE;
+				
+				line-height: 2em;
+				padding: 0.5em 1em;
+				padding-left: 2.5em;
+				
+				color: @MAJOR_MUTE_D4;
+				
+				position: relative;
+				
+				& > svg {
+					font-size: 1em;
+					
+					position: absolute;
+					top: 0;
+					bottom: 0;
+					left: 1em;
+					margin: auto;
+				}
+				& > div {
+					font-size: 1.3em;
+				}
 			}
 			
 			& > .-user {
@@ -152,25 +188,6 @@
 					
 					z-index: 5;
 				}
-			}
-		}
-
-		& .-button {
-			line-height: @NAVBAR_CELL;/* - 2px;*/
-			padding: 0 20px;
-			
-			background: #4D3D2D;
-			color: #E5D2C0;
-			
-			transition: background 0.1s, color 0.1s;
-			
-			&:hover, &:focus, &:active {
-				background: #D63;
-				color: #FFF;
-			}
-			&:hover:active {
-				color: #D63;
-				background: #FFF;
 			}
 		}
 	}
