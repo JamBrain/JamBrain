@@ -11,6 +11,8 @@ import SidebarTV						from 'com/sidebar-tv/tv';
 import SidebarTrending					from 'com/sidebar-trending/trending';
 import SidebarSupport					from 'com/sidebar-support/support';
 
+window.LUDUMDARE_ROOT = '/events/ludum-dare';
+
 class Main extends Component {
 	constructor() {
 		this.state = {};
