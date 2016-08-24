@@ -9,11 +9,20 @@ import SidebarCalendar					from 'com/sidebar-calendar/calendar';
 import SidebarUpcoming					from 'com/sidebar-upcoming/upcoming';
 import SidebarTV						from 'com/sidebar-tv/tv';
 import SidebarTrending					from 'com/sidebar-trending/trending';
+import SidebarSupport					from 'com/sidebar-support/support';
 
 class Main extends Component {
 	constructor() {
 		this.state = {};
 		this.state.posts = [ 
+			{
+				title:"Work in Progress",
+				slug:"work-in-progress",
+				author:'pov',
+				body:"Hi! Yes the theme is weird and unusual. It's not done.\n\n"+
+					"I'm blocking out features, which means I'm focused on adding them and making them work. That doesn't necessarily mean I'm worried about how they look.\n\n"+
+					"You're welcome to comment on them, but understand that I'm focused on function, not form."
+			},
 			{
 				title:"**True Story:** The Internet is ~~DEAD~~ _REAL_",
 				slug:"true-story-the-internet-is-real",
@@ -115,6 +124,7 @@ class Main extends Component {
 						<SidebarCalendar />
 						<SidebarUpcoming />
 						<SidebarTV />
+						<SidebarSupport />
 					</div>
 				</div>
 				<div id="footer">
