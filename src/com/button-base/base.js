@@ -5,17 +5,17 @@ export default class ButtonBase extends Component {
 		if ( !props.hasOwnProperty('tabIndex') )
 			props.tabIndex="0";
 
-		if ( props.hasOwnProperty('class') )
-			props.class += " button-base";
+		if ( props.class )
+			props.class = "button-base " + props.class;
 		else
 			props.class = "button-base";
 			
-		if ( props.hasOwnProperty('onClick') ) {
+		if ( props.onclick ) {
 			// As long as you don't set the "keep focus" property //
-			if ( !props.hasOwnProperty('keepFocus') ) {
+			if ( !props.keepFocus ) {
 				// Wrap onClick with a function that deselects current element //
-				let oldClick = props.onClick;
-				props.onClick = (e) => {
+				let oldClick = props.onclick;
+				props.onclick = (e) => {
 					oldClick(e);
 					if ( typeof document.activeElement.blur !== "undefined" ) {
 						document.activeElement.blur();
@@ -27,9 +27,9 @@ export default class ButtonBase extends Component {
 				}
 			}
 			
-			props.onKeyDown = (e) => {
+			props.onkeydown = (e) => {
 				if ( e.keyCode === 13 ) {
-					props.onClick()
+					props.onclick()
 				}
 			};
 		}
