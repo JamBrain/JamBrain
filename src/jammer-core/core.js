@@ -78,21 +78,24 @@ class CJammerCore {
 		this.NODE_USERS = 2;
 		
 		// Populate slugs table with keys (parent!slug) //
-		for ( item in this.items ) {
+		this.addSlugKeys( this.items );
+	}
+	
+	addSlugKeys( items ) {
+		for ( item in items ) {
 			this.slugs[ this.items[item].parent+'!'+this.items[item].slug ] = item;
-		}
+		}		
 	}
 	
 	getItemById( id ) {
-		// Convert String to number, in case you forgot //
-		if ( typeof id === 'string' ) {
-			id = Number(id);
+		// Convert Number to a String. Counter intuative yes, but this saves an extra cast //
+		if ( typeof id === 'number' ) {
+			id = id.toString();
 		}
 		
 		// True test //
-		if ( typeof id === 'number' ) {
-			if ( id == 0 ) {
-				// TODO: Figure out if I should be returning a dummy node named null, or this //
+		if ( typeof id === 'string' ) {
+			if ( id == '0' ) {
 				return null;
 			}
 			else if ( this.items[id] ) {
@@ -104,7 +107,7 @@ class CJammerCore {
 				// Return Items //
 			}
 		}
-		else if ( typeof id === 'array' ) {
+		else if ( Array.isArray(id) ) {
 			// Figure out what we don't have //
 			let missing = id.filter( item => {
 				return !(item in this.items);
@@ -122,6 +125,27 @@ class CJammerCore {
 		return null;
 	}
 	
+	getTypeById( id ) {
+		// Convert Number to a String. Counter intuative yes, but this saves an extra cast //
+		if ( typeof id === 'number' ) {
+			id = id.toString();
+		}
+
+		if ( this.items[id] ) {
+			return this.items[id].type;
+		}
+	}
+	
+	// Prefetching is an optimization. To make it clearer that you are prefetching, use this function //
+	preFetchItemById( id ) {
+		this.getItemById( id );
+	}
+	
+	preFetchItemWithAuthorById( id ) {
+		this.getItemById( id );
+		this.getItemById( this.getAuthorOf(id) );
+	}
+	
 	getItemIdByParentAndSlug( parent, slug ) {
 		let key = parent+'!'+slug;
 		if ( this.slugs[key] ) {
@@ -129,6 +153,32 @@ class CJammerCore {
 		}
 
 		// Slug not found. We'll have to do work //
+		
+		return null;
+	}
+	
+
+	getAuthorOf( id ) {
+		let items = this.getItemById( id );
+		
+		if ( Array.isArray(id) ) {
+			// Fetch all authors, removing duplicates //
+			let authors = {};
+
+			for ( item in items ) {
+				if ( items[item] ) {
+					console.log(items[item].author);
+					authors[ items[item].author ] = items[item].author;
+				}
+			}
+			
+			return Object.keys(authors).map(key => authors[key]);
+		}
+		else {
+			if ( items ) {
+				return items.author;
+			}
+		}
 		
 		return null;
 	}

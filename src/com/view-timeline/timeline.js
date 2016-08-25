@@ -8,11 +8,27 @@ import SidebarTV						from 'com/sidebar-tv/tv';
 import SidebarTrending					from 'com/sidebar-trending/trending';
 import SidebarSupport					from 'com/sidebar-support/support';
 
+import JammerCore						from '../../jammer-core/core';
 
 export default class ViewTimeline extends Component {
 	constructor() {
 		this.state = {};
-		this.state.feed = [10,11,12];
+		this.state.feed = [10,10,11,12,13];
+	}
+	
+	getItems( props, state ) {
+		JammerCore.preFetchItemWithAuthorById( state.feed );
+		
+		return state.feed.map(function(item) {
+			var item_type = JammerCore.getTypeById(item);
+			
+			if ( item_type === 'post' ) {
+				return <ContentPost item={item} />;
+			}
+			else {
+				return <div>null</div>;
+			}
+		});
 	}
 	
 	render( props, state ) {
@@ -23,15 +39,7 @@ export default class ViewTimeline extends Component {
 			<div class="view-timeline">
 				<div id="header" />
 				<div id="content-sidebar">
-					<div id="content">{
-//						props.posts.map(function(item) {
-//							return <ContentPost {...item} user={props.users[item.author]} />;
-//						})
-						state.feed.map(function(item) {
-							// Lookup Item Type, create appropriate Content Type //
-							return <ContentPost item={item} />;
-						})
-					}</div>
+					<div id="content">{ this.getItems(props,state) }</div>
 					<div id="sidebar">
 						<SidebarCalendar />
 						<SidebarUpcoming />
