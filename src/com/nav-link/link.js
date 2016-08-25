@@ -3,7 +3,7 @@ import { h, Component } from 'preact/preact';
 // TODO: Push the state (arg1 of pushShate/replaceState //
 
 export default class NavLink extends Component {
-	dispatchNavChangeEvent() {
+	dispatchNavChangeEvent( _old ) {
 		var new_event = new CustomEvent('navchange',{
 			detail: {
 				baseURI: this.baseURI,			// without query string
@@ -16,6 +16,8 @@ export default class NavLink extends Component {
 				port: this.port,				// port
 				protocol: this.protocol,		// http:, https:, etc
 				search: this.search,			// query string
+				
+				old: _old
 			}
 		});
 
@@ -27,10 +29,12 @@ export default class NavLink extends Component {
 		let origin = this.origin || this.href.slice(0,this.href.indexOf('/','https://'.length));
 		
 		if ( origin === window.location.origin ) {
+			var old = Object.assign({},window.location);
+			
 			e.preventDefault();
 			history.pushState(null,null,this.pathname);
 
-			NavLink.prototype.dispatchNavChangeEvent.call( this );
+			NavLink.prototype.dispatchNavChangeEvent.call( this, old );
 		}
 		e.stopPropagation();
 		
@@ -41,10 +45,12 @@ export default class NavLink extends Component {
 		let origin = this.origin || this.href.slice(0,this.href.indexOf('/','https://'.length));
 		
 		if ( this.origin === window.location.origin ) {
+			var old = Object.assign({},window.location);
+			
 			e.preventDefault();
 			history.replaceState(null,null,this.pathname);
-			
-			NavLink.prototype.dispatchNavChangeEvent.call( this );
+
+			NavLink.prototype.dispatchNavChangeEvent.call( this, old );
 		}
 		e.stopPropagation();
 		

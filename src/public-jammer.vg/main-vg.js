@@ -16,62 +16,12 @@ class Main extends Component {
 			active: 1,
 		};
 		
-		// Clean the URL //
-		var clean = {
-			pathname: this.makeClean(window.location.pathname),
-			search: window.location.search,
-			hash: this.makeClean(window.location.hash),
-		}
-		var clean_path = clean.pathname+clean.search+clean.hash;
-		
-		// If current URL is unclean, replace it //
-		if ( window.location.pathname !== clean.pathname || window.location.hash !== clean.hash ) {
-			window.history.replaceState( null, null, clean_path);
-		}
-		
-		// Parse the clean URL //
-		var slugs = this.trimSlashes(clean.pathname).split('/');
-		
-		// Figure out what our active page_id actually is //
-		this.state.active = JammerCore.getItemIdByParentAndSlugs( this.state.root, slugs );
-		
+		this.setActive(window.location);
+
 		// Bind Events to handle future changes //
 		var that = this;
 		window.addEventListener('hashchange',that.onHashChange.bind(that));
 		window.addEventListener('navchange',that.onNavChange.bind(that));
-
-/*		
-		function make_slug( str ) {
-			str = str.toLowerCase();
-			str = str.replace(/%[a-f0-9]{2}/g,'-');
-			str = str.replace(/[^a-z0-9]/g,'-');
-			str = str.replace(/-+/g,'-');
-			str = str.replace(/^-|-$/g,'');
-			return str;
-		}
-		
-		var url = window.location.pathname.replace(/^\/|\/$/g,'');
-		
-		var url_parts = url.split('/');
-		url_parts = url_parts.map( part => make_slug(part) );
-		
-		console.log(url_parts);
-		
-		var clean_url = url_parts.join('/');
-		console.log(url);
-		console.log(clean_url);
-		if ( url !== clean_url ) {
-			console.log("bad url, cleaning...");
-			
-			let new_url = '/'+clean_url;
-			if ( new_url !== '/' )
-				new_url += '/';
-			if ( window.location.hash )
-				new_url += window.location.hash;
-				
-			window.history.replaceState(null,null,new_url);
-		}
-*/
 	}
 
 	makeSlug( str ) {
@@ -96,18 +46,28 @@ class Main extends Component {
 	trimSlashes( str ) {
 		return str.replace(/^\/|\/$/g,'');
 	}
-	
-	cleanPath( path ) {
-		return path.split('/').map( part => { return this.makeSlug(part) }).join('/');
-	}
-	cleanHash( path ) {
-		var parts = path.split('#');
 		
-		if ( parts.length > 1 ) {
-			return '#'+parts[1].split('/').map( part => { return this.makeSlug(part) }).join('/');
+	setActive( whom ) {
+		// Clean the URL //
+		var clean = {
+			pathname: this.makeClean(whom.pathname),
+			search: whom.search,
+			hash: this.makeClean(whom.hash),
 		}
-		return "";
+		var clean_path = clean.pathname+clean.search+clean.hash;
+		
+		// If current URL is unclean, replace it //
+		if ( whom.pathname !== clean.pathname || whom.hash !== clean.hash ) {
+			window.history.replaceState( null, null, clean_path );
+		}
+		
+		// Parse the clean URL //
+		var slugs = this.trimSlashes(clean.pathname).split('/');
+		
+		// Figure out what our active page_id actually is //
+		this.state.active = JammerCore.getItemIdByParentAndSlugs( this.state.root, slugs );
 	}
+
 	
 	componentDidMount() {
 		// Startup //
@@ -116,15 +76,14 @@ class Main extends Component {
 	onHashChange() {
 		let state = this.state;
 		
-		//console.log(window.location.hash);
 		this.setState(state);
 	}
 	onNavChange( e ) {
-		let state = this.state;
-		//state.active = JammerCore.lookupByParentAndSlugs(this.state.root,e.detail.pathname)
-		
-		console.log( this, e );
-		this.setState(state);
+		console.log( e.detail.href, e.detail.old.href );
+		if ( e.detail.href !== e.detail.old.href ) {
+			this.setActive(e.detail);
+			this.setState(this.state);
+		}
 	}
 	
 	getView( props, state ) {
