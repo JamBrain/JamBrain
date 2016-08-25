@@ -32,8 +32,6 @@ export default class ViewTimeline extends Component {
 	}
 	
 	render( props, state ) {
-		//let hasHash = window.location.hash ? <div>{window.location.hash}</div> : <div />;
-		
 		// content-sidebar should be #body
 		return (
 			<div class="view-timeline">

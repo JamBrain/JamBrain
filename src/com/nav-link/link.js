@@ -3,8 +3,8 @@ import { h, Component } from 'preact/preact';
 // TODO: Push the state (arg1 of pushShate/replaceState //
 
 export default class NavLink extends Component {
-	dispatchLinkChangeEvent() {
-		var new_event = new CustomEvent('linkchange',{
+	dispatchNavChangeEvent() {
+		var new_event = new CustomEvent('navchange',{
 			detail: {
 				baseURI: this.baseURI,			// without query string
 				hash: this.hash,				// #hash
@@ -30,7 +30,7 @@ export default class NavLink extends Component {
 			e.preventDefault();
 			history.pushState(null,null,this.pathname);
 
-			NavLink.prototype.dispatchLinkChangeEvent.call( this );
+			NavLink.prototype.dispatchNavChangeEvent.call( this );
 		}
 		e.stopPropagation();
 		
@@ -44,7 +44,7 @@ export default class NavLink extends Component {
 			e.preventDefault();
 			history.replaceState(null,null,this.pathname);
 			
-			NavLink.prototype.dispatchLinkChangeEvent.call( this );
+			NavLink.prototype.dispatchNavChangeEvent.call( this );
 		}
 		e.stopPropagation();
 		

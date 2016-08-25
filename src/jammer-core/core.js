@@ -181,6 +181,23 @@ class CJammerCore {
 		
 		return null;
 	}
+	
+	getItemIdByParentAndSlugs( parent, slugs ) {
+		// TODO: support symlinks and meta slugs //
+		
+		if ( !parent )
+			return null;
+			
+		if ( slugs.length > 1 ) {
+			return this.getItemIdByParentAndSlugs( this.getItemIdByParentAndSlug( parent, slugs.shift() ), slugs );
+		}
+		else if ( slugs[0] === "" ) {
+			return parent;
+		}
+		else {
+			return this.getItemIdByParentAndSlug( parent, slugs[0] );
+		}
+	}
 };
 
 // Singleton //
