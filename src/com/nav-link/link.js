@@ -34,7 +34,7 @@ export default class NavLink extends Component {
 		}
 		e.stopPropagation();
 		
-		//return false; /* Internet Explorer 11 */
+		//return false; /* Internet Explorer 11 can also stop clicks with this */
 	}
 	onClickReplace( e ) {
 		// Internet Explorer 11 doesn't set the origin, so we need to extract it //
@@ -48,7 +48,7 @@ export default class NavLink extends Component {
 		}
 		e.stopPropagation();
 		
-		//return false; /* Internet Explorer 11 */
+		//return false; /* Internet Explorer 11 can also stop clicks with this */
 	}
 	
 	render( props, state ) {

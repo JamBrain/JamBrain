@@ -1,5 +1,6 @@
 import { h, Component } from 'preact/preact';
 import ButtonBase		from '../button-base/base';
+import ButtonLink		from '../button-link/link';
 import SVGIcon 			from 'com/svg-icon/icon';
 
 export default class NavBar extends Component {
@@ -10,9 +11,9 @@ export default class NavBar extends Component {
 			<div class="nav-bar">
 				<div class="-content">
 					<div class="-left">
-						<ButtonBase class="-logo" onClick={e => console.log('logo')}>
+						<ButtonLink href="/" class="-logo" onclick={e => console.log('logo')}>
 							<SVGIcon baseline>ludum</SVGIcon><SVGIcon baseline>dare</SVGIcon>
-						</ButtonBase>
+						</ButtonLink>
 					</div>
 					<div class="-right">
 						<ButtonBase class="-icon" onClick={e => console.log('search')}>
