@@ -26,6 +26,10 @@ This means that child classes of a component tend to be prefixed with a dash, an
 }
 ```
 
+For more details, see the CSS style guide.
+
+[LINK]
+
 When used in JavaScript code, the class tends to be named in StudlyCaps.
 
 ```js
@@ -40,7 +44,7 @@ When importing, omit the file extension. You can also omit any prefixes and use 
 import SubjectPurpose					from 'com/subject-purpose/purpose';
 ```
 
-If you're curious why we need to mention the filename at all, remember this is not NodeJS. The actual ES6 import specification regrettably doesn't say anything about using an implied `index.js` file, even though a typical web server _would_ be configured to return an index.blah files.
+If you're curious why we need to mention the filename at all, remember this is not NodeJS. The actual ES6 import specification regrettably doesn't say anything about using an implied `index.js` file, even though a typical web server _would_ be configured to return an `index.blah` file. More importantly though, working with several files with the exact same filename is difficult to follow in a standard text editor.
 
 After importing, the classes can be used in JSX.
 
@@ -51,6 +55,10 @@ After importing, the classes can be used in JSX.
 For more details, see the Preact documentation: 
 
 https://preactjs.com/
+
+And the JS style guide:
+
+[LINK]
 
 ## Views
 Views are how the website reconfigures the layout. Depending on the content type of the active node, we switch views.
