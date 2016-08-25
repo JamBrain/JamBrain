@@ -125,6 +125,22 @@ class Main extends Component {
 		this.setState(state);
 	}
 	
+	getView( props, state ) {
+		if ( state.active ) {
+			var item = JammerCore.getItemById( state.active );
+	
+			if ( item.type === 'root' ) {
+				return <ViewTimeline item={state.active} />;
+			}
+			else {
+				return <div>unsupported</div>;
+			}
+		}
+		else {
+			return <div>404</div>;
+		}
+	}
+	
 	render( props, state ) {
 		//let hasHash = window.location.hash ? <div>{window.location.hash}</div> : <div />;
 		console.log("paint:",state);
@@ -132,7 +148,7 @@ class Main extends Component {
 		return (
 			<div id="layout">
 				<NavBar />
-				<ViewTimeline posts={state.posts} users={state.users} />
+				{ this.getView(props,state) }
 			</div>
 		);
 	}
