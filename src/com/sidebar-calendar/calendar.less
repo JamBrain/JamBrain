@@ -15,15 +15,21 @@
 			margin-bottom:1px;
 			background: @MAJOR_MUTE_D;/*@MAJOR_COLOR_MUTE3;*/
 
-			/* This is perfect square trickery */
-			width:100%;
-			padding-bottom:14.28%; /* 100% / 7 */
-			/* The trick is that padding/margin %'s are based on width. So we float */
-			/* the element above the parent (absolute positioning), and we get a box */
-			
 			cursor:pointer;
 			transition: transform 0.1s, z-index 0.1s;
-			
+
+			/* This is perfect square trickery: http://stackoverflow.com/a/23754080 */
+			width:100%;
+			&::after {
+				padding-bottom:100%; /* Previously: 100% / 7 */
+				/* The trick used to work by padding/margin with %'s, which were based on width. */
+				/* Now you add a dummy element, which we do here via the pseudo element. */
+				
+				content: '';
+				display: block;
+			}
+						
+			/* Position this absolutely, so not to affect the flow (and make the box bigger) */
 			& > .-text {
 				position:absolute;
 				top:0.25em;
