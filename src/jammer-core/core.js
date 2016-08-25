@@ -167,7 +167,6 @@ class CJammerCore {
 
 			for ( item in items ) {
 				if ( items[item] ) {
-					console.log(items[item].author);
 					authors[ items[item].author ] = items[item].author;
 				}
 			}
