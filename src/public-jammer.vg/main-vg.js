@@ -2,6 +2,8 @@ import { h, render, Component }			from 'preact/preact';
 import NavBar 							from 'com/nav-bar/bar';
 
 import ViewTimeline						from 'com/view-timeline/timeline';
+import ViewSingle						from 'com/view-single/single';
+
 import JammerCore						from '../jammer-core/core';
 
 
@@ -131,6 +133,9 @@ class Main extends Component {
 	
 			if ( item.type === 'root' ) {
 				return <ViewTimeline item={state.active} />;
+			}
+			else if ( item.type === 'post' || item.type === 'game' || item.type === 'user' ) {
+				return <ViewSingle item={state.active} />;
 			}
 			else {
 				return <div>unsupported</div>;

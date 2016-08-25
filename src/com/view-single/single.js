@@ -1,6 +1,7 @@
 import { h, Component }					from 'preact/preact';
 
 import ContentPost						from 'com/content-post/post';
+import ContentUser						from 'com/content-user/user';
 
 import SidebarCalendar					from 'com/sidebar-calendar/calendar';
 import SidebarUpcoming					from 'com/sidebar-upcoming/upcoming';
@@ -10,20 +11,25 @@ import SidebarSupport					from 'com/sidebar-support/support';
 
 import JammerCore						from '../../jammer-core/core';
 
-export default class ViewTimeline extends Component {
+export default class ViewSingle extends Component {
 	constructor() {
 		this.state = {};
-		this.state.feed = [10,11,12,13];
+		this.state.feed = [];
 	}
 	
 	getItems( props, state ) {
-		JammerCore.preFetchItemWithAuthorById( state.feed );
+		var items = [props.item];
 		
-		return state.feed.map(function(item) {
+		JammerCore.preFetchItemWithAuthorById( items );
+		
+		return items.map(function(item) {
 			var item_type = JammerCore.getTypeById(item);
 			
-			if ( item_type === 'post' ) {
+			if ( item_type === 'post' || item_type === 'game' ) {
 				return <ContentPost item={item} />;
+			}
+			if ( item_type === 'user' ) {
+				return <ContentUser item={item} />;
 			}
 			else {
 				return <div>null</div>;
@@ -32,9 +38,10 @@ export default class ViewTimeline extends Component {
 	}
 	
 	render( props, state ) {
+		
 		// content-sidebar should be #body
 		return (
-			<div class="view-timeline">
+			<div class="view-single">
 				<div id="header" />
 				<div id="content-sidebar">
 					<div id="content">{ this.getItems(props,state) }</div>
@@ -45,7 +52,7 @@ export default class ViewTimeline extends Component {
 						<SidebarSupport />
 					</div>
 				</div>
-				<div id="footer">Timeline</div>
+				<div id="footer">Single</div>
 			</div>
 		);
 	}

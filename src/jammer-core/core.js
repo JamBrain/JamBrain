@@ -6,20 +6,25 @@ class CJammerCore {
 				name:"*ROOT-NODE*",
 				slug:'root',
 				type:"root",
+				subtype:"",
 				parent:0,
 				author:0,
+				body:"",
 			},
 			2: {
 				name:"user",
 				slug:'u',
-				type:"users",
+				type:"browse",
+				subtype:"user",
 				parent:1,
 				author:0,
+				body:"",
 			},
 			3: {
 				name:'PoV',
 				slug:'pov',
 				type:"user",
+				subtype:"",
 				parent:2,
 				author:0,
 				body:"Confirmed Human",
@@ -33,14 +38,17 @@ class CJammerCore {
 				name:"Ludum Dare",
 				slug:'ludum-dare',
 				type:"event",
+				subtype:"",
 				parent:1,
 				author:3,
+				body:"",
 			},
 
 			10:{
 				name:"Work in Progress",
 				slug:"work-in-progress",
 				type:"post",
+				subtype:"",
 				parent:5,
 				author:3,
 				body:"Hi! Yes the theme is weird and unusual. It's not done.\n\n"+
@@ -51,6 +59,7 @@ class CJammerCore {
 				name:"**True Story:** The Internet is ~~DEAD~~ _REAL_",
 				slug:"true-story-the-internet-is-real",
 				type:"post",
+				subtype:"",
 				parent:5,
 				author:3,
 				body:"Even I can't believe it! I feel like a :whale:! :bird: :crocodile:\n\n"+
@@ -65,6 +74,7 @@ class CJammerCore {
 				name:"A dangerous place in SPAAAACE",
 				slug:"a-dangerous-place-in-space",
 				type:"post",
+				subtype:"",
 				parent:5,
 				author:3,
 				body:"This is message for @PoV. Are you here @PoV? I need @help.\n\n```js\n  var Muffin = 10;\n  Muffin += 2;\n\n  echo \"The Wheel\";```\n\nWhoa.\n\nAlso call @murr-DEATH-weasel."
@@ -181,7 +191,8 @@ class CJammerCore {
 		
 		return null;
 	}
-	
+
+	// Used to decode a URL //
 	getItemIdByParentAndSlugs( parent, slugs ) {
 		// TODO: support symlinks and meta slugs //
 		
