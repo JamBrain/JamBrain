@@ -23,15 +23,23 @@ export default class NavLink extends Component {
 	}
 	
 	onClickPush( e ) {
-		if ( this.origin === window.location.origin ) {
+		// Internet Explorer 11 doesn't set the origin, so we need to extract it //
+		let origin = this.origin || this.href.slice(0,this.href.indexOf('/','https://'.length));
+		
+		if ( origin === window.location.origin ) {
 			e.preventDefault();
 			history.pushState(null,null,this.pathname);
 
 			NavLink.prototype.dispatchLinkChangeEvent.call( this );
 		}
 		e.stopPropagation();
+		
+		//return false; /* Internet Explorer 11 */
 	}
 	onClickReplace( e ) {
+		// Internet Explorer 11 doesn't set the origin, so we need to extract it //
+		let origin = this.origin || this.href.slice(0,this.href.indexOf('/','https://'.length));
+		
 		if ( this.origin === window.location.origin ) {
 			e.preventDefault();
 			history.replaceState(null,null,this.pathname);
@@ -39,6 +47,8 @@ export default class NavLink extends Component {
 			NavLink.prototype.dispatchLinkChangeEvent.call( this );
 		}
 		e.stopPropagation();
+		
+		//return false; /* Internet Explorer 11 */
 	}
 	
 	render( props, state ) {
