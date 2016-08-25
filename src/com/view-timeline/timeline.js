@@ -12,7 +12,7 @@ import SidebarSupport					from 'com/sidebar-support/support';
 export default class ViewTimeline extends Component {
 	constructor() {
 		this.state = {};
-		this.state.feed = [1,2,3];
+		this.state.feed = [10,11,12];
 	}
 	
 	render( props, state ) {
@@ -24,13 +24,13 @@ export default class ViewTimeline extends Component {
 				<div id="header" />
 				<div id="content-sidebar">
 					<div id="content">{
-						props.posts.map(function(item) {
-							return <ContentPost {...item} user={props.users[item.author]} />;
-						})
-//						state.feed.map(function(item) {
-//							// Lookup Item Type, create appropriate Content Type //
-//							return <ContentPost item={item} />;
+//						props.posts.map(function(item) {
+//							return <ContentPost {...item} user={props.users[item.author]} />;
 //						})
+						state.feed.map(function(item) {
+							// Lookup Item Type, create appropriate Content Type //
+							return <ContentPost item={item} />;
+						})
 					}</div>
 					<div id="sidebar">
 						<SidebarCalendar />

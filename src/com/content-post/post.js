@@ -2,17 +2,20 @@ import { h, Component } from 'preact/preact';
 import SVGIcon 			from 'com/svg-icon/icon';
 import NavLink 			from 'com/nav-link/link';
 
+import JammerCore		from '../../jammer-core/core';
+
+
 export default class ContentPost extends Component {
 	render(props,state) {
-		props.title = (props.post && props.post.title) ? props.post.title : props.title;
-		props.user = props.user ? props.user : {};
+		var post = JammerCore.getItemById( props.item );
+		var user = JammerCore.getItemById( post.author );
 		
-		var hasTwitter = props.user.twitter ? <span class="-twitter"> (<a href={"https://twitter.com/"+props.user.twitter} target="_blank" title={"https://twitter.com/"+props.user.twitter}><SVGIcon baseline small>twitter</SVGIcon>/{props.user.twitter}</a>)</span> : <span />;
-		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <SVGIcon>users</SVGIcon></span> : <span />;
+		var hasTwitter = user.meta.twitter ? <span class="-twitter"> (<a href={"https://twitter.com/"+user.meta.twitter} target="_blank" title={"https://twitter.com/"+user.meta.twitter}><SVGIcon baseline small>twitter</SVGIcon>/{user.meta.twitter}</a>)</span> : <span />;
+//		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <SVGIcon>users</SVGIcon></span> : <span />;
 		
 		// Build URL //
 		// TODO: append trailing '/' to base if missing
-		var url = props.slug+'/';
+		var url = post.slug+'/';
 		// TODO: if single post mode, prefix with '../'
 		
 //		function parseNames( str ) {
@@ -40,10 +43,10 @@ export default class ContentPost extends Component {
 //			// TODO: attach the Navigation link code to the <a> tag above //
 //		}
 
-		var dangerousParsedBody = { __html:marked.parse(props.body) };
-		var dangerousParsedTitle = { __html:titleParser.parse(props.title) };
+		var dangerousParsedBody = { __html:marked.parse(post.body) };
+		var dangerousParsedTitle = { __html:titleParser.parse(post.name) };
 		
-		var avatar = props.user.avatar ? "//"+STATIC_DOMAIN+props.user.avatar : "";
+		var avatar = user.meta.avatar ? "//"+STATIC_DOMAIN+user.meta.avatar : "";
 		
 		return (
 			<div class="content-base content-post">
@@ -51,11 +54,10 @@ export default class ContentPost extends Component {
 					<div class="-avatar"><img src={avatar} /></div>
 					<div class="-title _font2"><NavLink href={url} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
 					<div class="-subtext">
-						Posted <span class="-time">{props.relative_time}</span> ago
-						on <span class="-title" title={props.date}>{props.short_date}</span>,
-						by <span class="-name"><NavLink href={'/u/'+props.user.slug+'/'} class="-author" title={'@'+props.user.slug}><img style="height:0.8em;padding-right:0.1em;" src={avatar} />{props.user.name}</NavLink></span>
+						Posted <span class="-time">{post.relative_time}</span> ago
+						on <span class="-title" title={post.date}>{post.short_date}</span>,
+						by <span class="-name"><NavLink href={'/u/'+user.slug+'/'} class="-author" title={'@'+user.slug}><img style="height:0.8em;padding-right:0.1em;" src={avatar} />{user.name}</NavLink></span>
 						{hasTwitter}
-						{hasTeam}
 					</div>
 				</div>
 				<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
