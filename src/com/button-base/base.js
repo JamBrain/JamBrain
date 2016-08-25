@@ -17,7 +17,13 @@ export default class ButtonBase extends Component {
 				let oldClick = props.onClick;
 				props.onClick = (e) => {
 					oldClick(e);
-					document.activeElement.blur();
+					if ( typeof document.activeElement.blur !== "undefined" ) {
+						document.activeElement.blur();
+					}
+					// SVG Elements on Internet Explorer have no blur() method, so call the parent's blur //
+					else if ( document.activeElement.parentNode.blur ) {
+						document.activeElement.parentNode.blur();
+					}
 				}
 			}
 			
