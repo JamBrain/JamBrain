@@ -20,7 +20,7 @@ This means that child classes of a component tend to be prefixed with a dash, an
 
 ```css
 .subject-purpose {
-	& > -title {
+	& > .-title {
 		font-size: 1.2em;
 	}
 }
@@ -48,8 +48,12 @@ After importing, the classes can be used in JSX.
 	return <SubjectPurpose>I have a purpose!</SubjectPurpose>;
 ```
 
+For more details, see the Preact documentation: 
+
+https://preactjs.com/
+
 ## Views
-Views are how the website reconfigures the layout. Depending on the content type, we switch views.
+Views are how the website reconfigures the layout. Depending on the content type of the active node, we switch views.
 
 Most views have a sidebar, but on Moblie, the sidebar is hidden.
 
@@ -68,14 +72,16 @@ Views are just how things are arranged. These are the actual posts, articles, an
 * ...
 
 ## Sidebar
-These are the sidebar components seen in most wide views.
+These are the sidebar components seen in most wide views. 
+
+Sidebar components tend to summaries. The full data from widgets tends to be available in either a Dialog, or a separate page.
 
 * [/sidebar-calendar/](sidebar-calendar/) - The 7x3 grid that lets you learn about what's coming up.
 * [/sidebar-shortlist/](sidebar-shortlist/) - A base layout type fo some of the sidebar items.
 * [/sidebar-upcoming/](sidebar-upcoming/) - Upcoming key dates. 3 items. The next LD event, plus 2 more.
 * [/sidebar-trending/](sidebar-trending/) - (disabled) Trending game jams and events.
 * [/sidebar-tv/](sidebar-tv/) - The television sidebar widget (not the popup). Uses data from `Jammer.tv`
-* [/sidebar-support/](sidebar-support/) - The tail-end "support us" widget.
+* [/sidebar-support/](sidebar-support/) - The tail-end "support us" component.
 
 ## Navigation
 A few specific components related to navigation.
