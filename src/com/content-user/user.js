@@ -14,7 +14,7 @@ export default class ContentUser extends Component {
 		
 		// Build URL //
 		// TODO: append trailing '/' to base if missing
-		var url = user.slug+'/';
+		var url = '/u/'+user.slug+'/';
 		// TODO: if single post mode, prefix with '../'
 		
 //		function parseNames( str ) {

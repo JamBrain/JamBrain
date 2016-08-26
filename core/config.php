@@ -16,11 +16,12 @@ const DEFAULT_CONFIG = [
 	// Database Table Versions //
 	CMW_TABLE_CONFIG => '0',				// Configuration Table (i.e. this)
 
-//	CMW_TABLE_NODE => '0',
-//	CMW_TABLE_NODE_META => '0',
-//	CMW_TABLE_NODE_DIFF => '0',
-//	CMW_TABLE_NODE_LOVE => '0',				// Likes
-//	CMW_TABLE_NODE_STAR => '0',				// Bookmark
+	CMW_TABLE_ITEM => '0',
+	CMW_TABLE_ITEM_LINK => '0',
+	CMW_TABLE_ITEM_META => '0',
+//	CMW_TABLE_ITEM_DIFF => '0',
+//	CMW_TABLE_ITEM_LOVE => '0',				// Likes
+//	CMW_TABLE_ITEM_STAR => '0',				// Bookmark
 	                               
 	CMW_TABLE_USER => '0',
 	CMW_TABLE_USER_ACCESS => '0',			// User Account Access Log

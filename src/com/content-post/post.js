@@ -14,7 +14,7 @@ export default class ContentPost extends Component {
 //		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <SVGIcon>users</SVGIcon></span> : <span />;
 		
 		// Build URL //
-		var url = '/'+JammerCore.getPathSlugsById( props.item ).slice(1).join('/')+'/';
+		var url = '/'+JammerCore.getItemPathSlugsById( props.item ).slice(1).join('/')+'/';
 		
 //		function parseNames( str ) {
 //			// Dummy: Use Global Object //

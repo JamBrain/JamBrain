@@ -23,7 +23,7 @@ export default class ViewSingle extends Component {
 		JammerCore.preFetchItemWithAuthorById( items );
 		
 		return items.map(function(item) {
-			var item_type = JammerCore.getTypeById(item);
+			var item_type = JammerCore.getItemTypeById(item);
 			
 			if ( item_type === 'post' || item_type === 'game' ) {
 				return <ContentPost item={item} />;

@@ -20,7 +20,7 @@ export default class ViewTimeline extends Component {
 		JammerCore.preFetchItemWithAuthorById( state.feed );
 		
 		return state.feed.map(function(item) {
-			var item_type = JammerCore.getTypeById(item);
+			var item_type = JammerCore.getItemTypeById(item);
 			
 			if ( item_type === 'post' ) {
 				return <ContentPost item={item} />;

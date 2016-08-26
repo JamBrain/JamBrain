@@ -210,7 +210,7 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 	case 0:
 		$ok = DoCreate( $table,
 			"CREATE TABLE ".$table." (
-				node BIGINT UNSIGNED NOT NULL UNIQUE,
+				item BIGINT UNSIGNED NOT NULL UNIQUE,
 				mail VARCHAR(255) CHARSET utf8 COLLATE utf8_unicode_ci NOT NULL UNIQUE,
 				hash VARCHAR(255) CHARSET latin1 NOT NULL,
 				timestamp TIMESTAMP NOT NULL,
@@ -413,7 +413,7 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 
 
 // Create/Upgrade Table //
-$table = CMW_TABLE_NODE;
+$table = CMW_TABLE_ITEM;
 if ( !isset($table_list) || isset($table_list[$table]) ) {
 	DoInit($table);
 	switch ($version) {
@@ -436,7 +436,7 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 				modified DATETIME NOT NULL,
 				slug VARCHAR(96) CHARSET latin1 NOT NULL,
 					INDEX(slug),
-				title VARCHAR(96) NOT NULL,
+				name VARCHAR(96) NOT NULL,
 				body MEDIUMTEXT NOT NULL,
 				revision BIGINT UNSIGNED NOT NULL,
 				extra BIGINT UNSIGNED NOT NULL
@@ -448,7 +448,7 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 
 
 // Create/Upgrade Table //
-$table = CMW_TABLE_NODE_LINK;
+$table = CMW_TABLE_ITEM_LINK;
 if ( !isset($table_list) || isset($table_list[$table]) ) {
 	DoInit($table);
 	switch ($version) {
@@ -470,7 +470,7 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 
 
 // Create/Upgrade Table //
-$table = CMW_TABLE_NODE_META;
+$table = CMW_TABLE_ITEM_META;
 if ( !isset($table_list) || isset($table_list[$table]) ) {
 	DoInit($table);
 	switch ($version) {
@@ -479,8 +479,8 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 			"CREATE TABLE ".$table." (
 				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
 					UNIQUE,
-				node BIGINT UNSIGNED NOT NULL,
-					INDEX(node),
+				item BIGINT UNSIGNED NOT NULL,
+					INDEX(item),
 				`key` VARCHAR(32) CHARSET latin1 NOT NULL,
 				value TEXT NOT NULL
 			)".DEFAULT_CS_ENGINE.";");
@@ -500,8 +500,8 @@ if ( !isset($table_list) || isset($table_list[$table]) ) {
 //			"CREATE TABLE ".$table." (
 //				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
 //					UNIQUE,
-//				node BIGINT UNSIGNED NOT NULL,
-//					INDEX(node),
+//				item BIGINT UNSIGNED NOT NULL,
+//					INDEX(item),
 //				`key` VARCHAR(32) CHARSET latin1 NOT NULL,
 //				value TEXT NOT NULL
 //			)".DEFAULT_CS_ENGINE.";");

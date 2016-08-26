@@ -33,6 +33,16 @@ class CJammerCore {
 					twitter:'mikekasprzak',
 				}
 			},
+			4: {
+				name:'',
+				slug:'mikekasprzak',
+				type:"symlink",
+				subtype:"",
+				parent:2,
+				author:0,
+				body:"",
+				extra:3,		// What we point at //
+			},
 
 			5: {
 				name:"Ludum Dare",
@@ -42,6 +52,16 @@ class CJammerCore {
 				parent:1,
 				author:3,
 				body:"",
+			},
+			
+			6: {
+				name:"Articles",
+				slug:'articles',
+				type:"browse",
+				subtype:"article",
+				parent:1,
+				author:0,
+				body:"",				
 			},
 
 			10:{
@@ -73,9 +93,9 @@ class CJammerCore {
 			12:{
 				name:"A dangerous place in SPAAAACE",
 				slug:"a-dangerous-place-in-space",
-				type:"post",
+				type:"article",
 				subtype:"",
-				parent:5,
+				parent:6,
 				author:3,
 				body:"This is message for @PoV. Are you here @PoV? I need @help.\n\n```js\n  var Muffin = 10;\n  Muffin += 2;\n\n  echo \"The Wheel\";```\n\nWhoa.\n\nAlso call @murr-DEATH-weasel."
 			}			
@@ -88,10 +108,10 @@ class CJammerCore {
 		this.NODE_USERS = 2;
 		
 		// Populate slugs table with keys (parent!slug) //
-		this.addSlugKeys( this.items );
+		this.addItemSlugKeys( this.items );
 	}
 	
-	addSlugKeys( items ) {
+	addItemSlugKeys( items ) {
 		for ( item in items ) {
 			this.slugs[ this.items[item].parent+'!'+this.items[item].slug ] = item;
 		}		
@@ -135,7 +155,7 @@ class CJammerCore {
 		return null;
 	}
 	
-	getTypeById( id ) {
+	getItemTypeById( id ) {
 		// Convert Number to a String. Counter intuative yes, but this saves an extra cast //
 		if ( typeof id === 'number' )
 			id = id.toString();
@@ -145,7 +165,7 @@ class CJammerCore {
 		return null;
 	}
 	
-	getParentById( id ) {
+	getItemParentById( id ) {
 		// Convert Number to a String. Counter intuative yes, but this saves an extra cast //
 		if ( typeof id === 'number' )
 			id = id.toString();
@@ -155,7 +175,7 @@ class CJammerCore {
 		return null;
 	}
 
-	getSlugById( id ) {
+	getItemSlugById( id ) {
 		// Convert Number to a String. Counter intuative yes, but this saves an extra cast //
 		if ( typeof id === 'number' )
 			id = id.toString();
@@ -172,7 +192,7 @@ class CJammerCore {
 	
 	preFetchItemWithAuthorById( id ) {
 		this.getItemById( id );
-		this.getItemById( this.getAuthorOf(id) );
+		this.getItemById( this.getAuthorOfItemById(id) );
 	}
 	
 	getItemIdByParentAndSlug( parent, slug ) {
@@ -187,7 +207,7 @@ class CJammerCore {
 	}
 	
 
-	getAuthorOf( id ) {
+	getAuthorOfItemById( id ) {
 		let items = this.getItemById( id );
 		
 		if ( Array.isArray(id) ) {
@@ -211,48 +231,70 @@ class CJammerCore {
 		return null;
 	}
 
-	// Used to decode a URL //
+
+	// Walk the tree starting at the parent, decoding slugs, returing the ID of the last one //
 	getItemIdByParentAndSlugs( parent, slugs ) {
-		// TODO: support symlinks and meta slugs //
-		
 		if ( !parent )
 			return null;
-			
-		if ( slugs.length > 1 ) {
+		
+		// Check if special //
+		var parent_data = this.getItemById(parent);
+		if ( parent_data.type === 'symlink' ) {
+			parent = parent_data.extra;
+		}
+		
+		if ( (slugs.length == 1) && (slugs[0] === "") ) {
+			// Cleverness: only the root should ever have a blank slug //
+			return parent;
+		}
+		else if ( slugs.length > 0 ) {
 			// Cleverness: slugs gets shifted before the main function is called.
 			return this.getItemIdByParentAndSlugs( this.getItemIdByParentAndSlug(parent, slugs.shift()), slugs );
 		}
-		else if ( slugs[0] === "" ) {
-			return parent;
-		}
-		else {
-			return this.getItemIdByParentAndSlug( parent, slugs[0] );
-		}
+
+		// And done //
+		return parent;
 	}
-	
-	getPathByParentAndSlugs( parent, slugs, ids ) {
+
+	// Walk the tree starting at the parent, decoding slugs, and return all ids //
+	getItemPathByParentAndSlugs( parent, slugs, ids ) {
 		if ( !parent )
 			return null;
 
+		// Check if parent is special //
+		var parent_data = this.getItemById(parent);
+		if ( parent_data.type === 'symlink' ) {
+			parent = parent_data.extra;
+		}
+
+		// Build List //
 		if ( !Array.isArray(ids) )
 			ids = [ parent.toString() ];
 		else
 			ids.push( parent );
 			
-		if ( slugs.length > 1 ) {
+		if ( (slugs.length == 1) && (slugs[0] === "") ) {
+			// Cleverness: only the root node should ever have a blank slug //
+			return parent;
+		}
+		else if ( slugs.length > 0 ) {
 			// Cleverness: slugs gets shifted before the main function is called.
-			return this.getPathByParentAndSlugs( this.getItemIdByParentAndSlug(parent, slugs.shift()), slugs, ids );
+			return this.getItemPathByParentAndSlugs( this.getItemIdByParentAndSlug(parent, slugs.shift()), slugs, ids );
 		}
-		else if ( slugs[0] === "" ) {
-			return ids;
-		}
-		else {
-			ids.push( this.getItemIdByParentAndSlug(parent, slugs[0]) );
-			return ids;
-		}
+		
+		return ids;
+
+//		else if ( slugs[0] === "" ) {
+//			return ids;
+//		}
+//		else {
+//			ids.push( this.getItemIdByParentAndSlug(parent, slugs[0]) );
+//			return ids;
+//		}
 	}
-	
-	getPathById( id, ids ) {
+
+	// Given an id, walk the tree backwards, return all ids in its TRUE PATH. //
+	getItemPathById( id, ids ) {
 		if ( !id )
 			return ids;
 			
@@ -261,19 +303,20 @@ class CJammerCore {
 		else
 			ids.unshift( id.toString() );
 		
-		return this.getPathById( this.getParentById(id), ids );
+		return this.getItemPathById( this.getItemParentById(id), ids );
 	}
 
-	getPathSlugsById( id, ids ) {
+	// Given an id, walk the tree backwards, return all slugs in its TRUE PATH. //
+	getItemPathSlugsById( id, ids ) {
 		if ( !id )
 			return ids;
 			
 		if ( !Array.isArray(ids) )
-			ids = [ this.getSlugById(id) ];
+			ids = [ this.getItemSlugById(id) ];
 		else
-			ids.unshift( this.getSlugById(id) );
+			ids.unshift( this.getItemSlugById(id) );
 		
-		return this.getPathSlugsById( this.getParentById(id), ids );
+		return this.getItemPathSlugsById( this.getItemParentById(id), ids );
 	}
 
 };
