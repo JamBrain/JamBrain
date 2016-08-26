@@ -64,8 +64,12 @@ class Main extends Component {
 		// Parse the clean URL //
 		var slugs = this.trimSlashes(clean.pathname).split('/');
 		
+		//console.log( JammerCore.getPathByParentAndSlugs(this.state.root, slugs.slice(0)) );
+		
 		// Figure out what our active page_id actually is //
 		this.state.active = JammerCore.getItemIdByParentAndSlugs( this.state.root, slugs );
+
+		//console.log( this.state.active, JammerCore.getPathById(this.state.active) );
 	}
 
 	

@@ -137,13 +137,32 @@ class CJammerCore {
 	
 	getTypeById( id ) {
 		// Convert Number to a String. Counter intuative yes, but this saves an extra cast //
-		if ( typeof id === 'number' ) {
+		if ( typeof id === 'number' )
 			id = id.toString();
-		}
 
-		if ( this.items[id] ) {
+		if ( this.items[id] )
 			return this.items[id].type;
-		}
+		return null;
+	}
+	
+	getParentById( id ) {
+		// Convert Number to a String. Counter intuative yes, but this saves an extra cast //
+		if ( typeof id === 'number' )
+			id = id.toString();
+
+		if ( this.items[id] )
+			return this.items[id].parent;
+		return null;
+	}
+
+	getSlugById( id ) {
+		// Convert Number to a String. Counter intuative yes, but this saves an extra cast //
+		if ( typeof id === 'number' )
+			id = id.toString();
+
+		if ( this.items[id] )
+			return this.items[id].slug;
+		return null;
 	}
 	
 	// Prefetching is an optimization. To make it clearer that you are prefetching, use this function //
@@ -200,7 +219,8 @@ class CJammerCore {
 			return null;
 			
 		if ( slugs.length > 1 ) {
-			return this.getItemIdByParentAndSlugs( this.getItemIdByParentAndSlug( parent, slugs.shift() ), slugs );
+			// Cleverness: slugs gets shifted before the main function is called.
+			return this.getItemIdByParentAndSlugs( this.getItemIdByParentAndSlug(parent, slugs.shift()), slugs );
 		}
 		else if ( slugs[0] === "" ) {
 			return parent;
@@ -209,6 +229,53 @@ class CJammerCore {
 			return this.getItemIdByParentAndSlug( parent, slugs[0] );
 		}
 	}
+	
+	getPathByParentAndSlugs( parent, slugs, ids ) {
+		if ( !parent )
+			return null;
+
+		if ( !Array.isArray(ids) )
+			ids = [ parent.toString() ];
+		else
+			ids.push( parent );
+			
+		if ( slugs.length > 1 ) {
+			// Cleverness: slugs gets shifted before the main function is called.
+			return this.getPathByParentAndSlugs( this.getItemIdByParentAndSlug(parent, slugs.shift()), slugs, ids );
+		}
+		else if ( slugs[0] === "" ) {
+			return ids;
+		}
+		else {
+			ids.push( this.getItemIdByParentAndSlug(parent, slugs[0]) );
+			return ids;
+		}
+	}
+	
+	getPathById( id, ids ) {
+		if ( !id )
+			return ids;
+			
+		if ( !Array.isArray(ids) )
+			ids = [ id.toString() ];
+		else
+			ids.unshift( id.toString() );
+		
+		return this.getPathById( this.getParentById(id), ids );
+	}
+
+	getPathSlugsById( id, ids ) {
+		if ( !id )
+			return ids;
+			
+		if ( !Array.isArray(ids) )
+			ids = [ this.getSlugById(id) ];
+		else
+			ids.unshift( this.getSlugById(id) );
+		
+		return this.getPathSlugsById( this.getParentById(id), ids );
+	}
+
 };
 
 // Singleton //
