@@ -3,8 +3,8 @@ import { h, Component } from 'preact/preact';
 // TODO: Push the state (arg1 of pushShate/replaceState //
 
 export default class NavLink extends Component {
-	dispatchLinkChangeEvent() {
-		var new_event = new CustomEvent('linkchange',{
+	dispatchNavChangeEvent( _old ) {
+		var new_event = new CustomEvent('navchange',{
 			detail: {
 				baseURI: this.baseURI,			// without query string
 				hash: this.hash,				// #hash
@@ -16,6 +16,8 @@ export default class NavLink extends Component {
 				port: this.port,				// port
 				protocol: this.protocol,		// http:, https:, etc
 				search: this.search,			// query string
+				
+				old: _old
 			}
 		});
 
@@ -23,28 +25,43 @@ export default class NavLink extends Component {
 	}
 	
 	onClickPush( e ) {
-		if ( this.origin === window.location.origin ) {
+		// Internet Explorer 11 doesn't set the origin, so we need to extract it //
+		let origin = this.origin || this.href.slice(0,this.href.indexOf('/','https://'.length));
+		
+		if ( origin === window.location.origin ) {
+			var old = Object.assign({},window.location);
+			
 			e.preventDefault();
 			history.pushState(null,null,this.pathname);
 
-			NavLink.prototype.dispatchLinkChangeEvent.call( this );
+			NavLink.prototype.dispatchNavChangeEvent.call( this, old );
 		}
 		e.stopPropagation();
+		
+		//return false; /* Internet Explorer 11 can also stop clicks with this */
 	}
 	onClickReplace( e ) {
+		// Internet Explorer 11 doesn't set the origin, so we need to extract it //
+		let origin = this.origin || this.href.slice(0,this.href.indexOf('/','https://'.length));
+		
 		if ( this.origin === window.location.origin ) {
+			var old = Object.assign({},window.location);
+			
 			e.preventDefault();
 			history.replaceState(null,null,this.pathname);
-			
-			NavLink.prototype.dispatchLinkChangeEvent.call( this );
+
+			NavLink.prototype.dispatchNavChangeEvent.call( this, old );
 		}
 		e.stopPropagation();
+		
+		//return false; /* Internet Explorer 11 can also stop clicks with this */
 	}
 	
 	render( props, state ) {
 		if ( props.href ) {
 			if ( props.href.indexOf('//') !== -1 ) {		
 				props.target = "_blank";
+				props.rel = "noopener noreferrer";
 			}
 			else {
 				if ( props.replace ) {

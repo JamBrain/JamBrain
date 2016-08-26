@@ -1,5 +1,6 @@
 import { h, Component } from 'preact/preact';
 import ButtonBase		from '../button-base/base';
+import ButtonLink		from '../button-link/link';
 import SVGIcon 			from 'com/svg-icon/icon';
 
 export default class NavBar extends Component {
@@ -10,28 +11,28 @@ export default class NavBar extends Component {
 			<div class="nav-bar">
 				<div class="-content">
 					<div class="-left">
-						<ButtonBase class="-logo" onClick={e => console.log('logo')}>
+						<ButtonLink href="/" class="-logo" onclick={e => console.log('logo')}>
 							<SVGIcon baseline>ludum</SVGIcon><SVGIcon baseline>dare</SVGIcon>
-						</ButtonBase>
+						</ButtonLink>
 					</div>
 					<div class="-right">
-						<ButtonBase class="-icon" onClick={e => console.log('search')}>
+						<ButtonBase class="-icon" onclick={e => console.log('search')}>
 							<SVGIcon baseline>search</SVGIcon>
 						</ButtonBase>
-						<ButtonBase class="-button" onClick={e => console.log('my game')}>
+						<ButtonBase class="-button" onclick={e => console.log('my game')}>
 							<SVGIcon>gamepad</SVGIcon>
 							<div>My Game</div>
 						</ButtonBase>
-						<ButtonBase class="-button" onClick={e => console.log('new post')}>
+						<ButtonBase class="-button" onclick={e => console.log('new post')}>
 							<SVGIcon>edit</SVGIcon>
 							<div>New Post</div>
 						</ButtonBase>
-						<ButtonBase class="-icon" onClick={e => console.log('notification')}>
+						<ButtonBase class="-icon" onclick={e => console.log('notification')}>
 							<SVGIcon baseline>bubble</SVGIcon>
 							<div class="-new">2</div>
 							<div class="-count">24</div>
 						</ButtonBase>
-						<ButtonBase class="-user" onClick={e => console.log('user')}>
+						<ButtonBase class="-user" onclick={e => console.log('user')}>
 							<img src={avatar} />
 						</ButtonBase>
 					</div>

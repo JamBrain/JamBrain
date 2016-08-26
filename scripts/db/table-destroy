@@ -73,6 +73,9 @@ table_Drop(CMW_TABLE_THEME_FINAL);
 table_Drop(CMW_TABLE_THEME_FINAL_VOTE);
 table_Drop(CMW_TABLE_THEME_HISTORY);
 
-table_Drop(CMW_TABLE_NODE);
-table_Drop(CMW_TABLE_NODE_LINK);
-table_Drop(CMW_TABLE_NODE_META);
+table_Drop(CMW_TABLE_ITEM);
+table_Drop(CMW_TABLE_ITEM_LINK);
+table_Drop(CMW_TABLE_ITEM_META);
+table_Drop(CMW_TABLE_ITEM_DIFF);
+table_Drop(CMW_TABLE_ITEM_LOVE);
+table_Drop(CMW_TABLE_ITEM_STAR);

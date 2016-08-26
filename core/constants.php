@@ -15,12 +15,12 @@ if ( !defined('CMW_TABLE_PREFIX') ) {
 // Database Tables //
 const CMW_TABLE_CONFIG =				CMW_TABLE_PREFIX."config";
 
-const CMW_TABLE_NODE =					CMW_TABLE_PREFIX."node";
-const CMW_TABLE_NODE_LINK =				CMW_TABLE_PREFIX."node_link";
-const CMW_TABLE_NODE_META =				CMW_TABLE_PREFIX."node_meta";
-const CMW_TABLE_NODE_DIFF =				CMW_TABLE_PREFIX."node_diff";
-const CMW_TABLE_NODE_LOVE =				CMW_TABLE_PREFIX."node_love";
-const CMW_TABLE_NODE_STAR =				CMW_TABLE_PREFIX."node_star";
+const CMW_TABLE_ITEM =					CMW_TABLE_PREFIX."item";
+const CMW_TABLE_ITEM_LINK =				CMW_TABLE_PREFIX."item_link";
+const CMW_TABLE_ITEM_META =				CMW_TABLE_PREFIX."item_meta";
+const CMW_TABLE_ITEM_DIFF =				CMW_TABLE_PREFIX."item_diff";
+const CMW_TABLE_ITEM_LOVE =				CMW_TABLE_PREFIX."item_love";
+const CMW_TABLE_ITEM_STAR =				CMW_TABLE_PREFIX."item_star";
 
 const CMW_TABLE_USER =					CMW_TABLE_PREFIX."user";
 const CMW_TABLE_USER_ACCESS =			CMW_TABLE_PREFIX."user_access";
@@ -51,42 +51,42 @@ const CMW_FIELD_TYPE_FLOAT = 3;
 const CMW_FIELD_TYPE_DATETIME = 4;
 const CMW_FIELD_TYPE_JSON = 5;
 
-// Node Constants //
-const CMW_NODE_ROOT = 1;				// The root of our Node tree
-const CMW_NODE_USER = 2;				// Users
-const CMW_NODE_ADMIN = 3;				// Administrator Control Panel
-//const CMW_NODE_TEAM = 4;				// Teams (uncategorized only, i.e. Admin)
-//const CMW_NODE_GAME = 5;				// Games (proxy)
-//const CMW_NODE_DEMO = 6;				// Demos (proxy)
-//const CMW_NODE_CRAFT = 7;				// Crafts (proxy)
-//const CMW_NODE_POST = 8;				// Posts (proxy)
-//const CMW_NODE_MEDIA = 9;				// Media (proxy)
+// Item Constants //
+const CMW_ITEM_ROOT = 1;				// The root of our Node tree
+const CMW_ITEM_USER = 2;				// Users
+//const CMW_ITEM_ADMIN = 3;				// Administrator Control Panel
+//const CMW_ITEM_TEAM = 4;				// Teams (uncategorized only, i.e. Admin)
+//const CMW_ITEM_GAME = 5;				// Games (proxy)
+//const CMW_ITEM_DEMO = 6;				// Demos (proxy)
+//const CMW_ITEM_CRAFT = 7;				// Crafts (proxy)
+//const CMW_ITEM_POST = 8;				// Posts (proxy)
+//const CMW_ITEM_MEDIA = 9;				// Media (proxy)
 
 // --- //
 
-const CMW_NODE_EVENT = 16;				// Ludum Dare Events
-const CMW_NODE_PLATFORM = 17;			// Platforms
-const CMW_NODE_TAG = 18;				// Tags
-const CMW_NODE_TOOL = 19;				// Tools (Unity, etc)
-const CMW_NODE_OTHER = 20;				// Other Games and Game Jams (GGJ)
-const CMW_NODE_CUSTOM = 21;				// Custom User Generated Jams
-const CMW_NODE_HOSTED = 22;				// Extra Events we host (3rd party, or sponsored)
+const CMW_ITEM_EVENT = 16;				// Ludum Dare Events
+const CMW_ITEM_PLATFORM = 17;			// Platforms
+const CMW_ITEM_TAG = 18;				// Tags
+const CMW_ITEM_TOOL = 19;				// Tools (Unity, etc)
+const CMW_ITEM_OTHER = 20;				// Other Games and Game Jams (GGJ)
+const CMW_ITEM_CUSTOM = 21;				// Custom User Generated Jams
+const CMW_ITEM_HOSTED = 22;				// Extra Events we host (3rd party, or sponsored)
 
 // --- //
 
-const CMW_NODE_EVENT_LD = 32;
-const CMW_NODE_EVENT_MINILD = 33;
-const CMW_NODE_EVENT_OCTOBER = 34;
-const CMW_NODE_EVENT_SCENE = 35;
+const CMW_ITEM_EVENT_LD = 32;
+const CMW_ITEM_EVENT_MINILD = 33;
+const CMW_ITEM_EVENT_OCTOBER = 34;
+const CMW_ITEM_EVENT_SCENE = 35;
 
-const CMW_NODE_OTHER_GAME = 36;			// Other Games (not from a Jam)
-const CMW_NODE_OTHER_DEMO = 37;			// Other Demos (from Demoscene Events we haven't added)
-const CMW_NODE_OTHER_CRAFT = 38;		// Other Crafts
-const CMW_NODE_OTHER_JAM = 39;			// Other Game Jams
-const CMW_NODE_OTHER_SCENE = 40;		// Other Demoscene Events
+const CMW_ITEM_OTHER_GAME = 36;			// Other Games (not from a Jam)
+const CMW_ITEM_OTHER_DEMO = 37;			// Other Demos (from Demoscene Events we haven't added)
+const CMW_ITEM_OTHER_CRAFT = 38;		// Other Crafts
+const CMW_ITEM_OTHER_JAM = 39;			// Other Game Jams
+const CMW_ITEM_OTHER_SCENE = 40;		// Other Demoscene Events
 
-const CMW_NODE_TOOL_DEV = 41;
-const CMW_NODE_TOOL_ART = 42;
-const CMW_NODE_TOOL_CONTENT = 43;
-const CMW_NODE_TOOL_OTHER = 44;
+const CMW_ITEM_TOOL_DEV = 41;
+const CMW_ITEM_TOOL_ART = 42;
+const CMW_ITEM_TOOL_CONTENT = 43;
+const CMW_ITEM_TOOL_OTHER = 44;
 ?>
