@@ -93,7 +93,7 @@ class CJammerCore {
 			12:{
 				name:"A dangerous place in SPAAAACE",
 				slug:"a-dangerous-place-in-space",
-				type:"article",
+				type:"post",
 				subtype:"",
 				parent:6,
 				author:3,
