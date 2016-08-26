@@ -83,7 +83,7 @@ class Main extends Component {
 		this.setState(state);
 	}
 	onNavChange( e ) {
-		console.log( e.detail.href, e.detail.old.href );
+		//console.log( e.detail.href, e.detail.old.href );
 		if ( e.detail.href !== e.detail.old.href ) {
 			this.setActive(e.detail);
 			this.setState(this.state);
@@ -111,7 +111,7 @@ class Main extends Component {
 	
 	render( props, state ) {
 		//let hasHash = window.location.hash ? <div>{window.location.hash}</div> : <div />;
-		console.log("paint:",state);
+		//console.log("paint:",state);
 		
 		return (
 			<div id="layout">

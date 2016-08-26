@@ -61,6 +61,7 @@ export default class NavLink extends Component {
 		if ( props.href ) {
 			if ( props.href.indexOf('//') !== -1 ) {		
 				props.target = "_blank";
+				props.rel = "noopener noreferrer";
 			}
 			else {
 				if ( props.replace ) {

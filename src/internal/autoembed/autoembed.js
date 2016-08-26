@@ -56,7 +56,7 @@
 
 	// NOTE: Since these are all external, there's no need for the Navigation Capture code //
 	AutoEmbed.prototype.makeSmartLink = function( icon_name, full_url, part_url ) {
-		return '<span><a href="'+full_url+'" target="_blank">'+this.makeSVGIcon(icon_name,{'class':'-baseline -small'})+part_url+'</a></span>';
+		return '<span><a href="'+full_url+'" target="_blank" rel="noopener noreferrer">'+this.makeSVGIcon(icon_name,{'class':'-baseline -small'})+part_url+'</a></span>';
 	}
 		
 	AutoEmbed.prototype.hasEmbed = function( str ) {
