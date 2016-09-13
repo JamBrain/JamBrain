@@ -8,7 +8,7 @@ import SidebarTV						from 'com/sidebar-tv/tv';
 import SidebarTrending					from 'com/sidebar-trending/trending';
 import SidebarSupport					from 'com/sidebar-support/support';
 
-import JammerCore						from '../../jammer-core/core';
+import CoreData							from '../../core-data/data';
 
 export default class ViewTimeline extends Component {
 	constructor() {
@@ -17,10 +17,10 @@ export default class ViewTimeline extends Component {
 	}
 	
 	getItems( props, state ) {
-		JammerCore.preFetchItemWithAuthorById( state.feed );
+		CoreData.preFetchItemWithAuthorById( state.feed );
 		
 		return state.feed.map(function(item) {
-			var item_type = JammerCore.getItemTypeById(item);
+			var item_type = CoreData.getItemTypeById(item);
 			
 			if ( item_type === 'post' ) {
 				return <ContentPost item={item} />;

@@ -4,7 +4,7 @@ import NavBar 							from 'com/nav-bar/bar';
 import ViewTimeline						from 'com/view-timeline/timeline';
 import ViewSingle						from 'com/view-single/single';
 
-import JammerCore						from '../jammer-core/core';
+import CoreData							from '../core-data/data';
 
 
 window.LUDUMDARE_ROOT = '/';
@@ -65,7 +65,7 @@ class Main extends Component {
 		var slugs = this.trimSlashes(clean.pathname).split('/');
 		
 		// Figure out what our active page_id actually is //
-		this.state.active = JammerCore.getItemIdByParentAndSlugs( this.state.root, slugs );
+		this.state.active = CoreData.getItemIdByParentAndSlugs( this.state.root, slugs );
 	}
 
 	
@@ -88,7 +88,7 @@ class Main extends Component {
 	
 	getView( props, state ) {
 		if ( state.active ) {
-			var item = JammerCore.getItemById( state.active );
+			var item = CoreData.getItemById( state.active );
 	
 			if ( item.type === 'root' ) {
 				return <ViewTimeline item={state.active} />;

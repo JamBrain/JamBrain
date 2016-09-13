@@ -2,19 +2,19 @@ import { h, Component } from 'preact/preact';
 import SVGIcon 			from 'com/svg-icon/icon';
 import NavLink 			from 'com/nav-link/link';
 
-import JammerCore		from '../../jammer-core/core';
+import CoreData			from '../../core-data/data';
 
 
 export default class ContentPost extends Component {
 	render(props,state) {
-		var post = JammerCore.getItemById( props.item );
-		var user = JammerCore.getItemById( post.author );
+		var post = CoreData.getItemById( props.item );
+		var user = CoreData.getItemById( post.author );
 		
 		var hasTwitter = user.meta.twitter ? <span class="-twitter"> (<a href={"https://twitter.com/"+user.meta.twitter} target="_blank" rel="noopener noreferrer" title={"https://twitter.com/"+user.meta.twitter}><SVGIcon baseline small>twitter</SVGIcon>/{user.meta.twitter}</a>)</span> : <span />;
 //		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <SVGIcon>users</SVGIcon></span> : <span />;
 		
 		// Build URL //
-		var url = '/'+JammerCore.getItemPathSlugsById( props.item ).slice(1).join('/')+'/';
+		var url = '/'+CoreData.getItemPathSlugsById( props.item ).slice(1).join('/')+'/';
 		
 //		function parseNames( str ) {
 //			// Dummy: Use Global Object //
