@@ -1,13 +1,15 @@
 #!/usr/bin/env php
 <?php
-require_once __DIR__."/../src/Core/cli.php";
+require_once __DIR__."/../src/core/cli.php";
 
 $cmd = array_shift($argv);
 array_unshift($argv,basename($cmd));
 
 if ( count($argv) < 2 ) {
-	echo "Usage: ".$cmd." file.php [directory]\n";
-	echo "If directory is omitted, '.' is assumed\n\n";
+	echo "Usage: ".$cmd." file.php [search_directory] [blah ...]\n";
+	echo "If search_directory is omitted, '.' is assumed\n";
+	echo "If one or more files are specified after search_directory, these folders will go first\n";
+	echo "\n";
 	exit( -1 );
 }
 
@@ -18,13 +20,39 @@ if ( count($argv) < 3 ) {
 echo "<?php\n";
 echo "// Generated with \"".implode(' ',$argv)."\" -- DO NOT EDIT! //\n";
 
-$files = array_diff(scandir($argv[2]),['.','..']);
+$pre_files = array_slice($argv,3);
 
-foreach( $files as $file ) {
-	$true_file = $argv[2].'/'.$file;
+// These files go first //
+foreach( $pre_files as $file ) {
+	if ( $argv[2] == '.' )
+		$true_file = $file;
+	else
+		$true_file = $argv[2].'/'.$file;
+
 	if ( is_dir($true_file) ) {
 		if ( file_exists($true_file.'/'.$argv[1]) ) {
-			echo 'include __DIR__."/'.$argv[2].'/'.$argv[1]."\";\n";
+			echo 'include __DIR__."/'.$true_file.'/'.$argv[1]."\";\n";
+		}
+	}
+}
+
+echo "\n";
+
+$files = array_diff(scandir($argv[2]),['.','..']);
+
+// The files found via our search go next //
+foreach( $files as $file ) {
+	if ( in_array($file,$pre_files) )
+		continue;
+	
+	if ( $argv[2] == '.' )
+		$true_file = $file;
+	else
+		$true_file = $argv[2].'/'.$file;
+
+	if ( is_dir($true_file) ) {
+		if ( file_exists($true_file.'/'.$argv[1]) ) {
+			echo 'include __DIR__."/'.$true_file.'/'.$argv[1]."\";\n";
 		}
 	}
 }
