@@ -18,7 +18,7 @@ if ( count($argv) < 3 ) {
 }
 
 echo "<?php\n";
-echo "// Generated with \"".implode(' ',$argv)."\" -- DO NOT EDIT! //\n";
+echo "/// Generated with \"".implode(' ',$argv)."\" -- **DO NOT EDIT!**\n";
 
 $pre_files = array_slice($argv,3);
 

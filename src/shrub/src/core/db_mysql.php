@@ -1,52 +1,85 @@
 <?php
-// Be sure to include your configuration before including this file.
-// Configuration is not auto-included, in case you want to customize
+// Be sure to include the configuration file before including this one.
+// Configuration is not auto-included, in case you want to customize it
 
-$db = null;				// ** Global Database Variable **** //
+/// @defgroup DB
+/// @brief The Database Library (wraps MySQLi)
+/// @ingroup Shrub
 
-$DB_QUERY_COUNT = 0;
+
+/// @name Debugging/Optimization
+/// @addtogroup DB
+/// @{
+
+/// @retval {integer} The number of queries that have been run
 function db_GetQueryCount() {
 	global $DB_QUERY_COUNT;
 	return $DB_QUERY_COUNT;
 }
+/// @}
 
-// Logging function specific to database operations //
-function db_Log( $msg, $echo_too = false ) {
+
+/// @cond INTERNAL
+
+/// @name Internal
+/// @{
+$db = null;				///< The global database object
+$DB_QUERY_COUNT = 0;	///< How many queries have been run
+/// @}
+
+/// @name Internal: Logging
+/// Used internally for logging database errors.
+/// @{
+function _db_Log( $msg, $echo_too = false ) {
 	error_log( "SHRUB DB ERROR: " . $msg );
 	if ( isset($echo_too) && $echo_too == true ) {
 		echo "<strong>SHRUB DB ERROR:</strong> " . $msg . "<br />";
 	}
 }
-function db_LogError( $echo_too = false ) {
+function _db_LogError( $echo_too = false ) {
 	global $db;
 	if ( isset($db) )
-		db_Log( mysqli_error($db), $echo_too );
+		_db_Log( mysqli_error($db), $echo_too );
 }
+/// @}
 
+/// @endcond
+
+
+///@cond
 // Check database config //
 if ( !defined('SH_DB_HOST') ) {
-	die(db_Log("SH_DB_HOST not set"));
+	die(_db_Log("SH_DB_HOST not set"));
 }
 if ( !defined('SH_DB_NAME') ) {
-	die(db_Log("SH_DB_NAME not set."));
+	die(_db_Log("SH_DB_NAME not set."));
 }
 if ( !defined('SH_DB_LOGIN') ) {
-	die(db_Log("SH_DB_LOGIN not set."));
+	die(_db_Log("SH_DB_LOGIN not set."));
 }
 if ( !defined('SH_DB_PASSWORD') ) {
-	die(db_Log("SH_DB_PASSWORD not set."));
-}
-
-// Are we connected and ready to use the Database? //
-function db_IsConnected() {
-	global $db;
-	return isset($db);
+	die(_db_Log("SH_DB_PASSWORD not set."));
 }
 
 define('_INI_MYSQLI_DEFAULT_PORT',ini_get("mysqli.default_port"));
 define('_INI_MYSQLI_DEFAULT_SOCKET',ini_get("mysqli.default_socket"));
+///@endcond
 
-// Connect to the Database //
+
+
+/// @cond INTERNAL
+
+/// @name Internal: Database Connect
+/// Database connections are handled automatically, so you **should not** need to call these
+/// @{
+
+/// @brief Are we connected and ready to use the Database?
+function _db_IsConnected() {
+	global $db;
+	return isset($db);
+}
+
+/// @brief Connect to the Database
 function _db_Connect(
 	$host=SH_DB_HOST,
 	$login=SH_DB_LOGIN,
@@ -57,7 +90,7 @@ function _db_Connect(
 )
 {
 	// Safely call this multiple times, only the first time has any effect //
-	if ( !db_IsConnected() ) {
+	if ( !_db_IsConnected() ) {
 		global $db;
 		$db = mysqli_init();
 		
@@ -76,7 +109,7 @@ function _db_Connect(
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
 		if ($db->connect_errno) {
-    		db_Log( "Failed to connect: (" . $db->connect_errno . ") " . $db->connect_error );
+    		_db_Log( "Failed to connect: (" . $db->connect_errno . ") " . $db->connect_error );
     	}
     	
     	// Set character set to utf8mb4 mode (default is utf8mb3 (utf8). mb4 is required for Emoji)
@@ -84,7 +117,8 @@ function _db_Connect(
     	// More info: http://stackoverflow.com/questions/279170/utf-8-all-the-way-through
 	}
 }
-// Connect to MySQL Server only //
+
+/// @brief Connect to the MySQL Server only
 function _db_ConnectOnly(
 	$host=SH_DB_HOST,
 	$login=SH_DB_LOGIN,
@@ -96,21 +130,30 @@ function _db_ConnectOnly(
 	return _db_Connect($host,$login,$password,"",$port,$socket);
 }
 
-// Close Database Connection //
-function db_Close() {
+/// @brief Close the Connection
+function _db_Close() {
 	// Safely call this multiple times, only the first time has any effect //
-	if ( !db_IsConnected() ) {
+	if ( !_db_IsConnected() ) {
 		global $db;
 		mysqli_close($db);
 	}
 }
+/// @}
+
+/// @endcond
 
 
-// Because MySQL returns everything as a string, here's a lightweight schema decoder //
-function db_DoSchema( &$row, &$schema ) {
+
+/// @name MySQL Workarounds
+/// @{
+
+/// Pbrief MySQL returns all fields as strings. This function lets you say what types each field should be instead.
+/// @param [in,out] $row a single row result from a db_Fetch function. **WILL BE MODIFIED**
+/// @param [in] $map a key=>value array of field names and SH_FIELD_TYPE constants
+function db_ParseRow( &$row, &$map ) {
 	foreach( $row as $key => &$value ) {
-		if ( isset($schema[$key]) ) {
-			switch( $schema[$key] ) {
+		if ( isset($map[$key]) ) {
+			switch( $map[$key] ) {
 				//case SH_FIELD_TYPE_STRING: {
 				//	// Do nothing for Strings (they're already strings) //
 				//	break;
@@ -140,13 +183,17 @@ function db_DoSchema( &$row, &$schema ) {
 		}
 	}
 }
-
+///@}
 
 /* *********************************************************************************************** */
 
-// NOTE: Prepare statements are only faster in places you DON'T use the "in" keyword.
-//	Prepared statements are an optimization when the query itself is identical.
+/// @cond INTERNAL
 
+// NOTE: Prepare statements are only faster in places you DON'T use the "in" keyword.
+// Prepared statements as an optimization are only applicible when the query itself is identical.
+
+/// @name Internal: Internal Query Code
+/// @{
 function _db_Prepare( $query ) {
 	return mysqli_prepare($GLOBALS['db'],$query);
 }
@@ -175,7 +222,7 @@ function _db_BindExecute( &$st, $args ) {
 			}
 			// date+time?
 			else {
-				db_Log("Unable to parse ".gettype($arg));
+				_db_Log("Unable to parse ".gettype($arg));
 			}
 		}
 		
@@ -186,7 +233,7 @@ function _db_BindExecute( &$st, $args ) {
 	$ret = $st->execute();
 	
 	if ( !$ret || $st->errno ) {
-		db_LogError();
+		_db_LogError();
 		$st->close();
 		return false;
 	}
@@ -196,7 +243,7 @@ function _db_BindExecute( &$st, $args ) {
 
 /* *********************************************************************************************** */
 
-// Underscore version doesn't close //
+/// @brief This, the underscore version doesn't close $st. It returns it instead
 function _db_Query( $query, $args ) {
 	_db_Connect();
 
@@ -204,12 +251,15 @@ function _db_Query( $query, $args ) {
 	if ( $st && _db_BindExecute($st,$args) ) {
 		return $st;
 	}
-	db_LogError();
+	_db_LogError();
 	return false;
 }
+///@}
 
 /* *********************************************************************************************** */
 
+/// @name Internal: Post-query extraction functions
+/// @{
 function _db_GetAssoc(&$st) {
 	$result = $st->get_result();
 	$ret = [];
@@ -218,7 +268,7 @@ function _db_GetAssoc(&$st) {
 	}
 	return $ret;
 }
-// Given a key (field name), populate an array using the value of the key as the index
+/// @brief Given a key (field name), populate an array using the value of the key as the index
 function _db_GetAssocStringKey($key,&$st) {
 	$result = $st->get_result();
 	$ret = [];
@@ -227,7 +277,7 @@ function _db_GetAssocStringKey($key,&$st) {
 	}
 	return $ret;
 }
-// Same, but assume the key is an integer, not a string //
+/// @brief Same as _db_GetAssocStringKey, but assume the key is an integer, not a string
 function _db_GetAssocIntKey($key,&$st) {
 	$result = $st->get_result();
 	$ret = [];
@@ -236,7 +286,7 @@ function _db_GetAssocIntKey($key,&$st) {
 	}
 	return $ret;
 }
-// Same, but assume the key is a float, not a string //
+/// @brief Same as _db_GetAssocStringKey, but assume the key is a float, not a string
 function _db_GetAssocFloatKey($key,&$st) {
 	$result = $st->get_result();
 	$ret = [];
@@ -245,7 +295,7 @@ function _db_GetAssocFloatKey($key,&$st) {
 	}
 	return $ret;
 }
-// Get an array of just the first element //
+/// @brief Get an array of just the first element
 function _db_GetFirst(&$st) {
 	$result = $st->get_result();
 	$ret = [];
@@ -254,7 +304,7 @@ function _db_GetFirst(&$st) {
 	}
 	return $ret;
 }
-// Make a key=value pair array, where 0 is the key, and 1 is the value 
+/// @brief Make a key=value pair array, where 0 is the key, and 1 is the value 
 function _db_GetPair(&$st) {
 	$result = $st->get_result();
 	$ret = [];
@@ -263,7 +313,7 @@ function _db_GetPair(&$st) {
 	}
 	return $ret;
 }
-// Same as above, but make sure the key is an integer
+/// @brief Same as _db_GetPair, but make sure the key is an integer
 function _db_GetIntPair(&$st) {
 	$result = $st->get_result();
 	$ret = [];
@@ -272,11 +322,18 @@ function _db_GetIntPair(&$st) {
 	}
 	return $ret;
 }
+/// @}
+
+/// @endcond
 
 /* *********************************************************************************************** */
 
-// Basic Query. Don't care about the results. //
-function db_Query( $query, ...$args ) {
+/// @name Basic Query Functions
+/// Takes a query string. Optionally replaces all ?'s with the additional arguments.
+/// @{
+
+/// @brief Basic Query, for when the results don't matter.
+function db_Query( /** [in] {string} */ $query, /** [in] {string...} (optional) */ ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
 		return $st->close();
@@ -284,7 +341,8 @@ function db_Query( $query, ...$args ) {
 	return false;
 }
 
-// Do an INSERT query, return the Id //
+/// @brief Primarily for **INSERT** queries. Returns the Id
+/// @retval {integer} the Id of the item inserted (0 on failure)
 function db_QueryInsert( $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
@@ -295,7 +353,8 @@ function db_QueryInsert( $query, ...$args ) {
 	return false;
 }
 
-// Do a DELETE query, return the number of rows changed //
+/// @brief Primarily for **DELETE** queries. Returns the number of rows changed
+/// @retval {integer} the number of rows that changed
 function db_QueryDelete( $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
@@ -306,6 +365,8 @@ function db_QueryDelete( $query, ...$args ) {
 	return false;
 }
 
+/// @brief For **true/false** queries. Returns the number of rows that match a query
+/// @retval {integer} the number of rows that match
 function db_QueryNumRows( $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
@@ -315,8 +376,14 @@ function db_QueryNumRows( $query, ...$args ) {
 	}
 	return null;
 }
+/// @}
 
-// Return the result of the query
+/// @name Fetch Query Functions
+/// Like db_Query, but returns the query result
+/// @{
+
+/// @brief Return the result of the query
+/// @retval {array[array[string=>string]]} an array of rows, each row an associative array of fields
 function db_QueryFetch( $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
@@ -326,7 +393,8 @@ function db_QueryFetch( $query, ...$args ) {
 	}
 	return null;
 }
-// Fetch the first row (not the first field). You should include a LIMIT 1.
+/// @brief Fetch the first row (not the first field). Don't forget to add a **LIMIT 1**!
+/// @retval {array[string=>string]} an associative array of fields
 function db_QueryFetchFirst( $query, ...$args ) {
 	$ret = db_QueryFetch($query,...$args);
 	if ( isset($ret[0]) )
@@ -334,7 +402,8 @@ function db_QueryFetchFirst( $query, ...$args ) {
 	return null;
 }
 
-// Fetch the first element in each row, and return them as an array
+/// @brief Fetch the first field in each row, and return an array of values
+/// @retval {array[string]} an array of values
 function db_QueryFetchSingle( $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
@@ -345,7 +414,8 @@ function db_QueryFetchSingle( $query, ...$args ) {
 	return null;
 }
 
-// Fetch a pair of elements, using the 1st as the key, 2nd as value
+/// @brief Fetch a pair of fields, using the 1st as the **key**, 2nd as **value**
+/// @retval {array[string=>string]} an array of key=>values pairs
 function db_QueryFetchPair( $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
@@ -355,7 +425,8 @@ function db_QueryFetchPair( $query, ...$args ) {
 	}
 	return null;
 }
-// Same as above, but both values are integers
+/// @brief Same as db_QueryFetchPair, but both values are integers
+/// @retval {array[string=>string]} an array of key=>values pairs, both values are integers
 function db_QueryFetchIntPair( $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
@@ -366,7 +437,8 @@ function db_QueryFetchIntPair( $query, ...$args ) {
 	return null;
 }
 
-// Fetch a single value, when there is only one result //
+/// @brief Fetch a single value, when there is only **one result**
+/// @retval {string} the value
 function db_QueryFetchValue( $query, ...$args ) {
 	$ret = db_QueryFetchSingle($query,$args);
 	if ( isset($ret[0]) ) {
@@ -375,8 +447,8 @@ function db_QueryFetchValue( $query, ...$args ) {
 	return null;	
 }
 
-// Given a specific key, populate an array using that value as an integer key
-function db_QueryFetchWithIntKey( $key, $query, ...$args ) {
+/// Given a specific key, populate an array using that value as an integer key
+function db_QueryFetchWithIntKey( /** [in] integer */ $key, $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
 		$ret = _db_GetAssocIntKey($key,$st);
@@ -385,8 +457,8 @@ function db_QueryFetchWithIntKey( $key, $query, ...$args ) {
 	}
 	return null;
 }
-// Given a specific key, populate an array using that value as a float key
-function db_QueryFetchWithFloatKey( $key, $query, ...$args ) {
+/// Given a specific key, populate an array using that value as a float key
+function db_QueryFetchWithFloatKey( /** [in] float */ $key, $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
 		$ret = _db_GetAssocFloatKey($key,$st);
@@ -395,8 +467,8 @@ function db_QueryFetchWithFloatKey( $key, $query, ...$args ) {
 	}
 	return null;
 }
-// Given a specific key, populate an array using that value as a string key
-function db_QueryFetchWithStringKey( $key, $query, ...$args ) {
+/// Given a specific key, populate an array using that value as a string key
+unction db_QueryFetchWithStringKey( /** [in] string */ $key, $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
 		$ret = _db_GetAssocStringKey($key,$st);
@@ -406,12 +478,22 @@ function db_QueryFetchWithStringKey( $key, $query, ...$args ) {
 	return null;
 }
 
+///@}
+
 /* *********************************************************************************************** */
 
-// TODO: Test these
+/*
+/// @name Existence Functions
+/// @{
+
+/// @todo Test this
 function db_TableExists($name) {
 	return db_QueryNumRows("SHOW TABLES LIKE ?;",$name) == 1;
 }
+/// @todo Test this
 function db_DatabaseExists($name) {
 	return db_QueryNumRows("SHOW DATABASES LIKE ?;",$name) == 1;
 }
+
+/// @}
+*/

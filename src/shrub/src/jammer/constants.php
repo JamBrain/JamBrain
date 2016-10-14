@@ -1,9 +1,9 @@
 <?php
+/// @defgroup Jammer
+/// @brief The Jammer/Ludum Dare Plugin for Shrub
 
-// Make sure SH_TABLE_PREFIX exists.
-if ( !defined('SH_TABLE_PREFIX') ) {
-	define('SH_TABLE_PREFIX',"sh_");	
-}
+
+// NOTE: This may eventually be removed
 
 // Item Constants //
 //const SH_NODE_ADMIN = 3;				// Administrator Control Panel

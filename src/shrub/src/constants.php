@@ -1,5 +1,5 @@
 <?php
-// Generated with "gen_includes constants.php . core config" -- DO NOT EDIT! //
+/// Generated with "gen_includes constants.php . core config" -- **DO NOT EDIT!**
 include __DIR__."/core/constants.php";
 include __DIR__."/config/constants.php";
 

@@ -9,9 +9,8 @@ EXTRACT_ALL			=	YES
 
 RECURSIVE			=	YES
 
-# Include internal data (anything after an \internal command), Default NO
+#ENABLED_SECTIONS	=	INTERNAL
 #INTERNAL_DOCS		=	YES
-
 
 GENERATE_HTML		=	YES
 GENERATE_LATEX		=	NO
