@@ -1,6 +1,15 @@
 <?php
-
-// Field constants for Schema //
+/**
+ * Constants for Core
+ *
+ * @author Mike Kasprzak <mikekasprzak@gmail.com>
+ *
+ * @since 0.1
+ */
+ 
+/*
+ * @package Shrub/Constants/Schema
+ */
 const SH_FIELD_TYPE_IGNORE = 0;			// Field will be unset (NOTE: Prefer a custom query) //
 const SH_FIELD_TYPE_STRING = 1;
 const SH_FIELD_TYPE_INT = 2;

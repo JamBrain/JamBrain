@@ -19,3 +19,4 @@ output/
 obj/
 -/
 *.gz
+/src/shrub/docs

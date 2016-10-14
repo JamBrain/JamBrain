@@ -1,0 +1,17 @@
+PROJECT_NAME		=	Shrub
+INPUT				=	js src
+OUTPUT_DIRECTORY	=	docs
+OUTPUT_LANGUAGE		=	English
+
+EXTRACT_ALL			=	YES
+#EXTRACT_PRIVATE	=	YES
+#EXTRACT_STATIC		=	YES
+
+RECURSIVE			=	YES
+
+# Include internal data (anything after an \internal command), Default NO
+#INTERNAL_DOCS		=	YES
+
+
+GENERATE_HTML		=	YES
+GENERATE_LATEX		=	NO

@@ -12,9 +12,9 @@ function db_GetQueryCount() {
 
 // Logging function specific to database operations //
 function db_Log( $msg, $echo_too = false ) {
-	error_log( "CMW DB ERROR: " . $msg );
+	error_log( "SHRUB DB ERROR: " . $msg );
 	if ( isset($echo_too) && $echo_too == true ) {
-		echo "<strong>CMW DB ERROR:</strong> " . $msg . "<br />";
+		echo "<strong>SHRUB DB ERROR:</strong> " . $msg . "<br />";
 	}
 }
 function db_LogError( $echo_too = false ) {
@@ -24,17 +24,17 @@ function db_LogError( $echo_too = false ) {
 }
 
 // Check database config //
-if ( !defined('CMW_DB_HOST') ) {
-	die(db_Log("CMW_DB_HOST not set"));
+if ( !defined('SH_DB_HOST') ) {
+	die(db_Log("SH_DB_HOST not set"));
 }
-if ( !defined('CMW_DB_NAME') ) {
-	die(db_Log("CMW_DB_NAME not set."));
+if ( !defined('SH_DB_NAME') ) {
+	die(db_Log("SH_DB_NAME not set."));
 }
-if ( !defined('CMW_DB_LOGIN') ) {
-	die(db_Log("CMW_DB_LOGIN not set."));
+if ( !defined('SH_DB_LOGIN') ) {
+	die(db_Log("SH_DB_LOGIN not set."));
 }
-if ( !defined('CMW_DB_PASSWORD') ) {
-	die(db_Log("CMW_DB_PASSWORD not set."));
+if ( !defined('SH_DB_PASSWORD') ) {
+	die(db_Log("SH_DB_PASSWORD not set."));
 }
 
 // Are we connected and ready to use the Database? //
@@ -48,10 +48,10 @@ define('_INI_MYSQLI_DEFAULT_SOCKET',ini_get("mysqli.default_socket"));
 
 // Connect to the Database //
 function _db_Connect(
-	$host=CMW_DB_HOST,
-	$login=CMW_DB_LOGIN,
-	$password=CMW_DB_PASSWORD,
-	$name=CMW_DB_NAME,
+	$host=SH_DB_HOST,
+	$login=SH_DB_LOGIN,
+	$password=SH_DB_PASSWORD,
+	$name=SH_DB_NAME,
 	$port=_INI_MYSQLI_DEFAULT_PORT,
 	$socket=_INI_MYSQLI_DEFAULT_SOCKET
 )
@@ -63,11 +63,11 @@ function _db_Connect(
 		
 		//mysqli_options($db, ...);
 
-		if ( defined('CMW_DB_PORT') )
-			$port = CMW_DB_PORT;
+		if ( defined('SH_DB_PORT') )
+			$port = SH_DB_PORT;
 
-		if ( defined('CMW_DB_SOCKET') )
-			$socket = CMW_DB_SOCKET;
+		if ( defined('SH_DB_SOCKET') )
+			$socket = SH_DB_SOCKET;
 		
 		$flags = null;
 
@@ -86,9 +86,9 @@ function _db_Connect(
 }
 // Connect to MySQL Server only //
 function _db_ConnectOnly(
-	$host=CMW_DB_HOST,
-	$login=CMW_DB_LOGIN,
-	$password=CMW_DB_PASSWORD,
+	$host=SH_DB_HOST,
+	$login=SH_DB_LOGIN,
+	$password=SH_DB_PASSWORD,
 	$port=_INI_MYSQLI_DEFAULT_PORT,
 	$socket=_INI_MYSQLI_DEFAULT_SOCKET
 )
@@ -111,27 +111,27 @@ function db_DoSchema( &$row, &$schema ) {
 	foreach( $row as $key => &$value ) {
 		if ( isset($schema[$key]) ) {
 			switch( $schema[$key] ) {
-				//case CMW_FIELD_TYPE_STRING: {
+				//case SH_FIELD_TYPE_STRING: {
 				//	// Do nothing for Strings (they're already strings) //
 				//	break;
 				//}
-				case CMW_FIELD_TYPE_INT: {
+				case SH_FIELD_TYPE_INT: {
 					$row[$key] = intval($value);
 					break;
 				}
-				case CMW_FIELD_TYPE_FLOAT: {
+				case SH_FIELD_TYPE_FLOAT: {
 					$row[$key] = floatval($value);
 					break;
 				}
-				case CMW_FIELD_TYPE_DATETIME: {
+				case SH_FIELD_TYPE_DATETIME: {
 					$row[$key] = strtotime($value);
 					break;
 				}
-				case CMW_FIELD_TYPE_JSON: {
+				case SH_FIELD_TYPE_JSON: {
 					$row[$key] = json_decode($value,true);
 					break;
 				}
-				case CMW_FIELD_TYPE_IGNORE: {
+				case SH_FIELD_TYPE_IGNORE: {
 					// NOTE: This is not ideal. You should instead use a modified query. //
 					unset($row[$key]);
 					break;
