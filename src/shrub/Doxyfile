@@ -1,5 +1,5 @@
 PROJECT_NAME		=	Shrub
-INPUT				=	js src
+INPUT				=	src
 OUTPUT_DIRECTORY	=	docs
 OUTPUT_LANGUAGE		=	English
 
