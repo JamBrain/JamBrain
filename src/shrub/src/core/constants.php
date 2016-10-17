@@ -31,6 +31,6 @@ const SH_FIELD_TYPE_IGNORE = 0;			///< This means field will be unset. You shoul
 const SH_FIELD_TYPE_STRING = 1;			///< Has no effect (values are strings by default)
 const SH_FIELD_TYPE_INT = 2;
 const SH_FIELD_TYPE_FLOAT = 3;
-const SH_FIELD_TYPE_DATETIME = 4;		///< ISO 8601 Date (2016-03-01T05:23:49.049Z)
-const SH_FIELD_TYPE_JSON = 5;			///< JSON encoded string
+const SH_FIELD_TYPE_DATETIME = 4;		///< W3C date formatted strings (i.e. 2016-03-01T05:23:49.049Z)
+const SH_FIELD_TYPE_JSON = 5;			///< JSON encoded strings
 /// @}
