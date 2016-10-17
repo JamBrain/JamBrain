@@ -1,4 +1,7 @@
 <?php
+/// @defgroup Node
+/// @ingroup Modules
+
 ///	@addtogroup NodeIds
 /// @{
 const SH_NODE_ID_ROOT = 			1;	///< Root of the node-tree

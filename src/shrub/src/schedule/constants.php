@@ -1,4 +1,7 @@
 <?php
+/// @defgroup Schedule
+/// @ingroup Modules
+
 /// @name Schedule Tables
 /// @addtogroup Tables
 /// @{

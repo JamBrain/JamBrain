@@ -1,4 +1,7 @@
 <?php
+/// @defgroup User
+/// @ingroup Modules
+
 /// @name User Tables
 /// @addtogroup Tables
 /// @{

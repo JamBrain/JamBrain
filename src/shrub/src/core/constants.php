@@ -2,9 +2,15 @@
 /// @defgroup Shrub
 /// @brief The Shrub CMS/CMW backend.
 
+/// @defgroup Core
+/// @ingroup Shrub
+
 /// @defgroup Constants
 /// @ingroup Shrub
  
+/// @defgroup Modules
+/// @ingroup Shrub
+
 /// @defgroup Tables
 /// @brief Database Tables
 /// @ingroup Constants

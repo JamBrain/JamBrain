@@ -1,4 +1,7 @@
 <?php
+/// @defgroup Config
+/// @ingroup Modules
+
 /// @name Config Tables
 /// @addtogroup Tables
 /// @{

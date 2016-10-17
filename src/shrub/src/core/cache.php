@@ -1,7 +1,7 @@
 <?php
 /// @defgroup Cache
 /// @brief Caching Module (wraps APCu)
-/// @ingroup Shrub
+/// @ingroup Core
 
 /// @cond
 if ( function_exists("apcu_fetch") ) {

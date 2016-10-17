@@ -1,4 +1,7 @@
 <?php
+/// @defgroup Comment
+/// @ingroup Modules
+
 /// @name Comment Tables
 /// @addtogroup Tables
 /// @{

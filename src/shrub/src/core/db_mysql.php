@@ -4,7 +4,7 @@
 
 /// @defgroup DB
 /// @brief The Database Library (wraps MySQLi)
-/// @ingroup Shrub
+/// @ingroup Core
 
 
 /// @name Debugging/Optimization

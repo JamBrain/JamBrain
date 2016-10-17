@@ -1,7 +1,7 @@
 <?php
 /// @defgroup JSON
 /// @brief JSON emitting module (typically for making APIs) 
-/// @ingroup Shrub
+/// @ingroup Core
 
 /// @addtogroup JSON
 /// @{
