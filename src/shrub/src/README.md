@@ -10,4 +10,4 @@ If the item has database tables:
 * `item/table_create.php` - run `tools/table_create` to create tables
 * `item/table_destroy.php` - run `tools/table_destroy` to destroy tables
 
-And as it was suggested above, Doxygen can be used to generate documentation. Simply run `doxygen` in the root `shrub` folder.
+And as it was suggested above, Doxygen can be used to generate documentation. Simply run `doxygen` in the root `shrub` folder. If you are creating your own plugin, add its unique calls to its own Doxygen module, but do add the Tables to the `"Tables"` module so all table constants can be found in one place.
