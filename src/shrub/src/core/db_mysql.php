@@ -3,7 +3,7 @@
 // Configuration is not auto-included, in case you want to customize it
 
 /// @defgroup DB
-/// @brief The Database Library (wraps MySQLi)
+/// The Database Library (wraps MySQLi)
 /// @ingroup Core
 
 
@@ -73,13 +73,13 @@ define('_INI_MYSQLI_DEFAULT_SOCKET',ini_get("mysqli.default_socket"));
 /// Database connections are handled automatically, so you **should not** need to call these
 /// @{
 
-/// @brief Are we connected and ready to use the Database?
+/// Are we connected and ready to use the Database?
 function _db_IsConnected() {
 	global $db;
 	return isset($db);
 }
 
-/// @brief Connect to the Database
+/// Connect to the Database
 function _db_Connect(
 	$host=SH_DB_HOST,
 	$login=SH_DB_LOGIN,
@@ -118,7 +118,7 @@ function _db_Connect(
 	}
 }
 
-/// @brief Connect to the MySQL Server only
+/// Connect to the MySQL Server only
 function _db_ConnectOnly(
 	$host=SH_DB_HOST,
 	$login=SH_DB_LOGIN,
@@ -130,7 +130,7 @@ function _db_ConnectOnly(
 	return _db_Connect($host,$login,$password,"",$port,$socket);
 }
 
-/// @brief Close the Connection
+/// Close the Connection
 function _db_Close() {
 	// Safely call this multiple times, only the first time has any effect //
 	if ( !_db_IsConnected() ) {
@@ -257,7 +257,7 @@ function _db_BindExecute( &$st, $args ) {
 
 /* *********************************************************************************************** */
 
-/// @brief This, the underscore version doesn't close $st. It returns it instead
+/// This, the underscore version doesn't close $st; It returns it instead
 function _db_Query( $query, $args ) {
 	_db_Connect();
 
@@ -282,7 +282,7 @@ function _db_GetAssoc(&$st) {
 	}
 	return $ret;
 }
-/// @brief Given a key (field name), populate an array using the value of the key as the index
+/// Given a key (field name), populate an array using the value of the key as the index
 function _db_GetAssocStringKey($key,&$st) {
 	$result = $st->get_result();
 	$ret = [];
@@ -291,7 +291,7 @@ function _db_GetAssocStringKey($key,&$st) {
 	}
 	return $ret;
 }
-/// @brief Same as _db_GetAssocStringKey, but assume the key is an integer, not a string
+/// Same as _db_GetAssocStringKey, but assume the key is an integer, not a string
 function _db_GetAssocIntKey($key,&$st) {
 	$result = $st->get_result();
 	$ret = [];
@@ -300,7 +300,7 @@ function _db_GetAssocIntKey($key,&$st) {
 	}
 	return $ret;
 }
-/// @brief Same as _db_GetAssocStringKey, but assume the key is a float, not a string
+/// Same as _db_GetAssocStringKey, but assume the key is a float, not a string
 function _db_GetAssocFloatKey($key,&$st) {
 	$result = $st->get_result();
 	$ret = [];
@@ -309,7 +309,7 @@ function _db_GetAssocFloatKey($key,&$st) {
 	}
 	return $ret;
 }
-/// @brief Get an array of just the first element
+/// Get an array of just the first element
 function _db_GetFirst(&$st) {
 	$result = $st->get_result();
 	$ret = [];
@@ -318,7 +318,7 @@ function _db_GetFirst(&$st) {
 	}
 	return $ret;
 }
-/// @brief Make a key=value pair array, where 0 is the key, and 1 is the value 
+/// Make a key=value pair array, where 0 is the key, and 1 is the value 
 function _db_GetPair(&$st) {
 	$result = $st->get_result();
 	$ret = [];
@@ -327,7 +327,7 @@ function _db_GetPair(&$st) {
 	}
 	return $ret;
 }
-/// @brief Same as _db_GetPair, but make sure the key is an integer
+/// Same as _db_GetPair, but make sure the key is an integer
 function _db_GetIntPair(&$st) {
 	$result = $st->get_result();
 	$ret = [];
@@ -349,7 +349,7 @@ function _db_GetIntPair(&$st) {
 /// When you see `$args`, assume it's variadic (i.e. like printf, any number of optional arguments)
 /// @{
 
-/// @brief Basic Query, for when the results don't matter.
+/// Basic Query, for when the results don't matter.
 /// @param [in] String $query MySQL query string
 /// @param [in] ... (optional) String arguments
 function db_Query( $query, ...$args ) {
@@ -360,7 +360,7 @@ function db_Query( $query, ...$args ) {
 	return false;
 }
 
-/// @brief Primarily for **INSERT** queries. Returns the Id
+/// Primarily for **INSERT** queries; Returns the Id
 /// @param [in] String $query MySQL query string
 /// @param [in] ... (optional) String arguments
 /// @retval Integer the Id of the item inserted (0 on failure)
@@ -374,7 +374,7 @@ function db_QueryInsert( $query, ...$args ) {
 	return false;
 }
 
-/// @brief Primarily for **DELETE** queries. Returns the number of rows changed
+/// Primarily for **DELETE** queries; Returns the number of rows changed
 /// @param [in] String $query MySQL query string
 /// @param [in] ... (optional) String arguments
 /// @retval Integer the number of rows that changed
@@ -388,7 +388,7 @@ function db_QueryDelete( $query, ...$args ) {
 	return false;
 }
 
-/// @brief For **true/false** queries. Returns the number of rows that match a query
+/// For **true/false** queries; Returns the number of rows that match a query
 /// @param [in] String $query MySQL query string
 /// @param [in] ... (optional) String arguments
 /// @retval Integer the number of rows that match
@@ -407,7 +407,7 @@ function db_QueryNumRows( $query, ...$args ) {
 /// Like db_Query, but returns the query result
 /// @{
 
-/// @brief Return the result of the query
+/// Return the result of the query
 /// @param [in] String $query MySQL query string
 /// @param [in] ... (optional) String arguments
 /// @retval Array[Array[String=>String]] an array of rows, each row an associative array of fields
@@ -420,7 +420,7 @@ function db_QueryFetch( $query, ...$args ) {
 	}
 	return null;
 }
-/// @brief Fetch the first row (not the first field). Don't forget to add a **LIMIT 1**!
+/// Fetch the first row (not the first field); Don't forget to add a **LIMIT 1**!
 /// @param [in] String $query MySQL query string
 /// @param [in] ... (optional) String arguments
 /// @retval Array[String=>String] an associative array of fields
@@ -431,7 +431,7 @@ function db_QueryFetchFirst( $query, ...$args ) {
 	return null;
 }
 
-/// @brief Fetch the first field in each row, and return an array of values
+/// Fetch the first field in each row, and return an array of values
 /// @param [in] String $query MySQL query string
 /// @param [in] ... (optional) String arguments
 /// @retval Array[String] an array of values
@@ -445,7 +445,7 @@ function db_QueryFetchSingle( $query, ...$args ) {
 	return null;
 }
 
-/// @brief Fetch a pair of fields, using the 1st as the **key**, 2nd as **value**
+/// Fetch a pair of fields, using the 1st as the **key**, 2nd as **value**
 /// @param [in] String $query MySQL query string
 /// @param [in] ... (optional) String arguments
 /// @retval Array[String=>String] an array of key=>values pairs
@@ -458,7 +458,7 @@ function db_QueryFetchPair( $query, ...$args ) {
 	}
 	return null;
 }
-/// @brief Same as db_QueryFetchPair, but both values are integers
+/// Same as db_QueryFetchPair, but both values are integers
 /// @param [in] String $query MySQL query string
 /// @param [in] ... (optional) String arguments
 /// @retval Array[String=>String] an array of key=>values pairs, both values are integers
@@ -472,7 +472,7 @@ function db_QueryFetchIntPair( $query, ...$args ) {
 	return null;
 }
 
-/// @brief Fetch a single value, when there is only **one result**
+/// Fetch a single value, when there is only **one result**
 /// @param [in] String $query MySQL query string
 /// @param [in] ... (optional) String arguments
 /// @retval String the value
@@ -485,7 +485,11 @@ function db_QueryFetchValue( $query, ...$args ) {
 }
 
 /// Given a specific key, populate an array using that value as an integer key
-function db_QueryFetchWithIntKey( /** [in] integer */ $key, $query, ...$args ) {
+/// @param [in] Integer $key ???
+/// @param [in] String $query MySQL query string
+/// @param [in] ... (optional) String arguments
+/// @retval ???
+function db_QueryFetchWithIntKey( $key, $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
 		$ret = _db_GetAssocIntKey($key,$st);
@@ -495,7 +499,11 @@ function db_QueryFetchWithIntKey( /** [in] integer */ $key, $query, ...$args ) {
 	return null;
 }
 /// Given a specific key, populate an array using that value as a float key
-function db_QueryFetchWithFloatKey( /** [in] float */ $key, $query, ...$args ) {
+/// @param [in] Float $key ???
+/// @param [in] String $query MySQL query string
+/// @param [in] ... (optional) String arguments
+/// @retval ???
+function db_QueryFetchWithFloatKey( $key, $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
 		$ret = _db_GetAssocFloatKey($key,$st);
@@ -505,7 +513,11 @@ function db_QueryFetchWithFloatKey( /** [in] float */ $key, $query, ...$args ) {
 	return null;
 }
 /// Given a specific key, populate an array using that value as a string key
-unction db_QueryFetchWithStringKey( /** [in] string */ $key, $query, ...$args ) {
+/// @param [in] String $key ???
+/// @param [in] String $query MySQL query string
+/// @param [in] ... (optional) String arguments
+/// @retval ???
+unction db_QueryFetchWithStringKey( $key, $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
 		$ret = _db_GetAssocStringKey($key,$st);
