@@ -11,7 +11,7 @@
 /// @addtogroup DB
 /// @{
 
-/// @retval {integer} The number of queries that have been run
+/// @retval Integer The number of queries that have been run
 function db_GetQueryCount() {
 	global $DB_QUERY_COUNT;
 	return $DB_QUERY_COUNT;
@@ -147,9 +147,21 @@ function _db_Close() {
 /// @name MySQL Workarounds
 /// @{
 
-/// Pbrief MySQL returns all fields as strings. This function lets you say what types each field should be instead.
-/// @param [in,out] $row a single row result from a db_Fetch function. **WILL BE MODIFIED**
-/// @param [in] $map a key=>value array of field names and SH_FIELD_TYPE constants
+/// MySQL returns all fields as strings. This function lets you say what types each field should be instead.
+/// @param [in,out] Array $row a single row result from a db_Fetch function. **WILL BE MODIFIED**
+/// @param [in] Array $map a key=>value array of field names and SH_FIELD_TYPE constants
+///
+/// Maps should look something like this:
+///
+/// 	$SCHEDULE_MAP = [
+/// 		'id' => SH_FIELD_TYPE_INT,
+/// 		'parent' => SH_FIELD_TYPE_INT,
+/// 		'start' => SH_FIELD_TYPE_DATETIME,
+/// 		'end' => SH_FIELD_TYPE_DATETIME,
+/// 		'extra' => SH_FIELD_TYPE_JSON,
+/// 	];
+///
+/// See @ref DBParseRowFields for types. 
 function db_ParseRow( &$row, &$map ) {
 	foreach( $row as $key => &$value ) {
 		if ( isset($map[$key]) ) {
@@ -330,10 +342,15 @@ function _db_GetIntPair(&$st) {
 
 /// @name Basic Query Functions
 /// Takes a query string. Optionally replaces all ?'s with the additional arguments.
+///
+/// **NOTE:** Doxygen doesn't correctly understand PHP's `...$args` as a variadic argument. 
+/// When you see `$args`, assume it's variadic (i.e. like printf, any number of optional arguments)
 /// @{
 
 /// @brief Basic Query, for when the results don't matter.
-function db_Query( /** [in] {string} */ $query, /** [in] {string...} (optional) */ ...$args ) {
+/// @param [in] String $query MySQL query string
+/// @param [in] ... (optional) String arguments
+function db_Query( $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
 		return $st->close();
@@ -342,7 +359,9 @@ function db_Query( /** [in] {string} */ $query, /** [in] {string...} (optional) 
 }
 
 /// @brief Primarily for **INSERT** queries. Returns the Id
-/// @retval {integer} the Id of the item inserted (0 on failure)
+/// @param [in] String $query MySQL query string
+/// @param [in] ... (optional) String arguments
+/// @retval Integer the Id of the item inserted (0 on failure)
 function db_QueryInsert( $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
@@ -354,7 +373,9 @@ function db_QueryInsert( $query, ...$args ) {
 }
 
 /// @brief Primarily for **DELETE** queries. Returns the number of rows changed
-/// @retval {integer} the number of rows that changed
+/// @param [in] String $query MySQL query string
+/// @param [in] ... (optional) String arguments
+/// @retval Integer the number of rows that changed
 function db_QueryDelete( $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
@@ -366,7 +387,9 @@ function db_QueryDelete( $query, ...$args ) {
 }
 
 /// @brief For **true/false** queries. Returns the number of rows that match a query
-/// @retval {integer} the number of rows that match
+/// @param [in] String $query MySQL query string
+/// @param [in] ... (optional) String arguments
+/// @retval Integer the number of rows that match
 function db_QueryNumRows( $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
@@ -383,7 +406,9 @@ function db_QueryNumRows( $query, ...$args ) {
 /// @{
 
 /// @brief Return the result of the query
-/// @retval {array[array[string=>string]]} an array of rows, each row an associative array of fields
+/// @param [in] String $query MySQL query string
+/// @param [in] ... (optional) String arguments
+/// @retval Array[Array[String=>String]] an array of rows, each row an associative array of fields
 function db_QueryFetch( $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
@@ -394,7 +419,9 @@ function db_QueryFetch( $query, ...$args ) {
 	return null;
 }
 /// @brief Fetch the first row (not the first field). Don't forget to add a **LIMIT 1**!
-/// @retval {array[string=>string]} an associative array of fields
+/// @param [in] String $query MySQL query string
+/// @param [in] ... (optional) String arguments
+/// @retval Array[String=>String] an associative array of fields
 function db_QueryFetchFirst( $query, ...$args ) {
 	$ret = db_QueryFetch($query,...$args);
 	if ( isset($ret[0]) )
@@ -403,7 +430,9 @@ function db_QueryFetchFirst( $query, ...$args ) {
 }
 
 /// @brief Fetch the first field in each row, and return an array of values
-/// @retval {array[string]} an array of values
+/// @param [in] String $query MySQL query string
+/// @param [in] ... (optional) String arguments
+/// @retval Array[String] an array of values
 function db_QueryFetchSingle( $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
@@ -415,7 +444,9 @@ function db_QueryFetchSingle( $query, ...$args ) {
 }
 
 /// @brief Fetch a pair of fields, using the 1st as the **key**, 2nd as **value**
-/// @retval {array[string=>string]} an array of key=>values pairs
+/// @param [in] String $query MySQL query string
+/// @param [in] ... (optional) String arguments
+/// @retval Array[String=>String] an array of key=>values pairs
 function db_QueryFetchPair( $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
@@ -426,7 +457,9 @@ function db_QueryFetchPair( $query, ...$args ) {
 	return null;
 }
 /// @brief Same as db_QueryFetchPair, but both values are integers
-/// @retval {array[string=>string]} an array of key=>values pairs, both values are integers
+/// @param [in] String $query MySQL query string
+/// @param [in] ... (optional) String arguments
+/// @retval Array[String=>String] an array of key=>values pairs, both values are integers
 function db_QueryFetchIntPair( $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
@@ -438,7 +471,9 @@ function db_QueryFetchIntPair( $query, ...$args ) {
 }
 
 /// @brief Fetch a single value, when there is only **one result**
-/// @retval {string} the value
+/// @param [in] String $query MySQL query string
+/// @param [in] ... (optional) String arguments
+/// @retval String the value
 function db_QueryFetchValue( $query, ...$args ) {
 	$ret = db_QueryFetchSingle($query,$args);
 	if ( isset($ret[0]) ) {
