@@ -1,6 +1,6 @@
 <?php
 /// @defgroup Shrub
-/// @brief The Shrub CMS/CMW backend.
+/// The Shrub CMS/CMW backend.
 
 /// @defgroup Core
 /// @ingroup Shrub
@@ -12,19 +12,19 @@
 /// @ingroup Shrub
 
 /// @defgroup Tables
-/// @brief Database Tables
+/// Database Tables
 /// @ingroup Constants
 
 /// @defgroup NodeIds Node Id's
-/// @brief Hardcoded Node Id's
+/// Hardcoded Node Id's
 /// @ingroup Constants
 
 ///	@defgroup NodeTypes Node Types
-/// @brief Short strings that define the type of the Node
+/// Short strings that define the type of the Node
 /// @ingroup Constants
 
 /// @defgroup DBParseRowFields db_ParseRow Fields
-/// @brief Constants used to tell db_ParseRow how to reinterpret fields
+/// Constants used to tell db_ParseRow how to reinterpret fields
 /// @ingroup DB
 /// @{
 const SH_FIELD_TYPE_IGNORE = 0;			///< This means field will be unset. You shouldn't use this. Prefer a custom query w/o the field instead.

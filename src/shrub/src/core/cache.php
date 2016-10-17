@@ -1,6 +1,6 @@
 <?php
 /// @defgroup Cache
-/// @brief Caching Module (wraps APCu)
+/// Caching Module (wraps APCu)
 /// @ingroup Core
 
 /// @cond
@@ -27,7 +27,7 @@ if ( function_exists("apcu_fetch") ) {
 		return $CACHE_STORE_COUNT;
 	}
 	
-	/// @brief Fetch value(s) by key(s), null on failure
+	/// Fetch value(s) by key(s), null on failure
 	/// @param [in] $key string or array of strings
 	/// @retval the value (any type), or null on failure
 	function cache_Fetch( $key ) {
@@ -37,7 +37,7 @@ if ( function_exists("apcu_fetch") ) {
 		$ret = apcu_fetch( $key, $success );
 		return $success ? $ret : null;
 	}
-	/// @brief Check if key(s) exist
+	/// Check if key(s) exist
 	/// @param [in] $key string or array of strings
 	/// @retval boolean or array of booleans
 	function cache_Exists( $key ) {
@@ -52,7 +52,7 @@ if ( function_exists("apcu_fetch") ) {
 		$CACHE_STORE_COUNT++;
 		return apcu_store( $key, $value, $ttl );
 	}
-	/// @briefLike Store, but wont overwrite if it exists
+	/// Like Store, but wont overwrite if it exists
 	/// @param [in] $key string or array of strings
 	/// @param [in] $value any type or value to write
 	/// @param [in] $ttl how long (in ms) value should exist for. 0 means forever
@@ -61,7 +61,7 @@ if ( function_exists("apcu_fetch") ) {
 		$CACHE_STORE_COUNT++;
 		return apcu_add( $key, $value, $ttl );
 	}
-	/// @brief Used to update the TTL of cached values. Works like Store
+	/// Used to update the TTL of cached values. Works like Store
 	/// @param [in] $key string or array of strings
 	/// @param [in] $ttl how long (in ms) value should exist for. 0 means forever
 	function cache_Touch( $key, $ttl = 0 ) {

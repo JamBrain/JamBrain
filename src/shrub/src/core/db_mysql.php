@@ -147,7 +147,7 @@ function _db_Close() {
 /// @name MySQL Workarounds
 /// @{
 
-/// MySQL returns all fields as strings. This function lets you say what types each field should be instead.
+/// Since MySQL returns all fields as strings, this can be used to change the type of each field.
 /// @param [in,out] Array $row a single row result from a db_Fetch function. **WILL BE MODIFIED**
 /// @param [in] Array $map a key=>value array of field names and SH_FIELD_TYPE constants
 ///
@@ -161,7 +161,9 @@ function _db_Close() {
 /// 		'extra' => SH_FIELD_TYPE_JSON,
 /// 	];
 ///
-/// See @ref DBParseRowFields for types. 
+/// You don't need to include every field in a map, just the ones you want to change from Strings.
+///
+/// See @ref DBParseRowFields for a list of types. 
 function db_ParseRow( &$row, &$map ) {
 	foreach( $row as $key => &$value ) {
 		if ( isset($map[$key]) ) {
