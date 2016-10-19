@@ -2,17 +2,22 @@
 /// @defgroup Jammer
 /// @brief The Jammer/Ludum Dare Plugin for Shrub
 
+/// @cond INTERNAL
+$SH_CONFIG_DEFAULT['ludumdare-active'] = '0';	// Currently Active Ludum Dare Event
+$SH_CONFIG_DEFAULT['ludumdare-alert'] = "";		// Short alert message shown by the Ludum Dare site
+$SH_CONFIG_DEFAULT['jammer-alert'] = "";		// Short alert message shown by the Jammer site
+$SH_CONFIG_DEFAULT['jammer.bio-alert'] = "";	// Short alert message shown by the jammer.bio
+/// @endcond
 
-// NOTE: This may eventually be removed
-
+/*
 // Item Constants //
-//const SH_NODE_ADMIN = 3;				// Administrator Control Panel
-//const SH_NODE_TEAM = 4;				// Teams (uncategorized only, i.e. Admin)
-//const SH_NODE_GAME = 5;				// Games (proxy)
-//const SH_NODE_DEMO = 6;				// Demos (proxy)
-//const SH_NODE_CRAFT = 7;				// Crafts (proxy)
-//const SH_NODE_POST = 8;				// Posts (proxy)
-//const SH_NODE_MEDIA = 9;				// Media (proxy)
+const SH_NODE_ADMIN = 3;				// Administrator Control Panel
+const SH_NODE_TEAM = 4;				// Teams (uncategorized only, i.e. Admin)
+const SH_NODE_GAME = 5;				// Games (proxy)
+const SH_NODE_DEMO = 6;				// Demos (proxy)
+const SH_NODE_CRAFT = 7;				// Crafts (proxy)
+const SH_NODE_POST = 8;				// Posts (proxy)
+const SH_NODE_MEDIA = 9;				// Media (proxy)
 
 // --- //
 
@@ -41,3 +46,4 @@ const SH_NODE_TOOL_DEV = 41;
 const SH_NODE_TOOL_ART = 42;
 const SH_NODE_TOOL_CONTENT = 43;
 const SH_NODE_TOOL_OTHER = 44;
+*/

@@ -76,6 +76,13 @@ if ( function_exists("apcu_fetch") ) {
 		else
 			return apcu_store( $key, $value, $ttl );
 	}
+	/// Delete a cached value
+	function cache_Delete( $key ) {
+		global $CACHE_STORE_COUNT;
+		$CACHE_STORE_COUNT++;
+		
+		return apcu_delete($key);
+	}
 	/// @param [in] $key string or array of strings
 	/// @param [in] $step [optional] how much to increment by
 	function cache_Inc( $key, $step = 1 ) {

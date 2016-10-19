@@ -7,6 +7,7 @@ include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."core/db_mysql.php";
 require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
 require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
+require_once __DIR__."/".SHRUB_PATH."config/config.php";
 
 $cmd = array_shift($argv);
 foreach ($argv as $value) {
@@ -32,6 +33,7 @@ if ( $input != "YES" ) {
 
 print "\n";
 
+// Normally Connect isn't required, but done here to confirm existence of DB //
 _db_Connect();
 
 if ( !_db_IsConnected() ) {
@@ -39,13 +41,16 @@ if ( !_db_IsConnected() ) {
 	exit(4);
 }
 
+// *** //
+
 /// Drop a table
 function table_Drop($table) {
 	global $table_list;
-	if ( !ctype_alnum($table) ) {
-		echo "* ERROR: Table \"".$table."\" is not alphanumeric\n";
-		return;
-	}
+	/// @todo make sure $table is a valid name (alphanumeric, underscores, etc)
+//	if ( !ctype_alnum($table) ) {	// Neglects underscore
+//		echo "* ERROR: Table \"".$table."\" is not alphanumeric\n";
+//		return;
+//	}
 	
 	if ( in_array($table,$table_list) ) { 
 		$ret = db_Query("DROP TABLE ".SH_TABLE_PREFIX.$table.";");

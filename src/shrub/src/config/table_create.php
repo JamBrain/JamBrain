@@ -1,45 +1,48 @@
 <?php
-// Create/Upgrade Table //
-$table = SH_TABLE_CONFIG;
-if ( !isset($table_list) || isset($table_list[$table]) ) {
-	DoInit($table);
-	switch ($version) {
+
+$table = 'SH_TABLE_CONFIG';
+if ( in_array(constant($table), $TABLE_LIST) ) {
+	$ok = true;
+
+	table_Init($table);
+	switch ( $TABLE_VERSION ) {
 	case 0:
-		$ok = DoCreate( $table,
-			"CREATE TABLE ".$table." (
+		$ok = table_Create( $table,
+			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
 				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
 					UNIQUE,
 				`key` VARCHAR(64) CHARSET latin1 NOT NULL DEFAULT '',
 					INDEX(`key`),
 				`value` VARCHAR(128) NOT NULL DEFAULT '',
 				`timestamp` DATETIME NOT NULL
-			)".DEFAULT_CS_ENGINE.";");
-		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
-	case 1:
-		// Oops! I forgot to remove this test that bumped the version number.
-		// Therefor, config actually starts at version 2
-		if (!$ok) break; $version++; if (isset($max_version) && $version == $max_version) break;
+			)".DB_CREATE_SUFFIX);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
-	DoExit($table);
 	
-	$DIFF_CONFIG = array_diff_key(DEFAULT_CONFIG,$CONFIG);
-	$DIFF_CONFIG_COUNT = count($DIFF_CONFIG);
-	if ( $DIFF_CONFIG_COUNT > 0 ) {
-		print "Adding ".$DIFF_CONFIG_COUNT." missing element(s) to ".$table."\n";
+	// Because this is Config, we do a few more things //
+	$config_default = array_merge($SH_CONFIG_DEFAULT, array_fill_keys(config_GetTableConstants(), '0'));
+	
+	$config_diff = array_diff_key($config_default,$SH_CONFIG);
+	$config_diff_count = count($config_diff);
+	if ( $config_diff_count > 0 ) {
+		print "Adding ".$config_diff_count." missing element(s) to ".$table."\n";
 		
-		foreach ( $DIFF_CONFIG as $key => $value ) {
+		foreach ( $config_diff as $key => $value ) {
 			print "  * ".$key." = ".(is_string($value)?("\"".$value."\"\n"):($value."\n"));
 			config_Set($key,$value);
 		}
 	}
 	
-	$DIFF_CONFIG = array_diff_key($CONFIG,DEFAULT_CONFIG);
-	$DIFF_CONFIG_COUNT = count($DIFF_CONFIG);
-	if ( $DIFF_CONFIG_COUNT > 0 ) {
-		print "NOTE: There are ".$DIFF_CONFIG_COUNT." element(s) not found in DEFAULT_CONFIG\n";
+	$config_diff = array_diff_key($SH_CONFIG,$config_default);
+	$config_diff_count = count($config_diff);
+	if ( $config_diff_count > 0 ) {
+		print "NOTE: There are ".$config_diff_count." extra element(s) found. These may require manual removal\n";
 		
-		foreach ( $DIFF_CONFIG as $key => $value ) {
+		foreach ( $config_diff as $key => $value ) {
 			print "  * ".$key." = ".(is_string($value)?("\"".$value."\"\n"):($value."\n"));
 		}
 	}
+
+	// Set the version now //
+	table_Exit($table);
 }

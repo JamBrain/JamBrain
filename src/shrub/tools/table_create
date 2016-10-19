@@ -1,23 +1,29 @@
 #!/usr/bin/env php
 <?php
 const CONFIG_PATH = "../";
+const SHRUB_PATH = "../src/";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/../src/core/db_mysql.php";
-require_once __DIR__."/../src/core/cli_root.php";	// Confirm CLI, Require ROOT
-require_once __DIR__."/../src/constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date
+require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
+require_once __DIR__."/".SHRUB_PATH."core/db_mysql.php";
+require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
+require_once __DIR__."/".SHRUB_PATH."config/config.php";
+
+
+$TABLE_LIST = [];
 
 $cmd = array_shift($argv);
 foreach ($argv as $value) {
-	$table_list[$value] = true;
+	$TABLE_LIST[] = $value;
 }
 
 print "\n*** WARNING ***\n\n";
-if (isset($table_list)) {
+if ( count($TABLE_LIST) ) {
 	print "You are about to create/update the following table(s):\n";
 	print implode(", ",$argv)."\n";
 }
 else {
+	$TABLE_LIST = config_GetTables();
 	print "You are about to create/update ALL tables.\n";
 }
 print "\nAre you sure [type 'YES']? ";
@@ -32,6 +38,7 @@ print "\n";
 
 // Normally Connect isn't required, but done here to confirm existence of DB //
 _db_Connect();
+
 if ( !_db_IsConnected() ) {
 	print "Failed to connect to Database. Retrying as server only...";
 	
@@ -62,35 +69,73 @@ if ( !_db_IsConnected() ) {
 	}
 }
 
-// NOTE: utf8 is 3 byte unicode. utf8mb4 is 4 byte. Required for Emoji.
-const DEFAULT_CS_ENGINE = " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE=InnoDB";
-global $CONFIG, $version, $old_version;
+// *** //
 
-function DoInit($table) {
-	global $CONFIG, $version, $old_version;
+// NOTE: utf8 is 3 byte unicode. utf8mb4 is 4 byte. Required for Emoji.
+const DB_CREATE_SUFFIX = " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE=InnoDB;";
+global $SH_CONFIG, $TABLE_VERSION, $OLD_TABLE_VERSION;
+
+function table_Init($table) {
+	global $SH_CONFIG, $TABLE_VERSION, $OLD_TABLE_VERSION;
 	
 	print "* ".$table."\n";
-	$version = isset($CONFIG[$table])?intval($CONFIG[$table]):0;
-	$old_version = $version;	
+	$TABLE_VERSION = isset($SH_CONFIG[$table])?intval($SH_CONFIG[$table]):0;
+	$OLD_TABLE_VERSION = $TABLE_VERSION;	
 }
-function DoCreate( $table, ...$args ) {
+function table_Create( $table, ...$args ) {
+	global $TABLE_VERSION;
+	
+	if ( getenv('MAX_VERSION') !== false && $TABLE_VERSION <= intval(getenv('MAX_VERSION')) ) 
+		return false;
+	
 	$ret = db_Query( ...$args );
-	if ( $ret )
-		print $table." created\n";
-	else
-		print "Error creating ".$table."\n";
+	
+	print( $ret ? ($table." created\n") : ("Error creating ".$table."\n") );
 	return $ret;
 }
-function DoExit($table) {
-	global $CONFIG, $version, $old_version;
+function table_Exit($table) {
+	global $SH_CONFIG, $TABLE_VERSION, $OLD_TABLE_VERSION;
 	
-	if ( config_Set($table,strval($version)) ) {
-		print $table." upgraded (version ".$old_version." -> ".$version.")\n";	
+	if ( config_Set($table,strval($TABLE_VERSION)) ) {
+		print $table." upgraded (version ".$OLD_TABLE_VERSION." -> ".$TABLE_VERSION.")\n";	
 	}
 }
 
 // *** //
 
+// These directories should be searched first // 
+$first_dirs = [
+	'config'
+];
+
+// Scan for include directories //
+$dirs = array_diff(scandir(SHRUB_PATH),['.','..']);
+$dirs_only = [];
+foreach ( $dirs as $dir ) {
+	if ( is_dir(SHRUB_PATH.$dir) ) {
+		$dirs_only[] = $dir;
+	}
+}
+
+// Generate the final ordered list //
+$dirs_ordered = array_merge($first_dirs,array_diff($dirs_only,$first_dirs));
+
+// *** //
+
+// Attempt to load the configuration (if possible) //
 print "Loading configuration...\n";
 config_Load();
 
+// *** //
+
+// Include the create code for each module
+foreach ( $dirs_ordered as $dir ) {
+	$file = SHRUB_PATH.$dir.'/table_create.php';
+	if ( is_file($file) ) {
+		echo "[".$file."]\n";
+		include $file;
+	}
+}
+
+// Done.
+exit;

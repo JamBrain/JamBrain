@@ -7,7 +7,7 @@
 
 /// @defgroup Constants
 /// @ingroup Shrub
- 
+
 /// @defgroup Modules
 /// @ingroup Shrub
 
