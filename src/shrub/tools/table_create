@@ -17,30 +17,30 @@ foreach ($argv as $value) {
 	$TABLE_LIST[] = $value;
 }
 
-print "\n*** WARNING ***\n\n";
+echo "\n*** WARNING ***\n\n";
 if ( count($TABLE_LIST) ) {
-	print "You are about to create/update the following table(s):\n";
-	print implode(", ",$argv)."\n";
+	echo "You are about to create/update the following table(s):\n";
+	echo implode(", ",$argv)."\n";
 }
 else {
 	$TABLE_LIST = config_GetTables();
-	print "You are about to create/update ALL tables.\n";
+	echo "You are about to create/update ALL tables.\n";
 }
-print "\nAre you sure [type 'YES']? ";
+echo "\nAre you sure [type 'YES']? ";
 flush();
 $input = trim(fgets(STDIN));
 if ( $input != "YES" ) {
-	print "Aborting...\n";
+	echo "Aborting...\n";
 	exit(1);
 }
 
-print "\n";
+echo "\n";
 
 // Normally Connect isn't required, but done here to confirm existence of DB //
 _db_Connect();
 
 if ( !_db_IsConnected() ) {
-	print "Failed to connect to Database. Retrying as server only...";
+	echo "Failed to connect to Database. Retrying as server only...";
 	
 	_db_ConnectOnly();
 
@@ -49,12 +49,12 @@ if ( !_db_IsConnected() ) {
 		exit(4);
 	}
 	
-	print "Connected.\n";
+	echo "Connected.\n";
 
 	// If database doesn't exist, create it //
 	if ( !db_DatabaseExists(SH_DB_NAME) ) {
 		db_Query("CREATE DATABASE IF NOT EXISTS ?;",SH_DB_NAME);
-		print("Database '".SH_DB_NAME."' created.\n");
+		echo("Database '".SH_DB_NAME."' created.\n");
 	
 		// Reconnect //
 		_db_Close();
@@ -65,7 +65,7 @@ if ( !_db_IsConnected() ) {
 			exit(1);
 		}
 		
-		print "Reconnected.\n";
+		echo "Reconnected.\n";
 	}
 }
 
@@ -78,26 +78,52 @@ global $SH_CONFIG, $TABLE_VERSION, $OLD_TABLE_VERSION;
 function table_Init($table) {
 	global $SH_CONFIG, $TABLE_VERSION, $OLD_TABLE_VERSION;
 	
-	print "* ".$table."\n";
+	echo "* ".$table."\n";
 	$TABLE_VERSION = isset($SH_CONFIG[$table])?intval($SH_CONFIG[$table]):0;
 	$OLD_TABLE_VERSION = $TABLE_VERSION;	
 }
+/// How to set MAX_VERSION:
+///
+/// 	sudo MAX_VERSION=1 ./table_create
+/// 
 function table_Create( $table, ...$args ) {
 	global $TABLE_VERSION;
 	
-	if ( getenv('MAX_VERSION') !== false && $TABLE_VERSION <= intval(getenv('MAX_VERSION')) ) 
+	if ( getenv('MAX_VERSION') !== false && $TABLE_VERSION > intval(getenv('MAX_VERSION')) ) 
 		return false;
 	
 	$ret = db_Query( ...$args );
 	
-	print( $ret ? ($table." created\n") : ("Error creating ".$table."\n") );
+	echo( $ret ? ($table." created\n") : ("Error creating ".$table."\n") );
 	return $ret;
+}
+/// Functionally the same as table_Create, but does different logging
+function table_Update( $table, ...$args ) {
+	global $TABLE_VERSION;
+
+	if ( getenv('MAX_VERSION') !== false && $TABLE_VERSION > intval(getenv('MAX_VERSION')) ) 
+		return false;
+
+	$ret = db_Query( ...$args );
+	
+	echo( $ret ? ($table." updated\n") : ("Error updating ".$table."\n") );
+	return $ret;
+}
+/// Like table_Update, but it doesn't do a query (No-Op); Use this when you want to flag a table as upgraded, but do nothing
+function table_Nop( $table ) {
+	global $TABLE_VERSION;
+
+	if ( getenv('MAX_VERSION') !== false && $TABLE_VERSION >= intval(getenv('MAX_VERSION')) ) 
+		return false;
+
+	echo $table." Nopped\n";
+	return true;
 }
 function table_Exit($table) {
 	global $SH_CONFIG, $TABLE_VERSION, $OLD_TABLE_VERSION;
 	
 	if ( config_Set($table,strval($TABLE_VERSION)) ) {
-		print $table." upgraded (version ".$OLD_TABLE_VERSION." -> ".$TABLE_VERSION.")\n";	
+		echo $table." upgraded (version ".$OLD_TABLE_VERSION." -> ".$TABLE_VERSION.")\n";	
 	}
 }
 
@@ -123,7 +149,7 @@ $dirs_ordered = array_merge($first_dirs,array_diff($dirs_only,$first_dirs));
 // *** //
 
 // Attempt to load the configuration (if possible) //
-print "Loading configuration...\n";
+echo "Loading configuration...\n";
 config_Load();
 
 // *** //
