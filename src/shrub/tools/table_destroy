@@ -1,0 +1,57 @@
+#!/usr/bin/env php
+<?php
+include_once __DIR__."/../config.php";
+require_once __DIR__."/../src/core/db_mysql.php";
+require_once __DIR__."/../src/core/cli_root.php";	// Confirm CLI, Require ROOT
+require_once __DIR__."/../src/constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
+
+$cmd = array_shift($argv);
+foreach ($argv as $value) {
+	$table_list[$value] = true;
+}
+
+print "\n*** WARNING ***\n\n";
+if (isset($table_list)) {
+	print "You are about to DESTROY the following table(s):\n";
+	print implode(", ",$argv)."\n";
+}
+else {
+	print "You are about to DESTROY ALL TABLES!!\n";
+}
+print "\nAre you sure [type 'YES']? ";
+flush();
+$input = trim(fgets(STDIN));
+if ( $input != "YES" ) {
+	print "Aborting...\n";
+	exit(1);
+}
+
+print "\n";
+
+_db_Connect();
+
+if ( !_db_IsConnected() ) {
+	_db_Log("Unable to connect to Database");
+	exit(4);
+}
+
+/// Drop a table
+function table_Drop($table) {
+	global $table_list;
+	if ( !isset($table_list) || isset($table_list[$table]) ) { 
+		$ret = db_Query("DROP TABLE ".SH_TABLE_PREFIX.$table.";");
+		
+		if ($ret && isset($GLOBALS['CONFIG'])) {
+			config_Set($table,'0');
+		}
+		
+		echo "* ".$table." [".(($ret)?("yes"):("no"))."]\n"; 
+	}
+}
+
+// *** //
+
+if ( isset($table_list) || !isset($table_list[SH_TABLE_CONFIG]) ) { 
+	print "Loading configuration...\n";
+	config_Load();
+}

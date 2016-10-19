@@ -1,0 +1,94 @@
+#!/usr/bin/env php
+<?php
+include_once __DIR__."/../config.php";
+require_once __DIR__."/../src/core/db_mysql.php";
+require_once __DIR__."/../src/core/cli_root.php";	// Confirm CLI, Require ROOT
+require_once __DIR__."/../src/constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date
+
+$cmd = array_shift($argv);
+foreach ($argv as $value) {
+	$table_list[$value]=true;
+}
+
+print "\n*** WARNING ***\n\n";
+if (isset($table_list)) {
+	print "You are about to create/update the following table(s):\n";
+	print implode(", ",$argv)."\n";
+}
+else {
+	print "You are about to create/update ALL tables.\n";
+}
+print "\nAre you sure [type 'YES']? ";
+flush();
+$input = trim(fgets(STDIN));
+if ( $input != "YES" ) {
+	print "Aborting...\n";
+	exit(1);
+}
+
+print "\n";
+
+// Normally Connect isn't required, but done here to confirm existence of DB //
+_db_Connect();
+if ( !_db_IsConnected() ) {
+	print "Failed to connect to Database. Retrying as server only...";
+	
+	_db_ConnectOnly();
+
+	if ( !_db_IsConnected() ) {
+		_db_Log("Failed to connect to Server");
+		exit(4);
+	}
+	
+	print "Connected.\n";
+
+	// If database doesn't exist, create it //
+	if ( !db_DatabaseExists(SH_DB_NAME) ) {
+		db_Query("CREATE DATABASE IF NOT EXISTS ?;",SH_DB_NAME);
+		print("Database '".SH_DB_NAME."' created.\n");
+	
+		// Reconnect //
+		_db_Close();
+		_db_Connect();
+	
+		if ( !db_IsConnected() ) {
+			_db_Log("Failed to reconnect to Database '".SH_DB_NAME."'");
+			exit(1);
+		}
+		
+		print "Reconnected.\n";
+	}
+}
+
+// NOTE: utf8 is 3 byte unicode. utf8mb4 is 4 byte. Required for Emoji.
+const DEFAULT_CS_ENGINE = " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE=InnoDB";
+global $CONFIG, $version, $old_version;
+
+function DoInit($table) {
+	global $CONFIG, $version, $old_version;
+	
+	print "* ".SH_TABLE_PREFIX.$table."\n";
+	$version = isset($CONFIG[SH_TABLE_PREFIX.$table])?intval($CONFIG[SH_TABLE_PREFIX.$table]):0;
+	$old_version = $version;	
+}
+function DoCreate( $table, ...$args ) {
+	$ret = db_Query( ...$args );
+	if ( $ret )
+		print SH_TABLE_PREFIX.$table." created\n";
+	else
+		print "Error creating ".SH_TABLE_PREFIX.$table."\n";
+	return $ret;
+}
+function DoExit($table) {
+	global $CONFIG, $version, $old_version;
+	
+	if ( config_Set(SH_TABLE_PREFIX.$table,strval($version)) ) {
+		print SH_TABLE_PREFIX.$table." upgraded (version ".$old_version." -> ".$version.")\n";	
+	}
+}
+
+// *** //
+
+print "Loading configuration...\n";
+config_Load();
+

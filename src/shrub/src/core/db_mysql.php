@@ -517,7 +517,7 @@ function db_QueryFetchWithFloatKey( $key, $query, ...$args ) {
 /// @param [in] String $query MySQL query string
 /// @param [in] ... (optional) String arguments
 /// @retval ???
-unction db_QueryFetchWithStringKey( $key, $query, ...$args ) {
+function db_QueryFetchWithStringKey( $key, $query, ...$args ) {
 	$st = _db_Query($query,$args);
 	if ( $st ) {
 		$ret = _db_GetAssocStringKey($key,$st);
