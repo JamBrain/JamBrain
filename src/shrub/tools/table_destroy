@@ -59,7 +59,7 @@ function table_Drop($table) {
 	
 			// Special case: If the config table, do a purge //	
 			if ( $ret && $table === "config" ) {
-				echo "Purging $SH_CONFIG...\n";
+				echo "Purging \$SH_CONFIG...\n";
 				config_Purge();
 			}
 			

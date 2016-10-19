@@ -120,6 +120,9 @@ else {
 	function cache_Create( $key, $value = null, $ttl = 0 ) {
 		return false;
 	}
+	function cache_Delete( $key ) {
+		return false;
+	}
 	function cache_Touch( $key, $ttl = 0 ) {
 		return false;
 	}

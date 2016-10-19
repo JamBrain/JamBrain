@@ -396,9 +396,11 @@ function db_QueryDelete( $query, ...$args ) {
 function db_QueryNumRows( $query, ...$args ) {
 	$st = _db_Query($query, $args);
 	if ( $st ) {
-		$ret = $st->num_rows;
+		print_r($query);
+		print_r($st);
+		$rows = $st->num_rows;
 		$st->close();
-		return $ret;
+		return $rows;
 	}
 	return null;
 }
@@ -537,11 +539,15 @@ function db_QueryFetchWithStringKey( $key, $query, ...$args ) {
 /// @{
 
 function db_TableExists($name) {
-	return db_QueryNumRows("SHOW TABLES LIKE \"".$name."\";") === 1;
+	global $db;
+	return mysqli_query($db,"SELECT 1 FROM information_schema.TABLES WHERE table_name='".$name."' LIMIT 1;")->num_rows == 1;
+	//return mysqli_query($db,"SHOW TABLES LIKE '".$name."';");
+//	return db_QueryNumRows("SHOW TABLES IN ".SH_DB_NAME." LIKE '".$name."';");
+//	return db_QueryNumRows("SELECT 1 FROM information_schema.TABLES WHERE table_name=? LIMIT 1;",$name);
 }
-function db_DatabaseExists($name) {
-	return db_QueryNumRows("SHOW DATABASES LIKE \"".$name."\";") === 1;
-}
+//function db_DatabaseExists($name) {
+//	return db_QueryNumRows("SHOW DATABASES LIKE '".$name."';");
+//}
 
 /// @}
 
