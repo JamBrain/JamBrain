@@ -15,3 +15,15 @@ const SH_TABLE_THEME_FINAL =			"theme_final";		///< Final round themes
 const SH_TABLE_THEME_FINAL_VOTE =		"theme_final_vote";	///< Final round theme votes
 const SH_TABLE_THEME_HISTORY =			"theme_history";	///< Historic Theme List
 /// @}
+
+config_AddTableConstant( 
+	'SH_TABLE_THEME_IDEA',
+	'SH_TABLE_THEME_IDEA_VOTE',
+	'SH_TABLE_THEME_IDEA_STAR',
+	
+	'SH_TABLE_THEME',
+	'SH_TABLE_THEME_VOTE',
+	'SH_TABLE_THEME_FINAL',
+	'SH_TABLE_THEME_FINAL_VOTE',
+	'SH_TABLE_THEME_HISTORY'
+);

@@ -67,23 +67,26 @@ foreach ( $dirs as $dir ) {
 		$dirs_only[] = $dir;
 	}
 }
-//var_dump($dirs_only);
 
 $dirs_ordered = array_merge($first_dirs,array_diff($dirs_only,$first_dirs));
 
-//var_dump($dirs_ordered);
+// *** //
+
+// Figure out what's being destroyed //
+
 
 // *** //
 
-//if ( isset($table_list) || !isset($table_list[SH_TABLE_PREFIX.SH_TABLE_CONFIG]) ) { 
-//	print "Loading configuration...\n";
-//	config_Load();
-//}
-
+// Include any special code 
 foreach ( $dirs_ordered as $dir ) {
 	if ( is_file(SHRUB_PATH.$dir.'/table_destroy.php') ) {
 		include SHRUB_PATH.$dir.'/table_destroy.php';
 	}
 }
 
-var_dump( $SH_TABLES);
+var_dump( config_GetTables() );
+
+//if ( isset($table_list) || !isset($table_list[SH_TABLE_PREFIX.SH_TABLE_CONFIG]) ) { 
+//	print "Loading configuration...\n";
+//	config_Load();
+//}

@@ -35,3 +35,12 @@ const SH_TABLE_NODE_DIFF =			"node_diff";
 const SH_TABLE_NODE_LOVE =			"node_love";
 const SH_TABLE_NODE_STAR =			"node_star";
 /// @}
+
+config_AddTableConstant( 
+	'SH_TABLE_NODE',
+	'SH_TABLE_NODE_LINK',
+	'SH_TABLE_NODE_META',
+	'SH_TABLE_NODE_DIFF',
+	'SH_TABLE_NODE_LOVE',
+	'SH_TABLE_NODE_STAR'
+);
