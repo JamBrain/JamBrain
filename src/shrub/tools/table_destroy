@@ -10,7 +10,7 @@ require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE consta
 
 $cmd = array_shift($argv);
 foreach ($argv as $value) {
-	$table_list[$value] = true;
+	$table_list[] = $value;
 }
 
 print "\n*** WARNING ***\n\n";
@@ -19,6 +19,7 @@ if (isset($table_list)) {
 	print implode(", ",$argv)."\n";
 }
 else {
+	$table_list = config_GetTables();
 	print "You are about to DESTROY ALL TABLES!!\n";
 }
 print "\nAre you sure [type 'YES']? ";
@@ -41,7 +42,12 @@ if ( !_db_IsConnected() ) {
 /// Drop a table
 function table_Drop($table) {
 	global $table_list;
-	if ( !isset($table_list) || isset($table_list[$table]) ) { 
+	if ( !ctype_alnum($table) ) {
+		echo "* ERROR: Table \"".$table."\" is not alphanumeric\n";
+		return;
+	}
+	
+	if ( in_array($table,$table_list) ) { 
 		$ret = db_Query("DROP TABLE ".SH_TABLE_PREFIX.$table.";");
 		
 		if ($ret && isset($GLOBALS['CONFIG'])) {
@@ -49,6 +55,9 @@ function table_Drop($table) {
 		}
 		
 		echo "* ".$table." [".(($ret)?("yes"):("no"))."]\n"; 
+	}
+	else {
+		echo "* WARNING: Unknown table \"".$table."\"\n"; 
 	}
 }
 
@@ -68,25 +77,28 @@ foreach ( $dirs as $dir ) {
 	}
 }
 
+// Generate the final ordered list //
 $dirs_ordered = array_merge($first_dirs,array_diff($dirs_only,$first_dirs));
 
 // *** //
 
-// Figure out what's being destroyed //
-
-
-// *** //
-
-// Include any special code 
+// Include any delete specific code from each module
 foreach ( $dirs_ordered as $dir ) {
 	if ( is_file(SHRUB_PATH.$dir.'/table_destroy.php') ) {
 		include SHRUB_PATH.$dir.'/table_destroy.php';
 	}
 }
 
-var_dump( config_GetTables() );
+// Load configuration (so we can track version changes) //
+if ( in_array(SH_TABLE_CONFIG,$table_list) ) { 
+	print "Loading configuration...\n";
+	config_Load();
+}
 
-//if ( isset($table_list) || !isset($table_list[SH_TABLE_PREFIX.SH_TABLE_CONFIG]) ) { 
-//	print "Loading configuration...\n";
-//	config_Load();
-//}
+// Drop all tables in the table list
+foreach ( $table_list as $table ) {
+	table_Drop($table);
+}
+
+// Done //
+exit;

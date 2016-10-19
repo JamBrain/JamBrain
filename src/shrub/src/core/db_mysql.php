@@ -32,14 +32,15 @@ $DB_QUERY_COUNT = 0;	///< How many queries have been run
 /// @{
 function _db_Log( $msg, $echo_too = false ) {
 	error_log( "SHRUB DB ERROR: " . $msg );
-	if ( isset($echo_too) && $echo_too == true ) {
+	if ( $echo_too === true ) {
 		echo "<strong>SHRUB DB ERROR:</strong> " . $msg . "<br />";
 	}
 }
 function _db_LogError( $echo_too = false ) {
 	global $db;
-	if ( isset($db) )
+	if ( isset($db) ) {
 		_db_Log( mysqli_error($db), $echo_too );
+	}
 }
 /// @}
 

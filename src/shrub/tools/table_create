@@ -69,23 +69,23 @@ global $CONFIG, $version, $old_version;
 function DoInit($table) {
 	global $CONFIG, $version, $old_version;
 	
-	print "* ".SH_TABLE_PREFIX.$table."\n";
-	$version = isset($CONFIG[SH_TABLE_PREFIX.$table])?intval($CONFIG[SH_TABLE_PREFIX.$table]):0;
+	print "* ".$table."\n";
+	$version = isset($CONFIG[$table])?intval($CONFIG[$table]):0;
 	$old_version = $version;	
 }
 function DoCreate( $table, ...$args ) {
 	$ret = db_Query( ...$args );
 	if ( $ret )
-		print SH_TABLE_PREFIX.$table." created\n";
+		print $table." created\n";
 	else
-		print "Error creating ".SH_TABLE_PREFIX.$table."\n";
+		print "Error creating ".$table."\n";
 	return $ret;
 }
 function DoExit($table) {
 	global $CONFIG, $version, $old_version;
 	
-	if ( config_Set(SH_TABLE_PREFIX.$table,strval($version)) ) {
-		print SH_TABLE_PREFIX.$table." upgraded (version ".$old_version." -> ".$version.")\n";	
+	if ( config_Set($table,strval($version)) ) {
+		print $table." upgraded (version ".$old_version." -> ".$version.")\n";	
 	}
 }
 
