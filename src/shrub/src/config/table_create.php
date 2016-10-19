@@ -2,7 +2,7 @@
 
 $table = 'SH_TABLE_CONFIG';
 if ( in_array(constant($table), $TABLE_LIST) ) {
-	$ok = true;
+	$ok = null;
 
 	table_Init($table);
 	switch ( $TABLE_VERSION ) {

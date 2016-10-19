@@ -43,6 +43,7 @@ function _config_Load() {
 	$ret = cache_Fetch(_SH_CONFIG_CACHE_KEY);
 	
 	if ( $ret === null ) {
+		// Fetch the newest version of every key //
 		$ret = db_QueryFetchPair(
 			"SELECT `key`,`value` FROM ".SH_TABLE_PREFIX.SH_TABLE_CONFIG."
 			WHERE id IN (

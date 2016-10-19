@@ -78,7 +78,7 @@ global $SH_CONFIG, $TABLE_VERSION, $OLD_TABLE_VERSION;
 function table_Init($table) {
 	global $SH_CONFIG, $TABLE_VERSION, $OLD_TABLE_VERSION;
 	
-	echo "* ".$table."\n";
+	echo "* ".$table.": ".constant($table)."\n";
 	$TABLE_VERSION = isset($SH_CONFIG[$table])?intval($SH_CONFIG[$table]):0;
 	$OLD_TABLE_VERSION = $TABLE_VERSION;	
 }
@@ -88,6 +88,8 @@ function table_Init($table) {
 /// 
 function table_Create( $table, ...$args ) {
 	global $TABLE_VERSION;
+
+	echo "Creating table...\n";
 	
 	if ( getenv('MAX_VERSION') !== false && $TABLE_VERSION > intval(getenv('MAX_VERSION')) ) 
 		return false;
@@ -100,6 +102,8 @@ function table_Create( $table, ...$args ) {
 /// Functionally the same as table_Create, but does different logging
 function table_Update( $table, ...$args ) {
 	global $TABLE_VERSION;
+
+	echo "Updating table...\n";
 
 	if ( getenv('MAX_VERSION') !== false && $TABLE_VERSION > intval(getenv('MAX_VERSION')) ) 
 		return false;

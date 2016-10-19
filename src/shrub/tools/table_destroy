@@ -52,14 +52,23 @@ function table_Drop($table) {
 //		return;
 //	}
 	
-	if ( in_array($table,$table_list) ) { 
-		$ret = db_Query("DROP TABLE ".SH_TABLE_PREFIX.$table.";");
-		
-		if ($ret && isset($GLOBALS['CONFIG'])) {
-			config_Set($table,'0');
+	if ( in_array($table,$table_list) ) {
+		$ret = db_TableExists(SH_TABLE_PREFIX.$table);
+		if ( $ret ) {
+			$ret = db_Query("DROP TABLE ".SH_TABLE_PREFIX.$table.";");
+	
+			// Special case: If the config table, do a purge //	
+			if ( $ret && $table === "config" ) {
+				echo "Purging $SH_CONFIG...\n";
+				config_Purge();
+			}
+			
+			if ( $ret && count($GLOBALS['SH_CONFIG']) ) {
+				config_Set($table,'0');
+			}
 		}
 		
-		echo "* ".$table." [".(($ret)?("yes"):("no"))."]\n"; 
+		echo "* ".config_GetTableConstantByValue($table).": ".$table." [".(($ret)?("yes"):("no"))."]\n"; 
 	}
 	else {
 		echo "* WARNING: Unknown table \"".$table."\"\n"; 

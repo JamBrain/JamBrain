@@ -392,9 +392,9 @@ function db_QueryDelete( $query, ...$args ) {
 /// For **true/false** queries; Returns the number of rows that match a query
 /// @param [in] String $query MySQL query string
 /// @param [in] ... (optional) String arguments
-/// @retval Integer the number of rows that match
+/// @retval Integer the number of rows that match, null on failure
 function db_QueryNumRows( $query, ...$args ) {
-	$st = _db_Query($query,$args);
+	$st = _db_Query($query, $args);
 	if ( $st ) {
 		$ret = $st->num_rows;
 		$st->close();
@@ -532,18 +532,16 @@ function db_QueryFetchWithStringKey( $key, $query, ...$args ) {
 
 /* *********************************************************************************************** */
 
-/*
-/// @name Existence Functions
+
+/// @name Exist Functions
 /// @{
 
-/// @todo Test this
 function db_TableExists($name) {
-	return db_QueryNumRows("SHOW TABLES LIKE ?;",$name) == 1;
+	return db_QueryNumRows("SHOW TABLES LIKE \"".$name."\";") === 1;
 }
-/// @todo Test this
 function db_DatabaseExists($name) {
-	return db_QueryNumRows("SHOW DATABASES LIKE ?;",$name) == 1;
+	return db_QueryNumRows("SHOW DATABASES LIKE \"".$name."\";") === 1;
 }
 
 /// @}
-*/
+
