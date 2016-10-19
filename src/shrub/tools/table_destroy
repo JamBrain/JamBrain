@@ -1,11 +1,12 @@
 #!/usr/bin/env php
 <?php
 const CONFIG_PATH = "../";
+const SHRUB_PATH = "../src/";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/../src/core/db_mysql.php";
-require_once __DIR__."/../src/core/cli_root.php";	// Confirm CLI, Require ROOT
-require_once __DIR__."/../src/constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
+require_once __DIR__."/".SHRUB_PATH."core/db_mysql.php";
+require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
+require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
 
 $cmd = array_shift($argv);
 foreach ($argv as $value) {
@@ -53,7 +54,36 @@ function table_Drop($table) {
 
 // *** //
 
-if ( isset($table_list) || !isset($table_list[SH_TABLE_CONFIG]) ) { 
-	print "Loading configuration...\n";
-	config_Load();
+// These directories should be searched first // 
+$first_dirs = [
+	'config'
+];
+
+// Scan for include directories //
+$dirs = array_diff(scandir(SHRUB_PATH),['.','..']);
+$dirs_only = [];
+foreach ( $dirs as $dir ) {
+	if ( is_dir(SHRUB_PATH.$dir) ) {
+		$dirs_only[] = $dir;
+	}
 }
+//var_dump($dirs_only);
+
+$dirs_ordered = array_merge($first_dirs,array_diff($dirs_only,$first_dirs));
+
+//var_dump($dirs_ordered);
+
+// *** //
+
+//if ( isset($table_list) || !isset($table_list[SH_TABLE_PREFIX.SH_TABLE_CONFIG]) ) { 
+//	print "Loading configuration...\n";
+//	config_Load();
+//}
+
+foreach ( $dirs_ordered as $dir ) {
+	if ( is_file(SHRUB_PATH.$dir.'/table_destroy.php') ) {
+		include SHRUB_PATH.$dir.'/table_destroy.php';
+	}
+}
+
+var_dump( $SH_TABLES);
