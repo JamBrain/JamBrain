@@ -121,10 +121,17 @@ function core_GetHTTPResponseText($code){
 		401=>"Unauthorized",			// Insufficent permission to do something
 		403=>"Forbidden",				// ** Resource is protected.
 		404=>"Not Found",				// Resource not found.
+		405=>"Method Not Allowed",		// Invalid use of GET, POST, etc
 		409=>"Conflict",				// **
-		412=>"Precondition Failed",		// **
+		410=>"Gone",					//
+		418=>"I'm a teapot (RFC 2324)",	//
+		422=>"Unprocessable Entity",	// WebDAV; RFC 4918
+		423=>"Locked",					// WebDAV; RFC 4918
+		424=>"Failed Dependency",		// WebDAV; RFC 4918
+		429=>"Too Many Requests",		// Rate Limiting
 		// Server Error Responses
 		500=>"Internal Server Error",	// Something is wrong on our end.
+		501=>"Not Implemented",			// In Development
 		503=>"Service Unavailable",		// Maintenence.
 	];
 	

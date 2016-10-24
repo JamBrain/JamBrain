@@ -11,10 +11,10 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 		$ok = table_Create( $table,
 			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
 				id ".DB_TYPE_UID.",
-				`key` VARCHAR(64) ".DB_TYPE_ASCII." DEFAULT '',
+				`key` ".DB_TYPE_ASCII(64)." DEFAULT '',
 					INDEX(`key`),
-				`value` VARCHAR(128) ".DB_TYPE_UNICODE." DEFAULT '',
-				`timestamp` ".DB_TYPE_TIMESTAMP."
+				`value` ".DB_TYPE_UNICODE(128)." DEFAULT '',
+				timestamp ".DB_TYPE_TIMESTAMP."
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
 	case 1:

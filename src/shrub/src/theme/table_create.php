@@ -11,16 +11,15 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 	case 0:
 		$ok = table_Create( $table,
 			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
-				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
-					UNIQUE,
-				node BIGINT UNSIGNED NOT NULL,
+				id ".DB_TYPE_UID.",
+				node ".DB_TYPE_ID.",
 					INDEX(node),
-				parent BIGINT UNSIGNED NOT NULL,
+				parent ".DB_TYPE_ID.",
 					INDEX(parent),
-				user BIGINT UNSIGNED NOT NULL,
+				user ".DB_TYPE_ID.",
 					INDEX(user),
-				theme VARCHAR(64) NOT NULL,
-				`timestamp` DATETIME NOT NULL,
+				theme ".DB_TYPE_UNICODE(64).",
+				timestamp ".DB_TYPE_TIMESTAMP.",
 				score DOUBLE NOT NULL,
 					INDEX(score)
 			)".DB_CREATE_SUFFIX);
@@ -52,14 +51,13 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 	case 0:
 		$ok = table_Create( $table,
 			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
-				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
-					UNIQUE,
-				user BIGINT UNSIGNED NOT NULL,
+				id ".DB_TYPE_UID.",
+				user ".DB_TYPE_ID.",
 					INDEX(user),
-				node BIGINT UNSIGNED NOT NULL,
+				node ".DB_TYPE_ID.",
 					INDEX(node),
 					UNIQUE `user_node` (user,node),
-				timestamp DATETIME NOT NULL,
+				timestamp ".DB_TYPE_TIMESTAMP.",
 				value INT NOT NULL,
 					INDEX(value)
 			)".DB_CREATE_SUFFIX);
@@ -108,12 +106,11 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 	case 0:
 		$ok = table_Create( $table,
 			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
-				id BIGINT UNSIGNED NOT NULL
-					UNIQUE,
-				node BIGINT UNSIGNED NOT NULL,
+				id ".DB_TYPE_ID." UNIQUE,
+				node ".DB_TYPE_ID.",
 					INDEX(node),
-				theme VARCHAR(64) NOT NULL,
-				`timestamp` DATETIME NOT NULL,
+				theme ".DB_TYPE_UNICODE(64).",
+				timestamp ".DB_TYPE_TIMESTAMP.",
 				page INT UNSIGNED NOT NULL,
 				score DOUBLE NOT NULL,
 					INDEX (score)
@@ -132,14 +129,13 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 	case 0:
 		$ok = table_Create( $table,
 			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
-				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
-					UNIQUE,
-				user BIGINT UNSIGNED NOT NULL,
+				id ".DB_TYPE_UID.",
+				user ".DB_TYPE_ID.",
 					INDEX(user),
-				node BIGINT UNSIGNED NOT NULL,
+				node ".DB_TYPE_ID.",
 					INDEX(node),
 					UNIQUE `user_node` (user,node),
-				timestamp DATETIME NOT NULL,
+				timestamp ".DB_TYPE_TIMESTAMP.",
 				value INT NOT NULL,
 					INDEX (value)
 			)".DB_CREATE_SUFFIX);
@@ -159,11 +155,10 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 	case 0:
 		$ok = table_Create( $table,
 			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
-				id BIGINT UNSIGNED NOT NULL
-					UNIQUE,
-				node BIGINT UNSIGNED NOT NULL,
+				id ".DB_TYPE_ID." UNIQUE,
+				node ".DB_TYPE_ID.",
 					INDEX(node),
-				theme VARCHAR(64) NOT NULL,
+				theme ".DB_TYPE_UNICODE.",
 				score DOUBLE NOT NULL,
 					INDEX (score)
 			)".DB_CREATE_SUFFIX);
@@ -181,14 +176,13 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 	case 0:
 		$ok = table_Create( $table,
 			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
-				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
-					UNIQUE,
-				user BIGINT UNSIGNED NOT NULL,
+				id ".DB_TYPE_UID.",
+				user ".DB_TYPE_ID.",
 					INDEX(user),
-				node BIGINT UNSIGNED NOT NULL,
+				node ".DB_TYPE_ID.",
 					INDEX(node),
 					UNIQUE `user_node` (user,node),
-				timestamp DATETIME NOT NULL,
+				timestamp ".DB_TYPE_TIMESTAMP.",
 				value INT NOT NULL,
 					INDEX (value)
 			)".DB_CREATE_SUFFIX);
@@ -208,12 +202,11 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 	case 0:
 		$ok = table_Create( $table,
 			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
-				id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT 
-					UNIQUE,
-				node BIGINT UNSIGNED NOT NULL,
-				shorthand VARCHAR(20) CHARSET latin1 NOT NULL,
-				name VARCHAR(64) NOT NULL,
-				theme VARCHAR(64) NOT NULL
+				id ".DB_TYPE_UID.",
+				node ".DB_TYPE_ID.",
+				shorthand ".DB_TYPE_ASCII(20).",
+				name ".DB_TYPE_UNICODE(64).",
+				theme ".DB_TYPE_UNICODE(64)."
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
 	};

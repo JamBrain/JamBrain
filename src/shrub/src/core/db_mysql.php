@@ -41,9 +41,15 @@ const DB_TYPE_UID = "BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE"; 				///< U
 const DB_TYPE_ID = "BIGINT UNSIGNED NOT NULL";										///< Use for all other IDs
 const DB_TYPE_IP = "VARBINARY(16) NOT NULL";										///< IP Addresses (IPv6 and IPv4)
 const DB_TYPE_TIMESTAMP = "DATETIME NOT NULL";										///< Timestamps
-const DB_TYPE_ASCII = "CHARSET latin1 NOT NULL";									///< Use with VarChar(x)
-const DB_TYPE_UNICODE = "NOT NULL"; /*CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci*/	///< Use with VarChar(x)
+//const DB_TYPE_ASCII = "CHARSET latin1 NOT NULL";									///< Use with VarChar(x)
+//const DB_TYPE_UNICODE = "NOT NULL"; /*CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci*/	///< Use with VarChar(x)
 
+function DB_TYPE_ASCII($chars) {
+	return ( $chars ? "VARCHAR($chars)" : "")." CHARSET latin1 NOT NULL";
+}
+function DB_TYPE_UNICODE($chars) {
+	return ( $chars ? "VARCHAR($chars)" : "")." NOT NULL";
+}
 /// @}
 
 

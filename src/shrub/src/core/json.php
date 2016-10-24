@@ -153,7 +153,7 @@ function json_EmitFatalError_NotFound( $msg = null, $data = null ) {
 }
 /// For when the wrong method is used (POST vs GET, etc)
 function json_EmitFatalError_BadMethod( $msg = null, $data = null ) {
-	json_EmitFatalError(404, $msg, $data);
+	json_EmitFatalError(405, $msg, $data);
 }
 /// Like 404, but for when a previously known resource was found, but is now gone
 function json_EmitFatalError_Gone( $msg = null, $data = null ) {
@@ -268,6 +268,27 @@ function json_CheckForMaintenence() {
 	if ( !user_AuthIsAdmin() && !global_IsActive() ) {
 		json_EmitFatalUnavailableError( strlen($SH['alert']) ? $SH['alert'] : null );
 	}
+}
+
+function json_IsValidHTTPMethod(...$args) {
+	return in_array($_SERVER['REQUEST_METHOD'],$args);
+}
+function json_ValidateHTTPMethod(...$args) {
+	if ( !json_IsValidHTTPMethod(...$args) ) {
+		json_EmitFatalError_BadMethod($_SERVER['REQUEST_METHOD']);
+	}
+}
+
+function json_ArgGet($index) {
+	global $REQUEST;
+	if ( isset($REQUEST[$index]) ) {
+		return $REQUEST[$index];
+	}
+	return '';
+}
+function json_ArgShift() {
+	global $REQUEST;
+	return array_shift($REQUEST);
 }
 
 function json_Begin() {

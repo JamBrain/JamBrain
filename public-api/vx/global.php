@@ -10,6 +10,8 @@ json_Begin();
 // Do Actions //
 switch ( $REQUEST[0] ) {
 	case 'set':
+		json_ValidateHTTPMethod('POST');
+
 		if ( user_AuthIsAdmin() ) {
 			json_EmitFatalError_NotImplemented(null,$RESPONSE);
 			
@@ -17,6 +19,7 @@ switch ( $REQUEST[0] ) {
 			/// @todo Do a set
 			
 			if ( false ) {
+				
 				json_RespondCreated();
 			}
 			else {
@@ -28,6 +31,8 @@ switch ( $REQUEST[0] ) {
 		}
 		break;
 	case 'get':
+		json_ValidateHTTPMethod('GET');
+
 		if ( user_AuthIsAdmin() ) {
 			$RESPONSE['global'] = $SH;
 		}
