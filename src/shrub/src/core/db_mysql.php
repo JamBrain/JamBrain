@@ -56,26 +56,35 @@ $db = null;				///< The global database object
 $DB_QUERY_COUNT = 0;	///< How many queries have been run
 /// @}
 
-/// @name Internal: Logging
+/// @name Internal: Error Logging
 /// Used internally for logging database errors.
 /// @{
-function _db_Log( $msg, $echo_too = false ) {
-	error_log( "SHRUB DB ERROR: ".$msg );
-	if ( $echo_too === true ) {
-		if ( php_sapi_name() === 'cli' ) {
-			echo( "SHRUB DB ERROR: ".$msg."\n" );
-		}
-		else {
-			require_once __DIR__."/json.php";
-			json_EmitError(400,$msg,"SHRUB DB");
-		}
+function _db_Error( $msg, $public = false ) {
+	$unique = uniqid();
+	$error = "shrub/src/core/db_mysql.php [$unique]: ".$msg;
+	
+	// Log the error to system log
+	error_log($error);
+	
+	if ( php_sapi_name() === 'cli' ) {
+		// CLI, we assume is private
+		echo($error."\n");
+	}
+	else {
+		require_once __DIR__."/json.php";
+		json_EmitError(500, $public ? $error : "See Log [$unique]");
 	}
 }
-function _db_LogError( $echo_too = false ) {
+function _db_FatalError( $msg, $public = false ) {
+	_db_Error($msg, $public);
+	exit;
+}
+
+function _db_FatalDBError( $public = false ) {
 	global $db;
-	if ( isset($db) ) {
-		_db_Log( mysqli_error($db), $echo_too );
-	}
+	
+	_db_Error(isset($db) ? mysqli_error($db) : "NO $db", $public);
+	exit;
 }
 /// @}
 
@@ -85,16 +94,16 @@ function _db_LogError( $echo_too = false ) {
 ///@cond
 // Check database config //
 if ( !defined('SH_DB_HOST') ) {
-	die(_db_Log("SH_DB_HOST not set",true));
+	_db_FatalError("SH_DB_HOST not set");
 }
 if ( !defined('SH_DB_NAME') ) {
-	die(_db_Log("SH_DB_NAME not set.",true));
+	_db_FatalError("SH_DB_NAME not set.");
 }
 if ( !defined('SH_DB_LOGIN') ) {
-	die(_db_Log("SH_DB_LOGIN not set.",true));
+	_db_FatalError("SH_DB_LOGIN not set.");
 }
 if ( !defined('SH_DB_PASSWORD') ) {
-	die(_db_Log("SH_DB_PASSWORD not set.",true));
+	_db_FatalError("SH_DB_PASSWORD not set.");
 }
 
 define('_INI_MYSQLI_DEFAULT_PORT',ini_get("mysqli.default_port"));
@@ -144,7 +153,7 @@ function _db_Connect(
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
 		if ($db->connect_errno) {
-    		_db_Log( "Failed to connect: (" . $db->connect_errno . ") " . $db->connect_error );
+    		_db_Error( "Failed to connect: (" . $db->connect_errno . ") " . $db->connect_error );
     	}
     	
     	// Set character set to utf8mb4 mode (default is utf8mb3 (utf8). mb4 is required for Emoji)
@@ -271,7 +280,7 @@ function _db_BindExecute( &$st, $args ) {
 			}
 			// date+time?
 			else {
-				_db_Log("Unable to parse ".gettype($arg));
+				_db_FatalError("Unable to parse ".gettype($arg));
 			}
 		}
 		
@@ -282,7 +291,7 @@ function _db_BindExecute( &$st, $args ) {
 	$ret = $st->execute();
 	
 	if ( !$ret || $st->errno ) {
-		_db_LogError();
+		_db_FatalDBError();
 		$st->close();
 		return false;
 	}
@@ -297,10 +306,10 @@ function _db_Query( $query, $args ) {
 	_db_Connect();
 
 	$st = _db_Prepare($query);
-	if ( $st && _db_BindExecute($st,$args) ) {
+	if ( $st && _db_BindExecute($st, $args) ) {
 		return $st;
 	}
-	_db_LogError();
+	_db_FatalDBError();
 	return false;
 }
 ///@}
