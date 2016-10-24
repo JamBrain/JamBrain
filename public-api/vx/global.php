@@ -11,20 +11,20 @@ json_Begin();
 switch ( $REQUEST[0] ) {
 	case 'set':
 		if ( user_AuthIsAdmin() ) {
-			json_EmitFatalNotImplementedError(null,$RESPONSE);
+			json_EmitFatalError_NotImplemented(null,$RESPONSE);
 			
 			/// @todo sanitize (don't let API create fields)
 			/// @todo Do a set
 			
 			if ( false ) {
-				json_SetResponseCreated();
+				json_RespondCreated();
 			}
 			else {
-				json_EmitFatalServerError(null,$RESPONSE);
+				json_EmitFatalError_Server(null,$RESPONSE);
 			}
 		}
 		else {
-			json_EmitFatalPermissionError(null,$RESPONSE);
+			json_EmitFatalError_Permission(null,$RESPONSE);
 		}
 		break;
 	case 'get':
@@ -32,11 +32,11 @@ switch ( $REQUEST[0] ) {
 			$RESPONSE['global'] = $SH;
 		}
 		else {
-			json_EmitFatalPermissionError(null,$RESPONSE);
+			json_EmitFatalError_Permission(null,$RESPONSE);
 		}
 		break;
 	default:
-		json_EmitFatalForbiddenError(null,$RESPONSE);
+		json_EmitFatalError_Forbidden(null,$RESPONSE);
 		break;
 };
 

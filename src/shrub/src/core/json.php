@@ -136,35 +136,39 @@ function json_EmitFatalError( $code = 400, $msg = null, $data = null ) {
 /// @{
 
 /// For most errors
-function json_EmitFatalBadRequestError( $msg = null, $data = null ) {
+function json_EmitFatalError_BadRequest( $msg = null, $data = null ) {
 	json_EmitFatalError(400, $msg, $data);
 }
 /// For when something requires authorization
-function json_EmitFatalPermissionError( $msg = null, $data = null ) {
+function json_EmitFatalError_Permission( $msg = null, $data = null ) {
 	json_EmitFatalError(401, $msg, $data);
 }
 /// For when the server will never resolve a request (not even with authentication)
-function json_EmitFatalForbiddenError( $msg = null, $data = null ) {
+function json_EmitFatalError_Forbidden( $msg = null, $data = null ) {
 	json_EmitFatalError(403, $msg, $data);
 }
 /// For when something was expected to be found, but wasn't
-function json_EmitFatalNotFoundError( $msg = null, $data = null ) {
+function json_EmitFatalError_NotFound( $msg = null, $data = null ) {
+	json_EmitFatalError(404, $msg, $data);
+}
+/// For when the wrong method is used (POST vs GET, etc)
+function json_EmitFatalError_BadMethod( $msg = null, $data = null ) {
 	json_EmitFatalError(404, $msg, $data);
 }
 /// Like 404, but for when a previously known resource was found, but is now gone
-function json_EmitFatalGoneError( $msg = null, $data = null ) {
+function json_EmitFatalError_Gone( $msg = null, $data = null ) {
 	json_EmitFatalError(410, $msg, $data);
 }
 /// When the server errors when it shouldn't
-function json_EmitFatalServerError( $msg = null, $data = null ) {
+function json_EmitFatalError_Server( $msg = null, $data = null ) {
 	json_EmitFatalError(500, $msg, $data);
 }
 /// When an action isn't yet implemented, and it's worth sharing this
-function json_EmitFatalNotImplementedError( $msg = null, $data = null ) {
+function json_EmitFatalError_NotImplemented( $msg = null, $data = null ) {
 	json_EmitFatalError(501, $msg, $data);
 }
 /// When the server is unavailable due to maintenence
-function json_EmitFatalUnavailableError( $msg = null, $data = null ) {
+function json_EmitFatalError_Unavailable( $msg = null, $data = null ) {
 	json_EmitFatalError(503, $msg, $data);
 }
 
@@ -179,6 +183,7 @@ function json_EmitFatalUnavailableError( $msg = null, $data = null ) {
 /// @param Array $out Response to output
 /// @param Boolean $allow_jsonp Should JSON-P Callbacks be allowed? (Default: true)
 function json_Emit( $out, $allow_jsonp = true ) {
+	// For JSONP //
 	$prefix = "";
 	$suffix = "";
 
