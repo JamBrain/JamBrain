@@ -1,6 +1,7 @@
 <?php
-// Be sure to include the configuration file before including this one.
-// Configuration is not auto-included, in case you want to customize it
+/// IMPORTANT: Don't include this file directly (include db.php instead)
+/// Also be sure to include the configuration file before including this one.
+/// Configuration is not auto-included, in case you want to customize it
 
 /// @defgroup DB
 /// The Database Library (wraps MySQLi)
@@ -19,6 +20,32 @@ function db_GetQueryCount() {
 /// @}
 
 
+/// @name Query Transformations
+/// @{
+
+/// Wraps MySQL datetime fields in SELECT queries so they are returned in ISO/W3C format
+function DB_FIELD_DATE($field) {
+	return "DATE_FORMAT(".$field.",'%Y-%m-%dT%TZ') AS ".$field;
+}
+
+function DB_FIELD_IP_TO_STRING($field) {
+	return "INET6_NTOA(".$field.") AS ".$field;
+}
+function DB_FIELD_IP_TO_NUMBER($field) {
+	return "INET6_ATON(".$field.") AS ".$field;
+}
+
+const DB_TYPE_UID = "UNSIGNED BIGINT NOT NULL AUTO_INCREMENT UNIQUE"; 				///< Use *ONLY ONCE*, as the unique ID
+const DB_TYPE_ID = "UNSIGNED BIGINT NOT NULL";										///< Use for all other IDs
+const DB_TYPE_IP = "VARBINARY(16) NOT NULL";										///< IP Addresses (IPv6 and IPv4)
+const DB_TYPE_DATE = "DATETIME NOT NULL";											///< Timestamps
+const DB_TYPE_ASCII = "CHARSET latin1 NOT NULL";									///< Use with VarChar(x)
+const DB_TYPE_UNICODE = "NOT NULL"; /*CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci*/	///< Use with VarChar(x)
+
+/// @}
+
+
+
 /// @cond INTERNAL
 
 /// @name Internal
@@ -31,9 +58,15 @@ $DB_QUERY_COUNT = 0;	///< How many queries have been run
 /// Used internally for logging database errors.
 /// @{
 function _db_Log( $msg, $echo_too = false ) {
-	error_log( "SHRUB DB ERROR: " . $msg );
+	error_log( "SHRUB DB ERROR: ".$msg );
 	if ( $echo_too === true ) {
-		echo "<strong>SHRUB DB ERROR:</strong> " . $msg . "<br />";
+		if ( php_sapi_name() === 'cli' ) {
+			echo( "SHRUB DB ERROR: ".$msg."\n" );
+		}
+		else {
+			require_once __DIR__."/json.php";
+			json_EmitError(400,$msg,"SHRUB DB");
+		}
 	}
 }
 function _db_LogError( $echo_too = false ) {
@@ -50,22 +83,21 @@ function _db_LogError( $echo_too = false ) {
 ///@cond
 // Check database config //
 if ( !defined('SH_DB_HOST') ) {
-	die(_db_Log("SH_DB_HOST not set"));
+	die(_db_Log("SH_DB_HOST not set",true));
 }
 if ( !defined('SH_DB_NAME') ) {
-	die(_db_Log("SH_DB_NAME not set."));
+	die(_db_Log("SH_DB_NAME not set.",true));
 }
 if ( !defined('SH_DB_LOGIN') ) {
-	die(_db_Log("SH_DB_LOGIN not set."));
+	die(_db_Log("SH_DB_LOGIN not set.",true));
 }
 if ( !defined('SH_DB_PASSWORD') ) {
-	die(_db_Log("SH_DB_PASSWORD not set."));
+	die(_db_Log("SH_DB_PASSWORD not set.",true));
 }
 
 define('_INI_MYSQLI_DEFAULT_PORT',ini_get("mysqli.default_port"));
 define('_INI_MYSQLI_DEFAULT_SOCKET',ini_get("mysqli.default_socket"));
 ///@endcond
-
 
 
 /// @cond INTERNAL
@@ -545,9 +577,11 @@ function db_TableExists($name) {
 //	return db_QueryNumRows("SHOW TABLES IN ".SH_DB_NAME." LIKE '".$name."';");
 //	return db_QueryNumRows("SELECT 1 FROM information_schema.TABLES WHERE table_name=? LIMIT 1;",$name);
 }
+/*
 //function db_DatabaseExists($name) {
 //	return db_QueryNumRows("SHOW DATABASES LIKE '".$name."';");
 //}
+*/
 
 /// @}
 

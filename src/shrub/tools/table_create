@@ -5,7 +5,7 @@ const SHRUB_PATH = "../src/";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
-require_once __DIR__."/".SHRUB_PATH."core/db_mysql.php";
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
 require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
 require_once __DIR__."/".SHRUB_PATH."config/config.php";
 

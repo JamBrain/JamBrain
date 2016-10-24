@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__."/../core/db_mysql.php";
+require_once __DIR__."/../constants.php";
+require_once __DIR__."/../core/db.php";
 require_once __DIR__."/../core/cache.php";
 
 /// @addtomodule Config

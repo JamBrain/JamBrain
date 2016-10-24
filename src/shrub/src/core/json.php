@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__."/core.php";
+
 /// @defgroup JSON
 /// @brief JSON emitting module (typically for making APIs) 
 /// @ingroup Core
@@ -32,25 +34,24 @@ function json_NewResponse( $code = null ) {
 /// 
 /// @param Integer $code HTTP response code (default: 400 Bad Request)
 /// @param String $msg (optional) Message
+/// @param Multi $data (optional) Any data you wish to attach to the response
 /// @retval Array
-function json_NewErrorResponse( $code = 400, $msg = null ) {
+function json_NewErrorResponse( $code = 400, $msg = null, $data = null ) {
 	// Set the error code in the response header //
-	http_response_code($code);
+	$response = json_NewResponse($code);
+
+	$response['status'] = $code;
+	$response['response'] = core_GetHTTPResponseText($code);
 	
 	// Return the response //
 	if ( is_string($msg) ) {
-		return [
-			'status' => $code,
-			'response' => core_GetHTTPResponseText($code),
-			'message' => $msg
-		];
+		$response['message'] = $msg;
 	}
-	else {
-		return [
-			'status' => $code,
-			'response' => core_GetHTTPResponseText($code)
-		];
+	if ( !is_null($data) ) {
+		$response['data'] = $data;
 	}
+	
+	return $response;
 }
 
 
@@ -84,10 +85,14 @@ function json_IsValidJSONPCallback($name) {
 /// * `401` (Unauthorized)
 /// * `404` (Not Found)
 /// @param String $msg (optional) Message
-function json_EmitError( $code = 400, $msg = null ) {
-	json_Emit(json_newErrorResponse($code,$msg));
+function json_EmitError( $code = 400, $msg = null, $data = null ) {
+	json_Emit(json_newErrorResponse($code,$msg,$data));
+}
+function json_EmitFatalError( $code = 400, $msg = null, $data = null ) {
+	json_Emit(json_newErrorResponse($code,$msg,$data));
 	exit;
 }
+
 
 /// Emit an "Server Error" document and **Exit**. Use this when the server fails.
 /// 
