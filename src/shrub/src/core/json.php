@@ -93,6 +93,27 @@ function json_EmitFatalError( $code = 400, $msg = null, $data = null ) {
 	exit;
 }
 
+/// For most errors
+function json_EmitGenericFatalError( $data = null ) {
+	json_EmitFatalError(400,null,$data);
+}
+/// For when something requires authorization
+function json_EmitFatalPermissionError( $data = null ) {
+	json_EmitFatalError(401,null,$data);
+}
+/// For when the server will never resolve a request (not even with authentication)
+function json_EmitFatalForbiddenError( $data = null ) {
+	json_EmitFatalError(403,null,$data);
+}
+/// For when something was expected to be found, but wasn't
+function json_EmitFatalNotFoundError( $data = null ) {
+	json_EmitFatalError(404,null,$data);
+}
+/// Like 404, but for when a previously known resource was found, but is now gone
+function json_EmitFatalGoneError( $data = null ) {
+	json_EmitFatalError(410,null,$data);
+}
+
 
 /// Emit an "Server Error" document and **Exit**. Use this when the server fails.
 /// 

@@ -78,47 +78,32 @@ function core_RemovePathDotsFromArray($arr) {
 
 /// @cond INTERNAL
 
-/// Internal parser for the API Action URL (array of strings)
-function _core_ParseActionURL() {
+/// Internal parser for the API request
+function _core_GetAPIRequest() {
 	// If PATH_INFO is set, then Apache figured out our parts for us //
 	if ( isset($_SERVER['PATH_INFO']) ) {
 		$ret = ltrim(rtrim(filter_var($_SERVER['PATH_INFO'],FILTER_SANITIZE_URL),'/'),'/');
-		if ( empty($ret) )
-			return [];
-		else
+		if ( empty($ret) ) {
+			return [''];
+		}
+		else {
 			return array_values(array_filter(explode('/',$ret),function ($val) {
 				return !(empty($val) || ($val[0] === '.'));
 			}));
+		}
 	}
 
-	// If not, we have to extract them from the REQUEST_URI //
-	// Logic borrowed from here: https://coderwall.com/p/gdam2w/get-request-path-in-php-for-routing
-	$request_uri = explode('/', trim(filter_var($_SERVER['REQUEST_URI'],FILTER_SANITIZE_URL), '/'));
-    $script_name = explode('/', trim(filter_var($_SERVER['SCRIPT_NAME'],FILTER_SANITIZE_URL), '/'));
-    $parts = array_diff_assoc($request_uri, $script_name);
-    if (empty($parts)) {
-        return [];
-    }
-	$path = implode('/', $parts);
-	if (($position = strpos($path, '?')) !== FALSE) {
-	    $path = substr($path, 0, $position);
-	}
-	$ret = ltrim(rtrim($path,'/'),'/');
-	if ( empty($ret) ) {
-		return [];
-	}
-	else {
-		return array_values(array_filter(explode('/',$ret),function ($val) {
-			return !(empty($val) || ($val[0] === '.'));
-		}));
-	}
+	// If PATH_INFO isn't set, assume it's the same as '/'
+	return [''];
 }
 /// @endcond
 
-/// Parse the API Action URL (array of strings)
-function core_ParseActionURL() {
-	return core_RemovePathDotsFromArray(_core_ParseActionURL());
+/// Parse the URL for the API request
+/// @retval Array[String] Each element of the request path, or [""] if no path specified
+function core_GetAPIRequest() {
+	return core_RemovePathDotsFromArray(_core_GetAPIRequest());
 }
+
 
 /// @name HTTP
 /// Convert response codes in to text
