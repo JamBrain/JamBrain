@@ -1,5 +1,5 @@
 <?php
-/// @defgroup Config
+/// @defgroup Global
 /// @ingroup Modules
 
 /// @cond INTERNAL
@@ -7,8 +7,8 @@ $SH_TABLE_CONSTANTS = [];
 $SH_TABLE_VALUES = [];
 $SH_TABLE_VALUE_KEYS = [];
 
-/// Default configuration settings
-$SH_CONFIG_DEFAULT = [
+/// Default global metadata
+$SH_GLOBAL_DEFAULT = [
 	'active' => '1',						// Is the website Active
 	'alert' => "",							// Short alert message to be shown everywhere
 	'web-alert' => "",						// Short alert message shown by the web site
@@ -16,12 +16,12 @@ $SH_CONFIG_DEFAULT = [
 ];
 /// @endcond
 
-/// @addtogroup Config
+/// @addtogroup Global
 /// @{
 
 /// Add to the table list
 /// @param [in] ... Table name string(s)
-function config_AddTableConstant(...$args) {
+function global_AddTableConstant(...$args) {
 	global $SH_TABLE_CONSTANTS,$SH_TABLE_VALUES,$SH_TABLE_VALUE_KEYS;
 
 	foreach ( $args as $arg ) {
@@ -33,33 +33,33 @@ function config_AddTableConstant(...$args) {
 
 /// Get the table constant list
 /// @retval Array[String]
-function config_GetTableConstants() {
+function global_GetTableConstants() {
 	global $SH_TABLE_CONSTANTS;
 	return $SH_TABLE_CONSTANTS;
 }
 
 /// Get the table list
 /// @retval Array[String]
-function config_GetTables() {
+function global_GetTables() {
 	global $SH_TABLE_VALUES;
 	return $SH_TABLE_VALUES;
 }
 
 /// Given a value, lookup the constant
 /// @retval String or Null on failure
-function config_GetTableConstantByValue( $val ) {
+function global_GetTableConstantByValue( $val ) {
 	global $SH_TABLE_VALUE_KEYS;
 	return $SH_TABLE_VALUE_KEYS[$val];
 }
 
 /// @}
 
-/// @name Config Tables
+/// @name Global Meta Tables
 /// @addtogroup Tables
 /// @{
-const SH_TABLE_CONFIG =					"config";
+const SH_TABLE_GLOBAL =					"global";
 /// @}
 	
-config_AddTableConstant( 
-	'SH_TABLE_CONFIG'
+global_AddTableConstant( 
+	'SH_TABLE_GLOBAL'
 );

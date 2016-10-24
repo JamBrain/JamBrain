@@ -9,7 +9,7 @@ const SH_TABLE_COMMENT =				"comment";
 const SH_TABLE_COMMENT_LOVE =			"comment_love";
 /// @}
 
-config_AddTableConstant( 
+global_AddTableConstant( 
 	'SH_TABLE_COMMENT',
 	'SH_TABLE_COMMENT_LOVE'
 );

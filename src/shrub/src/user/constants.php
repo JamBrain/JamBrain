@@ -10,7 +10,7 @@ const SH_TABLE_USER_ACCESS =			"user_access";
 const SH_TABLE_USER_STRIKE =			"user_strike";
 /// @}
 
-config_AddTableConstant( 
+global_AddTableConstant( 
 	'SH_TABLE_USER',
 	'SH_TABLE_USER_ACCESS',
 	'SH_TABLE_USER_STRIKE'

@@ -16,7 +16,7 @@ const SH_TABLE_THEME_FINAL_VOTE =		"theme_final_vote";	///< Final round theme vo
 const SH_TABLE_THEME_HISTORY =			"theme_history";	///< Historic Theme List
 /// @}
 
-config_AddTableConstant( 
+global_AddTableConstant( 
 	'SH_TABLE_THEME_IDEA',
 	'SH_TABLE_THEME_IDEA_VOTE',
 	'SH_TABLE_THEME_IDEA_STAR',

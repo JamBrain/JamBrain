@@ -37,10 +37,10 @@ function DB_FIELD_IP_FROM_STRING($field) {
 
 // http://dev.mysql.com/doc/refman/5.6/en/func-op-summary-ref.html
 
-const DB_TYPE_UID = "UNSIGNED BIGINT NOT NULL AUTO_INCREMENT UNIQUE"; 				///< Use *ONLY ONCE*, as the unique ID
-const DB_TYPE_ID = "UNSIGNED BIGINT NOT NULL";										///< Use for all other IDs
+const DB_TYPE_UID = "BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE"; 				///< Use *ONLY ONCE*, as the unique ID
+const DB_TYPE_ID = "BIGINT UNSIGNED NOT NULL";										///< Use for all other IDs
 const DB_TYPE_IP = "VARBINARY(16) NOT NULL";										///< IP Addresses (IPv6 and IPv4)
-const DB_TYPE_DATE = "DATETIME NOT NULL";											///< Timestamps
+const DB_TYPE_TIMESTAMP = "DATETIME NOT NULL";										///< Timestamps
 const DB_TYPE_ASCII = "CHARSET latin1 NOT NULL";									///< Use with VarChar(x)
 const DB_TYPE_UNICODE = "NOT NULL"; /*CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci*/	///< Use with VarChar(x)
 

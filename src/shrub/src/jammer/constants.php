@@ -3,10 +3,10 @@
 /// @brief The Jammer/Ludum Dare Plugin for Shrub
 
 /// @cond INTERNAL
-$SH_CONFIG_DEFAULT['ludumdare-active'] = '0';	// Currently Active Ludum Dare Event
-$SH_CONFIG_DEFAULT['ludumdare-alert'] = "";		// Short alert message shown by the Ludum Dare site
-$SH_CONFIG_DEFAULT['jammer-alert'] = "";		// Short alert message shown by the Jammer site
-$SH_CONFIG_DEFAULT['jammer.bio-alert'] = "";	// Short alert message shown by the jammer.bio
+$SH_GLOBAL_DEFAULT['ludumdare-active'] = '0';	// Currently Active Ludum Dare Event
+$SH_GLOBAL_DEFAULT['ludumdare-alert'] = "";		// Short alert message shown by the Ludum Dare site
+$SH_GLOBAL_DEFAULT['jammer-alert'] = "";		// Short alert message shown by the Jammer site
+$SH_GLOBAL_DEFAULT['jammer.bio-alert'] = "";	// Short alert message shown by the jammer.bio
 /// @endcond
 
 /*

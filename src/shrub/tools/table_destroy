@@ -7,7 +7,7 @@ include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."core/db.php";
 require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
 require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
-require_once __DIR__."/".SHRUB_PATH."config/config.php";
+require_once __DIR__."/".SHRUB_PATH."global/global.php";
 
 $cmd = array_shift($argv);
 foreach ($argv as $value) {
@@ -20,7 +20,7 @@ if (isset($table_list)) {
 	print implode(", ",$argv)."\n";
 }
 else {
-	$table_list = config_GetTables();
+	$table_list = global_GetTables();
 	print "You are about to DESTROY ALL TABLES!!\n";
 }
 print "\nAre you sure [type 'YES']? ";
@@ -57,18 +57,18 @@ function table_Drop($table) {
 		if ( $ret ) {
 			$ret = db_Query("DROP TABLE ".SH_TABLE_PREFIX.$table.";");
 	
-			// Special case: If the config table, do a purge //	
-			if ( $ret && $table === "config" ) {
-				echo "Purging \$SH_CONFIG...\n";
-				config_Purge();
+			// Special case: If the globals table, do a purge //	
+			if ( $ret && $table === "global" ) {
+				echo "Purging \$SH...\n";
+				global_Purge();
 			}
 			
-			if ( $ret && count($GLOBALS['SH_CONFIG']) ) {
-				config_Set($table,'0');
+			if ( $ret && count($GLOBALS['SH']) ) {
+				global_Set($table,'0');
 			}
 		}
 		
-		echo "* ".config_GetTableConstantByValue($table).": ".$table." [".(($ret)?("yes"):("no"))."]\n"; 
+		echo "* ".global_GetTableConstantByValue($table).": ".$table." [".(($ret)?("yes"):("no"))."]\n"; 
 	}
 	else {
 		echo "* WARNING: Unknown table \"".$table."\"\n"; 
@@ -79,7 +79,7 @@ function table_Drop($table) {
 
 // These directories should be searched first // 
 $first_dirs = [
-	'config'
+	'global'
 ];
 
 // Scan for include directories //
@@ -103,10 +103,10 @@ foreach ( $dirs_ordered as $dir ) {
 	}
 }
 
-// Load configuration (so we can track version changes) //
-if ( in_array(SH_TABLE_CONFIG,$table_list) ) { 
-	print "Loading configuration...\n";
-	config_Load();
+// Load globals (so we can track version changes) //
+if ( in_array(SH_TABLE_GLOBAL,$table_list) ) { 
+	print "Loading globals...\n";
+	global_Load();
 }
 
 // Drop all tables in the table list

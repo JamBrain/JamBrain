@@ -7,7 +7,7 @@ include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
 require_once __DIR__."/".SHRUB_PATH."core/db.php";
 require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
-require_once __DIR__."/".SHRUB_PATH."config/config.php";
+require_once __DIR__."/".SHRUB_PATH."global/global.php";
 
 
 $TABLE_LIST = [];
@@ -23,7 +23,7 @@ if ( count($TABLE_LIST) ) {
 	echo implode(", ",$argv)."\n";
 }
 else {
-	$TABLE_LIST = config_GetTables();
+	$TABLE_LIST = global_GetTables();
 	echo "You are about to create/update ALL tables.\n";
 }
 echo "\nAre you sure [type 'YES']? ";
@@ -73,13 +73,13 @@ if ( !_db_IsConnected() ) {
 
 // NOTE: utf8 is 3 byte unicode. utf8mb4 is 4 byte. Required for Emoji.
 const DB_CREATE_SUFFIX = " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE=InnoDB;";
-global $SH_CONFIG, $TABLE_VERSION, $OLD_TABLE_VERSION;
+global $SH, $TABLE_VERSION, $OLD_TABLE_VERSION;
 
 function table_Init($table) {
-	global $SH_CONFIG, $TABLE_VERSION, $OLD_TABLE_VERSION;
+	global $SH, $TABLE_VERSION, $OLD_TABLE_VERSION;
 	
 	echo "* ".$table.": ".constant($table)."\n";
-	$TABLE_VERSION = isset($SH_CONFIG[$table])?intval($SH_CONFIG[$table]):0;
+	$TABLE_VERSION = isset($SH[$table])?intval($SH[$table]):0;
 	$OLD_TABLE_VERSION = $TABLE_VERSION;	
 }
 /// How to set MAX_VERSION:
@@ -124,9 +124,9 @@ function table_Nop( $table ) {
 	return true;
 }
 function table_Exit($table) {
-	global $SH_CONFIG, $TABLE_VERSION, $OLD_TABLE_VERSION;
+	global $SH, $TABLE_VERSION, $OLD_TABLE_VERSION;
 	
-	if ( config_Set($table,strval($TABLE_VERSION)) ) {
+	if ( global_Set($table,strval($TABLE_VERSION)) ) {
 		echo $table." upgraded (version ".$OLD_TABLE_VERSION." -> ".$TABLE_VERSION.")\n";	
 	}
 }
@@ -135,7 +135,7 @@ function table_Exit($table) {
 
 // These directories should be searched first // 
 $first_dirs = [
-	'config'
+	'global'
 ];
 
 // Scan for include directories //
@@ -152,9 +152,9 @@ $dirs_ordered = array_merge($first_dirs,array_diff($dirs_only,$first_dirs));
 
 // *** //
 
-// Attempt to load the configuration (if possible) //
-echo "Loading configuration...\n";
-config_Load();
+// Attempt to load the globals (if possible) //
+echo "Loading globals...\n";
+global_Load();
 
 // *** //
 
