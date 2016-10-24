@@ -14,18 +14,57 @@ require_once __DIR__."/core.php";
 /// 	$MyResponse['thing'] = "This is defifinitely a thing";
 /// 	$MyResponse['other-thing'] = "Also a thing";
 /// 
+/// @param Integer $code (optional) Set an HTTP response code. See json_SetResponseCode.
+/// @retval Array (empty)
+function json_NewResponse( $code = null ) {
+	json_SetResponseCode($code);
+	return [];
+}
+
+/// Used to set the HTTP response code; Returns nothing
 /// @param Integer $code (optional) Set an HTTP response code
 /// All codes are supported, but the following are recommended:
 /// * `200` (OK)
-/// * `201` (Created)
-/// * `202` (Accepted)
-/// @retval Array (empty)
-function json_NewResponse( $code = null ) {
+/// * `201` (Created) - If a resource was created
+/// * `202` (Accepted) - Similar to 201, but processing hasn't finished (or started)
+/// * `304` (Not Modified) - Action had no effect
+/// * `500` (Internal Server Error) - When the server is unable to do the thing requested
+/// http://stackoverflow.com/a/34324179/5678759
+function json_SetResponseCode( $code = null ) {
 	if ( is_numeric($code) ) {
 		http_response_code($code);
 	}
-	return [];
 }
+
+/// @}
+
+/// @name HTTP Responses
+/// @{
+
+/// `200` (OK)
+function json_RespondOK() {
+	json_SetResponseCode(200);
+}
+/// `201` (Created) - If a resource was created
+function json_RespondCreated() {
+	json_SetResponseCode(201);
+}
+/// `202` (Accepted) - Similar to 201, but processing hasn't finished (or started)
+function json_RespondAccepted() {
+	json_SetResponseCode(202);
+}
+/// `304` (Not Modified) - Action had no effect
+function json_RespondNotModified() {
+	json_SetResponseCode(304);
+}
+/// `500` (Internal Server Error) - When the server is unable to do the thing requested
+function json_RespondError() {
+	json_SetResponseCode(500);
+}
+/// @}
+
+
+/// @{
 
 /// Returns an error response.
 /// 
@@ -39,8 +78,6 @@ function json_NewResponse( $code = null ) {
 function json_NewErrorResponse( $code = 400, $msg = null, $data = null ) {
 	// Set the error code in the response header //
 	$response = json_NewResponse($code);
-
-	$response['status'] = $code;
 	$response['response'] = core_GetHTTPResponseText($code);
 	
 	// Return the response //
@@ -86,43 +123,50 @@ function json_IsValidJSONPCallback($name) {
 /// * `404` (Not Found)
 /// @param String $msg (optional) Message
 function json_EmitError( $code = 400, $msg = null, $data = null ) {
-	json_Emit(json_newErrorResponse($code,$msg,$data));
+	json_Emit(json_newErrorResponse($code, $msg, $data));
 }
 function json_EmitFatalError( $code = 400, $msg = null, $data = null ) {
-	json_Emit(json_newErrorResponse($code,$msg,$data));
+	json_Emit(json_newErrorResponse($code, $msg, $data));
 	exit;
 }
+
+/// @}
+
+/// @name Fatal Errors
+/// @{
 
 /// For most errors
-function json_EmitGenericFatalError( $data = null ) {
-	json_EmitFatalError(400,null,$data);
+function json_EmitFatalBadRequestError( $msg = null, $data = null ) {
+	json_EmitFatalError(400, $msg, $data);
 }
 /// For when something requires authorization
-function json_EmitFatalPermissionError( $data = null ) {
-	json_EmitFatalError(401,null,$data);
+function json_EmitFatalPermissionError( $msg = null, $data = null ) {
+	json_EmitFatalError(401, $msg, $data);
 }
 /// For when the server will never resolve a request (not even with authentication)
-function json_EmitFatalForbiddenError( $data = null ) {
-	json_EmitFatalError(403,null,$data);
+function json_EmitFatalForbiddenError( $msg = null, $data = null ) {
+	json_EmitFatalError(403, $msg, $data);
 }
 /// For when something was expected to be found, but wasn't
-function json_EmitFatalNotFoundError( $data = null ) {
-	json_EmitFatalError(404,null,$data);
+function json_EmitFatalNotFoundError( $msg = null, $data = null ) {
+	json_EmitFatalError(404, $msg, $data);
 }
 /// Like 404, but for when a previously known resource was found, but is now gone
-function json_EmitFatalGoneError( $data = null ) {
-	json_EmitFatalError(410,null,$data);
+function json_EmitFatalGoneError( $msg = null, $data = null ) {
+	json_EmitFatalError(410, $msg, $data);
+}
+/// When the server errors when it shouldn't
+function json_EmitFatalServerError( $msg = null, $data = null ) {
+	json_EmitFatalError(500, $msg, $data);
+}
+/// When the server is unavailable due to maintenence
+function json_EmitFatalUnavailableError( $msg = null, $data = null ) {
+	json_EmitFatalError(503, $msg, $data);
 }
 
+/// @}
 
-/// Emit an "Server Error" document and **Exit**. Use this when the server fails.
-/// 
-/// @param String $msg (optional) Message
-function json_EmitServerError( $msg = null ) {
-	json_Emit(json_newErrorResponse(500,$msg));
-	exit;
-}
-
+/// @{
 
 /// Emit a JSON document.
 /// 
@@ -141,7 +185,7 @@ function json_Emit( $out, $allow_jsonp = true ) {
 	if ( isset($_GET['pretty']) ) {
 		$out_format |= JSON_PRETTY_PRINT;
 	}
-	
+		
 	// JSON-P //
 	if ( isset($_GET['callback']) ) {
 		if ( $allow_jsonp ) {
@@ -158,6 +202,9 @@ function json_Emit( $out, $allow_jsonp = true ) {
 			$out = json_NewErrorResponse(401,"JSON-P Unavailable");
 		}
 	}
+
+	// Prepend the status code //
+	$out = ['status' => http_response_code()]+$out;
 		
 	// Debug Info //
 	if ( defined('SH_PHP_DEBUG') && isset($_GET['debug']) ) {
@@ -200,6 +247,45 @@ function json_Emit( $out, $allow_jsonp = true ) {
 	//header("Pragma: no-cache"); // HTTP 1.0.
 	//header("Expires: 0"); // Proxies.
 	echo $prefix,str_replace('</', '<\/', json_encode($out,$out_format)),$suffix;
+}
+
+/// @}
+
+/// @name Simplified API calls
+/// @{
+
+/// After authenticating and loading globals, confirm that we're not in maintenence mode
+function json_CheckForMaintenence() {
+	if ( !user_AuthIsAdmin() && !global_IsActive() ) {
+		json_EmitFatalUnavailableError( strlen($SH['alert']) ? $SH['alert'] : null );
+	}
+}
+
+function json_Begin() {
+	global $RESPONSE, $AUTH, $REQUEST;
+	
+	// Begin //
+	$RESPONSE = json_NewResponse();
+	
+	// Authenticate //
+	user_Auth();
+	$RESPONSE['auth'] = $AUTH;
+	
+	// Load Globals //
+	global_Load();
+	
+	json_CheckForMaintenence();
+	
+	// Parse Arguments //
+	$REQUEST = core_GetAPIRequest();
+	$RESPONSE['request'] = $REQUEST;
+}
+
+function json_End() {
+	global $RESPONSE;
+
+	// Emit Response //
+	json_Emit( $RESPONSE );	
 }
 
 /// @}

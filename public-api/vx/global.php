@@ -3,36 +3,39 @@ const CONFIG_PATH = "../../src/shrub/";
 const SHRUB_PATH = "../../src/shrub/src/";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/".SHRUB_PATH."core/json.php";
-require_once __DIR__."/".SHRUB_PATH."global/global.php";
-require_once __DIR__."/".SHRUB_PATH."user/auth.php";
+require_once __DIR__."/".SHRUB_PATH."api.php";
 
-// Begin //
-$response = json_NewResponse();
-
-// Authenticate //
-user_Auth();
-$response['auth'] = $AUTH;
-
-// Parse Arguments //
-$REQUEST = core_GetAPIRequest();
-$response['request'] = $REQUEST;
+json_Begin();
 
 // Do Actions //
 switch ( $REQUEST[0] ) {
-	case 'get':
+	case 'set':
 		if ( user_AuthIsAdmin() ) {
-			global_Load();
-			$response['global'] = $SH;
+			/// @todo sanitize
+			/// @todo Do a set
+			
+			if ( false ) {
+				json_SetResponseCreated();
+			}
+			else {
+				json_EmitFatalServerError(null,$RESPONSE);
+			}
 		}
 		else {
-			json_EmitFatalPermissionError($response);
+			json_EmitFatalPermissionError(null,$RESPONSE);
+		}
+		break;
+	case 'get':
+		if ( user_AuthIsAdmin() ) {
+			$RESPONSE['global'] = $SH;
+		}
+		else {
+			json_EmitFatalPermissionError(null,$RESPONSE);
 		}
 		break;
 	default:
-		json_EmitFatalForbiddenError($response);
+		json_EmitFatalForbiddenError(null,$RESPONSE);
 		break;
 };
 
-// Emit Response //
-json_Emit( $response );
+json_End();

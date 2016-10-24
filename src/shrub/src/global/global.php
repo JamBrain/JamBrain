@@ -95,4 +95,20 @@ function global_Purge() {
 	$SH = [];
 }
 
+function global_IsActive() {
+	global $SH;
+	
+	return isset($SH['active']) && $SH['active'];
+}
+
+//function global_Has(...$args) {
+//	global $SH;
+//	foreach ( $args as $arg ) {
+//		if ( !isset($SH[$arg]) || (!$SH[$arg]) ) {
+//			return false;
+//		}
+//	}
+//	return true;
+//}
+
 /// @}
