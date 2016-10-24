@@ -10,7 +10,7 @@ require_once __DIR__."/../core/cache.php";
 $SH = [];
 
 const _SH_GLOBAL_CACHE_KEY = "SH";
-const _SH_GLOBAL_CACHE_TTL = 10*60;
+const _SH_GLOBAL_CACHE_TTL = 3*60; // Every 3 minutes.
 /// @endcond
 
 /// @cond INTERNAL
@@ -29,11 +29,13 @@ function _global_Set($key, $value) {
 /// @endcond
 /// Set a global key to a new value
 function global_Set($key, $value) {
-	if ( !isset($GLOBALS['SH'][$key]) || $GLOBALS['SH'][$key] !== $value ) {
+	global $SH;
+	
+	if ( !isset($SH[$key]) || $SH[$key] !== $value ) {
 		if ( !_global_Set($key,$value) )
 			return false;
-		$GLOBALS['SH'][$key] = $value;
-		cache_Store(_SH_GLOBAL_CACHE_KEY,$GLOBALS['SH'],_SH_GLOBAL_CACHE_TTL);
+		$SH[$key] = $value;
+		cache_Store(_SH_GLOBAL_CACHE_KEY,$SH,_SH_GLOBAL_CACHE_TTL);
 		return true;
 	}
 	return false;
@@ -52,6 +54,22 @@ function _global_Load() {
 			);"
 		);
 		
+		// Convert types of the values of certain keys found in globals //
+		foreach ( $ret as $key => &$value ) {
+			if ( strcmp($key, "active") === 0 ) {
+				$value = intval($value);
+				continue;
+			}
+			else if ( strpos($key, "-active") !== false ) {
+				$value = intval($value);
+				continue;
+			}
+			else if ( strpos($key, "SH_TABLE_") === 0 ) {
+				$value = intval($value);
+				continue;
+			}
+		}
+		
 		if ( $ret ) {
 			cache_Store(_SH_GLOBAL_CACHE_KEY,$ret,_SH_GLOBAL_CACHE_TTL);
 		}
@@ -64,13 +82,17 @@ function _global_Load() {
 /// @endcond
 /// Load the Globals ($SH)
 function global_Load() {
-	$GLOBALS['SH'] = _global_Load();
+	global $SH;
+	
+	$SH = _global_Load();
 }
 
 /// Purge the cached globals
 function global_Purge() {
+	global $SH;
+	
 	cache_Delete(_SH_GLOBAL_CACHE_KEY);
-	$GLOBALS['SH'] = [];
+	$SH = [];
 }
 
 /// @}
