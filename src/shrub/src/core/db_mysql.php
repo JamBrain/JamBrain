@@ -31,9 +31,11 @@ function DB_FIELD_DATE($field) {
 function DB_FIELD_IP_TO_STRING($field) {
 	return "INET6_NTOA(".$field.") AS ".$field;
 }
-function DB_FIELD_IP_TO_NUMBER($field) {
+function DB_FIELD_IP_FROM_STRING($field) {
 	return "INET6_ATON(".$field.") AS ".$field;
 }
+
+// http://dev.mysql.com/doc/refman/5.6/en/func-op-summary-ref.html
 
 const DB_TYPE_UID = "UNSIGNED BIGINT NOT NULL AUTO_INCREMENT UNIQUE"; 				///< Use *ONLY ONCE*, as the unique ID
 const DB_TYPE_ID = "UNSIGNED BIGINT NOT NULL";										///< Use for all other IDs
