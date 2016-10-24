@@ -11,7 +11,9 @@ json_Begin();
 switch ( $REQUEST[0] ) {
 	case 'set':
 		if ( user_AuthIsAdmin() ) {
-			/// @todo sanitize
+			json_EmitFatalNotImplementedError(null,$RESPONSE);
+			
+			/// @todo sanitize (don't let API create fields)
 			/// @todo Do a set
 			
 			if ( false ) {

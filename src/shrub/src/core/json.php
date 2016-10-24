@@ -159,6 +159,10 @@ function json_EmitFatalGoneError( $msg = null, $data = null ) {
 function json_EmitFatalServerError( $msg = null, $data = null ) {
 	json_EmitFatalError(500, $msg, $data);
 }
+/// When an action isn't yet implemented, and it's worth sharing this
+function json_EmitFatalNotImplementedError( $msg = null, $data = null ) {
+	json_EmitFatalError(501, $msg, $data);
+}
 /// When the server is unavailable due to maintenence
 function json_EmitFatalUnavailableError( $msg = null, $data = null ) {
 	json_EmitFatalError(503, $msg, $data);
