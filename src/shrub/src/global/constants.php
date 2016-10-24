@@ -9,7 +9,7 @@ $SH_TABLE_VALUE_KEYS = [];
 
 /// Default global metadata
 $SH_GLOBAL_DEFAULT = [
-	'active' => '1',						// Is the website Active
+	'active' => 1,							// Is the website Active
 	'alert' => "",							// Short alert message to be shown everywhere
 	'web-alert' => "",						// Short alert message shown by the web site
 	'api-alert' => "",						// Short alert message shown by the API

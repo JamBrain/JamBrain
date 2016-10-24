@@ -80,10 +80,13 @@ function _db_FatalError( $msg, $public = false ) {
 	exit;
 }
 
-function _db_FatalDBError( $public = false ) {
+function _db_DBError( $public = false ) {
 	global $db;
 	
 	_db_Error(isset($db) ? mysqli_error($db) : "NO $db", $public);
+}
+function _db_FatalDBError( $public = false ) {
+	_db_DBError($public);
 	exit;
 }
 /// @}
@@ -309,7 +312,7 @@ function _db_Query( $query, $args ) {
 	if ( $st && _db_BindExecute($st, $args) ) {
 		return $st;
 	}
-	_db_FatalDBError();
+	_db_DBError();
 	return false;
 }
 ///@}

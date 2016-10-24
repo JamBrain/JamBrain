@@ -79,7 +79,7 @@ function table_Init($table) {
 	global $SH, $TABLE_VERSION, $OLD_TABLE_VERSION;
 	
 	echo "* ".$table.": ".constant($table)."\n";
-	$TABLE_VERSION = isset($SH[$table])?intval($SH[$table]):0;
+	$TABLE_VERSION = isset($SH[$table]) ? intval($SH[$table]) : 0;
 	$OLD_TABLE_VERSION = $TABLE_VERSION;	
 }
 /// How to set MAX_VERSION:
@@ -126,7 +126,7 @@ function table_Nop( $table ) {
 function table_Exit($table) {
 	global $SH, $TABLE_VERSION, $OLD_TABLE_VERSION;
 	
-	if ( global_Set($table,strval($TABLE_VERSION)) ) {
+	if ( global_Set($table,$TABLE_VERSION) ) {
 		echo $table." upgraded (version ".$OLD_TABLE_VERSION." -> ".$TABLE_VERSION.")\n";	
 	}
 }

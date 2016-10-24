@@ -23,7 +23,7 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 	};
 	
 	// Because this is Global, we do a few more things //
-	$global_default = array_merge($SH_GLOBAL_DEFAULT, array_fill_keys(global_GetTableConstants(), '0'));
+	$global_default = array_merge($SH_GLOBAL_DEFAULT, array_fill_keys(global_GetTableConstants(), 0));
 	
 	// Add elements found in the defaults that don't exist yet //
 	$global_diff = array_diff_key($global_default,$SH);
