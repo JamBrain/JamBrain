@@ -253,6 +253,18 @@ function themeIdea_CountAllOriginal( $user_id = 0, $threshold = null, $query_suf
 
 // *** //
 
+function themeIdea_CountUsers( $event_id, $query_suffix = ";" ) {
+	return db_QueryFetchValue(
+		"SELECT count(DISTINCT user)
+		FROM ".SH_TABLE_THEME_IDEA." 
+		WHERE node=?
+		LIMIT 1".$query_suffix,
+		$event_id
+	);
+}
+
+// *** //
+
 // Like themeIdea_Get, but returns a more detailed result
 function themeIdea_GetDetail( $event_id, $user_id = 0, $threshold = null, $query_suffix = ";" ) {
 	if ( $user_id ) {
@@ -285,6 +297,61 @@ function themeIdea_GetDetail( $event_id, $user_id = 0, $threshold = null, $query
 	}
 }
 
+// *** //
+
+function themeIdea_GetOther( $event_id, $user_id = 0, $threshold = null, $query_suffix = ";" ) {
+	if ( $user_id ) {
+		return db_QueryFetchPair(
+			"SELECT id,theme 
+			FROM ".SH_TABLE_THEME_IDEA." 
+			WHERE node!=? AND user=?".$query_suffix,
+			$event_id, 
+			$user_id
+		);
+	}
+	else {
+		if ( isset($threshold) ) {
+			return db_QueryFetchPair(
+				"SELECT id,theme 
+				FROM ".SH_TABLE_THEME_IDEA." 
+				WHERE node!=? AND score>=?".$query_suffix,
+				$event_id,
+				$threshold
+			);
+		}
+		else {
+			return db_QueryFetchPair(
+				"SELECT id,theme 
+				FROM ".SH_TABLE_THEME_IDEA." 
+				WHERE node!=?".$query_suffix,
+				$event_id
+			);
+		}
+	}
+}
+
+/// You shouldn't use this, but it is here; It's slow, and will give duplicates
+function _themeIdea_GetRandom( $event_id, $threshold = null, $query_suffix = ";" ) {
+	if ( isset($threshold) ) {
+		return db_QueryFetchPair(
+			"SELECT id,theme 
+			FROM ".SH_TABLE_THEME_IDEA." 
+			WHERE node=? AND parent=0 AND score>=?
+			ORDER BY rand() LIMIT 1".$query_suffix,
+			$event_id,
+			$threshold
+		);
+	}
+	else {
+		return db_QueryFetchPair(
+			"SELECT id,theme 
+			FROM ".SH_TABLE_THEME_IDEA." 
+			WHERE node=? AND parent=0
+			ORDER BY rand() LIMIT 1".$query_suffix,
+			$event_id
+		);		
+	}
+}
 
 // *** //
 
@@ -311,7 +378,7 @@ function _themeIdea_AddWithLimit( $idea, $event_id, $user_id, $limit ) {
 	$count = 0;
 	
 	try {
-		$count = themeIdea_CountMine($event_id, $user_id, " FOR UPDATE");
+		$count = themeIdea_Count($event_id, $user_id, " FOR UPDATE;");
 		if ( $count === false ) 
 			throw new Exception();
 		if ( $count >= $limit ) 
@@ -324,12 +391,14 @@ function _themeIdea_AddWithLimit( $idea, $event_id, $user_id, $limit ) {
 			VALUES ( 
 				?, ?, ?, NOW()
 			)",
-			$idea, $event_id, $user_id
+			$idea, 
+			$event_id, 
+			$user_id
 		);
 		if ( empty($result) ) 
 			throw new Exception();
 
-		$count = themeIdea_CountMine($event_id, $user_id);
+		$count = themeIdea_Count($event_id, $user_id);
 		if ( $count === false ) 
 			throw new Exception();
 		if ( $count > $limit ) 
@@ -337,12 +406,18 @@ function _themeIdea_AddWithLimit( $idea, $event_id, $user_id, $limit ) {
 		
 		// We're good! Commit! We're finished //
 		$db->commit();
-		return ["id" => $result, "count" => $count];
+		return [
+			"id" => $result, 
+			"count" => $count
+		];
 	}
 	catch (Exception $ex) {
 		// Bad! Do a rollback! //
 		$db->rollback();
-		return ["id" => 0, "count" => $count];
+		return [
+			"id" => 0,
+			"count" => $count
+		];
 	}
 }
 /// @endcond
@@ -375,7 +450,7 @@ function themeIdea_Remove( $id, $user_id = 0 ) {
 // *** //
 
 function themeIdea_SetParent( $id, $event_id ) {
-	return db_QueryInsert(
+	return db_QueryUpdate(
 		"UPDATE ".SH_TABLE_THEME_IDEA."
 		SET
 			parent=?
@@ -386,7 +461,7 @@ function themeIdea_SetParent( $id, $event_id ) {
 }
 
 function themeIdea_SetScore( $id, $score ) {
-	return db_QueryInsert(
+	return db_QueryUpdate(
 		"UPDATE ".SH_TABLE_THEME_IDEA."
 		SET
 			score=?
@@ -396,4 +471,17 @@ function themeIdea_SetScore( $id, $score ) {
 	);
 }
 
+function themeIdea_SetTheme( $id, $idea ) {
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_THEME_IDEA."
+		SET
+			idea=?
+		WHERE
+			id=?;",
+		$idea, $id
+	);
+}
+
 // *** //
+
+

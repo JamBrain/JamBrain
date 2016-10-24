@@ -441,6 +441,11 @@ function db_QueryDelete( $query, ...$args ) {
 	return false;
 }
 
+function db_QueryUpdate( $query, ...$args ) {
+	// NOTE: Doesn't actually delete. Just means it returns the number of rows changed
+	return db_QueryDelete( $query, ...$args );
+}
+
 /// For **true/false** queries; Returns the number of rows that match a query
 /// @param [in] String $query MySQL query string
 /// @param [in] ... (optional) String arguments
