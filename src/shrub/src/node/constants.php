@@ -11,7 +11,6 @@ const SH_NODE_ID_USER = 			2;	///< Special group for Users
 ///	@addtogroup NodeTypes
 /// @name Internal Types
 /// @{
-// Internal Types //
 const SH_NODE_TYPE_ROOT =			'root';
 const SH_NODE_TYPE_USERS =			'users';
 const SH_NODE_TYPE_SYMLINK =		'symlink';
@@ -20,9 +19,16 @@ const SH_NODE_TYPE_SYMLINK =		'symlink';
 ///	@addtogroup NodeTypes
 /// @name Core Types
 /// @{
-// Core Types //
 const SH_NODE_TYPE_USER =			'user';
 const SH_NODE_TYPE_POST =			'post';
+/// @}
+
+///	@addtogroup NodeMetaPrivacy
+/// @name Privacy Types
+/// @{
+const SH_NODE_META_PUBLIC = 		0;
+const SH_NODE_META_PROTECTED = 		1;
+const SH_NODE_META_PRIVATE = 		128;
 /// @}
 
 /// @name Node Tables
