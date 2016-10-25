@@ -299,7 +299,11 @@ function json_Begin() {
 	
 	// Authenticate //
 	user_Auth();
-	$RESPONSE['auth'] = $AUTH;
+	if ( isset($_GET['auth']) || isset($_GET['debug']) ) {
+		// Need to limit what keys get copied. No need to send a full user (or accidentilaly send private info)
+		$keys = ['user'];//,'admin','permission'];
+		$RESPONSE['auth'] = array_intersect_key($AUTH, array_flip($keys));
+	}
 	
 	// Load Globals //
 	global_Load();
@@ -308,7 +312,9 @@ function json_Begin() {
 	
 	// Parse Arguments //
 	$REQUEST = core_GetAPIRequest();
-	$RESPONSE['request'] = $REQUEST;
+	if ( isset($_GET['request']) || isset($_GET['debug']) ) {
+		$RESPONSE['request'] = $REQUEST;
+	}
 }
 
 function json_End() {
