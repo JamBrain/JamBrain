@@ -99,6 +99,17 @@ if ( function_exists("apcu_fetch") ) {
 	}
 /// @}
 
+	/// Combo function that attempts to fetch
+	function cache_FetchStore( $key, $func, $ttl = 0 ) {
+		if ( cache_Exists($key) ) {
+			return cache_Fetch($key);
+		}
+
+		$value = $func();
+		cache_Store($key, $value, $ttl);
+		return $value;
+	}
+
 /// @cond
 }
 else {

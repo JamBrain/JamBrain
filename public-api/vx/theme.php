@@ -8,6 +8,8 @@ require_once __DIR__."/".SHRUB_PATH."theme/theme.php";
 
 json_Begin();
 
+const CACHE_TTL = 15;//10*60;
+
 // Do Actions //
 $action = json_ArgGet(0);
 switch ( $action ) {
@@ -45,6 +47,7 @@ switch ( $action ) {
 			json_EmitFatalError_Permission(null,$RESPONSE);
 		}
 		break;
+
 	// Theme Suggestions //
 	case 'idea': {
 		$parent_action = json_ArgShift();
@@ -60,23 +63,42 @@ switch ( $action ) {
 						$RESPONSE['count'] = count($RESPONSE['ideas']);
 					}
 					else {
-						json_EmitFatalError_BadRequest(null,$RESPONSE);
+						json_EmitFatalError_BadRequest(null, $RESPONSE);
 					}
 				}
 				else {
-					json_EmitFatalError_Permission(null,$RESPONSE);
+					json_EmitFatalError_Permission(null, $RESPONSE);
 				}
 				break;
 			case 'get':
 				json_ValidateHTTPMethod('GET');
 				$event_id = intval(json_ArgGet(1));
-
+				
 				if ( $event_id !== 0 ) {
-					$RESPONSE['themes'] = themeIdea_GetOriginal($event_id,null,1);//,$AUTH['user']['id']);
+					/// @todo Confirm that $event_id is an event
+					/// 	Broadphase: check if it's on the master list of event nodes.
+					///		Narrowphase: Get the threshold from the node itself
+					$threshold = 1;
+					$cache_key = "SH!THEME!IDEA!GET".$event_id."!".$threshold;
+					
+//					$RESPONSE['themes'] = cache_FetchStore($key, 
+//						function() use ($event_id, $threshold) {
+//							return themeIdea_GetOriginal($event_id, null, $threshold);
+//						},
+//						CACHE_TTL);
+						
+					$RESPONSE['themes'] = cache_Fetch($cache_key);
+					if ( !isset($RESPONSE['themes']) ) {
+						$RESPONSE['themes'] = themeIdea_GetOriginal($event_id, null, $threshold);
+						if ( isset($RESPONSE['themes']) ) {
+							cache_Store($cache_key, $RESPONSE['themes'], CACHE_TTL);
+						}
+					}
+					
 					$RESPONSE['count'] = count($RESPONSE['themes']);
 				}
 				else {
-					json_EmitFatalError_BadRequest(null,$RESPONSE);
+					json_EmitFatalError_BadRequest(null, $RESPONSE);
 				}
 
 				break;
@@ -88,6 +110,7 @@ switch ( $action ) {
 		};
 		break;
 	}
+
 	default:
 		json_EmitFatalError_Forbidden(null,$RESPONSE);
 		break;
