@@ -34,14 +34,15 @@ if ( function_exists("apcu_fetch") ) {
 		global $CACHE_FETCH_COUNT;
 		$CACHE_FETCH_COUNT++;
 		$success = null;
-		$ret = apcu_fetch( $key, $success );
+		
+		$ret = apcu_fetch($key, $success);
 		return $success ? $ret : null;
 	}
 	/// Check if key(s) exist
 	/// @param [in] $key string or array of strings
 	/// @retval boolean or array of booleans
 	function cache_Exists( $key ) {
-		return apcu_exists( $key );
+		return apcu_exists($key);
 	}
 	
 	/// @param [in] $key string or array of strings
@@ -50,7 +51,12 @@ if ( function_exists("apcu_fetch") ) {
 	function cache_Store( $key, $value = null, $ttl = 0 ) {
 		global $CACHE_STORE_COUNT;
 		$CACHE_STORE_COUNT++;
-		return apcu_store( $key, $value, $ttl );
+		
+		// Don't write null //
+		if ( isset($value) ) {
+			return apcu_store($key, $value, $ttl);
+		}
+		return false;
 	}
 	/// Like Store, but wont overwrite if it exists
 	/// @param [in] $key string or array of strings
@@ -59,7 +65,7 @@ if ( function_exists("apcu_fetch") ) {
 	function cache_Create( $key, $value = null, $ttl = 0 ) {
 		global $CACHE_STORE_COUNT;
 		$CACHE_STORE_COUNT++;
-		return apcu_add( $key, $value, $ttl );
+		return apcu_add($key, $value, $ttl);
 	}
 	/// Used to update the TTL of cached values. Works like Store
 	/// @param [in] $key string or array of strings
@@ -72,9 +78,9 @@ if ( function_exists("apcu_fetch") ) {
 		
 		$value = apcu_fetch($key);
 		if ( is_array($value) )
-			return apcu_store( $value, null, $ttl );
+			return apcu_store($value, null, $ttl);
 		else
-			return apcu_store( $key, $value, $ttl );
+			return apcu_store($key, $value, $ttl);
 	}
 	/// Delete a cached value
 	function cache_Delete( $key ) {
@@ -88,27 +94,16 @@ if ( function_exists("apcu_fetch") ) {
 	function cache_Inc( $key, $step = 1 ) {
 		global $CACHE_STORE_COUNT;
 		$CACHE_STORE_COUNT++;
-		return apcu_inc( $key, $step );
+		return apcu_inc($key, $step);
 	}
 	/// @param [in] $key string or array of strings
 	/// @param [in] $step [optional] how much to decrement by
 	function cache_Dec( $key, $step = 1 ) {
 		global $CACHE_STORE_COUNT;
 		$CACHE_STORE_COUNT++;
-		return apcu_dec( $key, $step );
+		return apcu_dec($key, $step);
 	}
 /// @}
-
-	/// Combo function that attempts to fetch
-	function cache_FetchStore( $key, $func, $ttl = 0 ) {
-		if ( cache_Exists($key) ) {
-			return cache_Fetch($key);
-		}
-
-		$value = $func();
-		cache_Store($key, $value, $ttl);
-		return $value;
-	}
 
 /// @cond
 }

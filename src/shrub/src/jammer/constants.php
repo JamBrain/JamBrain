@@ -9,6 +9,13 @@ $SH_GLOBAL_DEFAULT['jammer-alert'] = "";		// Short alert message shown by the Ja
 $SH_GLOBAL_DEFAULT['jammer.bio-alert'] = "";	// Short alert message shown by the jammer.bio
 /// @endcond
 
+///	@addtogroup NodeTypes
+/// @name Jammer Types
+/// @{
+// Internal Types //
+const SH_NODE_TYPE_EVENT =			'event';
+/// @}
+
 /*
 // Item Constants //
 const SH_NODE_ADMIN = 3;				// Administrator Control Panel
