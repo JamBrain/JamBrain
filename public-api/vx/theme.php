@@ -16,6 +16,8 @@ switch ( $action ) {
 		json_ValidateHTTPMethod('GET');
 		$event_id = intval(json_ArgGet(1));
 		
+		/// @todo Confirm valid event_id
+		
 		if ( $event_id !== 0 ) {
 			$RESPONSE['themes'] = ['bacon'];
 		}
@@ -67,15 +69,11 @@ switch ( $action ) {
 				break;
 			case 'get':
 				json_ValidateHTTPMethod('GET');
-				$arg = son_ArgGet(1);
-				
-				// Get my ideas //
-				if ( $arg == 'me' ) {
-					
-				}
+				$event_id = intval(json_ArgGet(1));
 
 				if ( $event_id !== 0 ) {
-					$RESPONSE['themes'] = ['bacon'];
+					$RESPONSE['themes'] = themeIdea_GetOriginal($event_id,null,1);//,$AUTH['user']['id']);
+					$RESPONSE['count'] = count($RESPONSE['themes']);
 				}
 				else {
 					json_EmitFatalError_BadRequest(null,$RESPONSE);

@@ -158,7 +158,7 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 				id ".DB_TYPE_ID." UNIQUE,
 				node ".DB_TYPE_ID.",
 					INDEX(node),
-				theme ".DB_TYPE_UNICODE.",
+				theme ".DB_TYPE_UNICODE(64).",
 				score DOUBLE NOT NULL,
 					INDEX (score)
 			)".DB_CREATE_SUFFIX);
