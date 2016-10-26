@@ -45,11 +45,27 @@ const DB_TYPE_TIMESTAMP = "DATETIME NOT NULL";										///< Timestamps
 //const DB_TYPE_UNICODE = "NOT NULL"; /*CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci*/	///< Use with VarChar(x)
 
 function DB_TYPE_ASCII($chars) {
-	return ( $chars ? "VARCHAR($chars)" : "")." CHARSET latin1 NOT NULL";
+	return ($chars ? "VARCHAR($chars)" : "")." CHARSET latin1 NOT NULL";
 }
 function DB_TYPE_UNICODE($chars) {
-	return ( $chars ? "VARCHAR($chars)" : "")." NOT NULL";
+	return ($chars ? "VARCHAR($chars)" : "")." NOT NULL";
 }
+function DB_TYPE_UNICODE3($chars) {
+	return (chars ? "VARCHAR($chars)" : "")." CHARSET utf8 NOT NULL";
+}
+/// @}
+
+
+/// @defgroup DBParseRowFields db_ParseRow Fields
+/// Constants used to tell db_ParseRow how to reinterpret fields
+/// @ingroup DB
+/// @{
+const SH_FIELD_TYPE_IGNORE = 0;			///< This means field will be unset. You shouldn't use this. Prefer a custom query w/o the field instead.
+const SH_FIELD_TYPE_STRING = 1;			///< Has no effect (values are strings by default)
+const SH_FIELD_TYPE_INT = 2;
+const SH_FIELD_TYPE_FLOAT = 3;
+const SH_FIELD_TYPE_DATETIME = 4;		///< W3C date formatted strings (i.e. 2016-03-01T05:23:49.049Z)
+const SH_FIELD_TYPE_JSON = 5;			///< JSON encoded strings
 /// @}
 
 
@@ -115,8 +131,8 @@ if ( !defined('SH_DB_PASSWORD') ) {
 	_db_FatalError("SH_DB_PASSWORD not set.");
 }
 
-define('_INI_MYSQLI_DEFAULT_PORT',ini_get("mysqli.default_port"));
-define('_INI_MYSQLI_DEFAULT_SOCKET',ini_get("mysqli.default_socket"));
+define('_INI_MYSQLI_DEFAULT_PORT', ini_get("mysqli.default_port"));
+define('_INI_MYSQLI_DEFAULT_SOCKET', ini_get("mysqli.default_socket"));
 ///@endcond
 
 
@@ -134,12 +150,12 @@ function _db_IsConnected() {
 
 /// Connect to the Database
 function _db_Connect(
-	$host=SH_DB_HOST,
-	$login=SH_DB_LOGIN,
-	$password=SH_DB_PASSWORD,
-	$name=SH_DB_NAME,
-	$port=_INI_MYSQLI_DEFAULT_PORT,
-	$socket=_INI_MYSQLI_DEFAULT_SOCKET
+	$host = SH_DB_HOST,
+	$login = SH_DB_LOGIN,
+	$password = SH_DB_PASSWORD,
+	$name = SH_DB_NAME,
+	$port = _INI_MYSQLI_DEFAULT_PORT,
+	$socket = _INI_MYSQLI_DEFAULT_SOCKET
 )
 {
 	// Safely call this multiple times, only the first time has any effect //
@@ -158,29 +174,29 @@ function _db_Connect(
 		$flags = null;
 
 		// Connect to the database //
-		mysqli_real_connect($db,$host,$login,$password,$name,$port,$socket,$flags);
+		mysqli_real_connect($db, $host, $login, $password, $name, $port, $socket, $flags);
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
 		if ($db->connect_errno) {
-    		_db_Error( "Failed to connect: (" . $db->connect_errno . ") " . $db->connect_error );
+    		_db_Error("Failed to connect: (".$db->connect_errno.") ".$db->connect_error);
     	}
     	
     	// Set character set to utf8mb4 mode (default is utf8mb3 (utf8). mb4 is required for Emoji)
-    	mysqli_set_charset($db,'utf8mb4');
+    	mysqli_set_charset($db, 'utf8mb4');
     	// More info: http://stackoverflow.com/questions/279170/utf-8-all-the-way-through
 	}
 }
 
 /// Connect to the MySQL Server only
 function _db_ConnectOnly(
-	$host=SH_DB_HOST,
-	$login=SH_DB_LOGIN,
-	$password=SH_DB_PASSWORD,
-	$port=_INI_MYSQLI_DEFAULT_PORT,
-	$socket=_INI_MYSQLI_DEFAULT_SOCKET
+	$host = SH_DB_HOST,
+	$login = SH_DB_LOGIN,
+	$password = SH_DB_PASSWORD,
+	$port = _INI_MYSQLI_DEFAULT_PORT,
+	$socket = _INI_MYSQLI_DEFAULT_SOCKET
 )
 {
-	return _db_Connect($host,$login,$password,"",$port,$socket);
+	return _db_Connect($host, $login, $password, "", $port, $socket);
 }
 
 /// Close the Connection
@@ -217,7 +233,7 @@ function _db_Close() {
 /// You don't need to include every field in a map, just the ones you want to change from Strings.
 ///
 /// See @ref DBParseRowFields for a list of types. 
-function db_ParseRow( &$row, &$map ) {
+function & db_ParseRow( &$row, $map ) {
 	foreach( $row as $key => &$value ) {
 		if ( isset($map[$key]) ) {
 			switch( $map[$key] ) {
@@ -249,6 +265,14 @@ function db_ParseRow( &$row, &$map ) {
 			};
 		}
 	}
+	return $row;
+}
+
+function & db_ParseRows( &$rows, $map ) {
+	foreach( $rows as &$row ) {
+		db_ParseRow($row, $map);
+	}
+	return $rows;
 }
 ///@}
 
@@ -262,7 +286,7 @@ function db_ParseRow( &$row, &$map ) {
 /// @name Internal: Internal Query Code
 /// @{
 function _db_Prepare( $query ) {
-	return mysqli_prepare($GLOBALS['db'],$query);
+	return mysqli_prepare($GLOBALS['db'], $query);
 }
 
 function _db_BindExecute( &$st, $args ) {
@@ -293,7 +317,7 @@ function _db_BindExecute( &$st, $args ) {
 			}
 		}
 		
-		$st->bind_param($arg_types_string,...$args);
+		$st->bind_param($arg_types_string, ...$args);
 	}
 
 	$GLOBALS['DB_QUERY_COUNT']++;
@@ -327,7 +351,7 @@ function _db_Query( $query, $args ) {
 
 /// @name Internal: Post-query extraction functions
 /// @{
-function _db_GetAssoc(&$st) {
+function _db_GetAssoc( &$st ) {
 	$result = $st->get_result();
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_ASSOC /*MYSQLI_NUM*/)) {
@@ -336,7 +360,7 @@ function _db_GetAssoc(&$st) {
 	return $ret;
 }
 /// Given a key (field name), populate an array using the value of the key as the index
-function _db_GetAssocStringKey($key,&$st) {
+function _db_GetAssocStringKey( $key, &$st ) {
 	$result = $st->get_result();
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_ASSOC /*MYSQLI_NUM*/)) {
@@ -345,7 +369,7 @@ function _db_GetAssocStringKey($key,&$st) {
 	return $ret;
 }
 /// Same as _db_GetAssocStringKey, but assume the key is an integer, not a string
-function _db_GetAssocIntKey($key,&$st) {
+function _db_GetAssocIntKey( $key, &$st ) {
 	$result = $st->get_result();
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_ASSOC /*MYSQLI_NUM*/)) {
@@ -354,7 +378,7 @@ function _db_GetAssocIntKey($key,&$st) {
 	return $ret;
 }
 /// Same as _db_GetAssocStringKey, but assume the key is a float, not a string
-function _db_GetAssocFloatKey($key,&$st) {
+function _db_GetAssocFloatKey( $key, &$st ) {
 	$result = $st->get_result();
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_ASSOC /*MYSQLI_NUM*/)) {
@@ -363,7 +387,7 @@ function _db_GetAssocFloatKey($key,&$st) {
 	return $ret;
 }
 /// Get an array of just the first element
-function _db_GetFirst(&$st) {
+function _db_GetFirst( &$st ) {
 	$result = $st->get_result();
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_NUM)) {
@@ -372,7 +396,7 @@ function _db_GetFirst(&$st) {
 	return $ret;
 }
 /// Make a key=value pair array, where 0 is the key, and 1 is the value 
-function _db_GetPair(&$st) {
+function _db_GetPair( &$st ) {
 	$result = $st->get_result();
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_NUM)) {
@@ -381,7 +405,7 @@ function _db_GetPair(&$st) {
 	return $ret;
 }
 /// Same as _db_GetPair, but make sure the key is an integer
-function _db_GetIntPair(&$st) {
+function _db_GetIntPair( &$st ) {
 	$result = $st->get_result();
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_NUM)) {
@@ -406,7 +430,7 @@ function _db_GetIntPair(&$st) {
 /// @param [in] String $query MySQL query string
 /// @param [in] ... (optional) String arguments
 function db_Query( $query, ...$args ) {
-	$st = _db_Query($query,$args);
+	$st = _db_Query($query, $args);
 	if ( $st ) {
 		return $st->close();
 	}
@@ -418,7 +442,7 @@ function db_Query( $query, ...$args ) {
 /// @param [in] ... (optional) String arguments
 /// @retval Integer the Id of the item inserted (0 on failure)
 function db_QueryInsert( $query, ...$args ) {
-	$st = _db_Query($query,$args);
+	$st = _db_Query($query, $args);
 	if ( $st ) {
 		$index = $st->insert_id;
 		$st->close();
@@ -432,7 +456,7 @@ function db_QueryInsert( $query, ...$args ) {
 /// @param [in] ... (optional) String arguments
 /// @retval Integer the number of rows that changed
 function db_QueryDelete( $query, ...$args ) {
-	$st = _db_Query($query,$args);
+	$st = _db_Query($query, $args);
 	if ( $st ) {
 		$index = $st->affected_rows;
 		$st->close();
@@ -443,7 +467,7 @@ function db_QueryDelete( $query, ...$args ) {
 
 function db_QueryUpdate( $query, ...$args ) {
 	// NOTE: Doesn't actually delete. Just means it returns the number of rows changed
-	return db_QueryDelete( $query, ...$args );
+	return db_QueryDelete( $query, ...$args ); // Calling non-internal function, so ...
 }
 
 /// For **true/false** queries; Returns the number of rows that match a query
@@ -472,7 +496,7 @@ function db_QueryNumRows( $query, ...$args ) {
 /// @param [in] ... (optional) String arguments
 /// @retval Array[Array[String=>String]] an array of rows, each row an associative array of fields
 function db_QueryFetch( $query, ...$args ) {
-	$st = _db_Query($query,$args);
+	$st = _db_Query($query, $args);
 	if ( $st ) {
 		$ret = _db_GetAssoc($st);
 		$st->close();
@@ -485,7 +509,7 @@ function db_QueryFetch( $query, ...$args ) {
 /// @param [in] ... (optional) String arguments
 /// @retval Array[String=>String] an associative array of fields
 function db_QueryFetchFirst( $query, ...$args ) {
-	$ret = db_QueryFetch($query,...$args);
+	$ret = db_QueryFetch($query, ...$args); // Calling non-internal function, so ...
 	if ( isset($ret[0]) )
 		return $ret[0];
 	return null;
@@ -496,7 +520,7 @@ function db_QueryFetchFirst( $query, ...$args ) {
 /// @param [in] ... (optional) String arguments
 /// @retval Array[String] an array of values
 function db_QueryFetchSingle( $query, ...$args ) {
-	$st = _db_Query($query,$args);
+	$st = _db_Query($query, $args);
 	if ( $st ) {
 		$ret = _db_GetFirst($st);
 		$st->close();
@@ -510,7 +534,7 @@ function db_QueryFetchSingle( $query, ...$args ) {
 /// @param [in] ... (optional) String arguments
 /// @retval Array[String=>String] an array of key=>values pairs
 function db_QueryFetchPair( $query, ...$args ) {
-	$st = _db_Query($query,$args);
+	$st = _db_Query($query, $args);
 	if ( $st ) {
 		$ret = _db_GetPair($st);
 		$st->close();
@@ -523,7 +547,7 @@ function db_QueryFetchPair( $query, ...$args ) {
 /// @param [in] ... (optional) String arguments
 /// @retval Array[String=>String] an array of key=>values pairs, both values are integers
 function db_QueryFetchIntPair( $query, ...$args ) {
-	$st = _db_Query($query,$args);
+	$st = _db_Query($query, $args);
 	if ( $st ) {
 		$ret = _db_GetIntPair($st);
 		$st->close();
@@ -537,7 +561,7 @@ function db_QueryFetchIntPair( $query, ...$args ) {
 /// @param [in] ... (optional) String arguments
 /// @retval String the value
 function db_QueryFetchValue( $query, ...$args ) {
-	$ret = db_QueryFetchSingle($query,$args);
+	$ret = db_QueryFetchSingle($query, ...$args); // Calling non-internal function, so ...
 	if ( isset($ret[0]) ) {
 		return $ret[0];
 	}
@@ -550,9 +574,9 @@ function db_QueryFetchValue( $query, ...$args ) {
 /// @param [in] ... (optional) String arguments
 /// @retval ???
 function db_QueryFetchWithIntKey( $key, $query, ...$args ) {
-	$st = _db_Query($query,$args);
+	$st = _db_Query($query, $args);
 	if ( $st ) {
-		$ret = _db_GetAssocIntKey($key,$st);
+		$ret = _db_GetAssocIntKey($key, $st);
 		$st->close();
 		return $ret;
 	}
@@ -564,9 +588,9 @@ function db_QueryFetchWithIntKey( $key, $query, ...$args ) {
 /// @param [in] ... (optional) String arguments
 /// @retval ???
 function db_QueryFetchWithFloatKey( $key, $query, ...$args ) {
-	$st = _db_Query($query,$args);
+	$st = _db_Query($query, $args);
 	if ( $st ) {
-		$ret = _db_GetAssocFloatKey($key,$st);
+		$ret = _db_GetAssocFloatKey($key, $st);
 		$st->close();
 		return $ret;
 	}
@@ -578,9 +602,9 @@ function db_QueryFetchWithFloatKey( $key, $query, ...$args ) {
 /// @param [in] ... (optional) String arguments
 /// @retval ???
 function db_QueryFetchWithStringKey( $key, $query, ...$args ) {
-	$st = _db_Query($query,$args);
+	$st = _db_Query($query, $args);
 	if ( $st ) {
-		$ret = _db_GetAssocStringKey($key,$st);
+		$ret = _db_GetAssocStringKey($key, $st);
 		$st->close();
 		return $ret;
 	}

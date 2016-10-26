@@ -84,7 +84,7 @@ function json_NewErrorResponse( $code = 400, $msg = null, $data = null ) {
 	if ( is_string($msg) ) {
 		$response['message'] = $msg;
 	}
-	if ( !is_null($data) ) {
+	if ( $data ) {
 		$response['data'] = $data;
 	}
 	
