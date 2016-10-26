@@ -48,15 +48,14 @@ function sendMail_UserAdd( $id, $mail, $key ) {
 
 // Do Actions //
 switch ( $REQUEST[0] ) {
+	// Create a new user activation attempt
 	case 'create':
 		json_ValidateHTTPMethod('POST');
 
-		if ( isset($_POST['mail']) ) {
-			$mail = filter_var($_POST['mail'], FILTER_SANITIZE_EMAIL);
-		}
-		else {
+		if ( isset($_POST['mail']) )
+			$mail = filter_var(trim($_POST['mail']), FILTER_SANITIZE_EMAIL);
+		else
 			json_EmitFatalError_BadRequest("'mail' not found in POST", $RESPONSE);
-		}
 		
 		$RESPONSE['mail'] = $mail;
 		
@@ -64,16 +63,17 @@ switch ( $REQUEST[0] ) {
 			json_EmitFatalError_BadRequest("Bad e-mail address", $RESPONSE);
 		}
 		
-		// If you find a match, fail to create //
 		if ( user_CountByMail($mail) ) {
 			json_EmitFatalError_Server("Unavailable", $RESPONSE);
 		}
 		else {
 			$user = user_Add($mail);
 			if ( $user ) {
-				sendMail_UserAdd($user['id'], $mail, $user['auth_key']);
+				$RESPONSE['id'] = $user['id'];
+				$RESPONSE['key'] = $user['auth_key'];
+				$RESPONSE['sent'] = intval(sendMail_UserAdd($user['id'], $mail, $user['auth_key']));
 				
-				$RESPONSE['user'] = $user;
+				// Successfully Created.
 				json_RespondCreated();
 			}
 			else {
@@ -82,10 +82,77 @@ switch ( $REQUEST[0] ) {
 		}
 
 		break;
+	// Fully activate a user
 	case 'activate':
 		json_ValidateHTTPMethod('POST');
 
-		
+		if ( isset($_POST['id']) )
+			$id = intval(trim($_POST['id']));
+		else
+			json_EmitFatalError_BadRequest("'id' not found in POST", $RESPONSE);
+
+		if ( isset($_POST['key']) )
+			$key = filter_var(trim($_POST['key']), FILTER_SANITIZE_STRING);
+		else
+			json_EmitFatalError_BadRequest("'key' not found in POST", $RESPONSE);
+
+		// @todo sanitize username
+		if ( isset($_POST['name']) )
+			$name = filter_var(trim($_POST['name']), FILTER_SANITIZE_STRING);
+		else
+			$name = "";
+
+		// @todo sanitize password
+		if ( isset($_POST['pw']) )
+			$pw = filter_var(trim($_POST['pw']), FILTER_SANITIZE_STRING);
+		else
+			$pw = "";
+
+
+		if ( $id && strlen($key) ) {
+			$user = user_GetById($id);
+			// Confirm lookup succedded, and user has a non-empty auth_key (auto 
+			if ( isset($user) && strlen($user['auth_key']) ) {
+				if ( $key == $user['auth_key'] ) {
+					/// @todo Success! Set last_auth to NOW()
+					
+					// If Node is already non-zero, bail. Don't double activate!
+					if ( $user['node'] ) {
+						json_EmitFatalError_Server(null, $RESPONSE);
+					}
+					// Node is Zero. We can continue.
+					else {
+						// If name is too short, that's okay. Just bail.
+						if ( strlen($name) < 3 ) {
+							$RESPONSE['message'] = "Name is too short (minimum 3)";
+							break;
+						}
+
+						// If password is too short, that's okay. Just bail.
+						if ( strlen($pw) < 8 ) {
+							$RESPONSE['message'] = "Password is too short (minimum 8)";
+							break;
+						}
+						
+						// @todo Continue! Now we need to confirm the name is available.
+
+//						// Successfully Created.
+//						json_RespondCreated();
+					}
+				}
+				else {
+					/// @todo Erase auth key (an attempt was made to authenticate with an incorrect key)
+					
+					json_EmitFatalError_Permission(null, $RESPONSE);
+				}
+			}
+			else {
+				json_EmitFatalError_Permission(null, $RESPONSE);
+			}
+		}
+		else {
+			json_EmitFatalError_BadRequest(null, $RESPONSE);
+		}
 
 		break;
 	case 'get':
