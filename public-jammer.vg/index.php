@@ -3,7 +3,7 @@ Coming soon!<br />
 For now, go to <strong><a href="https://ldjam.com">ldjam.com</a></strong>.<br />
 <br />
 <h2>What is this though?</h2>
-You know how <strong>Ludum Dare</strong> runs those <strong>Ludum Dare</strong> game jams? Well <strong>Jammer</strong> is everything else.<br />
+You know how <strong>ludumdare.com</strong> runs those <strong>Ludum Dare</strong> game jams? Well <strong>Jammer</strong> is everything else.<br />
 <br />
 So as the library of <strong>Ludum Dare</strong> related web projects I was working on grew in to a network, it made sense to take a step back, and consider giving the network itself an identity. The network itself is about growing what <strong>Ludum Dare</strong> does for you, the people that recreationally challenge themselves to make games. I decided to call it <strong>Jammer</strong>; Something everyone can spell (Ludlum), can say (lou-dumb dah-ray), and something that highlights that it's about the people that jam. So when the <strong>Ludum Dare</strong> website tells you to make a <strong>Jammer</strong> account, that is us telling you to make an account for the network. For <strong>Ludum Dare</strong>, and our <strong>future stuff</strong>.<br />
 <br />
