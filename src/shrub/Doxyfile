@@ -1,0 +1,25 @@
+PROJECT_NAME			=	Shrub
+INPUT					=	README.md src
+OUTPUT_DIRECTORY		=	docs
+OUTPUT_LANGUAGE			=	English
+RECURSIVE				=	YES
+
+EXTRACT_ALL				=	YES
+#EXTRACT_PRIVATE		=	YES
+#EXTRACT_STATIC			=	YES
+
+# Enable these for the verbose Internal docs
+#ENABLED_SECTIONS		=	INTERNAL
+#INTERNAL_DOCS			=	YES
+
+# Disables the Pages Tab
+EXTERNAL_PAGES			=	NO
+
+GENERATE_HTML			=	YES
+GENERATE_LATEX			=	NO
+
+# Use a MarkDown file as the main page
+USE_MDFILE_AS_MAINPAGE	=	README.md
+
+# Automatically use first line (until 1st period) as the @brief
+JAVADOC_AUTOBRIEF		=	YES

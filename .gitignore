@@ -19,3 +19,5 @@ output/
 obj/
 -/
 *.gz
+/src/shrub/docs
+/src/shrub/config.php

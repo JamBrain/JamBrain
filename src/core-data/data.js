@@ -1,5 +1,5 @@
 
-class CJammerCore {
+class CCoreData {
 	constructor() {
 		this.items = {
 			1: {
@@ -322,5 +322,5 @@ class CJammerCore {
 };
 
 // Singleton //
-let JammerCore = new CJammerCore();
-export default JammerCore;
+let CoreData = new CCoreData();
+export default CoreData;

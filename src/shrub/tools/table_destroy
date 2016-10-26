@@ -1,0 +1,118 @@
+#!/usr/bin/env php
+<?php
+const CONFIG_PATH = "../";
+const SHRUB_PATH = "../src/";
+
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
+require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
+require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
+require_once __DIR__."/".SHRUB_PATH."global/global.php";
+
+$cmd = array_shift($argv);
+foreach ($argv as $value) {
+	$table_list[] = $value;
+}
+
+print "\n*** WARNING ***\n\n";
+if (isset($table_list)) {
+	print "You are about to DESTROY the following table(s):\n";
+	print implode(", ",$argv)."\n";
+}
+else {
+	$table_list = global_GetTables();
+	print "You are about to DESTROY ALL TABLES!!\n";
+}
+print "\nAre you sure [type 'YES']? ";
+flush();
+$input = trim(fgets(STDIN));
+if ( $input != "YES" ) {
+	print "Aborting...\n";
+	exit(1);
+}
+
+print "\n";
+
+// Normally Connect isn't required, but done here to confirm existence of DB //
+_db_Connect();
+
+if ( !_db_IsConnected() ) {
+	_db_Log("Unable to connect to Database");
+	exit(4);
+}
+
+// *** //
+
+/// Drop a table
+function table_Drop($table) {
+	global $table_list;
+	/// @todo make sure $table is a valid name (alphanumeric, underscores, etc)
+//	if ( !ctype_alnum($table) ) {	// Neglects underscore
+//		echo "* ERROR: Table \"".$table."\" is not alphanumeric\n";
+//		return;
+//	}
+	
+	if ( in_array($table,$table_list) ) {
+		$ret = db_TableExists(SH_TABLE_PREFIX.$table);
+		if ( $ret ) {
+			$ret = db_Query("DROP TABLE ".SH_TABLE_PREFIX.$table.";");
+	
+			// Special case: If the globals table, do a purge //	
+			if ( $ret && $table === "global" ) {
+				echo "Purging \$SH...\n";
+				global_Purge();
+			}
+			
+			if ( $ret && count($GLOBALS['SH']) ) {
+				global_Set($table,'0');
+			}
+		}
+		
+		echo "* ".global_GetTableConstantByValue($table).": ".$table." [".(($ret)?("yes"):("no"))."]\n"; 
+	}
+	else {
+		echo "* WARNING: Unknown table \"".$table."\"\n"; 
+	}
+}
+
+// *** //
+
+// These directories should be searched first // 
+$first_dirs = [
+	'global'
+];
+
+// Scan for include directories //
+$dirs = array_diff(scandir(SHRUB_PATH),['.','..']);
+$dirs_only = [];
+foreach ( $dirs as $dir ) {
+	if ( is_dir(SHRUB_PATH.$dir) ) {
+		$dirs_only[] = $dir;
+	}
+}
+
+// Generate the final ordered list //
+$dirs_ordered = array_merge($first_dirs,array_diff($dirs_only,$first_dirs));
+
+// *** //
+
+// Include any delete specific code from each module
+foreach ( $dirs_ordered as $dir ) {
+	if ( is_file(SHRUB_PATH.$dir.'/table_destroy.php') ) {
+		include SHRUB_PATH.$dir.'/table_destroy.php';
+	}
+}
+
+// Load globals (so we can track version changes) //
+if ( in_array(SH_TABLE_GLOBAL,$table_list) ) { 
+	print "Loading globals...\n";
+	global_Load();
+}
+
+// Drop all tables in the table list
+foreach ( $table_list as $table ) {
+	table_Drop($table);
+}
+
+// Done //
+exit;

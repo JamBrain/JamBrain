@@ -9,7 +9,7 @@ import SidebarTV						from 'com/sidebar-tv/tv';
 import SidebarTrending					from 'com/sidebar-trending/trending';
 import SidebarSupport					from 'com/sidebar-support/support';
 
-import JammerCore						from '../../jammer-core/core';
+import CoreData							from '../../core-data/data';
 
 export default class ViewSingle extends Component {
 	constructor() {
@@ -20,10 +20,10 @@ export default class ViewSingle extends Component {
 	getItems( props, state ) {
 		var items = [props.item];
 		
-		JammerCore.preFetchItemWithAuthorById( items );
+		CoreData.preFetchItemWithAuthorById( items );
 		
 		return items.map(function(item) {
-			var item_type = JammerCore.getItemTypeById(item);
+			var item_type = CoreData.getItemTypeById(item);
 			
 			if ( item_type === 'post' || item_type === 'game' ) {
 				return <ContentPost item={item} />;

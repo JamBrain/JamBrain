@@ -1,0 +1,171 @@
+#!/usr/bin/env php
+<?php
+const CONFIG_PATH = "../";
+const SHRUB_PATH = "../src/";
+
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
+require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
+require_once __DIR__."/".SHRUB_PATH."global/global.php";
+
+
+$TABLE_LIST = [];
+
+$cmd = array_shift($argv);
+foreach ($argv as $value) {
+	$TABLE_LIST[] = $value;
+}
+
+echo "\n*** WARNING ***\n\n";
+if ( count($TABLE_LIST) ) {
+	echo "You are about to create/update the following table(s):\n";
+	echo implode(", ",$argv)."\n";
+}
+else {
+	$TABLE_LIST = global_GetTables();
+	echo "You are about to create/update ALL tables.\n";
+}
+echo "\nAre you sure [type 'YES']? ";
+flush();
+$input = trim(fgets(STDIN));
+if ( $input != "YES" ) {
+	echo "Aborting...\n";
+	exit(1);
+}
+
+echo "\n";
+
+// Normally Connect isn't required, but done here to confirm existence of DB //
+_db_Connect();
+
+if ( !_db_IsConnected() ) {
+	echo "Failed to connect to Database. Retrying as server only...";
+	
+	_db_ConnectOnly();
+
+	if ( !_db_IsConnected() ) {
+		_db_Log("Failed to connect to Server");
+		exit(4);
+	}
+	
+	echo "Connected.\n";
+
+	// If database doesn't exist, create it //
+	if ( !db_DatabaseExists(SH_DB_NAME) ) {
+		db_Query("CREATE DATABASE IF NOT EXISTS ?;",SH_DB_NAME);
+		echo("Database '".SH_DB_NAME."' created.\n");
+	
+		// Reconnect //
+		_db_Close();
+		_db_Connect();
+	
+		if ( !db_IsConnected() ) {
+			_db_Log("Failed to reconnect to Database '".SH_DB_NAME."'");
+			exit(1);
+		}
+		
+		echo "Reconnected.\n";
+	}
+}
+
+// *** //
+
+// NOTE: utf8 is 3 byte unicode. utf8mb4 is 4 byte. Required for Emoji.
+const DB_CREATE_SUFFIX = " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE=InnoDB;";
+global $SH, $TABLE_VERSION, $OLD_TABLE_VERSION;
+
+function table_Init($table) {
+	global $SH, $TABLE_VERSION, $OLD_TABLE_VERSION;
+	
+	echo "* ".$table.": ".constant($table)."\n";
+	$TABLE_VERSION = isset($SH[$table]) ? intval($SH[$table]) : 0;
+	$OLD_TABLE_VERSION = $TABLE_VERSION;	
+}
+/// How to set MAX_VERSION:
+///
+/// 	sudo MAX_VERSION=1 ./table_create
+/// 
+function table_Create( $table, ...$args ) {
+	global $TABLE_VERSION;
+
+	echo "Creating table...\n";
+	
+	if ( getenv('MAX_VERSION') !== false && $TABLE_VERSION > intval(getenv('MAX_VERSION')) ) 
+		return false;
+	
+	$ret = db_Query( ...$args );
+	
+	echo( $ret ? ($table." created\n") : ("Error creating ".$table."\n") );
+	return $ret;
+}
+/// Functionally the same as table_Create, but does different logging
+function table_Update( $table, ...$args ) {
+	global $TABLE_VERSION;
+
+	echo "Updating table...\n";
+
+	if ( getenv('MAX_VERSION') !== false && $TABLE_VERSION > intval(getenv('MAX_VERSION')) ) 
+		return false;
+
+	$ret = db_Query( ...$args );
+	
+	echo( $ret ? ($table." updated\n") : ("Error updating ".$table."\n") );
+	return $ret;
+}
+/// Like table_Update, but it doesn't do a query (No-Op); Use this when you want to flag a table as upgraded, but do nothing
+function table_Nop( $table ) {
+	global $TABLE_VERSION;
+
+	if ( getenv('MAX_VERSION') !== false && $TABLE_VERSION >= intval(getenv('MAX_VERSION')) ) 
+		return false;
+
+	echo $table." Nopped\n";
+	return true;
+}
+function table_Exit($table) {
+	global $SH, $TABLE_VERSION, $OLD_TABLE_VERSION;
+	
+	if ( global_Set($table,$TABLE_VERSION) ) {
+		echo $table." upgraded (version ".$OLD_TABLE_VERSION." -> ".$TABLE_VERSION.")\n";	
+	}
+}
+
+// *** //
+
+// These directories should be searched first // 
+$first_dirs = [
+	'global'
+];
+
+// Scan for include directories //
+$dirs = array_diff(scandir(SHRUB_PATH),['.','..']);
+$dirs_only = [];
+foreach ( $dirs as $dir ) {
+	if ( is_dir(SHRUB_PATH.$dir) ) {
+		$dirs_only[] = $dir;
+	}
+}
+
+// Generate the final ordered list //
+$dirs_ordered = array_merge($first_dirs,array_diff($dirs_only,$first_dirs));
+
+// *** //
+
+// Attempt to load the globals (if possible) //
+echo "Loading globals...\n";
+global_Load();
+
+// *** //
+
+// Include the create code for each module
+foreach ( $dirs_ordered as $dir ) {
+	$file = SHRUB_PATH.$dir.'/table_create.php';
+	if ( is_file($file) ) {
+		echo "[".$file."]\n";
+		include $file;
+	}
+}
+
+// Done.
+exit;
