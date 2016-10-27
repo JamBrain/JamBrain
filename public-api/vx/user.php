@@ -4,6 +4,7 @@ const SHRUB_PATH = "../../src/shrub/src/";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."api.php";
+require_once __DIR__."/".SHRUB_PATH."plugin.php";
 require_once __DIR__."/".SHRUB_PATH."user/user.php";
 
 json_Begin();
