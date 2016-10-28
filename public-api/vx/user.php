@@ -120,10 +120,12 @@ switch ( $REQUEST[0] ) {
 		// If Non-zero $id and non-empty $key value
 		if ( $id && strlen($key) ) {
 			$user = user_GetById($id);
-			// Confirm lookup succedded, and user has a non-empty auth_key (auto 
+			// Confirm lookup succedded, and user has an auth_key set (can get erased, for safety)
 			if ( isset($user) && strlen($user['auth_key']) ) {
+				// Check if keys match
 				if ( $key == $user['auth_key'] ) {
-					/// @todo Success! Set last_auth to NOW()
+					// Success. Remember that we successfully authenticated
+					user_AuthTimeSetNow($id);
 					
 					// If Node is already non-zero, bail. Don't double activate!
 					if ( $user['node'] ) {
@@ -131,26 +133,80 @@ switch ( $REQUEST[0] ) {
 					}
 					// Node is Zero. We can continue.
 					else {
-						// If name is too short, that's okay. Just bail.
-						if ( strlen($name) < USERNAME_MIN_LENGTH ) {
-							$RESPONSE['message'] = "User name is too short (minimum ".USERNAME_MIN_LENGTH.")";
-							break;
-						}
-
-						// If password is too short, that's okay. Just bail.
-						if ( strlen($pw) < PASSWORD_MIN_LENGTH ) {
-							$RESPONSE['message'] = "Password is too short (minimum ".PASSWORD_MIN_LENGTH." characters)";
+						// If no name and password are set, that's okay. Just bail.
+						if ( !strlen($name) && !strlen($pw) ) {
 							break;
 						}
 						
-						// @todo Continue! Now we need to confirm the name is available.
+						// If name is too short
+						if ( strlen($name) < USERNAME_MIN_LENGTH ) {
+							json_EmitFatalError_Permission("Name is too short (minimum ".USERNAME_MIN_LENGTH.")", $RESPONSE);
+						}
+						
+						$slug = coreSlugify_Name($name);
 
-//						// Successfully Created.
-//						json_RespondCreated();
+						// If the name and slug aren't the same length (they need to match)
+						if ( strlen($name) !== strlen($slug) ) {
+							json_EmitFatalError_BadRequest("Name must be alphanumeric, may contain '_', '.', or '-', but may not start or end with them", $RESPONSE);
+						}
+
+						// If password is too short
+						if ( strlen($pw) < PASSWORD_MIN_LENGTH ) {
+							json_EmitFatalError_Permission("Password is too short (minimum ".PASSWORD_MIN_LENGTH." characters)", $RESPONSE);
+						}
+							
+						// Does that name already exist?
+						if ( node_GetIdByParentAndSlug(SH_NODE_ID_USER, $slug) ) {
+							json_EmitFatalError_Server("Name ($slug) already exists", $RESPONSE);
+						}
+						else {
+							/// @TODO Check if on the reserved list
+							if ( false ) {
+								/// @TODO Does this e-mail address match the one on the reserve list?
+								if ( false ) {
+									/// @TODO: Add
+								}
+								else {
+									json_EmitFatalError_Server("Name is reserved. Is this you? Try using your original e-mail address instead", $RESPONSE);
+								}
+							}
+							else {
+								// @TODO wrap these so we can rollback
+								$user_id = node_Add(
+									$slug,
+									$name
+								);
+								
+								if ( $user_id ) {
+									// @TODO wrap these so we can rollback
+									
+									if ( !user_SetNode($id, $user_id) ) {
+										json_EmitFatalError_Server("Unable to set node", $RESPONSE);
+									}
+									if ( !user_SetHash($id, userPassword_Hash($pw)) ) {
+										json_EmitFatalError_Server("Unable to set password", $RESPONSE);
+									}
+									if ( !user_AuthKeyClear($id) ) {
+										json_EmitFatalError_Server("Unable to clear key", $RESPONSE);
+									}
+									
+									// @TODO send confirmation e-mail
+									
+									// Successfully Created.
+									json_RespondCreated();
+								}
+								else {
+									json_EmitFatalError_Server("Unable to add node", $RESPONSE);
+								}
+							}
+						}
 					}
 				}
 				else {
-					/// @todo Erase auth key (an attempt was made to authenticate with an incorrect key)
+					// Keys don't match. This may be an attempt to hijack the account, so destroy the key.
+					if ( !user_AuthKeyClear($id) ) {
+						json_EmitFatalError_Server("Unable to clear key", $RESPONSE);
+					}
 					
 					json_EmitFatalError_Permission(null, $RESPONSE);
 				}

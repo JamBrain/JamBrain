@@ -234,35 +234,37 @@ function _db_Close() {
 ///
 /// See @ref DBParseRowFields for a list of types. 
 function & db_ParseRow( &$row, $map ) {
-	foreach( $row as $key => &$value ) {
-		if ( isset($map[$key]) ) {
-			switch( $map[$key] ) {
-				//case SH_FIELD_TYPE_STRING: {
-				//	// Do nothing for Strings (they're already strings) //
-				//	break;
-				//}
-				case SH_FIELD_TYPE_INT: {
-					$row[$key] = intval($value);
-					break;
-				}
-				case SH_FIELD_TYPE_FLOAT: {
-					$row[$key] = floatval($value);
-					break;
-				}
-				case SH_FIELD_TYPE_DATETIME: {
-					$row[$key] = strtotime($value);
-					break;
-				}
-				case SH_FIELD_TYPE_JSON: {
-					$row[$key] = json_decode($value,true);
-					break;
-				}
-				case SH_FIELD_TYPE_IGNORE: {
-					// NOTE: This is not ideal. You should instead use a modified query. //
-					unset($row[$key]);
-					break;
-				}
-			};
+	if ( is_array($row) ) {
+		foreach( $row as $key => &$value ) {
+			if ( isset($map[$key]) ) {
+				switch( $map[$key] ) {
+					//case SH_FIELD_TYPE_STRING: {
+					//	// Do nothing for Strings (they're already strings) //
+					//	break;
+					//}
+					case SH_FIELD_TYPE_INT: {
+						$row[$key] = intval($value);
+						break;
+					}
+					case SH_FIELD_TYPE_FLOAT: {
+						$row[$key] = floatval($value);
+						break;
+					}
+					case SH_FIELD_TYPE_DATETIME: {
+						$row[$key] = strtotime($value);
+						break;
+					}
+					case SH_FIELD_TYPE_JSON: {
+						$row[$key] = json_decode($value,true);
+						break;
+					}
+					case SH_FIELD_TYPE_IGNORE: {
+						// NOTE: This is not ideal. You should instead use a modified query. //
+						unset($row[$key]);
+						break;
+					}
+				};
+			}
 		}
 	}
 	return $row;

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__."/../node/node.php";
 
 // NOTE: Confirming an e-mail address BEFORE entering account credentials is BEST!
 // This avoids the problem where you enter the wrong e-mail address as you sign up sign up.
@@ -134,10 +135,81 @@ function user_Add( $mail, $node = 0 ) {
 	return null;
 }
 
+function user_SetNode( $id, $node ) {
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_USER."
+		SET
+			node=?
+		WHERE
+			id=?;",
+		$node, $id
+	);
+}
+function user_SetHash( $id, $hash ) {
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_USER."
+		SET
+			hash=?
+		WHERE
+			id=?;",
+		$hash, $id
+	);
+}
+// TODO: needs binary conversion for read/write
+//function user_SetSecret( $id, $secret ) {
+//	return db_QueryUpdate(
+//		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_USER."
+//		SET
+//			secret=?
+//		WHERE
+//			id=?;",
+//		$secret, $id
+//	);
+//}
+
+
 // *** //
 
-function user_ClearAuthKey() {
+function user_AuthKeyGen( $id ) {
+	$key = userAuthKey_Gen();
+	$updated = db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_USER."
+		SET
+			auth_key=?
+		WHERE
+			id=?;",
+		$key, $id
+	);
+
+	if ( $updated ) {
+		$ret = [];
+		$ret['id'] = $id;
+		$ret['auth_key'] = $key;
+		return $ret;
+	}
+	return null;
 	
+}
+function user_AuthKeyClear( $id ) {
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_USER."
+		SET
+			auth_key=''
+		WHERE
+			id=?;",
+		$id
+	);
+}
+
+function user_AuthTimeSetNow( $id ) {
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_USER."
+		SET
+			last_auth=NOW()
+		WHERE
+			id=?;",
+		$id
+	);
 }
 
 // *** //

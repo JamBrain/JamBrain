@@ -30,11 +30,11 @@ function coreSanitize_String( $str ) {
 
 	// I'm not entirely sure which is best. this:
 	//$str = filter_var($str, FILTER_SANITIZE_STRING);
-	//$str = trim($str);												// Trim whitespace
 
 	// Or this:
 	$str = strip_tags($str);										// Remove any XML/HTML tags
-	$str = trim($str);												// Trim whitespace
+
+//	$str = trim($str);												// Trim whitespace
 	
 	return $str;
 }
