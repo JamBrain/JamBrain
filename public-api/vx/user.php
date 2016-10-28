@@ -19,6 +19,9 @@ const SH_URL_ACTIVATE = "https://".SH_DOMAIN."/#user-activate";
 
 const CRLF = "\r\n";
 
+const USERNAME_MIN_LENGTH = 3;
+const PASSWORD_MIN_LENGTH = 8;
+
 function sendMail_UserAdd( $id, $mail, $key ) {
 	$subject = "[".SH_SITE."] Confirming your e-mail address";
 	$headers = [
@@ -53,19 +56,24 @@ switch ( $REQUEST[0] ) {
 	case 'create':
 		json_ValidateHTTPMethod('POST');
 
+		// Sanitize
 		if ( isset($_POST['mail']) )
-			$mail = filter_var(trim($_POST['mail']), FILTER_SANITIZE_EMAIL);
+			$mail = coreSanitize_Mail($_POST['mail']);
 		else
 			json_EmitFatalError_BadRequest("'mail' not found in POST", $RESPONSE);
 		
 		$RESPONSE['mail'] = $mail;
 		
-		if ( !filter_var($mail, FILTER_VALIDATE_EMAIL) ) {
-			json_EmitFatalError_BadRequest("Bad e-mail address", $RESPONSE);
+		// Is the email provided even a valid e-mail address?
+		if ( !coreValidate_Mail($mail) ) {
+			json_EmitFatalError_BadRequest("Invalid e-mail address", $RESPONSE);
 		}
 		
-		if ( user_CountByMail($mail) ) {
-			json_EmitFatalError_Server("Unavailable", $RESPONSE);
+		/// @todo Add e-mail blacklist checking here
+		
+		// Is the email provided one that is allowed to create a new account?
+		if ( user_CountByMail($mail) || plugin_Call('api_user_create_mail_allowed', $mail) ) {
+			json_EmitFatalError_Server("Address unavailable", $RESPONSE);
 		}
 		else {
 			$user = user_Add($mail);
@@ -88,28 +96,28 @@ switch ( $REQUEST[0] ) {
 		json_ValidateHTTPMethod('POST');
 
 		if ( isset($_POST['id']) )
-			$id = intval(trim($_POST['id']));
+			$id = coreSanitize_Integer($_POST['id']);
 		else
 			json_EmitFatalError_BadRequest("'id' not found in POST", $RESPONSE);
 
 		if ( isset($_POST['key']) )
-			$key = filter_var(trim($_POST['key']), FILTER_SANITIZE_STRING);
+			$key = coreSanitize_String($_POST['key']);
 		else
 			json_EmitFatalError_BadRequest("'key' not found in POST", $RESPONSE);
 
-		// @todo sanitize username
 		if ( isset($_POST['name']) )
-			$name = filter_var(trim($_POST['name']), FILTER_SANITIZE_STRING);
+			$name = coreSanitize_Name($_POST['name']);
 		else
 			$name = "";
 
-		// @todo sanitize password
 		if ( isset($_POST['pw']) )
-			$pw = filter_var(trim($_POST['pw']), FILTER_SANITIZE_STRING);
+			$pw = coreSanitize_Password($_POST['pw']);
 		else
 			$pw = "";
 
 
+		// Sorry, this is complicated
+		// If Non-zero $id and non-empty $key value
 		if ( $id && strlen($key) ) {
 			$user = user_GetById($id);
 			// Confirm lookup succedded, and user has a non-empty auth_key (auto 
@@ -124,14 +132,14 @@ switch ( $REQUEST[0] ) {
 					// Node is Zero. We can continue.
 					else {
 						// If name is too short, that's okay. Just bail.
-						if ( strlen($name) < 3 ) {
-							$RESPONSE['message'] = "Name is too short (minimum 3)";
+						if ( strlen($name) < USERNAME_MIN_LENGTH ) {
+							$RESPONSE['message'] = "User name is too short (minimum ".USERNAME_MIN_LENGTH.")";
 							break;
 						}
 
 						// If password is too short, that's okay. Just bail.
-						if ( strlen($pw) < 8 ) {
-							$RESPONSE['message'] = "Password is too short (minimum 8)";
+						if ( strlen($pw) < PASSWORD_MIN_LENGTH ) {
+							$RESPONSE['message'] = "Password is too short (minimum ".PASSWORD_MIN_LENGTH." characters)";
 							break;
 						}
 						

@@ -1,4 +1,5 @@
 <?php
+/// Automatically included by ../plugin.php (gen.sh)
 
 /// Plugins are called in the order they are added.
 /// When you write a hook function, you can return True to raise an error. Otherwise don't, or return false.
@@ -31,15 +32,15 @@ function plugin_Call( $hook, ...$args ) {
 function plugin_Filter( $hook, $first_arg, ...$args ) {
 	global $SH_HOOK;
 	
+	$ret = $first_arg;
+
 	if ( isset($SH_HOOK[$hook]) ) {
-		$ret = $first_arg;
 		foreach ( $SH_HOOK[$hook] as $func ) {
 			$ret = $func($ret, ...$args);
 		}
-		return $ret;
 	}
 	
-	return null;
+	return $ret;
 }
 
 
