@@ -12,12 +12,12 @@ function return_r( $data ) {
 /// Trim Spaces, Unicode Spaces, and Non-printables
 /// NOTE: This is an old function. I don't know if I sourced this, or wrote it myself. Not entirely sure I trust it.
 /// mb_trim may not be needed, as trim will correctly remove standard whitespace. It's just the weird whitespace it wont.
-function mb_trim($str) {
-	// http://www.utf8-chartable.de/
-	// https://www.cs.tut.fi/~jkorpela/chars/spaces.html
-	// U+2800 - Braille blank \u2800
-	return preg_replace('/^[\pZ\pC]+|[\pZ\pC]+$/u','',$str);
-}
+//function mb_trim($str) {
+//	// http://www.utf8-chartable.de/
+//	// https://www.cs.tut.fi/~jkorpela/chars/spaces.html
+//	// U+2800 - Braille blank \u2800
+//	return preg_replace('/^[\pZ\pC]+|[\pZ\pC]+$/u','',$str);
+//}
 
 
 /// @name Sanitization, Validation, Slugification

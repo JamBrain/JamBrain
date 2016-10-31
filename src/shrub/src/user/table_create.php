@@ -1,5 +1,6 @@
 <?php
 
+// User Login Credentials
 $table = 'SH_TABLE_USER';
 if ( in_array(constant($table), $TABLE_LIST) ) {
 	$ok = null;
@@ -47,3 +48,62 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 	table_Exit($table);
 }
 
+
+// User Access Log
+$table = 'SH_TABLE_USER_ACCESS';
+if ( in_array(constant($table), $TABLE_LIST) ) {
+	$ok = null;
+
+	table_Init($table);
+	switch ( $TABLE_VERSION ) {
+	case 0:
+		$ok = table_Create( $table,
+			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
+				id ".DB_TYPE_UID.",
+				user ".DB_TYPE_ID.",
+					INDEX(user),
+				ip ".DB_TYPE_IP.",
+					INDEX(ip),
+				timestamp ".DB_TYPE_TIMESTAMP.",
+					INDEX(timestamp),
+				value ".DB_TYPE_INT32."
+			)".DB_CREATE_SUFFIX);
+
+//		$ok = table_Create( $table,
+//			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
+//				id ".DB_TYPE_UID.",
+//				user ".DB_TYPE_ID.",
+//					INDEX(user),
+//				ip ".DB_TYPE_IP.",
+//					INDEX(ip),
+//					UNIQUE `user_ip` (user, ip),
+//				first_access ".DB_TYPE_TIMESTAMP.",
+//				last_access ".DB_TYPE_TIMESTAMP.",
+//				total ".DB_TYPE_UINT64."
+//			)".DB_CREATE_SUFFIX);
+		if (!$ok) break; $TABLE_VERSION++;
+	};
+	table_Exit($table);
+}
+
+
+$table = 'SH_TABLE_USER_STRIKE';
+if ( in_array(constant($table), $TABLE_LIST) ) {
+	$ok = null;
+
+	table_Init($table);
+	switch ( $TABLE_VERSION ) {
+	case 0:
+		$ok = table_Create( $table,
+			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
+				id ".DB_TYPE_UID.",
+				user ".DB_TYPE_ID.",
+					INDEX(user),
+				node ".DB_TYPE_ID.",
+				timestamp ".DB_TYPE_TIMESTAMP.",
+				reason TEXT NOT NULL
+			)".DB_CREATE_SUFFIX);
+		if (!$ok) break; $TABLE_VERSION++;
+	};
+	table_Exit($table);
+}
