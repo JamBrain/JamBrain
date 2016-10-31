@@ -220,6 +220,78 @@ switch ( $REQUEST[0] ) {
 		}
 
 		break;
+	case 'login':
+		$login = null;
+		$pw = null;
+		$secret = null;
+	
+		// Confirm Arguments
+		if ( isset($_POST['login']) )
+			$login = coreSanitize_String($_POST['login']);
+		else
+			json_EmitFatalError_BadRequest("'login' not found in POST", $RESPONSE);
+
+		if ( isset($_POST['pw']) )
+			$pw = coreSanitize_String($_POST['pw']);
+		else
+			json_EmitFatalError_BadRequest("'pw' not found in POST", $RESPONSE);
+
+		if ( isset($_POST['secret']) ) {
+			$secret = coreSanitize_String($_POST['secret']);
+		}
+
+		// Bail if empty
+		if ( empty($login) || empty($pw) ) {
+			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
+		
+		$name = null;
+		$mail = null;
+		$user = null;
+		
+		// Decode the login as either an e-mail address, or a username
+		if ( coreValidate_Mail($login) ) {
+			$mail = coreSanitize_Mail($login);
+		}
+		else {
+			$name = coreSlugify_Name($login)
+		}
+		
+		// If an e-mail login attempt
+		if ( $mail ) {
+			$user = user_GetByMail( $mail );
+		}
+		// If a username login attempt
+		else if ( $name ) {
+			// lookup user by slug
+			// lookup all addresses associated with that user
+			// extract node, hash, and secret
+		}
+		
+		// Bail if no user was found, or if their node is zero (not associated with an account)
+		if ( !isset($user) || !($user['node'] > 0) ) {
+			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
+		
+		$hash = userPassword_Hash($pw);
+		
+		// If hashes match, it's a success, so log the user in
+		if ( isset($user['hash']) && $hash === $user['hash'] ) {
+			// Does the user have a secret?
+			
+			
+			// Success
+			session_start();
+			$_SESSION['id'] = $user['node'];
+			$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
+			
+			break;
+		}
+
+		// Permission denied on fail
+		json_EmitFatalError_Permission(null, $RESPONSE);
+	
+		break;
 	case 'get':
 		json_ValidateHTTPMethod('GET');
 		
