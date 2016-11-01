@@ -78,8 +78,11 @@ switch ( $REQUEST[0] ) {
 		else {
 			$user = user_Add($mail);
 			if ( $user ) {
+				// NOTE! YOU SHOULD NOT DO THIS! IT DEFEATS THE EMAIL CHECK!
 				$RESPONSE['id'] = $user['id'];
 				$RESPONSE['key'] = $user['auth_key'];
+				
+				// Send an e-mail
 				$RESPONSE['sent'] = intval(sendMail_UserAdd($user['id'], $mail, $user['auth_key']));
 				
 				// Successfully Created.
@@ -221,6 +224,8 @@ switch ( $REQUEST[0] ) {
 
 		break;
 	case 'login':
+		json_ValidateHTTPMethod('POST');
+
 		$login = null;
 		$pw = null;
 		$secret = null;
@@ -254,7 +259,7 @@ switch ( $REQUEST[0] ) {
 			$mail = coreSanitize_Mail($login);
 		}
 		else {
-			$name = coreSlugify_Name($login)
+			$name = coreSlugify_Name($login);
 		}
 		
 		// If an e-mail login attempt
@@ -272,18 +277,18 @@ switch ( $REQUEST[0] ) {
 		if ( !isset($user) || !($user['node'] > 0) ) {
 			json_EmitFatalError_Permission(null, $RESPONSE);
 		}
-		
-		$hash = userPassword_Hash($pw);
-		
+				
 		// If hashes match, it's a success, so log the user in
-		if ( isset($user['hash']) && $hash === $user['hash'] ) {
+		if ( isset($user['hash']) && userPassword_Verify($pw, $user['hash']) ) {
 			// Does the user have a secret?
 			
 			
 			// Success
+			session_name('SID');
 			session_start();
 			$_SESSION['id'] = $user['node'];
 			$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
+			session_write_close();
 			
 			break;
 		}
