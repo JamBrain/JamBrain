@@ -12,13 +12,12 @@
 
 /// 
 function user_Auth() {
-	session_name('SID');
-	session_Start();
+	userSession_Start();
 	// IP Check. If different, expire the session
 	if ( !isset($_SESSION['ip']) || ($_SESSION['ip'] !== $_SERVER['REMOTE_ADDR']) ) {
 		session_destroy();
 	}
-	session_write_close();		// Nothing to write, so close immediately to avoid hanging
+	userSession_End();
 	// Refresh cookie lifetime
 
 	// If session is set, lookup the node, and permissions
@@ -56,4 +55,38 @@ function user_AuthHas(...$args) {
 	}
 	
 	return true;
+}
+
+
+function userSession_Start() {
+	$sid_name = 'SID';
+	$is_secure = false;
+	// http://stackoverflow.com/a/16076965/5678759
+	if ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ) {
+		$is_secure = true;
+	}
+	else if ( !empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https' || !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on' ) {
+	    $is_secure = true;
+	}
+	
+	// Use a different name if we're connected securely
+	$sid_name .= $is_secure ? 'S' : '';
+	
+	session_name($sid_name);						// This can be removed, once we've moved entirely to PHP 7
+	session_start([
+		'name' => $sid_name,
+		'cookie_lifetime' => 2*24*60*60,			// Two days
+		'cookie_httponly' => 1,						// Don't pass SID to JavaScript
+		'cookie_secure' => $is_secure ? 1 : 0,
+		//'cookie_path' => '/',
+		//'cookie_domain' => '',
+		'sid_length' => 64,							// As of PHP 7.1
+		'sid_bits_per_character' => 5,				// As of PHP 7.1
+	]);
+	
+	// @todo: check how long the SID is. Was about 25 on PHP 5.6
+}
+
+function userSession_End() {
+	session_write_close();
 }

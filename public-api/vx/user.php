@@ -284,11 +284,10 @@ switch ( $REQUEST[0] ) {
 			
 			
 			// Success
-			session_name('SID');
-			session_start();
+			userSession_Start();
 			$_SESSION['id'] = $user['node'];
 			$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
-			session_write_close();
+			userSession_End();
 			
 			break;
 		}

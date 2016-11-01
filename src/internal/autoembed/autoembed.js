@@ -79,19 +79,23 @@
 		}
 		else if ( str.indexOf('github.com') !== -1 ) {
 			url = this.extractFromURL(str);
-			return this.makeSmartLink( 'github', str, '/'+url.path.join('/') );
+//			return this.makeSmartLink( 'github', str, '/'+url.path.join('/') );
+			return this.makeSmartLink( 'github', str, ' github.com/'+url.path.join('/') );
 		}
 		else if ( str.indexOf('twitch.tv') !== -1 ) {
 			url = this.extractFromURL(str);
-			return this.makeSmartLink( 'twitch', str, '/'+url.path.join('/') );
+//			return this.makeSmartLink( 'twitch', str, '/'+url.path.join('/') );
+			return this.makeSmartLink( 'twitch', str, ' twitch.tv/'+url.path.join('/') );
 		}
 		else if ( str.indexOf('reddit.com') !== -1 ) {
 			url = this.extractFromURL(str);
-			return this.makeSmartLink( 'reddit', str, '/'+url.path.join('/') );
+//			return this.makeSmartLink( 'reddit', str, '/'+url.path.join('/') );
+			return this.makeSmartLink( 'reddit', str, ' reddit.com/'+url.path.join('/') );
 		}
 		else if ( str.indexOf('twitter.com') !== -1 ) {
 			url = this.extractFromURL(str);
-			return this.makeSmartLink( 'twitter', str, '/'+url.path.join('/') );
+//			return this.makeSmartLink( 'twitter', str, '/'+url.path.join('/') );
+			return this.makeSmartLink( 'twitter', str, ' twitter.com/'+url.path.join('/') );
 		}
 //		else {
 //			return this.makeSmartLink( 'link', str, str.split('//')[1] );
