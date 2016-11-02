@@ -47,22 +47,23 @@
 				}
 			
 				& > .icon-ludum, & > .icon-l-udum {
-					color: @MAJOR_COLOR;
+					color: @MAJOR_COLOR1;
 				}
 				& > .icon-dare, & > .icon-d-are {
-					color: @MAJOR_LIGHT;
+					color: @MAJOR_COLOR2;
 				}
+				
 				& > .icon-ldnum {
-					color: @MAJOR_MUTE;
+					color: @MAJOR_COLOR3;
 				}
 				&:hover > .icon-ludum, &:hover > .icon-l-udum {
-					color: @MAJOR_LIGHT;
+					color: @MAJOR_COLOR2;
 				}
 				&:hover > .icon-dare, &:hover > .icon-d-are {
-					color: @MAJOR_COLOR;
+					color: @MAJOR_COLOR3;
 				}
 				&:hover > .icon-ldnum {
-					color: @MAJOR_LIGHT;
+					color: @MAJOR_COLOR4;
 				}
 			}
 		}
@@ -83,11 +84,11 @@
 				transition: background 0.1s, color 0.1s;
 			
 				&:hover, &:focus, &:active {
-					background: @MAJOR_COLOR;
+					background: @MAJOR_COLOR1;
 					color: @MAJOR_LIGHT;
 				}
 				&:hover:active {
-					color: @MAJOR_COLOR;
+					color: @MAJOR_COLOR2;
 					background: @MAJOR_LIGHT;
 				}
 			}
@@ -175,7 +176,7 @@
 				
 				& > .-new {
 					font-weight: bold;
-					background: #F00;
+					background: @MAJOR_COLOR1; /*#F00;*/
 					
 					font-size:0.75em;
 					
