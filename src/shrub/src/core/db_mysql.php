@@ -44,6 +44,21 @@ const DB_TYPE_TIMESTAMP = "DATETIME NOT NULL";										///< Timestamps
 //const DB_TYPE_ASCII = "CHARSET latin1 NOT NULL";									///< Use with VarChar(x)
 //const DB_TYPE_UNICODE = "NOT NULL"; /*CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci*/	///< Use with VarChar(x)
 
+const DB_TYPE_INT64 = "BIGINT NOT NULL";											///< 64bit Integer
+const DB_TYPE_UINT64 = "BIGINT UNSIGNED NOT NULL";									///< 64bit Unsigned Integer
+const DB_TYPE_INT32 = "INT NOT NULL";												///< 32bit Integer
+const DB_TYPE_UINT32 = "INT UNSIGNED NOT NULL";										///< 32bit Unsigned Integer
+const DB_TYPE_INT24 = "MEDIUMINT NOT NULL";											///< 24bit Integer*
+const DB_TYPE_UINT24 = "MEDIUMINT UNSIGNED NOT NULL";								///< 24bit Unsigned Integer*
+const DB_TYPE_INT16 = "SMALLINT NOT NULL";											///< 16bit Integer
+const DB_TYPE_UINT16 = "SMALLINT UNSIGNED NOT NULL";								///< 16bit Unsigned Integer
+const DB_TYPE_INT8 = "TINYINT NOT NULL";											///< 8bit Integer
+const DB_TYPE_UINT8 = "TINYINT UNSIGNED NOT NULL";									///< 8bit Unsigned Integer
+
+const DB_TYPE_FLOAT64 = "DOUBLE NOT NULL";											///< 64bit Floating point number
+const DB_TYPE_FLOAT32 = "FLOAT NOT NULL";											///< 32bit Floating point number
+
+
 function DB_TYPE_ASCII($chars) {
 	return ($chars ? "VARCHAR($chars)" : "")." CHARSET latin1 NOT NULL";
 }
@@ -234,35 +249,37 @@ function _db_Close() {
 ///
 /// See @ref DBParseRowFields for a list of types. 
 function & db_ParseRow( &$row, $map ) {
-	foreach( $row as $key => &$value ) {
-		if ( isset($map[$key]) ) {
-			switch( $map[$key] ) {
-				//case SH_FIELD_TYPE_STRING: {
-				//	// Do nothing for Strings (they're already strings) //
-				//	break;
-				//}
-				case SH_FIELD_TYPE_INT: {
-					$row[$key] = intval($value);
-					break;
-				}
-				case SH_FIELD_TYPE_FLOAT: {
-					$row[$key] = floatval($value);
-					break;
-				}
-				case SH_FIELD_TYPE_DATETIME: {
-					$row[$key] = strtotime($value);
-					break;
-				}
-				case SH_FIELD_TYPE_JSON: {
-					$row[$key] = json_decode($value,true);
-					break;
-				}
-				case SH_FIELD_TYPE_IGNORE: {
-					// NOTE: This is not ideal. You should instead use a modified query. //
-					unset($row[$key]);
-					break;
-				}
-			};
+	if ( is_array($row) ) {
+		foreach( $row as $key => &$value ) {
+			if ( isset($map[$key]) ) {
+				switch( $map[$key] ) {
+					//case SH_FIELD_TYPE_STRING: {
+					//	// Do nothing for Strings (they're already strings) //
+					//	break;
+					//}
+					case SH_FIELD_TYPE_INT: {
+						$row[$key] = intval($value);
+						break;
+					}
+					case SH_FIELD_TYPE_FLOAT: {
+						$row[$key] = floatval($value);
+						break;
+					}
+					case SH_FIELD_TYPE_DATETIME: {
+						$row[$key] = strtotime($value);
+						break;
+					}
+					case SH_FIELD_TYPE_JSON: {
+						$row[$key] = json_decode($value,true);
+						break;
+					}
+					case SH_FIELD_TYPE_IGNORE: {
+						// NOTE: This is not ideal. You should instead use a modified query. //
+						unset($row[$key]);
+						break;
+					}
+				};
+			}
 		}
 	}
 	return $row;

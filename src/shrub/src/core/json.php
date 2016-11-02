@@ -292,7 +292,7 @@ function json_ArgShift() {
 }
 
 function json_Begin() {
-	global $RESPONSE, $AUTH, $REQUEST;
+	global $RESPONSE, $REQUEST;
 	
 	// Begin //
 	$RESPONSE = json_NewResponse();
@@ -301,8 +301,8 @@ function json_Begin() {
 	user_Auth();
 	if ( isset($_GET['auth']) || isset($_GET['debug']) ) {
 		// Need to limit what keys get copied. No need to send a full user (or accidentilaly send private info)
-		$keys = ['user'];//,'admin','permission'];
-		$RESPONSE['auth'] = array_intersect_key($AUTH, array_flip($keys));
+		$keys = ['id'];//,'admin','permission'];
+		$RESPONSE['auth'] = array_intersect_key($_SESSION, array_flip($keys));
 	}
 	
 	// Load Globals //

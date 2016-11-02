@@ -10,12 +10,115 @@ function return_r( $data ) {
 }
 
 /// Trim Spaces, Unicode Spaces, and Non-printables
-function mb_trim($str) {
-	// http://www.utf8-chartable.de/
-	// https://www.cs.tut.fi/~jkorpela/chars/spaces.html
-	// U+2800 - Braille blank \u2800
-	return preg_replace('/^[\pZ\pC]+|[\pZ\pC]+$/u','',$str);
+/// NOTE: This is an old function. I don't know if I sourced this, or wrote it myself. Not entirely sure I trust it.
+/// mb_trim may not be needed, as trim will correctly remove standard whitespace. It's just the weird whitespace it wont.
+//function mb_trim($str) {
+//	// http://www.utf8-chartable.de/
+//	// https://www.cs.tut.fi/~jkorpela/chars/spaces.html
+//	// U+2800 - Braille blank \u2800
+//	return preg_replace('/^[\pZ\pC]+|[\pZ\pC]+$/u','',$str);
+//}
+
+
+/// @name Sanitization, Validation, Slugification
+// NOTE: Setting a default locale in the global scope!
+setlocale(LC_ALL, "en_US.UTF-8");
+
+
+function coreSanitize_String( $str ) {
+	$str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');				// Remove invalid UTF-8 characters
+
+	// I'm not entirely sure which is best. this:
+	//$str = filter_var($str, FILTER_SANITIZE_STRING);
+
+	// Or this:
+	$str = strip_tags($str);										// Remove any XML/HTML tags
+
+//	$str = trim($str);												// Trim whitespace
+	
+	return $str;
 }
+function coreSanitize_Integer( $str ) {
+	return intval(trim($str));
+}
+function coreSanitize_Float( $str ) {
+	return floatval(trim($str));
+}
+
+
+function coreEncode_String( $str ) {
+	// https://paragonie.com/blog/2015/06/preventing-xss-vulnerabilities-in-php-everything-you-need-know
+	return htmlentities($str, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+}
+// These were suggested by a comment in the PHP documentation, but I'm not entirely convinced
+//	return htmlspecialchars($str);		// '<input value="'.htmlspecialchars($data).'" />'
+//	return htmlentities($str);			// '<p>'.htmlentities($data).'</p>'
+
+
+/// NOTE: Passwords should never be displayed, so this is a cleanup before hashing
+function coreSanitize_Password( $str ) {
+	$str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');				// Remove invalid UTF-8 characters
+	
+	return $str;
+}
+function coreSanitize_Mail( $str ) {
+	return filter_var(trim($str), FILTER_SANITIZE_EMAIL);
+}
+//function coreSanitize_URL( $str ) {
+//}
+
+
+function coreValidate_Mail( $str ) {
+	return filter_var($str, FILTER_VALIDATE_EMAIL);
+}
+//function coreValidate_URL( $str ) {
+//}
+
+
+function coreSanitize_Title( $str ) {
+	$str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');				// Remove invalid UTF-8 characters
+	$str = strip_tags($str);										// Remove any XML/HTML tags
+	$str = trim($str);												// Trim whitespace
+	
+	return $str;
+}
+function coreSlugify_Title( $str ) {
+	$symbols = ' \!-\&\(-\/\:-\@\[-\`\{-\~';						// Should be every ASCII symbol, except '
+	
+	$str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');				// Remove invalid UTF-8 characters
+	$str = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $str);			// Remove accents
+	$str = strip_tags($str);										// Remove any XML/HTML tags
+	$str = strtolower($str);										// To lower case
+	$str = preg_replace('/[^a-z0-9'.$symbols.']/', '', $str);		// Keep only these
+	$str = preg_replace('/['.$symbols.']+/', '-', $str);			// Replace symbols with a single dash
+	$str = trim($str, '- ');										// Trim all dashes and spaces from the start and end
+	
+	return $str;
+}
+
+
+function coreSanitize_Name( $str ) {
+	$str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');				// Remove invalid UTF-8 characters
+	$str = strip_tags($str);										// Remove any XML/HTML tags
+	$str = preg_replace('/[^\p{Latin}0-9_.\- ]/u', '', $str);		// Latin, underscore, dot, dash, and space
+	$str = str_replace(' ', '_', $str);								// Spaces to underscores
+	$str = trim($str, '_.- ');										// Trim start and end
+	
+	return $str;
+}
+function coreSlugify_Name( $str ) {
+	$str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');				// Remove invalid UTF-8 characters
+	$str = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $str);			// Remove accents, non-ascii characters
+	$str = strip_tags($str);										// Remove any XML/HTML tags
+	$str = strtolower($str);										// To lower case
+	$str = preg_replace("/[^a-z0-9_.\- ]/", '', $str);				// Keep only these
+	$str = preg_replace("/[_.\- ]+/", '-', $str);					// Replace symbols with a single dash
+	$str = trim($str, '- ');										// Trim all dashes and spaces from the start and end
+	
+	return $str;
+}
+
+
 
 /// @name Whitelisting/Blacklisting
 /// Shorthand function for checking against a list (whitelist, blacklist)
