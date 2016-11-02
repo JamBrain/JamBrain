@@ -7,7 +7,11 @@
 	border-top: 4px solid @MAJOR_MUTE_D6;
 	color: @MAJOR_MUTE_D6;
 	
-	background: #F2F2F2; /*@MAJOR_MUTE_L4;*/
+	@spacing: 8px;
+	
+	background: linear-gradient(to bottom, #E53 (@spacing * 0), #E53 (@spacing * 1), #E82 (@spacing * 1), #E82 (@spacing * 3), #FD1 (@spacing * 3), #FD1 (@spacing * 6), #F2F2F2 (@spacing * 6));
+	
+	/*background: #F2F2F2; /*@MAJOR_MUTE_L4;*/
 	box-shadow: 0px 0px 3px rgba(64,0,0,0.2);
 	
 	& a {
