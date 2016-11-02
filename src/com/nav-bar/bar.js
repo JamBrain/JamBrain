@@ -16,9 +16,6 @@ export default class NavBar extends Component {
 						</ButtonLink>
 					</div>
 					<div class="-right">
-						<ButtonBase class="-icon" onclick={e => console.log('search')}>
-							<SVGIcon baseline>search</SVGIcon>
-						</ButtonBase>
 						<ButtonBase class="-button" onclick={e => console.log('my game')}>
 							<SVGIcon>gamepad</SVGIcon>
 							<div>My Game</div>
@@ -27,10 +24,12 @@ export default class NavBar extends Component {
 							<SVGIcon>edit</SVGIcon>
 							<div>New Post</div>
 						</ButtonBase>
+						<ButtonBase class="-icon" onclick={e => console.log('search')}>
+							<SVGIcon baseline>search</SVGIcon>
+						</ButtonBase>
 						<ButtonBase class="-icon" onclick={e => console.log('notification')}>
 							<SVGIcon baseline>bubble</SVGIcon>
 							<div class="-new">2</div>
-							<div class="-count">24</div>
 						</ButtonBase>
 						<ButtonBase class="-user" onclick={e => console.log('user')}>
 							<img src={avatar} />
@@ -40,6 +39,7 @@ export default class NavBar extends Component {
 			</div>
 		);
 	}
+//							<div class="-count">24</div>
 
 //					<div class="-right">
 //						<CoreButton class="-button if-no-sidebar-inline"><SVGIcon>calendar</SVGIcon><span class="if-small-hide">Schedule</span></CoreButton>

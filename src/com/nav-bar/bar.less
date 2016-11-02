@@ -47,16 +47,22 @@
 				}
 			
 				& > .icon-ludum, & > .icon-l-udum {
-					color: @MAJOR_MUTE;
+					color: @MAJOR_COLOR;
 				}
 				& > .icon-dare, & > .icon-d-are {
-					color: @MAJOR_COLOR_MUTE;
+					color: @MAJOR_LIGHT;
+				}
+				& > .icon-ldnum {
+					color: @MAJOR_MUTE;
 				}
 				&:hover > .icon-ludum, &:hover > .icon-l-udum {
 					color: @MAJOR_LIGHT;
 				}
 				&:hover > .icon-dare, &:hover > .icon-d-are {
 					color: @MAJOR_COLOR;
+				}
+				&:hover > .icon-ldnum {
+					color: @MAJOR_LIGHT;
 				}
 			}
 		}
@@ -68,7 +74,7 @@
 			margin:auto;
 			height: 3em; /* Required, otherwise top+bottom fills the whole parent div */
 
-			color: @MAJOR_MUTE_D4;
+			color: @MAJOR_MUTE; /*@MAJOR_LIGHT; /*@MAJOR_COLOR; /*@MAJOR_MUTE_D4;*/
 			
 			& > div {
 				margin-left: 0.5em;
@@ -87,7 +93,7 @@
 			}
 			
 			& > .-button {
-				background: @MAJOR_MUTE;
+/*				background: @MAJOR_MUTE;*/
 				
 				line-height: 2em;
 				padding: 0.5em 1em;
@@ -115,7 +121,7 @@
 			& > .-user {
 				height: 3em;
 				width: 3em;
-				background: @MAJOR_MUTE;
+				/*background: @MAJOR_MUTE;*/
 				position:relative;
 
 				& > img {
@@ -135,7 +141,7 @@
 			& > .-icon {
 				height: 3em;
 				width: 3em;
-				background: @MAJOR_MUTE;
+				/*background: @MAJOR_MUTE;*/
 				
 				position:relative;
 				
@@ -164,7 +170,7 @@
 					right:0;
 					margin:auto;
 
-					color: @MAJOR_LIGHT;
+					color: @MAJOR_DARK;
 				}
 				
 				& > .-new {

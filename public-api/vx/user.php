@@ -296,19 +296,23 @@ switch ( $REQUEST[0] ) {
 		json_EmitFatalError_Permission(null, $RESPONSE);
 	
 		break;
-	case 'get':
-		json_ValidateHTTPMethod('GET');
-		
-		$RESPONSE['user'] = user_GetByNode(0);
-		
-//
-//		if ( user_AuthIsAdmin() ) {
-//			$RESPONSE['global'] = $SH;
-//		}
-//		else {
-//			json_EmitFatalError_Permission(null, $RESPONSE);
-//		}
+	case 'logout':
+	
 		break;
+		
+//	case 'get':
+//		json_ValidateHTTPMethod('GET');
+//		
+//		$RESPONSE['user'] = user_GetByNode(0);
+//		
+////
+////		if ( user_AuthIsAdmin() ) {
+////			$RESPONSE['global'] = $SH;
+////		}
+////		else {
+////			json_EmitFatalError_Permission(null, $RESPONSE);
+////		}
+//		break;
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break;
