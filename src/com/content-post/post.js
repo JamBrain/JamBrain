@@ -62,23 +62,29 @@ export default class ContentPost extends Component {
 				<div class="-footer">
 					<div class="-left">
 						<div class="-minmax"><SVGIcon>arrow-up</SVGIcon></div>
-						<div class="-edge"><SVGIcon>wedge-left</SVGIcon></div>
 					</div>
 					<div class="-right">
-						<div class="-edge"><SVGIcon>wedge-right</SVGIcon></div>
-						<div class="-heart"><SVGIcon>heart-check</SVGIcon></div>
-						<div class="-text -heart-count">0</div>
-						<div class="-spacer"><SVGIcon>wedge-right</SVGIcon></div>
+						<div class="-love">
+							<div class="-heart"><SVGIcon>heart-check</SVGIcon></div>
+							<div class="-text -count">0</div>
+							<div class="-text -count">0</div>
+						</div>
 						<div class="-comment"><SVGIcon>bubble-empty</SVGIcon></div>
-						<div class="-text -comment-count">0</div>
-						<div class="-spacer2"><SVGIcon>wedge-right</SVGIcon></div>
-						<div class="-gear"><SVGIcon>cog</SVGIcon></div>
 					</div>
 				</div>
 			</div>
 		);
 	}
-	// body: unmagin-top, unmargin-bottom. replace with selector
+	// body: unmargin-top, unmargin-bottom. replace with selector
+	
+	// <SVGIcon>wedge-left</SVGIcon>
+	// <SVGIcon>wedge-right</SVGIcon>
+
+//						<div class="-spacer"><SVGIcon>wedge-right</SVGIcon></div>
+//						<div class="-comment"><SVGIcon>bubble-empty</SVGIcon></div>
+//						<div class="-text -comment-count">0</div>
+//						<div class="-spacer2"><SVGIcon>wedge-right</SVGIcon></div>
+//						<div class="-gear"><SVGIcon>cog</SVGIcon></div>
 	
 	componentDidMount() {
 	}

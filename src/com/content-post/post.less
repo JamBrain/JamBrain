@@ -6,17 +6,15 @@
 	
 	border-top: 4px solid @MAJOR_MUTE_D6;
 	color: @MAJOR_MUTE_D6;
-	
-	@spacing: 14px;
-	
-	background: linear-gradient(135deg, @MAJOR_COLOR1 (@spacing * 0), @MAJOR_COLOR1 (@spacing * 1), @MAJOR_COLOR2 (@spacing * 1), @MAJOR_COLOR2 (@spacing * 3), @MAJOR_COLOR3 (@spacing * 3), @MAJOR_COLOR3 (@spacing * 6), @MAJOR_COLOR4 (@spacing * 6));
-	
-	/*background: #F2F2F2; /*@MAJOR_MUTE_L4;*/
+		
+	/*background: linear-gradient(135deg, @MAJOR_COLOR1 (@spacing * 0), @MAJOR_COLOR1 (@spacing * 2), @MAJOR_COLOR2 (@spacing * 2), @MAJOR_COLOR2 (@spacing * 5), @MAJOR_COLOR3 (@spacing * 5), @MAJOR_COLOR3 (@spacing * 9), @MAJOR_COLOR4 (@spacing * 9));
+	*/
+	background: #F2F2F2; /*@MAJOR_MUTE_L4;*/
 	box-shadow: 0px 0px 3px rgba(64,0,0,0.2);
 	
 	& a {
 		text-decoration: none;
-		padding:0.1em 0.15em 0;
+		padding:0.1em 0.15em;
 		border-radius:0.05em;
 		margin:-0.1em -0.075em 0;
 	}
@@ -33,15 +31,26 @@
 	}
 
 	& > .-header {
-		margin: 1em;
+		/*margin: 1em;*/
+		padding: 1em;
+		padding-bottom: 0;
+		
+		@spacing: 1.5em;
+
+/*		background: linear-gradient(135deg, @MAJOR_MUTE_D6 (@spacing * 0), @MAJOR_MUTE_D6 (@spacing * 2), @MAJOR_COLOR1 (@spacing * 2), @MAJOR_COLOR1 (@spacing * 5), @MAJOR_COLOR2 (@spacing * 5), @MAJOR_COLOR2 (@spacing * 9), @MAJOR_COLOR3 (@spacing * 9), @MAJOR_COLOR3 (@spacing * 15), transparent (@spacing * 15));/**/
+		background: linear-gradient(135deg, @MAJOR_COLOR1 (@spacing * 0), @MAJOR_COLOR1 (@spacing * 2), @MAJOR_COLOR2 (@spacing * 2), @MAJOR_COLOR2 (@spacing * 4), @MAJOR_COLOR3 (@spacing * 4), @MAJOR_COLOR3 (@spacing * 6), transparent (@spacing * 6));/**/
+
 		
 		& > .-title {
 			font-size: 2.2em;
 			/*font-variant: small-caps;*/
 			/*letter-spacing: 0.05em;*/
+			position: relative;
+			left: -0.1em;
 		}
 		& > .-subtext {
 			font-size: 0.8em;
+			margin:0.2em 0;
 		}
 		& > .-avatar {
 			margin: -0.5em;
@@ -71,7 +80,7 @@
 	}	
 	& > .-footer {
 		border-bottom:8px solid @MAJOR_MUTE_D6;
-		color: @MAJOR_LIGHT;
+		color: @MAJOR_MUTE;
 		height: 2em;
 
 		& > .-left {
@@ -92,13 +101,28 @@
 				padding-left:1rem;
 				padding-right:1rem;
 				background: @MAJOR_MUTE_D6;
-			}
-			& > .-edge {
-				& > svg {
-					width:100%;
-					height:100%;
+				
+				&:after {
 					color: @MAJOR_MUTE_D6;
-					display:block;
+					
+					content:'';
+					left: 3.5rem;
+					top: -2.5rem;
+					border-top: 2.5rem/2 solid transparent;
+					border-right: 2.5rem/2 solid transparent;
+					border-bottom: 2.5rem/2 solid;
+					border-left: 2.5rem/2 solid;
+					
+					display: block;
+    				  position: relative;
+				}
+				
+				&:hover {
+					color: @MAJOR_LIGHT;
+					background: @MAJOR_COLOR1;
+					&:after {
+						color: @MAJOR_COLOR1;
+					}
 				}
 			}
 		}
@@ -117,26 +141,66 @@
 			}
 			
 			
+			& > .-wedge-right {
+				background: linear-gradient(45deg, @MAJOR_MUTE_D6 0px, @MAJOR_MUTE_D6 30px, transparent 30px);
+			}
 			& > .-edge {
-				& > svg {
+/*				background: @MAJOR_MUTE_D6;
+				
+/*				& > svg {
 					width:100%;
 					height:100%;
 					color: @MAJOR_MUTE_D6;
 					display:block;
+				}*/
+			}
+			& > .-love {
+				display: flex;
+				
+				& > .-heart {
+					width:auto;
+					padding-left:1rem;
+					padding-right:1rem;
+					background: @MAJOR_MUTE_D6;
+				}				
+				
+/*
+				& > svg {
+					width:auto;
+					padding-left:1rem;
+					padding-right:1rem;
+					background: @MAJOR_MUTE_D6;
+				/*	
+					&:before {
+						color: @MAJOR_MUTE_D6;
+						
+						content:'';
+						left: -3.5rem;
+						top: -2.5rem;
+						border-top: 2.5rem/2 solid transparent;
+						border-right: 2.5rem/2 solid transparent;
+						border-bottom: 2.5rem/2 solid;
+						border-left: 2.5rem/2 solid;
+						
+						display: block;
+	    				  position: relative;
+					}
+					
+					&:hover {
+						color: @MAJOR_LIGHT;
+						background: @MAJOR_COLOR1;
+						&:after {
+							color: @MAJOR_COLOR1;
+						}
+					}			
+				}*/
+				& > .-count {
+					width:auto;
+					padding-right:1rem;
+					background: @MAJOR_MUTE_D6;
+					font-size:1.5em;
+					line-height:2.8rem;
 				}
-			}
-			& > .-heart {
-				width:auto;
-				padding-left:1rem;
-				padding-right:1rem;
-				background: @MAJOR_MUTE_D6;
-			}
-			& > .-heart-count {
-				width:auto;
-				padding-right:1rem;
-				background: @MAJOR_MUTE_D6;
-				font-size:1.5em;
-				line-height:2.8rem;
 			}
 			& > .-spacer {
 				background: @MAJOR_MUTE_D6;
