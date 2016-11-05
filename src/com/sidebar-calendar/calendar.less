@@ -16,7 +16,7 @@
 			background: @MAJOR_MUTE_D;/*@MAJOR_COLOR_MUTE3;*/
 
 			cursor:pointer;
-			transition: transform 0.1s, z-index 0.1s;
+			/*transition: transform 0.1s, z-index 0.1s;*/
 
 			/* This is perfect square trickery: http://stackoverflow.com/a/23754080 */
 			width:100%;
@@ -37,14 +37,14 @@
 			}
 			
 			&:hover, &:first-child:hover, &:last-child:hover {
-				background: @MAJOR_COLOR;
+				background: @MAJOR_COLOR1;
 				color: @MAJOR_LIGHT;
-				transform: scale(1.2, 1.2);
+				/*transform: scale(1.2, 1.2);*/
 				z-index:10;
 				font-weight: bold;
 			}
 			&:active, &:first-child:active, &:last-child:active {
-				transform: scale(0.9, 0.9);
+				/*transform: scale(0.9, 0.9);*/
 			}
 			
 			&:first-child, &:last-child {

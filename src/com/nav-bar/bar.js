@@ -22,7 +22,7 @@ export default class NavBar extends Component {
 						</ButtonBase>
 						<ButtonBase class="-button" onclick={e => console.log('new post')}>
 							<SVGIcon>edit</SVGIcon>
-							<div>New Post</div>
+							<div>New</div>
 						</ButtonBase>
 						<ButtonBase class="-icon" onclick={e => console.log('search')}>
 							<SVGIcon baseline>search</SVGIcon>

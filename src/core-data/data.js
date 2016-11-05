@@ -65,8 +65,8 @@ class CCoreData {
 			},
 			
 			10:{
-				name:"Alpha testing fun time: **Week 1**",
-				slug:"alpha-testing-fun-time-week-1",
+				name:"**Alpha Testing**: Week 1",
+				slug:"alpha-testing-week-1",
 				type:"post",
 				subtype:"",
 				parent:5,
