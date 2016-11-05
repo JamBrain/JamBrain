@@ -54,6 +54,9 @@ function _global_Load() {
 			);"
 		);
 		
+		if ( !is_array($ret) )
+			return [];
+		
 		// Convert types of the values of certain keys found in globals //
 		foreach ( $ret as $key => &$value ) {
 			if ( strcmp($key, "active") === 0 ) {

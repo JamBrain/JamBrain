@@ -35,18 +35,20 @@ const SH_NODE_META_PRIVATE = 		128;
 ///	@addtogroup Tables
 /// @{
 const SH_TABLE_NODE =				"node";
+const SH_TABLE_NODE_VERSION =		"node_version";
 const SH_TABLE_NODE_LINK =			"node_link";
 const SH_TABLE_NODE_META =			"node_meta";
-const SH_TABLE_NODE_DIFF =			"node_diff";
 const SH_TABLE_NODE_LOVE =			"node_love";
 const SH_TABLE_NODE_STAR =			"node_star";
+const SH_TABLE_NODE_SEARCH =		"node_search";
 /// @}
 
 global_AddTableConstant( 
 	'SH_TABLE_NODE',
+	'SH_TABLE_NODE_VERSION',
 	'SH_TABLE_NODE_LINK',
 	'SH_TABLE_NODE_META',
-	'SH_TABLE_NODE_DIFF',
 	'SH_TABLE_NODE_LOVE',
-	'SH_TABLE_NODE_STAR'
+	'SH_TABLE_NODE_STAR',
+	'SH_TABLE_NODE_SEARCH'
 );

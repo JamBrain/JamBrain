@@ -66,7 +66,7 @@ function DB_TYPE_UNICODE($chars) {
 	return ($chars ? "VARCHAR($chars)" : "")." NOT NULL";
 }
 function DB_TYPE_UNICODE3($chars) {
-	return (chars ? "VARCHAR($chars)" : "")." CHARSET utf8 NOT NULL";
+	return ($chars ? "VARCHAR($chars)" : "")." CHARSET utf8 NOT NULL";
 }
 /// @}
 
