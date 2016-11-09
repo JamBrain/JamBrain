@@ -14,6 +14,8 @@ $SH_GLOBAL_DEFAULT = [
 	'web-alert' => "",						// Short alert message shown by the web site
 	'api-alert' => "",						// Short alert message shown by the API
 ];
+
+$SH_NAME_RESERVED = [];
 /// @endcond
 
 /// @addtogroup Global
@@ -53,6 +55,15 @@ function global_GetTableConstantByValue( $val ) {
 }
 
 /// @}
+
+function global_AddReservedName(...$args) {
+	global $SH_NAME_RESERVED;
+
+	foreach ( $args as $arg ) {
+		$SH_NAME_RESERVED[] = $arg;
+	}
+}
+
 
 /// @name Global Meta Tables
 /// @addtogroup Tables

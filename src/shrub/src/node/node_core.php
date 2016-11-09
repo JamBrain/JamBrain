@@ -42,6 +42,8 @@ function node_Add( $slug, $name ) {
 	return 5;
 }
 
+//function node_AddIf( 
+
 
 function node_GetIdByType( $type ) {
 	// hack

@@ -52,3 +52,17 @@ global_AddTableConstant(
 	'SH_TABLE_NODE_STAR',
 	'SH_TABLE_NODE_SEARCH'
 );
+
+global_AddReservedName(
+	'nodes',
+	'node',
+	'roots',
+	'root',
+	'symlinks',
+	'symlink',
+	'groups',
+	'group',
+
+	'posts'
+	'post',
+);
