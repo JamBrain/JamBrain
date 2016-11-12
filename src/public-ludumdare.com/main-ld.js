@@ -20,8 +20,9 @@ class Main extends Component {
 
 		// Bind Events to handle future changes //
 		var that = this;
-		window.addEventListener('hashchange',that.onHashChange.bind(that));
-		window.addEventListener('navchange',that.onNavChange.bind(that));
+		window.addEventListener('hashchange', that.onHashChange.bind(that));
+		window.addEventListener('navchange', that.onNavChange.bind(that));
+		window.addEventListener('popstate', that.onPopState.bind(that));
 	}
 
 	makeSlug( str ) {
@@ -55,11 +56,14 @@ class Main extends Component {
 			hash: this.makeClean(whom.hash),
 		}
 		var clean_path = clean.pathname+clean.search+clean.hash;
+		console.log( clean_path );
+		
+		// For some reason, we need to replace the state to keep the ?search string
 		
 		// If current URL is unclean, replace it //
-		if ( whom.pathname !== clean.pathname || whom.hash !== clean.hash ) {
-			window.history.replaceState( null, null, clean_path );
-		}
+	//	if ( whom.pathname !== clean.pathname || whom.hash !== clean.hash ) {
+			window.history.replaceState(window.history.state, null, clean_path);
+	//	}
 		
 		// Parse the clean URL //
 		var slugs = this.trimSlashes(clean.pathname).split('/');
@@ -84,6 +88,10 @@ class Main extends Component {
 			this.setActive(e.detail);
 			this.setState(this.state);
 		}
+	}
+	
+	onPopState( e ) {
+		console.log(e);
 	}
 	
 	getView( props, state ) {

@@ -4,7 +4,7 @@ import { h, Component } from 'preact/preact';
 
 export default class NavLink extends Component {
 	dispatchNavChangeEvent( _old ) {
-		var new_event = new CustomEvent('navchange',{
+		let new_event = new CustomEvent('navchange',{
 			detail: {
 				baseURI: this.baseURI,			// without query string
 				hash: this.hash,				// #hash
@@ -15,26 +15,27 @@ export default class NavLink extends Component {
 				pathname: this.pathname,		// just the path
 				port: this.port,				// port
 				protocol: this.protocol,		// http:, https:, etc
-				search: this.search,			// query string
+				search: (this.search && this.search.length !== 0) ? this.search : _old.search,			// query string
 				
 				old: _old
 			}
 		});
 
-		window.dispatchEvent( new_event );
+		window.dispatchEvent(new_event);
 	}
 	
 	onClickPush( e ) {
 		// Internet Explorer 11 doesn't set the origin, so we need to extract it //
-		let origin = this.origin || this.href.slice(0,this.href.indexOf('/','https://'.length));
+		// NOTE: May be broken. I can't remember why https:// is here and not some generic http://
+		let origin = this.origin || this.href.slice(0, this.href.indexOf('/','https://'.length));
 		
 		if ( origin === window.location.origin ) {
-			var old = Object.assign({},window.location);
+			var old = Object.assign({}, window.location);
 			
 			e.preventDefault();
-			history.pushState(null,null,this.pathname);
+			history.pushState(null, null, this.pathname);
 
-			NavLink.prototype.dispatchNavChangeEvent.call( this, old );
+			NavLink.prototype.dispatchNavChangeEvent.call(this, old);
 		}
 		e.stopPropagation();
 		
@@ -42,15 +43,16 @@ export default class NavLink extends Component {
 	}
 	onClickReplace( e ) {
 		// Internet Explorer 11 doesn't set the origin, so we need to extract it //
-		let origin = this.origin || this.href.slice(0,this.href.indexOf('/','https://'.length));
+		// NOTE: May be broken. I can't remember why https:// is here and not some generic http://
+		let origin = this.origin || this.href.slice(0, this.href.indexOf('/','https://'.length));
 		
 		if ( this.origin === window.location.origin ) {
-			var old = Object.assign({},window.location);
+			var old = Object.assign({}, window.location);
 			
 			e.preventDefault();
-			history.replaceState(null,null,this.pathname);
+			history.replaceState(null, null, this.pathname);
 
-			NavLink.prototype.dispatchNavChangeEvent.call( this, old );
+			NavLink.prototype.dispatchNavChangeEvent.call(this, old);
 		}
 		e.stopPropagation();
 		

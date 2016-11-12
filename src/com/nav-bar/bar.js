@@ -3,6 +3,10 @@ import ButtonBase		from '../button-base/base';
 import ButtonLink		from '../button-link/link';
 import SVGIcon 			from 'com/svg-icon/icon';
 
+function make_url( url ) {
+	return url + window.location.search;
+}
+
 export default class NavBar extends Component {
 	render( props, state ) {
 		var avatar = "//"+STATIC_DOMAIN+'/other/logo/mike/Chicken64.png';
@@ -11,7 +15,7 @@ export default class NavBar extends Component {
 			<div class="nav-bar">
 				<div class="-content">
 					<div class="-left">
-						<ButtonLink href="/" class="-logo" onclick={e => console.log('logo')}>
+						<ButtonLink href="/" class="-logo" onclick={e => console.log('logo')} force>
 							<SVGIcon baseline>ludum</SVGIcon><SVGIcon baseline>dare</SVGIcon>
 						</ButtonLink>
 					</div>
