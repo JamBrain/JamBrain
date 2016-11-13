@@ -11,10 +11,15 @@ window.LUDUMDARE_ROOT = '/';
 
 class Main extends Component {
 	constructor() {
-		this.state = {
+//		this.state = {
+//			root: 1,
+//			node: 1,
+//		};
+
+		this.state = Object.assign(window.history.state, {
 			root: 1,
-			active: 1,
-		};
+			node: 1,
+		});
 		
 		this.setActive(window.location);
 
@@ -57,19 +62,19 @@ class Main extends Component {
 		}
 		var clean_path = clean.pathname+clean.search+clean.hash;
 		console.log( clean_path );
+
+		// Parse the clean URL //
+		var slugs = this.trimSlashes(clean.pathname).split('/');
+		
+		// Figure out what our active page_id actually is //
+		this.state.node = parseInt(CoreData.getItemIdByParentAndSlugs(this.state.root, slugs));
 		
 		// For some reason, we need to replace the state to keep the ?search string
 		
 		// If current URL is unclean, replace it //
 	//	if ( whom.pathname !== clean.pathname || whom.hash !== clean.hash ) {
-			window.history.replaceState(window.history.state, null, clean_path);
+			window.history.replaceState(this.state, null, clean_path);
 	//	}
-		
-		// Parse the clean URL //
-		var slugs = this.trimSlashes(clean.pathname).split('/');
-		
-		// Figure out what our active page_id actually is //
-		this.state.active = CoreData.getItemIdByParentAndSlugs( this.state.root, slugs );
 	}
 
 	
@@ -86,23 +91,25 @@ class Main extends Component {
 		//console.log( e.detail.href, e.detail.old.href );
 		if ( e.detail.href !== e.detail.old.href ) {
 			this.setActive(e.detail);
-			this.setState(this.state);
+			this.setState(this.state);	// Force Refresh
 		}
 	}
 	
 	onPopState( e ) {
 		console.log(e);
+		console.log(window.location);
+		this.setState(e.state);
 	}
 	
 	getView( props, state ) {
-		if ( state.active ) {
-			var item = CoreData.getItemById( state.active );
+		if ( state.node ) {
+			var item = CoreData.getItemById( state.node );
 	
 			if ( item.type === 'root' ) {
-				return <ViewTimeline item={state.active} />;
+				return <ViewTimeline item={state.node} />;
 			}
 			else if ( item.type === 'post' || item.type === 'game' || item.type === 'user' ) {
-				return <ViewSingle item={state.active} />;
+				return <ViewSingle item={state.node} />;
 			}
 			else {
 				return <div>unsupported</div>;
