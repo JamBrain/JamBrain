@@ -16,7 +16,7 @@ class Main extends Component {
 //			node: 1,
 //		};
 
-		this.state = Object.assign(window.history.state, {
+		this.state = Object.assign(window.history.state ? window.history.state : {}, {
 			root: 1,
 			node: 1,
 		});
@@ -82,22 +82,22 @@ class Main extends Component {
 		// Startup //
 	}
 	
-	onHashChange() {
-		let state = this.state;
+	onHashChange( e ) {
+		console.log("hashchange: ", e);
 		
-		this.setState(state);
+		this.setState(this.state);
 	}
 	onNavChange( e ) {
+		console.log("navchange: ", e.detail);
 		//console.log( e.detail.href, e.detail.old.href );
-		if ( e.detail.href !== e.detail.old.href ) {
-			this.setActive(e.detail);
+		if ( e.detail.location.href !== e.detail.old.href ) {
+			this.setActive(e.detail.location);
 			this.setState(this.state);	// Force Refresh
 		}
 	}
 	
 	onPopState( e ) {
-		console.log(e);
-		console.log(window.location);
+		console.log("popstate: ", e);
 		this.setState(e.state);
 	}
 	
