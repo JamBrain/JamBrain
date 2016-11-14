@@ -5,18 +5,6 @@ export default class DarkOverlay extends Component {
 		this.state = {};
 	}
 
-	dispatchNavChangeEvent( state ) {
-		console.log('urr',this);
-		
-		let new_event = new CustomEvent('navchange', {
-			detail: Object.assign(state, {
-				location: this
-			})
-		});
-
-		window.dispatchEvent(new_event);
-	}
-	
 	componentDidMount() {
 		// Disables Mouse Wheel //
 		document.body.addEventListener('mousewheel', function(e) {
@@ -25,9 +13,9 @@ export default class DarkOverlay extends Component {
 			    //return false;
 			}
 		}.bind(this), false);
+
 		document.body.addEventListener('keydown', function(e) {
 			if ( document.getElementById("dark-overlay") ) {
-				console.log('kd',this,that);
 				var keys_to_disable = [
 					9, 					// Tab
 					33, 34, 			// PgUp, PgDown
@@ -50,18 +38,15 @@ export default class DarkOverlay extends Component {
 	
 	abort() {
 		//location.href = location.pathname+location.search;//"#";
-		history.pushState(history.state, null, location.pathname+location.search);
+		//history.pushState(history.state, null, location.pathname+location.search);
 		
-		DarkOverlay.prototype.dispatchNavChangeEvent.call(this, this.state);		
+		//this.dispatchNavChangeEvent(this.state);		
+		window.location.hash = "#";
 	}
 	
-	render( props, state ) {
+	render( props ) {
 		props.id = "dark-overlay";
-
-		if ( props.class )
-			props.class = "dark-overlay " + props.class;
-		else
-			props.class = "dark-overlay";
+		props.class = "dark-overlay" + (props.class ? " " + props.class : "");
 			
 		props.onclick = function(e) {
 			this.abort();

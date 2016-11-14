@@ -12,17 +12,10 @@ window.LUDUMDARE_ROOT = '/';
 
 class Main extends Component {
 	constructor() {
-//		this.state = {
-//			root: 1,
-//			node: 1,
-//		};
-
-		this.state = Object.assign(window.history.state ? window.history.state : {}, {
-			root: 1,
-			node: 1,
-		});
+		this.state = Object.assign({}, window.history.state ? window.history.state : {});
+		this.state.root = 1;
 		
-		this.setActive(window.location);
+		this.getNodeFromLocation(window.location);
 
 		// Bind Events to handle future changes //
 		var that = this;
@@ -54,50 +47,59 @@ class Main extends Component {
 		return str.replace(/^\/|\/$/g,'');
 	}
 		
-	setActive( whom ) {
-		// Clean the URL //
+	getNodeFromLocation( location ) {
+		// Clean the URL
 		var clean = {
-			pathname: this.makeClean(whom.pathname),
-			search: whom.search,
-			hash: this.makeClean(whom.hash),
+			pathname: this.makeClean(location.pathname),
+			search: location.search,
+			hash: this.makeClean(location.hash),
 		}
-		var clean_path = clean.pathname+clean.search+clean.hash;
+		if ( clean.hash == "#" )
+			clean.hash = "";
 
-		// Parse the clean URL //
+		var clean_path = clean.pathname + clean.search + clean.hash;
+
+		// Parse the clean URL
 		var slugs = this.trimSlashes(clean.pathname).split('/');
 		
-		// Figure out what our active page_id actually is //
+		// Figure out what the active node actually is
 		this.state.node = parseInt(CoreData.getNodeIdByParentAndSlugs(this.state.root, slugs));
 		
-		// If current URL is unclean, replace it //
-	//	if ( whom.pathname !== clean.pathname || whom.hash !== clean.hash ) {
-			console.log('replaceState', this.state);
-			window.history.replaceState(this.state, null, clean_path);
-	//	}
+		// Store the state, and cleaned URL
+		console.log('replaceState', this.state);
+		window.history.replaceState(this.state, null, clean_path);
 	}
-
+	
+	// *** //
 	
 	componentDidMount() {
 		// Startup //
 	}
 	
+	// *** //
+	
+	// Hash Changes are automatically differences
 	onHashChange( e ) {
 		console.log("hashchange: ", e);
 		
+		this.getNodeFromLocation(window.location);
 		this.setState(this.state);
+		
+		// Don't set scroll, since we're an overlay
 	}
+	// When we navigate by clicking forward
 	onNavChange( e ) {
-		console.log("navchange: ", e.detail);
-		//console.log( e.detail.href, e.detail.old.href );
 		if ( e.detail.location.href !== e.detail.old.href ) {
-			this.setActive(e.detail.location);
-			this.setState(this.state);	// Force Refresh
+			console.log("navchange: ", e.detail);
+
+			this.getNodeFromLocation(e.detail.location);
+			this.setState(this.state);
 			
 			// Scroll to top
 			window.scrollTo(0, 0);
 		}
 	}
-	
+	// When we navigate using back/forward buttons
 	onPopState( e ) {
 		// NOTE: This is sometimes called on a HashChange with a null state
 		if ( e.state ) {
@@ -105,22 +107,19 @@ class Main extends Component {
 	
 			this.setState(e.state);
 			
-			window.scrollTo(e.state.top, e.state.left);
-		}
-		else {
-			console.log(location);
+			window.scrollTo(parseFloat(e.state.top), parseFloat(e.state.left));
 		}
 	}
 	
-	getView( props, state ) {
-		if ( state.node ) {
-			var node = CoreData.getNodeById( state.node );
+	getView( props ) {
+		if ( this.state.node ) {
+			var node = CoreData.getNodeById( this.state.node );
 	
 			if ( node.type === 'root' ) {
-				return <ViewTimeline node={state.node} />;
+				return <ViewTimeline node={this.state.node} />;
 			}
 			else if ( node.type === 'post' || node.type === 'game' || node.type === 'user' ) {
-				return <ViewSingle node={state.node} />;
+				return <ViewSingle node={this.state.node} />;
 			}
 			else {
 				return <div>unsupported</div>;
@@ -131,14 +130,14 @@ class Main extends Component {
 		}
 	}
 	
-	render( props, state ) {
+	render( props ) {
 		let hasHash = window.location.hash ? <DarkOverlay>{window.location.hash}</DarkOverlay> : <div />;
-		//console.log("paint:",state);
+		//console.log("paint:", this.state);
 		
 		return (
 			<div id="layout">
 				<NavBar />
-				{ this.getView(props,state) }
+				{ this.getView(props) }
 				{ hasHash }
 			</div>
 		);

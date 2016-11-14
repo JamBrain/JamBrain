@@ -1,9 +1,12 @@
 import { h, Component } from 'preact/preact';
 
 export default class ButtonBase extends Component {
-	render(props,state) {
+	constructor() {
+	}
+	
+	render( props ) {
 		if ( !props.hasOwnProperty('tabIndex') )
-			props.tabIndex="0";
+			props.tabIndex = "0";
 
 		if ( props.class )
 			props.class = "button-base " + props.class;
@@ -14,9 +17,9 @@ export default class ButtonBase extends Component {
 			// As long as you don't set the "keep focus" property //
 			if ( !props.keepFocus ) {
 				// Wrap onClick with a function that deselects current element //
-				let oldClick = props.onclick;
+				let func = props.onclick;
 				props.onclick = (e) => {
-					oldClick(e);
+					func(e);
 					if ( typeof document.activeElement.blur !== "undefined" ) {
 						document.activeElement.blur();
 					}

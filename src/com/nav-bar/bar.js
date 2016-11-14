@@ -20,11 +20,11 @@ export default class NavBar extends Component {
 						</ButtonLink>
 					</div>
 					<div class="-right">
-						<ButtonBase class="-button" replace onclick={function(e) { console.log('my game'); location.href = "#user-test";}}>
+						<ButtonBase class="-button" onclick={e => console.log('my game')}>
 							<SVGIcon>gamepad</SVGIcon>
 							<div>My Game</div>
 						</ButtonBase>
-						<ButtonBase class="-button" onclick={e => console.log('new post')}>
+						<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#user-login"; }}>
 							<SVGIcon>edit</SVGIcon>
 							<div>New</div>
 						</ButtonBase>
