@@ -1,5 +1,5 @@
 import { h, render, Component }			from 'preact/preact';
-import DarkOverlay						from 'com/dark-overlay/overlay';
+import DialogOverlay						from 'com/dialog-overlay/overlay';
 import ContentPost						from 'com/content-post/post';
 
 class Main extends Component {
@@ -27,6 +27,6 @@ class Main extends Component {
 	}
 };
 
-//				<DarkOverlay />
+//				<DialogOverlay />
 
 render(<Main />, document.body);

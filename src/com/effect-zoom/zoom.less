@@ -1,0 +1,21 @@
+
+@import "../effect-base/base.less";
+
+.effect-zoomin {
+	animation: effect-zoomin @EFFECT_SPEED2;
+	animation-timing-function: @EFFECT_BEZIER_NO_DIP;
+}
+@keyframes effect-zoomin {
+    from { transform: scale(0); }
+    to   { transform: scale(1); }
+}
+
+
+.effect-zoomout {
+	animation: effect-zoomout @EFFECT_SPEED2;	
+	animation-timing-function: @EFFECT_BEZIER_NO_DIP_NO_POP;
+}
+@keyframes effect-zoomout {
+    from { transform: scale(1); }
+    to   { transform: scale(0); visibility: hidden; }
+}

@@ -23,7 +23,7 @@ export default class DialogOverlay extends Component {
 					37, 38, 39, 40,		// Left, Up, Right, Down
 				];
 				
-				if( keys_to_disable.indexOf(e.keyCode) > -1 ) {
+				if( keys_to_disable.indexOf(e.keyCode) >= 0) {
 					e.preventDefault();
 					//return false;
 				}
@@ -46,7 +46,7 @@ export default class DialogOverlay extends Component {
 	
 	render( props ) {
 		props.id = "dialog-overlay";
-		props.class = "dialog-overlay" + (props.class ? " " + props.class : "");
+		props.class = "dialog-overlay effect-fadein" + (props.class ? (" " + props.class) : "");
 			
 		props.onclick = function(e) {
 			this.abort();
