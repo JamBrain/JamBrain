@@ -5,6 +5,9 @@ import ViewTimeline						from 'com/view-timeline/timeline';
 import ViewSingle						from 'com/view-single/single';
 import DarkOverlay						from 'com/dark-overlay/overlay';
 
+import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
+import DialogLogin						from 'com/dialog-login/login';
+
 import CoreData							from '../core-data/data';
 
 
@@ -14,6 +17,10 @@ class Main extends Component {
 	constructor() {
 		this.state = Object.assign({}, window.history.state ? window.history.state : {});
 		this.state.root = 1;
+		
+		this.dialogs = {
+			'#user-login': <DialogLogin />
+		};
 		
 		this.getNodeFromLocation(window.location);
 
@@ -131,14 +138,19 @@ class Main extends Component {
 	}
 	
 	render( props ) {
-		let hasHash = window.location.hash ? <DarkOverlay>{window.location.hash}</DarkOverlay> : <div />;
+		var Dialog = <DialogUnfinished />;		
+		if ( this.dialogs[window.location.hash] ) {
+			Dialog = this.dialogs[window.location.hash];
+		}
+		
+		let DialogCode = window.location.hash ? <DarkOverlay>{Dialog}</DarkOverlay> : <div />;
 		//console.log("paint:", this.state);
 		
 		return (
 			<div id="layout">
 				<NavBar />
 				{ this.getView(props) }
-				{ hasHash }
+				{ DialogCode }
 			</div>
 		);
 	}
