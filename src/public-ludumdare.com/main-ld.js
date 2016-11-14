@@ -61,15 +61,12 @@ class Main extends Component {
 			hash: this.makeClean(whom.hash),
 		}
 		var clean_path = clean.pathname+clean.search+clean.hash;
-		console.log( clean_path );
 
 		// Parse the clean URL //
 		var slugs = this.trimSlashes(clean.pathname).split('/');
 		
 		// Figure out what our active page_id actually is //
-		this.state.node = parseInt(CoreData.getItemIdByParentAndSlugs(this.state.root, slugs));
-		
-		// For some reason, we need to replace the state to keep the ?search string
+		this.state.node = parseInt(CoreData.getNodeIdByParentAndSlugs(this.state.root, slugs));
 		
 		// If current URL is unclean, replace it //
 	//	if ( whom.pathname !== clean.pathname || whom.hash !== clean.hash ) {
@@ -93,23 +90,30 @@ class Main extends Component {
 		if ( e.detail.location.href !== e.detail.old.href ) {
 			this.setActive(e.detail.location);
 			this.setState(this.state);	// Force Refresh
+			
+			// Scroll to top
+			window.scrollTo(0, 0);
 		}
 	}
 	
 	onPopState( e ) {
 		console.log("popstate: ", e);
 		this.setState(e.state);
+		
+		console.log(e.state);
+		
+		window.scrollTo(e.state.top, e.state.left);
 	}
 	
 	getView( props, state ) {
 		if ( state.node ) {
-			var item = CoreData.getItemById( state.node );
+			var node = CoreData.getNodeById( state.node );
 	
-			if ( item.type === 'root' ) {
-				return <ViewTimeline item={state.node} />;
+			if ( node.type === 'root' ) {
+				return <ViewTimeline node={state.node} />;
 			}
-			else if ( item.type === 'post' || item.type === 'game' || item.type === 'user' ) {
-				return <ViewSingle item={state.node} />;
+			else if ( node.type === 'post' || node.type === 'game' || node.type === 'user' ) {
+				return <ViewSingle node={state.node} />;
 			}
 			else {
 				return <div>unsupported</div>;

@@ -17,19 +17,21 @@ export default class ViewSingle extends Component {
 		this.state.feed = [];
 	}
 	
-	getItems( props, state ) {
-		var items = [props.item];
+	getNodes( props, state ) {
+		var nodes = [props.node];
 		
-		CoreData.preFetchItemWithAuthorById( items );
+		CoreData.preFetchNodeWithAuthorById( nodes );
 		
-		return items.map(function(item) {
-			var item_type = CoreData.getItemTypeById(item);
+		return nodes.map(function(node) {
+			var node_type = CoreData.getNodeTypeById(node);
 			
-			if ( item_type === 'post' || item_type === 'game' ) {
-				return <ContentPost item={item} />;
+			document.title = titleParser.parse(CoreData.getNodeNameById(node), true) + " | " + window.location.host;
+			
+			if ( node_type === 'post' || node_type === 'game' ) {
+				return <ContentPost node={node} />;
 			}
-			if ( item_type === 'user' ) {
-				return <ContentUser item={item} />;
+			if ( node_type === 'user' ) {
+				return <ContentUser node={node} />;
 			}
 			else {
 				return <div>null</div>;
@@ -38,13 +40,12 @@ export default class ViewSingle extends Component {
 	}
 	
 	render( props, state ) {
-		
 		// content-sidebar should be #body
 		return (
 			<div class="view-single">
 				<div id="header" />
 				<div id="content-sidebar">
-					<div id="content">{ this.getItems(props,state) }</div>
+					<div id="content">{ this.getNodes(props,state) }</div>
 					<div id="sidebar">
 						<SidebarCalendar />
 						<SidebarUpcoming />

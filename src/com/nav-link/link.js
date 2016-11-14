@@ -34,6 +34,9 @@ export default class NavLink extends Component {
 		if ( origin === window.location.origin ) {
 			var old = Object.assign({}, window.location);
 			
+			window.history.state.top = window.pageYOffset || document.documentElement.scrollTop;
+    		window.history.state.left = window.pageXOffset || document.documentElement.scrollLeft;
+			
 			// Stop the page from reloading after the click
 			e.preventDefault();
 			// Store the old 
@@ -56,10 +59,13 @@ export default class NavLink extends Component {
 		// If the origin (http+domain) of the current and next URL is the same, navigate by manipulating the history
 		if ( this.origin === window.location.origin ) {
 			var old = Object.assign({}, window.location);
+
+			window.history.state.top = window.pageYOffset || document.documentElement.scrollTop;
+    		window.history.state.left = window.pageXOffset || document.documentElement.scrollLeft;
 			
 			// Stop the page from reloading after the click
 			e.preventDefault();
-			// Unlike above, 
+			// Unlike above, we only replace the state
 			history.replaceState(window.history.state, null, this.pathname+this.search);
 
 			// Trigger a 'navchange' event to cleanup what we've done here

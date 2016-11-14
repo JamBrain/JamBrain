@@ -7,7 +7,7 @@ import CoreData			from '../../core-data/data';
 
 export default class ContentUser extends Component {
 	render(props,state) {
-		var user = CoreData.getItemById( props.item );
+		var user = CoreData.getNodeById( props.node );
 		
 		var hasTwitter = user.meta.twitter ? <span class="-twitter"> (<a href={"https://twitter.com/"+user.meta.twitter} target="_blank" rel="noopener noreferrer" title={"https://twitter.com/"+user.meta.twitter}><SVGIcon baseline small>twitter</SVGIcon>/{user.meta.twitter}</a>)</span> : <span />;
 //		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <SVGIcon>users</SVGIcon></span> : <span />;

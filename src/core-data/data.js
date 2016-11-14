@@ -1,7 +1,7 @@
 
 class CCoreData {
 	constructor() {
-		this.items = {
+		this.nodes = {
 			1: {
 				name:"*ROOT-NODE*",
 				slug:'root',
@@ -158,16 +158,16 @@ class CCoreData {
 		this.NODE_USERS = 2;
 		
 		// Populate slugs table with keys (parent!slug) //
-		this.addItemSlugKeys( this.items );
+		this.addNodeSlugKeys( this.nodes );
 	}
 	
-	addItemSlugKeys( items ) {
-		for ( item in items ) {
-			this.slugs[ this.items[item].parent+'!'+this.items[item].slug ] = item;
+	addNodeSlugKeys( nodes ) {
+		for ( node in nodes ) {
+			this.slugs[ this.nodes[node].parent+'!'+this.nodes[node].slug ] = node;
 		}		
 	}
 	
-	getItemById( id ) {
+	getNodeById( id ) {
 		// Convert Number to a String. Counter intuative yes, but this saves an extra cast //
 		if ( typeof id === 'number' ) {
 			id = id.toString();
@@ -178,74 +178,84 @@ class CCoreData {
 			if ( id == '0' ) {
 				return null;
 			}
-			else if ( this.items[id] ) {
-				return this.items[id];
+			else if ( this.nodes[id] ) {
+				return this.nodes[id];
 			}
 			else {
 				// Fetch Missing //
 				
-				// Return Items //
+				// Return Nodes //
 			}
 		}
 		else if ( Array.isArray(id) ) {
 			// Figure out what we don't have //
-			let missing = id.filter( item => {
-				return !(item in this.items);
+			let missing = id.filter( node => {
+				return !(node in this.nodes);
 			});
 			
 			// Fetch Missing //
 			
 			
-			// Return Items //
-			return id.map( item => {
-				return this.items[item] || null;
+			// Return Nodes //
+			return id.map( node => {
+				return this.nodes[node] || null;
 			});
 		}
 		
 		return null;
 	}
 	
-	getItemTypeById( id ) {
+	getNodeTypeById( id ) {
 		// Convert Number to a String. Counter intuative yes, but this saves an extra cast //
 		if ( typeof id === 'number' )
 			id = id.toString();
 
-		if ( this.items[id] )
-			return this.items[id].type;
+		if ( this.nodes[id] )
+			return this.nodes[id].type;
 		return null;
 	}
 	
-	getItemParentById( id ) {
+	getNodeParentById( id ) {
 		// Convert Number to a String. Counter intuative yes, but this saves an extra cast //
 		if ( typeof id === 'number' )
 			id = id.toString();
 
-		if ( this.items[id] )
-			return this.items[id].parent;
+		if ( this.nodes[id] )
+			return this.nodes[id].parent;
 		return null;
 	}
 
-	getItemSlugById( id ) {
+	getNodeNameById( id ) {
 		// Convert Number to a String. Counter intuative yes, but this saves an extra cast //
 		if ( typeof id === 'number' )
 			id = id.toString();
 
-		if ( this.items[id] )
-			return this.items[id].slug;
+		if ( this.nodes[id] )
+			return this.nodes[id].name;
+		return null;
+	}
+
+	getNodeSlugById( id ) {
+		// Convert Number to a String. Counter intuative yes, but this saves an extra cast //
+		if ( typeof id === 'number' )
+			id = id.toString();
+
+		if ( this.nodes[id] )
+			return this.nodes[id].slug;
 		return null;
 	}
 	
 	// Prefetching is an optimization. To make it clearer that you are prefetching, use this function //
-	preFetchItemById( id ) {
-		this.getItemById( id );
+	preFetchNodeById( id ) {
+		this.getNodeById( id );
 	}
 	
-	preFetchItemWithAuthorById( id ) {
-		this.getItemById( id );
-		this.getItemById( this.getAuthorOfItemById(id) );
+	preFetchNodeWithAuthorById( id ) {
+		this.getNodeById( id );
+		this.getNodeById( this.getAuthorOfNodeById(id) );
 	}
 	
-	getItemIdByParentAndSlug( parent, slug ) {
+	getNodeIdByParentAndSlug( parent, slug ) {
 		let key = parent+'!'+slug;
 		if ( this.slugs[key] ) {
 			return this.slugs[key];
@@ -257,24 +267,24 @@ class CCoreData {
 	}
 	
 
-	getAuthorOfItemById( id ) {
-		let items = this.getItemById( id );
+	getAuthorOfNodeById( id ) {
+		let nodes = this.getNodeById( id );
 		
 		if ( Array.isArray(id) ) {
 			// Fetch all authors, removing duplicates //
 			let authors = {};
 
-			for ( item in items ) {
-				if ( items[item] ) {
-					authors[ items[item].author ] = items[item].author;
+			for ( node in nodes ) {
+				if ( nodes[node] ) {
+					authors[ nodes[node].author ] = nodes[node].author;
 				}
 			}
 			
 			return Object.keys(authors).map(key => authors[key]);
 		}
 		else {
-			if ( items ) {
-				return items.author;
+			if ( nodes ) {
+				return nodes.author;
 			}
 		}
 		
@@ -283,12 +293,12 @@ class CCoreData {
 
 
 	// Walk the tree starting at the parent, decoding slugs, returing the ID of the last one //
-	getItemIdByParentAndSlugs( parent, slugs ) {
+	getNodeIdByParentAndSlugs( parent, slugs ) {
 		if ( !parent )
 			return null;
 		
 		// Check if special //
-		var parent_data = this.getItemById(parent);
+		var parent_data = this.getNodeById(parent);
 		if ( parent_data.type === 'symlink' ) {
 			parent = parent_data.extra;
 		}
@@ -299,7 +309,7 @@ class CCoreData {
 		}
 		else if ( slugs.length > 0 ) {
 			// Cleverness: slugs gets shifted before the main function is called.
-			return this.getItemIdByParentAndSlugs( this.getItemIdByParentAndSlug(parent, slugs.shift()), slugs );
+			return this.getNodeIdByParentAndSlugs( this.getNodeIdByParentAndSlug(parent, slugs.shift()), slugs );
 		}
 
 		// And done //
@@ -307,12 +317,12 @@ class CCoreData {
 	}
 
 	// Walk the tree starting at the parent, decoding slugs, and return all ids //
-	getItemPathByParentAndSlugs( parent, slugs, ids ) {
+	getNodePathByParentAndSlugs( parent, slugs, ids ) {
 		if ( !parent )
 			return null;
 
 		// Check if parent is special //
-		var parent_data = this.getItemById(parent);
+		var parent_data = this.getNodeById(parent);
 		if ( parent_data.type === 'symlink' ) {
 			parent = parent_data.extra;
 		}
@@ -329,7 +339,7 @@ class CCoreData {
 		}
 		else if ( slugs.length > 0 ) {
 			// Cleverness: slugs gets shifted before the main function is called.
-			return this.getItemPathByParentAndSlugs( this.getItemIdByParentAndSlug(parent, slugs.shift()), slugs, ids );
+			return this.getNodePathByParentAndSlugs( this.getNodeIdByParentAndSlug(parent, slugs.shift()), slugs, ids );
 		}
 		
 		return ids;
@@ -338,13 +348,13 @@ class CCoreData {
 //			return ids;
 //		}
 //		else {
-//			ids.push( this.getItemIdByParentAndSlug(parent, slugs[0]) );
+//			ids.push( this.getNodeIdByParentAndSlug(parent, slugs[0]) );
 //			return ids;
 //		}
 	}
 
 	// Given an id, walk the tree backwards, return all ids in its TRUE PATH. //
-	getItemPathById( id, ids ) {
+	getNodePathById( id, ids ) {
 		if ( !id )
 			return ids;
 			
@@ -353,20 +363,20 @@ class CCoreData {
 		else
 			ids.unshift( id.toString() );
 		
-		return this.getItemPathById( this.getItemParentById(id), ids );
+		return this.getNodePathById( this.getNodeParentById(id), ids );
 	}
 
 	// Given an id, walk the tree backwards, return all slugs in its TRUE PATH. //
-	getItemPathSlugsById( id, ids ) {
+	getNodePathSlugsById( id, ids ) {
 		if ( !id )
 			return ids;
 			
 		if ( !Array.isArray(ids) )
-			ids = [ this.getItemSlugById(id) ];
+			ids = [ this.getNodeSlugById(id) ];
 		else
-			ids.unshift( this.getItemSlugById(id) );
+			ids.unshift( this.getNodeSlugById(id) );
 		
-		return this.getItemPathSlugsById( this.getItemParentById(id), ids );
+		return this.getNodePathSlugsById( this.getNodeParentById(id), ids );
 	}
 
 };

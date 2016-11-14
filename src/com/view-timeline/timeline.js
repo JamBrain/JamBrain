@@ -13,17 +13,21 @@ import CoreData							from '../../core-data/data';
 export default class ViewTimeline extends Component {
 	constructor() {
 		this.state = {};
+		this.state.node = 1;
 		this.state.feed = [10,11,12,13];
 	}
 	
-	getItems( props, state ) {
-		CoreData.preFetchItemWithAuthorById( state.feed );
+	getNodes( props, state ) {
+		CoreData.preFetchNodeWithAuthorById( state.feed );
 		
-		return state.feed.map(function(item) {
-			var item_type = CoreData.getItemTypeById(item);
+		// TODO: create titles depending on type (mainly the root node should be just the domain) //
+		document.title = titleParser.parse(CoreData.getNodeNameById(state.node), true) + " | " + window.location.host;
+		
+		return state.feed.map(function(node) {
+			var node_type = CoreData.getNodeTypeById(node);
 			
-			if ( item_type === 'post' ) {
-				return <ContentPost item={item} />;
+			if ( node_type === 'post' ) {
+				return <ContentPost node={node} />;
 			}
 			else {
 				return <div>null</div>;
@@ -37,7 +41,7 @@ export default class ViewTimeline extends Component {
 			<div class="view-timeline">
 				<div id="header" />
 				<div id="content-sidebar">
-					<div id="content">{ this.getItems(props,state) }</div>
+					<div id="content">{ this.getNodes(props,state) }</div>
 					<div id="sidebar">
 						<SidebarCalendar />
 						<SidebarUpcoming />
