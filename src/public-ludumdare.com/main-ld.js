@@ -3,6 +3,7 @@ import NavBar 							from 'com/nav-bar/bar';
 
 import ViewTimeline						from 'com/view-timeline/timeline';
 import ViewSingle						from 'com/view-single/single';
+import DarkOverlay						from 'com/dark-overlay/overlay';
 
 import CoreData							from '../core-data/data';
 
@@ -70,6 +71,7 @@ class Main extends Component {
 		
 		// If current URL is unclean, replace it //
 	//	if ( whom.pathname !== clean.pathname || whom.hash !== clean.hash ) {
+			console.log('replaceState', this.state);
 			window.history.replaceState(this.state, null, clean_path);
 	//	}
 	}
@@ -97,12 +99,17 @@ class Main extends Component {
 	}
 	
 	onPopState( e ) {
-		console.log("popstate: ", e);
-		this.setState(e.state);
-		
-		console.log(e.state);
-		
-		window.scrollTo(e.state.top, e.state.left);
+		// NOTE: This is sometimes called on a HashChange with a null state
+		if ( e.state ) {
+			console.log("popstate: ", e);
+	
+			this.setState(e.state);
+			
+			window.scrollTo(e.state.top, e.state.left);
+		}
+		else {
+			console.log(location);
+		}
 	}
 	
 	getView( props, state ) {
@@ -125,13 +132,14 @@ class Main extends Component {
 	}
 	
 	render( props, state ) {
-		//let hasHash = window.location.hash ? <div>{window.location.hash}</div> : <div />;
+		let hasHash = window.location.hash ? <DarkOverlay>{window.location.hash}</DarkOverlay> : <div />;
 		//console.log("paint:",state);
 		
 		return (
 			<div id="layout">
 				<NavBar />
 				{ this.getView(props,state) }
+				{ hasHash }
 			</div>
 		);
 	}

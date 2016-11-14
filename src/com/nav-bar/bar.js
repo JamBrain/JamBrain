@@ -15,12 +15,12 @@ export default class NavBar extends Component {
 			<div class="nav-bar">
 				<div class="-content">
 					<div class="-left">
-						<ButtonLink href="/" class="-logo" onclick={e => console.log('logo')} force>
+						<ButtonLink href="/" class="-logo" onclick={e => console.log('logo')}>
 							<SVGIcon baseline>ludum</SVGIcon><SVGIcon baseline>dare</SVGIcon>
 						</ButtonLink>
 					</div>
 					<div class="-right">
-						<ButtonBase class="-button" onclick={e => console.log('my game')}>
+						<ButtonBase class="-button" replace onclick={function(e) { console.log('my game'); location.href = "#user-test";}}>
 							<SVGIcon>gamepad</SVGIcon>
 							<div>My Game</div>
 						</ButtonBase>

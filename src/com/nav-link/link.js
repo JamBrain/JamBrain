@@ -3,9 +3,9 @@ import { h, Component } from 'preact/preact';
 // TODO: Push the state (arg1 of pushShate/replaceState //
 
 export default class NavLink extends Component {
-	dispatchNavChangeEvent( _old ) {
-		let new_event = new CustomEvent('navchange',{
-			detail: {
+	dispatchNavChangeEvent( state ) {
+		let new_event = new CustomEvent('navchange', {
+			detail: Object.assign(state, {
 				location: {
 					baseURI: this.baseURI,			// without query string
 					hash: this.hash,				// #hash
@@ -16,10 +16,9 @@ export default class NavLink extends Component {
 					pathname: this.pathname,		// just the path
 					port: this.port,				// port
 					protocol: this.protocol,		// http:, https:, etc
-					search: (this.search && this.search.length !== 0) ? this.search : _old.search,			// query string
-				},
-				old: _old
-			}
+					search: (this.search && this.search.length !== 0) ? this.search : state.old.search,	// query string
+				}
+			})
 		});
 
 		window.dispatchEvent(new_event);
@@ -32,20 +31,23 @@ export default class NavLink extends Component {
 		
 		// If the origin (http+domain) of the current and next URL is the same, navigate by manipulating the history
 		if ( origin === window.location.origin ) {
-			var old = Object.assign({}, window.location);
-			
-			window.history.state.top = window.pageYOffset || document.documentElement.scrollTop;
-    		window.history.state.left = window.pageXOffset || document.documentElement.scrollLeft;
+			var state = { 
+				old: Object.assign({}, window.location),
+				top: window.pageYOffset || document.documentElement.scrollTop,
+				left: window.pageXOffset || document.documentElement.scrollLeft,
+			};
 			
 			// Stop the page from reloading after the click
 			e.preventDefault();
-			// Store the old 
+			// Store 
+			console.log('replaceState', window.history.state);
 			history.replaceState(window.history.state, null, window.location.pathname+window.location.search);
 			// Advance history by pushing a state (that will be updated by the 'navchange' event)
+			console.log('pushState', null);
 			history.pushState(null, null, this.pathname+this.search);
 
 			// Trigger a 'navchange' event to cleanup what we've done here
-			NavLink.prototype.dispatchNavChangeEvent.call(this, old);
+			NavLink.prototype.dispatchNavChangeEvent.call(this, state);
 		}
 		e.stopPropagation();
 		
@@ -60,12 +62,13 @@ export default class NavLink extends Component {
 		if ( this.origin === window.location.origin ) {
 			var old = Object.assign({}, window.location);
 
-			window.history.state.top = window.pageYOffset || document.documentElement.scrollTop;
-    		window.history.state.left = window.pageXOffset || document.documentElement.scrollLeft;
+//			window.history.state.top = window.pageYOffset || document.documentElement.scrollTop;
+//    		window.history.state.left = window.pageXOffset || document.documentElement.scrollLeft;
 			
 			// Stop the page from reloading after the click
 			e.preventDefault();
 			// Unlike above, we only replace the state
+			console.log('replaceState', window.history.state);
 			history.replaceState(window.history.state, null, this.pathname+this.search);
 
 			// Trigger a 'navchange' event to cleanup what we've done here
