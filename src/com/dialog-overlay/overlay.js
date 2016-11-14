@@ -1,6 +1,6 @@
 import { h, Component } from 'preact/preact';
 
-export default class DarkOverlay extends Component {
+export default class DialogOverlay extends Component {
 	constructor() {
 		this.state = {};
 	}
@@ -8,14 +8,14 @@ export default class DarkOverlay extends Component {
 	componentDidMount() {
 		// Disables Mouse Wheel //
 		document.body.addEventListener('mousewheel', function(e) {
-			if ( document.getElementById("dark-overlay") ) {
+			if ( document.getElementById("dialog-overlay") ) {
 				e.preventDefault();
 			    //return false;
 			}
 		}.bind(this), false);
 
 		document.body.addEventListener('keydown', function(e) {
-			if ( document.getElementById("dark-overlay") ) {
+			if ( document.getElementById("dialog-overlay") ) {
 				var keys_to_disable = [
 					9, 					// Tab
 					33, 34, 			// PgUp, PgDown
@@ -45,8 +45,8 @@ export default class DarkOverlay extends Component {
 	}
 	
 	render( props ) {
-		props.id = "dark-overlay";
-		props.class = "dark-overlay" + (props.class ? " " + props.class : "");
+		props.id = "dialog-overlay";
+		props.class = "dialog-overlay" + (props.class ? " " + props.class : "");
 			
 		props.onclick = function(e) {
 			this.abort();

@@ -2,11 +2,7 @@ import { h, Component }					from 'preact/preact';
 
 import ContentPost						from 'com/content-post/post';
 
-import SidebarCalendar					from 'com/sidebar-calendar/calendar';
-import SidebarUpcoming					from 'com/sidebar-upcoming/upcoming';
-import SidebarTV						from 'com/sidebar-tv/tv';
-import SidebarTrending					from 'com/sidebar-trending/trending';
-import SidebarSupport					from 'com/sidebar-support/support';
+import ViewSidebar						from 'com/view-sidebar/sidebar';
 
 import CoreData							from '../../core-data/data';
 
@@ -17,13 +13,13 @@ export default class ViewTimeline extends Component {
 		this.state.feed = [10,11,12,13];
 	}
 	
-	getNodes( props, state ) {
-		CoreData.preFetchNodeWithAuthorById( state.feed );
+	getNodes( props ) {
+		CoreData.preFetchNodeWithAuthorById( this.state.feed );
 		
 		// TODO: create titles depending on type (mainly the root node should be just the domain) //
-		document.title = titleParser.parse(CoreData.getNodeNameById(state.node), true) + " | " + window.location.host;
+		document.title = titleParser.parse(CoreData.getNodeNameById(this.state.node), true) + " | " + window.location.host;
 		
-		return state.feed.map(function(node) {
+		return this.state.feed.map(function(node) {
 			var node_type = CoreData.getNodeTypeById(node);
 			
 			if ( node_type === 'post' ) {
@@ -35,19 +31,14 @@ export default class ViewTimeline extends Component {
 		});
 	}
 	
-	render( props, state ) {
+	render( props ) {
 		// content-sidebar should be #body
 		return (
 			<div class="view-timeline">
 				<div id="header" />
 				<div id="content-sidebar">
-					<div id="content">{ this.getNodes(props,state) }</div>
-					<div id="sidebar">
-						<SidebarCalendar />
-						<SidebarUpcoming />
-						<SidebarTV />
-						<SidebarSupport />
-					</div>
+					<div id="content">{ this.getNodes(props) }</div>
+					<ViewSidebar />
 				</div>
 				<div id="footer">Timeline</div>
 			</div>

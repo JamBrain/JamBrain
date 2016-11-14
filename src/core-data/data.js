@@ -3,18 +3,18 @@ class CCoreData {
 	constructor() {
 		this.nodes = {
 			1: {
-				name:"*ROOT-NODE*",
-				slug:'root',
-				type:"root",
+				name:"Root Root",
+				slug:'roots',
+				type:"roots",
 				subtype:"",
 				parent:0,
 				author:0,
 				body:"",
 			},
 			2: {
-				name:"user",
+				name:"Users Root",
 				slug:'u',
-				type:"browse",
+				type:"users",
 				subtype:"user",
 				parent:1,
 				author:0,
@@ -71,8 +71,8 @@ class CCoreData {
 				subtype:"",
 				parent:5,
 				author:3,
-				body:"Hi everybody! Welcome to Week 1!\n\n"+
-					"Over the next 4 weeks, we'll be gradually rolling out **core** features of this website. "+
+				body:"Hi everybody! Welcome to the new site!\n\n"+
+					"Over the next few weeks, we'll be gradually rolling out **core** features of this website. "+
 					"It's going to be a little bumpy. Many things you're expecting wont be available right away (Posting, Commenting, Notifications, Mobile, ... well really, most features are either unfinished or disabled). Have patience! We'll get there.\n\n"+
 					"This week we're starting with just two things:\n\n"+
 					"* Creating Accounts\n"+
@@ -88,9 +88,8 @@ class CCoreData {
 					"Once you've created your account, you can **go here** to begin making suggestions:\n\n"+
 					"* https://ldjam.com/blah\n\n"+
 					"And that's it!\n\n"+
-					"We'll be calling you back in **about 2 weeks before Ludum Dare 37**, when we kick off **Theme Selection**. Starting with the **Theme Slaughter**, followed by the all-new **Theme Fusion** round, and several days of **Theme Voting**, before the final result.\n\n"+
-					"For those announcements, follow the main Twitter account at https://twitter.com/ludumdare. If you want a bit of a sneak peek, and to help out with some pre-alpha testing, you can follow my personal Twitter account at https://twitter.com/mikekasprzak.\n\n"+
-					"That's it from me. We'll see you soon."
+					"Follow the main Twitter account at https://twitter.com/ludumdare for event announcements. For alpha testing announcements, follow my personal Twitter account at https://twitter.com/mikekasprzak.\n\n"+
+					"We'll be back soon with more rounds of **Theme Selection**, and to start making **Teams**."
 			},
 
 			11:{

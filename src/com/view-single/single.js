@@ -3,11 +3,7 @@ import { h, Component }					from 'preact/preact';
 import ContentPost						from 'com/content-post/post';
 import ContentUser						from 'com/content-user/user';
 
-import SidebarCalendar					from 'com/sidebar-calendar/calendar';
-import SidebarUpcoming					from 'com/sidebar-upcoming/upcoming';
-import SidebarTV						from 'com/sidebar-tv/tv';
-import SidebarTrending					from 'com/sidebar-trending/trending';
-import SidebarSupport					from 'com/sidebar-support/support';
+import ViewSidebar						from 'com/view-sidebar/sidebar';
 
 import CoreData							from '../../core-data/data';
 
@@ -46,12 +42,7 @@ export default class ViewSingle extends Component {
 				<div id="header" />
 				<div id="content-sidebar">
 					<div id="content">{ this.getNodes(props,state) }</div>
-					<div id="sidebar">
-						<SidebarCalendar />
-						<SidebarUpcoming />
-						<SidebarTV />
-						<SidebarSupport />
-					</div>
+					<ViewSidebar />
 				</div>
 				<div id="footer">Single</div>
 			</div>

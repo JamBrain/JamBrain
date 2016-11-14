@@ -3,8 +3,8 @@ import NavBar 							from 'com/nav-bar/bar';
 
 import ViewTimeline						from 'com/view-timeline/timeline';
 import ViewSingle						from 'com/view-single/single';
-import DarkOverlay						from 'com/dark-overlay/overlay';
 
+import DialogOverlay					from 'com/dialog-overlay/overlay';
 import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
 import DialogLogin						from 'com/dialog-login/login';
 
@@ -19,7 +19,7 @@ class Main extends Component {
 		this.state.root = 1;
 		
 		this.dialogs = {
-			'#user-login': <DialogLogin />
+			'#user-login': (<DialogLogin />)
 		};
 		
 		this.getNodeFromLocation(window.location);
@@ -122,7 +122,7 @@ class Main extends Component {
 		if ( this.state.node ) {
 			var node = CoreData.getNodeById( this.state.node );
 	
-			if ( node.type === 'root' ) {
+			if ( node.type === 'roots' ) {
 				return <ViewTimeline node={this.state.node} />;
 			}
 			else if ( node.type === 'post' || node.type === 'game' || node.type === 'user' ) {
@@ -143,7 +143,7 @@ class Main extends Component {
 			Dialog = this.dialogs[window.location.hash];
 		}
 		
-		let DialogCode = window.location.hash ? <DarkOverlay>{Dialog}</DarkOverlay> : <div />;
+		let DialogCode = window.location.hash ? <DialogOverlay>{Dialog}</DialogOverlay> : <div />;
 		//console.log("paint:", this.state);
 		
 		return (
