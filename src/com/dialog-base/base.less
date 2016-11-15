@@ -1,4 +1,6 @@
 
+@import "../effect-base/base";
+
 @DIALOG_RED_DEEP: #622;
 @DIALOG_RED_BASE: #C44;
 @DIALOG_RED_LIGHT: #F88;
@@ -8,10 +10,8 @@
 @DIALOG_RED_MUTE_LIGHT: #FAA;
 @DIALOG_RED_MUTE_BRIGHT: #FDD;
 
-
-
 .dialog-base {
-	& > .header {
+/*	& > .header {
 		text-align: center;
 		padding: 0.5em 0;
 		
@@ -66,6 +66,7 @@
 	& > .dark-footer {
 		background:#666;
 	}
+	*/
 }
 
 #dialog {
@@ -96,12 +97,42 @@
 	& .buttons {
 		padding:0.5em 2.0em;
 	}
+
+
+	& button {
+		background:#AAA;
+		color:#DDD;
+	
+		border:0;
+		padding:12px 28px;
+		cursor:pointer;
+	
+		margin:0.5em;
+		border-radius:2.0em;
+		font-weight:700;
+	    outline: none;
+	
+	    transition: transform 0.2s @EFFECT_BEZIER_NO_DIP_BIG_POP;
+	}
+	& button:hover {
+		transform: scale(1.25);
+	}
+	& button:focus {
+		background:#666;
+		color:#FFF;
+		
+		padding:10px 26px;
+		/*border:2px dotted #FFF;*/
+		border:2px solid #FFF;
+	}
+	& button:active {
+		background:#FFF;
+		color:#666;
+		/*transform: scale(1.5);*/
+	}
+
 }
 
-.tip {
-	font-size:0.7em;
-	margin-top:2em;
-}
 
 
 /* Red */
