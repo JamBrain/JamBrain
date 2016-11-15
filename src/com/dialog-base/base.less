@@ -1,0 +1,155 @@
+
+@DIALOG_RED_DEEP: #622;
+@DIALOG_RED_BASE: #C44;
+@DIALOG_RED_LIGHT: #F88;
+@DIALOG_RED_BRIGHT: #FFF;
+
+@DIALOG_RED_MUTE: #E55;
+@DIALOG_RED_MUTE_LIGHT: #FAA;
+@DIALOG_RED_MUTE_BRIGHT: #FDD;
+
+
+
+.dialog-base {
+	& > .header {
+		text-align: center;
+		padding: 0.5em 0;
+		
+		color: #FD0;
+		background: linear-gradient(to bottom, #d53 0%, #d83 80%);
+
+		text-shadow: 0 1px 2px rgba(128,0,0,0.5);
+		border-bottom: 2px solid #EB5;
+	}
+	
+	& > .inv {
+		color:#FFF;
+	}
+	
+	& > .header .event {
+	}
+	& > .header .mode { 
+		margin: 0.3em 0;
+	}
+	& > .header .date {
+		margin: 0.3em 0;
+	}
+	
+	& > .body {
+		background: #DDD;
+	}
+	& > .dark-body {
+		background: #111;
+		color: #AAA;
+		border-top: 0 !important;
+	}
+	
+	& > .body .main {
+		padding: 1.0em 2.0em;
+		text-align: center;
+	}
+	
+	& > .body .headline {
+		margin-bottom: 2.0em;
+	}
+	
+	& .action {
+		margin-top: 2.0em;
+	}
+	& .gap {
+		margin-top: 2.0em !important;
+	}
+	
+	& > .footer {
+		padding:1.0em 0;
+	}
+	& > .dark-footer {
+		background:#666;
+	}
+}
+
+#dialog {
+	text-align:center;
+	/*pointer-events:none;*/
+	
+	overflow:hidden;
+	max-width:20em;
+	
+	z-index:10000;
+	
+	border-radius:1.0em;
+	box-shadow:0 2px 6px rgba(0,0,0,0.3);
+
+	& .title {
+		font-weight:700;
+		
+		padding:0.5em 1.0em;
+		text-overflow:ellipsis;
+		overflow:hidden;
+	}
+	& .body {
+		padding:0.5em 2.0em;
+	}
+	& .body > div {
+		margin:0.5em 0;
+	}
+	& .buttons {
+		padding:0.5em 2.0em;
+	}
+}
+
+.tip {
+	font-size:0.7em;
+	margin-top:2em;
+}
+
+
+/* Red */
+.red_dialog {
+	background: @DIALOG_RED_BASE;
+}
+.red_dialog .title {
+	color: @DIALOG_RED_BRIGHT;
+}
+.red_dialog .body {
+	color: @DIALOG_RED_DEEP;
+	background: @DIALOG_RED_LIGHT;
+}
+.red_dialog .buttons {
+	color: @DIALOG_RED_DEEP;
+}
+.red_dialog button {
+	background: @DIALOG_RED_MUTE;
+	color: @DIALOG_RED_BRIGHT;
+}
+.red_dialog button:focus {
+	background: @DIALOG_RED_MUTE_LIGHT;
+	color: @DIALOG_RED_BRIGHT;
+}
+.red_dialog button:active {
+	background: @DIALOG_RED_BRIGHT;
+	color: @DIALOG_RED_MUTE_LIGHT;
+	box-shadow: 0 0px 6px @DIALOG_RED_MUTE_LIGHT;
+}
+
+.red_button, .red_selected .no_button {
+	background: @DIALOG_RED_BASE !important;
+	color: @DIALOG_RED_LIGHT !important;
+}
+.red_button:focus, .no_button:focus {
+	background: @DIALOG_RED_MUTE !important;
+	color: @DIALOG_RED_BRIGHT !important;
+}
+.red_button:active, .no_button:active {
+	background: @DIALOG_RED_BRIGHT !important;
+	color: @DIALOG_RED_MUTE !important;
+	box-shadow: 0 0px 6px @DIALOG_RED_MUTE !important;
+}
+
+.red_selected {
+	background: linear-gradient(to left, @DIALOG_RED_MUTE_LIGHT 0%,#FFF 50%);
+}
+.red_selected .red_button {
+	border: 2px solid @DIALOG_RED_DEEP !important;
+	padding: 1px !important;
+}
