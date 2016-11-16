@@ -10,7 +10,7 @@ function make_url( url ) {
 export default class NavBar extends Component {
 	render( props, state ) {
 		var Search = (
-			<ButtonBase class="-icon" onclick={e => console.log('search')}>
+			<ButtonBase class="-icon" onclick={e => { console.log('search'); window.location.hash = "#search"; }}>
 				<SVGIcon baseline>search</SVGIcon>
 			</ButtonBase>
 		);
@@ -25,7 +25,7 @@ export default class NavBar extends Component {
 			);
 			
 			var NewPost = (
-				<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#user-login"; }}>
+				<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#post-new"; }}>
 					<SVGIcon>edit</SVGIcon>
 					<div>New</div>
 				</ButtonBase>

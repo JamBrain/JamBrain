@@ -12,7 +12,7 @@ export default class SidebarUpcoming extends Component {
 				<div class="-item"><strong>Nov. 25th</strong> - Theme Selection begins</div>
 				<div class="-item"><strong>Dec. 9th</strong> - Ludum Dare 37 <SVGIcon baseline small>trophy</SVGIcon></div>
 				<div class="-item"><strong>Dec. 30th</strong> - Results</div>
-				<div class="-footer">Full Schedule</div>
+				<div class="-footer" onclick={e => { console.log('full-schedlue'); window.location.hash = "#cal"; }}>Full Schedule</div>
 			</div>
 		);
 	}

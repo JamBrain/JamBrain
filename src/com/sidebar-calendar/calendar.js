@@ -14,9 +14,11 @@ export default class SidebarCalendar extends Component {
 		// TODO: Adjust selected day/week when time itself rolls over
 
 		let thisDay = today.getDate();
+		let thisMonth = today.getMonth()+1;
+		let thisYear = today.getFullYear();
 		
 		/* Months and Weeks start at 0. Years and Days start at 1. Using 0th day is like -1 */
-		let monthEndsOn = new Date(today.getFullYear(),today.getMonth()+1,0).getDate();
+		let monthEndsOn = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate();
 		let nextDay = today.getDate() - today.getDay();
 		
 		if ( nextDay < 1 ) {
@@ -28,7 +30,9 @@ export default class SidebarCalendar extends Component {
 		
 		this.data = Array(...Array(this.rows)).map(() => Array.from( Array(this.columns),function(){
 			let ret = {
-				'day':nextDay
+				'year': thisYear,
+				'month': thisMonth,
+				'day': nextDay
 			};
 			
 			if ( nextDay === thisDay ) {
@@ -38,6 +42,11 @@ export default class SidebarCalendar extends Component {
 			nextDay++;
 			if ( nextDay > monthEndsOn ) {
 				nextDay -= monthEndsOn;
+				thisMonth++;
+				if ( thisMonth > 12 ) {
+					thisYear++;
+					thisMonth = 1;
+				}
 			}
 			
 			return ret;
@@ -50,16 +59,21 @@ export default class SidebarCalendar extends Component {
 			if ( col.selected ) {
 				props.class = "selected";
 			}
+			props.onclick = (e) => {
+				console.log('cal: ',col); 
+				window.location.hash = "#cal/"+col.year+"/"+col.month+"/"+col.day;
+			};
 
 			return (<div {...props}><div class="-text">{col.day}</div></div>) 
 		});
 	}
 	
-	render( props, state ) {
+	render( props ) {
 		return (
 			<div class="sidebar-base sidebar-calendar"> {
 				this.data.map(
-				row => (<div class="-week">{ this.genRow(row) }</div>) )
+					row => (<div class="-week">{ this.genRow(row) }</div>)
+				)
 			} </div>
 		);
 	}
