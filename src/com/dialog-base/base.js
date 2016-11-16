@@ -13,7 +13,6 @@ export default class DialogBase extends Component {
 	}
 	
 	componentDidUnmount() {
-		console.log("HOON");
 		document.body.removeEventListener('mousewheel', this._eventWheel);
 		document.body.removeEventListener('keydown', this._eventKey);
 	}
@@ -26,7 +25,9 @@ export default class DialogBase extends Component {
 	}
 	
 	eventKey( e ) {
-		if ( document.getElementById("dialog-background") ) {
+		var el = document.getElementById("dialog-background");
+		
+		if ( el ) {
 			var keys_to_disable = [
 				9, 					// Tab
 				33, 34, 			// PgUp, PgDown
@@ -39,7 +40,9 @@ export default class DialogBase extends Component {
 			}
 			// ESC key
 			else if ( e.keyCode == 27 ) {
-				this.abort();
+				if ( !el.hasAttribute("explicit") ) {
+					this.abort();
+				}
 			}
 		}
 	}
@@ -50,18 +53,19 @@ export default class DialogBase extends Component {
 	}
 	
 	render( props ) {
-		var Abort = { onclick: e => { this.abort(); }};
+		var _Abort = { onclick: e => { this.abort(); }};
+		var Abort = props.explicit ? { explicit:true } : _Abort;
 		var Error = props.error ? (<div class="-error"><strong>Error:</strong> {props.error}</div>) : "";
 		
 		var ButtonOK = "";
 		var ButtonCancel = "";
 		
 		if ( props.ok ) {
-			let Click = props.onclick ? { onclick: props.onclick } : (props.cancel ? {} : Abort);
+			let Click = props.onclick ? { onclick: props.onclick } : (props.cancel ? {} : _Abort);
 			ButtonOK = <ButtonBase class="-button -light" {...Click}>{props.oktext ? props.oktext : "OK"}</ButtonBase>;
 		}
 		if ( props.cancel ) {
-			let Click = props.oncancel ? { onclick: props.oncancel } : Abort;
+			let Click = props.oncancel ? { onclick: props.oncancel } : _Abort;
 			ButtonCancel = <ButtonBase class="-button" {...Click}>{props.canceltext ? props.canceltext : "Cancel"}</ButtonBase>;
 		}
 

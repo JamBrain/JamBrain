@@ -6,14 +6,14 @@ export default class DialogActivate extends Component {
 	}
 	
 	componentDidUpdate() {
-		document.getElementById('dialog-register-mail').focus();
+		document.getElementById('dialog-activate-name').focus();
 	}
 
 	render( props ) {
 		var Error = {};//{ error:"There was a problem" };
 		
 		return (
-			<DialogBase title="Activate Account" ok cancel oktext="Activate" {...Error}>
+			<DialogBase title="Activate Account" ok cancel oktext="Activate" explicit {...Error}>
 				<div class="-info">
 					Enter your desired User Name and Password.
 				</div>
