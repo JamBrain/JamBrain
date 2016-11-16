@@ -1,4 +1,5 @@
-import { h, Component } from 'preact/preact';
+import { h, Component } 				from 'preact/preact';
+import ButtonBase						from 'com/button-base/base';
 
 export default class DialogBase extends Component {
 	constructor() {
@@ -53,14 +54,16 @@ export default class DialogBase extends Component {
 			this.abort();
 		}.bind(this);
 		
+		var Error = props.error ? (<div class="-error"><strong>Error:</strong> {props.error}</div>) : "";
+		
 		var ButtonOK = "";
 		var ButtonCancel = "";
 		
 		if ( props.ok ) {
-			ButtonOK = <div class="-button -light">{props.oktext ? props.oktext : "OK"}</div>;
+			ButtonOK = <ButtonBase class="-button -light">{props.oktext ? props.oktext : "OK"}</ButtonBase>;
 		}
 		if ( props.cancel ) {
-			ButtonCancel = <div class="-button">{props.canceltext ? props.canceltext : "Cancel"}</div>;
+			ButtonCancel = <ButtonBase class="-button">{props.canceltext ? props.canceltext : "Cancel"}</ButtonBase>;
 		}
 
 		return (
@@ -69,6 +72,7 @@ export default class DialogBase extends Component {
 					<div class="-header">
 						<div class="-title _font2">{props.title}</div>
 					</div>
+					{Error}
 					<div class="-body">{props.children}</div>
 					<div class="-footer">
 						{ButtonOK}

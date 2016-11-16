@@ -34,20 +34,45 @@
 			font-weight:700;
 		}
 	}
+	& > .-error {
+		background: @MAJOR_COLOR1;
+		color: MAJOR_LIGHT;
+		padding: 0.5rem 1rem;
+	}
 	& > .-body {
 		margin: 1rem 2rem;
 		
+		& > div {
+			margin: 0.5em 0;
+		}
+		
+		& .-label {
+			width: 6em;
+			display: inline-block;
+		}
+		& .-text {
+			background: @MAJOR_MUTE_L4;
+			border: 0;
+			padding: 0.5em;
+			width: 20em;
+			/*border-radius: 1em;*/
+			
+			&:focus {
+				background: @MAJOR_LIGHT;
+			}
+		}
 	}
 	& > .-footer {
 		background: @MAJOR_MUTE_D;
-		color: @MAJOR_DARK;
+		color: @MAJOR_COLOR4;
 		
 		display: flex;
+		justify-content: center;
 
 		& > .-button {
 			padding: 0.5rem 2rem;
 			border: 1px solid @MAJOR_MUTE_D;
-			margin: 0.5rem 1rem;
+			margin: 0.5rem 0.25rem;
 			
 			font-weight:700;
 		
