@@ -53,7 +53,7 @@ export default class SidebarCalendar extends Component {
 		}));
 	}
 
-	genRow(row) {
+	genRow( row ) {
 		return row.map( function(col) {
 			let props = {};
 			if ( col.selected ) {
@@ -63,6 +63,12 @@ export default class SidebarCalendar extends Component {
 				console.log('cal: ',col); 
 				window.location.hash = "#cal/"+col.year+"/"+col.month+"/"+col.day;
 			};
+			props.title = col.month+"-"+col.day+"-"+col.year;
+			if ( window.Intl ) {
+				// http://stackoverflow.com/a/18648314/5678759
+				let objDate = new Date(props.title);
+				props.title = objDate.toLocaleString("en-us", {month:"long", day:"numeric", year:"numeric"});
+			}
 
 			return (<div {...props}><div class="-text">{col.day}</div></div>) 
 		});

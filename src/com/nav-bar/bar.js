@@ -61,7 +61,7 @@ export default class NavBar extends Component {
 			var Register = (
 				<ButtonBase class="-button" onclick={e => { console.log('register'); window.location.hash = "#user-register"; }}>
 					<SVGIcon>user</SVGIcon>
-					<div>Register</div>
+					<div>Create Account</div>
 				</ButtonBase>			
 			);
 			var Login = (
