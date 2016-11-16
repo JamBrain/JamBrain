@@ -5,7 +5,11 @@ export default class DialogLogin extends Component {
 	constructor() {
 	}
 	
+	componentWillUpdate() {
+		console.log("DialogLogin: componentWillUpdate");
+	}
 	componentDidUpdate() {
+		console.log("DialogLogin: componentDidUpdate");
 		document.getElementById('dialog-login-name').focus();
 	}
 
