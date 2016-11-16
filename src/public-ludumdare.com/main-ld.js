@@ -8,7 +8,7 @@ import DialogOverlay					from 'com/dialog-overlay/overlay';
 import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
 import DialogLogin						from 'com/dialog-login/login';
 import DialogRegister					from 'com/dialog-register/register';
-//import DialogActivate					from 'com/dialog-activate/activate';
+import DialogActivate					from 'com/dialog-activate/activate';
 
 //import AlertBase						from 'com/alert-base/base';
 
@@ -24,7 +24,7 @@ class Main extends Component {
 		
 		this.dialogs = {
 			'#user-login': (<DialogLogin />),
-			'#user-activate': (<DialogLogin />),
+			'#user-activate': (<DialogActivate />),
 			'#user-register': (<DialogRegister />)
 		};
 		

@@ -14,8 +14,8 @@ export default class DialogRegister extends Component {
 		
 		return (
 			<DialogBase title="Create Account" ok cancel oktext="Send e-mail" {...Error}>
-				<div>
-					Enter your e-mail address to begin creating an account.
+				<div class="-info">
+					Enter an e-mail address to begin creating an account.
 				</div>
 				<div>
 					<span class="-label">E-mail:</span><input id="dialog-register-mail" class="-text" type="text" name="email" />

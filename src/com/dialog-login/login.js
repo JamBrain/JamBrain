@@ -19,7 +19,7 @@ export default class DialogLogin extends Component {
 		return (
 			<DialogBase title="Log In" ok cancel oktext="Log In" {...Error}>
 				<div>
-					<span class="-label">Name:</span><input id="dialog-login-name" class="-text" type="text" name="username" />
+					<span class="-label">User Name:</span><input id="dialog-login-name" class="-text" type="text" name="username" />
 				</div>
 				<div>
 					<span class="-label">Password:</span><input id="dialog-login-password" class="-text" type="password" name="password" />
