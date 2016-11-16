@@ -1,5 +1,3 @@
-import { empty } from './util';
-
 /** Global options
  *	@public
  *	@namespace options {Object}
@@ -16,5 +14,14 @@ export default {
 	/** Processes all created VNodes.
 	 *	@param {VNode} vnode	A newly-created VNode to normalize/process
 	 */
-	vnode: empty
+	//vnode(vnode) { }
+
+	/** Hook invoked after a component is mounted. */
+	// afterMount(component) { }
+
+	/** Hook invoked after the DOM is updated with a component's latest render. */
+	// afterUpdate(component) { }
+
+	/** Hook invoked immediately before a component is unmounted. */
+	// beforeUnmount(component) { }
 };

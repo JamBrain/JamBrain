@@ -1,8 +1,8 @@
 import { FORCE_RENDER } from './constants';
-import { hook } from './hooks';
 import { extend, clone, isFunction } from './util';
 import { createLinkedState } from './linked-state';
-import { triggerComponentRender, renderComponent } from './vdom/component';
+import { renderComponent } from './vdom/component';
+import { enqueueRender } from './render-queue';
 
 /** Base Component class, for he ES6 Class method of creating Components
  *	@public
@@ -17,16 +17,16 @@ import { triggerComponentRender, renderComponent } from './vdom/component';
 export function Component(props, context) {
 	/** @private */
 	this._dirty = true;
+	// /** @public */
+	// this._disableRendering = false;
+	// /** @public */
+	// this.prevState = this.prevProps = this.prevContext = this.base = this.nextBase = this._parentComponent = this._component = this.__ref = this.__key = this._linkedStates = this._renderCallbacks = null;
 	/** @public */
-	this._disableRendering = false;
-	/** @public */
-	this.prevState = this.prevProps = this.prevContext = this.base = this.nextBase = this._parentComponent = this._component = this.__ref = this.__key = this._linkedStates = this._renderCallbacks = null;
-	/** @public */
-	this.context = context || {};
+	this.context = context;
 	/** @type {object} */
 	this.props = props;
 	/** @type {object} */
-	this.state = hook(this, 'getInitialState') || {};
+	if (!this.state) this.state = {};
 }
 
 
@@ -65,9 +65,8 @@ extend(Component.prototype, {
 	 *		<button onClick={ this.linkState('touch.coords', 'touches.0') }>Tap</button
 	 */
 	linkState(key, eventPath) {
-		let c = this._linkedStates || (this._linkedStates = {}),
-			cacheKey = key + '|' + eventPath;
-		return c[cacheKey] || (c[cacheKey] = createLinkedState(this, key, eventPath));
+		let c = this._linkedStates || (this._linkedStates = {});
+		return c[key+eventPath] || (c[key+eventPath] = createLinkedState(this, key, eventPath));
 	},
 
 
@@ -79,7 +78,7 @@ extend(Component.prototype, {
 		if (!this.prevState) this.prevState = clone(s);
 		extend(s, isFunction(state) ? state(s, this.props) : state);
 		if (callback) (this._renderCallbacks = (this._renderCallbacks || [])).push(callback);
-		triggerComponentRender(this);
+		enqueueRender(this);
 	},
 
 
@@ -98,8 +97,6 @@ extend(Component.prototype, {
 	 *	@param {object} context		Context object (if a parent component has provided context)
 	 *	@returns VNode
 	 */
-	render() {
-		return null;
-	}
+	render() {}
 
 });
