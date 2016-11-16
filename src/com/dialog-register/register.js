@@ -10,7 +10,7 @@ export default class DialogRegister extends Component {
 	}
 
 	render( props ) {
-		var Error = { error:"There was a problem" };
+		var Error = {};//{ error:"There was a problem" };
 		
 		return (
 			<DialogBase title="Create Account" ok cancel oktext="Send e-mail" {...Error}>

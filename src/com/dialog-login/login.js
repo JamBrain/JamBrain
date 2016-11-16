@@ -10,7 +10,7 @@ export default class DialogLogin extends Component {
 	}
 
 	render( props ) {
-		var Error = { error:"There was a problem" };
+		var Error = {};// { error:"There was a problem" };
 		
 		return (
 			<DialogBase title="Log In" ok cancel oktext="Log In" {...Error}>

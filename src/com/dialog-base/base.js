@@ -50,24 +50,23 @@ export default class DialogBase extends Component {
 	}
 	
 	render( props ) {
-		props.onclick = function(e) {
-			this.abort();
-		}.bind(this);
-		
+		var Abort = { onclick: e => { this.abort(); }};
 		var Error = props.error ? (<div class="-error"><strong>Error:</strong> {props.error}</div>) : "";
 		
 		var ButtonOK = "";
 		var ButtonCancel = "";
 		
 		if ( props.ok ) {
-			ButtonOK = <ButtonBase class="-button -light">{props.oktext ? props.oktext : "OK"}</ButtonBase>;
+			let Click = props.onclick ? { onclick: props.onclick } : (props.cancel ? {} : Abort);
+			ButtonOK = <ButtonBase class="-button -light" {...Click}>{props.oktext ? props.oktext : "OK"}</ButtonBase>;
 		}
 		if ( props.cancel ) {
-			ButtonCancel = <ButtonBase class="-button">{props.canceltext ? props.canceltext : "Cancel"}</ButtonBase>;
+			let Click = props.oncancel ? { onclick: props.oncancel } : Abort;
+			ButtonCancel = <ButtonBase class="-button" {...Click}>{props.canceltext ? props.canceltext : "Cancel"}</ButtonBase>;
 		}
 
 		return (
-			<div class="dialog-background" id="dialog-background">
+			<div class="dialog-background" id="dialog-background" {...Abort}>
 				<div class="dialog-base" onclick={ e => event.stopPropagation() }>
 					<div class="-header">
 						<div class="-title _font2">{props.title}</div>
