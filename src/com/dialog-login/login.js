@@ -5,28 +5,25 @@ export default class DialogLogin extends Component {
 	constructor() {
 	}
 	
-	componentWillUpdate() {
-		console.log("DialogLogin: componentWillUpdate");
-	}
-	componentDidUpdate() {
-		console.log("DialogLogin: componentDidUpdate");
-		document.getElementById('dialog-login-name').focus();
+	componentDidMount() {
+		this.loginName.focus();
 	}
 
 	render( props ) {
 		var Error = {};// { error:"There was a problem" };
 		
+		// NOTE: There's a Preact bug that the extra <span /> is working around
 		return (
 			<DialogBase title="Log In" ok cancel oktext="Log In" {...Error}>
 				<div>
-					<span class="-label">User Name:</span><input id="dialog-login-name" class="-text" type="text" name="username" />
+					<span /><span class="-label">User Name:</span><input ref={(input) => this.loginName = input} class="-text" type="text" name="username" />
 				</div>
 				<div>
-					<span class="-label">Password:</span><input id="dialog-login-password" class="-text" type="password" name="password" />
+					<span class="-label">Password:</span><input ref={(input) => this.loginPassword = input} class="-text" type="password" name="password" />
 				</div>
 				<div>
-					<input id="dialog-login-remember" type="checkbox" name="remember" checked="1" /><span>Stay Logged In</span>
-					<div class="_float-right" id="dialog-login-forgot">Forgot Login/Password?</div>
+					<input ref={(input) => this.loginRemember = input} type="checkbox" name="remember" checked="1" /><span>Stay Logged In</span>
+					<div class="_float-right" ref={(input) => this.loginForgot = input}>Forgot Login/Password?</div>
 				</div>
 				
 			</DialogBase>

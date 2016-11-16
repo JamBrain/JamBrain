@@ -1,6 +1,6 @@
 import { h, Component } from 'preact/preact';
 
-// TODO: Push the state (arg1 of pushShate/replaceState //
+// TODO: Push the state (arg1 of pushShate/replaceState
 
 export default class NavLink extends Component {
 	dispatchNavChangeEvent( state ) {
@@ -26,8 +26,8 @@ export default class NavLink extends Component {
 	}
 	
 	onClickPush( e ) {
-		console.log("feen",this,e);
-		e.preventDefault();
+//		console.log("feen",this,e);
+//		e.preventDefault();
 		
 		// Internet Explorer 11 doesn't set the origin, so we need to extract it
 		// Cleverness: we slice at the 1st slash, but offset by length of 'https://' first, so it's after the domain
@@ -95,7 +95,6 @@ export default class NavLink extends Component {
 					delete props.replace;
 				}
 				else {
-					console.log(this);
 					props.onclick = this.onClickPush.bind(this);
 				}
 			}
