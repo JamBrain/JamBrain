@@ -8,11 +8,13 @@ export default class DialogBase extends Component {
 	}
 
 	componentDidMount() {
+		console.log("bog");
 		document.body.addEventListener('mousewheel', this._eventWheel);
 		document.body.addEventListener('keydown', this._eventKey);
 	}
 	
 	componentDidUnmount() {
+		console.log("out");
 		document.body.removeEventListener('mousewheel', this._eventWheel);
 		document.body.removeEventListener('keydown', this._eventKey);
 	}

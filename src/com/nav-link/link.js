@@ -4,19 +4,20 @@ import { h, Component } from 'preact/preact';
 
 export default class NavLink extends Component {
 	dispatchNavChangeEvent( state ) {
+		let that = this.base;
 		let new_event = new CustomEvent('navchange', {
 			detail: Object.assign(state, {
 				location: {
-					baseURI: this.baseURI,			// without query string
-					hash: this.hash,				// #hash
-					host: this.host,				// host with port
-					hostname: this.hostname,		// without port
-					href: this.href,				// full
-					origin: this.origin,			// protocol+host
-					pathname: this.pathname,		// just the path
-					port: this.port,				// port
-					protocol: this.protocol,		// http:, https:, etc
-					search: (this.search && this.search.length !== 0) ? this.search : state.old.search,	// query string
+					baseURI: that.baseURI,			// without query string
+					hash: that.hash,				// #hash
+					host: that.host,				// host with port
+					hostname: that.hostname,		// without port
+					href: that.href,				// full
+					origin: that.origin,			// protocol+host
+					pathname: that.pathname,		// just the path
+					port: that.port,				// port
+					protocol: that.protocol,		// http:, https:, etc
+					search: (that.search && that.search.length !== 0) ? that.search : state.old.search,	// query string
 				}
 			})
 		});
@@ -25,9 +26,12 @@ export default class NavLink extends Component {
 	}
 	
 	onClickPush( e ) {
+		console.log("feen",this,e);
+		e.preventDefault();
+		
 		// Internet Explorer 11 doesn't set the origin, so we need to extract it
 		// Cleverness: we slice at the 1st slash, but offset by length of 'https://' first, so it's after the domain
-		let origin = this.origin || this.href.slice(0, this.href.indexOf('/','https://'.length));
+		let origin = this.base && (this.base.origin || (this.base.href && this.base.href.slice(0, this.href.base.indexOf('/','https://'.length))));
 		
 		// If the origin (http+domain) of the current and next URL is the same, navigate by manipulating the history
 		if ( origin === window.location.origin ) {
@@ -44,7 +48,7 @@ export default class NavLink extends Component {
 			history.replaceState(window.history.state, null, window.location.pathname+window.location.search);
 			// Advance history by pushing a state (that will be updated by the 'navchange' event)
 			console.log('pushState', null);
-			history.pushState(null, null, this.pathname+this.search);
+			history.pushState(null, null, this.base.pathname+this.base.search);
 
 			// Trigger a 'navchange' event to cleanup what we've done here
 			NavLink.prototype.dispatchNavChangeEvent.call(this, state);
@@ -56,10 +60,10 @@ export default class NavLink extends Component {
 	onClickReplace( e ) {
 		// Internet Explorer 11 doesn't set the origin, so we need to extract it
 		// Cleverness: we slice at the 1st slash, but offset by length of 'https://' first, so it's after the domain
-		let origin = this.origin || this.href.slice(0, this.href.indexOf('/','https://'.length));
+		let origin = this.base && (this.base.origin || (this.base.href && this.base.href.slice(0, this.base.href.indexOf('/','https://'.length))));
 		
 		// If the origin (http+domain) of the current and next URL is the same, navigate by manipulating the history
-		if ( this.origin === window.location.origin ) {
+		if ( origin === window.location.origin ) {
 			var old = Object.assign({}, window.location);
 
 //			window.history.state.top = window.pageYOffset || document.documentElement.scrollTop;
@@ -69,7 +73,7 @@ export default class NavLink extends Component {
 			e.preventDefault();
 			// Unlike above, we only replace the state
 			console.log('replaceState', window.history.state);
-			history.replaceState(window.history.state, null, this.pathname+this.search);
+			history.replaceState(window.history.state, null, this.base.pathname+this.base.search);
 
 			// Trigger a 'navchange' event to cleanup what we've done here
 			NavLink.prototype.dispatchNavChangeEvent.call(this, old);
@@ -79,7 +83,7 @@ export default class NavLink extends Component {
 		//return false; /* Internet Explorer 11 can also stop clicks with this */
 	}
 	
-	render( props, state ) {
+	render( props ) {
 		if ( props.href ) {
 			if ( props.href.indexOf('//') !== -1 ) {		
 				props.target = "_blank";
@@ -87,11 +91,12 @@ export default class NavLink extends Component {
 			}
 			else {
 				if ( props.replace ) {
-					props.onclick = this.onClickReplace;
+					props.onclick = this.onClickReplace.bind(this);
 					delete props.replace;
 				}
 				else {
-					props.onclick = this.onClickPush;
+					console.log(this);
+					props.onclick = this.onClickPush.bind(this);
 				}
 			}
 		}
