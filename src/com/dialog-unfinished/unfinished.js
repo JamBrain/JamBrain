@@ -1,8 +1,8 @@
-import { h, Component } from 'preact/preact';
+import { h, Component } 				from 'preact/preact';
+import DialogBase						from 'com/dialog-base/base';
 
 export default class DialogUnfinished extends Component {
 	constructor() {
-		this.state = {};
 	}
 
 	componentDidMount() {
@@ -10,7 +10,9 @@ export default class DialogUnfinished extends Component {
 	
 	render( props ) {
 		return (
-			<div style="color:#F00">:(</div>
+			<DialogBase title="Unavailable" ok>
+				<div>Sorry. This feature is unavailable at this time.</div>
+			</DialogBase>
 		);
 	}
 }

@@ -6,7 +6,7 @@ import ViewSingle						from 'com/view-single/single';
 
 import DialogOverlay					from 'com/dialog-overlay/overlay';
 import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
-import DialogLogin						from 'com/dialog-login-orig/login';
+import DialogLogin						from 'com/dialog-login/login';
 
 //import AlertBase						from 'com/alert-base/base';
 
@@ -150,7 +150,8 @@ class Main extends Component {
 			var Dialog = <DialogUnfinished />;
 		}
 		
-		let DialogCode = window.location.hash ? <DialogOverlay>{Dialog}</DialogOverlay> : <div />;
+//		let DialogCode = window.location.hash ? <DialogOverlay>{Dialog}</DialogOverlay> : <div />;
+		let DialogCode = window.location.hash ? Dialog : <div />;
 		let AlertCode = <div />;
 		
 		return (

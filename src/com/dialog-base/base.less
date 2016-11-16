@@ -1,0 +1,64 @@
+
+@import "defs.less";
+
+.dialog-background {
+	background: rgba(0, 0, 0, 0.7);
+
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	
+	z-index: 9999;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.dialog-base {
+	background: @MAJOR_MUTE;
+	color: @MAJOR_DARK;
+	
+	font-size: 1.2em;
+	
+	& > .-header {
+		background: @MAJOR_MUTE_D4;
+		color: @MAJOR_LIGHT;
+
+		& > .-title {
+			font-size: 1.2em;
+			padding: 0.5rem 1rem;
+			
+			font-weight:700;
+		}
+	}
+	& > .-body {
+		margin: 1rem 2rem;
+		
+	}
+	& > .-footer {
+		background: @MAJOR_MUTE_D;
+		color: @MAJOR_DARK;
+		
+		display: flex;
+
+		& > .-button {
+			padding: 0.5rem 2rem;
+			border: 1px solid @MAJOR_MUTE_D;
+			margin: 0.5rem 1rem;
+			
+			font-weight:700;
+		
+			&:hover {
+				background: @MAJOR_COLOR1;
+				color: @MAJOR_LIGHT;
+				border: 1px solid @MAJOR_COLOR1;
+			}
+		}
+		& > .-light {
+			border: 1px solid;
+		}
+	}
+}
