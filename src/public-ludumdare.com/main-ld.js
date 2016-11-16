@@ -8,6 +8,8 @@ import DialogOverlay					from 'com/dialog-overlay/overlay';
 import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
 import DialogLogin						from 'com/dialog-login/login';
 
+//import AlertBase						from 'com/alert-base/base';
+
 import CoreData							from '../core-data/data';
 
 
@@ -19,7 +21,9 @@ class Main extends Component {
 		this.state.root = 1;
 		
 		this.dialogs = {
-			'#user-login': (<DialogLogin />)
+			'#user-login': (<DialogLogin />),
+			'#user-verify': (<DialogLogin />),
+			'#user-register': (<DialogLogin />)
 		};
 		
 		this.getNodeFromLocation(window.location);
@@ -138,19 +142,23 @@ class Main extends Component {
 	}
 	
 	render( props ) {
-		var Dialog = <DialogUnfinished />;		
-		if ( this.dialogs[window.location.hash] ) {
-			Dialog = this.dialogs[window.location.hash];
+		var HashRoot = window.location.hash.split('/',1)[0];
+		if ( this.dialogs[HashRoot] ) {
+			var Dialog = this.dialogs[HashRoot];
+		}
+		else {
+			var Dialog = <DialogUnfinished />;
 		}
 		
 		let DialogCode = window.location.hash ? <DialogOverlay>{Dialog}</DialogOverlay> : <div />;
-		//console.log("paint:", this.state);
+		let AlertCode = <div />;
 		
 		return (
 			<div id="layout">
 				<NavBar />
 				{ this.getView(props) }
 				{ DialogCode }
+				{ AlertCode }
 			</div>
 		);
 	}
