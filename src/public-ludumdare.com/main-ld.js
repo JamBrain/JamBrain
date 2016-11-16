@@ -6,7 +6,7 @@ import ViewSingle						from 'com/view-single/single';
 
 import DialogOverlay					from 'com/dialog-overlay/overlay';
 import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
-import DialogLogin						from 'com/dialog-login/login';
+import DialogLogin						from 'com/dialog-login-orig/login';
 
 //import AlertBase						from 'com/alert-base/base';
 
