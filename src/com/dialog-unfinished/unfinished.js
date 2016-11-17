@@ -2,7 +2,8 @@ import { h, Component } 				from 'preact/preact';
 import DialogBase						from 'com/dialog-base/base';
 
 export default class DialogUnfinished extends Component {
-	constructor() {
+	constructor( props ) {
+		super(props);
 	}
 
 	componentDidMount() {

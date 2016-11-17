@@ -1,7 +1,8 @@
 import { h, Component } from 'preact/preact';
 
 export default class ButtonBase extends Component {
-	constructor() {
+	constructor( props ) {
+		super(props);
 	}
 	
 	render( props ) {

@@ -2,7 +2,9 @@ import { h, Component } 				from 'preact/preact';
 import DialogBase						from 'com/dialog-base/base';
 
 export default class DialogAuth extends Component {
-	constructor() {
+	constructor( props ) {
+		super(props);
+		
 		this.state = {
 			secret: ""
 		};

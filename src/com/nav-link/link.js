@@ -3,6 +3,10 @@ import { h, Component } from 'preact/preact';
 // TODO: Push the state (arg1 of pushShate/replaceState
 
 export default class NavLink extends Component {
+	constructor( props ) {
+		super(props);
+	}
+	
 	dispatchNavChangeEvent( state ) {
 		let that = this.base;
 		let new_event = new CustomEvent('navchange', {

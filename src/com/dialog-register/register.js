@@ -4,7 +4,9 @@ import DialogBase						from 'com/dialog-base/base';
 import LabelYesNo						from 'com/label-yesno/yesno';
 
 export default class DialogRegister extends Component {
-	constructor() {
+	constructor( props ) {
+		super(props);
+		
 		this.state = {
 			mail: ""
 		};

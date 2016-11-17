@@ -8,6 +8,10 @@ function make_url( url ) {
 }
 
 export default class NavBar extends Component {
+	constructor( props ) {
+		super(props);
+	}
+	
 	render( props, state ) {
 		var Search = (
 			<ButtonBase class="-icon" onclick={e => { console.log('search'); window.location.hash = "#search"; }}>

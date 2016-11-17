@@ -3,6 +3,8 @@ import ButtonBase						from 'com/button-base/base';
 
 export default class DialogBase extends Component {
 	constructor( props ) {
+		super(props);
+		
 		this._eventWheel = this.eventWheel.bind(this);
 		this._eventKey = this.eventKey.bind(this);
 //		this._eventFocus = this.eventFocus.bind(this);

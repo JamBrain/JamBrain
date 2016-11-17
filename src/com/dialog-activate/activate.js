@@ -5,6 +5,8 @@ import LabelYesNo						from 'com/label-yesno/yesno';
 
 export default class DialogActivate extends Component {
 	constructor( props ) {
+		super(props);
+		
 		this.state = {
 			name: "",
 			slug: "",
@@ -18,22 +20,21 @@ export default class DialogActivate extends Component {
 	}
 	
 	onNameChange( e ) {
-		this.state.name = e.target.value;
-		this.state.slug = this.getSlug();
-		this.setState(this.state);
+//		this.state.name = e.target.value;
+//		this.state.slug = this.getSlug();
+		this.setState({ name: e.target.value, slug: this.toSlug(e.target.value) });
 	}
 	onPasswordChange( e ) {
-		this.state.password = e.target.value;
-		this.setState(this.state);
+//		this.state.password = e.target.value;
+		this.setState({ password: e.target.value });
 	}
 	onPassword2Change( e ) {
-		this.state.password2 = e.target.value;
-		this.setState(this.state);
+//		this.state.password2 = e.target.value;
+		this.setState({ password2: e.target.value });
 	}
 	
-	getSlug() {
-		var slug = this.state.name.toLowerCase();
-		
+	toSlug( str ) {
+		var slug = str.toLowerCase();
 		return slug;
 	}
 	
