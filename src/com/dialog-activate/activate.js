@@ -6,13 +6,32 @@ import LabelYesNo						from 'com/label-yesno/yesno';
 export default class DialogActivate extends Component {
 	constructor( props ) {
 		super(props);
+
+		// TODO: Show Waiting...
+				
+		// Get activation ID
 		
-		this.state = {
-			name: "",
-			slug: "",
-			password: "",
-			password2: ""
-		};
+		// Lookup ID, and confirm this is a valid activation
+		
+		if ( true ) {
+			this.state = {
+				mail: "bobby@bobby.bo",
+				name: "",
+				slug: "",
+				password: "",
+				password2: ""
+			};
+		}
+		else {
+			this.state = {
+				error: true
+			}
+		}
+
+		// Bind functions (avoiding the need to rebind every render)
+		this.onNameChange = this.onNameChange.bind(this);
+		this.onPasswordChange = this.onPasswordChange.bind(this);
+		this.onPassword2Change = this.onPassword2Change.bind(this);
 	}
 	
 	componentDidMount() {
@@ -20,16 +39,12 @@ export default class DialogActivate extends Component {
 	}
 	
 	onNameChange( e ) {
-//		this.state.name = e.target.value;
-//		this.state.slug = this.getSlug();
 		this.setState({ name: e.target.value, slug: this.toSlug(e.target.value) });
 	}
 	onPasswordChange( e ) {
-//		this.state.password = e.target.value;
 		this.setState({ password: e.target.value });
 	}
 	onPassword2Change( e ) {
-//		this.state.password2 = e.target.value;
 		this.setState({ password2: e.target.value });
 	}
 	
@@ -75,10 +90,10 @@ export default class DialogActivate extends Component {
 		return 1;
 	}
 
-	render( props ) {
+	render( props, { mail, name, slug, password, password2, error } ) {
 		var ErrorMessage = {};//{ error:"There was a problem" };
 
-		if ( false ) {
+		if ( error ) {
 			return (
 				<DialogBase title="Activate Account" ok explicit {...ErrorMessage}>
 					This account can't be activated.
@@ -86,7 +101,7 @@ export default class DialogActivate extends Component {
 			);
 		}
 		
-		// NOTE: There's a Preact bug that the extra <span /> is working around
+		// NOTE: There's a Preact (?) bug that the extra <span /> is working around
 		return (
 			<DialogBase title="Activate Account" ok cancel oktext="Activate" explicit {...ErrorMessage}>
 				<div class="-info">
@@ -96,25 +111,21 @@ export default class DialogActivate extends Component {
 					<strong>Names</strong> let you customize how your <strong>Account Name</strong> looks. You can use case, accents, and simple punctuation. <strong>Account Names</strong> are more strict. <strong>Names</strong> will be converted to <strong>Account Names</strong> by using only lower case letters, numbers, and single dashes.
 				</div>
 				<div>
-					<span /><span class="-label">E-mail:</span><span ref={(input) => this.activateMail = input} id="dialog-activate-mail">bobby@bobby.bob</span>
+					<span /><span class="-label">E-mail:</span><span id="dialog-activate-mail">{mail}</span>
 				</div>
 				<div>
-					<span class="-label">Name:</span><input ref={(input) => this.activateName = input} id="dialog-activate-name" onchange={this.onNameChange.bind(this)} class="-text focusable" type="text" name="username" maxlength="32" value={this.state.name} /><LabelYesNo value={this.isValidName()} />
+					<span class="-label">Name:</span><input ref={(input) => this.activateName = input} id="dialog-activate-name" onchange={this.onNameChange} class="-text focusable" type="text" name="username" maxlength="32" value={name} /><LabelYesNo value={this.isValidName()} />
 				</div>
 				<div>
-					<span class="-label">Account Name:</span><span ref={(input) => this.activateSlug = input} id="dialog-activate-slug"><code>{this.state.slug}</code></span><LabelYesNo value={this.isValidSlug()} />
+					<span class="-label">Account Name:</span><span id="dialog-activate-slug"><code>{slug}</code></span><LabelYesNo value={this.isValidSlug()} />
 				</div>
 				<div>
-					<span class="-label">Password:</span><input ref={(input) => this.activatePassword = input} id="dialog-activate-password" onchange={this.onPasswordChange.bind(this)} class="-text focusable" type="password" name="password" maxlength="64" value={this.state.password} /><LabelYesNo value={this.isValidPassword()} />
+					<span class="-label">Password:</span><input id="dialog-activate-password" onchange={this.onPasswordChange} class="-text focusable" type="password" name="password" maxlength="64" value={password} /><LabelYesNo value={this.isValidPassword()} />
 				</div>
 				<div>
-					<span class="-label">Password Again:</span><input ref={(input) => this.activatePassword2 = input} id="dialog-activate-password2" onchange={this.onPassword2Change.bind(this)} class="-text focusable" type="password" name="password2" maxlength="64" value={this.state.password2} /><LabelYesNo value={this.isValidPassword2()} />
+					<span class="-label">Password Again:</span><input id="dialog-activate-password2" onchange={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxlength="64" value={password2} /><LabelYesNo value={this.isValidPassword2()} />
 				</div>
 			</DialogBase>
 		);
 	}
 }
-
-//				<div class="-info -topline">
-//					Two-factor authentication can be enabled from your <strong>Account Settings</strong>.
-//				</div>

@@ -19,7 +19,9 @@ import CoreData							from '../core-data/data';
 window.LUDUMDARE_ROOT = '/';
 
 class Main extends Component {
-	constructor() {
+	constructor( props ) {
+		super(props);
+		
 		this.state = Object.assign({}, window.history.state ? window.history.state : {});
 		this.state.root = 1;
 		
@@ -137,7 +139,7 @@ class Main extends Component {
 				return <ViewSingle node={this.state.node} />;
 			}
 			else {
-				return <div>unsupported</div>;
+				return <div>Unsupported Node Type: {node.type}</div>;
 			}
 		}
 		else {
@@ -145,7 +147,7 @@ class Main extends Component {
 		}
 	}
 	
-	render( props ) {
+	render( props, {} ) {
 		var HashRoot = window.location.hash.split('/',1)[0];
 		if ( this.dialogs[HashRoot] ) {
 			var Dialog = this.dialogs[HashRoot];

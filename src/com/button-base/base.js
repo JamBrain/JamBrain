@@ -5,7 +5,7 @@ export default class ButtonBase extends Component {
 		super(props);
 	}
 	
-	render( props ) {
+	render( props, {} ) {
 		if ( !props.hasOwnProperty('tabIndex') )
 			props.tabIndex = "0";
 

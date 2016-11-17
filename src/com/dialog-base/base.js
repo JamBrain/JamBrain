@@ -50,6 +50,8 @@ export default class DialogBase extends Component {
 		var el = document.getElementById("dialog-background");
 		
 		if ( el ) {
+			// TODO: Spacebar needs to be ignored, but only if not in an input box
+			
 			var keys_to_disable = [
 				33, 34, 			// PgUp, PgDown
 				35, 36,				// End, Home
@@ -92,7 +94,7 @@ export default class DialogBase extends Component {
 		window.location.hash = "#";
 	}
 	
-	render( props ) {
+	render( props, {} ) {
 		var _Abort = { onclick: e => { this.abort(); }};
 		var Abort = props.explicit ? { explicit:true } : _Abort;
 		var Error = props.error ? (<div class="-error"><strong>Error:</strong> {props.error}</div>) : "";

@@ -9,7 +9,7 @@ export default class DialogUnfinished extends Component {
 	componentDidMount() {
 	}
 	
-	render( props ) {
+	render( props, {} ) {
 		return (
 			<DialogBase title="Unavailable" ok>
 				<div>Sorry. This feature is unavailable at this time.</div>
