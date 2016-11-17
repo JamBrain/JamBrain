@@ -36,7 +36,7 @@ export default class DialogRegister extends Component {
 					Enter an e-mail address to begin creating an account.
 				</div>
 				<div>
-					<span /><span class="-label">E-mail:</span><input ref={(input) => this.registerMail = input} onchange={this.onChange.bind(this)} class="-text" type="text" name="email" /><LabelYesNo value={this.validateMail(this.state.mail) ? 1 : -1} />
+					<span /><span class="-label">E-mail:</span><input ref={(input) => this.registerMail = input} id="dialog-register-mail" onchange={this.onChange.bind(this)} class="-text focusable" type="text" name="email" /><LabelYesNo value={this.validateMail(this.state.mail) ? 1 : -1} />
 				</div>
 				<div class="-info -topline">
 					Expect an activation e-mail from <code>hello@jammer.vg</code>.

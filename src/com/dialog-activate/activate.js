@@ -98,16 +98,16 @@ export default class DialogActivate extends Component {
 					<span /><span class="-label">E-mail:</span><span ref={(input) => this.activateMail = input} id="dialog-activate-mail">bobby@bobby.bob</span>
 				</div>
 				<div>
-					<span class="-label">Name:</span><input ref={(input) => this.activateName = input} id="dialog-activate-name" onchange={this.onNameChange.bind(this)} class="-text tabbable" type="text" name="username" maxlength="32" value={this.state.name} /><LabelYesNo value={this.isValidName()} />
+					<span class="-label">Name:</span><input ref={(input) => this.activateName = input} id="dialog-activate-name" onchange={this.onNameChange.bind(this)} class="-text focusable" type="text" name="username" maxlength="32" value={this.state.name} /><LabelYesNo value={this.isValidName()} />
 				</div>
 				<div>
 					<span class="-label">Account Name:</span><span ref={(input) => this.activateSlug = input} id="dialog-activate-slug"><code>{this.state.slug}</code></span><LabelYesNo value={this.isValidSlug()} />
 				</div>
 				<div>
-					<span class="-label">Password:</span><input ref={(input) => this.activatePassword = input} id="dialog-activate-password" onchange={this.onPasswordChange.bind(this)} class="-text tabbable" type="password" name="password" maxlength="64" value={this.state.password} /><LabelYesNo value={this.isValidPassword()} />
+					<span class="-label">Password:</span><input ref={(input) => this.activatePassword = input} id="dialog-activate-password" onchange={this.onPasswordChange.bind(this)} class="-text focusable" type="password" name="password" maxlength="64" value={this.state.password} /><LabelYesNo value={this.isValidPassword()} />
 				</div>
 				<div>
-					<span class="-label">Password Again:</span><input ref={(input) => this.activatePassword2 = input} id="dialog-activate-password2" onchange={this.onPassword2Change.bind(this)} class="-text tabbable" type="password" name="password2" maxlength="64" value={this.state.password2} /><LabelYesNo value={this.isValidPassword2()} />
+					<span class="-label">Password Again:</span><input ref={(input) => this.activatePassword2 = input} id="dialog-activate-password2" onchange={this.onPassword2Change.bind(this)} class="-text focusable" type="password" name="password2" maxlength="64" value={this.state.password2} /><LabelYesNo value={this.isValidPassword2()} />
 				</div>
 			</DialogBase>
 		);

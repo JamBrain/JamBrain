@@ -8,8 +8,8 @@ export default class DialogBase extends Component {
 //		this._eventFocus = this.eventFocus.bind(this);
 	}
 	
-	getTabbable() {
-		return document.getElementsByClassName("tabbable");
+	getFocusable() {
+		return document.getElementsByClassName("focusable");
 	}
 
 	componentDidMount() {
@@ -33,16 +33,16 @@ export default class DialogBase extends Component {
 		}
 	}
 	
-	eventFocus( e ) {
-		if ( document.getElementById("dialog-background") ) {
-			var tabbable = this.getTabbable();
-			
-			if ( !tabbable[document.activeElement.id] ) {
-				e.preventDefault();
-				tabbable[0].focus();					
-			}
-		}
-	}
+//	eventFocus( e ) {
+//		if ( document.getElementById("dialog-background") ) {
+//			var focusable = this.getFocusable();
+//			
+//			if ( !focusable[document.activeElement.id] ) {
+//				e.preventDefault();
+//				focusable[0].focus();					
+//			}
+//		}
+//	}
 	
 	eventKey( e ) {
 		var el = document.getElementById("dialog-background");
@@ -60,20 +60,20 @@ export default class DialogBase extends Component {
 			}
 			// Tab
 			else if ( e.keyCode == 9 ) {
-				var tabbable = this.getTabbable();
+				var focusable = this.getFocusable();
 				var active = document.activeElement.id;
 				
-				if ( !tabbable[active] ) {
+				if ( !focusable[active] ) {
 					e.preventDefault();
-					tabbable[0].focus();					
+					focusable[0].focus();					
 				}
-				else if ( tabbable[active] == tabbable[tabbable.length-1] && !e.shiftKey ) {
+				else if ( focusable[active] == focusable[focusable.length-1] && !e.shiftKey ) {
 					e.preventDefault();
-					tabbable[0].focus();
+					focusable[0].focus();
 				}
-				else if ( tabbable[active] == tabbable[0] && e.shiftKey ) {
+				else if ( focusable[active] == focusable[0] && e.shiftKey ) {
 					e.preventDefault();
-					tabbable[tabbable.length-1].focus();
+					focusable[focusable.length-1].focus();
 				}			
 			}
 			// ESC key
@@ -100,11 +100,11 @@ export default class DialogBase extends Component {
 		
 		if ( props.ok ) {
 			let Click = props.onclick ? { onclick: props.onclick } : (props.cancel ? {} : _Abort);
-			ShowButtonOK = <ButtonBase class="-button -light tabbable" id="dialog-button-ok" ref={(input) => this.buttonOK = input} {...Click}>{props.oktext ? props.oktext : "OK"}</ButtonBase>;
+			ShowButtonOK = <ButtonBase class="-button -light focusable" id="dialog-button-ok" ref={(input) => this.buttonOK = input} {...Click}>{props.oktext ? props.oktext : "OK"}</ButtonBase>;
 		}
 		if ( props.cancel ) {
 			let Click = props.oncancel ? { onclick: props.oncancel } : _Abort;
-			ShowButtonCancel = <ButtonBase class="-button tabbable" id="dialog-button-cancel" ref={(input) => this.buttonCancel = input} {...Click}>{props.canceltext ? props.canceltext : "Cancel"}</ButtonBase>;
+			ShowButtonCancel = <ButtonBase class="-button focusable" id="dialog-button-cancel" ref={(input) => this.buttonCancel = input} {...Click}>{props.canceltext ? props.canceltext : "Cancel"}</ButtonBase>;
 		}
 
 		return (
