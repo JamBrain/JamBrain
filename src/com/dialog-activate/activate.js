@@ -5,7 +5,6 @@ import LabelYesNo						from 'com/label-yesno/yesno';
 
 export default class DialogActivate extends Component {
 	constructor( props ) {
-		console.log("prop",props);
 		this.state = {
 			name: "",
 			slug: "",

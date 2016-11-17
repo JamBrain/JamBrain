@@ -1,12 +1,29 @@
 import { h, Component } 				from 'preact/preact';
 import DialogBase						from 'com/dialog-base/base';
 
+import LabelYesNo						from 'com/label-yesno/yesno';
+
 export default class DialogRegister extends Component {
 	constructor() {
+		this.state = {
+			mail: ""
+		};
 	}
 	
 	componentDidMount() {
 		this.registerMail.focus();
+	}
+	
+	validateMail( mail ) {
+		// http://stackoverflow.com/a/9204568/5678759
+		//return /\S+@\S+\.\S+/.test(mail);
+		//return /[^\s@]+@[^\s@]+\.[^\s@]+/.test(mail);
+		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
+	}
+
+	onChange( e ) {
+		this.state.mail = e.target.value;
+		this.setState(this.state);
 	}
 
 	render( props ) {
@@ -19,7 +36,7 @@ export default class DialogRegister extends Component {
 					Enter an e-mail address to begin creating an account.
 				</div>
 				<div>
-					<span /><span class="-label">E-mail:</span><input ref={(input) => this.registerMail = input} class="-text" type="text" name="email" />
+					<span /><span class="-label">E-mail:</span><input ref={(input) => this.registerMail = input} onchange={this.onChange.bind(this)} class="-text" type="text" name="email" /><LabelYesNo value={this.validateMail(this.state.mail) ? 1 : -1} />
 				</div>
 				<div class="-info -topline">
 					Expect an activation e-mail from <code>hello@jammer.vg</code>.
