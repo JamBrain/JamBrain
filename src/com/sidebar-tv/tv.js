@@ -2,7 +2,9 @@ import { h, Component } from 'preact/preact';
 import SVGIcon 			from 'com/svg-icon/icon';
 
 export default class SidebarTV extends Component {
-	constructor() {
+	constructor( props ) {
+		super(props);
+		
 		this.state = {
 			active: 0,
 			streams: []
@@ -20,7 +22,7 @@ export default class SidebarTV extends Component {
 	}
 	
 	componentDidMount() {
-		fetch('//direct.jammer.tv/v1/live.php/ludum-dare+game-jam+game-dev/')//,{mode:'no-cors'})
+		fetch('//jammer.tv/v1/live.php/ludum-dare+game-jam+game-dev/')//,{mode:'no-cors'})
 			.then( r => r.json() )
 			.then( data => {
 				let state_copy = this.state;
@@ -30,10 +32,10 @@ export default class SidebarTV extends Component {
 			});
 	}
 	
-	setActive( id, ev ) {
-		let state_copy = this.state;
-		state_copy.active = id;
-		this.setState(state_copy);
+	setActive( id, e ) {
+//		let state_copy = this.state;
+//		state_copy.active = id;
+		this.setState({ active: id });
 	}
 	
 	showOthers( others, active ) {
@@ -41,10 +43,18 @@ export default class SidebarTV extends Component {
 		
 		return others.map( function(other,index) {
 			if (other === active) {
-				return (<div class="selected" onclick={that.setActive.bind(that,index)}><div><img src={other.meta.thumbnail} /></div></div>);
+				return (
+					<div class="selected" onclick={that.setActive.bind(that,index)}>
+						<div><img src={other.meta.thumbnail} /></div>
+					</div>
+				);
 			}
 			else {
-				return (<div onclick={that.setActive.bind(that,index)}><div><img src={other.meta.thumbnail} /></div></div>);
+				return (
+					<div onclick={that.setActive.bind(that,index)}>
+						<div><img src={other.meta.thumbnail} /></div>
+					</div>
+				);
 			}
 		});
 	}
@@ -74,14 +84,16 @@ export default class SidebarTV extends Component {
 						<div class="-viewers"><SVGIcon baseline>tv</SVGIcon> <span class="-text">{active.viewers}</span></div>
 						<div class="-play"><SVGIcon>play</SVGIcon></div>
 					</div>
-					<div class="-detail" title={active.meta.status}><SVGIcon top>quotes-left</SVGIcon><SVGIcon bottom>quotes-right</SVGIcon><div>{active.meta.status}</div></div>
+					<div class="-detail" title={active.meta.status}>
+						<SVGIcon top>quotes-left</SVGIcon>
+						<SVGIcon bottom>quotes-right</SVGIcon>
+						<div>{active.meta.status}</div>
+					</div>
 					<div class="-browse">
 						{this.showOthers(others,active)}
 					</div>
 				</div>
 			);
-			
-			// detail: <div class="-fader" />
 		}
 	}
 }
