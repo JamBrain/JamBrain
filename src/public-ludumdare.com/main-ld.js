@@ -4,7 +4,6 @@ import NavBar 							from 'com/nav-bar/bar';
 import ViewTimeline						from 'com/view-timeline/timeline';
 import ViewSingle						from 'com/view-single/single';
 
-import DialogOverlay					from 'com/dialog-overlay/overlay';
 import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
 import DialogLogin						from 'com/dialog-login/login';
 import DialogRegister					from 'com/dialog-register/register';
@@ -156,7 +155,6 @@ class Main extends Component {
 			var Dialog = <DialogUnfinished />;
 		}
 		
-//		let DialogCode = window.location.hash ? <DialogOverlay>{Dialog}</DialogOverlay> : <div />;
 		let DialogCode = window.location.hash ? Dialog : <div />;
 		let AlertCode = <div />;
 		

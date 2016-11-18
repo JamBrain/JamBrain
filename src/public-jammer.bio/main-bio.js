@@ -1,5 +1,4 @@
 import { h, render, Component }			from 'preact/preact';
-import DialogOverlay						from 'com/dialog-overlay/overlay';
 import ContentPost						from 'com/content-post/post';
 
 class Main extends Component {
@@ -26,7 +25,5 @@ class Main extends Component {
 		);
 	}
 };
-
-//				<DialogOverlay />
 
 render(<Main />, document.body);
