@@ -17,3 +17,18 @@ global_AddTableConstant(
 	'SH_TABLE_USER_STRIKE',
 	'SH_TABLE_USER_MAIL'
 );
+
+global_AddReservedName(
+	'users',
+	'user',
+	'administrators',
+	'administrator',
+	'admins',
+	'admin',
+	'moderators',
+	'moderator',
+	'mods',
+	'mod',
+	'anonymous',
+	'anon'
+);

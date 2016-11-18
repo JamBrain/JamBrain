@@ -2,28 +2,28 @@ import { h, Component }					from 'preact/preact';
 
 import ContentPost						from 'com/content-post/post';
 
-import SidebarCalendar					from 'com/sidebar-calendar/calendar';
-import SidebarUpcoming					from 'com/sidebar-upcoming/upcoming';
-import SidebarTV						from 'com/sidebar-tv/tv';
-import SidebarTrending					from 'com/sidebar-trending/trending';
-import SidebarSupport					from 'com/sidebar-support/support';
+import ViewSidebar						from 'com/view-sidebar/sidebar';
 
 import CoreData							from '../../core-data/data';
 
 export default class ViewTimeline extends Component {
 	constructor() {
 		this.state = {};
+		this.state.node = 1;
 		this.state.feed = [10,11,12,13];
 	}
 	
-	getItems( props, state ) {
-		CoreData.preFetchItemWithAuthorById( state.feed );
+	getNodes( props ) {
+		CoreData.preFetchNodeWithAuthorById( this.state.feed );
 		
-		return state.feed.map(function(item) {
-			var item_type = CoreData.getItemTypeById(item);
+		// TODO: create titles depending on type (mainly the root node should be just the domain) //
+		document.title = titleParser.parse(CoreData.getNodeNameById(this.state.node), true) + " | " + window.location.host;
+		
+		return this.state.feed.map(function(node) {
+			var node_type = CoreData.getNodeTypeById(node);
 			
-			if ( item_type === 'post' ) {
-				return <ContentPost item={item} />;
+			if ( node_type === 'post' ) {
+				return <ContentPost node={node} />;
 			}
 			else {
 				return <div>null</div>;
@@ -31,19 +31,14 @@ export default class ViewTimeline extends Component {
 		});
 	}
 	
-	render( props, state ) {
+	render( props ) {
 		// content-sidebar should be #body
 		return (
 			<div class="view-timeline">
 				<div id="header" />
 				<div id="content-sidebar">
-					<div id="content">{ this.getItems(props,state) }</div>
-					<div id="sidebar">
-						<SidebarCalendar />
-						<SidebarUpcoming />
-						<SidebarTV />
-						<SidebarSupport />
-					</div>
+					<div id="content">{ this.getNodes(props) }</div>
+					<ViewSidebar />
 				</div>
 				<div id="footer">Timeline</div>
 			</div>

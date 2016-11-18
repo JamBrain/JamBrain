@@ -15,11 +15,11 @@ export default class ButtonLink extends NavLink {
 				props.rel = "noopener noreferrer";
 			}
 			else if ( props.replace ) {
-				doHistory = this.onClickReplace;
+				doHistory = this.onClickReplace.bind(this);
 				delete props.replace;
 			}
 			else {
-				doHistory = this.onClickPush;
+				doHistory = this.onClickPush.bind(this);
 			}
 		}
 

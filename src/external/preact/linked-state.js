@@ -1,4 +1,4 @@
-import { empty, isString, isFunction, delve } from './util';
+import { isString, delve } from './util';
 
 /** Create an Event handler function that sets a given state property.
  *	@param {Component} component	The component whose state should be updated
@@ -8,31 +8,17 @@ import { empty, isString, isFunction, delve } from './util';
  *	@private
  */
 export function createLinkedState(component, key, eventPath) {
-	let path = key.split('.'),
-		p0 = path[0],
-		len = path.length;
+	let path = key.split('.');
 	return function(e) {
-		let t = e && e.currentTarget || this,
-			s = component.state,
-			obj = s,
-			v, i;
-		if (isString(eventPath)) {
-			v = delve(e, eventPath);
-			if (empty(v) && (t=t._component)) {
-				v = delve(t, eventPath);
-			}
+		let t = e && e.target || this,
+			state = {},
+			obj = state,
+			v = isString(eventPath) ? delve(e, eventPath) : t.nodeName ? (t.type.match(/^che|rad/) ? t.checked : t.value) : e,
+			i = 0;
+		for ( ; i<path.length-1; i++) {
+			obj = obj[path[i]] || (obj[path[i]] = !i && component.state[path[i]] || {});
 		}
-		else {
-			v = (t.nodeName+t.type).match(/^input(check|rad)/i) ? t.checked : t.value;
-		}
-		if (isFunction(v)) v = v.call(t);
-		if (len>1) {
-			for (i=0; i<len-1; i++) {
-				obj = obj[path[i]] || (obj[path[i]] = {});
-			}
-			obj[path[i]] = v;
-			v = s[p0];
-		}
-		component.setState({ [p0]: v });
+		obj[path[i]] = v;
+		component.setState(state);
 	};
 }

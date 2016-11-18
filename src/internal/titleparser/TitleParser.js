@@ -22,28 +22,44 @@
 			del:this.makeDel,
 			code:this.makeCode,
 		}
+		
+		this.strip_funcs = {
+			italic:this.nop,
+			bold:this.nop,
+			italic_bold:this.nop,
+			del:this.nop,
+			code:this.nop,
+		}
 	}
 	
-	TitleParser.prototype.makeBold = function(str) {
+	TitleParser.prototype.makeBold = function( str ) {
 		return '<strong>'+str+'</strong>';
 	}
-	TitleParser.prototype.makeItalic = function(str) {
+	TitleParser.prototype.makeItalic = function( str ) {
 		return '<em>'+str+'</em>';
 	}
-	TitleParser.prototype.makeItalicBold = function(str) {
+	TitleParser.prototype.makeItalicBold = function( str ) {
 		return '<em><strong>'+str+'</strong></em>';
 	}
-	TitleParser.prototype.makeDel = function(str) {
+	TitleParser.prototype.makeDel = function( str ) {
 		return '<del>'+str+'</del>';
 	}
-	TitleParser.prototype.makeCode = function(str) {
+	TitleParser.prototype.makeCode = function( str ) {
 		// Doesn't actually make code. Used to make it ignore styles. //
+		return str;
+	}
+	TitleParser.prototype.nop = function( str ) {
 		return str;
 	}
 	
 	// Barebones markdown parser for titles. Only parses inline text styles (bold, italics, etc) //
-	TitleParser.prototype.parse = function(str) {
+	TitleParser.prototype.parse = function( str, strip ) {
 		var out = "";
+		
+		var funcs = this.style_funcs;
+		if ( strip ) {
+			funcs = this.strip_funcs;
+		}
 		
 		while (str.length > 0) {
 			var pos = str.search(this.next_token);
@@ -59,7 +75,7 @@
 				for ( var sty in this.styles ) {
 					str.replace(this.styles[sty],function(match,p1,p2,offset){
 						// Some regexes have 2 possible matches, and we sometimes use the 1st for start+ends //
-						out += this.style_funcs[sty](p2 || p1);
+						out += funcs[sty](p2 || p1);
 						str = str.slice(match.length);
 						matched = true;
 					}.bind(this));

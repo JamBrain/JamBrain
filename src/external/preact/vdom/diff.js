@@ -1,15 +1,32 @@
 import { ATTR_KEY } from '../constants';
-import { toLowerCase, empty, isString, isFunction } from '../util';
-import { hook, deepHook } from '../hooks';
+import { isString, isFunction } from '../util';
 import { isSameNodeType, isNamedNode } from './index';
 import { isFunctionalComponent, buildFunctionalComponent } from './functional-component';
 import { buildComponentFromVNode } from './component';
-import { removeNode, setAccessor, getRawNodeAttributes, getNodeType } from '../dom/index';
+import { setAccessor } from '../dom/index';
 import { createNode, collectNode } from '../dom/recycler';
 import { unmountComponent } from './component';
+import options from '../options';
 
+
+/** Diff recursion count, used to track the end of the diff cycle. */
+export const mounts = [];
+
+/** Diff recursion count, used to track the end of the diff cycle. */
+export let diffLevel = 0;
 
 let isSvgMode = false;
+
+let hydrating = false;
+
+
+export function flushMounts() {
+	let c;
+	while ((c=mounts.pop())) {
+		if (options.afterMount) options.afterMount(c);
+		if (c.componentDidMount) c.componentDidMount();
+	}
+}
 
 
 /** Apply differences in a given vnode (and it's deep children) to a real DOM Node.
@@ -18,40 +35,57 @@ let isSvgMode = false;
  *	@returns {Element} dom			The created/mutated element
  *	@private
  */
-export function diff(dom, vnode, context, mountAll, unmountChildrenOnly) {
-	let originalAttributes = vnode.attributes;
+export function diff(dom, vnode, context, mountAll, parent, componentRoot) {
+	if (!diffLevel++) {
+		isSvgMode = parent instanceof SVGElement;
+		hydrating = dom && !(ATTR_KEY in dom);
+	}
+	let ret = idiff(dom, vnode, context, mountAll);
+	if (parent && ret.parentNode!==parent) parent.appendChild(ret);
+	if (!--diffLevel) {
+		hydrating = false;
+		if (!componentRoot) flushMounts();
+	}
+	return ret;
+}
+
+
+function idiff(dom, vnode, context, mountAll) {
+	let originalAttributes = vnode && vnode.attributes;
 
 	while (isFunctionalComponent(vnode)) {
 		vnode = buildFunctionalComponent(vnode, context);
 	}
 
+	if (vnode==null) vnode = '';
+
 	if (isString(vnode)) {
-		if (dom) {
-			if (getNodeType(dom)===3) {
-				if (dom.nodeValue!==vnode) {
-					dom.nodeValue = vnode;
-				}
-				return dom;
+
+		if (dom && dom instanceof Text) {
+			if (dom.nodeValue!=vnode) {
+				dom.nodeValue = vnode;
 			}
-			if (!unmountChildrenOnly) collectNode(dom);
 		}
-		return document.createTextNode(vnode);
+		else {
+			if (dom) recollectNodeTree(dom);
+			dom = document.createTextNode(vnode);
+		}
+		dom[ATTR_KEY] = true;
+		return dom;
+
+	}
+
+	if (isFunction(vnode.nodeName)) {
+		return buildComponentFromVNode(dom, vnode, context, mountAll);
 	}
 
 	let out = dom,
-		nodeName = vnode.nodeName,
-		svgMode;
+		nodeName = String(vnode.nodeName),
+		prevSvgMode = isSvgMode,
+		vchildren = vnode.children;
 
-	if (isFunction(nodeName)) {
-		return buildComponentFromVNode(dom, vnode, context, mountAll);
-	}
-	if (!isString(nodeName)) {
-		nodeName = String(nodeName);
-	}
 
-	svgMode = toLowerCase(nodeName)==='svg';
-
-	if (svgMode) isSvgMode = true;
+	isSvgMode = nodeName==='svg' ? true : nodeName==='foreignObject' ? false : isSvgMode;
 
 	if (!dom) {
 		out = createNode(nodeName, isSvgMode);
@@ -61,42 +95,37 @@ export function diff(dom, vnode, context, mountAll, unmountChildrenOnly) {
 		// move children into the replacement node
 		while (dom.firstChild) out.appendChild(dom.firstChild);
 		// reclaim element nodes
-		if (!unmountChildrenOnly) recollectNodeTree(dom);
+		recollectNodeTree(dom);
 	}
 
-	diffNode(out, vnode.children, context, mountAll);
 
-	diffAttributes(out, vnode.attributes);
-
-	if (originalAttributes && originalAttributes.ref) {
-		(out[ATTR_KEY].ref = originalAttributes.ref)(out);
+	let fc = out.firstChild,
+		props = out[ATTR_KEY];
+	if (!props) {
+		out[ATTR_KEY] = props = {};
+		for (let a=out.attributes, i=a.length; i--; ) props[a[i].name] = a[i].value;
 	}
 
-	if (svgMode) isSvgMode = false;
+	diffAttributes(out, vnode.attributes, props);
+
+
+	// fast-path for elements containing a single TextNode:
+	if (!hydrating && vchildren && vchildren.length===1 && typeof vchildren[0]==='string' && fc instanceof Text && !fc.nextSibling) {
+		if (fc.nodeValue!=vchildren[0]) {
+			fc.nodeValue = vchildren[0];
+		}
+	}
+	else if (vchildren && vchildren.length || fc) {
+		innerDiffNode(out, vchildren, context, mountAll);
+	}
+
+	if (originalAttributes && typeof originalAttributes.ref==='function') {
+		(props.ref = originalAttributes.ref)(out);
+	}
+
+	isSvgMode = prevSvgMode;
 
 	return out;
-}
-
-
-/** Morph a DOM node to look like the given VNode. Creates DOM if it doesn't exist. */
-function diffNode(dom, vchildren, context, mountAll) {
-	let firstChild = dom.firstChild;
-	if (vchildren && vchildren.length===1 && typeof vchildren[0]==='string' && firstChild instanceof Text && dom.childNodes.length===1) {
-		firstChild.nodeValue = vchildren[0];
-	}
-	else if (vchildren || firstChild) {
-		innerDiffNode(dom, vchildren, context, mountAll);
-	}
-
-}
-
-
-function getKey(child) {
-	let c = child._component;
-	if (c) return c.__key;
-
-	let data = child[ATTR_KEY];
-	if (data) return data.key;
 }
 
 
@@ -110,17 +139,18 @@ function innerDiffNode(dom, vchildren, context, mountAll) {
 		len = originalChildren.length,
 		childrenLen = 0,
 		vlen = vchildren && vchildren.length,
-		j, c;
+		j, c, vchild, child;
 
 	if (len) {
 		for (let i=0; i<len; i++) {
 			let child = originalChildren[i],
-				key = getKey(child);
-			if ((key || key===0) && vlen) {
+				props = child[ATTR_KEY],
+				key = vlen ? ((c = child._component) ? c.__key : props ? props.key : null) : null;
+			if (key!=null) {
 				keyedLen++;
 				keyed[key] = child;
 			}
-			else {
+			else if (hydrating || props) {
 				children[childrenLen++] = child;
 			}
 		}
@@ -128,25 +158,24 @@ function innerDiffNode(dom, vchildren, context, mountAll) {
 
 	if (vlen) {
 		for (let i=0; i<vlen; i++) {
-			let vchild = vchildren[i],
-				child = null;
+			vchild = vchildren[i];
+			child = null;
 
 			// if (isFunctionalComponent(vchild)) {
 			// 	vchild = buildFunctionalComponent(vchild);
 			// }
 
 			// attempt to find a node based on key matching
-			if (keyedLen && vchild.attributes) {
-				let key = vchild.key;
-				if (!empty(key) && key in keyed) {
+			let key = vchild.key;
+			if (key!=null) {
+				if (keyedLen && key in keyed) {
 					child = keyed[key];
 					keyed[key] = undefined;
 					keyedLen--;
 				}
 			}
-
 			// attempt to pluck a node of the same type from the existing children
-			if (!child && min<childrenLen) {
+			else if (!child && min<childrenLen) {
 				for (j=min; j<childrenLen; j++) {
 					c = children[j];
 					if (c && isSameNodeType(c, vchild)) {
@@ -157,35 +186,24 @@ function innerDiffNode(dom, vchildren, context, mountAll) {
 						break;
 					}
 				}
+				if (!child && min<childrenLen && isFunction(vchild.nodeName) && mountAll) {
+					child = children[min];
+					children[min++] = undefined;
+				}
 			}
 
 			// morph the matched/found/created DOM child to match vchild (deep)
-			child = diff(child, vchild, context, mountAll);
+			child = idiff(child, vchild, context, mountAll);
 
-			c = (mountAll || child.parentNode!==dom) && child._component;
-
-			if (c) deepHook(c, 'componentWillMount');
-
-			let next = originalChildren[i];
-			if (next!==child && originalChildren[i+1]!==child) {
-				if (next) {
-					dom.insertBefore(child, next);
-				}
-				else {
-					dom.appendChild(child);
-				}
+			if (child && child!==dom && child!==originalChildren[i]) {
+				dom.insertBefore(child, originalChildren[i] || null);
 			}
-
-			if (c) deepHook(c, 'componentDidMount');
 		}
 	}
 
 
 	if (keyedLen) {
-		/*eslint guard-for-in:0*/
-		for (let i in keyed) if (keyed[i]) {
-			children[min=childrenLen++] = keyed[i];
-		}
+		for (let i in keyed) if (keyed[i]) recollectNodeTree(keyed[i]);
 	}
 
 	// remove orphaned children
@@ -198,9 +216,8 @@ function innerDiffNode(dom, vchildren, context, mountAll) {
 /** Reclaim children that were unreferenced in the desired VTree */
 export function removeOrphanedChildren(children, unmountOnly) {
 	for (let i=children.length; i--; ) {
-		let child = children[i];
-		if (child) {
-			recollectNodeTree(child, unmountOnly);
+		if (children[i]) {
+			recollectNodeTree(children[i], unmountOnly);
 		}
 	}
 }
@@ -212,47 +229,37 @@ export function recollectNodeTree(node, unmountOnly) {
 	// Currently it *does* remove them. Discussion: https://github.com/developit/preact/issues/39
 	//if (!node[ATTR_KEY]) return;
 
-	let attrs = node[ATTR_KEY];
-	if (attrs) hook(attrs, 'ref', null);
-
 	let component = node._component;
 	if (component) {
 		unmountComponent(component, !unmountOnly);
 	}
 	else {
-		if (!unmountOnly) {
-			if (getNodeType(node)!==1) {
-				removeNode(node);
-				return;
-			}
+		if (node[ATTR_KEY] && node[ATTR_KEY].ref) node[ATTR_KEY].ref(null);
 
+		if (!unmountOnly) {
 			collectNode(node);
 		}
 
-		let c = node.childNodes;
-		if (c && c.length) {
-			removeOrphanedChildren(c, unmountOnly);
+		if (node.childNodes && node.childNodes.length) {
+			removeOrphanedChildren(node.childNodes, unmountOnly);
 		}
 	}
 }
 
 
 /** Apply differences in attributes from a VNode to the given DOM Node. */
-function diffAttributes(dom, attrs) {
-	let old = dom[ATTR_KEY] || getRawNodeAttributes(dom);
-
-	// removeAttributes(dom, old, attrs || EMPTY);
+function diffAttributes(dom, attrs, old) {
 	for (let name in old) {
-		if (!attrs || !(name in attrs)) {
-			setAccessor(dom, name, null, isSvgMode);
+		if (!(attrs && name in attrs) && old[name]!=null) {
+			setAccessor(dom, name, old[name], old[name] = undefined, isSvgMode);
 		}
 	}
 
 	// new & updated
 	if (attrs) {
 		for (let name in attrs) {
-			if (!(name in old) || attrs[name]!=(name==='value' || name==='selected' || name==='checked' ? dom[name] : old[name])) {
-				setAccessor(dom, name, attrs[name], isSvgMode);
+			if (name!=='children' && name!=='innerHTML' && (!(name in old) || attrs[name]!==(name==='value' || name==='checked' ? dom[name] : old[name]))) {
+				setAccessor(dom, name, old[name], old[name] = attrs[name], isSvgMode);
 			}
 		}
 	}

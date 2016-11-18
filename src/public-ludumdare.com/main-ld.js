@@ -4,24 +4,40 @@ import NavBar 							from 'com/nav-bar/bar';
 import ViewTimeline						from 'com/view-timeline/timeline';
 import ViewSingle						from 'com/view-single/single';
 
+import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
+import DialogLogin						from 'com/dialog-login/login';
+import DialogRegister					from 'com/dialog-register/register';
+import DialogActivate					from 'com/dialog-activate/activate';
+import DialogAuth						from 'com/dialog-auth/auth';
+
+//import AlertBase						from 'com/alert-base/base';
+
 import CoreData							from '../core-data/data';
 
 
 window.LUDUMDARE_ROOT = '/';
 
 class Main extends Component {
-	constructor() {
-		this.state = {
-			root: 1,
-			active: 1,
+	constructor( props ) {
+		super(props);
+		
+		this.state = Object.assign({}, window.history.state ? window.history.state : {});
+		this.state.root = 1;
+		
+		this.dialogs = {
+			'#user-login': (<DialogLogin />),
+			'#user-activate': (<DialogActivate />),
+			'#user-register': (<DialogRegister />),
+			'#user-auth': (<DialogAuth />)
 		};
 		
-		this.setActive(window.location);
+		this.getNodeFromLocation(window.location);
 
 		// Bind Events to handle future changes //
 		var that = this;
-		window.addEventListener('hashchange',that.onHashChange.bind(that));
-		window.addEventListener('navchange',that.onNavChange.bind(that));
+		window.addEventListener('hashchange', that.onHashChange.bind(that));
+		window.addEventListener('navchange', that.onNavChange.bind(that));
+		window.addEventListener('popstate', that.onPopState.bind(that));
 	}
 
 	makeSlug( str ) {
@@ -47,57 +63,82 @@ class Main extends Component {
 		return str.replace(/^\/|\/$/g,'');
 	}
 		
-	setActive( whom ) {
-		// Clean the URL //
+	getNodeFromLocation( location ) {
+		// Clean the URL
 		var clean = {
-			pathname: this.makeClean(whom.pathname),
-			search: whom.search,
-			hash: this.makeClean(whom.hash),
+			pathname: this.makeClean(location.pathname),
+			search: location.search,
+			hash: this.makeClean(location.hash),
 		}
-		var clean_path = clean.pathname+clean.search+clean.hash;
-		
-		// If current URL is unclean, replace it //
-		if ( whom.pathname !== clean.pathname || whom.hash !== clean.hash ) {
-			window.history.replaceState( null, null, clean_path );
-		}
-		
-		// Parse the clean URL //
+		if ( clean.hash == "#" )
+			clean.hash = "";
+
+		var clean_path = clean.pathname + clean.search + clean.hash;
+
+		// Parse the clean URL
 		var slugs = this.trimSlashes(clean.pathname).split('/');
 		
-		// Figure out what our active page_id actually is //
-		this.state.active = CoreData.getItemIdByParentAndSlugs( this.state.root, slugs );
+		// Figure out what the active node actually is
+		this.state.node = parseInt(CoreData.getNodeIdByParentAndSlugs(this.state.root, slugs));
+		
+		// Store the state, and cleaned URL
+		console.log('replaceState', this.state);
+		window.history.replaceState(this.state, null, clean_path);
 	}
-
+	
+	// *** //
 	
 	componentDidMount() {
 		// Startup //
 	}
 	
-	onHashChange() {
-		let state = this.state;
+	// *** //
+	
+	// Hash Changes are automatically differences
+	onHashChange( e ) {
+		console.log("hashchange: ", e);
 		
-		this.setState(state);
+		this.getNodeFromLocation(window.location);
+		this.setState(this.state);
+		
+		// Don't set scroll, since we're an overlay
 	}
+	// When we navigate by clicking forward
 	onNavChange( e ) {
-		//console.log( e.detail.href, e.detail.old.href );
-		if ( e.detail.href !== e.detail.old.href ) {
-			this.setActive(e.detail);
+		if ( e.detail.location.href !== e.detail.old.href ) {
+			console.log("navchange: ", e.detail);
+
+			this.getNodeFromLocation(e.detail.location);
 			this.setState(this.state);
+			
+			// Scroll to top
+			window.scrollTo(0, 0);
+		}
+	}
+	// When we navigate using back/forward buttons
+	onPopState( e ) {
+		// NOTE: This is sometimes called on a HashChange with a null state
+		if ( e.state ) {
+			console.log("popstate: ", e);
+	
+			this.setState(e.state);
+			
+			window.scrollTo(parseFloat(e.state.top), parseFloat(e.state.left));
 		}
 	}
 	
-	getView( props, state ) {
-		if ( state.active ) {
-			var item = CoreData.getItemById( state.active );
+	getView( props ) {
+		if ( this.state.node ) {
+			var node = CoreData.getNodeById( this.state.node );
 	
-			if ( item.type === 'root' ) {
-				return <ViewTimeline item={state.active} />;
+			if ( node.type === 'roots' ) {
+				return <ViewTimeline node={this.state.node} />;
 			}
-			else if ( item.type === 'post' || item.type === 'game' || item.type === 'user' ) {
-				return <ViewSingle item={state.active} />;
+			else if ( node.type === 'post' || node.type === 'game' || node.type === 'user' ) {
+				return <ViewSingle node={this.state.node} />;
 			}
 			else {
-				return <div>unsupported</div>;
+				return <div>Unsupported Node Type: {node.type}</div>;
 			}
 		}
 		else {
@@ -105,14 +146,24 @@ class Main extends Component {
 		}
 	}
 	
-	render( props, state ) {
-		//let hasHash = window.location.hash ? <div>{window.location.hash}</div> : <div />;
-		//console.log("paint:",state);
+	render( props, {} ) {
+		var HashRoot = window.location.hash.split('/',1)[0];
+		if ( this.dialogs[HashRoot] ) {
+			var Dialog = this.dialogs[HashRoot];
+		}
+		else {
+			var Dialog = <DialogUnfinished />;
+		}
+		
+		let DialogCode = window.location.hash ? Dialog : <div />;
+		let AlertCode = <div />;
 		
 		return (
 			<div id="layout">
 				<NavBar />
-				{ this.getView(props,state) }
+				{ this.getView(props) }
+				{ DialogCode }
+				{ AlertCode }
 			</div>
 		);
 	}

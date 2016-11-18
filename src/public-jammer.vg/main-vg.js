@@ -7,7 +7,7 @@ import ViewSingle						from 'com/view-single/single';
 import CoreData							from '../core-data/data';
 
 
-window.LUDUMDARE_ROOT = '/events/ludum-dare';
+window.LUDUMDARE_ROOT = '/e/ludum-dare';
 
 class Main extends Component {
 	constructor() {

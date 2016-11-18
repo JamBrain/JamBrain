@@ -3,9 +3,78 @@ import ButtonBase		from '../button-base/base';
 import ButtonLink		from '../button-link/link';
 import SVGIcon 			from 'com/svg-icon/icon';
 
+function make_url( url ) {
+	return url + window.location.search;
+}
+
 export default class NavBar extends Component {
+	constructor( props ) {
+		super(props);
+	}
+	
 	render( props, state ) {
-		var avatar = "//"+STATIC_DOMAIN+'/other/logo/mike/Chicken64.png';
+		var Search = (
+			<ButtonBase class="-icon" onclick={e => { console.log('search'); window.location.hash = "#search"; }}>
+				<SVGIcon baseline>search</SVGIcon>
+			</ButtonBase>
+		);
+		
+		if ( false /*LoggedIn*/ ) {
+			// TODO: Check if a participant of the current event
+			var MyGame = (
+				<ButtonBase class="-button" onclick={e => console.log('my game')}>
+					<SVGIcon>gamepad</SVGIcon>
+					<div>My Game</div>
+				</ButtonBase>
+			);
+			
+			var NewPost = (
+				<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#post-new"; }}>
+					<SVGIcon>edit</SVGIcon>
+					<div>New</div>
+				</ButtonBase>
+			);
+			
+			// TODO: Figure out how many notifications a user has
+			let NotificationCount = false ? (
+				<div class="-new">2</div>
+			) : "";
+			var Notification = (
+				<ButtonBase class="-icon" onclick={e => console.log('notification')}>
+					<SVGIcon baseline>bubble</SVGIcon>
+					{NotificationCount}
+				</ButtonBase>
+			);
+			
+			// TODO: Pull this out of the user meta, else use a dummy
+			let Avatar = "//"+STATIC_DOMAIN+'/other/logo/mike/Chicken64.png';
+			var User = (
+				<ButtonBase class="-user" onclick={e => console.log('user')}>
+					<img src={Avatar} />
+				</ButtonBase>
+			);
+			
+			var Register = "";
+			var Login = "";
+		}
+		else {
+			var MyGame = "";
+			var NewPost = "";
+			var Notification = "";
+			var User = "";
+			var Register = (
+				<ButtonBase class="-button" onclick={e => { console.log('register'); window.location.hash = "#user-register"; }}>
+					<SVGIcon>user</SVGIcon>
+					<div>Create Account</div>
+				</ButtonBase>			
+			);
+			var Login = (
+				<ButtonBase class="-button" onclick={e => { console.log('login'); window.location.hash = "#user-login"; }}>
+					<SVGIcon>key</SVGIcon>
+					<div>Login</div>
+				</ButtonBase>			
+			);
+		}
 		
 		return (
 			<div class="nav-bar">
@@ -16,24 +85,13 @@ export default class NavBar extends Component {
 						</ButtonLink>
 					</div>
 					<div class="-right">
-						<ButtonBase class="-button" onclick={e => console.log('my game')}>
-							<SVGIcon>gamepad</SVGIcon>
-							<div>My Game</div>
-						</ButtonBase>
-						<ButtonBase class="-button" onclick={e => console.log('new post')}>
-							<SVGIcon>edit</SVGIcon>
-							<div>New</div>
-						</ButtonBase>
-						<ButtonBase class="-icon" onclick={e => console.log('search')}>
-							<SVGIcon baseline>search</SVGIcon>
-						</ButtonBase>
-						<ButtonBase class="-icon" onclick={e => console.log('notification')}>
-							<SVGIcon baseline>bubble</SVGIcon>
-							<div class="-new">2</div>
-						</ButtonBase>
-						<ButtonBase class="-user" onclick={e => console.log('user')}>
-							<img src={avatar} />
-						</ButtonBase>
+						{MyGame}
+						{NewPost}
+						{Search}
+						{Notification}
+						{User}
+						{Register}
+						{Login}
 					</div>
 				</div>
 			</div>

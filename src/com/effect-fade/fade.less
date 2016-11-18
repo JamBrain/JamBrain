@@ -1,0 +1,20 @@
+
+@import "../effect-base/base.less";
+
+.effect-fadein {
+	animation: effect-fadein @EFFECT_SPEED;
+}
+@keyframes effect-fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.effect-fadeout {
+	animation: effect-fadeout @EFFECT_SPEED;
+	visibility: hidden;
+}
+@keyframes effect-fadeout {
+    from { opacity: 1; visibility:visible; }
+    to   { opacity: 0; visibility:hidden; }
+}
+
