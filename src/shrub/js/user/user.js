@@ -43,6 +43,6 @@ export function Activate( id, key, name, password ) {
 		'id': id,
 		'key': key,
 		'name': name,
-		'password': password
+		'pw': password
 	});
 }

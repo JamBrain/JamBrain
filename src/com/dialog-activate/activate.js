@@ -32,12 +32,11 @@ export default class DialogActivate extends Component {
 		console.log("v",Vars);
 		
 		// Get activation ID
-		var ActID = Vars.id;
-		var ActHash = Vars.key;
+		this.ActID = Vars.id;
+		this.ActHash = Vars.key;
 		
 		// Lookup ID, and confirm this is a valid activation
-		
-		SHUser.Activate( ActID, ActHash, "", "" )
+		SHUser.Activate( this.ActID, this.ActHash, "", "" )
 			.then( r => {
 				if ( r.status === 200  ) {
 					this.setState({
@@ -63,6 +62,7 @@ export default class DialogActivate extends Component {
 		this.onNameChange = this.onNameChange.bind(this);
 		this.onPasswordChange = this.onPasswordChange.bind(this);
 		this.onPassword2Change = this.onPassword2Change.bind(this);
+		this.doActivate = this.doActivate.bind(this);
 	}
 	
 	componentDidMount() {
@@ -122,6 +122,25 @@ export default class DialogActivate extends Component {
 		return 1;
 	}
 
+	doActivate() {
+		SHUser.Activate( this.ActID, this.ActHash, this.state.name, this.state.password )
+			.then( r => {
+				if ( r.status === 201 ) {
+					console.log('sent', r.sent);
+					location.href = "#user-activated";
+				}
+				else {
+					console.log(r);
+					this.setState({ error: r.message ? r.message : r.response });
+				}
+				return r;
+			})
+			.catch( err => {
+				console.log(err);
+				this.setState({ error: err });
+			});
+	}
+	
 	render( props, {mail, name, slug, password, password2, error} ) {
 		var ErrorMessage = error ? {'error': error} : {};
 
@@ -143,7 +162,7 @@ export default class DialogActivate extends Component {
 		
 		// NOTE: There's a Preact (?) bug that the extra <span /> is working around
 		return (
-			<DialogBase title="Create Account: Step 2" ok cancel oktext="Create Account" explicit {...ErrorMessage}>
+			<DialogBase title="Create Account: Step 2" ok cancel oktext="Create Account" onclick={this.doActivate} explicit {...ErrorMessage}>
 				<div>
 					<span /><span class="-label">E-mail:</span><span id="dialog-activate-mail">{mail}</span>
 				</div>
