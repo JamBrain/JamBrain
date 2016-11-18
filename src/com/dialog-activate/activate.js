@@ -56,7 +56,7 @@ export default class DialogActivate extends Component {
 			})
 			.catch( err => {
 				console.log(err);
-				this.setState({ error: "See log" });
+				this.setState({ error: err });
 			});
 
 		// Bind functions (avoiding the need to rebind every render)
@@ -122,7 +122,7 @@ export default class DialogActivate extends Component {
 		return 1;
 	}
 
-	render( props, { mail, name, slug, password, password2, error } ) {
+	render( props, {mail, name, slug, password, password2, error} ) {
 		var ErrorMessage = error ? {'error': error} : {};
 
 		if ( error ) {

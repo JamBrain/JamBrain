@@ -79,9 +79,9 @@ switch ( $REQUEST[0] ) {
 		else {
 			$user = user_Add($mail);
 			if ( $user ) {
-				// NOTE! YOU SHOULD NOT DO THIS! IT DEFEATS THE EMAIL CHECK!
-				$RESPONSE['id'] = $user['id'];
-				$RESPONSE['key'] = $user['auth_key'];
+//				// NOTE! YOU SHOULD NOT DO THIS! IT DEFEATS THE EMAIL CHECK!
+//				$RESPONSE['id'] = $user['id'];
+//				$RESPONSE['key'] = $user['auth_key'];
 				
 				// Send an e-mail
 				$RESPONSE['sent'] = intval(sendMail_UserAdd($user['id'], $mail, $user['auth_key']));

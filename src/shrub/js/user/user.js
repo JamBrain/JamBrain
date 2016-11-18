@@ -22,11 +22,11 @@ function doFetch( url, data ) {
 }
 
 export default {
-	Create,
+	Register,
 	Activate
 };
 
-export function Create( mail ) {
+export function Register( mail ) {
 	return doFetch('//'+SH_DOMAIN+SH_ENDPOINT+'/user/create', {
 		'mail': mail
 	});
