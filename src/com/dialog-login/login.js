@@ -40,20 +40,17 @@ export default class DialogLogin extends Component {
 		
 		// NOTE: There's a Preact bug that the extra <span /> is working around
 		return (
-			<DialogBase title="Log In" ok cancel oktext="Log In" {...Error}>
-				<div class="-info -botline">
-					Use either your <strong>Name</strong>, your <strong>Account Name</strong>, or <strong>E-mail Address</strong>.
+			<DialogBase title="Log in" ok cancel oktext="Log In" {...Error}>
+				<div>
+					<span /><input ref={(input) => this.loginName = input} id="dialog-login-login" onchange={this.onLoginChange} class="-text focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="32" value={login} />
 				</div>
 				<div>
-					<span /><span class="-label">Log In:</span><input ref={(input) => this.loginName = input} id="dialog-login-login" onchange={this.onLoginChange} class="-text focusable" type="text" name="username" maxlength="32" value={login} />
-				</div>
-				<div>
-					<span class="-label">Password:</span><input id="dialog-login-password" onchange={this.onPasswordChange} class="-text focusable" type="password" name="password" maxlength="64" value={password} />
+					<input id="dialog-login-password" onchange={this.onPasswordChange} class="-text focusable" type="password" name="password" placeholder="Password" maxlength="64" value={password} />
 				</div>
 				<div>
 					<input id="dialog-login-remember" onchange={this.onRememberChange} class="focusable" type="checkbox" name="remember" checked={remember} /><span>Stay Logged In</span>
 					
-					<div class="_float-right" id="dialog-login-forgot">Forgot your Password?</div>
+					<div class="_float-right" id="dialog-login-forgot">Forgot Password?</div>
 				</div>
 			</DialogBase>
 		);

@@ -40,14 +40,11 @@ export default class DialogRegister extends Component {
 		// NOTE: There's a Preact bug that the extra <span /> is working around
 		return (
 			<DialogBase title="Create Account" ok cancel oktext="Send Activation E-mail" {...Error}>
-				<div class="-info -botline">
-					Enter an e-mail address to begin creating an account.
-				</div>
 				<div>
-					<span /><span class="-label">E-mail:</span><input ref={(input) => this.registerMail = input} id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" /><LabelYesNo value={this.validateMail(mail) ? 1 : -1} />
+					<span /><input ref={(input) => this.registerMail = input} id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" /><LabelYesNo value={this.validateMail(mail) ? 1 : -1} />
 				</div>
-				<div class="-info -topline">
-					Expect an activation e-mail from <code>hello@jammer.vg</code>.
+				<div class="-info">
+					Expect an e-mail from <code>hello@jammer.vg</code>
 				</div>
 			</DialogBase>
 		);
