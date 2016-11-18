@@ -3,30 +3,61 @@ import DialogBase						from 'com/dialog-base/base';
 
 import LabelYesNo						from 'com/label-yesno/yesno';
 
+import SHUser							from '../shrub/js/user/user';
+
+
+function getHTTPVars() {
+	var ret = {};
+	
+	if (location.search) {
+	    var parts = location.search.substring(1).split('&');
+	
+	    for (var i = 0; i < parts.length; i++) {
+	        var nv = parts[i].split('=');
+	        if (!nv[0]) continue;
+	        ret[nv[0]] = nv[1] || true;
+	    }
+	}
+	
+	return ret;
+}
+
 export default class DialogActivate extends Component {
 	constructor( props ) {
 		super(props);
 
 		// TODO: Show Waiting...
-				
+		
+		var Vars = getHTTPVars();
+		console.log("v",Vars);
+		
 		// Get activation ID
+		var ActID = Vars.id;
+		var ActHash = Vars.key;
 		
 		// Lookup ID, and confirm this is a valid activation
 		
-		if ( true ) {
-			this.state = {
-				mail: "bobby@bobby.bo",
-				name: "",
-				slug: "",
-				password: "",
-				password2: ""
-			};
-		}
-		else {
-			this.state = {
-				error: true
-			}
-		}
+		SHUser.Activate( ActID, ActHash, "", "" )
+			.then( r => {
+				if ( r.status === 200  ) {
+					this.setState({
+						mail: r.mail,
+						name: "",
+						slug: "",
+						password: "",
+						password2: ""
+					});
+//					this.activateName.focus();
+				}
+				else {
+					console.log(r);
+					this.setState({ error: r.response });
+				}
+			})
+			.catch( err => {
+				console.log(err);
+				this.setState({ error: "See log" });
+			});
 
 		// Bind functions (avoiding the need to rebind every render)
 		this.onNameChange = this.onNameChange.bind(this);
@@ -35,7 +66,8 @@ export default class DialogActivate extends Component {
 	}
 	
 	componentDidMount() {
-		this.activateName.focus();
+//		if ( this.activateName )
+//			this.activateName.focus();
 	}
 	
 	onNameChange( e ) {
@@ -91,12 +123,20 @@ export default class DialogActivate extends Component {
 	}
 
 	render( props, { mail, name, slug, password, password2, error } ) {
-		var ErrorMessage = {};//{ error:"There was a problem" };
+		var ErrorMessage = error ? {'error': error} : {};
 
 		if ( error ) {
 			return (
 				<DialogBase title="Create Account: Step 2" ok explicit {...ErrorMessage}>
-					This account can't be activated.
+					{"This account can't be activated."}
+				</DialogBase>
+			);
+		}
+
+		if ( !mail ) {
+			return (
+				<DialogBase title="Create Account: Step 2" explicit {...ErrorMessage}>
+					Loading...
 				</DialogBase>
 			);
 		}

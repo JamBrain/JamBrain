@@ -15,7 +15,8 @@ const SH_MAILER = "Jammer <no-reply@jammer.vg>";
 const SH_SITE = "Jammer";
 const SH_DOMAIN = "ldjam.com";
 const SH_URL_SITE = "https://".SH_DOMAIN;
-const SH_URL_ACTIVATE = "https://".SH_DOMAIN."/#user-activate";
+const SH_ACTIVATE = "#user-activate";
+const SH_ARGS = "alpha&";//"";
 
 const CRLF = "\r\n";
 
@@ -32,19 +33,17 @@ function sendMail_UserAdd( $id, $mail, $key ) {
 //		"Return-Path: ".SH_MAILER_RETURN,
 	];
 	$message = [
-		"Hello!",
+		"Here is your confirmation e-mail.",
 		"",
-		"This is a confirmation e-mail for you! Hooray!!",
+		"The next step is to visit this link to create your ".SH_SITE." account:",
 		"",
-		"Your next step is to visit this link, and create your ".SH_SITE." account:",
+		SH_URL_SITE."?".SH_ARGS."id=$id&key=$key".SH_ACTIVATE,
 		"",
-		SH_URL_ACTIVATE."?id=$id&key=$key",
+		"Confused?",
 		"",
-		"Confused? Someone entered your e-mail address here:",
+		"Someone signed up on ".SH_URL_SITE." using your e-mail address.",
 		"",
-		SH_URL_SITE,
-		"",
-		"If that wasn't you then oops! Sorry! Someone made a mistake."
+		"If that wasn't you then oops! Feel free to ignore this e-mail."
 	];
 	
 	return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers));
@@ -140,6 +139,7 @@ switch ( $REQUEST[0] ) {
 					else {
 						// If no name and password are set, that's okay. Just bail.
 						if ( !strlen($name) && !strlen($pw) ) {
+							$RESPONSE['mail'] = $user['mail'];
 							break;
 						}
 						
@@ -302,21 +302,21 @@ switch ( $REQUEST[0] ) {
 	
 		break;
 		
-	case 'get':
-		json_ValidateHTTPMethod('GET','POST');
-		
-		$RESPONSE['user'] = user_GetByNode(0);
-		$RESPONSE['method'] = $_SERVER['REQUEST_METHOD'];
-		$RESPONSE['post'] = $_POST;
-		
-//
-//		if ( user_AuthIsAdmin() ) {
-//			$RESPONSE['global'] = $SH;
-//		}
-//		else {
-//			json_EmitFatalError_Permission(null, $RESPONSE);
-//		}
-		break;
+//	case 'get':
+//		json_ValidateHTTPMethod('GET','POST');
+//		
+//		$RESPONSE['user'] = user_GetByNode(0);
+//		$RESPONSE['method'] = $_SERVER['REQUEST_METHOD'];
+//		$RESPONSE['post'] = $_POST;
+//		
+////
+////		if ( user_AuthIsAdmin() ) {
+////			$RESPONSE['global'] = $SH;
+////		}
+////		else {
+////			json_EmitFatalError_Permission(null, $RESPONSE);
+////		}
+//		break;
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break;
