@@ -126,7 +126,7 @@ export default class DialogActivate extends Component {
 		SHUser.Activate( this.ActID, this.ActHash, this.state.name, this.state.password )
 			.then( r => {
 				if ( r.status === 201 ) {
-					console.log('sent', r.sent);
+					console.log('success',r);
 					location.href = "#user-activated";
 				}
 				else {

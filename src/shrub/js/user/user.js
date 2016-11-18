@@ -23,7 +23,9 @@ function doFetch( url, data ) {
 
 export default {
 	Register,
-	Activate
+	Activate,
+	Login,
+	Logout
 };
 
 export function Register( mail ) {
@@ -44,5 +46,18 @@ export function Activate( id, key, name, password ) {
 		'key': key,
 		'name': name,
 		'pw': password
+	});
+}
+
+export function Login( name, password, secret ) {
+	return doFetch('//'+SH_DOMAIN+SH_ENDPOINT+'/user/login', {
+		'login': name,
+		'pw': password,
+		'secret': secret
+	});
+}
+
+export function Logout() {
+	return doFetch('//'+SH_DOMAIN+SH_ENDPOINT+'/user/logout', {
 	});
 }
