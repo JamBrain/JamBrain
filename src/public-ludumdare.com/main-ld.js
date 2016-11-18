@@ -14,6 +14,7 @@ import DialogAuth						from 'com/dialog-auth/auth';
 
 import CoreData							from '../core-data/data';
 
+import {shUser_DoRegister}				from '../shrub/js/user/user';
 
 window.LUDUMDARE_ROOT = '/';
 

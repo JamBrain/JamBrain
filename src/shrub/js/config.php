@@ -11,5 +11,5 @@ function core_GetSecondLevelDomain() {
 ?>
 <script>
 	window.SH_DOMAIN = 'api.<?=core_GetSecondLevelDomain()?>';
-	window.SH_ENDPOINT = '/vx/';
+	window.SH_ENDPOINT = '/vx';
 </script>

@@ -2,6 +2,9 @@
 RewriteEngine on
 RewriteBase /
 
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Headers "content-type"
+
 # Bad URLs #
 RewriteCond %{REQUEST_FILENAME} !-f
 #RewriteCond %{REQUEST_FILENAME} !-d

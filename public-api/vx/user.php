@@ -50,6 +50,8 @@ function sendMail_UserAdd( $id, $mail, $key ) {
 	return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers));
 }
 
+//Access-Control-Allow-Origin
+
 // Do Actions //
 switch ( $REQUEST[0] ) {
 	// Create a new user activation attempt
@@ -300,19 +302,21 @@ switch ( $REQUEST[0] ) {
 	
 		break;
 		
-//	case 'get':
-//		json_ValidateHTTPMethod('GET');
-//		
-//		$RESPONSE['user'] = user_GetByNode(0);
-//		
-////
-////		if ( user_AuthIsAdmin() ) {
-////			$RESPONSE['global'] = $SH;
-////		}
-////		else {
-////			json_EmitFatalError_Permission(null, $RESPONSE);
-////		}
-//		break;
+	case 'get':
+		json_ValidateHTTPMethod('GET','POST');
+		
+		$RESPONSE['user'] = user_GetByNode(0);
+		$RESPONSE['method'] = $_SERVER['REQUEST_METHOD'];
+		$RESPONSE['post'] = $_POST;
+		
+//
+//		if ( user_AuthIsAdmin() ) {
+//			$RESPONSE['global'] = $SH;
+//		}
+//		else {
+//			json_EmitFatalError_Permission(null, $RESPONSE);
+//		}
+		break;
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break;

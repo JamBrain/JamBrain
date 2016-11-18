@@ -270,10 +270,16 @@ function json_CheckForMaintenence() {
 	}
 }
 
-function json_IsValidHTTPMethod(...$args) {
-	return in_array($_SERVER['REQUEST_METHOD'],$args);
+function json_IsValidHTTPMethod( ...$args ) {
+	return in_array($_SERVER['REQUEST_METHOD'], $args);
 }
-function json_ValidateHTTPMethod(...$args) {
+function json_ValidateHTTPMethod( ...$args ) {
+//	// If an OPTIONS request (CORS Preflight Request)
+//	if ($_SERVER['REQUEST_METHOD'] === "OPTIONS" ) {
+//		die;
+//	}
+	
+	// Verify the method
 	if ( !json_IsValidHTTPMethod(...$args) ) {
 		json_EmitFatalError_BadMethod($_SERVER['REQUEST_METHOD']);
 	}
