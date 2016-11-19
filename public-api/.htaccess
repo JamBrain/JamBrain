@@ -2,9 +2,9 @@
 RewriteEngine on
 RewriteBase /
 
-Header set Access-Control-Allow-Origin "*"
-Header set Access-Control-Allow-Credentials "true"
-Header set Access-Control-Allow-Headers "content-type"
+#Header set Access-Control-Allow-Origin "http://ludumdare.org"
+#Header set Access-Control-Allow-Credentials "true"
+#Header set Access-Control-Allow-Headers "content-type"
 
 # Bad URLs #
 RewriteCond %{REQUEST_FILENAME} !-f

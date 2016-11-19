@@ -78,13 +78,14 @@ function node_Add( $parent, $author, $type, $subtype, $subsubtype, $slug, $name,
 		)"
 	);
 
-	$version = nodeVersion_Add( $node, $author, $type, $subtype, $subsubtype, $slug, $name, $body, "!ZERO" );
-	$edit = node_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, $version, $slug, $name, $body );
+	$edit = node_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, "!ZERO" );
 	
 	return $node;
 }
 
-function node_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, $version, $slug, $name, $body ) {
+function node_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag = "" ) {
+	$version = nodeVersion_Add( $node, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag );
+
 	$success = db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 		SET
