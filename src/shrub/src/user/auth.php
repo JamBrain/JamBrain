@@ -12,6 +12,9 @@
 
 /// 
 function user_Auth() {
+//	global $RESPONSE;
+//	$RESPONSE['sess'] = isset($RESPONSE['sess']) ? $RESPONSE['sess']+1 : 1;
+	
 	userSession_Start();
 	// IP Check. If different, expire the session
 	if ( !isset($_SESSION['ip']) || ($_SESSION['ip'] !== $_SERVER['REMOTE_ADDR']) ) {
@@ -61,6 +64,7 @@ function user_AuthHas(...$args) {
 function userSession_Start() {
 	$sid_name = 'SID';
 	$is_secure = false;
+
 	// http://stackoverflow.com/a/16076965/5678759
 	if ( isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ) {
 		$is_secure = true;
@@ -72,14 +76,24 @@ function userSession_Start() {
 	// Use a different name if we're connected securely
 	$sid_name .= $is_secure ? 'S' : '';
 	
-	session_name($sid_name);						// This can be removed, once we've moved entirely to PHP 7
+	// This can be removed, once we've moved entirely to PHP 7
+	session_name($sid_name);
+//	session_set_cookie_params(
+//		2*24*60*60,			// Two days
+//		'/',
+//		$_SERVER['HTTP_HOST'],
+//		$is_secure,
+//		true
+//	);
+
+	// Start Session	
 	session_start([
 		'name' => $sid_name,
 		'cookie_lifetime' => 2*24*60*60,			// Two days
 		'cookie_httponly' => 1,						// Don't pass SID to JavaScript
 		'cookie_secure' => $is_secure ? 1 : 0,
 		//'cookie_path' => '/',
-		//'cookie_domain' => '',
+		'cookie_domain' => $_SERVER['HTTP_HOST'],
 		'sid_length' => 64,							// As of PHP 7.1
 		'sid_bits_per_character' => 5,				// As of PHP 7.1
 	]);

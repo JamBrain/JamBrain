@@ -286,6 +286,8 @@ switch ( $REQUEST[0] ) {
 			
 			
 			// Success
+			$RESPONSE['id'] = $user['node'];
+			
 			userSession_Start();
 			$_SESSION['id'] = $user['node'];
 			$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
@@ -302,10 +304,15 @@ switch ( $REQUEST[0] ) {
 	
 		break;
 		
-//	case 'get':
-//		json_ValidateHTTPMethod('GET','POST');
-//		
-//		$RESPONSE['user'] = user_GetByNode(0);
+	case 'get':
+		json_ValidateHTTPMethod('GET','POST');
+		
+		$id = $_SESSION['id'];
+		$RESPONSE['id'] = $id;
+		
+		if ( $id > 0 ) {
+			$RESPONSE['node'] = node_GetById($id);
+
 //		$RESPONSE['method'] = $_SERVER['REQUEST_METHOD'];
 //		$RESPONSE['post'] = $_POST;
 //		
@@ -316,7 +323,8 @@ switch ( $REQUEST[0] ) {
 ////		else {
 ////			json_EmitFatalError_Permission(null, $RESPONSE);
 ////		}
-//		break;
+		}
+		break;
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break;
