@@ -15,14 +15,14 @@ export default class DialogBase extends Component {
 	}
 
 	componentDidMount() {
-		console.log("DialogBase: componentDidMount");
+//		console.log("DialogBase: componentDidMount");
 		document.body.addEventListener('mousewheel', this._eventWheel);
 		document.body.addEventListener('keydown', this._eventKey);
 //		window.addEventListener('focus', this._eventFocus);
 	}
 	
 	componentDidUnmount() {
-		console.log("DialogBase: componentDidUnmount");
+//		console.log("DialogBase: componentDidUnmount");
 		document.body.removeEventListener('mousewheel', this._eventWheel);
 		document.body.removeEventListener('keydown', this._eventKey);
 //		window.removeEventListener('focus', this._eventFocus);

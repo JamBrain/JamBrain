@@ -10,13 +10,17 @@ export default class DialogRegister extends Component {
 	constructor( props ) {
 		super(props);
 		
+		console.log("DialogRegister",this.state);
+		
 		this.state = {
-			mail: ""
+			mail: "",
+			error: null,
+			loading: false
 		};
 
 		// Bind functions (avoiding the need to rebind every render)
-		this.onChange = this.onChange.bind(this);
-		this.doRegister = this.doRegister.bind(this);
+		this.onChange = DialogRegister.prototype.onChange.bind(this);
+		this.doRegister = DialogRegister.prototype.doRegister.bind(this);
 	}
 	
 	componentDidMount() {
@@ -25,8 +29,6 @@ export default class DialogRegister extends Component {
 	
 	validateMail( mail ) {
 		// http://stackoverflow.com/a/9204568/5678759
-		//return /\S+@\S+\.\S+/.test(mail);
-		//return /[^\s@]+@[^\s@]+\.[^\s@]+/.test(mail);
 		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
 	}
 
@@ -35,37 +37,59 @@ export default class DialogRegister extends Component {
 	}
 	
 	doRegister() {
+		this.setState({ loading: true, error: null });
+		
 		SHUser.Register( this.state.mail )
 			.then( r => {
 				if ( r.status === 201 ) {
 					console.log('sent', r.sent);
-					location.href = "#user-sent";
+					this.setState({sent: true, loading: false});
 				}
 				else {
 					console.log(r);
-					this.setState({ error: r.message ? r.message : r.response });
+					this.setState({ error: r.message ? r.message : r.response, loading: false });
 				}
 				return r;
 			})
 			.catch( err => {
 				console.log(err);
-				this.setState({ error: err });
+				this.setState({ error: err, loading: false });
 			});
 	}
 
-	render( props, {mail, error} ) {
+	render( props, {mail, sent, loading, error} ) {
 		var ErrorMessage = error ? {'error': error} : {};
 		
-		// NOTE: There's a Preact bug that the extra <span /> is working around
-		return (
-			<DialogBase title="Create Account" ok cancel oktext="Send Activation E-mail" onclick={this.doRegister} {...ErrorMessage}>
-				<div>
-					<span /><input ref={(input) => this.registerMail = input} id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" /><LabelYesNo value={this.validateMail(mail) ? 1 : -1} />
-				</div>
-				<div class="-info">
-					Expect an e-mail from <code>hello@jammer.vg</code>
-				</div>
-			</DialogBase>
-		);
+		if ( loading ) {
+			return (
+				<DialogBase title="Create Account" explicit {...ErrorMessage}>
+					<div>
+						Please wait...
+					</div>
+				</DialogBase>
+			);			
+		}
+		else if ( sent ) {
+			return (
+				<DialogBase title="Create Account" ok explicit {...ErrorMessage}>
+					<div>
+						Activation e-mail sent to <code>{mail}</code>
+					</div>
+				</DialogBase>
+			);
+		}
+		else {
+			// NOTE: There's a Preact bug that the extra <span /> is working around
+			return (
+				<DialogBase title="Create Account" ok cancel oktext="Send Activation E-mail" explicit onclick={this.doRegister} {...ErrorMessage}>
+					<div>
+						<span /><input ref={(input) => this.registerMail = input} id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" /><LabelYesNo value={this.validateMail(mail) ? 1 : -1} />
+					</div>
+					<div class="-info">
+						Expect an e-mail from <code>no-reply@jammer.vg</code>
+					</div>
+				</DialogBase>
+			);
+		}
 	}
 }
