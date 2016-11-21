@@ -21,7 +21,11 @@ export default class ViewSingle extends Component {
 		return nodes.map(function(node) {
 			var node_type = CoreData.getNodeTypeById(node);
 			
-			document.title = titleParser.parse(CoreData.getNodeNameById(node), true) + " | " + window.location.host;
+			document.title = titleParser.parse(CoreData.getNodeNameById(node), true);
+			if ( document.title === "" )
+				document.title = window.location.host;
+			else
+				document.title += " | " + window.location.host;
 			
 			if ( node_type === 'post' || node_type === 'game' ) {
 				return <ContentPost node={node} />;

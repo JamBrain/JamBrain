@@ -3,7 +3,7 @@ class CCoreData {
 	constructor() {
 		this.nodes = {
 			1: {
-				name:"Root Root",
+				name:"",
 				slug:'roots',
 				type:"roots",
 				subtype:"",
@@ -12,7 +12,7 @@ class CCoreData {
 				body:"",
 			},
 			2: {
-				name:"Users Root",
+				name:"Users",
 				slug:'u',
 				type:"users",
 				subtype:"user",
