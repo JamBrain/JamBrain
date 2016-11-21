@@ -313,7 +313,7 @@ switch ( $REQUEST[0] ) {
 		if ( $id > 0 ) {
 			$RESPONSE['node'] = node_GetById($id);
 		}
-		$RESPONSE['server'] = $_SERVER;
+//		$RESPONSE['server'] = $_SERVER;
 //		$RESPONSE['method'] = $_SERVER['REQUEST_METHOD'];
 //		$RESPONSE['post'] = $_POST;
 //		

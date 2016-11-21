@@ -66,6 +66,7 @@ export default class DialogActivate extends Component {
 		this.onPasswordChange = this.onPasswordChange.bind(this);
 		this.onPassword2Change = this.onPassword2Change.bind(this);
 		this.doActivate = this.doActivate.bind(this);
+		this.doFinishActivation = this.doFinishActivation.bind(this);
 	}
 	
 	componentDidMount() {
@@ -131,7 +132,7 @@ export default class DialogActivate extends Component {
 				if ( r.status === 201 ) {
 					console.log('success',r);
 					//location.href = "#user-activated";
-					this.setState({ created: true, loading: false });
+					this.setState({ created: true, loading: false, error: null });
 				}
 				else {
 					console.log(r);
@@ -144,12 +145,16 @@ export default class DialogActivate extends Component {
 				this.setState({ error: err, loading: false });
 			});
 	}
+
+	doFinishActivation() {
+		location.href = "";
+	}
 	
 	render( props, {mail, name, slug, password, password2, created, loading, error} ) {
 		var ErrorMessage = error ? {'error': error} : {};
 		var title = "Create Account: Step 2";
 
-		if ( loading || !mail ) {
+		if ( loading ) {
 			return (
 				<DialogBase title={title} explicit {...ErrorMessage}>
 					<div>
@@ -158,8 +163,7 @@ export default class DialogActivate extends Component {
 				</DialogBase>
 			);			
 		}
-		
-		if ( error ) {
+		else if ( !mail ) {
 			return (
 				<DialogBase title={title} ok explicit {...ErrorMessage}>
 					{"This account can't be activated."}
@@ -169,7 +173,7 @@ export default class DialogActivate extends Component {
 
 		if ( created ) {
 			return (
-				<DialogBase title={title} ok explicit {...ErrorMessage}>
+				<DialogBase title={title} ok onclick={this.doFinishActivation} explicit {...ErrorMessage}>
 					Account <code>{this.slug}</code> Created. You can now <strong>Log In</strong>.
 				</DialogBase>
 			);
