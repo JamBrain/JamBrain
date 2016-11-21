@@ -35,7 +35,7 @@ function sendMail_UserAdd( $id, $mail, $key ) {
 	$message = [
 		"Here is your confirmation e-mail.",
 		"",
-		"The next step is to visit this link to create your ".SH_SITE." account:",
+		"The next step is to visit this link to create your account:",
 		"",
 		SH_URL_SITE."?".SH_ARGS."id=$id&key=$key".SH_ACTIVATE,
 		"",

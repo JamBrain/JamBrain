@@ -1,7 +1,4 @@
 
-const SH_DOMAIN = 'api.ludumdare.org';
-const SH_ENDPOINT = '/vx';
-
 function doFetch( url, data ) {
 	return fetch( url, {
 		method: 'POST',
@@ -31,7 +28,7 @@ export default {
 };
 
 export function Register( mail ) {
-	return doFetch('//'+SH_DOMAIN+SH_ENDPOINT+'/user/create', {
+	return doFetch('//'+API_DOMAIN+'/vx/user/create', {
 		'mail': mail
 	});
 //	.then( r => {
@@ -43,7 +40,7 @@ export function Register( mail ) {
 }
 
 export function Activate( id, key, name, password ) {
-	return doFetch('//'+SH_DOMAIN+SH_ENDPOINT+'/user/activate', {
+	return doFetch('//'+API_DOMAIN+'/vx/user/activate', {
 		'id': id,
 		'key': key,
 		'name': name,
@@ -52,7 +49,7 @@ export function Activate( id, key, name, password ) {
 }
 
 export function Login( name, password, secret ) {
-	return doFetch('//'+SH_DOMAIN+SH_ENDPOINT+'/user/login', {
+	return doFetch('//'+API_DOMAIN+'/vx/user/login', {
 		'login': name,
 		'pw': password,
 		'secret': secret
@@ -60,6 +57,6 @@ export function Login( name, password, secret ) {
 }
 
 export function Logout() {
-	return doFetch('//'+SH_DOMAIN+SH_ENDPOINT+'/user/logout', {
+	return doFetch('//'+API_DOMAIN+'/vx/user/logout', {
 	});
 }

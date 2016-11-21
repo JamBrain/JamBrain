@@ -37,8 +37,11 @@ const STATIC_DOMAINS = [
 	'jammer.work' => 'static.jammer.work',
 	'jammer.dev' => 'static.jam.dev',
 ];
+
 define( 'STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : 'static.jam.vg' );
 define( 'LINK_SUFFIX', isset($_GET['nopush']) ? '; nopush' : '' );
+define( 'API_DOMAIN', 'api.'.$_SERVER['SERVER_NAME'] );
+define( 'API_ENDPOINT', '/vx' );
 
 define( 'JS_FILE',   "/-/all".USE_MINIFIED.".js?".VERSION_STRING );
 define( 'CSS_FILE',  "/-/all".USE_MINIFIED.".css?".VERSION_STRING );
@@ -68,6 +71,7 @@ if ( !isset($_GET['nopreload']) ) {
 		<?php /* Output PHP Variables for JS */ ?>
 		var VERSION_STRING = "<?=VERSION_STRING?>";
 		var STATIC_DOMAIN = "<?=STATIC_DOMAIN?>";
+		var API_DOMAIN = "<?=API_DOMAIN?>";
 		<?php /* Load SVG */ ?>
 		<?php include __DIR__."/../embed/preload-svg.js.php"; ?>
 	</script>
