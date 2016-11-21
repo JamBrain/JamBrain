@@ -9,12 +9,14 @@ require_once __DIR__."/".SHRUB_PATH."user/user.php";
 
 json_Begin();
 
-const SH_MAILER_RETURN = "error@jammer.vg";
+const SH_MAIL_DOMAIN = "jammer.vg";
+const SH_MAILER_RETURN = "error@".SH_MAIL_DOMAIN;
 
-const SH_MAILER = "Jammer <no-reply@jammer.vg>";
 const SH_SITE = "Jammer";
-const SH_DOMAIN = "ldjam.com";
-const SH_URL_SITE = "https://".SH_DOMAIN;
+const SH_MAILER = SH_SITE." <no-reply@".SH_MAIL_DOMAIN.">";
+//const SH_DOMAIN = "ldjam.com";
+define('SH_URL_SITE', isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : 'http://ludumdare.org');
+//define('SH_URL_SITE', (isset($_SERVER['HTTPS']) ? "https://" : "http://").SH_DOMAIN);
 const SH_ACTIVATE = "#user-activate";
 const SH_ARGS = "alpha&";//"";
 
