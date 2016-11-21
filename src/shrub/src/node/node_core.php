@@ -131,7 +131,22 @@ function node_Publish( $node, $state = true ) {
 	);
 }
 
-//function node_AddIf( 
+//function node_AddUniqueParentSlug( $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body ) {
+//	// TODO: wrap this in a block
+//
+//	
+//}
+
+//function node_GetIdByParentSlug( $parent, $slug ) {
+//	return db_QueryFetchPair(
+//		"SELECT id, modified 
+//		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+//		WHERE parent=? AND slug=?
+//		LIMIT 1
+//		".$query_suffix,
+//		$parent, $slug
+//	);
+//}
 
 
 function node_GetIdByType( $type ) {

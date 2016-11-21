@@ -1,4 +1,35 @@
 <?php
+require_once __DIR__."/node.php";
+
+// Simliar to the regular NODE, but a snapshot
+// IMPORTANT: This has to come first, as with the node table, we need to make nodes
+$table = 'SH_TABLE_NODE_VERSION';
+if ( in_array(constant($table), $TABLE_LIST) ) {
+	$ok = null;
+
+	table_Init($table);
+	switch ( $TABLE_VERSION ) {
+	case 0:
+		$ok = table_Create( $table,
+			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
+				id ".DB_TYPE_UID.",
+				node ".DB_TYPE_ID.",
+					INDEX(node),
+				author ".DB_TYPE_ID.",
+				type ".DB_TYPE_ASCII(24).",
+				subtype ".DB_TYPE_ASCII(24).",
+				subsubtype ".DB_TYPE_ASCII(24).",
+				timestamp ".DB_TYPE_TIMESTAMP.",
+				slug ".DB_TYPE_ASCII(96).",
+					INDEX(slug),
+				name ".DB_TYPE_UNICODE(96).",
+				body MEDIUMTEXT NOT NULL,
+				tag ".DB_TYPE_ASCII(32)."
+			)".DB_CREATE_SUFFIX);
+		if (!$ok) break; $TABLE_VERSION++;
+	};
+	table_Exit($table);
+}
 
 $table = 'SH_TABLE_NODE';
 if ( in_array(constant($table), $TABLE_LIST) ) {
@@ -28,57 +59,31 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 				version ".DB_TYPE_ID.",
 				slug ".DB_TYPE_ASCII(96).",
 					INDEX(slug),
+					UNIQUE parent_slug (parent,slug),
 				name ".DB_TYPE_UNICODE(96).",
 				body MEDIUMTEXT NOT NULL
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
-	};
-	table_Exit($table);
 
-	// Check-for and create necessary nodes
-//	node_AddIf('root', 		// check for
-//		0,0,				// parent, author
-//		'root','','',		// type, subtype, subsubtype
-//		0,0,0,				// published, created, modified
-//		0,					// version
-//		'root','root',		// slug, name
-//		''					// body
-//	);
-//	node_AddIf('users', 	// check for
-//		1,1,				// parent, author
-//		'users','','',		// type, subtype, subsubtype
-//		0,0,0,				// published, created, modified
-//		0,					// version
-//		'users','Users',	// slug, name
-//		''					// body
-//	);
-}
+		// Create necessary nodes
+		node_Add(
+			0,						// parent (0 = void)
+			0,						// author (0 = orphaned)
+			'root','','',			// type, subtype, subsubtype
+			'root','',				// slug, name
+			''						// body
+		);
+		node_Add(
+			SH_NODE_ID_ROOT,		// parent
+			0,						// author (0 = orphaned)
+			'users','','',			// type, subtype, subsubtype
+			'users','Users',		// slug, name
+			''						// body
+		);
 
-// Simliar to the regular NODE, but a snapshot
-$table = 'SH_TABLE_NODE_VERSION';
-if ( in_array(constant($table), $TABLE_LIST) ) {
-	$ok = null;
-
-	table_Init($table);
-	switch ( $TABLE_VERSION ) {
-	case 0:
-		$ok = table_Create( $table,
-			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
-				id ".DB_TYPE_UID.",
-				node ".DB_TYPE_ID.",
-					INDEX(node),
-				author ".DB_TYPE_ID.",
-				type ".DB_TYPE_ASCII(24).",
-				subtype ".DB_TYPE_ASCII(24).",
-				subsubtype ".DB_TYPE_ASCII(24).",
-				timestamp ".DB_TYPE_TIMESTAMP.",
-				slug ".DB_TYPE_ASCII(96).",
-					INDEX(slug),
-				name ".DB_TYPE_UNICODE(96).",
-				body MEDIUMTEXT NOT NULL,
-				tag ".DB_TYPE_ASCII(32)."
-			)".DB_CREATE_SUFFIX);
-		if (!$ok) break; $TABLE_VERSION++;
+		break;
+//	case 1:
+//		break;
 	};
 	table_Exit($table);
 }

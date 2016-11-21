@@ -147,7 +147,8 @@ export default class DialogActivate extends Component {
 	}
 
 	doFinishActivation() {
-		location.href = "";
+		// HACK
+		location.href = "?alpha";
 	}
 	
 	render( props, {mail, name, slug, password, password2, created, loading, error} ) {
