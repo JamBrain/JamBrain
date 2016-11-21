@@ -5,7 +5,7 @@
 ///	@addtogroup NodeIds
 /// @{
 const SH_NODE_ID_ROOT = 			1;	///< Root of the node-tree
-const SH_NODE_ID_USER = 			2;	///< Special group for Users
+const SH_NODE_ID_USERS = 			2;	///< Special group for Users
 /// @}
 
 ///	@addtogroup NodeTypes

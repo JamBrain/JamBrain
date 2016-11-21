@@ -38,7 +38,7 @@ function node_GetPublishedIdModifiedByParent( $parent, $limit = 20, $offset = 0 
 }
 
 function nodeVersion_Add( $node, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag = "" ) {
-	$ret = db_QueryCreate(
+	$ret = db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_VERSION." (
 			node,
 			author, 
@@ -69,7 +69,7 @@ function nodeVersion_Add( $node, $author, $type, $subtype, $subsubtype, $slug, $
 
 function node_Add( $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body ) {
 	// TODO: wrap this in a block
-	$node = db_QueryCreate(
+	$node = db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE." (
 			created
 		)

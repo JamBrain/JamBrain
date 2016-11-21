@@ -255,9 +255,16 @@ function json_Emit( $out, $allow_jsonp = true ) {
 	header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
 	//header("Pragma: no-cache"); // HTTP 1.0.
 	//header("Expires: 0"); // Proxies.
-	header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);	// CORS: For 'fetch' with credentials, this can't be '*'
-	header('Access-Control-Allow-Credentials: true');					// CORS: Allow cookies
-	header('Access-Control-Allow-Headers: content-type');				// CORS: Allow requests that specify content-type
+	
+	if ( isset($_SERVER['HTTP_ORIGIN']) ) {
+		header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);	// CORS: For 'fetch' with credentials, this can't be '*'
+		header('Access-Control-Allow-Credentials: true');					// CORS: Allow cookies
+	}
+	else {
+		header('Access-Control-Allow-Origin: *');	
+	}
+	header('Access-Control-Allow-Headers: content-type');					// CORS: Allow requests that specify content-type
+	
 	echo $prefix,str_replace('</', '<\/', json_encode($out,$out_format)),$suffix;
 }
 

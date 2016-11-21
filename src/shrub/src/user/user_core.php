@@ -167,6 +167,19 @@ function user_SetHash( $id, $hash ) {
 //	);
 //}
 
+// *** //
+
+function userNode_Add( $slug, $name ) {
+	return node_Add(
+		SH_NODE_ID_USERS,			// parent
+		0,							// author
+		SH_NODE_TYPE_USER,			// type
+		'','',						// subtype, subsubtype
+		$slug,						// slug
+		$name,						// name
+		""							// body
+	);
+}
 
 // *** //
 

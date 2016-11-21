@@ -161,7 +161,7 @@ switch ( $REQUEST[0] ) {
 						}
 							
 						// Does that name already exist?
-						if ( node_GetIdByParentAndSlug(SH_NODE_ID_USER, $slug) ) {
+						if ( node_GetIdByParentAndSlug(SH_NODE_ID_USERS, $slug) ) {
 							json_EmitFatalError_Server("Name ($slug) already exists", $RESPONSE);
 						}
 						else {
@@ -177,7 +177,7 @@ switch ( $REQUEST[0] ) {
 							}
 							else {
 								// @TODO wrap these so we can rollback
-								$user_id = node_Add(
+								$user_id = userNode_Add(
 									$slug,
 									$name
 								);
@@ -305,14 +305,15 @@ switch ( $REQUEST[0] ) {
 		break;
 		
 	case 'get':
-		json_ValidateHTTPMethod('GET','POST');
+		json_ValidateHTTPMethod('GET');
 		
-		$id = $_SESSION['id'];
+		$id = isset($_SESSION['id']) ? intval($_SESSION['id']) : 0;
 		$RESPONSE['id'] = $id;
 		
 		if ( $id > 0 ) {
 			$RESPONSE['node'] = node_GetById($id);
-
+		}
+		$RESPONSE['server'] = $_SERVER;
 //		$RESPONSE['method'] = $_SERVER['REQUEST_METHOD'];
 //		$RESPONSE['post'] = $_POST;
 //		
@@ -323,7 +324,7 @@ switch ( $REQUEST[0] ) {
 ////		else {
 ////			json_EmitFatalError_Permission(null, $RESPONSE);
 ////		}
-		}
+		
 		break;
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);

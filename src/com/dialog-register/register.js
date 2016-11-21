@@ -59,19 +59,20 @@ export default class DialogRegister extends Component {
 
 	render( props, {mail, sent, loading, error} ) {
 		var ErrorMessage = error ? {'error': error} : {};
+		var title = "Create Account";
 		
 		if ( loading ) {
 			return (
-				<DialogBase title="Create Account" explicit {...ErrorMessage}>
+				<DialogBase title={title} explicit {...ErrorMessage}>
 					<div>
 						Please wait...
 					</div>
 				</DialogBase>
-			);			
+			);
 		}
 		else if ( sent ) {
 			return (
-				<DialogBase title="Create Account" ok explicit {...ErrorMessage}>
+				<DialogBase title={title} ok explicit {...ErrorMessage}>
 					<div>
 						Activation e-mail sent to <code>{mail}</code>
 					</div>
@@ -81,7 +82,7 @@ export default class DialogRegister extends Component {
 		else {
 			// NOTE: There's a Preact bug that the extra <span /> is working around
 			return (
-				<DialogBase title="Create Account" ok cancel oktext="Send Activation E-mail" explicit onclick={this.doRegister} {...ErrorMessage}>
+				<DialogBase title={title} ok cancel oktext="Send Activation E-mail" explicit onclick={this.doRegister} {...ErrorMessage}>
 					<div>
 						<span /><input ref={(input) => this.registerMail = input} id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" /><LabelYesNo value={this.validateMail(mail) ? 1 : -1} />
 					</div>
