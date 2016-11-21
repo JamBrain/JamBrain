@@ -63,6 +63,6 @@ global_AddReservedName(
 	'groups',
 	'group',
 
-	'posts'
-	'post',
+	'posts',
+	'post'
 );

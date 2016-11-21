@@ -1,6 +1,8 @@
 import { h, Component } 				from 'preact/preact';
 import DialogBase						from 'com/dialog-base/base';
 
+import SHUser							from '../shrub/js/user/user';
+
 export default class DialogLogin extends Component {
 	constructor( props ) {
 		super(props);
@@ -15,6 +17,7 @@ export default class DialogLogin extends Component {
 		this.onLoginChange = this.onLoginChange.bind(this);
 		this.onPasswordChange = this.onPasswordChange.bind(this);
 		this.onRememberChange = this.onRememberChange.bind(this);
+		this.doLogin = this.doLogin.bind(this);
 	}
 	
 	componentDidMount() {
@@ -32,15 +35,30 @@ export default class DialogLogin extends Component {
 	}
 	
 	doLogin() {
-		// TODO
+		SHUser.Login( this.state.login, this.state.password, "" )
+			.then( r => {
+				if ( r.status === 200 ) {
+					console.log('success',r);
+					location.href = "#user-loggedin";
+				}
+				else {
+					console.log(r);
+					this.setState({ error: r.message ? r.message : r.response });
+				}
+				return r;
+			})
+			.catch( err => {
+				console.log(err);
+				this.setState({ error: err });
+			});
 	}
 
-	render( props, {login, password, remember} ) {
-		var Error = {};// { error:"There was a problem" };
+	render( props, {login, password, remember, error} ) {
+		var ErrorMessage = error ? {'error': error} : {};
 		
 		// NOTE: There's a Preact bug that the extra <span /> is working around
 		return (
-			<DialogBase title="Log in" ok cancel oktext="Log In" {...Error}>
+			<DialogBase title="Log in" ok cancel oktext="Log In" onclick={this.doLogin} {...ErrorMessage}>
 				<div>
 					<span /><input ref={(input) => this.loginName = input} id="dialog-login-login" onchange={this.onLoginChange} class="-text focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="32" value={login} />
 				</div>

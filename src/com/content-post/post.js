@@ -64,17 +64,21 @@ export default class ContentPost extends Component {
 						<div class="-minmax"><SVGIcon>arrow-up</SVGIcon></div>
 					</div>
 					<div class="-right">
-						<div class="-love">
-							<div class="-heart"><SVGIcon>heart-check</SVGIcon></div>
-							<div class="-text -count">0</div>
-							<div class="-text -count">0</div>
-						</div>
-						<div class="-comment"><SVGIcon>bubble-empty</SVGIcon></div>
 					</div>
 				</div>
 			</div>
 		);
 	}
+
+// From the footer class right above
+//						<div class="-love">
+//							<div class="-heart"><SVGIcon>heart-check</SVGIcon></div>
+//							<div class="-text -count">0</div>
+//							<div class="-text -count">0</div>
+//						</div>
+//						<div class="-comment"><SVGIcon>bubble-empty</SVGIcon></div>
+
+
 	// body: unmargin-top, unmargin-bottom. replace with selector
 	
 	// <SVGIcon>wedge-left</SVGIcon>
