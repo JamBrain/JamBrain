@@ -1,7 +1,7 @@
 import { h, Component }					from 'preact/preact';
-
 import ContentPost						from 'com/content-post/post';
 import ContentUser						from 'com/content-user/user';
+import ContentTimeline					from 'com/content-timeline/timeline';
 
 export default class ViewContent extends Component {
 	constructor( props ) {
@@ -32,9 +32,9 @@ export default class ViewContent extends Component {
 		else if ( node.type === 'user' ) {
 			return <ContentUser node={node} />;
 		}
-//		else if ( node.type === 'root' ) {
-//			return <ContentUser node={node} />;
-//		}
+		else if ( node.type === 'root' ) {
+			return <ContentTimeline node={node} />;
+		}
 		else {
 			return <div>Unsupported Node Type: {""+node.type}</div>;
 		}

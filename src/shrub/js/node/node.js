@@ -1,7 +1,8 @@
 
 export default {
 	Get,
-	Walk
+	Walk,
+	GetFeed
 };
 
 var Nodes = {};
@@ -51,4 +52,14 @@ export function Get( ids ) {
 		if ( r ) 
 			return r.json();
 	});
+}
+
+export function GetFeed( id ) {
+	return fetch('//'+API_DOMAIN+'/vx/node/feed/'+id, {
+		credentials: 'include'
+	})
+	.then( r => {
+		if ( r ) 
+			return r.json();
+	});	
 }

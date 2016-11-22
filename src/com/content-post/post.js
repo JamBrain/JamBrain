@@ -2,7 +2,7 @@ import { h, Component } 				from 'preact/preact';
 import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
 
-import $Node							from '../shrub/js/node/node';
+import $Node							from '../../shrub/js/node/node';
 
 export default class ContentPost extends Component {
 	constructor( props ) {

@@ -18,7 +18,7 @@ import DialogAuth						from 'com/dialog-auth/auth';
 
 import $Node							from '../shrub/js/node/node';
 
-//import $User							from '../shrub/js/user/user';
+//import $User							from 'shrub/js/user/user';
 
 window.LUDUMDARE_ROOT = '/';
 window.SITE_ROOT = 1;

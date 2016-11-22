@@ -146,6 +146,19 @@ switch ( array_shift($REQUEST) ) {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
 		}
 		break;
+	case 'feed':
+		json_ValidateHTTPMethod('GET');
+
+		if ( count($REQUEST) > 0 ) {
+			$root = intval(array_shift($REQUEST));
+			$RESPONSE['root'] = $root;
+			
+			$RESPONSE['feed'] = node_GetPublishedIdModifiedByParent($root);
+		}
+		else {
+			json_EmitFatalError_BadRequest(null, $RESPONSE);
+		}
+		break;
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break;

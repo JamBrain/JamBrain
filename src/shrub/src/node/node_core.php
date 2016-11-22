@@ -19,10 +19,10 @@ function node_GetPublishedIdModifiedByParent( $parent, $limit = 20, $offset = 0 
 		$ids = implode(',', $parent);
 		
 		return db_QueryFetchPair(
-			"SELECT id, modified 
+			"SELECT id, ".DB_FIELD_DATE('modified')." 
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
 			WHERE parent IN ($ids) AND published > CONVERT(0,DATETIME)
-			ORDER BY published DESC,
+			ORDER BY published DESC
 			LIMIT ? OFFSET ?
 			".$query_suffix,
 			$limit, $offset
