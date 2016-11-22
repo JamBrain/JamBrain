@@ -15,7 +15,7 @@ export default class ContentEvent extends Component {
 	render( {node, path, extra}, {error} ) {
 		if ( node.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
-			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
+			var dangerousParsedTitle = { __html:titleParser.parse('**Event:** '+node.name) };
 			
 			var url = path+'/'+node.slug+'/';
 			

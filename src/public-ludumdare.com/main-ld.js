@@ -195,7 +195,7 @@ class Main extends Component {
 		$Node.Walk(this.state.root, this.state.slugs)
 		.then(r => {
 			// We found a path
-			var state = { 
+			var new_state = { 
 				id: r.node,
 				path: '/'+this.state.slugs.slice(0, r.path.length).join('/'),
 				extra: r.extra
@@ -205,8 +205,8 @@ class Main extends Component {
 			$Node.Get(r.node)
 			.then(rr => {
 				if ( rr.node && rr.node.length ) {
-					state.node = rr.node[0];
-					this.setState(state);
+					new_state.node = rr.node[0];
+					this.setState(new_state);
 				}
 				else {
 					this.setState({ error: err });
@@ -231,18 +231,22 @@ class Main extends Component {
 		});		
 	}
 	
-	componentDidMount() {
-		if ( !this.state.node.id )
+	fetchData() {
+		if ( this.state.node && !this.state.node.id )
 			this.fetchNode();
-		if ( !this.state.user.id )
-			this.fetchUser();
+		if ( this.state.user && !this.state.user.id )
+			this.fetchUser();	
+	}
+	
+	componentDidMount() {
+		this.fetchData();
 	}
 	
 	// *** //
 	
 	// Hash Changes are automatically differences
 	onHashChange( e ) {
-		console.log("hashchange: ", e);
+		console.log("hashchange: ", e.newURL);
 		
 		var slugs = this.cleanLocation(window.location);
 		
@@ -250,7 +254,7 @@ class Main extends Component {
 			this.setState({});
 		}
 		else {
-			this.setState({ id: 0, slugs: this.cleanLocation(window.location) });
+			this.setState({ id: 0, slugs: slugs });
 		}
 		
 //		this.fetchNode(this.cleanLocation(window.location));
@@ -262,9 +266,19 @@ class Main extends Component {
 	// When we navigate by clicking forward
 	onNavChange( e ) {
 		if ( e.detail.location.href !== e.detail.old.href ) {
-			console.log("navchange: ", e.detail);
+			console.log("navchange: ", e.detail.location.href);
+			
+			var slugs = this.cleanLocation(e.detail.location);
 
-			this.setState({ slugs: this.cleanLocation(e.detail.location) });
+			if ( slugs.join() === this.state.slugs.join() ) {
+				this.setState({});
+			}
+			else {
+				console.log("Change");
+				this.setState({ id: 0, slugs: slugs, node: {id: 0} });
+				
+				this.fetchData();
+			}
 
 //			this.fetchNode(this.cleanLocation(e.detail.location));
 			//this.getNodeFromLocation(e.detail.location);
@@ -276,14 +290,14 @@ class Main extends Component {
 	}
 	// When we navigate using back/forward buttons
 	onPopState( e ) {
-		// NOTE: This is sometimes called on a HashChange with a null state
-		if ( e.state ) {
-			console.log("popstate: ", e);
-	
-			this.setState(e.state);
-			
-			//window.scrollTo(parseFloat(e.state.top), parseFloat(e.state.left));
-		}
+//		// NOTE: This is sometimes called on a HashChange with a null state
+//		if ( e.state ) {
+//			console.log("popstate: ", e);
+//	
+//			this.setState(e.state);
+//			
+//			//window.scrollTo(parseFloat(e.state.top), parseFloat(e.state.left));
+//		}
 	}
 
 	render( {}, {node, user, path, extra, error} ) {
