@@ -9,6 +9,8 @@ require_once __DIR__."/".SHRUB_PATH."core/db.php";
 require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
 require_once __DIR__."/".SHRUB_PATH."global/global.php";
 
+require_once __DIR__."/".SHRUB_PATH."node/node.php";
+
 
 $TABLE_LIST = [];
 
@@ -129,6 +131,27 @@ function table_Exit($table) {
 	if ( global_Set($table, $TABLE_VERSION) ) {
 		echo $table." upgraded (version ".$OLD_TABLE_VERSION." -> ".$TABLE_VERSION.")\n";	
 	}
+}
+
+function MakeKeyNode( $key, $parent, $type, $slug, $name ) {
+	global $SH;
+	
+	if ( !isset($SH[$key]) || !$SH[$key] ) {
+		$node = node_Add(
+			$parent,						// parent
+			0,								// author (0 = orphaned)
+			$type,'','',					// type, subtype, subsubtype
+			$slug,$name,					// slug, name
+			''								// body
+		);
+		
+		if ( $node && global_Set($key, $node) ) {
+			echo($key." = ".$node."\n");
+		}
+		
+		return $node;
+	}
+	return 0;
 }
 
 // *** //

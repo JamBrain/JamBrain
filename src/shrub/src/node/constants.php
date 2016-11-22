@@ -8,8 +8,8 @@ const SH_NODE_ID_ROOT = 			1;	///< Root of the node-tree
 const SH_NODE_ID_USERS = 			2;	///< Special group for Users
 /// @}
 
-$SH_GLOBAL_DEFAULT['SH_NODE_ID_ROOT'] = 1;
-$SH_GLOBAL_DEFAULT['SH_NODE_ID_USERS'] = 2;
+$SH_GLOBAL_DEFAULT['SH_NODE_ID_ROOT'] = 0;		// Set by table_create tool
+$SH_GLOBAL_DEFAULT['SH_NODE_ID_USERS'] = 0;
 
 ///	@addtogroup NodeTypes
 /// @name Internal Types

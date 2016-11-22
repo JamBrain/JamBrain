@@ -69,20 +69,8 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 		// NOTE: "extra" is an extra field, primarily used by symlinks
 
 		// Create necessary nodes
-		node_Add(
-			0,						// parent (0 = void)
-			0,						// author (0 = orphaned)
-			'root','','',			// type, subtype, subsubtype
-			'root','',				// slug, name
-			''						// body
-		);
-		node_Add(
-			SH_NODE_ID_ROOT,		// parent
-			0,						// author (0 = orphaned)
-			'users','','',			// type, subtype, subsubtype
-			'users','Users',		// slug, name
-			''						// body
-		);
+		$root = MakeKeyNode('SH_NODE_ID_ROOT', 0, SH_NODE_TYPE_ROOT, 'root', '' );
+		$users = MakeKeyNode('SH_NODE_ID_USERS', $root, SH_NODE_TYPE_USERS, 'users', 'Users' );
 
 		break;
 //	case 1:
