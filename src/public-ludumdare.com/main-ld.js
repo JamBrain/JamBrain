@@ -3,6 +3,8 @@ import NavBar 							from 'com/nav-bar/bar';
 
 import ViewTimeline						from 'com/view-timeline/timeline';
 import ViewSingle						from 'com/view-single/single';
+import ViewSidebar						from 'com/view-sidebar/sidebar';
+import ViewContent						from 'com/view-content/content';
 
 import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
 import DialogLogin						from 'com/dialog-login/login';
@@ -12,7 +14,7 @@ import DialogAuth						from 'com/dialog-auth/auth';
 
 //import AlertBase						from 'com/alert-base/base';
 
-import CoreData							from '../core-data/data';
+//import CoreData							from '../core-data/data';
 
 import $Node							from '../shrub/js/node/node';
 
@@ -27,24 +29,30 @@ class Main extends Component {
 		
 		this.state = {
 			root: SITE_ROOT,
+			
+			// URL walking
 			id: 0,
-			node: null,
-			loading: false
+			slugs: this.cleanLocation(window.location),
+			extra: [],
+			
+			// Active Node
+			node: {
+				id: 0
+			},
+			
+			// Active User
+			user: {
+				id: 0
+			},
+//			loading: false,
 		};
 		
 //		console.log("EEEEEEEEE",this.state.sort(),history.state.sort());		
 //		this.state = Object.assign({}, window.history.state ? window.history.state : {});
 //		this.state.root = 1;
-		
-		this.dialogs = {
-			'#user-login': (<DialogLogin />),
-			'#user-activate': (<DialogActivate />),
-			'#user-register': (<DialogRegister />),
-			'#user-auth': (<DialogAuth />)
-		};
-		
+				
 		//this.getNodeFromLocation(window.location);
-		this.fetchNode(this.cleanLocation(window.location));
+//		this.fetchNode(this.cleanLocation(window.location));
 
 //		$User.Get().then( r => {
 //			if ( r.id ) {
@@ -60,6 +68,26 @@ class Main extends Component {
 		window.addEventListener('hashchange', that.onHashChange.bind(that));
 		window.addEventListener('navchange', that.onNavChange.bind(that));
 		window.addEventListener('popstate', that.onPopState.bind(that));
+	}
+	
+	getDialog() {
+		var HashRoot = window.location.hash.split('/',1)[0];
+		switch (HashRoot) {
+			case '#user-login':
+				return <DialogLogin />;
+			case '#user-activate':
+				return <DialogActivate />;
+			case '#user-register':
+				return <DialogRegister />;
+			case '#user-auth':
+				return <DialogAuth />;
+			default:
+				if ( window.location.hash )
+					return <DialogUnfinished />;
+				else
+					return <div />
+				break;
+		};
 	}
 
 	makeSlug( str ) {
@@ -84,7 +112,7 @@ class Main extends Component {
 	trimSlashes( str ) {
 		return str.replace(/^\/|\/$/g,'');
 	}
-	
+/*	
 	fetchNode( slugs ) {
 		this.setState({ loading: true });
 		
@@ -120,7 +148,7 @@ class Main extends Component {
 				this.setState({ error: err, loading: false });
 			});
 	}
-
+*/
 	getNodeFromLocation( location ) {
 //		// Clean the URL
 //		var clean = {
@@ -177,7 +205,35 @@ class Main extends Component {
 	// *** //
 	
 	componentDidMount() {
-		// Startup //
+		$Node.Walk(this.state.root, this.state.slugs)
+		.then(r => {
+			// We found a path
+			var state = { 
+				id: r.node, 
+				extra: r.extra
+			};
+
+			// Now lookup the node
+			$Node.Get(r.node)
+				.then(rr => {
+					console.log('rr',rr);
+					console.log('state2',state);
+					
+					if ( rr.node && rr.node.length ) {
+						state.node = rr.node[0];
+						this.setState(state);
+					}
+					else {
+						this.setState({ error: err });
+					}
+				})
+				.catch(err => {
+					this.setState({ error: err, loading: false });
+				});
+		})
+		.catch(err => {
+			this.setState({ error: err, loading: false });
+		});
 	}
 	
 	// *** //
@@ -186,7 +242,7 @@ class Main extends Component {
 	onHashChange( e ) {
 		console.log("hashchange: ", e);
 		
-		this.fetchNode(this.cleanLocation(window.location));
+//		this.fetchNode(this.cleanLocation(window.location));
 		//this.getNodeFromLocation(window.location);
 		//this.setState(this.state);
 		
@@ -197,7 +253,7 @@ class Main extends Component {
 		if ( e.detail.location.href !== e.detail.old.href ) {
 			console.log("navchange: ", e.detail);
 
-			this.fetchNode(this.cleanLocation(e.detail.location));
+//			this.fetchNode(this.cleanLocation(e.detail.location));
 			//this.getNodeFromLocation(e.detail.location);
 			//this.setState(this.state);
 			
@@ -216,7 +272,7 @@ class Main extends Component {
 			window.scrollTo(parseFloat(e.state.top), parseFloat(e.state.left));
 		}
 	}
-	
+/*	
 	getView( props ) {
 		if ( this.state.node ) {
 			//var node = CoreData.getNodeById( this.state.node );
@@ -236,31 +292,39 @@ class Main extends Component {
 			return <div>404</div>;
 		}
 	}
-	
-	render( props, {loading} ) {
-		if ( loading ) {
-			return (
-				<div id="layout">
-					Please Wait...
-				</div>
-			);
-		}
-		else {
-			var HashRoot = window.location.hash.split('/',1)[0];
-			if ( this.dialogs[HashRoot] ) {
-				var Dialog = this.dialogs[HashRoot];
-			}
-			else {
-				var Dialog = <DialogUnfinished />;
-			}
+*/	
+	render( props, {node, user} ) {
+//		if ( loading ) {
+//			return (
+//				<div id="layout">
+//					Please Wait...
+//				</div>
+//			);
+//		}
+//		else 
+		{
+//			var HashRoot = window.location.hash.split('/',1)[0];
+//			if ( this.dialogs[HashRoot] ) {
+//				var Dialog = this.dialogs[HashRoot];
+//			}
+//			else {
+//				var Dialog = <DialogUnfinished />;
+//			}
 			
-			let DialogCode = window.location.hash ? Dialog : <div />;
+			let DialogCode = this.getDialog();//window.location.hash ? Dialog : <div />;
 			let AlertCode = <div />;
 			
 			return (
 				<div id="layout">
-					<NavBar />
-					{ this.getView(props) }
+					<NavBar user={user} />
+					<div class="view-single">
+						<div id="header" />
+						<div id="content-sidebar">
+							<ViewContent node={node} user={user} />
+							<ViewSidebar />
+						</div>
+						<div id="footer"></div>
+					</div>					
 					{ DialogCode }
 					{ AlertCode }
 				</div>
@@ -268,5 +332,7 @@ class Main extends Component {
 		}
 	}
 };
+
+//					{ this.getView(props) }
 
 render(<Main />, document.body);

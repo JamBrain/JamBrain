@@ -2,35 +2,78 @@ import { h, Component } from 'preact/preact';
 import SVGIcon 			from 'com/svg-icon/icon';
 import NavLink 			from 'com/nav-link/link';
 
-import CoreData			from '../../core-data/data';
+//import CoreData			from '../../core-data/data';
 
 
 export default class ContentPost extends Component {
 	constructor( props ) {
 		super(props);
-		
-		this.state = {
-			post: props.node,
-			user: props.node
-		};
-		
-		
+
+//		this.state = {
+//			post: props.node,
+//			user: props.node
+//		};
 	}
 
-	render( props, {post, user} ) {
-		if ( !post && !user ) {
+	render( { node, user }, state ) {
+		if ( node.body ) {
+			var dangerousParsedBody = { __html:marked.parse(node.body) };
+			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
+			
+			var url = "//";
+			
+			var relative_time = "";//<span class="-time">{node.published}</span> ago
+//			var post_date = <span>on <span class="-title" title={post.date}>{post.short_date}</span></span>;
+			var post_date = <span>on <span class="-title" title={post.published}>{post.published}</span></span>;
+//			var post_by = by <span class="-name"><NavLink href={'/u/'+user.slug+'/'} class="-author" title={'@'+user.slug}><img style="height:0.8em;padding-right:0.1em;" src={avatar} />{user.name}</NavLink></span>
+			var post_by = <span>by {node.author}<span>;
+			
+			var hasTwitter = "";
+			
 			return (
 				<div class="content-base content-post">
-					Please Wait...
+					<div class="-header">
+						<div class="-title _font2"><NavLink href={url} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
+						<div class="-subtext">
+							Posted {relative_time} {post_date}, {post_by} {hasTwitter}
+						</div>
+					</div>
+					<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
+					<div class="-footer">
+						<div class="-left">
+							<div class="-minmax"><SVGIcon>arrow-up</SVGIcon></div>
+						</div>
+						<div class="-right">
+						</div>
+					</div>
 				</div>
 			);
 		}
+//		else {
+//			return (
+//				<div class="content-base content-post">
+//					Please Wait...
+//				</div>
+//			);
+//		}
+		
+	}
+	
+	
+/*
+//		if ( !post && !user ) {
+//			return (
+//				<div class="content-base content-post">
+//					Please Wait...
+//				</div>
+//			);
+//		}
 		
 		
 //		var post = CoreData.getNodeById( props.node );
 //		var user = CoreData.getNodeById( post.author );
 		
-		var hasTwitter = user.meta.twitter ? <span class="-twitter"> (<a href={"https://twitter.com/"+user.meta.twitter} target="_blank" rel="noopener noreferrer" title={"https://twitter.com/"+user.meta.twitter}><SVGIcon baseline small>twitter</SVGIcon>/{user.meta.twitter}</a>)</span> : <span />;
+//		var hasTwitter = user.meta.twitter ? <span class="-twitter"> (<a href={"https://twitter.com/"+user.meta.twitter} target="_blank" rel="noopener noreferrer" title={"https://twitter.com/"+user.meta.twitter}><SVGIcon baseline small>twitter</SVGIcon>/{user.meta.twitter}</a>)</span> : <span />;
 //		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <SVGIcon>users</SVGIcon></span> : <span />;
 		
 		// Build URL //
@@ -61,7 +104,7 @@ export default class ContentPost extends Component {
 //			// TODO: attach the Navigation link code to the <a> tag above //
 //		}
 
-		var dangerousParsedBody = { __html:marked.parse(post.body) };
+/*		var dangerousParsedBody = { __html:marked.parse(post.body) };
 		var dangerousParsedTitle = { __html:titleParser.parse(post.name) };
 		
 		var avatar = user.meta.avatar ? "//"+STATIC_DOMAIN+user.meta.avatar : "";
@@ -89,7 +132,7 @@ export default class ContentPost extends Component {
 			</div>
 		);
 	}
-
+*/
 // From the footer class right above
 //						<div class="-love">
 //							<div class="-heart"><SVGIcon>heart-check</SVGIcon></div>
