@@ -119,7 +119,8 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 					INDEX(node),
 				scope TINYINT UNSIGNED NOT NULL,
 				`key` ".DB_TYPE_ASCII(32).",
-				`value` TEXT NOT NULL
+				`value` TEXT NOT NULL,
+				timestamp ".DB_TYPE_TIMESTAMP."
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
 	};
@@ -167,7 +168,8 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 					INDEX(node),
 				author ".DB_TYPE_ID.",
 				ip ".DB_TYPE_IP.",
-					UNIQUE(author,ip)
+					UNIQUE(author,ip),
+				timestamp ".DB_TYPE_TIMESTAMP."
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
 	};
@@ -190,7 +192,8 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 				author ".DB_TYPE_ID.",
 					INDEX(author),
 				node ".DB_TYPE_ID.",
-					INDEX(node)
+					INDEX(node),
+				timestamp ".DB_TYPE_TIMESTAMP."
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
 	};

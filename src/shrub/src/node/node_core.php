@@ -222,7 +222,7 @@ function nodeMeta_GetByNode( $nodes ) {
 		$node_string = implode(',', $nodes);
 
 		return db_QueryFetch(
-			"SELECT scope, `key`, `value`
+			"SELECT node, scope, `key`, `value`
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." 
 			WHERE node IN ($node_string) AND id IN (
 				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`

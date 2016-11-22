@@ -24,7 +24,7 @@ function user_Auth() {
 	// Refresh cookie lifetime
 
 	// If session is set, lookup the node, and permissions
-	if ( user_AuthIsUser() ) {
+	if ( user_AuthUser() ) {
 		// Lookup user
 		//$_SESSION['node'] = 
 		// Extract Permissions
@@ -33,8 +33,8 @@ function user_Auth() {
 }
 
 // Is active user a user (i.e. logged in)
-function user_AuthIsUser() {
-	return isset($_SESSION['id']) && ($_SESSION['id'] > 0);
+function user_AuthUser() {
+	return isset($_SESSION['id']) ? $_SESSION['id'] : 0;
 }
 
 /// Is active user an administrator
