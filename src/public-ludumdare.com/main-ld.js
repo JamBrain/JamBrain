@@ -17,8 +17,7 @@ import DialogAuth						from 'com/dialog-auth/auth';
 //import CoreData							from '../core-data/data';
 
 import $Node							from '../shrub/js/node/node';
-
-//import $User							from 'shrub/js/user/user';
+import $User							from '../shrub/js/user/user';
 
 window.LUDUMDARE_ROOT = '/';
 window.SITE_ROOT = 1;
@@ -43,8 +42,7 @@ class Main extends Component {
 			// Active User
 			user: {
 				id: 0
-			},
-//			loading: false,
+			}
 		};
 		
 //		console.log("EEEEEEEEE",this.state.sort(),history.state.sort());		
@@ -54,16 +52,7 @@ class Main extends Component {
 		//this.getNodeFromLocation(window.location);
 //		this.fetchNode(this.cleanLocation(window.location));
 
-//		$User.Get().then( r => {
-//			if ( r.id ) {
-//				this.setState({ user: r.id });
-//			}
-//		})
-//		.catch( err => {
-//			console.log("$User",err);
-//		});
-
-		// Bind Events to handle future changes //
+		// Bind Events to handle future changes
 		var that = this;
 		window.addEventListener('hashchange', that.onHashChange.bind(that));
 		window.addEventListener('navchange', that.onNavChange.bind(that));
@@ -205,6 +194,7 @@ class Main extends Component {
 	// *** //
 	
 	componentDidMount() {
+		// Fetch the active node
 		$Node.Walk(this.state.root, this.state.slugs)
 		.then(r => {
 			// We found a path
@@ -231,6 +221,14 @@ class Main extends Component {
 		.catch(err => {
 			this.setState({ error: err, loading: false });
 		});
+		
+		// Fetch the Active User
+		$User.Get().then(r => {
+			this.setState({ user: r.node });
+		})
+		.catch(err => {
+			this.setState({ error: err, loading: false });
+		});
 	}
 	
 	// *** //
@@ -238,6 +236,8 @@ class Main extends Component {
 	// Hash Changes are automatically differences
 	onHashChange( e ) {
 		console.log("hashchange: ", e);
+		
+		this.setState({ slugs: this.cleanLocation(window.location), extra: [] });
 		
 //		this.fetchNode(this.cleanLocation(window.location));
 		//this.getNodeFromLocation(window.location);
@@ -269,27 +269,7 @@ class Main extends Component {
 			window.scrollTo(parseFloat(e.state.top), parseFloat(e.state.left));
 		}
 	}
-/*	
-	getView( props ) {
-		if ( this.state.node ) {
-			//var node = CoreData.getNodeById( this.state.node );
-			node = this.state.node;
-	
-			if ( node.type === 'root' || node.type === 'site' ) {
-				return <ViewTimeline node={this.state.id} />;
-			}
-			else if ( node.type === 'post' || node.type === 'game' || node.type === 'user' ) {
-				return <ViewSingle node={this.state.node} />;
-			}
-			else {
-				return <div>Unsupported Node Type: {node.type}</div>;
-			}
-		}
-		else {
-			return <div>404</div>;
-		}
-	}
-*/	
+
 	render( props, {node, user} ) {
 //		if ( loading ) {
 //			return (
@@ -300,15 +280,7 @@ class Main extends Component {
 //		}
 //		else 
 		{
-//			var HashRoot = window.location.hash.split('/',1)[0];
-//			if ( this.dialogs[HashRoot] ) {
-//				var Dialog = this.dialogs[HashRoot];
-//			}
-//			else {
-//				var Dialog = <DialogUnfinished />;
-//			}
-			
-			let DialogCode = this.getDialog();//window.location.hash ? Dialog : <div />;
+			let DialogCode = this.getDialog();
 			let AlertCode = <div />;
 			
 			return (
@@ -329,7 +301,5 @@ class Main extends Component {
 		}
 	}
 };
-
-//					{ this.getView(props) }
 
 render(<Main />, document.body);

@@ -359,6 +359,13 @@ switch ( $REQUEST[0] ) {
 		
 		if ( $id > 0 ) {
 			$RESPONSE['node'] = node_GetById($id);
+			if ( count($RESPONSE['node']) ) {
+				$RESPONSE['node'] = $RESPONSE['node'][0];
+			}
+			else {
+				$RESPONSE['node'] = [];
+				$RESPONSE['node']['id'] = 0;
+			}
 		}
 //		$RESPONSE['server'] = $_SERVER;
 //		$RESPONSE['method'] = $_SERVER['REQUEST_METHOD'];
