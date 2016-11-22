@@ -286,7 +286,7 @@ class Main extends Component {
 		}
 	}
 
-	render( {}, {node, user, path, error} ) {
+	render( {}, {node, user, path, extra, error} ) {
 		if ( node.id ) {
 			let DialogCode = this.getDialog();
 			let AlertCode = <div />;
@@ -297,7 +297,7 @@ class Main extends Component {
 					<div class="view-single">
 						<div id="header" />
 						<div id="content-sidebar">
-							<ViewContent node={node} user={user} path={path} />
+							<ViewContent node={node} user={user} path={path} extra={extra} />
 							<ViewSidebar />
 						</div>
 						<div id="footer"></div>
