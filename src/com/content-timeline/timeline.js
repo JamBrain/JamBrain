@@ -17,16 +17,13 @@ export default class ContentTimeline extends Component {
 	
 	componentWillReceiveProps( props ) {
 		// Clear the Feed
-		this.setState({ feed: {} });
+		this.setState({ feed: [] });
 		
 		$Node.GetFeed( props.node.id )
 		.then(r => {
-			if ( r.node && r.node.length ) {
-				//this.setState({ feed: r.feed });
-				console.log('r',r);
-				$Node.Get( r.feed )
+			if ( r.feed ) {
+				$Node.Get( Object.keys(r.feed) )
 				.then(rr => {
-					console.log('rr',rr);
 					this.setState({ feed: rr.node });
 				})
 				.catch(err => {
@@ -68,18 +65,12 @@ export default class ContentTimeline extends Component {
 //			return <ContentTimeline node={node} />;
 //		}
 		else {
-			return <div>hUnsupported Node Type: {""+node.type}</div>;
+			return <div>Unsupported Node Type: {""+node.type}</div>;
 		}
 	}
 	
 	getContent( feed ) {
-		console.log("hurr",feed);
-		var ret = [];
-		for ( var node in feed ) {
-			console.log(node);
-			ret.push( node.slug );
-		}
-		return ret;
+		return feed.map(this.makeNode);
 	}
 
 //	componentDidMount() {
