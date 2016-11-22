@@ -3,7 +3,7 @@ import DialogBase						from 'com/dialog-base/base';
 
 import LabelYesNo						from 'com/label-yesno/yesno';
 
-import SHUser							from '../shrub/js/user/user';
+import $User							from '../shrub/js/user/user';
 
 
 export default class DialogRegister extends Component {
@@ -39,7 +39,7 @@ export default class DialogRegister extends Component {
 	doRegister() {
 		this.setState({ loading: true, error: null });
 		
-		SHUser.Register( this.state.mail )
+		$User.Register( this.state.mail )
 			.then( r => {
 				if ( r.status === 201 ) {
 					console.log('sent', r.sent);

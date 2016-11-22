@@ -1,7 +1,7 @@
 import { h, Component } 				from 'preact/preact';
 import DialogBase						from 'com/dialog-base/base';
 
-import SHUser							from '../shrub/js/user/user';
+import $User							from '../shrub/js/user/user';
 
 export default class DialogLogin extends Component {
 	constructor( props ) {
@@ -35,7 +35,7 @@ export default class DialogLogin extends Component {
 	}
 	
 	doLogin() {
-		SHUser.Login( this.state.login, this.state.password, "" )
+		$User.Login( this.state.login, this.state.password, "" )
 			.then( r => {
 				if ( r.status === 200 ) {
 					console.log('success',r);

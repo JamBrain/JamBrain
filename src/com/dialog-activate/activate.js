@@ -3,7 +3,7 @@ import DialogBase						from 'com/dialog-base/base';
 
 import LabelYesNo						from 'com/label-yesno/yesno';
 
-import SHUser							from '../shrub/js/user/user';
+import $User							from '../shrub/js/user/user';
 
 
 function getHTTPVars() {
@@ -38,7 +38,7 @@ export default class DialogActivate extends Component {
 		this.ActHash = Vars.key;
 		
 		// Lookup ID, and confirm this is a valid activation
-		SHUser.Activate( this.ActID, this.ActHash, "", "" )
+		$User.Activate( this.ActID, this.ActHash, "", "" )
 			.then( r => {
 				if ( r.status === 200  ) {
 					this.setState({
@@ -127,7 +127,7 @@ export default class DialogActivate extends Component {
 	}
 
 	doActivate() {
-		SHUser.Activate( this.ActID, this.ActHash, this.state.name, this.state.password )
+		$User.Activate( this.ActID, this.ActHash, this.state.name, this.state.password )
 			.then( r => {
 				if ( r.status === 201 ) {
 					console.log('success',r);
@@ -182,7 +182,7 @@ export default class DialogActivate extends Component {
 		
 		// NOTE: There's a Preact (?) bug that the extra <span /> is working around
 		return (
-			<DialogBase title={title} ok cancel oktext="Create Account" onclick={this.doActivate} explicit {...ErrorMessage}>
+			<DialogBase title={title} ok cancel oktext="Create Account" onclick={this.doActivate} oncancel={this.doFinishActivation} explicit {...ErrorMessage}>
 				<div>
 					<span /><span class="-label">E-mail:</span><span id="dialog-activate-mail">{mail}</span>
 				</div>

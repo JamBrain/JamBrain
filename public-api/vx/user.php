@@ -203,7 +203,7 @@ switch ( $REQUEST[0] ) {
 						}
 							
 						// Does that name already exist?
-						if ( node_GetIdByParentAndSlug(SH_NODE_ID_USERS, $slug) ) {
+						if ( node_GetIdByParentSlug(SH_NODE_ID_USERS, $slug) ) {
 							json_EmitFatalError_Server("Name ($slug) already exists", $RESPONSE);
 						}
 						else {
