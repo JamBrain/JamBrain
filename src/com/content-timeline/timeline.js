@@ -9,6 +9,7 @@ export default class ContentTimeline extends Component {
 		super(props);
 		
 		this.state = {
+			id: 0,
 			feed: []
 		};
 		
@@ -16,8 +17,11 @@ export default class ContentTimeline extends Component {
 	}
 	
 	componentWillReceiveProps( props ) {
+		if ( props.node.id === this.state.id )
+			return;
+		
 		// Clear the Feed
-		this.setState({ feed: [] });
+		this.setState({ id: props.node.id, feed: [] });
 		
 		$Node.GetFeed( props.node.id, "site" )
 		.then(r => {
@@ -54,35 +58,23 @@ export default class ContentTimeline extends Component {
 //		});
 	}
 
-	makeNode( node ) {		
+	makeItem( node ) {
 		if ( node.type === 'post' || node.type === 'game' ) {
 			return <ContentPost node={node} />;
 		}
 		else if ( node.type === 'user' ) {
 			return <ContentUser node={node} />;
 		}
-//		else if ( node.type === 'root' ) {
-//			return <ContentTimeline node={node} />;
-//		}
 		else {
 			return <div>Unsupported Node Type: {""+node.type}</div>;
 		}
 	}
-	
-	getContent( feed ) {
-		return feed.map(this.makeNode);
-	}
-
-//	componentDidMount() {
-//	}
-//	componentWillUnmount() {
-//	}
 
 	render( {node}, {feed, error} ) {
 		if ( node.slug && feed ) {
 			return (
 				<div id="content">
-					{ this.getContent(feed) }
+					{ feed.map(this.makeItem) }
 				</div>
 			);
 		}

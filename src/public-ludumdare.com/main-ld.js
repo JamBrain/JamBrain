@@ -198,21 +198,21 @@ class Main extends Component {
 				id: r.node, 
 				extra: r.extra
 			};
-
+			
 			// Now lookup the node
 			$Node.Get(r.node)
-				.then(rr => {
-					if ( rr.node && rr.node.length ) {
-						state.node = rr.node[0];
-						this.setState(state);
-					}
-					else {
-						this.setState({ error: err });
-					}
-				})
-				.catch(err => {
+			.then(rr => {
+				if ( rr.node && rr.node.length ) {
+					state.node = rr.node[0];
+					this.setState(state);
+				}
+				else {
 					this.setState({ error: err });
-				});
+				}
+			})
+			.catch(err => {
+				this.setState({ error: err });
+			});
 		})
 		.catch(err => {
 			this.setState({ error: err });
@@ -230,8 +230,10 @@ class Main extends Component {
 	}
 	
 	componentDidMount() {
-		this.fetchNode();
-		this.fetchUser();
+		if ( !this.state.node.id )
+			this.fetchNode();
+		if ( !this.state.user.id )
+			this.fetchUser();
 	}
 	
 	// *** //
@@ -240,7 +242,14 @@ class Main extends Component {
 	onHashChange( e ) {
 		console.log("hashchange: ", e);
 		
-		this.setState({ slugs: this.cleanLocation(window.location), extra: [] });
+		var slugs = this.cleanLocation(window.location);
+		
+		if ( slugs.join() === this.state.slugs.join() ) {
+			this.setState({});
+		}
+		else {
+			this.setState({ id: 0, slugs: this.cleanLocation(window.location) });
+		}
 		
 //		this.fetchNode(this.cleanLocation(window.location));
 		//this.getNodeFromLocation(window.location);
@@ -253,7 +262,7 @@ class Main extends Component {
 		if ( e.detail.location.href !== e.detail.old.href ) {
 			console.log("navchange: ", e.detail);
 
-			this.setState({ slugs: this.cleanLocation(e.detail.location), extra: [] });
+			this.setState({ slugs: this.cleanLocation(e.detail.location) });
 
 //			this.fetchNode(this.cleanLocation(e.detail.location));
 			//this.getNodeFromLocation(e.detail.location);
