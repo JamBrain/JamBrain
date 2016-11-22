@@ -1,14 +1,46 @@
-import { h, Component } from 'preact/preact';
-import SVGIcon 			from 'com/svg-icon/icon';
-import NavLink 			from 'com/nav-link/link';
+import { h, Component } 				from 'preact/preact';
+import SVGIcon 							from 'com/svg-icon/icon';
+import NavLink 							from 'com/nav-link/link';
+
+import $Node							from '../shrub/js/node/node';
 
 export default class ContentPost extends Component {
 	constructor( props ) {
 		super(props);
+		
+		this.state = {
+			author: {}
+		};
+		
+		this.componentWillReceiveProps( props );
+	}
+	
+	componentWillReceiveProps( props ) {
+		// Clear the Author
+		this.setState({ author: {} });
+		
+		// Lookup the author
+		$Node.Get( props.node.author )
+		.then(r => {
+			if ( r.node && r.node.length ) {
+				this.setState({ author: r.node[0] });
+			}
+			else {
+				this.setState({ error: "Not found" });
+			}
+		})
+		.catch(err => {
+			this.setState({ error: err });
+		});
 	}
 
-	render( { node, user }, state ) {
-		if ( node.body ) {
+//	componentDidMount() {
+//	}
+//	componentWillUnmount() {
+//	}
+
+	render( {node, user}, {author, error} ) {
+		if ( node.slug && author.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 			
@@ -18,7 +50,7 @@ export default class ContentPost extends Component {
 			var relative_time = <span></span>;//<span class="-time">{node.published}</span> ago
 			// simple date, full date on hover
 			var post_date = <span>on <span class="-title" title={node.published}>{node.published}</span></span>;
-			var post_by = <span>by {node.author}</span>;
+			var post_by = <span>by {author.slug}</span>;
 			
 			var hasTwitter = <span></span>;
 			
@@ -44,15 +76,10 @@ export default class ContentPost extends Component {
 		else {
 			return (
 				<div class="content-base content-post">
-					Please Wait...
+					{ error ? error : "Please Wait..." }
 				</div>
 			);
 		}
-	}
-
-	componentDidMount() {
-	}
-	componentWillUnmount() {
 	}
 }
 
