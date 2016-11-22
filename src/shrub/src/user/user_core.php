@@ -1,42 +1,6 @@
 <?php
 require_once __DIR__."/../node/node.php";
 
-// NOTE: Confirming an e-mail address BEFORE entering account credentials is BEST!
-// This avoids the problem where you enter the wrong e-mail address as you sign up sign up.
-
-// Create an account
-//  if $mail doesn't exist
-//   mail = blah@blah.com
-//   node = 0
-//   created = NOW()
-//   auth_key = RANDOM_BYTES
-//   last_auth = 0:00:00
-//   do( email_Send( mail, auth_key, $redirect_url )
-//
-// website.com/#user-activate?id=5862&key=aeo8du8aodu8
-// api.website.com/vx/user/activate [id=5862&key=aeo8du8aodu8]
-
-// Activate an account (and partially activate an account)
-//  lookup $id by id (not node)
-//  does $key match?
-//   no: erase auth_key, stop
-//   yes: set last_auth to NOW()
-//   is node 0? ***
-//    no: stop
-//    yes:
-//    is $name set and strlen() >= 3
-//     is $pw set and strlen() >= 8
-//      yes:
-//      is node $user available
-//       yes:
-//       is on reserved list
-//        no: hash($pw) to hash, create a node named $user, erase auth_key
-//        yes:
-//        does $mail match?
-//         yes: hash($pw) to hash, create a node named $user, erase auth_key
-//
-// api.website.com/vx/user/activate [id=5862&key=aeo8du8aodu8&name=homeboy&pw=potatoes]
-
 // *** //
 
 const _SH_USER_ROW_MAP = [
@@ -84,9 +48,15 @@ function user_GetByMail( $mail, $query_suffix = ";" ) {
 
 // @retval Array[Array[String=>String] 
 function user_GetBySlug( $slug, $query_suffix = ";" ) {
+	$node = node_GetIdByParentSlug(SH_NODE_ID_USERS, $slug);
 //	//$node = nodeCache_GetBySlug($slug, $query_suffix);
 //	$node = node_GetBySlug($slug, $query_suffix);
-//	return user_GetByNode($node, $query_suffix);
+	$users = user_GetByNode($node, $query_suffix);
+
+	// Hack, always return the first user
+	if ( count($users) )
+		return $users[0];
+	return null;
 }
 
 

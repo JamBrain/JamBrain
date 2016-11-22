@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__."/node.php";
 
-// Simliar to the regular NODE, but a snapshot
+// Simliar to the regular NODE, but just a snapshot
 // IMPORTANT: This has to come first, as with the node table, we need to make nodes
 $table = 'SH_TABLE_NODE_VERSION';
 if ( in_array(constant($table), $TABLE_LIST) ) {

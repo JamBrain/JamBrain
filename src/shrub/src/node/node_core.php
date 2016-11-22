@@ -2,6 +2,8 @@
 
 /// For fetching subscriptions
 function node_GetPublishedIdModifiedByParent( $parent, $limit = 20, $offset = 0 ) {
+	$query_suffix = ';';	// do we want this anymore?
+		
 	if ( is_integer($parent) ) {
 		return db_QueryFetchPair(
 			"SELECT id, modified 
@@ -131,33 +133,26 @@ function node_Publish( $node, $state = true ) {
 	);
 }
 
-//function node_AddUniqueParentSlug( $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body ) {
-//	// TODO: wrap this in a block
-//
-//	
-//}
-
-//function node_GetIdByParentSlug( $parent, $slug ) {
-//	return db_QueryFetchPair(
-//		"SELECT id, modified 
-//		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
-//		WHERE parent=? AND slug=?
-//		LIMIT 1
-//		".$query_suffix,
-//		$parent, $slug
-//	);
-//}
-
 
 function node_GetIdByType( $type ) {
 	// hack
 	return [100,101];
 }
 
-// TODO: Finish me
-function node_GetIdByParentAndSlug( $parent, $slug ) {
-	return 0;
+function node_GetIdByParentSlug( $parent, $slug ) {
+	$query_suffix = ';';	// do we want this anymore?
+
+	return db_QueryFetchValue(
+		"SELECT id
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+		WHERE parent=? AND slug=?
+		LIMIT 1
+		".$query_suffix,
+		$parent, $slug
+	);
 }
+
+// Get All Functions
 
 function node_GetById( $id ) {
 	

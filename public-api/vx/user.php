@@ -7,6 +7,46 @@ require_once __DIR__."/".SHRUB_PATH."api.php";
 require_once __DIR__."/".SHRUB_PATH."plugin.php";
 require_once __DIR__."/".SHRUB_PATH."user/user.php";
 
+// *** Some older notes. Remove these *** //
+
+// NOTE: Confirming an e-mail address BEFORE entering account credentials is BEST!
+// This avoids the problem where you enter the wrong e-mail address as you sign up sign up.
+
+// Create an account
+//  if $mail doesn't exist
+//   mail = blah@blah.com
+//   node = 0
+//   created = NOW()
+//   auth_key = RANDOM_BYTES
+//   last_auth = 0:00:00
+//   do( email_Send( mail, auth_key, $redirect_url )
+//
+// website.com/#user-activate?id=5862&key=aeo8du8aodu8
+// api.website.com/vx/user/activate [id=5862&key=aeo8du8aodu8]
+
+// Activate an account (and partially activate an account)
+//  lookup $id by id (not node)
+//  does $key match?
+//   no: erase auth_key, stop
+//   yes: set last_auth to NOW()
+//   is node 0? ***
+//    no: stop
+//    yes:
+//    is $name set and strlen() >= 3
+//     is $pw set and strlen() >= 8
+//      yes:
+//      is node $user available
+//       yes:
+//       is on reserved list
+//        no: hash($pw) to hash, create a node named $user, erase auth_key
+//        yes:
+//        does $mail match?
+//         yes: hash($pw) to hash, create a node named $user, erase auth_key
+//
+// api.website.com/vx/user/activate [id=5862&key=aeo8du8aodu8&name=homeboy&pw=potatoes]
+
+// *** //
+
 json_Begin();
 
 const SH_MAIL_DOMAIN = "jammer.vg";
@@ -261,9 +301,11 @@ switch ( $REQUEST[0] ) {
 		// Decode the login as either an e-mail address, or a username
 		if ( coreValidate_Mail($login) ) {
 			$mail = coreSanitize_Mail($login);
+			$RESPONSE['mail'] = $mail;
 		}
 		else {
 			$name = coreSlugify_Name($login);
+			$RESPONSE['name'] = $name;
 		}
 		
 		// If an e-mail login attempt
@@ -272,6 +314,7 @@ switch ( $REQUEST[0] ) {
 		}
 		// If a username login attempt
 		else if ( $name ) {
+			$user = user_GetBySlug( $name );
 			// lookup user by slug
 			// lookup all addresses associated with that user
 			// extract node, hash, and secret
