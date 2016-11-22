@@ -1,7 +1,9 @@
-import { h, Component } from 'preact/preact';
-import ButtonBase		from '../button-base/base';
-import ButtonLink		from '../button-link/link';
-import SVGIcon 			from 'com/svg-icon/icon';
+import { h, Component } 				from 'preact/preact';
+import ButtonBase						from '../button-base/base';
+import ButtonLink						from '../button-link/link';
+import SVGIcon 							from 'com/svg-icon/icon';
+
+import $User							from '../../shrub/js/user/user';
 
 function make_url( url ) {
 	return url + window.location.search;
@@ -10,16 +12,30 @@ function make_url( url ) {
 export default class NavBar extends Component {
 	constructor( props ) {
 		super(props);
+		
+		this.state = {
+			user: 0
+		};
+
+		$User.Get().then( r => {
+			console.log(r);
+			if ( r.id ) {
+				this.setState({ user: r.id });
+			}
+		})
+		.catch( err => {
+			console.log("$User",err);
+		});
 	}
 	
-	render( props, state ) {
+	render( props, {user} ) {
 		var Search = (
 			<ButtonBase class="-icon" onclick={e => { console.log('search'); window.location.hash = "#search"; }}>
 				<SVGIcon baseline>search</SVGIcon>
 			</ButtonBase>
 		);
 		
-		if ( false /*LoggedIn*/ ) {
+		if ( user ) {
 			// TODO: Check if a participant of the current event
 			var MyGame = (
 				<ButtonBase class="-button" onclick={e => console.log('my game')}>

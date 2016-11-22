@@ -24,7 +24,8 @@ export default {
 	Register,
 	Activate,
 	Login,
-	Logout
+	Logout,
+	Get
 };
 
 export function Register( mail ) {
@@ -58,5 +59,15 @@ export function Login( name, password, secret ) {
 
 export function Logout() {
 	return doFetch('//'+API_DOMAIN+'/vx/user/logout', {
+	});
+}
+
+export function Get() {
+	return fetch('//'+API_DOMAIN+'/vx/user/get', {
+		credentials: 'include'
+	})
+	.then( r => {
+		if ( r ) 
+			return r.json();
 	});
 }

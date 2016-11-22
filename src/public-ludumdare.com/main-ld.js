@@ -14,19 +14,17 @@ import DialogAuth						from 'com/dialog-auth/auth';
 
 import CoreData							from '../core-data/data';
 
-import User								from '../shrub/js/user/user';
-
-window.$SH = {};
-window.$SH.User = User;
+//import $User							from '../shrub/js/user/user';
 
 window.LUDUMDARE_ROOT = '/';
 
 class Main extends Component {
 	constructor( props ) {
 		super(props);
-		
+				
 		this.state = Object.assign({}, window.history.state ? window.history.state : {});
 		this.state.root = 1;
+//		this.state.user = 0;
 		
 		this.dialogs = {
 			'#user-login': (<DialogLogin />),
@@ -36,6 +34,15 @@ class Main extends Component {
 		};
 		
 		this.getNodeFromLocation(window.location);
+
+//		$User.Get().then( r => {
+//			if ( r.id ) {
+//				this.setState({ user: r.id });
+//			}
+//		})
+//		.catch( err => {
+//			console.log("$User",err);
+//		});
 
 		// Bind Events to handle future changes //
 		var that = this;
