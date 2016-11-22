@@ -144,6 +144,7 @@ function MakeKeyNode( $key, $parent, $type, $slug, $name ) {
 			$slug,$name,					// slug, name
 			''								// body
 		);
+		node_Publish($node);
 		
 		if ( $node && global_Set($key, $node) ) {
 			echo($key." = ".$node."\n");

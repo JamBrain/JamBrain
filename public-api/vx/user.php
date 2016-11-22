@@ -227,6 +227,8 @@ switch ( $REQUEST[0] ) {
 								if ( $user_id ) {
 									// @TODO wrap these so we can rollback
 									
+									node_Publish($user_id);
+									
 									if ( !user_SetNode($id, $user_id) ) {
 										json_EmitFatalError_Server("Unable to set node", $RESPONSE);
 									}

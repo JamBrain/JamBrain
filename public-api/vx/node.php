@@ -9,13 +9,13 @@ require_once __DIR__."/".SHRUB_PATH."node/node.php";
 json_Begin();
 
 // Do Actions //
-switch ( $REQUEST[0] ) {
+switch ( array_shift($REQUEST) ) {
 	case 'get':
 		json_ValidateHTTPMethod('GET');
 		
 		// Extract requests
-		if ( isset($REQUEST[1]) ) {
-			$node_ids = explode('+', $REQUEST[1]);
+		if ( isset($REQUEST[0]) ) {
+			$node_ids = explode('+', $REQUEST[0]);
 
 			// Sanitize
 			foreach ( $node_ids as &$id ) {
@@ -118,8 +118,36 @@ switch ( $REQUEST[0] ) {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
 		}
 		break;
+	case 'walk':
+		json_ValidateHTTPMethod('GET');
+
+		if ( count($REQUEST) > 0 ) {
+			$root = intval(array_shift($REQUEST));
+			$RESPONSE['root'] = $root;
+			
+			$parent = $root;
+			$RESPONSE['path'] = [];
+			$RESPONSE['extra'] = [];
+			
+			foreach ( $REQUEST as $slug ) {
+				$node = node_GetIdByParentSlug($parent, coreSlugify_Name($slug));
+				if ( $node ) {
+					$parent = $node;
+					$RESPONSE['path'][] = $node;
+				}
+				else {
+					$RESPONSE['extra'][] = coreSlugify_Name($slug);
+				}
+			}
+			
+			$RESPONSE['node'] = $parent;
+		}
+		else {
+			json_EmitFatalError_BadRequest(null, $RESPONSE);
+		}
+		break;
 	default:
-		json_EmitFatalError_Forbidden(null,$RESPONSE);
+		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break;
 };
 
