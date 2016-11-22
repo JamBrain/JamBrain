@@ -14,17 +14,27 @@ import DialogAuth						from 'com/dialog-auth/auth';
 
 import CoreData							from '../core-data/data';
 
+import $Node							from '../shrub/js/node/node';
+
 //import $User							from '../shrub/js/user/user';
 
 window.LUDUMDARE_ROOT = '/';
+window.SITE_ROOT = 1;
 
 class Main extends Component {
 	constructor( props ) {
 		super(props);
-				
-		this.state = Object.assign({}, window.history.state ? window.history.state : {});
-		this.state.root = 1;
-//		this.state.user = 0;
+		
+		this.state = {
+			root: SITE_ROOT,
+			id: 0,
+			node: null,
+			loading: false
+		};
+		
+//		console.log("EEEEEEEEE",this.state.sort(),history.state.sort());		
+//		this.state = Object.assign({}, window.history.state ? window.history.state : {});
+//		this.state.root = 1;
 		
 		this.dialogs = {
 			'#user-login': (<DialogLogin />),
@@ -33,7 +43,8 @@ class Main extends Component {
 			'#user-auth': (<DialogAuth />)
 		};
 		
-		this.getNodeFromLocation(window.location);
+		//this.getNodeFromLocation(window.location);
+		this.fetchNode(this.cleanLocation(window.location));
 
 //		$User.Get().then( r => {
 //			if ( r.id ) {
@@ -73,8 +84,75 @@ class Main extends Component {
 	trimSlashes( str ) {
 		return str.replace(/^\/|\/$/g,'');
 	}
+	
+	fetchNode( slugs ) {
+		this.setState({ loading: true });
 		
+		$Node.Walk(this.state.root, slugs)
+			.then(r => {
+				console.log('r',r);
+
+				var state = { 
+					loading: false,
+					id: r.node, 
+					extra: r.extra
+				};
+				console.log('state',state);
+				
+				$Node.Get(r.node)
+					.then(rr => {
+						console.log('rr',rr);
+						console.log('state2',state);
+						
+						state.node = rr.node[0];
+
+//						if ( rr.node && rr.node.length ) {
+//							state.node = rr.node[0];
+//						}
+//						
+						this.setState(state);
+					})
+					.catch(err => {
+						this.setState({ error: err, loading: false });
+					});
+			})
+			.catch(err => {
+				this.setState({ error: err, loading: false });
+			});
+	}
+
 	getNodeFromLocation( location ) {
+//		// Clean the URL
+//		var clean = {
+//			pathname: this.makeClean(location.pathname),
+//			search: location.search,
+//			hash: this.makeClean(location.hash),
+//		}
+//		if ( clean.hash == "#" )
+//			clean.hash = "";
+//
+//		var clean_path = clean.pathname + clean.search + clean.hash;
+//
+//		// Parse the clean URL
+//		var slugs = this.trimSlashes(clean.pathname).split('/');
+//		
+//		// Figure out what the active node actually is
+//		//this.state.node = parseInt(CoreData.getNodeIdByParentAndSlugs(this.state.root, slugs));
+//		this.setState({ loading: true });
+////		$Node.FetchByParentSlug(this.state.root, slugs)
+////			.then(r => {
+////				this.setState({ node: r, loading: false });
+////			})
+////			.catch(err => {
+////				this.setState({ loading: false });
+////			});
+//		
+//		// Store the state, and cleaned URL
+//		console.log('replaceState', this.state);
+//		window.history.replaceState(this.state, null, clean_path);
+	}
+	
+	cleanLocation( location ) {
 		// Clean the URL
 		var clean = {
 			pathname: this.makeClean(location.pathname),
@@ -89,12 +167,11 @@ class Main extends Component {
 		// Parse the clean URL
 		var slugs = this.trimSlashes(clean.pathname).split('/');
 		
-		// Figure out what the active node actually is
-		this.state.node = parseInt(CoreData.getNodeIdByParentAndSlugs(this.state.root, slugs));
-		
 		// Store the state, and cleaned URL
-		console.log('replaceState', this.state);
-		window.history.replaceState(this.state, null, clean_path);
+//		console.log('replaceState', this.state);
+		window.history.replaceState(null /*this.state*/, null, clean_path);
+		
+		return slugs;
 	}
 	
 	// *** //
@@ -109,8 +186,9 @@ class Main extends Component {
 	onHashChange( e ) {
 		console.log("hashchange: ", e);
 		
-		this.getNodeFromLocation(window.location);
-		this.setState(this.state);
+		this.fetchNode(this.cleanLocation(window.location));
+		//this.getNodeFromLocation(window.location);
+		//this.setState(this.state);
 		
 		// Don't set scroll, since we're an overlay
 	}
@@ -119,8 +197,9 @@ class Main extends Component {
 		if ( e.detail.location.href !== e.detail.old.href ) {
 			console.log("navchange: ", e.detail);
 
-			this.getNodeFromLocation(e.detail.location);
-			this.setState(this.state);
+			this.fetchNode(this.cleanLocation(e.detail.location));
+			//this.getNodeFromLocation(e.detail.location);
+			//this.setState(this.state);
 			
 			// Scroll to top
 			window.scrollTo(0, 0);
@@ -140,10 +219,11 @@ class Main extends Component {
 	
 	getView( props ) {
 		if ( this.state.node ) {
-			var node = CoreData.getNodeById( this.state.node );
+			//var node = CoreData.getNodeById( this.state.node );
+			node = this.state.node;
 	
-			if ( node.type === 'roots' ) {
-				return <ViewTimeline node={this.state.node} />;
+			if ( node.type === 'root' || node.type === 'site' ) {
+				return <ViewTimeline node={this.state.id} />;
 			}
 			else if ( node.type === 'post' || node.type === 'game' || node.type === 'user' ) {
 				return <ViewSingle node={this.state.node} />;
@@ -157,26 +237,35 @@ class Main extends Component {
 		}
 	}
 	
-	render( props, {} ) {
-		var HashRoot = window.location.hash.split('/',1)[0];
-		if ( this.dialogs[HashRoot] ) {
-			var Dialog = this.dialogs[HashRoot];
+	render( props, {loading} ) {
+		if ( loading ) {
+			return (
+				<div id="layout">
+					Please Wait...
+				</div>
+			);
 		}
 		else {
-			var Dialog = <DialogUnfinished />;
+			var HashRoot = window.location.hash.split('/',1)[0];
+			if ( this.dialogs[HashRoot] ) {
+				var Dialog = this.dialogs[HashRoot];
+			}
+			else {
+				var Dialog = <DialogUnfinished />;
+			}
+			
+			let DialogCode = window.location.hash ? Dialog : <div />;
+			let AlertCode = <div />;
+			
+			return (
+				<div id="layout">
+					<NavBar />
+					{ this.getView(props) }
+					{ DialogCode }
+					{ AlertCode }
+				</div>
+			);
 		}
-		
-		let DialogCode = window.location.hash ? Dialog : <div />;
-		let AlertCode = <div />;
-		
-		return (
-			<div id="layout">
-				<NavBar />
-				{ this.getView(props) }
-				{ DialogCode }
-				{ AlertCode }
-			</div>
-		);
 	}
 };
 

@@ -6,15 +6,35 @@ import CoreData			from '../../core-data/data';
 
 
 export default class ContentPost extends Component {
-	render(props,state) {
-		var post = CoreData.getNodeById( props.node );
-		var user = CoreData.getNodeById( post.author );
+	constructor( props ) {
+		super(props);
+		
+		this.state = {
+			post: props.node,
+			user: props.node
+		};
+		
+		
+	}
+
+	render( props, {post, user} ) {
+		if ( !post && !user ) {
+			return (
+				<div class="content-base content-post">
+					Please Wait...
+				</div>
+			);
+		}
+		
+		
+//		var post = CoreData.getNodeById( props.node );
+//		var user = CoreData.getNodeById( post.author );
 		
 		var hasTwitter = user.meta.twitter ? <span class="-twitter"> (<a href={"https://twitter.com/"+user.meta.twitter} target="_blank" rel="noopener noreferrer" title={"https://twitter.com/"+user.meta.twitter}><SVGIcon baseline small>twitter</SVGIcon>/{user.meta.twitter}</a>)</span> : <span />;
 //		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <SVGIcon>users</SVGIcon></span> : <span />;
 		
 		// Build URL //
-		var url = '/'+CoreData.getNodePathSlugsById( props.node ).slice(1).join('/')+'/';
+		var url = '/'+'timmy';//CoreData.getNodePathSlugsById( props.node ).slice(1).join('/')+'/';
 		
 //		function parseNames( str ) {
 //			// Dummy: Use Global Object //

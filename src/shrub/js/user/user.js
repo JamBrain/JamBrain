@@ -32,12 +32,6 @@ export function Register( mail ) {
 	return doFetch('//'+API_DOMAIN+'/vx/user/create', {
 		'mail': mail
 	});
-//	.then( r => {
-//		console.log("post", r);
-//	})
-//	.catch( err => {
-//		console.log("err", err);
-//	})
 }
 
 export function Activate( id, key, name, password ) {
