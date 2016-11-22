@@ -14,6 +14,9 @@ export default class ContentTimeline extends Component {
 		};
 		
 		this.componentWillReceiveProps( props );
+		
+		
+		this.makeItem = this.makeItem.bind(this);
 	}
 	
 	componentWillReceiveProps( props ) {
@@ -44,11 +47,13 @@ export default class ContentTimeline extends Component {
 	}
 
 	makeItem( node ) {
+		var path = this.props.path;//'/'+this.props.node.slug+'/';//this.props.path ? this.props.path : this.props.;
+		
 		if ( node.type === 'post' || node.type === 'game' ) {
-			return <ContentPost node={node} />;
+			return <ContentPost node={node} path={path} />;
 		}
 		else if ( node.type === 'user' ) {
-			return <ContentUser node={node} />;
+			return <ContentUser node={node} path={path} />;
 		}
 		else {
 			return <div>Unsupported Node Type: {""+node.type}</div>;

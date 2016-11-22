@@ -27,6 +27,7 @@ class Main extends Component {
 			
 			// URL walking
 			id: 0,
+			path: '/',
 			slugs: this.cleanLocation(window.location),
 			extra: [],
 			
@@ -195,7 +196,8 @@ class Main extends Component {
 		.then(r => {
 			// We found a path
 			var state = { 
-				id: r.node, 
+				id: r.node,
+				path: '/'+this.state.slugs.slice(0, r.path.length).join('/'),
 				extra: r.extra
 			};
 			
@@ -284,7 +286,7 @@ class Main extends Component {
 		}
 	}
 
-	render( {}, {node, user, error} ) {
+	render( {}, {node, user, path, error} ) {
 		if ( node.id ) {
 			let DialogCode = this.getDialog();
 			let AlertCode = <div />;
@@ -295,7 +297,7 @@ class Main extends Component {
 					<div class="view-single">
 						<div id="header" />
 						<div id="content-sidebar">
-							<ViewContent node={node} user={user} />
+							<ViewContent node={node} user={user} path={path} />
 							<ViewSidebar />
 						</div>
 						<div id="footer"></div>

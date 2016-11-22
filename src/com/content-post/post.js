@@ -39,12 +39,12 @@ export default class ContentPost extends Component {
 //	componentWillUnmount() {
 //	}
 
-	render( {node, user}, {author, error} ) {
+	render( {node, user, path}, {author, error} ) {
 		if ( node.slug && author.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 			
-			var url = "//";
+			var url = (path ? path+'/' : '/')+node.slug+'/';
 			
 			// x minutes ago
 			var relative_time = <span></span>;//<span class="-time">{node.published}</span> ago

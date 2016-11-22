@@ -19,7 +19,7 @@ export default class ContentUser extends Component {
 			
 			var avatar = (node.meta && node.meta.avatar) ? "//"+STATIC_DOMAIN+node.meta.avatar : "";
 			
-			var url = "//";
+			var url = '/users/'+node.slug+'/';
 			
 			return (
 				<div class="content-base content-user">

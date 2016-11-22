@@ -11,10 +11,9 @@ export default class ViewContent extends Component {
 	}
 	
 	componentDidMount() {
-		
 	}
 	
-	getContent( {node}, state ) {
+	getContent( {node, path}, state ) {
 		if ( node.name ) {
 			document.title = titleParser.parse(node.name, true);
 			if ( document.title === "" )
@@ -27,13 +26,13 @@ export default class ViewContent extends Component {
 		}
 
 		if ( node.type === 'post' || node.type === 'game' ) {
-			return <ContentPost node={node} />;
+			return <ContentPost node={node} path={path+'/..'} />;
 		}
 		else if ( node.type === 'user' ) {
-			return <ContentUser node={node} />;
+			return <ContentUser node={node} path={path+'/..'} />;
 		}
 		else if ( node.type === 'root' || node.type === 'events' ) {
-			return <ContentTimeline node={node} />;
+			return <ContentTimeline node={node} path={path} />;
 		}
 		else {
 			return <div>Unsupported Node Type: {""+node.type}</div>;
