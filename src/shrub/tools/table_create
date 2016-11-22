@@ -126,7 +126,7 @@ function table_Nop( $table ) {
 function table_Exit($table) {
 	global $SH, $TABLE_VERSION, $OLD_TABLE_VERSION;
 	
-	if ( global_Set($table,$TABLE_VERSION) ) {
+	if ( global_Set($table, $TABLE_VERSION) ) {
 		echo $table." upgraded (version ".$OLD_TABLE_VERSION." -> ".$TABLE_VERSION.")\n";	
 	}
 }
@@ -135,7 +135,8 @@ function table_Exit($table) {
 
 // These directories should be searched first // 
 $first_dirs = [
-	'global'
+	'global',
+	'node'
 ];
 
 // Scan for include directories //

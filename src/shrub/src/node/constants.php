@@ -8,6 +8,9 @@ const SH_NODE_ID_ROOT = 			1;	///< Root of the node-tree
 const SH_NODE_ID_USERS = 			2;	///< Special group for Users
 /// @}
 
+$SH_GLOBAL_DEFAULT['SH_NODE_ID_ROOT'] = 1;
+$SH_GLOBAL_DEFAULT['SH_NODE_ID_USERS'] = 2;
+
 ///	@addtogroup NodeTypes
 /// @name Internal Types
 /// @{
@@ -19,6 +22,7 @@ const SH_NODE_TYPE_SYMLINK =		'symlink';
 ///	@addtogroup NodeTypes
 /// @name Core Types
 /// @{
+const SH_NODE_TYPE_SITE =			'site';
 const SH_NODE_TYPE_USER =			'user';
 const SH_NODE_TYPE_POST =			'post';
 /// @}

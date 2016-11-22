@@ -61,9 +61,12 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 					INDEX(slug),
 					UNIQUE parent_slug (parent,slug),
 				name ".DB_TYPE_UNICODE(96).",
-				body MEDIUMTEXT NOT NULL
+				body MEDIUMTEXT NOT NULL,
+				extra ".DB_TYPE_ID."
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
+
+		// NOTE: "extra" is an extra field, primarily used by symlinks
 
 		// Create necessary nodes
 		node_Add(
