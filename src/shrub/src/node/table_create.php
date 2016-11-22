@@ -61,12 +61,11 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 					INDEX(slug),
 					UNIQUE parent_slug (parent,slug),
 				name ".DB_TYPE_UNICODE(96).",
-				body MEDIUMTEXT NOT NULL,
-				extra ".DB_TYPE_ID."
+				body MEDIUMTEXT NOT NULL
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
 
-		// NOTE: "extra" is an extra field, primarily used by symlinks
+		// NOTE: Store "extra" in body for symlinks
 
 		// Create necessary nodes
 		$root = MakeKeyNode('SH_NODE_ID_ROOT', 0, SH_NODE_TYPE_ROOT, 'root', '' );

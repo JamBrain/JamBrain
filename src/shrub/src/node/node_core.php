@@ -5,30 +5,23 @@ function node_GetPublishedIdModifiedByParent( $parent, $limit = 20, $offset = 0 
 	$query_suffix = ';';	// do we want this anymore?
 		
 	if ( is_integer($parent) ) {
-		return db_QueryFetchPair(
-			"SELECT id, modified 
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
-			WHERE published > CONVERT(0,DATETIME) AND parent=?
-			ORDER BY published DESC,
-			LIMIT ? OFFSET ?
-			".$query_suffix,
-			$parent, 
-			$limit, $offset
-		);
+		$parent = [$parent];
 	}
-	else if ( is_array($parent) ) {
+
+	if ( is_array($parent) ) {
 		// Confirm that all IDs are not zero
 		foreach( $parent as $id ) {
 			if ( intval($id) == 0 )
 				return null;
 		}
-		
+
+		// Build IN string
 		$ids = implode(',', $parent);
 		
 		return db_QueryFetchPair(
 			"SELECT id, modified 
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
-			WHERE published > CONVERT(0,DATETIME) AND parent IN ($ids)
+			WHERE parent IN ($ids) AND published > CONVERT(0,DATETIME)
 			ORDER BY published DESC,
 			LIMIT ? OFFSET ?
 			".$query_suffix,
@@ -154,8 +147,143 @@ function node_GetIdByParentSlug( $parent, $slug ) {
 
 // Get All Functions
 
-function node_GetById( $id ) {
+function node_GetById( $ids ) {
+	if ( is_integer($ids) ) {
+		$ids = [$ids];
+	}
 	
+	if ( is_array($ids) ) {
+		// Confirm that all IDs are not zero
+		foreach( $ids as $id ) {
+			if ( intval($id) == 0 )
+				return null;
+		}
+
+		// Build IN string
+		$ids_string = implode(',', $ids);
+
+		return db_QueryFetch(
+			"SELECT id, parent, author,
+				type, subtype, subsubtype,
+				".DB_FIELD_DATE('published').",
+				".DB_FIELD_DATE('created').",
+				".DB_FIELD_DATE('modified').",
+				version,
+				slug, name, body
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+			WHERE id IN ($ids_string)
+			"
+		);
+	}
+	
+	return null;
 }
 
+// This isn't what you want
+function nodeMeta_GetById( $ids ) {
+	if ( is_integer($ids) ) {
+		$ids = [$ids];
+	}
+	
+	if ( is_array($ids) ) {
+		// Confirm that all IDs are not zero
+		foreach( $ids as $id ) {
+			if ( intval($id) == 0 )
+				return null;
+		}
+
+		// Build IN string
+		$ids_string = implode(',', $ids);
+
+		return db_QueryFetch(
+			"SELECT node, scope, `key`, `value`
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." 
+			WHERE id IN ($ids_string)
+			"
+		);
+	}
+	
+	return null;
+}
+
+function nodeMeta_GetByNode( $nodes ) {
+	if ( is_integer($nodes) ) {
+		$nodes = [$nodes];
+	}
+	
+	if ( is_array($nodes) ) {
+		// Confirm that all Nodes are not zero
+		foreach( $nodes as $node ) {
+			if ( intval($node) == 0 )
+				return null;
+		}
+
+		// Build IN string
+		$node_string = implode(',', $nodes);
+
+		return db_QueryFetch(
+			"SELECT scope, `key`, `value`
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." 
+			WHERE node IN ($node_string) AND id IN (
+				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
+			)
+			"
+		);
+	}
+	
+	return null;
+}
+
+// This isn't what you want
+function nodeLink_GetById( $ids ) {
+	if ( is_integer($ids) ) {
+		$ids = [$ids];
+	}
+	
+	if ( is_array($ids) ) {
+		// Confirm that all IDs are not zero
+		foreach( $ids as $id ) {
+			if ( intval($id) == 0 )
+				return null;
+		}
+
+		// Build IN string
+		$ids_string = implode(',', $ids);
+
+		return db_QueryFetch(
+			"SELECT a, b, type
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
+			WHERE id IN ($ids_string)
+			"
+		);
+	}
+	
+	return null;
+}
+
+function nodeLink_GetByNode( $nodes ) {
+	if ( is_integer($nodes) ) {
+		$nodes = [$nodes];
+	}
+	
+	if ( is_array($nodes) ) {
+		// Confirm that all Nodes are not zero
+		foreach( $nodes as $node ) {
+			if ( intval($node) == 0 )
+				return null;
+		}
+
+		// Build IN string
+		$node_string = implode(',', $nodes);
+
+		return db_QueryFetch(
+			"SELECT a, b, type
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
+			WHERE a IN ($node_string) OR b IN ($node_string)
+			"
+		);
+	}
+	
+	return null;
+}
 
