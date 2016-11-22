@@ -1,7 +1,7 @@
 <?php
 
-/// For fetching subscriptions
-function node_GetPublishedIdModifiedByParent( $parent, $limit = 20, $offset = 0 ) {
+// For fetching subscriptions
+function node_GetPublishedIdModifiedByParentType( $parent, $types = null, $limit = 20, $offset = 0 ) {
 	$query_suffix = ';';	// do we want this anymore?
 		
 	if ( is_integer($parent) ) {
@@ -16,17 +16,36 @@ function node_GetPublishedIdModifiedByParent( $parent, $limit = 20, $offset = 0 
 		}
 
 		// Build IN string
-		$ids = implode(',', $parent);
+		$ids_string = implode(',', $parent);
 		
-		return db_QueryFetchPair(
-			"SELECT id, ".DB_FIELD_DATE('modified')." 
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
-			WHERE parent IN ($ids) AND published > CONVERT(0,DATETIME)
-			ORDER BY published DESC
-			LIMIT ? OFFSET ?
-			".$query_suffix,
-			$limit, $offset
-		);
+		if ( $types ) {
+			if ( !is_array($types) ) {
+				$types = [$types];
+			}
+			
+			$types_string = '"'.implode('","', $types).'"';
+			
+			return db_QueryFetchPair(
+				"SELECT id, ".DB_FIELD_DATE('modified')." 
+				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+				WHERE parent IN ($ids_string) AND type IN ($types_string) AND published > CONVERT(0,DATETIME)
+				ORDER BY published DESC
+				LIMIT ? OFFSET ?
+				".$query_suffix,
+				$limit, $offset
+			);			
+		}
+		else {
+			return db_QueryFetchPair(
+				"SELECT id, ".DB_FIELD_DATE('modified')." 
+				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+				WHERE parent IN ($ids_string) AND published > CONVERT(0,DATETIME)
+				ORDER BY published DESC
+				LIMIT ? OFFSET ?
+				".$query_suffix,
+				$limit, $offset
+			);
+		}
 	}
 	
 	return null;

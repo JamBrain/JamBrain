@@ -152,8 +152,18 @@ switch ( array_shift($REQUEST) ) {
 		if ( count($REQUEST) > 0 ) {
 			$root = intval(array_shift($REQUEST));
 			$RESPONSE['root'] = $root;
+
+			$types = [];
+			if ( isset($REQUEST[0]) ) {
+				$types = explode('+', $REQUEST[0]);
+			}
+			$RESPONSE['types'] = $types;
+
+//			foreach ( $REQUEST as $slug ) {
+//				$types[] = coreSlugify_Name($slug);
+//			}
 			
-			$RESPONSE['feed'] = node_GetPublishedIdModifiedByParent($root);
+			$RESPONSE['feed'] = node_GetPublishedIdModifiedByParentType($root, $types);
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);

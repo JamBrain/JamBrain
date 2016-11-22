@@ -54,8 +54,12 @@ export function Get( ids ) {
 	});
 }
 
-export function GetFeed( id ) {
-	return fetch('//'+API_DOMAIN+'/vx/node/feed/'+id, {
+export function GetFeed( id, types ) {
+	if ( !Array.isArray(types) ) {
+		types = [types];
+	}
+	
+	return fetch('//'+API_DOMAIN+'/vx/node/feed/'+id+'/'+(types ? types.join("+") : ""), {
 		credentials: 'include'
 	})
 	.then( r => {

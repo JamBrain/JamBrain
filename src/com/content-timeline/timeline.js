@@ -19,7 +19,7 @@ export default class ContentTimeline extends Component {
 		// Clear the Feed
 		this.setState({ feed: [] });
 		
-		$Node.GetFeed( props.node.id )
+		$Node.GetFeed( props.node.id, "site" )
 		.then(r => {
 			if ( r.feed ) {
 				$Node.Get( Object.keys(r.feed) )
