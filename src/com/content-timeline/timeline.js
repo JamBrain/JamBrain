@@ -23,9 +23,9 @@ export default class ContentTimeline extends Component {
 		// Clear the Feed
 		this.setState({ id: props.node.id, feed: [] });
 		
-		$Node.GetFeed( props.node.id, "site" )
+		$Node.GetFeed( props.node.id, "post" )
 		.then(r => {
-			if ( r.feed ) {
+			if ( r.feed && Object.keys(r.feed).length ) {
 				$Node.Get( Object.keys(r.feed) )
 				.then(rr => {
 					this.setState({ feed: rr.node });
@@ -41,21 +41,6 @@ export default class ContentTimeline extends Component {
 		.catch(err => {
 			this.setState({ error: err });
 		})
-		
-//		// Lookup the author
-//		$Node.GetPublishedChildren( props.node.id )
-//		.then(r => {
-//			
-////			if ( r.node && r.node.length ) {
-////				this.setState({ author: r.node[0] });
-////			}
-////			else {
-////				this.setState({ error: "Not found" });
-////			}
-//		})
-//		.catch(err => {
-//			this.setState({ error: err });
-//		});
 	}
 
 	makeItem( node ) {
@@ -74,7 +59,7 @@ export default class ContentTimeline extends Component {
 		if ( node.slug && feed ) {
 			return (
 				<div id="content">
-					{ feed.map(this.makeItem) }
+					{ feed.length ? feed.map(this.makeItem) : "No Posts" }
 				</div>
 			);
 		}
