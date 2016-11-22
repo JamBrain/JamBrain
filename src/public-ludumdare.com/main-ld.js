@@ -1,8 +1,6 @@
 import { h, render, Component }			from 'preact/preact';
 import NavBar 							from 'com/nav-bar/bar';
 
-import ViewTimeline						from 'com/view-timeline/timeline';
-import ViewSingle						from 'com/view-single/single';
 import ViewSidebar						from 'com/view-sidebar/sidebar';
 import ViewContent						from 'com/view-content/content';
 
@@ -13,8 +11,6 @@ import DialogActivate					from 'com/dialog-activate/activate';
 import DialogAuth						from 'com/dialog-auth/auth';
 
 //import AlertBase						from 'com/alert-base/base';
-
-//import CoreData							from '../core-data/data';
 
 import $Node							from '../shrub/js/node/node';
 import $User							from '../shrub/js/user/user';
@@ -193,7 +189,7 @@ class Main extends Component {
 	
 	// *** //
 	
-	componentDidMount() {
+	fetchNode() {
 		// Fetch the active node
 		$Node.Walk(this.state.root, this.state.slugs)
 		.then(r => {
@@ -215,20 +211,27 @@ class Main extends Component {
 					}
 				})
 				.catch(err => {
-					this.setState({ error: err, loading: false });
+					this.setState({ error: err });
 				});
 		})
 		.catch(err => {
-			this.setState({ error: err, loading: false });
-		});
-		
+			this.setState({ error: err });
+		});		
+	}
+	
+	fetchUser() {
 		// Fetch the Active User
 		$User.Get().then(r => {
 			this.setState({ user: r.node });
 		})
 		.catch(err => {
-			this.setState({ error: err, loading: false });
-		});
+			this.setState({ error: err });
+		});		
+	}
+	
+	componentDidMount() {
+		this.fetchNode();
+		this.fetchUser();
 	}
 	
 	// *** //
@@ -250,6 +253,8 @@ class Main extends Component {
 		if ( e.detail.location.href !== e.detail.old.href ) {
 			console.log("navchange: ", e.detail);
 
+			this.setState({ slugs: this.cleanLocation(e.detail.location), extra: [] });
+
 //			this.fetchNode(this.cleanLocation(e.detail.location));
 			//this.getNodeFromLocation(e.detail.location);
 			//this.setState(this.state);
@@ -266,20 +271,12 @@ class Main extends Component {
 	
 			this.setState(e.state);
 			
-			window.scrollTo(parseFloat(e.state.top), parseFloat(e.state.left));
+			//window.scrollTo(parseFloat(e.state.top), parseFloat(e.state.left));
 		}
 	}
 
-	render( props, {node, user} ) {
-//		if ( loading ) {
-//			return (
-//				<div id="layout">
-//					Please Wait...
-//				</div>
-//			);
-//		}
-//		else 
-		{
+	render( {}, {node, user, error} ) {
+		if ( node.id ) {
 			let DialogCode = this.getDialog();
 			let AlertCode = <div />;
 			
@@ -296,6 +293,13 @@ class Main extends Component {
 					</div>					
 					{ DialogCode }
 					{ AlertCode }
+				</div>
+			);
+		}
+		else {
+			return (
+				<div id="layout">
+					{ error ? error : "Please Wait..." }
 				</div>
 			);
 		}
