@@ -14,44 +14,33 @@ export default class ViewContent extends Component {
 		
 	}
 	
-/*	getNodes( props, state ) {
-		var nodes = [props.node];
-		
-		console.log(nodes);
-		
-		//CoreData.preFetchNodeWithAuthorById( nodes );
-		
-		return nodes.map(function(node) {
-//			document.title = titleParser.parse(node.name, true);
-//			if ( document.title === "" )
-//				document.title = window.location.host;
-//			else
-//				document.title += " | " + window.location.host;
-		
-			if ( node.type === 'post' || node.type === 'game' ) {
-				return <ContentPost node={node} />;
-			}
-			if ( node.type === 'user' ) {
-				return <ContentUser node={node} />;
-			}
-			else {
-				return <div>null</div>;
-			}
-		});
-	}
-*/	
 	getContent( {node}, state ) {
-		console.log("gct");
-		if ( node.type === 'post' ) {
+		if ( node.name ) {
+			document.title = titleParser.parse(node.name, true);
+			if ( document.title === "" )
+				document.title = window.location.host;
+			else
+				document.title += " | " + window.location.host;
+		}
+		else {
+			document.title = window.location.host;
+		}
+
+		if ( node.type === 'post' || node.type === 'game' ) {
 			return <ContentPost node={node} />;
 		}
+		else if ( node.type === 'user' ) {
+			return <ContentUser node={node} />;
+		}
+//		else if ( node.type === 'root' ) {
+//			return <ContentUser node={node} />;
+//		}
 		else {
 			return <div>Unsupported Node Type: {""+node.type}</div>;
 		}
 	}
 
 	render( props, state ) {
-		// content-sidebar should be #body
 		return (
 			<div id="content">
 				{ this.getContent( props, state ) }
@@ -59,4 +48,3 @@ export default class ViewContent extends Component {
 		);
 	}
 };
-//				{ this.getNodes(props,state) }

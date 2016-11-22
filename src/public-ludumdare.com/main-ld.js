@@ -216,9 +216,6 @@ class Main extends Component {
 			// Now lookup the node
 			$Node.Get(r.node)
 				.then(rr => {
-					console.log('rr',rr);
-					console.log('state2',state);
-					
 					if ( rr.node && rr.node.length ) {
 						state.node = rr.node[0];
 						this.setState(state);
