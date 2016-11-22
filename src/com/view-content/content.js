@@ -32,7 +32,7 @@ export default class ViewContent extends Component {
 		else if ( node.type === 'user' ) {
 			return <ContentUser node={node} />;
 		}
-		else if ( node.type === 'root' ) {
+		else if ( node.type === 'root' || node.type === 'events' ) {
 			return <ContentTimeline node={node} />;
 		}
 		else {
