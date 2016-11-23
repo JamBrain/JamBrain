@@ -37,9 +37,7 @@ class Main extends Component {
 			},
 			
 			// Active User
-			user: {
-				id: 0
-			}
+			user: null
 		};
 		
 //		console.log("EEEEEEEEE",this.state.sort(),history.state.sort());		
@@ -54,13 +52,15 @@ class Main extends Component {
 		window.addEventListener('hashchange', that.onHashChange.bind(that));
 		window.addEventListener('navchange', that.onNavChange.bind(that));
 		window.addEventListener('popstate', that.onPopState.bind(that));
+		
+		this.onLogin = this.onLogin.bind(this);
 	}
 	
 	getDialog() {
 		var HashRoot = window.location.hash.split('/',1)[0];
 		switch (HashRoot) {
 			case '#user-login':
-				return <DialogLogin />;
+				return <DialogLogin onlogin={this.onLogin} />;
 			case '#user-activate':
 				return <DialogActivate />;
 			case '#user-register':
@@ -74,6 +74,11 @@ class Main extends Component {
 					return <div />
 				break;
 		};
+	}
+	
+	onLogin() {
+		this.setState({ user: null });
+		this.fetchData();
 	}
 
 	makeSlug( str ) {
@@ -234,7 +239,7 @@ class Main extends Component {
 	fetchData() {
 		if ( this.state.node && !this.state.node.id )
 			this.fetchNode();
-		if ( this.state.user && !this.state.user.id )
+		if ( !this.state.user )
 			this.fetchUser();	
 	}
 	

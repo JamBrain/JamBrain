@@ -39,7 +39,8 @@ export default class DialogLogin extends Component {
 			.then( r => {
 				if ( r.status === 200 ) {
 					console.log('success',r);
-					location.href = "#user-loggedin";
+					location.href = "#";//user-loggedin";
+					this.props.onlogin();
 				}
 				else {
 					console.log(r);
