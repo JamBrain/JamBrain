@@ -18,13 +18,11 @@ export default class ContentEventIdea extends Component {
 			ideas: null
 		};
 		
-		this.tom = 0;
-		
 		this.textChange = this.textChange.bind(this);
 //		this.removeIdea = this.removeIdea.bind(this);
 		this.submitIdeaForm = this.submitIdeaForm.bind(this);
 		
-//		this.renderIdea = this.renderIdea.bind(this);
+		this.renderIdea = this.renderIdea.bind(this);
 	}
 	
 	componentDidMount() {
@@ -90,7 +88,6 @@ export default class ContentEventIdea extends Component {
 
 	renderIdea( id ) {
 		var idea = this.state.ideas[id];
-		//console.log( this.state.ideas );
 		
 		return (
 			<div class="-item">
@@ -100,7 +97,7 @@ export default class ContentEventIdea extends Component {
 		);
 	}
 	renderIdeas() {
-		return Object.keys(this.state.ideas).map(this.renderIdea.bind(this));
+		return Object.keys(this.state.ideas).map(this.renderIdea);
 	}
 
 	render( {node, user, path, extra}, {idea, ideas, error} ) {
@@ -109,10 +106,10 @@ export default class ContentEventIdea extends Component {
 			if ( user && user['id'] ) {
 				return (
 					<div class="-body">
-						<h3>Theme Suggestion Round { this.tom++ }</h3>
+						<h3>Theme Suggestion Round</h3>
 						<div class="idea-form">
 							<input type="text" class="-single" onchange={this.textChange} placeholder="Your suggestion" maxlength="64" value={idea} />
-							<ButtonBase class="-submit" onclick={this.submitIdeaForm}>Submit</ButtonBase>
+							<button class="-submit" onclick={this.submitIdeaForm}>Submit</button>
 						</div>
 						<div class="foot-note small">You have <strong>{MAX_IDEAS - Object.keys(ideas).length}</strong> suggestion(s) left</div>
 						<h3>My Suggestions</h3>
