@@ -236,7 +236,7 @@ switch ( $REQUEST[0] ) {
 							// Check if this slug is on the reserved list
 							if ( count($reserved) ) {
 								// Does this e-mail address match the one on the reserve list?
-								if ( !in_array($user['mail'], $reserved) ) {
+								if ( !in_array(strtolower($user['mail']), $reserved) ) {
 									json_EmitFatalError_Server("Sorry. \"$slug\" is reserved. Is this you? Try using your original e-mail address", $RESPONSE);
 								}
 							}
