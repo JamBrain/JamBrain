@@ -200,3 +200,26 @@ function user_AuthTimeSetNow( $id ) {
 function userAuthKey_Gen() {
 	return bin2hex(openssl_random_pseudo_bytes(32));
 }
+
+// *** //
+
+function userReserved_Is( $slug ) {
+	return db_QueryFetchSingle(
+		"SELECT mail FROM ".SH_TABLE_PREFIX.SH_TABLE_USER_RESERVED." 
+		WHERE slug=?
+		;",
+		$slug
+	);
+}
+
+function userReserved_Add( $slug, $mail ) {
+	return db_QueryInsert(
+		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_USER_RESERVED." (
+			slug, mail
+		)
+		VALUES ( 
+			?, ?
+		)",
+		$slug, $mail
+	);
+}

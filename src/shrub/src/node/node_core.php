@@ -146,9 +146,26 @@ function node_Publish( $node, $state = true ) {
 }
 
 
-function node_GetIdByType( $type ) {
-	// hack
-	return [100,101];
+function node_GetIdByType( $types ) {
+	if ( is_string($types) ) {
+		$types = [$types];
+	}
+	
+	if ( is_array($types) ) {
+		$types_string = '"'.implode('","', $types).'"';
+
+		return db_QueryFetchSingle(
+			"SELECT id
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+			WHERE type IN ($types_string)
+			"
+		);
+	}
+	
+	return null;
+//	
+//	// hack
+//	return [100,101];
 }
 
 function node_GetIdByParentSlug( $parent, $slug ) {
@@ -306,3 +323,53 @@ function nodeLink_GetByNode( $nodes ) {
 	return null;
 }
 
+
+function nodeComplete_GetById( $ids, $scope = 0 ) {
+	$nodes = node_GetById($ids);
+	
+	$metas = nodeMeta_GetByNode($ids);
+	$links = nodeLink_GetByNode($ids);
+		
+	// Populate Links		
+	foreach ( $nodes as &$node ) {
+		$node['a'] = [];
+		$node['b'] = [];
+		
+		foreach ( $links as $link ) {
+			if ( $node['id'] === $link['a'] ) {
+				if ( isset($node['a'][$link['type']]) ) {
+					$node['a'][$link['type']][] = $link['b'];
+				}
+				else {
+					$node['a'][$link['type']] = [$link['b']];
+				}
+			}
+			else if ( $node['id'] === $link['b'] ) {
+				if ( isset($node['b'][$link['type']]) ) {
+					$node['b'][$link['type']][] = $link['a'];
+				}
+				else {
+					$node['b'][$link['type']] = [$link['a']];
+				}
+			}
+		}
+	}
+
+	//$scope = 0;
+	
+	// Populate Metadata
+	foreach ( $nodes as &$node ) {
+		$node['meta'] = [];
+		
+		foreach ( $metas as $meta ) {
+			if ( $node['id'] === $meta['node'] ) {
+				if ( $meta['scope'] <= $scope ) {
+					$node['meta'][$meta['key']] = $meta['value'];
+				}
+			}
+		}
+		//sort($node['meta']);
+	}
+
+	return $nodes;
+}

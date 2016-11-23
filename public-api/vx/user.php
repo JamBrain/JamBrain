@@ -172,6 +172,10 @@ switch ( $REQUEST[0] ) {
 			$name = coreSanitize_Name($_POST['name']);
 		else
 			$name = "";
+		
+		if ( $name !== $_POST['name'] ) {
+			json_EmitFatalError_BadRequest("Name contains (or starts/ends) with invalid characters", $RESPONSE);
+		}		
 
 		if ( isset($_POST['pw']) )
 			$pw = coreSanitize_Password($_POST['pw']);
@@ -209,10 +213,14 @@ switch ( $REQUEST[0] ) {
 						
 						$slug = coreSlugify_Name($name);
 
-						// If the name and slug aren't the same length (they need to match)
-						if ( strlen($name) !== strlen($slug) ) {
-							json_EmitFatalError_BadRequest("Name must be alphanumeric, may contain '_', '.', or '-', but may not start or end with them", $RESPONSE);
+						if ( in_array($slug, $SH_NAME_RESERVED) ) {
+							json_EmitFatalError_BadRequest("Sorry. '$slug' is reserved", $RESPONSE);
 						}
+
+//						// If the name and slug aren't the same length (they need to match)
+//						if ( strlen($name) !== strlen($slug) ) {
+//							json_EmitFatalError_BadRequest("Name must be alphanumeric, may contain '_', '.', or '-', but may not start or end with them", $RESPONSE);
+//						}
 
 						// If password is too short
 						if ( strlen($pw) < PASSWORD_MIN_LENGTH ) {
@@ -224,17 +232,16 @@ switch ( $REQUEST[0] ) {
 							json_EmitFatalError_Server("Sorry. Account \"$slug\" already exists", $RESPONSE);
 						}
 						else {
-							/// @TODO Check if on the reserved list
-							if ( false ) {
-								/// @TODO Does this e-mail address match the one on the reserve list?
-								if ( false ) {
-									/// @TODO: Add
-								}
-								else {
-									json_EmitFatalError_Server("Sorry. Account \"$slug\" is reserved. Is this you? Try using your original e-mail address", $RESPONSE);
+							$reserved = userReserved_Is($slug);
+							// Check if this slug is on the reserved list
+							if ( count($reserved) ) {
+								// Does this e-mail address match the one on the reserve list?
+								if ( !in_array(strtolower($user['mail']), $reserved) ) {
+									json_EmitFatalError_Server("Sorry. \"$slug\" is reserved. Is this you? Try using your original e-mail address", $RESPONSE);
 								}
 							}
-							else {
+							
+							{
 								// @TODO wrap these so we can rollback
 								$user_id = userNode_Add(
 									$slug,
@@ -376,7 +383,7 @@ switch ( $REQUEST[0] ) {
 		$RESPONSE['id'] = $id;
 		
 		if ( $id > 0 ) {
-			$RESPONSE['node'] = node_GetById($id);
+			$RESPONSE['node'] = nodeComplete_GetById($id);
 			if ( count($RESPONSE['node']) ) {
 				$RESPONSE['node'] = $RESPONSE['node'][0];
 			}
