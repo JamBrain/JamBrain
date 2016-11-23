@@ -2,6 +2,8 @@ import { h, Component } 				from 'preact/preact';
 import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
 
+import ContentEventIdea					from 'com/content-event-idea/event-idea';
+
 export default class ContentEvent extends Component {
 	constructor( props ) {
 		super(props);
@@ -12,7 +14,7 @@ export default class ContentEvent extends Component {
 	componentWillUnmount() {
 	}
 	
-	render( {node, path, extra}, {error} ) {
+	render( {node, user, path, extra}, {error} ) {
 		if ( node.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse('**Event:** '+node.name) };
@@ -24,15 +26,11 @@ export default class ContentEvent extends Component {
 			// Theme Selection
 			if ( extra.length && extra[0] === 'theme' ) {
 				let ThemeBody = "";
+
 				
 				switch (ThemeMode) {
 					case 1:
-						ThemeBody = (
-							<div class="-body">
-								<h3>Theme Suggestion Round</h3>
-								<div>ears</div>
-							</div>
-						);
+						ThemeBody = <ContentEventIdea node={node} user={user} />
 						break;
 					default:
 						ThemeBody = (
