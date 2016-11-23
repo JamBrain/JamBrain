@@ -19,26 +19,76 @@ export default class ContentEvent extends Component {
 			
 			var url = path+'/'+node.slug+'/';
 			
+			let ThemeMode = (node.meta['theme-mode']) ? (node.meta['theme-mode']) : 0;
+			
+			// Theme Selection
 			if ( extra.length && extra[0] === 'theme' ) {
+				let ThemeBody = "";
+				
+				switch (ThemeMode) {
+					case 1:
+						ThemeBody = (
+							<div class="-body">
+								<h3>Theme Suggestions</h3>
+								<div>ears</div>
+							</div>
+						);
+						break;
+					default:
+						ThemeBody = (
+							<div class="-body">
+								<h3>Theme Selection: Closed</h3>
+								<div>{"This event is either old, has no Theme Selection, or it hasn't started yet"}</div>
+							</div>
+						);
+						break;
+				};
+				
 				return (
-					<div class="content-base content-user">
+					<div class="content-base content-user content-event">
 						<div class="-header">
 							<div class="-title _font2"><NavLink href={url} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
 						</div>
-						<div class="-body">Theme Selection</div>
+						{ThemeBody}
 						<div class="-footer">
 						</div>
 					</div>
 				);				
 			}
+			// Regular View
 			else {
+				var ThemeModeText = "";
+				switch ( ThemeMode ) {
+					case 1:
+						ThemeModeText = "Suggest Themes";
+						break;
+					case 2:
+						ThemeModeText = "Slaughter Themes";
+						break;
+					case 3:
+						ThemeModeText = "Fuse Themes";
+						break;
+					case 4:
+						ThemeModeText = "Vote for Themes";
+						break;
+					case 5:
+						ThemeModeText = "Vote for Final Theme";
+						break;
+				};
+				
+				var ThemeSelectionDiv = ThemeModeText ? <div><SVGIcon>mallet</SVGIcon> {ThemeModeText}</div> : "";
+				
 				return (
-					<div class="content-base content-user">
+					<div class="content-base content-user content-event">
 						<div class="-header">
 							<div class="-title _font2"><NavLink href={url} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
 						</div>
 						<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
-						<div class="-body">This is an <strong>Event</strong> page. Extra Args: {extra}</div>
+						<div class="_hidden">Extra Args: {extra.join("/")}</div>
+						<div class="-body">
+							<div><SVGIcon>gamepad</SVGIcon> Join Event</div>
+							{ThemeSelectionDiv}
+						</div>
 						<div class="-footer">
 						</div>
 					</div>
