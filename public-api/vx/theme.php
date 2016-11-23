@@ -70,9 +70,11 @@ switch ( $action ) {
 				json_ValidateHTTPMethod('GET');
 				$event_id = intval(json_ArgGet(1));
 				
-				if ( user_AuthIsUser() ) {
+				//$RESPONSE['event'] = $event_id;
+				//$RESPONSE['user'] = user_AuthUser();
+				if ( user_AuthUser() ) {
 					if ( $event_id ) {
-						$RESPONSE['ideas'] = theme_IdeaGetMine($event_id,$AUTH['user']['id']);
+						$RESPONSE['ideas'] = themeIdea_Get($event_id, user_AuthUser());
 						$RESPONSE['count'] = count($RESPONSE['ideas']);
 					}
 					else {
