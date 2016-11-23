@@ -213,10 +213,10 @@ switch ( $REQUEST[0] ) {
 						
 						$slug = coreSlugify_Name($name);
 
-						// If the name and slug aren't the same length (they need to match)
-						if ( strlen($name) !== strlen($slug) ) {
-							json_EmitFatalError_BadRequest("Name must be alphanumeric, may contain '_', '.', or '-', but may not start or end with them", $RESPONSE);
-						}
+//						// If the name and slug aren't the same length (they need to match)
+//						if ( strlen($name) !== strlen($slug) ) {
+//							json_EmitFatalError_BadRequest("Name must be alphanumeric, may contain '_', '.', or '-', but may not start or end with them", $RESPONSE);
+//						}
 
 						// If password is too short
 						if ( strlen($pw) < PASSWORD_MIN_LENGTH ) {
