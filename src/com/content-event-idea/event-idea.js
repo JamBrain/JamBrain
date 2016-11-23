@@ -26,14 +26,17 @@ export default class ContentEventIdea extends Component {
 	}
 	
 	componentDidMount() {
-		console.log("mount");
 		$ThemeIdea.GetMy([this.props.node.id])
 		.then(r => {
-			console.log(r.ideas);
-			this.setState({ ideas: r.ideas });
+			if ( r.ideas ) {
+				this.setState({ ideas: r.ideas });
+			}
+			else {
+				this.setState({ ideas: {} });
+			}
 		})
 		.catch(err => {
-			this.setState({ error: err, ideas: [] });
+			this.setState({ error: err });
 		});
 	}
 
@@ -56,7 +59,7 @@ export default class ContentEventIdea extends Component {
 		if ( id ) {
 			$ThemeIdea.Remove(this.props.node.id, id)
 			.then(r => {
-				console.log(r.ideas);
+				//console.log(r.ideas);
 				this.setState({ ideas: r.ideas });
 			})
 			.catch(err => {
@@ -101,7 +104,6 @@ export default class ContentEventIdea extends Component {
 	}
 
 	render( {node, user, path, extra}, {idea, ideas, error} ) {
-		console.log("rander",ideas);
 		if ( node.slug && ideas ) {
 			if ( user && user['id'] ) {
 				return (
@@ -123,7 +125,7 @@ export default class ContentEventIdea extends Component {
 				return (
 					<div class="-body">
 						<h3>Theme Suggestion Round</h3>
-						<div>Please log in to make suggestion</div>
+						<div>Please log in</div>
 					</div>
 				);
 			}
