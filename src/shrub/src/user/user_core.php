@@ -211,3 +211,15 @@ function userReserved_Is( $slug ) {
 		$slug
 	);
 }
+
+function userReserved_Add( $slug, $mail ) {
+	return db_QueryInsert(
+		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_USER_RESERVED." (
+			slug, mail
+		)
+		VALUES ( 
+			?, ?
+		)",
+		$slug, $mail
+	);
+}
