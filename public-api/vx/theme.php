@@ -172,6 +172,58 @@ switch ( $action ) {
 					json_EmitFatalError_BadRequest(null, $RESPONSE);
 				}
 				break;
+			case 'remove':
+				json_ValidateHTTPMethod('POST');
+	
+				$user = user_AuthUser();
+				if ( !$user ) {
+					json_EmitFatalError_Permission(null, $RESPONSE);
+				}
+
+				if ( isset($_POST['id']) )
+					$id = intval($_POST['id']);
+				else
+					json_EmitFatalError_BadRequest("'id' not found in POST", $RESPONSE);
+
+				if ( !$id ) {
+					json_EmitFatalError_BadRequest(null, $RESPONSE);
+				}
+					
+				$event_id = intval(json_ArgGet(1));
+				if ( $event_id !== 0 ) {
+					/// Broadphase: check if $event_id is on the master list of event nodes.
+					if ( in_array($event_id, GetEventNodes()) ) {
+						// TODO: Cache
+						$event = nodeComplete_GetById($event_id);
+						if ( isset($event[0]) ) {
+							$event = $event[0];
+							
+							// Is Event Accepting Suggestions ?
+							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) === 1 ) {
+								$RESPONSE['response'] = themeIdea_Remove($id, $user);
+								
+								$RESPONSE['ideas'] = themeIdea_Get($event_id, $user);
+								$RESPONSE['count'] = count($RESPONSE['ideas']);
+								
+								if ( $RESPONSE['response'] )
+									json_RespondCreated();
+							}
+							else {
+								json_EmitFatalError_BadRequest("Event is not accepting Theme Suggestions", $RESPONSE);
+							}
+						}
+						else {
+							json_EmitFatalError_Server(null, $RESPONSE);
+						}
+					}
+					else {
+						json_EmitFatalError_NotFound("Invalid Event", $RESPONSE);
+					}
+				}
+				else {
+					json_EmitFatalError_BadRequest(null, $RESPONSE);
+				}
+				break;
 			default:
 				json_EmitFatalError_Forbidden(null,$RESPONSE);
 				break;
