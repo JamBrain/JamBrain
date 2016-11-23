@@ -146,9 +146,26 @@ function node_Publish( $node, $state = true ) {
 }
 
 
-function node_GetIdByType( $type ) {
-	// hack
-	return [100,101];
+function node_GetIdByType( $types ) {
+	if ( is_string($types) ) {
+		$types = [$types];
+	}
+	
+	if ( is_array($types) ) {
+		$types_string = '"'.implode('","', $types).'"';
+
+		return db_QueryFetchSingle(
+			"SELECT id
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+			WHERE type IN ($types_string)
+			"
+		);
+	}
+	
+	return null;
+//	
+//	// hack
+//	return [100,101];
 }
 
 function node_GetIdByParentSlug( $parent, $slug ) {

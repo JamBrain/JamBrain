@@ -427,9 +427,9 @@ function _themeIdea_AddWithLimit( $idea, $event_id, $user_id, $limit ) {
 
 function themeIdea_Add( $idea, $event_id, $user_id, $limit = null ) {
 	if ( isset($limit) )
-		_themeIdea_AddWithLimit( $idea, $event_id, $user_id, $limit );
+		return _themeIdea_AddWithLimit( $idea, $event_id, $user_id, $limit );
 	else
-		_themeIdea_Add( $idea, $event_id, $user_id );
+		return _themeIdea_Add( $idea, $event_id, $user_id );
 }
 
 

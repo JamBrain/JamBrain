@@ -174,7 +174,7 @@ switch ( $REQUEST[0] ) {
 			$name = "";
 		
 		if ( $name !== $_POST['name'] ) {
-			json_EmitFatalError_BadRequest("Name contains invalid characters", $RESPONSE);
+			json_EmitFatalError_BadRequest("'name' contains invalid characters", $RESPONSE);
 		}
 
 		if ( isset($_POST['pw']) )
