@@ -101,37 +101,6 @@ class Main extends Component {
 		return str.replace(/^\/|\/$/g,'');
 	}
 
-	getNodeFromLocation( location ) {
-//		// Clean the URL
-//		var clean = {
-//			pathname: this.makeClean(location.pathname),
-//			search: location.search,
-//			hash: this.makeClean(location.hash),
-//		}
-//		if ( clean.hash == "#" )
-//			clean.hash = "";
-//
-//		var clean_path = clean.pathname + clean.search + clean.hash;
-//
-//		// Parse the clean URL
-//		var slugs = this.trimSlashes(clean.pathname).split('/');
-//		
-//		// Figure out what the active node actually is
-//		//this.state.node = parseInt(CoreData.getNodeIdByParentAndSlugs(this.state.root, slugs));
-//		this.setState({ loading: true });
-////		$Node.FetchByParentSlug(this.state.root, slugs)
-////			.then(r => {
-////				this.setState({ node: r, loading: false });
-////			})
-////			.catch(err => {
-////				this.setState({ loading: false });
-////			});
-//		
-//		// Store the state, and cleaned URL
-//		console.log('replaceState', this.state);
-//		window.history.replaceState(this.state, null, clean_path);
-	}
-	
 	cleanLocation( location ) {
 		// Clean the URL
 		var clean = {
@@ -146,13 +115,7 @@ class Main extends Component {
 
 		// Parse the clean URL
 		clean.slugs = this.trimSlashes(clean.pathname).split('/');
-		
-//		// Store the state, and cleaned URL
-//		console.log('cleanLocation replaceState', clean_path);//, this.state);
-//		//window.history.replaceState(window.history.state, null, clean_path);
-//		window.history.replaceState(null, null, clean_path);
-//	
-//		return slugs;
+
 		return clean;
 	}
 	
@@ -224,36 +187,15 @@ class Main extends Component {
 		else {
 			this.setState({ id: 0, slugs: slugs });
 		}
-		
-//		this.fetchNode(this.cleanLocation(window.location));
-		//this.getNodeFromLocation(window.location);
-		//this.setState(this.state);
-		
-		// Don't set scroll, since we're an overlay
 	}
 	// When we navigate by clicking forward
 	onNavChange( e ) {
 		console.log('navchange:',e.detail.old.href,'=>',e.detail.location.href);
 		if ( e.detail.location.href !== e.detail.old.href ) {
-//			console.log(e.detail.location);
-			//console.log("navchange: ", e.detail.location.href);
-
 			var slugs = this.cleanLocation(e.detail.location).slugs;
 
 			if ( slugs.join() !== this.state.slugs.join() ) {
-//				// Store 
-//				var old_state = Object.assign({},this.state);
-//				console.log('replaceState', old_state);
-//				history.replaceState(old_state, null);//, null, window.location.pathname+window.location.search);
-
-//			console.log('pushState');
-//			history.pushState(null, null, this.base.pathname+this.base.search);
-		
-//			window.history.state = Object.assign({},this.state);
-//			window.history.replaceState(window.history.state, null, e.detail.old.href);
-
-				// Advance history by pushing a state (that will be updated by the 'navchange' event)
-				console.log('pushState');
+//				console.log('pushState');
 				history.pushState(null, null, e.detail.location.pathname+e.detail.location.search);
 
 				this.setState({ id: 0, slugs: slugs, node: {id: 0} });
@@ -271,16 +213,10 @@ class Main extends Component {
 		// NOTE: This is sometimes called on a HashChange with a null state
 		if ( e.state ) {
 			this.setState(e.state);
-			
-			//window.scrollTo(parseFloat(e.state.top), parseFloat(e.state.left));
 		}
-//		else {
-//			this.setState({});
-//		}
 	}
 	
 	componentDidUpdate( prevProps, prevState ) {
-//		console.log('state change');
 		var state_copy = Object.assign({},this.state);
 //		console.log('replaceState', state_copy);
 		history.replaceState(state_copy, null);
