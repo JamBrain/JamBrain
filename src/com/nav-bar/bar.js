@@ -41,14 +41,14 @@ export default class NavBar extends Component {
 				<div class="-new">2</div>
 			) : "";
 			var Notification = (
-				<ButtonBase class="-icon" onclick={e => console.log('notification')}>
+				<ButtonBase class="-icon" onclick={e => {console.log('notification'); window.location.hash = "#dummy";}}>
 					<SVGIcon baseline>bubble</SVGIcon>
 					{NotificationCount}
 				</ButtonBase>
 			);
 			
 			// TODO: Pull this out of the user meta, else use a dummy
-			let Avatar = user.avatar ? <img src={"//"+STATIC_DOMAIN+user.avatar} /> : <img src={'//'+STATIC_DOMAIN+'/other/dummy/user64.png'} />;
+			let Avatar = (user.meta && user.meta.avatar) ? <img src={"//"+STATIC_DOMAIN+user.meta.avatar} /> : <img src={'//'+STATIC_DOMAIN+'/other/dummy/user64.png'} />;
 			//'/other/logo/mike/Chicken64.png';
 			var User = (
 				<ButtonBase class="-user" onclick={e => console.log('user')}>

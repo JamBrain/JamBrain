@@ -306,3 +306,53 @@ function nodeLink_GetByNode( $nodes ) {
 	return null;
 }
 
+
+function nodeComplete_GetById( $ids, $scope = 0 ) {
+	$nodes = node_GetById($ids);
+	
+	$metas = nodeMeta_GetByNode($ids);
+	$links = nodeLink_GetByNode($ids);
+		
+	// Populate Links		
+	foreach ( $nodes as &$node ) {
+		$node['a'] = [];
+		$node['b'] = [];
+		
+		foreach ( $links as $link ) {
+			if ( $node['id'] === $link['a'] ) {
+				if ( isset($node['a'][$link['type']]) ) {
+					$node['a'][$link['type']][] = $link['b'];
+				}
+				else {
+					$node['a'][$link['type']] = [$link['b']];
+				}
+			}
+			else if ( $node['id'] === $link['b'] ) {
+				if ( isset($node['b'][$link['type']]) ) {
+					$node['b'][$link['type']][] = $link['a'];
+				}
+				else {
+					$node['b'][$link['type']] = [$link['a']];
+				}
+			}
+		}
+	}
+
+	//$scope = 0;
+	
+	// Populate Metadata
+	foreach ( $nodes as &$node ) {
+		$node['meta'] = [];
+		
+		foreach ( $metas as $meta ) {
+			if ( $node['id'] === $meta['node'] ) {
+				if ( $meta['scope'] <= $scope ) {
+					$node['meta'][$meta['key']] = $meta['value'];
+				}
+			}
+		}
+		//sort($node['meta']);
+	}
+
+	return $nodes;
+}

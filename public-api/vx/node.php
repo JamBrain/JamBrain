@@ -32,53 +32,55 @@ switch ( array_shift($REQUEST) ) {
 				json_EmitFatalError_BadRequest("Too many nodes", $RESPONSE);
 			}
 			
-			$nodes = node_GetById($node_ids);
+			$nodes = nodeComplete_GetById($node_ids);
 			
-			$metas = nodeMeta_GetByNode($node_ids);
-			$links = nodeLink_GetByNode($node_ids);
-				
-			// Populate Links		
-			foreach ( $nodes as &$node ) {
-				$node['a'] = [];
-				$node['b'] = [];
-				
-				foreach ( $links as $link ) {
-					if ( $node['id'] === $link['a'] ) {
-						if ( isset($node['a'][$link['type']]) ) {
-							$node['a'][$link['type']][] = $link['b'];
-						}
-						else {
-							$node['a'][$link['type']] = [$link['b']];
-						}
-					}
-					else if ( $node['id'] === $link['b'] ) {
-						if ( isset($node['b'][$link['type']]) ) {
-							$node['b'][$link['type']][] = $link['a'];
-						}
-						else {
-							$node['b'][$link['type']] = [$link['a']];
-						}
-					}
-				}
-			}
-
-			// Determine what we can see about the node
-
-			$scope = 0;
-			
-			// Populate Metadata
-			foreach ( $nodes as &$node ) {
-				$node['meta'] = [];
-				
-				foreach ( $metas as $meta ) {
-					if ( $node['id'] === $meta['node'] ) {
-						if ( $meta['scope'] <= $scope ) {
-							$node['meta'][$meta['key']] = $meta['value'];
-						}
-					}
-				}
-				//sort($node['meta']);
-			}
+//			$nodes = node_GetById($node_ids);
+//			
+//			$metas = nodeMeta_GetByNode($node_ids);
+//			$links = nodeLink_GetByNode($node_ids);
+//				
+//			// Populate Links		
+//			foreach ( $nodes as &$node ) {
+//				$node['a'] = [];
+//				$node['b'] = [];
+//				
+//				foreach ( $links as $link ) {
+//					if ( $node['id'] === $link['a'] ) {
+//						if ( isset($node['a'][$link['type']]) ) {
+//							$node['a'][$link['type']][] = $link['b'];
+//						}
+//						else {
+//							$node['a'][$link['type']] = [$link['b']];
+//						}
+//					}
+//					else if ( $node['id'] === $link['b'] ) {
+//						if ( isset($node['b'][$link['type']]) ) {
+//							$node['b'][$link['type']][] = $link['a'];
+//						}
+//						else {
+//							$node['b'][$link['type']] = [$link['a']];
+//						}
+//					}
+//				}
+//			}
+//
+//			// Determine what we can see about the node
+//
+//			$scope = 0;
+//			
+//			// Populate Metadata
+//			foreach ( $nodes as &$node ) {
+//				$node['meta'] = [];
+//				
+//				foreach ( $metas as $meta ) {
+//					if ( $node['id'] === $meta['node'] ) {
+//						if ( $meta['scope'] <= $scope ) {
+//							$node['meta'][$meta['key']] = $meta['value'];
+//						}
+//					}
+//				}
+//				//sort($node['meta']);
+//			}
 
 			// TODO: Determine if we're allowed to view the requested nodes
 			
