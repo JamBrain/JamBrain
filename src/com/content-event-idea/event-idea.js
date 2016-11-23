@@ -19,7 +19,7 @@ export default class ContentEventIdea extends Component {
 		};
 		
 		this.textChange = this.textChange.bind(this);
-		this.removeIdea = this.removeIdea.bind(this);
+//		this.removeIdea = this.removeIdea.bind(this);
 		this.submitIdeaForm = this.submitIdeaForm.bind(this);
 		
 		this.renderIdea = this.renderIdea.bind(this);
@@ -39,7 +39,7 @@ export default class ContentEventIdea extends Component {
 //		<script>
 //			document.getElementById("input-idea").addEventListener("keydown", function(e) {
 //				if (!e) { var e = window.event; }
-//				if (e.keyCode == 13) { /*e.preventDefault();*/ SubmitIdeaForm(); }
+//				if (e.keyCode == 13) { /*e.preventDefault();*/ submitIdeaForm(); }
 //			}, false);
 //		</script>
 
@@ -47,21 +47,50 @@ export default class ContentEventIdea extends Component {
 		this.setState({ idea: e.target.value });
 	}
 
-	removeIdea( idea ) {
-		console.log('remove');
+	removeIdea( id, e ) {
+		id = parseInt(id);
+		
+		console.log('remove:', id );
+		
+		if ( id ) {
+			$ThemeIdea.Remove(this.props.node.id, id)
+			.then(r => {
+				console.log(r.ideas);
+				this.setState({ ideas: r.ideas });
+			})
+			.catch(err => {
+				this.setState({ error: err });
+			});
+		}
+		else {
+			this.setState({ error: "Problem with length" });
+		}
 	}
 	
-	submitIdeaForm( form ) {
-		console.log('submit');
+	submitIdeaForm( e ) {
+		console.log('submit:', this.state.idea);
+		
+		if ( this.state.idea.length > 0 && this.state.idea.length <= 64 ) {
+			$ThemeIdea.Add(this.props.node.id, this.state.idea)
+			.then(r => {
+				console.log(r.ideas);
+				this.setState({ ideas: r.ideas, idea: "" });
+			})
+			.catch(err => {
+				this.setState({ error: err });
+			});
+		}
+		else {
+			this.setState({ error: "Problem with length" });
+		}
 	}
 
 	renderIdea( id ) {
-		//console.log('erro',id,this.state.ideas);
 		var idea = this.state.ideas[id];
 		
 		return (
 			<div class="-item">
-				<div class='-x' onclick={this.removeIdea}>✕</div>
+				<div class='-x' onclick={this.removeIdea.bind(this, id)}>✕</div>
 				<div class='-text' title={idea}>{idea}</div>
 			</div>
 		);
@@ -75,11 +104,10 @@ export default class ContentEventIdea extends Component {
 			if ( user && user['id'] ) {
 				return (
 					<div class="-body">
-					<ButtonBase class="-submit" onclick={this.SubmitIdeaForm}>Voons</ButtonBase>
 						<h3>Theme Suggestion Round</h3>
 						<div class="idea-form">
 							<input type="text" class="-single" onchange={this.textChange} placeholder="Your suggestion" maxlength="64" value={idea} />
-							<button class="-submit" onclick={this.SubmitIdeaForm} >Submit</button>
+							<ButtonBase class="-submit" onclick={this.submitIdeaForm}>Submit</ButtonBase>
 						</div>
 						<div class="foot-note small">You have <strong>{MAX_IDEAS-Object.keys(ideas).length}</strong> suggestion(s) left</div>
 						<h3>My Suggestions</h3>
