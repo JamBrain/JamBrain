@@ -172,6 +172,10 @@ switch ( $REQUEST[0] ) {
 			$name = coreSanitize_Name($_POST['name']);
 		else
 			$name = "";
+		
+		if ( $name !== $_POST['name'] ) {
+			json_EmitFatalError_BadRequest("Name contains invalid characters", $RESPONSE);
+		}
 
 		if ( isset($_POST['pw']) )
 			$pw = coreSanitize_Password($_POST['pw']);
