@@ -174,8 +174,8 @@ switch ( $REQUEST[0] ) {
 			$name = "";
 		
 		if ( $name !== $_POST['name'] ) {
-			json_EmitFatalError_BadRequest("'name' contains invalid characters", $RESPONSE);
-		}
+			json_EmitFatalError_BadRequest("Name contains (or starts/ends) with invalid characters", $RESPONSE);
+		}		
 
 		if ( isset($_POST['pw']) )
 			$pw = coreSanitize_Password($_POST['pw']);
@@ -212,6 +212,10 @@ switch ( $REQUEST[0] ) {
 						}
 						
 						$slug = coreSlugify_Name($name);
+
+						if ( in_array($slug, $SH_NAME_RESERVED) ) {
+							json_EmitFatalError_BadRequest("Sorry. '$slug' is reserved", $RESPONSE);
+						}
 
 //						// If the name and slug aren't the same length (they need to match)
 //						if ( strlen($name) !== strlen($slug) ) {
