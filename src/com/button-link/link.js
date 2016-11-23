@@ -2,6 +2,10 @@ import { h, Component } from 'preact/preact';
 import NavLink 			from 'com/nav-link/link';
 
 export default class ButtonLink extends NavLink {
+	constructor( props ) {
+		super(props);
+	}
+	
 	render(props,state) {
 		if ( props.class )
 			props.class = "button-base button-link " + props.class;
@@ -14,12 +18,12 @@ export default class ButtonLink extends NavLink {
 				props.target = "_blank";
 				props.rel = "noopener noreferrer";
 			}
-			else if ( props.replace ) {
-				doHistory = this.onClickReplace.bind(this);
-				delete props.replace;
-			}
+//			else if ( props.replace ) {
+//				doHistory = this.onClickReplace.bind(this);
+//				delete props.replace;
+//			}
 			else {
-				doHistory = this.onClickPush.bind(this);
+				doHistory = this.onClick;//Push.bind(this);
 			}
 		}
 

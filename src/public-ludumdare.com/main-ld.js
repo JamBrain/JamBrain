@@ -21,14 +21,20 @@ window.SITE_ROOT = 1;
 class Main extends Component {
 	constructor( props ) {
 		super(props);
-		
+				
+		var clean = this.cleanLocation(window.location);
+		if ( window.location.origin+clean.path !== window.location.href ) {
+			console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
+			window.history.replaceState(window.history.state, null, clean.path);
+		}
+	
+		console.log("History:", window.history.state);
+	
 		this.state = {
-			root: SITE_ROOT,
-			
 			// URL walking
 			id: 0,
 			path: '/',
-			slugs: this.cleanLocation(window.location),
+			slugs: clean.slugs,
 			extra: [],
 			
 			// Active Node
@@ -40,18 +46,9 @@ class Main extends Component {
 			user: null
 		};
 		
-//		console.log("EEEEEEEEE",this.state.sort(),history.state.sort());		
-//		this.state = Object.assign({}, window.history.state ? window.history.state : {});
-//		this.state.root = 1;
-				
-		//this.getNodeFromLocation(window.location);
-//		this.fetchNode(this.cleanLocation(window.location));
-
-		// Bind Events to handle future changes
-		var that = this;
-		window.addEventListener('hashchange', that.onHashChange.bind(that));
-		window.addEventListener('navchange', that.onNavChange.bind(that));
-		window.addEventListener('popstate', that.onPopState.bind(that));
+		window.addEventListener('hashchange', this.onHashChange.bind(this));
+		window.addEventListener('navchange', this.onNavChange.bind(this));
+		window.addEventListener('popstate', this.onPopState.bind(this));
 		
 		this.onLogin = this.onLogin.bind(this);
 	}
@@ -103,43 +100,7 @@ class Main extends Component {
 	trimSlashes( str ) {
 		return str.replace(/^\/|\/$/g,'');
 	}
-/*	
-	fetchNode( slugs ) {
-		this.setState({ loading: true });
-		
-		$Node.Walk(this.state.root, slugs)
-			.then(r => {
-				console.log('r',r);
 
-				var state = { 
-					loading: false,
-					id: r.node, 
-					extra: r.extra
-				};
-				console.log('state',state);
-				
-				$Node.Get(r.node)
-					.then(rr => {
-						console.log('rr',rr);
-						console.log('state2',state);
-						
-						state.node = rr.node[0];
-
-//						if ( rr.node && rr.node.length ) {
-//							state.node = rr.node[0];
-//						}
-//						
-						this.setState(state);
-					})
-					.catch(err => {
-						this.setState({ error: err, loading: false });
-					});
-			})
-			.catch(err => {
-				this.setState({ error: err, loading: false });
-			});
-	}
-*/
 	getNodeFromLocation( location ) {
 //		// Clean the URL
 //		var clean = {
@@ -181,23 +142,25 @@ class Main extends Component {
 		if ( clean.hash == "#" )
 			clean.hash = "";
 
-		var clean_path = clean.pathname + clean.search + clean.hash;
+		clean.path = clean.pathname + clean.search + clean.hash;
 
 		// Parse the clean URL
-		var slugs = this.trimSlashes(clean.pathname).split('/');
+		clean.slugs = this.trimSlashes(clean.pathname).split('/');
 		
-		// Store the state, and cleaned URL
-//		console.log('replaceState', this.state);
-		window.history.replaceState(null /*this.state*/, null, clean_path);
-		
-		return slugs;
+//		// Store the state, and cleaned URL
+//		console.log('cleanLocation replaceState', clean_path);//, this.state);
+//		//window.history.replaceState(window.history.state, null, clean_path);
+//		window.history.replaceState(null, null, clean_path);
+//	
+//		return slugs;
+		return clean;
 	}
 	
 	// *** //
 	
 	fetchNode() {
 		// Fetch the active node
-		$Node.Walk(this.state.root, this.state.slugs)
+		$Node.Walk(SITE_ROOT, this.state.slugs)
 		.then(r => {
 			// We found a path
 			var new_state = { 
@@ -253,7 +216,7 @@ class Main extends Component {
 	onHashChange( e ) {
 		console.log("hashchange: ", e.newURL);
 		
-		var slugs = this.cleanLocation(window.location);
+		var slugs = this.cleanLocation(window.location).slugs;
 		
 		if ( slugs.join() === this.state.slugs.join() ) {
 			this.setState({});
@@ -270,39 +233,57 @@ class Main extends Component {
 	}
 	// When we navigate by clicking forward
 	onNavChange( e ) {
+		console.log('navchange:',e.detail.old.href,'=>',e.detail.location.href);
 		if ( e.detail.location.href !== e.detail.old.href ) {
-			console.log("navchange: ", e.detail.location.href);
-			
-			var slugs = this.cleanLocation(e.detail.location);
+//			console.log(e.detail.location);
+			//console.log("navchange: ", e.detail.location.href);
 
-			if ( slugs.join() === this.state.slugs.join() ) {
-				this.setState({});
-			}
-			else {
-				console.log("Change");
+			var slugs = this.cleanLocation(e.detail.location).slugs;
+
+			if ( slugs.join() !== this.state.slugs.join() ) {
+//				// Store 
+//				var old_state = Object.assign({},this.state);
+//				console.log('replaceState', old_state);
+//				history.replaceState(old_state, null);//, null, window.location.pathname+window.location.search);
+
+//			console.log('pushState');
+//			history.pushState(null, null, this.base.pathname+this.base.search);
+		
+//			window.history.state = Object.assign({},this.state);
+//			window.history.replaceState(window.history.state, null, e.detail.old.href);
+
+				// Advance history by pushing a state (that will be updated by the 'navchange' event)
+				console.log('pushState');
+				history.pushState(null, null, e.detail.location.pathname+e.detail.location.search);
+
 				this.setState({ id: 0, slugs: slugs, node: {id: 0} });
-				
-				this.fetchData();
-			}
 
-//			this.fetchNode(this.cleanLocation(e.detail.location));
-			//this.getNodeFromLocation(e.detail.location);
-			//this.setState(this.state);
-			
-			// Scroll to top
-			window.scrollTo(0, 0);
+				this.fetchData();
+
+				// Scroll to top
+				window.scrollTo(0, 0);
+			}
 		}
 	}
 	// When we navigate using back/forward buttons
 	onPopState( e ) {
-//		// NOTE: This is sometimes called on a HashChange with a null state
-//		if ( e.state ) {
-//			console.log("popstate: ", e);
-//	
-//			this.setState(e.state);
-//			
-//			//window.scrollTo(parseFloat(e.state.top), parseFloat(e.state.left));
+		console.log("popstate: ", e.state);
+		// NOTE: This is sometimes called on a HashChange with a null state
+		if ( e.state ) {
+			this.setState(e.state);
+			
+			//window.scrollTo(parseFloat(e.state.top), parseFloat(e.state.left));
+		}
+//		else {
+//			this.setState({});
 //		}
+	}
+	
+	componentDidUpdate( prevProps, prevState ) {
+//		console.log('state change');
+		var state_copy = Object.assign({},this.state);
+//		console.log('replaceState', state_copy);
+		history.replaceState(state_copy, null);
 	}
 
 	render( {}, {node, user, path, extra, error} ) {
