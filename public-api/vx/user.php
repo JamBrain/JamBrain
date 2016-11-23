@@ -232,17 +232,16 @@ switch ( $REQUEST[0] ) {
 							json_EmitFatalError_Server("Sorry. Account \"$slug\" already exists", $RESPONSE);
 						}
 						else {
-							/// @TODO Check if on the reserved list
-							if ( false ) {
-								/// @TODO Does this e-mail address match the one on the reserve list?
-								if ( false ) {
-									/// @TODO: Add
-								}
-								else {
-									json_EmitFatalError_Server("Sorry. Account \"$slug\" is reserved. Is this you? Try using your original e-mail address", $RESPONSE);
+							$reserved = userReserved_Is($slug);
+							// Check if this slug is on the reserved list
+							if ( count($reserved) ) {
+								// Does this e-mail address match the one on the reserve list?
+								if ( !in_array($user['mail'], $reserved) ) {
+									json_EmitFatalError_Server("Sorry. \"$slug\" is reserved. Is this you? Try using your original e-mail address", $RESPONSE);
 								}
 							}
-							else {
+							
+							{
 								// @TODO wrap these so we can rollback
 								$user_id = userNode_Add(
 									$slug,

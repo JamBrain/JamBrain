@@ -107,3 +107,23 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 	};
 	table_Exit($table);
 }
+
+
+$table = 'SH_TABLE_USER_RESERVED';
+if ( in_array(constant($table), $TABLE_LIST) ) {
+	$ok = null;
+
+	table_Init($table);
+	switch ( $TABLE_VERSION ) {
+	case 0:
+		$ok = table_Create( $table,
+			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
+				id ".DB_TYPE_UID.",
+				slug ".DB_TYPE_ASCII(64).",
+					INDEX(slug),
+				mail ".DB_TYPE_UNICODE3(254)."
+			)".DB_CREATE_SUFFIX);
+		if (!$ok) break; $TABLE_VERSION++;
+	};
+	table_Exit($table);
+}
