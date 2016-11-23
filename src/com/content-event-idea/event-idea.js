@@ -76,7 +76,7 @@ export default class ContentEventIdea extends Component {
 		if ( this.state.idea.length > 0 && this.state.idea.length <= 64 ) {
 			$ThemeIdea.Add(this.props.node.id, this.state.idea)
 			.then(r => {
-				console.log(r.ideas);
+				console.log('r',r);
 				this.setState({ ideas: r.ideas, idea: "" });
 			})
 			.catch(err => {
