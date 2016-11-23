@@ -31,6 +31,8 @@ export default class ContentTimeline extends Component {
 			if ( r.feed && Object.keys(r.feed).length ) {
 				$Node.Get( Object.keys(r.feed) )
 				.then(rr => {
+					// Hack: Posts should go in Publish Date order
+					rr.node.reverse();
 					this.setState({ feed: rr.node });
 				})
 				.catch(err => {
