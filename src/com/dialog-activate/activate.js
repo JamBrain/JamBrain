@@ -1,4 +1,5 @@
 import { h, Component } 				from 'preact/preact';
+import Sanitize							from '../../internal/sanitize/sanitize';
 import DialogBase						from 'com/dialog-base/base';
 
 import LabelYesNo						from 'com/label-yesno/yesno';
@@ -75,19 +76,15 @@ export default class DialogActivate extends Component {
 	}
 	
 	onNameChange( e ) {
-		this.setState({ name: e.target.value, slug: this.toSlug(e.target.value) });
+		this.setState({ name: e.target.value, slug: Sanitize.makeSlug(e.target.value), error: null });
 	}
 	onPasswordChange( e ) {
-		this.setState({ password: e.target.value });
+		this.setState({ password: e.target.value, error: null });
 	}
 	onPassword2Change( e ) {
-		this.setState({ password2: e.target.value });
+		this.setState({ password2: e.target.value, error: null });
 	}
-	
-	toSlug( str ) {
-		var slug = str.toLowerCase();
-		return slug;
-	}
+
 	
 	isValidName() {
 		if ( this.state.name.length === 0 )
@@ -127,7 +124,8 @@ export default class DialogActivate extends Component {
 	}
 
 	doActivate() {
-		$User.Activate( this.ActID, this.ActHash, this.state.name, this.state.password )
+		if ( this.isValidName() > 0 && this.isValidPassword() > 0 && this.isValidPassword2() > 0 ) {
+			$User.Activate( this.ActID, this.ActHash, this.state.name, this.state.password )
 			.then( r => {
 				if ( r.status === 201 ) {
 					console.log('success',r);
@@ -144,6 +142,10 @@ export default class DialogActivate extends Component {
 				console.log(err);
 				this.setState({ error: err, loading: false });
 			});
+		}
+		else {
+			this.setState({ error: "Form incomplete or invalid" });
+		}
 	}
 
 	doFinishActivation() {

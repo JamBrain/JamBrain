@@ -91,7 +91,24 @@ function sendMail_UserAdd( $id, $mail, $key ) {
 	return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers));
 }
 
-//Access-Control-Allow-Origin
+function sendMail_UserCreate( $mail, $slug ) {
+	$subject = "[".SH_SITE."] Account created";
+	$headers = [
+		"MIME-Version: 1.0",
+		"Content-type: text/plain; charset=iso-8859-1",
+		"From: ".SH_MAILER,
+//		"Reply-To: ".SH_MAILER,
+//		"Return-Path: ".SH_MAILER_RETURN,
+	];
+	$message = [
+		"Your account \"$slug\" has been created!",
+		"",
+		"You can now log in on: ".SH_URL_SITE,
+		""
+	];
+	
+	return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers));
+}
 
 // Do Actions //
 switch ( $REQUEST[0] ) {
@@ -204,7 +221,7 @@ switch ( $REQUEST[0] ) {
 							
 						// Does that name already exist?
 						if ( node_GetIdByParentSlug(SH_NODE_ID_USERS, $slug) ) {
-							json_EmitFatalError_Server("Name ($slug) already exists", $RESPONSE);
+							json_EmitFatalError_Server("Sorry. Account \"$slug\" already exists", $RESPONSE);
 						}
 						else {
 							/// @TODO Check if on the reserved list
@@ -214,7 +231,7 @@ switch ( $REQUEST[0] ) {
 									/// @TODO: Add
 								}
 								else {
-									json_EmitFatalError_Server("Name is reserved. Is this you? Try using your original e-mail address instead", $RESPONSE);
+									json_EmitFatalError_Server("Sorry. Account \"$slug\" is reserved. Is this you? Try using your original e-mail address", $RESPONSE);
 								}
 							}
 							else {
@@ -239,7 +256,8 @@ switch ( $REQUEST[0] ) {
 										json_EmitFatalError_Server("Unable to clear key", $RESPONSE);
 									}
 									
-									// @TODO send confirmation e-mail
+									// Send an e-mail
+									$RESPONSE['sent'] = intval(sendMail_UserCreate($user['mail'], $slug));
 									
 									// Successfully Created.
 									json_RespondCreated();

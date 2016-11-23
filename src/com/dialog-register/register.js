@@ -37,9 +37,10 @@ export default class DialogRegister extends Component {
 	}
 	
 	doRegister() {
-		this.setState({ loading: true, error: null });
-		
-		$User.Register( this.state.mail )
+		if ( this.validateMail(this.state.mail) ) {
+			this.setState({ loading: true, error: null });
+			
+			$User.Register( this.state.mail )
 			.then( r => {
 				if ( r.status === 201 ) {
 					console.log('sent', r.sent);
@@ -55,6 +56,10 @@ export default class DialogRegister extends Component {
 				console.log(err);
 				this.setState({ error: err, loading: false });
 			});
+		}
+		else {
+			this.setState({ error: "Incorrectly formatted e-mail address" });
+		}
 	}
 
 	render( props, {mail, sent, loading, error} ) {
