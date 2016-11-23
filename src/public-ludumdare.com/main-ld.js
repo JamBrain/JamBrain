@@ -1,4 +1,5 @@
 import { h, render, Component }			from 'preact/preact';
+import Sanitize							from '../internal/sanitize/sanitize';
 import NavBar 							from 'com/nav-bar/bar';
 
 import ViewSidebar						from 'com/view-sidebar/sidebar';
@@ -78,35 +79,35 @@ class Main extends Component {
 		this.fetchData();
 	}
 
-	makeSlug( str ) {
-		str = str.toLowerCase();
-		str = str.replace(/%[a-f0-9]{2}/g,'-');
-		str = str.replace(/[^a-z0-9]/g,'-');
-		str = str.replace(/-+/g,'-');
-		str = str.replace(/^-|-$/g,'');
-		return str;
-	}
-
-	makeClean( str ) {
-		str = str.toLowerCase();
-		str = str.replace(/%[a-f0-9]{2}/g,'-');		// % codes = -
-		str = str.replace(/[^a-z0-9\/#]/g,'-');		// non a-z, 0-9, #, or / with -
-		str = str.replace(/-+/g,'-');				// multiple -'s to a single -
-		str = str.replace(/\/+/g,'/');				// multiple /'s to a single /
-//		str = str.replace(/^-|-$/g,'');				// Prefix and suffix -'s with nothing
-		return str;
-	}
-	
-	trimSlashes( str ) {
-		return str.replace(/^\/|\/$/g,'');
-	}
+//	makeSlug( str ) {
+//		str = str.toLowerCase();
+//		str = str.replace(/%[a-f0-9]{2}/g,'-');
+//		str = str.replace(/[^a-z0-9]/g,'-');
+//		str = str.replace(/-+/g,'-');
+//		str = str.replace(/^-|-$/g,'');
+//		return str;
+//	}
+//
+//	makeClean( str ) {
+//		str = str.toLowerCase();
+//		str = str.replace(/%[a-f0-9]{2}/g,'-');		// % codes = -
+//		str = str.replace(/[^a-z0-9\/#]/g,'-');		// non a-z, 0-9, #, or / with -
+//		str = str.replace(/-+/g,'-');				// multiple -'s to a single -
+//		str = str.replace(/\/+/g,'/');				// multiple /'s to a single /
+////		str = str.replace(/^-|-$/g,'');				// Prefix and suffix -'s with nothing
+//		return str;
+//	}
+//	
+//	trimSlashes( str ) {
+//		return str.replace(/^\/|\/$/g,'');
+//	}
 
 	cleanLocation( location ) {
 		// Clean the URL
 		var clean = {
-			pathname: this.makeClean(location.pathname),
+			pathname: Sanitize.makeClean(location.pathname),
 			search: location.search,
-			hash: this.makeClean(location.hash),
+			hash: Sanitize.makeClean(location.hash),
 		}
 		if ( clean.hash == "#" )
 			clean.hash = "";
@@ -114,7 +115,7 @@ class Main extends Component {
 		clean.path = clean.pathname + clean.search + clean.hash;
 
 		// Parse the clean URL
-		clean.slugs = this.trimSlashes(clean.pathname).split('/');
+		clean.slugs = Sanitize.trimSlashes(clean.pathname).split('/');
 
 		return clean;
 	}
