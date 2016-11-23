@@ -15,9 +15,9 @@ export default class ContentUser extends Component {
 	render( {node}, {error} ) {
 		if ( node.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
-			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
+			var dangerousParsedTitle = { __html:titleParser.parse('**User:** '+node.name) };
 			
-			var avatar = (node.meta && node.meta.avatar) ? "//"+STATIC_DOMAIN+node.meta.avatar : "";
+			var avatar = '//'+STATIC_DOMAIN + ((node.meta && node.meta.avatar) ? node.meta.avatar : '/other/dummy/user64.png');
 			
 			var url = '/users/'+node.slug+'/';
 			
@@ -27,6 +27,7 @@ export default class ContentUser extends Component {
 						<div class="-avatar"><img src={avatar} /></div>
 						<div class="-title _font2"><NavLink href={url} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
 					</div>
+					<div class="-body"><div><SVGIcon>user-plus</SVGIcon> Follow</div></div>
 					<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
 					<div class="-footer">
 						<div class="-left">

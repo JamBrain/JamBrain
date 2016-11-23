@@ -52,11 +52,14 @@ export default class ContentPost extends Component {
 			var post_date = <span>on <span class="-title" title={node.published}>{node.published}</span></span>;
 			var post_by = <span>by {author.slug}</span>;
 			
+			var avatar = '//'+STATIC_DOMAIN + ((author.meta && author.meta.avatar) ? author.meta.avatar : '/other/dummy/user64.png');
+			
 			var hasTwitter = <span></span>;
 			
 			return (
 				<div class="content-base content-post">
 					<div class="-header">
+						<div class="-avatar"><img src={avatar} /></div>
 						<div class="-title _font2"><NavLink href={url} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
 						<div class="-subtext">
 							Posted {relative_time} {post_date}, {post_by} {hasTwitter}
