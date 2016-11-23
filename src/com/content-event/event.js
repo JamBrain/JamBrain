@@ -19,7 +19,7 @@ export default class ContentEvent extends Component {
 			
 			var url = path+'/'+node.slug+'/';
 			
-			let ThemeMode = (node.meta['theme-mode']) ? (node.meta['theme-mode']) : 0;
+			let ThemeMode = (node.meta['theme-mode']) ? parseInt(node.meta['theme-mode']) : 0;
 			
 			// Theme Selection
 			if ( extra.length && extra[0] === 'theme' ) {
@@ -29,7 +29,7 @@ export default class ContentEvent extends Component {
 					case 1:
 						ThemeBody = (
 							<div class="-body">
-								<h3>Theme Suggestions</h3>
+								<h3>Theme Suggestion Round</h3>
 								<div>ears</div>
 							</div>
 						);
