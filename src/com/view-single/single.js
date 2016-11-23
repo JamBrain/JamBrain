@@ -8,25 +8,35 @@ import ViewSidebar						from 'com/view-sidebar/sidebar';
 import CoreData							from '../../core-data/data';
 
 export default class ViewSingle extends Component {
-	constructor() {
+	constructor( props ) {
+		super(props);
+		
 		this.state = {};
-		this.state.feed = [];
+		//this.state.feed = [];
+	}
+	
+	componentDidMount() {
+		
 	}
 	
 	getNodes( props, state ) {
 		var nodes = [props.node];
 		
-		CoreData.preFetchNodeWithAuthorById( nodes );
+		console.log(nodes);
+		
+		//CoreData.preFetchNodeWithAuthorById( nodes );
 		
 		return nodes.map(function(node) {
-			var node_type = CoreData.getNodeTypeById(node);
-			
-			document.title = titleParser.parse(CoreData.getNodeNameById(node), true) + " | " + window.location.host;
-			
-			if ( node_type === 'post' || node_type === 'game' ) {
+//			document.title = titleParser.parse(node.name, true);
+//			if ( document.title === "" )
+//				document.title = window.location.host;
+//			else
+//				document.title += " | " + window.location.host;
+		
+			if ( node.type === 'post' || node.type === 'game' ) {
 				return <ContentPost node={node} />;
 			}
-			if ( node_type === 'user' ) {
+			if ( node.type === 'user' ) {
 				return <ContentUser node={node} />;
 			}
 			else {

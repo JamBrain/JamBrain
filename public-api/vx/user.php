@@ -7,14 +7,56 @@ require_once __DIR__."/".SHRUB_PATH."api.php";
 require_once __DIR__."/".SHRUB_PATH."plugin.php";
 require_once __DIR__."/".SHRUB_PATH."user/user.php";
 
+// *** Some older notes. Remove these *** //
+
+// NOTE: Confirming an e-mail address BEFORE entering account credentials is BEST!
+// This avoids the problem where you enter the wrong e-mail address as you sign up sign up.
+
+// Create an account
+//  if $mail doesn't exist
+//   mail = blah@blah.com
+//   node = 0
+//   created = NOW()
+//   auth_key = RANDOM_BYTES
+//   last_auth = 0:00:00
+//   do( email_Send( mail, auth_key, $redirect_url )
+//
+// website.com/#user-activate?id=5862&key=aeo8du8aodu8
+// api.website.com/vx/user/activate [id=5862&key=aeo8du8aodu8]
+
+// Activate an account (and partially activate an account)
+//  lookup $id by id (not node)
+//  does $key match?
+//   no: erase auth_key, stop
+//   yes: set last_auth to NOW()
+//   is node 0? ***
+//    no: stop
+//    yes:
+//    is $name set and strlen() >= 3
+//     is $pw set and strlen() >= 8
+//      yes:
+//      is node $user available
+//       yes:
+//       is on reserved list
+//        no: hash($pw) to hash, create a node named $user, erase auth_key
+//        yes:
+//        does $mail match?
+//         yes: hash($pw) to hash, create a node named $user, erase auth_key
+//
+// api.website.com/vx/user/activate [id=5862&key=aeo8du8aodu8&name=homeboy&pw=potatoes]
+
+// *** //
+
 json_Begin();
 
-const SH_MAILER_RETURN = "error@jammer.vg";
+const SH_MAIL_DOMAIN = "jammer.vg";
+const SH_MAILER_RETURN = "error@".SH_MAIL_DOMAIN;
 
-const SH_MAILER = "Jammer <no-reply@jammer.vg>";
 const SH_SITE = "Jammer";
-const SH_DOMAIN = "ldjam.com";
-const SH_URL_SITE = "https://".SH_DOMAIN;
+const SH_MAILER = SH_SITE." <no-reply@".SH_MAIL_DOMAIN.">";
+//const SH_DOMAIN = "ldjam.com";
+define('SH_URL_SITE', isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : 'http://ludumdare.org');
+//define('SH_URL_SITE', (isset($_SERVER['HTTPS']) ? "https://" : "http://").SH_DOMAIN);
 const SH_ACTIVATE = "#user-activate";
 const SH_ARGS = "alpha&";//"";
 
@@ -161,7 +203,7 @@ switch ( $REQUEST[0] ) {
 						}
 							
 						// Does that name already exist?
-						if ( node_GetIdByParentAndSlug(SH_NODE_ID_USER, $slug) ) {
+						if ( node_GetIdByParentSlug(SH_NODE_ID_USERS, $slug) ) {
 							json_EmitFatalError_Server("Name ($slug) already exists", $RESPONSE);
 						}
 						else {
@@ -177,13 +219,15 @@ switch ( $REQUEST[0] ) {
 							}
 							else {
 								// @TODO wrap these so we can rollback
-								$user_id = node_Add(
+								$user_id = userNode_Add(
 									$slug,
 									$name
 								);
 								
 								if ( $user_id ) {
 									// @TODO wrap these so we can rollback
+									
+									node_Publish($user_id);
 									
 									if ( !user_SetNode($id, $user_id) ) {
 										json_EmitFatalError_Server("Unable to set node", $RESPONSE);
@@ -259,9 +303,11 @@ switch ( $REQUEST[0] ) {
 		// Decode the login as either an e-mail address, or a username
 		if ( coreValidate_Mail($login) ) {
 			$mail = coreSanitize_Mail($login);
+			$RESPONSE['mail'] = $mail;
 		}
 		else {
 			$name = coreSlugify_Name($login);
+			$RESPONSE['name'] = $name;
 		}
 		
 		// If an e-mail login attempt
@@ -270,6 +316,7 @@ switch ( $REQUEST[0] ) {
 		}
 		// If a username login attempt
 		else if ( $name ) {
+			$user = user_GetBySlug( $name );
 			// lookup user by slug
 			// lookup all addresses associated with that user
 			// extract node, hash, and secret
@@ -305,14 +352,22 @@ switch ( $REQUEST[0] ) {
 		break;
 		
 	case 'get':
-		json_ValidateHTTPMethod('GET','POST');
+		json_ValidateHTTPMethod('GET');
 		
-		$id = $_SESSION['id'];
+		$id = isset($_SESSION['id']) ? intval($_SESSION['id']) : 0;
 		$RESPONSE['id'] = $id;
 		
 		if ( $id > 0 ) {
 			$RESPONSE['node'] = node_GetById($id);
-
+			if ( count($RESPONSE['node']) ) {
+				$RESPONSE['node'] = $RESPONSE['node'][0];
+			}
+			else {
+				$RESPONSE['node'] = [];
+				$RESPONSE['node']['id'] = 0;
+			}
+		}
+//		$RESPONSE['server'] = $_SERVER;
 //		$RESPONSE['method'] = $_SERVER['REQUEST_METHOD'];
 //		$RESPONSE['post'] = $_POST;
 //		
@@ -323,7 +378,7 @@ switch ( $REQUEST[0] ) {
 ////		else {
 ////			json_EmitFatalError_Permission(null, $RESPONSE);
 ////		}
-		}
+		
 		break;
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);

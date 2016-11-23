@@ -1,13 +1,65 @@
-import { h, Component } from 'preact/preact';
-import SVGIcon 			from 'com/svg-icon/icon';
-import NavLink 			from 'com/nav-link/link';
-
-import CoreData			from '../../core-data/data';
-
+import { h, Component } 				from 'preact/preact';
+import SVGIcon 							from 'com/svg-icon/icon';
+import NavLink 							from 'com/nav-link/link';
 
 export default class ContentUser extends Component {
-	render(props,state) {
-		var user = CoreData.getNodeById( props.node );
+	constructor( props ) {
+		super(props);
+	}
+
+	componentDidMount() {
+	}
+	componentWillUnmount() {
+	}
+	
+	render( {node}, {error} ) {
+		if ( node.slug ) {
+			var dangerousParsedBody = { __html:marked.parse(node.body) };
+			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
+			
+			var avatar = (node.meta && node.meta.avatar) ? "//"+STATIC_DOMAIN+node.meta.avatar : "";
+			
+			var url = '/users/'+node.slug+'/';
+			
+			return (
+				<div class="content-base content-user">
+					<div class="-header">
+						<div class="-avatar"><img src={avatar} /></div>
+						<div class="-title _font2"><NavLink href={url} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
+					</div>
+					<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
+					<div class="-footer">
+						<div class="-left">
+						</div>
+						<div class="-right">
+						</div>
+					</div>
+				</div>
+			);
+		}
+		else {
+			return (
+				<div class="content-base content-post">
+					{ error ? error : "Please Wait..." }
+				</div>
+			);
+		}
+	}
+
+//							<div class="-minmax"><SVGIcon>arrow-up</SVGIcon></div>
+//							<div class="-edge"><SVGIcon>wedge-left</SVGIcon></div>
+
+//							<div class="-edge"><SVGIcon>wedge-right</SVGIcon></div>
+//							<div class="-heart"><SVGIcon>heart-check</SVGIcon></div>
+//							<div class="-text -heart-count">0</div>
+//							<div class="-spacer"><SVGIcon>wedge-right</SVGIcon></div>
+//							<div class="-comment"><SVGIcon>bubble-empty</SVGIcon></div>
+//							<div class="-text -comment-count">0</div>
+//							<div class="-spacer2"><SVGIcon>wedge-right</SVGIcon></div>
+//							<div class="-gear"><SVGIcon>cog</SVGIcon></div>
+
+/*
+		var user = props.node;//CoreData.getNodeById( props.node );
 		
 		var hasTwitter = user.meta.twitter ? <span class="-twitter"> (<a href={"https://twitter.com/"+user.meta.twitter} target="_blank" rel="noopener noreferrer" title={"https://twitter.com/"+user.meta.twitter}><SVGIcon baseline small>twitter</SVGIcon>/{user.meta.twitter}</a>)</span> : <span />;
 //		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <SVGIcon>users</SVGIcon></span> : <span />;
@@ -74,11 +126,7 @@ export default class ContentUser extends Component {
 		);
 	}
 	// body: unmagin-top, unmargin-bottom. replace with selector
-	
-	componentDidMount() {
-	}
-	componentWillUnmount() {
-	}
+*/	
 }
 
 marked.setOptions({

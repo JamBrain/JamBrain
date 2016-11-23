@@ -18,6 +18,7 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
 	case 1:
+		// a table No-op. MUST DO THIS IF YOU DO NOTHING
 		$ok = table_Nop( $table );
 		if (!$ok) break; $TABLE_VERSION++;
 	};

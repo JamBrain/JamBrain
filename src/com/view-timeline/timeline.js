@@ -15,9 +15,13 @@ export default class ViewTimeline extends Component {
 	
 	getNodes( props ) {
 		CoreData.preFetchNodeWithAuthorById( this.state.feed );
-		
-		// TODO: create titles depending on type (mainly the root node should be just the domain) //
-		document.title = titleParser.parse(CoreData.getNodeNameById(this.state.node), true) + " | " + window.location.host;
+
+		document.title = titleParser.parse(CoreData.getNodeNameById(this.state.node), true);
+		if ( document.title === "" )
+			document.title = window.location.host;
+		else
+			document.title += " | " + window.location.host;
+
 		
 		return this.state.feed.map(function(node) {
 			var node_type = CoreData.getNodeTypeById(node);

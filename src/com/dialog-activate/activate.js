@@ -3,7 +3,7 @@ import DialogBase						from 'com/dialog-base/base';
 
 import LabelYesNo						from 'com/label-yesno/yesno';
 
-import SHUser							from '../shrub/js/user/user';
+import $User							from '../shrub/js/user/user';
 
 
 function getHTTPVars() {
@@ -25,9 +25,11 @@ function getHTTPVars() {
 export default class DialogActivate extends Component {
 	constructor( props ) {
 		super(props);
-
-		// TODO: Show Waiting...
 		
+		this.state = {
+			loading: true
+		};
+
 		var Vars = getHTTPVars();
 		console.log("v",Vars);
 		
@@ -36,7 +38,7 @@ export default class DialogActivate extends Component {
 		this.ActHash = Vars.key;
 		
 		// Lookup ID, and confirm this is a valid activation
-		SHUser.Activate( this.ActID, this.ActHash, "", "" )
+		$User.Activate( this.ActID, this.ActHash, "", "" )
 			.then( r => {
 				if ( r.status === 200  ) {
 					this.setState({
@@ -44,18 +46,19 @@ export default class DialogActivate extends Component {
 						name: "",
 						slug: "",
 						password: "",
-						password2: ""
+						password2: "",
+						loading: false
 					});
 //					this.activateName.focus();
 				}
 				else {
 					console.log(r);
-					this.setState({ error: r.response });
+					this.setState({ error: r.response, loading: false });
 				}
 			})
 			.catch( err => {
 				console.log(err);
-				this.setState({ error: err });
+				this.setState({ error: err, loading: false });
 			});
 
 		// Bind functions (avoiding the need to rebind every render)
@@ -63,6 +66,7 @@ export default class DialogActivate extends Component {
 		this.onPasswordChange = this.onPasswordChange.bind(this);
 		this.onPassword2Change = this.onPassword2Change.bind(this);
 		this.doActivate = this.doActivate.bind(this);
+		this.doFinishActivation = this.doFinishActivation.bind(this);
 	}
 	
 	componentDidMount() {
@@ -123,46 +127,62 @@ export default class DialogActivate extends Component {
 	}
 
 	doActivate() {
-		SHUser.Activate( this.ActID, this.ActHash, this.state.name, this.state.password )
+		$User.Activate( this.ActID, this.ActHash, this.state.name, this.state.password )
 			.then( r => {
 				if ( r.status === 201 ) {
 					console.log('success',r);
-					location.href = "#user-activated";
+					//location.href = "#user-activated";
+					this.setState({ created: true, loading: false, error: null });
 				}
 				else {
 					console.log(r);
-					this.setState({ error: r.message ? r.message : r.response });
+					this.setState({ error: r.message ? r.message : r.response, loading: false });
 				}
 				return r;
 			})
 			.catch( err => {
 				console.log(err);
-				this.setState({ error: err });
+				this.setState({ error: err, loading: false });
 			});
 	}
-	
-	render( props, {mail, name, slug, password, password2, error} ) {
-		var ErrorMessage = error ? {'error': error} : {};
 
-		if ( error ) {
+	doFinishActivation() {
+		// HACK
+		location.href = "?alpha";
+	}
+	
+	render( props, {mail, name, slug, password, password2, created, loading, error} ) {
+		var ErrorMessage = error ? {'error': error} : {};
+		var title = "Create Account: Step 2";
+
+		if ( loading ) {
 			return (
-				<DialogBase title="Create Account: Step 2" ok explicit {...ErrorMessage}>
+				<DialogBase title={title} explicit {...ErrorMessage}>
+					<div>
+						Please wait...
+					</div>
+				</DialogBase>
+			);			
+		}
+		else if ( !mail ) {
+			return (
+				<DialogBase title={title} ok explicit {...ErrorMessage}>
 					{"This account can't be activated."}
 				</DialogBase>
 			);
 		}
 
-		if ( !mail ) {
+		if ( created ) {
 			return (
-				<DialogBase title="Create Account: Step 2" explicit {...ErrorMessage}>
-					Loading...
+				<DialogBase title={title} ok onclick={this.doFinishActivation} explicit {...ErrorMessage}>
+					Account <code>{this.slug}</code> Created. You can now <strong>Log In</strong>.
 				</DialogBase>
 			);
 		}
 		
 		// NOTE: There's a Preact (?) bug that the extra <span /> is working around
 		return (
-			<DialogBase title="Create Account: Step 2" ok cancel oktext="Create Account" onclick={this.doActivate} explicit {...ErrorMessage}>
+			<DialogBase title={title} ok cancel oktext="Create Account" onclick={this.doActivate} oncancel={this.doFinishActivation} explicit {...ErrorMessage}>
 				<div>
 					<span /><span class="-label">E-mail:</span><span id="dialog-activate-mail">{mail}</span>
 				</div>

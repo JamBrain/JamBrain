@@ -1,7 +1,7 @@
-import { h, Component } from 'preact/preact';
-import ButtonBase		from '../button-base/base';
-import ButtonLink		from '../button-link/link';
-import SVGIcon 			from 'com/svg-icon/icon';
+import { h, Component } 				from 'preact/preact';
+import ButtonBase						from '../button-base/base';
+import ButtonLink						from '../button-link/link';
+import SVGIcon 							from 'com/svg-icon/icon';
 
 function make_url( url ) {
 	return url + window.location.search;
@@ -12,21 +12,22 @@ export default class NavBar extends Component {
 		super(props);
 	}
 	
-	render( props, state ) {
+	render( {user}, {} ) {
 		var Search = (
 			<ButtonBase class="-icon" onclick={e => { console.log('search'); window.location.hash = "#search"; }}>
 				<SVGIcon baseline>search</SVGIcon>
 			</ButtonBase>
 		);
 		
-		if ( false /*LoggedIn*/ ) {
+		if ( user && user.id ) {
 			// TODO: Check if a participant of the current event
-			var MyGame = (
-				<ButtonBase class="-button" onclick={e => console.log('my game')}>
-					<SVGIcon>gamepad</SVGIcon>
-					<div>My Game</div>
-				</ButtonBase>
-			);
+			var MyGame = "";
+//			 (
+//				<ButtonBase class="-button" onclick={e => console.log('my game')}>
+//					<SVGIcon>gamepad</SVGIcon>
+//					<div>My Game</div>
+//				</ButtonBase>
+//			);
 			
 			var NewPost = (
 				<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#post-new"; }}>
@@ -47,10 +48,11 @@ export default class NavBar extends Component {
 			);
 			
 			// TODO: Pull this out of the user meta, else use a dummy
-			let Avatar = "//"+STATIC_DOMAIN+'/other/logo/mike/Chicken64.png';
+			let Avatar = user.avatar ? <img src={"//"+STATIC_DOMAIN+user.avatar} /> : <img src={'//'+STATIC_DOMAIN+'/other/dummy/user64.png'} />;
+			//'/other/logo/mike/Chicken64.png';
 			var User = (
 				<ButtonBase class="-user" onclick={e => console.log('user')}>
-					<img src={Avatar} />
+					{Avatar}
 				</ButtonBase>
 			);
 			

@@ -3,16 +3,31 @@
 /// @brief The Jammer/Ludum Dare Plugin for Shrub
 
 /// @cond INTERNAL
-$SH_GLOBAL_DEFAULT['ludumdare-active'] = 0;		// Currently Active Ludum Dare Event
+$SH_GLOBAL_DEFAULT['ludumdare-root'] = 0;
 $SH_GLOBAL_DEFAULT['ludumdare-alert'] = "";		// Short alert message shown by the Ludum Dare site
+$SH_GLOBAL_DEFAULT['ludumdare-event'] = 0;		// Currently Active Ludum Dare Event
+
+$SH_GLOBAL_DEFAULT['jammer-root'] = 0;
 $SH_GLOBAL_DEFAULT['jammer-alert'] = "";		// Short alert message shown by the Jammer site
+
+$SH_GLOBAL_DEFAULT['jammer.bio-root'] = 0;
 $SH_GLOBAL_DEFAULT['jammer.bio-alert'] = "";	// Short alert message shown by the jammer.bio
+
+$SH_GLOBAL_DEFAULT['SH_NODE_ID_ITEMS'] = 0;
+$SH_GLOBAL_DEFAULT['SH_NODE_ID_TAGS'] = 0;
+$SH_GLOBAL_DEFAULT['SH_NODE_ID_EVENTS'] = 0;
 /// @endcond
 
 ///	@addtogroup NodeTypes
 /// @name Jammer Types
 /// @{
 // Internal Types //
+const SH_NODE_TYPE_ITEMS =			'items';
+const SH_NODE_TYPE_TAGS =			'tags';
+const SH_NODE_TYPE_EVENTS =			'events';
+
+const SH_NODE_TYPE_ITEM =			'item';		// Game, Tool, Demo, Craft
+const SH_NODE_TYPE_TAG =			'tag';
 const SH_NODE_TYPE_EVENT =			'event';
 /// @}
 

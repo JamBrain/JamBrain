@@ -131,7 +131,7 @@ global_AddReservedName(
 	'hasbro',
 	'mattel',
 	'disney',
-	'marvel'
+	'marvel',
 	
 	// Profanity and troublesome words
 	'fuck',

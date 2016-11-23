@@ -1,4 +1,35 @@
 <?php
+require_once __DIR__."/node.php";
+
+// Simliar to the regular NODE, but just a snapshot
+// IMPORTANT: This has to come first, as with the node table, we need to make nodes
+$table = 'SH_TABLE_NODE_VERSION';
+if ( in_array(constant($table), $TABLE_LIST) ) {
+	$ok = null;
+
+	table_Init($table);
+	switch ( $TABLE_VERSION ) {
+	case 0:
+		$ok = table_Create( $table,
+			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
+				id ".DB_TYPE_UID.",
+				node ".DB_TYPE_ID.",
+					INDEX(node),
+				author ".DB_TYPE_ID.",
+				type ".DB_TYPE_ASCII(24).",
+				subtype ".DB_TYPE_ASCII(24).",
+				subsubtype ".DB_TYPE_ASCII(24).",
+				timestamp ".DB_TYPE_TIMESTAMP.",
+				slug ".DB_TYPE_ASCII(96).",
+					INDEX(slug),
+				name ".DB_TYPE_UNICODE(96).",
+				body MEDIUMTEXT NOT NULL,
+				tag ".DB_TYPE_ASCII(32)."
+			)".DB_CREATE_SUFFIX);
+		if (!$ok) break; $TABLE_VERSION++;
+	};
+	table_Exit($table);
+}
 
 $table = 'SH_TABLE_NODE';
 if ( in_array(constant($table), $TABLE_LIST) ) {
@@ -28,57 +59,21 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 				version ".DB_TYPE_ID.",
 				slug ".DB_TYPE_ASCII(96).",
 					INDEX(slug),
+					UNIQUE parent_slug (parent,slug),
 				name ".DB_TYPE_UNICODE(96).",
 				body MEDIUMTEXT NOT NULL
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
-	};
-	table_Exit($table);
 
-	// Check-for and create necessary nodes
-//	node_AddIf('root', 		// check for
-//		0,0,				// parent, author
-//		'root','','',		// type, subtype, subsubtype
-//		0,0,0,				// published, created, modified
-//		0,					// version
-//		'root','root',		// slug, name
-//		''					// body
-//	);
-//	node_AddIf('users', 	// check for
-//		1,1,				// parent, author
-//		'users','','',		// type, subtype, subsubtype
-//		0,0,0,				// published, created, modified
-//		0,					// version
-//		'users','Users',	// slug, name
-//		''					// body
-//	);
-}
+		// NOTE: Store "extra" in body for symlinks
 
-// Simliar to the regular NODE, but a snapshot
-$table = 'SH_TABLE_NODE_VERSION';
-if ( in_array(constant($table), $TABLE_LIST) ) {
-	$ok = null;
+		// Create necessary nodes
+		$root = MakeKeyNode('SH_NODE_ID_ROOT', 0, SH_NODE_TYPE_ROOT, 'root', '' );
+		$users = MakeKeyNode('SH_NODE_ID_USERS', $root, SH_NODE_TYPE_USERS, 'users', 'Users' );
 
-	table_Init($table);
-	switch ( $TABLE_VERSION ) {
-	case 0:
-		$ok = table_Create( $table,
-			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
-				id ".DB_TYPE_UID.",
-				node ".DB_TYPE_ID.",
-					INDEX(node),
-				author ".DB_TYPE_ID.",
-				type ".DB_TYPE_ASCII(24).",
-				subtype ".DB_TYPE_ASCII(24).",
-				subsubtype ".DB_TYPE_ASCII(24).",
-				timestamp ".DB_TYPE_TIMESTAMP.",
-				slug ".DB_TYPE_ASCII(96).",
-					INDEX(slug),
-				name ".DB_TYPE_UNICODE(96).",
-				body MEDIUMTEXT NOT NULL,
-				tag ".DB_TYPE_ASCII(32)."
-			)".DB_CREATE_SUFFIX);
-		if (!$ok) break; $TABLE_VERSION++;
+		break;
+//	case 1:
+//		break;
 	};
 	table_Exit($table);
 }
@@ -124,7 +119,8 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 					INDEX(node),
 				scope TINYINT UNSIGNED NOT NULL,
 				`key` ".DB_TYPE_ASCII(32).",
-				`value` TEXT NOT NULL
+				`value` TEXT NOT NULL,
+				timestamp ".DB_TYPE_TIMESTAMP."
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
 	};
@@ -172,7 +168,8 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 					INDEX(node),
 				author ".DB_TYPE_ID.",
 				ip ".DB_TYPE_IP.",
-					UNIQUE(author,ip)
+					UNIQUE(author,ip),
+				timestamp ".DB_TYPE_TIMESTAMP."
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
 	};
@@ -195,7 +192,8 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 				author ".DB_TYPE_ID.",
 					INDEX(author),
 				node ".DB_TYPE_ID.",
-					INDEX(node)
+					INDEX(node),
+				timestamp ".DB_TYPE_TIMESTAMP."
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
 	};
