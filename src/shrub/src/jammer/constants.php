@@ -94,6 +94,9 @@ global_AddReservedName(
 	'platform',
 	'arts',
 	'art',
+	'code',
+	'src',
+	'source',
 	'photos',
 	'photo',
 	'comics',
@@ -124,10 +127,29 @@ global_AddReservedName(
 	'comments',
 	'comment',
 	
+	'theme',
+	'themes',
+	'vote',
+	'votes',
+	'result',
+	'results',
+	'top',
+	'winner',
+	'winners',
+	'loser',
+	'losers',
+	'trophy',
+	'trophies',
+	'award',
+	'awards',
+	'medal',
+	'medals',
+	'achievement',
+	'achievements',	
+	
 	// Groups
 	'help',
 	'unityhelp',
-	
 	
 	// Generally Reserved
 	'jammers',
