@@ -24,8 +24,8 @@ function db_GetQueryCount() {
 /// @{
 
 /// Wraps MySQL datetime fields in SELECT queries so they are returned in ISO/W3C format
-function DB_FIELD_DATE($field) {
-	return "DATE_FORMAT(".$field.",'%Y-%m-%dT%TZ') AS ".$field;
+function DB_FIELD_DATE($field, $name = null) {
+	return "DATE_FORMAT($field,'%Y-%m-%dT%TZ') AS ".(isset($name) ? $name : $field);
 }
 
 function DB_FIELD_IP_TO_STRING($field) {

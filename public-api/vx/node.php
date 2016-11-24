@@ -171,6 +171,38 @@ switch ( array_shift($REQUEST) ) {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
 		}
 		break;
+	case 'love':
+		switch ( array_shift($REQUEST) ) {
+			case 'get':
+				json_ValidateHTTPMethod('GET');
+				
+				if ( isset($REQUEST[0]) ) {
+					$node_ids = explode('+', $REQUEST[0]);
+		
+					// Sanitize
+					foreach ( $node_ids as &$id ) {
+						$id = intval($id);
+						
+						if ( !$id ) {
+							json_EmitFatalError_BadRequest("Bad ID", $RESPONSE);
+						}
+					}
+					sort($node_ids);
+			
+					$RESPONSE['love'] = nodeLove_GetByNode($node_ids);
+				}
+				break;
+			case 'add':
+				json_ValidateHTTPMethod('POST');
+				break;
+			case 'remove':
+				json_ValidateHTTPMethod('POST');
+				break;
+			default:
+			json_EmitFatalError_Forbidden(null, $RESPONSE);
+				break;
+		};
+		break;
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break;

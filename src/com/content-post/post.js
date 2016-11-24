@@ -48,6 +48,7 @@ export default class ContentPost extends Component {
 	
 	onMinMax( e ) {
 		console.log("minmax");
+		window.location.hash = "#dummy";
 	}
 
 	getAvatar( user ) {

@@ -373,3 +373,30 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 
 	return $nodes;
 }
+
+
+function nodeLove_GetByNode( $nodes ) {
+	if ( is_integer($nodes) ) {
+		$nodes = [$nodes];
+	}
+	
+	if ( is_array($nodes) ) {
+		// Confirm that all Nodes are not zero
+		foreach( $nodes as $node ) {
+			if ( intval($node) == 0 )
+				return null;
+		}
+
+		// Build IN string
+		$node_string = implode(',', $nodes);
+
+		return db_QueryFetch(
+			"SELECT node, COUNT(node) AS count, ".DB_FIELD_DATE('MAX(timestamp)','timestamp')."
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LOVE." 
+			WHERE node IN ($node_string)
+			GROUP BY node;"
+		);
+	}
+	
+	return null;
+}
