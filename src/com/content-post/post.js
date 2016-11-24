@@ -55,26 +55,30 @@ export default class ContentPost extends Component {
 			
 			var url = path+node.slug+'/';
 			
+			var pub_date = new Date(node.published);
+			var pub_diff = Date.now() - pub_date.getTime();
+			
 			// x minutes ago
-			var relative_time = <span></span>;//<span class="-time">{node.published}</span> ago
+			var post_relative = <span>{getRoughAge(pub_diff)}</span>;//<span class="-time">{node.published}</span> ago
 			// simple date, full date on hover
-			var post_date = <span>on <span class="-title" title={node.published}>{node.published}</span></span>;
+			var post_date = <span>on <span class="-title" title={getLocaleDate(pub_date)}>{getLocaleDay(pub_date)} {getLocaleMonthDay(pub_date)}</span></span>;
+			
 			var post_by = <span>by {this.getAtName(author)}</span>;
 			if ( author.meta['real-name'] ) {
 				post_by = <span>by {author.meta['real-name']} ({this.getAtName(author)})</span>;
 			}
 			
-			var avatar = this.getAvatar( author );
+			var post_avatar = this.getAvatar( author );
 			
-			var hasTwitter = <span></span>;
+			var post_author_extras = "";
 			
 			return (
 				<div class="content-base content-post">
 					<div class="-header">
-						<div class="-avatar"><img src={avatar} /></div>
+						<div class="-avatar"><img src={post_avatar} /></div>
 						<div class="-title _font2"><NavLink href={url} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
 						<div class="-subtext">
-							Posted {relative_time} {post_date}, {post_by} {hasTwitter}
+							Posted {post_relative} {post_date}, {post_by} {post_author_extras}
 						</div>
 					</div>
 					<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
