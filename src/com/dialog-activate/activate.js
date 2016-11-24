@@ -195,16 +195,16 @@ export default class DialogActivate extends Component {
 					<span class="-label">Account Name:</span><span id="dialog-activate-slug"><code>{slug}</code></span><LabelYesNo value={this.isValidSlug()} />
 				</div>
 				<div>
-					<span class="-label">Password:</span><input id="dialog-activate-password" onchange={this.onPasswordChange} class="-text focusable" type="password" name="password" maxlength="64" value={password} /><LabelYesNo value={this.isValidPassword()} />
+					<span class="-label">Password:</span><input id="dialog-activate-password" onchange={this.onPasswordChange} class="-text focusable" type="password" name="password" maxlength="128" value={password} /><LabelYesNo value={this.isValidPassword()} />
 				</div>
 				<div>
-					<span class="-label">Password Again:</span><input id="dialog-activate-password2" onchange={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxlength="64" placeholder="Confirmation" value={password2} /><LabelYesNo value={this.isValidPassword2()} />
+					<span class="-label">Password Again:</span><input id="dialog-activate-password2" onchange={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxlength="128" placeholder="Confirmation" value={password2} /><LabelYesNo value={this.isValidPassword2()} />
 				</div>
 				
-				<div class="-info -topline">
+				<div class="-info -topline if-dialog-not-small-block">
 					<strong>Account Names</strong> are generated automatically from your <strong>Name</strong>. An <strong>Account Name</strong> is the name used in your personalized URLs, and your <strong>@name</strong>.
 				</div>
-				<div class="-info">
+				<div class="-info if-dialog-not-small-block">
 					<strong>Names</strong> let you customize how your <strong>Account Name</strong> looks. You can use case, accents, and simple punctuation. <strong>Account Names</strong> are more strict. <strong>Names</strong> will be converted to <strong>Account Names</strong> by using only lower case letters, numbers, and single dashes.
 				</div>
 			</DialogBase>
