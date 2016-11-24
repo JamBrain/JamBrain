@@ -126,10 +126,15 @@ class Main extends Component {
 		// Fetch the active node
 		$Node.Walk(SITE_ROOT, this.state.slugs)
 		.then(r => {
+			var new_path = this.state.slugs.slice(0, r.path.length).join('/');
+			if ( new_path.length ) {
+				new_path += '/';
+			}
+			
 			// We found a path
 			var new_state = { 
 				id: r.node,
-				path: '/'+this.state.slugs.slice(0, r.path.length).join('/'),
+				path: '/'+new_path,
 				extra: r.extra
 			};
 			
