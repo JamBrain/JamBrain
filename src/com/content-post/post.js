@@ -56,7 +56,7 @@ export default class ContentPost extends Component {
 			var url = path+node.slug+'/';
 			
 			var pub_date = new Date(node.published);
-			var pub_diff = Date.now() - pub_date.getTime();
+			var pub_diff = new Date().getTime() - pub_date.getTime();
 			
 			// x minutes ago
 			var post_relative = <span>{getRoughAge(pub_diff)}</span>;//<span class="-time">{node.published}</span> ago
