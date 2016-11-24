@@ -130,10 +130,28 @@ switch ( $REQUEST[0] ) {
 		}
 		
 		/// @todo Add e-mail blacklist checking here
+		/*|| plugin_Call('api_user_create_mail_allowed', $mail)*/
 		
-		// Is the email provided one that is allowed to create a new account?
-		if ( user_CountByMail($mail) || plugin_Call('api_user_create_mail_allowed', $mail) ) {
-			json_EmitFatalError_Server("Address unavailable", $RESPONSE);
+		$ex_user = user_GetByMail($mail);
+		
+		// Is the email provided one that already exists?
+		if ( isset($ex_user) ) {
+			if ( !$ex_user['node'] ) {
+				// TODO: Limit number of activations per minute
+				
+				$ex_new = user_AuthKeyGen($ex_user['id']);
+
+				// Resend activation e-mail
+				if ( isset($ex_new) ) {
+					$RESPONSE['sent'] = intval(sendMail_UserAdd($ex_new['id'], $mail, $ex_new['auth_key']));
+				}
+				else {
+					json_EmitFatalError_Server(null, $RESPONSE);
+				}
+			}
+			else {
+				json_EmitFatalError_Server("Address already registered. Did you mean to reset your password?", $RESPONSE);
+			}
 		}
 		else {
 			$user = user_Add($mail);

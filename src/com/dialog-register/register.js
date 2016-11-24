@@ -46,6 +46,10 @@ export default class DialogRegister extends Component {
 					console.log('sent', r.sent);
 					this.setState({sent: true, loading: false});
 				}
+				else if ( r.status === 200 ) {
+					console.log('resent', r.sent);
+					this.setState({sent: true, resent: true, loading: false});
+				}
 				else {
 					console.log(r);
 					this.setState({ error: r.message ? r.message : r.response, loading: false });
@@ -62,7 +66,7 @@ export default class DialogRegister extends Component {
 		}
 	}
 
-	render( props, {mail, sent, loading, error} ) {
+	render( props, {mail, sent, resent, loading, error} ) {
 		var ErrorMessage = error ? {'error': error} : {};
 		var title = "Create Account";
 		
@@ -79,7 +83,7 @@ export default class DialogRegister extends Component {
 			return (
 				<DialogBase title={title} ok explicit {...ErrorMessage}>
 					<div>
-						Activation e-mail sent to <code>{mail}</code>
+						Activation e-mail {resent ? 'resent' : 'sent'} to <code>{mail}</code>
 					</div>
 				</DialogBase>
 			);
@@ -95,7 +99,7 @@ export default class DialogRegister extends Component {
 						Expect an e-mail from <code>hello@jammer.vg</code>
 					</div>
 					<div class="-info">
-						If you use Hotmail or Outlook, go to <a href="https://outlook.live.com/owa/?path=/people" target="_blank" onclick={ e => { return e.stopPropagation() }}>People</a> add a <em>Contact</em>.
+						If you use Hotmail or Outlook, go to <a href="https://outlook.live.com/owa/?path=/people" target="_blank" onclick={ e => { return e.stopPropagation() }}>people</a> and add a <em>contact</em>.
 					</div>
 				</DialogBase>
 			);
