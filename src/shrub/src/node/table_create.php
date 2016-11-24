@@ -174,13 +174,13 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 		if (!$ok) break; $TABLE_VERSION++;
 	case 1:
 		$ok = table_Update( $table,
-			"ALTER TABLE "SH_TABLE_PREFIX.constant($table)."
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
 				DROP INDEX author;"
 			);
 		if (!$ok) break; $TABLE_VERSION++;
 	case 2:
 		$ok = table_Update( $table,
-			"ALTER TABLE "SH_TABLE_PREFIX.constant($table)."
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
 				ADD UNIQUE `node_author_ip` (`node`, `author`, `ip`);"
 			);
 		if (!$ok) break; $TABLE_VERSION++;

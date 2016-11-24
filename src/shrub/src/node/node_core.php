@@ -329,6 +329,7 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 	
 	$metas = nodeMeta_GetByNode($ids);
 	$links = nodeLink_GetByNode($ids);
+	$loves = nodeLove_GetByNode($ids);
 		
 	// Populate Links		
 	foreach ( $nodes as &$node ) {
@@ -336,6 +337,8 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 		$node['b'] = [];
 		
 		foreach ( $links as $link ) {
+			// Question: Should we support circular links (i.e. remove "else" from "else if")?
+			
 			if ( $node['id'] === $link['a'] ) {
 				if ( isset($node['a'][$link['type']]) ) {
 					$node['a'][$link['type']][] = $link['b'];
@@ -370,6 +373,24 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 		}
 		//sort($node['meta']);
 	}
+	
+	// Populate Love
+	foreach ( $nodes as &$node ) {
+		$node['love'] = 0;
+		
+		foreach ( $loves as $love ) {
+			if ( $node['id'] === $love['node'] ) {
+				$node['love'] = $love['count'];
+				$node['love-timestamp'] = $love['timestamp'];
+			}
+		}
+	}
+	
+	// Populate Comment Count
+//	foreach ( $nodes as &$node ) {
+//		$node['comments'] = 0;
+//		
+//	}
 
 	return $nodes;
 }

@@ -106,7 +106,7 @@ export default class ContentPost extends Component {
 								<SVGIcon class="-hover-hide">heart</SVGIcon>
 								<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
 								<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
-								<div class="-count">0</div>
+								<div class="-count">{node.love}</div>
 							</div>
 						</div>
 					</div>
