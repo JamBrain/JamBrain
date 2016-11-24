@@ -92,7 +92,7 @@ export default class DialogRegister extends Component {
 						<span /><input ref={(input) => this.registerMail = input} id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" /><LabelYesNo value={this.validateMail(mail) ? 1 : -1} />
 					</div>
 					<div class="-info">
-						Expect an e-mail from <code>no-reply@jammer.vg</code>
+						Expect an e-mail from <code>hello@jammer.vg</code>
 					</div>
 				</DialogBase>
 			);
