@@ -70,15 +70,13 @@ export default class ContentPost extends Component {
 			
 			var post_avatar = this.getAvatar( author );
 			
-			var post_author_extras = "";
-			
 			return (
 				<div class="content-base content-post">
 					<div class="-header">
 						<div class="-avatar"><img src={post_avatar} /></div>
 						<div class="-title _font2"><NavLink href={url} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
 						<div class="-subtext">
-							Posted {post_relative} {post_date} {post_by} {post_author_extras}
+							Posted {post_relative} {post_by} {post_date}
 						</div>
 					</div>
 					<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
