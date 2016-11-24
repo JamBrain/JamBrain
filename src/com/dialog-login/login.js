@@ -61,7 +61,7 @@ export default class DialogLogin extends Component {
 		return (
 			<DialogBase title="Log in" ok cancel oktext="Log In" onclick={this.doLogin} {...ErrorMessage}>
 				<div>
-					<span /><input ref={(input) => this.loginName = input} id="dialog-login-login" onchange={this.onLoginChange} class="-text focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="32" value={login} />
+					<span /><input ref={(input) => this.loginName = input} id="dialog-login-login" onchange={this.onLoginChange} class="-text focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="254" value={login} />
 				</div>
 				<div>
 					<input id="dialog-login-password" onchange={this.onPasswordChange} class="-text focusable" type="password" name="password" placeholder="Password" maxlength="64" value={password} />

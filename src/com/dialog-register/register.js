@@ -93,7 +93,7 @@ export default class DialogRegister extends Component {
 			return (
 				<DialogBase title={title} ok cancel oktext="Send Activation E-mail" explicit onclick={this.doRegister} {...ErrorMessage}>
 					<div>
-						<span /><input ref={(input) => this.registerMail = input} id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" /><LabelYesNo value={this.validateMail(mail) ? 1 : -1} />
+						<span /><input ref={(input) => this.registerMail = input} id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" maxlength="254" /><LabelYesNo value={this.validateMail(mail) ? 1 : -1} />
 					</div>
 					<div class="-info">
 						Expect an e-mail from <code>hello@jammer.vg</code>
