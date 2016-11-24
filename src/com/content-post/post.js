@@ -61,7 +61,7 @@ export default class ContentPost extends Component {
 			var post_date = <span>on <span class="-title" title={node.published}>{node.published}</span></span>;
 			var post_by = <span>by {this.getAtName(author)}</span>;
 			if ( author.meta['real-name'] ) {
-				post_by = <span>by {author.meta['real-name']+' ('+this.getAtName(author)+')'}</span>;
+				post_by = <span>by {author.meta['real-name']} ({this.getAtName(author)})</span>;
 			}
 			
 			var avatar = this.getAvatar( author );
