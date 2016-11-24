@@ -45,7 +45,7 @@ export default class ContentPost extends Component {
 	
 	getAtName( user ) {
 		var user_url = '/users/'+user.slug+'/';
-		return <NavLink class="at-name" href={user_url}><img src={this.getAvatar()} />{user.name}</NavLink>;
+		return <NavLink class="at-name" href={user_url}><img src={this.getAvatar(user)} />{user.name}</NavLink>;
 	}
 
 	render( {node, user, path}, {author, error} ) {
