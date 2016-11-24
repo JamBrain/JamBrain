@@ -20,9 +20,9 @@ export default class NavBar extends Component {
 		);
 		
 		var Calendar = (
-			<ButtonBase class="-button if-no-sidebar-inline" onclick={e => { console.log('calendar'); window.location.hash = "#cal"; }}>
+			<ButtonBase class="-button if-no-sidebar-block" onclick={e => { console.log('calendar'); window.location.hash = "#cal"; }}>
 				<SVGIcon baseline>calendar</SVGIcon>
-				<div class="if-sidebar-inline">Schedule</div>
+				<div class="if-sidebar-block">Schedule</div>
 			</ButtonBase>		
 		);
 		
@@ -39,7 +39,7 @@ export default class NavBar extends Component {
 			var NewPost = (
 				<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#post-new"; }}>
 					<SVGIcon>edit</SVGIcon>
-					<div class="if-sidebar-inline">New</div>
+					<div class="if-sidebar-block">New</div>
 				</ButtonBase>
 			);
 			
@@ -74,13 +74,13 @@ export default class NavBar extends Component {
 			var Register = (
 				<ButtonBase class="-button" onclick={e => { console.log('register'); window.location.hash = "#user-register"; }}>
 					<SVGIcon>user</SVGIcon>
-					<div class="if-sidebar-inline">Create Account</div>
+					<div class="if-sidebar-block">Create Account</div>
 				</ButtonBase>			
 			);
 			var Login = (
 				<ButtonBase class="-button" onclick={e => { console.log('login'); window.location.hash = "#user-login"; }}>
 					<SVGIcon>key</SVGIcon>
-					<div class="if-sidebar-inline">Login</div>
+					<div class="if-sidebar-block">Login</div>
 				</ButtonBase>			
 			);
 		}
@@ -90,8 +90,8 @@ export default class NavBar extends Component {
 				<div class="-content">
 					<div class="-left">
 						<ButtonLink href="/" class="-logo" onclick={e => console.log('logo')}>
-							<SVGIcon class="if-sidebar-inline" baseline>ludum</SVGIcon><SVGIcon class="if-sidebar-inline" baseline>dare</SVGIcon>
-							<SVGIcon class="if-no-sidebar-inline" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-inline" baseline>d-are</SVGIcon>							
+							<SVGIcon class="if-sidebar-block" baseline>ludum</SVGIcon><SVGIcon class="if-sidebar-block" baseline>dare</SVGIcon>
+							<SVGIcon class="if-no-sidebar-block" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-block" baseline>d-are</SVGIcon>							
 						</ButtonLink>
 					</div>
 					<div class="-right">
