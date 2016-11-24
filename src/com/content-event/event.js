@@ -19,7 +19,7 @@ export default class ContentEvent extends Component {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse('**Event:** '+node.name) };
 			
-			var url = path+'/'+node.slug+'/';
+			var url = path+node.slug+'/';
 			
 			let ThemeMode = (node.meta['theme-mode']) ? parseInt(node.meta['theme-mode']) : 0;
 			
