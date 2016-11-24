@@ -82,8 +82,10 @@ export default class ContentPost extends Component {
 					<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
 					<div class="-footer">
 						<div class="-left">
+							<div class="-minmax"><SVGIcon>arrow-up</SVGIcon></div>
 						</div>
 						<div class="-right">
+							<div class="-love"><SVGIcon>heart</SVGIcon><div class="-count">0</div></div>
 						</div>
 					</div>
 				</div>

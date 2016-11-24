@@ -116,7 +116,7 @@
 					border-left: 2.5rem/2 solid;
 					
 					display: block;
-    				  position: relative;
+    				position: relative;
 				}
 				
 				&:hover {
@@ -157,14 +157,47 @@
 				}*/
 			}
 			& > .-love {
+				width:auto;
+				padding-left:1rem;
+				padding-right:1rem;
+				background: @MAJOR_MUTE_D6;
+
 				display: flex;
 				
-				& > .-heart {
-					width:auto;
+				&:before {
+					color: @MAJOR_MUTE_D6;
+					
+					content:'';
+					left: -3.5rem;
+					top: 0rem;
+					border-top: 2.5rem/2 solid transparent;
+					border-right: 2.5rem/2 solid;
+					border-bottom: 2.5rem/2 solid;
+					border-left: 2.5rem/2 solid transparent;
+					
+					display: block;
+    				position: relative;
+				}
+				
+				& > svg {
+					position:absolute;
+					margin:auto;
+					top:0;
+					bottom:0;
+					
+/*					width:auto;
 					padding-left:1rem;
 					padding-right:1rem;
-					background: @MAJOR_MUTE_D6;
+					background: @MAJOR_MUTE_D6;*/
 				}				
+
+				&:hover {
+					color: @MAJOR_LIGHT;
+					background: @MAJOR_COLOR1;
+					&:before {
+						color: @MAJOR_COLOR1;
+					}
+				}
 				
 /*
 				& > svg {
@@ -199,7 +232,7 @@
 				& > .-count {
 					width:auto;
 					padding-right:1rem;
-					background: @MAJOR_MUTE_D6;
+					/*background: @MAJOR_MUTE_D6;*/
 					font-size:1.5em;
 					line-height:2.8rem;
 				}
