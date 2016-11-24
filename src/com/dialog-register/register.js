@@ -1,6 +1,6 @@
 import { h, Component } 				from 'preact/preact';
-import DialogBase						from 'com/dialog-base/base';
 
+import DialogBase						from 'com/dialog-base/base';
 import LabelYesNo						from 'com/label-yesno/yesno';
 
 import $User							from '../shrub/js/user/user';
@@ -93,6 +93,9 @@ export default class DialogRegister extends Component {
 					</div>
 					<div class="-info">
 						Expect an e-mail from <code>hello@jammer.vg</code>
+					</div>
+					<div class="-info">
+						If you use Hotmail or Outlook, go to <a href="https://outlook.live.com/owa/?path=/people" target="_blank" onclick={ e => { return e.stopPropagation() }}>People</a> add a <em>Contact</em>.
 					</div>
 				</DialogBase>
 			);
