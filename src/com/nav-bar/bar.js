@@ -19,6 +19,13 @@ export default class NavBar extends Component {
 			</ButtonBase>
 		);
 		
+		var Calendar = (
+			<ButtonBase class="-button if-no-sidebar-inline" onclick={e => { console.log('calendar'); window.location.hash = "#cal"; }}>
+				<SVGIcon baseline>calendar</SVGIcon>
+				<div class="if-sidebar-inline">Schedule</div>
+			</ButtonBase>		
+		);
+		
 		if ( user && user.id ) {
 			// TODO: Check if a participant of the current event
 			var MyGame = "";
@@ -32,7 +39,7 @@ export default class NavBar extends Component {
 			var NewPost = (
 				<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#post-new"; }}>
 					<SVGIcon>edit</SVGIcon>
-					<div>New</div>
+					<div class="if-sidebar-inline">New</div>
 				</ButtonBase>
 			);
 			
@@ -67,13 +74,13 @@ export default class NavBar extends Component {
 			var Register = (
 				<ButtonBase class="-button" onclick={e => { console.log('register'); window.location.hash = "#user-register"; }}>
 					<SVGIcon>user</SVGIcon>
-					<div>Create Account</div>
+					<div class="if-sidebar-inline">Create Account</div>
 				</ButtonBase>			
 			);
 			var Login = (
 				<ButtonBase class="-button" onclick={e => { console.log('login'); window.location.hash = "#user-login"; }}>
 					<SVGIcon>key</SVGIcon>
-					<div>Login</div>
+					<div class="if-sidebar-inline">Login</div>
 				</ButtonBase>			
 			);
 		}
@@ -83,12 +90,14 @@ export default class NavBar extends Component {
 				<div class="-content">
 					<div class="-left">
 						<ButtonLink href="/" class="-logo" onclick={e => console.log('logo')}>
-							<SVGIcon baseline>ludum</SVGIcon><SVGIcon baseline>dare</SVGIcon>
+							<SVGIcon class="if-sidebar-inline" baseline>ludum</SVGIcon><SVGIcon class="if-sidebar-inline" baseline>dare</SVGIcon>
+							<SVGIcon class="if-no-sidebar-inline" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-inline" baseline>d-are</SVGIcon>							
 						</ButtonLink>
 					</div>
 					<div class="-right">
 						{MyGame}
 						{NewPost}
+						{Calendar}
 						{Search}
 						{Notification}
 						{User}

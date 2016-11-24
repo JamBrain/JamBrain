@@ -100,6 +100,12 @@
 				padding: 0.5em 1em;
 				padding-left: 1em+1.5em+0.5em;
 				
+				@media (max-width: (@BASE_WIDTH - 20em)) { 
+					height: 3em;
+					width: 3em;
+					padding: 0;
+				}
+
 				position: relative;
 				
 				& > svg {
@@ -112,6 +118,12 @@
 					margin: auto;
 
 					display:block;
+
+					@media (max-width: (@BASE_WIDTH - 20em)) { 
+						font-size: 2em;
+						left:0;
+						right:0;
+					}
 				}
 				& > div {
 					font-size: 1.3em;
@@ -142,8 +154,7 @@
 			& > .-icon {
 				height: 3em;
 				width: 3em;
-				/*background: @MAJOR_MUTE;*/
-				
+
 				position:relative;
 				
 				& > svg {
