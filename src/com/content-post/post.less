@@ -126,6 +126,14 @@
 						color: @MAJOR_COLOR1;
 					}
 				}
+
+				&:active, &:focus {
+					color: @MAJOR_COLOR1;
+					background: @MAJOR_LIGHT;
+					&:after {
+						color: @MAJOR_LIGHT;
+					}
+				}
 			}
 		}
 		
@@ -185,17 +193,105 @@
 					top:0;
 					bottom:0;
 					left:1rem;
+				}
+
+
+				& .-hover-hide,
+				& .-loved-hide {
+					display: block;
+				}
+				& .-hover-show,
+				& .-loved-show {
+					display: none;
+				}
+				
+				
+				&.loved {
+					& > svg {
+						color: @MAJOR_COLOR1;
+					}
 					
-/*					width:auto;
-					padding-left:1rem;
-					padding-right:1rem;
-					background: @MAJOR_MUTE_D6;*/
-				}				
+					& .-loved-hide {
+						display: none;
+						
+						&.-hover-hide,
+						&.-hover-show {
+							display: none;
+						}
+					}
+					& .-loved-show {
+						display: block;
+
+						&.-hover-hide {
+							display: block;
+						}
+						&.-hover-show {
+							display: none;
+						}
+					}
+				}
+				
 
 				&:hover {
 					color: @MAJOR_LIGHT;
 					background: @MAJOR_COLOR1;
 					&:before {
+						color: @MAJOR_COLOR1;
+					}
+					
+					& > svg {
+						color: @MAJOR_LIGHT;
+					}
+					
+					& .-hover-hide {
+						display: none;
+						
+						&.-loved-hide,
+						&.-loved-show {
+							display: none;
+						}
+					}
+					& .-hover-show {
+						display: block;
+						
+						&.-loved-show {
+							display: none;
+						}
+						&.-loved-hide {
+							display: block;
+						}
+					}
+				}
+				
+				&:hover.loved {
+					& .-loved-hide {
+						display: none;
+						
+						&.-hover-hide,
+						&.-hover-show {
+							display: none;
+						}
+					}
+					& .-loved-show {
+						display: block;
+
+						&.-hover-hide {
+							display: none;
+						}
+						&.-hover-show {
+							display: block;
+						}
+					}					
+				}
+				
+				&:active, &:focus {
+					color: @MAJOR_COLOR1;
+					background: @MAJOR_LIGHT;
+					&:before {
+						color: @MAJOR_LIGHT;
+					}
+					
+					& > svg {
 						color: @MAJOR_COLOR1;
 					}
 				}

@@ -85,7 +85,12 @@ export default class ContentPost extends Component {
 							<div class="-minmax"><SVGIcon>arrow-up</SVGIcon></div>
 						</div>
 						<div class="-right">
-							<div class="-love"><SVGIcon>heart</SVGIcon><div class="-count">0</div></div>
+							<div class="-love loved">
+								<SVGIcon class="-hover-hide">heart</SVGIcon>
+								<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
+								<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
+								<div class="-count">0</div>
+							</div>
 						</div>
 					</div>
 				</div>
