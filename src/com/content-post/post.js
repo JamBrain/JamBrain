@@ -97,7 +97,7 @@ export default class ContentPost extends Component {
 					<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
 					<div class="-footer">
 						<div class="-left">
-							<div class="-minmax" onclick={this.onMinMax}>
+							<div class="-minmax _hidden" onclick={this.onMinMax}>
 								<SVGIcon>arrow-up</SVGIcon>
 							</div>
 						</div>
@@ -122,8 +122,6 @@ export default class ContentPost extends Component {
 		}
 	}
 }
-
-//							<div class="-minmax"><SVGIcon>arrow-up</SVGIcon></div>
 
 marked.setOptions({
 	highlight: function( code, lang ) {
