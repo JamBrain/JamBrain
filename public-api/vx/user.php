@@ -117,17 +117,26 @@ switch ( $REQUEST[0] ) {
 		json_ValidateHTTPMethod('POST');
 
 		// Sanitize
-		if ( isset($_POST['mail']) )
+		if ( isset($_POST['mail']) ) {
 			$mail = coreSanitize_Mail($_POST['mail']);
-		else
+
+			if ( $mail !== $_POST['mail'] ) {
+				json_EmitFatalError_BadRequest("E-mail contains invalid characters", $RESPONSE);
+			}
+			if ( strlen($mail) > 254 ) {
+				json_EmitFatalError_BadRequest("E-mail too long", $RESPONSE);
+			}
+		}
+		else {
 			json_EmitFatalError_BadRequest("'mail' not found in POST", $RESPONSE);
-		
-		$RESPONSE['mail'] = $mail;
-		
+		}
+
 		// Is the email provided even a valid e-mail address?
 		if ( !coreValidate_Mail($mail) ) {
 			json_EmitFatalError_BadRequest("Invalid e-mail address", $RESPONSE);
 		}
+
+		$RESPONSE['mail'] = $mail;
 		
 		/// @todo Add e-mail blacklist checking here
 		/*|| plugin_Call('api_user_create_mail_allowed', $mail)*/
@@ -176,29 +185,54 @@ switch ( $REQUEST[0] ) {
 	case 'activate':
 		json_ValidateHTTPMethod('POST');
 
-		if ( isset($_POST['id']) )
+		if ( isset($_POST['id']) ) {
 			$id = coreSanitize_Integer($_POST['id']);
-		else
+		}
+		else {
 			json_EmitFatalError_BadRequest("'id' not found in POST", $RESPONSE);
+		}
 
-		if ( isset($_POST['key']) )
+
+		if ( isset($_POST['key']) ) {
 			$key = coreSanitize_String($_POST['key']);
-		else
+
+			if ( $key !== $_POST['key'] ) {
+				json_EmitFatalError_BadRequest("Key contains invalid characters", $RESPONSE);
+			}
+			if ( strlen($key) > 255 ) {
+				json_EmitFatalError_BadRequest("Key too long", $RESPONSE);
+			}
+		}
+		else {
 			json_EmitFatalError_BadRequest("'key' not found in POST", $RESPONSE);
+		}
 
-		if ( isset($_POST['name']) )
+
+		if ( isset($_POST['name']) ) {
 			$name = coreSanitize_Name($_POST['name']);
-		else
-			$name = "";
-		
-		if ( $name !== $_POST['name'] ) {
-			json_EmitFatalError_BadRequest("Name contains (or starts/ends) with invalid characters", $RESPONSE);
-		}		
 
-		if ( isset($_POST['pw']) )
+			if ( $name !== $_POST['name'] ) {
+				json_EmitFatalError_BadRequest("Name contains (or starts/ends) with invalid characters", $RESPONSE);
+			}
+			if ( strlen($name) > 32 ) {
+				json_EmitFatalError_BadRequest("Name too long", $RESPONSE);
+			}
+		}
+		else {
+			$name = "";
+		}
+
+
+		if ( isset($_POST['pw']) ) {
 			$pw = coreSanitize_Password($_POST['pw']);
-		else
+
+			if ( strlen($pw) > 255 ) {
+				json_EmitFatalError_BadRequest("Password is too long", $RESPONSE);
+			}
+		}
+		else {
 			$pw = "";
+		}
 
 
 		// Sorry, this is complicated
@@ -320,19 +354,37 @@ switch ( $REQUEST[0] ) {
 		$secret = null;
 	
 		// Confirm Arguments
-		if ( isset($_POST['login']) )
+		if ( isset($_POST['login']) ) {
 			$login = coreSanitize_String($_POST['login']);
-		else
-			json_EmitFatalError_BadRequest("'login' not found in POST", $RESPONSE);
 
-		if ( isset($_POST['pw']) )
+			if ( $login !== $_POST['login'] ) {
+				json_EmitFatalError_BadRequest("Login contains invalid characters", $RESPONSE);
+			}
+			if ( strlen($login) > 254 ) {
+				json_EmitFatalError_BadRequest("Login too long", $RESPONSE);
+			}
+		}
+		else {
+			json_EmitFatalError_BadRequest("'login' not found in POST", $RESPONSE);
+		}
+
+
+		if ( isset($_POST['pw']) ) {
 			$pw = coreSanitize_String($_POST['pw']);
-		else
+
+			if ( strlen($pw) > 255 ) {
+				json_EmitFatalError_BadRequest("Password too long", $RESPONSE);
+			}
+		}
+		else {
 			json_EmitFatalError_BadRequest("'pw' not found in POST", $RESPONSE);
+		}
+
 
 		if ( isset($_POST['secret']) ) {
 			$secret = coreSanitize_String($_POST['secret']);
 		}
+
 
 		// Bail if empty
 		if ( empty($login) || empty($pw) ) {
