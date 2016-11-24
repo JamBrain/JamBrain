@@ -59,9 +59,9 @@ export default class ContentPost extends Component {
 			var pub_diff = new Date().getTime() - pub_date.getTime();
 			
 			// x minutes ago
-			var post_relative = <span>{getRoughAge(pub_diff)}</span>;//<span class="-time">{node.published}</span> ago
+			var post_relative = <span class="if-sidebar-inline">{getRoughAge(pub_diff)}</span>;
 			// simple date, full date on hover
-			var post_date = <span>on <span class="-title" title={getLocaleDate(pub_date)}>{getLocaleDay(pub_date)} {getLocaleMonthDay(pub_date)}</span></span>;
+			var post_date = <span>on <span class="-title" title={getLocaleDate(pub_date)}><span class="if-sidebar-inline">{getLocaleDay(pub_date)}</span> {getLocaleMonthDay(pub_date)}</span></span>;
 			
 			var post_by = <span>by {this.getAtName(author)}</span>;
 			if ( author.meta['real-name'] ) {
@@ -78,7 +78,7 @@ export default class ContentPost extends Component {
 						<div class="-avatar"><img src={post_avatar} /></div>
 						<div class="-title _font2"><NavLink href={url} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
 						<div class="-subtext">
-							Posted {post_relative} {post_date}, {post_by} {post_author_extras}
+							Posted {post_relative} {post_date} {post_by} {post_author_extras}
 						</div>
 					</div>
 					<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
