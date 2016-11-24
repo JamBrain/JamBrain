@@ -44,7 +44,7 @@ export default class ContentPost extends Component {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 			
-			var url = (path ? path+'/' : '/')+node.slug+'/';
+			var url = path+node.slug+'/';
 			
 			// x minutes ago
 			var relative_time = <span></span>;//<span class="-time">{node.published}</span> ago
