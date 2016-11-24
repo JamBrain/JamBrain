@@ -13,6 +13,9 @@ export default class ContentPost extends Component {
 		};
 		
 		this.componentWillReceiveProps( props );
+		
+		this.onLove = this.onLove.bind(this);
+		this.onMinMax = this.onMinMax.bind(this);
 	}
 	
 	componentWillReceiveProps( props ) {
@@ -38,6 +41,14 @@ export default class ContentPost extends Component {
 //	}
 //	componentWillUnmount() {
 //	}
+
+	onLove( e ) {
+		console.log("luv");
+	}
+	
+	onMinMax( e ) {
+		console.log("minmax");
+	}
 
 	getAvatar( user ) {
 		return '//'+STATIC_DOMAIN + ((user && user.meta && user.meta.avatar) ? user.meta.avatar : '/other/dummy/user64.png');
@@ -70,6 +81,9 @@ export default class ContentPost extends Component {
 			
 			var post_avatar = this.getAvatar( author );
 			
+			// TODO: Figure out if user loves this post
+			var loved = false;
+			
 			return (
 				<div class="content-base content-post">
 					<div class="-header">
@@ -82,10 +96,12 @@ export default class ContentPost extends Component {
 					<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
 					<div class="-footer">
 						<div class="-left">
-							<div class="-minmax"><SVGIcon>arrow-up</SVGIcon></div>
+							<div class="-minmax" onclick={this.onMinMax}>
+								<SVGIcon>arrow-up</SVGIcon>
+							</div>
 						</div>
 						<div class="-right">
-							<div class="-love loved">
+							<div class={'-love'+ (loved ? ' loved' : '')} onclick={this.onLove}>
 								<SVGIcon class="-hover-hide">heart</SVGIcon>
 								<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
 								<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
