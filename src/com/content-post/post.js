@@ -39,6 +39,15 @@ export default class ContentPost extends Component {
 //	componentWillUnmount() {
 //	}
 
+	getAvatar( user ) {
+		return '//'+STATIC_DOMAIN + ((user && user.meta && user.meta.avatar) ? user.meta.avatar : '/other/dummy/user64.png');
+	}
+	
+	getAtName( user ) {
+		var user_url = '/users/'+user.slug+'/';
+		return <NavLink class="at-name" href={user_url}><img src={this.getAvatar()} />{user.name}</NavLink>;
+	}
+
 	render( {node, user, path}, {author, error} ) {
 		if ( node.slug && author.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
@@ -50,9 +59,12 @@ export default class ContentPost extends Component {
 			var relative_time = <span></span>;//<span class="-time">{node.published}</span> ago
 			// simple date, full date on hover
 			var post_date = <span>on <span class="-title" title={node.published}>{node.published}</span></span>;
-			var post_by = <span>by {author.slug}</span>;
+			var post_by = <span>by {this.getAtName(author)}</span>;
+			if ( author.meta['real-name'] ) {
+				post_by = <span>by {author.meta['real-name']+' ('+this.getAtName(author)+')'}</span>;
+			}
 			
-			var avatar = '//'+STATIC_DOMAIN + ((author.meta && author.meta.avatar) ? author.meta.avatar : '/other/dummy/user64.png');
+			var avatar = this.getAvatar( author );
 			
 			var hasTwitter = <span></span>;
 			
