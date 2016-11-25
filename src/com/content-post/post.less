@@ -58,12 +58,30 @@
 			margin: -0.5em;
 			float:right;
 			cursor: pointer;
+			
+			position: relative;
+			
 			&:hover {
 				background: @MAJOR_COLOR1;
+				& > .-info {
+					display: block;
+					color: @MAJOR_LIGHT;
+				}
 			}
 			& > img {
 				display:block;
 				padding: 0.5em;
+			}
+			& > .-info {
+				position: absolute;
+				margin: auto;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				font-size: 2em;
+				
+				display: none;
 			}
 		}
 		& .-author {

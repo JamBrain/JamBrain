@@ -88,7 +88,7 @@ export default class ContentPost extends Component {
 			return (
 				<div class="content-base content-post">
 					<div class="-header">
-						<div class="-avatar"><img src={post_avatar} /></div>
+						<div class="-avatar" onclick={e => { console.log(author.slug); location.href = "#user-card"; }}><img src={post_avatar} /><SVGIcon class="-info">info</SVGIcon></div>
 						<div class="-title _font2"><NavLink href={url} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
 						<div class="-subtext">
 							Posted {post_relative} {post_by} {post_date}
