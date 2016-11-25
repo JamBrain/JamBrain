@@ -9,6 +9,7 @@ import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
 import DialogLogin						from 'com/dialog-login/login';
 import DialogRegister					from 'com/dialog-register/register';
 import DialogActivate					from 'com/dialog-activate/activate';
+import DialogPassword					from 'com/dialog-password/password';
 import DialogAuth						from 'com/dialog-auth/auth';
 
 //import AlertBase						from 'com/alert-base/base';
@@ -65,11 +66,13 @@ class Main extends Component {
 				return <DialogRegister />;
 			case '#user-auth':
 				return <DialogAuth />;
+			case '#user-password':
+				return <DialogPassword />;
 			default:
 				if ( window.location.hash )
 					return <DialogUnfinished />;
 				else
-					return <div />
+					return null;
 				break;
 		};
 	}

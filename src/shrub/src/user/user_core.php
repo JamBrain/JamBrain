@@ -49,13 +49,13 @@ function user_GetByMail( $mail, $query_suffix = ";" ) {
 // @retval Array[Array[String=>String] 
 function user_GetBySlug( $slug, $query_suffix = ";" ) {
 	$node = node_GetIdByParentSlug(SH_NODE_ID_USERS, $slug);
-//	//$node = nodeCache_GetBySlug($slug, $query_suffix);
-//	$node = node_GetBySlug($slug, $query_suffix);
-	$users = user_GetByNode($node, $query_suffix);
-
-	// Hack, always return the first user
-	if ( count($users) )
-		return $users[0];
+	if ( $node ) {
+		$users = user_GetByNode($node, $query_suffix);
+	
+		// Hack, always return the first user
+		if ( count($users) )
+			return $users[0];
+	}
 	return null;
 }
 

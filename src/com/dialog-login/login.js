@@ -35,7 +35,7 @@ export default class DialogLogin extends Component {
 	}
 	
 	doLogin() {
-		$User.Login( this.state.login, this.state.password, "" )
+		$User.Login( this.state.login.trim(), this.state.password.trim(), "" )
 			.then( r => {
 				if ( r.status === 200 ) {
 					console.log('success',r);
@@ -64,7 +64,7 @@ export default class DialogLogin extends Component {
 					<span /><input ref={(input) => this.loginName = input} id="dialog-login-login" onchange={this.onLoginChange} class="-text focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="254" value={login} />
 				</div>
 				<div>
-					<input id="dialog-login-password" onchange={this.onPasswordChange} class="-text focusable" type="password" name="password" placeholder="Password" maxlength="64" value={password} />
+					<input id="dialog-login-password" onchange={this.onPasswordChange} class="-text focusable" type="password" name="password" placeholder="Password" maxlength="128" value={password} />
 				</div>
 				<div>
 					<input id="dialog-login-remember" onchange={this.onRememberChange} class="focusable" type="checkbox" name="remember" checked={remember} /><span>Stay Logged In</span>

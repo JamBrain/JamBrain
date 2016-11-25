@@ -172,6 +172,18 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 				timestamp ".DB_TYPE_TIMESTAMP."
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				DROP INDEX author;"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+	case 2:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD UNIQUE `node_author_ip` (`node`, `author`, `ip`);"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
 }

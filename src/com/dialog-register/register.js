@@ -37,10 +37,12 @@ export default class DialogRegister extends Component {
 	}
 	
 	doRegister() {
-		if ( this.validateMail(this.state.mail) ) {
+		mail = this.state.mail.trim();
+		
+		if ( this.validateMail(mail) ) {
 			this.setState({ loading: true, error: null });
 			
-			$User.Register( this.state.mail )
+			$User.Register( mail )
 			.then( r => {
 				if ( r.status === 201 ) {
 					console.log('sent', r.sent);

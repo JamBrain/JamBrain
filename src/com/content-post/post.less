@@ -58,12 +58,30 @@
 			margin: -0.5em;
 			float:right;
 			cursor: pointer;
+			
+			position: relative;
+			
 			&:hover {
 				background: @MAJOR_COLOR1;
+				& > .-info {
+					display: block;
+					color: @MAJOR_LIGHT;
+				}
 			}
 			& > img {
 				display:block;
 				padding: 0.5em;
+			}
+			& > .-info {
+				position: absolute;
+				margin: auto;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				font-size: 2em;
+				
+				display: none;
 			}
 		}
 		& .-author {
@@ -116,14 +134,24 @@
 					border-left: 2.5rem/2 solid;
 					
 					display: block;
-    				  position: relative;
+    				position: relative;
 				}
 				
 				&:hover {
+					cursor: pointer;
+					
 					color: @MAJOR_LIGHT;
 					background: @MAJOR_COLOR1;
 					&:after {
 						color: @MAJOR_COLOR1;
+					}
+				}
+
+				&:active, &:focus {
+					color: @MAJOR_COLOR1;
+					background: @MAJOR_LIGHT;
+					&:after {
+						color: @MAJOR_LIGHT;
 					}
 				}
 			}
@@ -157,14 +185,138 @@
 				}*/
 			}
 			& > .-love {
+				width:auto;
+				padding-left:1rem;
+				padding-right:1rem;
+				background: @MAJOR_MUTE_D6;
+
 				display: flex;
 				
-				& > .-heart {
-					width:auto;
-					padding-left:1rem;
-					padding-right:1rem;
-					background: @MAJOR_MUTE_D6;
-				}				
+				&:before {
+					color: @MAJOR_MUTE_D6;
+					
+					content:'';
+					left: -3.5rem;
+					top: 0rem;
+					border-top: 2.5rem/2 solid transparent;
+					border-right: 2.5rem/2 solid;
+					border-bottom: 2.5rem/2 solid;
+					border-left: 2.5rem/2 solid transparent;
+					
+					display: block;
+    				position: relative;
+				}
+				
+				& > svg {
+					position:absolute;
+					margin:auto;
+					top:0;
+					bottom:0;
+					left:1rem;
+				}
+
+
+				& .-hover-hide,
+				& .-loved-hide {
+					display: block;
+				}
+				& .-hover-show,
+				& .-loved-show {
+					display: none;
+				}
+				
+				
+				&.loved {
+					& > svg {
+						color: @MAJOR_COLOR1;
+					}
+					
+					& .-loved-hide {
+						display: none;
+						
+						&.-hover-hide,
+						&.-hover-show {
+							display: none;
+						}
+					}
+					& .-loved-show {
+						display: block;
+
+						&.-hover-hide {
+							display: block;
+						}
+						&.-hover-show {
+							display: none;
+						}
+					}
+				}
+				
+
+				&:hover {
+					cursor: pointer;
+					
+					color: @MAJOR_LIGHT;
+					background: @MAJOR_COLOR1;
+					&:before {
+						color: @MAJOR_COLOR1;
+					}
+					
+					& > svg {
+						color: @MAJOR_LIGHT;
+					}
+					
+					& .-hover-hide {
+						display: none;
+						
+						&.-loved-hide,
+						&.-loved-show {
+							display: none;
+						}
+					}
+					& .-hover-show {
+						display: block;
+						
+						&.-loved-show {
+							display: none;
+						}
+						&.-loved-hide {
+							display: block;
+						}
+					}
+				}
+				
+				&:hover.loved {
+					& .-loved-hide {
+						display: none;
+						
+						&.-hover-hide,
+						&.-hover-show {
+							display: none;
+						}
+					}
+					& .-loved-show {
+						display: block;
+
+						&.-hover-hide {
+							display: none;
+						}
+						&.-hover-show {
+							display: block;
+						}
+					}					
+				}
+				
+				&:active, &:focus {
+					color: @MAJOR_COLOR1;
+					background: @MAJOR_LIGHT;
+					&:before {
+						color: @MAJOR_LIGHT;
+					}
+					
+					& > svg {
+						color: @MAJOR_COLOR1;
+					}
+				}
 				
 /*
 				& > svg {
@@ -199,7 +351,7 @@
 				& > .-count {
 					width:auto;
 					padding-right:1rem;
-					background: @MAJOR_MUTE_D6;
+					/*background: @MAJOR_MUTE_D6;*/
 					font-size:1.5em;
 					line-height:2.8rem;
 				}
