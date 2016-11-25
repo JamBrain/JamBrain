@@ -39,7 +39,7 @@ export default class DialogActivate extends Component {
 		this.ActHash = Vars.key;
 		
 		// Lookup ID, and confirm this is a valid activation
-		$User.Activate( this.ActID, this.ActHash, "", "" )
+		$User.Activate( this.ActID, this.ActHash.trim(), "", "" )
 			.then( r => {
 				if ( r.status === 200  ) {
 					this.setState({
@@ -87,36 +87,45 @@ export default class DialogActivate extends Component {
 
 	
 	isValidName() {
-		if ( this.state.name.length === 0 )
+		var str = this.state.name.trim();
+		if ( str.length === 0 )
 			return 0;
-		if ( this.state.name.length < 3 )
+		if ( str.length < 3 )
 			return -1;
 		
 		return 1;
 	}
 	isValidSlug() {
-		if ( this.state.slug.length === 0 )
+		var str = this.state.slug.trim();
+		if ( str.length === 0 )
 			return 0;
-		if ( this.state.slug.length < 3 )
+		if ( str.length < 3 )
 			return -1;
 		
 		return 1;
 	}
 	isValidPassword() {
-		if ( this.state.password.length === 0 )
+		var pw = this.state.password.trim();
+		if ( pw.length === 0 )
 			return 0;
-		if ( this.state.password.length < 8 )
+		if ( pw.length < 8 )
 			return -1;
 		
 		return 1;
 	}
 	isValidPassword2() {
+		var pw1 = this.state.password.trim();
+		var pw2 = this.state.password2.trim();
 		// Clever: This doesn't start failing until password (not password2) is not empty
-		if ( this.state.password.length === 0 )
+		if ( pw1.length === 0 )
 			return 0;
-		if ( this.state.password2.length < 8 )
+		if ( pw2.length < 8 )
+			return -1;
+
+		if ( pw1 !== pw2 )
 			return -1;
 			
+		// Keep this check, so the display doesn't look weird			
 		if ( this.state.password !== this.state.password2 )
 			return -1;
 		
@@ -125,7 +134,7 @@ export default class DialogActivate extends Component {
 
 	doActivate() {
 		if ( this.isValidName() > 0 && this.isValidPassword() > 0 && this.isValidPassword2() > 0 ) {
-			$User.Activate( this.ActID, this.ActHash, this.state.name, this.state.password )
+			$User.Activate( this.ActID, this.ActHash.trim(), this.state.name.trim(), this.state.password.trim() )
 			.then( r => {
 				if ( r.status === 201 ) {
 					console.log('success',r);
@@ -150,7 +159,7 @@ export default class DialogActivate extends Component {
 
 	doFinishActivation() {
 		// HACK
-		location.href = "?alpha";
+		location.href = "?";//"?alpha";
 	}
 	
 	render( props, {mail, name, slug, password, password2, created, loading, error} ) {

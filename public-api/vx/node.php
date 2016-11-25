@@ -193,7 +193,25 @@ switch ( array_shift($REQUEST) ) {
 				}
 				break;
 			case 'add':
-				json_ValidateHTTPMethod('POST');
+				json_ValidateHTTPMethod('GET');
+				
+//				if ( isset($REQUEST[0]) ) {
+//					$node_ids = explode('+', $REQUEST[0]);
+//
+//					// Sanitize
+//					foreach ( $node_ids as &$id ) {
+//						$id = intval($id);
+//						
+//						if ( !$id ) {
+//							json_EmitFatalError_BadRequest("Bad ID", $RESPONSE);
+//						}
+//					}
+//					sort($node_ids);
+//					
+//					//$RESPONSE['status'] = nodeLove_AddByNode($node_ids, );
+//					
+//					$RESPONSE['love'] = nodeLove_GetByNode($node_ids);
+//				}
 				break;
 			case 'remove':
 				json_ValidateHTTPMethod('POST');

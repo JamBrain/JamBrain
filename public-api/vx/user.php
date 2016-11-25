@@ -58,7 +58,7 @@ const SH_MAILER = SH_SITE." <hello@".SH_MAIL_DOMAIN.">";
 define('SH_URL_SITE', isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : 'http://ludumdare.org');
 //define('SH_URL_SITE', (isset($_SERVER['HTTPS']) ? "https://" : "http://").SH_DOMAIN);
 const SH_ACTIVATE = "#user-activate";
-const SH_ARGS = "alpha&";//"";
+const SH_ARGS = "";//"alpha&";//"";
 
 const CRLF = "\r\n";
 

@@ -35,7 +35,7 @@ export default class DialogLogin extends Component {
 	}
 	
 	doLogin() {
-		$User.Login( this.state.login, this.state.password, "" )
+		$User.Login( this.state.login.trim(), this.state.password.trim(), "" )
 			.then( r => {
 				if ( r.status === 200 ) {
 					console.log('success',r);
