@@ -102,7 +102,7 @@ export default class ContentPost extends Component {
 							</div>
 						</div>
 						<div class="-right">
-							<div class={'-love'+ (loved ? ' loved' : '')} onclick={this.onLove}>
+							<div class={'-love _hidden'+ (loved ? ' loved' : '')} onclick={this.onLove}>
 								<SVGIcon class="-hover-hide">heart</SVGIcon>
 								<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
 								<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
