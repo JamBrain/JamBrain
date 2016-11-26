@@ -2,6 +2,7 @@ import { h, Component } 				from 'preact/preact';
 import ButtonBase						from '../button-base/base';
 import ButtonLink						from '../button-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
+import NavLink 							from 'com/nav-link/link';
 
 function make_url( url ) {
 	return url + window.location.search;
@@ -57,9 +58,10 @@ export default class NavBar extends Component {
 			// TODO: Pull this out of the user meta, else use a dummy
 			let Avatar = (user.meta && user.meta.avatar) ? <img src={"//"+STATIC_DOMAIN+user.meta.avatar} /> : <img src={'//'+STATIC_DOMAIN+'/other/dummy/user64.png'} />;
 			//'/other/logo/mike/Chicken64.png';
+			let MyURL = '/users/'+user.slug+'/';
 			var User = (
 				<ButtonBase class="-user" onclick={e => console.log('user')}>
-					{Avatar}
+					<NavLink href={MyURL}>{Avatar}</NavLink>
 				</ButtonBase>
 			);
 			
