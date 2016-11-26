@@ -110,6 +110,73 @@ function sendMail_UserCreate( $mail, $slug ) {
 	return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers));
 }
 
+
+// User ID (not Node ID)
+function getSanitizedIdFromPost() {
+	$id = null;
+	if ( isset($_POST['id']) ) {
+		$id = coreSanitize_Integer($_POST['id']);
+	}
+	else {
+		json_EmitFatalError_BadRequest("'id' not found in POST", $RESPONSE);
+	}
+	return $id;
+}
+
+// Authentication Key
+function getSanitizedKeyFromPost() {
+	$key = null;
+	if ( isset($_POST['key']) ) {
+		$key = coreSanitize_String($_POST['key']);
+
+		if ( $key !== $_POST['key'] ) {
+			json_EmitFatalError_BadRequest("Key contains invalid characters", $RESPONSE);
+		}
+		if ( strlen($key) > 255 ) {
+			json_EmitFatalError_BadRequest("Key too long", $RESPONSE);
+		}
+	}
+	else {
+		json_EmitFatalError_BadRequest("'key' not found in POST", $RESPONSE);
+	}
+	
+	return $key;
+}
+
+function getSanitizedNameFromPost() {
+	$name = null;
+	if ( isset($_POST['name']) ) {
+		$name = coreSanitize_Name($_POST['name']);
+
+		if ( $name !== $_POST['name'] ) {
+			json_EmitFatalError_BadRequest("Name contains (or starts/ends) with invalid characters", $RESPONSE);
+		}
+		if ( strlen($name) > 32 ) {
+			json_EmitFatalError_BadRequest("Name too long", $RESPONSE);
+		}
+	}
+	else {
+		$name = "";
+	}
+	return $name;
+}
+
+function getSanitizedPwFromPost() {
+	$pw = null;
+	if ( isset($_POST['pw']) ) {
+		$pw = coreSanitize_Password($_POST['pw']);
+
+		if ( strlen($pw) > 255 ) {
+			json_EmitFatalError_BadRequest("Password is too long", $RESPONSE);
+		}
+	}
+	else {
+		$pw = "";
+	}
+	return $pw;
+}
+
+
 // Do Actions //
 switch ( $REQUEST[0] ) {
 	// Create a new user activation attempt
@@ -185,54 +252,57 @@ switch ( $REQUEST[0] ) {
 	case 'activate':
 		json_ValidateHTTPMethod('POST');
 
-		if ( isset($_POST['id']) ) {
-			$id = coreSanitize_Integer($_POST['id']);
-		}
-		else {
-			json_EmitFatalError_BadRequest("'id' not found in POST", $RESPONSE);
-		}
+		$id = getSanitizedIdFromPost();
+//		if ( isset($_POST['id']) ) {
+//			$id = coreSanitize_Integer($_POST['id']);
+//		}
+//		else {
+//			json_EmitFatalError_BadRequest("'id' not found in POST", $RESPONSE);
+//		}
+
+		$key = getSanitizedKeyFromPost();
+//		if ( isset($_POST['key']) ) {
+//			$key = coreSanitize_String($_POST['key']);
+//
+//			if ( $key !== $_POST['key'] ) {
+//				json_EmitFatalError_BadRequest("Key contains invalid characters", $RESPONSE);
+//			}
+//			if ( strlen($key) > 255 ) {
+//				json_EmitFatalError_BadRequest("Key too long", $RESPONSE);
+//			}
+//		}
+//		else {
+//			json_EmitFatalError_BadRequest("'key' not found in POST", $RESPONSE);
+//		}
+
+		$name = getSanitizedNameFromPost();
+//		if ( isset($_POST['name']) ) {
+//			$name = coreSanitize_Name($_POST['name']);
+//
+//			if ( $name !== $_POST['name'] ) {
+//				json_EmitFatalError_BadRequest("Name contains (or starts/ends) with invalid characters", $RESPONSE);
+//			}
+//			if ( strlen($name) > 32 ) {
+//				json_EmitFatalError_BadRequest("Name too long", $RESPONSE);
+//			}
+//		}
+//		else {
+//			$name = "";
+//		}
 
 
-		if ( isset($_POST['key']) ) {
-			$key = coreSanitize_String($_POST['key']);
-
-			if ( $key !== $_POST['key'] ) {
-				json_EmitFatalError_BadRequest("Key contains invalid characters", $RESPONSE);
-			}
-			if ( strlen($key) > 255 ) {
-				json_EmitFatalError_BadRequest("Key too long", $RESPONSE);
-			}
-		}
-		else {
-			json_EmitFatalError_BadRequest("'key' not found in POST", $RESPONSE);
-		}
-
-
-		if ( isset($_POST['name']) ) {
-			$name = coreSanitize_Name($_POST['name']);
-
-			if ( $name !== $_POST['name'] ) {
-				json_EmitFatalError_BadRequest("Name contains (or starts/ends) with invalid characters", $RESPONSE);
-			}
-			if ( strlen($name) > 32 ) {
-				json_EmitFatalError_BadRequest("Name too long", $RESPONSE);
-			}
-		}
-		else {
-			$name = "";
-		}
-
-
-		if ( isset($_POST['pw']) ) {
-			$pw = coreSanitize_Password($_POST['pw']);
-
-			if ( strlen($pw) > 255 ) {
-				json_EmitFatalError_BadRequest("Password is too long", $RESPONSE);
-			}
-		}
-		else {
-			$pw = "";
-		}
+		$pw = getSanitizedPwFromPost();
+		
+//		if ( isset($_POST['pw']) ) {
+//			$pw = coreSanitize_Password($_POST['pw']);
+//
+//			if ( strlen($pw) > 255 ) {
+//				json_EmitFatalError_BadRequest("Password is too long", $RESPONSE);
+//			}
+//		}
+//		else {
+//			$pw = "";
+//		}
 
 
 		// Sorry, this is complicated
@@ -345,6 +415,16 @@ switch ( $REQUEST[0] ) {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
 		}
 
+		break;
+	case 'password':
+		json_ValidateHTTPMethod('POST');
+
+		$id = getSanitizedIdFromPost();
+		$key = getSanitizedKeyFromPost();
+
+		$pw = getSanitizedPwFromPost();
+
+	
 		break;
 	case 'login':
 		json_ValidateHTTPMethod('POST');

@@ -208,7 +208,7 @@ switch ( array_shift($REQUEST) ) {
 //					}
 //					sort($node_ids);
 //					
-//					//$RESPONSE['status'] = nodeLove_AddByNode($node_ids, );
+//					$RESPONSE['status'] = nodeLove_AddByNode($node_ids, );
 //					
 //					$RESPONSE['love'] = nodeLove_GetByNode($node_ids);
 //				}

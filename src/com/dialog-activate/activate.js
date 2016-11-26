@@ -41,7 +41,7 @@ export default class DialogActivate extends Component {
 		// Lookup ID, and confirm this is a valid activation
 		$User.Activate( this.ActID, this.ActHash.trim(), "", "" )
 			.then( r => {
-				if ( r.status === 200  ) {
+				if ( r.status === 200 ) {
 					this.setState({
 						mail: r.mail,
 						name: "",
@@ -76,7 +76,7 @@ export default class DialogActivate extends Component {
 	}
 	
 	onNameChange( e ) {
-		this.setState({ name: e.target.value, slug: Sanitize.makeSlug(e.target.value), error: null });
+		this.setState({ name: e.target.value.trim(), slug: Sanitize.makeSlug(e.target.value), error: null });
 	}
 	onPasswordChange( e ) {
 		this.setState({ password: e.target.value, error: null });
