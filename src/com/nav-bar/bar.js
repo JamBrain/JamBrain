@@ -27,9 +27,26 @@ export default class NavBar extends Component {
 			</ButtonBase>		
 		);
 		
-		if ( user && user.id ) {
+		var MyGame = null;
+		var NewPost = null;
+		var Notification = null;
+		var User = null;
+		var Register = null;
+		var Login = null;
+		var GoSecure = null;
+
+		if ( SECURE_LOGIN_ONLY && (location.protocol !== 'https:') ) {
+			let SecureURL = 'https://'+location.hostname+location.pathname+location.search+location.hash;
+			GoSecure = (
+				<ButtonBase class="-button" href={SecureURL} onclick={e => {console.log('secure'); location.href = SecureURL;}}>
+					<SVGIcon>unlocked</SVGIcon>
+					<div class="if-sidebar-block">Go to Secure Site</div>
+				</ButtonBase>
+			);
+		}
+		else if ( user && user.id ) {
 			// TODO: Check if a participant of the current event
-			var MyGame = "";
+			MyGame = "";
 //			 (
 //				<ButtonBase class="-button" onclick={e => console.log('my game')}>
 //					<SVGIcon>gamepad</SVGIcon>
@@ -37,7 +54,7 @@ export default class NavBar extends Component {
 //				</ButtonBase>
 //			);
 			
-			var NewPost = (
+			NewPost = (
 				<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#post-new"; }}>
 					<SVGIcon>edit</SVGIcon>
 					<div class="if-sidebar-block">New</div>
@@ -59,31 +76,24 @@ export default class NavBar extends Component {
 			let Avatar = (user.meta && user.meta.avatar) ? <img src={"//"+STATIC_DOMAIN+user.meta.avatar} /> : <img src={'//'+STATIC_DOMAIN+'/other/dummy/user64.png'} />;
 			//'/other/logo/mike/Chicken64.png';
 			let MyURL = '/users/'+user.slug+'/';
-			var User = (
+			User = (
 				<ButtonBase class="-user" onclick={e => console.log('user')}>
 					<NavLink href={MyURL}>{Avatar}</NavLink>
 				</ButtonBase>
 			);
-			
-			var Register = "";
-			var Login = "";
 		}
 		else {
-			var MyGame = "";
-			var NewPost = "";
-			var Notification = "";
-			var User = "";
-			var Register = (
+			Register = (
 				<ButtonBase class="-button" onclick={e => { console.log('register'); window.location.hash = "#user-register"; }}>
 					<SVGIcon>user</SVGIcon>
 					<div class="if-sidebar-block">Create Account</div>
-				</ButtonBase>			
+				</ButtonBase>
 			);
-			var Login = (
+			Login = (
 				<ButtonBase class="-button" onclick={e => { console.log('login'); window.location.hash = "#user-login"; }}>
 					<SVGIcon>key</SVGIcon>
 					<div class="if-sidebar-block">Login</div>
-				</ButtonBase>			
+				</ButtonBase>
 			);
 		}
 		
@@ -105,6 +115,7 @@ export default class NavBar extends Component {
 						{User}
 						{Register}
 						{Login}
+						{GoSecure}
 					</div>
 				</div>
 			</div>

@@ -9,6 +9,8 @@ if ( !isset($_GET['ignore']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE') !== f
 	die();
 }
 
+@include __DIR__."/../config.php";
+
 // http://stackoverflow.com/a/9535967/5678759
 function make_slug( $string, $separator = '-' ) {
 //	$accents_regex = '~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i';
@@ -72,6 +74,7 @@ if ( !isset($_GET['nopreload']) ) {
 		var VERSION_STRING = "<?=VERSION_STRING?>";
 		var STATIC_DOMAIN = "<?=STATIC_DOMAIN?>";
 		var API_DOMAIN = "<?=API_DOMAIN?>";
+		var SECURE_LOGIN_ONLY = <?= defined('SECURE_LOGIN_ONLY') ? ((SECURE_LOGIN_ONLY && !$_GET['insecure'])?'true':'false') : 'false' ?>;
 		<?php /* Load SVG */ ?>
 		<?php include __DIR__."/../embed/preload-svg.js.php"; ?>
 	</script>
