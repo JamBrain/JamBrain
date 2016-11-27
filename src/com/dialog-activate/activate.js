@@ -27,15 +27,18 @@ export default class DialogActivate extends Component {
 		$User.Activate( this.ActID, this.ActHash.trim(), "", "" )
 			.then( r => {
 				if ( r.status === 200 ) {
+					var name = (r.slug && r.slug.length ? r.slug[0] : "");
+					var slug = Sanitize.makeSlug(name);
+					
 					this.setState({
-						mail: r.mail,
-						name: "",
-						slug: "",
-						password: "",
-						password2: "",
+						'mail': r.mail,
+						'name': name,
+						'slug': slug,
+						'password': "",
+						'password2': "",
 						
-						valid_slug: 0,
-						loading: false
+						'valid_slug': 0,
+						'loading': false
 					});
 //					this.activateName.focus();
 				}
