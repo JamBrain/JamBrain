@@ -9,6 +9,7 @@ import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
 import DialogLogin						from 'com/dialog-login/login';
 import DialogRegister					from 'com/dialog-register/register';
 import DialogActivate					from 'com/dialog-activate/activate';
+import DialogReset						from 'com/dialog-reset/reset';
 import DialogPassword					from 'com/dialog-password/password';
 import DialogAuth						from 'com/dialog-auth/auth';
 
@@ -66,6 +67,8 @@ class Main extends Component {
 				return <DialogRegister />;
 			case '#user-auth':
 				return <DialogAuth />;
+			case '#user-reset':
+				return <DialogReset />;
 			case '#user-password':
 				return <DialogPassword />;
 			default:

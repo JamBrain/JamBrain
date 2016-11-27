@@ -7,11 +7,9 @@ import LabelYesNo						from 'com/label-yesno/yesno';
 import $User							from '../shrub/js/user/user';
 
 
-export default class DialogRegister extends Component {
+export default class DialogReset extends Component {
 	constructor( props ) {
 		super(props);
-		
-		console.log("DialogRegister",this.state);
 		
 		this.state = {
 			mail: "",
@@ -21,7 +19,7 @@ export default class DialogRegister extends Component {
 
 		// Bind functions (avoiding the need to rebind every render)
 		this.onChange = this.onChange.bind(this);
-		this.doRegister = this.doRegister.bind(this);
+		this.doReset = this.doReset.bind(this);
 	}
 	
 	componentDidMount() {
@@ -32,21 +30,17 @@ export default class DialogRegister extends Component {
 		this.setState({ mail: e.target.value });
 	}
 	
-	doRegister() {
+	doReset() {
 		mail = this.state.mail.trim();
 		
 		if ( Sanitize.validateMail(mail) ) {
 			this.setState({ loading: true, error: null });
 			
-			$User.Register( mail )
+			$User.Reset( mail )
 			.then( r => {
-				if ( r.status === 201 ) {
+				if ( r.status === 200 ) {
 					console.log('sent', r.sent);
 					this.setState({sent: true, loading: false});
-				}
-				else if ( r.status === 200 ) {
-					console.log('resent', r.sent);
-					this.setState({sent: true, resent: true, loading: false});
 				}
 				else {
 					console.log(r);
@@ -64,9 +58,9 @@ export default class DialogRegister extends Component {
 		}
 	}
 
-	render( props, {mail, sent, resent, loading, error} ) {
+	render( props, {mail, sent, loading, error} ) {
 		var ErrorMessage = error ? {'error': error} : {};
-		var title = "Create Account";
+		var title = "Reset Password";
 		
 		if ( loading ) {
 			return (
@@ -81,7 +75,7 @@ export default class DialogRegister extends Component {
 			return (
 				<DialogBase title={title} ok explicit {...ErrorMessage}>
 					<div>
-						Activation e-mail {resent ? 'resent' : 'sent'} to <code>{mail}</code>
+						Password reset message sent to to <code>{mail}</code>
 					</div>
 				</DialogBase>
 			);
@@ -89,15 +83,9 @@ export default class DialogRegister extends Component {
 		else {
 			// NOTE: There's a Preact bug that the extra <span /> is working around
 			return (
-				<DialogBase title={title} ok cancel oktext="Send Activation E-mail" explicit onclick={this.doRegister} {...ErrorMessage}>
+				<DialogBase title={title} ok cancel oktext="Send E-mail" explicit onclick={this.doReset} {...ErrorMessage}>
 					<div>
-						<span /><input ref={(input) => this.registerMail = input} id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" maxlength="254" /><LabelYesNo value={Sanitize.validateMail(mail) ? 1 : -1} />
-					</div>
-					<div class="-info">
-						Expect an e-mail from <code>hello@jammer.vg</code>
-					</div>
-					<div class="-info">
-						If you use Hotmail or Outlook, go to <a href="https://outlook.live.com/owa/?path=/people" target="_blank" onclick={ e => { return e.stopPropagation() }}>people</a> and add a <em>contact</em>.
+						<input ref={(input) => this.registerMail = input} id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" maxlength="254" /><LabelYesNo value={Sanitize.validateMail(mail) ? 1 : -1} />
 					</div>
 				</DialogBase>
 			);

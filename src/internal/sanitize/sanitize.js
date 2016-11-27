@@ -25,6 +25,11 @@ class CSanitize {
 	trimSlashes( str ) {
 		return str.replace(/^\/|\/$/g,'');
 	}
+	
+	validateMail( mail ) {
+		// http://stackoverflow.com/a/9204568/5678759
+		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
+	}
 };
 
 // Singleton

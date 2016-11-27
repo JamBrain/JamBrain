@@ -118,7 +118,7 @@ function mailSend_UserCreate( $mail, $slug ) {
 }
 
 function mailSend_UserPasswordReset( $mail, $slug, $id, $key ) {
-	$subject = mailGen_Subject("Account created");
+	$subject = mailGen_Subject("Reset password");
 	$message = [
 		"Someone has requested a password reset for your account \"$slug\".",
 		"",
@@ -353,8 +353,6 @@ switch ( $action ) {
 		// Is the email provided one that already exists?
 		if ( isset($ex_user) ) {
 			if ( !$ex_user['node'] ) {
-				// TODO: Limit number of activations per minute
-				
 				$ex_new = user_AuthKeyGen($ex_user['id']);
 
 				// Resend activation e-mail
@@ -609,9 +607,18 @@ switch ( $action ) {
 		
 		$user = validateUserWithLogin($login);
 
-		if ( isset($user) && isset($user['mail']) && isset($user['slug']) ) {
-			// Send an e-mail
-			$RESPONSE['sent'] = intval(mailSend_UserPasswordReset($user['mail'], $node['slug'], $id, $key));
+		if ( isset($user) && isset($user['mail']) ) {
+			$node = nodeComplete_GetById($user['node']);
+			
+			if ( isset($node) && isset($node['slug']) ) {
+				$ex_new = user_AuthKeyGen($user['id']);
+
+				// Send an e-mail
+				$RESPONSE['sent'] = intval(mailSend_UserPasswordReset($user['mail'], $node['slug'], $ex_new['id'], $ex_new['auth_key']));
+			}
+			else {
+				json_EmitFatalError_Server(null, $RESPONSE);
+			}
 		}
 		else {
 			json_EmitFatalError_Permission(null, $RESPONSE);
