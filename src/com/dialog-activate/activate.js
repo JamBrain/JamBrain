@@ -33,6 +33,8 @@ export default class DialogActivate extends Component {
 						slug: "",
 						password: "",
 						password2: "",
+						
+						valid_slug: 0,
 						loading: false
 					});
 //					this.activateName.focus();
@@ -61,7 +63,26 @@ export default class DialogActivate extends Component {
 	}
 	
 	onNameChange( e ) {
-		this.setState({ name: e.target.value.trim(), slug: Sanitize.makeSlug(e.target.value), error: null });
+		var name = e.target.value.trim();
+		var slug = Sanitize.makeSlug(name);
+		
+		$User.Have( name, this.state.mail )
+		.then( r => {
+			if ( r.status === 200 ) {
+				this.setState({ valid_slug: (r.available ? 1 : -1) });
+			}
+			else {
+				console.log(r);
+				this.setState({ error: r.message ? r.message : r.response, loading: false });
+			}
+			return r;
+		})
+		.catch( err => {
+			console.log(err);
+			this.setState({ error: err, loading: false });
+		});
+		
+		this.setState({ name: name, slug: slug, valid_slug: 0, error: null });
 	}
 	onPasswordChange( e ) {
 		this.setState({ password: e.target.value, error: null });
@@ -147,7 +168,7 @@ export default class DialogActivate extends Component {
 		location.href = "?";//"?alpha";
 	}
 	
-	render( props, {mail, name, slug, password, password2, created, loading, error} ) {
+	render( props, {mail, name, slug, password, password2, valid_slug, created, loading, error} ) {
 		var ErrorMessage = error ? {'error': error} : {};
 		var title = "Create Account: Step 2";
 
@@ -186,7 +207,7 @@ export default class DialogActivate extends Component {
 					<span class="-label">Name:</span><input ref={(input) => this.activateName = input} id="dialog-activate-name" onchange={this.onNameChange} class="-text focusable" type="text" name="username" maxlength="32" placeholder="How your name appears" value={name} /><LabelYesNo value={this.isValidName()} />
 				</div>
 				<div>
-					<span class="-label">Account Name:</span><span id="dialog-activate-slug"><code>{slug}</code></span><LabelYesNo value={this.isValidSlug()} />
+					<span class="-label">Account Name:</span><span id="dialog-activate-slug"><code>{slug}</code></span><LabelYesNo value={valid_slug} />
 				</div>
 				<div>
 					<span class="-label">Password:</span><input id="dialog-activate-password" onchange={this.onPasswordChange} class="-text focusable" type="password" name="password" maxlength="128" value={password} /><LabelYesNo value={this.isValidPassword()} />

@@ -22,6 +22,7 @@ export default class DialogRegister extends Component {
 		// Bind functions (avoiding the need to rebind every render)
 		this.onChange = this.onChange.bind(this);
 		this.doRegister = this.doRegister.bind(this);
+		this.doFinish = this.doFinish.bind(this);
 	}
 	
 	componentDidMount() {
@@ -63,6 +64,10 @@ export default class DialogRegister extends Component {
 			this.setState({ error: "Incorrectly formatted e-mail address" });
 		}
 	}
+	
+	doFinish() {
+		location.href = location.pathname+location.search;
+	}
 
 	render( props, {mail, sent, resent, loading, error} ) {
 		var ErrorMessage = error ? {'error': error} : {};
@@ -79,7 +84,7 @@ export default class DialogRegister extends Component {
 		}
 		else if ( sent ) {
 			return (
-				<DialogBase title={title} ok explicit {...ErrorMessage}>
+				<DialogBase title={title} ok explicit onclick={this.doFinish} {...ErrorMessage}>
 					<div>
 						Activation e-mail {resent ? 'resent' : 'sent'} to <code>{mail}</code>
 					</div>

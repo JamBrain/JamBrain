@@ -624,7 +624,44 @@ switch ( $action ) {
 		}
 		
 		break;
+	
+	case 'have':
+		json_ValidateHTTPMethod('POST');
+
+		$mail = strtolower(getSanitizedMailFromPost(true));
+		$name = getSanitizedNameFromPost();
 		
+		// TODO: If logged in, get your user, and make the current name valid
+		
+		//$user = user_GetByMail($mail);
+		
+		$slug = coreSlugify_Name($name);
+
+		// If on the internal reserved list
+		if ( in_array($slug, $SH_NAME_RESERVED) ) {
+			$RESPONSE['available'] = false;
+			break;
+		}
+		
+		// If on the user reserved list.
+		$reserved = userReserved_Is($slug);
+		if ( count($reserved) ) {
+			if ( !in_array($mail, $reserved) ) {
+				$RESPONSE['available'] = false;
+				break;
+			}
+		}
+		
+		// If user exsts
+		$node = user_GetBySlug($slug);
+		if ( $node ) {
+			$RESPONSE['available'] = false;
+			break;			
+		}
+
+		$RESPONSE['available'] = true;
+		break;
+	
 	case 'get':
 		json_ValidateHTTPMethod('GET');
 		
