@@ -58,6 +58,7 @@ const SH_MAILER = SH_SITE." <hello@".SH_MAIL_DOMAIN.">";
 define('SH_URL_SITE', isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : 'http://ludumdare.org');
 //define('SH_URL_SITE', (isset($_SERVER['HTTPS']) ? "https://" : "http://").SH_DOMAIN);
 const SH_ACTIVATE = "#user-activate";
+const SH_PASSWORD = "#user-password";
 const SH_ARGS = "";//"alpha&";//"";
 
 const CRLF = "\r\n";
@@ -84,7 +85,7 @@ function mailSend_Now( $mail, $subject, $message ) {
 }
 	
 
-function mailSend_UserAdd( $id, $mail, $key ) {
+function mailSend_UserAdd( $mail, $id, $key ) {
 	$subject = mailGen_Subject("Confirming your e-mail address");
 	$message = [
 		"Here is your confirmation e-mail.",
@@ -97,7 +98,8 @@ function mailSend_UserAdd( $id, $mail, $key ) {
 		"",
 		"Someone signed up on ".SH_URL_SITE." using your e-mail address.",
 		"",
-		"If that wasn't you then oops! Feel free to ignore this e-mail."
+		"If that wasn't you then oops! Feel free to ignore this e-mail.",
+		""
 	];
 	
 	return mailSend_Now($mail, $subject, $message);
@@ -109,6 +111,22 @@ function mailSend_UserCreate( $mail, $slug ) {
 		"Your account \"$slug\" has been created!",
 		"",
 		"You can now log in on: ".SH_URL_SITE,
+		""
+	];
+	
+	return mailSend_Now($mail, $subject, $message);
+}
+
+function mailSend_UserPasswordReset( $mail, $slug, $id, $key ) {
+	$subject = mailGen_Subject("Account created");
+	$message = [
+		"Someone has requested a password reset for your account \"$slug\".",
+		"",
+		"Click the following link to change your password:",
+		"",
+		SH_URL_SITE."?".SH_ARGS."id=$id&key=$key".SH_PASSWORD,
+		"",
+		"If you do not wish to reset your password, or it was sent in error, then feel free to ignore this email.",
 		""
 	];
 	
@@ -280,9 +298,45 @@ function validateUserWithIdKey( $id, $key ) {
 }
 
 
-// Do Actions //
-switch ( $REQUEST[0] ) {
-	// Create a new user activation attempt
+function validateUserWithLogin( $login ) {	
+	global $RESPONSE;
+	
+	$name = null;
+	$mail = null;
+	$user = null;
+	
+	// Decode the login as either an e-mail address, or a username
+	if ( coreValidate_Mail($login) ) {
+		$mail = coreSanitize_Mail($login);
+		$RESPONSE['mail'] = $mail;
+	}
+	else {
+		$name = coreSlugify_Name($login);
+		$RESPONSE['name'] = $name;
+	}
+	
+	// If an e-mail login attempt
+	if ( $mail ) {
+		$user = user_GetByMail( $mail );
+	}
+	// If a username login attempt
+	else if ( $name ) {
+		$user = user_GetBySlug( $name );
+	}
+	
+	// Bail if no user was found, or if their node is zero (not associated with an account)
+	if ( !isset($user) || !($user['node'] > 0) ) {
+		json_EmitFatalError_Permission(null, $RESPONSE);
+	}
+	
+	return $user;
+}
+
+
+// Do Actions
+$action = json_ArgGet(0);
+switch ( $action ) {
+	// Create a new user activation
 	case 'create':
 		json_ValidateHTTPMethod('POST');
 		
@@ -305,7 +359,7 @@ switch ( $REQUEST[0] ) {
 
 				// Resend activation e-mail
 				if ( isset($ex_new) ) {
-					$RESPONSE['sent'] = intval(mailSend_UserAdd($ex_new['id'], $mail, $ex_new['auth_key']));
+					$RESPONSE['sent'] = intval(mailSend_UserAdd($mail, $ex_new['id'], $ex_new['auth_key']));
 				}
 				else {
 					json_EmitFatalError_Server(null, $RESPONSE);
@@ -319,7 +373,7 @@ switch ( $REQUEST[0] ) {
 			$user = user_Add($mail);
 			if ( $user ) {
 				// Send an e-mail
-				$RESPONSE['sent'] = intval(mailSend_UserAdd($user['id'], $mail, $user['auth_key']));
+				$RESPONSE['sent'] = intval(mailSend_UserAdd($mail, $user['id'], $user['auth_key']));
 				
 				// Successfully Created.
 				json_RespondCreated();
@@ -330,6 +384,7 @@ switch ( $REQUEST[0] ) {
 		}
 
 		break;
+
 	// Fully activate a user
 	case 'activate':
 		json_ValidateHTTPMethod('POST');
@@ -419,6 +474,7 @@ switch ( $REQUEST[0] ) {
 			}
 		}
 		break;
+
 	case 'password':
 		json_ValidateHTTPMethod('POST');
 		
@@ -432,13 +488,46 @@ switch ( $REQUEST[0] ) {
 		$user = validateUserWithIdKey($id, $key);
 
 		if ( $user['node'] ) {
+			$node = nodeComplete_GetById($user['node']);
+			
+			// In the unlikely situation where there is no node associated with a user
+			if ( !$node && !isset($node['id']) && !isset($node['slug']) ) {
+				json_EmitFatalError_Server(null, $RESPONSE);
+			}
+			
+			// If no password specified, that's okay
+			if ( !strlen($pw) ) {
+				$RESPONSE['node'] = $node['id'];
+				break;
+			}
 
+			// If password is too short
+			if ( strlen($pw) < PASSWORD_MIN_LENGTH ) {
+				json_EmitFatalError_Permission("Password is too short (minimum ".PASSWORD_MIN_LENGTH." characters)", $RESPONSE);
+			}
+			
+			// OKAY! LETS DO IT!
+
+			// Set the hash to the new password
+			if ( !user_SetHash($id, userPassword_Hash($pw)) ) {
+				json_EmitFatalError_Server("Unable to set password", $RESPONSE);
+			}
+			if ( !user_AuthKeyClear($id) ) {
+				json_EmitFatalError_Server("Unable to clear key", $RESPONSE);
+			}
+			
+			// Send an e-mail
+			//$RESPONSE['sent'] = intval(mailSend_UserPasswordReset($user['mail'], $node['slug'], $id, $key));
+			
+			// Need to do something to inform the user the password was successfully reset
+			$RESPONSE['sent'] = 1;
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
 		}
 	
 		break;
+
 	case 'login':
 		json_ValidateHTTPMethod('POST');
 		
@@ -453,39 +542,35 @@ switch ( $REQUEST[0] ) {
 			$secret = coreSanitize_String($_POST['secret']);
 		}
 
-
-		// Bail if empty
-		if ( empty($login) || empty($pw) ) {
-			json_EmitFatalError_Permission(null, $RESPONSE);
-		}
+		$user = validateUserWithLogin($login);
 		
-		$name = null;
-		$mail = null;
-		$user = null;
-		
-		// Decode the login as either an e-mail address, or a username
-		if ( coreValidate_Mail($login) ) {
-			$mail = coreSanitize_Mail($login);
-			$RESPONSE['mail'] = $mail;
-		}
-		else {
-			$name = coreSlugify_Name($login);
-			$RESPONSE['name'] = $name;
-		}
-		
-		// If an e-mail login attempt
-		if ( $mail ) {
-			$user = user_GetByMail( $mail );
-		}
-		// If a username login attempt
-		else if ( $name ) {
-			$user = user_GetBySlug( $name );
-		}
-		
-		// Bail if no user was found, or if their node is zero (not associated with an account)
-		if ( !isset($user) || !($user['node'] > 0) ) {
-			json_EmitFatalError_Permission(null, $RESPONSE);
-		}
+//		$name = null;
+//		$mail = null;
+//		$user = null;
+//		
+//		// Decode the login as either an e-mail address, or a username
+//		if ( coreValidate_Mail($login) ) {
+//			$mail = coreSanitize_Mail($login);
+//			$RESPONSE['mail'] = $mail;
+//		}
+//		else {
+//			$name = coreSlugify_Name($login);
+//			$RESPONSE['name'] = $name;
+//		}
+//		
+//		// If an e-mail login attempt
+//		if ( $mail ) {
+//			$user = user_GetByMail( $mail );
+//		}
+//		// If a username login attempt
+//		else if ( $name ) {
+//			$user = user_GetBySlug( $name );
+//		}
+//		
+//		// Bail if no user was found, or if their node is zero (not associated with an account)
+//		if ( !isset($user) || !($user['node'] > 0) ) {
+//			json_EmitFatalError_Permission(null, $RESPONSE);
+//		}
 				
 		// If hashes match, it's a success, so log the user in
 		if ( isset($user['hash']) && userPassword_Verify($pw, $user['hash']) ) {
@@ -507,11 +592,31 @@ switch ( $REQUEST[0] ) {
 		json_EmitFatalError_Permission(null, $RESPONSE);
 	
 		break;
+
 	case 'logout':
 		json_ValidateHTTPMethod('GET');
 		
 		$RESPONSE['id'] = userAuth_Logout();
 	
+		break;
+
+	case 'reset':
+		json_ValidateHTTPMethod('POST');
+		
+		// NOTE: You can reset password while logged in.
+
+		$login = getSanitizedLoginFromPost();
+		
+		$user = validateUserWithLogin($login);
+
+		if ( isset($user) && isset($user['mail']) && isset($user['slug']) ) {
+			// Send an e-mail
+			$RESPONSE['sent'] = intval(mailSend_UserPasswordReset($user['mail'], $node['slug'], $id, $key));
+		}
+		else {
+			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
+		
 		break;
 		
 	case 'get':
@@ -544,6 +649,7 @@ switch ( $REQUEST[0] ) {
 ////		}
 		
 		break;
+
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break;

@@ -23,7 +23,7 @@ function GetEventNodes() {
 	return $ret;
 }
 
-// Do Actions //
+// Do Actions
 $action = json_ArgGet(0);
 switch ( $action ) {
 	// Regular Voting Rounds //
