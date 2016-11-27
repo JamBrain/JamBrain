@@ -48,7 +48,7 @@ export default class ContentEventIdea extends Component {
 //		</script>
 
 	textChange( e ) {
-		this.setState({ idea: e.target.value });
+		this.setState({ idea: e.target.value.trim() });
 	}
 
 	removeIdea( id, e ) {
@@ -72,10 +72,11 @@ export default class ContentEventIdea extends Component {
 	}
 	
 	submitIdeaForm( e ) {
-		console.log('submit:', this.state.idea);
+		var idea = this.state.idea.trim()
+		console.log('submit:', idea);
 		
-		if ( this.state.idea.length > 0 && this.state.idea.length <= 64 ) {
-			$ThemeIdea.Add(this.props.node.id, this.state.idea)
+		if ( idea.length > 0 && idea.length <= 64 ) {
+			$ThemeIdea.Add(this.props.node.id, idea)
 			.then(r => {
 				console.log('r',r);
 				this.setState({ ideas: r.ideas, idea: "" });
