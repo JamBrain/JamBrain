@@ -18,6 +18,7 @@ export default class DialogLogin extends Component {
 		this.onLoginChange = this.onLoginChange.bind(this);
 		this.onPasswordChange = this.onPasswordChange.bind(this);
 		this.onRememberChange = this.onRememberChange.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
 		this.doLogin = this.doLogin.bind(this);
 	}
 	
@@ -34,13 +35,24 @@ export default class DialogLogin extends Component {
 	onRememberChange( e ) {
 		this.setState({ remember: e.target.checked });
 	}
-	
+
+	onKeyDown( e ) {
+		if (!e) { 
+			var e = window.event; 
+		}
+		if (e.keyCode === 13) { 
+			this.onPasswordChange(e);
+			/*e.preventDefault();*/ 
+			this.doLogin(); 
+		}
+	}	
 	doLogin() {
 		$User.Login( this.state.login.trim(), this.state.password.trim(), "" )
 			.then( r => {
 				if ( r.status === 200 ) {
 					console.log('success',r);
-					location.href = "#";//user-loggedin";
+					//location.href = "#";//user-loggedin";
+					location.href = location.pathname+location.search;
 					this.props.onlogin();
 				}
 				else {
@@ -65,7 +77,7 @@ export default class DialogLogin extends Component {
 					<span /><input ref={(input) => this.loginName = input} id="dialog-login-login" onchange={this.onLoginChange} class="-text focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="254" value={login} />
 				</div>
 				<div>
-					<input id="dialog-login-password" onchange={this.onPasswordChange} class="-text focusable" type="password" name="password" placeholder="Password" maxlength="128" value={password} />
+					<input id="dialog-login-password" onchange={this.onPasswordChange} onkeydown={this.onKeyDown} class="-text focusable" type="password" name="password" placeholder="Password" maxlength="128" value={password} />
 				</div>
 				<div>
 					<input id="dialog-login-remember" onchange={this.onRememberChange} class="focusable" type="checkbox" name="remember" checked={remember} /><span>Stay Logged In</span>
