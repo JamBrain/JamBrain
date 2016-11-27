@@ -184,9 +184,9 @@ function node_GetIdByParentSlug( $parent, $slug ) {
 // Get All Functions
 
 function node_GetById( $ids ) {
-	if ( is_integer($ids) ) {
+	$multi = is_array($ids);
+	if ( !$multi )
 		$ids = [$ids];
-	}
 	
 	if ( is_array($ids) ) {
 		// Confirm that all IDs are not zero
@@ -198,7 +198,7 @@ function node_GetById( $ids ) {
 		// Build IN string
 		$ids_string = implode(',', $ids);
 
-		return db_QueryFetch(
+		$ret = db_QueryFetch(
 			"SELECT id, parent, author,
 				type, subtype, subsubtype,
 				".DB_FIELD_DATE('published').",
@@ -207,9 +207,13 @@ function node_GetById( $ids ) {
 				version,
 				slug, name, body
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
-			WHERE id IN ($ids_string)
-			"
+			WHERE id IN ($ids_string);"
 		);
+		
+		if ( $multi )
+			return $ret;
+		else
+			return $ret ? $ret[0] : null;
 	}
 	
 	return null;
@@ -243,9 +247,9 @@ function nodeMeta_GetById( $ids ) {
 }
 
 function nodeMeta_GetByNode( $nodes ) {
-	if ( is_integer($nodes) ) {
+	$multi = is_array($nodes);
+	if ( !$multi )
 		$nodes = [$nodes];
-	}
 	
 	if ( is_array($nodes) ) {
 		// Confirm that all Nodes are not zero
@@ -257,14 +261,18 @@ function nodeMeta_GetByNode( $nodes ) {
 		// Build IN string
 		$node_string = implode(',', $nodes);
 
-		return db_QueryFetch(
+		$ret = db_QueryFetch(
 			"SELECT node, scope, `key`, `value`
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." 
 			WHERE node IN ($node_string) AND id IN (
 				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
-			)
-			"
+			);"
 		);
+		
+		if ( $multi )
+			return $ret;
+		else
+			return $ret ? $ret[0] : null;
 	}
 	
 	return null;
@@ -298,9 +306,9 @@ function nodeLink_GetById( $ids ) {
 }
 
 function nodeLink_GetByNode( $nodes ) {
-	if ( is_integer($nodes) ) {
+	$multi = is_array($nodes);
+	if ( !$multi )
 		$nodes = [$nodes];
-	}
 	
 	if ( is_array($nodes) ) {
 		// Confirm that all Nodes are not zero
@@ -312,12 +320,16 @@ function nodeLink_GetByNode( $nodes ) {
 		// Build IN string
 		$node_string = implode(',', $nodes);
 
-		return db_QueryFetch(
+		$ret = db_QueryFetch(
 			"SELECT a, b, type
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
-			WHERE a IN ($node_string) OR b IN ($node_string)
-			"
+			WHERE a IN ($node_string) OR b IN ($node_string);"
 		);
+		
+		if ( $multi )
+			return $ret;
+		else
+			return $ret ? $ret[0] : null;
 	}
 	
 	return null;
@@ -325,7 +337,13 @@ function nodeLink_GetByNode( $nodes ) {
 
 
 function nodeComplete_GetById( $ids, $scope = 0 ) {
+	$multi = is_array($ids);
+	if ( !$multi )
+		$ids = [$ids];
+	
 	$nodes = node_GetById($ids);
+	if ( !$nodes )
+		return null;
 	
 	$metas = nodeMeta_GetByNode($ids);
 	$links = nodeLink_GetByNode($ids);
@@ -392,14 +410,17 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 //		
 //	}
 
-	return $nodes;
+	if ($multi)
+		return $nodes;
+	else
+		return $nodes[0];
 }
 
 
 function nodeLove_GetByNode( $nodes ) {
-	if ( is_integer($nodes) ) {
+	$multi = is_array($nodes);
+	if ( !$multi )
 		$nodes = [$nodes];
-	}
 	
 	if ( is_array($nodes) ) {
 		// Confirm that all Nodes are not zero
@@ -411,12 +432,17 @@ function nodeLove_GetByNode( $nodes ) {
 		// Build IN string
 		$node_string = implode(',', $nodes);
 
-		return db_QueryFetch(
+		$ret = db_QueryFetch(
 			"SELECT node, COUNT(node) AS count, ".DB_FIELD_DATE('MAX(timestamp)','timestamp')."
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LOVE." 
 			WHERE node IN ($node_string)
-			GROUP BY node;"
+			GROUP BY node".($multi?';':' LIMIT 1;')
 		);
+		
+		if ( $multi )
+			return $ret;
+		else
+			return $ret ? $ret[0] : null;
 	}
 	
 	return null;

@@ -539,7 +539,7 @@ switch ( $REQUEST[0] ) {
 		if ( $id > 0 ) {
 			$node = nodeComplete_GetById($id);
 			if ( count($node) ) {
-				$RESPONSE['node'] = $node[0];
+				$RESPONSE['node'] = $node;
 			}
 			else {
 				$id = 0;
