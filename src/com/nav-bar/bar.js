@@ -46,7 +46,13 @@ export default class NavBar extends Component {
 		}
 		else if ( user && user.id ) {
 			// TODO: Check if a participant of the current event
-			MyGame = "";
+			MyGame = (
+				<ButtonBase class="-button" onclick={e => { console.log('my game'); location.href = '/events/ludum-dare/37/theme/'; }}>
+					<SVGIcon>gamepad</SVGIcon>
+					<div>Suggest Themes</div>
+				</ButtonBase>
+			);
+			//"";
 //			 (
 //				<ButtonBase class="-button" onclick={e => console.log('my game')}>
 //					<SVGIcon>gamepad</SVGIcon>
