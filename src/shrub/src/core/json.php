@@ -275,7 +275,7 @@ function json_Emit( $out, $allow_jsonp = true ) {
 
 /// After authenticating and loading globals, confirm that we're not in maintenence mode
 function json_CheckForMaintenence() {
-	if ( !user_AuthIsAdmin() && !global_IsActive() ) {
+	if ( !userAuth_IsAdmin() && !global_IsActive() ) {
 		json_EmitFatalUnavailableError( strlen($SH['alert']) ? $SH['alert'] : null );
 	}
 }
@@ -314,7 +314,7 @@ function json_Begin() {
 	$RESPONSE = json_NewResponse();
 	
 	// Authenticate //
-	user_Auth();
+	userAuth_Start();
 	if ( isset($_GET['auth']) || isset($_GET['debug']) ) {
 		// Need to limit what keys get copied. No need to send a full user (or accidentilaly send private info)
 		$keys = ['id'];//,'admin','permission'];

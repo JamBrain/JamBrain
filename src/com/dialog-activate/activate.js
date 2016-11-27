@@ -7,21 +7,6 @@ import LabelYesNo						from 'com/label-yesno/yesno';
 import $User							from '../shrub/js/user/user';
 
 
-function getHTTPVars() {
-	var ret = {};
-	
-	if (location.search) {
-	    var parts = location.search.substring(1).split('&');
-	
-	    for (var i = 0; i < parts.length; i++) {
-	        var nv = parts[i].split('=');
-	        if (!nv[0]) continue;
-	        ret[nv[0]] = nv[1] || true;
-	    }
-	}
-	
-	return ret;
-}
 
 export default class DialogActivate extends Component {
 	constructor( props ) {
@@ -31,7 +16,7 @@ export default class DialogActivate extends Component {
 			loading: true
 		};
 
-		var Vars = getHTTPVars();
+		var Vars = Sanitize.getHTTPVars();
 		console.log("v",Vars);
 		
 		// Get activation ID
@@ -41,7 +26,7 @@ export default class DialogActivate extends Component {
 		// Lookup ID, and confirm this is a valid activation
 		$User.Activate( this.ActID, this.ActHash.trim(), "", "" )
 			.then( r => {
-				if ( r.status === 200  ) {
+				if ( r.status === 200 ) {
 					this.setState({
 						mail: r.mail,
 						name: "",
@@ -76,7 +61,7 @@ export default class DialogActivate extends Component {
 	}
 	
 	onNameChange( e ) {
-		this.setState({ name: e.target.value, slug: Sanitize.makeSlug(e.target.value), error: null });
+		this.setState({ name: e.target.value.trim(), slug: Sanitize.makeSlug(e.target.value), error: null });
 	}
 	onPasswordChange( e ) {
 		this.setState({ password: e.target.value, error: null });

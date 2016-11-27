@@ -1,5 +1,6 @@
 import { h, Component } 				from 'preact/preact';
 import DialogBase						from 'com/dialog-base/base';
+import NavLink							from 'com/nav-link/link';
 
 import $User							from '../shrub/js/user/user';
 
@@ -25,7 +26,7 @@ export default class DialogLogin extends Component {
 	}
 
 	onLoginChange( e ) {
-		this.setState({ login: e.target.value });
+		this.setState({ login: e.target.value.trim() });
 	}
 	onPasswordChange( e ) {
 		this.setState({ password: e.target.value });
@@ -69,7 +70,7 @@ export default class DialogLogin extends Component {
 				<div>
 					<input id="dialog-login-remember" onchange={this.onRememberChange} class="focusable" type="checkbox" name="remember" checked={remember} /><span>Stay Logged In</span>
 					
-					<div class="_float-right" id="dialog-login-forgot">Forgot Password?</div>
+					<div class="_float-right -link" id="dialog-login-forgot" onclick={e => { location.href = "#user-reset"; /*e.stopPropagation(); e.preventDefault();*/ } }>Forgot Password?</div>
 				</div>
 			</DialogBase>
 		);

@@ -12,8 +12,8 @@ switch ( $REQUEST[0] ) {
 	case 'set':
 		json_ValidateHTTPMethod('POST');
 
-		if ( user_AuthIsAdmin() ) {
-			json_EmitFatalError_NotImplemented(null,$RESPONSE);
+		if ( userAuth_IsAdmin() ) {
+			json_EmitFatalError_NotImplemented(null, $RESPONSE);
 			
 			/// @todo sanitize (don't let API create fields)
 			/// @todo Do a set
@@ -23,25 +23,25 @@ switch ( $REQUEST[0] ) {
 				json_RespondCreated();
 			}
 			else {
-				json_EmitFatalError_Server(null,$RESPONSE);
+				json_EmitFatalError_Server(null, $RESPONSE);
 			}
 		}
 		else {
-			json_EmitFatalError_Permission(null,$RESPONSE);
+			json_EmitFatalError_Permission(null, $RESPONSE);
 		}
 		break;
 	case 'get':
 		json_ValidateHTTPMethod('GET');
 
-		if ( user_AuthIsAdmin() ) {
+		if ( userAuth_IsAdmin() ) {
 			$RESPONSE['global'] = $SH;
 		}
 		else {
-			json_EmitFatalError_Permission(null,$RESPONSE);
+			json_EmitFatalError_Permission(null, $RESPONSE);
 		}
 		break;
 	default:
-		json_EmitFatalError_Forbidden(null,$RESPONSE);
+		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break;
 };
 

@@ -88,7 +88,7 @@ switch ( array_shift($REQUEST) ) {
 			foreach( $nodes as &$node ) {
 				// TODO: a better check than this
 				if ( $node['published'] === "0000-00-00T00:00:00Z" ) {
-					$user_id = user_AuthUser();
+					$user_id = userAuth_GetId();
 
 					// Bad Id
 					if ( $user_id == 0 )
@@ -99,7 +99,7 @@ switch ( array_shift($REQUEST) ) {
 						// Not on the author list
 						if ( !isset($node['b']['author']) || !in_array($user_id, $node['b']['author']) ) {
 							// Not an admin
-							if ( !user_AuthIsAdmin() ) {
+							if ( !userAuth_IsAdmin() ) {
 								continue;
 							}
 						}
@@ -208,7 +208,7 @@ switch ( array_shift($REQUEST) ) {
 //					}
 //					sort($node_ids);
 //					
-//					//$RESPONSE['status'] = nodeLove_AddByNode($node_ids, );
+//					$RESPONSE['status'] = nodeLove_AddByNode($node_ids, );
 //					
 //					$RESPONSE['love'] = nodeLove_GetByNode($node_ids);
 //				}

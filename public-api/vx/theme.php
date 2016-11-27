@@ -23,7 +23,7 @@ function GetEventNodes() {
 	return $ret;
 }
 
-// Do Actions //
+// Do Actions
 $action = json_ArgGet(0);
 switch ( $action ) {
 	// Regular Voting Rounds //
@@ -43,7 +43,7 @@ switch ( $action ) {
 	case 'set':
 		json_ValidateHTTPMethod('POST');
 
-		if ( user_AuthIsAdmin() ) {
+		if ( userAuth_IsAdmin() ) {
 			json_EmitFatalError_NotImplemented(null,$RESPONSE);
 			
 			/// @todo sanitize (don't let API create fields)
@@ -73,7 +73,7 @@ switch ( $action ) {
 				if ( $event_id !== 0 ) {
 					/// Broadphase: check if $event_id is on the master list of event nodes.
 					if ( in_array($event_id, GetEventNodes()) ) {
-						$user = user_AuthUser();
+						$user = userAuth_GetId();
 						if ( $user ) {
 							$RESPONSE['ideas'] = themeIdea_Get($event_id, $user);
 							$RESPONSE['count'] = count($RESPONSE['ideas']);
@@ -121,7 +121,7 @@ switch ( $action ) {
 			case 'add':
 				json_ValidateHTTPMethod('POST');
 	
-				$user = user_AuthUser();
+				$user = userAuth_GetId();
 				if ( !$user ) {
 					json_EmitFatalError_Permission(null, $RESPONSE);
 				}
@@ -175,7 +175,7 @@ switch ( $action ) {
 			case 'remove':
 				json_ValidateHTTPMethod('POST');
 	
-				$user = user_AuthUser();
+				$user = userAuth_GetId();
 				if ( !$user ) {
 					json_EmitFatalError_Permission(null, $RESPONSE);
 				}

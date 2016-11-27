@@ -1,63 +1,72 @@
 <?php
 /// Active User Authentication
 
-//$lifetime=600;
-//session_start();
-//setcookie(session_name(),session_id(),time()+$lifetime);
+$USER = null;
 
-// TODO: Store stuff in SESSION, instead of AUTH
-// When it comes to node data and permissions, it's actually okay to do this *ONLY* if you do it after session_write_close.
-// The point is, for security reasons, the node and permission data should not be stored in the actual session
-// It can be stored in the global though (i.e. after important session data is serialized)
-
-/// 
-function user_Auth() {
-//	global $RESPONSE;
-//	$RESPONSE['sess'] = isset($RESPONSE['sess']) ? $RESPONSE['sess']+1 : 1;
+function userAuth_Start() {
+	global $USER;
 	
 	userSession_Start();
 	// IP Check. If different, expire the session
 	if ( !isset($_SESSION['ip']) || ($_SESSION['ip'] !== $_SERVER['REMOTE_ADDR']) ) {
-		session_destroy();
+		userSession_Expire();
 	}
-	userSession_End();
-	// Refresh cookie lifetime
+	else {
+		userSession_End();
+	}
+	
+	// TODO: Refresh Cookie/Session timeouts
 
 	// If session is set, lookup the node, and permissions
-	if ( user_AuthUser() ) {
+	if ( $id = userAuth_GetId() ) {
 		// Lookup user
-		//$_SESSION['node'] = 
-		// Extract Permissions
-		// Is Admin?
+		$USER = nodeComplete_GetById($id);
+		if ( $USER ) {
+			// Extract Permissions
+			//$USER['private'] = nodeMeta_GetPrivateByNode($id);
+		}
+		else {
+			userSession_Start();
+			userSession_Expire();
+		}
 	}
 }
 
 // Is active user a user (i.e. logged in)
-function user_AuthUser() {
+function userAuth_GetId() {
 	return isset($_SESSION['id']) ? $_SESSION['id'] : 0;
 }
 
 /// Is active user an administrator
-function user_AuthIsAdmin() {	
-	return isset($_SESSION['admin']) && ($_SESSION['admin'] === 1);
+function userAuth_IsAdmin() {
+	global $USER;
+	return isset($USER) && isset($USER['private']) && isset($USER['private']['admin']) && ($USER['private']['admin'] === 1);
 }
 
 /// Check if active user has all listed permissions
 /// @param [in] ... permission name(s) as strings
 /// @retval Boolean If active user has all listed permissions
-function user_AuthHas(...$args) {
-	if ( !isset($_SESSION['permission']) ) {
+function userAuth_Has(...$args) {
+	global $USER;
+	if ( !isset($USER['private']) ) {
 		return false;
 	}
 	
 	// Check if user has all permissions
 	foreach ( $args as $arg ) {
-		if ( !in_array($arg, $_SESSION['permission']) ) {
+		if ( !in_array($arg, $USER['private']) ) {
 			return false;
 		}
 	}
 	
 	return true;
+}
+
+function userAuth_Logout() {
+	userSession_Start();
+	$ret = userAuth_GetId();
+	userSession_Expire();
+	return $ret;
 }
 
 
@@ -103,4 +112,13 @@ function userSession_Start() {
 
 function userSession_End() {
 	session_write_close();
+}
+
+// http://php.net/manual/en/function.session-unset.php#107089
+function userSession_Expire() {
+	session_unset();
+	session_destroy();
+	userSession_End();
+	setcookie(session_name(), '', 0, '/');
+	session_regenerate_id(true);
 }
