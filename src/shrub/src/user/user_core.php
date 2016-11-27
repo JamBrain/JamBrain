@@ -203,7 +203,7 @@ function userAuthKey_Gen() {
 
 // *** //
 
-function userReserved_Is( $slug ) {
+function userReserved_GetMailBySlug( $slug ) {
 	return db_QueryFetchSingle(
 		"SELECT mail FROM ".SH_TABLE_PREFIX.SH_TABLE_USER_RESERVED." 
 		WHERE slug=?
@@ -223,3 +223,13 @@ function userReserved_Add( $slug, $mail ) {
 		$slug, $mail
 	);
 }
+
+function userReserved_GetSlugByMail( $mail ) {
+	return db_QueryFetchSingle(
+		"SELECT slug FROM ".SH_TABLE_PREFIX.SH_TABLE_USER_RESERVED." 
+		WHERE mail=?
+		;",
+		$mail
+	);
+}
+

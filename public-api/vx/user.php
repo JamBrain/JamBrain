@@ -405,6 +405,7 @@ switch ( $action ) {
 			// If no name and password are set, that's okay. Just bail.
 			if ( !strlen($name) && !strlen($pw) ) {
 				$RESPONSE['mail'] = $user['mail'];
+				$RESPONSE['slug'] = userReserved_GetSlugByMail(strtolower($user['mail']));
 				break;
 			}
 			
@@ -429,7 +430,7 @@ switch ( $action ) {
 				json_EmitFatalError_Server("Sorry. Account \"$slug\" already exists", $RESPONSE);
 			}
 			else {
-				$reserved = userReserved_Is($slug);
+				$reserved = userReserved_GetMailBySlug($slug);
 				// Check if this slug is on the reserved list
 				if ( count($reserved) ) {
 					// Does this e-mail address match the one on the reserve list?
@@ -644,7 +645,7 @@ switch ( $action ) {
 		}
 		
 		// If on the user reserved list.
-		$reserved = userReserved_Is($slug);
+		$reserved = userReserved_GetMailBySlug($slug);
 		if ( count($reserved) ) {
 			if ( !in_array($mail, $reserved) ) {
 				$RESPONSE['available'] = false;
