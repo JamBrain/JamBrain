@@ -18,6 +18,7 @@ export default class ContentEventIdea extends Component {
 			ideas: null
 		};
 		
+		this.onKeyDown = this.onKeyDown.bind(this);
 		this.textChange = this.textChange.bind(this);
 //		this.removeIdea = this.removeIdea.bind(this);
 		this.submitIdeaForm = this.submitIdeaForm.bind(this);
@@ -50,6 +51,17 @@ export default class ContentEventIdea extends Component {
 	textChange( e ) {
 		this.setState({ idea: e.target.value.trim() });
 	}
+	
+	onKeyDown( e ) {
+		if (!e) { 
+			var e = window.event; 
+		}
+		if (e.keyCode === 13) { 
+			this.textChange(e);
+			/*e.preventDefault();*/ 
+			this.submitIdeaForm(); 
+		}
+	}
 
 	removeIdea( id, e ) {
 		id = parseInt(id);
@@ -79,7 +91,7 @@ export default class ContentEventIdea extends Component {
 			$ThemeIdea.Add(this.props.node.id, idea)
 			.then(r => {
 				console.log('r',r);
-				this.setState({ ideas: r.ideas, idea: "" });
+				this.setState({ ideas: r.ideas, idea: r.status === 201 ? "" : idea });
 			})
 			.catch(err => {
 				this.setState({ error: err });
@@ -111,7 +123,7 @@ export default class ContentEventIdea extends Component {
 					<div class="-body">
 						<h3>Theme Suggestion Round</h3>
 						<div class="idea-form">
-							<input type="text" class="-single" onchange={this.textChange} placeholder="Your suggestion" maxlength="64" value={idea} />
+							<input type="text" class="-single" onchange={this.textChange} onkeydown={this.onKeyDown} placeholder="Your suggestion" maxlength="64" value={idea} />
 							<button class="-submit" onclick={this.submitIdeaForm}>Submit</button>
 						</div>
 						<div class="foot-note small">You have <strong>{MAX_IDEAS - Object.keys(ideas).length}</strong> suggestion(s) left</div>
