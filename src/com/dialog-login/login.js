@@ -25,7 +25,7 @@ export default class DialogLogin extends Component {
 	}
 
 	onLoginChange( e ) {
-		this.setState({ login: e.target.value });
+		this.setState({ login: e.target.value.trim() });
 	}
 	onPasswordChange( e ) {
 		this.setState({ password: e.target.value });
