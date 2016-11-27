@@ -113,11 +113,11 @@ function mailSend_UserCreate( $mail, $slug ) {
 	];
 	
 	return mailSend_Now($mail, $subject, $message);
-//	return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers));
 }
 
 
 function getSanitizedMailFromPost( $optional = false ) {
+	global $RESPONSE;
 	$mail = null;
 	if ( isset($_POST['mail']) ) {
 		$mail = coreSanitize_Mail($_POST['mail']);
@@ -145,6 +145,7 @@ function getSanitizedMailFromPost( $optional = false ) {
 
 // User ID (not Node ID)
 function getSanitizedIdFromPost( $optional = false ) {
+	global $RESPONSE;
 	$id = null;
 	if ( isset($_POST['id']) ) {
 		$id = coreSanitize_Integer($_POST['id']);
@@ -160,6 +161,7 @@ function getSanitizedIdFromPost( $optional = false ) {
 
 // Authentication Key
 function getSanitizedKeyFromPost( $optional = false ) {
+	global $RESPONSE;
 	$key = null;
 	if ( isset($_POST['key']) ) {
 		$key = coreSanitize_String($_POST['key']);
@@ -181,6 +183,7 @@ function getSanitizedKeyFromPost( $optional = false ) {
 }
 
 function getSanitizedNameFromPost( $optional = false ) {
+	global $RESPONSE;
 	$name = null;
 	if ( isset($_POST['name']) ) {
 		$name = coreSanitize_Name($_POST['name']);
@@ -201,6 +204,7 @@ function getSanitizedNameFromPost( $optional = false ) {
 }
 
 function getSanitizedPwFromPost( $optional = false ) {
+	global $RESPONSE;
 	$pw = null;
 	if ( isset($_POST['pw']) ) {
 		$pw = coreSanitize_Password($_POST['pw']);
@@ -218,6 +222,7 @@ function getSanitizedPwFromPost( $optional = false ) {
 }
 
 function getSanitizedLoginFromPost( $optional = false ) {
+	global $RESPONSE;
 	$login = null;
 	if ( isset($_POST['login']) ) {
 		$login = coreSanitize_String($_POST['login']);
@@ -403,7 +408,7 @@ switch ( $REQUEST[0] ) {
 					}
 					
 					// Send an e-mail
-					$RESPONSE['sent'] = intval(sendMail_UserCreate($user['mail'], $slug));
+					$RESPONSE['sent'] = intval(mailSend_UserCreate($user['mail'], $slug));
 					
 					// Successfully Created.
 					json_RespondCreated();
