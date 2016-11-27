@@ -231,6 +231,43 @@ function getSanitizedLoginFromPost( $optional = false ) {
 	return $login;
 }
 
+function validateUserWithIdKey( $id, $key ) {
+	global $RESPONSE;
+	$user = null;
+	
+	// Sorry, this is complicated
+	// If Non-zero $id and non-empty $key value
+	if ( $id && strlen($key) ) {
+		$user = user_GetById($id);
+		// Confirm lookup succedded, and user has an auth_key set (can get erased, for safety)
+		if ( isset($user) && strlen($user['auth_key']) ) {
+			// Check if keys match
+			if ( $key == $user['auth_key'] ) {
+				// Success. Remember that we successfully authenticated
+				user_AuthTimeSetNow($id);
+				
+				return $user;
+			}
+			else {
+				// Keys don't match. This may be an attempt to hijack the account, so destroy the key.
+				if ( !user_AuthKeyClear($id) ) {
+					json_EmitFatalError_Server("Unable to clear key", $RESPONSE);
+				}
+				
+				json_EmitFatalError_Permission(null, $RESPONSE);
+			}
+		}
+		else {
+			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
+	}
+	else {
+		json_EmitFatalError_BadRequest(null, $RESPONSE);
+	}
+
+	return null;
+}
+
 
 // Do Actions //
 switch ( $REQUEST[0] ) {
@@ -314,16 +351,17 @@ switch ( $REQUEST[0] ) {
 		$name = getSanitizedNameFromPost(true);
 		$pw = getSanitizedPwFromPost(true);
 
-		// Sorry, this is complicated
-		// If Non-zero $id and non-empty $key value
-		if ( $id && strlen($key) ) {
-			$user = user_GetById($id);
-			// Confirm lookup succedded, and user has an auth_key set (can get erased, for safety)
-			if ( isset($user) && strlen($user['auth_key']) ) {
-				// Check if keys match
-				if ( $key == $user['auth_key'] ) {
-					// Success. Remember that we successfully authenticated
-					user_AuthTimeSetNow($id);
+//		// Sorry, this is complicated
+//		// If Non-zero $id and non-empty $key value
+//		if ( $id && strlen($key) ) {
+//			$user = user_GetById($id);
+//			// Confirm lookup succedded, and user has an auth_key set (can get erased, for safety)
+//			if ( isset($user) && strlen($user['auth_key']) ) {
+//				// Check if keys match
+//				if ( $key == $user['auth_key'] ) {
+//					// Success. Remember that we successfully authenticated
+//					user_AuthTimeSetNow($id);
+					$user = validateUserWithIdKey($id, $key);
 					
 					// If Node is already non-zero, bail. Don't double activate!
 					if ( $user['node'] ) {
@@ -401,23 +439,23 @@ switch ( $REQUEST[0] ) {
 							}
 						}
 					}
-				}
-				else {
-					// Keys don't match. This may be an attempt to hijack the account, so destroy the key.
-					if ( !user_AuthKeyClear($id) ) {
-						json_EmitFatalError_Server("Unable to clear key", $RESPONSE);
-					}
-					
-					json_EmitFatalError_Permission(null, $RESPONSE);
-				}
-			}
-			else {
-				json_EmitFatalError_Permission(null, $RESPONSE);
-			}
-		}
-		else {
-			json_EmitFatalError_BadRequest(null, $RESPONSE);
-		}
+//				}
+//				else {
+//					// Keys don't match. This may be an attempt to hijack the account, so destroy the key.
+//					if ( !user_AuthKeyClear($id) ) {
+//						json_EmitFatalError_Server("Unable to clear key", $RESPONSE);
+//					}
+//					
+//					json_EmitFatalError_Permission(null, $RESPONSE);
+//				}
+//			}
+//			else {
+//				json_EmitFatalError_Permission(null, $RESPONSE);
+//			}
+//		}
+//		else {
+//			json_EmitFatalError_BadRequest(null, $RESPONSE);
+//		}
 
 		break;
 	case 'password':
