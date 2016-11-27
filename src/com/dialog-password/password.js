@@ -11,10 +11,38 @@ export default class DialogPassword extends Component {
 		super(props);
 		
 		this.state = {
-			password: "",
-			password2: ""
+			loading: true
 		};
 
+		var Vars = Sanitize.getHTTPVars();
+		console.log("v",Vars);
+		
+		// Get activation ID
+		this.ActID = Vars.id;
+		this.ActHash = Vars.key;
+
+		// Lookup ID, and confirm this is a valid activation
+		$User.Password( this.ActID, this.ActHash.trim(), "" )
+		.then( r => {
+			if ( r.status === 200 ) {
+				this.setState({
+					node: r.node,
+					password: "",
+					password2: "",
+					loading: false
+				});
+			}
+			else {
+				console.log(r);
+				this.setState({ error: r.response, loading: false });
+			}
+		})
+		.catch( err => {
+			console.log(err);
+			this.setState({ error: err, loading: false });
+		});
+		
+		
 		// Bind functions (avoiding the need to rebind every render)
 		this.onPasswordChange = this.onPasswordChange.bind(this);
 		this.onPassword2Change = this.onPassword2Change.bind(this);
@@ -64,7 +92,7 @@ export default class DialogPassword extends Component {
 	
 	doResetPassword() {
 		if ( this.isValidPassword() > 0 && this.isValidPassword2() > 0 ) {
-			$User.Password( this.state.password.trim() )
+			$User.Password( this.ActID, this.ActHash.trim(), this.state.password.trim() )
 			.then( r => {
 				if ( r.status === 200 ) {
 					console.log('success',r);
@@ -92,17 +120,30 @@ export default class DialogPassword extends Component {
 		location.href = "?";
 	}
 
-	render( props, {password, password2, success, error} ) {
+	render( props, {password, password2, node, success, loading, error} ) {
 		var ErrorMessage = error ? {'error': error} : {};
 		
 		var title = "Reset Password: Step 2";
 		
-		if ( false ) {
-			
+		if ( loading ) {
+			return (
+				<DialogBase title={title} explicit {...ErrorMessage}>
+					<div>
+						Please wait...
+					</div>
+				</DialogBase>
+			);			
+		}
+		else if ( !node ) {
+			return (
+				<DialogBase title={title} ok explicit {...ErrorMessage}>
+					{"Password can not be reset."}
+				</DialogBase>
+			);
 		}
 		else if ( success ) {
 			return (
-				<DialogBase title={title} ok cancel oktext="Save" explicit onclick={this.doFinishReset} {...ErrorMessage}>
+				<DialogBase title={title} ok explicit onclick={this.doFinishReset} {...ErrorMessage}>
 					Password Reset. You can now <strong>Log In</strong>.
 				</DialogBase>
 			);			

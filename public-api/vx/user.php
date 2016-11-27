@@ -264,7 +264,6 @@ function validateUserWithIdKey( $id, $key ) {
 	global $RESPONSE;
 	$user = null;
 	
-	// Sorry, this is complicated
 	// If Non-zero $id and non-empty $key value
 	if ( $id && strlen($key) ) {
 		$user = user_GetById($id);
@@ -291,7 +290,7 @@ function validateUserWithIdKey( $id, $key ) {
 		}
 	}
 	else {
-		json_EmitFatalError_BadRequest(null, $RESPONSE);
+		json_EmitFatalError_BadRequest($id.' '.$key, $RESPONSE);
 	}
 
 	return null;

@@ -30,6 +30,22 @@ class CSanitize {
 		// http://stackoverflow.com/a/9204568/5678759
 		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
 	}
+	
+	getHTTPVars() {
+		var ret = {};
+		
+		if (location.search) {
+		    var parts = location.search.substring(1).split('&');
+		
+		    for (var i = 0; i < parts.length; i++) {
+		        var nv = parts[i].split('=');
+		        if (!nv[0]) continue;
+		        ret[nv[0]] = nv[1] || true;
+		    }
+		}
+		
+		return ret;
+	}
 };
 
 // Singleton

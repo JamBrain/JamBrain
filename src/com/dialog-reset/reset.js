@@ -75,7 +75,7 @@ export default class DialogReset extends Component {
 			return (
 				<DialogBase title={title} ok explicit {...ErrorMessage}>
 					<div>
-						Password reset message sent to to <code>{mail}</code>
+						Password reset message sent to <code>{mail}</code>
 					</div>
 				</DialogBase>
 			);

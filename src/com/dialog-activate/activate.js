@@ -7,21 +7,6 @@ import LabelYesNo						from 'com/label-yesno/yesno';
 import $User							from '../shrub/js/user/user';
 
 
-function getHTTPVars() {
-	var ret = {};
-	
-	if (location.search) {
-	    var parts = location.search.substring(1).split('&');
-	
-	    for (var i = 0; i < parts.length; i++) {
-	        var nv = parts[i].split('=');
-	        if (!nv[0]) continue;
-	        ret[nv[0]] = nv[1] || true;
-	    }
-	}
-	
-	return ret;
-}
 
 export default class DialogActivate extends Component {
 	constructor( props ) {
@@ -31,7 +16,7 @@ export default class DialogActivate extends Component {
 			loading: true
 		};
 
-		var Vars = getHTTPVars();
+		var Vars = Sanitize.getHTTPVars();
 		console.log("v",Vars);
 		
 		// Get activation ID
