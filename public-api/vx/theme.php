@@ -10,7 +10,7 @@ require_once __DIR__."/".SHRUB_PATH."node/node.php";
 json_Begin();
 
 const CACHE_KEY_PREFIX = "SH!THEME!";
-const CACHE_TTL = 30;//10*60;
+const CACHE_TTL = 60;
 
 function GetEventNodes() {
 	$cache_key = CACHE_KEY_PREFIX."GetEventNodes";
@@ -141,8 +141,8 @@ switch ( $action ) {
 					if ( in_array($event_id, GetEventNodes()) ) {
 						// TODO: Cache
 						$event = nodeComplete_GetById($event_id);
-						if ( isset($event[0]) ) {
-							$event = $event[0];
+						if ( isset($event) ) {
+							$event = $event;
 							
 							// Is Event Accepting Suggestions ?
 							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) === 1 ) {
@@ -195,8 +195,8 @@ switch ( $action ) {
 					if ( in_array($event_id, GetEventNodes()) ) {
 						// TODO: Cache
 						$event = nodeComplete_GetById($event_id);
-						if ( isset($event[0]) ) {
-							$event = $event[0];
+						if ( isset($event) ) {
+							$event = $event;
 							
 							// Is Event Accepting Suggestions ?
 							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) === 1 ) {
