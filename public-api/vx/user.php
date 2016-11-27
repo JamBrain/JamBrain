@@ -65,15 +65,27 @@ const CRLF = "\r\n";
 const USERNAME_MIN_LENGTH = 3;
 const PASSWORD_MIN_LENGTH = 8;
 
-function sendMail_UserAdd( $id, $mail, $key ) {
-	$subject = "[".SH_SITE."] Confirming your e-mail address";
-	$headers = [
+function mailGen_Subject( $subject ) {
+	return "[".SH_SITE."] ".$subject;
+}
+function mailGen_Headers() {
+	return [
 		"MIME-Version: 1.0",
 		"Content-type: text/plain; charset=iso-8859-1",
 		"From: ".SH_MAILER,
 //		"Reply-To: ".SH_MAILER,
 //		"Return-Path: ".SH_MAILER_RETURN,
 	];
+}
+
+function mailSend_Now( $mail, $subject, $message ) {
+	$headers = mailGen_Headers();
+	return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers));
+}
+	
+
+function mailSend_UserAdd( $id, $mail, $key ) {
+	$subject = mailGen_Subject("Confirming your e-mail address");
 	$message = [
 		"Here is your confirmation e-mail.",
 		"",
@@ -88,18 +100,11 @@ function sendMail_UserAdd( $id, $mail, $key ) {
 		"If that wasn't you then oops! Feel free to ignore this e-mail."
 	];
 	
-	return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers));
+	return mailSend_Now($mail, $subject, $message);
 }
 
-function sendMail_UserCreate( $mail, $slug ) {
-	$subject = "[".SH_SITE."] Account created";
-	$headers = [
-		"MIME-Version: 1.0",
-		"Content-type: text/plain; charset=iso-8859-1",
-		"From: ".SH_MAILER,
-//		"Reply-To: ".SH_MAILER,
-//		"Return-Path: ".SH_MAILER_RETURN,
-	];
+function mailSend_UserCreate( $mail, $slug ) {
+	$subject = mailGen_Subject("Account created");
 	$message = [
 		"Your account \"$slug\" has been created!",
 		"",
@@ -107,7 +112,8 @@ function sendMail_UserCreate( $mail, $slug ) {
 		""
 	];
 	
-	return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers));
+	return mailSend_Now($mail, $subject, $message);
+//	return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers));
 }
 
 
@@ -274,28 +280,10 @@ switch ( $REQUEST[0] ) {
 	// Create a new user activation attempt
 	case 'create':
 		json_ValidateHTTPMethod('POST');
+		
+		// NOTE: Accounts can be created while logged in. Should we do anything about that?
 
 		$mail = getSanitizedMailFromPost();
-//		// Sanitize
-//		if ( isset($_POST['mail']) ) {
-//			$mail = coreSanitize_Mail($_POST['mail']);
-//
-//			if ( $mail !== $_POST['mail'] ) {
-//				json_EmitFatalError_BadRequest("E-mail contains invalid characters", $RESPONSE);
-//			}
-//			if ( strlen($mail) > 254 ) {
-//				json_EmitFatalError_BadRequest("E-mail too long", $RESPONSE);
-//			}
-//		}
-//		else {
-//			json_EmitFatalError_BadRequest("'mail' not found in POST", $RESPONSE);
-//		}
-//
-//		// Is the email provided even a valid e-mail address?
-//		if ( !coreValidate_Mail($mail) ) {
-//			json_EmitFatalError_BadRequest("Invalid e-mail address", $RESPONSE);
-//		}
-
 		$RESPONSE['mail'] = $mail;
 		
 		/// @todo Add e-mail blacklist checking here
@@ -312,7 +300,7 @@ switch ( $REQUEST[0] ) {
 
 				// Resend activation e-mail
 				if ( isset($ex_new) ) {
-					$RESPONSE['sent'] = intval(sendMail_UserAdd($ex_new['id'], $mail, $ex_new['auth_key']));
+					$RESPONSE['sent'] = intval(mailSend_UserAdd($ex_new['id'], $mail, $ex_new['auth_key']));
 				}
 				else {
 					json_EmitFatalError_Server(null, $RESPONSE);
@@ -325,12 +313,8 @@ switch ( $REQUEST[0] ) {
 		else {
 			$user = user_Add($mail);
 			if ( $user ) {
-//				// NOTE! YOU SHOULD NOT DO THIS! IT DEFEATS THE EMAIL CHECK!
-//				$RESPONSE['id'] = $user['id'];
-//				$RESPONSE['key'] = $user['auth_key'];
-				
 				// Send an e-mail
-				$RESPONSE['sent'] = intval(sendMail_UserAdd($user['id'], $mail, $user['auth_key']));
+				$RESPONSE['sent'] = intval(mailSend_UserAdd($user['id'], $mail, $user['auth_key']));
 				
 				// Successfully Created.
 				json_RespondCreated();
@@ -344,6 +328,8 @@ switch ( $REQUEST[0] ) {
 	// Fully activate a user
 	case 'activate':
 		json_ValidateHTTPMethod('POST');
+		
+		// NOTE: Accounts can be activated while logged in. Should we do anything about that?
 
 		$id = getSanitizedIdFromPost();
 		$key = getSanitizedKeyFromPost();
@@ -351,158 +337,113 @@ switch ( $REQUEST[0] ) {
 		$name = getSanitizedNameFromPost(true);
 		$pw = getSanitizedPwFromPost(true);
 
-//		// Sorry, this is complicated
-//		// If Non-zero $id and non-empty $key value
-//		if ( $id && strlen($key) ) {
-//			$user = user_GetById($id);
-//			// Confirm lookup succedded, and user has an auth_key set (can get erased, for safety)
-//			if ( isset($user) && strlen($user['auth_key']) ) {
-//				// Check if keys match
-//				if ( $key == $user['auth_key'] ) {
-//					// Success. Remember that we successfully authenticated
-//					user_AuthTimeSetNow($id);
-					$user = validateUserWithIdKey($id, $key);
+		$user = validateUserWithIdKey($id, $key);
+		
+		// If Node is already non-zero, bail. Don't double activate!
+		if ( $user['node'] ) {
+			json_EmitFatalError_Server(null, $RESPONSE);
+		}
+		// Node is Zero. We can continue.
+		else {
+			// If no name and password are set, that's okay. Just bail.
+			if ( !strlen($name) && !strlen($pw) ) {
+				$RESPONSE['mail'] = $user['mail'];
+				break;
+			}
+			
+			// If name is too short
+			if ( strlen($name) < USERNAME_MIN_LENGTH ) {
+				json_EmitFatalError_Permission("Name is too short (minimum ".USERNAME_MIN_LENGTH.")", $RESPONSE);
+			}
+			
+			$slug = coreSlugify_Name($name);
+
+			if ( in_array($slug, $SH_NAME_RESERVED) ) {
+				json_EmitFatalError_BadRequest("Sorry. '$slug' is reserved", $RESPONSE);
+			}
+
+			// If password is too short
+			if ( strlen($pw) < PASSWORD_MIN_LENGTH ) {
+				json_EmitFatalError_Permission("Password is too short (minimum ".PASSWORD_MIN_LENGTH." characters)", $RESPONSE);
+			}
+				
+			// Does that name already exist?
+			if ( node_GetIdByParentSlug(SH_NODE_ID_USERS, $slug) ) {
+				json_EmitFatalError_Server("Sorry. Account \"$slug\" already exists", $RESPONSE);
+			}
+			else {
+				$reserved = userReserved_Is($slug);
+				// Check if this slug is on the reserved list
+				if ( count($reserved) ) {
+					// Does this e-mail address match the one on the reserve list?
+					if ( !in_array(strtolower($user['mail']), $reserved) ) {
+						json_EmitFatalError_Server("Sorry. \"$slug\" is reserved. Is this you? Try using your original e-mail address", $RESPONSE);
+					}
+				}
+				
+				// @TODO wrap these so we can rollback
+				$user_id = userNode_Add(
+					$slug,
+					$name
+				);
+				
+				if ( $user_id ) {
+					// @TODO wrap these so we can rollback
 					
-					// If Node is already non-zero, bail. Don't double activate!
-					if ( $user['node'] ) {
-						json_EmitFatalError_Server(null, $RESPONSE);
+					node_Publish($user_id);
+					
+					if ( !user_SetNode($id, $user_id) ) {
+						json_EmitFatalError_Server("Unable to set node", $RESPONSE);
 					}
-					// Node is Zero. We can continue.
-					else {
-						// If no name and password are set, that's okay. Just bail.
-						if ( !strlen($name) && !strlen($pw) ) {
-							$RESPONSE['mail'] = $user['mail'];
-							break;
-						}
-						
-						// If name is too short
-						if ( strlen($name) < USERNAME_MIN_LENGTH ) {
-							json_EmitFatalError_Permission("Name is too short (minimum ".USERNAME_MIN_LENGTH.")", $RESPONSE);
-						}
-						
-						$slug = coreSlugify_Name($name);
-
-						if ( in_array($slug, $SH_NAME_RESERVED) ) {
-							json_EmitFatalError_BadRequest("Sorry. '$slug' is reserved", $RESPONSE);
-						}
-
-						// If password is too short
-						if ( strlen($pw) < PASSWORD_MIN_LENGTH ) {
-							json_EmitFatalError_Permission("Password is too short (minimum ".PASSWORD_MIN_LENGTH." characters)", $RESPONSE);
-						}
-							
-						// Does that name already exist?
-						if ( node_GetIdByParentSlug(SH_NODE_ID_USERS, $slug) ) {
-							json_EmitFatalError_Server("Sorry. Account \"$slug\" already exists", $RESPONSE);
-						}
-						else {
-							$reserved = userReserved_Is($slug);
-							// Check if this slug is on the reserved list
-							if ( count($reserved) ) {
-								// Does this e-mail address match the one on the reserve list?
-								if ( !in_array(strtolower($user['mail']), $reserved) ) {
-									json_EmitFatalError_Server("Sorry. \"$slug\" is reserved. Is this you? Try using your original e-mail address", $RESPONSE);
-								}
-							}
-							
-							{
-								// @TODO wrap these so we can rollback
-								$user_id = userNode_Add(
-									$slug,
-									$name
-								);
-								
-								if ( $user_id ) {
-									// @TODO wrap these so we can rollback
-									
-									node_Publish($user_id);
-									
-									if ( !user_SetNode($id, $user_id) ) {
-										json_EmitFatalError_Server("Unable to set node", $RESPONSE);
-									}
-									if ( !user_SetHash($id, userPassword_Hash($pw)) ) {
-										json_EmitFatalError_Server("Unable to set password", $RESPONSE);
-									}
-									if ( !user_AuthKeyClear($id) ) {
-										json_EmitFatalError_Server("Unable to clear key", $RESPONSE);
-									}
-									
-									// Send an e-mail
-									$RESPONSE['sent'] = intval(sendMail_UserCreate($user['mail'], $slug));
-									
-									// Successfully Created.
-									json_RespondCreated();
-								}
-								else {
-									json_EmitFatalError_Server("Unable to add node", $RESPONSE);
-								}
-							}
-						}
+					if ( !user_SetHash($id, userPassword_Hash($pw)) ) {
+						json_EmitFatalError_Server("Unable to set password", $RESPONSE);
 					}
-//				}
-//				else {
-//					// Keys don't match. This may be an attempt to hijack the account, so destroy the key.
-//					if ( !user_AuthKeyClear($id) ) {
-//						json_EmitFatalError_Server("Unable to clear key", $RESPONSE);
-//					}
-//					
-//					json_EmitFatalError_Permission(null, $RESPONSE);
-//				}
-//			}
-//			else {
-//				json_EmitFatalError_Permission(null, $RESPONSE);
-//			}
-//		}
-//		else {
-//			json_EmitFatalError_BadRequest(null, $RESPONSE);
-//		}
-
+					if ( !user_AuthKeyClear($id) ) {
+						json_EmitFatalError_Server("Unable to clear key", $RESPONSE);
+					}
+					
+					// Send an e-mail
+					$RESPONSE['sent'] = intval(sendMail_UserCreate($user['mail'], $slug));
+					
+					// Successfully Created.
+					json_RespondCreated();
+				}
+				else {
+					json_EmitFatalError_Server("Unable to add node", $RESPONSE);
+				}
+			}
+		}
 		break;
 	case 'password':
 		json_ValidateHTTPMethod('POST');
+		
+		// NOTE: Passwords can be reset while logged in? Is that weird?
 
 		$id = getSanitizedIdFromPost();
 		$key = getSanitizedKeyFromPost();
 
 		$pw = getSanitizedPwFromPost(true);
 
+		$user = validateUserWithIdKey($id, $key);
+
+		if ( $user['node'] ) {
+
+		}
+		else {
+			json_EmitFatalError_BadRequest(null, $RESPONSE);
+		}
 	
 		break;
 	case 'login':
 		json_ValidateHTTPMethod('POST');
+		
+		// NOTE: You can login while logged in. Weird huh.
 
 		$login = getSanitizedLoginFromPost();
 		$pw = getSanitizedPwFromPost();
 		$secret = null;
 	
-		// Confirm Arguments
-//		if ( isset($_POST['login']) ) {
-//			$login = coreSanitize_String($_POST['login']);
-//
-//			if ( $login !== $_POST['login'] ) {
-//				json_EmitFatalError_BadRequest("Login contains invalid characters", $RESPONSE);
-//			}
-//			if ( strlen($login) > 254 ) {
-//				json_EmitFatalError_BadRequest("Login too long", $RESPONSE);
-//			}
-//		}
-//		else {
-//			json_EmitFatalError_BadRequest("'login' not found in POST", $RESPONSE);
-//		}
-
-
-//		if ( isset($_POST['pw']) ) {
-//			$pw = coreSanitize_String($_POST['pw']);
-//
-//			if ( strlen($pw) > 255 ) {
-//				json_EmitFatalError_BadRequest("Password too long", $RESPONSE);
-//			}
-//		}
-//		else {
-//			json_EmitFatalError_BadRequest("'pw' not found in POST", $RESPONSE);
-//		}
-
-
+		// TODO: Secret
 		if ( isset($_POST['secret']) ) {
 			$secret = coreSanitize_String($_POST['secret']);
 		}
@@ -534,9 +475,6 @@ switch ( $REQUEST[0] ) {
 		// If a username login attempt
 		else if ( $name ) {
 			$user = user_GetBySlug( $name );
-			// lookup user by slug
-			// lookup all addresses associated with that user
-			// extract node, hash, and secret
 		}
 		
 		// Bail if no user was found, or if their node is zero (not associated with an account)
