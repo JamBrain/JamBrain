@@ -27,7 +27,8 @@ export default {
 	Logout,
 	Get,
 	Reset,
-	Password
+	Password,
+	Have
 };
 
 export function Register( mail ) {
@@ -79,5 +80,12 @@ export function Password( id, key, password ) {
 		'id': id,
 		'key': key,
 		'pw': password
+	});	
+}
+
+export function Have( name, mail = null ) {
+	return doFetch('//'+API_DOMAIN+'/vx/user/have', {
+		'name': name,
+		'mail': mail
 	});	
 }
