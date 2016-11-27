@@ -527,6 +527,9 @@ switch ( $REQUEST[0] ) {
 	
 		break;
 	case 'logout':
+		json_ValidateHTTPMethod('GET');
+		
+		$RESPONSE['id'] = userAuth_Logout();
 	
 		break;
 		

@@ -62,6 +62,13 @@ function userAuth_Has(...$args) {
 	return true;
 }
 
+function userAuth_Logout() {
+	userSession_Start();
+	$ret = userAuth_GetId();
+	userSession_Expire();
+	return $ret;
+}
+
 
 function userSession_Start() {
 	$sid_name = 'SID';
