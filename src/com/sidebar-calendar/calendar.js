@@ -69,8 +69,18 @@ export default class SidebarCalendar extends Component {
 				let objDate = new Date(props.title);
 				props.title = objDate.toLocaleString("en-us", {month:"long", day:"numeric", year:"numeric"});
 			}
+			
+			var ShowIcon = null;
+			if ( col.year == 2016 && col.month == 12 && (col.day >= 9 && col.day <= 12) ) {
+				ShowIcon = <SVGIcon class="-icon">trophy</SVGIcon>;
+			}
 
-			return (<div {...props}><div class="-text">{col.day}</div></div>) 
+			return (
+				<div {...props}>
+					<div class="-text">{col.day}</div>
+					{ShowIcon}
+				</div>
+			); 
 		});
 	}
 	
