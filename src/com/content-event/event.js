@@ -4,7 +4,7 @@ import NavLink 							from 'com/nav-link/link';
 
 import ContentEventHome					from 'com/content-event-home/event-home';
 import ContentEventIdea					from 'com/content-event-idea/event-idea';
-//import ContentEventSlaughter			from 'com/content-event-slaughter/event-slaughter';
+import ContentEventSlaughter			from 'com/content-event-slaughter/event-slaughter';
 //import ContentEventFusion				from 'com/content-event-fusion/event-fusion';
 //import ContentEventTheme				from 'com/content-event-theme/event-theme';
 //import ContentEventFinal				from 'com/content-event-final/event-final';
@@ -38,6 +38,9 @@ export default class ContentEvent extends Component {
 					switch (ThemeMode) {
 						case 1:
 							EventBody = <ContentEventIdea node={node} user={user} />
+							break;
+						case 2:
+							EventBody = <ContentEventSlaughter node={node} user={user} />
 							break;
 						default:
 							EventBody = (
