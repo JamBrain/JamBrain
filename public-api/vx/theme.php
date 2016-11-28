@@ -68,7 +68,10 @@ switch ( $action ) {
 		if ( $event_id !== 0 ) {
 			/// Broadphase: check if $event_id is on the master list of event nodes.
 			if ( in_array($event_id, GetEventNodes()) ) {
-				$RESPONSE['idea'] = themeIdea_GetStats($event_id);
+				$ret = [];
+				$ret['idea'] = themeIdea_GetStats($event_id);
+				
+				$RESPONSE['stats'] = $ret;
 			}
 			else {
 				json_EmitFatalError_NotFound("Invalid Event", $RESPONSE);				
