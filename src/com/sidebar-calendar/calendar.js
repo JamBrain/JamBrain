@@ -77,8 +77,8 @@ export default class SidebarCalendar extends Component {
 
 			return (
 				<div {...props}>
-					<div class="-text">{col.day}</div>
 					{ShowIcon}
+					<div class="-text">{col.day}</div>
 				</div>
 			); 
 		});
