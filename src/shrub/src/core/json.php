@@ -295,16 +295,25 @@ function json_ValidateHTTPMethod( ...$args ) {
 	}
 }
 
-function json_ArgGet($index) {
+function json_ArgGet($index = null) {
 	global $REQUEST;
-	if ( isset($REQUEST[$index]) ) {
-		return $REQUEST[$index];
+	if ( isset($index) ) {
+		if ( isset($REQUEST[$index]) ) {
+			return $REQUEST[$index];
+		}
+	}
+	else {
+		return $REQUEST;
 	}
 	return '';
 }
 function json_ArgShift() {
 	global $REQUEST;
 	return array_shift($REQUEST);
+}
+function json_ArgCount() {
+	global $REQUEST;
+	return count($REQUEST);
 }
 
 function json_Begin() {
