@@ -24,12 +24,12 @@ function GetEventNodes() {
 }
 
 // Do Actions
-$action = json_ArgGet(0);
+$action = json_ArgShift();
 switch ( $action ) {
 	// Regular Voting Rounds //
 	case 'get':
 		json_ValidateHTTPMethod('GET');
-		$event_id = intval(json_ArgGet(1));
+		$event_id = intval(json_ArgGet(0));
 		
 		/// @todo Confirm valid event_id
 		
@@ -68,7 +68,7 @@ switch ( $action ) {
 		if ( $event_id !== 0 ) {
 			/// Broadphase: check if $event_id is on the master list of event nodes.
 			if ( in_array($event_id, GetEventNodes()) ) {
-				$RESPONSE['idea'] = themeIdea_GetStats();
+				$RESPONSE['idea'] = themeIdea_GetStats($event_id);
 			}
 			else {
 				json_EmitFatalError_NotFound("Invalid Event", $RESPONSE);				
@@ -82,12 +82,12 @@ switch ( $action ) {
 
 	// Theme Suggestions //
 	case 'idea': {
-		$parent_action = json_ArgShift();
-		$action = json_ArgGet(0);
+		$parent_action = $action;
+		$action = json_ArgShift();
 		switch ( $action ) {
 			case 'getmy':
 				json_ValidateHTTPMethod('GET');
-				$event_id = intval(json_ArgGet(1));
+				$event_id = intval(json_ArgGet(0));
 				
 				if ( $event_id !== 0 ) {
 					/// Broadphase: check if $event_id is on the master list of event nodes.
@@ -111,7 +111,7 @@ switch ( $action ) {
 				break;
 //			case 'get':
 //				json_ValidateHTTPMethod('GET');
-//				$event_id = intval(json_ArgGet(1));
+//				$event_id = intval(json_ArgGet(0));
 //				
 //				if ( $event_id !== 0 ) {
 //					/// Broadphase: check if $event_id is on the master list of event nodes.
@@ -154,7 +154,7 @@ switch ( $action ) {
 					json_EmitFatalError_BadRequest("'idea' is invalid", $RESPONSE);
 				}
 					
-				$event_id = intval(json_ArgGet(1));
+				$event_id = intval(json_ArgGet(0));
 				if ( $event_id !== 0 ) {
 					/// Broadphase: check if $event_id is on the master list of event nodes.
 					if ( in_array($event_id, GetEventNodes()) ) {
@@ -208,7 +208,7 @@ switch ( $action ) {
 					json_EmitFatalError_BadRequest(null, $RESPONSE);
 				}
 					
-				$event_id = intval(json_ArgGet(1));
+				$event_id = intval(json_ArgGet(0));
 				if ( $event_id !== 0 ) {
 					/// Broadphase: check if $event_id is on the master list of event nodes.
 					if ( in_array($event_id, GetEventNodes()) ) {

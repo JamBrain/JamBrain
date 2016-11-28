@@ -486,4 +486,12 @@ function themeIdea_SetTheme( $id, $idea ) {
 
 // *** //
 
+function themeIdea_GetStats( $event_id ) {
+	return db_QueryFetchFirst(
+		"SELECT COUNT(id) AS ideas, COUNT(DISTINCT user) AS users
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
+		WHERE node=?;",
+		$event_id
+	);
+}
 
