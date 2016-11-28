@@ -5,7 +5,7 @@ import NavLink 							from 'com/nav-link/link';
 import ContentEventHome					from 'com/content-event-home/event-home';
 import ContentEventIdea					from 'com/content-event-idea/event-idea';
 import ContentEventSlaughter			from 'com/content-event-slaughter/event-slaughter';
-//import ContentEventFusion				from 'com/content-event-fusion/event-fusion';
+import ContentEventFusion				from 'com/content-event-fusion/event-fusion';
 //import ContentEventTheme				from 'com/content-event-theme/event-theme';
 //import ContentEventFinal				from 'com/content-event-final/event-final';
 //import ContentEventJudging				from 'com/content-event-judging/event-judging';
@@ -41,6 +41,9 @@ export default class ContentEvent extends Component {
 							break;
 						case 2:
 							EventBody = <ContentEventSlaughter node={node} user={user} />
+							break;
+						case 3:
+							EventBody = <ContentEventFusion node={node} user={user} />
 							break;
 						default:
 							EventBody = (
