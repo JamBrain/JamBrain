@@ -15,7 +15,7 @@ export default class ContentUser extends Component {
 	render( {node}, {error} ) {
 		if ( node.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
-			var dangerousParsedTitle = { __html:titleParser.parse('**User:** '+node.name) };
+			var dangerousParsedTitle = { __html:titleParser.parse('**User:** `'+node.name+'`') };
 			
 			var avatar = '//'+STATIC_DOMAIN + ((node.meta && node.meta.avatar) ? node.meta.avatar : '/other/dummy/user64.png');
 			

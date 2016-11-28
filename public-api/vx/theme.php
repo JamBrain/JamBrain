@@ -60,6 +60,25 @@ switch ( $action ) {
 			json_EmitFatalError_Permission(null,$RESPONSE);
 		}
 		break;
+	
+	case 'stats': 
+		json_ValidateHTTPMethod('GET');
+		$event_id = intval(json_ArgGet(0));
+		
+		if ( $event_id !== 0 ) {
+			/// Broadphase: check if $event_id is on the master list of event nodes.
+			if ( in_array($event_id, GetEventNodes()) ) {
+				$RESPONSE['idea'] = themeIdea_GetStats();
+			}
+			else {
+				json_EmitFatalError_NotFound("Invalid Event", $RESPONSE);				
+			}
+		}
+		else {
+			json_EmitFatalError_BadRequest(null, $RESPONSE);
+		}
+	
+		break;
 
 	// Theme Suggestions //
 	case 'idea': {
