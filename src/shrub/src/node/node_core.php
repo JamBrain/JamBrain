@@ -447,3 +447,58 @@ function nodeLove_GetByNode( $nodes ) {
 	
 	return null;
 }
+
+/// Can only add 1 love at a time
+function nodeLove_AddByNode( $node, $author ) {
+	if ( is_array($node) ) {
+		return null;
+	}
+	
+	if ( !$node )
+		return null;
+
+	return db_QueryInsert(
+		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_LOVE." (
+			node,
+			author,
+			ip,
+			timestamp
+		)
+		VALUES ( 
+			?,
+			?,
+			INET_ATON(?),
+			NOW()
+		);",
+		$node,
+		$author,
+		0
+	);
+
+
+// Anonymous Love support requires newer MYSQL 5.6.3+. Scotchbox ships with 5.5.x.		
+//	if ( $author ) {
+//		$ip = 0;
+//	}
+//	else {
+//		$ip = $_SERVER['REMOTE_ADDR'];
+//	}
+//	
+//	return db_QueryInsert(
+//		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_LOVE." (
+//			node,
+//			author,
+//			ip,
+//			timestamp
+//		)
+//		VALUES ( 
+//			?,
+//			?,
+//			INET6_ATON(?),
+//			NOW()
+//		);",
+//		$node,
+//		$author,
+//		$ip
+//	);
+}
