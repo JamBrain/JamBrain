@@ -101,8 +101,9 @@ function coreSanitize_Name( $str ) {
 	$str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');				// Remove invalid UTF-8 characters
 	$str = strip_tags($str);										// Remove any XML/HTML tags
 	$str = preg_replace('/[^\p{Latin}0-9_.\- ]/u', '', $str);		// Latin, underscore, dot, dash, and space
-	//$str = str_replace(' ', '_', $str);								// Spaces to underscores
-	$str = trim($str, '_.- ');										// Trim start and end
+	//$str = str_replace(' ', '_', $str);							// Spaces to underscores
+	//$str = trim($str, '_.- ');									// Trim start and end
+	$str = trim($str);												// Trim start and end
 	
 	return $str;
 }
