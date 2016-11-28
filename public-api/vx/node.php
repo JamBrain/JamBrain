@@ -138,7 +138,7 @@ switch ( $action ) {
 						$id = intval($id);
 						
 						if ( !$id ) {
-							json_EmitFatalError_BadRequest("Bad ID", $RESPONSE);
+							json_EmitFatalError_BadRequest("Invalid ID requested", $RESPONSE);
 						}
 					}
 					sort($node_ids);
@@ -189,6 +189,7 @@ switch ( $action ) {
 					json_EmitFatalError_BadRequest(null, $RESPONSE);
 				}
 				break;
+
 			case 'remove':
 				json_ValidateHTTPMethod('GET');
 
@@ -218,6 +219,7 @@ switch ( $action ) {
 				break;
 		};
 		break;
+
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break;
