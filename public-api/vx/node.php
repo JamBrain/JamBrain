@@ -151,19 +151,19 @@ switch ( $action ) {
 
 				break;
 				
-//			case 'getmy':
-//				json_ValidateHTTPMethod('GET');
-//
-//				if ( $user_id = userAuth_GetID() ) {
-//					// Limit to last 500 love?
-//
-//					$RESPONSE['mylove'] = nodeLove_GetByAuthor($user_id);
-//				}
-//				else {
-//					json_EmitFatalError_Permission(null, $RESPONSE);
-//				}
-//			
-//				break;
+			case 'getmy':
+				json_ValidateHTTPMethod('GET');
+				
+				if ( $user_id = userAuth_GetID() ) {
+					// Limit to last 500 love?
+
+					$RESPONSE['my-love'] = nodeLove_GetByAuthor($user_id);
+				}
+				else {
+					json_EmitFatalError_Permission(null, $RESPONSE);
+				}
+			
+				break;
 
 			case 'add':
 				json_ValidateHTTPMethod('GET');
@@ -190,7 +190,28 @@ switch ( $action ) {
 				}
 				break;
 			case 'remove':
-				json_ValidateHTTPMethod('POST');
+				json_ValidateHTTPMethod('GET');
+
+				if ( json_ArgCount() ) {
+					$node_id = intval(json_ArgGet(0));
+					
+					if ( $node_id ) {
+						// NOTE: You are allowed to LOVE anonymously (it's just not fetchable)
+						$user_id = userAuth_GetID();
+
+						// TODO: Check if node exists
+						
+						$RESPONSE['removed'] = nodeLove_RemoveByNode($node_id, $user_id);
+						
+						$RESPONSE['love'] = nodeLove_GetByNode([$node_id]);
+					}
+					else {
+						json_EmitFatalError_BadRequest(null, $RESPONSE);
+					}
+				}
+				else {
+					json_EmitFatalError_BadRequest(null, $RESPONSE);
+				}
 				break;
 			default:
 			json_EmitFatalError_Forbidden(null, $RESPONSE);
