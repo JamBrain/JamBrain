@@ -457,6 +457,14 @@ function nodeLove_AddByNode( $node, $author ) {
 	if ( !$node )
 		return null;
 
+	// Anonymous Love support requires newer MYSQL 5.6.3+. Scotchbox ships with 5.5.x.		
+	if ( $author ) {
+		$ip = 0;
+	}
+	else {
+		$ip = $_SERVER['REMOTE_ADDR'];
+	}
+	
 	return db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_LOVE." (
 			node,
@@ -467,38 +475,11 @@ function nodeLove_AddByNode( $node, $author ) {
 		VALUES ( 
 			?,
 			?,
-			INET_ATON(?),
+			INET6_ATON(?),
 			NOW()
 		);",
 		$node,
 		$author,
-		0
+		$ip
 	);
-
-
-// Anonymous Love support requires newer MYSQL 5.6.3+. Scotchbox ships with 5.5.x.		
-//	if ( $author ) {
-//		$ip = 0;
-//	}
-//	else {
-//		$ip = $_SERVER['REMOTE_ADDR'];
-//	}
-//	
-//	return db_QueryInsert(
-//		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_LOVE." (
-//			node,
-//			author,
-//			ip,
-//			timestamp
-//		)
-//		VALUES ( 
-//			?,
-//			?,
-//			INET6_ATON(?),
-//			NOW()
-//		);",
-//		$node,
-//		$author,
-//		$ip
-//	);
 }

@@ -172,16 +172,14 @@ switch ( $action ) {
 					$node_id = intval(json_ArgGet(0));
 					
 					if ( $node_id ) {
-						if ( $user_id = userAuth_GetID() ) {
-							// TODO: Check if node exists
-							
-							$RESPONSE['change'] = nodeLove_AddByNode($node_id, $user_id);
-							
-							$RESPONSE['love'] = nodeLove_GetByNode([$node_id]);
-						}
-						else {
-							json_EmitFatalError_Permission(null, $RESPONSE);
-						}
+						// NOTE: You are allowed to LOVE anonymously (it's just not fetchable)
+						$user_id = userAuth_GetID();
+
+						// TODO: Check if node exists
+						
+						$RESPONSE['id'] = nodeLove_AddByNode($node_id, $user_id);
+						
+						$RESPONSE['love'] = nodeLove_GetByNode([$node_id]);
 					}
 					else {
 						json_EmitFatalError_BadRequest(null, $RESPONSE);
