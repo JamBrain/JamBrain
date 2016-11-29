@@ -124,7 +124,18 @@ switch ( $action ) {
 		
 		if ( $event = validateEvent($event_id) ) {
 			$ret = [];
-			$ret['idea'] = themeIdea_GetStats($event_id);
+
+			if ( isset($event['meta']) && isset($event['meta']['theme-mode']) ) {
+				if ( intval($event['meta']['theme-mode']) >= 1 ) {
+					$ret['idea'] = themeIdea_GetStats($event_id);
+				}
+//				if ( intval($event['meta']['theme-mode']) >= 2 ) {
+//					$ret['idea'] = themeIdeaVote_GetStats($event_id);
+//				}
+//				if ( intval($event['meta']['theme-mode']) >= 3 ) {
+//					$ret['idea'] = themeIdeaCompare_GetStats($event_id);
+//				}
+			}
 			
 			$RESPONSE['stats'] = $ret;
 		}
