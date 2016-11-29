@@ -40,20 +40,6 @@ function validateEvent( $event_id, $optional = false ) {
 	return $event_id;
 }
 
-//function validateIdea( $idea_id ) {
-//	$event = null;
-//	if ( $idea_id !== 0 ) {
-//		$event = 
-//		if ( $event_id !== 0 ) {
-//			/// Check if $event_id is on the master list of event nodes.
-//			if ( !in_array($event_id, GetEventNodes()) ) {
-//				json_EmitFatalError_NotFound("Invalid Event", $RESPONSE);
-//			}
-//		}
-//	}
-//	return $ret;
-//}
-
 function doThemeIdeaVote( $value ) {
 	global $RESPONSE;
 	
@@ -123,20 +109,11 @@ switch ( $action ) {
 		json_ValidateHTTPMethod('GET');
 		$event_id = intval(json_ArgGet(0));
 		
-		if ( $event_id !== 0 ) {
-			/// Broadphase: check if $event_id is on the master list of event nodes.
-			if ( in_array($event_id, GetEventNodes()) ) {
-				$ret = [];
-				$ret['idea'] = themeIdea_GetStats($event_id);
-				
-				$RESPONSE['stats'] = $ret;
-			}
-			else {
-				json_EmitFatalError_NotFound("Invalid Event", $RESPONSE);				
-			}
-		}
-		else {
-			json_EmitFatalError_BadRequest(null, $RESPONSE);
+		if ( validateEvent($event_id) ) {
+			$ret = [];
+			$ret['idea'] = themeIdea_GetStats($event_id);
+			
+			$RESPONSE['stats'] = $ret;
 		}
 	
 		break;
@@ -209,40 +186,31 @@ switch ( $action ) {
 				}
 					
 				$event_id = intval(json_ArgGet(0));
-				if ( $event_id !== 0 ) {
-					/// Broadphase: check if $event_id is on the master list of event nodes.
-					if ( in_array($event_id, GetEventNodes()) ) {
-						// TODO: Cache
-						$event = nodeComplete_GetById($event_id);
-						if ( isset($event) ) {
-							$event = $event;
+				if ( validateEvent($event_id) ) {
+					// TODO: Cache
+					$event = nodeComplete_GetById($event_id);
+					if ( isset($event) ) {
+						$event = $event;
+						
+						// Is Event Accepting Suggestions ?
+						if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) === 1 ) {
+							$theme_limit = isset($event['meta']['theme-idea-limit']) ? intval($event['meta']['theme-idea-limit']) : 3;
 							
-							// Is Event Accepting Suggestions ?
-							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) === 1 ) {
-								$theme_limit = isset($event['meta']['theme-idea-limit']) ? intval($event['meta']['theme-idea-limit']) : 3;
-								
-								$RESPONSE['response'] = themeIdea_Add($idea, $event_id, $user, $theme_limit);
-								
-								$RESPONSE['ideas'] = themeIdea_Get($event_id, $user);
-								$RESPONSE['count'] = count($RESPONSE['ideas']);
-								
-								if ( $RESPONSE['response']['id'] )
-									json_RespondCreated();
-							}
-							else {
-								json_EmitFatalError_BadRequest("Event is not accepting Theme Suggestions", $RESPONSE);
-							}
+							$RESPONSE['response'] = themeIdea_Add($idea, $event_id, $user, $theme_limit);
+							
+							$RESPONSE['ideas'] = themeIdea_Get($event_id, $user);
+							$RESPONSE['count'] = count($RESPONSE['ideas']);
+							
+							if ( $RESPONSE['response']['id'] )
+								json_RespondCreated();
 						}
 						else {
-							json_EmitFatalError_Server(null, $RESPONSE);
+							json_EmitFatalError_BadRequest("Event is not accepting Theme Suggestions", $RESPONSE);
 						}
 					}
 					else {
-						json_EmitFatalError_NotFound("Invalid Event", $RESPONSE);
+						json_EmitFatalError_Server(null, $RESPONSE);
 					}
-				}
-				else {
-					json_EmitFatalError_BadRequest(null, $RESPONSE);
 				}
 				break;
 
@@ -264,38 +232,29 @@ switch ( $action ) {
 				}
 					
 				$event_id = intval(json_ArgGet(0));
-				if ( $event_id !== 0 ) {
-					/// Broadphase: check if $event_id is on the master list of event nodes.
-					if ( in_array($event_id, GetEventNodes()) ) {
-						// TODO: Cache
-						$event = nodeComplete_GetById($event_id);
-						if ( isset($event) ) {
-							$event = $event;
+				if ( validateEvent($event_id) ) {
+					// TODO: Cache
+					$event = nodeComplete_GetById($event_id);
+					if ( isset($event) ) {
+						$event = $event;
+						
+						// Is Event Accepting Suggestions ?
+						if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) === 1 ) {
+							$RESPONSE['response'] = themeIdea_Remove($id, $user);
 							
-							// Is Event Accepting Suggestions ?
-							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) === 1 ) {
-								$RESPONSE['response'] = themeIdea_Remove($id, $user);
-								
-								$RESPONSE['ideas'] = themeIdea_Get($event_id, $user);
-								$RESPONSE['count'] = count($RESPONSE['ideas']);
-								
-								if ( $RESPONSE['response'] )
-									json_RespondCreated();
-							}
-							else {
-								json_EmitFatalError_BadRequest("Event is not accepting Theme Suggestions", $RESPONSE);
-							}
+							$RESPONSE['ideas'] = themeIdea_Get($event_id, $user);
+							$RESPONSE['count'] = count($RESPONSE['ideas']);
+							
+							if ( $RESPONSE['response'] )
+								json_RespondCreated();
 						}
 						else {
-							json_EmitFatalError_Server(null, $RESPONSE);
+							json_EmitFatalError_BadRequest("Event is not accepting Theme Suggestions", $RESPONSE);
 						}
 					}
 					else {
-						json_EmitFatalError_NotFound("Invalid Event", $RESPONSE);
+						json_EmitFatalError_Server(null, $RESPONSE);
 					}
-				}
-				else {
-					json_EmitFatalError_BadRequest(null, $RESPONSE);
 				}
 				break;
 				
