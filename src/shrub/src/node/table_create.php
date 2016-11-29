@@ -4,7 +4,7 @@ require_once __DIR__."/node.php";
 // Simliar to the regular NODE, but just a snapshot
 // IMPORTANT: This has to come first, as with the node table, we need to make nodes
 $table = 'SH_TABLE_NODE_VERSION';
-if ( in_array(constant($table), $TABLE_LIST) ) {
+if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
 
 	table_Init($table);
@@ -32,7 +32,7 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 }
 
 $table = 'SH_TABLE_NODE';
-if ( in_array(constant($table), $TABLE_LIST) ) {
+if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
 
 	// MEDIUMTEXT: 2^24 characters
@@ -80,7 +80,7 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 
 
 $table = 'SH_TABLE_NODE_LINK';
-if ( in_array(constant($table), $TABLE_LIST) ) {
+if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
 
 	table_Init($table);
@@ -103,7 +103,7 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 
 
 $table = 'SH_TABLE_NODE_META';
-if ( in_array(constant($table), $TABLE_LIST) ) {
+if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
 	
 	// TEXT: 2^16 characters (65535)
@@ -129,7 +129,7 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 
 /*
 $table = 'SH_TABLE_NODE_SEARCH';
-if ( in_array(constant($table), $TABLE_LIST) ) {
+if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
 	
 	// Use ID only, but manually mirror what's in NODE (unique)?
@@ -151,7 +151,7 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 */
 
 $table = 'SH_TABLE_NODE_LOVE';
-if ( in_array(constant($table), $TABLE_LIST) ) {
+if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
 	
 	// NODE: What is love(d), baby don't hurt me
@@ -189,7 +189,7 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 }
 
 $table = 'SH_TABLE_NODE_STAR';
-if ( in_array(constant($table), $TABLE_LIST) ) {
+if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
 	
 	// AUTHOR: whom likes the thing

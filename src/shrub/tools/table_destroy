@@ -4,23 +4,29 @@ const CONFIG_PATH = "../";
 const SHRUB_PATH = "../src/";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/".SHRUB_PATH."core/db.php";
 require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
 require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
 require_once __DIR__."/".SHRUB_PATH."global/global.php";
 
+
+
+$TABLE_LIST = [];
+
 $cmd = array_shift($argv);
 foreach ($argv as $value) {
-	$table_list[] = $value;
+	$TABLE_LIST[] = $value;
 }
 
+$FULL_TABLE_LIST = global_GetTableConstants();
+
 print "\n*** WARNING ***\n\n";
-if (isset($table_list)) {
+if ( count($TABLE_LIST) ) {
 	print "You are about to DESTROY the following table(s):\n";
-	print implode(", ",$argv)."\n";
+	print implode(", ",$TABLE_LIST)."\n";
 }
 else {
-	$table_list = global_GetTables();
+	$TABLE_LIST = $FULL_TABLE_LIST;
 	print "You are about to DESTROY ALL TABLES!!\n";
 }
 print "\nAre you sure [type 'YES']? ";
@@ -45,30 +51,27 @@ if ( !_db_IsConnected() ) {
 
 /// Drop a table
 function table_Drop($table) {
-	global $table_list;
+	global $TABLE_LIST, $FULL_TABLE_LIST, $SH;
 	/// @todo make sure $table is a valid name (alphanumeric, underscores, etc)
-//	if ( !ctype_alnum($table) ) {	// Neglects underscore
-//		echo "* ERROR: Table \"".$table."\" is not alphanumeric\n";
-//		return;
-//	}
 	
-	if ( in_array($table,$table_list) ) {
-		$ret = db_TableExists(SH_TABLE_PREFIX.$table);
+	if ( in_array($table, $FULL_TABLE_LIST) ) {
+		$ret = db_TableExists(SH_TABLE_PREFIX.constant($table));
 		if ( $ret ) {
-			$ret = db_Query("DROP TABLE ".SH_TABLE_PREFIX.$table.";");
+			$ret = db_Query("DROP TABLE ".SH_TABLE_PREFIX.constant($table).";");
 	
 			// Special case: If the globals table, do a purge //	
-			if ( $ret && $table === "global" ) {
+			if ( $ret && constant($table) === "global" ) {
 				echo "Purging \$SH...\n";
 				global_Purge();
 			}
 			
-			if ( $ret && count($GLOBALS['SH']) ) {
-				global_Set($table,'0');
+			// Don't do if there's no $SH global
+			if ( $ret && count($SH) ) {
+				global_Set($table, '0');
 			}
 		}
 		
-		echo "* ".global_GetTableConstantByValue($table).": ".$table." [".(($ret)?("yes"):("no"))."]\n"; 
+		echo "* ".$table.": ".SH_TABLE_PREFIX.constant($table)." [".(($ret)?("yes"):("no"))."]\n"; 
 	}
 	else {
 		echo "* WARNING: Unknown table \"".$table."\"\n"; 
@@ -104,13 +107,13 @@ foreach ( $dirs_ordered as $dir ) {
 }
 
 // Load globals (so we can track version changes) //
-if ( in_array(SH_TABLE_GLOBAL,$table_list) ) { 
+if ( !in_array('SH_TABLE_GLOBAL', $TABLE_LIST) ) { 
 	print "Loading globals...\n";
 	global_Load();
 }
 
 // Drop all tables in the table list
-foreach ( $table_list as $table ) {
+foreach ( $TABLE_LIST as $table ) {	
 	table_Drop($table);
 }
 
