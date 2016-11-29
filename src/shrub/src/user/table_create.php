@@ -2,7 +2,7 @@
 
 // User Login Credentials
 $table = 'SH_TABLE_USER';
-if ( in_array(constant($table), $TABLE_LIST) ) {
+if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
 	
 	// References:
@@ -51,7 +51,7 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 
 // User Access Log
 $table = 'SH_TABLE_USER_ACCESS';
-if ( in_array(constant($table), $TABLE_LIST) ) {
+if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
 
 	table_Init($table);
@@ -88,7 +88,7 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 
 
 $table = 'SH_TABLE_USER_STRIKE';
-if ( in_array(constant($table), $TABLE_LIST) ) {
+if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
 
 	table_Init($table);
@@ -110,7 +110,7 @@ if ( in_array(constant($table), $TABLE_LIST) ) {
 
 
 $table = 'SH_TABLE_USER_RESERVED';
-if ( in_array(constant($table), $TABLE_LIST) ) {
+if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
 
 	table_Init($table);

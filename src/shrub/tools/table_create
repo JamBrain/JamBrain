@@ -11,7 +11,6 @@ require_once __DIR__."/".SHRUB_PATH."global/global.php";
 
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
 
-
 $TABLE_LIST = [];
 
 $cmd = array_shift($argv);
@@ -19,13 +18,15 @@ foreach ($argv as $value) {
 	$TABLE_LIST[] = $value;
 }
 
+$FULL_TABLE_LIST = global_GetTableConstants();
+
 echo "\n*** WARNING ***\n\n";
 if ( count($TABLE_LIST) ) {
 	echo "You are about to create/update the following table(s):\n";
-	echo implode(", ",$argv)."\n";
+	echo implode(", ",$TABLE_LIST)."\n";
 }
 else {
-	$TABLE_LIST = global_GetTables();
+	$TABLE_LIST = $FULL_TABLE_LIST;
 	echo "You are about to create/update ALL tables.\n";
 }
 echo "\nAre you sure [type 'YES']? ";
@@ -77,7 +78,7 @@ if ( !_db_IsConnected() ) {
 const DB_CREATE_SUFFIX = " CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE=InnoDB;";
 global $SH, $TABLE_VERSION, $OLD_TABLE_VERSION;
 
-function table_Init($table) {
+function table_Init( $table ) {
 	global $SH, $TABLE_VERSION, $OLD_TABLE_VERSION;
 	
 	echo "* ".$table.": ".constant($table)."\n";
@@ -129,7 +130,7 @@ function table_Exit($table) {
 	global $SH, $TABLE_VERSION, $OLD_TABLE_VERSION;
 	
 	if ( global_Set($table, $TABLE_VERSION) ) {
-		echo $table." upgraded (version ".$OLD_TABLE_VERSION." -> ".$TABLE_VERSION.")\n";	
+		echo $table." upgraded (version ".$OLD_TABLE_VERSION." -> ".$TABLE_VERSION.")\n";
 	}
 }
 
@@ -173,7 +174,7 @@ foreach ( $dirs as $dir ) {
 }
 
 // Generate the final ordered list //
-$dirs_ordered = array_merge($first_dirs,array_diff($dirs_only,$first_dirs));
+$dirs_ordered = array_merge($first_dirs, array_diff($dirs_only, $first_dirs));
 
 // *** //
 

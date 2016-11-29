@@ -1,7 +1,7 @@
 <?php
 
 $table = 'SH_TABLE_GLOBAL';
-if ( in_array(constant($table), $TABLE_LIST) ) {
+if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
 
 	table_Init($table);
