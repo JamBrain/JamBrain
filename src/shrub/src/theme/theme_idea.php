@@ -3,7 +3,7 @@ require_once __DIR__."/../constants.php";
 require_once __DIR__."/../core/db.php";
 
 function themeIdea_GetById( $id ) {
-	return db_QueryFetch(
+	return db_QueryFetchFirst(
 		"SELECT id, node, parent, user, theme, ".DB_FIELD_DATE('timestamp').", score
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 			WHERE id=?;",

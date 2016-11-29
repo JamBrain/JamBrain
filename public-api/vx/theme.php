@@ -24,6 +24,8 @@ function GetEventNodes() {
 }
 
 function validateEvent( $event_id, $optional = false ) {
+	global $RESPONSE;
+	
 	if ( $event_id !== 0 ) {
 		/// Check if $event_id is on the master list of event nodes.
 		if ( !in_array($event_id, GetEventNodes()) ) {
@@ -53,11 +55,14 @@ function validateEvent( $event_id, $optional = false ) {
 //}
 
 function doThemeIdeaVote( $value ) {
+	global $RESPONSE;
+	
 	json_ValidateHTTPMethod('GET');
 	$idea_id = intval(json_ArgGet(0));
 	
 	if ( $idea_id ) {
 		$idea = themeIdea_GetById($idea_id);
+		$RESPONSE['idea'] = $idea;
 		if ( isset($idea) && isset($idea['node']) ) {
 			$author_id = userAuth_GetId();
 			if ( $author_id ) {
@@ -68,7 +73,7 @@ function doThemeIdeaVote( $value ) {
 			}
 		}
 		else {
-			json_EmitFatalError_BadRequest(null, $RESPONSE);
+			json_EmitFatalError_Server(null, $RESPONSE);
 		}
 	}
 	else {
@@ -293,7 +298,8 @@ switch ( $action ) {
 					json_EmitFatalError_BadRequest(null, $RESPONSE);
 				}
 				break;
-			case vote:
+				
+			case 'vote':
 				$parent_action = $action;
 				$action = json_ArgShift();
 				switch ( $action ) {

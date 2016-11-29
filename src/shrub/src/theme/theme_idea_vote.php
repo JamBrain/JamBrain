@@ -22,9 +22,9 @@ function themeIdeaVote_Add( $event_id, $idea_id, $author_id, $value ) {
 		VALUES ( 
 			?, ?, ?, ?, NOW()
 		)
-		ON DUPLICATE KEY UPDATE (
+		ON DUPLICATE KEY UPDATE
 			value=VALUES(value), timestamp=VALUES(timestamp)
-		);",
+		;",
 		$event_id, $idea_id, $author_id, $value
 	);
 }
