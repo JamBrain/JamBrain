@@ -50,7 +50,7 @@ require_once __DIR__."/".SHRUB_PATH."user/user.php";
 json_Begin();
 
 const SH_MAIL_DOMAIN = "jammer.vg";
-const SH_MAILER_RETURN = "error@".SH_MAIL_DOMAIN;
+const SH_MAILER_RETURN = "hello@".SH_MAIL_DOMAIN;
 
 const SH_SITE = "Jammer";
 const SH_MAILER = SH_SITE." <hello@".SH_MAIL_DOMAIN.">";
@@ -74,14 +74,14 @@ function mailGen_Headers() {
 		"MIME-Version: 1.0",
 		"Content-type: text/plain; charset=iso-8859-1",
 		"From: ".SH_MAILER,
-//		"Reply-To: ".SH_MAILER,
+//		"Reply-To: ".SH_MAILER_RETURN,
 //		"Return-Path: ".SH_MAILER_RETURN,
 	];
 }
 
 function mailSend_Now( $mail, $subject, $message ) {
 	$headers = mailGen_Headers();
-	return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers));
+	return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers), '-f '.SH_MAILER_RETURN);
 }
 	
 
