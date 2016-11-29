@@ -2,6 +2,15 @@
 require_once __DIR__."/../constants.php";
 require_once __DIR__."/../core/db.php";
 
+function themeIdea_GetById( $id ) {
+	return db_QueryFetch(
+		"SELECT id, node, parent, user, theme, ".DB_FIELD_DATE('timestamp').", score
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
+			WHERE id=?;",
+			$id
+		);
+}
+
 /// Get all themes from an event, optionally from a specific user, or above a threshold
 function themeIdea_Get( $event_id, $user_id = 0, $threshold = null, $query_suffix = ";" ) {
 	if ( $user_id ) {
