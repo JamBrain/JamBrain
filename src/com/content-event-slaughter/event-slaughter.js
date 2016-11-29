@@ -141,7 +141,7 @@ export default class ContentEventSlaughter extends Component {
 	renderBody( {current, votes, ideas, done, error} ) {
 		if ( done ) {
 			return (
-				<div>Wow! {"You're done!"} Amazing! You slaughtered {Object.keys(votes).length} themes!</div>
+				<div>Wow! {"You're totally done!"} Amazing! You slaughtered {Object.keys(votes).length} themes!</div>
 			);
 		}
 		else if ( current ) {
