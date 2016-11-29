@@ -297,7 +297,7 @@ switch ( $action ) {
 							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) >= 2 ) {
 								$author_id = userAuth_GetId();
 								if ( $author_id ) {
-									$RESPONSE['myvotes'] = themeIdeaVote_GetMy($event_id, $author_id);
+									$RESPONSE['votes'] = themeIdeaVote_GetMy($event_id, $author_id);
 								}
 								else {
 									json_EmitFatalError_Permission(null, $RESPONSE);

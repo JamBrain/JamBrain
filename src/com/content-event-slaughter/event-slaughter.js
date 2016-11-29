@@ -4,7 +4,7 @@ import NavLink 							from 'com/nav-link/link';
 
 import ButtonBase						from 'com/button-base/base';
 
-import $ThemeIdea						from '../../shrub/js/theme/theme_idea';
+import $ThemeIdeaVote					from '../../shrub/js/theme/theme_idea_vote';
 
 
 export default class ContentEventSlaughter extends Component {
@@ -12,74 +12,103 @@ export default class ContentEventSlaughter extends Component {
 		super(props);
 		
 		this.state = {
-			idea: "",
-			ideas: null
+			'current': null,
+			'votes-left': null,
+			
+			'votes': null,
+			'ideas': null
 		};
-		
-		this.onKeyDown = this.onKeyDown.bind(this);
-		this.textChange = this.textChange.bind(this);
-		this.submitIdeaForm = this.submitIdeaForm.bind(this);
-		
-		this.renderIdea = this.renderIdea.bind(this);
+				
+		this.submitYesVote = this.submitYesVote.bind(this);
+		this.submitNoVote = this.submitNoVote.bind(this);
+		this.submitFlagVote = this.submitFlagVote.bind(this);
+
+		this._renderMyIdea = this._renderMyIdea.bind(this);
 	}
 	
 	componentDidMount() {
-		$ThemeIdea.GetMy([this.props.node.id])
+		var onVotes = $ThemeIdeaVote.GetMy(this.props.node.id)
 		.then(r => {
-			if ( r.ideas ) {
-				this.setState({ ideas: r.ideas });
+			if ( r.votes ) {
+				//console.log('my',r);
+				this.setState({ 'votes': r.votes });
 			}
 			else {
-				this.setState({ ideas: {} });
+				this.setState({ 'votes': [] });
 			}
 		})
 		.catch(err => {
 			this.setState({ error: err });
 		});
-	}
-
-//		<script>
-//			document.getElementById("input-idea").addEventListener("keydown", function(e) {
-//				if (!e) { var e = window.event; }
-//				if (e.keyCode == 13) { /*e.preventDefault();*/ submitIdeaForm(); }
-//			}, false);
-//		</script>
-
-	textChange( e ) {
-		this.setState({ idea: e.target.value.trim() });
-	}
-	
-	onKeyDown( e ) {
-		if (!e) { 
-			var e = window.event; 
-		}
-		if (e.keyCode === 13) { 
-			this.textChange(e);
-			/*e.preventDefault();*/ 
-			this.submitIdeaForm(); 
-		}
-	}
-	
-	submitIdeaForm( e ) {
-		var idea = this.state.idea.trim()
-		console.log('submit:', idea);
 		
-		if ( idea.length > 0 && idea.length <= 64 ) {
-			$ThemeIdea.Add(this.props.node.id, idea)
-			.then(r => {
-				console.log('r',r);
-				this.setState({ ideas: r.ideas, idea: r.status === 201 ? "" : idea });
-			})
-			.catch(err => {
-				this.setState({ error: err });
-			});
+		var onIdeas = $ThemeIdeaVote.Get(this.props.node.id)
+		.then(r => {
+			if ( r.ideas ) {
+				//console.log('get',r);
+				this.setState({ 'ideas': r.ideas });
+			}
+			else {
+				this.setState({ 'ideas': [] });
+			}
+		})
+		.catch(err => {
+			this.setState({ error: err });
+		});
+		
+		// Once Finished
+		Promise.all([ onVotes, onIdeas ])
+		.then(r => {
+			console.log("Loaded my Ideas and Themes", r);
+			
+			this.pickRandomIdea();
+		})
+		.catch(err => {
+			console.log("Boo hoo", err);
+		});
+	}
+	
+	pickRandomIdea() {
+		if ( this.state.votes && this.state.ideas ) {
+			var vote_keys = Object.keys(this.state.votes);
+			var idea_keys = Object.keys(this.state.ideas);
+						
+			var available = idea_keys.filter(key => vote_keys.indexOf(key) === -1);
+						
+			if ( available.length === 0 ) {
+				this.setState({ 'done': true, 'votes-left': available.length });
+			}
+
+			var id = parseInt(Math.random() * available.length);
+	
+			this.setState({ 'current': available[id], 'votes-left': available.length });
 		}
 		else {
-			this.setState({ error: "Problem with length" });
+			this.setState({ 'error': 'Not loaded' });
 		}
 	}
 
-	renderIdea( id ) {
+	
+	_submitVote( command, e ) {
+		return $ThemeIdeaVote[command](this.state.current)
+		.then(r => {
+			console.log('r',r);
+//			this.setState({ ideas: r.ideas, idea: r.status === 201 ? "" : idea });
+		})
+		.catch(err => {
+			this.setState({ error: err });
+		});
+	}
+	submitYesVote( e ) {
+		return this._submitVote('Yes', e);
+	}
+	submitNoVote( e ) {
+		return this._submitVote('No', e);
+	}
+	submitFlagVote( e ) {
+		return this._submitVote('Flag', e);
+	}
+
+	_renderMyIdea( id ) {
 		var idea = this.state.ideas[id];
 		
 		return (
@@ -88,22 +117,34 @@ export default class ContentEventSlaughter extends Component {
 			</div>
 		);
 	}
-	renderIdeas() {
-		return Object.keys(this.state.ideas).map(this.renderIdea);
+	renderMyIdeas() {
+		return Object.keys(this.state.ideas).map(this._renderMyIdea);
+	}
+	
+	renderBody( {current, votes, ideas, done, error} ) {
+		if ( done ) {
+			return (
+				<div>Wow! You're done! Amazing! That's {votes.length} votes!</div>
+			);
+		
+		}
+		else if ( current ) {
+			var ThemeName = ideas[current];
+			return (
+				<div>{ThemeName}</div>
+			);
+		}		
 	}
 
-	render( {node, user, path, extra}, {idea, ideas, error} ) {
-		var Title = <h3>Theme Slaughter Round</h3>;
+	render( {node, user, path, extra}, state ) {
+		var Title = (<h3>Theme Slaughter Round</h3>);
 		
-		if ( node.slug && ideas ) {
+		if ( node.slug && state.votes && state.ideas ) {
 			if ( user && user['id'] ) {
 				return (
 					<div class="-body">
 						{Title}
-						<h3>My Suggestions</h3>
-						<div class="idea-mylist">
-							{ this.renderIdeas() }
-						</div>
+						{this.renderBody(state)}
 					</div>
 				);
 			}
@@ -119,9 +160,16 @@ export default class ContentEventSlaughter extends Component {
 		else {
 			return (
 				<div class="content-base content-post">
-					{ error ? error : "Please Wait..." }
+					{ state.error ? state.error : "Please Wait..." }
 				</div>
 			);
 		}
 	}
 }
+
+
+//							<h3>My Suggestions</h3>
+//							<div class="idea-mylist">
+//								{ this.renderMyIdeas() }
+//							</div>
+
