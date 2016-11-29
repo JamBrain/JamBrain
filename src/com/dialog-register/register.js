@@ -30,7 +30,7 @@ export default class DialogRegister extends Component {
 	}
 
 	onChange( e ) {
-		this.setState({ mail: e.target.value });
+		this.setState({ mail: e.target.value.trim() });
 	}
 	
 	doRegister() {
@@ -92,20 +92,23 @@ export default class DialogRegister extends Component {
 			);
 		}
 		else {
-			// NOTE: There's a Preact bug that the extra <span /> is working around
 			return (
 				<DialogBase title={title} ok cancel oktext="Send Activation E-mail" explicit onclick={this.doRegister} {...ErrorMessage}>
+					<div class="-info">
+						Enter your e-mail address to begin activating your account.
+					</div>
 					<div>
-						<span /><input ref={(input) => this.registerMail = input} id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" maxlength="254" /><LabelYesNo value={Sanitize.validateMail(mail) ? 1 : -1} />
+						<input ref={(input) => this.registerMail = input} id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" maxlength="254" value={mail} /><LabelYesNo value={mail.trim().length ? (Sanitize.validateMail(mail) ? 1 : -1) : 0} />
 					</div>
 					<div class="-info">
-						Expect an e-mail from <code>hello@jammer.vg</code>
-					</div>
-					<div class="-info">
-						If you use Hotmail or Outlook, go to <a href="https://outlook.live.com/owa/?path=/people" target="_blank" onclick={ e => { return e.stopPropagation() }}>people</a> and add a <em>contact</em>.
+						<strong>Hotmail</strong>, <strong>Outlook</strong>, <strong>Live.com</strong>: Add <code>hello@jammer.vg</code> to your contacts.<br />
+						<strong>Free.fr</strong>: Probably wont work. We've sent a whitelisting request.<br />
+						<strong>Laposte.net</strong>: <strong>Sorry!</strong> We can't figure out how to fix them. :(
 					</div>
 				</DialogBase>
 			);
+
+//						<strong>TIP:</strong> For Hotmail, Outlook, live.com go to <a href="https://outlook.live.com/owa/?path=/people" target="_blank" onclick={ e => { return e.stopPropagation() }}>people</a> and add a <em>contact</em>.
 		}
 	}
 }
