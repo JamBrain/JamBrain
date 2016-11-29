@@ -71,6 +71,8 @@ export default class ContentEventSlaughter extends Component {
 		if ( this.state.votes && this.state.ideas ) {
 			var vote_keys = Object.keys(this.state.votes);
 			var idea_keys = Object.keys(this.state.ideas);
+			
+			console.log("vo",vote_keys);
 						
 			var available = idea_keys.filter(key => vote_keys.indexOf(key) === -1);
 						
@@ -87,11 +89,26 @@ export default class ContentEventSlaughter extends Component {
 		}
 	}
 
+	commandToScore( command ) {
+		if ( command === 'Yes' )
+			return 1;
+		else if ( command === 'No' )
+			return 0;
+		else if ( command === 'Flag' )
+			return -1;
+		
+		return 0;
+	}
 	
 	_submitVote( command, e ) {
 		return $ThemeIdeaVote[command](this.state.current)
 		.then(r => {
 			console.log('r',r);
+			console.log( 'b', this.state.votes, this.state.ideas[this.state.current] );
+			this.state.votes[this.state.current] = this.commandToScore(command);
+			console.log( 'a',this.state.votes );
+			
+			this.pickRandomIdea();
 //			this.setState({ ideas: r.ideas, idea: r.status === 201 ? "" : idea });
 		})
 		.catch(err => {
@@ -124,14 +141,26 @@ export default class ContentEventSlaughter extends Component {
 	renderBody( {current, votes, ideas, done, error} ) {
 		if ( done ) {
 			return (
-				<div>Wow! You're done! Amazing! That's {votes.length} votes!</div>
+				<div>Wow! {"You're done!"} Amazing! You slaughtered {Object.keys(votes).length} themes!</div>
 			);
-		
 		}
 		else if ( current ) {
 			var ThemeName = ideas[current];
 			return (
-				<div>{ThemeName}</div>
+				<div>
+					<div class="title big">Would this be a good Theme?</div>
+					<div class="kill-group" id="kill-theme-border" onclick="OpenLink()" title="Click to search Google for this">
+						<div class="bigger" id="kill-theme">{ThemeName}</div>
+					</div>
+					<div class="kill-buttons">
+						<button id="kill-good" class="middle big green_button" onclick={this.submitYesVote} title='Good'>YES ✓</button>
+						<button id="kill-bad" class="middle big red_button" onclick={this.submitNoVote} title='Bad'>NO ✕</button>
+						
+						<div class="title">If inappropriate or offensive, <button onclick={this.submitFlagVote}>click here to Flag ⚑</button></div>
+					</div>				
+					<br />
+					<div>(PS: Undo and Keyboard Controls will be coming later tonight. Use only if you don't make mistakes)</div>
+				</div>
 			);
 		}		
 	}
