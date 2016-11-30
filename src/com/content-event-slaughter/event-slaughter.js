@@ -129,7 +129,7 @@ export default class ContentEventSlaughter extends Component {
 //		for ( var idx = Start; idx < End; idx++ ) {		// Regular Order
 		for ( var idx = End; idx-- > Start; ) {			// Reverse Order
 			ret.push(
-				<div>
+				<div class="-recent">
 					{this.renderIcon(this.state.votes[this.state.recent[idx]])}
 					<span>{this.state.ideas[this.state.recent[idx]]}</span>
 				</div>
