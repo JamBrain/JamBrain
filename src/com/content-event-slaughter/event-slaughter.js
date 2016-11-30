@@ -197,22 +197,23 @@ export default class ContentEventSlaughter extends Component {
 		else if ( current ) {
 			var ThemeName = (ideas[current]);
 			return (
-				<div>
-					<div class="title big">Would this be a good Theme?</div>
-					<div class="kill-group" id="kill-theme-border" onclick={this.openLink} title="Click to search Google for this">
-						<div class="bigger" id="kill-theme">{ThemeName}</div>
+				<div class="event-slaughter">
+					<div class="-title">Would this be a good Theme?</div>
+					<div class="-theme" onclick={this.openLink} title="Click to search Google for this">
+						<div>{ThemeName}</div>
 					</div>
-					<div class="kill-buttons">
-						<button id="kill-good" class="middle big green_button" onclick={this.submitYesVote} title='Good'>YES ✓</button>
-						<button id="kill-bad" class="middle big red_button" onclick={this.submitNoVote} title='Bad'>NO ✕</button>
+					<div class="-buttons">
+						<button class="middle big -green" onclick={this.submitYesVote} title='Good'>YES ✓</button>
+						<button class="middle big -red" onclick={this.submitNoVote} title='Bad'>NO ✕</button>
 						
-						<div class="title">If inappropriate or offensive, you can <button onclick={this.submitFlagVote}>Flag ⚑</button> it.</div>
+						<div class="-title">If inappropriate or offensive, you can <button class="-tiny" onclick={this.submitFlagVote}>Flag ⚑</button> it.</div>
 					</div>
-					<br />
-					<div>
-						<strong>Themes Slaughtered:</strong> <span>{Object.keys(votes).length}</span>
+					<div class="-stats">
+						<div>
+							<strong>Themes Slaughtered:</strong> <span>{Object.keys(votes).length}</span>
+						</div>
+						{StatsAndDetails}
 					</div>
-					{StatsAndDetails}
 				</div>
 			);
 		}		

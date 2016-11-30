@@ -1,0 +1,68 @@
+
+@import "defs.less";
+
+.event-slaughter {
+	text-align: center;
+	
+	& .-title {
+		margin: 0.5em 0;
+		font-size:1.2em;
+	}
+	& .-theme {
+		font-size: 1.8em;
+		
+		cursor:pointer;
+		margin: 0.5em;
+		
+		font-weight: bold;
+		
+		border-radius: 0.25em;
+		background: linear-gradient(to bottom,#FFF 35%,#EEE 100%);
+		box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+		
+		& > div {
+			padding: 0.25em;
+		}
+	}
+	& .-buttons {
+		margin:0.5em 0;	
+		vertical-align: middle;
+		
+		& button {
+			background: #AAA;
+			color: #DDD;
+
+			font-size: 1.2em;
+
+			border: 0;
+			padding: 0.5em 1em;
+			cursor: pointer;
+			
+			margin: 0.5em;
+			border-radius: 2.0em;
+			font-weight: 700;
+			outline: none;
+
+			&.-green {
+				background:#4C4;
+				color:#8F8;
+			}
+			&.-red {
+				background:#C44;
+				color:#F88;
+			}
+			&.-tiny {
+				font-size: 0.8em;
+			}
+
+		    transition: transform 0.1s;
+			&:hover {
+				transform: scale(1.2);
+			}
+		}
+	}
+	
+	& .-stats {
+		text-align: left;
+	}
+}
