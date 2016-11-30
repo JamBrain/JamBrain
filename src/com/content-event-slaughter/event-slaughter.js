@@ -195,7 +195,7 @@ export default class ContentEventSlaughter extends Component {
 			);
 		}
 		else if ( current ) {
-			var ThemeName = escape(ideas[current]);
+			var ThemeName = (ideas[current]);
 			return (
 				<div>
 					<div class="title big">Would this be a good Theme?</div>
