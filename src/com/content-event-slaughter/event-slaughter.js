@@ -166,7 +166,7 @@ export default class ContentEventSlaughter extends Component {
 	}
 
 	_renderMyIdea( id ) {
-		var idea = this.state.ideas[id];
+		var idea = escape(this.state.ideas[id]);
 		
 		return (
 			<div class="-item">
@@ -195,7 +195,7 @@ export default class ContentEventSlaughter extends Component {
 			);
 		}
 		else if ( current ) {
-			var ThemeName = ideas[current];
+			var ThemeName = escape(ideas[current]);
 			return (
 				<div>
 					<div class="title big">Would this be a good Theme?</div>
