@@ -2,11 +2,20 @@
 require_once __DIR__."/../constants.php";
 require_once __DIR__."/../core/db.php";
 
+function themeIdea_GetById( $id ) {
+	return db_QueryFetchFirst(
+		"SELECT id, node, parent, user, theme, ".DB_FIELD_DATE('timestamp').", score
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
+			WHERE id=?;",
+			$id
+		);
+}
+
 /// Get all themes from an event, optionally from a specific user, or above a threshold
 function themeIdea_Get( $event_id, $user_id = 0, $threshold = null, $query_suffix = ";" ) {
 	if ( $user_id ) {
 		return db_QueryFetchPair(
-			"SELECT id,theme 
+			"SELECT id, theme 
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 			WHERE node=? AND user=?".$query_suffix,
 			$event_id, 
@@ -16,7 +25,7 @@ function themeIdea_Get( $event_id, $user_id = 0, $threshold = null, $query_suffi
 	else {
 		if ( isset($threshold) ) {
 			return db_QueryFetchPair(
-				"SELECT id,theme 
+				"SELECT id, theme 
 				FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 				WHERE node=? AND score>=?".$query_suffix,
 				$event_id,
@@ -25,7 +34,7 @@ function themeIdea_Get( $event_id, $user_id = 0, $threshold = null, $query_suffi
 		}
 		else {
 			return db_QueryFetchPair(
-				"SELECT id,theme 
+				"SELECT id, theme 
 				FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 				WHERE node=?".$query_suffix,
 				$event_id
@@ -38,7 +47,7 @@ function themeIdea_Get( $event_id, $user_id = 0, $threshold = null, $query_suffi
 function themeIdea_GetOriginal( $event_id, $user_id = 0, $threshold = null, $query_suffix = ";" ) {
 	if ( $user_id ) {
 		return db_QueryFetchPair(
-			"SELECT id,theme 
+			"SELECT id, theme 
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 			WHERE node=? AND user=? AND parent=0".$query_suffix,
 			$event_id
@@ -47,7 +56,7 @@ function themeIdea_GetOriginal( $event_id, $user_id = 0, $threshold = null, $que
 	else {
 		if ( isset($threshold) ) {
 			return db_QueryFetchPair(
-				"SELECT id,theme 
+				"SELECT id, theme 
 				FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 				WHERE node=? AND parent=0 AND score>=?".$query_suffix,
 				$event_id,
@@ -56,7 +65,7 @@ function themeIdea_GetOriginal( $event_id, $user_id = 0, $threshold = null, $que
 		}
 		else {
 			return db_QueryFetchPair(
-				"SELECT id,theme 
+				"SELECT id, theme 
 				FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 				WHERE node=? AND parent=0".$query_suffix,
 				$event_id
@@ -69,7 +78,7 @@ function themeIdea_GetOriginal( $event_id, $user_id = 0, $threshold = null, $que
 function themeIdea_GetAll( $user_id = 0, $threshold = null, $query_suffix = ";" ) {
 	if ( $user_id ) {
 		return db_QueryFetchPair(
-			"SELECT id,theme 
+			"SELECT id, theme 
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 			WHERE user=?".$query_suffix,
 			$user_id
@@ -78,7 +87,7 @@ function themeIdea_GetAll( $user_id = 0, $threshold = null, $query_suffix = ";" 
 	else {
 		if ( isset($threshold) ) {
 			return db_QueryFetchPair(
-				"SELECT id,theme 
+				"SELECT id, theme 
 				FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 				WHERE score>=?".$query_suffix,
 				$threshold
@@ -86,7 +95,7 @@ function themeIdea_GetAll( $user_id = 0, $threshold = null, $query_suffix = ";" 
 		}
 		else {
 			return db_QueryFetchPair(
-				"SELECT id,theme 
+				"SELECT id, theme 
 				FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA.$query_suffix
 			);
 		}
@@ -97,7 +106,7 @@ function themeIdea_GetAll( $user_id = 0, $threshold = null, $query_suffix = ";" 
 function themeIdea_GetAllOriginal( $user_id = 0, $threshold = null, $query_suffix = ";" ) {
 	if ( $user_id ) {
 		return db_QueryFetchPair(
-			"SELECT id,theme 
+			"SELECT id, theme 
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 			WHERE user=? AND parent=0".$query_suffix,
 			$user_id
@@ -106,7 +115,7 @@ function themeIdea_GetAllOriginal( $user_id = 0, $threshold = null, $query_suffi
 	else {
 		if ( isset($threshold) ) {
 			return db_QueryFetchPair(
-				"SELECT id,theme 
+				"SELECT id, theme 
 				FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 				WHERE parent=0 AND score>=?".$query_suffix,
 				$threshold
@@ -114,7 +123,7 @@ function themeIdea_GetAllOriginal( $user_id = 0, $threshold = null, $query_suffi
 		}
 		else {
 			return db_QueryFetchPair(
-				"SELECT id,theme 
+				"SELECT id, theme 
 				FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA."
 				WHERE parent=0".$query_suffix
 			);
@@ -271,7 +280,7 @@ function themeIdea_CountUsers( $event_id, $query_suffix = ";" ) {
 function themeIdea_GetDetail( $event_id, $user_id = 0, $threshold = null, $query_suffix = ";" ) {
 	if ( $user_id ) {
 		return db_QueryFetch(
-			"SELECT id,theme,parent,user,score,".DB_FIELD_DATE('timestamp')."
+			"SELECT id, theme, parent, user, score, ".DB_FIELD_DATE('timestamp')."
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 			WHERE node=? AND user=?".$query_suffix,
 			$event_id, 
@@ -281,7 +290,7 @@ function themeIdea_GetDetail( $event_id, $user_id = 0, $threshold = null, $query
 	else {
 		if ( isset($threshold) ) {
 			return db_QueryFetch(
-				"SELECT id,theme,parent,user,score,".DB_FIELD_DATE('timestamp')."
+				"SELECT id, theme, parent, user, score, ".DB_FIELD_DATE('timestamp')."
 				FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 				WHERE node=? AND score>=?".$query_suffix,
 				$event_id,
@@ -290,7 +299,7 @@ function themeIdea_GetDetail( $event_id, $user_id = 0, $threshold = null, $query
 		}
 		else {
 			return db_QueryFetch(
-				"SELECT id,theme,parent,user,score,".DB_FIELD_DATE('timestamp')."
+				"SELECT id, theme, parent, user, score, ".DB_FIELD_DATE('timestamp')."
 				FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 				WHERE node=?".$query_suffix,
 				$event_id
@@ -304,7 +313,7 @@ function themeIdea_GetDetail( $event_id, $user_id = 0, $threshold = null, $query
 function themeIdea_GetOther( $event_id, $user_id = 0, $threshold = null, $query_suffix = ";" ) {
 	if ( $user_id ) {
 		return db_QueryFetchPair(
-			"SELECT id,theme 
+			"SELECT id, theme 
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 			WHERE node!=? AND user=?".$query_suffix,
 			$event_id, 
@@ -314,7 +323,7 @@ function themeIdea_GetOther( $event_id, $user_id = 0, $threshold = null, $query_
 	else {
 		if ( isset($threshold) ) {
 			return db_QueryFetchPair(
-				"SELECT id,theme 
+				"SELECT id, theme 
 				FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 				WHERE node!=? AND score>=?".$query_suffix,
 				$event_id,
@@ -336,7 +345,7 @@ function themeIdea_GetOther( $event_id, $user_id = 0, $threshold = null, $query_
 function _themeIdea_GetRandom( $event_id, $threshold = null, $query_suffix = ";" ) {
 	if ( isset($threshold) ) {
 		return db_QueryFetchPair(
-			"SELECT id,theme 
+			"SELECT id, theme 
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 			WHERE node=? AND parent=0 AND score>=?
 			ORDER BY rand() LIMIT 1".$query_suffix,
@@ -346,7 +355,7 @@ function _themeIdea_GetRandom( $event_id, $threshold = null, $query_suffix = ";"
 	}
 	else {
 		return db_QueryFetchPair(
-			"SELECT id,theme 
+			"SELECT id, theme 
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 			WHERE node=? AND parent=0
 			ORDER BY rand() LIMIT 1".$query_suffix,
