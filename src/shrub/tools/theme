@@ -1,0 +1,90 @@
+#!/usr/bin/env php
+<?php
+const CONFIG_PATH = "../";
+const SHRUB_PATH = "../src/";
+
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
+require_once __DIR__."/".SHRUB_PATH."core/core.php";
+require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
+require_once __DIR__."/".SHRUB_PATH."global/global.php";
+
+require_once __DIR__."/".SHRUB_PATH."theme/theme.php";
+
+if ( count($argv) < 2 ) {
+	echo "Usage: ".$argv[0]." [command]\n";
+	echo "\n";
+	echo "  dupes      - Remove Duplicate Ideas\n";
+//	echo "  score      - Score Ideas\n";
+//	echo "  promote    - Promote highest scored Ideas to Themes\n";
+//	echo "  page       - Assign pages to themes\n";
+//	echo "  calc #     - Calculate Score for Page \"#\" (1-4)\n";
+//	echo "  finalize   - Take the top 20 themes and make a Final Round\n";
+//	echo "  calc-final - Calculate the Final Score\n";
+	echo "\n";
+	die;
+}
+
+global_Load();
+
+$ARG_COMMAND = array_shift($argv);
+
+$EVENT_NODE = isset($SH['ludumdare-event']) ? intval($SH['ludumdare-event']) : 0;
+if ( !$EVENT_NODE ) {
+	echo "'ludumdare-event' is zero or not set ($EVENT_NODE)\n";
+	die;
+}
+
+$COMMAND = array_shift($argv);
+if ( $COMMAND === "dupes" ) {
+	print "\n*** WARNING ***\n\n";
+	print "You are about to flag all duplicate ideas. This will destroy any manual changes.\n";
+	print "\nAre you sure [type 'YES']? ";
+	flush();
+	$input = trim(fgets(STDIN));
+	if ( $input != "YES" ) {
+		print "Aborting...\n";
+		exit(1);
+	}
+	
+	echo "Fetching Idea List...\n";
+	
+	$all_ideas = themeIdea_Get($EVENT_NODE);
+
+	echo count($all_ideas) . " total.\n";
+	
+	// Generate Slugs
+	$slug_ideas = [];
+	$slug_parents = [];
+	foreach ($all_ideas as $key => $theme) {
+		$slug = coreSlugify_Name($theme);
+		
+		if ( isset($slug_ideas[$slug]) ) {
+			$slug_parents[] = [
+				'id' => $key,
+				'parent' => $slug_ideas[$slug]['id']
+			];
+		}
+		else {
+			$slug_ideas[$slug] = [
+				'id' => $key,
+				'slug' => $slug
+			];
+		}
+	}
+	
+	echo count($slug_ideas) . " with duplicates removed.\n";
+	
+	echo "Updating Parents...\n";
+	foreach ($slug_parents as $theme) {
+		themeIdea_SetParent($theme['id'], $theme['parent']);
+	}
+
+	echo "Done.\n";
+	exit;
+}
+else {
+	echo "Error: Unknown command \"$COMMAND\"\n";
+	exit(1);
+}
