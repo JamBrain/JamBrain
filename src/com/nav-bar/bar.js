@@ -49,7 +49,7 @@ export default class NavBar extends Component {
 			MyGame = (
 				<ButtonBase class="-button" onclick={e => { console.log('my game'); location.href = '/events/ludum-dare/37/theme/'; }}>
 					<SVGIcon>gamepad</SVGIcon>
-					<div>Suggest Themes</div>
+					<div class="if-sidebar-block">Slaughter Themes</div>
 				</ButtonBase>
 			);
 			//"";
