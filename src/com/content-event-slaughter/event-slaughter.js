@@ -109,13 +109,13 @@ export default class ContentEventSlaughter extends Component {
 	
 	renderIcon( value ) {
 		if ( value === 1 )
-			return <SVGIcon>checkmark</SVGIcon>;
+			return <span title={value}><SVGIcon>checkmark</SVGIcon></span>;
 		else if ( value === 0 )
-			return <SVGIcon>cross</SVGIcon>;
+			return <span title={value}><SVGIcon>cross</SVGIcon></span>;
 		else if ( value === -1 )
-			return <SVGIcon>flag</SVGIcon>;
+			return <span title={value}><SVGIcon>flag</SVGIcon></span>;
 		
-		return <SVGIcon>fire</SVGIcon>;
+		return <span title={value}><SVGIcon>fire</SVGIcon></span>;
 	}
 	
 	renderRecentQueue() {
