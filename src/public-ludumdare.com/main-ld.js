@@ -12,6 +12,7 @@ import DialogActivate					from 'com/dialog-activate/activate';
 import DialogReset						from 'com/dialog-reset/reset';
 import DialogPassword					from 'com/dialog-password/password';
 import DialogAuth						from 'com/dialog-auth/auth';
+import DialogSession					from 'com/dialog-session/session';
 
 //import AlertBase						from 'com/alert-base/base';
 
@@ -71,6 +72,8 @@ class Main extends Component {
 				return <DialogReset />;
 			case '#user-password':
 				return <DialogPassword />;
+			case '#expired':
+				return <DialogSession />
 			default:
 				if ( window.location.hash )
 					return <DialogUnfinished />;
