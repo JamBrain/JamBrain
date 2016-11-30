@@ -108,6 +108,11 @@ clean:
 	rm -fr $(OUT)
 	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-target -r --no-print-directory -C . -f $(subst $(OUT)/$(BUILD)/,$(SRC)/,$(b));)
 
+clean-version:
+	rm $(OUT)/git-version.php
+
+mini: clean-version target
+
 target: $(BUILDS) $(OUT)/git-version.php
 # NOTE: git-version should be last! Generation of this file doubles as the "install complete" notification.
 
@@ -192,7 +197,7 @@ $(OUT)/git-version.php:
 
 
 # Phony Rules #
-.PHONY: default clean target clean-target fail report $(BUILDS)
+.PHONY: default clean target clean-target clean-version fail report $(BUILDS)
 
 
 # Dependencies #
