@@ -137,24 +137,12 @@ export default class ContentEventSlaughter extends Component {
 		}
 		return ret;
 	}
-
-//	commandToScore( command ) {
-//		if ( command === 'Yes' )
-//			return 1;
-//		else if ( command === 'No' )
-//			return 0;
-//		else if ( command === 'Flag' )
-//			return -1;
-//		
-//		return 0;
-//	}
 	
 	_submitVote( command, e ) {
 		return $ThemeIdeaVote[command](this.state.current)
 		.then(r => {
-			this.state.votes[this.state.current] = r.value;// this.commandToScore(command);
+			this.state.votes[this.state.current] = r.value;
 			this.addToRecentQueue(this.state.current);
-//			console.log(r);
 			
 			this.pickRandomIdea();
 		})
@@ -260,10 +248,3 @@ export default class ContentEventSlaughter extends Component {
 		}
 	}
 }
-
-
-//							<h3>My Suggestions</h3>
-//							<div class="idea-mylist">
-//								{ this.renderMyIdeas() }
-//							</div>
-
