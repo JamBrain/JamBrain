@@ -61,6 +61,7 @@ function doThemeIdeaVote( $value ) {
 					$author_id = userAuth_GetId();
 					if ( $author_id ) {
 						$RESPONSE['id'] = themeIdeaVote_Add($idea['node'], $idea_id, $author_id, $value);
+						$RESPONSE['value'] = $value;
 					}
 					else {
 						json_EmitFatalError_Permission(null, $RESPONSE);
