@@ -24,6 +24,8 @@ export default class ContentEventSlaughter extends Component {
 		this.submitNoVote = this.submitNoVote.bind(this);
 		this.submitFlagVote = this.submitFlagVote.bind(this);
 
+		this.openLink = this.openLink.bind(this);
+
 		this._renderMyIdea = this._renderMyIdea.bind(this);
 	}
 	
@@ -31,8 +33,14 @@ export default class ContentEventSlaughter extends Component {
 		var onVotes = $ThemeIdeaVote.GetMy(this.props.node.id)
 		.then(r => {
 			if ( r.votes ) {
-				//console.log('my',r);
-				this.setState({ 'votes': r.votes });
+				var End = this.state.recent.length;
+				var Start = End - 50;
+				if ( Start < 0 )
+					Start = 0;
+				
+				// NOTE: The 'recent' order is quite random. Better than nothing though
+				
+				this.setState({ 'votes': r.votes, 'recent': Object.keys(r.votes).slice(Start).reverse() });
 			}
 			else {
 				this.setState({ 'votes': [] });
@@ -91,7 +99,7 @@ export default class ContentEventSlaughter extends Component {
 	addToRecentQueue( id ) {
 		this.state.recent.push(id);
 		
-		while (this.state.recent.length > 3) {
+		while (this.state.recent.length > 50) {
 			var junk = this.state.recent.shift();
 			console.log("trimmed",junk);
 		}
@@ -99,18 +107,32 @@ export default class ContentEventSlaughter extends Component {
 		this.setState({ 'recent': this.state.recent });
 	}
 	
+	renderIcon( value ) {
+		if ( value === 1 )
+			return <SVGIcon>checkmark</SVGIcon>;
+		else if ( value === 0 )
+			return <SVGIcon>cross</SVGIcon>;
+		else if ( value === -1 )
+			return <SVGIcon>flag</SVGIcon>;
+		
+		return <SVGIcon>fire</SVGIcon>;
+	}
+	
 	renderRecentQueue() {
 		// Render the last 10
 		var End = this.state.recent.length;
-		var Start = End - 4;
+		var Start = End - 10;
 		if ( Start < 0 )
 			Start = 0;
 		
 		var ret = [];
-//		for ( var idx = Start; idx < End; idx++ ) {
-		for ( var idx = End; idx-- > Start; ) {
+//		for ( var idx = Start; idx < End; idx++ ) {		// Regular Order
+		for ( var idx = End; idx-- > Start; ) {			// Reverse Order
 			ret.push(
-				<div>{this.state.ideas[this.state.recent[idx]]}</div>
+				<div>
+					{this.renderIcon(this.state.votes[this.state.recent[idx]])}
+					<span>{this.state.ideas[this.state.recent[idx]]}</span>
+				</div>
 			);
 		}
 		return ret;
@@ -149,6 +171,11 @@ export default class ContentEventSlaughter extends Component {
 	submitFlagVote( e ) {
 		return this._submitVote('Flag', e);
 	}
+	
+	openLink( e ) {
+		// TODO: this
+		console.log("link open omg");
+	}
 
 	_renderMyIdea( id ) {
 		var idea = this.state.ideas[id];
@@ -164,12 +191,18 @@ export default class ContentEventSlaughter extends Component {
 	}
 	
 	renderBody( {current, votes, ideas, done, error} ) {
+		var StatsAndDetails = (
+			<div>
+				<h3>Recent Themes</h3>
+				{this.renderRecentQueue()}
+			</div>			
+		);
+		
 		if ( done ) {
 			return (
 				<div>
 					<div>Wow! {"You're totally done!"} Amazing! You slaughtered {Object.keys(votes).length} themes!</div>
-					<br />
-					{this.renderRecentQueue()}
+					{StatsAndDetails}
 				</div>
 			);
 		}
@@ -178,17 +211,20 @@ export default class ContentEventSlaughter extends Component {
 			return (
 				<div>
 					<div class="title big">Would this be a good Theme?</div>
-					<div class="kill-group" id="kill-theme-border" onclick="OpenLink()" title="Click to search Google for this">
+					<div class="kill-group" id="kill-theme-border" onclick={this.openLink} title="Click to search Google for this">
 						<div class="bigger" id="kill-theme">{ThemeName}</div>
 					</div>
 					<div class="kill-buttons">
 						<button id="kill-good" class="middle big green_button" onclick={this.submitYesVote} title='Good'>YES ✓</button>
 						<button id="kill-bad" class="middle big red_button" onclick={this.submitNoVote} title='Bad'>NO ✕</button>
 						
-						<div class="title">If inappropriate or offensive, <button onclick={this.submitFlagVote}>click here to Flag ⚑</button></div>
-					</div>		
+						<div class="title">If inappropriate or offensive, you can <button onclick={this.submitFlagVote}>Flag ⚑</button> it.</div>
+					</div>
 					<br />
-					{this.renderRecentQueue()}
+					<div>
+						<strong>Themes Slaughtered:</strong> <span>{Object.keys(votes).length}</span>
+					</div>
+					{StatsAndDetails}
 				</div>
 			);
 		}		
