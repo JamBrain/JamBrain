@@ -1,6 +1,7 @@
 import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
+import SVGIcon 							from 'com/svg-icon/icon';
 
 import $Node							from '../../shrub/js/node/node';
 
@@ -116,7 +117,7 @@ export default class ContentPost extends Component {
 		else {
 			return (
 				<div class="content-base content-post">
-					{ error ? error : "Please Wait..." }
+					{ error ? error : <NavSpinner /> }
 				</div>
 			);
 		}
