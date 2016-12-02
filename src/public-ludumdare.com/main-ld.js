@@ -1,6 +1,7 @@
 import { h, render, Component }			from 'preact/preact';
 import Sanitize							from '../internal/sanitize/sanitize';
 import NavBar 							from 'com/nav-bar/bar';
+import NavSpinner						from 'com/nav-spinner/spinner';
 
 import ViewSidebar						from 'com/view-sidebar/sidebar';
 import ViewContent						from 'com/view-content/content';
@@ -261,7 +262,7 @@ class Main extends Component {
 		else {
 			return (
 				<div id="layout">
-					{ error ? error : "Please Wait..." }
+					{ error ? error : <NavSpinner /> }
 				</div>
 			);
 		}
