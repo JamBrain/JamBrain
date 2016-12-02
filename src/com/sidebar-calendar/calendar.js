@@ -54,7 +54,9 @@ export default class SidebarCalendar extends Component {
 	}
 
 	genRow( row ) {
-		return row.map( function(col) {
+		return row.map( function(col, index) {
+			if(col[index])
+				col = col[index];
 			let props = {};
 			if ( col.selected ) {
 				props.class = "selected";
@@ -66,10 +68,10 @@ export default class SidebarCalendar extends Component {
 			props.title = col.month+"-"+col.day+"-"+col.year;
 			if ( window.Intl ) {
 				// http://stackoverflow.com/a/18648314/5678759
-				let objDate = new Date(props.title);
+				let objDate = new Date( col.year, col.month-1, col.day );
 				props.title = objDate.toLocaleString("en-us", {month:"long", day:"numeric", year:"numeric"});
 			}
-			
+
 			var ShowIcon = null;
 			if ( col.year == 2016 && col.month == 12 && (col.day >= 9 && col.day <= 12) ) {
 				ShowIcon = <SVGIcon class="-icon">trophy</SVGIcon>;
