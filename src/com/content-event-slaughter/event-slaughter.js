@@ -166,8 +166,10 @@ export default class ContentEventSlaughter extends Component {
 	}
 	
 	openLink( e ) {
-		// TODO: this
-		console.log("link open omg");
+		// Google link https://www.google.com/search?q=[query]
+		let url = "https://www.google.com/search?q="+encodeURIComponent(this.state.ideas[this.state.current]);
+		let win = window.open(url, '_blank');
+  		win.focus();
 	}
 
 	_renderMyIdea( id ) {
