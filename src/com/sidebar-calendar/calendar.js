@@ -14,11 +14,11 @@ export default class SidebarCalendar extends Component {
 		// TODO: Adjust selected day/week when time itself rolls over
 
 		let thisDay = today.getDate();
-		let thisMonth = today.getMonth()+1;
+		let thisMonth = today.getMonth();
 		let thisYear = today.getFullYear();
 		
 		/* Months and Weeks start at 0. Years and Days start at 1. Using 0th day is like -1 */
-		let monthEndsOn = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate();
+		let monthEndsOn = new Date(today.getFullYear(), today.getMonth(), 0).getDate();
 		let nextDay = today.getDate() - today.getDay();
 		
 		if ( nextDay < 1 ) {
