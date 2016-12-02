@@ -1,6 +1,7 @@
 import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
+import SVGIcon 							from 'com/svg-icon/icon';
 
 import ContentEventHome					from 'com/content-event-home/event-home';
 import ContentEventIdea					from 'com/content-event-idea/event-idea';
@@ -56,9 +57,10 @@ export default class ContentEvent extends Component {
 					};
 				}
 				else {
+					// TODO: emit 404
 					EventBody = (
 						<div>
-							404
+							<h3>404</h3>
 						</div>
 					);
 				}
@@ -81,7 +83,7 @@ export default class ContentEvent extends Component {
 		else {
 			return (
 				<div class="content-base content-post">
-					{ error ? error : "Please Wait..." }
+					{ error ? error : <NavSpinner /> }
 				</div>
 			);
 		}

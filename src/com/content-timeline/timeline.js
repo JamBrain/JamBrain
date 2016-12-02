@@ -1,4 +1,6 @@
 import { h, Component } 				from 'preact/preact';
+import NavSpinner						from 'com/nav-spinner/spinner';
+
 import ContentPost						from 'com/content-post/post';
 import ContentUser						from 'com/content-user/user';
 
@@ -10,7 +12,7 @@ export default class ContentTimeline extends Component {
 		
 		this.state = {
 			id: 0,
-			feed: []
+			feed: null
 		};
 		
 		this.componentWillReceiveProps( props );
@@ -73,7 +75,7 @@ export default class ContentTimeline extends Component {
 		else {
 			return (
 				<div id="content">
-					{ error ? error : "Please Wait..." }
+					{ error ? error : <NavSpinner /> }
 				</div>
 			);
 		}

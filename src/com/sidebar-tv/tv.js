@@ -1,5 +1,6 @@
-import { h, Component } from 'preact/preact';
-import SVGIcon 			from 'com/svg-icon/icon';
+import { h, Component } 				from 'preact/preact';
+import SVGIcon 							from 'com/svg-icon/icon';
+import NavSpinner						from 'com/nav-spinner/spinner';
 
 export default class SidebarTV extends Component {
 	constructor( props ) {
@@ -23,24 +24,24 @@ export default class SidebarTV extends Component {
 	
 	componentDidMount() {
 		fetch('//jammer.tv/v1/live.php/ludum-dare+game-jam+game-dev/', {method: 'POST' /*, mode:'no-cors'*/})
-			.then(r => {
-				if ( r )
-					return r.json();
-				//throw new Error("Response is empty");
-			})
-			.then(data => {
-				this.setState({ 
-					streams: this.state.streams.concat(data.streams)
-				});
-				return data;
-			})
-			.catch(err => {
-				console.log("sidebar-tv:",err);
-				this.setState({
-					error: err
-				});
-				return err;
-			})
+		.then(r => {
+			if ( r )
+				return r.json();
+			//throw new Error("Response is empty");
+		})
+		.then(data => {
+			this.setState({ 
+				streams: this.state.streams.concat(data.streams)
+			});
+			return data;
+		})
+		.catch(err => {
+			console.log("sidebar-tv:",err);
+			this.setState({
+				error: err
+			});
+			return err;
+		});
 	}
 	
 	setActive( id, e ) {
@@ -81,9 +82,7 @@ export default class SidebarTV extends Component {
 		else if ( state.streams.length == 0 ) {
 			return (
 				<div class="sidebar-base sidebar-tv">
-					<div class="-detail">
-						Loading...
-					</div>
+					<NavSpinner />
 				</div>
 			);
 		}

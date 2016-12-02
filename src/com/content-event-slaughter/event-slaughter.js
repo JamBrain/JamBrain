@@ -1,6 +1,7 @@
 import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
+import SVGIcon 							from 'com/svg-icon/icon';
 
 import ButtonBase						from 'com/button-base/base';
 
@@ -250,7 +251,7 @@ export default class ContentEventSlaughter extends Component {
 		else {
 			return (
 				<div class="content-base content-post">
-					{ state.error ? state.error : "Please Wait..." }
+					{ state.error ? state.error : <NavSpinner /> }
 				</div>
 			);
 		}
