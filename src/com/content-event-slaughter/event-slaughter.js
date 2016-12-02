@@ -131,7 +131,7 @@ export default class ContentEventSlaughter extends Component {
 			ret.push(
 				<div class="-recent">
 					{this.renderIcon(this.state.votes[this.state.recent[idx]])}
-					<span>{this.state.ideas[this.state.recent[idx]]}</span>
+					<span title="Click to Change Vote" onclick={this.modifyVote}>{this.state.ideas[this.state.recent[idx]]}</span>
 				</div>
 			);
 		}
@@ -154,6 +154,15 @@ export default class ContentEventSlaughter extends Component {
 		.catch(err => {
 			this.setState({ error: err });
 		});
+	}
+	_modifyVote( idea, e) {
+		this.state.recent.pop();
+		delete this.state.votes[''+idea];
+		this.setState({ current: idea });
+		this.renderRecentQueue();
+	}
+	modifyVote( e ) {
+		return this._modifyVote( this.state.current, e );	
 	}
 	submitYesVote( e ) {
 		return this._submitVote('Yes', e);
