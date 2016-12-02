@@ -57,9 +57,10 @@ export default class ContentEvent extends Component {
 					};
 				}
 				else {
+					// TODO: emit 404
 					EventBody = (
 						<div>
-							404
+							<h3>404</h3>
 						</div>
 					);
 				}
