@@ -18,6 +18,12 @@ export default class ContentPost extends Component {
 			'lovecount': null
 		};
 		
+		$NodeLove.GetMy(props.user.id, props.node.id)
+		.then(r => {
+			//console.log( r ) ;
+			this.setState({ 'loved': r });
+		});
+		
 		// TODO: Extract Love from the global love pool (props.node.id)
 		
 		this.getAuthor( props.node );
