@@ -19,6 +19,7 @@ import DialogSession					from 'com/dialog-session/session';
 
 import $Node							from '../shrub/js/node/node';
 import $User							from '../shrub/js/user/user';
+import $NodeLove						from '../shrub/js/node/node_love';
 
 window.LUDUMDARE_ROOT = '/';
 window.SITE_ROOT = 1;
@@ -148,9 +149,23 @@ class Main extends Component {
 	fetchUser() {
 		// Fetch the Active User
 		$User.Get().then(r => {
-			this.setState({ user: r.node });
+			console.log("Got User:",r.id);
+			
+			if ( r.id ) {
+				$NodeLove.GetMy(/*r.id,*/ 1)
+				.then(rr => {
+					this.setState({ 'user': r.node });
+				})
+				.catch(err => {
+					this.setState({ 'user': r.node });
+				});
+			}
+			else {
+				this.setState({ 'user': null });
+			}				
 		})
 		.catch(err => {
+			console.log('hurr', err);
 			this.setState({ error: err });
 		});		
 	}
@@ -208,8 +223,9 @@ class Main extends Component {
 	}
 	
 	componentDidUpdate( prevProps, prevState ) {
-		var state_copy = Object.assign({},this.state);
-		history.replaceState(state_copy, null);
+//		var state_copy = Object.assign({},this.state);
+//		history.replaceState(state_copy, null);
+		history.replaceState(this.state, null);
 	}
 	
 

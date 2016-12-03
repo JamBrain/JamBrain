@@ -179,7 +179,7 @@ switch ( $action ) {
 						
 						$RESPONSE['id'] = nodeLove_AddByNode($node_id, $user_id);
 						
-						$RESPONSE['love'] = nodeLove_GetByNode([$node_id]);
+						$RESPONSE['love'] = nodeLove_GetByNode($node_id);
 					}
 					else {
 						json_EmitFatalError_BadRequest(null, $RESPONSE);
@@ -204,7 +204,13 @@ switch ( $action ) {
 						
 						$RESPONSE['removed'] = nodeLove_RemoveByNode($node_id, $user_id);
 						
-						$RESPONSE['love'] = nodeLove_GetByNode([$node_id]);
+						$RESPONSE['love'] = nodeLove_GetByNode($node_id);
+						if ( !isset($RESPONSE['love']) )
+							$RESPONSE['love'] = [
+								'id' => $node_id,
+								'count' => 0,
+								'timestamp' => "0000-00-00T00:00:00Z"
+							];
 					}
 					else {
 						json_EmitFatalError_BadRequest(null, $RESPONSE);

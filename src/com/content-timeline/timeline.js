@@ -52,12 +52,14 @@ export default class ContentTimeline extends Component {
 
 	makeItem( node ) {
 		var path = this.props.path;//'/'+this.props.node.slug+'/';//this.props.path ? this.props.path : this.props.;
+		var user = this.props.user;
+		var extra = this.props.extra;
 		
 		if ( node.type === 'post' || node.type === 'game' ) {
-			return <ContentPost node={node} path={path} />;
+			return <ContentPost node={node} user={user} path={path} extra={extra} />;
 		}
 		else if ( node.type === 'user' ) {
-			return <ContentUser node={node} path={path} />;
+			return <ContentUser node={node} user={user} path={path} extra={extra} />;
 		}
 		else {
 			return <div>Unsupported Node Type: {""+node.type}</div>;
