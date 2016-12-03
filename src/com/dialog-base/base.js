@@ -92,6 +92,7 @@ export default class DialogBase extends Component {
 
 	abort() {
 		window.location.hash = "#";
+		//location.href = location.pathname+location.search;
 	}
 	
 	render( props, {} ) {

@@ -1,4 +1,6 @@
 import { h, Component } 				from 'preact/preact';
+import ShallowCompare	 				from 'shallow-compare/index';
+
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
@@ -13,18 +15,32 @@ export default class ContentPost extends Component {
 			author: {}
 		};
 		
-		this.componentWillReceiveProps( props );
+		this.getAuthor( props.node );
 		
 		this.onLove = this.onLove.bind(this);
 		this.onMinMax = this.onMinMax.bind(this);
 	}
+
+//	shouldComponentUpdate( nextProps, nextState ) {
+//		var com = ShallowCompare(this, nextProps, nextState);
+////		console.log("HOOP",com,this.props, nextProps);
+////		console.log("HOOP",com,this.state, nextState);
+//		return com;
+//	}
 	
-	componentWillReceiveProps( props ) {
+//	componentWillReceiveProps( props ) {
+	componentWillUpdate( newProps, newState ) {
+		if ( this.props.user !== newProps.user ) {
+			this.getAuthor(newProps.user);
+		}
+	}
+	
+	getAuthor( node ) {
 		// Clear the Author
 		this.setState({ author: {} });
 		
 		// Lookup the author
-		$Node.Get( props.node.author )
+		$Node.Get( node.author )
 		.then(r => {
 			if ( r.node && r.node.length ) {
 				this.setState({ author: r.node[0] });
@@ -37,11 +53,6 @@ export default class ContentPost extends Component {
 			this.setState({ error: err });
 		});
 	}
-
-//	componentDidMount() {
-//	}
-//	componentWillUnmount() {
-//	}
 
 	onLove( e ) {
 		console.log("luv");
