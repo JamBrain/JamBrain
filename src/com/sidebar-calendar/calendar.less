@@ -42,18 +42,23 @@
 				right: 0.25em;
 			}
 			
-			&:hover, &:first-child:hover, &:last-child:hover {
+			&:hover,
+			&:first-child:hover,
+			&:last-child:hover {
 				background: @MAJOR_COLOR1;
 				color: @MAJOR_LIGHT;
 				/*transform: scale(1.2, 1.2);*/
 				z-index:10;
 				font-weight: bold;
 			}
-			&:active, &:first-child:active, &:last-child:active {
+			&:active, 
+			&:first-child:active,
+			&:last-child:active {
 				/*transform: scale(0.9, 0.9);*/
 			}
 			
-			&:first-child, &:last-child {
+			&:first-child,
+			&:last-child {
 				background: @MAJOR_MUTE_D2;/*@MAJOR_COLOR_MUTE2;*/
 			}
 			&:last-child {
@@ -62,6 +67,10 @@
 		}
 		& > .selected {
 			background: @MAJOR_MUTE_L2;
+			&:first-child,
+			&:last-child {
+				background: @MAJOR_MUTE_L2;
+			}
 		}
 		& > .event {
 			font-weight: bold;
