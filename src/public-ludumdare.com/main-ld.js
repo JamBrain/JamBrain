@@ -193,7 +193,7 @@ class Main extends Component {
 
 				this.setState({ id: 0, slugs: slugs, node: {id: 0} });
 
-				this.fetchData();
+				this.fetchNode();
 
 				// Scroll to top
 				window.scrollTo(0, 0);
