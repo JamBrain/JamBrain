@@ -6,14 +6,19 @@ import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
 import $Node							from '../../shrub/js/node/node';
+import $NodeLove						from '../../shrub/js/node/node_love';
 
 export default class ContentPost extends Component {
 	constructor( props ) {
 		super(props);
 		
 		this.state = {
-			author: {}
+			'author': {},
+			'loved': null,
+			'lovecount': null
 		};
+		
+		// TODO: Extract Love from the global love pool (props.node.id)
 		
 		this.getAuthor( props.node );
 		
@@ -55,7 +60,18 @@ export default class ContentPost extends Component {
 	}
 
 	onLove( e ) {
-		console.log("luv");
+		if ( this.state.loved ) {
+			$NodeLove.Remove(this.props.node.id)
+			.then(r => {
+				this.setState({ 'loved': false, 'lovecount': r.love.count });
+			});			
+		}
+		else {
+			$NodeLove.Add(this.props.node.id)
+			.then(r => {
+				this.setState({ 'loved': true, 'lovecount': r.love.count });
+			});
+		}
 	}
 	
 	onMinMax( e ) {
@@ -72,7 +88,7 @@ export default class ContentPost extends Component {
 		return <NavLink class="at-name" href={user_url}><img src={this.getAvatar(user)} />{user.name}</NavLink>;
 	}
 
-	render( {node, user, path}, {author, error} ) {
+	render( {node, user, path}, {author, loved, lovecount, error} ) {
 		if ( node.slug && author.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
@@ -94,9 +110,6 @@ export default class ContentPost extends Component {
 			
 			var post_avatar = this.getAvatar( author );
 			
-			// TODO: Figure out if user loves this post
-			var loved = false;
-			
 			return (
 				<div class="content-base content-post">
 					<div class="-header">
@@ -114,11 +127,11 @@ export default class ContentPost extends Component {
 							</div>
 						</div>
 						<div class="-right">
-							<div class={'-love _hidden'+ (loved ? ' loved' : '')} onclick={this.onLove}>
+							<div class={'-love'+ (loved ? ' loved' : '')} onclick={this.onLove}>
 								<SVGIcon class="-hover-hide">heart</SVGIcon>
 								<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
 								<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
-								<div class="-count">{node.love}</div>
+								<div class="-count">{Number.isInteger(lovecount) ? lovecount : node.love}</div>
 							</div>
 						</div>
 					</div>
