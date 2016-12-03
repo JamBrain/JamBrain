@@ -26,7 +26,7 @@ export default class ContentTimeline extends Component {
 			return;
 		
 		// Clear the Feed
-		this.setState({ id: props.node.id, feed: [] });
+		this.setState({ 'id': props.node.id, 'feed': null });
 		
 		$Node.GetFeed( props.node.id, "post" )
 		.then(r => {
@@ -35,18 +35,18 @@ export default class ContentTimeline extends Component {
 				.then(rr => {
 					// Hack: Posts should go in Publish Date order
 					rr.node.reverse();
-					this.setState({ feed: rr.node });
+					this.setState({ 'feed': rr.node });
 				})
 				.catch(err => {
-					this.setState({ error: err });
+					this.setState({ 'error': err });
 				});
 			}
 			else {
-				this.setState({ error: "Not found" });
+				this.setState({ 'feed': [] });
 			}			
 		})
 		.catch(err => {
-			this.setState({ error: err });
+			this.setState({ 'error': err });
 		})
 	}
 
