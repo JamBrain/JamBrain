@@ -188,11 +188,9 @@ class Main extends Component {
 			var slugs = this.cleanLocation(e.detail.location).slugs;
 
 			if ( slugs.join() !== this.state.slugs.join() ) {
-//				console.log('pushState');
 				history.pushState(null, null, e.detail.location.pathname+e.detail.location.search);
 
 				this.setState({ id: 0, slugs: slugs, node: {id: 0} });
-
 				this.fetchNode();
 
 				// Scroll to top
@@ -211,7 +209,6 @@ class Main extends Component {
 	
 	componentDidUpdate( prevProps, prevState ) {
 		var state_copy = Object.assign({},this.state);
-//		console.log('replaceState', state_copy);
 		history.replaceState(state_copy, null);
 	}
 	

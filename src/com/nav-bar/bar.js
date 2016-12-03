@@ -65,7 +65,7 @@ export default class NavBar extends Component {
 			var GameURL = '/events/ludum-dare/37/theme/';
 			// TODO: Check if a participant of the current event
 			MyGame = (
-				<ButtonLink href={GameURL} class="-button" onclick={e => console.log('my game')}>
+				<ButtonLink href={GameURL} class="-button">
 					<SVGIcon>gamepad</SVGIcon>
 					<div class="if-sidebar-block">Slaughter Themes</div>
 				</ButtonLink>
@@ -101,7 +101,7 @@ export default class NavBar extends Component {
 			//'/other/logo/mike/Chicken64.png';
 			let MyURL = '/users/'+user.slug+'/';
 			User = (
-				<ButtonBase class="-user" onclick={e => console.log('user')}>
+				<ButtonBase class="-user">
 					<NavLink href={MyURL}>{Avatar}</NavLink>
 				</ButtonBase>
 			);
@@ -125,7 +125,7 @@ export default class NavBar extends Component {
 			<div class="nav-bar">
 				<div class="-content">
 					<div class="-left">
-						<ButtonLink href="/" class="-logo" onclick={e => console.log('logo')}>
+						<ButtonLink href="/" class="-logo">
 							<SVGIcon class="if-sidebar-block" baseline>ludum</SVGIcon><SVGIcon class="if-sidebar-block" baseline>dare</SVGIcon>
 							<SVGIcon class="if-no-sidebar-block" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-block" baseline>d-are</SVGIcon>							
 						</ButtonLink>
