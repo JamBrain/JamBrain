@@ -54,7 +54,7 @@ export default class SidebarCalendar extends Component {
 	}
 
 	genRow( row ) {
-		return row.map( function(col) {
+		return row.map(col => {
 			let props = {};
 			if ( col.selected ) {
 				props.class = "selected";
@@ -63,13 +63,15 @@ export default class SidebarCalendar extends Component {
 				console.log('cal: ',col); 
 				window.location.hash = "#cal/"+col.year+"/"+col.month+"/"+col.day;
 			};
+			// In case Intl extensions are not available
 			props.title = col.month+"-"+col.day+"-"+col.year;
 			if ( window.Intl ) {
 				// http://stackoverflow.com/a/18648314/5678759
-				let objDate = new Date(props.title);
+				let objDate = new Date(col.year, col.month-1, col.day);
 				props.title = objDate.toLocaleString("en-us", {month:"long", day:"numeric", year:"numeric"});
 			}
 			
+			// Hack
 			var ShowIcon = null;
 			if ( col.year == 2016 && col.month == 12 && (col.day >= 9 && col.day <= 12) ) {
 				ShowIcon = <SVGIcon class="-icon">trophy</SVGIcon>;
@@ -84,13 +86,19 @@ export default class SidebarCalendar extends Component {
 		});
 	}
 	
+	genWeek( row ) {
+		return (
+			<div class="-week">
+			{this.genRow(row)}
+			</div>
+		);
+	}
+	
 	render( props ) {
 		return (
-			<div class="sidebar-base sidebar-calendar"> {
-				this.data.map(
-					row => (<div class="-week">{ this.genRow(row) }</div>)
-				)
-			} </div>
+			<div class="sidebar-base sidebar-calendar">
+			{this.data.map(row => this.genWeek(row))} 
+			</div>
 		);
 	}
 }
