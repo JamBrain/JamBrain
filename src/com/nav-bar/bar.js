@@ -23,11 +23,11 @@ export default class NavBar extends Component {
 		document.body.classList.remove('_static-nav-bar');
 	}
 	
-	shouldComponentUpdate( nextProps, nextState ) {
-		var com = ShallowCompare(this, nextProps, nextState);
-		console.log("FOON",com,this.props, nextProps);
-		return com;
-	}
+//	shouldComponentUpdate( nextProps, nextState ) {
+//		var com = ShallowCompare(this, nextProps, nextState);
+//		console.log("FOON",com,this.props, nextProps);
+//		return com;
+//	}
 	
 	render( {user}, {} ) {
 		var Search = (

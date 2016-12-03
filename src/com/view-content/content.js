@@ -11,9 +11,6 @@ export default class ViewContent extends Component {
 		this.state = {};
 	}
 	
-	componentDidMount() {
-	}
-	
 	getContent( {node, user, path, extra}, state ) {
 		if ( node.name ) {
 			document.title = titleParser.parse(node.name, true);
@@ -44,10 +41,19 @@ export default class ViewContent extends Component {
 	}
 
 	render( props, state ) {
-		return (
-			<div id="content">
-				{ this.getContent( props, state ) }
-			</div>
-		);
+		if ( props.node ) {
+			return (
+				<div id="content">
+					{this.getContent(props, state)}
+				</div>
+			);
+		}
+		else {
+			return (
+				<div id="content">
+					{this.props.children}
+				</div>
+			);
+		}
 	}
 };
