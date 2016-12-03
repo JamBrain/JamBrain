@@ -1,6 +1,8 @@
 export default {
 	Store,
-	Fetch
+	Fetch,
+	Push,
+	Pop
 //	Touch,
 //	Expire
 };
@@ -25,6 +27,22 @@ export function _StoreVal( key, value ) {
 export function _RemoveVal( key ) {
 	delete MEMORY[key];
 }
+
+export function _PushVal( key, value ) {
+	if ( Array.isArray(MEMORY[key]) ) {
+		return MEMORY[key].push(value);
+	}
+	return null;
+}
+export function _PopVal( key, value ) {
+	if ( Array.isArray(MEMORY[key]) ) {
+		var pos = MEMORY[key].indexOf(value);
+		if ( pos !== -1 )
+			return MEMORY[key].splice(pos, 1);
+	}
+	return null;
+}
+
 export function _FetchVal( key ) {
 	return MEMORY[key];
 }
@@ -77,3 +95,11 @@ export function Fetch( key, ttl = null ) {
 	// Return the parsed data
 	return ret;		
 }
+
+export function Push( key, value, ttl = null ) {
+	return _PushVal(key, value);
+}
+export function Pop( key, value, ttl = null ) {
+	return _PopVal(key, value);
+}
+

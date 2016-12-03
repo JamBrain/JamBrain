@@ -18,20 +18,16 @@ export function Get( node ) {
 function _GetMy() {
 	return Fetch.Get('//'+API_DOMAIN+'/vx/node/love/getmy/');
 }
-export function GetMy( user, node ) {
+export function GetMy( node ) {
 	return new Promise((resolve, reject) => {
-		if ( user === 0 ) {
-			reject('Bad user');
-			return;
-		}
-		
-		var key = 'NODE|LOVE|MINE|'+user;
+		var key = 'NODE|LOVE|MINE';
 		
 		var Data = STORAGE.Fetch(key);
 		if ( Data ) {
-			//console.log('found',Data,node,Data.indexOf(node));
-			//resolve({ 'loved': Data.indexOf(node) !== -1, 'count': Data.length });
-			resolve(Data.indexOf(node) !== -1);
+			if ( node )
+				resolve(Data.indexOf(node) !== -1);
+			else
+				resolve(Data);
 		}
 		else {
 			//console.log('fetch');
@@ -42,8 +38,10 @@ export function GetMy( user, node ) {
 				Data = r['my-love'];
 				STORAGE.Store(key, Data);
 				
-				resolve(Data.indexOf(node) !== -1);
-				//resolve({ 'loved': Data.indexOf(node) !== -1, 'count': Data.length });
+				if ( node )
+					resolve(Data.indexOf(node) !== -1);
+				else
+					resolve(Data);
 			})
 			.catch(err => {
 				reject(err);
@@ -52,10 +50,19 @@ export function GetMy( user, node ) {
 	});
 }
 
+export function SetMy( Data ) {
+	var key = 'NODE|LOVE|MINE';
+	return STORAGE.Store(key, Data);
+}
+
 
 export function Add( node ) {
+	STORAGE.Push('NODE|LOVE|MINE', node);
+
 	return Fetch.Get('//'+API_DOMAIN+'/vx/node/love/add/'+node);
 }
 export function Remove( node ) {
+	STORAGE.Pop('NODE|LOVE|MINE', node);
+
 	return Fetch.Get('//'+API_DOMAIN+'/vx/node/love/remove/'+node);
 }
