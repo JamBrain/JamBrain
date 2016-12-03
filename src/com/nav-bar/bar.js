@@ -30,11 +30,12 @@ export default class NavBar extends Component {
 //	}
 	
 	render( {user}, {} ) {
-		var Search = (
-			<ButtonBase class="-icon" onclick={e => { console.log('search'); window.location.hash = "#search"; }}>
-				<SVGIcon baseline>search</SVGIcon>
-			</ButtonBase>
-		);
+		var Search = null;
+//		var Search = (
+//			<ButtonBase class="-icon" onclick={e => { console.log('search'); window.location.hash = "#search"; }}>
+//				<SVGIcon baseline>search</SVGIcon>
+//			</ButtonBase>
+//		);
 		
 		var Calendar = (
 			<ButtonBase class="-button if-no-sidebar-block" onclick={e => { console.log('calendar'); window.location.hash = "#cal"; }}>
@@ -61,12 +62,13 @@ export default class NavBar extends Component {
 			);
 		}
 		else if ( user && user.id ) {
+			var GameURL = '/events/ludum-dare/37/theme/';
 			// TODO: Check if a participant of the current event
 			MyGame = (
-				<ButtonBase class="-button" onclick={e => { console.log('my game'); location.href = '/events/ludum-dare/37/theme/'; }}>
+				<ButtonLink href={GameURL} class="-button" onclick={e => console.log('my game')}>
 					<SVGIcon>gamepad</SVGIcon>
 					<div class="if-sidebar-block">Slaughter Themes</div>
-				</ButtonBase>
+				</ButtonLink>
 			);
 			//"";
 //			 (

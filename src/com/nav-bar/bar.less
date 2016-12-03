@@ -75,11 +75,16 @@
 			margin:auto;
 			height: 3em; /* Required, otherwise top+bottom fills the whole parent div */
 
-			color: @MAJOR_MUTE; /*@MAJOR_LIGHT; /*@MAJOR_COLOR; /*@MAJOR_MUTE_D4;*/
+			&, a, a:visited {
+				color: @MAJOR_MUTE; /*@MAJOR_LIGHT; /*@MAJOR_COLOR; /*@MAJOR_MUTE_D4;*/
+			}
 			
-			& > div {
+			& > div,
+			& > a,
+			& > a:visited {
 				margin-left: 0.5em;
 				float:left;
+				text-decoration: none;
 
 				transition: background 0.1s, color 0.1s;
 			
