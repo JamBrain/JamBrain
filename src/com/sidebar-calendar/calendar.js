@@ -24,7 +24,7 @@ export default class SidebarCalendar extends Component {
 		if ( nextDay < 1 ) {
 			let lastMonth = new Date(today.getFullYear(),today.getMonth(),0);
 			monthEndsOn = lastMonth.getDate();
-			console.log( lastMonth.getFullYear(), lastMonth.getMonth(), lastMonth.getDate(), lastMonth.getDay() );
+			//console.log( lastMonth.getFullYear(), lastMonth.getMonth(), lastMonth.getDate(), lastMonth.getDay() );
 			nextDay = lastMonth.getDate() - lastMonth.getDay();
 		}
 		
