@@ -1,4 +1,6 @@
 import { h, Component } 				from 'preact/preact';
+import ShallowCompare	 				from 'shallow-compare/index';
+
 import ButtonBase						from '../button-base/base';
 import ButtonLink						from '../button-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
@@ -12,6 +14,20 @@ export default class NavBar extends Component {
 	constructor( props ) {
 		super(props);
 	}
+
+	componentDidMount() {
+		document.body.classList.add('_use-nav-bar');
+	}
+	componentWillUnmount() {
+		document.body.classList.remove('_use-nav-bar');
+		document.body.classList.remove('_static-nav-bar');
+	}
+	
+//	shouldComponentUpdate( nextProps, nextState ) {
+//		var com = ShallowCompare(this, nextProps, nextState);
+//		console.log("FOON",com,this.props, nextProps);
+//		return com;
+//	}
 	
 	render( {user}, {} ) {
 		var Search = (
@@ -127,35 +143,11 @@ export default class NavBar extends Component {
 			</div>
 		);
 	}
-//							<div class="-count">24</div>
-
-//					<div class="-right">
-//						<CoreButton class="-button if-no-sidebar-inline"><SVGIcon>calendar</SVGIcon><span class="if-small-hide">Schedule</span></CoreButton>
-//						<CoreButton class="-button if-no-sidebar-inline"><SVGIcon>fire</SVGIcon><span class="if-small-hide">Trending</span></CoreButton>
-//						<CoreButton class="-button"><SVGIcon>search</SVGIcon></CoreButton>
-//						<CoreButton class="-button"><SVGIcon>question</SVGIcon> What is this?</CoreButton>
-//						<CoreButton class="-button" onClick={ e => { console.log("moop"); } }><SVGIcon>user</SVGIcon><span>Register</span></CoreButton>
-//						<CoreButton class="-button" keepFocus><SVGIcon>key</SVGIcon><span>Login</span></CoreButton>
-//					</div>
-
-//				<div>
-//					<CoreButton class="button" onClick={ navbar_Static }>Static</CoreButton>
-//					<CoreButton class="button" onClick={ navbar_Float }>Float</CoreButton>
-//					<CoreButton class="button" onClick={ e => { document.activeElement.blur(); } }>Blank</CoreButton>
-//				</div>
-	
-	componentDidMount() {
-		document.body.classList.add('_use-nav-bar');
-	}
-	componentWillUnmount() {
-		document.body.classList.remove('_use-nav-bar');
-		document.body.classList.remove('_static-nav-bar');
-	}
 }
 
-export function navbar_Float() {
-	document.body.classList.remove('_static-nav-bar');
-}
-export function navbar_Static() {
-	document.body.classList.add('_static-nav-bar');
-}
+//export function navbar_Float() {
+//	document.body.classList.remove('_static-nav-bar');
+//}
+//export function navbar_Static() {
+//	document.body.classList.add('_static-nav-bar');
+//}

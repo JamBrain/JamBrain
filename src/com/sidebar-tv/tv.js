@@ -1,4 +1,6 @@
 import { h, Component } 				from 'preact/preact';
+import ShallowCompare	 				from 'shallow-compare/index';
+
 import SVGIcon 							from 'com/svg-icon/icon';
 import NavSpinner						from 'com/nav-spinner/spinner';
 
@@ -21,8 +23,16 @@ export default class SidebarTV extends Component {
 			(<div></div>),
 		];
 	}
-	
+
+//	shouldComponentUpdate( nextProps, nextState ) {
+//		var com = ShallowCompare(this, nextProps, nextState);
+//		console.log("SideBarTV",com,this.state, nextState);
+//		return com;
+//	}
+		
 	componentDidMount() {
+//		console.log("SideBarTV: componentDidMount");
+		
 		fetch('//jammer.tv/v1/live.php/ludum-dare+game-jam+game-dev/', {method: 'POST' /*, mode:'no-cors'*/})
 		.then(r => {
 			if ( r )
@@ -42,6 +52,10 @@ export default class SidebarTV extends Component {
 			});
 			return err;
 		});
+	}
+
+	componentWillUnmount() {
+//		console.log("SideBarTV: componentWillUnmount");
 	}
 	
 	setActive( id, e ) {

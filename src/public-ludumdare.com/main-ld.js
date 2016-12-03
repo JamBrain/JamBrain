@@ -26,7 +26,7 @@ window.SITE_ROOT = 1;
 class Main extends Component {
 	constructor( props ) {
 		super(props);
-				
+
 		var clean = this.cleanLocation(window.location);
 		if ( window.location.origin+clean.path !== window.location.href ) {
 			console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
@@ -88,29 +88,6 @@ class Main extends Component {
 		this.setState({ user: null });
 		this.fetchData();
 	}
-
-//	makeSlug( str ) {
-//		str = str.toLowerCase();
-//		str = str.replace(/%[a-f0-9]{2}/g,'-');
-//		str = str.replace(/[^a-z0-9]/g,'-');
-//		str = str.replace(/-+/g,'-');
-//		str = str.replace(/^-|-$/g,'');
-//		return str;
-//	}
-//
-//	makeClean( str ) {
-//		str = str.toLowerCase();
-//		str = str.replace(/%[a-f0-9]{2}/g,'-');		// % codes = -
-//		str = str.replace(/[^a-z0-9\/#]/g,'-');		// non a-z, 0-9, #, or / with -
-//		str = str.replace(/-+/g,'-');				// multiple -'s to a single -
-//		str = str.replace(/\/+/g,'/');				// multiple /'s to a single /
-////		str = str.replace(/^-|-$/g,'');				// Prefix and suffix -'s with nothing
-//		return str;
-//	}
-//	
-//	trimSlashes( str ) {
-//		return str.replace(/^\/|\/$/g,'');
-//	}
 
 	cleanLocation( location ) {
 		// Clean the URL
@@ -237,35 +214,37 @@ class Main extends Component {
 //		console.log('replaceState', state_copy);
 		history.replaceState(state_copy, null);
 	}
+	
 
 	render( {}, {node, user, path, extra, error} ) {
+		var Content = null;
 		if ( node.id ) {
-			let DialogCode = this.getDialog();
-			let AlertCode = <div />;
-			
-			return (
-				<div id="layout">
-					<NavBar user={user} />
-					<div class="view-single">
-						<div id="header" />
-						<div id="content-sidebar">
-							<ViewContent node={node} user={user} path={path} extra={extra} />
-							<ViewSidebar />
-						</div>
-						<div id="footer"></div>
-					</div>					
-					{ DialogCode }
-					{ AlertCode }
-				</div>
+			Content = (
+				<ViewContent node={node} user={user} path={path} extra={extra} />
 			);
 		}
 		else {
-			return (
-				<div id="layout">
-					{ error ? error : <NavSpinner /> }
-				</div>
+			Content = (
+				<ViewContent>
+					{error ? error : <NavSpinner />}
+				</ViewContent>
 			);
 		}
+
+		return (
+			<div id="layout">
+				<NavBar user={user} />
+				<div class="view-single">
+					<div id="header" />
+					<div id="content-sidebar">
+						{Content}
+						<ViewSidebar />
+					</div>
+					<div id="footer"></div>
+				</div>					
+				{this.getDialog()}
+			</div>
+		);
 	}
 };
 
