@@ -21,8 +21,8 @@ export default class DialogBase extends Component {
 //		window.addEventListener('focus', this._eventFocus);
 	}
 	
-	componentDidUnmount() {
-//		console.log("DialogBase: componentDidUnmount");
+	componentWillUnmount() {
+//		console.log("DialogBase: componentWillUnmount");
 		document.body.removeEventListener('mousewheel', this._eventWheel);
 		document.body.removeEventListener('keydown', this._eventKey);
 //		window.removeEventListener('focus', this._eventFocus);
