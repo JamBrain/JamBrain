@@ -25,8 +25,10 @@ export default class ContentEventSlaughter extends Component {
 		this.submitFlagVote = this.submitFlagVote.bind(this);
 
 		this.openLink = this.openLink.bind(this);
+		this.modifyVote = this.modifyVote.bind(this);
 
 		this._renderMyIdea = this._renderMyIdea.bind(this);
+		this._modifyVote = this._modifyVote.bind(this);
 	}
 	
 	componentDidMount() {
