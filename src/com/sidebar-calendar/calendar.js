@@ -75,7 +75,7 @@ export default class SidebarCalendar extends Component {
 			
 			// Hack
 			var ShowIcon = null;
-			if ( col.year == 2016 && col.month == 12 && (col.day >= 9 && col.day <= 12) ) {
+			if ( col.year == 2016 && col.month == 11 && (col.day >= 9 && col.day <= 12) ) {
 				ShowIcon = <SVGIcon class="-icon">trophy</SVGIcon>;
 			}
 
