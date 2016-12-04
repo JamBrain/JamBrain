@@ -52,7 +52,7 @@ TARGET_DEPS			:=	$(OUT_FOLDERS) $(TARGET_FILES)
 
 
 # Tools #
-BUBLE_ARGS			:=	--no modules --jsx h
+BUBLE_ARGS			:=	--no modules --jsx h --objectAssign Object.assign
 BUBLE				=	buble $(BUBLE_ARGS) $(1) -o $(2)
 # ES6 Compiler: https://buble.surge.sh/guide/
 ROLLUP_ARGS			:=	-c src/config/rollup.config.js
