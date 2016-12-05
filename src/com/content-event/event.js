@@ -38,19 +38,19 @@ export default class ContentEvent extends Component {
 				if ( extra.length && extra[0] === 'theme' ) {
 					switch (ThemeMode) {
 						case 1:
-							EventBody = <ContentEventIdea node={node} user={user} />
+							EventBody = <ContentEventIdea node={node} user={user} path={path} extra={extra} />
 							break;
 						case 2:
-							EventBody = <ContentEventSlaughter node={node} user={user} />
+							EventBody = <ContentEventSlaughter node={node} user={user} path={path} extra={extra} />
 							break;
 						case 3:
-							EventBody = <ContentEventFusion node={node} user={user} />
+							EventBody = <ContentEventFusion node={node} user={user} path={path} extra={extra} />
 							break;
 						case 4:
-							EventBody = <ContentEventList node={node} user={user} />
+							EventBody = <ContentEventList node={node} user={user} path={path} extra={extra} />
 							break;
 //						case 5:
-//							EventBody = <ContentEventFinal node={node} user={user} />
+//							EventBody = <ContentEventFinal node={node} user={user} path={path} extra={extra} />
 //							break;
 						default:
 							EventBody = (
