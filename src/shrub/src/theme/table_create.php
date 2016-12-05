@@ -2,7 +2,13 @@
 
 // *** //
 
+const DB_TYPE_THEME_PAGE = 'INT UNSIGNED NOT NULL';
+const DB_TYPE_THEME_SCORE = 'DOUBLE NOT NULL';
+const DB_TYPE_THEME_VOTE = 'INT NOT NULL';
+
+
 // TODO: Fixme. user should be author
+// TODO: Fixme. value should be vote
 
 $table = 'SH_TABLE_THEME_IDEA';
 if ( in_array($table, $TABLE_LIST) ) {
@@ -22,7 +28,7 @@ if ( in_array($table, $TABLE_LIST) ) {
 					INDEX(user),
 				theme ".DB_TYPE_UNICODE(64).",
 				timestamp ".DB_TYPE_TIMESTAMP.",
-				score DOUBLE NOT NULL,
+				score ".DB_TYPE_THEME_SCORE.",
 					INDEX(score)
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
@@ -61,7 +67,7 @@ if ( in_array($table, $TABLE_LIST) ) {
 				author ".DB_TYPE_ID.",
 					INDEX(author),
 					UNIQUE `author_idea` (author, idea),
-				value INT NOT NULL,
+				value ".DB_TYPE_THEME_VOTE.",
 					INDEX(value),
 				timestamp ".DB_TYPE_TIMESTAMP."
 			)".DB_CREATE_SUFFIX);
@@ -129,52 +135,55 @@ if ( in_array($table, $TABLE_LIST) ) {
 // *** //
 
 
-//$table = 'SH_TABLE_THEME';
-//if ( in_array($table, $TABLE_LIST) ) {
-//	$ok = null;
-//
-//	table_Init($table);
-//	switch ( $TABLE_VERSION ) {
-//	case 0:
-//		$ok = table_Create( $table,
-//			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
-//				id ".DB_TYPE_ID." UNIQUE,
-//				node ".DB_TYPE_ID.",
-//					INDEX(node),
-//				theme ".DB_TYPE_UNICODE(64).",
-//				timestamp ".DB_TYPE_TIMESTAMP.",
-//				page INT UNSIGNED NOT NULL,
-//				score DOUBLE NOT NULL,
-//					INDEX (score)
-//			)".DB_CREATE_SUFFIX);
-//		if (!$ok) break; $TABLE_VERSION++;
-//	};
-//	table_Exit($table);
-//}
+$table = 'SH_TABLE_THEME_LIST';
+if ( in_array($table, $TABLE_LIST) ) {
+	$ok = null;
 
-//$table = 'SH_TABLE_THEME_VOTE';
-//if ( in_array($table, $TABLE_LIST) ) {
-//	$ok = null;
-//
-//	table_Init($table);
-//	switch ( $TABLE_VERSION ) {
-//	case 0:
-//		$ok = table_Create( $table,
-//			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
-//				id ".DB_TYPE_UID.",
-//				node ".DB_TYPE_ID.",
-//					INDEX(node),
-//				author ".DB_TYPE_ID.",
-//					INDEX(author),
-//					UNIQUE `author_node` (author, node),
-//				value INT NOT NULL,
-//					INDEX (value),
-//				timestamp ".DB_TYPE_TIMESTAMP."
-//			)".DB_CREATE_SUFFIX);
-//		if (!$ok) break; $TABLE_VERSION++;
-//	};
-//	table_Exit($table);
-//}
+	table_Init($table);
+	switch ( $TABLE_VERSION ) {
+	case 0:
+		$ok = table_Create( $table,
+			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
+				id ".DB_TYPE_UID.",
+				node ".DB_TYPE_ID.",
+					INDEX(node),
+				idea ".DB_TYPE_ID.",
+				theme ".DB_TYPE_UNICODE(64).",
+				page ".DB_TYPE_THEME_PAGE.",
+				score ".DB_TYPE_THEME_SCORE.",
+					INDEX (score),
+				timestamp ".DB_TYPE_TIMESTAMP."
+			)".DB_CREATE_SUFFIX);
+		if (!$ok) break; $TABLE_VERSION++;
+	};
+	table_Exit($table);
+}
+
+$table = 'SH_TABLE_THEME_LIST_VOTE';
+if ( in_array($table, $TABLE_LIST) ) {
+	$ok = null;
+
+	table_Init($table);
+	switch ( $TABLE_VERSION ) {
+	case 0:
+		$ok = table_Create( $table,
+			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
+				id ".DB_TYPE_UID.",
+				node ".DB_TYPE_ID.",
+					INDEX(node),
+				author ".DB_TYPE_ID.",
+					INDEX(author),
+				theme ".DB_TYPE_ID.",
+					INDEX(theme),
+					UNIQUE `author_theme` (author, theme),
+				vote ".DB_TYPE_THEME_VOTE.",
+					INDEX (vote),
+				timestamp ".DB_TYPE_TIMESTAMP."
+			)".DB_CREATE_SUFFIX);
+		if (!$ok) break; $TABLE_VERSION++;
+	};
+	table_Exit($table);
+}
 
 // *** //
 
@@ -187,11 +196,12 @@ if ( in_array($table, $TABLE_LIST) ) {
 //	case 0:
 //		$ok = table_Create( $table,
 //			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
-//				id ".DB_TYPE_ID." UNIQUE,
+//				id ".DB_TYPE_UID.",
 //				node ".DB_TYPE_ID.",
 //					INDEX(node),
+//				idea ".DB_TYPE_ID.",
 //				theme ".DB_TYPE_UNICODE(64).",
-//				score DOUBLE NOT NULL,
+//				score ".DB_TYPE_THEME_SCORE.",
 //					INDEX (score)
 //			)".DB_CREATE_SUFFIX);
 //		if (!$ok) break; $TABLE_VERSION++;

@@ -16,7 +16,7 @@ export function Get( node ) {
 }
 
 function _GetMy() {
-	return Fetch.Get('//'+API_DOMAIN+'/vx/node/love/getmy/');
+	return Fetch.Get('//'+API_DOMAIN+'/vx/node/love/getmy');
 }
 export function GetMy( node ) {
 	return new Promise((resolve, reject) => {

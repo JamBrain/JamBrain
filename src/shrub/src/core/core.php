@@ -186,13 +186,13 @@ function core_RemovePathDotsFromArray($arr) {
 function _core_GetAPIRequest() {
 	// If PATH_INFO is set, then Apache figured out our parts for us //
 	if ( isset($_SERVER['PATH_INFO']) ) {
-		$ret = ltrim(rtrim(filter_var($_SERVER['PATH_INFO'],FILTER_SANITIZE_URL),'/'),'/');
-		if ( empty($ret) ) {
+		$ret = ltrim(rtrim(filter_var($_SERVER['PATH_INFO'], FILTER_SANITIZE_URL), '/'), '/');
+		if ( empty($ret) && $val !== '0' ) {
 			return [''];
 		}
 		else {
-			return array_values(array_filter(explode('/',$ret),function ($val) {
-				return !(empty($val) || ($val[0] === '.'));
+			return array_values(array_filter(explode('/',$ret), function ($val) {
+				return !((empty($val) && $val !== '0') || ($val[0] === '.'));
 			}));
 		}
 	}
