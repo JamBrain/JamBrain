@@ -47,7 +47,7 @@ export default class ContentEvent extends Component {
 							EventBody = <ContentEventFusion node={node} user={user} />
 							break;
 						case 4:
-							EventBody = <ContentEventTheme node={node} user={user} />
+							EventBody = <ContentEventList node={node} user={user} />
 							break;
 //						case 5:
 //							EventBody = <ContentEventFinal node={node} user={user} />

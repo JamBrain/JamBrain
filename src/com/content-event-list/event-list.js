@@ -35,9 +35,18 @@ export default class ContentEventList extends Component {
 	}	
 	
 	renderList( list ) {
-		
+		if ( this.state.lists[list] ) {
+			return (
+				<div>
+					<h3>{this.state.names[list]}</h3>
+					{this.state.lists[list].map(r => {
+						return <div>{r.theme}</div>;
+					})}
+				</div>
+				);
+		}
+		return null;
 	}
-	
 	
 	render( {node, user, path, extra}, {lists, error} ) {
 		var Title = <h3>Theme Voting Round</h3>;
@@ -46,10 +55,21 @@ export default class ContentEventList extends Component {
 			return (
 				<div class="-body">
 					{Title}
-					<div>Round begins soon...</div>
-					{this.renderList(1);}
-					
-					<div>{"Sorry! Still running behind. Needed a few hours of sleep."}</div>
+					<div class="_hidden">Round begins soon...</div>
+					{this.renderList(1)}
+					<br />
+					<div>{"(Sorry! Voting isn't ready yet, but here's 1st round list)"}</div>
+				</div>
+			);
+		}
+		else if ( lists ) {
+			return (
+				<div class="-body">
+					{Title}
+					<div class="_hidden">Please log in</div>
+					{this.renderList(1)}
+					<br />
+					<div>{"(Sorry! Voting isn't ready yet, but here's 1st round list)"}</div>
 				</div>
 			);
 		}
@@ -57,7 +77,7 @@ export default class ContentEventList extends Component {
 			return (
 				<div class="-body">
 					{Title}
-					<div>Please log in</div>
+					<div>Problem</div>
 				</div>
 			);
 		}

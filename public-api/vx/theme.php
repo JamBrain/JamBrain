@@ -426,10 +426,10 @@ switch ( $action ) {
 					$RESPONSE['names'] = [];
 					foreach ( $pages as $page ) {
 						if ( isset($event['meta']["theme-page-name-$page"]) ) {
-							$RESPONSE['names'][] = $event['meta']["theme-page-name-$page"];
+							$RESPONSE['names'][$page] = $event['meta']["theme-page-name-$page"];
 						}
 						else {
-							$RESPONSE['names'][] = "Round $page";
+							$RESPONSE['names'][$page] = "Round $page";
 						}
 					}
 

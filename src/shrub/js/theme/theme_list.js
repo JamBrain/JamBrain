@@ -5,5 +5,5 @@ export default {
 };
 
 export function Get( event ) {
-	return doGet('//'+API_DOMAIN+'/vx/theme/list/get/'+event);
+	return Fetch.Get('//'+API_DOMAIN+'/vx/theme/list/get/'+event);
 }
