@@ -42,7 +42,7 @@ export default class ContentEventList extends Component {
 				this.setState({ 'votes': r.votes });
 			}
 			else {
-				this.setState({ 'votes': [] });
+				this.setState({ 'votes': null });
 			}
 		})
 		.catch(err => {
@@ -50,14 +50,23 @@ export default class ContentEventList extends Component {
 		});
 	}
 	
+	addToVotes( id, value ) {
+		var votes = Object.assign({}, this.state.votes);
+		console.log('b',votes);
+		
+		votes[id] = value;
+		
+		console.log('a',votes);
+		
+		this.setState(votes);
+	}
+	
 	_submitVote( command, id, e ) {
 		return $ThemeListVote[command](id)
 		.then(r => {
+			console.log(r);
 			if ( r.status === 200 ) {
-//				this.state.votes[this.state.current] = r.value;
-//				this.addToRecentQueue(this.state.current);
-//				
-//				this.pickRandomIdea();
+				this.addToVotes(r.id, r.value);
 			}
 			else {
 				location.href = "#expired";

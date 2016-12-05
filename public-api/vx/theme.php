@@ -154,7 +154,7 @@ function doThemeListVote( $value ) {
 					if ( isset($event['meta']["theme-page-mode-$page"]) && intval($event['meta']["theme-page-mode-$page"]) === 1 ) {
 						$author_id = userAuth_GetId();
 						if ( $author_id ) {
-							$RESPONSE['id'] = themeListVote_Add($item['node'], $author_id, $theme_id, $value);
+							$RESPONSE['id'] = themeListVote_Add($item['node'], $author_id, $theme_id, $value) ? $theme_id : 0;
 							$RESPONSE['value'] = $value;
 						}
 						else {
