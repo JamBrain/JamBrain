@@ -454,6 +454,65 @@ switch ( $action ) {
 				}
 				break; // case 'get: //theme/list/get
 
+			case 'vote': //theme//list/vote
+				$parent_action = $action;
+				$action = json_ArgShift();
+				switch ( $action ) {
+//					case 'get': //theme/list/vote/get
+//						json_ValidateHTTPMethod('GET');
+//						$event_id = intval(json_ArgGet(0));
+//
+//						if ( $event = validateEvent($event_id) ) {
+//							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) >= 2 ) {
+//								$author_id = userAuth_GetId();
+//								if ( $author_id ) {
+//									$threshold = 0.0;
+//									$RESPONSE['ideas'] = themeIdeaVote_GetIdeas($event_id, $threshold);
+//								}
+//								else {
+//									json_EmitFatalError_Permission(null, $RESPONSE);
+//								}
+//							}
+//							else {
+//								json_EmitFatalError_BadRequest("Event is not Slaughtering", $RESPONSE);
+//							}
+//						}
+//						break; // case 'get': //theme/list/vote/get
+
+					case 'getmy': //theme/list/vote/getmy
+						json_ValidateHTTPMethod('GET');
+						$event_id = intval(json_ArgGet(0));
+
+						if ( $event = validateEvent($event_id) ) {
+							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) >= 4 ) {
+								$author_id = userAuth_GetId();
+								if ( $author_id ) {
+									$RESPONSE['votes'] = themeListVote_GetMy($event_id, $author_id);
+								}
+								else {
+									json_EmitFatalError_Permission(null, $RESPONSE);
+								}
+							}
+							else {
+								json_EmitFatalError_BadRequest("Event is not Voting", $RESPONSE);
+							}
+						}
+						break; // case 'getmy': //theme/list/vote/getmy
+
+//					case 'yes': //theme/list/vote/yes
+//						doThemeIdeaVote(1);
+//						break; // case 'yes': //theme/list/vote/yes
+//
+//					case 'no': //theme/list/vote/no
+//						doThemeIdeaVote(0);
+//						break; // case 'no': //theme/list/vote/no
+//
+//					case 'flag': //theme/list/vote/flag
+//						doThemeIdeaVote(-1);
+//						break; // case 'flag': //theme/list/vote/flag
+				}
+				break; // case 'vote': //theme/list/vote
+
 			default:
 				json_EmitFatalError_Forbidden(null, $RESPONSE);
 				break; // default
