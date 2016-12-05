@@ -37,7 +37,6 @@ export default class ContentEventList extends Component {
 
 		$ThemeListVote.GetMy(this.props.node.id)
 		.then(r => {
-			//console.log(r);
 			if ( r.votes ) {
 				this.setState({ 'votes': r.votes });
 			}
@@ -52,19 +51,13 @@ export default class ContentEventList extends Component {
 	
 	addToVotes( id, value ) {
 		var votes = Object.assign({}, this.state.votes);
-		console.log('b',votes);
-		
 		votes[id] = value;
-		
-		console.log('a',votes);
-		
-		this.setState(votes);
+		this.setState({ 'votes': votes });
 	}
 	
 	_submitVote( command, id, e ) {
 		return $ThemeListVote[command](id)
 		.then(r => {
-			console.log(r);
 			if ( r.status === 200 ) {
 				this.addToVotes(r.id, r.value);
 			}
