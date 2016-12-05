@@ -81,48 +81,70 @@ function doThemeIdeaVote( $value ) {
 	}
 }
 
+
+/// Internal version used to extract pages from the raw queries
+function _getListPages( $list ) {
+	$pages = [];
+
+	foreach ( $list as &$item ) {
+		$page = intval($item['page']);
+		if ( !in_array($page, $pages) ) {
+			$pages[] = $page;
+		}
+	}
+
+	return $pages;
+}
+
+function getLists( $event_id, $can_see_scores = false ) {
+	$list = themeList_GetByNode($event_id);
+
+	if ( !isset($list) ) {
+		return null;
+	}
+
+	// Given our list, figure out what pages we have
+	$pages = _getListPages($list);
+
+	// Make arrays for each page
+	$lists = [];
+	foreach ( $pages as &$page_id ) {
+		$lists[$page_id] = [];
+	}
+
+	// Populate the pages
+	foreach ( $list as &$item ) {
+		$lists[$item['page']][] = [
+			'id' => $item['id'],
+			'node' => $item['node'],
+			'idea' => $item['idea'],
+			'theme' => $item['theme']
+		];
+
+		if ( $can_see_scores ) {
+			$lists[$item['page']]['score'] = $item['score'];
+		}
+	}
+	return $lists;
+}
+
+function getListPages( $lists ) {
+	if ( !isset($lists) ) {
+		return [];
+	}
+
+	return array_keys($lists);
+}
+
+
+
 // Do Actions
 $action = json_ArgShift();
 switch ( $action ) {
-	// Regular Voting Rounds //
-	case 'get':
-//		json_ValidateHTTPMethod('GET');
-//		$event_id = intval(json_ArgGet(0));
-//		
-//		/// @todo Confirm valid event_id
-//		
-//		if ( $event_id !== 0 ) {
-//			$RESPONSE['themes'] = ['bacon'];
-//		}
-//		else {
-//			json_EmitFatalError_BadRequest(null,$RESPONSE);
-//		}
-		break;
-	case 'set':
-//		json_ValidateHTTPMethod('POST');
-//
-//		if ( userAuth_IsAdmin() ) {
-//			json_EmitFatalError_NotImplemented(null,$RESPONSE);
-//			
-//			/// @todo sanitize (don't let API create fields)
-//			/// @todo Do a set
-//			
-//			if ( false ) {
-//				json_RespondCreated();
-//			}
-//			else {
-//				json_EmitFatalError_Server(null,$RESPONSE);
-//			}
-//		}
-//		else {
-//			json_EmitFatalError_Permission(null,$RESPONSE);
-//		}
-		break;
-	
-	case 'stats': 
+	case 'stats': //theme/stats
 		json_ValidateHTTPMethod('GET');
 		$event_id = intval(json_ArgGet(0));
-		
+
 		if ( $event = validateEvent($event_id) ) {
 			$ret = [];
 
@@ -137,21 +159,38 @@ switch ( $action ) {
 //					$ret['idea'] = themeIdeaCompare_GetStats($event_id);
 //				}
 			}
-			
+
 			$RESPONSE['stats'] = $ret;
 		}
-	
-		break;
+		break;	// case 'stats': //theme/stats
 
-	// Theme Suggestions //
-	case 'idea': {
+	case 'history': //theme/history
 		$parent_action = $action;
 		$action = json_ArgShift();
 		switch ( $action ) {
-			case 'getmy':
+			case 'get': //theme/history/get
+				json_ValidateHTTPMethod('GET');
+
+				// TODO: Cache history
+
+				$RESPONSE['history'] = themeHistory_Get();
+				break; // case 'get': //theme/history/get
+
+			default:
+				json_EmitFatalError_Forbidden(null, $RESPONSE);
+				break; // default
+		};
+		break; // case 'history': //theme/history
+
+	// Theme Suggestions
+	case 'idea': //theme/idea
+		$parent_action = $action;
+		$action = json_ArgShift();
+		switch ( $action ) {
+			case 'getmy': //theme/idea/getmy
 				json_ValidateHTTPMethod('GET');
 				$event_id = intval(json_ArgGet(0));
-				
+
 				if ( $event = validateEvent($event_id) ) {
 					$author_id = userAuth_GetId();
 					if ( $author_id ) {
@@ -162,9 +201,9 @@ switch ( $action ) {
 						json_EmitFatalError_Permission(null, $RESPONSE);
 					}
 				}
-				break;
+				break; // case 'getmy: //theme/idea/getmy
 
-//			case 'get':
+//			case 'get': //theme/idea/get
 //				json_ValidateHTTPMethod('GET');
 //				$event_id = intval(json_ArgGet(0));
 //				
@@ -190,12 +229,11 @@ switch ( $action ) {
 //				else {
 //					json_EmitFatalError_BadRequest(null, $RESPONSE);
 //				}
-//
-//				break;
+//				break; // case 'get': //theme/idea/get
 
-			case 'add':
+			case 'add': //theme/idea/add
 				json_ValidateHTTPMethod('POST');
-	
+
 				$user = userAuth_GetId();
 				if ( !$user ) {
 					json_EmitFatalError_Permission(null, $RESPONSE);
@@ -209,7 +247,7 @@ switch ( $action ) {
 				if ( $idea !== $_POST['idea'] ) {
 					json_EmitFatalError_BadRequest("'idea' is invalid", $RESPONSE);
 				}
-					
+
 				$event_id = intval(json_ArgGet(0));
 				if ( $event = validateEvent($event_id) ) {
 					// Is Event Accepting Suggestions ?
@@ -228,11 +266,11 @@ switch ( $action ) {
 						json_EmitFatalError_BadRequest("Event is not accepting Theme Suggestions", $RESPONSE);
 					}
 				}
-				break;
+				break; // case 'add': //theme/idea/add
 
-			case 'remove':
+			case 'remove': //theme/idea/remove
 				json_ValidateHTTPMethod('POST');
-	
+
 				$user = userAuth_GetId();
 				if ( !$user ) {
 					json_EmitFatalError_Permission(null, $RESPONSE);
@@ -246,16 +284,16 @@ switch ( $action ) {
 				if ( !$id ) {
 					json_EmitFatalError_BadRequest(null, $RESPONSE);
 				}
-					
+
 				$event_id = intval(json_ArgGet(0));
 				if ( $event = validateEvent($event_id) ) {
 					// Is Event Accepting Suggestions ?
 					if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) === 1 ) {
 						$RESPONSE['response'] = themeIdea_Remove($id, $user);
-						
+
 						$RESPONSE['ideas'] = themeIdea_Get($event_id, $user);
 						$RESPONSE['count'] = count($RESPONSE['ideas']);
-						
+
 						if ( $RESPONSE['response'] )
 							json_RespondCreated();
 					}
@@ -263,13 +301,13 @@ switch ( $action ) {
 						json_EmitFatalError_BadRequest("Event is not accepting Theme Suggestions", $RESPONSE);
 					}
 				}
-				break;
-				
-			case 'vote':
+				break; // case 'remove': //theme/idea/remove
+
+			case 'vote': //theme/idea/vote
 				$parent_action = $action;
 				$action = json_ArgShift();
 				switch ( $action ) {
-					case 'get':
+					case 'get': //theme/idea/vote/get
 						json_ValidateHTTPMethod('GET');
 						$event_id = intval(json_ArgGet(0));
 
@@ -288,9 +326,9 @@ switch ( $action ) {
 								json_EmitFatalError_BadRequest("Event is not Slaughtering", $RESPONSE);
 							}
 						}
-						break;
-						
-					case 'getmy':
+						break; // case 'get': //theme/idea/vote/get
+
+					case 'getmy': //theme/idea/vote/getmy
 						json_ValidateHTTPMethod('GET');
 						$event_id = intval(json_ArgGet(0));
 
@@ -308,33 +346,182 @@ switch ( $action ) {
 								json_EmitFatalError_BadRequest("Event is not Slaughtering", $RESPONSE);
 							}
 						}
-						break;
+						break; // case 'getmy': //theme/idea/vote/getmy
 
-					case 'yes':
+					case 'yes': //theme/idea/vote/yes
 						doThemeIdeaVote(1);
-						break;
+						break; // case 'yes': //theme/idea/vote/yes
 
-					case 'no':
+					case 'no': //theme/idea/vote/no
 						doThemeIdeaVote(0);
-						break;
-						
-					case 'flag':
+						break; // case 'no': //theme/idea/vote/no
+
+					case 'flag': //theme/idea/vote/flag
 						doThemeIdeaVote(-1);
-						break;
+						break; // case 'flag': //theme/idea/vote/flag
 				}
-				
-				break;
+				break; // case 'vote': //theme/idea/vote
 				
 			default:
-				json_EmitFatalError_Forbidden(null,$RESPONSE);
-				break;
+				json_EmitFatalError_Forbidden(null, $RESPONSE);
+				break; // default
 		};
-		break;
-	}
+		break; // case 'idea': //theme/idea
+
+	// Theme (List) Voting
+	case 'list': //theme/list
+		$parent_action = $action;
+		$action = json_ArgShift();
+		switch ( $action ) {
+//			case 'getmy': //theme/list/getmy
+//				json_ValidateHTTPMethod('GET');
+//				$event_id = intval(json_ArgGet(0));
+//				
+//				if ( $event = validateEvent($event_id) ) {
+//					$author_id = userAuth_GetId();
+//					if ( $author_id ) {
+//						$RESPONSE['ideas'] = themeList_GetMy($event_id, $author_id);
+//						$RESPONSE['count'] = count($RESPONSE['ideas']);
+//					}
+//					else {
+//						json_EmitFatalError_Permission(null, $RESPONSE);
+//					}
+//				}
+//				break; // case 'getmy: //theme/list/getmy
+
+			case 'get': //theme/list/get
+				json_ValidateHTTPMethod('GET');
+				$event_id = intval(json_ArgGet(0));
+				
+				if ( $event = validateEvent($event_id) ) {
+					$page_id = json_ArgGet(1);
+
+					// If no page specified, get everything
+					if ( $page_id === '' ) {
+						$page_id = null;
+					}
+					// Otherwise, get specific page
+					else {
+						$page_id = intval($page_id);
+
+						// Pages start at 1, *NOT* zero
+						if ( !$page_id ) {
+							json_EmitFatalError_BadRequest("Invalid Page: $page_id", $RESPONSE);
+						}
+					}
+
+					$lists = getLists($event_id);
+					$pages = getListPages($lists);
+
+					$allowed = [];
+					foreach ( $pages as $page ) {
+						if ( isset($event['meta']["theme-page-mode-$page"]) && $event['meta']["theme-page-mode-$page"] > 0 ) {
+							$allowed[] = $page;
+						}
+					}
+
+					$RESPONSE['allowed'] = $allowed;
+					$RESPONSE['pages'] = count($pages);
+
+					$RESPONSE['names'] = [];
+					foreach ( $pages as $page ) {
+						if ( isset($event['meta']["theme-page-name-$page"]) ) {
+							$RESPONSE['names'][$page] = $event['meta']["theme-page-name-$page"];
+						}
+						else {
+							$RESPONSE['names'][$page] = "Round $page";
+						}
+					}
+
+					// So what do we want anyway?
+					if ( is_null($page_id) ) {
+						$request = $pages;
+					}
+					else if ( in_array($page_id, $pages) ) {
+						$request = [$page_id];
+					}
+					else {
+						json_EmitFatalError_BadRequest("Invalid Page: $page_id", $RESPONSE);
+					}
+
+					// Emit the list
+					$RESPONSE['lists'] = [];
+					foreach ( $allowed as $page ) {
+						if ( in_array($page, $request) ) {
+							$RESPONSE['lists'][$page] = $lists[$page];
+						}
+					}
+				}
+				break; // case 'get: //theme/list/get
+
+			case 'vote': //theme//list/vote
+				$parent_action = $action;
+				$action = json_ArgShift();
+				switch ( $action ) {
+//					case 'get': //theme/list/vote/get
+//						json_ValidateHTTPMethod('GET');
+//						$event_id = intval(json_ArgGet(0));
+//
+//						if ( $event = validateEvent($event_id) ) {
+//							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) >= 2 ) {
+//								$author_id = userAuth_GetId();
+//								if ( $author_id ) {
+//									$threshold = 0.0;
+//									$RESPONSE['ideas'] = themeIdeaVote_GetIdeas($event_id, $threshold);
+//								}
+//								else {
+//									json_EmitFatalError_Permission(null, $RESPONSE);
+//								}
+//							}
+//							else {
+//								json_EmitFatalError_BadRequest("Event is not Slaughtering", $RESPONSE);
+//							}
+//						}
+//						break; // case 'get': //theme/list/vote/get
+
+					case 'getmy': //theme/list/vote/getmy
+						json_ValidateHTTPMethod('GET');
+						$event_id = intval(json_ArgGet(0));
+
+						if ( $event = validateEvent($event_id) ) {
+							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) >= 4 ) {
+								$author_id = userAuth_GetId();
+								if ( $author_id ) {
+									$RESPONSE['votes'] = themeListVote_GetMy($event_id, $author_id);
+								}
+								else {
+									json_EmitFatalError_Permission(null, $RESPONSE);
+								}
+							}
+							else {
+								json_EmitFatalError_BadRequest("Event is not Voting", $RESPONSE);
+							}
+						}
+						break; // case 'getmy': //theme/list/vote/getmy
+
+//					case 'yes': //theme/list/vote/yes
+//						doThemeIdeaVote(1);
+//						break; // case 'yes': //theme/list/vote/yes
+//
+//					case 'no': //theme/list/vote/no
+//						doThemeIdeaVote(0);
+//						break; // case 'no': //theme/list/vote/no
+//
+//					case 'flag': //theme/list/vote/flag
+//						doThemeIdeaVote(-1);
+//						break; // case 'flag': //theme/list/vote/flag
+				}
+				break; // case 'vote': //theme/list/vote
+
+			default:
+				json_EmitFatalError_Forbidden(null, $RESPONSE);
+				break; // default
+		};
+		break; // case 'list': //theme/list
 
 	default:
-		json_EmitFatalError_Forbidden(null,$RESPONSE);
-		break;
+		json_EmitFatalError_Forbidden(null, $RESPONSE);
+		break; // default
 };
 
 json_End();

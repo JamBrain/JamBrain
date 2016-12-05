@@ -7,7 +7,7 @@ import ContentEventHome					from 'com/content-event-home/event-home';
 import ContentEventIdea					from 'com/content-event-idea/event-idea';
 import ContentEventSlaughter			from 'com/content-event-slaughter/event-slaughter';
 import ContentEventFusion				from 'com/content-event-fusion/event-fusion';
-import ContentEventTheme				from 'com/content-event-theme/event-theme';
+import ContentEventList					from 'com/content-event-list/event-list';
 //import ContentEventFinal				from 'com/content-event-final/event-final';
 //import ContentEventJudging				from 'com/content-event-judging/event-judging';
 //import ContentEventResults				from 'com/content-event-results/event-results';
@@ -47,8 +47,11 @@ export default class ContentEvent extends Component {
 							EventBody = <ContentEventFusion node={node} user={user} />
 							break;
 						case 4:
-							EventBody = <ContentEventTheme node={node} user={user} />
+							EventBody = <ContentEventList node={node} user={user} />
 							break;
+//						case 5:
+//							EventBody = <ContentEventFinal node={node} user={user} />
+//							break;
 						default:
 							EventBody = (
 								<div>

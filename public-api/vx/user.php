@@ -7,6 +7,8 @@ require_once __DIR__."/".SHRUB_PATH."api.php";
 require_once __DIR__."/".SHRUB_PATH."plugin.php";
 require_once __DIR__."/".SHRUB_PATH."user/user.php";
 
+json_Begin();
+
 // *** Some older notes. Remove these *** //
 
 // NOTE: Confirming an e-mail address BEFORE entering account credentials is BEST!
@@ -46,8 +48,6 @@ require_once __DIR__."/".SHRUB_PATH."user/user.php";
 // api.website.com/vx/user/activate [id=5862&key=aeo8du8aodu8&name=homeboy&pw=potatoes]
 
 // *** //
-
-json_Begin();
 
 const SH_MAIL_DOMAIN = "jammer.vg";
 const SH_MAILER_RETURN = "hello@".SH_MAIL_DOMAIN;
@@ -333,10 +333,10 @@ function validateUserWithLogin( $login ) {
 
 
 // Do Actions
-$action = json_ArgGet(0);
+$action = json_ArgShift();
 switch ( $action ) {
 	// Create a new user activation
-	case 'create':
+	case 'create': //user/create
 		json_ValidateHTTPMethod('POST');
 		
 		// NOTE: Accounts can be created while logged in. Should we do anything about that?
@@ -379,11 +379,10 @@ switch ( $action ) {
 				json_EmitFatalError_Server(null, $RESPONSE);
 			}
 		}
-
-		break;
+		break; // case 'create': //user/create
 
 	// Fully activate a user
-	case 'activate':
+	case 'activate': //user/activate
 		json_ValidateHTTPMethod('POST');
 		
 		// NOTE: Accounts can be activated while logged in. Should we do anything about that?
@@ -406,7 +405,7 @@ switch ( $action ) {
 			if ( !strlen($name) && !strlen($pw) ) {
 				$RESPONSE['mail'] = $user['mail'];
 				$RESPONSE['slug'] = userReserved_GetSlugByMail(strtolower($user['mail']));
-				break;
+				break; // case 'activate': //user/activate
 			}
 			
 			// If name is too short
@@ -471,9 +470,9 @@ switch ( $action ) {
 				}
 			}
 		}
-		break;
+		break; // case 'activate': //user/activate
 
-	case 'password':
+	case 'password': //user/password
 		json_ValidateHTTPMethod('POST');
 		
 		// NOTE: Passwords can be reset while logged in? Is that weird?
@@ -496,7 +495,7 @@ switch ( $action ) {
 			// If no password specified, that's okay
 			if ( !strlen($pw) ) {
 				$RESPONSE['node'] = $node['id'];
-				break;
+				break; // case 'password': //user/password
 			}
 
 			// If password is too short
@@ -523,10 +522,9 @@ switch ( $action ) {
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
 		}
-	
-		break;
+		break; // case 'password': //user/password
 
-	case 'login':
+	case 'login': //user/login
 		json_ValidateHTTPMethod('POST');
 		
 		// NOTE: You can login while logged in. Weird huh.
@@ -583,22 +581,20 @@ switch ( $action ) {
 			$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
 			userSession_End();
 			
-			break;
+			break; // case 'login': //user/login
 		}
 
 		// Permission denied on fail
 		json_EmitFatalError_Permission(null, $RESPONSE);
-	
-		break;
+		break; // case 'login': //user/login
 
-	case 'logout':
+	case 'logout': //user/logout
 		json_ValidateHTTPMethod('GET');
 		
 		$RESPONSE['id'] = userAuth_Logout();
-	
-		break;
+		break; // case 'logout': //user/logout
 
-	case 'reset':
+	case 'reset': //user/reset
 		json_ValidateHTTPMethod('POST');
 		
 		// NOTE: You can reset password while logged in.
@@ -623,10 +619,9 @@ switch ( $action ) {
 		else {
 			json_EmitFatalError_Permission(null, $RESPONSE);
 		}
-		
-		break;
+		break; // case 'reset': //user/reset
 	
-	case 'have':
+	case 'have': //user/have
 		json_ValidateHTTPMethod('POST');
 
 		$mail = strtolower(getSanitizedMailFromPost(true));
@@ -641,7 +636,7 @@ switch ( $action ) {
 		// If on the internal reserved list
 		if ( in_array($slug, $SH_NAME_RESERVED) ) {
 			$RESPONSE['available'] = false;
-			break;
+			break; // case 'have': //user/have
 		}
 		
 		// If on the user reserved list.
@@ -649,7 +644,7 @@ switch ( $action ) {
 		if ( count($reserved) ) {
 			if ( !in_array($mail, $reserved) ) {
 				$RESPONSE['available'] = false;
-				break;
+				break; // case 'have': //user/have
 			}
 		}
 		
@@ -657,17 +652,16 @@ switch ( $action ) {
 		$node = user_GetBySlug($slug);
 		if ( $node ) {
 			$RESPONSE['available'] = false;
-			break;			
+			break; // case 'have': //user/have
 		}
 
 		$RESPONSE['available'] = true;
-		break;
+		break; // case 'have': //user/have
 	
-	case 'get':
+	case 'get': //user/get
 		json_ValidateHTTPMethod('GET');
-		
-		$id = isset($_SESSION['id']) ? intval($_SESSION['id']) : 0;
-		$RESPONSE['id'] = $id;
+
+		$id = userAuth_GetId();
 		
 		if ( $id > 0 ) {
 			$node = nodeComplete_GetById($id);
@@ -679,7 +673,9 @@ switch ( $action ) {
 				$RESPONSE['stale'] = true;
 			}
 		}
-		
+		break; // case 'get': //user/get
+
+//	case 'test': //user/test
 //		$RESPONSE['server'] = $_SERVER;
 //		$RESPONSE['method'] = $_SERVER['REQUEST_METHOD'];
 //		$RESPONSE['post'] = $_POST;
@@ -691,12 +687,11 @@ switch ( $action ) {
 ////		else {
 ////			json_EmitFatalError_Permission(null, $RESPONSE);
 ////		}
-		
-		break;
+//		break; // case 'test': //user/test
 
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
-		break;
+		break; // default
 };
 
 json_End();

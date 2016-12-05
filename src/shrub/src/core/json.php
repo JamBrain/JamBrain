@@ -319,33 +319,35 @@ function json_ArgCount() {
 function json_Begin() {
 	global $RESPONSE, $REQUEST;
 	
-	// Begin //
+	// Begin
 	$RESPONSE = json_NewResponse();
 	
-	// Authenticate //
+	// Authenticate
 	userAuth_Start();
-	if ( isset($_GET['auth']) || isset($_GET['debug']) ) {
-		// Need to limit what keys get copied. No need to send a full user (or accidentilaly send private info)
-		$keys = ['id'];//,'admin','permission'];
-		$RESPONSE['auth'] = array_intersect_key($_SESSION, array_flip($keys));
-	}
+	$RESPONSE['caller_id'] = userAuth_GetId();
+
+//	if ( isset($_GET['auth']) || isset($_GET['debug']) ) {
+//		// Need to limit what keys get copied. No need to send a full user (or accidentilaly send private info)
+//		$keys = ['id'];//,'admin','permission'];
+//		$RESPONSE['auth'] = array_intersect_key($_SESSION, array_flip($keys));
+//	}
 	
-	// Load Globals //
+	// Load Globals
 	global_Load();
 	
 	json_CheckForMaintenence();
 	
-	// Parse Arguments //
+	// Parse Arguments
 	$REQUEST = core_GetAPIRequest();
-	if ( isset($_GET['request']) || isset($_GET['debug']) ) {
-		$RESPONSE['request'] = $REQUEST;
-	}
+//	if ( isset($_GET['request']) || isset($_GET['debug']) ) {
+//		$RESPONSE['request'] = $REQUEST;
+//	}
 }
 
 function json_End() {
 	global $RESPONSE;
 
-	// Emit Response //
+	// Emit Response
 	json_Emit( $RESPONSE );	
 }
 

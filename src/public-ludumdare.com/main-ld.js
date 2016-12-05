@@ -38,18 +38,18 @@ class Main extends Component {
 	
 		this.state = {
 			// URL walking
-			id: 0,
-			path: '/',
-			slugs: clean.slugs,
-			extra: [],
+			'id': 0,
+			'path': '/',
+			'slugs': clean.slugs,
+			'extra': [],
 			
 			// Active Node
-			node: {
-				id: 0
+			'node': {
+				'id': 0
 			},
 			
 			// Active User
-			user: null
+			'user': null
 		};
 		
 		window.addEventListener('hashchange', this.onHashChange.bind(this));
@@ -121,9 +121,9 @@ class Main extends Component {
 			
 			// We found a path
 			var new_state = { 
-				id: r.node,
-				path: '/'+new_path,
-				extra: r.extra
+				'id': r.node,
+				'path': '/'+new_path,
+				'extra': r.extra
 			};
 			
 			// Now lookup the node
@@ -149,10 +149,10 @@ class Main extends Component {
 	fetchUser() {
 		// Fetch the Active User
 		$User.Get().then(r => {
-			console.log("Got User:",r.id);
+			console.log("Got User:",r.caller_id);
 			
-			if ( r.id ) {
-				$NodeLove.GetMy(/*r.id,*/ 1)
+			if ( r.caller_id ) {
+				$NodeLove.GetMy(/*r.caller_id,*/ 1)
 				.then(rr => {
 					this.setState({ 'user': r.node });
 				})
@@ -193,7 +193,7 @@ class Main extends Component {
 			this.setState({});
 		}
 		else {
-			this.setState({ id: 0, slugs: slugs });
+			this.setState({ 'id': 0, 'slugs': slugs });
 		}
 	}
 	// When we navigate by clicking forward
@@ -205,7 +205,7 @@ class Main extends Component {
 			if ( slugs.join() !== this.state.slugs.join() ) {
 				history.pushState(null, null, e.detail.location.pathname+e.detail.location.search);
 
-				this.setState({ id: 0, slugs: slugs, node: {id: 0} });
+				this.setState({ 'id': 0, 'slugs': slugs, 'node': {'id': 0} });
 				this.fetchNode();
 
 				// Scroll to top
