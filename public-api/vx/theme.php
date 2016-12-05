@@ -136,6 +136,49 @@ function getListPages( $lists ) {
 	return array_keys($lists);
 }
 
+function doThemeListVote( $value ) {
+	global $RESPONSE;
+	
+	json_ValidateHTTPMethod('GET');
+	$theme_id = intval(json_ArgGet(0));
+	
+	if ( $theme_id ) {
+		$item = themeList_GetById($theme_id);
+		$RESPONSE['item'] = $item;
+		if ( isset($item) && isset($item['node']) ) {
+			if ( $event = validateEvent($item['node']) ) {
+				// TODO: Check Page activity too
+				$page = $item['page'];
+				$RESPONSE['event'] = $event;
+				if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) === 4 ) {
+					if ( isset($event['meta']["theme-page-mode-$page"]) && intval($event['meta']["theme-page-mode-$page"]) === 1 ) {
+						$author_id = userAuth_GetId();
+						if ( $author_id ) {
+							$RESPONSE['id'] = themeListVote_Add($item['node'], $author_id, $theme_id, $value);
+							$RESPONSE['value'] = $value;
+						}
+						else {
+							json_EmitFatalError_Permission(null, $RESPONSE);
+						}
+					}
+					else {
+						json_EmitFatalError_BadRequest("Round is not Voting", $RESPONSE);
+					}
+				}
+				else {
+					json_EmitFatalError_BadRequest("Event is not Voting", $RESPONSE);
+				}
+			}
+		}
+		else {
+			json_EmitFatalError_Server(null, $RESPONSE);
+		}
+	}
+	else {
+		json_EmitFatalError_BadRequest(null, $RESPONSE);
+	}	
+}
+
 
 
 // Do Actions
@@ -487,7 +530,7 @@ switch ( $action ) {
 							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) >= 4 ) {
 								$author_id = userAuth_GetId();
 								if ( $author_id ) {
-									$RESPONSE['votes'] = themeListVote_GetMy($event_id, $author_id);
+									$RESPONSE['votes'] = themeListVote_GetByNodeUser($event_id, $author_id);
 								}
 								else {
 									json_EmitFatalError_Permission(null, $RESPONSE);
@@ -499,17 +542,17 @@ switch ( $action ) {
 						}
 						break; // case 'getmy': //theme/list/vote/getmy
 
-//					case 'yes': //theme/list/vote/yes
-//						doThemeIdeaVote(1);
-//						break; // case 'yes': //theme/list/vote/yes
-//
-//					case 'no': //theme/list/vote/no
-//						doThemeIdeaVote(0);
-//						break; // case 'no': //theme/list/vote/no
-//
-//					case 'flag': //theme/list/vote/flag
-//						doThemeIdeaVote(-1);
-//						break; // case 'flag': //theme/list/vote/flag
+					case 'yes': //theme/list/vote/yes
+						doThemeListVote(1);
+						break; // case 'yes': //theme/list/vote/yes
+
+					case 'maybe': //theme/list/vote/maybe
+						doThemeListVote(0);
+						break; // case 'maybe': //theme/list/vote/maybe
+
+					case 'no': //theme/list/vote/no
+						doThemeListVote(-1);
+						break; // case 'no': //theme/list/vote/no
 				}
 				break; // case 'vote': //theme/list/vote
 

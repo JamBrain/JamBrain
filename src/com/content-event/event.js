@@ -35,24 +35,25 @@ export default class ContentEvent extends Component {
 			// Internal URLs
 			if ( extra.length ) {
 				// Theme Selection URL (/theme/)
-				if ( extra.length && extra[0] === 'theme' ) {
-					var _path = path + '/' + extra.shift();
+				if ( extra[0] === 'theme' ) {
+					var _path = path + '/' + extra[0];
+					var _extra = extra.slice(1);
 					
 					switch (ThemeMode) {
 						case 1:
-							EventBody = <ContentEventIdea node={node} user={user} path={_path} extra={extra} />
+							EventBody = <ContentEventIdea node={node} user={user} path={_path} extra={_extra} />
 							break;
 						case 2:
-							EventBody = <ContentEventSlaughter node={node} user={user} path={_path} extra={extra} />
+							EventBody = <ContentEventSlaughter node={node} user={user} path={_path} extra={_extra} />
 							break;
 						case 3:
-							EventBody = <ContentEventFusion node={node} user={user} path={_path} extra={extra} />
+							EventBody = <ContentEventFusion node={node} user={user} path={_path} extra={_extra} />
 							break;
 						case 4:
-							EventBody = <ContentEventList node={node} user={user} path={_path} extra={extra} />
+							EventBody = <ContentEventList node={node} user={user} path={_path} extra={_extra} />
 							break;
 //						case 5:
-//							EventBody = <ContentEventFinal node={node} user={user} path={_path} extra={extra} />
+//							EventBody = <ContentEventFinal node={node} user={user} path={_path} extra={_extra} />
 //							break;
 						default:
 							EventBody = (

@@ -5,6 +5,7 @@ import NavLink 							from 'com/nav-link/link';
 import ButtonBase						from 'com/button-base/base';
 
 import $ThemeList						from '../../shrub/js/theme/theme_list';
+import $ThemeListVote					from '../../shrub/js/theme/theme_list_vote';
 
 
 export default class ContentEventList extends Component {
@@ -13,7 +14,8 @@ export default class ContentEventList extends Component {
 		
 		this.state = {
 			'lists': null,
-			'names': null
+			'names': null,
+			'votes': null
 		}
 		
 		this.renderList = this.renderList.bind(this);
@@ -32,18 +34,82 @@ export default class ContentEventList extends Component {
 		.catch(err => {
 			this.setState({ error: err });
 		});
-	}	
+
+		$ThemeListVote.GetMy(this.props.node.id)
+		.then(r => {
+			if ( r.lists ) {
+				this.setState({ 'votes': r.votes });
+			}
+			else {
+				this.setState({ 'votes': [] });
+			}
+		})
+		.catch(err => {
+			this.setState({ error: err });
+		});
+	}
+	
+	_submitVote( command, id, e ) {
+		return $ThemeListVote[command](id)
+		.then(r => {
+			if ( r.status === 200 ) {
+//				this.state.votes[this.state.current] = r.value;
+//				this.addToRecentQueue(this.state.current);
+//				
+//				this.pickRandomIdea();
+			}
+			else {
+				location.href = "#expired";
+			}
+		})
+		.catch(err => {
+			this.setState({ error: err });
+		});
+	}
+	
+	onYes( id, e ) {
+		return this._submitVote('Yes', id, e);
+	}
+	onMaybe( id, e ) {
+		return this._submitVote('Maybe', id, e);
+	}
+	onNo( id, e ) {
+		return this._submitVote('No', id, e);
+	}
 	
 	renderList( list ) {
 		if ( this.state.lists[list] ) {
-			return (
-				<div>
-					<h3>{this.state.names[list]}</h3>
-					{this.state.lists[list].map(r => {
-						return <div>{r.theme}</div>;
-					})}
-				</div>
-			);
+			if ( Number.parseInt(this.props.node.meta['theme-page-mode-'+list]) === 1 ) {
+				var _class = "theme-item";
+				_class += " -yes";
+				
+				return (
+					<div class="theme-list">
+						<h3>{this.state.names[list]}</h3>
+						{this.state.lists[list].map(r => {
+							return <div class={_class}>
+								<ButtonBase class="-button -yes" onClick={this.onYes.bind(this, r.id)}>+1</ButtonBase>
+								<ButtonBase class="-button -maybe" onClick={this.onMaybe.bind(this, r.id)}>0</ButtonBase>
+								<ButtonBase class="-button -no" onClick={this.onNo.bind(this, r.id)}>-1</ButtonBase>
+								<span class="-text">{r.theme}</span>
+							</div>;
+						})}
+						<div class="-tip">
+							<strong>NOTE:</strong>{" Votes are sent automatically. When the color changes, they have been accepted."}
+						</div>
+					</div>
+				);
+			}
+			else {
+				return (
+					<div>
+						<h3>{this.state.names[list]}</h3>
+						{this.state.lists[list].map(r => {
+							return <div>{r.theme}</div>;
+						})}
+					</div>
+				);
+			}
 		}
 		else if ( this.state.names[list] ) {
 			return (
@@ -51,7 +117,7 @@ export default class ContentEventList extends Component {
 					<h3>{this.state.names[list]}</h3>
 					{"This round hasn't started yet. Say tuned!"}
 				</div>
-			);			
+			);
 		}
 		return null;
 	}
@@ -68,10 +134,7 @@ export default class ContentEventList extends Component {
 			return (
 				<div class="-body">
 					{Title}
-					<div class="_hidden">Round begins soon...</div>
 					{page ? this.renderList(page) : null}
-					<br />
-					<div>{"(Sorry! Voting isn't ready yet, but here's 1st round list)"}</div>
 				</div>
 			);
 		}
@@ -79,10 +142,8 @@ export default class ContentEventList extends Component {
 			return (
 				<div class="-body">
 					{Title}
-					<div class="_hidden">Please log in</div>
+					<div class="">Please log in</div>
 					{page ? this.renderList(page) : null}
-					<br />
-					<div>{"(Sorry! Voting isn't ready yet, but here's 1st round list)"}</div>
 				</div>
 			);
 		}
