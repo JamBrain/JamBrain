@@ -386,35 +386,62 @@ switch ( $action ) {
 				$event_id = intval(json_ArgGet(0));
 				
 				if ( $event = validateEvent($event_id) ) {
-					$page = json_ArgGet(1);
+					$page_id = json_ArgGet(1);
 
 					// If no page specified, get everything
-					if ( $page === '' ) {
-						$page = null;
+					if ( $page_id === '' ) {
+						$page_id = null;
 					}
 					// Otherwise, get specific page
 					else {
-						$page = intval($page);
+						$page_id = intval($page_id);
 
 						// Pages start at 1, *NOT* zero
-						if ( !$page ) {
-							json_EmitFatalError_BadRequest("Invalid Page: $page", $RESPONSE);
+						if ( !$page_id ) {
+							json_EmitFatalError_BadRequest("Invalid Page: $page_id", $RESPONSE);
 						}
 					}
 
 					$lists = getLists($event_id);
 					$pages = getListPages($lists);
 
-
-					if ( is_null($page) ) {
-						$RESPONSE['lists'] = $lists;
+					$allowed = [];
+					foreach ( $pages as $page ) {
+						if ( isset($event['meta']["theme-page-mode-$page"]) && $event['meta']["theme-page-mode-$page"] > 0 ) {
+							$allowed[] = $page;
+						}
 					}
-					else if ( in_array($page, $pages) ) {
-						$RESPONSE['lists'] = [];
-						$RESPONSE['lists'][$page] = $lists[$page];
+
+					$RESPONSE['allowed'] = $allowed;
+					$RESPONSE['pages'] = count($pages);
+
+					$RESPONSE['names'] = [];
+					foreach ( $pages as $page ) {
+						if ( isset($event['meta']["theme-page-name-$page"]) ) {
+							$RESPONSE['names'][] = $event['meta']["theme-page-name-$page"];
+						}
+						else {
+							$RESPONSE['names'][] = "Round $page";
+						}
+					}
+
+					// So what do we want anyway?
+					if ( is_null($page_id) ) {
+						$request = $pages;
+					}
+					else if ( in_array($page_id, $pages) ) {
+						$request = [$page_id];
 					}
 					else {
 						json_EmitFatalError_BadRequest("Invalid Page: $page", $RESPONSE);
+					}
+
+					// Emit the list
+					$RESPONSE['lists'] = [];
+					foreach ( $allowed as $page ) {
+						if ( in_array($page, $request) ) {
+							$RESPONSE['lists'][$page] = $lists[$page];
+						}
 					}
 				}
 				break; // case 'get: //theme/list/get
