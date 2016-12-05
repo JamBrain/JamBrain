@@ -144,12 +144,12 @@ function doThemeListVote( $value ) {
 	
 	if ( $theme_id ) {
 		$item = themeList_GetById($theme_id);
-		$RESPONSE['item'] = $item;
+		//$RESPONSE['item'] = $item;
 		if ( isset($item) && isset($item['node']) ) {
 			if ( $event = validateEvent($item['node']) ) {
 				// TODO: Check Page activity too
 				$page = $item['page'];
-				$RESPONSE['event'] = $event;
+				//$RESPONSE['event'] = $event;
 				if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) === 4 ) {
 					if ( isset($event['meta']["theme-page-mode-$page"]) && intval($event['meta']["theme-page-mode-$page"]) === 1 ) {
 						$author_id = userAuth_GetId();

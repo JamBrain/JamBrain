@@ -37,7 +37,8 @@ export default class ContentEventList extends Component {
 
 		$ThemeListVote.GetMy(this.props.node.id)
 		.then(r => {
-			if ( r.lists ) {
+			//console.log(r);
+			if ( r.votes ) {
 				this.setState({ 'votes': r.votes });
 			}
 			else {
@@ -93,18 +94,14 @@ export default class ContentEventList extends Component {
 	
 	renderList( list ) {
 		if ( this.state.lists[list] ) {
-			if ( Number.parseInt(this.props.node.meta['theme-page-mode-'+list]) === 1 ) {
+			if ( this.state.votes && Number.parseInt(this.props.node.meta['theme-page-mode-'+list]) === 1 ) {
 				var _class = "theme-item";
-				
-//				var vote = this.state.votes[]
-//				if ( var vote = this.state.votes[] )
-//				//_class += " -yes";
 				
 				return (
 					<div class="theme-list">
 						<h3>{this.state.names[list]}</h3>
 						{this.state.lists[list].map(r => {
-							return <div class={_class + this.voteToClass(this.state.votes[r.theme])}>
+							return <div class={_class + this.voteToClass(this.state.votes[r.id])}>
 								<ButtonBase class="-button -yes" onClick={this.onYes.bind(this, r.id)}>+1</ButtonBase>
 								<ButtonBase class="-button -maybe" onClick={this.onMaybe.bind(this, r.id)}>0</ButtonBase>
 								<ButtonBase class="-button -no" onClick={this.onNo.bind(this, r.id)}>-1</ButtonBase>
