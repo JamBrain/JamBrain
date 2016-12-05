@@ -143,6 +143,23 @@ switch ( $action ) {
 	
 		break;
 
+	case 'history':
+		$parent_action = $action;
+		$action = json_ArgShift();
+		switch ( $action ) {
+			case 'get':
+				json_ValidateHTTPMethod('GET');
+
+				$RESPONSE['history'] = themeHistory_Get();
+
+				break;
+				
+			default:
+				json_EmitFatalError_Forbidden(null,$RESPONSE);
+				break;
+		};
+		break;
+
 	// Theme Suggestions //
 	case 'idea': {
 		$parent_action = $action;
