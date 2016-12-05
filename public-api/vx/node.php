@@ -8,10 +8,10 @@ require_once __DIR__."/".SHRUB_PATH."node/node.php";
 
 json_Begin();
 
-// Do Actions //
+// Do Actions
 $action = json_ArgShift();
 switch ( $action ) {
-	case 'get':
+	case 'get': //node/get
 		json_ValidateHTTPMethod('GET');
 		
 		if ( json_ArgCount() ) {
@@ -68,9 +68,9 @@ switch ( $action ) {
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
 		}
-		break;
+		break; // case 'get': //node/get
 
-	case 'walk':
+	case 'walk': //node/walk
 		json_ValidateHTTPMethod('GET');
 
 		if ( json_ArgCount() ) {
@@ -97,9 +97,9 @@ switch ( $action ) {
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
 		}
-		break;
+		break; // case 'walk': //node/walk
 
-	case 'feed':
+	case 'feed': //node/feed
 		json_ValidateHTTPMethod('GET');
 
 		if ( json_ArgCount() ) {
@@ -121,13 +121,13 @@ switch ( $action ) {
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
 		}
-		break;
+		break; // case 'feed': //node/feed
 
-	case 'love':
+	case 'love': //node/love
 		$old_action = $action;
 		$action = json_ArgShift();
 		switch ( $action ) {
-			case 'get':
+			case 'get': //node/love/get
 				json_ValidateHTTPMethod('GET');
 				
 				if ( json_ArgCount() ) {
@@ -148,10 +148,9 @@ switch ( $action ) {
 				else {
 					json_EmitFatalError_BadRequest(null, $RESPONSE);
 				}
-
-				break;
+				break; // case 'get': //node/love/get
 				
-			case 'getmy':
+			case 'getmy': //node/love/getmy
 				json_ValidateHTTPMethod('GET');
 				
 				if ( $user_id = userAuth_GetID() ) {
@@ -162,10 +161,9 @@ switch ( $action ) {
 				else {
 					json_EmitFatalError_Permission(null, $RESPONSE);
 				}
-			
-				break;
+				break; // case 'getmy': //node/love/getmy
 
-			case 'add':
+			case 'add': //node/love/add
 				json_ValidateHTTPMethod('GET');
 				
 				if ( json_ArgCount() ) {
@@ -188,9 +186,9 @@ switch ( $action ) {
 				else {
 					json_EmitFatalError_BadRequest(null, $RESPONSE);
 				}
-				break;
+				break; // case 'add': //node/love/add
 
-			case 'remove':
+			case 'remove': //node/love/remove
 				json_ValidateHTTPMethod('GET');
 
 				if ( json_ArgCount() ) {
@@ -219,16 +217,17 @@ switch ( $action ) {
 				else {
 					json_EmitFatalError_BadRequest(null, $RESPONSE);
 				}
-				break;
+				break; // case 'remove': //node/love/remove
+				
 			default:
 			json_EmitFatalError_Forbidden(null, $RESPONSE);
-				break;
+				break; // default
 		};
-		break;
+		break; // case 'love': //node/love
 
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
-		break;
+		break; // default
 };
 
 json_End();
