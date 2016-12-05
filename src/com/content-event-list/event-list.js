@@ -61,7 +61,6 @@ export default class ContentEventList extends Component {
 		
 		var page = 1;
 		if ( (extra && extra.length && extra[0]) ) {
-			console.log(extra);
 			page = Number.parseInt(extra[0]);
 		}
 		
