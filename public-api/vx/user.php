@@ -666,8 +666,10 @@ switch ( $action ) {
 	case 'get':
 		json_ValidateHTTPMethod('GET');
 		
-		$id = isset($_SESSION['id']) ? intval($_SESSION['id']) : 0;
-		$RESPONSE['id'] = $id;
+//		$id = isset($_SESSION['id']) ? intval($_SESSION['id']) : 0;
+//		$RESPONSE['id'] = $id;
+
+		$id = userAuth_GetId();
 		
 		if ( $id > 0 ) {
 			$node = nodeComplete_GetById($id);

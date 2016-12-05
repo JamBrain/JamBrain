@@ -34,7 +34,7 @@ function userAuth_Start() {
 
 // Is active user a user (i.e. logged in)
 function userAuth_GetId() {
-	return isset($_SESSION['id']) ? $_SESSION['id'] : 0;
+	return isset($_SESSION['id']) ? intval($_SESSION['id']) : 0;
 }
 
 /// Is active user an administrator

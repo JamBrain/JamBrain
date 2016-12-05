@@ -5,5 +5,5 @@ export default {
 }
 
 export function Get() {
-	return Fetch.Get('//'+API_DOMAIN+'/vx/theme/history/get/');
+	return Fetch.Get('//'+API_DOMAIN+'/vx/theme/history/get');
 }
