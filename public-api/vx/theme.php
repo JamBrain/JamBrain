@@ -81,7 +81,9 @@ function doThemeIdeaVote( $value ) {
 	}
 }
 
-function getListPages( $list ) {
+
+/// Internal version used to extract pages from the raw queries
+function _getListPages( $list ) {
 	$pages = [];
 
 	foreach ( $list as &$item ) {
@@ -98,7 +100,7 @@ function getLists( $event_id, $can_see_scores = false ) {
 	$list = themeList_GetByNode($event_id);
 
 	// Given our list, figure out what pages we have
-	$pages = getListPages($list);
+	$pages = _getListPages($list);
 
 	// Make arrays for each page
 	$lists = [];
@@ -121,6 +123,11 @@ function getLists( $event_id, $can_see_scores = false ) {
 	}
 	return $lists;
 }
+
+function getListPages( $lists ) {
+	return array_keys($lists);
+}
+
 
 
 // Do Actions
@@ -391,18 +398,23 @@ switch ( $action ) {
 
 						// Pages start at 1, *NOT* zero
 						if ( !$page ) {
-							json_EmitFatalError_BadRequest("Invalid Page", $RESPONSE);
+							json_EmitFatalError_BadRequest("Invalid Page: $page", $RESPONSE);
 						}
 					}
 
 					$lists = getLists($event_id);
+					$pages = getListPages($lists);
 
-					if ( $page ) {
+
+					if ( is_null($page) ) {
+						$RESPONSE['lists'] = $lists;
+					}
+					else if ( in_array($page, $pages) ) {
 						$RESPONSE['lists'] = [];
 						$RESPONSE['lists'][$page] = $lists[$page];
 					}
 					else {
-						$RESPONSE['lists'] = $lists;
+						json_EmitFatalError_BadRequest("Invalid Page: $page", $RESPONSE);
 					}
 				}
 				break; // case 'get: //theme/list/get
