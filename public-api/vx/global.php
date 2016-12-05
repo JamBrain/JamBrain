@@ -7,9 +7,10 @@ require_once __DIR__."/".SHRUB_PATH."api.php";
 
 json_Begin();
 
-// Do Actions //
-switch ( $REQUEST[0] ) {
-	case 'set':
+// Do Actions
+$action = json_ArgShift();
+switch ( $action ) {
+	case 'set': //global/set
 		json_ValidateHTTPMethod('POST');
 
 		if ( userAuth_IsAdmin() ) {
@@ -29,8 +30,9 @@ switch ( $REQUEST[0] ) {
 		else {
 			json_EmitFatalError_Permission(null, $RESPONSE);
 		}
-		break;
-	case 'get':
+		break; // case 'set': //global/set
+
+	case 'get': //global/get
 		json_ValidateHTTPMethod('GET');
 
 		if ( userAuth_IsAdmin() ) {
@@ -39,10 +41,11 @@ switch ( $REQUEST[0] ) {
 		else {
 			json_EmitFatalError_Permission(null, $RESPONSE);
 		}
-		break;
+		break; // case 'get': //global/get
+
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
-		break;
+		break; // default
 };
 
 json_End();

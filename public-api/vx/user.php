@@ -7,6 +7,8 @@ require_once __DIR__."/".SHRUB_PATH."api.php";
 require_once __DIR__."/".SHRUB_PATH."plugin.php";
 require_once __DIR__."/".SHRUB_PATH."user/user.php";
 
+json_Begin();
+
 // *** Some older notes. Remove these *** //
 
 // NOTE: Confirming an e-mail address BEFORE entering account credentials is BEST!
@@ -46,8 +48,6 @@ require_once __DIR__."/".SHRUB_PATH."user/user.php";
 // api.website.com/vx/user/activate [id=5862&key=aeo8du8aodu8&name=homeboy&pw=potatoes]
 
 // *** //
-
-json_Begin();
 
 const SH_MAIL_DOMAIN = "jammer.vg";
 const SH_MAILER_RETURN = "hello@".SH_MAIL_DOMAIN;
@@ -333,7 +333,7 @@ function validateUserWithLogin( $login ) {
 
 
 // Do Actions
-$action = json_ArgGet(0);
+$action = json_ArgShift();
 switch ( $action ) {
 	// Create a new user activation
 	case 'create': //user/create
