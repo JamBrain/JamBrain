@@ -84,7 +84,7 @@ function doThemeIdeaVote( $value ) {
 // Do Actions
 $action = json_ArgShift();
 switch ( $action ) {
-	case 'stats': 
+	case 'stats': //theme/stats
 		json_ValidateHTTPMethod('GET');
 		$event_id = intval(json_ArgGet(0));
 		
@@ -105,32 +105,33 @@ switch ( $action ) {
 			
 			$RESPONSE['stats'] = $ret;
 		}
-	
-		break;
+		break;	// case 'stats': //theme/stats
 
-	case 'history':
+	case 'history': //theme/history
 		$parent_action = $action;
 		$action = json_ArgShift();
 		switch ( $action ) {
-			case 'get':
+			case 'get': //theme/history/get
 				json_ValidateHTTPMethod('GET');
+				
+				// TODO: Cache history
 
 				$RESPONSE['history'] = themeHistory_Get();
 
-				break;
+				break; // case 'get': //theme/history/get
 				
 			default:
-				json_EmitFatalError_Forbidden(null,$RESPONSE);
-				break;
+				json_EmitFatalError_Forbidden(null, $RESPONSE);
+				break; // default
 		};
-		break;
+		break; // case 'history': //theme/history
 
-	// Theme Suggestions //
-	case 'idea': {
+	// Theme Suggestions
+	case 'idea': //theme/idea
 		$parent_action = $action;
 		$action = json_ArgShift();
 		switch ( $action ) {
-			case 'getmy':
+			case 'getmy': //theme/idea/getmy
 				json_ValidateHTTPMethod('GET');
 				$event_id = intval(json_ArgGet(0));
 				
@@ -144,9 +145,9 @@ switch ( $action ) {
 						json_EmitFatalError_Permission(null, $RESPONSE);
 					}
 				}
-				break;
+				break; // case 'getmy: //theme/idea/getmy
 
-//			case 'get':
+//			case 'get': //theme/idea/get
 //				json_ValidateHTTPMethod('GET');
 //				$event_id = intval(json_ArgGet(0));
 //				
@@ -172,10 +173,9 @@ switch ( $action ) {
 //				else {
 //					json_EmitFatalError_BadRequest(null, $RESPONSE);
 //				}
-//
-//				break;
+//				break; // case 'get': //theme/idea/get
 
-			case 'add':
+			case 'add': //theme/idea/add
 				json_ValidateHTTPMethod('POST');
 	
 				$user = userAuth_GetId();
@@ -210,9 +210,9 @@ switch ( $action ) {
 						json_EmitFatalError_BadRequest("Event is not accepting Theme Suggestions", $RESPONSE);
 					}
 				}
-				break;
+				break; // case 'add': //theme/idea/add
 
-			case 'remove':
+			case 'remove': //theme/idea/remove
 				json_ValidateHTTPMethod('POST');
 	
 				$user = userAuth_GetId();
@@ -245,13 +245,13 @@ switch ( $action ) {
 						json_EmitFatalError_BadRequest("Event is not accepting Theme Suggestions", $RESPONSE);
 					}
 				}
-				break;
+				break; // case 'remove': //theme/idea/remove
 				
-			case 'vote':
+			case 'vote': //theme/idea/vote
 				$parent_action = $action;
 				$action = json_ArgShift();
 				switch ( $action ) {
-					case 'get':
+					case 'get': //theme/idea/vote/get
 						json_ValidateHTTPMethod('GET');
 						$event_id = intval(json_ArgGet(0));
 
@@ -270,9 +270,9 @@ switch ( $action ) {
 								json_EmitFatalError_BadRequest("Event is not Slaughtering", $RESPONSE);
 							}
 						}
-						break;
+						break; // case 'get': //theme/idea/vote/get
 						
-					case 'getmy':
+					case 'getmy': //theme/idea/vote/getmy
 						json_ValidateHTTPMethod('GET');
 						$event_id = intval(json_ArgGet(0));
 
@@ -290,33 +290,31 @@ switch ( $action ) {
 								json_EmitFatalError_BadRequest("Event is not Slaughtering", $RESPONSE);
 							}
 						}
-						break;
+						break; // case 'getmy': //theme/idea/vote/getmy
 
-					case 'yes':
+					case 'yes': //theme/idea/vote/yes
 						doThemeIdeaVote(1);
-						break;
+						break; // case 'yes': //theme/idea/vote/yes
 
-					case 'no':
+					case 'no': //theme/idea/vote/no
 						doThemeIdeaVote(0);
-						break;
+						break; // case 'no': //theme/idea/vote/no
 						
-					case 'flag':
+					case 'flag': //theme/idea/vote/flag
 						doThemeIdeaVote(-1);
-						break;
+						break; // case 'flag': //theme/idea/vote/flag
 				}
-				
-				break;
+				break; // case 'vote': //theme/idea/vote
 				
 			default:
-				json_EmitFatalError_Forbidden(null,$RESPONSE);
-				break;
+				json_EmitFatalError_Forbidden(null, $RESPONSE);
+				break; // default
 		};
-		break;
-	}
+		break; // case 'idea': //theme/idea
 
 	default:
-		json_EmitFatalError_Forbidden(null,$RESPONSE);
-		break;
+		json_EmitFatalError_Forbidden(null, $RESPONSE);
+		break; // default
 };
 
 json_End();
