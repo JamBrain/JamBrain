@@ -48,3 +48,18 @@ function themeIdeaVote_RemoveById( $id ) {
 		$id
 	);
 }
+
+
+// How to get Theme Slaughter theme scores (using a basic SUM), out as a CSV
+
+//SELECT _idea.id, _idea.theme, SUM(_vote.value) AS score
+//FROM sh_theme_idea_vote AS _vote
+//INNER JOIN sh_theme_idea AS _idea ON (_vote.idea = _idea.id)
+//WHERE _vote.node=10
+//GROUP BY _vote.idea
+//ORDER BY score DESC
+//
+//INTO OUTFILE 'themes.csv'
+//FIELDS TERMINATED BY ','
+//ENCLOSED BY '"'
+//LINES TERMINATED BY '\n';
