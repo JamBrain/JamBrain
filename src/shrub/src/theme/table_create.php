@@ -142,7 +142,7 @@ if ( in_array($table, $TABLE_LIST) ) {
 	case 0:
 		$ok = table_Create( $table,
 			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
-				id ".DB_TYPE_ID." UNIQUE,
+				id ".DB_TYPE_UID.",
 				node ".DB_TYPE_ID.",
 					INDEX(node),
 				idea ".DB_TYPE_ID.",
@@ -192,7 +192,7 @@ if ( in_array($table, $TABLE_LIST) ) {
 //	case 0:
 //		$ok = table_Create( $table,
 //			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
-//				id ".DB_TYPE_ID." UNIQUE,
+//				id ".DB_TYPE_UID.",
 //				node ".DB_TYPE_ID.",
 //					INDEX(node),
 //				idea ".DB_TYPE_ID.",

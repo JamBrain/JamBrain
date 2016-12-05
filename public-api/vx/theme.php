@@ -84,7 +84,7 @@ function doThemeIdeaVote( $value ) {
 // Do Actions
 $action = json_ArgShift();
 switch ( $action ) {
-	// Regular Voting Rounds //
+	// Regular Voting Rounds
 	case 'get':
 //		json_ValidateHTTPMethod('GET');
 //		$event_id = intval(json_ArgGet(0));
