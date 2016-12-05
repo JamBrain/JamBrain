@@ -99,6 +99,10 @@ function _getListPages( $list ) {
 function getLists( $event_id, $can_see_scores = false ) {
 	$list = themeList_GetByNode($event_id);
 
+	if ( !isset($list) ) {
+		return null;
+	}
+
 	// Given our list, figure out what pages we have
 	$pages = _getListPages($list);
 
@@ -125,6 +129,10 @@ function getLists( $event_id, $can_see_scores = false ) {
 }
 
 function getListPages( $lists ) {
+	if ( !isset($lists) ) {
+		return [];
+	}
+
 	return array_keys($lists);
 }
 
@@ -433,7 +441,7 @@ switch ( $action ) {
 						$request = [$page_id];
 					}
 					else {
-						json_EmitFatalError_BadRequest("Invalid Page: $page", $RESPONSE);
+						json_EmitFatalError_BadRequest("Invalid Page: $page_id", $RESPONSE);
 					}
 
 					// Emit the list
