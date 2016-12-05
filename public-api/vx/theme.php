@@ -530,7 +530,14 @@ switch ( $action ) {
 							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) >= 4 ) {
 								$author_id = userAuth_GetId();
 								if ( $author_id ) {
-									$RESPONSE['votes'] = themeListVote_GetByNodeUser($event_id, $author_id);
+									$votes = themeListVote_GetByNodeUser($event_id, $author_id);
+									
+									$ret = [];
+									foreach ( $votes as $vote ) {
+										$ret[$vote['theme']] = $vote['vote'];
+									}
+									
+									$RESPONSE['votes'] = $ret;
 								}
 								else {
 									json_EmitFatalError_Permission(null, $RESPONSE);

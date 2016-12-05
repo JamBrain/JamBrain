@@ -77,17 +77,34 @@ export default class ContentEventList extends Component {
 		return this._submitVote('No', id, e);
 	}
 	
+	voteToClass( vote ) {
+		if ( vote === 1 ) {
+			return ' -yes';
+		}
+		else if ( vote === 0 ) {
+			return ' -maybe';
+		}
+		else if ( vote === -1 ) {
+			return ' -no';
+		}
+		
+		return '';
+	}
+	
 	renderList( list ) {
 		if ( this.state.lists[list] ) {
 			if ( Number.parseInt(this.props.node.meta['theme-page-mode-'+list]) === 1 ) {
 				var _class = "theme-item";
-				_class += " -yes";
+				
+//				var vote = this.state.votes[]
+//				if ( var vote = this.state.votes[] )
+//				//_class += " -yes";
 				
 				return (
 					<div class="theme-list">
 						<h3>{this.state.names[list]}</h3>
 						{this.state.lists[list].map(r => {
-							return <div class={_class}>
+							return <div class={_class + this.voteToClass(this.state.votes[r.theme])}>
 								<ButtonBase class="-button -yes" onClick={this.onYes.bind(this, r.id)}>+1</ButtonBase>
 								<ButtonBase class="-button -maybe" onClick={this.onMaybe.bind(this, r.id)}>0</ButtonBase>
 								<ButtonBase class="-button -no" onClick={this.onNo.bind(this, r.id)}>-1</ButtonBase>
@@ -122,7 +139,7 @@ export default class ContentEventList extends Component {
 		return null;
 	}
 	
-	render( {node, user, path, extra}, {lists, error} ) {
+	render( {node, user, path, extra}, {lists, votes, error} ) {
 		var Title = <h3>Theme Voting Round</h3>;
 		
 		var page = 1;
@@ -130,7 +147,7 @@ export default class ContentEventList extends Component {
 			page = Number.parseInt(extra[0]);
 		}
 		
-		if ( user && user['id'] && lists ) {
+		if ( user && user['id'] && lists && votes ) {
 			return (
 				<div class="-body">
 					{Title}
