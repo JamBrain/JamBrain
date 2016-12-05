@@ -67,7 +67,7 @@ export default class NavBar extends Component {
 			MyGame = (
 				<ButtonLink href={GameURL} class="-button">
 					<SVGIcon>gamepad</SVGIcon>
-					<div class="if-sidebar-block">Slaughter Themes</div>
+					<div class="if-sidebar-block">Theme Voting</div>
 				</ButtonLink>
 			);
 			//"";

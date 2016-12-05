@@ -1,0 +1,74 @@
+
+@import "defs.less";
+
+.theme-list {
+	& > .theme-item {
+		& > .-button {
+			display: inline-block;
+	
+			width: 1.4em;
+			height: 1.4em;
+			line-height: 1.4em;
+	
+			text-align: center;
+			vertical-align: middle;
+			
+			margin: 0.1em;
+			background: @MAJOR_MUTE;
+			border-radius: 0.25em;
+			
+			font-size: 0.9em;
+			
+			font-weight: bold;
+			
+			&.-yes:hover {
+				/*border: 2px solid #262;*/
+				background: #AFA;
+			}
+			&.-maybe:hover {
+				/*border: 2px solid #662;*/
+				background: #FFA;
+			}
+			&.-no:hover {
+				/*border: 2px solid #622;*/
+				background: #FAA;
+			}
+		}
+		& > .-text {
+			line-height: 1.25em;
+			margin: 0.125em 0.5em;	
+			
+			vertical-align: middle;
+		}
+	
+		&.-yes {
+			background: linear-gradient(to left, #AFA 0%, @MAJOR_MUTE_L3 90%);
+			
+			& > .-button.-yes {
+				background: #AFA;
+			}
+		}
+		&.-maybe {
+			background: linear-gradient(to left, #FFA 0%, @MAJOR_MUTE_L3 90%);
+	
+			& > .-button.-maybe {
+				background: #FFA;
+			}
+		}
+		&.-no {
+			background: linear-gradient(to left, #FAA 0%, @MAJOR_MUTE_L3 90%);
+	
+			& > .-button.-no {
+				background: #FAA;
+			}
+		}
+	
+		&.-error {
+			background: #F80;
+		}
+	}
+	
+	& > .-tip {
+		margin-top: 1em;
+	}
+}
