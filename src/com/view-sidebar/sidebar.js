@@ -7,27 +7,28 @@ import SidebarTrending					from 'com/sidebar-trending/trending';
 import SidebarSupport					from 'com/sidebar-support/support';
 import SidebarCountdown					from 'com/sidebar-countdown/countdown';
 
-export default class ViewSingle extends Component {
+export default class ViewSidebar extends Component {
 	constructor( props ) {
 		super(props);
 	}
 
 	render( props, state ) {
+		// TODO: cleanup
 		let jamEndDate = new Date(Date.UTC(2016, 11, 13, 2, 0, 0));
 		let compoEndDate = new Date(Date.UTC(2016, 11, 12, 2, 0, 0));
 		let ldStartDate = new Date(Date.UTC(2016, 11, 10, 2, 0, 0));
 
-		let n = new Date();
+		let now = new Date();
 		
 		let ShowCountdown = [];
-		if ( n < ldStartDate ) {
+		if ( now < ldStartDate ) {
 			ShowCountdown.push(<SidebarCountdown date={ ldStartDate } nc="ld" to="Ludum Dare" tt="Starts" />);
 		}
 		else {
-			if ( n < compoEndDate ) {
+			if ( now < compoEndDate ) {
 				ShowCountdown.push(<SidebarCountdown date={ compoEndDate } nc="compo" to="Compo" tt="Ends" />);
 			};
-			if ( n < compoEndDate ) {
+			if ( now < compoEndDate ) {
 				ShowCountdown.push(<SidebarCountdown date={ jamEndDate } nc="jam" to="Jam" tt="Ends" />);
 			}
 		}
