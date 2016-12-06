@@ -21,6 +21,7 @@
 		font-size: 1em;
 		font-weight: 300;
 		text-transform: uppercase;
+		margin-top: 0px;
 	}
 
 	& > .-clock h1.strong {
@@ -43,6 +44,7 @@
 		display: inline-block;
 		margin-right: 10px;
 		text-align: center;
+		overflow: hidden;
 	}
 	& > .-clock > .-countdown .bloc-time:last-child {
 		margin-right: 0;
@@ -60,9 +62,9 @@
 	& > .-clock > .-countdown .figure {
 		position: relative;
 		display: inline-block;
-		height: 41.25px;
+		height: 41px;
 		/* come back to this to enable auto resizing on mobile and other things etc */
-		width: 37.5px;
+		width: 37px;
 		margin-right: 3px;
 		background-color: @MAJOR_LIGHT;
 		border-radius: 8px;
@@ -73,11 +75,11 @@
 	}
 	& > .-clock > .-countdown .figure  span {
 		position: absolute;
-		left: 0;
+		left: 0.5px;
 		right: 0;
 		margin: auto;
 		font normal: 2.8em;
-		line-height: 41.25px;
+		line-height: 41px;
 		font-weight: 700;
 		/*color: @MAJOR_COLOR1;*/
 		color: @MAJOR_MUTE_D5;
@@ -157,6 +159,13 @@
 		right: 0;
 		margin: auto;
 	}
+
+	@media (max-width: 1100px) {
+		& > .-clock > .-countdown .bloc-time {
+			margin-right: 6px;
+		}
+	}
+
 }
 
 @keyframes clockflip {
