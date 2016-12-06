@@ -124,9 +124,6 @@ export default class SidebarCountdown extends Component {
 						that.setState({'Urgent': true});
 					}
 				}
-
-				console.log(that);
-
         // Update DOM values
         // Days
         that.checkHour(that.values.days, d.children[1], d.children[2]);
