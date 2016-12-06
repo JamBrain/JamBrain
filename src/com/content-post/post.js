@@ -92,16 +92,14 @@ export default class ContentPost extends Component {
 	}
 	
 	getAtName( user ) {
-		var user_url = '/users/'+user.slug+'/';
-		return <NavLink class="at-name" href={user_url}><img src={this.getAvatar(user)} />{user.name}</NavLink>;
+		var user_path = '/users/'+user.slug;
+		return <NavLink class="at-name" href={user_path}><img src={this.getAvatar(user)} />{user.name}</NavLink>;
 	}
 
 	render( {node, user, path}, {author, loved, lovecount, error} ) {
 		if ( node.slug && author.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
-			
-			var url = path+node.slug+'/';
 			
 			var pub_date = new Date(node.published);
 			var pub_diff = new Date().getTime() - pub_date.getTime();
@@ -122,7 +120,7 @@ export default class ContentPost extends Component {
 				<div class="content-base content-post">
 					<div class="-header">
 						<div class="-avatar" onclick={e => { console.log(author.slug); location.href = "#user-card"; }}><img src={post_avatar} /><SVGIcon class="-info">info</SVGIcon></div>
-						<div class="-title _font2"><NavLink href={url} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
+						<div class="-title _font2"><NavLink href={path} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
 						<div class="-subtext">
 							Posted {post_relative} {post_by} {post_date}
 						</div>

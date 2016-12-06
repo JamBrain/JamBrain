@@ -26,8 +26,6 @@ export default class ContentEvent extends Component {
 		if ( node.slug ) {
 			var dangerousParsedTitle = { __html:titleParser.parse('**Event:** '+node.name) };
 			
-			var url = path+node.slug+'/';
-			
 			let ThemeMode = (node.meta['theme-mode']) ? parseInt(node.meta['theme-mode']) : 0;
 			
 			var EventBody = null;
@@ -81,7 +79,7 @@ export default class ContentEvent extends Component {
 			return (
 				<div class="content-base content-user content-event">
 					<div class="-header">
-						<div class="-title _font2"><NavLink href={url} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
+						<div class="-title _font2"><NavLink href={path} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
 					</div>
 					{EventBody}
 					<div class="-footer">

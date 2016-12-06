@@ -39,7 +39,7 @@ class Main extends Component {
 		this.state = {
 			// URL walking
 			'id': 0,
-			'path': '/',
+			'path': '',
 			'slugs': clean.slugs,
 			'extra': [],
 			
@@ -114,15 +114,15 @@ class Main extends Component {
 		// Fetch the active node
 		$Node.Walk(SITE_ROOT, this.state.slugs)
 		.then(r => {
-			var new_path = this.state.slugs.slice(0, r.path.length).join('/');
-			if ( new_path.length ) {
-				new_path += '/';
-			}
-			
+			var new_path = (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/');
+//			if ( new_path.length ) {
+//				new_path += '/';
+//			}
+//			
 			// We found a path
 			var new_state = { 
 				'id': r.node,
-				'path': '/'+new_path,
+				'path': new_path,
 				'extra': r.extra
 			};
 			
@@ -165,7 +165,6 @@ class Main extends Component {
 			}				
 		})
 		.catch(err => {
-			console.log('hurr', err);
 			this.setState({ error: err });
 		});		
 	}
@@ -231,6 +230,7 @@ class Main extends Component {
 
 	render( {}, {node, user, path, extra, error} ) {
 		var Content = null;
+		
 		if ( node.id ) {
 			Content = (
 				<ViewContent node={node} user={user} path={path} extra={extra} />
