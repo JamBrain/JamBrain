@@ -23,7 +23,7 @@ export default class ViewSingle extends Component {
 		if(n < ldStartDate) {
 			return (
 				<div id="sidebar">
-					<SidebarCountdown date={ ldStartDate } nc="ld" to="LudumDare" tt="Starts" />
+					<SidebarCountdown date={ ldStartDate } nc="ld" to="Ludum Dare" tt="Starts" />
 					<SidebarCalendar />
 					<SidebarUpcoming />
 					<SidebarTV />

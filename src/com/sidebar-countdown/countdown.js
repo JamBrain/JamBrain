@@ -256,7 +256,7 @@ export default class SidebarCountdown extends Component {
 							</div>
 						</div>
 
-						<div class="bloc-time min" data-init-value="0"  ref={c => this.minutesblock=c}>
+						<div class="bloc-time min" data-init-value="0"  ref={c => this.minutesblock=c} style={this.state.ShowDays ? "margin-right: 0px;" : ""}>
 							<span class="count-title">Minutes</span>
 
 							<div class="figure min min-1">
