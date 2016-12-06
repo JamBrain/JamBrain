@@ -460,9 +460,12 @@ var inline = {
   code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
   br: /^ {2,}\n(?!\s*$)/,
   del: noop,
-  text: /^[\s\S]+?(?=[\\<!\[_*`:@]| {2,}\n|$)/,		// Added : and @
+  text: /^[\s\S]+?(?=[\\<!\[_*`:@]| {2,}\n|$)/,		// Added : and @ (emoji and @names)
   emoji: /^:([a-z_]+):/,
-  atname: /^@([A-Za-z-]+)(?!@)/,
+//  email: /^(\w+@\w+.\w+)/,		// Added just to help 
+  atname: /^@([A-Za-z0-9-]+)(?!@)/,
+  ///^(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z0-9]+)/,
+//  atname: /^@([A-Za-z0-9-]+)(?!@)/,
 };
 
 inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
@@ -688,6 +691,13 @@ InlineLexer.prototype.output = function(src) {
       continue;
     }
 
+//    // email
+//    if (cap = this.rules.email.exec(src)) {
+//      src = src.substring(cap[0].length);
+//      out += this.renderer.email(this.output(cap[2] || cap[1]));
+//      continue;
+//    }
+
     // @names
     if (cap = this.rules.atname.exec(src)) {
       src = src.substring(cap[0].length);
@@ -875,8 +885,13 @@ Renderer.prototype.emoji = function(text) {
 	return emoji.shortnameToImage(text);
 };
 
+//Renderer.prototype.email = function(text) {
+//  return 'VEOO'+text+'OOEV';
+//};
+
+// This is not ideal anyway. Should be inserting a NavLink, not an <a />
 Renderer.prototype.atname = function(text) {
-  return '['+text+']';
+  return '<a href="'+'/users/'+text+'">@'+text+'</a>';
 };
 
 Renderer.prototype.codespan = function(text) {
