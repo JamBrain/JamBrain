@@ -94,10 +94,11 @@ export default class SidebarCountdown extends Component {
 
 	count() {
 		let that = this;
-		let d = that.daysblock;
-		let h = that.hoursblock;
-		let m = that.minutesblock;
-		let s = that.secondsblock;
+		console.log(that);
+		let d = that.daysblock.children[1];
+		let h = that.hoursblock.children[1];
+		let m = that.minutesblock.children[1];
+		let s = that.secondsblock.children[1];
 		this.countdown_interval = setInterval(function() {
 			if(that.total_seconds > 0) {
 				--that.values.seconds;
@@ -136,13 +137,13 @@ export default class SidebarCountdown extends Component {
 				if(!that.state.loaded)
 					that.setState({loaded: true});
 
-        that.checkHour(that.values.days, d.children[1], d.children[2]);
+        that.checkHour(that.values.days, d.children[0], d.children[1]);
         // Hours
-        that.checkHour(that.values.hours, h.children[1], h.children[2]);
+        that.checkHour(that.values.hours, h.children[0], h.children[1]);
         // Minutes
-        that.checkHour(that.values.minutes, m.children[1], m.children[2]);
+        that.checkHour(that.values.minutes, m.children[0], m.children[1]);
         // Seconds
-        that.checkHour(that.values.seconds, s.children[1], s.children[2]);
+        that.checkHour(that.values.seconds, s.children[0], s.children[1]);
 
         --that.total_seconds;
 			} else {
@@ -151,9 +152,38 @@ export default class SidebarCountdown extends Component {
 		}, 1000);
 	}
 
+	renderDigit( value, classname ) {
+		let Digit1 = Math.floor(value / 10);
+		let Digit2 = value % 10;
+		//console.log(value, Digit1, Digit2);
+		return (
+			<div>
+				<div class={ "figure " + classname + " " + classname + "-1" }>
+					<span class="top">{  Digit1 }</span>
+					<span class="top-back">
+						<span>{ Digit1 }</span>
+					</span>
+					<span class="bottom">{ Digit1 }</span>
+					<span class="bottom-back">
+						<span >{ Digit1 }</span>
+					</span>
+				</div>
+
+				<div class={ "figure " + classname + " " + classname + "-2" }>
+					<span class="top">{  Digit2 }</span>
+					<span class="top-back">
+						<span>{ Digit2 }</span>
+					</span>
+					<span class="bottom">{ Digit2 }</span>
+					<span class="bottom-back">
+						<span >{ Digit2 }</span>
+					</span>
+				</div>
+			</div>
+		);
+	}
+
 	render( props ) {
-
-
 
 		let days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 		let utcCode = (props.date.getTimezoneOffset()/60)*-1;
@@ -185,7 +215,7 @@ export default class SidebarCountdown extends Component {
 			let n = new Date();
 			let diff = props.date.getTime() - n.getTime();
 			let ts = Math.abs(diff/1000);
-			let ss = String(ts % 60);
+			let ss = String(parseInt(ts % 60));
 			let mm = String(Math.floor(ts / 60) % 60);
 			let hh = String(Math.floor(ts / 60 / 60) % 24);
 			let dd = String(Math.floor(ts / 60 / 60 / 24));
@@ -196,6 +226,8 @@ export default class SidebarCountdown extends Component {
 				minutes: mm,
 				seconds: ss
 			};
+
+			console.log(this.values);
 		}
 		//console.log(this);
 		return (
@@ -207,105 +239,29 @@ export default class SidebarCountdown extends Component {
 					<div class="bloc-time days" data-init-value="00"  ref={c => this.daysblock=c} style={ daysblock }>
 						<span class="count-title">Days</span>
 
-						<div class="figure days days-1">
-							<span class="top">{this.values.days < 10 ? '0' : String(this.values.days).charAt(0)}</span>
-							<span class="top-back">
-								<span>{this.values.days < 10 ? '0' : String(this.values.days).charAt(0)}</span>
-							</span>
-							<span class="bottom">{this.values.days < 10 ? '0' : String(this.values.days).charAt(0)}</span>
-							<span class="bottom-back">
-								<span >{this.values.days < 10 ? '0' : String(this.values.days).charAt(0)}</span>
-							</span>
-						</div>
+						{ this.renderDigit(this.values.days, "days") }
 
-						<div class="figure days days-2">
-							<span class="top">{this.values.days < 10 ? String(this.values.days).charAt(0) : String(this.values.days).charAt(1)}</span>
-							<span class="top-back">
-								<span>{this.values.days < 10 ? String(this.values.days).charAt(0) : String(this.values.days).charAt(1)}</span>
-							</span>
-							<span class="bottom">{this.values.days < 10 ? String(this.values.days).charAt(0) : String(this.values.days).charAt(1)}</span>
-							<span class="bottom-back">
-								<span>{this.values.days < 10 ? String(this.values.days).charAt(0) : String(this.values.days).charAt(1)}</span>
-							</span>
-						</div>
 					</div>
 
 						<div class="bloc-time hours" data-init-value="00"  ref={c => this.hoursblock=c}>
 							<span class="count-title">Hours</span>
 
-							<div class="figure hours hours-1">
-								<span class="top">{this.values.hours < 10 ? '0' : String(this.values.hours).charAt(0)}</span>
-								<span class="top-back">
-									<span>{this.values.hours < 10 ? '0' : String(this.values.hours).charAt(0)}</span>
-								</span>
-								<span class="bottom">{this.values.hours < 10 ? '0' : String(this.values.hours).charAt(0)}</span>
-								<span class="bottom-back">
-									<span>{this.values.hours < 10 ? '0' : String(this.values.hours).charAt(0)}</span>
-								</span>
-							</div>
+							{ this.renderDigit(this.values.hours, "hours") }
 
-							<div class="figure hours hours-2">
-								<span class="top">{this.values.hours < 10 ? String(this.values.hours).charAt(0) : String(this.values.hours).charAt(1)}</span>
-								<span class="top-back">
-									<span>{this.values.hours < 10 ? String(this.values.hours).charAt(0) : String(this.values.hours).charAt(1)}</span>
-								</span>
-								<span class="bottom">{this.values.hours < 10 ? String(this.values.hours).charAt(0) : String(this.values.hours).charAt(1)}</span>
-								<span class="bottom-back">
-									<span>{this.values.hours < 10 ? String(this.values.hours).charAt(0) : String(this.values.hours).charAt(1)}</span>
-								</span>
-							</div>
 						</div>
 
 						<div class="bloc-time min" data-init-value="0"  ref={c => this.minutesblock=c} style={this.state.ShowDays ? "margin-right: 0px;" : ""}>
 							<span class="count-title">Minutes</span>
 
-							<div class="figure min min-1">
-								<span class="top">{this.values.minutes < 10 ? '0' : String(this.values.minutes).charAt(0)}</span>
-								<span class="top-back">
-									<span>{this.values.minutes < 10 ? '0' : String(this.values.minutes).charAt(0)}</span>
-								</span>
-								<span class="bottom">{this.values.minutes < 10 ? '0' : String(this.values.minutes).charAt(0)}</span>
-								<span class="bottom-back">
-									<span>{this.values.minutes < 10 ? '0' : String(this.values.minutes).charAt(0)}</span>
-								</span>
-							</div>
+							{ this.renderDigit(this.values.minutes, "minutes") }
 
-							<div class="figure min min-2">
-							 <span class="top">{this.values.minutes < 10 ? String(this.values.minutes).charAt(0) : String(this.values.minutes).charAt(1)}</span>
-								<span class="top-back">
-									<span>{this.values.minutes < 10 ? String(this.values.minutes).charAt(0) : String(this.values.minutes).charAt(1)}</span>
-								</span>
-								<span class="bottom">{this.values.minutes < 10 ? String(this.values.minutes).charAt(0) : String(this.values.minutes).charAt(1)}</span>
-								<span class="bottom-back">
-									<span>{this.values.minutes < 10 ? String(this.values.minutes).charAt(0) : String(this.values.minutes).charAt(1)}</span>
-								</span>
-							</div>
 						</div>
 
 						<div class="bloc-time sec" data-init-value="0" style={ secondsblock }  ref={c => this.secondsblock=c}>
 							<span class="count-title">Seconds</span>
 
-								<div class="figure sec sec-1">
-								<span class="top">{this.values.seconds < 10 ? '0' : String(this.values.seconds).charAt(0)}</span>
-								<span class="top-back">
-									<span>{this.values.seconds < 10 ? '0' : String(this.values.seconds).charAt(0)}</span>
-								</span>
-								<span class="bottom">{this.values.seconds < 10 ? '0' : String(this.values.seconds).charAt(0)}</span>
-								<span class="bottom-back">
-									<span>{this.values.seconds < 10 ? '0' : String(this.values.seconds).charAt(0)}</span>
-								</span>
-							</div>
+							{ this.renderDigit(this.values.seconds, "seconds") }
 
-							<div class="figure sec sec-2">
-								<span class="top">{this.values.seconds < 10 ? String(this.values.seconds).charAt(0) : String(this.values.seconds).charAt(1)}</span>
-								<span class="top-back">
-									<span>{this.values.seconds < 10 ? String(this.values.seconds).charAt(0) : String(this.values.seconds).charAt(1)}</span>
-								</span>
-								<span class="bottom">{this.values.seconds < 10 ? String(this.values.seconds).charAt(0) : String(this.values.seconds).charAt(1)}</span>
-								<span class="bottom-back">
-									<span>{this.values.seconds < 10 ? String(this.values.seconds).charAt(0) : String(this.values.seconds).charAt(1)}</span>
-								</span>
-							</div>
 						</div>
 					</div>
 				</div>
