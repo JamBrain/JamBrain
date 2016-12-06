@@ -20,7 +20,7 @@ export default class ViewSingle extends Component {
 
 		let n = new Date();
 
-		if(n > ldStartDate) {
+		if(n < ldStartDate) {
 			return (
 				<div id="sidebar">
 					<SidebarCountdown date={ ldStartDate } nc="ld" to="LudumDare" tt="Starts" />
