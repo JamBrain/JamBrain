@@ -13,34 +13,33 @@ export default class ViewSingle extends Component {
 	}
 
 	render( props, state ) {
-
 		let jamEndDate = new Date(Date.UTC(2016, 11, 13, 2, 0, 0));
 		let compoEndDate = new Date(Date.UTC(2016, 11, 12, 2, 0, 0));
 		let ldStartDate = new Date(Date.UTC(2016, 11, 10, 2, 0, 0));
 
 		let n = new Date();
-
-		if(n < ldStartDate) {
-			return (
-				<div id="sidebar">
-					<SidebarCountdown date={ ldStartDate } nc="ld" to="Ludum Dare" tt="Starts" />
-					<SidebarCalendar />
-					<SidebarUpcoming />
-					<SidebarTV />
-					<SidebarSupport />
-				</div>
-			);
-		} else {
-			return (
-				<div id="sidebar">
-					<SidebarCountdown date={ compoEndDate } nc="compo" to="Compo" tt="Ends" />
-					<SidebarCountdown date={ jamEndDate } nc="jam" to="Jam" tt="Ends" />
-					<SidebarCalendar />
-					<SidebarUpcoming />
-					<SidebarTV />
-					<SidebarSupport />
-				</div>
-			);
+		
+		let ShowCountdown = [];
+		if ( n < ldStartDate ) {
+			ShowCountdown.push(<SidebarCountdown date={ ldStartDate } nc="ld" to="Ludum Dare" tt="Starts" />);
 		}
+		else {
+			if ( n < compoEndDate ) {
+				ShowCountdown.push(<SidebarCountdown date={ compoEndDate } nc="compo" to="Compo" tt="Ends" />);
+			};
+			if ( n < compoEndDate ) {
+				ShowCountdown.push(<SidebarCountdown date={ jamEndDate } nc="jam" to="Jam" tt="Ends" />);
+			}
+		}
+
+		return (
+			<div id="sidebar">
+				{ShowCountdown}
+				<SidebarCalendar rows={ShowCountdown.length ? 2 : 3} />
+				<SidebarUpcoming />
+				<SidebarTV />
+				<SidebarSupport />
+			</div>
+		);
 	}
 };
