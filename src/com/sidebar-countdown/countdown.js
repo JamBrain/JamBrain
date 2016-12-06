@@ -10,6 +10,7 @@ export default class SidebarCountdown extends Component {
 			this.$ = {};
 			this.values = {};
 			this.class = this.props.nc;
+			this.setState({loaded: false});
 			//this.init(this.props.date);
 	}
 
@@ -39,6 +40,7 @@ export default class SidebarCountdown extends Component {
 			//that.total_seconds = (((that.values.days * 24) * 60) * 60) + that.values.hours * 60 * 60 + (that.values.minutes * 60) + that.values.seconds;
 			that.total_seconds = ts;
 			that.setState({'values': {'days': d, 'hours': h, 'minutes': m, 'seconds': s}, 'fvalues': {'d1': 0, 'd2': 0, 'h1': 0, 'h2': 0, 'm1': 0, 'm2': 0, 's1': 0, 's2': 0}, 'animate': false});
+
 			that.count();
 
 		//});
@@ -130,6 +132,10 @@ export default class SidebarCountdown extends Component {
 				}
         // Update DOM values
         // Days
+
+				if(!that.state.loaded)
+					that.setState({loaded: true});
+
         that.checkHour(that.values.days, d.children[1], d.children[2]);
         // Hours
         that.checkHour(that.values.hours, h.children[1], h.children[2]);
@@ -146,6 +152,9 @@ export default class SidebarCountdown extends Component {
 	}
 
 	render( props ) {
+
+
+
 		let days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 		let utcCode = (props.date.getTimezoneOffset()/60)*-1;
 		let utcCodep = "";
@@ -171,6 +180,24 @@ export default class SidebarCountdown extends Component {
 		if(this.state.Urgent && this.state.Urgent == true)
 			urgentclass = "-countdown urgent";
 
+		if(!this.state.loaded)
+		{
+			let n = new Date();
+			let diff = props.date.getTime() - n.getTime();
+			let ts = Math.abs(diff/1000);
+			let ss = String(ts % 60);
+			let mm = String(Math.floor(ts / 60) % 60);
+			let hh = String(Math.floor(ts / 60 / 60) % 24);
+			let dd = String(Math.floor(ts / 60 / 60 / 24));
+
+			this.values = {
+				days: dd,
+				hours: hh,
+				minutes: mm,
+				seconds: ss
+			};
+		}
+		console.log(this);
 		return (
 			<div class="sidebar-base sidebar-countdown">
 				<div class="-clock font2" id={ this.class }>
@@ -181,24 +208,24 @@ export default class SidebarCountdown extends Component {
 						<span class="count-title">Days</span>
 
 						<div class="figure days days-1">
-							<span class="top">0</span>
+							<span class="top">{this.values.days < 10 ? '0' : String(this.values.days).charAt(0)}</span>
 							<span class="top-back">
-								<span>0</span>
+								<span>{this.values.days < 10 ? '0' : String(this.values.days).charAt(0)}</span>
 							</span>
-							<span class="bottom">0</span>
+							<span class="bottom">{this.values.days < 10 ? '0' : String(this.values.days).charAt(0)}</span>
 							<span class="bottom-back">
-								<span >0</span>
+								<span >{this.values.days < 10 ? '0' : String(this.values.days).charAt(0)}</span>
 							</span>
 						</div>
 
 						<div class="figure days days-2">
-							<span class="top">0</span>
+							<span class="top">{this.values.days < 10 ? String(this.values.days).charAt(0) : String(this.values.days).charAt(1)}</span>
 							<span class="top-back">
-								<span>0</span>
+								<span>{this.values.days < 10 ? String(this.values.days).charAt(0) : String(this.values.days).charAt(1)}</span>
 							</span>
-							<span class="bottom">0</span>
+							<span class="bottom">{this.values.days < 10 ? String(this.values.days).charAt(0) : String(this.values.days).charAt(1)}</span>
 							<span class="bottom-back">
-								<span>0</span>
+								<span>{this.values.days < 10 ? String(this.values.days).charAt(0) : String(this.values.days).charAt(1)}</span>
 							</span>
 						</div>
 					</div>
@@ -207,24 +234,24 @@ export default class SidebarCountdown extends Component {
 							<span class="count-title">Hours</span>
 
 							<div class="figure hours hours-1">
-								<span class="top">0</span>
+								<span class="top">{this.values.hours < 10 ? '0' : String(this.values.hours).charAt(0)}</span>
 								<span class="top-back">
-									<span>0</span>
+									<span>{this.values.hours < 10 ? '0' : String(this.values.hours).charAt(0)}</span>
 								</span>
-								<span class="bottom">0</span>
+								<span class="bottom">{this.values.hours < 10 ? '0' : String(this.values.hours).charAt(0)}</span>
 								<span class="bottom-back">
-									<span>0</span>
+									<span>{this.values.hours < 10 ? '0' : String(this.values.hours).charAt(0)}</span>
 								</span>
 							</div>
 
 							<div class="figure hours hours-2">
-								<span class="top">0</span>
+								<span class="top">{this.values.hours < 10 ? String(this.values.hours).charAt(0) : String(this.values.hours).charAt(1)}</span>
 								<span class="top-back">
-									<span>0</span>
+									<span>{this.values.hours < 10 ? String(this.values.hours).charAt(0) : String(this.values.hours).charAt(1)}</span>
 								</span>
-								<span class="bottom">0</span>
+								<span class="bottom">{this.values.hours < 10 ? String(this.values.hours).charAt(0) : String(this.values.hours).charAt(1)}</span>
 								<span class="bottom-back">
-									<span>0</span>
+									<span>{this.values.hours < 10 ? String(this.values.hours).charAt(0) : String(this.values.hours).charAt(1)}</span>
 								</span>
 							</div>
 						</div>
@@ -233,24 +260,24 @@ export default class SidebarCountdown extends Component {
 							<span class="count-title">Minutes</span>
 
 							<div class="figure min min-1">
-								<span class="top">0</span>
+								<span class="top">{this.values.minutes < 10 ? '0' : String(this.values.minutes).charAt(0)}</span>
 								<span class="top-back">
-									<span>0</span>
+									<span>{this.values.minutes < 10 ? '0' : String(this.values.minutes).charAt(0)}</span>
 								</span>
-								<span class="bottom">0</span>
+								<span class="bottom">{this.values.minutes < 10 ? '0' : String(this.values.minutes).charAt(0)}</span>
 								<span class="bottom-back">
-									<span>0</span>
+									<span>{this.values.minutes < 10 ? '0' : String(this.values.minutes).charAt(0)}</span>
 								</span>
 							</div>
 
 							<div class="figure min min-2">
-							 <span class="top">0</span>
+							 <span class="top">{this.values.minutes < 10 ? String(this.values.minutes).charAt(0) : String(this.values.minutes).charAt(1)}</span>
 								<span class="top-back">
-									<span>0</span>
+									<span>{this.values.minutes < 10 ? String(this.values.minutes).charAt(0) : String(this.values.minutes).charAt(1)}</span>
 								</span>
-								<span class="bottom">0</span>
+								<span class="bottom">{this.values.minutes < 10 ? String(this.values.minutes).charAt(0) : String(this.values.minutes).charAt(1)}</span>
 								<span class="bottom-back">
-									<span>0</span>
+									<span>{this.values.minutes < 10 ? String(this.values.minutes).charAt(0) : String(this.values.minutes).charAt(1)}</span>
 								</span>
 							</div>
 						</div>
@@ -259,24 +286,24 @@ export default class SidebarCountdown extends Component {
 							<span class="count-title">Seconds</span>
 
 								<div class="figure sec sec-1">
-								<span class="top">0</span>
+								<span class="top">{this.values.seconds < 10 ? '0' : String(this.values.seconds).charAt(0)}</span>
 								<span class="top-back">
-									<span>0</span>
+									<span>{this.values.seconds < 10 ? '0' : String(this.values.seconds).charAt(0)}</span>
 								</span>
-								<span class="bottom">0</span>
+								<span class="bottom">{this.values.seconds < 10 ? '0' : String(this.values.seconds).charAt(0)}</span>
 								<span class="bottom-back">
-									<span>0</span>
+									<span>{this.values.seconds < 10 ? '0' : String(this.values.seconds).charAt(0)}</span>
 								</span>
 							</div>
 
 							<div class="figure sec sec-2">
-								<span class="top">0</span>
+								<span class="top">{this.values.seconds < 10 ? String(this.values.seconds).charAt(0) : String(this.values.seconds).charAt(1)}</span>
 								<span class="top-back">
-									<span>0</span>
+									<span>{this.values.seconds < 10 ? String(this.values.seconds).charAt(0) : String(this.values.seconds).charAt(1)}</span>
 								</span>
-								<span class="bottom">0</span>
+								<span class="bottom">{this.values.seconds < 10 ? String(this.values.seconds).charAt(0) : String(this.values.seconds).charAt(1)}</span>
 								<span class="bottom-back">
-									<span>0</span>
+									<span>{this.values.seconds < 10 ? String(this.values.seconds).charAt(0) : String(this.values.seconds).charAt(1)}</span>
 								</span>
 							</div>
 						</div>
