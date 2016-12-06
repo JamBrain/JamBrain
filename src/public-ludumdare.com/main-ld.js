@@ -3,8 +3,10 @@ import Sanitize							from '../internal/sanitize/sanitize';
 import NavBar 							from 'com/nav-bar/bar';
 import NavSpinner						from 'com/nav-spinner/spinner';
 
+import ViewHeader						from 'com/view-header/header';
 import ViewSidebar						from 'com/view-sidebar/sidebar';
 import ViewContent						from 'com/view-content/content';
+//import ViewFooter						from 'com/view-footer/footer';
 
 import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
 import DialogLogin						from 'com/dialog-login/login';
@@ -229,15 +231,13 @@ class Main extends Component {
 	
 
 	render( {}, {node, user, path, extra, error} ) {
-		var Content = null;
+		var ShowContent = null;
 		
 		if ( node.id ) {
-			Content = (
-				<ViewContent node={node} user={user} path={path} extra={extra} />
-			);
+			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} />;
 		}
 		else {
-			Content = (
+			ShowContent = (
 				<ViewContent>
 					{error ? error : <NavSpinner />}
 				</ViewContent>
@@ -248,9 +248,9 @@ class Main extends Component {
 			<div id="layout">
 				<NavBar user={user} />
 				<div class="view-single">
-					<div id="header" />
+					<ViewHeader />
 					<div id="content-sidebar">
-						{Content}
+						{ShowContent}
 						<ViewSidebar />
 					</div>
 					<div id="footer"></div>
