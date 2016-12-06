@@ -4,17 +4,15 @@ import SVGIcon 			from 'com/svg-icon/icon';
 export default class SidebarCalendar extends Component {
 	constructor( props ) {
 		super(props);
-		
-		this.rows = 3;
-		this.columns = 7;
 
-		this.genCalendar( new Date() );
+		//this.genCalendar( new Date(), 3 );
 	}
 
-	genCalendar( today ) {
+	genCalendar( today, rows ) {
 		// TODO: Adjust noted days based on timezone
 		// TODO: Adjust selected day/week when time itself rolls over
 
+		let cols = 7;
 		let thisDay = today.getDate();
 		let thisMonth = today.getMonth();
 		let thisYear = today.getFullYear();
@@ -30,7 +28,7 @@ export default class SidebarCalendar extends Component {
 			nextDay = lastMonth.getDate() - lastMonth.getDay();
 		}
 		
-		this.data = Array(...Array(this.rows)).map(() => Array.from( Array(this.columns),function(){
+		let data = Array(...Array(rows)).map(() => Array.from( Array(cols),function(){
 			let ret = {
 				'year': thisYear,
 				'month': thisMonth,
@@ -53,6 +51,8 @@ export default class SidebarCalendar extends Component {
 			
 			return ret;
 		}));
+		
+		return data;
 	}
 
 	genRow( row ) {
@@ -91,15 +91,17 @@ export default class SidebarCalendar extends Component {
 	genWeek( row ) {
 		return (
 			<div class="-week">
-			{this.genRow(row)}
+				{this.genRow(row)}
 			</div>
 		);
 	}
 	
-	render( props ) {
+	render( {rows} ) {
+		let data = this.genCalendar(new Date(), rows ? rows : 3);
+		
 		return (
 			<div class="sidebar-base sidebar-calendar">
-			{this.data.map(row => this.genWeek(row))} 
+				{data.map(row => this.genWeek(row))} 
 			</div>
 		);
 	}
