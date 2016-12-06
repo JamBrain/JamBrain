@@ -197,7 +197,7 @@ export default class SidebarCountdown extends Component {
 				seconds: ss
 			};
 		}
-		console.log(this);
+		//console.log(this);
 		return (
 			<div class="sidebar-base sidebar-countdown">
 				<div class="-clock font2" id={ this.class }>
