@@ -158,3 +158,27 @@
 		margin: auto;
 	}
 }
+
+@keyframes clockflip {
+	from {
+		transform: rotateX(0deg);
+		perspective: 0px;
+	}
+
+	to {
+		transform: rotateX(-180deg);
+		perspective: 300px;
+	}
+}
+
+@keyframes clockflipreverse {
+	from {
+		transform: rotateX(0deg);
+		perspective: 0px;
+	}
+
+	to {
+		transform: rotateX(180deg);
+		perspective: 300px;
+	}
+}
