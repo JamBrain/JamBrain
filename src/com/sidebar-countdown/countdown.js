@@ -10,12 +10,12 @@ export default class SidebarCountdown extends Component {
 			this.$ = {};
 			this.values = {};
 			this.class = this.props.nc;
-			this.init(this.props.date);
+			//this.init(this.props.date);
 	}
 
 	init( countdownTo ) {
 		let that = this;
-		document.addEventListener("DOMContentLoaded", function(event) {
+		//document.addEventListener("DOMContentLoaded", function(event) {
 
 			let n = new Date();
 			let diff = countdownTo.getTime() - n.getTime();
@@ -41,7 +41,11 @@ export default class SidebarCountdown extends Component {
 			that.setState({'values': {'days': d, 'hours': h, 'minutes': m, 'seconds': s}, 'fvalues': {'d1': 0, 'd2': 0, 'h1': 0, 'h2': 0, 'm1': 0, 'm2': 0, 's1': 0, 's2': 0}, 'animate': false});
 			that.count();
 
-		});
+		//});
+	}
+
+	componentDidMount() {
+		this.init(this.props.date);
 	}
 
 	animateFigure($el, value) {
