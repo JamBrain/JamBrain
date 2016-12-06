@@ -58,6 +58,10 @@
 	AutoEmbed.prototype.makeSmartLink = function( icon_name, full_url, part_url ) {
 		return '<span><a href="'+full_url+'" target="_blank" rel="noopener noreferrer">'+this.makeSVGIcon(icon_name,{'class':'-baseline -small'})+part_url+'</a></span>';
 	}
+
+	AutoEmbed.prototype.makeLocalLink = function( url ) {
+		return '<span><a href="'+url+'">'+url+'</a></span>';
+	}
 		
 	AutoEmbed.prototype.hasEmbed = function( str ) {
 		if ( str.indexOf('youtube.com') !== -1 ) {
@@ -96,6 +100,10 @@
 			url = this.extractFromURL(str);
 //			return this.makeSmartLink( 'twitter', str, '/'+url.path.join('/') );
 			return this.makeSmartLink( 'twitter', str, ' twitter.com/'+url.path.join('/') );
+		}
+		else if ( str.indexOf(window.location.hostname) !== -1 ) {
+			url = this.extractFromURL(str);
+			return this.makeLocalLink( '/'+url.path.join('/') );
 		}
 //		else {
 //			return this.makeSmartLink( 'link', str, str.split('//')[1] );
