@@ -66,7 +66,7 @@ export default class ContentEventHome extends Component {
 			""
 		];
 		
-		var ThemeSelectionDiv = ThemeModeText ? <div><SVGIcon>mallet</SVGIcon> {ThemeModeText}</div> : "";
+		var ThemeSelectionDiv = ThemeModeText ? <NavLink href={path+'/theme'} class="-item"><SVGIcon>mallet</SVGIcon> {ThemeModeText}</NavLink> : "";
 		
 		var ShowStats = null;
 		if ( stats ) {
@@ -100,8 +100,8 @@ export default class ContentEventHome extends Component {
 				<div class="">
 					{ShowEventMode}
 				</div>
-				<div class="">
-					<div><SVGIcon>gamepad</SVGIcon> Join Event</div>
+				<div class="event-nav">
+					<NavLink class="-item"><SVGIcon>gamepad</SVGIcon> Join Event</NavLink>
 					{ThemeSelectionDiv}
 				</div>
 				{ShowStats}

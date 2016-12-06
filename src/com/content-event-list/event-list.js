@@ -1,6 +1,7 @@
 import { h, Component } 				from 'preact/preact';
 import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
+import NavSpinner						from 'com/nav-spinner/spinner';
 
 import ButtonBase						from 'com/button-base/base';
 
@@ -15,7 +16,8 @@ export default class ContentEventList extends Component {
 		this.state = {
 			'lists': null,
 			'names': null,
-			'votes': null
+			'votes': null,
+			'page': 1
 		}
 		
 		this.renderList = this.renderList.bind(this);
@@ -25,10 +27,18 @@ export default class ContentEventList extends Component {
 		$ThemeList.Get(this.props.node.id)
 		.then(r => {
 			if ( r.lists ) {
-				this.setState({ 'lists': r.lists, 'names': r.names });
+				var newstate = { 
+					'lists': r.lists, 
+					'names': r.names
+				};
+				if ( r.allowed.length > 0 ) {
+					newstate['page'] = r.allowed[r.allowed.length-1];
+				}
+				
+				this.setState(newstate);
 			}
 			else {
-				this.setState({ 'lists': [] });
+				this.setState({ 'lists': null });
 			}
 		})
 		.catch(err => {
@@ -81,16 +91,12 @@ export default class ContentEventList extends Component {
 	}
 	
 	voteToClass( vote ) {
-		if ( vote === 1 ) {
+		if ( vote === 1 )
 			return ' -yes';
-		}
-		else if ( vote === 0 ) {
+		else if ( vote === 0 )
 			return ' -maybe';
-		}
-		else if ( vote === -1 ) {
+		else if ( vote === -1 )
 			return ' -no';
-		}
-		
 		return '';
 	}
 	
@@ -117,59 +123,65 @@ export default class ContentEventList extends Component {
 				);
 			}
 			else {
-				return (
-					<div>
-						<h3>{this.state.names[list]}</h3>
-						{this.state.lists[list].map(r => {
-							return <div>{r.theme}</div>;
-						})}
-					</div>
-				);
+				return [
+					<h3>{this.state.names[list]}</h3>,
+					this.state.lists[list].map(r => {
+						return <div>{r.theme}</div>;
+					})
+				];
 			}
 		}
 		else if ( this.state.names[list] ) {
-			return (
-				<div>
-					<h3>{this.state.names[list]}</h3>
-					{"This round hasn't started yet. Say tuned!"}
-				</div>
-			);
+			return [
+				<h3>{this.state.names[list]}</h3>,
+				"This round hasn't started yet. Say tuned!"
+			];
 		}
 		return null;
 	}
 	
-	render( {node, user, path, extra}, {lists, votes, error} ) {
+	render( {node, user, path, extra}, {lists, names, votes, page, error} ) {
 		var Title = <h3>Theme Voting Round</h3>;
-		
-		var page = 1;
+	
+		// By default, the page is the last available round	
 		if ( (extra && extra.length && extra[0]) ) {
 			page = Number.parseInt(extra[0]);
 		}
 		
-		if ( user && user['id'] && lists && votes ) {
-			return (
-				<div class="-body">
-					{Title}
-					{page ? this.renderList(page) : null}
+		var Navigation = null;
+		if ( names ) {
+			Navigation = (
+				<div class="event-nav">
+					{Object.keys(names).map(v => <NavLink class={"-item" + ((v == page) ? " -selected" : "")} href={path+'/'+v}>{names[v]}</NavLink>)}
 				</div>
 			);
+		}
+
+		// Page bodies		
+		var Body = null;
+		if ( user && user['id'] && lists && votes ) {
+			Body = page ? this.renderList(page) : null;
 		}
 		else if ( lists ) {
-			return (
-				<div class="-body">
-					{Title}
-					<div class="">Please log in</div>
-					{page ? this.renderList(page) : null}
-				</div>
-			);
+			Body = [
+				<div class="-info">Please log in</div>,
+				page ? this.renderList(page) : null
+			];
+		}
+		else if ( error ) {
+			Body = <div>{error}</div>;
 		}
 		else {
-			return (
-				<div class="-body">
-					{Title}
-					<div>Problem</div>
-				</div>
-			);
+			Body = <NavSpinner />;
 		}
+
+		// Generate the page		
+		return (
+			<div class="-body">
+				{Title}
+				{Navigation}
+				{Body}
+			</div>
+		);
 	}
 }

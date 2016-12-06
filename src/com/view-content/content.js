@@ -24,13 +24,13 @@ export default class ViewContent extends Component {
 		}
 
 		if ( node.type === 'post' || node.type === 'game' ) {
-			return <ContentPost node={node} user={user} path={path+'../'} extra={extra} />;
+			return <ContentPost node={node} user={user} path={path} extra={extra} />;
 		}
 		else if ( node.type === 'user' ) {
-			return <ContentUser node={node} user={user} path={path+'../'} extra={extra} />;
+			return <ContentUser node={node} user={user} path={path} extra={extra} />;
 		}
 		else if ( node.type === 'event' ) {
-			return <ContentEvent node={node} user={user} path={path+'../'} extra={extra} />;
+			return <ContentEvent node={node} user={user} path={path} extra={extra} />;
 		}
 		else if ( node.type === 'root' || node.type === 'events' ) {
 			return <ContentTimeline node={node} user={user} path={path} extra={extra} />;

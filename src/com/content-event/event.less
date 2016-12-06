@@ -77,3 +77,37 @@
 	margin-top:1.0em;
 }
 
+
+#content .event-nav {
+	& > a.-item {
+		padding: 0.5em 1em;
+		margin: 0.25em;
+		border: 1px solid @MAJOR_MUTE_D2;
+		display: inline-block;
+		font-weight: bold;
+		
+		&:hover,
+		&:focus,
+		&.-selected:hover,
+		&.-selected:focus {
+			color: @MAJOR_LIGHT;
+			background: @MAJOR_COLOR1;
+			border: 1px solid @MAJOR_COLOR1;
+		}
+		
+		&.-selected {
+			color: @MAJOR_MUTE_L2;
+			background: @MAJOR_MUTE_D2;
+			border: 1px solid @MAJOR_MUTE_D2;			
+		}
+
+		&:first-child {
+			margin-left: 0;
+		}
+		&:last-child {
+			margin-right: 0;
+		}
+		
+		color: @MAJOR_MUTE_D2;
+	}
+}
