@@ -24,7 +24,7 @@ export default class SidebarCalendar extends Component {
 		let nextDay = today.getDate() - today.getDay();
 		
 		if ( nextDay < 1 ) {
-			let lastMonth = new Date(today.getFullYear(),today.getMonth(),0);
+			let lastMonth = new Date(today.getFullYear(), today.getMonth(),0);
 			monthEndsOn = lastMonth.getDate();
 			//console.log( lastMonth.getFullYear(), lastMonth.getMonth(), lastMonth.getDate(), lastMonth.getDay() );
 			nextDay = lastMonth.getDate() - lastMonth.getDay();
@@ -69,7 +69,7 @@ export default class SidebarCalendar extends Component {
 			props.title = col.month+"-"+col.day+"-"+col.year;
 			if ( window.Intl ) {
 				// http://stackoverflow.com/a/18648314/5678759
-				let objDate = new Date(col.year, col.month-1, col.day);
+				let objDate = new Date(col.year, col.month, col.day);
 				props.title = objDate.toLocaleString("en-us", {month:"long", day:"numeric", year:"numeric"});
 			}
 			
