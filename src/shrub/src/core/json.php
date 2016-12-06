@@ -276,7 +276,7 @@ function json_Emit( $out, $allow_jsonp = true ) {
 /// After authenticating and loading globals, confirm that we're not in maintenence mode
 function json_CheckForMaintenence() {
 	if ( !userAuth_IsAdmin() && !global_IsActive() ) {
-		json_EmitFatalUnavailableError( strlen($SH['alert']) ? $SH['alert'] : null );
+		json_EmitFatalError_Unavailable( strlen($SH['alert']) ? $SH['alert'] : null );
 	}
 }
 
