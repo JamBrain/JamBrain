@@ -94,7 +94,6 @@ export default class SidebarCountdown extends Component {
 
 	count() {
 		let that = this;
-		console.log(that);
 		let d = that.daysblock.children[1];
 		let h = that.hoursblock.children[1];
 		let m = that.minutesblock.children[1];
@@ -155,7 +154,6 @@ export default class SidebarCountdown extends Component {
 	renderDigit( value, classname ) {
 		let Digit1 = Math.floor(value / 10);
 		let Digit2 = value % 10;
-		//console.log(value, Digit1, Digit2);
 		return (
 			<div>
 				<div class={ "figure " + classname + " " + classname + "-1" }>
@@ -226,10 +224,7 @@ export default class SidebarCountdown extends Component {
 				minutes: mm,
 				seconds: ss
 			};
-
-			console.log(this.values);
 		}
-		//console.log(this);
 		return (
 			<div class="sidebar-base sidebar-countdown">
 				<div class="-clock font2" id={ this.class }>
