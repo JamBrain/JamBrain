@@ -9,7 +9,7 @@ export default class ViewHeader extends Component {
 
 	render( props, state ) {
 		var ShowWhatsup = null;
-		//ShowWhatsup = <HeaderWhatsup />
+		ShowWhatsup = <HeaderWhatsup />
 		
 		return (
 			<div id="header">

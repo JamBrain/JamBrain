@@ -247,7 +247,7 @@ class Main extends Component {
 		return (
 			<div id="layout">
 				<NavBar user={user} />
-				<div class="view-single">
+				<div class="view">
 					<ViewHeader />
 					<div id="content-sidebar">
 						{ShowContent}
