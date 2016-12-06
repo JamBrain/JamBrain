@@ -51,7 +51,7 @@ export default class ContentTimeline extends Component {
 	}
 
 	makeItem( node ) {
-		var path = this.props.path;//'/'+this.props.node.slug+'/';//this.props.path ? this.props.path : this.props.;
+		var path = this.props.path+'/'+node.slug;
 		var user = this.props.user;
 		var extra = this.props.extra;
 		
