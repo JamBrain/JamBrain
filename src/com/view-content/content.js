@@ -14,15 +14,6 @@ export default class ViewContent extends Component {
 	}
 	
 	getContent( {node, user, path, extra} ) {
-//		if ( extra.length ) {
-//			console.log(extra);
-//			return (
-//				<Content404 user={user} path={path} extra={extra}>
-//					{extra[0]} not found
-//				</Content404>
-//			);
-//		}
-		
 		if ( node.name ) {
 			document.title = titleParser.parse(node.name, true);
 			if ( document.title === "" )
@@ -49,8 +40,13 @@ export default class ViewContent extends Component {
 		else if ( node.type === 'events' || node.type === 'group' ) {
 			return <ContentGroup node={node} user={user} path={path} extra={extra} />;
 		}
-		else if ( node.type === 'root' || node.type === 'events' ) {
-			return <ContentTimeline node={node} user={user} path={path} extra={extra} />;
+		else if ( node.type === 'root' ) {
+			if ( extra.length ) {
+				return <Content404 user={user} path={path} extra={extra}>{extra[0]} not found</Content404>;
+			}
+			else {
+				return <ContentTimeline node={node} user={user} path={path} extra={extra} />;
+			}
 		}
 		else {
 			return <div>Unsupported Node Type: {""+node.type}</div>;
