@@ -6,11 +6,6 @@ export default class ContentUser extends Component {
 	constructor( props ) {
 		super(props);
 	}
-
-	componentDidMount() {
-	}
-	componentWillUnmount() {
-	}
 	
 	render( {node}, {error} ) {
 		if ( node.slug ) {

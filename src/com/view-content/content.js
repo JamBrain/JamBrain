@@ -1,17 +1,17 @@
 import { h, Component }					from 'preact/preact';
 import ContentPost						from 'com/content-post/post';
 import ContentUser						from 'com/content-user/user';
+import ContentUsers						from 'com/content-users/users';
 import ContentTimeline					from 'com/content-timeline/timeline';
 import ContentEvent						from 'com/content-event/event';
+//import ContentEvents					from 'com/content-events/events';
 
 export default class ViewContent extends Component {
 	constructor( props ) {
 		super(props);
-		
-		this.state = {};
 	}
 	
-	getContent( {node, user, path, extra}, state ) {
+	getContent( {node, user, path, extra} ) {
 		if ( node.name ) {
 			document.title = titleParser.parse(node.name, true);
 			if ( document.title === "" )
@@ -29,6 +29,9 @@ export default class ViewContent extends Component {
 		else if ( node.type === 'user' ) {
 			return <ContentUser node={node} user={user} path={path} extra={extra} />;
 		}
+		else if ( node.type === 'users' ) {
+			return <ContentUsers node={node} user={user} path={path} extra={extra} />;
+		}
 		else if ( node.type === 'event' ) {
 			return <ContentEvent node={node} user={user} path={path} extra={extra} />;
 		}
@@ -40,11 +43,11 @@ export default class ViewContent extends Component {
 		}
 	}
 
-	render( props, state ) {
+	render( props ) {
 		if ( props.node ) {
 			return (
 				<div id="content">
-					{this.getContent(props, state)}
+					{this.getContent(props)}
 				</div>
 			);
 		}
