@@ -54,7 +54,7 @@ if ( !isset($_GET['nopreload']) ) {
 	header( "Link: <".JS_FILE.">; rel=preload; as=script".LINK_SUFFIX, false );
 	header( "Link: <".CSS_FILE.">; rel=preload; as=style".LINK_SUFFIX, false );
 	header( "Link: <".SVG_FILE.">; rel=preload".LINK_SUFFIX, false );
-	header( "Link: <".FONT_FILE.">; rel=preload; as=style", false );
+//	header( "Link: <".FONT_FILE.">; rel=preload; as=style", false );
 }
 //header("Link: </blah">; rel=canonical"); // https://yoast.com/rel-canonical/
 
