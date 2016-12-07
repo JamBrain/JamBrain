@@ -54,7 +54,7 @@ export default class ClockFlip extends Component {
 				}
 
 				if(that.state.values.days >= 0 && that.state.values.hours < 0) {
-					that.state.values.hours = 24;
+					that.state.values.hours = 23;
 					--that.state.values.days;
 				}
 
@@ -196,27 +196,27 @@ export default class ClockFlip extends Component {
 		}
 
 		return (
-			<div class={ "clock-base clock-countdown " + props.classes } style={ size }>
-				<div class="-clock font2" id={ props.id } style={ display }>
+			<div class={"clock-base clock-countdown " + props.class} style={ size }>
+				<div class="-clock" id={ props.id } style={ display }>
 					<h1>{ props.h1 } <strong>{ props.h2 }</strong></h1>
 					<div class={ urgent }>
 						<div class="bloc-time days" data-init-value="00" ref={c => this.daysblock=c} style={ daysblock }>
-							<span class="count-title">Days</span>
+							<span class="count-title _font2">Days</span>
 							{ this.renderDigit(this.state.values.days, "days") }
 						</div>
 		
 						<div class="bloc-time hours" data-init-value="00" ref={c => this.hoursblock=c}>
-							<span class="count-title">Hours</span>
+							<span class="count-title _font2">Hours</span>
 							{ this.renderDigit(this.state.values.hours, "hours") }
 						</div>
 		
 						<div class="bloc-time min" data-init-value="0" ref={c => this.minutesblock=c} style={this.state.ShowDays ? "margin-right: 0px;" : ""}>
-							<span class="count-title">Minutes</span>
+							<span class="count-title _font2">Minutes</span>
 							{ this.renderDigit(this.state.values.minutes, "minutes") }
 						</div>
 		
 						<div class="bloc-time sec" data-init-value="0" style={ secondsblock } ref={c => this.secondsblock=c}>
-							<span class="count-title">Seconds</span>
+							<span class="count-title _font2">Seconds</span>
 							{ this.renderDigit(this.state.values.seconds, "seconds") }
 						</div>
 					</div>

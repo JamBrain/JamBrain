@@ -227,7 +227,7 @@ export default class SidebarCountdown extends Component {
 		}
 		return (
 			<div class="sidebar-base sidebar-countdown">
-				<div class="-clock font2" id={ this.class }>
+				<div class="-clock _font2" id={ this.class }>
 					<h1>{ props.to } <strong>{ props.tt }</strong></h1>
 					<div class={ urgentclass }>
 
