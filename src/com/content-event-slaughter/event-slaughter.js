@@ -186,7 +186,7 @@ export default class ContentEventSlaughter extends Component {
 		return Object.keys(this.state.ideas).map(this._renderMyIdea);
 	}
 	
-	renderBody( {current, votes, ideas, done, error} ) {
+	renderBody( {current, votes, ideas, done/*, error*/} ) {
 		var StatsAndDetails = (
 			<div>
 				<h3>Recent Themes</h3>
@@ -227,7 +227,7 @@ export default class ContentEventSlaughter extends Component {
 		}		
 	}
 
-	render( {node, user, path, extra}, state ) {
+	render( {node, user/*, path, extra*/}, state ) {
 		var Title = (<h3>Theme Slaughter Round</h3>);
 		
 		if ( node.slug && state.votes && state.ideas ) {

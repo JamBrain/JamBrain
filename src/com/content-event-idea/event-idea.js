@@ -117,7 +117,7 @@ export default class ContentEventIdea extends Component {
 		return Object.keys(this.state.ideas).map(this.renderIdea);
 	}
 
-	render( {node, user, path, extra}, {idea, ideas, error} ) {
+	render( {node, user, /*path, extra*/}, {idea, ideas, error} ) {
 		if ( node.slug && ideas ) {
 			if ( user && user['id'] ) {
 				return (
