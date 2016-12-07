@@ -195,7 +195,7 @@ export default class ClockFlip extends Component {
 		return (
 			<div class={"clock-base clock-countdown " + props.class} style={ size }>
 				<div class="-clock" id={ props.id } style={ display }>
-					<h1>{ props.h1 } <strong>{ props.h2 }</strong></h1>
+					<h1 class="_font2">{ props.h1 } <strong>{ props.h2 }</strong></h1>
 					<div class={ urgent }>
 						<div class="bloc-time days" data-init-value="00" ref={c => this.daysblock=c} style={ daysblock }>
 							<span class="count-title _font2">Days</span>
