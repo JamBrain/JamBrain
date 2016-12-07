@@ -13,7 +13,7 @@ export default class ViewHeader extends Component {
 		ShowWhatsup = <HeaderWhatsup />
 
 		var ShowClock = null;
-//		ShowClock = <HeaderClock />
+		ShowClock = <HeaderClock />
 		
 		return (
 			<div id="header">
