@@ -115,7 +115,7 @@ export default class SidebarCountdown extends Component {
         }
 
 				if(that.values.days >= 0 && that.values.hours < 0) {
-					that.values.hours = 24;
+					that.values.hours = 23;
 					--that.values.days;
 				}
 
