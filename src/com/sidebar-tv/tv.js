@@ -33,16 +33,41 @@ export default class SidebarTV extends Component {
 	componentDidMount() {
 //		console.log("SideBarTV: componentDidMount");
 		
-		fetch('//jammer.tv/v1/live.php/ludum-dare+game-jam+game-dev/', {method: 'POST' /*, mode:'no-cors'*/})
+		//fetch('//jammer.tv/v1/live.php/ludum-dare+game-jam+game-dev/', {method: 'POST' /*, mode:'no-cors'*/})
+		fetch('http://jammer.tv/v1/live.php/ludum-dare+ludum-dare-art+ludum-dare-music+ludum-dare-craft+ludum-dare-play+ludum-dare-unity')
 		.then(r => {
 			if ( r )
 				return r.json();
-			//throw new Error("Response is empty");
 		})
 		.then(data => {
-			this.setState({ 
-				streams: this.state.streams.concat(data.streams)
-			});
+			// hack
+			this.state.streams = this.state.streams.concat(data.streams);
+						
+			if ( this.state.streams.length < 3 ) {
+				fetch('http://jammer.tv/v1/live.php/game-dev+game-art+game-music+unity')
+				.then(rr => {
+					if ( rr )
+						return rr.json();
+				})
+				.then(data2 => {
+					this.setState({ 
+						'streams': this.state.streams.concat(data2.streams)
+					});
+				})
+				.catch(err => {
+					console.log("sidebar-tv2:",err);
+					this.setState({
+						'error': err
+					});
+					return err;
+				});
+			}
+			else {
+				this.setState({ 
+					'streams': this.state.streams
+				});
+			}
+			
 			return data;
 		})
 		.catch(err => {
@@ -110,7 +135,7 @@ export default class SidebarTV extends Component {
 			
 			return (
 				<div class="sidebar-base sidebar-tv">
-					<div class="-active" onclick={e => {console.log('tv'); window.location.hash = "#tv/"+active.meta.name;}}>
+					<div class="-active" onclick={e => {console.log('tv'); window.open("https://www.twitch.tv/directory/game/Creative/ldjam", '_blank'); /*window.location.hash = "#tv/"+active.meta.name;*/}}>
 						<div class="-img"><img src={active.meta.thumbnail} /></div>
 						<div class="-live"><SVGIcon baseline small>circle</SVGIcon> <span class="-text">LIVE</span></div>
 						<div class="-name">{this.serviceIcons[active.service_id]} <span class="-text">{active.meta.name}</span></div>
