@@ -1,30 +1,33 @@
 
 @import "defs.less";
 
-@NAVBAR_HEIGHT: 4rem;
-@NAVBAR_SHADOW: 0.25rem;
-@NAVBAR_PAD: 0.5em;
-@NAVBAR_CELL: @NAVBAR_HEIGHT - @NAVBAR_PAD * 2;
+@VIEWBAR_HEIGHT: 4rem;
+@VIEWBAR_SHADOW: 0.25rem;
+@VIEWBAR_PAD: 0.5em;
+@VIEWBAR_CELL: @VIEWBAR_HEIGHT - @VIEWBAR_PAD * 2;
 
-.nav-bar {
+@VIEWBAR_BG: mix(@MAJOR_DARK,@MAJOR_DARK,80%);
+@VIEWBAR_BG_ALPHA: fade(@VIEWBAR_BG,80%);
+
+.view-bar {
 	/* Needed for click-off and drag un-highlighting buttons to work (i.e. no selections) */
 	user-select: none;
 	
 	position: fixed;
-	top: -@NAVBAR_SHADOW;							/* Mobile Scrolling Garbage Fix */
+	top: -@VIEWBAR_SHADOW;							/* Mobile Scrolling Garbage Fix */
 	left: 0;
 	right: 0;
 	z-index:1000;
 	
-	border-top: @NAVBAR_SHADOW solid @NAVBAR_BG;	/* Mobile Scrolling Garbage Fix */
+	border-top: @VIEWBAR_SHADOW solid @VIEWBAR_BG;	/* Mobile Scrolling Garbage Fix */
 
-	height: @NAVBAR_HEIGHT;
-	background: @NAVBAR_BG_ALPHA;
+	height: @VIEWBAR_HEIGHT;
+	background: @VIEWBAR_BG_ALPHA;
 		
 	& > .-content {
 		margin: auto;
 		max-width: @BASE_WIDTH + 2rem; /* 2rem, so when we lose our full width, it's padded */
-		height: @NAVBAR_HEIGHT;
+		height: @VIEWBAR_HEIGHT;
 		position: relative;
 
 		& > .-left {
@@ -36,7 +39,7 @@
 			height: 2.5em; /* Required, otherwise top+bottom fills the whole parent div */
 			
 			& > .-logo {
-				/*margin-right: @NAVBAR_PAD;*/		
+				/*margin-right: @VIEWBAR_PAD;*/		
 				font-size:2.5em;
 				display: flex;
 				transition: color 0.2s;
@@ -216,14 +219,14 @@
 	}
 };
 
-body /*._use-nav-bar*/ {
+body /*._use-view-bar*/ {
 	position:relative;
-	top: @NAVBAR_HEIGHT;
+	top: @VIEWBAR_HEIGHT;
 };
 /*
-body._static-nav-bar > .nav-bar {
+body._static-view-bar > .view-bar {
 	position: absolute;
 	left: 0;
-	top: -(@NAVBAR_HEIGHT + @NAVBAR_SHADOW);
+	top: -(@VIEWBAR_HEIGHT + @VIEWBAR_SHADOW);
 }
 */

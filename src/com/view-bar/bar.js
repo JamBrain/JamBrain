@@ -10,17 +10,17 @@ function make_url( url ) {
 	return url + window.location.search;
 }
 
-export default class NavBar extends Component {
+export default class ViewBar extends Component {
 	constructor( props ) {
 		super(props);
 	}
 
 	componentDidMount() {
-		document.body.classList.add('_use-nav-bar');
+		document.body.classList.add('_use-view-bar');
 	}
 	componentWillUnmount() {
-		document.body.classList.remove('_use-nav-bar');
-		document.body.classList.remove('_static-nav-bar');
+		document.body.classList.remove('_use-view-bar');
+		document.body.classList.remove('_static-view-bar');
 	}
 	
 //	shouldComponentUpdate( nextProps, nextState ) {
@@ -122,7 +122,7 @@ export default class NavBar extends Component {
 		}
 		
 		return (
-			<div class="nav-bar">
+			<div class="view-bar">
 				<div class="-content">
 					<div class="-left">
 						<ButtonLink href="/" class="-logo">
@@ -147,9 +147,9 @@ export default class NavBar extends Component {
 	}
 }
 
-//export function navbar_Float() {
-//	document.body.classList.remove('_static-nav-bar');
+//export function viewbar_Float() {
+//	document.body.classList.remove('_static-view-bar');
 //}
-//export function navbar_Static() {
-//	document.body.classList.add('_static-nav-bar');
+//export function viewbar_Static() {
+//	document.body.classList.add('_static-view-bar');
 //}

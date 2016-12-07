@@ -1,5 +1,5 @@
 import { h, render, Component }			from 'preact/preact';
-import NavBar 							from 'com/nav-bar/bar';
+import ViewBar 							from 'com/view-bar/bar';
 
 import ViewTimeline						from 'com/view-timeline/timeline';
 import ViewSingle						from 'com/view-single/single';
@@ -111,7 +111,7 @@ class Main extends Component {
 		
 		return (
 			<div id="layout">
-				<NavBar />
+				<ViewBar />
 				{ this.getView(props,state) }
 			</div>
 		);
