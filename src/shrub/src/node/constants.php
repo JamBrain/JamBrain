@@ -30,9 +30,13 @@ const SH_NODE_TYPE_POST =			'post';
 ///	@addtogroup NodeMetaPrivacy
 /// @name Privacy Types
 /// @{
-const SH_NODE_META_PUBLIC = 		0;
-const SH_NODE_META_PROTECTED = 		1;
-const SH_NODE_META_PRIVATE = 		128;
+const SH_NODE_META_PUBLIC = 				0;
+const SH_NODE_META_PROTECTED = 				32;
+const SH_NODE_META_PRIVATE = 				64;
+
+const SH_NODE_META_PUBLIC_DELETED = 		0^-1;
+const SH_NODE_META_PROTECTED_DELETED = 		32^-1;
+const SH_NODE_META_PRIVATE_DELETED = 		64^-1;
 /// @}
 
 /// @name Node Tables
@@ -43,7 +47,7 @@ const SH_TABLE_NODE_VERSION =		"node_version";
 const SH_TABLE_NODE_LINK =			"node_link";
 const SH_TABLE_NODE_META =			"node_meta";
 const SH_TABLE_NODE_LOVE =			"node_love";
-const SH_TABLE_NODE_STAR =			"node_star";
+//const SH_TABLE_NODE_STAR =			"node_star";
 const SH_TABLE_NODE_SEARCH =		"node_search";
 /// @}
 
@@ -53,7 +57,7 @@ global_AddTableConstant(
 	'SH_TABLE_NODE_LINK',
 	'SH_TABLE_NODE_META',
 	'SH_TABLE_NODE_LOVE',
-	'SH_TABLE_NODE_STAR',
+//	'SH_TABLE_NODE_STAR',
 	'SH_TABLE_NODE_SEARCH'
 );
 
