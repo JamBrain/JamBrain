@@ -226,33 +226,33 @@ export default class SidebarCountdown extends Component {
 		}
 		return (
 			<div class="sidebar-base sidebar-countdown">
-				<div class="-clock _font2" id={ this.class }>
-					<h1>{ props.to } <strong>{ props.tt }</strong></h1>
+				<div class="-clock" id={ this.class }>
+					<h1 class="_font2">{ props.to } <strong>{ props.tt }</strong></h1>
 					<div class={ urgentclass }>
 
 					<div class="bloc-time days" data-init-value="00"  ref={c => this.daysblock=c} style={ daysblock }>
-						<span class="count-title">Days</span>
+						<span class="count-title _font2">Days</span>
 
 						{ this.renderDigit(this.values.days, "days") }
 
 					</div>
 
 						<div class="bloc-time hours" data-init-value="00"  ref={c => this.hoursblock=c}>
-							<span class="count-title">Hours</span>
+							<span class="count-title _font2">Hours</span>
 
 							{ this.renderDigit(this.values.hours, "hours") }
 
 						</div>
 
 						<div class="bloc-time min" data-init-value="0"  ref={c => this.minutesblock=c} style={this.state.ShowDays ? "margin-right: 0px;" : ""}>
-							<span class="count-title">Minutes</span>
+							<span class="count-title _font2">Minutes</span>
 
 							{ this.renderDigit(this.values.minutes, "minutes") }
 
 						</div>
 
 						<div class="bloc-time sec" data-init-value="0" style={ secondsblock }  ref={c => this.secondsblock=c}>
-							<span class="count-title">Seconds</span>
+							<span class="count-title _font2">Seconds</span>
 
 							{ this.renderDigit(this.values.seconds, "seconds") }
 
