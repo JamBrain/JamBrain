@@ -14,13 +14,14 @@ export default class ViewContent extends Component {
 	}
 	
 	getContent( {node, user, path, extra} ) {
-		if ( extra.length ) {
-			return (
-				<Content404 user={user} path={path} extra={extra}>
-					{extra[0]} not found
-				</Content404>
-			);
-		}
+//		if ( extra.length ) {
+//			console.log(extra);
+//			return (
+//				<Content404 user={user} path={path} extra={extra}>
+//					{extra[0]} not found
+//				</Content404>
+//			);
+//		}
 		
 		if ( node.name ) {
 			document.title = titleParser.parse(node.name, true);
