@@ -94,14 +94,14 @@ export default class SidebarTV extends Component {
 			if (other === active) {
 				return (
 					<div class="selected" onclick={that.setActive.bind(that,index)}>
-						<div><img src={other.meta.thumbnail} /></div>
+						<div><img src={ other && other.meta ? other.meta.thumbnail : ""} /></div>
 					</div>
 				);
 			}
 			else {
 				return (
 					<div onclick={that.setActive.bind(that,index)}>
-						<div><img src={other.meta.thumbnail} /></div>
+						<div><img src={ other && other.meta ? other.meta.thumbnail : ""} /></div>
 					</div>
 				);
 			}
