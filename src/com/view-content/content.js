@@ -6,6 +6,7 @@ import ContentTimeline					from 'com/content-timeline/timeline';
 import ContentEvent						from 'com/content-event/event';
 //import ContentEvents					from 'com/content-events/events';
 import ContentGroup						from 'com/content-group/group';
+import Content404						from 'com/content-404/404';
 
 export default class ViewContent extends Component {
 	constructor( props ) {
@@ -13,6 +14,14 @@ export default class ViewContent extends Component {
 	}
 	
 	getContent( {node, user, path, extra} ) {
+		if ( extra.length ) {
+			return (
+				<Content404 user={user} path={path} extra={extra}>
+					{extra[0]} not found
+				</Content404>
+			);
+		}
+		
 		if ( node.name ) {
 			document.title = titleParser.parse(node.name, true);
 			if ( document.title === "" )
