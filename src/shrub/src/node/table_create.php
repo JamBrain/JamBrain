@@ -1,6 +1,12 @@
 <?php
 require_once __DIR__."/node.php";
 
+const DB_TYPE_NODE_BODY = 'MEDIUMTEXT NOT NULL';
+const DB_TYPE_NODE_SCOPE = 'TINYINT NOT NULL';
+const DB_TYPE_NODE_META_VALUE = 'TEXT NOT NULL';
+const DB_TYPE_NODE_LINK_VALUE = 'TEXT DEFAULT NULL';
+
+
 // Simliar to the regular NODE, but just a snapshot
 // IMPORTANT: This has to come first, as with the node table, we need to make nodes
 $table = 'SH_TABLE_NODE_VERSION';
@@ -23,7 +29,7 @@ if ( in_array($table, $TABLE_LIST) ) {
 				slug ".DB_TYPE_ASCII(96).",
 					INDEX(slug),
 				name ".DB_TYPE_UNICODE(96).",
-				body MEDIUMTEXT NOT NULL,
+				body ".DB_TYPE_NODE_BODY.",
 				tag ".DB_TYPE_ASCII(32)."
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
@@ -61,7 +67,7 @@ if ( in_array($table, $TABLE_LIST) ) {
 					INDEX(slug),
 					UNIQUE parent_slug (parent,slug),
 				name ".DB_TYPE_UNICODE(96).",
-				body MEDIUMTEXT NOT NULL
+				body ".DB_TYPE_NODE_BODY."
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
 
@@ -104,9 +110,18 @@ if ( in_array($table, $TABLE_LIST) ) {
 					INDEX(a),
 				b ".DB_TYPE_ID.",
 					INDEX(b),
-				type ".DB_TYPE_ASCII(24).",
-					INDEX(type)
+				scope ".DB_TYPE_NODE_SCOPE.",
+				`key` ".DB_TYPE_ASCII(32).",
+					INDEX(`key`),
+				`value` ".DB_TYPE_NODE_LINK_VALUE.",
+				timestamp ".DB_TYPE_TIMESTAMP."
 			)".DB_CREATE_SUFFIX);
+		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD INDEX scope (scope);"
+			);
 		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
@@ -128,11 +143,17 @@ if ( in_array($table, $TABLE_LIST) ) {
 				id ".DB_TYPE_UID.",
 				node ".DB_TYPE_ID.",
 					INDEX(node),
-				scope TINYINT UNSIGNED NOT NULL,
+				scope ".DB_TYPE_NODE_SCOPE.",
 				`key` ".DB_TYPE_ASCII(32).",
-				`value` TEXT NOT NULL,
+				`value` ".DB_TYPE_NODE_META_VALUE.",
 				timestamp ".DB_TYPE_TIMESTAMP."
 			)".DB_CREATE_SUFFIX);
+		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD INDEX scope (scope);"
+			);
 		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
