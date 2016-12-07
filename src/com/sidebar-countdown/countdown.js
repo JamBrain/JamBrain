@@ -51,7 +51,6 @@ export default class SidebarCountdown extends Component {
 	}
 
 	animateFigure($el, value) {
-		let that = this;
 		let $top = $el.children[0];
 		let $bottom = $el.children[2];
 		let $back_top = $el.children[1];
@@ -119,7 +118,7 @@ export default class SidebarCountdown extends Component {
 					--that.values.days;
 				}
 
-				if(that.values.days < 1 && that.state.ShowDays == true) {
+				if(that.values.days < 1 && that.state.ShowDays === true) {
 					that.setState({"ShowDays": false});
 				}
 
@@ -205,7 +204,7 @@ export default class SidebarCountdown extends Component {
 
 		utcCode = utcCodep+utcCode;
 		let urgentclass = "-countdown";
-		if(this.state.Urgent && this.state.Urgent == true)
+		if(this.state.Urgent && this.state.Urgent === true)
 			urgentclass = "-countdown urgent";
 
 		if(!this.state.loaded)

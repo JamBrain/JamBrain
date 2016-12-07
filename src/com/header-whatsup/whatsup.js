@@ -7,7 +7,7 @@ export default class HeaderWhatsup extends Component {
 		super(props);
 	}
 
-	render( {rows} ) {
+	render( props ) {
 		// NOTE: For Theme Voting, look at what's in 'available' returned by the theme list.
 		// Then use that to check the name in 'names'. 
 		

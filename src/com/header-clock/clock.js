@@ -8,7 +8,7 @@ export default class HeaderClock extends Component {
 		super(props);
 	}
 
-	render( {rows} ) {
+	render( props ) {
 		return (
 			<div class="header-base header-clock outside">
 				<ClockFlip date={new Date()} />

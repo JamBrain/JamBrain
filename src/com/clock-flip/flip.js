@@ -2,10 +2,10 @@ import { h, Component } 				from 'preact/preact';
 
 export default class ClockFlip extends Component {
 	constructor( props ) {
-		super( props );
+		super(props);
 
-		let n = new Date();
-		let diff = props.date.getTime() - n.getTime();
+		let now = new Date();
+		let diff = props.date ? props.date.getTime() - now.getTime() : 0;
 		let ts = Math.abs(diff/1000);
 
 		let ss = String(parseInt(ts % 60));
@@ -77,7 +77,6 @@ export default class ClockFlip extends Component {
 	}
 
 	animateFigure( $el, value ) {
-		let that = this;
 		let $top = $el.children[0];
 		let $bottom = $el.children[2];
 		let $back_top = $el.children[1];
@@ -162,8 +161,6 @@ export default class ClockFlip extends Component {
 	}
 
 	render( props ) {
-		let n = new Date();
-
 		let size = "font-size: 1em";
 		if(props.comSize)
 			size = "font-size: "+props.comSize+"em";
@@ -187,8 +184,8 @@ export default class ClockFlip extends Component {
 		let daysblock = "display: inline-block";
 		let secondsblock = "display: inline-block";
 		if(!this.props.jumbo) {
-			let daysblock = "display: none";
-			let secondsblock = "display: inline-block";
+			daysblock = "display: none";
+			secondsblock = "display: inline-block";
 		}
 		if(!this.props.jumbo && this.state.values.days > displayAfterDays) {
 			daysblock = "display: inline-block";
