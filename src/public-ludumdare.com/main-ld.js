@@ -1,12 +1,12 @@
 import { h, render, Component }			from 'preact/preact';
 import Sanitize							from '../internal/sanitize/sanitize';
-import NavBar 							from 'com/nav-bar/bar';
 import NavSpinner						from 'com/nav-spinner/spinner';
 
+import ViewBar 							from 'com/view-bar/bar';
 import ViewHeader						from 'com/view-header/header';
 import ViewSidebar						from 'com/view-sidebar/sidebar';
 import ViewContent						from 'com/view-content/content';
-//import ViewFooter						from 'com/view-footer/footer';
+import ViewFooter						from 'com/view-footer/footer';
 
 import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
 import DialogLogin						from 'com/dialog-login/login';
@@ -246,14 +246,14 @@ class Main extends Component {
 
 		return (
 			<div id="layout">
-				<NavBar user={user} />
+				<ViewBar user={user} />
 				<div class="view">
 					<ViewHeader />
 					<div id="content-sidebar">
 						{ShowContent}
 						<ViewSidebar />
 					</div>
-					<div id="footer"></div>
+					<ViewFooter />
 				</div>					
 				{this.getDialog()}
 			</div>

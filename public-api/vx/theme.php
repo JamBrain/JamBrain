@@ -225,6 +225,54 @@ switch ( $action ) {
 		};
 		break; // case 'history': //theme/history
 
+	case 'get': //theme/get
+		json_ValidateHTTPMethod('GET');
+		
+		$event_id = intval(json_ArgGet(0));
+		
+		// NOTE: This is a special cache. The server is going to be hit HARD by this request.
+		
+		// TODO: Build Cache Key
+		// TODO: Check if it exists
+		// TODO: If it exists, check if it's allowed to be shown, and return immediately
+		
+		if ( $event = validateEvent($event_id) ) {
+			// If the theme is public knowledge
+			if ( isset($event['meta']['event-theme']) ) {
+				$RESPONSE['theme'] = $event['meta']['event-theme'];
+				break; // case 'get': //theme/get
+			}
+			
+			// If the event has a start time
+			if ( isset($event['meta']['event-start']) ) {
+				$start = strtotime($event['meta']['event-start']);
+				$now = time();
+				
+				$diff = $start - $now;
+				
+				$RESPONSE['countdown'] = $diff > 0 ? $diff : 0;
+
+				$event_priv = null;//nodeComplete_GetPrivateById($event_id);
+
+				// TODO: Store item in cache
+
+				if ( isset($event_priv) && isset($event_priv['event-theme']) ) {
+					$RESPONSE['locked'] = true;
+					if ( $diff <= 0 ) {
+						$RESPONSE['theme'] = $event_priv['event-theme'];
+					}
+				}
+				else {
+					$RESPONSE['locked'] = false;
+				}
+				
+				break; // case 'get': //theme/get
+			}
+			
+			json_EmitFatalError_BadRequest("No theme is set", $RESPONSE);
+		}
+		break; // case 'get': //theme/get
+
 	// Theme Suggestions
 	case 'idea': //theme/idea
 		$parent_action = $action;
