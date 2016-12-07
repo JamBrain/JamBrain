@@ -1,8 +1,8 @@
 import { h, render, Component }			from 'preact/preact';
 import ViewBar 							from 'com/view-bar/bar';
 
-import ViewTimeline						from 'com/view-timeline/timeline';
-import ViewSingle						from 'com/view-single/single';
+//import ViewTimeline						from 'com/view-timeline/timeline';
+//import ViewSingle						from 'com/view-single/single';
 
 import CoreData							from '../core-data/data';
 
@@ -90,15 +90,15 @@ class Main extends Component {
 		if ( state.active ) {
 			var item = CoreData.getItemById( state.active );
 	
-			if ( item.type === 'root' ) {
-				return <ViewTimeline item={state.active} />;
-			}
-			else if ( item.type === 'post' || item.type === 'game' || item.type === 'user' ) {
-				return <ViewSingle item={state.active} />;
-			}
-			else {
+//			if ( item.type === 'root' ) {
+//				return <ViewTimeline item={state.active} />;
+//			}
+//			else if ( item.type === 'post' || item.type === 'game' || item.type === 'user' ) {
+//				return <ViewSingle item={state.active} />;
+//			}
+//			else {
 				return <div>unsupported</div>;
-			}
+//			}
 		}
 		else {
 			return <div>404</div>;
