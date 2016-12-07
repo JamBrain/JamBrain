@@ -32,7 +32,7 @@ export default class ContentEventHome extends Component {
 	}
 
 
-	render( {node, user, path, extra}, {stats, error} ) {
+	render( {node, /*user,*/ path, extra}, {stats /*, error*/} ) {
 		var dangerousParsedBody = { __html:marked.parse(node.body) };
 		
 		let ThemeMode = (node.meta['theme-mode']) ? parseInt(node.meta['theme-mode']) : 0;

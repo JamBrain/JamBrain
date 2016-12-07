@@ -96,7 +96,7 @@ export default class ContentPost extends Component {
 		return <NavLink class="at-name" href={user_path}><img src={this.getAvatar(user)} />{user.name}</NavLink>;
 	}
 
-	render( {node, user, path}, {author, loved, lovecount, error} ) {
+	render( {node, /*user,*/ path}, {author, loved, lovecount, error} ) {
 		if ( node.slug && author.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };

@@ -140,7 +140,7 @@ export default class ContentEventList extends Component {
 		return null;
 	}
 	
-	render( {node, user, path, extra}, {lists, names, votes, page, error} ) {
+	render( {/*node,*/ user, path, extra}, {lists, names, votes, page, error} ) {
 		var Title = <h3>Theme Voting Round</h3>;
 	
 		// By default, the page is the last available round	

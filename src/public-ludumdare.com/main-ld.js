@@ -83,7 +83,6 @@ class Main extends Component {
 					return <DialogUnfinished />;
 				else
 					return null;
-				break;
 		};
 	}
 	

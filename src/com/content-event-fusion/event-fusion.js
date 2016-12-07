@@ -17,7 +17,7 @@ export default class ContentEventFusion extends Component {
 	}
 
 
-	render( {node, user, path, extra}, {error} ) {
+	render( {/*node,*/ user/*, path, extra*/} ) {
 		var Title = <h3>Theme Fusion Round</h3>;
 		
 		if ( user && user['id'] ) {
