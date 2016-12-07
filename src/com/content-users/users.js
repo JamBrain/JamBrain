@@ -12,7 +12,9 @@ export default class ContentUsers extends Component {
 		if ( extra.length ) {
 			return (
 				<div class="content-base content-post">
-					<strong>404:</strong> User "{extra[0]}" not found.
+					<h2><strong>404:</strong> User "{extra[0]}" not found.</h2>
+					<div>Did you forget to create your account?</div>
+					<div>.</div>
 				</div>
 			);
 		}
