@@ -34,7 +34,7 @@ export default class SidebarTV extends Component {
 //		console.log("SideBarTV: componentDidMount");
 		
 		//fetch('//jammer.tv/v1/live.php/ludum-dare+game-jam+game-dev/', {method: 'POST' /*, mode:'no-cors'*/})
-		fetch('http://jammer.tv/v1/live.php/ludum-dare+ludum-dare-art+ludum-dare-music+ludum-dare-craft+ludum-dare-play+ludum-dare-unity')
+		fetch('//jammer.tv/v1/live.php/ludum-dare+ludum-dare-art+ludum-dare-music+ludum-dare-craft+ludum-dare-play+ludum-dare-unity')
 		.then(r => {
 			if ( r )
 				return r.json();
@@ -44,7 +44,7 @@ export default class SidebarTV extends Component {
 			this.state.streams = this.state.streams.concat(data.streams);
 						
 			if ( this.state.streams.length < 3 ) {
-				fetch('http://jammer.tv/v1/live.php/game-dev+game-art+game-music+unity')
+				fetch('//jammer.tv/v1/live.php/game-dev+game-art+game-music+unity')
 				.then(rr => {
 					if ( rr )
 						return rr.json();
