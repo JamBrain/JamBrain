@@ -37,14 +37,14 @@ export default class ViewBar extends Component {
 //			</ButtonBase>
 //		);
 		
-		var Calendar = (
+		var ShowCalendar = (
 			<ButtonBase class="-button if-no-sidebar-block" onclick={e => { console.log('calendar'); window.location.hash = "#cal"; }}>
 				<SVGIcon baseline>calendar</SVGIcon>
 				<div class="if-sidebar-block">Schedule</div>
 			</ButtonBase>		
 		);
 		
-		var MyGame = null;
+		var ShowMyGame = null;
 		var NewPost = null;
 		var Notification = null;
 		var User = null;
@@ -62,14 +62,14 @@ export default class ViewBar extends Component {
 			);
 		}
 		else if ( user && user.id ) {
-			var GameURL = '/events/ludum-dare/37/theme/';
-			// TODO: Check if a participant of the current event
-			MyGame = (
-				<ButtonLink href={GameURL} class="-button">
-					<SVGIcon>gamepad</SVGIcon>
-					<div class="if-sidebar-block">Theme Voting</div>
-				</ButtonLink>
-			);
+//			var GameURL = '/events/ludum-dare/37/theme/';
+//			// TODO: Check if a participant of the current event
+//			SHowMyGame = (
+//				<ButtonLink href={GameURL} class="-button">
+//					<SVGIcon>gamepad</SVGIcon>
+//					<div class="if-sidebar-block">My Game</div>
+//				</ButtonLink>
+//			);
 			//"";
 //			 (
 //				<ButtonBase class="-button" onclick={e => console.log('my game')}>
@@ -131,9 +131,9 @@ export default class ViewBar extends Component {
 						</ButtonLink>
 					</div>
 					<div class="-right">
-						{MyGame}
+						{ShowMyGame}
 						{NewPost}
-						{Calendar}
+						{ShowCalendar}
 						{Search}
 						{Notification}
 						{User}
