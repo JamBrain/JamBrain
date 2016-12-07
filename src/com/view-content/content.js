@@ -5,6 +5,7 @@ import ContentUsers						from 'com/content-users/users';
 import ContentTimeline					from 'com/content-timeline/timeline';
 import ContentEvent						from 'com/content-event/event';
 //import ContentEvents					from 'com/content-events/events';
+import ContentGroup						from 'com/content-group/group';
 
 export default class ViewContent extends Component {
 	constructor( props ) {
@@ -34,6 +35,9 @@ export default class ViewContent extends Component {
 		}
 		else if ( node.type === 'event' ) {
 			return <ContentEvent node={node} user={user} path={path} extra={extra} />;
+		}
+		else if ( node.type === 'events' || node.type === 'group' ) {
+			return <ContentGroup node={node} user={user} path={path} extra={extra} />;
 		}
 		else if ( node.type === 'root' || node.type === 'events' ) {
 			return <ContentTimeline node={node} user={user} path={path} extra={extra} />;
