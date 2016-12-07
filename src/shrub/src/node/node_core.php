@@ -295,7 +295,7 @@ function nodeLink_GetById( $ids ) {
 		$ids_string = implode(',', $ids);
 
 		return db_QueryFetch(
-			"SELECT a, b, type
+			"SELECT a, b, scope, `key`, `value`
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
 			WHERE id IN ($ids_string)
 			"
@@ -321,7 +321,7 @@ function nodeLink_GetByNode( $nodes ) {
 		$node_string = implode(',', $nodes);
 
 		$ret = db_QueryFetch(
-			"SELECT a, b, type
+			"SELECT a, b, scope, `key`, `value`
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
 			WHERE a IN ($node_string) OR b IN ($node_string);"
 		);
@@ -358,19 +358,19 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 			// Question: Should we support circular links (i.e. remove "else" from "else if")?
 			
 			if ( $node['id'] === $link['a'] ) {
-				if ( isset($node['a'][$link['type']]) ) {
-					$node['a'][$link['type']][] = $link['b'];
+				if ( isset($node['a'][$link['key']]) ) {
+					$node['a'][$link['key']][] = $link['b'];
 				}
 				else {
-					$node['a'][$link['type']] = [$link['b']];
+					$node['a'][$link['key']] = [$link['b']];
 				}
 			}
 			else if ( $node['id'] === $link['b'] ) {
-				if ( isset($node['b'][$link['type']]) ) {
-					$node['b'][$link['type']][] = $link['a'];
+				if ( isset($node['b'][$link['key']]) ) {
+					$node['b'][$link['key']][] = $link['a'];
 				}
 				else {
-					$node['b'][$link['type']] = [$link['a']];
+					$node['b'][$link['key']] = [$link['a']];
 				}
 			}
 		}
