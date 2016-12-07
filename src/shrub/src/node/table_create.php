@@ -199,26 +199,26 @@ if ( in_array($table, $TABLE_LIST) ) {
 	table_Exit($table);
 }
 
-$table = 'SH_TABLE_NODE_STAR';
-if ( in_array($table, $TABLE_LIST) ) {
-	$ok = null;
-	
-	// AUTHOR: whom likes the thing
-	// NODE: what they like
-	
-	table_Init($table);
-	switch ( $TABLE_VERSION ) {
-	case 0:
-		$ok = table_Create( $table,
-			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
-				id ".DB_TYPE_UID.",
-				author ".DB_TYPE_ID.",
-					INDEX(author),
-				node ".DB_TYPE_ID.",
-					INDEX(node),
-				timestamp ".DB_TYPE_TIMESTAMP."
-			)".DB_CREATE_SUFFIX);
-		if (!$ok) break; $TABLE_VERSION++;
-	};
-	table_Exit($table);
-}
+//$table = 'SH_TABLE_NODE_STAR';
+//if ( in_array($table, $TABLE_LIST) ) {
+//	$ok = null;
+//	
+//	// AUTHOR: whom likes the thing
+//	// NODE: what they like
+//	
+//	table_Init($table);
+//	switch ( $TABLE_VERSION ) {
+//	case 0:
+//		$ok = table_Create( $table,
+//			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
+//				id ".DB_TYPE_UID.",
+//				author ".DB_TYPE_ID.",
+//					INDEX(author),
+//				node ".DB_TYPE_ID.",
+//					INDEX(node),
+//				timestamp ".DB_TYPE_TIMESTAMP."
+//			)".DB_CREATE_SUFFIX);
+//		if (!$ok) break; $TABLE_VERSION++;
+//	};
+//	table_Exit($table);
+//}
