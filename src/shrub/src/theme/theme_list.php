@@ -53,3 +53,17 @@ function themeList_SetPage( $id, $page ) {
 		$page, $id
 	);
 }
+
+
+function themeList_Add( $event_id, $idea_id, $theme, $page, $score = 0 ) {
+	return db_QueryInsert(
+		"INSERT INTO ".SH_TABLE_PREFIX.SH_TABLE_THEME_LIST." (
+			node, idea, theme, page, score, timestamp
+		)
+		VALUES ( 
+			?, ?, ?, ?, ?, NOW()
+		)
+		;",
+		$event_id, $idea_id, $theme, $page, $score 
+	);
+}

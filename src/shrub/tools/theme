@@ -174,7 +174,9 @@ else if ( $COMMAND === "finalize" ) {
 	$idx = 0;
 	
 	foreach ( $themes as &$theme ) {
-		print $theme['score']."\t".$theme['theme']." [".$theme['page']."]\n";
+		$theme['place'] = $idx;
+		
+		print $idx."\t".$theme['score']."\t".$theme['theme']." [".$theme['page']."]\n";
 		
 		if ( $theme['page'] > $max_page ) {
 			$max_page = $theme['page'];
@@ -201,11 +203,13 @@ else if ( $COMMAND === "finalize" ) {
 
 	foreach ( $new_themes as &$theme ) {
 //		print_r($theme);
-		print $theme['id']."\t".$theme['theme']." [".$theme['page']."]\n";
+		print $theme['place']."\t".$theme['id']."\t".$theme['score']."\t".$theme['theme']." [".$theme['page']."] {".$theme['idea']."} (".$theme['node'].")\n";
 	}
+	
+	$new_page = $max_page+1;
 
 	print "\n*** WARNING ***\n\n";
-	print "Is this Randomization Good? Last chance to back out\n";
+	print "Is this Randomization Good? This will become page ".($new_page).". Last chance to back out!!!!\n";
 	print "\nAre you sure [type 'YES']? ";
 	flush();
 	$input = trim(fgets(STDIN));
@@ -214,9 +218,11 @@ else if ( $COMMAND === "finalize" ) {
 		exit(1);
 	}
 	
-//	foreach ( $themes as $theme ) {
-//		theme_AddFinalTheme($theme['id'],$EVENT_NODE,$theme['theme']);
-//	}
+	foreach ( $new_themes as &$theme ) {
+		$ret = themeList_Add($theme['node'], $theme['idea'], $theme['theme'], $new_page );
+	}
+	
+	echo "Done.\n";
 }
 else {
 	echo "Error: Unknown command \"$COMMAND\"\n";
