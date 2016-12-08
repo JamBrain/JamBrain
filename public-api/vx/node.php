@@ -257,6 +257,60 @@ switch ( $action ) {
 		};
 		break; // case 'love': //node/love
 
+	case 'star': //node/star
+		$old_action = $action;
+		$action = json_ArgShift();
+		switch ( $action ) {
+			case 'add': //node/star/add
+				json_ValidateHTTPMethod('GET');
+				
+				if ( json_ArgCount() ) {
+					$node_id = intval(json_ArgGet(0));
+					$user_id = userAuth_GetID();
+					
+					if ( $node_id && $user_id ) {
+
+						// TODO: Check if node exists
+						
+						$RESPONSE['id'] = nodeLink_AddByNode($user_id, $node_id, SH_NODE_META_SHARED, 'star');
+					}
+					else {
+						json_EmitFatalError_BadRequest(null, $RESPONSE);
+					}
+				}
+				else {
+					json_EmitFatalError_BadRequest(null, $RESPONSE);
+				}
+				break; // case 'add': //node/love/add
+
+			case 'remove': //node/star/remove
+				json_ValidateHTTPMethod('GET');
+
+				if ( json_ArgCount() ) {
+					$node_id = intval(json_ArgGet(0));
+					$user_id = userAuth_GetID();
+					
+					if ( $node_id && $user_id ) {
+
+						// TODO: Check if node exists
+						
+						$RESPONSE['id'] = nodeLink_RemoveByNode($user_id, $node_id, SH_NODE_META_SHARED, 'star');
+					}
+					else {
+						json_EmitFatalError_BadRequest(null, $RESPONSE);
+					}
+				}
+				else {
+					json_EmitFatalError_BadRequest(null, $RESPONSE);
+				}
+				break; // case 'remove': //node/star/remove
+				
+			default:
+			json_EmitFatalError_Forbidden(null, $RESPONSE);
+				break; // default
+		};
+		break; // case 'star': //node/star
+
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break; // default

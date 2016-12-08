@@ -688,3 +688,71 @@ function nodeLove_GetByAuthor( $author ) {
 	
 	return null;
 }
+
+
+
+function nodeMeta_AddByNode( $node, $scope, $key, $value ) {
+	return db_QueryInsert(
+		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." (
+			node,
+			scope,
+			`key`,
+			`value`,
+			timestamp
+		)
+		VALUES ( 
+			?,
+			?,			
+			?,
+			?,
+			NOW()
+		);",
+		$node,
+		$scope,
+		$key,
+		$value
+	);
+}
+
+// NOTE: Doesn't actually remove, but adds an "ignore-me" entry
+function nodeMeta_RemoveByNode( $node, $scope, $key, $value ) {
+	return nodeMeta_AddByNode($node, $scope^-1, $key, $value);
+}
+
+
+function nodeLink_AddByNode( $a, $b, $scope, $key, $value = null ) {
+	return db_QueryInsert(
+		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." (
+			a,
+			b,
+			
+			scope,
+			
+			`key`,
+			`value`,
+			timestamp
+		)
+		VALUES ( 
+			?,
+			?,
+			
+			?,
+			
+			?,
+			?,
+			NOW()
+		);",
+		$a,
+		$b,
+		
+		$scope,
+		
+		$key,
+		$value
+	);
+}
+
+// NOTE: Doesn't actually remove, but adds an "ignore-me" entry
+function nodeLink_RemoveByNode( $a, $b, $scope, $key, $value ) {
+	return nodeLink_AddByNode($a, $b, $scope^-1, $key, $value);
+}

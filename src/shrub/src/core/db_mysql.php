@@ -328,6 +328,9 @@ function _db_BindExecute( &$st, $args ) {
 				$arg_types_string .= 's';
 				$arg = json_encode($arg,true);
 			}
+			else if ( is_null($arg) ) {
+				$arg_types_string .= 's';
+			}
 			// date+time?
 			else {
 				_db_FatalError("Unable to parse ".gettype($arg));
