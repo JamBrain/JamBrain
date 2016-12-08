@@ -12,7 +12,7 @@ export default class ViewContent extends Component {
 	constructor( props ) {
 		super(props);
 	}
-	
+
 	getContent( {node, user, path, extra} ) {
 		if ( node.name ) {
 			document.title = titleParser.parse(node.name, true);
@@ -22,7 +22,7 @@ export default class ViewContent extends Component {
 				document.title += " | " + window.location.host;
 		}
 		else {
-			document.title = window.location.host;
+			document.title = "Ludum Dare";//window.location.host;
 		}
 
 		if ( node.type === 'post' || node.type === 'game' ) {
