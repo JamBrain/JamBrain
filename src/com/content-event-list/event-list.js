@@ -102,8 +102,11 @@ export default class ContentEventList extends Component {
 	
 	renderList( list ) {
 		if ( this.state.lists[list] ) {
-			if ( this.state.votes && Number.parseInt(this.props.node.meta['theme-page-mode-'+list]) === 1 ) {
+			var ThemeMode = Number.parseInt(this.props.node.meta['theme-page-mode-'+list]);
+			if ( this.state.votes && ThemeMode === 1 ) {
 				var _class = "theme-item";
+				
+				var ShowHeadline = null;
 				
 				return (
 					<div class="theme-list">
@@ -121,6 +124,15 @@ export default class ContentEventList extends Component {
 						</div>
 					</div>
 				);
+			}
+			else if ( ThemeMode === 2 ) {
+				return [
+					<h3>{this.state.names[list]}</h3>,
+					"This round has ended.",
+					this.state.lists[list].map(r => {
+						return <div>{r.theme}</div>;
+					})
+				];				
 			}
 			else {
 				return [
