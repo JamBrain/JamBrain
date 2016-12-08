@@ -10,37 +10,48 @@ export default class ContentUser extends Component {
 	constructor( props ) {
 		super(props);
 		
+		this.state = {
+			'following': null,
+			'hasClicked': null
+		};
+		
 		this.onFollow = this.onFollow.bind(this);
 		this.onUnfollow = this.onUnfollow.bind(this);
 		this.onUnfriend = this.onUnfriend.bind(this);
 	}
 	
 	onFollow( e ) {
-		console.log("Follow");
+		//console.log("Follow");
 		$NodeStar.Add(this.props.node.id)
 		.then(r => {
-			console.log('win', r);
+			//console.log('win', r);
+			this.setState({ 'hasClicked': true, 'following': true });
+			
+			// TODO: Tell parent user has changed
 		})
 		.catch(err => {
 			this.setState({'error':err});
 		});
 	}
 	onUnfollow( e ) {
-		console.log("Unfollow");
+		//console.log("Unfollow");
 		$NodeStar.Remove(this.props.node.id)
 		.then(r => {
-			console.log('wooon', r);
+			//console.log('wooon', r);
+			this.setState({ 'hasClicked': true, 'following': false });
+			
+			// TODO: Tell parent user has changed
 		})
 		.catch(err => {
 			this.setState({'error':err});
 		});
 	}
 	onUnfriend( e ) {
-		console.log("Unfriend");
+		//console.log("Unfriend");
 		this.onUnfollow(e);
 	}
 	
-	render( {node, user}, {error} ) {
+	render( {node, user}, {hasClicked, following, error} ) {
 		if ( node.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse('**User:** `'+node.name+'`') };
@@ -53,7 +64,7 @@ export default class ContentUser extends Component {
 			
 			let ShowFollow = [];
 			if ( user && node.id !== user.id ) {
-				if ( user.private.link.star && user.private.link.star.indexOf(node.id) !== -1 ) {
+				if ( hasClicked ? following : user.private.link.star && user.private.link.star.indexOf(node.id) !== -1 ) {
 					if ( user.private.refs.star && user.private.refs.star.indexOf(node.id) !== -1 ) {
 						ShowFollow = <ButtonBase class="-button -green" onclick={this.onUnfriend}><SVGIcon class="if-not-hover-block">users</SVGIcon><SVGIcon class="if-hover-block">user-minus</SVGIcon> Friend</ButtonBase>;
 					}
