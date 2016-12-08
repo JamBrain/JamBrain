@@ -60,7 +60,7 @@ export default class ContentUser extends Component {
 			
 			var url = '/users/'+node.slug+'/';
 			
-			console.log('fee', user);
+			//console.log('fee', user);
 			
 			let ShowFollow = [];
 			if ( user && node.id !== user.id ) {
