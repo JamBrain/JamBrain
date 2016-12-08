@@ -129,6 +129,7 @@ export default class ContentEventList extends Component {
 				return [
 					<h3>{this.state.names[list]}</h3>,
 					"This round has ended.",
+					<br />,
 					this.state.lists[list].map(r => {
 						return <div>{r.theme}</div>;
 					})
