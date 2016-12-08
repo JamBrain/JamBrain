@@ -79,6 +79,6 @@ if ( !isset($_GET['nopreload']) ) {
 		<?php include __DIR__."/../embed/preload-svg.js.php"; ?>
 	</script>
 	<script src="<?=JS_FILE?>"></script>
-	<noscript>This website needs JavaScript</noscript>
+	<noscript>This website requires JavaScript</noscript>
 </body>
 </html>

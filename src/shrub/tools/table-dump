@@ -23,12 +23,6 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-PW=`$COMMAND_PATH/database-password-get`
-if [ $? -ne 0 ]; then
-	>&2 echo "Error: Unable to fetch database password"
-	exit 1
-fi
-
 LOGIN=`$COMMAND_PATH/database-login-get`
 if [ $? -ne 0 ]; then
 	>&2 echo "Error: Unable to fetch database name"
@@ -40,7 +34,6 @@ if [ $? -ne 0 ]; then
 	>&2 echo "Error: Unable to fetch database host"
 	exit 1
 fi
-
 
 TABLE_VERSION=`$COMMAND_PATH/config-get-value $TABLE`
 if [ $? -ne 0 ]; then
