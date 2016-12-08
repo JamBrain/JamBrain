@@ -1,36 +1,23 @@
 import { h, Component } 				from 'preact/preact';
 import ShallowCompare	 				from 'shallow-compare/index';
 
+import LoveButton						from 'com/button-love/love';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
 import $Node							from '../../shrub/js/node/node';
-import $NodeLove						from '../../shrub/js/node/node_love';
 
 export default class ContentPost extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {
-			'author': {},
-			'loved': null,
-			'lovecount': null
+			'author': {}
 		};
-		
-		if ( props.user ) {
-			$NodeLove.GetMy(/*props.user.id,*/ props.node.id)
-			.then(r => {
-				//console.log( r ) ;
-				this.setState({ 'loved': r });
-			});
-		}
-		
-		// TODO: Extract Love from the global love pool (props.node.id)
-		
+
 		this.getAuthor( props.node );
-		
-		this.onLove = this.onLove.bind(this);
+
 		this.onMinMax = this.onMinMax.bind(this);
 	}
 
@@ -40,18 +27,18 @@ export default class ContentPost extends Component {
 ////		console.log("HOOP",com,this.state, nextState);
 //		return com;
 //	}
-	
+
 //	componentWillReceiveProps( props ) {
 	componentWillUpdate( newProps, newState ) {
 		if ( this.props.node !== newProps.node ) {
 			this.getAuthor(newProps.node);
 		}
 	}
-	
+
 	getAuthor( node ) {
 		// Clear the Author
 		this.setState({ author: {} });
-		
+
 		// Lookup the author
 		$Node.Get( node.author )
 		.then(r => {
@@ -67,21 +54,6 @@ export default class ContentPost extends Component {
 		});
 	}
 
-	onLove( e ) {
-		if ( this.state.loved ) {
-			$NodeLove.Remove(this.props.node.id)
-			.then(r => {
-				this.setState({ 'loved': false, 'lovecount': r.love.count });
-			});			
-		}
-		else {
-			$NodeLove.Add(this.props.node.id)
-			.then(r => {
-				this.setState({ 'loved': true, 'lovecount': r.love.count });
-			});
-		}
-	}
-	
 	onMinMax( e ) {
 		console.log("minmax");
 		window.location.hash = "#dummy";
@@ -90,32 +62,32 @@ export default class ContentPost extends Component {
 	getAvatar( user ) {
 		return '//'+STATIC_DOMAIN + ((user && user.meta && user.meta.avatar) ? user.meta.avatar : '/other/dummy/user64.png');
 	}
-	
+
 	getAtName( user ) {
 		var user_path = '/users/'+user.slug;
 		return <NavLink class="at-name" href={user_path}><img src={this.getAvatar(user)} />{user.name}</NavLink>;
 	}
 
-	render( {node, /*user,*/ path}, {author, loved, lovecount, error} ) {
+	render( {node, /*user,*/ path}, {author, error} ) {
 		if ( node.slug && author.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
-			
+
 			var pub_date = new Date(node.published);
 			var pub_diff = new Date().getTime() - pub_date.getTime();
-			
+
 			// x minutes ago
 			var post_relative = <span class="if-sidebar-inline">{getRoughAge(pub_diff)}</span>;
 			// simple date, full date on hover
 			var post_date = <span>on <span class="-title" title={getLocaleDate(pub_date)}><span class="if-sidebar-inline">{getLocaleDay(pub_date)}</span> {getLocaleMonthDay(pub_date)}</span></span>;
-			
+
 			var post_by = <span>by {this.getAtName(author)}</span>;
 			if ( author.meta['real-name'] ) {
 				post_by = <span>by {author.meta['real-name']} ({this.getAtName(author)})</span>;
 			}
-			
+
 			var post_avatar = this.getAvatar( author );
-			
+
 			return (
 				<div class="content-base content-post">
 					<div class="-header">
@@ -133,13 +105,8 @@ export default class ContentPost extends Component {
 							</div>
 						</div>
 						<div class="-right">
-							<div class={'-love'+ (loved ? ' loved' : '')} onclick={this.onLove}>
-								<SVGIcon class="-hover-hide">heart</SVGIcon>
-								<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
-								<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
-								<div class="-count">{Number.isInteger(lovecount) ? lovecount : node.love}</div>
-							</div>
-						</div>
+			  			<LoveButton node={node}/>
+			  		</div>
 					</div>
 				</div>
 			);
