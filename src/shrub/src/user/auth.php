@@ -12,7 +12,15 @@ function userAuth_Start() {
 		userSession_Expire();
 	}
 	else {
-		userSession_End();
+		if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > (24*60*60))) {
+			userSession_Expire();
+		}
+		else {
+			$_copy = $_SESSION['LAST_ACTIVITY'];
+			$_SESSION['LAST_ACTIVITY'] = time();
+			userSession_End();
+			$_SESSION['OLD_LAST_ACTIVITY'] = $_copy;
+		}
 	}
 	
 	// TODO: Refresh Cookie/Session timeouts
