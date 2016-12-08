@@ -51,7 +51,8 @@ class Main extends Component {
 			},
 			
 			// Active User
-			'user': null
+			'user': null,
+			'private': null
 		};
 		
 		window.addEventListener('hashchange', this.onHashChange.bind(this));
@@ -150,24 +151,55 @@ class Main extends Component {
 	fetchUser() {
 		// Fetch the Active User
 		$User.Get().then(r => {
-			console.log("Got User:",r.caller_id);
+			console.log("Got User:", r.caller_id);
 			
+			// If a legit user
 			if ( r.caller_id ) {
-				$NodeLove.GetMy(/*r.caller_id,*/ 1)
+				// Pre-caching Love
+				$NodeLove.GetMy()
+				.then(rrr => {
+					// Load user's private data
+					$Node.GetMy()
+					.then(rr => {
+						r.node['private'] = { 
+							'meta': rr.meta,
+							'link': rr.link,
+							'refs': rr.refs
+						};
+						
+						// Finally, user is ready
+						console.log("User Loaded.");
+						this.setState({ 'user': r.node });
+					})
+					.catch(err => {
+						this.setState({ error: err });
+					});					
+				})
+				.catch(err => {
+					this.setState({ error: err });
+				});
+				
+				$Node.GetMy()
 				.then(rr => {
+					r.node['private'] = { 
+						'meta': rr.meta,
+						'link': rr.link,
+						'refs': rr.refs
+					};
+					
 					this.setState({ 'user': r.node });
 				})
 				.catch(err => {
-					this.setState({ 'user': r.node });
+					this.setState({ error: err });
 				});
 			}
 			else {
-				this.setState({ 'user': null });
-			}				
+				this.setState({ 'user': null, 'private': null });
+			}
 		})
 		.catch(err => {
 			this.setState({ error: err });
-		});		
+		});
 	}
 	
 	fetchData() {
