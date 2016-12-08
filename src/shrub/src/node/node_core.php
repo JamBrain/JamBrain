@@ -753,6 +753,6 @@ function nodeLink_AddByNode( $a, $b, $scope, $key, $value = null ) {
 }
 
 // NOTE: Doesn't actually remove, but adds an "ignore-me" entry
-function nodeLink_RemoveByNode( $a, $b, $scope, $key, $value ) {
+function nodeLink_RemoveByNode( $a, $b, $scope, $key, $value = null ) {
 	return nodeLink_AddByNode($a, $b, $scope^-1, $key, $value);
 }

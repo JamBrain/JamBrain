@@ -8,6 +8,14 @@ require_once __DIR__."/".SHRUB_PATH."node/node.php";
 
 json_Begin();
 
+const THINGS_I_CAN_LOVE = [
+	'post'
+];
+
+const THINGS_I_CAN_STAR = [
+	'user'
+];
+
 // Do Actions
 $action = json_ArgShift();
 switch ( $action ) {
@@ -205,11 +213,19 @@ switch ( $action ) {
 						// NOTE: You are allowed to LOVE anonymously (it's just not fetchable)
 						$user_id = userAuth_GetID();
 
-						// TODO: Check if node exists
-						
-						$RESPONSE['id'] = nodeLove_AddByNode($node_id, $user_id);
-						
-						$RESPONSE['love'] = nodeLove_GetByNode($node_id);
+						if ( $node = node_GetById($node_id) ) {
+							if ( in_array($node['type'], THINGS_I_CAN_LOVE) ) {
+								$RESPONSE['id'] = nodeLove_AddByNode($node_id, $user_id);
+								
+								$RESPONSE['love'] = nodeLove_GetByNode($node_id);
+							}
+							else {
+								json_EmitFatalError_BadRequest("Can't love ".$node['type'], $RESPONSE);
+							}
+						}
+						else {
+							json_EmitFatalError_NotFound(null, $RESPONSE);
+						}
 					}
 					else {
 						json_EmitFatalError_BadRequest(null, $RESPONSE);
@@ -230,17 +246,25 @@ switch ( $action ) {
 						// NOTE: You are allowed to LOVE anonymously (it's just not fetchable)
 						$user_id = userAuth_GetID();
 
-						// TODO: Check if node exists
-						
-						$RESPONSE['removed'] = nodeLove_RemoveByNode($node_id, $user_id);
-						
-						$RESPONSE['love'] = nodeLove_GetByNode($node_id);
-						if ( !isset($RESPONSE['love']) )
-							$RESPONSE['love'] = [
-								'id' => $node_id,
-								'count' => 0,
-								'timestamp' => "0000-00-00T00:00:00Z"
-							];
+						if ( $node = node_GetById($node_id) ) {
+							if ( in_array($node['type'], THINGS_I_CAN_LOVE) ) {
+								$RESPONSE['removed'] = nodeLove_RemoveByNode($node_id, $user_id);
+								
+								$RESPONSE['love'] = nodeLove_GetByNode($node_id);
+								if ( !isset($RESPONSE['love']) )
+									$RESPONSE['love'] = [
+										'id' => $node_id,
+										'count' => 0,
+										'timestamp' => "0000-00-00T00:00:00Z"
+									];
+							}
+							else {
+								json_EmitFatalError_BadRequest("Can't love ".$node['type'], $RESPONSE);
+							}
+						}
+						else {
+							json_EmitFatalError_NotFound(null, $RESPONSE);
+						}
 					}
 					else {
 						json_EmitFatalError_BadRequest(null, $RESPONSE);
@@ -269,10 +293,19 @@ switch ( $action ) {
 					$user_id = userAuth_GetID();
 					
 					if ( $node_id && $user_id ) {
+						if ( $node = node_GetById($node_id) ) {
+							if ( in_array($node['type'], THINGS_I_CAN_STAR) ) {
+								// TODO: Check if this exact value isn't the newest
 
-						// TODO: Check if node exists
-						
-						$RESPONSE['id'] = nodeLink_AddByNode($user_id, $node_id, SH_NODE_META_SHARED, 'star');
+								$RESPONSE['id'] = nodeLink_AddByNode($user_id, $node_id, SH_NODE_META_SHARED, 'star');
+							}
+							else {
+								json_EmitFatalError_BadRequest("Can't star ".$node['type'], $RESPONSE);
+							}
+						}
+						else {
+							json_EmitFatalError_NotFound(null, $RESPONSE);
+						}
 					}
 					else {
 						json_EmitFatalError_BadRequest(null, $RESPONSE);
@@ -291,10 +324,19 @@ switch ( $action ) {
 					$user_id = userAuth_GetID();
 					
 					if ( $node_id && $user_id ) {
-
-						// TODO: Check if node exists
-						
-						$RESPONSE['id'] = nodeLink_RemoveByNode($user_id, $node_id, SH_NODE_META_SHARED, 'star');
+						if ( $node = node_GetById($node_id) ) {
+							if ( in_array($node['type'], THINGS_I_CAN_STAR) ) {
+								// TODO: Check if this exact value isn't the newest
+								
+								$RESPONSE['id'] = nodeLink_RemoveByNode($user_id, $node_id, SH_NODE_META_SHARED, 'star');
+							}
+							else {
+								json_EmitFatalError_BadRequest("Can't star ".$node['type'], $RESPONSE);
+							}
+						}
+						else {
+							json_EmitFatalError_NotFound(null, $RESPONSE);
+						}
 					}
 					else {
 						json_EmitFatalError_BadRequest(null, $RESPONSE);
