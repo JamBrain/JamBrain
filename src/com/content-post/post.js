@@ -68,7 +68,7 @@ export default class ContentPost extends Component {
 		return <NavLink class="at-name" href={user_path}><img src={this.getAvatar(user)} />{user.name}</NavLink>;
 	}
 
-	render( {node, /*user,*/ path}, {author, error} ) {
+	render( {node, user, path}, {author, error} ) {
 		if ( node.slug && author.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
@@ -105,7 +105,7 @@ export default class ContentPost extends Component {
 							</div>
 						</div>
 						<div class="-right">
-			  			<LoveButton node={node}/>
+			  			<LoveButton user={user} node={node}/>
 			  		</div>
 					</div>
 				</div>
