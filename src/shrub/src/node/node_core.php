@@ -380,8 +380,8 @@ function nodeLink_GetByNode( $nodes, $scope_check = ">=0" ) {
 		$ret = db_QueryFetch(
 			"SELECT a, b, scope, `key`, `value`
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
-			WHERE $scope_check_string a IN ($node_string) OR b IN ($node_string) AND id IN (
-				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
+			WHERE $scope_check_string (a IN ($node_string) OR b IN ($node_string)) AND id IN (
+				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." GROUP BY a, b, `key`
 			);"
 		);
 //			WHERE a IN ($node_string) OR b IN ($node_string);"
@@ -396,26 +396,22 @@ function nodeLink_GetByNode( $nodes, $scope_check = ">=0" ) {
 }
 
 
-function nodeComplete_GetById( $ids, $scope = 0 ) {
-	$multi = is_array($ids);
+function nodeMeta_ParseByNode( $node_ids ) {
+	$multi = is_array($node_ids);
 	if ( !$multi )
-		$ids = [$ids];
+		$node_ids = [$node_ids];
 	
-	$nodes = node_GetById($ids);
-	if ( !$nodes )
-		return null;
-	
-	$metas = nodeMeta_GetByNode($ids);
-	$links = nodeLink_GetByNode($ids);
-	$loves = nodeLove_GetByNode($ids);
+	$metas = nodeMeta_GetByNode($node_ids);
+
+	$ret = [];
 
 	// Populate Metadata (NOTE: This is a full-scan per node requested. Could be quicker)
-	foreach ( $nodes as &$node ) {
+	foreach ( $node_ids as $node_id ) {
 		$raw_meta = [];
-		
+
 		foreach ( $metas as $meta ) {
 			// If this item in the meta list belongs to us
-			if ( $node['id'] === $meta['node'] ) {
+			if ( $node_id === $meta['node'] ) {
 				// Create Scope array (if missing)
 				if ( isset($raw_meta[$meta['scope']]) && !is_array($raw_meta[$meta['scope']]) ) {
 					$raw_meta[$meta['scope']] = [];
@@ -425,29 +421,35 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 				$raw_meta[$meta['scope']][$meta['key']] = $meta['value'];
 			}
 		}
+//		arsort($raw_meta);
 		
-		// Store Public Metadata
-		if ( isset($raw_meta[SH_NODE_META_PUBLIC]) ) {
-			$node['meta'] = $raw_meta[SH_NODE_META_PUBLIC];
-		}
-		else {
-			$node['meta'] = [];
-		}
-		
-//		$node['testmeta'] = $raw_meta;		// debug
-		
-		// TODO: Store Protected and Private Metadata
+		$ret[$node_id] = $raw_meta;
 	}
 	
+	if ($multi)
+		return $ret;
+	else
+		return $ret[$node_ids[0]];
+}
 
-	// Populate Links		
-	foreach ( $nodes as &$node ) {
+
+function nodeLink_ParseByNode( $node_ids ) {
+	$multi = is_array($node_ids);
+	if ( !$multi )
+		$node_ids = [$node_ids];
+	
+	$links = nodeLink_GetByNode($node_ids);
+
+	$ret = [];
+
+	// Populate Metadata (NOTE: This is a full-scan per node requested. Could be quicker)
+	foreach ( $node_ids as $node_id ) {
 		$raw_a = [];
 		$raw_b = [];
 		
 		foreach ( $links as $link ) {
 			// Question: Should we support circular links (i.e. remove "else" from "else if")?
-			if ( $node['id'] === $link['a'] ) {
+			if ( $node_id === $link['a'] ) {
 				if ( isset($raw_a[$link['scope']]) && !is_array($raw_a[$link['scope']]) ) {
 					$raw_a[$link['scope']] = [];
 				}
@@ -465,11 +467,11 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 						$raw_a[$link['scope']][$link['key']][$link['b']] = $link['value'];
 					}
 					else {
-						$raw_a[$link['scope']][$link['key']] = [$link['b']=>$link['value']];
+						$raw_a[$link['scope']][$link['key']] = [$link['b'] => $link['value']];
 					}
 				}
 			}
-			else if ( $node['id'] === $link['b'] ) {
+			else if ( $node_id === $link['b'] ) {
 				if ( isset($raw_b[$link['scope']]) && !is_array($raw_b[$link['scope']]) ) {
 					$raw_b[$link['scope']] = [];
 				}
@@ -487,22 +489,63 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 						$raw_b[$link['scope']][$link['key']][$link['a']] = $link['value'];
 					}
 					else {
-						$raw_b[$link['scope']][$link['key']] = [$link['a']=>$link['value']];
+						$raw_b[$link['scope']][$link['key']] = [$link['a'] => $link['value']];
 					}
 				}
 			}
 		}
+//		asort($raw_a);
+//		asort($raw_b);
 
-		// Store Public Links
-		if ( isset($raw_a[SH_NODE_META_PUBLIC]) ) {
-			$node['link'] = $raw_a[SH_NODE_META_PUBLIC];
+		//$raw_b[77] = 'horse';
+
+		$ret[$node_id] = [$raw_a, $raw_b];
+	}
+	
+	if ($multi)
+		return $ret;
+	else
+		return $ret[$node_ids[0]];
+}
+
+
+
+
+function nodeComplete_GetById( $ids, $scope = 0 ) {
+	$multi = is_array($ids);
+	if ( !$multi )
+		$ids = [$ids];
+	
+	$nodes = node_GetById($ids);
+	if ( !$nodes )
+		return null;
+	
+	$metas = nodeMeta_ParseByNode($ids);
+	$links = nodeLink_ParseByNode($ids);
+
+	$loves = nodeLove_GetByNode($ids);
+
+	// Populate Metadata
+	foreach ( $nodes as &$node ) {
+		// Store Public Metadata
+		if ( isset($metas[$node['id']][SH_NODE_META_PUBLIC]) ) {
+			$node['meta'] = $metas[$node['id']][SH_NODE_META_PUBLIC];
+		}
+		else {
+			$node['meta'] = [];
+		}
+
+		// TODO: Store Protected and Private Metadata
+	}
+
+	// Populate Links (NOTE: Links come in Pairs)
+	foreach ( $nodes as &$node ) {
+		if ( isset($links[$node['id']][0][SH_NODE_META_PUBLIC]) ) {
+			$node['link'] = $links[$node['id']][0][SH_NODE_META_PUBLIC];
 		}
 		else {
 			$node['link'] = [];
 		}
-
-//		$node['raw_a'] = $raw_a;			// debug
-//		$node['raw_b'] = $raw_b;			// debug
 
 		// TODO: Store Protected and Private Metadata
 	}
@@ -524,6 +567,7 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 //		$node['comments'] = 0;
 //		
 //	}
+
 
 	if ($multi)
 		return $nodes;
@@ -643,4 +687,72 @@ function nodeLove_GetByAuthor( $author ) {
 	);
 	
 	return null;
+}
+
+
+
+function nodeMeta_AddByNode( $node, $scope, $key, $value ) {
+	return db_QueryInsert(
+		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." (
+			node,
+			scope,
+			`key`,
+			`value`,
+			timestamp
+		)
+		VALUES ( 
+			?,
+			?,			
+			?,
+			?,
+			NOW()
+		);",
+		$node,
+		$scope,
+		$key,
+		$value
+	);
+}
+
+// NOTE: Doesn't actually remove, but adds an "ignore-me" entry
+function nodeMeta_RemoveByNode( $node, $scope, $key, $value ) {
+	return nodeMeta_AddByNode($node, $scope^-1, $key, $value);
+}
+
+
+function nodeLink_AddByNode( $a, $b, $scope, $key, $value = null ) {
+	return db_QueryInsert(
+		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." (
+			a,
+			b,
+			
+			scope,
+			
+			`key`,
+			`value`,
+			timestamp
+		)
+		VALUES ( 
+			?,
+			?,
+			
+			?,
+			
+			?,
+			?,
+			NOW()
+		);",
+		$a,
+		$b,
+		
+		$scope,
+		
+		$key,
+		$value
+	);
+}
+
+// NOTE: Doesn't actually remove, but adds an "ignore-me" entry
+function nodeLink_RemoveByNode( $a, $b, $scope, $key, $value = null ) {
+	return nodeLink_AddByNode($a, $b, $scope^-1, $key, $value);
 }

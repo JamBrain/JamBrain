@@ -3,18 +3,55 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
 import ButtonBase						from 'com/button-base/base';
 
+import $NodeStar						from '../shrub/js/node/node_star';
+
+
 export default class ContentUser extends Component {
 	constructor( props ) {
 		super(props);
 		
+		this.state = {
+			'following': null,
+			'hasClicked': null
+		};
+		
 		this.onFollow = this.onFollow.bind(this);
+		this.onUnfollow = this.onUnfollow.bind(this);
+		this.onUnfriend = this.onUnfriend.bind(this);
 	}
 	
 	onFollow( e ) {
-		console.log("hello");
+		//console.log("Follow");
+		$NodeStar.Add(this.props.node.id)
+		.then(r => {
+			//console.log('win', r);
+			this.setState({ 'hasClicked': true, 'following': true });
+			
+			// TODO: Tell parent user has changed
+		})
+		.catch(err => {
+			this.setState({'error':err});
+		});
+	}
+	onUnfollow( e ) {
+		//console.log("Unfollow");
+		$NodeStar.Remove(this.props.node.id)
+		.then(r => {
+			//console.log('wooon', r);
+			this.setState({ 'hasClicked': true, 'following': false });
+			
+			// TODO: Tell parent user has changed
+		})
+		.catch(err => {
+			this.setState({'error':err});
+		});
+	}
+	onUnfriend( e ) {
+		//console.log("Unfriend");
+		this.onUnfollow(e);
 	}
 	
-	render( {node}, {error} ) {
+	render( {node, user}, {hasClicked, following, error} ) {
 		if ( node.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse('**User:** `'+node.name+'`') };
@@ -23,13 +60,25 @@ export default class ContentUser extends Component {
 			
 			var url = '/users/'+node.slug+'/';
 			
-			let ShowFollow = null;
-			ShowFollow = [
-				<ButtonBase class="-button" onclick={this.onFollow}><SVGIcon>user-plus</SVGIcon> Follow</ButtonBase>,
-//				<ButtonBase class="-button" onclick={this.onFollow}><SVGIcon>user-minun</SVGIcon> UnFollow</ButtonBase>,
-//				<ButtonBase class="-button" onclick={this.onFollow}><SVGIcon>user-check</SVGIcon> Followed</ButtonBase>,
-//				<ButtonBase class="-button" onclick={this.onFollow}><SVGIcon>users</SVGIcon> Friend</ButtonBase>
-			];
+			console.log('fee', user);
+			
+			let ShowFollow = [];
+			if ( user && node.id !== user.id ) {
+				if ( hasClicked ? following : user.private.link.star && user.private.link.star.indexOf(node.id) !== -1 ) {
+					if ( user.private.refs.star && user.private.refs.star.indexOf(node.id) !== -1 ) {
+						ShowFollow = <ButtonBase class="-button -green" onclick={this.onUnfriend}><SVGIcon class="if-not-hover-block">users</SVGIcon><SVGIcon class="if-hover-block">user-minus</SVGIcon> Friend</ButtonBase>;
+					}
+					else {
+						ShowFollow = <ButtonBase class="-button -blue" onclick={this.onUnfollow}><SVGIcon class="if-not-hover-block">user-check</SVGIcon><SVGIcon class="if-hover-block">user-minus</SVGIcon> Following</ButtonBase>;
+					}
+				}
+				else {
+					ShowFollow = <ButtonBase class="-button" onclick={this.onFollow}><SVGIcon class="if-not-hover-block">user</SVGIcon><SVGIcon class="if-hover-block">user-plus</SVGIcon> Follow</ButtonBase>;
+				}
+			}
+//				<ButtonBase class="-button -blue" onclick={this.onUnfollow}><SVGIcon class="if-not-hover-block">user-check</SVGIcon><SVGIcon class="if-hover-block">user-minus</SVGIcon> Followed</ButtonBase>,
+//				<ButtonBase class="-button -green" onclick={this.onUnfriend}><SVGIcon class="if-not-hover-block">users</SVGIcon><SVGIcon class="if-hover-block">user-minus</SVGIcon> Friend</ButtonBase>
+//			];
 			
 			return (
 				<div class="content-base content-user">

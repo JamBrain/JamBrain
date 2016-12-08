@@ -30,12 +30,18 @@ const SH_NODE_TYPE_POST =			'post';
 ///	@addtogroup NodeMetaPrivacy
 /// @name Privacy Types
 /// @{
-const SH_NODE_META_PUBLIC = 				0;
-const SH_NODE_META_PROTECTED = 				32;
-const SH_NODE_META_PRIVATE = 				64;
+const SH_NODE_META_PUBLIC = 				0;			// Anyone can see
+const SH_NODE_META_SHARED = 				4;			// Shared between 2 users (a and b)
+const SH_NODE_META_PROTECTED = 				16;			// My eyes only
+const SH_NODE_META_PRIVATE = 				64;			// Server only
+//											1
+//											2
+//											8
+//											32
 
 const SH_NODE_META_PUBLIC_DELETED = 		0^-1;
-const SH_NODE_META_PROTECTED_DELETED = 		32^-1;
+const SH_NODE_META_SHARED_DELETED = 		4^-1;
+const SH_NODE_META_PROTECTED_DELETED = 		16^-1;
 const SH_NODE_META_PRIVATE_DELETED = 		64^-1;
 /// @}
 

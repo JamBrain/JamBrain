@@ -1,69 +1,35 @@
+import Fetch	 				from '../internal/fetch';
 
 export default {
 	Get,
 	Walk,
-	GetFeed
+	GetFeed,
+	
+	GetMy
 };
 
 var Nodes = {};
 
 export function Walk( parent, slugs ) {
-	return fetch('//'+API_DOMAIN+'/vx/node/walk/'+parent+'/'+slugs.join('/'), {
-		credentials: 'include'
-	})
-	.then(r => {
-		if ( r ) 
-			return r.json();
-	});
+	return Fetch.Get('//'+API_DOMAIN+'/vx/node/walk/'+parent+'/'+slugs.join('/'));
 }
-
-//
-//function _FetchByParentSlug( parent, slugs ) {
-//	if ( Array.isArray(slugs) ) {
-//		if (slugs.length) {
-//			return parent
-//		var slug = slugs.shift();
-//		
-//	}
-//	else {
-//		return 
-//	}
-//}
-
-//export function FetchByParentSlug( parent, slugs ) {
-//	if ( String.isString(slugs) ) {
-//		slugs = [slugs];
-//	}
-//	
-//	
-//	
-//	return _FetchByParentSlug( parent, slugs );
-//}
 
 export function Get( ids ) {
 	if ( Number.isInteger(ids) ) {
 		ids = [ids];
 	}
-	
-	return fetch('//'+API_DOMAIN+'/vx/node/get/'+ids.join('+'), {
-		credentials: 'include'
-	})
-	.then( r => {
-		if ( r ) 
-			return r.json();
-	});
+
+	return Fetch.Get('//'+API_DOMAIN+'/vx/node/get/'+ids.join('+'));
 }
 
 export function GetFeed( id, types ) {
 	if ( !Array.isArray(types) ) {
 		types = [types];
 	}
-	
-	return fetch('//'+API_DOMAIN+'/vx/node/feed/'+id+'/'+(types ? types.join("+") : ""), {
-		credentials: 'include'
-	})
-	.then( r => {
-		if ( r ) 
-			return r.json();
-	});	
+
+	return Fetch.Get('//'+API_DOMAIN+'/vx/node/feed/'+id+'/'+(types ? types.join("+") : ""));
+}
+
+export function GetMy() {
+	return Fetch.Get('//'+API_DOMAIN+'/vx/node/getmy');
 }
