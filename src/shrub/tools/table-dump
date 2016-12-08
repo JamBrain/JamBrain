@@ -1,0 +1,49 @@
+#!/bin/sh
+
+if [ $# -lt 1 ]; then
+	>&2 echo "Usage: $0 SH_TABLE_CONSTANT_NAME [additional arguments for mysqldump] > table_name.sql"
+	exit 1
+fi
+
+COMMAND=$0
+COMMAND_PATH=`pwd -P`
+
+FULL_ARGS=$@
+TABLE=$1
+shift
+ARGS=$@
+
+DB=`$COMMAND_PATH/database-get`
+if [ $? -ne 0 ]; then
+	>&2 echo "Error: Unable to fetch database name"
+	exit 1
+fi
+
+TABLE_VERSION=`$COMMAND_PATH/config-get-value $TABLE`
+if [ $? -ne 0 ]; then
+	>&2 echo "Error: Unable to fetch table version from config"
+	exit 1
+fi
+
+TABLE_NAME=`$COMMAND_PATH/table-get $TABLE`
+if [ $? -ne 0 ]; then
+	>&2 echo "Error: Unable to find table"
+	exit 1
+fi
+
+echo "-- $COMMAND -- Starship table dump script"
+echo "-- Options: $FULL_ARGS"
+echo
+
+mysqldump $DB $TABLE_NAME $ARGS
+
+# Only add commands for setting the version if NOT the config table 
+if [ "$TABLE_NAME" != "sh_global" ]; then
+	echo
+	echo "-- Set the table version inside the config"
+	echo "LOCK TABLES \`sh_global\` WRITE;"
+	echo "INSERT INTO \`sh_global\` (\`key\`,\`value\`,\`timestamp\`) VALUES ('$TABLE', '$TABLE_VERSION', NOW());"
+	echo "UNLOCK TABLES;"
+fi
+
+exit 0
