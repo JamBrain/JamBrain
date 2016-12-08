@@ -1,4 +1,6 @@
 import { h, Component } 				from 'preact/preact';
+import Sanitize							from '../../internal/sanitize/sanitize';
+
 import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
 import NavSpinner						from 'com/nav-spinner/spinner';
@@ -7,6 +9,7 @@ import ButtonBase						from 'com/button-base/base';
 
 import $ThemeList						from '../../shrub/js/theme/theme_list';
 import $ThemeListVote					from '../../shrub/js/theme/theme_list_vote';
+import $ThemeHistory					from '../../shrub/js/theme/theme_history';
 
 
 export default class ContentEventList extends Component {
@@ -17,14 +20,17 @@ export default class ContentEventList extends Component {
 			'lists': null,
 			'names': null,
 			'votes': null,
-			'page': 1
+			'page': 1,
+			'history': null
 		}
 		
 		this.renderList = this.renderList.bind(this);
 	}
 	
 	componentDidMount() {
-		$ThemeList.Get(this.props.node.id)
+		var event_id = this.props.node.id;
+		
+		$ThemeList.Get(event_id)
 		.then(r => {
 			if ( r.lists ) {
 				var newstate = { 
@@ -42,10 +48,28 @@ export default class ContentEventList extends Component {
 			}
 		})
 		.catch(err => {
-			this.setState({ error: err });
+			this.setState({ 'error': err });
+		});
+		
+		$ThemeHistory.Get()
+		.then(r => {
+			if ( r.history ) {
+				var ret = {};
+				for ( var idx in r.history ) {
+					ret[Sanitize.makeSlug(r.history[idx]['theme'])] = r.history[idx];
+				}
+				
+				this.setState({ 'history': ret });
+			}
+			else {
+				this.setState({ 'error': "no history" });
+			}
+		})
+		.catch(err => {
+			this.setState({ 'error': err });
 		});
 
-		$ThemeListVote.GetMy(this.props.node.id)
+		$ThemeListVote.GetMy(event_id)
 		.then(r => {
 			if ( r.votes ) {
 				this.setState({ 'votes': r.votes });
@@ -112,11 +136,24 @@ export default class ContentEventList extends Component {
 					<div class="theme-list">
 						<h3>{this.state.names[list]}</h3>
 						{this.state.lists[list].map(r => {
+							var ShowHistory = null;
+							if ( this.state.history ) {
+								let theme_slug = Sanitize.makeSlug(r.theme);
+								if ( this.state.history[theme_slug] ) {
+									ShowHistory = (
+										<span class="-label" title={this.state.history[theme_slug]['name']}>
+											{this.state.history[theme_slug]['shorthand']}
+										</span>
+									);
+								}
+							}
+							
 							return <div class={_class + this.voteToClass(this.state.votes[r.id])}>
 								<ButtonBase class="-button -yes" onClick={this.onYes.bind(this, r.id)}>+1</ButtonBase>
 								<ButtonBase class="-button -maybe" onClick={this.onMaybe.bind(this, r.id)}>0</ButtonBase>
 								<ButtonBase class="-button -no" onClick={this.onNo.bind(this, r.id)}>-1</ButtonBase>
 								<span class="-text">{r.theme}</span>
+								{ShowHistory}
 							</div>;
 						})}
 						<div class="-tip">
@@ -132,10 +169,23 @@ export default class ContentEventList extends Component {
 						<div>This round has ended.</div>
 						<br />
 						{this.state.lists[list].map(r => {
+							var ShowHistory = null;
+							if ( this.state.history ) {
+								let theme_slug = Sanitize.makeSlug(r.theme);
+								if ( this.state.history[theme_slug] ) {
+									ShowHistory = (
+										<span class="-label" title={this.state.history[theme_slug]['name']}>
+											{this.state.history[theme_slug]['shorthand']}
+										</span>
+									);
+								}
+							}
+	
 							let new_class = "theme-item" + (this.state.votes ? this.voteToClass(this.state.votes[r.id]) : "");
 							return (
 								<div class={new_class}>
 									<span class="-text">{r.theme}</span>
+									{ShowHistory}
 								</div>
 							);
 						})}
