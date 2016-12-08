@@ -417,23 +417,23 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 			// If this item in the meta list belongs to us
 			if ( $node['id'] === $meta['node'] ) {
 				// Create Node array (if missing)
-				if ( isset($raw_meta[$meta['node']]) && !is_array($raw_meta[$meta['node']]) ) {
-					$raw_meta[$meta['node']] = [];
-				}
+//				if ( isset($raw_meta[$meta['node']]) && !is_array($raw_meta[$meta['node']]) ) {
+//					$raw_meta[$meta['node']] = [];
+//				}
 				// Create Scope array (if missing)
-				if ( isset($raw_meta[$meta['node']][$meta['scope']]) && !is_array($raw_meta[$meta['node']][$meta['scope']]) ) {
-					$raw_meta[$meta['node']][$meta['scope']] = [];
+				if ( isset($raw_meta[$meta['scope']]) && !is_array($raw_meta[$meta['scope']]) ) {
+					$raw_meta[$meta['scope']] = [];
 				}
 				
 				// Store
-				$raw_meta[$meta['node']][$meta['scope']][$meta['key']] = $meta['value'];
+				$raw_meta[$meta['scope']][$meta['key']] = $meta['value'];
 			}
 		}
 		//sort($node['meta']);
 		
 		// Store Public Metadata
-		if ( isset($raw_meta[$node['id']]) && isset($raw_meta[$node['id']][SH_NODE_META_PUBLIC]) ) {
-			$node['meta'] = $raw_meta[$node['id']][SH_NODE_META_PUBLIC];
+		if ( isset($raw_meta[SH_NODE_META_PUBLIC]) ) {
+			$node['meta'] = $raw_meta[SH_NODE_META_PUBLIC];
 		}
 		else {
 			$node['meta'] = [];
