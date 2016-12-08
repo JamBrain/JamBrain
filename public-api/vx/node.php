@@ -125,6 +125,36 @@ switch ( $action ) {
 		}
 		break; // case 'feed': //node/feed
 
+	case 'getmy': //node/getmy
+		json_ValidateHTTPMethod('GET');
+
+		if ( $user_id = userAuth_GetID() ) {
+			$metas = nodeMeta_ParseByNode($user_id);
+			$meta_out = array_merge([], 
+				isset($metas[SH_NODE_META_SHARED]) ? $metas[SH_NODE_META_SHARED] : [],
+				isset($metas[SH_NODE_META_PROTECTED]) ? $metas[SH_NODE_META_PROTECTED] : []
+			);
+
+			$links = nodeLink_ParseByNode($user_id);
+			$link_out = array_merge([], 
+				isset($links[0][SH_NODE_META_SHARED]) ? $links[0][SH_NODE_META_SHARED] : [],
+				isset($links[0][SH_NODE_META_PROTECTED]) ? $links[0][SH_NODE_META_PROTECTED] : []
+			);
+			$refs_out = array_merge([], 
+				isset($links[1][SH_NODE_META_PUBLIC]) ? $links[1][SH_NODE_META_PUBLIC] : [],
+				isset($links[1][SH_NODE_META_SHARED]) ? $links[1][SH_NODE_META_SHARED] : []
+			);
+				
+			$RESPONSE['id'] = $user_id;
+			$RESPONSE['meta'] = $meta_out;
+			$RESPONSE['link'] = $link_out;
+			$RESPONSE['refs'] = $refs_out;
+		}
+		else {
+			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
+		break; // case 'getmy': //node/getmy
+
 	case 'love': //node/love
 		$old_action = $action;
 		$action = json_ArgShift();

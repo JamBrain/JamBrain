@@ -380,8 +380,8 @@ function nodeLink_GetByNode( $nodes, $scope_check = ">=0" ) {
 		$ret = db_QueryFetch(
 			"SELECT a, b, scope, `key`, `value`
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
-			WHERE $scope_check_string a IN ($node_string) OR b IN ($node_string) AND id IN (
-				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
+			WHERE $scope_check_string (a IN ($node_string) OR b IN ($node_string)) AND id IN (
+				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." GROUP BY a, b, `key`
 			);"
 		);
 //			WHERE a IN ($node_string) OR b IN ($node_string);"
@@ -467,7 +467,7 @@ function nodeLink_ParseByNode( $node_ids ) {
 						$raw_a[$link['scope']][$link['key']][$link['b']] = $link['value'];
 					}
 					else {
-						$raw_a[$link['scope']][$link['key']] = [$link['b']=>$link['value']];
+						$raw_a[$link['scope']][$link['key']] = [$link['b'] => $link['value']];
 					}
 				}
 			}
@@ -489,13 +489,15 @@ function nodeLink_ParseByNode( $node_ids ) {
 						$raw_b[$link['scope']][$link['key']][$link['a']] = $link['value'];
 					}
 					else {
-						$raw_b[$link['scope']][$link['key']] = [$link['a']=>$link['value']];
+						$raw_b[$link['scope']][$link['key']] = [$link['a'] => $link['value']];
 					}
 				}
 			}
 		}
 //		asort($raw_a);
 //		asort($raw_b);
+
+		//$raw_b[77] = 'horse';
 
 		$ret[$node_id] = [$raw_a, $raw_b];
 	}
