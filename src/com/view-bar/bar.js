@@ -44,6 +44,7 @@ export default class ViewBar extends Component {
 			</ButtonBase>		
 		);
 		
+		var ShowJoin = null;
 		var ShowMyGame = null;
 		var NewPost = null;
 		var Notification = null;
@@ -62,28 +63,29 @@ export default class ViewBar extends Component {
 			);
 		}
 		else if ( user && user.id ) {
-//			var GameURL = '/events/ludum-dare/37/theme/';
+//			ShowJoin = (
+//				<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#post-new"; }}>
+//					<SVGIcon>publish</SVGIcon>
+//					<div class="if-sidebar-block">Join Event</div>
+//				</ButtonBase>
+//			);
+				
+			
+//			var GameURL = '/events/ludum-dare/37/my-game';
 //			// TODO: Check if a participant of the current event
-//			SHowMyGame = (
+//			ShowMyGame = (
 //				<ButtonLink href={GameURL} class="-button">
 //					<SVGIcon>gamepad</SVGIcon>
 //					<div class="if-sidebar-block">My Game</div>
 //				</ButtonLink>
 //			);
-			//"";
-//			 (
-//				<ButtonBase class="-button" onclick={e => console.log('my game')}>
-//					<SVGIcon>gamepad</SVGIcon>
-//					<div>My Game</div>
+//			
+//			NewPost = (
+//				<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#post-new"; }}>
+//					<SVGIcon>edit</SVGIcon>
+//					<div class="if-sidebar-block">New</div>
 //				</ButtonBase>
 //			);
-			
-			NewPost = (
-				<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#post-new"; }}>
-					<SVGIcon>edit</SVGIcon>
-					<div class="if-sidebar-block">New</div>
-				</ButtonBase>
-			);
 			
 			// TODO: Figure out how many notifications a user has
 			let NotificationCount = false ? (
@@ -131,6 +133,7 @@ export default class ViewBar extends Component {
 						</ButtonLink>
 					</div>
 					<div class="-right">
+						{ShowJoin}
 						{ShowMyGame}
 						{NewPost}
 						{ShowCalendar}

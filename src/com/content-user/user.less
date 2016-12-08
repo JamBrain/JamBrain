@@ -1,7 +1,7 @@
 
 @import "defs.less";
 
-#content > .content-user {
+#content .content-user {
 	position: relative;
 	
 	border-top: 4px solid @MAJOR_MUTE_D6;
@@ -24,7 +24,7 @@
 		color: @MAJOR_DARK;
 	}
 
-	& > .-header {
+	& .-header {
 		margin: 1em;
 		
 		& > .-title {
@@ -50,8 +50,28 @@
 		& .-author {
 			font-weight:bold;
 		}
-	}	
-	& > .-body {
+		
+		& .-link {
+			& input {
+				width: 20em;
+			}
+		}
+	}
+	& .-nav {
+		& > .-button {
+			display: inline-block;
+			padding: 0.5em 1em;
+			border: 1px solid @MAJOR_MUTE;
+			
+			&:hover, &:focus {
+				background: @MAJOR_COLOR1;
+				border: 1px solid @MAJOR_COLOR1;
+				color: @MAJOR_LIGHT;
+			}
+		}
+	}
+		
+	& .-body {
 		margin: 1em;
 		font-size: 1.1em;
 		
@@ -61,7 +81,7 @@
 			border-radius:0.25em;
 		}
 	}	
-	& > .-footer {
+	& .-footer {
 		border-bottom:8px solid @MAJOR_MUTE_D2;
 		color: @MAJOR_LIGHT;
 		height: 2em;
@@ -170,6 +190,7 @@
 			}
 		}
 	}
+	
 	
 	@media (max-width: 26em) { 
 		& .-heart-count {

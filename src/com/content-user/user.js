@@ -1,10 +1,17 @@
 import { h, Component } 				from 'preact/preact';
 import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
+import ButtonBase						from 'com/button-base/base';
 
 export default class ContentUser extends Component {
 	constructor( props ) {
 		super(props);
+		
+		this.onFollow = this.onFollow.bind(this);
+	}
+	
+	onFollow( e ) {
+		console.log("hello");
 	}
 	
 	render( {node}, {error} ) {
@@ -16,13 +23,24 @@ export default class ContentUser extends Component {
 			
 			var url = '/users/'+node.slug+'/';
 			
+			let ShowFollow = null;
+			ShowFollow = [
+				<ButtonBase class="-button" onclick={this.onFollow}><SVGIcon>user-plus</SVGIcon> Follow</ButtonBase>,
+//				<ButtonBase class="-button" onclick={this.onFollow}><SVGIcon>user-minun</SVGIcon> UnFollow</ButtonBase>,
+//				<ButtonBase class="-button" onclick={this.onFollow}><SVGIcon>user-check</SVGIcon> Followed</ButtonBase>,
+//				<ButtonBase class="-button" onclick={this.onFollow}><SVGIcon>users</SVGIcon> Friend</ButtonBase>
+			];
+			
 			return (
 				<div class="content-base content-user">
 					<div class="-header">
 						<div class="-avatar"><img src={avatar} /></div>
 						<div class="-title _font2"><NavLink href={url} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
+						<div class="-link"><strong>Link:</strong> <input type="text" value={"https://ldjam.com"+url} readonly /></div>
 					</div>
-					<div class="-body"><div><SVGIcon>user-plus</SVGIcon> Follow</div></div>
+					<div class="-body -nav">
+						{ShowFollow}
+					</div>
 					<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
 					<div class="-footer">
 						<div class="-left">
