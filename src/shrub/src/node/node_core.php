@@ -439,6 +439,8 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 			$node['meta'] = [];
 		}
 		
+//		$node['testmeta'] = $raw_meta;
+		
 		// TODO: Store Protected and Private Metadata
 	}
 	
@@ -496,8 +498,19 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 			}
 		}
 
-		$node['a'] = $raw_a;
-		$node['b'] = $raw_b;
+		// Store Public Links
+		if ( isset($raw_a[SH_NODE_META_PUBLIC]) ) {
+			$node['link'] = $raw_a[SH_NODE_META_PUBLIC];
+		}
+		else {
+			$node['link'] = [];
+		}
+
+//		$node['a'] = $raw_a;
+//		$node['b'] = $raw_b;
+
+		// TODO: Store Protected and Private Metadata
+
 	}
 	
 	// Populate Love
