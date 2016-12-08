@@ -246,7 +246,9 @@ function nodeMeta_GetById( $ids ) {
 	return null;
 }
 
-function nodeMeta_GetByNode( $nodes ) {
+/// NOTE: By default, this ignores any node with a scope less than 0 (that is how deleting works)
+/// Pass $scope_check as null to get everything, or "=64" to get specific
+function nodeMeta_GetByNode( $nodes, $scope_check = ">=0" ) {
 	$multi = is_array($nodes);
 	if ( !$multi )
 		$nodes = [$nodes];
@@ -260,11 +262,58 @@ function nodeMeta_GetByNode( $nodes ) {
 
 		// Build IN string
 		$node_string = implode(',', $nodes);
+		
+		if ( empty($scope_check) ) {
+			$scope_check_string = "";
+		}
+		else {
+			$scope_check_string = "scope".$scope_check." AND";
+		}
 
+//		// Original Query
+//		SELECT node, scope, `key`, `value`
+//		FROM sh_node_meta 
+//		WHERE scope>=0 AND node IN (11,12) AND id IN (
+//			SELECT MAX(id) FROM sh_node_meta GROUP BY node, `key`
+//		);
+
+//		// Potential faster query (uses where)	
+//		SELECT node, scope, `key`, `value`
+//		FROM sh_node_meta 
+//		WHERE scope>=0 AND node IN (11,12) AND id IN (
+//			SELECT MAX(id) FROM sh_node_meta WHERE scope>=0 AND node IN (11,12) GROUP BY node, `key`
+//		);
+
+//		// Potentially even faster
+//		SELECT _in.node, _in.scope, _in.key, _in.value
+//		FROM (
+//		    SELECT node, scope, `key`, `value`, MAX(id) AS max_id
+//		    FROM sh_node_meta
+//		    WHERE scope>=0 AND node IN (11,12)
+//		    GROUP BY node, `key`
+//		) _out
+//		JOIN sh_node_meta _in
+//		ON _in.id = _out.max_id
+
+//		// More concice
+//		SELECT _in.node, _in.scope, _in.key, _in.value
+//		FROM (
+//		    SELECT MAX(id) AS max_id
+//		    FROM sh_node_meta
+//		    WHERE scope>=0 AND node IN (11,12)
+//		    GROUP BY node, `key`
+//		) _out
+//		JOIN sh_node_meta _in
+//		ON _in.id = _out.max_id
+
+
+		// http://stackoverflow.com/questions/1299556/sql-group-by-max
+		
+		// NOTE: This query may need some work. The subquery may be doing a full table scan
 		$ret = db_QueryFetch(
 			"SELECT node, scope, `key`, `value`
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." 
-			WHERE node IN ($node_string) AND id IN (
+			WHERE $scope_check_string node IN ($node_string) AND id IN (
 				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
 			);"
 		);
@@ -305,7 +354,7 @@ function nodeLink_GetById( $ids ) {
 	return null;
 }
 
-function nodeLink_GetByNode( $nodes ) {
+function nodeLink_GetByNode( $nodes, $scope_check = ">=0" ) {
 	$multi = is_array($nodes);
 	if ( !$multi )
 		$nodes = [$nodes];
@@ -320,11 +369,22 @@ function nodeLink_GetByNode( $nodes ) {
 		// Build IN string
 		$node_string = implode(',', $nodes);
 
+		if ( empty($scope_check) ) {
+			$scope_check_string = "";
+		}
+		else {
+			$scope_check_string = "scope".$scope_check." AND";
+		}
+
+		// NOTE: This may be poor performing once we have more nodes. See Meta above for some optimization homework
 		$ret = db_QueryFetch(
 			"SELECT a, b, scope, `key`, `value`
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
-			WHERE a IN ($node_string) OR b IN ($node_string);"
+			WHERE $scope_check_string a IN ($node_string) OR b IN ($node_string) AND id IN (
+				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
+			);"
 		);
+//			WHERE a IN ($node_string) OR b IN ($node_string);"
 		
 		if ( $multi )
 			return $ret;
@@ -348,49 +408,127 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 	$metas = nodeMeta_GetByNode($ids);
 	$links = nodeLink_GetByNode($ids);
 	$loves = nodeLove_GetByNode($ids);
-		
-	// Populate Links		
-	foreach ( $nodes as &$node ) {
-		$node['a'] = [];
-		$node['b'] = [];
-		
-		foreach ( $links as $link ) {
-			// Question: Should we support circular links (i.e. remove "else" from "else if")?
-			
-			if ( $node['id'] === $link['a'] ) {
-				if ( isset($node['a'][$link['key']]) ) {
-					$node['a'][$link['key']][] = $link['b'];
-				}
-				else {
-					$node['a'][$link['key']] = [$link['b']];
-				}
-			}
-			else if ( $node['id'] === $link['b'] ) {
-				if ( isset($node['b'][$link['key']]) ) {
-					$node['b'][$link['key']][] = $link['a'];
-				}
-				else {
-					$node['b'][$link['key']] = [$link['a']];
-				}
-			}
-		}
-	}
 
-	//$scope = 0;
-	
-	// Populate Metadata
+	// Populate Metadata (NOTE: This is a full-scan per node requested. Could be quicker)
 	foreach ( $nodes as &$node ) {
-		$node['meta'] = [];
+		$raw_meta = [];
 		
 		foreach ( $metas as $meta ) {
+			// If this item in the meta list belongs to us
 			if ( $node['id'] === $meta['node'] ) {
-				if ( $meta['scope'] <= $scope ) {
-					$node['meta'][$meta['key']] = $meta['value'];
+				// Create Node array (if missing)
+				if ( isset($raw_meta[$meta['node']]) && !is_array($raw_meta[$meta['node']]) ) {
+					$raw_meta[$meta['node']] = [];
 				}
+				// Create Scope array (if missing)
+				if ( isset($raw_meta[$meta['node']][$meta['scope']]) && !is_array($raw_meta[$meta['node']][$meta['scope']]) ) {
+					$raw_meta[$meta['node']][$meta['scope']] = [];
+				}
+				
+				// Store
+				$raw_meta[$meta['node']][$meta['scope']][$meta['key']] = $meta['value'];
 			}
 		}
 		//sort($node['meta']);
+		
+		// Store Public Metadata
+		if ( isset($raw_meta[$node['id']]) && isset($raw_meta[$node['id']][SH_NODE_META_PUBLIC]) ) {
+			$node['meta'] = $raw_meta[$node['id']][SH_NODE_META_PUBLIC];
+		}
+		else {
+			$node['meta'] = [];
+		}
+		
+		// TODO: Store Protected and Private Metadata
 	}
+	
+
+	// Populate Links		
+	foreach ( $nodes as &$node ) {
+		$raw_a = [];
+		$raw_b = [];
+		
+		foreach ( $links as $link ) {
+			// Question: Should we support circular links (i.e. remove "else" from "else if")?
+			if ( $node['id'] === $link['a'] ) {
+				if ( isset($raw_a[$link['a']]) && !is_array($raw_a[$link['a']]) ) {
+					$raw_meta[$link['a']] = [];
+				}
+
+				if ( isset($raw_a[$link['a']][$link['scope']]) && !is_array($raw_a[$link['a']][$link['scope']]) ) {
+					$raw_a[$link['a']][$link['scope']] = [];
+				}
+
+				if ( $link['value'] === null ) {
+					if ( isset($raw_a[$link['a']][$link['scope']][$link['key']]) ) {
+						$raw_a[$link['a']][$link['scope']][$link['key']][] = $link['b'];
+					}
+					else {
+						$raw_a[$link['a']][$link['scope']][$link['key']] = [$link['b']];
+					}
+				}
+				else {
+					if ( isset($raw_a[$link['a']][$link['scope']][$link['key']]) ) {
+						$raw_a[$link['a']][$link['scope']][$link['key']][$link['b']] = $link['value'];
+					}
+					else {
+						$raw_a[$link['a']][$link['scope']][$link['key']] = [$link['b']=>$link['value']];
+					}
+				}
+				
+//				$raw_a[$link['a']][$link['scope']][$link['key']] = $link['b'];
+				
+//				if ( isset($raw_a[$link['key']]) ) {
+//					$raw_a[$link['key']][] = $link['b'];
+//				}
+//				else {
+//					$raw_a[$link['key']] = [$link['b']];
+//				}
+			}
+			else if ( $node['id'] === $link['b'] ) {
+				if ( isset($raw_b[$link['b']]) && !is_array($raw_b[$link['b']]) ) {
+					$raw_meta[$link['b']] = [];
+				}
+
+				if ( isset($raw_b[$link['b']][$link['scope']]) && !is_array($raw_b[$link['b']][$link['scope']]) ) {
+					$raw_b[$link['b']][$link['scope']] = [];
+				}
+
+				if ( $link['value'] === null ) {
+					if ( isset($raw_b[$link['b']][$link['scope']][$link['key']]) ) {
+						$raw_b[$link['b']][$link['scope']][$link['key']][] = $link['a'];
+					}
+					else {
+						$raw_b[$link['b']][$link['scope']][$link['key']] = [$link['a']];
+					}
+				}
+				else {
+					if ( isset($raw_b[$link['b']][$link['scope']][$link['key']]) ) {
+						$raw_b[$link['b']][$link['scope']][$link['key']][$link['a']] = $link['value'];
+					}
+					else {
+						$raw_b[$link['b']][$link['scope']][$link['key']] = [$link['a']=>$link['value']];
+					}
+				}
+			}
+
+//			else if ( $node['id'] === $link['b'] ) {
+//				if ( isset($raw_b[$link['key']]) ) {
+//					$raw_b[$link['key']][] = $link['a'];
+//				}
+//				else {
+//					$raw_b[$link['key']] = [$link['a']];
+//				}
+//			}
+		}
+
+		$node['a'] = $raw_a;
+		$node['b'] = $raw_b;
+	}
+
+	//$nodes[0]['hurr'] = $links;
+
+	//$scope = 0;
 	
 	// Populate Love
 	foreach ( $nodes as &$node ) {
