@@ -45,14 +45,14 @@ echo "-- $COMMAND -- Starship table dump script"
 echo "-- Options: $FULL_ARGS"
 echo
 
-mysqldump $DB $TABLE -u $LOGIN -h $HOST $ARGS
+mysqldump $DB $TABLE_VERSION -u $LOGIN -h $HOST $ARGS
 
 # Only add commands for setting the version if NOT the config table 
-if [ "$TABLE" != "sh_globals" ]; then
+if [ "$TABLE_VERSION" != "sh_global" ]; then
 	echo
 	echo "-- Set the table version inside the config"
-	echo "LOCK TABLES \`sh_globals\` WRITE;"
-	echo "INSERT INTO \`sh_globals\` (\`key\`,\`value\`) VALUES ('$TABLE','$TABLE_VERSION');"
+	echo "LOCK TABLES \`sh_global\` WRITE;"
+	echo "INSERT INTO \`sh_global\` (\`key\`,\`value\`,\`timestamp\`) VALUES ('$TABLE', '$TABLE_VERSION', NOW());"
 	echo "UNLOCK TABLES;"
 fi
 
