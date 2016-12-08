@@ -1,0 +1,23 @@
+#!/bin/sh
+
+if [ $# -lt 1 ]; then
+	>&2 echo "Usage: $0 my_database_file.sql.gz [other arguments to mysql]"
+	exit 1
+fi
+
+COMMAND=$0
+COMMAND_PATH=`pwd -P`
+
+INFILE=$1
+shift
+ARGS=$@
+
+DB=`$COMMAND_PATH/database-get`
+if [ $? -ne 0 ]; then
+	>&2 echo "Error: Unable to fetch database name"
+	exit 1
+fi
+
+gunzip < $INFILE | mysql $DB $ARGS
+
+exit 0
