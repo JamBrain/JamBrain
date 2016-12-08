@@ -33,7 +33,7 @@ export default class SidebarCountdown extends Component {
 				minutes: m,
 				seconds: s
 			}
-			if(d > 1) {
+			if(d > 0) {
 				that.setState({"ShowDays": true});
 			}
 
