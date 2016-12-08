@@ -128,7 +128,7 @@ export default class ContentEventList extends Component {
 			else if ( ThemeMode === 2 ) {
 				return [
 					<h3>{this.state.names[list]}</h3>,
-					"This round has ended.",
+					<div>This round has ended.</div>,
 					<br />,
 					this.state.lists[list].map(r => {
 						return <div>{r.theme}</div>;
