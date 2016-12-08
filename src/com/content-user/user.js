@@ -8,10 +8,19 @@ export default class ContentUser extends Component {
 		super(props);
 		
 		this.onFollow = this.onFollow.bind(this);
+		this.onUnfollow = this.onUnfollow.bind(this);
+		this.onUnfriend = this.onUnfriend.bind(this);
 	}
 	
 	onFollow( e ) {
-		console.log("hello");
+		console.log("Follow");
+	}
+	onUnfollow( e ) {
+		console.log("Unfollow");
+	}
+	onUnfriend( e ) {
+		console.log("Unfriend");
+		this.onUnfollow(e);
 	}
 	
 	render( {node}, {error} ) {
@@ -25,10 +34,9 @@ export default class ContentUser extends Component {
 			
 			let ShowFollow = null;
 			ShowFollow = [
-				<ButtonBase class="-button" onclick={this.onFollow}><SVGIcon>user-plus</SVGIcon> Follow</ButtonBase>,
-//				<ButtonBase class="-button" onclick={this.onFollow}><SVGIcon>user-minun</SVGIcon> UnFollow</ButtonBase>,
-//				<ButtonBase class="-button" onclick={this.onFollow}><SVGIcon>user-check</SVGIcon> Followed</ButtonBase>,
-//				<ButtonBase class="-button" onclick={this.onFollow}><SVGIcon>users</SVGIcon> Friend</ButtonBase>
+				<ButtonBase class="-button" onclick={this.onFollow}><SVGIcon class="if-not-hover-block">user</SVGIcon><SVGIcon class="if-hover-block">user-plus</SVGIcon> Follow</ButtonBase>,
+				<ButtonBase class="-button -blue" onclick={this.onUnfollow}><SVGIcon class="if-not-hover-block">user-check</SVGIcon><SVGIcon class="if-hover-block">user-minus</SVGIcon> Followed</ButtonBase>,
+				<ButtonBase class="-button -green" onclick={this.onUnfriend}><SVGIcon class="if-not-hover-block">users</SVGIcon><SVGIcon class="if-hover-block">user-minus</SVGIcon> Friend</ButtonBase>
 			];
 			
 			return (
