@@ -421,7 +421,7 @@ function nodeMeta_ParseByNode( $node_ids ) {
 				$raw_meta[$meta['scope']][$meta['key']] = $meta['value'];
 			}
 		}
-		arsort($raw_meta);
+//		arsort($raw_meta);
 		
 		$ret[$node_id] = $raw_meta;
 	}
@@ -431,6 +431,82 @@ function nodeMeta_ParseByNode( $node_ids ) {
 	else
 		return $ret[$node_ids[0]];
 }
+
+
+function nodeLink_ParseByNode( $node_ids ) {
+	$multi = is_array($node_ids);
+	if ( !$multi )
+		$node_ids = [$node_ids];
+	
+	$links = nodeLink_GetByNode($node_ids);
+
+	$ret = [];
+
+	// Populate Metadata (NOTE: This is a full-scan per node requested. Could be quicker)
+	foreach ( $node_ids as $node_id ) {
+		$raw_a = [];
+		$raw_b = [];
+		
+		foreach ( $links as $link ) {
+			// Question: Should we support circular links (i.e. remove "else" from "else if")?
+			if ( $node_id === $link['a'] ) {
+				if ( isset($raw_a[$link['scope']]) && !is_array($raw_a[$link['scope']]) ) {
+					$raw_a[$link['scope']] = [];
+				}
+
+				if ( $link['value'] === null ) {
+					if ( isset($raw_a[$link['scope']][$link['key']]) ) {
+						$raw_a[$link['scope']][$link['key']][] = $link['b'];
+					}
+					else {
+						$raw_a[$link['scope']][$link['key']] = [$link['b']];
+					}
+				}
+				else {
+					if ( isset($raw_a[$link['scope']][$link['key']]) ) {
+						$raw_a[$link['scope']][$link['key']][$link['b']] = $link['value'];
+					}
+					else {
+						$raw_a[$link['scope']][$link['key']] = [$link['b']=>$link['value']];
+					}
+				}
+			}
+			else if ( $node_id === $link['b'] ) {
+				if ( isset($raw_b[$link['scope']]) && !is_array($raw_b[$link['scope']]) ) {
+					$raw_b[$link['scope']] = [];
+				}
+
+				if ( $link['value'] === null ) {
+					if ( isset($raw_b[$link['scope']][$link['key']]) ) {
+						$raw_b[$link['scope']][$link['key']][] = $link['a'];
+					}
+					else {
+						$raw_b[$link['scope']][$link['key']] = [$link['a']];
+					}
+				}
+				else {
+					if ( isset($raw_b[$link['scope']][$link['key']]) ) {
+						$raw_b[$link['scope']][$link['key']][$link['a']] = $link['value'];
+					}
+					else {
+						$raw_b[$link['scope']][$link['key']] = [$link['a']=>$link['value']];
+					}
+				}
+			}
+		}
+//		asort($raw_a);
+//		asort($raw_b);
+
+		$ret[$node_id] = [$raw_a, $raw_b];
+	}
+	
+	if ($multi)
+		return $ret;
+	else
+		return $ret[$node_ids[0]];
+}
+
+
 
 
 function nodeComplete_GetById( $ids, $scope = 0 ) {
@@ -443,19 +519,20 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 		return null;
 	
 //	$metas = nodeMeta_GetByNode($ids);
-	$links = nodeLink_GetByNode($ids);
+//	$links = nodeLink_GetByNode($ids);
 	$loves = nodeLove_GetByNode($ids);
 	
 	//$nodes[$ids[0]]['fee'] = nodeMeta_ParseByNode($ids);
 
 	$metas = nodeMeta_ParseByNode($ids);
+	$links = nodeLink_ParseByNode($ids);
 
 
 	// Populate Metadata (NOTE: This is a full-scan per node requested. Could be quicker)
 	foreach ( $nodes as &$node ) {
 		// Store Public Metadata
-		if ( isset($metas[SH_NODE_META_PUBLIC]) ) {
-			$node['meta'] = $metas[SH_NODE_META_PUBLIC];
+		if ( isset($metas[$node['id']][SH_NODE_META_PUBLIC]) ) {
+			$node['meta'] = $metas[$node['id']][SH_NODE_META_PUBLIC];
 		}
 		else {
 			$node['meta'] = [];
@@ -498,64 +575,74 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 
 	// Populate Links		
 	foreach ( $nodes as &$node ) {
-		$raw_a = [];
-		$raw_b = [];
-		
-		foreach ( $links as $link ) {
-			// Question: Should we support circular links (i.e. remove "else" from "else if")?
-			if ( $node['id'] === $link['a'] ) {
-				if ( isset($raw_a[$link['scope']]) && !is_array($raw_a[$link['scope']]) ) {
-					$raw_a[$link['scope']] = [];
-				}
-
-				if ( $link['value'] === null ) {
-					if ( isset($raw_a[$link['scope']][$link['key']]) ) {
-						$raw_a[$link['scope']][$link['key']][] = $link['b'];
-					}
-					else {
-						$raw_a[$link['scope']][$link['key']] = [$link['b']];
-					}
-				}
-				else {
-					if ( isset($raw_a[$link['scope']][$link['key']]) ) {
-						$raw_a[$link['scope']][$link['key']][$link['b']] = $link['value'];
-					}
-					else {
-						$raw_a[$link['scope']][$link['key']] = [$link['b']=>$link['value']];
-					}
-				}
-			}
-			else if ( $node['id'] === $link['b'] ) {
-				if ( isset($raw_b[$link['scope']]) && !is_array($raw_b[$link['scope']]) ) {
-					$raw_b[$link['scope']] = [];
-				}
-
-				if ( $link['value'] === null ) {
-					if ( isset($raw_b[$link['scope']][$link['key']]) ) {
-						$raw_b[$link['scope']][$link['key']][] = $link['a'];
-					}
-					else {
-						$raw_b[$link['scope']][$link['key']] = [$link['a']];
-					}
-				}
-				else {
-					if ( isset($raw_b[$link['scope']][$link['key']]) ) {
-						$raw_b[$link['scope']][$link['key']][$link['a']] = $link['value'];
-					}
-					else {
-						$raw_b[$link['scope']][$link['key']] = [$link['a']=>$link['value']];
-					}
-				}
-			}
-		}
-
-		// Store Public Links
-		if ( isset($raw_a[SH_NODE_META_PUBLIC]) ) {
-			$node['link'] = $raw_a[SH_NODE_META_PUBLIC];
+		if ( isset($links[$node['id']][0][SH_NODE_META_PUBLIC]) ) {
+			$node['link'] = $links[$node['id']][0][SH_NODE_META_PUBLIC];
 		}
 		else {
 			$node['link'] = [];
 		}
+
+		
+//		$raw_a = [];
+//		$raw_b = [];
+//		
+//		foreach ( $links as $link ) {
+//			// Question: Should we support circular links (i.e. remove "else" from "else if")?
+//			if ( $node['id'] === $link['a'] ) {
+//				if ( isset($raw_a[$link['scope']]) && !is_array($raw_a[$link['scope']]) ) {
+//					$raw_a[$link['scope']] = [];
+//				}
+//
+//				if ( $link['value'] === null ) {
+//					if ( isset($raw_a[$link['scope']][$link['key']]) ) {
+//						$raw_a[$link['scope']][$link['key']][] = $link['b'];
+//					}
+//					else {
+//						$raw_a[$link['scope']][$link['key']] = [$link['b']];
+//					}
+//				}
+//				else {
+//					if ( isset($raw_a[$link['scope']][$link['key']]) ) {
+//						$raw_a[$link['scope']][$link['key']][$link['b']] = $link['value'];
+//					}
+//					else {
+//						$raw_a[$link['scope']][$link['key']] = [$link['b']=>$link['value']];
+//					}
+//				}
+//			}
+//			else if ( $node['id'] === $link['b'] ) {
+//				if ( isset($raw_b[$link['scope']]) && !is_array($raw_b[$link['scope']]) ) {
+//					$raw_b[$link['scope']] = [];
+//				}
+//
+//				if ( $link['value'] === null ) {
+//					if ( isset($raw_b[$link['scope']][$link['key']]) ) {
+//						$raw_b[$link['scope']][$link['key']][] = $link['a'];
+//					}
+//					else {
+//						$raw_b[$link['scope']][$link['key']] = [$link['a']];
+//					}
+//				}
+//				else {
+//					if ( isset($raw_b[$link['scope']][$link['key']]) ) {
+//						$raw_b[$link['scope']][$link['key']][$link['a']] = $link['value'];
+//					}
+//					else {
+//						$raw_b[$link['scope']][$link['key']] = [$link['a']=>$link['value']];
+//					}
+//				}
+//			}
+//		}
+//
+//		// Store Public Links
+//		if ( isset($raw_a[SH_NODE_META_PUBLIC]) ) {
+//			$node['link'] = $raw_a[SH_NODE_META_PUBLIC];
+//		}
+//		else {
+//			$node['link'] = [];
+//		}
+//		
+//		$node['hoo'] = nodeLink_ParseByNode($ids);
 
 //		$node['raw_a'] = $raw_a;			// debug
 //		$node['raw_b'] = $raw_b;			// debug
