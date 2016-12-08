@@ -14,7 +14,8 @@ if ( _db_IsConnected() ) {
 	global_Load();
 	
 	if ( isset($SH) ) {
-		echo json_encode($SH,JSON_PRETTY_PRINT)."\n";
+		ksort($SH);
+		echo json_encode($SH, JSON_PRETTY_PRINT)."\n";
 		exit(0);
 	}
 }
