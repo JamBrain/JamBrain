@@ -451,28 +451,28 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 		foreach ( $links as $link ) {
 			// Question: Should we support circular links (i.e. remove "else" from "else if")?
 			if ( $node['id'] === $link['a'] ) {
-				if ( isset($raw_a[$link['a']]) && !is_array($raw_a[$link['a']]) ) {
-					$raw_meta[$link['a']] = [];
-				}
+//				if ( isset($raw_a[$link['a']]) && !is_array($raw_a[$link['a']]) ) {
+//					$raw_meta[$link['a']] = [];
+//				}
 
-				if ( isset($raw_a[$link['a']][$link['scope']]) && !is_array($raw_a[$link['a']][$link['scope']]) ) {
-					$raw_a[$link['a']][$link['scope']] = [];
+				if ( isset($raw_a[$link['scope']]) && !is_array($raw_a[$link['scope']]) ) {
+					$raw_a[$link['scope']] = [];
 				}
 
 				if ( $link['value'] === null ) {
-					if ( isset($raw_a[$link['a']][$link['scope']][$link['key']]) ) {
-						$raw_a[$link['a']][$link['scope']][$link['key']][] = $link['b'];
+					if ( isset($raw_a[$link['scope']][$link['key']]) ) {
+						$raw_a[$link['scope']][$link['key']][] = $link['b'];
 					}
 					else {
-						$raw_a[$link['a']][$link['scope']][$link['key']] = [$link['b']];
+						$raw_a[$link['scope']][$link['key']] = [$link['b']];
 					}
 				}
 				else {
-					if ( isset($raw_a[$link['a']][$link['scope']][$link['key']]) ) {
-						$raw_a[$link['a']][$link['scope']][$link['key']][$link['b']] = $link['value'];
+					if ( isset($raw_a[$link['scope']][$link['key']]) ) {
+						$raw_a[$link['scope']][$link['key']][$link['b']] = $link['value'];
 					}
 					else {
-						$raw_a[$link['a']][$link['scope']][$link['key']] = [$link['b']=>$link['value']];
+						$raw_a[$link['scope']][$link['key']] = [$link['b']=>$link['value']];
 					}
 				}
 				
@@ -486,28 +486,28 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 //				}
 			}
 			else if ( $node['id'] === $link['b'] ) {
-				if ( isset($raw_b[$link['b']]) && !is_array($raw_b[$link['b']]) ) {
-					$raw_meta[$link['b']] = [];
-				}
+//				if ( isset($raw_b[$link['b']]) && !is_array($raw_b[$link['b']]) ) {
+//					$raw_meta[$link['b']] = [];
+//				}
 
-				if ( isset($raw_b[$link['b']][$link['scope']]) && !is_array($raw_b[$link['b']][$link['scope']]) ) {
-					$raw_b[$link['b']][$link['scope']] = [];
+				if ( isset($raw_b[$link['scope']]) && !is_array($raw_b[$link['scope']]) ) {
+					$raw_b[$link['scope']] = [];
 				}
 
 				if ( $link['value'] === null ) {
-					if ( isset($raw_b[$link['b']][$link['scope']][$link['key']]) ) {
-						$raw_b[$link['b']][$link['scope']][$link['key']][] = $link['a'];
+					if ( isset($raw_b[$link['scope']][$link['key']]) ) {
+						$raw_b[$link['scope']][$link['key']][] = $link['a'];
 					}
 					else {
-						$raw_b[$link['b']][$link['scope']][$link['key']] = [$link['a']];
+						$raw_b[$link['scope']][$link['key']] = [$link['a']];
 					}
 				}
 				else {
-					if ( isset($raw_b[$link['b']][$link['scope']][$link['key']]) ) {
-						$raw_b[$link['b']][$link['scope']][$link['key']][$link['a']] = $link['value'];
+					if ( isset($raw_b[$link['scope']][$link['key']]) ) {
+						$raw_b[$link['scope']][$link['key']][$link['a']] = $link['value'];
 					}
 					else {
-						$raw_b[$link['b']][$link['scope']][$link['key']] = [$link['a']=>$link['value']];
+						$raw_b[$link['scope']][$link['key']] = [$link['a']=>$link['value']];
 					}
 				}
 			}
