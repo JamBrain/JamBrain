@@ -30,3 +30,26 @@ function themeList_GetByNode( $id, $page = null ) {
 	}
 }
 
+
+function themeList_SetScore( $id, $score ) {
+	return db_QueryInsert(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_THEME_LIST."
+		SET
+			score=?
+		WHERE
+			id=?;",
+		$score, $id
+	);
+}
+
+
+function themeList_SetPage( $id, $page ) {
+	return db_QueryInsert(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_THEME_LIST."
+		SET
+			page=?
+		WHERE
+			id=?;",
+		$page, $id
+	);
+}
