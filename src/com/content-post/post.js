@@ -105,7 +105,7 @@ export default class ContentPost extends Component {
 							</div>
 						</div>
 						<div class="-right">
-			  			<LoveButton node={node} user={this.props.user}/>
+			  			<LoveButton node={node}/>
 			  		</div>
 					</div>
 				</div>
