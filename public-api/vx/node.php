@@ -38,29 +38,31 @@ switch ( $action ) {
 			// TODO: Determine if we're allowed to view the requested nodes
 			
 			$out = [];
-			foreach( $nodes as &$node ) {
-				// TODO: a better check than this
-				if ( $node['published'] === "0000-00-00T00:00:00Z" ) {
-					$user_id = userAuth_GetId();
-
-					// Bad Id
-					if ( $user_id == 0 )
-						continue;
-					
-					// Not the author
-					if ( $user_id != $node['author'] ) {
-						// Not on the author list
-						if ( !isset($node['b']['author']) || !in_array($user_id, $node['b']['author']) ) {
-							// Not an admin
-							if ( !userAuth_IsAdmin() ) {
-								continue;
+			if ( $nodes ) {
+				foreach( $nodes as &$node ) {
+					// TODO: a better check than this
+					if ( $node['published'] === "0000-00-00T00:00:00Z" ) {
+						$user_id = userAuth_GetId();
+	
+						// Bad Id
+						if ( $user_id == 0 )
+							continue;
+						
+						// Not the author
+						if ( $user_id != $node['author'] ) {
+							// Not on the author list
+							if ( !isset($node['b']['author']) || !in_array($user_id, $node['b']['author']) ) {
+								// Not an admin
+								if ( !userAuth_IsAdmin() ) {
+									continue;
+								}
 							}
 						}
 					}
+					
+					// If we get here, we're allowed to view the node
+					$out[] = $node;
 				}
-				
-				// If we get here, we're allowed to view the node
-				$out[] = $node;
 			}
 
 			$RESPONSE['node'] = $out;

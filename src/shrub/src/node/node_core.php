@@ -518,17 +518,12 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 	if ( !$nodes )
 		return null;
 	
-//	$metas = nodeMeta_GetByNode($ids);
-//	$links = nodeLink_GetByNode($ids);
-	$loves = nodeLove_GetByNode($ids);
-	
-	//$nodes[$ids[0]]['fee'] = nodeMeta_ParseByNode($ids);
-
 	$metas = nodeMeta_ParseByNode($ids);
 	$links = nodeLink_ParseByNode($ids);
 
+	$loves = nodeLove_GetByNode($ids);
 
-	// Populate Metadata (NOTE: This is a full-scan per node requested. Could be quicker)
+	// Populate Metadata
 	foreach ( $nodes as &$node ) {
 		// Store Public Metadata
 		if ( isset($metas[$node['id']][SH_NODE_META_PUBLIC]) ) {
@@ -541,39 +536,7 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 		// TODO: Store Protected and Private Metadata
 	}
 
-//		$raw_meta = [];
-//		
-//		foreach ( $metas as $meta ) {
-//			// If this item in the meta list belongs to us
-//			if ( $node['id'] === $meta['node'] ) {
-//				// Create Scope array (if missing)
-//				if ( isset($raw_meta[$meta['scope']]) && !is_array($raw_meta[$meta['scope']]) ) {
-//					$raw_meta[$meta['scope']] = [];
-//				}
-//				
-//				// Store
-//				$raw_meta[$meta['scope']][$meta['key']] = $meta['value'];
-//			}
-//		}
-		
-//		// Store Public Metadata
-//		if ( isset($raw_meta[SH_NODE_META_PUBLIC]) ) {
-//			$node['meta'] = $raw_meta[SH_NODE_META_PUBLIC];
-//		}
-//		else {
-//			$node['meta'] = [];
-//		}
-		
-//		$node['moon'] = nodeMeta_ParseByNode($ids[0]);
-
-		
-//		$node['testmeta'] = $raw_meta;		// debug
-		
-		// TODO: Store Protected and Private Metadata
-//	}
-	
-
-	// Populate Links		
+	// Populate Links (NOTE: Links come in Pairs)
 	foreach ( $nodes as &$node ) {
 		if ( isset($links[$node['id']][0][SH_NODE_META_PUBLIC]) ) {
 			$node['link'] = $links[$node['id']][0][SH_NODE_META_PUBLIC];
@@ -581,71 +544,6 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 		else {
 			$node['link'] = [];
 		}
-
-		
-//		$raw_a = [];
-//		$raw_b = [];
-//		
-//		foreach ( $links as $link ) {
-//			// Question: Should we support circular links (i.e. remove "else" from "else if")?
-//			if ( $node['id'] === $link['a'] ) {
-//				if ( isset($raw_a[$link['scope']]) && !is_array($raw_a[$link['scope']]) ) {
-//					$raw_a[$link['scope']] = [];
-//				}
-//
-//				if ( $link['value'] === null ) {
-//					if ( isset($raw_a[$link['scope']][$link['key']]) ) {
-//						$raw_a[$link['scope']][$link['key']][] = $link['b'];
-//					}
-//					else {
-//						$raw_a[$link['scope']][$link['key']] = [$link['b']];
-//					}
-//				}
-//				else {
-//					if ( isset($raw_a[$link['scope']][$link['key']]) ) {
-//						$raw_a[$link['scope']][$link['key']][$link['b']] = $link['value'];
-//					}
-//					else {
-//						$raw_a[$link['scope']][$link['key']] = [$link['b']=>$link['value']];
-//					}
-//				}
-//			}
-//			else if ( $node['id'] === $link['b'] ) {
-//				if ( isset($raw_b[$link['scope']]) && !is_array($raw_b[$link['scope']]) ) {
-//					$raw_b[$link['scope']] = [];
-//				}
-//
-//				if ( $link['value'] === null ) {
-//					if ( isset($raw_b[$link['scope']][$link['key']]) ) {
-//						$raw_b[$link['scope']][$link['key']][] = $link['a'];
-//					}
-//					else {
-//						$raw_b[$link['scope']][$link['key']] = [$link['a']];
-//					}
-//				}
-//				else {
-//					if ( isset($raw_b[$link['scope']][$link['key']]) ) {
-//						$raw_b[$link['scope']][$link['key']][$link['a']] = $link['value'];
-//					}
-//					else {
-//						$raw_b[$link['scope']][$link['key']] = [$link['a']=>$link['value']];
-//					}
-//				}
-//			}
-//		}
-//
-//		// Store Public Links
-//		if ( isset($raw_a[SH_NODE_META_PUBLIC]) ) {
-//			$node['link'] = $raw_a[SH_NODE_META_PUBLIC];
-//		}
-//		else {
-//			$node['link'] = [];
-//		}
-//		
-//		$node['hoo'] = nodeLink_ParseByNode($ids);
-
-//		$node['raw_a'] = $raw_a;			// debug
-//		$node['raw_b'] = $raw_b;			// debug
 
 		// TODO: Store Protected and Private Metadata
 	}
