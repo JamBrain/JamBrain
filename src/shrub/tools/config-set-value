@@ -1,0 +1,39 @@
+#!/usr/bin/env php
+<?php
+const CONFIG_PATH = "../";
+const SHRUB_PATH = "../src/";
+
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";		// Confirm CLI, and ROOT
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
+require_once __DIR__."/".SHRUB_PATH."global/global.php";
+
+if (count($argv) <= 2) {
+	echo "Usage: ".$argv[0]." config-key-name \"value\"\n";
+	exit(-1);
+}
+
+$key = trim($argv[1]);
+$value = trim($argv[2]);
+
+if ( $key === "" ) {
+	exit(2);
+}
+
+_db_Connect();
+
+if ( _db_IsConnected() ) {
+	global_Load();
+
+	global $SH;
+	if ( isset($SH[$key]) ) {
+		if ( global_Set($key, $value) ) {
+			exit(0);
+		}
+	}
+	else {
+		echo "Error: Key \"".$key."\" doesn't exist. Use config-force-value to set.\n";
+	}
+}
+
+exit(1);

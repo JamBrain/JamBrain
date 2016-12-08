@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+<?php
+const CONFIG_PATH = "../";
+const SHRUB_PATH = "../src/";
+
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."core/cli.php";		// Confirm CLI
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
+require_once __DIR__."/".SHRUB_PATH."global/global.php";
+
+_db_Connect();
+
+if ( _db_IsConnected() ) {
+	global_Load();
+	
+	if ( isset($SH) ) {
+		echo json_encode($SH,JSON_PRETTY_PRINT)."\n";
+		exit(0);
+	}
+}
+
+exit(1);
