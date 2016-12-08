@@ -11,13 +11,13 @@ import $NodeLove						from '../../shrub/js/node/node_love';
 export default class ContentPost extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {
 			'author': {},
 			'loved': null,
 			'lovecount': null
 		};
-		
+
 		if ( props.user ) {
 			$NodeLove.GetMy(/*props.user.id,*/ props.node.id)
 			.then(r => {
@@ -25,11 +25,11 @@ export default class ContentPost extends Component {
 				this.setState({ 'loved': r });
 			});
 		}
-		
+
 		// TODO: Extract Love from the global love pool (props.node.id)
-		
+
 		this.getAuthor( props.node );
-		
+
 		this.onLove = this.onLove.bind(this);
 		this.onMinMax = this.onMinMax.bind(this);
 	}
@@ -40,18 +40,18 @@ export default class ContentPost extends Component {
 ////		console.log("HOOP",com,this.state, nextState);
 //		return com;
 //	}
-	
+
 //	componentWillReceiveProps( props ) {
 	componentWillUpdate( newProps, newState ) {
 		if ( this.props.node !== newProps.node ) {
 			this.getAuthor(newProps.node);
 		}
 	}
-	
+
 	getAuthor( node ) {
 		// Clear the Author
 		this.setState({ author: {} });
-		
+
 		// Lookup the author
 		$Node.Get( node.author )
 		.then(r => {
@@ -68,20 +68,40 @@ export default class ContentPost extends Component {
 	}
 
 	onLove( e ) {
-		if ( this.state.loved ) {
-			$NodeLove.Remove(this.props.node.id)
-			.then(r => {
-				this.setState({ 'loved': false, 'lovecount': r.love.count });
-			});			
-		}
-		else {
-			$NodeLove.Add(this.props.node.id)
-			.then(r => {
-				this.setState({ 'loved': true, 'lovecount': r.love.count });
-			});
-		}
+        // if we have a user let them love stuff else get them to log on
+        if( this.props.user && this.props.user.id ){
+            // user is logged on so they can love stuff
+    		if ( this.state.loved ) {
+    			$NodeLove.Remove(this.props.node.id)
+    			.then(r => {
+    				this.setState({ 'loved': false, 'lovecount': r.love.count });
+    			});
+    		}
+    		else {
+    			$NodeLove.Add(this.props.node.id)
+    			.then(r => {
+    				this.setState({ 'loved': true, 'lovecount': r.love.count });
+    			});
+    		}
+        }
+        else {
+            // user isnt logged on so they cannot love stuff
+
+            // if secure login mode is on and were not on the secure site , then go to the secure site
+            if ( SECURE_LOGIN_ONLY && (window.location.protocol !== 'https:')) {
+    			let SecureURL = 'https://'+window.location.hostname+window.location.pathname+window.location.search+window.location.hash;
+    			window.location.href = SecureURL;
+            }
+
+            // user isnt logged on so prompt them to log on
+            console.log('login');
+            window.location.hash = "#user-login";
+
+            //TODO: shouldnt the login script disallow insecure logins itself, rather than relying
+            // on whoever is calling it to check ???
+        }
 	}
-	
+
 	onMinMax( e ) {
 		console.log("minmax");
 		window.location.hash = "#dummy";
@@ -90,7 +110,7 @@ export default class ContentPost extends Component {
 	getAvatar( user ) {
 		return '//'+STATIC_DOMAIN + ((user && user.meta && user.meta.avatar) ? user.meta.avatar : '/other/dummy/user64.png');
 	}
-	
+
 	getAtName( user ) {
 		var user_path = '/users/'+user.slug;
 		return <NavLink class="at-name" href={user_path}><img src={this.getAvatar(user)} />{user.name}</NavLink>;
@@ -100,22 +120,22 @@ export default class ContentPost extends Component {
 		if ( node.slug && author.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
-			
+
 			var pub_date = new Date(node.published);
 			var pub_diff = new Date().getTime() - pub_date.getTime();
-			
+
 			// x minutes ago
 			var post_relative = <span class="if-sidebar-inline">{getRoughAge(pub_diff)}</span>;
 			// simple date, full date on hover
 			var post_date = <span>on <span class="-title" title={getLocaleDate(pub_date)}><span class="if-sidebar-inline">{getLocaleDay(pub_date)}</span> {getLocaleMonthDay(pub_date)}</span></span>;
-			
+
 			var post_by = <span>by {this.getAtName(author)}</span>;
 			if ( author.meta['real-name'] ) {
 				post_by = <span>by {author.meta['real-name']} ({this.getAtName(author)})</span>;
 			}
-			
+
 			var post_avatar = this.getAvatar( author );
-			
+
 			return (
 				<div class="content-base content-post">
 					<div class="-header">
