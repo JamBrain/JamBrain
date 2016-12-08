@@ -451,10 +451,6 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 		foreach ( $links as $link ) {
 			// Question: Should we support circular links (i.e. remove "else" from "else if")?
 			if ( $node['id'] === $link['a'] ) {
-//				if ( isset($raw_a[$link['a']]) && !is_array($raw_a[$link['a']]) ) {
-//					$raw_meta[$link['a']] = [];
-//				}
-
 				if ( isset($raw_a[$link['scope']]) && !is_array($raw_a[$link['scope']]) ) {
 					$raw_a[$link['scope']] = [];
 				}
@@ -475,21 +471,8 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 						$raw_a[$link['scope']][$link['key']] = [$link['b']=>$link['value']];
 					}
 				}
-				
-//				$raw_a[$link['a']][$link['scope']][$link['key']] = $link['b'];
-				
-//				if ( isset($raw_a[$link['key']]) ) {
-//					$raw_a[$link['key']][] = $link['b'];
-//				}
-//				else {
-//					$raw_a[$link['key']] = [$link['b']];
-//				}
 			}
 			else if ( $node['id'] === $link['b'] ) {
-//				if ( isset($raw_b[$link['b']]) && !is_array($raw_b[$link['b']]) ) {
-//					$raw_meta[$link['b']] = [];
-//				}
-
 				if ( isset($raw_b[$link['scope']]) && !is_array($raw_b[$link['scope']]) ) {
 					$raw_b[$link['scope']] = [];
 				}
@@ -511,24 +494,11 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 					}
 				}
 			}
-
-//			else if ( $node['id'] === $link['b'] ) {
-//				if ( isset($raw_b[$link['key']]) ) {
-//					$raw_b[$link['key']][] = $link['a'];
-//				}
-//				else {
-//					$raw_b[$link['key']] = [$link['a']];
-//				}
-//			}
 		}
 
 		$node['a'] = $raw_a;
 		$node['b'] = $raw_b;
 	}
-
-	//$nodes[0]['hurr'] = $links;
-
-	//$scope = 0;
 	
 	// Populate Love
 	foreach ( $nodes as &$node ) {
