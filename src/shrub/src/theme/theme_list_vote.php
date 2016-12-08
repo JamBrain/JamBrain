@@ -25,3 +25,20 @@ function themeListVote_Add( $event_id, $author_id, $theme_id, $vote ) {
 		$event_id, $author_id, $theme_id, $vote
 	);
 }
+
+
+function themeListVote_GetScoreCounts( $theme_id ) {
+	return db_QueryFetchPair(
+		"SELECT vote, COUNT(vote) AS count
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_LIST_VOTE."
+			WHERE theme=?
+			GROUP BY vote
+			;",
+			$theme_id
+		);
+}
+
+function themeListVote_CalculateScores( $event_id, $page ) {
+	
+}
+

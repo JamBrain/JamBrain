@@ -30,3 +30,40 @@ function themeList_GetByNode( $id, $page = null ) {
 	}
 }
 
+
+function themeList_SetScore( $id, $score ) {
+	return db_QueryInsert(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_THEME_LIST."
+		SET
+			score=?
+		WHERE
+			id=?;",
+		$score, $id
+	);
+}
+
+
+function themeList_SetPage( $id, $page ) {
+	return db_QueryInsert(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_THEME_LIST."
+		SET
+			page=?
+		WHERE
+			id=?;",
+		$page, $id
+	);
+}
+
+
+function themeList_Add( $event_id, $idea_id, $theme, $page, $score = 0 ) {
+	return db_QueryInsert(
+		"INSERT INTO ".SH_TABLE_PREFIX.SH_TABLE_THEME_LIST." (
+			node, idea, theme, page, score, timestamp
+		)
+		VALUES ( 
+			?, ?, ?, ?, ?, NOW()
+		)
+		;",
+		$event_id, $idea_id, $theme, $page, $score 
+	);
+}

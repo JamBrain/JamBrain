@@ -19,8 +19,8 @@ if ( count($argv) < 2 ) {
 //	echo "  score      - Score Ideas\n";
 //	echo "  promote    - Promote highest scored Ideas to Themes\n";
 //	echo "  page       - Assign pages to themes\n";
-//	echo "  calc #     - Calculate Score for Page \"#\" (1-4)\n";
-//	echo "  finalize   - Take the top 20 themes and make a Final Round\n";
+	echo "  calc #     - Calculate Score for Page \"#\" (starts at 1)\n";
+	echo "  finalize # - Take the top # themes and make a new (Final) Round\n";
 //	echo "  calc-final - Calculate the Final Score\n";
 	echo "\n";
 	die;
@@ -83,6 +83,146 @@ if ( $COMMAND === "dupes" ) {
 
 	echo "Done.\n";
 	exit;
+}
+else if ( $COMMAND === "calc" ) {
+	if ( count($argv) < 1 ) {
+		print "Error: No page specified\n";
+		exit(1);
+	}
+
+	$page = intval($argv[0]);
+	
+	if ( $page < 1 ) {
+		print "Error: Invalid page"+$page+"\n";
+		exit(1);
+	}
+
+	print "\n*** WARNING ***\n\n";
+	print "You are about to Score Round ".$page."\n";
+	print "\nAre you sure [type 'YES']? ";
+	flush();
+	$input = trim(fgets(STDIN));
+	if ( $input != "YES" ) {
+		print "Aborting...\n";
+		exit(1);
+	}
+	
+	print "Fetching Themes...\n";
+	
+	$themes = themeList_GetByNode($EVENT_NODE, $page);
+
+	print "Counting Scores...\n";
+	$votes = [];
+	foreach ( $themes as &$theme ) {
+		$votes[$theme['id']] = themeListVote_GetScoreCounts($theme['id']);
+		$sum = 0;
+		$str = "";
+		foreach ( $votes[$theme['id']] as $key => &$value ) {
+			$sum += intval($key) * intval($value);
+		}
+		
+		echo $sum."\t".$theme['theme']."\t\t\t(".implode(", ",$votes[$theme['id']]).")\n";
+
+		$votes[$theme['id']]['sum'] = $sum;
+	}
+	
+	print "\n*** WARNING ***\n\n";
+	print "Commit these Scores to Round ".$page."?\n";
+	print "\nAre you sure [type 'YES']? ";
+	flush();
+	$input = trim(fgets(STDIN));
+	if ( $input != "YES" ) {
+		print "Aborting...\n";
+		exit(1);
+	}
+	
+	print "Writing...\n";
+
+	foreach ( $votes as $key => &$vote ) {
+		$ret = themeList_SetScore($key, $vote['sum']);
+		echo $key." = ".$vote['sum']." : $ret\n";
+	}
+
+	print "Done.\n";
+}
+else if ( $COMMAND === "finalize" ) {
+	if ( count($argv) < 1 ) {
+		print "Error: No count specified\n";
+		exit(1);
+	}
+
+	$count = intval($argv[0]);
+	if ( $count < 1 ) {
+		print "Error: Invalid count:"+$count+"\n";
+		exit(1);
+	}
+
+	echo "----------------------------------\n";	
+
+	$themes = themeList_GetByNode($EVENT_NODE);
+	
+	// Sort Themes by score	
+	$cmp = function($a, $b) {
+	    if ($a['score'] == $b['score']) {
+	        return 0;
+	    }
+	    return ($a['score'] > $b['score']) ? -1 : 1;
+	};
+	usort($themes, $cmp);
+	
+	$max_page = 0;
+	$idx = 0;
+	
+	foreach ( $themes as &$theme ) {
+		$theme['place'] = $idx;
+		
+		print $idx."\t".$theme['score']."\t".$theme['theme']." [".$theme['page']."]\n";
+		
+		if ( $theme['page'] > $max_page ) {
+			$max_page = $theme['page'];
+		}
+		
+		$idx++;
+		if ( $idx === $count ) {
+			echo "----------------------------------\n";	
+		}
+	}
+	
+	print "\n*** WARNING ***\n\n";
+	print "You are about to make the above $count themes in to the Final Round\n";
+	print "\nAre you sure [type 'YES']? ";
+	flush();
+	$input = trim(fgets(STDIN));
+	if ( $input != "YES" ) {
+		print "Aborting...\n";
+		exit(1);
+	}
+
+	$new_themes = array_slice($themes, 0, $count);
+	shuffle($new_themes);
+
+	foreach ( $new_themes as &$theme ) {
+//		print_r($theme);
+		print $theme['place']."\t".$theme['id']."\t".$theme['score']."\t".$theme['theme']." [".$theme['page']."] {".$theme['idea']."} (".$theme['node'].")\n";
+	}
+	
+	$new_page = $max_page+1;
+
+	print "\n*** WARNING ***\n\n";
+	print "Is this Randomization Good? This will become page ".($new_page).". Last chance to back out!!!!\n";
+	print "\nAre you sure [type 'YES']? ";
+	flush();
+	$input = trim(fgets(STDIN));
+	if ( $input != "YES" ) {
+		print "Aborting...\n";
+		exit(1);
+	}
+	
+	foreach ( $new_themes as &$theme ) {
+		$ret = themeList_Add($theme['node'], $theme['idea'], $theme['theme'], $new_page );
+	}
+	
+	echo "Done.\n";
 }
 else {
 	echo "Error: Unknown command \"$COMMAND\"\n";
