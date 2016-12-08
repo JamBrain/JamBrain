@@ -416,10 +416,6 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 		foreach ( $metas as $meta ) {
 			// If this item in the meta list belongs to us
 			if ( $node['id'] === $meta['node'] ) {
-				// Create Node array (if missing)
-//				if ( isset($raw_meta[$meta['node']]) && !is_array($raw_meta[$meta['node']]) ) {
-//					$raw_meta[$meta['node']] = [];
-//				}
 				// Create Scope array (if missing)
 				if ( isset($raw_meta[$meta['scope']]) && !is_array($raw_meta[$meta['scope']]) ) {
 					$raw_meta[$meta['scope']] = [];
@@ -429,7 +425,6 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 				$raw_meta[$meta['scope']][$meta['key']] = $meta['value'];
 			}
 		}
-		//sort($node['meta']);
 		
 		// Store Public Metadata
 		if ( isset($raw_meta[SH_NODE_META_PUBLIC]) ) {
@@ -439,7 +434,7 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 			$node['meta'] = [];
 		}
 		
-//		$node['testmeta'] = $raw_meta;
+//		$node['testmeta'] = $raw_meta;		// debug
 		
 		// TODO: Store Protected and Private Metadata
 	}
@@ -506,11 +501,10 @@ function nodeComplete_GetById( $ids, $scope = 0 ) {
 			$node['link'] = [];
 		}
 
-//		$node['a'] = $raw_a;
-//		$node['b'] = $raw_b;
+//		$node['raw_a'] = $raw_a;			// debug
+//		$node['raw_b'] = $raw_b;			// debug
 
 		// TODO: Store Protected and Private Metadata
-
 	}
 	
 	// Populate Love
