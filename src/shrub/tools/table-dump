@@ -1,7 +1,11 @@
 #!/bin/sh
 
+# Create a file ~/.my.cnf
+#[client]
+#password=YOUR_PASSWORD
+
 if [ $# -lt 1 ]; then
-	>&2 echo "Usage: $0 SH_TABLE_CONSTANT_NAME [additional arguments for mysqldump] > table_name.sql"
+	>&2 echo "Usage: $0 table_name [additional arguments for mysqldump] > table_name.sql"
 	exit 1
 fi
 
@@ -19,15 +23,28 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-TABLE_VERSION=`$COMMAND_PATH/config-get-value $TABLE`
+PW=`$COMMAND_PATH/database-password-get`
 if [ $? -ne 0 ]; then
-	>&2 echo "Error: Unable to fetch table version from config"
+	>&2 echo "Error: Unable to fetch database password"
 	exit 1
 fi
 
-TABLE_NAME=`$COMMAND_PATH/table-get $TABLE`
+LOGIN=`$COMMAND_PATH/database-login-get`
 if [ $? -ne 0 ]; then
-	>&2 echo "Error: Unable to find table"
+	>&2 echo "Error: Unable to fetch database name"
+	exit 1
+fi
+
+HOST=`$COMMAND_PATH/database-host-get`
+if [ $? -ne 0 ]; then
+	>&2 echo "Error: Unable to fetch database host"
+	exit 1
+fi
+
+
+TABLE_VERSION=`$COMMAND_PATH/config-get-value $TABLE`
+if [ $? -ne 0 ]; then
+	>&2 echo "Error: Unable to fetch table version from config"
 	exit 1
 fi
 
@@ -35,14 +52,14 @@ echo "-- $COMMAND -- Starship table dump script"
 echo "-- Options: $FULL_ARGS"
 echo
 
-mysqldump $DB $TABLE_NAME $ARGS
+mysqldump $DB $TABLE -u $LOGIN -h $HOST $ARGS
 
 # Only add commands for setting the version if NOT the config table 
-if [ "$TABLE_NAME" != "sh_global" ]; then
+if [ "$TABLE" != "sh_globals" ]; then
 	echo
 	echo "-- Set the table version inside the config"
-	echo "LOCK TABLES \`sh_global\` WRITE;"
-	echo "INSERT INTO \`sh_global\` (\`key\`,\`value\`,\`timestamp\`) VALUES ('$TABLE', '$TABLE_VERSION', NOW());"
+	echo "LOCK TABLES \`sh_globals\` WRITE;"
+	echo "INSERT INTO \`sh_globals\` (\`key\`,\`value\`) VALUES ('$TABLE','$TABLE_VERSION');"
 	echo "UNLOCK TABLES;"
 fi
 
