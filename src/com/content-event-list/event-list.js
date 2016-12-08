@@ -126,14 +126,21 @@ export default class ContentEventList extends Component {
 				);
 			}
 			else if ( ThemeMode === 2 ) {
-				return [
-					<h3>{this.state.names[list]}</h3>,
-					<div>This round has ended.</div>,
-					<br />,
-					this.state.lists[list].map(r => {
-						return <div>{r.theme}</div>;
-					})
-				];				
+				return (
+					<div class="theme-list">
+						<h3>{this.state.names[list]}</h3>
+						<div>This round has ended.</div>
+						<br />
+						{this.state.lists[list].map(r => {
+							let new_class = "theme-item" + (this.state.votes ? this.voteToClass(this.state.votes[r.id]) : "");
+							return (
+								<div class={new_class}>
+									<span class="-text">{r.theme}</span>
+								</div>
+							);
+						})}
+					</div>
+				);
 			}
 			else {
 				return [
