@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+const CONFIG_PATH = "../";
+const SHRUB_PATH = "../src/";
+
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."core/cli.php";		// Confirm CLI
+require_once __DIR__."/".SHRUB_PATH."constants.php";
+
+if (count($argv) <= 1) {
+	echo "Usage: ".$argv[0]." config-key-name\n";
+	exit(1);
+}
+
+$key = trim($argv[1]);
+
+if ( defined($key) ) {
+	echo SH_TABLE_PREFIX.constant($key);
+}
+
+exit(0);
