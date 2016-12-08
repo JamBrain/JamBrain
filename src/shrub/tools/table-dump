@@ -41,14 +41,21 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
+TABLE_NAME=`$COMMAND_PATH/table-get $TABLE`
+if [ $? -ne 0 ]; then
+	>&2 echo "Error: Unable to fetch table version from config"
+	exit 1
+fi
+
+
 echo "-- $COMMAND -- Starship table dump script"
 echo "-- Options: $FULL_ARGS"
 echo
 
-mysqldump $DB $TABLE_VERSION -u $LOGIN -h $HOST $ARGS
+mysqldump $DB $TABLE_NAME -u $LOGIN -h $HOST $ARGS
 
 # Only add commands for setting the version if NOT the config table 
-if [ "$TABLE_VERSION" != "sh_global" ]; then
+if [ "$TABLE_NAME" != "sh_global" ]; then
 	echo
 	echo "-- Set the table version inside the config"
 	echo "LOCK TABLES \`sh_global\` WRITE;"
