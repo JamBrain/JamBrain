@@ -6,6 +6,7 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
+import ContentBody						from 'com/content-body/body';
 import ContentBodyMarkup				from 'com/content-body-markup/body-markup';
 
 import $Node							from '../../shrub/js/node/node';
@@ -92,7 +93,7 @@ export default class ContentPost extends Component {
 
 			return (
 				<div class="content-base content-common content-post">
-					<div class="content-header-base content-header-common -header">
+					<div class="content-header content-header-common -header">
 						<div class="-avatar" onclick={e => { location.href = "#user-card/"+author.slug; }}>
 							<img src={post_avatar} /><SVGIcon class="-info">info</SVGIcon>
 						</div>
@@ -104,7 +105,7 @@ export default class ContentPost extends Component {
 						</div>
 					</div>
 					<ContentBodyMarkup class="fudge">{node.body}</ContentBodyMarkup>
-					<div class="content-footer-base content-footer-common -footer">
+					<div class="content-footer content-footer-common -footer">
 						<div class="-left">
 							<div class="-minmax _hidden" onclick={this.onMinMax}>
 								<SVGIcon>arrow-up</SVGIcon>
@@ -119,8 +120,10 @@ export default class ContentPost extends Component {
 		}
 		else {
 			return (
-				<div class="content-base content-post">
-					{ error ? error : <NavSpinner /> }
+				<div class="content-base content-common content-post">
+					<ContentBody>
+						{ error ? error : <NavSpinner /> }
+					</ContentBody>
 				</div>
 			);
 		}
