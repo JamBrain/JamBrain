@@ -13,8 +13,9 @@ export default class ContentBodyMarkup extends Component {
 	render( props ) {
 		// NOTE: only parses the first child
 		var _body = props.children.length ? marked.parse(props.children[0]) : "";
+
 		// '-body' for backwards compatibility (remove me)
-		var _class = "content-body-base content-body-markup -body markup" + (props.class ? " "+props.class : "");
+		var _class = "content-body content-body-markup -body markup" + (props.class ? " "+props.class : "");
 
 		return <div class={_class} dangerouslySetInnerHTML={{__html:_body}} />;
 	}
