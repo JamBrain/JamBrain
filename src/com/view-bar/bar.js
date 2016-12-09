@@ -111,7 +111,7 @@ export default class ViewBar extends Component {
 		else {
 			Register = (
 				<ButtonBase class="-button" onclick={e => { console.log('register'); window.location.hash = "#user-register"; }}>
-					<SVGIcon>user</SVGIcon>
+					<SVGIcon>user-plus</SVGIcon>
 					<div class="if-sidebar-block">Create Account</div>
 				</ButtonBase>
 			);
