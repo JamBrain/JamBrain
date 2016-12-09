@@ -11,7 +11,7 @@ export default class DialogLogin extends Component {
 		this.state = {
 			login: "",
 			password: "",
-			remember: "1"
+			remember: false
 		};
 
 		// Bind functions (avoiding the need to rebind every render)
@@ -80,9 +80,9 @@ export default class DialogLogin extends Component {
 					<input id="dialog-login-password" onchange={this.onPasswordChange} onkeydown={this.onKeyDown} class="-text focusable" type="password" name="password" placeholder="Password" maxlength="128" value={password} />
 				</div>
 				<div>
-					<input id="dialog-login-remember" onchange={this.onRememberChange} class="focusable" type="checkbox" name="remember" checked={remember} /><span>Stay Logged In</span>
-					
 					<div class="_float-right -link" id="dialog-login-forgot" onclick={e => { location.href = "#user-reset"; /*e.stopPropagation(); e.preventDefault();*/ } }>Forgot Password?</div>
+
+					<div title="LOL. This is broken. Sorry!"><input id="dialog-login-remember" onchange={this.onRememberChange} class="focusable" type="checkbox" name="remember" checked={remember} /><span>Stay Logged In</span></div>
 				</div>
 			</DialogBase>
 		);
