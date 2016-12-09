@@ -36,27 +36,22 @@ export default class ContentPost extends Component {
 	}
 
 	getAuthor( node ) {
-		// Clear the Author
+		// Clear the Author (QUESTION: why?)
 		this.setState({ author: {} });
 
 		// Lookup the author
 		$Node.Get( node.author )
 		.then(r => {
 			if ( r.node && r.node.length ) {
-				this.setState({ author: r.node[0] });
+				this.setState({ 'author': r.node[0] });
 			}
 			else {
-				this.setState({ error: "Not found" });
+				this.setState({ 'error': "Not found" });
 			}
 		})
 		.catch(err => {
-			this.setState({ error: err });
+			this.setState({ 'error': err });
 		});
-	}
-
-	onMinMax( e ) {
-		console.log("minmax");
-		window.location.hash = "#dummy";
 	}
 
 	getAvatar( user ) {
@@ -68,18 +63,24 @@ export default class ContentPost extends Component {
 		return <NavLink class="at-name" href={user_path}><img src={this.getAvatar(user)} />{user.name}</NavLink>;
 	}
 
+	onMinMax( e ) {
+		console.log("minmax");
+		window.location.hash = "#dummy";
+	}
+
 	render( {node, user, path}, {author, error} ) {
 		if ( node.slug && author.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 
-			var pub_date = new Date(node.published);
-			var pub_diff = new Date().getTime() - pub_date.getTime();
+			var date_pub = new Date(node.published);
+			var date_now = new Date();
+			var pub_diff = date_now.getTime() - date_pub.getTime();
 
 			// x minutes ago
 			var post_relative = <span class="if-sidebar-inline">{getRoughAge(pub_diff)}</span>;
 			// simple date, full date on hover
-			var post_date = <span>on <span class="-title" title={getLocaleDate(pub_date)}><span class="if-sidebar-inline">{getLocaleDay(pub_date)}</span> {getLocaleMonthDay(pub_date)}</span></span>;
+			var post_date = <span>on <span class="-title" title={getLocaleDate(date_pub)}><span class="if-sidebar-inline">{getLocaleDay(date_pub)}</span> {getLocaleMonthDay(date_pub)}</span></span>;
 
 			var post_by = <span>by {this.getAtName(author)}</span>;
 			if ( author.meta['real-name'] ) {

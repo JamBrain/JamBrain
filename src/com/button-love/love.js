@@ -43,7 +43,7 @@ export default class ButtonLove extends Component {
 
 	render( {node}, {loved, lovecount} ) {
 		return (
-			<div class={'footer-button button-love'+ (loved ? ' loved' : '')} onclick={this.onLove}>
+			<div class={'button-footer button-love'+ (loved ? ' loved' : '')} onclick={this.onLove}>
 				<SVGIcon class="-hover-hide">heart</SVGIcon>
 				<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
 				<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
