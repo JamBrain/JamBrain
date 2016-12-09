@@ -72,7 +72,9 @@ export default class ContentPost extends Component {
 		window.location.hash = "#dummy";
 	}
 
-	render( {node, user, path}, {author, error} ) {
+	render( {node, user, path, extra}, {author, error} ) {
+		var EditMode = extra.length ? extra[0] === 'edit' : false;
+		
 		if ( node.slug && author.slug ) {
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 
