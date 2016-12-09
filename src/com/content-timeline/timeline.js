@@ -11,35 +11,44 @@ export default class ContentTimeline extends Component {
 		super(props);
 		
 		this.state = {
-			id: 0,
 			feed: null
 		};
-		
-		this.componentWillReceiveProps( props );
-		
-		
-		this.makeItem = this.makeItem.bind(this);
+
+		this.makeFeedItem = this.makeFeedItem.bind(this);
+	}
+
+	componentDidMount() {
+		this.getFeed(
+			this.props.node.id,
+			this.props.methods ? this.props.methods : ['parent', 'superparent'],
+			this.props.types ? this.props.types : ['post']
+		);
 	}
 	
-	componentWillReceiveProps( props ) {
-		if ( props.node.id === this.state.id )
-			return;
-		
-		// Clear the Feed
-		this.setState({ 'id': props.node.id, 'feed': null });
-		
-		$Node.GetFeed( props.node.id, "post" )
+	getFeed( id, methods, types ) {
+		$Node.GetFeed( id, methods, types )
 		.then(r => {
-			if ( r.feed && Object.keys(r.feed).length ) {
-				$Node.Get( Object.keys(r.feed) )
-				.then(rr => {
-					// Hack: Posts should go in Publish Date order
-					rr.node.reverse();
-					this.setState({ 'feed': rr.node });
-				})
-				.catch(err => {
-					this.setState({ 'error': err });
-				});
+			// If the feed is not empty
+			if ( r.feed && r.feed.length ) {
+				var keys = r.feed.map(v => v['id']);
+				$Node.Get( keys )
+					.then(rr => {
+						// Make a id mapping object
+						let nodemap = {};
+						for ( let idx = 0; idx < rr.node.length; idx++ ) {
+							nodemap[rr.node[idx].id] = rr.node[idx];
+						}
+						
+						// Using the original keys, return an ordered array of nodes
+						let new_state = {
+							'feed': keys.map(v => nodemap[v])
+						};
+						
+						this.setState(new_state);
+					})
+					.catch(err => {
+						this.setState({ 'error': err });
+					});
 			}
 			else {
 				this.setState({ 'feed': [] });
@@ -50,7 +59,7 @@ export default class ContentTimeline extends Component {
 		})
 	}
 
-	makeItem( node ) {
+	makeFeedItem( node ) {
 		var path = this.props.path+'/'+node.slug;
 		var user = this.props.user;
 		var extra = this.props.extra;
@@ -66,20 +75,26 @@ export default class ContentTimeline extends Component {
 		}
 	}
 
-	render( {node}, {feed, error} ) {
-		if ( node.slug && feed ) {
-			return (
-				<div id="content">
-					{ feed.length ? feed.map(this.makeItem) : "No Posts" }
-				</div>
-			);
+	render( props, {feed, error} ) {
+		var ShowFeed = null;
+		
+		if ( error ) {
+			ShowFeed = error;
+		}
+		else if ( feed ) {
+			if ( feed.length ) {
+				ShowFeed = feed.map(this.makeFeedItem);
+			}
 		}
 		else {
-			return (
-				<div id="content">
-					{ error ? error : <NavSpinner /> }
-				</div>
-			);
+			ShowFeed = <NavSpinner />;
 		}
+			
+		return (		/// ***************************************
+			<div id="content">
+				{props.children}
+				{ShowFeed}
+			</div>
+		);
 	}
 }
