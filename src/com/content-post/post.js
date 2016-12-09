@@ -6,6 +6,8 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
+import ContentBodyMarkup				from 'com/content-body-markup/body-markup';
+
 import $Node							from '../../shrub/js/node/node';
 
 export default class ContentPost extends Component {
@@ -70,7 +72,7 @@ export default class ContentPost extends Component {
 
 	render( {node, user, path}, {author, error} ) {
 		if ( node.slug && author.slug ) {
-			var dangerousParsedBody = { __html:marked.parse(node.body) };
+			//var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 
 			var date_pub = new Date(node.published);
@@ -102,8 +104,8 @@ export default class ContentPost extends Component {
 							Posted {post_relative} {post_by} {post_date}
 						</div>
 					</div>
-					<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
-					<div class="-footer">
+					<ContentBodyMarkup>{node.body}</ContentBodyMarkup>
+					<div class="content-footer-base content-footer-common -footer">
 						<div class="-left">
 							<div class="-minmax _hidden" onclick={this.onMinMax}>
 								<SVGIcon>arrow-up</SVGIcon>
@@ -125,6 +127,8 @@ export default class ContentPost extends Component {
 		}
 	}
 }
+
+//					<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
 
 marked.setOptions({
 	highlight: function( code, lang ) {
