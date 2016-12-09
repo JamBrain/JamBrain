@@ -92,8 +92,8 @@ export default class ContentPost extends Component {
 			var post_avatar = this.getAvatar( author );
 
 			return (
-				<div class="content-base content-post">
-					<div class="-header">
+				<div class="content-base content-common content-post">
+					<div class="content-header-base content-header-common -header">
 						<div class="-avatar" onclick={e => { location.href = "#user-card/"+author.slug; }}>
 							<img src={post_avatar} /><SVGIcon class="-info">info</SVGIcon>
 						</div>
