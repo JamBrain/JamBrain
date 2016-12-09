@@ -9,14 +9,14 @@ import $User							from '../shrub/js/user/user';
 export default class DialogPassword extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {
 			loading: true
 		};
 
 		var Vars = Sanitize.getHTTPVars();
 		console.log("v",Vars);
-		
+
 		// Get activation ID
 		this.ActID = Vars.id;
 		this.ActHash = Vars.key;
@@ -41,15 +41,15 @@ export default class DialogPassword extends Component {
 			console.log(err);
 			this.setState({ error: err, loading: false });
 		});
-		
-		
+
+
 		// Bind functions (avoiding the need to rebind every render)
 		this.onPasswordChange = this.onPasswordChange.bind(this);
 		this.onPassword2Change = this.onPassword2Change.bind(this);
 		this.doResetPassword = this.doResetPassword.bind(this);
 		this.doFinishReset = this.doFinishReset.bind(this);
 	}
-	
+
 	componentDidMount() {
 //		this.loginName.focus();
 	}
@@ -67,7 +67,7 @@ export default class DialogPassword extends Component {
 			return 0;
 		if ( pw.length < 8 )
 			return -1;
-		
+
 		return 1;
 	}
 	isValidPassword2() {
@@ -81,15 +81,15 @@ export default class DialogPassword extends Component {
 
 		if ( pw1 !== pw2 )
 			return -1;
-			
-		// Keep this check, so the display doesn't look weird			
+
+		// Keep this check, so the display doesn't look weird
 		if ( this.state.password !== this.state.password2 )
 			return -1;
-		
+
 		return 1;
 	}
 
-	
+
 	doResetPassword() {
 		if ( this.isValidPassword() > 0 && this.isValidPassword2() > 0 ) {
 			$User.Password( this.ActID, this.ActHash.trim(), this.state.password.trim() )
@@ -114,7 +114,7 @@ export default class DialogPassword extends Component {
 			this.setState({ error: "Form incomplete or invalid" });
 		}
 	}
-	
+
 	doFinishReset() {
 		// HACK
 		location.href = "?";
@@ -122,9 +122,9 @@ export default class DialogPassword extends Component {
 
 	render( props, {password, password2, node, success, loading, error} ) {
 		var ErrorMessage = error ? {'error': error} : {};
-		
+
 		var title = "Reset Password: Step 2";
-		
+
 		if ( loading ) {
 			return (
 				<DialogBase title={title} explicit {...ErrorMessage}>
@@ -132,7 +132,7 @@ export default class DialogPassword extends Component {
 						Please wait...
 					</div>
 				</DialogBase>
-			);			
+			);
 		}
 		else if ( !node ) {
 			return (
@@ -146,16 +146,16 @@ export default class DialogPassword extends Component {
 				<DialogBase title={title} ok explicit onclick={this.doFinishReset} {...ErrorMessage}>
 					Password Reset. You can now <strong>Log In</strong>.
 				</DialogBase>
-			);			
+			);
 		}
 		else {
 			return (
 				<DialogBase title={title} ok cancel oktext="Save" explicit onclick={this.doResetPassword} {...ErrorMessage}>
 					<div>
-						<input id="dialog-password-password2" onchange={this.onPasswordChange} class="-text focusable" type="password" name="password" maxlength="128" placeholder="Password" value={password} /><LabelYesNo value={this.isValidPassword()} />
+						<input id="dialog-password-password2" oninput={this.onPasswordChange} class="-text focusable" type="password" name="password" maxlength="128" placeholder="Password" value={password} /><LabelYesNo value={this.isValidPassword} />
 					</div>
 					<div>
-						<input id="dialog-password-password2" onchange={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxlength="128" placeholder="Password again" value={password2} /><LabelYesNo value={this.isValidPassword2()} />
+						<input id="dialog-password-password2" oninput={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxlength="128" placeholder="Password again" value={password2} /><LabelYesNo value={this.isValidPassword2} />
 					</div>
 				</DialogBase>
 			);
