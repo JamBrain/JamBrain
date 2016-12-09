@@ -72,7 +72,6 @@ export default class ContentPost extends Component {
 
 	render( {node, user, path}, {author, error} ) {
 		if ( node.slug && author.slug ) {
-			//var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 
 			var date_pub = new Date(node.published);
@@ -104,7 +103,7 @@ export default class ContentPost extends Component {
 							Posted {post_relative} {post_by} {post_date}
 						</div>
 					</div>
-					<ContentBodyMarkup>{node.body}</ContentBodyMarkup>
+					<ContentBodyMarkup class="fudge">{node.body}</ContentBodyMarkup>
 					<div class="content-footer-base content-footer-common -footer">
 						<div class="-left">
 							<div class="-minmax _hidden" onclick={this.onMinMax}>
@@ -127,16 +126,3 @@ export default class ContentPost extends Component {
 		}
 	}
 }
-
-//					<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
-
-marked.setOptions({
-	highlight: function( code, lang ) {
-		var language = Prism.languages.clike;
-		if ( Prism.languages[lang] )
-			language = Prism.languages[lang];
-		return Prism.highlight( code, language );
-	},
-	sanitize: true,			// disable HTML //
-	smartypants: true,		// enable automatic fancy quotes, ellipses, dashes //
-});

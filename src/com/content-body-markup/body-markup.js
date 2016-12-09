@@ -10,12 +10,13 @@ export default class ContentBodyMarkup extends Component {
 		return shallowDiff(this.props.children, nextProps.children);
 	}
 
-	render( {children} ) {
-		// NOTE: Only supports the first child
-		var body = marked.parse(children.length ? children[0] : "");
-		
+	render( props ) {
+		// NOTE: only parses the first child
+		var _body = props.children.length ? marked.parse(props.children[0]) : "";
 		// '-body' for backwards compatibility (remove me)
-		return <div class="content-body-base content-body-markup -body markup" dangerouslySetInnerHTML={{__html:body}} />;
+		var _class = "content-body-base content-body-markup -body markup" + (props.class ? " "+props.class : "");
+
+		return <div class={_class} dangerouslySetInnerHTML={{__html:_body}} />;
 	}
 }
 
