@@ -32,14 +32,44 @@ function nodeVersion_Add( $node, $author, $type, $subtype, $subsubtype, $slug, $
 
 function node_Add( $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body ) {
 	// TODO: wrap this in a block
-	$node = db_QueryInsert(
-		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE." (
-			created
-		)
-		VALUES ( 
-			NOW()
-		)"
-	);
+
+	// With a slug set
+	if ( !empty($slug) ) {
+		$node = db_QueryInsert(
+			"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE." (
+				created,
+				slug
+			)
+			VALUES (
+				NOW(),
+				?
+			)",
+			$slug
+		);
+	}
+	// Without a slug set, generate one
+	else {
+		// Insert with a dummy slug
+		$node = db_QueryInsert(
+			"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE." (
+				created,
+				slug
+			)
+			VALUES (
+				NOW(),
+				'$$'+LAST_INSERT_ID()
+			)"
+		);
+
+		if ( empty($node) ) {
+			return $node;
+		}
+
+		// Generate a unique slug (based on the node). It gets set by the edit below
+		$slug = "$".$node;
+	}
+
+	// NOTE: If the edit below fails, the node will have a $$ prefixed slug, and a parent of 0 (orphaned)
 
 	$edit = node_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, "!ZERO" );
 	
