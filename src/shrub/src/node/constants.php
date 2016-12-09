@@ -155,5 +155,7 @@ global_AddReservedName(
 	'file',
 	'files',
 	'permission',
-	'permissions'
+	'permissions',
+	
+	'news'
 );

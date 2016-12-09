@@ -3,7 +3,7 @@ import SVGIcon 							from 'com/svg-icon/icon';
 
 import $NodeLove						from '../../shrub/js/node/node_love';
 
-export default class ButtonLove extends Component {
+export default class ContentFooterButtonLove extends Component {
 	constructor( props ) {
 		super(props);
 
@@ -19,7 +19,7 @@ export default class ButtonLove extends Component {
 		// TODO: Extract Love from the global love pool (props.node.id)
 		
 		if ( this.props.user ) {	
-			$NodeLove.GetMy(/*props.user.id,*/ this.props.node.id)
+			$NodeLove.GetMy(this.props.node.id)
 			.then(r => {
 				this.setState({ 'loved': r });
 			});
@@ -42,13 +42,14 @@ export default class ButtonLove extends Component {
 	}
 
 	render( {node}, {loved, lovecount} ) {
+		var _class = "footer-button footer-button-love" + (loved ? " loved" : "");
 		return (
-			<div class={'button-footer button-love'+ (loved ? ' loved' : '')} onclick={this.onLove}>
+			<div class={_class} onclick={this.onLove}>
 				<SVGIcon class="-hover-hide">heart</SVGIcon>
 				<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
 				<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
 				<div class="-count">{Number.isInteger(lovecount) ? lovecount : node.love}</div>
 			</div>
-		)
+		);
 	}
 }

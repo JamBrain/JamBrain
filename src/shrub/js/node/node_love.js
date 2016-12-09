@@ -11,13 +11,16 @@ export default {
 
 var STORAGE = Memory;
 
+/// ??
 export function Get( node ) {
 	return Fetch.Get('//'+API_DOMAIN+'/vx/node/love/get/'+node);
 }
 
+/// Returns all of my love
 function _GetMy() {
 	return Fetch.Get('//'+API_DOMAIN+'/vx/node/love/getmy');
 }
+/// Wraps the concept of getting love for a specific node
 export function GetMy( node ) {
 	return new Promise((resolve, reject) => {
 		var key = 'NODE|LOVE|MINE';
@@ -30,11 +33,8 @@ export function GetMy( node ) {
 				resolve(Data);
 		}
 		else {
-			//console.log('fetch');
 			_GetMy()
 			.then(r => {
-				//console.log('got',r);
-
 				Data = r['my-love'];
 				STORAGE.Store(key, Data);
 				

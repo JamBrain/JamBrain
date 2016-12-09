@@ -1,12 +1,14 @@
 import { h, Component } 				from 'preact/preact';
-import ShallowCompare	 				from 'shallow-compare/index';
+//import ShallowCompare	 				from 'shallow-compare/index';
 
-import ButtonLove						from 'com/button-love/love';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
+import ContentBody						from 'com/content-body/body';
 import ContentBodyMarkup				from 'com/content-body-markup/body-markup';
+
+import ContentFooterButtonLove			from 'com/content-footer-button-love/footer-button-love';
 
 import $Node							from '../../shrub/js/node/node';
 
@@ -70,7 +72,9 @@ export default class ContentPost extends Component {
 		window.location.hash = "#dummy";
 	}
 
-	render( {node, user, path}, {author, error} ) {
+	render( {node, user, path, extra}, {author, error} ) {
+		var EditMode = extra.length ? extra[0] === 'edit' : false;
+		
 		if ( node.slug && author.slug ) {
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 
@@ -92,7 +96,7 @@ export default class ContentPost extends Component {
 
 			return (
 				<div class="content-base content-common content-post">
-					<div class="content-header-base content-header-common -header">
+					<div class="content-header content-header-common -header">
 						<div class="-avatar" onclick={e => { location.href = "#user-card/"+author.slug; }}>
 							<img src={post_avatar} /><SVGIcon class="-info">info</SVGIcon>
 						</div>
@@ -104,14 +108,14 @@ export default class ContentPost extends Component {
 						</div>
 					</div>
 					<ContentBodyMarkup class="fudge">{node.body}</ContentBodyMarkup>
-					<div class="content-footer-base content-footer-common -footer">
+					<div class="content-footer content-footer-common -footer">
 						<div class="-left">
 							<div class="-minmax _hidden" onclick={this.onMinMax}>
 								<SVGIcon>arrow-up</SVGIcon>
 							</div>
 						</div>
 						<div class="-right">
-				  			<ButtonLove user={user} node={node} wedge_left_bottom />
+				  			<ContentFooterButtonLove user={user} node={node} wedge_left_bottom />
 				  		</div>
 					</div>
 				</div>
@@ -119,8 +123,10 @@ export default class ContentPost extends Component {
 		}
 		else {
 			return (
-				<div class="content-base content-post">
-					{ error ? error : <NavSpinner /> }
+				<div class="content-base content-common content-post">
+					<ContentBody>
+						{ error ? error : <NavSpinner /> }
+					</ContentBody>
 				</div>
 			);
 		}
