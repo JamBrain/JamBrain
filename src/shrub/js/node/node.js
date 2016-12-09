@@ -22,12 +22,26 @@ export function Get( ids ) {
 	return Fetch.Get('//'+API_DOMAIN+'/vx/node/get/'+ids.join('+'));
 }
 
-export function GetFeed( id, types ) {
-	if ( !Array.isArray(types) ) {
-		types = [types];
+export function GetFeed( id, methods, types ) {
+	let args = [];
+
+	args.push(id);
+
+	if ( methods ) {
+		if ( Array.isArray(methods) ) {
+			methods = methods.join("+");
+		}
+		args.push(methods);
 	}
 
-	return Fetch.Get('//'+API_DOMAIN+'/vx/node/feed/'+id+'/'+(types ? types.join("+") : ""));
+	if ( types ) {
+		if ( Array.isArray(types) ) {
+			types = types.join("+");
+		}
+		args.push(types);
+	}
+
+	return Fetch.Get('//'+API_DOMAIN+'/vx/node/feed/'+args.join('/'));
 }
 
 export function GetMy() {

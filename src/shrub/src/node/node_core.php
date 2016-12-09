@@ -1,56 +1,5 @@
 <?php
 
-// For fetching subscriptions
-function node_GetPublishedIdModifiedByParentType( $parent, $types = null, $limit = 20, $offset = 0 ) {
-	$query_suffix = ';';	// do we want this anymore?
-		
-	if ( is_integer($parent) ) {
-		$parent = [$parent];
-	}
-
-	if ( is_array($parent) ) {
-		// Confirm that all IDs are not zero
-		foreach( $parent as $id ) {
-			if ( intval($id) == 0 )
-				return null;
-		}
-
-		// Build IN string
-		$ids_string = implode(',', $parent);
-		
-		if ( $types ) {
-			if ( !is_array($types) ) {
-				$types = [$types];
-			}
-			
-			$types_string = '"'.implode('","', $types).'"';
-			
-			return db_QueryFetchPair(
-				"SELECT id, ".DB_FIELD_DATE('modified')." 
-				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
-				WHERE parent IN ($ids_string) AND type IN ($types_string) AND published > CONVERT(0,DATETIME)
-				ORDER BY published DESC
-				LIMIT ? OFFSET ?
-				".$query_suffix,
-				$limit, $offset
-			);			
-		}
-		else {
-			return db_QueryFetchPair(
-				"SELECT id, ".DB_FIELD_DATE('modified')." 
-				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
-				WHERE parent IN ($ids_string) AND published > CONVERT(0,DATETIME)
-				ORDER BY published DESC
-				LIMIT ? OFFSET ?
-				".$query_suffix,
-				$limit, $offset
-			);
-		}
-	}
-	
-	return null;
-}
-
 function nodeVersion_Add( $node, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag = "" ) {
 	$ret = db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_VERSION." (

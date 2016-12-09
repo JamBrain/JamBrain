@@ -116,17 +116,39 @@ switch ( $action ) {
 			$root = intval(json_ArgShift());
 			$RESPONSE['root'] = $root;
 
-			$types = [];
-			if ( json_ArgCount() ) {
-				$types = explode('+', json_ArgGet(0));
+			$methods = json_ArgShift();
+			if ( empty($methods) ) {
+				$methods = ['parent'];
+			}
+			else {
+				$methods = array_map("coreSlugify_Name", explode('+', $methods));
+				
+				$allowed_methods = ['parent','superparent','author'];
+				foreach ( $methods as &$method ) {
+					if ( !in_array($method, $allowed_methods) ) {
+						json_EmitFatalError_BadRequest("Invalid method: $method", $RESPONSE);
+					}
+				}
+			}
+			$RESPONSE['method'] = $methods;
+
+			$types = json_ArgShift();
+			if ( empty($types) ) {
+				$types = ['post'];
+			}
+			else {
+				$types = array_map("coreSlugify_Name", explode('+', $types));
+
+				$allowed_types = ['post','item','event'];
+				foreach ( $types as &$type ) {
+					if ( !in_array($type, $allowed_types) ) {
+						json_EmitFatalError_BadRequest("Invalid type: $type", $RESPONSE);
+					}
+				}
 			}
 			$RESPONSE['types'] = $types;
 
-//			foreach ( $REQUEST as $slug ) {
-//				$types[] = coreSlugify_Name($slug);
-//			}
-			
-			$RESPONSE['feed'] = node_GetPublishedIdModifiedByParentType($root, $types);
+			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types );
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
