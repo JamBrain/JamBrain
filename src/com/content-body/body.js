@@ -1,5 +1,5 @@
 import { h, Component } 				from 'preact/preact';
-]
+
 export default class ContentBody extends Component {
 	constructor( props ) {
 		super(props);

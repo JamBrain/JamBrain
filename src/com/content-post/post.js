@@ -1,13 +1,14 @@
 import { h, Component } 				from 'preact/preact';
-import ShallowCompare	 				from 'shallow-compare/index';
+//import ShallowCompare	 				from 'shallow-compare/index';
 
-import ButtonLove						from 'com/button-love/love';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
 import ContentBody						from 'com/content-body/body';
 import ContentBodyMarkup				from 'com/content-body-markup/body-markup';
+
+import ContentFooterButtonLove			from 'com/content-footer-button-love/footer-button-love';
 
 import $Node							from '../../shrub/js/node/node';
 
@@ -112,7 +113,7 @@ export default class ContentPost extends Component {
 							</div>
 						</div>
 						<div class="-right">
-				  			<ButtonLove user={user} node={node} wedge_left_bottom />
+				  			<ContentFooterButtonLove user={user} node={node} wedge_left_bottom />
 				  		</div>
 					</div>
 				</div>
