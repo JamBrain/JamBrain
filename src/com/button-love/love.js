@@ -1,11 +1,10 @@
 import { h, Component } 				from 'preact/preact';
-
 import SVGIcon 							from 'com/svg-icon/icon';
 
 import $NodeLove						from '../../shrub/js/node/node_love';
 
-export default class LoveButton extends Component {
-  constructor( props ) {
+export default class ButtonLove extends Component {
+	constructor( props ) {
 		super(props);
 
 		this.state = {
@@ -13,31 +12,21 @@ export default class LoveButton extends Component {
 			'lovecount': null
 		};
 
-		if ( props.user ) {	
-			$NodeLove.GetMy(/*props.user.id,*/ props.node.id)
-			.then(r => {
-				//console.log( r ) ;
-				this.setState({ 'loved': r });
-			});
-		}
-
-		// TODO: Extract Love from the global love pool (props.node.id)
-
 		this.onLove = this.onLove.bind(this);
 	}
-
-	render( {node}, {loved, lovecount} ) {
-		return (
-      <div class={'-love'+ (loved ? ' loved' : '')} onclick={this.onLove}>
-        <SVGIcon class="-hover-hide">heart</SVGIcon>
-        <SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
-        <SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
-        <div class="-count">{Number.isInteger(lovecount) ? lovecount : node.love}</div>
-      </div>
-    )
+	
+	componentDidMount() {
+		// TODO: Extract Love from the global love pool (props.node.id)
+		
+		if ( this.props.user ) {	
+			$NodeLove.GetMy(/*props.user.id,*/ this.props.node.id)
+			.then(r => {
+				this.setState({ 'loved': r });
+			});
+		}		
 	}
 
-  onLove( e ) {
+	onLove( e ) {
 		if ( this.state.loved ) {
 			$NodeLove.Remove(this.props.node.id)
 			.then(r => {
@@ -52,4 +41,14 @@ export default class LoveButton extends Component {
 		}
 	}
 
+	render( {node}, {loved, lovecount} ) {
+		return (
+			<div class={'footer-button button-love'+ (loved ? ' loved' : '')} onclick={this.onLove}>
+				<SVGIcon class="-hover-hide">heart</SVGIcon>
+				<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
+				<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
+				<div class="-count">{Number.isInteger(lovecount) ? lovecount : node.love}</div>
+			</div>
+		)
+	}
 }

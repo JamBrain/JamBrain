@@ -1,7 +1,7 @@
 import { h, Component } 				from 'preact/preact';
 import ShallowCompare	 				from 'shallow-compare/index';
 
-import LoveButton						from 'com/button-love/love';
+import ButtonLove						from 'com/button-love/love';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
@@ -91,8 +91,12 @@ export default class ContentPost extends Component {
 			return (
 				<div class="content-base content-post">
 					<div class="-header">
-						<div class="-avatar" onclick={e => { console.log(author.slug); location.href = "#user-card"; }}><img src={post_avatar} /><SVGIcon class="-info">info</SVGIcon></div>
-						<div class="-title _font2"><NavLink href={path} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
+						<div class="-avatar" onclick={e => { location.href = "#user-card/"+author.slug; }}>
+							<img src={post_avatar} /><SVGIcon class="-info">info</SVGIcon>
+						</div>
+						<div class="-title _font2">
+							<NavLink href={path} dangerouslySetInnerHTML={dangerousParsedTitle} />
+						</div>
 						<div class="-subtext">
 							Posted {post_relative} {post_by} {post_date}
 						</div>
@@ -105,8 +109,8 @@ export default class ContentPost extends Component {
 							</div>
 						</div>
 						<div class="-right">
-			  			<LoveButton user={user} node={node}/>
-			  		</div>
+				  			<ButtonLove user={user} node={node} wedge_left_bottom />
+				  		</div>
 					</div>
 				</div>
 			);
