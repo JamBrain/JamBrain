@@ -83,7 +83,7 @@ export default class ContentPost extends Component {
 			var pub_diff = (date_now.getTime() - date_pub.getTime());// - (date_now.getTimezoneOffset()*60);
 
 			// x minutes ago
-			var post_relative = <span class="if-sidebar-inline" title={date_pub + "  " + node.published}>{getRoughAge(pub_diff)}</span>;
+			var post_relative = <span class="if-sidebar-inline" title={date_pub + " (" + node.published + ") ** " + date_now + " ** " + pub_diff}>{getRoughAge(pub_diff)}</span>;
 			// simple date, full date on hover
 			var post_date = <span>on <span class="-title" title={getLocaleDate(date_pub)}><span class="if-sidebar-inline">{getLocaleDay(date_pub)}</span> {getLocaleMonthDay(date_pub)}</span></span>;
 
