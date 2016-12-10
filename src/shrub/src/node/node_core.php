@@ -22,6 +22,16 @@ function node_GetIdByParentSlug( $parent, $slug ) {
 	);
 }
 
+function node_GetSlugByParentSlugLike( $parent, $slug ) {
+	return db_QueryFetchSingle(
+		"SELECT slug
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+		WHERE parent=? AND slug LIKE ?;",
+		$parent, $slug
+	);	
+}
+
+
 function node_GetIdByType( $types ) {
 	if ( is_string($types) ) {
 		return db_QueryFetchSingle(

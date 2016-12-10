@@ -216,7 +216,7 @@ switch ( $action ) {
 		}
 		break; // case 'getmy': //node/getmy
 
-	case 'where':
+	case 'where': //node/where
 		json_ValidateHTTPMethod('GET');
 		
 		$RESPONSE['where'] = [];
@@ -269,8 +269,32 @@ switch ( $action ) {
 //			$RESPONSE['where']['item'][] = $user_id;
 //			$RESPONSE['where']['article'][] = $user_id;
 		}
+		break; //case 'where': //node/where
 		
-		break;
+	case 'add': //node/add
+	
+	
+		break; //case 'add': //node/add
+
+	case 'update': //node/Update
+	
+	
+		break; //case 'update': //node/update
+
+	case 'publish': //node/publish
+//		json_ValidateHTTPMethod('POST');
+		
+		//if ( $user_id = userAuth_GetID() ) {
+		{	
+//			$parent = intval(json_ArgShift());
+//			$name = json_ArgShift();
+//			if ( !empty($name) ) {
+//				$RESPONSE['hoo'] = node_GetSlugByParentSlugLike($parent, $name."%");
+//			}
+		
+		
+		}	
+		break; //case 'publish': //node/publish
 
 	case 'love': //node/love
 		$old_action = $action;
