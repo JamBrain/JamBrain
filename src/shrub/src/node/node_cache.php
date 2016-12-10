@@ -29,6 +29,8 @@ function _nodeCache_GetCached( $ids ) {
 		return $nodes[0];
 }
 
+
+/// This takes nodes and puts them in the cache
 function _nodeCache_CacheNodes( &$nodes ) {
 	foreach ( $nodes as &$node ) {
 		cache_Store(_nodeCache_GenKey($node['id']), $node, SH_NODE_CACHE_TTL);
@@ -36,6 +38,7 @@ function _nodeCache_CacheNodes( &$nodes ) {
 }
 
 
+/// This is the cache wrapped version of nodeComplete_GetById
 function nodeCache_GetById( $ids ) {
 	$multi = is_array($ids);
 	if ( !$multi )
@@ -59,6 +62,17 @@ function nodeCache_GetById( $ids ) {
 		return $nodes;
 	else
 		return $nodes[0];
+}
+
+
+/// This invalidates the cache for the passed ids
+function nodeCache_InvalidateById( $ids ) {
+	if ( is_integer($ids) )
+		$ids = [$ids];
+	
+	foreach ( $ids as $id ) {
+		cache_Delete(_nodeCache_GenKey($id));
+	}
 }
 
 
