@@ -95,12 +95,10 @@ class Main extends Component {
 	cleanLocation( location ) {
 		// Clean the URL
 		var clean = {
-			pathname: Sanitize.makeClean(location.pathname),
-			search: location.search,
-			hash: Sanitize.makeClean(location.hash),
+			pathname: Sanitize.clean_Path(location.pathname),
+			search: Sanitize.clean_Query(location.search),
+			hash: Sanitize.clean_Hash(location.hash),
 		}
-		if ( clean.hash == "#" )
-			clean.hash = "";
 
 		clean.path = clean.pathname + clean.search + clean.hash;
 
