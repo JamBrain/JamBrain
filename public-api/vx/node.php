@@ -166,8 +166,8 @@ switch ( $action ) {
 			$meta_out = array_merge([],
 				// Public metadata (this is already in the node)
 				//isset($metas[SH_NODE_META_PUBLIC]) ? $metas[SH_NODE_META_PUBLIC] : [],
-				// Shared metadata (NOTE: Will be empty)
-				//isset($metas[SH_NODE_META_SHARED]) ? $metas[SH_NODE_META_SHARED] : [],
+				// Shared metadata (authors??)
+				isset($metas[SH_NODE_META_SHARED]) ? $metas[SH_NODE_META_SHARED] : [],
 				// Protected metadata
 				isset($metas[SH_NODE_META_PROTECTED]) ? $metas[SH_NODE_META_PROTECTED] : []
 			);
@@ -199,6 +199,40 @@ switch ( $action ) {
 		break; // case 'getmy': //node/getmy
 
 	case 'where':
+		json_ValidateHTTPMethod('GET');
+		
+		$RESPONSE['where'] = [];
+//		$RESPONSE['where']['post'] = [];
+//		$RESPONSE['where']['item'] = [];
+//		$RESPONSE['where']['article'] = [];
+		
+		// if not logged in, where will be blank
+		if ( $user_id = userAuth_GetID() ) {
+			// Scan for nodes with 'cat-create' metadata
+			$metas = nodeMeta_GetByKey("can-create");
+
+			foreach( $metas as &$meta ) {
+				// We only care about public (for now)
+				if ( $meta['scope'] == SH_NODE_META_PUBLIC ) {
+					if ( !isset($RESPONSE['where'][$meta['value']]) ) {
+						$RESPONSE['where'][$meta['value']] = [];
+					}
+					
+					$RESPONSE['where'][$meta['value']][] = $meta['node'];
+				}
+			}
+			
+//			$author_metas = nodeMeta_GetByKeyValue("author", $user_id);
+//			
+//			$RESPONSE['aa'] = $author_metas;
+
+//			// Let me post content to my own node (but we're adding ourselves last, to make it the least desirable)
+//			// NOTE: Don't forge tto create sub-arrays here
+//			$RESPONSE['where']['post'][] = $user_id;
+//			$RESPONSE['where']['item'][] = $user_id;
+//			$RESPONSE['where']['article'][] = $user_id;
+		}
+		
 		break;
 
 	case 'love': //node/love
