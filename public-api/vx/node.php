@@ -82,6 +82,8 @@ switch ( $action ) {
 
 	case 'walk': //node/walk
 		json_ValidateHTTPMethod('GET');
+		
+		// TODO: Support Symlinks and HardLinks (?)
 
 		if ( json_ArgCount() ) {
 			$root = intval(json_ArgShift());
@@ -155,23 +157,34 @@ switch ( $action ) {
 		}
 		break; // case 'feed': //node/feed
 
+	/// This gets the extra metadata an active user has access to
 	case 'getmy': //node/getmy
 		json_ValidateHTTPMethod('GET');
 
 		if ( $user_id = userAuth_GetID() ) {
 			$metas = nodeMeta_ParseByNode($user_id);
-			$meta_out = array_merge([], 
-				isset($metas[SH_NODE_META_SHARED]) ? $metas[SH_NODE_META_SHARED] : [],
+			$meta_out = array_merge([],
+				// Public metadata (this is already in the node)
+				//isset($metas[SH_NODE_META_PUBLIC]) ? $metas[SH_NODE_META_PUBLIC] : [],
+				// Shared metadata (NOTE: Will be empty)
+				//isset($metas[SH_NODE_META_SHARED]) ? $metas[SH_NODE_META_SHARED] : [],
+				// Protected metadata
 				isset($metas[SH_NODE_META_PROTECTED]) ? $metas[SH_NODE_META_PROTECTED] : []
 			);
 
 			$links = nodeLink_ParseByNode($user_id);
-			$link_out = array_merge([], 
+			$link_out = array_merge([],
+				// Public Links from me (this is already in the node)
+				//isset($links[0][SH_NODE_META_PUBLIC]) ? $links[0][SH_NODE_META_PUBLIC] : [],
+				// Shared Links from me
 				isset($links[0][SH_NODE_META_SHARED]) ? $links[0][SH_NODE_META_SHARED] : [],
+				// Procted Links from me
 				isset($links[0][SH_NODE_META_PROTECTED]) ? $links[0][SH_NODE_META_PROTECTED] : []
 			);
-			$refs_out = array_merge([], 
+			$refs_out = array_merge([],
+				// Public links to me
 				isset($links[1][SH_NODE_META_PUBLIC]) ? $links[1][SH_NODE_META_PUBLIC] : [],
+				// Shared links to me
 				isset($links[1][SH_NODE_META_SHARED]) ? $links[1][SH_NODE_META_SHARED] : []
 			);
 				
@@ -184,6 +197,9 @@ switch ( $action ) {
 			json_EmitFatalError_Permission(null, $RESPONSE);
 		}
 		break; // case 'getmy': //node/getmy
+
+	case 'where':
+		break;
 
 	case 'love': //node/love
 		$old_action = $action;
