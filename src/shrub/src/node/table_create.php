@@ -1,11 +1,13 @@
 <?php
 require_once __DIR__."/node.php";
 
+// TEXT: 2^16 characters (65535)
+// TINYINT UNSIGNED: 0-255
+
 const DB_TYPE_NODE_BODY = 'MEDIUMTEXT NOT NULL';
 const DB_TYPE_NODE_SCOPE = 'TINYINT NOT NULL';
 const DB_TYPE_NODE_META_VALUE = 'TEXT NOT NULL';
 const DB_TYPE_NODE_LINK_VALUE = 'TEXT DEFAULT NULL';
-
 
 // Simliar to the regular NODE, but just a snapshot
 // IMPORTANT: This has to come first, as with the node table, we need to make nodes
@@ -96,6 +98,43 @@ if ( in_array($table, $TABLE_LIST) ) {
 }
 
 
+$table = 'SH_TABLE_NODE_META';
+if ( in_array($table, $TABLE_LIST) ) {
+	$ok = null;
+	
+	table_Init($table);
+	switch ( $TABLE_VERSION ) {
+	case 0:
+		$ok = table_Create( $table,
+			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
+				id ".DB_TYPE_UID.",
+				node ".DB_TYPE_ID.",
+					INDEX(node),
+				scope ".DB_TYPE_NODE_SCOPE.",
+				`key` ".DB_TYPE_ASCII(32).",
+				`value` ".DB_TYPE_NODE_META_VALUE.",
+				timestamp ".DB_TYPE_TIMESTAMP."
+			)".DB_CREATE_SUFFIX);
+		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD INDEX scope (scope);"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+	case 2:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD INDEX `key` (`key`);"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+		
+		// NOTE: `value` cannot be indexed, since it is not a VARCHAR
+	};
+	table_Exit($table);
+}
+
+
 $table = 'SH_TABLE_NODE_LINK';
 if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
@@ -123,41 +162,12 @@ if ( in_array($table, $TABLE_LIST) ) {
 				ADD INDEX scope (scope);"
 			);
 		if (!$ok) break; $TABLE_VERSION++;
+
+		// NOTE: `value` cannot be indexed, since it is not a VARCHAR
 	};
 	table_Exit($table);
 }
 
-
-$table = 'SH_TABLE_NODE_META';
-if ( in_array($table, $TABLE_LIST) ) {
-	$ok = null;
-	
-	// TEXT: 2^16 characters (65535)
-	// TINYINT UNSIGNED: 0-255
-
-	table_Init($table);
-	switch ( $TABLE_VERSION ) {
-	case 0:
-		$ok = table_Create( $table,
-			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
-				id ".DB_TYPE_UID.",
-				node ".DB_TYPE_ID.",
-					INDEX(node),
-				scope ".DB_TYPE_NODE_SCOPE.",
-				`key` ".DB_TYPE_ASCII(32).",
-				`value` ".DB_TYPE_NODE_META_VALUE.",
-				timestamp ".DB_TYPE_TIMESTAMP."
-			)".DB_CREATE_SUFFIX);
-		if (!$ok) break; $TABLE_VERSION++;
-	case 1:
-		$ok = table_Update( $table,
-			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
-				ADD INDEX scope (scope);"
-			);
-		if (!$ok) break; $TABLE_VERSION++;
-	};
-	table_Exit($table);
-}
 
 /*
 $table = 'SH_TABLE_NODE_SEARCH';

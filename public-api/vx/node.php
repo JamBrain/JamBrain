@@ -208,11 +208,25 @@ switch ( $action ) {
 		
 		// if not logged in, where will be blank
 		if ( $user_id = userAuth_GetID() ) {
+			// Scan for things I am the author of
+			$author_links = nodeLink_GetByKeyNode("author", $user_id);
+			
+			$author_ids = [];
+
+			foreach( $author_links as &$link ) {
+				// We only care about public (for now)
+				if ( $link['scope'] == SH_NODE_META_PUBLIC ) {
+					if ( $link['b'] == $user_id ) {
+						$author_ids[] = $link['a'];
+					}
+				}
+			}
+			
+
 			// Scan for nodes with 'cat-create' metadata
 			$metas = nodeMeta_GetByKey("can-create");
 
 			foreach( $metas as &$meta ) {
-				// We only care about public (for now)
 				if ( $meta['scope'] == SH_NODE_META_PUBLIC ) {
 					if ( !isset($RESPONSE['where'][$meta['value']]) ) {
 						$RESPONSE['where'][$meta['value']] = [];
@@ -220,11 +234,16 @@ switch ( $action ) {
 					
 					$RESPONSE['where'][$meta['value']][] = $meta['node'];
 				}
+				else if ( $meta['scope'] == SH_NODE_META_SHARED ) {
+					if ( in_array($meta['node'], $author_ids) ) {
+						if ( !isset($RESPONSE['where'][$meta['value']]) ) {
+							$RESPONSE['where'][$meta['value']] = [];
+						}
+						
+						$RESPONSE['where'][$meta['value']][] = $meta['node'];
+					}
+				}
 			}
-			
-//			$author_links = nodeLink_GetByKey("author", $user_id);
-//			
-//			$RESPONSE['aa'] = $author_links;
 
 //			// Let me post content to my own node (but we're adding ourselves last, to make it the least desirable)
 //			// NOTE: Don't forge tto create sub-arrays here
