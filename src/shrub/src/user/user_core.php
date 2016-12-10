@@ -140,8 +140,10 @@ function user_SetHash( $id, $hash ) {
 // *** //
 
 function userNode_Add( $slug, $name ) {
-	return node_Add(
+	// Don't use regular version. We want to explicitly set superparent
+	return _node_Add(
 		SH_NODE_ID_USERS,			// parent
+		0,							// superparent
 		0,							// author
 		SH_NODE_TYPE_USER,			// type
 		'','',						// subtype, subsubtype
