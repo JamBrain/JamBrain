@@ -161,6 +161,8 @@ function node_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, $slug
 	return _node_Edit($node, $parent, $superparent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag);
 }
 
+
+// TODO: optional 'set slug'
 function node_Publish( $node, $state = true ) {
 	if ( $state ) {
 		return db_QueryUpdate(

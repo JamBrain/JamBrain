@@ -1,6 +1,6 @@
 <?php
 
-function nodeComplete_GetById( $ids, $scope = 0 ) {
+function nodeComplete_GetById( $ids ) {
 	$multi = is_array($ids);
 	if ( !$multi )
 		$ids = [$ids];
