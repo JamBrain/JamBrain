@@ -56,7 +56,23 @@ function nodeCache_GetById( $ids ) {
 	
 		$nodes = array_merge($nodes, $uncached);
 	}
+		
+	if ($multi)
+		return $nodes;
+	else
+		return $nodes[0];
+}
+
+
+/// Overwrites the cache with fresh copies of these nodes
+function nodeCache_CacheById( $ids ) {
+	$multi = is_array($ids);
+	if ( !$multi )
+		$ids = [$ids];
+
+	$nodes = nodeComplete_GetById($ids);
 	
+	_nodeCache_CacheNodes($nodes);
 		
 	if ($multi)
 		return $nodes;
@@ -81,3 +97,9 @@ function nodeCache_InvalidateById( $ids ) {
 //	return 0;
 //}
 
+// Variation of Edit that purges and recaches the cache copy
+function nodeCache_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag = "" ) {
+	$ret = node_Edit($node, $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag);
+	nodeCache_CacheById($node);
+	return $ret;
+}
