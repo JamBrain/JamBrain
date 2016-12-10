@@ -222,9 +222,9 @@ switch ( $action ) {
 				}
 			}
 			
-//			$author_metas = nodeMeta_GetByKeyValue("author", $user_id);
+//			$author_links = nodeLink_GetByKey("author", $user_id);
 //			
-//			$RESPONSE['aa'] = $author_metas;
+//			$RESPONSE['aa'] = $author_links;
 
 //			// Let me post content to my own node (but we're adding ourselves last, to make it the least desirable)
 //			// NOTE: Don't forge tto create sub-arrays here

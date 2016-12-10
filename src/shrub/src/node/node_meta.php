@@ -36,45 +36,56 @@ function nodeMeta_GetById( $ids ) {
 
 
 // Please sanitize before calling
-function nodeMeta_GetByKey( $keys, $scope_check = ">=0" ) {
-	if ( empty($scope_check) )
-		$scope_check_string = "";
-	else
-		$scope_check_string = "scope".$scope_check." AND";
-	
-	if ( is_string($keys) ) {
-		$keys_string = '`key`=?';
+function nodeMeta_GetByKey( $keys, $values = null, $scope_check = ">=0", $scope_check_values = null ) {
+	$WHERE = [];
+	$ARGS = [];
 
-//			"SELECT node, scope, `key`, `value`
-//			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." 
-//			WHERE $scope_check_string $keys_string,
-		
-		return db_QueryFetch(
-			"SELECT node, scope, `key`, `value`
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." 
-			WHERE $scope_check_string $keys_string AND id IN (
-				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
-			);",
-			$keys
-		);
+	// Scope Check
+	if ( !empty($scope_check) ) {
+		$WHERE[] = "scope".$scope_check;
+		if ( is_integer($scope_check_values) ) {
+			$ARGS[] = $scope_check_values;
+		}
+	}
+
+	// Keys
+	if ( is_integer($keys) ) {
+		$keys = strval($keys);
+	}
+	if ( is_string($keys) ) {
+		$WHERE[] = '`key`=?';
+		$ARGS[] = $keys;
 	}
 	else if ( is_array($keys) ) {
-		$keys_string = '`key` IN ("'.implode('","', $keys).'")';
-
-//			"SELECT node, scope, `key`, `value`
-//			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." 
-//			WHERE $scope_check_string $keys_string;"
-
-		return db_QueryFetch(
-			"SELECT node, scope, `key`, `value`
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." 
-			WHERE $scope_check_string $keys_string AND id IN (
-				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
-			);"
-		);
+		$WHERE[] = '`key` IN ("'.implode('","', $keys).'")';
+	}
+	else {
+		// Unknown key type, bail
+		return null;
+	}
+			
+	// Values
+	if ( is_integer($values) ) {
+		$values = strval($values);
+	}
+	if ( is_string($values) ) {
+		$WHERE[] = "`value`=?";
+		$ARGS[] = $values;
+	}
+	else if ( is_array($values) ) {
+		$WHERE[] = '`value` IN ("'.implode('","', $values).'")';
 	}
 	
-	return null;
+	$where_string = implode(' AND ', $WHERE);
+
+	return db_QueryFetch(
+		"SELECT node, scope, `key`, `value`
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
+		WHERE $where_string AND id IN (
+			SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
+		);",
+		...$ARGS
+	);
 }
 
 /// NOTE: By default, this ignores any node with a scope less than 0 (that is how deleting works)
