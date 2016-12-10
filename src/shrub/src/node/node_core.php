@@ -32,6 +32,39 @@ function node_GetSlugByParentSlugLike( $parent, $slug ) {
 }
 
 
+const SH_MAX_SLUG_LENGTH = 12;//96;
+const SH_MAX_SLUG_RETRIES = 100;
+
+function node_GetUniqueSlugByParentSlug( $parent, $slug ) {
+	// Trim the slug
+	$slug = substr($slug, 0, SH_MAX_SLUG_LENGTH);
+	
+	// Search for similar slugs
+	$slugs = node_GetSlugByParentSlugLike($parent, $slug.'%');
+	
+	// If not found, success
+	if ( !in_array($slug, $slugs) ) {
+		return $slug;
+	}
+	
+	// Try up to 100 different variants
+	for ( $idx = 1; $idx < SH_MAX_SLUG_RETRIES; $idx++ ) {
+		$append = '-'.$idx;
+		$append_length = strlen($append);
+		
+		$try = $slug.$append;
+		if ( strlen($try) > SH_MAX_SLUG_LENGTH ) {
+			$try = substr($try, 0, SH_MAX_SLUG_LENGTH-$append_length).$append;
+		}
+
+		if ( !in_array($try, $slugs) ) {
+			return $try;
+		}
+	}
+	return null;
+}
+
+
 function node_GetIdByType( $types ) {
 	if ( is_string($types) ) {
 		return db_QueryFetchSingle(

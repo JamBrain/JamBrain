@@ -290,6 +290,8 @@ switch ( $action ) {
 //			$name = json_ArgShift();
 //			if ( !empty($name) ) {
 //				$RESPONSE['hoo'] = node_GetSlugByParentSlugLike($parent, $name."%");
+//				
+//				$RESPONSE['moo'] = node_GetUniqueSlugByParentSlug($parent, $name);
 //			}
 		
 		
