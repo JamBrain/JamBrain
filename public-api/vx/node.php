@@ -94,13 +94,31 @@ switch ( $action ) {
 			$RESPONSE['extra'] = [];
 			
 			foreach ( json_ArgGet() as $slug ) {
-				$node = node_GetIdByParentSlug($parent, coreSlugify_Name($slug));
+				$slug = coreSlugify_PathName($slug);
+
+				if ( !empty($slug) && $slug[0] == '$' ) {
+					$node = intval(substr($slug, 1));
+
+					// Validate that node's parent correct
+					if ( node_GetParentById($node) !== $parent ) {
+						$node = 0;
+					}
+				}
+				else {
+					$node = node_GetIdByParentSlug($parent, $slug);
+				}
+
 				if ( $node ) {
 					$parent = $node;
 					$RESPONSE['path'][] = $node;
 				}
 				else {
-					$RESPONSE['extra'][] = coreSlugify_Name($slug);
+					if ( !empty($slug) ) {
+						$RESPONSE['extra'][] = $slug;//coreSlugify_Name($slug); // already slugified
+					}
+					else {
+						json_EmitFatalError_BadRequest(null, $RESPONSE);
+					}
 				}
 			}
 			

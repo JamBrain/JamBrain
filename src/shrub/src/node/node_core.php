@@ -160,6 +160,16 @@ function node_GetIdByParentSlug( $parent, $slug ) {
 	);
 }
 
+function node_GetParentById( $id ) {
+	return db_QueryFetchValue(
+		"SELECT parent
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		WHERE id=?
+		LIMIT 1;",
+		$id
+	);
+}
+
 // Get All Functions
 
 function node_GetById( $ids ) {
