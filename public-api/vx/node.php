@@ -82,6 +82,8 @@ switch ( $action ) {
 
 	case 'walk': //node/walk
 		json_ValidateHTTPMethod('GET');
+		
+		// TODO: Support Symlinks and HardLinks (?)
 
 		if ( json_ArgCount() ) {
 			$root = intval(json_ArgShift());
@@ -92,13 +94,31 @@ switch ( $action ) {
 			$RESPONSE['extra'] = [];
 			
 			foreach ( json_ArgGet() as $slug ) {
-				$node = node_GetIdByParentSlug($parent, coreSlugify_Name($slug));
+				$slug = coreSlugify_PathName($slug);
+
+				if ( !empty($slug) && $slug[0] == '$' ) {
+					$node = intval(substr($slug, 1));
+
+					// Validate that node's parent correct
+					if ( node_GetParentById($node) !== $parent ) {
+						$node = 0;
+					}
+				}
+				else {
+					$node = node_GetIdByParentSlug($parent, $slug);
+				}
+
 				if ( $node ) {
 					$parent = $node;
 					$RESPONSE['path'][] = $node;
 				}
 				else {
-					$RESPONSE['extra'][] = coreSlugify_Name($slug);
+					if ( !empty($slug) ) {
+						$RESPONSE['extra'][] = $slug;//coreSlugify_Name($slug); // already slugified
+					}
+					else {
+						json_EmitFatalError_BadRequest(null, $RESPONSE);
+					}
 				}
 			}
 			
@@ -155,23 +175,34 @@ switch ( $action ) {
 		}
 		break; // case 'feed': //node/feed
 
+	/// This gets the extra metadata an active user has access to
 	case 'getmy': //node/getmy
 		json_ValidateHTTPMethod('GET');
 
 		if ( $user_id = userAuth_GetID() ) {
 			$metas = nodeMeta_ParseByNode($user_id);
-			$meta_out = array_merge([], 
+			$meta_out = array_merge([],
+				// Public metadata (this is already in the node)
+				//isset($metas[SH_NODE_META_PUBLIC]) ? $metas[SH_NODE_META_PUBLIC] : [],
+				// Shared metadata (authors??)
 				isset($metas[SH_NODE_META_SHARED]) ? $metas[SH_NODE_META_SHARED] : [],
+				// Protected metadata
 				isset($metas[SH_NODE_META_PROTECTED]) ? $metas[SH_NODE_META_PROTECTED] : []
 			);
 
 			$links = nodeLink_ParseByNode($user_id);
-			$link_out = array_merge([], 
+			$link_out = array_merge([],
+				// Public Links from me (this is already in the node)
+				//isset($links[0][SH_NODE_META_PUBLIC]) ? $links[0][SH_NODE_META_PUBLIC] : [],
+				// Shared Links from me
 				isset($links[0][SH_NODE_META_SHARED]) ? $links[0][SH_NODE_META_SHARED] : [],
+				// Procted Links from me
 				isset($links[0][SH_NODE_META_PROTECTED]) ? $links[0][SH_NODE_META_PROTECTED] : []
 			);
-			$refs_out = array_merge([], 
+			$refs_out = array_merge([],
+				// Public links to me
 				isset($links[1][SH_NODE_META_PUBLIC]) ? $links[1][SH_NODE_META_PUBLIC] : [],
+				// Shared links to me
 				isset($links[1][SH_NODE_META_SHARED]) ? $links[1][SH_NODE_META_SHARED] : []
 			);
 				
@@ -184,6 +215,62 @@ switch ( $action ) {
 			json_EmitFatalError_Permission(null, $RESPONSE);
 		}
 		break; // case 'getmy': //node/getmy
+
+	case 'where':
+		json_ValidateHTTPMethod('GET');
+		
+		$RESPONSE['where'] = [];
+//		$RESPONSE['where']['post'] = [];
+//		$RESPONSE['where']['item'] = [];
+//		$RESPONSE['where']['article'] = [];
+		
+		// if not logged in, where will be blank
+		if ( $user_id = userAuth_GetID() ) {
+			// Scan for things I am the author of
+			$author_links = nodeLink_GetByKeyNode("author", $user_id);
+			
+			$author_ids = [];
+
+			foreach( $author_links as &$link ) {
+				// We only care about public (for now)
+				if ( $link['scope'] == SH_NODE_META_PUBLIC ) {
+					if ( $link['b'] == $user_id ) {
+						$author_ids[] = $link['a'];
+					}
+				}
+			}
+			
+
+			// Scan for nodes with 'cat-create' metadata
+			$metas = nodeMeta_GetByKey("can-create");
+
+			foreach( $metas as &$meta ) {
+				if ( $meta['scope'] == SH_NODE_META_PUBLIC ) {
+					if ( !isset($RESPONSE['where'][$meta['value']]) ) {
+						$RESPONSE['where'][$meta['value']] = [];
+					}
+					
+					$RESPONSE['where'][$meta['value']][] = $meta['node'];
+				}
+				else if ( $meta['scope'] == SH_NODE_META_SHARED ) {
+					if ( in_array($meta['node'], $author_ids) ) {
+						if ( !isset($RESPONSE['where'][$meta['value']]) ) {
+							$RESPONSE['where'][$meta['value']] = [];
+						}
+						
+						$RESPONSE['where'][$meta['value']][] = $meta['node'];
+					}
+				}
+			}
+
+//			// Let me post content to my own node (but we're adding ourselves last, to make it the least desirable)
+//			// NOTE: Don't forge tto create sub-arrays here
+//			$RESPONSE['where']['post'][] = $user_id;
+//			$RESPONSE['where']['item'][] = $user_id;
+//			$RESPONSE['where']['article'][] = $user_id;
+		}
+		
+		break;
 
 	case 'love': //node/love
 		$old_action = $action;

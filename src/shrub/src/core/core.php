@@ -119,6 +119,16 @@ function coreSlugify_Name( $str ) {
 	return $str;
 }
 
+function coreSlugify_PathName( $str ) {
+	// Node slugs must be > 0
+	if ( !empty($str) && $str[0] == '$' ) {
+		$id = intval(substr($str, 1));
+		return ($id > 0 ? '$'.$id : '');
+	}
+
+	return coreSlugify_Name($str);
+}
+
 
 
 /// @name Whitelisting/Blacklisting
