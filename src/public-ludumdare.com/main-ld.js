@@ -17,6 +17,7 @@ import DialogPassword					from 'com/dialog-password/password';
 import DialogAuth						from 'com/dialog-auth/auth';
 import DialogSession					from 'com/dialog-session/session';
 import DialogSavebug					from 'com/dialog-savebug/savebug';
+import DialogSubmit						from 'com/dialog-submit/submit';
 
 import DialogCreate						from 'com/dialog-create/create';
 
@@ -130,6 +131,8 @@ class Main extends Component {
 					return <DialogSavebug {...props} />;
 				case 'create':
 					return <DialogCreate {...props} />;
+				case 'submit':
+					return <DialogSubmit {...props} />;
 				default:
 					return <DialogUnfinished {...props} />;
 			};

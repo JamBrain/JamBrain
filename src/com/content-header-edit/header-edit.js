@@ -11,7 +11,7 @@ export default class ContentHeaderEdit extends Component {
 	}
 
 	render( {title, authors, link, published, onmodify}, {} ) {
-		console.log('here', authors);
+		//console.log('here', authors);
 		var ShowAuthors = null;
 		if ( authors ) {
 			ShowAuthors = authors.map( v => {

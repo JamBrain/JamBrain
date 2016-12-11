@@ -352,20 +352,63 @@ switch ( $action ) {
 		break; //case 'drafts': //node/drafts
 
 	case 'publish': //node/publish
-//		json_ValidateHTTPMethod('POST');
+		json_ValidateHTTPMethod('POST');
 		
-		//if ( $user_id = userAuth_GetID() ) {
-		{	
-//			$parent = intval(json_ArgShift());
-//			$name = json_ArgShift();
-//			if ( !empty($name) ) {
-//				$RESPONSE['hoo'] = node_GetSlugByParentSlugLike($parent, $name."%");
-//				
-//				$RESPONSE['moo'] = node_GetUniqueSlugByParentSlug($parent, $name);
-//			}
-		
-		
-		}	
+		if ( $user_id = userAuth_GetID() ) {
+			$node_id = intval(json_ArgShift());
+			if ( empty($node_id) ) {
+				json_EmitFatalError_BadRequest(null, $RESPONSE);
+			}
+			
+			// Parse POST
+			if ( isset($_POST['event']) )
+				$event = coreSanitize_String(substr($_POST['event'], 0, 24));
+			else
+				json_EmitFatalError_BadRequest("'event' not found in POST", $RESPONSE);
+
+			if ( $event === 'compo' || $event === 'jam' ) {
+			}
+			else {
+				json_EmitFatalError_BadRequest("Unsupported 'event'", $RESPONSE);
+			}
+
+			// Fetch Node			
+			$node = nodeComplete_GetById($node_id);
+			$authors = nodeList_GetAuthors($node);
+
+			// If you are authorized to edit
+			if ( in_array($user_id, $authors) ) {
+				$slug = coreSlugify_Name($node['name']);
+				if ( in_array($slug, $SH_NAME_RESERVED) ) {
+					json_EmitFatalError_BadRequest("Title is a reserved word", $RESPONSE);
+				}
+				
+				$new_slug = node_GetUniqueSlugByParentSlug($node['parent'], $slug);
+			
+				if ( strlen($new_slug) < 3 ) {
+					json_EmitFatalError_BadRequest("Title is too short (minumum 3 characters)", $RESPONSE);
+				}
+				
+				$RESPONSE['edit'] = node_Edit(
+					$node_id,
+					$node['parent'], $node['author'], 
+					$node['type'], $node['subtype'], $event,
+					$new_slug,
+					$node['name'],
+					$node['body'],
+					"!PUBLISH");
+				
+				$RESPONSE['publish'] = node_Publish(
+					$node_id
+				);
+			}
+			else {
+				json_EmitFatalError_Permission(null, $RESPONSE);
+			}
+		}
+		else {
+			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
 		break; //case 'publish': //node/publish
 
 	case 'love': //node/love

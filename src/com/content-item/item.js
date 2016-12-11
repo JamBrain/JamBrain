@@ -35,23 +35,24 @@ export default class ContentItem extends Component {
 		this.onClickPreview = this.onClickPreview.bind(this);
 		this.onClickSave = this.onClickSave.bind(this);
 		this.onClickPublish = this.onClickPublish.bind(this);
+		this.onClickPublish2 = this.onClickPublish2.bind(this);
 		
 		this.onModifyTitle = this.onModifyTitle.bind(this);
 		this.onModifyBody = this.onModifyBody.bind(this);
 	}
 	
 	componentDidMount() {
-		$Node.Get(this.props.node.author)
-		.then( r => {
-			console.log(r.node);
-			if ( r.node.length ) {
-				console.log('hoo');
-				this.setState({ 'authors': r.node });
-			}
-		})
-		.catch(err => {
-			this.setState({ 'error': err });
-		});
+//		$Node.Get(this.props.node.author)
+//		.then( r => {
+//			console.log(r.node);
+//			if ( r.node.length ) {
+//				console.log('hoo');
+//				this.setState({ 'authors': r.node });
+//			}
+//		})
+//		.catch(err => {
+//			this.setState({ 'error': err });
+//		});
 	}
 	
 	onClickEdit(e) {
@@ -68,7 +69,7 @@ export default class ContentItem extends Component {
 		var Title = this.state.title ? this.state.title : this.props.node.name;
 		var Body = this.state.body ? this.state.body : this.props.node.body;
 		
-		$Node.Update(this.props.node.id, Title, Body)
+		return $Node.Update(this.props.node.id, Title, Body)
 		.then(r => {
 			if ( r.status == 200 ) {
 				this.setState({ 'modified': false });
@@ -89,10 +90,45 @@ export default class ContentItem extends Component {
 	}
 	onClickPublish(e) {
 		console.log('pub');
-		// DO THING UPDATE NODE
 		
-		this.setState({ 'error': 'I hate birds' });
+		this.onClickSave(e)
+		.then( rr => {
+			console.log("LETS PUBLISH");
+			$Node.Publish(this.props.node.id, "compo")
+			.then(r => {
+				if ( r.status == 200 ) {
+					location.hash = "#submit";
+				}
+			})
+			.catch(err => {
+				this.setState({ 'error': err });
+			});
+		})
+		.catch(err => {
+			this.setState({ 'error': err });
+		});
 	}
+
+	onClickPublish2(e) {
+		console.log('pub');
+		
+		this.onClickSave(e)
+		.then( rr => {
+			console.log("LETS PUBLISH");
+			$Node.Publish(this.props.node.id, "jam")
+			.then(r => {
+				if ( r.status == 200 ) {
+					location.hash = "#submit";
+				}
+			})
+			.catch(err => {
+				this.setState({ 'error': err });
+			});
+		})
+		.catch(err => {
+			this.setState({ 'error': err });
+		});
+	}	
 	
 	onModifyTitle( e ) {
 		this.setState({ 'modified': true, 'title': e.srcElement.value });
@@ -119,17 +155,18 @@ export default class ContentItem extends Component {
 		if ( user && user.id == node.author ) {
 			var EditMode = extra.length ? extra[0] === 'edit' : false;
 			
-			var IsPublished = node.published === '0000-00-00T00:00:00Z';
+			var IsPublished = node.subsubtype.length;//;Number.parseInt(node.published) !== 0;
 	
 			if ( EditMode ) {
-				ShowEditBar = <ContentHeadlineEdit edit={edit} modified={modified} published={IsPublished} onedit={this.onClickEdit} onpreview={this.onClickPreview} onsave={this.onClickSave} onpublish={this.onClickPublish} />;
+				ShowEditBar = <ContentHeadlineEdit edit={edit} modified={modified} published={IsPublished} onedit={this.onClickEdit} onpreview={this.onClickPreview} onsave={this.onClickSave} onpublish={this.onClickPublish} onpublish2={this.onClickPublish2} />;
 			}
 		}
 
 		if ( EditMode && edit ) {
 			ShowItem = (
 				<div class="content-base content-common content-item">
-					<ContentHeaderEdit title={title ? title : node.name} onmodify={this.onModifyTitle} author={authors} />
+					<ContentHeaderEdit title={title ? title : node.name} event={node.subsubtype} onmodify={this.onModifyTitle} author={authors} />
+					<ContentBody>{IsPublished ? "Event: "+node.subsubtype : ""}</ContentBody>
 					<ContentBodyEdit onmodify={this.onModifyBody}>{body ? body : node.body}</ContentBodyEdit>
 					<ContentFooterEdit node={node} user={user} love />
 				</div>
@@ -139,6 +176,7 @@ export default class ContentItem extends Component {
 			ShowItem = (
 				<div class="content-base content-common content-item">
 					<ContentHeaderCommon title={title ? title : node.name} path={path} />
+					<ContentBody>{IsPublished ? (<div><strong>Event:</strong> {node.subsubtype}</div>) : ""}</ContentBody>
 					<ContentBodyMarkup>{body ? body : node.body}</ContentBodyMarkup>
 					<ContentFooterCommon node={node} user={user} love />
 				</div>
