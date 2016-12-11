@@ -35,14 +35,13 @@ class Main extends Component {
 		var clean = this.cleanLocation(window.location);
 		if ( window.location.origin+clean.path !== window.location.href ) {
 			console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
-			window.history.replaceState(window.history.state, null, clean.path);
+			
+			this.storeHistory(window.history.state, null, clean.path);
 		}
-	
-		//console.log("History:", window.history.state);
 	
 		this.state = {
 			// URL walking
-			'id': 0,
+			//'id': 0,
 			'path': '',
 			'slugs': clean.slugs,
 			'extra': [],
@@ -55,7 +54,7 @@ class Main extends Component {
 			// Root Node
 			'root': null,
 			
-			// Featured Ndde
+			// Featured node
 			'featured': null,
 			
 			// Active User
@@ -73,11 +72,21 @@ class Main extends Component {
 		this.fetchRoot();
 		this.fetchData();
 	}
+	
+	storeHistory( input, arg1 = null, arg2 = null ) {
+		if ( window.history && window.history.replaceState ) {
+			history.replaceState({
+				//'id': input.id,
+				'path': input.path,
+				'slugs': input.slugs,
+				'extra': input.extra,
+				'node': input.node
+			}, arg1, arg2);
+		}
+	}
 
 	componentDidUpdate( prevProps, prevState ) {
-//		var state_copy = Object.assign({},this.state);
-//		history.replaceState(state_copy, null);
-		history.replaceState(this.state, null);
+		this.storeHistory(this.state);
 	}
 
 	cleanLocation( location ) {
@@ -135,14 +144,21 @@ class Main extends Component {
 	fetchRoot() {
 		$Node.Get(SITE_ROOT)
 			.then(r => {
-				console.log("Root Loaded:", r.node.id);
-				this.setState({ 'root': r.node });
-				
-				if ( r.node.meta['featured'] && Number.parseInt(r.node.meta['featured']) > 0 ) {
-					this.fetchFeatured(Number.parseInt(r.node.meta['featured']));
+				if ( r.node.length ) {
+					var node = f.node[0];
+					console.log('r',node);
+					
+					this.setState({ 'root': node });
+					
+					if ( node.meta['featured'] && Number.parseInt(node.meta['featured']) > 0 ) {
+						this.fetchFeatured(Number.parseInt(node.meta['featured']));
+					}
+				}
+				else {
+					this.setState({ 'error': 'Failed to load root' });
 				}
 			})
-			.catch(err => { this.setState({ 'error': err }); });
+			.catch(err => { this.setState({ 'error': err }) });
 	}
 	
 	fetchFeatured( node ) {
@@ -159,8 +175,8 @@ class Main extends Component {
 		$Node.Walk(SITE_ROOT, this.state.slugs)
 			.then(r => {
 				var new_state = { 
-					'id': r.node,
-					'path': (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/');,
+					//'id': r.node,
+					'path': (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/'),
 					'extra': r.extra
 				};
 				
@@ -235,23 +251,6 @@ class Main extends Component {
 		});
 	}
 
-	fetchFeatured() {
-//		// Now lookup the node
-//		$Node.Get(r.node)
-//		.then(rr => {
-//			if ( rr.node && rr.node.length ) {
-//				new_state.node = rr.node[0];
-//				this.setState(new_state);
-//			}
-//			else {
-//				this.setState({ 'error': err });
-//			}
-//		})
-//		.catch(err => {
-//			this.setState({ 'error': err });
-//		});
-	}
-
 	
 	fetchData() {
 		if ( !this.state.user )
@@ -273,8 +272,8 @@ class Main extends Component {
 		}
 		else {
 			this.setState({ 
-				'id': 0,
-				'slugs': slugs 
+				//'id': 0,
+				'slugs': slugs
 			});
 		}
 	}
@@ -287,9 +286,9 @@ class Main extends Component {
 			if ( slugs.join() !== this.state.slugs.join() ) {
 				history.pushState(null, null, e.detail.location.pathname+e.detail.location.search);
 
-				this.setState({ 
-					'id': 0,
-					'slugs': slugs, 
+				this.setState({
+					//'id': 0,
+					'slugs': slugs,
 					'node': {
 						'id': 0
 					} 
