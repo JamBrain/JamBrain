@@ -118,7 +118,7 @@ function nodeLink_GetByKeyNode( $keys, $nodes, $scope_check = ">=0", $scope_chec
 		$ARGS[] = $nodes;
 	}
 	else if ( is_array($nodes) ) {
-		$WHERE[] = '(`a` IN ("'.implode('","', $nodes).'") OR `b` IN ("'.implode('","', $nodes).'"))';
+		$WHERE[] = '(`a` IN ('.implode(',', $nodes).') OR `b` IN ('.implode(',', $nodes).'))';
 	}
 	
 	$where_string = implode(' AND ', $WHERE);

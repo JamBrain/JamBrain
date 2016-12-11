@@ -88,6 +88,57 @@ function nodeMeta_GetByKey( $keys, $values = null, $scope_check = ">=0", $scope_
 	);
 }
 
+// Please sanitize before calling
+function nodeMeta_GetByKeyNode( $keys, $nodes, $scope_check = ">=0", $scope_check_values = null ) {
+	$WHERE = [];
+	$ARGS = [];
+
+	// Scope Check
+	if ( !empty($scope_check) ) {
+		$WHERE[] = "scope".$scope_check;
+		if ( is_integer($scope_check_values) ) {
+			$ARGS[] = $scope_check_values;
+		}
+	}
+
+	// Keys
+	if ( is_integer($keys) ) {
+		$keys = strval($keys);
+	}
+	if ( is_string($keys) ) {
+		$WHERE[] = '`key`=?';
+		$ARGS[] = $keys;
+	}
+	else if ( is_array($keys) ) {
+		$WHERE[] = '`key` IN ("'.implode('","', $keys).'")';
+	}
+	else {
+		// Unknown key type, bail
+		return null;
+	}
+			
+	// Nodes
+	if ( is_integer($nodes) ) {
+		$WHERE[] = "node=?";
+		$ARGS[] = $nodes;
+	}
+	else if ( is_array($nodes) ) {
+		$WHERE[] = 'node IN ('.implode(',', $nodes).')';
+	}
+
+	$where_string = implode(' AND ', $WHERE);
+
+	return db_QueryFetch(
+		"SELECT node, scope, `key`, `value`
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
+		WHERE $where_string AND id IN (
+			SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
+		);",
+		...$ARGS
+	);
+}
+
+
 /// NOTE: By default, this ignores any node with a scope less than 0 (that is how deleting works)
 /// Pass $scope_check as null to get everything, or "=64" to get specific
 function nodeMeta_GetByNode( $nodes, $scope_check = ">=0" ) {

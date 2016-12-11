@@ -216,61 +216,156 @@ switch ( $action ) {
 		}
 		break; // case 'getmy': //node/getmy
 
-	case 'where':
+	case 'where': //node/where
 		json_ValidateHTTPMethod('GET');
-		
-		$RESPONSE['where'] = [];
-//		$RESPONSE['where']['post'] = [];
-//		$RESPONSE['where']['item'] = [];
-//		$RESPONSE['where']['article'] = [];
 		
 		// if not logged in, where will be blank
 		if ( $user_id = userAuth_GetID() ) {
-			// Scan for things I am the author of
-			$author_links = nodeLink_GetByKeyNode("author", $user_id);
-			
-			$author_ids = [];
+			$RESPONSE['where'] = nodeComplete_GetWhereIdCanCreate($user_id);
+		}
+		else {
+			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
+		break; //case 'where': //node/where
 
-			foreach( $author_links as &$link ) {
-				// We only care about public (for now)
-				if ( $link['scope'] == SH_NODE_META_PUBLIC ) {
-					if ( $link['b'] == $user_id ) {
-						$author_ids[] = $link['a'];
-					}
-				}
+	case 'what': //node/what
+		json_ValidateHTTPMethod('GET');
+		
+		// if not logged in, where will be blank
+		if ( $user_id = userAuth_GetID() ) {
+			$parent = intval(json_ArgShift());
+			if ( $parent ) {
+				$RESPONSE['what'] = nodeComplete_GetWhatIdHasAuthoredByParent($user_id, $parent);
+			}
+			else {
+				json_EmitFatalError_BadRequest(null, $RESPONSE);
+			}
+		}
+		else {
+			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
+		break; //case 'what': //node/what
+		
+	case 'add': //node/add/:parent/:type/:subtype/:subsubtype
+//		json_ValidateHTTPMethod('POST');
+		json_ValidateHTTPMethod('GET');
+		
+		// NOTE: This doesn't actually need POST, but it uses the method for safety
+		
+		if ( $user_id = userAuth_GetID() ) {
+			$parent = intval(json_ArgShift());
+			$type = coreSlugify_Name(json_ArgShift());
+//			$subtype = coreSlugify_Name(json_ArgShift());
+//			$subsubtype = coreSlugify_Name(json_ArgShift());
+
+			if ( empty($parent) || empty($type) ) {
+				json_EmitFatalError_BadRequest(null, $RESPONSE);
 			}
 			
-
-			// Scan for nodes with 'cat-create' metadata
-			$metas = nodeMeta_GetByKey("can-create");
-
-			foreach( $metas as &$meta ) {
-				if ( $meta['scope'] == SH_NODE_META_PUBLIC ) {
-					if ( !isset($RESPONSE['where'][$meta['value']]) ) {
-						$RESPONSE['where'][$meta['value']] = [];
+			$where = nodeComplete_GetWhereIdCanCreate($user_id);
+			
+			if ( !isset($where[$type]) || !in_array($parent, $where[$type]) ) {
+				json_EmitFatalError_BadRequest(null, $RESPONSE);
+			}
+			
+			switch ( $type ) {
+				case 'item':
+					// TODO: Rollback
+				
+					// For now we only support game items, so hardcode game
+					$new_node = node_Add($parent, $user_id, $type, "game", "", null, "", "");
+					if ( $new_node ) {
+						nodeMeta_AddByNode($new_node, SH_NODE_META_SHARED, 'can-create', 'post');
+						nodeLink_AddbyNode($new_node, $user_id, SH_NODE_META_PUBLIC, 'author');
+					}
+					else {
+						json_EmitFatalError_ServerError(null, $RESPONSE);
 					}
 					
-					$RESPONSE['where'][$meta['value']][] = $meta['node'];
-				}
-				else if ( $meta['scope'] == SH_NODE_META_SHARED ) {
-					if ( in_array($meta['node'], $author_ids) ) {
-						if ( !isset($RESPONSE['where'][$meta['value']]) ) {
-							$RESPONSE['where'][$meta['value']] = [];
-						}
-						
-						$RESPONSE['where'][$meta['value']][] = $meta['node'];
-					}
-				}
-			}
+					$RESPONSE['id'] = $new_node;
+					break;
+					
+//				case 'post':
+//					break;
 
-//			// Let me post content to my own node (but we're adding ourselves last, to make it the least desirable)
-//			// NOTE: Don't forge tto create sub-arrays here
-//			$RESPONSE['where']['post'][] = $user_id;
-//			$RESPONSE['where']['item'][] = $user_id;
-//			$RESPONSE['where']['article'][] = $user_id;
+				default:
+					break;
+			};
 		}
+		else {
+			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
+		break; //case 'add': //node/add
+
+	case 'update': //node/update/:node
+		json_ValidateHTTPMethod('POST');
+
+		if ( $user_id = userAuth_GetID() ) {
+			$node_id = intval(json_ArgShift());
+			if ( empty($node_id) ) {
+				json_EmitFatalError_BadRequest(null, $RESPONSE);
+			}
+			
+			// Parse POST
+			if ( isset($_POST['name']) )
+				$name = coreSanitize_String(substr($_POST['name'], 0, 96));
+			else
+				json_EmitFatalError_BadRequest("'name' not found in POST", $RESPONSE);
+				
+			if ( isset($_POST['body']) )
+				$body = coreSanitize_String(substr($_POST['body'], 0, 32768));
+			else
+				json_EmitFatalError_BadRequest("'body' not found in POST", $RESPONSE);
+
+			if ( isset($_POST['tag']) )
+				$version_tag = coreSanitize_Slug(substr($_POST['tag'], 0, 32));
+			else
+				$version_tag = "";
+
+			// Fetch Node			
+			$node = nodeComplete_GetById($node_id);
+			$authors = nodeList_GetAuthors($node);
+			
+			// If you are authorized to edit
+			if ( in_array($user_id, $authors) ) {
+				$RESPONSE['updated'] = node_Edit(
+					$node_id,
+					$node['parent'], $node['author'], 
+					$node['type'], $node['subtype'], $node['subsubtype'],
+					$node['slug'],
+					$name,
+					$body,
+					$version_tag);
+			}
+			else {
+				json_EmitFatalError_Permission(null, $RESPONSE);
+			}
+		}
+		else {
+			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
+		break; //case 'update': //node/update
+
+	case 'drafts': //node/drafts
+	
+		break; //case 'drafts': //node/drafts
+
+	case 'publish': //node/publish
+//		json_ValidateHTTPMethod('POST');
 		
-		break;
+		//if ( $user_id = userAuth_GetID() ) {
+		{	
+//			$parent = intval(json_ArgShift());
+//			$name = json_ArgShift();
+//			if ( !empty($name) ) {
+//				$RESPONSE['hoo'] = node_GetSlugByParentSlugLike($parent, $name."%");
+//				
+//				$RESPONSE['moo'] = node_GetUniqueSlugByParentSlug($parent, $name);
+//			}
+		
+		
+		}	
+		break; //case 'publish': //node/publish
 
 	case 'love': //node/love
 		$old_action = $action;
