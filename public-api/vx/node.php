@@ -319,6 +319,8 @@ switch ( $action ) {
 
 			if ( isset($_POST['tag']) )
 				$version_tag = coreSanitize_Slug(substr($_POST['tag'], 0, 32));
+			else
+				$version_tag = "";
 
 			// Fetch Node			
 			$node = nodeComplete_GetById($node_id);
@@ -327,6 +329,7 @@ switch ( $action ) {
 			// If you are authorized to edit
 			if ( in_array($user_id, $authors) ) {
 				$RESPONSE['updated'] = node_Edit(
+					$node_id,
 					$node['parent'], $node['author'], 
 					$node['type'], $node['subtype'], $node['subsubtype'],
 					$node['slug'],
