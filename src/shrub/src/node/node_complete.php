@@ -88,19 +88,6 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 	
 	// Scan for things I am the author of
 	$node_ids = nodeComplete_GetAuthored($id);
-
-//	$author_links = nodeLink_GetByKeyNode("author", $id);
-//
-//	// Populate a list of things I authored
-//	$author_ids = [];
-//	foreach( $author_links as &$link ) {
-//		// We only care about public (for now)
-//		if ( $link['scope'] == SH_NODE_META_PUBLIC ) {
-//			if ( $link['b'] == $user_id ) {
-//				$author_ids[] = $link['a'];
-//			}
-//		}
-//	}
 	
 	// Scan for nodes with 'can-create' metadata
 	$metas = nodeMeta_GetByKey("can-create");
@@ -110,20 +97,20 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 	foreach( $metas as &$meta ) {
 		// Add public nodes
 		if ( $meta['scope'] == SH_NODE_META_PUBLIC ) {
-			if ( !isset($ret['where'][$meta['value']]) ) {
-				$ret['where'][$meta['value']] = [];
+			if ( !isset($ret[$meta['value']]) ) {
+				$ret[$meta['value']] = [];
 			}
 			
-			$ret['where'][$meta['value']][] = $meta['node'];
+			$ret[$meta['value']][] = $meta['node'];
 		}
 		// Add shared nodes (primarily authored nodes)
 		else if ( $meta['scope'] == SH_NODE_META_SHARED ) {
 			if ( in_array($meta['node'], $node_ids) ) {
-				if ( !isset($ret['where'][$meta['value']]) ) {
-					$ret['where'][$meta['value']] = [];
+				if ( !isset($ret[$meta['value']]) ) {
+					$ret[$meta['value']] = [];
 				}
 				
-				$ret['where'][$meta['value']][] = $meta['node'];
+				$ret[$meta['value']][] = $meta['node'];
 			}
 		}
 	}
