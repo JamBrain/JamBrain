@@ -25,6 +25,8 @@ export default class ContentItem extends Component {
 			'edit': true,
 			'modified': false,
 			
+			'authors': null,
+			
 			'title': null,
 			'body': null
 		};
@@ -36,6 +38,20 @@ export default class ContentItem extends Component {
 		
 		this.onModifyTitle = this.onModifyTitle.bind(this);
 		this.onModifyBody = this.onModifyBody.bind(this);
+	}
+	
+	componentDidMount() {
+		$Node.Get(this.props.node.author)
+		.then( r => {
+			console.log(r.node);
+			if ( r.node.length ) {
+				console.log('hoo');
+				this.setState({ 'authors': r.node });
+			}
+		})
+		.catch(err => {
+			this.setState({ 'error': err });
+		});
 	}
 	
 	onClickEdit(e) {
@@ -58,7 +74,12 @@ export default class ContentItem extends Component {
 				this.setState({ 'modified': false });
 			}
 			else {
-				location.hash = "#savebug";
+				if ( r.caller_id == 0 || (r.data && r.data.caller_id == 0) ) {
+					location.hash = "#savebug";
+				}
+				else {
+					this.setState({ 'error': r.status + ": " + r.error });
+				}
 			}
 		})
 		.catch(err => {
@@ -69,6 +90,8 @@ export default class ContentItem extends Component {
 	onClickPublish(e) {
 		console.log('pub');
 		// DO THING UPDATE NODE
+		
+		this.setState({ 'error': 'I hate birds' });
 	}
 	
 	onModifyTitle( e ) {
@@ -80,17 +103,23 @@ export default class ContentItem extends Component {
 	
 	
 	
-	render( {node, user, path, extra}, {edit, modified, title, body} ) {
+	render( {node, user, path, extra}, {edit, modified, authors, title, body, error} ) {
 		var EditMode = false;
+		
+		var ShowError = null;
 
 		var ShowEditBar = null;
 		var ShowItem = null;
+		
+		if ( error ) {
+			ShowError = <div class="-error"><strong>Error</strong>: {error}</div>;
+		}
 
 		// Hack Edit mode only if you're the author
 		if ( user && user.id == node.author ) {
 			var EditMode = extra.length ? extra[0] === 'edit' : false;
 			
-			var IsPublished = node.published !== '0000-00-00T00:00:00Z';
+			var IsPublished = node.published === '0000-00-00T00:00:00Z';
 	
 			if ( EditMode ) {
 				ShowEditBar = <ContentHeadlineEdit edit={edit} modified={modified} published={IsPublished} onedit={this.onClickEdit} onpreview={this.onClickPreview} onsave={this.onClickSave} onpublish={this.onClickPublish} />;
@@ -100,7 +129,7 @@ export default class ContentItem extends Component {
 		if ( EditMode && edit ) {
 			ShowItem = (
 				<div class="content-base content-common content-item">
-					<ContentHeaderEdit title={title ? title : node.name} onmodify={this.onModifyTitle} author={node} />
+					<ContentHeaderEdit title={title ? title : node.name} onmodify={this.onModifyTitle} author={authors} />
 					<ContentBodyEdit onmodify={this.onModifyBody}>{body ? body : node.body}</ContentBodyEdit>
 					<ContentFooterEdit node={node} user={user} love />
 				</div>
@@ -117,7 +146,7 @@ export default class ContentItem extends Component {
 		}
 		
 		if ( EditMode ) {
-			return <div>{ShowEditBar}{ShowItem}</div>;
+			return <div>{ShowEditBar}{ShowError}{ShowItem}</div>;
 		}
 		else {
 			return <div>{ShowItem}</div>;
