@@ -145,8 +145,8 @@ class Main extends Component {
 		$Node.Get(SITE_ROOT)
 			.then(r => {
 				if ( r.node.length ) {
-					var node = f.node[0];
-					console.log('r',node);
+					var node = r.node[0];
+					console.log("Root Loaded:", node.id);
 					
 					this.setState({ 'root': node });
 					
@@ -164,7 +164,7 @@ class Main extends Component {
 	fetchFeatured( node ) {
 		$Node.Get(node)
 			.then(r => {
-				console.log("Featured Node Loaded:", r.node.id);
+				console.log("Featured Loaded:", r.node.id);
 				this.setState({ 'featured': r.node });
 			})
 			.catch(err => { this.setState({ 'error': err }); });
@@ -197,7 +197,7 @@ class Main extends Component {
 	fetchUser() {
 		// Fetch the Active User
 		$User.Get().then(r => {
-			console.log("Got User:", r.caller_id);
+			//console.log("Got User:", r.caller_id);
 			
 			// If a legit user
 			if ( r.caller_id ) {
@@ -224,20 +224,6 @@ class Main extends Component {
 				.catch(err => {
 					this.setState({ 'error': err });
 				});
-				
-//				$Node.GetMy()
-//				.then(rr => {
-//					r.node['private'] = {
-//						'meta': rr.meta,
-//						'link': rr.link,
-//						'refs': rr.refs
-//					};
-//					
-//					this.setState({ 'user': r.node });
-//				})
-//				.catch(err => {
-//					this.setState({ error: err });
-//				});
 			}
 			// User not logged in
 			else {
