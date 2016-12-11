@@ -12,7 +12,11 @@ export default class ContentHeaderEdit extends Component {
 	render( {title, onmodify}, {} ) {
 		return (
 			<div class="content-header content-header-common content-header-edit">
+				<div>Title:</div>
 				<input type="text" value={title} oninput={onmodify} placeholder="Titles can use **bold** markup" />
+				<div>Authors:</div>
+				
+				<div>URL:</div>
 			</div>
 		);
 	}

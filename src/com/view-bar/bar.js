@@ -78,6 +78,7 @@ export default class ViewBar extends Component {
 					var GameURL = '/events/ludum-dare/37/'
 //					var GameURL = '/users/ham/';
 					GameURL += '$'+featured.what[featured.what.length-1];
+					GameURL += '/edit';
 
 					ShowMyGame = (
 						<ButtonLink href={GameURL} class="-button">

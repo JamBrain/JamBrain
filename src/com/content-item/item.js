@@ -48,7 +48,23 @@ export default class ContentItem extends Component {
 	}
 	onClickSave(e) {
 		console.log('save');
-		this.setState({ 'modified': false });
+		
+		var Title = this.state.title ? this.state.title : this.props.node.name;
+		var Body = this.state.body ? this.state.body : this.props.node.body;
+		
+		$Node.Update(this.props.node.id, Title, Body)
+		.then(r => {
+			if ( r.status == 200 ) {
+				this.setState({ 'modified': false });
+			}
+			else {
+				location.hash = "#savebug";
+			}
+		})
+		.catch(err => {
+			console.log(err);
+			this.setState({ 'error': err });
+		});
 	}
 	onClickPublish(e) {
 		console.log('pub');
@@ -58,7 +74,6 @@ export default class ContentItem extends Component {
 	onModifyTitle( e ) {
 		this.setState({ 'modified': true, 'title': e.srcElement.value });
 	}
-
 	onModifyBody( e ) {
 		this.setState({ 'modified': true, 'body': e.srcElement.value });
 	}

@@ -7,7 +7,11 @@ export default {
 	
 	GetMy,
 	Where,
-	What
+	What,
+	
+	Add,
+	Update,
+	Publish
 };
 
 var Nodes = {};
@@ -56,5 +60,18 @@ export function Where() {
 
 export function What( id ) {
 	return Fetch.Get('//'+API_DOMAIN+'/vx/node/what/'+id);
+}
+
+
+export function Add( id, name, body ) {
+}
+export function Publish( id, name, body ) {
+}
+
+export function Update( id, name, body ) {
+	return Fetch.Post('//'+API_DOMAIN+'/vx/node/update/'+id, {
+		'name': name,
+		'body': body
+	});
 }
 
