@@ -74,14 +74,14 @@ class Main extends Component {
 		this.fetchData();
 	}
 	
-	storeHistory( input, arg1 = null, arg2 = null ) {
+	storeHistory( input, page_title = null, page_url = null ) {
 		if ( window.history && window.history.replaceState && input ) {
 			history.replaceState({
 				'path': input.path ? input.path : "",
 				'slugs': input.slugs ? input.slugs : [],
 				'extra': input.extra ? input.extra : [],
 				'node': input.node ? input.node : null
-			}, arg1, arg2);
+			}, page_title, page_url);
 		}
 	}
 
