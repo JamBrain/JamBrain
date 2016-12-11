@@ -86,34 +86,61 @@ function nodeComplete_GetAuthored( $id ) {
 function nodeComplete_GetWhereIdCanCreate( $id ) {
 	$ret = [];
 	
-	// Scan for things I am the author of
-	$node_ids = nodeComplete_GetAuthored($id);
+	// Scan for public nodes with 'can-create' metadata
+	$public_metas = nodeMeta_GetByKey("can-create", null, '='.SH_NODE_META_PUBLIC);
 	
-	// Scan for nodes with 'can-create' metadata
-	$metas = nodeMeta_GetByKey("can-create");
-	
-	// NOTE: This will get slower as the number of games increase
+	// Add public nodes
+	foreach( $public_metas as &$meta ) {
+		if ( !isset($ret[$meta['value']]) ) {
+			$ret[$meta['value']] = [];
+		}
+		
+		$ret[$meta['value']][] = $meta['node'];
+	}
 
-	foreach( $metas as &$meta ) {
-		// Add public nodes
-		if ( $meta['scope'] == SH_NODE_META_PUBLIC ) {
+
+	// Scan for things I am the author of
+	$authored_ids = nodeComplete_GetAuthored($id);
+	// Scan for shared nodes I authored
+	$shared_metas = nodeMeta_GetByKeyNode("can-create", $authored_ids, '='.SH_NODE_META_SHARED);
+
+	// Add shared nodes
+	foreach( $shared_metas as &$meta ) {
+		if ( in_array($meta['node'], $authored_ids) ) {
 			if ( !isset($ret[$meta['value']]) ) {
 				$ret[$meta['value']] = [];
 			}
 			
 			$ret[$meta['value']][] = $meta['node'];
 		}
-		// Add shared nodes (primarily authored nodes)
-		else if ( $meta['scope'] == SH_NODE_META_SHARED ) {
-			if ( in_array($meta['node'], $node_ids) ) {
-				if ( !isset($ret[$meta['value']]) ) {
-					$ret[$meta['value']] = [];
-				}
-				
-				$ret[$meta['value']][] = $meta['node'];
-			}
-		}
 	}
+
+	
+//	// NOTE: This will get slower as the number of games increase
+//
+//	// Scan for nodes with 'can-create' metadata
+//	$metas = nodeMeta_GetByKey("can-create");
+//	
+//	foreach( $metas as &$meta ) {
+//		// Add public nodes
+//		if ( $meta['scope'] == SH_NODE_META_PUBLIC ) {
+//			if ( !isset($ret[$meta['value']]) ) {
+//				$ret[$meta['value']] = [];
+//			}
+//			
+//			$ret[$meta['value']][] = $meta['node'];
+//		}
+//		// Add shared nodes (primarily authored nodes)
+//		else if ( $meta['scope'] == SH_NODE_META_SHARED ) {
+//			if ( in_array($meta['node'], $node_ids) ) {
+//				if ( !isset($ret[$meta['value']]) ) {
+//					$ret[$meta['value']] = [];
+//				}
+//				
+//				$ret[$meta['value']][] = $meta['node'];
+//			}
+//		}
+//	}
 
 //	// Let me post content to my own node (but we're adding ourselves last, to make it the least desirable)
 //	// NOTE: Don't forge tto create sub-arrays here
