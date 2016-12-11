@@ -219,55 +219,60 @@ switch ( $action ) {
 	case 'where': //node/where
 		json_ValidateHTTPMethod('GET');
 		
-		$RESPONSE['where'] = [];
+//		$RESPONSE['where'] = [];
 //		$RESPONSE['where']['post'] = [];
 //		$RESPONSE['where']['item'] = [];
 //		$RESPONSE['where']['article'] = [];
 		
 		// if not logged in, where will be blank
 		if ( $user_id = userAuth_GetID() ) {
-			// Scan for things I am the author of
-			$author_links = nodeLink_GetByKeyNode("author", $user_id);
-			
-			$author_ids = [];
-
-			foreach( $author_links as &$link ) {
-				// We only care about public (for now)
-				if ( $link['scope'] == SH_NODE_META_PUBLIC ) {
-					if ( $link['b'] == $user_id ) {
-						$author_ids[] = $link['a'];
-					}
-				}
-			}
-			
-
-			// Scan for nodes with 'cat-create' metadata
-			$metas = nodeMeta_GetByKey("can-create");
-
-			foreach( $metas as &$meta ) {
-				if ( $meta['scope'] == SH_NODE_META_PUBLIC ) {
-					if ( !isset($RESPONSE['where'][$meta['value']]) ) {
-						$RESPONSE['where'][$meta['value']] = [];
-					}
-					
-					$RESPONSE['where'][$meta['value']][] = $meta['node'];
-				}
-				else if ( $meta['scope'] == SH_NODE_META_SHARED ) {
-					if ( in_array($meta['node'], $author_ids) ) {
-						if ( !isset($RESPONSE['where'][$meta['value']]) ) {
-							$RESPONSE['where'][$meta['value']] = [];
-						}
-						
-						$RESPONSE['where'][$meta['value']][] = $meta['node'];
-					}
-				}
-			}
+			$RESPONSE['where'] = nodeComplete_GetWhereIdCanCreate($user_id);
+//			
+//			// Scan for things I am the author of
+//			$author_links = nodeLink_GetByKeyNode("author", $user_id);
+//			
+//			$author_ids = [];
+//
+//			foreach( $author_links as &$link ) {
+//				// We only care about public (for now)
+//				if ( $link['scope'] == SH_NODE_META_PUBLIC ) {
+//					if ( $link['b'] == $user_id ) {
+//						$author_ids[] = $link['a'];
+//					}
+//				}
+//			}
+//			
+//
+//			// Scan for nodes with 'cat-create' metadata
+//			$metas = nodeMeta_GetByKey("can-create");
+//
+//			foreach( $metas as &$meta ) {
+//				if ( $meta['scope'] == SH_NODE_META_PUBLIC ) {
+//					if ( !isset($RESPONSE['where'][$meta['value']]) ) {
+//						$RESPONSE['where'][$meta['value']] = [];
+//					}
+//					
+//					$RESPONSE['where'][$meta['value']][] = $meta['node'];
+//				}
+//				else if ( $meta['scope'] == SH_NODE_META_SHARED ) {
+//					if ( in_array($meta['node'], $author_ids) ) {
+//						if ( !isset($RESPONSE['where'][$meta['value']]) ) {
+//							$RESPONSE['where'][$meta['value']] = [];
+//						}
+//						
+//						$RESPONSE['where'][$meta['value']][] = $meta['node'];
+//					}
+//				}
+//			}
 
 //			// Let me post content to my own node (but we're adding ourselves last, to make it the least desirable)
 //			// NOTE: Don't forge tto create sub-arrays here
 //			$RESPONSE['where']['post'][] = $user_id;
 //			$RESPONSE['where']['item'][] = $user_id;
 //			$RESPONSE['where']['article'][] = $user_id;
+		}
+		else {
+			json_EmitFatalError_Permission(null, $RESPONSE);
 		}
 		break; //case 'where': //node/where
 		
