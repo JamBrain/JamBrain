@@ -38,7 +38,7 @@ class Main extends Component {
 			window.history.replaceState(window.history.state, null, clean.path);
 		}
 	
-		console.log("History:", window.history.state);
+		//console.log("History:", window.history.state);
 	
 		this.state = {
 			// URL walking
@@ -52,9 +52,14 @@ class Main extends Component {
 				'id': 0
 			},
 			
+			// Root Node
+			'root': null,
+			
+			// Featured Ndde
+			'featured': null,
+			
 			// Active User
-			'user': null,
-			'private': null
+			'user': null
 		};
 		
 		window.addEventListener('hashchange', this.onHashChange.bind(this));
@@ -62,6 +67,33 @@ class Main extends Component {
 		window.addEventListener('popstate', this.onPopState.bind(this));
 		
 		this.onLogin = this.onLogin.bind(this);
+	}
+
+	componentDidMount() {
+		this.fetchRoot();
+		this.fetchData();
+	}
+
+	componentDidUpdate( prevProps, prevState ) {
+//		var state_copy = Object.assign({},this.state);
+//		history.replaceState(state_copy, null);
+		history.replaceState(this.state, null);
+	}
+
+	cleanLocation( location ) {
+		// Clean the URL
+		var clean = {
+			pathname: Sanitize.clean_Path(location.pathname),
+			search: Sanitize.clean_Query(location.search),
+			hash: Sanitize.clean_Hash(location.hash),
+		}
+
+		clean.path = clean.pathname + clean.search + clean.hash;
+
+		// Parse the clean URL
+		clean.slugs = Sanitize.trimSlashes(clean.pathname).split('/');
+
+		return clean;
 	}
 	
 	getDialog() {
@@ -94,59 +126,56 @@ class Main extends Component {
 	}
 	
 	onLogin() {
-		this.setState({ user: null });
+		this.setState({ 'user': null });
 		this.fetchData();
-	}
-
-	cleanLocation( location ) {
-		// Clean the URL
-		var clean = {
-			pathname: Sanitize.clean_Path(location.pathname),
-			search: Sanitize.clean_Query(location.search),
-			hash: Sanitize.clean_Hash(location.hash),
-		}
-
-		clean.path = clean.pathname + clean.search + clean.hash;
-
-		// Parse the clean URL
-		clean.slugs = Sanitize.trimSlashes(clean.pathname).split('/');
-
-		return clean;
 	}
 	
 	// *** //
 	
-	fetchNode() {
-		// Fetch the active node
-		$Node.Walk(SITE_ROOT, this.state.slugs)
-		.then(r => {
-			var new_path = (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/');
-
-			// We found a path
-			var new_state = { 
-				'id': r.node,
-				'path': new_path,
-				'extra': r.extra
-			};
-			
-			// Now lookup the node
-			$Node.Get(r.node)
-			.then(rr => {
-				if ( rr.node && rr.node.length ) {
-					new_state.node = rr.node[0];
-					this.setState(new_state);
-				}
-				else {
-					this.setState({ error: err });
+	fetchRoot() {
+		$Node.Get(SITE_ROOT)
+			.then(r => {
+				console.log("Root Loaded:", r.node.id);
+				this.setState({ 'root': r.node });
+				
+				if ( r.node.meta['featured'] && Number.parseInt(r.node.meta['featured']) > 0 ) {
+					this.fetchFeatured(Number.parseInt(r.node.meta['featured']));
 				}
 			})
-			.catch(err => {
-				this.setState({ error: err });
-			});
-		})
-		.catch(err => {
-			this.setState({ error: err });
-		});		
+			.catch(err => { this.setState({ 'error': err }); });
+	}
+	
+	fetchFeatured( node ) {
+		$Node.Get(node)
+			.then(r => {
+				console.log("Featured Node Loaded:", r.node.id);
+				this.setState({ 'featured': r.node });
+			})
+			.catch(err => { this.setState({ 'error': err }); });
+	}
+	
+	fetchNode() {
+		// Walk to the active node
+		$Node.Walk(SITE_ROOT, this.state.slugs)
+			.then(r => {
+				var new_state = { 
+					'id': r.node,
+					'path': (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/');,
+					'extra': r.extra
+				};
+				
+				// Now, lookup the node
+				$Node.Get(r.node)
+				.then(rr => {
+					if ( rr.node && rr.node.length ) {
+						new_state.node = rr.node[0];
+						this.setState(new_state);
+					}
+					else { this.setState({ 'error': err }); }
+				})
+				.catch(err => { this.setState({ 'error': err }); });
+			})
+			.catch(err => { this.setState({ 'error': err }); });
 	}
 	
 	fetchUser() {
@@ -156,64 +185,81 @@ class Main extends Component {
 			
 			// If a legit user
 			if ( r.caller_id ) {
+				r.node['private'] = {};
+				
 				// Pre-caching Love
 				$NodeLove.GetMy()
-				.then(rrr => {
+				.then(() => {
 					// Load user's private data
 					$Node.GetMy()
 					.then(rr => {
-						r.node['private'] = { 
-							'meta': rr.meta,
-							'link': rr.link,
-							'refs': rr.refs
-						};
+						r.node['private']['meta'] = rr.meta;
+						r.node['private']['link'] = rr.link;
+						r.node['private']['refs'] = rr.refs;
 						
 						// Finally, user is ready
-						console.log("User Loaded.");
+						console.log("User Loaded:", r.caller_id);
 						this.setState({ 'user': r.node });
 					})
 					.catch(err => {
-						this.setState({ error: err });
-					});					
+						this.setState({ 'error': err });
+					});
 				})
 				.catch(err => {
-					this.setState({ error: err });
+					this.setState({ 'error': err });
 				});
 				
-				$Node.GetMy()
-				.then(rr => {
-					r.node['private'] = { 
-						'meta': rr.meta,
-						'link': rr.link,
-						'refs': rr.refs
-					};
-					
-					this.setState({ 'user': r.node });
-				})
-				.catch(err => {
-					this.setState({ error: err });
-				});
+//				$Node.GetMy()
+//				.then(rr => {
+//					r.node['private'] = {
+//						'meta': rr.meta,
+//						'link': rr.link,
+//						'refs': rr.refs
+//					};
+//					
+//					this.setState({ 'user': r.node });
+//				})
+//				.catch(err => {
+//					this.setState({ error: err });
+//				});
 			}
+			// User not logged in
 			else {
-				this.setState({ 'user': null, 'private': null });
+				this.setState({ 
+					'user': { 'id': 0 }
+				});
 			}
 		})
 		.catch(err => {
-			this.setState({ error: err });
+			this.setState({ 'error': err });
 		});
 	}
+
+	fetchFeatured() {
+//		// Now lookup the node
+//		$Node.Get(r.node)
+//		.then(rr => {
+//			if ( rr.node && rr.node.length ) {
+//				new_state.node = rr.node[0];
+//				this.setState(new_state);
+//			}
+//			else {
+//				this.setState({ 'error': err });
+//			}
+//		})
+//		.catch(err => {
+//			this.setState({ 'error': err });
+//		});
+	}
+
 	
 	fetchData() {
+		if ( !this.state.user )
+			this.fetchUser();
 		if ( this.state.node && !this.state.node.id )
 			this.fetchNode();
-		if ( !this.state.user )
-			this.fetchUser();	
 	}
-	
-	componentDidMount() {
-		this.fetchData();
-	}
-	
+		
 	// *** //
 	
 	// Hash Changes are automatically differences
@@ -226,7 +272,10 @@ class Main extends Component {
 			this.setState({});
 		}
 		else {
-			this.setState({ 'id': 0, 'slugs': slugs });
+			this.setState({ 
+				'id': 0,
+				'slugs': slugs 
+			});
 		}
 	}
 	// When we navigate by clicking forward
@@ -238,7 +287,13 @@ class Main extends Component {
 			if ( slugs.join() !== this.state.slugs.join() ) {
 				history.pushState(null, null, e.detail.location.pathname+e.detail.location.search);
 
-				this.setState({ 'id': 0, 'slugs': slugs, 'node': {'id': 0} });
+				this.setState({ 
+					'id': 0,
+					'slugs': slugs, 
+					'node': {
+						'id': 0
+					} 
+				});
 				this.fetchNode();
 
 				// Scroll to top
@@ -255,14 +310,8 @@ class Main extends Component {
 		}
 	}
 	
-	componentDidUpdate( prevProps, prevState ) {
-//		var state_copy = Object.assign({},this.state);
-//		history.replaceState(state_copy, null);
-		history.replaceState(this.state, null);
-	}
-	
 
-	render( {}, {node, user, path, extra, error} ) {
+	render( {}, {node, user, featured, path, extra, error} ) {
 		var ShowContent = null;
 		
 		if ( node.id ) {
@@ -278,12 +327,12 @@ class Main extends Component {
 
 		return (
 			<div id="layout">
-				<ViewBar user={user} />
+				<ViewBar user={user} featured={featured} />
 				<div class="view">
-					<ViewHeader />
+					<ViewHeader user={user} featured={featured} />
 					<div id="content-sidebar">
 						{ShowContent}
-						<ViewSidebar />
+						<ViewSidebar user={user} featured={featured} />
 					</div>
 					<ViewFooter />
 				</div>					
