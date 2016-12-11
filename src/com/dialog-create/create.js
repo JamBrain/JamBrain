@@ -4,7 +4,7 @@ import Sanitize							from '../internal/sanitize/sanitize';
 import DialogBase						from 'com/dialog-base/base';
 //import NavLink							from 'com/nav-link/link';
 
-import $User							from '../shrub/js/user/user';
+import $Node							from '../shrub/js/node/node';
 
 export default class DialogCreate extends Component {
 	constructor( props ) {
@@ -14,7 +14,13 @@ export default class DialogCreate extends Component {
 	}
 	
 	doCreate( e ) {
-		
+		$Node.Add(this.props.featured.id)
+		.then(r => {
+			window.location.href = window.location.pathname;
+		})
+		.catch(err => {
+			this.setState({ 'error': err });
+		});
 	}
 
 	render( {/*path,*/ extra}, {error} ) {
@@ -45,8 +51,8 @@ export default class DialogCreate extends Component {
 			}
 		}
 		return (
-			<DialogBase title={"Create"} ok {...ShowError}>
-				<div>{"I don't know how to make that"}</div>
+			<DialogBase title={"Create"} ok cancel oktext="Yes" canceltext="No" onclick={this.doCreate} {...ShowError}>
+				<div>{"Would you like to create a game?"}</div>
 			</DialogBase>
 		);
 	}

@@ -63,7 +63,9 @@ export function What( id ) {
 }
 
 
-export function Add( id, name, body ) {
+export function Add( id ) {
+	return Fetch.Post('//'+API_DOMAIN+'/vx/node/add/'+id, {});
+
 }
 export function Publish( id, event ) {
 	return Fetch.Post('//'+API_DOMAIN+'/vx/node/publish/'+id, {

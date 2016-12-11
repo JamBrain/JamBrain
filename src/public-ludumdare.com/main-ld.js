@@ -43,7 +43,6 @@ class Main extends Component {
 	
 		this.state = {
 			// URL walking
-			//'id': 0,
 			'path': '',
 			'slugs': clean.slugs,
 			'extra': [],
@@ -78,7 +77,6 @@ class Main extends Component {
 	storeHistory( input, arg1 = null, arg2 = null ) {
 		if ( window.history && window.history.replaceState ) {
 			history.replaceState({
-				//'id': input.id,
 				'path': input.path,
 				'slugs': input.slugs,
 				'extra': input.extra,
@@ -140,6 +138,7 @@ class Main extends Component {
 		return null;
 	}
 	
+	// Called by the login dialog
 	onLogin() {
 		this.setState({ 'user': null });
 		this.fetchData();
@@ -148,7 +147,7 @@ class Main extends Component {
 	// *** //
 	
 	fetchRoot() {
-		$Node.Get(SITE_ROOT)
+		return $Node.Get(SITE_ROOT)
 			.then(r => {
 				if ( r.node.length ) {
 					var node = r.node[0];
@@ -168,7 +167,7 @@ class Main extends Component {
 	}
 	
 	fetchFeatured( node ) {
-		$Node.Get(node)
+		return $Node.Get(node)
 			.then(r => {
 				if ( r.node.length ) {
 					var node = r.node[0];
@@ -194,10 +193,9 @@ class Main extends Component {
 	
 	fetchNode() {
 		// Walk to the active node
-		$Node.Walk(SITE_ROOT, this.state.slugs)
+		return $Node.Walk(SITE_ROOT, this.state.slugs)
 			.then(r => {
 				var new_state = { 
-					//'id': r.node,
 					'path': (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/'),
 					'extra': r.extra
 				};
@@ -218,11 +216,11 @@ class Main extends Component {
 	
 	fetchUser() {
 		// Fetch the Active User
-		$User.Get().then(r => {
-			//console.log("Got User:", r.caller_id);
+		return $User.Get().then(r => {
+			console.log("Got User:", r.caller_id);
 			
 			// If a legit user
-			if ( r.caller_id ) {
+			if ( Number.parseInt(r.caller_id) ) {
 				r.node['private'] = {};
 				
 				// Pre-caching Love
@@ -280,7 +278,6 @@ class Main extends Component {
 		}
 		else {
 			this.setState({ 
-				//'id': 0,
 				'slugs': slugs
 			});
 		}
@@ -295,7 +292,6 @@ class Main extends Component {
 				history.pushState(null, null, e.detail.location.pathname+e.detail.location.search);
 
 				this.setState({
-					//'id': 0,
 					'slugs': slugs,
 					'node': {
 						'id': 0

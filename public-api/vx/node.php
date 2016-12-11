@@ -248,8 +248,8 @@ switch ( $action ) {
 		break; //case 'what': //node/what
 		
 	case 'add': //node/add/:parent/:type/:subtype/:subsubtype
-//		json_ValidateHTTPMethod('POST');
-		json_ValidateHTTPMethod('GET');
+		json_ValidateHTTPMethod('POST');
+//		json_ValidateHTTPMethod('GET');
 		
 		// NOTE: This doesn't actually need POST, but it uses the method for safety
 		
