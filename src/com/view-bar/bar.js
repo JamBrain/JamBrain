@@ -63,12 +63,15 @@ export default class ViewBar extends Component {
 			);
 		}
 		else if ( user && user.id ) {
-//			ShowJoin = (
-//				<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#post-new"; }}>
-//					<SVGIcon>publish</SVGIcon>
-//					<div class="if-sidebar-block">Join Event</div>
-//				</ButtonBase>
-//			);
+			var ActiveEvent = 10;
+			if ( ActiveEvent ) {
+				ShowJoin = (
+					<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#create/"+ActiveEvent+"/item/game"; }}>
+						<SVGIcon>publish</SVGIcon>
+						<div class="if-sidebar-block">Join Event</div>
+					</ButtonBase>
+				);
+			}
 				
 			
 //			var GameURL = '/events/ludum-dare/37/my-game';

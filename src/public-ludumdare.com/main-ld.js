@@ -17,6 +17,8 @@ import DialogPassword					from 'com/dialog-password/password';
 import DialogAuth						from 'com/dialog-auth/auth';
 import DialogSession					from 'com/dialog-session/session';
 
+import DialogCreate						from 'com/dialog-create/create';
+
 //import AlertBase						from 'com/alert-base/base';
 
 import $Node							from '../shrub/js/node/node';
@@ -63,28 +65,32 @@ class Main extends Component {
 	}
 	
 	getDialog() {
-		var HashRoot = window.location.hash.split('/',1)[0];
-		switch (HashRoot) {
-			case '#user-login':
-				return <DialogLogin onlogin={this.onLogin} />;
-			case '#user-activate':
-				return <DialogActivate />;
-			case '#user-register':
-				return <DialogRegister />;
-			case '#user-auth':
-				return <DialogAuth />;
-			case '#user-reset':
-				return <DialogReset />;
-			case '#user-password':
-				return <DialogPassword />;
-			case '#expired':
-				return <DialogSession />
-			default:
-				if ( window.location.hash )
-					return <DialogUnfinished />;
-				else
-					return null;
-		};
+		var props = Sanitize.parseHash(window.location.hash);
+		
+		if ( window.location.hash ) {
+			switch (props.path) {
+				case 'user-login':
+					props.onlogin = this.onLogin;
+					return <DialogLogin {...props} />;
+				case 'user-activate':
+					return <DialogActivate {...props} />;
+				case 'user-register':
+					return <DialogRegister {...props} />;
+				case 'user-auth':
+					return <DialogAuth {...props} />;
+				case 'user-reset':
+					return <DialogReset {...props} />;
+				case 'user-password':
+					return <DialogPassword {...props} />;
+				case 'expired':
+					return <DialogSession {...props} />
+				case 'create':
+					return <DialogCreate {...props} />
+				default:
+					return <DialogUnfinished {...props} />;
+			};
+		}
+		return null;
 	}
 	
 	onLogin() {
@@ -115,10 +121,7 @@ class Main extends Component {
 		$Node.Walk(SITE_ROOT, this.state.slugs)
 		.then(r => {
 			var new_path = (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/');
-//			if ( new_path.length ) {
-//				new_path += '/';
-//			}
-//			
+
 			// We found a path
 			var new_state = { 
 				'id': r.node,

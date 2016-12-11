@@ -75,6 +75,32 @@ class CSanitize {
 		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
 	}
 	
+	parseHash( raw_hash ) {
+		var ret = {
+			'path': "",
+			'extra': [],
+			'args': {}
+		};
+		
+		if ( !raw_hash.length )
+			return ret;
+		
+		var query_pos = raw_hash.indexOf('?');
+		var query = (query_pos != -1) ? raw_hash.substr(query_pos+1) : '';
+		if ( query.length ) {
+			query.split('&').forEach(v => { 
+				let _var = v.split('='); 
+				ret.args[_var[0]] = (_var.length > 1) ? _var[1] : true; 
+			});
+		}
+
+		var full_path = (query_pos != -1) ? raw_hash.substr(1, query_pos-1) : raw_hash.substr(1);
+		ret.extra = full_path.split('/');
+		ret.path = ret.extra.shift();
+		
+		return ret;
+	}
+	
 	getHTTPVars() {
 		var ret = {};
 		
