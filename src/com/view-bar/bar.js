@@ -72,32 +72,40 @@ export default class ViewBar extends Component {
 		}
 		// Both user and user.id means logged in
 		else if ( user && user.id ) {
-			var ActiveEvent = 10;
-			if ( ActiveEvent ) {
-				ShowJoin = (
-					<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#create/"+ActiveEvent+"/item/game"; }}>
-						<SVGIcon>publish</SVGIcon>
-						<div class="if-sidebar-block">Join Event</div>
-					</ButtonBase>
-				);
+			if ( featured && featured.id ) {
+				if ( featured.what && featured.what.length ) {
+					// TODO: get actual URL
+					var GameURL = '/events/ludum-dare/37/'
+//					var GameURL = '/users/ham/';
+					GameURL += '$'+featured.what[featured.what.length-1];
+
+					ShowMyGame = (
+						<ButtonLink href={GameURL} class="-button">
+							<SVGIcon>gamepad</SVGIcon>
+							<div class="if-sidebar-block">My Game</div>
+						</ButtonLink>
+					);
+					
+//					NewPost = (
+//						<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#create/post"; }}>
+//							<SVGIcon>edit</SVGIcon>
+//							<div class="if-sidebar-block">New</div>
+//						</ButtonBase>
+//					);
+				}
+				else {
+					ShowJoin = (
+						<ButtonBase class="-button" onclick={e => { window.location.hash = "#create/"+featured.id+"/item/game"; }}>
+							<SVGIcon>publish</SVGIcon>
+							<div class="if-sidebar-block">Join Event</div>
+						</ButtonBase>
+					);
+				}
 			}
+			
 				
 			
-//			var GameURL = '/events/ludum-dare/37/my-game';
-//			// TODO: Check if a participant of the current event
-//			ShowMyGame = (
-//				<ButtonLink href={GameURL} class="-button">
-//					<SVGIcon>gamepad</SVGIcon>
-//					<div class="if-sidebar-block">My Game</div>
-//				</ButtonLink>
-//			);
-//			
-//			NewPost = (
-//				<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#post-new"; }}>
-//					<SVGIcon>edit</SVGIcon>
-//					<div class="if-sidebar-block">New</div>
-//				</ButtonBase>
-//			);
+
 			
 			// TODO: Figure out how many notifications a user has
 			let NotificationCount = false ? (

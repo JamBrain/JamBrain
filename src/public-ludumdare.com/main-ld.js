@@ -164,8 +164,24 @@ class Main extends Component {
 	fetchFeatured( node ) {
 		$Node.Get(node)
 			.then(r => {
-				console.log("Featured Loaded:", r.node.id);
-				this.setState({ 'featured': r.node });
+				if ( r.node.length ) {
+					var node = r.node[0];
+					console.log("Featured Loaded:", node.id);
+					
+					$Node.What(node.id)
+						.then(rr => {
+							console.log('My Game:',rr.what);
+							node.what = rr.what;
+							
+							this.setState({ 'featured': node });
+						})
+						.catch(err => { this.setState({ 'error': err }); });
+
+					//this.setState({ 'featured': node });
+				}
+				else {
+					this.setState({ 'error': 'Failed to load featured' });
+				}
 			})
 			.catch(err => { this.setState({ 'error': err }); });
 	}
