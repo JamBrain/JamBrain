@@ -34,6 +34,7 @@ export default class ContentItem extends Component {
 		this.onClickSave = this.onClickSave.bind(this);
 		this.onClickPublish = this.onClickPublish.bind(this);
 		
+		this.onModifyTitle = this.onModifyTitle.bind(this);
 		this.onModifyBody = this.onModifyBody.bind(this);
 	}
 	
@@ -54,11 +55,17 @@ export default class ContentItem extends Component {
 		// DO THING UPDATE NODE
 	}
 	
+	onModifyTitle( e ) {
+		this.setState({ 'modified': true, 'title': e.srcElement.value });
+	}
+
 	onModifyBody( e ) {
 		this.setState({ 'modified': true, 'body': e.srcElement.value });
 	}
 	
-	render( {node, user, path, extra}, {edit, modified, body} ) {
+	
+	
+	render( {node, user, path, extra}, {edit, modified, title, body} ) {
 		var EditMode = false;
 
 		var ShowEditBar = null;
@@ -78,7 +85,7 @@ export default class ContentItem extends Component {
 		if ( EditMode && edit ) {
 			ShowItem = (
 				<div class="content-base content-common content-item">
-					<ContentHeaderEdit title={node.name} author={node} />
+					<ContentHeaderEdit title={title ? title : node.name} onmodify={this.onModifyTitle} author={node} />
 					<ContentBodyEdit onmodify={this.onModifyBody}>{body ? body : node.body}</ContentBodyEdit>
 					<ContentFooterEdit node={node} user={user} love />
 				</div>
@@ -87,7 +94,7 @@ export default class ContentItem extends Component {
 		else {
 			ShowItem = (
 				<div class="content-base content-common content-item">
-					<ContentHeaderCommon title={node.name} author={node} />
+					<ContentHeaderCommon title={title ? title : node.name} path={path} />
 					<ContentBodyMarkup>{body ? body : node.body}</ContentBodyMarkup>
 					<ContentFooterCommon node={node} user={user} love />
 				</div>

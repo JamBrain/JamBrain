@@ -16,10 +16,14 @@ export default class ContentHeaderCommon extends Component {
 		super(props);
 	}
 
-	render( {node, user, path}, state ) {
+	render( {title, path}, state ) {
+		var dangerousParsedTitle = { __html:titleParser.parse(title) };
+		
 		return (
 			<div class="content-header content-header-common">
-			
+				<div class="-title _font2">
+					<NavLink href={path} dangerouslySetInnerHTML={dangerousParsedTitle} />
+				</div>
 			</div>
 		);
 	}

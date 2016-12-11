@@ -5,14 +5,14 @@ export default class ContentHeaderEdit extends Component {
 		super(props);
 	}
 
-//	shouldComponentUpdate( nextProps ) {
-//		return false;
-//	}
+	shouldComponentUpdate( nextProps ) {
+		return false;
+	}
 
-	render( {title, ontitle}, {} ) {
+	render( {title, onmodify}, {} ) {
 		return (
 			<div class="content-header content-header-common content-header-edit">
-				<input type="text" value={title} onchange={ontitle} />
+				<input type="text" value={title} oninput={onmodify} placeholder="Titles can use **bold** markup" />
 			</div>
 		);
 	}

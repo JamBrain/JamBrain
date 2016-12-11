@@ -32,7 +32,7 @@ export default class ContentHeadlineEdit extends Component {
 		}
 
 		if ( modified ) {
-			ShowSave = <ButtonBase class="-available -red" onclick={onsave}><SVGIcon>save</SVGIcon> Save</ButtonBase>;
+			ShowSave = <ButtonBase class="-available -blue" onclick={onsave}><SVGIcon>save</SVGIcon> Save</ButtonBase>;
 		}
 		else {
 			ShowSave = <ButtonBase><SVGIcon>save</SVGIcon> Saved</ButtonBase>;

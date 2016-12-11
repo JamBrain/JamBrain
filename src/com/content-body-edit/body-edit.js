@@ -10,9 +10,11 @@ export default class ContentBodyEdit extends Component {
 	}
 
 	render( {children, onmodify}, {} ) {
+		var PlaceholderText = "Use GitHub-style markup, and emoji codes :like_this: :smile:";
+
 		return (
 			<div class="content-body content-body-common content-body-edit">
-				<div><textarea name="paragraph_text" rows="12" value={children} oninput={onmodify} /></div>
+				<div><textarea name="paragraph_text" rows="12" value={children} oninput={onmodify} placeholder={PlaceholderText} /></div>
 			</div>
 		);
 	}
