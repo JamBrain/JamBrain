@@ -7,6 +7,7 @@ import ContentEvent						from 'com/content-event/event';
 //import ContentEvents					from 'com/content-events/events';
 import ContentGroup						from 'com/content-group/group';
 import Content404						from 'com/content-404/404';
+import ContentItem						from 'com/content-item/item';
 
 export default class ViewContent extends Component {
 	constructor( props ) {
@@ -25,8 +26,11 @@ export default class ViewContent extends Component {
 			document.title = window.location.host;
 		}
 
-		if ( node.type === 'post' || node.type === 'game' ) {
+		if ( node.type === 'post' ) {
 			return <ContentPost node={node} user={user} path={path} extra={extra} />;
+		}
+		else if ( node.type === 'item' ) {
+			return <ContentItem node={node} user={user} path={path} extra={extra} />;
 		}
 		else if ( node.type === 'user' ) {
 			return <ContentUser node={node} user={user} path={path} extra={extra} />;

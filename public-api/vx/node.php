@@ -9,7 +9,8 @@ require_once __DIR__."/".SHRUB_PATH."node/node.php";
 json_Begin();
 
 const THINGS_I_CAN_LOVE = [
-	'post'
+	'post',
+	'item'
 ];
 
 const THINGS_I_CAN_STAR = [
