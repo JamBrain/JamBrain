@@ -114,7 +114,7 @@ function node_GetById( $ids ) {
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
 			WHERE id IN ($ids_string);"
 		);
-		
+
 		if ( $multi )
 			return $ret;
 		else

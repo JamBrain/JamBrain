@@ -101,17 +101,19 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 
 	// Scan for things I am the author of
 	$authored_ids = nodeComplete_GetAuthored($id);
-	// Scan for shared nodes I authored
-	$shared_metas = nodeMeta_GetByKeyNode("can-create", $authored_ids, '='.SH_NODE_META_SHARED);
-
-	// Add shared nodes
-	foreach( $shared_metas as &$meta ) {
-		if ( in_array($meta['node'], $authored_ids) ) {
-			if ( !isset($ret[$meta['value']]) ) {
-				$ret[$meta['value']] = [];
+	if ( !empty($authored_ids) ) {
+		// Scan for shared nodes I authored
+		$shared_metas = nodeMeta_GetByKeyNode("can-create", $authored_ids, '='.SH_NODE_META_SHARED);
+	
+		// Add shared nodes
+		foreach( $shared_metas as &$meta ) {
+			if ( in_array($meta['node'], $authored_ids) ) {
+				if ( !isset($ret[$meta['value']]) ) {
+					$ret[$meta['value']] = [];
+				}
+				
+				$ret[$meta['value']][] = $meta['node'];
 			}
-			
-			$ret[$meta['value']][] = $meta['node'];
 		}
 	}
 
@@ -154,14 +156,21 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 
 function nodeComplete_GetWhatIdHasAuthoredByParent( $id, $parent ) {
 	$node_ids = nodeComplete_GetAuthored($id);
-	$nodes = node_GetById($node_ids);			// OPTIMIZE: Use a cached function (we only need parent)
-	
-	$authored_ids = [];
-	foreach ( $nodes as &$node ) {
-		if ( $node['parent'] == $parent ) {
-			$authored_ids[] = $node['id'];
+	if ( !empty($node_ids) ) {
+		$nodes = node_GetById($node_ids);			// OPTIMIZE: Use a cached function (we only need parent)
+		
+		global $RESPONSE;
+		$RESPONSE['_node_ids'] = $node_ids;
+		$RESPONSE['_nodes'] = $nodes;
+		
+		$authored_ids = [];
+		foreach ( $nodes as &$node ) {
+			if ( $node['parent'] == $parent ) {
+				$authored_ids[] = $node['id'];
+			}
 		}
+		
+		return $authored_ids;
 	}
-	
-	return $authored_ids;
+	return [];
 }

@@ -14,13 +14,22 @@ export default class DialogCreate extends Component {
 	}
 	
 	doCreate( e ) {
-		$Node.Add(this.props.featured.id)
-		.then(r => {
-			window.location.href = window.location.pathname;
-		})
-		.catch(err => {
-			this.setState({ 'error': err });
-		});
+		var event_id = this.props.extra.length ? Number.parseInt(this.props.extra[0]) : 0;
+		var node_type = this.props.extra.length > 1 ? (this.props.extra[1]) : "";
+		var node_subtype = this.props.extra.length > 2 ? (this.props.extra[2]) : "";
+		
+		console.log(event_id, node_type, node_subtype);
+		
+		if ( event_id ) {
+			$Node.Add(event_id, node_type, node_subtype)
+			.then(r => {
+				//console.log('hurr',r);
+				window.location.href = window.location.pathname;
+			})
+			.catch(err => {
+				this.setState({ 'error': err });
+			});
+		}
 	}
 
 	render( {/*path,*/ extra}, {error} ) {
@@ -45,7 +54,7 @@ export default class DialogCreate extends Component {
 				
 				return (
 					<DialogBase title={"Create "+ShowType} ok cancel oktext={"Create "+ShowType} onclick={this.doCreate} {...ShowError}>
-						<div>Mahvel baby</div>
+						<div>Create a game for the active event?</div>
 					</DialogBase>
 				);
 			}

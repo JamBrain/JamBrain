@@ -63,8 +63,20 @@ export function What( id ) {
 }
 
 
-export function Add( id ) {
-	return Fetch.Post('//'+API_DOMAIN+'/vx/node/add/'+id, {});
+export function Add( id, node_type, node_subtype ) {
+	var args = [];
+
+	args.push(id);
+
+	if ( node_type ) {
+		args.push(node_type);
+	}
+
+	if ( node_subtype ) {
+		args.push(node_subtype);
+	}	
+	
+	return Fetch.Post('//'+API_DOMAIN+'/vx/node/add/'+args.join('/'), {});
 
 }
 export function Publish( id, event ) {

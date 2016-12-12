@@ -256,8 +256,8 @@ switch ( $action ) {
 		if ( $user_id = userAuth_GetID() ) {
 			$parent = intval(json_ArgShift());
 			$type = coreSlugify_Name(json_ArgShift());
-//			$subtype = coreSlugify_Name(json_ArgShift());
-//			$subsubtype = coreSlugify_Name(json_ArgShift());
+			$subtype = coreSlugify_Name(json_ArgShift());
+			$subsubtype = coreSlugify_Name(json_ArgShift());
 
 			if ( empty($parent) || empty($type) ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
