@@ -71,15 +71,8 @@ if ( in_array($table, $TABLE_LIST) ) {
 				name ".DB_TYPE_UNICODE(96).",
 				body ".DB_TYPE_NODE_BODY."
 			)".DB_CREATE_SUFFIX);
+		$did_0 = true;
 		if (!$ok) break; $TABLE_VERSION++;
-
-		// NOTE: Store "extra" in body for symlinks
-
-		// Create necessary nodes
-		$root = MakeKeyNode('SH_NODE_ID_ROOT', 0, SH_NODE_TYPE_ROOT, 'root', '' );
-		$users = MakeKeyNode('SH_NODE_ID_USERS', $root, SH_NODE_TYPE_USERS, 'users', 'Users' );
-
-		break;
 	case 1:
 		$ok = table_Update( $table,
 			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
@@ -94,6 +87,15 @@ if ( in_array($table, $TABLE_LIST) ) {
 			);
 		if (!$ok) break; $TABLE_VERSION++;
 	};
+
+	// NOTE: Store "extra" in body for symlinks
+
+	// Generate Nodes
+	if ( isset($did_0) ) {
+		// Create necessary nodes
+		$root = MakeKeyNode('SH_NODE_ID_ROOT', 0, SH_NODE_TYPE_ROOT, 'root', '' );
+		$users = MakeKeyNode('SH_NODE_ID_USERS', $root, SH_NODE_TYPE_USERS, 'users', 'Users' );
+	}
 	table_Exit($table);
 }
 

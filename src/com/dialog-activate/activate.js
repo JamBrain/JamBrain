@@ -167,8 +167,8 @@ export default class DialogActivate extends Component {
 	}
 
 	doFinishActivation() {
-		// HACK
-		location.href = "?";//"?alpha";
+		// HACK (no search string, so to hide querystring)
+		window.location.href = window.location.pathname;//+window.location.search;
 	}
 
 	render( props, {mail, name, slug, password, password2, valid_slug, created, loading, error} ) {

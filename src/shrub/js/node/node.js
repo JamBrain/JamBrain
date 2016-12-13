@@ -5,7 +5,13 @@ export default {
 	Walk,
 	GetFeed,
 	
-	GetMy
+	GetMy,
+	Where,
+	What,
+	
+	Add,
+	Update,
+	Publish
 };
 
 var Nodes = {};
@@ -47,3 +53,42 @@ export function GetFeed( id, methods, types ) {
 export function GetMy() {
 	return Fetch.Get('//'+API_DOMAIN+'/vx/node/getmy');
 }
+
+export function Where() {
+	return Fetch.Get('//'+API_DOMAIN+'/vx/node/where');
+}
+
+export function What( id ) {
+	return Fetch.Get('//'+API_DOMAIN+'/vx/node/what/'+id);
+}
+
+
+export function Add( id, node_type, node_subtype ) {
+	var args = [];
+
+	args.push(id);
+
+	if ( node_type ) {
+		args.push(node_type);
+	}
+
+	if ( node_subtype ) {
+		args.push(node_subtype);
+	}	
+	
+	return Fetch.Post('//'+API_DOMAIN+'/vx/node/add/'+args.join('/'), {});
+
+}
+export function Publish( id, event ) {
+	return Fetch.Post('//'+API_DOMAIN+'/vx/node/publish/'+id, {
+		'event': event
+	});
+}
+
+export function Update( id, name, body ) {
+	return Fetch.Post('//'+API_DOMAIN+'/vx/node/update/'+id, {
+		'name': name,
+		'body': body
+	});
+}
+

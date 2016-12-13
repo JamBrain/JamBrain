@@ -32,7 +32,7 @@ function node_GetSlugByParentSlugLike( $parent, $slug ) {
 }
 
 
-const SH_MAX_SLUG_LENGTH = 12;//96;
+const SH_MAX_SLUG_LENGTH = 96;
 const SH_MAX_SLUG_RETRIES = 100;
 
 function node_GetUniqueSlugByParentSlug( $parent, $slug ) {
@@ -114,7 +114,7 @@ function node_GetById( $ids ) {
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
 			WHERE id IN ($ids_string);"
 		);
-		
+
 		if ( $multi )
 			return $ret;
 		else

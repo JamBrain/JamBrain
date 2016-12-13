@@ -16,6 +16,10 @@ import DialogReset						from 'com/dialog-reset/reset';
 import DialogPassword					from 'com/dialog-password/password';
 import DialogAuth						from 'com/dialog-auth/auth';
 import DialogSession					from 'com/dialog-session/session';
+import DialogSavebug					from 'com/dialog-savebug/savebug';
+import DialogSubmit						from 'com/dialog-submit/submit';
+
+import DialogCreate						from 'com/dialog-create/create';
 
 //import AlertBase						from 'com/alert-base/base';
 
@@ -33,14 +37,12 @@ class Main extends Component {
 		var clean = this.cleanLocation(window.location);
 		if ( window.location.origin+clean.path !== window.location.href ) {
 			console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
-			window.history.replaceState(window.history.state, null, clean.path);
+			
+			this.storeHistory(window.history.state, null, clean.path);
 		}
-	
-		console.log("History:", window.history.state);
 	
 		this.state = {
 			// URL walking
-			'id': 0,
 			'path': '',
 			'slugs': clean.slugs,
 			'extra': [],
@@ -50,9 +52,14 @@ class Main extends Component {
 				'id': 0
 			},
 			
+			// Root Node
+			'root': null,
+			
+			// Featured node
+			'featured': null,
+			
 			// Active User
-			'user': null,
-			'private': null
+			'user': null
 		};
 		
 		window.addEventListener('hashchange', this.onHashChange.bind(this));
@@ -61,35 +68,25 @@ class Main extends Component {
 		
 		this.onLogin = this.onLogin.bind(this);
 	}
-	
-	getDialog() {
-		var HashRoot = window.location.hash.split('/',1)[0];
-		switch (HashRoot) {
-			case '#user-login':
-				return <DialogLogin onlogin={this.onLogin} />;
-			case '#user-activate':
-				return <DialogActivate />;
-			case '#user-register':
-				return <DialogRegister />;
-			case '#user-auth':
-				return <DialogAuth />;
-			case '#user-reset':
-				return <DialogReset />;
-			case '#user-password':
-				return <DialogPassword />;
-			case '#expired':
-				return <DialogSession />
-			default:
-				if ( window.location.hash )
-					return <DialogUnfinished />;
-				else
-					return null;
-		};
+
+	componentDidMount() {
+		this.fetchRoot();
+		this.fetchData();
 	}
 	
-	onLogin() {
-		this.setState({ user: null });
-		this.fetchData();
+	storeHistory( input, page_title = null, page_url = null ) {
+		if ( window.history && window.history.replaceState && input ) {
+			history.replaceState({
+				'path': input.path ? input.path : "",
+				'slugs': input.slugs ? input.slugs : [],
+				'extra': input.extra ? input.extra : [],
+				'node': input.node ? input.node : null
+			}, page_title, page_url);
+		}
+	}
+
+	componentDidUpdate( prevProps, prevState ) {
+		this.storeHistory(this.state);
 	}
 
 	cleanLocation( location ) {
@@ -108,109 +105,166 @@ class Main extends Component {
 		return clean;
 	}
 	
+	getDialog() {
+		var props = Sanitize.parseHash(window.location.hash);
+		
+		if ( window.location.hash ) {
+			switch (props.path) {
+				case 'user-login':
+					props.onlogin = this.onLogin;
+					return <DialogLogin {...props} />;
+				case 'user-activate':
+					return <DialogActivate {...props} />;
+				case 'user-register':
+					return <DialogRegister {...props} />;
+				case 'user-auth':
+					return <DialogAuth {...props} />;
+				case 'user-reset':
+					return <DialogReset {...props} />;
+				case 'user-password':
+					return <DialogPassword {...props} />;
+				case 'expired':
+					return <DialogSession {...props} />;
+				case 'savebug':
+					return <DialogSavebug {...props} />;
+				case 'create':
+					return <DialogCreate {...props} />;
+				case 'submit':
+					return <DialogSubmit {...props} />;
+				default:
+					return <DialogUnfinished {...props} />;
+			};
+		}
+		return null;
+	}
+	
+	// Called by the login dialog
+	onLogin() {
+		this.setState({ 'user': null });
+		this.fetchData();
+	}
+	
 	// *** //
 	
-	fetchNode() {
-		// Fetch the active node
-		$Node.Walk(SITE_ROOT, this.state.slugs)
-		.then(r => {
-			var new_path = (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/');
-//			if ( new_path.length ) {
-//				new_path += '/';
-//			}
-//			
-			// We found a path
-			var new_state = { 
-				'id': r.node,
-				'path': new_path,
-				'extra': r.extra
-			};
-			
-			// Now lookup the node
-			$Node.Get(r.node)
-			.then(rr => {
-				if ( rr.node && rr.node.length ) {
-					new_state.node = rr.node[0];
-					this.setState(new_state);
+	fetchRoot() {
+		return $Node.Get(SITE_ROOT)
+			.then(r => {
+				if ( r.node.length ) {
+					var node = r.node[0];
+					console.log("Root Loaded:", node.id);
+					
+					this.setState({ 'root': node });
+					
+					if ( node.meta['featured'] && Number.parseInt(node.meta['featured']) > 0 ) {
+						this.fetchFeatured(Number.parseInt(node.meta['featured']));
+					}
 				}
 				else {
-					this.setState({ error: err });
+					this.setState({ 'error': 'Failed to load root' });
 				}
 			})
-			.catch(err => {
-				this.setState({ error: err });
-			});
-		})
-		.catch(err => {
-			this.setState({ error: err });
-		});		
+			.catch(err => { this.setState({ 'error': err }) });
+	}
+	
+	fetchFeatured( node ) {
+		return $Node.Get(node)
+			.then(r => {
+				if ( r.node.length ) {
+					var node = r.node[0];
+					console.log("Featured Loaded:", node.id);
+					
+					$Node.What(node.id)
+						.then(rr => {
+							console.log('My Game:',rr.what);
+							node.what = rr.what;
+							
+							this.setState({ 'featured': node });
+						})
+						.catch(err => { this.setState({ 'error': err }); });
+
+					//this.setState({ 'featured': node });
+				}
+				else {
+					this.setState({ 'error': 'Failed to load featured' });
+				}
+			})
+			.catch(err => { this.setState({ 'error': err }); });
+	}
+	
+	fetchNode() {
+		// Walk to the active node
+		return $Node.Walk(SITE_ROOT, this.state.slugs)
+			.then(r => {
+				var new_state = { 
+					'path': (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/'),
+					'extra': r.extra
+				};
+				
+				// Now, lookup the node
+				$Node.Get(r.node)
+				.then(rr => {
+					if ( rr.node && rr.node.length ) {
+						new_state.node = rr.node[0];
+						this.setState(new_state);
+					}
+					else { this.setState({ 'error': err }); }
+				})
+				.catch(err => { this.setState({ 'error': err }); });
+			})
+			.catch(err => { this.setState({ 'error': err }); });
 	}
 	
 	fetchUser() {
 		// Fetch the Active User
-		$User.Get().then(r => {
+		return $User.Get().then(r => {
 			console.log("Got User:", r.caller_id);
 			
 			// If a legit user
-			if ( r.caller_id ) {
+			if ( Number.parseInt(r.caller_id) ) {
+				r.node['private'] = {};
+				
 				// Pre-caching Love
 				$NodeLove.GetMy()
-				.then(rrr => {
+				.then(() => {
 					// Load user's private data
 					$Node.GetMy()
 					.then(rr => {
-						r.node['private'] = { 
-							'meta': rr.meta,
-							'link': rr.link,
-							'refs': rr.refs
-						};
+						r.node['private']['meta'] = rr.meta;
+						r.node['private']['link'] = rr.link;
+						r.node['private']['refs'] = rr.refs;
 						
 						// Finally, user is ready
-						console.log("User Loaded.");
+						console.log("User Loaded:", r.caller_id);
 						this.setState({ 'user': r.node });
 					})
 					.catch(err => {
-						this.setState({ error: err });
-					});					
+						this.setState({ 'error': err });
+					});
 				})
 				.catch(err => {
-					this.setState({ error: err });
-				});
-				
-				$Node.GetMy()
-				.then(rr => {
-					r.node['private'] = { 
-						'meta': rr.meta,
-						'link': rr.link,
-						'refs': rr.refs
-					};
-					
-					this.setState({ 'user': r.node });
-				})
-				.catch(err => {
-					this.setState({ error: err });
+					this.setState({ 'error': err });
 				});
 			}
+			// User not logged in
 			else {
-				this.setState({ 'user': null, 'private': null });
+				this.setState({ 
+					'user': { 'id': 0 }
+				});
 			}
 		})
 		.catch(err => {
-			this.setState({ error: err });
+			this.setState({ 'error': err });
 		});
 	}
+
 	
 	fetchData() {
+		if ( !this.state.user )
+			this.fetchUser();
 		if ( this.state.node && !this.state.node.id )
 			this.fetchNode();
-		if ( !this.state.user )
-			this.fetchUser();	
 	}
-	
-	componentDidMount() {
-		this.fetchData();
-	}
-	
+		
 	// *** //
 	
 	// Hash Changes are automatically differences
@@ -223,7 +277,9 @@ class Main extends Component {
 			this.setState({});
 		}
 		else {
-			this.setState({ 'id': 0, 'slugs': slugs });
+			this.setState({ 
+				'slugs': slugs
+			});
 		}
 	}
 	// When we navigate by clicking forward
@@ -235,7 +291,12 @@ class Main extends Component {
 			if ( slugs.join() !== this.state.slugs.join() ) {
 				history.pushState(null, null, e.detail.location.pathname+e.detail.location.search);
 
-				this.setState({ 'id': 0, 'slugs': slugs, 'node': {'id': 0} });
+				this.setState({
+					'slugs': slugs,
+					'node': {
+						'id': 0
+					} 
+				});
 				this.fetchNode();
 
 				// Scroll to top
@@ -252,14 +313,8 @@ class Main extends Component {
 		}
 	}
 	
-	componentDidUpdate( prevProps, prevState ) {
-//		var state_copy = Object.assign({},this.state);
-//		history.replaceState(state_copy, null);
-		history.replaceState(this.state, null);
-	}
-	
 
-	render( {}, {node, user, path, extra, error} ) {
+	render( {}, {node, user, featured, path, extra, error} ) {
 		var ShowContent = null;
 		
 		if ( node.id ) {
@@ -275,12 +330,12 @@ class Main extends Component {
 
 		return (
 			<div id="layout">
-				<ViewBar user={user} />
+				<ViewBar user={user} featured={featured} />
 				<div class="view">
-					<ViewHeader />
+					<ViewHeader user={user} featured={featured} />
 					<div id="content-sidebar">
 						{ShowContent}
-						<ViewSidebar />
+						<ViewSidebar user={user} featured={featured} />
 					</div>
 					<ViewFooter />
 				</div>					

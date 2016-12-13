@@ -18,7 +18,7 @@ export default class ContentFooterButtonLove extends Component {
 	componentDidMount() {
 		// TODO: Extract Love from the global love pool (props.node.id)
 		
-		if ( this.props.user ) {	
+		if ( this.props.user && this.props.user.id ) {	
 			$NodeLove.GetMy(this.props.node.id)
 			.then(r => {
 				this.setState({ 'loved': r });
