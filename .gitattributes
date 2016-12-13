@@ -1,2 +1,9 @@
 # Force LF line endings on Windows.
 * text eol=lf
+
+# Binary Files
+*.png binary
+*.jpg binary
+*.ico binary
+*.pdf binary
+
