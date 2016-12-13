@@ -138,7 +138,7 @@ function MakeKeyNode( $key, $parent, $type, $slug, $name ) {
 	global $SH;
 	
 	if ( !isset($SH[$key]) || !$SH[$key] ) {
-		$node = node_Add(
+		$node = _node_Add(
 			$parent,						// parent
 			0,								// superparent (0 = don't care)
 			0,								// author (0 = orphaned)
