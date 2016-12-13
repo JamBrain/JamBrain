@@ -10,4 +10,4 @@ SCRIPTPATH=$(dirname "$SCRIPT")
 cd $SCRIPTPATH
 
 (cd apache ; sh add-ports.sh)
-(cd db ; echo YES | php table-create)
+(cd /vagrant/www/src/shrub/tools; echo YES | php table_create)
