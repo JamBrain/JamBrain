@@ -9,7 +9,8 @@ require_once __DIR__."/".SHRUB_PATH."node/node.php";
 json_Begin();
 
 const THINGS_I_CAN_LOVE = [
-	'post'
+	'post',
+	'item'
 ];
 
 const THINGS_I_CAN_STAR = [
@@ -82,6 +83,8 @@ switch ( $action ) {
 
 	case 'walk': //node/walk
 		json_ValidateHTTPMethod('GET');
+		
+		// TODO: Support Symlinks and HardLinks (?)
 
 		if ( json_ArgCount() ) {
 			$root = intval(json_ArgShift());
@@ -92,13 +95,31 @@ switch ( $action ) {
 			$RESPONSE['extra'] = [];
 			
 			foreach ( json_ArgGet() as $slug ) {
-				$node = node_GetIdByParentSlug($parent, coreSlugify_Name($slug));
+				$slug = coreSlugify_PathName($slug);
+
+				if ( !empty($slug) && $slug[0] == '$' ) {
+					$node = intval(substr($slug, 1));
+
+					// Validate that node's parent correct
+					if ( node_GetParentById($node) !== $parent ) {
+						$node = 0;
+					}
+				}
+				else {
+					$node = node_GetIdByParentSlug($parent, $slug);
+				}
+
 				if ( $node ) {
 					$parent = $node;
 					$RESPONSE['path'][] = $node;
 				}
 				else {
-					$RESPONSE['extra'][] = coreSlugify_Name($slug);
+					if ( !empty($slug) ) {
+						$RESPONSE['extra'][] = $slug;//coreSlugify_Name($slug); // already slugified
+					}
+					else {
+						json_EmitFatalError_BadRequest(null, $RESPONSE);
+					}
 				}
 			}
 			
@@ -116,40 +137,73 @@ switch ( $action ) {
 			$root = intval(json_ArgShift());
 			$RESPONSE['root'] = $root;
 
-			$types = [];
-			if ( json_ArgCount() ) {
-				$types = explode('+', json_ArgGet(0));
+			$methods = json_ArgShift();
+			if ( empty($methods) ) {
+				$methods = ['parent'];
+			}
+			else {
+				$methods = array_map("coreSlugify_Name", explode('+', $methods));
+				
+				$allowed_methods = ['parent','superparent','author'];
+				foreach ( $methods as &$method ) {
+					if ( !in_array($method, $allowed_methods) ) {
+						json_EmitFatalError_BadRequest("Invalid method: $method", $RESPONSE);
+					}
+				}
+			}
+			$RESPONSE['method'] = $methods;
+
+			$types = json_ArgShift();
+			if ( empty($types) ) {
+				$types = ['post'];
+			}
+			else {
+				$types = array_map("coreSlugify_Name", explode('+', $types));
+
+				$allowed_types = ['post','item','event'];
+				foreach ( $types as &$type ) {
+					if ( !in_array($type, $allowed_types) ) {
+						json_EmitFatalError_BadRequest("Invalid type: $type", $RESPONSE);
+					}
+				}
 			}
 			$RESPONSE['types'] = $types;
 
-//			foreach ( $REQUEST as $slug ) {
-//				$types[] = coreSlugify_Name($slug);
-//			}
-			
-			$RESPONSE['feed'] = node_GetPublishedIdModifiedByParentType($root, $types);
+			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types );
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
 		}
 		break; // case 'feed': //node/feed
 
+	/// This gets the extra metadata an active user has access to
 	case 'getmy': //node/getmy
 		json_ValidateHTTPMethod('GET');
 
 		if ( $user_id = userAuth_GetID() ) {
 			$metas = nodeMeta_ParseByNode($user_id);
-			$meta_out = array_merge([], 
+			$meta_out = array_merge([],
+				// Public metadata (this is already in the node)
+				//isset($metas[SH_NODE_META_PUBLIC]) ? $metas[SH_NODE_META_PUBLIC] : [],
+				// Shared metadata (authors??)
 				isset($metas[SH_NODE_META_SHARED]) ? $metas[SH_NODE_META_SHARED] : [],
+				// Protected metadata
 				isset($metas[SH_NODE_META_PROTECTED]) ? $metas[SH_NODE_META_PROTECTED] : []
 			);
 
 			$links = nodeLink_ParseByNode($user_id);
-			$link_out = array_merge([], 
+			$link_out = array_merge([],
+				// Public Links from me (this is already in the node)
+				//isset($links[0][SH_NODE_META_PUBLIC]) ? $links[0][SH_NODE_META_PUBLIC] : [],
+				// Shared Links from me
 				isset($links[0][SH_NODE_META_SHARED]) ? $links[0][SH_NODE_META_SHARED] : [],
+				// Procted Links from me
 				isset($links[0][SH_NODE_META_PROTECTED]) ? $links[0][SH_NODE_META_PROTECTED] : []
 			);
-			$refs_out = array_merge([], 
+			$refs_out = array_merge([],
+				// Public links to me
 				isset($links[1][SH_NODE_META_PUBLIC]) ? $links[1][SH_NODE_META_PUBLIC] : [],
+				// Shared links to me
 				isset($links[1][SH_NODE_META_SHARED]) ? $links[1][SH_NODE_META_SHARED] : []
 			);
 				
@@ -162,6 +216,200 @@ switch ( $action ) {
 			json_EmitFatalError_Permission(null, $RESPONSE);
 		}
 		break; // case 'getmy': //node/getmy
+
+	case 'where': //node/where
+		json_ValidateHTTPMethod('GET');
+		
+		// if not logged in, where will be blank
+		if ( $user_id = userAuth_GetID() ) {
+			$RESPONSE['where'] = nodeComplete_GetWhereIdCanCreate($user_id);
+		}
+		else {
+			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
+		break; //case 'where': //node/where
+
+	case 'what': //node/what
+		json_ValidateHTTPMethod('GET');
+		
+		// if not logged in, where will be blank
+		if ( $user_id = userAuth_GetID() ) {
+			$parent = intval(json_ArgShift());
+			if ( $parent ) {
+				$RESPONSE['what'] = nodeComplete_GetWhatIdHasAuthoredByParent($user_id, $parent);
+			}
+			else {
+				json_EmitFatalError_BadRequest(null, $RESPONSE);
+			}
+		}
+		else {
+			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
+		break; //case 'what': //node/what
+		
+	case 'add': //node/add/:parent/:type/:subtype/:subsubtype
+		json_ValidateHTTPMethod('POST');
+//		json_ValidateHTTPMethod('GET');
+		
+		// NOTE: This doesn't actually need POST, but it uses the method for safety
+		
+		if ( $user_id = userAuth_GetID() ) {
+			$parent = intval(json_ArgShift());
+			$type = coreSlugify_Name(json_ArgShift());
+			$subtype = coreSlugify_Name(json_ArgShift());
+			$subsubtype = coreSlugify_Name(json_ArgShift());
+
+			if ( empty($parent) || empty($type) ) {
+				json_EmitFatalError_BadRequest(null, $RESPONSE);
+			}
+			
+			$where = nodeComplete_GetWhereIdCanCreate($user_id);
+			
+			if ( !isset($where[$type]) || !in_array($parent, $where[$type]) ) {
+				json_EmitFatalError_BadRequest(null, $RESPONSE);
+			}
+			
+			switch ( $type ) {
+				case 'item':
+					// TODO: Rollback
+				
+					// For now we only support game items, so hardcode game
+					$new_node = node_Add($parent, $user_id, $type, "game", "", null, "", "");
+					if ( $new_node ) {
+						nodeMeta_AddByNode($new_node, SH_NODE_META_SHARED, 'can-create', 'post');
+						nodeLink_AddbyNode($new_node, $user_id, SH_NODE_META_PUBLIC, 'author');
+					}
+					else {
+						json_EmitFatalError_ServerError(null, $RESPONSE);
+					}
+					
+					$RESPONSE['id'] = $new_node;
+					break;
+					
+//				case 'post':
+//					break;
+
+				default:
+					break;
+			};
+		}
+		else {
+			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
+		break; //case 'add': //node/add
+
+	case 'update': //node/update/:node
+		json_ValidateHTTPMethod('POST');
+
+		if ( $user_id = userAuth_GetID() ) {
+			$node_id = intval(json_ArgShift());
+			if ( empty($node_id) ) {
+				json_EmitFatalError_BadRequest(null, $RESPONSE);
+			}
+			
+			// Parse POST
+			if ( isset($_POST['name']) )
+				$name = coreSanitize_String(substr($_POST['name'], 0, 96));
+			else
+				json_EmitFatalError_BadRequest("'name' not found in POST", $RESPONSE);
+				
+			if ( isset($_POST['body']) )
+				$body = coreSanitize_String(substr($_POST['body'], 0, 32768));
+			else
+				json_EmitFatalError_BadRequest("'body' not found in POST", $RESPONSE);
+
+			if ( isset($_POST['tag']) )
+				$version_tag = coreSanitize_Slug(substr($_POST['tag'], 0, 32));
+			else
+				$version_tag = "";
+
+			// Fetch Node			
+			$node = nodeComplete_GetById($node_id);
+			$authors = nodeList_GetAuthors($node);
+			
+			// If you are authorized to edit
+			if ( in_array($user_id, $authors) ) {
+				$RESPONSE['updated'] = node_Edit(
+					$node_id,
+					$node['parent'], $node['author'], 
+					$node['type'], $node['subtype'], $node['subsubtype'],
+					$node['slug'],
+					$name,
+					$body,
+					$version_tag);
+			}
+			else {
+				json_EmitFatalError_Permission(null, $RESPONSE);
+			}
+		}
+		else {
+			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
+		break; //case 'update': //node/update
+
+	case 'drafts': //node/drafts
+	
+		break; //case 'drafts': //node/drafts
+
+	case 'publish': //node/publish
+		json_ValidateHTTPMethod('POST');
+		
+		if ( $user_id = userAuth_GetID() ) {
+			$node_id = intval(json_ArgShift());
+			if ( empty($node_id) ) {
+				json_EmitFatalError_BadRequest(null, $RESPONSE);
+			}
+			
+			// Parse POST
+			if ( isset($_POST['event']) )
+				$event = coreSanitize_String(substr($_POST['event'], 0, 24));
+			else
+				json_EmitFatalError_BadRequest("'event' not found in POST", $RESPONSE);
+
+			if ( $event === 'compo' || $event === 'jam' ) {
+			}
+			else {
+				json_EmitFatalError_BadRequest("Unsupported 'event'", $RESPONSE);
+			}
+
+			// Fetch Node			
+			$node = nodeComplete_GetById($node_id);
+			$authors = nodeList_GetAuthors($node);
+
+			// If you are authorized to edit
+			if ( in_array($user_id, $authors) ) {
+				$slug = coreSlugify_Name($node['name']);
+				if ( in_array($slug, $SH_NAME_RESERVED) ) {
+					json_EmitFatalError_BadRequest("Title is a reserved word", $RESPONSE);
+				}
+				
+				$new_slug = node_GetUniqueSlugByParentSlug($node['parent'], $slug);
+			
+				if ( strlen($new_slug) < 3 ) {
+					json_EmitFatalError_BadRequest("Title is too short (minumum 3 characters)", $RESPONSE);
+				}
+				
+				$RESPONSE['edit'] = node_Edit(
+					$node_id,
+					$node['parent'], $node['author'], 
+					$node['type'], $node['subtype'], $event,
+					$new_slug,
+					$node['name'],
+					$node['body'],
+					"!PUBLISH");
+				
+				$RESPONSE['publish'] = node_Publish(
+					$node_id
+				);
+			}
+			else {
+				json_EmitFatalError_Permission(null, $RESPONSE);
+			}
+		}
+		else {
+			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
+		break; //case 'publish': //node/publish
 
 	case 'love': //node/love
 		$old_action = $action;

@@ -5,7 +5,13 @@ export default {
 	Walk,
 	GetFeed,
 	
-	GetMy
+	GetMy,
+	Where,
+	What,
+	
+	Add,
+	Update,
+	Publish
 };
 
 var Nodes = {};
@@ -22,14 +28,67 @@ export function Get( ids ) {
 	return Fetch.Get('//'+API_DOMAIN+'/vx/node/get/'+ids.join('+'));
 }
 
-export function GetFeed( id, types ) {
-	if ( !Array.isArray(types) ) {
-		types = [types];
+export function GetFeed( id, methods, types ) {
+	let args = [];
+
+	args.push(id);
+
+	if ( methods ) {
+		if ( Array.isArray(methods) ) {
+			methods = methods.join("+");
+		}
+		args.push(methods);
 	}
 
-	return Fetch.Get('//'+API_DOMAIN+'/vx/node/feed/'+id+'/'+(types ? types.join("+") : ""));
+	if ( types ) {
+		if ( Array.isArray(types) ) {
+			types = types.join("+");
+		}
+		args.push(types);
+	}
+
+	return Fetch.Get('//'+API_DOMAIN+'/vx/node/feed/'+args.join('/'));
 }
 
 export function GetMy() {
 	return Fetch.Get('//'+API_DOMAIN+'/vx/node/getmy');
 }
+
+export function Where() {
+	return Fetch.Get('//'+API_DOMAIN+'/vx/node/where');
+}
+
+export function What( id ) {
+	return Fetch.Get('//'+API_DOMAIN+'/vx/node/what/'+id);
+}
+
+
+export function Add( id, node_type, node_subtype ) {
+	var args = [];
+
+	args.push(id);
+
+	if ( node_type ) {
+		args.push(node_type);
+	}
+
+	if ( node_subtype ) {
+		args.push(node_subtype);
+	}	
+	
+	return Fetch.Post('//'+API_DOMAIN+'/vx/node/add/'+args.join('/'), {});
+
+}
+export function Publish( id, event ) {
+	return Fetch.Post('//'+API_DOMAIN+'/vx/node/publish/'+id, {
+		'event': event
+	});
+}
+
+export function Update( id, name, body ) {
+	return Fetch.Post('//'+API_DOMAIN+'/vx/node/update/'+id, {
+		'name': name,
+		'body': body
+	});
+}
+

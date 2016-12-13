@@ -1,0 +1,53 @@
+@import "defs.less";
+
+#content .content-header-common {
+	padding: 1em;
+	padding-bottom: 0;
+	
+		& > .-title {
+			font-size: 2.2em;
+			/*font-variant: small-caps;*/
+			/*letter-spacing: 0.05em;*/
+			position: relative;
+			left: -0.1em;
+			margin-right:64px;
+		}
+		& > .-subtext {
+			font-size: 0.8em;
+			margin:0.2em 0;
+			margin-right:64px;
+		}
+		& > .-avatar {
+			margin: -0.5em;
+			float:right;
+			cursor: pointer;
+			
+			position: relative;
+			
+			&:hover {
+				background: @MAJOR_COLOR1;
+				& > .-info {
+					display: block;
+					color: @MAJOR_LIGHT;
+				}
+			}
+			& > img {
+				display:block;
+				padding: 0.5em;
+			}
+			& > .-info {
+				position: absolute;
+				margin: auto;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				right: 0;
+				font-size: 2em;
+				
+				display: none;
+			}
+		}
+		& .-author {
+			font-weight:bold;
+		}
+}

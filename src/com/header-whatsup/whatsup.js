@@ -13,11 +13,20 @@ export default class HeaderWhatsup extends Component {
 		
 		// TODO: Write code to convert an array to "1 and 2" or "1, 2, and 3"
 		
+		// TODO: The actual theme can be found in the the public metatag "event-theme" (private one before event)
+		
 		return (
 			<div class="header-base header-whatsup outside">
-				<span class="-title _font2">ON NOW:</span> Ludum Dare 37 <NavLink href="/events/ludum-dare/37/theme"><SVGIcon baseline small gap>mallet</SVGIcon>Theme Voting</NavLink> Final Round!
+				<span class="-title _font2">{"Theme:"}</span>{" One room"}
 			</div>
 		);
+
+//				<NavLink href="/events/ludum-dare/37/theme"><SVGIcon baseline small gap>mallet</SVGIcon>Theme Voting</NavLink> has ended. The theme will be announced soon.
+
+// Yes, if you're watching the source code, we're going to have to do this manually.
+//				<span class="-title _font2">{"Theme:"}</span>{" ???"}
+
+//				<span class="-title _font2">ON NOW:</span> Ludum Dare 37 <NavLink href="/events/ludum-dare/37/theme"><SVGIcon baseline small gap>mallet</SVGIcon>Theme Voting</NavLink> Final Round!
 
 //				<span class="-title _font2">ON NOW:</span> Ludum Dare 37 <NavLink href="/events/ludum-dare/37/theme"><SVGIcon baseline small gap>mallet</SVGIcon>Theme Voting</NavLink> Round 1, Round 2, and Round 3
 	}

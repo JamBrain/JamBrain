@@ -6,6 +6,8 @@ import ButtonLink						from '../button-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
 
+import NavSpinner						from 'com/nav-spinner/spinner';
+
 function make_url( url ) {
 	return url + window.location.search;
 }
@@ -28,8 +30,12 @@ export default class ViewBar extends Component {
 //		console.log("FOON",com,this.props, nextProps);
 //		return com;
 //	}
+
+	renderLeft() {
+		
+	}
 	
-	render( {user}, {} ) {
+	renderRight( user, featured ) {
 		var Search = null;
 //		var Search = (
 //			<ButtonBase class="-icon" onclick={e => { console.log('search'); window.location.hash = "#search"; }}>
@@ -52,7 +58,9 @@ export default class ViewBar extends Component {
 		var Register = null;
 		var Login = null;
 		var GoSecure = null;
+		var ShowSpinner = null;
 
+		// Disallow insecure login
 		if ( SECURE_LOGIN_ONLY && (location.protocol !== 'https:') ) {
 			let SecureURL = 'https://'+location.hostname+location.pathname+location.search+location.hash;
 			GoSecure = (
@@ -62,30 +70,43 @@ export default class ViewBar extends Component {
 				</ButtonBase>
 			);
 		}
+		// Both user and user.id means logged in
 		else if ( user && user.id ) {
-//			ShowJoin = (
-//				<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#post-new"; }}>
-//					<SVGIcon>publish</SVGIcon>
-//					<div class="if-sidebar-block">Join Event</div>
-//				</ButtonBase>
-//			);
+			if ( featured && featured.id ) {
+				if ( featured.what && featured.what.length ) {
+					// TODO: get actual URL
+					var GameURL = '/events/ludum-dare/37/'
+//					var GameURL = '/users/ham/';
+					GameURL += '$'+featured.what[featured.what.length-1];
+					GameURL += '/edit';
+
+					ShowMyGame = (
+						<ButtonLink href={GameURL} class="-button">
+							<SVGIcon>gamepad</SVGIcon>
+							<div class="if-sidebar-block">My Game</div>
+						</ButtonLink>
+					);
+					
+//					NewPost = (
+//						<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#create/post"; }}>
+//							<SVGIcon>edit</SVGIcon>
+//							<div class="if-sidebar-block">New</div>
+//						</ButtonBase>
+//					);
+				}
+				else {
+					ShowJoin = (
+						<ButtonBase class="-button" onclick={e => { window.location.hash = "#create/"+featured.id+"/item/game"; }}>
+							<SVGIcon>publish</SVGIcon>
+							<div class="if-sidebar-block">Join Event</div>
+						</ButtonBase>
+					);
+				}
+			}
+			
 				
 			
-//			var GameURL = '/events/ludum-dare/37/my-game';
-//			// TODO: Check if a participant of the current event
-//			ShowMyGame = (
-//				<ButtonLink href={GameURL} class="-button">
-//					<SVGIcon>gamepad</SVGIcon>
-//					<div class="if-sidebar-block">My Game</div>
-//				</ButtonLink>
-//			);
-//			
-//			NewPost = (
-//				<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#post-new"; }}>
-//					<SVGIcon>edit</SVGIcon>
-//					<div class="if-sidebar-block">New</div>
-//				</ButtonBase>
-//			);
+
 			
 			// TODO: Figure out how many notifications a user has
 			let NotificationCount = false ? (
@@ -108,10 +129,11 @@ export default class ViewBar extends Component {
 				</ButtonBase>
 			);
 		}
-		else {
+		// If user has finished loading (and is not logged in)
+		else if ( user ) {
 			Register = (
 				<ButtonBase class="-button" onclick={e => { console.log('register'); window.location.hash = "#user-register"; }}>
-					<SVGIcon>user</SVGIcon>
+					<SVGIcon>user-plus</SVGIcon>
 					<div class="if-sidebar-block">Create Account</div>
 				</ButtonBase>
 			);
@@ -122,7 +144,37 @@ export default class ViewBar extends Component {
 				</ButtonBase>
 			);
 		}
-		
+		// Still waiting
+		else {
+			ShowSpinner = <NavSpinner />;
+		}		
+
+		if ( ShowSpinner ) {
+			return (
+				<div class="-fake-right">
+					{ShowSpinner}
+				</div>
+			);
+		}
+		else {
+			return (
+				<div class="-right">
+					{ShowJoin}
+					{ShowMyGame}
+					{NewPost}
+					{ShowCalendar}
+					{Search}
+					{Notification}
+					{User}
+					{Register}
+					{Login}
+					{GoSecure}
+				</div>
+			);
+		}
+	}
+	
+	render( {user, featured}, {} ) {
 		return (
 			<div class="view-bar">
 				<div class="-content">
@@ -132,27 +184,9 @@ export default class ViewBar extends Component {
 							<SVGIcon class="if-no-sidebar-block" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-block" baseline>d-are</SVGIcon>							
 						</ButtonLink>
 					</div>
-					<div class="-right">
-						{ShowJoin}
-						{ShowMyGame}
-						{NewPost}
-						{ShowCalendar}
-						{Search}
-						{Notification}
-						{User}
-						{Register}
-						{Login}
-						{GoSecure}
-					</div>
+					{this.renderRight(user, featured)}
 				</div>
 			</div>
 		);
 	}
 }
-
-//export function viewbar_Float() {
-//	document.body.classList.remove('_static-view-bar');
-//}
-//export function viewbar_Static() {
-//	document.body.classList.add('_static-view-bar');
-//}

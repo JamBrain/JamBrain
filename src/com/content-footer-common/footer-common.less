@@ -1,0 +1,35 @@
+@import "defs.less";
+
+#content .content-footer-common {
+	border-bottom:8px solid @MAJOR_MUTE_D6;
+	color: @MAJOR_MUTE;
+	height: 2em;
+
+	& > .-left {
+		position: absolute;
+		left:0;
+		bottom:0;
+		display:flex;
+
+		& > div {
+			line-height:2.5rem;
+			width:2.5rem;
+			height:2.5rem;
+			text-align:center;
+		}
+	}
+			
+	& > .-right {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		display: flex;
+
+		& > div {
+			line-height: 2.5rem;
+			/*width:2.5rem;*/
+			height: 2.5rem;
+			text-align: center;
+		}
+	}
+}

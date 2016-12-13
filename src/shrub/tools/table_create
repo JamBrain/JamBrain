@@ -140,6 +140,7 @@ function MakeKeyNode( $key, $parent, $type, $slug, $name ) {
 	if ( !isset($SH[$key]) || !$SH[$key] ) {
 		$node = node_Add(
 			$parent,						// parent
+			0,								// superparent (0 = don't care)
 			0,								// author (0 = orphaned)
 			$type,'','',					// type, subtype, subsubtype
 			$slug,$name,					// slug, name
