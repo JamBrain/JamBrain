@@ -1,12 +1,24 @@
 #!/usr/bin/env php
 <?php
-const CONFIG_PATH = "../";
-const SHRUB_PATH = "../src/";
+const CONFIG_PATH = "../../";
+const SHRUB_PATH = "../../src/";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."core/cli.php";		// Confirm CLI
 require_once __DIR__."/".SHRUB_PATH."core/db.php";
 require_once __DIR__."/".SHRUB_PATH."global/global.php";
+
+if (count($argv) <= 3) {
+	echo "Usage: ".$argv[0]." email@address.com name password\n";
+	exit(-1);
+}
+
+// TODO: Sanitize inputs (like registration does
+
+$email = trim($argv[1]);
+$name = trim($argv[2]);
+$password = trim($argv[3]);
+
 
 _db_Connect();
 
