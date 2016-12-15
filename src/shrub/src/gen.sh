@@ -1,6 +1,6 @@
 #!/bin/sh
 
-php ../tools/gen_includes constants.php . core global node>constants.php
+php ../tools/gen/gen-includes constants.php . core global node>constants.php
 
-php ../tools/gen_includes plugin.php . core>plugin.php
+php ../tools/gen/gen-includes plugin.php . core>plugin.php
 

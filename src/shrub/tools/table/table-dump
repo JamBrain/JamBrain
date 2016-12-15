@@ -10,20 +10,20 @@ if [ $# -lt 1 ]; then
 fi
 
 COMMAND=$0
-COMMAND_PATH=`pwd -P`
+COMMAND_PATH=`pwd -P`/..
 
 FULL_ARGS=$@
 TABLE=$1
 shift
 ARGS=$@
 
-DB=`$COMMAND_PATH/database-get`
+DB=`$COMMAND_PATH/database/database-get`
 if [ $? -ne 0 ]; then
 	>&2 echo "Error: Unable to fetch database name"
 	exit 1
 fi
 
-LOGIN=`$COMMAND_PATH/database-login-get`
+LOGIN=`$COMMAND_PATH/database/database-login-get`
 if [ $? -ne 0 ]; then
 	>&2 echo "Error: Unable to fetch database name"
 	exit 1
@@ -35,13 +35,13 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-TABLE_VERSION=`$COMMAND_PATH/config-get-value $TABLE`
+TABLE_VERSION=`$COMMAND_PATH/config/config-get-value $TABLE`
 if [ $? -ne 0 ]; then
 	>&2 echo "Error: Unable to fetch table version from config"
 	exit 1
 fi
 
-TABLE_NAME=`$COMMAND_PATH/table-get $TABLE`
+TABLE_NAME=`$COMMAND_PATH/table/table-get $TABLE`
 if [ $? -ne 0 ]; then
 	>&2 echo "Error: Unable to fetch table version from config"
 	exit 1
@@ -64,3 +64,4 @@ if [ "$TABLE_NAME" != "sh_global" ]; then
 fi
 
 exit 0
+

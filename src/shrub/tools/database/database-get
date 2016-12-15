@@ -1,11 +1,11 @@
 #!/usr/bin/env php
 <?php
-const CONFIG_PATH = "../";
-const SHRUB_PATH = "../src/";
+const CONFIG_PATH = "../../";
+const SHRUB_PATH = "../../src/";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."core/cli.php";		// Confirm CLI
 
-echo SH_DB_HOST;
+echo SH_DB_NAME;
 
 exit(0);
