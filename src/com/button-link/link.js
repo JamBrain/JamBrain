@@ -43,11 +43,11 @@ export default class ButtonLink extends NavLink {
 			else if ( document.activeElement.parentNode.blur ) {
 				document.activeElement.parentNode.blur();
 			}
-		}
+		};
 		
 		props.onkeydown = (e) => {
 			if ( e.keyCode === 13 ) {
-				props.onclick()
+				props.onclick();
 			}
 		};
 			

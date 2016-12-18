@@ -22,7 +22,7 @@ export default class ContentEventList extends Component {
 			'votes': null,
 			'page': 1,
 			'history': null
-		}
+		};
 		
 		this.renderList = this.renderList.bind(this);
 	}

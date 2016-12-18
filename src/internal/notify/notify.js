@@ -1,9 +1,7 @@
-'use strict'
-
 export default {
 	init,
 	send
-}
+};
 
 // Do this when logged in //
 export function init() {

@@ -75,7 +75,7 @@ export default class ViewBar extends Component {
 			if ( featured && featured.id ) {
 				if ( featured.what && featured.what.length ) {
 					// TODO: get actual URL
-					var GameURL = '/events/ludum-dare/37/'
+					var GameURL = '/events/ludum-dare/37/';
 //					var GameURL = '/users/ham/';
 					GameURL += '$'+featured.what[featured.what.length-1];
 					GameURL += '/edit';

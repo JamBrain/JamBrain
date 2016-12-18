@@ -15,4 +15,4 @@ export default (instance, nextProps, nextState) => {
 		shallowDiff(instance.props, nextProps) ||
 		shallowDiff(instance.state, nextState)
 	);
-}
+};

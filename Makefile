@@ -52,6 +52,9 @@ TARGET_DEPS			:=	$(OUT_FOLDERS) $(TARGET_FILES)
 
 
 # Tools #
+ESLINT_ARGS			:=	--config src/config/eslint.config.json
+ESLINT				=	eslint $(1) $(ESLINT_ARGS)
+# Ecmascript Linter: http://eslint.org/
 BUBLE_ARGS			:=	--no modules --jsx h --objectAssign Object.assign
 BUBLE				=	buble $(BUBLE_ARGS) $(1) -o $(2)
 # ES6 Compiler: https://buble.surge.sh/guide/
@@ -130,6 +133,7 @@ $(OUT_FOLDERS):
 
 # File Rules #
 $(OUT)/%.es6.js:$(SRC)/%.js
+	$(call ESLINT,$<)
 	$(call BUBLE,$<,$@)
 
 $(OUT)/%.o.js:$(SRC)/%.js
