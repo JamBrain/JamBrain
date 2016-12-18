@@ -56,7 +56,7 @@ export default class ContentTimeline extends Component {
 		})
 		.catch(err => {
 			this.setState({ 'error': err });
-		})
+		});
 	}
 
 	makeFeedItem( node ) {

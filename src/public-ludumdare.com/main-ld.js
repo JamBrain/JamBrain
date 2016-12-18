@@ -95,7 +95,7 @@ class Main extends Component {
 			pathname: Sanitize.clean_Path(location.pathname),
 			search: Sanitize.clean_Query(location.search),
 			hash: Sanitize.clean_Hash(location.hash),
-		}
+		};
 
 		clean.path = clean.pathname + clean.search + clean.hash;
 
@@ -163,7 +163,7 @@ class Main extends Component {
 					this.setState({ 'error': 'Failed to load root' });
 				}
 			})
-			.catch(err => { this.setState({ 'error': err }) });
+			.catch(err => { this.setState({ 'error': err }); });
 	}
 	
 	fetchFeatured( node ) {

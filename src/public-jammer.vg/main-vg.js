@@ -53,7 +53,7 @@ class Main extends Component {
 			pathname: this.makeClean(whom.pathname),
 			search: whom.search,
 			hash: this.makeClean(whom.hash),
-		}
+		};
 		var clean_path = clean.pathname+clean.search+clean.hash;
 		
 		// If current URL is unclean, replace it //

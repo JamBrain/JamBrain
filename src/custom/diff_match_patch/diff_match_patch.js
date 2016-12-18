@@ -2147,7 +2147,7 @@ export default {
 	DIFF_DELETE,
 	DIFF_INSERT,
 	DIFF_EQUAL
-}
+};
 
 export {
 	diff_match_patch,
@@ -2155,4 +2155,4 @@ export {
 	DIFF_DELETE,
 	DIFF_INSERT,
 	DIFF_EQUAL
-}
+};

@@ -85,7 +85,7 @@ export default class ContentEventIdea extends Component {
 	}
 	
 	submitIdeaForm( e ) {
-		var idea = this.state.idea.trim()
+		var idea = this.state.idea.trim();
 		console.log('submit:', idea);
 		
 		if ( idea.length > 0 && idea.length <= 64 ) {

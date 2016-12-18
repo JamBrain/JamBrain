@@ -29,10 +29,11 @@ export default class ContentGroup extends Component {
 			);
 		}
 		else if ( items ) {
-			<div class="content-base content-post">
-				<div>Group</div>
-				
-			</div>
+			return (
+				<div class="content-base content-post">
+					<div>Group</div>
+				</div>
+			);
 			
 		}
 		return (

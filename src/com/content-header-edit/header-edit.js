@@ -15,7 +15,7 @@ export default class ContentHeaderEdit extends Component {
 		var ShowAuthors = null;
 		if ( authors ) {
 			ShowAuthors = authors.map( v => {
-				<div class="-author">{v.name}</div>
+				<div class="-author">{v.name}</div>;
 			});
 			
 			ShowAuthors.unshift(<div class="-label">Authors:</div>);

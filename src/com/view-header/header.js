@@ -10,10 +10,10 @@ export default class ViewHeader extends Component {
 
 	render( props, state ) {
 		var ShowWhatsup = null;
-		ShowWhatsup = <HeaderWhatsup />
+		ShowWhatsup = <HeaderWhatsup />;
 
 		var ShowClock = null;
-		ShowClock = <HeaderClock />
+		ShowClock = <HeaderClock />;
 		
 		return (
 			<div id="header">
