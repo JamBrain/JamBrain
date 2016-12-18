@@ -111,8 +111,8 @@ function userSession_Start() {
 		'cookie_secure' => $is_secure ? 1 : 0,
 		//'cookie_path' => '/',
 		'cookie_domain' => $_SERVER['HTTP_HOST'],
-		'sid_length' => 64,							// As of PHP 7.1
-		'sid_bits_per_character' => 5,				// As of PHP 7.1
+//		'sid_length' => 64,							// As of PHP 7.1
+//		'sid_bits_per_character' => 5,				// As of PHP 7.1
 	]);
 	
 	// @todo: check how long the SID is. Was about 25 on PHP 5.6
@@ -128,5 +128,5 @@ function userSession_Expire() {
 	session_destroy();
 	userSession_End();
 	setcookie(session_name(), '', 0, '/');
-	session_regenerate_id(true);
+//	session_regenerate_id(true);					// error: "Cannot regenerate session id - session is not active"
 }

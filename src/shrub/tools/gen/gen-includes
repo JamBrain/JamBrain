@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-require_once __DIR__."/../src/core/cli.php";
+require_once __DIR__."/../../src/core/cli.php";
 
 $cmd = array_shift($argv);
 array_unshift($argv,basename($cmd));

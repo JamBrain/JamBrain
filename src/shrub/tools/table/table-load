@@ -6,13 +6,13 @@ if [ $# -lt 1 ]; then
 fi
 
 COMMAND=$0
-COMMAND_PATH=`pwd -P`
+COMMAND_PATH=`pwd -P`/..
 
 INFILE=$1
 shift
 ARGS=$@
 
-DB=`$COMMAND_PATH/database-get`
+DB=`$COMMAND_PATH/database/database-get`
 if [ $? -ne 0 ]; then
 	>&2 echo "Error: Unable to fetch database name"
 	exit 1

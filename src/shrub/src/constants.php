@@ -1,5 +1,5 @@
 <?php
-/// Generated with "gen_includes constants.php . core global node" -- **DO NOT EDIT!**
+/// Generated with "gen-includes constants.php . core global node" -- **DO NOT EDIT!**
 include __DIR__."/core/constants.php";
 include __DIR__."/global/constants.php";
 include __DIR__."/node/constants.php";
