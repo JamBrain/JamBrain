@@ -154,7 +154,9 @@ OUT_MAIN_JS			:=	$(subst $(SRC)/,$(OUT)/,$(MAIN_JS:.js=.es6.js))
 $(BUILD_FOLDER)/js.js: $(OUT_JS_FILES)
 	cat $^ > $@
 $(BUILD_FOLDER)/buble.js: $(OUT_MAIN_JS) $(OUT_ES6_FILES)
-	$(call ROLLUP,$<,$@)
+	$(call ROLLUP,$<,$@.tmp)
+	rm -f $@
+	mv $@.tmp $@
 $(BUILD_FOLDER)/all.js: $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js
 	cat $^ > $@
 $(TARGET_FOLDER)/all.min.js: $(BUILD_FOLDER)/all.js
