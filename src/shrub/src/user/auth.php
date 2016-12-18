@@ -128,5 +128,5 @@ function userSession_Expire() {
 	session_destroy();
 	userSession_End();
 	setcookie(session_name(), '', 0, '/');
-	session_regenerate_id(true);
+//	session_regenerate_id(true);					// error: "Cannot regenerate session id - session is not active"
 }
