@@ -1,16 +1,8 @@
 
 .dialog-tv {
 	position: relative;
-
-	animation: dialog-tv-fadein 0.5s;
-
-	@keyframes dialog-tv-fadein {
-	    0%		{ opacity: 0; }
-	    25%		{ opacity: 0; }
-	    100%	{ opacity: 1; }
-	}
 	
-	& .-tv {
+	& > .-tv {
 		position: relative;
 		
 		width: 480px;
@@ -19,23 +11,36 @@
 		animation: dialog-tv-tv-fadein 2s;
 
 		@keyframes dialog-tv-tv-fadein {
-		    0%		{ opacity: 0; }
-		    75%		{ opacity: 0; }
-		    100%	{ opacity: 1; }
+		    0%	{ opacity: 0; }
+		    25%	{ opacity: 0; }
+		    50%	{ opacity: 1; }
 		}
 		
 		z-index: 10001;
 	}
 	
-	& .-logo {
+	& > .-branding {
 		position: absolute;
-		margin: auto;
-		left: 0;
-		right: 0;
-		top: 0;
-		bottom: 0;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
 		
 		z-index: 10000;
-	} 
+
+		& > .-logo {
+		}
+		
+		& > .-text {
+			position: relative;
+			
+			font-size: 1.2em;
+			font-weight: bold;
+			color: #FFF;
+
+			vertical-align: top;
+			
+			left: -10px;
+		}
+	}
 }
 
