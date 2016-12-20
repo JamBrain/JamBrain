@@ -203,7 +203,7 @@ export default class DialogActivate extends Component {
 		return (
 			<DialogCommon ok oktext="Create Account" onok={this.doActivate} cancel oncancel={this.doFinishActivation} explicit {...new_props}>
 				<div>
-					<span /><span class="-label">E-mail:</span><span id="dialog-activate-mail">{mail}</span>
+					<span class="-label">E-mail:</span><span id="dialog-activate-mail">{mail}</span>
 				</div>
 				<div>
 					<span class="-label">Name:</span><input autofocus id="dialog-activate-name" onchange={this.onNameChange} class="-text focusable" type="text" name="username" maxlength="32" placeholder="How your name appears" value={name} /><LabelYesNo value={this.isValidName()} />
