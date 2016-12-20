@@ -10,25 +10,22 @@ export default class DialogAuth extends Component {
 		};
 	}
 	
-	componentDidUpdate() {
-		document.getElementById('dialog-auth-secret').focus();
-	}
-	
 	onChange( e ) {
-		this.state.secret = e.target.value;
-		this.setState(this.state);
+		this.setState({ 'secret': e.target.value });
 	}
 
 	render( props ) {
-		var Error = {};//{ error:"There was a problem" };
+		var new_props = {
+			'title': 'Two Factor Authentication'
+		};
 		
 		return (
-			<DialogCommon title="Two Factor Authentication" ok cancel oktext="Authenticate" explicit {...Error}>
+			<DialogCommon ok oktext="Authenticate" cancel explicit {...new_props}>
 				<div class="-info -botbar">
 					Open the Authenticator App, and write the code here.
 				</div>
 				<div>
-					<span class="-label">Code:</span><input id="dialog-auth-secret" class="-text focusable" onchange={this.onChange.bind(this)} type="text" name="secret" autocomplete="off" value={this.state.secret} />
+					<span class="-label">Code:</span><input autofocus id="dialog-auth-secret" class="-text focusable" onchange={this.onChange.bind(this)} type="text" name="secret" autocomplete="off" value={this.state.secret} />
 				</div>
 			</DialogCommon>
 		);
