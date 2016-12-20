@@ -19,6 +19,7 @@ const IFrame = (props) => {
 		if ( props.width && props.height ) {
 			new_props.style = 'width:'+props.width+'px;height:'+props.height+'px;';
 		}
+		// auto-calculate dimension
 		else if ( props.width ) {
 			let new_height = props.width * (16/9);
 			new_props.style = 'width:'+props.width+'px;height:'+new_height+'px;';

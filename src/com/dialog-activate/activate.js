@@ -1,6 +1,6 @@
 import { h, Component } 				from 'preact/preact';
 import Sanitize							from '../../internal/sanitize/sanitize';
-import DialogBase						from 'com/dialog-base/base';
+import DialogCommon						from 'com/dialog-common/common';
 
 import LabelYesNo						from 'com/label-yesno/yesno';
 
@@ -177,32 +177,32 @@ export default class DialogActivate extends Component {
 
 		if ( loading ) {
 			return (
-				<DialogBase title={title} explicit {...ErrorMessage}>
+				<DialogCommon title={title} explicit {...ErrorMessage}>
 					<div>
 						Please wait...
 					</div>
-				</DialogBase>
+				</DialogCommon>
 			);
 		}
 		else if ( !mail ) {
 			return (
-				<DialogBase title={title} ok explicit {...ErrorMessage}>
+				<DialogCommon title={title} ok explicit {...ErrorMessage}>
 					{"This account can't be activated."}
-				</DialogBase>
+				</DialogCommon>
 			);
 		}
 
 		if ( created ) {
 			return (
-				<DialogBase title={title} ok onclick={this.doFinishActivation} explicit {...ErrorMessage}>
+				<DialogCommon title={title} ok onclick={this.doFinishActivation} explicit {...ErrorMessage}>
 					Account <code>{this.slug}</code> Created. You can now <strong>Log In</strong>.
-				</DialogBase>
+				</DialogCommon>
 			);
 		}
 
 		// NOTE: There's a Preact (?) bug that the extra <span /> is working around
 		return (
-			<DialogBase title={title} ok cancel oktext="Create Account" onclick={this.doActivate} oncancel={this.doFinishActivation} explicit {...ErrorMessage}>
+			<DialogCommon title={title} ok cancel oktext="Create Account" onclick={this.doActivate} oncancel={this.doFinishActivation} explicit {...ErrorMessage}>
 				<div>
 					<span /><span class="-label">E-mail:</span><span id="dialog-activate-mail">{mail}</span>
 				</div>
@@ -225,7 +225,7 @@ export default class DialogActivate extends Component {
 				<div class="-info if-dialog-not-small-block">
 					<strong>Names</strong> let you customize how your <strong>Account Name</strong> looks. You can use case, accents, and simple punctuation. <strong>Account Names</strong> are more strict. <strong>Names</strong> will be converted to <strong>Account Names</strong> by using only lower case letters, numbers, and single dashes.
 				</div>
-			</DialogBase>
+			</DialogCommon>
 		);
 	}
 }

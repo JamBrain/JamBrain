@@ -1,5 +1,5 @@
 import { h, Component } 				from 'preact/preact';
-import DialogBase						from 'com/dialog-base/base';
+import DialogCommon						from 'com/dialog-common/common';
 import NavLink							from 'com/nav-link/link';
 
 import $User							from '../shrub/js/user/user';
@@ -72,7 +72,7 @@ export default class DialogLogin extends Component {
 		
 		// NOTE: There's a Preact bug that the extra <span /> is working around
 		return (
-			<DialogBase title="Log in" ok cancel oktext="Log In" onclick={this.doLogin} {...ErrorMessage}>
+			<DialogCommon title="Log in" ok cancel oktext="Log In" onclick={this.doLogin} {...ErrorMessage}>
 				<div>
 					<span /><input ref={(input) => this.loginName = input} id="dialog-login-login" onchange={this.onLoginChange} class="-text focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="254" value={login} />
 				</div>
@@ -84,7 +84,7 @@ export default class DialogLogin extends Component {
 
 					<div title="LOL. This is broken. Sorry!"><input id="dialog-login-remember" onchange={this.onRememberChange} class="focusable" type="checkbox" name="remember" checked={remember} /><span>Stay Logged In</span></div>
 				</div>
-			</DialogBase>
+			</DialogCommon>
 		);
 	}
 }

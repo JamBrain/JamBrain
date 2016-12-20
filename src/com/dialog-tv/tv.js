@@ -39,8 +39,8 @@ export default class DialogTV extends Component {
 		var ChatWidth = 320;
 		var BarHeight = 48;
 
-		var ViewWidth = Math.floor(WindowWidth - 64);
-		var ViewHeight = Math.floor(WindowHeight - 64);
+		var ViewWidth = Math.floor(WindowWidth - 32);
+		var ViewHeight = Math.floor(WindowHeight - 32);
 
 		var CanHaveChat = ViewWidth >= (MinWidth + ChatWidth); // 800
 		if ( !CanHaveChat ) {

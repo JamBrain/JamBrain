@@ -1,5 +1,5 @@
 import { h, Component } 				from 'preact/preact';
-import DialogBase						from 'com/dialog-base/base';
+import DialogCommon						from 'com/dialog-common/common';
 
 export default class DialogUnfinished extends Component {
 	constructor( props ) {
@@ -11,9 +11,9 @@ export default class DialogUnfinished extends Component {
 	
 	render( props, {} ) {
 		return (
-			<DialogBase title="Unavailable" ok>
+			<DialogCommon title="Unavailable" ok>
 				<div>Sorry. This feature is unavailable at this time.</div>
-			</DialogBase>
+			</DialogCommon>
 		);
 	}
 }

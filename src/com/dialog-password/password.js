@@ -1,6 +1,6 @@
 import { h, Component } 				from 'preact/preact';
 import Sanitize							from '../../internal/sanitize/sanitize';
-import DialogBase						from 'com/dialog-base/base';
+import DialogCommon						from 'com/dialog-common/common';
 
 import LabelYesNo						from 'com/label-yesno/yesno';
 
@@ -127,37 +127,37 @@ export default class DialogPassword extends Component {
 
 		if ( loading ) {
 			return (
-				<DialogBase title={title} explicit {...ErrorMessage}>
+				<DialogCommon title={title} explicit {...ErrorMessage}>
 					<div>
 						Please wait...
 					</div>
-				</DialogBase>
+				</DialogCommon>
 			);
 		}
 		else if ( !node ) {
 			return (
-				<DialogBase title={title} ok explicit {...ErrorMessage}>
+				<DialogCommon title={title} ok explicit {...ErrorMessage}>
 					{"Password can not be reset."}
-				</DialogBase>
+				</DialogCommon>
 			);
 		}
 		else if ( success ) {
 			return (
-				<DialogBase title={title} ok explicit onclick={this.doFinishReset} {...ErrorMessage}>
+				<DialogCommon title={title} ok explicit onclick={this.doFinishReset} {...ErrorMessage}>
 					Password Reset. You can now <strong>Log In</strong>.
-				</DialogBase>
+				</DialogCommon>
 			);
 		}
 		else {
 			return (
-				<DialogBase title={title} ok cancel oktext="Save" explicit onclick={this.doResetPassword} {...ErrorMessage}>
+				<DialogCommon title={title} ok cancel oktext="Save" explicit onclick={this.doResetPassword} {...ErrorMessage}>
 					<div>
 						<input id="dialog-password-password2" oninput={this.onPasswordChange} class="-text focusable" type="password" name="password" maxlength="128" placeholder="Password" value={password} /><LabelYesNo value={this.isValidPassword()} />
 					</div>
 					<div>
 						<input id="dialog-password-password2" oninput={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxlength="128" placeholder="Password again" value={password2} /><LabelYesNo value={this.isValidPassword2()} />
 					</div>
-				</DialogBase>
+				</DialogCommon>
 			);
 		}
 	}

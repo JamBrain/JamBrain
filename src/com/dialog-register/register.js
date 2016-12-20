@@ -1,7 +1,7 @@
 import { h, Component } 				from 'preact/preact';
 import Sanitize							from '../../internal/sanitize/sanitize';
 
-import DialogBase						from 'com/dialog-base/base';
+import DialogCommon						from 'com/dialog-common/common';
 import LabelYesNo						from 'com/label-yesno/yesno';
 
 import $User							from '../shrub/js/user/user';
@@ -75,25 +75,25 @@ export default class DialogRegister extends Component {
 		
 		if ( loading ) {
 			return (
-				<DialogBase title={title} explicit {...ErrorMessage}>
+				<DialogCommon title={title} explicit {...ErrorMessage}>
 					<div>
 						Please wait...
 					</div>
-				</DialogBase>
+				</DialogCommon>
 			);
 		}
 		else if ( sent ) {
 			return (
-				<DialogBase title={title} ok explicit onclick={this.doFinish} {...ErrorMessage}>
+				<DialogCommon title={title} ok explicit onok={this.doFinish} {...ErrorMessage}>
 					<div>
 						Activation e-mail {resent ? 'resent' : 'sent'} to <code>{mail}</code>
 					</div>
-				</DialogBase>
+				</DialogCommon>
 			);
 		}
 		else {
 			return (
-				<DialogBase title={title} ok cancel oktext="Send Activation E-mail" explicit onclick={this.doRegister} {...ErrorMessage}>
+				<DialogCommon title={title} ok cancel oktext="Send Activation E-mail" explicit onok={this.doRegister} {...ErrorMessage}>
 					<div class="-info if-dialog-not-small-block">
 						Enter your e-mail address to begin activating your account
 					</div>
@@ -107,10 +107,10 @@ export default class DialogRegister extends Component {
 							<li><strong>Laposte.net</strong>: We can't find any info on how to fix them. <strong>SORRY!</strong> :(</li>
 						</ul>
 					</div>
-				</DialogBase>
+				</DialogCommon>
 			);
 
-//						<strong>TIP:</strong> For Hotmail, Outlook, live.com go to <a href="https://outlook.live.com/owa/?path=/people" target="_blank" onclick={ e => { return e.stopPropagation() }}>people</a> and add a <em>contact</em>.
+//						<strong>TIP:</strong> For Hotmail, Outlook, live.com go to <a href="https://outlook.live.com/owa/?path=/people" target="_blank" onok={ e => { return e.stopPropagation() }}>people</a> and add a <em>contact</em>.
 		}
 	}
 }

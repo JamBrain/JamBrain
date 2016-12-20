@@ -1,8 +1,7 @@
 import { h, Component } 				from 'preact/preact';
 import Sanitize							from '../internal/sanitize/sanitize';
 
-import DialogBase						from 'com/dialog-base/base';
-//import NavLink							from 'com/nav-link/link';
+import DialogCommon						from 'com/dialog-common/common';
 
 import $Node							from '../shrub/js/node/node';
 
@@ -53,16 +52,16 @@ export default class DialogCreate extends Component {
 				var ShowType = "Game";
 				
 				return (
-					<DialogBase title={"Create "+ShowType} ok cancel oktext={"Create "+ShowType} onclick={this.doCreate} {...ShowError}>
+					<DialogCommon title={"Create "+ShowType} ok cancel oktext={"Create "+ShowType} onclick={this.doCreate} {...ShowError}>
 						<div>Create a game for the active event?</div>
-					</DialogBase>
+					</DialogCommon>
 				);
 			}
 		}
 		return (
-			<DialogBase title={"Create"} ok cancel oktext="Yes" canceltext="No" onclick={this.doCreate} {...ShowError}>
+			<DialogCommon title={"Create"} ok cancel oktext="Yes" canceltext="No" onclick={this.doCreate} {...ShowError}>
 				<div>{"Would you like to create a game?"}</div>
-			</DialogBase>
+			</DialogCommon>
 		);
 	}
 }

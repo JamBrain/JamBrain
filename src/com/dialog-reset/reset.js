@@ -1,7 +1,7 @@
 import { h, Component } 				from 'preact/preact';
 import Sanitize							from '../../internal/sanitize/sanitize';
 
-import DialogBase						from 'com/dialog-base/base';
+import DialogCommon						from 'com/dialog-common/common';
 import LabelYesNo						from 'com/label-yesno/yesno';
 
 import $User							from '../shrub/js/user/user';
@@ -64,30 +64,30 @@ export default class DialogReset extends Component {
 		
 		if ( loading ) {
 			return (
-				<DialogBase title={title} explicit {...ErrorMessage}>
+				<DialogCommon title={title} explicit {...ErrorMessage}>
 					<div>
 						Please wait...
 					</div>
-				</DialogBase>
+				</DialogCommon>
 			);
 		}
 		else if ( sent ) {
 			return (
-				<DialogBase title={title} ok explicit {...ErrorMessage}>
+				<DialogCommon title={title} ok explicit {...ErrorMessage}>
 					<div>
 						Password reset message sent to <code>{mail}</code>
 					</div>
-				</DialogBase>
+				</DialogCommon>
 			);
 		}
 		else {
 			// NOTE: There's a Preact bug that the extra <span /> is working around
 			return (
-				<DialogBase title={title} ok cancel oktext="Send E-mail" explicit onclick={this.doReset} {...ErrorMessage}>
+				<DialogCommon title={title} ok cancel oktext="Send E-mail" explicit onclick={this.doReset} {...ErrorMessage}>
 					<div>
 						<input ref={(input) => this.registerMail = input} id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" maxlength="254" /><LabelYesNo value={Sanitize.validateMail(mail) ? 1 : -1} />
 					</div>
-				</DialogBase>
+				</DialogCommon>
 			);
 		}
 	}

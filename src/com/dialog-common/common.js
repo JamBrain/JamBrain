@@ -10,6 +10,8 @@ export default class DialogCommon extends Component {
 //		this._eventWheel = this.eventWheel.bind(this);
 //		this._eventKey = this.eventKey.bind(this);
 ////		this._eventFocus = this.eventFocus.bind(this);
+
+		this.onAbort = this.onAbort.bind(this);
 	}
 	
 //	getFocusable() {
@@ -90,36 +92,42 @@ export default class DialogCommon extends Component {
 //			}
 //		}
 //	}
-//	
-//
-//	abort() {
-//		window.location.hash = "#";
-//		//location.href = location.pathname+location.search;
-//	}
-//	
-	render( props, {} ) {
-//		var _Abort = { onclick: e => { this.abort(); }};
-//		var Abort = props.explicit ? { explicit:true } : _Abort;
-		var Error = props.error ? (<div class="-error"><strong>Error:</strong> {props.error}</div>) : "";
-		
-		var ShowButtonOK = "";
-		var ShowButtonCancel = "";
-		
-		if ( props.ok ) {
-			let Click = props.onclick ? { onclick: props.onclick } : (props.cancel ? {} : _Abort);
-			ShowButtonOK = <ButtonBase class="-button -light focusable" id="dialog-button-ok" ref={(input) => this.buttonOK = input} {...Click}>{props.oktext ? props.oktext : "OK"}</ButtonBase>;
+
+	onAbort() {
+		//console.log(location.pathname + location.search);
+		//window.history.pushState(null, null, location.pathname + location.search);
+		window.location.hash = "#";
+		//location.href = location.pathname+location.search;
+	}
+
+	render( props ) {
+		var ShowError = null;
+		if ( props.error ) {
+			ShowError = <div class="-error"><strong>Error:</strong> {props.error}</div>;
 		}
+		
+		var ShowButtonOK = null;
+		if ( props.ok ) {
+			let Click = props.onok ? { 'onclick': props.onok } : (props.cancel ? {} : { 'onclick': this.onAbort });
+			ShowButtonOK = <ButtonBase class="-button -light focusable" id="dialog-button-ok" {...Click}>
+				{props.oktext ? props.oktext : "OK"}
+			</ButtonBase>;
+		}
+
+		var ShowButtonCancel = null;
 		if ( props.cancel ) {
-			let Click = props.oncancel ? { onclick: props.oncancel } : _Abort;
-			ShowButtonCancel = <ButtonBase class="-button focusable" id="dialog-button-cancel" ref={(input) => this.buttonCancel = input} {...Click}>{props.canceltext ? props.canceltext : "Cancel"}</ButtonBase>;
+			let Click = props.oncancel ? { 'onclick': props.onok } : { 'onclick': this.onAbort };
+			ShowButtonCancel = <ButtonBase class="-button focusable" id="dialog-button-cancel" {...Click}>
+				{props.canceltext ? props.canceltext : "Cancel"}
+			</ButtonBase>;
 		}
 
 		return (
-			<DialogBase class="dialog-common">
+			<DialogBase class={"dialog-common" + (props.class ? ' '+props.class : '')}>
 				<div class="-header">
 					<div class="-title _font2">{props.title}</div>
 				</div>
-				{Error}
+				{ShowError}
 				<div class="-body">
 					{props.children}
 				</div>
