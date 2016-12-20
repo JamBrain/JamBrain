@@ -135,7 +135,11 @@ export default class SidebarTV extends Component {
 			
 			return (
 				<div class="sidebar-base sidebar-tv">
-					<div class="-active" onclick={e => {console.log('tv'); window.open("https://www.twitch.tv/directory/game/Creative/ldjam", '_blank'); /*window.location.hash = "#tv/"+active.meta.name;*/}}>
+					<div class="-active" onclick={e => {
+							console.log('tv'); 
+							/*window.open("https://www.twitch.tv/directory/game/Creative/ldjam", '_blank');*/
+							window.location.hash = "#tv/"+active.meta.name;
+						}}>
 						<div class="-img"><img src={active.meta.thumbnail} /></div>
 						<div class="-live"><SVGIcon baseline small>circle</SVGIcon> <span class="-text">LIVE</span></div>
 						<div class="-name">{this.serviceIcons[active.service_id]} <span class="-text">{active.meta.name}</span></div>
