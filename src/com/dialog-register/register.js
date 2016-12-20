@@ -73,7 +73,7 @@ export default class DialogRegister extends Component {
 			'title': 'Create Account'
 		};
 		if ( error ) {
-			new_props['error'] = error;
+			new_props.error = error;
 		}
 		
 		if ( loading ) {

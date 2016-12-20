@@ -124,7 +124,7 @@ export default class DialogCommon extends Component {
 
 		var ShowButtonCancel = null;
 		if ( props.cancel ) {
-			let Click = props.oncancel ? { 'onclick': props.onok } : { 'onclick': this.onAbort };
+			let Click = props.oncancel ? { 'onclick': props.oncancel } : { 'onclick': this.onAbort };
 			ShowButtonCancel = <ButtonBase class="-button focusable" id="dialog-button-cancel" {...Click}>
 				{props.canceltext ? props.canceltext : "Cancel"}
 			</ButtonBase>;
