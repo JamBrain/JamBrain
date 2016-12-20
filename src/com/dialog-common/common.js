@@ -101,6 +101,14 @@ export default class DialogCommon extends Component {
 	}
 
 	render( props ) {
+		var new_props = {
+			'class': "dialog-common" + (props.class ? ' '+props.class : ''),
+			'oncancel': props.oncancel ? props.oncancel : this.onAbort
+		};
+		if ( props.explicit ) {
+			new_props.explicit = props.explicit;
+		}
+		
 		var ShowError = null;
 		if ( props.error ) {
 			ShowError = <div class="-error"><strong>Error:</strong> {props.error}</div>;
@@ -121,9 +129,17 @@ export default class DialogCommon extends Component {
 				{props.canceltext ? props.canceltext : "Cancel"}
 			</ButtonBase>;
 		}
+		
+		if ( props.empty ) {
+			return (
+				<DialogBase {...new_props}>
+					{props.children}
+				</DialogBase>
+			);
+		}
 
 		return (
-			<DialogBase class={"dialog-common" + (props.class ? ' '+props.class : '')}>
+			<DialogBase {...new_props}>
 				<div class="-header">
 					<div class="-title _font2">{props.title}</div>
 				</div>

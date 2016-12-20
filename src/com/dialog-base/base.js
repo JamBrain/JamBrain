@@ -12,30 +12,30 @@ export default class DialogBase extends Component {
 		this.onDialogClick = this.onDialogClick.bind(this);
 	}
 	
-	getFocusable() {
-		return document.getElementsByClassName("focusable");
-	}
+//	getFocusable() {
+//		return document.getElementsByClassName("focusable");
+//	}
 
-	componentDidMount() {
+//	componentDidMount() {
 ////		console.log("DialogBase: componentDidMount");
 //		document.body.addEventListener('mousewheel', this.eventWheel);
 //		document.body.addEventListener('keydown', this.eventKey);
 ////		window.addEventListener('focus', this.eventFocus);
-	}
+//	}
 	
-	componentWillUnmount() {
+//	componentWillUnmount() {
 ////		console.log("DialogBase: componentWillUnmount");
 //		document.body.removeEventListener('mousewheel', this.eventWheel);
 //		document.body.removeEventListener('keydown', this.eventKey);
 ////		window.removeEventListener('focus', this.eventFocus);
-	}
+//	}
 	
-	eventWheel( e ) {
-		// Disables Mouse Wheel
-		if ( document.getElementById("dialog-background") ) {
-			e.preventDefault();
-		}
-	}
+//	eventWheel( e ) {
+//		// Disables Mouse Wheel
+//		if ( document.getElementById("dialog-background") ) {
+//			e.preventDefault();
+//		}
+//	}
 	
 //	eventFocus( e ) {
 //		if ( document.getElementById("dialog-background") ) {
@@ -93,10 +93,8 @@ export default class DialogBase extends Component {
 	
 
 	onAbort() {
-		if ( !this.props.explicit ) {
-			window.location.hash = "#";
-			//location.href = location.pathname+location.search;
-		}
+		window.location.hash = "#";
+		//location.href = location.pathname+location.search;
 	}
 	
 	onDialogClick( e ) {
@@ -105,9 +103,22 @@ export default class DialogBase extends Component {
 	}
 	
 	render( props ) {
+		var parent_props = {
+			'id': 'dialog-background',
+			'class': 'dialog-background'
+		};
+		if ( !props.explicit ) {
+			parent_props.onclick = props.oncancel ? props.oncancel : this.onAbort;
+		}
+		
+		var child_props = {
+			'class': 'dialog-base'+(props.class ? ' '+props.class : ''),
+			'onclick': this.onDialogClick
+		};
+		
 		return (
-			<div class="dialog-background" id="dialog-background" onclick={this.onAbort}>
-				<div class={"dialog-base"+(props.class ? ' '+props.class : '')} onclick={this.onDialogClick}>
+			<div {...parent_props}>
+				<div {...child_props}>
 					{props.children}
 				</div>
 			</div>

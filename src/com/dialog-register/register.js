@@ -1,6 +1,9 @@
 import { h, Component } 				from 'preact/preact';
 import Sanitize							from '../../internal/sanitize/sanitize';
 
+import NavSpinner						from 'com/nav-spinner/spinner';
+
+import DialogBase						from 'com/dialog-base/base';
 import DialogCommon						from 'com/dialog-common/common';
 import LabelYesNo						from 'com/label-yesno/yesno';
 
@@ -11,12 +14,12 @@ export default class DialogRegister extends Component {
 	constructor( props ) {
 		super(props);
 		
-		console.log("DialogRegister",this.state);
+		//console.log("DialogRegister",this.state);
 		
 		this.state = {
-			mail: "",
-			error: null,
-			loading: false
+			'mail': "",
+			'error': null,
+			'loading': false
 		};
 
 		// Bind functions (avoiding the need to rebind every render)
@@ -24,81 +27,77 @@ export default class DialogRegister extends Component {
 		this.doRegister = this.doRegister.bind(this);
 		this.doFinish = this.doFinish.bind(this);
 	}
-	
-	componentDidMount() {
-		this.registerMail.focus();
-	}
 
 	onChange( e ) {
-		this.setState({ mail: e.target.value.trim() });
+		this.setState({ 'mail': e.target.value.trim() });
 	}
 	
 	doRegister() {
 		mail = this.state.mail.trim();
 		
 		if ( Sanitize.validateMail(mail) ) {
-			this.setState({ loading: true, error: null });
+			this.setState({ 'loading': true, 'error': null });
 			
 			$User.Register( mail )
 			.then( r => {
 				if ( r.status === 201 ) {
-					console.log('sent', r.sent);
-					this.setState({sent: true, loading: false});
+					//console.log('sent', r.sent);
+					this.setState({'sent': true, 'loading': false});
 				}
 				else if ( r.status === 200 ) {
-					console.log('resent', r.sent);
-					this.setState({sent: true, resent: true, loading: false});
+					//console.log('resent', r.sent);
+					this.setState({'sent': true, 'resent': true, 'loading': false});
 				}
 				else {
-					console.log(r);
-					this.setState({ error: r.message ? r.message : r.response, loading: false });
+					//console.log(r);
+					this.setState({ 'error': r.message ? r.message : r.response, 'loading': false });
 				}
 				return r;
 			})
 			.catch( err => {
-				console.log(err);
-				this.setState({ error: err, loading: false });
+				//console.log(err);
+				this.setState({ 'error': err, 'loading': false });
 			});
 		}
 		else {
-			this.setState({ error: "Incorrectly formatted e-mail address" });
+			this.setState({ 'error': "Incorrectly formatted e-mail address" });
 		}
 	}
 	
 	doFinish() {
-		location.href = location.pathname+location.search;
+		location.href = location.pathname + location.search;
 	}
 
 	render( props, {mail, sent, resent, loading, error} ) {
-		var ErrorMessage = error ? {'error': error} : {};
-		var title = "Create Account";
+		var new_props = {
+			'title': 'Create Account'
+		};
+		if ( error ) {
+			new_props['error'] = error;
+		}
 		
 		if ( loading ) {
 			return (
-				<DialogCommon title={title} explicit {...ErrorMessage}>
-					<div>
-						Please wait...
-					</div>
+				<DialogCommon empty explicit {...new_props}>
+					<NavSpinner />
 				</DialogCommon>
 			);
 		}
 		else if ( sent ) {
 			return (
-				<DialogCommon title={title} ok explicit onok={this.doFinish} {...ErrorMessage}>
-					<div>
-						Activation e-mail {resent ? 'resent' : 'sent'} to <code>{mail}</code>
-					</div>
+				<DialogCommon ok onok={this.doFinish} explicit {...new_props}>
+					<div>Activation e-mail {resent ? 'resent' : 'sent'} to <code>{mail}</code></div>
 				</DialogCommon>
 			);
 		}
 		else {
 			return (
-				<DialogCommon title={title} ok cancel oktext="Send Activation E-mail" explicit onok={this.doRegister} {...ErrorMessage}>
+				<DialogCommon ok oktext="Send Activation E-mail" onok={this.doRegister} cancel explicit {...new_props}>
 					<div class="-info if-dialog-not-small-block">
 						Enter your e-mail address to begin activating your account
 					</div>
 					<div>
-						<input ref={(input) => this.registerMail = input} id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" maxlength="254" value={mail} /><LabelYesNo value={mail.trim().length ? (Sanitize.validateMail(mail) ? 1 : -1) : 0} />
+						<input autofocus id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" maxlength="254" value={mail} /><LabelYesNo value={mail.trim().length ? (Sanitize.validateMail(mail) ? 1 : -1) : 0} />
 					</div>
 					<div class="-info">
 						<ul>
@@ -109,8 +108,6 @@ export default class DialogRegister extends Component {
 					</div>
 				</DialogCommon>
 			);
-
-//						<strong>TIP:</strong> For Hotmail, Outlook, live.com go to <a href="https://outlook.live.com/owa/?path=/people" target="_blank" onok={ e => { return e.stopPropagation() }}>people</a> and add a <em>contact</em>.
 		}
 	}
 }
