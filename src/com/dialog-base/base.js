@@ -114,7 +114,10 @@ export default class DialogBase extends Component {
 
 		return (
 			<div class="dialog-background" id="dialog-background" {...Abort}>
-				<div class="dialog-base" onclick={ e => {e.preventDefault(); e.stopPropagation(); } }>
+				<div class={"dialog-base"+(props.class ? ' '+props.class : '')} onclick={ e => {
+					e.preventDefault();
+					e.stopPropagation(); 
+				} }>
 					<div class="-header">
 						<div class="-title _font2">{props.title}</div>
 					</div>

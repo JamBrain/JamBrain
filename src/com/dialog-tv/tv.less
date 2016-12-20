@@ -1,5 +1,41 @@
 
 .dialog-tv {
-	width: 480px;
-	height: 270px;
+	position: relative;
+
+	animation: dialog-tv-fadein 0.5s;
+
+	@keyframes dialog-tv-fadein {
+	    0%		{ opacity: 0; }
+	    25%		{ opacity: 0; }
+	    100%	{ opacity: 1; }
+	}
+	
+	& .-tv {
+		position: relative;
+		
+		width: 480px;
+		height: 270px;
+	
+		animation: dialog-tv-tv-fadein 2s;
+
+		@keyframes dialog-tv-tv-fadein {
+		    0%		{ opacity: 0; }
+		    75%		{ opacity: 0; }
+		    100%	{ opacity: 1; }
+		}
+		
+		z-index: 10001;
+	}
+	
+	& .-logo {
+		position: absolute;
+		margin: auto;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		
+		z-index: 10000;
+	} 
 }
+

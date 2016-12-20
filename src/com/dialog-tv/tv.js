@@ -19,12 +19,13 @@ export default class DialogTV extends Component {
 	render( props ) {
 		var ShowStream = null;
 		if ( props.extra.length ) {
-			ShowStream = Video.EmbedTwitch("dialog-tv", "//player.twitch.tv/?channel="+props.extra[0]);
+			ShowStream = Video.EmbedTwitch("-tv", "//player.twitch.tv/?channel="+props.extra[0]);
 		}
 
 		// TODO: Make DialogBase more simple (and move current DialogBase to DialogCommon)
 		return (
-			<DialogBase title="Jammer TV">
+			<DialogBase title="Jammer TV" class="dialog-tv">
+				<img class="-logo" src={'//'+STATIC_DOMAIN+'/other/logo/jammer/JammerLogo56W.png'} />
 				{ShowStream}
 			</DialogBase>
 		);
