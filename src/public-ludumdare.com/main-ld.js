@@ -18,6 +18,7 @@ import DialogAuth						from 'com/dialog-auth/auth';
 import DialogSession					from 'com/dialog-session/session';
 import DialogSavebug					from 'com/dialog-savebug/savebug';
 import DialogSubmit						from 'com/dialog-submit/submit';
+import DialogTV							from 'com/dialog-tv/tv';
 
 import DialogCreate						from 'com/dialog-create/create';
 
@@ -131,6 +132,8 @@ class Main extends Component {
 					return <DialogCreate {...props} />;
 				case 'submit':
 					return <DialogSubmit {...props} />;
+				case 'tv':
+					return <DialogTV {...props} />;
 				default:
 					return <DialogUnfinished {...props} />;
 			};

@@ -1,19 +1,18 @@
 import { h, Component } 				from 'preact/preact';
 import Sanitize							from '../../internal/sanitize/sanitize';
-import DialogBase						from 'com/dialog-base/base';
 
+import DialogCommon						from 'com/dialog-common/common';
+import NavSpinner						from 'com/nav-spinner/spinner';
 import LabelYesNo						from 'com/label-yesno/yesno';
 
 import $User							from '../shrub/js/user/user';
-
-
 
 export default class DialogActivate extends Component {
 	constructor( props ) {
 		super(props);
 
 		this.state = {
-			loading: true
+			'loading': true
 		};
 
 		var Vars = Sanitize.getHTTPVars();
@@ -23,34 +22,6 @@ export default class DialogActivate extends Component {
 		this.ActID = Vars.id;
 		this.ActHash = Vars.key;
 
-		// Lookup ID, and confirm this is a valid activation
-		$User.Activate( this.ActID, this.ActHash.trim(), "", "" )
-			.then( r => {
-				if ( r.status === 200 ) {
-					var name = (r.slug && r.slug.length ? r.slug[0] : "");
-					var slug = Sanitize.makeSlug(name);
-
-					this.setState({
-						'mail': r.mail,
-						'name': name,
-						'slug': slug,
-						'password': "",
-						'password2': "",
-
-						'valid_slug': 0,
-						'loading': false
-					});
-//					this.activateName.focus();
-				}
-				else {
-					console.log(r);
-					this.setState({ error: r.response, loading: false });
-				}
-			})
-			.catch( err => {
-				console.log(err);
-				this.setState({ error: err, loading: false });
-			});
 
 		// Bind functions (avoiding the need to rebind every render)
 		this.onNameChange = this.onNameChange.bind(this);
@@ -61,8 +32,33 @@ export default class DialogActivate extends Component {
 	}
 
 	componentDidMount() {
-//		if ( this.activateName )
-//			this.activateName.focus();
+		// Lookup ID, and confirm this is a valid activation
+		$User.Activate(this.ActID, this.ActHash.trim(), "", "")
+		.then( r => {
+			if ( r.status === 200 ) {
+				var name = (r.slug && r.slug.length ? r.slug[0] : "");
+				var slug = Sanitize.makeSlug(name);
+
+				this.setState({
+					'mail': r.mail,
+					'name': name,
+					'slug': slug,
+					'password': "",
+					'password2': "",
+
+					'valid_slug': 0,
+					'loading': false
+				});
+			}
+			else {
+				console.log(r);
+				this.setState({ 'error': r.response, 'loading': false });
+			}
+		})
+		.catch( err => {
+			console.log(err);
+			this.setState({ 'error': err, 'loading': false });
+		});
 	}
 
 	onNameChange( e ) {
@@ -75,14 +71,14 @@ export default class DialogActivate extends Component {
 				this.setState({ valid_slug: (r.available ? 1 : -1) });
 			}
 			else {
-				console.log(r);
-				this.setState({ error: r.message ? r.message : r.response, loading: false });
+				//console.log(r);
+				this.setState({ 'error': r.message ? r.message : r.response, 'loading': false });
 			}
 			return r;
 		})
 		.catch( err => {
-			console.log(err);
-			this.setState({ error: err, loading: false });
+			//console.log(err);
+			this.setState({ 'error': err, 'loading': false });
 		});
 
 		this.setState({ name: name, slug: slug, valid_slug: 0, error: null });
@@ -143,22 +139,24 @@ export default class DialogActivate extends Component {
 
 	doActivate() {
 		if ( this.isValidName() > 0 && this.isValidPassword() > 0 && this.isValidPassword2() > 0 ) {
+			this.setState({'loading': true});
+			
 			$User.Activate( this.ActID, this.ActHash.trim(), this.state.name.trim(), this.state.password.trim() )
 			.then( r => {
 				if ( r.status === 201 ) {
-					console.log('success',r);
+					//console.log('success',r);
 					//location.href = "#user-activated";
-					this.setState({ created: true, loading: false, error: null });
+					this.setState({ 'created': true, 'loading': false, 'error': null });
 				}
 				else {
-					console.log(r);
-					this.setState({ error: r.message ? r.message : r.response, loading: false });
+					//console.log(r);
+					this.setState({ 'error': r.message ? r.message : r.response, 'loading': false });
 				}
 				return r;
 			})
 			.catch( err => {
-				console.log(err);
-				this.setState({ error: err, loading: false });
+				//console.log(err);
+				this.setState({ 'error': err, 'loading': false });
 			});
 		}
 		else {
@@ -172,42 +170,43 @@ export default class DialogActivate extends Component {
 	}
 
 	render( props, {mail, name, slug, password, password2, valid_slug, created, loading, error} ) {
-		var ErrorMessage = error ? {'error': error} : {};
-		var title = "Create Account: Step 2";
+		var new_props = {
+			'title': 'Create Account: Step 2'
+		};
+		if ( error ) {
+			new_props.error = error;
+		}
 
 		if ( loading ) {
 			return (
-				<DialogBase title={title} explicit {...ErrorMessage}>
-					<div>
-						Please wait...
-					</div>
-				</DialogBase>
+				<DialogCommon empty explicit {...new_props}>
+					<NavSpinner />
+				</DialogCommon>
 			);
 		}
 		else if ( !mail ) {
 			return (
-				<DialogBase title={title} ok explicit {...ErrorMessage}>
+				<DialogCommon ok explicit {...new_props}>
 					{"This account can't be activated."}
-				</DialogBase>
+				</DialogCommon>
 			);
 		}
 
 		if ( created ) {
 			return (
-				<DialogBase title={title} ok onclick={this.doFinishActivation} explicit {...ErrorMessage}>
+				<DialogCommon ok onok={this.doFinishActivation} explicit {...new_props}>
 					Account <code>{this.slug}</code> Created. You can now <strong>Log In</strong>.
-				</DialogBase>
+				</DialogCommon>
 			);
 		}
 
-		// NOTE: There's a Preact (?) bug that the extra <span /> is working around
 		return (
-			<DialogBase title={title} ok cancel oktext="Create Account" onclick={this.doActivate} oncancel={this.doFinishActivation} explicit {...ErrorMessage}>
+			<DialogCommon ok oktext="Create Account" onok={this.doActivate} cancel oncancel={this.doFinishActivation} explicit {...new_props}>
 				<div>
-					<span /><span class="-label">E-mail:</span><span id="dialog-activate-mail">{mail}</span>
+					<span class="-label">E-mail:</span><span id="dialog-activate-mail">{mail}</span>
 				</div>
 				<div>
-					<span class="-label">Name:</span><input ref={(input) => this.activateName = input} id="dialog-activate-name" onchange={this.onNameChange} class="-text focusable" type="text" name="username" maxlength="32" placeholder="How your name appears" value={name} /><LabelYesNo value={this.isValidName()} />
+					<span class="-label">Name:</span><input autofocus id="dialog-activate-name" onchange={this.onNameChange} class="-text focusable" type="text" name="username" maxlength="32" placeholder="How your name appears" value={name} /><LabelYesNo value={this.isValidName()} />
 				</div>
 				<div>
 					<span class="-label">Account Name:</span><span id="dialog-activate-slug"><code>{slug}</code></span><LabelYesNo value={valid_slug} />
@@ -225,7 +224,7 @@ export default class DialogActivate extends Component {
 				<div class="-info if-dialog-not-small-block">
 					<strong>Names</strong> let you customize how your <strong>Account Name</strong> looks. You can use case, accents, and simple punctuation. <strong>Account Names</strong> are more strict. <strong>Names</strong> will be converted to <strong>Account Names</strong> by using only lower case letters, numbers, and single dashes.
 				</div>
-			</DialogBase>
+			</DialogCommon>
 		);
 	}
 }

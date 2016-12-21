@@ -1,5 +1,5 @@
 import { h, Component } 				from 'preact/preact';
-import DialogBase						from 'com/dialog-base/base';
+import DialogCommon						from 'com/dialog-common/common';
 
 export default class DialogSession extends Component {
 	constructor( props ) {
@@ -17,11 +17,11 @@ export default class DialogSession extends Component {
 	
 	render( props, {} ) {
 		return (
-			<DialogBase title="Session Expired" ok explicit onclick={this.onClick}>
+			<DialogCommon title="Session Expired" ok explicit onok={this.onClick}>
 				<div><strong>{"Oops!!"}</strong></div>
 				<div>{"It looks like your session expired (and yes, it's probably a bug)."}</div>
 				<div>{"Log in again to continue what you were doing."}</div>
-			</DialogBase>
+			</DialogCommon>
 		);
 	}
 }

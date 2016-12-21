@@ -1,33 +1,35 @@
-import { h, Component } from 'preact/preact';
-import SVGIcon 			from 'com/svg-icon/icon';
+import { h, Component } 				from 'preact/preact';
+import SVGIcon 							from 'com/svg-icon/icon';
 
 export default class SidebarCalendar extends Component {
 	constructor( props ) {
 		super(props);
+	}
 
-		//this.genCalendar( new Date(), 3 );
+	shouldComponentUpdate( nextProps, nextState ) {
+		// At the moment, there are no external events that should trigger an update (I ignore my props)
+		return false;
 	}
 
 	genCalendar( today, rows ) {
-		// TODO: Adjust noted days based on timezone
-		// TODO: Adjust selected day/week when time itself rolls over
-
 		let cols = 7;
+		let thisWeekday = today.getDay();
 		let thisDay = today.getDate();
 		let thisMonth = today.getMonth();
 		let thisYear = today.getFullYear();
 		
 		/* Months and Weeks start at 0. Years and Days start at 1. Using 0th day is like -1 */
-		let monthEndsOn = new Date(today.getFullYear(), today.getMonth(), 0).getDate();
-		let nextDay = today.getDate() - today.getDay();
+		let monthEndsOn = new Date(thisYear, thisMonth+1, 0).getDate();
+		let nextDay = thisDay - thisWeekday;
 		
 		if ( nextDay < 1 ) {
-			let lastMonth = new Date(today.getFullYear(), today.getMonth(),0);
+			let lastMonth = new Date(thisYear, thisMonth, 0);
 			monthEndsOn = lastMonth.getDate();
 			//console.log( lastMonth.getFullYear(), lastMonth.getMonth(), lastMonth.getDate(), lastMonth.getDay() );
 			nextDay = lastMonth.getDate() - lastMonth.getDay();
 		}
 		
+		// TODO: Insert scheduled events here
 		let data = Array(...Array(rows)).map(() => Array.from( Array(cols),function(){
 			let ret = {
 				'year': thisYear,
@@ -97,6 +99,9 @@ export default class SidebarCalendar extends Component {
 	}
 	
 	render( {rows} ) {
+		// TODO: Adjust noted days based on timezone
+		// TODO: Adjust selected day/week when time itself rolls over
+
 		let data = this.genCalendar(new Date(), rows ? rows : 3);
 		
 		return (

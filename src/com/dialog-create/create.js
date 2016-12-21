@@ -1,8 +1,7 @@
 import { h, Component } 				from 'preact/preact';
 import Sanitize							from '../internal/sanitize/sanitize';
 
-import DialogBase						from 'com/dialog-base/base';
-//import NavLink							from 'com/nav-link/link';
+import DialogCommon						from 'com/dialog-common/common';
 
 import $Node							from '../shrub/js/node/node';
 
@@ -32,37 +31,46 @@ export default class DialogCreate extends Component {
 		}
 	}
 
-	render( {/*path,*/ extra}, {error} ) {
-		var ShowError = error ? {'error': error} : {};
+	render( props, {error} ) {
+		var new_props = {
+			'title': 'Create'
+		};
+		if ( error ) {
+			new_props.error = error;
+		}
 		
 		var TargetNode = null;
 		var What = "";
 		
-		if ( extra && extra.length ) {
-			TargetNode = Number.parseInt(extra[0]);
+		if ( props.extra && props.extra.length ) {
+			TargetNode = Number.parseInt(props.extra[0]);
 			
-			if ( extra.length > 1 ) {
-				What = extra.slice(1).join('/');
+			if ( props.extra.length > 1 ) {
+				What = props.extra.slice(1).join('/');
 			}
 		}
-		
-		console.log("make: ", What);
 		
 		if ( TargetNode > 0 && What.length ) {
 			if ( What == "item/game" ) {
 				var ShowType = "Game";
+				new_props.title += ' '+ShowType;
+				new_props.oktext = "Create "+ShowType;
 				
 				return (
-					<DialogBase title={"Create "+ShowType} ok cancel oktext={"Create "+ShowType} onclick={this.doCreate} {...ShowError}>
+					<DialogCommon ok onok={this.doCreate} cancel explicit {...new_props}>
 						<div>Create a game for the active event?</div>
-					</DialogBase>
+					</DialogCommon>
 				);
 			}
 		}
+
+		new_props.oktext = "Yes";
+		new_props.canceltext = "No";
+
 		return (
-			<DialogBase title={"Create"} ok cancel oktext="Yes" canceltext="No" onclick={this.doCreate} {...ShowError}>
+			<DialogCommon ok onok={this.doCreate} cancel explicit {...new_props}>
 				<div>{"Would you like to create a game?"}</div>
-			</DialogBase>
+			</DialogCommon>
 		);
 	}
 }

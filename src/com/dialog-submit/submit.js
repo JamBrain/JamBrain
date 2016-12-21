@@ -1,5 +1,5 @@
 import { h, Component } 				from 'preact/preact';
-import DialogBase						from 'com/dialog-base/base';
+import DialogCommon						from 'com/dialog-common/common';
 
 export default class DialogSubmit extends Component {
 	constructor( props ) {
@@ -17,9 +17,9 @@ export default class DialogSubmit extends Component {
 	
 	render( props, {} ) {
 		return (
-			<DialogBase title="Publish Game" ok explicit onclick={this.onClick}>
+			<DialogCommon title="Publish Game" ok explicit onok={this.onClick}>
 				<div>Game Successsfully Published :D</div>
-			</DialogBase>
+			</DialogCommon>
 		);
 	}
 }

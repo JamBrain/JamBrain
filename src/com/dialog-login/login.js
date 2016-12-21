@@ -1,5 +1,5 @@
 import { h, Component } 				from 'preact/preact';
-import DialogBase						from 'com/dialog-base/base';
+import DialogCommon						from 'com/dialog-common/common';
 import NavLink							from 'com/nav-link/link';
 
 import $User							from '../shrub/js/user/user';
@@ -20,10 +20,6 @@ export default class DialogLogin extends Component {
 		this.onRememberChange = this.onRememberChange.bind(this);
 		this.onKeyDown = this.onKeyDown.bind(this);
 		this.doLogin = this.doLogin.bind(this);
-	}
-	
-	componentDidMount() {
-		this.loginName.focus();
 	}
 
 	onLoginChange( e ) {
@@ -50,41 +46,51 @@ export default class DialogLogin extends Component {
 		$User.Login( this.state.login.trim(), this.state.password.trim(), "" )
 			.then( r => {
 				if ( r.status === 200 ) {
-					console.log('success',r);
-					//location.href = "#";//user-loggedin";
-					location.href = location.pathname+location.search;
+					//console.log('success',r);
+					location.href = location.pathname + location.search;
 					this.props.onlogin();
 				}
 				else {
-					console.log(r);
+					//console.log(r);
 					this.setState({ error: r.message ? r.message : r.response });
 				}
 				return r;
 			})
 			.catch( err => {
-				console.log(err);
+				//console.log(err);
 				this.setState({ error: err });
 			});
 	}
 
 	render( props, {login, password, remember, error} ) {
-		var ErrorMessage = error ? {'error': error} : {};
+		var new_props = {
+			'title': 'Log in'
+		};
+		if ( error ) {
+			new_props.error = error;
+		}
 		
-		// NOTE: There's a Preact bug that the extra <span /> is working around
 		return (
-			<DialogBase title="Log in" ok cancel oktext="Log In" onclick={this.doLogin} {...ErrorMessage}>
+			<DialogCommon ok oktext="Log In" onok={this.doLogin} cancel {...new_props}>
 				<div>
-					<span /><input ref={(input) => this.loginName = input} id="dialog-login-login" onchange={this.onLoginChange} class="-text focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="254" value={login} />
+					<input autofocus id="dialog-login-login" onchange={this.onLoginChange} class="-text focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="254" value={login} />
 				</div>
 				<div>
 					<input id="dialog-login-password" onchange={this.onPasswordChange} onkeydown={this.onKeyDown} class="-text focusable" type="password" name="password" placeholder="Password" maxlength="128" value={password} />
 				</div>
 				<div>
-					<div class="_float-right -link" id="dialog-login-forgot" onclick={e => { location.href = "#user-reset"; /*e.stopPropagation(); e.preventDefault();*/ } }>Forgot Password?</div>
-
-					<div title="LOL. This is broken. Sorry!"><input id="dialog-login-remember" onchange={this.onRememberChange} class="focusable" type="checkbox" name="remember" checked={remember} /><span>Stay Logged In</span></div>
+					<div class="_float-right -link" id="dialog-login-forgot" onclick={e => { 
+						location.href = "#user-reset"; 
+						/*e.stopPropagation(); e.preventDefault();*/ 
+					} }>
+						Forgot Password?
+					</div>
+					<div title="LOL. This is broken. Sorry!">
+						<input id="dialog-login-remember" onchange={this.onRememberChange} class="focusable" type="checkbox" name="remember" checked={remember} />
+						<span>Stay Logged In</span>
+					</div>
 				</div>
-			</DialogBase>
+			</DialogCommon>
 		);
 	}
 }
