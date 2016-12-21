@@ -17,7 +17,7 @@ export default class DialogSubmit extends Component {
 	
 	render( props, {} ) {
 		return (
-			<DialogCommon title="Publish Game" ok explicit onclick={this.onClick}>
+			<DialogCommon title="Publish Game" ok explicit onok={this.onClick}>
 				<div>Game Successsfully Published :D</div>
 			</DialogCommon>
 		);
