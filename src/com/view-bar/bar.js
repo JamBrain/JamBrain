@@ -130,7 +130,7 @@ export default class ViewBar extends Component {
 				<ButtonBase class="-user">
 					<NavLink href={MyURL}>{Avatar}</NavLink>
 				</ButtonBase>,
-				<DropdownUser />
+//				<DropdownUser />
 			];
 		}
 		// If user has finished loading (and is not logged in)
