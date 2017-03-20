@@ -74,6 +74,8 @@ if ( !isset($_GET['nopreload']) ) {
 		var VERSION_STRING = "<?=VERSION_STRING?>";
 		var STATIC_DOMAIN = "<?=STATIC_DOMAIN?>";
 		var API_DOMAIN = "<?=API_DOMAIN?>";
+		var SERVER_TIMESTAMP = "<?=gmdate('Y-m-d\TH:i:s.000\Z'/*DATE_W3C*/);?>";
+		var CLIENT_TIMESTAMP = new Date().toISOString();
 		var SECURE_LOGIN_ONLY = <?= defined('SECURE_LOGIN_ONLY') ? ((SECURE_LOGIN_ONLY && !$_GET['insecure'])?'true':'false') : 'false' ?>;
 		<?php /* Load SVG */ ?>
 		<?php include __DIR__."/../embed/preload-svg.js.php"; ?>
