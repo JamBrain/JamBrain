@@ -60,8 +60,10 @@ export default class SidebarCalendar extends Component {
 	genRow( row ) {
 		return row.map(col => {
 			let props = {};
+			props.class = [];
+			
 			if ( col.selected ) {
-				props.class = "selected";
+				props.class.push('selected');
 			}
 			props.onclick = (e) => {
 				console.log('cal: ',col); 
@@ -77,8 +79,11 @@ export default class SidebarCalendar extends Component {
 			
 			// Hack
 			var ShowIcon = null;
-			if ( col.year == 2016 && col.month == 11 && (col.day >= 9 && col.day <= 12) ) {
-				ShowIcon = <SVGIcon class="-icon">trophy</SVGIcon>;
+			if ( col.year == 2017 && col.month == 3 && (col.day >= 1 && col.day <= 4) ) {
+				if ( col.day === 1 ) {
+					ShowIcon = <SVGIcon class="-icon">trophy</SVGIcon>;
+				}
+				props.class.push('scheduled');
 			}
 
 			return (
