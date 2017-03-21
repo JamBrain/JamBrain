@@ -38,6 +38,7 @@ options.vnode = function(vnode) {
 			vnode.attributes.class = vnode.attributes.class.join(' ');
 		}
 		else {
+			// NOTE: this might be slow. You can disable this, and the .length check for a potential speedup
 			delete vnode.attributes.class;
 		}
 	}
