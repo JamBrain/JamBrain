@@ -1,2 +1,30 @@
-
 @import "../public-jammer.vg/defs.less";
+@TARGET: "ludumdare.com";
+
+@COL_A: #E53;
+@COL_B: #FD1;
+@COL_C: #1DF;
+@COL_AB: mix(@COL_A, @COL_B, 50%); /*#E82;*/
+@COL_BC: mix(@COL_B, @COL_C, 50%); /*#E82;*/
+@COL_CA: mix(@COL_C, @COL_A, 50%); /*#E82;*/
+
+@COL_L: #EEE;	/* Light -- Lightest color that can be diferentiated from White */
+@COL_W: #FFF;	/* White */
+@COL_G: #888;	/* Gray */
+@COL_K: #000;	/* Key (i.e. Black from CMYK) */
+@COL_D: #222;	/* Dark -- Darkest color that can be differentiated from Black */
+
+/* Perceptual Grayscale */
+@COL_AG: hsv(0,0,luma(@COL_A));
+@COL_BG: hsv(0,0,luma(@COL_B));
+@COL_CG: hsv(0,0,luma(@COL_C));
+@COL_ABG: hsv(0,0,luma(@COL_AB));
+@COL_BCG: hsv(0,0,luma(@COL_BC));
+@COL_CAG: hsv(0,0,luma(@COL_CA));
+
+/*
+@COL_AG: rgb(luma(@COL_A),luma(@COL_A),luma(@COL_A));
+@COL_BG: rgb(luma(@COL_B),luma(@COL_B),luma(@COL_B));
+@COL_CG: rgb(luma(@COL_C),luma(@COL_C),luma(@COL_C));
+@COL_ABG: rgb(luma(@COL_AB),luma(@COL_AB),luma(@COL_AB));
+*/
