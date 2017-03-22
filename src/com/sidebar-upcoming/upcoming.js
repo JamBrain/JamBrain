@@ -10,8 +10,10 @@ export default class SidebarUpcoming extends Component {
 		return (
 			<div class="sidebar-base sidebar-shortlist sidebar-upcoming">
 				<div class="-title _font2"><SVGIcon baseline>calendar-wide</SVGIcon> <span class="-text">Coming Up</span></div>
-				<div class="-item"><strong>Dec. 9th</strong> - Ludum Dare 37 <SVGIcon baseline small>trophy</SVGIcon></div>
-				<div class="-item"><strong>Dec. 16th</strong> - Judging (Tentative) Start</div>
+				<div class="-item"><strong>Mar 24th</strong> - Theme Suggestions Open</div>
+				<div class="-item"><strong>Apr 7th</strong> - Theme Selection Starts</div>
+				<div class="-item"><strong>Apr 21st</strong> - Ludum Dare 38 <SVGIcon baseline small>trophy</SVGIcon></div>
+				<div class="-item"><strong>May 16th</strong> - Results <SVGIcon baseline small>flag</SVGIcon></div>
 				<ButtonLink class="-footer" href="/cal">Full Schedule</ButtonLink>
 			</div>
 		);
