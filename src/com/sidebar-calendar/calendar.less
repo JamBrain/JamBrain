@@ -3,7 +3,7 @@
 
 #sidebar > .sidebar-calendar {
 	/*box-shadow: 0px 0px 3px rgba(64,0,0,0.2);*/
-	color: @MAJOR_MUTE_D6;
+	color: @MAJOR_MUTE_D4;/*@MAJOR_MUTE_D6;*/
 	
 	& > .-week {
 		display:flex;
@@ -15,7 +15,8 @@
 			margin-bottom:1px;
 			background: @MAJOR_MUTE_D;/*@MAJOR_COLOR_MUTE3;*/
 			
-			border-bottom: 3px solid rgba(0,0,0,0);
+			border: 2px solid transparent;
+			font-weight: bold;
 
 			cursor:pointer;
 			/*transition: transform 0.1s, z-index 0.1s;*/
@@ -33,15 +34,17 @@
 						
 			/* Position this absolutely, so not to affect the flow (and make the box bigger) */
 			& > .-text {
-				position:absolute;
-				top:0.25em;
-				left:0.25em;
+				position: absolute;
+				top: 0;/*0.1em;*/
+				left: 2px;/*0.1em;*/
 			}
 			
 			& > .-icon {
-				position:absolute;
-				bottom: 0.25em;
-				right: 0.25em;
+				position: absolute;
+				bottom: -2px;/*0.1em;*/
+				right: -2px;/*0.1em;*/
+				background: @MAJOR_COLOR2;
+				padding: 4px;
 			}
 			
 			&:hover,
@@ -51,7 +54,8 @@
 				color: @MAJOR_LIGHT;
 				/*transform: scale(1.2, 1.2);*/
 				z-index:10;
-				font-weight: bold;
+				/*font-weight: bold;*/
+				border: 2px solid transparent;
 			}
 			&:active, 
 			&:first-child:active,
@@ -61,10 +65,12 @@
 			
 			&:first-child,
 			&:last-child {
-				background: @MAJOR_MUTE_D2;/*@MAJOR_COLOR_MUTE2;*/
+				border: 2px solid @MAJOR_MUTE_D2;
+				color: @MAJOR_MUTE_D2;
+				background: @MAJOR_MUTE_D4;/*@MAJOR_COLOR_MUTE2;*/
 			}
 			&:last-child {
-				margin-right:0;
+				margin-right: 0;
 			}
 		}
 		& > .selected {
@@ -75,7 +81,14 @@
 			}
 		}
 		& > .scheduled {
-			border-bottom: 3px solid;
+			background: mix(@MAJOR_COLOR2, @MAJOR_MUTE_D2, 30%) !important;
+			border: 2px solid @MAJOR_COLOR2 !important;
+			color: @MAJOR_LIGHT !important;
+			/*border: 0.15em solid fade(@MAJOR_COLOR3, 50%);*/
+		}
+		
+		& > .month {
+			background: @MAJOR_MUTE_D2;
 		}
 		& > .event {
 			font-weight: bold;

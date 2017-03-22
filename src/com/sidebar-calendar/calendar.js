@@ -21,12 +21,14 @@ export default class SidebarCalendar extends Component {
 		/* Months and Weeks start at 0. Years and Days start at 1. Using 0th day is like -1 */
 		let monthEndsOn = new Date(thisYear, thisMonth+1, 0).getDate();
 		let nextDay = thisDay - thisWeekday;
+		let toggleMonth = false;
 		
 		if ( nextDay < 1 ) {
 			let lastMonth = new Date(thisYear, thisMonth, 0);
 			monthEndsOn = lastMonth.getDate();
 			//console.log( lastMonth.getFullYear(), lastMonth.getMonth(), lastMonth.getDate(), lastMonth.getDay() );
 			nextDay = lastMonth.getDate() - lastMonth.getDay();
+			toggleMonth = true;
 		}
 		
 		// TODO: Insert scheduled events here
@@ -40,6 +42,9 @@ export default class SidebarCalendar extends Component {
 			if ( nextDay === thisDay ) {
 				ret['selected'] = true;
 			}
+			if ( toggleMonth ) {
+				ret['toggle'] = true;
+			}
 			
 			nextDay++;
 			if ( nextDay > monthEndsOn ) {
@@ -49,6 +54,7 @@ export default class SidebarCalendar extends Component {
 					thisYear++;
 					thisMonth = 1;
 				}
+				toggleMonth = !toggleMonth;
 			}
 			
 			return ret;
@@ -65,6 +71,9 @@ export default class SidebarCalendar extends Component {
 			if ( col.selected ) {
 				props.class.push('selected');
 			}
+			if ( col.toggle === true ) {
+				props.class.push('month');
+			}
 			props.onclick = (e) => {
 				console.log('cal: ',col); 
 				window.location.hash = "#cal/"+col.year+"/"+col.month+"/"+col.day;
@@ -79,7 +88,7 @@ export default class SidebarCalendar extends Component {
 			
 			// Hack
 			var ShowIcon = null;
-			if ( col.year == 2017 && col.month == 3 && (col.day >= 1 && col.day <= 4) ) {
+			if ( col.year == 2017 && col.month == 3 && (col.day >= 1 && col.day <= 3) ) {
 				if ( col.day === 1 ) {
 					ShowIcon = <SVGIcon class="-icon">trophy</SVGIcon>;
 				}
