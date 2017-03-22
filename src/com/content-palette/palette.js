@@ -15,11 +15,20 @@ export default class ContentPalette extends Component {
 			<div class="-col-bc">BC</div>,
 			<div class="-col-c">C</div>,
 			<div class="-col-ca">CA</div>,
+
+			<div class="-col-am">AM</div>,
+			<div class="-col-abm">ABM</div>,
+			<div class="-col-bm">BM</div>,
+			<div class="-col-bcm">BCM</div>,
+			<div class="-col-cm">CM</div>,
+			<div class="-col-cam">CAM</div>,
+
 			<div class="-col-l">L</div>,
 			<div class="-col-w">W</div>,
 			<div class="-col-g">G</div>,
 			<div class="-col-k">K</div>,
 			<div class="-col-d">D</div>,
+			<div class="-col-m">M</div>,
 		];
 		var BGVariants = [
 			<div class="-bg-a">A</div>,
@@ -28,11 +37,20 @@ export default class ContentPalette extends Component {
 			<div class="-bg-bc">BC</div>,
 			<div class="-bg-c">C</div>,
 			<div class="-bg-ca">CA</div>,
+
+			<div class="-bg-am">AM</div>,
+			<div class="-bg-abm">ABM</div>,
+			<div class="-bg-bm">BM</div>,
+			<div class="-bg-bcm">BCM</div>,
+			<div class="-bg-cm">CM</div>,
+			<div class="-bg-cam">CAM</div>,
+
 			<div class="-bg-l">L</div>,
 			<div class="-bg-w">W</div>,
 			<div class="-bg-g">G</div>,
 			<div class="-bg-k">K</div>,
 			<div class="-bg-d">D</div>,
+			<div class="-bg-m">M</div>,
 		];
 		
 		return (
@@ -97,7 +115,70 @@ export default class ContentPalette extends Component {
 					<div>COL_CA</div>
 					<div class="-col-cag">xG</div>
 					{BGVariants}
-				</div>				
+				</div>
+
+
+				<div class="-bg-am">
+					<div>COL_AM</div>
+					<div class="-bg-amg">xG</div>
+					{ColVariants}
+				</div>
+				<div class="-bg-abm">
+					<div>COL_ABM</div>
+					<div class="-bg-abmg">xG</div>
+					{ColVariants}
+				</div>
+				<div class="-bg-bm">
+					<div>COL_BM</div>
+					<div class="-bg-bmg">xG</div>
+					{ColVariants}
+				</div>
+				<div class="-bg-bcm">
+					<div>COL_BCM</div>
+					<div class="-bg-bcmg">xG</div>
+					{ColVariants}
+				</div>
+				<div class="-bg-cm">
+					<div>COL_CM</div>
+					<div class="-bg-cmg">xG</div>
+					{ColVariants}
+				</div>
+				<div class="-bg-cam">
+					<div>COL_CAM</div>
+					<div class="-bg-camg">xG</div>
+					{ColVariants}
+				</div>
+
+				<div class="-col-am">
+					<div>COL_AM</div>
+					<div class="-col-amg">xG</div>
+					{BGVariants}
+				</div>
+				<div class="-col-abm">
+					<div>COL_ABM</div>
+					<div class="-col-abmg">xG</div>
+					{BGVariants}
+				</div>
+				<div class="-col-bm">
+					<div>COL_BM</div>
+					<div class="-col-bmg">xG</div>
+					{BGVariants}
+				</div>
+				<div class="-col-bcm">
+					<div>COL_BCM</div>
+					<div class="-col-bcmg">xG</div>
+					{BGVariants}
+				</div>
+				<div class="-col-cm">
+					<div>COL_CM</div>
+					<div class="-col-cmg">xG</div>
+					{BGVariants}
+				</div>
+				<div class="-col-cam">
+					<div>COL_CAM</div>
+					<div class="-col-camg">xG</div>
+					{BGVariants}
+				</div>
 			</div>
 		);
 	}
