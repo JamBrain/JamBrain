@@ -1,16 +1,23 @@
+@import "defs.less";
 
 .dialog-tv {
 	background: #000;
 	box-shadow: 0 0 4px rgba(0,0,0,0.5);
 
 	position: relative;
+	top: 32px; /* offset 32px (half 64) to not hide the View Bar */
 	
-	& > .-tv {
-		position: relative;
-		
-		width: 480px;
-		height: 270px;
+	overflow: hidden;
 	
+	&,
+	& > .-tv,
+	& > .-bar,
+	& > .-side {
+		transition: width 0.4s, height 0.4s;	
+	}
+	
+	& > .-tv,
+	& > .-bar {
 		animation: dialog-tv-tv-fadein 2s;
 
 		@keyframes dialog-tv-tv-fadein {
@@ -18,8 +25,74 @@
 		    25%	{ opacity: 0; }
 		    50%	{ opacity: 1; }
 		}
+	}
+	
+	& > .-tv {
+		position: relative;
+		
+		width: 480px;
+		height: 270px;
 		
 		z-index: 10001;
+	}
+	
+	& > .-bar {
+		position: relative;
+		height: 48px;
+		line-height:48px;
+		padding: 0 4px;
+		
+		color: @COL_L;
+		font-weight: bold;
+
+		& > div > div {
+			position: relative;
+			
+			line-height: 32px;
+			display: inline-block;
+			padding: 0 8px 0 30px; /***/
+			margin: 8px 4px;
+			
+			& > svg {
+				position: absolute;
+				
+				top: 0;
+				bottom: 0;
+				left: 8px; /***/
+				margin: auto;
+				display: block;
+			}
+
+			&.-button /*.-style-a*/ {
+				cursor: pointer;
+				border: 1px solid;
+				
+				&:hover {
+					background: @COL_A;
+					border: 1px solid transparent;
+				}
+			}
+			
+			&.-button.-disabled {
+				color: @COL_N;
+				
+				&:hover {
+					background: transparent;
+					border: 1px solid;
+				}
+			}
+		}
+		& > .-left {
+			
+		}
+		& > .-right {
+			float: right;
+		}
+	}
+	
+	& > .-side {
+		/*position: relative;*/
+		float: right;
 	}
 	
 	& > .-branding {
