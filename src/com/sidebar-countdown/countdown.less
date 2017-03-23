@@ -1,5 +1,8 @@
 @import "defs.less";
 
+@RADIUS_A: 4px;	/* was 10px;*/
+@RADIUS_B: 4px;	/* was 8px;*/
+
 #sidebar > .sidebar-countdown {
 	color: @COL_NLLL;/*@MAJOR_MUTE;*/
 
@@ -70,9 +73,10 @@
 		/* come back to this to enable auto resizing on mobile and other things etc */
 		width: 37px;
 		margin-right: 3px;
-		background-color: @COL_L; /*@MAJOR_LIGHT;*/
-		border-radius: 8px;
-		box-shadow: 0 3px 4px 0 fade(@COL_D, 20%), inset 2px 4px 0 0 fade(@COL_L, 80%);
+		background-color: @COL_NLLLL; /*@MAJOR_LIGHT;*/
+		border-radius: @RADIUS_B;
+		/*box-shadow: 0 3px 4px 0 fade(@COL_D, 20%), inset 2px 4px 0 0 fade(@COL_L, 80%);*/
+		box-shadow: 0 1px 4px 0 fade(@COL_D, 60%);
 	}
 	& > .-clock > .-countdown .figure:last-child {
 		margin-right: 0px;
@@ -90,7 +94,8 @@
 	& > .-clock > .-countdown.urgent .figure span {
 		color: @COL_A; /*@MAJOR_COLOR1;*/
 	}
-	& > .-clock > .-countdown .figure .top:after, & > .-clock > .-countdown .figure .bottom-back:after {
+	& > .-clock > .-countdown .figure .top:after, 
+	& > .-clock > .-countdown .figure .bottom-back:after {
 		content: "";
 		position: absolute;
 		z-index: -1;
@@ -105,8 +110,8 @@
 		background-color: @COL_L;
 		transform-origin: 50% 100%;
 		-webkit-transform-origin: 50% 100%;
-		border-top-right-radius: 10px;
-		border-top-left-radius: 10px;
+		border-top-right-radius: @RADIUS_A;
+		border-top-left-radius: @RADIUS_A;
 		transform: perspective(200px);
 	}
 	& > .-clock > .-countdown .figure .bottom {
@@ -128,8 +133,8 @@
 		height: 50%;
 		overflow: hidden;
 		background-color: @COL_L;
-		border-top-right-radius: 10px;
-		border-top-left-radius: 10px;
+		border-top-right-radius: @RADIUS_A;
+		border-top-left-radius: @RADIUS_A;
 	}
 	& > .-clock > .-countdown .figure .bottom-back span {
 		position: absolute;
@@ -139,7 +144,8 @@
 		margin: auto;
 	}
 
-	& > .-clock > .-countdown .figure .top, & > .-clock > .-countdown .figure .top-back {
+	& > .-clock > .-countdown .figure .top, 
+	& > .-clock > .-countdown .figure .top-back {
 		height: 50%;
 		overflow: hidden;
 		backface-visibility: hidden;
@@ -148,12 +154,12 @@
 	& > .-clock > .-countdown .figure .top-back {
 		z-index: 4;
 		bottom: 0;
-		background-color: @COL_L;
+		background-color: @COL_NLLLL;
 		-webkit-transform-origin: 50% 0;
 		transform-origin: 50% 0;
 		transform: perspective(200px) rotateX(180deg);
-		border-bottom-right-radius: 10px;
-		border-bottom-left-radius: 10px;
+		border-bottom-right-radius: @RADIUS_A;
+		border-bottom-left-radius: @RADIUS_A;
 	}
 	& > .-clock > .-countdown .figure .top-back span {
 		position: absolute;
