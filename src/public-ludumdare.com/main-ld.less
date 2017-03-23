@@ -1,13 +1,17 @@
 @import "defs.less";
 
+@MAIN_BG: @COL_N;		/*@MAJOR_MUTE_D4; /* radial-gradient(ellipse, @MAIN_BACKGROUND 75%, @MAIN_BACKGROUND2 100%); */
+@MAIN_COL: @COL_D;		/*@MAJOR_DARK;*/
+
+
 html {
 	font-size: @BASE_UNIT;
 }
 
 body {
-	background: @COL_N;/*@MAJOR_MUTE_D4; /* radial-gradient(ellipse, @MAIN_BACKGROUND 75%, @MAIN_BACKGROUND2 100%); */
+	background: @MAIN_BG;
 	background-attachment: fixed;
-	color: @COL_D;/*@MAJOR_DARK;*/
+	color: @MAIN_COL;
 }
 
 /* Page Layout - Everything on a page goes here */
@@ -124,8 +128,3 @@ body {
 		margin: 20px;
 	}
 }
-
-.nav-bar > div > .logo {
-	display: none;
-}
-
