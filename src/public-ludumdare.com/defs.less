@@ -3,10 +3,10 @@
 /* Color Triad */
 @COL_A: #E53;		/* Red (Main) */
 @COL_B: #FD1;		/* Yellow (Analogous Accent) */
-@COL_C: #1DF;		/* Blue (Complementary Accent) */
+@COL_C: #28E;		/* Blue (Complementary Accent) */
 
 @COL_M: #777;		/* Mute -- Color blended against when muting */
-@COL_N: mix(@COL_M, @COL_C, 95%);/*#7d7d82;	/* Neutral -- Center color used as the backdrop */
+@COL_N: mix(@COL_M, @COL_C, 90%);/*#7d7d82;	/* Neutral -- Center color used as the backdrop */
 
 /* Grays */
 @COL_L: #EEE;		/* Light -- Lightest color that can be reasonably diferentiated from White */
@@ -36,6 +36,8 @@
 @COL_ABG: hsv(0,0,luma(@COL_AB));
 @COL_BCG: hsv(0,0,luma(@COL_BC));
 @COL_CAG: hsv(0,0,luma(@COL_CA));
+@COL_MG: hsv(0,0,luma(@COL_M));
+@COL_NG: hsv(0,0,luma(@COL_N));
 
 
 
