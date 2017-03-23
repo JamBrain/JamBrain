@@ -11,9 +11,9 @@ export default class IMG extends Component {
 		this.onError = this.onError.bind(this);
 	}
 
-	shouldComponentUpdate( {}, nextState ) {
-		return this.state.error !== nextState.error;
-	}
+//	shouldComponentUpdate( nextProps, nextState ) {
+//		return this.state.error !== nextState.error;
+//	}
 	
 	onError() {
 		this.setState({'error': true});

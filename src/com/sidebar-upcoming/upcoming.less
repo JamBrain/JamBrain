@@ -2,9 +2,12 @@
 
 #sidebar > .sidebar-upcoming {
 	& > .-item {
+		cursor: pointer;
+		transition: background 0.1s, color 0.1s;
+
 		&:hover {
-			background: @MAJOR_COLOR1;
-			color: @MAJOR_LIGHT;
+			background: @COL_A; /*@MAJOR_COLOR1;*/
+			color: @COL_W; /*@MAJOR_LIGHT;*/
 		}
 	}
 }

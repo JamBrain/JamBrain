@@ -224,10 +224,15 @@ export default class SidebarCountdown extends Component {
 				seconds: ss
 			};
 		}
+		
+		var Title = null;
+		if ( props.to ) {
+			Title = <h1 class="_font2">{ props.to } <strong>{ props.tt }</strong></h1>;
+		}
 		return (
 			<div class="sidebar-base sidebar-countdown">
 				<div class="-clock" id={ this.class }>
-					<h1 class="_font2">{ props.to } <strong>{ props.tt }</strong></h1>
+					{Title}
 					<div class={ urgentclass }>
 
 					<div class="bloc-time days" data-init-value="00"  ref={c => this.daysblock=c} style={ daysblock }>
