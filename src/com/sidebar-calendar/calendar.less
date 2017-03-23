@@ -1,42 +1,55 @@
-
 @import "defs.less";
 
+@CAL_CMONTH_BG: @COL_NLLL;
+@CAL_CMONTH_COL: @COL_NL;
+@CAL_OMONTH_BG: @COL_NLL;
+@CAL_OMONTH_COL: @COL_N;
+
+@CAL_SCHEDULED_BG: @COL_BCM;
+@CAL_SCHEDULED_COL: @COL_L;
+
+@CAL_LIT_BG: @COL_A;
+@CAL_LIT_COL: @COL_W;
+
+@CAL_BORDER: 2px;
+
 #sidebar > .sidebar-calendar {
-	/*box-shadow: 0px 0px 3px rgba(64,0,0,0.2);*/
-
-	color: @MAJOR_MUTE_D4;/*@MAJOR_MUTE_D6;*/
-	
 	& > .-week {
-		display:flex;
-		align-items:stretch;
-		& > div {
-			position:relative;
-			
-			margin-right:1px;
-			margin-bottom:1px;
-			background: @MAJOR_MUTE_D;/*@MAJOR_COLOR_MUTE3;*/
-			&.month {
-				background: @MAJOR_MUTE_D2;
-			}
-			
-			border: 2px solid transparent;
-			font-weight: bold;
+		display: flex;
+		align-items: stretch;
 
-			cursor:pointer;
+		& > div {
+			position: relative;
+
+			font-weight: bold;
+			cursor: pointer;
+			
+			background: @CAL_CMONTH_BG; /*@MAJOR_MUTE_D;/*@MAJOR_COLOR_MUTE3;*/
+			color: @CAL_CMONTH_COL;
+			&.month {
+				background: @CAL_OMONTH_BG;/*@MAJOR_MUTE_D2;*/
+				color: @CAL_OMONTH_COL;
+			}
+			border: @CAL_BORDER solid transparent;
+
+			margin-right: 1px;
+			margin-bottom: 1px;
+
 			/*transition: transform 0.1s, z-index 0.1s;*/
 
-			/* This is perfect square trickery: http://stackoverflow.com/a/23754080 */
-			width:100%;
+			/* This is the perfect square trickery: http://stackoverflow.com/a/23754080 */
+			width: 100%;
 			&::after {
-				padding-bottom:100%; /* Previously: 14.29% (100 / 7) */
+				padding-bottom: 100%; /* Previously: 14.29% (100 / 7) */
 				/* The trick used to work by padding/margin with %'s, which were based on width. */
 				/* Now you add a dummy element, which we do here via the pseudo element. */
 				
 				content: '';
 				display: block;
 			}
+
 						
-			/* Position this absolutely, so not to affect the flow (and make the box bigger) */
+			/* Elements are positioned absolutely, so not to affect the flow (and make the box bigger) */
 			& > .-text {
 				position: absolute;
 				top: -1px;/*0.1em;*/
@@ -47,38 +60,33 @@
 				position: absolute;
 				bottom: 2px;
 				right: 2px;
-				/*bottom: -2px;/*0.1em;*/
-				/*right: -2px;/*0.1em;*/
-				/*background: @MAJOR_COLOR2;*/
-				/*padding: 4px;*/
 			}
+
 
 			&.scheduled,
 			&.scheduled.month,
 			&:first-child.scheduled.month,
 			&:last-child.scheduled.month {
-				background: mix(@MAJOR_COLOR2, @MAJOR_MUTE_D2, 100%);
-				border: 2px solid @MAJOR_COLOR2;
-				color: @MAJOR_COLOR3;
-				/*border: 0.15em solid fade(@MAJOR_COLOR3, 50%);*/
+				background: @CAL_SCHEDULED_BG;
+				color: @CAL_SCHEDULED_COL;
+				border: @CAL_BORDER solid transparent;
 			}
-				
+
+			/* Hover */				
 			&:hover,
 			&:first-child:hover,
 			&:last-child:hover {
-				background: @MAJOR_COLOR1;
-				color: @MAJOR_LIGHT;
-				border: 2px solid transparent;
-
-				/*transform: scale(1.2, 1.2);*/
 				z-index:10;
-				/*font-weight: bold;*/
+				
+				&,
 				&.month,
 				&.scheduled {
-					background: @MAJOR_COLOR1;
-					color: @MAJOR_LIGHT;
-					border: 2px solid transparent;
+					background: @CAL_LIT_BG; /*@MAJOR_COLOR1;*/
+					color: @CAL_LIT_COL; /*@MAJOR_LIGHT;*/
+					border: @CAL_BORDER solid transparent;
 				}
+
+				/*transform: scale(1.2, 1.2);*/
 			}
 			&:active, 
 			&:first-child:active,
@@ -86,16 +94,20 @@
 				/*transform: scale(0.9, 0.9);*/
 			}
 			
+			/* Sunday and Monday */
 			&:first-child,
 			&:last-child {
-				border: 2px solid @MAJOR_MUTE_D;
-				color: @MAJOR_MUTE_D;
-				background: @MAJOR_MUTE_D4;/*@MAJOR_COLOR_MUTE2;*/
+				border: @CAL_BORDER solid @CAL_CMONTH_BG;/*@MAJOR_MUTE_D;*/
+				color: @CAL_CMONTH_BG;/*@MAJOR_MUTE_D;*/
+				background: @CAL_CMONTH_COL; /*@MAJOR_MUTE_D4;/*@MAJOR_COLOR_MUTE2;*/
 				&.month {
-					border: 2px solid @MAJOR_MUTE_D2;
-					color: @MAJOR_MUTE_D2;
+					border: @CAL_BORDER solid @CAL_OMONTH_BG;
+					color: @CAL_OMONTH_BG;
+					background: @CAL_OMONTH_COL;
 				}
 			}
+			
+			/* Cleanup */
 			&:last-child {
 				margin-right: 0;
 			}
@@ -104,9 +116,9 @@
 			&,
 			&:first-child,
 			&:last-child {
-				/*background: @MAJOR_MUTE_L2;*/
-				color: @MAJOR_LIGHT;/*@MAJOR_MUTE_D3;*/
-				border: 2px solid @MAJOR_LIGHT;
+				background: @COL_NLLLLL;/*@MAJOR_MUTE_L2;*/
+				color: @COL_N;/*@MAJOR_LIGHT;/*@MAJOR_MUTE_D3;*/
+				border: @CAL_BORDER solid transparent;/*@MAJOR_LIGHT;*/
 			}
 		}
 
@@ -114,4 +126,6 @@
 			font-weight: bold;
 		}
 	}
+
+	/*box-shadow: 0px 0px 3px rgba(64,0,0,0.2);*/
 }

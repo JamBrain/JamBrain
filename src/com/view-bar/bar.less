@@ -5,8 +5,15 @@
 @VIEWBAR_PAD: 0.5em;
 @VIEWBAR_CELL: @VIEWBAR_HEIGHT - @VIEWBAR_PAD * 2;
 
-@VIEWBAR_BG: fade(@COL_D, 90%);/*mix(@MAJOR_DARK,@MAJOR_DARK,80%);*/
-/*@VIEWBAR_BG_ALPHA: fade(@VIEWBAR_BG,80%);*/
+@VIEWBAR_COL: fade(@COL_D, 100%);
+
+@LOGO_COL_A: @COL_A;
+@LOGO_COL_B: @COL_AB;
+@LOGO_COL_C: @COL_B;
+@LOGO_LIT_A: @COL_W;
+@LOGO_LIT_B: @COL_B;
+@LOGO_LIT_C: @COL_W;
+@LOGO_LIT_BG: @COL_A;
 
 .view-bar {
 	/* Needed for click-off and drag un-highlighting buttons to work (i.e. no selections) */
@@ -18,10 +25,10 @@
 	right: 0;
 	z-index:1000;
 	
-	border-top: @VIEWBAR_SHADOW solid @VIEWBAR_BG;	/* Mobile Scrolling Garbage Fix */
+	border-top: @VIEWBAR_SHADOW solid @VIEWBAR_COL;	/* Mobile Scrolling Garbage Fix */
 
 	height: @VIEWBAR_HEIGHT;
-	background: @VIEWBAR_BG;
+	background: @VIEWBAR_COL;
 		
 	& > .-content {
 		margin: auto;
@@ -51,26 +58,26 @@
 				}
 			
 				& > .icon-ludum, & > .icon-l-udum {
-					color: @COL_A;
+					color: @LOGO_COL_A;
 				}
 				& > .icon-dare, & > .icon-d-are {
-					color: @COL_AB;
+					color: @LOGO_COL_B;
+				}
+				& > .icon-ldnum {
+					color: @LOGO_COL_C;
 				}
 				
-				& > .icon-ldnum {
-					color: @COL_B;
-				}
 				&:hover {
-					background: @COL_A;					
+					background: @LOGO_LIT_BG;
 				}
 				&:hover > .icon-ludum, &:hover > .icon-l-udum {
-					color: @COL_W;
+					color: @LOGO_LIT_A;
 				}
 				&:hover > .icon-dare, &:hover > .icon-d-are {
-					color: @COL_B;
+					color: @LOGO_LIT_B;
 				}
 				&:hover > .icon-ldnum {
-					color: @COL_W;
+					color: @LOGO_LIT_C;
 				}
 			}
 		}

@@ -112,6 +112,33 @@ export default class ContentPalette extends Component {
 					{this.genColorRow('cm')}
 					{this.genColorRow('cam')}
 				</div>
+
+				<h1>Relative Neutral Colors</h1>
+				<div class="palette">
+					{this.genBGRow('nddddd')}
+					{this.genBGRow('ndddd')}
+					{this.genBGRow('nddd')}
+					{this.genBGRow('ndd')}
+					{this.genBGRow('nd')}
+					{this.genBGRow('n')}
+					{this.genBGRow('nl')}
+					{this.genBGRow('nll')}
+					{this.genBGRow('nlll')}
+					{this.genBGRow('nllll')}
+					{this.genBGRow('nlllll')}
+	
+					{this.genColorRow('nddddd')}
+					{this.genColorRow('ndddd')}
+					{this.genColorRow('nddd')}
+					{this.genColorRow('ndd')}
+					{this.genColorRow('nd')}
+					{this.genColorRow('n')}
+					{this.genColorRow('nl')}
+					{this.genColorRow('nll')}
+					{this.genColorRow('nlll')}
+					{this.genColorRow('nllll')}
+					{this.genColorRow('nlllll')}
+				</div>
 			</div>
 		);
 	}
