@@ -6,6 +6,7 @@ import SidebarTV						from 'com/sidebar-tv/tv';
 import SidebarTrending					from 'com/sidebar-trending/trending';
 import SidebarSupport					from 'com/sidebar-support/support';
 import SidebarCountdown					from 'com/sidebar-countdown/countdown';
+import SidebarSponsor					from 'com/sidebar-sponsor/sponsor';
 
 export default class ViewSidebar extends Component {
 	constructor( props ) {
@@ -39,6 +40,7 @@ export default class ViewSidebar extends Component {
 				<SidebarCalendar rows={ShowCountdown.length ? 2 : 3} />
 				<SidebarUpcoming />
 				<SidebarTV />
+				<SidebarSponsor />
 				<SidebarSupport />
 			</div>
 		);
