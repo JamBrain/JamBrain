@@ -1,4 +1,3 @@
-
 @import "defs.less";
 
 @VIEWBAR_HEIGHT: 4rem;
@@ -6,8 +5,8 @@
 @VIEWBAR_PAD: 0.5em;
 @VIEWBAR_CELL: @VIEWBAR_HEIGHT - @VIEWBAR_PAD * 2;
 
-@VIEWBAR_BG: mix(@MAJOR_DARK,@MAJOR_DARK,80%);
-@VIEWBAR_BG_ALPHA: fade(@VIEWBAR_BG,80%);
+@VIEWBAR_BG: fade(@COL_D, 90%);/*mix(@MAJOR_DARK,@MAJOR_DARK,80%);*/
+/*@VIEWBAR_BG_ALPHA: fade(@VIEWBAR_BG,80%);*/
 
 .view-bar {
 	/* Needed for click-off and drag un-highlighting buttons to work (i.e. no selections) */
@@ -22,7 +21,7 @@
 	border-top: @VIEWBAR_SHADOW solid @VIEWBAR_BG;	/* Mobile Scrolling Garbage Fix */
 
 	height: @VIEWBAR_HEIGHT;
-	background: @VIEWBAR_BG_ALPHA;
+	background: @VIEWBAR_BG;
 		
 	& > .-content {
 		margin: auto;
@@ -35,14 +34,16 @@
 			left:1rem; /* 1rem, so when we lose our full width, it's padded */
 			bottom:0;
 			top:0;
-			margin:auto;
+			/*margin: auto;*/
 			height: 2.5em; /* Required, otherwise top+bottom fills the whole parent div */
 			
 			& > .-logo {
 				/*margin-right: @VIEWBAR_PAD;*/		
-				font-size:2.5em;
+				font-size: 2.5em;
 				display: flex;
-				transition: color 0.2s;
+				transition: color 0.2s, background 0.2s;
+				
+				padding: 0.3em;
 				
 				& > svg {
 					display:block;
@@ -50,23 +51,26 @@
 				}
 			
 				& > .icon-ludum, & > .icon-l-udum {
-					color: @MAJOR_COLOR1;
+					color: @COL_A;
 				}
 				& > .icon-dare, & > .icon-d-are {
-					color: @MAJOR_COLOR2;
+					color: @COL_AB;
 				}
 				
 				& > .icon-ldnum {
-					color: @MAJOR_COLOR3;
+					color: @COL_B;
+				}
+				&:hover {
+					background: @COL_A;					
 				}
 				&:hover > .icon-ludum, &:hover > .icon-l-udum {
-					color: @MAJOR_COLOR2;
+					color: @COL_W;
 				}
 				&:hover > .icon-dare, &:hover > .icon-d-are {
-					color: @MAJOR_COLOR3;
+					color: @COL_B;
 				}
 				&:hover > .icon-ldnum {
-					color: @MAJOR_COLOR4;
+					color: @COL_W;
 				}
 			}
 		}
