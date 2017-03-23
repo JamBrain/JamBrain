@@ -1,27 +1,29 @@
 @TARGET: "ludumdare.com";
 
-/* https://www.sessions.edu/color-calculator/ */
+/* Palette Tester: http://ludumdare.org/dev/palette */
+/* Reference: https://www.sessions.edu/color-calculator/ */
 
 /* Color Triad */
 @COL_A: #E53;						/* Red (Main) */
-@COL_B: #FC1;						/* Yellow (Accent) /* was #FD1 */
+@COL_B: #FC1;						/* Yellow (Pair) /* was #FD1 */
 @COL_C: #2288F7;					/* Blue (Triadic) /* was #28E */
 
 @COL_N: mix(#777, @COL_C, 90%); 	/* Neutral -- Center color used as the backdrop /* was #7d7d82 */
-
-@COL_M: @COL_N;						/* Mute -- Color blended against when muting /* was #777 */
-@COL_L: @COL_NLLLLL;				/* Light -- Lightest color that can be diferentiated from White /* was #EEE */
-@COL_D: @COL_NDDDDD;				/* Dark -- Darkest color that can be reasonably differentiated from Black /* was #222 */
-
-/* Grays */
-@COL_W: #FFF;						/* White */
-@COL_G: #888;						/* Grey (Middle Grey) */
-@COL_K: #000;						/* Key (i.e. Black from CMYK) */
 
 /* Blends */
 @COL_AB: mix(@COL_A, @COL_B, 50%); /* was #E82 */
 @COL_BC: #7D4; /*mix(@COL_B, @COL_C, 75%); /*mix(@COL_B, @COL_C, 50%); /* was #4F3 */
 @COL_CA: #B7E; /*mix(@COL_C, @COL_A, 25%); /*mix(@COL_C, @COL_A, 50%); /* was #F2D */
+
+/* Primary Greys */
+@COL_M: @COL_N;						/* Mute -- Color blended against when muting /* was #777 */
+@COL_L: @COL_NLLLLL;				/* Light -- Lightest color that can be diferentiated from White /* was #EEE */
+@COL_D: @COL_NDDDDD;				/* Dark -- Darkest color that can be reasonably differentiated from Black /* was #222 */
+
+/* Reference Greys */
+@COL_W: #FFF;						/* White */
+@COL_G: #888;						/* Grey (Middle Grey) */
+@COL_K: #000;						/* Key (i.e. Black from CMYK) */
 
 /* Mutes */
 @COL_AM: mix(@COL_A, @COL_M, 50%);
@@ -31,7 +33,7 @@
 @COL_BCM: mix(@COL_BC, @COL_M, 50%);
 @COL_CAM: mix(@COL_CA, @COL_M, 50%);
 
-/* Pushes */
+/* Neutral Pushed Colors */
 @COL_ND: darken(mix(@COL_N, @COL_C, 96%), 8%);
 @COL_NDD: darken(mix(@COL_ND, @COL_C, 96%), 7%);
 @COL_NDDD: darken(mix(@COL_NDD, @COL_N, 96%), 6%);

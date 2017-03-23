@@ -114,7 +114,7 @@ export default class ContentPalette extends Component {
 		return (
 			<div class={'-bg-'+symbol}>
 				<div>COL_{symbol.toUpperCase()}</div>
-				<div class={'-bg-'+symbol+'g'}>xG</div>
+				<div class={'-bg-'+symbol+'g'}>PG</div>
 				{this.ColorVariants}
 			</div>
 		);
@@ -123,7 +123,7 @@ export default class ContentPalette extends Component {
 		return (
 			<div class={'-col-'+symbol}>
 				<div>COL_{symbol.toUpperCase()}</div>
-				<div class={'-col-'+symbol+'g'}>xG</div>
+				<div class={'-col-'+symbol+'g'}>PG</div>
 				{this.BGVariants}
 			</div>
 		);
