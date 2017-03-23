@@ -1,11 +1,7 @@
 @import "defs.less";
 
 @VIEWBAR_HEIGHT: 4rem;
-@VIEWBAR_SHADOW: 0.25rem;
-@VIEWBAR_PAD: 0.5em;
-@VIEWBAR_CELL: @VIEWBAR_HEIGHT - @VIEWBAR_PAD * 2;
-
-@VIEWBAR_COL: fade(@COL_D, 100%);
+@VIEWBAR_COL: fade(@COL_D, 100%); /* was 80% */
 
 @LOGO_COL_A: @COL_A;
 @LOGO_COL_B: @COL_AB;
@@ -27,12 +23,10 @@
 	/* Needed for click-off and drag un-highlighting buttons to work (i.e. no selections) */
 	user-select: none;
 	
-	top: 0;/*-@VIEWBAR_SHADOW;							/* Mobile Scrolling Garbage Fix */
+	top: 0;
 	left: 0;
 	right: 0;
 	z-index: 1000;
-	
-	/*border-top: @VIEWBAR_SHADOW solid @VIEWBAR_COL;	/* Mobile Scrolling Garbage Fix */
 
 	height: @VIEWBAR_HEIGHT;
 	background: @VIEWBAR_COL;
@@ -47,14 +41,12 @@
 		& > .-left {
 			position: absolute;
 
-			left: 1rem; /* 1rem, so when we lose our full width, it's padded */
+			left: 1rem; 	/* 1rem, so when we lose our full width, it's padded */
 			bottom: 0;
 			top: 0;
-			/*margin: auto;*/
-			height: 2.5em; /* Required, otherwise top+bottom fills the whole parent div */
+			height: 2.5em; 	/* Required, otherwise top+bottom fills the whole parent div */
 			
 			& > .-logo {
-				/*margin-right: @VIEWBAR_PAD;*/		
 				font-size: 2.5em;
 				display: flex;
 				
@@ -103,7 +95,7 @@
 			bottom: 0;
 			top: 0;
 			margin: auto;
-			height: 3em; /* Required, otherwise top+bottom fills the whole parent div */
+			height: 3em; 	/* Required, otherwise top+bottom fills the whole parent div */
 			min-width: 3em;
 			
 		}
@@ -119,11 +111,11 @@
 				transition: background 0.1s;
 				
 				& div {
-					color: @BUTTON_COL_TEXT; /*@COL_A;/*@MAJOR_MUTE; /*@MAJOR_LIGHT; /*@MAJOR_COLOR; /*@MAJOR_MUTE_D4;*/
+					color: @BUTTON_COL_TEXT;
 					transition: color 0.2s;
 				}
 				& svg {
-					color: @BUTTON_COL_SVG; /*@COL_NLLL;*/
+					color: @BUTTON_COL_SVG;
 					transition: color 0.2s;
 				}
 				
@@ -131,7 +123,7 @@
 				&:focus, 
 				&:active,
 				&:hover:active {
-					background: @BUTTON_LIT_BG; /*@COL_A;*/
+					background: @BUTTON_LIT_BG;
 					
 					& svg {
 						color: @BUTTON_LIT_SVG;

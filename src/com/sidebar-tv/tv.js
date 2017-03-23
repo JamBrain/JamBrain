@@ -3,6 +3,7 @@ import ShallowCompare	 				from 'shallow-compare/index';
 
 import SVGIcon 							from 'com/svg-icon/icon';
 import NavSpinner						from 'com/nav-spinner/spinner';
+import IMG	 							from 'com/img2/img2';
 
 export default class SidebarTV extends Component {
 	constructor( props ) {
@@ -16,12 +17,14 @@ export default class SidebarTV extends Component {
 		this.serviceIcons = [
 			(<div />),						// Null //
 			(<SVGIcon>twitch</SVGIcon>),	// Twitch //
-			(<div></div>),
+			(<SVGIcon>youtube</SVGIcon>),	// YouTube //
 			(<div></div>),
 			(<div></div>),
 			(<div></div>),
 			(<div></div>),
 		];
+		
+		this.FailImage = '//'+STATIC_DOMAIN+'/other/asset/TVFail.png';
 	}
 
 //	shouldComponentUpdate( nextProps, nextState ) {
@@ -33,7 +36,6 @@ export default class SidebarTV extends Component {
 	componentDidMount() {
 //		console.log("SideBarTV: componentDidMount");
 		
-		//fetch('//jammer.tv/v1/live.php/ludum-dare+game-jam+game-dev/', {method: 'POST' /*, mode:'no-cors'*/})
 		fetch('//jammer.tv/v1/live.php/ludum-dare+ludum-dare-art+ludum-dare-music+ludum-dare-craft+ludum-dare-play+ludum-dare-talk')
 		.then(r => {
 			if ( r )
@@ -88,24 +90,22 @@ export default class SidebarTV extends Component {
 	}
 	
 	showOthers( others, active ) {
-		var that = this;	// Workaround. Not sure if it's a Buble or Preact bug //
-		
-		return others.map( function(other,index) {
+		return others.map( function(other, index) {
 			if (other === active) {
 				return (
-					<div class="selected" onclick={that.setActive.bind(that,index)}>
-						<div><img src={ other && other.meta ? other.meta.thumbnail : ""} /></div>
+					<div class="selected" onclick={this.setActive.bind(this, index)}>
+						<div><IMG src={ other && other.meta ? other.meta.thumbnail : ""} failsrc={this.FailImage} /></div>
 					</div>
 				);
 			}
 			else {
 				return (
-					<div onclick={that.setActive.bind(that,index)}>
-						<div><img src={ other && other.meta ? other.meta.thumbnail : ""} /></div>
+					<div onclick={this.setActive.bind(this, index)}>
+						<div><IMG src={ other && other.meta ? other.meta.thumbnail : ""} failsrc={this.FailImage} /></div>
 					</div>
 				);
 			}
-		});
+		}.bind(this));
 	}
 	
 	render( props, state ) {
@@ -140,7 +140,7 @@ export default class SidebarTV extends Component {
 							/*window.open("https://www.twitch.tv/directory/game/Creative/ldjam", '_blank');*/
 							window.location.hash = "#tv/"+active.meta.name;
 						}}>
-						<div class="-img"><img src={active.meta.thumbnail} /></div>
+						<div class="-img"><IMG src={active.meta.thumbnail} failsrc={this.FailImage} /></div>
 						<div class="-live"><SVGIcon baseline small>circle</SVGIcon> <span class="-text">LIVE</span></div>
 						<div class="-name">{this.serviceIcons[active.service_id]} <span class="-text">{active.meta.name}</span></div>
 						<div class="-viewers"><SVGIcon baseline>tv</SVGIcon> <span class="-text">{active.viewers}</span></div>

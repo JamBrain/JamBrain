@@ -1,7 +1,5 @@
 import { h, Component } 				from 'preact/preact';
 
-import SVGIcon 							from 'com/svg-icon/icon';
-
 export default class ContentPalette extends Component {
 	constructor( props ) {
 		super(props);
