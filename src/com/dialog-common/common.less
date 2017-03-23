@@ -1,9 +1,9 @@
 @import "defs.less";
 
 .dialog-common {
-	color: @MAJOR_DARK;
-	background: @MAJOR_MUTE;
-	box-shadow: 0 0 4px rgba(0,0,0,0.5);
+	color: @COL_D;
+	background: @COL_NLLL;
+	box-shadow: 0 0 4px fade(@COL_D, 50%);
 
 	max-width: 40em;
 	@media (max-width: 40em) { 
@@ -13,8 +13,8 @@
 	font-size: 1.2em;
 	
 	& > .-header {
-		background: @MAJOR_MUTE_D4;
-		color: @MAJOR_LIGHT;
+		background: @COL_ND;
+		color: @COL_L;
 
 		& > .-title {
 			font-size: 1.2em;
@@ -24,8 +24,8 @@
 		}
 	}
 	& > .-error {
-		background: @MAJOR_COLOR1;
-		color: MAJOR_LIGHT;
+		background: @COL_A;
+		color: @COL_L;
 		padding: 0.5rem 1rem;
 	}
 	& > .-body {
@@ -54,7 +54,7 @@
 			display: inline-block;
 		}
 		& .-text {
-			background: @MAJOR_MUTE_L4;
+			background: @COL_NLLLL;
 			border: 0;
 			padding: 0.5em;
 			max-width: 20em;
@@ -67,7 +67,7 @@
 			}
 				
 			&:focus {
-				background: @MAJOR_LIGHT;
+				background: @COL_L;
 			}
 		}
 		
@@ -76,28 +76,28 @@
 			
 			&:hover {
 				cursor: pointer;
-				color: @MAJOR_COLOR1;
+				color: @COL_A;
 			}
 		}
 	}
 	& > .-footer {
-		background: @MAJOR_MUTE_D2;
-		color: @MAJOR_COLOR4;
+		background: @COL_N;
+		color: @COL_L;
 		
 		display: flex;
 		justify-content: center;
 
 		& > .-button {
 			padding: 0.5rem 2rem;
-			border: 1px solid @MAJOR_MUTE_D2;
+			border: 1px solid @COL_N;
 			margin: 0.5rem 0.25rem;
 			
 			font-weight:700;
 		
 			&:hover, &:focus {
-				background: @MAJOR_COLOR1;
-				color: @MAJOR_LIGHT;
-				border: 1px solid @MAJOR_COLOR1;
+				background: @COL_A;
+				color: @COL_L;
+				border: 1px solid @COL_A;
 			}
 		}
 		& > .-light {

@@ -70,19 +70,21 @@
 					color: @LOGO_COL_C;
 				}
 				
-				&:hover {
+				&:hover,
+				&:focus {
 					background: @LOGO_LIT_BG;
-				}
-				&:hover > .icon-ludum, 
-				&:hover > .icon-l-udum {
-					color: @LOGO_LIT_A;
-				}
-				&:hover > .icon-dare, 
-				&:hover > .icon-d-are {
-					color: @LOGO_LIT_B;
-				}
-				&:hover > .icon-ldnum {
-					color: @LOGO_LIT_C;
+
+					& > .icon-ludum,
+					& > .icon-l-udum {
+						color: @LOGO_LIT_A;
+					}
+					& > .icon-dare, 
+					& > .icon-d-are {
+						color: @LOGO_LIT_B;
+					}
+					& > .icon-ldnum {
+						color: @LOGO_LIT_C;
+					}
 				}
 			}
 		}
