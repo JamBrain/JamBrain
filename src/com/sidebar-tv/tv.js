@@ -14,6 +14,12 @@ export default class SidebarTV extends Component {
 			streams: []
 		};
 		
+		this.services = [
+			'stream-null',
+			'stream-twitch',
+			'stream-youtube',
+		];
+		
 		this.serviceIcons = [
 			(<div />),						// Null //
 			(<SVGIcon>twitch</SVGIcon>),	// Twitch //
@@ -142,7 +148,7 @@ export default class SidebarTV extends Component {
 						}}>
 						<div class="-img"><IMG src={active.meta.thumbnail} failsrc={this.FailImage} /></div>
 						<div class="-live"><SVGIcon baseline small>circle</SVGIcon> <span class="-text">LIVE</span></div>
-						<div class="-name">{this.serviceIcons[active.service_id]} <span class="-text">{active.meta.name}</span></div>
+						<div class={'-name '+this.services[active.service_id]}>{this.serviceIcons[active.service_id]} <span class="-text">{active.meta.name}</span></div>
 						<div class="-viewers"><SVGIcon baseline>tv</SVGIcon> <span class="-text">{active.viewers}</span></div>
 						<div class="-play"><SVGIcon>play</SVGIcon></div>
 					</div>

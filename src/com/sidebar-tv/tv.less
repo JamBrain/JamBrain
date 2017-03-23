@@ -1,15 +1,13 @@
-
 @import "defs.less";
 
 #sidebar > .sidebar-tv {
-	@TV_BACKGROUND: #d7d2ac;
-	background: @MAJOR_MUTE_D6;
+	background: @COL_NDDDD;
 	
 	min-height: 3rem;
 
 	& > .-active {
 		position: relative;
-		cursor:pointer;
+		cursor: pointer;
 
 		& > .-img {
 			padding:0.5em;
@@ -20,12 +18,15 @@
 		}
 		& > .-live {
 			position: absolute;
-			left:1em;
-			top:1em;
-			text-shadow: 0 0 5px black;
+			left: 1em;
+			top: 1em;
+			/*text-shadow: 0 0 5px black;*/
+			background: @COL_L;
+			padding: 0 5px;
+			border-radius: 10px;
 
 			& > svg {
-				color: @MAJOR_COLOR1;
+				color: @COL_A;
 				animation: blinker 10s linear infinite;
 			}
 			@keyframes blinker { 
@@ -35,8 +36,8 @@
 			}
 			
 			& > span {
-				color: white;
-				font-weight:bold;
+				color: @COL_A;
+				font-weight: bold;
 			}
 		}
 		& > .-name {
@@ -45,9 +46,19 @@
 			bottom:1em;
 
 			padding:0.05em 0.5em;
-			background:rgba(100,65,165,0.8);
+			&.stream-twitch {
+				background: rgb(100,65,165);
+			}
+			&.stream-youtube {
+				background: rgb(230,33,23);
+			}
 
-			color:white;
+			color: @COL_L;
+			& > svg {
+				font-size: 0.75em;
+			}
+
+			border-radius: 10px;
 		}
 		& > .-viewers {
 			position: absolute;
@@ -55,32 +66,37 @@
 			top:1em;
 			
 			padding:0.05em 0.5em;
-			background:rgba(0,0,0,0.7);
+			background: fade(@COL_D, 100%);
 
-			color: white;
+			color: @COL_L;
+			& > svg {
+				font-size: 0.75em;
+			}
+
+			border-radius: 10px;
 		}
 		& > .-play {
-			position:absolute;
-			top:50%;
-			left:50%;
+			position: absolute;
+			top: 50%;
+			left: 50%;
 			transform: translate(-50%,-50%);
 			/*opacity:0.3;*/
-			font-size:3em;
-			color:white;
+			font-size: 3em;
+			color: @COL_L;
 			transition: all 0.2s;
 			
 			& > svg {
-				display:block;
+				display: block;
 			}
 			
-			background: rgba(0,0,0,0.4);
+			background: fade(@COL_D, 50%);
 		}
 		&:hover > .-play {
-			font-size:4em;
-			background: @MAJOR_COLOR1;
+			font-size: 4em;
+			background: @COL_A;
 		}
 		&:active > .-play {
-			font-size:2.5em;
+			font-size: 2.5em;
 		}
 	}
 	& > .-detail {
@@ -90,10 +106,10 @@
 		height:2.5em;
 		overflow: hidden;
 		
-		color: @MAJOR_MUTE;
+		color: @COL_NL;
 		
 		& > svg {
-			color: @MAJOR_MUTE_D5;
+			color: @COL_NDD;
 			padding: 0 0.4em;
 			display: block;
 			
@@ -109,7 +125,7 @@
 		}
 		
 		& > div {
-			overflow:hidden;
+			overflow: hidden;
 			font-style: italic;
 		}
 	}
@@ -134,10 +150,11 @@
 			}
 			
 			&.selected {
-				background: @MAJOR_MUTE_D4;
+				background: @COL_N;
 			}
-			&:hover {
-				background: @MAJOR_COLOR1;
+			&:hover,
+			&:focus {
+				background: @COL_A;
 			}
 
 		}
