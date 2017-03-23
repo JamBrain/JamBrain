@@ -148,26 +148,25 @@ export default class DialogTV extends Component {
 	
 	render( props, state ) {
 		var ShowStream = null;
-		var ShowSide = null;
+		var ShowSide = <div class="-chat" style={'width:'+state.chat[0]+'px; height:'+state.chat[1]+'px;'}></div>;
 
-		if ( props.extra.length ) {
-			ShowStream = Video.EmbedTwitch(
-				"-tv",
-				"//player.twitch.tv/?channel="+props.extra[0],
-				state.video[0],
-				state.video[1]
-			);
-
-			if ( state.showchat ) {
-				ShowSide = Video.EmbedTwitch(
-					"-chat",
-					"//www.twitch.tv/"+props.extra[0]+"/chat?popout=",
-					state.chat[0],
-					state.chat[1]
+		if ( props.extra.length > 1 ) {
+			if ( props.extra[0] == "twitch" ) {
+				ShowStream = Video.EmbedTwitch(
+					"-tv",
+					"//player.twitch.tv/?channel="+props.extra[1],
+					state.video[0],
+					state.video[1]
 				);
-			}
-			else {
-				ShowSide = <div class="-chat" style={'width:'+state.chat[0]+'px; height:'+state.chat[1]+'px;'}></div>;
+	
+				if ( state.showchat ) {
+					ShowSide = Video.EmbedTwitch(
+						"-chat",
+						"//www.twitch.tv/"+props.extra[1]+"/chat?popout=",
+						state.chat[0],
+						state.chat[1]
+					);
+				}
 			}
 		}
 		

@@ -15,9 +15,9 @@ export default class SidebarTV extends Component {
 		};
 		
 		this.services = [
-			'stream-null',
-			'stream-twitch',
-			'stream-youtube',
+			'null',
+			'twitch',
+			'youtube',
 		];
 		
 		this.serviceIcons = [
@@ -144,11 +144,11 @@ export default class SidebarTV extends Component {
 					<div class="-active" onclick={e => {
 							console.log('tv'); 
 							/*window.open("https://www.twitch.tv/directory/game/Creative/ldjam", '_blank');*/
-							window.location.hash = "#tv/"+active.meta.name;
+							window.location.hash = "#tv/"+this.services[active.service_id]+'/'+active.meta.name;
 						}}>
 						<div class="-img"><IMG src={active.meta.thumbnail} failsrc={this.FailImage} /></div>
 						<div class="-live"><SVGIcon baseline small>circle</SVGIcon> <span class="-text">LIVE</span></div>
-						<div class={'-name '+this.services[active.service_id]}>{this.serviceIcons[active.service_id]} <span class="-text">{active.meta.name}</span></div>
+						<div class={'-name stream-'+this.services[active.service_id]}>{this.serviceIcons[active.service_id]} <span class="-text">{active.meta.name}</span></div>
 						<div class="-viewers"><SVGIcon baseline>tv</SVGIcon> <span class="-text">{active.viewers}</span></div>
 						<div class="-play"><SVGIcon>play</SVGIcon></div>
 					</div>
