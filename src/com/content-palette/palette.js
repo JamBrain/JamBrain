@@ -29,6 +29,7 @@ export default class ContentPalette extends Component {
 			<div class="-col-k">K</div>,
 			<div class="-col-d">D</div>,
 			<div class="-col-m">M</div>,
+			<div class="-col-n">N</div>,
 		];
 		var BGVariants = [
 			<div class="-bg-a">A</div>,
@@ -51,6 +52,7 @@ export default class ContentPalette extends Component {
 			<div class="-bg-k">K</div>,
 			<div class="-bg-d">D</div>,
 			<div class="-bg-m">M</div>,
+			<div class="-bg-n">N</div>,
 		];
 		
 		return (
