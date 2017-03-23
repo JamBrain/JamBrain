@@ -41,7 +41,8 @@
 		
 		transition: background 0.1s, color 0.1s, border 0s;
 		
-		&:hover {
+		&:hover,
+		&:focus {
 			background: @COL_A; /*@MAJOR_COLOR1*/;
 			border: 1px solid transparent;
 			color: @COL_W; /*@MAJOR_LIGHT;*/
@@ -54,7 +55,8 @@
 		
 		&.-footer {
 			color: @COL_NLLL;
-			&:hover {
+			&:hover,
+			&:focus {
 				border: 1px solid transparent;
 				color: @COL_W;
 			}

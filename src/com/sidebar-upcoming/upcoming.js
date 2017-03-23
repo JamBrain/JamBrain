@@ -8,15 +8,19 @@ export default class SidebarUpcoming extends Component {
 	}
 	
 	render( {}, {} ) {
+		var Items = [
+//			<div class="-item"><strong>Mar 24th</strong> - Theme Suggestions Open</div>,
+			<div class="-item"><strong>Apr 7th</strong> - Theme Selection Starts</div>,
+			<div class="-item"><strong>Apr 21st</strong> - Ludum Dare 38 <SVGIcon baseline small>trophy</SVGIcon></div>,
+			<div class="-item"><strong>May 16th</strong> - Results <SVGIcon baseline small>checker</SVGIcon></div>
+		];
+		
 		return (
 			<div class="sidebar-base sidebar-shortlist sidebar-upcoming">
 				<div class="-title _font2"><SVGIcon baseline>calendar-wide</SVGIcon> <span class="-text">Coming Up</span></div>
-				<div class="-item"><strong>Mar 24th</strong> - Theme Suggestions Open</div>
-				<div class="-item"><strong>Apr 7th</strong> - Theme Selection Starts</div>
-				<div class="-item"><strong>Apr 21st</strong> - Ludum Dare 38 <SVGIcon baseline small>trophy</SVGIcon></div>
-				<div class="-item"><strong>May 16th</strong> - Results <SVGIcon baseline small>checker</SVGIcon></div>
-				<ButtonLink class="-footer" href="/cal">Full Schedule</ButtonLink>
+				{Items}
 			</div>
 		);
 	}
 }
+//				<ButtonLink class="-footer" href="/cal">Full Schedule</ButtonLink>
