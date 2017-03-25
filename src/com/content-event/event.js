@@ -78,11 +78,11 @@ export default class ContentEvent extends Component {
 			
 			var EventWhen = null;
 			var EventWhere = null;
-			if (true) {
-				EventWhen = <div class="-when"><SVGIcon baseline small>clock</SVGIcon> <strong>WHEN:</strong> <span>April 21st-24th, 2017</span></div>;
+			if ( node.meta['when'] ) {
+				EventWhen = <div class="-detail -when"><SVGIcon baseline small>clock</SVGIcon> <strong>WHEN:</strong> <span>{node.meta['when']}</span></div>;
 			}
-			if ( false ) {
-				EventWhere = <div class="-where"><SVGIcon baseline small>location</SVGIcon> <strong>WHERE:</strong> <span>Here (Online)</span></div>;
+			if ( node.meta['where'] ) {
+				EventWhere = <div class="-detail -where"><SVGIcon baseline small>location</SVGIcon> <strong>WHERE:</strong> <span>{node.meta['where']}</span></div>;
 			}
 				
 			return (
