@@ -1,12 +1,17 @@
 @import "defs.less";
 
+@POST_BG: @COL_L;
+@POST_DARK: @COL_NDDD;
+
+@POST_BUTTON_LIT: @COL_A;
+
 #content .content-post {
 	position: relative;
 	
-	border-top: 4px solid @MAJOR_MUTE_D6;
-	color: @MAJOR_MUTE_D6;
+	border-top: 4px solid;
+	color: @POST_DARK;
 		
-	/*background: linear-gradient(135deg, @MAJOR_COLOR1 (@spacing * 0), @MAJOR_COLOR1 (@spacing * 2), @MAJOR_COLOR2 (@spacing * 2), @MAJOR_COLOR2 (@spacing * 5), @MAJOR_COLOR3 (@spacing * 5), @MAJOR_COLOR3 (@spacing * 9), @MAJOR_COLOR4 (@spacing * 9));
+	/*background: linear-gradient(135deg, @POST_BUTTON_LIT (@spacing * 0), @POST_BUTTON_LIT (@spacing * 2), @MAJOR_COLOR2 (@spacing * 2), @MAJOR_COLOR2 (@spacing * 5), @MAJOR_COLOR3 (@spacing * 5), @MAJOR_COLOR3 (@spacing * 9), @MAJOR_COLOR4 (@spacing * 9));
 	*/
 	background: #F2F2F2; /*@MAJOR_MUTE_L4;*/
 	box-shadow: 0px 0px 3px rgba(64,0,0,0.2);
@@ -19,11 +24,11 @@
 	}
 	& a:hover, & a:focus, & .-title a:hover, & .-title a:focus {
 		color: @MAJOR_COLOR4 !important; /*@MAJOR_COLOR4;*/
-		background: @MAJOR_COLOR1; /*@MAJOR_MUTE;*/
+		background: @POST_BUTTON_LIT; /*@MAJOR_MUTE;*/
 	}
 	
 	& a, & a:visited {
-		color: @MAJOR_COLOR1;
+		color: @POST_BUTTON_LIT;
 	}
 	& .-title a, & .-title a:visited {
 		color: @MAJOR_DARK;
@@ -36,8 +41,8 @@
 		
 		@spacing: 1.5em;
 
-/*		background: linear-gradient(135deg, @MAJOR_MUTE_D6 (@spacing * 0), @MAJOR_MUTE_D6 (@spacing * 2), @MAJOR_COLOR1 (@spacing * 2), @MAJOR_COLOR1 (@spacing * 5), @MAJOR_COLOR2 (@spacing * 5), @MAJOR_COLOR2 (@spacing * 9), @MAJOR_COLOR3 (@spacing * 9), @MAJOR_COLOR3 (@spacing * 15), transparent (@spacing * 15));/**/
-/*		background: linear-gradient(135deg, @MAJOR_COLOR1 (@spacing * 0), @MAJOR_COLOR1 (@spacing * 2), @MAJOR_COLOR2 (@spacing * 2), @MAJOR_COLOR2 (@spacing * 4), @MAJOR_COLOR3 (@spacing * 4), @MAJOR_COLOR3 (@spacing * 6), transparent (@spacing * 6));/**/
+/*		background: linear-gradient(135deg, @POST_DARK (@spacing * 0), @POST_DARK (@spacing * 2), @POST_BUTTON_LIT (@spacing * 2), @POST_BUTTON_LIT (@spacing * 5), @MAJOR_COLOR2 (@spacing * 5), @MAJOR_COLOR2 (@spacing * 9), @MAJOR_COLOR3 (@spacing * 9), @MAJOR_COLOR3 (@spacing * 15), transparent (@spacing * 15));/**/
+/*		background: linear-gradient(135deg, @POST_BUTTON_LIT (@spacing * 0), @POST_BUTTON_LIT (@spacing * 2), @MAJOR_COLOR2 (@spacing * 2), @MAJOR_COLOR2 (@spacing * 4), @MAJOR_COLOR3 (@spacing * 4), @MAJOR_COLOR3 (@spacing * 6), transparent (@spacing * 6));/**/
 
 		
 		& > .-title {
@@ -61,7 +66,7 @@
 			position: relative;
 			
 			&:hover {
-				background: @MAJOR_COLOR1;
+				background: @POST_BUTTON_LIT;
 				& > .-info {
 					display: block;
 					color: @MAJOR_LIGHT;
@@ -99,7 +104,7 @@
 		}
 	}	
 	& > .-footer {
-		border-bottom:8px solid @MAJOR_MUTE_D6;
+		border-bottom:8px solid @POST_DARK;
 		color: @MAJOR_MUTE;
 		height: 2em;
 
@@ -120,10 +125,10 @@
 				width:auto;
 				padding-left:1rem;
 				padding-right:1rem;
-				background: @MAJOR_MUTE_D6;
+				background: @POST_DARK;
 				
 				&:after {
-					color: @MAJOR_MUTE_D6;
+					color: @POST_DARK;
 					
 					content:'';
 					left: 3.5rem;
@@ -141,14 +146,14 @@
 					cursor: pointer;
 					
 					color: @MAJOR_LIGHT;
-					background: @MAJOR_COLOR1;
+					background: @POST_BUTTON_LIT;
 					&:after {
-						color: @MAJOR_COLOR1;
+						color: @POST_BUTTON_LIT;
 					}
 				}
 
 				&:active, &:focus {
-					color: @MAJOR_COLOR1;
+					color: @POST_BUTTON_LIT;
 					background: @MAJOR_LIGHT;
 					&:after {
 						color: @MAJOR_LIGHT;
@@ -172,20 +177,20 @@
 			
 			
 			& > .-wedge-right {
-				background: linear-gradient(45deg, @MAJOR_MUTE_D6 0px, @MAJOR_MUTE_D6 30px, transparent 30px);
+				background: linear-gradient(45deg, @POST_DARK 0px, @POST_DARK 30px, transparent 30px);
 			}
 			& > .-edge {
-/*				background: @MAJOR_MUTE_D6;
+/*				background: @POST_DARK;
 				
 /*				& > svg {
 					width:100%;
 					height:100%;
-					color: @MAJOR_MUTE_D6;
+					color: @POST_DARK;
 					display:block;
 				}*/
 			}
 			& > .-spacer {
-				background: @MAJOR_MUTE_D6;
+				background: @POST_DARK;
 				& > svg {
 					width:100%;
 					height:100%;
@@ -234,6 +239,22 @@
 	@media (max-width: 22em) { 
 		& .-comment-count {
 			display: none !important;
+		}
+	}
+	
+	&.-has-headline {
+		border-top: 0 solid;
+		& .-headline {
+			position: relative;
+			
+			background: @POST_DARK;
+			color: @POST_BG;
+			height: 1em;
+			font-size: 2em;
+			font-weight: bold;
+			font-style: italic;
+			overflow: hidden;
+			padding-left: 0.5em;
 		}
 	}
 }
