@@ -93,7 +93,7 @@ export default class ContentTimeline extends Component {
 		}
 			
 		return (
-			<div>
+			<div class="content-timeline">
 				{props.children}
 				{ShowFeed}
 			</div>
