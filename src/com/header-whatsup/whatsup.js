@@ -15,6 +15,8 @@ export default class HeaderWhatsup extends Component {
 		
 		// TODO: The actual theme can be found in the the public metatag "event-theme" (private one before event)
 		
+		return null;
+		
 		return (
 			<div class="header-base header-whatsup outside">
 				<span class="-title _font2">{"Theme:"}</span>{" One room"}

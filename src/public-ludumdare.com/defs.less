@@ -1,2 +1,122 @@
+@TARGET: "ludumdare.com";
 
-@import "../public-jammer.vg/defs.less";
+/* Palette Tester: http://ludumdare.org/dev/palette */
+/* Reference: https://www.sessions.edu/color-calculator/ */
+
+/* Color Triad */
+@COL_A: #E53;						/* Red (Main) */
+@COL_B: #FC1;						/* Yellow (Pair) /* was #FD1 */
+@COL_C: #2288F7;					/* Blue (Triadic) /* was #28E */
+
+@COL_N: mix(#777, @COL_C, 90%); 	/* Neutral -- Center color used as the backdrop /* was #7d7d82 */
+
+/* Blends */
+@COL_AB: mix(@COL_A, @COL_B, 50%); /* was #E82 */
+@COL_BC: #7D4; /*mix(@COL_B, @COL_C, 75%); /*mix(@COL_B, @COL_C, 50%); /* was #4F3 */
+@COL_CA: #B7E; /*mix(@COL_C, @COL_A, 25%); /*mix(@COL_C, @COL_A, 50%); /* was #F2D */
+
+/* Primary Greys */
+@COL_M: @COL_N;						/* Mute -- Color blended against when muting /* was #777 */
+@COL_L: @COL_NLLLLL;				/* Light -- Lightest color that can be diferentiated from White /* was #EEE */
+@COL_D: @COL_NDDDDD;				/* Dark -- Darkest color that can be reasonably differentiated from Black /* was #222 */
+
+/* Reference Greys */
+@COL_W: #FFF;						/* White */
+@COL_G: #888;						/* Grey (Middle Grey) */
+@COL_K: #000;						/* Key (i.e. Black from CMYK) */
+
+/* Mutes */
+@COL_AM: mix(@COL_A, @COL_M, 50%);
+@COL_BM: mix(@COL_B, @COL_M, 50%);
+@COL_CM: mix(@COL_C, @COL_M, 50%);
+@COL_ABM: mix(@COL_AB, @COL_M, 50%);
+@COL_BCM: mix(@COL_BC, @COL_M, 50%);
+@COL_CAM: mix(@COL_CA, @COL_M, 50%);
+
+/* Neutral Pushed Colors */
+@COL_ND: darken(mix(@COL_N, @COL_C, 96%), 8%);
+@COL_NDD: darken(mix(@COL_ND, @COL_C, 96%), 7%);
+@COL_NDDD: darken(mix(@COL_NDD, @COL_N, 96%), 6%);
+@COL_NDDDD: darken(mix(@COL_NDDD, @COL_N, 97%), 7%);
+@COL_NDDDDD: darken(mix(@COL_NDDDD, @COL_N, 98%), 8%);
+
+@COL_NL: lighten(mix(@COL_N, @COL_C, 96%), 10%);
+@COL_NLL: lighten(mix(@COL_NL, @COL_C, 96%), 10%);
+@COL_NLLL: lighten(mix(@COL_NLL, @COL_C, 96%), 10%);
+@COL_NLLLL: lighten(mix(@COL_NLLL, @COL_C, 96%), 10%);
+@COL_NLLLLL: lighten(mix(@COL_NLLLL, @COL_C, 96%), 10%);
+
+/* Perceptual Grayscale */
+@COL_AG: hsv(0,0,luma(@COL_A));
+@COL_BG: hsv(0,0,luma(@COL_B));
+@COL_CG: hsv(0,0,luma(@COL_C));
+@COL_ABG: hsv(0,0,luma(@COL_AB));
+@COL_BCG: hsv(0,0,luma(@COL_BC));
+@COL_CAG: hsv(0,0,luma(@COL_CA));
+
+@COL_AMG: hsv(0,0,luma(@COL_AM));
+@COL_BMG: hsv(0,0,luma(@COL_BM));
+@COL_CMG: hsv(0,0,luma(@COL_CM));
+@COL_ABMG: hsv(0,0,luma(@COL_ABM));
+@COL_BCMG: hsv(0,0,luma(@COL_BCM));
+@COL_CAMG: hsv(0,0,luma(@COL_CAM));
+
+@COL_NDDDDDG: hsv(0,0,luma(@COL_NDDDDD));
+@COL_NDDDDG: hsv(0,0,luma(@COL_NDDDD));
+@COL_NDDDG: hsv(0,0,luma(@COL_NDDD));
+@COL_NDDG: hsv(0,0,luma(@COL_NDD));
+@COL_NDG: hsv(0,0,luma(@COL_ND));
+@COL_NG: hsv(0,0,luma(@COL_N));
+@COL_NLG: hsv(0,0,luma(@COL_NL));
+@COL_NLLG: hsv(0,0,luma(@COL_NLL));
+@COL_NLLLG: hsv(0,0,luma(@COL_NLLL));
+@COL_NLLLLG: hsv(0,0,luma(@COL_NLLLL));
+@COL_NLLLLLG: hsv(0,0,luma(@COL_NLLLLL));
+
+
+/* LEGACY */
+@BASE_UNIT: 16px;
+@BASE_WIDTH: 80rem;
+
+@MAJOR_DARK: #000;
+@MAJOR_LIGHT: #FFF;
+
+@MAJOR_COLOR0: #000;
+@MAJOR_COLOR1: #E53;
+@MAJOR_COLOR2: #E82;
+@MAJOR_COLOR3: #FD1;
+@MAJOR_COLOR4: #F2F2F2;
+
+@MAJOR_ALT0: #000;
+@MAJOR_ALT1: #36E;
+@MAJOR_ALT2: #29E;
+@MAJOR_ALT3: #1DF;
+@MAJOR_ALT4: #FFF;
+
+/*@MAJOR_COLOR: #F60;*/
+/*@MAJOR_COLOR: #06F;*/
+
+/*@MAJOR_MUTE: #EDA;*/
+/*@MAJOR_MUTE: #9AE;*/
+/*@MAJOR_MUTE: #ABE;*/
+@MAJOR_MUTE: #D0D0D8;
+/*
+@MAJOR_COLOR_MUTE: mix(@MAJOR_COLOR,@MAJOR_MUTE,75%);
+@MAJOR_COLOR_MUTE2: mix(@MAJOR_COLOR,@MAJOR_MUTE,40%);
+@MAJOR_COLOR_MUTE3: mix(@MAJOR_COLOR,@MAJOR_MUTE,25%);
+*/
+
+@MAJOR_MUTE_L: mix(@MAJOR_MUTE,@MAJOR_LIGHT,85%);
+@MAJOR_MUTE_L2: mix(@MAJOR_MUTE,@MAJOR_LIGHT,70%);
+@MAJOR_MUTE_L3: mix(@MAJOR_MUTE,@MAJOR_LIGHT,60%);
+@MAJOR_MUTE_L4: mix(@MAJOR_MUTE,@MAJOR_LIGHT,40%);
+
+@MAJOR_MUTE_D: mix(@MAJOR_MUTE,@MAJOR_DARK,90%);
+@MAJOR_MUTE_D2: mix(@MAJOR_MUTE,@MAJOR_DARK,80%);
+@MAJOR_MUTE_D3: mix(@MAJOR_MUTE,@MAJOR_DARK,70%);
+@MAJOR_MUTE_D4: mix(@MAJOR_MUTE,@MAJOR_DARK,60%);
+@MAJOR_MUTE_D5: mix(@MAJOR_MUTE,@MAJOR_DARK,50%);
+@MAJOR_MUTE_D6: mix(@MAJOR_MUTE,@MAJOR_DARK,30%);
+
+@MAJOR_GREEN: #8E4;
+@MAJOR_BLUE: #5CE;

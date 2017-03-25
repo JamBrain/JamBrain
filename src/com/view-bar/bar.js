@@ -8,6 +8,9 @@ import NavLink 							from 'com/nav-link/link';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
 
+import DropdownUser 					from 'com/dropdown-user/user';
+//import DropdownNotification				from 'com/dropdown-notification/notification';
+
 function make_url( url ) {
 	return url + window.location.search;
 }
@@ -54,7 +57,7 @@ export default class ViewBar extends Component {
 		var ShowMyGame = null;
 		var NewPost = null;
 		var Notification = null;
-		var User = null;
+		var ShowUser = null;
 		var Register = null;
 		var Login = null;
 		var GoSecure = null;
@@ -123,11 +126,12 @@ export default class ViewBar extends Component {
 			let Avatar = (user.meta && user.meta.avatar) ? <img src={"//"+STATIC_DOMAIN+user.meta.avatar} /> : <img src={'//'+STATIC_DOMAIN+'/other/dummy/user64.png'} />;
 			//'/other/logo/mike/Chicken64.png';
 			let MyURL = '/users/'+user.slug+'/';
-			User = (
+			ShowUser = [
 				<ButtonBase class="-user">
 					<NavLink href={MyURL}>{Avatar}</NavLink>
-				</ButtonBase>
-			);
+				</ButtonBase>,
+//				<DropdownUser />
+			];
 		}
 		// If user has finished loading (and is not logged in)
 		else if ( user ) {
@@ -165,7 +169,7 @@ export default class ViewBar extends Component {
 					{ShowCalendar}
 					{Search}
 					{Notification}
-					{User}
+					{ShowUser}
 					{Register}
 					{Login}
 					{GoSecure}

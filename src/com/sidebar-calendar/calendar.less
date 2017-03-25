@@ -1,55 +1,97 @@
-
 @import "defs.less";
 
-#sidebar > .sidebar-calendar {
-	/*box-shadow: 0px 0px 3px rgba(64,0,0,0.2);*/
-	color: @MAJOR_MUTE_D6;
-	
-	& > .-week {
-		display:flex;
-		align-items:stretch;
-		& > div {
-			position:relative;
-			
-			margin-right:1px;
-			margin-bottom:1px;
-			background: @MAJOR_MUTE_D;/*@MAJOR_COLOR_MUTE3;*/
+@CAL_CMONTH_BG: @COL_NLLL;
+@CAL_CMONTH_COL: @COL_NL;
+@CAL_OMONTH_BG: @COL_NLL;
+@CAL_OMONTH_COL: @COL_N;
 
-			cursor:pointer;
+@CAL_SCHEDULED_BG: @COL_BM;
+@CAL_SCHEDULED_COL: @COL_NLLLL;
+
+@CAL_LIT_BG: @COL_A;
+@CAL_LIT_COL: @COL_W;
+
+@CAL_BORDER: 2px;
+
+#sidebar > .sidebar-calendar {
+	& > .-week {
+		display: flex;
+		align-items: stretch;
+
+		& > div {
+			position: relative;
+
+			font-weight: bold;
+			cursor: pointer;
+			
+			background: @CAL_CMONTH_BG; /*@MAJOR_MUTE_D;/*@MAJOR_COLOR_MUTE3;*/
+			color: @CAL_CMONTH_COL;
+			&.month {
+				background: @CAL_OMONTH_BG;/*@MAJOR_MUTE_D2;*/
+				color: @CAL_OMONTH_COL;
+			}
+			border: @CAL_BORDER solid transparent;
+
+			transition: background 0.1s, color 0.2s, border 0.2s;
+
+			margin-right: 1px;
+			margin-bottom: 1px;
+
 			/*transition: transform 0.1s, z-index 0.1s;*/
 
-			/* This is perfect square trickery: http://stackoverflow.com/a/23754080 */
-			width:100%;
+			/* This is the perfect square trickery: http://stackoverflow.com/a/23754080 */
+			width: 100%;
 			&::after {
-				padding-bottom:100%; /* Previously: 14.29% (100 / 7) */
+				padding-bottom: 100%; /* Previously: 14.29% (100 / 7) */
 				/* The trick used to work by padding/margin with %'s, which were based on width. */
 				/* Now you add a dummy element, which we do here via the pseudo element. */
 				
 				content: '';
 				display: block;
 			}
+
 						
-			/* Position this absolutely, so not to affect the flow (and make the box bigger) */
+			/* Elements are positioned absolutely, so not to affect the flow (and make the box bigger) */
 			& > .-text {
-				position:absolute;
-				top:0.25em;
-				left:0.25em;
+				position: absolute;
+				top: -1px;/*0.1em;*/
+				left: 2px;/*0.1em;*/
 			}
 			
 			& > .-icon {
-				position:absolute;
-				bottom: 0.25em;
-				right: 0.25em;
+				position: absolute;
+				bottom: 2px;
+				right: 2px;
 			}
-			
+
+
+			&.scheduled,
+			&.scheduled.month,
+			&:first-child.scheduled.month,
+			&:last-child.scheduled.month {
+				background: @CAL_SCHEDULED_BG;
+				color: @CAL_SCHEDULED_COL;
+				border: @CAL_BORDER solid transparent;
+			}
+
+			/* Hover */				
 			&:hover,
+			&:focus,
 			&:first-child:hover,
-			&:last-child:hover {
-				background: @MAJOR_COLOR1;
-				color: @MAJOR_LIGHT;
-				/*transform: scale(1.2, 1.2);*/
+			&:first-child:focus,
+			&:last-child:hover,
+			&:last-child:focus {
 				z-index:10;
-				font-weight: bold;
+				
+				&,
+				&.month,
+				&.scheduled {
+					background: @CAL_LIT_BG; /*@MAJOR_COLOR1;*/
+					color: @CAL_LIT_COL; /*@MAJOR_LIGHT;*/
+					border: @CAL_BORDER solid transparent;
+				}
+
+				/*transform: scale(1.2, 1.2);*/
 			}
 			&:active, 
 			&:first-child:active,
@@ -57,23 +99,38 @@
 				/*transform: scale(0.9, 0.9);*/
 			}
 			
+			/* Sunday and Monday */
 			&:first-child,
 			&:last-child {
-				background: @MAJOR_MUTE_D2;/*@MAJOR_COLOR_MUTE2;*/
+				border: @CAL_BORDER solid @CAL_CMONTH_BG;/*@MAJOR_MUTE_D;*/
+				color: @CAL_CMONTH_BG;/*@MAJOR_MUTE_D;*/
+				background: @CAL_CMONTH_COL; /*@MAJOR_MUTE_D4;/*@MAJOR_COLOR_MUTE2;*/
+				&.month {
+					border: @CAL_BORDER solid @CAL_OMONTH_BG;
+					color: @CAL_OMONTH_BG;
+					background: @CAL_OMONTH_COL;
+				}
 			}
+			
+			/* Cleanup */
 			&:last-child {
-				margin-right:0;
+				margin-right: 0;
 			}
 		}
 		& > .selected {
-			background: @MAJOR_MUTE_L2;
+			&,
 			&:first-child,
 			&:last-child {
-				background: @MAJOR_MUTE_L2;
+				background: @COL_NLLLLL;/*@MAJOR_MUTE_L2;*/
+				color: @COL_NLL;/*@MAJOR_LIGHT;/*@MAJOR_MUTE_D3;*/
+				border: @CAL_BORDER solid transparent;/*@MAJOR_LIGHT;*/
 			}
 		}
+
 		& > .event {
 			font-weight: bold;
 		}
 	}
+
+	/*box-shadow: 0px 0px 3px rgba(64,0,0,0.2);*/
 }

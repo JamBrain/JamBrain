@@ -36,8 +36,8 @@ const IFrame = (props) => {
 export function EmbedTwitch( _class, _src, _width = null, _height = null ) {
 	return <IFrame class={_class} src={_src} width={_width} height={_height} />;
 }
-export function EmbedTwitchChat() {
-	
+export function EmbedTwitchChat(_class, _src, _width = null, _height = null ) {
+	return <IFrame class={_class} src={_src} style={'width: '+_width+'px; height: '+_height+'px'} />;	
 }
 
 export function EmbedHitbox() {
@@ -54,5 +54,9 @@ export function EmbedYouTubeChat() {
 	
 }
 
+// NOTE: Beam generates thumbnail mp4's
+//<video loop><source type="video/mp4" src="https://thumbs.beam.pro/channel/116674.m4v?"></video>
 
+// video.load()
+// video.play()
 

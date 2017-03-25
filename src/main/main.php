@@ -36,11 +36,14 @@ foreach ( $URL_PARTS as &$PART ) {
 define( 'USE_MINIFIED', isset($_GET['debug']) ? '' : '.min' );
 define( 'VERSION_STRING', defined('GIT_VERSION') ? 'v='.GIT_VERSION : '' );
 const STATIC_DOMAINS = [ 
+	'ludumdare.org' => 'static.jammer.work',
 	'jammer.work' => 'static.jammer.work',
+	'ludumdare.dev' => 'static.jam.dev',
 	'jammer.dev' => 'static.jam.dev',
 ];
+const DEFAULT_STATIC_DOMAIN = 'static.jam.vg';
 
-define( 'STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : 'static.jam.vg' );
+define( 'STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : DEFAULT_STATIC_DOMAIN );
 define( 'LINK_SUFFIX', isset($_GET['nopush']) ? '; nopush' : '' );
 define( 'API_DOMAIN', 'api.'.$_SERVER['SERVER_NAME'] );
 define( 'API_ENDPOINT', '/vx' );
@@ -74,6 +77,8 @@ if ( !isset($_GET['nopreload']) ) {
 		var VERSION_STRING = "<?=VERSION_STRING?>";
 		var STATIC_DOMAIN = "<?=STATIC_DOMAIN?>";
 		var API_DOMAIN = "<?=API_DOMAIN?>";
+		var SERVER_TIMESTAMP = "<?=gmdate('Y-m-d\TH:i:s.000\Z'/*DATE_W3C*/);?>";
+		var CLIENT_TIMESTAMP = new Date().toISOString();
 		var SECURE_LOGIN_ONLY = <?= defined('SECURE_LOGIN_ONLY') ? ((SECURE_LOGIN_ONLY && !$_GET['insecure'])?'true':'false') : 'false' ?>;
 		<?php /* Load SVG */ ?>
 		<?php include __DIR__."/../embed/preload-svg.js.php"; ?>

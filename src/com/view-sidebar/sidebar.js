@@ -1,11 +1,13 @@
 import { h, Component }					from 'preact/preact';
 
+import SidebarCountdown					from 'com/sidebar-countdown/countdown';
 import SidebarCalendar					from 'com/sidebar-calendar/calendar';
 import SidebarUpcoming					from 'com/sidebar-upcoming/upcoming';
 import SidebarTV						from 'com/sidebar-tv/tv';
+import SidebarDummyTV					from 'com/sidebar-dummytv/dummytv';
 import SidebarTrending					from 'com/sidebar-trending/trending';
+import SidebarSponsor					from 'com/sidebar-sponsor/sponsor';
 import SidebarSupport					from 'com/sidebar-support/support';
-import SidebarCountdown					from 'com/sidebar-countdown/countdown';
 
 export default class ViewSidebar extends Component {
 	constructor( props ) {
@@ -14,15 +16,15 @@ export default class ViewSidebar extends Component {
 
 	render( props, state ) {
 		// TODO: cleanup
-		let jamEndDate = new Date(Date.UTC(2016, 11, 13, 2, 0, 0));
-		let compoEndDate = new Date(Date.UTC(2016, 11, 12, 2, 0, 0));
-		let ldStartDate = new Date(Date.UTC(2016, 11, 10, 2, 0, 0));
+		let ldStartDate = new Date(Date.UTC(2017, 3, 22, 1, 0, 0));
+		let jamEndDate = new Date(Date.UTC(2017, 3, 25, 1, 0, 0));
+		let compoEndDate = new Date(Date.UTC(2017, 3, 24, 1, 0, 0));
 
 		let now = new Date();
 		
 		let ShowCountdown = [];
 		if ( now < ldStartDate ) {
-			ShowCountdown.push(<SidebarCountdown date={ ldStartDate } nc="ld" to="Ludum Dare" tt="Starts" />);
+			ShowCountdown.push(<SidebarCountdown date={ ldStartDate } nc="ld" tt="Starts" />); /*to="Ludum Dare"*/
 		}
 		else {
 			if ( now < compoEndDate ) {
@@ -39,6 +41,8 @@ export default class ViewSidebar extends Component {
 				<SidebarCalendar rows={ShowCountdown.length ? 2 : 3} />
 				<SidebarUpcoming />
 				<SidebarTV />
+				<SidebarDummyTV />
+				<SidebarSponsor />
 				<SidebarSupport />
 			</div>
 		);

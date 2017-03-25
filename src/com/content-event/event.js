@@ -3,14 +3,14 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
-import ContentEventHome					from 'com/content-event-home/event-home';
-import ContentEventIdea					from 'com/content-event-idea/event-idea';
-import ContentEventSlaughter			from 'com/content-event-slaughter/event-slaughter';
-import ContentEventFusion				from 'com/content-event-fusion/event-fusion';
-import ContentEventList					from 'com/content-event-list/event-list';
-//import ContentEventFinal				from 'com/content-event-final/event-final';
-//import ContentEventJudging				from 'com/content-event-judging/event-judging';
-//import ContentEventResults				from 'com/content-event-results/event-results';
+import ContentEventHome					from 'com/content-event/event-home';
+import ContentEventIdea					from 'com/content-event/event-idea';
+import ContentEventSlaughter			from 'com/content-event/event-slaughter';
+import ContentEventFusion				from 'com/content-event/event-fusion';
+import ContentEventList					from 'com/content-event/event-list';
+//import ContentEventFinal				from 'com/content-event/event-final';
+//import ContentEventJudging				from 'com/content-event/event-judging';
+//import ContentEventResults				from 'com/content-event/event-results';
 
 export default class ContentEvent extends Component {
 	constructor( props ) {

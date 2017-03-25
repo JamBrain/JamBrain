@@ -21,12 +21,14 @@ export default class SidebarCalendar extends Component {
 		/* Months and Weeks start at 0. Years and Days start at 1. Using 0th day is like -1 */
 		let monthEndsOn = new Date(thisYear, thisMonth+1, 0).getDate();
 		let nextDay = thisDay - thisWeekday;
+		let toggleMonth = false;
 		
 		if ( nextDay < 1 ) {
 			let lastMonth = new Date(thisYear, thisMonth, 0);
 			monthEndsOn = lastMonth.getDate();
 			//console.log( lastMonth.getFullYear(), lastMonth.getMonth(), lastMonth.getDate(), lastMonth.getDay() );
 			nextDay = lastMonth.getDate() - lastMonth.getDay();
+			toggleMonth = true;
 		}
 		
 		// TODO: Insert scheduled events here
@@ -40,6 +42,9 @@ export default class SidebarCalendar extends Component {
 			if ( nextDay === thisDay ) {
 				ret['selected'] = true;
 			}
+			if ( toggleMonth ) {
+				ret['toggle'] = true;
+			}
 			
 			nextDay++;
 			if ( nextDay > monthEndsOn ) {
@@ -49,6 +54,7 @@ export default class SidebarCalendar extends Component {
 					thisYear++;
 					thisMonth = 1;
 				}
+				toggleMonth = !toggleMonth;
 			}
 			
 			return ret;
@@ -60,8 +66,13 @@ export default class SidebarCalendar extends Component {
 	genRow( row ) {
 		return row.map(col => {
 			let props = {};
+			props.class = [];
+			
 			if ( col.selected ) {
-				props.class = "selected";
+				props.class.push('selected');
+			}
+			if ( col.toggle === true ) {
+				props.class.push('month');
 			}
 			props.onclick = (e) => {
 				console.log('cal: ',col); 
@@ -77,8 +88,23 @@ export default class SidebarCalendar extends Component {
 			
 			// Hack
 			var ShowIcon = null;
-			if ( col.year == 2016 && col.month == 11 && (col.day >= 9 && col.day <= 12) ) {
-				ShowIcon = <SVGIcon class="-icon">trophy</SVGIcon>;
+			if ( col.year == 2017 && col.month == 3 && (col.day >= 21 && col.day <= 24) ) {
+				if ( col.day === 21 ) {
+					ShowIcon = <SVGIcon class="-icon">trophy</SVGIcon>;
+				}
+				props.class.push('scheduled');
+			}
+			else if ( col.year == 2017 && col.month == 4 && col.day == 16 ) {
+				ShowIcon = <SVGIcon class="-icon">checker</SVGIcon>;
+				props.class.push('scheduled');
+			}
+			else if ( col.year == 2017 && col.month == 2 && col.day == 24 ) {
+				ShowIcon = <SVGIcon class="-icon">checker</SVGIcon>;
+				props.class.push('scheduled');
+			}
+			else if ( col.year == 2017 && col.month == 3 && col.day == 7 ) {
+				ShowIcon = <SVGIcon class="-icon">checker</SVGIcon>;
+				props.class.push('scheduled');
 			}
 
 			return (
