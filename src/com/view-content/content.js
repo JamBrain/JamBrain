@@ -53,13 +53,30 @@ export default class ViewContent extends Component {
 			ret.push( <ContentNavRoot user={user} path={path} extra={extra} /> );
 			
 			if ( extra.length ) {
-				if ( extra[0] === 'palette' ) {
-					ret.push( <ContentPalette node={node} user={user} path={path} extra={extra} /> );
+				if ( extra[0] === 'news' ) {
+					ret.push( <ContentTimeline node={node} user={user} path={path} extra={extra} /> );
+				}
+				else if ( extra[0] === 'hot' ) {
+					ret.push( <ContentTimeline node={node} user={user} path={path} extra={extra} /> );
+				}
+				else if ( extra[0] === 'games' ) {
+					ret.push( <ContentTimeline node={node} user={user} path={path} extra={extra} /> );
+				}
+				else if ( extra[0] === 'feed' ) {
+					ret.push( <ContentTimeline node={node} user={user} path={path} extra={extra} /> );
+				}
+				else if ( extra[0] === 'palette' ) {
+					return <ContentPalette node={node} user={user} path={path} extra={extra} />;
 				}
 				else {
 					return <Content404 user={user} path={path} extra={extra}>{extra[0]} not found</Content404>;
 				}
 			}
+			// If logged in, default to the user timeline
+			else if ( user.id ) {
+				ret.push( <ContentTimeline node={node} user={user} path={path} extra={extra} /> );
+			}
+			// If not logged in, default to news
 			else {
 				ret.push( <ContentTimeline node={node} user={user} path={path} extra={extra} /> );
 			}
