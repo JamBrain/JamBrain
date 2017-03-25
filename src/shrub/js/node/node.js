@@ -28,7 +28,7 @@ export function Get( ids ) {
 	return Fetch.Get('//'+API_DOMAIN+'/vx/node/get/'+ids.join('+'));
 }
 
-export function GetFeed( id, methods, types ) {
+export function GetFeed( id, methods, types, subtypes, subsubtypes ) {
 	let args = [];
 
 	args.push(id);
@@ -47,6 +47,20 @@ export function GetFeed( id, methods, types ) {
 		args.push(types);
 	}
 
+	if ( subtypes ) {
+		if ( Array.isArray(subtypes) ) {
+			subtypes = subtypes.join("+");
+		}
+		args.push(subtypes);
+	}
+
+	if ( subsubtypes ) {
+		if ( Array.isArray(subsubtypes) ) {
+			subsubtypes = subsubtypes.join("+");
+		}
+		args.push(subsubtypes);
+	}
+
 	return Fetch.Get('//'+API_DOMAIN+'/vx/node/feed/'+args.join('/'));
 }
 
@@ -63,7 +77,7 @@ export function What( id ) {
 }
 
 
-export function Add( id, node_type, node_subtype ) {
+export function Add( id, node_type, node_subtype, node_subsubtype ) {
 	var args = [];
 
 	args.push(id);
@@ -71,9 +85,11 @@ export function Add( id, node_type, node_subtype ) {
 	if ( node_type ) {
 		args.push(node_type);
 	}
-
 	if ( node_subtype ) {
 		args.push(node_subtype);
+	}	
+	if ( node_subsubtype ) {
+		args.push(node_subsubtype);
 	}	
 	
 	return Fetch.Post('//'+API_DOMAIN+'/vx/node/add/'+args.join('/'), {});
