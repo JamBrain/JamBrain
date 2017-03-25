@@ -49,7 +49,7 @@ export default class ContentNavRoot extends Component {
 		
 		return (
 			<div class="-body">
-				<div class="content-nav">
+				<div class="content-base content-nav content-nav-root">
 					{ShowMyFeed}
 					<ContentNavButton path={NewPath} icon='news' href='/news'>News</ContentNavButton>
 				</div>
