@@ -74,7 +74,7 @@ export default class ViewContent extends Component {
 				}
 			}
 			// If logged in, default to the user timeline
-			else if ( user.id ) {
+			else if ( user && user.id ) {
 				ret.push( <ContentTimeline node={node} user={user} path={path} extra={extra} /> );
 			}
 			// If not logged in, default to news

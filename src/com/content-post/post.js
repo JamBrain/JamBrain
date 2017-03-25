@@ -93,9 +93,15 @@ export default class ContentPost extends Component {
 			}
 
 			var post_avatar = this.getAvatar( author );
+			
+			var HasHeadline = null;
+			if ( node.subtype === 'news' ) {
+				HasHeadline = <div class='-headline'>NEWS</div>;
+			}
 
 			return (
-				<div class="content-base content-common content-post">
+				<div class={['content-base','content-common','content-post',HasHeadline ? '-has-headline' : '']}>
+					{HasHeadline}
 					<div class="content-header content-header-common -header">
 						<div class="-avatar" onclick={e => { location.href = "#user-card/"+author.slug; }}>
 							<img src={post_avatar} /><SVGIcon class="-info">info</SVGIcon>
