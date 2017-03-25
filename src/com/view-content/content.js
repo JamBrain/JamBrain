@@ -3,11 +3,15 @@ import ContentPost						from 'com/content-post/post';
 import ContentUser						from 'com/content-user/user';
 import ContentUsers						from 'com/content-users/users';
 import ContentTimeline					from 'com/content-timeline/timeline';
+import ContentGames						from 'com/content-games/games';
 import ContentEvent						from 'com/content-event/event';
 //import ContentEvents					from 'com/content-events/events';
 import ContentGroup						from 'com/content-group/group';
 import Content404						from 'com/content-404/404';
 import ContentItem						from 'com/content-item/item';
+
+import ContentNavRoot					from 'com/content-nav/nav-root';
+
 import ContentPalette					from 'com/content-palette/palette';
 
 export default class ViewContent extends Component {
@@ -46,18 +50,42 @@ export default class ViewContent extends Component {
 			return <ContentGroup node={node} user={user} path={path} extra={extra} />;
 		}
 		else if ( node.type === 'root' ) {
+			var ret = [];
+			ret.push( <ContentNavRoot user={user} path={path} extra={extra} /> );
+			
 			if ( extra.length ) {
-				if ( extra[0] === 'palette' ) {
+				if ( extra[0] === 'news' ) {
+					ret.push( <ContentTimeline types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra} /> );
+				}
+				else if ( extra[0] === 'hot' ) {
+					ret.push( <ContentTimeline node={node} user={user} path={path} extra={extra} /> );
+				}
+				else if ( extra[0] === 'games' ) {
+					ret.push( <ContentGames node={node} user={user} path={path} extra={extra} /> );
+				}
+//				else if ( extra[0] === 'feed' ) {
+//					ret.push( <ContentTimeline node={node} user={user} path={path} extra={extra} /> );
+//				}
+				else if ( extra[0] === 'palette' ) {
 					return <ContentPalette node={node} user={user} path={path} extra={extra} />;
 				}
-				return <Content404 user={user} path={path} extra={extra}>{extra[0]} not found</Content404>;
+				else {
+					return <Content404 user={user} path={path} extra={extra}>{extra[0]} not found</Content404>;
+				}
 			}
+			// If logged in, default to the user timeline
+			else if ( user.id ) {
+				ret.push( <ContentTimeline node={node} user={user} path={path} extra={extra} /> );
+			}
+			// If not logged in, default to news
 			else {
-				return <ContentTimeline node={node} user={user} path={path} extra={extra} />;
+				ret.push( <ContentTimeline types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra} /> );
 			}
+			
+			return ret;
 		}
 		else {
-			return <div>Unsupported Node Type: {""+node.type}</div>;
+			return <div class='content-base'>Unsupported Node Type: {""+node.type}</div>;
 		}
 	}
 

@@ -169,7 +169,12 @@ switch ( $action ) {
 			}
 			$RESPONSE['types'] = $types;
 
-			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types );
+			$subtypes = json_ArgShift();
+			if ( !empty($subtypes) ) {
+				$RESPONSE['subtypes'] = $subtypes;
+			}
+
+			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes );
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);

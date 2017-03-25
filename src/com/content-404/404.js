@@ -8,7 +8,8 @@ export default class ContentGroup extends Component {
 	render( {children} ) {
 		return (
 			<div class="content-base content-404">
-				<strong>404:</strong> {children}
+				<div class='-title'>404</div>
+				<div>{children}</div>
 			</div>
 		);
 	}

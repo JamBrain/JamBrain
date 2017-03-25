@@ -1,7 +1,7 @@
 <?php
 
 // For fetching subscriptions
-function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $published = true, $limit = 20, $offset = 0 ) {
+function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subtypes = null, $subsubtypes = null, $published = true, $score_minimum = null, $limit = 20, $offset = 0 ) {
 	// PLEASE PRE-SANITIZE YOUR TYPES!
 	$QUERY = [];
 	$ARGS = [];
@@ -52,10 +52,8 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $publ
 	else {
 		return null;
 	}
-	
-	// TODO: Add support for subtypes and subsubtypes (i.e. it's own bracketed query)
 		
-	// Build a query fragment for the types check
+	// Build query fragment for the types check
 	if ( is_array($types) ) {
 		$QUERY[] = 'type IN ("'.implode('","', $types).'")';
 	}
@@ -66,12 +64,50 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $publ
 	else if ( is_null($types) ) {
 	}
 	else {
-		return null;
+		return null;	// Non strings, non arrays
+	}
+
+	// Build query fragment for the subtypes check
+	if ( is_array($subtypes) ) {
+		$QUERY[] = 'subtype IN ("'.implode('","', $subtypes).'")';
+	}
+	else if ( is_string($subtypes) ) {
+		$QUERY[] = "subtype=?";
+		$ARGS[] = $subtypes;
+	}
+	else if ( is_null($subtypes) ) {
+	}
+	else {
+		return null;	// Non strings, non arrays
+	}
+
+	// Build query fragment for the subsubtypes check
+	if ( is_array($subsubtypes) ) {
+		$QUERY[] = 'subsubtype IN ("'.implode('","', $subsubtypes).'")';
+	}
+	else if ( is_string($subsubtypes) ) {
+		$QUERY[] = "subsubtype=?";
+		$ARGS[] = $subsubtypes;
+	}
+	else if ( is_null($subsubtypes) ) {
+	}
+	else {
+		return null;	// Non strings, non arrays
 	}
 
 	// Build query fragment for published content
 	if ( $published ) {
 		$QUERY[] = "published > CONVERT(0, DATETIME)";
+	}
+
+	// Build query fragment for score
+	if ( is_integer($score_minimum) ) {
+		$QUERY[] = "score >= ".$score_minimum;
+	}
+	else if ( is_null($score_minimum) ) {
+	}
+	else {
+		return null;
 	}
 	
 	$full_query = '('.implode(' AND ', $QUERY).')';
