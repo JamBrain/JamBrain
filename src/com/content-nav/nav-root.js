@@ -52,11 +52,12 @@ export default class ContentNavRoot extends Component {
 				<div class="content-nav">
 					{ShowMyFeed}
 					<ContentNavButton path={NewPath} icon='news' href='/news'>News</ContentNavButton>
-					<ContentNavButton path={NewPath} icon='heart' href='/hot'>Popular</ContentNavButton>
-					<ContentNavButton path={NewPath} icon='gamepad' href='/games'>Games</ContentNavButton>
-					<ContentNavButton path={NewPath} href='/feed'>All</ContentNavButton>
 				</div>
 			</div>
 		);
 	}
 }
+
+//					<ContentNavButton path={NewPath} icon='heart' href='/hot'>Popular</ContentNavButton>
+//					<ContentNavButton path={NewPath} icon='gamepad' href='/games'>Games</ContentNavButton>
+//					<ContentNavButton path={NewPath} href='/feed'>All</ContentNavButton>

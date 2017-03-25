@@ -21,7 +21,8 @@ export default class ContentTimeline extends Component {
 		this.getFeed(
 			this.props.node.id,
 			this.props.methods ? this.props.methods : ['parent', 'superparent'],
-			this.props.types ? this.props.types : ['post']
+			this.props.types ? this.props.types : ['post'],
+			this.props.subtypes ? this.props.subtypes : null
 		);
 	}
 	
@@ -71,7 +72,7 @@ export default class ContentTimeline extends Component {
 			return <ContentUser node={node} user={user} path={path} extra={extra} />;
 		}
 		else {
-			return <div>Unsupported Node Type: {""+node.type}</div>;
+			return <div class='content-base'>Unsupported Node Type: {""+node.type}</div>;
 		}
 	}
 
@@ -90,11 +91,9 @@ export default class ContentTimeline extends Component {
 			ShowFeed = <NavSpinner />;
 		}
 			
-		return (		/// ***************************************
-			<div id="content">
-				{props.children}
-				{ShowFeed}
-			</div>
-		);
+		return [
+			props.children,
+			ShowFeed
+		];
 	}
 }
