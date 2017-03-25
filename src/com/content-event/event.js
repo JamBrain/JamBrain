@@ -24,7 +24,7 @@ export default class ContentEvent extends Component {
 	
 	render( {node, user, path, extra}, {error} ) {
 		if ( node.slug ) {
-			var dangerousParsedTitle = { __html:titleParser.parse('**Event:** '+node.name) };
+			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 			
 			let ThemeMode = (node.meta['theme-mode']) ? parseInt(node.meta['theme-mode']) : 0;
 			
@@ -79,7 +79,9 @@ export default class ContentEvent extends Component {
 			return (
 				<div class="content-base content-user content-event">
 					<div class="-header">
-						<div class="-title _font2"><NavLink href={path} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
+						<div class="-title _font2"><SVGIcon baseline small>trophy</SVGIcon> <strong>Event:</strong> <NavLink href={path} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
+						<div class="-when"><SVGIcon baseline small>clock</SVGIcon> <strong>When:</strong> <span>April 21st, 2017 Weekend</span></div>
+						<div class="-where"><SVGIcon baseline small>location</SVGIcon> <strong>Where:</strong> <span>Here (online)</span></div>
 					</div>
 					{EventBody}
 					<div class="-footer">
