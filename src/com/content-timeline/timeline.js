@@ -22,12 +22,13 @@ export default class ContentTimeline extends Component {
 			this.props.node.id,
 			this.props.methods ? this.props.methods : ['parent', 'superparent'],
 			this.props.types ? this.props.types : ['post'],
-			this.props.subtypes ? this.props.subtypes : null
+			this.props.subtypes ? this.props.subtypes : null,
+			this.props.subsubtypes ? this.props.subsubtypes : null
 		);
 	}
 	
-	getFeed( id, methods, types ) {
-		$Node.GetFeed( id, methods, types )
+	getFeed( id, methods, types, subtypes, subsubtypes ) {
+		$Node.GetFeed( id, methods, types, subtypes, subsubtypes )
 		.then(r => {
 			// If the feed is not empty
 			if ( r.feed && r.feed.length ) {
@@ -91,9 +92,11 @@ export default class ContentTimeline extends Component {
 			ShowFeed = <NavSpinner />;
 		}
 			
-		return [
-			props.children,
-			ShowFeed
-		];
+		return (
+			<div>
+				{props.children}
+				{ShowFeed}
+			</div>
+		);
 	}
 }

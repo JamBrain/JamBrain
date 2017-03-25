@@ -9,20 +9,7 @@ export default class ContentNavButton extends Component {
 	}
 	
 	componentDidMount() {
-//		$Theme.GetStats(this.props.node.id)
-//		.then(r => {
-//			if ( r.stats ) {
-//				this.setState({ 'stats': r.stats });
-//			}
-//			else {
-//				this.setState({ 'stats': null });
-//			}
-//		})
-//		.catch(err => {
-//			this.setState({ error: err });
-//		});
 	}
-
 
 	render( props, {} ) {
 		if ( props.class ) {
@@ -33,7 +20,6 @@ export default class ContentNavButton extends Component {
 		}
 		props.class.push('-button');
 		
-		console.log(props.path);
 		if ( props.path === props.href ) {
 			props.class.push('-selected');
 		}
