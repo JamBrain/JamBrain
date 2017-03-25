@@ -57,7 +57,7 @@ export default class ViewContent extends Component {
 					ret.push( <ContentPalette node={node} user={user} path={path} extra={extra} /> );
 				}
 				else {
-					ret.push( <Content404 user={user} path={path} extra={extra}>{extra[0]} not found</Content404> );
+					return <Content404 user={user} path={path} extra={extra}>{extra[0]} not found</Content404>;
 				}
 			}
 			else {
