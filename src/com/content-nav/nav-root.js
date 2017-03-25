@@ -39,7 +39,7 @@ export default class ContentNavRoot extends Component {
 		var NewPath = '/'+ (extra ? extra.join('/') : '');
 		
 		var ShowMyFeed = null;
-		if ( user.id ) {
+		if ( user && user.id ) {
 			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href='/'>My Feed</ContentNavButton>;
 		}
 		// Default to /news if not logged in
