@@ -8,6 +8,9 @@ import ContentEvent						from 'com/content-event/event';
 import ContentGroup						from 'com/content-group/group';
 import Content404						from 'com/content-404/404';
 import ContentItem						from 'com/content-item/item';
+
+import ContentNavRoot					from 'com/content-nav/nav-root';
+
 import ContentPalette					from 'com/content-palette/palette';
 
 export default class ViewContent extends Component {
@@ -46,15 +49,22 @@ export default class ViewContent extends Component {
 			return <ContentGroup node={node} user={user} path={path} extra={extra} />;
 		}
 		else if ( node.type === 'root' ) {
+			var ret = [];
+			ret.push( <ContentNavRoot user={user} path={path} extra={extra} /> );
+			
 			if ( extra.length ) {
 				if ( extra[0] === 'palette' ) {
-					return <ContentPalette node={node} user={user} path={path} extra={extra} />;
+					ret.push( <ContentPalette node={node} user={user} path={path} extra={extra} /> );
 				}
-				return <Content404 user={user} path={path} extra={extra}>{extra[0]} not found</Content404>;
+				else {
+					ret.push( <Content404 user={user} path={path} extra={extra}>{extra[0]} not found</Content404> );
+				}
 			}
 			else {
-				return <ContentTimeline node={node} user={user} path={path} extra={extra} />;
+				ret.push( <ContentTimeline node={node} user={user} path={path} extra={extra} /> );
 			}
+			
+			return ret;
 		}
 		else {
 			return <div>Unsupported Node Type: {""+node.type}</div>;
