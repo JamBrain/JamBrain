@@ -24,7 +24,7 @@ export default class ContentEvent extends Component {
 	
 	render( {node, user, path, extra}, {error} ) {
 		if ( node.slug ) {
-			var dangerousParsedTitle = { __html:titleParser.parse('**EVENT:** '+node.name) };
+			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 			
 			let ThemeMode = (node.meta['theme-mode']) ? parseInt(node.meta['theme-mode']) : 0;
 			
@@ -79,10 +79,10 @@ export default class ContentEvent extends Component {
 			var EventWhen = null;
 			var EventWhere = null;
 			if ( node.meta['when'] ) {
-				EventWhen = <div class="-detail -when"><SVGIcon baseline small>clock</SVGIcon> <strong>WHEN:</strong> <span>{node.meta['when']}</span></div>;
+				EventWhen = <div class="-detail -when"><SVGIcon baseline small>clock</SVGIcon> <span>{node.meta['when']}</span></div>;
 			}
 			if ( node.meta['where'] ) {
-				EventWhere = <div class="-detail -where"><SVGIcon baseline small>location</SVGIcon> <strong>WHERE:</strong> <span>{node.meta['where']}</span></div>;
+				EventWhere = <div class="-detail -where"><SVGIcon baseline small>location</SVGIcon> <span>{node.meta['where']}</span></div>;
 			}
 				
 			return (
