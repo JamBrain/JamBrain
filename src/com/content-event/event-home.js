@@ -101,6 +101,8 @@ export default class ContentEventHome extends Component {
 					{ShowEventMode}
 				</div>
 				<div class="event-nav">
+					<NavLink class="-item -selected"><SVGIcon>feed</SVGIcon> Feed</NavLink>
+					<NavLink class="-item"><SVGIcon>news</SVGIcon> News</NavLink>
 					<NavLink class="-item"><SVGIcon>gamepad</SVGIcon> Join Event</NavLink>
 					{ThemeSelectionDiv}
 				</div>
