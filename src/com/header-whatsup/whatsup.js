@@ -15,13 +15,16 @@ export default class HeaderWhatsup extends Component {
 		
 		// TODO: The actual theme can be found in the the public metatag "event-theme" (private one before event)
 		
-		return null;
-		
+//		return null;
+
+
 		return (
 			<div class="header-base header-whatsup outside">
-				<span class="-title _font2">{"Theme:"}</span>{" One room"}
+				<span class="-title _font2">ON NOW:</span> Ludum Dare 38 <NavLink href="/events/ludum-dare/38/theme"><SVGIcon baseline small gap>suggestion</SVGIcon>Theme Suggestions</NavLink> are open
 			</div>
 		);
+
+//				<span class="-title _font2">{"Theme:"}</span>{" One room"}
 
 //				<NavLink href="/events/ludum-dare/37/theme"><SVGIcon baseline small gap>mallet</SVGIcon>Theme Voting</NavLink> has ended. The theme will be announced soon.
 
