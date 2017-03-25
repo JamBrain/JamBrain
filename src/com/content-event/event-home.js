@@ -81,7 +81,7 @@ export default class ContentEventHome extends Component {
 			
 			ShowStats = (
 				<div class="">
-					<h2>Theme Selection Stats</h2>
+					<h2><SVGIcon baseline small>status</SVGIcon> Theme Selection Stats</h2>
 					{ShowIdeaCount}
 					{ShowUsersWithIdeas}
 				</div>
@@ -90,7 +90,7 @@ export default class ContentEventHome extends Component {
 		
 		var ShowEventMode = null;
 		if ( node.meta && node.meta['theme-mode'] > 0 ) {
-			ShowEventMode = (<div><strong>Event Mode:</strong> {ThemeModeName[node.meta['theme-mode']]}</div>);
+			ShowEventMode = (<div><strong>ON NOW:</strong> {ThemeModeName[node.meta['theme-mode']]}</div>);
 		}
 		
 		return (
