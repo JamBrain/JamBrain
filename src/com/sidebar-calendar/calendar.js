@@ -99,11 +99,11 @@ export default class SidebarCalendar extends Component {
 				props.class.push('scheduled');
 			}
 			else if ( col.year == 2017 && col.month == 2 && col.day == 24 ) {
-				ShowIcon = <SVGIcon class="-icon">checker</SVGIcon>;
+				ShowIcon = <SVGIcon class="-icon">suggestion</SVGIcon>;
 				props.class.push('scheduled');
 			}
 			else if ( col.year == 2017 && col.month == 3 && col.day == 7 ) {
-				ShowIcon = <SVGIcon class="-icon">checker</SVGIcon>;
+				ShowIcon = <SVGIcon class="-icon">mallet</SVGIcon>;
 				props.class.push('scheduled');
 			}
 
