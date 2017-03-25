@@ -92,8 +92,9 @@ export default class ContentTimeline extends Component {
 			ShowFeed = <NavSpinner />;
 		}
 			
+		// TERRIBLE HACK! There are two #content's!!
 		return (
-			<div class="content-timeline">
+			<div id="content">
 				{props.children}
 				{ShowFeed}
 			</div>
