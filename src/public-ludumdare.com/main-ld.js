@@ -84,8 +84,8 @@ class Main extends Component {
 	}
 
 	componentDidMount() {
-		this.fetchRoot();
 		this.fetchData();
+		this.fetchRoot();
 	}
 	
 	storeHistory( input, page_title = null, page_url = null ) {
@@ -275,10 +275,16 @@ class Main extends Component {
 
 	
 	fetchData() {
-		if ( !this.state.user )
-			this.fetchUser();
-		if ( this.state.node && !this.state.node.id )
+		if ( !this.state.user ) {
+			this.fetchUser().then(() => { 
+				if ( this.state.node && !this.state.node.id ) {
+					return this.fetchNode(); 
+				}
+			});
+		}
+		else if ( this.state.node && !this.state.node.id ) {
 			this.fetchNode();
+		}
 	}
 		
 	// *** //
