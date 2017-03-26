@@ -32,70 +32,69 @@ export default class ViewContent extends Component {
 		}
 
 		if ( node.type === 'post' ) {
-			return <ContentPost node={node} user={user} path={path} extra={extra} />;
+			return <div id="content"><ContentPost node={node} user={user} path={path} extra={extra} /></div>;
 		}
 		else if ( node.type === 'item' ) {
-			return <ContentItem node={node} user={user} path={path} extra={extra} />;
+			return <div id="content"><ContentItem node={node} user={user} path={path} extra={extra} /></div>;
 		}
 		else if ( node.type === 'user' ) {
-			return <ContentUser node={node} user={user} path={path} extra={extra} />;
+			return <div id="content"><ContentUser node={node} user={user} path={path} extra={extra} /></div>;
 		}
 		else if ( node.type === 'users' ) {
-			return <ContentUsers node={node} user={user} path={path} extra={extra} />;
+			return <div id="content"><ContentUsers node={node} user={user} path={path} extra={extra} /></div>;
 		}
 		else if ( node.type === 'event' ) {
-			return <ContentEvent node={node} user={user} path={path} extra={extra} />;
+			return <div id="content"><ContentEvent node={node} user={user} path={path} extra={extra} /></div>;
 		}
 		else if ( node.type === 'events' || node.type === 'group' ) {
-			return <ContentGroup node={node} user={user} path={path} extra={extra} />;
+			return <div id="content"><ContentGroup node={node} user={user} path={path} extra={extra} /></div>;
 		}
 		else if ( node.type === 'root' ) {
-			var ret = [];
-			ret.push( <ContentNavRoot user={user} path={path} extra={extra} /> );
+			var ShowNavRoot = <ContentNavRoot user={user} path={path} extra={extra} />;
 			
 			if ( extra.length ) {
 				if ( extra[0] === 'news' ) {
-					ret.push( <ContentTimeline types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra} /> );
+					return <ContentTimeline types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 				}
 				else if ( extra[0] === 'hot' ) {
-					ret.push( <ContentTimeline node={node} user={user} path={path} extra={extra} /> );
+					return <ContentTimeline node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 				}
 				else if ( extra[0] === 'games' ) {
-					ret.push( <ContentGames node={node} user={user} path={path} extra={extra} /> );
+					return <ContentGames types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentGames>;
 				}
 //				else if ( extra[0] === 'feed' ) {
 //					ret.push( <ContentTimeline node={node} user={user} path={path} extra={extra} /> );
 //				}
 				else if ( extra[0] === 'palette' ) {
-					return <ContentPalette node={node} user={user} path={path} extra={extra} />;
+					return <div id="content"><ContentPalette node={node} user={user} path={path} extra={extra} /></div>;
 				}
 				else {
-					return <Content404 user={user} path={path} extra={extra}>{extra[0]} not found</Content404>;
+					return <div id="content"><Content404 user={user} path={path} extra={extra}>{extra[0]} not found</Content404></div>;
 				}
 			}
 			// If logged in, default to the user timeline
 			else if ( user && user.id ) {
-				ret.push( <ContentTimeline node={node} user={user} path={path} extra={extra} /> );
+				return <ContentTimeline node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 			}
 			// If not logged in, default to news
 			else {
-				ret.push( <ContentTimeline types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra} /> );
+				return <ContentTimeline types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 			}
 			
 			return ret;
 		}
 		else {
-			return <div class='content-base'>Unsupported Node Type: {""+node.type}</div>;
+			return (
+				<div id="content">
+					<div class='content-base'>Unsupported Node Type: {""+node.type}</div>
+				</div>
+			);
 		}
 	}
 
 	render( props ) {
 		if ( props.node ) {
-			return (
-				<div id="content">
-					{this.getContent(props)}
-				</div>
-			);
+			return this.getContent(props);
 		}
 		else {
 			return (
