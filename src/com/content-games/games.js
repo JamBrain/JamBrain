@@ -76,7 +76,7 @@ export default class ContentGames extends Component {
 //	}
 
 	render( props, {feed, error} ) {
-		var ShowFeed = null;
+//		var ShowFeed = null;
 		
 //		if ( error ) {
 //			ShowFeed = error;
@@ -96,11 +96,11 @@ export default class ContentGames extends Component {
 //				{ShowFeed}
 //			</div>
 //		);
-		return [
-			<div class="content-base content-games">
-				<div>No games. :(</div>
-			</div>,
-			{ShowFeed}
-		];
+		return (
+			<div id="content">
+				{props.children}
+				<div>No games yet. :(</div>
+			</div>
+		);
 	}
 }
