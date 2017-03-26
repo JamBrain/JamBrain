@@ -51,7 +51,8 @@ export default class ViewContent extends Component {
 		}
 		else if ( node.type === 'root' ) {
 			var ShowNavRoot = <ContentNavRoot user={user} path={path} extra={extra} />;
-			
+
+			// If some extra arguments were passed, do virtual children			
 			if ( extra.length ) {
 				if ( extra[0] === 'news' ) {
 					return <ContentTimeline types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
@@ -60,11 +61,11 @@ export default class ViewContent extends Component {
 					return <ContentTimeline node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 				}
 				else if ( extra[0] === 'games' ) {
-					return <ContentGames types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentGames>;
+					return <ContentGames types={['game']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentGames>;
 				}
-//				else if ( extra[0] === 'feed' ) {
-//					ret.push( <ContentTimeline node={node} user={user} path={path} extra={extra} /> );
-//				}
+				else if ( extra[0] === 'feed' ) {
+					return <ContentTimeline types='' node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
+				}
 				else if ( extra[0] === 'palette' ) {
 					return <div id="content"><ContentPalette node={node} user={user} path={path} extra={extra} /></div>;
 				}
@@ -80,15 +81,9 @@ export default class ViewContent extends Component {
 			else {
 				return <ContentTimeline types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 			}
-			
-			return ret;
 		}
 		else {
-			return (
-				<div id="content">
-					<div class='content-base'>Unsupported Node Type: {""+node.type}</div>
-				</div>
-			);
+			return <div id="content"><div class='content-base'>Unsupported Node Type: {""+node.type}</div></div>;
 		}
 	}
 
@@ -97,11 +92,7 @@ export default class ViewContent extends Component {
 			return this.getContent(props);
 		}
 		else {
-			return (
-				<div id="content">
-					{this.props.children}
-				</div>
-			);
+			return <div id="content">{this.props.children}</div>;
 		}
 	}
 };
