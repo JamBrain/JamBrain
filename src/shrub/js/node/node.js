@@ -40,25 +40,26 @@ export function GetFeed( id, methods, types, subtypes, subsubtypes ) {
 		args.push(methods);
 	}
 
+	// Tree of types
 	if ( types ) {
 		if ( Array.isArray(types) ) {
 			types = types.join("+");
 		}
 		args.push(types);
-	}
 
-	if ( subtypes ) {
-		if ( Array.isArray(subtypes) ) {
-			subtypes = subtypes.join("+");
-		}
-		args.push(subtypes);
-	}
+		if ( subtypes ) {
+			if ( Array.isArray(subtypes) ) {
+				subtypes = subtypes.join("+");
+			}
+			args.push(subtypes);
 
-	if ( subsubtypes ) {
-		if ( Array.isArray(subsubtypes) ) {
-			subsubtypes = subsubtypes.join("+");
+			if ( subsubtypes ) {
+				if ( Array.isArray(subsubtypes) ) {
+					subsubtypes = subsubtypes.join("+");
+				}
+				args.push(subsubtypes);
+			}
 		}
-		args.push(subsubtypes);
 	}
 
 	return Fetch.Get('//'+API_DOMAIN+'/vx/node/feed/'+args.join('/'));
