@@ -1,6 +1,8 @@
 import { h, Component } 				from 'preact/preact';
 import ShallowCompare	 				from 'shallow-compare/index';
 
+import $JammerTV						from 'external/jammertv/jammertv';
+
 import SVGIcon 							from 'com/svg-icon/icon';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import IMG	 							from 'com/img2/img2';
@@ -31,32 +33,40 @@ export default class SidebarTV extends Component {
 		];
 		
 		this.FailImage = '//'+STATIC_DOMAIN+'/other/asset/TVFail.png';
+		
+		this.refreshStreams = this.refreshStreams.bind(this);
 	}
 
-//	shouldComponentUpdate( nextProps, nextState ) {
-//		var com = ShallowCompare(this, nextProps, nextState);
-//		console.log("SideBarTV",com,this.state, nextState);
-//		return com;
-//	}
+	loadStreams() {
+		//var API_BASE = '//jammer.tv/v1/live.php';
 		
-	componentDidMount() {
-//		console.log("SideBarTV: componentDidMount");
-		
-		fetch('//jammer.tv/v1/live.php/ludum-dare+ludum-dare-art+ludum-dare-music+ludum-dare-craft+ludum-dare-play+ludum-dare-talk')
-		.then(r => {
-			if ( r )
-				return r.json();
-		})
+		//return fetch(API_BASE+'/ludum-dare+ludum-dare-art+ludum-dare-music+ludum-dare-craft+ludum-dare-play+ludum-dare-talk')
+		$JammerTV.GetLive([
+			'ludum-dare',
+			'ludum-dare-art',
+			'ludum-dare-music',
+			'ludum-dare-craft',
+			'ludum-dare-play',
+			'ludum-dare-talk'
+		])
 		.then(data => {
 			// hack
 			this.state.streams = this.state.streams.concat(data.streams);
 						
 			if ( this.state.streams.length < 3 ) {
-				fetch('//jammer.tv/v1/live.php/game-jam+game-jam-art+game-jam-music+game-dev+game-art+game-music')
-				.then(rr => {
-					if ( rr )
-						return rr.json();
-				})
+//				fetch(API_BASE+'/game-jam+game-jam-art+game-jam-music+game-dev+game-art+game-music')
+				$JammerTV.GetLive([
+					'game-jam',
+					'game-jam-art',
+					'game-jam-music',
+					'game-dev',
+					'game-art',
+					'game-music'
+				])
+//				.then(rr => {
+//					if ( rr )
+//						return rr.json();
+//				})
 				.then(data2 => {
 					this.setState({ 
 						'streams': this.state.streams.concat(data2.streams)
@@ -84,7 +94,38 @@ export default class SidebarTV extends Component {
 				error: err
 			});
 			return err;
-		});
+		});		
+	}
+	
+	// Called every few minutes, to make sure stream list is fresh
+	refreshStreams() {
+//		// But only if the window is visible
+//		if ( !document.hidden ) {
+//			console.log("Streams Refreshed: "+Date.now());
+//			this.loadStreams().then(function() {
+//				console.log("Queued");
+//				this.timer = setTimeout(function() {
+//					refreshStreams();
+//				}, 2*60*1000);
+//			}
+//		}
+//		else {
+//			console.log("Hidden Queue");
+//			this.timer = setTimeout(function() {
+//				refreshStreams();
+//			}, 2*60*1000);
+//		}
+	}
+
+//	shouldComponentUpdate( nextProps, nextState ) {
+//		var com = ShallowCompare(this, nextProps, nextState);
+//		console.log("SideBarTV",com,this.state, nextState);
+//		return com;
+//	}
+		
+	componentDidMount() {
+//		console.log("SideBarTV: componentDidMount");
+		this.loadStreams();
 	}
 
 	componentWillUnmount() {

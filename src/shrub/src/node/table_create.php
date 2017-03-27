@@ -4,7 +4,7 @@ require_once __DIR__."/node.php";
 // TEXT: 2^16 characters (65535)
 // TINYINT UNSIGNED: 0-255
 
-const DB_TYPE_NODE_BODY = 'MEDIUMTEXT NOT NULL';
+const DB_TYPE_NODE_BODY = 'MEDIUMTEXT NOT NULL';	// MEDIUMTEXT: 2^24 characters
 const DB_TYPE_NODE_SCOPE = 'TINYINT NOT NULL';
 const DB_TYPE_NODE_META_VALUE = 'TEXT NOT NULL';
 const DB_TYPE_NODE_LINK_VALUE = 'TEXT DEFAULT NULL';
@@ -43,8 +43,6 @@ $table = 'SH_TABLE_NODE';
 if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
 
-	// MEDIUMTEXT: 2^24 characters
-
 	table_Init($table);
 	switch ( $TABLE_VERSION ) {
 	case 0:
@@ -71,7 +69,7 @@ if ( in_array($table, $TABLE_LIST) ) {
 				name ".DB_TYPE_UNICODE(96).",
 				body ".DB_TYPE_NODE_BODY."
 			)".DB_CREATE_SUFFIX);
-		$did_0 = true;
+		$created = true;
 		if (!$ok) break; $TABLE_VERSION++;
 	case 1:
 		$ok = table_Update( $table,
@@ -91,7 +89,7 @@ if ( in_array($table, $TABLE_LIST) ) {
 	// NOTE: Store "extra" in body for symlinks
 
 	// Generate Nodes
-	if ( isset($did_0) ) {
+	if ( isset($created) ) {
 		// Create necessary nodes
 		$root = MakeKeyNode('SH_NODE_ID_ROOT', 0, SH_NODE_TYPE_ROOT, 'root', '' );
 		$users = MakeKeyNode('SH_NODE_ID_USERS', $root, SH_NODE_TYPE_USERS, 'users', 'Users' );
