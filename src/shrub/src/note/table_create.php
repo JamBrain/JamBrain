@@ -72,6 +72,7 @@ if ( in_array($table, $TABLE_LIST) ) {
 				node ".DB_TYPE_ID.",
 					INDEX(node),
 				author ".DB_TYPE_ID.",
+					INDEX(author),
 				created ".DB_TYPE_TIMESTAMP.",
 				modified ".DB_TYPE_TIMESTAMP.",
 					INDEX(modified),
@@ -103,7 +104,7 @@ if ( in_array($table, $TABLE_LIST) ) {
 					INDEX(note),
 				author ".DB_TYPE_ID.",
 				ip ".DB_TYPE_IP.",
-					UNIQUE(note, author, ip),
+					UNIQUE `node_author_ip` (note, author, ip),
 				timestamp ".DB_TYPE_TIMESTAMP."
 			)".DB_CREATE_SUFFIX);
 		$created = true;
