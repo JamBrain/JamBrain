@@ -56,19 +56,15 @@ export default class SidebarTV extends Component {
 				NewStreams = NewStreams.concat(data.streams);
 			}
 			
-			// hack
-			//this.state.streams = this.state.streams.concat(data.streams);
-			
 			// Fetch more (if needed)
-			if ( NewStreams.length < 3 ) {
-			
-//			if ( this.state.streams.length < 3 ) {
+			if ( NewStreams.length < 10 ) {
 				return $JammerTV.GetLive([
 					'game-jam',
 					'game-jam-art',
 					'game-jam-music',
 				]);
 			}
+			return null;
 		})
 		// Fetch Game Dev streams last (if we didn't have enough)
 		.then(data => {
@@ -78,13 +74,14 @@ export default class SidebarTV extends Component {
 			}
 
 			// Fetch more (if needed)
-			if ( NewStreams.length < 3 ) {
+			if ( NewStreams.length < 10 ) {
 				return $JammerTV.GetLive([
 					'game-dev',
 					'game-art',
 					'game-music'
 				]);
 			}
+			return null;
 		})
 		// Wrap up
 		.then(data => {
@@ -97,33 +94,12 @@ export default class SidebarTV extends Component {
 			this.setState({
 				'streams': NewStreams
 			});
+			return null;
 		})
-				
-//				.then(data2 => {
-//					this.setState({ 
-//						'streams': this.state.streams.concat(data2.streams)
-//					});
-//				})
-//				.catch(err => {
-//					console.log("sidebar-tv2:",err);
-//					this.setState({
-//						'error': err
-//					});
-//					return err;
-//				});
-//			}
-//			else {
-//				this.setState({ 
-//					'streams': this.state.streams
-//				});
-//			}
-//			
-//			return data;
-//		})
 		.catch(err => {
-			console.log("sidebar-tv:",err);
+			// Error state
 			this.setState({
-				error: err
+				'error': err
 			});
 			return err;
 		});		
@@ -131,22 +107,28 @@ export default class SidebarTV extends Component {
 	
 	// Called every few minutes, to make sure stream list is fresh
 	refreshStreams() {
-//		// But only if the window is visible
-//		if ( !document.hidden ) {
-//			console.log("Streams Refreshed: "+Date.now());
-//			this.loadStreams().then(function() {
-//				console.log("Queued");
-//				this.timer = setTimeout(function() {
-//					refreshStreams();
-//				}, 2*60*1000);
-//			}
-//		}
-//		else {
-//			console.log("Hidden Queue");
-//			this.timer = setTimeout(function() {
-//				refreshStreams();
-//			}, 2*60*1000);
-//		}
+		// TODO: Raise this, once JammerTV caching is correctly supported
+		var StreamRefreshRate = 3*60*1000;
+		
+		// But only if the window is visible
+		if ( !document.hidden ) {
+			//console.log("Streams Refreshed: "+Date.now());
+			
+			this.loadStreams().then(function() {
+				//console.log("Queued");
+
+				this.timer = setTimeout(function() {
+					this.refreshStreams();
+				}.bind(this), StreamRefreshRate);
+			}.bind(this));
+		}
+		else {
+			//console.log("Hidden Queue");
+
+			this.timer = setTimeout(function() {
+				this.refreshStreams();
+			}.bind(this), StreamRefreshRate);
+		}
 	}
 
 //	shouldComponentUpdate( nextProps, nextState ) {
@@ -157,7 +139,7 @@ export default class SidebarTV extends Component {
 		
 	componentDidMount() {
 //		console.log("SideBarTV: componentDidMount");
-		this.loadStreams();
+		this.refreshStreams();
 	}
 
 	componentWillUnmount() {
