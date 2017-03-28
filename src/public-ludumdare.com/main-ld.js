@@ -171,7 +171,9 @@ class Main extends Component {
 			if ( r.node.length ) {
 				var node = r.node[0];
 				
-				this.setState({ 'root': node });
+				this.setState({ 
+					'root': node 
+				});
 				
 				if ( node.meta['featured'] && Number.parseInt(node.meta['featured']) > 0 ) {
 					this.fetchFeatured(Number.parseInt(node.meta['featured']));
@@ -179,7 +181,7 @@ class Main extends Component {
 				console.log("[fetchRoot] Done:", node.id);
 			}
 			else {
-				this.setState({ 'error': 'Failed to load root' });
+				throw '[fetchRoot] Failed to load root node';
 			}
 		})
 		.catch(err => { 
@@ -187,29 +189,34 @@ class Main extends Component {
 		});
 	}
 	
-	fetchFeatured( node ) {
+	fetchFeatured( _node ) {
 		console.log("[fetchFeatured]");
-		
-		return $Node.Get(node)
-		.then(r => {
-			if ( r.node.length ) {
-				var node = r.node[0];
-				console.log("[fetchFeatured] Done:", node.id);
-				
-				$Node.What(node.id)
-					.then(rr => {
-						console.log('My Game:',rr.what);
-						node.what = rr.what;
-						
-						this.setState({ 'featured': node });
-					})
-					.catch(err => { this.setState({ 'error': err }); });
 
-				//this.setState({ 'featured': node });
+		var Node = null;
+		
+		return $Node.Get(_node)
+		.then(r => {
+			// Parse node
+			if ( r && Array.isArray(r.node) && r.node.length ) {
+				Node = r.node[0];
+				console.log("[fetchFeatured] Loaded: ", Node.id);
+				
+				return $Node.What(Node.id);
 			}
-			else {
-				this.setState({ 'error': 'Failed to load featured' });
+			return null;
+		})
+		.then(r => {
+			if ( r && r.what ) {
+				Node.what = r.what;
+
+				console.log('[fetchFeatured] My Game:', Node.what);
 			}
+			
+			this.setState({ 
+				'featured': Node 
+			});
+
+			console.log('[fetchFeatured] Done:', Node.id);
 		})
 		.catch(err => { 
 			this.setState({ 'error': err }); 
@@ -272,8 +279,8 @@ class Main extends Component {
 				User = Object.assign({}, r.node);
 				User['private'] = {};
 
-				// Pre-cache my Love
-//				$NodeLove.GetMy();
+				// Pre-cache my Love (not returned)
+				$NodeLove.GetMy();
 			}
 			return null;	// Do we need this?
 		})
