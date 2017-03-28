@@ -6,21 +6,18 @@ export default {
 	Remove
 };
 
-//var Nodes = {};
-
 export function GetMy( event ) {
-	return Fetch.Get('//'+API_DOMAIN+'/vx/theme/idea/getmy/'+event);
+	return Fetch.Get(API_ENDPOINT+'/vx/theme/idea/getmy/'+event, true);
 }
 
 export function Add( event, idea ) {
-	return Fetch.Post('//'+API_DOMAIN+'/vx/theme/idea/add/'+event, {
+	return Fetch.Post(API_ENDPOINT+'/vx/theme/idea/add/'+event, {
 		'idea': idea
 	});
 }
 
 export function Remove( event, id ) {
-	return Fetch.Post('//'+API_DOMAIN+'/vx/theme/idea/remove/'+event, {
+	return Fetch.Post(API_ENDPOINT+'/vx/theme/idea/remove/'+event, {
 		'id': id
 	});
 }
-

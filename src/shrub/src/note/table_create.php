@@ -3,7 +3,7 @@ require_once __DIR__."/note.php";
 
 const DB_TYPE_NOTE_BODY = 'MEDIUMTEXT NOT NULL';	// MEDIUMTEXT: 2^24 characters
 const DB_TYPE_NOTE_SCOPE = 'TINYINT NOT NULL';
-
+/*
 // Simliar to the regular NOTE, but just a snapshot
 // IMPORTANT: This has to come first, just in case the NOTE table needs to make notes
 $table = 'SH_TABLE_NOTE_VERSION';
@@ -57,3 +57,4 @@ if ( in_array($table, $TABLE_LIST) ) {
 
 	table_Exit($table);
 }
+*/

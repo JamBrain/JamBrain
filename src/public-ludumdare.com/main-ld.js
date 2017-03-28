@@ -47,6 +47,7 @@ options.vnode = function(vnode) {
 class Main extends Component {
 	constructor( props ) {
 		super(props);
+		console.log('[constructor]');
 
 		var clean = this.cleanLocation(window.location);
 		if ( window.location.origin+clean.path !== window.location.href ) {
@@ -163,128 +164,170 @@ class Main extends Component {
 	// *** //
 	
 	fetchRoot() {
+		console.log("[fetchRoot]");
+
 		return $Node.Get(SITE_ROOT)
-			.then(r => {
-				if ( r.node.length ) {
-					var node = r.node[0];
-					console.log("Root Loaded:", node.id);
-					
-					this.setState({ 'root': node });
-					
-					if ( node.meta['featured'] && Number.parseInt(node.meta['featured']) > 0 ) {
-						this.fetchFeatured(Number.parseInt(node.meta['featured']));
-					}
+		.then(r => {
+			if ( r.node.length ) {
+				var node = r.node[0];
+				
+				this.setState({ 'root': node });
+				
+				if ( node.meta['featured'] && Number.parseInt(node.meta['featured']) > 0 ) {
+					this.fetchFeatured(Number.parseInt(node.meta['featured']));
 				}
-				else {
-					this.setState({ 'error': 'Failed to load root' });
-				}
-			})
-			.catch(err => { this.setState({ 'error': err }); });
+				console.log("[fetchRoot] Done:", node.id);
+			}
+			else {
+				this.setState({ 'error': 'Failed to load root' });
+			}
+		})
+		.catch(err => { 
+			this.setState({ 'error': err }); 
+		});
 	}
 	
 	fetchFeatured( node ) {
+		console.log("[fetchFeatured]");
+		
 		return $Node.Get(node)
-			.then(r => {
-				if ( r.node.length ) {
-					var node = r.node[0];
-					console.log("Featured Loaded:", node.id);
-					
-					$Node.What(node.id)
-						.then(rr => {
-							console.log('My Game:',rr.what);
-							node.what = rr.what;
-							
-							this.setState({ 'featured': node });
-						})
-						.catch(err => { this.setState({ 'error': err }); });
+		.then(r => {
+			if ( r.node.length ) {
+				var node = r.node[0];
+				console.log("[fetchFeatured] Done:", node.id);
+				
+				$Node.What(node.id)
+					.then(rr => {
+						console.log('My Game:',rr.what);
+						node.what = rr.what;
+						
+						this.setState({ 'featured': node });
+					})
+					.catch(err => { this.setState({ 'error': err }); });
 
-					//this.setState({ 'featured': node });
-				}
-				else {
-					this.setState({ 'error': 'Failed to load featured' });
-				}
-			})
-			.catch(err => { this.setState({ 'error': err }); });
+				//this.setState({ 'featured': node });
+			}
+			else {
+				this.setState({ 'error': 'Failed to load featured' });
+			}
+		})
+		.catch(err => { 
+			this.setState({ 'error': err }); 
+		});
 	}
 	
 	fetchNode() {
+		console.log("[fetchNode]");
+		
+		var NewState = {};
+		
 		// Walk to the active node
 		return $Node.Walk(SITE_ROOT, this.state.slugs)
-			.then(r => {
-				var new_state = { 
-					'path': (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/'),
-					'extra': r.extra
-				};
+		.then(r => {
+			if ( r && r.node ) {
+				NewState['path'] = (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/');
+				NewState['extra'] = r.extra;
 				
 				// Now, lookup the node
-				$Node.Get(r.node)
-				.then(rr => {
-					if ( rr.node && rr.node.length ) {
-						new_state.node = rr.node[0];
-						this.setState(new_state);
-					}
-					else { this.setState({ 'error': err }); }
-				})
-				.catch(err => { this.setState({ 'error': err }); });
-			})
-			.catch(err => { this.setState({ 'error': err }); });
+				return $Node.Get(r.node);
+			}
+			else {
+				throw '[fetchNode] Unable to walk tree';
+			}
+			return null;
+		})
+		.then(r => {
+			// Process node
+			if ( r && r.node && r.node.length ) {
+				NewState['node'] = r.node[0];
+				this.setState(NewState);
+				
+				console.log("[fetchNode] Done:", NewState['node'].id);
+			}
+			else {
+				throw '[fetchNode] No nodes found';
+			}
+			return null;
+		})
+		.catch(err => { 
+			this.setState({ 'error': err }); 
+		});
 	}
 	
 	fetchUser() {
+		console.log("[fetchUser]");
+
+		var Caller = 0;
+		var User = {
+			'id': 0
+		};
+		
 		// Fetch the Active User
 		return $User.Get().then(r => {
-			console.log("Got User:", r.caller_id);
+			Caller = Number.parseInt(r.caller_id);
+			console.log("[fetchUser] caller_id:", Caller);
+
+			// Process my User
+			if ( Caller && r.node ) {
+				User = Object.assign({}, r.node);
+				User['private'] = {};
+
+				// Pre-cache my Love
+//				$NodeLove.GetMy();
+			}
+			return null;	// Do we need this?
+		})
+		.then(r => {
+			if ( Caller && User.id ) {
+				// Load user's private data
+				return $Node.GetMy();
+			}
+			return null;	// Do we need this?
+		})
+		.then(r => {
+			// Process private User data
+			if ( r ) {
+				User['private']['meta'] = r.meta;
+				User['private']['link'] = r.link;
+				User['private']['refs'] = r.refs;
+			}
 			
-			// If a legit user
-			if ( Number.parseInt(r.caller_id) ) {
-				r.node['private'] = {};
-				
-				// Pre-caching Love
-				$NodeLove.GetMy()
-				.then(() => {
-					// Load user's private data
-					$Node.GetMy()
-					.then(rr => {
-						r.node['private']['meta'] = rr.meta;
-						r.node['private']['link'] = rr.link;
-						r.node['private']['refs'] = rr.refs;
-						
-						// Finally, user is ready
-						console.log("User Loaded:", r.caller_id);
-						this.setState({ 'user': r.node });
-					})
-					.catch(err => {
-						this.setState({ 'error': err });
-					});
-				})
-				.catch(err => {
-					this.setState({ 'error': err });
-				});
-			}
-			// User not logged in
-			else {
-				this.setState({ 
-					'user': { 'id': 0 }
-				});
-			}
+			// Finally, user is ready
+			this.setState({
+				'user': User
+			});
+			
+			console.log("[fetchUser] Done:", Caller);
+
+			return null;	// Do we need this?
 		})
 		.catch(err => {
-			this.setState({ 'error': err });
+			this.setState({ 
+				'error': err 
+			});
 		});
 	}
 
 	
 	fetchData() {
+		console.log("[fetchData]");
+		
+		// If no user
 		if ( !this.state.user ) {
-			this.fetchUser().then(() => { 
+			// First, fetch the user
+			return this.fetchUser().then(() => {
+				// Next, fetch the node (if not loaded)
 				if ( this.state.node && !this.state.node.id ) {
 					return this.fetchNode(); 
 				}
+				return null;
 			});
 		}
+		// Fetch the node (if not loaded)
 		else if ( this.state.node && !this.state.node.id ) {
-			this.fetchNode();
+			return this.fetchNode();
 		}
+		return null;
 	}
 		
 	// *** //

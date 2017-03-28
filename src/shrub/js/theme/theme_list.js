@@ -5,5 +5,5 @@ export default {
 };
 
 export function Get( event ) {
-	return Fetch.Get('//'+API_DOMAIN+'/vx/theme/list/get/'+event);
+	return Fetch.Get(API_ENDPOINT+'/vx/theme/list/get/'+event, true);
 }

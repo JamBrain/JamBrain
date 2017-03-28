@@ -17,7 +17,7 @@ export default {
 var Nodes = {};
 
 export function Walk( parent, slugs ) {
-	return Fetch.Get('//'+API_DOMAIN+'/vx/node/walk/'+parent+'/'+slugs.join('/'));
+	return Fetch.Get(API_ENDPOINT+'/vx/node/walk/'+parent+'/'+slugs.join('/'), true);
 }
 
 export function Get( ids ) {
@@ -25,7 +25,7 @@ export function Get( ids ) {
 		ids = [ids];
 	}
 
-	return Fetch.Get('//'+API_DOMAIN+'/vx/node/get/'+ids.join('+'));
+	return Fetch.Get(API_ENDPOINT+'/vx/node/get/'+ids.join('+'), true);
 }
 
 export function GetFeed( id, methods, types, subtypes, subsubtypes ) {
@@ -62,19 +62,19 @@ export function GetFeed( id, methods, types, subtypes, subsubtypes ) {
 		}
 	}
 
-	return Fetch.Get('//'+API_DOMAIN+'/vx/node/feed/'+args.join('/'));
+	return Fetch.Get(API_ENDPOINT+'/vx/node/feed/'+args.join('/'), true);
 }
 
 export function GetMy() {
-	return Fetch.Get('//'+API_DOMAIN+'/vx/node/getmy');
+	return Fetch.Get(API_ENDPOINT+'/vx/node/getmy', true);
 }
 
 export function Where() {
-	return Fetch.Get('//'+API_DOMAIN+'/vx/node/where');
+	return Fetch.Get(API_ENDPOINT+'/vx/node/where', true);
 }
 
 export function What( id ) {
-	return Fetch.Get('//'+API_DOMAIN+'/vx/node/what/'+id);
+	return Fetch.Get(API_ENDPOINT+'/vx/node/what/'+id, true);
 }
 
 
@@ -93,17 +93,17 @@ export function Add( id, node_type, node_subtype, node_subsubtype ) {
 		args.push(node_subsubtype);
 	}	
 	
-	return Fetch.Post('//'+API_DOMAIN+'/vx/node/add/'+args.join('/'), {});
+	return Fetch.Post(API_ENDPOINT+'/vx/node/add/'+args.join('/'), {});
 
 }
 export function Publish( id, event ) {
-	return Fetch.Post('//'+API_DOMAIN+'/vx/node/publish/'+id, {
+	return Fetch.Post(API_ENDPOINT+'/vx/node/publish/'+id, {
 		'event': event
 	});
 }
 
 export function Update( id, name, body ) {
-	return Fetch.Post('//'+API_DOMAIN+'/vx/node/update/'+id, {
+	return Fetch.Post(API_ENDPOINT+'/vx/node/update/'+id, {
 		'name': name,
 		'body': body
 	});

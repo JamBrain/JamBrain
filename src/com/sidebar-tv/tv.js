@@ -115,20 +115,20 @@ export default class SidebarTV extends Component {
 		if ( !document.hidden ) {
 			//console.log("Streams Refreshed: "+Date.now());
 			
-			this.loadStreams().then(function() {
+			this.loadStreams().then(() => {
 				//console.log("Queued");
 
-				this.timer = setTimeout(function() {
+				this.timer = setTimeout(() => {
 					this.refreshStreams();
-				}.bind(this), StreamRefreshRate);
-			}.bind(this));
+				}, StreamRefreshRate);
+			});
 		}
 		else {
 			//console.log("Hidden Queue");
 
-			this.timer = setTimeout(function() {
+			this.timer = setTimeout(() => {
 				this.refreshStreams();
-			}.bind(this), HiddenRefreshRate);
+			}, HiddenRefreshRate);
 		}
 	}
 
@@ -152,7 +152,7 @@ export default class SidebarTV extends Component {
 	}
 	
 	showOthers( others, active ) {
-		return others.map( function(other, index) {
+		return others.map((other, index) => {
 			if (other === active) {
 				return (
 					<div class="selected" onclick={this.setActive.bind(this, index)}>
@@ -167,7 +167,7 @@ export default class SidebarTV extends Component {
 					</div>
 				);
 			}
-		}.bind(this));
+		});
 	}
 	
 	render( props, state ) {
