@@ -109,6 +109,7 @@ export default class SidebarTV extends Component {
 	refreshStreams() {
 		// TODO: Raise this, once JammerTV caching is correctly supported
 		var StreamRefreshRate = 3*60*1000;
+		var HiddenRefreshRate = 1*20*1000;	// When hidden, refresh more often (which fails, so work is minimal)
 		
 		// But only if the window is visible
 		if ( !document.hidden ) {
@@ -127,7 +128,7 @@ export default class SidebarTV extends Component {
 
 			this.timer = setTimeout(function() {
 				this.refreshStreams();
-			}.bind(this), StreamRefreshRate);
+			}.bind(this), HiddenRefreshRate);
 		}
 	}
 
