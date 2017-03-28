@@ -1,0 +1,73 @@
+@import "defs.less";
+
+#content .content-footer .footer-button-love {
+	/* Hover Effect */
+	& .-hover-hide,
+	& .-loved-hide {
+		display: block;
+	}
+	& .-hover-show,
+	& .-loved-show {
+		display: none;
+	}
+
+	&.loved {
+		& .-loved-hide {
+			display: none;
+			
+			&.-hover-hide,
+			&.-hover-show {
+				display: none;
+			}
+		}
+		& .-loved-show {
+			display: block;
+
+			&.-hover-hide {
+				display: block;
+			}
+			&.-hover-show {
+				display: none;
+			}
+		}
+	}
+	
+
+	&:hover {
+		& .-hover-hide {
+			&.-loved-hide,
+			&.-loved-show {
+				display: none;
+			}
+		}
+		& .-hover-show {
+			&.-loved-show {
+				display: none;
+			}
+			&.-loved-hide {
+				display: block;
+			}
+		}
+	}
+	
+	&:hover.loved {
+		& .-loved-hide {
+			display: none;
+			
+			&.-hover-hide,
+			&.-hover-show {
+				display: none;
+			}
+		}
+		& .-loved-show {
+			display: block;
+
+			&.-hover-hide {
+				display: none;
+			}
+			&.-hover-show {
+				display: block;
+			}
+		}					
+	}
+}

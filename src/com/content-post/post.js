@@ -8,7 +8,8 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import ContentBody						from 'com/content-body/body';
 import ContentBodyMarkup				from 'com/content-body-markup/body-markup';
 
-import ContentFooterButtonLove			from 'com/content-footer-button-love/footer-button-love';
+import ContentFooterButtonLove			from 'com/content-footer/footer-button-love';
+import ContentFooterButtonComments		from 'com/content-footer/footer-button-comments';
 
 import $Node							from '../../shrub/js/node/node';
 
@@ -96,7 +97,10 @@ export default class ContentPost extends Component {
 			
 			var HasHeadline = null;
 			if ( node.subtype === 'news' ) {
-				HasHeadline = <div class='-headline'>NEWS</div>;
+				HasHeadline = <div class='-headline -news'>NEWS</div>;
+			}
+			else if ( node.subtype === 'event' ) {
+				HasHeadline = <div class='-headline -event'><SVGIcon>trophy</SVGIcon> EVENT</div>;
 			}
 
 			return (
@@ -122,6 +126,7 @@ export default class ContentPost extends Component {
 						</div>
 						<div class="-right">
 				  			<ContentFooterButtonLove user={user} node={node} wedge_left_bottom />
+				  			<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />
 				  		</div>
 					</div>
 				</div>

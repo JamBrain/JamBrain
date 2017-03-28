@@ -1,0 +1,118 @@
+@import "defs.less";
+
+@BUTTON_BG: @COL_NDDD;
+@BUTTON_COL: @COL_N;
+@BUTTON_LIT_BG: @COL_A;
+@BUTTON_LIT_COL: @COL_L;
+
+#content .content-footer .footer-button {
+	position: relative;
+
+	width: auto;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	background: @BUTTON_BG;/*@MAJOR_MUTE_D6;*/
+
+	display: flex;
+	
+	/* Left Wedge */
+	&:before {
+		color: @BUTTON_BG;/*@MAJOR_MUTE_D6;*/
+		
+		content: '';
+		left: -3.5rem;
+		top: 0rem;
+		border-top: 2.5rem/2 solid transparent;
+		border-right: 2.5rem/2 solid;
+		border-bottom: 2.5rem/2 solid;
+		border-left: 2.5rem/2 solid transparent;
+		
+		display: block;
+		position: relative;
+	}
+	
+	& > svg {
+		position: absolute;
+		margin: auto;
+		top: 0;
+		bottom: 0;
+		left: 1rem;
+	}
+
+	/* Here, because this plays nicer with the colors below */
+	&.loved {
+		& > svg {
+			color: @COL_A;
+		}
+	}
+		
+	&:hover {
+		cursor: pointer;
+		
+		color: @BUTTON_LIT_COL;/*@MAJOR_LIGHT;*/
+		background: @BUTTON_LIT_BG;/*@MAJOR_COLOR1;*/
+		&:before {
+			color: @BUTTON_LIT_BG;/*@MAJOR_COLOR1;*/
+		}
+		
+		& > svg {
+			color: @BUTTON_LIT_COL;/*@MAJOR_LIGHT;*/
+		}
+		
+		& .-hover-hide {
+			display: none;
+		}
+		& .-hover-show {
+			display: block;
+		}
+	}
+	
+	&:active, &:focus {
+		color: @BUTTON_LIT_BG;/*@MAJOR_COLOR1;*/
+		background: @BUTTON_LIT_COL;/*@MAJOR_LIGHT;*/
+		&:before {
+			color: @BUTTON_LIT_COL;/*@MAJOR_LIGHT;*/
+		}
+		
+		& > svg {
+			color: @BUTTON_LIT_BG;/*@MAJOR_COLOR1;*/
+		}
+	}
+	
+/*
+	& > svg {
+		width:auto;
+		padding-left:1rem;
+		padding-right:1rem;
+		background: @BUTTON_BG;
+	/*	
+		&:before {
+			color: @BUTTON_BG;
+			
+			content:'';
+			left: -3.5rem;
+			top: -2.5rem;
+			border-top: 2.5rem/2 solid transparent;
+			border-right: 2.5rem/2 solid transparent;
+			border-bottom: 2.5rem/2 solid;
+			border-left: 2.5rem/2 solid;
+			
+			display: block;
+			  position: relative;
+		}
+		
+		&:hover {
+			color: @BUTTON_LIT_COL;
+			background: @BUTTON_LIT_BG;
+			&:after {
+				color: @BUTTON_LIT_BG;
+			}
+		}			
+	}*/
+	& > .-count {
+		width: auto;
+		padding-right: 1rem;
+		font-size: 1.5em;
+		line-height: 2.8rem;
+	}
+}

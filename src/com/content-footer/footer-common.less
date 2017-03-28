@@ -1,9 +1,17 @@
 @import "defs.less";
 
-#content .content-footer-common {
-	border-bottom:8px solid @MAJOR_MUTE_D6;
-	color: @MAJOR_MUTE;
+#content .content-common .content-footer-common {
+	/*border-bottom:8px solid @MAJOR_MUTE_D6;*/
+	/*color: @COL_B;*/
 	height: 2em;
+	
+	& a,
+	& a:visited {
+		margin: 0;
+		padding-top: 0;
+		padding-bottom: 0;
+		color: inherit;
+	}
 
 	& > .-left {
 		position: absolute;
@@ -11,7 +19,8 @@
 		bottom:0;
 		display:flex;
 
-		& > div {
+		& > div,
+		& > a {
 			line-height:2.5rem;
 			width:2.5rem;
 			height:2.5rem;
@@ -25,11 +34,16 @@
 		bottom: 0;
 		display: flex;
 
-		& > div {
+		& > div,
+		& > a {
 			line-height: 2.5rem;
 			/*width:2.5rem;*/
 			height: 2.5rem;
 			text-align: center;
+			padding-right: 2.5rem;
+		}
+		& > *:last-child {
+			padding-right: 1rem;	/* match whatever button uses */
 		}
 	}
 }

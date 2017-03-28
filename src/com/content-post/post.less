@@ -8,32 +8,6 @@
 #content .content-post {
 	position: relative;
 	
-	border-top: 4px solid;
-	color: @POST_DARK;
-		
-	/*background: linear-gradient(135deg, @POST_BUTTON_LIT (@spacing * 0), @POST_BUTTON_LIT (@spacing * 2), @MAJOR_COLOR2 (@spacing * 2), @MAJOR_COLOR2 (@spacing * 5), @MAJOR_COLOR3 (@spacing * 5), @MAJOR_COLOR3 (@spacing * 9), @MAJOR_COLOR4 (@spacing * 9));
-	*/
-	background: #F2F2F2; /*@MAJOR_MUTE_L4;*/
-	box-shadow: 0px 0px 3px rgba(64,0,0,0.2);
-	
-	& a {
-		text-decoration: none;
-		padding:0.1em 0.15em;
-		border-radius:0.05em;
-		margin:-0.1em -0.075em 0;
-	}
-	& a:hover, & a:focus, & .-title a:hover, & .-title a:focus {
-		color: @MAJOR_COLOR4 !important; /*@MAJOR_COLOR4;*/
-		background: @POST_BUTTON_LIT; /*@MAJOR_MUTE;*/
-	}
-	
-	& a, & a:visited {
-		color: @POST_BUTTON_LIT;
-	}
-	& .-title a, & .-title a:visited {
-		color: @MAJOR_DARK;
-	}
-
 	& > .-header {
 		/*margin: 1em;*/
 		padding: 1em;
@@ -255,6 +229,13 @@
 			font-style: italic;
 			overflow: hidden;
 			padding-left: 0.5em;
+			
+			&.-news {
+				background: @COL_C;
+			}
+			&.-event {
+				background: @COL_AB;
+			}
 		}
 	}
 }

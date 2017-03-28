@@ -1,7 +1,7 @@
 import { h, Component } 				from 'preact/preact';
 import { shallowDiff }	 				from 'shallow-compare/index';
 
-import ContentFooterButtonLove			from 'com/content-footer-button-love/footer-button-love';
+import ContentFooterButtonLove			from 'com/content-footer/footer-button-love';
 
 export default class ContentFooterCommon extends Component {
 	constructor( props ) {
