@@ -38,10 +38,10 @@ export default class SidebarTV extends Component {
 	}
 
 	loadStreams() {
-		//var API_BASE = '//jammer.tv/v1/live.php';
+		var NewStreams = [];
 		
-		//return fetch(API_BASE+'/ludum-dare+ludum-dare-art+ludum-dare-music+ludum-dare-craft+ludum-dare-play+ludum-dare-talk')
-		$JammerTV.GetLive([
+		// Fetch Ludum Dare streams first
+		return $JammerTV.GetLive([
 			'ludum-dare',
 			'ludum-dare-art',
 			'ludum-dare-music',
@@ -49,45 +49,77 @@ export default class SidebarTV extends Component {
 			'ludum-dare-play',
 			'ludum-dare-talk'
 		])
+		// Fetch Game Jam streams next (if we don't have enough)
 		.then(data => {
+			// Parse Data
+			if ( data && Array.isArray(data.streams) ) {
+				NewStreams = NewStreams.concat(data.streams);
+			}
+			
 			// hack
-			this.state.streams = this.state.streams.concat(data.streams);
-						
-			if ( this.state.streams.length < 3 ) {
-//				fetch(API_BASE+'/game-jam+game-jam-art+game-jam-music+game-dev+game-art+game-music')
-				$JammerTV.GetLive([
+			//this.state.streams = this.state.streams.concat(data.streams);
+			
+			// Fetch more (if needed)
+			if ( NewStreams.length < 3 ) {
+			
+//			if ( this.state.streams.length < 3 ) {
+				return $JammerTV.GetLive([
 					'game-jam',
 					'game-jam-art',
 					'game-jam-music',
+				]);
+			}
+		})
+		// Fetch Game Dev streams last (if we didn't have enough)
+		.then(data => {
+			// Parse data
+			if ( data && Array.isArray(data.streams) ) {
+				NewStreams = NewStreams.concat(data.streams);
+			}
+
+			// Fetch more (if needed)
+			if ( NewStreams.length < 3 ) {
+				return $JammerTV.GetLive([
 					'game-dev',
 					'game-art',
 					'game-music'
-				])
-//				.then(rr => {
-//					if ( rr )
-//						return rr.json();
-//				})
-				.then(data2 => {
-					this.setState({ 
-						'streams': this.state.streams.concat(data2.streams)
-					});
-				})
-				.catch(err => {
-					console.log("sidebar-tv2:",err);
-					this.setState({
-						'error': err
-					});
-					return err;
-				});
+				]);
 			}
-			else {
-				this.setState({ 
-					'streams': this.state.streams
-				});
+		})
+		// Wrap up
+		.then(data => {
+			// Parse Data
+			if ( data && Array.isArray(data.streams) ) {
+				NewStreams = NewStreams.concat(data.streams);
 			}
 			
-			return data;
+			// Populate state with streams
+			this.setState({
+				'streams': NewStreams
+			});
 		})
+				
+//				.then(data2 => {
+//					this.setState({ 
+//						'streams': this.state.streams.concat(data2.streams)
+//					});
+//				})
+//				.catch(err => {
+//					console.log("sidebar-tv2:",err);
+//					this.setState({
+//						'error': err
+//					});
+//					return err;
+//				});
+//			}
+//			else {
+//				this.setState({ 
+//					'streams': this.state.streams
+//				});
+//			}
+//			
+//			return data;
+//		})
 		.catch(err => {
 			console.log("sidebar-tv:",err);
 			this.setState({

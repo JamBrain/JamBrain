@@ -63,16 +63,6 @@ export function Post( _url, _data, _credentials /*true*/, _json_only /*true*/, _
 	});
 
 	return fetch(_url, response )	
-//	return fetch(_url, {
-//		'method': 'POST',
-//		'credentials': 'include',
-//		'headers': headers,
-//		// Other encodings don't correctly send POST data for PHP
-//		// https://github.com/github/fetch/issues/263#issuecomment-209548790
-//		'body': Object.keys(_data).map((key) => {
-//			return encodeURIComponent(key) + '=' + encodeURIComponent(_data[key]);
-//		}).join('&')
-//	})
 	.then(r => {
 		if ( r ) {
 			var contentType = r.headers.get('content-type');

@@ -1,4 +1,4 @@
-import {Get,Post} from '../../shrub/js/internal/fetch';
+import { Get, Post }			from '../../shrub/js/internal/fetch';
 
 export default {
 	GetLive
