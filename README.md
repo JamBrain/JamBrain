@@ -44,3 +44,4 @@ These are not currently in active development.
   * Advanced build options
     * `make mini` - Like `make`, but this can be used to refresh the UID (used to bypass caching proxies, etc)
     * `make TARGET=public-ludumdare.com` - Make a specific target
+  * `config.mk` - Create this file and you can hardcode makefile settings (like `TARGET=public-ludumdare.com`)
