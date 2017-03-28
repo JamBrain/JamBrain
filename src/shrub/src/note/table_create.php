@@ -64,16 +64,17 @@ if ( in_array($table, $TABLE_LIST) ) {
 	table_Init($table);
 	switch ( $TABLE_VERSION ) {
 	case 0:
+		// No "published" date, just modified, as comments aren't drafted
+	
 		$ok = table_Create( $table,
 			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
 				id ".DB_TYPE_UID.",
 				node ".DB_TYPE_ID.",
 					INDEX(node),
 				author ".DB_TYPE_ID.",
-				published ".DB_TYPE_TIMESTAMP.",
-					INDEX(published),
 				created ".DB_TYPE_TIMESTAMP.",
 				modified ".DB_TYPE_TIMESTAMP.",
+					INDEX(modified),
 				version ".DB_TYPE_ID.",
 				body ".DB_TYPE_NOTE_BODY."
 			)".DB_CREATE_SUFFIX);

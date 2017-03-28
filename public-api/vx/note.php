@@ -23,6 +23,29 @@ switch ( $action ) {
 			
 		break; // case 'stats': //note/stats
 
+	case 'count': //note/count
+		json_ValidateHTTPMethod('GET');
+
+		if ( json_ArgCount() ) {
+			$node_ids = explode('+', json_ArgGet(0));
+
+			// Sanitize
+			foreach ( $node_ids as &$id ) {
+				$id = intval($id);
+				
+				if ( !$id ) {
+					json_EmitFatalError_BadRequest("Invalid ID requested", $RESPONSE);
+				}
+			}
+			sort($node_ids);
+			
+			$RESPONSE['comments'] = note_CountByNode($node_ids);
+		}
+		else {
+			json_EmitFatalError_BadRequest(null, $RESPONSE);
+		}
+		break; // case 'count': //note/count
+
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break; // default
