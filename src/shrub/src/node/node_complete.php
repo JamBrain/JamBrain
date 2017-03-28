@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__."/../note/note_core.php";
 
 function nodeComplete_GetById( $ids ) {
 	$multi = is_array($ids);
@@ -13,6 +14,8 @@ function nodeComplete_GetById( $ids ) {
 	$links = nodeLink_ParseByNode($ids);
 
 	$loves = nodeLove_GetByNode($ids);
+	
+	$notes = note_CountByNode($ids);
 
 	// Populate Metadata
 	foreach ( $nodes as &$node ) {
@@ -51,11 +54,20 @@ function nodeComplete_GetById( $ids ) {
 		}
 	}
 	
-	// Populate Comment Count
-//	foreach ( $nodes as &$node ) {
-//		$node['comments'] = 0;
-//		
-//	}
+	// Populate Note (comment) Count
+	foreach ( $nodes as &$node ) {
+		// Check if note data is public for this Node type
+		if ( note_IsNotePublicByNode($node) ) {
+			$node['notes'] = 0;
+
+			foreach ( $notes as $note ) {
+				if ( $node['id'] === $note['node'] ) {
+					$node['notes'] = $note['count'];
+					$node['notes-timestamp'] = $note['timestamp'];
+				}
+			}
+		}
+	}
 
 
 	if ($multi)

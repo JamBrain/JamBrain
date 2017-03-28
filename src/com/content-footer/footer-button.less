@@ -1,6 +1,8 @@
 @import "defs.less";
 
-#content .content-footer .footer-button-love {
+#content .content-footer .footer-button {
+	position: relative;
+
 	width: auto;
 	padding-left: 1rem;
 	padding-right: 1rem;
@@ -32,43 +34,7 @@
 		left: 1rem;
 	}
 
-
-	/* Hover Effect */
-	& .-hover-hide,
-	& .-loved-hide {
-		display: block;
-	}
-	& .-hover-show,
-	& .-loved-show {
-		display: none;
-	}
 	
-	&.loved {
-		& > svg {
-			color: @MAJOR_COLOR1;
-		}
-		
-		& .-loved-hide {
-			display: none;
-			
-			&.-hover-hide,
-			&.-hover-show {
-				display: none;
-			}
-		}
-		& .-loved-show {
-			display: block;
-
-			&.-hover-hide {
-				display: block;
-			}
-			&.-hover-show {
-				display: none;
-			}
-		}
-	}
-	
-
 	&:hover {
 		cursor: pointer;
 		
@@ -84,43 +50,10 @@
 		
 		& .-hover-hide {
 			display: none;
-			
-			&.-loved-hide,
-			&.-loved-show {
-				display: none;
-			}
 		}
 		& .-hover-show {
 			display: block;
-			
-			&.-loved-show {
-				display: none;
-			}
-			&.-loved-hide {
-				display: block;
-			}
 		}
-	}
-	
-	&:hover.loved {
-		& .-loved-hide {
-			display: none;
-			
-			&.-hover-hide,
-			&.-hover-show {
-				display: none;
-			}
-		}
-		& .-loved-show {
-			display: block;
-
-			&.-hover-hide {
-				display: none;
-			}
-			&.-hover-show {
-				display: block;
-			}
-		}					
 	}
 	
 	&:active, &:focus {

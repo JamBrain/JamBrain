@@ -12,6 +12,7 @@ json_Begin();
 const CACHE_KEY_PREFIX = "SH!NOTE!";
 const CACHE_TTL = 60;
 
+
 // Do Actions
 $action = json_ArgShift();
 switch ( $action ) {
@@ -22,7 +23,7 @@ switch ( $action ) {
 		$RESPONSE['ham'] = "true";
 			
 		break; // case 'stats': //note/stats
-
+/*
 	case 'count': //note/count
 		json_ValidateHTTPMethod('GET');
 
@@ -39,13 +40,18 @@ switch ( $action ) {
 			}
 			sort($node_ids);
 			
+			// Validate
+//			$nodes = nodeCache_GetById($node_ids);
+			
+			
+			
 			$RESPONSE['comments'] = note_CountByNode($node_ids);
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
 		}
 		break; // case 'count': //note/count
-
+*/
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break; // default
