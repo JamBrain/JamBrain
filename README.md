@@ -10,8 +10,8 @@ https://github.com/ludumdare/dairybox
 
 Development discussion (site-dev only please): 
 
-* **Web (Slack-like):** https://gitter.im/ludumdare/ludumdare
-* **IRC:** https://irc.gitter.im/ (click for details)
+* **Web:** https://gitter.im/ludumdare/ludumdare (Slack-like)
+* **IRC:** https://irc.gitter.im/
 
 # Structure
 Many folder are documented. Just browse the tree to learn about the contents.
@@ -26,14 +26,13 @@ These folders contain the live sites that are served. They tend to be simple `PH
 
 * [/public-ludumdare.com](public-ludumdare.com/) - Ludum Dare focused version of the common site -- https://ldjam.com
   * This will be moving to `ludumdare.com` later this year
-* [/public-jammer.vg](public-jammer.vg/) - Jammer, the general version of the common site
-  * Currently not under active development
-* [/public-jammer.bio](public-jammer.bio/) - Jammer Bio, a variant focused on user pages. i.e. `jammer.bio/your-user-name`
-  * Currently not under active development
 * /public-jammer.tv - Not yet in this repository. Coming soon. -- https://jammer.tv
-  * TV widget uses a version of the backend. The frontend site
-* [/public-url.shortener](public-url.shortener) - A variety of URL shortening services. https://ldj.am, https://jam.mr
-  * Currently not under active development
+  * The TV widget uses the backend. The frontend site is not currently in active development.
+
+These are not currently in active development.
+* [/public-jammer.vg](public-jammer.vg/) - Jammer, the general version of the common site -- https://jammer.vg
+* [/public-jammer.bio](public-jammer.bio/) - Jammer Bio's, a variant focused on user pages. i.e. `jammer.bio/your-user-name`
+* [/public-url.shortener](public-url.shortener) - A variety of URL shortening services. -- https://ldj.am, https://jam.mr
 
 ### Other 
 * [/public-api](public-api/) - Restful API calls (**NB**: This will be moving soon, but for now the API's are here)
@@ -45,3 +44,4 @@ These folders contain the live sites that are served. They tend to be simple `PH
   * Advanced build options
     * `make mini` - Like `make`, but this can be used to refresh the UID (used to bypass caching proxies, etc)
     * `make TARGET=public-ludumdare.com` - Make a specific target
+  * `config.mk` - Create this file and you can hardcode makefile settings (like `TARGET=public-ludumdare.com`)
