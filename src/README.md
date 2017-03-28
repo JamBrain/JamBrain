@@ -16,6 +16,7 @@ Inside you will find a variety of code in a variety of formats.
 * [/internal/](internal/) - Internal Libraries (??)
 * [/embed/](embed/) - Code that gets embedded in to (PHP) scripts
 * [/main/](main/) - The common Main used across sites
+* [/shrub/](shrub/) - The CMS internals.
 
 ## Externals
 
