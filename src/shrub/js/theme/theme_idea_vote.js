@@ -9,20 +9,20 @@ export default {
 };
 
 export function Get( event ) {
-	return Fetch.Get('//'+API_DOMAIN+'/vx/theme/idea/vote/get/'+event);
+	return Fetch.Get(API_ENDPOINT+'/vx/theme/idea/vote/get/'+event, true);
 }
 export function GetMy( event ) {
-	return Fetch.Get('//'+API_DOMAIN+'/vx/theme/idea/vote/getmy/'+event);
+	return Fetch.Get(API_ENDPOINT+'/vx/theme/idea/vote/getmy/'+event, true);
 }
 
 
 export function Yes( idea ) {
-	return Fetch.Get('//'+API_DOMAIN+'/vx/theme/idea/vote/yes/'+idea);
+	return Fetch.Get(API_ENDPOINT+'/vx/theme/idea/vote/yes/'+idea, true);
 }
 export function No( idea ) {
-	return Fetch.Get('//'+API_DOMAIN+'/vx/theme/idea/vote/no/'+idea);
+	return Fetch.Get(API_ENDPOINT+'/vx/theme/idea/vote/no/'+idea, true);
 }
 export function Flag( idea ) {
-	return Fetch.Get('//'+API_DOMAIN+'/vx/theme/idea/vote/flag/'+idea);
+	return Fetch.Get(API_ENDPOINT+'/vx/theme/idea/vote/flag/'+idea, true);
 }
 

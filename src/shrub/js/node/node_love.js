@@ -13,12 +13,12 @@ var STORAGE = Memory;
 
 /// ??
 export function Get( node ) {
-	return Fetch.Get('//'+API_DOMAIN+'/vx/node/love/get/'+node);
+	return Fetch.Get(API_ENDPOINT+'/vx/node/love/get/'+node, true);
 }
 
 /// Returns all of my love
 function _GetMy() {
-	return Fetch.Get('//'+API_DOMAIN+'/vx/node/love/getmy');
+	return Fetch.Get(API_ENDPOINT+'/vx/node/love/getmy', true);
 }
 /// Wraps the concept of getting love for a specific node
 export function GetMy( node ) {
@@ -59,10 +59,10 @@ export function SetMy( Data ) {
 export function Add( node ) {
 	STORAGE.Push('NODE|LOVE|MINE', node);
 
-	return Fetch.Get('//'+API_DOMAIN+'/vx/node/love/add/'+node);
+	return Fetch.Get(API_ENDPOINT+'/vx/node/love/add/'+node, true);
 }
 export function Remove( node ) {
 	STORAGE.Pop('NODE|LOVE|MINE', node);
 
-	return Fetch.Get('//'+API_DOMAIN+'/vx/node/love/remove/'+node);
+	return Fetch.Get(API_ENDPOINT+'/vx/node/love/remove/'+node, true);
 }

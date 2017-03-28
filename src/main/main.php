@@ -44,9 +44,10 @@ const STATIC_DOMAINS = [
 const DEFAULT_STATIC_DOMAIN = 'static.jam.vg';
 
 define( 'STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : DEFAULT_STATIC_DOMAIN );
+define( 'STATIC_ENDPOINT', '//'+STATIC_DOMAIN );
 define( 'LINK_SUFFIX', isset($_GET['nopush']) ? '; nopush' : '' );
 define( 'API_DOMAIN', 'api.'.$_SERVER['SERVER_NAME'] );
-define( 'API_ENDPOINT', '/vx' );
+define( 'API_ENDPOINT', '//'.API_DOMAIN );
 
 define( 'JS_FILE',   "/-/all".USE_MINIFIED.".js?".VERSION_STRING );
 define( 'CSS_FILE',  "/-/all".USE_MINIFIED.".css?".VERSION_STRING );
@@ -76,7 +77,9 @@ if ( !isset($_GET['nopreload']) ) {
 		<?php /* Output PHP Variables for JS */ ?>
 		var VERSION_STRING = "<?=VERSION_STRING?>";
 		var STATIC_DOMAIN = "<?=STATIC_DOMAIN?>";
+		var STATIC_ENDPOINT = "<?=STATIC_ENDPOINT?>";
 		var API_DOMAIN = "<?=API_DOMAIN?>";
+		var API_ENDPOINT = "<?=API_ENDPOINT?>";
 		var SERVER_TIMESTAMP = "<?=gmdate('Y-m-d\TH:i:s.000\Z'/*DATE_W3C*/);?>";
 		var CLIENT_TIMESTAMP = new Date().toISOString();
 		var SECURE_LOGIN_ONLY = <?= defined('SECURE_LOGIN_ONLY') ? ((SECURE_LOGIN_ONLY && !$_GET['insecure'])?'true':'false') : 'false' ?>;

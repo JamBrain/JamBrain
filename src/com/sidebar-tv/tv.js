@@ -1,6 +1,8 @@
 import { h, Component } 				from 'preact/preact';
 import ShallowCompare	 				from 'shallow-compare/index';
 
+import $JammerTV						from 'external/jammertv/jammertv';
+
 import SVGIcon 							from 'com/svg-icon/icon';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import IMG	 							from 'com/img2/img2';
@@ -31,6 +33,103 @@ export default class SidebarTV extends Component {
 		];
 		
 		this.FailImage = '//'+STATIC_DOMAIN+'/other/asset/TVFail.png';
+		
+		this.refreshStreams = this.refreshStreams.bind(this);
+	}
+
+	loadStreams() {
+		var NewStreams = [];
+		
+		// Fetch Ludum Dare streams first
+		return $JammerTV.GetLive([
+			'ludum-dare',
+			'ludum-dare-art',
+			'ludum-dare-music',
+			'ludum-dare-craft',
+			'ludum-dare-play',
+			'ludum-dare-talk'
+		])
+		// Fetch Game Jam streams next (if we don't have enough)
+		.then(data => {
+			// Parse Data
+			if ( data && Array.isArray(data.streams) ) {
+				NewStreams = NewStreams.concat(data.streams);
+			}
+			
+			// Fetch more (if needed)
+			if ( NewStreams.length < 10 ) {
+				return $JammerTV.GetLive([
+					'game-jam',
+					'game-jam-art',
+					'game-jam-music',
+				]);
+			}
+			return null;
+		})
+		// Fetch Game Dev streams last (if we didn't have enough)
+		.then(data => {
+			// Parse data
+			if ( data && Array.isArray(data.streams) ) {
+				NewStreams = NewStreams.concat(data.streams);
+			}
+
+			// Fetch more (if needed)
+			if ( NewStreams.length < 10 ) {
+				return $JammerTV.GetLive([
+					'game-dev',
+					'game-art',
+					'game-music'
+				]);
+			}
+			return null;
+		})
+		// Wrap up
+		.then(data => {
+			// Parse Data
+			if ( data && Array.isArray(data.streams) ) {
+				NewStreams = NewStreams.concat(data.streams);
+			}
+			
+			// Populate state with streams
+			this.setState({
+				'streams': NewStreams
+			});
+			return null;
+		})
+		.catch(err => {
+			// Error state
+			this.setState({
+				'error': err
+			});
+			return err;
+		});		
+	}
+	
+	// Called every few minutes, to make sure stream list is fresh
+	refreshStreams() {
+		// TODO: Raise this, once JammerTV caching is correctly supported
+		var StreamRefreshRate = 3*60*1000;
+		var HiddenRefreshRate = 1*20*1000;	// When hidden, refresh more often (which fails, so work is minimal)
+		
+		// But only if the window is visible
+		if ( !document.hidden ) {
+			//console.log("Streams Refreshed: "+Date.now());
+			
+			this.loadStreams().then(() => {
+				//console.log("Queued");
+
+				this.timer = setTimeout(() => {
+					this.refreshStreams();
+				}, StreamRefreshRate);
+			});
+		}
+		else {
+			//console.log("Hidden Queue");
+
+			this.timer = setTimeout(() => {
+				this.refreshStreams();
+			}, HiddenRefreshRate);
+		}
 	}
 
 //	shouldComponentUpdate( nextProps, nextState ) {
@@ -41,50 +140,7 @@ export default class SidebarTV extends Component {
 		
 	componentDidMount() {
 //		console.log("SideBarTV: componentDidMount");
-		
-		fetch('//jammer.tv/v1/live.php/ludum-dare+ludum-dare-art+ludum-dare-music+ludum-dare-craft+ludum-dare-play+ludum-dare-talk')
-		.then(r => {
-			if ( r )
-				return r.json();
-		})
-		.then(data => {
-			// hack
-			this.state.streams = this.state.streams.concat(data.streams);
-						
-			if ( this.state.streams.length < 3 ) {
-				fetch('//jammer.tv/v1/live.php/game-jam+game-jam-art+game-jam-music+game-dev+game-art+game-music')
-				.then(rr => {
-					if ( rr )
-						return rr.json();
-				})
-				.then(data2 => {
-					this.setState({ 
-						'streams': this.state.streams.concat(data2.streams)
-					});
-				})
-				.catch(err => {
-					console.log("sidebar-tv2:",err);
-					this.setState({
-						'error': err
-					});
-					return err;
-				});
-			}
-			else {
-				this.setState({ 
-					'streams': this.state.streams
-				});
-			}
-			
-			return data;
-		})
-		.catch(err => {
-			console.log("sidebar-tv:",err);
-			this.setState({
-				error: err
-			});
-			return err;
-		});
+		this.refreshStreams();
 	}
 
 	componentWillUnmount() {
@@ -96,7 +152,7 @@ export default class SidebarTV extends Component {
 	}
 	
 	showOthers( others, active ) {
-		return others.map( function(other, index) {
+		return others.map((other, index) => {
 			if (other === active) {
 				return (
 					<div class="selected" onclick={this.setActive.bind(this, index)}>
@@ -111,7 +167,7 @@ export default class SidebarTV extends Component {
 					</div>
 				);
 			}
-		}.bind(this));
+		});
 	}
 	
 	render( props, state ) {
