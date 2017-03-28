@@ -4,7 +4,12 @@
 # Settings #
 SRC					?=	src
 OUT					?=	.output
-BUILD				?=	.build
+.BUILD				?=	.build
+
+# Use 'TARGET=public-blah' if you want to build a specific build "blah" #
+ifdef TARGET
+ALL_MAKEFILES		:=	$(SRC)/$(subst /,,$(TARGET))/Makefile
+endif # BUILD
 
 STATIC_DOMAIN		?=	static.jammer.work
 
@@ -13,7 +18,7 @@ ifdef INCLUDE_FOLDERS
 INCLUDE_FOLDERS		+=	src/compat/
 endif
 INCLUDE_FOLDERS		?=	$(SRC)/
-BUILD_FOLDER		:=	$(OUT)/$(BUILD)/$(TARGET)
+BUILD_FOLDER		:=	$(OUT)/$(.BUILD)/$(subst /,,$(TARGET))
 
 # Functions (must use '=', and not ':=') #
 REMOVE_UNDERSCORE	=	$(foreach v,$(1),$(if $(findstring /_,$(v)),,$(v)))
@@ -102,14 +107,14 @@ report: $(TARGET_FILES)
 		| column -t
 
 # If not called recursively, figure out who the targes are and call them #
-ifndef TARGET # ---- #
+ifndef MAIN_FOLDER # ---- #
 
-ALL_MAKEFILES		:=	$(call FIND_FILE,$(SRC)/,Makefile)
-BUILDS				:=	$(subst $(SRC)/,$(OUT)/$(BUILD)/,$(ALL_MAKEFILES))
+ALL_MAKEFILES		?=	$(call FIND_FILE,$(SRC)/,Makefile)
+BUILDS				:=	$(subst $(SRC)/,$(OUT)/$(.BUILD)/,$(ALL_MAKEFILES))
 
 clean:
 	rm -fr $(OUT)
-	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-target -r --no-print-directory -C . -f $(subst $(OUT)/$(BUILD)/,$(SRC)/,$(b));)
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-target -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 
 clean-version:
 	rm $(OUT)/git-version.php
@@ -120,8 +125,8 @@ target: $(BUILDS) $(OUT)/git-version.php
 # NOTE: git-version should be last! Generation of this file doubles as the "install complete" notification.
 
 $(BUILDS):
-	@echo "[+] Building \"$(subst /Makefile,,$(subst $(OUT)/$(BUILD)/,,$@))\"..."
-	@$(MAKE) --no-print-directory -C . -f $(subst $(OUT)/$(BUILD)/,$(SRC)/,$@)
+	@echo "[+] Building \"$(subst /Makefile,,$(subst $(OUT)/$(.BUILD)/,,$@))\"..."
+	@$(MAKE) --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$@)
 
 endif # $(BUILDS) # ---- #
 
@@ -150,7 +155,7 @@ $(OUT)/%.min.svg:$(SRC)/%.svg
 
 
 # Concat Rules #
-ifdef TARGET # ---- #
+ifdef MAIN_FOLDER # ---- #
 
 OUT_MAIN_JS			:=	$(subst $(SRC)/,$(OUT)/,$(MAIN_JS:.js=.es6.js))
 
@@ -187,9 +192,9 @@ $(TARGET_FOLDER)/all.min.svg: $(BUILD_FOLDER)/all.svg
 
 # Target #
 target: $(TARGET_DEPS) report
-	@echo "[-] Done \"$(TARGET)\""
+	@echo "[-] Done \"$(subst /,,$(TARGET))\""
 
-endif # TARGET # ---- #
+endif # MAIN_FOLDER # ---- #
 
 
 # Generate GIT VERSION file #
@@ -203,7 +208,7 @@ $(OUT)/git-version.php:
 
 
 # Phony Rules #
-.PHONY: default clean target clean-target clean-version fail report $(BUILDS)
+.PHONY: default build clean target clean-target clean-version fail report $(BUILDS)
 
 
 # Dependencies #
