@@ -126,7 +126,7 @@ export default class ContentPost extends Component {
 						</div>
 						<div class="-right">
 				  			<ContentFooterButtonLove user={user} node={node} wedge_left_bottom />
-				  			<ContentFooterButtonComments user={user} node={node} wedge_left_bottom />
+				  			<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />
 				  		</div>
 					</div>
 				</div>
