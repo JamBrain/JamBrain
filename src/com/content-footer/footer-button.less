@@ -1,18 +1,23 @@
 @import "defs.less";
 
+@BUTTON_BG: @COL_NDDD;
+@BUTTON_COL: @COL_N;
+@BUTTON_LIT_BG: @COL_A;
+@BUTTON_LIT_COL: @COL_L;
+
 #content .content-footer .footer-button {
 	position: relative;
 
 	width: auto;
 	padding-left: 1rem;
 	padding-right: 1rem;
-	background: @MAJOR_MUTE_D6;
+	background: @BUTTON_BG;/*@MAJOR_MUTE_D6;*/
 
 	display: flex;
 	
 	/* Left Wedge */
 	&:before {
-		color: @MAJOR_MUTE_D6;
+		color: @BUTTON_BG;/*@MAJOR_MUTE_D6;*/
 		
 		content: '';
 		left: -3.5rem;
@@ -34,18 +39,24 @@
 		left: 1rem;
 	}
 
-	
+	/* Here, because this plays nicer with the colors below */
+	&.loved {
+		& > svg {
+			color: @COL_A;
+		}
+	}
+		
 	&:hover {
 		cursor: pointer;
 		
-		color: @MAJOR_LIGHT;
-		background: @MAJOR_COLOR1;
+		color: @BUTTON_LIT_COL;/*@MAJOR_LIGHT;*/
+		background: @BUTTON_LIT_BG;/*@MAJOR_COLOR1;*/
 		&:before {
-			color: @MAJOR_COLOR1;
+			color: @BUTTON_LIT_BG;/*@MAJOR_COLOR1;*/
 		}
 		
 		& > svg {
-			color: @MAJOR_LIGHT;
+			color: @BUTTON_LIT_COL;/*@MAJOR_LIGHT;*/
 		}
 		
 		& .-hover-hide {
@@ -57,14 +68,14 @@
 	}
 	
 	&:active, &:focus {
-		color: @MAJOR_COLOR1;
-		background: @MAJOR_LIGHT;
+		color: @BUTTON_LIT_BG;/*@MAJOR_COLOR1;*/
+		background: @BUTTON_LIT_COL;/*@MAJOR_LIGHT;*/
 		&:before {
-			color: @MAJOR_LIGHT;
+			color: @BUTTON_LIT_COL;/*@MAJOR_LIGHT;*/
 		}
 		
 		& > svg {
-			color: @MAJOR_COLOR1;
+			color: @BUTTON_LIT_BG;/*@MAJOR_COLOR1;*/
 		}
 	}
 	
@@ -73,10 +84,10 @@
 		width:auto;
 		padding-left:1rem;
 		padding-right:1rem;
-		background: @MAJOR_MUTE_D6;
+		background: @BUTTON_BG;
 	/*	
 		&:before {
-			color: @MAJOR_MUTE_D6;
+			color: @BUTTON_BG;
 			
 			content:'';
 			left: -3.5rem;
@@ -91,10 +102,10 @@
 		}
 		
 		&:hover {
-			color: @MAJOR_LIGHT;
-			background: @MAJOR_COLOR1;
+			color: @BUTTON_LIT_COL;
+			background: @BUTTON_LIT_BG;
 			&:after {
-				color: @MAJOR_COLOR1;
+				color: @BUTTON_LIT_BG;
 			}
 		}			
 	}*/
