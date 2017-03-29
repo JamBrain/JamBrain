@@ -9,8 +9,8 @@ import SVGIcon 							from 'com/svg-icon/icon';
 //import ContentBodyMarkup				from 'com/content-body-markup/body-markup';
 //
 //import ContentFooterButtonLove			from 'com/content-footer/footer-button-love';
-//import ContentFooterButtonComments		from 'com/content-footer/footer-button-comments';
-//
+import ContentFooterButtonComments		from 'com/content-footer/footer-button-comments';
+
 //import $Node							from '../../shrub/js/node/node';
 //
 
@@ -24,20 +24,68 @@ export default class ContentComments extends Component {
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
+
+		var FooterItems = [];
+		if ( !props['no_comments'] )
+			FooterItems.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
 		
 		return (
 			<div class={['content-base','content-comments',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
+				<div class="-headline">COMMENTS</div>
 				<div class="-item -comment -indent-0">
 					<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
-					<div class="-title"><span class="-author">Author</span> (<span class="-atname">@PoV</span>)</div>
-					<div class="-body">{"They think I'm slow 'cause I'm from Canada 'eh"}</div>
-					<div class="-nav"><div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div> <div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div> <div class="-love"><SVGIcon>heart</SVGIcon> 4</div></div>
+					<div class="-body">
+						<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
+						<div class="-text">{"I'm saying words because I have words"}</div>
+						<div class="-nav">
+							<div class="-love"><SVGIcon>heart</SVGIcon> 4</div>
+							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
+							<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
+						</div>
+					</div>
+				</div>
+				<div class="-item -comment -indent-1 -first">
+					<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
+					<div class="-body">
+						<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
+						<div class="-text">{"I wish I had words"}</div>
+						<div class="-nav">
+							<div class="-love"><SVGIcon>heart</SVGIcon> 4</div>
+							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
+							<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
+						</div>
+					</div>
 				</div>
 				<div class="-item -comment -indent-1">
 					<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
-					<div class="-title"><span class="-author">Author</span> (<span class="-atname">@PoV</span>)</div>
-					<div class="-body">{"They think I'm slow 'cause I'm from Canada 'eh"}</div>
-					<div class="-nav"><div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div> <div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div> <div class="-love"><SVGIcon>heart</SVGIcon> 0</div></div>
+					<div class="-body">
+						<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
+						<div class="-text">{"Me too. I've always wondered about words."}<br /><br />{"Sadness."}</div>
+						<div class="-nav">
+							<div class="-love"><SVGIcon>heart</SVGIcon> 4</div>
+							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
+							<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
+						</div>
+					</div>
+				</div>
+				<div class="-item -comment -indent-0">
+					<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
+					<div class="-body">
+						<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
+						<div class="-text">{"I was late to the party"}</div>
+						<div class="-nav">
+							<div class="-love"><SVGIcon>heart</SVGIcon> 4</div>
+							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
+							<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
+						</div>
+					</div>
+				</div>
+				<div class="content-footer content-footer-common -footer">
+					<div class="-left">
+					</div>
+					<div class="-right">
+			  			{FooterItems}
+			  		</div>
 				</div>
 			</div>
 		);

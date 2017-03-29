@@ -40,7 +40,7 @@ export default class ViewContent extends Component {
 			return (
 				<div id="content">
 					<ContentPost node={node} user={user} path={path} extra={extra} no_comments />
-					<ContentComments node={node} user={user} path={path} extra={extra} no_header no_gap />
+					<ContentComments node={node} user={user} path={path} extra={extra} />
 				</div>
 			);
 		}
