@@ -1,4 +1,5 @@
 import { h, Component }					from 'preact/preact';
+
 import ContentPost						from 'com/content-post/post';
 import ContentUser						from 'com/content-user/user';
 import ContentUsers						from 'com/content-users/users';
@@ -10,7 +11,11 @@ import ContentGroup						from 'com/content-group/group';
 import Content404						from 'com/content-404/404';
 import ContentItem						from 'com/content-item/item';
 
+import ContentComments					from 'com/content-comments/comments';
+
 import ContentNavRoot					from 'com/content-nav/nav-root';
+//import ContentNavUser					from 'com/content-nav/nav-user';
+//import ContentNavEvent					from 'com/content-nav/nav-event';
 
 import ContentPalette					from 'com/content-palette/palette';
 
@@ -32,25 +37,49 @@ export default class ViewContent extends Component {
 		}
 
 		if ( node.type === 'post' ) {
-			return <div id="content"><ContentPost node={node} user={user} path={path} extra={extra} /></div>;
+			return (
+				<div id="content">
+					<ContentPost node={node} user={user} path={path} extra={extra} no_comments />
+					<ContentComments node={node} user={user} path={path} extra={extra} />
+				</div>
+			);
 		}
 		else if ( node.type === 'item' ) {
-			return <div id="content"><ContentItem node={node} user={user} path={path} extra={extra} /></div>;
+			return (
+				<div id="content">
+					<ContentItem node={node} user={user} path={path} extra={extra} />
+					<ContentComments node={node} user={user} path={path} extra={extra} />
+				</div>
+			);
 		}
 		else if ( node.type === 'user' ) {
-			return <div id="content"><ContentUser node={node} user={user} path={path} extra={extra} /></div>;
+			return (
+				<div id="content">
+					<ContentUser node={node} user={user} path={path} extra={extra} />
+				</div>
+			);
+//					<ContentNavUser node={node} user={user} path={path} extra={extra} />;
 		}
 		else if ( node.type === 'users' ) {
-			return <div id="content"><ContentUsers node={node} user={user} path={path} extra={extra} /></div>;
+			return (
+				<div id="content">
+					<ContentUsers node={node} user={user} path={path} extra={extra} />
+				</div>
+			);
 		}
 		else if ( node.type === 'event' ) {
-			return <div id="content"><ContentEvent node={node} user={user} path={path} extra={extra} /></div>;
+			return (
+				<div id="content">
+					<ContentEvent node={node} user={user} path={path} extra={extra} />
+				</div>
+			);
+//					<ContentNavEvent node={node} user={user} path={path} extra={extra} />;
 		}
 		else if ( node.type === 'events' || node.type === 'group' ) {
 			return <div id="content"><ContentGroup node={node} user={user} path={path} extra={extra} /></div>;
 		}
 		else if ( node.type === 'root' ) {
-			var ShowNavRoot = <ContentNavRoot user={user} path={path} extra={extra} />;
+			var ShowNavRoot = <ContentNavRoot node={node} user={user} path={path} extra={extra} />;
 
 			// If some extra arguments were passed, do virtual children			
 			if ( extra.length ) {

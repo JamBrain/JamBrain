@@ -8,7 +8,7 @@
 #content .content-common {
 	position: relative;
 	
-	border-top: 4px solid;
+	/*border-top: 4px solid;*/
 	color: @CONTENT_DARK;
 
 	background: #F2F2F2; /*@MAJOR_MUTE_L4;*/
@@ -20,15 +20,23 @@
 		border-radius:0.05em;
 		margin:-0.1em -0.075em 0;
 	}
-	& a:hover, & a:focus, & .-title a:hover, & .-title a:focus {
+	& a:hover, 
+	& a:focus, 
+	& .-title a:hover, 
+	& .-title a:focus {
 		color: @MAJOR_COLOR4 !important;
 		background: @CONTENT_BUTTON_LIT;
 	}
 	
-	& a, & a:visited {
-		color: @CONTENT_BUTTON_LIT;
+	& .-header,
+	& .-body {
+		& a, 
+		& a:visited {
+			color: @CONTENT_BUTTON_LIT;
+		}
 	}
-	& .-title a, & .-title a:visited {
+	& .-title a, 
+	& .-title a:visited {
 		color: @MAJOR_DARK;
 	}
 		
