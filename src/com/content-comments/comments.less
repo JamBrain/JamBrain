@@ -10,7 +10,6 @@
 	}
 	
 	&.-no-header {
-		border-top: 0 solid;
 	}
 	
 	& .-headline {
@@ -24,6 +23,11 @@
 		font-style: italic;
 		overflow: hidden;
 		padding-left: 0.5em;
+	}
+
+	& .-indent {
+		border-top: 4px solid @COL_NLL;
+		margin-left: 4.5em;
 	}
 	
 	& .-item {
@@ -98,13 +102,8 @@
 		&.-indent-0 {
 		}
 		&.-indent-1 {
-			margin-left: 4.5em;
-			/*border-left: 4px solid @COL_NLL;*/
 			background: @COL_NLLL;
-			
-			&.-first {
-				border-top: 4px solid @COL_NLL;
-			}
+			/*border-left: 4px solid @COL_NLL;*/
 
 			& > .-avatar {
 				top: 0;
