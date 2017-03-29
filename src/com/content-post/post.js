@@ -73,7 +73,12 @@ export default class ContentPost extends Component {
 		window.location.hash = "#dummy";
 	}
 
-	render( {node, user, path, extra}, {author, error} ) {
+	render( props, {author, error} ) {
+		var node = props.node;
+		var user = props.user;
+		var path = props.path;
+		var extra = props.extra;
+		
 		var EditMode = extra.length ? extra[0] === 'edit' : false;
 		
 		if ( node.slug && author.slug ) {
@@ -102,6 +107,12 @@ export default class ContentPost extends Component {
 			else if ( node.subtype === 'event' ) {
 				HasHeadline = <div class='-headline -event'><SVGIcon>trophy</SVGIcon> EVENT</div>;
 			}
+			
+			var FooterItems = [];
+			if ( !props['no_love'] )
+				FooterItems.push(<ContentFooterButtonLove user={user} node={node} wedge_left_bottom />);
+			if ( !props['no_comments'] )
+				FooterItems.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
 
 			return (
 				<div class={['content-base','content-common','content-post',HasHeadline ? '-has-headline' : '']}>
@@ -125,8 +136,7 @@ export default class ContentPost extends Component {
 							</div>
 						</div>
 						<div class="-right">
-				  			<ContentFooterButtonLove user={user} node={node} wedge_left_bottom />
-				  			<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />
+				  			{FooterItems}
 				  		</div>
 					</div>
 				</div>

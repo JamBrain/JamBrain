@@ -1,0 +1,75 @@
+@import "defs.less";
+
+#content .content-comments {
+	background: @COL_NLLL;
+	padding: 0.5em;
+	border-top: 4px solid @COL_NDDD;
+	border-bottom: 8px solid @COL_NDDD;
+	
+	&.-no-gap {
+		margin-top: 0;
+	}
+	
+	&.-no-header {
+		border-top: 0 solid;
+	}
+	
+	& .-comment {
+		margin: 0.5em;
+		overflow: auto;
+		
+		& > .-avatar {
+			float: left;
+			margin: 0 0.5em;
+		}
+		& > .-title {
+			& .-author {
+				font-size: 1.1em;
+				font-weight: bold;
+			}
+			& .-date {
+				font-size: 0.8em;
+			}
+		}
+		& > .-body {
+			& .-author {
+				font-size: 1.1em;
+				font-weight: bold;
+			}
+		
+		}
+		& > .-nav {
+			
+			& > div {
+				display: inline-block;
+				padding: 0.25em 1em;
+				margin-right: 0.5em;
+				border: 1px solid;
+			}
+		}
+		
+		&.-indent-0 {
+			margin-left: 0;
+		}
+		&.-indent-1 {
+			margin-left: 60px;
+			border-left: 4px solid @COL_N;
+			background: @COL_NLL;
+			padding: 0.5em;
+		}
+		
+		&.-indent-0 {
+			& > .-avatar img {
+				width: 48px;
+				height: 48px;
+			}
+		}
+		
+		&.-indent-1 {
+			& > .-avatar img {
+				width: 24px;
+				height: 24px;
+			}
+		}
+	}
+}
