@@ -36,9 +36,9 @@ export default class ContentComments extends Component {
 					<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
 					<div class="-body">
 						<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
-						<div class="-text">{"I'm saying words because I have words"}</div>
+						<div class="-text">{"This is a sample comment. Sorry, you can't actually make comments yet."}</div>
 						<div class="-nav">
-							<div class="-love"><SVGIcon>heart</SVGIcon> 4</div>
+							<div class="-love"><SVGIcon>heart</SVGIcon> 1</div>
 							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
 							<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
 						</div>
@@ -49,9 +49,9 @@ export default class ContentComments extends Component {
 						<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
 						<div class="-body">
 							<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
-							<div class="-text">{"I wish I had words"}</div>
+							<div class="-text">{"Wow, this is a sample reply to that comment"}</div>
 							<div class="-nav">
-								<div class="-love"><SVGIcon>heart</SVGIcon> 4</div>
+								<div class="-love"><SVGIcon>heart</SVGIcon> 0</div>
 								<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
 								<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
 							</div>
@@ -61,9 +61,9 @@ export default class ContentComments extends Component {
 						<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
 						<div class="-body">
 							<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
-							<div class="-text">{"Me too. I've always wondered about words."}<br /><br />{"Sadness."}</div>
+							<div class="-text">{"Double wow! This is another reply."}<br /><br />{"Amazing!"}</div>
 							<div class="-nav">
-								<div class="-love"><SVGIcon>heart</SVGIcon> 4</div>
+								<div class="-love"><SVGIcon>heart</SVGIcon> 0</div>
 								<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
 								<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
 							</div>
@@ -76,7 +76,7 @@ export default class ContentComments extends Component {
 						<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
 						<div class="-text">{"I was late to the party"}</div>
 						<div class="-nav">
-							<div class="-love"><SVGIcon>heart</SVGIcon> 4</div>
+							<div class="-love"><SVGIcon>heart</SVGIcon> 0</div>
 							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
 							<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
 						</div>
