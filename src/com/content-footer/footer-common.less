@@ -23,9 +23,10 @@
 
 	& > .-left {
 		position: absolute;
-		left:0;
-		bottom:0;
-		display:flex;
+
+		left: 0;
+		bottom: 0;
+		display: flex;
 
 		& > div,
 		& > a {
@@ -41,7 +42,7 @@
 		position: absolute;
 		
 		right: 0;
-		bottom: 0;
+		bottom: -8px;
 		display: flex;
 
 		& > div,
@@ -67,19 +68,6 @@
 	}
 
 	& > .-left {
-		position: absolute;
-
-		left: 0;
-		bottom: 0;
-		display: flex;
-
-		& > div {
-			text-align: center;
-
-			line-height: 2.5rem;
-			width: 2.5rem;
-			height: 2.5rem;
-		}
 
 		& > .-minmax {
 			width:auto;
@@ -124,18 +112,6 @@
 	}
 	
 	& > .-right {
-		position: absolute;
-		right: 0;
-		bottom: 0;
-		display: flex;
-
-		& > div {
-			line-height: 2.5rem;
-			height: 2.5rem;
-			text-align: center;
-		}
-		
-		
 		& > .-wedge-right {
 			background: linear-gradient(45deg, @FOOT_DARK 0px, @FOOT_DARK 30px, transparent 30px);
 		}
