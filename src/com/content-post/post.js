@@ -6,7 +6,7 @@ import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
 import ContentBody						from 'com/content-body/body';
-import ContentBodyMarkup				from 'com/content-body-markup/body-markup';
+import ContentBodyMarkup				from 'com/content-body/body-markup';
 
 import ContentFooterButtonLove			from 'com/content-footer/footer-button-love';
 import ContentFooterButtonComments		from 'com/content-footer/footer-button-comments';
