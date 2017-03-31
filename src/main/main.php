@@ -23,7 +23,7 @@ const STATIC_DOMAINS = [
 const DEFAULT_STATIC_DOMAIN = 'static.jam.vg';
 
 define( 'STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : DEFAULT_STATIC_DOMAIN );
-define( 'STATIC_ENDPOINT', '//'+STATIC_DOMAIN );
+define( 'STATIC_ENDPOINT', '//'.STATIC_DOMAIN );
 define( 'LINK_SUFFIX', isset($_GET['nopush']) ? '; nopush' : '' );
 define( 'API_DOMAIN', 'api.'.$_SERVER['SERVER_NAME'] );
 define( 'API_ENDPOINT', '//'.API_DOMAIN /* '/-/' */);
