@@ -30,7 +30,7 @@ export default class ContentCommonBodyTitle extends Component {
 		}
 		
 		if ( props.subtitle ) {
-			Body.push(<span class="-subtext">({props.subtitle})</span>);
+			Body.push(<span class="-subtext"> ({props.subtitle})</span>);
 		}
 		
 		return <div class={props.class}>{Body}</div>;

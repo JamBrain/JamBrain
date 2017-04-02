@@ -1,6 +1,16 @@
+@import 'defs.less';
 
 #content .content-common-body {
 	margin: 1em;
 	font-size: 1.1em;
 	line-height: 1.5em;
+
+}
+
+/* When Sidebar is disabled */
+@media (max-width: (@BASE_WIDTH - 20em)) {
+	#content .content-common-body {
+		margin-left: 0.5em !important;
+		margin-right: 0.5em !important;
+	}
 }

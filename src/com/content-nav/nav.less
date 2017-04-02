@@ -13,10 +13,10 @@
 			
 			padding: 0.5em 1em 0.5em 1em;
 			&.-has-icon {
-				padding: 0.5em 1em 0.5em 2.5em;
+				padding: 0.5em 1em 0.5em 2.0em;
 			}
 			
-			margin-right: 0.25em;
+			margin-right: 0.5em;
 			&:last-child {
 				margin-right: 0;
 			}
@@ -28,6 +28,11 @@
 			
 			& > span {
 				position: relative;
+				padding-left: 0.5em;
+				
+				@media (max-width: (@BASE_WIDTH - 20em)) {
+					display: none;
+				}
 			}
 			& > svg {
 				position: absolute;
@@ -57,7 +62,13 @@
 					background: @NAV_BUTTON_LIT_BG;
 					color: @NAV_BUTTON_LIT;
 					border: 1px solid transparent;
+					z-index: 10;
 				}
+			}
+
+			/* Make buttons overlap by 1 pixel */
+			@media (max-width: (@BASE_WIDTH - 20em)) {
+				margin-right: -1px;
 			}
 		}
 	}

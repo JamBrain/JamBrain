@@ -1,8 +1,19 @@
+@import 'defs.less';
 
 #content .content-common-body.-avatar {
 	float: right;
+	margin-left: 0.5em;
+	margin-bottom: 0.5em;
 	
 	& > img {
-		margin-left: 0.5em;
+		display: block;
+		width: 64px;
+		height: 64px;
+
+		/* When Sidebar is disabled */
+		@media (max-width: (@BASE_WIDTH - 20em)) {
+			width: 48px;
+			height: 48px;
+		}
 	}
 }
