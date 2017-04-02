@@ -4,8 +4,10 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
-import ContentBody						from 'com/content-body/body';
-import ContentBodyMarkup				from 'com/content-body/body-markup';
+import ContentCommonBody				from 'common-body';
+import ContentCommonBodyTitle			from 'common-body-title';
+import ContentCommonBodyAvatar			from 'common-body-avatar';
+import ContentCommonBodyMarkup			from 'common-body-markup';
 
 //import ContentFooterButtonMinMax		from 'com/content-footer/footer-button-minmax';
 import ContentFooterButtonStar			from 'com/content-footer/footer-button-star';
@@ -142,11 +144,14 @@ export default class ContentCommon extends Component {
 			let HasBody = [];
 			if ( true ) {
 				HasBody.push(
-					<ContentBody>{node.name}</ContentBody>
+					<ContentCommonBodyAvatar />
+				);
+				HasBody.push(
+					<ContentCommonBodyTitle href={path}>{node.name}</ContentCommonBodyTitle>
 				);
 				
 				HasBody.push(
-					<ContentBodyMarkup class="-block-if-not-minimized">{node.body}</ContentBodyMarkup>
+					<ContentCommonBodyMarkup class="-block-if-not-minimized">{node.body}</ContentCommonBodyMarkup>
 				);
 			}
 			
