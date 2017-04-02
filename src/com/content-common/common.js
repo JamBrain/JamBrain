@@ -94,9 +94,22 @@ export default class ContentCommon extends Component {
 			var EditMode = extra.length ? extra[0] === 'edit' : false;
 		}		
 		
-		if ( node.slug ) {
+		if ( (node.slug && !props.authored) || (node.slug && author.slug) ) {
+			let MainClass = [
+				'content-base',
+				'content-common'
+			];
 			
-			// && (props.authored && author.slug)
+			// TODO: Append classes
+
+			if ( minimized )
+				MainClass.push('minimized');
+
+
+			let HasHeader = null;
+			if ( props.header ) {
+				HasHeader = <div class={['content-common-header', props.headerClass ? props.headerClass : '']}>{props.header}</div>;
+			}
 			
 //			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 //
@@ -124,25 +137,15 @@ export default class ContentCommon extends Component {
 //				HasHeadline = <div class='-headline -event'><SVGIcon>trophy</SVGIcon> EVENT</div>;
 //			}
 			
-
-			let MainClass = [
-				'content-base',
-				'content-common'
-			];
-			
-			// TODO: Append classes
-			
-			if ( minimized )
-				MainClass.push('minimized');
 				
-			let HasHeader = null;
-			if ( props.header ) {
-				HasHeader = <div class={['content-common-header', props.headerClass ? props.headerClass : '']}>{props.header}</div>;
-			}
 				
-			let HasBody = null;
+			let HasBody = [];
 			if ( true ) {
-				HasBody = (
+				HasBody.push(
+					<ContentBody>{node.name}</ContentBody>
+				);
+				
+				HasBody.push(
 					<ContentBodyMarkup class="-block-if-not-minimized">{node.body}</ContentBodyMarkup>
 				);
 			}
