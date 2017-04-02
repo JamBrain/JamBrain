@@ -948,9 +948,10 @@ Renderer.prototype.image = function(href, title, text) {
   	// Rewrite URL to replace the first two slashes with the endpoint
     href = STATIC_ENDPOINT + href.substr(2);
   }
-  else if ( href.indexOf(STATIC_ENDPOINT) >= 0 && href.indexOf(STATIC_ENDPOINT) <= 5 ) {
-  	// Everything is okay. Use this URL as-is
-  }
+  // Disabled this. Only Triple slash URLs should be allow.
+//  else if ( href.indexOf(STATIC_ENDPOINT) >= 0 && href.indexOf(STATIC_ENDPOINT) <= 5 ) {
+//  	// Everything is okay. Use this URL as-is
+//  }
   else {
     return '<div class="unsafe-image-url">' + text + '</div>';
   }
