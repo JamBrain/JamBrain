@@ -3,11 +3,16 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
 import ButtonBase						from 'com/button-base/base';
 
-import ContentSimple					from 'com/content-simple/simple';
+//import ContentSimple					from 'com/content-simple/simple';
 
 import ContentBodyMarkup				from 'com/content-body/body-markup';
 
 import ContentFooterButtonStar			from 'com/content-footer/footer-button-star';
+
+import ContentCommon					from 'com/content-common/common';
+import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
+import ContentCommonBodyAvatar			from 'com/content-common/common-body-avatar';
+import ContentCommonBodyMarkup			from 'com/content-common/common-body-markup';
 
 import $NodeStar						from '../shrub/js/node/node_star';
 
@@ -61,8 +66,33 @@ export default class ContentUser extends Component {
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
+		var extra = props.extra;
+
+
+		if ( node && node.slug ) {
+			props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
+			props.class.push("content-user");
+			props.header = "USER";
+			props.headerClass = "-col-b";
+			if ( user.id && (node.id !== user.id) )
+				props.star = 1;
+			if ( user.id && (node.id === user.id) )
+				props.edit = 1;
+
+			return (
+				<ContentCommon {...props}>
+					<ContentCommonBodyAvatar src={(node.meta && node.meta.avatar) ? node.meta.avatar : ''} />
+					<ContentCommonBodyTitle href={path} title={node.name} subtitle={'@'+node.slug} />
+					<ContentCommonBodyMarkup class="-block-if-not-minimized">{node.body}</ContentCommonBodyMarkup>
+					{props.children}
+				</ContentCommon>
+			);
+		}
+		else {
+			return <ContentLoading />;
+		}
 		
-		return <ContentSimple path={path} node={node} user={user} header="USER" headerClass="-col-b" minmax>{props.children}</ContentSimple>;
+//		return <ContentSimple path={path} node={node} user={user} header="USER" headerClass="-col-b" minmax>{props.children}</ContentSimple>;
 		
 		
 		if ( node.slug ) {

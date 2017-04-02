@@ -13,11 +13,26 @@ export default class ContentCommonBodyTitle extends Component {
 	}
 
 	render( props ) {
-		var _class = "content-common-body -title" + (props.class ? " "+props.class : "");
+		props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
+		props.class.push("content-common-body");
+		props.class.push("-title");
+		props.class.push("_font2");
+		if ( props.subtitle )
+			props.class.push("-has-subtitle");
 		
-		if ( props.href )
-			return <div class={_class}><NavLink class="_font2" href={props.href}>{props.children}</NavLink></div>;
-		else
-			return <div class={_class}><div class="_font2">{props.children}</div></div>;
+		
+		var Body = [];
+		if ( props.title ) {
+			if ( props.href )
+				Body.push(<NavLink class="-text" href={props.href}>{props.title}</NavLink>);
+			else
+				Body.push(<div class="-text">{props.title}</div>);
+		}
+		
+		if ( props.subtitle ) {
+			Body.push(<span class="-subtext">({props.subtitle})</span>);
+		}
+		
+		return <div class={props.class}>{Body}</div>;
 	}
 }

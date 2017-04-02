@@ -12,9 +12,10 @@ import ContentLoading					from 'com/content-loading/loading';
 //import ContentCommonBodyMarkup			from 'common-body-markup';
 
 //import ContentFooterButtonMinMax		from 'com/content-footer/footer-button-minmax';
-import ContentFooterButtonStar			from 'com/content-footer/footer-button-star';
+import ContentCommonFooterButtonStar	from 'com/content-common/common-footer-button-star';
 import ContentFooterButtonLove			from 'com/content-footer/footer-button-love';
 import ContentFooterButtonComments		from 'com/content-footer/footer-button-comments';
+//import ContentFooterButtonEdit			from 'com/content-footer/footer-button-edit';
 
 import $Node							from '../../shrub/js/node/node';
 
@@ -175,14 +176,14 @@ export default class ContentCommon extends Component {
 				if ( props['comments'] )
 					Right.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
 				if ( props['star'] )
-					Right.push(<ContentFooterButtonStar href={path} node={node} wedge_left_bottom />);
+					Right.push(<ContentCommonFooterButtonStar href={path} node={node} wedge_left_bottom />);
 //				if ( props['edit'] )
 //					Right.push(<ContentFooterButtonEdit href={path} node={node} wedge_left_bottom />);
 
 				HasFooter = (
 					<div class={[
 						'content-common-footer', 
-						Left.length+Right.length ? '-has-items' : ''
+						(Left.length + Right.length) ? '-has-items' : ''
 					]}>
 						<div class="-left">
 							{Left}

@@ -67,7 +67,7 @@ export default class ContentSimple extends Component {
 			return (
 				<ContentCommon {...props}>
 					<ContentCommonBodyAvatar src={author.meta && author.meta.avatar ? author.meta.avatar : ''} />
-					<ContentCommonBodyTitle href={path}>{node.name}</ContentCommonBodyTitle>
+					<ContentCommonBodyTitle href={path} title={node.name} />
 					<ContentCommonBodyMarkup class="-block-if-not-minimized">{node.body}</ContentCommonBodyMarkup>
 					{props.children}
 				</ContentCommon>
