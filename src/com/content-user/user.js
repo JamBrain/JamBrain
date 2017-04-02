@@ -78,11 +78,11 @@ export default class ContentUser extends Component {
 				props.star = 1;
 			if ( user.id && (node.id === user.id) )
 				props.edit = 1;
-
+				
 			return (
 				<ContentCommon {...props}>
-					<ContentCommonBodyAvatar src={(node.meta && node.meta.avatar) ? node.meta.avatar : ''} />
-					<ContentCommonBodyTitle href={path} title={node.name} subtitle={'@'+node.slug} />
+					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
+					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.name} />
 					<ContentCommonBodyMarkup class="-block-if-not-minimized">{node.body}</ContentCommonBodyMarkup>
 					{props.children}
 				</ContentCommon>
