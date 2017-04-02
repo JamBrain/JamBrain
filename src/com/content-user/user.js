@@ -3,7 +3,7 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
 import ButtonBase						from 'com/button-base/base';
 
-import ContentCommon					from 'com/content-common/common';
+import ContentSimple					from 'com/content-simple/simple';
 
 import ContentBodyMarkup				from 'com/content-body/body-markup';
 
@@ -62,7 +62,7 @@ export default class ContentUser extends Component {
 		var user = props.user;
 		var path = props.path;
 		
-		return <ContentCommon path={path} node={node} user={user} header="USER" headerClass="-col-ab" minmax>{props.children}</ContentCommon>;
+		return <ContentSimple path={path} node={node} user={user} header="USER" headerClass="-col-b" minmax>{props.children}</ContentSimple>;
 		
 		
 		if ( node.slug ) {

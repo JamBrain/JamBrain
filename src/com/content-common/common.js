@@ -4,10 +4,12 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
-import ContentCommonBody				from 'common-body';
-import ContentCommonBodyTitle			from 'common-body-title';
-import ContentCommonBodyAvatar			from 'common-body-avatar';
-import ContentCommonBodyMarkup			from 'common-body-markup';
+import ContentLoading					from 'com/content-loading/loading';
+
+//import ContentCommonBody				from 'common-body';
+//import ContentCommonBodyTitle			from 'common-body-title';
+//import ContentCommonBodyAvatar			from 'common-body-avatar';
+//import ContentCommonBodyMarkup			from 'common-body-markup';
 
 //import ContentFooterButtonMinMax		from 'com/content-footer/footer-button-minmax';
 import ContentFooterButtonStar			from 'com/content-footer/footer-button-star';
@@ -21,12 +23,12 @@ export default class ContentCommon extends Component {
 		super(props);
 
 		this.state = {
-			'author': {},
+//			'author': {},
 			'minimized': false
 		};
 
-		if ( props.authored )
-			this.getAuthor( props.node );
+//		if ( props.authored )
+//			this.getAuthor( props.node );
 
 		this.onMinMax = this.onMinMax.bind(this);
 	}
@@ -39,34 +41,34 @@ export default class ContentCommon extends Component {
 //	}
 
 //	componentWillReceiveProps( props ) {
-	componentWillUpdate( newProps, newState ) {
-		if ( this.props.node !== newProps.node ) {
-			this.getAuthor(newProps.node);
-		}
-	}
+//	componentWillUpdate( newProps, newState ) {
+//		if ( this.props.node !== newProps.node ) {
+//			this.getAuthor(newProps.node);
+//		}
+//	}
 
-	getAuthor( node ) {
-		// Clear the Author (QUESTION: why?)
-		this.setState({ author: {} });
+//	getAuthor( node ) {
+//		// Clear the Author (QUESTION: why?)
+//		this.setState({ author: {} });
+//
+//		// Lookup the author
+//		$Node.Get( node.author )
+//		.then(r => {
+//			if ( r.node && r.node.length ) {
+//				this.setState({ 'author': r.node[0] });
+//			}
+//			else {
+//				this.setState({ 'error': "Not found" });
+//			}
+//		})
+//		.catch(err => {
+//			this.setState({ 'error': err });
+//		});
+//	}
 
-		// Lookup the author
-		$Node.Get( node.author )
-		.then(r => {
-			if ( r.node && r.node.length ) {
-				this.setState({ 'author': r.node[0] });
-			}
-			else {
-				this.setState({ 'error': "Not found" });
-			}
-		})
-		.catch(err => {
-			this.setState({ 'error': err });
-		});
-	}
-
-	getAvatar( user ) {
-		return STATIC_ENDPOINT + ((user && user.meta && user.meta.avatar) ? user.meta.avatar : '/other/dummy/user64.png');
-	}
+//	getAvatar( user ) {
+//		return STATIC_ENDPOINT + ((user && user.meta && user.meta.avatar) ? user.meta.avatar : '/other/dummy/user64.png');
+//	}
 
 	getAtName( user ) {
 		var user_path = '/users/'+user.slug;
@@ -96,7 +98,7 @@ export default class ContentCommon extends Component {
 			var EditMode = extra.length ? extra[0] === 'edit' : false;
 		}		
 		
-		if ( (node.slug && !props.authored) || (node.slug && author.slug) ) {
+		if ( node && node.slug ) { //((node.slug && !props.authored) || (node.slug && author.slug)) ) {
 			let MainClass = [
 				'content-base',
 				'content-common'
@@ -141,19 +143,19 @@ export default class ContentCommon extends Component {
 			
 				
 				
-			let HasBody = [];
-			if ( true ) {
-				HasBody.push(
-					<ContentCommonBodyAvatar />
-				);
-				HasBody.push(
-					<ContentCommonBodyTitle href={path}>{node.name}</ContentCommonBodyTitle>
-				);
-				
-				HasBody.push(
-					<ContentCommonBodyMarkup class="-block-if-not-minimized">{node.body}</ContentCommonBodyMarkup>
-				);
-			}
+//			let HasBody = [];
+//			if ( true ) {
+//				HasBody.push(
+//					<ContentCommonBodyAvatar />
+//				);
+//				HasBody.push(
+//					<ContentCommonBodyTitle href={path}>{node.name}</ContentCommonBodyTitle>
+//				);
+//				
+//				HasBody.push(
+//					<ContentCommonBodyMarkup class="-block-if-not-minimized">{node.body}</ContentCommonBodyMarkup>
+//				);
+//			}
 			
 			let HasFooter = null;
 			if ( true ) {
@@ -196,7 +198,7 @@ export default class ContentCommon extends Component {
 //				<div class={['content-base','content-common','content-post',HasHeadline ? '-has-headline' : '',minimized ? 'minimized' : '']}>
 				<div class={MainClass}>
 					{HasHeader}
-					{HasBody}
+					{props.children}
 					{HasFooter}
 				</div>
 			);
@@ -227,14 +229,8 @@ export default class ContentCommon extends Component {
 //					</div>
 
 		}
-//		else {
-//			return (
-//				<div class="content-base content-common content-post">
-//					<ContentBody>
-//						{ error ? error : <NavSpinner /> }
-//					</ContentBody>
-//				</div>
-//			);
-//		}
+		else {
+			return <ContentLoading />;
+		}
 	}
 }
