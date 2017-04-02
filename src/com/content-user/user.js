@@ -3,6 +3,8 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
 import ButtonBase						from 'com/button-base/base';
 
+import ContentCommon					from 'com/content-common/common';
+
 import ContentBodyMarkup				from 'com/content-body/body-markup';
 
 import ContentFooterButtonStar			from 'com/content-footer/footer-button-star';
@@ -14,14 +16,14 @@ export default class ContentUser extends Component {
 	constructor( props ) {
 		super(props);
 		
-		this.state = {
-			'following': null,
-			'hasClicked': null
-		};
-		
-		this.onFollow = this.onFollow.bind(this);
-		this.onUnfollow = this.onUnfollow.bind(this);
-		this.onUnfriend = this.onUnfriend.bind(this);
+//		this.state = {
+//			'following': null,
+//			'hasClicked': null
+//		};
+//		
+//		this.onFollow = this.onFollow.bind(this);
+//		this.onUnfollow = this.onUnfollow.bind(this);
+//		this.onUnfriend = this.onUnfriend.bind(this);
 	}
 	
 	onFollow( e ) {
@@ -58,6 +60,9 @@ export default class ContentUser extends Component {
 	render( props, {hasClicked, following, error} ) {
 		var node = props.node;
 		var user = props.user;
+		var path = props.path;
+		
+		return <ContentCommon path={path} node={node} user={user} header="USER" headerClass="-col-ab" minmax>{props.children}</ContentCommon>;
 		
 		
 		if ( node.slug ) {
