@@ -4,9 +4,12 @@ import ContentLoading					from 'com/content-loading/loading';
 import ContentCommon					from 'com/content-common/common';
 
 import ContentCommonBody				from 'com/content-common/common-body';
+import ContentCommonBodyBy				from 'com/content-common/common-body-by';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonBodyAvatar			from 'com/content-common/common-body-avatar';
 import ContentCommonBodyMarkup			from 'com/content-common/common-body-markup';
+
+import $Node							from '../../shrub/js/node/node';
 
 
 export default class ContentSimple extends Component {
@@ -23,7 +26,7 @@ export default class ContentSimple extends Component {
 
 	componentWillUpdate( newProps, newState ) {
 		if ( this.props.node !== newProps.node ) {
-			if ( props.authored ) {
+			if ( this.props.authored ) {
 				this.getAuthor(newProps.node);
 			}
 		}
@@ -63,11 +66,19 @@ export default class ContentSimple extends Component {
 		if ( node && ((node.slug && !props.authored) || (node.slug && author && author.slug)) ) {
 			props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 			props.class.push("content-simple");
+			
+			let ShowAvatar = null;
+			let ShowByLine = null;
+			if ( props.authored ) {
+				ShowAvatar = <ContentCommonBodyAvatar src={author.meta && author.meta.avatar ? author.meta.avatar : ''} />;
+				ShowByLine = <ContentCommonBodyBy node={node} author={author} when />;
+			}
 
 			return (
 				<ContentCommon {...props}>
-					<ContentCommonBodyAvatar src={author.meta && author.meta.avatar ? author.meta.avatar : ''} />
+					{ShowAvatar}
 					<ContentCommonBodyTitle href={path} title={node.name} />
+					{ShowByLine}
 					<ContentCommonBodyMarkup class="-block-if-not-minimized">{node.body}</ContentCommonBodyMarkup>
 					{props.children}
 				</ContentCommon>

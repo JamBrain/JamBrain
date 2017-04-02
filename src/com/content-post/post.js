@@ -11,6 +11,8 @@ import ContentBodyMarkup				from 'com/content-body/body-markup';
 import ContentFooterButtonLove			from 'com/content-footer/footer-button-love';
 import ContentFooterButtonComments		from 'com/content-footer/footer-button-comments';
 
+import ContentSimple					from 'com/content-simple/simple';
+
 import $Node							from '../../shrub/js/node/node';
 
 export default class ContentPost extends Component {
@@ -80,6 +82,20 @@ export default class ContentPost extends Component {
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
+		
+		// Additional properties		
+		props.authored = 1;
+		
+		if ( node ) {
+			if ( node.subtype === 'news' ) {
+				props.header = "NEWS";
+				props.headerClass = "-col-c";
+			}
+		}
+		
+		return <ContentSimple {...props} />;
+		
+		
 		
 		// If a Minimized property was included, invert the internal state
 		if (props.minimized) {

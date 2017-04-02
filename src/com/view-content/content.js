@@ -53,7 +53,7 @@ export default class ViewContent extends Component {
 			);
 		}
 		else if ( node.type === 'user' ) {
-			let View = null;
+			let View = <Content404 />;
 			let ViewType = null;
 			if ( extra.length ) {
 				ViewType = extra[0];
