@@ -10,18 +10,20 @@ import IMG	 							from 'com/img2/img2';
 export default class SidebarTV extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {
 			active: 0,
 			streams: []
 		};
-		
+
 		this.services = [
 			'null',
 			'twitch',
 			'youtube',
 		];
-		
+
+		this.openExternal = false;
+
 		this.serviceIcons = [
 			(<div />),						// Null //
 			(<SVGIcon>twitch</SVGIcon>),	// Twitch //
@@ -31,15 +33,15 @@ export default class SidebarTV extends Component {
 			(<div></div>),
 			(<div></div>),
 		];
-		
+
 		this.FailImage = '//'+STATIC_DOMAIN+'/other/asset/TVFail.png';
-		
+
 		this.refreshStreams = this.refreshStreams.bind(this);
 	}
 
 	loadStreams() {
 		var NewStreams = [];
-		
+
 		// Fetch Ludum Dare streams first
 		return $JammerTV.GetLive([
 			'ludum-dare',
@@ -55,7 +57,7 @@ export default class SidebarTV extends Component {
 			if ( data && Array.isArray(data.streams) ) {
 				NewStreams = NewStreams.concat(data.streams);
 			}
-			
+
 			// Fetch more (if needed)
 			if ( NewStreams.length < 10 ) {
 				return $JammerTV.GetLive([
@@ -89,7 +91,7 @@ export default class SidebarTV extends Component {
 			if ( data && Array.isArray(data.streams) ) {
 				NewStreams = NewStreams.concat(data.streams);
 			}
-			
+
 			// Populate state with streams
 			this.setState({
 				'streams': NewStreams
@@ -102,19 +104,19 @@ export default class SidebarTV extends Component {
 				'error': err
 			});
 			return err;
-		});		
+		});
 	}
-	
+
 	// Called every few minutes, to make sure stream list is fresh
 	refreshStreams() {
 		// TODO: Raise this, once JammerTV caching is correctly supported
 		var StreamRefreshRate = 3*60*1000;
 		var HiddenRefreshRate = 1*20*1000;	// When hidden, refresh more often (which fails, so work is minimal)
-		
+
 		// But only if the window is visible
 		if ( !document.hidden ) {
 			//console.log("Streams Refreshed: "+Date.now());
-			
+
 			this.loadStreams().then(() => {
 				//console.log("Queued");
 
@@ -137,7 +139,7 @@ export default class SidebarTV extends Component {
 //		console.log("SideBarTV",com,this.state, nextState);
 //		return com;
 //	}
-		
+
 	componentDidMount() {
 //		console.log("SideBarTV: componentDidMount");
 		this.refreshStreams();
@@ -146,11 +148,11 @@ export default class SidebarTV extends Component {
 	componentWillUnmount() {
 //		console.log("SideBarTV: componentWillUnmount");
 	}
-	
+
 	setActive( id, e ) {
 		this.setState({ active: id });
 	}
-	
+
 	showOthers( others, active ) {
 		return others.map((other, index) => {
 			if (other === active) {
@@ -169,7 +171,7 @@ export default class SidebarTV extends Component {
 			}
 		});
 	}
-	
+
 	render( props, state ) {
 		if ( state.error ) {
 			return (
@@ -178,7 +180,7 @@ export default class SidebarTV extends Component {
 						{""+state.error}
 					</div>
 				</div>
-			);			
+			);
 		}
 		else if ( state.streams.length == 0 ) {
 			return (
@@ -192,19 +194,36 @@ export default class SidebarTV extends Component {
 			let others = [
 				state.streams[0],
 				state.streams[1],
-				state.streams[2],				
+				state.streams[2],
 			];
-			
+
 			return (
 				<div class="sidebar-base sidebar-tv">
 					<div class="-active" onclick={e => {
-							console.log('tv'); 
+							console.log('tv');
 							/*window.open("https://www.twitch.tv/directory/game/Creative/ldjam", '_blank');*/
+							if ( this.openExternal == true){
+								this.openExternal = false;
+								return;
+							}
+
 							window.location.hash = "#tv/"+this.services[active.service_id]+'/'+active.meta.name;
+							this.openExternal = false;
 						}}>
 						<div class="-img"><IMG src={active.meta.thumbnail} failsrc={this.FailImage} /></div>
 						<div class="-live"><SVGIcon baseline small>circle</SVGIcon> <span class="-text">LIVE</span></div>
-						<div class={'-name stream-'+this.services[active.service_id]}>{this.serviceIcons[active.service_id]} <span class="-text">{active.meta.name}</span></div>
+						<div class="-stream-information">
+							<div class={'-name stream-'+this.services[active.service_id]}>{this.serviceIcons[active.service_id]} <span class="-text">{active.meta.name}</span></div>
+							<div class="-external" onclick={e => {
+								console.log("clicked external");
+								this.openExternal = true;
+								if ( this.services[active.service_id] == "twitch" ) {
+									window.open("https://www.twitch.tv/"+active.meta.slug, "_blank");
+								} else if ( this.services[active.service_id] == "youtube" ) {
+									//TODO: add youtube action, when youtube displays in TV
+								}
+							}}>Open Externally</div>
+						</div>
 						<div class="-viewers"><SVGIcon baseline>tv</SVGIcon> <span class="-text">{active.viewers}</span></div>
 						<div class="-play"><SVGIcon>play</SVGIcon></div>
 					</div>
