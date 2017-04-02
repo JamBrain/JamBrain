@@ -22,7 +22,7 @@
 
 	/* Needed for click-off and drag un-highlighting buttons to work (i.e. no selections) */
 	user-select: none;
-	
+
 	top: 0;
 	left: 0;
 	right: 0;
@@ -30,7 +30,7 @@
 
 	height: @VIEWBAR_HEIGHT;
 	background: @VIEWBAR_COL;
-		
+
 	& > .-content {
 		position: relative;
 
@@ -45,20 +45,20 @@
 			bottom: 0;
 			top: 0;
 			height: 2.5em; 	/* Required, otherwise top+bottom fills the whole parent div */
-			
+
 			& > .-logo {
 				font-size: 2.5em;
 				display: flex;
-				
+
 				padding: 0.3em;
-				
+
 				transition: background 0.1s, color 0.2s;
 				& > svg {
 					display: block;
 					transition: color 0.2s;
 				}
-			
-				& > .icon-ludum, 
+
+				& > .icon-ludum,
 				& > .icon-l-udum {
 					color: @LOGO_COL_A;
 				}
@@ -69,7 +69,7 @@
 				& > .icon-ldnum {
 					color: @LOGO_COL_C;
 				}
-				
+
 				&:hover,
 				&:focus {
 					background: @LOGO_LIT_BG;
@@ -78,7 +78,7 @@
 					& > .icon-l-udum {
 						color: @LOGO_LIT_A;
 					}
-					& > .icon-dare, 
+					& > .icon-dare,
 					& > .icon-d-are {
 						color: @LOGO_LIT_B;
 					}
@@ -99,19 +99,19 @@
 			margin: auto;
 			height: 3em; 	/* Required, otherwise top+bottom fills the whole parent div */
 			min-width: 3em;
-			
+
 		}
 		& > .-right {
 			/* Everything */
-			& > div, 
-			& > a, 
+			& > div,
+			& > a,
 			& > a:visited {
 				margin-left: 0.5em;
 				float: left;
 				text-decoration: none;
 
 				transition: background 0.1s;
-				
+
 				& div {
 					color: @BUTTON_COL_TEXT;
 					transition: color 0.2s;
@@ -120,13 +120,13 @@
 					color: @BUTTON_COL_SVG;
 					transition: color 0.2s;
 				}
-				
+
 				&:hover,
-				&:focus, 
+				&:focus,
 				&:active,
 				&:hover:active {
 					background: @BUTTON_LIT_BG;
-					
+
 					& svg {
 						color: @BUTTON_LIT_SVG;
 					}
@@ -137,25 +137,25 @@
 				}
 			}
 
-			/* Buttons (Text with SVG) */			
+			/* Buttons (Text with SVG) */
 			& > .-button {
 				position: relative;
 
 				line-height: 2em;
 				padding: 0.5em 1em;
 				padding-left: 1em+1.5em+0.5em;
-				
-				@media (max-width: (@BASE_WIDTH - 20em)) { 
+
+				@media (max-width: (@BASE_WIDTH - 20em)) {
 					height: 3em;
 					width: 3em;
 					padding: 0;
 				}
-				
+
 				& > svg {
 					position: absolute;
 
 					font-size: 1.5em;
-					
+
 					top: 0;
 					bottom: 0;
 					left: 1rem;
@@ -163,7 +163,7 @@
 
 					display:block;
 
-					@media (max-width: (@BASE_WIDTH - 20em)) { 
+					@media (max-width: (@BASE_WIDTH - 20em)) {
 						font-size: 2em;
 						left:0;
 						right:0;
@@ -174,14 +174,14 @@
 					font-weight: 400;
 				}
 			}
-			
+
 			/* Avatar */
 			& > .-user {
 				position: relative;
 
 				height: 3em;
 				width: 3em;
-				
+
 				z-index: 1001;
 
 				& img {
@@ -193,19 +193,40 @@
 					right: 0;
 					margin: auto;
 					display: block;
-					
+
 					width: 2.5em;
 					height: 2.5em;
 				}
 			}
-			
+
+			/* Temporary Logout Button Until DropdownUser implemeneted Fully */
+			& > .-logout {
+				position: relative;
+
+				height: 3em;
+				width: 3em;
+
+				& svg {
+					position: absolute;
+
+					font-size: 2em;
+					top: 0;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					margin: auto;
+					display: block;
+				}
+
+			}
+
 			/* Icon-only Button (with overlays) */
 			& > .-icon {
 				position: relative;
 
 				height: 3em;
 				width: 3em;
-				
+
 				& > svg {
 					position: absolute;
 
@@ -223,7 +244,7 @@
 
 					font-size: 0.75em;
 					z-index: 4;
-					
+
 					text-align: center;
 					height: 1em;
 
@@ -235,15 +256,15 @@
 
 					color: @COL_D; /*@MAJOR_DARK;*/
 				}
-				
+
 				& > .-new {
 					position: absolute;
 
 					font-weight: bold;
 					background: @COL_A; /*@MAJOR_COLOR1; /*#F00;*/
-					
+
 					font-size:0.75em;
-					
+
 					width: 1.75em;
 					line-height: 1.75em;
 					height: 1.75em;
@@ -253,7 +274,7 @@
 					top:0.25rem;
 					right:0.25rem;
 					margin:auto;
-					
+
 					z-index: 5;
 
 					color: @COL_L; /*@MAJOR_LIGHT;*/

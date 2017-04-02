@@ -35,7 +35,7 @@ export function Login( name, password, secret ) {
 }
 
 export function Logout() {
-	return Fetch.Post(API_ENDPOINT+'/vx/user/logout', {
+	return Fetch.Get(API_ENDPOINT+'/vx/user/logout', {
 	});
 }
 
@@ -54,12 +54,12 @@ export function Password( id, key, password ) {
 		'id': id,
 		'key': key,
 		'pw': password
-	});	
+	});
 }
 
 export function Have( name, mail = null ) {
 	return Fetch.Post(API_ENDPOINT+'/vx/user/have', {
 		'name': name,
 		'mail': mail
-	});	
+	});
 }
