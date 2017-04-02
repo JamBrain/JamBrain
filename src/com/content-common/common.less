@@ -16,9 +16,9 @@
 
 	& a {
 		text-decoration: none;
-		padding:0.1em 0.15em;
-		border-radius:0.05em;
-		margin:-0.1em -0.075em 0;
+		padding: 0.1em 0.15em;
+		border-radius: 0.05em;
+		margin: -0.1em -0.075em 0;
 	}
 	& a:hover, 
 	& a:focus, 
@@ -40,7 +40,7 @@
 		color: @MAJOR_DARK;
 	}
 		
-	
+/*	
 	& > .-body {
 		margin: 1em;
 		font-size: 1.1em;
@@ -52,7 +52,7 @@
 			border-radius:0.25em;
 		}
 	}
-
+*/
 	& .-block-if-minimized,
 	& .-inline-if-minimized {
 		display: none;
@@ -76,6 +76,7 @@
 		}
 	}
 	
-
-
+	& > .-bodies {
+		overflow: hidden;
+	}
 }

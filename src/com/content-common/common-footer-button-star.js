@@ -41,7 +41,7 @@ export default class ContentCommonFooterButtonStar extends Component {
 	}
 
 	render( {node}, {starred} ) {
-		var _class = "content-common-footer -button -star" + (starred ? " starred" : "");
+		var _class = "content-common-footer-button -star" + (starred ? " starred" : "");
 		return (
 			<div class={_class} onclick={this.onStar}>
 				<SVGIcon>star-full</SVGIcon>
