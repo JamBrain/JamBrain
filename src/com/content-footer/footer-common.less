@@ -25,7 +25,7 @@
 		position: absolute;
 
 		left: 0;
-		bottom: 0;
+		bottom: -8px;
 		display: flex;
 
 		& > div,
@@ -36,43 +36,11 @@
 			width: 2.5rem;
 			height: 2.5rem;
 		}
-	}
-			
-	& > .-right {
-		position: absolute;
-		
-		right: 0;
-		bottom: -8px;
-		display: flex;
-
-		& > div,
-		& > a,
-		& > a:visited {
-			text-align: center;
-
-			line-height: 2.5rem;
-			height: 2.5rem;
-			padding-right: 2.5rem;
-
-			text-decoration: none;
-		
-			/*color: inherit;*/
-			&:last-child {
-				padding-right: 1rem;	/* match whatever button uses */
-
-				margin: 0;
-				padding-top: 0;
-				padding-bottom: 0;
-			}
-		}
-	}
-
-	& > .-left {
 
 		& > .-minmax {
-			width:auto;
-			padding-left:1rem;
-			padding-right:1rem;
+			width: auto;
+			padding-left: 1rem;
+			padding-right: 1rem;
 			background: @FOOT_DARK;
 			
 			&:after {
@@ -112,6 +80,32 @@
 	}
 	
 	& > .-right {
+		position: absolute;
+		
+		right: 0;
+		bottom: -8px;
+		display: flex;
+
+		& > div,
+		& > a,
+		& > a:visited {
+			text-align: center;
+
+			line-height: 2.5rem;
+			height: 2.5rem;
+			padding-right: 2.5rem;
+
+			text-decoration: none;
+		
+			&:last-child {
+				padding-right: 1rem;	/* match whatever button uses */
+
+				margin: 0;
+				padding-top: 0;
+				padding-bottom: 0;
+			}
+		}
+
 		& > .-wedge-right {
 			background: linear-gradient(45deg, @FOOT_DARK 0px, @FOOT_DARK 30px, transparent 30px);
 		}

@@ -5,9 +5,7 @@ import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
 import ContentBody						from 'com/content-body/body';
-import ContentBodyMarkup				from 'com/content-body-markup/body-markup';
-
-import ContentFooterButtonLove			from 'com/content-footer-button-love/footer-button-love';
+import ContentBodyMarkup				from 'com/content-body/body-markup';
 
 import $Node							from '../../shrub/js/node/node';
 

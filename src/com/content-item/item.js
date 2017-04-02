@@ -5,15 +5,15 @@ import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
 import ContentBody						from 'com/content-body/body';
-import ContentBodyMarkup				from 'com/content-body-markup/body-markup';
-import ContentBodyEdit					from 'com/content-body-edit/body-edit';
+import ContentBodyMarkup				from 'com/content-body/body-markup';
+import ContentBodyEdit					from 'com/content-body/body-edit';
 
-import ContentHeaderCommon				from 'com/content-header-common/header-common';
-import ContentFooterCommon				from 'com/content-footer-common/footer-common';
-import ContentHeaderEdit				from 'com/content-header-edit/header-edit';
-import ContentFooterEdit				from 'com/content-footer-edit/footer-edit';
+import ContentHeaderCommon				from 'com/content-header/header-common';
+import ContentFooterCommon				from 'com/content-footer/footer-common';
+import ContentHeaderEdit				from 'com/content-header/header-edit';
+import ContentFooterEdit				from 'com/content-footer/footer-edit';
 
-import ContentHeadlineEdit				from 'com/content-headline-edit/headline-edit';
+import ContentHeadlineEdit				from 'com/content-headline/headline-edit';
 
 import $Node							from '../../shrub/js/node/node';
 

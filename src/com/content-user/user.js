@@ -3,6 +3,10 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
 import ButtonBase						from 'com/button-base/base';
 
+import ContentBodyMarkup				from 'com/content-body/body-markup';
+
+import ContentFooterButtonStar			from 'com/content-footer/footer-button-star';
+
 import $NodeStar						from '../shrub/js/node/node_star';
 
 
@@ -51,12 +55,16 @@ export default class ContentUser extends Component {
 		this.onUnfollow(e);
 	}
 	
-	render( {node, user}, {hasClicked, following, error} ) {
+	render( props, {hasClicked, following, error} ) {
+		var node = props.node;
+		var user = props.user;
+		
+		
 		if ( node.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse('**User:** `'+node.name+'`') };
 			
-			var avatar = '//'+STATIC_DOMAIN + ((node.meta && node.meta.avatar) ? node.meta.avatar : '/other/dummy/user64.png');
+			var avatar = STATIC_ENDPOINT + ((node.meta && node.meta.avatar) ? node.meta.avatar : '/other/dummy/user64.png');
 			
 			var url = '/users/'+node.slug+'/';
 			
@@ -79,9 +87,15 @@ export default class ContentUser extends Component {
 //				<ButtonBase class="-button -blue" onclick={this.onUnfollow}><SVGIcon class="if-not-hover-block">user-check</SVGIcon><SVGIcon class="if-hover-block">user-minus</SVGIcon> Followed</ButtonBase>,
 //				<ButtonBase class="-button -green" onclick={this.onUnfriend}><SVGIcon class="if-not-hover-block">users</SVGIcon><SVGIcon class="if-hover-block">user-minus</SVGIcon> Friend</ButtonBase>
 //			];
+
+
+			var FooterItems = [];
+			if ( !props['no_star'] )
+				FooterItems.push(<ContentFooterButtonStar user={user} node={node} wedge_left_bottom />);
 			
 			return (
-				<div class="content-base content-user">
+				<div class="content-base content-common content-user">
+					<div class='-headline -col-ab'>USER</div>
 					<div class="-header">
 						<div class="-avatar"><img src={avatar} /></div>
 						<div class="-title _font2"><NavLink href={url} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
@@ -90,12 +104,16 @@ export default class ContentUser extends Component {
 					<div class="-body -nav">
 						{ShowFollow}
 					</div>
-					<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
-					<div class="-footer">
+					<ContentBodyMarkup class="fudge">{node.body}</ContentBodyMarkup>
+					<div class="content-footer content-footer-common -footer">
 						<div class="-left">
+							<div class="-minmax _hidden" onclick={this.onMinMax}>
+								<SVGIcon>arrow-up</SVGIcon>
+							</div>
 						</div>
 						<div class="-right">
-						</div>
+							{FooterItems}
+				  		</div>
 					</div>
 				</div>
 			);
@@ -108,6 +126,8 @@ export default class ContentUser extends Component {
 			);
 		}
 	}
+
+//					<div class="-body markup" dangerouslySetInnerHTML={dangerousParsedBody} />
 
 //							<div class="-minmax"><SVGIcon>arrow-up</SVGIcon></div>
 //							<div class="-edge"><SVGIcon>wedge-left</SVGIcon></div>
@@ -192,13 +212,13 @@ export default class ContentUser extends Component {
 */	
 }
 
-marked.setOptions({
-	highlight: function( code, lang ) {
-		var language = Prism.languages.clike;
-		if ( Prism.languages[lang] )
-			language = Prism.languages[lang];
-		return Prism.highlight( code, language );
-	},
-	sanitize: true,			// disable HTML //
-	smartypants: true,		// enable automatic fancy quotes, ellipses, dashes //
-});
+//marked.setOptions({
+//	highlight: function( code, lang ) {
+//		var language = Prism.languages.clike;
+//		if ( Prism.languages[lang] )
+//			language = Prism.languages[lang];
+//		return Prism.highlight( code, language );
+//	},
+//	sanitize: true,			// disable HTML //
+//	smartypants: true,		// enable automatic fancy quotes, ellipses, dashes //
+//});

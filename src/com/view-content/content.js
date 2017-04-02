@@ -14,7 +14,7 @@ import ContentItem						from 'com/content-item/item';
 import ContentComments					from 'com/content-comments/comments';
 
 import ContentNavRoot					from 'com/content-nav/nav-root';
-//import ContentNavUser					from 'com/content-nav/nav-user';
+import ContentNavUser					from 'com/content-nav/nav-user';
 //import ContentNavEvent					from 'com/content-nav/nav-event';
 
 import ContentPalette					from 'com/content-palette/palette';
@@ -56,9 +56,9 @@ export default class ViewContent extends Component {
 			return (
 				<div id="content">
 					<ContentUser node={node} user={user} path={path} extra={extra} />
+					<ContentNavUser node={node} user={user} path={path} extra={extra} />
 				</div>
 			);
-//					<ContentNavUser node={node} user={user} path={path} extra={extra} />;
 		}
 		else if ( node.type === 'users' ) {
 			return (

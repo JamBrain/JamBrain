@@ -6,7 +6,7 @@ import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
 import ContentBody						from 'com/content-body/body';
-import ContentBodyMarkup				from 'com/content-body-markup/body-markup';
+import ContentBodyMarkup				from 'com/content-body/body-markup';
 
 import ContentFooterButtonLove			from 'com/content-footer/footer-button-love';
 import ContentFooterButtonComments		from 'com/content-footer/footer-button-comments';
@@ -18,7 +18,8 @@ export default class ContentPost extends Component {
 		super(props);
 
 		this.state = {
-			'author': {}
+			'author': {},
+			'minimized': false
 		};
 
 		this.getAuthor( props.node );
@@ -69,15 +70,21 @@ export default class ContentPost extends Component {
 	}
 
 	onMinMax( e ) {
-		console.log("minmax");
-		window.location.hash = "#dummy";
+		this.setState({
+			'minimized': !this.state.minimized 
+		});
 	}
 
-	render( props, {author, error} ) {
+	render( props, {author, minimized, error} ) {
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
+		
+		// If a Minimized property was included, invert the internal state
+		if (props.minimized) {
+			minimized = !minimized;
+		}
 		
 		var EditMode = extra.length ? extra[0] === 'edit' : false;
 		
@@ -108,14 +115,14 @@ export default class ContentPost extends Component {
 				HasHeadline = <div class='-headline -event'><SVGIcon>trophy</SVGIcon> EVENT</div>;
 			}
 			
-			var FooterItems = [];
+			let RightFooterItems = [];
 			if ( !props['no_love'] )
-				FooterItems.push(<ContentFooterButtonLove user={user} node={node} wedge_left_bottom />);
+				RightFooterItems.push(<ContentFooterButtonLove user={user} node={node} wedge_left_bottom />);
 			if ( !props['no_comments'] )
-				FooterItems.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
+				RightFooterItems.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
 
 			return (
-				<div class={['content-base','content-common','content-post',HasHeadline ? '-has-headline' : '']}>
+				<div class={['content-base','content-common','content-post',HasHeadline ? '-has-headline' : '',minimized ? 'minimized' : '']}>
 					{HasHeadline}
 					<div class="content-header content-header-common -header">
 						<div class="-avatar" onclick={e => { location.href = "#user-card/"+author.slug; }}>
@@ -128,15 +135,16 @@ export default class ContentPost extends Component {
 							Posted {post_relative} {post_by} {post_date}
 						</div>
 					</div>
-					<ContentBodyMarkup class="fudge">{node.body}</ContentBodyMarkup>
+					<ContentBodyMarkup class="-block-if-not-minimized">{node.body}</ContentBodyMarkup>
 					<div class="content-footer content-footer-common -footer">
 						<div class="-left">
-							<div class="-minmax _hidden" onclick={this.onMinMax}>
-								<SVGIcon>arrow-up</SVGIcon>
+							<div class="-minmax" onclick={this.onMinMax}>
+								<SVGIcon class="-inline-if-not-minimized">arrow-up</SVGIcon>
+								<SVGIcon class="-inline-if-minimized">arrow-down</SVGIcon>
 							</div>
 						</div>
 						<div class="-right">
-				  			{FooterItems}
+				  			{RightFooterItems}
 				  		</div>
 					</div>
 				</div>

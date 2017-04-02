@@ -758,6 +758,8 @@ InlineLexer.prototype.smartypants = function(text) {
     .replace(/\.{3}/g, '\u2026');
 };
 
+//" //UltraEdit Glitch
+
 /**
  * Mangle Links
  */
@@ -939,6 +941,20 @@ Renderer.prototype.link = function(href, title, text) {
 };
 
 Renderer.prototype.image = function(href, title, text) {
+  // Customized. Disable image rendering if URLs are used to files not on our safe list.
+  // Also, rewrite URLs to our static domain if the short form is used.
+  
+  if ( href.indexOf("///") === 0 ) {
+  	// Rewrite URL to replace the first two slashes with the endpoint
+    href = STATIC_ENDPOINT + href.substr(2);
+  }
+  else if ( href.indexOf(STATIC_ENDPOINT) >= 0 && href.indexOf(STATIC_ENDPOINT) <= 5 ) {
+  	// Everything is okay. Use this URL as-is
+  }
+  else {
+    return '<div class="unsafe-image-url">' + text + '</div>';
+  }
+
   var out = '<img src="' + href + '" alt="' + text + '"';
   if (title) {
     out += ' title="' + title + '"';
@@ -1143,6 +1159,8 @@ function escape(html, encode) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 }
+
+//" // UltraEdit glitch
 
 function unescape(html) {
 	// explicitly match decimal, hex, and named HTML entities 
