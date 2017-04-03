@@ -39,7 +39,8 @@
 		color: @BUTTON_BG;
 	}
 		
-	&:hover {
+	&:hover,
+	&:focus {
 		cursor: pointer;
 		
 		color: @BUTTON_LIT_COL;
@@ -62,8 +63,8 @@
 		}
 	}
 	
-	&:active, 
-	&:focus {
+	&:active,
+	&:active:hover {
 		color: @BUTTON_LIT_BG;
 		background: @BUTTON_LIT_COL;
 
