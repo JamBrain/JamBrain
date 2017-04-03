@@ -11,6 +11,18 @@
 		
 		/*object-fit: contain;*/
 	}
+	
+	
+	& a, 
+	& a:visited {
+		color: @COL_A;
+
+		&:hover,
+		&:focus {
+			color: @COL_L;
+			background: @COL_A;
+		}
+	}
 }
 
 /* When Sidebar is disabled */

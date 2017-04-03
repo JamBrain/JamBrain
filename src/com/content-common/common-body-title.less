@@ -4,6 +4,15 @@
 	position: relative;
 
 	margin: 1em 1em 0;
+	
+	& a, 
+	& a:visited {
+		color: @COL_NDDD;
+		&:hover,
+		&:focus {
+			color: @COL_L;
+		}
+	}
 
 	& > .-text {
 		position: relative;

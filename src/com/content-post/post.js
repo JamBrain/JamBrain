@@ -85,9 +85,9 @@ export default class ContentPost extends Component {
 		
 		// Additional properties		
 		props.authored = 1;
-		props.love = 1;
-		props.comments = 1;
-		props.minmax = 1;
+//		props.love = 1;
+//		props.comments = 1;
+//		props.minmax = 1;
 		
 		if ( node ) {
 			if ( node.subtype === 'news' ) {
