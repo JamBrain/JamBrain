@@ -35,51 +35,24 @@
 
 		& > div,
 		& > a {
-			text-align: center;
+			padding-left: 3.5rem;
 
-			line-height: 2.5rem;
-			width: 2.5rem;
-			height: 2.5rem;
-		}
+			&:first-child {
+				padding-left: 1rem;	/* match whatever button uses */
+			}
 
-		& > .-minmax {
-			width: auto;
-			padding-left: 1rem;
-			padding-right: 1rem;
-			background: @DARK;
-			
+			/* Right Wedge */
 			&:after {
-				color: @DARK;
+				position: absolute;
+				display: block;
 				
 				content:'';
-				left: 3.5rem;
-				top: -2.5rem;
+				right: -2.5rem;
+				top: 0;
 				border-top: 2.5rem/2 solid transparent;
 				border-right: 2.5rem/2 solid transparent;
 				border-bottom: 2.5rem/2 solid;
 				border-left: 2.5rem/2 solid;
-				
-				display: block;
-				position: relative;
-			}
-			
-			&:hover {
-				cursor: pointer;
-				
-				color: @MAJOR_LIGHT;
-				background: @BUTTON_LIT;
-				&:after {
-					color: @BUTTON_LIT;
-				}
-			}
-
-			&:active, 
-			&:focus {
-				color: @BUTTON_LIT;
-				background: @MAJOR_LIGHT;
-				&:after {
-					color: @MAJOR_LIGHT;
-				}
 			}
 		}
 	}
@@ -90,67 +63,28 @@
 		right: 0;
 		bottom: -8px;
 		display: flex;
-
-		& > div,
-		& > a,
-		& > a:visited {
-			text-align: center;
-
-			line-height: 2.5rem;
-			height: 2.5rem;
-			padding-right: 2.5rem;
-
-			text-decoration: none;
 		
+		& > div,
+		& > a {
+			padding-right: 3.5rem;
+
 			&:last-child {
 				padding-right: 1rem;	/* match whatever button uses */
-
-				margin: 0;
-				padding-top: 0;
-				padding-bottom: 0;
 			}
-		}
-
-		& > .-wedge-right {
-			background: linear-gradient(45deg, @DARK 0px, @DARK 30px, transparent 30px);
-		}
-		& > .-spacer {
-			background: @DARK;
-			& > svg {
-				width: 100%;
-				height: 100%;
-				color: @MAJOR_MUTE_D5;
-				display: block;
-			}
-		}
-
-		& > .-comment {
-			width: auto;
-			padding-left: 1rem;
-			padding-right: 1rem;
-			background: @MAJOR_MUTE_D5;
-		}
-		& > .-comment-count {
-			width: auto;
-			padding-right: 1rem;
-			background: @MAJOR_MUTE_D5;
-			font-size: 1.5em;
-			line-height: 2.8rem;
-		}
-
-		& > .-spacer2 {
-			background: @MAJOR_MUTE_D5;
-			& > svg {
-				width: 100%;
-				height: 100%;
-				color: @MAJOR_MUTE_D4;
-				display: block;
-			}
-		}
 		
-		& > .-gear {
-			background: @MAJOR_MUTE_D4;
-			width: 2.5em;
+			/* Left Wedge */
+			&:before {
+				position: absolute;
+				display: block;
+				
+				content: '';
+				left: -2.5rem;
+				top: 0;
+				border-top: 2.5rem/2 solid transparent;
+				border-right: 2.5rem/2 solid;
+				border-bottom: 2.5rem/2 solid;
+				border-left: 2.5rem/2 solid transparent;
+			}
 		}
 	}
 	

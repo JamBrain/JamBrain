@@ -11,26 +11,14 @@
 	width: auto;
 	padding-left: 1rem;
 	padding-right: 1rem;
-	background: @BUTTON_BG;/*@MAJOR_MUTE_D6;*/
+	background: @BUTTON_BG;
 
 	display: flex;
-	
-	/* Left Wedge */
-	&:before {
-		color: @BUTTON_BG;/*@MAJOR_MUTE_D6;*/
+
+	line-height: 2.5rem;
+	height: 2.5rem;
+	min-width: 1.25rem;
 		
-		content: '';
-		left: -3.5rem;
-		top: 0rem;
-		border-top: 2.5rem/2 solid transparent;
-		border-right: 2.5rem/2 solid;
-		border-bottom: 2.5rem/2 solid;
-		border-left: 2.5rem/2 solid transparent;
-		
-		display: block;
-		position: relative;
-	}
-	
 	& > svg {
 		position: absolute;
 		margin: auto;
@@ -45,18 +33,25 @@
 			color: @COL_A;
 		}
 	}
+	
+	&:before,
+	&:after {
+		color: @BUTTON_BG;
+	}
 		
 	&:hover {
 		cursor: pointer;
 		
-		color: @BUTTON_LIT_COL;/*@MAJOR_LIGHT;*/
-		background: @BUTTON_LIT_BG;/*@MAJOR_COLOR1;*/
-		&:before {
-			color: @BUTTON_LIT_BG;/*@MAJOR_COLOR1;*/
+		color: @BUTTON_LIT_COL;
+		background: @BUTTON_LIT_BG;
+		
+		&:before,
+		&:after {
+			color: @BUTTON_LIT_BG;
 		}
 		
 		& > svg {
-			color: @BUTTON_LIT_COL;/*@MAJOR_LIGHT;*/
+			color: @BUTTON_LIT_COL;
 		}
 		
 		& .-hover-hide {
@@ -67,51 +62,24 @@
 		}
 	}
 	
-	&:active, &:focus {
-		color: @BUTTON_LIT_BG;/*@MAJOR_COLOR1;*/
-		background: @BUTTON_LIT_COL;/*@MAJOR_LIGHT;*/
-		&:before {
-			color: @BUTTON_LIT_COL;/*@MAJOR_LIGHT;*/
+	&:active, 
+	&:focus {
+		color: @BUTTON_LIT_BG;
+		background: @BUTTON_LIT_COL;
+
+		&:before,
+		&:after {
+			color: @BUTTON_LIT_COL;
 		}
 		
 		& > svg {
-			color: @BUTTON_LIT_BG;/*@MAJOR_COLOR1;*/
+			color: @BUTTON_LIT_BG;
 		}
 	}
-	
-/*
-	& > svg {
-		width:auto;
-		padding-left:1rem;
-		padding-right:1rem;
-		background: @BUTTON_BG;
-	/*	
-		&:before {
-			color: @BUTTON_BG;
-			
-			content:'';
-			left: -3.5rem;
-			top: -2.5rem;
-			border-top: 2.5rem/2 solid transparent;
-			border-right: 2.5rem/2 solid transparent;
-			border-bottom: 2.5rem/2 solid;
-			border-left: 2.5rem/2 solid;
-			
-			display: block;
-			  position: relative;
-		}
-		
-		&:hover {
-			color: @BUTTON_LIT_COL;
-			background: @BUTTON_LIT_BG;
-			&:after {
-				color: @BUTTON_LIT_BG;
-			}
-		}			
-	}*/
+
 	& > .-count {
 		width: auto;
-		padding-right: 1rem;
+		padding-left: 2.25rem;
 		font-size: 1.5em;
 		line-height: 2.8rem;
 	}
