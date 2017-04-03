@@ -67,10 +67,10 @@ export default class ContentTimeline extends Component {
 		var extra = this.props.extra;
 		
 		if ( node.type === 'post' || node.type === 'game' ) {
-			return <ContentPost node={node} user={user} path={path} extra={extra} />;
+			return <ContentPost node={node} user={user} path={path} extra={extra} minmax love comments />;
 		}
 		else if ( node.type === 'user' ) {
-			return <ContentUser node={node} user={user} path={path} extra={extra} />;
+			return <ContentUser node={node} user={user} path={path} extra={extra} minmax />;
 		}
 		else {
 			return <div class='content-base'>Unsupported Node Type: {""+node.type}</div>;

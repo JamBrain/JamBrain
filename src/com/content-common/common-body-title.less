@@ -1,0 +1,42 @@
+@import 'defs.less';
+
+#content .content-common-body.-title {
+	position: relative;
+
+	margin: 1em 1em 0;
+	
+	& a, 
+	& a:visited {
+		color: @COL_NDDD;
+		&:hover,
+		&:focus {
+			color: @COL_L;
+		}
+	}
+
+	& > .-text {
+		position: relative;
+
+		font-size: 2.25em;
+		
+		@media (max-width: (@BASE_WIDTH - 20em)) {
+			font-size: 2.0em;
+		}
+	}
+	& > .-subtext {
+		font-size: 2.0em;
+
+		color: @COL_NL;
+
+		@media (max-width: (@BASE_WIDTH - 20em)) {
+			font-size: 1.75em;
+		}
+	}
+
+	
+	&.-has-subtitle {
+		& > .-text {
+			font-weight: bold;
+		}
+	}
+}

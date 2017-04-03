@@ -1,56 +1,24 @@
 @import "defs.less";
 
-@CONTENT_BG: @COL_L;
-@CONTENT_DARK: @COL_NDDD;
+@BG: @COL_L;
+@DARK: @COL_NDDD;
 
 @CONTENT_BUTTON_LIT: @COL_A;
 
 #content .content-common {
 	position: relative;
 	
-	/*border-top: 4px solid;*/
-	color: @CONTENT_DARK;
+	color: @DARK;
 
-	background: #F2F2F2; /*@MAJOR_MUTE_L4;*/
+	background: @BG;
 	box-shadow: 0px 0px 3px rgba(64,0,0,0.2);
 
-	& a {
+	& a,
+	& a:visited {
 		text-decoration: none;
-		padding:0.1em 0.15em;
-		border-radius:0.05em;
-		margin:-0.1em -0.075em 0;
-	}
-	& a:hover, 
-	& a:focus, 
-	& .-title a:hover, 
-	& .-title a:focus {
-		color: @MAJOR_COLOR4 !important;
-		background: @CONTENT_BUTTON_LIT;
-	}
-	
-	& .-header,
-	& .-body {
-		& a, 
-		& a:visited {
-			color: @CONTENT_BUTTON_LIT;
-		}
-	}
-	& .-title a, 
-	& .-title a:visited {
-		color: @MAJOR_DARK;
-	}
-		
-	
-	& > .-body {
-		margin: 1em;
-		font-size: 1.1em;
-		line-height: 1.5em;
-		
-		& pre {
-			background: @MAJOR_MUTE;
-			padding: 1em;
-			border-radius:0.25em;
-		}
+		/*padding: 0.1em 0.15em;*/
+		border-radius: 0.05em;
+		margin: -0.1em -0.075em 0;
 	}
 
 	& .-block-if-minimized,
@@ -76,36 +44,7 @@
 		}
 	}
 	
-	& .-headline {
-		position: relative;
-		
-		background: @CONTENT_DARK;
-		color: @CONTENT_BG;
-		height: 1em;
-		font-size: 2em;
-		font-weight: bold;
-		font-style: italic;
+	& > .-bodies {
 		overflow: hidden;
-		padding-left: 0.5em;
-		
-		&.-col-a {
-			background: @COL_A;
-		}
-		&.-col-ab {
-			background: @COL_AB;
-		}
-		&.-col-b {
-			background: @COL_B;
-		}
-		&.-col-bc {
-			background: @COL_BC;
-		}
-		&.-col-c {
-			background: @COL_C;
-		}
-		&.-col-ca {
-			background: @COL_CA;
-		}
 	}
-
 }

@@ -1,0 +1,87 @@
+@import "defs.less";
+
+@BUTTON_BG: @COL_NDDD;
+@BUTTON_COL: @COL_N;
+@BUTTON_LIT_BG: @COL_A;
+@BUTTON_LIT_COL: @COL_L;
+
+#content .content-common-footer-button {
+	position: relative;
+
+	width: auto;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	background: @BUTTON_BG;
+
+	display: flex;
+
+	line-height: 2.5rem;
+	height: 2.5rem;
+	min-width: 1.25rem;
+		
+	& > svg {
+		position: absolute;
+		margin: auto;
+		top: 0;
+		bottom: 0;
+		left: 1rem;
+	}
+
+	/* Here, because this plays nicer with the colors below */
+	&.loved {
+		& > svg {
+			color: @COL_A;
+		}
+	}
+	
+	&:before,
+	&:after {
+		color: @BUTTON_BG;
+	}
+		
+	&:hover,
+	&:focus {
+		cursor: pointer;
+		
+		color: @BUTTON_LIT_COL;
+		background: @BUTTON_LIT_BG;
+		
+		&:before,
+		&:after {
+			color: @BUTTON_LIT_BG;
+		}
+		
+		& > svg {
+			color: @BUTTON_LIT_COL;
+		}
+		
+		& .-hover-hide {
+			display: none;
+		}
+		& .-hover-show {
+			display: block;
+		}
+	}
+	
+	&:active,
+	&:active:hover {
+		color: @BUTTON_LIT_BG;
+		background: @BUTTON_LIT_COL;
+
+		&:before,
+		&:after {
+			color: @BUTTON_LIT_COL;
+		}
+		
+		& > svg {
+			color: @BUTTON_LIT_BG;
+		}
+	}
+
+	& > .-count {
+		width: auto;
+		padding-left: 2.25rem;
+		font-size: 1.5em;
+		line-height: 2.8rem;
+	}
+}

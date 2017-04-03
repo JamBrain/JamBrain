@@ -39,7 +39,7 @@ export default class ViewContent extends Component {
 		if ( node.type === 'post' ) {
 			return (
 				<div id="content">
-					<ContentPost node={node} user={user} path={path} extra={extra} no_comments />
+					<ContentPost node={node} user={user} path={path} extra={extra} love edit />
 					<ContentComments node={node} user={user} path={path} extra={extra} />
 				</div>
 			);
@@ -53,10 +53,30 @@ export default class ViewContent extends Component {
 			);
 		}
 		else if ( node.type === 'user' ) {
+			let View = <Content404 />;
+			let ViewType = null;
+			if ( extra.length ) {
+				ViewType = extra[0];
+			}
+			else {
+				// TODO: check counts
+				ViewType = 'games';
+			}
+				
+			if ( ViewType ) {
+				if ( ViewType === 'games' ) {
+					View = <ContentGames types={['game']} methods={['author']} node={node} user={user} path={path} extra={extra} />;
+				}
+				else if ( ViewType === 'feed' ) {
+					View = <ContentTimeline types={['post']} methods={['author']} node={node} user={user} path={path} extra={extra} />;
+				}
+			}
+
 			return (
 				<div id="content">
 					<ContentUser node={node} user={user} path={path} extra={extra} />
 					<ContentNavUser node={node} user={user} path={path} extra={extra} />
+					{View}
 				</div>
 			);
 		}

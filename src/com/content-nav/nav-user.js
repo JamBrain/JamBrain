@@ -15,23 +15,49 @@ export default class ContentNavUser extends Component {
 
 
 	render( {node, user, path, extra}, {} ) {
-
 		var NewPath = '/'+ (extra ? extra.join('/') : '');
-		
+
 		var ShowMyFeed = null;
 		if ( NewPath === '/' ) {
-			NewPath = '/games';
+			// Default to games, articles, or feed if no games/articles are available
+			if ( true )
+				NewPath = '/games';
+			else if ( false )
+				NewPath = '/articles';
+			else
+				NewPath = '/feed';
+		}
+		// Prefix with path
+		NewPath = path + NewPath;
+
+		var HasGames = <ContentNavButton path={NewPath} icon='gamepad' href={path+'/games'}>Games</ContentNavButton>;
+
+		var HasArticles = null;
+		if ( false ) {
+			HasArticles = <ContentNavButton path={NewPath} icon='article' href={path+'/articles'}>Articles</ContentNavButton>;
+		}
+
+		var HasFeed = <ContentNavButton path={NewPath} icon='feed' href={path+'/feed'}>Feed</ContentNavButton>;
+
+		var HasFollowing = null;
+		if ( false ) {
+			HasFollowing = <ContentNavButton path={NewPath} icon='user-check' href={path+'/following'}>Following</ContentNavButton>;
+		}
+		var HasFollowers = null;
+		if ( false ) {
+			HasFollowers = <ContentNavButton path={NewPath} icon='users' href={path+'/followers'}>Followers</ContentNavButton>;
 		}
 		
 		return (
 			<div class="-body">
 				<div class="content-base content-nav content-nav-root">
-					<ContentNavButton path={NewPath} icon='gamepad' href='/games'>Games</ContentNavButton>
-					<ContentNavButton path={NewPath} icon='feed' href='/feed'>Feed</ContentNavButton>
+					{HasGames}
+					{HasArticles}
+					{HasFeed}
+					{HasFollowing}
+					{HasFollowers}
 				</div>
 			</div>
 		);
 	}
 }
-
-//					<ContentNavButton path={NewPath} icon='warning' href='/feed' minimize>Everything</ContentNavButton>
