@@ -12,6 +12,16 @@ function node_GetParentById( $id ) {
 	);
 }
 
+function node_GetParentSlugById( $id ) {
+	return db_QueryFetchFirst(
+		"SELECT parent, slug
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		WHERE id=?
+		LIMIT 1;",
+		$id
+	);
+}
+
 function node_GetIdByParentSlug( $parent, $slug ) {
 	return db_QueryFetchValue(
 		"SELECT id
@@ -31,6 +41,18 @@ function node_GetSlugByParentSlugLike( $parent, $slug ) {
 	);	
 }
 
+
+function node_WalkById( $id, $top = 0, $timeout = 10 ) {
+	$tree = [];
+//	$data = [];
+//	while ( $id > 0 && isset && ($data['parent'] !== $top) && !($timeout--) ) {
+		$data = node_GetParentSlugById($id);
+		$tree[] = $data;
+//		$id = $data['parent'];
+//	};// while ( $id > 0 && ($data['parent'] !== $top) && !($timeout--) );
+
+	return $tree;
+}
 
 const SH_MAX_SLUG_LENGTH = 96;
 const SH_MAX_SLUG_RETRIES = 100;

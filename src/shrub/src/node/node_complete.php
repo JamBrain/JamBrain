@@ -9,7 +9,7 @@ function nodeComplete_GetById( $ids ) {
 	$nodes = node_GetById($ids);
 	if ( !$nodes )
 		return null;
-	
+		
 	$metas = nodeMeta_ParseByNode($ids);
 	$links = nodeLink_ParseByNode($ids);
 
@@ -19,6 +19,9 @@ function nodeComplete_GetById( $ids ) {
 
 	// Populate Metadata
 	foreach ( $nodes as &$node ) {
+		// Walk paths
+		$node['path'] = node_WalkById($node['id']);
+		
 		// Store Public Metadata
 		if ( isset($metas[$node['id']][SH_NODE_META_PUBLIC]) ) {
 			$node['meta'] = $metas[$node['id']][SH_NODE_META_PUBLIC];

@@ -14,6 +14,9 @@ import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonBodyAvatar			from 'com/content-common/common-body-avatar';
 import ContentCommonBodyMarkup			from 'com/content-common/common-body-markup';
 
+import ContentCommonNav					from 'com/content-common/common-nav';
+
+
 import $NodeStar						from '../shrub/js/node/node_star';
 
 
@@ -84,6 +87,7 @@ export default class ContentUser extends Component {
 					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
 					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.name} />
 					<ContentCommonBodyMarkup class="-block-if-not-minimized">{node.body}</ContentCommonBodyMarkup>
+					<ContentCommonNav node={node} />
 					{props.children}
 				</ContentCommon>
 			);
