@@ -60,4 +60,8 @@ export default class ContentNavRoot extends Component {
 	}
 }
 
-//					<ContentNavButton path={NewPath} icon='warning' href='/feed' minimize>Everything</ContentNavButton>
+//					<ContentNavButton path={NewPath} icon='article' href='/articles'>Articles</ContentNavButton>
+//					<ContentNavButton path={NewPath} icon='tv' href='/tv'>TV</ContentNavButton>
+//					<ContentNavButton path={NewPath} icon='infinity' href='/feed' minimize>Everything</ContentNavButton>
+
+//					<ContentNavButton path={NewPath} icon='about' href='/about' class="-right">About</ContentNavButton>

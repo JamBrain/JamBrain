@@ -19,7 +19,7 @@ export default class ContentCommonNav extends Component {
 		
 		if ( node && node.slug ) {
 			return (
-				<div class="content-common-nav">Nav
+				<div class="content-common-body content-common-nav">Nav
 				</div>
 			);
 		}
