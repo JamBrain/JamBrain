@@ -2,7 +2,7 @@
 
 #sidebar > .sidebar-tv {
 	background: @COL_NDDDD;
-
+	
 	min-height: 3rem;
 
 	& > .-active {
@@ -11,13 +11,9 @@
 
 		& > .-img {
 			padding:0.5em;
-			height: 0; // don't resize other than padding
-			padding-bottom: 56.25%; // 16:9 ratio padding, to ensure size
 			& > img {
 				max-width:100%;
 				display:block;
-				position: absolute;
-				height: 100%; // fill padding height for ratio
 			}
 		}
 		& > .-live {
@@ -33,12 +29,12 @@
 				color: @COL_A;
 				animation: blinker 10s linear infinite;
 			}
-			@keyframes blinker {
+			@keyframes blinker { 
 				5% { opacity: 1.0; }
 				10% { opacity: 0.2; }
 				15% { opacity: 1.0; }
 			}
-
+			
 			& > span {
 				color: @COL_D;
 				font-weight: bold;
@@ -68,7 +64,7 @@
 			position: absolute;
 			right:1em;
 			top:1em;
-
+			
 			padding:0.05em 0.5em;
 			background: fade(@COL_D, 100%);
 
@@ -88,11 +84,11 @@
 			font-size: 3em;
 			color: @COL_L;
 			transition: all 0.2s;
-
+			
 			& > svg {
 				display: block;
 			}
-
+			
 			background: fade(@COL_D, 50%);
 		}
 		&:hover > .-play {
@@ -105,18 +101,18 @@
 	}
 	& > .-detail {
 		/*margin-bottom:0.5em;*/
-		margin-top: 1em;
+		
 		line-height:1.25em;
 		height:2.5em;
 		overflow: hidden;
-
+		
 		color: @COL_NL;
-
+		
 		& > svg {
 			color: @COL_NDD;
 			padding: 0 0.4em;
 			display: block;
-
+			
 			position: relative;
 		}
 		& > .icon-quotes-left {
@@ -127,7 +123,7 @@
 			top: 2.5em - 0.9em;
 			float: right;
 		}
-
+		
 		& > div {
 			overflow: hidden;
 			font-style: italic;
@@ -137,13 +133,13 @@
 		display:flex;
 		flex-wrap:nowrap;
 		align-items:stretch;
-
+		
 		padding: 0.5em 0.25em 0.25em;
-
+		
 		& > div {
 			width:100%;
 			cursor:pointer;
-
+			
 			& > div {
 				padding:0.25em;
 
@@ -152,7 +148,7 @@
 					display:block;
 				}
 			}
-
+			
 			&.selected {
 				background: @COL_N;
 			}
