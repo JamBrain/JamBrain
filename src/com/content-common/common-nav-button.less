@@ -1,0 +1,34 @@
+@import 'defs.less';
+
+#content .content-common-nav-button {
+	display: inline-block;
+	padding: 0.5em 1em;
+	border: 1px solid @MAJOR_MUTE;
+
+	&:hover, &:focus {
+		background: @MAJOR_COLOR1;
+		border: 1px solid @MAJOR_COLOR1;
+		color: @MAJOR_LIGHT;
+	}
+	&:active {
+		background: @MAJOR_LIGHT;
+		border: 1px solid @MAJOR_LIGHT;
+		color: @MAJOR_COLOR1;
+	}
+	
+	& .if-hover-block {
+		display: none;
+	}
+	&:hover .if-hover-block,
+	&:focus .if-hover-block {
+		display: inline-block;
+	}
+
+	& .if-not-hover-block {
+		display: inline-block;
+	}
+	&:hover .if-not-hover-block,
+	&:focus .if-not-hover-block {
+		display: none;
+	}
+}

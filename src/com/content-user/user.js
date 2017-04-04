@@ -95,10 +95,12 @@ export default class ContentUser extends Component {
 		else {
 			return <ContentLoading />;
 		}
+	}
+}
 		
 //		return <ContentSimple path={path} node={node} user={user} header="USER" headerClass="-col-b" minmax>{props.children}</ContentSimple>;
 		
-		
+/*		
 		if ( node.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse('**User:** `'+node.name+'`') };
@@ -248,16 +250,6 @@ export default class ContentUser extends Component {
 		);
 	}
 	// body: unmagin-top, unmargin-bottom. replace with selector
-*/	
+	
 }
-
-//marked.setOptions({
-//	highlight: function( code, lang ) {
-//		var language = Prism.languages.clike;
-//		if ( Prism.languages[lang] )
-//			language = Prism.languages[lang];
-//		return Prism.highlight( code, language );
-//	},
-//	sanitize: true,			// disable HTML //
-//	smartypants: true,		// enable automatic fancy quotes, ellipses, dashes //
-//});
+*/
