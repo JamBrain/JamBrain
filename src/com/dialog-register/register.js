@@ -99,15 +99,15 @@ export default class DialogRegister extends Component {
 					<div>
 						<input autofocus id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" maxlength="254" value={mail} /><LabelYesNo value={mail.trim().length ? (Sanitize.validateMail(mail) ? 1 : -1) : 0} />
 					</div>
-					<div class="-info">
-						<ul>
-							<li><strong>Hotmail</strong>, <strong>Outlook</strong>, <strong>Live.com</strong>: Add <code>hello@jammer.vg</code> to your contacts</li>
-							<li><strong>Free.fr</strong>: Probably wont work. We've sent a whitelisting request</li>
-							<li><strong>Laposte.net</strong>: We can't find any info on how to fix them. <strong>SORRY!</strong> :(</li>
-						</ul>
-					</div>
 				</DialogCommon>
 			);
+//					<div class="-info">
+//						<ul>
+//							<li><strong>Hotmail</strong>, <strong>Outlook</strong>, <strong>Live.com</strong>: Add <code>hello@jammer.vg</code> to your contacts</li>
+//							<li><strong>Free.fr</strong>: Probably wont work. We've sent a whitelisting request</li>
+//							<li><strong>Laposte.net</strong>: We can't find any info on how to fix them. <strong>SORRY!</strong> :(</li>
+//						</ul>
+//					</div>
 		}
 	}
 }
