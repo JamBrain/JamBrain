@@ -9,6 +9,7 @@ import NavLink 							from 'com/nav-link/link';
 import NavSpinner						from 'com/nav-spinner/spinner';
 
 import DropdownUser 					from 'com/dropdown-user/user';
+import $User							from '../shrub/js/user/user';
 //import DropdownNotification				from 'com/dropdown-notification/notification';
 
 function make_url( url ) {
@@ -27,7 +28,7 @@ export default class ViewBar extends Component {
 		document.body.classList.remove('_use-view-bar');
 		document.body.classList.remove('_static-view-bar');
 	}
-	
+
 //	shouldComponentUpdate( nextProps, nextState ) {
 //		var com = ShallowCompare(this, nextProps, nextState);
 //		console.log("FOON",com,this.props, nextProps);
@@ -35,9 +36,9 @@ export default class ViewBar extends Component {
 //	}
 
 	renderLeft() {
-		
+
 	}
-	
+
 	renderRight( user, featured ) {
 		var Search = null;
 //		var Search = (
@@ -45,19 +46,20 @@ export default class ViewBar extends Component {
 //				<SVGIcon baseline>search</SVGIcon>
 //			</ButtonBase>
 //		);
-		
+
 		var ShowCalendar = (
 			<ButtonBase class="-button if-no-sidebar-block" onclick={e => { console.log('calendar'); window.location.hash = "#cal"; }}>
 				<SVGIcon baseline>calendar</SVGIcon>
 				<div class="if-sidebar-block">Schedule</div>
-			</ButtonBase>		
+			</ButtonBase>
 		);
-		
+
 		var ShowJoin = null;
 		var ShowMyGame = null;
 		var NewPost = null;
 		var Notification = null;
 		var ShowUser = null;
+		var LogOut = null;
 		var Register = null;
 		var Login = null;
 		var GoSecure = null;
@@ -89,7 +91,7 @@ export default class ViewBar extends Component {
 							<div class="if-sidebar-block">My Game</div>
 						</ButtonLink>
 					);
-					
+
 //					NewPost = (
 //						<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#create/post"; }}>
 //							<SVGIcon>edit</SVGIcon>
@@ -106,11 +108,11 @@ export default class ViewBar extends Component {
 					);
 				}
 			}
-			
-				
-			
 
-			
+
+
+
+
 			// TODO: Figure out how many notifications a user has
 			let NotificationCount = false ? (
 				<div class="-new">2</div>
@@ -121,7 +123,7 @@ export default class ViewBar extends Component {
 					{NotificationCount}
 				</ButtonBase>
 			);
-			
+
 			// TODO: Pull this out of the user meta, else use a dummy
 			let Avatar = (user.meta && user.meta.avatar) ? <img src={"//"+STATIC_DOMAIN+user.meta.avatar} /> : <img src={'//'+STATIC_DOMAIN+'/other/dummy/user64.png'} />;
 			//'/other/logo/mike/Chicken64.png';
@@ -131,6 +133,13 @@ export default class ViewBar extends Component {
 					<NavLink href={MyURL}>{Avatar}</NavLink>
 				</ButtonBase>,
 //				<DropdownUser />
+			];
+
+			let LogOutURL = "";
+			LogOut = [
+				<ButtonBase class="-logout" onclick={e => {$User.Logout();window.location.reload();}}>
+					<SVGIcon baseline>logout</SVGIcon>
+				</ButtonBase>,
 			];
 		}
 		// If user has finished loading (and is not logged in)
@@ -151,7 +160,7 @@ export default class ViewBar extends Component {
 		// Still waiting
 		else {
 			ShowSpinner = <NavSpinner />;
-		}		
+		}
 
 		if ( ShowSpinner ) {
 			return (
@@ -170,6 +179,7 @@ export default class ViewBar extends Component {
 					{Search}
 					{Notification}
 					{ShowUser}
+					{LogOut}
 					{Register}
 					{Login}
 					{GoSecure}
@@ -177,7 +187,7 @@ export default class ViewBar extends Component {
 			);
 		}
 	}
-	
+
 	render( {user, featured}, {} ) {
 		return (
 			<div class="view-bar">
@@ -185,7 +195,7 @@ export default class ViewBar extends Component {
 					<div class="-left">
 						<ButtonLink href="/" class="-logo">
 							<SVGIcon class="if-sidebar-block" baseline>ludum</SVGIcon><SVGIcon class="if-sidebar-block" baseline>dare</SVGIcon>
-							<SVGIcon class="if-no-sidebar-block" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-block" baseline>d-are</SVGIcon>							
+							<SVGIcon class="if-no-sidebar-block" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-block" baseline>d-are</SVGIcon>
 						</ButtonLink>
 					</div>
 					{this.renderRight(user, featured)}
