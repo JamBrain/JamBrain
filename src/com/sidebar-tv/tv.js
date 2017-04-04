@@ -22,8 +22,6 @@ export default class SidebarTV extends Component {
 			'youtube',
 		];
 
-		this.openExternal = false;
-
 		this.serviceIcons = [
 			(<div />),						// Null //
 			(<SVGIcon>twitch</SVGIcon>),	// Twitch //
@@ -202,10 +200,6 @@ export default class SidebarTV extends Component {
 					<div class="-active" onclick={e => {
 							console.log('tv');
 							/*window.open("https://www.twitch.tv/directory/game/Creative/ldjam", '_blank');*/
-							if(this.openExternal == true) {
-								this.openExternal = false;
-								return;
-							}
 							window.location.hash = "#tv/"+this.services[active.service_id]+'/'+active.meta.name;
 						}}>
 						<div class="-img"><IMG src={active.meta.thumbnail} failsrc={this.FailImage} /></div>
@@ -213,7 +207,7 @@ export default class SidebarTV extends Component {
 						<div class={'-name stream-'+this.services[active.service_id]}>{this.serviceIcons[active.service_id]} <span class="-text">{active.meta.name}</span></div>
 						<div class="-viewers"><SVGIcon baseline>tv</SVGIcon> <span class="-text">{active.viewers}</span></div>
 						<div class="-external" onclick={e => {
-							this.openExternal = true;
+							e.stopPropagation();
 							if ( this.services[active.service_id] == "twitch" ) {
 									window.open("https://www.twitch.tv/"+active.meta.slug, "_blank");
 							} else if ( this.services[active.service_id] == "youtube" ) {
