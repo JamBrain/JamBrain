@@ -11,9 +11,13 @@
 
 		& > .-img {
 			padding:0.5em;
+			height: 0;
+			padding-bottom: 56.25%;
 			& > img {
-				max-width:100%;
+				width: calc(~"100% - 1em");
 				display:block;
+				position: absolute;
+				height: 100%;
 			}
 		}
 		& > .-live {
@@ -124,6 +128,7 @@
 	& > .-detail {
 		/*margin-bottom:0.5em;*/
 
+		margin-top: 1em;
 		line-height:1.25em;
 		height:2.5em;
 		overflow: hidden;
