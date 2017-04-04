@@ -11,9 +11,13 @@
 
 		& > .-img {
 			padding:0.5em;
+			height: 0;
+			padding-bottom: 56.25%;
 			& > img {
-				max-width:100%;
+				width: calc(~"100% - 1em");
 				display:block;
+				position: absolute;
+				height: auto;
 			}
 		}
 		& > .-live {
