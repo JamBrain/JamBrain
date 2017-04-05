@@ -24,12 +24,37 @@ export default class ContentCommonNavButtonFollow extends Component {
 		var user = props.user;
 //		var path = props.path;
 //		var extra = props.extra;
+
+		var Class = [];
+		if ( props.class )
+			Class.concat(props.class.split(' '));
+		Class.push('-follow');
 		
+		var Icon = <SVGIcon class="if-not-hover-block">user</SVGIcon>;
+		var HoverIcon = <SVGIcon class="if-hover-block">user-plus</SVGIcon>;
+		var Text = <span>Follow</span>;
+
+		// Following or Friend
+		if ( false ) {
+			HoverIcon = <SVGIcon class="if-hover-block">user-minus</SVGIcon>;
+		}
+		// Friend only
+		if ( false ) {
+			Text = <span>Friends</span>;
+			Class.push('-friends');
+		}
+		// Following only
+		else if ( false ) {
+			Text = <span>Following</span>;
+			Class.push('-following');
+		}
 		
 //		if ( node && node.slug ) {
 			return (
-				<NavButton onclick={this.onClick}>
-					<SVGIcon class="if-not-hover-block">user</SVGIcon><SVGIcon class="if-hover-block">user-plus</SVGIcon> Follow
+				<NavButton class={Class} onclick={this.onClick}>
+					{Icon}
+					{HoverIcon}
+					{Text}
 				</NavButton>
 			);
 //		}

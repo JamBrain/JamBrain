@@ -1,0 +1,27 @@
+@import 'defs.less';
+
+#content .content-common-nav-button.-follow {
+	&.-following {
+		background: @COL_C;
+		border: 1px solid @COL_C;
+	}
+	&.-friends {
+		background: @COL_BC;
+		border: 1px solid @COL_BC;
+	}
+	
+	&.-following,
+	&.-friends {
+		&:hover,
+		&:focus {
+			background: @COL_A;
+			border: 1px solid @COL_A;
+			color: @COL_L;
+		}
+		&:active {
+			background: @COL_L;
+			border: 1px solid @COL_L;
+			color: @COL_A;
+		}
+	}
+}
