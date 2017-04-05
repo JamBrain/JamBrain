@@ -15,9 +15,10 @@ import ContentCommonBodyAvatar			from 'com/content-common/common-body-avatar';
 import ContentCommonBodyMarkup			from 'com/content-common/common-body-markup';
 
 import ContentCommonNav					from 'com/content-common/common-nav';
+import ButtonFollow						from 'com/content-common/common-nav-button-follow';
 
 
-import $NodeStar						from '../shrub/js/node/node_star';
+//import $NodeStar						from '../shrub/js/node/node_star';
 
 
 export default class ContentUser extends Component {
@@ -33,7 +34,7 @@ export default class ContentUser extends Component {
 //		this.onUnfollow = this.onUnfollow.bind(this);
 //		this.onUnfriend = this.onUnfriend.bind(this);
 	}
-	
+/*	
 	onFollow( e ) {
 		//console.log("Follow");
 		$NodeStar.Add(this.props.node.id)
@@ -64,7 +65,7 @@ export default class ContentUser extends Component {
 		//console.log("Unfriend");
 		this.onUnfollow(e);
 	}
-	
+*/	
 	render( props, {hasClicked, following, error} ) {
 		var node = props.node;
 		var user = props.user;
@@ -77,17 +78,24 @@ export default class ContentUser extends Component {
 			props.class.push("content-user");
 			props.header = "USER";
 			props.headerClass = "-col-b";
-			if ( user.id && (node.id !== user.id) )
-				props.star = 1;
+//			if ( user.id && (node.id !== user.id) )
+//				props.star = 1;
 			if ( user.id && (node.id === user.id) )
 				props.edit = 1;
+			
+			var Nav = [];
+			if ( user && user.id && node.id !== user.id ) {
+				Nav.push(<ButtonFollow node={node} user={user} />);
+			}
 				
 			return (
 				<ContentCommon {...props}>
 					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
 					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.name} />
 					<ContentCommonBodyMarkup class="-block-if-not-minimized">{node.body}</ContentCommonBodyMarkup>
-					<ContentCommonNav node={node} />
+					<ContentCommonNav>
+						{Nav}
+					</ContentCommonNav>
 					{props.children}
 				</ContentCommon>
 			);

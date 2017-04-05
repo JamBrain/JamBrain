@@ -8,8 +8,12 @@ export default class ContentCommonNavButton extends Component {
 	}
 
 	render( props ) {
+		var Class = ['content-common-nav-button'];
+		if ( props.class )
+			Class = Class.concat(props.class.split(' '));
+
 		return (
-			<ButtonBase class="content-common-nav-button" onclick={props.onclick}>
+			<ButtonBase class={Class} onclick={props.onclick}>
 				{props.children}
 			</ButtonBase>
 		);
