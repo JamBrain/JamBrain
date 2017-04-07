@@ -38,8 +38,7 @@ export default class ContentCommonBodyMarkup extends Component {
 			Class = Class.concat(props.class.split(' '));
 		}
 
-
-		if (props.edit) {
+		if (props.editing) {
 			return (
 				<div class={Class}>
 					<div class="-label"></div>

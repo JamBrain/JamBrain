@@ -1,7 +1,6 @@
 import { h, Component } 				from 'preact/preact';
 
 import SVGIcon 							from 'com/svg-icon/icon';
-
 import ButtonBase 						from 'com/button-base/base';
 
 export default class ContentCommonEdit extends Component {
@@ -21,7 +20,7 @@ export default class ContentCommonEdit extends Component {
 		var ShowSave = null;
 		var ShowPublish = null;
 		
-		if ( props.edit ) {
+		if ( props.editing ) {
 			ShowEdit = <ButtonBase class="-selected"><SVGIcon>edit</SVGIcon><span>Edit</span></ButtonBase>;
 			ShowPreview = <ButtonBase onclick={props.onpreview}><SVGIcon>preview</SVGIcon><span>Preview</span></ButtonBase>;
 		}
@@ -37,16 +36,18 @@ export default class ContentCommonEdit extends Component {
 			ShowSave = <ButtonBase><SVGIcon>save</SVGIcon><span>Saved</span></ButtonBase>;
 		}
 
-		if ( props.published ) {
-			ShowPublish = <ButtonBase><SVGIcon>publish</SVGIcon><span>Published</span></ButtonBase>;
-		}
-		else {
-			ShowPublish = [
-				<ButtonBase class="-available -green" onclick={props.onpublish}><SVGIcon>publish</SVGIcon><span>Publish</span></ButtonBase>,
-//				<ButtonBase class="-available -green" onclick={onpublish}><SVGIcon>publish</SVGIcon><span>Publish Compo</span></ButtonBase>,
-//				<ButtonBase class="-available -green" onclick={onpublish2}><SVGIcon>publish</SVGIcon><span>Publish Jam</span></ButtonBase>
-			];
-		}
+//		if ( !props.hide_published ) {
+			if ( props.published ) {
+				ShowPublish = <ButtonBase><SVGIcon>publish</SVGIcon><span>Published</span></ButtonBase>;
+			}
+			else {
+				ShowPublish = [
+					<ButtonBase class="-available -green" onclick={props.onpublish}><SVGIcon>publish</SVGIcon><span>Publish</span></ButtonBase>,
+//					<ButtonBase class="-available -green" onclick={onpublish}><SVGIcon>publish</SVGIcon><span>Publish Compo</span></ButtonBase>,
+//					<ButtonBase class="-available -green" onclick={onpublish2}><SVGIcon>publish</SVGIcon><span>Publish Jam</span></ButtonBase>
+				];
+			}
+//		}
 	
 		return (
 			<div class="content-common-body -edit">

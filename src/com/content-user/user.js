@@ -29,18 +29,41 @@ export default class ContentUser extends Component {
 	constructor( props ) {
 		super(props);
 		
-//		this.state = {
-//			'edit': null
-//		};
+		this.state = {
+			'editing': true,
+			'modified': false,
+			
+			'body': null,
+		};
 
-		this.onModifyMarkup = this.onModifyMarkup.bind(this);
+		this.onEdit = this.onEdit.bind(this);
+		this.onPreview = this.onPreview.bind(this);
+		this.onSave = this.onSave.bind(this);
+		this.onPublish = this.onPublish.bind(this);
+
+		this.onModifyText = this.onModifyText.bind(this);
 	}
 	
-	onModifyMarkup( e ) {
+	onEdit( e ) {
+		console.log('edu');
+		this.setState({'editing': true});
+	}
+	onPreview( e ) {
+		console.log('prev');
+		this.setState({'editing': false});
+	}
+	onSave( e ) {
+		this.setState({'modified': false});
+	}
+	onPublish( e ) {
 		console.log( e );
 	}
 
-	render( props ) {
+	onModifyText( e ) {
+		this.setState({'modified': true, 'body': e.srcElement.value});
+	}
+
+	render( props, state ) {
 		props = Object.assign({}, props);	// Shallow copy we can change props
 		
 		var node = props.node;
@@ -48,8 +71,10 @@ export default class ContentUser extends Component {
 		var path = props.path;
 		var extra = props.extra;
 		var edit = extra && extra.length && extra[extra.length-1] == 'edit';
-
+		
 		if ( node && node.slug ) {
+			var body = state.body ? state.body : node.body;
+
 			props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 			props.class.push("content-user");
 			props.header = "USER";
@@ -59,8 +84,13 @@ export default class ContentUser extends Component {
 			var EditBar = null;
 
 			if ( edit ) {
-				props.editing = 1;
-				EditBar = <ContentCommonEdit />;
+				if ( state.editing )
+					props.editing = 1;
+					
+				// Hack
+				var IsPublished = node.type.length;//;Number.parseInt(node.published) !== 0;
+				
+				EditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} published={IsPublished} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} onpublish={this.onPublish} />;
 			}
 			else {
 //				if ( user.id && (node.id !== user.id) )
@@ -78,7 +108,7 @@ export default class ContentUser extends Component {
 					{EditBar}
 					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
 					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.name} />
-					<ContentCommonBodyMarkup class="-block-if-not-minimized" onmodify={this.onModifyMarkup} edit={edit}>{node.body}</ContentCommonBodyMarkup>
+					<ContentCommonBodyMarkup editing={state.editing} class="-block-if-not-minimized" onmodify={this.onModifyText}>{body}</ContentCommonBodyMarkup>
 					<ContentCommonNav>
 						{NavBar}
 					</ContentCommonNav>
