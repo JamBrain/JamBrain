@@ -20,9 +20,9 @@ export default class ContentNavUser extends Component {
 		var ShowMyFeed = null;
 		if ( NewPath === '/' ) {
 			// Default to games, articles, or feed if no games/articles are available
-			if ( true )
+			if ( node['games'] > 0 )
 				NewPath = '/games';
-			else if ( false )
+			else if ( node['articles'] > 0 )
 				NewPath = '/articles';
 			else
 				NewPath = '/feed';
@@ -30,10 +30,13 @@ export default class ContentNavUser extends Component {
 		// Prefix with path
 		NewPath = path + NewPath;
 
-		var HasGames = <ContentNavButton path={NewPath} icon='gamepad' href={path+'/games'}>Games</ContentNavButton>;
+		var HasGames = null;
+		if ( node['games'] > 0 ) {
+			HasGames = <ContentNavButton path={NewPath} icon='gamepad' href={path+'/games'}>Games</ContentNavButton>;
+		}
 
 		var HasArticles = null;
-		if ( false ) {
+		if ( node['articles'] > 0 ) {
 			HasArticles = <ContentNavButton path={NewPath} icon='article' href={path+'/articles'}>Articles</ContentNavButton>;
 		}
 

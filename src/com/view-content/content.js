@@ -59,8 +59,13 @@ export default class ViewContent extends Component {
 				ViewType = extra[0];
 			}
 			else {
-				// TODO: check counts
-				ViewType = 'games';
+				// Default View (i.e. URL is `/`)
+				if ( node['games'] > 0 )
+					ViewType = 'games';
+				else if ( node['articles'] > 0 )
+					ViewType = 'articles';
+				else
+					ViewType = 'feed';
 			}
 				
 			if ( ViewType ) {

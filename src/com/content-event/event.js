@@ -12,6 +12,11 @@ import ContentEventList					from 'com/content-event/event-list';
 //import ContentEventJudging				from 'com/content-event/event-judging';
 //import ContentEventResults				from 'com/content-event/event-results';
 
+import ContentCommon					from 'com/content-common/common';
+import ContentCommonNav					from 'com/content-common/common-nav';
+
+
+
 export default class ContentEvent extends Component {
 	constructor( props ) {
 		super(props);
@@ -22,8 +27,28 @@ export default class ContentEvent extends Component {
 	componentWillUnmount() {
 	}
 	
-	render( {node, user, path, extra}, {error} ) {
+	render( props ) {
+		var node = props.node;
+		
 		if ( node.slug ) {
+			return (
+				<ContentCommon {...props}>
+//					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
+//					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.name} />
+//					<ContentCommonBodyMarkup class="-block-if-not-minimized">{node.body}</ContentCommonBodyMarkup>
+					<ContentCommonNav>
+//						{Nav}
+					</ContentCommonNav>
+					{props.children}
+				</ContentCommon>
+			);
+		}
+		else {
+			return <ContentLoading />;
+		}
+
+
+/*
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 			
 			let ThemeMode = (node.meta['theme-mode']) ? parseInt(node.meta['theme-mode']) : 0;
@@ -105,5 +130,6 @@ export default class ContentEvent extends Component {
 				</div>
 			);
 		}
+*/
 	}
 }

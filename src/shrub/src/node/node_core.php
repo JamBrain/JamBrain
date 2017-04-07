@@ -146,6 +146,109 @@ function node_GetById( $ids ) {
 	return null;
 }
 
+function node_CountByAuthorType( $ids, $authors, $types = null, $subtypes = null, $subsubtypes = null ) {
+	$multi = is_array($ids);
+	if ( !$multi )
+		$ids = [$ids];
+	
+	if ( is_array($ids) ) {
+		// Confirm that all IDs are not zero
+		foreach( $ids as $id ) {
+			if ( intval($id) == 0 )
+				return null;
+		}
+		
+		$QUERY = [];
+		$ARGS = [];
+		
+		// Build query fragment for the types check
+		if ( is_array($types) ) {
+			$QUERY[] = 'type IN ("'.implode('","', $types).'")';
+		}
+		else if ( is_string($types) ) {
+			$QUERY[] = "type=?";
+			$ARGS[] = $types;
+		}
+		else if ( is_null($types) ) {
+		}
+		else {
+			return null;	// Non strings, non arrays
+		}
+	
+		// Build query fragment for the subtypes check
+		if ( is_array($subtypes) ) {
+			$QUERY[] = 'subtype IN ("'.implode('","', $subtypes).'")';
+		}
+		else if ( is_string($subtypes) ) {
+			$QUERY[] = "subtype=?";
+			$ARGS[] = $subtypes;
+		}
+		else if ( is_null($subtypes) ) {
+		}
+		else {
+			return null;	// Non strings, non arrays
+		}
+	
+		// Build query fragment for the subsubtypes check
+		if ( is_array($subsubtypes) ) {
+			$QUERY[] = 'subsubtype IN ("'.implode('","', $subsubtypes).'")';
+		}
+		else if ( is_string($subsubtypes) ) {
+			$QUERY[] = "subsubtype=?";
+			$ARGS[] = $subsubtypes;
+		}
+		else if ( is_null($subsubtypes) ) {
+		}
+		else {
+			return null;	// Non strings, non arrays
+		}
+
+		// Build IN string
+		$ids_string = implode(',', $ids);
+
+
+		$full_query = '('.implode(' AND ', $QUERY).')';
+		
+//		$ARGS[] = $limit;
+//		$ARGS[] = $offset;
+
+		if ( $authors ) {
+			// if true, I don't actually know how I should handle this.
+			// Yes we search the meta table for matching author
+			// Unfortunately you will find everything that user is an author of
+			// For now that's games (which is exactly what we want), but future co-authoring fetures wont be right
+			// Sub query? Find all valid nodes, then check if they match the types (in theory an user will have authored less co-authored items)
+//			$ret = db_QueryFetch(
+//				"SELECT id, COUNT(id) AS count
+//				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." 
+//				WHERE author IN ($ids_string)
+//				AND $full_query
+//				GROUP BY id".($multi?';':' LIMIT 1;'),
+//				...$ARGS
+//			);
+	}
+		else {
+			$ret = db_QueryFetch(
+				"SELECT author AS id, COUNT(id) AS count
+				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+				WHERE author IN ($ids_string)
+				AND $full_query
+				GROUP BY author".($multi?';':' LIMIT 1;'),
+				...$ARGS
+			);
+		}
+
+		if ( $multi )
+			return $ret;
+		else
+			return $ret ? $ret[0] : null;
+	}
+	
+	return null;
+}
+
+
+
 function _node_Add( $parent, $superparent, $author, $type, $subtype, $subsubtype, $slug, $name, $body ) {
 	// TODO: wrap this in a block
 
@@ -222,8 +325,17 @@ function _node_Edit( $node, $parent, $superparent, $author, $type, $subtype, $su
 	return $success;
 }
 function node_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag = "" ) {
+	// Lookup superpaprent (skip this step by calling _node_Edit directly)
 	$superparent = $parent ? node_GetParentById($parent) : 0;	
 	return _node_Edit($node, $parent, $superparent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag);
+}
+
+// Safe version of the edit function. Only allows you to change things users are allowed to change (i.e. slug, name, body).
+function node_SafeEdit( $node, $slug, $name, $body, $tag = "" ) {
+	// TODO: wrap in a db lock
+	$old = node_GetById($node);		// uncached
+	
+	return _node_Edit($node, $old['parent'], $old['superparent'], $old['author'], $old['type'], $old['subtype'], $old['subsubtype'], $slug, $name, $body, $tag);
 }
 
 
@@ -251,3 +363,17 @@ function node_Publish( $node, $state = true ) {
 	);
 }
 
+
+
+function node_IdToIndex( $nodes ) {
+	if ( !is_array($nodes) )
+		return null;
+	
+	$ret = [];
+	
+	foreach ( $nodes as &$node ) {
+		$ret[$node['id']] = $node;
+	}
+	
+	return $ret;
+}

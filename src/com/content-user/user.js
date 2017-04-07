@@ -1,13 +1,15 @@
 import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
-import NavLink 							from 'com/nav-link/link';
-import ButtonBase						from 'com/button-base/base';
+//import SVGIcon 							from 'com/svg-icon/icon';
+//import NavLink 							from 'com/nav-link/link';
+//import ButtonBase						from 'com/button-base/base';
 
 //import ContentSimple					from 'com/content-simple/simple';
 
-import ContentBodyMarkup				from 'com/content-body/body-markup';
+//import ContentBodyMarkup				from 'com/content-body/body-markup';
 
-import ContentFooterButtonStar			from 'com/content-footer/footer-button-star';
+//import ContentFooterButtonStar			from 'com/content-footer/footer-button-star';
+
+import ContentLoading					from 'com/content-loading/loading';
 
 import ContentCommon					from 'com/content-common/common';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
