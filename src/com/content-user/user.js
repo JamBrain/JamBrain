@@ -20,6 +20,8 @@ import ContentCommonNav					from 'com/content-common/common-nav';
 import ButtonFollow						from 'com/content-common/common-nav-button-follow';
 
 
+import ContentCommonEdit				from 'com/content-common/common-edit';
+
 //import $NodeStar						from '../shrub/js/node/node_star';
 
 
@@ -28,75 +30,57 @@ export default class ContentUser extends Component {
 		super(props);
 		
 //		this.state = {
-//			'following': null,
-//			'hasClicked': null
+//			'edit': null
 //		};
-//		
-//		this.onFollow = this.onFollow.bind(this);
-//		this.onUnfollow = this.onUnfollow.bind(this);
-//		this.onUnfriend = this.onUnfriend.bind(this);
+
+		this.onModifyMarkup = this.onModifyMarkup.bind(this);
 	}
-/*	
-	onFollow( e ) {
-		//console.log("Follow");
-		$NodeStar.Add(this.props.node.id)
-		.then(r => {
-			//console.log('win', r);
-			this.setState({ 'hasClicked': true, 'following': true });
-			
-			// TODO: Tell parent user has changed
-		})
-		.catch(err => {
-			this.setState({'error':err});
-		});
+	
+	onModifyMarkup( e ) {
+		console.log( e );
 	}
-	onUnfollow( e ) {
-		//console.log("Unfollow");
-		$NodeStar.Remove(this.props.node.id)
-		.then(r => {
-			//console.log('wooon', r);
-			this.setState({ 'hasClicked': true, 'following': false });
-			
-			// TODO: Tell parent user has changed
-		})
-		.catch(err => {
-			this.setState({'error':err});
-		});
-	}
-	onUnfriend( e ) {
-		//console.log("Unfriend");
-		this.onUnfollow(e);
-	}
-*/	
-	render( props, {hasClicked, following, error} ) {
+
+	render( props ) {
+		props = Object.assign({}, props);	// Shallow copy we can change props
+		
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
-
+		var edit = extra && extra.length && extra[extra.length-1] == 'edit';
 
 		if ( node && node.slug ) {
 			props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 			props.class.push("content-user");
 			props.header = "USER";
 			props.headerClass = "-col-b";
-//			if ( user.id && (node.id !== user.id) )
-//				props.star = 1;
-			if ( user.id && (node.id === user.id) )
-				props.edit = 1;
 			
-			var Nav = [];
-			if ( user && user.id && node.id !== user.id ) {
-				Nav.push(<ButtonFollow node={node} user={user} />);
+			var NavBar = [];
+			var EditBar = null;
+
+			if ( edit ) {
+				props.editing = 1;
+				EditBar = <ContentCommonEdit />;
+			}
+			else {
+//				if ( user.id && (node.id !== user.id) )
+//					props.star = 1;
+				if ( user.id && (node.id === user.id) )
+					props.edit = 1;
+			
+				if ( user && user.id && node.id !== user.id ) {
+					NavBar.push(<ButtonFollow node={node} user={user} />);
+				}
 			}
 				
 			return (
 				<ContentCommon {...props}>
+					{EditBar}
 					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
 					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.name} />
-					<ContentCommonBodyMarkup class="-block-if-not-minimized">{node.body}</ContentCommonBodyMarkup>
+					<ContentCommonBodyMarkup class="-block-if-not-minimized" onmodify={this.onModifyMarkup} edit={edit}>{node.body}</ContentCommonBodyMarkup>
 					<ContentCommonNav>
-						{Nav}
+						{NavBar}
 					</ContentCommonNav>
 					{props.children}
 				</ContentCommon>

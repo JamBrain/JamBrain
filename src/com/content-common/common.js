@@ -19,42 +19,22 @@ export default class ContentCommon extends Component {
 		this.onMinMax = this.onMinMax.bind(this);
 	}
 
-//	shouldComponentUpdate( nextProps, nextState ) {
-//		var com = ShallowCompare(this, nextProps, nextState);
-////		console.log("HOOP",com,this.props, nextProps);
-////		console.log("HOOP",com,this.state, nextState);
-//		return com;
-//	}
-
-//	componentWillReceiveProps( props ) {
-//	componentWillUpdate( newProps, newState ) {
-//		if ( this.props.node !== newProps.node ) {
-//			this.getAuthor(newProps.node);
-//		}
-//	}
-
 	onMinMax( e ) {
 		this.setState({
 			'minimized': !this.state.minimized 
 		});
 	}
 
-	render( props, {author, minimized, error} ) {
+	render( props, {minimized, error} ) {
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
-		
+
 		// If a Minimized property was included, invert the internal state
 		if ( props.minimized ) {
 			minimized = !minimized;
 		}
-		
-		// Parse extra modes
-		if ( extra ) {
-			// If extra is 'edit', we're in edit mode
-			var EditMode = extra.length ? extra[0] === 'edit' : false;
-		}		
 		
 		if ( node && node.slug ) {
 			let MainClass = [
@@ -62,15 +42,21 @@ export default class ContentCommon extends Component {
 				'content-common'
 			];
 			
-			// TODO: Append classes
-
+			if ( typeof props.class == 'string' ) {
+				MainClass = MainClass.concat(props.class.split(' '));
+			}
+			
+			if ( props.editing )
+				MainClass.push('edit');
 			if ( minimized )
 				MainClass.push('minimized');
 
-
 			let HasHeader = null;
 			if ( props.header ) {
-				HasHeader = <div class={['content-common-header', props.headerClass ? props.headerClass : '']}>{props.header}</div>;
+				HasHeader = <div class={[
+					'content-common-header', 
+					props.headerClass ? props.headerClass : ''
+				]}>{props.header}</div>;
 			}
 			
 //			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
