@@ -115,7 +115,7 @@ export default class ContentEvent extends Component {
 			}
 				
 			return (
-				<div class="content-base content-user content-event">
+				<div class="content-base content-user-legacy content-event">
 					<div class="-header">
 						<div class="-title _font2"><SVGIcon baseline small>trophy</SVGIcon> <NavLink href={path} dangerouslySetInnerHTML={dangerousParsedTitle} /></div>
 						{EventWhen}
