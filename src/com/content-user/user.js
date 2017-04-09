@@ -14,6 +14,7 @@ import ContentError						from 'com/content-error/error';
 
 import ContentCommon					from 'com/content-common/common';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
+import ContentCommonBodyBy				from 'com/content-common/common-body-by';
 import ContentCommonBodyAvatar			from 'com/content-common/common-body-avatar';
 import ContentCommonBodyMarkup			from 'com/content-common/common-body-markup';
 
@@ -119,6 +120,7 @@ export default class ContentUser extends Component {
 					{EditBar}
 					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
 					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.name} />
+					<ContentCommonBodyBy node={node} label="Joined" when />
 					<ContentCommonBodyMarkup editing={state.editing} label="Biography" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
 					<ContentCommonNav>
 						{NavBar}
