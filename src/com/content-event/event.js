@@ -51,7 +51,7 @@ export default class ContentEvent extends Component {
 //		}
 
 
-
+		if ( node.slug ) {
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 			
 			let ThemeMode = (node.meta['theme-mode']) ? parseInt(node.meta['theme-mode']) : 0;
