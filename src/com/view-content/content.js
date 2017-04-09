@@ -35,6 +35,8 @@ export default class ViewContent extends Component {
 		else {
 			document.title = window.location.host;
 		}
+		
+		var EditMode = extra && extra.length && extra[extra.length-1] == 'edit';
 
 		if ( node.type === 'post' ) {
 			return (
@@ -53,7 +55,7 @@ export default class ViewContent extends Component {
 			);
 		}
 		else if ( node.type === 'user' ) {
-			let View = <Content404 />;
+			let View = [];
 			let ViewType = null;
 			if ( extra.length ) {
 				ViewType = extra[0];
@@ -67,20 +69,33 @@ export default class ViewContent extends Component {
 				else
 					ViewType = 'feed';
 			}
-				
-			if ( ViewType ) {
-				if ( ViewType === 'games' ) {
-					View = <ContentGames types={['game']} methods={['author']} node={node} user={user} path={path} extra={extra} />;
+			
+			// When root edit mode is detected 
+			if ( extra.length === 1 && EditMode ) {
+				// Do nothing
+			}
+			else {
+				View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
+					
+				if ( ViewType ) {
+					if ( ViewType === 'games' ) {
+						View = <ContentGames types={['game']} methods={['author']} node={node} user={user} path={path} extra={extra} />;
+					}
+					else if ( ViewType === 'feed' ) {
+						View = <ContentTimeline types={['post']} methods={['author']} node={node} user={user} path={path} extra={extra} />;
+					}
+					else {
+						View.push(<Content404 />);
+					}
 				}
-				else if ( ViewType === 'feed' ) {
-					View = <ContentTimeline types={['post']} methods={['author']} node={node} user={user} path={path} extra={extra} />;
+				else {
+					View.push(<Content404 />);
 				}
 			}
 
 			return (
 				<div id="content">
 					<ContentUser node={node} user={user} path={path} extra={extra} />
-					<ContentNavUser node={node} user={user} path={path} extra={extra} />
 					{View}
 				</div>
 			);
