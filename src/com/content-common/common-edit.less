@@ -1,0 +1,91 @@
+@import "defs.less";
+
+#content .content-common-body.-edit {
+	position: relative;
+	
+	/*height: 4em;*/
+	line-height: 1.25em;
+/*	font-size: 1.1em;*/
+	
+	& > .-left,
+	& > .-right {
+		display: flex;
+
+		/* Button */
+		& > div {
+			position: relative;
+			
+			padding: 0.5em 1em 0.5em 2em;
+			border: 1px solid;
+			
+			& span {
+				margin-left: 0.5em;
+			}
+			& svg {
+				position: absolute;
+				
+				left: 1em;
+				top: 0;
+				bottom: 0;
+				margin: auto;
+			}
+/*
+			color: @MAJOR_MUTE_L2;
+			background: @MAJOR_MUTE_D3;
+			border: 1px solid @MAJOR_MUTE;
+
+			&:hover,
+			&:focus,
+			&.-green:focus,
+			&.-green:hover,
+			&.-blue:focus,
+			&.-blue:hover {
+				border: 1px solid @MAJOR_COLOR1;
+				background: @MAJOR_COLOR1;
+				color: @MAJOR_LIGHT;
+			}
+			&:active {
+				border: 1px solid @MAJOR_LIGHT;
+				background: @MAJOR_LIGHT;
+				color: @MAJOR_COLOR1;
+			}
+*/			
+			&.-selected {
+				color: @COL_NDDDD;
+				background: @COL_NLL;
+				border: 1px solid @COL_NLL;
+			}
+/*		
+			&.-blue {
+				border: 1px solid @MAJOR_BLUE;
+				background: @MAJOR_BLUE;
+				color: @MAJOR_MUTE_D5;
+			}
+			&.-green {
+				border: 1px solid @MAJOR_GREEN;
+				background: @MAJOR_GREEN;
+				color: @MAJOR_MUTE_D5;
+			}
+*/
+		}
+	}
+
+	& > .-left {
+		& div {
+			margin-right: 0.5em;
+			&:last-child {
+				margin-right: 0;
+			}
+		}
+	}
+
+	& > .-right {
+		float: right;
+		& div {
+			margin-left: 0.5em;
+			&:first-child {
+				margin-left: 0;
+			}
+		}
+	}
+}

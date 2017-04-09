@@ -9,16 +9,29 @@ function nodeComplete_GetById( $ids ) {
 	$nodes = node_GetById($ids);
 	if ( !$nodes )
 		return null;
-	
+		
 	$metas = nodeMeta_ParseByNode($ids);
 	$links = nodeLink_ParseByNode($ids);
 
 	$loves = nodeLove_GetByNode($ids);
 	
 	$notes = note_CountByNode($ids);
+	
+	$games = node_IdToIndex(node_CountByAuthorType($ids, false, 'item', 'game'));
+	$articles = node_IdToIndex(node_CountByAuthorType($ids, false, 'page', 'article'));
+	$posts = node_IdToIndex(node_CountByAuthorType($ids, false, 'post'));
 
 	// Populate Metadata
 	foreach ( $nodes as &$node ) {
+		// Walk paths
+		$node['path'] = node_WalkById($node['id']);
+		
+		if ( $node['type'] == 'user' ) {
+			$node['games'] = isset($games[$node['id']]) ? $games[$node['id']]['count'] : 0;
+			$node['articles'] = isset($articles[$node['id']]) ? $articles[$node['id']]['count'] : 0;
+			$node['posts'] = isset($posts[$node['id']]) ? $posts[$node['id']]['count'] : 0;
+		}
+		
 		// Store Public Metadata
 		if ( isset($metas[$node['id']][SH_NODE_META_PUBLIC]) ) {
 			$node['meta'] = $metas[$node['id']][SH_NODE_META_PUBLIC];

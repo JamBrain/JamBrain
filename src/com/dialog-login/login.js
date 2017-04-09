@@ -78,14 +78,14 @@ export default class DialogLogin extends Component {
 				<div>
 					<input id="dialog-login-password" onchange={this.onPasswordChange} onkeydown={this.onKeyDown} class="-text focusable" type="password" name="password" placeholder="Password" maxlength="128" value={password} />
 				</div>
-				<div>
+				<div style="overflow:hidden">
 					<div class="_float-right -link" id="dialog-login-forgot" onclick={e => { 
 						location.href = "#user-reset"; 
 						/*e.stopPropagation(); e.preventDefault();*/ 
 					} }>
 						Forgot Password?
 					</div>
-					<div title="LOL. This is broken. Sorry!">
+					<div title="LOL. This is broken. Sorry!" class="_hidden">
 						<input id="dialog-login-remember" onchange={this.onRememberChange} class="focusable" type="checkbox" name="remember" checked={remember} />
 						<span>Stay Logged In</span>
 					</div>

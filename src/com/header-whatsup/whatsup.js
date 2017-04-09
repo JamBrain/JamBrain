@@ -18,9 +18,15 @@ export default class HeaderWhatsup extends Component {
 //		return null;
 
 
+//		return (
+//			<div class="header-base header-whatsup outside">
+//				<span class="-title _font2">ON NOW:</span> Ludum Dare 38 <NavLink href="/events/ludum-dare/38/theme"><SVGIcon baseline small gap>suggestion</SVGIcon>Theme Suggestions</NavLink> are open
+//			</div>
+//		);
+
 		return (
 			<div class="header-base header-whatsup outside">
-				<span class="-title _font2">ON NOW:</span> Ludum Dare 38 <NavLink href="/events/ludum-dare/38/theme"><SVGIcon baseline small gap>suggestion</SVGIcon>Theme Suggestions</NavLink> are open
+				<span class="-title _font2">ON NOW:</span> Ludum Dare 38 <NavLink href="/events/ludum-dare/38/theme"><SVGIcon baseline small gap>fire</SVGIcon>Theme Slaughter</NavLink>
 			</div>
 		);
 

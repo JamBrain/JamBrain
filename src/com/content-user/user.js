@@ -1,89 +1,122 @@
 import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
-import NavLink 							from 'com/nav-link/link';
-import ButtonBase						from 'com/button-base/base';
+//import SVGIcon 							from 'com/svg-icon/icon';
+//import NavLink 							from 'com/nav-link/link';
+//import ButtonBase						from 'com/button-base/base';
 
 //import ContentSimple					from 'com/content-simple/simple';
 
-import ContentBodyMarkup				from 'com/content-body/body-markup';
+//import ContentBodyMarkup				from 'com/content-body/body-markup';
 
-import ContentFooterButtonStar			from 'com/content-footer/footer-button-star';
+//import ContentFooterButtonStar			from 'com/content-footer/footer-button-star';
+
+import ContentLoading					from 'com/content-loading/loading';
 
 import ContentCommon					from 'com/content-common/common';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonBodyAvatar			from 'com/content-common/common-body-avatar';
 import ContentCommonBodyMarkup			from 'com/content-common/common-body-markup';
 
-import $NodeStar						from '../shrub/js/node/node_star';
+import ContentCommonNav					from 'com/content-common/common-nav';
+import ButtonFollow						from 'com/content-common/common-nav-button-follow';
+
+
+import ContentCommonEdit				from 'com/content-common/common-edit';
+
+//import $NodeStar						from '../shrub/js/node/node_star';
 
 
 export default class ContentUser extends Component {
 	constructor( props ) {
 		super(props);
 		
-//		this.state = {
-//			'following': null,
-//			'hasClicked': null
-//		};
-//		
-//		this.onFollow = this.onFollow.bind(this);
-//		this.onUnfollow = this.onUnfollow.bind(this);
-//		this.onUnfriend = this.onUnfriend.bind(this);
+		this.state = {
+			'editing': this.isEditMode(),
+			'modified': false,
+			
+			'body': props.node.body,
+		};
+
+		this.onEdit = this.onEdit.bind(this);
+		this.onPreview = this.onPreview.bind(this);
+		this.onSave = this.onSave.bind(this);
+		this.onPublish = this.onPublish.bind(this);
+
+		this.onModifyText = this.onModifyText.bind(this);
 	}
 	
-	onFollow( e ) {
-		//console.log("Follow");
-		$NodeStar.Add(this.props.node.id)
-		.then(r => {
-			//console.log('win', r);
-			this.setState({ 'hasClicked': true, 'following': true });
-			
-			// TODO: Tell parent user has changed
-		})
-		.catch(err => {
-			this.setState({'error':err});
-		});
+	onEdit( e ) {
+		console.log('edu');
+		this.setState({'editing': true});
 	}
-	onUnfollow( e ) {
-		//console.log("Unfollow");
-		$NodeStar.Remove(this.props.node.id)
-		.then(r => {
-			//console.log('wooon', r);
-			this.setState({ 'hasClicked': true, 'following': false });
-			
-			// TODO: Tell parent user has changed
-		})
-		.catch(err => {
-			this.setState({'error':err});
-		});
+	onPreview( e ) {
+		console.log('prev');
+		this.setState({'editing': false});
 	}
-	onUnfriend( e ) {
-		//console.log("Unfriend");
-		this.onUnfollow(e);
+	onSave( e ) {
+		this.setState({'modified': false});
+	}
+	onPublish( e ) {
+		console.log( e );
+	}
+
+	onModifyText( e ) {
+		this.setState({'modified': true, 'body': e.srcElement.value});
 	}
 	
-	render( props, {hasClicked, following, error} ) {
+	isEditMode() {
+		var extra = this.props.extra;
+		return extra && extra.length && extra[extra.length-1] == 'edit';
+	}
+
+	render( props, state ) {
+		props = Object.assign({}, props);	// Shallow copy we can change props
+		
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
-
-
+		
 		if ( node && node.slug ) {
+			//var body = state.body ? state.body : node.body;
+
 			props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 			props.class.push("content-user");
 			props.header = "USER";
 			props.headerClass = "-col-b";
-			if ( user.id && (node.id !== user.id) )
-				props.star = 1;
-			if ( user.id && (node.id === user.id) )
-				props.edit = 1;
+			
+			var NavBar = [];
+			var EditBar = null;
+			var IsPublished = false;
+
+			if ( this.isEditMode() ) {
+				// Hack
+				var IsPublished = node.type.length;//;Number.parseInt(node.published) !== 0;
+				
+				// In this case, you shouldn't be able to publish (as all users are published upon registration)
+				// published={IsPublished}
+				// onpublish={this.onPublish}
+				EditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} />;
+			}
+			else {
+//				if ( user.id && (node.id !== user.id) )
+//					props.star = 1;
+//				if ( user.id && (node.id === user.id) )
+//					props.edit = 1;
+			
+				if ( user && user.id && node.id !== user.id ) {
+					NavBar.push(<ButtonFollow node={node} user={user} />);
+				}
+			}
 				
 			return (
 				<ContentCommon {...props}>
+					{EditBar}
 					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
 					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.name} />
-					<ContentCommonBodyMarkup class="-block-if-not-minimized">{node.body}</ContentCommonBodyMarkup>
+					<ContentCommonBodyMarkup editing={state.editing} class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
+					<ContentCommonNav>
+						{NavBar}
+					</ContentCommonNav>
 					{props.children}
 				</ContentCommon>
 			);
@@ -91,10 +124,12 @@ export default class ContentUser extends Component {
 		else {
 			return <ContentLoading />;
 		}
+	}
+}
 		
 //		return <ContentSimple path={path} node={node} user={user} header="USER" headerClass="-col-b" minmax>{props.children}</ContentSimple>;
 		
-		
+/*		
 		if ( node.slug ) {
 			var dangerousParsedBody = { __html:marked.parse(node.body) };
 			var dangerousParsedTitle = { __html:titleParser.parse('**User:** `'+node.name+'`') };
@@ -244,16 +279,6 @@ export default class ContentUser extends Component {
 		);
 	}
 	// body: unmagin-top, unmargin-bottom. replace with selector
-*/	
+	
 }
-
-//marked.setOptions({
-//	highlight: function( code, lang ) {
-//		var language = Prism.languages.clike;
-//		if ( Prism.languages[lang] )
-//			language = Prism.languages[lang];
-//		return Prism.highlight( code, language );
-//	},
-//	sanitize: true,			// disable HTML //
-//	smartypants: true,		// enable automatic fancy quotes, ellipses, dashes //
-//});
+*/

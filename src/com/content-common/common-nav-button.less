@@ -1,0 +1,77 @@
+@import 'defs.less';
+
+#content .content-common-nav-button {
+	position: relative;
+	
+	display: inline-block;
+	padding: 0.5em 1em 0.5em 2em;
+	border: 1px solid @COL_N;
+	
+	line-height: 1.5rem;
+
+	& > svg {
+		position: absolute;
+		
+		top: 0;
+		bottom: 0;
+		left: 1em;
+		margin: auto;
+	}
+	& > span {
+		padding-left: 0.5em;
+	}
+
+	&:hover, 
+	&:focus {
+		background: @COL_A;
+		border: 1px solid @COL_A;
+		color: @COL_L;
+	}
+	&:active {
+		background: @COL_L;
+		border: 1px solid @COL_L;
+		color: @COL_A;
+	}
+	
+	& .if-hover-block {
+		display: none;
+	}
+	&:hover .if-hover-block,
+	&:focus .if-hover-block {
+		display: inline-block;
+	}
+
+	& .if-not-hover-block {
+		display: inline-block;
+	}
+	&:hover .if-not-hover-block,
+	&:focus .if-not-hover-block {
+		display: none;
+	}
+	
+	&.-follow {
+		&.-following {
+			background: @COL_C;
+			border: 1px solid @COL_C;
+		}
+		&.-friend {
+			background: @COL_BC;
+			border: 1px solid @COL_BC;
+		}
+		
+		&.-following,
+		&.-friend {
+			&:hover,
+			&:focus {
+				background: @COL_A;
+				border: 1px solid @COL_A;
+				color: @COL_L;
+			}
+			&:active {
+				background: @COL_L;
+				border: 1px solid @COL_L;
+				color: @COL_A;
+			}
+		}
+	}
+}
