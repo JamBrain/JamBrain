@@ -41,7 +41,7 @@ export default class ContentCommonBodyMarkup extends Component {
 		if (props.editing) {
 			return (
 				<div class={Class}>
-					<div class="-label"></div>
+					<div class="-label">{props.label}</div>
 					<textarea name="paragraph_text" rows="18" value={props.children} oninput={props.onmodify} placeholder={this.PlaceholderText} />
 				</div>
 			);
