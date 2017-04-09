@@ -46,7 +46,7 @@ export default class ContentCommonBodyBy extends Component {
 			Body.push(<span> (<NavLink class="-at-name" href={this.getURL(props.author)}>@{this.getAtName(props.author)}</NavLink>)</span>);
 		}
 		if ( props.when && props.node ) {
-			Body.push(<span class="-when">, published {this.getWhen(props.node)}</span>);
+			Body.push(<span class="-when">{props.author ? ', ' : ''}{props.label} {this.getWhen(props.node)}</span>);
 		}
 		
 		return <div class={props.class}>{Body}{props.children}</div>;
