@@ -57,6 +57,7 @@ export default class ViewContent extends Component {
 		else if ( node.type === 'user' ) {
 			let View = [];
 			let ViewType = null;
+			
 			if ( extra.length ) {
 				ViewType = extra[0];
 			}
@@ -71,24 +72,35 @@ export default class ViewContent extends Component {
 			}
 			
 			// When root edit mode is detected 
-			if ( extra.length === 1 && EditMode ) {
+			if ( extra.length && extra[0] == 'edit' ) {
 				// Do nothing
 			}
 			else {
-				View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
-					
 				if ( ViewType ) {
-					if ( ViewType === 'games' ) {
-						View = <ContentGames types={['game']} methods={['author']} node={node} user={user} path={path} extra={extra} />;
+					if ( ViewType == 'games' ) {
+						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
+						View.push(<ContentGames types={['game']} methods={['author']} node={node} user={user} path={path} extra={extra} />);
 					}
-					else if ( ViewType === 'feed' ) {
-						View = <ContentTimeline types={['post']} methods={['author']} node={node} user={user} path={path} extra={extra} />;
+					else if ( ViewType == 'articles' ) {
+						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
+						View.push(<ContentTimeline types={['page']} methods={['author']} node={node} user={user} path={path} extra={extra} />);
+					}
+					else if ( ViewType == 'feed' ) {
+						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
+						View.push(<ContentTimeline types={['post']} methods={['author']} node={node} user={user} path={path} extra={extra} />);
+					}
+					else if ( ViewType == 'post' ) {
+//						View.push(<ContentPost node={node} user={user} path={path} extra={extra.splice(1)} />);
+					}
+					else if ( ViewType == 'game' ) {
+					}
+					else if ( ViewType == 'article' ) {
 					}
 					else {
 						View.push(<Content404 />);
 					}
 				}
-				else {
+				if ( !View.length ) {
 					View.push(<Content404 />);
 				}
 			}

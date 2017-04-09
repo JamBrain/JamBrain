@@ -10,6 +10,7 @@ import { h, Component } 				from 'preact/preact';
 //import ContentFooterButtonStar			from 'com/content-footer/footer-button-star';
 
 import ContentLoading					from 'com/content-loading/loading';
+import ContentError						from 'com/content-error/error';
 
 import ContentCommon					from 'com/content-common/common';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
@@ -89,8 +90,13 @@ export default class ContentUser extends Component {
 			var IsPublished = false;
 
 			if ( this.isEditMode() ) {
+				// Check if user has permission to edit
+				if ( node.id != user.id ) {
+					return <ContentError code="401">Permission Denied</ContentError>;
+				}
+				
 				// Hack
-				var IsPublished = node.type.length;//;Number.parseInt(node.published) !== 0;
+				//var IsPublished = node.type.length;//;Number.parseInt(node.published) !== 0;
 				
 				// In this case, you shouldn't be able to publish (as all users are published upon registration)
 				// published={IsPublished}
@@ -113,7 +119,7 @@ export default class ContentUser extends Component {
 					{EditBar}
 					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
 					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.name} />
-					<ContentCommonBodyMarkup editing={state.editing} class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
+					<ContentCommonBodyMarkup editing={state.editing} label="Biography" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
 					<ContentCommonNav>
 						{NavBar}
 					</ContentCommonNav>
