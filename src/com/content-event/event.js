@@ -29,26 +29,29 @@ export default class ContentEvent extends Component {
 	
 	render( props ) {
 		var node = props.node;
+		var user = props.user;
+		var path = props.path;
+		var extra = props.extra;
 		
-		if ( node.slug ) {
-			return (
-				<ContentCommon {...props}>
-//					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
-//					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.name} />
-//					<ContentCommonBodyMarkup class="-block-if-not-minimized">{node.body}</ContentCommonBodyMarkup>
-					<ContentCommonNav>
-//						{Nav}
-					</ContentCommonNav>
-					{props.children}
-				</ContentCommon>
-			);
-		}
-		else {
-			return <ContentLoading />;
-		}
+//		if ( node.slug ) {
+//			return (
+//				<ContentCommon {...props}>
+////					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
+////					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.name} />
+////					<ContentCommonBodyMarkup class="-block-if-not-minimized">{node.body}</ContentCommonBodyMarkup>
+//					<ContentCommonNav>
+////						{Nav}
+//					</ContentCommonNav>
+//					{props.children}
+//				</ContentCommon>
+//			);
+//		}
+//		else {
+//			return <ContentLoading />;
+//		}
 
 
-/*
+
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 			
 			let ThemeMode = (node.meta['theme-mode']) ? parseInt(node.meta['theme-mode']) : 0;
@@ -130,6 +133,7 @@ export default class ContentEvent extends Component {
 				</div>
 			);
 		}
-*/
+
+
 	}
 }
