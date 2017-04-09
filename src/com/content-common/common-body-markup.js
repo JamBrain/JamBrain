@@ -24,7 +24,7 @@ export default class ContentCommonBodyMarkup extends Component {
 	}
 
 	shouldComponentUpdate( nextProps ) {
-		return shallowDiff(this.props.children, nextProps.children);
+		return shallowDiff(this.props, nextProps);
 	}
 
 	render( props ) {

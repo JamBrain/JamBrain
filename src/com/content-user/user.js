@@ -30,10 +30,10 @@ export default class ContentUser extends Component {
 		super(props);
 		
 		this.state = {
-			'editing': true,
+			'editing': this.isEditMode(),
 			'modified': false,
 			
-			'body': null,
+			'body': props.node.body,
 		};
 
 		this.onEdit = this.onEdit.bind(this);
@@ -62,6 +62,11 @@ export default class ContentUser extends Component {
 	onModifyText( e ) {
 		this.setState({'modified': true, 'body': e.srcElement.value});
 	}
+	
+	isEditMode() {
+		var extra = this.props.extra;
+		return extra && extra.length && extra[extra.length-1] == 'edit';
+	}
 
 	render( props, state ) {
 		props = Object.assign({}, props);	// Shallow copy we can change props
@@ -70,10 +75,9 @@ export default class ContentUser extends Component {
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
-		var edit = extra && extra.length && extra[extra.length-1] == 'edit';
 		
 		if ( node && node.slug ) {
-			var body = state.body ? state.body : node.body;
+			//var body = state.body ? state.body : node.body;
 
 			props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 			props.class.push("content-user");
@@ -82,21 +86,22 @@ export default class ContentUser extends Component {
 			
 			var NavBar = [];
 			var EditBar = null;
+			var IsPublished = false;
 
-			if ( edit ) {
-				if ( state.editing )
-					props.editing = 1;
-					
+			if ( this.isEditMode() ) {
 				// Hack
 				var IsPublished = node.type.length;//;Number.parseInt(node.published) !== 0;
 				
-				EditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} published={IsPublished} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} onpublish={this.onPublish} />;
+				// In this case, you shouldn't be able to publish (as all users are published upon registration)
+				// published={IsPublished}
+				// onpublish={this.onPublish}
+				EditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} />;
 			}
 			else {
 //				if ( user.id && (node.id !== user.id) )
 //					props.star = 1;
-				if ( user.id && (node.id === user.id) )
-					props.edit = 1;
+//				if ( user.id && (node.id === user.id) )
+//					props.edit = 1;
 			
 				if ( user && user.id && node.id !== user.id ) {
 					NavBar.push(<ButtonFollow node={node} user={user} />);
@@ -108,7 +113,7 @@ export default class ContentUser extends Component {
 					{EditBar}
 					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
 					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.name} />
-					<ContentCommonBodyMarkup editing={state.editing} class="-block-if-not-minimized" onmodify={this.onModifyText}>{body}</ContentCommonBodyMarkup>
+					<ContentCommonBodyMarkup editing={state.editing} class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
 					<ContentCommonNav>
 						{NavBar}
 					</ContentCommonNav>

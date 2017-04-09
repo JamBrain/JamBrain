@@ -40,13 +40,14 @@ export default class ContentCommonEdit extends Component {
 			if ( props.published ) {
 				ShowPublish = <ButtonBase><SVGIcon>publish</SVGIcon><span>Published</span></ButtonBase>;
 			}
-			else {
+			else if ( props.published === false ) {
 				ShowPublish = [
 					<ButtonBase class="-available -green" onclick={props.onpublish}><SVGIcon>publish</SVGIcon><span>Publish</span></ButtonBase>,
 //					<ButtonBase class="-available -green" onclick={onpublish}><SVGIcon>publish</SVGIcon><span>Publish Compo</span></ButtonBase>,
 //					<ButtonBase class="-available -green" onclick={onpublish2}><SVGIcon>publish</SVGIcon><span>Publish Jam</span></ButtonBase>
 				];
 			}
+			// Otherwise, published is null, so publish button is not shown
 //		}
 	
 		return (
