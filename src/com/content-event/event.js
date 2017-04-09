@@ -27,12 +27,13 @@ export default class ContentEvent extends Component {
 	componentWillUnmount() {
 	}
 	
-	render( props ) {
+	render( props, state ) {
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
-		
+		var error = state.error;
+
 //		if ( node.slug ) {
 //			return (
 //				<ContentCommon {...props}>
