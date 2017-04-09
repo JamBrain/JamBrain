@@ -34,6 +34,14 @@ export default class ContentCommonBodyBy extends Component {
 		// x minutes ago
 		return <span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span>;
 	}
+	getModified( node ) {
+		var date_pub = new Date(node.modified);
+		var date_now = new Date();
+		var pub_diff = (date_now.getTime() - date_pub.getTime());// - (date_now.getTimezoneOffset()*60);
+		
+		// x minutes ago
+		return <span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span>;
+	}
 
 	render( props ) {
 		props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
@@ -46,7 +54,10 @@ export default class ContentCommonBodyBy extends Component {
 			Body.push(<span> (<NavLink class="-at-name" href={this.getURL(props.author)}>@{this.getAtName(props.author)}</NavLink>)</span>);
 		}
 		if ( props.when && props.node ) {
-			Body.push(<span class="-when">{props.author ? ', ' : ''}{props.label} {this.getWhen(props.node)}</span>);
+			Body.push(<span class="-when">{Body.length ? ', ' : ''}{props.label} {this.getWhen(props.node)}</span>);
+		}
+		else if ( props.modified && props.node ) {
+			Body.push(<span class="-when">{Body.length ? ', ' : ''}{props.label} {this.getModified(props.node)}</span>);
 		}
 		
 		return <div class={props.class}>{Body}{props.children}</div>;
