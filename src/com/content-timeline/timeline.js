@@ -67,7 +67,7 @@ export default class ContentTimeline extends Component {
 		var extra = this.props.extra;
 		
 		if ( node.type === 'post' || node.type === 'game' ) {
-			return <ContentPost node={node} user={user} path={path} extra={extra} minmax love comments />;
+			return <ContentPost node={node} user={user} path={path} extra={extra} authored by minmax love comments />;
 		}
 		else if ( node.type === 'user' ) {
 			return <ContentUser node={node} user={user} path={path} extra={extra} minmax />;

@@ -41,8 +41,15 @@ export default class ViewContent extends Component {
 		if ( node.type === 'post' ) {
 			return (
 				<div id="content">
-					<ContentPost node={node} user={user} path={path} extra={extra} love edit />
+					<ContentPost node={node} user={user} path={path} extra={extra} authored by love edit />
 					<ContentComments node={node} user={user} path={path} extra={extra} />
+				</div>
+			);
+		}
+		else if ( node.type === 'page' ) {
+			return (
+				<div id="content">
+					<ContentPost node={node} user={user} path={path} extra={extra} updated edit />
 				</div>
 			);
 		}
@@ -90,7 +97,7 @@ export default class ViewContent extends Component {
 						View.push(<ContentTimeline types={['post']} methods={['author']} node={node} user={user} path={path} extra={extra} />);
 					}
 					else if ( ViewType == 'post' ) {
-//						View.push(<ContentPost node={node} user={user} path={path} extra={extra.splice(1)} />);
+//						View.push(<ContentPost node={node} user={user} path={path} extra={extra.splice(1)} by love edit />);
 					}
 					else if ( ViewType == 'game' ) {
 					}
