@@ -1,5 +1,7 @@
 <?php
 /// Active User Authentication
+require_once __DIR__."/../node/node.php";
+
 
 $USER = null;
 
