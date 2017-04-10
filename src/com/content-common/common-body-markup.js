@@ -66,7 +66,7 @@ export default class ContentCommonBodyMarkup extends Component {
 							ref={(input) => { this.textarea = input; }} 
 						/>
 					</div>
-					<div class="-footer">Supports <NavLink href="/markdown"><SVGIcon>markdown</SVGIcon> <strong>Markdown</strong></NavLink> and <NavLink href="//emoji.codes/"><strong>:emoji:</strong></NavLink></div>
+					<div class="-footer">Supports <NavLink blank href="/markdown"><SVGIcon>markdown</SVGIcon> <strong>Markdown</strong></NavLink> and <NavLink href="//emoji.codes/"><strong>:emoji_codes:</strong></NavLink></div>
 				</div>
 			);
 		}
