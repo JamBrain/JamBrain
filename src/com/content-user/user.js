@@ -136,7 +136,7 @@ export default class ContentUser extends Component {
 				<ContentCommon {...props}>
 					{EditBar}
 					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
-					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.name} />
+					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.slug} />
 					<ContentCommonBodyBy node={node} label="Joined" when />
 					<ContentCommonBodyMarkup editing={state.editing} label="Biography" placeholder="Share details about yourself {optional}" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
 					<ContentCommonNav>{NavBar}</ContentCommonNav>
