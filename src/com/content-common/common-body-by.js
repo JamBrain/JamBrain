@@ -19,7 +19,7 @@ export default class ContentCommonBodyBy extends Component {
 	}
 
 	getAtName( node ) {
-		return node.name;
+		return node.slug;
 	}
 
 	getURL( node ) {
