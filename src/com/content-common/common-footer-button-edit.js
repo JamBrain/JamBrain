@@ -1,21 +1,17 @@
 import { h, Component } 				from 'preact/preact';
 import SVGIcon 							from 'com/svg-icon/icon';
+import NavLink 							from 'com/nav-link/link';
 
 export default class ContentCommonFooterButtonEdit extends Component {
 	constructor( props ) {
 		super(props);
-
-		this.onEdit = this.onEdit.bind(this);
-	}
-	
-	onEdit( e ) {
 	}
 
-	render( {} ) {
+	render( props ) {
 		return (
-			<div class="content-common-footer-button -edit" onclick={this.onEdit}>
+			<NavLink href={props.path+"/edit"} class="content-common-footer-button -edit">
 				<SVGIcon>edit</SVGIcon>
-			</div>
+			</NavLink>
 		);
 	}
 }

@@ -55,12 +55,12 @@
 	}
 
 	// NOTE: Since these are all external, there's no need for the Navigation Capture code //
-	AutoEmbed.prototype.makeSmartLink = function( icon_name, full_url, part_url ) {
-		return '<span><a href="'+full_url+'" target="_blank" rel="noopener noreferrer">'+this.makeSVGIcon(icon_name,{'class':'-baseline -small'})+part_url+'</a></span>';
+	AutoEmbed.prototype.makeSmartLink = function( icon_name, full_url, domain, part_url ) {
+		return '<span class="smart-link"><a href="'+full_url+'" target="_blank" rel="noopener noreferrer">'+this.makeSVGIcon(icon_name,{'class':'-baseline -small'})+'<span class="-domain">'+domain+'</span>'+part_url+'</a></span>';
 	}
 
 	AutoEmbed.prototype.makeLocalLink = function( url ) {
-		return '<span><a href="'+url+'">'+url+'</a></span>';
+		return '<span class="smart-link"><a href="'+url+'">'+url+'</a></span>';
 	}
 		
 	AutoEmbed.prototype.hasEmbed = function( str ) {
@@ -71,35 +71,35 @@
 			}
 			else if ( url.path[0] === 'user' ) {
 				url.path.shift();
-				return this.makeSmartLink( 'youtube', str, '/'+url.path.join('/') );
+				return this.makeSmartLink( 'youtube', str, 'youtube.com', '/'+url.path.join('/') );
 			}
 			else if ( url.path[0] === 'c' ) {
 				url.path.shift();
-				return this.makeSmartLink( 'youtube', str, '/'+url.path.join('/') );
+				return this.makeSmartLink( 'youtube', str, 'youtube.com', '/'+url.path.join('/') );
 			}
 			else if ( url.path[0] !== 'watch' ) {
-				return this.makeSmartLink( 'youtube', str, '/'+url.path.join('/') );
+				return this.makeSmartLink( 'youtube', str, 'youtube.com', '/'+url.path.join('/') );
 			}
 		}
 		else if ( str.indexOf('github.com') !== -1 ) {
 			url = this.extractFromURL(str);
 //			return this.makeSmartLink( 'github', str, '/'+url.path.join('/') );
-			return this.makeSmartLink( 'github', str, ' github.com/'+url.path.join('/') );
+			return this.makeSmartLink( 'github', str, 'github.com', '/'+url.path.join('/') );
 		}
 		else if ( str.indexOf('twitch.tv') !== -1 ) {
 			url = this.extractFromURL(str);
 //			return this.makeSmartLink( 'twitch', str, '/'+url.path.join('/') );
-			return this.makeSmartLink( 'twitch', str, ' twitch.tv/'+url.path.join('/') );
+			return this.makeSmartLink( 'twitch', str, 'twitch.tv', '/'+url.path.join('/') );
 		}
 		else if ( str.indexOf('reddit.com') !== -1 ) {
 			url = this.extractFromURL(str);
 //			return this.makeSmartLink( 'reddit', str, '/'+url.path.join('/') );
-			return this.makeSmartLink( 'reddit', str, ' reddit.com/'+url.path.join('/') );
+			return this.makeSmartLink( 'reddit', str, 'reddit.com', '/'+url.path.join('/') );
 		}
 		else if ( str.indexOf('twitter.com') !== -1 ) {
 			url = this.extractFromURL(str);
 //			return this.makeSmartLink( 'twitter', str, '/'+url.path.join('/') );
-			return this.makeSmartLink( 'twitter', str, ' twitter.com/'+url.path.join('/') );
+			return this.makeSmartLink( 'twitter', str, 'twitter.com', '/'+url.path.join('/') );
 		}
 		else if ( str.indexOf(window.location.hostname) !== -1 ) {
 			url = this.extractFromURL(str);

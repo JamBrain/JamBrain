@@ -36,6 +36,10 @@ export default class NavLink extends Component {
 	}
 	
 	onClick( e ) {
+		// Bail if blanking behavior is requested
+		if ( this.props.blank )
+			return;
+		
 		// Internet Explorer 11 doesn't set the origin, so we need to extract it
 		// Cleverness: we slice at the 1st slash, but offset by length of 'https://' first, so it's after the domain
 		let origin = this.base && (this.base.origin || (this.base.href && this.base.href.slice(0, this.href.base.indexOf('/','https://'.length))));
@@ -106,6 +110,10 @@ export default class NavLink extends Component {
 //				else {
 					props.onclick = this.onClick;
 //				}
+			}
+
+			if ( props.blank ) {
+				props.target = "_blank";
 			}
 		}
 		return (
