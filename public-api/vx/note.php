@@ -1,6 +1,5 @@
 <?php
-const CONFIG_PATH = "../../src/shrub/";
-const SHRUB_PATH = "../../src/shrub/src/";
+require_once __DIR__."/../config.php";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."api.php";
