@@ -81,7 +81,7 @@ export default class ContentUser extends Component {
 	}
 
 	onModifyText( e ) {
-		this.setState({'modified': true, 'body': e.srcElement.value});
+		this.setState({'modified': true, 'body': e.target.value});
 	}
 	
 	isEditMode() {
