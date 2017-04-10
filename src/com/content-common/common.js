@@ -71,13 +71,13 @@ export default class ContentCommon extends Component {
 				
 				let Right = [];
 				if ( props['love'] )
-					Right.push(<FooterButtonLove user={user} node={node} />);
+					Right.push(<FooterButtonLove node={node} user={user} path={path}  />);
 				if ( props['comments'] )
-					Right.push(<FooterButtonComments href={path} node={node} />);
+					Right.push(<FooterButtonComments node={node} user={user} path={path} />);
 				if ( props['star'] )
-					Right.push(<FooterButtonStar user={user} node={node} />);
+					Right.push(<FooterButtonStar node={node} user={user} path={path} />);
 				if ( props['edit'] )
-					Right.push(<FooterButtonEdit user={user} node={node} />);
+					Right.push(<FooterButtonEdit node={node} user={user} path={path} />);
 
 				HasFooter = (
 					<div class={[

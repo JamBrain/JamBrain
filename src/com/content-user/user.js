@@ -107,8 +107,8 @@ export default class ContentUser extends Component {
 			else {
 //				if ( user.id && (node.id !== user.id) )
 //					props.star = 1;
-//				if ( user.id && (node.id === user.id) )
-//					props.edit = 1;
+				if ( user.id && (node.id === user.id) )
+					props.edit = 1;
 			
 				if ( user && user.id && node.id !== user.id ) {
 					NavBar.push(<ButtonFollow node={node} user={user} />);
@@ -121,10 +121,8 @@ export default class ContentUser extends Component {
 					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
 					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.name} />
 					<ContentCommonBodyBy node={node} label="Joined" when />
+					<ContentCommonNav>{NavBar}</ContentCommonNav>
 					<ContentCommonBodyMarkup editing={state.editing} label="Biography" placeholder="Share any additional details about yourself (optional)" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
-					<ContentCommonNav>
-						{NavBar}
-					</ContentCommonNav>
 					{props.children}
 				</ContentCommon>
 			);
