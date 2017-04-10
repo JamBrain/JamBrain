@@ -43,7 +43,8 @@ export function Post( _url, _data, _credentials /*true*/, _json_only /*true*/, _
 	// NOTE: Credentials default to "on" in POST, unlike GET
 	if ( _credentials !== false ) {
 		response = Object.assign(response, {
-			'credentials': 'include'
+			'credentials': 'include',
+			'mode': 'cors',
 		});
 	}	
 
