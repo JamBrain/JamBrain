@@ -24,6 +24,7 @@ import ButtonFollow						from 'com/content-common/common-nav-button-follow';
 
 import ContentCommonEdit				from 'com/content-common/common-edit';
 
+import $Node							from '../shrub/js/node/node';
 //import $NodeStar						from '../shrub/js/node/node_star';
 
 
@@ -55,7 +56,27 @@ export default class ContentUser extends Component {
 		this.setState({'editing': false});
 	}
 	onSave( e ) {
-		this.setState({'modified': false});
+		var Name = /*this.state.title ? this.state.title :*/ this.props.node.name;
+		var Body = this.state.body ? this.state.body : this.props.node.body;
+		
+		return $Node.Update(this.props.node.id, Name, Body)
+		.then(r => {
+			if ( r.status == 200 ) {
+				this.setState({ 'modified': false });
+			}
+			else {
+				if ( r.caller_id == 0 || (r.data && r.data.caller_id == 0) ) {
+					location.hash = "#savebug";
+				}
+				else {
+					this.setState({ 'error': r.status + ": " + r.error });
+				}
+			}
+		})
+		.catch(err => {
+			console.log(err);
+			this.setState({ 'error': err });
+		});
 	}
 	onPublish( e ) {
 		console.log( e );

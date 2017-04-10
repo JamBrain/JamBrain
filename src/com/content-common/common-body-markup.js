@@ -51,7 +51,7 @@ export default class ContentCommonBodyMarkup extends Component {
 
 		if (props.editing) {
 			var Height = this.textarea ? this.textarea.scrollHeight : 0;
-			var Style = {'height': Height+'px'};
+//			var Style = {'height': Height+'px'};
 			
 			return (
 				<div class={Class}>
@@ -59,7 +59,6 @@ export default class ContentCommonBodyMarkup extends Component {
 					<div class="-textarea">
 						<textarea 
 							name="paragraph_text" 
-							style={Style} 
 							value={props.children} 
 							oninput={props.onmodify} 
 							placeholder={props.placeholder} 
@@ -69,6 +68,7 @@ export default class ContentCommonBodyMarkup extends Component {
 					<div class="-footer">Supports <NavLink blank href="/markdown"><SVGIcon>markdown</SVGIcon> <strong>Markdown</strong></NavLink> and <NavLink href="//emoji.codes/"><strong>:emoji_codes:</strong></NavLink></div>
 				</div>
 			);
+//							style={Style} 
 		}
 		else {
 			Class.push("markup");

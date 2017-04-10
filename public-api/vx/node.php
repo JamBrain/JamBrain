@@ -312,36 +312,60 @@ switch ( $action ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
 			}
 			
-			// Parse POST
-			if ( isset($_POST['name']) )
-				$name = coreSanitize_String(substr($_POST['name'], 0, 96));
-			else
-				json_EmitFatalError_BadRequest("'name' not found in POST", $RESPONSE);
-				
-			if ( isset($_POST['body']) )
-				$body = coreSanitize_String(substr($_POST['body'], 0, 32768));
-			else
-				json_EmitFatalError_BadRequest("'body' not found in POST", $RESPONSE);
-
-			if ( isset($_POST['tag']) )
-				$version_tag = coreSanitize_Slug(substr($_POST['tag'], 0, 32));
-			else
-				$version_tag = "";
+			$changes = 0;
 
 			// Fetch Node			
 			$node = nodeComplete_GetById($node_id);
 			$authors = nodeList_GetAuthors($node);
 			
+			if ( !$node )
+				json_EmitFatalError_BadRequest("Problem fetching node", $RESPONSE);
+			
+			// Parse POST
+			if ( isset($_POST['name']) ) {
+				$name = coreSanitize_String(substr($_POST['name'], 0, 96));
+				if ( $name !== $node['name'] )
+					$changes++;
+			}
+			else {
+				$name = $node['name'];
+			}
+				
+			if ( isset($_POST['body']) ) {
+				$body = coreSanitize_String(substr($_POST['body'], 0, 32768));
+				if ( $body !== $node['body'] )
+					$changes++;
+			}
+			else {
+				$body = $node['body'];
+			}
+
+			if ( isset($_POST['tag']) ) {
+				$version_tag = coreSlugify_Name(substr($_POST['tag'], 0, 32));
+				if ( !empty($version_tag) )
+					$changes++;
+			}
+			else {
+				$version_tag = "";
+			}
+				
 			// If you are authorized to edit
-			if ( in_array($user_id, $authors) ) {
-				$RESPONSE['updated'] = node_Edit(
-					$node_id,
-					$node['parent'], $node['author'], 
-					$node['type'], $node['subtype'], $node['subsubtype'],
-					$node['slug'],
-					$name,
-					$body,
-					$version_tag);
+			if ( $user_id === $node_id || $user_id === $node['author'] || in_array($user_id, $authors) ) {
+				if ( $changes === 0 ) {
+					$RESPONSE['updated'] = 0;
+					$RESPONSE['message'] = "No changes";
+				}
+				else {
+					$RESPONSE['updated'] = node_Edit(
+						$node_id,
+						$node['parent'], $node['author'], 
+						$node['type'], $node['subtype'], $node['subsubtype'],
+						$node['slug'],
+						$name,
+						$body,
+						$version_tag
+					);
+				}
 			}
 			else {
 				json_EmitFatalError_Permission(null, $RESPONSE);
