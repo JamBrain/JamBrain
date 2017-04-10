@@ -34,36 +34,38 @@
 			background: @MAJOR_MUTE_D3;
 			border: 1px solid @MAJOR_MUTE;
 */
-			&:hover,
-			&:focus {
-				border: 1px solid @COL_A;
-				background: @COL_A;
-				color: @COL_L;
+			&,
+			&.-save,
+			&.-publish {
+				&:hover,
+				&:focus {
+					color: @COL_L;
+					background: @COL_A;
+					border: 1px solid @COL_A;
+				}
+				&:active {
+					color: @COL_A;
+					background: @COL_W;
+					border: 1px solid @COL_W;
+				}
 			}
-/*
-			&:active {
-				border: 1px solid @MAJOR_LIGHT;
-				background: @MAJOR_LIGHT;
-				color: @MAJOR_COLOR1;
-			}
-*/			
+			
 			&.-selected {
 				color: @COL_L;
 				background: @COL_N;
 				border: 1px solid @COL_N;
 			}
-/*		
-			&.-blue {
-				border: 1px solid @MAJOR_BLUE;
-				background: @MAJOR_BLUE;
-				color: @MAJOR_MUTE_D5;
+		
+			&.-save {
+				color: @COL_L;
+				border: 1px solid @COL_C;
+				background: @COL_C;
 			}
-			&.-green {
-				border: 1px solid @MAJOR_GREEN;
-				background: @MAJOR_GREEN;
-				color: @MAJOR_MUTE_D5;
+			&.-publish {
+				color: @COL_L;
+				border: 1px solid @COL_BC;
+				background: @COL_BC;
 			}
-*/
 		}
 	}
 

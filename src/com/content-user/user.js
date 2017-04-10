@@ -48,18 +48,16 @@ export default class ContentUser extends Component {
 	}
 	
 	onEdit( e ) {
-		console.log('edu');
 		this.setState({'editing': true});
 	}
 	onPreview( e ) {
-		console.log('prev');
 		this.setState({'editing': false});
 	}
 	onSave( e ) {
-		var Name = /*this.state.title ? this.state.title :*/ this.props.node.name;
+		//var Name = /*this.state.title ? this.state.title :*/ this.props.node.name;
 		var Body = this.state.body ? this.state.body : this.props.node.body;
 		
-		return $Node.Update(this.props.node.id, Name, Body)
+		return $Node.Update(this.props.node.id, null, Body)
 		.then(r => {
 			if ( r.status == 200 ) {
 				this.setState({ 'modified': false });
@@ -100,8 +98,6 @@ export default class ContentUser extends Component {
 		var extra = props.extra;
 		
 		if ( node && node.slug ) {
-			//var body = state.body ? state.body : node.body;
-
 			props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 			props.class.push("content-user");
 			props.header = "USER";

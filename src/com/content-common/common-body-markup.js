@@ -31,11 +31,21 @@ export default class ContentCommonBodyMarkup extends Component {
 		return shallowDiff(this.props, nextProps);
 	}
 	
-	componentDidUpdate() {
+	resizeTextarea() {
 		if ( this.textarea ) {
 			this.textarea.style.height = 0;	/* Shockingly, this is necessary. textarea wont shrink otherwise */
 			this.textarea.style.height = this.textarea.scrollHeight + 'px';
-		}
+		}		
+	}
+	
+	// After initial render
+	componentDidMount() {
+		this.resizeTextarea();
+	}
+	
+	// After every update
+	componentDidUpdate() {
+		this.resizeTextarea();
 	}
 	
 	render( props ) {
