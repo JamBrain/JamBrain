@@ -30,7 +30,7 @@ export default class ContentCommonEdit extends Component {
 		}
 
 		if ( props.modified ) {
-			ShowSave = <ButtonBase class="-available -blue" onclick={props.onsave}><SVGIcon>save</SVGIcon><span>Save</span></ButtonBase>;
+			ShowSave = <ButtonBase class="-available -save" onclick={props.onsave}><SVGIcon>save</SVGIcon><span>Save</span></ButtonBase>;
 		}
 		else {
 			ShowSave = <ButtonBase><SVGIcon>save</SVGIcon><span>Saved</span></ButtonBase>;
@@ -42,9 +42,9 @@ export default class ContentCommonEdit extends Component {
 			}
 			else if ( props.published === false ) {
 				ShowPublish = [
-					<ButtonBase class="-available -green" onclick={props.onpublish}><SVGIcon>publish</SVGIcon><span>Publish</span></ButtonBase>,
-//					<ButtonBase class="-available -green" onclick={onpublish}><SVGIcon>publish</SVGIcon><span>Publish Compo</span></ButtonBase>,
-//					<ButtonBase class="-available -green" onclick={onpublish2}><SVGIcon>publish</SVGIcon><span>Publish Jam</span></ButtonBase>
+					<ButtonBase class="-available -publish" onclick={props.onpublish}><SVGIcon>publish</SVGIcon><span>Publish</span></ButtonBase>,
+//					<ButtonBase class="-available -publish" onclick={onpublish}><SVGIcon>publish</SVGIcon><span>Publish Compo</span></ButtonBase>,
+//					<ButtonBase class="-available -publish" onclick={onpublish2}><SVGIcon>publish</SVGIcon><span>Publish Jam</span></ButtonBase>
 				];
 			}
 			// Otherwise, published is null, so publish button is not shown

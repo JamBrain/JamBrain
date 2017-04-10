@@ -102,10 +102,16 @@ export function Publish( id, event ) {
 	});
 }
 
-export function Update( id, name, body ) {
-	return Fetch.Post(API_ENDPOINT+'/vx/node/update/'+id, {
-		'name': name,
-		'body': body
-	});
+export function Update( id, name, body, tag ) {
+	var Data = {};
+	
+	if (name)
+		Data.name = name;
+	if (body)
+		Data.body = body;
+	if (tag)
+		Data.tag = tag;
+	
+	return Fetch.Post(API_ENDPOINT+'/vx/node/update/'+id, Data);
 }
 

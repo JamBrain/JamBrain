@@ -24,6 +24,7 @@ import ButtonFollow						from 'com/content-common/common-nav-button-follow';
 
 import ContentCommonEdit				from 'com/content-common/common-edit';
 
+import $Node							from '../shrub/js/node/node';
 //import $NodeStar						from '../shrub/js/node/node_star';
 
 
@@ -47,15 +48,33 @@ export default class ContentUser extends Component {
 	}
 	
 	onEdit( e ) {
-		console.log('edu');
 		this.setState({'editing': true});
 	}
 	onPreview( e ) {
-		console.log('prev');
 		this.setState({'editing': false});
 	}
 	onSave( e ) {
-		this.setState({'modified': false});
+		//var Name = /*this.state.title ? this.state.title :*/ this.props.node.name;
+		var Body = this.state.body ? this.state.body : this.props.node.body;
+		
+		return $Node.Update(this.props.node.id, null, Body)
+		.then(r => {
+			if ( r.status == 200 ) {
+				this.setState({ 'modified': false });
+			}
+			else {
+				if ( r.caller_id == 0 || (r.data && r.data.caller_id == 0) ) {
+					location.hash = "#savebug";
+				}
+				else {
+					this.setState({ 'error': r.status + ": " + r.error });
+				}
+			}
+		})
+		.catch(err => {
+			console.log(err);
+			this.setState({ 'error': err });
+		});
 	}
 	onPublish( e ) {
 		console.log( e );
@@ -79,8 +98,6 @@ export default class ContentUser extends Component {
 		var extra = props.extra;
 		
 		if ( node && node.slug ) {
-			//var body = state.body ? state.body : node.body;
-
 			props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 			props.class.push("content-user");
 			props.header = "USER";
@@ -121,8 +138,8 @@ export default class ContentUser extends Component {
 					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
 					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.name} />
 					<ContentCommonBodyBy node={node} label="Joined" when />
-					<ContentCommonNav>{NavBar}</ContentCommonNav>
 					<ContentCommonBodyMarkup editing={state.editing} label="Biography" placeholder="Share details about yourself {optional}" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
+					<ContentCommonNav>{NavBar}</ContentCommonNav>
 					{props.children}
 				</ContentCommon>
 			);
