@@ -30,7 +30,8 @@ const IFrame = (props) => {
 		}
 	}
 	
-	return <iframe {...new_props} frameborder="0" scrolling="no" allowfullscreen></iframe>;
+	return <iframe {...new_props} frameborder="0" scrolling="no" allowfullscreen />;
+//	return <div class="embed-video"><iframe {...new_props} frameborder="0" scrolling="no" allowfullscreen /></div>;
 };
 
 export function EmbedTwitch( _class, _src, _width = null, _height = null ) {
