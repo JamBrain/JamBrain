@@ -135,10 +135,7 @@ export default class ContentSimple extends Component {
 				// Hack
 				//var IsPublished = node.type.length;//;Number.parseInt(node.published) !== 0;
 				
-				// In this case, you shouldn't be able to publish (as all users are published upon registration)
-				// published={IsPublished}
-				// onpublish={this.onPublish}
-				EditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} />;
+				EditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} published={IsPublished} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} onpublish={this.onPublish} />;
 			}
 			else {
 				if ( user.id && (author.id === user.id) )
