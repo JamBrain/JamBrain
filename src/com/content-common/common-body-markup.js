@@ -2,13 +2,12 @@ import { h, Component } 				from 'preact/preact';
 import { shallowDiff }	 				from 'shallow-compare/index';
 
 import NavLink							from 'com/nav-link/link';
+import SVGIcon							from 'com/svg-icon/icon';
 
 export default class ContentCommonBodyMarkup extends Component {
 	constructor( props ) {
 		super(props);
 
-//console.log(this);console.log(input);input.style.height = (input.scrollHeight)+"px"; 
-//		
 //		this.PlaceholderText = ([
 //			"",
 ////			"Use GitHub-style markup (**bold** _italics_ ~~del~~ `code`), and emoji codes :like_this: :smile:",
@@ -26,23 +25,17 @@ export default class ContentCommonBodyMarkup extends Component {
 ////			"",
 ////			"https://www.youtube.com/watch?v=dQw4w9WgXcQ",
 //			""]).join("\n");
-
-		this.onTextChange = this.onTextChange.bind(this);
 	}
 
 	shouldComponentUpdate( nextProps ) {
 		return shallowDiff(this.props, nextProps);
 	}
 	
-	onTextChange() {
+	componentDidUpdate() {
 		if ( this.textarea ) {
 			this.textarea.style.height = 0;	/* Shockingly, this is necessary. textarea wont shrink otherwise */
 			this.textarea.style.height = this.textarea.scrollHeight + 'px';
 		}
-	}
-	
-	componentDidUpdate() {
-		this.onTextChange();
 	}
 	
 	render( props ) {
@@ -73,11 +66,9 @@ export default class ContentCommonBodyMarkup extends Component {
 							ref={(input) => { this.textarea = input; }} 
 						/>
 					</div>
-					<div class="-footer">Use <strong>**markup**</strong> <em>_styles_</em>, and <NavLink href="//emoji.codes/">:emoji:</NavLink></div>
+					<div class="-footer">Supports <NavLink href="/markdown"><SVGIcon>markdown</SVGIcon> <strong>Markdown</strong></NavLink> and <NavLink href="//emoji.codes/"><strong>:emoji:</strong></NavLink></div>
 				</div>
 			);
-
-//							onkeyup={this.onTextChange}
 		}
 		else {
 			Class.push("markup");
