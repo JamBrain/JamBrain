@@ -16,7 +16,7 @@ function userAuth_Start() {
 			userSession_Expire();
 		}
 		else {
-			$_copy = $_SESSION['LAST_ACTIVITY'];
+			$_copy = isset($_SESSION['LAST_ACTIVITY']) ? $_SESSION['LAST_ACTIVITY'] : null;
 			$_SESSION['LAST_ACTIVITY'] = time();
 			userSession_End();
 			$_SESSION['OLD_LAST_ACTIVITY'] = $_copy;
