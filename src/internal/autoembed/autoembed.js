@@ -38,10 +38,14 @@
 	}
 	
 	AutoEmbed.prototype.makeYouTube = function( video_id ) {
-		return '<iframe class="embed-16-9 embed-youtube" '+
+		return '<div class="embed-video"><iframe class="embed-youtube" '+
 			'src="https://www.youtube.com/embed/'+
 			video_id+
-			'?rel=0" frameborder="0" allowfullscreen></iframe>';
+			'?rel=0" frameborder="0" allowfullscreen></iframe></div>';
+//		return '<iframe class="embed-16-9 embed-youtube" '+
+//			'src="https://www.youtube.com/embed/'+
+//			video_id+
+//			'?rel=0" frameborder="0" allowfullscreen></iframe>';
 	}
 
 	AutoEmbed.prototype.makeSVGIcon = function( name, args ) {
