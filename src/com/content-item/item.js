@@ -131,10 +131,10 @@ export default class ContentItem extends Component {
 	}	
 	
 	onModifyTitle( e ) {
-		this.setState({ 'modified': true, 'title': e.srcElement.value });
+		this.setState({ 'modified': true, 'title': e.target.value });
 	}
 	onModifyBody( e ) {
-		this.setState({ 'modified': true, 'body': e.srcElement.value });
+		this.setState({ 'modified': true, 'body': e.target.value });
 	}
 	
 	
