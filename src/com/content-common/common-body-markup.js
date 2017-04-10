@@ -87,4 +87,5 @@ marked.setOptions({
 	},
 	sanitize: true,			// disable HTML
 	smartypants: true,		// enable automatic fancy quotes, ellipses, dashes
+	langPrefix: 'language-',
 });

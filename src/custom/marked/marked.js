@@ -800,7 +800,7 @@ Renderer.prototype.code = function(code, lang, escaped) {
   }
 
   if (!lang) {
-    return '<pre><code>'
+    return '<pre class="language-"><code>'
       + (escaped ? code : escape(code, true))
       + '\n</code></pre>';
   }
