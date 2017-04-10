@@ -28,6 +28,9 @@ export default class ContentCommonBodyBy extends Component {
 	
 	getWhen( node ) {
 		var date_pub = new Date(node.published);
+		if ( node.meta['origin-date'] ) {
+			date_pub = new Date(node.meta['origin-date']);
+		}
 		var date_now = new Date();
 		var pub_diff = (date_now.getTime() - date_pub.getTime());// - (date_now.getTimezoneOffset()*60);
 		
