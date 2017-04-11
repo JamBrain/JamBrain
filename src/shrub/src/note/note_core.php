@@ -48,3 +48,8 @@ function note_CountByNode( $ids ) {
 	
 	return null;
 }
+
+
+function note_FetchTree( $id ) {
+	
+}
