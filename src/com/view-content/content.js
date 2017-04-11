@@ -42,7 +42,7 @@ export default class ViewContent extends Component {
 			var Content = [];
 			Content.push(<ContentPost node={node} user={user} path={path} extra={extra} authored by love />);
 			
-			if ( extra.length && extra[extra.length-1] !== 'edit' ) {
+			if ( !EditMode ) {
 				Content.push(<ContentComments node={node} user={user} path={path} extra={extra} />);
 			}
 			
