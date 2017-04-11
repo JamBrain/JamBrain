@@ -96,7 +96,7 @@ function userSession_Start() {
 	$sid_name .= $is_secure ? 'S' : '';
 	
 	// This can be removed, once we've moved entirely to PHP 7
-	session_name($sid_name);
+//	session_name($sid_name);
 //	session_set_cookie_params(
 //		2*24*60*60,			// Two days
 //		'/',
