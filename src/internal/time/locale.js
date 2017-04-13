@@ -37,8 +37,8 @@ var LocaleZoneRemaps = {
 	"Romance Standard Time":"GMT+1",
 	"Romance Daylight Time":"GMT+2",
 //	"Romance Daylight Time":"CEST",
-	"Mitteleurop‰ische Zeit":"MEZ",
-	"Mitteleurop‰ische Sommerzeit":"MESZ",
+	"Mitteleurop√§ische Zeit":"MEZ",
+	"Mitteleurop√§ische Sommerzeit":"MESZ",
 }
 
 // Some countries have different interpretations
