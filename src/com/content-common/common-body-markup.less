@@ -49,22 +49,24 @@
     /* Tables */
 
     table{
-        border: 1px solid #bbb;
+        border: 1px solid @COL_NLLL;
         margin: 2% 0;
         border-collapse: collapse;
     }
 
     th, td {
         vertical-align: center;
-        border: 1px solid #ccc;
+        border: 1px solid @COL_NLLL;
         padding: 0.5em;
     }
 
-    tr:nth-child(even) {
-        background-color: #eee
-    }
+    tbody{
+        tr:nth-child(even) {
+            background-color: @COL_NLLLL;
+        }
 
-    tr:nth-child(even) {
-        background-color: #ddd;
+        tr:nth-child(odd) {
+            background-color: inherit;
+        }
     }
 }
