@@ -45,4 +45,28 @@
 	& pre code {
 		font-size: 0.75em;
 	}
+
+    /* Tables */
+
+    table{
+        border: 1px solid @COL_NLLL;
+        margin: 2% 0;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        vertical-align: center;
+        border: 1px solid @COL_NLLL;
+        padding: 0.5em;
+    }
+
+    tbody{
+        tr:nth-child(even) {
+            background-color: @COL_NLLLL;
+        }
+
+        tr:nth-child(odd) {
+            background-color: inherit;
+        }
+    }
 }
