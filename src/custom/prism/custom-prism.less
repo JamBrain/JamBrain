@@ -1,0 +1,158 @@
+@import "../public-ludumdare.com/defs.less";
+
+
+// Grayscale colors
+@base03: @COL_NLLLL;
+@base02: @COL_NLLL;
+@base01: @COL_NLL;
+@base00: @COL_NL;
+
+@base:@COL_N;
+
+@base0: @COL_ND;
+@base1: @COL_NDD;
+@base2: @COL_NDDD;
+@base3: @COL_NDDDD;
+
+// highlight colors
+@yellow: @COL_B;
+@orange: @COL_AB;
+@red: @COL_A;
+@magenta: @COL_CA;
+@violet: @COL_CAM;
+@blue: @COL_CM;
+@cyan: @COL_C;
+@green: @COL_BC;
+
+// only target stuff within a markup block
+.markup{
+
+
+	pre {
+        color: @base01;
+		background-color: @base2;
+
+        padding: 0.5em;
+        border-radius: 0.5em;
+        overflow: auto;
+
+		font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+
+        line-height: 1.1;
+        tab-size: 4;
+        text-align: left;
+		white-space: pre;
+		word-spacing: normal;
+		word-break: normal;
+		word-wrap: normal;
+        hyphens: none;
+	}
+
+/*    // not sure if these selectors are actually working
+	pre code[class*="language-"],
+	pre[class*="language-"] {
+		color: @base01;
+		font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+		text-align: left;
+		white-space: pre;
+		word-spacing: normal;
+		word-break: normal;
+		word-wrap: normal;
+
+		line-height: 1.1;
+
+		-moz-tab-size: 4;
+		-o-tab-size: 4;
+		tab-size: 4;
+
+		-webkit-hyphens: none;
+		-moz-hyphens: none;
+		-ms-hyphens: none;
+		hyphens: none;
+	}
+
+	// Code blocks
+	pre[class*="language-"] {
+		padding: 1em;
+		margin: .5em 0;
+		overflow: auto;
+		border-radius: 0.3em;
+	}
+
+	// Inline code
+	& :not(pre) > code[class*="language-"] {
+		padding: .1em;
+		border-radius: .3em;
+		background-color: @base1;
+	}*/
+
+	.namespace{
+		opacity:0.7;
+	}
+
+	pre code {
+		.token.comment,
+		.token.prolog,
+		.token.doctype,
+		.token.cdata {
+			color: @base1;
+		}
+
+		.token.punctuation {
+			color: @base01;
+		}
+
+		.token.property,
+		.token.tag,
+		.token.boolean,
+		.token.number,
+		.token.constant,
+		.token.symbol,
+		.token.deleted {
+			color: @blue;
+		}
+
+		.token.selector,
+		.token.attr-name,
+		.token.string,
+		.token.char,
+		.token.builtin,
+		.token.url,
+		.token.inserted {
+			color: @cyan;
+		}
+
+		.token.entity {
+			color: @base00;
+			background: @base2;
+		}
+
+		.token.atrule,
+		.token.attr-value,
+		.token.keyword {
+			color: @green;
+		}
+
+		.token.function {
+			color: @yellow;
+		}
+
+		.token.regex,
+		.token.important,
+		.token.variable {
+			color: @orange;
+		}
+
+		.token.important,
+		.bold {
+			font-weight: bold;
+		}
+		.token.italic {
+			font-style: italic;
+		}
+
+		.token.entity {
+			cursor: help;
+		}
+	}
+}
