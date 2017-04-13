@@ -28,23 +28,30 @@ if ( LocaleTimeRemapTable.hasOwnProperty(navigator.language) ) {
 	time_locale = LocaleTimeRemapTable[navigator.language];
 }
 
-// Main remapping table (
+// Timezone remapping table
 var LocaleZoneRemaps = {
 	"Argentina Standard Time":"ART",
-	"W. Europe Standard Time":"CET",	// Microsoft
-	"GMT Standard Time":"BST",			// British Summer Time*
-//	"GMT Standard Time":"GMT+1",
-	"Romance Standard Time":"GMT+1",
-	"Romance Daylight Time":"GMT+2",
-//	"Romance Daylight Time":"CEST",
-	"Mitteleuropäische Zeit":"MEZ",
-	"Mitteleuropäische Sommerzeit":"MESZ",
-}
+	"GMT Standard Time":"BST"/*"GMT+1"*/,					// British Summer Time*
+	//"??":"CET"/*"GMT+1"*/,
+	"Western European Daylight Time":"CEST"/*"GMT+2"*/,		// was WEDT, but VERY uncommon
+	//"??":"CET"/*"GMT+1"*/,
+	"Western European Summer Time":"CEST"/*"GMT+2"*/,		// was WEST, but uncommon
+	"Romance Standard Time":"CET"/*"GMT+1"*/,				// was RST, but uncommon
+	"Romance Daylight Time":"CEST"/*"GMT+2"*/,				// was RDT, but uncommon
+	"Mitteleuropäische Zeit":"MEZ"/*"GMT+1"*/,
+	"Mitteleuropäische Sommerzeit":"MESZ"/*"GMT+2"*/,
 
-// Some countries have different interpretations
+	// Microsoft
+	"W. Europe Standard Time":"CET"/*"GMT+1"*/,
+}
+// References:
+// * https://gist.github.com/stemar/5556910e99e8df2fd21d - I'm not sure I trust this
+// * https://msdn.microsoft.com/en-us/library/ms912391(v=winembedded.11).aspx
+
+// Locale dependent changes 
 var LocaleCustomZoneRemaps = {
 	'en-IE': {
-		"GMT Standard Time":"IST",		// Irish Summer Time
+		"GMT Standard Time":"IST"/*"GMT+1"*/,				// Irish Standard Time
 	},
 };
 
