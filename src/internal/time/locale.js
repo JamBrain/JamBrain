@@ -21,11 +21,40 @@ var MonthOfTheYearTable = [
 var time_locale = navigator.language;
 
 // Since official time standards don't necessarily match common use, remap time locales //
-var LocaleRemapTable = {
-	'en-GB':'en-US'
+var LocaleTimeRemapTable = {
+	'en-GB':'en-US',			// 12 hour, from 24 hour
 };
-if ( LocaleRemapTable.hasOwnProperty(navigator.language) ) {
-	time_locale = LocaleRemapTable[navigator.language];
+if ( LocaleTimeRemapTable.hasOwnProperty(navigator.language) ) {
+	time_locale = LocaleTimeRemapTable[navigator.language];
+}
+
+// Main remapping table (
+var LocaleZoneRemaps = {
+	"Argentina Standard Time":"ART",
+	"W. Europe Standard Time":"CET",	// Microsoft
+	"GMT Standard Time":"BST",			// British Summer Time*
+}
+
+// Some countries have different interpretations
+var LocaleCustomZoneRemaps = {
+	'en-IE': {
+		"GMT Standard Time":"IST",
+	},
+//	'en-CA': {
+//		"EDT": "CAKE",
+//	}
+};
+
+// Overwrite master list with custom mappings
+if ( LocaleCustomZoneRemaps[navigator.language] ) {
+	LocaleZoneRemaps = Object.assign(LocaleZoneRemaps, LocaleCustomZoneRemaps[navigator.language]);
+}
+if ( navigator.languages ) {
+	navigator.languages.forEach(function(lang) {
+		if ( LocaleCustomZoneRemaps[lang] ) {
+			LocaleZoneRemaps = Object.assign(LocaleZoneRemaps, LocaleCustomZoneRemaps[lang]);
+		}
+	});
 }
 
 // I don't see this being used much, but a way to get the internal locale //
@@ -84,8 +113,9 @@ window.getLocaleMonthDay = function( date ) {
 window.getLocaleTimeZone = function( date ) {
 	// http://stackoverflow.com/a/12496442
 	date = date.toString();
-	date = date.replace("Argentina Standard Time","ART");
-	date = date.replace("W. Europe Standard Time","CET");	// Microsoft
+	for (var key in LocaleZoneRemaps) {
+		date = date.replace(key, LocaleZoneRemaps[key]);
+	}
 	var TZ = date.indexOf('(') > -1 ?
 	date.match(/\([^\)]+\)/)[0].match(/[A-Z]/g).join('') :
 	date.match(/[A-Z]{3,4}/)[0];
