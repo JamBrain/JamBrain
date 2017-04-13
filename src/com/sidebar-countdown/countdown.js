@@ -264,7 +264,7 @@ export default class SidebarCountdown extends Component {
 						</div>
 					</div>
 				</div>
-				<div id={this.class} class="-info">{props.tt} {getLocaleDay(props.date)} at <strong>{getLocaleTime(props.date)} {getLocaleTimeZone(props.date)}</strong></div>
+				<div id={this.class} class="-info" title={props.date.toString()}>{props.tt} {getLocaleDay(props.date)} at <strong>{getLocaleTime(props.date)} {getLocaleTimeZone(props.date)}</strong></div>
 			</div>
 		);
 	}
