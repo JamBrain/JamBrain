@@ -33,16 +33,19 @@ var LocaleZoneRemaps = {
 	"Argentina Standard Time":"ART",
 	"W. Europe Standard Time":"CET",	// Microsoft
 	"GMT Standard Time":"BST",			// British Summer Time*
+//	"GMT Standard Time":"GMT+1",
+	"Romance Standard Time":"GMT+1",
+	"Romance Daylight Time":"GMT+2",
+//	"Romance Daylight Time":"CEST",
+	"Mitteleuropäische Zeit":"MEZ",
+	"Mitteleuropäische Sommerzeit":"MESZ",
 }
 
 // Some countries have different interpretations
 var LocaleCustomZoneRemaps = {
 	'en-IE': {
-		"GMT Standard Time":"IST",
+		"GMT Standard Time":"IST",		// Irish Summer Time
 	},
-//	'en-CA': {
-//		"EDT": "CAKE",
-//	}
 };
 
 // Overwrite master list with custom mappings
