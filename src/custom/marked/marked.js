@@ -923,8 +923,12 @@ Renderer.prototype.link = function(href, title, text) {
     }
   }
   var HasEmbed = autoEmbed.hasEmbed(href);
+  var HasSmartLink = autoEmbed.hasSmartLink(href);
   if ( HasEmbed ) {
     return HasEmbed;
+  }
+  else if ( HasSmartLink ) {
+    return HasSmartLink;
   }
   else {
     var out = '<a href="' + href + '"';
