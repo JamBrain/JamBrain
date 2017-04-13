@@ -225,6 +225,11 @@ export default class SidebarCountdown extends Component {
 			};
 		}
 		
+		var LanguagePrefix = "["+navigator.language+"] ";
+		if ( navigator.languages ) {
+			LanguagePrefix += "["+navigator.languages.join(',')+"] ";
+		}
+		
 		var Title = null;
 		if ( props.to ) {
 			Title = <h1 class="_font2">{ props.to } <strong>{ props.tt }</strong></h1>;
@@ -264,7 +269,7 @@ export default class SidebarCountdown extends Component {
 						</div>
 					</div>
 				</div>
-				<div id={this.class} class="-info" title={props.date.toString()}>{props.tt} {getLocaleDay(props.date)} at <strong>{getLocaleTime(props.date)} {getLocaleTimeZone(props.date)}</strong></div>
+				<div id={this.class} class="-info" title={LanguagePrefix+props.date.toString()}>{props.tt} {getLocaleDay(props.date)} at <strong>{getLocaleTime(props.date)} {getLocaleTimeZone(props.date)}</strong></div>
 			</div>
 		);
 	}
