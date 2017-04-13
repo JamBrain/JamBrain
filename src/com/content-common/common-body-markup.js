@@ -49,8 +49,6 @@ export default class ContentCommonBodyMarkup extends Component {
 	}
 	
 	render( props ) {
-		// NOTE: only parses the first child
-		var Text = props.children.length ? marked.parse(props.children[0]) : "";
 		var Class = [
 			"content-common-body",
 			"-markup"
@@ -61,7 +59,6 @@ export default class ContentCommonBodyMarkup extends Component {
 
 		if (props.editing) {
 			var Height = this.textarea ? this.textarea.scrollHeight : 0;
-//			var Style = {'height': Height+'px'};
 			
 			return (
 				<div class={Class}>
@@ -78,10 +75,12 @@ export default class ContentCommonBodyMarkup extends Component {
 					<div class="-footer">Supports <NavLink blank href="/markdown"><SVGIcon>markdown</SVGIcon> <strong>Markdown</strong></NavLink> and <NavLink href="//emoji.codes/"><strong>:emoji_codes:</strong></NavLink></div>
 				</div>
 			);
-//							style={Style} 
 		}
 		else {
 			Class.push("markup");
+
+			// NOTE: only parses the first child
+			var Text = props.children.length ? marked.parse(props.children[0]) : "";
 
 			return <div class={Class} dangerouslySetInnerHTML={{__html:Text}} />;
 		}
