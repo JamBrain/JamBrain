@@ -126,10 +126,28 @@ window.getLocaleTimeZone = function( date ) {
 	for (var key in LocaleZoneRemaps) {
 		date = date.replace(key, LocaleZoneRemaps[key]);
 	}
-	var TZ = date.indexOf('(') > -1 ?
-	date.match(/\([^\)]+\)/)[0].match(/[A-Z]/g).join('') :
-	date.match(/[A-Z]{3,4}/)[0];
-	if (TZ == "GMT" && /(GMT\W*\d{4})/.test(date)) TZ = RegExp.$1;
+	var TZ, TZAll;
+	if ( date.indexOf('(') > -1 ) {
+		TZAll = date.match(/\([^\)]+\)/)[0];
+		if ( TZAll ) {
+			TZ = TZAll.match(/[A-Z]/g);
+			if ( TZ ) {
+				TZ = TZ.join('');
+			}
+		}
+		if ( !TZ ) {
+			TZ = TZAll;
+		}
+	}
+	else {
+		TZ = date.match(/[A-Z]{3,4}/)[0];
+	}
+		
+//	var TZ = date.indexOf('(') > -1 ?
+//		date.match(/\([^\)]+\)/)[0].match(/[A-Z]/g).join('') :
+//		date.match(/[A-Z]{3,4}/)[0];
+	if (TZ == "GMT" && /(GMT\W*\d{4})/.test(date)) 
+		TZ = RegExp.$1;
 	return TZ;
 }
 
