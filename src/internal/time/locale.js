@@ -32,6 +32,8 @@ if ( LocaleTimeRemapTable.hasOwnProperty(navigator.language) ) {
 var LocaleZoneRemaps = {
 	"Argentina Standard Time":"ART",
 	"GMT Standard Time":"BST"/*"GMT+1"*/,					// British Summer Time*
+	"Central Europe Daylight Time":"CEST"/*"GMT+2"*/,		// was CEDT
+	"Central European Daylight Time":"CEST"/*"GMT+2"*/,		// was CEDT
 	//"??":"CET"/*"GMT+1"*/,
 	"Western European Daylight Time":"CEST"/*"GMT+2"*/,		// was WEDT, but VERY uncommon
 	//"??":"CET"/*"GMT+1"*/,
