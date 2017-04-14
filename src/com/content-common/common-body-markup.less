@@ -41,14 +41,23 @@
 	/* Inline Code */
 	& code {
 	}
+	
+	pre{
+		display:block;
+		width: 100%;
+		overflow:auto;
+		box-sizing: border-box;
+	}
+
 	/* Code Blocks */
-	& pre code {
-		font-size: 0.75em;
+	pre code {
+		width: 100%;
+		box-sizing: border-box;
 	}
 
     /* Tables */
 
-    table{
+    table {
         border: 1px solid @COL_NLLL;
         margin: 2% 0;
         border-collapse: collapse;
