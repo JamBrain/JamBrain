@@ -26,7 +26,7 @@ export default class HeaderWhatsup extends Component {
 
 		return (
 			<div class="header-base header-whatsup outside">
-				<span class="-title _font2">ON NOW:</span> Ludum Dare 38 <NavLink href="/events/ludum-dare/38/theme"><SVGIcon baseline small gap>fire</SVGIcon>Theme Slaughter</NavLink>
+				<span class="-title _font2">ON NOW:</span> Ludum Dare 38 <NavLink href="/events/ludum-dare/38"><SVGIcon baseline small gap>fire</SVGIcon>Theme Slaughter</NavLink>
 			</div>
 		);
 
