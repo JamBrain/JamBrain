@@ -128,7 +128,7 @@ export default class ContentSimple extends Component {
 
 			if ( this.isEditMode() ) {
 				// Check if user has permission to edit
-				if ( author.id != user.id ) {
+				if ( node.author !== user.id ) {	// might not be authored, so we check the node.author
 					return <ContentError code="401">Permission Denied</ContentError>;
 				}
 				
