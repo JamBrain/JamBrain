@@ -1,4 +1,4 @@
-@import "../public-ludumdare.com/defs.less";
+@import "defs.less";
 
 
 // Grayscale colors
@@ -27,16 +27,28 @@
 // only target stuff within a markup block
 .markup{
 
+    // InLine Code
+    :not(pre) > code {
+        padding-left: 0.125em;
+        padding-right: 0.125em;
+        border-radius: 0.125em;
+        color: @base3;
+        background-color: @base03;
+        line-height: 1;
+        font-size: 75%;
+    }
 
+    // Code Blocks
 	pre {
-        color: @base01;
+        color: @base02;
 		background-color: @base2;
 
         padding: 0.5em;
-        border-radius: 0.5em;
+        border-radius: 0.25em;
         overflow: auto;
 
 		font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+        font-size: 75%;
 
         line-height: 1.1;
         tab-size: 4;
@@ -48,58 +60,17 @@
         hyphens: none;
 	}
 
-/*    // not sure if these selectors are actually working
-	pre code[class*="language-"],
-	pre[class*="language-"] {
-		color: @base01;
-		font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-		text-align: left;
-		white-space: pre;
-		word-spacing: normal;
-		word-break: normal;
-		word-wrap: normal;
-
-		line-height: 1.1;
-
-		-moz-tab-size: 4;
-		-o-tab-size: 4;
-		tab-size: 4;
-
-		-webkit-hyphens: none;
-		-moz-hyphens: none;
-		-ms-hyphens: none;
-		hyphens: none;
-	}
-
-	// Code blocks
-	pre[class*="language-"] {
-		padding: 1em;
-		margin: .5em 0;
-		overflow: auto;
-		border-radius: 0.3em;
-	}
-
-	// Inline code
-	& :not(pre) > code[class*="language-"] {
-		padding: .1em;
-		border-radius: .3em;
-		background-color: @base1;
-	}*/
-
-	.namespace{
-		opacity:0.7;
-	}
-
-	pre code {
+	pre > code {
 		.token.comment,
 		.token.prolog,
 		.token.doctype,
 		.token.cdata {
-			color: @base1;
+			color: @base;
 		}
 
+        .token.operator,
 		.token.punctuation {
-			color: @base01;
+			color: @base03;
 		}
 
 		.token.property,
@@ -124,7 +95,6 @@
 
 		.token.entity {
 			color: @base00;
-			background: @base2;
 		}
 
 		.token.atrule,
@@ -155,4 +125,8 @@
 			cursor: help;
 		}
 	}
+
+    .namespace{
+        opacity:0.7;
+    }
 }
