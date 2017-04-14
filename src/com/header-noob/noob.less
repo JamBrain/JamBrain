@@ -7,6 +7,14 @@
 	padding: 1em;
 	border-radius: 0.5em;
 	
+	margin: auto;
+	max-width: 1024px;
+	
+	@media (max-width: (@BASE_WIDTH - 20em)) {
+		border-radius: 0;
+		padding: 0.5em;
+	}
+	
 	background: @COL_NDDD;
 	
 	& > .-gap {
