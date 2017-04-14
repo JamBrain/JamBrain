@@ -331,7 +331,7 @@ switch ( $action ) {
 			}
 				
 			if ( isset($_POST['body']) ) {
-				$body = coreSanitize_String(substr($_POST['body'], 0, 32768));
+				$body = coreSanitize_Body(substr($_POST['body'], 0, 32768));
 				if ( $body !== $node['body'] )
 					$changes++;
 			}

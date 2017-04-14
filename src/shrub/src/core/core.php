@@ -45,6 +45,13 @@ function coreSanitize_Float( $str ) {
 	return floatval(trim($str));
 }
 
+function coreSanitize_Body( $str ) {
+	$str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');				// Remove invalid UTF-8 characters
+
+//	$str = trim($str);												// Trim whitespace
+	
+	return $str;
+}
 
 function coreEncode_String( $str ) {
 	// https://paragonie.com/blog/2015/06/preventing-xss-vulnerabilities-in-php-everything-you-need-know
