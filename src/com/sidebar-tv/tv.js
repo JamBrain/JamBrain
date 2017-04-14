@@ -62,6 +62,7 @@ export default class SidebarTV extends Component {
 					'game-jam',
 					'game-jam-art',
 					'game-jam-music',
+					'demoscene',
 				]);
 			}
 			return null;
