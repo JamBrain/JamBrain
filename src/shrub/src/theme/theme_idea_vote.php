@@ -8,7 +8,8 @@ function themeIdeaVote_GetMy( $event_id, $author_id ) {
 	return db_QueryFetchPair(
 		"SELECT idea, value 
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA_VOTE." 
-		WHERE node=? AND author=?;",
+		WHERE node=? AND author=?
+		ORDER BY id ASC;",
 		$event_id, 
 		$author_id
 	);
