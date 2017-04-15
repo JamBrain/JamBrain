@@ -129,6 +129,19 @@ if ( in_array($table, $TABLE_LIST) ) {
 			)".DB_CREATE_SUFFIX);
 		$created = true;
 		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD COLUMN node ".DB_TYPE_ID."
+					AFTER note;"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+	case 2:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD INDEX node (node);"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
 }

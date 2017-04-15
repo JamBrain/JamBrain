@@ -25,7 +25,13 @@ switch ( $action ) {
 	case 'get': //note/get
 		json_ValidateHTTPMethod('GET');
 		
-		$RESPONSE['comments'] = note_GetByNode(explode('+', json_ArgGet(0)));
+		$ids = explode('+', json_ArgGet(0));
+		
+		if ( count($ids) !== 1 ) {
+			json_EmitFatalError_BadRequest(null, $RESPONSE);
+		}
+	
+		$RESPONSE['note'] = noteComplete_GetByNode($ids[0]);
 	
 		break;
 /*

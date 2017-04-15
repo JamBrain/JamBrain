@@ -153,18 +153,21 @@ function _note_GetByNode( $ids ) {
 function note_GetByNode( $ids ) {
 	$notes = _note_GetByNode($ids);
 
-	$multi = is_array($ids);
-	if ( !$multi )
-		$ids = [$ids];
-		
 	$ret = [];
 
-	foreach( $ids as $id ) {
-		$ret[$id] = [];
+	if ( is_array($ids) ) {
+		foreach( $ids as $id ) {
+			$ret[$id] = [];
+		}
+	
+		foreach( $notes as &$note ) {
+			$ret[$note['node']][$note['id']] = $note;
+		}
 	}
-
-	foreach( $notes as &$note ) {
-		$ret[$note['node']][] = $note;
+	else {
+		foreach( $notes as &$note ) {
+			$ret[$note['id']] = $note;
+		}
 	}
 
 	return $ret;

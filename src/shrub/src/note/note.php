@@ -4,3 +4,4 @@ require_once __DIR__."/note_core.php";
 require_once __DIR__."/note_love.php";
 require_once __DIR__."/note_version.php";
 
+require_once __DIR__."/note_complete.php";

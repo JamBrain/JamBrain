@@ -1,5 +1,17 @@
 <?php
 
+function noteLove_CountByNode( $node ) {
+	$ret = db_QueryFetch(
+		"SELECT note, COUNT(note) AS count, ".DB_FIELD_DATE('MAX(timestamp)','timestamp')."
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE." 
+		WHERE $node=?
+		GROUP BY note;",
+		$node
+	);
+
+	return $ret;	
+}
+
 function noteLove_GetByNote( $notes ) {
 	$multi = is_array($notes);
 	if ( !$multi )
