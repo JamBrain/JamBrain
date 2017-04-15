@@ -12,6 +12,8 @@ function noteLove_CountByNode( $node ) {
 	return $ret;	
 }
 
+/*
+// This should actually work fine, I just want to discourage myself from using it, due to preformance
 function noteLove_GetByNote( $notes ) {
 	$multi = is_array($notes);
 	if ( !$multi )
@@ -42,9 +44,10 @@ function noteLove_GetByNote( $notes ) {
 	
 	return null;
 }
+*/
 
-/// Can only add 1 love at a time
-function noteLove_AddByNote( $note, $author ) {
+/// Can only add 1 love at a time (NOTE: has an extra argument versus the node code)
+function noteLove_AddByNote( $note, $author, $node ) {
 	if ( is_array($note) ) {
 		return null;
 	}
@@ -63,6 +66,7 @@ function noteLove_AddByNote( $note, $author ) {
 	return db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE." (
 			note,
+			node,
 			author,
 			ip,
 			timestamp
@@ -70,10 +74,12 @@ function noteLove_AddByNote( $note, $author ) {
 		VALUES ( 
 			?,
 			?,
+			?,
 			INET6_ATON(?),
 			NOW()
 		);",
 		$note,
+		$node,
 		$author,
 		$ip
 	);
@@ -105,21 +111,40 @@ function noteLove_RemoveByNote( $note, $author ) {
 	);
 }
 
-function noteLove_GetByAuthor( $author ) {
+function noteLove_GetByAuthor( $author, $node = null, $limit = 200 ) {
 	if ( is_array($author) ) {
 		return null;
 	}
 
-	if ( !$author )
-		return null;
-		
-	// TODO: Limit to 500 loves?
+	$QUERY = [];
+	$ARGS = [];
 
+	if ( $author ) {
+		$QUERY[] = 'author=?';
+		$ARGS[] = $author;
+	}
+	else {
+		return null;
+	}
+
+	if ( is_integer($node) ) {
+		$QUERY[] = 'node=?';
+		$ARGS[] = $node;
+	}
+		
+	$limit_string = '';
+	if ( is_integer($limit) ) {
+		$limit_string = 'LIMIT $limit';
+	}
+
+	$full_query = '('.implode(' AND ', $QUERY).')';
+	
 	return db_QueryFetchSingle(
 		"SELECT note
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
-		WHERE author=?;",
-		$author
+		WHERE $full_query
+		$limit_string;",
+		...$ARGS
 	);
 	
 	return null;
