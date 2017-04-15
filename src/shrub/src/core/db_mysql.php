@@ -437,7 +437,7 @@ function _db_GetPairUnsorted( &$st ) {
 	$result = $st->get_result();
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_NUM)) {
-		$ret[] = $row[1];
+		$ret[] = $row;
 	}
 	return $ret;
 }
@@ -586,7 +586,7 @@ function db_QueryFetchIntPair( $query, ...$args ) {
 /// Same as db_QueryFetchPair, but keep the order as returned by db
 /// @param [in] String $query MySQL query string
 /// @param [in] ... (optional) String arguments
-/// @retval Array[String] an array of values
+/// @retval Array[Array[String]] an array of [key, value] pairs
 function db_QueryFetchPairUnsorted( $query, ...$args ) {
 	$st = _db_Query($query, $args);
 	if ( $st ) {
