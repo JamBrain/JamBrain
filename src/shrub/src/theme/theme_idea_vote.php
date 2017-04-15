@@ -9,7 +9,7 @@ function themeIdeaVote_GetMy( $event_id, $author_id ) {
 		"SELECT idea, value 
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA_VOTE." 
 		WHERE node=? AND author=?
-		ORDER BY id DESC;",
+		ORDER BY id ASC;",
 		$event_id, 
 		$author_id
 	);
