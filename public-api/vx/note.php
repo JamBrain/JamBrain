@@ -22,6 +22,18 @@ switch ( $action ) {
 		$RESPONSE['ham'] = "true";
 			
 		break; // case 'stats': //note/stats
+	case 'get': //note/get
+		json_ValidateHTTPMethod('GET');
+		
+		$ids = explode('+', json_ArgGet(0));
+		
+		if ( count($ids) !== 1 ) {
+			json_EmitFatalError_BadRequest(null, $RESPONSE);
+		}
+	
+		$RESPONSE['note'] = noteComplete_GetByNode($ids[0]);
+	
+		break;
 /*
 	case 'count': //note/count
 		json_ValidateHTTPMethod('GET');
