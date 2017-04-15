@@ -22,6 +22,12 @@ switch ( $action ) {
 		$RESPONSE['ham'] = "true";
 			
 		break; // case 'stats': //note/stats
+	case 'get': //note/get
+		json_ValidateHTTPMethod('GET');
+		
+		$RESPONSE['comments'] = note_GetByNode(explode('+', json_ArgGet(0)));
+	
+		break;
 /*
 	case 'count': //note/count
 		json_ValidateHTTPMethod('GET');

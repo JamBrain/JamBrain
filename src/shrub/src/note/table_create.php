@@ -94,6 +94,13 @@ if ( in_array($table, $TABLE_LIST) ) {
 				ADD INDEX supernode (supernode);"
 			);
 		if (!$ok) break; $TABLE_VERSION++;
+	case 3:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD COLUMN parent ".DB_TYPE_ID."
+					AFTER id;"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 
 	table_Exit($table);
