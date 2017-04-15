@@ -18,6 +18,7 @@ function note_IsNotePublicByNode( $node ) {
 	return in_array($node['type'], NODE_TYPES_WITH_PUBLIC_NOTES);
 }
 
+// Can be used to detect if the comments on a node have changed
 function note_CountByNode( $ids ) {
 	$multi = is_array($ids);
 	if ( !$multi )
@@ -34,7 +35,7 @@ function note_CountByNode( $ids ) {
 		$ids_string = implode(',', $ids);
 
 		$ret = db_QueryFetch(
-			"SELECT node, COUNT(node) AS count, ".DB_FIELD_DATE('MAX(created)','timestamp')."
+			"SELECT node, COUNT(node) AS count, ".DB_FIELD_DATE('MAX(modified)','timestamp')."
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE." 
 			WHERE node IN ($ids_string)
 			GROUP BY node".($multi?';':' LIMIT 1;')
@@ -168,3 +169,10 @@ function note_GetByNode( $ids ) {
 
 	return $ret;
 }
+
+
+
+function note_AddByNode( $parent, $node, $supernode, $author, $body ) {
+	
+}
+
