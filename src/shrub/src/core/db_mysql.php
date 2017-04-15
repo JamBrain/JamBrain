@@ -432,6 +432,15 @@ function _db_GetIntPair( &$st ) {
 	}
 	return $ret;
 }
+/// Same as _db_GetPair, but keep the order as returned by db
+function _db_GetPairUnsorted( &$st ) {
+	$result = $st->get_result();
+	$ret = [];
+	while ($row = $result->fetch_array(MYSQLI_NUM)) {
+		$ret[] = $row[1];
+	}
+	return $ret;
+}
 /// @}
 
 /// @endcond
@@ -569,6 +578,19 @@ function db_QueryFetchIntPair( $query, ...$args ) {
 	$st = _db_Query($query, $args);
 	if ( $st ) {
 		$ret = _db_GetIntPair($st);
+		$st->close();
+		return $ret;
+	}
+	return null;
+}
+/// Same as db_QueryFetchPair, but keep the order as returned by db
+/// @param [in] String $query MySQL query string
+/// @param [in] ... (optional) String arguments
+/// @retval Array[String] an array of values
+function db_QueryFetchPairUnsorted( $query, ...$args ) {
+	$st = _db_Query($query, $args);
+	if ( $st ) {
+		$ret = _db_GetPairUnsorted($st);
 		$st->close();
 		return $ret;
 	}

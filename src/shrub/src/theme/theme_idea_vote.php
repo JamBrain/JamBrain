@@ -5,11 +5,11 @@ function themeIdeaVote_GetIdeas( $event_id, $threshold = null ) {
 }
 
 function themeIdeaVote_GetMy( $event_id, $author_id ) {
-	return db_QueryFetchPair(
+	return db_QueryFetchPairUnsorted(
 		"SELECT idea, value 
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA_VOTE." 
 		WHERE node=? AND author=?
-		ORDER BY timestamp DESC;",
+		ORDER BY id DESC;",
 		$event_id, 
 		$author_id
 	);
