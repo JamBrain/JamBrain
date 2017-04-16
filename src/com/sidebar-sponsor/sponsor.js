@@ -11,7 +11,7 @@ export default class ViewSidebar extends Component {
 
 	render( {}, {} ) {
 		/* If event is active, and it's sponsored */
-		if ( true ) {
+		if ( false ) {
 			return (
 				<div class="sidebar-base sidebar-shortlist sidebar-sponsor _hidden">
 					<div class="-title _font2"><SVGIcon baseline>trophy</SVGIcon> <span class="-text">Sponsored by</span></div>
