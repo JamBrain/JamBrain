@@ -5,7 +5,7 @@ function themeIdeaVote_GetIdeas( $event_id, $threshold = null ) {
 }
 
 function themeIdeaVote_GetMy( $event_id, $author_id ) {
-	$pairs = db_QueryFetchPairUnsorted(
+	return db_QueryFetch(
 		"SELECT idea, value 
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA_VOTE." 
 		WHERE node=? AND author=?
@@ -13,11 +13,6 @@ function themeIdeaVote_GetMy( $event_id, $author_id ) {
 		$event_id, 
 		$author_id
 	);
-	$ret = [];
-	foreach ($pairs as $pair){
-		$ret[] = $pairs[1];
-	}
-	return ret;
 }
 
 function themeIdeaVote_Add( $event_id, $idea_id, $author_id, $value ) {
