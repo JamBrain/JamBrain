@@ -11,13 +11,43 @@ import SVGIcon 							from 'com/svg-icon/icon';
 //import ContentFooterButtonLove			from 'com/content-footer/footer-button-love';
 import ContentFooterButtonComments		from 'com/content-footer/footer-button-comments';
 
-//import $Node							from '../../shrub/js/node/node';
-//
+import $Note							from '../../shrub/js/note/note';
 
 export default class ContentComments extends Component {
 	constructor( props ) {
 		super(props);
+		
+		this.state = {
+			'comments': null,
+		};
+		
+		this.getComments(props.node);
 	}
+	
+//	componentWillMount() {
+//		this.getComments(props.node);
+//	}
+	
+	getComments( node ) {
+		// Clear the Comments
+//		this.setState({ 'comments': null });
+
+		// Lookup the author
+		$Note.Get( node.id )
+		.then(r => {
+			console.log(r);
+			
+//			if ( r.node && r.node.length ) {
+//				this.setState({ 'comments': r.node[0] });
+//			}
+//			else {
+//				this.setState({ 'error': " not found" });
+//			}
+		})
+		.catch(err => {
+			this.setState({ 'error': err });
+		});
+	}	
 	
 	render( props, {} ) {
 		var node = props.node;
