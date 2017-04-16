@@ -79,12 +79,20 @@ export default class ContentComments extends Component {
 			var ShowEdit = null;
 			if ( comment.author == this.props.user )
 				ShowEdit = <div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>;
+				
+			var Name = author.name;
+			if ( author.meta['real-name'] )
+				Name = author.meta['real-name'];
+				
+			var Avatar = "///other/dummy/user64.png";
+			if ( author.meta['avatar'] )
+				Avatar = author.meta['avatar'];
 			
 			return (
 				<div class={"-item -comment -indent-"+indent}>
-					<div class="-avatar"><IMG2 src={"///other/dummy/user64.png"} /></div>
+					<div class="-avatar"><IMG2 src={Avatar} /></div>
 					<div class="-body">
-						<div class="-title"><span class="-author">{author.name}</span> (<span class="-atname">{"@"+author.slug}</span>)</div>
+						<div class="-title"><span class="-author">{Name}</span> (<NavLink class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</NavLink>)</div>
 						<div class="-text">{comment.body}</div>
 						<div class="-nav">
 							<div class="-love"><SVGIcon>heart</SVGIcon> {comment.love}</div>
