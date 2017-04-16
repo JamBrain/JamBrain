@@ -82,7 +82,6 @@ export default class ContentComments extends Component {
 			}
 		}
 		
-		console.log('tree', tree);
 		this.setState({'tree': tree});
 
 //		return tree;
@@ -123,8 +122,6 @@ export default class ContentComments extends Component {
 			// Remove Duplicates
 			Authors = Authors.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
 			
-			console.log(Authors);
-			
 			// Fetch authors
 	
 			$Node.GetKeyed( Authors )
@@ -143,6 +140,10 @@ export default class ContentComments extends Component {
 			var ShowEdit = null;
 			if ( comment.author == this.props.user )
 				ShowEdit = <div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>;
+			
+			var ShowReply = null;
+			if ( this.props.user && this.props.user.id )
+				ShowReply = <div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>;
 				
 			var Name = author.name;
 			if ( author.meta['real-name'] )
@@ -160,7 +161,7 @@ export default class ContentComments extends Component {
 						<ContentCommentsMarkup class="-text">{comment.body}</ContentCommentsMarkup>
 						<div class="-nav">
 							<div class="-love"><SVGIcon>heart</SVGIcon> {comment.love}</div>
-							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
+							{ShowReply}
 							{ShowEdit}
 						</div>
 					</div>
@@ -178,10 +179,8 @@ export default class ContentComments extends Component {
 
 	renderComments( tree, indent = 0 ) {
 		var ret = [];
-		console.log('treoooo',tree);
 
 		for ( var item in tree ) {
-			console.log('e',item);
 			ret.push(this.renderComment(tree[item].node, indent));
 
 			if ( tree[item].child ) {
