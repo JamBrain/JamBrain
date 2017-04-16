@@ -17,5 +17,6 @@ function noteComplete_GetByNode( $node ) {
 		}
 	}
 	
-	return $notes;
+	// it's a shame to do this, but this is how I need the data client side :(
+	return array_values($notes);
 }
