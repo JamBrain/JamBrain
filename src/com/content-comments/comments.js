@@ -49,7 +49,7 @@ export default class ContentComments extends Component {
 				this.buildTree();
 			}
 			else {
-				this.setState({ 'comment': [] });
+				this.setState({ 'comment': [], 'tree': {}, 'authors': [] });
 			}
 		})
 		.catch(err => {
@@ -217,8 +217,14 @@ export default class ContentComments extends Component {
 			FooterItems.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
 			
 		var ShowComments = <NavSpinner />;
-		if ( comment && tree && authors )
-			ShowComments = this.renderComments(tree);
+		if ( comment && tree && authors ) {
+			if ( comment.length )
+				ShowComments = this.renderComments(tree);
+			else
+				ShowComments = <div class={"-item -comment -indent-0"}><div class="-nothing">no comments</div></div>;
+		}
+			
+		console.log(comment, tree, authors);
 		
 		return (
 			<div class={['content-base','content-comments',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
