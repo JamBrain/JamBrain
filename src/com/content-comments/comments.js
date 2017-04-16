@@ -32,12 +32,12 @@ export default class ContentComments extends Component {
 //	}
 	
 	getComments( node ) {
-		console.log('gettttt');
 		$Note.Get( node.id )
 		.then(r => {
-			console.log('gottt',r);
 			if ( r.note && r.note.length ) {
 				this.setState({ 'comment': r.note });
+				
+				this.getAuthors();
 			}
 			else {
 				this.setState({ 'comment': [] });
@@ -49,45 +49,59 @@ export default class ContentComments extends Component {
 	}
 	
 	getAuthors() {
-		// Extract a list of all authors from comments
-		
-		// Fetch authors
-
-//		$Node.Get( node.id )
-//		.then(r => {
-//			if ( r.note && r.note.length ) {
-//				this.setState({ 'comment': r.note });
-//			}
-//			else {
-//				this.setState({ 'comment': [] });
-//			}
-//		})
-//		.catch(err => {
-//			this.setState({ 'error': err });
-//		});
+		if ( this.state.comment && this.state.comment.length ) {
+			var Authors = [];
+			// Extract a list of all authors from comments
+			for ( var idx = 0; idx < this.state.comment.length; idx++ ) {
+				Authors.push(this.state.comment[idx].author);
+			}
+			// http://stackoverflow.com/a/23282067/5678759
+			// Remove Duplicates
+			Authors = Authors.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+			
+			console.log(Authors);
+			
+			// Fetch authors
+	
+			$Node.GetKeyed( Authors )
+			.then(r => {
+				this.setState({ 'authors': r.node });
+			})
+			.catch(err => {
+				this.setState({ 'error': err });
+			});
+		}
 	}
 	
 	renderComment( comment, indent = 0 ) {
-		//var author = this.state.authors[comment.author];
-		
-		var ShowEdit = null;
-		if ( comment.author == this.props.user )
-			ShowEdit = <div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>;
-		
-		return (
-			<div class={"-item -comment -indent-"+indent}>
-				<div class="-avatar"><IMG2 src={"///other/dummy/user64.png"} /></div>
-				<div class="-body">
-					<div class="-title"><span class="-author">{"author.name"}</span> (<span class="-atname">{"@"+"author.slug"}</span>)</div>
-					<div class="-text">{comment.body}</div>
-					<div class="-nav">
-						<div class="-love"><SVGIcon>heart</SVGIcon> {comment.love}</div>
-						<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
-						{ShowEdit}
+		var author = this.state.authors[comment.author];
+		if ( author ) {
+			var ShowEdit = null;
+			if ( comment.author == this.props.user )
+				ShowEdit = <div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>;
+			
+			return (
+				<div class={"-item -comment -indent-"+indent}>
+					<div class="-avatar"><IMG2 src={"///other/dummy/user64.png"} /></div>
+					<div class="-body">
+						<div class="-title"><span class="-author">{author.name}</span> (<span class="-atname">{"@"+author.slug}</span>)</div>
+						<div class="-text">{comment.body}</div>
+						<div class="-nav">
+							<div class="-love"><SVGIcon>heart</SVGIcon> {comment.love}</div>
+							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
+							{ShowEdit}
+						</div>
 					</div>
 				</div>
-			</div>
-		);
+			);
+		}
+		else {
+			return (
+				<div class={"-item -comment -indent-"+indent}>
+					<div class="-body">There was a problem with this node</div>
+				</div>
+			);
+		}
 	}
 
 	renderComments() {
@@ -101,7 +115,7 @@ export default class ContentComments extends Component {
 		return ret;
 	}
 	
-	render( props, {comment} ) {
+	render( props, {comment, authors} ) {
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
@@ -112,7 +126,7 @@ export default class ContentComments extends Component {
 			FooterItems.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
 			
 		var ShowComments = <NavSpinner />;
-		if ( comment )
+		if ( comment, authors )
 			ShowComments = this.renderComments();
 		
 		return (
