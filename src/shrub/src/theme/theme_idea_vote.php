@@ -50,6 +50,13 @@ function themeIdeaVote_RemoveById( $id ) {
 	);
 }
 
+function themeIdeaVote_GetVotesForIdea( $idea ) {
+	return db_QueryFetchSingle(
+		"SELECT value FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA_VOTE." 
+		WHERE idea=?",
+		$idea
+	);	
+}
 
 // How to get Theme Slaughter theme scores (using a basic SUM), out as a CSV
 
