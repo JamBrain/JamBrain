@@ -13,36 +13,28 @@ export function Get( node ) {
 }
 
 
-export function Add( id, node_type, node_subtype, node_subsubtype ) {
-/*	var args = [];
-
-	args.push(id);
-
-	if ( node_type ) {
-		args.push(node_type);
-	}
-	if ( node_subtype ) {
-		args.push(node_subtype);
-	}	
-	if ( node_subsubtype ) {
-		args.push(node_subsubtype);
-	}	
+export function Add( parent, node, body, tag ) {
+	var Data = {};
 	
-	return Fetch.Post(API_ENDPOINT+'/vx/note/add/'+args.join('/'), {});
-*/
+	if (parent)
+		Data.parent = parent;
+	if (body)
+		Data.body = body;
+	if (tag)
+		Data.tag = tag;
+	
+	return Fetch.Post(API_ENDPOINT+'/vx/note/add/'+node, Data);
 }
 
-export function Update( id, name, body, tag ) {
-/*	var Data = {};
+export function Update( id, node, body, tag ) {
+	var Data = {};
 	
-	if (name)
-		Data.name = name;
+	if (node)
+		Data.node = node;
 	if (body)
 		Data.body = body;
 	if (tag)
 		Data.tag = tag;
 	
 	return Fetch.Post(API_ENDPOINT+'/vx/note/update/'+id, Data);
-*/
 }
-

@@ -4,6 +4,7 @@ import { h, Component } 				from 'preact/preact';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
+import IMG2 							from 'com/img2/img2';
 
 //import ContentBody						from 'com/content-body/body';
 //import ContentBodyMarkup				from 'com/content-body/body-markup';
@@ -12,13 +13,15 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import ContentFooterButtonComments		from 'com/content-footer/footer-button-comments';
 
 import $Note							from '../../shrub/js/note/note';
+import $Node							from '../../shrub/js/node/node';
 
 export default class ContentComments extends Component {
 	constructor( props ) {
 		super(props);
 		
 		this.state = {
-			'comments': null,
+			'comment': null,
+			'authors': null
 		};
 		
 		this.getComments(props.node);
@@ -29,27 +32,76 @@ export default class ContentComments extends Component {
 //	}
 	
 	getComments( node ) {
-		// Clear the Comments
-//		this.setState({ 'comments': null });
-
-		// Lookup the author
+		console.log('gettttt');
 		$Note.Get( node.id )
 		.then(r => {
-			console.log(r);
-			
-//			if ( r.node && r.node.length ) {
-//				this.setState({ 'comments': r.node[0] });
-//			}
-//			else {
-//				this.setState({ 'error': " not found" });
-//			}
+			console.log('gottt',r);
+			if ( r.note && r.note.length ) {
+				this.setState({ 'comment': r.note });
+			}
+			else {
+				this.setState({ 'comment': [] });
+			}
 		})
 		.catch(err => {
 			this.setState({ 'error': err });
 		});
-	}	
+	}
 	
-	render( props, {} ) {
+	getAuthors() {
+		// Extract a list of all authors from comments
+		
+		// Fetch authors
+
+//		$Node.Get( node.id )
+//		.then(r => {
+//			if ( r.note && r.note.length ) {
+//				this.setState({ 'comment': r.note });
+//			}
+//			else {
+//				this.setState({ 'comment': [] });
+//			}
+//		})
+//		.catch(err => {
+//			this.setState({ 'error': err });
+//		});
+	}
+	
+	renderComment( comment, indent = 0 ) {
+		//var author = this.state.authors[comment.author];
+		
+		var ShowEdit = null;
+		if ( comment.author == this.props.user )
+			ShowEdit = <div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>;
+		
+		return (
+			<div class={"-item -comment -indent-"+indent}>
+				<div class="-avatar"><IMG2 src={"///other/dummy/user64.png"} /></div>
+				<div class="-body">
+					<div class="-title"><span class="-author">{"author.name"}</span> (<span class="-atname">{"@"+"author.slug"}</span>)</div>
+					<div class="-text">{comment.body}</div>
+					<div class="-nav">
+						<div class="-love"><SVGIcon>heart</SVGIcon> {comment.love}</div>
+						<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
+						{ShowEdit}
+					</div>
+				</div>
+			</div>
+		);
+	}
+
+	renderComments() {
+		var ret = [];
+		
+		// wrong
+		for ( var idx = 0; idx < this.state.comment.length; idx++ ) {
+			ret.push(this.renderComment(this.state.comment[idx]));
+		}
+		
+		return ret;
+	}
+	
+	render( props, {comment} ) {
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
@@ -58,60 +110,15 @@ export default class ContentComments extends Component {
 		var FooterItems = [];
 		if ( !props['no_comments'] )
 			FooterItems.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
+			
+		var ShowComments = <NavSpinner />;
+		if ( comment )
+			ShowComments = this.renderComments();
 		
 		return (
 			<div class={['content-base','content-comments',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
 				<div class="-headline">COMMENTS</div>
-				<div class="-item -comment -indent-0">
-					<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
-					<div class="-body">
-						<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
-						<div class="-text">{"This is a sample comment. Sorry, you can't actually make comments yet."}</div>
-						<div class="-nav">
-							<div class="-love"><SVGIcon>heart</SVGIcon> 1</div>
-							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
-							<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
-						</div>
-					</div>
-				</div>
-				<div class="-indent">
-					<div class="-item -comment -indent-1">
-						<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
-						<div class="-body">
-							<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
-							<div class="-text">{"Wow, this is a sample reply to that comment"}</div>
-							<div class="-nav">
-								<div class="-love"><SVGIcon>heart</SVGIcon> 0</div>
-								<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
-								<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
-							</div>
-						</div>
-					</div>
-					<div class="-item -comment -indent-1">
-						<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
-						<div class="-body">
-							<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
-							<div class="-text">{"Double wow! This is another reply."}<br /><br />{"Amazing!"}</div>
-							<div class="-nav">
-								<div class="-love"><SVGIcon>heart</SVGIcon> 0</div>
-								<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
-								<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="-item -comment -indent-0">
-					<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
-					<div class="-body">
-						<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
-						<div class="-text">{"I was late to the party"}</div>
-						<div class="-nav">
-							<div class="-love"><SVGIcon>heart</SVGIcon> 0</div>
-							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
-							<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
-						</div>
-					</div>
-				</div>
+				{ShowComments}
 				<div class="content-footer content-footer-common -footer">
 					<div class="-left">
 					</div>
@@ -124,3 +131,54 @@ export default class ContentComments extends Component {
 	}
 }
 
+
+//				<div class="-item -comment -indent-0">
+//					<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
+//					<div class="-body">
+//						<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
+//						<div class="-text">{"This is a sample comment. Sorry, you can't actually make comments yet."}</div>
+//						<div class="-nav">
+//							<div class="-love"><SVGIcon>heart</SVGIcon> 1</div>
+//							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
+//							<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
+//						</div>
+//					</div>
+//				</div>
+//				<div class="-indent">
+//					<div class="-item -comment -indent-1">
+//						<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
+//						<div class="-body">
+//							<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
+//							<div class="-text">{"Wow, this is a sample reply to that comment"}</div>
+//							<div class="-nav">
+//								<div class="-love"><SVGIcon>heart</SVGIcon> 0</div>
+//								<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
+//								<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
+//							</div>
+//						</div>
+//					</div>
+//					<div class="-item -comment -indent-1">
+//						<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
+//						<div class="-body">
+//							<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
+//							<div class="-text">{"Double wow! This is another reply."}<br /><br />{"Amazing!"}</div>
+//							<div class="-nav">
+//								<div class="-love"><SVGIcon>heart</SVGIcon> 0</div>
+//								<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
+//								<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
+//							</div>
+//						</div>
+//					</div>
+//				</div>
+//				<div class="-item -comment -indent-0">
+//					<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
+//					<div class="-body">
+//						<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
+//						<div class="-text">{"I was late to the party"}</div>
+//						<div class="-nav">
+//							<div class="-love"><SVGIcon>heart</SVGIcon> 0</div>
+//							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
+//							<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
+//						</div>
+//					</div>
+//				</div>
