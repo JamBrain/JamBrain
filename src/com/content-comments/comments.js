@@ -12,6 +12,8 @@ import IMG2 							from 'com/img2/img2';
 //import ContentFooterButtonLove			from 'com/content-footer/footer-button-love';
 import ContentFooterButtonComments		from 'com/content-footer/footer-button-comments';
 
+import ContentCommentsMarkup			from 'comments-markup';
+
 import $Note							from '../../shrub/js/note/note';
 import $Node							from '../../shrub/js/node/node';
 
@@ -21,10 +23,13 @@ export default class ContentComments extends Component {
 		
 		this.state = {
 			'comment': null,
-			'authors': null
+			'tree': null,
+			'authors': null,
 		};
 		
 		this.getComments(props.node);
+		
+		this.renderComments = this.renderComments.bind(this);
 	}
 	
 //	componentWillMount() {
@@ -37,7 +42,11 @@ export default class ContentComments extends Component {
 			if ( r.note && r.note.length ) {
 				this.setState({ 'comment': r.note });
 				
+				// Async first
 				this.getAuthors();
+				
+				// Sync last
+				this.buildTree();
 			}
 			else {
 				this.setState({ 'comment': [] });
@@ -46,6 +55,61 @@ export default class ContentComments extends Component {
 		.catch(err => {
 			this.setState({ 'error': err });
 		});
+	}
+	
+	buildTree() {
+		var comment = this.state.comment;
+		
+		// Only supports single level deep trees
+		var tree = {};
+		for ( var idx = 0; idx < comment.length; idx++ ) {
+			if ( comment[idx].parent === 0 ) {
+				tree[comment[idx].id] = {
+					'node': comment[idx],
+				};
+			}
+			else if ( comment[idx].parent && tree[comment[idx].parent] ) {
+				if (!tree[comment[idx].parent].child) {
+					tree[comment[idx].parent].child = {};
+				}
+				
+				tree[comment[idx].parent].child[comment[idx].id] = {
+					'node': comment[idx],
+				};
+			}
+			else {
+				console.log('[Comment] Unable to find parent for '+comment[idx].id);
+			}
+		}
+		
+		console.log('tree', tree);
+		this.setState({'tree': tree});
+
+//		return tree;
+/*
+		console.log('tree', tree);
+		//this.setState({'tree':tree});
+	
+		// Now flatten the tree
+		var flat = [];
+		for ( var parent in tree ) {
+			flat.push({
+				'id':parent,
+				'comment':tree[parent].comment,
+				'indent':0
+			});
+			// For all children
+			for ( var child in tree[parent].child ) {
+				flat.push({
+					'id':child,
+					'comment': tree[parent].child[child].comment,
+					'indent':1
+				});
+			}
+		}
+		console.log('flat', flat);
+
+		return flat;*/
 	}
 	
 	getAuthors() {
@@ -93,7 +157,7 @@ export default class ContentComments extends Component {
 					<div class="-avatar"><IMG2 src={Avatar} /></div>
 					<div class="-body">
 						<div class="-title"><span class="-author">{Name}</span> (<NavLink class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</NavLink>)</div>
-						<div class="-text">{comment.body}</div>
+						<ContentCommentsMarkup class="-text">{comment.body}</ContentCommentsMarkup>
 						<div class="-nav">
 							<div class="-love"><SVGIcon>heart</SVGIcon> {comment.love}</div>
 							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
@@ -112,18 +176,38 @@ export default class ContentComments extends Component {
 		}
 	}
 
-	renderComments() {
+	renderComments( tree, indent = 0 ) {
 		var ret = [];
-		
-		// wrong
-		for ( var idx = 0; idx < this.state.comment.length; idx++ ) {
-			ret.push(this.renderComment(this.state.comment[idx]));
+		console.log('treoooo',tree);
+
+		for ( var item in tree ) {
+			console.log('e',item);
+			ret.push(this.renderComment(tree[item].node, indent));
+
+			if ( tree[item].child ) {
+				ret.push(<div class="-indent">{this.renderComments(tree[item].child, indent+1)}</div>);
+			}
 		}
+
+//		for ( var idx = 0; idx < flat.length; idx++ ) {
+//			ret.push(this.renderComment(flat[idx].comment, flat[idx].indent));
+//		}
+		
+//		var flat = this.buildTree();
+//		console.log('oeugd',flat);
+//		for ( var idx = 0; idx < flat.length; idx++ ) {
+//			ret.push(this.renderComment(flat[idx].comment, flat[idx].indent));
+//		}
+		
+//		// wrong
+//		for ( var idx = 0; idx < this.state.comment.length; idx++ ) {
+//			ret.push(this.renderComment(this.state.comment[idx]));
+//		}
 		
 		return ret;
 	}
 	
-	render( props, {comment, authors} ) {
+	render( props, {comment, tree, authors} ) {
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
@@ -134,8 +218,8 @@ export default class ContentComments extends Component {
 			FooterItems.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
 			
 		var ShowComments = <NavSpinner />;
-		if ( comment, authors )
-			ShowComments = this.renderComments();
+		if ( comment && tree && authors )
+			ShowComments = this.renderComments(tree);
 		
 		return (
 			<div class={['content-base','content-comments',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
