@@ -204,7 +204,7 @@ export default class ContentEventList extends Component {
 		else if ( this.state.names[list] ) {
 			return [
 				<h3>{this.state.names[list]}</h3>,
-				"This round hasn't started yet. Say tuned!"
+				"This round hasn't started yet. Stay tuned!"
 			];
 		}
 		return null;
@@ -229,8 +229,13 @@ export default class ContentEventList extends Component {
 
 		// Page bodies		
 		var Body = null;
-		if ( user && user['id'] && lists && votes ) {
+		if ( user && user['id'] && lists && lists.length && votes ) {
 			Body = page ? this.renderList(page) : null;
+		}
+		else if ( lists && lists.length == 0 ) {
+			Body = [
+				"This round hasn't started yet. Stay tuned!"
+			];
 		}
 		else if ( lists ) {
 			Body = [
