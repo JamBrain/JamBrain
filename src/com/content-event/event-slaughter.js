@@ -132,7 +132,7 @@ export default class ContentEventSlaughter extends Component {
 			ret.push(
 				<div class="-recent">
 					{this.renderIcon(this.state.votes[this.state.recent[idx]])}
-					<span>{this.state.ideas[this.state.recent[idx]]}</span>
+					<span title={'Id: '+this.state.recent[idx]}>{this.state.ideas[this.state.recent[idx]]}</span>
 				</div>
 			);
 		}
