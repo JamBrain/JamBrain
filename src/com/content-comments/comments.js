@@ -223,8 +223,6 @@ export default class ContentComments extends Component {
 			else
 				ShowComments = <div class={"-item -comment -indent-0"}><div class="-nothing">no comments</div></div>;
 		}
-			
-		console.log(comment, tree, authors);
 		
 		return (
 			<div class={['content-base','content-comments',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
