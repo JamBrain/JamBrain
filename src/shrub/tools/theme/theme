@@ -112,12 +112,14 @@ else if ( $COMMAND === "score" ) {
 
 	$mins = [ -1 => null, 0 => null, 1 => null ];
 	$maxes = [ -1 => null, 0 => null, 1 => null ];
+	
+	$total_votes_count = 0;
 
-	$hack = 10;
 	foreach ( $theme_list as $key => $value ) {
 		$votes = themeIdeaVote_GetVotesForIdea($key);
 
 		$votes_count = count($votes);
+		$total_votes_count += $votes_count;
 		if ( $min_votes === null || $votes_count < $min_votes )
 			$min_votes = $votes_count;
 		if ( $max_votes === null || $votes_count > $max_votes )
@@ -150,6 +152,7 @@ else if ( $COMMAND === "score" ) {
 		}
 	}
 
+	echo "Total Votes: ".$total_votes_count."\n";
 	echo "Votes: ".$min_votes." ... ".$max_votes."\n";
 	echo "Scores: ".$min_score." ... ".$max_score."\n";
 	foreach ( [1,0,-1] as $idx ) {
