@@ -18,12 +18,13 @@ import ContentNavUser					from 'com/content-nav/nav-user';
 //import ContentNavEvent					from 'com/content-nav/nav-event';
 
 import ContentPalette					from 'com/content-palette/palette';
+import ContentFollowing					from 'com/content-following/following';
 
 export default class ViewContent extends Component {
 	constructor( props ) {
 		super(props);
 	}
-	
+
 	getContent( {node, user, path, extra} ) {
 		if ( node.name ) {
 			document.title = titleParser.parse(node.name, true);
@@ -35,17 +36,17 @@ export default class ViewContent extends Component {
 		else {
 			document.title = window.location.host;
 		}
-		
+
 		var EditMode = extra && extra.length && extra[extra.length-1] == 'edit';
 
 		if ( node.type === 'post' ) {
 			var Content = [];
 			Content.push(<ContentPost node={node} user={user} path={path} extra={extra} authored by love />);
-			
+
 			if ( !EditMode ) {
 				Content.push(<ContentComments node={node} user={user} path={path} extra={extra} />);
 			}
-			
+
 			return (
 				<div id="content">
 					{Content}
@@ -70,9 +71,10 @@ export default class ViewContent extends Component {
 		else if ( node.type === 'user' ) {
 			let View = [];
 			let ViewType = null;
-			
+
 			if ( extra.length ) {
 				ViewType = extra[0];
+                console.log(extra[0]);
 			}
 			else {
 				// Default View (i.e. URL is `/`)
@@ -83,8 +85,8 @@ export default class ViewContent extends Component {
 				else
 					ViewType = 'feed';
 			}
-			
-			// When root edit mode is detected 
+
+			// When root edit mode is detected
 			if ( extra.length && extra[0] == 'edit' ) {
 				// Do nothing
 			}
@@ -109,6 +111,10 @@ export default class ViewContent extends Component {
 					}
 					else if ( ViewType == 'article' ) {
 					}
+                    else if ( ViewType == 'following'){
+                        // return early because we dont want the full bio
+                        return (<ContentFollowing node={node} user={user} path={path} extra={extra} />);
+                    }
 					else {
 						View.push(<Content404 />);
 					}
@@ -146,7 +152,7 @@ export default class ViewContent extends Component {
 		else if ( node.type === 'root' ) {
 			var ShowNavRoot = <ContentNavRoot node={node} user={user} path={path} extra={extra} />;
 
-			// If some extra arguments were passed, do virtual children			
+			// If some extra arguments were passed, do virtual children
 			if ( extra.length ) {
 				if ( extra[0] === 'news' ) {
 					return <ContentTimeline types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;

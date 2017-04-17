@@ -1,0 +1,36 @@
+@import 'defs.less';
+
+.userbar {
+    margin: 0 auto;
+    width:100%;
+
+    box-sizing: border-box;
+    .info{
+        display: inline-block;
+        margin: 0.1em;
+
+        span {
+            padding-left: 0.2em;
+            padding-right: 0.2em;
+        }
+    }
+
+    & > .-avatar {
+        margin: -0.5em;
+        float:right;
+        cursor: pointer;
+        &:hover {
+            background: @MAJOR_COLOR1;
+        }
+        & > img {
+            display:block;
+            padding: 0.5em;
+            height: 1em;
+            width: auto;
+        }
+    }
+}
+
+.following{
+    width: 100%;
+}

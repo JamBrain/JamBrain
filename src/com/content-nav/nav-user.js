@@ -9,13 +9,14 @@ export default class ContentNavUser extends Component {
 	constructor( props ) {
 		super(props);
 	}
-	
+
 	componentDidMount() {
 	}
 
 
 	render( {node, user, path, extra}, {} ) {
-		var NewPath = '/'+ (extra ? extra.join('/') : '');
+
+        var NewPath = '/'+ (extra ? extra.join('/') : '');
 
 		var ShowMyFeed = null;
 		if ( NewPath === '/' ) {
@@ -50,7 +51,7 @@ export default class ContentNavUser extends Component {
 		if ( false ) {
 			HasFollowers = <ContentNavButton path={NewPath} icon='users' href={path+'/followers'}>Followers</ContentNavButton>;
 		}
-		
+
 		return (
 			<div class="-body">
 				<div class="content-base content-nav content-nav-root">
