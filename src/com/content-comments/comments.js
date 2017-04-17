@@ -204,6 +204,9 @@ export default class ContentComments extends Component {
 		if ( user && user['id'] && newcomment ) {
 			ShowPostNew = this.renderPostNew();
 		}
+		else {
+			ShowPostNew = <div class="-new-comment" style="padding:0"><div class={"-item -comment -indent-0"}><div class="-nothing">Sign in to post a comment</div></div></div>;
+		}
 		
 		return (
 			<div class={['content-base','content-common','content-comments',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
