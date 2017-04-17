@@ -227,14 +227,14 @@ export default class ContentEventList extends Component {
 			);
 		}
 		
-		console.log('lister',user,lists,votes);
+		//console.log('lister',user,lists,votes);
 
 		// Page bodies
 		var Body = null;
-		if ( user && user['id'] && lists && lists.length && votes ) {
+		if ( user && user['id'] && lists && lists.keys().length && votes ) {
 			Body = page ? this.renderList(page) : null;
 		}
-		else if ( lists && lists.length == 0 ) {
+		else if ( lists && lists.keys().length == 0 ) {
 			Body = [
 				"This round hasn't started yet. Stay tuned!"
 			];
