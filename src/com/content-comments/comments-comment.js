@@ -10,6 +10,8 @@ import ContentFooterButtonComments		from 'com/content-footer/footer-button-comme
 
 import ContentCommentsMarkup			from 'comments-markup';
 
+import $Note							from '../../shrub/js/note/note';
+
 export default class ContentCommentsComment extends Component {
 	constructor( props ) {
 		super(props);
@@ -90,8 +92,17 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onSave( e ) {
-		console.log('save');
-		this.setState({'modified': false, 'editing': false, 'preview': false, 'original': this.props.comment.body});
+		var comment = this.props.comment;
+		
+		$Note.Update( comment.id, comment.node, comment.body )
+		.then(r => {
+			console.log(r);
+			
+			this.setState({'modified': false, 'editing': false, 'preview': false, 'original': this.props.comment.body});
+		})
+		.catch(err => {
+			this.setState({ 'error': err });
+		});
 	}
 
 	onPublish( e ) {

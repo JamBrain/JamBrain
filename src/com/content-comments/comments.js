@@ -37,9 +37,9 @@ export default class ContentComments extends Component {
 	genComment() {
 		return {
 			'parent': 0,
-			'body': '',
-			'author': this.props.user.id,
 			'node': this.props.node.id,
+			'author': this.props.user.id,
+			'body': '',
 			'love': 0,
 		};
 	}
@@ -156,23 +156,31 @@ export default class ContentComments extends Component {
 	}
 	
 	onPublish( e ) {
+		var node = this.props.node;
 		var newcomment = this.state.newcomment;
-		var comment = Object.assign({
-				'id': 10+this.state.comments.length
-			},
-			newcomment);
+		
+		$Note.Add( newcomment.parent, newcomment.node, newcomment.body )
+		.then(r => {
+			console.log(r);
+/*			
+			var comment = Object.assign({
+					'id': 10+this.state.comments.length
+				},
+				newcomment);
+				
+			// TODO: insert properly
+			this.state.comments.push(comment);
 			
-		// TODO: insert properly
-		this.state.comments.push(comment);
-		
-		// Reset newcomment
-		newcomment.parent = 0;
-		newcomment.body = '';
-		
-		//this.setState({'comments': comments, 'tree':null});	// In theory this isn't necessary
-		this.setState({'tree': this.buildTree()});
-
-		// , 'newcomment': this.genComment()
+			// Reset newcomment
+			newcomment.parent = 0;
+			newcomment.body = '';
+			
+			this.setState({'tree': this.buildTree()});
+*/
+		})
+		.catch(err => {
+			this.setState({ 'error': err });
+		});
 	}
 	
 	render( props, {comments, tree, authors, newcomment} ) {
