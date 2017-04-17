@@ -47,9 +47,13 @@ export default class ContentCommentsComment extends Component {
 		this.setState({'preview': true});
 	}
 	
+	canSave() {
+		return this.props.comment.body.trim().length > 1;
+	}
+	
 	onModify( e ) {
 		this.props.comment.body = e.target.value;
-		this.setState({'modified': true});
+		this.setState({'modified': this.canSave()});
 	}
 
 	onCancel( e ) {
@@ -64,9 +68,11 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onPublish( e ) {
-		console.log('pub');
-		if ( this.props.onPublish )
-			this.props.onPublish(e);
+		if ( this.canSave() ) {
+			if ( this.props.onpublish ) {
+				this.props.onpublish(e);
+			}
+		}
 	}
 	
 	onEdit( e ) {
@@ -82,7 +88,7 @@ export default class ContentCommentsComment extends Component {
 		console.log('reply');
 	}
 	
-	render( {user, comment, author, indent, publish}, state ) {
+	render( {user, comment, author, indent, publish, onpublish}, state ) {
 		if ( author ) {
 			var ShowEdit = null;
 			if ( user && comment.author === user.id )
@@ -137,7 +143,7 @@ export default class ContentCommentsComment extends Component {
 				}
 				
 				if ( publish ) {
-					PreviewEdit.push(<div class="-publish" onclick={this.onPublish}><SVGIcon>publish</SVGIcon> Publish</div>);
+					PreviewEdit.push(<div class={"-publish"+(state.modified?" -modified":"")} onclick={this.onPublish}><SVGIcon>publish</SVGIcon> Publish</div>);
 				}
 				else {
 					PreviewEdit.push(<div class="-cancel" onclick={this.onCancel}><SVGIcon>cross</SVGIcon> Cancel</div>);
