@@ -6,13 +6,11 @@ import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 import IMG2 							from 'com/img2/img2';
 
-//import ContentBody						from 'com/content-body/body';
-//import ContentBodyMarkup				from 'com/content-body/body-markup';
-//
-//import ContentFooterButtonLove			from 'com/content-footer/footer-button-love';
 import ContentFooterButtonComments		from 'com/content-footer/footer-button-comments';
 
 import ContentCommentsMarkup			from 'comments-markup';
+
+import ContentCommentsComment			from 'comments-comment';
 
 import $Note							from '../../shrub/js/note/note';
 import $Node							from '../../shrub/js/node/node';
@@ -25,6 +23,8 @@ export default class ContentComments extends Component {
 			'comment': null,
 			'tree': null,
 			'authors': null,
+			
+			'newcomment': null,
 		};
 		
 		this.getComments(props.node);
@@ -35,21 +35,36 @@ export default class ContentComments extends Component {
 //	componentWillMount() {
 //		this.getComments(props.node);
 //	}
+
+	genComment( editing = true) {
+		return {
+			'body': '',
+			'author': this.props.user.id,
+			'node': this.props.node.id,
+			'parent': 0,
+			
+			'editing': editing,
+		};
+	}
 	
 	getComments( node ) {
 		$Note.Get( node.id )
 		.then(r => {
+			var nextThen = null;
 			if ( r.note && r.note.length ) {
 				this.setState({ 'comment': r.note });
 				
 				// Async first
-				this.getAuthors();
+				this.getAuthors().then( rr => {
+					console.log("DOENU",this);
+					this.setState({'newcomment': this.genComment()});
+				});
 				
 				// Sync last
 				this.buildTree();
 			}
 			else {
-				this.setState({ 'comment': [], 'tree': {}, 'authors': [] });
+				this.setState({ 'comment': [], 'authors': [], 'tree': {} });
 			}
 		})
 		.catch(err => {
@@ -83,32 +98,6 @@ export default class ContentComments extends Component {
 		}
 		
 		this.setState({'tree': tree});
-
-//		return tree;
-/*
-		console.log('tree', tree);
-		//this.setState({'tree':tree});
-	
-		// Now flatten the tree
-		var flat = [];
-		for ( var parent in tree ) {
-			flat.push({
-				'id':parent,
-				'comment':tree[parent].comment,
-				'indent':0
-			});
-			// For all children
-			for ( var child in tree[parent].child ) {
-				flat.push({
-					'id':child,
-					'comment': tree[parent].child[child].comment,
-					'indent':1
-				});
-			}
-		}
-		console.log('flat', flat);
-
-		return flat;*/
 	}
 	
 	getAuthors() {
@@ -124,7 +113,7 @@ export default class ContentComments extends Component {
 			
 			// Fetch authors
 	
-			$Node.GetKeyed( Authors )
+			return $Node.GetKeyed( Authors )
 			.then(r => {
 				this.setState({ 'authors': r.node });
 			})
@@ -133,12 +122,12 @@ export default class ContentComments extends Component {
 			});
 		}
 	}
-	
-	renderComment( comment, indent = 0 ) {
+/*		
+	renderComment( comment, indent = 0, editing = false ) {
 		var author = this.state.authors[comment.author];
 		if ( author ) {
 			var ShowEdit = null;
-			if ( comment.author == this.props.user )
+			if ( this.props.user && comment.author === this.props.user.id )
 				ShowEdit = <div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>;
 			
 			var ShowReply = null;
@@ -153,17 +142,42 @@ export default class ContentComments extends Component {
 			if ( author.meta['avatar'] )
 				Avatar = author.meta['avatar'];
 			
+			var ShowTitle = null;
+			var ShowBottomNav = null;
+			if ( !editing ) {
+				ShowTitle = (
+					<div class="-title">
+						<span class="-author">{Name}</span> (<NavLink class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</NavLink>)
+					</div>
+				);
+
+				ShowBottomNav = (
+					<div class="-nav">
+						<div class="-love"><SVGIcon>heart</SVGIcon> {comment.love}</div>
+						{ShowReply}
+						{ShowEdit}
+					</div>
+				);
+			}
+			
+			var ShowTopNav = null;
+			if ( editing ) {
+				ShowTopNav = (
+					<div class="-nav">
+						<div class={"-editing "+comment.editing?"-selected":""} onclick={this.onEditing}><SVGIcon>edit</SVGIcon> Edit</div>
+						<div class={"-preview "+comment.editing?"":"-selected"} onclick={this.onPreview}><SVGIcon>preview</SVGIcon> Preview</div>
+					</div>
+				);
+			}
+			
 			return (
 				<div class={"-item -comment -indent-"+indent}>
 					<div class="-avatar"><IMG2 src={Avatar} /></div>
 					<div class="-body">
-						<div class="-title"><span class="-author">{Name}</span> (<NavLink class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</NavLink>)</div>
-						<ContentCommentsMarkup class="-text">{comment.body}</ContentCommentsMarkup>
-						<div class="-nav">
-							<div class="-love"><SVGIcon>heart</SVGIcon> {comment.love}</div>
-							{ShowReply}
-							{ShowEdit}
-						</div>
+						{ShowTopNav}
+						{ShowTitle}
+						<ContentCommentsMarkup class="-text" editing={editing}>{comment.body}</ContentCommentsMarkup>
+						{ShowBottomNav}
 					</div>
 				</div>
 			);
@@ -176,37 +190,38 @@ export default class ContentComments extends Component {
 			);
 		}
 	}
-
+*/
 	renderComments( tree, indent = 0 ) {
+		var user = this.props.user;
+		var authors = this.state.authors;
+
 		var ret = [];
 
 		for ( var item in tree ) {
-			ret.push(this.renderComment(tree[item].node, indent));
+			//ret.push(this.renderComment(tree[item].node, indent));
+			var comment = tree[item].node;
+			var author = authors[comment.author];
+			ret.push(<ContentCommentsComment user={user} comment={comment} author={author} indent={indent} />);
 
 			if ( tree[item].child ) {
 				ret.push(<div class="-indent">{this.renderComments(tree[item].child, indent+1)}</div>);
 			}
 		}
 
-//		for ( var idx = 0; idx < flat.length; idx++ ) {
-//			ret.push(this.renderComment(flat[idx].comment, flat[idx].indent));
-//		}
-		
-//		var flat = this.buildTree();
-//		console.log('oeugd',flat);
-//		for ( var idx = 0; idx < flat.length; idx++ ) {
-//			ret.push(this.renderComment(flat[idx].comment, flat[idx].indent));
-//		}
-		
-//		// wrong
-//		for ( var idx = 0; idx < this.state.comment.length; idx++ ) {
-//			ret.push(this.renderComment(this.state.comment[idx]));
-//		}
-		
 		return ret;
 	}
 	
-	render( props, {comment, tree, authors} ) {
+	renderPostNew() {
+		var user = this.props.user;
+		var authors = this.state.authors;
+		var comment = this.state.newcomment;
+		var author = authors[comment.author];
+
+		return <ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing />;
+//		return this.renderComment(this.state.newcomment, 0, true);
+	}
+	
+	render( props, {comment, tree, authors, newcomment} ) {
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
@@ -221,13 +236,20 @@ export default class ContentComments extends Component {
 			if ( comment.length )
 				ShowComments = this.renderComments(tree);
 			else
-				ShowComments = <div class={"-item -comment -indent-0"}><div class="-nothing">no comments</div></div>;
+				ShowComments = <div class={"-item -comment -indent-0"}><div class="-nothing">No Comments.</div></div>;
+		}
+		
+		var ShowPostNew = null;
+		console.log(newcomment);
+		if ( user && user['id'] && newcomment ) {
+			ShowPostNew = this.renderPostNew();
 		}
 		
 		return (
 			<div class={['content-base','content-comments',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
 				<div class="-headline">COMMENTS</div>
 				{ShowComments}
+				{ShowPostNew}
 				<div class="content-footer content-footer-common -footer">
 					<div class="-left">
 					</div>
@@ -239,55 +261,3 @@ export default class ContentComments extends Component {
 		);
 	}
 }
-
-
-//				<div class="-item -comment -indent-0">
-//					<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
-//					<div class="-body">
-//						<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
-//						<div class="-text">{"This is a sample comment. Sorry, you can't actually make comments yet."}</div>
-//						<div class="-nav">
-//							<div class="-love"><SVGIcon>heart</SVGIcon> 1</div>
-//							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
-//							<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
-//						</div>
-//					</div>
-//				</div>
-//				<div class="-indent">
-//					<div class="-item -comment -indent-1">
-//						<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
-//						<div class="-body">
-//							<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
-//							<div class="-text">{"Wow, this is a sample reply to that comment"}</div>
-//							<div class="-nav">
-//								<div class="-love"><SVGIcon>heart</SVGIcon> 0</div>
-//								<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
-//								<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
-//							</div>
-//						</div>
-//					</div>
-//					<div class="-item -comment -indent-1">
-//						<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
-//						<div class="-body">
-//							<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
-//							<div class="-text">{"Double wow! This is another reply."}<br /><br />{"Amazing!"}</div>
-//							<div class="-nav">
-//								<div class="-love"><SVGIcon>heart</SVGIcon> 0</div>
-//								<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
-//								<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
-//							</div>
-//						</div>
-//					</div>
-//				</div>
-//				<div class="-item -comment -indent-0">
-//					<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
-//					<div class="-body">
-//						<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
-//						<div class="-text">{"I was late to the party"}</div>
-//						<div class="-nav">
-//							<div class="-love"><SVGIcon>heart</SVGIcon> 0</div>
-//							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
-//							<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
-//						</div>
-//					</div>
-//				</div>
