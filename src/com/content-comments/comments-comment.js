@@ -20,7 +20,7 @@ export default class ContentCommentsComment extends Component {
 			'modified': false,
 			
 			// NOTE: Set this upon save, or use it to cancel
-			'original': props.body,
+			'original': props.comment.body,
 			
 			'loved': props.loved ? true: false,
 		};
