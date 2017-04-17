@@ -30,6 +30,8 @@ export default class ContentComments extends Component {
 		this.getComments(props.node);
 		
 		this.renderComments = this.renderComments.bind(this);
+		
+		this.onPublish = this.onPublish.bind(this);
 	}
 	
 //	componentWillMount() {
@@ -56,7 +58,6 @@ export default class ContentComments extends Component {
 				
 				// Async first
 				this.getAuthors().then( rr => {
-					console.log("DOENU",this);
 					this.setState({'newcomment': this.genComment()});
 				});
 				
@@ -191,6 +192,7 @@ export default class ContentComments extends Component {
 		}
 	}
 */
+
 	renderComments( tree, indent = 0 ) {
 		var user = this.props.user;
 		var authors = this.state.authors;
@@ -198,7 +200,6 @@ export default class ContentComments extends Component {
 		var ret = [];
 
 		for ( var item in tree ) {
-			//ret.push(this.renderComment(tree[item].node, indent));
 			var comment = tree[item].node;
 			var author = authors[comment.author];
 			ret.push(<ContentCommentsComment user={user} comment={comment} author={author} indent={indent} />);
@@ -217,8 +218,11 @@ export default class ContentComments extends Component {
 		var comment = this.state.newcomment;
 		var author = authors[comment.author];
 
-		return <ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing />;
-//		return this.renderComment(this.state.newcomment, 0, true);
+		return <ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish />;
+	}
+	
+	onPublish( e ) {
+		console.log('whee');
 	}
 	
 	render( props, {comment, tree, authors, newcomment} ) {
@@ -240,7 +244,6 @@ export default class ContentComments extends Component {
 		}
 		
 		var ShowPostNew = null;
-		console.log(newcomment);
 		if ( user && user['id'] && newcomment ) {
 			ShowPostNew = this.renderPostNew();
 		}

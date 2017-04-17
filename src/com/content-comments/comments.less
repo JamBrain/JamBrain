@@ -98,18 +98,33 @@
 					margin-right: 0.5em;
 					/*border: 1px solid;*/
 					
-					&:hover {
+					&:hover,
+					&:focus {
 						background: @COL_A;
 						color: @COL_L;
+						
+						&:active {
+							background: @COL_L;
+							color: @COL_A;
+						}
 					}
 				}
 				
-				& .-edit {
+				& .-edit,
+				& .-cancel,
+				& .-save,
+				& .-publish {
 					float: right;
+					margin-right: 0;
+					margin-left: 0.5em;
 				}
 				
 				& .-selected {
 					background: @COL_N;
+					color: @COL_NLLLL;
+				}
+				& .-modified {
+					background: @COL_C;
 					color: @COL_NLLLL;
 				}
 			}

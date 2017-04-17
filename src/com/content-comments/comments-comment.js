@@ -16,28 +16,79 @@ export default class ContentCommentsComment extends Component {
 		
 		this.state = {
 			'editing': props.editing ? true : false,
+			'modified': false,
+			
+			// NOTE: Set this upon save, or use it to cancel
+			'original': props.body,
+			
+			'loved': props.loved ? true: false,
 		};
 		
 		this.onEditing = this.onEditing.bind(this);
 		this.onPreview = this.onPreview.bind(this);
+		
+		this.onModify = this.onModify.bind(this);
+
+		this.onEdit = this.onEdit.bind(this);
+
+		this.onSave = this.onSave.bind(this);
+		this.onCancel = this.onCancel.bind(this);
+		this.onPublish = this.onPublish.bind(this);
+
+		this.onLove = this.onLove.bind(this);
+		this.onReply = this.onReply.bind(this);
 	}
 
 	onEditing( e ) {
-		console.log( '+comm' );
+		this.setState({'editing': true});
 	}
 	onPreview( e ) {
-		console.log( '-comm' );
+		this.setState({'editing': false});
 	}
 	
-	render( {user, comment, author, indent, editing}, state ) {
+	onModify( e ) {
+		this.props.comment.body = e.target.value;
+		this.setState({'modified': true});
+	}
+
+	onCancel( e ) {
+		console.log('cancel');
+		this.props.comment.body = this.state.original;
+		this.setState({'modified': false, 'editing': false});		
+	}
+
+	onSave( e ) {
+		console.log('save');
+		this.setState({'modified': false, 'original': this.props.comment.body});
+	}
+
+	onPublish( e ) {
+		console.log('pub');
+		if ( this.props.onPublish )
+			this.props.onPublish(e);
+	}
+	
+	onEdit( e ) {
+		console.log('edit');
+	}
+	
+	onLove( e ) {
+		console.log('love');
+		this.setState({'loved': true });
+	}
+	onReply( e ) {
+		console.log('reply');
+	}
+	
+	render( {user, comment, author, indent, editing, publish}, state ) {
 		if ( author ) {
 			var ShowEdit = null;
 			if ( user && comment.author === user.id )
-				ShowEdit = <div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>;
+				ShowEdit = <div class="-edit" onclick={this.onEdit}><SVGIcon>edit</SVGIcon> Edit</div>;
 			
 			var ShowReply = null;
 			if ( user && user.id )
-				ShowReply = <div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>;
+				ShowReply = <div class="-reply" onclick={this.onReply}><SVGIcon>reply</SVGIcon> Reply</div>;
 				
 			var Name = author.name;
 			if ( author.meta['real-name'] )
@@ -48,17 +99,19 @@ export default class ContentCommentsComment extends Component {
 				Avatar = author.meta['avatar'];
 			
 			var ShowTitle = null;
-			var ShowBottomNav = null;
-			if ( !editing ) {
+			if ( !state.editing ) {
 				ShowTitle = (
 					<div class="-title">
 						<span class="-author">{Name}</span> (<NavLink class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</NavLink>)
 					</div>
 				);
+			}
 
+			var ShowBottomNav = null;
+			if ( !editing ) {
 				ShowBottomNav = (
 					<div class="-nav">
-						<div class="-love"><SVGIcon>heart</SVGIcon> {comment.love}</div>
+						<div class={"-love"+state.loved?" -loved":""} onclick={this.onLove}><SVGIcon>heart</SVGIcon> {comment.love}</div>
 						{ShowReply}
 						{ShowEdit}
 					</div>
@@ -67,10 +120,31 @@ export default class ContentCommentsComment extends Component {
 			
 			var ShowTopNav = null;
 			if ( editing ) {
+				var PreviewEdit = null;
+				if ( state.editing ) {
+					PreviewEdit = [
+						<div class="-editing -selected"><SVGIcon>edit</SVGIcon> Edit</div>,
+						<div class="-preview" onclick={this.onPreview}><SVGIcon>preview</SVGIcon> Preview</div>
+					];
+				}
+				else {
+					PreviewEdit = [
+						<div class="-editing" onclick={this.onEditing}><SVGIcon>edit</SVGIcon> Edit</div>,
+						<div class="-preview -selected"><SVGIcon>preview</SVGIcon> Preview</div>
+					];
+				}
+				
+				if ( publish ) {
+					PreviewEdit.push(<div class="-publish" onclick={this.onPublish}><SVGIcon>publish</SVGIcon> Publish</div>);
+				}
+				else {
+					PreviewEdit.push(<div class="-cancel" onclick={this.onCancel}><SVGIcon>cross</SVGIcon> Cancel</div>);
+					PreviewEdit.push(<div class={"-save"+(state.modified?" -modified":"")} onclick={this.onSave}><SVGIcon>save</SVGIcon> Save</div>);
+				}
+				
 				ShowTopNav = (
 					<div class="-nav">
-						<div class={"-editing "+state.editing?"-selected":""} onclick={this.onEditing}><SVGIcon>edit</SVGIcon> Edit</div>
-						<div class={"-preview "+state.editing?"":"-selected"} onclick={this.onPreview}><SVGIcon>preview</SVGIcon> Preview</div>
+						{PreviewEdit}
 					</div>
 				);
 			}
@@ -81,7 +155,7 @@ export default class ContentCommentsComment extends Component {
 					<div class="-body">
 						{ShowTopNav}
 						{ShowTitle}
-						<ContentCommentsMarkup class="-text" editing={editing}>{comment.body}</ContentCommentsMarkup>
+						<ContentCommentsMarkup class="-text" editing={state.editing} onmodify={this.onModify}>{comment.body}</ContentCommentsMarkup>
 						{ShowBottomNav}
 					</div>
 				</div>
