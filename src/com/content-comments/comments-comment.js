@@ -120,14 +120,6 @@ export default class ContentCommentsComment extends Component {
 	render( {user, comment, author, indent, publish, onpublish, limit}, state ) {
 //		console.log('R '+comment.id+": ", this.state.editing,this.state.preview);
 		if ( author ) {
-			var ShowEdit = null;
-			if ( user && comment.author === user.id )
-				ShowEdit = <div class="-edit" onclick={this.onEdit}><SVGIcon>edit</SVGIcon> Edit</div>;
-			
-			var ShowReply = null;
-//			if ( user && user.id )
-//				ShowReply = <div class="-reply" onclick={this.onReply}><SVGIcon>reply</SVGIcon> Reply</div>;
-				
 			var Name = author.name;
 			if ( author.meta['real-name'] )
 				Name = author.meta['real-name'];
@@ -145,13 +137,22 @@ export default class ContentCommentsComment extends Component {
 				);
 			}
 
+			var ShowReply = null;
+//			if ( user && user.id )
+//				ShowReply = <div class="-reply" onclick={this.onReply}><SVGIcon>reply</SVGIcon> Reply</div>;
+
+			var ShowEdit = null;
+			if ( user && comment.author === user.id && !state.editing )
+				ShowEdit = <div class="-edit" onclick={this.onEdit}><SVGIcon>edit</SVGIcon> Edit</div>;
+
 			var ShowBottomNav = null;
-			if ( !state.editing ) {
+			//if ( !state.editing ) 
+			{
 				ShowBottomNav = (
 					<div class="-nav">
-						<div class={"-love"+state.loved?" -loved":""} onclick={this.onLove}><SVGIcon>heart</SVGIcon> {comment.love}</div>
 						{ShowReply}
 						{ShowEdit}
+						<div class={"-love"+(state.loved?" -loved":"")} onclick={this.onLove}><SVGIcon>heart</SVGIcon> {comment.love}</div>
 					</div>
 				);
 			}
