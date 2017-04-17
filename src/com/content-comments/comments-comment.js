@@ -1,5 +1,5 @@
 import { h, Component } 				from 'preact/preact';
-//import ShallowCompare	 				from 'shallow-compare/index';
+import { shallowDiff }	 				from 'shallow-compare/index';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
@@ -15,8 +15,8 @@ export default class ContentCommentsComment extends Component {
 		super(props);
 		
 		this.state = {
-			'editing': props.editing ? true : false,
-			'preview': props.editing ? false : true,
+			'editing': !!props.editing,
+			'preview': !props.editing,
 			'modified': false,
 			
 			// NOTE: Set this upon save, or use it to cancel
@@ -24,6 +24,8 @@ export default class ContentCommentsComment extends Component {
 			
 			'loved': props.loved ? true: false,
 		};
+		
+//		console.log('C '+props.comment.id+": ", this.state.editing,this.state.preview);
 		
 		this.onEditing = this.onEditing.bind(this);
 		this.onPreview = this.onPreview.bind(this);
@@ -40,10 +42,35 @@ export default class ContentCommentsComment extends Component {
 		this.onReply = this.onReply.bind(this);
 	}
 
+//	shouldComponentUpdate( nextProps, nextState ) {
+//		return shallowDiff(this.props, nextProps);
+////		return ShallowCompare(this, nextProps, nextState);
+//	}
+
+	componentWillReceiveProps( nextProps ) {
+//		console.log('err', nextProps);
+
+//		if ( nextProps.editing ) {
+//			this.setState({
+//				'editing': nextProps.editing ? true : false,
+//				'preview': nextProps.editing ? false : true,
+//			});
+//		}
+		
+//		if ( shallowDiff(this.props.comment, nextProps.comment) ) {
+//			this.setState(
+//		}
+//		
+//		console.log("MEEEEEEEEEEEEEEEEEEEEE", this.props.author);
+//		console.log("HEEEEEEEEEEEEEEEEEEEEE", nextProps.author);
+	}
+
 	onEditing( e ) {
+		console.log('** Edit Comment');
 		this.setState({'preview': false});
 	}
 	onPreview( e ) {
+		console.log('** Preview Comment');
 		this.setState({'preview': true});
 	}
 	
@@ -71,6 +98,8 @@ export default class ContentCommentsComment extends Component {
 		if ( this.canSave() ) {
 			if ( this.props.onpublish ) {
 				this.props.onpublish(e);
+
+				//this.setState({'modified': false, 'editing': true, 'preview': false});
 			}
 		}
 	}
@@ -89,6 +118,7 @@ export default class ContentCommentsComment extends Component {
 	}
 	
 	render( {user, comment, author, indent, publish, onpublish}, state ) {
+//		console.log('R '+comment.id+": ", this.state.editing,this.state.preview);
 		if ( author ) {
 			var ShowEdit = null;
 			if ( user && comment.author === user.id )
@@ -131,14 +161,14 @@ export default class ContentCommentsComment extends Component {
 				var PreviewEdit = null;
 				if ( !state.preview ) {
 					PreviewEdit = [
+						<div class="-preview" onclick={this.onPreview}><SVGIcon>preview</SVGIcon> Preview</div>,
 						<div class="-editing -selected"><SVGIcon>edit</SVGIcon> Edit</div>,
-						<div class="-preview" onclick={this.onPreview}><SVGIcon>preview</SVGIcon> Preview</div>
 					];
 				}
 				else {
 					PreviewEdit = [
+						<div class="-preview -selected"><SVGIcon>preview</SVGIcon> Preview</div>,
 						<div class="-editing" onclick={this.onEditing}><SVGIcon>edit</SVGIcon> Edit</div>,
-						<div class="-preview -selected"><SVGIcon>preview</SVGIcon> Preview</div>
 					];
 				}
 				

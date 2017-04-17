@@ -20,32 +20,27 @@ export default class ContentComments extends Component {
 		super(props);
 		
 		this.state = {
-			'comment': null,
+			'comments': null,
 			'tree': null,
 			'authors': null,
 			
 			'newcomment': null,
 		};
 		
-		this.getComments(props.node);
-		
-		this.renderComments = this.renderComments.bind(this);
-		
 		this.onPublish = this.onPublish.bind(this);
 	}
 	
-//	componentWillMount() {
-//		this.getComments(props.node);
-//	}
+	componentWillMount() {
+		this.getComments(this.props.node);
+	}
 
-	genComment( editing = true) {
+	genComment() {
 		return {
+			'parent': 0,
 			'body': '',
 			'author': this.props.user.id,
 			'node': this.props.node.id,
-			'parent': 0,
-			
-			'editing': editing,
+			'love': 0,
 		};
 	}
 	
@@ -54,30 +49,20 @@ export default class ContentComments extends Component {
 		.then(r => {
 			// Has comments
 			if ( r.note && r.note.length ) {
-				this.setState({ 'comment': r.note });
-				
-				// Async first
-				this.getAuthors().then( rr => {
-					this.setState({'newcomment': this.genComment()});
-				});
-				
-				// Sync last
-				this.buildTree();
+				this.setState({ 'comments': r.note, 'tree': null, 'authors': null });
 			}
 			// Does not have comments
 			else if ( r.note ) {
-				this.setState({ 'comment': [], 'tree': {} });
-
-				// Async first
-				this.getAuthors().then( rr => {
-					this.setState({'newcomment': this.genComment()});
-				});
+				this.setState({ 'comments': [], 'tree': null, 'authors': null });
+			}
 				
-				// Sync last
-			}
-			else {
-				this.setState({ 'error': err });
-			}
+			// Async first
+			this.getAuthors().then( rr => {
+				this.setState({'newcomment': this.genComment()});
+			});
+			
+			// Sync last
+			this.setState({'tree': this.buildTree()});
 		})
 		.catch(err => {
 			this.setState({ 'error': err });
@@ -85,42 +70,42 @@ export default class ContentComments extends Component {
 	}
 	
 	buildTree() {
-		var comment = this.state.comment;
+		var comments = this.state.comments;
 		
 		// Only supports single level deep trees
 		var tree = {};
-		for ( var idx = 0; idx < comment.length; idx++ ) {
-			if ( comment[idx].parent === 0 ) {
-				tree[comment[idx].id] = {
-					'node': comment[idx],
+		for ( var idx = 0; idx < comments.length; idx++ ) {
+			if ( comments[idx].parent === 0 ) {
+				tree[comments[idx].id] = {
+					'node': comments[idx],
 				};
 			}
-			else if ( comment[idx].parent && tree[comment[idx].parent] ) {
-				if (!tree[comment[idx].parent].child) {
-					tree[comment[idx].parent].child = {};
+			else if ( comments[idx].parent && tree[comments[idx].parent] ) {
+				if (!tree[comments[idx].parent].child) {
+					tree[comments[idx].parent].child = {};
 				}
 				
-				tree[comment[idx].parent].child[comment[idx].id] = {
-					'node': comment[idx],
+				tree[comments[idx].parent].child[comments[idx].id] = {
+					'node': comments[idx],
 				};
 			}
 			else {
-				console.log('[Comment] Unable to find parent for '+comment[idx].id);
+				console.log('[Comments] Unable to find parent for '+comments[idx].id);
 			}
 		}
 		
-		this.setState({'tree': tree});
+		return tree;
 	}
 	
 	getAuthors() {
 		var user = this.props.user;
-		var comment = this.state.comment;
+		var comments = this.state.comments;
 		
-		if ( comment ) {
+		if ( comments ) {
 			var Authors = [];
 			// Extract a list of all authors from comments
-			for ( var idx = 0; idx < comment.length; idx++ ) {
-				Authors.push(comment[idx].author);
+			for ( var idx = 0; idx < comments.length; idx++ ) {
+				Authors.push(comments[idx].author);
 			}
 			// Add self (in case we start making comments
 			if ( user && user.id ) {
@@ -171,11 +156,26 @@ export default class ContentComments extends Component {
 	}
 	
 	onPublish( e ) {
-		console.log('whee');
+		var newcomment = this.state.newcomment;
+		var comment = Object.assign({
+				'id': 10+this.state.comments.length
+			},
+			newcomment);
+			
+		// TODO: insert properly
+		this.state.comments.push(comment);
 		
+		// Reset newcomment
+		newcomment.parent = 0;
+		newcomment.body = '';
+		
+		//this.setState({'comments': comments, 'tree':null});	// In theory this isn't necessary
+		this.setState({'tree': this.buildTree()});
+
+		// , 'newcomment': this.genComment()
 	}
 	
-	render( props, {comment, tree, authors, newcomment} ) {
+	render( props, {comments, tree, authors, newcomment} ) {
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
@@ -186,8 +186,8 @@ export default class ContentComments extends Component {
 //			FooterItems.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
 			
 		var ShowComments = <NavSpinner />;
-		if ( comment && tree && authors ) {
-			if ( comment.length )
+		if ( comments && tree && authors ) {
+			if ( comments.length )
 				ShowComments = this.renderComments(tree);
 			else
 				ShowComments = <div class={"-item -comment -indent-0"}><div class="-nothing">No Comments.</div></div>;
