@@ -16,6 +16,7 @@ export default class ContentCommentsComment extends Component {
 		
 		this.state = {
 			'editing': props.editing ? true : false,
+			'preview': props.editing ? false : true,
 			'modified': false,
 			
 			// NOTE: Set this upon save, or use it to cancel
@@ -40,10 +41,10 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onEditing( e ) {
-		this.setState({'editing': true});
+		this.setState({'preview': false});
 	}
 	onPreview( e ) {
-		this.setState({'editing': false});
+		this.setState({'preview': true});
 	}
 	
 	onModify( e ) {
@@ -54,12 +55,12 @@ export default class ContentCommentsComment extends Component {
 	onCancel( e ) {
 		console.log('cancel');
 		this.props.comment.body = this.state.original;
-		this.setState({'modified': false, 'editing': false});		
+		this.setState({'modified': false, 'editing': false, 'preview': false});		
 	}
 
 	onSave( e ) {
 		console.log('save');
-		this.setState({'modified': false, 'original': this.props.comment.body});
+		this.setState({'modified': false, 'editing': false, 'preview': false, 'original': this.props.comment.body});
 	}
 
 	onPublish( e ) {
@@ -70,6 +71,7 @@ export default class ContentCommentsComment extends Component {
 	
 	onEdit( e ) {
 		console.log('edit');
+		this.setState({'editing': true, 'preview': false});
 	}
 	
 	onLove( e ) {
@@ -80,7 +82,7 @@ export default class ContentCommentsComment extends Component {
 		console.log('reply');
 	}
 	
-	render( {user, comment, author, indent, editing, publish}, state ) {
+	render( {user, comment, author, indent, publish}, state ) {
 		if ( author ) {
 			var ShowEdit = null;
 			if ( user && comment.author === user.id )
@@ -99,7 +101,7 @@ export default class ContentCommentsComment extends Component {
 				Avatar = author.meta['avatar'];
 			
 			var ShowTitle = null;
-			if ( !state.editing ) {
+			if ( !state.editing || state.preview ) {
 				ShowTitle = (
 					<div class="-title">
 						<span class="-author">{Name}</span> (<NavLink class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</NavLink>)
@@ -108,7 +110,7 @@ export default class ContentCommentsComment extends Component {
 			}
 
 			var ShowBottomNav = null;
-			if ( !editing ) {
+			if ( !state.editing ) {
 				ShowBottomNav = (
 					<div class="-nav">
 						<div class={"-love"+state.loved?" -loved":""} onclick={this.onLove}><SVGIcon>heart</SVGIcon> {comment.love}</div>
@@ -119,9 +121,9 @@ export default class ContentCommentsComment extends Component {
 			}
 			
 			var ShowTopNav = null;
-			if ( editing ) {
+			if ( state.editing ) {
 				var PreviewEdit = null;
-				if ( state.editing ) {
+				if ( !state.preview ) {
 					PreviewEdit = [
 						<div class="-editing -selected"><SVGIcon>edit</SVGIcon> Edit</div>,
 						<div class="-preview" onclick={this.onPreview}><SVGIcon>preview</SVGIcon> Preview</div>
@@ -155,7 +157,7 @@ export default class ContentCommentsComment extends Component {
 					<div class="-body">
 						{ShowTopNav}
 						{ShowTitle}
-						<ContentCommentsMarkup class="-text" editing={state.editing} onmodify={this.onModify}>{comment.body}</ContentCommentsMarkup>
+						<ContentCommentsMarkup class="-text" editing={state.editing && !state.preview} onmodify={this.onModify}>{comment.body}</ContentCommentsMarkup>
 						{ShowBottomNav}
 					</div>
 				</div>
