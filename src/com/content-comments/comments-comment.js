@@ -117,9 +117,12 @@ export default class ContentCommentsComment extends Component {
 		console.log('reply');
 	}
 	
-	render( {user, comment, author, indent, publish, onpublish}, state ) {
+	render( {user, comment, author, indent, publish, onpublish, limit}, state ) {
 //		console.log('R '+comment.id+": ", this.state.editing,this.state.preview);
 		if ( author ) {
+			if ( !limit )
+				limit = 4096;
+			
 			var ShowEdit = null;
 			if ( user && comment.author === user.id )
 				ShowEdit = <div class="-edit" onclick={this.onEdit}><SVGIcon>edit</SVGIcon> Edit</div>;
@@ -193,7 +196,7 @@ export default class ContentCommentsComment extends Component {
 					<div class="-body">
 						{ShowTopNav}
 						{ShowTitle}
-						<ContentCommentsMarkup class="-text" editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here">{comment.body}</ContentCommentsMarkup>
+						<ContentCommentsMarkup class="-text" editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here" limit={limit}>{comment.body}</ContentCommentsMarkup>
 						{ShowBottomNav}
 					</div>
 				</div>
