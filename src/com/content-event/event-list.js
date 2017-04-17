@@ -226,8 +226,10 @@ export default class ContentEventList extends Component {
 				</div>
 			);
 		}
+		
+		console.log('lister',user,lists,votes);
 
-		// Page bodies		
+		// Page bodies
 		var Body = null;
 		if ( user && user['id'] && lists && lists.length && votes ) {
 			Body = page ? this.renderList(page) : null;
