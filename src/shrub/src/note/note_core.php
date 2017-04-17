@@ -212,9 +212,38 @@ function note_GetById( $ids ) {
 }
 
 
-function note_AddByNode( $parent, $node, $supernode, $author, $body, $tag ) {
+function _note_AddByNode( $node, $supernode, $author, $parent, $body, $version_tag ) {
+	// Insert Proxy
+	$note_id = db_QueryInsert(
+		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NOTE." (
+			parent,
+			node, supernode,
+			author,
+			created
+		)
+		VALUES (
+			?,
+			?, ?,
+			?,
+			NOW()
+		)",
+		$parent,
+		$node, $supernode,
+		$author
+	);
+
+	$edit = note_SafeEdit( $note_id, $author, $body, $version_tag );
 	
-	//$version_id = noteVersion_Add($note_id, $author, $body, $version_tag);
+	return $note_id;
+}
+
+function note_AddByNode( $node, $supernode, $author, $parent, $body, $version_tag ) {
+	$note_id = _note_AddByNode($node, $supernode, $author, $parent, $body, $version_tag);
+	
+	// Hack: Adding just the root entry to the tree
+	$tree = noteTree_Add($node, $note_id, 0, 1);
+	
+	return $note_id;
 }
 
 function note_SafeEdit( $note_id, $author, $body, $version_tag ) {

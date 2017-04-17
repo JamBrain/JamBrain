@@ -57,13 +57,16 @@ switch ( $action ) {
 			if ( isset($_POST['tag']) )
 				$version_tag = coreSlugify_Name($_POST['tag']);
 			
-			
 			// Load Node
 			$node = node_GetById($node_id);
 			
 			// Check if you have permission to add comment to node
 			if ( note_IsNotePublicByNode($node) ) {
-				$RESPONSE['note'] = 'hey';
+				// hack for now
+				if ( $parent !== 0 )
+					json_EmitFatalError_Permission("Temporary: No children", $RESPONSE);
+
+				$RESPONSE['note'] = note_AddByNode($node['id'], $node['parent'], $author, $parent, $body, $version_tag);
 			}
 			else {
 				json_EmitFatalError_Permission(null, $RESPONSE);

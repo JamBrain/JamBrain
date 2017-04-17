@@ -161,22 +161,21 @@ export default class ContentComments extends Component {
 		
 		$Note.Add( newcomment.parent, newcomment.node, newcomment.body )
 		.then(r => {
-			console.log(r);
-/*			
-			var comment = Object.assign({
-					'id': 10+this.state.comments.length
-				},
-				newcomment);
+			if ( r.note ) {
+				var comment = Object.assign({'id': r.note},	newcomment);
+					
+				// TODO: insert properly
+				this.state.comments.push(comment);
 				
-			// TODO: insert properly
-			this.state.comments.push(comment);
-			
-			// Reset newcomment
-			newcomment.parent = 0;
-			newcomment.body = '';
-			
-			this.setState({'tree': this.buildTree()});
-*/
+				// Reset newcomment
+				newcomment.parent = 0;
+				newcomment.body = '';
+				
+				this.setState({'tree': this.buildTree()});
+			}
+			else {
+				this.setState({ 'error': err });
+			}
 		})
 		.catch(err => {
 			this.setState({ 'error': err });
