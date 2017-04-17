@@ -157,7 +157,7 @@ export default class ContentCommentsComment extends Component {
 					<div class="-body">
 						{ShowTopNav}
 						{ShowTitle}
-						<ContentCommentsMarkup class="-text" editing={state.editing && !state.preview} onmodify={this.onModify}>{comment.body}</ContentCommentsMarkup>
+						<ContentCommentsMarkup class="-text" editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here">{comment.body}</ContentCommentsMarkup>
 						{ShowBottomNav}
 					</div>
 				</div>

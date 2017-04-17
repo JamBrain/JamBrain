@@ -249,7 +249,7 @@ export default class ContentComments extends Component {
 		}
 		
 		return (
-			<div class={['content-base','content-comments',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
+			<div class={['content-base','content-common','content-comments',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
 				<div class="-headline">COMMENTS</div>
 				{ShowComments}
 				{ShowPostNew}

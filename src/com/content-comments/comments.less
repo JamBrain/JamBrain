@@ -1,12 +1,12 @@
 @import "defs.less";
 
-#content .content-comments {
+#content .content-common.content-comments {
 	position: relative;
 	
 	background: @COL_NLLLL;
 	/*border-top: 4px solid @COL_NDDD;*/
 /*	border-bottom: 8px solid @COL_NDDD;*/
-	
+
 	&.-no-gap {
 		margin-top: 0;
 	}
@@ -36,7 +36,18 @@
 		position: relative;
 		
 		overflow: auto;
-		
+
+		& a, 
+		& a:visited {
+			color: @COL_A;
+	
+			&:hover,
+			&:focus {
+				color: @COL_L;
+				background: @COL_A;
+			}
+		}
+
 		& > .-avatar {
 			position: absolute;
 			top: 0.5em;
@@ -125,7 +136,7 @@
 				}
 				& .-modified {
 					background: @COL_C;
-					color: @COL_NLLLL;
+					color: @COL_L;
 				}
 			}
 		}
