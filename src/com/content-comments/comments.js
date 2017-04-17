@@ -162,7 +162,12 @@ export default class ContentComments extends Component {
 		$Note.Add( newcomment.parent, newcomment.node, newcomment.body )
 		.then(r => {
 			if ( r.note ) {
-				var comment = Object.assign({'id': r.note},	newcomment);
+				var Now = new Date();
+				var comment = Object.assign({
+					'id': r.note,
+					'created': Now.toISOString(),
+					'modified': Now.toISOString()
+				}, newcomment);
 					
 				// TODO: insert properly
 				this.state.comments.push(comment);
