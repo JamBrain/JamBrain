@@ -141,11 +141,21 @@ export default class ContentCommentsComment extends Component {
 			
 			var ShowTitle = null;
 			if ( !state.editing || state.preview ) {
-				ShowTitle = (
+				var Created = new Date(comment.created);
+				var Modified = new Date(comment.modified);
+				var Now = new Date();
+				var DateDiff = (Now.getTime() - Created.getTime());
+				var ModDiff = (Modified.getTime() - Created.getTime());
+				
+				// 1 minute leeway on edits
+				var HasEdited = ModDiff > (60*1000);
+				
+				ShowTitle = [
 					<div class="-title">
 						<span class="-author">{Name}</span> (<NavLink class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</NavLink>)
-					</div>
-				);
+					</div>,
+					<div class="-date">posted <span title={getLocaleDate(Created)}>{getRoughAge(DateDiff)}</span><span title={getLocaleDate(Modified)}>{HasEdited?" (edited)":""}</span></div>
+				];
 			}
 
 			var ShowReply = null;
