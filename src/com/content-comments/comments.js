@@ -52,7 +52,7 @@ export default class ContentComments extends Component {
 	getComments( node ) {
 		$Note.Get( node.id )
 		.then(r => {
-			var nextThen = null;
+			// Has comments
 			if ( r.note && r.note.length ) {
 				this.setState({ 'comment': r.note });
 				
@@ -64,8 +64,19 @@ export default class ContentComments extends Component {
 				// Sync last
 				this.buildTree();
 			}
+			// Does not have comments
+			else if ( r.note ) {
+				this.setState({ 'comment': [], 'tree': {} });
+
+				// Async first
+				this.getAuthors().then( rr => {
+					this.setState({'newcomment': this.genComment()});
+				});
+				
+				// Sync last
+			}
 			else {
-				this.setState({ 'comment': [], 'authors': [], 'tree': {} });
+				this.setState({ 'error': err });
 			}
 		})
 		.catch(err => {
@@ -102,11 +113,18 @@ export default class ContentComments extends Component {
 	}
 	
 	getAuthors() {
-		if ( this.state.comment && this.state.comment.length ) {
+		var user = this.props.user;
+		var comment = this.state.comment;
+		
+		if ( comment ) {
 			var Authors = [];
 			// Extract a list of all authors from comments
-			for ( var idx = 0; idx < this.state.comment.length; idx++ ) {
-				Authors.push(this.state.comment[idx].author);
+			for ( var idx = 0; idx < comment.length; idx++ ) {
+				Authors.push(comment[idx].author);
+			}
+			// Add self (in case we start making comments
+			if ( user && user.id ) {
+				Authors.push(user.id);
 			}
 			// http://stackoverflow.com/a/23282067/5678759
 			// Remove Duplicates
@@ -154,6 +172,7 @@ export default class ContentComments extends Component {
 	
 	onPublish( e ) {
 		console.log('whee');
+		
 	}
 	
 	render( props, {comment, tree, authors, newcomment} ) {
