@@ -1,6 +1,9 @@
 @import 'defs.less';
 
 #content .content-common-body.-markup {
+}
+
+#content .-markup {
 	& .-textarea {
 		/*padding: 0.25em;*/
 		border: 1px solid @COL_NLLL;
@@ -36,13 +39,20 @@
 	
 	& .-footer {
 		font-size: 0.8em;
+		
+		& .-left {
+			
+		}
+		& .-right {
+			float: right;
+		}
 	}
 	
 	/* Inline Code */
 	& code {
 	}
 	
-	pre{
+	& pre {
 		display:block;
 		width: 100%;
 		overflow:auto;
@@ -50,26 +60,26 @@
 	}
 
 	/* Code Blocks */
-	pre code {
+	& pre code {
 		width: 100%;
 		box-sizing: border-box;
 	}
 
     /* Tables */
 
-    table {
+	& table {
         border: 1px solid @COL_NLLL;
         margin: 2% 0;
         border-collapse: collapse;
     }
 
-    th, td {
+    & th, td {
         vertical-align: center;
         border: 1px solid @COL_NLLL;
         padding: 0.5em;
     }
 
-    tbody{
+    & tbody {
         tr:nth-child(even) {
             background-color: @COL_NLLLL;
         }

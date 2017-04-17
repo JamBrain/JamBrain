@@ -9,10 +9,10 @@ function noteVersion_Add( $note, $author, $body, $tag = "" ) {
 			body,
 			tag
 		)
-		VALUES ( 
+		VALUES (
 			?,
 			?,
-			NOW()
+			NOW(),
 			?,
 			?
 		)",

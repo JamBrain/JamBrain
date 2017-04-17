@@ -16,11 +16,11 @@ export function Get( node ) {
 export function Add( parent, node, body, tag ) {
 	var Data = {};
 	
-	if (parent)
+	if ( Number.isInteger(parent) )
 		Data.parent = parent;
-	if (body)
+	if ( body )
 		Data.body = body;
-	if (tag)
+	if ( tag )
 		Data.tag = tag;
 	
 	return Fetch.Post(API_ENDPOINT+'/vx/note/add/'+node, Data);
@@ -29,11 +29,11 @@ export function Add( parent, node, body, tag ) {
 export function Update( id, node, body, tag ) {
 	var Data = {};
 	
-	if (node)
+	if ( node )
 		Data.node = node;
-	if (body)
+	if ( body )
 		Data.body = body;
-	if (tag)
+	if ( tag )
 		Data.tag = tag;
 	
 	return Fetch.Post(API_ENDPOINT+'/vx/note/update/'+id, Data);
