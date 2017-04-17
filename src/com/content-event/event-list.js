@@ -149,9 +149,9 @@ export default class ContentEventList extends Component {
 							}
 							
 							return <div class={_class + this.voteToClass(this.state.votes[r.id])}>
-								<ButtonBase class="-button -yes" onClick={this.onYes.bind(this, r.id)}>+1</ButtonBase>
-								<ButtonBase class="-button -maybe" onClick={this.onMaybe.bind(this, r.id)}>0</ButtonBase>
 								<ButtonBase class="-button -no" onClick={this.onNo.bind(this, r.id)}>-1</ButtonBase>
+								<ButtonBase class="-button -maybe" onClick={this.onMaybe.bind(this, r.id)}>0</ButtonBase>
+								<ButtonBase class="-button -yes" onClick={this.onYes.bind(this, r.id)}>+1</ButtonBase>
 								<span class="-text">{r.theme}</span>
 								{ShowHistory}
 							</div>;
