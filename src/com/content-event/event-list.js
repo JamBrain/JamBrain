@@ -231,10 +231,10 @@ export default class ContentEventList extends Component {
 
 		// Page bodies
 		var Body = null;
-		if ( user && user['id'] && lists && lists.keys().length && votes ) {
+		if ( user && user['id'] && lists && votes ) {
 			Body = page ? this.renderList(page) : null;
 		}
-		else if ( lists && lists.keys().length == 0 ) {
+		else if ( lists && !lists['1'] ) {
 			Body = [
 				"This round hasn't started yet. Stay tuned!"
 			];
