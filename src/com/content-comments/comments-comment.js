@@ -89,8 +89,8 @@ export default class ContentCommentsComment extends Component {
 				ShowEdit = <div class="-edit" onclick={this.onEdit}><SVGIcon>edit</SVGIcon> Edit</div>;
 			
 			var ShowReply = null;
-			if ( user && user.id )
-				ShowReply = <div class="-reply" onclick={this.onReply}><SVGIcon>reply</SVGIcon> Reply</div>;
+//			if ( user && user.id )
+//				ShowReply = <div class="-reply" onclick={this.onReply}><SVGIcon>reply</SVGIcon> Reply</div>;
 				
 			var Name = author.name;
 			if ( author.meta['real-name'] )

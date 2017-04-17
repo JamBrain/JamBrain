@@ -123,75 +123,6 @@ export default class ContentComments extends Component {
 			});
 		}
 	}
-/*		
-	renderComment( comment, indent = 0, editing = false ) {
-		var author = this.state.authors[comment.author];
-		if ( author ) {
-			var ShowEdit = null;
-			if ( this.props.user && comment.author === this.props.user.id )
-				ShowEdit = <div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>;
-			
-			var ShowReply = null;
-			if ( this.props.user && this.props.user.id )
-				ShowReply = <div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>;
-				
-			var Name = author.name;
-			if ( author.meta['real-name'] )
-				Name = author.meta['real-name'];
-				
-			var Avatar = "///other/dummy/user64.png";
-			if ( author.meta['avatar'] )
-				Avatar = author.meta['avatar'];
-			
-			var ShowTitle = null;
-			var ShowBottomNav = null;
-			if ( !editing ) {
-				ShowTitle = (
-					<div class="-title">
-						<span class="-author">{Name}</span> (<NavLink class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</NavLink>)
-					</div>
-				);
-
-				ShowBottomNav = (
-					<div class="-nav">
-						<div class="-love"><SVGIcon>heart</SVGIcon> {comment.love}</div>
-						{ShowReply}
-						{ShowEdit}
-					</div>
-				);
-			}
-			
-			var ShowTopNav = null;
-			if ( editing ) {
-				ShowTopNav = (
-					<div class="-nav">
-						<div class={"-editing "+comment.editing?"-selected":""} onclick={this.onEditing}><SVGIcon>edit</SVGIcon> Edit</div>
-						<div class={"-preview "+comment.editing?"":"-selected"} onclick={this.onPreview}><SVGIcon>preview</SVGIcon> Preview</div>
-					</div>
-				);
-			}
-			
-			return (
-				<div class={"-item -comment -indent-"+indent}>
-					<div class="-avatar"><IMG2 src={Avatar} /></div>
-					<div class="-body">
-						{ShowTopNav}
-						{ShowTitle}
-						<ContentCommentsMarkup class="-text" editing={editing}>{comment.body}</ContentCommentsMarkup>
-						{ShowBottomNav}
-					</div>
-				</div>
-			);
-		}
-		else {
-			return (
-				<div class={"-item -comment -indent-"+indent}>
-					<div class="-body">There was a problem with this node</div>
-				</div>
-			);
-		}
-	}
-*/
 
 	renderComments( tree, indent = 0 ) {
 		var user = this.props.user;
@@ -218,7 +149,7 @@ export default class ContentComments extends Component {
 		var comment = this.state.newcomment;
 		var author = authors[comment.author];
 
-		return <ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish />;
+		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish /></div>;
 	}
 	
 	onPublish( e ) {
@@ -231,9 +162,9 @@ export default class ContentComments extends Component {
 		var path = props.path;
 		var extra = props.extra;
 
-		var FooterItems = [];
-		if ( !props['no_comments'] )
-			FooterItems.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
+//		var FooterItems = [];
+//		if ( !props['no_comments'] )
+//			FooterItems.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
 			
 		var ShowComments = <NavSpinner />;
 		if ( comment && tree && authors ) {
@@ -253,14 +184,16 @@ export default class ContentComments extends Component {
 				<div class="-headline">COMMENTS</div>
 				{ShowComments}
 				{ShowPostNew}
-				<div class="content-footer content-footer-common -footer">
-					<div class="-left">
-					</div>
-					<div class="-right">
-			  			{FooterItems}
-			  		</div>
-				</div>
+				<div class="content-footer content-footer-common -footer" style="height:0" />
 			</div>
 		);
 	}
+
+//				<div class="content-footer content-footer-common -footer">
+//					<div class="-left">
+//					</div>
+//					<div class="-right">
+//			  			{FooterItems}
+//			  		</div>
+//				</div>
 }
