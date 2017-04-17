@@ -42,7 +42,7 @@ export default class ContentCommentsMarkup extends Component {
 		if (props.editing) {
 			var Height = this.textarea ? this.textarea.scrollHeight : 0;
 			
-			var Limit = props.limit ? props.limit : 4096;
+			var Limit = props.limit ? props.limit : 2048;
 			var Chars = props.children[0] ? props.children[0].length : 0;
 			
 			return (
