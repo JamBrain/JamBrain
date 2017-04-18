@@ -1,5 +1,6 @@
 import { h, Component } from 'preact/preact';
 import SVGIcon 			from 'com/svg-icon/icon';
+import NavLink			from 'com/nav-link/link';
 
 export default class SidebarCountdown extends Component {
 	constructor( props ) {
@@ -269,7 +270,7 @@ export default class SidebarCountdown extends Component {
 						</div>
 					</div>
 				</div>
-				<div id={this.class} class="-info" title={LanguagePrefix+props.date.toString()}>{props.tt} {getLocaleDay(props.date)} at <strong>{getLocaleTime(props.date)} {getLocaleTimeZone(props.date)}</strong></div>
+				<div id={this.class} class="-info" title={LanguagePrefix+props.date.toString()}>{props.tt} {getLocaleDay(props.date)} at <strong>{getLocaleTime(props.date)} {getLocaleTimeZone(props.date)}</strong> <NavLink href="https://github.com/ludumdare/ludumdare/issues/589"><strong title="Adjusted for your local timezone. If this is not your timezone, click here and let us know!">*</strong></NavLink></div>
 			</div>
 		);
 	}
