@@ -173,12 +173,18 @@ export default class ContentSimple extends Component {
 					</ContentCommonBodyMarkup>
 				);
 			}
+			
+			let ShowAbove = null;
+			if ( props.above ) {
+				ShowAbove = props.above;
+			}
 
 			return (
 				<ContentCommon {...props}>
 					{ShowEditBar}
 					{ShowAvatar}
 					{ShowTitle}
+					{ShowAbove}
 					{ShowByLine}
 					{ShowMarkup}
 					{props.children}
