@@ -37,7 +37,7 @@ switch ( $action ) {
 			sort($node_ids);
 
 			// Limit number of nodes
-			if ( count($node_ids) > 50 ) {
+			if ( count($node_ids) > 250 ) {
 				json_EmitFatalError_BadRequest("Too many nodes", $RESPONSE);
 			}
 			
