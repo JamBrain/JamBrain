@@ -73,7 +73,7 @@ export default class ContentEvent extends Component {
 				IsHome = true;
 			}
 
-			ShowHome = <ContentCommonNavButton href={path} class={Class}><SVGIcon>home</SVGIcon>Home</ContentCommonNavButton>;
+			ShowHome = <ContentCommonNavButton href={path} class={Class}><SVGIcon>home</SVGIcon><div class="if-sidebar-inline">Home</div></ContentCommonNavButton>;
 		}
 		
 		var ShowGame = null;
@@ -83,7 +83,7 @@ export default class ContentEvent extends Component {
 				Class = "-disabled";
 //			}
 
-			ShowGame = <ContentCommonNavButton onclick={this.onJoin} class={Class}><SVGIcon>gamepad</SVGIcon>Join Event</ContentCommonNavButton>;
+			ShowGame = <ContentCommonNavButton onclick={this.onJoin} class={Class}><SVGIcon>gamepad</SVGIcon><div class="if-sidebar-inline">Join Event</div></ContentCommonNavButton>;
 		}
 		
 		var ShowFeed = null;
@@ -114,7 +114,7 @@ export default class ContentEvent extends Component {
 				}
 			}
 
-			ShowTheme = <ContentCommonNavButton href={path+'/theme'} class={Class}><SVGIcon>ticket</SVGIcon>Theme Selection</ContentCommonNavButton>;
+			ShowTheme = <ContentCommonNavButton href={path+'/theme'} class={Class}><SVGIcon>ticket</SVGIcon><div class="if-sidebar-inline">Theme Selection</div></ContentCommonNavButton>;
 		}
 		
 		if ( !IsHome )
