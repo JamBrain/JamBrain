@@ -158,7 +158,7 @@ export default class ContentSimple extends Component {
 				<ContentCommon {...props}>
 					{EditBar}
 					{ShowAvatar}
-					<ContentCommonBodyTitle href={path} title={node.name} />
+					<ContentCommonBodyTitle href={path} title={node.name} titleIcon={props.titleIcon} />
 					{ShowByLine}
 					<ContentCommonBodyMarkup 
 						node={node} 
