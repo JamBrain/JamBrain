@@ -66,8 +66,6 @@ export default class ContentFollowing extends Component {
             var a_friend = props.user.private.refs.star.indexOf(a.id) != -1;
             var b_friend = props.user.private.refs.star.indexOf(b.id) != -1;
 
-            console.log("a : "+a_friend + " , b : " + b_friend);
-
             if ( a_friend == b_friend){ // either their both freinds or both following
                 return 0;
             }

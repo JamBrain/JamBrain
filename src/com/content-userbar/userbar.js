@@ -22,13 +22,12 @@ export default class ContentUserBar extends Component {
         var posts = following.posts;
 
         return (
-                <div class="userbar">
-                    <ContentCommonBodyAvatar src={following.meta && following.meta.avatar ? following.meta.avatar : ''} />
-                    <ContentCommonBodyTitle href={"/#dummy"} title={following.meta['real-name'] ? following.meta['real-name'] : following.name} subtitle={'@'+following.slug} />
+            <div class="userbar">
+                <ContentCommonBodyAvatar src={following.meta && following.meta.avatar ? following.meta.avatar : ''} />
+                <ContentCommonBodyTitle href={"/users/"+following.slug} title={following.meta['real-name'] ? following.meta['real-name'] : following.name} subtitle={'@'+following.slug} />
 
-                    <ContentCommonNav><ButtonFollow node={following} user={user} /></ContentCommonNav>
-                </div>
-
+                <ContentCommonNav><ButtonFollow node={following} user={user} /></ContentCommonNav>
+            </div>
         );
     }
 }
