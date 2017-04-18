@@ -44,9 +44,10 @@ export default class ContentNavUser extends Component {
 		var HasFeed = <ContentNavButton path={NewPath} icon='feed' href={path+'/feed'}>Feed</ContentNavButton>;
 
 		var HasFollowing = null;
-		if ( false ) {
+		if ( user["private"] && user.private["link"] && user.private.link["star"] ) {
 			HasFollowing = <ContentNavButton path={NewPath} icon='user-check' href={path+'/following'}>Following</ContentNavButton>;
 		}
+
 		var HasFollowers = null;
 		if ( false ) {
 			HasFollowers = <ContentNavButton path={NewPath} icon='users' href={path+'/followers'}>Followers</ContentNavButton>;

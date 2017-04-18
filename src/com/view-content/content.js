@@ -101,7 +101,7 @@ export default class ViewContent extends Component {
 						View.push(<ContentTimeline types={['page']} methods={['author']} node={node} user={user} path={path} extra={extra} />);
 					}
 					else if ( ViewType == 'feed' ) {
-						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
+                        View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
 						View.push(<ContentTimeline types={['post']} methods={['author']} node={node} user={user} path={path} extra={extra} />);
 					}
 					else if ( ViewType == 'post' ) {
@@ -112,8 +112,8 @@ export default class ViewContent extends Component {
 					else if ( ViewType == 'article' ) {
 					}
                     else if ( ViewType == 'following'){
-                        // return early because we dont want the full bio
-                        return (<ContentFollowing node={node} user={user} path={path} extra={extra} />);
+                        View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
+                        View.push(<ContentFollowing node={node} user={user} path={path} extra={extra} />);
                     }
 					else {
 						View.push(<Content404 />);

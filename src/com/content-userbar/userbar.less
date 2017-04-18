@@ -1,7 +1,8 @@
 @import 'defs.less';
 
 .userbar {
-    margin: 0 auto;
+    margin: 0.25em auto;
+    padding-bottom: 1em;
     width:100%;
 
     box-sizing: border-box;
@@ -16,7 +17,7 @@
     }
 
     & > .-avatar {
-        margin: -0.5em;
+        margin-top: -0.5em!important;
         float:right;
         cursor: pointer;
         &:hover {
@@ -24,7 +25,10 @@
         }
         & > img {
             display:block;
-            padding: 0.5em;
+            padding-top: 0em;
+            padding-left: 0.25em;
+            padding-right: 0.25em;
+
             height: 1em;
             width: auto;
         }
