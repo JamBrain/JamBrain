@@ -82,23 +82,23 @@ export default class ContentEvent extends Component {
 		}
 		
 		var ShowFeed = null;
-		if ( true ) {
-			let Class = null;
-			if ( extra && extra.length ) {
-				if ( extra[0] === 'feed' || extra[0] === 'hot' || extra[0] === 'news' || extra[0] === 'games' ) {
-					Class = "-selected";
-				}
-			}
-			// Root node, context sensitive
-			else {
-				// If not logged in
-				if ( user && user.id === 0 ) {
-					Class = "-selected";
-				}
-			}
-			
-			ShowFeed = <ContentCommonNavButton href={path} class={Class}><SVGIcon>feed</SVGIcon>Feed</ContentCommonNavButton>;	
-		}
+//		if ( true ) {
+//			let Class = null;
+//			if ( extra && extra.length ) {
+//				if ( extra[0] === 'feed' || extra[0] === 'hot' || extra[0] === 'news' || extra[0] === 'games' ) {
+//					Class = "-selected";
+//				}
+//			}
+//			// Root node, context sensitive
+//			else {
+//				// If not logged in
+//				if ( user && user.id === 0 ) {
+//					Class = "-selected";
+//				}
+//			}
+//			
+//			ShowFeed = <ContentCommonNavButton href={path} class={Class}><SVGIcon>feed</SVGIcon>Feed</ContentCommonNavButton>;	
+//		}
 
 		var ShowTheme = null;
 		if ( true ) {

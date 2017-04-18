@@ -11,12 +11,11 @@ export default class ContentNavEvent extends Component {
 	}
 	
 	render( {node, user, path, extra}, {} ) {
-
 		var NewPath = '/'+ (extra ? extra.join('/') : '');
 		
 		var ShowMyFeed = null;
 		if ( user && user.id ) {
-			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href='/'>Feed</ContentNavButton>;
+			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href={path}>Feed</ContentNavButton>;
 		}
 		// Default to /hot if not logged in
 		else if ( NewPath === '/' ) {
@@ -27,9 +26,9 @@ export default class ContentNavEvent extends Component {
 			<div class="-body">
 				<div class="content-base content-nav content-nav-root">
 					{ShowMyFeed}
-					<ContentNavButton path={NewPath} icon='heart' href='/hot'>Popular</ContentNavButton>
-					<ContentNavButton path={NewPath} icon='news' href='/news'>News</ContentNavButton>
-					<ContentNavButton path={NewPath} icon='gamepad' href='/games'>Games</ContentNavButton>
+					<ContentNavButton path={NewPath} icon='heart' href={path+'/hot'}>Popular</ContentNavButton>
+					<ContentNavButton path={NewPath} icon='news' href={path+'/news'}>News</ContentNavButton>
+					<ContentNavButton path={NewPath} icon='gamepad' href={path+'/games'}>Games</ContentNavButton>
 				</div>
 			</div>
 		);
