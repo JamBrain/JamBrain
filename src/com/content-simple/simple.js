@@ -138,7 +138,7 @@ export default class ContentSimple extends Component {
 				ShowEditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} published={IsPublished} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} onpublish={this.onPublish} />;
 			}
 			else {
-				if ( user.id && (author.id === user.id) )
+				if ( user.id && (node.author === user.id) )
 					props.edit = 1;
 			}
 			

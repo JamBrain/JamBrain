@@ -58,7 +58,7 @@ export default class ViewContent extends Component {
 		else if ( node.type === 'page' ) {
 			return (
 				<div id="content">
-					<ContentPost node={node} user={user} path={path} extra={extra} updated edit />
+					<ContentPost node={node} user={user} path={path} extra={extra} updated />
 				</div>
 			);
 		}
