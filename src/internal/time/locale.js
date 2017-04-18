@@ -28,6 +28,9 @@ if ( LocaleTimeRemapTable.hasOwnProperty(navigator.language) ) {
 	time_locale = LocaleTimeRemapTable[navigator.language];
 }
 
+// TODO: Consider making all GMT+2's in to CEST, except Africa
+// https://www.timeanddate.com/time/zones/cest
+
 // Timezone remapping table
 var LocaleZoneRemaps = {
 	"Argentina Standard Time":"ART",
@@ -42,6 +45,8 @@ var LocaleZoneRemaps = {
 	"Romance Daylight Time":"CEST"/*"GMT+2"*/,				// was RDT, but uncommon
 	"Mitteleuropäische Zeit":"MEZ"/*"GMT+1"*/,
 	"Mitteleuropäische Sommerzeit":"MESZ"/*"GMT+2"*/,
+	
+	"Paris, Madrid (heure d’été)":"CEST"/*"GMT+2"*/,		// was PM, completely wrong
 
 	// Microsoft
 	"W. Europe Standard Time":"CET"/*"GMT+1"*/,

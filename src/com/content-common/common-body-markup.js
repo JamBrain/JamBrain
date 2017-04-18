@@ -7,24 +7,6 @@ import SVGIcon							from 'com/svg-icon/icon';
 export default class ContentCommonBodyMarkup extends Component {
 	constructor( props ) {
 		super(props);
-
-//		this.PlaceholderText = ([
-//			"",
-////			"Use GitHub-style markup (**bold** _italics_ ~~del~~ `code`), and emoji codes :like_this: :smile:",
-////			"",
-////			"# This is a header",
-////			"",
-////			"* Item 1",
-////			"* Item 2",
-////			"",
-////			"```",
-////			"printf(\"Hello World\");",
-////			"```",
-////			"",
-////			"## Embed things by pasting a URL on a new line:",
-////			"",
-////			"https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-//			""]).join("\n");
 	}
 
 	shouldComponentUpdate( nextProps ) {
