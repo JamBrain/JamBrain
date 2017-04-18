@@ -14,44 +14,157 @@ import ContentEventList					from 'com/content-event/event-list';
 
 import ContentCommon					from 'com/content-common/common';
 import ContentCommonNav					from 'com/content-common/common-nav';
+import ContentCommonNavButton			from 'com/content-common/common-nav-button';
+import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
+import ContentCommonBodyMarkup			from 'com/content-common/common-body-markup';
 
+
+import ContentSimple					from 'com/content-simple/simple';
 
 
 export default class ContentEvent extends Component {
 	constructor( props ) {
 		super(props);
+//
+//		this.state = {
+//			'editing': this.isEditMode(),
+//			'modified': false,
+//
+//			'body': props.node.body,
+//		};
+		this.onJoin = this.onJoin.bind(this);
 	}
 
-	componentDidMount() {
-	}
-	componentWillUnmount() {
+//	componentDidMount() {
+//	}
+//	componentWillUnmount() {
+//	}
+
+//	isEditMode() {
+//		var extra = this.props.extra;
+//		return extra && extra.length && extra[extra.length-1] == 'edit';
+//	}
+
+	onJoin( e ) {
+		console.log('join');
 	}
 	
 	render( props, state ) {
+		props = Object.assign({}, props);
+		
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
-		var error = state.error;
+		
+		if ( node ) {
+			props.header = "EVENT";
+			props.headerClass = "-col-ab";
+			props.titleIcon = "trophy";
+		}
 
+		var ShowHome = null;
+		var IsHome = false;
+		if ( true ) {
+			let Class = null;
+			if ( extra && extra.length == 0 ) {
+				Class = "-selected";
+				IsHome = true;
+			}
+
+			ShowHome = <ContentCommonNavButton href={path} class={Class}><SVGIcon>home</SVGIcon>Home</ContentCommonNavButton>;
+		}
+		
+		var ShowGame = null;
+		if ( true ) {
+			let Class = null;
+//			if ( extra && extra.length ) {
+				Class = "-disabled";
+//			}
+
+			ShowGame = <ContentCommonNavButton onclick={this.onJoin} class={Class}><SVGIcon>gamepad</SVGIcon>Join Event</ContentCommonNavButton>;
+		}
+		
+		var ShowFeed = null;
+//		if ( true ) {
+//			let Class = null;
+//			if ( extra && extra.length ) {
+//				if ( extra[0] === 'feed' || extra[0] === 'hot' || extra[0] === 'news' || extra[0] === 'games' ) {
+//					Class = "-selected";
+//				}
+//			}
+//			// Root node, context sensitive
+//			else {
+//				// If not logged in
+//				if ( user && user.id === 0 ) {
+//					Class = "-selected";
+//				}
+//			}
+//			
+//			ShowFeed = <ContentCommonNavButton href={path} class={Class}><SVGIcon>feed</SVGIcon>Feed</ContentCommonNavButton>;	
+//		}
+
+		var ShowTheme = null;
+		if ( true ) {
+			let Class = null;
+			if ( extra && extra.length ) {
+				if ( extra[0] === 'theme' ) {
+					Class = "-selected";
+				}
+			}
+
+			ShowTheme = <ContentCommonNavButton href={path+'/theme'} class={Class}><SVGIcon>ticket</SVGIcon>Theme Selection</ContentCommonNavButton>;
+		}
+		
+		if ( !IsHome )
+			props.nomarkup = true;
+		
+		return (
+			<ContentSimple {...props}>
+				<ContentCommonNav>
+					{ShowHome}
+					{ShowGame}
+					{ShowFeed}
+					{ShowTheme}
+				</ContentCommonNav>
+			</ContentSimple>
+		);
+			
+//		props = Object.assign({}, props);	// Shallow copy we can change props
+//
+//		var node = props.node;
+//		var user = props.user;
+//		var path = props.path;
+//		var extra = props.extra;
+//		var error = state.error;
+//
 //		if ( node.slug ) {
 //			return (
 //				<ContentCommon {...props}>
-////					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
-////					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.name} />
-////					<ContentCommonBodyMarkup class="-block-if-not-minimized">{node.body}</ContentCommonBodyMarkup>
+//					<ContentCommonBodyTitle href={path} title={node.name} />
+//					<ContentCommonBodyMarkup 
+//						node={node} 
+//						editing={state.editing}
+//						placeholder="Say something"
+//						class="-block-if-not-minimized"
+//						onmodify={this.onModifyText}
+//					>
+//						{state.body}
+//					</ContentCommonBodyMarkup>
 //					<ContentCommonNav>
-////						{Nav}
 //					</ContentCommonNav>
 //					{props.children}
 //				</ContentCommon>
 //			);
+//
+////					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
+////						{Nav}
 //		}
 //		else {
 //			return <ContentLoading />;
 //		}
 
-
+/*
 		if ( node.slug ) {
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 			
@@ -134,7 +247,7 @@ export default class ContentEvent extends Component {
 				</div>
 			);
 		}
-
+*/
 
 	}
 }

@@ -15,7 +15,10 @@ import ContentComments					from 'com/content-comments/comments';
 
 import ContentNavRoot					from 'com/content-nav/nav-root';
 import ContentNavUser					from 'com/content-nav/nav-user';
-//import ContentNavEvent					from 'com/content-nav/nav-event';
+import ContentNavEvent					from 'com/content-nav/nav-event';
+import ContentNavTheme					from 'com/content-nav/nav-theme';
+
+import ContentEventTheme				from 'com/content-event/event-theme';
 
 import ContentPalette					from 'com/content-palette/palette';
 
@@ -133,9 +136,43 @@ export default class ViewContent extends Component {
 			);
 		}
 		else if ( node.type === 'event' ) {
+			var ShowNav = null;
+			var ShowPage = null;
+			
+			if ( extra && extra.length && extra[0] == 'theme' ) {
+				let NewPath = path+'/'+extra[0];
+				let NewExtra = extra.slice(1);
+				ShowNav = <ContentNavTheme node={node} user={user} path={NewPath} extra={NewExtra} />;
+				ShowPage = <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} />;
+			}
+			else {
+				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
+			}
+
+//			else {
+/*				let Topic = 'news';
+				if ( extra.length )
+					Topic = extra.length;
+				
+				if ( Topic == 'news' ) {
+					ShowPage = <ContentTimeline types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra}></ContentTimeline>;
+				}
+				else if ( Topic == 'hot' ) {
+					ShowPage = <ContentTimeline node={node} user={user} path={path} extra={extra}></ContentTimeline>;
+				}
+				else if ( Topic == 'games' ) {
+					ShowPage = <ContentGames types={['game']} node={node} user={user} path={path} extra={extra}></ContentGames>;
+				}
+				else if ( Topic == 'feed' ) {
+					ShowPage = <ContentTimeline types='' node={node} user={user} path={path} extra={extra}></ContentTimeline>;
+				}*/
+//			}
+			
 			return (
 				<div id="content">
 					<ContentEvent node={node} user={user} path={path} extra={extra} />
+					{ShowNav}
+					{ShowPage}
 				</div>
 			);
 //					<ContentNavEvent node={node} user={user} path={path} extra={extra} />;
