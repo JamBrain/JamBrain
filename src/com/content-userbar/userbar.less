@@ -1,35 +1,36 @@
 @import 'defs.less';
 
-.userbar {
-    margin: 0.25em auto;
-    padding-bottom: 1em;
-    width:100%;
+#content .content-userbar{
 
-    box-sizing: border-box;
-    .info{
-        display: inline-block;
-        margin: 0.1em;
+    .-bodies .userbar {
+        margin: 0.25em auto;
+        padding-bottom: 0.5em;
+        width:100%;
 
-        span {
-            padding-left: 0.2em;
-            padding-right: 0.2em;
+        box-sizing: border-box;
+
+        & > .-avatar {
+            margin-top: -0.5em!important;
+            float:right;
+
+            & > img {
+                display:block;
+                padding: 0.5em;
+            }
+        }
+
+        .content-common-nav{
+            margin-top: 0.125em;
+            margin-bottom: 0.125em;
+        }
+        & .-link {
+            & input {
+                width: 20em;
+            }
         }
     }
 
-    & > .-avatar {
-        margin-top: -0.5em!important;
-        float:right;
-        cursor: pointer;
-        &:hover {
-            background: @MAJOR_COLOR1;
-        }
-        & > img {
-            display:block;
-            padding: 0.5em;
-        }
+    .following{
+        width: 100%;
     }
-}
-
-.following{
-    width: 100%;
 }
