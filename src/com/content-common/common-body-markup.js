@@ -3,6 +3,7 @@ import { shallowDiff }	 				from 'shallow-compare/index';
 
 import NavLink							from 'com/nav-link/link';
 import SVGIcon							from 'com/svg-icon/icon';
+import InputTextArea					from 'com/input-textarea/input-textarea';
 
 export default class ContentCommonBodyMarkup extends Component {
 	constructor( props ) {
@@ -11,23 +12,6 @@ export default class ContentCommonBodyMarkup extends Component {
 
 	shouldComponentUpdate( nextProps ) {
 		return shallowDiff(this.props, nextProps);
-	}
-	
-	resizeTextarea() {
-		if ( this.textarea ) {
-			this.textarea.style.height = 0;	/* Shockingly, this is necessary. textarea wont shrink otherwise */
-			this.textarea.style.height = this.textarea.scrollHeight + 'px';
-		}		
-	}
-	
-	// After initial render
-	componentDidMount() {
-		this.resizeTextarea();
-	}
-	
-	// After every update
-	componentDidUpdate() {
-		this.resizeTextarea();
 	}
 	
 	render( props ) {
@@ -46,10 +30,10 @@ export default class ContentCommonBodyMarkup extends Component {
 				<div class={Class}>
 					<div class="-label">{props.label}</div>
 					<div class="-textarea">
-						<textarea 
+						<InputTextArea 
 							name="paragraph_text" 
 							value={props.children} 
-							oninput={props.onmodify} 
+							onModify={props.onmodify} 
 							placeholder={props.placeholder} 
 							ref={(input) => { this.textarea = input; }} 
 						/>
