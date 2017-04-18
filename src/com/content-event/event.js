@@ -130,7 +130,7 @@ export default class ContentEvent extends Component {
 			props.above.push(
 				<ContentCommonBody>
 					<div><SVGIcon small baseline gap>calendar</SVGIcon> {getLocaleDay(Start)} {getLocaleMonthDay(Start)} to <span class="if-sidebar-inline">{getLocaleDay(End)}</span> {getLocaleDate(End)}</div>
-					<div><SVGIcon small baseline gap>clock</SVGIcon><strong> Starts at {getLocaleTime(Start)}</strong> {getLocaleTimeZone(Start)}</div>
+					<div><SVGIcon small baseline gap>clock</SVGIcon> Starts at <strong>{getLocaleTime(Start)}</strong> {getLocaleTimeZone(Start)}</div>
 				</ContentCommonBody>
 			);
 		}
