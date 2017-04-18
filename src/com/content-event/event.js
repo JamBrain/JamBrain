@@ -64,11 +64,60 @@ export default class ContentEvent extends Component {
 			props.titleIcon = "trophy";
 		}
 		
+		var ShowGame = null;
+		if ( true ) {
+			let Class = null;
+			if ( extra && extra.length ) {
+				// ??
+			}
+			// Root node, context sensitive
+			else {
+				// If logged in
+				if ( user && user.id ) {
+					Class = "-selected";
+				}
+			}
+
+			ShowGame = <ContentCommonNavButton onclick={this.onJoin}><SVGIcon>gamepad</SVGIcon>Join Event</ContentCommonNavButton>;
+		}
+		
+		var ShowFeed = null;
+		if ( true ) {
+			let Class = null;
+			if ( extra && extra.length ) {
+				if ( extra[0] === 'feed' || extra[0] === 'hot' || extra[0] === 'news' || extra[0] === 'games' ) {
+					Class = "-selected";
+				}
+			}
+			// Root node, context sensitive
+			else {
+				// If not logged in
+				if ( user && user.id === 0 ) {
+					Class = "-selected";
+				}
+			}
+			
+			ShowFeed = <ContentCommonNavButton href={path} class={Class}><SVGIcon>feed</SVGIcon>Feed</ContentCommonNavButton>;	
+		}
+
+		var ShowTheme = null;
+		if ( true ) {
+			let Class = null;
+			if ( extra && extra.length ) {
+				if ( extra[0] === 'theme' ) {
+					Class = "-selected";
+				}
+			}
+
+			ShowTheme = <ContentCommonNavButton href="theme" class={Class}><SVGIcon>ticket</SVGIcon>Theme Selection</ContentCommonNavButton>;
+		}
+		
 		return (
 			<ContentSimple {...props}>
 				<ContentCommonNav>
-					<ContentCommonNavButton onclick={this.onJoin}><SVGIcon>gamepad</SVGIcon>Join Event</ContentCommonNavButton>
-					<ContentCommonNavButton href="theme"><SVGIcon>mallet</SVGIcon>Theme Voting</ContentCommonNavButton>
+					{ShowGame}
+					{ShowFeed}
+					{ShowTheme}
 				</ContentCommonNav>
 			</ContentSimple>
 		);

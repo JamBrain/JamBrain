@@ -18,7 +18,7 @@ export default class ContentNavEvent extends Component {
 		if ( user && user.id ) {
 			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href='/'>Feed</ContentNavButton>;
 		}
-		// Default to /news if not logged in
+		// Default to /hot if not logged in
 		else if ( NewPath === '/' ) {
 			NewPath = '/hot';
 		}
