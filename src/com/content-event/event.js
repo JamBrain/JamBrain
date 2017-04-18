@@ -13,6 +13,7 @@ import ContentEventList					from 'com/content-event/event-list';
 //import ContentEventResults				from 'com/content-event/event-results';
 
 import ContentCommon					from 'com/content-common/common';
+import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
@@ -120,6 +121,19 @@ export default class ContentEvent extends Component {
 			props.nomarkup = true;
 		
 		props.class = 'content-event';
+		props.above = [];
+		
+		if ( node.meta['event-start'] && node.meta['event-end'] ) {
+			let Start = new Date(node.meta['event-start']);
+			let End = new Date(node.meta['event-end']);
+			
+			props.above.push(
+				<ContentCommonBody>
+					<div><SVGIcon small baseline gap>calendar</SVGIcon> {getLocaleDay(Start)} {getLocaleMonthDay(Start)} to <span class="if-sidebar-inline">{getLocaleDay(End)}</span> {getLocaleDate(End)}</div>
+					<div><SVGIcon small baseline gap>clock</SVGIcon><strong> {getLocaleTime(Start)}</strong> {getLocaleTimeZone(Start)}</div>
+				</ContentCommonBody>
+			);
+		}
 		
 		return (
 			<ContentSimple {...props}>
