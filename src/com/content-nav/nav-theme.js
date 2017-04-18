@@ -18,38 +18,38 @@ export default class ContentNavTheme extends Component {
 			var NewPath = '/'+ (extra ? extra.join('/') : '');
 
 			// Figure out Default Page (this needs to be done first, otherwise Defaults are set wrong)
-			var DefaultPath = '/theme';
+			var DefaultPath = '';
 			if ( ThemeMode >= 1 ) {
-				DefaultPath = '/theme/slaguhter';
+				DefaultPath = '/idea';
 			}
 			if ( ThemeMode >= 2 ) {
-				DefaultPath = '/theme/slaughter';
+				DefaultPath = '/slaughter';
 			}
 			if ( ThemeMode >= 3 ) {
-				DefaultPath = '/theme/fusion';
+				DefaultPath = '/fusion';
 			}
 			if ( ThemeMode >= 4 ) {
 				for ( var idx = 1; idx <= 5; idx++ ) {	// 5 rounds max
 					let Page = node.meta['theme-page-mode-'+idx];
 					if ( parseInt(Page) > 0 ) {
-						DefaultPath = '/theme/'+idx;
+						DefaultPath = '/'+idx;
 					}
 				}
 			}
-			if ( NewPath === '/theme' || NewPath === '/theme/' ) {
+			if ( NewPath === '/' ) {
 				NewPath = DefaultPath;
 			}
 
 			// Populate Round Buttons
 			var ShowRounds = [];
 			if ( ThemeMode >= 1 ) {
-				ShowRounds.push(<ContentNavButton path={path+NewPath} icon='suggestion' href={path+'/theme/idea'}>Suggestions</ContentNavButton>);
+				ShowRounds.push(<ContentNavButton path={path+NewPath} icon='suggestion' href={path+'/idea'}>Suggestions</ContentNavButton>);
 			}
 			if ( ThemeMode >= 2 ) {
-				ShowRounds.push(<ContentNavButton path={path+NewPath} icon='fire' href={path+'/theme/slaughter'}>Slaughter</ContentNavButton>);
+				ShowRounds.push(<ContentNavButton path={path+NewPath} icon='fire' href={path+'/slaughter'}>Slaughter</ContentNavButton>);
 			}
 			if ( ThemeMode >= 3 ) {
-				ShowRounds.push(<ContentNavButton path={path+NewPath} icon='heart-broken' href={path+'/theme/fusion'}>Fusion</ContentNavButton>);
+				ShowRounds.push(<ContentNavButton path={path+NewPath} icon='heart-broken' href={path+'/fusion'}>Fusion</ContentNavButton>);
 			}
 			if ( ThemeMode >= 4 ) {
 				for ( var idx = 1; idx <= 5; idx++ ) {	// 5 rounds max
@@ -59,7 +59,7 @@ export default class ContentNavTheme extends Component {
 						if ( node.meta['theme-page-name-'+idx] )
 							Name = node.meta['theme-page-name-'+idx];
 						
-						ShowRounds.push(<ContentNavButton path={path+NewPath} icon='ticket' href={path+'/theme/'+idx}>{Name}</ContentNavButton>);
+						ShowRounds.push(<ContentNavButton path={path+NewPath} icon='ticket' href={path+'/'+idx}>{Name}</ContentNavButton>);
 					}
 				}
 			}

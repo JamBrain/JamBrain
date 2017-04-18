@@ -137,18 +137,19 @@ export default class ViewContent extends Component {
 		}
 		else if ( node.type === 'event' ) {
 			var ShowNav = null;
+			var ShowPage = null;
+			
 			if ( extra && extra.length && extra[0] == 'theme' ) {
-				ShowNav = <ContentNavTheme node={node} user={user} path={path} extra={extra} />;
+				let NewPath = path+'/'+extra[0];
+				let NewExtra = extra.slice(1);
+				ShowNav = <ContentNavTheme node={node} user={user} path={NewPath} extra={NewExtra} />;
+				ShowPage = <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} />;
 			}
 			else {
 				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
 			}
 
-			var ShowPage = null;
-			if ( extra && extra.length && extra[0] == 'theme' ) {
-				ShowPage = <ContentEventTheme node={node} user={user} path={path} extra={extra} />;
-			}
-			else {
+//			else {
 /*				let Topic = 'news';
 				if ( extra.length )
 					Topic = extra.length;
@@ -165,7 +166,7 @@ export default class ViewContent extends Component {
 				else if ( Topic == 'feed' ) {
 					ShowPage = <ContentTimeline types='' node={node} user={user} path={path} extra={extra}></ContentTimeline>;
 				}*/
-			}
+//			}
 			
 			return (
 				<div id="content">
