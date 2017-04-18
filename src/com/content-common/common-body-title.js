@@ -2,6 +2,7 @@ import { h, Component } 				from 'preact/preact';
 import { shallowDiff }	 				from 'shallow-compare/index';
 
 import NavLink							from 'com/nav-link/link';
+import SVGIcon							from 'com/svg-icon/icon';
 
 export default class ContentCommonBodyTitle extends Component {
 	constructor( props ) {
@@ -20,13 +21,17 @@ export default class ContentCommonBodyTitle extends Component {
 		if ( props.subtitle )
 			props.class.push("-has-subtitle");
 		
+		var Prefix = null;
+		if ( props.titleIcon ) {
+			Prefix = <SVGIcon baseline small>{props.titleIcon}</SVGIcon>;
+		}
 		
 		var Body = [];
 		if ( props.title ) {
 			if ( props.href )
-				Body.push(<NavLink class="-text" href={props.href}>{props.title}</NavLink>);
+				Body.push(<NavLink class="-text" href={props.href}>{Prefix}{props.title}</NavLink>);
 			else
-				Body.push(<div class="-text">{props.title}</div>);
+				Body.push(<div class="-text">{Prefix}{props.title}</div>);
 		}
 		
 		if ( props.subtitle ) {

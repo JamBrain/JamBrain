@@ -132,9 +132,9 @@ export default class ContentEventList extends Component {
 				
 				var ShowHeadline = null;
 				
+//						<h3>{this.state.names[list]}</h3>
 				return (
 					<div class="theme-list">
-						<h3>{this.state.names[list]}</h3>
 						{this.state.lists[list].map(r => {
 							var ShowHistory = null;
 							if ( this.state.history ) {
@@ -149,9 +149,9 @@ export default class ContentEventList extends Component {
 							}
 							
 							return <div class={_class + this.voteToClass(this.state.votes[r.id])}>
-								<ButtonBase class="-button -yes" onClick={this.onYes.bind(this, r.id)}>+1</ButtonBase>
-								<ButtonBase class="-button -maybe" onClick={this.onMaybe.bind(this, r.id)}>0</ButtonBase>
 								<ButtonBase class="-button -no" onClick={this.onNo.bind(this, r.id)}>-1</ButtonBase>
+								<ButtonBase class="-button -maybe" onClick={this.onMaybe.bind(this, r.id)}>0</ButtonBase>
+								<ButtonBase class="-button -yes" onClick={this.onYes.bind(this, r.id)}>+1</ButtonBase>
 								<span class="-text">{r.theme}</span>
 								{ShowHistory}
 							</div>;
@@ -164,8 +164,9 @@ export default class ContentEventList extends Component {
 			}
 			else if ( ThemeMode === 2 ) {
 				return (
+//						<h3>{this.state.names[list]}</h3>
+
 					<div class="theme-list">
-						<h3>{this.state.names[list]}</h3>
 						<div>This round has ended.</div>
 						<br />
 						{this.state.lists[list].map(r => {
@@ -194,7 +195,7 @@ export default class ContentEventList extends Component {
 			}
 			else {
 				return [
-					<h3>{this.state.names[list]}</h3>,
+//					<h3>{this.state.names[list]}</h3>,
 					this.state.lists[list].map(r => {
 						return <div>{r.theme}</div>;
 					})
@@ -203,55 +204,67 @@ export default class ContentEventList extends Component {
 		}
 		else if ( this.state.names[list] ) {
 			return [
-				<h3>{this.state.names[list]}</h3>,
-				"This round hasn't started yet. Say tuned!"
+//				<h3>{this.state.names[list]}</h3>,
+				"This round hasn't started yet. Stay tuned!"
 			];
 		}
 		return null;
 	}
 	
 	render( {/*node,*/ user, path, extra}, {lists, names, votes, page, error} ) {
-		var Title = <h3>Theme Voting Round</h3>;
-	
 		// By default, the page is the last available round	
 		if ( (extra && extra.length && extra[0]) ) {
 			page = Number.parseInt(extra[0]);
 		}
-		
-		var Navigation = null;
+
 		if ( names ) {
-			Navigation = (
-				<div class="event-nav">
-					{Object.keys(names).map(v => <NavLink class={"-item" + ((v == page) ? " -selected" : "")} href={path+'/'+v}>{names[v]}</NavLink>)}
+			var Title = "Theme Voting "+names[page];
+			
+			var Navigation = null;
+	//		if ( names ) {
+	//			Navigation = (
+	//				<div class="event-nav">
+	//					{Object.keys(names).map(v => <NavLink class={"-item" + ((v == page) ? " -selected" : "")} href={path+'/'+v}>{names[v]}</NavLink>)}
+	//				</div>
+	//			);
+	//		}
+			
+			//console.log('lister',user,lists,votes);
+	
+			// Page bodies
+			var Body = null;
+			if ( user && user['id'] && lists && votes ) {
+				Body = page ? this.renderList(page) : null;
+			}
+			else if ( lists && !lists['1'] ) {
+				Body = [
+					"This round hasn't started yet. Stay tuned!"
+				];
+			}
+			else if ( lists ) {
+				Body = [
+					<div class="-info">Please log in</div>,
+					page ? this.renderList(page) : null
+				];
+			}
+			else if ( error ) {
+				Body = <div>{error}</div>;
+			}
+			else {
+				Body = <NavSpinner />;
+			}
+	
+			// Generate the page		
+			return (
+				<div class="-body">
+					<h2><SVGIcon small baseline gap>ticket</SVGIcon>{Title}</h2>
+					{Navigation}
+					{Body}
 				</div>
 			);
 		}
-
-		// Page bodies		
-		var Body = null;
-		if ( user && user['id'] && lists && votes ) {
-			Body = page ? this.renderList(page) : null;
-		}
-		else if ( lists ) {
-			Body = [
-				<div class="-info">Please log in</div>,
-				page ? this.renderList(page) : null
-			];
-		}
-		else if ( error ) {
-			Body = <div>{error}</div>;
-		}
 		else {
-			Body = <NavSpinner />;
+			return null;
 		}
-
-		// Generate the page		
-		return (
-			<div class="-body">
-				{Title}
-				{Navigation}
-				{Body}
-			</div>
-		);
 	}
 }

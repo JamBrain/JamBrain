@@ -4,93 +4,230 @@ import { h, Component } 				from 'preact/preact';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
+import IMG2 							from 'com/img2/img2';
 
-//import ContentBody						from 'com/content-body/body';
-//import ContentBodyMarkup				from 'com/content-body/body-markup';
-//
-//import ContentFooterButtonLove			from 'com/content-footer/footer-button-love';
 import ContentFooterButtonComments		from 'com/content-footer/footer-button-comments';
 
-//import $Node							from '../../shrub/js/node/node';
-//
+import ContentCommentsMarkup			from 'comments-markup';
+
+import ContentCommentsComment			from 'comments-comment';
+
+import $Note							from '../../shrub/js/note/note';
+import $Node							from '../../shrub/js/node/node';
 
 export default class ContentComments extends Component {
 	constructor( props ) {
 		super(props);
+		
+		this.state = {
+			'comments': null,
+			'tree': null,
+			'authors': null,
+			
+			'newcomment': null,
+		};
+		
+		this.onPublish = this.onPublish.bind(this);
 	}
 	
-	render( props, {} ) {
+	componentWillMount() {
+		this.getComments(this.props.node);
+	}
+
+	genComment() {
+		return {
+			'parent': 0,
+			'node': this.props.node.id,
+			'author': this.props.user.id,
+			'body': '',
+			'love': 0,
+		};
+	}
+	
+	getComments( node ) {
+		$Note.Get( node.id )
+		.then(r => {
+			// Has comments
+			if ( r.note && r.note.length ) {
+				this.setState({ 'comments': r.note, 'tree': null, 'authors': null });
+			}
+			// Does not have comments
+			else if ( r.note ) {
+				this.setState({ 'comments': [], 'tree': null, 'authors': null });
+			}
+				
+			// Async first
+			this.getAuthors().then( rr => {
+				this.setState({'newcomment': this.genComment()});
+			});
+			
+			// Sync last
+			this.setState({'tree': this.buildTree()});
+		})
+		.catch(err => {
+			this.setState({ 'error': err });
+		});
+	}
+	
+	buildTree() {
+		var comments = this.state.comments;
+		
+		// Only supports single level deep trees
+		var tree = {};
+		for ( var idx = 0; idx < comments.length; idx++ ) {
+			if ( comments[idx].parent === 0 ) {
+				tree[comments[idx].id] = {
+					'node': comments[idx],
+				};
+			}
+			else if ( comments[idx].parent && tree[comments[idx].parent] ) {
+				if (!tree[comments[idx].parent].child) {
+					tree[comments[idx].parent].child = {};
+				}
+				
+				tree[comments[idx].parent].child[comments[idx].id] = {
+					'node': comments[idx],
+				};
+			}
+			else {
+				console.log('[Comments] Unable to find parent for '+comments[idx].id);
+			}
+		}
+		
+		return tree;
+	}
+	
+	getAuthors() {
+		var user = this.props.user;
+		var comments = this.state.comments;
+		
+		if ( comments ) {
+			var Authors = [];
+			// Extract a list of all authors from comments
+			for ( var idx = 0; idx < comments.length; idx++ ) {
+				Authors.push(comments[idx].author);
+			}
+			// Add self (in case we start making comments
+			if ( user && user.id ) {
+				Authors.push(user.id);
+			}
+			// http://stackoverflow.com/a/23282067/5678759
+			// Remove Duplicates
+			Authors = Authors.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+			
+			// Fetch authors
+	
+			return $Node.GetKeyed( Authors )
+			.then(r => {
+				this.setState({ 'authors': r.node });
+			})
+			.catch(err => {
+				this.setState({ 'error': err });
+			});
+		}
+	}
+
+	renderComments( tree, indent = 0 ) {
+		var user = this.props.user;
+		var authors = this.state.authors;
+
+		var ret = [];
+
+		for ( var item in tree ) {
+			var comment = tree[item].node;
+			var author = authors[comment.author];
+			ret.push(<ContentCommentsComment user={user} comment={comment} author={author} indent={indent} />);
+
+			if ( tree[item].child ) {
+				ret.push(<div class="-indent">{this.renderComments(tree[item].child, indent+1)}</div>);
+			}
+		}
+
+		return ret;
+	}
+	
+	renderPostNew() {
+		var user = this.props.user;
+		var authors = this.state.authors;
+		var comment = this.state.newcomment;
+		var author = authors[comment.author];
+
+		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish}/></div>;
+	}
+	
+	onPublish( e ) {
+		var node = this.props.node;
+		var newcomment = this.state.newcomment;
+		
+		$Note.Add( newcomment.parent, newcomment.node, newcomment.body )
+		.then(r => {
+			if ( r.note ) {
+				var Now = new Date();
+				var comment = Object.assign({
+					'id': r.note,
+					'created': Now.toISOString(),
+					'modified': Now.toISOString()
+				}, newcomment);
+					
+				// TODO: insert properly
+				this.state.comments.push(comment);
+				
+				// Reset newcomment
+				newcomment.parent = 0;
+				newcomment.body = '';
+				
+				this.setState({'tree': this.buildTree()});
+			}
+			else {
+				this.setState({ 'error': err });
+			}
+		})
+		.catch(err => {
+			this.setState({ 'error': err });
+		});
+	}
+	
+	render( props, {comments, tree, authors, newcomment} ) {
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
 
-		var FooterItems = [];
-		if ( !props['no_comments'] )
-			FooterItems.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
+//		var FooterItems = [];
+//		if ( !props['no_comments'] )
+//			FooterItems.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
+			
+		var ShowComments = <NavSpinner />;
+		if ( comments && tree && authors ) {
+			if ( comments.length )
+				ShowComments = this.renderComments(tree);
+			else
+				ShowComments = <div class={"-item -comment -indent-0"}><div class="-nothing">No Comments.</div></div>;
+		}
+		
+		var ShowPostNew = null;
+		if ( user && user['id'] && newcomment ) {
+			ShowPostNew = this.renderPostNew();
+		}
+		else {
+			ShowPostNew = <div class="-new-comment" style="padding:0"><div class={"-item -comment -indent-0"}><div class="-nothing">Sign in to post a comment</div></div></div>;
+		}
 		
 		return (
-			<div class={['content-base','content-comments',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
+			<div class={['content-base','content-common','content-comments',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
 				<div class="-headline">COMMENTS</div>
-				<div class="-item -comment -indent-0">
-					<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
-					<div class="-body">
-						<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
-						<div class="-text">{"This is a sample comment. Sorry, you can't actually make comments yet."}</div>
-						<div class="-nav">
-							<div class="-love"><SVGIcon>heart</SVGIcon> 1</div>
-							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
-							<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
-						</div>
-					</div>
-				</div>
-				<div class="-indent">
-					<div class="-item -comment -indent-1">
-						<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
-						<div class="-body">
-							<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
-							<div class="-text">{"Wow, this is a sample reply to that comment"}</div>
-							<div class="-nav">
-								<div class="-love"><SVGIcon>heart</SVGIcon> 0</div>
-								<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
-								<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
-							</div>
-						</div>
-					</div>
-					<div class="-item -comment -indent-1">
-						<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
-						<div class="-body">
-							<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
-							<div class="-text">{"Double wow! This is another reply."}<br /><br />{"Amazing!"}</div>
-							<div class="-nav">
-								<div class="-love"><SVGIcon>heart</SVGIcon> 0</div>
-								<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
-								<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="-item -comment -indent-0">
-					<div class="-avatar"><img src="http://static.jam.vg/other/logo/mike/Chicken64.png" /></div>
-					<div class="-body">
-						<div class="-title"><span class="-author">Mike Kasprzak</span> (<span class="-atname">@PoV</span>)</div>
-						<div class="-text">{"I was late to the party"}</div>
-						<div class="-nav">
-							<div class="-love"><SVGIcon>heart</SVGIcon> 0</div>
-							<div class="-reply"><SVGIcon>reply</SVGIcon> Reply</div>
-							<div class="-edit"><SVGIcon>edit</SVGIcon> Edit</div>
-						</div>
-					</div>
-				</div>
-				<div class="content-footer content-footer-common -footer">
-					<div class="-left">
-					</div>
-					<div class="-right">
-			  			{FooterItems}
-			  		</div>
-				</div>
+				{ShowComments}
+				{ShowPostNew}
+				<div class="content-footer content-footer-common -footer" style="height:0" />
 			</div>
 		);
 	}
-}
 
+//				<div class="content-footer content-footer-common -footer">
+//					<div class="-left">
+//					</div>
+//					<div class="-right">
+//			  			{FooterItems}
+//			  		</div>
+//				</div>
+}

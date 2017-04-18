@@ -44,15 +44,15 @@ export default class ContentNavRoot extends Component {
 		}
 		// Default to /news if not logged in
 		else if ( NewPath === '/' ) {
-			NewPath = '/news';
+			NewPath = '/hot';
 		}
 		
 		return (
 			<div class="-body">
 				<div class="content-base content-nav content-nav-root">
 					{ShowMyFeed}
-					<ContentNavButton path={NewPath} icon='news' href='/news'>News</ContentNavButton>
 					<ContentNavButton path={NewPath} icon='heart' href='/hot'>Popular</ContentNavButton>
+					<ContentNavButton path={NewPath} icon='news' href='/news'>News</ContentNavButton>
 					<ContentNavButton path={NewPath} icon='gamepad' href='/games'>Games</ContentNavButton>
 				</div>
 			</div>

@@ -5,7 +5,7 @@ import NavLink							from 'com/nav-link/link';
 import SVGIcon							from 'com/svg-icon/icon';
 import InputTextArea					from 'com/input-textarea/input-textarea';
 
-export default class ContentCommonBodyMarkup extends Component {
+export default class ContentCommentsMarkup extends Component {
 	constructor( props ) {
 		super(props);
 	}
@@ -16,7 +16,7 @@ export default class ContentCommonBodyMarkup extends Component {
 	
 	render( props ) {
 		var Class = [
-			"content-common-body",
+//			"content-common-body",
 			"-markup"
 		];
 		if ( typeof props.class == 'string' ) {
@@ -25,6 +25,9 @@ export default class ContentCommonBodyMarkup extends Component {
 
 		if (props.editing) {
 			var Height = this.textarea ? this.textarea.scrollHeight : 0;
+			
+			var Limit = props.limit ? props.limit : 2048;
+			var Chars = props.children[0] ? props.children[0].length : 0;
 			
 			return (
 				<div class={Class}>
@@ -36,9 +39,13 @@ export default class ContentCommonBodyMarkup extends Component {
 							onModify={props.onmodify} 
 							placeholder={props.placeholder} 
 							ref={(input) => { this.textarea = input; }} 
+							maxlength={Limit}
 						/>
 					</div>
-					<div class="-footer">Supports <NavLink blank href="/markdown"><SVGIcon>markdown</SVGIcon> <strong>Markdown</strong></NavLink> and <NavLink href="//emoji.codes/"><strong>:emoji_codes:</strong></NavLink></div>
+					<div class="-footer">
+						<div class="-right"><span class="-chars">{Chars}</span>/<span class="-limit">{Limit}</span></div>
+						<div class="-left">Supports <NavLink blank href="/markdown"><SVGIcon>markdown</SVGIcon> <strong>Markdown</strong></NavLink> and <NavLink href="//emoji.codes/"><strong>:emoji_codes:</strong></NavLink></div>
+					</div>
 				</div>
 			);
 		}
@@ -52,15 +59,3 @@ export default class ContentCommonBodyMarkup extends Component {
 		}
 	}
 }
-
-marked.setOptions({
-	highlight: function( code, lang ) {
-		var language = Prism.languages.clike;
-		if ( Prism.languages[lang] )
-			language = Prism.languages[lang];
-		return Prism.highlight( code, language );
-	},
-	sanitize: true,			// disable HTML
-	smartypants: true,		// enable automatic fancy quotes, ellipses, dashes
-	langPrefix: 'language-',
-});

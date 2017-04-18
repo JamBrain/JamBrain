@@ -123,7 +123,7 @@ export default class ContentSimple extends Component {
 			props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 			props.class.push("content-simple");
 
-			var EditBar = null;
+			var ShowEditBar = null;
 			var IsPublished = false;
 
 			if ( this.isEditMode() ) {
@@ -135,10 +135,10 @@ export default class ContentSimple extends Component {
 				// Hack
 				//var IsPublished = node.type.length;//;Number.parseInt(node.published) !== 0;
 				
-				EditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} published={IsPublished} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} onpublish={this.onPublish} />;
+				ShowEditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} published={IsPublished} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} onpublish={this.onPublish} />;
 			}
 			else {
-				if ( user.id && (author.id === user.id) )
+				if ( user.id && (node.author === user.id) )
 					props.edit = 1;
 			}
 			
@@ -154,13 +154,39 @@ export default class ContentSimple extends Component {
 				ShowByLine = <ContentCommonBodyBy node={node} label="Last updated" modified />;					
 			}
 
+			let ShowTitle = null;
+			if ( !props.notitle ) {
+				ShowTitle = <ContentCommonBodyTitle href={path} title={node.name} titleIcon={props.titleIcon} />;
+			}
+			
+			let ShowMarkup = null;
+			if ( !props.nomarkup ) {
+				ShowMarkup = (
+					<ContentCommonBodyMarkup 
+						node={node} 
+						editing={state.editing}
+						placeholder="Say something"
+						class="-block-if-not-minimized"
+						onmodify={this.onModifyText}
+					>
+						{state.body}
+					</ContentCommonBodyMarkup>
+				);
+			}
+			
+			let ShowAbove = null;
+			if ( props.above ) {
+				ShowAbove = props.above;
+			}
+
 			return (
 				<ContentCommon {...props}>
-					{EditBar}
+					{ShowEditBar}
 					{ShowAvatar}
-					<ContentCommonBodyTitle href={path} title={node.name} />
+					{ShowTitle}
+					{ShowAbove}
 					{ShowByLine}
-					<ContentCommonBodyMarkup node={node} editing={state.editing} placeholder="Say something" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
+					{ShowMarkup}
 					{props.children}
 				</ContentCommon>
 			);

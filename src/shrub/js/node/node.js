@@ -2,6 +2,7 @@ import Fetch	 				from '../internal/fetch';
 
 export default {
 	Get,
+	GetKeyed,
 	Walk,
 	GetFeed,
 	
@@ -26,6 +27,17 @@ export function Get( ids ) {
 	}
 
 	return Fetch.Get(API_ENDPOINT+'/vx/node/get/'+ids.join('+'), true);
+}
+// Like Get, but nodes will be an object of keys rather than an array of objects
+export function GetKeyed( ids ) {
+	return Get(ids).then( r => {
+		var node = r.node;
+		r.node = {};
+		for ( var idx = 0; idx < node.length; idx++ ) {
+			r.node[node[idx].id] = node[idx];
+		}
+		return r;
+	});
 }
 
 export function GetFeed( id, methods, types, subtypes, subsubtypes ) {

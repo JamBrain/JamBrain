@@ -174,8 +174,92 @@ function note_GetByNode( $ids ) {
 }
 
 
-
-function note_AddByNode( $parent, $node, $supernode, $author, $body ) {
+function note_GetById( $ids ) {
+	$multi = is_array($ids);
+	if ( !$multi )
+		$ids = [$ids];
 	
+	if ( is_array($ids) ) {
+		// Confirm that all IDs are not zero
+		foreach( $ids as $id ) {
+			if ( intval($id) == 0 )
+				return null;
+		}
+
+		// Build IN string
+		$ids_string = implode(',', $ids);
+
+		$ret = db_QueryFetch(
+			"SELECT id, parent, 
+				node, supernode, 
+				author, 
+				".DB_FIELD_DATE('created').",
+				".DB_FIELD_DATE('modified').",
+				version,
+				body
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE." 
+			WHERE id IN ($ids_string)
+			;"
+		);
+
+		if ( $multi )
+			return $ret;
+		else
+			return $ret ? $ret[0] : null;
+	}
+	
+	return null;
 }
 
+
+function _note_AddByNode( $node, $supernode, $author, $parent, $body, $version_tag ) {
+	// Insert Proxy
+	$note_id = db_QueryInsert(
+		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NOTE." (
+			parent,
+			node, supernode,
+			author,
+			created
+		)
+		VALUES (
+			?,
+			?, ?,
+			?,
+			NOW()
+		)",
+		$parent,
+		$node, $supernode,
+		$author
+	);
+
+	$edit = note_SafeEdit( $note_id, $author, $body, $version_tag );
+	
+	return $note_id;
+}
+
+function note_AddByNode( $node, $supernode, $author, $parent, $body, $version_tag ) {
+	$note_id = _note_AddByNode($node, $supernode, $author, $parent, $body, $version_tag);
+	
+	// Hack: Adding just the root entry to the tree
+	$tree = noteTree_Add($node, $note_id, 0, 1);
+	
+	return $note_id;
+}
+
+function note_SafeEdit( $note_id, $author, $body, $version_tag ) {
+	$version_id = noteVersion_Add($note_id, $author, $body, $version_tag);
+
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NOTE."
+		SET
+			modified=NOW(),
+			version=?,
+			body=?
+		WHERE
+			id=?;",
+		$version_id,
+		$body,
+	
+		$note_id
+	);
+}

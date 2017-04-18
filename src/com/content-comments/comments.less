@@ -1,10 +1,12 @@
 @import "defs.less";
 
-#content .content-comments {
+#content .content-common.content-comments {
+	position: relative;
+	
 	background: @COL_NLLLL;
 	/*border-top: 4px solid @COL_NDDD;*/
 /*	border-bottom: 8px solid @COL_NDDD;*/
-	
+
 	&.-no-gap {
 		margin-top: 0;
 	}
@@ -30,11 +32,28 @@
 		margin-left: 4.5em;
 	}
 	
+	& .-new-comment {
+		border-top: 8px solid @COL_NDDD;
+		background: @COL_L;
+		padding-bottom: 0.5em;	/* hack to simulate 1em margin */
+	}
+	
 	& .-item {
 		position: relative;
 		
 		overflow: auto;
-		
+
+		& a, 
+		& a:visited {
+			color: @COL_A;
+	
+			&:hover,
+			&:focus {
+				color: @COL_L;
+				background: @COL_A;
+			}
+		}
+
 		& > .-avatar {
 			position: absolute;
 			top: 0.5em;
@@ -48,9 +67,17 @@
 				}
 			}
 		}
+		& > .-nothing {
+			margin: 1em;
+		}
 		& > .-body {
 			margin-left: 4.5em;
 			margin-top: 1em;
+
+			margin-right: 1em;
+			
+			overflow-wrap: break-word;
+			hyphens: auto;
 			
 			& .-author {
 				font-size: 1.1em;
@@ -68,6 +95,9 @@
 			}
 			& > .-nav {
 				margin: 0.5em 0;
+				
+				overflow: hidden;
+				
 				& > div {
 					position: relative;
 					
@@ -91,10 +121,35 @@
 					margin-right: 0.5em;
 					/*border: 1px solid;*/
 					
-					&:hover {
+					&:hover,
+					&:focus {
 						background: @COL_A;
 						color: @COL_L;
+						
+						&:active {
+							background: @COL_L;
+							color: @COL_A;
+						}
 					}
+				}
+				
+				& .-edit,
+				& .-cancel,
+				& .-save,
+				& .-love,
+				& .-publish {
+					float: right;
+					margin-right: 0;
+					margin-left: 0.5em;
+				}
+				
+				& .-selected {
+					background: @COL_N;
+					color: @COL_NLLLL;
+				}
+				& .-modified {
+					background: @COL_C;
+					color: @COL_L;
 				}
 			}
 		}

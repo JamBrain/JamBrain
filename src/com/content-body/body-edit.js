@@ -1,4 +1,5 @@
 import { h, Component } 				from 'preact/preact';
+import InputTextArea					from 'com/input-textarea/input-textarea';
 
 export default class ContentBodyEdit extends Component {
 	constructor( props ) {
@@ -15,7 +16,7 @@ export default class ContentBodyEdit extends Component {
 		return (
 			<div class="content-body content-body-common content-body-edit">
 				<div class="-label">Description</div>
-				<div class="-textarea"><textarea name="paragraph_text" rows="18" value={children} oninput={onmodify} placeholder={PlaceholderText} /></div>
+				<div class="-textarea"><InputTextArea name="paragraph_text" rows="18" value={children} onModify={onmodify} placeholder={PlaceholderText} /></div>
 			</div>
 		);
 	}
