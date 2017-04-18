@@ -123,7 +123,7 @@ export default class ContentSimple extends Component {
 			props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 			props.class.push("content-simple");
 
-			var EditBar = null;
+			var ShowEditBar = null;
 			var IsPublished = false;
 
 			if ( this.isEditMode() ) {
@@ -135,7 +135,7 @@ export default class ContentSimple extends Component {
 				// Hack
 				//var IsPublished = node.type.length;//;Number.parseInt(node.published) !== 0;
 				
-				EditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} published={IsPublished} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} onpublish={this.onPublish} />;
+				ShowEditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} published={IsPublished} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} onpublish={this.onPublish} />;
 			}
 			else {
 				if ( user.id && (author.id === user.id) )
@@ -154,12 +154,14 @@ export default class ContentSimple extends Component {
 				ShowByLine = <ContentCommonBodyBy node={node} label="Last updated" modified />;					
 			}
 
-			return (
-				<ContentCommon {...props}>
-					{EditBar}
-					{ShowAvatar}
-					<ContentCommonBodyTitle href={path} title={node.name} titleIcon={props.titleIcon} />
-					{ShowByLine}
+			let ShowTitle = null;
+			if ( !props.notitle ) {
+				ShowTitle = <ContentCommonBodyTitle href={path} title={node.name} titleIcon={props.titleIcon} />;
+			}
+			
+			let ShowMarkup = null;
+			if ( !props.nomarkup ) {
+				ShowMarkup = (
 					<ContentCommonBodyMarkup 
 						node={node} 
 						editing={state.editing}
@@ -169,6 +171,16 @@ export default class ContentSimple extends Component {
 					>
 						{state.body}
 					</ContentCommonBodyMarkup>
+				);
+			}
+
+			return (
+				<ContentCommon {...props}>
+					{ShowEditBar}
+					{ShowAvatar}
+					{ShowTitle}
+					{ShowByLine}
+					{ShowMarkup}
 					{props.children}
 				</ContentCommon>
 			);

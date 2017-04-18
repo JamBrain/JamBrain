@@ -50,18 +50,29 @@ export default class ContentEvent extends Component {
 	}
 	
 	render( props, state ) {
+		props = Object.assign({}, props);
+		
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
 		
-		// Additional properties		
-		//props.authored = 1;
-		
 		if ( node ) {
 			props.header = "EVENT";
 			props.headerClass = "-col-ab";
 			props.titleIcon = "trophy";
+		}
+
+		var ShowHome = null;
+		var IsHome = false;
+		if ( true ) {
+			let Class = null;
+			if ( extra && extra.length == 0 ) {
+				Class = "-selected";
+				IsHome = true;
+			}
+
+			ShowHome = <ContentCommonNavButton href={path} class={Class}><SVGIcon>home</SVGIcon>Home</ContentCommonNavButton>;
 		}
 		
 		var ShowGame = null;
@@ -69,13 +80,6 @@ export default class ContentEvent extends Component {
 			let Class = null;
 //			if ( extra && extra.length ) {
 				Class = "-disabled";
-//			}
-//			// Root node, context sensitive
-//			else {
-//				// If logged in
-////				if ( user && user.id ) {
-////					Class = "-selected";
-////				}
 //			}
 
 			ShowGame = <ContentCommonNavButton onclick={this.onJoin} class={Class}><SVGIcon>gamepad</SVGIcon>Join Event</ContentCommonNavButton>;
@@ -112,9 +116,13 @@ export default class ContentEvent extends Component {
 			ShowTheme = <ContentCommonNavButton href={path+'/theme'} class={Class}><SVGIcon>ticket</SVGIcon>Theme Selection</ContentCommonNavButton>;
 		}
 		
+		if ( !IsHome )
+			props.nomarkup = true;
+		
 		return (
 			<ContentSimple {...props}>
 				<ContentCommonNav>
+					{ShowHome}
 					{ShowGame}
 					{ShowFeed}
 					{ShowTheme}
