@@ -1,5 +1,32 @@
 @import 'defs.less';
 
+#content a,
+#content a:visited {
+	&.content-common-nav-button {
+		margin: 0;
+		display: inline-block;
+		color: inherit;
+		
+		margin-right: 0.5em;	/* hack, as common-nav style wasn't working */
+
+		&.-selected {
+			color: @COL_L;
+		}
+
+		&:hover, 
+		&:focus {
+			background: @COL_A;
+			border: 1px solid @COL_A;
+			color: @COL_L;
+		}
+		&:active {
+			background: @COL_W;
+			border: 1px solid @COL_W;
+			color: @COL_A;
+		}
+	}
+}
+
 #content .content-common-nav-button {
 	position: relative;
 	
@@ -21,6 +48,11 @@
 		padding-left: 0.5em;
 	}
 	
+	&.-disabled {
+		border: 1px solid @COL_NLLL;
+		color: @COL_NLLL;
+	}
+	
 	&.-selected {
 		border: 1px solid @COL_N;
 		background: @COL_N;
@@ -34,8 +66,8 @@
 		color: @COL_L;
 	}
 	&:active {
-		background: @COL_L;
-		border: 1px solid @COL_L;
+		background: @COL_W;
+		border: 1px solid @COL_W;
 		color: @COL_A;
 	}
 	
@@ -74,8 +106,8 @@
 				color: @COL_L;
 			}
 			&:active {
-				background: @COL_L;
-				border: 1px solid @COL_L;
+				background: @COL_W;
+				border: 1px solid @COL_W;
 				color: @COL_A;
 			}
 		}

@@ -67,18 +67,18 @@ export default class ContentEvent extends Component {
 		var ShowGame = null;
 		if ( true ) {
 			let Class = null;
-			if ( extra && extra.length ) {
-				// ??
-			}
-			// Root node, context sensitive
-			else {
-				// If logged in
-				if ( user && user.id ) {
-					Class = "-selected";
-				}
-			}
+//			if ( extra && extra.length ) {
+				Class = "-disabled";
+//			}
+//			// Root node, context sensitive
+//			else {
+//				// If logged in
+////				if ( user && user.id ) {
+////					Class = "-selected";
+////				}
+//			}
 
-			ShowGame = <ContentCommonNavButton onclick={this.onJoin}><SVGIcon>gamepad</SVGIcon>Join Event</ContentCommonNavButton>;
+			ShowGame = <ContentCommonNavButton onclick={this.onJoin} class={Class}><SVGIcon>gamepad</SVGIcon>Join Event</ContentCommonNavButton>;
 		}
 		
 		var ShowFeed = null;
@@ -109,7 +109,7 @@ export default class ContentEvent extends Component {
 				}
 			}
 
-			ShowTheme = <ContentCommonNavButton href="theme" class={Class}><SVGIcon>ticket</SVGIcon>Theme Selection</ContentCommonNavButton>;
+			ShowTheme = <ContentCommonNavButton href={path+'/theme'} class={Class}><SVGIcon>ticket</SVGIcon>Theme Selection</ContentCommonNavButton>;
 		}
 		
 		return (
