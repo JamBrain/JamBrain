@@ -119,6 +119,8 @@ export default class ContentEvent extends Component {
 		if ( !IsHome )
 			props.nomarkup = true;
 		
+		props.class = 'content-event';
+		
 		return (
 			<ContentSimple {...props}>
 				<ContentCommonNav>
