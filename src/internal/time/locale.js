@@ -48,6 +48,8 @@ var LocaleZoneRemaps = {
 	
 	"Paris, Madrid (heure d’été)":"CEST"/*"GMT+2"*/,		// was PM, completely wrong
 
+	"Eastern Europe Daylight Time":"EEST"/*"GMT+3"*/,		// was EEDT, but uncommon
+
 	// Microsoft
 	"W. Europe Standard Time":"CET"/*"GMT+1"*/,
 }
