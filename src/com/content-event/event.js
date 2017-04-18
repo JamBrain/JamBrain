@@ -126,11 +126,16 @@ export default class ContentEvent extends Component {
 		if ( node.meta['event-start'] && node.meta['event-end'] ) {
 			let Start = new Date(node.meta['event-start']);
 			let End = new Date(node.meta['event-end']);
+
+			let LanguagePrefix = "["+navigator.language+"] ";
+			if ( navigator.languages ) {
+				LanguagePrefix += "["+navigator.languages.join(',')+"] ";
+			}
 			
 			props.above.push(
 				<ContentCommonBody>
 					<div><SVGIcon small baseline gap>calendar</SVGIcon> {getLocaleDay(Start)} {getLocaleMonthDay(Start)} to <span class="if-sidebar-inline">{getLocaleDay(End)}</span> {getLocaleDate(End)}</div>
-					<div><SVGIcon small baseline gap>clock</SVGIcon><strong> Starts at {getLocaleTime(Start)}</strong> {getLocaleTimeZone(Start)}</div>
+					<div title={LanguagePrefix+Start.toString()}><SVGIcon small baseline gap>clock</SVGIcon> Starts at <strong>{getLocaleTime(Start)}</strong> {getLocaleTimeZone(Start)} <NavLink href="https://github.com/ludumdare/ludumdare/issues/589"><strong title="Adjusted for your local timezone. If this is not your timezone, click here and let us know!">*</strong></NavLink></div>
 				</ContentCommonBody>
 			);
 		}
