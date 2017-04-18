@@ -25,6 +25,7 @@ export default class ContentCommentsComment extends Component {
 			'original': props.comment.body,
 			
 			'loved': props.loved ? true: false,
+			'cursorPos': props.comment.body.length,
 		};
 		
 //		console.log('C '+props.comment.id+": ", this.state.editing,this.state.preview);
@@ -82,7 +83,8 @@ export default class ContentCommentsComment extends Component {
 	
 	onModify( e ) {
 		this.props.comment.body = e.target.value;
-		this.setState({'modified': this.canSave()});
+		e.preventDefault();
+		this.setState({'modified': this.canSave(), 'cursorPos': e.target.selectionEnd});
 	}
 
 	onCancel( e ) {
@@ -215,7 +217,7 @@ export default class ContentCommentsComment extends Component {
 					<div class="-body">
 						{ShowTopNav}
 						{ShowTitle}
-						<ContentCommentsMarkup class="-text" editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here" limit={limit}>{comment.body}</ContentCommentsMarkup>
+						<ContentCommentsMarkup class="-text" editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here" limit={limit} cursorPos={state.cursorPos}>{comment.body}</ContentCommentsMarkup>
 						{ShowBottomNav}
 					</div>
 				</div>

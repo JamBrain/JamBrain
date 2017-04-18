@@ -20,13 +20,12 @@ export default class ContentCommonBodyMarkup extends Component {
 		}		
 	}
 	
-	// After initial render
-	componentDidMount() {
-		this.resizeTextarea();
-	}
-	
 	// After every update
 	componentDidUpdate() {
+		if( this.textarea ) {
+			this.textarea.setSelectionRange(this.props.cursorPos, this.props.cursorPos);
+		}
+
 		this.resizeTextarea();
 	}
 	
@@ -49,7 +48,7 @@ export default class ContentCommonBodyMarkup extends Component {
 						<textarea 
 							name="paragraph_text" 
 							value={props.children} 
-							oninput={props.onmodify} 
+							onInput={props.onmodify} 
 							placeholder={props.placeholder} 
 							ref={(input) => { this.textarea = input; }} 
 						/>

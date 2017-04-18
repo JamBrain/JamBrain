@@ -27,6 +27,7 @@ export default class ContentSimple extends Component {
 			'modified': false,
 
 			'body': props.node.body,
+			'cursorPos': props.node.body.length,
 		};
 
 		if ( props.authored )
@@ -101,7 +102,8 @@ export default class ContentSimple extends Component {
 	}
 
 	onModifyText( e ) {
-		this.setState({'modified': true, 'body': e.target.value});
+		e.preventDefault();
+		this.setState({'modified': true, 'body': e.target.value, 'cursorPos': e.target.selectionEnd});
 	}
 	
 	isEditMode() {
@@ -160,7 +162,7 @@ export default class ContentSimple extends Component {
 					{ShowAvatar}
 					<ContentCommonBodyTitle href={path} title={node.name} />
 					{ShowByLine}
-					<ContentCommonBodyMarkup node={node} editing={state.editing} placeholder="Say something" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
+					<ContentCommonBodyMarkup node={node} editing={state.editing} placeholder="Say something" class="-block-if-not-minimized" onmodify={this.onModifyText} cursorPos={state.cursorPos}>{state.body}</ContentCommonBodyMarkup>
 					{props.children}
 				</ContentCommon>
 			);

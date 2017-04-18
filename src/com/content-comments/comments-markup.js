@@ -27,9 +27,13 @@ export default class ContentCommentsMarkup extends Component {
 	
 	// After every update
 	componentDidUpdate() {
+		if( this.textarea ) {
+			this.textarea.setSelectionRange(this.props.cursorPos, this.props.cursorPos);
+		}
+
 		this.resizeTextarea();
 	}
-	
+
 	render( props ) {
 		var Class = [
 //			"content-common-body",
@@ -52,7 +56,7 @@ export default class ContentCommentsMarkup extends Component {
 						<textarea 
 							name="paragraph_text" 
 							value={props.children} 
-							oninput={props.onmodify} 
+							onInput={props.onmodify}
 							placeholder={props.placeholder} 
 							ref={(input) => { this.textarea = input; }} 
 							maxlength={Limit}
