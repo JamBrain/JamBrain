@@ -42,15 +42,15 @@ export default class ContentNavTheme extends Component {
 
 			// Populate Round Buttons
 			var ShowRounds = [];
-			if ( ThemeMode >= 1 ) {
-				ShowRounds.push(<ContentNavButton path={path+NewPath} icon='suggestion' href={path+'/idea'}>Suggestions</ContentNavButton>);
-			}
-			if ( ThemeMode >= 2 ) {
-				ShowRounds.push(<ContentNavButton path={path+NewPath} icon='fire' href={path+'/slaughter'}>Slaughter</ContentNavButton>);
-			}
-			if ( ThemeMode >= 3 ) {
-				ShowRounds.push(<ContentNavButton path={path+NewPath} icon='heart-broken' href={path+'/fusion'}>Fusion</ContentNavButton>);
-			}
+//			if ( ThemeMode >= 1 ) {
+//				ShowRounds.push(<ContentNavButton path={path+NewPath} icon='suggestion' href={path+'/idea'}>Suggestions</ContentNavButton>);
+//			}
+//			if ( ThemeMode >= 2 ) {
+//				ShowRounds.push(<ContentNavButton path={path+NewPath} icon='fire' href={path+'/slaughter'}>Slaughter</ContentNavButton>);
+//			}
+//			if ( ThemeMode >= 3 ) {
+//				ShowRounds.push(<ContentNavButton path={path+NewPath} icon='heart-broken' href={path+'/fusion'}>Fusion</ContentNavButton>);
+//			}
 			if ( ThemeMode >= 4 ) {
 				for ( var idx = 1; idx <= 5; idx++ ) {	// 5 rounds max
 					var Page = node.meta['theme-page-mode-'+idx];
@@ -65,10 +65,8 @@ export default class ContentNavTheme extends Component {
 			}
 			
 			return (
-				<div class="-body">
-					<div class="content-base content-nav content-nav-root">
-						{ShowRounds}
-					</div>
+				<div class="content-base content-nav content-nav-root">
+					{ShowRounds}
 				</div>
 			);
 		}
