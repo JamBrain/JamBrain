@@ -15,7 +15,9 @@ import ContentComments					from 'com/content-comments/comments';
 
 import ContentNavRoot					from 'com/content-nav/nav-root';
 import ContentNavUser					from 'com/content-nav/nav-user';
-//import ContentNavEvent					from 'com/content-nav/nav-event';
+import ContentNavEvent					from 'com/content-nav/nav-event';
+
+import ContentEventTheme				from 'com/content-event/event-theme';
 
 import ContentPalette					from 'com/content-palette/palette';
 
@@ -133,9 +135,13 @@ export default class ViewContent extends Component {
 			);
 		}
 		else if ( node.type === 'event' ) {
+			var ShowPage = <ContentEventTheme node={node} user={user} path={path} extra={extra} />;
+			
 			return (
 				<div id="content">
 					<ContentEvent node={node} user={user} path={path} extra={extra} />
+					<ContentNavEvent node={node} user={user} path={path} extra={extra} />
+					{ShowPage}
 				</div>
 			);
 //					<ContentNavEvent node={node} user={user} path={path} extra={extra} />;

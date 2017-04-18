@@ -160,7 +160,15 @@ export default class ContentSimple extends Component {
 					{ShowAvatar}
 					<ContentCommonBodyTitle href={path} title={node.name} />
 					{ShowByLine}
-					<ContentCommonBodyMarkup node={node} editing={state.editing} placeholder="Say something" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
+					<ContentCommonBodyMarkup 
+						node={node} 
+						editing={state.editing}
+						placeholder="Say something"
+						class="-block-if-not-minimized"
+						onmodify={this.onModifyText}
+					>
+						{state.body}
+					</ContentCommonBodyMarkup>
 					{props.children}
 				</ContentCommon>
 			);
