@@ -23,7 +23,7 @@ export default class ContentUserBar extends Component {
 //		var posts = node.posts;
 		
 		var ShowAddToTeam = null;
-		if ( true ) {
+		if ( nodeUser_IsFriend(user, node) ) {
 			ShowAddToTeam = (
 				<CommonButton class="-disabled" node={node} user={user}>
 					<SVGIcon>pushpin</SVGIcon><div>Add to Team</div>
