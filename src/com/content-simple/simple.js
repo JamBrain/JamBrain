@@ -28,6 +28,7 @@ export default class ContentSimple extends Component {
 			'editing': this.isEditMode(),
 			'modified': false,
 
+			'name': props.node.name,
 			'body': props.node.body,
 		};
 
@@ -39,6 +40,7 @@ export default class ContentSimple extends Component {
 		this.onSave = this.onSave.bind(this);
 		this.onPublish = this.onPublish.bind(this);
 
+		this.onModifyTitle = this.onModifyTitle.bind(this);
 		this.onModifyText = this.onModifyText.bind(this);
 	}
 
@@ -76,10 +78,10 @@ export default class ContentSimple extends Component {
 		this.setState({'editing': false});
 	}
 	onSave( e ) {
-		//var Name = /*this.state.title ? this.state.title :*/ this.props.node.name;
+		var Title = this.state.name ? this.state.name : this.props.node.name;
 		var Body = this.state.body ? this.state.body : this.props.node.body;
 		
-		return $Node.Update(this.props.node.id, null, Body)
+		return $Node.Update(this.props.node.id, Title, Body)
 		.then(r => {
 			if ( r.status == 200 ) {
 				this.setState({ 'modified': false });
@@ -102,6 +104,9 @@ export default class ContentSimple extends Component {
 		console.log( 'pubby', e );
 	}
 
+	onModifyTitle( e ) {
+		this.setState({'modified': true, 'name': e.target.value});
+	}
 	onModifyText( e ) {
 		this.setState({'modified': true, 'body': e.target.value});
 	}
@@ -154,7 +159,13 @@ export default class ContentSimple extends Component {
 
 			let ShowTitle = null;
 			if ( !props.notitle ) {
-				ShowTitle = <ContentCommonBodyTitle href={path} title={node.name} titleIcon={props.titleIcon} />;
+				ShowTitle = <ContentCommonBodyTitle 
+					href={path} 
+					title={state.name} 
+					titleIcon={props.titleIcon} 
+					editing={state.editing} 
+					onmodify={this.onModifyTitle} 
+				/>;
 			}
 			
 			let ShowMarkup = null;

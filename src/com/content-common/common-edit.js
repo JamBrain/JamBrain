@@ -21,8 +21,8 @@ export default class ContentCommonEdit extends Component {
 		var ShowPublish = null;
 		
 		if ( props.editing ) {
-			ShowEdit = <ButtonBase class="-selected"><SVGIcon>edit</SVGIcon><div class="if-sidebar-block"><span>Edit</span></div></ButtonBase>;
-			ShowPreview = <ButtonBase onclick={props.onpreview}><SVGIcon>preview</SVGIcon><div class="if-sidebar-block"><span>Preview</span></div></ButtonBase>;
+			ShowEdit = <ButtonBase class="-selected"><SVGIcon>edit</SVGIcon><div class="if-sidebar-block">Edit</div></ButtonBase>;
+			ShowPreview = <ButtonBase onclick={props.onpreview}><SVGIcon>preview</SVGIcon><div class="if-sidebar-block">Preview</div></ButtonBase>;
 		}
 		else {
 			ShowEdit = <ButtonBase onclick={props.onedit}><SVGIcon>edit</SVGIcon><div class="if-sidebar-block">Edit</div></ButtonBase>;

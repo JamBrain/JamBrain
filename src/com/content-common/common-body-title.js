@@ -9,9 +9,9 @@ export default class ContentCommonBodyTitle extends Component {
 		super(props);
 	}
 
-	shouldComponentUpdate( nextProps ) {
-		return shallowDiff(this.props.children, nextProps.children);
-	}
+//	shouldComponentUpdate( nextProps ) {
+//		return shallowDiff(this.props.children, nextProps.children);
+//	}
 
 	render( props ) {
 		props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
@@ -26,18 +26,34 @@ export default class ContentCommonBodyTitle extends Component {
 			Prefix = <SVGIcon baseline small>{props.titleIcon}</SVGIcon>;
 		}
 		
-		var Body = [];
-		if ( props.title ) {
-			if ( props.href )
-				Body.push(<NavLink class="-text" href={props.href}>{Prefix}{props.title}</NavLink>);
-			else
-				Body.push(<div class="-text">{Prefix}{props.title}</div>);
+		if (props.editing) {
+			props.class.push('-editing');
+			return (
+				<div class={props.class}>
+					<div class="-label">Title:</div>
+					<input 
+						type="text"
+						value={props.title} 
+						oninput={props.onmodify} 
+						placeholder="Title" 
+					/>
+				</div>
+			);
 		}
-		
-		if ( props.subtitle ) {
-			Body.push(<span class="-subtext"> ({props.subtitle})</span>);
+		else {
+			var Body = [];
+			if ( props.title ) {
+				if ( props.href )
+					Body.push(<NavLink class="-text" href={props.href}>{Prefix}{props.title}</NavLink>);
+				else
+					Body.push(<div class="-text">{Prefix}{props.title}</div>);
+			}
+			
+			if ( props.subtitle ) {
+				Body.push(<span class="-subtext"> ({props.subtitle})</span>);
+			}
+			
+			return <div class={props.class}>{Body}</div>;
 		}
-		
-		return <div class={props.class}>{Body}</div>;
 	}
 }

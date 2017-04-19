@@ -25,6 +25,9 @@ export default class ContentCommonBodyMarkup extends Component {
 
 		if (props.editing) {
 			var Height = this.textarea ? this.textarea.scrollHeight : 0;
+
+			var Limit = props.limit ? props.limit : 8192;
+			var Chars = props.children[0] ? props.children[0].length : 0;
 			
 			return (
 				<div class={Class}>
@@ -33,12 +36,16 @@ export default class ContentCommonBodyMarkup extends Component {
 						<InputTextArea 
 							name="paragraph_text" 
 							value={props.children} 
-							onModify={props.onmodify} 
+							onmodify={props.onmodify} 
 							placeholder={props.placeholder} 
 							ref={(input) => { this.textarea = input; }} 
+							maxlength={Limit}
 						/>
 					</div>
-					<div class="-footer">Supports <NavLink blank href="/markdown"><SVGIcon>markdown</SVGIcon> <strong>Markdown</strong></NavLink> and <NavLink href="//emoji.codes/"><strong>:emoji_codes:</strong></NavLink></div>
+					<div class="-footer">
+						<div class="-right"><span class="-chars">{Chars}</span>/<span class="-limit">{Limit}</span></div>
+						<div class="-left">Supports <NavLink blank href="/markdown"><SVGIcon>markdown</SVGIcon> <strong>Markdown</strong></NavLink> and <NavLink href="//emoji.codes/"><strong>:emoji_codes:</strong></NavLink></div>
+					</div>
 				</div>
 			);
 		}
