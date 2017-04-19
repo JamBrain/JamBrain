@@ -4,6 +4,8 @@ import { shallowDiff }	 				from 'shallow-compare/index';
 import NavLink							from 'com/nav-link/link';
 import SVGIcon							from 'com/svg-icon/icon';
 
+import InputText						from 'com/input-text/text';
+
 export default class ContentCommonBodyTitle extends Component {
 	constructor( props ) {
 		super(props);
@@ -17,7 +19,6 @@ export default class ContentCommonBodyTitle extends Component {
 		props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 		props.class.push("content-common-body");
 		props.class.push("-title");
-		props.class.push("_font2");
 		if ( props.subtitle )
 			props.class.push("-has-subtitle");
 		
@@ -25,22 +26,26 @@ export default class ContentCommonBodyTitle extends Component {
 		if ( props.titleIcon ) {
 			Prefix = <SVGIcon baseline small>{props.titleIcon}</SVGIcon>;
 		}
+
+		var Limit = 64;	// True limit is 96
 		
 		if (props.editing) {
 			props.class.push('-editing');
 			return (
 				<div class={props.class}>
 					<div class="-label">Title:</div>
-					<input 
-						type="text"
+					<InputText 
 						value={props.title} 
-						oninput={props.onmodify} 
-						placeholder="Title" 
+						onmodify={props.onmodify}
+						placeholder="Title"
+						maxlength={Limit}
 					/>
 				</div>
 			);
 		}
 		else {
+			props.class.push("_font2");
+			
 			var Body = [];
 			if ( props.title ) {
 				if ( props.href )
