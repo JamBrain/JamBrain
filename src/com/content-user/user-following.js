@@ -29,7 +29,7 @@ export default class ContentUserFollowing extends Component {
         }
     }
 
-    hasPermission(props){
+    hasPermission(){
         return (this.props.node.id == this.props.user.id);
     }
 
