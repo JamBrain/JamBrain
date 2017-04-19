@@ -16,17 +16,16 @@ export default class ContentUserBar extends Component {
 	}
 
 	render( props ) {
-
 		var user = props.user;
-		var following = props.node;
-		var games =  following.games;
-		var articles = following.articles;
-		var posts = following.posts;
+		var node = props.node;
+//		var games =  node.games;
+//		var articles = node.articles;
+//		var posts = node.posts;
 		
 		var ShowAddToTeam = null;
-		if ( true ) {
+		if ( nodeUser_IsFriend(user, node) ) {
 			ShowAddToTeam = (
-				<CommonButton class="-disabled" node={following} user={user}>
+				<CommonButton class="-disabled" node={node} user={user}>
 					<SVGIcon>pushpin</SVGIcon><div>Add to Team</div>
 				</CommonButton>
 			);
@@ -34,11 +33,11 @@ export default class ContentUserBar extends Component {
 
 		return (
 			<div class="content-user-bar">
-				<ContentCommonBodyAvatar src={following.meta && following.meta.avatar ? following.meta.avatar : ''} />
-				<ContentCommonBodyTitle href={"/users/"+following.slug} title={following.meta['real-name'] ? following.meta['real-name'] : following.name} subtitle={'@'+following.slug} />
+				<ContentCommonBodyAvatar src={node.meta && node.meta.avatar ? node.meta.avatar : ''} />
+				<ContentCommonBodyTitle href={"/users/"+node.slug} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.slug} />
 
 				<ContentCommonNav>
-					<CommonButtonFollow node={following} user={user} />
+					<CommonButtonFollow node={node} user={user} />
 					{ShowAddToTeam}
 				</ContentCommonNav>
 			</div>
