@@ -37,7 +37,7 @@ export default class ViewContent extends Component {
 				document.title += " | " + window.location.host;
 		}
 		else {
-			document.title = window.location.host;
+			document.title = "Ludum Dare";//window.location.host;
 		}
 
 		var EditMode = extra && extra.length && extra[extra.length-1] == 'edit';
