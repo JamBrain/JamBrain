@@ -83,7 +83,7 @@ export default class ContentCommonNavButtonFollow extends Component {
 			
 			var Icon = <SVGIcon class="if-not-hover-block">user</SVGIcon>;
 			var HoverIcon = <SVGIcon class="if-hover-block">user-plus</SVGIcon>;
-			var Text = <span>Follow</span>;
+			var Text = <div>Follow</div>;
 	
 			// Following or Friend
 			if ( isFollowing ) {
@@ -92,13 +92,13 @@ export default class ContentCommonNavButtonFollow extends Component {
 			// Friend only
 			if ( isFriend ) {
 				Icon = <SVGIcon class="if-not-hover-block">users</SVGIcon>;
-				Text = <span>Friends</span>;
+				Text = <div>Friends</div>;
 				Class.push('-friends');
 			}
 			// Following only
 			else if ( isFollowing ) {
 				Icon = <SVGIcon class="if-not-hover-block">user-check</SVGIcon>;
-				Text = <span>Following</span>;
+				Text = <div>Following</div>;
 				Class.push('-following');
 			}
 			
