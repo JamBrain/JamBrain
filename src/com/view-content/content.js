@@ -21,7 +21,7 @@ import ContentNavTheme					from 'com/content-nav/nav-theme';
 import ContentEventTheme				from 'com/content-event/event-theme';
 
 import ContentPalette					from 'com/content-palette/palette';
-import ContentFollowing					from 'com/content-following/following';
+import ContentUserFollowing             from 'com/content-user/user-following';
 
 export default class ViewContent extends Component {
 	constructor( props ) {
@@ -116,7 +116,7 @@ export default class ViewContent extends Component {
 					}
                     else if ( ViewType == 'following'){
                         View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
-                        View.push(<ContentFollowing node={node} user={user} path={path} extra={extra} />);
+                        View.push(<ContentUserFollowing node={node} user={user} path={path} extra={extra} />);
                     }
 					else {
 						View.push(<Content404 />);
@@ -144,7 +144,7 @@ export default class ViewContent extends Component {
 		else if ( node.type === 'event' ) {
 			var ShowNav = null;
 			var ShowPage = null;
-			
+
 			if ( extra && extra.length && extra[0] == 'theme' ) {
 				let NewPath = path+'/'+extra[0];
 				let NewExtra = extra.slice(1);
@@ -159,7 +159,7 @@ export default class ViewContent extends Component {
 /*				let Topic = 'news';
 				if ( extra.length )
 					Topic = extra.length;
-				
+
 				if ( Topic == 'news' ) {
 					ShowPage = <ContentTimeline types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra}></ContentTimeline>;
 				}
@@ -173,7 +173,7 @@ export default class ViewContent extends Component {
 					ShowPage = <ContentTimeline types='' node={node} user={user} path={path} extra={extra}></ContentTimeline>;
 				}*/
 //			}
-			
+
 			return (
 				<div id="content">
 					<ContentEvent node={node} user={user} path={path} extra={extra} />

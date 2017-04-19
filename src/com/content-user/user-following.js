@@ -9,7 +9,7 @@ import ContentCommon					from 'com/content-common/common';
 
 import $Node							from '../../shrub/js/node/node';
 
-export default class ContentFollowing extends Component {
+export default class ContentUserFollowing extends Component {
 	constructor( props ) {
 		super(props);
 
