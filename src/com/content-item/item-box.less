@@ -1,0 +1,46 @@
+@import 'defs.less' ;
+
+#content .content-item-box {
+
+    margin: 0.25em;
+
+    width: 32%;
+
+    box-sizing: border-box;
+
+    @media only screen and (max-width: 970px) {
+        width: 48%;
+    }
+
+    @media only screen and (max-width: 480px) {
+        width: 96%;
+    }
+
+    & > .-bodies {
+        width: 100%;
+        background-color: @COL_NDDDD;
+    }
+
+    & img{
+        width: 100%;
+    }
+
+    & .-title{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: auto;
+        height: auto;
+        z-index: 10;
+        & > a.-text {
+            font-size: 1.25em;
+            color: @COL_NLLLL;
+            background-color: @COL_NDDDDD;
+        }
+
+        & > a:hover {
+            color: @COL_NLLLLL;
+            background-color: @COL_A;
+        }
+    }
+}

@@ -1,6 +1,9 @@
 import { h, Component } 				from 'preact/preact';
 import NavSpinner						from 'com/nav-spinner/spinner';
 
+import ContentCommon					from 'com/content-common/common';
+import ContentGameBox					from 'com/content-game/game-box';
+
 //import ContentPost						from 'com/content-post/post';
 //import ContentUser						from 'com/content-user/user';
 
@@ -9,7 +12,7 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 export default class ContentGames extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 //		this.state = {
 //			feed: null
 //		};
@@ -24,7 +27,7 @@ export default class ContentGames extends Component {
 //			this.props.types ? this.props.types : ['post']
 //		);
 //	}
-//	
+//
 //	getFeed( id, methods, types ) {
 //		$Node.GetFeed( id, methods, types )
 //		.then(r => {
@@ -38,12 +41,12 @@ export default class ContentGames extends Component {
 //						for ( let idx = 0; idx < rr.node.length; idx++ ) {
 //							nodemap[rr.node[idx].id] = rr.node[idx];
 //						}
-//						
+//
 //						// Using the original keys, return an ordered array of nodes
 //						let new_state = {
 //							'feed': keys.map(v => nodemap[v])
 //						};
-//						
+//
 //						this.setState(new_state);
 //					})
 //					.catch(err => {
@@ -52,7 +55,7 @@ export default class ContentGames extends Component {
 //			}
 //			else {
 //				this.setState({ 'feed': [] });
-//			}			
+//			}
 //		})
 //		.catch(err => {
 //			this.setState({ 'error': err });
@@ -63,7 +66,7 @@ export default class ContentGames extends Component {
 //		var path = this.props.path+'/'+node.slug;
 //		var user = this.props.user;
 //		var extra = this.props.extra;
-//		
+//
 //		if ( node.type === 'post' || node.type === 'game' ) {
 //			return <ContentPost node={node} user={user} path={path} extra={extra} />;
 //		}
@@ -76,8 +79,9 @@ export default class ContentGames extends Component {
 //	}
 
 	render( props, {feed, error} ) {
+
 //		var ShowFeed = null;
-		
+
 //		if ( error ) {
 //			ShowFeed = error;
 //		}
@@ -89,7 +93,7 @@ export default class ContentGames extends Component {
 //		else {
 //			ShowFeed = <NavSpinner />;
 //		}
-//			
+//
 //		return (		/// ***************************************
 //			<div id="content">
 //				{props.children}

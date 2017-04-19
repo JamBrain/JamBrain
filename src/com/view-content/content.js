@@ -1,8 +1,12 @@
 import { h, Component }					from 'preact/preact';
 
 import ContentPost						from 'com/content-post/post';
-import ContentUser						from 'com/content-user/user';
+
 import ContentUsers						from 'com/content-users/users';
+import ContentUser						from 'com/content-user/user';
+import ContentUserFollowing             from 'com/content-user/user-following';
+import ContentUserGames                 from 'com/content-user/user-games';
+
 import ContentTimeline					from 'com/content-timeline/timeline';
 import ContentGames						from 'com/content-games/games';
 import ContentEvent						from 'com/content-event/event';
@@ -21,7 +25,6 @@ import ContentNavTheme					from 'com/content-nav/nav-theme';
 import ContentEventTheme				from 'com/content-event/event-theme';
 
 import ContentPalette					from 'com/content-palette/palette';
-import ContentUserFollowing             from 'com/content-user/user-following';
 
 export default class ViewContent extends Component {
 	constructor( props ) {
@@ -110,6 +113,8 @@ export default class ViewContent extends Component {
 //						View.push(<ContentPost node={node} user={user} path={path} extra={extra.splice(1)} by love edit />);
 					}
 					else if ( ViewType == 'game' ) {
+                        View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
+                        View.push(<ContentUserGames node={node} user={user} path={path} extra={extra} />);
 					}
 					else if ( ViewType == 'article' ) {
 					}
