@@ -26,7 +26,7 @@ export default class ContentCommentsMarkup extends Component {
 		var Text = props.children.join('');
 
 		if (props.editing) {
-			var Height = this.textarea ? this.textarea.scrollHeight : 0;
+			//var Height = this.textarea ? this.textarea.scrollHeight : 0;
 			
 			var Limit = props.limit ? props.limit : 2048;
 			//var Chars = props.children[0] ? props.children[0].length : 0;
@@ -36,7 +36,7 @@ export default class ContentCommentsMarkup extends Component {
 					<div class="-label">{props.label}</div>
 					<InputTextArea 
 						value={Text} 
-						onModify={props.onmodify} 
+						onmodify={props.onmodify} 
 						placeholder={props.placeholder} 
 						ref={(input) => { this.textarea = input; }} 
 						maxlength={Limit}

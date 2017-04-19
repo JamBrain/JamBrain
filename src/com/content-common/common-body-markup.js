@@ -26,7 +26,7 @@ export default class ContentCommonBodyMarkup extends Component {
 		var Text = props.children.join('');
 
 		if (props.editing) {
-			var Height = this.textarea ? this.textarea.scrollHeight : 0;
+			//var Height = this.textarea ? this.textarea.scrollHeight : 0;
 
 			var Limit = props.limit ? props.limit : 8192;
 			//var Chars = props.children[0] ? props.children[0].length : 0;
