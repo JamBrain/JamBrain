@@ -14,23 +14,23 @@ export default class ContentUserFollowing extends Component {
 		super(props);
 
         this.getFollowing = this.getFollowing.bind(this);
+        this.hasPermission = this.hasPermission.bind(this);
 
         this.state = {
-            "allowed": true,
             "followingNodes" : null
         };
 
-        if (props.node.id != props.user.id) {
-            // if it's not our page then we cannot see there following
-            this.state.allowed = false;
-        }
     }
 
-    componentDidMount() {
+    componentDidMount(this.hasPermission()) {
         if (this.state.allowed){
             // if were looking at our own page then display following
             this.getFollowing(this.props.user.private.link.star);
         }
+    }
+
+    hasPermission(props){
+        return (this.props.node.id == this.props.user.id);
     }
 
     getFollowing(ids){
@@ -79,7 +79,7 @@ export default class ContentUserFollowing extends Component {
                 </ContentCommon>
             );
         }
-        else if (!state.allowed){
+        else if (!this.hasPermission()){
             // if were not allowed to see the nodes following then display an error
             return <ContentError code="401">Permission Denied : Cannot see who other people are following </ContentError>;
         }

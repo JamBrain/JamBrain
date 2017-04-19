@@ -22,7 +22,7 @@ export default class ContentUserBar extends Component {
         var posts = following.posts;
 
         return (
-            <div class="-bar">
+            <div class="content-user-bar">
                 <ContentCommonBodyAvatar src={following.meta && following.meta.avatar ? following.meta.avatar : ''} />
                 <ContentCommonBodyTitle href={"/users/"+following.slug} title={following.meta['real-name'] ? following.meta['real-name'] : following.name} subtitle={'@'+following.slug} />
 
