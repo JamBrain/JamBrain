@@ -22,8 +22,8 @@ export default class ContentUserFollowing extends Component {
 
     }
 
-    componentDidMount(this.hasPermission()) {
-        if (this.state.allowed){
+    componentDidMount() {
+        if (this.hasPermission()){
             // if were looking at our own page then display following
             this.getFollowing(this.props.user.private.link.star);
         }
@@ -45,7 +45,7 @@ export default class ContentUserFollowing extends Component {
 
     render( props, state ) {
         props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
-        props.class.push("content-user-bar");
+        props.class.push("content-user-following");
 
         // display a loading bar whilst we wait
         if (state.followingNodes){
