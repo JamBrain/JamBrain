@@ -2,7 +2,7 @@
 
 #content .content-userbar{
 
-    .-bodies .userbar {
+    & .-bar {
         margin: 0.25em auto;
         padding-bottom: 0.5em;
         width:100%;
@@ -19,18 +19,16 @@
             }
         }
 
-        .content-common-nav{
+        & > .content-common-nav{
             margin-top: 0.125em;
             margin-bottom: 0.125em;
         }
-        & .-link {
+        & > .-link {
             & input {
                 width: 20em;
             }
         }
     }
 
-    .following{
-        width: 100%;
-    }
+
 }

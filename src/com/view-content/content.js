@@ -77,7 +77,6 @@ export default class ViewContent extends Component {
 
 			if ( extra.length ) {
 				ViewType = extra[0];
-                console.log(extra[0]);
 			}
 			else {
 				// Default View (i.e. URL is `/`)
