@@ -1,0 +1,29 @@
+@import 'defs.less';
+
+#content .content-user-bar {
+    margin: 0.25em auto;
+    padding-bottom: 0.5em;
+    width:100%;
+
+    box-sizing: border-box;
+
+    & > .-avatar {
+        margin-top: -0.5em!important;
+        float:right;
+
+        & > img {
+            display:block;
+            padding: 0.5em;
+        }
+    }
+
+    & > .content-common-nav{
+        margin-top: 0.125em;
+        margin-bottom: 0.125em;
+    }
+    & > .-link {
+        & input {
+            width: 20em;
+        }
+    }
+}
