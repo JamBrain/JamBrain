@@ -48,7 +48,7 @@ export default class ContentCommonBodyBy extends Component {
 		var pub_diff = (date_now.getTime() - date_pub.getTime());// - (date_now.getTimezoneOffset()*60);
 		
 		// x minutes ago
-		return <span>{props.label} <span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span></span>;
+		return <span>{this.props.label} <span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span></span>;
 	}
 
 	render( props ) {
