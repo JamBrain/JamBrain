@@ -161,7 +161,7 @@ window.getLocaleTimeZone = function( date ) {
 }
 
 window.getLocaleTimeStamp = function( date ) {
-    return getLocaleDate(date) + " " + getLocaleTime(date) + " " + getLocaleTimeZone(date);
+    return getLocaleDay(date) + " " + getLocaleDate(date) + " " + getLocaleTime(date) + " " + getLocaleTimeZone(date);
 }
 
 })();
