@@ -91,6 +91,12 @@ export default class ContentPost extends Component {
 			if ( node.subtype === 'news' ) {
 				props.header = "NEWS";
 				props.headerClass = "-col-c";
+			} else if ( node.subtype === 'info' ) {
+				props.header = "INFO";
+				props.headerClass = "-col-nddd";
+			} else if ( node.subtype === 'guide' ) {
+				props.header = "GUIDE";
+				props.headerClass = "-col-nddd";
 			}
 		}
 		
