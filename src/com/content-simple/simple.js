@@ -101,7 +101,26 @@ export default class ContentSimple extends Component {
 		});
 	}
 	onPublish( e ) {
-		console.log( 'pubby', e );
+		// TODO: Confirm
+		return $Node.Publish(this.props.node.id)
+		.then(r => {
+			console.log(r);
+//			if ( r.status == 200 ) {
+//				this.setState({ 'modified': false });
+//			}
+//			else {
+//				if ( r.caller_id == 0 || (r.data && r.data.caller_id == 0) ) {
+//					location.hash = "#savebug";
+//				}
+//				else {
+//					this.setState({ 'error': r.status + ": " + r.error });
+//				}
+//			}
+		})
+		.catch(err => {
+			console.log(err);
+			this.setState({ 'error': err });
+		});
 	}
 
 	onModifyTitle( e ) {
