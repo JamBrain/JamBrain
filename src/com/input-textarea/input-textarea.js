@@ -1,6 +1,9 @@
 import { h, Component } 				from 'preact/preact';
 import { shallowDiff }	 				from 'shallow-compare/index';
 
+import NavLink							from 'com/nav-link/link';
+import SVGIcon							from 'com/svg-icon/icon';
+
 export default class InputTextarea extends Component {
 	constructor( props ) {
 		super(props);
@@ -8,7 +11,6 @@ export default class InputTextarea extends Component {
 		this.state = {
 			'cursorPos': (props.value || '').length
 		};
-//		this.setState({'cursorPos': (props.value || '').length});
 		
 		this.onInput = this.onInput.bind(this);
 	}
@@ -48,12 +50,23 @@ export default class InputTextarea extends Component {
 	}
 
 	render( props ) {
-//		oninput={(e) => { props.onModify(e); this.onInput(e); }}
+		var ShowLimit = null;
+		if ( props.maxlength )
+			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{props.maxlength}</span></div>;
+
 		return (
-			<textarea {...props} 
-				oninput={this.onInput}
-				ref={(input) => { this.textarea = input; }} 
-			/>
+			<div class="input-textarea">
+				<div class="-textarea">
+					<textarea {...props} 
+						oninput={this.onInput}
+						ref={(input) => { this.textarea = input; }} 
+					/>
+				</div>
+				<div class="-footer">
+					{ShowLimit}
+					<div class="-left if-sidebar-block">Supports <NavLink blank href="/markdown"><SVGIcon>markdown</SVGIcon> <strong>Markdown</strong></NavLink> and <NavLink href="//emoji.codes/"><strong>:emoji_codes:</strong></NavLink></div>
+				</div>
+			</div>
 		);
 	}
 }

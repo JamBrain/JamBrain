@@ -1,0 +1,47 @@
+@import 'defs.less';
+
+.input-textarea {
+	& > .-textarea {
+		border: 1px solid @COL_NLLL;
+		
+		background: @COL_NLLLL;
+		
+		border-radius: 0.25em;
+		overflow: hidden;
+
+		& > textarea {
+			width: 100%;
+			max-width: 100%;			/* don't let the width exceed the width of the parent (do we need this anymore?) */
+			min-height: 6em;
+			
+			background: inherit;		/* let the parent dictate background color */
+			display: block;				/* removes gap on line after element */
+	
+			padding: 0.5em;
+			border: 0;
+			
+			overflow: hidden;			/* We're going to resize the box automatically (hopefully this is mobile friendly) */
+			resize: none;
+			
+			box-sizing: border-box;		/* Correctly fit to div-like shapes */
+			
+			outline: none;				/* Remove Chrome outline when focused (handled by a bg color change instead) */
+	
+			&:focus {
+				background: @COL_W;
+			}
+		}
+	}
+	& > .-footer {
+		font-size: 0.8em;
+		overflow: hidden;
+
+		& > .-left {}
+		& > .-right {
+			float: right;
+		}
+		
+		& .-chars {}
+		& .-limit {}
+	}	
+}
