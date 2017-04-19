@@ -154,8 +154,14 @@ export default class ContentCommentsComment extends Component {
 					<div class="-title">
 						<span class="-author">{Name}</span> (<NavLink class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</NavLink>)
 					</div>,
-					<div class="-date">posted <span title={getLocaleDate(Created)}>{getRoughAge(DateDiff)}</span><span title={getLocaleDate(Modified)}>{HasEdited?" (edited)":""}</span></div>
 				];
+				
+				if ( comment.created ) {
+					ShowTitle.push(<div class="-date">posted <span title={getLocaleTimeStamp(Created)}>{getRoughAge(DateDiff)}</span><span title={getLocaleDate(Modified)}>{HasEdited?" (edited)":""}</span></div>);
+				}
+				else {
+					ShowTitle.push(<div class="-date">not yet posted</div>);
+				}
 			}
 
 			var ShowReply = null;

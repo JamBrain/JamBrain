@@ -160,4 +160,8 @@ window.getLocaleTimeZone = function( date ) {
 	return TZ;
 }
 
+window.getLocaleTimeStamp = function( date ) {
+    return getLocaleDay(date) + " " + getLocaleDate(date) + " " + getLocaleTime(date) + " " + getLocaleTimeZone(date);
+}
+
 })();

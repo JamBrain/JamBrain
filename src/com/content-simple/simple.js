@@ -11,6 +11,8 @@ import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonBodyAvatar			from 'com/content-common/common-body-avatar';
 import ContentCommonBodyMarkup			from 'com/content-common/common-body-markup';
 
+import ContentCommonDraft				from 'com/content-common/common-draft';
+
 import ContentCommonEdit				from 'com/content-common/common-edit';
 
 import $Node							from '../../shrub/js/node/node';
@@ -26,6 +28,7 @@ export default class ContentSimple extends Component {
 			'editing': this.isEditMode(),
 			'modified': false,
 
+			'name': props.node.name,
 			'body': props.node.body,
 		};
 
@@ -37,6 +40,7 @@ export default class ContentSimple extends Component {
 		this.onSave = this.onSave.bind(this);
 		this.onPublish = this.onPublish.bind(this);
 
+		this.onModifyTitle = this.onModifyTitle.bind(this);
 		this.onModifyText = this.onModifyText.bind(this);
 	}
 
@@ -74,10 +78,10 @@ export default class ContentSimple extends Component {
 		this.setState({'editing': false});
 	}
 	onSave( e ) {
-		//var Name = /*this.state.title ? this.state.title :*/ this.props.node.name;
+		var Title = this.state.name ? this.state.name : this.props.node.name;
 		var Body = this.state.body ? this.state.body : this.props.node.body;
 		
-		return $Node.Update(this.props.node.id, null, Body)
+		return $Node.Update(this.props.node.id, Title, Body)
 		.then(r => {
 			if ( r.status == 200 ) {
 				this.setState({ 'modified': false });
@@ -97,9 +101,31 @@ export default class ContentSimple extends Component {
 		});
 	}
 	onPublish( e ) {
-		console.log( e );
+		// TODO: Confirm
+		return $Node.Publish(this.props.node.id)
+		.then(r => {
+			console.log(r);
+//			if ( r.status == 200 ) {
+//				this.setState({ 'modified': false });
+//			}
+//			else {
+//				if ( r.caller_id == 0 || (r.data && r.data.caller_id == 0) ) {
+//					location.hash = "#savebug";
+//				}
+//				else {
+//					this.setState({ 'error': r.status + ": " + r.error });
+//				}
+//			}
+		})
+		.catch(err => {
+			console.log(err);
+			this.setState({ 'error': err });
+		});
 	}
 
+	onModifyTitle( e ) {
+		this.setState({'modified': true, 'name': e.target.value});
+	}
 	onModifyText( e ) {
 		this.setState({'modified': true, 'body': e.target.value});
 	}
@@ -124,7 +150,6 @@ export default class ContentSimple extends Component {
 			props.class.push("content-simple");
 
 			var ShowEditBar = null;
-			var IsPublished = false;
 
 			if ( this.isEditMode() ) {
 				// Check if user has permission to edit
@@ -132,10 +157,7 @@ export default class ContentSimple extends Component {
 					return <ContentError code="401">Permission Denied</ContentError>;
 				}
 				
-				// Hack
-				//var IsPublished = node.type.length;//;Number.parseInt(node.published) !== 0;
-				
-				ShowEditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} published={IsPublished} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} onpublish={this.onPublish} />;
+				ShowEditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} published={!!node.published} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} onpublish={this.onPublish} />;
 			}
 			else {
 				if ( user.id && (node.author === user.id) )
@@ -146,17 +168,23 @@ export default class ContentSimple extends Component {
 			let ShowByLine = null;
 			if ( props.authored ) {
 				ShowAvatar = <ContentCommonBodyAvatar src={author.meta && author.meta.avatar ? author.meta.avatar : ''} />;
-				if ( props.by ) {
+				if ( props.by && !state.editing ) {
 					ShowByLine = <ContentCommonBodyBy node={node} author={author} label="published" when />;
 				}
 			}
-			else if ( props.updated ) {
+			else if ( props.updated && !state.editing ) {
 				ShowByLine = <ContentCommonBodyBy node={node} label="Last updated" modified />;					
 			}
 
 			let ShowTitle = null;
 			if ( !props.notitle ) {
-				ShowTitle = <ContentCommonBodyTitle href={path} title={node.name} titleIcon={props.titleIcon} />;
+				ShowTitle = <ContentCommonBodyTitle 
+					href={path} 
+					title={state.name} 
+					titleIcon={props.titleIcon} 
+					editing={state.editing} 
+					onmodify={this.onModifyTitle} 
+				/>;
 			}
 			
 			let ShowMarkup = null;
@@ -178,10 +206,16 @@ export default class ContentSimple extends Component {
 			if ( props.above ) {
 				ShowAbove = props.above;
 			}
+			
+			let ShowDraft = null;
+			if ( !node.published ) {
+				ShowDraft = <ContentCommonDraft />;
+			}
 
 			return (
 				<ContentCommon {...props}>
 					{ShowEditBar}
+					{ShowDraft}
 					{ShowAvatar}
 					{ShowTitle}
 					{ShowAbove}

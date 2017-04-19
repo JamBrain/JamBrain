@@ -26,24 +26,29 @@ export default class ContentCommonBodyBy extends Component {
 		return '/users/'+node.slug;
 	}
 	
-	getWhen( node ) {
-		var date_pub = new Date(node.published);
-		if ( node.meta['origin-date'] ) {
-			date_pub = new Date(node.meta['origin-date']);
+	getWhen( node, label ) {
+		if ( node.published ) {
+			var date_pub = new Date(node.published);
+			if ( node.meta['origin-date'] ) {
+				date_pub = new Date(node.meta['origin-date']);
+			}
+			var date_now = new Date();
+			var pub_diff = (date_now.getTime() - date_pub.getTime());// - (date_now.getTimezoneOffset()*60);
+			
+			// x minutes ago
+			return <span>{label} <span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span></span>;
 		}
-		var date_now = new Date();
-		var pub_diff = (date_now.getTime() - date_pub.getTime());// - (date_now.getTimezoneOffset()*60);
-		
-		// x minutes ago
-		return <span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span>;
+		else {
+			return <span>not {label} yet</span>;			
+		}
 	}
-	getModified( node ) {
+	getModified( node, label ) {
 		var date_pub = new Date(node.modified);
 		var date_now = new Date();
 		var pub_diff = (date_now.getTime() - date_pub.getTime());// - (date_now.getTimezoneOffset()*60);
 		
 		// x minutes ago
-		return <span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span>;
+		return <span>{props.label} <span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span></span>;
 	}
 
 	render( props ) {
@@ -57,10 +62,10 @@ export default class ContentCommonBodyBy extends Component {
 			Body.push(<span> (<NavLink class="-at-name" href={this.getURL(props.author)}>@{this.getAtName(props.author)}</NavLink>)</span>);
 		}
 		if ( props.when && props.node ) {
-			Body.push(<span class="-when">{Body.length ? ', ' : ''}{props.label} {this.getWhen(props.node)}</span>);
+			Body.push(<span class="-when">{Body.length ? ', ' : ''}{this.getWhen(props.node, props.label)}</span>);
 		}
 		else if ( props.modified && props.node ) {
-			Body.push(<span class="-when">{Body.length ? ', ' : ''}{props.label} {this.getModified(props.node)}</span>);
+			Body.push(<span class="-when">{Body.length ? ', ' : ''}{this.getModified(props.node, props.label)}</span>);
 		}
 		
 		return <div class={props.class}>{Body}{props.children}</div>;
