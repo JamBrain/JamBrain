@@ -168,11 +168,11 @@ export default class ContentSimple extends Component {
 			let ShowByLine = null;
 			if ( props.authored ) {
 				ShowAvatar = <ContentCommonBodyAvatar src={author.meta && author.meta.avatar ? author.meta.avatar : ''} />;
-				if ( props.by ) {
+				if ( props.by && !state.editing ) {
 					ShowByLine = <ContentCommonBodyBy node={node} author={author} label="published" when />;
 				}
 			}
-			else if ( props.updated ) {
+			else if ( props.updated && !state.editing ) {
 				ShowByLine = <ContentCommonBodyBy node={node} label="Last updated" modified />;					
 			}
 
