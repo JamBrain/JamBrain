@@ -11,6 +11,8 @@ import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonBodyAvatar			from 'com/content-common/common-body-avatar';
 import ContentCommonBodyMarkup			from 'com/content-common/common-body-markup';
 
+import ContentCommonDraft				from 'com/content-common/common-draft';
+
 import ContentCommonEdit				from 'com/content-common/common-edit';
 
 import $Node							from '../../shrub/js/node/node';
@@ -97,7 +99,7 @@ export default class ContentSimple extends Component {
 		});
 	}
 	onPublish( e ) {
-		console.log( e );
+		console.log( 'pubby', e );
 	}
 
 	onModifyText( e ) {
@@ -124,7 +126,6 @@ export default class ContentSimple extends Component {
 			props.class.push("content-simple");
 
 			var ShowEditBar = null;
-			var IsPublished = false;
 
 			if ( this.isEditMode() ) {
 				// Check if user has permission to edit
@@ -132,10 +133,7 @@ export default class ContentSimple extends Component {
 					return <ContentError code="401">Permission Denied</ContentError>;
 				}
 				
-				// Hack
-				//var IsPublished = node.type.length;//;Number.parseInt(node.published) !== 0;
-				
-				ShowEditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} published={IsPublished} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} onpublish={this.onPublish} />;
+				ShowEditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} published={!!node.published} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} onpublish={this.onPublish} />;
 			}
 			else {
 				if ( user.id && (node.author === user.id) )
@@ -178,10 +176,16 @@ export default class ContentSimple extends Component {
 			if ( props.above ) {
 				ShowAbove = props.above;
 			}
+			
+			let ShowDraft = null;
+			if ( !node.published ) {
+				ShowDraft = <ContentCommonDraft />;
+			}
 
 			return (
 				<ContentCommon {...props}>
 					{ShowEditBar}
+					{ShowDraft}
 					{ShowAvatar}
 					{ShowTitle}
 					{ShowAbove}
