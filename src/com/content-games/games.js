@@ -6,6 +6,7 @@ import ContentError						from 'com/content-error/error';
 
 import ContentCommon					from 'com/content-common/common';
 import ContentItemBox					from 'com/content-item/item-box';
+import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
 //import ContentPost						from 'com/content-post/post';
 //import ContentUser						from 'com/content-user/user';
@@ -74,7 +75,7 @@ export default class ContentGames extends Component {
         if (state['error']){
             return <ContentError code="400">"Bad Request : Couldn't load games"</ContentError>;
         }
-        else if(state.feed)
+        else if(state['feed'] && state.feed > 0)
         {
             var games = state.feed.map( g => {
                 return <ContentItemBox node={g} path={props.path} user={props.user}/>;
@@ -84,6 +85,14 @@ export default class ContentGames extends Component {
                 <div class={props.class}>
                     {games}
                 </div>
+            );
+        }
+        else if (state['feed']){
+            return (
+                <ContentCommon {...props}>
+                    <ContentCommonBodyTitle href={""} title={"No Games!"} />
+                    <p>"Sorry there isn't any games yet."</p>
+                </ContentCommon>
             );
         }
         else {

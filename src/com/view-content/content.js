@@ -83,9 +83,9 @@ export default class ViewContent extends Component {
 			}
 			else {
 				// Default View (i.e. URL is `/`)
-				if ( node['games'] > 0 )
+				/*if ( node['games'] > 0 ) //Disabled games as default as api needs work
 					ViewType = 'games';
-				else if ( node['articles'] > 0 )
+				else*/ if ( node['articles'] > 0 )
 					ViewType = 'articles';
 				else
 					ViewType = 'feed';
@@ -153,9 +153,9 @@ export default class ViewContent extends Component {
 				ShowPage = <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} />;
 			}
             else if(extra && extra.length && extra[0] == 'games'){
-                let NewPath = path+'/'+extra[0];
-                let NewExtra = extra.slice(1);
-                ShowPage = <ContentGames node={node} user={user} path={NewPath} extra={NewExtra} />;
+                //let NewPath = path+'/'+extra[0];
+                //let NewExtra = extra.slice(1);
+                ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} />;
             }
 			else {
 				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
@@ -204,7 +204,7 @@ export default class ViewContent extends Component {
 					return <ContentTimeline node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 				}
 				else if ( extra[0] === 'games' ) {
-					return <ContentGames types={['game']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentGames>;
+					return <ContentGames node={node} user={user} path={path} extra={extra} >{ShowNavRoot}</ContentGames>;
 				}
 				else if ( extra[0] === 'feed' ) {
 					return <ContentTimeline types='' node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;

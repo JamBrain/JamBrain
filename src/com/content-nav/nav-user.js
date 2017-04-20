@@ -21,9 +21,10 @@ export default class ContentNavUser extends Component {
 		var ShowMyFeed = null;
 		if ( NewPath === '/' ) {
 			// Default to games, articles, or feed if no games/articles are available
-			if ( node['games'] > 0 )
+            // Disabled games as default because its doesn't work great.
+			/*if ( node['games'] > 0 )
 				NewPath = '/games';
-			else if ( node['articles'] > 0 )
+			else*/ if ( node['articles'] > 0 )
 				NewPath = '/articles';
 			else
 				NewPath = '/feed';
