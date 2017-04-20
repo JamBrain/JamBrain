@@ -26,6 +26,9 @@ import ContentEventTheme				from 'com/content-event/event-theme';
 
 import ContentPalette					from 'com/content-palette/palette';
 
+import ContentUserFollowing             from 'com/content-user/user-following';
+import ContentUserFollowers             from 'com/content-user/user-followers';
+
 export default class ViewContent extends Component {
 	constructor( props ) {
 		super(props);
@@ -118,6 +121,10 @@ export default class ViewContent extends Component {
                     else if ( ViewType == 'following'){
                         View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
                         View.push(<ContentUserFollowing node={node} user={user} path={path} extra={extra} />);
+                    }
+                    else if ( ViewType == 'followers'){
+                        View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
+                        View.push(<ContentUserFollowers node={node} user={user} path={path} extra={extra} />);
                     }
 					else {
 						View.push(<Content404 />);

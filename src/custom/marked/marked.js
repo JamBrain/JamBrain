@@ -931,8 +931,9 @@ Renderer.prototype.link = function(href, title, text) {
     return HasSmartLink;
   }
   else {
-    console.log("title: "+title);
-    console.log("text: "+text);
+
+    href = autoEmbed.extractFromURL(href).url;
+
     var out = '<a href="' + href + '"';
     if (title) {
       out += ' title="' + title + '"';
