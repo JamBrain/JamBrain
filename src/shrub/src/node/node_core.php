@@ -42,17 +42,32 @@ function node_GetSlugByParentSlugLike( $parent, $slug ) {
 }
 
 
-function node_WalkById( $id, $top = 0, $timeout = 10 ) {
+function _node_GetPathById( $id, $top = 0, $timeout = 10 ) {
+	if ( !$id )
+		return '';
+
 	$tree = [];
-//	$data = [];
-//	while ( $id > 0 && isset && ($data['parent'] !== $top) && !($timeout--) ) {
+	do {
 		$data = node_GetParentSlugById($id);
 		$tree[] = $data;
-//		$id = $data['parent'];
-//	};// while ( $id > 0 && ($data['parent'] !== $top) && !($timeout--) );
+		$id = $data['parent'];
+	} while ( $id > 0 && ($data['parent'] !== $top) && ($timeout--) );
 
 	return $tree;
 }
+function node_GetPathById( $id, $top = 0, $timeout = 10 ) {
+	$tree = _node_GetPathById($id, $top, $timeout);
+	
+	$path = '';
+	$parent = [];
+	foreach( $tree as &$leaf ) {
+		$path = '/'.($leaf['slug']).$path;
+		array_unshift($parent, $leaf['parent']);
+	}
+	
+	return [ 'path' => $path, 'parent' => $parent ];
+}
+
 
 const SH_MAX_SLUG_LENGTH = 96;
 const SH_MAX_SLUG_RETRIES = 100;
@@ -183,8 +198,10 @@ function node_CountByParentAuthorType( $parent, $author = null, $type = null, $s
 		LIMIT 1;",
 		...$ARGS
 	);
-
-	return $ret;
+	
+	if ( count($ret) && isset($ret[0]['count']) )
+		return $ret[0]['count'];
+	return 0;
 }
 
 function node_CountByAuthorType( $ids, $authors, $types = null, $subtypes = null, $subsubtypes = null ) {

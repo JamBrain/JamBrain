@@ -28,7 +28,7 @@ export default class ViewContent extends Component {
 		super(props);
 	}
 
-	getContent( {node, user, path, extra} ) {
+	getContent( {node, user, path, extra, featured} ) {
 		if ( node.name ) {
 			document.title = titleParser.parse(node.name, true);
 			if ( document.title === "" )
@@ -66,7 +66,7 @@ export default class ViewContent extends Component {
 		else if ( node.type === 'item' ) {
 			return (
 				<div id="content">
-					<ContentItem node={node} user={user} path={path} extra={extra} />
+					<ContentItem node={node} user={user} path={path} extra={extra} featured={featured} />
 					<ContentComments node={node} user={user} path={path} extra={extra} />
 				</div>
 			);
@@ -147,8 +147,8 @@ export default class ViewContent extends Component {
 			if ( extra && extra.length && extra[0] == 'theme' ) {
 				let NewPath = path+'/'+extra[0];
 				let NewExtra = extra.slice(1);
-				ShowNav = <ContentNavTheme node={node} user={user} path={NewPath} extra={NewExtra} />;
-				ShowPage = <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} />;
+				ShowNav = <ContentNavTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
+				ShowPage = <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
 			}
 			else {
 				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
@@ -175,7 +175,7 @@ export default class ViewContent extends Component {
 
 			return (
 				<div id="content">
-					<ContentEvent node={node} user={user} path={path} extra={extra} />
+					<ContentEvent node={node} user={user} path={path} extra={extra} featured={featured} />
 					{ShowNav}
 					{ShowPage}
 				</div>

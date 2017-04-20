@@ -77,10 +77,12 @@ export default class ViewBar extends Component {
 		else if ( user && user.id ) {
 			if ( featured && featured.id ) {
 				if ( featured.what && featured.what.length ) {
-					// TODO: get actual URL
-					var GameURL = '/events/ludum-dare/37/';
-//					var GameURL = '/users/ham/';
-					GameURL += '$'+featured.what[featured.what.length-1];
+					// TODO: use path
+					//var GameURL = '/events/ludum-dare/38/';
+					var GameURL = featured.path;
+					var CurrentFeaturedItem = featured.what[featured.what.length-1];
+
+					GameURL += '/$'+CurrentFeaturedItem;
 					GameURL += '/edit';
 
 					ShowMyGame = (
@@ -90,14 +92,14 @@ export default class ViewBar extends Component {
 						</ButtonLink>
 					);
 					
-//					NewPost = (
-//						<ButtonBase class="-button" onclick={e => { console.log('new'); window.location.hash = "#create/post"; }}>
-//							<SVGIcon>edit</SVGIcon>
-//							<div class="if-sidebar-block">New</div>
-//						</ButtonBase>
-//					);
+					NewPost = (
+						<ButtonBase class="-button" onclick={e => { window.location.hash = "#create/"+CurrentFeaturedItem+"/post"; }}>
+							<SVGIcon>edit</SVGIcon>
+							<div class="if-sidebar-block">New</div>
+						</ButtonBase>
+					);
 				}
-				else {
+				else if ( node_CanCreate(featured) ) {
 					ShowJoin = (
 						<ButtonBase class="-button" onclick={e => { window.location.hash = "#create/"+featured.id+"/item/game"; }}>
 							<SVGIcon>publish</SVGIcon>
