@@ -137,7 +137,7 @@ export default class ViewContent extends Component {
 
 			return (
 				<div id="content">
-					<ContentUser node={node} user={user} path={path} extra={extra} />
+					<ContentUser node={node} user={user} path={path} extra={extra} methods={['all']}/>
 					{View}
 				</div>
 			);
