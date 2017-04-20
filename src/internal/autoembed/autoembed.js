@@ -28,6 +28,13 @@
 			ret.url = str;
 		}
 
+        // if its not already an external link with a protocol and it has a dot in it
+        // then make it an extrenal link becuase not internal links have dots
+        if ( ret.url.indexOf('//') == -1 && ret.url.indexOf('.') != -1 /*&&
+            (ret.url.indexOf('/') == -1 || ret.url.indexOf('.') < ret.url.indexOf('/')) */) {
+            ret.url = 'https://' + ret.url;
+        }
+
 		// If it has a '//', it has a protocol and a domain
 		if ( ret.url.indexOf('//') !== -1 ) {
 			var url_body = ret.url.split('//');
@@ -38,6 +45,7 @@
 		}
 		else {
 			ret.parts = ret.url.split('/');
+            ret.domain = ret.parts.shift().toLowerCase();
 		}
 
 		ret.path = ret.parts.length ? '/'+ret.parts.join('/') : '';
@@ -95,8 +103,10 @@
 	AutoEmbed.prototype.hasSmartLink = function( str, title, text ) {
 		url = this.extractFromURL(str);
 
-        console.log(str + ":" + title + ":" + text);
         console.log(url);
+        console.log(url.url);
+        console.log(str);
+
         var isMDlink = !(str == text) && text;
         var domain = url.domain;
         var path = url.path;
@@ -107,21 +117,22 @@
         }
 		if ( url.domain ) {
 			if ( url.domain.indexOf('youtube.com') !== -1 ) {
-				return this.makeSmartLink('youtube', str, domain, path );
+				return this.makeSmartLink('youtube', url.url, domain, path );
 			}
 			else if ( url.domain.indexOf('github.com') !== -1 ) {
-				return this.makeSmartLink('github', str, domain, path );
+				return this.makeSmartLink('github', url.url, domain, path );
             }
 			else if ( url.domain.indexOf('twitch.tv') !== -1 ) {
-				return this.makeSmartLink('twitch', str, domain, path );
+				return this.makeSmartLink('twitch', url.url, domain, path );
 			}
 			else if ( url.domain.indexOf('reddit.com') !== -1 ) {
-                return this.makeSmartLink('reddit', str, domain, path );
+                return this.makeSmartLink('reddit', url.url, domain, path );
             }
 			else if ( url.domain.indexOf('twitter.com') !== -1 ) {
-				return this.makeSmartLink('twitter', str, domain, path );
+				return this.makeSmartLink('twitter', url.url, domain, path );
 			}
-			else if ( url.domain.indexOf(window.location.hostname) !== -1 ) {
+			else if ( url.domain.indexOf('//'+window.location.hostname) !== -1 ) {
+                console.log("Make local link of " + url.url);
 				return this.makeLocalLink( '/'+url.parts.join('/') );
 			}
 	//		else if ( url.indexOf('https') === 0 ) {
@@ -134,6 +145,7 @@
 	//			return this.makeSmartLink( 'link', str, str.split('//')[1] );
 	//		}
 		}
+        console.log("Didnt auto link " + str);
 		return false;
 	}
 
