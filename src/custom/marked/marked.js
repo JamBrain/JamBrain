@@ -960,7 +960,7 @@ Renderer.prototype.image = function(href, title, text) {
     return '<div class="unsafe-image-url">' + text + '</div>';
   }
 
-  var out = '<img src="' + href + '" alt="' + text + '"';
+  var out = '<img class="img" src="' + href + '" alt="' + text + '"';
   if (title) {
     out += ' title="' + title + '"';
   }
