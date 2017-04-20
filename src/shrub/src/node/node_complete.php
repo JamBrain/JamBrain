@@ -24,7 +24,9 @@ function nodeComplete_GetById( $ids ) {
 	// Populate Metadata
 	foreach ( $nodes as &$node ) {
 		// Walk paths
-		$node['path'] = node_WalkById($node['id']);
+		$paths = node_GetPathById($node['id'], 1);	// 1 = root node
+		$node['path'] = $paths['path'];
+		$node['parents'] = $paths['parent'];
 		
 		if ( $node['type'] == 'user' ) {
 			$node['games'] = isset($games[$node['id']]) ? $games[$node['id']]['count'] : 0;

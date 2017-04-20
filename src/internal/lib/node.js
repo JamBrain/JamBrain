@@ -41,4 +41,15 @@ window.nodeUser_GetFriends = function( user ) {
 	return [];
 }
 
+window.node_CanCreate = function( node ) {
+	return node.meta && node.meta['can-create'];
+}
+window.node_CanTheme = function( node ) {
+	return node.meta && node.meta['can-theme'];
+}
+
+//window.nodeUser_IsTeamLeader = function( user, project ) {
+//	
+//}
+
 })();

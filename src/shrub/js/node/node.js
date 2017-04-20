@@ -108,10 +108,8 @@ export function Add( id, node_type, node_subtype, node_subsubtype ) {
 	return Fetch.Post(API_ENDPOINT+'/vx/node/add/'+args.join('/'), {});
 
 }
-export function Publish( id, event ) {
-	return Fetch.Post(API_ENDPOINT+'/vx/node/publish/'+id, {
-		'event': event
-	});
+export function Publish( id ) {
+	return Fetch.Post(API_ENDPOINT+'/vx/node/publish/'+id, {});
 }
 
 export function Update( id, name, body, tag ) {

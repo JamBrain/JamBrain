@@ -263,35 +263,101 @@ switch ( $action ) {
 			$subtype = coreSlugify_Name(json_ArgShift());
 			$subsubtype = coreSlugify_Name(json_ArgShift());
 
+			$fulltype = $type;
+			if ( $subtype )
+				$fulltype .= '/'.$subtype;
+			if ( $subsubtype )
+				$fulltype .= '/'.$subsubtype;
+
 			if ( empty($parent) || empty($type) ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
 			}
-			
+
 			$where = nodeComplete_GetWhereIdCanCreate($user_id);
+			//$RESPONSE['where'] = $where;
 			
-			if ( !isset($where[$type]) || !in_array($parent, $where[$type]) ) {
-				json_EmitFatalError_BadRequest(null, $RESPONSE);
+			if ( !isset($where[$fulltype]) || !in_array($parent, $where[$fulltype]) ) {
+				json_EmitFatalError_BadRequest("Can't create a $fulltype under this node", $RESPONSE);
 			}
 			
-			switch ( $type ) {
-				case 'item':
-					// TODO: Rollback
+			// Default create limits
+			$create_limits = [
+				'item/game' => 1,
+				'item/game/jam' => 1,
+				'item/game/compo' => 1,
+				'item/game/warmup' => 1,
+				'item/game/incomplete' => 1,
+				'item/game/release' => -1,	// i.e. unlimited
+
+				'item/craft' => 0,			// i.e. can't create
 				
-					// For now we only support game items, so hardcode game
-					$new_node = node_Add($parent, $user_id, $type, "game", "", null, "", "");
+				'post' => -10,				// i.e. unlimited
+				'post/news' => 0,			// i.e. can't create
+			];
+			
+			// TODO: Do things that modify limits here
+			$true_limit = 2;	// TODO: up this as a user becomes more trustworthy.
+
+
+			// Check if you haven't exceeded the limit
+			$RESPONSE['limit'] = isset($create_limits[$fulltype]) ? $create_limits[$fulltype] : 0;
+			
+			if ( $RESPONSE['limit'] === 0 ) {
+				json_EmitFatalError_Permission("You don't have permission to create a $fulltype here", $RESPONSE);
+			}
+			
+			// Negatives are a pseudolimit
+			if ( $RESPONSE['limit'] < 0 ) {
+				$RESPONSE['limit'] = $true_limit * (-$RESPONSE['limit']);
+			}
+			
+
+			// Check how many you have
+			$RESPONSE['count'] = node_CountByParentAuthorType($parent, $user_id, $type, $subtype, $subsubtype);
+//			if ( isset($RESPONSE['count']) && count($RESPONSE['count']) == 0 ) {
+//				$RESPONSE['count'] = 0;
+//			}
+//			else if ( isset($RESPONSE['count']) && count($RESPONSE['count']) > 0 && isset($RESPONSE['count'][0]['count']) ) {
+//				$RESPONSE['count'] = $RESPONSE['count'][0]['count'];
+//			}
+//			else {
+//				json_EmitFatalError_BadRequest("Problem", $RESPONSE);
+//			}
+			
+			if ( $RESPONSE['count'] >= $RESPONSE['limit'] ) {
+				json_EmitFatalError_Permission("You don't have permission to create any more $fulltype's here", $RESPONSE);
+			}
+
+			switch ( $fulltype ) {
+				case 'item/game':
+					// TODO: Rollback
+
+					$new_node = node_Add($parent, $user_id, $type, $subtype, "", null, "", "");
 					if ( $new_node ) {
+						// Allow posts under the game
 						nodeMeta_AddByNode($new_node, SH_NODE_META_SHARED, 'can-create', 'post');
+						// Add yourself as an author of the game
 						nodeLink_AddbyNode($new_node, $user_id, SH_NODE_META_PUBLIC, 'author');
 					}
 					else {
 						json_EmitFatalError_ServerError(null, $RESPONSE);
 					}
 					
+					$RESPONSE['count']++;
 					$RESPONSE['id'] = $new_node;
 					break;
 					
-//				case 'post':
-//					break;
+				case 'post':
+					$new_node = node_Add($parent, $user_id, $type, $subtype, "", null, "", "");
+					if ( $new_node ) {
+					}
+					else {
+						json_EmitFatalError_ServerError(null, $RESPONSE);
+					}
+
+					$RESPONSE['count']++;
+					$RESPONSE['id'] = $new_node;
+					break;
 
 				default:
 					break;
@@ -389,38 +455,42 @@ switch ( $action ) {
 			}
 			
 			// Parse POST
-			if ( isset($_POST['event']) )
-				$event = coreSanitize_String(substr($_POST['event'], 0, 24));
-			else
-				json_EmitFatalError_BadRequest("'event' not found in POST", $RESPONSE);
+//			if ( isset($_POST['parent']) )
+//				$parent = intval($_POST['parent']);
+//			else
+//				json_EmitFatalError_BadRequest("'parent' not found in POST", $RESPONSE);
 
-			if ( $event === 'compo' || $event === 'jam' ) {
-			}
-			else {
-				json_EmitFatalError_BadRequest("Unsupported 'event'", $RESPONSE);
-			}
+//			if ( $event === 'compo' || $event === 'jam' ) {
+//			}
+//			else {
+//				json_EmitFatalError_BadRequest("Unsupported 'event'", $RESPONSE);
+//			}
 
 			// Fetch Node			
 			$node = nodeComplete_GetById($node_id);
+			if ( $node['published'] ) {
+				json_EmitFatalError_BadRequest("Already published", $RESPONSE);
+			}
+			
 			$authors = nodeList_GetAuthors($node);
 
 			// If you are authorized to edit
 			if ( in_array($user_id, $authors) ) {
 				$slug = coreSlugify_Name($node['name']);
 				if ( in_array($slug, $SH_NAME_RESERVED) ) {
-					json_EmitFatalError_BadRequest("Title is a reserved word", $RESPONSE);
+					json_EmitFatalError_BadRequest("Name is a reserved word", $RESPONSE);
 				}
 				
 				$new_slug = node_GetUniqueSlugByParentSlug($node['parent'], $slug);
 			
 				if ( strlen($new_slug) < 3 ) {
-					json_EmitFatalError_BadRequest("Title is too short (minumum 3 characters)", $RESPONSE);
+					json_EmitFatalError_BadRequest("Name is too short (minumum 3 characters)", $RESPONSE);
 				}
 				
 				$RESPONSE['edit'] = node_Edit(
 					$node_id,
 					$node['parent'], $node['author'], 
-					$node['type'], $node['subtype'], $event,
+					$node['type'], $node['subtype'], $node['subsubtype'],
 					$new_slug,
 					$node['name'],
 					$node['body'],
@@ -429,6 +499,10 @@ switch ( $action ) {
 				$RESPONSE['publish'] = node_Publish(
 					$node_id
 				);
+				
+				if ( $RESPONSE['publish'] ) {
+					$RESPONSE['path'] = node_GetPathById($node_id, 1)['path']; // Root node
+				}
 			}
 			else {
 				json_EmitFatalError_Permission(null, $RESPONSE);

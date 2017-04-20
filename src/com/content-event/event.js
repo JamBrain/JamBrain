@@ -47,7 +47,9 @@ export default class ContentEvent extends Component {
 //	}
 
 	onJoin( e ) {
-		console.log('join');
+		var featured = this.props.featured;
+		
+		window.location.hash = "#create/"+featured.id+"/item/game";
 	}
 
 	render( props, state ) {
@@ -57,6 +59,8 @@ export default class ContentEvent extends Component {
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
+
+		var featured = props.featured;
 
 		if ( node ) {
 			props.header = "EVENT";
@@ -76,24 +80,31 @@ export default class ContentEvent extends Component {
 			ShowHome = <ContentCommonNavButton href={path} class={Class}><SVGIcon>home</SVGIcon><div class="if-sidebar-inline">Home</div></ContentCommonNavButton>;
 		}
 
-        var ShowJoin = null;
-        if ( true ) {
-            let Class = "-disabled";
-            //if ( extra && extra.length > 0 && extra[0] == "join") {
-            //    Class = "-disabled";
-            //}
-
-            ShowJoin = <ContentCommonNavButton onclick={this.onJoin} class={Class}><SVGIcon>publish</SVGIcon><div class="if-sidebar-inline">Join Event</div></ContentCommonNavButton>;
-        }
-
 		var ShowGame = null;
-		if ( true ) {
+		if ( user && user.id && node_CanCreate(node) ) {
 			let Class = null;
 			if ( extra && extra.length > 0 && extra[0] == "games") {
 				Class = "-selected";
 			}
 
 			ShowGame = <ContentCommonNavButton href={path+'/games'} class={Class}><SVGIcon>gamepad</SVGIcon><div class="if-sidebar-inline">View Games</div></ContentCommonNavButton>;
+//			if ( extra && extra.length ) {
+//				Class = "-disabled";
+//			}
+
+			// NOTE: THIS IS WRONG! We should be asking the event node (i.e. this) for `what`. Alas, with 1 event we can cheat 
+			if ( featured && featured.what && featured.what.length ) {
+				var FeaturedGame = featured.what[featured.what.length-1]; // Hack
+//				ShowGame =
+				
+			}
+			else {
+				ShowJoin = (
+					<ContentCommonNavButton onclick={this.onJoin} class={Class}>
+						<SVGIcon>publish</SVGIcon><div class="if-sidebar-inline">Join Event</div>
+					</ContentCommonNavButton>
+				);
+			}
 		}
 
 		var ShowFeed = null;
@@ -116,7 +127,7 @@ export default class ContentEvent extends Component {
 //		}
 
 		var ShowTheme = null;
-		if ( true ) {
+		if ( node_CanTheme(node) ) {
 			let Class = null;
 			if ( extra && extra.length ) {
 				if ( extra[0] === 'theme' ) {
@@ -154,7 +165,7 @@ export default class ContentEvent extends Component {
 			<ContentSimple {...props}>
 				<ContentCommonNav>
 					{ShowHome}
-                    {ShowJoin}
+          {ShowJoin}
 					{ShowGame}
 					{ShowFeed}
 					{ShowTheme}

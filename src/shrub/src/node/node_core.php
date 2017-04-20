@@ -42,17 +42,32 @@ function node_GetSlugByParentSlugLike( $parent, $slug ) {
 }
 
 
-function node_WalkById( $id, $top = 0, $timeout = 10 ) {
+function _node_GetPathById( $id, $top = 0, $timeout = 10 ) {
+	if ( !$id )
+		return '';
+
 	$tree = [];
-//	$data = [];
-//	while ( $id > 0 && isset && ($data['parent'] !== $top) && !($timeout--) ) {
+	do {
 		$data = node_GetParentSlugById($id);
 		$tree[] = $data;
-//		$id = $data['parent'];
-//	};// while ( $id > 0 && ($data['parent'] !== $top) && !($timeout--) );
+		$id = $data['parent'];
+	} while ( $id > 0 && ($data['parent'] !== $top) && ($timeout--) );
 
 	return $tree;
 }
+function node_GetPathById( $id, $top = 0, $timeout = 10 ) {
+	$tree = _node_GetPathById($id, $top, $timeout);
+	
+	$path = '';
+	$parent = [];
+	foreach( $tree as &$leaf ) {
+		$path = '/'.($leaf['slug']).$path;
+		array_unshift($parent, $leaf['parent']);
+	}
+	
+	return [ 'path' => $path, 'parent' => $parent ];
+}
+
 
 const SH_MAX_SLUG_LENGTH = 96;
 const SH_MAX_SLUG_RETRIES = 100;
@@ -144,6 +159,49 @@ function node_GetById( $ids ) {
 	}
 	
 	return null;
+}
+
+function node_CountByParentAuthorType( $parent, $author = null, $type = null, $subtype = null, $subsubtype = null ) {
+	$QUERY = [];
+	$ARGS = [];
+
+	if ( $parent ) {
+		$QUERY[] = "parent=?";
+		$ARGS[] = $parent;
+	}
+
+	if ( $author ) {
+		$QUERY[] = "author=?";
+		$ARGS[] = $author;
+	}
+
+	if ( $type ) {
+		$QUERY[] = "type=?";
+		$ARGS[] = $type;
+	}
+	if ( $subtype ) {
+		$QUERY[] = "subtype=?";
+		$ARGS[] = $subtype;
+	}
+	if ( $subsubtype ) {
+		$QUERY[] = "subsubtype=?";
+		$ARGS[] = $subsubtype;
+	}
+
+	$full_query = implode(' AND ', $QUERY);
+
+	$ret = db_QueryFetch(
+		"SELECT author AS id, COUNT(id) AS count
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		WHERE $full_query
+		GROUP BY author
+		LIMIT 1;",
+		...$ARGS
+	);
+	
+	if ( count($ret) && isset($ret[0]['count']) )
+		return $ret[0]['count'];
+	return 0;
 }
 
 function node_CountByAuthorType( $ids, $authors, $types = null, $subtypes = null, $subsubtypes = null ) {
