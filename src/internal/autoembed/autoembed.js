@@ -103,10 +103,6 @@
 	AutoEmbed.prototype.hasSmartLink = function( str, title, text ) {
 		url = this.extractFromURL(str);
 
-        console.log(url);
-        console.log(url.url);
-        console.log(str);
-
         var isMDlink = !(str == text) && text;
         var domain = url.domain;
         var path = url.path;
@@ -132,7 +128,6 @@
 				return this.makeSmartLink('twitter', url.url, domain, path );
 			}
 			else if ( url.domain.indexOf('//'+window.location.hostname) !== -1 ) {
-                console.log("Make local link of " + url.url);
 				return this.makeLocalLink( '/'+url.parts.join('/') );
 			}
 	//		else if ( url.indexOf('https') === 0 ) {
@@ -142,10 +137,9 @@
 	//			return this.makePlainLink( false, str, url.domain, url.full_parts + url.query );
 	//		}
 	//		else {
-	//			return this.makeSmartLink( 'link', str, str.split('//')[1] );
+	//			return this.makeSmartLink( 'link', str, domain, path );
 	//		}
 		}
-        console.log("Didnt auto link " + str);
 		return false;
 	}
 

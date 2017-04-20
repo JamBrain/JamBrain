@@ -933,9 +933,13 @@ Renderer.prototype.link = function(href, title, text) {
   else {
 
     href = autoEmbed.extractFromURL(href).url;
+
     var out = '<a href="' + href + '"';
     if (title) {
       out += ' title="' + title + '"';
+    }
+    if(!text || text.length < 1){
+        text = href;
     }
     // If it contains double slashes, consider it an external link //
     if ( href.indexOf('//') != -1 ) {

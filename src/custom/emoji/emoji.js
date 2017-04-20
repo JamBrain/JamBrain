@@ -8,8 +8,9 @@
 ;
 
 	ns.ext = '.png';
-//	ns.path = '//twemoji.maxcdn.com/2/72x72/';					// Twitter's Emoji Library //
-	ns.path = '//cdn.jsdelivr.net/emojione/assets/png/';		// EmojiOne's Library //
+//	ns.path = '//twemoji.maxcdn.com/2/72x72/';					// Twitter's Emoji Library
+//	ns.path = '//cdn.jsdelivr.net/emojione/assets/png/';		// EmojiOne 2.3 Library
+	ns.path = '//cdn.jsdelivr.net/emojione/assets/3.0/png/64/';	// EmojiOne 3.0 Library
 
 	// Converts a single shortname (without colons) in to an image //
 	ns.shortnameToImage = function(shortname) {
