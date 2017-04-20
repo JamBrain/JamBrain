@@ -923,7 +923,7 @@ Renderer.prototype.link = function(href, title, text) {
     }
   }
   var HasEmbed = autoEmbed.hasEmbed(href);
-  var HasSmartLink = autoEmbed.hasSmartLink(href, text);
+  var HasSmartLink = autoEmbed.hasSmartLink(href, title, text);
   if ( HasEmbed ) {
     return HasEmbed;
   }

@@ -92,34 +92,34 @@
 		return false;
 	}
 
-	AutoEmbed.prototype.hasSmartLink = function( str, title ) {
+	AutoEmbed.prototype.hasSmartLink = function( str, title, text ) {
 		url = this.extractFromURL(str);
 
-        console.log( url.domain + " : " + url.path + " : " + title);
-
+        console.log(str + ":" + title + ":" + text);
+        console.log(url);
+        var isMDlink = !(str == text) && text;
+        var domain = url.domain;
+        var path = url.path;
+        if (isMDlink)
+        {
+            domain = text;
+            path = "";
+        }
 		if ( url.domain ) {
 			if ( url.domain.indexOf('youtube.com') !== -1 ) {
-				return this.makeSmartLink('youtube', str, url.domain, url.path );
+				return this.makeSmartLink('youtube', str, domain, path );
 			}
 			else if ( url.domain.indexOf('github.com') !== -1 ) {
-                if (title){
-				    return this.makeSmartLink('github', str, title, "" );
-                }
-                else {
-                    return this.makeSmartLink('github', str, url.domain, url.path );
-                }			}
+				return this.makeSmartLink('github', str, domain, path );
+            }
 			else if ( url.domain.indexOf('twitch.tv') !== -1 ) {
-				return this.makeSmartLink('twitch', str, url.domain, url.path );
+				return this.makeSmartLink('twitch', str, domain, path );
 			}
 			else if ( url.domain.indexOf('reddit.com') !== -1 ) {
-                if (title){
-                    return this.makeSmartLink('reddit', str, title, "" );
-                }
-                else {
-                    return this.makeSmartLink('reddit', str, url.domain, url.path );
-                }					}
+                return this.makeSmartLink('reddit', str, domain, path );
+            }
 			else if ( url.domain.indexOf('twitter.com') !== -1 ) {
-				return this.makeSmartLink('twitter', str, url.domain, url.path );
+				return this.makeSmartLink('twitter', str, domain, path );
 			}
 			else if ( url.domain.indexOf(window.location.hostname) !== -1 ) {
 				return this.makeLocalLink( '/'+url.parts.join('/') );
