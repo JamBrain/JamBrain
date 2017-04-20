@@ -9,7 +9,7 @@ import $Node							from '../../shrub/js/node/node';
 export default class ContentTimeline extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {
 			feed: null
 		};
@@ -26,7 +26,7 @@ export default class ContentTimeline extends Component {
 			this.props.subsubtypes ? this.props.subsubtypes : null
 		);
 	}
-	
+
 	getFeed( id, methods, types, subtypes, subsubtypes ) {
 		$Node.GetFeed( id, methods, types, subtypes, subsubtypes )
 		.then(r => {
@@ -40,12 +40,12 @@ export default class ContentTimeline extends Component {
 						for ( let idx = 0; idx < rr.node.length; idx++ ) {
 							nodemap[rr.node[idx].id] = rr.node[idx];
 						}
-						
+
 						// Using the original keys, return an ordered array of nodes
 						let new_state = {
 							'feed': keys.map(v => nodemap[v])
 						};
-						
+
 						this.setState(new_state);
 					})
 					.catch(err => {
@@ -54,7 +54,7 @@ export default class ContentTimeline extends Component {
 			}
 			else {
 				this.setState({ 'feed': [] });
-			}			
+			}
 		})
 		.catch(err => {
 			this.setState({ 'error': err });
@@ -65,7 +65,7 @@ export default class ContentTimeline extends Component {
 		var path = this.props.path+'/'+node.slug;
 		var user = this.props.user;
 		var extra = this.props.extra;
-		
+
 		if ( node.type === 'post' || node.type === 'game' ) {
 			return <ContentPost node={node} user={user} path={path} extra={extra} authored by minmax love comments />;
 		}
@@ -79,7 +79,7 @@ export default class ContentTimeline extends Component {
 
 	render( props, {feed, error} ) {
 		var ShowFeed = null;
-		
+
 		if ( error ) {
 			ShowFeed = error;
 		}
@@ -91,7 +91,7 @@ export default class ContentTimeline extends Component {
 		else {
 			ShowFeed = <NavSpinner />;
 		}
-			
+
 		// TERRIBLE HACK! There are two #content's!!
 		return (
 			<div id="content">

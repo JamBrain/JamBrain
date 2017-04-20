@@ -14,13 +14,18 @@ export default class ContentItemBox extends Component {
 
 
     render(props){
+        var game = props.node;
+        var title = game.name;
+        var cover = game.meta.cover;
+        var link = props.path + "/" + game.slug;
+
         props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
         props.class.push("content-item-box");
 
         return (
             <ContentCommon {...props}>
-                <ContentCommonBodyTitle href={"/users/"} title={"My Awesome Game"} />
-                <IMG2 src="" failsrc="///other/asset/TVFail.png" />
+                <ContentCommonBodyTitle href={link} title={title} />
+                <IMG2 src={cover} failsrc="///other/asset/TVFail.png" />
             </ContentCommon>
         );
     }

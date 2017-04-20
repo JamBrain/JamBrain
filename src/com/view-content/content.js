@@ -155,6 +155,11 @@ export default class ViewContent extends Component {
 				ShowNav = <ContentNavTheme node={node} user={user} path={NewPath} extra={NewExtra} />;
 				ShowPage = <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} />;
 			}
+            else if(extra && extra.length && extra[0] == 'games'){
+                let NewPath = path+'/'+extra[0];
+                let NewExtra = extra.slice(1);
+                ShowPage = <ContentGames node={node} user={user} path={NewPath} extra={NewExtra} />;
+            }
 			else {
 				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
 			}
