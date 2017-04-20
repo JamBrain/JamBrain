@@ -9,7 +9,8 @@ export default class InputTextarea extends Component {
 		super(props);
 
 		this.state = {
-			'cursorPos': (props.value || '').length
+			'cursorPos': (props.value || '').length,
+			'edge': /Edge/.test(navigator.userAgent)
 		};
 		
 		this.onInput = this.onInput.bind(this);
@@ -33,7 +34,7 @@ export default class InputTextarea extends Component {
 	
 	// After every update
 	componentDidUpdate() {
-		if ( this.textarea ) {
+		if ( this.textarea && this.state.edge ) {
 			this.textarea.setSelectionRange(this.state.cursorPos, this.state.cursorPos);
 		}
 
@@ -45,8 +46,10 @@ export default class InputTextarea extends Component {
 			this.props.onmodify(e);
 		}
 		
-		e.preventDefault();
-		this.setState({'cursorPos': e.target.selectionEnd});
+		if( this.state.edge ) {
+			e.preventDefault();
+			this.setState({'cursorPos': e.target.selectionEnd});
+		}
 	}
 
 	render( props ) {
