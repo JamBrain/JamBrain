@@ -28,7 +28,7 @@
 	}
 
 	& .-indent {
-		border-top: 4px solid @COL_NLL;
+		//border-top: 4px solid @COL_NLL;
 		margin-left: 4.5em;
 	}
 	
@@ -37,11 +37,25 @@
 		background: @COL_L;
 		padding-bottom: 0.5em;	/* hack to simulate 1em margin */
 	}
-	
+
 	& .-item {
 		position: relative;
 		
 		overflow: auto;
+
+		border-top: 1px solid @COL_NLL;	
+
+		&:nth-child(odd) {
+			&.-indent-0 {
+				background: @COL_L;
+			}
+		}
+
+		&:nth-child(2){
+			&:not(.-indent-1) {
+				border-top: none;
+			}
+		}
 
 		& a, 
 		& a:visited {
@@ -153,11 +167,11 @@
 				}
 			}
 		}
-		
+
 		&.-indent-0 {
 		}
 		&.-indent-1 {
-			background: @COL_NLLL;
+			// background: @COL_NLLL;
 			/*border-left: 4px solid @COL_NLL;*/
 
 			& > .-avatar {
