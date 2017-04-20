@@ -78,12 +78,12 @@ export default class ViewBar extends Component {
 			if ( featured && featured.id ) {
 				if ( featured.what && featured.what.length ) {
 					// TODO: use path
-					var GameURL = '/events/ludum-dare/38/';
-//					var GameURL = '/users/ham/';
+					//var GameURL = '/events/ludum-dare/38/';
+					var GameURL = featured.path;
 					var CurrentFeaturedItem = featured.what[featured.what.length-1];
 
-					GameURL += '$'+CurrentFeaturedItem;
-					//GameURL += '/edit';
+					GameURL += '/$'+CurrentFeaturedItem;
+					GameURL += '/edit';
 
 					ShowMyGame = (
 						<ButtonLink href={GameURL} class="-button">

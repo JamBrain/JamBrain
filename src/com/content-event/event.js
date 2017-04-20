@@ -80,13 +80,14 @@ export default class ContentEvent extends Component {
 		}
 		
 		var ShowGame = null;
-		if ( node_CanCreate(node) ) {
+		if ( user && user.id && node_CanCreate(node) ) {
 			let Class = null;
 //			if ( extra && extra.length ) {
 //				Class = "-disabled";
 //			}
 
-			if ( featured.what.length ) {
+			// NOTE: THIS IS WRONG! We should be asking the event node (i.e. this) for `what`. Alas, with 1 event we can cheat 
+			if ( featured && featured.what && featured.what.length ) {
 				var FeaturedGame = featured.what[featured.what.length-1]; // Hack
 //				ShowGame =
 				
