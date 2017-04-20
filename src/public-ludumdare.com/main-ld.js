@@ -390,7 +390,7 @@ class Main extends Component {
 		var ShowContent = null;
 		
 		if ( node.id ) {
-			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} />;
+			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} featured={featured} />;
 		}
 		else {
 			ShowContent = (

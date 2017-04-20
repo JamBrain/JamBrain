@@ -47,7 +47,9 @@ export default class ContentEvent extends Component {
 //	}
 
 	onJoin( e ) {
-		console.log('join');
+		var featured = this.props.featured;
+		
+		window.location.hash = "#create/"+featured.id+"/item/game";
 	}
 	
 	render( props, state ) {
@@ -57,6 +59,7 @@ export default class ContentEvent extends Component {
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
+		var featured = props.featured;
 		
 		if ( node ) {
 			props.header = "EVENT";
@@ -80,12 +83,21 @@ export default class ContentEvent extends Component {
 		if ( node_CanCreate(node) ) {
 			let Class = null;
 //			if ( extra && extra.length ) {
-				Class = "-disabled";
+//				Class = "-disabled";
 //			}
 
-			ShowGame = <ContentCommonNavButton onclick={this.onJoin} class={Class}>
-				<SVGIcon>publish</SVGIcon><div class="if-sidebar-inline">Join Event</div>
-			</ContentCommonNavButton>;
+			if ( featured.what.length ) {
+				var FeaturedGame = featured.what[featured.what.length-1]; // Hack
+//				ShowGame =
+				
+			}
+			else {
+				ShowGame = (
+					<ContentCommonNavButton onclick={this.onJoin} class={Class}>
+						<SVGIcon>publish</SVGIcon><div class="if-sidebar-inline">Join Event</div>
+					</ContentCommonNavButton>
+				);
+			}
 		}
 		
 		var ShowFeed = null;

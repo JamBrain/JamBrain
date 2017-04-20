@@ -314,15 +314,15 @@ switch ( $action ) {
 
 			// Check how many you have
 			$RESPONSE['count'] = node_CountByParentAuthorType($parent, $user_id, $type, $subtype, $subsubtype);
-			if ( isset($RESPONSE['count']) && count($RESPONSE['count']) == 0 ) {
-				$RESPONSE['count'] = 0;
-			}
-			else if ( isset($RESPONSE['count']) && count($RESPONSE['count']) > 0 && isset($RESPONSE['count'][0]['count']) ) {
-				$RESPONSE['count'] = $RESPONSE['count'][0]['count'];
-			}
-			else {
-				json_EmitFatalError_BadRequest("Problem", $RESPONSE);
-			}
+//			if ( isset($RESPONSE['count']) && count($RESPONSE['count']) == 0 ) {
+//				$RESPONSE['count'] = 0;
+//			}
+//			else if ( isset($RESPONSE['count']) && count($RESPONSE['count']) > 0 && isset($RESPONSE['count'][0]['count']) ) {
+//				$RESPONSE['count'] = $RESPONSE['count'][0]['count'];
+//			}
+//			else {
+//				json_EmitFatalError_BadRequest("Problem", $RESPONSE);
+//			}
 			
 			if ( $RESPONSE['count'] >= $RESPONSE['limit'] ) {
 				json_EmitFatalError_Permission("You don't have permission to create any more $fulltype's here", $RESPONSE);

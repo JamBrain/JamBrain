@@ -183,8 +183,10 @@ function node_CountByParentAuthorType( $parent, $author = null, $type = null, $s
 		LIMIT 1;",
 		...$ARGS
 	);
-
-	return $ret;
+	
+	if ( count($ret) && isset($ret[0]['count']) )
+		return $ret[0]['count'];
+	return 0;
 }
 
 function node_CountByAuthorType( $ids, $authors, $types = null, $subtypes = null, $subsubtypes = null ) {
