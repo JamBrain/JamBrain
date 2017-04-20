@@ -110,7 +110,7 @@ export default class ViewContent extends Component {
 					}
 					else if ( ViewType == 'games' ) {
 						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
-						View.push(<ContentGames node={node} user={user} path={path} extra={extra} />);
+						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['author']}/>);
 					}
 					else if ( ViewType == 'article' ) {
 
