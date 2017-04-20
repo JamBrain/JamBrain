@@ -41,4 +41,8 @@ window.nodeUser_GetFriends = function( user ) {
 	return [];
 }
 
+//window.nodeUser_IsTeamLeader = function( user, project ) {
+//	
+//}
+
 })();

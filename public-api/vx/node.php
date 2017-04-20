@@ -263,35 +263,95 @@ switch ( $action ) {
 			$subtype = coreSlugify_Name(json_ArgShift());
 			$subsubtype = coreSlugify_Name(json_ArgShift());
 
+			$fulltype = $type;
+			if ( $subtype )
+				$fulltype .= '/'.$subtype;
+			if ( $subsubtype )
+				$fulltype .= '/'.$subsubtype;
+
 			if ( empty($parent) || empty($type) ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
 			}
-			
+
 			$where = nodeComplete_GetWhereIdCanCreate($user_id);
+			//$RESPONSE['where'] = $where;
 			
-			if ( !isset($where[$type]) || !in_array($parent, $where[$type]) ) {
-				json_EmitFatalError_BadRequest(null, $RESPONSE);
+			if ( !isset($where[$fulltype]) || !in_array($parent, $where[$fulltype]) ) {
+				json_EmitFatalError_BadRequest("Can't create a $fulltype under this node", $RESPONSE);
 			}
 			
-			switch ( $type ) {
-				case 'item':
-					// TODO: Rollback
+			// Default create limits
+			$create_limits = [
+				'item/game' => 1,
+				'item/game/jam' => 1,
+				'item/game/compo' => 1,
+				'item/game/warmup' => 1,
+				'item/game/incomplete' => 1,
+				'item/game/release' => -1,	// i.e. unlimited
+
+				'item/craft' => 0,			// i.e. can't create
 				
-					// For now we only support game items, so hardcode game
-					$new_node = node_Add($parent, $user_id, $type, "game", "", null, "", "");
+				'post' => -10,				// i.e. unlimited
+				'post/news' => 0,			// i.e. can't create
+			];
+			
+			// TODO: Do things that modify limits here
+			$true_limit = 2;	// TODO: up this as a user becomes more trustworthy.
+
+
+			// Check if you haven't exceeded the limit
+			$RESPONSE['limit'] = isset($create_limits[$fulltype]) ? $create_limits[$fulltype] : 0;
+			
+			if ( $RESPONSE['limit'] === 0 ) {
+				json_EmitFatalError_Permission("You don't have permission to create a $fulltype here", $RESPONSE);
+			}
+			
+			// Negatives are a pseudolimit
+			if ( $RESPONSE['limit'] < 0 ) {
+				$RESPONSE['limit'] = $true_limit * (-$RESPONSE['limit']);
+			}
+			
+
+			// Check how many you have
+			$RESPONSE['count'] = node_CountByParentAuthorType($parent, $user_id, $type, $subtype, $subsubtype);
+			if ( !isset($RESPONSE['count'][0]['count']) )
+				json_EmitFatalError_BadRequest("Problem", $RESPONSE);
+			$RESPONSE['count'] = $RESPONSE['count'][0]['count'];
+			
+			if ( $RESPONSE['count'] >= $RESPONSE['limit'] ) {
+				json_EmitFatalError_Permission("You don't have permission to create any more $fulltype's here", $RESPONSE);
+			}
+
+			switch ( $fulltype ) {
+				case 'item/game':
+					// TODO: Rollback
+
+					$new_node = node_Add($parent, $user_id, $type, $subtype, "", null, "", "");
 					if ( $new_node ) {
+						// Allow posts under the game
 						nodeMeta_AddByNode($new_node, SH_NODE_META_SHARED, 'can-create', 'post');
+						// Add yourself as an author of the game
 						nodeLink_AddbyNode($new_node, $user_id, SH_NODE_META_PUBLIC, 'author');
 					}
 					else {
 						json_EmitFatalError_ServerError(null, $RESPONSE);
 					}
 					
+					$RESPONSE['count']++;
 					$RESPONSE['id'] = $new_node;
 					break;
 					
-//				case 'post':
-//					break;
+				case 'post':
+					$new_node = node_Add($parent, $user_id, $type, $subtype, "", null, "", "");
+					if ( $new_node ) {
+					}
+					else {
+						json_EmitFatalError_ServerError(null, $RESPONSE);
+					}
+
+					$RESPONSE['count']++;
+					$RESPONSE['id'] = $new_node;
+					break;
 
 				default:
 					break;
