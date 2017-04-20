@@ -252,7 +252,7 @@ switch ( $action ) {
 		break; //case 'what': //node/what
 		
 	case 'add': //node/add/:parent/:type/:subtype/:subsubtype
-		json_ValidateHTTPMethod('POST');
+//		json_ValidateHTTPMethod('POST');
 //		json_ValidateHTTPMethod('GET');
 		
 		// NOTE: This doesn't actually need POST, but it uses the method for safety
@@ -314,9 +314,15 @@ switch ( $action ) {
 
 			// Check how many you have
 			$RESPONSE['count'] = node_CountByParentAuthorType($parent, $user_id, $type, $subtype, $subsubtype);
-			if ( !isset($RESPONSE['count'][0]['count']) )
+			if ( isset($RESPONSE['count']) && count($RESPONSE['count']) == 0 ) {
+				$RESPONSE['count'] = 0;
+			}
+			else if ( isset($RESPONSE['count']) && count($RESPONSE['count']) > 0 && isset($RESPONSE['count'][0]['count']) ) {
+				$RESPONSE['count'] = $RESPONSE['count'][0]['count'];
+			}
+			else {
 				json_EmitFatalError_BadRequest("Problem", $RESPONSE);
-			$RESPONSE['count'] = $RESPONSE['count'][0]['count'];
+			}
 			
 			if ( $RESPONSE['count'] >= $RESPONSE['limit'] ) {
 				json_EmitFatalError_Permission("You don't have permission to create any more $fulltype's here", $RESPONSE);

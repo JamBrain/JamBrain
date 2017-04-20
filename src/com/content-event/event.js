@@ -77,13 +77,15 @@ export default class ContentEvent extends Component {
 		}
 		
 		var ShowGame = null;
-		if ( true ) {
+		if ( node_CanCreate(node) ) {
 			let Class = null;
 //			if ( extra && extra.length ) {
 				Class = "-disabled";
 //			}
 
-			ShowGame = <ContentCommonNavButton onclick={this.onJoin} class={Class}><SVGIcon>gamepad</SVGIcon><div class="if-sidebar-inline">Join Event</div></ContentCommonNavButton>;
+			ShowGame = <ContentCommonNavButton onclick={this.onJoin} class={Class}>
+				<SVGIcon>publish</SVGIcon><div class="if-sidebar-inline">Join Event</div>
+			</ContentCommonNavButton>;
 		}
 		
 		var ShowFeed = null;
@@ -106,7 +108,7 @@ export default class ContentEvent extends Component {
 //		}
 
 		var ShowTheme = null;
-		if ( true ) {
+		if ( node_CanTheme(node) ) {
 			let Class = null;
 			if ( extra && extra.length ) {
 				if ( extra[0] === 'theme' ) {
