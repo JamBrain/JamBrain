@@ -462,7 +462,7 @@ var inline = {
   del: noop,
   text: /^[\s\S]+?(?=[\\<!\[_*`:@]| {2,}\n|$)/,		// Added : and @ (emoji and @names)
   emoji: /^:([a-z_]+):/,
-//  email: /^(\w+@\w+.\w+)/,		// Added just to help 
+//  email: /^(\w+@\w+.\w+)/,		// Added just to help
   atname: /^@([A-Za-z0-9-]+)(?!@)/,
   ///^(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z0-9]+)/,
 //  atname: /^@([A-Za-z0-9-]+)(?!@)/,
@@ -923,7 +923,7 @@ Renderer.prototype.link = function(href, title, text) {
     }
   }
   var HasEmbed = autoEmbed.hasEmbed(href);
-  var HasSmartLink = autoEmbed.hasSmartLink(href);
+  var HasSmartLink = autoEmbed.hasSmartLink(href, title, text);
   if ( HasEmbed ) {
     return HasEmbed;
   }
@@ -947,7 +947,7 @@ Renderer.prototype.link = function(href, title, text) {
 Renderer.prototype.image = function(href, title, text) {
   // Customized. Disable image rendering if URLs are used to files not on our safe list.
   // Also, rewrite URLs to our static domain if the short form is used.
-  
+
   if ( href.indexOf("///") === 0 ) {
   	// Rewrite URL to replace the first two slashes with the endpoint
     href = STATIC_ENDPOINT + href.substr(2);
@@ -1168,7 +1168,7 @@ function escape(html, encode) {
 //" // UltraEdit glitch
 
 function unescape(html) {
-	// explicitly match decimal, hex, and named HTML entities 
+	// explicitly match decimal, hex, and named HTML entities
   return html.replace(/&(#(?:\d+)|(?:#x[0-9A-Fa-f]+)|(?:\w+));?/g, function(_, n) {
     n = n.toLowerCase();
     if (n === 'colon') return ':';

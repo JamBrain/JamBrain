@@ -2,7 +2,7 @@
 (function(){
 	function AutoEmbed() {
 	}
-	
+
 	AutoEmbed.prototype.extractFromURL = function( str ) {
 		var ret = {};
 
@@ -12,10 +12,10 @@
 		if ( str.indexOf('?') !== -1 ) {
 			var url_split = str.split('?');
 			ret.url = url_split[0];
-			
+
 			ret.query = url_split[1];
 			var query_string_raw_args = ret.query.split('&');
-			
+
 			query_string_raw_args.forEach(function(val,idx,arr) {
 				var part = val.split('=');
 					if ( part.length > 1 )
@@ -27,7 +27,7 @@
 		else {
 			ret.url = str;
 		}
-		
+
 		// If it has a '//', it has a protocol and a domain
 		if ( ret.url.indexOf('//') !== -1 ) {
 			var url_body = ret.url.split('//');
@@ -44,7 +44,7 @@
 
 		return ret;
 	}
-	
+
 	AutoEmbed.prototype.makeYouTube = function( video_id ) {
 		return '<div class="embed-video"><div><iframe '+
 			'src="https://www.youtube.com/embed/'+
@@ -90,26 +90,36 @@
 			}
 		}
 		return false;
-	}	
+	}
 
-	AutoEmbed.prototype.hasSmartLink = function( str ) {
+	AutoEmbed.prototype.hasSmartLink = function( str, title, text ) {
 		url = this.extractFromURL(str);
 
+        console.log(str + ":" + title + ":" + text);
+        console.log(url);
+        var isMDlink = !(str == text) && text;
+        var domain = url.domain;
+        var path = url.path;
+        if (isMDlink)
+        {
+            domain = text;
+            path = "";
+        }
 		if ( url.domain ) {
 			if ( url.domain.indexOf('youtube.com') !== -1 ) {
-				return this.makeSmartLink( 'youtube', str, url.domain, url.path );
+				return this.makeSmartLink('youtube', str, domain, path );
 			}
 			else if ( url.domain.indexOf('github.com') !== -1 ) {
-				return this.makeSmartLink( 'github', str, url.domain, url.path );
-			}
+				return this.makeSmartLink('github', str, domain, path );
+            }
 			else if ( url.domain.indexOf('twitch.tv') !== -1 ) {
-				return this.makeSmartLink( 'twitch', str, url.domain, url.path );
+				return this.makeSmartLink('twitch', str, domain, path );
 			}
 			else if ( url.domain.indexOf('reddit.com') !== -1 ) {
-				return this.makeSmartLink( 'reddit', str, url.domain, url.path );
-			}
+                return this.makeSmartLink('reddit', str, domain, path );
+            }
 			else if ( url.domain.indexOf('twitter.com') !== -1 ) {
-				return this.makeSmartLink( 'twitter', str, url.domain, url.path );
+				return this.makeSmartLink('twitter', str, domain, path );
 			}
 			else if ( url.domain.indexOf(window.location.hostname) !== -1 ) {
 				return this.makeLocalLink( '/'+url.parts.join('/') );
@@ -126,7 +136,7 @@
 		}
 		return false;
 	}
-	
+
 	// Intantiate
 	window.autoEmbed = new AutoEmbed();
 }());
