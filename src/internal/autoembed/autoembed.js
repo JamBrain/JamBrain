@@ -95,8 +95,6 @@
 	AutoEmbed.prototype.hasSmartLink = function( str, title, text ) {
 		url = this.extractFromURL(str);
 
-        console.log(str + ":" + title + ":" + text);
-        console.log(url);
         var isMDlink = !(str == text) && text;
         var domain = url.domain;
         var path = url.path;
@@ -131,7 +129,7 @@
 	//			return this.makePlainLink( false, str, url.domain, url.full_parts + url.query );
 	//		}
 	//		else {
-	//			return this.makeSmartLink( 'link', str, str.split('//')[1] );
+	//			return this.makeSmartLink( 'link', str, domain, path );
 	//		}
 		}
 		return false;
