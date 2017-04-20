@@ -22,7 +22,6 @@ export default class ContentGames extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props);
         this.getFeed(
             this.props.node.id,
             this.props.methods ? this.props.methods : ['parent', 'superparent'],

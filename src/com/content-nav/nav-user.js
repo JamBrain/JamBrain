@@ -31,16 +31,6 @@ export default class ContentNavUser extends Component {
 		// Prefix with path
 		NewPath = path + NewPath;
 
-		var HasGames = null;
-		if ( node['games'] > 0 ) {
-			HasGames = <ContentNavButton path={NewPath} icon='gamepad' href={path+'/games'}>Games</ContentNavButton>;
-		}
-
-		var HasArticles = null;
-		if ( node['articles'] > 0 ) {
-			HasArticles = <ContentNavButton path={NewPath} icon='article' href={path+'/articles'}>Articles</ContentNavButton>;
-		}
-
 		var HasFeed = <ContentNavButton path={NewPath} icon='feed' href={path+'/feed'}>Feed</ContentNavButton>;
 
 		var HasFollowing = null;
@@ -53,12 +43,22 @@ export default class ContentNavUser extends Component {
 			HasFollowers = <ContentNavButton path={NewPath} icon='users' href={path+'/followers'}>Followers</ContentNavButton>;
 		}
 
+        var HasGames = null;
+		if ( node['games'] > 0 ) {
+			HasGames = <ContentNavButton path={NewPath} icon='gamepad' href={path+'/games'}>Games</ContentNavButton>;
+		}
+
+		var HasArticles = null;
+		if ( node['articles'] > 0 ) {
+			HasArticles = <ContentNavButton path={NewPath} icon='article' href={path+'/articles'}>Articles</ContentNavButton>;
+		}
+
 		return (
 			<div class="-body">
 				<div class="content-base content-nav content-nav-root">
-					{HasGames}
 					{HasArticles}
 					{HasFeed}
+                    {HasGames}
 					{HasFollowing}
 					{HasFollowers}
 				</div>

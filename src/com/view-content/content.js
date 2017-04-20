@@ -97,11 +97,7 @@ export default class ViewContent extends Component {
 			}
 			else {
 				if ( ViewType ) {
-					if ( ViewType == 'games' ) {
-						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
-						View.push(<ContentGames types={['game']} methods={['author']} node={node} user={user} path={path} extra={extra} />);
-					}
-					else if ( ViewType == 'articles' ) {
+					if ( ViewType == 'articles' ) {
 						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
 						View.push(<ContentTimeline types={['page']} methods={['author']} node={node} user={user} path={path} extra={extra} />);
 					}
@@ -112,11 +108,12 @@ export default class ViewContent extends Component {
 					else if ( ViewType == 'post' ) {
 //						View.push(<ContentPost node={node} user={user} path={path} extra={extra.splice(1)} by love edit />);
 					}
-					else if ( ViewType == 'game' ) {
-                        View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
-                        View.push(<ContentUserGames node={node} user={user} path={path} extra={extra} />);
+					else if ( ViewType == 'games' ) {
+						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
+						View.push(<ContentGames node={node} user={user} path={path} extra={extra} />);
 					}
 					else if ( ViewType == 'article' ) {
+
 					}
                     else if ( ViewType == 'following'){
                         View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
