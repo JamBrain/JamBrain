@@ -85,6 +85,7 @@ export default class ContentSimple extends Component {
 		.then(r => {
 			if ( r.status == 200 ) {
 				this.setState({ 'modified': false });
+				return true;
 			}
 			else {
 				if ( r.caller_id == 0 || (r.data && r.data.caller_id == 0) ) {
@@ -94,6 +95,7 @@ export default class ContentSimple extends Component {
 					this.setState({ 'error': r.status + ": " + r.error });
 				}
 			}
+			return false;
 		})
 		.catch(err => {
 			console.log(err);
@@ -102,24 +104,31 @@ export default class ContentSimple extends Component {
 	}
 	onPublish( e ) {
 		// TODO: Confirm
-		return $Node.Publish(this.props.node.id)
-		.then(r => {
-			console.log(r);
-//			if ( r.status == 200 ) {
-//				this.setState({ 'modified': false });
-//			}
-//			else {
-//				if ( r.caller_id == 0 || (r.data && r.data.caller_id == 0) ) {
-//					location.hash = "#savebug";
-//				}
-//				else {
-//					this.setState({ 'error': r.status + ": " + r.error });
-//				}
-//			}
-		})
-		.catch(err => {
-			console.log(err);
-			this.setState({ 'error': err });
+		console.log('do save first');
+		return this.onSave( e ).then( rr => {
+			if ( rr ) {
+				console.log('do publish');
+				$Node.Publish(this.props.node.id)
+				.then(r => {
+					console.log(r);
+					if ( r.status == 200 && r.path ) {
+						window.location.href = r.path;
+	//					this.setState({ 'modified': false });
+					}
+	//			else {
+	//				if ( r.caller_id == 0 || (r.data && r.data.caller_id == 0) ) {
+	//					location.hash = "#savebug";
+	//				}
+	//				else {
+	//					this.setState({ 'error': r.status + ": " + r.error });
+	//				}
+	//			}
+				})
+				.catch(err => {
+					console.log(err);
+					this.setState({ 'error': err });
+				});
+			}
 		});
 	}
 

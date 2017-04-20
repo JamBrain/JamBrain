@@ -2,7 +2,7 @@
 (function(){
 	function AutoEmbed() {
 	}
-	
+
 	AutoEmbed.prototype.extractFromURL = function( str ) {
 		var ret = {};
 
@@ -12,10 +12,10 @@
 		if ( str.indexOf('?') !== -1 ) {
 			var url_split = str.split('?');
 			ret.url = url_split[0];
-			
+
 			ret.query = url_split[1];
 			var query_string_raw_args = ret.query.split('&');
-			
+
 			query_string_raw_args.forEach(function(val,idx,arr) {
 				var part = val.split('=');
 					if ( part.length > 1 )
@@ -27,7 +27,14 @@
 		else {
 			ret.url = str;
 		}
-		
+
+        // if its not already an external link with a protocol and it has a dot in it
+        // then make it an extrenal link becuase not internal links have dots
+        if ( ret.url.indexOf('//') == -1 && ret.url.indexOf('.') != -1 /*&&
+            (ret.url.indexOf('/') == -1 || ret.url.indexOf('.') < ret.url.indexOf('/')) */) {
+            ret.url = 'https://' + ret.url;
+        }
+
 		// If it has a '//', it has a protocol and a domain
 		if ( ret.url.indexOf('//') !== -1 ) {
 			var url_body = ret.url.split('//');
@@ -38,13 +45,14 @@
 		}
 		else {
 			ret.parts = ret.url.split('/');
+            ret.domain = ret.parts.shift().toLowerCase();
 		}
 
 		ret.path = ret.parts.length ? '/'+ret.parts.join('/') : '';
 
 		return ret;
 	}
-	
+
 	AutoEmbed.prototype.makeYouTube = function( video_id ) {
 		return '<div class="embed-video"><div><iframe '+
 			'src="https://www.youtube.com/embed/'+
@@ -90,28 +98,36 @@
 			}
 		}
 		return false;
-	}	
+	}
 
-	AutoEmbed.prototype.hasSmartLink = function( str ) {
+	AutoEmbed.prototype.hasSmartLink = function( str, title, text ) {
 		url = this.extractFromURL(str);
 
+        var isMDlink = !(str == text) && text;
+        var domain = url.domain;
+        var path = url.path;
+        if (isMDlink)
+        {
+            domain = text;
+            path = "";
+        }
 		if ( url.domain ) {
 			if ( url.domain.indexOf('youtube.com') !== -1 ) {
-				return this.makeSmartLink( 'youtube', str, url.domain, url.path );
+				return this.makeSmartLink('youtube', url.url, domain, path );
 			}
 			else if ( url.domain.indexOf('github.com') !== -1 ) {
-				return this.makeSmartLink( 'github', str, url.domain, url.path );
-			}
+				return this.makeSmartLink('github', url.url, domain, path );
+            }
 			else if ( url.domain.indexOf('twitch.tv') !== -1 ) {
-				return this.makeSmartLink( 'twitch', str, url.domain, url.path );
+				return this.makeSmartLink('twitch', url.url, domain, path );
 			}
 			else if ( url.domain.indexOf('reddit.com') !== -1 ) {
-				return this.makeSmartLink( 'reddit', str, url.domain, url.path );
-			}
+                return this.makeSmartLink('reddit', url.url, domain, path );
+            }
 			else if ( url.domain.indexOf('twitter.com') !== -1 ) {
-				return this.makeSmartLink( 'twitter', str, url.domain, url.path );
+				return this.makeSmartLink('twitter', url.url, domain, path );
 			}
-			else if ( url.domain.indexOf(window.location.hostname) !== -1 ) {
+			else if ( url.domain.indexOf('//'+window.location.hostname) !== -1 ) {
 				return this.makeLocalLink( '/'+url.parts.join('/') );
 			}
 	//		else if ( url.indexOf('https') === 0 ) {
@@ -121,12 +137,12 @@
 	//			return this.makePlainLink( false, str, url.domain, url.full_parts + url.query );
 	//		}
 	//		else {
-	//			return this.makeSmartLink( 'link', str, str.split('//')[1] );
+	//			return this.makeSmartLink( 'link', str, domain, path );
 	//		}
 		}
 		return false;
 	}
-	
+
 	// Intantiate
 	window.autoEmbed = new AutoEmbed();
 }());

@@ -8,6 +8,12 @@ export default class HeaderWhatsup extends Component {
 	}
 
 	render( props ) {
+		var node = props.node;
+		var user = props.user;
+		var path = props.path;
+		var extra = props.extra;
+		var featured = props.featured;
+		
 		// NOTE: For Theme Voting, look at what's in 'available' returned by the theme list.
 		// Then use that to check the name in 'names'. 
 		
@@ -29,12 +35,16 @@ export default class HeaderWhatsup extends Component {
 //				<span class="-title _font2">ON NOW:</span> Ludum Dare 38 <NavLink href="/events/ludum-dare/38"><SVGIcon baseline small gap>fire</SVGIcon>Theme Slaughter</NavLink>
 //			</div>
 //		);
-
-		return (
-			<div class="header-base header-whatsup outside">
-				<span class="-title _font2">ON NOW:</span> <NavLink href="/events/ludum-dare/38"><SVGIcon baseline small gap>trophy</SVGIcon>Ludum Dare 38</NavLink> Final Round Theme Voting
-			</div>
-		);
+		if ( featured ) {
+			return (
+				<div class="header-base header-whatsup outside">
+					<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> Final Round Theme Voting
+				</div>
+			);
+		}
+		return null;
+		
+//				<span class="-title _font2">ON NOW:</span> <NavLink href="/events/ludum-dare/38"><SVGIcon baseline small gap>trophy</SVGIcon>Ludum Dare 38</NavLink> Final Round Theme Voting
 
 //				<span class="-title _font2">ON NOW:</span> <NavLink href="/events/ludum-dare/38"><SVGIcon baseline small gap>trophy</SVGIcon>Ludum Dare 38</NavLink> <SVGIcon baseline small gap>ticket</SVGIcon>Theme Voting
 

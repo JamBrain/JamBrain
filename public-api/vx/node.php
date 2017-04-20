@@ -314,9 +314,15 @@ switch ( $action ) {
 
 			// Check how many you have
 			$RESPONSE['count'] = node_CountByParentAuthorType($parent, $user_id, $type, $subtype, $subsubtype);
-			if ( !isset($RESPONSE['count'][0]['count']) )
-				json_EmitFatalError_BadRequest("Problem", $RESPONSE);
-			$RESPONSE['count'] = $RESPONSE['count'][0]['count'];
+//			if ( isset($RESPONSE['count']) && count($RESPONSE['count']) == 0 ) {
+//				$RESPONSE['count'] = 0;
+//			}
+//			else if ( isset($RESPONSE['count']) && count($RESPONSE['count']) > 0 && isset($RESPONSE['count'][0]['count']) ) {
+//				$RESPONSE['count'] = $RESPONSE['count'][0]['count'];
+//			}
+//			else {
+//				json_EmitFatalError_BadRequest("Problem", $RESPONSE);
+//			}
 			
 			if ( $RESPONSE['count'] >= $RESPONSE['limit'] ) {
 				json_EmitFatalError_Permission("You don't have permission to create any more $fulltype's here", $RESPONSE);
@@ -449,38 +455,42 @@ switch ( $action ) {
 			}
 			
 			// Parse POST
-			if ( isset($_POST['event']) )
-				$event = coreSanitize_String(substr($_POST['event'], 0, 24));
-			else
-				json_EmitFatalError_BadRequest("'event' not found in POST", $RESPONSE);
+//			if ( isset($_POST['parent']) )
+//				$parent = intval($_POST['parent']);
+//			else
+//				json_EmitFatalError_BadRequest("'parent' not found in POST", $RESPONSE);
 
-			if ( $event === 'compo' || $event === 'jam' ) {
-			}
-			else {
-				json_EmitFatalError_BadRequest("Unsupported 'event'", $RESPONSE);
-			}
+//			if ( $event === 'compo' || $event === 'jam' ) {
+//			}
+//			else {
+//				json_EmitFatalError_BadRequest("Unsupported 'event'", $RESPONSE);
+//			}
 
 			// Fetch Node			
 			$node = nodeComplete_GetById($node_id);
+			if ( $node['published'] ) {
+				json_EmitFatalError_BadRequest("Already published", $RESPONSE);
+			}
+			
 			$authors = nodeList_GetAuthors($node);
 
 			// If you are authorized to edit
 			if ( in_array($user_id, $authors) ) {
 				$slug = coreSlugify_Name($node['name']);
 				if ( in_array($slug, $SH_NAME_RESERVED) ) {
-					json_EmitFatalError_BadRequest("Title is a reserved word", $RESPONSE);
+					json_EmitFatalError_BadRequest("Name is a reserved word", $RESPONSE);
 				}
 				
 				$new_slug = node_GetUniqueSlugByParentSlug($node['parent'], $slug);
 			
 				if ( strlen($new_slug) < 3 ) {
-					json_EmitFatalError_BadRequest("Title is too short (minumum 3 characters)", $RESPONSE);
+					json_EmitFatalError_BadRequest("Name is too short (minumum 3 characters)", $RESPONSE);
 				}
 				
 				$RESPONSE['edit'] = node_Edit(
 					$node_id,
 					$node['parent'], $node['author'], 
-					$node['type'], $node['subtype'], $event,
+					$node['type'], $node['subtype'], $node['subsubtype'],
 					$new_slug,
 					$node['name'],
 					$node['body'],
@@ -489,6 +499,10 @@ switch ( $action ) {
 				$RESPONSE['publish'] = node_Publish(
 					$node_id
 				);
+				
+				if ( $RESPONSE['publish'] ) {
+					$RESPONSE['path'] = node_GetPathById($node_id, 1)['path']; // Root node
+				}
 			}
 			else {
 				json_EmitFatalError_Permission(null, $RESPONSE);

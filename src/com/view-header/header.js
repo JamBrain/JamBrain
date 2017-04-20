@@ -15,11 +15,13 @@ export default class ViewHeader extends Component {
 		var ShowWhatsup = null;
 		var ShowClock = null;
 		
+		console.log(props.featured);
+		
 		if ( props.user && props.user.id === 0 )
-			ShowNoob = <HeaderNoob />;
+			ShowNoob = <HeaderNoob featured={props.featured} />;
 
-		ShowWhatsup = <HeaderWhatsup />;
-		ShowClock = <HeaderClock />;
+		ShowWhatsup = <HeaderWhatsup featured={props.featured} />;
+		ShowClock = <HeaderClock featured={props.featured} />;
 		
 		return (
 			<div id="header">

@@ -26,12 +26,15 @@ import ContentEventTheme				from 'com/content-event/event-theme';
 
 import ContentPalette					from 'com/content-palette/palette';
 
+import ContentUserFollowing             from 'com/content-user/user-following';
+import ContentUserFollowers             from 'com/content-user/user-followers';
+
 export default class ViewContent extends Component {
 	constructor( props ) {
 		super(props);
 	}
 
-	getContent( {node, user, path, extra} ) {
+	getContent( {node, user, path, extra, featured} ) {
 		if ( node.name ) {
 			document.title = titleParser.parse(node.name, true);
 			if ( document.title === "" )
@@ -69,7 +72,7 @@ export default class ViewContent extends Component {
 		else if ( node.type === 'item' ) {
 			return (
 				<div id="content">
-					<ContentItem node={node} user={user} path={path} extra={extra} />
+					<ContentItem node={node} user={user} path={path} extra={extra} featured={featured} />
 					<ContentComments node={node} user={user} path={path} extra={extra} />
 				</div>
 			);
@@ -119,6 +122,10 @@ export default class ViewContent extends Component {
                         View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
                         View.push(<ContentUserFollowing node={node} user={user} path={path} extra={extra} />);
                     }
+                    else if ( ViewType == 'followers'){
+                        View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
+                        View.push(<ContentUserFollowers node={node} user={user} path={path} extra={extra} />);
+                    }
 					else {
 						View.push(<Content404 />);
 					}
@@ -149,8 +156,8 @@ export default class ViewContent extends Component {
 			if ( extra && extra.length && extra[0] == 'theme' ) {
 				let NewPath = path+'/'+extra[0];
 				let NewExtra = extra.slice(1);
-				ShowNav = <ContentNavTheme node={node} user={user} path={NewPath} extra={NewExtra} />;
-				ShowPage = <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} />;
+				ShowNav = <ContentNavTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
+				ShowPage = <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
 			}
             else if(extra && extra.length && extra[0] == 'games'){
                 //let NewPath = path+'/'+extra[0];
@@ -182,7 +189,7 @@ export default class ViewContent extends Component {
 
 			return (
 				<div id="content">
-					<ContentEvent node={node} user={user} path={path} extra={extra} />
+					<ContentEvent node={node} user={user} path={path} extra={extra} featured={featured} />
 					{ShowNav}
 					{ShowPage}
 				</div>
