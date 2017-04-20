@@ -75,7 +75,7 @@ export default class ContentGames extends Component {
         if (state['error']){
             return <ContentError code="400">"Bad Request : Couldn't load games"</ContentError>;
         }
-        else if(state['feed'] && state.feed > 0)
+        else if(state['feed'] && state.feed.length > 0)
         {
             var games = state.feed.map( g => {
                 return <ContentItemBox node={g} path={props.path} user={props.user}/>;
@@ -91,7 +91,7 @@ export default class ContentGames extends Component {
             return (
                 <ContentCommon {...props}>
                     <ContentCommonBodyTitle href={""} title={"No Games!"} />
-                    <p>"Sorry there isn't any games yet."</p>
+                    <p>Sorry there are no games yet.</p>
                 </ContentCommon>
             );
         }
