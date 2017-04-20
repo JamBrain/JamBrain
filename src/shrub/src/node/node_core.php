@@ -146,6 +146,47 @@ function node_GetById( $ids ) {
 	return null;
 }
 
+function node_CountByParentAuthorType( $parent, $author = null, $type = null, $subtype = null, $subsubtype = null ) {
+	$QUERY = [];
+	$ARGS = [];
+
+	if ( $parent ) {
+		$QUERY[] = "parent=?";
+		$ARGS[] = $parent;
+	}
+
+	if ( $author ) {
+		$QUERY[] = "author=?";
+		$ARGS[] = $author;
+	}
+
+	if ( $type ) {
+		$QUERY[] = "type=?";
+		$ARGS[] = $type;
+	}
+	if ( $subtype ) {
+		$QUERY[] = "subtype=?";
+		$ARGS[] = $subtype;
+	}
+	if ( $subsubtype ) {
+		$QUERY[] = "subsubtype=?";
+		$ARGS[] = $subsubtype;
+	}
+
+	$full_query = implode(' AND ', $QUERY);
+
+	$ret = db_QueryFetch(
+		"SELECT author AS id, COUNT(id) AS count
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		WHERE $full_query
+		GROUP BY author
+		LIMIT 1;",
+		...$ARGS
+	);
+
+	return $ret;
+}
+
 function node_CountByAuthorType( $ids, $authors, $types = null, $subtypes = null, $subsubtypes = null ) {
 	$multi = is_array($ids);
 	if ( !$multi )
