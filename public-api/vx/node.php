@@ -187,8 +187,11 @@ switch ( $action ) {
 			if ( !empty($subtypes) ) {
 				$RESPONSE['subtypes'] = $subtypes;
 			}
+			
+			$RESPONSE['offset'] = 0;
+			$RESPONSE['limit'] = 10;
 
-			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes );
+			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes, null/*$subsubtypes*/, null, $RESPONSE['limit'] );
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
