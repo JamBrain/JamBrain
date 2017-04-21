@@ -1,7 +1,9 @@
 <?php
 
 // For fetching subscriptions
-function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subtypes = null, $subsubtypes = null, $published = true, $score_minimum = null, $limit = 20, $offset = 0 ) {
+function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subtypes = null, $subsubtypes = null, $score_minimum = null, $limit = 20, $offset = 0 ) {
+	$published = true;
+
 	// PLEASE PRE-SANITIZE YOUR TYPES!
 	$QUERY = [];
 	$ARGS = [];
@@ -48,6 +50,9 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subt
 				break;
 				case 'authors':
 					// TODO: this
+				break;
+				case 'unpublished':
+					$published = false;
 				break;
 			};
 		}
@@ -104,6 +109,10 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subt
 	// Build query fragment for published content
 	if ( $published ) {
 		$QUERY[] = "published > CONVERT(0, DATETIME)";
+		$orderby_query = "ORDER BY published DESC";
+	}
+	else {
+		$orderby_query = "ORDER BY modified DESC";
 	}
 
 	// Build query fragment for score
@@ -114,7 +123,7 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subt
 	}
 	else {
 		return null;
-	}
+	}		
 	
 	$full_query = '';
 	if ( count($QUERY) )
@@ -127,7 +136,7 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subt
 		"SELECT id, ".DB_FIELD_DATE('modified')."
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
 		$full_query
-		ORDER BY published DESC
+		$orderby_query
 		LIMIT ? OFFSET ?;",
 		...$ARGS
 	);
