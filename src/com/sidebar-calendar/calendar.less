@@ -23,7 +23,7 @@
 
 			font-weight: bold;
 			cursor: pointer;
-			
+
 			background: @CAL_CMONTH_BG; /*@MAJOR_MUTE_D;/*@MAJOR_COLOR_MUTE3;*/
 			color: @CAL_CMONTH_COL;
 			&.month {
@@ -45,19 +45,19 @@
 				padding-bottom: 100%; /* Previously: 14.29% (100 / 7) */
 				/* The trick used to work by padding/margin with %'s, which were based on width. */
 				/* Now you add a dummy element, which we do here via the pseudo element. */
-				
+
 				content: '';
 				display: block;
 			}
 
-						
+
 			/* Elements are positioned absolutely, so not to affect the flow (and make the box bigger) */
 			& > .-text {
 				position: absolute;
 				top: -1px;/*0.1em;*/
 				left: 2px;/*0.1em;*/
 			}
-			
+
 			& > .-icon {
 				position: absolute;
 				bottom: 2px;
@@ -74,9 +74,15 @@
 				background: @CAL_SCHEDULED_BG;
 				color: @CAL_SCHEDULED_COL;
 				border: @CAL_BORDER solid transparent;
+
+                // if its scheduled and also selected
+                &.selected{
+                    color: darken(@CAL_SCHEDULED_COL,20%);
+                    background: lighten(@CAL_SCHEDULED_BG,25%);
+                }
 			}
 
-			/* Hover */				
+			/* Hover */
 			&:hover,
 			&:focus,
 			&:first-child:hover,
@@ -84,7 +90,7 @@
 			&:last-child:hover,
 			&:last-child:focus {
 				z-index:10;
-				
+
 				&,
 				&.month,
 				&.scheduled {
@@ -95,25 +101,25 @@
 
 				/*transform: scale(1.2, 1.2);*/
 			}
-			&:active, 
+			&:active,
 			&:first-child:active,
 			&:last-child:active {
 				/*transform: scale(0.9, 0.9);*/
 			}
-			
+
 			/* Sunday and Monday */
 			&:first-child,
 			&:last-child {
-				border: @CAL_BORDER solid @CAL_CMONTH_BG;/*@MAJOR_MUTE_D;*/
+				border: @CAL_BORDER solid @CAL_CMONTH_BG!important;/*@MAJOR_MUTE_D;*/
 				color: @CAL_CMONTH_BG;/*@MAJOR_MUTE_D;*/
 				background: @CAL_CMONTH_COL; /*@MAJOR_MUTE_D4;/*@MAJOR_COLOR_MUTE2;*/
 				&.month {
-					border: @CAL_BORDER solid @CAL_OMONTH_BG;
+					border: @CAL_BORDER solid @CAL_OMONTH_BG!important;
 					color: @CAL_OMONTH_BG;
 					background: @CAL_OMONTH_COL;
 				}
 			}
-			
+
 			/* Cleanup */
 			&:last-child {
 				margin-right: 0;
