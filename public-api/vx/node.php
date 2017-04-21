@@ -187,8 +187,15 @@ switch ( $action ) {
 			if ( !empty($subtypes) ) {
 				$RESPONSE['subtypes'] = $subtypes;
 			}
+			
+			$RESPONSE['offset'] = 0;
+			$RESPONSE['limit'] = 10;
 
-			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes );
+			if ( isset($_GET['offset']) ) {
+				$RESPONSE['offset'] = intval($_GET['offset']);
+			}
+
+			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes, null/*$subsubtypes*/, null, $RESPONSE['limit'], $RESPONSE['offset'] );
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
@@ -358,6 +365,8 @@ switch ( $action ) {
 						json_EmitFatalError_ServerError(null, $RESPONSE);
 					}
 					
+					$RESPONSE['type'] = $type;
+					$RESPONSE['path'] = node_GetPathById($new_node, 1)['path']; // Root node
 					$RESPONSE['count']++;
 					$RESPONSE['id'] = $new_node;
 					break;
@@ -370,6 +379,8 @@ switch ( $action ) {
 						json_EmitFatalError_ServerError(null, $RESPONSE);
 					}
 
+					$RESPONSE['type'] = $type;
+					$RESPONSE['path'] = node_GetPathById($new_node, 1)['path']; // Root node
 					$RESPONSE['count']++;
 					$RESPONSE['id'] = $new_node;
 					break;
