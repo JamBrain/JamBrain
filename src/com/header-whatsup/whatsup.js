@@ -38,7 +38,7 @@ export default class HeaderWhatsup extends Component {
 		if ( featured ) {
 			return (
 				<div class="header-base header-whatsup outside">
-					<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> Theme Announcement Soon
+					<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> Theme Announcement Soon! <NavLink href="https://twitter.com/ludumdare"><SVGIcon baseline small gap>twitter</SVGIcon>Check Twitter</NavLink>
 				</div>
 			);
 		}
