@@ -128,7 +128,7 @@ class Main extends Component {
 		var props = Sanitize.parseHash(window.location.hash);
 
 		if ( window.location.hash ) {
-			if ( !window.location.hash.includes("/") ) {
+			if ( window.location.hash.indexOf("/") != 1 ) {
 				switch (props.path) {
 					case 'user-login':
 						props.onlogin = this.onLogin;
