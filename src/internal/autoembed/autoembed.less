@@ -1,3 +1,5 @@
+@import 'defs.less';
+
 /*
 iframe {
 	margin: auto;
@@ -16,17 +18,83 @@ iframe {
 .embed-video {
 	max-width: 640px;
 	margin: auto;
-	
-	& > div {
+
+    position: relative;
+
+    & > .thumbnail {
+        & > .overlay {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+
+            & > .-play {
+    			position: absolute;
+    			top: 50%;
+    			left: 50%;
+    			transform: translate(-50%,-50%);
+    			/*opacity:0.3;*/
+    			font-size: 3em;
+    			color: @COL_L;
+    			transition: all 0.2s;
+
+    			& > svg {
+    				display: block;
+    			}
+
+    			background: fade(@COL_D, 50%);
+    		}
+    		&:hover > .-play {
+    			font-size: 4em;
+    			background: @COL_A;
+    		}
+    		&:active > .-play {
+    			font-size: 2.5em;
+    		}
+
+            & > .-external {
+    			position: absolute;
+    			bottom: 1em;
+    			right: 1em;
+    			font-size: 1em;
+    			color: @COL_L;
+    			transition: all 0.2s;
+    			opacity: 0;
+    			&:hover {
+    				font-size: 2em;
+    				bottom: 0.5em;
+    				right: 0.5em;
+    			}
+
+                & > a {
+                    padding: 0;
+                }
+    		}
+    		&:hover > .-external {
+    			opacity: 1;
+    		}
+        }
+
+        & > img {
+            width: 100%;
+            height: auto;
+        }
+    }
+
+
+
+	& > .video {
 		position: relative;
-		
+
 		width: 100%;
 		height: 0;
 		padding-bottom: 100% * (9/16);
-	
+
 		& > iframe {
 			position: absolute;
-	
+
 			width: 100%;
 			height: 100%;
 			left: 0;
@@ -41,7 +109,7 @@ iframe {
 	-ms-word-break: break-all;
 	word-break: break-word;
 	hyphens: auto;
-	
+
 	& .-icon-domain {
 		white-space: nowrap;
 	}
