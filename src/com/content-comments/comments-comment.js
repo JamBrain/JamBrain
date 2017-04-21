@@ -100,21 +100,25 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onLove( e ) {
-		if ( this.state.loved ) {
-			$NoteLove.Remove(this.props.comment.node, this.props.comment.id)
-			.then(r => {
-				if(r.removed != 0) {
-					this.setState({ 'loved': false, 'lovecount': this.state.lovecount - 1 });
+		if ( this.props.user.id != 0 && this.props.user.id != null ) {
+			if( this.props.comment.id != null) {
+				if ( this.state.loved ) {
+					$NoteLove.Remove(this.props.comment.node, this.props.comment.id)
+					.then(r => {
+						if(r.removed != 0) {
+							this.setState({ 'loved': false, 'lovecount': this.state.lovecount - 1 });
+						}
+					});
 				}
-			});
-		}
-		else {
-			$NoteLove.Add(this.props.comment.node, this.props.comment.id)
-			.then(r => {
-				if(r.id != 0) {
-					this.setState({ 'loved': true, 'lovecount': this.state.lovecount + 1 });
+				else {
+					$NoteLove.Add(this.props.comment.node, this.props.comment.id)
+					.then(r => {
+						if(r.id != 0) {
+							this.setState({ 'loved': true, 'lovecount': this.state.lovecount + 1 });
+						}
+					});
 				}
-			});
+			}
 		}
 	}
 

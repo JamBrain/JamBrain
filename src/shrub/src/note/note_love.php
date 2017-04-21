@@ -12,7 +12,7 @@ function noteLove_CountByNode( $node ) {
 	return $ret;
 }
 
-/*
+
 // This should actually work fine, I just want to discourage myself from using it, due to preformance
 function noteLove_GetByNote( $notes ) {
 	$multi = is_array($notes);
@@ -44,7 +44,7 @@ function noteLove_GetByNote( $notes ) {
 
 	return null;
 }
-*/
+
 
 /// Can only add 1 love at a time (NOTE: has an extra arguments versus the node code)
 function noteLove_AddByNote( $id, $author, $node, $supernode, $authornode ) {
