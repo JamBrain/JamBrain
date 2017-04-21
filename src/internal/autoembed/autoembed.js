@@ -28,12 +28,16 @@
 			ret.url = str;
 		}
 
-        // if its not already an external link with a protocol and it has a dot in it
-        // then make it an extrenal link becuase not internal links have dots
-        if ( ret.url.indexOf('//') == -1 && ret.url.indexOf('.') != -1 /*&&
-            (ret.url.indexOf('/') == -1 || ret.url.indexOf('.') < ret.url.indexOf('/')) */) {
-            ret.url = 'https://' + ret.url;
-        }
+    // if its not already an external link with a protocol and it has a dot in it
+    // then make it an extrenal link becuase not internal links have dots
+    if ( ret.url.indexOf('//') == -1 && ret.url.indexOf('.') != -1 /*&&
+        (ret.url.indexOf('/') == -1 || ret.url.indexOf('.') < ret.url.indexOf('/')) */) {
+        ret.url = 'https://' + ret.url;
+    }
+
+    if ( ret.url.indexOf('#') != -1 && ret.url.indexOf('#/') == -1 && ret.url.indexOf('//') == -1) {
+        ret.url = ret.url.replace("#", "#/");
+    }
 
 		// If it has a '//', it has a protocol and a domain
 		if ( ret.url.indexOf('//') !== -1 ) {
@@ -45,7 +49,7 @@
 		}
 		else {
 			ret.parts = ret.url.split('/');
-            ret.domain = ret.parts.shift().toLowerCase();
+      ret.domain = ret.parts.shift().toLowerCase();
 		}
 
 		ret.path = ret.parts.length ? '/'+ret.parts.join('/') : '';
