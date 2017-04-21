@@ -9,7 +9,7 @@ export default class ContentCommonFooterButtonEdit extends Component {
 
 	render( props ) {
 		return (
-			<NavLink href={props.path+"/edit"} class="content-common-footer-button -edit">
+			<NavLink href={props.node.path+"/edit"} class="content-common-footer-button -edit">
 				<SVGIcon>edit</SVGIcon>
 			</NavLink>
 		);
