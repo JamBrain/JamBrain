@@ -161,6 +161,105 @@ switch ( $action ) {
 		}
 		break; // case 'count': //note/count
 */
+
+	case 'love': //note/love
+		$old_action = $action;
+		$action = json_ArgShift();
+		switch ( $action ) {
+//			case 'getmy': //note/love/getmy
+//				json_ValidateHTTPMethod('GET');
+//				
+//				if ( $user_id = userAuth_GetID() ) {
+//					// Limit to last 500 love?
+//
+//					$RESPONSE['my-love'] = noteLove_GetByAuthor($user_id);
+//				}
+//				else {
+//					json_EmitFatalError_Permission(null, $RESPONSE);
+//				}
+//				break; // case 'getmy': //note/love/getmy
+
+			case 'add': //note/love/add
+				json_ValidateHTTPMethod('GET');
+				
+				if ( json_ArgCount() ) {
+					$note_id = intval(json_ArgGet(0));
+					
+					if ( $note_id ) {
+						// NOTE: You are allowed to LOVE anonymously (it's just not fetchable)
+						$user_id = userAuth_GetID();
+
+						if ( $note = note_GetById($note_id) ) {
+							if ( $note['id'] ) {
+							
+//							if ( in_array($node['type'], THINGS_I_CAN_LOVE) ) {
+								$RESPONSE['id'] = noteLove_AddByNote($note_id, $user_id, $note['node'], $note['supernode'], $note['author'] );
+								
+//								$RESPONSE['love'] = noteLove_GetByNode($node_id);
+//							}
+//							else {
+//								json_EmitFatalError_BadRequest("Can't love ".$node['type'], $RESPONSE);
+//							}
+							}
+						}
+						else {
+							json_EmitFatalError_NotFound(null, $RESPONSE);
+						}
+					}
+					else {
+						json_EmitFatalError_BadRequest(null, $RESPONSE);
+					}
+				}
+				else {
+					json_EmitFatalError_BadRequest(null, $RESPONSE);
+				}
+				break; // case 'add': //note/love/add
+
+			case 'remove': //note/love/remove
+				json_ValidateHTTPMethod('GET');
+
+				if ( json_ArgCount() ) {
+					$note_id = intval(json_ArgGet(0));
+					
+					if ( $note_id ) {
+						// NOTE: You are allowed to LOVE anonymously (it's just not fetchable)
+						$user_id = userAuth_GetID();
+
+						if ( $note = node_GetById($note_id) ) {
+//							if ( in_array($node['type'], THINGS_I_CAN_LOVE) ) {
+								$RESPONSE['removed'] = noteLove_RemoveByNote($note_id, $user_id);
+								
+//								$RESPONSE['love'] = nodeLove_GetByNode($node_id);
+//								if ( !isset($RESPONSE['love']) )
+//									$RESPONSE['love'] = [
+//										'id' => $node_id,
+//										'count' => 0,
+//										'timestamp' => "0000-00-00T00:00:00Z"
+//									];
+//							}
+//							else {
+//								json_EmitFatalError_BadRequest("Can't love ".$node['type'], $RESPONSE);
+//							}
+						}
+						else {
+							json_EmitFatalError_NotFound(null, $RESPONSE);
+						}
+					}
+					else {
+						json_EmitFatalError_BadRequest(null, $RESPONSE);
+					}
+				}
+				else {
+					json_EmitFatalError_BadRequest(null, $RESPONSE);
+				}
+				break; // case 'remove': //note/love/remove
+				
+			default:
+			json_EmitFatalError_Forbidden(null, $RESPONSE);
+				break; // default
+		};
+		break; // case 'love': //note/love
+
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break; // default
