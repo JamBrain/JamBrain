@@ -52,7 +52,7 @@ function noteLove_AddByNote( $id, $author, $node, $supernode, $authornode ) {
 		return null;
 	}
 	
-	if ( !$id || !$node || !$supernode || !$authornode )
+	if ( !$id || !$node || !is_int($supernode) || !$authornode )
 		return null;
 
 	// Anonymous Love support requires newer MYSQL 5.6.3+. Scotchbox ships with 5.5.x.		
