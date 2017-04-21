@@ -8,7 +8,7 @@ export default class LabelYesNo extends Component {
 
 	componentDidMount() {
 	}
-	
+
 	render( props ) {
 		if ( parseInt(props.value) > 0 ) {
 			return (
@@ -17,7 +17,7 @@ export default class LabelYesNo extends Component {
 				</div>
 			);
 		}
-		else if ( parseInt(props.value) < 0 ) {
+		else if ( parseInt(props.value) <= 0 ) {
 			return (
 				<div class="label-yesno">
 					<SVGIcon>cross</SVGIcon>
@@ -29,6 +29,6 @@ export default class LabelYesNo extends Component {
 		return (
 			<div class="label-yesno">
 			</div>
-		);			
+		);
 	}
 }
