@@ -113,8 +113,12 @@ export default class ViewContent extends Component {
 						View.push(<ContentTimeline types={['page']} methods={['author']} node={node} user={user} path={path} extra={extra} />);
 					}
 					else if ( ViewType == 'feed' ) {
+						let Methods = ['author'];
+						if ( node.id == user.id )
+							Methods.push('unpublished');
+						
                         View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
-						View.push(<ContentTimeline types={['post']} methods={['author']} node={node} user={user} path={path} extra={extra} />);
+						View.push(<ContentTimeline types={['post']} methods={Methods} node={node} user={user} path={path} extra={extra} />);
 					}
 					else if ( ViewType == 'post' ) {
 //						View.push(<ContentPost node={node} user={user} path={path} extra={extra.splice(1)} by love edit />);
