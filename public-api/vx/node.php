@@ -145,7 +145,13 @@ switch ( $action ) {
 				
 				$allowed_methods = ['parent','superparent','author'/*,'authors'*/,'all'];
 				foreach ( $methods as &$method ) {
-					if ( !in_array($method, $allowed_methods) ) {
+					if ( $method == 'all' ) {
+						if ( count($methods) > 1 ) {
+							json_EmitFatalError_BadRequest("Can't combine methods with all", $RESPONSE);
+						}
+						// totally fine, let it fall through
+					}
+					else if ( !in_array($method, $allowed_methods) ) {
 						json_EmitFatalError_BadRequest("Invalid method: $method", $RESPONSE);
 					}
 				}
