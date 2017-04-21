@@ -128,7 +128,7 @@ export default class ContentCommentsComment extends Component {
 		console.log('reply');
 	}
 	
-	render( {user, comment, author, indent, publish, onpublish, limit}, state ) {
+	render( {user, comment, author, indent, publish, onpublish, limit, children}, state ) {
 //		console.log('R '+comment.id+": ", this.state.editing,this.state.preview);
 		if ( author ) {
 			var Name = author.name;
@@ -165,8 +165,8 @@ export default class ContentCommentsComment extends Component {
 			}
 
 			var ShowReply = null;
-//			if ( user && user.id )
-//				ShowReply = <div class="-reply" onclick={this.onReply}><SVGIcon>reply</SVGIcon> Reply</div>;
+			//if ( user && user.id )
+			//	ShowReply = <div class="-reply" onclick={this.onReply}><SVGIcon>reply</SVGIcon> Reply</div>;
 
 			var ShowEdit = null;
 			if ( user && comment.author === user.id && !state.editing )
@@ -224,6 +224,7 @@ export default class ContentCommentsComment extends Component {
 						<ContentCommentsMarkup class="-text" editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here" limit={limit}>{comment.body}</ContentCommentsMarkup>
 						{ShowBottomNav}
 					</div>
+					{children}
 				</div>
 			);
 		}
