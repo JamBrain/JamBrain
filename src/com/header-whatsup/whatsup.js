@@ -38,11 +38,13 @@ export default class HeaderWhatsup extends Component {
 		if ( featured ) {
 			return (
 				<div class="header-base header-whatsup outside">
-					<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> Final Round Theme Voting
+					<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> Theme Announcement Soon
 				</div>
 			);
 		}
 		return null;
+
+//					<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> Final Round Theme Voting
 		
 //				<span class="-title _font2">ON NOW:</span> <NavLink href="/events/ludum-dare/38"><SVGIcon baseline small gap>trophy</SVGIcon>Ludum Dare 38</NavLink> Final Round Theme Voting
 
