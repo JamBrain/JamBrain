@@ -28,16 +28,17 @@ export default class ContentCommonBodyTitle extends Component {
 		}
 
 		var Limit = 64;	// True limit is 96
+		var Placeholder = props.placeholder ? props.placeholder : 'Title';
 		
 		if (props.editing) {
 			props.class.push('-editing');
 			return (
 				<div class={props.class}>
-					<div class="-label">Title:</div>
+					<div class="-label">Title</div>
 					<InputText 
 						value={props.title} 
 						onmodify={props.onmodify}
-						placeholder="Title"
+						placeholder={Placeholder}
 						maxlength={Limit}
 					/>
 				</div>
@@ -46,13 +47,12 @@ export default class ContentCommonBodyTitle extends Component {
 		else {
 			props.class.push("_font2");
 			
+			var Title = props.title.trim().length ? props.title.trim() : Placeholder;
 			var Body = [];
-			if ( props.title ) {
-				if ( props.href )
-					Body.push(<NavLink class="-text" href={props.href}>{Prefix}{props.title}</NavLink>);
-				else
-					Body.push(<div class="-text">{Prefix}{props.title}</div>);
-			}
+			if ( props.href )
+				Body.push(<NavLink class="-text" href={props.href}>{Prefix}{Title}</NavLink>);
+			else
+				Body.push(<div class="-text">{Prefix}{Title}</div>);
 			
 			if ( props.subtitle ) {
 				Body.push(<span class="-subtext"> ({props.subtitle})</span>);

@@ -23,6 +23,9 @@ export default class ContentCommonBodyMarkup extends Component {
 			Class = Class.concat(props.class.split(' '));
 		}
 		
+		var Label = props.label ? props.label : "Description";
+		var Placeholder = props.placeholder ? props.placeholder : "Description";
+		
 		var Text = props.children.join('');
 
 		if (props.editing) {
@@ -33,11 +36,11 @@ export default class ContentCommonBodyMarkup extends Component {
 			
 			return (
 				<div class={Class}>
-					<div class="-label">{props.label}</div>
+					<div class="-label">{Label}</div>
 					<InputTextArea 
 						value={Text} 
 						onmodify={props.onmodify} 
-						placeholder={props.placeholder} 
+						placeholder={Placeholder} 
 						ref={(input) => { this.textarea = input; }} 
 						maxlength={Limit}
 					/>
@@ -61,6 +64,10 @@ export default class ContentCommonBodyMarkup extends Component {
 		}
 		else {
 			Class.push("markup");
+			
+			if ( !Text.trim().length ) {
+				Text = Placeholder;
+			}
 
 			// NOTE: only parses the first child
 			//var Text = props.children.length ? marked.parse(props.children[0]) : "";
