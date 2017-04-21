@@ -143,7 +143,7 @@ switch ( $action ) {
 			else {
 				$methods = array_map("coreSlugify_Name", explode('+', $methods));
 				
-				$allowed_methods = ['parent','superparent','author'];
+				$allowed_methods = ['parent','superparent','author'/*,'authors'*/,'all'];
 				foreach ( $methods as &$method ) {
 					if ( !in_array($method, $allowed_methods) ) {
 						json_EmitFatalError_BadRequest("Invalid method: $method", $RESPONSE);
