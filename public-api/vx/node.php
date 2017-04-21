@@ -143,7 +143,7 @@ switch ( $action ) {
 			else {
 				$methods = array_map("coreSlugify_Name", explode('+', $methods));
 				
-				$allowed_methods = ['parent','superparent','author','authors','all'];
+				$allowed_methods = ['parent','superparent','author','authors','all','unpublished'];
 				foreach ( $methods as &$method ) {
 					if ( $method == 'all' ) {
 						if ( count($methods) > 1 ) {
