@@ -224,7 +224,12 @@ export default class ViewContent extends Component {
 				return <ContentGames types={['game']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentGames>;
 			}
 			else if ( Viewing == '/feed' ) {
-				return <ContentTimeline types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
+				return (
+					<ContentTimeline types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra}>
+						{ShowNavRoot}
+						<ContentTimeline types={['post']} subtypes={['news']} methods={['all']} minimized nomore limit={1} node={node} user={user} path={path} extra={extra} />
+					</ContentTimeline>
+				);
 			}
 			else if ( Viewing == '/palette' ) {
 				return <div id="content"><ContentPalette node={node} user={user} path={path} extra={extra} /></div>;

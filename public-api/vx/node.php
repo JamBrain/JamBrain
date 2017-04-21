@@ -194,6 +194,13 @@ switch ( $action ) {
 			if ( isset($_GET['offset']) ) {
 				$RESPONSE['offset'] = intval($_GET['offset']);
 			}
+			if ( isset($_GET['limit']) ) {
+				$RESPONSE['limit'] = intval($_GET['limit']);
+				if ( $RESPONSE['limit'] < 1 )
+					$RESPONSE['limit'] = 1;
+				if ( $RESPONSE['limit'] > 25 )
+					$RESPONSE['limit'] = 25;
+			}
 
 			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes, null/*$subsubtypes*/, null, $RESPONSE['limit'], $RESPONSE['offset'] );
 		}

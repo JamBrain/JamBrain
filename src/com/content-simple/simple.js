@@ -217,6 +217,7 @@ export default class ContentSimple extends Component {
 						placeholder="Say something"
 						class="-block-if-not-minimized"
 						onmodify={this.onModifyText}
+						minimized={props.minimized}
 					>
 						{state.body}
 					</ContentCommonBodyMarkup>
