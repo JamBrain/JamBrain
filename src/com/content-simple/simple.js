@@ -166,7 +166,19 @@ export default class ContentSimple extends Component {
 					return <ContentError code="401">Permission Denied</ContentError>;
 				}
 				
-				ShowEditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} published={!!node.published} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} onpublish={this.onPublish} />;
+				let EditProps = {
+					'editing': state.editing,
+					'modified': state.modified,
+					'published': !!node.published,
+					'onedit': this.onEdit,
+					'onpreview': this.onPreview,
+					'onsave': this.onSave,
+					'onpublish': this.onPublish,
+				};
+
+				EditProps.nopublish = props.nopublish;
+				
+				ShowEditBar = <ContentCommonEdit {...EditProps} />;
 			}
 			else {
 				if ( user.id && (node.author === user.id) )
