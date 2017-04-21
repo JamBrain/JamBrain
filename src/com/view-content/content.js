@@ -66,10 +66,10 @@ export default class ViewContent extends Component {
 			);
 		}
 		else if ( node.type === 'item' ) {
-			var ShowNav = <ContentNavItem node={node} user={user} path={path} extra={extra} />;
-			
+			var ShowNav = null;
 			var ShowFeed = null;
-			if ( true ) {
+			if ( extra && (extra.length == 0 || extra[0] != 'edit') ) {
+				ShowNav = <ContentNavItem node={node} user={user} path={path} extra={extra} />;
 				ShowFeed = <ContentComments node={node} user={user} path={path} extra={extra} />;
 			}
 			
