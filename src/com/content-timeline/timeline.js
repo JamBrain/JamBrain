@@ -12,10 +12,12 @@ export default class ContentTimeline extends Component {
 		
 		this.state = {
 			feed: [],
-			hash: {}
+			hash: {},
+			offset: 10
 		};
 
 		this.makeFeedItem = this.makeFeedItem.bind(this);
+		this.fetchMore = this.fetchMore.bind(this);
 	}
 
 	componentDidMount() {
@@ -59,26 +61,29 @@ export default class ContentTimeline extends Component {
 	getMissingNodes() {
 		var keys = this.getFeedIdsWithoutNodes();
 		
-		return $Node.GetKeyed( keys )
-			.then(r => {
-				var feed = this.state.feed;
-				var hash = this.state.hash;
-				
-				for ( var node_id in r.node ) {
-					var id = r.node[node_id].id;
+		if ( keys.length ) {
+			return $Node.GetKeyed( keys )
+				.then(r => {
+					var feed = this.state.feed;
+					var hash = this.state.hash;
 					
-					feed[hash[id]].node = r.node[node_id];
-				}
-				
-				this.setState({'feed': feed, 'hash': hash});
-			})
-			.catch(err => {
-				this.setState({ 'error': err });
-			});		
+					for ( var node_id in r.node ) {
+						var id = r.node[node_id].id;
+						
+						feed[hash[id]].node = r.node[node_id];
+					}
+					
+					this.setState({'feed': feed, 'hash': hash});
+				})
+				.catch(err => {
+					this.setState({ 'error': err });
+				});
+		}
+		
 	}
 	
-	getFeed( id, methods, types, subtypes, subsubtypes ) {
-		$Node.GetFeed( id, methods, types, subtypes, subsubtypes )
+	getFeed( id, methods, types, subtypes, subsubtypes, more ) {
+		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, more )
 		.then(r => {
 			if ( r.feed && r.feed.length ) {
 				this.appendFeed(r.feed);
@@ -124,8 +129,22 @@ export default class ContentTimeline extends Component {
 //		});
 //	}
 	
-	fetchMore() {
+	fetchMore( offset ) {
+		var props = this.props;
+		var offset = this.state.offset;
+//		var morenode = this.state.feed[this.state.feed.length-1];
+//		var more = morenode.created ? morenode.created : morenode.modified;
 		
+		this.getFeed(
+			props.node.id,
+			props.methods ? props.methods : ['parent', 'superparent'],
+			props.types ? props.types : ['post'],
+			props.subtypes ? props.subtypes : null,
+			props.subsubtypes ? props.subsubtypes : null,
+			offset
+		);
+		
+		this.setState({'offset': offset+10});
 	}
 
 	makeFeedItem( node ) {
@@ -161,7 +180,7 @@ export default class ContentTimeline extends Component {
 			if ( feed.length ) {
 				ShowFeed = feed.map(this.makeFeedItem);
 			}
-			ShowFeed.push(<div>More</div>);
+			ShowFeed.push(<div onclick={this.fetchMore}>More</div>);
 		}
 		else {
 			ShowFeed = <NavSpinner />;

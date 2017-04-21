@@ -191,7 +191,11 @@ switch ( $action ) {
 			$RESPONSE['offset'] = 0;
 			$RESPONSE['limit'] = 10;
 
-			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes, null/*$subsubtypes*/, null, $RESPONSE['limit'] );
+			if ( isset($_GET['offset']) ) {
+				$RESPONSE['offset'] = intval($_GET['offset']);
+			}
+
+			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes, null/*$subsubtypes*/, null, $RESPONSE['limit'], $RESPONSE['offset'] );
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
