@@ -46,13 +46,13 @@ function noteLove_GetByNote( $notes ) {
 }
 */
 
-/// Can only add 1 love at a time (NOTE: has an extra argument versus the node code)
-function noteLove_AddByNote( $note, $author, $node ) {
-	if ( is_array($note) ) {
+/// Can only add 1 love at a time (NOTE: has an extra arguments versus the node code)
+function noteLove_AddByNote( $id, $author, $node, $supernode, $authornode ) {
+	if ( is_array($id) ) {
 		return null;
 	}
 	
-	if ( !$note )
+	if ( !$id || !$node || !$supernode || !$authornode )
 		return null;
 
 	// Anonymous Love support requires newer MYSQL 5.6.3+. Scotchbox ships with 5.5.x.		
@@ -67,6 +67,8 @@ function noteLove_AddByNote( $note, $author, $node ) {
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE." (
 			note,
 			node,
+			supernode,
+			authornode,
 			author,
 			ip,
 			timestamp
@@ -75,23 +77,27 @@ function noteLove_AddByNote( $note, $author, $node ) {
 			?,
 			?,
 			?,
+			?,
+			?,
 			INET6_ATON(?),
 			NOW()
 		);",
-		$note,
+		$id,
 		$node,
+		$supernode,
+		$authornode,
 		$author,
 		$ip
 	);
 }
 
 /// Can only remove 1 love at a time
-function noteLove_RemoveByNote( $note, $author ) {
-	if ( is_array($note) ) {
+function noteLove_RemoveByNote( $id, $author ) {
+	if ( is_array($id) ) {
 		return null;
 	}
 	
-	if ( !$note )
+	if ( !$id )
 		return null;
 
 	// Anonymous Love support requires newer MYSQL 5.6.3+. Scotchbox ships with 5.5.x.		
@@ -105,7 +111,7 @@ function noteLove_RemoveByNote( $note, $author ) {
 	return db_QueryDelete(
 		"DELETE FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
 		WHERE note=? AND author=? AND ip=INET6_ATON(?);",
-		$note,
+		$id,
 		$author,
 		$ip
 	);
