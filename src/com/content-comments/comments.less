@@ -2,7 +2,7 @@
 
 #content .content-common.content-comments {
 	position: relative;
-	
+
 	background: @COL_NLLLL;
 	/*border-top: 4px solid @COL_NDDD;*/
 /*	border-bottom: 8px solid @COL_NDDD;*/
@@ -10,13 +10,13 @@
 	&.-no-gap {
 		margin-top: 0;
 	}
-	
+
 	&.-no-header {
 	}
-	
+
 	& .-headline {
 		position: relative;
-		
+
 		background: @COL_NDDD;
 		color: @COL_NLLLL;
 		height: 1em;
@@ -30,7 +30,7 @@
 	& .-indent {
 		margin-left: 4.5em;
 	}
-	
+
 	& .-new-comment {
 		border-top: 8px solid @COL_NDDD;
 		background: @COL_L;
@@ -39,10 +39,10 @@
 
 	& .-item {
 		position: relative;
-		
+
 		overflow: auto;
 
-		border-top: 1px solid @COL_NLL;	
+		border-top: 1px solid @COL_NLL;
 
 		&:nth-child(odd) {
 			&.-indent-0 {
@@ -56,10 +56,10 @@
 			}
 		}
 
-		& a, 
+		& a,
 		& a:visited {
 			color: @COL_A;
-	
+
 			&:hover,
 			&:focus {
 				color: @COL_L;
@@ -71,10 +71,10 @@
 			position: absolute;
 			top: 0.5em;
 			left: 0.5em;
-			
+
 			& > img {
 				padding: 0.5em;
-			
+
 				&:hover {
 					background: @COL_A;
 				}
@@ -88,10 +88,10 @@
 			margin-top: 1em;
 
 			margin-right: 1em;
-			
+
 			overflow-wrap: break-word;
 			hyphens: auto;
-			
+
 			& .-author {
 				font-size: 1.1em;
 				font-weight: bold;
@@ -99,7 +99,7 @@
 			& .-date {
 				font-size: 0.8em;
 			}
-			
+
 			& > .-title {
 				/*margin: 0.5em 0;*/
 			}
@@ -112,44 +112,44 @@
 			}
 			& > .-nav {
 				margin: 0  0 0.25em 0;
-				
+
 				overflow: hidden;
-				
+
 				& > div {
 					position: relative;
-					
+
 					cursor: pointer;
 					color: @COL_N;
-					
+
 					& > svg {
 						position: absolute;
-						
+
 						left: 1em;
 						top: 0;
 						bottom: 0;
-						
+
 						margin: auto;
 					}
-					
+
 					display: inline-block;
 					padding: 0 1em 0 2.5em;
 					line-height: 2em;
-					
+
 					margin-right: 0.5em;
 					/*border: 1px solid;*/
-					
+
 					&:hover,
 					&:focus {
 						background: @COL_A;
 						color: @COL_L;
-						
+
 						&:active {
 							background: @COL_L;
 							color: @COL_A;
 						}
 					}
 				}
-				
+
 				& .-edit,
 				& .-cancel,
 				& .-save,
@@ -159,7 +159,82 @@
 					margin-right: 0;
 					margin-left: 0.5em;
 				}
-				
+
+				& .-love {
+					& .-hover-hide,
+					& .-loved-hide {
+						display: block;
+					}
+					& .-hover-show,
+					& .-loved-show {
+						display: none;
+					}
+
+					&.loved {
+						& .-loved-hide {
+							display: none;
+
+							&.-hover-hide,
+							&.-hover-show {
+								display: none;
+							}
+						}
+						& .-loved-show {
+							display: block;
+
+							&.-hover-hide {
+								display: block;
+							}
+							&.-hover-show {
+								display: none;
+							}
+						}
+					}
+
+
+					&:hover {
+						& .-hover-hide {
+							display: none;
+
+							&.-loved-hide,
+							&.-loved-show {
+								display: none;
+							}
+						}
+						& .-hover-show {
+							display: block;
+
+							&.-loved-show {
+								display: none;
+							}
+							&.-loved-hide {
+								display: block;
+							}
+						}
+					}
+
+					&:hover.loved {
+						& .-loved-hide {
+							display: none;
+
+							&.-hover-hide,
+							&.-hover-show {
+								display: none;
+							}
+						}
+						& .-loved-show {
+							display: block;
+
+							&.-hover-hide {
+								display: none;
+							}
+							&.-hover-show {
+								display: block;
+							}
+						}
+					}
+				}
+
 				& .-selected {
 					background: @COL_N;
 					color: @COL_NLLLL;
@@ -186,7 +261,7 @@
 				margin-left: 3em;
 			}
 		}
-		
+
 		&.-indent-0 {
 			& > .-avatar img {
 				width: 48px;
