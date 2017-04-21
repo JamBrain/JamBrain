@@ -2,6 +2,7 @@ import { h, Component } 				from 'preact/preact';
 import { shallowDiff }	 				from 'shallow-compare/index';
 
 import NavLink							from 'com/nav-link/link';
+import ButtonLink						from 'com/button-link/link';
 import SVGIcon							from 'com/svg-icon/icon';
 
 export default class InputTextarea extends Component {
@@ -67,9 +68,14 @@ export default class InputTextarea extends Component {
 				</div>
 				<div class="-footer">
 					{ShowLimit}
-					<div class="-left if-sidebar-block">Supports <NavLink blank href="/markdown"><SVGIcon>markdown</SVGIcon> <strong>Markdown</strong></NavLink> and <NavLink href="//emoji.codes/"><strong>:emoji_codes:</strong></NavLink></div>
+					<div class="-left">
+						<NavLink class="-upload" onclick={e => {window.location = "#upload";}}><SVGIcon baseline gap>upload</SVGIcon>Upload</NavLink>
+						<span class="if-sidebar-inline">. Supports <NavLink blank href="/markdown"><SVGIcon>markdown</SVGIcon> Markdown</NavLink> and <NavLink href="//emoji.codes/">:emoji_codes:</NavLink></span>
+					</div>
 				</div>
 			</div>
 		);
+//		<NavLink class="-upload" href="#upload"><SVGIcon baseline gap>upload</SVGIcon>Upload</NavLink>
+//		<span class="-upload" onclick={e => {window.location = "#upload";}}><SVGIcon baseline gap>upload</SVGIcon>Upload</span>
 	}
 }

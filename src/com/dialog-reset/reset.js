@@ -11,7 +11,7 @@ import $User							from '../shrub/js/user/user';
 export default class DialogReset extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {
 			'mail': "",
 			'error': null,
@@ -22,20 +22,20 @@ export default class DialogReset extends Component {
 		this.onChange = this.onChange.bind(this);
 		this.doReset = this.doReset.bind(this);
 	}
-	
+
 	componentDidMount() {
 	}
 
 	onChange( e ) {
 		this.setState({ 'mail': e.target.value });
 	}
-	
+
 	doReset() {
 		mail = this.state.mail.trim();
-		
+
 		if ( Sanitize.validateMail(mail) ) {
 			this.setState({ 'loading': true, 'error': null });
-			
+
 			$User.Reset( mail )
 			.then( r => {
 				if ( r.status === 200 ) {
@@ -65,7 +65,7 @@ export default class DialogReset extends Component {
 		if ( error ) {
 			new_props.error = error;
 		}
-		
+
 		if ( loading ) {
 			return (
 				<DialogCommon empty explicit {...new_props}>
@@ -84,8 +84,10 @@ export default class DialogReset extends Component {
 			return (
 				<DialogCommon ok oktext="Send E-mail" onok={this.doReset} cancel explicit {...new_props}>
 					<div>
-						<input autofocus id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" maxlength="254" />
-						<LabelYesNo value={Sanitize.validateMail(mail) ? 1 : -1} />
+						<div class="-input-container">
+							<input autofocus id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" maxlength="254" />
+							<LabelYesNo value={Sanitize.validateMail(mail) ? 1 : -1} />
+						</div>
 					</div>
 				</DialogCommon>
 			);

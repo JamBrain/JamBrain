@@ -32,22 +32,28 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subt
 		$pre_query = [];
 		foreach ( $methods as &$method ) {
 			switch ( $method ) {
-				case 'parent';
+				case 'parent':
 					$pre_query[] = $method.$node_query;
 					if ( isset($node_args) ) $ARGS[] = $node_args;
 				break;
-				case 'superparent';
+				case 'superparent':
 					$pre_query[] = $method.$node_query;
 					if ( isset($node_args) ) $ARGS[] = $node_args;
 				break;
-				case 'author';
+				case 'author':
 					$pre_query[] = $method.$node_query;
 					if ( isset($node_args) ) $ARGS[] = $node_args;
+				break;
+				case 'all':
+				break;
+				case 'authors':
+					// TODO: this
 				break;
 			};
 		}
 		
-		$QUERY[] = '('.implode(' OR ', $pre_query).')';
+		if ( count($pre_query) )
+			$QUERY[] = '('.implode(' OR ', $pre_query).')';
 	}
 	else {
 		return null;
@@ -110,7 +116,9 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subt
 		return null;
 	}
 	
-	$full_query = '('.implode(' AND ', $QUERY).')';
+	$full_query = '';
+	if ( count($QUERY) )
+		$full_query = 'WHERE ('.implode(' AND ', $QUERY).')';
 	
 	$ARGS[] = $limit;
 	$ARGS[] = $offset;
@@ -118,7 +126,7 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subt
 	return db_QueryFetch(
 		"SELECT id, ".DB_FIELD_DATE('modified')."
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
-		WHERE $full_query
+		$full_query
 		ORDER BY published DESC
 		LIMIT ? OFFSET ?;",
 		...$ARGS

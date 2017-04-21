@@ -136,10 +136,10 @@ export default class ContentComments extends Component {
 		for ( var item in tree ) {
 			var comment = tree[item].node;
 			var author = authors[comment.author];
-			ret.push(<ContentCommentsComment user={user} comment={comment} author={author} indent={indent} />);
-
 			if ( tree[item].child ) {
-				ret.push(<div class="-indent">{this.renderComments(tree[item].child, indent+1)}</div>);
+				ret.push(<ContentCommentsComment user={user} comment={comment} author={author} indent={indent}><div class="-indent">{this.renderComments(tree[item].child, indent+1)}</div></ContentCommentsComment>);
+			} else {
+				ret.push(<ContentCommentsComment user={user} comment={comment} author={author} indent={indent}/>);
 			}
 		}
 

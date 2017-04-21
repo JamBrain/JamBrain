@@ -6,12 +6,12 @@
 	box-shadow: 0 0 4px fade(@COL_D, 50%);
 
 	max-width: 40em;
-	@media (max-width: 40em) { 
+	@media (max-width: 40em) {
 		width:100%;
 	}
-	
+
 	font-size: 1.2em;
-	
+
 	& > .-header {
 		background: @COL_ND;
 		color: @COL_L;
@@ -19,7 +19,7 @@
 		& > .-title {
 			font-size: 1.2em;
 			padding: 0.5rem 1rem;
-			
+
 			font-weight:700;
 		}
 	}
@@ -30,11 +30,11 @@
 	}
 	& > .-body {
 		margin: 1rem 2rem;
-		
+
 		& > div {
 			margin: 0.5em 0;
 		}
-		
+
 		& .-botline {
 			padding-bottom: 0.5em;
 			margin-bottom: 1.0em;
@@ -45,35 +45,50 @@
 			margin-top: 1.0em;
 			border-top: 1px solid;
 		}
-		
+
 		& .-info {
 		}
-		
+
 		& .-label {
 			width: 8em;
 			display: inline-block;
 		}
-		& .-text {
-			background: @COL_NLLLL;
-			border: 0;
-			padding: 0.5em;
-			max-width: 20em;
-			width: 20em;
-			font-size: 1em;
-			
-			@media (max-width: 40em) { 
+		& .-input-container {
+			@media (max-width: 40em) {
+				display: table;
 				max-width: initial;
-				width:100%;
+				width: 100%;
+
+				& .label-yesno {
+					display: table-cell;
+					width: 1em;
+				}
 			}
-				
-			&:focus {
-				background: @COL_L;
+
+			& .-text {
+				background: @COL_NLLLL;
+				border: 0;
+				padding: 0.5em;
+				max-width: 20em;
+				width: 20em;
+				font-size: 1em;
+
+				@media (max-width: 40em) {
+					display: table-cell;
+					max-width: initial;
+					width: 90%;
+					&.-block {
+						width: 95%;
+					}
+				}
+
+				&:focus {
+					background: @COL_L;
+				}
 			}
 		}
-		
+
 		& .-link {
-			
-			
 			&:hover {
 				cursor: pointer;
 				color: @COL_A;
@@ -83,17 +98,17 @@
 	& > .-footer {
 		background: @COL_N;
 		color: @COL_L;
-		
+
 		display: flex;
 		justify-content: center;
 
 		& > .-button {
-			padding: 0.5rem 2rem;
+			padding: 0.5rem 1rem;
 			border: 1px solid @COL_N;
 			margin: 0.5rem 0.25rem;
-			
+
 			font-weight:700;
-		
+
 			&:hover, &:focus {
 				background: @COL_A;
 				color: @COL_L;

@@ -20,6 +20,7 @@ import ContentComments					from 'com/content-comments/comments';
 
 import ContentNavRoot					from 'com/content-nav/nav-root';
 import ContentNavUser					from 'com/content-nav/nav-user';
+import ContentNavItem					from 'com/content-nav/nav-item';
 import ContentNavEvent					from 'com/content-nav/nav-event';
 import ContentNavTheme					from 'com/content-nav/nav-theme';
 
@@ -70,10 +71,18 @@ export default class ViewContent extends Component {
 			);
 		}
 		else if ( node.type === 'item' ) {
+			var ShowNav = <ContentNavItem node={node} user={user} path={path} extra={extra} />;
+			
+			var ShowFeed = null;
+			if ( true ) {
+				ShowFeed = <ContentComments node={node} user={user} path={path} extra={extra} />;
+			}
+			
 			return (
 				<div id="content">
 					<ContentItem node={node} user={user} path={path} extra={extra} featured={featured} />
-					<ContentComments node={node} user={user} path={path} extra={extra} />
+					{ShowNav}
+					{ShowFeed}
 				</div>
 			);
 		}
