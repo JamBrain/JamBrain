@@ -83,7 +83,8 @@ export default class ViewBar extends Component {
 					var CurrentFeaturedItem = featured.what[featured.what.length-1];
 
 					GameURL += '/$'+CurrentFeaturedItem;
-					GameURL += '/edit';
+					// TODO: Check if team leader (i.e. you have edit permissions)
+//					GameURL += '/edit';
 
 					ShowMyGame = (
 						<ButtonLink href={GameURL} class="-button">
