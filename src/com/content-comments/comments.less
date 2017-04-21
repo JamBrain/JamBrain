@@ -170,7 +170,11 @@
 						display: none;
 					}
 
-					&.loved {
+					&.-loved {
+						& > svg {
+							color: @COL_A;
+						}
+
 						& .-loved-hide {
 							display: none;
 
@@ -213,7 +217,11 @@
 						}
 					}
 
-					&:hover.loved {
+					&:hover.-loved {
+						& > svg {
+							color: @COL_L;
+						}
+
 						& .-loved-hide {
 							display: none;
 

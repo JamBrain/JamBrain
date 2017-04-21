@@ -11,7 +11,7 @@ import ContentFooterButtonComments		from 'com/content-footer/footer-button-comme
 import ContentCommentsMarkup			from 'comments-markup';
 
 import $Note							from '../../shrub/js/note/note';
-import $NodeLove						from '../../shrub/js/note/note_love';
+import $NoteLove						from '../../shrub/js/note/note_love';
 
 export default class ContentCommentsComment extends Component {
 	constructor( props ) {
@@ -25,7 +25,8 @@ export default class ContentCommentsComment extends Component {
 			// NOTE: Set this upon save, or use it to cancel
 			'original': props.comment.body,
 
-			'loved': props.loved ? true: false,
+			'loved': props.comment.loved ? true: false,
+			'lovecount': props.comment.love
 		};
 
 //		console.log('C '+props.comment.id+": ", this.state.editing,this.state.preview);
@@ -43,33 +44,6 @@ export default class ContentCommentsComment extends Component {
 
 		this.onLove = this.onLove.bind(this);
 		this.onReply = this.onReply.bind(this);
-	}
-
-	componentDidMount() {
-		if ( this.props.user && this.props.user.id ) {
-			$NoteLove.GetMy(this.props.comment.id)
-			.then(r => {
-				this.setState({ 'loved': r });
-			});
-		}
-	}
-
-	componentWillReceiveProps( nextProps ) {
-//		console.log('err', nextProps);
-
-//		if ( nextProps.editing ) {
-//			this.setState({
-//				'editing': nextProps.editing ? true : false,
-//				'preview': nextProps.editing ? false : true,
-//			});
-//		}
-
-//		if ( shallowDiff(this.props.comment, nextProps.comment) ) {
-//			this.setState(
-//		}
-//
-//		console.log("MEEEEEEEEEEEEEEEEEEEEE", this.props.author);
-//		console.log("HEEEEEEEEEEEEEEEEEEEEE", nextProps.author);
 	}
 
 	onEditing( e ) {
@@ -126,9 +100,20 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onLove( e ) {
-		console.log('love');
-		this.setState({'loved': true });
+		if ( this.state.loved ) {
+			$NoteLove.Remove(this.props.comment.node, this.props.comment.id)
+			.then(r => {
+				this.setState({ 'loved': false, 'lovecount': this.state.lovecount - 1 });
+			});
+		}
+		else {
+			$NoteLove.Add(this.props.comment.node, this.props.comment.id)
+			.then(r => {
+				this.setState({ 'loved': true, 'lovecount': this.state.lovecount + 1 });
+			});
+		}
 	}
+
 	onReply( e ) {
 		console.log('reply');
 	}
@@ -188,11 +173,14 @@ export default class ContentCommentsComment extends Component {
 							<SVGIcon class="-hover-hide">heart</SVGIcon>
 							<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
 							<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
-							{comment.love}
+							{Number.isInteger(state.lovecount) ? state.lovecount : comment.love}
 						</div>
 					</div>
 				);
 			}
+
+			console.log(state.loved);
+			console.log(comment);
 
 			var ShowTopNav = null;
 			if ( state.editing ) {
