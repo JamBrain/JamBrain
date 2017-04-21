@@ -77,8 +77,8 @@
 
                 // if its scheduled and also selected
                 &.selected{
-                    color: @COL_NLL;
-                    background: @COL_NLLLLL;
+                    color: darken(@CAL_SCHEDULED_COL,20%);
+                    background: lighten(@CAL_SCHEDULED_BG,25%);
                 }
 			}
 
@@ -110,7 +110,7 @@
 			/* Sunday and Monday */
 			&:first-child,
 			&:last-child {
-				border: @CAL_BORDER solid @CAL_CMONTH_BG;/*@MAJOR_MUTE_D;*/
+				border: @CAL_BORDER solid @CAL_CMONTH_BG!important;/*@MAJOR_MUTE_D;*/
 				color: @CAL_CMONTH_BG;/*@MAJOR_MUTE_D;*/
 				background: @CAL_CMONTH_COL; /*@MAJOR_MUTE_D4;/*@MAJOR_COLOR_MUTE2;*/
 				&.month {
