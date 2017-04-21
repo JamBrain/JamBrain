@@ -35,8 +35,16 @@
 	& > .-footer {
 		font-size: 0.8em;
 		overflow: hidden;
+		
+		& a {
+			font-weight: bold;
+		}
 
-		& > .-left {}
+		& > .-left {
+			.-upload {
+				cursor: pointer;	/* hack */
+			}
+		}
 		& > .-right {
 			float: right;
 		}
