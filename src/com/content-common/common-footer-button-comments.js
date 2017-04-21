@@ -10,10 +10,10 @@ export default class ContentCommonFooterButtonComments extends Component {
 	componentDidMount() {
 	}
 
-	render( {node, path}, {} ) {
+	render( {node}, {} ) {
 		if ( node && Number.isInteger(node.notes) ) {
 			return (
-				<NavLink href={path} class="content-common-footer-button -comments" title="Comments">
+				<NavLink href={node.path} class="content-common-footer-button -comments" title="Comments">
 					<SVGIcon>bubbles</SVGIcon>
 					<div class="-count">{node.notes}</div>
 				</NavLink>
