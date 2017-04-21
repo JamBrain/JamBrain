@@ -3,6 +3,7 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 
 import ContentPost						from 'com/content-post/post';
 import ContentUser						from 'com/content-user/user';
+import ContentMore						from 'com/content-more/more';
 
 import $Node							from '../../shrub/js/node/node';
 
@@ -13,7 +14,7 @@ export default class ContentTimeline extends Component {
 		this.state = {
 			feed: [],
 			hash: {},
-			offset: 10
+			offset: 5 //10
 		};
 
 		this.makeFeedItem = this.makeFeedItem.bind(this);
@@ -144,7 +145,7 @@ export default class ContentTimeline extends Component {
 			offset
 		);
 		
-		this.setState({'offset': offset+10});
+		this.setState({'offset': offset+5});
 	}
 
 	makeFeedItem( node ) {
@@ -180,7 +181,7 @@ export default class ContentTimeline extends Component {
 			if ( feed.length ) {
 				ShowFeed = feed.map(this.makeFeedItem);
 			}
-			ShowFeed.push(<div onclick={this.fetchMore}>More</div>);
+			ShowFeed.push(<ContentMore onclick={this.fetchMore} />);
 		}
 		else {
 			ShowFeed = <NavSpinner />;
