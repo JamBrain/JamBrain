@@ -200,7 +200,7 @@ export default class ContentSimple extends Component {
 			let ShowTitle = null;
 			if ( !props.notitle ) {
 				ShowTitle = <ContentCommonBodyTitle 
-					href={path} 
+					href={node.path} 
 					title={state.name} 
 					titleIcon={props.titleIcon} 
 					editing={state.editing} 
