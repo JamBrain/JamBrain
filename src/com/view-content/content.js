@@ -8,7 +8,7 @@ import ContentGames						from 'com/content-games/games';
 import ContentEvent						from 'com/content-event/event';
 //import ContentEvents					from 'com/content-events/events';
 import ContentGroup						from 'com/content-group/group';
-import Content404						from 'com/content-404/404';
+import ContentError						from 'com/content-error/error';
 import ContentItem						from 'com/content-item/item';
 
 import ContentComments					from 'com/content-comments/comments';
@@ -132,11 +132,11 @@ export default class ViewContent extends Component {
                         View.push(<ContentUserFollowers node={node} user={user} path={path} extra={extra} />);
                     }
 					else {
-						View.push(<Content404 />);
+						View.push(<ContentError />);
 					}
 				}
 				if ( !View.length ) {
-					View.push(<Content404 />);
+					View.push(<ContentError />);
 				}
 			}
 
@@ -202,34 +202,31 @@ export default class ViewContent extends Component {
 		else if ( node.type === 'root' ) {
 			var ShowNavRoot = <ContentNavRoot node={node} user={user} path={path} extra={extra} />;
 
-			// If some extra arguments were passed, do virtual children
-			if ( extra.length ) {
-				if ( extra[0] === 'news' ) {
-					return <ContentTimeline types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
-				}
-				else if ( extra[0] === 'hot' ) {
-					return <ContentTimeline node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
-				}
-				else if ( extra[0] === 'games' ) {
-					return <ContentGames types={['game']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentGames>;
-				}
-				else if ( extra[0] === 'feed' ) {
-					return <ContentTimeline types='' node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
-				}
-				else if ( extra[0] === 'palette' ) {
-					return <div id="content"><ContentPalette node={node} user={user} path={path} extra={extra} /></div>;
-				}
-				else {
-					return <div id="content"><Content404 user={user} path={path} extra={extra}>{extra[0]} not found</Content404></div>;
+			let Viewing = '/'+ (extra ? extra.join('/') : '');
+			if ( Viewing == '/' ) {
+				Viewing = '/news';
+				if ( user && user.id ) {
+					Viewing = '/feed';
 				}
 			}
-			// If logged in, default to the user timeline
-			else if ( user && user.id ) {
+			
+			if ( Viewing == '/news' ) {
+				return <ContentTimeline types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
+			}
+			else if ( Viewing == '/hot' ) {
 				return <ContentTimeline node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 			}
-			// If not logged in, default to news
+			else if ( Viewing == '/games' ) {
+				return <ContentGames types={['game']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentGames>;
+			}
+			else if ( Viewing == '/feed' ) {
+				return <ContentTimeline types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
+			}
+			else if ( Viewing == '/palette' ) {
+				return <div id="content"><ContentPalette node={node} user={user} path={path} extra={extra} /></div>;
+			}
 			else {
-				return <ContentTimeline types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
+				return <div id="content"><ContentError user={user} path={path} extra={extra}>{Viewing} not found</ContentError></div>;
 			}
 		}
 		else {

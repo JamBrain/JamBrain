@@ -18,12 +18,14 @@ export default class ContentTimeline extends Component {
 	}
 
 	componentDidMount() {
+		var props = this.props;
+		
 		this.getFeed(
-			this.props.node.id,
-			this.props.methods ? this.props.methods : ['parent', 'superparent'],
-			this.props.types ? this.props.types : ['post'],
-			this.props.subtypes ? this.props.subtypes : null,
-			this.props.subsubtypes ? this.props.subsubtypes : null
+			props.node.id,
+			props.methods ? props.methods : ['parent', 'superparent'],
+			props.types ? props.types : ['post'],
+			props.subtypes ? props.subtypes : null,
+			props.subsubtypes ? props.subsubtypes : null
 		);
 	}
 	
