@@ -358,6 +358,7 @@ switch ( $action ) {
 						json_EmitFatalError_ServerError(null, $RESPONSE);
 					}
 					
+					$RESPONSE['type'] = $type;
 					$RESPONSE['path'] = node_GetPathById($new_node, 1)['path']; // Root node
 					$RESPONSE['count']++;
 					$RESPONSE['id'] = $new_node;
@@ -371,6 +372,7 @@ switch ( $action ) {
 						json_EmitFatalError_ServerError(null, $RESPONSE);
 					}
 
+					$RESPONSE['type'] = $type;
 					$RESPONSE['path'] = node_GetPathById($new_node, 1)['path']; // Root node
 					$RESPONSE['count']++;
 					$RESPONSE['id'] = $new_node;

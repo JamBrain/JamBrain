@@ -24,7 +24,16 @@ export default class DialogCreate extends Component {
 			.then(r => {
 				console.log('hurr',r);
 				
-				//window.location.href = window.location.pathname;
+				if ( r.path ) {
+					if ( r.type == 'post' ) {
+						window.location.href = r.path+'/edit';
+					}
+					else {
+						window.location.href = r.path;
+					}
+				}
+				else
+					window.location.href = window.location.pathname;
 			})
 			.catch(err => {
 				this.setState({ 'error': err });
