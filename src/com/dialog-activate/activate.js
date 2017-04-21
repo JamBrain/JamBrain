@@ -68,7 +68,7 @@ export default class DialogActivate extends Component {
 		$User.Have( name, this.state.mail )
 		.then( r => {
 			if ( r.status === 200 ) {
-				this.setState({ valid_slug: (r.available ? 1 : -1) });
+				this.setState({ valid_slug: (r.available && slug !== "" ? 1 : -1) });
 			}
 			else {
 				//console.log(r);
@@ -140,7 +140,7 @@ export default class DialogActivate extends Component {
 	doActivate() {
 		if ( this.isValidName() > 0 && this.isValidPassword() > 0 && this.isValidPassword2() > 0 ) {
 			this.setState({'loading': true});
-			
+
 			$User.Activate( this.ActID, this.ActHash.trim(), this.state.name.trim(), this.state.password.trim() )
 			.then( r => {
 				if ( r.status === 201 ) {
@@ -203,19 +203,40 @@ export default class DialogActivate extends Component {
 		return (
 			<DialogCommon ok oktext="Create Account" onok={this.doActivate} cancel oncancel={this.doFinishActivation} explicit {...new_props}>
 				<div>
-					<span class="-label">E-mail:</span><span id="dialog-activate-mail">{mail}</span>
+					<span class="-label">E-mail:</span>
+					<div class="-input-container">
+						<span id="dialog-activate-mail">{mail}</span>
+					</div>
 				</div>
 				<div>
-					<span class="-label">Name:</span><input autofocus id="dialog-activate-name" onchange={this.onNameChange} class="-text focusable" type="text" name="username" maxlength="32" placeholder="How your name appears" value={name} /><LabelYesNo value={this.isValidName()} />
+					<span class="-label">Name:</span>
+					<div class="-input-container">
+						<input autofocus id="dialog-activate-name" onchange={this.onNameChange} class="-text focusable" type="text" name="username" maxlength="32" placeholder="How your name appears" value={name} />
+						<LabelYesNo value={this.isValidName()} />
+					</div>
 				</div>
 				<div>
-					<span class="-label">Account Name:</span><span id="dialog-activate-slug"><code>{slug}</code></span><LabelYesNo value={valid_slug} />
+					<span class="-label">Account Name:</span>
+					<div class="-input-container">
+						<span id="dialog-activate-slug">
+							<code>{slug}</code>
+						</span>
+						<LabelYesNo value={valid_slug} />
+					</div>
 				</div>
 				<div>
-					<span class="-label">Password:</span><input id="dialog-activate-password" oninput={this.onPasswordChange} class="-text focusable" type="password" name="password" maxlength="128" value={password} /><LabelYesNo value={this.isValidPassword()} />
+					<span class="-label">Password:</span>
+					<div class="-input-container">
+						<input id="dialog-activate-password" oninput={this.onPasswordChange} class="-text focusable" type="password" name="password" maxlength="128" value={password} />
+						<LabelYesNo value={this.isValidPassword()} />
+					</div>
 				</div>
 				<div>
-					<span class="-label">Password Again:</span><input id="dialog-activate-password2" oninput={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxlength="128" placeholder="Confirmation" value={password2} /><LabelYesNo value={this.isValidPassword2()} />
+					<span class="-label">Password Again:</span>
+					<div class="-input-container">
+						<input id="dialog-activate-password2" oninput={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxlength="128" placeholder="Confirmation" value={password2} />
+						<LabelYesNo value={this.isValidPassword2()} />
+					</div>
 				</div>
 
 				<div class="-info -topline if-dialog-not-small-block">

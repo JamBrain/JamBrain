@@ -13,9 +13,9 @@ import $User							from '../shrub/js/user/user';
 export default class DialogRegister extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		//console.log("DialogRegister",this.state);
-		
+
 		this.state = {
 			'mail': "",
 			'error': null,
@@ -31,13 +31,13 @@ export default class DialogRegister extends Component {
 	onChange( e ) {
 		this.setState({ 'mail': e.target.value.trim() });
 	}
-	
+
 	doRegister() {
 		mail = this.state.mail.trim();
-		
+
 		if ( Sanitize.validateMail(mail) ) {
 			this.setState({ 'loading': true, 'error': null });
-			
+
 			$User.Register( mail )
 			.then( r => {
 				if ( r.status === 201 ) {
@@ -63,7 +63,7 @@ export default class DialogRegister extends Component {
 			this.setState({ 'error': "Incorrectly formatted e-mail address" });
 		}
 	}
-	
+
 	doFinish() {
 		location.href = location.pathname + location.search;
 	}
@@ -75,7 +75,7 @@ export default class DialogRegister extends Component {
 		if ( error ) {
 			new_props.error = error;
 		}
-		
+
 		if ( loading ) {
 			return (
 				<DialogCommon empty explicit {...new_props}>
@@ -93,11 +93,14 @@ export default class DialogRegister extends Component {
 		else {
 			return (
 				<DialogCommon ok oktext="Send Activation E-mail" onok={this.doRegister} cancel explicit {...new_props}>
-					<div class="-info if-dialog-not-small-block">
+					<div class="-info">
 						Enter your e-mail address to begin activating your account
 					</div>
 					<div>
-						<input autofocus id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" maxlength="254" value={mail} /><LabelYesNo value={mail.trim().length ? (Sanitize.validateMail(mail) ? 1 : -1) : 0} />
+						<div class="-input-container">
+							<input autofocus id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" maxlength="254" value={mail} />
+							<LabelYesNo value={mail.trim().length ? (Sanitize.validateMail(mail) ? 1 : -1) : 0} />
+						</div>
 					</div>
 				</DialogCommon>
 			);
