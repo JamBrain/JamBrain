@@ -24,11 +24,5 @@ export default class LabelYesNo extends Component {
 				</div>
 			);
 		}
-
-		// This is actually a "yes, no, maybe"
-		return (
-			<div class="label-yesno">
-			</div>
-		);
 	}
 }
