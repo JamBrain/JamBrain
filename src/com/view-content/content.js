@@ -4,8 +4,9 @@ import ContentPost						from 'com/content-post/post';
 
 import ContentUsers						from 'com/content-users/users';
 import ContentUser						from 'com/content-user/user';
+//import ContentUserGames                 from 'com/content-user/user-games';
 import ContentUserFollowing             from 'com/content-user/user-following';
-import ContentUserGames                 from 'com/content-user/user-games';
+import ContentUserFollowers             from 'com/content-user/user-followers';
 
 import ContentTimeline					from 'com/content-timeline/timeline';
 import ContentGames						from 'com/content-games/games';
@@ -26,8 +27,7 @@ import ContentEventTheme				from 'com/content-event/event-theme';
 
 import ContentPalette					from 'com/content-palette/palette';
 
-import ContentUserFollowing             from 'com/content-user/user-following';
-import ContentUserFollowers             from 'com/content-user/user-followers';
+
 
 export default class ViewContent extends Component {
 	constructor( props ) {
@@ -211,7 +211,7 @@ export default class ViewContent extends Component {
 					return <ContentTimeline node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 				}
 				else if ( extra[0] === 'games' ) {
-					return <div id="content"><ContentGames node={node} user={user} path={path} extra={extra} >{ShowNavRoot}</ContentGames></div>;
+					return <div id="content"><ContentGames node={node} user={user} path={path} extra={extra} methods={['all']}>{ShowNavRoot}</ContentGames></div>;
 				}
 				else if ( extra[0] === 'feed' ) {
 					return <ContentTimeline types='' node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
