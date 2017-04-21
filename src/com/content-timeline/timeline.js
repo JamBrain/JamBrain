@@ -14,7 +14,8 @@ export default class ContentTimeline extends Component {
 		this.state = {
 			feed: [],
 			hash: {},
-			offset: 5 //10
+			offset: 5, //10
+			added: null
 		};
 
 		this.makeFeedItem = this.makeFeedItem.bind(this);
@@ -29,7 +30,9 @@ export default class ContentTimeline extends Component {
 			props.methods ? props.methods : ['parent', 'superparent'],
 			props.types ? props.types : ['post'],
 			props.subtypes ? props.subtypes : null,
-			props.subsubtypes ? props.subsubtypes : null
+			props.subsubtypes ? props.subsubtypes : null,
+			null,
+			this.props.limit
 		);
 	}
 
@@ -44,7 +47,7 @@ export default class ContentTimeline extends Component {
 				feed.push(info);
 			}
 		}
-		this.setState({'feed': feed, 'hash': hash});
+		this.setState({'feed': feed, 'hash': hash, 'added': newfeed.length});
 	}
 	
 	getFeedIdsWithoutNodes() {
@@ -83,8 +86,8 @@ export default class ContentTimeline extends Component {
 		
 	}
 	
-	getFeed( id, methods, types, subtypes, subsubtypes, more ) {
-		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, more )
+	getFeed( id, methods, types, subtypes, subsubtypes, more, limit ) {
+		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, more, limit )
 		.then(r => {
 			if ( r.feed && r.feed.length ) {
 				this.appendFeed(r.feed);
@@ -142,7 +145,8 @@ export default class ContentTimeline extends Component {
 			props.types ? props.types : ['post'],
 			props.subtypes ? props.subtypes : null,
 			props.subsubtypes ? props.subsubtypes : null,
-			offset
+			offset,
+			this.props.limit
 		);
 		
 		this.setState({'offset': offset+5});
@@ -157,7 +161,7 @@ export default class ContentTimeline extends Component {
 			var extra = this.props.extra;
 			
 			if ( node.type === 'post' || node.type === 'game' ) {
-				return <ContentPost node={node} user={user} path={path} extra={extra} authored by minmax love comments />;
+				return <ContentPost node={node} user={user} path={path} extra={extra} authored by minmax love comments minimized={this.props.minimized} />;
 			}
 			else if ( node.type === 'user' ) {
 				return <ContentUser node={node} user={user} path={path} extra={extra} minmax />;
@@ -169,7 +173,7 @@ export default class ContentTimeline extends Component {
 		return null;
 	}
 
-	render( props, {feed, error} ) {
+	render( props, {feed, added, error} ) {
 		var ShowFeed = null;
 		
 		if ( error ) {
@@ -181,7 +185,8 @@ export default class ContentTimeline extends Component {
 			if ( feed.length ) {
 				ShowFeed = feed.map(this.makeFeedItem);
 			}
-			ShowFeed.push(<ContentMore onclick={this.fetchMore} />);
+			if ( !props.nomore /*|| added >= 10*/ )
+				ShowFeed.push(<ContentMore onclick={this.fetchMore} />);
 		}
 		else {
 			ShowFeed = <NavSpinner />;
