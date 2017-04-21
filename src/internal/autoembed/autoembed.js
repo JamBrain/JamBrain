@@ -65,7 +65,7 @@
                     '</div>';
 
         var external = '<div class="-external"><a href="https://www.youtube.com/watch?v=' + video_id + '" target="_blank" >' +
-                            this.makeSVGIcon('enlarge', {"class":"-middle"}) +
+                            this.makeSVGIcon('enlarge', {"class":"-middle -block"}) +
                         '</a></div>';
 
         var overlay = '<div class="overlay">' +
