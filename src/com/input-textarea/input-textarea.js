@@ -73,9 +73,11 @@ export default class InputTextarea extends Component {
 				.then( r => {
 					if ( r.path ) {
 						this.insertAtCursor('![](///raw/'+r.path+')');
+						this.textarea.dispatchEvent( new Event('input') );
 					}
-					
-					this.textarea.dispatchEvent( new Event('input') );
+					else {
+						alert(r.message);
+					}
 				})
 				.catch(err => {
 					this.setState({ 'error': err });
