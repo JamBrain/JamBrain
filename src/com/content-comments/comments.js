@@ -14,22 +14,23 @@ import ContentCommentsComment			from 'comments-comment';
 
 import $Note							from '../../shrub/js/note/note';
 import $Node							from '../../shrub/js/node/node';
+import $NoteLove						from '../../shrub/js/note/note_love';
 
 export default class ContentComments extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {
 			'comments': null,
 			'tree': null,
 			'authors': null,
-			
+
 			'newcomment': null,
 		};
-		
+
 		this.onPublish = this.onPublish.bind(this);
 	}
-	
+
 	componentWillMount() {
 		this.getComments(this.props.node);
 	}
@@ -41,9 +42,10 @@ export default class ContentComments extends Component {
 			'author': this.props.user.id,
 			'body': '',
 			'love': 0,
+			'loved': false
 		};
 	}
-	
+
 	getComments( node ) {
 		$Note.Get( node.id )
 		.then(r => {
@@ -55,36 +57,42 @@ export default class ContentComments extends Component {
 			else if ( r.note ) {
 				this.setState({ 'comments': [], 'tree': null, 'authors': null });
 			}
-				
+
 			// Async first
 			this.getAuthors().then( rr => {
 				this.setState({'newcomment': this.genComment()});
 			});
-			
-			// Sync last
-			this.setState({'tree': this.buildTree()});
+
+			$NoteLove.GetMy(node.id)
+			.then(r => {
+					this.setState({ "lovedComments": r["my-love"]});
+
+					// Sync last
+					this.setState({'tree': this.buildTree()});
+			});
 		})
 		.catch(err => {
 			this.setState({ 'error': err });
 		});
 	}
-	
+
 	buildTree() {
 		var comments = this.state.comments;
-		
+
 		// Only supports single level deep trees
 		var tree = {};
 		for ( var idx = 0; idx < comments.length; idx++ ) {
 			if ( comments[idx].parent === 0 ) {
 				tree[comments[idx].id] = {
 					'node': comments[idx],
+					//'loved': lovedComments.indexOf(comments[idx].id) !== -1 ? true : false
 				};
 			}
 			else if ( comments[idx].parent && tree[comments[idx].parent] ) {
 				if (!tree[comments[idx].parent].child) {
 					tree[comments[idx].parent].child = {};
 				}
-				
+
 				tree[comments[idx].parent].child[comments[idx].id] = {
 					'node': comments[idx],
 				};
@@ -93,14 +101,14 @@ export default class ContentComments extends Component {
 				console.log('[Comments] Unable to find parent for '+comments[idx].id);
 			}
 		}
-		
+
 		return tree;
 	}
-	
+
 	getAuthors() {
 		var user = this.props.user;
 		var comments = this.state.comments;
-		
+
 		if ( comments ) {
 			var Authors = [];
 			// Extract a list of all authors from comments
@@ -114,9 +122,9 @@ export default class ContentComments extends Component {
 			// http://stackoverflow.com/a/23282067/5678759
 			// Remove Duplicates
 			Authors = Authors.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-			
+
 			// Fetch authors
-	
+
 			return $Node.GetKeyed( Authors )
 			.then(r => {
 				this.setState({ 'authors': r.node });
@@ -131,11 +139,19 @@ export default class ContentComments extends Component {
 		var user = this.props.user;
 		var authors = this.state.authors;
 
+		var lovedComments = this.state.lovedComments;
+		var actualLove = [];
+		for (var item in lovedComments) {
+			actualLove.push(lovedComments[item]['note']);
+		}
+
 		var ret = [];
 
 		for ( var item in tree ) {
 			var comment = tree[item].node;
+			comment.loved = actualLove.indexOf(comment.id) !== -1 ? true : false;
 			var author = authors[comment.author];
+
 			if ( tree[item].child ) {
 				ret.push(<ContentCommentsComment user={user} comment={comment} author={author} indent={indent}><div class="-indent">{this.renderComments(tree[item].child, indent+1)}</div></ContentCommentsComment>);
 			} else {
@@ -145,7 +161,7 @@ export default class ContentComments extends Component {
 
 		return ret;
 	}
-	
+
 	renderPostNew() {
 		var user = this.props.user;
 		var authors = this.state.authors;
@@ -154,11 +170,11 @@ export default class ContentComments extends Component {
 
 		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish}/></div>;
 	}
-	
+
 	onPublish( e ) {
 		var node = this.props.node;
 		var newcomment = this.state.newcomment;
-		
+
 		$Note.Add( newcomment.parent, newcomment.node, newcomment.body )
 		.then(r => {
 			if ( r.note ) {
@@ -168,14 +184,14 @@ export default class ContentComments extends Component {
 					'created': Now.toISOString(),
 					'modified': Now.toISOString()
 				}, newcomment);
-					
+
 				// TODO: insert properly
 				this.state.comments.push(comment);
-				
+
 				// Reset newcomment
 				newcomment.parent = 0;
 				newcomment.body = '';
-				
+
 				this.setState({'tree': this.buildTree()});
 			}
 			else {
@@ -186,7 +202,7 @@ export default class ContentComments extends Component {
 			this.setState({ 'error': err });
 		});
 	}
-	
+
 	render( props, {comments, tree, authors, newcomment} ) {
 		var node = props.node;
 		var user = props.user;
@@ -196,7 +212,7 @@ export default class ContentComments extends Component {
 //		var FooterItems = [];
 //		if ( !props['no_comments'] )
 //			FooterItems.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
-			
+
 		var ShowComments = <NavSpinner />;
 		if ( comments && tree && authors ) {
 			if ( comments.length )
@@ -204,7 +220,7 @@ export default class ContentComments extends Component {
 			else
 				ShowComments = <div class={"-item -comment -indent-0"}><div class="-nothing">No Comments.</div></div>;
 		}
-		
+
 		var ShowPostNew = null;
 		if ( user && user['id'] && newcomment ) {
 			ShowPostNew = this.renderPostNew();
@@ -212,7 +228,7 @@ export default class ContentComments extends Component {
 		else {
 			ShowPostNew = <div class="-new-comment" style="padding:0"><div class={"-item -comment -indent-0"}><div class="-nothing">Sign in to post a comment</div></div></div>;
 		}
-		
+
 		return (
 			<div class={['content-base','content-common','content-comments',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
 				<div class="-headline">COMMENTS</div>
