@@ -72,7 +72,7 @@ export default class InputTextarea extends Component {
 			return $Asset.Upload(this.props.user.id, file)
 				.then( r => {
 					if ( r.path ) {
-						this.insertAtCursor('![](///raw/'+r.path+')');
+						this.insertAtCursor('!['+r.name+'](///raw/'+r.path+')');
 						this.textarea.dispatchEvent( new Event('input') );
 					}
 					else {
