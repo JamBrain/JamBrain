@@ -128,12 +128,12 @@ export default class ViewContent extends Component {
 					else if ( ViewType == 'article' ) {
 					}
                     else if ( ViewType == 'following'){
-                        View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
-                        View.push(<ContentUserFollowing node={node} user={user} path={path} extra={extra} />);
+                        View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} featured={featured} />);
+                        View.push(<ContentUserFollowing node={node} user={user} path={path} extra={extra} featured={featured} />);
                     }
                     else if ( ViewType == 'followers'){
-                        View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
-                        View.push(<ContentUserFollowers node={node} user={user} path={path} extra={extra} />);
+                        View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} featured={featured} />);
+                        View.push(<ContentUserFollowers node={node} user={user} path={path} extra={extra} featured={featured} />);
                     }
 					else {
 						View.push(<ContentError />);
