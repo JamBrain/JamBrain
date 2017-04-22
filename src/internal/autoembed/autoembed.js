@@ -68,8 +68,11 @@
                         this.makeSVGIcon('play', {"class":"-middle"}) +
                     '</div>';
 
+//        var external = '<div class="-external"><a href="https://www.youtube.com/watch?v=' + video_id + '" target="_blank" onclick="arguments[0].stopPropagation()">' +
+//                            this.makeSVGIcon('enlarge', {"class":"-middle -block"}) +
+//                        '</a></div>';
         var external = '<div class="-external"><a href="https://www.youtube.com/watch?v=' + video_id + '" target="_blank" onclick="arguments[0].stopPropagation()">' +
-                            this.makeSVGIcon('enlarge', {"class":"-middle -block"}) +
+                            this.makeSVGIcon('youtube', {"class":"-middle -block"}) +
                         '</a></div>';
 
         var overlay = '<div class="-overlay" onclick="thumbToVidYT(this)">' +
