@@ -71,18 +71,14 @@ export default class InputTextarea extends Component {
 
 			return $Asset.Upload(this.props.user.id, file)
 				.then( r => {
-					//console.log('vv',r);
 					if ( r.path ) {
 						this.insertAtCursor('![](///raw/'+r.path+')');
 					}
 					
-					// Do everything in onInput? //
-//					if ( this.props.onmodify ) {
-//						this.props.onmodify(e);
-//					}
+					this.textarea.dispatchEvent( new Event('input') );
 				})
-				.catch( err => {
-					console.log('err',err);
+				.catch(err => {
+					this.setState({ 'error': err });
 				});
 		}
 	}
