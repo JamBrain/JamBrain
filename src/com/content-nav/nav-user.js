@@ -49,9 +49,9 @@ export default class ContentNavUser extends Component {
 		}
 
 		var HasFollowers = null;
-		if ( user.id == node.id && user["private"] && user.private["refs"] && user.private.refs["star"]  ) {
-			HasFollowers = <ContentNavButton path={NewPath} icon='users' href={path+'/followers'}>Followers</ContentNavButton>;
-		}
+//		if ( user.id == node.id && user["private"] && user.private["refs"] && user.private.refs["star"]  ) {
+//			HasFollowers = <ContentNavButton path={NewPath} icon='users' href={path+'/followers'}>Followers</ContentNavButton>;
+//		}
 
 		return (
 			<div class="-body">
