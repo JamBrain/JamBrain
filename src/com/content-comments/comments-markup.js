@@ -35,6 +35,7 @@ export default class ContentCommentsMarkup extends Component {
 				<div class={Class}>
 					<div class="-label">{props.label}</div>
 					<InputTextArea 
+						user={props.user}
 						value={Text} 
 						onmodify={props.onmodify} 
 						placeholder={props.placeholder} 
