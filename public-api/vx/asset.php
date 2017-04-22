@@ -151,6 +151,7 @@ switch ( $action ) {
 				$RESPONSE['width'] = $asset['width'];
 				$RESPONSE['height'] = $asset['height'];
 				$RESPONSE['size'] = $asset['size'];
+				$RESPONSE['name'] = $asset['name'];
 
 				$asset_hash = dechex($asset_id);
 				$RESPONSE['stem'] = $user_path;
