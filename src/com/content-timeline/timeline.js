@@ -146,10 +146,10 @@ export default class ContentTimeline extends Component {
 			props.subtypes ? props.subtypes : null,
 			props.subsubtypes ? props.subsubtypes : null,
 			offset,
-			this.props.limit
+			this.props.limit ? this.props.limit : 15
 		);
 		
-		this.setState({'offset': offset+5});
+		this.setState({'offset': offset+10});
 	}
 
 	makeFeedItem( node ) {
