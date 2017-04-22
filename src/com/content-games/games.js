@@ -33,6 +33,14 @@ export default class ContentGames extends Component {
     }
 
     getFeed( id, methods, types, subtypes, subsubtypes ) {
+
+        console.log("\ngetFeed()");
+        console.log(id);
+        console.log(methods);
+        console.log(types);
+        console.log(subtypes);
+        console.log(subsubtypes);
+
         $Node.GetFeed( id, methods, types, subtypes, subsubtypes )
         .then(r => {
             // If the feed is not empty
@@ -82,8 +90,11 @@ export default class ContentGames extends Component {
             });
 
             return(
-                <div class={props.class}>
-                    {games}
+                <div class="-bodies">
+                    {props.children}
+                    <div class={props.class}>
+                        {games}
+                    </div>
                 </div>
             );
         }

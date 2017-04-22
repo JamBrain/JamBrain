@@ -77,7 +77,7 @@ export default class ViewContent extends Component {
 				ShowNav = <ContentNavItem node={node} user={user} path={path} extra={extra} />;
 				ShowFeed = <ContentComments node={node} user={user} path={path} extra={extra} />;
 			}
-			
+
 			return (
 				<div id="content">
 					<ContentItem node={node} user={user} path={path} extra={extra} featured={featured} />
@@ -117,7 +117,7 @@ export default class ViewContent extends Component {
 						let Methods = ['author'];
 						if ( node.id == user.id )
 							Methods.push('unpublished');
-						
+
                         View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
 						View.push(<ContentTimeline types={['post']} methods={Methods} node={node} user={user} path={path} extra={extra} />);
 					}
@@ -175,7 +175,7 @@ export default class ViewContent extends Component {
             else if(extra && extra.length && extra[0] == 'games'){
                 //let NewPath = path+'/'+extra[0];
                 //let NewExtra = extra.slice(1);
-                ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} />;
+                ShowPage = <ContentGames node={node} user={user} path={path} extra={extra}/>;
             }
 			else {
 				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
@@ -222,7 +222,7 @@ export default class ViewContent extends Component {
 					Viewing = '/feed';
 				}
 			}
-			
+
 			if ( Viewing == '/news' ) {
 				return <ContentTimeline types={['post']} subtypes={['news']} methods={['all']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 			}
@@ -230,7 +230,7 @@ export default class ViewContent extends Component {
 				return <ContentTimeline node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 			}
 			else if ( Viewing == '/games' ) {
-				return <ContentGames types={['game']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentGames>;
+				return <div id="content"><ContentGames node={node} user={user} path={path} extra={extra} methods={['all']}>{ShowNavRoot}</ContentGames></div>;;
 			}
 			else if ( Viewing == '/feed' ) {
 				return (
