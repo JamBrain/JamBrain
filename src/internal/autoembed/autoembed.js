@@ -64,20 +64,20 @@
 
 	AutoEmbed.prototype.makeYouTube = function( video_id ) {
 
-        var play = '<div class="-play" onclick="thumbToVidYT(this)">' +
+        var play = '<div class="-play">' +
                         this.makeSVGIcon('play', {"class":"-middle"}) +
                     '</div>';
 
-        var external = '<div class="-external"><a href="https://www.youtube.com/watch?v=' + video_id + '" target="_blank" >' +
+        var external = '<div class="-external"><a href="https://www.youtube.com/watch?v=' + video_id + '" target="_blank" onclick="arguments[0].stopPropagation()">' +
                             this.makeSVGIcon('enlarge', {"class":"-middle -block"}) +
                         '</a></div>';
 
-        var overlay = '<div class="overlay">' +
+        var overlay = '<div class="-overlay" onclick="thumbToVidYT(this)">' +
                             play +
                             external +
                         '</div>' ;
 
-        var thumbnail = '<div class="thumbnail">' +
+        var thumbnail = '<div class="-thumbnail">' +
                             overlay +
                             '<img src="' + yt_thumbnail_prefix + video_id + yt_thumbnail_suffix +'" />' +
                         '</div>';
@@ -92,7 +92,7 @@
 
         console.log(element);
         var video_id = "ly8K257P2BI";
-        var video = '<div class="video" style="display:none"><iframe src="https://www.youtube.com/embed/'+ video_id + '?rel=0" frameborder="0" allowfullscreen></iframe></div>';
+        var video = '<div class="-video" style="display:none"><iframe src="https://www.youtube.com/embed/'+ video_id + '?rel=0" frameborder="0" allowfullscreen></iframe></div>';
 
         //element.parentElement.parentElement.parentElement.innerHTML = video;
 
@@ -188,7 +188,7 @@
     window.thumbToVidYT = function( element ) {
         console.log(element);
 
-        var thumbnail = element.parentElement.parentElement;
+        var thumbnail = element.parentElement;//.parentElement;
         console.log(thumbnail);
         console.log(thumbnail.children);
 
@@ -198,7 +198,7 @@
         var video_id = src.substring(yt_thumbnail_prefix.length,src.length - yt_thumbnail_suffix.length );
         console.log(video_id);
 
-        var video = '<div class="video"><iframe src="https://www.youtube.com/embed/'+ video_id + '?&autoplay=1"'+ ' frameborder="0" allowfullscreen></iframe></div>';
+        var video = '<div class="-video"><iframe src="https://www.youtube.com/embed/'+ video_id + '?&autoplay=1"'+ ' frameborder="0" allowfullscreen></iframe></div>';
 
         console.log(video);
         thumbnail.parentElement.innerHTML = video;
@@ -212,7 +212,7 @@
 
     console.log(element);
     //var video_id = "ly8K257P2BI";
-    //var video = '<div class="video" style="display:none"><iframe src="https://www.youtube.com/embed/'+ video_id + '?rel=0" frameborder="0" allowfullscreen></iframe></div>';
+    //var video = '<div class="-video" style="display:none"><iframe src="https://www.youtube.com/embed/'+ video_id + '?rel=0" frameborder="0" allowfullscreen></iframe></div>';
 
     //element.parentElement.parentElement.parentElement.innerHTML = video;
 
