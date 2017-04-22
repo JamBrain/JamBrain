@@ -119,7 +119,7 @@ export default class ContentUser extends Component {
 				// In this case, you shouldn't be able to publish (as all users are published upon registration)
 				// published={IsPublished}
 				// onpublish={this.onPublish}
-				EditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} />;
+				EditBar = <ContentCommonEdit nopublish editing={state.editing} modified={state.modified} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} />;
 			}
 			else {
 //				if ( user.id && (node.id !== user.id) )
@@ -138,7 +138,7 @@ export default class ContentUser extends Component {
 					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
 					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.slug} />
 					<ContentCommonBodyBy node={node} label="Joined" when />
-					<ContentCommonBodyMarkup editing={state.editing} label="Biography" placeholder="Share details about yourself {optional}" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
+					<ContentCommonBodyMarkup user={user} editing={state.editing} label="Biography" placeholder="Share details about yourself {optional}" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
 					<ContentCommonNav>{NavBar}</ContentCommonNav>
 					{props.children}
 				</ContentCommon>
