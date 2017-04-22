@@ -36,6 +36,16 @@ export default class HeaderWhatsup extends Component {
 //			</div>
 //		);
 		if ( featured ) {
+			if ( featured.meta ) {
+				if ( featured.meta['event-theme'] ) {
+					return (
+						<div class="header-base header-whatsup outside">
+							<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
+						</div>
+					);
+				}
+			}
+			
 			return (
 				<div class="header-base header-whatsup outside">
 					<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> Theme Announcement Soon! <NavLink href="https://twitter.com/ludumdare"><SVGIcon baseline small gap>twitter</SVGIcon>Check Twitter</NavLink>
