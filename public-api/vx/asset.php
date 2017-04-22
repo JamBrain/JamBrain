@@ -93,7 +93,7 @@ switch ( $action ) {
 		$user_path .= "/z";						// Append '/z' meaning this is my home
 
 		// Confirm an asset was included
-		if ( !$_FILES["asset"] )
+		if ( !isset($_FILES["asset"]) )
 			json_EmitFatalError_BadRequest("No 'asset' found", $RESPONSE);
 			
 		$asset = $_FILES["asset"];	// copy, so we can change it
