@@ -5,8 +5,7 @@
 
     // Constants
     var yt_thumbnail_prefix = "https://i.ytimg.com/vi/";
-    var yt_thumbnail_suffix = "/maxresdefault.jpg";
-
+    var yt_thumbnail_suffix = "/mqdefault.jpg";
 
 	AutoEmbed.prototype.extractFromURL = function( str ) {
 		var ret = {};
