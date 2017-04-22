@@ -4,8 +4,11 @@ require_once __DIR__."/../config.php";
 include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."api.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
+require_once __DIR__."/".SHRUB_PATH."asset/asset.php";
 
 json_Begin();
+
+const TARGET_FOLDER = '/../../public-static/raw';
 
 const CACHE_KEY_PREFIX = "SH!ASSET!";
 const CACHE_TTL = 60;
@@ -13,7 +16,7 @@ const CACHE_TTL = 60;
 const IMAGE_CONSTANTS = [
 	IMAGETYPE_PNG => 'png',
 	IMAGETYPE_GIF => 'gif',
-	IMAGETYPE_JPEG => 'jpeg',
+	IMAGETYPE_JPEG => 'jpg',
 
 //	IMAGETYPE_WEBP => 'webp',		// Requires 7.1
 ];
@@ -80,9 +83,14 @@ switch ( $action ) {
 		//	}
 
 		// Authenticate User		
-//		$user_id = userAuth_GetId();
-//		if ( !$user_id )
-//			json_EmitFatalError_Permission(null, $RESPONSE);
+		$user_id = userAuth_GetId();
+		if ( !$user_id )
+			json_EmitFatalError_Permission(null, $RESPONSE);
+
+		$user_hash = strrev(dechex($user_id));	// hex it, then reverse the order of the characters
+		$user_path = str_split($user_hash, 3);	// Break every 3 characters
+		$user_path = implode($user_path,'/');	// Recombine with '/' slashes
+		$user_path .= "/z";						// Append '/z' meaning this is my home
 
 		// Confirm an asset was included
 		if ( !$_FILES["asset"] )
@@ -129,17 +137,43 @@ switch ( $action ) {
 			if ( $asset['height'] > MAX_IMAGE_HEIGHT )
 				json_EmitFatalError_BadRequest("Image asset 'height' is too large (Max: ".MAX_IMAGE_HEIGHT.")", $RESPONSE);
 
+			// Insert Asset
+			$asset_id = asset_AddByNode($user_id, 'image', $asset['mime'], $asset['size'], [
+				'width' => $asset['width'],
+				'height' => $asset['height'],
+				'name' => substr($asset['name'], 0, 96),	// max length
+				'ext' => $asset['type']
+			]);
 			
+			// Success
+			if ( $asset_id ) {
+				$RESPONSE['mime'] = $asset['mime'];
+				$RESPONSE['width'] = $asset['width'];
+				$RESPONSE['height'] = $asset['height'];
+				$RESPONSE['size'] = $asset['size'];
 
+				$asset_hash = dechex($asset_id);
+				$RESPONSE['stem'] = $user_path;
+				$RESPONSE['file'] = $asset_hash.'.'.$asset['type'];
+				$RESPONSE['path'] = $RESPONSE['stem'].'/'.$RESPONSE['file']; //'///raw/'
+
+				$actual_path = __DIR__.TARGET_FOLDER.'/'.$RESPONSE['stem'];
+				$actual_file = $actual_path.'/'.$RESPONSE['file'];
+
+				if ( !file_exists($actual_path) )
+					mkdir($actual_path, 0777, true);
+				move_uploaded_file($asset["tmp_name"], $actual_file);
+			}
+			else {
+				json_EmitFatalError_BadRequest("Unable to add 'asset'", $RESPONSE);
+			}
 		}
 		else {
 			json_EmitFatalError_BadRequest("Unsupported 'asset' type", $RESPONSE);
-		}	
-		
-		//move_uploaded_file($asset["tmp_name"], $where_it_goes);
-		
+		}
+
 		// NOTE: temp file will be deleted after this script finishes (unless moved)
-		
+
 		break; // case 'upload': //asset/upload
 
 	default:
