@@ -23,7 +23,7 @@ export default class ContentUserBar extends Component {
 		var node = this.props.node;
 		var featured = this.props.featured;
 		
-		if ( featured ) {
+		if ( featured && confirm("Add to Team?") ) {
 			// hack
 			var ItemId = featured.what[featured.what.length-1];
 			
@@ -41,7 +41,7 @@ export default class ContentUserBar extends Component {
 		var node = this.props.node;
 		var featured = this.props.featured;
 		
-		if ( featured ) {
+		if ( featured && confirm("Remove from Team?") ) {
 			// hack
 			var ItemId = featured.what[featured.what.length-1];
 			
