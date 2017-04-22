@@ -213,7 +213,7 @@ export default class ContentItem extends Component {
 		}
 
 		return (
-			<ContentSimple {...props} nopublish>
+			<ContentSimple {...props} nopublish by authors>
 			</ContentSimple>
 		);
 		

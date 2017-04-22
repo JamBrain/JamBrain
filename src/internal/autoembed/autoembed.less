@@ -1,3 +1,5 @@
+@import 'defs.less';
+
 /*
 iframe {
 	margin: auto;
@@ -13,20 +15,112 @@ iframe {
 }*/
 
 
-.embed-video {
+#content .embed-video {
 	max-width: 640px;
 	margin: auto;
-	
-	& > div {
+
+    position: relative;
+    
+    cursor: pointer;
+
+    & > .-thumbnail {
+    	position: relative;
+    	
+        & > .-overlay {
+            position: absolute;
+
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 10;
+
+            & > .-play {
+    			position: absolute;
+    			
+    			top: 50%;
+    			left: 50%;
+    			transform: translate(-50%,-50%);
+    			
+    			font-size: 3em;
+    			color: @COL_L;
+    			background: fade(@COL_D, 50%);
+    			transition: all 0.2s;
+
+    			& > svg {
+    				display: block;
+    			}
+    		}
+
+    		/* while hovering */
+    		&:hover > .-play {
+    			font-size: 4em;
+    			background: @COL_A;
+    		}
+    		/* squish effect on click */
+    		&:active > .-play {
+    			font-size: 2.5em;
+    		}
+
+            & > .-external {
+    			position: absolute;
+    			bottom: 1rem;
+    			right: 1rem;
+
+    			font-size: 1.5em;
+    			color: @COL_L;
+
+    			opacity: 0;
+    			transform: scale(1, 1);
+    			transition: all 0.2s;
+    			
+    			padding: 0.5rem;
+    			background: fade(@COL_D, 50%);
+
+    			&:hover {
+    				transform: scale(1.5, 1.5);
+	    			background: @COL_A;
+    			}
+
+                & > a {
+                    padding: 0px;
+                    line-height: 1;
+                }
+                    
+                & > a,
+                & > a:visited {
+                    color: @COL_L;
+                }
+    		}
+    		&:hover > .-external {
+                opacity: 1;
+                /*color: @COL_D;*/
+    		}
+        }
+
+        & > img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        &:hover {
+        	
+        }
+    }
+
+
+
+	& > .-video {
 		position: relative;
-		
+
 		width: 100%;
 		height: 0;
 		padding-bottom: 100% * (9/16);
-	
+
 		& > iframe {
 			position: absolute;
-	
+
 			width: 100%;
 			height: 100%;
 			left: 0;
@@ -41,7 +135,7 @@ iframe {
 	-ms-word-break: break-all;
 	word-break: break-word;
 	hyphens: auto;
-	
+
 	& .-icon-domain {
 		white-space: nowrap;
 	}

@@ -22,8 +22,18 @@ export default class DialogCreate extends Component {
 		if ( event_id ) {
 			$Node.Add(event_id, node_type, node_subtype)
 			.then(r => {
-				//console.log('hurr',r);
-				window.location.href = window.location.pathname;
+				console.log('hurr',r);
+				
+				if ( r.path ) {
+					if ( r.type == 'post' ) {
+						window.location.href = r.path+'/edit';
+					}
+					else {
+						window.location.href = r.path;
+					}
+				}
+				else
+					window.location.href = window.location.pathname;
 			})
 			.catch(err => {
 				this.setState({ 'error': err });
@@ -49,20 +59,49 @@ export default class DialogCreate extends Component {
 				What = props.extra.slice(1).join('/');
 			}
 		}
-		
+
+		// Ludum Dare Hack
 		if ( TargetNode > 0 && What.length ) {
 			if ( What == "item/game" ) {
 				var ShowType = "Game";
+				new_props.title += ' '+ShowType+" for Ludum Dare 38";
+				new_props.oktext = "Create "+ShowType;
+				
+				return (
+					<DialogCommon ok onok={this.doCreate} cancel explicit {...new_props}>
+						<div><strong>Solo</strong> participants and <strong>Team Leaders</strong>, would you like to create a game?</div>
+						<div>If you are a <strong>Team Member</strong>, ask your <strong>Team Leader</strong> add you to the game</div>
+						<div>To join an event, you make a game. You need a game to make <strong>blog</strong> posts. When you are done, you <strong>Publish</strong> your game.</div>
+					</DialogCommon>
+				);
+			}
+			if ( What == "post" ) {
+				var ShowType = "Blog Post";
 				new_props.title += ' '+ShowType;
 				new_props.oktext = "Create "+ShowType;
 				
 				return (
 					<DialogCommon ok onok={this.doCreate} cancel explicit {...new_props}>
-						<div>Create a game for the active event?</div>
+						<div>Create a new Blog Post?</div>
+						<div>You can find your unpublished draft posts on your user page.</div>
 					</DialogCommon>
 				);
 			}
 		}
+				
+//		if ( TargetNode > 0 && What.length ) {
+//			if ( What == "item/game" ) {
+//				var ShowType = "Game";
+//				new_props.title += ' '+ShowType;
+//				new_props.oktext = "Create "+ShowType;
+//				
+//				return (
+//					<DialogCommon ok onok={this.doCreate} cancel explicit {...new_props}>
+//						<div>Create a game for the active event?</div>
+//					</DialogCommon>
+//				);
+//			}
+//		}
 
 		new_props.oktext = "Yes";
 		new_props.canceltext = "No";

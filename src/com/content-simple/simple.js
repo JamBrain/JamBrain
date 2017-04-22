@@ -1,5 +1,7 @@
 import { h, Component } 				from 'preact/preact';
 
+import NavLink							from 'com/nav-link/link';
+
 import ContentLoading					from 'com/content-loading/loading';
 import ContentError						from 'com/content-error/error';
 
@@ -24,6 +26,7 @@ export default class ContentSimple extends Component {
 		
 		this.state = {
 			'author': {},
+			'authors': [],
 
 			'editing': this.isEditMode(),
 			'modified': false,
@@ -31,9 +34,6 @@ export default class ContentSimple extends Component {
 			'name': props.node.name,
 			'body': props.node.body,
 		};
-
-		if ( props.authored )
-			this.getAuthor(props.node);
 
 		this.onEdit = this.onEdit.bind(this);
 		this.onPreview = this.onPreview.bind(this);
@@ -43,18 +43,51 @@ export default class ContentSimple extends Component {
 		this.onModifyTitle = this.onModifyTitle.bind(this);
 		this.onModifyText = this.onModifyText.bind(this);
 	}
+	
+	componentDidMount() {
+		var props = this.props;
+		
+		if ( props.authored )
+			this.getAuthor(props.node);
+		if ( props.authors )
+			this.getAuthors(props.node);
+	}
 
 	componentWillUpdate( newProps, newState ) {
 		if ( this.props.node !== newProps.node ) {
 			if ( this.props.authored ) {
 				this.getAuthor(newProps.node);
 			}
+			if ( this.props.authors ) {
+				this.getAuthors(newProps.node);
+			}
+		}
+	}
+	
+	getAuthors( node ) {
+		// Clear the Authors
+//		this.setState({ authors: [] });
+
+		if ( node.link && node.link['author'] ) {
+			// Lookup the authors
+			$Node.Get( node.link['author'] )
+			.then(r => {
+				if ( r.node && r.node.length ) {
+					this.setState({ 'authors': r.node });
+				}
+				else {
+					this.setState({ 'error': "Authors not found" });
+				}
+			})
+			.catch(err => {
+				this.setState({ 'error': err });
+			});
 		}
 	}
 
 	getAuthor( node ) {
 		// Clear the Author
-		this.setState({ author: {} });
+//		this.setState({ author: {} });
 
 		// Lookup the author
 		$Node.Get( node.author )
@@ -153,8 +186,9 @@ export default class ContentSimple extends Component {
 		var extra = props.extra;
 		
 		var author = state.author;
+		var authors = state.authors;
 	
-		if ( node && ((node.slug && !props.authored) || (node.slug && author && author.slug)) ) {
+		if ( node && ((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length) ) {
 			props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 			props.class.push("content-simple");
 
@@ -193,6 +227,14 @@ export default class ContentSimple extends Component {
 					ShowByLine = <ContentCommonBodyBy node={node} author={author} label="published" when />;
 				}
 			}
+			else if ( props.authors ) {
+				if ( props.by && !state.editing ) {
+					ShowByLine = <ContentCommonBodyBy node={node} authors={authors} />;
+				}
+				else {
+					ShowByLine = <div class="content-common-body">Visit <NavLink blank href={user.path+'/following'}>your userpage</NavLink> to add authors. <br /><strong>NOTE:</strong> You can only add friends (users that follow each other).</div>;
+				}
+			}
 			else if ( props.updated && !state.editing ) {
 				ShowByLine = <ContentCommonBodyBy node={node} label="Last updated" modified />;					
 			}
@@ -200,7 +242,7 @@ export default class ContentSimple extends Component {
 			let ShowTitle = null;
 			if ( !props.notitle ) {
 				ShowTitle = <ContentCommonBodyTitle 
-					href={path} 
+					href={node.path} 
 					title={state.name} 
 					titleIcon={props.titleIcon} 
 					editing={state.editing} 
@@ -217,6 +259,7 @@ export default class ContentSimple extends Component {
 						placeholder="Say something"
 						class="-block-if-not-minimized"
 						onmodify={this.onModifyText}
+						minimized={props.minimized}
 					>
 						{state.body}
 					</ContentCommonBodyMarkup>

@@ -16,6 +16,30 @@ const THINGS_I_CAN_STAR = [
 	'user'
 ];
 
+const VALID_META = [
+	'item' => [
+		'author-name' => ['length' => 64],
+	],
+	'user' => [
+		'real-name' => ['length' => 64],
+	],
+	'post' => [
+	],
+];
+
+const VALID_LINK = [
+	'item' => [
+		'user' => [
+			'author' => ['empty' => true],
+		],
+	],
+	'user' => [
+	],
+	'post' => [
+	],
+];
+
+
 // Do Actions
 $action = json_ArgShift();
 switch ( $action ) {
@@ -143,9 +167,24 @@ switch ( $action ) {
 			else {
 				$methods = array_map("coreSlugify_Name", explode('+', $methods));
 				
-				$allowed_methods = ['parent','superparent','author'/*,'authors'*/,'all'];
+				$allowed_methods = ['parent','superparent','author','authors','all','unpublished'];
 				foreach ( $methods as &$method ) {
-					if ( !in_array($method, $allowed_methods) ) {
+					if ( $method == 'all' ) {
+						if ( count($methods) > 1 ) {
+							json_EmitFatalError_BadRequest("Can't combine methods with all", $RESPONSE);
+						}
+						// totally fine, let it fall through
+					}
+					if ( $method == 'authors' ) {
+						if ( count($methods) > 1 ) {
+							json_EmitFatalError_BadRequest("Can't combine methods with authors", $RESPONSE);
+						}
+						else {
+							json_EmitFatalError_BadRequest("Sorry. authors method not yet supported", $RESPONSE);
+							// TODO: totally fine, let it fall through
+						}
+					}
+					else if ( !in_array($method, $allowed_methods) ) {
 						json_EmitFatalError_BadRequest("Invalid method: $method", $RESPONSE);
 					}
 				}
@@ -172,8 +211,22 @@ switch ( $action ) {
 			if ( !empty($subtypes) ) {
 				$RESPONSE['subtypes'] = $subtypes;
 			}
+			
+			$RESPONSE['offset'] = 0;
+			$RESPONSE['limit'] = 10;
 
-			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes );
+			if ( isset($_GET['offset']) ) {
+				$RESPONSE['offset'] = intval($_GET['offset']);
+			}
+			if ( isset($_GET['limit']) ) {
+				$RESPONSE['limit'] = intval($_GET['limit']);
+				if ( $RESPONSE['limit'] < 1 )
+					$RESPONSE['limit'] = 1;
+				if ( $RESPONSE['limit'] > 25 )
+					$RESPONSE['limit'] = 25;
+			}
+
+			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes, null/*$subsubtypes*/, null, $RESPONSE['limit'], $RESPONSE['offset'] );
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
@@ -343,6 +396,8 @@ switch ( $action ) {
 						json_EmitFatalError_ServerError(null, $RESPONSE);
 					}
 					
+					$RESPONSE['type'] = $type;
+					$RESPONSE['path'] = node_GetPathById($new_node, 1)['path']; // Root node
 					$RESPONSE['count']++;
 					$RESPONSE['id'] = $new_node;
 					break;
@@ -355,6 +410,8 @@ switch ( $action ) {
 						json_EmitFatalError_ServerError(null, $RESPONSE);
 					}
 
+					$RESPONSE['type'] = $type;
+					$RESPONSE['path'] = node_GetPathById($new_node, 1)['path']; // Root node
 					$RESPONSE['count']++;
 					$RESPONSE['id'] = $new_node;
 					break;
@@ -703,6 +760,143 @@ switch ( $action ) {
 		};
 		break; // case 'star': //node/star
 
+	case 'meta':
+		$old_action = $action;
+		$action = json_ArgShift();
+		switch ( $action ) {
+			case 'add': //node/meta/add/:node
+			case 'remove': //node/meta/remove/:node
+				json_ValidateHTTPMethod('POST');
+				
+				if ( !count($_POST) )
+					json_EmitFatalError_BadRequest("No metadata set", $RESPONSE);
+
+				$node_id = intval(json_ArgGet(0));
+				$user_id = userAuth_GetID();
+
+				if ( $node_id && $user_id ) {
+					if ( $node = node_GetById($node_id) ) {
+						// TODO: Improve Permissions
+						if ( !$node['author'] == $user_id )
+							json_EmitFatalError_Permission(null, $RESPONSE);
+
+						if ( !isset(VALID_META[$node['type']]) )
+							json_EmitFatalError_BadRequest("Can't set '".$node['type']."' metadata", $RESPONSE);
+						
+						// Validate that all posts are legal
+						foreach ( $_POST as $key => &$value ) {
+							if ( !isset(VALID_META[$node['type']][$key]) ) {
+								json_EmitFatalError_BadRequest("Can't set '$key' metadata in '".$node['type']."'", $RESPONSE);
+							}
+						}
+						
+						// node, scope, key, value
+						// bigint, tinyint, char32, text65535
+						
+						$scope = 0;
+						$RESPONSE['changed'] = [];
+						
+						foreach ( $_POST as $key => &$value ) {
+							$detail = VALID_META[$node['type']][$key];
+							
+							$v = $value;
+							if ( isset($detail['length']))
+								$v = substr($v, 0, $detail['length']);
+							if ( isset($detail['empty']) && $detail['empty'] )
+								$v = null;
+							
+							if ( $action == 'add' )
+								$changed = nodeMeta_AddByNode($node_id, $scope, $key, $v);
+							else if ( $action == 'remove' )
+								$changed = nodeMeta_RemoveByNode($node_id, $scope, $key, $v);
+							
+							if ( $changed )
+								$RESPONSE['changed'][$key] = $v;
+						}
+					}
+					else {
+						json_EmitFatalError_NotFound(null, $RESPONSE);
+					}
+				}
+				else {
+					json_EmitFatalError_BadRequest(null, $RESPONSE);
+				}
+				break; // case 'add': //node/meta/add/:node
+		};
+		break; // case 'meta': //node/meta
+
+	case 'link':
+		$old_action = $action;
+		$action = json_ArgShift();
+		switch ( $action ) {
+			case 'add': //node/link/add/:node
+			case 'remove': //node/link/remove/:node
+				json_ValidateHTTPMethod('POST');
+
+				if ( !count($_POST) )
+					json_EmitFatalError_BadRequest("No links set", $RESPONSE);
+				
+				$node_a_id = intval(json_ArgGet(0));
+				$node_b_id = intval(json_ArgGet(1));
+				$user_id = userAuth_GetID();
+
+				if ( $node_a_id && $node_b_id && $user_id ) {
+					$node_a = node_GetById($node_a_id);
+					$node_b = node_GetById($node_b_id);
+					if ( $node_a && $node_b ) {
+						// Only the author of $node_a can change properties
+						if ( !$node_a['author'] == $user_id )
+							json_EmitFatalError_Permission(null, $RESPONSE);
+						// TODO: Improve Permissions
+
+						if ( !isset(VALID_LINK[$node_a['type']]) )
+							json_EmitFatalError_BadRequest("Can't link '".$node_a['type']."'", $RESPONSE);
+
+						if ( !isset(VALID_LINK[$node_a['type']][$node_b['type']]) )
+							json_EmitFatalError_BadRequest("Can't link '".$node_a['type']."' to '".$node_b['type']."'", $RESPONSE);
+						
+						// Validate that all posts are legal
+						foreach ( $_POST as $key => &$value ) {
+							if ( !isset(VALID_LINK[$node_a['type']][$node_b['type']][$key]) ) {
+								json_EmitFatalError_BadRequest("Can't create '$key' link between '".$node_a['type']."' and '".$node_b['type']."'", $RESPONSE);
+							}
+						}
+						
+						// a, b, scope, key, value
+						// bigint, bigint, tinyint, char32, text65535
+						
+						$scope = 0;
+						$RESPONSE['changed'] = [];
+						
+						foreach ( $_POST as $key => &$value ) {
+							$detail = VALID_LINK[$node_a['type']][$node_b['type']][$key];
+							
+							$v = $value;
+							if ( isset($detail['length']))
+								$v = substr($v, 0, $detail['length']);
+							if ( isset($detail['empty']) && $detail['empty'] )
+								$v = null;
+							
+							if ( $action == 'add' )
+								$changed = nodeLink_AddByNode($node_a_id, $node_b_id, $scope, $key, $v);
+							else if ( $action == 'remove' )
+								$changed = nodeLink_RemoveByNode($node_a_id, $node_b_id, $scope, $key, $v);
+							
+							if ( $changed )
+								$RESPONSE['changed'][$key] = $v;
+						}
+					}
+					else {
+						json_EmitFatalError_NotFound(null, $RESPONSE);
+					}
+				}
+				else {
+					json_EmitFatalError_BadRequest(null, $RESPONSE);
+				}
+				break; // case 'add': //node/meta/add/:node
+		};
+		break; // case 'meta': //node/meta
+		
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break; // default

@@ -69,7 +69,7 @@ export default class ContentUserFollowing extends Component {
             })
             .map( following => {
                 return (
-                    <ContentUserBar node={following} user={props.user}/>
+                    <ContentUserBar node={following} user={props.user} featured={props.featured} />
                 );
             });
 

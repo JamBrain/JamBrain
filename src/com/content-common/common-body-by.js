@@ -61,6 +61,17 @@ export default class ContentCommonBodyBy extends Component {
 			Body.push(<span class="-name">by {this.getName(props.author)}</span>);
 			Body.push(<span> (<NavLink class="-at-name" href={this.getURL(props.author)}>@{this.getAtName(props.author)}</NavLink>)</span>);
 		}
+		if ( props.authors ) {
+			Body.push(<span>by </span>);
+			for ( var idx = 0; idx < props.authors.length; idx++ ) {
+				Body.push(<span class="-name">{this.getName(props.authors[idx])}</span>);
+				Body.push(<span> (<NavLink class="-at-name" href={this.getURL(props.authors[idx])}>@{this.getAtName(props.authors[idx])}</NavLink>)</span>);
+				if ( idx < props.authors.length-2 )
+					Body.push(<span>, </span>);
+				else if ( idx < props.authors.length-1 )
+					Body.push(<span>, and </span>);
+			}
+		}
 		if ( props.when && props.node ) {
 			Body.push(<span class="-when">{Body.length ? ', ' : ''}{this.getWhen(props.node, props.label)}</span>);
 		}

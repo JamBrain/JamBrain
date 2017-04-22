@@ -40,7 +40,7 @@ export function GetKeyed( ids ) {
 	});
 }
 
-export function GetFeed( id, methods, types, subtypes, subsubtypes ) {
+export function GetFeed( id, methods, types, subtypes, subsubtypes, more, limit ) {
 	let args = [];
 
 	args.push(id);
@@ -73,8 +73,20 @@ export function GetFeed( id, methods, types, subtypes, subsubtypes ) {
 			}
 		}
 	}
+	
+	var query = [];
+	
+	if ( more ) {
+		query.push("offset="+more);
+	}
+	if ( limit ) {
+		query.push("limit="+limit);
+	}
+	
+	if ( query.length )
+		query = "?"+query.join('&');
 
-	return Fetch.Get(API_ENDPOINT+'/vx/node/feed/'+args.join('/'), true);
+	return Fetch.Get(API_ENDPOINT+'/vx/node/feed/'+args.join('/')+query, true);
 }
 
 export function GetMy() {

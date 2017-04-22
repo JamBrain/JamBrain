@@ -214,7 +214,7 @@ export default class SidebarTV extends Component {
 							} else if ( this.services[active.service_id] == "youtube" ) {
 									//TODO: add youtube action, when youtube displays in TV
 							}
-						}}><SVGIcon>enlarge</SVGIcon></div>
+						}}><SVGIcon>twitch</SVGIcon></div>
 						<div class="-play"><SVGIcon>play</SVGIcon></div>
 					</div>
 					<div class="-detail" title={active.meta.status}>

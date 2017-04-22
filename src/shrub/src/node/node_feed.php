@@ -1,7 +1,9 @@
 <?php
 
 // For fetching subscriptions
-function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subtypes = null, $subsubtypes = null, $published = true, $score_minimum = null, $limit = 20, $offset = 0 ) {
+function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subtypes = null, $subsubtypes = null, $score_minimum = null, $limit = 20, $offset = 0 ) {
+	$published = true;
+
 	// PLEASE PRE-SANITIZE YOUR TYPES!
 	$QUERY = [];
 	$ARGS = [];
@@ -12,7 +14,7 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subt
 			// Confirm that IDs are non-zero integers
 			if ( !is_integer($id) || $id <= 0 ) return null;
 		}
-		
+
 		$node_query = " IN (".implode(',', $node_ids).")";
 		$node_args = null;
 	}
@@ -23,7 +25,7 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subt
 	else {
 		return null;
 	}
-	
+
 	// Build a query fragment for the methods
 	if ( is_string($methods) ) {
 		$methods = [$methods];
@@ -49,16 +51,19 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subt
 				case 'authors':
 					// TODO: this
 				break;
+				case 'unpublished':
+					$published = false;
+				break;
 			};
 		}
-		
+
 		if ( count($pre_query) )
 			$QUERY[] = '('.implode(' OR ', $pre_query).')';
 	}
 	else {
 		return null;
 	}
-		
+
 	// Build query fragment for the types check
 	if ( is_array($types) ) {
 		$QUERY[] = 'type IN ("'.implode('","', $types).'")';
@@ -104,6 +109,10 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subt
 	// Build query fragment for published content
 	if ( $published ) {
 		$QUERY[] = "published > CONVERT(0, DATETIME)";
+		$orderby_query = "ORDER BY published DESC";
+	}
+	else {
+		$orderby_query = "ORDER BY modified DESC";
 	}
 
 	// Build query fragment for score
@@ -115,19 +124,19 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subt
 	else {
 		return null;
 	}
-	
+
 	$full_query = '';
 	if ( count($QUERY) )
 		$full_query = 'WHERE ('.implode(' AND ', $QUERY).')';
-	
+
 	$ARGS[] = $limit;
 	$ARGS[] = $offset;
 
 	return db_QueryFetch(
 		"SELECT id, ".DB_FIELD_DATE('modified')."
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 		$full_query
-		ORDER BY published DESC
+		$orderby_query
 		LIMIT ? OFFSET ?;",
 		...$ARGS
 	);
@@ -145,28 +154,28 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subt
 //
 //		// Build IN string
 //		$ids_string = implode(',', $parent);
-//		
+//
 //		if ( $types ) {
 //			if ( !is_array($types) ) {
 //				$types = [$types];
 //			}
-//			
+//
 //			$types_string = '"'.implode('","', $types).'"';
-//			
+//
 //			return db_QueryFetch(
 //				"SELECT id, ".DB_FIELD_DATE('modified')."
-//				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+//				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 //				WHERE parent IN ($ids_string) AND type IN ($types_string) AND published > CONVERT(0,DATETIME)
 //				ORDER BY published DESC
 //				LIMIT ? OFFSET ?
 //				;",
 //				$limit, $offset
-//			);			
+//			);
 //		}
 //		else {
 //			return db_QueryFetchPair(
-//				"SELECT id, ".DB_FIELD_DATE('modified')." 
-//				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+//				"SELECT id, ".DB_FIELD_DATE('modified')."
+//				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 //				WHERE parent IN ($ids_string) AND published > CONVERT(0,DATETIME)
 //				ORDER BY published DESC
 //				LIMIT ? OFFSET ?
@@ -175,6 +184,6 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subt
 //			);
 //		}
 //	}
-	
+
 	return null;
 }

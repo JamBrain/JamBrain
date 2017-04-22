@@ -105,16 +105,30 @@
 
 		& > .-external {
 			position: absolute;
-			bottom: 1em;
-			right: 1em;
-			font-size: 1em;
+			bottom: 1rem;
+			right: 1rem;
+			font-size: 1.5em;
+
+			padding: 0.25em;
 			color: @COL_L;
+			background: fade(@COL_D, 50%);
+
+   			transform: scale(1, 1);
+
 			transition: all 0.2s;
 			opacity: 0;
+			
+			& svg {
+				display: block;
+			}
+
 			&:hover {
-				font-size: 2em;
-				bottom: 0.5em;
-				right: 0.5em;
+				background: @COL_A;
+    			transform: scale(1.5, 1.5);
+				
+//				font-size: 2em;
+//				bottom: 0.5em;
+//				right: 0.5em;
 			}
 			&:hover + .-play {
 				background: fade(@COL_D, 50%);
