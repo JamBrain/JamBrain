@@ -37,7 +37,8 @@ export default class ContentCommonBodyMarkup extends Component {
 			return (
 				<div class={Class}>
 					<div class="-label">{Label}</div>
-					<InputTextArea 
+					<InputTextArea
+						user={props.user}
 						value={Text} 
 						onmodify={props.onmodify} 
 						placeholder={Placeholder} 

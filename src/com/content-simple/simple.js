@@ -254,7 +254,8 @@ export default class ContentSimple extends Component {
 			if ( !props.nomarkup ) {
 				ShowMarkup = (
 					<ContentCommonBodyMarkup 
-						node={node} 
+						node={node}
+						user={user}
 						editing={state.editing}
 						placeholder="Say something"
 						class="-block-if-not-minimized"
