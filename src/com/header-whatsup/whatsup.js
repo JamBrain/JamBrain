@@ -41,12 +41,13 @@ export default class HeaderWhatsup extends Component {
 					return (
 						<div class="header-base header-whatsup outside">
 							<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
-							<br /><br />Game Publishing (Submission) is coming! Sorry for the <NavLink href="https://twitter.com/mikekasprzak"><SVGIcon baseline small gap>twitter</SVGIcon>delay</NavLink>!
-							<br />We will make sure you get your compo games in the compo!
+							<br /><br />Judging will start Wednesday (or early if it's ready sooner). Sorry for the <NavLink href="https://twitter.com/mikekasprzak"><SVGIcon baseline small gap>twitter</SVGIcon>delays</NavLink>!
 						</div>
 					);
 				}
 			}
+//							<br /><br />Game Publishing (Submission) is coming! Sorry for the <NavLink href="https://twitter.com/mikekasprzak"><SVGIcon baseline small gap>twitter</SVGIcon>delay</NavLink>!
+//							<br />We will make sure you get your compo games in the compo!
 			
 			return (
 				<div class="header-base header-whatsup outside">
