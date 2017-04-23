@@ -435,3 +435,44 @@ function node_IdToIndex( $nodes ) {
 	
 	return $ret;
 }
+
+
+function node_SetAuthor( $id, $author ) {
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		SET
+			author=?
+		WHERE
+			id=?;",
+		$author, $id
+	);
+}
+function node_SetType( $id, $type, $subtype = null, $subsubtype = null ) {
+	$QUERY = [];
+	$ARGS = [];
+	
+	$QUERY[] = 'type=?';
+	$ARGS[] = $type;
+
+	if ( is_integer($subtype) ) {
+		$QUERY[] = 'subtype=?';
+		$ARGS[] = $subtype;
+	}
+	if ( is_integer($subsubtype) ) {
+		$QUERY[] = 'subsubtype=?';
+		$ARGS[] = $subsubtype;
+	}
+	
+	$ARGS[] = $id;
+	
+	$merged_query = implode(',', $QUERY);
+	
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		SET
+			$merged_query
+		WHERE
+			id=?;",
+		...$ARGS
+	);
+}
