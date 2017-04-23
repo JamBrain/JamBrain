@@ -67,9 +67,6 @@
                         this.makeSVGIcon('play', {"class":"-middle"}) +
                     '</div>';
 
-//        var external = '<div class="-external"><a href="https://www.youtube.com/watch?v=' + video_id + '" target="_blank" onclick="arguments[0].stopPropagation()">' +
-//                            this.makeSVGIcon('enlarge', {"class":"-middle -block"}) +
-//                        '</a></div>';
         var external = '<div class="-external"><a href="https://www.youtube.com/watch?v=' + video_id + '" target="_blank" onclick="arguments[0].stopPropagation()">' +
                             this.makeSVGIcon('youtube', {"class":"-middle -block"}) +
                         '</a></div>';
@@ -89,16 +86,6 @@
                     thumbnail +
                 '</div>';
 	}
-
-    /*AutoEmbed.prototype.thumbToVidYT = function( element ) {
-
-        console.log(element);
-        var video_id = "ly8K257P2BI";
-        var video = '<div class="-video" style="display:none"><iframe src="https://www.youtube.com/embed/'+ video_id + '?rel=0" frameborder="0" allowfullscreen></iframe></div>';
-
-        //element.parentElement.parentElement.parentElement.innerHTML = video;
-
-    }*/
 
 	AutoEmbed.prototype.makeSVGIcon = function( name, args ) {
 		var svg_class = "svg-icon icon-"+name;
@@ -127,13 +114,15 @@
 	}
 
 	AutoEmbed.prototype.hasEmbed = function( str ) {
-		url = this.extractFromURL(str);
+		if(str) {
+			url = this.extractFromURL(str);
 
-		if ( url.domain ) {
-			if ( url.domain.indexOf('youtube.com') !== -1 ) {
-				// This check sucks. if there's a `v=` arg, then embed it
-				if ( url.args.v ) {
-					return this.makeYouTube( url.args.v );
+			if ( url.domain ) {
+				if ( url.domain.indexOf('youtube.com') !== -1 ) {
+					// This check sucks. if there's a `v=` arg, then embed it
+					if ( url.args.v ) {
+						return this.makeYouTube( url.args.v );
+					}
 				}
 			}
 		}
@@ -143,14 +132,15 @@
 	AutoEmbed.prototype.hasSmartLink = function( str, title, text ) {
 		url = this.extractFromURL(str);
 
-        var isMDlink = !(str == text) && text;
-        var domain = url.domain;
-        var path = url.path;
-        if (isMDlink)
-        {
-            domain = text;
-            path = "";
-        }
+    var isMDlink = !(str == text) && text;
+    var domain = url.domain;
+    var path = url.path;
+    if (isMDlink)
+    {
+        domain = text;
+        path = "";
+    }
+
 		if ( url.domain ) {
 			if ( url.domain.indexOf('youtube.com') !== -1 ) {
 				return this.makeSmartLink('youtube', url.url, domain, path );
@@ -208,14 +198,3 @@
     }
 
 }());
-
-
-/*function thumbToVidYT( element ) {
-
-    console.log(element);
-    //var video_id = "ly8K257P2BI";
-    //var video = '<div class="-video" style="display:none"><iframe src="https://www.youtube.com/embed/'+ video_id + '?rel=0" frameborder="0" allowfullscreen></iframe></div>';
-
-    //element.parentElement.parentElement.parentElement.innerHTML = video;
-
-}*/
