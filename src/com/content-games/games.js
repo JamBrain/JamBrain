@@ -6,6 +6,8 @@ import ContentError						from 'com/content-error/error';
 
 import ContentCommon					from 'com/content-common/common';
 import ContentItemBox					from 'com/content-item/item-box';
+
+import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
 //import ContentPost						from 'com/content-post/post';
@@ -160,11 +162,11 @@ export default class ContentGames extends Component {
                 </div>
             );
         }
-        else if (!feed){
+        else if ( feed && feed.length == 0 ){
             return (
                 <ContentCommon {...props}>
                     <ContentCommonBodyTitle href={""} title={"No Games!"} />
-                    <p>Sorry there are no games yet.</p>
+                    <ContentCommonBody>Sorry, there are no published games yet</ContentCommonBody>
                 </ContentCommon>
             );
         }
