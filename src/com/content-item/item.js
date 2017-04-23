@@ -268,7 +268,7 @@ export default class ContentItem extends Component {
 					<div class="-label">Event</div>
 					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
 					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
-					<div>Please refer to <NavLink blank href="/event/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know, pick the <strong>Jam</strong>.<br />Because {"we're"} running late, {"we're"} letting you choose all weekend. Honour system, ok?</div>
+					<div>Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know, pick the <strong>Jam</strong>.<br />Because {"we're"} running late, {"we're"} letting you choose all weekend. Honour system, ok?</div>
 				</ContentCommonNav>
 			);
 		}
@@ -318,6 +318,11 @@ export default class ContentItem extends Component {
 					<div class="-label">Links</div>
 					<div>Download Links</div>
 					<div>Source Code</div>
+					<br />
+					If you're new to Ludum Dare, you should know we don't host your downloads, just links to them. For recommendations where and how to host your files, check out the Hosting Guide:<br />
+					<br />
+					<NavLink blank href="/events/ludum-dare/hosting-guide">/ludum-dare/hosting-guide</NavLink><br />
+					<br />
 				</ContentCommonBody>
 			);
 		}
