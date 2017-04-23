@@ -267,16 +267,14 @@ export default class ContentItem extends Component {
 			
 		}
 		
-		props.editonly = [
-			{ShowEventPicker},
+		props.editonly = <div>
+			{ShowEventPicker}
 			{ShowOptOut}
-		];
+		</div>;
 
 		return (
 			<ContentSimple {...props} by authors>
 			</ContentSimple>
 		);
-		
 	}
-
 }

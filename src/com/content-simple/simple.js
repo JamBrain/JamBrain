@@ -240,12 +240,21 @@ export default class ContentSimple extends Component {
 				ShowByLine = <ContentCommonBodyBy node={node} label="Last updated" modified />;					
 			}
 			
-			//if ( props.editonly ) {
-			//	ShowEditOnly = <div>{props.editonly}</div>;
-			//}
-
+//			if ( props.editonly && state.editing ) {
+//				ShowEditOnly = props.editonly;
+//			}
+//			else 
 			if ( props.authors && state.editing ) {
-				ShowEditOnly = <ContentCommonBody>Hey sorry for the delay! Publishing your game is coming soon!<br /><br />If you're finished and you wont be able to submit before the compo deadline, don't worry! Do what you can above. We will make sure that you get your game in the compo.</ContentCommonBody>;
+				ShowEditOnly = <ContentCommonBody>
+					Hey sorry for the delay! Publishing your game is coming soon!<br />
+					<br />
+					If you're finished and you wont be able to submit before the compo deadline, don't worry! Do what you can above. We will make sure that you get your game in the compo.<br />
+					<br />
+					If you're new to Ludum Dare, you should know we don't host your downloads, just links to them. For recommendations where and how to host your files, check out the Hosting Guide:<br />
+					<br />
+					<NavLink blank href="/events/ludum-dare/hosting-guide">/ludum-dare/hosting-guide</NavLink><br />
+					<br />
+					</ContentCommonBody>;
 			}
 
 			let ShowTitle = null;
