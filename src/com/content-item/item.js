@@ -273,12 +273,26 @@ export default class ContentItem extends Component {
 			);
 		}
 		
+		var ShowPrePub = (
+			<div style="background: #E53; color: #FFF; padding: 0 0.5em;"><ContentCommonBody>
+				<strong>Hey folks!</strong> We're going to let you pre-publish your entries as we finish the data fields below. Please come back and update your page. We'll have new things fixed and added reguraly.<br />
+				<br />
+				I've included summaries of what to expect for each. In the mean time, I recommend you add your links above, and a screenshot or two. Here's an example:<br />
+				<br />
+				<div style="background:#FFF; color:#000; padding: 0.5em; border-radius: 0.25em"><strong>Sample Game:</strong> <NavLink blank href="/events/ludum-dare/38/ludum-dare-dot-com">Ludumdare.com</NavLink></div>
+				<br />
+				Then rest, relax, take it easy. We'll have this cleaned up soon!<br />
+				<br />
+				Lets also say that judging will begin Wednesday (possibly a little earlier), just in case it takes longer than expected (i.e. like all of this). <strong>Thank you for your patience!</strong>
+			</ContentCommonBody></div>
+		);
+		
 		var ShowOptOut = null;
 		if ( true ) {
 			ShowOptOut = (
 				<ContentCommonBody>
 					<div class="-label">Voting Category Opt-outs</div>
-					{"Opt-out of categories here. Say, if your team didn't make all your graphics, audio, or music during the event."}
+					{"Opt-out of categories here. Say, if your team didn't make all your graphics, audio, or music during the event. "}
 					{"Many participants are making original content from scratch during the event. It's not fair to get a rating a category if you didn't do the same."}
 				</ContentCommonBody>
 			);
@@ -289,11 +303,12 @@ export default class ContentItem extends Component {
 			ShowShots = (
 				<ContentCommonBody>
 					<div class="-label">Images</div>
-					<div>Cover Image</div>
-					<div>Screen Shots</div>
+					<div>Cover Image - this will be squared and used as box art (final size TBD)</div>
+					<div>Screen Shots - These go up top, above your Title and Description. Try to keep your GIFs less than 640 pixels wide.</div>
+					<div>Video - Or we can put a YouTube video up top</div>
+					<div><del>Embed - If we do add this, it's going to be much later</del></div>
 				</ContentCommonBody>
 			);
-//					<div>Video</div>
 		}
 
 		var ShowLinks = null;
@@ -310,6 +325,7 @@ export default class ContentItem extends Component {
 		props.editonly = (
 			<div>
 				{ShowEventPicker}
+				{ShowPrePub}
 				{ShowOptOut}
 				{ShowShots}
 				{ShowLinks}
