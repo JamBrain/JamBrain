@@ -1,7 +1,7 @@
 <?php
 
 // For fetching subscriptions
-function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subtypes = null, $subsubtypes = null, $score_minimum = null, $limit = 20, $offset = 0 ) {
+function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subtypes = null, $subsubtypes = null, $score_minimum = null, $limit = 20, $from_id=null, $offset = 0 ) {
 	$published = true;
 
 	// PLEASE PRE-SANITIZE YOUR TYPES!
@@ -123,6 +123,11 @@ function node_GetFeedByNodeMethodType( $node_ids, $methods, $types = null, $subt
 	}
 	else {
 		return null;
+	}
+
+	if( isset($from_id) ) {
+		$QUERY[] = "id < ?";
+		$ARGS[] = $from_id;
 	}
 
 	$full_query = '';
