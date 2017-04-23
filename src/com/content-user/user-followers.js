@@ -15,15 +15,17 @@ export default class ContentUserFollowers extends Component {
 
         this.getFollowers = this.getFollowers.bind(this);
         this.hasPermission = this.hasPermission.bind(this);
+        this.hasFollowers = this.hasFollowers.bind(this);
 
         this.state = {
-            "followerNodes" : null
+            "followerNodes" : []
         };
 
     }
 
     componentDidMount() {
-        if (this.hasPermission()){
+        // make sure we actually have followers to display
+        if (this.hasFollowers() && this.hasPermission()){
             // if were looking at our own page then display followers
             this.getFollowers(this.props.user.private.refs.star);
         }
@@ -31,6 +33,10 @@ export default class ContentUserFollowers extends Component {
 
     hasPermission(){
         return (this.props.node.id == this.props.user.id);
+    }
+
+    hasFollowers(){
+        return (this.props.user['private'] && this.props.user.private['refs']&& this.props.user.private.refs['star']);
     }
 
     getFollowers(ids){
@@ -47,8 +53,19 @@ export default class ContentUserFollowers extends Component {
         props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
         props.class.push("content-user-follower");
 
-        // display a loading bar whilst we wait
-        if (state.followerNodes){
+        if (!this.hasPermission()){
+            // if were not allowed to see the nodes followers then display an error
+            return <ContentError code="401">Permission Denied : Cannot see who other peoples followers are </ContentError>;
+        }
+        else if (!this.hasFollowers())
+        {
+            return (
+                <ContentCommon {...props}>
+                    <h1> No one is currently following you </h1>
+                </ContentCommon>
+            );
+        }
+        else if (state.followerNodes && state.followerNodes.length > 0){
 
             // turn our array of follower nodes to ContentUserBar 's
             var followers = state.followerNodes
@@ -78,10 +95,6 @@ export default class ContentUserFollowers extends Component {
                     {followers}
                 </ContentCommon>
             );
-        }
-        else if (!this.hasPermission()){
-            // if were not allowed to see the nodes followers then display an error
-            return <ContentError code="401">Permission Denied : Cannot see who other peoples followers are </ContentError>;
         }
         else{
             // Show a spinner whilst were loading
