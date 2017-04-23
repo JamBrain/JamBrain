@@ -119,7 +119,7 @@ switch ( $action ) {
 					$RESPONSE['updated'] = note_SafeEdit($note_id, $author, $body, $version_tag);
 				}
 				else {
-					json_EmitFatalError_Permission(null, $RESPONSE);
+					json_EmitFatalError_Forbidden("This node type does now allow notes (yet)", $RESPONSE);
 				}
 			}
 			else {

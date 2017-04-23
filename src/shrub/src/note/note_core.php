@@ -3,7 +3,7 @@
 // Scope of notes is inherited by the parent node
 const NODE_TYPES_WITH_PUBLIC_NOTES = [
 	'post',
-	'game'
+	'item'
 ];
 
 const NODE_TYPES_WITH_PROTECTED_NOTES = [
