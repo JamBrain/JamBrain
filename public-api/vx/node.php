@@ -19,9 +19,11 @@ const THINGS_I_CAN_STAR = [
 const VALID_META = [
 	'item' => [
 		'author-name' => ['length' => 64],
+		'cover' => ['length' => 256],
 	],
 	'user' => [
 		'real-name' => ['length' => 64],
+		'avatar' => ['length' => 256],
 	],
 	'post' => [
 	],
