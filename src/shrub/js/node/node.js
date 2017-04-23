@@ -40,7 +40,7 @@ export function GetKeyed( ids ) {
 	});
 }
 
-export function GetFeed( id, methods, types, subtypes, subsubtypes, from, limit ) {
+export function GetFeed( id, methods, types, subtypes, subsubtypes, from, limit, page ) {
 	let args = [];
 
 	args.push(id);
@@ -81,6 +81,9 @@ export function GetFeed( id, methods, types, subtypes, subsubtypes, from, limit 
 	}
 	if ( limit ) {
 		query.push("limit="+limit);
+	}
+	if ( page ) {
+		query.push("page="+page);
 	}
 
 	if ( query.length )

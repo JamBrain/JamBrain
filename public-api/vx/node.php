@@ -212,9 +212,9 @@ switch ( $action ) {
 				$RESPONSE['subtypes'] = $subtypes;
 			}
 
-			$RESPONSE['offset'] = 0;
-			$RESPONSE['from'] = null;
+			$offset = 0;
 			$RESPONSE['limit'] = 10;
+			$RESPONSE['from'] = PHP_INT_MAX;
 
 			if ( isset($_GET['limit']) ) {
 				$RESPONSE['limit'] = intval($_GET['limit']);
@@ -228,11 +228,18 @@ switch ( $action ) {
 				$RESPONSE['from'] = intval($_GET['from']);
 			}
 
-			if ( isset($_GET['offset']) ) {
-				$RESPONSE['offset'] = intval($_GET['offset']);
+			if ( isset($_GET['page']) ) {
+				$RESPONSE['page'] = intval($_GET['page']);
 			}
 
-			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes, null/*$subsubtypes*/, null, $RESPONSE['limit'], $RESPONSE['from'], $RESPONSE['offset'] );
+			//if ( isset($_GET['offset']) ) {
+			if(isset($RESPONSE['page']) && isset($RESPONSE['limit'])) {
+				$offset = ($RESPONSE['page'] > 0 ? $RESPONSE['page'] - 1 : 0) * $RESPONSE['limit'];
+			}
+
+			$RESPONSE['offset'] = $offset;
+
+			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes, null/*$subsubtypes*/, null, $RESPONSE['limit'], $RESPONSE['from'], $offset );
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
