@@ -211,6 +211,13 @@ export default class ContentItem extends Component {
 				props.titleIcon = "gamepad";
 			}
 			
+			if ( node.subsubtype == 'jam' ) {
+				props.header += ": JAM";
+			}
+			else if ( node.subsubtype == 'compo' ) {
+				props.header += ": COMPO";
+			}
+			
 			props.draft = "Game";
 		}
 
