@@ -251,7 +251,7 @@ export default class ContentItem extends Component {
 		}
 		
 		var ShowEventPicker = null;
-		if ( true ) {
+		if ( extra && extra.length && extra[0] == 'edit' ) {
 			ShowEventPicker = (
 				<ContentCommonNav>
 					<div>Event</div>
@@ -266,11 +266,14 @@ export default class ContentItem extends Component {
 		if ( true ) {
 			
 		}
+		
+		props.editonly = [
+			{ShowEventPicker},
+			{ShowOptOut}
+		];
 
 		return (
 			<ContentSimple {...props} by authors>
-				{ShowEventPicker}
-				{ShowOptOut}
 			</ContentSimple>
 		);
 		
