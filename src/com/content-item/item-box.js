@@ -13,21 +13,21 @@ export default class ContentItemBox extends Component {
 
     }
 
+    render( props ){
+    	var node = props.node;
+    	var user = props.user;
 
-    render(props){
-
-        if (props.node){
-            var game = props.node;
-            var title = game.name;
-            var cover = (game['meta'] && game.meta['cover']) ? game.meta.cover : "";
-            var link = props.path + "/" + game.slug;
+        if ( node ) {
+            var title = node.name;
+            var cover = (node['meta'] && node.meta['cover']) ? node.meta.cover : "";
+            //var link = props.path + "/" + node.slug;
 
             props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
             props.class.push("content-item-box");
 
             return (
                 <ContentCommon {...props}>
-                    <ContentCommonBodyTitle href={link} title={title} />
+                    <ContentCommonBodyTitle href={node.path} title={title} />
                     <IMG2 src={cover} failsrc="///other/asset/TVFail.png" />
                 </ContentCommon>
             );
