@@ -4,6 +4,7 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 import ContentPost						from 'com/content-post/post';
 import ContentUser						from 'com/content-user/user';
 import ContentMore						from 'com/content-more/more';
+import ContentCommon					from 'com/content-common/common';
 
 import $Node							from '../../shrub/js/node/node';
 
@@ -15,11 +16,13 @@ export default class ContentTimeline extends Component {
 			feed: [],
 			hash: {},
 			offset: 5, //10
-			added: null
+			added: null,
+            loaded : false
 		};
 
 		this.makeFeedItem = this.makeFeedItem.bind(this);
 		this.fetchMore = this.fetchMore.bind(this);
+
 	}
 
 	componentDidMount() {
@@ -37,7 +40,9 @@ export default class ContentTimeline extends Component {
 	}
 
 	appendFeed( newfeed ) {
+
 		var feed = this.state.feed;
+
 		var hash = this.state.hash;
 
 		for ( var idx = 0; idx < newfeed.length; idx++ ) {
@@ -89,6 +94,8 @@ export default class ContentTimeline extends Component {
 	getFeed( id, methods, types, subtypes, subsubtypes, more, limit ) {
 		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, more, limit )
 		.then(r => {
+            this.setState({'loaded':true});
+            // make sure we have a feed
 			if ( r.feed && r.feed.length ) {
 				this.appendFeed(r.feed);
 				return this.getMissingNodes();
@@ -173,14 +180,16 @@ export default class ContentTimeline extends Component {
 		return null;
 	}
 
-	render( props, {feed, added, error} ) {
+	render( props, {feed, added, error, loaded} ) {
 		var ShowFeed = null;
 
 		if ( error ) {
 			ShowFeed = error;
 		}
-
-		else if ( feed && feed.length ) {
+        else if ( loaded && feed && feed.length == 0){
+            ShowFeed = <ContentCommon {...props}><h1>Sorry, there are no {props.types[0]}</h1></ContentCommon>;
+        }
+		else if ( loaded && feed && feed.length ) {
 			ShowFeed = [];
 			if ( feed.length ) {
 				ShowFeed = feed.map(this.makeFeedItem);

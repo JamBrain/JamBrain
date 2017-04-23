@@ -25,7 +25,8 @@ export default class ContentGames extends Component {
 			feed: [],
 			hash: {},
 			offset: 5, //10
-			added: null
+			added: null,
+            loaded: false
 		};
 
 		this.fetchMore = this.fetchMore.bind(this);
@@ -100,6 +101,8 @@ export default class ContentGames extends Component {
     getFeed( id, methods, types, subtypes, subsubtypes, more, limit ) {
         $Node.GetFeed( id, methods, types, subtypes, subsubtypes, more, limit )
         .then(r => {
+            this.setState({ 'loaded': true });
+
             if ( r.feed && r.feed.length ) {
                 this.appendFeed(r.feed);
                 return this.getMissingNodes();
@@ -132,7 +135,7 @@ export default class ContentGames extends Component {
         this.setState({'offset': offset + 10});
     }
 
-    render( props, {feed, added, error}  ) {
+    render( props, {feed, added, error, loaded}  ) {
         props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
         props.class.push("content-games");
         props.class.push("content-item-boxes");
@@ -162,7 +165,7 @@ export default class ContentGames extends Component {
                 </div>
             );
         }
-        else if ( feed && feed.length == 0 ){
+        else if ( loaded == false && feed && feed.length == 0 ){
             return (
                 <ContentCommon {...props}>
                     <ContentCommonBodyTitle href={""} title={"No Games!"} />
