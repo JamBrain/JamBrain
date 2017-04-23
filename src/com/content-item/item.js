@@ -210,10 +210,12 @@ export default class ContentItem extends Component {
 				props.headerClass = "-col-a";
 				props.titleIcon = "gamepad";
 			}
+			
+			props.draft = "Game";
 		}
 
 		return (
-			<ContentSimple {...props} nopublish by authors>
+			<ContentSimple {...props} by authors>
 			</ContentSimple>
 		);
 		

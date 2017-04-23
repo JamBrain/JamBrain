@@ -274,7 +274,7 @@ export default class ContentSimple extends Component {
 			
 			let ShowDraft = null;
 			if ( !node.published ) {
-				ShowDraft = <ContentCommonDraft />;
+				ShowDraft = <ContentCommonDraft draft={props.draft} />;
 			}
 
 			return (
