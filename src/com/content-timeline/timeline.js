@@ -24,7 +24,7 @@ export default class ContentTimeline extends Component {
 
 	componentDidMount() {
 		var props = this.props;
-		
+
 		this.getFeed(
 			props.node.id,
 			props.methods ? props.methods : ['parent', 'superparent'],
@@ -39,7 +39,7 @@ export default class ContentTimeline extends Component {
 	appendFeed( newfeed ) {
 		var feed = this.state.feed;
 		var hash = this.state.hash;
-		
+
 		for ( var idx = 0; idx < newfeed.length; idx++ ) {
 			var info = newfeed[idx];
 			if ( !hash[info['id']] ) {
@@ -49,7 +49,7 @@ export default class ContentTimeline extends Component {
 		}
 		this.setState({'feed': feed, 'hash': hash, 'added': newfeed.length});
 	}
-	
+
 	getFeedIdsWithoutNodes() {
 		var feed = this.state.feed;
 		var hash = this.state.hash;
@@ -61,31 +61,31 @@ export default class ContentTimeline extends Component {
 		}
 		return keys;
 	}
-	
+
 	getMissingNodes() {
 		var keys = this.getFeedIdsWithoutNodes();
-		
+
 		if ( keys.length ) {
 			return $Node.GetKeyed( keys )
 				.then(r => {
 					var feed = this.state.feed;
 					var hash = this.state.hash;
-					
+
 					for ( var node_id in r.node ) {
 						var id = r.node[node_id].id;
-						
+
 						feed[hash[id]].node = r.node[node_id];
 					}
-					
+
 					this.setState({'feed': feed, 'hash': hash});
 				})
 				.catch(err => {
 					this.setState({ 'error': err });
 				});
 		}
-		
+
 	}
-	
+
 	getFeed( id, methods, types, subtypes, subsubtypes, more, limit ) {
 		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, more, limit )
 		.then(r => {
@@ -98,7 +98,7 @@ export default class ContentTimeline extends Component {
 			this.setState({ 'error': err });
 		});
 	}
-	
+
 //	getFeed( id, methods, types, subtypes, subsubtypes ) {
 //		$Node.GetFeed( id, methods, types, subtypes, subsubtypes )
 //		.then(r => {
@@ -112,12 +112,12 @@ export default class ContentTimeline extends Component {
 //						for ( let idx = 0; idx < rr.node.length; idx++ ) {
 //							nodemap[rr.node[idx].id] = rr.node[idx];
 //						}
-//						
+//
 //						// Using the original keys, return an ordered array of nodes
 //						let new_state = {
 //							'feed': keys.map(v => nodemap[v])
 //						};
-//						
+//
 //						this.setState(new_state);
 //					})
 //					.catch(err => {
@@ -126,19 +126,19 @@ export default class ContentTimeline extends Component {
 //			}
 //			else {
 //				this.setState({ 'feed': [] });
-//			}			
+//			}
 //		})
 //		.catch(err => {
 //			this.setState({ 'error': err });
 //		});
 //	}
-	
+
 	fetchMore( offset ) {
 		var props = this.props;
 		var offset = this.state.offset;
 //		var morenode = this.state.feed[this.state.feed.length-1];
 //		var more = morenode.created ? morenode.created : morenode.modified;
-		
+
 		this.getFeed(
 			props.node.id,
 			props.methods ? props.methods : ['parent', 'superparent'],
@@ -148,18 +148,18 @@ export default class ContentTimeline extends Component {
 			offset,
 			this.props.limit ? this.props.limit : 15
 		);
-		
+
 		this.setState({'offset': offset+10});
 	}
 
 	makeFeedItem( node ) {
 		node = node.node;
-		
+
 		if ( node ) {
 			var path = this.props.path+'/'+node.slug;
 			var user = this.props.user;
 			var extra = this.props.extra;
-			
+
 			if ( node.type === 'post' || node.type === 'game' ) {
 				return <ContentPost node={node} user={user} path={path} extra={extra} authored by minmax love comments minimized={this.props.minimized} />;
 			}

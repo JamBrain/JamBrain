@@ -10,64 +10,100 @@ import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
 //import ContentPost						from 'com/content-post/post';
 //import ContentUser						from 'com/content-user/user';
+import ContentMore						from 'com/content-more/more';
 
 import $Node							from '../../shrub/js/node/node';
 
 export default class ContentGames extends Component {
+
     constructor( props ) {
 		super(props);
 
         this.state = {
-            "feed" : null
-        };
+			feed: [],
+			hash: {},
+			offset: 5, //10
+			added: null
+		};
+
+		this.fetchMore = this.fetchMore.bind(this);
+
     }
 
     componentDidMount() {
+
+        var props = this.props;
+
         this.getFeed(
-            this.props.node.id,
-            this.props.methods ? this.props.methods : ['parent', 'superparent'],
-            this.props.types ? this.props.types : ['item'],
-            this.props.subtypes ? this.props.subtypes : ['game'],
-            this.props.subsubtypes ? this.props.subsubtypes : null
+            props.node.id,
+            props.methods ? props.methods : ['parent', 'superparent'],
+            props.types ? props.types : ['item'],
+            props.subtypes ? props.subtypes : ['game'],
+            props.subsubtypes ? props.subsubtypes : null,
+            null,
+            this.props.limit
         );
     }
 
-    getFeed( id, methods, types, subtypes, subsubtypes ) {
+    appendFeed( newfeed ) {
+        var feed = this.state.feed;
+        var hash = this.state.hash;
 
-        console.log("\ngetFeed()");
-        console.log(id);
-        console.log(methods);
-        console.log(types);
-        console.log(subtypes);
-        console.log(subsubtypes);
-
-        $Node.GetFeed( id, methods, types, subtypes, subsubtypes )
-        .then(r => {
-            // If the feed is not empty
-            if ( r.feed && r.feed.length ) {
-                var keys = r.feed.map(v => v['id']);
-                $Node.Get( keys )
-                    .then(rr => {
-                        // Make a id mapping object
-                        let nodemap = {};
-                        for ( let idx = 0; idx < rr.node.length; idx++ ) {
-                            nodemap[rr.node[idx].id] = rr.node[idx];
-                        }
-
-                        // Using the original keys, return an ordered array of nodes
-                        let new_state = {
-                            'feed': keys.map(v => nodemap[v])
-                        };
-
-                        console.log(new_state.feed);
-                        this.setState(new_state);
-                    })
-                    .catch(err => {
-                        this.setState({ 'error': err });
-                    });
+        for ( var idx = 0; idx < newfeed.length; idx++ ) {
+            var info = newfeed[idx];
+            if ( !hash[info['id']] ) {
+                hash[info['id']] = feed.length;
+                feed.push(info);
             }
-            else {
-                this.setState({ 'feed': [] });
+        }
+        this.setState({'feed': feed, 'hash': hash, 'added': newfeed.length});
+    }
+
+    getFeedIdsWithoutNodes() {
+        var feed = this.state.feed;
+        var hash = this.state.hash;
+
+        var keys = [];
+        for (var idx = 0; idx < feed.length; idx++ ) {
+            if ( !feed[idx]['node'] )
+                keys.push(feed[idx]['id']);
+        }
+        return keys;
+    }
+
+    getMissingNodes() {
+        var keys = this.getFeedIdsWithoutNodes();
+
+        if ( keys.length ) {
+            console.log(keys);
+            return $Node.GetKeyed( keys )
+                .then(r => {
+                    console.log(r);
+                    var feed = this.state.feed;
+                    var hash = this.state.hash;
+
+                    for ( var node_id in r.node ) {
+                        var id = r.node[node_id].id;
+
+                        feed[hash[id]].node = r.node[node_id];
+                    }
+
+                    this.setState({'feed': feed, 'hash': hash});
+                })
+                .catch(err => {
+                    this.setState({ 'error': err });
+                });
+        }
+
+    }
+
+    getFeed( id, methods, types, subtypes, subsubtypes, more, limit ) {
+        $Node.GetFeed( id, methods, types, subtypes, subsubtypes, more, limit )
+        .then(r => {
+            console.log(r);
+            if ( r.feed && r.feed.length ) {
+                this.appendFeed(r.feed);
+                return this.getMissingNodes();
             }
         })
         .catch(err => {
@@ -75,30 +111,59 @@ export default class ContentGames extends Component {
         });
     }
 
-    render( props, state ) {
+    fetchMore( offset ) {
+
+        console.log("MORE");
+
+        var props = this.props;
+        var offset = this.state.offset;
+//		var morenode = this.state.feed[this.state.feed.length-1];
+//		var more = morenode.created ? morenode.created : morenode.modified;
+
+        this.getFeed(
+            props.node.id,
+            props.methods ? props.methods : ['parent', 'superparent'],
+            props.types ? props.types : ['item'],
+            props.subtypes ? props.subtypes : ['games'],
+            props.subsubtypes ? props.subsubtypes : null,
+            offset,
+            this.props.limit ? this.props.limit : 15
+        );
+
+        this.setState({'offset': offset + 10});
+    }
+
+    render( props, {feed, added, error}  ) {
         props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
         props.class.push("content-games");
         props.class.push("content-item-boxes");
 
-        if (state['error']){
+        var LoadMore = null;
+
+        if (error){
             return <ContentError code="400">"Bad Request : Couldn't load games"</ContentError>;
         }
-        else if(state['feed'] && state.feed.length > 0)
+        else if(feed && feed.length > 0)
         {
-            var games = state.feed.map( g => {
-                return <ContentItemBox node={g} path={props.path} user={props.user}/>;
+            var games = feed.map( g => {
+                return <ContentItemBox node={g.node} path={props.path} user={props.user}/>;
             });
 
+            if ( !props.nomore /*|| added >= 10*/ ){
+				LoadMore = <ContentMore onclick={this.fetchMore} />;
+            }
+
             return(
-                <div class="-bodies">
+                <div class="-bodies content-games">
                     {props.children}
                     <div class={props.class}>
                         {games}
                     </div>
+                    {LoadMore}
                 </div>
             );
         }
-        else if (state['feed']){
+        else if (!feed){
             return (
                 <ContentCommon {...props}>
                     <ContentCommonBodyTitle href={""} title={"No Games!"} />

@@ -1,5 +1,6 @@
 import { h, Component } 				from 'preact/preact';
 import NavSpinner						from 'com/nav-spinner/spinner';
+import ContentLoading					from 'com/content-loading/loading';
 
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
@@ -14,20 +15,25 @@ export default class ContentItemBox extends Component {
 
 
     render(props){
-        var game = props.node;
-        var title = game.name;
-        var cover = game.meta.cover;
-        var link = props.path + "/" + game.slug;
 
-        props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
-        props.class.push("content-item-box");
+        if (props.node){
+            var game = props.node;
+            var title = game.name;
+            var cover = (game['meta'] && game.meta['cover']) ? game.meta.cover : "";
+            var link = props.path + "/" + game.slug;
 
-        return (
-            <ContentCommon {...props}>
-                <ContentCommonBodyTitle href={link} title={title} />
-                <IMG2 src={cover} failsrc="///other/asset/TVFail.png" />
-            </ContentCommon>
-        );
+            props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
+            props.class.push("content-item-box");
+
+            return (
+                <ContentCommon {...props}>
+                    <ContentCommonBodyTitle href={link} title={title} />
+                    <IMG2 src={cover} failsrc="///other/asset/TVFail.png" />
+                </ContentCommon>
+            );
+        }
+        else {
+            return <ContentLoading />;
+        }
     }
-
 }
