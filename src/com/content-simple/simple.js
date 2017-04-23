@@ -233,17 +233,23 @@ export default class ContentSimple extends Component {
 					ShowByLine = <ContentCommonBodyBy node={node} authors={authors} />;
 				}
 				else {
-					ShowByLine = <div class="content-common-body">Visit <NavLink blank href={user.path+'/following'}>your userpage</NavLink> to add authors. <br /><strong>NOTE:</strong> You can only add friends (users that follow each other).</div>;
+					ShowByLine = (
+						<div class="content-common-body">
+							<div class="-label">Authors</div>
+							Visit <NavLink blank href={user.path+'/following'}>your userpage</NavLink> to add authors. <br />
+							<strong>NOTE:</strong> You can only add friends (users that follow each other).
+						</div>
+					);
 				}
 			}
 			else if ( props.updated && !state.editing ) {
 				ShowByLine = <ContentCommonBodyBy node={node} label="Last updated" modified />;					
 			}
 			
-//			if ( props.editonly && state.editing ) {
-//				ShowEditOnly = props.editonly;
-//			}
-//			else 
+			if ( props.editonly && state.editing ) {
+				ShowEditOnly = props.editonly;
+			}
+			else 
 			if ( props.authors && state.editing ) {
 				ShowEditOnly = <ContentCommonBody>
 					Hey sorry for the delay! Publishing your game is coming soon!<br />

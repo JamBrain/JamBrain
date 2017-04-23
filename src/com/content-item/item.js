@@ -15,9 +15,9 @@ import ContentFooterEdit				from 'com/content-footer/footer-edit';
 
 import ContentHeadlineEdit				from 'com/content-headline/headline-edit';
 
+import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
-
 
 import ContentSimple					from 'com/content-simple/simple';
 
@@ -47,7 +47,6 @@ export default class ContentItem extends Component {
 //		this.onModifyTitle = this.onModifyTitle.bind(this);
 //		this.onModifyBody = this.onModifyBody.bind(this);
 
-//		this.onSetSubSubType = this.onSetSubSubType.bind(this);
 		this.onSetJam = this.onSetJam.bind(this);
 		this.onSetCompo = this.onSetCompo.bind(this);
 	}
@@ -202,19 +201,31 @@ export default class ContentItem extends Component {
 //		}
 //	}
 
-//	onSetSubSubType( e, type ) {
-//		console.log("type", type);
-//	}
-
 	setSubSubType( type ) {
-		
+		return $Node.Transform(this.props.node.id, 'item', 'game', type)
+		.then( r => {
+			if ( r ) {
+				if ( r.changed ) {
+					console.log( 'oo', this.props.node.subsubtype );
+					this.props.node.subsubtype = type;
+					this.setState({});
+				}
+			}
+			return r;
+		});
 	}
 
 	onSetJam( e ) {
-		console.log('jam');
+		return this.setSubSubType('jam')
+			.then( r => {
+				
+			});
 	}
 	onSetCompo( e ) {
-		console.log('compo');
+		return this.setSubSubType('compo')
+			.then( r => {
+				
+			});
 	}
 
 	render( props, state ) {
@@ -254,27 +265,73 @@ export default class ContentItem extends Component {
 		if ( extra && extra.length && extra[0] == 'edit' ) {
 			ShowEventPicker = (
 				<ContentCommonNav>
-					<div>Event</div>
+					<div class="-label">Event</div>
 					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
 					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
-					<div>Please refer to <NavLink blank href="/event/ludum-dare/rules">the rules</NavLink></div>
+					<div>Please refer to <NavLink blank href="/event/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know, pick the <strong>Jam</strong>.<br />Because {"we're"} running late, {"we're"} letting you choose all weekend. Honour system, ok?</div>
 				</ContentCommonNav>
 			);
 		}
 		
+		var ShowPrePub = (
+			<div style="background: #E53; color: #FFF; padding: 0 0.5em;"><ContentCommonBody>
+				<strong>Hey folks!</strong> We're going to let you pre-publish your entries as we finish the data fields below. Please come back and update your page. We'll have new things fixed and added reguraly.<br />
+				<br />
+				I've included summaries of what to expect for each. In the mean time, I recommend you add your links above, and a screenshot or two. Here's an example:<br />
+				<br />
+				<div style="background:#FFF; color:#000; padding: 0.5em; border-radius: 0.25em"><strong>Sample Game:</strong> <NavLink blank href="/events/ludum-dare/38/ludum-dare-dot-com">Ludumdare.com</NavLink></div>
+				<br />
+				Then rest, relax, take it easy. We'll have this cleaned up soon!<br />
+				<br />
+				Lets also say that judging will begin Wednesday (possibly a little earlier), just in case it takes longer than expected (i.e. like all of this). <strong>Thank you for your patience!</strong>
+			</ContentCommonBody></div>
+		);
+		
 		var ShowOptOut = null;
 		if ( true ) {
-			
+			ShowOptOut = (
+				<ContentCommonBody>
+					<div class="-label">Voting Category Opt-outs</div>
+					{"Opt-out of categories here. Say, if your team didn't make all your graphics, audio, or music during the event. "}
+					{"Many participants are making original content from scratch during the event. It's not fair to get a rating a category if you didn't do the same."}
+				</ContentCommonBody>
+			);
 		}
 		
-		props.editonly = <div>
-			{ShowEventPicker}
-			{ShowOptOut}
-		</div>;
+		var ShowShots = null;
+		if ( true ) {
+			ShowShots = (
+				<ContentCommonBody>
+					<div class="-label">Images</div>
+					<div>Cover Image - this will be squared and used as box art (final size TBD)</div>
+					<div>Screen Shots - These go up top, above your Title and Description. Try to keep your GIFs less than 640 pixels wide.</div>
+					<div>Video - Or we can put a YouTube video up top</div>
+					<div><del>Embed - If we do add this, it's going to be much later</del></div>
+				</ContentCommonBody>
+			);
+		}
 
-		return (
-			<ContentSimple {...props} by authors>
-			</ContentSimple>
+		var ShowLinks = null;
+		if ( true ) {
+			ShowLinks = (
+				<ContentCommonBody>
+					<div class="-label">Links</div>
+					<div>Download Links</div>
+					<div>Source Code</div>
+				</ContentCommonBody>
+			);
+		}
+		
+		props.editonly = (
+			<div>
+				{ShowEventPicker}
+				{ShowPrePub}
+				{ShowOptOut}
+				{ShowShots}
+				{ShowLinks}
+			</div>
 		);
+
+		return <ContentSimple {...props} by authors />;
 	}
 }
