@@ -5,11 +5,11 @@ export default {
 	GetKeyed,
 	Walk,
 	GetFeed,
-	
+
 	GetMy,
 	Where,
 	What,
-	
+
 	Add,
 	Update,
 	Publish
@@ -40,7 +40,7 @@ export function GetKeyed( ids ) {
 	});
 }
 
-export function GetFeed( id, methods, types, subtypes, subsubtypes, more, limit ) {
+export function GetFeed( id, methods, types, subtypes, subsubtypes, from, limit, page ) {
 	let args = [];
 
 	args.push(id);
@@ -73,16 +73,19 @@ export function GetFeed( id, methods, types, subtypes, subsubtypes, more, limit 
 			}
 		}
 	}
-	
+
 	var query = [];
-	
-	if ( more ) {
-		query.push("offset="+more);
+
+	if ( from ) {
+		query.push("from="+from);
 	}
 	if ( limit ) {
 		query.push("limit="+limit);
 	}
-	
+	if ( page ) {
+		query.push("page="+page);
+	}
+
 	if ( query.length )
 		query = "?"+query.join('&');
 
@@ -112,11 +115,11 @@ export function Add( id, node_type, node_subtype, node_subsubtype ) {
 	}
 	if ( node_subtype ) {
 		args.push(node_subtype);
-	}	
+	}
 	if ( node_subsubtype ) {
 		args.push(node_subsubtype);
-	}	
-	
+	}
+
 	return Fetch.Post(API_ENDPOINT+'/vx/node/add/'+args.join('/'), {});
 
 }
@@ -126,14 +129,13 @@ export function Publish( id ) {
 
 export function Update( id, name, body, tag ) {
 	var Data = {};
-	
+
 	if (name)
 		Data.name = name;
 	if (body)
 		Data.body = body;
 	if (tag)
 		Data.tag = tag;
-	
+
 	return Fetch.Post(API_ENDPOINT+'/vx/node/update/'+id, Data);
 }
-
