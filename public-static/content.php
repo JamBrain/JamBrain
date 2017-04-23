@@ -76,28 +76,29 @@ foreach( $ext_part as &$value ) {
 			$out['height'] = $h;
 		}
 	}
+	else {
+		echo "unknown prop: '$value'\n";
+		exit;
+	}
 }
 
-var_dump($out);
-
 if ( hasChanges( $out ) ) {
+	echo "nope";
+//	echo $in_path;
 	
-	
-	echo $in_path;
-	
-	echo 'h..';
-	
-	if ( file_exists($out_path) ) {
-		echo 'vvv';
-	}
-	if ( file_exists($src_path) ) {
-		echo 'eee';
-	}
+//	echo 'h..';
+//	
+//	if ( file_exists($out_path) ) {
+//		echo 'vvv';
+//	}
+//	if ( file_exists($src_path) ) {
+//		echo 'eee';
+//	}
 }
 else {
 	if ( file_exists($src_path) ) {
-		symlink( $src_path, $out_path );
-		
-		
+		//symlink( $src_path, $out_path );
+		echo "no changes\n";
+		var_dump($src_path);
 	}
 }
