@@ -165,7 +165,7 @@ export default class ContentGames extends Component {
                 </div>
             );
         }
-        else if ( loaded == false && feed && feed.length == 0 ){
+        else if ( loaded && feed && feed.length == 0 ){
             return (
                 <ContentCommon {...props}>
                     <ContentCommonBodyTitle href={""} title={"No Games!"} />
