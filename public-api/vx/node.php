@@ -41,6 +41,18 @@ const VALID_LINK = [
 	],
 ];
 
+const VALID_TRANSFORMS = [
+	'item/game' => [
+		'item/game/jam',
+		'item/game/compo',
+	],
+	'item/game/compo' => [
+		'item/game/jam',
+	],
+	'item/game/jam' => [
+		'item/game/compo',
+	],
+];
 
 // Do Actions
 $action = json_ArgShift();
@@ -211,7 +223,18 @@ switch ( $action ) {
 
 			$subtypes = json_ArgShift();
 			if ( !empty($subtypes) ) {
+				//$subtypes = array_map("coreSlugify_Name", explode('+', $subtypes));
+				$subtypes = coreSlugify_Name($subtypes);
+				
 				$RESPONSE['subtypes'] = $subtypes;
+			}
+
+			$subsubtypes = json_ArgShift();
+			if ( !empty($subsubtypes) ) {
+				//$subsubtypes = array_map("coreSlugify_Name", explode('+', $subsubtypes));
+				$subsubtypes = coreSlugify_Name($subsubtypes);
+				
+				$RESPONSE['subsubtypes'] = $subsubtypes;
 			}
 			
 			$RESPONSE['offset'] = 0;
@@ -228,7 +251,7 @@ switch ( $action ) {
 					$RESPONSE['limit'] = 25;
 			}
 
-			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes, null/*$subsubtypes*/, null, $RESPONSE['limit'], $RESPONSE['offset'] );
+			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset'] );
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
@@ -499,6 +522,29 @@ switch ( $action ) {
 			json_EmitFatalError_Permission(null, $RESPONSE);
 		}
 		break; //case 'update': //node/update
+
+	case 'transform': //node/transform
+		json_ValidateHTTPMethod('POST');
+
+		$node_id = intval(json_ArgGet(0));
+		$user_id = userAuth_GetID();
+
+		if ( $node_id && $user_id ) {
+			if ( $node = node_GetById($node_id) ) {
+				// TODO: Improve Permissions
+				if ( !$node['author'] == $user_id ) {
+					json_EmitFatalError_Forbidden("You can't transform this", $RESPONSE);
+				}
+				
+				
+				
+			}
+		}
+		else {
+			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
+
+		break; //case 'transform': //node/transform
 
 	case 'drafts': //node/drafts
 	
