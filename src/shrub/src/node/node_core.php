@@ -454,11 +454,11 @@ function node_SetType( $id, $type, $subtype = null, $subsubtype = null ) {
 	$QUERY[] = 'type=?';
 	$ARGS[] = $type;
 
-	if ( is_integer($subtype) ) {
+	if ( is_string($subtype) ) {
 		$QUERY[] = 'subtype=?';
 		$ARGS[] = $subtype;
 	}
-	if ( is_integer($subsubtype) ) {
+	if ( is_string($subsubtype) ) {
 		$QUERY[] = 'subsubtype=?';
 		$ARGS[] = $subsubtype;
 	}

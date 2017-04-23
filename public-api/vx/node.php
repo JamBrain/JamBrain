@@ -526,18 +526,50 @@ switch ( $action ) {
 	case 'transform': //node/transform
 		json_ValidateHTTPMethod('POST');
 
-		$node_id = intval(json_ArgGet(0));
+		$node_id = intval(json_ArgShift());
 		$user_id = userAuth_GetID();
 
 		if ( $node_id && $user_id ) {
 			if ( $node = node_GetById($node_id) ) {
 				// TODO: Improve Permissions
-				if ( !$node['author'] == $user_id ) {
+				if ( $node['author'] != $user_id ) {
 					json_EmitFatalError_Forbidden("You can't transform this", $RESPONSE);
 				}
 				
+				$old_type = $node['type'];
+				if ( $node['subtype'] )
+					$old_type .= '/'.$node['subtype'];
+				if ( $node['subsubtype'] )
+					$old_type .= '/'.$node['subsubtype'];
 				
+				$RESPONSE['id'] = $node_id;
+				$RESPONSE['before'] = $old_type;
 				
+				$type = json_ArgShift();
+				$subtype = json_ArgShift();
+				$subsubtype = json_ArgShift();
+				
+				$type = $type ? coreSlugify_Name($type) : $type;
+				$subtype = $subtype ? coreSlugify_Name($subtype) : $subtype;
+				$subsubtype = $subsubtype ? coreSlugify_Name($subsubtype) : $subsubtype;
+				
+				$new_type = $type;
+				if ( $subtype )
+					$new_type .= '/'.$subtype;
+				if ( $subsubtype )
+					$new_type .= '/'.$subsubtype;
+				
+				$RESPONSE['after'] = $new_type;
+				
+				if ( $new_type == $old_type ) {
+					$RESPONSE['changed'] = 0;
+				}
+				else if ( in_array($new_type, VALID_TRANSFORMS[$old_type]) ) {
+					$RESPONSE['changed'] = node_SetType($node_id, $type ? $type : "", $subtype ? $subtype : "", $subsubtype ? $subsubtype : "");
+				}
+				else {
+					json_EmitFatalError_Forbidden("Not a valid transform '$old_type' to '$new_type'", $RESPONSE);
+				}
 			}
 		}
 		else {
@@ -825,7 +857,7 @@ switch ( $action ) {
 				if ( $node_id && $user_id ) {
 					if ( $node = node_GetById($node_id) ) {
 						// TODO: Improve Permissions
-						if ( !$node['author'] == $user_id )
+						if ( $node['author'] != $user_id )
 							json_EmitFatalError_Permission(null, $RESPONSE);
 
 						if ( !isset(VALID_META[$node['type']]) )

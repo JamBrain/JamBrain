@@ -240,10 +240,10 @@ export default class ContentSimple extends Component {
 				ShowByLine = <ContentCommonBodyBy node={node} label="Last updated" modified />;					
 			}
 			
-//			if ( props.editonly && state.editing ) {
-//				ShowEditOnly = props.editonly;
-//			}
-//			else 
+			if ( props.editonly && state.editing ) {
+				ShowEditOnly = props.editonly;
+			}
+			else 
 			if ( props.authors && state.editing ) {
 				ShowEditOnly = <ContentCommonBody>
 					Hey sorry for the delay! Publishing your game is coming soon!<br />
