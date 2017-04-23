@@ -48,19 +48,20 @@ export default class ContentEvent extends Component {
 
 	onJoin( e ) {
 		var featured = this.props.featured;
-		
+
 		window.location.hash = "#create/"+featured.id+"/item/game";
 	}
-	
+
 	render( props, state ) {
 		props = Object.assign({}, props);
-		
+
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
+
 		var featured = props.featured;
-		
+
 		if ( node ) {
 			props.header = "EVENT";
 			props.headerClass = "-col-ab";
@@ -78,29 +79,43 @@ export default class ContentEvent extends Component {
 
 			ShowHome = <ContentCommonNavButton href={path} class={Class}><SVGIcon>home</SVGIcon><div class="if-sidebar-inline">Home</div></ContentCommonNavButton>;
 		}
-		
-		var ShowGame = null;
-		if ( user && user.id && node_CanCreate(node) ) {
-			let Class = null;
-//			if ( extra && extra.length ) {
-//				Class = "-disabled";
-//			}
 
-			// NOTE: THIS IS WRONG! We should be asking the event node (i.e. this) for `what`. Alas, with 1 event we can cheat 
-			if ( featured && featured.what && featured.what.length ) {
-				var FeaturedGame = featured.what[featured.what.length-1]; // Hack
-//				ShowGame =
-				
+		var ShowGame = null;
+		if ( true ) {
+            console.log(extra);
+			let Class = null;
+			if ( extra && extra.length > 0 && extra[0] == "games") {
+				Class = "-selected";
 			}
-			else {
-				ShowGame = (
-					<ContentCommonNavButton onclick={this.onJoin} class={Class}>
-						<SVGIcon>publish</SVGIcon><div class="if-sidebar-inline">Join Event</div>
-					</ContentCommonNavButton>
-				);
-			}
+
+			ShowGame = <ContentCommonNavButton href={path+'/games'} class={Class}><SVGIcon>gamepad</SVGIcon><div class="if-sidebar-inline">View Games</div></ContentCommonNavButton>;
 		}
-		
+
+//		if ( extra && extra.length ) {
+//			Class = "-disabled";
+//		}
+        var ShowJoin = null;
+        if ( user && user.id && node_CanCreate(node) ) {
+            var Class = "-diabled";
+            if ( extra && extra.length > 0 && extra[0] == "games") {
+                Class = "-selected";
+            }
+
+    		// NOTE: THIS IS WRONG! We should be asking the event node (i.e. this) for `what`. Alas, with 1 event we can cheat
+    		if ( featured && featured.what && featured.what.length ) {
+    			var FeaturedGame = featured.what[featured.what.length-1]; // Hack
+//				ShowGame =
+
+    		}
+    		else {
+    			ShowJoin = (
+    				<ContentCommonNavButton onclick={this.onJoin} class={Class}>
+    					<SVGIcon>publish</SVGIcon><div class="if-sidebar-inline">Join Event</div>
+    				</ContentCommonNavButton>
+    			);
+    		}
+        }
+
 		var ShowFeed = null;
 //		if ( true ) {
 //			let Class = null;
@@ -116,8 +131,8 @@ export default class ContentEvent extends Component {
 //					Class = "-selected";
 //				}
 //			}
-//			
-//			ShowFeed = <ContentCommonNavButton href={path} class={Class}><SVGIcon>feed</SVGIcon>Feed</ContentCommonNavButton>;	
+//
+//			ShowFeed = <ContentCommonNavButton href={path} class={Class}><SVGIcon>feed</SVGIcon>Feed</ContentCommonNavButton>;
 //		}
 
 		var ShowTheme = null;
@@ -131,13 +146,13 @@ export default class ContentEvent extends Component {
 
 			ShowTheme = <ContentCommonNavButton href={path+'/theme'} class={Class}><SVGIcon>ticket</SVGIcon><div class="if-sidebar-inline">Theme Selection</div></ContentCommonNavButton>;
 		}
-		
+
 		if ( !IsHome )
 			props.nomarkup = true;
-		
+
 		props.class = 'content-event';
 		props.above = [];
-		
+
 		if ( node.meta['event-start'] && node.meta['event-end'] ) {
 			let Start = new Date(node.meta['event-start']);
 			let End = new Date(node.meta['event-end']);
@@ -146,7 +161,7 @@ export default class ContentEvent extends Component {
 			if ( navigator.languages ) {
 				LanguagePrefix += "["+navigator.languages.join(',')+"] ";
 			}
-			
+
 			props.above.push(
 				<ContentCommonBody>
 					<div><SVGIcon small baseline gap>calendar</SVGIcon> {getLocaleDay(Start)} {getLocaleMonthDay(Start)} to <span class="if-sidebar-inline">{getLocaleDay(End)}</span> {getLocaleDate(End)}</div>
@@ -154,18 +169,19 @@ export default class ContentEvent extends Component {
 				</ContentCommonBody>
 			);
 		}
-		
+
 		return (
 			<ContentSimple {...props}>
 				<ContentCommonNav>
 					{ShowHome}
+                    {ShowJoin}
 					{ShowGame}
 					{ShowFeed}
 					{ShowTheme}
 				</ContentCommonNav>
 			</ContentSimple>
 		);
-			
+
 //		props = Object.assign({}, props);	// Shallow copy we can change props
 //
 //		var node = props.node;
@@ -178,8 +194,8 @@ export default class ContentEvent extends Component {
 //			return (
 //				<ContentCommon {...props}>
 //					<ContentCommonBodyTitle href={path} title={node.name} />
-//					<ContentCommonBodyMarkup 
-//						node={node} 
+//					<ContentCommonBodyMarkup
+//						node={node}
 //						editing={state.editing}
 //						placeholder="Say something"
 //						class="-block-if-not-minimized"
@@ -203,18 +219,18 @@ export default class ContentEvent extends Component {
 /*
 		if ( node.slug ) {
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
-			
+
 			let ThemeMode = (node.meta['theme-mode']) ? parseInt(node.meta['theme-mode']) : 0;
-			
+
 			var EventBody = null;
-			
+
 			// Internal URLs
 			if ( extra.length ) {
 				// Theme Selection URL (/theme/)
 				if ( extra[0] === 'theme' ) {
 					var _path = path + '/' + extra[0];
 					var _extra = extra.slice(1);
-					
+
 					switch (ThemeMode) {
 						case 1:
 							EventBody = <ContentEventIdea node={node} user={user} path={_path} extra={_extra} />;
@@ -253,7 +269,7 @@ export default class ContentEvent extends Component {
 			else {
 				EventBody = (<ContentEventHome node={node} user={user} path={path} extra={extra} />);
 			}
-			
+
 			var EventWhen = null;
 			var EventWhere = null;
 			if ( node.meta['when'] ) {
@@ -262,7 +278,7 @@ export default class ContentEvent extends Component {
 			if ( node.meta['where'] ) {
 				EventWhere = <div class="-detail -where"><SVGIcon baseline small>location</SVGIcon> <span>{node.meta['where']}</span></div>;
 			}
-				
+
 			return (
 				<div class="content-base content-user-legacy content-event">
 					<div class="-header">

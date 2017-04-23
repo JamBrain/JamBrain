@@ -1,8 +1,13 @@
 import { h, Component }					from 'preact/preact';
 
 import ContentPost						from 'com/content-post/post';
-import ContentUser						from 'com/content-user/user';
+
 import ContentUsers						from 'com/content-users/users';
+import ContentUser						from 'com/content-user/user';
+//import ContentUserGames                 from 'com/content-user/user-games';
+import ContentUserFollowing             from 'com/content-user/user-following';
+import ContentUserFollowers             from 'com/content-user/user-followers';
+
 import ContentTimeline					from 'com/content-timeline/timeline';
 import ContentGames						from 'com/content-games/games';
 import ContentEvent						from 'com/content-event/event';
@@ -22,8 +27,8 @@ import ContentNavTheme					from 'com/content-nav/nav-theme';
 import ContentEventTheme				from 'com/content-event/event-theme';
 
 import ContentPalette					from 'com/content-palette/palette';
-import ContentUserFollowing             from 'com/content-user/user-following';
-import ContentUserFollowers             from 'com/content-user/user-followers';
+
+
 
 export default class ViewContent extends Component {
 	constructor( props ) {
@@ -72,7 +77,7 @@ export default class ViewContent extends Component {
 				ShowNav = <ContentNavItem node={node} user={user} path={path} extra={extra} />;
 				ShowFeed = <ContentComments node={node} user={user} path={path} extra={extra} />;
 			}
-			
+
 			return (
 				<div id="content">
 					<ContentItem node={node} user={user} path={path} extra={extra} featured={featured} />
@@ -90,9 +95,9 @@ export default class ViewContent extends Component {
 			}
 			else {
 				// Default View (i.e. URL is `/`)
-				if ( node['games'] > 0 )
+				/*if ( node['games'] > 0 ) //Disabled games as default as api needs work
 					ViewType = 'games';
-				else if ( node['articles'] > 0 )
+				else*/ if ( node['articles'] > 0 )
 					ViewType = 'articles';
 				else
 					ViewType = 'feed';
@@ -104,11 +109,7 @@ export default class ViewContent extends Component {
 			}
 			else {
 				if ( ViewType ) {
-					if ( ViewType == 'games' ) {
-						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
-						View.push(<ContentGames types={['game']} methods={['author']} node={node} user={user} path={path} extra={extra} />);
-					}
-					else if ( ViewType == 'articles' ) {
+					if ( ViewType == 'articles' ) {
 						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
 						View.push(<ContentTimeline types={['page']} methods={['author']} node={node} user={user} path={path} extra={extra} />);
 					}
@@ -116,16 +117,19 @@ export default class ViewContent extends Component {
 						let Methods = ['author'];
 						if ( node.id == user.id )
 							Methods.push('unpublished');
-						
+
                         View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
 						View.push(<ContentTimeline types={['post']} methods={Methods} node={node} user={user} path={path} extra={extra} />);
 					}
 					else if ( ViewType == 'post' ) {
 //						View.push(<ContentPost node={node} user={user} path={path} extra={extra.splice(1)} by love edit />);
 					}
-					else if ( ViewType == 'game' ) {
+					else if ( ViewType == 'games' ) {
+						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
+						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['author']}/>);
 					}
 					else if ( ViewType == 'article' ) {
+
 					}
                     else if ( ViewType == 'following'){
                         View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} featured={featured} />);
@@ -146,7 +150,7 @@ export default class ViewContent extends Component {
 
 			return (
 				<div id="content">
-					<ContentUser node={node} user={user} path={path} extra={extra} />
+					<ContentUser node={node} user={user} path={path} extra={extra}/>
 					{View}
 				</div>
 			);
@@ -168,6 +172,11 @@ export default class ViewContent extends Component {
 				ShowNav = <ContentNavTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
 				ShowPage = <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
 			}
+            else if(extra && extra.length && extra[0] == 'games'){
+                //let NewPath = path+'/'+extra[0];
+                //let NewExtra = extra.slice(1);
+                ShowPage = <ContentGames node={node} user={user} path={path} extra={extra}/>;
+            }
 			else {
 				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
 			}
@@ -213,7 +222,7 @@ export default class ViewContent extends Component {
 					Viewing = '/feed';
 				}
 			}
-			
+
 			if ( Viewing == '/news' ) {
 				return <ContentTimeline types={['post']} subtypes={['news']} methods={['all']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 			}
@@ -221,7 +230,7 @@ export default class ViewContent extends Component {
 				return <ContentTimeline node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 			}
 			else if ( Viewing == '/games' ) {
-				return <ContentGames types={['game']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentGames>;
+				return <div id="content"><ContentGames node={node} user={user} path={path} extra={extra} methods={['all']}>{ShowNavRoot}</ContentGames></div>;;
 			}
 			else if ( Viewing == '/feed' ) {
 				return (
