@@ -92,13 +92,13 @@ function ShowSlaughter( $logged_in ) {
 //					"<div class='sg-item-x' onclick='kill_RemoveTheme("+Id+",\""+(ThemeAttr)+"\")'>❤</div>";
 				switch( value ) {
 				case 1:
-					node.innerHTML += "<div class='item-left item-good' title='Good'>✓</div>";
+					node.innerHTML += "<div class='item-left item-good' title='Good' accesskey='a'>✓</div>";
 					break;
 				case 0:
-					node.innerHTML += "<div class='item-left item-bad' title='Bad'>✕</div>";
+					node.innerHTML += "<div class='item-left item-bad' title='Bad' accesskey='d'>✕</div>";
 					break;
 				case -1:
-					node.innerHTML += "<div class='item-left item-flag' title='Flag'>⚑</div>";
+					node.innerHTML += "<div class='item-left item-flag' title='Flag' accesskey='s'>⚑</div>";
 					break;
 				};
 				node.innerHTML +=
