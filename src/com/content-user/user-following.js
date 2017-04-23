@@ -15,22 +15,29 @@ export default class ContentUserFollowing extends Component {
 
         this.getFollowing = this.getFollowing.bind(this);
         this.hasPermission = this.hasPermission.bind(this);
+        this.hasFollowing = this.hasFollowing.bind(this);
 
         this.state = {
-            "followingNodes" : null
+            "followingNodes" : []
         };
 
     }
 
     componentDidMount() {
-        if (this.hasPermission()){
+        // make sure we actually have a following to display
+        if (this.hasFollowing() && this.hasPermission()){
             // if were looking at our own page then display following
             this.getFollowing(this.props.user.private.link.star);
         }
+
     }
 
     hasPermission(){
         return (this.props.node.id == this.props.user.id);
+    }
+
+    hasFollowing(){
+        return (this.props.user['private'] && this.props.user.private['link']&& this.props.user.private.link['star']);
     }
 
     getFollowing(ids){
@@ -48,7 +55,19 @@ export default class ContentUserFollowing extends Component {
         props.class.push("content-user-following");
 
         // display a loading bar whilst we wait
-        if (state.followingNodes){
+        if (!this.hasPermission()){
+            // if were not allowed to see the nodes following then display an error
+            return <ContentError code="401">Permission Denied : Cannot see who other people are following </ContentError>;
+        }
+        else if (!this.hasFollowing())
+        {
+            return (
+                <ContentCommon {...props}>
+                    <h1> Your not currently following anyone </h1>
+                </ContentCommon>
+            );
+        }
+        else if (state.followingNodes  && state.followingNodes.length > 0){
 
             // turn our array of following nodes to ContentUserBar 's
             var following = state.followingNodes
@@ -78,10 +97,6 @@ export default class ContentUserFollowing extends Component {
                     {following}
                 </ContentCommon>
             );
-        }
-        else if (!this.hasPermission()){
-            // if were not allowed to see the nodes following then display an error
-            return <ContentError code="401">Permission Denied : Cannot see who other people are following </ContentError>;
         }
         else{
             // Show a spinner whilst were loading
