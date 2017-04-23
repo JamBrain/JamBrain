@@ -75,10 +75,8 @@ export default class ContentGames extends Component {
         var keys = this.getFeedIdsWithoutNodes();
 
         if ( keys.length ) {
-            console.log(keys);
             return $Node.GetKeyed( keys )
                 .then(r => {
-                    console.log(r);
                     var feed = this.state.feed;
                     var hash = this.state.hash;
 
@@ -100,7 +98,6 @@ export default class ContentGames extends Component {
     getFeed( id, methods, types, subtypes, subsubtypes, more, limit ) {
         $Node.GetFeed( id, methods, types, subtypes, subsubtypes, more, limit )
         .then(r => {
-            console.log(r);
             if ( r.feed && r.feed.length ) {
                 this.appendFeed(r.feed);
                 return this.getMissingNodes();
@@ -113,7 +110,7 @@ export default class ContentGames extends Component {
 
     fetchMore( offset ) {
 
-        console.log("MORE");
+        console.log("loading more");
 
         var props = this.props;
         var offset = this.state.offset;
@@ -124,7 +121,7 @@ export default class ContentGames extends Component {
             props.node.id,
             props.methods ? props.methods : ['parent', 'superparent'],
             props.types ? props.types : ['item'],
-            props.subtypes ? props.subtypes : ['games'],
+            props.subtypes ? props.subtypes : ['game'],
             props.subsubtypes ? props.subsubtypes : null,
             offset,
             this.props.limit ? this.props.limit : 15
