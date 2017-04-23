@@ -18,7 +18,6 @@ import ContentHeadlineEdit				from 'com/content-headline/headline-edit';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
-
 import ContentSimple					from 'com/content-simple/simple';
 
 
@@ -47,7 +46,6 @@ export default class ContentItem extends Component {
 //		this.onModifyTitle = this.onModifyTitle.bind(this);
 //		this.onModifyBody = this.onModifyBody.bind(this);
 
-//		this.onSetSubSubType = this.onSetSubSubType.bind(this);
 		this.onSetJam = this.onSetJam.bind(this);
 		this.onSetCompo = this.onSetCompo.bind(this);
 	}
@@ -202,19 +200,31 @@ export default class ContentItem extends Component {
 //		}
 //	}
 
-//	onSetSubSubType( e, type ) {
-//		console.log("type", type);
-//	}
-
 	setSubSubType( type ) {
-		
+		return $Node.Transform(this.props.node.id, 'item', 'game', type)
+		.then( r => {
+			if ( r ) {
+				if ( r.changed ) {
+					console.log( 'oo', this.props.node.subsubtype );
+					this.props.node.subsubtype = type;
+					this.setState({});
+				}
+			}
+			return r;
+		});
 	}
 
 	onSetJam( e ) {
-		console.log('jam');
+		return this.setSubSubType('jam')
+			.then( r => {
+				
+			});
 	}
 	onSetCompo( e ) {
-		console.log('compo');
+		return this.setSubSubType('compo')
+			.then( r => {
+				
+			});
 	}
 
 	render( props, state ) {

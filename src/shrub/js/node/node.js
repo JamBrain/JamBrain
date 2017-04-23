@@ -12,7 +12,9 @@ export default {
 	
 	Add,
 	Update,
-	Publish
+	Publish,
+
+	Transform
 };
 
 var Nodes = {};
@@ -126,14 +128,24 @@ export function Publish( id ) {
 
 export function Update( id, name, body, tag ) {
 	var Data = {};
-	
-	if (name)
+
+	if ( name )
 		Data.name = name;
-	if (body)
+	if ( body )
 		Data.body = body;
-	if (tag)
+	if ( tag )
 		Data.tag = tag;
-	
+
 	return Fetch.Post(API_ENDPOINT+'/vx/node/update/'+id, Data);
 }
 
+
+export function Transform( id, type, subtype, subsubtype ) {
+	var new_type = type;
+	if ( subtype )
+		new_type += '/'+subtype;
+	if ( subsubtype )
+		new_type += '/'+subsubtype;
+	
+	return Fetch.Post(API_ENDPOINT+'/vx/node/transform/'+id+'/'+new_type, {});
+}
