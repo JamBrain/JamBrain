@@ -15,6 +15,9 @@ import ContentFooterEdit				from 'com/content-footer/footer-edit';
 
 import ContentHeadlineEdit				from 'com/content-headline/headline-edit';
 
+import ContentCommonNav					from 'com/content-common/common-nav';
+import ContentCommonNavButton			from 'com/content-common/common-nav-button';
+
 
 import ContentSimple					from 'com/content-simple/simple';
 
@@ -43,6 +46,10 @@ export default class ContentItem extends Component {
 //		
 //		this.onModifyTitle = this.onModifyTitle.bind(this);
 //		this.onModifyBody = this.onModifyBody.bind(this);
+
+//		this.onSetSubSubType = this.onSetSubSubType.bind(this);
+		this.onSetJam = this.onSetJam.bind(this);
+		this.onSetCompo = this.onSetCompo.bind(this);
 	}
 //	
 //	componentDidMount() {
@@ -195,6 +202,21 @@ export default class ContentItem extends Component {
 //		}
 //	}
 
+//	onSetSubSubType( e, type ) {
+//		console.log("type", type);
+//	}
+
+	setSubSubType( type ) {
+		
+	}
+
+	onSetJam( e ) {
+		console.log('jam');
+	}
+	onSetCompo( e ) {
+		console.log('compo');
+	}
+
 	render( props, state ) {
 		props = Object.assign({}, props);
 		
@@ -203,6 +225,8 @@ export default class ContentItem extends Component {
 		var path = props.path;
 		var extra = props.extra;
 		var featured = props.featured;
+		
+		var Category = '/';
 
 		if ( node ) {
 			if ( node.subtype == 'game' ) {
@@ -211,8 +235,42 @@ export default class ContentItem extends Component {
 				props.titleIcon = "gamepad";
 			}
 			
+			if ( node.subsubtype == 'jam' ) {
+				props.header += ": JAM";
+				Category = '/jam';
+			}
+			else if ( node.subsubtype == 'compo' ) {
+				props.header += ": COMPO";
+				Category = '/compo';
+			}
+			else {
+				props.nopublish = true;
+			}
+			
 			props.draft = "Game";
 		}
+		
+		var ShowEventPicker = null;
+		if ( extra && extra.length && extra[0] == 'edit' ) {
+			ShowEventPicker = (
+				<ContentCommonNav>
+					<div>Event</div>
+					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
+					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
+					<div>Please refer to <NavLink blank href="/event/ludum-dare/rules">the rules</NavLink></div>
+				</ContentCommonNav>
+			);
+		}
+		
+		var ShowOptOut = null;
+		if ( true ) {
+			
+		}
+		
+		props.editonly = [
+			{ShowEventPicker},
+			{ShowOptOut}
+		];
 
 		return (
 			<ContentSimple {...props} by authors>
