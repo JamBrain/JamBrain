@@ -15,6 +15,7 @@ import ContentFooterEdit				from 'com/content-footer/footer-edit';
 
 import ContentHeadlineEdit				from 'com/content-headline/headline-edit';
 
+import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
@@ -264,27 +265,57 @@ export default class ContentItem extends Component {
 		if ( extra && extra.length && extra[0] == 'edit' ) {
 			ShowEventPicker = (
 				<ContentCommonNav>
-					<div>Event</div>
+					<div class="-label">Event</div>
 					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
 					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
-					<div>Please refer to <NavLink blank href="/event/ludum-dare/rules">the rules</NavLink></div>
+					<div>Please refer to <NavLink blank href="/event/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know, pick the <strong>Jam</strong>.<br />Because {"we're"} running late, {"we're"} letting you choose all weekend. Honour system, ok?</div>
 				</ContentCommonNav>
 			);
 		}
 		
 		var ShowOptOut = null;
 		if ( true ) {
-			
+			ShowOptOut = (
+				<ContentCommonBody>
+					<div class="-label">Voting Category Opt-outs</div>
+					{"Opt-out of categories here. Say, if your team didn't make all your graphics, audio, or music during the event."}
+					{"Many participants are making original content from scratch during the event. It's not fair to get a rating a category if you didn't do the same."}
+				</ContentCommonBody>
+			);
 		}
 		
-		props.editonly = <div>
-			{ShowEventPicker}
-			{ShowOptOut}
-		</div>;
+		var ShowShots = null;
+		if ( true ) {
+			ShowShots = (
+				<ContentCommonBody>
+					<div class="-label">Images</div>
+					<div>Cover Image</div>
+					<div>Screen Shots</div>
+				</ContentCommonBody>
+			);
+//					<div>Video</div>
+		}
 
-		return (
-			<ContentSimple {...props} by authors>
-			</ContentSimple>
+		var ShowLinks = null;
+		if ( true ) {
+			ShowLinks = (
+				<ContentCommonBody>
+					<div class="-label">Links</div>
+					<div>Download Links</div>
+					<div>Source Code</div>
+				</ContentCommonBody>
+			);
+		}
+		
+		props.editonly = (
+			<div>
+				{ShowEventPicker}
+				{ShowOptOut}
+				{ShowShots}
+				{ShowLinks}
+			</div>
 		);
+
+		return <ContentSimple {...props} by authors />;
 	}
 }
