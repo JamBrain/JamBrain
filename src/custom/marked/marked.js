@@ -964,7 +964,8 @@ Renderer.prototype.image = function(href, title, text) {
 //  	// Everything is okay. Use this URL as-is
 //  }
   else {
-    return '<div class="unsafe-image-url">' + text + '</div>';
+    //return '<div class="unsafe-image-url">' + text + '</div>';
+    href = STATIC_ENDPOINT + '/internal/pleaseupload.png';
   }
 
   var out = '<img class="img" src="' + href + '" alt="' + text + '"';
