@@ -164,56 +164,61 @@ export default class ContentCommentsComment extends Component {
 
 			var ShowReply = null;
 			//if ( user && user.id )
-			//	ShowReply = <div class="-reply" onclick={this.onReply}><SVGIcon>reply</SVGIcon> Reply</div>;
+			//	ShowReply = <div class="-button -reply" onclick={this.onReply}><SVGIcon>reply</SVGIcon><div>Reply</div></div>;
 
 			var ShowEdit = null;
 			if ( user && comment.author === user.id && !state.editing )
-				ShowEdit = <div class="-edit" onclick={this.onEdit}><SVGIcon>edit</SVGIcon> Edit</div>;
+				ShowEdit = <div class="-button -edit" onclick={this.onEdit}><SVGIcon>edit</SVGIcon></div>;
 
 			var ShowBottomNav = null;
 			//if ( !state.editing )
 			{
 				ShowBottomNav = (
 					<div class="-nav">
-						{ShowReply}
-						{ShowEdit}
-						<div class={"-love"+(state.loved?" -loved":"")} onclick={this.onLove}>
-							<SVGIcon class="-hover-hide">heart</SVGIcon>
-							<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
-							<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
-							{Number.isInteger(state.lovecount) ? state.lovecount : comment.love}
+						<div class="-right">
+							<div class={"-button -love"+(state.loved?" -loved":"")} onclick={this.onLove}>
+								<SVGIcon class="-hover-hide">heart</SVGIcon>
+								<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
+								<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
+								<div>{Number.isInteger(state.lovecount) ? state.lovecount : comment.love}</div>
+							</div>
+							{ShowEdit}
 						</div>
+						
+						<div class="-left">{ShowReply}</div>
 					</div>
 				);
 			}
 
 			var ShowTopNav = null;
 			if ( state.editing ) {
-				var PreviewEdit = null;
+				var ShowLeft = [];
 				if ( !state.preview ) {
-					PreviewEdit = [
-						<div class="-preview" onclick={this.onPreview}><SVGIcon>preview</SVGIcon> Preview</div>,
-						<div class="-editing -selected"><SVGIcon>edit</SVGIcon> Edit</div>,
+					ShowLeft = [
+						<div class="-button -preview" onclick={this.onPreview}><SVGIcon>preview</SVGIcon><div class="if-sidebar-block">Preview</div></div>,
+						<div class="-button -editing -selected"><SVGIcon>edit</SVGIcon><div class="if-sidebar-block">Edit</div></div>,
 					];
 				}
 				else {
-					PreviewEdit = [
-						<div class="-preview -selected"><SVGIcon>preview</SVGIcon> Preview</div>,
-						<div class="-editing" onclick={this.onEditing}><SVGIcon>edit</SVGIcon> Edit</div>,
+					ShowLeft = [
+						<div class="-button -preview -selected"><SVGIcon>preview</SVGIcon><div class="if-sidebar-block">Preview</div></div>,
+						<div class="-button -editing" onclick={this.onEditing}><SVGIcon>edit</SVGIcon><div class="if-sidebar-block">Edit</div></div>,
 					];
 				}
 
+				var ShowRight = [];
 				if ( publish ) {
-					PreviewEdit.push(<div class={"-publish"+(state.modified?" -modified":"")} onclick={this.onPublish}><SVGIcon>publish</SVGIcon> Publish</div>);
+					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublish}><SVGIcon>publish</SVGIcon><div>Publish</div></div>);
 				}
 				else {
-					PreviewEdit.push(<div class="-cancel" onclick={this.onCancel}><SVGIcon>cross</SVGIcon> Cancel</div>);
-					PreviewEdit.push(<div class={"-save"+(state.modified?" -modified":"")} onclick={this.onSave}><SVGIcon>save</SVGIcon> Save</div>);
+					ShowRight.push(<div class="-button -cancel" onclick={this.onCancel}><SVGIcon>cross</SVGIcon> Cancel</div>);
+					ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onclick={this.onSave}><SVGIcon>save</SVGIcon><div>Save</div></div>);
 				}
 
 				ShowTopNav = (
 					<div class="-nav">
-						{PreviewEdit}
+						<div class="-right">{ShowRight}</div>
+						<div class="-left">{ShowLeft}</div>
 					</div>
 				);
 			}
@@ -223,8 +228,10 @@ export default class ContentCommentsComment extends Component {
 					<div class="-avatar"><IMG2 src={Avatar} /></div>
 					<div class="-body">
 						{ShowTopNav}
-						{ShowTitle}
-						<ContentCommentsMarkup user={user} class="-text" editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here" limit={limit}>{comment.body}</ContentCommentsMarkup>
+						<div class="-text">
+							{ShowTitle}
+							<ContentCommentsMarkup user={user} editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here" limit={limit}>{comment.body}</ContentCommentsMarkup>
+						</div>
 						{ShowBottomNav}
 					</div>
 					{children}

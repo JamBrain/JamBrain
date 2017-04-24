@@ -17,11 +17,8 @@ export default class ContentCommentsMarkup extends Component {
 	render( props ) {
 		var Class = [
 //			"content-common-body",
-			"-markup"
+//			"-markup"
 		];
-		if ( typeof props.class == 'string' ) {
-			Class = Class.concat(props.class.split(' '));
-		}
 		
 		var Text = props.children.join('');
 
@@ -32,7 +29,7 @@ export default class ContentCommentsMarkup extends Component {
 			//var Chars = props.children[0] ? props.children[0].length : 0;
 			
 			return (
-				<div class={Class}>
+				<div class={cN(Class, props.class)}>
 					<div class="-label">{props.label}</div>
 					<InputTextArea 
 						user={props.user}
@@ -61,13 +58,14 @@ export default class ContentCommentsMarkup extends Component {
 //					</div>
 		}
 		else {
+			Class.push("-markup");
 			Class.push("markup");
 
 			// NOTE: only parses the first child
 			//var Text = props.children.length ? marked.parse(props.children[0]) : "";
 			Text = marked.parse(Text);
 
-			return <div class={Class} dangerouslySetInnerHTML={{__html: Text}} />;
+			return <div class={cN(Class, props.class)} dangerouslySetInnerHTML={{__html: Text}} />;
 		}
 	}
 }
