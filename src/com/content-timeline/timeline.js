@@ -4,7 +4,9 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 import ContentPost						from 'com/content-post/post';
 import ContentUser						from 'com/content-user/user';
 import ContentMore						from 'com/content-more/more';
+
 import ContentCommon					from 'com/content-common/common';
+import ContentCommonBody				from 'com/content-common/common-body';
 
 import $Node							from '../../shrub/js/node/node';
 
@@ -16,7 +18,7 @@ export default class ContentTimeline extends Component {
 			feed: [],
 			hash: {},
 			offset: 5, //10
-			added: null,
+			lastadded: null,
             loaded : false
 		};
 
@@ -40,19 +42,20 @@ export default class ContentTimeline extends Component {
 	}
 
 	appendFeed( newfeed ) {
-
 		var feed = this.state.feed;
-
 		var hash = this.state.hash;
+		
+		var added = 0;
 
 		for ( var idx = 0; idx < newfeed.length; idx++ ) {
 			var info = newfeed[idx];
 			if ( !hash[info['id']] ) {
 				hash[info['id']] = feed.length;
 				feed.push(info);
+				added++;
 			}
 		}
-		this.setState({'feed': feed, 'hash': hash, 'added': newfeed.length});
+		this.setState({'feed': feed, 'hash': hash, 'lastadded': added});
 	}
 
 	getFeedIdsWithoutNodes() {
@@ -180,25 +183,26 @@ export default class ContentTimeline extends Component {
 		return null;
 	}
 
-	render( props, {feed, added, error, loaded} ) {
-		var ShowFeed = null;
+	render( props, {feed, lastadded, error, loaded} ) {
+		var ShowFeed = [];
 
 		if ( error ) {
-			ShowFeed = error;
+			ShowFeed.push(<ContentCommon><ContentCommonBody>error</ContentCommonBody></ContentCommon>);
 		}
         else if ( loaded && feed && feed.length == 0){
-            ShowFeed = <ContentCommon {...props}><h1>Sorry, there are no {props.types[0]}</h1></ContentCommon>;
+            ShowFeed.push(<ContentCommon {...props}><h1>Sorry, there are no {props.types[0]}</h1></ContentCommon>);
         }
 		else if ( loaded && feed && feed.length ) {
-			ShowFeed = [];
 			if ( feed.length ) {
+				// NOTE: Only place where we directly set it. The rest are pushes
 				ShowFeed = feed.map(this.makeFeedItem);
 			}
-			if ( !props.nomore /*|| added >= 10*/ )
-				ShowFeed.push(<ContentMore onclick={this.fetchMore} />);
+//			if ( !props.nomore /*|| added >= 10*/ )
+//				ShowFeed.push(<ContentMore loading={!loaded} onclick={this.fetchMore} />);
 		}
-		else {
-			ShowFeed = <NavSpinner />;
+
+		if ( !props.nomore && lastadded > 0 ) {
+			ShowFeed.push(<ContentMore loading={!loaded} onclick={this.fetchMore} />);
 		}
 
 		// TERRIBLE HACK! There are two #content's!!
