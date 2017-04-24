@@ -45,11 +45,18 @@ const VALID_TRANSFORMS = [
 	'item/game' => [
 		'item/game/jam',
 		'item/game/compo',
+		'item/craft/jam',
 	],
 	'item/game/compo' => [
 		'item/game/jam',
+		'item/craft/jam',
 	],
 	'item/game/jam' => [
+		'item/game/compo',
+		'item/craft/jam',
+	],
+	'item/craft/jam' => [
+		'item/game/jam',
 		'item/game/compo',
 	],
 ];
@@ -368,6 +375,7 @@ switch ( $action ) {
 				'item/game/release' => -1,	// i.e. unlimited
 
 				'item/craft' => 0,			// i.e. can't create
+				'item/craft/jam' => 0,		// i.e. can't create
 				
 				'post' => -10,				// i.e. unlimited
 				'post/news' => 0,			// i.e. can't create
