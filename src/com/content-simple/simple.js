@@ -271,6 +271,7 @@ export default class ContentSimple extends Component {
 					titleIcon={props.titleIcon} 
 					editing={state.editing} 
 					onmodify={this.onModifyTitle} 
+					limit="80"
 				/>;
 			}
 			
