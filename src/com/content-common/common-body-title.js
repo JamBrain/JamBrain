@@ -27,7 +27,7 @@ export default class ContentCommonBodyTitle extends Component {
 			Prefix = <SVGIcon baseline small>{props.titleIcon}</SVGIcon>;
 		}
 
-		var Limit = 64;	// True limit is 96
+		var Limit = props.limit ? props.limit : 64;	// True limit is 96
 		var Placeholder = props.placeholder ? props.placeholder : 'Title';
 		
 		if (props.editing) {
