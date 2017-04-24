@@ -918,7 +918,7 @@ Renderer.prototype.link = function(href, title, text) {
     } catch (e) {
       return '';
     }
-    if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0) {
+    if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0 || prot.indexOf('data:') === 0) {
       return '';
     }
   }
@@ -932,7 +932,8 @@ Renderer.prototype.link = function(href, title, text) {
   }
   else {
 
-    href = autoEmbed.extractFromURL(href).url;
+	// MK: I disabled this, 'cause I wasn't sure why it was being used. It removed the query string
+//    href = autoEmbed.extractFromURL(href).url;
 
     var out = '<a href="' + href + '"';
     if (title) {

@@ -18,6 +18,7 @@ export default class ViewSidebar extends Component {
 		// TODO: cleanup
 		let ldStartDate = new Date(Date.UTC(2017, 3, 22, 1, 0, 0));
 		let jamEndDate = new Date(Date.UTC(2017, 3, 25, 1, 0, 0));
+		let jamEndDate2 = new Date(Date.UTC(2017, 3, 25, 2, 0, 0));
 		let compoEndDate = new Date(Date.UTC(2017, 3, 24, 1, 0, 0));
 		let compoEndDate2 = new Date(Date.UTC(2017, 3, 24, 2, 0, 0));
 
@@ -37,6 +38,9 @@ export default class ViewSidebar extends Component {
 			
 			if ( now < jamEndDate ) {
 				ShowCountdown.push(<SidebarCountdown date={ jamEndDate } nc="jam" to="Jam" tt="Ends" />);
+			}
+			if ( now < jamEndDate2 ) {
+				ShowCountdown.push(<SidebarCountdown date={ jamEndDate2 } nc="jam" to="Submission Hour" tt="Ends" />);
 			}
 		}
 
