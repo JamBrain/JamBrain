@@ -36,6 +36,10 @@
 		background: @COL_L;
 		padding-bottom: 0.5em;	/* hack to simulate 1em margin */
 	}
+	
+	& .-markup {
+		margin: 0.5em 0;
+	}
 
 	& .-item {
 		position: relative;
@@ -85,37 +89,39 @@
 		}
 		& > .-body {
 			margin-left: 4.5em;
-			margin-top: 1em;
+			margin-top: 0.5em;
 
 			margin-right: 1em;
 
 			overflow-wrap: break-word;
 			hyphens: auto;
 
-			& .-author {
-				font-size: 1.1em;
-				font-weight: bold;
-			}
-			& .-date {
-				font-size: 0.8em;
-			}
-
-			& > .-title {
-				/*margin: 0.5em 0;*/
-			}
 			& > .-text {
-				margin: 0.25em 0 0.5em;
+				margin: 0.5em 0 0.5em;
 
-				& > * {
-					margin: 0.5rem 0 0;
+				& .-author {
+					font-size: 1.1em;
+					font-weight: bold;
 				}
+				& .-date {
+					margin-top: 0;
+					font-size: 0.8em;
+				}
+	
+				& > .-title {
+					/*margin: 0.5em 0;*/
+				}
+
+//				& > * {
+//					margin: 0.5rem 0 0;
+//				}
 			}
 			& > .-nav {
-				margin: 0  0 0.25em 0;
+				/*margin: 0  0 0.25em 0;*/
 
 				overflow: hidden;
 
-				& > div {
+				& .-button {
 					position: relative;
 
 					cursor: pointer;
@@ -130,13 +136,23 @@
 
 						margin: auto;
 					}
+					
+					& > div {
+						padding-left: 0.5em;
+					}
 
 					display: inline-block;
-					padding: 0 1em 0 2.5em;
+					padding: 0 1em 0 2em;
 					line-height: 2em;
+					height: 2em;
+					vertical-align: top;
 
-					margin-right: 0.5em;
-					/*border: 1px solid;*/
+//					margin-right: 0.5em;
+//					/*border: 1px solid;*/
+//					
+//					&:last-child {
+//						margin-right: 0;
+//					}
 
 					&:hover,
 					&:focus {
@@ -149,15 +165,36 @@
 						}
 					}
 				}
+				
+				& .-left {
+					& > div {
+						margin-right: 0.5em;
+
+						&:last-child {
+							margin-right: 0;
+						}
+					}
+				}
+				
+				& .-right {
+					float: right;
+					& > div {
+						margin-left: 0.5em;
+
+						&:first-child {
+							margin-left: 0;
+						}
+					}
+				}
 
 				& .-edit,
 				& .-cancel,
 				& .-save,
 				& .-love,
 				& .-publish {
-					float: right;
-					margin-right: 0;
-					margin-left: 0.5em;
+//					float: right;
+//					margin-right: 0;
+//					margin-left: 0.5em;
 				}
 
 				& .-love {
