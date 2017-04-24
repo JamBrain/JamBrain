@@ -254,6 +254,10 @@ export default class ContentItem extends Component {
 				props.header += ": COMPO";
 				Category = '/compo';
 			}
+			else if ( node.subsubtype == 'craft' ) {
+				props.header += ": CRAFT";
+				Category = '/craft';
+			}
 			else {
 				props.nopublish = true;
 			}
