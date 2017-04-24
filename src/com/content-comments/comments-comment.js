@@ -211,7 +211,7 @@ export default class ContentCommentsComment extends Component {
 					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublish}><SVGIcon>publish</SVGIcon><div>Publish</div></div>);
 				}
 				else {
-					ShowRight.push(<div class="-button -cancel" onclick={this.onCancel}><SVGIcon>cross</SVGIcon> Cancel</div>);
+					ShowRight.push(<div class="-button -cancel" onclick={this.onCancel}><SVGIcon>cross</SVGIcon><div class="if-sidebar-block">Cancel</div></div>);
 					ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onclick={this.onSave}><SVGIcon>save</SVGIcon><div>Save</div></div>);
 				}
 
