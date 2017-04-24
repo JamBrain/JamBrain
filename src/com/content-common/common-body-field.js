@@ -28,7 +28,7 @@ export default class ContentCommonBodyField extends Component {
 				<div class={cN(Class, props.class)}>
 					<div class="-label">{props.label ? props.label : ""}</div>
 					<InputText 
-						value={props.title} 
+						value={props.value} 
 						onmodify={props.onmodify}
 						placeholder={Placeholder}
 						maxlength={Limit}
@@ -37,18 +37,7 @@ export default class ContentCommonBodyField extends Component {
 			);
 		}
 		else {
-			var Title = props.title.trim().length ? props.title.trim() : Placeholder;
-			var Body = [];
-			if ( props.href )
-				Body.push(<NavLink class="-text" href={props.href}>{Prefix}{Title}</NavLink>);
-			else
-				Body.push(<div class="-text">{Prefix}{Title}</div>);
-			
-			if ( props.subtitle ) {
-				Body.push(<span class="-subtext"> ({props.subtitle})</span>);
-			}
-			
-			return <div class={cN(Class, props.class)}>{Body}</div>;
+			return <div class={cN(Class, props.class)}>{props.value}</div>;
 		}
 	}
 }
