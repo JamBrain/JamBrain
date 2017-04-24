@@ -1,11 +1,15 @@
 import { h, Component } 				from 'preact/preact';
 
+import SVGIcon							from 'com/svg-icon/icon';
+
 import ContentLoading					from 'com/content-loading/loading';
 import ContentError						from 'com/content-error/error';
 
 import ContentSimple					from 'com/content-simple/simple';
 import ContentUserBar       			from 'com/content-user/user-bar';
+
 import ContentCommon					from 'com/content-common/common';
+import ContentCommonBody				from 'com/content-common/common-body';
 
 import $Node							from '../../shrub/js/node/node';
 
@@ -57,13 +61,13 @@ export default class ContentUserFollowing extends Component {
         // display a loading bar whilst we wait
         if (!this.hasPermission()){
             // if were not allowed to see the nodes following then display an error
-            return <ContentError code="401">Permission Denied : Cannot see who other people are following </ContentError>;
+            return <ContentError code="403">Forbidden: You do not have permission to see who this user is following</ContentError>;
         }
         else if (!this.hasFollowing())
         {
             return (
                 <ContentCommon {...props}>
-                    <h1> Your not currently following anyone </h1>
+                    <ContentCommonBody>You are not following anyone</ContentCommonBody>
                 </ContentCommon>
             );
         }
@@ -78,7 +82,7 @@ export default class ContentUserFollowing extends Component {
                 var a_friend = false;
                 var b_friend = false;
 
-                if (props.user["private"] && props.user.private["refs"] && props.user.private.refs["star"]){
+                if ( props.user.private && props.user.private.refs && props.user.private.refs.star ){
                     props.user.private.refs.star.indexOf(a.id) != -1;
                     props.user.private.refs.star.indexOf(b.id) != -1;
                 }
@@ -101,6 +105,10 @@ export default class ContentUserFollowing extends Component {
 
             return (
                 <ContentCommon {...props}>
+                	<ContentCommonBody>
+                		<p>To add someone to your team, you need to both follow each other. Do so by visiting each others user pages, and clicking the <span><SVGIcon baseline small gap>user-plus</SVGIcon><strong>Follow</strong></span> button.</p>
+	                	<p>Users that follow each other will be shown below as <span><SVGIcon baseline small gap>users</SVGIcon><strong>Friends</strong></span>.</p>
+	                </ContentCommonBody>
                     {following}
                 </ContentCommon>
             );

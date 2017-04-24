@@ -131,18 +131,25 @@ export default class ContentUser extends Component {
 					NavBar.push(<ButtonFollow node={node} user={user} />);
 				}
 			}
-				
+
+			// TODO: Swap this out for the minimized feature. Start it minimized instead.			
+			var ShowMarkup = null;
+			if ( (extra && !extra.length) || (extra && extra[0] == 'edit') || (extra && extra[0] == 'feed') ) {
+				ShowMarkup = <ContentCommonBodyMarkup user={user} editing={state.editing} label="Biography" placeholder="Share details about yourself {optional}" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>;
+			}
+			
 			return (
 				<ContentCommon {...props}>
 					{EditBar}
 					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
 					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.slug} />
 					<ContentCommonBodyBy node={node} label="Joined" when />
-					<ContentCommonBodyMarkup user={user} editing={state.editing} label="Biography" placeholder="Share details about yourself {optional}" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
+					{ShowMarkup}
 					<ContentCommonNav>{NavBar}</ContentCommonNav>
 					{props.children}
 				</ContentCommon>
 			);
+//<ContentCommonBodyMarkup user={user} editing={state.editing} label="Biography" placeholder="Share details about yourself {optional}" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
 		}
 		else {
 			return <ContentLoading />;
