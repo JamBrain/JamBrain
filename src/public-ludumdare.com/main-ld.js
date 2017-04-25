@@ -384,6 +384,7 @@ class Main extends Component {
 	// When we navigate by clicking forward
 	onNavChange( e ) {
 		console.log('navchange:',e.detail.old.href,'=>',e.detail.location.href);
+
 		if ( e.detail.location.href !== e.detail.old.href ) {
 			var slugs = this.cleanLocation(e.detail.location).slugs;
 
@@ -396,14 +397,13 @@ class Main extends Component {
 						'id': 0
 					}
 				});
+
 				this.fetchNode();
-
-				console.log(e);
-
-				// Scroll to top
-				window.scrollTo(0, 0);
 			}
 		}
+
+		// Scroll to top
+		window.scrollTo(0, 0);
 
 		this.handleAnchors();
 	}
