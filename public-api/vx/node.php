@@ -94,6 +94,7 @@ switch ( $action ) {
 			if ( $nodes ) {
 				foreach( $nodes as &$node ) {
 					// TODO: a better check than this
+					// MK: This might not be doing anything!! That should explain why users were able to see unpublished content
 					if ( $node['published'] === "0000-00-00T00:00:00Z" ) {
 						$user_id = userAuth_GetId();
 	
@@ -174,7 +175,7 @@ switch ( $action ) {
 		}
 		break; // case 'walk': //node/walk
 
-	case 'feed': //node/feed
+	case 'feed': //node/feed/:node_id/:methods[]/:type/[:subtype]/[:subsubtype]
 		json_ValidateHTTPMethod('GET');
 
 		if ( json_ArgCount() ) {
@@ -254,8 +255,8 @@ switch ( $action ) {
 				$RESPONSE['limit'] = intval($_GET['limit']);
 				if ( $RESPONSE['limit'] < 1 )
 					$RESPONSE['limit'] = 1;
-				if ( $RESPONSE['limit'] > 25 )
-					$RESPONSE['limit'] = 25;
+				if ( $RESPONSE['limit'] > 50 )
+					$RESPONSE['limit'] = 50;
 			}
 
 			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset'] );
@@ -306,6 +307,7 @@ switch ( $action ) {
 		}
 		break; // case 'getmy': //node/getmy
 
+	// Where can I create content?
 	case 'where': //node/where
 		json_ValidateHTTPMethod('GET');
 		
@@ -318,7 +320,8 @@ switch ( $action ) {
 		}
 		break; //case 'where': //node/where
 
-	case 'what': //node/what
+	// Get what a list of everything I authored under this node
+	case 'what': //node/what/:node_id
 		json_ValidateHTTPMethod('GET');
 		
 		// if not logged in, where will be blank
@@ -335,13 +338,12 @@ switch ( $action ) {
 			json_EmitFatalError_Permission(null, $RESPONSE);
 		}
 		break; //case 'what': //node/what
-		
+	
 	case 'add': //node/add/:parent/:type/:subtype/:subsubtype
 		json_ValidateHTTPMethod('POST');
-//		json_ValidateHTTPMethod('GET');
-		
-		// NOTE: This doesn't actually need POST, but it uses the method for safety
-		
+
+		// NOTE: This doesn't actually use POST data
+
 		if ( $user_id = userAuth_GetID() ) {
 			$parent = intval(json_ArgShift());
 			$type = coreSlugify_Name(json_ArgShift());
@@ -358,6 +360,8 @@ switch ( $action ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
 			}
 
+			// MK: This is a potential place you'll need to fix things once users are restricted from posting under other people's `can-create` nodes
+			// MK: oh. after a quick glance it might be fine, but you should check it out again.
 			$where = nodeComplete_GetWhereIdCanCreate($user_id);
 			//$RESPONSE['where'] = $where;
 			
@@ -458,7 +462,7 @@ switch ( $action ) {
 		}
 		break; //case 'add': //node/add
 
-	case 'update': //node/update/:node
+	case 'update': //node/update/:node_id
 		json_ValidateHTTPMethod('POST');
 
 		if ( $user_id = userAuth_GetID() ) {
@@ -469,9 +473,9 @@ switch ( $action ) {
 			
 			$changes = 0;
 
-			// Fetch Node			
+			// Fetch Node
 			$node = nodeComplete_GetById($node_id);
-			$authors = nodeList_GetAuthors($node);
+			//$authors = nodeList_GetAuthors($node);
 			
 			if ( !$node )
 				json_EmitFatalError_BadRequest("Problem fetching node", $RESPONSE);
@@ -505,7 +509,8 @@ switch ( $action ) {
 			}
 				
 			// If you are authorized to edit
-			if ( $user_id === $node_id || $user_id === $node['author'] || in_array($user_id, $authors) ) {
+//			if ( $user_id === $node_id || $user_id === $node['author'] || in_array($user_id, $authors) ) {
+			if ( node_IsAuthor($node, $user_id) ) {		// NEEDS links!
 				if ( $changes === 0 ) {
 					$RESPONSE['updated'] = 0;
 					$RESPONSE['message'] = "No changes";
@@ -531,17 +536,17 @@ switch ( $action ) {
 		}
 		break; //case 'update': //node/update
 
-	case 'transform': //node/transform
+	// Changes a node's type from one to another
+	case 'transform': //node/transform/:node_id/:type/[:subtype]/[:subsubtype]
 		json_ValidateHTTPMethod('POST');
 
 		$node_id = intval(json_ArgShift());
 		$user_id = userAuth_GetID();
 
 		if ( $node_id && $user_id ) {
-			if ( $node = node_GetById($node_id) ) {
-				// TODO: Improve Permissions
-				if ( $node['author'] != $user_id ) {
-					json_EmitFatalError_Forbidden("You can't transform this", $RESPONSE);
+			if ( $node = nodeComplete_GetById($node_id) ) {
+				if ( !node_IsAuthor($node, $user_id) ) { // NEEDS LINKS!
+					json_EmitFatalError_Forbidden("Forbidden: You don't have permission to transform this", $RESPONSE);
 				}
 				
 				$old_type = $node['type'];
@@ -586,11 +591,7 @@ switch ( $action ) {
 
 		break; //case 'transform': //node/transform
 
-	case 'drafts': //node/drafts
-	
-		break; //case 'drafts': //node/drafts
-
-	case 'publish': //node/publish
+	case 'publish': //node/publish/:node_id
 		json_ValidateHTTPMethod('POST');
 		
 		if ( $user_id = userAuth_GetID() ) {
@@ -620,7 +621,7 @@ switch ( $action ) {
 			$authors = nodeList_GetAuthors($node);
 
 			// If you are authorized to edit
-			if ( in_array($user_id, $authors) ) {
+			if ( node_IsAuthor($node, $user_id) ) {
 				$slug = coreSlugify_Name($node['name']);
 				if ( in_array($slug, $SH_NAME_RESERVED) ) {
 					json_EmitFatalError_BadRequest("Name is a reserved word", $RESPONSE);
@@ -658,11 +659,11 @@ switch ( $action ) {
 		}
 		break; //case 'publish': //node/publish
 
-	case 'love': //node/love
+	case 'love': //node/love/...
 		$old_action = $action;
 		$action = json_ArgShift();
 		switch ( $action ) {
-			case 'get': //node/love/get
+			case 'get': //node/love/get/:node_id[]
 				json_ValidateHTTPMethod('GET');
 				
 				if ( json_ArgCount() ) {
@@ -698,7 +699,7 @@ switch ( $action ) {
 				}
 				break; // case 'getmy': //node/love/getmy
 
-			case 'add': //node/love/add
+			case 'add': //node/love/add/:node_id
 				json_ValidateHTTPMethod('GET');
 				
 				if ( json_ArgCount() ) {
@@ -731,7 +732,7 @@ switch ( $action ) {
 				}
 				break; // case 'add': //node/love/add
 
-			case 'remove': //node/love/remove
+			case 'remove': //node/love/remove/:node_id
 				json_ValidateHTTPMethod('GET');
 
 				if ( json_ArgCount() ) {
@@ -776,11 +777,11 @@ switch ( $action ) {
 		};
 		break; // case 'love': //node/love
 
-	case 'star': //node/star
+	case 'star': //node/star/...
 		$old_action = $action;
 		$action = json_ArgShift();
 		switch ( $action ) {
-			case 'add': //node/star/add
+			case 'add': //node/star/add/:node_id
 				json_ValidateHTTPMethod('GET');
 				
 				if ( json_ArgCount() ) {
@@ -811,7 +812,7 @@ switch ( $action ) {
 				}
 				break; // case 'add': //node/love/add
 
-			case 'remove': //node/star/remove
+			case 'remove': //node/star/remove/:node_id
 				json_ValidateHTTPMethod('GET');
 
 				if ( json_ArgCount() ) {
@@ -852,8 +853,8 @@ switch ( $action ) {
 		$old_action = $action;
 		$action = json_ArgShift();
 		switch ( $action ) {
-			case 'add': //node/meta/add/:node
-			case 'remove': //node/meta/remove/:node
+			case 'add': //node/meta/add/:node_id
+			case 'remove': //node/meta/remove/:node_id
 				json_ValidateHTTPMethod('POST');
 				
 				if ( !count($_POST) )
@@ -863,9 +864,8 @@ switch ( $action ) {
 				$user_id = userAuth_GetID();
 
 				if ( $node_id && $user_id ) {
-					if ( $node = node_GetById($node_id) ) {
-						// TODO: Improve Permissions
-						if ( $node['author'] != $user_id )
+					if ( $node = nodeComplete_GetById($node_id) ) {
+						if ( !node_IsAuthor($node, $user_id) )
 							json_EmitFatalError_Permission(null, $RESPONSE);
 
 						if ( !isset(VALID_META[$node['type']]) )
@@ -917,8 +917,8 @@ switch ( $action ) {
 		$old_action = $action;
 		$action = json_ArgShift();
 		switch ( $action ) {
-			case 'add': //node/link/add/:node
-			case 'remove': //node/link/remove/:node
+			case 'add': //node/link/add/:node_id
+			case 'remove': //node/link/remove/:node_id
 				json_ValidateHTTPMethod('POST');
 
 				if ( !count($_POST) )
@@ -929,13 +929,13 @@ switch ( $action ) {
 				$user_id = userAuth_GetID();
 
 				if ( $node_a_id && $node_b_id && $user_id ) {
-					$node_a = node_GetById($node_a_id);
-					$node_b = node_GetById($node_b_id);
+					$node_a = nodeComplete_GetById($node_a_id);
+					$node_b = nodeComplete_GetById($node_b_id);
 					if ( $node_a && $node_b ) {
-						// Only the author of $node_a can change properties
-						if ( !$node_a['author'] == $user_id )
+						// Only an author of $node_a can change properties
+						if ( !node_IsAuthor($node_a, $user_id) ) {
 							json_EmitFatalError_Permission(null, $RESPONSE);
-						// TODO: Improve Permissions
+						}
 
 						if ( !isset(VALID_LINK[$node_a['type']]) )
 							json_EmitFatalError_BadRequest("Can't link '".$node_a['type']."'", $RESPONSE);

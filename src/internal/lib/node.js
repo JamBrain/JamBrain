@@ -4,6 +4,8 @@
 	Node Library - get information about nodes
 	
 	NOTE: these functions will be globally available. No need to include anything. Also you can't use ES6 here.
+	
+	Try to mirror what's available in "src/shrub/src/node/node_util.php"
 */
 
 window.node_IsPublished = function( node ) {
