@@ -101,6 +101,10 @@ class Main extends Component {
 	}
 
 	componentDidUpdate( prevProps, prevState ) {
+		if(window.location.href.substr(-3) == "#--") {
+			history.replaceState({}, '', window.location.href.replace("#--", ""));
+		}
+
 		this.storeHistory(this.state);
 
 		if(this.state.node != prevState.node) {
@@ -128,7 +132,7 @@ class Main extends Component {
 		var props = Sanitize.parseHash(window.location.hash);
 
 		if ( window.location.hash ) {
-			if ( window.location.hash.indexOf("/") != 1 ) {
+			if ( window.location.hash.indexOf("/") != 1 && props.path !== "--") {
 				switch (props.path) {
 					case 'user-login':
 						props.onlogin = this.onLogin;
@@ -348,7 +352,6 @@ class Main extends Component {
 	// Hash Changes are automatically differences
 	onHashChange( e ) {
 		console.log("hashchange: ", e.newURL);
-
 		var slugs = this.cleanLocation(window.location).slugs;
 
 		if ( slugs.join() === this.state.slugs.join() ) {

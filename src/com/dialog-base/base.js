@@ -3,20 +3,20 @@ import { h, Component } 				from 'preact/preact';
 export default class DialogBase extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.eventKey = this.eventKey.bind(this);
 		this.eventFocus = this.eventFocus.bind(this);
 
 		this.onAbort = this.onAbort.bind(this);
 		this.onDialogClick = this.onDialogClick.bind(this);
 	}
-	
+
 	componentDidMount() {
 		document.body.addEventListener('keydown', this.eventKey);
 		window.addEventListener('focus', this.eventFocus);
 		window.addEventListener('pageshow', this.eventFocus);		// iOS
 	}
-	
+
 	componentWillUnmount() {
 		document.body.removeEventListener('keydown', this.eventKey);
 		window.removeEventListener('focus', this.eventFocus);
@@ -26,10 +26,10 @@ export default class DialogBase extends Component {
 	getFocusable() {
 		return document.getElementsByClassName("focusable");
 	}
-	
+
 	eventFocus( e ) {
 		var focusable = this.getFocusable();
-		
+
 		if ( focusable.length ) {
 			if ( !focusable[document.activeElement.id] ) {
 				e.preventDefault();
@@ -37,7 +37,7 @@ export default class DialogBase extends Component {
 			}
 		}
 	}
-	
+
 	eventKey( e ) {
 		// Tab
 		if ( e.keyCode == 9 ) {
@@ -47,7 +47,7 @@ export default class DialogBase extends Component {
 			if ( focusable.length ) {
 				if ( !focusable[active] ) {
 					e.preventDefault();
-					focusable[0].focus();					
+					focusable[0].focus();
 				}
 				else if ( focusable[active] == focusable[focusable.length-1] && !e.shiftKey ) {
 					e.preventDefault();
@@ -67,18 +67,18 @@ export default class DialogBase extends Component {
 			}
 		}
 	}
-	
+
 
 	onAbort() {
-		window.location.hash = "#";
+		window.location.hash = "--";
 		//location.href = location.pathname+location.search;
 	}
-	
+
 	onDialogClick( e ) {
 		e.preventDefault();
 		e.stopPropagation();
 	}
-	
+
 	render( props ) {
 		var parent_props = {
 			'id': 'dialog-background',
