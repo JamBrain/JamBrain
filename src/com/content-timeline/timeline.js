@@ -95,9 +95,11 @@ export default class ContentTimeline extends Component {
 	}
 
 	getFeed( id, methods, types, subtypes, subsubtypes, more, limit ) {
+		this.setState({'loaded': false});
 		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, more, limit )
 		.then(r => {
-            this.setState({'loaded':true});
+            this.setState({'loaded': true});
+            
             // make sure we have a feed
 			if ( r.feed && r.feed.length ) {
 				this.appendFeed(r.feed);
@@ -189,10 +191,10 @@ export default class ContentTimeline extends Component {
 		if ( error ) {
 			ShowFeed.push(<ContentCommon><ContentCommonBody>error</ContentCommonBody></ContentCommon>);
 		}
-        else if ( loaded && feed && feed.length == 0){
+        else if ( feed && feed.length == 0){
             ShowFeed.push(<ContentCommon {...props}><h1>Sorry, there are no {props.types[0]}</h1></ContentCommon>);
         }
-		else if ( loaded && feed && feed.length ) {
+		else if ( feed && feed.length ) {
 			if ( feed.length ) {
 				// NOTE: Only place where we directly set it. The rest are pushes
 				ShowFeed = feed.map(this.makeFeedItem);

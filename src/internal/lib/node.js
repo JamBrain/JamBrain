@@ -4,11 +4,30 @@
 	Node Library - get information about nodes
 	
 	NOTE: these functions will be globally available. No need to include anything. Also you can't use ES6 here.
+	
+	Try to mirror what's available in "src/shrub/src/node/node_util.php"
 */
 
 window.node_IsPublished = function( node ) {
 	return node.published;
 }
+
+window.node_IsAuthor = function( node, user ) {
+	// Confirm non-zero
+	if ( !user.id )
+		return false;
+	
+	// Check if you are the node's author
+	if ( node.author == user.id )
+		return true;
+		
+	// Check if you are on the list of authors (metadata)
+	if ( node.link && node.link.author && node.link.author.indexOf(user.id) != -1 )
+		return true;
+	
+	return false;
+}
+
 
 // http://stackoverflow.com/a/16227294/5678759
 function intersection(a, b) {

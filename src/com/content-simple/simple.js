@@ -179,6 +179,7 @@ export default class ContentSimple extends Component {
 	
 	render( props, state ) {
 		props = Object.assign({}, props);	// Shallow copy we can change props
+		var Class = [];
 
 		var node = props.node;
 		var user = props.user;
@@ -189,16 +190,14 @@ export default class ContentSimple extends Component {
 		var authors = state.authors;
 	
 		if ( node && ((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length) ) {
-			props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
-			props.class.push("content-simple");
+			Class.push("content-simple");
 
 			var ShowEditBar = null;
 			var ShowEditOnly = null;
 
 			if ( this.isEditMode() ) {
-				// Check if user has permission to edit
-				if ( node.author !== user.id ) {	// might not be authored, so we check the node.author
-					return <ContentError code="401">Permission Denied</ContentError>;
+				if ( !node_IsAuthor(node, user) ) {
+					return <ContentError code="403">Forbidden: You do not have permission to edit this</ContentError>;
 				}
 				
 				let EditProps = {
@@ -216,8 +215,9 @@ export default class ContentSimple extends Component {
 				ShowEditBar = <ContentCommonEdit {...EditProps} />;
 			}
 			else {
-				if ( user.id && (node.author === user.id) )
+				if ( node_IsAuthor(node, user) ) {
 					props.edit = 1;
+				}
 			}
 			
 			let ShowAvatar = null;
@@ -301,6 +301,8 @@ export default class ContentSimple extends Component {
 			if ( !node.published ) {
 				ShowDraft = <ContentCommonDraft draft={props.draft} />;
 			}
+			
+			props.class = cN(Class, props.class);
 
 			return (
 				<ContentCommon {...props}>
