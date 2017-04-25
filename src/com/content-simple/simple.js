@@ -196,7 +196,7 @@ export default class ContentSimple extends Component {
 			var ShowEditOnly = null;
 
 			if ( this.isEditMode() ) {
-				if ( node_IsAuthor(node, user) ) {
+				if ( !node_IsAuthor(node, user) ) {
 					return <ContentError code="403">Forbidden: You do not have permission to edit this</ContentError>;
 				}
 				
@@ -215,8 +215,9 @@ export default class ContentSimple extends Component {
 				ShowEditBar = <ContentCommonEdit {...EditProps} />;
 			}
 			else {
-				if ( user.id && (node.author === user.id) )
+				if ( node_IsAuthor(node, user) ) {
 					props.edit = 1;
+				}
 			}
 			
 			let ShowAvatar = null;
