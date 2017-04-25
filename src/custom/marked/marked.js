@@ -893,7 +893,7 @@ Renderer.prototype.emoji = function(text) {
 
 // This is not ideal anyway. Should be inserting a NavLink, not an <a />
 Renderer.prototype.atname = function(text) {
-  return '<a href="'+'/users/'+text+'">@'+text+'</a>';
+	return '<a class="-at" href="' + '/users/' + text + '"><span class="-symbol">@</span><span class="-name">' + text + '</span></a>';
 };
 
 Renderer.prototype.codespan = function(text) {
@@ -909,46 +909,58 @@ Renderer.prototype.del = function(text) {
   return '<del>' + text + '</del>';
 };
 
-Renderer.prototype.link = function(href, title, text) {
-  if (this.options.sanitize) {
-    try {
-      var prot = decodeURIComponent(unescape(href))
-        .replace(/[^\w:]/g, '')
-        .toLowerCase();
-    } catch (e) {
-      return '';
-    }
-    if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0 || prot.indexOf('data:') === 0) {
-      return '';
-    }
-  }
-  var HasEmbed = autoEmbed.hasEmbed(href);
-  var HasSmartLink = autoEmbed.hasSmartLink(href, title, text);
-  if ( HasEmbed ) {
-    return HasEmbed;
-  }
-  else if ( HasSmartLink ) {
-    return HasSmartLink;
-  }
-  else {
+Renderer.prototype.link = function( href, title, text ) {
+	if ( this.options.sanitize ) {
+		try {
+			var prot = decodeURIComponent(unescape(href))
+				.replace(/[^\w:]/g, '')
+				.toLowerCase();
+		} catch (e) {
+			return '';
+		}
+		if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0 || prot.indexOf('data:') === 0) {
+			return '';
+		}
+	}
 
-	// MK: I disabled this, 'cause I wasn't sure why it was being used. It removed the query string
-//    href = autoEmbed.extractFromURL(href).url;
+	var hasEmbed = autoEmbed.hasEmbed(href);
+	if ( hasEmbed ) {
+		return hasEmbed;
+	}
 
-    var out = '<a href="' + href + '"';
-    if (title) {
-      out += ' title="' + title + '"';
-    }
-    if(!text || text.length < 1){
-        text = href;
-    }
-    // If it contains double slashes, consider it an external link //
-    if ( href.indexOf('//') != -1 ) {
-       out += ' target="_blank"';
-    }
-    out += '>' + text + '</a>';
-    return out;
-  }
+	var hasSmartLink = autoEmbed.hasSmartLink(href, title, text);
+	if ( hasSmartLink ) {
+		return hasSmartLink;
+	}
+	else {
+		// MK: I disabled this, 'cause I wasn't sure why it was being used. It removed the query string
+		//    href = autoEmbed.extractFromURL(href).url;
+
+		var isExternal = href.indexOf('//') != -1;
+		var isInternal = href.indexOf('///') === 0;
+		if ( isInternal ) {
+			isExternal = false;
+			href = href.substr(2);
+		}
+
+		// If text is blank, use the URL itself
+		if ( !text || text.length < 1 ) {
+			text = href;
+		}
+		
+		// Emit link
+		var out = '<a href="' + href + '"';
+		if ( title ) {
+			out += ' title="' + title + '"';
+		}
+		// If it contains double slashes, consider it an external link //
+		if ( isExternal ) {
+			out += ' target="_blank"';
+		}
+		out += '>' + text + '</a>';
+		
+		return out;
+	}
 };
 
 Renderer.prototype.image = function(href, title, text) {
