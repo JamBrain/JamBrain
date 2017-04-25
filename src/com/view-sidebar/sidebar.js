@@ -17,10 +17,14 @@ export default class ViewSidebar extends Component {
 	render( props, state ) {
 		// TODO: cleanup
 		let ldStartDate = new Date(Date.UTC(2017, 3, 22, 1, 0, 0));
-		let jamEndDate = new Date(Date.UTC(2017, 3, 25, 1, 0, 0));
-		let jamEndDate2 = new Date(Date.UTC(2017, 3, 25, 2, 0, 0));
+
 		let compoEndDate = new Date(Date.UTC(2017, 3, 24, 1, 0, 0));
 		let compoEndDate2 = new Date(Date.UTC(2017, 3, 24, 2, 0, 0));
+
+		let jamEndDate = new Date(Date.UTC(2017, 3, 25, 1, 0, 0));
+		let jamEndDate2 = new Date(Date.UTC(2017, 3, 25, 2, 0, 0));
+		let jamEndDate3 = new Date(Date.UTC(2017, 3, 25, 4, 0, 0));
+		let jamEndDate4 = new Date(Date.UTC(2017, 3, 25, 5, 0, 0));
 
 		let now = new Date();
 		
@@ -41,6 +45,12 @@ export default class ViewSidebar extends Component {
 			}
 			else if ( now < jamEndDate2 ) {
 				ShowCountdown.push(<SidebarCountdown date={ jamEndDate2 } nc="jam" to="Submission Hour" tt="Ends" />);
+			}
+			else if ( now < jamEndDate3 ) {
+				ShowCountdown.push(<SidebarCountdown date={ jamEndDate3 } nc="jam" to="Submission Bonus" tt="Ends" />);
+			}
+			else if ( now < jamEndDate4 ) {
+				ShowCountdown.push(<SidebarCountdown date={ jamEndDate4 } nc="jam" to="Submission Bonus2" tt="Ends" />);
 			}
 		}
 
