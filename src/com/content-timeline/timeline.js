@@ -192,7 +192,7 @@ export default class ContentTimeline extends Component {
 			ShowFeed.push(<ContentCommon><ContentCommonBody>error</ContentCommonBody></ContentCommon>);
 		}
         else if ( feed && feed.length == 0){
-            ShowFeed.push(<ContentCommon {...props}><h1>Sorry, there are no {props.types[0]}</h1></ContentCommon>);
+            ShowFeed.push(<ContentCommon><h1>Sorry, there are no {props.types[0]}</h1></ContentCommon>);
         }
 		else if ( feed && feed.length ) {
 			if ( feed.length ) {
