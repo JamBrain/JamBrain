@@ -9,10 +9,18 @@
 */
 
 window.node_IsPublished = function( node ) {
+	// Return null if arguments are invalid
+	if ( !node )
+		return null;
+	
 	return node.published;
 }
 
 window.node_IsAuthor = function( node, user ) {
+	// Return null if either arguments are invalid
+	if ( !user || !node )
+		return null;
+	
 	// Confirm non-zero
 	if ( !user.id )
 		return false;
@@ -39,6 +47,10 @@ function intersection(a, b) {
 }
 
 window.nodeUser_IsFriend = function( user, node ) {
+	// Return null if either arguments are invalid
+	if ( !user || !node )
+		return null;
+
 	// Refs checks are first, because it's an early rejection
 	if ( node.id && user.private && user.private.refs && user.private.refs.star && user.private.link && user.private.link.star ) {
 		return (user.private.refs.star.indexOf(node.id) !== -1) && (user.private.link.star.indexOf(node.id) !== -1);
@@ -47,6 +59,10 @@ window.nodeUser_IsFriend = function( user, node ) {
 }
 
 window.nodeUser_IsFollowing = function( user, node ) {
+	// Return null if either arguments are invalid
+	if ( !user || !node )
+		return null;
+
 	if ( node.id && user.private && user.private.link && user.private.link.star ) {
 		return (user.private.link.star.indexOf(node.id) !== -1);
 	}
@@ -54,6 +70,10 @@ window.nodeUser_IsFollowing = function( user, node ) {
 }
 
 window.nodeUser_GetFriends = function( user ) {
+	// Return null if argument is invalid
+	if ( !user )
+		return null;
+
 	if ( user.private && user.private.refs && user.private.refs.star && user.private.link && user.private.link.star ) {
 		return intersection(user.private.link.star, user.private.refs.star);
 	}
@@ -61,9 +81,17 @@ window.nodeUser_GetFriends = function( user ) {
 }
 
 window.node_CanCreate = function( node ) {
+	// Return null if argument is invalid
+	if ( !node )
+		return null;
+
 	return node.meta && node.meta['can-create'];
 }
 window.node_CanTheme = function( node ) {
+	// Return null if argument is invalid
+	if ( !node )
+		return null;
+
 	return node.meta && node.meta['can-theme'];
 }
 
