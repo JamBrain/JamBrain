@@ -71,9 +71,14 @@ export function Get( ids ) {
 	}
 		
 	return ret.then( r => {
+			// Append our locally cached values
 			r.node = r.node.concat(nodes);
 			r.cached = r.cached.concat(cached);
+			// Inform the caller which nodes came from the local cache
 			r.local = cached;
+
+			// Actually these aren't fresh at all
+			r.fresh = false;
 
 			return r;
 		});
@@ -85,13 +90,15 @@ export function GetFresh( ids ) {
 
 	return Fetch.Get(API_ENDPOINT+'/vx/node/get/'+ids.join('+'), true)
 		.then( r => {
-
+			// If any nodes were returned, update our cached copies
 			if ( r.node ) {
-				// Cache the nodes
 				for ( var idx = 0; idx < r.node.length; idx++ ) {
 					_Cache(r.node[idx]);
 				}
 			}
+			
+			// Inform the caller that these results are fresh
+			r.fresh = true;
 		
 			return r;	
 		});
