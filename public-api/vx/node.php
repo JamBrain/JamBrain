@@ -86,7 +86,10 @@ switch ( $action ) {
 				json_EmitFatalError_BadRequest("Too many nodes", $RESPONSE);
 			}
 			
-			$nodes = nodeComplete_GetById($node_ids);
+			$RESPONSE['cached'] = true;
+			
+//			$nodes = nodeComplete_GetById($node_ids);
+			$nodes = nodeCache_GetById($node_ids, $RESPONSE['cached']);
 
 			// TODO: Determine if we're allowed to view the requested nodes
 			
@@ -433,6 +436,8 @@ switch ( $action ) {
 						json_EmitFatalError_ServerError(null, $RESPONSE);
 					}
 					
+					nodeCache_InvalidateById($new_node);
+					
 					$RESPONSE['type'] = $type;
 					$RESPONSE['path'] = node_GetPathById($new_node, 1)['path']; // Root node
 					$RESPONSE['count']++;
@@ -446,6 +451,8 @@ switch ( $action ) {
 					else {
 						json_EmitFatalError_ServerError(null, $RESPONSE);
 					}
+
+					nodeCache_InvalidateById($new_node);
 
 					$RESPONSE['type'] = $type;
 					$RESPONSE['path'] = node_GetPathById($new_node, 1)['path']; // Root node
@@ -525,6 +532,8 @@ switch ( $action ) {
 						$body,
 						$version_tag
 					);
+
+					nodeCache_InvalidateById($node_id);
 				}
 			}
 			else {
@@ -579,6 +588,8 @@ switch ( $action ) {
 				}
 				else if ( in_array($new_type, VALID_TRANSFORMS[$old_type]) ) {
 					$RESPONSE['changed'] = node_SetType($node_id, $type ? $type : "", $subtype ? $subtype : "", $subsubtype ? $subsubtype : "");
+					
+					nodeCache_InvalidateById($node_id);
 				}
 				else {
 					json_EmitFatalError_Forbidden("Not a valid transform '$old_type' to '$new_type'", $RESPONSE);
@@ -641,6 +652,8 @@ switch ( $action ) {
 					$node['name'],
 					$node['body'],
 					"!PUBLISH");
+
+				nodeCache_InvalidateById($node_id);
 				
 				$RESPONSE['publish'] = node_Publish(
 					$node_id
@@ -712,6 +725,9 @@ switch ( $action ) {
 						if ( $node = node_GetById($node_id) ) {
 							if ( in_array($node['type'], THINGS_I_CAN_LOVE) ) {
 								$RESPONSE['id'] = nodeLove_AddByNode($node_id, $user_id);
+								if ( $RESPONSE['id'] ) {
+									nodeCache_InvalidateById($node_id);
+								}
 								
 								$RESPONSE['love'] = nodeLove_GetByNode($node_id);
 							}
@@ -745,6 +761,9 @@ switch ( $action ) {
 						if ( $node = node_GetById($node_id) ) {
 							if ( in_array($node['type'], THINGS_I_CAN_LOVE) ) {
 								$RESPONSE['removed'] = nodeLove_RemoveByNode($node_id, $user_id);
+								if ( $RESPONSE['removed'] ) {
+									nodeCache_InvalidateById($node_id);
+								}
 								
 								$RESPONSE['love'] = nodeLove_GetByNode($node_id);
 								if ( !isset($RESPONSE['love']) )
@@ -794,6 +813,9 @@ switch ( $action ) {
 								// TODO: Check if this exact value isn't the newest
 
 								$RESPONSE['id'] = nodeLink_AddByNode($user_id, $node_id, SH_NODE_META_SHARED, 'star');
+								if ( $RESPONSE['id'] ) {
+									nodeCache_InvalidateById($node_id);
+								}
 							}
 							else {
 								json_EmitFatalError_BadRequest("Can't star ".$node['type'], $RESPONSE);
@@ -825,6 +847,9 @@ switch ( $action ) {
 								// TODO: Check if this exact value isn't the newest
 								
 								$RESPONSE['id'] = nodeLink_RemoveByNode($user_id, $node_id, SH_NODE_META_SHARED, 'star');
+								if ( $RESPONSE['id'] ) {
+									nodeCache_InvalidateById($node_id);
+								}
 							}
 							else {
 								json_EmitFatalError_BadRequest("Can't star ".$node['type'], $RESPONSE);
@@ -901,6 +926,9 @@ switch ( $action ) {
 							if ( $changed )
 								$RESPONSE['changed'][$key] = $v;
 						}
+						if ( count($RESPONSE['changed']) ) {
+							nodeCache_InvalidateById($node_id);
+						}
 					}
 					else {
 						json_EmitFatalError_NotFound(null, $RESPONSE);
@@ -973,6 +1001,10 @@ switch ( $action ) {
 							if ( $changed )
 								$RESPONSE['changed'][$key] = $v;
 						}
+						if ( count($RESPONSE['changed']) ) {
+							nodeCache_InvalidateById($node_id);
+						}
+
 					}
 					else {
 						json_EmitFatalError_NotFound(null, $RESPONSE);
