@@ -47,11 +47,11 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onEditing( e ) {
-		console.log('** Edit Comment');
+//		console.log('** Edit Comment');
 		this.setState({'preview': false});
 	}
 	onPreview( e ) {
-		console.log('** Preview Comment');
+//		console.log('** Preview Comment');
 		this.setState({'preview': true});
 	}
 

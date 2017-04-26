@@ -187,7 +187,11 @@ export function GetFeed( id, methods, types, subtypes, subsubtypes, more, limit 
 	if ( query.length )
 		query = "?"+query.join('&');
 
-	return Fetch.Get(API_ENDPOINT+'/vx/node/feed/'+args.join('/')+query, true);
+	return Fetch.Get(API_ENDPOINT+'/vx/node/feed/'+args.join('/')+query, true)
+		.then( r => {
+			
+			return r;
+		});
 }
 
 export function GetMy() {

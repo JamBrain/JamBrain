@@ -234,7 +234,7 @@ class Main extends Component {
 	}
 
 	fetchNode() {
-		console.log("[fetchNode]");
+		//console.log("[fetchNode]");
 
 		var NewState = {};
 
@@ -259,7 +259,7 @@ class Main extends Component {
 				NewState['node'] = r.node[0];
 				this.setState(NewState);
 
-				console.log("[fetchNode] Done:", NewState['node'].id);
+				//console.log("[fetchNode] Done:", NewState['node'].id);
 			}
 			else {
 				throw '[fetchNode] No nodes found';
