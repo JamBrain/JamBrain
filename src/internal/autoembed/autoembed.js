@@ -60,7 +60,7 @@
 	
 		// Remap # hash anchor urls to #/
 		if ( ret.internal && ret.hash.length ) {
-			console.log(ret.hash);
+//			console.log(ret.hash);
 			ret.hash = '/' + ret.hash;
 		}
 
@@ -148,7 +148,7 @@
 		var url = extractFromURL(href);
 		var video_id = url.args.v;
 		
-		console.log(video_id, url);
+//		console.log(video_id, url);
 		
 		var args = ['autoplay=1'];
 		if ( url.args.t ) {
@@ -202,8 +202,6 @@
 	AutoEmbed.prototype.hasEmbed = function( str ) {
 		if ( str ) {
 			url = extractFromURL(str);
-
-			console.log('teddy', url);
 
 			if ( url.domain ) {
 				if ( url.domain.indexOf('youtube.com') !== -1 ) {
