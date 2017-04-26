@@ -23,17 +23,15 @@ export default class ContentUserBar extends Component {
 		var node = this.props.node;
 		var featured = this.props.featured;
 		
-		if ( featured && confirm("Add to Team?") ) {
-			// hack
-			var ItemId = featured.what[featured.what.length-1];
-			
-			$NodeLink.Add(ItemId, node.id, {'author':null})
-			.then( r => {
-				console.log('did it',r);
-			})
-			.catch( err => {
-				this.setState({ 'error': err });
-			});
+		if ( featured && featured.focus && confirm("Add to Team?") ) {
+
+			$NodeLink.Add(featured.focus, node.id, {'author':null})
+				.then( r => {
+					console.log('did it',r);
+				})
+				.catch( err => {
+					this.setState({ 'error': err });
+				});
 		}
 	}
 
@@ -41,11 +39,8 @@ export default class ContentUserBar extends Component {
 		var node = this.props.node;
 		var featured = this.props.featured;
 		
-		if ( featured && confirm("Remove from Team?") ) {
-			// hack
-			var ItemId = featured.what[featured.what.length-1];
-			
-			$NodeLink.Remove(ItemId, node.id, {'author':null})
+		if ( featured && featured.focus && confirm("Remove from Team?") ) {
+			$NodeLink.Remove(featured.focus, node.id, {'author':null})
 			.then( r => {
 				console.log('did it',r);
 			})
@@ -63,25 +58,33 @@ export default class ContentUserBar extends Component {
 //		var articles = node.articles;
 //		var posts = node.posts;
 		
+		var ShowFollow = null;
 		var ShowAddToTeam = null;
-		if ( nodeUser_IsFriend(user, node) ) {
-			ShowAddToTeam = [
-				<CommonButton class="" node={node} user={user} onclick={this.onAddTo}>
-					<SVGIcon>pushpin</SVGIcon><div>Add To</div>
-				</CommonButton>,
-				<CommonButton class="" node={node} user={user} onclick={this.onRemoveFrom}>
-					<SVGIcon>fire</SVGIcon><div>Remove From</div>
-				</CommonButton>,
-			];
+		
+		if ( user && user.id ) {
+			ShowFollow = <CommonButtonFollow node={node} user={user} />;
+			
+			if ( featured && featured.focus && featured.what_node && featured.what_node[featured.focus] && featured.what_node[featured.focus].author == user.id ) {
+				if ( nodeUser_IsFriend(user, node) ) {
+					ShowAddToTeam = [
+						<CommonButton class="" node={node} user={user} onclick={this.onAddTo}>
+							<SVGIcon>pushpin</SVGIcon><div>Add To</div>
+						</CommonButton>,
+						<CommonButton class="" node={node} user={user} onclick={this.onRemoveFrom}>
+							<SVGIcon>fire</SVGIcon><div>Remove From</div>
+						</CommonButton>,
+					];
+				}
+			}
 		}
-
+	
 		return (
 			<div class="content-user-bar">
 				<ContentCommonBodyAvatar src={node.meta && node.meta.avatar ? node.meta.avatar : ''} />
 				<ContentCommonBodyTitle href={"/users/"+node.slug} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.slug} />
 
 				<ContentCommonNav>
-					<CommonButtonFollow node={node} user={user} />
+					{ShowFollow}
 					{ShowAddToTeam}
 				</ContentCommonNav>
 			</div>
