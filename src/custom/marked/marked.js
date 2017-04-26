@@ -933,8 +933,9 @@ Renderer.prototype.link = function( href, title, text ) {
 		return hasSmartLink;
 	}
 	else {
-		// MK: I disabled this, 'cause I wasn't sure why it was being used. It removed the query string
-		//    href = autoEmbed.extractFromURL(href).url;
+		// extractFromURL does some smart stuff, such as correcting local hash # links in to #/
+		// Ideally though all we need is that small part. We could optimize this using that
+		href = extractFromURL(href).href;
 
 		var isExternal = href.indexOf('//') != -1;
 		var isInternal = href.indexOf('///') === 0;

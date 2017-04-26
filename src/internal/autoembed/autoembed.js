@@ -60,8 +60,7 @@
 	
 		// Remap # hash anchor urls to #/
 		if ( ret.internal && ret.hash.length ) {
-//			console.log(ret.hash);
-			ret.hash = '/' + ret.hash;
+			ret.hash = '#/' + ret.hash.substr(1);
 		}
 
 		// If it has a '//', it has a protocol and a domain (possibly an empty protocol)
