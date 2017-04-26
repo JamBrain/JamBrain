@@ -64,7 +64,9 @@ export default class ContentUserBar extends Component {
 		if ( user && user.id ) {
 			ShowFollow = <CommonButtonFollow node={node} user={user} />;
 			
+			// Only team leaders can add team members
 			if ( featured && featured.focus && featured.what_node && featured.what_node[featured.focus] && featured.what_node[featured.focus].author == user.id ) {
+				// You can only add friends
 				if ( nodeUser_IsFriend(user, node) ) {
 					ShowAddToTeam = [
 						<CommonButton class="" node={node} user={user} onclick={this.onAddTo}>
