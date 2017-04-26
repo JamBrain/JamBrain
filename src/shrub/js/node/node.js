@@ -2,7 +2,10 @@ import Fetch	 				from '../internal/fetch';
 
 export default {
 	Get,
+	GetFresh,
 	GetKeyed,
+	GetFreshKeyed,
+	
 	Walk,
 	GetFeed,
 	
@@ -17,11 +20,83 @@ export default {
 	Transform
 };
 
-var Nodes = {};
-
-export function Walk( parent, slugs ) {
-	return Fetch.Get(API_ENDPOINT+'/vx/node/walk/'+parent+'/'+slugs.join('/'), true);
+var NODE_CACHE = {};
+function _Cache( node ) {
+	if ( node.id ) {
+		NODE_CACHE[node.id] = node;
+	}
 }
+function _Exists( node_id ) {
+	return !!NODE_CACHE[node_id];
+}
+function _Get( node_id ) {
+	return NODE_CACHE[node_id];
+}
+
+
+// http://stackoverflow.com/a/4026828/5678759
+function ArrayDiff(a, b) {
+    return a.filter(function(i) {
+    	return b.indexOf(i) < 0;
+    });
+}
+
+
+// Gets 1 or more nodes. May pull from our local cache.
+export function Get( ids ) {
+	if ( Number.isInteger(ids) ) {
+		ids = [ids];
+	}
+	
+	var nodes = [];
+	var cached = [];
+	for ( var idx = 0; idx < ids.length; idx++ ) {
+		if ( _Exists(ids[idx]) ) {
+			nodes.push(_Get(ids[idx]));
+			cached.push(ids[idx]);
+		}
+	}
+	
+	var uncached = ArrayDiff(ids, cached);
+	
+	var ret = null;
+	if ( uncached.length > 0 ) {
+		ret = GetFresh(uncached);
+	}
+	else {
+		ret = Promise.resolve({
+			'cached': [],
+			'node': []
+		});
+	}
+		
+	return ret.then( r => {
+			r.node = r.node.concat(nodes);
+			r.cached = r.cached.concat(cached);
+			r.local = cached;
+
+			return r;
+		});
+}
+export function GetFresh( ids ) {
+	if ( Number.isInteger(ids) ) {
+		ids = [ids];
+	}
+
+	return Fetch.Get(API_ENDPOINT+'/vx/node/get/'+ids.join('+'), true)
+		.then( r => {
+
+			if ( r.node ) {
+				// Cache the nodes
+				for ( var idx = 0; idx < r.node.length; idx++ ) {
+					_Cache(r.node[idx]);
+				}
+			}
+		
+			return r;	
+		});
+}
+
 
 // generic key extractor
 function _Keyed( promise, member = 'node', key = 'id' ) {
@@ -36,27 +111,9 @@ function _Keyed( promise, member = 'node', key = 'id' ) {
 	});
 }
 
-// Gets 1 or more nodes. May pull from our local cache.
-export function Get( ids ) {
-	// TODO: check for cached results here
-	
-	return GetFresh(ids);
-}
-export function GetFresh( ids ) {
-	if ( Number.isInteger(ids) ) {
-		ids = [ids];
-	}
-	
-	// TODO: do caching of results here
-
-	return Fetch.Get(API_ENDPOINT+'/vx/node/get/'+ids.join('+'), true);
-}
 
 // Like Get, but nodes will be an object of keys rather than an array of objects
 export function GetKeyed( ids ) {
-	return GetFreshKeyed(ids);
-}
-export function GetFreshKeyed( ids ) {
 	return Get(ids).then( r => {
 		var node = r.node;
 		r.node = {};
@@ -67,6 +124,22 @@ export function GetFreshKeyed( ids ) {
 	});
 }
 
+export function GetFreshKeyed( ids ) {
+	return GetFresh(ids).then( r => {
+		var node = r.node;
+		r.node = {};
+		for ( var idx = 0; idx < node.length; idx++ ) {
+			r.node[node[idx].id] = node[idx];
+		}
+		return r;
+	});
+}
+
+
+
+export function Walk( parent, slugs ) {
+	return Fetch.Get(API_ENDPOINT+'/vx/node/walk/'+parent+'/'+slugs.join('/'), true);
+}
 
 export function GetFeed( id, methods, types, subtypes, subsubtypes, more, limit ) {
 	let args = [];
