@@ -66,7 +66,8 @@ export function Get( ids ) {
 	else {
 		ret = Promise.resolve({
 			'cached': [],
-			'node': []
+			'node': [],
+			'fresh': true,	// As fresh as nothing can be
 		});
 	}
 		
@@ -77,8 +78,10 @@ export function Get( ids ) {
 			// Inform the caller which nodes came from the local cache
 			r.local = cached;
 
-			// Actually these aren't fresh at all
-			r.fresh = false;
+			if ( cached.length ) {
+				// Actually these aren't all fresh
+				r.fresh = false;
+			}
 
 			return r;
 		});

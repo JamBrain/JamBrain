@@ -18,6 +18,8 @@ function make_url( url ) {
 export default class ViewBar extends Component {
 	constructor( props ) {
 		super(props);
+		
+		
 	}
 
 	componentDidMount() {
