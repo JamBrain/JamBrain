@@ -1,5 +1,5 @@
 import { h, Component } 				from 'preact/preact';
-import NavSpinner						from 'com/nav-spinner/spinner';
+//import NavSpinner						from 'com/nav-spinner/spinner';
 
 import ContentPost						from 'com/content-post/post';
 import ContentUser						from 'com/content-user/user';
@@ -19,7 +19,7 @@ export default class ContentTimeline extends Component {
 			hash: {},
 			offset: 5, //10
 			lastadded: null,
-            loaded : false
+			loaded: false
 		};
 
 		this.makeFeedItem = this.makeFeedItem.bind(this);
@@ -98,9 +98,9 @@ export default class ContentTimeline extends Component {
 		this.setState({'loaded': false});
 		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, more, limit )
 		.then(r => {
-            this.setState({'loaded': true});
-            
-            // make sure we have a feed
+			this.setState({'loaded': true});
+			
+			// make sure we have a feed
 			if ( r.feed && r.feed.length ) {
 				this.appendFeed(r.feed);
 				return this.getMissingNodes();
@@ -191,16 +191,11 @@ export default class ContentTimeline extends Component {
 		if ( error ) {
 			ShowFeed.push(<ContentCommon><ContentCommonBody>error</ContentCommonBody></ContentCommon>);
 		}
-        else if ( feed && feed.length == 0){
-            ShowFeed.push(<ContentCommon><h1>Sorry, there are no {props.types[0]}</h1></ContentCommon>);
-        }
 		else if ( feed && feed.length ) {
-			if ( feed.length ) {
-				// NOTE: Only place where we directly set it. The rest are pushes
-				ShowFeed = feed.map(this.makeFeedItem);
-			}
-//			if ( !props.nomore /*|| added >= 10*/ )
-//				ShowFeed.push(<ContentMore loading={!loaded} onclick={this.fetchMore} />);
+			ShowFeed = ShowFeed.concat(feed.map(this.makeFeedItem));
+		}
+		else if ( feed && feed.length == 0 ){
+			ShowFeed.push(<ContentCommon><h1>Sorry, there are no {props.types[0]}</h1></ContentCommon>);
 		}
 
 		if ( !props.nomore && lastadded > 0 ) {

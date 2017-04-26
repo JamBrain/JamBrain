@@ -1,5 +1,5 @@
 import { h, Component } 				from 'preact/preact';
-import ShallowCompare	 				from 'shallow-compare/index';
+import Shallow			 				from 'shallow/shallow';
 
 import ButtonBase						from '../button-base/base';
 import ButtonLink						from '../button-link/link';
@@ -10,6 +10,8 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 
 import DropdownUser 					from 'com/dropdown-user/user';
 //import DropdownNotification				from 'com/dropdown-notification/notification';
+
+//import $Node							from '../../shrub/js/node/node';
 
 function make_url( url ) {
 	return url + window.location.search;
@@ -28,14 +30,19 @@ export default class ViewBar extends Component {
 		document.body.classList.remove('_static-view-bar');
 	}
 	
-//	shouldComponentUpdate( nextProps, nextState ) {
-//		var com = ShallowCompare(this, nextProps, nextState);
-//		console.log("FOON",com,this.props, nextProps);
-//		return com;
+//	componentWillReceiveProps( nextProps ) {
+//		if ( Shallow.Diff(nextProps, this.props) ) {
+////			console.log('featured',nextProps.featured);
+//		}
 //	}
+	
+	shouldComponentUpdate( nextProps, nextState ) {
+		var ret = Shallow.Compare(this, nextProps, nextState);
+		//console.log(ret, nextProps.featured);
+		return ret;
+	}
 
 	renderLeft() {
-		
 	}
 	
 	renderRight( user, featured ) {
@@ -76,28 +83,16 @@ export default class ViewBar extends Component {
 		// Both user and user.id means logged in
 		else if ( user && user.id ) {
 			if ( featured && featured.id ) {
-				if ( featured.what && featured.what.length ) {
-					// TODO: use path
-					//var GameURL = '/events/ludum-dare/38/';
-					var GameURL = featured.path;
-					var CurrentFeaturedItem = featured.what[featured.what.length-1];
-
-					GameURL += '/$'+CurrentFeaturedItem;
-					// TODO: Check if team leader (i.e. you have edit permissions)
-//					GameURL += '/edit';
-					//var GameURL = 
-					
-//					console.log(featured);
-
+				if ( featured.focus ) {
 					ShowMyGame = (
-						<ButtonLink href={GameURL} class="-button">
+						<ButtonLink href={featured.what_node[featured.focus].path} class="-button">
 							<SVGIcon>gamepad</SVGIcon>
 							<div class="if-sidebar-block">My Game</div>
 						</ButtonLink>
 					);
 					
 					NewPost = (
-						<ButtonBase class="-button" onclick={e => { window.location.hash = "#create/"+CurrentFeaturedItem+"/post"; }}>
+						<ButtonBase class="-button" onclick={e => { window.location.hash = "#create/"+featured.focus+"/post"; }}>
 							<SVGIcon>edit</SVGIcon>
 							<div class="if-sidebar-block">New</div>
 						</ButtonBase>
@@ -112,10 +107,6 @@ export default class ViewBar extends Component {
 					);
 				}
 			}
-			
-				
-			
-
 			
 			// TODO: Figure out how many notifications a user has
 			let NotificationCount = false ? (

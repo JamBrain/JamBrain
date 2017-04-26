@@ -41,13 +41,16 @@ export default class HeaderWhatsup extends Component {
 					return (
 						<div class="header-base header-whatsup outside">
 							<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
-							<br /><br />Wow! Sorry about the site! Judging will start <del>Wednesday</del> Friday.
-							<br /><NavLink href="https://twitter.com/mikekasprzak"><SVGIcon baseline small gap>twitter</SVGIcon>Mike</NavLink> wants to take Tuesday to be sure we got all the submissions.
-							<br /><NavLink href="/contact">Contact Mike</NavLink> if you need help. PS: <NavLink href="https://twitter.com/mikekasprzak/status/856708287856746497">We set a record</NavLink>. Still going!
+							<br /><br />Judging will start Friday. See <NavLink href="/events/ludum-dare/38/ludum-dare-dot-com/whats-next-helping-you-judging-friday">the News</NavLink>. Contact <NavLink href="/contact">Mike</NavLink> if you need help
 						</div>
 					);
 				}
 			}
+
+//							<br /><br />Wow! Sorry about the site! Judging will start <del>Wednesday</del> Friday.
+//							<br /><NavLink href="https://twitter.com/mikekasprzak"><SVGIcon baseline small gap>twitter</SVGIcon>Mike</NavLink> wants to take Tuesday to be sure we got all the submissions.
+//							<br /><NavLink href="/contact">Contact Mike</NavLink> if you need help. PS: <NavLink href="https://twitter.com/mikekasprzak/status/856708287856746497">We set a record</NavLink>. Still going!
+
 //							<br /><br />Game Publishing (Submission) is coming! Sorry for the <NavLink href="https://twitter.com/mikekasprzak"><SVGIcon baseline small gap>twitter</SVGIcon>delay</NavLink>!
 //							<br />We will make sure you get your compo games in the compo!
 			

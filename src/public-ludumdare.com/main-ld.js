@@ -185,8 +185,8 @@ class Main extends Component {
 					'root': node
 				});
 
-				if ( node.meta['featured'] && Number.parseInt(node.meta['featured']) > 0 ) {
-					this.fetchFeatured(Number.parseInt(node.meta['featured']));
+				if ( node.meta['featured'] && (node.meta['featured']|0) > 0 ) {
+					return this.fetchFeatured(node.meta['featured']|0);
 				}
 				console.log("[fetchRoot] Done:", node.id);
 			}
@@ -199,42 +199,95 @@ class Main extends Component {
 		});
 	}
 
-	fetchFeatured( _node ) {
+	fetchFeatured( node_id ) {
 		console.log("[fetchFeatured]");
 
+		// Used across everything below
 		var Node = null;
 
-		return $Node.Get(_node)
-		.then(r => {
-			// Parse node
-			if ( r && Array.isArray(r.node) && r.node.length ) {
-				Node = r.node[0];
-				console.log("[fetchFeatured] Loaded: ", Node.id);
+		return $Node.Get(node_id)
+			.then(r => {
+				// If 
+				if ( r && Array.isArray(r.node) && r.node.length ) {
+					Node = r.node[0];
 
-				return $Node.What(Node.id);
-			}
-			return null;
-		})
-		.then(r => {
-			if ( r && r.what ) {
-				Node.what = r.what;
+					console.log("[fetchFeatured] +", Node.id);
+	
+					return $Node.What(Node.id);
+				}
+				
+				// No featured event
+				return null;
+			})
+			.then(r => {
+				if ( r && r.what ) {
+					Node.what = r.what;
+	
+					console.log('[fetchFeatured] My Game(s):', Node.what);
+	
+					if ( Node.what.length ) {
+						return $Node.GetKeyed(r.what);
+					}
+				}
 
-				console.log('[fetchFeatured] My Game:', Node.what);
-			}
-
-			this.setState({
-				'featured': Node
+				return Promise.resolve({});
+			})
+			.then( r => {
+				if ( r && r.node ) {
+					Node.what_node = r.node;
+					
+					var Focus = 0;
+					var FocusDate = 0;
+					var LastPublished = 0;
+					
+					for ( var key in r.node ) {
+						var NewDate = new Date(r.node[key].modified).getTime();
+						if ( NewDate > FocusDate ) {
+							FocusDate = NewDate;
+							Focus = key|0;
+						}
+						if ( r.node[key].published ) {
+							LastPublished = key|0;
+							console.log('[fetchFeatured] '+key+' is published');
+						}
+					}
+					if ( Focus ) {
+						console.log('[fetchFeatured] '+Focus+' was the last modified');
+					}
+	
+					// If the last updated is published, focus on that
+					if ( r.node[Focus].published ) {
+						Node.focus = Focus;
+					}
+					// If not, make it the last known published game
+					else if ( LastPublished ) {
+						Node.focus = Lastpublished;
+					}
+					// Otherwise, just the last one we found
+					else if ( Focus > 0 ) {
+						Node.focus = Focus;
+					}
+					
+					if ( Node.focus || Node.focus === 0 ) {
+						console.log('[fetchFeatured] '+Node.focus+' chosen as Focus');
+					}
+				}
+	
+				this.setState({
+					'featured': Node
+				});
+			
+				console.log('[fetchFeatured] -', Node.id);
+	
+				return r;	
+			})
+			.catch(err => {
+				this.setState({ 'error': err });
 			});
-
-			console.log('[fetchFeatured] Done:', Node.id);
-		})
-		.catch(err => {
-			this.setState({ 'error': err });
-		});
 	}
 
 	fetchNode() {
-		console.log("[fetchNode]");
+		//console.log("[fetchNode]");
 
 		var NewState = {};
 
@@ -259,7 +312,7 @@ class Main extends Component {
 				NewState['node'] = r.node[0];
 				this.setState(NewState);
 
-				console.log("[fetchNode] Done:", NewState['node'].id);
+				//console.log("[fetchNode] Done:", NewState['node'].id);
 			}
 			else {
 				throw '[fetchNode] No nodes found';
@@ -281,7 +334,7 @@ class Main extends Component {
 
 		// Fetch the Active User
 		return $User.Get().then(r => {
-			Caller = Number.parseInt(r.caller_id);
+			Caller = r.caller_id|0;
 			console.log("[fetchUser] caller_id:", Caller);
 
 			// Process my User
