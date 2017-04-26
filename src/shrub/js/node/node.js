@@ -23,15 +23,40 @@ export function Walk( parent, slugs ) {
 	return Fetch.Get(API_ENDPOINT+'/vx/node/walk/'+parent+'/'+slugs.join('/'), true);
 }
 
+// generic key extractor
+function _Keyed( promise, member = 'node', key = 'id' ) {
+	return promise.then( r => {
+		var node = r[member];
+		
+		r[member] = {};
+		for ( var idx = 0; idx < node.length; idx++ ) {
+			r[member][node[idx][key]] = node[idx];
+		}
+		return r;
+	});
+}
+
+// Gets 1 or more nodes. May pull from our local cache.
 export function Get( ids ) {
+	// TODO: check for cached results here
+	
+	return GetFresh(ids);
+}
+export function GetFresh( ids ) {
 	if ( Number.isInteger(ids) ) {
 		ids = [ids];
 	}
+	
+	// TODO: do caching of results here
 
 	return Fetch.Get(API_ENDPOINT+'/vx/node/get/'+ids.join('+'), true);
 }
+
 // Like Get, but nodes will be an object of keys rather than an array of objects
 export function GetKeyed( ids ) {
+	return GetFreshKeyed(ids);
+}
+export function GetFreshKeyed( ids ) {
 	return Get(ids).then( r => {
 		var node = r.node;
 		r.node = {};
@@ -41,6 +66,7 @@ export function GetKeyed( ids ) {
 		return r;
 	});
 }
+
 
 export function GetFeed( id, methods, types, subtypes, subsubtypes, more, limit ) {
 	let args = [];
