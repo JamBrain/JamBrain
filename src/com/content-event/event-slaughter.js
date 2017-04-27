@@ -34,14 +34,15 @@ export default class ContentEventSlaughter extends Component {
 		var onVotes = $ThemeIdeaVote.GetMy(this.props.node.id)
 		.then(r => {
 			if ( r.votes ) {
-				var End = this.state.recent.length;
-				var Start = End - 50;
-				if ( Start < 0 )
-					Start = 0;
+				let end = this.state.recent.length;
+				let start = end - 50;
+				if ( start < 0 ) {
+					start = 0;
+				}
 				
-				// NOTE: The 'recent' order is quite random. Better than nothing though
+				let vote_keys = r.votes.map(vote => vote.idea);
 				
-				this.setState({ 'votes': r.votes, 'recent': Object.keys(r.votes).slice(Start).reverse() });
+				this.setState({ 'votes': r.votes, 'recent': vote_keys.slice(start) });
 			}
 			else {
 				this.setState({ 'votes': [] });
@@ -79,16 +80,17 @@ export default class ContentEventSlaughter extends Component {
 	
 	pickRandomIdea() {
 		if ( this.state.votes && this.state.ideas ) {
-			var vote_keys = Object.keys(this.state.votes);
+			var votes_indexed = [];
+			this.state.votes.forEach(vote => votes_indexed[vote.idea] = vote.value);
 			var idea_keys = Object.keys(this.state.ideas);
 			
-			var available = idea_keys.filter(key => vote_keys.indexOf(key) === -1);
-						
+			var available = idea_keys.filter(key => votes_indexed[parseInt(key)] === undefined);
+			
 			if ( available.length === 0 ) {
 				this.setState({ 'done': true, 'votes-left': available.length });
 			}
 
-			var id = parseInt(Math.random() * available.length);
+			var id = Math.floor(Math.random() * available.length);
 	
 			this.setState({ 'current': available[id], 'votes-left': available.length });
 		}
@@ -123,15 +125,19 @@ export default class ContentEventSlaughter extends Component {
 		// Render the last 10
 		var End = this.state.recent.length;
 		var Start = End - 10;
-		if ( Start < 0 )
+		if ( Start < 0 ){
 			Start = 0;
+		}
+		
+		var votes_indexed = [];
+		this.state.votes.forEach(vote => votes_indexed[vote.idea] = vote.value);
 		
 		var ret = [];
 //		for ( var idx = Start; idx < End; idx++ ) {		// Regular Order
 		for ( var idx = End; idx-- > Start; ) {			// Reverse Order
 			ret.push(
 				<div class="-recent">
-					{this.renderIcon(this.state.votes[this.state.recent[idx]])}
+					{this.renderIcon(votes_indexed[this.state.recent[idx]])}
 					<span title={'Id: '+this.state.recent[idx]}>{this.state.ideas[this.state.recent[idx]]}</span>
 				</div>
 			);
@@ -143,7 +149,7 @@ export default class ContentEventSlaughter extends Component {
 		return $ThemeIdeaVote[command](this.state.current)
 		.then(r => {
 			if ( r.status === 200 ) {
-				this.state.votes[this.state.current] = r.value;
+				this.state.votes.push({"idea": this.state.current, "value": r.value});
 				this.addToRecentQueue(this.state.current);
 				
 				this.pickRandomIdea();
@@ -170,7 +176,7 @@ export default class ContentEventSlaughter extends Component {
 		// Google link https://www.google.com/search?q=[query]
 		let url = "https://www.google.com/search?q="+encodeURIComponent(this.state.ideas[this.state.current]);
 		let win = window.open(url, '_blank');
-  		win.focus();
+		win.focus();
 	}
 
 	_renderMyIdea( id ) {
@@ -197,7 +203,7 @@ export default class ContentEventSlaughter extends Component {
 		if ( done ) {
 			return (
 				<div>
-					<div>Wow! {"You're totally done!"} Amazing! You slaughtered {Object.keys(votes).length} themes!</div>
+					<div>Wow! {"You're totally done!"} Amazing! You slaughtered {votes.length} themes!</div>
 					{StatsAndDetails}
 				</div>
 			);
@@ -218,7 +224,7 @@ export default class ContentEventSlaughter extends Component {
 					</div>
 					<div class="-stats">
 						<div>
-							<strong>Themes Slaughtered:</strong> <span>{Object.keys(votes).length}</span>
+							<strong>Themes Slaughtered:</strong> <span>{votes.length}</span>
 						</div>
 						{StatsAndDetails}
 					</div>
