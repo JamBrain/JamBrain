@@ -49,7 +49,7 @@ function hasChanges( &$arr ) {
 
 
 function redirectToSelfAndExit() {
-	global $in_path;
+	global $out_file;
 	
 	// Force redirect to data
 	header('Location: '.
@@ -57,7 +57,7 @@ function redirectToSelfAndExit() {
 		"://".
 		$_SERVER['HTTP_HOST'].
 		'/'.
-		$in_file
+		$out_file
 	);
 
 	exit;
@@ -118,8 +118,7 @@ else {
 			mkdir($out_fullpath, 0755, true);
 		symlink($src_relativefile, $out_file);
 
-//		redirectToSelfAndExit();
-//		echo "no changes\n";
+		redirectToSelfAndExit();
 	}
 	// File doesn't exist
 	else {
