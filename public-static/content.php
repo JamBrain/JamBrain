@@ -11,8 +11,20 @@ $ext_part = explode('.', $in_basename);
 $file_name = array_shift($ext_part);
 $file_ext = array_shift($ext_part);
 
-$src_path = 'raw/'.$in_path;
-$out_path = 'content/'.$in_path;
+const SRC_DIR = 'raw';
+const OUT_DIR = 'content';
+
+$src_file = SRC_DIR.'/'.$in_path;
+$src_path = dirname($src_file);
+$src_fullfile = __DIR__.'/'.$src_file;
+$src_fullpath = __DIR__.'/'.$src_path;
+
+$out_file = OUT_DIR.'/'.$in_path;
+$out_path = dirname($out_file);
+$out_fullfile = __DIR__.'/'.$out_file;
+$out_fullpath = __DIR__.'/'.$out_path;
+
+$src_relativefile = str_repeat('../', count(explode('/', $out_path))).$src_file;
 
 const IMAGE_TYPE = [
 	'png',
@@ -35,6 +47,7 @@ function hasChanges( &$arr ) {
 	return false;
 }
 
+
 function redirectToSelfAndExit() {
 	global $in_path;
 	
@@ -43,8 +56,8 @@ function redirectToSelfAndExit() {
 		$_SERVER['REQUEST_SCHEME'].
 		"://".
 		$_SERVER['HTTP_HOST'].
-		CONTENT_DIR.
-		$in_path
+		'/'.
+		$in_file
 	);
 
 	exit;
@@ -82,23 +95,34 @@ foreach( $ext_part as &$value ) {
 	}
 }
 
+//var_dump($out);
+
+
+
 if ( hasChanges( $out ) ) {
-	echo "nope";
+	echo "yup";
 //	echo $in_path;
 	
 //	echo 'h..';
 //	
-//	if ( file_exists($out_path) ) {
+//	if ( file_exists($out_file) ) {
 //		echo 'vvv';
 //	}
-//	if ( file_exists($src_path) ) {
+//	if ( file_exists($src_file) ) {
 //		echo 'eee';
 //	}
 }
 else {
-	if ( file_exists($src_path) ) {
-		//symlink( $src_path, $out_path );
-		echo "no changes\n";
-		var_dump($src_path);
+	if ( file_exists($src_file) ) {
+		if ( !file_exists($out_fullpath) )
+			mkdir($out_fullpath, 0755, true);
+		symlink($src_relativefile, $out_file);
+
+//		redirectToSelfAndExit();
+//		echo "no changes\n";
+	}
+	// File doesn't exist
+	else {
+		
 	}
 }
