@@ -111,7 +111,7 @@ function coreSanitize_Name( $str ) {
 	//$str = str_replace(' ', '_', $str);							// Spaces to underscores
 	//$str = trim($str, '_.- ');									// Trim start and end
 	$str = trim($str);												// Trim start and end
-	
+
 	return $str;
 }
 function coreSlugify_Name( $str ) {
@@ -122,9 +122,21 @@ function coreSlugify_Name( $str ) {
 	$str = preg_replace("/[^a-z0-9_.\- ]/", '', $str);				// Keep only these
 	$str = preg_replace("/[_.\- ]+/", '-', $str);					// Replace symbols with a single dash
 	$str = trim($str, '- ');										// Trim all dashes and spaces from the start and end
+
+	return $str;
+}
+function coreSlugify_File( $str ) {
+	$str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');				// Remove invalid UTF-8 characters
+	$str = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $str);			// Remove accents, non-ascii characters
+	$str = strip_tags($str);										// Remove any XML/HTML tags
+	$str = strtolower($str);										// To lower case
+	$str = preg_replace("/[^a-z0-9_.\- ]/", '', $str);				// Keep only these
+	$str = preg_replace("/[\- ]+/", '-', $str);						// Replace other symbols with a single dash
+	//$str = trim($str, '- ');										// Trim all dashes and spaces from the start and end
 	
 	return $str;
 }
+
 
 function coreSlugify_PathName( $str ) {
 	// Node slugs must be > 0
