@@ -146,14 +146,13 @@ foreach( $in_ext_part as &$value ) {
 		$out['height'] = $v;
 	}
 	else if ( ($pos = strpos($value, 'x')) > 0 && ($w = intval($value)) > 0 && ($h = intval(substr($value, $pos+1))) > 0 ) {
-//		$parts = explode('x', $value);
-//		$w = intval($parts[0]);
-//		$h = intval($parts[1]);
-//		
-//		if ( $w && $h ) {
-			$out['width'] = $w;
-			$out['height'] = $h;
-//		}
+		if ( $w > 4096 )
+			EmitError(400, "Bad Width: '$w' (max 4096)");
+		if ( $h > 4096 )
+			EmitError(400, "Bad Height: '$h' (max 4096)");
+
+		$out['width'] = $w;
+		$out['height'] = $h;
 	}
 	else {
 		EmitError(400, "Unknown or Invalid property: '$value'");
@@ -175,8 +174,9 @@ if ( hasChanges( $out ) ) {
 }
 // No changes
 else {
-	if ( !file_exists($out_fullpath) )
+	if ( !file_exists($out_fullpath) ) {
 		mkdir($out_fullpath, 0755, true);
+	}
 	symlink($src_relativefile, $out_file);
 
 	redirectToSelfAndExit();
