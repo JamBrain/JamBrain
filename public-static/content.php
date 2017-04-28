@@ -161,15 +161,33 @@ foreach( $in_ext_part as &$value ) {
 
 // If a change has been requested
 if ( hasChanges( $out ) ) {
-	// Debug mode, output JSON instead
-	if ( $out['debug'] ) {
-		$RESPONSE['args'] = $in_ext_part;
+	$image_info = getimagesize($src_fullfile);
+	
+	if ( $image_info ) {
+		// It's faster to re-extract the data then ask the database
+		$asset = [
+			'width' => $image_info[0],
+			'height' => $image_info[1],
+			'mime' => $image_info['mime'],
+		];
 		
-		Emit($RESPONSE);
+		$RESPONSE['asset'] = $asset;
+
+		// Debug mode, output JSON instead of an image
+		if ( $out['debug'] ) {
+			$RESPONSE['args'] = $in_ext_part;
+			
+			Emit($RESPONSE);
+		}
+		// Image output mode
+		else {
+			
+			// hack
+			Emit($RESPONSE);
+		}
 	}
-	// Normal mode
 	else {
-		echo "hey";
+		EmitError(400, "Not an valid transformable content type");
 	}
 }
 // No changes
