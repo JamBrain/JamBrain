@@ -2,6 +2,8 @@
 
 require_once __DIR__."/../src/shrub/src/core/core.php";
 
+$RESPONSE = [];
+
 function TrimName($name) {
 	return coreSlugify_File(substr($name, 0, 32));
 }
@@ -10,6 +12,7 @@ $in_part = core_GetAPIRequest();
 $in_part = array_map('TrimName', $in_part);
 $in_file = implode('/', $in_part);
 $in_path = dirname($in_file);
+$in_paths = explode('/', $in_path);
 $in_basename = basename($in_file);
 
 $in_ext_part = explode('.', $in_basename);
@@ -17,6 +20,16 @@ $in_ext_part = array_map('TrimName', $in_ext_part);
 $in_name = array_shift($in_ext_part);
 $in_ext = array_shift($in_ext_part);
 
+$user_id = null;
+$asset_id = null;
+// Check if the path is to a legal user file
+if ( ($in_paths_count = count($in_paths)) > 1 && $in_paths[$in_paths_count-1] == 'z' ) {
+	$user_id = hexdec(strrev(implode('', array_slice($in_paths, 0, -1))));
+	$RESPONSE['user'] = $user_id;
+
+	$asset_id = hexdec($in_name);
+	$RESPONSE['asset'] = $asset_id;
+}
 
 const SRC_DIR = 'raw';
 const OUT_DIR = 'content';
@@ -35,14 +48,12 @@ $src_relativefile = str_repeat('../', count(explode('/', $out_path))).$src_file;
 
 // TODO: Sort extensions other than the input and output extensions, and symlink the file you should really be requesting
 
-$RESPONSE = [];
-function EmitResponse() {
-	global $RESPONSE;
-	
-	if ( !isset($RESPONSE['status']) )
-		$RESPONSE['status'] = 200;
+function Emit( $response ) {
+	if ( !isset($response['status']) ) {
+		$response = ['status' => 200] + $response;
+	}
 
-	http_response_code($RESPONSE['status']);
+	http_response_code($response['status']);
 	header('Content-Type: application/json');
 	header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
 	
@@ -51,19 +62,21 @@ function EmitResponse() {
 		$json_format |= JSON_PRETTY_PRINT;
 	}
 
-	echo json_encode($RESPONSE, $json_format);
+	echo json_encode($response, $json_format);
 
 	exit;
 }
 function EmitError( $code, $message = null ) {
 	global $RESPONSE;
 
-	$RESPONSE['status'] = $code;
+	$ERROR = ['status' => $code];
 
 	if ( $message )
-		$RESPONSE['message'] = $message;
+		$ERROR['message'] = $message;
+		
+	$ERROR['data'] = $RESPONSE;
 
-	EmitResponse();
+	Emit($ERROR);
 }
 
 // Make sure file exists, otherwise we're done
@@ -77,7 +90,6 @@ const IMAGE_TYPE = [
 	'jpg',
 	'gif',
 	'webp',		// Output only //
-	'debug',
 ];
 
 
@@ -85,6 +97,7 @@ const IMAGE_TYPE = [
 $out['width'] = null;
 $out['height'] = null;
 $out['format'] = null;
+$out['debug'] = null;
 
 function hasChanges( &$arr ) {
 	foreach ( $arr as &$value ) {
@@ -116,6 +129,9 @@ foreach( $in_ext_part as &$value ) {
 	if ( strlen($value) < 1 ) {
 		EmitError(400, "Invalid property");
 	}
+	else if ( $value == 'debug' ) {
+		$out['debug'] = true;
+	}
 	else if ( array_search($value, IMAGE_TYPE) ) {
 		$out['format'] = $value;
 	}
@@ -144,13 +160,13 @@ foreach( $in_ext_part as &$value ) {
 	}
 }
 
+// If a change has been requested
 if ( hasChanges( $out ) ) {
 	// Debug mode, output JSON instead
-	if ( $out['format'] == 'debug' ) {
-		$RESPONSE['bas'] = $in_basename;
-		$RESPONSE['b'] = $in_ext_part;
+	if ( $out['debug'] ) {
+		$RESPONSE['args'] = $in_ext_part;
 		
-		EmitResponse();
+		Emit($RESPONSE);
 	}
 	// Normal mode
 	else {
