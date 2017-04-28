@@ -41,7 +41,7 @@ export default class HeaderWhatsup extends Component {
 					return (
 						<div class="header-base header-whatsup outside">
 							<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
-							<br /><br />Judging will start Friday. See <NavLink href="/events/ludum-dare/38/ludum-dare-dot-com/whats-next-helping-you-judging-friday">the News</NavLink>. Contact <NavLink href="/contact">Mike</NavLink> if you need help
+							<br /><br />Judging will start <del>Friday</del> Sunday. See <NavLink href="/news">the News</NavLink>. Contact <NavLink href="/contact">Mike</NavLink> if you need help
 						</div>
 					);
 				}
