@@ -16,6 +16,7 @@ var block = {
   fences: noop,
   hr: /^( *[-*_]){3,} *(?:\n+|$)/,
   heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
+  spoiler: /^(\!>)([^\n]+?) *\n*/,
   nptable: noop,
   lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
   blockquote: /^( *>[^\n]+(\n(?!def)[^\n]+)*\n*)+/,
@@ -23,7 +24,7 @@ var block = {
   html: /^ *(?:comment *(?:\n|\s*$)|closed *(?:\n{2,}|\s*$)|closing *(?:\n{2,}|\s*$))/,
   def: /^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +["(]([^\n]+)[")])? *(?:\n+|$)/,
   table: noop,
-  paragraph: /^((?:[^\n]+\n?(?!hr|heading|lheading|blockquote|tag|def))+)\n*/,
+  paragraph: /^((?:[^\n]+\n?(?!hr|heading|lheading|spoiler|blockquote|tag|def))+)\n*/,
   text: /^[^\n]+/
 };
 
@@ -59,6 +60,7 @@ block.paragraph = replace(block.paragraph)
   ('hr', block.hr)
   ('heading', block.heading)
   ('lheading', block.lheading)
+  ('spoiler', block.spoiler)
   ('blockquote', block.blockquote)
   ('tag', '<' + block._tag)
   ('def', block.def)
@@ -77,7 +79,8 @@ block.normal = merge({}, block);
 block.gfm = merge({}, block.normal, {
   fences: /^ *(`{3,}|~{3,})[ \.]*(\S+)? *\n([\s\S]*?)\s*\1 *(?:\n+|$)/,
   paragraph: /^/,
-  heading: /^ *(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)/
+  heading: /^ *(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)/,
+  spoiler: /^(\!>)([^\n]+?) *\n*/
 });
 
 block.gfm.paragraph = replace(block.paragraph)
@@ -200,6 +203,16 @@ Lexer.prototype.token = function(src, top, bq) {
       this.tokens.push({
         type: 'heading',
         depth: cap[1].length,
+        text: cap[2]
+      });
+      continue;
+    }
+
+    // spoiler
+    if (cap = this.rules.spoiler.exec(src)) {
+      src = src.substring(cap[0].length);
+      this.tokens.push({
+        type: 'spoiler',
         text: cap[2]
       });
       continue;
@@ -834,6 +847,12 @@ Renderer.prototype.heading = function(text, level, raw) {
     + '>\n';
 };
 
+Renderer.prototype.spoiler = function(text) {
+  return '<span class="spoiler">'
+    + text
+    + '</span>\n';
+};
+
 Renderer.prototype.hr = function() {
   return this.options.xhtml ? '<hr/>\n' : '<hr>\n';
 };
@@ -1078,6 +1097,10 @@ Parser.prototype.tok = function() {
         this.inline.output(this.token.text),
         this.token.depth,
         this.token.text);
+    }
+    case 'spoiler': {
+      return this.renderer.spoiler(
+        this.inline.output(this.token.text));
     }
     case 'code': {
       return this.renderer.code(this.token.text,
