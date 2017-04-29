@@ -115,9 +115,8 @@ function redirectToSelfAndExit() {
 	
 	// Force redirect to data
 	header('Location: '.
-		$_SERVER['REQUEST_SCHEME'].
-		"://".
-		$_SERVER['HTTP_HOST'].
+		isset($_SERVER['HTTPS']) ? 'https://' : 'http://'.
+		$_SERVER['SERVER_NAME'].
 		'/'.
 		$out_file
 	);
