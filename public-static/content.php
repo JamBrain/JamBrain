@@ -97,7 +97,9 @@ const IMAGE_TYPE = [
 $out['width'] = null;
 $out['height'] = null;
 $out['format'] = null;
+$out['color'] = null;
 $out['fit'] = null;
+$out['noopt'] = null;
 $out['debug'] = null;
 
 function hasChanges( &$arr ) {
@@ -164,6 +166,9 @@ foreach( $in_ext_part as &$value ) {
 	else if ( $value == 'fit' ) {
 		$out['fit'] = true;
 	}
+	else if ( $value == 'noopt' ) {
+		$out['noopt'] = true;
+	}
 	else if ( array_search($value, IMAGE_TYPE) !== false ) {
 		$out['format'] = $value;
 	}
@@ -186,6 +191,10 @@ foreach( $in_ext_part as &$value ) {
 		$out['width'] = $w;
 		$out['height'] = $h;
 	}
+	else if ( $value[0] == 'c' ) {
+		$out['color'] = substr($value, 1, 6);
+	}
+
 	else {
 		EmitError(400, "Unknown or Invalid property: '$value'");
 	}
@@ -196,6 +205,11 @@ if ( hasChanges($out) ) {
 	// confirm that final extension is an output format
 	if ( ($of = $in_paths[count($in_paths)-1]) && ($of == 'debug' || array_search($of, IMAGE_TYPE) !== false) ) {
 		EmitError(400, "Final extension must be an output format. Invalid format '$of'");
+	}
+	
+	// Glob and make sure there are not too many files already
+	if ( ($globs = count(glob($out_path."/".$in_name.'.'.$in_ext.'.*'))) > 64 ) {
+		EmitError(400, "Too many variations of file: $globs. TODO: Purge");
 	}
 	
 	$data = null;
@@ -253,7 +267,11 @@ if ( hasChanges($out) ) {
 				// NOTE: modifiers append to resize strings, so this must come next //
 				if ( $out['fit'] ) {
 					// Fit to dimensions //
-					$option .= '^ -gravity center';
+					$option .= "^ -gravity center";
+					if ( $out['color'] )
+						$option .= " -background '#".$out['color']."'";
+					else
+						$option .= " -background none";
 					$option .= ' -extent '.$out['width'].'x'.$out['height'];
 				}
 				else {
@@ -271,7 +289,7 @@ if ( hasChanges($out) ) {
 		}
 
 		// Step 3: Optimize
-		if ( true ) {
+		if ( !$out['noopt'] ) {
 //			if ( ($file_out_ext == 'gif') ) {
 //				// http://www.lcdf.org/gifsicle/
 //				EmitErrorAndExit("ERROR: Unsupported optimizer GIF");
