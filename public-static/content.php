@@ -92,6 +92,13 @@ const IMAGE_TYPE = [
 	'webp',		// Output only //
 ];
 
+const IMAGE_MIME = [
+	'png' => 'image/png',
+	'jpg' => 'image/jpeg',
+	'gif' => 'image/gif',
+	'webp' => 'image/webp',
+];
+
 
 // Globals
 $out['width'] = null;
@@ -332,7 +339,14 @@ if ( hasChanges($out) ) {
 			file_put_contents($out_file, $data);
 
 			// Step 5: Redirect to self and exit
-			redirectToSelfAndExit();
+			//redirectToSelfAndExit();
+			
+			header("Content-Type: ".IMAGE_MIME[$out['format']]);
+			header("Content-Length: ".strlen($data));
+			header('Expires: 0');
+			
+			echo $data;
+			exit;
 		}
 	}
 	else {
@@ -346,5 +360,11 @@ else {
 	}
 	symlink($src_relativefile, $out_file);
 
-	redirectToSelfAndExit();
+	//redirectToSelfAndExit();
+	header("Content-Type: ".IMAGE_MIME[$in_ext]);
+	header("Content-Length: ".filesize($out_file));
+	header('Expires: 0');
+	
+	readfile($out_file);
+	exit;
 }
