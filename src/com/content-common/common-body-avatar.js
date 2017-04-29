@@ -52,14 +52,17 @@ export default class ContentCommonBodyAvatar extends Component {
 	render( props ) {
 		var Class = cN("content-common-body -avatar", props.class, props.editing ? '-editing' : '');
 		
-		var Avatar = props.src + ".64x64.fit.png";
+		var AvatarFail = '///content/internal/user64.png';
+		var Avatar = props.src ? props.src : AvatarFail;
+			
+		Avatar += ".64x64.fit.png";
 		
 		if ( props.editing ) {
 			return (
 				<label>
 					<input type="file" name="asset" style="display: none;" onchange={this.onEdit} />
 					<div class={Class}>
-						<IMG2 src={Avatar} failsrc="///content/internal/user64.png" />
+						<IMG2 src={Avatar} failsrc={AvatarFail} />
 						<SVGIcon>edit</SVGIcon>
 					</div>
 				</label>
@@ -67,7 +70,7 @@ export default class ContentCommonBodyAvatar extends Component {
 		}		
 		return (
 			<div class={Class}>
-				<IMG2 src={Avatar} failsrc="///content/internal/user64.png" />
+				<IMG2 src={Avatar} failsrc={AvatarFail} />
 			</div>
 		);
 	}
