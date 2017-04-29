@@ -1,19 +1,54 @@
 @import 'defs.less';
 
 #content .content-common-body.-avatar {
+	position: relative;
+	
 	float: right;
-	margin-left: 0.5em;
-	margin-bottom: 0.5em;
+
+	margin: 0;
+	margin-top: 0.5em;
+	margin-right: 0.5em;
+	padding: 0.5em;
+	
+	z-index: 5;
 	
 	& > img {
 		display: block;
 		width: 64px;
 		height: 64px;
 
-		/* When Sidebar is disabled */
+		/* When Sidebar is hidden */
 		@media (max-width: (@BASE_WIDTH - 20em)) {
 			width: 48px;
 			height: 48px;
+		}
+	}
+	/* When Sidebar is hidden */
+	@media (max-width: (@BASE_WIDTH - 20em)) {
+		margin-right: 0;
+	}
+		
+	& > svg {
+		position: absolute;
+		
+		margin: auto;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		
+		font-size: 1.25em;
+		
+		color: @COL_W;
+		display: none;
+	}
+
+	&:hover {
+		background: @COL_A;
+		cursor: pointer;
+		
+		& > svg {
+			display: block;
 		}
 	}
 }

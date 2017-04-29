@@ -223,7 +223,7 @@ export default class ContentSimple extends Component {
 			let ShowAvatar = null;
 			let ShowByLine = null;
 			if ( props.authored ) {
-				ShowAvatar = <ContentCommonBodyAvatar src={author.meta && author.meta.avatar ? author.meta.avatar : ''} />;
+				ShowAvatar = <ContentCommonBodyAvatar node={node} user={user} src={author.meta && author.meta.avatar ? author.meta.avatar : ''} editing={node_IsAuthor(node, user) ? state.editing : false} />;
 				if ( props.by && !(props.notitleedit ? false : state.editing) ) {
 					ShowByLine = <ContentCommonBodyBy node={node} author={author} label={props.by.length ? props.by : "published"} noby={props.noby} when />;
 				}

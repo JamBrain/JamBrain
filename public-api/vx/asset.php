@@ -94,12 +94,16 @@ switch ( $action ) {
 
 		// Confirm an asset was included
 		if ( !isset($_FILES["asset"]) )
-			json_EmitFatalError_BadRequest("No 'asset' found", $RESPONSE);
+			json_EmitFatalError_BadRequest("No 'asset' found. Max upload size is ".file_upload_max_size()." bytes", $RESPONSE);
 			
 		$asset = $_FILES["asset"];	// copy, so we can change it
+
+		// http://stackoverflow.com/a/21715692/5678759
+		// NOTE! Uploads that are too large are a difficult error to handle.
+		// The error is thrown BEFORE your script executes. The only way to stop this is to disable this behavior (php.ini)
 			
 		// Check errors
-		if ( $error = $asset['error'] ) {
+		if ( $error = intval($asset['error']) ) {
 			// http://php.net/manual/en/features.file-upload.errors.php
 			if ( $error == 1 && $error == 2 )
 				json_EmitFatalError_BadRequest("Asset is larger than ".file_upload_max_size()." bytes", $RESPONSE);
