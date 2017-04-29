@@ -3,7 +3,7 @@ import { h, Component } 				from 'preact/preact';
 //import NavLink 							from 'com/nav-link/link';
 //import ButtonBase						from 'com/button-base/base';
 
-//import ContentSimple					from 'com/content-simple/simple';
+import ContentSimple					from 'com/content-simple/simple';
 
 //import ContentBodyMarkup				from 'com/content-body/body-markup';
 
@@ -32,62 +32,62 @@ export default class ContentUser extends Component {
 	constructor( props ) {
 		super(props);
 		
-		this.state = {
-			'editing': this.isEditMode(),
-			'modified': false,
-			
-			'body': props.node.body,
-		};
-
-		this.onEdit = this.onEdit.bind(this);
-		this.onPreview = this.onPreview.bind(this);
-		this.onSave = this.onSave.bind(this);
-		this.onPublish = this.onPublish.bind(this);
-
-		this.onModifyText = this.onModifyText.bind(this);
+//		this.state = {
+//			'editing': this.isEditMode(),
+//			'modified': false,
+//			
+//			'body': props.node.body,
+//		};
+//
+//		this.onEdit = this.onEdit.bind(this);
+//		this.onPreview = this.onPreview.bind(this);
+//		this.onSave = this.onSave.bind(this);
+//		this.onPublish = this.onPublish.bind(this);
+//
+//		this.onModifyText = this.onModifyText.bind(this);
 	}
 	
-	onEdit( e ) {
-		this.setState({'editing': true});
-	}
-	onPreview( e ) {
-		this.setState({'editing': false});
-	}
-	onSave( e ) {
-		//var Name = /*this.state.title ? this.state.title :*/ this.props.node.name;
-		var Body = this.state.body ? this.state.body : this.props.node.body;
-		
-		return $Node.Update(this.props.node.id, null, Body)
-		.then(r => {
-			if ( r.status == 200 ) {
-				this.setState({ 'modified': false });
-			}
-			else {
-				if ( r.caller_id == 0 || (r.data && r.data.caller_id == 0) ) {
-					location.hash = "#savebug";
-				}
-				else {
-					this.setState({ 'error': r.status + ": " + r.error });
-				}
-			}
-		})
-		.catch(err => {
-			console.log(err);
-			this.setState({ 'error': err });
-		});
-	}
-	onPublish( e ) {
-		console.log( e );
-	}
-
-	onModifyText( e ) {
-		this.setState({'modified': true, 'body': e.target.value});
-	}
-	
-	isEditMode() {
-		var extra = this.props.extra;
-		return extra && extra.length && extra[extra.length-1] == 'edit';
-	}
+//	onEdit( e ) {
+//		this.setState({'editing': true});
+//	}
+//	onPreview( e ) {
+//		this.setState({'editing': false});
+//	}
+//	onSave( e ) {
+//		//var Name = /*this.state.title ? this.state.title :*/ this.props.node.name;
+//		var Body = this.state.body ? this.state.body : this.props.node.body;
+//		
+//		return $Node.Update(this.props.node.id, null, Body)
+//		.then(r => {
+//			if ( r.status == 200 ) {
+//				this.setState({ 'modified': false });
+//			}
+//			else {
+//				if ( r.caller_id == 0 || (r.data && r.data.caller_id == 0) ) {
+//					location.hash = "#savebug";
+//				}
+//				else {
+//					this.setState({ 'error': r.status + ": " + r.error });
+//				}
+//			}
+//		})
+//		.catch(err => {
+//			console.log(err);
+//			this.setState({ 'error': err });
+//		});
+//	}
+//	onPublish( e ) {
+//		console.log( e );
+//	}
+//
+//	onModifyText( e ) {
+//		this.setState({'modified': true, 'body': e.target.value});
+//	}
+//	
+//	isEditMode() {
+//		var extra = this.props.extra;
+//		return extra && extra.length && extra[extra.length-1] == 'edit';
+//	}
 
 	render( props, state ) {
 		props = Object.assign({}, props);	// Shallow copy we can change props
@@ -96,64 +96,79 @@ export default class ContentUser extends Component {
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
+
+		props.header = "USER";
+		props.headerClass = "-col-b";
 		
-		if ( node && node.slug ) {
-			props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
-			props.class.push("content-user");
-			props.header = "USER";
-			props.headerClass = "-col-b";
-			
-			var NavBar = [];
-			var EditBar = null;
-			var IsPublished = false;
+		props.subtitle = '@'+node.slug;
+		props.notitleedit = true;
+		
+		props.authored = true;
+		props.by = "Joined";
+		props.noby = true;
+		
+		props.label = "Biography";
+		
+		return <ContentSimple class="content-user" {...props} />;
 
-			if ( this.isEditMode() ) {
-				// Check if user has permission to edit
-				if ( node.id != user.id ) {
-					return <ContentError code="401">Permission Denied</ContentError>;
-				}
-				
-				// Hack
-				//var IsPublished = node.type.length;//;Number.parseInt(node.published) !== 0;
-				
-				// In this case, you shouldn't be able to publish (as all users are published upon registration)
-				// published={IsPublished}
-				// onpublish={this.onPublish}
-				EditBar = <ContentCommonEdit nopublish editing={state.editing} modified={state.modified} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} />;
-			}
-			else {
-//				if ( user.id && (node.id !== user.id) )
-//					props.star = 1;
-				if ( user.id && (node.id === user.id) )
-					props.edit = 1;
-			
-				if ( user && user.id && node.id !== user.id ) {
-					NavBar.push(<ButtonFollow node={node} user={user} />);
-				}
-			}
-
-			// TODO: Swap this out for the minimized feature. Start it minimized instead.			
-			var ShowMarkup = null;
-			if ( (extra && !extra.length) || (extra && extra[0] == 'edit') || (extra && extra[0] == 'feed') ) {
-				ShowMarkup = <ContentCommonBodyMarkup user={user} editing={state.editing} label="Biography" placeholder="Share details about yourself {optional}" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>;
-			}
-			
-			return (
-				<ContentCommon {...props}>
-					{EditBar}
-					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
-					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.slug} />
-					<ContentCommonBodyBy node={node} label="Joined" when />
-					{ShowMarkup}
-					<ContentCommonNav>{NavBar}</ContentCommonNav>
-					{props.children}
-				</ContentCommon>
-			);
-//<ContentCommonBodyMarkup user={user} editing={state.editing} label="Biography" placeholder="Share details about yourself {optional}" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
-		}
-		else {
-			return <ContentLoading />;
-		}
+	
+//		if ( node && node.slug ) {
+//			props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
+//			props.class.push("content-user");
+//			props.header = "USER";
+//			props.headerClass = "-col-b";
+//			
+//			var NavBar = [];
+//			var EditBar = null;
+//			var IsPublished = false;
+//
+//			if ( this.isEditMode() ) {
+//				// Check if user has permission to edit
+//				if ( node.id != user.id ) {
+//					return <ContentError code="401">Permission Denied</ContentError>;
+//				}
+//				
+//				// Hack
+//				//var IsPublished = node.type.length;//;Number.parseInt(node.published) !== 0;
+//				
+//				// In this case, you shouldn't be able to publish (as all users are published upon registration)
+//				// published={IsPublished}
+//				// onpublish={this.onPublish}
+//				EditBar = <ContentCommonEdit nopublish editing={state.editing} modified={state.modified} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} />;
+//			}
+//			else {
+////				if ( user.id && (node.id !== user.id) )
+////					props.star = 1;
+//				if ( user.id && (node.id === user.id) )
+//					props.edit = 1;
+//			
+//				if ( user && user.id && node.id !== user.id ) {
+//					NavBar.push(<ButtonFollow node={node} user={user} />);
+//				}
+//			}
+//
+//			// TODO: Swap this out for the minimized feature. Start it minimized instead.			
+//			var ShowMarkup = null;
+//			if ( (extra && !extra.length) || (extra && extra[0] == 'edit') || (extra && extra[0] == 'feed') ) {
+//				ShowMarkup = <ContentCommonBodyMarkup user={user} editing={state.editing} label="Biography" placeholder="Share details about yourself {optional}" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>;
+//			}
+//			
+//			return (
+//				<ContentCommon {...props}>
+//					{EditBar}
+//					<ContentCommonBodyAvatar src={node.meta.avatar ? node.meta.avatar : ''} />
+//					<ContentCommonBodyTitle href={path} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.slug} />
+//					<ContentCommonBodyBy node={node} label="Joined" when />
+//					{ShowMarkup}
+//					<ContentCommonNav>{NavBar}</ContentCommonNav>
+//					{props.children}
+//				</ContentCommon>
+//			);
+////<ContentCommonBodyMarkup user={user} editing={state.editing} label="Biography" placeholder="Share details about yourself {optional}" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
+//		}
+//		else {
+//			return <ContentLoading />;
+//		}
 	}
 }
 		

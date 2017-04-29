@@ -945,8 +945,8 @@ switch ( $action ) {
 		$old_action = $action;
 		$action = json_ArgShift();
 		switch ( $action ) {
-			case 'add': //node/link/add/:node_id
-			case 'remove': //node/link/remove/:node_id
+			case 'add': //node/link/add/:node_a/:node_b
+			case 'remove': //node/link/remove/:node_a/:node_b
 				json_ValidateHTTPMethod('POST');
 
 				if ( !count($_POST) )

@@ -57,11 +57,11 @@ export default class ContentCommonBodyBy extends Component {
 		props.class.push("-by");
 		
 		var Body = [];
-		if ( props.author ) {
+		if ( !props.noby && props.author ) {
 			Body.push(<span class="-name">by {this.getName(props.author)}</span>);
 			Body.push(<span> (<NavLink class="-at-name" href={this.getURL(props.author)}>@{this.getAtName(props.author)}</NavLink>)</span>);
 		}
-		if ( props.authors ) {
+		if ( !props.noby && props.authors ) {
 			Body.push(<span>by </span>);
 			for ( var idx = 0; idx < props.authors.length; idx++ ) {
 				Body.push(<span class="-name">{this.getName(props.authors[idx])}</span>);

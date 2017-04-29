@@ -17,7 +17,12 @@ export default {
 	Update,
 	Publish,
 
-	Transform
+	Transform,
+
+	AddMeta,
+	RemoveMeta,
+	AddLink,
+	RemoveLink
 };
 
 var NODE_CACHE = {};
@@ -261,4 +266,17 @@ export function Transform( id, type, subtype, subsubtype ) {
 		new_type += '/'+subsubtype;
 	
 	return Fetch.Post(API_ENDPOINT+'/vx/node/transform/'+id+'/'+new_type, {});
+}
+
+export function AddMeta( id, data ) {
+	return Fetch.Post(API_ENDPOINT+'/vx/node/meta/add/'+id, data);
+}
+export function RemoveMeta( id, data ) {
+	return Fetch.Post(API_ENDPOINT+'/vx/node/meta/remove/'+id, data);
+}
+export function AddLink( a, b, data ) {
+	return Fetch.Post(API_ENDPOINT+'/vx/node/link/add/'+a+'/'+b, data);
+}
+export function RemoveLink( a, b, data ) {
+	return Fetch.Post(API_ENDPOINT+'/vx/node/link/remove/'+a+'/'+b, data);
 }
