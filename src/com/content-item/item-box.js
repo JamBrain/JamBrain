@@ -1,39 +1,49 @@
 import { h, Component } 				from 'preact/preact';
-import NavSpinner						from 'com/nav-spinner/spinner';
+
 import ContentLoading					from 'com/content-loading/loading';
 
-import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
-
-import ContentCommon					from 'com/content-common/common';
-import IMG2								from 'com/img2/img2';
+import ContentBox						from 'com/content-box/box';
 
 export default class ContentItemBox extends Component {
 	constructor( props ) {
 		super(props);
+	}
 
-    }
-
-    render( props ){
-    	var node = props.node;
-    	var user = props.user;
-
-        if ( node ) {
-            var title = node.name;
-            var cover = (node['meta'] && node.meta['cover']) ? node.meta.cover : "";
-            //var link = props.path + "/" + node.slug;
-
-            props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
-            props.class.push("content-item-box");
-
-            return (
-                <ContentCommon {...props}>
-                    <ContentCommonBodyTitle href={node.path} title={title} />
-                    <IMG2 src={cover} failsrc="///other/asset/TVFail.png" />
-                </ContentCommon>
-            );
-        }
-        else {
-            return <ContentLoading />;
-        }
-    }
+	render( props, state ) {
+		props = Object.assign({}, props);
+		
+		var node = props.node;
+		var user = props.user;
+		var path = props.path;
+		var extra = props.extra;
+		
+		return <ContentBox {...props} />;
+	}
+//
+//		if ( node /* && state.authors */ ) {
+//			var Class = ["content-item-box"];
+//
+//			var Title = node.name;
+//			
+//			var CoverFail = '///content/internal/tvfail.png';
+//			var Cover = (node.meta && node.meta.cover) ? node.meta.cover : CoverFail;
+//
+//			//Cover += '.192x192.jpg';
+//
+//			props.class = cN(Class, props.class);
+//
+//			//href={node.path}
+//			return (
+//				<ContentCommon {...props}>
+//					<IMG2 class="-view" src={Cover} failsrc={CoverFail} />
+//					<div class="-bar">
+//						<div class="-title">{Title}</div>
+//					</div>
+//				</ContentCommon>
+//			);
+//		}
+//		else {
+//			return <ContentLoading />;
+//		}
+//	}
 }

@@ -1,0 +1,76 @@
+@import 'defs.less' ;
+
+#content .content-box {
+	position: relative;
+	
+	max-width: 308px;
+	width: 308px;
+	height: 246px;	/* 5:4 */
+	
+	& > .-view {
+		position: relative;
+		
+		width: 100%;
+		height: 100%;
+	}
+	& img {
+		display: block;
+	}
+		
+	& > .-avatars {
+		position: absolute;
+		
+		right: 0.5em;
+		bottom: 0.5em;
+	}
+	& > .-bar {
+		position: absolute;
+		
+		box-sizing: border-box;
+		
+		bottom: 0;
+		width: 100%;
+		line-height: 1.5em;
+		
+		padding: 0.25em;
+		
+		background: fade(@COL_NDD, 90%);
+		color: @COL_L;
+	}
+	
+	& > .-event {
+		position: absolute;
+		box-sizing: border-box;
+		
+		top: 0;
+		right: 0;
+		
+		background: @COL_A;
+		color: @COL_L;
+
+		&:before {
+			color: @COL_A;
+		}
+		
+		font-size: 1.2em;
+		line-height: 2rem;
+		font-weight: bold;
+
+		padding: 0 0.5em;
+		
+				
+		/* Left Wedge */
+		&:before {
+			position: absolute;
+			display: block;
+			
+			content: '';
+			left: -2rem;
+			top: 0;
+			border-bottom: 2rem/2 solid transparent;
+			border-right: 2rem/2 solid;
+			border-top: 2rem/2 solid;
+			border-left: 2rem/2 solid transparent;
+		}
+	}
+}
