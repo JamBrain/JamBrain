@@ -265,7 +265,7 @@ function json_Emit( $out, $allow_jsonp = true ) {
 	}
 	header('Access-Control-Allow-Headers: content-type');					// CORS: Allow requests that specify content-type
 	
-	echo $prefix,str_replace('</', '<\/', json_encode($out,$out_format)),$suffix;
+	echo $prefix, str_replace('</', '<\/', json_encode($out, $out_format)), $suffix;
 }
 
 /// @}
