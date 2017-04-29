@@ -978,7 +978,7 @@ Renderer.prototype.image = function(href, title, text) {
 //  }
   else {
     //return '<div class="unsafe-image-url">' + text + '</div>';
-    href = STATIC_ENDPOINT + '/internal/pleaseupload.png';
+    href = STATIC_ENDPOINT + '/content/internal/pleaseupload.png';
   }
 
   var out = '<img class="img" src="' + href + '" alt="' + text + '"';
