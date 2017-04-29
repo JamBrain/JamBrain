@@ -113,6 +113,9 @@ function hasChanges( &$arr ) {
 function redirectToSelfAndExit() {
 	global $out_file;
 	
+	http_response_code(302);			// Temporary
+	header('Cache-Control: no-cache');	// Should stop CloudFlare from caching this response
+	
 	// Force redirect to data
 	header('Location: '.
 		isset($_SERVER['HTTPS']) ? 'https://' : 'http://'.
