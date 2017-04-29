@@ -224,8 +224,8 @@ export default class ContentSimple extends Component {
 			let ShowByLine = null;
 			if ( props.authored ) {
 				ShowAvatar = <ContentCommonBodyAvatar src={author.meta && author.meta.avatar ? author.meta.avatar : ''} />;
-				if ( props.by && !state.editing ) {
-					ShowByLine = <ContentCommonBodyBy node={node} author={author} label="published" when />;
+				if ( props.by && !(props.notitleedit ? false : state.editing) ) {
+					ShowByLine = <ContentCommonBodyBy node={node} author={author} label={props.by.length ? props.by : "published"} noby={props.noby} when />;
 				}
 			}
 			else if ( props.authors ) {
@@ -268,8 +268,9 @@ export default class ContentSimple extends Component {
 				ShowTitle = <ContentCommonBodyTitle 
 					href={node.path} 
 					title={state.name} 
+					subtitle={props.subtitle}
 					titleIcon={props.titleIcon} 
-					editing={state.editing} 
+					editing={props.notitleedit ? false : state.editing} 
 					onmodify={this.onModifyTitle} 
 					limit="80"
 				/>;
@@ -281,6 +282,7 @@ export default class ContentSimple extends Component {
 					<ContentCommonBodyMarkup 
 						node={node}
 						user={user}
+						label={props.label ? props.label : "Description"}
 						editing={state.editing}
 						placeholder="Say something"
 						class="-block-if-not-minimized"
