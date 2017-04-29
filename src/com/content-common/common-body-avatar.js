@@ -15,9 +15,9 @@ export default class ContentCommonBodyAvatar extends Component {
 		this.onEdit = this.onEdit.bind(this);
 	}
 
-	shouldComponentUpdate( nextProps ) {
-		return Shallow.Diff(this.props.children, nextProps.children);
-	}
+//	shouldComponentUpdate( nextProps ) {
+//		return Shallow.Diff(this.props.children, nextProps.children);
+//	}
 
 	onEdit( e ) {
 		var node = this.props.node;

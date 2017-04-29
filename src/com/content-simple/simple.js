@@ -33,6 +33,7 @@ export default class ContentSimple extends Component {
 
 			'name': props.node.name,
 			'body': props.node.body,
+			'avatar': '',
 		};
 
 		this.onEdit = this.onEdit.bind(this);
@@ -42,6 +43,7 @@ export default class ContentSimple extends Component {
 
 		this.onModifyTitle = this.onModifyTitle.bind(this);
 		this.onModifyText = this.onModifyText.bind(this);
+		this.onModifyAvatar = this.onModifyAvatar.bind(this);
 	}
 	
 	componentDidMount() {
@@ -93,7 +95,8 @@ export default class ContentSimple extends Component {
 		$Node.Get( node.author )
 		.then(r => {
 			if ( r.node && r.node.length ) {
-				this.setState({ 'author': r.node[0] });
+				var author = r.node[0];
+				this.setState({ 'author': author, 'avatar': (author && author.meta && author.meta.avatar) ? author.meta.avatar : ''});
 			}
 			else {
 				this.setState({ 'error': "Author not found" });
@@ -171,6 +174,9 @@ export default class ContentSimple extends Component {
 	onModifyText( e ) {
 		this.setState({'modified': true, 'body': e.target.value});
 	}
+	onModifyAvatar( avatar ) {
+		this.setState({/*'modified': true,*/ 'avatar': avatar});
+	}
 	
 	isEditMode() {
 		var extra = this.props.extra;
@@ -223,7 +229,7 @@ export default class ContentSimple extends Component {
 			let ShowAvatar = null;
 			let ShowByLine = null;
 			if ( props.authored ) {
-				ShowAvatar = <ContentCommonBodyAvatar node={node} user={user} src={author.meta && author.meta.avatar ? author.meta.avatar : ''} editing={node_IsAuthor(node, user) ? state.editing : false} />;
+				ShowAvatar = <ContentCommonBodyAvatar node={node} user={user} src={state.avatar} editing={node_IsAuthor(node, user) ? state.editing : false} onchange={this.onModifyAvatar} />;
 				if ( props.by && !(props.notitleedit ? false : state.editing) ) {
 					ShowByLine = <ContentCommonBodyBy node={node} author={author} label={props.by.length ? props.by : "published"} noby={props.noby} when />;
 				}
