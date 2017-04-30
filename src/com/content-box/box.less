@@ -113,11 +113,36 @@
 		top: 0;
 		right: 0;
 		
-		background: @COL_A;
+		background: @COL_ND;
 		color: @COL_L;
 
 		&:before {
-			color: @COL_A;
+			color: @COL_ND;
+		}
+		
+		&.-col-a {
+			background: @COL_A;
+			&:before { color: @COL_A; }
+		}
+		&.-col-ab {
+			background: @COL_AB;
+			&:before { color: @COL_AB; }
+		}
+		&.-col-b {
+			background: @COL_B;
+			&:before { color: @COL_B; }
+		}
+		&.-col-bc {
+			background: @COL_BC;
+			&:before { color: @COL_BC; }
+		}
+		&.-col-c {
+			background: @COL_C;
+			&:before { color: @COL_C; }
+		}
+		&.-col-ca {
+			background: @COL_CA;
+			&:before { color: @COL_CA; }
 		}
 		
 		font-size: 1.2em;
