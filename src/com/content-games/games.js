@@ -24,7 +24,7 @@ export default class ContentGames extends Component {
 		this.state = {
 			feed: [],
 			hash: {},
-			offset: 5, //10
+			offset: 12-5, //10-5
 			added: null,
 			loaded: false
 		};
