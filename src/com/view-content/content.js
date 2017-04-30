@@ -230,7 +230,12 @@ export default class ViewContent extends Component {
 				return <ContentTimeline node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 			}
 			else if ( Viewing == '/games' ) {
-				return <div id="content"><ContentGames node={node} user={user} path={path} extra={extra} methods={['all']}>{ShowNavRoot}</ContentGames></div>;;
+				return (
+					<div id="content">
+						{ShowNavRoot}
+						<ContentGames node={node} user={user} path={path} extra={extra} methods={['all']} />
+					</div>
+				);
 			}
 			else if ( Viewing == '/feed' ) {
 				return (

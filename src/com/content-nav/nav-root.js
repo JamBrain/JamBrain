@@ -50,12 +50,10 @@ export default class ContentNavRoot extends Component {
 		}
 		
 		return (
-			<div class="-body">
-				<div class="content-base content-nav content-nav-root">
-					{ShowMyFeed}
-					<ContentNavButton path={NewPath} icon='news' href='/news'>News</ContentNavButton>
-					<ContentNavButton path={NewPath} icon='gamepad' href='/games'>Games</ContentNavButton>
-				</div>
+			<div class="content-base content-nav content-nav-root">
+				{ShowMyFeed}
+				<ContentNavButton path={NewPath} icon='news' href='/news'>News</ContentNavButton>
+				<ContentNavButton path={NewPath} icon='gamepad' href='/games'>Games</ContentNavButton>
 			</div>
 		);
 
