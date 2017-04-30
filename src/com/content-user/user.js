@@ -83,11 +83,11 @@ export default class ContentUser extends Component {
 //	onModifyText( e ) {
 //		this.setState({'modified': true, 'body': e.target.value});
 //	}
-//	
-//	isEditMode() {
-//		var extra = this.props.extra;
-//		return extra && extra.length && extra[extra.length-1] == 'edit';
-//	}
+
+	isEditMode() {
+		var extra = this.props.extra;
+		return extra && extra.length && extra[extra.length-1] == 'edit';
+	}
 
 	render( props, state ) {
 		props = Object.assign({}, props);	// Shallow copy we can change props
@@ -109,7 +109,19 @@ export default class ContentUser extends Component {
 		
 		props.label = "Biography";
 		
-		return <ContentSimple class="content-user" {...props} />;
+		
+		var NavBar = [];
+		if ( !this.isEditMode() ) {
+			if ( user && user.id && node.id !== user.id ) {
+				NavBar.push(<ButtonFollow node={node} user={user} />);
+			}
+		}
+		
+		return (
+			<ContentSimple class="content-user" {...props}>
+				<ContentCommonNav>{NavBar}</ContentCommonNav>
+			</ContentSimple>
+		);
 
 	
 //		if ( node && node.slug ) {
