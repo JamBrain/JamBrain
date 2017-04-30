@@ -66,9 +66,8 @@ export default class ContentBox extends Component {
 
 			Cover += '.320x256.fit.jpg';
 			
-			//var HoverCover = 
 			var ShowHoverCover = null;
-			{//if ( node.meta['cover-hover'] ) {
+			if ( node.meta['cover-hover'] ) {
 				ShowHoverCover = <IMG2 class="-cover-hover" src={HoverCover} failsrc={CoverFail} />;
 			}
 			

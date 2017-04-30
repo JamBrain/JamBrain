@@ -7,6 +7,8 @@
 	width: 308px;
 	height: 246px;	/* 5:4 */
 	
+	overflow: hidden;
+	
 	& > .-cover,
 	& > .-cover-hover {
 		position: absolute;
@@ -27,6 +29,9 @@
 
 	& > .-cover {
 		z-index: 0;
+		
+		transform: scale(1);
+		transition: transform 0.2s ease-in;
 	}
 	& > .-cover-hover {
 		display: none;
@@ -35,6 +40,15 @@
 	&:hover {
 		& > .-cover-hover {
 			display: block;
+		}
+		
+		& > .-cover {
+			transform: scale(1.05);
+		}
+
+		& > .-top,
+		& > .-bot {
+			opacity: 0;
 		}
 	}
 
@@ -61,6 +75,9 @@
 		
 		background: fade(@COL_NDDD, 85%);
 		color: @COL_L;
+		
+		transition: opacity 0.4s ease-in;
+		opacity: 1;
 	}
 	
 	& > .-top {
@@ -77,6 +94,9 @@
 		
 		background: fade(@COL_NDDD, 85%);
 		color: @COL_L;
+
+		transition: opacity 0.4s ease-in;
+		opacity: 1;
 	}
 	
 	& > .-sub-event {
