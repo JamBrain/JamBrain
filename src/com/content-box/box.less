@@ -7,8 +7,16 @@
 	width: 308px;
 	height: 246px;	/* 5:4 */
 	
-	& > .-view {
-		position: relative;
+	& > .-cover,
+	& > .-cover-hover {
+		position: absolute;
+		
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		
+		box-sizing: border-box;
 		
 		width: 100%;
 		height: 100%;
@@ -16,31 +24,66 @@
 	& img {
 		display: block;
 	}
+
+	& > .-cover {
+		z-index: 0;
+	}
+	& > .-cover-hover {
+		display: none;
+		z-index: 2;
+	}
+	&:hover {
+		& > .-cover-hover {
+			display: block;
+		}
+	}
+
 		
 	& > .-avatars {
 		position: absolute;
 		
+		z-index: 10;
+		
 		right: 0.5em;
 		bottom: 0.5em;
 	}
-	& > .-bar {
+	& > .-bot {
 		position: absolute;
 		
-		box-sizing: border-box;
+		z-index: 5;
 		
 		bottom: 0;
-		width: 100%;
-		line-height: 1.5em;
+		left: 0;
+		right: 0;
+
+		line-height: 2rem;		
+		padding: 0 0.5em;
 		
-		padding: 0.25em;
-		
-		background: fade(@COL_NDD, 90%);
+		background: fade(@COL_NDDD, 85%);
 		color: @COL_L;
 	}
 	
-	& > .-event {
+	& > .-top {
+		position: absolute;
+		
+		z-index: 5;
+		
+		top: 0;
+		left: 0;
+		right: 0;
+		
+		line-height: 2rem;
+		padding: 0 0.5em;
+		
+		background: fade(@COL_NDDD, 85%);
+		color: @COL_L;
+	}
+	
+	& > .-sub-event {
 		position: absolute;
 		box-sizing: border-box;
+		
+		z-index: 10;
 		
 		top: 0;
 		right: 0;

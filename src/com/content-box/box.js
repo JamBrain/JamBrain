@@ -1,15 +1,46 @@
 import { h, Component } 				from 'preact/preact';
+import Shallow							from 'shallow/shallow';
 
 import ContentLoading					from 'com/content-loading/loading';
 import IMG2								from 'com/img2/img2';
+
+import ButtonLink						from 'com/button-link/link';
+
+import $Node							from '../../shrub/js/node/node';
 
 export default class ContentBox extends Component {
 	constructor( props ) {
 		super(props);
 
 		this.state = {
-			'authors': null
+			'authors': null,
+			'parent': null,
 		};
+	}
+	
+	componentDidMount() {
+		this.getParent(this.props);
+	}
+	
+	componentWillReceiveProps( nextProps ) {
+		if ( Shallow.Diff(this.props, nextProps) ) {
+			this.getParent(nextProps);
+		}
+	}
+
+	getParent( props ) {
+		var node = props.node;
+		
+		if ( node && node.parent ) {
+			return $Node.Get(node.parent)
+				.then(r => {
+					if ( r && r.node && r.node.length ) {
+						var Parent = r.node[0];
+						this.setState({'parent': Parent});
+					}
+				});
+		}
+		return Promise.resolve({});
 	}
 
 	getAuthors() {
@@ -31,20 +62,56 @@ export default class ContentBox extends Component {
 			
 			var CoverFail = '///content/internal/tvfail.png';
 			var Cover = (node.meta && node.meta.cover) ? node.meta.cover : CoverFail;
+			var HoverCover = (node.meta && node.meta['hover-cover']) ? node.meta['hover-cover'] : CoverFail;
 
 			Cover += '.320x256.fit.jpg';
+			
+			//var HoverCover = 
+			var ShowHoverCover = null;
+			{//if ( node.meta['cover-hover'] ) {
+				ShowHoverCover = <IMG2 class="-cover-hover" src={HoverCover} failsrc={CoverFail} />;
+			}
+			
+			var ShowEvent = null;
+			if ( !props.noevent && state.parent && state.parent.name ) {
+				ShowEvent = <div>{state.parent.name}</div>;
+			}
+			
+			var ShowSubEvent = null;
+			var SubEventClass = null;
+			if ( !props.nosubevent && node.subtype ) {
+				if ( node.subtype == 'game' ) {
+					if ( node.subsubtype ) {
+						if ( node.subsubtype == 'jam' ) {
+							ShowSubEvent = <div>JAM</div>;
+							SubEventClass = '-col-a';
+						}
+						else if ( node.subsubtype == 'compo' ) {
+							ShowSubEvent = <div>COMPO</div>;
+							SubEventClass = '-col-ab';
+						}
+					}
+				}
+				else if ( node.subtype == 'tool' ) {
+					ShowSubEvent = <div>TOOL</div>;
+					SubEventClass = '-col-c';
+				}
+			}
 
-			//href={node.path}
 			return (
-				<div class={cN(Class, props.class)}>
-					<IMG2 class="-view" src={Cover} failsrc={CoverFail} />
-					<div class="-event">
-						<div>JAM</div>
+				<ButtonLink class={cN(Class, props.class)} href={node.path}>
+					{ShowHoverCover}
+					<IMG2 class="-cover" src={Cover} failsrc={CoverFail} />
+					<div class="-top">
+						{ShowEvent}
 					</div>
-					<div class="-bar">
+					<div class={cN("-sub-event", SubEventClass)}>
+						{ShowSubEvent}
+					</div>
+					<div class="-bot">
 						<div class="-title">{Title}</div>
 					</div>
-				</div>
+				</ButtonLink>
 			);
 		}
 		else {
