@@ -39,6 +39,7 @@ switch ( $action ) {
 		break; // case 'stats': //grade/stats
 		
 	case 'add': //grade/add/:node_id/:grade/:score
+	case 'remove': //grade/add/:node_id/:grade
 		json_ValidateHTTPMethod('GET');
 //		json_ValidateHTTPMethod('POST');
 		
@@ -56,7 +57,7 @@ switch ( $action ) {
 			json_EmitFatalError_BadRequest("No grade", $RESPONSE);
 
 		$score = json_ArgShift();
-		if ( is_null($score) )
+		if ( is_null($score) && $action == 'add' )
 			json_EmitFatalError_BadRequest("No score", $RESPONSE);
 		$score = intval($score);
 
@@ -81,7 +82,10 @@ switch ( $action ) {
 		if ( !in_array($grade, $grades) )
 			json_EmitFatalError_BadRequest("Invalid grade: $grade", $RESPONSE);
 
-		
+		if ( $score )
+			$RESPONSE['id'] = grade_AddByNode($node_id, $user_id, $grade, $score);
+		else 
+			$RESPONSE['changed'] = grade_RemoveByNode($node_id, $user_id, $grade);
 
 		break; // case 'upload': //grade/add/:node_id
 

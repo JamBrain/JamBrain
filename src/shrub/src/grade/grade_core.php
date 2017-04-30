@@ -2,14 +2,13 @@
 
 
 function grade_AddByNode( $node_id, $author_id, $name, $value ) {
-	// todo add exists variant
-
 	return db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_GRADE." (
 			node,
 			author,
 			name,
-			value
+			value,
+			timestamp
 		)
 		VALUES (
 			?,
@@ -17,10 +16,28 @@ function grade_AddByNode( $node_id, $author_id, $name, $value ) {
 			?,
 			?,
 			NOW()
-		);",
+		)
+		ON DUPLICATE KEY UPDATE
+			value=VALUES(value), 
+			timestamp=VALUES(timestamp)
+		;",
 		$node_id,
 		$author_id,
 		$name,
 		$value
+	);
+}
+
+function grade_RemoveByNode( $node_id, $author_id, $name ) {
+	return db_QueryDelete(
+		"DELETE FROM ".SH_TABLE_PREFIX.SH_TABLE_GRADE." 
+		WHERE
+			node=? AND 
+			author=? AND 
+			name=?
+		;",
+		$node_id,
+		$author_id,
+		$name
 	);
 }
