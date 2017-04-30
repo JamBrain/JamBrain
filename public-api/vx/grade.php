@@ -41,7 +41,6 @@ switch ( $action ) {
 	case 'add': //grade/add/:node_id/:grade/:score
 	case 'remove': //grade/add/:node_id/:grade
 		json_ValidateHTTPMethod('GET');
-//		json_ValidateHTTPMethod('POST');
 		
 		// Authenticate User		
 		$user_id = userAuth_GetId();
@@ -83,11 +82,27 @@ switch ( $action ) {
 			json_EmitFatalError_BadRequest("Invalid grade: $grade", $RESPONSE);
 
 		if ( $score )
-			$RESPONSE['id'] = grade_AddByNode($node_id, $user_id, $grade, $score);
+			$RESPONSE['id'] = grade_AddByNodeAuthorName($node_id, $user_id, $grade, $score);
 		else 
-			$RESPONSE['changed'] = grade_RemoveByNode($node_id, $user_id, $grade);
+			$RESPONSE['changed'] = grade_RemoveByNodeAuthorName($node_id, $user_id, $grade);
 
-		break; // case 'upload': //grade/add/:node_id
+		break; // case 'upload': //grade/add/:node_id/:grade/:score
+
+	case 'getmy': //grade/getmy/:node_id
+		json_ValidateHTTPMethod('GET');
+		
+		// Authenticate User		
+		$user_id = userAuth_GetId();
+		if ( !$user_id )
+			json_EmitFatalError_Permission(null, $RESPONSE);
+
+		$node_id = intval(json_ArgShift());
+		if ( !$node_id )
+			json_EmitFatalError_BadRequest("Unspecified node", $RESPONSE);
+		
+		$RESPONSE['grade'] = grade_GetByNodeAuthor($node_id, $user_id);
+			
+		break; // case 'getmy': //grade/getmy/:node_id
 
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
