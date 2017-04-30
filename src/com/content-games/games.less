@@ -3,22 +3,16 @@
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	justify-content: space-between;
+	justify-content: flex-start; /* space-between; */
 	align-items: flex-start;
-	align-content: flex-start;
 	
+	margin: -0.5rem;	/* to undo the effect of the 0.5rem margin in items */
 	
-	margin: 1em 0;
-	
-	& > div {
+	& > * {
 		flex: 1;
+		
+		min-width: 240px;
+		max-width: 640px;
+		margin: 0.5rem;
 	}
 }
-
-/*
-#content > .-bodies.content-games {
-    & > .content-more{
-        margin: 0 auto;
-    }
-}
-*/

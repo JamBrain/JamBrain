@@ -3,13 +3,18 @@
 #content .content-box {
 	position: relative;
 	
-	max-width: 308px;
-	width: 308px;
-	height: 246px;	/* 5:4 */
+/*	max-width: 308px;*/
+/*	width: 308px;*/
+/*	height: 246px;	/* 5:4 */
 	
 	overflow: hidden;
 	
-	& > .-cover,
+	& > .-cover {
+		box-sizing: border-box;
+		
+		width: 100%;
+		/*height: 100%;*/
+	}
 	& > .-cover-hover {
 		position: absolute;
 		
