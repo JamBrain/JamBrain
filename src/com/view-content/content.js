@@ -191,10 +191,10 @@ export default class ViewContent extends Component {
 				
 				ShowInfo = (
 					<ContentCommon node={node}>
-						<ContentCommonBody>Sorry, these aren't sorted correctly yet. For now, try <strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</ContentCommonBody>
+						<ContentCommonBody>{"Sorry, these aren't sorted correctly yet. For now, try "}<strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</ContentCommonBody>
 					</ContentCommon>
 				);
-				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} methods={['parent']} subsubtypes={SubSubType ? SubSubType : null} />;
+				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={['parent']} subsubtypes={SubSubType ? SubSubType : null} />;
 			}
 			else {
 				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;

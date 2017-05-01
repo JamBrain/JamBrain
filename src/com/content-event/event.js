@@ -88,7 +88,7 @@ export default class ContentEvent extends Component {
 				Class = "-selected";
 			}
 
-			ShowGame = <ContentCommonNavButton href={path+'/games'} class={Class}><SVGIcon>gamepad</SVGIcon><div class="if-sidebar-inline">View Games</div></ContentCommonNavButton>;
+			ShowGame = <ContentCommonNavButton href={path+'/games'} class={Class}><SVGIcon>gamepad</SVGIcon><div class="if-sidebar-inline">Games</div></ContentCommonNavButton>;
 		}
 
 //		if ( extra && extra.length ) {
@@ -147,8 +147,8 @@ export default class ContentEvent extends Component {
 			ShowTheme = <ContentCommonNavButton href={path+'/theme'} class={Class}><SVGIcon>ticket</SVGIcon><div class="if-sidebar-inline">Theme Selection</div></ContentCommonNavButton>;
 		}
 
-		if ( !IsHome )
-			props.nomarkup = true;
+//		if ( !IsHome )
+//			props.nomarkup = true;
 
 		props.class = 'content-event';
 		props.above = [];
@@ -169,6 +169,10 @@ export default class ContentEvent extends Component {
 				</ContentCommonBody>
 			);
 		}
+		
+		props.minmax = true;
+		if ( !IsHome )
+			props.minimized = true;
 
 		return (
 			<ContentSimple {...props}>

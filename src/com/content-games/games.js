@@ -149,7 +149,7 @@ export default class ContentGames extends Component {
 		else if(feed && feed.length > 0)
 		{
 			var Games = feed.map(r => {
-				return <ContentItemBox node={r.node} user={props.user} path={props.path} />;
+				return <ContentItemBox node={r.node} user={props.user} path={props.path} noevent={props.noevent ? props.noevent : null} />;
 			});
 
 			if ( !props.nomore /*|| added >= 10*/ ){

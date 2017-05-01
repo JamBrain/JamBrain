@@ -96,6 +96,11 @@ export default class ContentUser extends Component {
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
+		
+		var IsHome = false;
+		if ( extra && extra.length == 0 || (extra.length && extra[0] == 'feed') ) {
+			IsHome = true;
+		}
 
 		props.header = "USER";
 		props.headerClass = "-col-b";
@@ -108,6 +113,11 @@ export default class ContentUser extends Component {
 		props.noby = true;
 		
 		props.label = "Biography";
+		
+		props.minmax = true;
+		if ( !IsHome ) {
+			props.minimized = true;
+		}
 		
 		
 		var NavBar = [];
