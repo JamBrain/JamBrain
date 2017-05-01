@@ -20,6 +20,14 @@ const VALID_META = [
 	'item' => [
 		'author-name' => ['length' => 64],
 		'cover' => ['length' => 256],
+		'grade-01-out' => [],
+		'grade-02-out' => [],
+		'grade-03-out' => [],
+		'grade-04-out' => [],
+		'grade-05-out' => [],
+		'grade-06-out' => [],
+		'grade-07-out' => [],
+		'grade-08-out' => [],
 	],
 	'user' => [
 		'real-name' => ['length' => 64],

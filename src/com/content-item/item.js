@@ -14,6 +14,7 @@ import ContentSimple					from 'com/content-simple/simple';
 
 
 import $Node							from '../../shrub/js/node/node';
+import $NodeMeta						from '../../shrub/js/node/node_meta';
 import $Grade							from '../../shrub/js/grade/grade';
 
 export default class ContentItem extends Component {
@@ -233,6 +234,44 @@ export default class ContentItem extends Component {
 			});
 	}
 
+	onOptOut( name, value ) {
+		var Node = this.props.node;
+		
+		let Name = name+'-out';
+		let Data = {};
+		
+		if ( value ) {
+			Data[Name] = 1;
+			
+			return $NodeMeta.Add(Node.id, Data)
+				.then(r => {
+					console.log(r);
+//					if ( r && r.id || !!r.changed ) {
+//						var Grades = this.state.grade;
+//						
+//						Grades[name] = value;
+//						
+//						this.setState({'grade': Grades});
+//					}
+				});
+		}
+		else {
+			Data[Name] = 0;
+
+			return $NodeMeta.Remove(Node.id, Data)
+				.then(r => {
+					console.log(r);
+//					if ( r && r.id || !!r.changed ) {
+//						var Grades = this.state.grade;
+//						
+//						Grades[name] = value;
+//						
+//						this.setState({'grade': Grades});
+//					}
+				});			
+		}
+	}
+
 	render( props, state ) {
 		props = Object.assign({}, props);
 		
@@ -361,11 +400,46 @@ export default class ContentItem extends Component {
 		//'
 		
 		var ShowOptOut = null;
-		if ( true ) {
+		if ( parent ) {
+			let Lines = [];
+			
+			for ( var key in parent.meta ) {
+				// Is it a valid grade ?
+				let parts = key.split('-');
+				if ( parts.length == 3 && parts[0] == 'grade' && parts[2] == 'optional' ) {
+					// Assuming the category isn't optional
+					if ( parent.meta[key]|0 ) {
+						let BaseKey = parts[0]+'-'+parts[1];
+						
+						Lines.push({
+							'key': BaseKey, 
+							'name': parent.meta[BaseKey],
+							'value': (node.meta ? !(node.meta[BaseKey+'-out']|0) : false)
+						});
+					}
+				}
+			}
+
+			let OptLines = [];
+
+			for ( let idx = 0; idx < Lines.length; idx++ ) {
+				let Line = Lines[idx];
+				
+//				console.log( Line );
+				
+				let Icon = null;
+				if ( Line.value )
+					Icon = <SVGIcon small baseline>checkbox-unchecked</SVGIcon>;
+				else
+					Icon = <SVGIcon small baseline>checkbox-checked</SVGIcon>;
+				
+				OptLines.push(<ButtonBase onclick={this.onOptOut.bind(this, Line.key, Line.value)}>{Icon} Do not rate me in <strong>{Line.name}</strong></ButtonBase>);
+			}
+			
 			ShowOptOut = (
 				<ContentCommonBody class="-opt-out">
 					<div class="-label">Voting Category Opt-outs</div>
-					<div>e</div>
+					{OptLines}
 					<div class="-footer">
 						Opt-out of categories here if your team didn't make all your graphics, audio, or music during the event.
 						Many participants are making original graphics, audio and music from scratch during the event. As a courtesy, we ask you to opt-out if you didn't do the same.
