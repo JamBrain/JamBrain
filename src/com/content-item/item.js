@@ -4,16 +4,7 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
-import ContentBody						from 'com/content-body/body';
-import ContentBodyMarkup				from 'com/content-body/body-markup';
-import ContentBodyEdit					from 'com/content-body/body-edit';
-
-import ContentHeaderCommon				from 'com/content-header/header-common';
-import ContentFooterCommon				from 'com/content-footer/footer-common';
-import ContentHeaderEdit				from 'com/content-header/header-edit';
-import ContentFooterEdit				from 'com/content-footer/footer-edit';
-
-import ContentHeadlineEdit				from 'com/content-headline/headline-edit';
+import ButtonBase						from 'com/button-base/base';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonNav					from 'com/content-common/common-nav';
@@ -23,48 +14,48 @@ import ContentSimple					from 'com/content-simple/simple';
 
 
 import $Node							from '../../shrub/js/node/node';
+import $NodeMeta						from '../../shrub/js/node/node_meta';
+import $Grade							from '../../shrub/js/grade/grade';
 
 export default class ContentItem extends Component {
 	constructor( props ) {
 		super(props);
 		
-//		this.state = {
-//			'edit': true,
-//			'modified': false,
-//			
-//			'authors': null,
-//			
-//			'title': null,
-//			'body': null
-//		};
-//
-//		this.onClickEdit = this.onClickEdit.bind(this);
-//		this.onClickPreview = this.onClickPreview.bind(this);
-//		this.onClickSave = this.onClickSave.bind(this);
-//		this.onClickPublish = this.onClickPublish.bind(this);
-//		this.onClickPublish2 = this.onClickPublish2.bind(this);
-//		
-//		this.onModifyTitle = this.onModifyTitle.bind(this);
-//		this.onModifyBody = this.onModifyBody.bind(this);
+		this.state = {
+			'parent': null,
+			'grade': null
+		};
 
 		this.onSetJam = this.onSetJam.bind(this);
 		this.onSetCompo = this.onSetCompo.bind(this);
 	}
-//	
-//	componentDidMount() {
-////		$Node.Get(this.props.node.author)
-////		.then( r => {
-////			console.log(r.node);
-////			if ( r.node.length ) {
-////				console.log('hoo');
-////				this.setState({ 'authors': r.node });
-////			}
-////		})
-////		.catch(err => {
-////			this.setState({ 'error': err });
-////		});
-//	}
-//	
+	
+	componentDidMount() {
+		var node = this.props.node;
+		
+		$Node.Get(node.parent)
+		.then(r => {
+			if ( r.node && r.node.length ) {
+				var Parent = r.node[0];
+				this.setState({'parent': Parent});
+				
+				return $Grade.GetMy(node.id);
+			}
+			return Promise.resolve({});
+		})
+		.then(r => {
+			if ( r.grade ) {
+				this.setState({'grade': r.grade});
+			}
+			else {
+				this.setState({'grade': []});
+			}
+		})
+		.catch(err => {
+			this.setState({ 'error': err });
+		});
+	}
+	
 //	onClickEdit(e) {
 //		console.log('edit');
 //		this.setState({ 'edit': true });
@@ -205,8 +196,7 @@ export default class ContentItem extends Component {
 		return $Node.Transform(this.props.node.id, 'item', 'game', type)
 		.then( r => {
 			if ( r ) {
-				if ( r.changed ) {
-					console.log( 'oo', this.props.node.subsubtype );
+				if ( r && r.changed ) {
 					this.props.node.subsubtype = type;
 					this.setState({});
 				}
@@ -227,6 +217,54 @@ export default class ContentItem extends Component {
 				
 			});
 	}
+	
+	onGrade( name, value ) {
+		var Node = this.props.node;
+		
+		return $Grade.Add(Node.id, name, value)
+			.then(r => {
+				if ( r && r.id || !!r.changed ) {
+					var Grades = this.state.grade;
+					
+					Grades[name] = value;
+					
+					this.setState({'grade': Grades});
+				}
+				return r;
+			});
+	}
+
+	onOptOut( name, value ) {
+		var Node = this.props.node;
+		
+		let Name = name+'-out';
+		let Data = {};
+		
+		if ( value ) {
+			Data[Name] = 1;
+			
+			return $NodeMeta.Add(Node.id, Data)
+				.then(r => {
+					if ( r && r.changed ) {
+						this.props.node.meta[Name] = Data[Name];
+						this.setState({});
+					}
+					return r;
+				});
+		}
+		else {
+			Data[Name] = 0;
+
+			return $NodeMeta.Remove(Node.id, Data)
+				.then(r => {
+					if ( r && r.changed ) {
+						this.props.node.meta[Name] = Data[Name];
+						this.setState({});
+					}
+					return r;
+				});			
+		}
+	}
 
 	render( props, state ) {
 		props = Object.assign({}, props);
@@ -236,6 +274,7 @@ export default class ContentItem extends Component {
 		var path = props.path;
 		var extra = props.extra;
 		var featured = props.featured;
+		var parent = state.parent;
 		
 		var Category = '/';
 
@@ -266,59 +305,162 @@ export default class ContentItem extends Component {
 		}
 		
 		var ShowEventPicker = null;
-		if ( extra && extra.length && extra[0] == 'edit' ) {
-			ShowEventPicker = (
-				<ContentCommonNav>
-					<div class="-label">Event</div>
-					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
-					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
-					<div>Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know, pick the <strong>Jam</strong>.<br />Because {"we're"} running late, {"we're"} letting you choose all weekend. Honour system, ok?</div>
-				</ContentCommonNav>
-			);
+		// TODO: Re-enable this to allow event selection
+//		if ( extra && extra.length && extra[0] == 'edit' ) {
+//			ShowEventPicker = (
+//				<ContentCommonNav>
+//					<div class="-label">Event</div>
+//					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
+//					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
+//					<div>Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know, pick the <strong>Jam</strong>.<br />Because {"we're"} running late, {"we're"} letting you choose all weekend. Honour system, ok?</div>
+//				</ContentCommonNav>
+//			);
+//		}
+		
+		var ShowGrade = null;
+		if ( parent && node_CanGrade(parent) ) {
+			if ( node_IsAuthor(node, user) ) {
+				//ShowGrade = <ContentCommonBody>You are an Author</ContentCommonBody>;
+			}
+			else if ( featured && featured.what_node && nodeKeys_HasPublishedParent(featured.what_node, node.parent) ) {
+				let Lines = [];
+				
+				for ( var key in parent.meta ) {
+					// Is it a valid grade ?
+					let parts = key.split('-');
+					if ( parts.length == 2 && parts[0] == 'grade' ) {
+						// Make sure they user hasn't opted out
+						
+						if ( node.meta && !(node.meta[key+'-out']|0) ) {
+							Lines.push({'key': key, 'value': parent.meta[key]});
+						}
+					}
+				}
+				
+				let VoteLines = [];
+				for ( let idx = 0; idx < Lines.length; idx++ ) {
+					let Line = Lines[idx];
+					
+					let Title = Line.value;
+					let Score = '?';
+					if ( state.grade ) {
+						Score = state.grade[Line.key] ? state.grade[Line.key] : 0;
+					}
+					
+					let Stars = [];
+					for ( let idx2 = 0; idx2 < Score; idx2++ ) {
+						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
+					}
+					for ( let idx2 = Score; idx2 < 5; idx2++ ) {
+						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
+					}
+					
+					VoteLines.push(<div class="-grade"><span class="-title">{Title}</span>: {Stars}</div>);
+				}
+				
+				ShowGrade = (
+					<ContentCommonBody class="-rating">
+						<h2>Ratings</h2>
+						{VoteLines}
+						<div class="-footer">Ratings are saved automatically when you click. When they change, they're saved.</div>
+					</ContentCommonBody>
+				);
+				
+				//'
+			}
+			else if ( !user || !user.id ) {
+				ShowGrade = <ContentCommonBody>Please login to rate this game</ContentCommonBody>;
+			}
+			else {
+				ShowGrade = <ContentCommonBody>At this time, only participants are able to rate games. Sorry!</ContentCommonBody>;
+			}
+		}
+		else {
+			// grading is closed
 		}
 		
 		var ShowPrePub = (
 			<div style="background: #E53; color: #FFF; padding: 0 0.5em;"><ContentCommonBody>
-				<strong>Hey folks!</strong> We're going to let you pre-publish your entries as we finish the data fields below. Please come back and update your page. We'll have new things fixed and added reguraly.<br />
+				<strong>Hey folks!</strong> We're still finishing the data fields below. Please come back and update your page. We'll have new things fixed and added reguraly.<br />
 				<br />
 				I've included summaries of what to expect for each. In the mean time, I recommend you add your links above, and a screenshot or two. Here's an example:<br />
 				<br />
 				<div style="background:#FFF; color:#000; padding: 0.5em; border-radius: 0.25em"><strong>Sample Game:</strong> <NavLink blank href="/events/ludum-dare/38/ludum-dare-dot-com">Ludumdare.com</NavLink></div>
 				<br />
-				Then rest, relax, take it easy. We'll have this cleaned up soon!<br />
-				<br />
-				Lets also say that judging will begin Wednesday (possibly a little earlier), just in case it takes longer than expected (i.e. like all of this). <strong>Thank you for your patience!</strong>
+				We'll have this cleaned up soon!
 			</ContentCommonBody></div>
 		);
 		
+		//'
+		
 		var ShowOptOut = null;
-		if ( true ) {
+		if ( parent ) {
+			let Lines = [];
+			
+			for ( var key in parent.meta ) {
+				// Is it a valid grade ?
+				let parts = key.split('-');
+				if ( parts.length == 3 && parts[0] == 'grade' && parts[2] == 'optional' ) {
+					// Assuming the category isn't optional
+					if ( parent.meta[key]|0 ) {
+						let BaseKey = parts[0]+'-'+parts[1];
+						
+						Lines.push({
+							'key': BaseKey, 
+							'name': parent.meta[BaseKey],
+							'value': (node.meta ? !(node.meta[BaseKey+'-out']|0) : false)
+						});
+					}
+				}
+			}
+
+			let OptLines = [];
+
+			for ( let idx = 0; idx < Lines.length; idx++ ) {
+				let Line = Lines[idx];
+				
+//				console.log( Line );
+				
+				let Icon = null;
+				if ( Line.value )
+					Icon = <SVGIcon small baseline>checkbox-unchecked</SVGIcon>;
+				else
+					Icon = <SVGIcon small baseline>checkbox-checked</SVGIcon>;
+				
+				OptLines.push(<ButtonBase onclick={this.onOptOut.bind(this, Line.key, Line.value)}>{Icon} Do not rate me in <strong>{Line.name}</strong></ButtonBase>);
+			}
+			
 			ShowOptOut = (
-				<ContentCommonBody>
+				<ContentCommonBody class="-opt-out">
 					<div class="-label">Voting Category Opt-outs</div>
-					{"Opt-out of categories here. Say, if your team didn't make all your graphics, audio, or music during the event. "}
-					{"Many participants are making original content from scratch during the event. It's not fair to get a rating a category if you didn't do the same."}
+					{OptLines}
+					<div class="-footer">
+						Opt-out of categories here if your team didn't make all your graphics, audio, or music during the event.
+						Many participants are making original graphics, audio and music from scratch during the event. As a courtesy, we ask you to opt-out if you didn't do the same.
+						Also, some games are not meant to be Humourous or Moody, so you can choose to opt-out of these too.
+					</div>
 				</ContentCommonBody>
 			);
 		}
 		
-		var ShowShots = null;
+		var ShowImages = null;
 		if ( true ) {
-			ShowShots = (
-				<ContentCommonBody>
+			ShowImages = (
+				<ContentCommonBody class="-images">
 					<div class="-label">Images</div>
-					<div>Cover Image - this will be squared and used as box art (final size TBD)</div>
-					<div>Screen Shots - These go up top, above your Title and Description. Try to keep your GIFs less than 640 pixels wide.</div>
-					<div>Video - Or we can put a YouTube video up top</div>
-					<div><del>Embed - If we do add this, it's going to be much later</del></div>
+					<div>Cover Image</div>
+					<div>[Just finishing this up. Check back]</div>
+					<div class="-footer">Recommended Size: 640x512 (i.e. 5:4 aspect ratio). Other sizes will be scaled and cropped to fit. Animated GIFs will not work here.</div>
 				</ContentCommonBody>
 			);
 		}
+		
+		//'
 
 		var ShowLinks = null;
 		if ( true ) {
 			ShowLinks = (
-				<ContentCommonBody>
+				<ContentCommonBody class="-links">
 					<div class="-label">Links</div>
 					<div>Download Links</div>
 					<div>Source Code</div>
@@ -330,16 +472,48 @@ export default class ContentItem extends Component {
 				</ContentCommonBody>
 			);
 		}
+
+		var ShowUnfinished = null;
+		if ( true ) {
+			ShowUnfinished = (
+				<ContentCommonBody>
+					<div class="-label">Images</div>
+					<div>Screen Shots - These go up top, above your Title and Description. Try to keep your GIFs less than 640 pixels wide.</div>
+					<div>Video - Or we can put a YouTube video up top</div>
+					<div><del>Hover Video - A GIF or silent MP4 video to play while hovering over Cover art.</del></div>
+					<div><del>Embed - This is coming later</del></div>
+					<br />
+					<div class="-label">Links</div>
+					<div>Download Links</div>
+					<div>Source Code</div>
+					<br />
+					If you're new to Ludum Dare, you should know we don't host your downloads, just links to them. For recommendations where and how to host your files, check out the Hosting Guide:<br />
+					<br />
+					<NavLink blank href="/events/ludum-dare/hosting-guide">/ludum-dare/hosting-guide</NavLink><br />
+					<br />
+				</ContentCommonBody>
+			);
+		}
+
 		
 		props.editonly = (
 			<div>
 				{ShowEventPicker}
-				{ShowPrePub}
 				{ShowOptOut}
-				{ShowShots}
-				{ShowLinks}
+				{ShowImages}
+				{ShowPrePub}
+				{ShowUnfinished}
 			</div>
 		);
+//				{ShowLinks}
+		
+		props.viewonly = (
+			<div>
+				{ShowGrade}
+			</div>
+		);
+		
+		props.class = cN("content-item", props.class);
 
 		return <ContentSimple {...props} by authors />;
 	}

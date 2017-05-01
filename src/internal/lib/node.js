@@ -86,17 +86,68 @@ window.node_CanCreate = function( node ) {
 		return null;
 
 	return node.meta && node.meta['can-create'];
-}
+};
 window.node_CanTheme = function( node ) {
 	// Return null if argument is invalid
 	if ( !node )
 		return null;
 
 	return node.meta && node.meta['can-theme'];
-}
+};
+window.node_CanGrade = function( node ) {
+	// Return null if argument is invalid
+	if ( !node )
+		return null;
+
+	return node.meta && node.meta['can-grade'];
+};
 
 //window.nodeUser_IsTeamLeader = function( user, project ) {
 //	
 //}
+
+window.nodes_HasParent = function( nodes, parent_id ) {
+	// Return null if argument is invalid
+	if ( !nodes )
+		return null;
+		
+	// TODO: Confirm nodes is an array
+	
+	for ( idx = 0; idx < nodes.length; idx++ ) {
+		if ( nodes[idx].parent == parent_id )
+			return true;
+	}
+	return false;
+};
+
+window.nodeKeys_HasParent = function( nodes, parent_id ) {
+	// Return null if argument is invalid
+	if ( !nodes )
+		return null;
+		
+	// TODO: Confirm nodes is an array
+	
+	//for ( idx = 0; idx < nodes.length; idx++ ) {
+	for ( var key in nodes ) {
+		if ( nodes[key].parent == parent_id )
+			return true;
+	}
+	return false;
+};
+
+window.nodeKeys_HasPublishedParent = function( nodes, parent_id ) {
+	// Return null if argument is invalid
+	if ( !nodes )
+		return null;
+		
+	// TODO: Confirm nodes is an array
+	
+	//for ( idx = 0; idx < nodes.length; idx++ ) {
+	for ( var key in nodes ) {
+		if ( nodes[key].parent == parent_id && nodes[key].published )
+			return true;
+	}
+	return false;
+};
 
 })();

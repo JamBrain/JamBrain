@@ -4,3 +4,36 @@
 	background: @MAJOR_COLOR1;
 	color: @MAJOR_LIGHT;
 }
+
+#content .content-item {
+	& .-opt-out {
+		
+	}
+	& .-rating {
+		& .-grade {
+			font-size: 1.2em;
+			
+			& > .-title {
+				width: 10em;
+			}
+			
+			& > .-star {
+				display: inline-block;
+				&:hover {
+					color: @COL_A;
+				}
+			}
+			
+		}
+	}
+
+	& .-opt-out,
+	& .-images,
+	& .-rating {
+		/* General footers have smaller text */
+		& > .-footer {
+			margin: 1em 0;
+			font-size: 1rem;
+		}
+	}
+}

@@ -199,7 +199,7 @@ export default class ContentSimple extends Component {
 			Class.push("content-simple");
 
 			var ShowEditBar = null;
-			var ShowEditOnly = null;
+			var ShowOnly = null;
 
 			if ( this.isEditMode() ) {
 				if ( !node_IsAuthor(node, user) ) {
@@ -252,22 +252,24 @@ export default class ContentSimple extends Component {
 				ShowByLine = <ContentCommonBodyBy node={node} label="Last updated" modified />;					
 			}
 			
-			if ( props.editonly && state.editing ) {
-				ShowEditOnly = props.editonly;
+			if ( state.editing && props.editonly ) {
+				ShowOnly = props.editonly;
 			}
-			else 
-			if ( props.authors && state.editing ) {
-				ShowEditOnly = <ContentCommonBody>
-					Hey sorry for the delay! Publishing your game is coming soon!<br />
-					<br />
-					If you're finished and you wont be able to submit before the compo deadline, don't worry! Do what you can above. We will make sure that you get your game in the compo.<br />
-					<br />
-					If you're new to Ludum Dare, you should know we don't host your downloads, just links to them. For recommendations where and how to host your files, check out the Hosting Guide:<br />
-					<br />
-					<NavLink blank href="/events/ludum-dare/hosting-guide">/ludum-dare/hosting-guide</NavLink><br />
-					<br />
-					</ContentCommonBody>;
+			else if ( !state.editing && props.viewonly ) {
+				ShowOnly = props.viewonly;
 			}
+//			else if ( state.editing && props.authors ) {
+//				ShowOnly = <ContentCommonBody>
+//					Hey sorry for the delay! Publishing your game is coming soon!<br />
+//					<br />
+//					If you're finished and you wont be able to submit before the compo deadline, don't worry! Do what you can above. We will make sure that you get your game in the compo.<br />
+//					<br />
+//					If you're new to Ludum Dare, you should know we don't host your downloads, just links to them. For recommendations where and how to host your files, check out the Hosting Guide:<br />
+//					<br />
+//					<NavLink blank href="/events/ludum-dare/hosting-guide">/ludum-dare/hosting-guide</NavLink><br />
+//					<br />
+//					</ContentCommonBody>;
+//			}
 
 			let ShowTitle = null;
 			if ( !props.notitle ) {
@@ -321,7 +323,7 @@ export default class ContentSimple extends Component {
 					{ShowAbove}
 					{ShowByLine}
 					{ShowMarkup}
-					{ShowEditOnly}
+					{ShowOnly}
 					{props.children}
 				</ContentCommon>
 			);
