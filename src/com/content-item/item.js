@@ -196,8 +196,7 @@ export default class ContentItem extends Component {
 		return $Node.Transform(this.props.node.id, 'item', 'game', type)
 		.then( r => {
 			if ( r ) {
-				if ( r.changed ) {
-					console.log( 'oo', this.props.node.subsubtype );
+				if ( r && r.changed ) {
 					this.props.node.subsubtype = type;
 					this.setState({});
 				}
@@ -231,6 +230,7 @@ export default class ContentItem extends Component {
 					
 					this.setState({'grade': Grades});
 				}
+				return r;
 			});
 	}
 
@@ -245,14 +245,11 @@ export default class ContentItem extends Component {
 			
 			return $NodeMeta.Add(Node.id, Data)
 				.then(r => {
-					console.log(r);
-//					if ( r && r.id || !!r.changed ) {
-//						var Grades = this.state.grade;
-//						
-//						Grades[name] = value;
-//						
-//						this.setState({'grade': Grades});
-//					}
+					if ( r && r.changed ) {
+						this.props.node.meta[Name] = Data[Name];
+						this.setState({});
+					}
+					return r;
 				});
 		}
 		else {
@@ -260,14 +257,11 @@ export default class ContentItem extends Component {
 
 			return $NodeMeta.Remove(Node.id, Data)
 				.then(r => {
-					console.log(r);
-//					if ( r && r.id || !!r.changed ) {
-//						var Grades = this.state.grade;
-//						
-//						Grades[name] = value;
-//						
-//						this.setState({'grade': Grades});
-//					}
+					if ( r && r.changed ) {
+						this.props.node.meta[Name] = Data[Name];
+						this.setState({});
+					}
+					return r;
 				});			
 		}
 	}
@@ -328,7 +322,7 @@ export default class ContentItem extends Component {
 			if ( node_IsAuthor(node, user) ) {
 				//ShowGrade = <ContentCommonBody>You are an Author</ContentCommonBody>;
 			}
-			else if ( featured && featured.what_node && nodeKeys_HasParent(featured.what_node, node.parent) ) {
+			else if ( featured && featured.what_node && nodeKeys_HasPublishedParent(featured.what_node, node.parent) ) {
 				let Lines = [];
 				
 				for ( var key in parent.meta ) {
@@ -455,6 +449,7 @@ export default class ContentItem extends Component {
 				<ContentCommonBody class="-images">
 					<div class="-label">Images</div>
 					<div>Cover Image</div>
+					<div>[Just finishing this up. Check back]</div>
 					<div class="-footer">Recommended Size: 640x512 (i.e. 5:4 aspect ratio). Other sizes will be scaled and cropped to fit. Animated GIFs will not work here.</div>
 				</ContentCommonBody>
 			);

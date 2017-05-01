@@ -135,4 +135,19 @@ window.nodeKeys_HasParent = function( nodes, parent_id ) {
 	return false;
 };
 
+window.nodeKeys_HasPublishedParent = function( nodes, parent_id ) {
+	// Return null if argument is invalid
+	if ( !nodes )
+		return null;
+		
+	// TODO: Confirm nodes is an array
+	
+	//for ( idx = 0; idx < nodes.length; idx++ ) {
+	for ( var key in nodes ) {
+		if ( nodes[key].parent == parent_id && nodes[key].published )
+			return true;
+	}
+	return false;
+};
+
 })();
