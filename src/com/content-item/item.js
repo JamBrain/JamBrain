@@ -244,8 +244,12 @@ export default class ContentItem extends Component {
 		
 		return $Grade.Add(Node.id, name, value)
 			.then(r => {
-				if ( r && r.id ) {
-					console.log(r.id);
+				if ( r && r.id || !!r.changed ) {
+					var Grades = this.state.grade;
+					
+					Grades[name] = value;
+					
+					this.setState({'grade': Grades});
 				}
 			});
 	}
@@ -337,11 +341,14 @@ export default class ContentItem extends Component {
 				}
 				
 				ShowGrade = (
-					<ContentCommonBody>
-						<h2>Rating</h2>
+					<ContentCommonBody class="-rating">
+						<h2>Ratings</h2>
 						{VoteLines}
+						<div class="-footer">Ratings are saved automatically when you click. When they change, they're saved.</div>
 					</ContentCommonBody>
 				);
+				
+				//'
 			}
 			else if ( !user || !user.id ) {
 				ShowGrade = <ContentCommonBody>Please login to rate this game</ContentCommonBody>;
