@@ -8,7 +8,7 @@ require_once __DIR__."/".SHRUB_PATH."/node/node.php";
 require_once __DIR__."/".SHRUB_PATH."/grade/grade.php";
 
 // This is a CRON job that regularly updates magic
-const COOL_MAX_ITEMS_TO_ADD = 100;
+const COOL_MAX_ITEMS_TO_ADD = 250;
 const COOL_MAX_ITEMS_TO_CALC = 250;
 
 const COOL_MAX_GRADES = 100;
