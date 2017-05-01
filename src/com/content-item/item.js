@@ -277,6 +277,20 @@ export default class ContentItem extends Component {
 			);
 		}
 		
+		var ShowVote = null;
+		if ( node_IsAuthor(node, user) ) {
+			ShowVote = <ContentCommonBody>You IS AUTHFER</ContentCommonBody>;
+		}
+		else if ( featured && featured.what_node && nodeKeys_HasParent(featured.what_node, node.parent) ) {
+			ShowVote = <ContentCommonBody>You DID IT</ContentCommonBody>;
+		}
+		else if ( !user || !user.id ) {
+			ShowVote = <ContentCommonBody>Please login to rate this game</ContentCommonBody>;
+		}
+		else {
+			ShowVote = <ContentCommonBody>At this time, only participants are able to rate games. Sorry!</ContentCommonBody>;
+		}
+		
 		var ShowPrePub = (
 			<div style="background: #E53; color: #FFF; padding: 0 0.5em;"><ContentCommonBody>
 				<strong>Hey folks!</strong> We're going to let you pre-publish your entries as we finish the data fields below. Please come back and update your page. We'll have new things fixed and added reguraly.<br />
@@ -290,6 +304,8 @@ export default class ContentItem extends Component {
 				Lets also say that judging will begin Wednesday (possibly a little earlier), just in case it takes longer than expected (i.e. like all of this). <strong>Thank you for your patience!</strong>
 			</ContentCommonBody></div>
 		);
+		
+		//'
 		
 		var ShowOptOut = null;
 		if ( true ) {
@@ -314,6 +330,8 @@ export default class ContentItem extends Component {
 				</ContentCommonBody>
 			);
 		}
+		
+		//'
 
 		var ShowLinks = null;
 		if ( true ) {
@@ -338,6 +356,12 @@ export default class ContentItem extends Component {
 				{ShowOptOut}
 				{ShowShots}
 				{ShowLinks}
+			</div>
+		);
+		
+		props.viewonly = (
+			<div>
+				{ShowVote}
 			</div>
 		);
 
