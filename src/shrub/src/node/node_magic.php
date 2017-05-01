@@ -84,6 +84,7 @@ function nodeMagic_Update( $node, $name, $score ) {
 			node=? AND name=?
 		;",
 		$score,
+
 		$node,
 		$name
 	);

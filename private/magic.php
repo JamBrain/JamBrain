@@ -8,7 +8,7 @@ require_once __DIR__."/".SHRUB_PATH."/node/node.php";
 
 // This is a CRON job that regularly updates magic
 const COOL_MAX_ITEMS_TO_ADD = 100;
-const COOL_MAX_ITEMS_TO_CALC = 100;
+const COOL_MAX_ITEMS_TO_CALC = 1;//100;
 
 
 // Get the root node
@@ -57,17 +57,17 @@ if ( $featured_id ) {
 	{
 		$cool = nodeMagic_GetOldestByParentName($featured_id, 'cool', COOL_MAX_ITEMS_TO_CALC);
 		
-		print_r($cool);
-		
-//		nodeMagic_Add(
-//					$node['id'],
-//					$node['parent'],
-//					$node['superparent'],
-//					$node['author'],
-//					0,	// score
-//					'cool'
-//				);
 		// Calculate their scores
+		foreach ( $cool as &$magic ) {
+			$node = nodeComplete_GetById($magic['node']);
+			$score = 0;
+			if ( $node ) {
+				$score = 2;
+			}
+
+			// Prefer $magic['node'] to $node['id'] in case it fails to load
+			$updated = nodeMagic_Update($magic['node'], $magic['name'], $score);
+		}
 	}
 }
 
