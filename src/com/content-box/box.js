@@ -64,7 +64,9 @@ export default class ContentBox extends Component {
 			var Cover = (node.meta && node.meta.cover) ? node.meta.cover : CoverFail;
 			var HoverCover = (node.meta && node.meta['hover-cover']) ? node.meta['hover-cover'] : CoverFail;
 
-			Cover += '.320x256.fit.jpg';
+//			Cover += '.320x256.fit.jpg';
+//			Cover += '.640x512.fit.jpg';
+			Cover += '.480x384.fit.jpg';
 			
 			var ShowHoverCover = null;
 			if ( node.meta['cover-hover'] ) {
