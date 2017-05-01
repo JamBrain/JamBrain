@@ -4,3 +4,20 @@
 	background: @MAJOR_COLOR1;
 	color: @MAJOR_LIGHT;
 }
+
+#content .content-item {
+	& .-grade {
+		font-size: 1.2em;
+		
+		& > .-title {
+			width: 10em;
+		}
+		
+		& > .-star {
+			display: inline-block;
+			&:hover {
+				color: @COL_A;
+			}
+		}
+	}
+}

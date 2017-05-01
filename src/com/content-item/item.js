@@ -4,6 +4,8 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
+import ButtonBase						from 'com/button-base/base';
+
 import ContentBody						from 'com/content-body/body';
 import ContentBodyMarkup				from 'com/content-body/body-markup';
 import ContentBodyEdit					from 'com/content-body/body-edit';
@@ -244,6 +246,7 @@ export default class ContentItem extends Component {
 		var path = props.path;
 		var extra = props.extra;
 		var featured = props.featured;
+		var parent = state.parent;
 		
 		var Category = '/';
 
@@ -285,18 +288,58 @@ export default class ContentItem extends Component {
 			);
 		}
 		
-		var ShowVote = null;
-		if ( node_IsAuthor(node, user) ) {
-			//ShowVote = <ContentCommonBody>You are an Author</ContentCommonBody>;
-		}
-		else if ( featured && featured.what_node && nodeKeys_HasParent(featured.what_node, node.parent) ) {
-			ShowVote = <ContentCommonBody>You DID IT: {state.grade ? state.grade.toString() : 'X'}</ContentCommonBody>;
-		}
-		else if ( !user || !user.id ) {
-			ShowVote = <ContentCommonBody>Please login to rate this game</ContentCommonBody>;
+		var ShowGrade = null;
+		if ( parent && node_CanGrade(parent) ) {
+			if ( node_IsAuthor(node, user) ) {
+				//ShowGrade = <ContentCommonBody>You are an Author</ContentCommonBody>;
+			}
+			else if ( featured && featured.what_node && nodeKeys_HasParent(featured.what_node, node.parent) ) {
+				let Lines = [];
+				
+				for ( var key in parent.meta ) {
+					let parts = key.split('-');
+					if ( parts.length == 2 && parts[0] == 'grade' ) {
+						Lines.push({'key': key, 'value': parent.meta[key]});
+					}
+				}
+				
+				let VoteLines = [];
+				for ( let idx = 0; idx < Lines.length; idx++ ) {
+					let Line = Lines[idx];
+					
+					let Title = Line.value;
+					let Score = '?';
+					if ( state.grade ) {
+						Score = state.grade[Line.key] ? state.grade[Line.key] : 0;
+					}
+					
+					let Stars = [];
+					for ( let idx2 = 0; idx2 < Score; idx2++ ) {
+						Stars.push(<ButtonBase class='-star'><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
+					}
+					for ( let idx2 = Score; idx2 < 5; idx2++ ) {
+						Stars.push(<ButtonBase class='-star'><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
+					}
+					
+					VoteLines.push(<div class="-grade"><span class="-title">{Title}</span>: {Stars}</div>);
+				}
+				
+				ShowGrade = (
+					<ContentCommonBody>
+						<h2>Rating</h2>
+						{VoteLines}
+					</ContentCommonBody>
+				);
+			}
+			else if ( !user || !user.id ) {
+				ShowGrade = <ContentCommonBody>Please login to rate this game</ContentCommonBody>;
+			}
+			else {
+				ShowGrade = <ContentCommonBody>At this time, only participants are able to rate games. Sorry!</ContentCommonBody>;
+			}
 		}
 		else {
-			ShowVote = <ContentCommonBody>At this time, only participants are able to rate games. Sorry!</ContentCommonBody>;
+			// grading is closed
 		}
 		
 		var ShowPrePub = (
@@ -369,9 +412,11 @@ export default class ContentItem extends Component {
 		
 		props.viewonly = (
 			<div>
-				{ShowVote}
+				{ShowGrade}
 			</div>
 		);
+		
+		props.class = cN("content-item", props.class);
 
 		return <ContentSimple {...props} by authors />;
 	}
