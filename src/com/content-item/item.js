@@ -23,21 +23,17 @@ import ContentSimple					from 'com/content-simple/simple';
 
 
 import $Node							from '../../shrub/js/node/node';
+import $Grade							from '../../shrub/js/grade/grade';
 
 export default class ContentItem extends Component {
 	constructor( props ) {
 		super(props);
 		
-//		this.state = {
-//			'edit': true,
-//			'modified': false,
-//			
-//			'authors': null,
-//			
-//			'title': null,
-//			'body': null
-//		};
-//
+		this.state = {
+			'parent': null,
+			'grade': null
+		};
+
 //		this.onClickEdit = this.onClickEdit.bind(this);
 //		this.onClickPreview = this.onClickPreview.bind(this);
 //		this.onClickSave = this.onClickSave.bind(this);
@@ -50,21 +46,33 @@ export default class ContentItem extends Component {
 		this.onSetJam = this.onSetJam.bind(this);
 		this.onSetCompo = this.onSetCompo.bind(this);
 	}
-//	
-//	componentDidMount() {
-////		$Node.Get(this.props.node.author)
-////		.then( r => {
-////			console.log(r.node);
-////			if ( r.node.length ) {
-////				console.log('hoo');
-////				this.setState({ 'authors': r.node });
-////			}
-////		})
-////		.catch(err => {
-////			this.setState({ 'error': err });
-////		});
-//	}
-//	
+	
+	componentDidMount() {
+		var node = this.props.node;
+		
+		$Node.Get(node.parent)
+		.then(r => {
+			if ( r.node && r.node.length ) {
+				var Parent = r.node[0];
+				this.setState({'parent': Parent});
+				
+				return $Grade.GetMy(node.id);
+			}
+			return Promise.resolve({});
+		})
+		.then(r => {
+			if ( r.grade ) {
+				this.setState({'grade': r.grade});
+			}
+			else {
+				this.setState({'grade': []});
+			}
+		})
+		.catch(err => {
+			this.setState({ 'error': err });
+		});
+	}
+	
 //	onClickEdit(e) {
 //		console.log('edit');
 //		this.setState({ 'edit': true });
@@ -279,10 +287,10 @@ export default class ContentItem extends Component {
 		
 		var ShowVote = null;
 		if ( node_IsAuthor(node, user) ) {
-			ShowVote = <ContentCommonBody>You IS AUTHFER</ContentCommonBody>;
+			//ShowVote = <ContentCommonBody>You are an Author</ContentCommonBody>;
 		}
 		else if ( featured && featured.what_node && nodeKeys_HasParent(featured.what_node, node.parent) ) {
-			ShowVote = <ContentCommonBody>You DID IT</ContentCommonBody>;
+			ShowVote = <ContentCommonBody>You DID IT: {state.grade ? state.grade.toString() : 'X'}</ContentCommonBody>;
 		}
 		else if ( !user || !user.id ) {
 			ShowVote = <ContentCommonBody>Please login to rate this game</ContentCommonBody>;
