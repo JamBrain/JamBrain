@@ -5,6 +5,7 @@ const SHRUB_PATH = "../src/shrub/src";
 include_once __DIR__."/".CONFIG_PATH."/config.php";
 require_once __DIR__."/".SHRUB_PATH."/cron.php";
 require_once __DIR__."/".SHRUB_PATH."/node/node.php";
+require_once __DIR__."/".SHRUB_PATH."/grade/grade.php";
 
 // This is a CRON job that regularly updates magic
 const COOL_MAX_ITEMS_TO_ADD = 100;
@@ -68,9 +69,22 @@ if ( $featured_id ) {
 
 				$authors = $node['link']['author'];
 
+				// Calculate effort
+				$team_grades = grade_CountByNotNodeAuthor($node['id'], $authors);
+
+				
+				$effort = $team_grades;
+				
+				// Calculate reward
+				$other_grades = grade_CountByNodeNotAuthor($node['id'], $authors);
 				
 				
+				$reward = $other_grades;
+
+
+				echo $magic['node']." $team_grades $other_grades\n";
 				
+				// Final
 				$score = $effort - $reward;
 			}
 
