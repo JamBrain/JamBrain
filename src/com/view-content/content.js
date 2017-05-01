@@ -135,7 +135,7 @@ export default class ViewContent extends Component {
 						}
 						
 						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
-						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['author']} subsubtypes={SubSubType ? SubSubType : ""} />);
+						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['author','cool']} subsubtypes={SubSubType ? SubSubType : ""} />);
 					}
 					else if ( ViewType == 'article' ) {
 
@@ -189,12 +189,12 @@ export default class ViewContent extends Component {
 						SubSubType = extra[1];
 				}
 				
-				ShowInfo = (
-					<ContentCommon node={node}>
-						<ContentCommonBody>{"Sorry, these aren't sorted correctly yet. For now, try "}<strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</ContentCommonBody>
-					</ContentCommon>
-				);
-				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={['parent']} subsubtypes={SubSubType ? SubSubType : null} />;
+//				ShowInfo = (
+//					<ContentCommon node={node}>
+//						<ContentCommonBody>{"Sorry, these aren't sorted correctly yet. For now, try "}<strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</ContentCommonBody>
+//					</ContentCommon>
+//				);
+				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={['parent','cool']} subsubtypes={SubSubType ? SubSubType : null} />;
 			}
 			else {
 				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
@@ -261,12 +261,14 @@ export default class ViewContent extends Component {
 				return (
 					<div id="content">
 						{ShowNavRoot}
-						<ContentCommon node={node}>
-							<ContentCommonBody>Sorry, these aren't sorted correctly yet. For now, try <strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</ContentCommonBody>
-						</ContentCommon>
-						<ContentGames node={node} user={user} path={path} extra={extra} methods={['all']} subsubtypes={SubSubType ? SubSubType : null} />
+						<ContentGames node={node} user={user} path={path} extra={extra} methods={['cool'/*'all'*/]} subsubtypes={SubSubType ? SubSubType : null} />
 					</div>
 				);
+
+//						<ContentCommon node={node}>
+//							<ContentCommonBody>Sorry, these aren't sorted correctly yet. For now, try <strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</ContentCommonBody>
+//						</ContentCommon>
+
 			}
 			else if ( Viewing == '/feed' ) {
 				return (

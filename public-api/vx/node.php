@@ -200,7 +200,7 @@ switch ( $action ) {
 			else {
 				$methods = array_map("coreSlugify_Name", explode('+', $methods));
 				
-				$allowed_methods = ['parent','superparent','author','authors','all','unpublished'];
+				$allowed_methods = ['parent','superparent','author','authors','all','unpublished','cool'];
 				foreach ( $methods as &$method ) {
 					if ( $method == 'all' ) {
 						if ( count($methods) > 1 ) {
@@ -270,7 +270,7 @@ switch ( $action ) {
 					$RESPONSE['limit'] = 50;
 			}
 
-			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset'] );
+			$RESPONSE['feed'] = nodeFeed_GetByNodeMethodType( $root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset'] );
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
