@@ -8,6 +8,7 @@ const DB_TYPE_NODE_BODY = 'MEDIUMTEXT NOT NULL';	// MEDIUMTEXT: 2^24 characters
 const DB_TYPE_NODE_SCOPE = 'TINYINT NOT NULL';
 const DB_TYPE_NODE_META_VALUE = 'TEXT NOT NULL';
 const DB_TYPE_NODE_LINK_VALUE = 'TEXT DEFAULT NULL';
+const DB_TYPE_NODE_SCORE = 'DOUBLE NOT NULL';
 
 // Simliar to the regular NODE, but just a snapshot
 // IMPORTANT: This has to come first, as with the node table, we need to make nodes
@@ -253,3 +254,35 @@ if ( in_array($table, $TABLE_LIST) ) {
 //	};
 //	table_Exit($table);
 //}
+
+
+$table = 'SH_TABLE_NODE_MAGIC';
+if ( in_array($table, $TABLE_LIST) ) {
+	$ok = null;
+
+	table_Init($table);
+	switch ( $TABLE_VERSION ) {
+	case 0:
+		$ok = table_Create( $table,
+			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
+				id ".DB_TYPE_UID.",
+				node ".DB_TYPE_ID.",
+					INDEX(node),
+				parent ".DB_TYPE_ID.",
+					INDEX(parent),
+				superparent ".DB_TYPE_ID.",
+					INDEX(superparent),
+				author ".DB_TYPE_ID.",
+					INDEX(author),
+				score ".DB_TYPE_NODE_SCORE.",
+					INDEX(score),
+				timestamp ".DB_TYPE_TIMESTAMP.",
+					INDEX(timestamp),
+				name ".DB_TYPE_ASCII(24).",
+					INDEX(name),
+					UNIQUE `node_name` (node, name)
+			)".DB_CREATE_SUFFIX);
+		if (!$ok) break; $TABLE_VERSION++;
+	};
+	table_Exit($table);
+}
