@@ -313,9 +313,14 @@ export default class ContentItem extends Component {
 				let Lines = [];
 				
 				for ( var key in parent.meta ) {
+					// Is it a valid grade ?
 					let parts = key.split('-');
 					if ( parts.length == 2 && parts[0] == 'grade' ) {
-						Lines.push({'key': key, 'value': parent.meta[key]});
+						// Make sure they user hasn't opted out
+						
+						if ( node.meta && !(node.meta[key+'-out']|0) ) {
+							Lines.push({'key': key, 'value': parent.meta[key]});
+						}
 					}
 				}
 				
