@@ -47,6 +47,7 @@ export default class ContentItem extends Component {
 
 		this.onSetJam = this.onSetJam.bind(this);
 		this.onSetCompo = this.onSetCompo.bind(this);
+//		this.onGrade = this.onGrade.bind(this);
 	}
 	
 	componentDidMount() {
@@ -237,6 +238,17 @@ export default class ContentItem extends Component {
 				
 			});
 	}
+	
+	onGrade( name, value ) {
+		var Node = this.props.node;
+		
+		return $Grade.Add(Node.id, name, value)
+			.then(r => {
+				if ( r && r.id ) {
+					console.log(r.id);
+				}
+			});
+	}
 
 	render( props, state ) {
 		props = Object.assign({}, props);
@@ -315,10 +327,10 @@ export default class ContentItem extends Component {
 					
 					let Stars = [];
 					for ( let idx2 = 0; idx2 < Score; idx2++ ) {
-						Stars.push(<ButtonBase class='-star'><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
+						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
 					}
 					for ( let idx2 = Score; idx2 < 5; idx2++ ) {
-						Stars.push(<ButtonBase class='-star'><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
+						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
 					}
 					
 					VoteLines.push(<div class="-grade"><span class="-title">{Title}</span>: {Stars}</div>);
