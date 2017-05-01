@@ -17,6 +17,7 @@ export default class ContentNavUser extends Component {
 	render( {node, user, path, extra}, {} ) {
 
         var NewPath = '/'+ (extra ? extra.join('/') : '');
+		var PartPath = '/'+ (extra && extra.length ? extra[0] : '');
 
 		var ShowMyFeed = null;
 		if ( NewPath === '/' ) {
@@ -31,6 +32,7 @@ export default class ContentNavUser extends Component {
 		}
 		// Prefix with path
 		NewPath = path + NewPath;
+		PartPath = path + PartPath;
 
 		var HasFeed = <ContentNavButton path={NewPath} icon='feed' href={path+'/feed'}>Feed</ContentNavButton>;
 
@@ -46,7 +48,7 @@ export default class ContentNavUser extends Component {
 
         var HasGames = null;
 		if ( node['games'] > 0 ) {
-			HasGames = <ContentNavButton path={NewPath} icon='gamepad' href={path+'/games'}>Games</ContentNavButton>;
+			HasGames = <ContentNavButton path={PartPath} icon='gamepad' href={path+'/games'}>Games</ContentNavButton>;
 		}
 
 		var HasArticles = null;

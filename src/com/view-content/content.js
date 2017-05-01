@@ -118,27 +118,33 @@ export default class ViewContent extends Component {
 						if ( node.id == user.id )
 							Methods.push('unpublished');
 
-                        View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
+						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
 						View.push(<ContentTimeline types={['post']} methods={Methods} node={node} user={user} path={path} extra={extra} />);
 					}
 					else if ( ViewType == 'post' ) {
 //						View.push(<ContentPost node={node} user={user} path={path} extra={extra.splice(1)} by love edit />);
 					}
 					else if ( ViewType == 'games' ) {
+						let SubSubType = null;
+						if ( extra && extra.length > 1 ) {
+							if ( extra[1] != 'all' )
+								SubSubType = extra[1];
+						}
+						
 						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
-						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['author']}/>);
+						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['author']} subsubtypes={SubSubType ? SubSubType : ""} />);
 					}
 					else if ( ViewType == 'article' ) {
 
 					}
-                    else if ( ViewType == 'following'){
-                        View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} featured={featured} />);
-                        View.push(<ContentUserFollowing node={node} user={user} path={path} extra={extra} featured={featured} />);
-                    }
-                    else if ( ViewType == 'followers'){
-                        View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} featured={featured} />);
-                        View.push(<ContentUserFollowers node={node} user={user} path={path} extra={extra} featured={featured} />);
-                    }
+					else if ( ViewType == 'following'){
+						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} featured={featured} />);
+						View.push(<ContentUserFollowing node={node} user={user} path={path} extra={extra} featured={featured} />);
+					}
+					else if ( ViewType == 'followers'){
+						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} featured={featured} />);
+						View.push(<ContentUserFollowers node={node} user={user} path={path} extra={extra} featured={featured} />);
+					}
 					else {
 						View.push(<ContentError />);
 					}
@@ -172,11 +178,15 @@ export default class ViewContent extends Component {
 				ShowNav = <ContentNavTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
 				ShowPage = <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
 			}
-            else if(extra && extra.length && extra[0] == 'games'){
-                //let NewPath = path+'/'+extra[0];
-                //let NewExtra = extra.slice(1);
-                ShowPage = <ContentGames node={node} user={user} path={path} extra={extra}/>;
-            }
+			else if( extra && extra.length && extra[0] == 'games' ){
+				let SubSubType = null;
+				if ( extra && extra.length > 1 ) {
+					if ( extra[1] != 'all' )
+						SubSubType = extra[1];
+				}
+				
+				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} methods={['parent']} subsubtypes={SubSubType ? SubSubType : null} />;
+			}
 			else {
 				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
 			}
@@ -229,11 +239,19 @@ export default class ViewContent extends Component {
 			else if ( Viewing == '/hot' ) {
 				return <ContentTimeline node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 			}
-			else if ( Viewing == '/games' ) {
+//			else if ( Viewing == '/games' ) {
+			else if ( extra && extra.length && extra[0] == 'games' ) {
+				let SubSubType = null;
+				if ( extra.length > 1 ) {
+					if ( extra[1] != 'all' ) {
+						SubSubType = extra[1];
+					}
+				}
+				
 				return (
 					<div id="content">
 						{ShowNavRoot}
-						<ContentGames node={node} user={user} path={path} extra={extra} methods={['all']} />
+						<ContentGames node={node} user={user} path={path} extra={extra} methods={['all']} subsubtypes={SubSubType ? SubSubType : null} />
 					</div>
 				);
 			}
@@ -249,7 +267,7 @@ export default class ViewContent extends Component {
 				return <div id="content"><ContentPalette node={node} user={user} path={path} extra={extra} /></div>;
 			}
 			else {
-				return <div id="content"><ContentError user={user} path={path} extra={extra}>{Viewing} not found</ContentError></div>;
+				return <div id="content"><ContentError user={user} path={path} extra={extra}>{Viewing} not found .</ContentError></div>;
 			}
 		}
 		else {
