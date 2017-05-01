@@ -296,6 +296,7 @@ export default class ContentSimple extends Component {
 						class="-block-if-not-minimized"
 						onmodify={this.onModifyText}
 						minimized={props.minimized}
+						limit={props.limit}
 					>
 						{state.body}
 					</ContentCommonBodyMarkup>
@@ -313,6 +314,10 @@ export default class ContentSimple extends Component {
 			}
 			
 			props.class = cN(Class, props.class);
+			if ( this.isEditMode() ) {
+				props.minmax = null;
+				props.minimized = null;
+			}
 
 			return (
 				<ContentCommon {...props}>

@@ -78,7 +78,9 @@ export default class ContentPost extends Component {
 	}
 */
 
-	render( props, {/*author, minimized,*/ error} ) {
+	render( props, state ) {
+		props = Object.assign({}, props);
+		
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
@@ -99,6 +101,8 @@ export default class ContentPost extends Component {
 				props.headerClass = "-col-nddd";
 			}
 		}
+		
+		props.limit = 1024*24;
 		
 		return <ContentSimple {...props} />;
 		
