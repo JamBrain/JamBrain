@@ -7,6 +7,9 @@ require_once __DIR__."/".SHRUB_PATH."/cron.php";
 require_once __DIR__."/".SHRUB_PATH."/node/node.php";
 
 // This is a CRON job that regularly updates magic
+const COOL_MAX_ITEMS_TO_ADD = 100;
+
+
 
 // Get the root node
 $root = nodeComplete_GetById(1);
@@ -23,15 +26,31 @@ if ( $featured_id ) {
 	// TODO: freak out if featured_id's don't match?
 	
 	// ** Find a bunch of games that don't yet have cool magic **
-	// Get all items with cool magic
-	$cool_nodes = nodeMagic_GetNodeIdByParentName($featured_id, 'cool');
-	
-	// Get all published item ids
-	$node_ids = node_GetIdByParentTypePublished($featured_id, 'item');
-	
-	// Add them to the magic
-	print_r($cool_nodes);
-	print_r($node_ids);
+	{
+		// Get all items with cool magic
+		$cool_nodes = nodeMagic_GetNodeIdByParentName($featured_id, 'cool');
+		
+		// Get all published item ids
+		$node_ids = node_GetIdByParentTypePublished($featured_id, 'item');
+		
+		$diff = array_diff($node_ids, $cool_nodes);
+		
+		$new_nodes = array_slice($diff, 0, COOL_MAX_ITEMS_TO_ADD);
+		
+		foreach ( $new_nodes as $key => &$value ) {
+			$node = node_GetById($value);
+			if ( $node ) {
+				nodeMagic_Add(
+					$node['id'],
+					$node['parent'],
+					$node['superparent'],
+					$node['author'],
+					0,	// score
+					'cool'
+				);
+			}
+		}
+	}
 	
 	
 	// Find a bunch of the oldest games with cool magic
