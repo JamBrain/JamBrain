@@ -5,24 +5,34 @@
 	color: @MAJOR_LIGHT;
 }
 
-#content .content-item .-rating {
-	& .-grade {
-		font-size: 1.2em;
-		
-		& > .-title {
-			width: 10em;
-		}
-		
-		& > .-star {
-			display: inline-block;
-			&:hover {
-				color: @COL_A;
-			}
-		}
+#content .content-item {
+	& .-opt-out {
 		
 	}
-	& > .-footer {
-		margin: 1em 0;
-		font-size: 0.8em;
+	& .-rating {
+		& .-grade {
+			font-size: 1.2em;
+			
+			& > .-title {
+				width: 10em;
+			}
+			
+			& > .-star {
+				display: inline-block;
+				&:hover {
+					color: @COL_A;
+				}
+			}
+			
+		}
+	}
+
+	& .-opt-out,
+	& .-rating {
+		/* General footers have smaller text */
+		& > .-footer {
+			margin: 1em 0;
+			font-size: 1rem;
+		}
 	}
 }
