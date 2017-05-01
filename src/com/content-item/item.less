@@ -26,6 +26,39 @@
 			
 		}
 	}
+	
+	& .-upload {
+		& .-path,
+		& .-button {
+			display: inline-block;
+			padding: 0.25em 0.5em;
+		}
+
+		& .-path {
+			border: 1px solid @COL_NLLL;
+			border-radius: 0.125em;
+			background: @COL_NLLLL;
+		}
+		& .-button {
+			color: @COL_NDD;
+			border: 1px solid;
+			
+			margin-left: 0.5em;
+			
+			&:hover,
+			&:focus {
+				color: @COL_L;
+				border: 1px solid @COL_A;
+				background: @COL_A;
+			}
+		}
+		& .-img {
+			width: 100%;
+			max-width: 320px;
+			display: block;
+			margin: 0.5em 0;
+		}
+	}
 
 	& .-opt-out,
 	& .-images,

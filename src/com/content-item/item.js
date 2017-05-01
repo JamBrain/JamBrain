@@ -3,6 +3,7 @@ import { h, Component } 				from 'preact/preact';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
+import IMG2 							from 'com/img2/img2';
 
 import ButtonBase						from 'com/button-base/base';
 
@@ -16,6 +17,7 @@ import ContentSimple					from 'com/content-simple/simple';
 import $Node							from '../../shrub/js/node/node';
 import $NodeMeta						from '../../shrub/js/node/node_meta';
 import $Grade							from '../../shrub/js/grade/grade';
+import $Asset							from '../../shrub/js/asset/asset';
 
 export default class ContentItem extends Component {
 	constructor( props ) {
@@ -265,6 +267,43 @@ export default class ContentItem extends Component {
 				});			
 		}
 	}
+	
+	onUpload( name, e ) {
+		var node = this.props.node;
+		var user = this.props.user;
+
+		if ( !this.props.user )
+			return null;
+			
+		var FileName = null;
+		
+		if ( e.target.files && e.target.files.length ) {
+			var file = e.target.files[0];
+
+			return $Asset.Upload(user.id, file)
+				.then(r => {
+					if ( r && r.path ) {
+						FileName = '///content/'+r.path;
+						
+						let Data = {};
+						Data[name] = FileName;
+						
+						return $NodeMeta.Add(node.id, Data);
+					}
+
+					return Promise.resolve({});
+				})
+				.then(r => {
+					if ( r && r.changed ) {
+						this.props.node.meta[name] = FileName;
+						this.setState({});
+					}
+				})
+				.catch(err => {
+					this.setState({ 'error': err });
+				});
+		}		
+	}
 
 	render( props, state ) {
 		props = Object.assign({}, props);
@@ -445,11 +484,23 @@ export default class ContentItem extends Component {
 		
 		var ShowImages = null;
 		if ( true ) {
+			let ShowImage = null;
+			if ( node.meta && node.meta.cover ) {
+				ShowImage = <IMG2 class="-img" src={node.meta && node.meta.cover ? node.meta.cover+'.320x256.fit.jpg' : "" } />;
+			}
+			
 			ShowImages = (
 				<ContentCommonBody class="-images">
 					<div class="-label">Images</div>
 					<div>Cover Image</div>
-					<div>[Just finishing this up. Check back]</div>
+					<div class="-upload">
+						<div class="-path">{node.meta && node.meta.cover ? node.meta.cover : "" }</div>
+						<label>
+							<input type="file" name="asset" style="display: none;" onchange={this.onUpload.bind(this,'cover')} />
+							<ButtonBase class="-button"><SVGIcon small baseline gap>upload</SVGIcon>Upload</ButtonBase>
+						</label>
+						{ShowImage}
+					</div>
 					<div class="-footer">Recommended Size: 640x512 (i.e. 5:4 aspect ratio). Other sizes will be scaled and cropped to fit. Animated GIFs will not work here.</div>
 				</ContentCommonBody>
 			);
