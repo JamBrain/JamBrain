@@ -12,6 +12,7 @@ export default class ContentNavEvent extends Component {
 
 	render( {node, user, path, extra}, {} ) {
 		var NewPath = '/'+ (extra ? extra.join('/') : '');
+		var PartPath = '/'+ (extra && extra.length ? extra[0] : '');
 
 		var ShowMyFeed = null;
 		if ( user && user.id ) {
@@ -28,8 +29,8 @@ export default class ContentNavEvent extends Component {
 					{ShowMyFeed}
 					<ContentNavButton path={NewPath} icon='heart' href={path+'/hot'}>Popular</ContentNavButton>
 					<ContentNavButton path={NewPath} icon='news' href={path+'/news'}>News</ContentNavButton>
-                    <ContentNavButton path={NewPath} icon='gamepad' href={path+'/Join'}>View Games</ContentNavButton>
-					<ContentNavButton path={NewPath} icon='gamepad' href={path+'/Join'}>Join Event</ContentNavButton>
+                    <ContentNavButton path={PartPath} icon='gamepad' href={path+'/games'}>View Games</ContentNavButton>
+					<ContentNavButton path={NewPath} icon='gamepad' href={path+'/join'}>Join Event</ContentNavButton>
 				</div>
 			</div>
 		);
