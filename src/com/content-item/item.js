@@ -6,17 +6,6 @@ import SVGIcon 							from 'com/svg-icon/icon';
 
 import ButtonBase						from 'com/button-base/base';
 
-import ContentBody						from 'com/content-body/body';
-import ContentBodyMarkup				from 'com/content-body/body-markup';
-import ContentBodyEdit					from 'com/content-body/body-edit';
-
-import ContentHeaderCommon				from 'com/content-header/header-common';
-import ContentFooterCommon				from 'com/content-footer/footer-common';
-import ContentHeaderEdit				from 'com/content-header/header-edit';
-import ContentFooterEdit				from 'com/content-footer/footer-edit';
-
-import ContentHeadlineEdit				from 'com/content-headline/headline-edit';
-
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
@@ -36,18 +25,8 @@ export default class ContentItem extends Component {
 			'grade': null
 		};
 
-//		this.onClickEdit = this.onClickEdit.bind(this);
-//		this.onClickPreview = this.onClickPreview.bind(this);
-//		this.onClickSave = this.onClickSave.bind(this);
-//		this.onClickPublish = this.onClickPublish.bind(this);
-//		this.onClickPublish2 = this.onClickPublish2.bind(this);
-//		
-//		this.onModifyTitle = this.onModifyTitle.bind(this);
-//		this.onModifyBody = this.onModifyBody.bind(this);
-
 		this.onSetJam = this.onSetJam.bind(this);
 		this.onSetCompo = this.onSetCompo.bind(this);
-//		this.onGrade = this.onGrade.bind(this);
 	}
 	
 	componentDidMount() {
@@ -396,12 +375,13 @@ export default class ContentItem extends Component {
 			);
 		}
 		
-		var ShowShots = null;
+		var ShowImages = null;
 		if ( true ) {
-			ShowShots = (
-				<ContentCommonBody>
+			ShowImages = (
+				<ContentCommonBody class="-images">
 					<div class="-label">Images</div>
-					<div>Cover Image - this will be squared and used as box art (final size TBD)</div>
+					<div>Cover Image</div>
+					<div class="-footer">Recommended Size: 640x512 (i.e. 5:4 aspect ratio). Other sizes will be scaled and cropped to fit. Animated GIFs will not work here.</div>
 				</ContentCommonBody>
 			);
 		}
@@ -411,7 +391,7 @@ export default class ContentItem extends Component {
 		var ShowLinks = null;
 		if ( true ) {
 			ShowLinks = (
-				<ContentCommonBody>
+				<ContentCommonBody class="-links">
 					<div class="-label">Links</div>
 					<div>Download Links</div>
 					<div>Source Code</div>
@@ -431,7 +411,8 @@ export default class ContentItem extends Component {
 					<div class="-label">Images</div>
 					<div>Screen Shots - These go up top, above your Title and Description. Try to keep your GIFs less than 640 pixels wide.</div>
 					<div>Video - Or we can put a YouTube video up top</div>
-					<div><del>Embed - If we do add this, it's going to be much later</del></div>
+					<div><del>Hover Video - A GIF or silent MP4 video to play while hovering over Cover art.</del></div>
+					<div><del>Embed - This is coming later</del></div>
 					<br />
 					<div class="-label">Links</div>
 					<div>Download Links</div>
@@ -450,7 +431,7 @@ export default class ContentItem extends Component {
 			<div>
 				{ShowEventPicker}
 				{ShowOptOut}
-				{ShowShots}
+				{ShowImages}
 				{ShowPrePub}
 				{ShowUnfinished}
 			</div>
