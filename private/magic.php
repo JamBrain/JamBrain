@@ -11,6 +11,8 @@ require_once __DIR__."/".SHRUB_PATH."/grade/grade.php";
 const COOL_MAX_ITEMS_TO_ADD = 100;
 const COOL_MAX_ITEMS_TO_CALC = 1;//100;
 
+const COOL_MAX_GRADES = 100;
+const COOL_GRADES_PER_NODE = 8.0;
 
 // Get the root node
 $root = nodeComplete_GetById(1);
@@ -62,30 +64,64 @@ if ( $featured_id ) {
 		foreach ( $cool as &$magic ) {
 			$node = nodeComplete_GetById($magic['node']);
 
+			// The old Formula
+			//
+			//	function compo2_calc_coolness( $votes, $total ) {
+			//  	$votes = max(0, min(100, $votes));
+			//		$total = max(0, min(100, $total-1));
+			//		$v = sqrt($votes * 100 / max(1, $total)) * 100 / 10;
+			//		return intval(round($v));
+			//	}
+			//
+			// 0, 0 = 0
+			// 0, 25 = 0
+			// 0, 50 = 0
+			// 0, 75 = 0
+			// 0, 100 = 0
+			//
+			// 25, 0 = 500
+			// 25, 25 = 100
+			// 25, 50 = 70.71
+			// 25, 75 = 57.73
+			// 25, 100 = 50
+			//
+			// 50, 0 = 707.1
+			// 50, 25 = 141.42
+			// 50, 50 = 100
+			// 50, 75 = 81.64
+			// 50, 100 = 70.71
+			//
+			// 75, 0 = 866.02
+			// 75, 25 = 173.20
+			// 75, 50 = 122.47
+			// 75, 75 = 100
+			// 75, 100 = 86.6
+			//
+			// 100, 0 = 1000
+			// 100, 25 = 200
+			// 100, 50 = 141.41
+			// 100, 75 = 115.47
+			// 100, 100 = 100
+
 			$score = 0;
 			if ( $node ) {
-				$effort = 0;
-				$reward = 0;
-
 				$authors = $node['link']['author'];
 
-				// Calculate effort
+				// Calculate Grades
 				$team_grades = grade_CountByNotNodeAuthor($node['id'], $authors);
-
+				$team_grades = max(0, min(COOL_MAX_GRADES, $team_grades / COOL_GRADES_PER_NODE));
 				
-				$effort = $team_grades;
+				$given_grades = grade_CountByNodeNotAuthor($node['id'], $authors);
+				$given_grades = max(0, min(COOL_MAX_GRADES, $given_grades / COOL_GRADES_PER_NODE));		// historically there's a -1 here
 				
-				// Calculate reward
-				$other_grades = grade_CountByNodeNotAuthor($node['id'], $authors);
-				
-				
-				$reward = $other_grades;
+				// Will be up to 1000 points
+				$grade = sqrt($team_grades * 100.0 / max(1.0, $given_grades)) * 100.0 / 10.0;
 
 
-				echo $magic['node']." $team_grades $other_grades\n";
+				echo $magic['node']." $team_grades $given_grades: $grade\n";
 				
 				// Final
-				$score = $effort - $reward;
+				$score = $grade;
 			}
 
 			// Prefer $magic['node'] to $node['id'] in case it fails to load
