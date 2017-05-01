@@ -127,7 +127,8 @@ export default class ViewContent extends Component {
 					else if ( ViewType == 'games' ) {
 						let SubSubType = null;
 						if ( extra && extra.length > 1 ) {
-							SubSubType = extra[1];
+							if ( extra[1] != 'all' )
+								SubSubType = extra[1];
 						}
 						
 						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
@@ -180,7 +181,8 @@ export default class ViewContent extends Component {
 			else if( extra && extra.length && extra[0] == 'games' ){
 				let SubSubType = null;
 				if ( extra && extra.length > 1 ) {
-					SubSubType = extra[1];
+					if ( extra[1] != 'all' )
+						SubSubType = extra[1];
 				}
 				
 				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} methods={['parent']} subsubtypes={SubSubType ? SubSubType : null} />;
@@ -241,13 +243,7 @@ export default class ViewContent extends Component {
 			else if ( extra && extra.length && extra[0] == 'games' ) {
 				let SubSubType = null;
 				if ( extra.length > 1 ) {
-					if ( extra[1] == 'all' ) {
-						// do nothing
-					}
-					else if ( extra[1] == 'jam' ) {
-						SubSubType = extra[1];
-					}
-					else if ( extra[1] == 'compo' ) {
+					if ( extra[1] != 'all' ) {
 						SubSubType = extra[1];
 					}
 				}
