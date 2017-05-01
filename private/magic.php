@@ -107,7 +107,7 @@ if ( $featured_id ) {
 			if ( $node ) {
 				$authors = $node['link']['author'];
 
-				// Calculate Grades
+				// ** Calculate Grades **
 				$team_grades = grade_CountByNotNodeAuthor($node['id'], $authors);
 				$team_grades = max(0, min(COOL_MAX_GRADES, $team_grades / COOL_GRADES_PER_NODE));
 				
@@ -120,9 +120,11 @@ if ( $featured_id ) {
 //				echo $magic['node']." $team_grades $given_grades: $grade\n";
 
 
+				// ** Calculate Feedback Score **
+
 				
 				// Final
-				$score = $grade + $effort;
+				$score = $grade;
 			}
 
 			// Prefer $magic['node'] to $node['id'] in case it fails to load
