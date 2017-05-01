@@ -60,9 +60,18 @@ if ( $featured_id ) {
 		// Calculate their scores
 		foreach ( $cool as &$magic ) {
 			$node = nodeComplete_GetById($magic['node']);
+
 			$score = 0;
 			if ( $node ) {
-				$score = 2;
+				$effort = 0;
+				$reward = 0;
+
+				$authors = $node['link']['author'];
+
+				
+				
+				
+				$score = $effort - $reward;
 			}
 
 			// Prefer $magic['node'] to $node['id'] in case it fails to load
