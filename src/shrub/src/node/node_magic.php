@@ -1,17 +1,44 @@
 <?php
 
-// TODO: add limit support
-function nodeMagic_GetNodeIdByParentName( $parent, $name ) {
+function nodeMagic_GetNodeIdByParentName( $parent, $name, $limit = null ) {
+	$LIMIT_QUERY = '';
+	if ( $limit > 0 ) {
+		$LIMIT_QUERY = 'LIMIT '.$limit;
+	}
 	return db_QueryFetchSingle(
 		"SELECT 
 			node
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC." 
 		WHERE 
 			parent=? AND name=?
-		;",
+		$LIMIT_QUERY;",
 		$parent,
 		$name
 	);
+}
+
+function nodeMagic_GetOldestByParentName( $parent, $name, $limit = null ) {
+	$LIMIT_QUERY = '';
+	if ( $limit > 0 ) {
+		$LIMIT_QUERY = 'LIMIT '.$limit;
+	}
+	return db_QueryFetch(
+		"SELECT 
+			node,
+			parent,
+			superparent,
+			author,
+			score,
+			".DB_FIELD_DATE('timestamp').",
+			name
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC." 
+		WHERE 
+			parent=? AND name=?
+		ORDER BY timestamp ASC
+		$LIMIT_QUERY;",
+		$parent,
+		$name
+	);	
 }
 
 function nodeMagic_Add( $node, $parent, $superparent, $author, $score, $name ) {
