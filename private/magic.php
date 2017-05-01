@@ -114,14 +114,15 @@ if ( $featured_id ) {
 				$given_grades = grade_CountByNodeNotAuthor($node['id'], $authors);
 				$given_grades = max(0, min(COOL_MAX_GRADES, $given_grades / COOL_GRADES_PER_NODE));		// historically there's a -1 here
 				
-				// Will be up to 1000 points
+				// Will be up to 1000 points (so long as the max is 100
 				$grade = sqrt($team_grades * 100.0 / max(1.0, $given_grades)) * 100.0 / 10.0;
 
+//				echo $magic['node']." $team_grades $given_grades: $grade\n";
 
-				echo $magic['node']." $team_grades $given_grades: $grade\n";
+
 				
 				// Final
-				$score = $grade;
+				$score = $grade + $effort;
 			}
 
 			// Prefer $magic['node'] to $node['id'] in case it fails to load
