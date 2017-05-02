@@ -2,7 +2,10 @@
 
 function noteLove_CountByNode( $node ) {
 	$ret = db_QueryFetch(
-		"SELECT note, COUNT(note) AS count, ".DB_FIELD_DATE('MAX(timestamp)','timestamp')."
+		"SELECT 
+			note, 
+			COUNT(note) AS count, 
+			".DB_FIELD_DATE('MAX(timestamp)','timestamp')."
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
 		WHERE $node=?
 		GROUP BY note;",
@@ -11,6 +14,38 @@ function noteLove_CountByNode( $node ) {
 
 	return $ret;
 }
+
+
+function noteLove_CountBySuperNotNodeAuthor( $supernode, $node, $authornode ) {
+	if ( !is_array($authornode) )
+		$authornode = [$authornode];
+	
+	return db_QueryFetchValue(
+		"SELECT 
+			COUNT(id) AS count
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
+		WHERE supernode=? AND node!=? AND authornode IN (".implode(',', $authornode).")
+		;",
+		$supernode,
+		$node
+	);
+}
+
+function noteLove_CountBySuperNodeNotAuthor( $supernode, $node, $authornode ) {
+	if ( !is_array($authornode) )
+		$authornode = [$authornode];
+	
+	return db_QueryFetchValue(
+		"SELECT 
+			COUNT(id) AS count
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
+		WHERE supernode=? AND node=? AND authornode NOT IN (".implode(',', $authornode).")
+		;",
+		$supernode,
+		$node
+	);
+}
+
 
 
 // This should actually work fine, I just want to discourage myself from using it, due to preformance
