@@ -46,7 +46,7 @@ export default class YoutubeEmbed extends Component {
               <SVGIcon middle>play</SVGIcon>
             </div>
             <div class="-external">
-              <a href={props.href} target="_blank">
+              <a href={props.href} target="_blank" onclick={(e) => {e.stopPropagation();}}>
                 <SVGIcon middle block>youtube</SVGIcon>
               </a>
             </div>
