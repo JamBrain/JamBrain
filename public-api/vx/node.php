@@ -392,7 +392,7 @@ switch ( $action ) {
 				'item/craft' => 0,			// i.e. can't create
 				'item/craft/jam' => 0,		// i.e. can't create
 				
-				'post' => -20,				// i.e. unlimited
+				'post' => -25,				// i.e. unlimited
 				'post/news' => 0,			// i.e. can't create
 			];
 			

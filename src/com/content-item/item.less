@@ -14,7 +14,8 @@
 			font-size: 1.2em;
 			
 			& > .-title {
-				width: 10em;
+				display: inline-block;
+				width: 5.5em;
 			}
 			
 			& > .-star {
@@ -22,6 +23,15 @@
 				&:hover {
 					color: @COL_A;
 				}
+			}
+			& > .-delete {
+				color: @COL_NLLLL;
+				
+				display: inline-block;
+				&:hover {
+					color: @COL_A;
+				}
+				margin-left: 0.5em;
 			}
 			
 		}

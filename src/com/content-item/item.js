@@ -393,8 +393,9 @@ export default class ContentItem extends Component {
 					for ( let idx2 = Score; idx2 < 5; idx2++ ) {
 						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
 					}
+					Stars.push(<ButtonBase class='-delete' onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
 					
-					VoteLines.push(<div class="-grade"><span class="-title">{Title}</span>: {Stars}</div>);
+					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> {Stars}</div>);
 				}
 				
 				ShowGrade = (
