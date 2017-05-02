@@ -5,14 +5,18 @@ const SHRUB_PATH = "../src/shrub/src";
 include_once __DIR__."/".CONFIG_PATH."/config.php";
 require_once __DIR__."/".SHRUB_PATH."/cron.php";
 require_once __DIR__."/".SHRUB_PATH."/node/node.php";
+require_once __DIR__."/".SHRUB_PATH."/note/note.php";
 require_once __DIR__."/".SHRUB_PATH."/grade/grade.php";
 
 // This is a CRON job that regularly updates magic
 const COOL_MAX_ITEMS_TO_ADD = 250;
 const COOL_MAX_ITEMS_TO_CALC = 250;
 
-const COOL_MAX_GRADES = 100;
+// TODO: Adjust the maximum effectiveness as the weeks go by. Start with like 50 initially (more than enough), but let it go up after.
+const COOL_MAX_GRADES = 50;//100;
 const COOL_GRADES_PER_NODE = 8.0;
+const COOL_MAX_FEEDBACK = 50;
+const COOL_FEEDBACK_PER_NOTE = 4.0;
 
 // Get the root node
 $root = nodeComplete_GetById(1);
@@ -108,10 +112,10 @@ if ( $featured_id ) {
 				$authors = $node['link']['author'];
 
 				// ** Calculate Grades **
-				$team_grades = grade_CountByNotNodeAuthor($node['id'], $authors);
-				$team_grades = max(0, min(COOL_MAX_GRADES, $team_grades / COOL_GRADES_PER_NODE));
-				
+				$team_grades = grade_CountByNotNodeAuthor($node['id'], $authors);				
 				$given_grades = grade_CountByNodeNotAuthor($node['id'], $authors);
+
+				$team_grades = max(0, min(COOL_MAX_GRADES, $team_grades / COOL_GRADES_PER_NODE));
 				$given_grades = max(0, min(COOL_MAX_GRADES, $given_grades / COOL_GRADES_PER_NODE));		// historically there's a -1 here
 				
 				// Will be up to 1000 points (so long as the max is 100
@@ -121,10 +125,17 @@ if ( $featured_id ) {
 
 
 				// ** Calculate Feedback Score **
+				$team_feedback = noteLove_CountBySuperNotNodeAuthor($node['parent'], $node['id'], $authors);
+				$given_feedback = noteLove_CountBySuperNodeNotAuthor($node['parent'], $node['id'], $authors);
+
+				$team_feedback = max(0, min(COOL_MAX_FEEDBACK, $team_feedback / COOL_FEEDBACK_PER_NOTE));
+				$given_feedback = max(0, min(COOL_MAX_FEEDBACK, $given_feedback / COOL_FEEDBACK_PER_NOTE));
+
+				$feedback = sqrt($team_feedback * 100.0 / max(1.0, $given_feedback)) * 100.0 / 10.0;
 
 				
 				// Final
-				$score = $grade;
+				$score = $grade + $feedback;
 			}
 
 			// Prefer $magic['node'] to $node['id'] in case it fails to load
