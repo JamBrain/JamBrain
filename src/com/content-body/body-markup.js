@@ -1,6 +1,6 @@
 import { h, Component } 				from 'preact/preact';
 import { shallowDiff }	 				from 'shallow-compare/index';
-import marked 								from '../../custom/marked/marked';
+import marked 								from '../../internal/marked/marked';
 
 export default class ContentBodyMarkup extends Component {
 	constructor( props ) {

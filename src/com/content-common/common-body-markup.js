@@ -4,7 +4,7 @@ import {shallowDiff} 					from 'shallow-compare/index';
 import NavLink 								from 'com/nav-link/link';
 import SVGIcon 								from 'com/svg-icon/icon';
 import InputTextArea 					from 'com/input-textarea/input-textarea';
-import marked 								from '../../custom/marked/marked';
+import marked 								from '../../internal/marked/marked';
 
 export default class ContentCommonBodyMarkup extends Component {
   constructor(props) {

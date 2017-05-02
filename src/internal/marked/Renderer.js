@@ -126,7 +126,6 @@ export default class Renderer {
   //  return 'VEOO'+text+'OOEV';
   //};
 
-  // This is not ideal anyway. Should be inserting a NavLink, not an <a />
   atname(text) {
     return (
       <NavLink href={"/users/" + text}>@{text}</NavLink>
@@ -200,17 +199,18 @@ export default class Renderer {
     // Customized. Disable image rendering if URLs are used to files not on our safe list.
     // Also, rewrite URLs to our static domain if the short form is used.
 
-    if (href.indexOf("///") === 0) {
-      // Rewrite URL to replace the first two slashes with the endpoint
+    if ( href.indexOf("///") === 0 ) {
+    	// Rewrite URL to replace the first two slashes with the endpoint
       href = STATIC_ENDPOINT + href.substr(2);
     }
     // Disabled this. Only Triple slash URLs should be allow.
-    //  else if ( href.indexOf(STATIC_ENDPOINT) >= 0 && href.indexOf(STATIC_ENDPOINT) <= 5 ) {
-    //  	// Everything is okay. Use this URL as-is
-    //  } else {
-    //return '<div class="unsafe-image-url">' + text + '</div>';
-    href = STATIC_ENDPOINT + '/content/internal/pleaseupload.png';
-
+  //  else if ( href.indexOf(STATIC_ENDPOINT) >= 0 && href.indexOf(STATIC_ENDPOINT) <= 5 ) {
+  //  	// Everything is okay. Use this URL as-is
+  //  }
+    else {
+      //return '<div class="unsafe-image-url">' + text + '</div>';
+      href = STATIC_ENDPOINT + '/content/internal/pleaseupload.png';
+    }
     var out = (<img class="img" src={href} alt={text} title={title}/>);
     /*if (title) {
       out += ' title="' + title + '"';
