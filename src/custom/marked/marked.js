@@ -16,7 +16,7 @@ var block = {
   fences: noop,
   hr: /^( *[-*_]){3,} *(?:\n+|$)/,
   heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
-  spoiler: /^(\!>)([^\n]+?) *\n*/,
+  spoiler: /^( *\!>[^\n]+(\n(?!def)[^\n]+)*\n*)+/,
   nptable: noop,
   lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
   blockquote: /^( *>[^\n]+(\n(?!def)[^\n]+)*\n*)+/,
@@ -43,6 +43,11 @@ block.list = replace(block.list)
 block.blockquote = replace(block.blockquote)
   ('def', block.def)
   ();
+
+block.spoiler = replace(block.spoiler)
+  ('def', block.def)
+  ();
+  
 
 block._tag = '(?!(?:'
   + 'a|em|strong|small|s|cite|q|dfn|abbr|data|time|code'
@@ -80,7 +85,6 @@ block.gfm = merge({}, block.normal, {
   fences: /^ *(`{3,}|~{3,})[ \.]*(\S+)? *\n([\s\S]*?)\s*\1 *(?:\n+|$)/,
   paragraph: /^/,
   heading: /^ *(#{1,6}) +([^\n]+?) *#* *(?:\n+|$)/,
-  spoiler: /^(\!>)([^\n]+?) *\n*/
 });
 
 block.gfm.paragraph = replace(block.paragraph)
@@ -208,16 +212,6 @@ Lexer.prototype.token = function(src, top, bq) {
       continue;
     }
 
-    // spoiler
-    if (cap = this.rules.spoiler.exec(src)) {
-      src = src.substring(cap[0].length);
-      this.tokens.push({
-        type: 'spoiler',
-        text: cap[2]
-      });
-      continue;
-    }
-
     // table no leading pipe (gfm)
     if (top && (cap = this.rules.nptable.exec(src))) {
       src = src.substring(cap[0].length);
@@ -291,6 +285,29 @@ Lexer.prototype.token = function(src, top, bq) {
 
       continue;
     }
+
+    // spoiler 
+    if (cap = this.rules.spoiler.exec(src)) {
+      src = src.substring(cap[0].length);
+
+      this.tokens.push({
+        type: 'spoiler_start'
+      });
+
+      cap = cap[0].replace(/^ *\!> ?/gm, '');
+
+      // Pass `top` to keep the current
+      // "toplevel" state. This is exactly
+      // how markdown.pl works.
+      this.token(cap, top, true);
+
+      this.tokens.push({
+        type: 'spoiler_end'
+      });
+
+      continue;
+    }
+
 
     // list
     if (cap = this.rules.list.exec(src)) {
@@ -830,6 +847,11 @@ Renderer.prototype.blockquote = function(quote) {
   return '<blockquote>\n' + quote + '</blockquote>\n';
 };
 
+Renderer.prototype.spoiler = function(quote) {
+  return '<div class="spoiler">\n' + quote + '</div>\n';
+};
+
+
 Renderer.prototype.html = function(html) {
   return html;
 };
@@ -847,11 +869,6 @@ Renderer.prototype.heading = function(text, level, raw) {
     + '>\n';
 };
 
-Renderer.prototype.spoiler = function(text) {
-  return '<span class="spoiler">'
-    + text
-    + '</span>\n';
-};
 
 Renderer.prototype.hr = function() {
   return this.options.xhtml ? '<hr/>\n' : '<hr>\n';
@@ -1098,10 +1115,10 @@ Parser.prototype.tok = function() {
         this.token.depth,
         this.token.text);
     }
-    case 'spoiler': {
+    /* case 'spoiler': {
       return this.renderer.spoiler(
         this.inline.output(this.token.text));
-    }
+    }*/
     case 'code': {
       return this.renderer.code(this.token.text,
         this.token.lang,
@@ -1150,6 +1167,15 @@ Parser.prototype.tok = function() {
       }
 
       return this.renderer.blockquote(body);
+    }
+    case 'spoiler_start': {
+      var body = '';
+
+      while (this.next().type !== 'spoiler_end') {
+        body += this.tok();
+      }
+
+      return this.renderer.spoiler(body);
     }
     case 'list_start': {
       var body = ''
