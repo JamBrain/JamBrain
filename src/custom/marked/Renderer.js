@@ -4,6 +4,7 @@ import Util from './Util';
 
 //COMPONENT IMPORTS
 import NavLink from 'com/nav-link/link';
+import AutoEmbed from 'com/autoembed/autoembed';
 
 export default class Renderer {
   constructor(options) {
@@ -166,24 +167,30 @@ export default class Renderer {
       }
     }
 
-    // MK: I disabled this, 'cause I wasn't sure why it was being used. It removed the query string
-    //    href = autoEmbed.extractFromURL(href).url;
+    href = extractFromURL(href).href;
 
-    /*var out = '<a href="' + href + '"';
-    if (title) {
-      out += ' title="' + title + '"';
+    var isExternal = href.indexOf('//') != -1;
+    var isInternal = href.indexOf('///') === 0;
+    if ( isInternal ) {
+      isExternal = false;
+      href = href.substr(2);
     }
-    if (!text || text.length < 1) {
+
+    if ( isExternal ) {
+			var target = "_blank";
+		}
+
+    // If text is blank, use the URL itself
+    if ( !text || text.length < 1 ) {
       text = href;
     }
-    // If it contains double slashes, consider it an external link //
-    if (href.indexOf('//') != -1) {
-      out += ' target="_blank"';
+
+    if(AutoEmbed.hasEmbed(href) || AutoEmbed.hasSmartLink(href)) {
+      return (<AutoEmbed href={href} title={title} text={text} />);
     }
-    out += '>' + text + '</a>'; */
 
     var out = (
-      <NavLink href={href} title={title}>{text}</NavLink>
+      <NavLink href={href} title={title} target={target}>{text}</NavLink>
     );
     return out;
 
