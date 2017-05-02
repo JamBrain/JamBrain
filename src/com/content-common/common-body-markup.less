@@ -1,5 +1,8 @@
 @import 'defs.less';
 
+@BG: @COL_L;
+@DARK: @COL_NDDD;
+
 #content .content-common-body.-markup {
 }
 
@@ -21,10 +24,59 @@
 		box-sizing: border-box;
 	}
 
-	& .spoiler {
-		background-color: black !important;
-		color: black !important;
+	/* Spoilers */
+
+	/* Spoiler deactivation modes hover anc focus */
+	& .spoiler:hover {
+		background-color: @BG;
 	}
+
+	& .spoiler:hover * {
+		background-color: @BG;
+	}
+
+	/* Could add more such as span-links within page */	
+	& .spoiler:hover a, 
+	& .spoiler:hover a:visited {
+		color: @COL_A;
+
+		&:hover,
+		&:focus {
+			color: @COL_L;
+			background: @COL_A;
+		}
+	}
+
+	& .spoiler:focus {
+		background-color: @BG;
+	}
+
+	& .spoiler:focus * {
+		background-color: @BG;
+	}
+
+	& .spoiler:focus a, 
+	& .spoiler:focus a:visited {
+		color: @COL_A;
+
+		&:hover,
+		&:focus {
+			color: @COL_L;
+			background: @COL_A;
+		}
+	}
+
+	& .spoiler {
+		background-color: @DARK;
+		color: @DARK;
+	}
+
+	& .spoiler * {
+		background-color: @DARK;
+		color: @DARK;
+	}
+	
+	/* End Spoilers */
 
     /* Tables */
 
