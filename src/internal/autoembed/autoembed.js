@@ -14,7 +14,7 @@
 			ret.hash = str.substr(hash_pos);	// with #
 			str = str.substr(0, hash_pos);
 		}
-	
+
 		// Query string
 		var query_pos = str.indexOf('?');
 		ret.query = '';
@@ -27,7 +27,7 @@
 
 			if ( ret.query.length > 1 ) {
 				var raw_args = ret.query.substr(1).split('&');
-		
+
 				raw_args.forEach(function( val, idx, arr ) {
 					var part = val.split('=');
 					if ( part.length > 1 )
@@ -40,8 +40,8 @@
 
 		// URL
 		ret.url = str;
-		
-		ret.internal = false;		
+
+		ret.internal = false;
 
 		// if its not already an external link with a protocol and it has a dot in it
 		// then make it an external link becuase not internal links have dots
@@ -57,7 +57,7 @@
 		//if ( ret.url.indexOf('#') != -1 && ret.url.indexOf('#/') == -1 && ret.url.indexOf('//') == -1) {
 		//	ret.url = ret.url.replace("#", "#/");
 		//}
-	
+
 		// Remap # hash anchor urls to #/
 		if ( ret.internal && ret.hash.length ) {
 			ret.hash = '#/' + ret.hash.substr(1);
@@ -90,7 +90,7 @@
 		ret.path = ret.paths.length ? '/'+ret.paths.join('/') : '';
 
 //		ret.path = ret.parts.length ? '/'+ret.parts.join('/') : '';
-		
+
 		// If we just use 'str', the &amp; isn't properly decoded
 		ret.href = ret.url + (ret.query ? ret.query : '') + (ret.hash ? ret.hash : '');
 
@@ -101,11 +101,11 @@
 	// Constants
 	var yt_thumbnail_prefix = "https://i.ytimg.com/vi/";
 	var yt_thumbnail_suffix = "/mqdefault.jpg";
-	
+
 	AutoEmbed.prototype.makeYouTube = function( str ) {
 		var url = extractFromURL(str);
 		var video_id = url.args.v;
-		
+
 		var play = (
 			'<div class="-play">' +
 				this.makeSVGIcon('play', {"class":"-middle"}) +
@@ -113,7 +113,7 @@
 		);
 		var external = (
 //			'<div class="-external"><a href="https://www.youtube.com/watch?v=' + video_id + (args ? args : '') + '" target="_blank" onclick="arguments[0].stopPropagation()">' +
-			'<div class="-external"><a href="'+str+'" target="_blank" onclick="arguments[0].stopPropagation()">' +
+			'<div class="-external youtube"><a href="'+str+'" target="_blank" onclick="arguments[0].stopPropagation()">' +
 				this.makeSVGIcon('youtube', {"class":"-middle -block"}) +
 			'</a></div>'
 		);
@@ -124,14 +124,14 @@
 				external +
 			'</div>'
 		);
-	
+
 		var thumbnail = (
 			'<div class="-thumbnail">' +
 				overlay +
 				'<img src="' + yt_thumbnail_prefix + video_id + yt_thumbnail_suffix +'" />' +
 			'</div>'
 		);
-	
+
 		// We really should get some JSX going on in here
 		// MK: ya
 		return (
@@ -146,32 +146,32 @@
 		var href = element.attributes.href.value;
 		var url = extractFromURL(href);
 		var video_id = url.args.v;
-		
+
 //		console.log(video_id, url);
-		
+
 		var args = ['autoplay=1'];
 		if ( url.args.t ) {
 			args.push('start='+parseInt(url.args.t));
 		}
-	
+
 		var thumbnail = element.parentElement;//.parentElement;
 		//console.log(thumbnail);
 		//console.log(thumbnail.children);
-	
+
 		var src = thumbnail.children[thumbnail.children.length-1].src;
 		//console.log(src);
-	
+
 //		var video_id = src.substring(yt_thumbnail_prefix.length, src.length - yt_thumbnail_suffix.length );
 		//console.log(video_id);
-	
+
 //		var video = '<div class="-video"><iframe src="https://www.youtube.com/embed/'+ video_id + '?&autoplay=1"'+ ' frameborder="0" allowfullscreen></iframe></div>';
 		var video = '<div class="-video"><iframe src="https://www.youtube.com/embed/'+ video_id + '?' + args.join('&') + '" frameborder="0" allowfullscreen></iframe></div>';
-	
+
 		//console.log(video);
 		thumbnail.parentElement.innerHTML = video;
 	}
-	
-	
+
+
 	AutoEmbed.prototype.makeSVGIcon = function( name, args ) {
 		var svg_class = "svg-icon icon-"+name;
 		if ( args ) {
