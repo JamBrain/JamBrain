@@ -181,7 +181,7 @@ $(BUILD_FOLDER)/all.js: $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js
 $(TARGET_FOLDER)/all.min.js: $(BUILD_FOLDER)/all.js
 	$(call MINIFY_JS,$<,$@)
 ifdef COPY_UNMIN
-	cp $< $(subst all.min.js,all.js,$@)
+	cp -f $< $(subst all.min.js,all.js,$@)
 endif # COPY_UNMIN
 
 # CSS #
@@ -194,7 +194,7 @@ $(BUILD_FOLDER)/all.css: $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.css
 $(TARGET_FOLDER)/all.min.css: $(BUILD_FOLDER)/all.css
 	$(call MINIFY_CSS,$<,$@)
 ifdef COPY_UNMIN
-	cp $< $(subst all.min.css,all.css,$@)
+	cp -f $< $(subst all.min.css,all.css,$@)
 endif # COPY_UNMIN
 
 # SVG # src/icons/icomoon/icons.svg
@@ -206,7 +206,7 @@ $(BUILD_FOLDER)/all.svg: $(BUILD_FOLDER)/svg.svg
 $(TARGET_FOLDER)/all.min.svg: $(BUILD_FOLDER)/all.svg
 	$(call MINIFY_SVG,$<,$@)
 ifdef COPY_UNMIN
-	cp $< $(subst all.min.svg,all.svg,$@)
+	cp -f $< $(subst all.min.svg,all.svg,$@)
 endif # COPY_UNMIN
 
 # Target #
