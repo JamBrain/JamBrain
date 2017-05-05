@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import { h, Component }				from 'preact/preact';
 
 import ContentLoading					from 'com/content-loading/loading';
 
@@ -21,7 +21,7 @@ export default class ContentCommon extends Component {
 
 	onMinMax( e ) {
 		this.setState({
-			'minimized': !this.state.minimized 
+			'minimized': !this.state.minimized
 		});
 	}
 
@@ -35,17 +35,17 @@ export default class ContentCommon extends Component {
 		if ( props.minimized ) {
 			minimized = !minimized;
 		}
-		
+
 		if ( node && node.slug ) {
 			let MainClass = [
 				'content-base',
 				'content-common'
 			];
-			
+
 			if ( typeof props.class == 'string' ) {
 				MainClass = MainClass.concat(props.class.split(' '));
 			}
-			
+
 			if ( props.editing )
 				MainClass.push('edit');
 			if ( minimized )
@@ -54,21 +54,21 @@ export default class ContentCommon extends Component {
 			let HasHeader = null;
 			if ( props.header ) {
 				HasHeader = <div class={[
-					'content-common-header', 
+					'content-common-header',
 					props.headerClass ? props.headerClass : ''
 				]}>{props.header}</div>;
 			}
-			
+
 //			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
-			
-			
+
+
 			let HasFooter = null;
 			if ( true ) {
 				let Left = [];
 				if ( props['minmax'] ) {
 					Left.push(<FooterButtonMinMax user={user} node={node} onclick={this.onMinMax} />);
 				}
-				
+
 				let Right = [];
 				if ( props['love'] )
 					Right.push(<FooterButtonLove node={node} user={user} path={path}  />);
@@ -81,7 +81,7 @@ export default class ContentCommon extends Component {
 
 				HasFooter = (
 					<div class={[
-						'content-common-footer', 
+						'content-common-footer',
 						(Left.length + Right.length) ? '-has-items' : ''
 					]}>
 						<div class="-left">
