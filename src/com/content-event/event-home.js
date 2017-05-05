@@ -106,12 +106,12 @@ export default class ContentEventHome extends Component {
 
 		// NOTE: only parses the first child
 		//var Text = props.children.length ? marked.parse(props.children[0]) : "";
-		var marked = new marked();
-		markdown = marked.parse(_body, markedOptions);
+		var mrkd = new marked();
+		markdown = mrkd.parse(_body, markedOptions);
 
 		return (
 			<div class="-body">
-				<div class="markup">{markdown}</div> 
+				<div class="markup">{markdown}</div>
 				<div class="_hidden">Extra Args: {extra.join("/")}</div>
 				<div class="">
 					{ShowEventMode}

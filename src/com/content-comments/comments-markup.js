@@ -50,8 +50,8 @@ export default class ContentCommentsMarkup extends Component {
 
 			// NOTE: only parses the first child
 			//var Text = props.children.length ? marked.parse(props.children[0]) : "";
-			Text = marked.parse(Text);
-
+			var mrkd = new marked();
+						
 			var markedOptions = {
 				highlight: function(code, lang) {
 					var language = Prism.languages.clike;
@@ -64,9 +64,6 @@ export default class ContentCommentsMarkup extends Component {
 				langPrefix: 'language-'
 			};
 
-			// NOTE: only parses the first child
-			//var Text = props.children.length ? marked.parse(props.children[0]) : "";
-			var mrkd = new marked();
 			markdown = mrkd.parse(Text, markedOptions);
 
 			return <div class={cN(Class, props.class)}>{markdown}</div>;

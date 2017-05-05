@@ -12,12 +12,8 @@ export default class ContentBodyMarkup extends Component {
 	}
 
 	render( props ) {
-		// NOTE: only parses the first child
-		var _body = props.children.length ? marked.parse(props.children[0]) : "";
-
-		// '-body' for backwards compatibility (remove me)
-		var _class = "content-body content-body-markup -body markup" + (props.class ? " "+props.class : "");
-
+		var mrkd = new marked();
+		
 		var markedOptions = {
 			highlight: function(code, lang) {
 				var language = Prism.languages.clike;
@@ -31,8 +27,13 @@ export default class ContentBodyMarkup extends Component {
 		};
 
 		// NOTE: only parses the first child
+		var _body = props.children.length ? mrkd.parse(props.children[0], markedOptions) : "";
+
+		// '-body' for backwards compatibility (remove me)
+		var _class = "content-body content-body-markup -body markup" + (props.class ? " "+props.class : "");
+
+		// NOTE: only parses the first child
 		//var Text = props.children.length ? marked.parse(props.children[0]) : "";
-		var mrkd = new marked();
 		markdown = mrkd.parse(_body, markedOptions);
 
 		return (<div class={_class}>{markdown}</div>);
