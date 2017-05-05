@@ -20,6 +20,14 @@ const VALID_META = [
 	'item' => [
 		'author-name' => ['length' => 64],
 		'cover' => ['length' => 256],
+		'grade-01-out' => ['length' => 1],
+		'grade-02-out' => ['length' => 1],
+		'grade-03-out' => ['length' => 1],
+		'grade-04-out' => ['length' => 1],
+		'grade-05-out' => ['length' => 1],
+		'grade-06-out' => ['length' => 1],
+		'grade-07-out' => ['length' => 1],
+		'grade-08-out' => ['length' => 1],
 	],
 	'user' => [
 		'real-name' => ['length' => 64],
@@ -192,7 +200,7 @@ switch ( $action ) {
 			else {
 				$methods = array_map("coreSlugify_Name", explode('+', $methods));
 				
-				$allowed_methods = ['parent','superparent','author','authors','all','unpublished'];
+				$allowed_methods = ['parent','superparent','author','authors','all','unpublished','cool'];
 				foreach ( $methods as &$method ) {
 					if ( $method == 'all' ) {
 						if ( count($methods) > 1 ) {
@@ -262,7 +270,7 @@ switch ( $action ) {
 					$RESPONSE['limit'] = 50;
 			}
 
-			$RESPONSE['feed'] = node_GetFeedByNodeMethodType( $root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset'] );
+			$RESPONSE['feed'] = nodeFeed_GetByNodeMethodType( $root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset'] );
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
@@ -384,7 +392,7 @@ switch ( $action ) {
 				'item/craft' => 0,			// i.e. can't create
 				'item/craft/jam' => 0,		// i.e. can't create
 				
-				'post' => -20,				// i.e. unlimited
+				'post' => -25,				// i.e. unlimited
 				'post/news' => 0,			// i.e. can't create
 			];
 			

@@ -1,5 +1,18 @@
-#content > .-bodies.content-games {
-    & > .content-more{
-        margin: 0 auto;
-    }
+
+#content .content-boxes {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start; /* space-between; */
+	align-items: flex-start;
+	
+	margin: -0.5rem;	/* to undo the effect of the 0.5rem margin in items */
+	
+	& > * {
+		flex: 1;
+		
+		min-width: 240px;
+		max-width: 640px;
+		margin: 0.5rem;
+	}
 }

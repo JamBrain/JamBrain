@@ -1,0 +1,173 @@
+@import 'defs.less' ;
+
+#content .content-box {
+	position: relative;
+	
+/*	max-width: 308px;*/
+/*	width: 308px;*/
+/*	height: 246px;	/* 5:4 */
+	
+	overflow: hidden;
+	
+	& > .-cover {
+		box-sizing: border-box;
+		
+		width: 100%;
+		/*height: 100%;*/
+	}
+	& > .-cover-hover {
+		position: absolute;
+		
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		
+		box-sizing: border-box;
+		
+		width: 100%;
+		height: 100%;
+	}
+	& img {
+		display: block;
+	}
+
+	& > .-cover {
+		z-index: 0;
+		
+		transform: scale(1);
+		transition: transform 0.2s ease-in;
+	}
+	& > .-cover-hover {
+		display: none;
+		z-index: 2;
+	}
+	&:hover {
+		& > .-cover-hover {
+			display: block;
+		}
+		
+		& > .-cover {
+			transform: scale(1.05);
+		}
+
+		& > .-top,
+		& > .-bot {
+			opacity: 0;
+		}
+	}
+
+		
+	& > .-avatars {
+		position: absolute;
+		
+		z-index: 10;
+		
+		right: 0.5em;
+		bottom: 0.5em;
+	}
+	& > .-bot {
+		position: absolute;
+		
+		z-index: 5;
+		
+		bottom: 0;
+		left: 0;
+		right: 0;
+
+		line-height: 2rem;
+		padding: 0 0.5em;
+		
+		white-space: nowrap;
+		
+		background: fade(@COL_NDDD, 85%);
+		color: @COL_L;
+		
+		transition: opacity 0.4s ease-in;
+		opacity: 1;
+	}
+	
+	& > .-top {
+		position: absolute;
+		
+		z-index: 5;
+		
+		top: 0;
+		left: 0;
+		right: 0;
+		
+		line-height: 2rem;
+		padding: 0 0.5em;
+		
+		white-space: nowrap;
+		
+		background: fade(@COL_NDDD, 85%);
+		color: @COL_L;
+
+		transition: opacity 0.4s ease-in;
+		opacity: 1;
+	}
+	
+	& > .-sub-event {
+		position: absolute;
+		box-sizing: border-box;
+		
+		z-index: 10;
+		
+		top: 0;
+		right: 0;
+		
+		background: @COL_ND;
+		color: @COL_L;
+
+		&:before {
+			color: @COL_ND;
+		}
+		
+		&.-col-a {
+			background: @COL_A;
+			&:before { color: @COL_A; }
+		}
+		&.-col-ab {
+			background: @COL_AB;
+			&:before { color: @COL_AB; }
+		}
+		&.-col-b {
+			background: @COL_B;
+			&:before { color: @COL_B; }
+		}
+		&.-col-bc {
+			background: @COL_BC;
+			&:before { color: @COL_BC; }
+		}
+		&.-col-c {
+			background: @COL_C;
+			&:before { color: @COL_C; }
+		}
+		&.-col-ca {
+			background: @COL_CA;
+			&:before { color: @COL_CA; }
+		}
+		
+		font-size: 1.2em;
+		line-height: 2rem;
+		font-weight: bold;
+
+		padding: 0 0.5em;
+		
+				
+		/* Left Wedge */
+		&:before {
+			position: absolute;
+			display: block;
+			
+			content: '';
+			left: -2rem;
+			top: 0;
+			border-bottom: 2rem/2 solid transparent;
+			border-right: 2rem/2 solid;
+			border-top: 2rem/2 solid;
+			border-left: 2rem/2 solid transparent;
+		}
+	}
+}

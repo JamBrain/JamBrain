@@ -4,3 +4,79 @@
 	background: @MAJOR_COLOR1;
 	color: @MAJOR_LIGHT;
 }
+
+#content .content-item {
+	& .-opt-out {
+		
+	}
+	& .-rating {
+		& .-grade {
+			font-size: 1.2em;
+			
+			& > .-title {
+				display: inline-block;
+				width: 5.5em;
+			}
+			
+			& > .-star {
+				display: inline-block;
+				&:hover {
+					color: @COL_A;
+				}
+			}
+			& > .-delete {
+				color: @COL_NLLLL;
+				
+				display: inline-block;
+				&:hover {
+					color: @COL_A;
+				}
+				margin-left: 0.5em;
+			}
+			
+		}
+	}
+	
+	& .-upload {
+		& .-path,
+		& .-button {
+			display: inline-block;
+			padding: 0.25em 0.5em;
+		}
+
+		& .-path {
+			border: 1px solid @COL_NLLL;
+			border-radius: 0.125em;
+			background: @COL_NLLLL;
+		}
+		& .-button {
+			color: @COL_NDD;
+			border: 1px solid;
+			
+			margin-left: 0.5em;
+			
+			&:hover,
+			&:focus {
+				color: @COL_L;
+				border: 1px solid @COL_A;
+				background: @COL_A;
+			}
+		}
+		& .-img {
+			width: 100%;
+			max-width: 320px;
+			display: block;
+			margin: 0.5em 0;
+		}
+	}
+
+	& .-opt-out,
+	& .-images,
+	& .-rating {
+		/* General footers have smaller text */
+		& > .-footer {
+			margin: 1em 0;
+			font-size: 1rem;
+		}
+	}
+}

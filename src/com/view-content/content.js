@@ -28,6 +28,9 @@ import ContentEventTheme				from 'com/content-event/event-theme';
 
 import ContentPalette					from 'com/content-palette/palette';
 
+import NavLink							from 'com/nav-link/link';
+import ContentCommon					from 'com/content-common/common';
+import ContentCommonBody				from 'com/content-common/common-body';
 
 
 export default class ViewContent extends Component {
@@ -118,27 +121,33 @@ export default class ViewContent extends Component {
 						if ( node.id == user.id )
 							Methods.push('unpublished');
 
-                        View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
+						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
 						View.push(<ContentTimeline types={['post']} methods={Methods} node={node} user={user} path={path} extra={extra} />);
 					}
 					else if ( ViewType == 'post' ) {
 //						View.push(<ContentPost node={node} user={user} path={path} extra={extra.splice(1)} by love edit />);
 					}
 					else if ( ViewType == 'games' ) {
+						let SubSubType = null;
+						if ( extra && extra.length > 1 ) {
+							if ( extra[1] != 'all' )
+								SubSubType = extra[1];
+						}
+						
 						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
-						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['author']}/>);
+						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['author','cool']} subsubtypes={SubSubType ? SubSubType : ""} />);
 					}
 					else if ( ViewType == 'article' ) {
 
 					}
-                    else if ( ViewType == 'following'){
-                        View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} featured={featured} />);
-                        View.push(<ContentUserFollowing node={node} user={user} path={path} extra={extra} featured={featured} />);
-                    }
-                    else if ( ViewType == 'followers'){
-                        View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} featured={featured} />);
-                        View.push(<ContentUserFollowers node={node} user={user} path={path} extra={extra} featured={featured} />);
-                    }
+					else if ( ViewType == 'following'){
+						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} featured={featured} />);
+						View.push(<ContentUserFollowing node={node} user={user} path={path} extra={extra} featured={featured} />);
+					}
+					else if ( ViewType == 'followers'){
+						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} featured={featured} />);
+						View.push(<ContentUserFollowers node={node} user={user} path={path} extra={extra} featured={featured} />);
+					}
 					else {
 						View.push(<ContentError />);
 					}
@@ -164,6 +173,7 @@ export default class ViewContent extends Component {
 		}
 		else if ( node.type === 'event' ) {
 			var ShowNav = null;
+			var ShowInfo = null;
 			var ShowPage = null;
 
 			if ( extra && extra.length && extra[0] == 'theme' ) {
@@ -172,11 +182,20 @@ export default class ViewContent extends Component {
 				ShowNav = <ContentNavTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
 				ShowPage = <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
 			}
-            else if(extra && extra.length && extra[0] == 'games'){
-                //let NewPath = path+'/'+extra[0];
-                //let NewExtra = extra.slice(1);
-                ShowPage = <ContentGames node={node} user={user} path={path} extra={extra}/>;
-            }
+			else if( extra && extra.length && extra[0] == 'games' ){
+				let SubSubType = null;
+				if ( extra && extra.length > 1 ) {
+					if ( extra[1] != 'all' )
+						SubSubType = extra[1];
+				}
+				
+//				ShowInfo = (
+//					<ContentCommon node={node}>
+//						<ContentCommonBody>{"Sorry, these aren't sorted correctly yet. For now, try "}<strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</ContentCommonBody>
+//					</ContentCommon>
+//				);
+				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={['parent','cool']} subsubtypes={SubSubType ? SubSubType : null} />;
+			}
 			else {
 				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
 			}
@@ -204,6 +223,7 @@ export default class ViewContent extends Component {
 				<div id="content">
 					<ContentEvent node={node} user={user} path={path} extra={extra} featured={featured} />
 					{ShowNav}
+					{ShowInfo}
 					{ShowPage}
 				</div>
 			);
@@ -229,8 +249,26 @@ export default class ViewContent extends Component {
 			else if ( Viewing == '/hot' ) {
 				return <ContentTimeline node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 			}
-			else if ( Viewing == '/games' ) {
-				return <div id="content"><ContentGames node={node} user={user} path={path} extra={extra} methods={['all']}>{ShowNavRoot}</ContentGames></div>;;
+//			else if ( Viewing == '/games' ) {
+			else if ( extra && extra.length && extra[0] == 'games' ) {
+				let SubSubType = null;
+				if ( extra.length > 1 ) {
+					if ( extra[1] != 'all' ) {
+						SubSubType = extra[1];
+					}
+				}
+				
+				return (
+					<div id="content">
+						{ShowNavRoot}
+						<ContentGames node={node} user={user} path={path} extra={extra} methods={['cool'/*'all'*/]} subsubtypes={SubSubType ? SubSubType : null} />
+					</div>
+				);
+
+//						<ContentCommon node={node}>
+//							<ContentCommonBody>Sorry, these aren't sorted correctly yet. For now, try <strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</ContentCommonBody>
+//						</ContentCommon>
+
 			}
 			else if ( Viewing == '/feed' ) {
 				return (
@@ -244,7 +282,7 @@ export default class ViewContent extends Component {
 				return <div id="content"><ContentPalette node={node} user={user} path={path} extra={extra} /></div>;
 			}
 			else {
-				return <div id="content"><ContentError user={user} path={path} extra={extra}>{Viewing} not found</ContentError></div>;
+				return <div id="content"><ContentError user={user} path={path} extra={extra}>{Viewing} not found .</ContentError></div>;
 			}
 		}
 		else {

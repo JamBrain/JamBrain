@@ -37,6 +37,7 @@ export default class ContentNavRoot extends Component {
 //		}
 
 		var NewPath = '/'+ (extra ? extra.join('/') : '');
+		var PartPath = '/'+ (extra && extra.length ? extra[0] : '');
 		
 		var ShowMyFeed = null;
 		if ( user && user.id ) {
@@ -50,12 +51,10 @@ export default class ContentNavRoot extends Component {
 		}
 		
 		return (
-			<div class="-body">
-				<div class="content-base content-nav content-nav-root">
-					{ShowMyFeed}
-					<ContentNavButton path={NewPath} icon='news' href='/news'>News</ContentNavButton>
-					<ContentNavButton path={NewPath} icon='gamepad' href='/games'>Games</ContentNavButton>
-				</div>
+			<div class="content-base content-nav content-nav-root">
+				{ShowMyFeed}
+				<ContentNavButton path={NewPath} icon='news' href='/news'>News</ContentNavButton>
+				<ContentNavButton path={PartPath} icon='gamepad' href='/games'>Games</ContentNavButton>
 			</div>
 		);
 

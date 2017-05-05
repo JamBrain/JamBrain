@@ -38,12 +38,21 @@ export default class HeaderWhatsup extends Component {
 		if ( featured ) {
 			if ( featured.meta ) {
 				if ( featured.meta['event-theme'] ) {
-					return (
-						<div class="header-base header-whatsup outside">
-							<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
-							<br /><br />Judging will start <del>Friday</del> Sunday. See <NavLink href="/news">the News</NavLink>. Contact <NavLink href="/contact">Mike</NavLink> if you need help
-						</div>
-					);
+					if ( featured.meta['can-grade'] ) {
+						return (
+							<div class="header-base header-whatsup outside">
+								<span class="-title _font2">JUDGING NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
+							</div>
+						);						
+					}
+					else {
+						return (
+							<div class="header-base header-whatsup outside">
+								<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
+								<br /><br />Judging will start <del>Friday</del> Sunday. See <NavLink href="/news">the News</NavLink>. Contact <NavLink href="/contact">Mike</NavLink> if you need help
+							</div>
+						);
+					}
 				}
 			}
 
