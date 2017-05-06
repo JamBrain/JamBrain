@@ -41,13 +41,15 @@
 		ret.internal = false;
 
 		// if its not already an external link with a protocol and it has a dot in it
-		// then make it an external link becuase not internal links have dots
+		// then make it an external link becuase no internal links have dots
 		if ( (ret.url.indexOf('//') == -1) && (ret.url.indexOf('.') != -1) && (ret.url.indexOf('/') == -1 || ret.url.indexOf('.') < ret.url.indexOf('/')) ) {
 			// Assume HTTP. Most HTTPS sites will autoredirect to HTTPS
 			ret.url = 'http://' + ret.url;
 		}
-		else if ( ret.url.indexOf('//') == -1 ) {
-			ret.internal = true;
+		else if (ret.origin.indexOf('/') == 0 || ret.origin.indexOf('//') == 0 ) {
+      //NOTE:: The second part of this check is unneeded but it make it clearer what going on
+      //NOTE:: link starting with '/', '//' or '///' are internal links
+      ret.internal = true;
 		}
 
 		// Original # hash anchor remap function

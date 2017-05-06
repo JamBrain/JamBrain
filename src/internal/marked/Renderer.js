@@ -4,6 +4,8 @@ import Util from './Util';
 
 //COMPONENT IMPORTS
 import NavLink from 'com/nav-link/link';
+import LocalLink from 'com/autoembed/locallink';
+
 import AutoEmbed from 'com/autoembed/autoembed';
 
 export default class Renderer {
@@ -166,18 +168,24 @@ export default class Renderer {
       }
     }
 
-    href = extractFromURL(href).href;
+    url = extractFromURL(href);
+    href = url.href;
 
-    var isExternal = href.indexOf('//') != -1;
-    var isInternal = href.indexOf('///') === 0;
+    var isInternal = url.internal;
+    var isExternal = !isInternal;
+
     if ( isInternal ) {
       isExternal = false;
-      href = href.substr(2);
+
+      console.log(url);
+
+      console.log("Making internal link to " + url.origin);
+      return (<LocalLink href={url.origin} name={url.origin} />);
     }
 
     if ( isExternal ) {
-			var target = "_blank";
-		}
+		var target = "_blank";
+	}
 
     // If text is blank, use the URL itself
     if ( !text || text.length < 1 ) {
