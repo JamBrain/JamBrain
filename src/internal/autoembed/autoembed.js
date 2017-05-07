@@ -90,7 +90,7 @@
 		// If we just use 'str', the &amp; isn't properly decoded
 		ret.href = ret.url + (ret.query ? ret.query : '') + (ret.hash ? ret.hash : '');
 
-    console.log(ret);
+    //console.log(ret);
 
 		return ret;
 	}

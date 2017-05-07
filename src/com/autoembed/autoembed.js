@@ -53,11 +53,19 @@ export default class AutoEmbed extends Component {
     }
 
     if (url.domain) {
+
+      /*
+      * Embeded content
+      */
       if (url.domain.indexOf('youtube.com') !== -1) {
         if ((url.paths && url.paths[0] == 'watch') && url.args.v) {
           return <YoutubeEmbed href={props.href} />;
         }
       }
+
+      /*
+      * Smart Links
+      */
 
       if (url.domain.indexOf('youtube.com') !== -1) {
         return (
@@ -85,11 +93,16 @@ export default class AutoEmbed extends Component {
         );
       } else if (url.domain.indexOf(window.location.hostname) == 0 ) {
         // local links starting pointing to the same domain name e.g. http://ldjam.com/users/mike
+        console.log(lit);
+        console.log(unlit);
+        console.log(url);
+        console.log(props);
+
         return (
-          <LocalLink href={url.href} text={(url.path)?url.path:url.href} title={''} target={"_blank"}/>
+          <LocalLink href={url.href} text={(unlit)?url.path:props.text} title={''} target={"_blank"}/>
         );
       } else {
-        console.warn();("Warn: Unable to autoembed link :" + props.href);
+        console.warn("Warn: Unable to autoembed link :" + props.href);
         return (
           <SmartLink icon_name='link' full_url={url.href} domain={lit} part_url={unlit}></SmartLink>
         );
