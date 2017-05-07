@@ -1,5 +1,7 @@
 import {h, Component} from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+
+import NavLink        from 'com/nav-link/link';
+import SVGIcon        from 'com/svg-icon/icon';
 
 export default class LocalLink extends Component {
   constructor(props) {
@@ -10,15 +12,15 @@ export default class LocalLink extends Component {
 
     return (
         <span class="smart-link local-link">
-            <a path={props.href} href={props.href}>
+            <NavLink href={props.href} title={props.title} target={props.target}>
                 <span class="-icon-domain">
                     <SVGIcon baseline small name={'l-udum'}/>
                     <SVGIcon baseline small name={'d-are'}/>
                 </span>
                 <span class="-the-rest">
-                    {props.name}
+                    {props.text}
                 </span>
-            </a>
+            </NavLink>
         </span>
     );
   }

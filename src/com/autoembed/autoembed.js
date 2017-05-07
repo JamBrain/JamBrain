@@ -84,16 +84,14 @@ export default class AutoEmbed extends Component {
           <SmartLink icon_name='soundcloud' full_url={url.href} domain={lit} part_url={unlit}></SmartLink>
         );
       } else if (url.domain.indexOf(window.location.hostname) == 0 ) {
-        // local links starting pointing to the same domain name e.g. ldjam.com/users/mike
-        console.log( props.href + "making a //hostname local link, via autoembed");
+        // local links starting pointing to the same domain name e.g. http://ldjam.com/users/mike
         return (
-          <LocalLink href={props.href} name={url.path} />
+          <LocalLink href={url.href} text={(url.path)?url.path:url.href} title={''} target={"_blank"}/>
         );
       } else {
-
-        console.log("Warn: Unable to autoembed link :" + props.href);
+        console.warn();("Warn: Unable to autoembed link :" + props.href);
         return (
-          <a href={props.href}>{props.href}</a>
+          <SmartLink icon_name='link' full_url={url.href} domain={lit} part_url={unlit}></SmartLink>
         );
       }
     }

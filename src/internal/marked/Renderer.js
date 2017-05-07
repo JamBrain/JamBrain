@@ -177,15 +177,15 @@ export default class Renderer {
     if ( isInternal ) {
       isExternal = false;
 
-      console.log(url);
+      // Use the markdown text if it
+      let name = (text && /\S/.test(text))?text:url.origin;
 
-      console.log("Making internal link to " + url.origin);
-      return (<LocalLink href={url.origin} name={url.origin} />);
+      return (<LocalLink href={url.origin} text={name} title={''} target={"_self"}/>);
     }
 
     if ( isExternal ) {
-		var target = "_blank";
-	}
+		  var target = "_blank";
+	  }
 
     // If text is blank, use the URL itself
     if ( !text || text.length < 1 ) {
