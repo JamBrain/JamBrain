@@ -416,10 +416,20 @@ export default class ContentItem extends Component {
 				//'
 			}
 			else if ( !user || !user.id ) {
-				ShowGrade = <ContentCommonBody>Please login to rate this game</ContentCommonBody>;
+				ShowGrade = (
+					<ContentCommonBody class="-rating">
+						<div class="-header">Ratings</div>
+						<div class="-items">Please login to rate this game</div>
+					</ContentCommonBody>
+				);
 			}
 			else {
-				ShowGrade = <ContentCommonBody>At this time, only participants are able to rate games. Sorry!</ContentCommonBody>;
+				ShowGrade = (
+					<ContentCommonBody class="-rating">
+						<div class="-header">Ratings</div>
+						<div class="-items">Sorry! At this time, only participants are able to rate games.</div>
+					</ContentCommonBody>
+				);
 			}
 		}
 		else {
