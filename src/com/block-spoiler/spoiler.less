@@ -1,0 +1,14 @@
+@import 'defs.less';
+
+#content .block-spoiler {
+	cursor: pointer;
+	
+	/* Spoiler is hidden */
+	color: @COL_NDDD;
+	background: @COL_NDDD;
+	
+	/* Spoiler is visible */
+	&.-visible {
+		background: inherit;
+	}
+}
