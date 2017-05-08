@@ -119,7 +119,7 @@ export default class Renderer {
   };
 
   emoji(text) {
-    return (<img class="emoji" alt={text} title={':' + text + ':'} src={emoji.shortnameToURL(text)}/>);
+    return (<img class="emoji" alt={text} title={':' + text + ':'} src={window.emoji.shortnameToURL(text.join(''))}/>);
   };
 
   //email(text) {

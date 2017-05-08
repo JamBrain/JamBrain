@@ -94,7 +94,7 @@ export default class SidebarCalendar extends Component {
 				}
 				props.class.push('scheduled');
 			}
-			else if ( col.year == 2017 && col.month == 5 /*4*/ && col.day == 17 ) {
+			else if ( col.year == 2017 && col.month == 4 /*4*/ && col.day == 17 ) {
 				ShowIcon = <SVGIcon class="-icon">checker</SVGIcon>;
 				props.class.push('scheduled');
 			}

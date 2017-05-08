@@ -359,6 +359,15 @@ export default class ContentItem extends Component {
 		var ShowGrade = null;
 		if ( parent && node_CanGrade(parent) ) {
 			if ( node_IsAuthor(node, user) ) {
+				ShowGrade = (
+					<ContentCommonBody class="-rating">
+						<div class="-header">Ratings</div>
+						<div class="-subtext">Your results so far</div>;
+						<div class="-items">
+						</div>
+					</ContentCommonBody>
+				);
+
 				//ShowGrade = <ContentCommonBody>You are an Author</ContentCommonBody>;
 			}
 			else if ( featured && featured.what_node && nodeKeys_HasPublishedParent(featured.what_node, node.parent) ) {
@@ -398,10 +407,17 @@ export default class ContentItem extends Component {
 					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> {Stars}</div>);
 				}
 				
+				let ShowRatingSubText = null;
+				if ( node.subsubtype == 'jam' )
+					ShowRatingSubText = <div class="-subtext">Jam game</div>;
+				else if ( node.subsubtype == 'compo' )
+					ShowRatingSubText = <div class="-subtext">Compo game</div>;
+				
 				ShowGrade = (
 					<ContentCommonBody class="-rating">
-						<h2>Ratings</h2>
-						{VoteLines}
+						<div class="-header">Ratings</div>
+						{ShowRatingSubText}
+						<div class="-items">{VoteLines}</div>
 						<div class="-footer">Ratings are saved automatically when you click. When they change, they're saved.</div>
 					</ContentCommonBody>
 				);
@@ -409,10 +425,20 @@ export default class ContentItem extends Component {
 				//'
 			}
 			else if ( !user || !user.id ) {
-				ShowGrade = <ContentCommonBody>Please login to rate this game</ContentCommonBody>;
+				ShowGrade = (
+					<ContentCommonBody class="-rating">
+						<div class="-header">Ratings</div>
+						<div class="-items">Please login to rate this game</div>
+					</ContentCommonBody>
+				);
 			}
 			else {
-				ShowGrade = <ContentCommonBody>At this time, only participants are able to rate games. Sorry!</ContentCommonBody>;
+				ShowGrade = (
+					<ContentCommonBody class="-rating">
+						<div class="-header">Ratings</div>
+						<div class="-items">Sorry! At this time, only participants are able to rate games.</div>
+					</ContentCommonBody>
+				);
 			}
 		}
 		else {
