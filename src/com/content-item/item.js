@@ -398,10 +398,17 @@ export default class ContentItem extends Component {
 					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> {Stars}</div>);
 				}
 				
+				let ShowRatingSubText = null;
+				if ( node.subsubtype == 'jam' )
+					ShowRatingSubText = <div class="-subtext">Jam game</div>;
+				else if ( node.subsubtype == 'compo' )
+					ShowRatingSubText = <div class="-subtext">Compo game</div>;
+				
 				ShowGrade = (
 					<ContentCommonBody class="-rating">
-						<h2>Ratings</h2>
-						{VoteLines}
+						<div class="-header">Ratings</div>
+						{ShowRatingSubText}
+						<div class="-items">{VoteLines}</div>
 						<div class="-footer">Ratings are saved automatically when you click. When they change, they're saved.</div>
 					</ContentCommonBody>
 				);
