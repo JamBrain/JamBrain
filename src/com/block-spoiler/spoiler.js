@@ -1,6 +1,6 @@
 import { h, Component } from 'preact/preact';
 
-export default class SidebarUpcoming extends Component {
+export default class BlockSpoiler extends Component {
 	constructor( props ) {
 		super(props);
 		
@@ -17,7 +17,7 @@ export default class SidebarUpcoming extends Component {
 	
 	render( props, state ) {
 		return (
-			<blockquote class={cN('block-spoiler',state.visible ? '-visible' : '')} onclick={this.onClick}>
+			<blockquote class={cN('block-spoiler', state.visible ? '-visible' : '')} onclick={this.onClick}>
 				{props.children}
 			</blockquote>
 		);
