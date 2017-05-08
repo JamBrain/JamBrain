@@ -359,6 +359,15 @@ export default class ContentItem extends Component {
 		var ShowGrade = null;
 		if ( parent && node_CanGrade(parent) ) {
 			if ( node_IsAuthor(node, user) ) {
+				ShowGrade = (
+					<ContentCommonBody class="-rating">
+						<div class="-header">Ratings</div>
+						<div class="-subtext">Your results so far</div>;
+						<div class="-items">
+						</div>
+					</ContentCommonBody>
+				);
+
 				//ShowGrade = <ContentCommonBody>You are an Author</ContentCommonBody>;
 			}
 			else if ( featured && featured.what_node && nodeKeys_HasPublishedParent(featured.what_node, node.parent) ) {
