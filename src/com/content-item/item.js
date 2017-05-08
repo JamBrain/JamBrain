@@ -359,16 +359,49 @@ export default class ContentItem extends Component {
 		var ShowGrade = null;
 		if ( parent && node_CanGrade(parent) ) {
 			if ( node_IsAuthor(node, user) ) {
+				let Lines = [];
+
+				for ( var key in parent.meta ) {
+					// Is it a valid grade ?
+					let parts = key.split('-');
+					if ( parts.length == 2 && parts[0] == 'grade' ) {
+						// Make sure they user hasn't opted out
+						
+						if ( node.meta && !(node.meta[key+'-out']|0) ) {
+							Lines.push({'key': key, 'value': parent.meta[key]});
+						}
+					}
+				}
+				
+				let VoteLines = [];
+				for ( let idx = 0; idx < Lines.length; idx++ ) {
+					let Line = Lines[idx];
+					
+//					let Title = Line.value;
+//					let Score = '?';
+//					if ( state.grade ) {
+//						Score = state.grade[Line.key] ? state.grade[Line.key] : 0;
+//					}
+//					
+//					let Stars = [];
+//					for ( let idx2 = 0; idx2 < Score; idx2++ ) {
+//						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
+//					}
+//					for ( let idx2 = Score; idx2 < 5; idx2++ ) {
+//						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
+//					}
+//					Stars.push(<ButtonBase class='-delete' onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
+					
+					VoteLines.push(<div class="-grade">{Line}</div>);
+				}
+								
 				ShowGrade = (
 					<ContentCommonBody class="-rating">
 						<div class="-header">Ratings</div>
-						<div class="-subtext">Your results so far</div>;
-						<div class="-items">
-						</div>
+						<div class="-subtext">Your votes and coolness so far</div>
+						<div class="-items">{VoteLines}</div>
 					</ContentCommonBody>
 				);
-
-				//ShowGrade = <ContentCommonBody>You are an Author</ContentCommonBody>;
 			}
 			else if ( featured && featured.what_node && nodeKeys_HasPublishedParent(featured.what_node, node.parent) ) {
 				let Lines = [];
