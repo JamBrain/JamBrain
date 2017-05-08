@@ -36,7 +36,11 @@ export default class Renderer {
       </code></pre>
     );
   };
-
+  spoiler(secret) {
+    return (
+      <blockquote class='spoiler'>{secret}</blockquote>
+    );
+  };
   blockquote(quote) {
     return (
       <blockquote>{quote}</blockquote>
