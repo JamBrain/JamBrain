@@ -21,10 +21,9 @@ var inline = {
   text: /^[\s\S]+?(?=[\\<!\[_*`:@]| {2,}\n|$)/, // Added : and @ (emoji and @names)
   emoji: /^:([a-z_]+):/,
   email:  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})/i,
-  //  email: /^(\w+@\w+.\w+)/,		// Added just to help
   atname: /^@([A-Za-z0-9-]+)(?!@)/,
+  
   ///^(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z0-9]+)/,
-  //  atname: /^@([A-Za-z0-9-]+)(?!@)/,
 };
 
 inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
@@ -243,13 +242,6 @@ export default class InlineLexer {
         out.push(this.renderer.emoji(this.output(cap[2] || cap[1])));
         continue;
       }
-
-      //    // email
-      //    if (cap = this.rules.email.exec(src)) {
-      //      src = src.substring(cap[0].length);
-      //      out.push(this.renderer.email(this.output(cap[2] || cap[1]));
-      //      continue;
-      //    }
 
       // @names
       if (cap = this.rules.atname.exec(src)) {

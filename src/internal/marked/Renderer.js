@@ -3,6 +3,7 @@ import {h} from 'preact/preact';
 import Util from './Util';
 
 import BlockSpoiler from 'com/block-spoiler/spoiler';
+import MailLink from 'com/content-maillink/maillink';
 
 //COMPONENT IMPORTS
 import NavLink from 'com/nav-link/link';
@@ -202,7 +203,7 @@ export default class Renderer {
   };
   
   mail(leftSide, rightSide, text) {
-	href = 'mailto:{0}@{1}'.replace('{1}', rightSide, 1).replace('{0}', leftSide, 1);
+	href = '{0}@{1}'.replace('{1}', rightSide, 1).replace('{0}', leftSide, 1);
     if (this.options.sanitize) {
       try {
         var prot = decodeURIComponent(unescape(href)).replace(/[^\w:]/g, '').toLowerCase();
@@ -214,15 +215,12 @@ export default class Renderer {
       }
     }
 
-	text = leftSide + '[at]' + rightSide;
-	
-    if(AutoEmbed.hasEmbed(href) || AutoEmbed.hasSmartLink(href)) {
-      return (<AutoEmbed href={href} title={text} text={text} />);
-    }
+	//text = leftSide + '[at]' + rightSide;
 
     var out = (
-      <NavLink href={href} title={text}>{text}</NavLink>
+      <MailLink href={href} title={text}>{text}</MailLink>
     );
+	
     return out;
 
   };
