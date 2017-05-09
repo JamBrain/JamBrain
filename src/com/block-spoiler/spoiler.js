@@ -12,6 +12,7 @@ export default class SidebarUpcoming extends Component {
 	}
 	
 	onClick( e ) {
+		//event.stopPropagation();
 		this.setState({'visible': true});
 	}
 	

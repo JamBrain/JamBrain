@@ -16,7 +16,8 @@
 	& p a, 
 	& p a:visited {
 		color: @COL_NDDD !important;
-
+		pointer-events: none;
+		
 		&:hover,
 		&:focus {
 			color: @COL_NDDD !important;
@@ -39,7 +40,8 @@
 	&.-visible p a, 
 	&.-visible p a:visited {
 		color: @COL_A !important;
-
+		pointer-events: auto;
+		
 		&:hover,
 		&:focus {
 			color: @COL_L !important;
