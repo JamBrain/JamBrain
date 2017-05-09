@@ -20,7 +20,7 @@ var inline = {
   del: {exec: function(){}},
   text: /^[\s\S]+?(?=[\\<!\[_*`:@]| {2,}\n|$)/, // Added : and @ (emoji and @names)
   emoji: /^:([a-z_]+):/,
-  email:  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+  email:  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})/i,
   //  email: /^(\w+@\w+.\w+)/,		// Added just to help
   atname: /^@([A-Za-z0-9-]+)(?!@)/,
   ///^(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z0-9]+)/,
@@ -115,26 +115,21 @@ export default class InlineLexer {
       cap;
 
     while (src) {
-      // escape
+
+	// escape
       if (cap = this.rules.escape.exec(src)) {
         src = src.substring(cap[0].length);
         out.push(cap[1]);
         continue;
       }
 
-      // automail
-      if (cap = this.rules.automail.exec(src)) {
+      // mail
+      if (cap = this.rules.email.exec(src)) {
         src = src.substring(cap[0].length);
-        if (cap[2] === '@') {
-          text = cap[1].charAt(6) === ':'
-            ? this.mangle(cap[1].substring(7))
-            : this.mangle(cap[1]);
-          href = this.mangle('mailto:') + text;
-        } else {
-          text = Util.escape(cap[1]);
-          href = text;
-        }
-        out.push(this.renderer.link(href, null, text));
+		leftSide = cap[1];
+		rightSide = cap[cap.lastIndexOf(undefined) + 1];
+		text = cap[0];
+        out.push(this.renderer.mail(leftSide, rightSide, text));
         continue;
       }
 	  
@@ -265,8 +260,17 @@ export default class InlineLexer {
 
       // text
       if (cap = this.rules.text.exec(src)) {
-        src = src.substring(cap[0].length);
-        out.push(this.renderer.text(Util.escape(this.smartypants(cap[0]))));
+		
+		//Text is too aggressive so we only parse it until first space in case
+		//there's an email comming in the text
+		l = cap[0].indexOf(' ');
+		if (l === -1) {
+			l = cap[0].length;
+		} else {
+			l ++;
+		}
+        src = src.substring(l);
+        out.push(this.renderer.text(Util.escape(this.smartypants(cap[0].substring(0, l)))));
         continue;
       }
 

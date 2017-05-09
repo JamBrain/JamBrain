@@ -182,20 +182,46 @@ export default class Renderer {
     }
 
     if ( isExternal ) {
-			var target = "_blank";
-		}
+		var target = "_blank";
+	}
 
     // If text is blank, use the URL itself
     if ( !text || text.length < 1 ) {
       text = href;
     }
-
+	
     if(AutoEmbed.hasEmbed(href) || AutoEmbed.hasSmartLink(href)) {
       return (<AutoEmbed href={href} title={title} text={text} />);
     }
 
     var out = (
       <NavLink href={href} title={title} target={target}>{text}</NavLink>
+    );
+    return out;
+
+  };
+  
+  mail(leftSide, rightSide, text) {
+	href = 'mailto:{0}@{1}'.replace('{1}', rightSide, 1).replace('{0}', leftSide, 1);
+    if (this.options.sanitize) {
+      try {
+        var prot = decodeURIComponent(unescape(href)).replace(/[^\w:]/g, '').toLowerCase();
+      } catch (e) {
+        return '';
+      }
+      if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0 || prot.indexOf('data:') === 0) {
+        return '';
+      }
+    }
+
+	text = leftSide + '[at]' + rightSide;
+	
+    if(AutoEmbed.hasEmbed(href) || AutoEmbed.hasSmartLink(href)) {
+      return (<AutoEmbed href={href} title={text} text={text} />);
+    }
+
+    var out = (
+      <NavLink href={href} title={text}>{text}</NavLink>
     );
     return out;
 
