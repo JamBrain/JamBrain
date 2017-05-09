@@ -18,9 +18,8 @@ export default class MailLink extends Component {
 		}
 		
 		return (
-			<span class="mail-link">
-				<SVGIcon>mail</SVGIcon>
-				<a class={cN('mail')} href={href} title={mail}><strong class="-the-rest">{mail}</strong></a>
+			<span class="mail-link">				
+				<a class={cN('mail')} href={href} title={mail}><SVGIcon gap>mail</SVGIcon><strong class="-the-rest">{mail}</strong></a>
 			</span>);
 	}
 }
