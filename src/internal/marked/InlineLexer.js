@@ -20,6 +20,7 @@ var inline = {
   del: {exec: function(){}},
   text: /^[\s\S]+?(?=[\\<!\[_*`:@]| {2,}\n|$)/, // Added : and @ (emoji and @names)
   emoji: /^:([a-z_]+):/,
+  email:  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
   //  email: /^(\w+@\w+.\w+)/,		// Added just to help
   atname: /^@([A-Za-z0-9-]+)(?!@)/,
   ///^(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z0-9]+)/,
@@ -121,6 +122,22 @@ export default class InlineLexer {
         continue;
       }
 
+      // automail
+      if (cap = this.rules.automail.exec(src)) {
+        src = src.substring(cap[0].length);
+        if (cap[2] === '@') {
+          text = cap[1].charAt(6) === ':'
+            ? this.mangle(cap[1].substring(7))
+            : this.mangle(cap[1]);
+          href = this.mangle('mailto:') + text;
+        } else {
+          text = Util.escape(cap[1]);
+          href = text;
+        }
+        out.push(this.renderer.link(href, null, text));
+        continue;
+      }
+	  
       // autolink
       if (cap = this.rules.autolink.exec(src)) {
         src = src.substring(cap[0].length);
