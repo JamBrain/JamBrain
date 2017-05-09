@@ -4,6 +4,7 @@
 function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subtypes = null, $subsubtypes = null, $score_minimum = null, $limit = 20, $offset = 0 ) {
 	$published = true;
 	$magic = null;
+	$authors = null;
 
 	// PLEASE PRE-SANITIZE YOUR TYPES!
 	$QUERY = [];
@@ -33,6 +34,7 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 	}
 	if ( is_array($methods) && count($methods) ) {
 		$pre_query = [];
+		$post_query = null;
 		foreach ( $methods as &$method ) {
 			switch ( $method ) {
 				case 'parent':
@@ -50,7 +52,17 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 				case 'all':
 				break;
 				case 'authors':
-					// TODO: this
+					$QUERY[] = '`key`=?';
+					$ARGS[] = 'author';
+
+					$pre_query[] = 'b'.$node_query;
+					if ( isset($node_args) ) $ARGS[] = $node_args;
+					
+					$post_query[] = "id IN (SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." GROUP BY a, b, `key`)";
+					$post_query[] = "scope=?";
+					$ARGS[] = 0;
+					
+					$authors = true;
 				break;
 				case 'unpublished':
 					$published = false;
@@ -63,6 +75,8 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 
 		if ( count($pre_query) )
 			$QUERY[] = '('.implode(' OR ', $pre_query).')';
+		if ( count($post_query) )
+			$QUERY[] = implode(' AND ', $post_query);
 	}
 	else {
 		return null;
@@ -70,6 +84,8 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 
 	if ( $magic ) {
 		$orderby_query = "ORDER BY score DESC";
+	}
+	else if ( $authors ) {
 	}
 	else {
 		// Build query fragment for the types check
@@ -144,9 +160,9 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 	if ( $magic ) {
 		// NOTE: Timestamp is wrong! It should be the modified date of the original
 		return db_QueryFetch(
-			"SELECT 
+			"SELECT
 				node AS id,
-				".DB_FIELD_DATE('timestamp','modified')."
+				".DB_FIELD_DATE('timestamp', 'modified')."
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC."
 			$full_query
 			$orderby_query
@@ -155,10 +171,24 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 			;",
 			...$ARGS
 		);
-		
+	}
+	else if ( $authors ) {
+		// NOTE: Timestamp is wrong! It should be the modified date of the original
+		return db_QueryFetch(
+			"SELECT
+				a AS id,
+				".DB_FIELD_DATE('timestamp', 'modified')."
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+			$full_query
+			ORDER BY id DESC
+			LIMIT ?
+			OFFSET ?
+			;",
+			...$ARGS
+		);
 	}
 	return db_QueryFetch(
-		"SELECT 
+		"SELECT
 			id,
 			".DB_FIELD_DATE('modified')."
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
