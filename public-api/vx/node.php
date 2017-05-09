@@ -212,10 +212,10 @@ switch ( $action ) {
 						if ( count($methods) > 1 ) {
 							json_EmitFatalError_BadRequest("Can't combine methods with authors", $RESPONSE);
 						}
-						else {
-							json_EmitFatalError_BadRequest("Sorry. authors method not yet supported", $RESPONSE);
-							// TODO: totally fine, let it fall through
-						}
+//						else {
+//							json_EmitFatalError_BadRequest("Sorry. authors method not yet supported", $RESPONSE);
+//							// TODO: totally fine, let it fall through
+//						}
 					}
 					else if ( !in_array($method, $allowed_methods) ) {
 						json_EmitFatalError_BadRequest("Invalid method: $method", $RESPONSE);

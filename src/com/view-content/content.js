@@ -135,7 +135,7 @@ export default class ViewContent extends Component {
 						}
 						
 						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
-						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['author','cool']} subsubtypes={SubSubType ? SubSubType : ""} />);
+						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['authors']} subsubtypes={SubSubType ? SubSubType : ""} />);
 					}
 					else if ( ViewType == 'article' ) {
 
