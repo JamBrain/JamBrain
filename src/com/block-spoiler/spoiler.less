@@ -7,8 +7,45 @@
 	color: @COL_NDDD;
 	background: @COL_NDDD;
 	
+
+	& p * {
+		color: @COL_NDDD !important;
+		background: @COL_NDDD;	
+	}
+
+	& p a, 
+	& p a:visited {
+		color: @COL_NDDD !important;
+		pointer-events: none;
+		
+		&:hover,
+		&:focus {
+			color: @COL_NDDD !important;
+			background: @COL_NDDD;
+		}
+	}
+	
+	/* End Spoilers */
+	
 	/* Spoiler is visible */
 	&.-visible {
 		background: inherit;
 	}
+
+	&.-visible p * {
+		color: inherit;
+		background: inherit;	
+	}
+
+	&.-visible p a, 
+	&.-visible p a:visited {
+		color: @COL_A !important;
+		pointer-events: auto;
+		
+		&:hover,
+		&:focus {
+			color: @COL_L !important;
+			background: @COL_A;
+		}
+	}	
 }
