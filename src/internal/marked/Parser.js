@@ -125,6 +125,16 @@ export default class Parser {
           }
           return this.renderer.table(header, body);
         }
+      case 'spoiler_start':
+        {
+          var body = [];
+
+          while (this.next().type !== 'spoiler_end') {
+            body.push(this.tok());
+          }
+
+          return this.renderer.spoiler(body);
+        }
       case 'blockquote_start':
         {
           var body = [];

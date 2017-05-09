@@ -2,6 +2,8 @@ import {h} from 'preact/preact';
 
 import Util from './Util';
 
+import BlockSpoiler from 'com/block-spoiler/spoiler';
+
 //COMPONENT IMPORTS
 import NavLink from 'com/nav-link/link';
 import AutoEmbed from 'com/autoembed/autoembed';
@@ -36,7 +38,11 @@ export default class Renderer {
       </code></pre>
     );
   };
-
+  spoiler(secret) {
+    return (
+      <BlockSpoiler>{secret}</BlockSpoiler>
+    );
+  };
   blockquote(quote) {
     return (
       <blockquote>{quote}</blockquote>

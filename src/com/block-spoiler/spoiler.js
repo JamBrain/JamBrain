@@ -11,7 +11,7 @@ export default class BlockSpoiler extends Component {
 		this.onClick = this.onClick.bind(this);
 	}
 	
-	onClick( e ) {
+	onClick( e ) {		
 		this.setState({'visible': true});
 	}
 	
