@@ -1,25 +1,27 @@
 import {h, Component} 				from 'preact/preact';
 import SVGIcon 						from 'com/svg-icon/icon';
 
-export default class InlineMail extends Component {
-	constructor (props) {
+// TODO: Migrate me in to `NavLink`/`Link`
+
+export default class LinkMail extends Component {
+	constructor( props ) {
 		super(props);		
 	}
 		
-	render( props, state ) {
-		if ( props.href && props.href.indexOf('mailto:') === 0 ) {
-			href = props.href;
-			mail = props.substr(7);
+	render( props/*, state*/ ) {
+		let HRef = props.href;// || (props.children && props.children.length && props.children[0]) || "";
+		let Mail = '???';
+		
+		if ( Href.indexOf('mailto:') === 0 ) {
+			Mail = props.substr(7); // strlen('mailto:')
 		}
 		else {
-			href = 'mailto:' + props.href;
-			mail = props.href;
+			Mail = HRef;
+			HRef = 'mailto:' + HRef;
 		}
 		
 		return (
-			<span class="inline-mail">				
-				<a href={href} title={mail}><SVGIcon gap small baseline>mail</SVGIcon>{mail}</a>
-			</span>
+			<a class={cN("link-mail", props.class)} href={HRef} title={Mail}><SVGIcon gap small baseline>mail</SVGIcon>{Mail}</a>
 		);
 	}
 }
