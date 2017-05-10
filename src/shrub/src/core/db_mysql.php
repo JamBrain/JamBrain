@@ -680,12 +680,14 @@ function db_QueryFetchIdKeyValue( $query, ...$args ) {
 	$out = db_QueryFetchArray($query, ...$args);
 	
 	$ret = [];
-	foreach ( $out as &$value ) {
-		if ( !isset($ret[$value[0]]) ) {
-			$ret[$value[0]] = [];
+	if ( is_array($out) ) {
+		foreach ( $out as &$value ) {
+			if ( !isset($ret[$value[0]]) ) {
+				$ret[$value[0]] = [];
+			}
+			
+			$ret[$value[0]][$value[1]] = $value[2];
 		}
-		
-		$ret[$value[0]][$value[1]] = $value[2];
 	}
 	
 	return $ret;
