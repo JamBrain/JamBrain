@@ -103,7 +103,7 @@ switch ( $action ) {
 		$RESPONSE['grade'] = grade_GetByNodeAuthor($node_id, $user_id);
 			
 		break; // case 'getmy': //grade/getmy/:node_id
-
+/*
 	case 'get': //grade/get/:node_id
 		json_ValidateHTTPMethod('GET');
 
@@ -117,7 +117,7 @@ switch ( $action ) {
 		// Results
 	
 		break; // case 'get': //grade/get/:node_id
-
+*/
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break; // default
