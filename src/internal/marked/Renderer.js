@@ -1,13 +1,12 @@
-import {h} from 'preact/preact';
+import {h} 					from 'preact/preact';
 
-import Util from './Util';
-
-import BlockSpoiler from 'com/block-spoiler/spoiler';
-import MailLink from 'com/content-maillink/maillink';
+import Util 				from './Util';
 
 //COMPONENT IMPORTS
-import NavLink from 'com/nav-link/link';
-import AutoEmbed from 'com/autoembed/autoembed';
+import NavLink 				from 'com/nav-link/link';
+import LinkMail				from 'com/link-mail/mail';		// TODO: Obsolete me
+import AutoEmbed 			from 'com/autoembed/autoembed';
+import BlockSpoiler 		from 'com/block-spoiler/spoiler';
 
 export default class Renderer {
   constructor(options) {
@@ -218,7 +217,7 @@ export default class Renderer {
 	//text = leftSide + '[at]' + rightSide;
 
     var out = (
-      <MailLink href={href} title={text}>{text}</MailLink>
+      <LinkMail href={href} title={text}>{text}</LinkMail>
     );
 	
     return out;
