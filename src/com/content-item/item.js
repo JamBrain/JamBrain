@@ -377,29 +377,23 @@ export default class ContentItem extends Component {
 				for ( let idx = 0; idx < Lines.length; idx++ ) {
 					let Line = Lines[idx];
 					
-//					let Title = Line.value;
-//					let Score = '?';
-//					if ( state.grade ) {
-//						Score = state.grade[Line.key] ? state.grade[Line.key] : 0;
-//					}
-//					
-//					let Stars = [];
-//					for ( let idx2 = 0; idx2 < Score; idx2++ ) {
-//						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
-//					}
-//					for ( let idx2 = Score; idx2 < 5; idx2++ ) {
-//						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
-//					}
-//					Stars.push(<ButtonBase class='-delete' onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
+					let Title = Line.value;
+					let Score = 0;
+					if ( node.grade ) {
+						Score = node.grade[Line.key];
+					}
 					
-					VoteLines.push(<div class="-grade">{Line}</div>);
+					//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
+					
+					VoteLines.push(<div class="-grade">{Title}: <strong>{Score}</strong></div>);
 				}
 								
 				ShowGrade = (
 					<ContentCommonBody class="-rating">
-						<div class="-header">Ratings</div>
-						<div class="-subtext">Your votes and coolness so far</div>
+						<div class="-header">Total Ratings</div>
+						<div class="-subtext">Your votes so far</div>
 						<div class="-items">{VoteLines}</div>
+						<div class="-footer">To get a score at the end, you need about <strong>20</strong> ratings in a category. To get ratings: play, rate, and leave feedback on games. Every game you rate and leave quality feedback on scores you <strong>Coolness</strong> points. Having a high "Coolness" prioritizes your game.</div>
 					</ContentCommonBody>
 				);
 			}
