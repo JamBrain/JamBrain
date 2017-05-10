@@ -101,3 +101,23 @@ function grade_CountByNodeNotAuthor( $node_id, $authors ) {
 		$node_id
 	);
 }
+
+
+function grade_CountByNode( $node_id, $limit = 8*10 ) {
+	$multi = is_array($node_id);
+	if ( !$multi )
+		$node_id = [$node_id];
+	
+	return db_QueryFetchIdKeyValue(
+		"SELECT
+			node AS id,
+			name,
+			count(id) AS count
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_GRADE." 
+		WHERE node IN (".implode(',', $node_id).")
+		GROUP BY node, name
+		LIMIT ?
+		;",
+		$limit
+	);
+}

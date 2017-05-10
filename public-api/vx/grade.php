@@ -103,7 +103,21 @@ switch ( $action ) {
 		$RESPONSE['grade'] = grade_GetByNodeAuthor($node_id, $user_id);
 			
 		break; // case 'getmy': //grade/getmy/:node_id
+/*
+	case 'get': //grade/get/:node_id
+		json_ValidateHTTPMethod('GET');
 
+		$node_id = intval(json_ArgShift());
+		if ( !$node_id )
+			json_EmitFatalError_BadRequest("Unspecified node", $RESPONSE);
+
+		// Data
+		$RESPONSE['grade'] = grade_CountByNode($node_id);
+		
+		// Results
+	
+		break; // case 'get': //grade/get/:node_id
+*/
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break; // default
