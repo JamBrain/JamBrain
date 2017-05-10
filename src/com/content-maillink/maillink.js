@@ -1,18 +1,17 @@
-import {h, Component} from 'preact/preact';
-import SVGIcon from 'com/svg-icon/icon';
+import {h, Component} 				from 'preact/preact';
+import SVGIcon 						from 'com/svg-icon/icon';
 
 export default class MailLink extends Component {
-	
 	constructor (props) {
 		super(props);		
 	}
 		
 	render( props, state ) {
-		
-		if (props.href.startsWith('mailto:')) {
+		if ( props.href && props.href.indexOf('mailto:') === 0 ) {
 			href = props.href;
-			mail = props.substring(7);
-		} else {
+			mail = props.substr(7);
+		}
+		else {
 			href = 'mailto:' + props.href;
 			mail = props.href;
 		}
