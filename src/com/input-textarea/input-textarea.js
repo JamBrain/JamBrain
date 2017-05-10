@@ -26,10 +26,23 @@ export default class InputTextarea extends Component {
 	}
 	
 	resizeTextarea() {
-		if ( this.textarea ) {
-			this.textarea.style.height = 0;	/* Shockingly, this is necessary. textarea wont shrink otherwise */
+
+		var doc = document;
+		var top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
+
+		if ( this.textarea) {
+			var before = this.textarea.style.height;
+			window.onscroll = function () {};
+
+			this.textarea.style.height = '1px';	/* Shockingly, this is necessary. textarea wont shrink otherwise */
 			this.textarea.style.height = this.textarea.scrollHeight + 'px';
-		}		
+
+			var delta = parseInt(this.textarea.style.height) - parseInt(before) || 0;
+
+			window.scrollTo(0, delta + top);
+			window.onscroll = null;
+			
+		}
 	}
 	
 	// After initial render
