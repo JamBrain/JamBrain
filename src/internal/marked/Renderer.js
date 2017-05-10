@@ -1,12 +1,12 @@
-import {h} from 'preact/preact';
+import {h} 					from 'preact/preact';
 
-import Util from './Util';
-
-import BlockSpoiler from 'com/block-spoiler/spoiler';
+import Util 				from './Util';
 
 //COMPONENT IMPORTS
-import NavLink from 'com/nav-link/link';
-import AutoEmbed from 'com/autoembed/autoembed';
+import NavLink 				from 'com/nav-link/link';
+import LinkMail				from 'com/link-mail/mail';		// TODO: Obsolete me
+import AutoEmbed 			from 'com/autoembed/autoembed';
+import BlockSpoiler 		from 'com/block-spoiler/spoiler';
 
 export default class Renderer {
   constructor(options) {
@@ -182,14 +182,14 @@ export default class Renderer {
     }
 
     if ( isExternal ) {
-			var target = "_blank";
-		}
+		var target = "_blank";
+	}
 
     // If text is blank, use the URL itself
     if ( !text || text.length < 1 ) {
       text = href;
     }
-
+	
     if(AutoEmbed.hasEmbed(href) || AutoEmbed.hasSmartLink(href)) {
       return (<AutoEmbed href={href} title={title} text={text} />);
     }
@@ -197,6 +197,29 @@ export default class Renderer {
     var out = (
       <NavLink href={href} title={title} target={target}>{text}</NavLink>
     );
+    return out;
+
+  };
+  
+  mail(leftSide, rightSide, text) {
+	href = '{0}@{1}'.replace('{1}', rightSide, 1).replace('{0}', leftSide, 1);
+    if (this.options.sanitize) {
+      try {
+        var prot = decodeURIComponent(unescape(href)).replace(/[^\w:]/g, '').toLowerCase();
+      } catch (e) {
+        return '';
+      }
+      if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0 || prot.indexOf('data:') === 0) {
+        return '';
+      }
+    }
+
+	//text = leftSide + '[at]' + rightSide;
+
+    var out = (
+      <LinkMail href={href} title={text}>{text}</LinkMail>
+    );
+	
     return out;
 
   };
