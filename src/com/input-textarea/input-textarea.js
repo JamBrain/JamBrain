@@ -14,7 +14,8 @@ export default class InputTextarea extends Component {
 
 		this.state = {
 			'cursorPos': (props.value || '').length,
-			'edge': /Edge/.test(navigator.userAgent)
+			'cachedScrollHeight': this.textarea.scrollHeight,
+			'edge': /Edge/.test(navigator.userAgent) 
 		};
 		
 		this.onInput = this.onInput.bind(this);
@@ -26,10 +27,12 @@ export default class InputTextarea extends Component {
 	}
 	
 	resizeTextarea() {
-		if ( this.textarea ) {
-			this.textarea.style.height = 0;	/* Shockingly, this is necessary. textarea wont shrink otherwise */
+		if ( this.textarea  && this.cachedScrollHeight !== this.textarea.scrollHeight) {
+			if (this.cachedScrollHeight > this.textarea.scrollHeight) {
+				this.textarea.style.height = 0;	/* Shockingly, this is necessary. textarea wont shrink otherwise */
+			}
 			this.textarea.style.height = this.textarea.scrollHeight + 'px';
-		}		
+		}
 	}
 	
 	// After initial render
