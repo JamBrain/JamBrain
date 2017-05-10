@@ -1,7 +1,7 @@
 import {h, Component} 				from 'preact/preact';
 import SVGIcon 						from 'com/svg-icon/icon';
 
-export default class MailLink extends Component {
+export default class InlineMail extends Component {
 	constructor (props) {
 		super(props);		
 	}
@@ -17,8 +17,9 @@ export default class MailLink extends Component {
 		}
 		
 		return (
-			<span class="mail-link">				
-				<a class={cN('mail')} href={href} title={mail}><SVGIcon gap>mail</SVGIcon><strong class="-the-rest">{mail}</strong></a>
-			</span>);
+			<span class="inline-mail">				
+				<a href={href} title={mail}><SVGIcon gap small baseline>mail</SVGIcon>{mail}</a>
+			</span>
+		);
 	}
 }
