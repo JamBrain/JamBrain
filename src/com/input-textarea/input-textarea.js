@@ -14,7 +14,8 @@ export default class InputTextarea extends Component {
 
 		this.state = {
 			'cursorPos': (props.value || '').length,
-			'microsoftEdge': /Edge/.test(navigator.userAgent)
+			'microsoftEdge': /Edge/.test(navigator.userAgent),
+			'prevHeight': -1	// This allows us to not scroll adjust wrong on first change
 		};
 		
 		this.onInput = this.onInput.bind(this);
@@ -33,15 +34,24 @@ export default class InputTextarea extends Component {
 		if ( this.textarea ) {
 			var scrollLeft = window.pageXOffset;// || document.documentElement.scrollLeft; // pageXOffset is IE 9+
 			var scrollTop  = window.pageYOffset;// || document.documentElement.scrollTop;  // pageYOffset is IE 9+
-//			window.onscroll = function() {}; // I don't think this has any effect
-			
+
+			//			window.onscroll = function() {}; // I don't think this has any effect
+
 			this.textarea.style.height = 0;	// Shockingly, this is necessary. textarea wont shrink otherwise.
+			
 			// Unfortunately if the textarea is larger than the screen, this `= 0` line causes the focus to jump to the top of the textarea.
 			this.textarea.style.height = this.textarea.scrollHeight + 'px';
 			
+			// Calculate the size change since last time here
+			var delta =  this.state.prevHeight > 0 ? this.textarea.scrollHeight - this.state.prevHeight : 0;
+			
 			// This works around the jumping by restoring the scroll positions to where they should have been
-			window.scrollTo(scrollLeft, scrollTop);
+			window.scrollTo(scrollLeft, scrollTop + delta);
+			
 //			window.onscroll = null;
+
+			//Save current height for next round
+			this.state.prevHeight = this.textarea.scrollHeight;
 		}
 	}
 	
