@@ -16,7 +16,7 @@ const COOL_MAX_ITEMS_TO_CALC = 250;
 const COOL_MAX_GRADES = 50;//100;
 const COOL_GRADES_PER_NODE = 8.0;
 const COOL_MAX_FEEDBACK = 50;
-const COOL_FEEDBACK_PER_NOTE = 4.0;
+const COOL_FEEDBACK_PER_NOTE = 1.0;
 
 // Get the root node
 $root = nodeComplete_GetById(1);
