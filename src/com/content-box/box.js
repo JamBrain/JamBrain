@@ -91,6 +91,20 @@ export default class ContentBox extends Component {
 							ShowSubEvent = <div>COMPO</div>;
 							SubEventClass = '-col-ab';
 						}
+						else if ( node.subsubtype == 'craft' ) {
+							ShowSubEvent = <div>CRAFT</div>;
+							SubEventClass = '-col-b';
+						}
+						else if ( node.subsubtype == 'release' ) {
+							ShowSubEvent = <div>RELEASE</div>;
+							SubEventClass = '-col-ca';
+						}
+						else if ( node.subsubtype == 'unfinished' ) {
+							ShowSubEvent = <div>UNFINISHED</div>;
+						}
+					}
+					else {
+						ShowSubEvent = <div>GAME</div>;
 					}
 				}
 				else if ( node.subtype == 'tool' ) {
