@@ -385,7 +385,7 @@ export default class ContentItem extends Component {
 					
 					//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
 					
-					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> {Score}</div>);
+					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
 				}
 
 				ShowGrade = (
