@@ -2,6 +2,7 @@ import { h, Component } 				from 'preact/preact';
 import Shallow							from 'shallow/shallow';
 
 import ContentLoading					from 'com/content-loading/loading';
+import SVGIcon							from 'com/svg-icon/icon';
 import IMG2								from 'com/img2/img2';
 
 import ButtonLink						from 'com/button-link/link';
@@ -82,7 +83,7 @@ export default class ContentBox extends Component {
 			var SubEventClass = null;
 			if ( !props.nosubevent && node.subtype ) {
 				if ( !node.published ) {
-					ShowSubEvent = <div>UNPUBLISHED</div>;
+					ShowSubEvent = <div><SVGIcon baseline small>cross</SVGIcon></div>;
 				}
 				else if ( node.subtype == 'game' ) {
 					ShowSubEvent = <div>GAME</div>;
@@ -104,7 +105,7 @@ export default class ContentBox extends Component {
 							SubEventClass = '-col-ca';
 						}
 						else if ( node.subsubtype == 'unfinished' ) {
-							ShowSubEvent = <div>UNFINISHED</div>;
+							ShowSubEvent = <div><SVGIcon baseline small>cross</SVGIcon></div>;
 						}
 					}
 				}
