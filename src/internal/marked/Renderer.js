@@ -140,7 +140,7 @@ export default class Renderer {
 
   codespan(text) {
     return (
-      <code>{text}</code>
+      <code>{Util.htmldecode(text)}</code>
     );
     // text.replace('\n','') // ??
   };
