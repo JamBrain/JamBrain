@@ -13,7 +13,6 @@ const MAX_ITEMS_TO_ADD = 500;
 const MAX_ITEMS_TO_CALC = 500;
 
 // TODO: Adjust the maximum effectiveness as the weeks go by. Start with like 50 initially (more than enough), but let it go up after.
-const GRADES_PER_NODE = 8.0;
 const FEEDBACK_PER_NOTE = 1.0;
 const COOL_MAX_GRADES = 50;
 const COOL_MAX_FEEDBACK = 50;
@@ -151,11 +150,12 @@ if ( $featured_id ) {
 							}
 						}
 					}
-					$grade_count = count(array_diff($grades_out, $node_grades_out));
+					$given_grade_value = count(array_diff($grades_out, $node_grades_out));
+					$team_grade_value = count($grades);
 	
 					// ** Calculate Grades **
-					$team_grades = max(0, grade_CountByNotNodeAuthor($node['id'], $authors) / GRADES_PER_NODE);
-					$given_grades = max(0, grade_CountByNodeNotAuthor($node['id'], $authors) / $grade_count);	// historically there's a -1 here
+					$team_grades = max(0, grade_CountByNotNodeAuthor($node['id'], $authors) / $team_grade_value);
+					$given_grades = max(0, grade_CountByNodeNotAuthor($node['id'], $authors) / $given_grade_value);	// historically there's a -1 here
 	
 					$smart_grade = sqrt(min(COOL_MAX_GRADES, $team_grades) * 100.0 / max(1.0, min(COOL_MAX_GRADES, $given_grades))) * 100.0 / 10.0;
 					$cool_grade = sqrt($team_grades * 100.0 / max(1.0, $given_grades)) * 100.0 / 10.0;
