@@ -9,8 +9,8 @@ require_once __DIR__."/".SHRUB_PATH."/note/note.php";
 require_once __DIR__."/".SHRUB_PATH."/grade/grade.php";
 
 // This is a CRON job that regularly updates magic
-const COOL_MAX_ITEMS_TO_ADD = 250;
-const COOL_MAX_ITEMS_TO_CALC = 250;
+const COOL_MAX_ITEMS_TO_ADD = 500;
+const COOL_MAX_ITEMS_TO_CALC = 500;
 
 // TODO: Adjust the maximum effectiveness as the weeks go by. Start with like 50 initially (more than enough), but let it go up after.
 const COOL_MAX_GRADES = 50;//100;
@@ -41,21 +41,26 @@ if ( $featured_id ) {
 		$node_ids = node_GetIdByParentTypePublished($featured_id, 'item');
 		
 		$diff = array_diff($node_ids, $cool_nodes);
-		
 		$new_nodes = array_slice($diff, 0, COOL_MAX_ITEMS_TO_ADD);
-		
-		foreach ( $new_nodes as $key => &$value ) {
-			$node = node_GetById($value);
-			if ( $node ) {
-				nodeMagic_Add(
-					$node['id'],
-					$node['parent'],
-					$node['superparent'],
-					$node['author'],
-					0,	// score
-					'cool'
-				);
+
+		if ( count($new_nodes) ) {
+			$nodes = node_IdToIndex(node_GetById($new_nodes));
+
+			$db->begin_transaction();
+			foreach ( $new_nodes as $key => &$value ) {
+				$node = &$nodes[$value];
+				if ( $node ) {
+					nodeMagic_Add(
+						$node['id'],
+						$node['parent'],
+						$node['superparent'],
+						$node['author'],
+						0,	// score
+						'cool'
+					);
+				}
 			}
+			$db->commit();
 		}
 	}
 	
@@ -71,8 +76,6 @@ if ( $featured_id ) {
 		
 		// Calculate their scores
 		foreach ( $cool as &$magic ) {
-//			$node = nodeComplete_GetById($magic['node'], F_NODE_LINK);
-
 			// The old Formula
 			//
 			//	function compo2_calc_coolness( $votes, $total ) {
