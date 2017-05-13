@@ -124,8 +124,11 @@ if ( $featured_id ) {
 
 			$smart = 0;
 			$cool = 0;
+
 			$team_grade = 0;
+			$given_grade = 0;
 			$team_feedback = 0;
+			$given_feedback = 0;
 
 			$node = &$nodes[$magic['node']];
 			if ( $node ) {
@@ -153,10 +156,10 @@ if ( $featured_id ) {
 			// Prefer $magic['node'] to $node['id'] in case it fails to load
 			$scores[] = [
 				'node' => $magic['node'],
-				'smart' => $smart,
-				'cool' => $cool,
-				'grade' => $team_grades,
-				'feedback' => $team_feedback
+				'smart' => $smart,					// Smart Coolness
+				'cool' => $cool,					// Unbound Coolness
+				'grade' => $given_grades,			// How many grades received (Rescue Rangers)
+				'feedback' => $team_feedback		// Quality of feedback given (People who are working hard)
 			];
 		}
 
