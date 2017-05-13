@@ -64,6 +64,8 @@ if ( $featured_id ) {
 	{
 		$cool = nodeMagic_GetOldestByParentName($featured_id, 'cool', COOL_MAX_ITEMS_TO_CALC);
 		
+		$db->begin_transaction();
+		
 		// Calculate their scores
 		foreach ( $cool as &$magic ) {
 			$node = nodeComplete_GetById($magic['node']);
@@ -141,6 +143,8 @@ if ( $featured_id ) {
 			// Prefer $magic['node'] to $node['id'] in case it fails to load
 			$updated = nodeMagic_Update($magic['node'], $magic['name'], $score);
 		}
+
+		$db->commit();
 	}
 }
 
