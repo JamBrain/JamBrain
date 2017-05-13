@@ -70,6 +70,15 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 				case 'cool':
 					$magic = 'cool';
 				break;
+				case 'smart':
+					$magic = 'smart';
+				break;
+				case 'grade':
+					$magic = 'grade';
+				break;
+				case 'feedback':
+					$magic = 'feedback';
+				break;
 			};
 		}
 
@@ -84,6 +93,8 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 
 	if ( $magic ) {
 		$orderby_query = "ORDER BY score DESC";
+		$QUERY[] = 'name=?';
+		$ARGS[] = $magic;
 	}
 	else if ( $authors ) {
 	}
