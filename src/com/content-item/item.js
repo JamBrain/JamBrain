@@ -385,13 +385,13 @@ export default class ContentItem extends Component {
 					
 					//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
 					
-					VoteLines.push(<div class="-grade">{Title}: <strong>{Score}</strong></div>);
+					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
 				}
-								
+
 				ShowGrade = (
 					<ContentCommonBody class="-rating">
 						<div class="-header">Total Ratings</div>
-						<div class="-subtext">Your votes so far</div>
+						<div class="-subtext">Votes on your game so far</div>
 						<div class="-items">{VoteLines}</div>
 						<div class="-footer">To get a score at the end, you need about <strong>20</strong> ratings in a category. To get ratings: play, rate, and leave feedback on games. Every game you rate and leave quality feedback on scores you <strong>Coolness</strong> points. Having a high "Coolness" prioritizes your game.</div>
 					</ContentCommonBody>
