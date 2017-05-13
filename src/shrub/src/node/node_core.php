@@ -193,6 +193,43 @@ function node_GetById( $ids ) {
 	return null;
 }
 
+// Like get, but omits the body (i.e. a string of indeterminate length)
+function node_GetNoBodyById( $ids ) {
+	$multi = is_array($ids);
+	if ( !$multi )
+		$ids = [$ids];
+	
+	if ( is_array($ids) ) {
+		// Confirm that all IDs are not zero
+		foreach( $ids as $id ) {
+			if ( intval($id) == 0 )
+				return null;
+		}
+
+		// Build IN string
+		$ids_string = implode(',', $ids);
+
+		$ret = db_QueryFetch(
+			"SELECT id, parent, superparent, author,
+				type, subtype, subsubtype,
+				".DB_FIELD_DATE('published').",
+				".DB_FIELD_DATE('created').",
+				".DB_FIELD_DATE('modified').",
+				version,
+				slug, name
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+			WHERE id IN ($ids_string);"
+		);
+
+		if ( $multi )
+			return $ret;
+		else
+			return $ret ? $ret[0] : null;
+	}
+	
+	return null;
+}
+
 function node_CountByParentAuthorType( $parent, $author = null, $type = null, $subtype = null, $subsubtype = null ) {
 	$QUERY = [];
 	$ARGS = [];
