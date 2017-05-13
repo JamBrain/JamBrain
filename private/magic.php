@@ -13,19 +13,10 @@ const MAX_ITEMS_TO_ADD = 500;
 const MAX_ITEMS_TO_CALC = 500;
 
 // TODO: Adjust the maximum effectiveness as the weeks go by. Start with like 50 initially (more than enough), but let it go up after.
-const COOL_MAX_GRADES = 50;//100;
-const COOL_GRADES_PER_NODE = 8.0;
+const GRADES_PER_NODE = 8.0;
+const FEEDBACK_PER_NOTE = 1.0;
+const COOL_MAX_GRADES = 50;
 const COOL_MAX_FEEDBACK = 50;
-const COOL_FEEDBACK_PER_NOTE = 1.0;
-
-// Get the root node
-$root = nodeComplete_GetById(1);
-
-// Get current featured event
-$featured_id = null;
-if ( isset($root['meta']['featured']) )
-	$featured_id = $root['meta']['featured']|0;
-
 
 function AddMagic( $name, $parent ) {
 	global $node_ids, $db;
@@ -54,6 +45,14 @@ function AddMagic( $name, $parent ) {
 		$db->commit();
 	}
 }
+
+// Get the root node
+$root = nodeComplete_GetById(1);
+
+// Get current featured event
+$featured_id = null;
+if ( isset($root['meta']['featured']) )
+	$featured_id = $root['meta']['featured']|0;
 
 // As long as an event is featured, do coolness calculation
 if ( $featured_id ) {
@@ -125,40 +124,30 @@ if ( $featured_id ) {
 
 			$smart = 0;
 			$cool = 0;
-			$grade = 0;
-			$feedback = 0;
+			$team_grade = 0;
+			$team_feedback = 0;
 
 			$node = &$nodes[$magic['node']];
 			if ( $node ) {
 				$authors = $node['link']['author'];
 
 				// ** Calculate Grades **
-				$team_grades = grade_CountByNotNodeAuthor($node['id'], $authors);				
-				$given_grades = grade_CountByNodeNotAuthor($node['id'], $authors);
+				$team_grades = max(0, grade_CountByNotNodeAuthor($node['id'], $authors) / GRADES_PER_NODE);
+				$given_grades = max(0, grade_CountByNodeNotAuthor($node['id'], $authors) / GRADES_PER_NODE);	// historically there's a -1 here
 
-				$team_grades = max(0, $team_grades / COOL_GRADES_PER_NODE);
-				$given_grades = max(0, $given_grades / COOL_GRADES_PER_NODE);		// historically there's a -1 here
-				
-				// Will be up to 1000 points (so long as the max is 100
-				$grade = sqrt(min(COOL_MAX_GRADES, $team_grades) * 100.0 / max(1.0, min(COOL_MAX_GRADES, $given_grades))) * 100.0 / 10.0;
-				$_grade = sqrt($team_grades * 100.0 / max(1.0, $given_grades)) * 100.0 / 10.0;
-
-//				echo $magic['node']." $team_grades $given_grades: $grade\n";
-
+				$smart_grade = sqrt(min(COOL_MAX_GRADES, $team_grades) * 100.0 / max(1.0, min(COOL_MAX_GRADES, $given_grades))) * 100.0 / 10.0;
+				$cool_grade = sqrt($team_grades * 100.0 / max(1.0, $given_grades)) * 100.0 / 10.0;
 
 				// ** Calculate Feedback Score **
-				$team_feedback = noteLove_CountBySuperNotNodeAuthor($node['parent'], $node['id'], $authors);
-				$given_feedback = noteLove_CountBySuperNodeNotAuthor($node['parent'], $node['id'], $authors);
+				$team_feedback = max(0, noteLove_CountBySuperNotNodeAuthor($node['parent'], $node['id'], $authors) / FEEDBACK_PER_NOTE);
+				$given_feedback = max(0, noteLove_CountBySuperNodeNotAuthor($node['parent'], $node['id'], $authors) / FEEDBACK_PER_NOTE);
 
-				$team_feedback = max(0, $team_feedback / COOL_FEEDBACK_PER_NOTE);
-				$given_feedback = max(0, $given_feedback / COOL_FEEDBACK_PER_NOTE);
-
-				$feedback = sqrt(min(COOL_MAX_FEEDBACK, $team_feedback) * 100.0 / max(1.0, min(COOL_MAX_FEEDBACK, $given_feedback))) * 100.0 / 10.0;
-				$_feedback = sqrt($team_feedback * 100.0 / max(1.0, $given_feedback)) * 100.0 / 10.0;
+				$smart_feedback = sqrt(min(COOL_MAX_FEEDBACK, $team_feedback) * 100.0 / max(1.0, min(COOL_MAX_FEEDBACK, $given_feedback))) * 100.0 / 10.0;
+				$cool_feedback = sqrt($team_feedback * 100.0 / max(1.0, $given_feedback)) * 100.0 / 10.0;
 				
 				// Final
-				$smart = $grade + $feedback;
-				$cool = $_grade + $_feedback;
+				$smart = $smart_grade + $smart_feedback;		// up to 1000 points
+				$cool = $cool_grade + $cool_feedback;			// unbound
 			}
 
 			// Prefer $magic['node'] to $node['id'] in case it fails to load
@@ -182,4 +171,3 @@ if ( $featured_id ) {
 		$db->commit();
 	}
 }
-
