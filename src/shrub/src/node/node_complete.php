@@ -2,7 +2,7 @@
 require_once __DIR__."/../note/note_core.php";
 require_once __DIR__."/../grade/grade_core.php";
 
-const F_NODE_ALL = 0xFFFF;
+const F_NODE_ALL = 0xFFFFFF;			// NOTE: 24bit. Bits above 24bit must be explicitly included
 
 const F_NODE_META = 0x1;
 const F_NODE_LINK = 0x2;
@@ -17,13 +17,20 @@ const F_NODE_GRADE = 0x100;
 //const F_NODE_ = 0x400;
 //const F_NODE_ = 0x800;
 
+const F_NODE_NO_BODY = 0x01000000;		// Get the node without the body
+const F_NODE_NO_LINKVALUE = 0x02000000;	// Get links without value
+
 function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 	$multi = is_array($ids);
 	if ( !$multi )
 		$ids = [$ids];
 
-	// Fetch nodes	
-	$nodes = node_GetById($ids);
+	// Fetch nodes
+	if ( $flags & F_NODE_NO_BODY )
+		$nodes = node_GetNoBodyById($ids);
+	else
+		$nodes = node_GetById($ids);
+
 	if ( !$nodes )
 		return null;
 
@@ -45,7 +52,7 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 
 	// Populate Links (NOTE: Links come in Pairs)
 	if ( $flags & F_NODE_LINK ) {
-		$links = nodeLink_ParseByNode($ids);
+		$links = nodeLink_ParseByNode($ids, !($flags & F_NODE_NO_LINKVALUE));
 		foreach ( $nodes as &$node ) {
 			if ( isset($links[$node['id']][0][SH_NODE_META_PUBLIC]) ) {
 				$node['link'] = $links[$node['id']][0][SH_NODE_META_PUBLIC];
@@ -58,7 +65,7 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 		}
 	}
 
-	// Populate paths **
+	// Populate paths ** NOTE: Multiple queries!
 	if ( $flags & F_NODE_PATH ) {
 		foreach ( $nodes as &$node ) {
 			// Walk paths

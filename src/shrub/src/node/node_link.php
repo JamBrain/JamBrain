@@ -20,7 +20,7 @@ function nodeLink_GetById( $ids ) {
 			"SELECT a, b, scope, `key`, `value`
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
 			WHERE id IN ($ids_string)
-			"
+			;"
 		);
 	}
 	
@@ -174,13 +174,57 @@ function nodeLink_GetByNode( $nodes, $scope_check = ">=0" ) {
 	return null;
 }
 
+// Variation that always returns null for values, no matter what they are set to 
+function nodeLink_GetNoValueByNode( $nodes, $scope_check = ">=0" ) {
+	$multi = is_array($nodes);
+	if ( !$multi )
+		$nodes = [$nodes];
+	
+	if ( is_array($nodes) ) {
+		// Confirm that all Nodes are not zero
+		foreach( $nodes as $node ) {
+			if ( intval($node) == 0 )
+				return null;
+		}
 
-function nodeLink_ParseByNode( $node_ids ) {
+		// Build IN string
+		$node_string = implode(',', $nodes);
+
+		if ( empty($scope_check) ) {
+			$scope_check_string = "";
+		}
+		else {
+			$scope_check_string = "scope".$scope_check." AND";
+		}
+
+		// NOTE: This may be poor performing once we have more nodes. See Meta above for some optimization homework
+		$ret = db_QueryFetch(
+			"SELECT a, b, scope, `key`, null AS `value`
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
+			WHERE $scope_check_string (a IN ($node_string) OR b IN ($node_string)) AND id IN (
+				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." GROUP BY a, b, `key`
+			);"
+		);
+		
+		if ( $multi )
+			return $ret;
+		else
+			return $ret ? $ret[0] : null;
+	}
+	
+	return null;
+}
+
+
+function nodeLink_ParseByNode( $node_ids, $get_values = true ) {
 	$multi = is_array($node_ids);
 	if ( !$multi )
 		$node_ids = [$node_ids];
 	
-	$links = nodeLink_GetByNode($node_ids);
+	if ( $get_values )
+		$links = nodeLink_GetByNode($node_ids);
+	else
+		$links = nodeLink_GetNoValueByNode($node_ids);
 
 	$ret = [];
 
