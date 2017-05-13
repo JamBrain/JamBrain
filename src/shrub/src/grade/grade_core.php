@@ -73,18 +73,26 @@ function grade_CountByNodeAuthor( $node_id, $authors ) {
 }
 
 function grade_CountByNotNodeAuthor( $node_id, $authors ) {
-	$multi = is_array($authors);
-	if ( !$multi )
-		$authors = [$authors];
+	$QUERY = ['node!=?'];
+	$ARGS = [$node_id];
+	
+	if ( is_array($authors) ) {
+		$QUERY[] = "author IN (".implode(',', $authors).")";
+	}
+	else {
+		$QUERY[] = 'author=?';
+		$ARGS[] = $authors;
+	}
 	
 	return db_QueryFetchValue(
 		"SELECT
 			count(id) AS count
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_GRADE." 
-		WHERE node!=? AND author IN (".implode(',', $authors).")
+		WHERE ".implode(' AND ', $QUERY)."
 		LIMIT 1;",
-		$node_id
+		...$ARGS
 	);
+	 //node!=? AND author IN (".implode(',', $authors).")
 }
 
 function grade_CountByNodeNotAuthor( $node_id, $authors ) {
