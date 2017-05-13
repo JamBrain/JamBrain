@@ -81,7 +81,11 @@ export default class ContentBox extends Component {
 			var ShowSubEvent = null;
 			var SubEventClass = null;
 			if ( !props.nosubevent && node.subtype ) {
-				if ( node.subtype == 'game' ) {
+				if ( !node.published ) {
+					ShowSubEvent = <div>UNPUBLISHED</div>;
+				}
+				else if ( node.subtype == 'game' ) {
+					ShowSubEvent = <div>GAME</div>;
 					if ( node.subsubtype ) {
 						if ( node.subsubtype == 'jam' ) {
 							ShowSubEvent = <div>JAM</div>;
@@ -102,9 +106,6 @@ export default class ContentBox extends Component {
 						else if ( node.subsubtype == 'unfinished' ) {
 							ShowSubEvent = <div>UNFINISHED</div>;
 						}
-					}
-					else {
-						ShowSubEvent = <div>GAME</div>;
 					}
 				}
 				else if ( node.subtype == 'tool' ) {
