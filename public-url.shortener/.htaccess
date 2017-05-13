@@ -1,2 +1,5 @@
-#RewriteEngine on 
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . index.php [B,L]
+
 #RewriteRule ^(.*)$ https://ludumdare.com/$1 [R=301,L]

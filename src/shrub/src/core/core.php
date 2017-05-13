@@ -213,17 +213,25 @@ function core_RemovePathDotsFromArray($arr) {
 
 /// Internal parser for the API request
 function _core_GetAPIRequest() {
-	// If PATH_INFO is set, then Apache figured out our parts for us //
+	$PATH = '';
+	
+	// If PATH_INFO is set, then Apache figured out our parts for us
 	if ( isset($_SERVER['PATH_INFO']) ) {
-		$ret = ltrim(rtrim(filter_var($_SERVER['PATH_INFO'], FILTER_SANITIZE_URL), '/'), '/');
-		if ( empty($ret) /*&& $val !== '0'*/ ) {
-			return [''];
-		}
-		else {
-			return array_values(array_filter(explode('/',$ret), function($val) {
-				return !((empty($val) && $val !== '0') || ($val[0] === '.'));
-			}));
-		}
+		$PATH = $_SERVER['PATH_INFO'];
+	}
+	// Alternatively if REDIRECT_URL is set, then this was a redirect
+	else if ( isset($_SERVER['REDIRECT_URL']) ) {
+		$PATH = $_SERVER['REDIRECT_URL'];
+	}
+	
+	$ret = ltrim(rtrim(filter_var($PATH, FILTER_SANITIZE_URL), '/'), '/');
+	if ( empty($ret) /*&& $val !== '0'*/ ) {
+		return [''];
+	}
+	else {
+		return array_values(array_filter(explode('/', $ret), function($val) {
+			return !((empty($val) && $val !== '0') || ($val[0] === '.'));
+		}));
 	}
 
 	// If PATH_INFO isn't set, assume it's the same as '/'
