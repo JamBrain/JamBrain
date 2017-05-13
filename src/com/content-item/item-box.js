@@ -19,31 +19,4 @@ export default class ContentItemBox extends Component {
 		
 		return <ContentBox {...props} />;
 	}
-//
-//		if ( node /* && state.authors */ ) {
-//			var Class = ["content-item-box"];
-//
-//			var Title = node.name;
-//			
-//			var CoverFail = '///content/internal/tvfail.png';
-//			var Cover = (node.meta && node.meta.cover) ? node.meta.cover : CoverFail;
-//
-//			//Cover += '.192x192.jpg';
-//
-//			props.class = cN(Class, props.class);
-//
-//			//href={node.path}
-//			return (
-//				<ContentCommon {...props}>
-//					<IMG2 class="-view" src={Cover} failsrc={CoverFail} />
-//					<div class="-bar">
-//						<div class="-title">{Title}</div>
-//					</div>
-//				</ContentCommon>
-//			);
-//		}
-//		else {
-//			return <ContentLoading />;
-//		}
-//	}
 }
