@@ -194,7 +194,7 @@ export default class ViewContent extends Component {
 //						<ContentCommonBody>{"Sorry, these aren't sorted correctly yet. For now, try "}<strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</ContentCommonBody>
 //					</ContentCommon>
 //				);
-				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={['parent','cool']} subsubtypes={SubSubType ? SubSubType : null} />;
+				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={['parent','smart']} subsubtypes={SubSubType ? SubSubType : null} />;
 			}
 			else {
 				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
@@ -261,7 +261,7 @@ export default class ViewContent extends Component {
 				return (
 					<div id="content">
 						{ShowNavRoot}
-						<ContentGames node={node} user={user} path={path} extra={extra} methods={['cool'/*'all'*/]} subsubtypes={SubSubType ? SubSubType : null} />
+						<ContentGames node={node} user={user} path={path} extra={extra} methods={['smart'/*'all'*/]} subsubtypes={SubSubType ? SubSubType : null} />
 					</div>
 				);
 
