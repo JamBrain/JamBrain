@@ -64,11 +64,14 @@ if ( $featured_id ) {
 	{
 		$cool = nodeMagic_GetOldestByParentName($featured_id, 'cool', COOL_MAX_ITEMS_TO_CALC);
 		
+		$node_ids = array_map(function($value) { return $value['node']; }, $cool);
+		$nodes = node_IdToIndex(nodeComplete_GetById($node_ids, F_NODE_LINK));
+
 		$scores = [];
 		
 		// Calculate their scores
 		foreach ( $cool as &$magic ) {
-			$node = nodeComplete_GetById($magic['node'], F_NODE_LINK);
+//			$node = nodeComplete_GetById($magic['node'], F_NODE_LINK);
 
 			// The old Formula
 			//
@@ -110,6 +113,7 @@ if ( $featured_id ) {
 			// 100, 100 = 100
 
 			$score = 0;
+			$node = &$nodes[$magic['node']];
 			if ( $node ) {
 				$authors = $node['link']['author'];
 
