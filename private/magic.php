@@ -68,7 +68,7 @@ if ( $featured_id ) {
 		
 		// Calculate their scores
 		foreach ( $cool as &$magic ) {
-			$node = nodeComplete_GetById($magic['node']);
+			$node = nodeComplete_GetById($magic['node'], F_NODE_LINK);
 
 			// The old Formula
 			//
