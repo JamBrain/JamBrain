@@ -300,10 +300,10 @@ switch ( $action ) {
 			
 			
 			$score_op = null;
-			if ( isset($_GET['max']) && is_float($_GET['max']) ) {
+			if ( isset($_GET['max']) ) {
 				$score_op = '<='.floatval($_GET['max']);
 			}
-			else if ( isset($_GET['min']) && is_float($_GET['min']) ) {
+			else if ( isset($_GET['min']) ) {
 				$score_op = '>='.floatval($_GET['min']);
 			}
 
