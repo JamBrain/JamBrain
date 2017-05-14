@@ -24,7 +24,7 @@ export default class ContentGames extends Component {
 		this.state = {
 			feed: [],
 			hash: {},
-			offset: 16-5, //10-5
+			offset: 12-5, //10-5
 			added: null,
 			loaded: false
 		};
@@ -44,7 +44,7 @@ export default class ContentGames extends Component {
 			props.subtypes ? props.subtypes : ['game'],
 			props.subsubtypes ? props.subsubtypes : null,
 			null,
-			this.props.limit ? this.props.limit : 16
+			this.props.limit ? this.props.limit : 12
 		);
 	}
 
@@ -129,10 +129,10 @@ export default class ContentGames extends Component {
 			props.subtypes ? props.subtypes : ['game'],
 			props.subsubtypes ? props.subsubtypes : null,
 			offset,
-			this.props.limit ? this.props.limit : 5+16
+			this.props.limit ? this.props.limit : 12+5
 		);
 
-		this.setState({'offset': offset + 16});
+		this.setState({'offset': offset + 12});
 	}
 
 	render( props, {feed, added, error, loaded}  ) {
