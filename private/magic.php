@@ -13,7 +13,7 @@ const MAX_ITEMS_TO_ADD = 500;
 const MAX_ITEMS_TO_CALC = 500;
 
 // TODO: Adjust the maximum effectiveness as the weeks go by. Start with like 50 initially (more than enough), but let it go up after.
-const FEEDBACK_PER_NOTE = 3.0;
+const FEEDBACK_PER_NOTE = 4.0;
 const COOL_MAX_GRADES = 50;
 const COOL_MAX_FEEDBACK = 50;
 
@@ -162,11 +162,12 @@ if ( $featured_id ) {
 					$cool_grade = sqrt($team_grades * 100.0 / max(1.0, $given_grades)) * 100.0 / 10.0;
 	
 					// ** Calculate Feedback Score **
-					$team_feedback = max(0, noteLove_CountBySuperNotNodeAuthor($node['parent'], $node['id'], $authors) / FEEDBACK_PER_NOTE);
-					$given_feedback = max(0, noteLove_CountBySuperNodeNotAuthor($node['parent'], $node['id'], $authors) / FEEDBACK_PER_NOTE);
+					$team_feedback = max(0, noteLove_CountBySuperNotNodeAuthorKnownNotAuthor($node['parent'], $node['id'], $authors) / FEEDBACK_PER_NOTE);
+					$given_feedback = max(0, noteLove_CountBySuperNodeNotAuthorKnownNotAuthor($node['parent'], $node['id'], $authors) / FEEDBACK_PER_NOTE);
 	
-					$smart_feedback = sqrt(min(COOL_MAX_FEEDBACK, $team_feedback) * 100.0 / max(1.0, min(COOL_MAX_FEEDBACK, $given_feedback))) * 100.0 / 10.0;
-					$cool_feedback = sqrt($team_feedback * 100.0 / max(1.0, $given_feedback)) * 100.0 / 10.0;
+					$smart_feedback = sqrt(min(COOL_MAX_FEEDBACK, $team_feedback) * 100.0 / max(1.0, min(COOL_MAX_FEEDBACK, $given_feedback))) * 100.0 / 20.0;
+					$cool_feedback = sqrt($team_feedback * 100.0 / max(1.0, $given_feedback)) * 100.0 / 20.0;
+					// EDIT: Half as much (was / 10, now / 20)
 
 					
 					// Final
