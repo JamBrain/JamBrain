@@ -126,8 +126,12 @@ export default class ContentCommentsComment extends Component {
 		console.log('reply');
 	}
 
-	render( {user, comment, author, indent, publish, onpublish, limit, children}, state ) {
-//		console.log('R '+comment.id+": ", this.state.editing,this.state.preview);
+	render( props, state ) {
+		var user = props.user;
+		var comment = props.comment;
+		var author = props.author;
+		
+//		console.log('R '+comment.id+": ", state.editing, state.preview);
 		if ( author ) {
 			var Name = author.name;
 			if ( author.meta['real-name'] )
@@ -170,18 +174,25 @@ export default class ContentCommentsComment extends Component {
 			if ( user && comment.author === user.id && !state.editing )
 				ShowEdit = <div class="-button -edit" onclick={this.onEdit}><SVGIcon>edit</SVGIcon></div>;
 
+			var ShowLove = null;
+			if ( !props.nolove ) {
+				ShowLove = (
+					<div class={"-button -love"+(state.loved?" -loved":"")} onclick={this.onLove}>
+						<SVGIcon class="-hover-hide">heart</SVGIcon>
+						<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
+						<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
+						<div>{Number.isInteger(state.lovecount) ? state.lovecount : comment.love}</div>
+					</div>
+				);
+			}
+
 			var ShowBottomNav = null;
 			//if ( !state.editing )
 			{
 				ShowBottomNav = (
 					<div class="-nav">
 						<div class="-right">
-							<div class={"-button -love"+(state.loved?" -loved":"")} onclick={this.onLove}>
-								<SVGIcon class="-hover-hide">heart</SVGIcon>
-								<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
-								<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
-								<div>{Number.isInteger(state.lovecount) ? state.lovecount : comment.love}</div>
-							</div>
+							{ShowLove}
 							{ShowEdit}
 						</div>
 						
@@ -207,7 +218,7 @@ export default class ContentCommentsComment extends Component {
 				}
 
 				var ShowRight = [];
-				if ( publish ) {
+				if ( props.publish ) {
 					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublish}><SVGIcon>publish</SVGIcon><div>Publish</div></div>);
 				}
 				else {
@@ -224,23 +235,23 @@ export default class ContentCommentsComment extends Component {
 			}
 
 			return (
-				<div id={"comment-"+comment.id} class={"-item -comment -indent-"+indent}>
+				<div id={"comment-"+comment.id} class={"-item -comment -indent-"+props.indent}>
 					<div class="-avatar"><IMG2 src={Avatar} /></div>
 					<div class="-body">
 						{ShowTopNav}
 						<div class="-text">
 							{ShowTitle}
-							<ContentCommentsMarkup user={user} editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here" limit={limit}>{comment.body}</ContentCommentsMarkup>
+							<ContentCommentsMarkup user={user} editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here" limit={props.limit}>{comment.body}</ContentCommentsMarkup>
 						</div>
 						{ShowBottomNav}
 					</div>
-					{children}
+					{props.children}
 				</div>
 			);
 		}
 		else {
 			return (
-				<div class={"-item -comment -indent-"+indent}>
+				<div class={"-item -comment -indent-"+props.indent}>
 					<div class="-body">There was a problem with this node</div>
 				</div>
 			);

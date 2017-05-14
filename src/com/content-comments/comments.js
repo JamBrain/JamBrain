@@ -168,7 +168,7 @@ export default class ContentComments extends Component {
 		var comment = this.state.newcomment;
 		var author = authors[comment.author];
 
-		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish}/></div>;
+		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove /></div>;
 	}
 
 	onPublish( e ) {
