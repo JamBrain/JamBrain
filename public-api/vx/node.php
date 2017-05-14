@@ -297,8 +297,17 @@ switch ( $action ) {
 				if ( $RESPONSE['limit'] > 50 )
 					$RESPONSE['limit'] = 50;
 			}
+			
+			
+			$score_op = null;
+			if ( isset($_GET['max']) && is_float($_GET['max']) ) {
+				$score_op = '<='.floatval($_GET['max']);
+			}
+			else if ( isset($_GET['min']) && is_float($_GET['min']) ) {
+				$score_op = '>='.floatval($_GET['min']);
+			}
 
-			$RESPONSE['feed'] = nodeFeed_GetByMethod( $methods, $root, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset'] );
+			$RESPONSE['feed'] = nodeFeed_GetByMethod( $methods, $root, $types, $subtypes, $subsubtypes, $score_op, $RESPONSE['limit'], $RESPONSE['offset'] );
 
 //			$RESPONSE['feed'] = nodeFeed_GetByNodeMethodType( $root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset'] );
 		}

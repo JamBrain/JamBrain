@@ -150,8 +150,9 @@ if ( $featured_id ) {
 							}
 						}
 					}
-					$given_grade_value = count(array_diff($grades_out, $node_grades_out));
 					$team_grade_value = count($grades);
+					$given_grade_value = count(array_diff($grades_out, $node_grades_out));
+
 	
 					// ** Calculate Grades **
 					$team_grades = max(0, grade_CountByNotNodeAuthor($node['id'], $authors) / $team_grade_value);
@@ -166,6 +167,7 @@ if ( $featured_id ) {
 	
 					$smart_feedback = sqrt(min(COOL_MAX_FEEDBACK, $team_feedback) * 100.0 / max(1.0, min(COOL_MAX_FEEDBACK, $given_feedback))) * 100.0 / 10.0;
 					$cool_feedback = sqrt($team_feedback * 100.0 / max(1.0, $given_feedback)) * 100.0 / 10.0;
+
 					
 					// Final
 					$smart = $smart_grade + $smart_feedback;		// up to 1000 points
