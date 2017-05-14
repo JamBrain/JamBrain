@@ -69,6 +69,12 @@ const VALID_TRANSFORMS = [
 	],
 ];
 
+const THINGS_I_CAN_FEED = [
+	'post',
+	'item',
+	'event'	
+];
+
 // Do Actions
 $action = json_ArgShift();
 switch ( $action ) {
@@ -231,27 +237,34 @@ switch ( $action ) {
 			else {
 				$types = array_map("coreSlugify_Name", explode('+', $types));
 
-				$allowed_types = ['post','item','event'];
 				foreach ( $types as &$type ) {
-					if ( !in_array($type, $allowed_types) ) {
+					if ( !in_array($type, THINGS_I_CAN_FEED) ) {
 						json_EmitFatalError_BadRequest("Invalid type: $type", $RESPONSE);
 					}
 				}
+				
+				if ( count($types) == 1 )
+					$types = $types[0];
+
+				$RESPONSE['types'] = $types;
 			}
-			$RESPONSE['types'] = $types;
 
 			$subtypes = json_ArgShift();
 			if ( !empty($subtypes) ) {
-				//$subtypes = array_map("coreSlugify_Name", explode('+', $subtypes));
-				$subtypes = coreSlugify_Name($subtypes);
+				$subtypes = array_map("coreSlugify_Name", explode('+', $subtypes));
+
+				if ( count($subtypes) == 1 )
+					$subtypes = $subtypes[0];
 				
 				$RESPONSE['subtypes'] = $subtypes;
 			}
 
 			$subsubtypes = json_ArgShift();
 			if ( !empty($subsubtypes) ) {
-				//$subsubtypes = array_map("coreSlugify_Name", explode('+', $subsubtypes));
-				$subsubtypes = coreSlugify_Name($subsubtypes);
+				$subsubtypes = array_map("coreSlugify_Name", explode('+', $subsubtypes));
+
+				if ( count($subsubtypes) == 1 )
+					$subsubtypes = $subsubtypes[0];
 				
 				$RESPONSE['subsubtypes'] = $subsubtypes;
 			}
@@ -270,7 +283,9 @@ switch ( $action ) {
 					$RESPONSE['limit'] = 50;
 			}
 
-			$RESPONSE['feed'] = nodeFeed_GetByNodeMethodType( $root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset'] );
+			$RESPONSE['feed'] = nodeFeed_GetByMethod( $methods, $root, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset'] );
+
+//			$RESPONSE['feed'] = nodeFeed_GetByNodeMethodType( $root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset'] );
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
