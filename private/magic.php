@@ -13,7 +13,7 @@ const MAX_ITEMS_TO_ADD = 500;
 const MAX_ITEMS_TO_CALC = 500;
 
 // TODO: Adjust the maximum effectiveness as the weeks go by. Start with like 50 initially (more than enough), but let it go up after.
-const FEEDBACK_PER_NOTE = 1.0;
+const FEEDBACK_PER_NOTE = 2.0;
 const COOL_MAX_GRADES = 50;
 const COOL_MAX_FEEDBACK = 50;
 
