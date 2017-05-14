@@ -16,35 +16,48 @@ function noteLove_CountByNode( $node ) {
 }
 
 
-function noteLove_CountBySuperNotNodeAuthor( $supernode, $node, $authornode ) {
-	if ( !is_array($authornode) )
-		$authornode = [$authornode];
+function noteLove_CountBySuperNotNodeAuthorKnownNotAuthor( $supernode, $node, $authors ) {
+	if ( !is_array($authors) )
+		$authors = [$authors];
 	
 	return db_QueryFetchValue(
 		"SELECT 
 			COUNT(id) AS count
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
-		WHERE supernode=? AND node!=? AND authornode IN (".implode(',', $authornode).")
+		FROM 
+			".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
+		WHERE 
+			supernode=?
+			AND node!=?
+			AND authornode IN (".implode(',', $authors).") 
+			AND author > 0
 		;",
 		$supernode,
 		$node
 	);
 }
+//			AND author NOT IN (".implode(',', $authors).")
 
-function noteLove_CountBySuperNodeNotAuthor( $supernode, $node, $authornode ) {
-	if ( !is_array($authornode) )
-		$authornode = [$authornode];
+function noteLove_CountBySuperNodeNotAuthorKnownNotAuthor( $supernode, $node, $authors ) {
+	if ( !is_array($authors) )
+		$authors = [$authors];
 	
 	return db_QueryFetchValue(
 		"SELECT 
 			COUNT(id) AS count
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
-		WHERE supernode=? AND node=? AND authornode NOT IN (".implode(',', $authornode).")
+		FROM 
+			".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
+		WHERE 
+			supernode=?
+			AND node=?
+			AND authornode NOT IN (".implode(',', $authors).")
+			AND author > 0
 		;",
 		$supernode,
 		$node
 	);
 }
+//			AND author != authornode
+//			AND author NOT IN (".implode(',', $authors).")
 
 
 
