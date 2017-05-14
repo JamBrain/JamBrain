@@ -257,3 +257,207 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 
 	return null;
 }
+
+
+function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subtypes = null, $subsubtypes = null, $score_op = null, $limit = 20, $offset = 0 ) {
+	$MAGIC_QUERY = [];
+	$MAGIC_ARGS = [];
+	$NODE_QUERY = [];
+	$NODE_ARGS = [];
+	$LINK_QUERY = [];
+	$LINK_ARGS = [];
+	
+	$JOIN_QUERY = [];
+	$JOIN_ARGS = [];
+
+	// Pre-parse the methods
+	if ( !dbQuery_Arrayify($methods) ) {
+		return null;
+	}
+	// Bail if no methods
+	if ( !count($methods) ) {
+		return null;
+	}
+	
+	// Make sure $node_ids are usable
+	$valid_ids = dbQuery_AreIdsValid($node_ids);
+
+	$published = true;
+	$magic = null;
+	$link = null;
+	
+	$SORT_ORDER = 'DESC';
+	
+	// Build Method Queries
+	foreach ( $methods as &$method ) {
+		switch ( $method ) {
+			case 'all':
+				break;
+	
+			case 'parent':
+			case 'superparent':
+			case 'author':
+				if ( !$valid_ids )
+					return null;
+			
+//				dbQuery_MakeId($node_ids, 'm.'.$method, $MAGIC_QUERY, $MAGIC_ARGS);
+				dbQuery_MakeId($node_ids, 'n.'.$method, $NODE_QUERY, $NODE_ARGS);
+				break;
+	
+			case 'authors':
+				if ( !$valid_ids )
+					return null;
+					
+				$JOIN_QUERY[] = 
+					"INNER JOIN (
+						SELECT
+							a, b,
+							MAX(id) AS max
+						FROM
+							".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+						WHERE
+							`key`=? AND scope=?
+						GROUP BY 
+							a, b, `key`
+					) AS authors ON n.id=authors.a";
+
+				$JOIN_ARGS[] = 'author';
+				$JOIN_ARGS[] = '0';
+
+				dbQuery_MakeId($node_ids, 'authors.b', $LINK_QUERY, $LINK_ARGS);
+
+				$link = 'authors';
+				break;
+
+			case 'unpublished':
+				$published = false;
+				break;
+			
+			case 'reverse':
+				$SORT_ORDER = 'ASC';
+				break;
+
+			case 'cool':
+			case 'smart':
+			case 'grade':
+			case 'feedback':
+				$magic = $method;
+				break;
+		};
+	}
+	
+	// Build published query
+	if ( $published ) {
+		$NODE_QUERY[] = "published > CONVERT(0, DATETIME)";
+	}
+	
+	// Build type queries
+	if ( $types )
+		dbQuery_Make($types, 'n.type', $NODE_QUERY, $NODE_ARGS);
+	if ( $subtypes )
+		dbQuery_Make($subtypes, 'n.subtype', $NODE_QUERY, $NODE_ARGS);
+	if ( $subsubtypes )
+		dbQuery_Make($subsubtypes, 'n.subsubtype', $NODE_QUERY, $NODE_ARGS);
+
+	// Build score-op query
+	if ( is_string($score_op) ) {
+		$MAGIC_QUERY[] = "m.score".$score_op;
+	}
+	
+	if ( $magic ) {
+		$MAGIC_QUERY[] = 'm.name=?';
+		$MAGIC_ARGS[] = $magic;
+	}
+	
+	// Execute Query
+	if ( $magic && $link ) {
+		
+	}
+	else if ( $link ) {
+		if ( $published )
+			$ORDER_BY = "ORDER BY n.published $SORT_ORDER";
+		else
+			$ORDER_BY = "ORDER BY n.modified $SORT_ORDER";
+
+		$QUERY = array_merge($NODE_QUERY, $LINK_QUERY);
+		$ARGS = array_merge($JOIN_ARGS, $NODE_ARGS, $LINK_ARGS);
+		
+		$ARGS[] = $limit;
+		$ARGS[] = $offset;
+		
+		$JOIN = count($JOIN_QUERY) ? implode(' ', $JOIN_QUERY) : '';
+		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
+
+		return db_QueryFetch(
+			"SELECT
+				n.id,
+				".DB_FIELD_DATE('n.modified', 'modified')."
+			FROM
+				".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
+				$JOIN
+			$WHERE
+			$ORDER_BY
+			LIMIT ?
+			OFFSET ?
+			;",
+			...$ARGS
+		);		
+	}
+	else if ( $magic ) {
+		$ORDER_BY = "ORDER BY m.score $SORT_ORDER";
+
+		$QUERY = array_merge($MAGIC_QUERY, $NODE_QUERY);
+		$ARGS = array_merge($MAGIC_ARGS, $NODE_ARGS);
+		
+		$ARGS[] = $limit;
+		$ARGS[] = $offset;
+
+		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
+
+		return db_QueryFetch(
+			"SELECT
+				n.id,
+				".DB_FIELD_DATE('n.modified', 'modified').",
+				m.score
+			FROM
+				".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
+				INNER JOIN ".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC." AS m ON n.id=m.node
+			$WHERE
+			$ORDER_BY
+			LIMIT ?
+			OFFSET ?
+			;",
+			...$ARGS
+		);
+	}
+	else {
+		if ( $published )
+			$ORDER_BY = "ORDER BY n.published $SORT_ORDER";
+		else
+			$ORDER_BY = "ORDER BY n.modified $SORT_ORDER";
+
+		$QUERY = $NODE_QUERY;
+		$ARGS = $NODE_ARGS;
+
+		$ARGS[] = $limit;
+		$ARGS[] = $offset;
+
+		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
+
+		return db_QueryFetch(
+			"SELECT
+				n.id,
+				".DB_FIELD_DATE('n.modified', 'modified')."
+			FROM
+				".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
+			$WHERE
+			$ORDER_BY
+			LIMIT ?
+			OFFSET ?
+			;",
+			...$ARGS
+		);
+	}
+
+	return null;
+}
