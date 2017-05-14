@@ -307,23 +307,37 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 			case 'authors':
 				if ( !$valid_ids )
 					return null;
-					
+
+				// 1st join limits our scope, binds ourself to the node table
 				$JOIN_QUERY[] = 
 					"INNER JOIN (
 						SELECT
-							a, b,
+							id, a, b
+						FROM 
+							".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+						WHERE
+							scope=0
+					) 
+					AS authors ON 
+						n.id = authors.a
+					";
+				// 2nd join limits us to only the newest IDs (and only authors as key never changes)
+				$JOIN_QUERY[] = 
+					"INNER JOIN (
+						SELECT
 							MAX(id) AS max
 						FROM
 							".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
 						WHERE
-							`key`=? AND scope=?
+							`key`='author'
 						GROUP BY 
 							a, b, `key`
-					) AS authors ON n.id=authors.a";
+					)
+					AS sub_authors ON 
+						authors.id = sub_authors.max
+					";
 
-				$JOIN_ARGS[] = 'author';
-				$JOIN_ARGS[] = '0';
-
+				// Build an IN statement that confirms the authors are those specified
 				dbQuery_MakeId($node_ids, 'authors.b', $LINK_QUERY, $LINK_ARGS);
 
 				$link = 'authors';
