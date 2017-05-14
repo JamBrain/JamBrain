@@ -183,7 +183,7 @@ export default class ViewContent extends Component {
 				ShowPage = <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
 			}
 			else if( extra && extra.length && extra[0] == 'games' ){
-				let SubSubType = null;
+				let SubSubType = 'compo+jam';	// alphabetical
 				if ( extra && extra.length > 1 ) {
 					if ( extra[1] != 'all' )
 						SubSubType = extra[1];
@@ -200,25 +200,6 @@ export default class ViewContent extends Component {
 				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
 			}
 
-//			else {
-/*				let Topic = 'news';
-				if ( extra.length )
-					Topic = extra.length;
-
-				if ( Topic == 'news' ) {
-					ShowPage = <ContentTimeline types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra}></ContentTimeline>;
-				}
-				else if ( Topic == 'hot' ) {
-					ShowPage = <ContentTimeline node={node} user={user} path={path} extra={extra}></ContentTimeline>;
-				}
-				else if ( Topic == 'games' ) {
-					ShowPage = <ContentGames types={['game']} node={node} user={user} path={path} extra={extra}></ContentGames>;
-				}
-				else if ( Topic == 'feed' ) {
-					ShowPage = <ContentTimeline types='' node={node} user={user} path={path} extra={extra}></ContentTimeline>;
-				}*/
-//			}
-
 			return (
 				<div id="content">
 					<ContentEvent node={node} user={user} path={path} extra={extra} featured={featured} />
@@ -227,7 +208,6 @@ export default class ViewContent extends Component {
 					{ShowPage}
 				</div>
 			);
-//					<ContentNavEvent node={node} user={user} path={path} extra={extra} />;
 		}
 		else if ( node.type === 'events' || node.type === 'group' ) {
 			return <div id="content"><ContentGroup node={node} user={user} path={path} extra={extra} /></div>;
@@ -251,7 +231,7 @@ export default class ViewContent extends Component {
 			}
 //			else if ( Viewing == '/games' ) {
 			else if ( extra && extra.length && extra[0] == 'games' ) {
-				let SubSubType = null;
+				let SubSubType = 'compo+jam+release';
 				if ( extra.length > 1 ) {
 					if ( extra[1] != 'all' ) {
 						SubSubType = extra[1];
@@ -264,11 +244,6 @@ export default class ViewContent extends Component {
 						<ContentGames node={node} user={user} path={path} extra={extra} methods={['smart'/*'all'*/]} subsubtypes={SubSubType ? SubSubType : null} />
 					</div>
 				);
-
-//						<ContentCommon node={node}>
-//							<ContentCommonBody>Sorry, these aren't sorted correctly yet. For now, try <strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</ContentCommonBody>
-//						</ContentCommon>
-
 			}
 			else if ( Viewing == '/feed' ) {
 				return (

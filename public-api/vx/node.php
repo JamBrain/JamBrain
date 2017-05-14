@@ -206,17 +206,32 @@ switch ( $action ) {
 			else {
 				$methods = array_map("coreSlugify_Name", explode('+', $methods));
 				
-				$allowed_methods = ['parent','superparent','author','authors','all','unpublished','cool','smart','grade','feedback','reverse'];
+				$allowed_methods = [
+					'parent',
+					'superparent',
+					'author',
+					
+					'all',
+					'authors',
+					
+					'unpublished',
+					'reverse',
+					
+					'cool',
+					'smart',
+					'grade',
+					'feedback'
+				];
 				foreach ( $methods as &$method ) {
 					if ( $method == 'all' ) {
 						if ( count($methods) > 1 ) {
-							json_EmitFatalError_BadRequest("Can't combine methods with all", $RESPONSE);
+//							json_EmitFatalError_BadRequest("Can't combine methods with all", $RESPONSE);
 						}
 						// totally fine, let it fall through
 					}
 					if ( $method == 'authors' ) {
 						if ( count($methods) > 1 ) {
-							json_EmitFatalError_BadRequest("Can't combine methods with authors", $RESPONSE);
+//							json_EmitFatalError_BadRequest("Can't combine methods with authors", $RESPONSE);
 						}
 //						else {
 //							json_EmitFatalError_BadRequest("Sorry. authors method not yet supported", $RESPONSE);

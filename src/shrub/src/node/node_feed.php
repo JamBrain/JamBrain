@@ -266,6 +266,9 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 	$NODE_ARGS = [];
 	$LINK_QUERY = [];
 	$LINK_ARGS = [];
+	
+	$JOIN_QUERY = [];
+	$JOIN_ARGS = [];
 
 	// Pre-parse the methods
 	if ( !dbQuery_Arrayify($methods) ) {
@@ -301,19 +304,30 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 				dbQuery_MakeId($node_ids, 'n.'.$method, $NODE_QUERY, $NODE_ARGS);
 				break;
 	
-//			case 'authors':
-//				$QUERY[] = '`key`=?';
-//				$ARGS[] = 'author';
-//
-//				$pre_query[] = 'b'.$node_query;
-//				if ( isset($node_args) ) $ARGS[] = $node_args;
-//				
-//				$post_query[] = "id IN (SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." GROUP BY a, b, `key`)";
-//				$post_query[] = "scope=?";
-//				$ARGS[] = 0;
-//				
-//				$authors = true;
-//				break;
+			case 'authors':
+				if ( !$valid_ids )
+					return null;
+					
+				$JOIN_QUERY[] = 
+					"INNER JOIN (
+						SELECT
+							a, b,
+							MAX(id) AS max
+						FROM
+							".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+						WHERE
+							`key`=? AND scope=?
+						GROUP BY 
+							a, b, `key`
+					) AS authors ON n.id=authors.a";
+
+				$JOIN_ARGS[] = 'author';
+				$JOIN_ARGS[] = '0';
+
+				dbQuery_MakeId($node_ids, 'authors.b', $LINK_QUERY, $LINK_ARGS);
+
+				$link = 'authors';
+				break;
 
 			case 'unpublished':
 				$published = false;
@@ -335,10 +349,6 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 	// Build published query
 	if ( $published ) {
 		$NODE_QUERY[] = "published > CONVERT(0, DATETIME)";
-		//$orderby_query = "ORDER BY published DESC";
-	}
-	else {
-		//$orderby_query = "ORDER BY modified DESC";
 	}
 	
 	// Build type queries
@@ -363,24 +373,56 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 	if ( $magic && $link ) {
 		
 	}
-	else if ( $magic ) {
-		$QUERY = array_merge($MAGIC_QUERY, $NODE_QUERY);
-		$ARGS = array_merge($MAGIC_ARGS, $NODE_ARGS);
-		$ORDER_BY = "ORDER BY m.score $SORT_ORDER";
+	else if ( $link ) {
+		if ( $published )
+			$ORDER_BY = "ORDER BY n.published $SORT_ORDER";
+		else
+			$ORDER_BY = "ORDER BY n.modified $SORT_ORDER";
+
+		$QUERY = array_merge($NODE_QUERY, $LINK_QUERY);
+		$ARGS = array_merge($JOIN_ARGS, $NODE_ARGS, $LINK_ARGS);
 		
 		$ARGS[] = $limit;
 		$ARGS[] = $offset;
+		
+		$JOIN = count($JOIN_QUERY) ? implode(' ', $JOIN_QUERY) : '';
+		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
 
 		return db_QueryFetch(
 			"SELECT
 				n.id,
-				".DB_FIELD_DATE('n.published', 'modified').",
+				".DB_FIELD_DATE('n.modified', 'modified')."
+			FROM
+				".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
+				$JOIN
+			$WHERE
+			$ORDER_BY
+			LIMIT ?
+			OFFSET ?
+			;",
+			...$ARGS
+		);		
+	}
+	else if ( $magic ) {
+		$ORDER_BY = "ORDER BY m.score $SORT_ORDER";
+
+		$QUERY = array_merge($MAGIC_QUERY, $NODE_QUERY);
+		$ARGS = array_merge($MAGIC_ARGS, $NODE_ARGS);
+		
+		$ARGS[] = $limit;
+		$ARGS[] = $offset;
+
+		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
+
+		return db_QueryFetch(
+			"SELECT
+				n.id,
+				".DB_FIELD_DATE('n.modified', 'modified').",
 				m.score
 			FROM
 				".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
 				INNER JOIN ".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC." AS m ON n.id=m.node
-			WHERE
-				".implode(' AND ', $QUERY)."
+			$WHERE
 			$ORDER_BY
 			LIMIT ?
 			OFFSET ?
@@ -389,24 +431,26 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 		);
 	}
 	else {
-		$QUERY = $NODE_QUERY;
-		$ARGS = $NODE_ARGS;
 		if ( $published )
 			$ORDER_BY = "ORDER BY n.published $SORT_ORDER";
 		else
 			$ORDER_BY = "ORDER BY n.modified $SORT_ORDER";
 
+		$QUERY = $NODE_QUERY;
+		$ARGS = $NODE_ARGS;
+
 		$ARGS[] = $limit;
 		$ARGS[] = $offset;
+
+		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
 
 		return db_QueryFetch(
 			"SELECT
 				n.id,
-				".DB_FIELD_DATE('n.published', 'modified')."
+				".DB_FIELD_DATE('n.modified', 'modified')."
 			FROM
 				".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
-			WHERE
-				".implode(' AND ', $QUERY)."
+			$WHERE
 			$ORDER_BY
 			LIMIT ?
 			OFFSET ?
