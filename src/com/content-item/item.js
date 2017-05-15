@@ -255,12 +255,13 @@ export default class ContentItem extends Component {
 				let Score = Metric.value;
 
 				if ( Metric.key == 'smart' ) {
-					Title = "Coolness";
+					Title = "Balance";
 					Star = true;
 				}
 				else if ( Metric.key == 'cool' ) {
-					Title = "Classic coolness";
+					Title = "Classic Balance";
 					Star = true;
+					continue;
 				}
 				else if ( Metric.key == 'grade' ) {
 					Title = "Ratings for game";
