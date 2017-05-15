@@ -73,11 +73,11 @@ if ( $featured_id ) {
 			// Get all published item ids
 			$node_ids = node_GetIdByParentTypePublished($featured_id, 'item');
 	
-			AddMagic('smart', $featured_id);
-			AddMagic('cool', $featured_id);
 			AddMagic('grade', $featured_id);
 			AddMagic('given', $featured_id);
 			AddMagic('feedback', $featured_id);
+			AddMagic('smart', $featured_id);
+			AddMagic('cool', $featured_id);
 		}
 		
 		
