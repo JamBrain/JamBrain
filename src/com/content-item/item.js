@@ -255,7 +255,7 @@ export default class ContentItem extends Component {
 				let Score = Metric.value;
 
 				if ( Metric.key == 'smart' ) {
-					Title = "Smart Balance";
+					Title = "Balance";
 					Star = true;
 				}
 				else if ( Metric.key == 'cool' ) {
@@ -264,19 +264,19 @@ export default class ContentItem extends Component {
 					continue;
 				}
 				else if ( Metric.key == 'grade' ) {
-					Title = "Ratings received";
+					Title = "Ratings for game";
 				}
 				else if ( Metric.key == 'given' ) {
-					Title = "Ratings given";
+					Title = "Ratings given by team";
 				}
 				else if ( Metric.key == 'feedback' ) {
-					Title = "Karma-weighted Feedback given";
+					Title = "Feedback given by team";
 				}
 
 				if ( Star )
-					AdvancedLines.push(<div class="-metric"><span class="-title">{Title}:</span> <strong>{Score} *</strong></div>);
+					AdvancedLines.push(<div class="-metric"><span class="-title">{Title}:</span> <strong>{Score.toFixed(2)} *</strong></div>);
 				else
-					SimpleLines.push(<div class="-metric"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
+					SimpleLines.push(<div class="-metric"><span class="-title">{Title}:</span> <strong>{Score.toFixed(2)}</strong></div>);
 			}
 
 			ShowMetrics = (
