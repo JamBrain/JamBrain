@@ -270,7 +270,7 @@ export default class ContentItem extends Component {
 					Title = "Ratings given";
 				}
 				else if ( Metric.key == 'feedback' ) {
-					Title = "Karma-weighted Feedback given";
+					Title = "Karma for Feedback given";
 				}
 				
 				let SmallScore = Score.toFixed(4);
