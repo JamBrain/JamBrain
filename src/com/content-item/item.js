@@ -274,9 +274,9 @@ export default class ContentItem extends Component {
 				}
 
 				if ( Star )
-					AdvancedLines.push(<div class="-metric"><span class="-title">{Title}:</span> <strong>{Score} *</strong></div>);
+					AdvancedLines.push(<div class="-metric"><span class="-title">{Title}:</span> <strong>{Score.toFixed(2)} *</strong></div>);
 				else
-					SimpleLines.push(<div class="-metric"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
+					SimpleLines.push(<div class="-metric"><span class="-title">{Title}:</span> <strong>{Score.toFixed(2)}</strong></div>);
 			}
 
 			ShowMetrics = (
