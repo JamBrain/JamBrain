@@ -1,5 +1,23 @@
 <?php
 
+function nodeMagic_GetByNode( $nodes, $offset = null, $limit = null ) {
+	$QUERY = [];
+	$ARGS = [];
+
+	dbQuery_MakeEq('node', $nodes, $QUERY, $ARGS);
+
+	return db_QueryFetchIdKeyValue(
+		"SELECT
+			node, name, score
+		FROM
+			".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC." 
+		".dbQuery_MakeQuery($QUERY)."
+		".dbQuery_MakeLimit($offset, $limit, $ARGS)."
+		;",
+		...$ARGS
+	);
+}
+
 function nodeMagic_GetNodeIdByParentName( $parent, $name, $limit = null ) {
 	$LIMIT_QUERY = '';
 	if ( $limit > 0 ) {
@@ -11,7 +29,8 @@ function nodeMagic_GetNodeIdByParentName( $parent, $name, $limit = null ) {
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC." 
 		WHERE 
 			parent=? AND name=?
-		$LIMIT_QUERY;",
+		$LIMIT_QUERY
+		;",
 		$parent,
 		$name
 	);

@@ -101,3 +101,71 @@ function dbQuery_MakeNot( $items, $item_name, &$QUERY, &$ARGS ) {
 	}
 	return true;
 }
+
+function dbQuery_MakeQuery( &$QUERY ) {
+	return count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
+}
+
+function dbQuery_MakeLimit( $offset, $limit, &$ARGS ) {
+	$QUERY = [];
+	if ( is_integer($limit) && $limit > 0 ) {
+		$QUERY[] = 'LIMIT ?';
+		$ARGS[] = $limit;
+	}
+	if ( is_integer($offset) && $offset >= 0 ) {
+		$QUERY[] = 'OFFSET ?';
+		$ARGS[] = $offset;
+	}
+
+	return implode(' ', $QUERY);
+}
+
+
+function dbQuery_MakeOp( $name, $op, $array, &$QUERY, &$ARGS ) {
+	if ( is_numeric($array) || is_string($array) ) {
+		$QUERY[] = $name.$op.'?';
+		$ARGS[] = $array;
+
+		return true;
+	}
+	else if ( is_array($array) ) {
+		if ( count($array) ) {
+			switch ( $op ) {
+				case '=':
+					$op = 'IN';
+					break;
+
+				case '!=':
+					$op = 'NOT IN';
+					break;
+
+				default: {
+					global $RESPONSE;
+					json_EmitFatalError_Server("Invalid Op passed to ".__FUNCTION__, $RESPONSE);
+					break;
+				}
+			}
+			
+			if ( is_numeric($array) ) {
+				$QUERY[] = $name.' '.$op.' ('.implode(',', $array).')';
+				return true;
+			}
+			else if ( is_string($array) ) {
+				$QUERY[] = $name.' '.$op.' ("'.implode('","', $array).'")';
+				return true;
+			}
+		}
+		else {
+			global $RESPONSE;
+			json_EmitFatalError_Server("Empty array passed to ".__FUNCTION__, $RESPONSE);
+		}
+	}
+	return null;
+}
+
+function dbQuery_MakeEq( $name, $array, &$QUERY, &$ARGS ) {
+	return dbQuery_MakeOp($name, '=', $array, $QUERY, $ARGS);
+}
+function dbQuery_MakeNotEq( $name, $array, &$QUERY, &$ARGS ) {
+	return dbQuery_MakeOp($name, '!=', $array, $QUERY, $ARGS);
+}
