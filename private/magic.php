@@ -76,6 +76,7 @@ if ( $featured_id ) {
 			AddMagic('smart', $featured_id);
 			AddMagic('cool', $featured_id);
 			AddMagic('grade', $featured_id);
+			AddMagic('given', $featured_id);
 			AddMagic('feedback', $featured_id);
 		}
 		
@@ -181,7 +182,8 @@ if ( $featured_id ) {
 					'smart' => $smart,					// Smart Coolness
 					'cool' => $cool,					// Unbound Coolness
 					'grade' => $given_grades,			// How many grades received (Rescue Rangers)
-					'feedback' => $team_feedback		// Quality of feedback given (People who are working hard)
+					'given' => $team_grades,			// How many grades the team has given
+					'feedback' => $team_feedback		// Quality of feedback team has given (i.e. people who are working hard)
 				];
 			}
 	
@@ -191,6 +193,7 @@ if ( $featured_id ) {
 				nodeMagic_Update($sc['node'], 'smart', $sc['smart']);
 				nodeMagic_Update($sc['node'], 'cool', $sc['cool']);
 				nodeMagic_Update($sc['node'], 'grade', $sc['grade']);
+				nodeMagic_Update($sc['node'], 'given', $sc['given']);
 				nodeMagic_Update($sc['node'], 'feedback', $sc['feedback']);
 			}
 			$db->commit();
