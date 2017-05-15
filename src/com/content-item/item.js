@@ -272,11 +272,15 @@ export default class ContentItem extends Component {
 				else if ( Metric.key == 'feedback' ) {
 					Title = "Karma-weighted Feedback given";
 				}
+				
+				let SmallScore = Score.toFixed(4);
+				if ( SmallScore.length > Score.toString().length )
+					SmallScore = Score.toString();
 
 				if ( Star )
-					AdvancedLines.push(<div class="-metric"><span class="-title">{Title}:</span> <strong>{Score.toFixed(2)} *</strong></div>);
+					AdvancedLines.push(<div class="-metric"><span class="-title">{Title}:</span> <strong title={Score}>{SmallScore} *</strong></div>);
 				else
-					SimpleLines.push(<div class="-metric"><span class="-title">{Title}:</span> <strong>{Score.toFixed(2)}</strong></div>);
+					SimpleLines.push(<div class="-metric"><span class="-title">{Title}:</span> <strong title={Score}>{SmallScore}</strong></div>);
 			}
 
 			ShowMetrics = (
