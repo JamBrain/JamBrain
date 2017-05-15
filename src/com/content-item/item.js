@@ -233,6 +233,66 @@ export default class ContentItem extends Component {
 //			);
 //		}
 		
+		var ShowMetrics = null;
+		if ( node.magic && node_IsAuthor(node, user) ) {
+			let Lines = [];
+			for ( var key in node.magic ) {
+				let parts = key.split('-');
+
+				// Ignore grades (i.e. grade-01)
+				//if ( parts.length && (parts[0] != 'grade' && parts.length > 1 ) {
+					Lines.push({'key': key, 'value': node.magic[key]});
+				//}
+			}
+
+			let SimpleLines = [];
+			let AdvancedLines = [];
+			for ( let idx = 0; idx < Lines.length; idx++ ) {
+				let Metric = Lines[idx];
+
+				let Star = false;
+				let Title = Metric.key;
+				let Score = Metric.value;
+
+				if ( Metric.key == 'smart' ) {
+					Title = "Coolness";
+					Star = true;
+				}
+				else if ( Metric.key == 'cool' ) {
+					Title = "Classic coolness";
+					Star = true;
+				}
+				else if ( Metric.key == 'grade' ) {
+					Title = "Ratings for game";
+				}
+				else if ( Metric.key == 'given' ) {
+					Title = "Ratings given by team";
+				}
+				else if ( Metric.key == 'feedback' ) {
+					Title = "Feedback given by team";
+				}
+
+				if ( Star )
+					AdvancedLines.push(<div class="-metric"><span class="-title">{Title}:</span> <strong>{Score} *</strong></div>);
+				else
+					SimpleLines.push(<div class="-metric"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
+			}
+
+			ShowMetrics = (
+				<ContentCommonBody class="-rating">
+					<div class="-header">Metrics</div>
+					<div class="-subtext">Advanced data on your game</div>
+					<div class="-items">
+						{SimpleLines}
+						{AdvancedLines}
+					</div>
+					<div class="-footer">Metrics update rougly every <strong>15 minutes</strong>. If they don't exactly match other data (i.e. ratings), this is because they haven't updated yet. Metrics with a <strong>*</strong> are dynamic, and change based on a variety of factors. It is normal for these numbers to go up and down.</div>
+				</ContentCommonBody>
+			);
+		}
+
+		var ShowResults = null;
+
 		var ShowGrade = null;
 		if ( parent && node_CanGrade(parent) ) {
 			if ( node_IsAuthor(node, user) ) {
@@ -492,6 +552,8 @@ export default class ContentItem extends Component {
 		props.viewonly = (
 			<div>
 				{ShowGrade}
+				{ShowMetrics}
+				{ShowResults}
 			</div>
 		);
 		
