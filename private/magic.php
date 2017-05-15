@@ -133,6 +133,7 @@ if ( $featured_id ) {
 	
 				$smart = 0;
 				$cool = 0;
+				$unbound = 0;
 	
 				$team_grade = 0;
 				$given_grade = 0;
@@ -159,21 +160,21 @@ if ( $featured_id ) {
 					$team_grades = max(0, grade_CountByNotNodeAuthor($node['id'], $authors) / $team_grade_value);
 					$given_grades = max(0, grade_CountByNodeNotAuthor($node['id'], $authors) / $given_grade_value);	// historically there's a -1 here
 	
-					$smart_grade = sqrt(min(COOL_MAX_GRADES, $team_grades) * 100.0 / max(1.0, min(COOL_MAX_GRADES, $given_grades))) * 100.0 / 10.0;
-					$cool_grade = sqrt($team_grades * 100.0 / max(1.0, $given_grades)) * 100.0 / 10.0;
+					$bound_grade = sqrt(min(COOL_MAX_GRADES, $team_grades) * 100.0 / max(1.0, min(COOL_MAX_GRADES, $given_grades))) * 100.0 / 10.0;
+					$unbound_grade = sqrt($team_grades * 100.0 / max(1.0, $given_grades)) * 100.0 / 10.0;
 	
 					// ** Calculate Feedback Score **
 					$team_feedback = max(0, noteLove_CountBySuperNotNodeAuthorKnownNotAuthor($node['parent'], $node['id'], $authors) / FEEDBACK_PER_NOTE);
 					$given_feedback = max(0, noteLove_CountBySuperNodeNotAuthorKnownNotAuthor($node['parent'], $node['id'], $authors) / FEEDBACK_PER_NOTE);
 	
-					$smart_feedback = sqrt(min(COOL_MAX_FEEDBACK, $team_feedback) * 100.0 / max(1.0, min(COOL_MAX_FEEDBACK, $given_feedback))) * 100.0 / 10.0;
-					$cool_feedback = sqrt($team_feedback * 100.0 / max(1.0, $given_feedback)) * 100.0 / 10.0;
+					$bound_feedback = sqrt(min(COOL_MAX_FEEDBACK, $team_feedback) * 100.0 / max(1.0, min(COOL_MAX_FEEDBACK, $given_feedback))) * 100.0 / 10.0;
+					$unbound_feedback = sqrt($team_feedback * 100.0 / max(1.0, $given_feedback)) * 100.0 / 10.0;
 
 					
 					// Final
-					$smart = $smart_grade;// + $smart_feedback;		// up to 1000 points
-					$cool = $smart_grade + $smart_feedback;
-//					$cool = $cool_grade + $cool_feedback;			// unbound
+					$smart = $bound_grade;// + $bound_feedback;			// up to 1000 points
+					$cool = $bound_grade + $bound_feedback;				// ratings only
+//					$unbound = $unbound_grade + $unbound_feedback;		// unbound
 				}
 	
 				// Prefer $magic['node'] to $node['id'] in case it fails to load
