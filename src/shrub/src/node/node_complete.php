@@ -13,7 +13,7 @@ const F_NODE_COMMENT = 0x20;
 const F_NODE_COUNT = 0x40;
 //const F_NODE_ = 0x80;
 const F_NODE_GRADE = 0x100;
-//const F_NODE_ = 0x200;
+const F_NODE_MAGIC = 0x200;
 //const F_NODE_ = 0x400;
 //const F_NODE_ = 0x800;
 
@@ -134,6 +134,18 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 			foreach ( $grades as $key => &$grade ) {
 				if ( $node['id'] === $key ) {
 					$node['grade'] = $grade;
+				}
+			}
+		}
+	}
+	
+	// Populate Magic
+	if ( $flags & F_NODE_MAGIC ) {
+		$magics = nodeMagic_GetByNode($ids);
+		foreach ( $nodes as &$node ) {
+			foreach ( $magics as $key => &$magic ) {
+				if ( $node['id'] === $key ) {
+					$node['magic'] = $magic;
 				}
 			}
 		}
