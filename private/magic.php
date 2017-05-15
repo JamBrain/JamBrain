@@ -14,7 +14,7 @@ const MAX_ITEMS_TO_CALC = 500;
 
 // TODO: Adjust the maximum effectiveness as the weeks go by. Start with like 50 initially (more than enough), but let it go up after.
 const FEEDBACK_PER_NOTE = 4.0;
-const COOL_MAX_GRADES = 50;
+const COOL_MAX_GRADES = 30;//50;
 const COOL_MAX_FEEDBACK = 50;
 
 function AddMagic( $name, $parent ) {
@@ -165,14 +165,14 @@ if ( $featured_id ) {
 					$team_feedback = max(0, noteLove_CountBySuperNotNodeAuthorKnownNotAuthor($node['parent'], $node['id'], $authors) / FEEDBACK_PER_NOTE);
 					$given_feedback = max(0, noteLove_CountBySuperNodeNotAuthorKnownNotAuthor($node['parent'], $node['id'], $authors) / FEEDBACK_PER_NOTE);
 	
-					$smart_feedback = sqrt(min(COOL_MAX_FEEDBACK, $team_feedback) * 100.0 / max(1.0, min(COOL_MAX_FEEDBACK, $given_feedback))) * 100.0 / 20.0;
-					$cool_feedback = sqrt($team_feedback * 100.0 / max(1.0, $given_feedback)) * 100.0 / 20.0;
-					// EDIT: Half as much (was / 10, now / 20)
+					$smart_feedback = sqrt(min(COOL_MAX_FEEDBACK, $team_feedback) * 100.0 / max(1.0, min(COOL_MAX_FEEDBACK, $given_feedback))) * 100.0 / 10.0;
+					$cool_feedback = sqrt($team_feedback * 100.0 / max(1.0, $given_feedback)) * 100.0 / 10.0;
 
 					
 					// Final
-					$smart = $smart_grade + $smart_feedback;		// up to 1000 points
-					$cool = $cool_grade + $cool_feedback;			// unbound
+					$smart = $smart_grade;// + $smart_feedback;		// up to 1000 points
+					$cool = $smart_grade + $smart_feedback;
+//					$cool = $cool_grade + $cool_feedback;			// unbound
 				}
 	
 				// Prefer $magic['node'] to $node['id'] in case it fails to load
