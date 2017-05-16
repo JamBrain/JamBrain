@@ -102,9 +102,11 @@ switch ( $node['type'] ) {
 			'item', null, 'unfinished'
 		);
 
-		$stats['grade-20'] = nodeMagic_CountByParentName($node['id'], 'grade', '>=20');
-		$stats['grade-15'] = nodeMagic_CountByParentName($node['id'], 'grade', '>=15') - $stats['grade-20'];
-		$stats['grade-10'] = nodeMagic_CountByParentName($node['id'], 'grade', '>=15') - $stats['grade-20'] - $stats['grade-15'];
+		$stats['grade-20-plus'] = nodeMagic_CountByParentName($node['id'], 'grade', '>=20');
+		$stats['grade-15-20'] = nodeMagic_CountByParentName($node['id'], 'grade', '>=15') - $stats['grade-20'];
+		$stats['grade-10-15'] = nodeMagic_CountByParentName($node['id'], 'grade', '>=10') - $stats['grade-20'] - $stats['grade-15'];
+		$stats['grade-5-10'] = nodeMagic_CountByParentName($node['id'], 'grade', '>=5') - $stats['grade-20'] - $stats['grade-15'] - $stats['grade-10'];
+		$stats['grade-0-5'] = nodeMagic_CountByParentName($node['id'], 'grade', '<5');
 		
 		break;
 	}
