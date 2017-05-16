@@ -197,7 +197,7 @@ export default class ViewContent extends Component {
 //						<CommonBody>{"Sorry, these aren't sorted correctly yet. For now, try "}<strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</CommonBody>
 //					</Common>
 //				);
-				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={['parent','smart']} subsubtypes={SubSubType ? SubSubType : null} />;
+				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={['parent','danger']} subsubtypes={SubSubType ? SubSubType : null} />;
 			}
 			else {
 				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
@@ -295,7 +295,7 @@ export default class ViewContent extends Component {
 					'smart': <div><strong>Smart</strong>: This is the modern balacing filter. It balances the list using a combination of votes and the karma given to feedback. You start seeing diminishing returns after 50 ratings, but you can make up for it by leaving quality feedback.</div>,
 					'unbound': <div><strong>Unbound</strong>: This is a variation of the Smart filter that is unbound. For curiousity.</div>,
 					'classic': <div><strong>Classic</strong>: This is the classic balancing filter. It balances the list based on ratings alone. You start seeing diminishing returns after 100 ratings.</div>,
-					'danger': <div><strong>Danger</strong>: This is the rescue filter. Top to bottom, it's every game with less than 20 ratings.</div>, //'
+					'danger': <div><strong>Danger</strong>: This is the rescue filter. Everything with less than 20 ratings sorted top to bottom. Items on the first page are typically 1-2 rating away, so help them out!</div>, //'
 					'feedback': <div><strong>Feedback</strong>: This filter lets you find who is working the hardest, leaving quality feedback for others.</div>,
 					'grade': <div><strong>Grade</strong>: This filter lets you find the games that have the most ratings.</div>,
 				};

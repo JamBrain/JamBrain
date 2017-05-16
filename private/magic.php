@@ -17,7 +17,7 @@ const FEEDBACK_PER_NOTE = 2.0;
 
 const COOL_MIN_GRADES = 1;		// In the future, set this to 3 or 4
 const COOL_MIN_FEEDBACK = 1;	// In the future, set this to 3 or 4
-const COOL_MAX_GRADES = 30;//50;
+const COOL_MAX_GRADES = 50;
 const COOL_MAX_FEEDBACK = 50;
 
 const CLASSIC_MAX_GRADES = 100;
@@ -196,12 +196,10 @@ if ( $featured_id ) {
 
 
 					// Final
-					$smart = $bound_grade + 100; // hack, like original
-					//$smart = $bound_grade + $bound_feedback;				// bound, so it will hit upper limits
+					$smart = $bound_grade + $bound_feedback;				// bound, so it will hit upper limits
 					$unbound = $unbound_grade + $unbound_feedback;			// unbound
 
-					$cool = $bound_grade + $bound_feedback; // hack
-					//$cool = $classic_grade;								// ratings only, old algorithm
+					$cool = $classic_grade;									// ratings only, old algorithm
 				}
 	
 				// Prefer $magic['node'] to $node['id'] in case it fails to load
