@@ -235,17 +235,18 @@ export default class ViewContent extends Component {
 //			else if ( Viewing == '/games' ) {
 			else if ( extra && extra.length && extra[0] == 'games' ) {
 				let DefaultSubFilter = 'all';
-				let DefaultFilter = 'smart';
+				let DefaultFilter = 'danger';//'smart';
+				
+				function EvalFilter(str) {
+					let MappingTable = {
+						'all': 'compo+jam+craft+release',
+						'classic': 'cool',
+					};
 
-				let MappingTable = {
-					'all': 'compo+jam+craft+release',
-					'classic': 'cool',
-				};
-
-				if ( MappingTable[DefaultSubFilter] )
-					DefaultSubFilter = MappingTable[DefaultSubFilter];
-				if ( MappingTable[DefaultFilter] )
-					DefaultFilter = MappingTable[DefaultFilter];
+					if ( MappingTable[str] )
+						return MappingTable[str];
+					return str;
+				}
 
 				let Methods = [];
 				let Filter = DefaultFilter;
@@ -257,16 +258,15 @@ export default class ViewContent extends Component {
 					Filter = extra[1];
 
 				// Determine Filter
-				if ( MappingTable[Filter] )
-					Filter = MappingTable[Filter];
 				if ( Filter.indexOf('-') == -1 ) {		// should be '+'
 					switch ( Filter ) {
 						case 'smart':
+						case 'classic':
 						case 'cool':
 						case 'danger':
 						case 'grade':
 						case 'feedback':
-							Methods = [Filter];
+							Methods = [EvalFilter(Filter)];
 							break;
 
 						case 'jam':
@@ -276,7 +276,7 @@ export default class ViewContent extends Component {
 						case 'release':
 						case 'unfinished':
 							SubFilter = Filter;
-							Methods = [DefaultFilter];
+							Methods = [EvalFilter(DefaultFilter)];
 							break;
 
 						default:
@@ -287,18 +287,14 @@ export default class ViewContent extends Component {
 				else {
 					// If '+' was found, assume it's a multi-part subfilter and not a filter
 					SubFilter = Filter.split('-');		// should be '+'
-					Methods = [DefaultFilter];
+					Methods = [EvalFilter(DefaultFilter)];
 				}
-
-				// Determine SubFilter
-				if ( MappingTable[SubFilter] )
-					SubFilter = MappingTable[SubFilter];
 
 
 				let FilterDesc = {
 					'smart': <div><strong>Smart</strong>: This is the modern balacing filter. It balances the list using a combination of votes and the karma given to feedback. You start seeing diminishing returns after 50 ratings, but you can make up for it by leaving quality feedback.</div>,
 					'unbound': <div><strong>Unbound</strong>: This is a variation of the Smart filter that is unbound. For curiousity.</div>,
-					'cool': <div><strong>Classic</strong>: This is the classic balancing filter. It balances the list based on ratings alone. You start seeing diminishing returns after 100 ratings.</div>,
+					'classic': <div><strong>Classic</strong>: This is the classic balancing filter. It balances the list based on ratings alone. You start seeing diminishing returns after 100 ratings.</div>,
 					'danger': <div><strong>Danger</strong>: This is the rescue filter. Top to bottom, it's every game with less than 20 ratings.</div>, //'
 					'feedback': <div><strong>Feedback</strong>: This filter lets you find who is working the hardest, leaving quality feedback for others.</div>,
 					'grade': <div><strong>Grade</strong>: This filter lets you find the games that have the most ratings.</div>,
@@ -306,25 +302,29 @@ export default class ViewContent extends Component {
 
 				let ShowFilters = null;
 				if ( true ) {
+					let Path = this.props.path+'/games/';
+					
 					ShowFilters = (
 						<Common node={this.props.node} class="filter-item filter-game">
 							<CommonNav>
-								<CommonNavButton><SVGIcon>gamepad</SVGIcon><div>All</div></CommonNavButton>
-								<CommonNavButton><SVGIcon>trophy</SVGIcon><div>Jam</div></CommonNavButton>
-								<CommonNavButton><SVGIcon>trophy</SVGIcon><div>Compo</div></CommonNavButton>
-								<CommonNavButton><SVGIcon>trash</SVGIcon><div>Unfinished</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+'/all'} class={SubFilter == 'all' ? '-selected' : ''}><SVGIcon>gamepad</SVGIcon><div>All</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+'/jam'} class={SubFilter == 'jam' ? '-selected' : ''}><SVGIcon>trophy</SVGIcon><div>Jam</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+'/compo'} class={SubFilter == 'compo' ? '-selected' : ''}><SVGIcon>trophy</SVGIcon><div>Compo</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+'/unfinished'} class={SubFilter == 'unfinished' ? '-selected' : ''}><SVGIcon>trash</SVGIcon><div>Unfinished</div></CommonNavButton>
 							</CommonNav>
 							<CommonNav>
-								<CommonNavButton><SVGIcon>ticket</SVGIcon><div>Smart</div></CommonNavButton>
-								<CommonNavButton><SVGIcon>ticket</SVGIcon><div>Classic</div></CommonNavButton>
-								<CommonNavButton><SVGIcon>help</SVGIcon><div>Danger</div></CommonNavButton>
-								<CommonNavButton><SVGIcon>bubbles</SVGIcon><div>Feedback</div></CommonNavButton>
-								<CommonNavButton><SVGIcon>todo</SVGIcon><div>Grade</div></CommonNavButton>
+								<CommonNavButton href={Path+'smart/'+SubFilter} class={Filter == 'smart' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Smart</div></CommonNavButton>
+								<CommonNavButton href={Path+'classic/'+SubFilter} class={Filter == 'classic' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Classic</div></CommonNavButton>
+								<CommonNavButton href={Path+'danger/'+SubFilter} class={Filter == 'danger' ? '-selected' : ''}><SVGIcon>help</SVGIcon><div>Danger</div></CommonNavButton>
+								<CommonNavButton href={Path+'feedback/'+SubFilter} class={Filter == 'feedback' ? '-selected' : ''}><SVGIcon>bubbles</SVGIcon><div>Feedback</div></CommonNavButton>
+								<CommonNavButton href={Path+'grade/'+SubFilter} class={Filter == 'grade' ? '-selected' : ''}><SVGIcon>todo</SVGIcon><div>Grade</div></CommonNavButton>
 							</CommonNav>
 							<CommonBody>{FilterDesc[Filter]}</CommonBody>
 						</Common>
 					);
 				}
+				
+				SubFilter = EvalFilter(SubFilter);
 				
 				return (
 					<div id="content">
@@ -333,9 +333,6 @@ export default class ViewContent extends Component {
 						<ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />
 					</div>
 				);
-//						<div>Filter: {Filter}</div>
-//						<div>Method: {Methods}</div>
-//						<div>SubFilter: {SubFilter}</div>
 			}
 			else if ( Viewing == '/feed' ) {
 				return (
