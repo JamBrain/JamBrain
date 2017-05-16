@@ -69,10 +69,10 @@ function dbQuery_Make( $items, $item_name, &$QUERY, &$ARGS ) {
 	// IMPORTANT: You must sanitize $items and $item_name
 	
 	if ( is_array($items) && count($items) ) {
-		$QUERY[] = '`'.$item_name.'` IN ("'.implode('","', $items).'")';
+		$QUERY[] = ''.$item_name.' IN ("'.implode('","', $items).'")';
 	}
 	else if ( is_string($items) ) {
-		$QUERY[] = '`'.$item_name.'`=?';
+		$QUERY[] = ''.$item_name.'=?';
 		$ARGS[] = $items;
 	}
 	else if ( is_null($items) ) {
@@ -87,10 +87,10 @@ function dbQuery_MakeNot( $items, $item_name, &$QUERY, &$ARGS ) {
 	// IMPORTANT: You must sanitize $items and $item_name
 	
 	if ( is_array($items) && count($items) ) {
-		$QUERY[] = '`'.$item_name.'` NOT IN ("'.implode('","', $items).'")';
+		$QUERY[] = ''.$item_name.' NOT IN ("'.implode('","', $items).'")';
 	}
 	else if ( is_string($items) ) {
-		$QUERY[] = '`'.$item_name.'`!=?';
+		$QUERY[] = ''.$item_name.'!=?';
 		$ARGS[] = $items;
 	}
 	else if ( is_null($items) ) {
