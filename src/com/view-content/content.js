@@ -131,6 +131,7 @@ export default class ViewContent extends Component {
 //						View.push(<ContentPost node={node} user={user} path={path} extra={extra.splice(1)} by love edit />);
 					}
 					else if ( ViewType == 'games' ) {
+/*
 						let DefaultSubFilter = 'all';
 						let DefaultFilter = 'smart';
 						
@@ -227,16 +228,16 @@ export default class ViewContent extends Component {
 						View.push(ShowNavRoot);
 						View.push(ShowFilters);
 						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />);
-						
+*/
 
-//						let SubSubType = null;
-//						if ( extra && extra.length > 1 ) {
-//							if ( extra[1] != 'all' )
-//								SubSubType = extra[1];
-//						}
-//						
-//						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
-//						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['authors']} subsubtypes={SubSubType ? SubSubType : ""} />);
+						let SubSubType = null;
+						if ( extra && extra.length > 1 ) {
+							if ( extra[1] != 'all' )
+								SubSubType = extra[1];
+						}
+						
+						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
+						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['authors']} subsubtypes={SubSubType ? SubSubType : ""} />);
 					}
 					else if ( ViewType == 'article' ) {
 
