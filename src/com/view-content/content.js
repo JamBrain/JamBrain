@@ -29,8 +29,11 @@ import ContentEventTheme				from 'com/content-event/event-theme';
 import ContentPalette					from 'com/content-palette/palette';
 
 import NavLink							from 'com/nav-link/link';
-import ContentCommon					from 'com/content-common/common';
-import ContentCommonBody				from 'com/content-common/common-body';
+import SVGIcon							from 'com/svg-icon/icon';
+import Common							from 'com/content-common/common';
+import CommonBody						from 'com/content-common/common-body';
+import CommonNav						from 'com/content-common/common-nav';
+import CommonNavButton					from 'com/content-common/common-nav-button';
 
 
 export default class ViewContent extends Component {
@@ -190,9 +193,9 @@ export default class ViewContent extends Component {
 				}
 				
 //				ShowInfo = (
-//					<ContentCommon node={node}>
-//						<ContentCommonBody>{"Sorry, these aren't sorted correctly yet. For now, try "}<strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</ContentCommonBody>
-//					</ContentCommon>
+//					<Common node={node}>
+//						<CommonBody>{"Sorry, these aren't sorted correctly yet. For now, try "}<strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</CommonBody>
+//					</Common>
 //				);
 				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={['parent','smart']} subsubtypes={SubSubType ? SubSubType : null} />;
 			}
@@ -290,10 +293,43 @@ export default class ViewContent extends Component {
 				// Determine SubFilter
 				if ( MappingTable[SubFilter] )
 					SubFilter = MappingTable[SubFilter];
+
+
+				let FilterDesc = {
+					'smart': <div><strong>Smart</strong>: This is the modern balacing filter. It balances the list using a combination of votes and the karma given to feedback. You start seeing diminishing returns after 50 ratings, but you can make up for it by leaving quality feedback.</div>,
+					'unbound': <div><strong>Unbound</strong>: This is a variation of the Smart filter that is unbound. For curiousity.</div>,
+					'cool': <div><strong>Classic</strong>: This is the classic balancing filter. It balances the list based on ratings alone. You start seeing diminishing returns after 100 ratings.</div>,
+					'danger': <div><strong>Danger</strong>: This is the rescue filter. Top to bottom, it's every game with less than 20 ratings.</div>, //'
+					'feedback': <div><strong>Feedback</strong>: This filter lets you find who is working the hardest, leaving quality feedback for others.</div>,
+					'grade': <div><strong>Grade</strong>: This filter lets you find the games that have the most ratings.</div>,
+				};
+
+				let ShowFilters = null;
+				if ( true ) {
+					ShowFilters = (
+						<Common node={this.props.node} class="filter-item filter-game">
+							<CommonNav>
+								<CommonNavButton><SVGIcon>gamepad</SVGIcon><div>All</div></CommonNavButton>
+								<CommonNavButton><SVGIcon>trophy</SVGIcon><div>Jam</div></CommonNavButton>
+								<CommonNavButton><SVGIcon>trophy</SVGIcon><div>Compo</div></CommonNavButton>
+								<CommonNavButton><SVGIcon>trash</SVGIcon><div>Unfinished</div></CommonNavButton>
+							</CommonNav>
+							<CommonNav>
+								<CommonNavButton><SVGIcon>ticket</SVGIcon><div>Smart</div></CommonNavButton>
+								<CommonNavButton><SVGIcon>ticket</SVGIcon><div>Classic</div></CommonNavButton>
+								<CommonNavButton><SVGIcon>help</SVGIcon><div>Danger</div></CommonNavButton>
+								<CommonNavButton><SVGIcon>bubbles</SVGIcon><div>Feedback</div></CommonNavButton>
+								<CommonNavButton><SVGIcon>todo</SVGIcon><div>Grade</div></CommonNavButton>
+							</CommonNav>
+							<CommonBody>{FilterDesc[Filter]}</CommonBody>
+						</Common>
+					);
+				}
 				
 				return (
 					<div id="content">
 						{ShowNavRoot}
+						{ShowFilters}
 						<ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />
 					</div>
 				);
