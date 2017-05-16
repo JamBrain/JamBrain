@@ -332,3 +332,76 @@ function nodeLink_AddByNode( $a, $b, $scope, $key, $value = null ) {
 function nodeLink_RemoveByNode( $a, $b, $scope, $key, $value = null ) {
 	return nodeLink_AddByNode($a, $b, $scope^-1, $key, $value);
 }
+
+
+function nodeLink_CountByABKeyScope( $parent = null, $a = null, $b = null, $key = null, $scope_op = '=0' ) {
+	$QUERY = [];
+	$OUTER_QUERY = [];
+	$INNER_QUERY = [];
+	$ARGS = [];
+
+	dbQuery_MakeEq('key', $key, $INNER_QUERY, $ARGS);
+
+	dbQuery_MakeEq('parent', $parent, $QUERY, $ARGS);
+
+	dbQuery_MakeEq('a', $a, $OUTER_QUERY, $ARGS);
+	dbQuery_MakeEq('b', $b, $OUTER_QUERY, $ARGS);
+	if ( $scope_op )
+		$OUTER_QUERY[] = 'scope'.$scope_op;
+
+//	return db_Echo(
+	return db_QueryFetchValue(
+		"SELECT
+			COUNT(DISTINCT o.b), o.a
+		FROM
+			".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." AS o
+			INNER JOIN (
+				SELECT
+					MAX(id) AS id
+				FROM
+					".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+				".dbQuery_MakeQuery($INNER_QUERY)."
+				GROUP BY 
+					a, b, `key`
+			) AS i ON o.id=i.id
+			INNER JOIN (
+				SELECT
+					id
+				FROM
+					".SH_TABLE_PREFIX.SH_TABLE_NODE."
+				".dbQuery_MakeQuery($QUERY)."
+			) AS n ON o.a=n.id
+		".dbQuery_MakeQuery($OUTER_QUERY)."
+		LIMIT 1
+		;",
+		...$ARGS
+	) |0;	// Clever: If nothing is returned, result is zero
+
+////	return db_Echo(
+//	return db_QueryFetchValue(
+//		"SELECT
+//			COUNT(DISTINCT o.b)
+//		FROM
+//			".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
+//			INNER JOIN (
+//				SELECT 
+//					id, a, b
+//				FROM
+//					".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+//				".dbQuery_MakeQuery($OUTER_QUERY)."
+//			) AS o ON n.id=o.a
+//			INNER JOIN (
+//				SELECT
+//					MAX(id) AS id
+//				FROM
+//					".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+//				".dbQuery_MakeQuery($INNER_QUERY)."
+//				GROUP BY 
+//					a, b, `key`
+//			) AS i ON o.id=i.id
+//		".dbQuery_MakeQuery($QUERY)."
+//		LIMIT 1
+//		;",
+//		...$ARGS
+//	) |0;	// Clever: If nothing is returned, result is zero
+}
