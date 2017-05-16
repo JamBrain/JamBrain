@@ -39,10 +39,10 @@ function dbQuery_AreIdsValid( &$array ) {
 // Build a query fragment for id checks
 function dbQuery_MakeId( $ids, $id_name, &$QUERY, &$ARGS ) {
 	if ( is_array($ids) && count($ids) ) {
-		$QUERY[] = "`$id_name` IN (".implode(',', $ids).")";
+		$QUERY[] = "$id_name IN (".implode(',', $ids).")";
 	}
 	else if ( is_integer($ids) ) {
-		$QUERY[] = "`$id_name`=?";
+		$QUERY[] = "$id_name=?";
 		$ARGS[] = $ids;
 	}
 	else {
@@ -52,10 +52,10 @@ function dbQuery_MakeId( $ids, $id_name, &$QUERY, &$ARGS ) {
 }
 function dbQuery_MakeNotId( $ids, $id_name, &$QUERY, &$ARGS ) {
 	if ( is_array($ids) && count($ids) ) {
-		$QUERY[] = "`$id_name` NOT IN (".implode(',', $ids).")";
+		$QUERY[] = "$id_name NOT IN (".implode(',', $ids).")";
 	}
 	else if ( is_integer($ids) ) {
-		$QUERY = "`$id_name`!=?";
+		$QUERY = "$id_name!=?";
 		$ARGS = $ids;
 	}
 	else {
