@@ -270,8 +270,8 @@ export default class ContentItem extends Component {
 					Title = "Ratings received";
 					Warning = Score < 20.0;
 					if ( !Warning ) {
-						Icon = <SVGIcon baseline small>check</SVGIcon>;
-						HoverTitle = "You have enough";
+						Icon = <SVGIcon baseline small>checked</SVGIcon>;
+						HoverTitle = "This game will be scored";
 					}
 					else {
 						Icon = <SVGIcon baseline small>warning</SVGIcon>;
@@ -281,8 +281,7 @@ export default class ContentItem extends Component {
 				else if ( Metric.key == 'given' ) {
 					Title = "Ratings given";
 					if ( Score > 20 ) {
-						Icon = <SVGIcon baseline small>check</SVGIcon>;
-						HoverTitle = "You have given the minimum required";
+						Icon = <SVGIcon baseline small>checked</SVGIcon>;
 					}
 				}
 				else if ( Metric.key == 'feedback' ) {
