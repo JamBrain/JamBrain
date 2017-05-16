@@ -16,6 +16,7 @@ const MAX_ITEMS_TO_CALC = 500;
 const FEEDBACK_PER_NOTE = 1.0;
 const COOL_MAX_GRADES = 30;//50;
 const COOL_MAX_FEEDBACK = 50;
+const COOL_MAX_CLASSIC_GRADES = 100;
 
 function AddMagic( $name, $parent ) {
 	global $node_ids, $db;
@@ -132,14 +133,14 @@ if ( $featured_id ) {
 				// 100, 100 = 100
 	
 				$smart = 0;
-				$cool = 0;
 				$unbound = 0;
-	
-				$team_grade = 0;
-				$given_grade = 0;
+				$cool = 0;
+
+				$team_grades = 0;
+				$given_grades = 0;
 				$team_feedback = 0;
 				$given_feedback = 0;
-	
+
 				$node = &$nodes[$magic['node']];
 				if ( $node ) {
 					$authors = $node['link']['author'];
@@ -155,36 +156,49 @@ if ( $featured_id ) {
 					$team_grade_value = count($grades);
 					$given_grade_value = count(array_diff($grades_out, $node_grades_out));
 
-	
 					// ** Calculate Grades **
-					$team_grades = max(0, grade_CountByNotNodeAuthor($node['id'], $authors) / $team_grade_value);
-					$given_grades = max(0, grade_CountByNodeNotAuthor($node['id'], $authors) / $given_grade_value);	// historically there's a -1 here
-	
-					$bound_grade = sqrt(min(COOL_MAX_GRADES, $team_grades) * 100.0 / max(1.0, min(COOL_MAX_GRADES, $given_grades))) * 100.0 / 10.0;
-					$unbound_grade = sqrt($team_grades * 100.0 / max(1.0, $given_grades)) * 100.0 / 10.0;
-	
-					// ** Calculate Feedback Score **
-					$team_feedback = max(0, noteLove_CountBySuperNotNodeAuthorKnownNotAuthor($node['parent'], $node['id'], $authors) / FEEDBACK_PER_NOTE);
-					$given_feedback = max(0, noteLove_CountBySuperNodeNotAuthorKnownNotAuthor($node['parent'], $node['id'], $authors) / FEEDBACK_PER_NOTE);
-	
-					$bound_feedback = sqrt(min(COOL_MAX_FEEDBACK, $team_feedback) * 100.0 / max(1.0, min(COOL_MAX_FEEDBACK, $given_feedback))) * 100.0 / 10.0;
-					$unbound_feedback = sqrt($team_feedback * 100.0 / max(1.0, $given_feedback)) * 100.0 / 10.0;
+					$raw_team_grades = grade_CountByNotNodeAuthor($node['id'], $authors);
+					$raw_given_grades = grade_CountByNodeNotAuthor($node['id'], $authors);
 
-					
+					$team_grades = $raw_team_grades / $team_grade_value;
+					$given_grades = $raw_given_grades / $given_grade_value;
+
+					$bound_grade = sqrt(min(COOL_MAX_GRADES, max(1.0, $team_grades)) * 100.0 / min(COOL_MAX_GRADES, max(1.0, $given_grades))) * 100.0 / 10.0;
+					$unbound_grade = sqrt(max(1.0, $team_grades) * 100.0 / max(1.0, $given_grades)) * 100.0 / 10.0;
+
+					// ** Classic Grade Algorithm ** (TODO: Double check that it even needs '/ $team_grade_value')
+					$classic_team_grades = max(0, min(COOL_MAX_CLASSIC_GRADES, $raw_team_grades / $team_grade_value));
+					$classic_given_grades = max(0, min(COOL_MAX_CLASSIC_GRADES, ($raw_given_grades / $team_grade_value) - 1));	// Magic "-1"
+					$classic_grade = sqrt($classic_team_grades * 100.0 / max(1.0, $classic_given_grades)) * 100.0 / 10.0;
+
+					// ** Calculate Feedback Score **
+					$raw_team_feedback = noteLove_CountBySuperNotNodeAuthorKnownNotAuthor($node['parent'], $node['id'], $authors);
+					$raw_given_feedback = noteLove_CountBySuperNodeNotAuthorKnownNotAuthor($node['parent'], $node['id'], $authors);
+
+					$team_feedback = $raw_team_feedback / FEEDBACK_PER_NOTE;
+					$given_feedback = $raw_given_feedback / FEEDBACK_PER_NOTE;
+
+					$bound_feedback = sqrt(min(COOL_MAX_FEEDBACK, max(1.0, $team_feedback)) * 100.0 / min(COOL_MAX_FEEDBACK, max(1.0, $given_feedback))) * 100.0 / 10.0;
+					$unbound_feedback = sqrt(max(1.0, $team_feedback) * 100.0 / max(1.0, $given_feedback)) * 100.0 / 10.0;
+
+
 					// Final
-					$smart = $bound_grade;// + $bound_feedback;			// up to 1000 points
-					$cool = $bound_grade + $bound_feedback;				// ratings only
-//					$unbound = $unbound_grade + $unbound_feedback;		// unbound
+					$smart = $bound_grade; // hack
+					//$smart = $bound_grade + $bound_feedback - 200;		// up to 1000 points
+					//$unbound = $unbound_grade + $unbound_feedback - 200;	// unbound
+
+					$cool = $bound_grade + $bound_feedback - 200; // hack
+					//$cool = $classic_grade;								// ratings only, old algorithm
 				}
 	
 				// Prefer $magic['node'] to $node['id'] in case it fails to load
 				$scores[] = [
 					'node' => $magic['node'],
-					'smart' => $smart,					// Smart Coolness
-					'cool' => $cool,					// Unbound Coolness
+					'smart' => $smart,					// Smart Balance
+					'cool' => $cool,					// Classic 'coolness' Balance
 					'grade' => $given_grades,			// How many grades received (Rescue Rangers)
 					'given' => $team_grades,			// How many grades the team has given
-					'feedback' => $team_feedback		// Quality of feedback team has given (i.e. people who are working hard)
+					'feedback' => $team_feedback		// Karma on feedback team has given (i.e. people who are working hard)
 				];
 			}
 	
