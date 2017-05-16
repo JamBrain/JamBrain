@@ -24,6 +24,16 @@
 
 			& .-metric {
 				font-size: 1.2em;
+				
+				& > .-value {
+					font-weight: bold;
+				}
+				&.-warning > .-value {
+					color: @COL_A;
+				}
+				& svg {
+					padding-left: 0.5em;
+				}
 			}
 
 			& .-grade {
