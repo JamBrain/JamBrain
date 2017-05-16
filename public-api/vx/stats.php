@@ -54,10 +54,10 @@ switch ( $node['type'] ) {
 	case 'event': {
 		$CACHE_KEY = '!API!STATS!'.$node['id'];
 		
-		if ( $stats = cache_Fetch($CACHE_KEY) ) {
-			$RESPONSE['cached'] = [$node['id']];
-		}
-		else {
+//		if ( $stats = cache_Fetch($CACHE_KEY) ) {
+//			$RESPONSE['cached'] = [$node['id']];
+//		}
+//		else {
 			$stats = [];
 			$stats['signups'] = node_CountByParentAuthorType(
 				$node['id'], null, null,
@@ -134,8 +134,8 @@ switch ( $node['type'] ) {
 	
 			$stats['timestamp'] = str_replace('+00:00', 'Z', date(DATE_W3C, time()));
 			
-			cache_Store($CACHE_KEY, $stats, CACHE_TTL);
-		}
+//			cache_Store($CACHE_KEY, $stats, CACHE_TTL);
+//		}
 		
 		break;
 	}
