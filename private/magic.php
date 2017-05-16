@@ -13,10 +13,15 @@ const MAX_ITEMS_TO_ADD = 500;
 const MAX_ITEMS_TO_CALC = 500;
 
 // TODO: Adjust the maximum effectiveness as the weeks go by. Start with like 50 initially (more than enough), but let it go up after.
-const FEEDBACK_PER_NOTE = 1.0;
+const FEEDBACK_PER_NOTE = 2.0;
+
+const COOL_MIN_GRADES = 1;		// In the future, set this to 3 or 4
+const COOL_MIN_FEEDBACK = 1;	// In the future, set this to 3 or 4
 const COOL_MAX_GRADES = 30;//50;
 const COOL_MAX_FEEDBACK = 50;
-const COOL_MAX_CLASSIC_GRADES = 100;
+
+const CLASSIC_MAX_GRADES = 100;
+
 
 function AddMagic( $name, $parent ) {
 	global $node_ids, $db;
@@ -141,6 +146,11 @@ if ( $featured_id ) {
 				$team_feedback = 0;
 				$given_feedback = 0;
 
+				$raw_team_grades = 0;
+				$raw_given_grades = 0;
+				$raw_team_feedback = 0;
+				$raw_given_feedback = 0;
+
 				$node = &$nodes[$magic['node']];
 				if ( $node ) {
 					$authors = $node['link']['author'];
@@ -156,38 +166,41 @@ if ( $featured_id ) {
 					$team_grade_value = count($grades);
 					$given_grade_value = count(array_diff($grades_out, $node_grades_out));
 
-					// ** Calculate Grades **
+					// ** Calculate Grades **************************************
 					$raw_team_grades = grade_CountByNotNodeAuthor($node['id'], $authors);
 					$raw_given_grades = grade_CountByNodeNotAuthor($node['id'], $authors);
 
 					$team_grades = $raw_team_grades / $team_grade_value;
 					$given_grades = $raw_given_grades / $given_grade_value;
 
-					$bound_grade = sqrt(min(COOL_MAX_GRADES, max(1.0, $team_grades)) * 100.0 / min(COOL_MAX_GRADES, max(1.0, $given_grades))) * 100.0 / 10.0;
-					$unbound_grade = sqrt(max(1.0, $team_grades) * 100.0 / max(1.0, $given_grades)) * 100.0 / 10.0;
+					// Given grade is unbound, so inactive participants will still get seen and get a few grades
+					$bound_grade = (sqrt(min(COOL_MAX_GRADES, max(COOL_MIN_GRADES, $team_grades)) * 100.0 / max(1.0, $given_grades)) * 100.0 / 10.0) - 100.0;
+					$unbound_grade = (sqrt(max(COOL_MIN_GRADES, $team_grades) * 100.0 / max(1.0, $given_grades)) * 100.0 / 10.0) - 100.0;
 
-					// ** Classic Grade Algorithm ** (TODO: Double check that it even needs '/ $team_grade_value')
-					$classic_team_grades = max(0, min(COOL_MAX_CLASSIC_GRADES, $raw_team_grades / $team_grade_value));
-					$classic_given_grades = max(0, min(COOL_MAX_CLASSIC_GRADES, ($raw_given_grades / $team_grade_value) - 1));	// Magic "-1"
+					// ** Classic Grade Algorithm **************************************
+					// (TODO: Double check that it even needs '/ $team_grade_value')
+					$classic_team_grades = max(0, min(CLASSIC_MAX_GRADES, $raw_team_grades / $team_grade_value));
+					$classic_given_grades = max(0, min(CLASSIC_MAX_GRADES, ($raw_given_grades / $team_grade_value) - 1));	// Magic "-1"
 					$classic_grade = sqrt($classic_team_grades * 100.0 / max(1.0, $classic_given_grades)) * 100.0 / 10.0;
 
-					// ** Calculate Feedback Score **
+					// ** Calculate Feedback Score **************************************
 					$raw_team_feedback = noteLove_CountBySuperNotNodeAuthorKnownNotAuthor($node['parent'], $node['id'], $authors);
 					$raw_given_feedback = noteLove_CountBySuperNodeNotAuthorKnownNotAuthor($node['parent'], $node['id'], $authors);
 
 					$team_feedback = $raw_team_feedback / FEEDBACK_PER_NOTE;
 					$given_feedback = $raw_given_feedback / FEEDBACK_PER_NOTE;
 
-					$bound_feedback = sqrt(min(COOL_MAX_FEEDBACK, max(1.0, $team_feedback)) * 100.0 / min(COOL_MAX_FEEDBACK, max(1.0, $given_feedback))) * 100.0 / 10.0;
-					$unbound_feedback = sqrt(max(1.0, $team_feedback) * 100.0 / max(1.0, $given_feedback)) * 100.0 / 10.0;
+					// Unlke grade, given feedback is bound, so excessive feedback doesn't accidentially drown-out the grades
+					$bound_feedback = (sqrt(min(COOL_MAX_FEEDBACK, max(COOL_MIN_FEEDBACK, $team_feedback)) * 100.0 / min(COOL_MAX_FEEDBACK, max(1.0, $given_feedback))) * 100.0 / 10.0) - 100.0;
+					$unbound_feedback = (sqrt(max(COOL_MIN_FEEDBACK, $team_feedback) * 100.0 / max(1.0, $given_feedback)) * 100.0 / 10.0) - 100.0;
 
 
 					// Final
-					$smart = $bound_grade; // hack
-					//$smart = $bound_grade + $bound_feedback - 200;		// up to 1000 points
-					//$unbound = $unbound_grade + $unbound_feedback - 200;	// unbound
+					$smart = $bound_grade + 100; // hack, like original
+					//$smart = $bound_grade + $bound_feedback;				// bound, so it will hit upper limits
+					$unbound = $unbound_grade + $unbound_feedback;			// unbound
 
-					$cool = $bound_grade + $bound_feedback - 200; // hack
+					$cool = $bound_grade + $bound_feedback; // hack
 					//$cool = $classic_grade;								// ratings only, old algorithm
 				}
 	
@@ -198,7 +211,7 @@ if ( $featured_id ) {
 					'cool' => $cool,					// Classic 'coolness' Balance
 					'grade' => $given_grades,			// How many grades received (Rescue Rangers)
 					'given' => $team_grades,			// How many grades the team has given
-					'feedback' => $team_feedback		// Karma on feedback team has given (i.e. people who are working hard)
+					'feedback' => $raw_team_feedback	// Karma on feedback team has given (i.e. people who are working hard)
 				];
 			}
 	
