@@ -199,6 +199,16 @@ switch ( $action ) {
 			$root = intval(json_ArgShift());
 			$RESPONSE['root'] = $root;
 
+			// Do this first, so we methods can change it
+			$score_op = null;
+			if ( isset($_GET['max']) ) {
+				$score_op = '<='.floatval($_GET['max']);
+			}
+			else if ( isset($_GET['min']) ) {
+				$score_op = '>='.floatval($_GET['min']);
+			}
+
+			// Methods
 			$methods = json_ArgShift();
 			if ( empty($methods) ) {
 				$methods = ['parent'];
@@ -223,22 +233,29 @@ switch ( $action ) {
 					'feedback'
 				];
 				foreach ( $methods as &$method ) {
-					if ( $method == 'all' ) {
-						if ( count($methods) > 1 ) {
-//							json_EmitFatalError_BadRequest("Can't combine methods with all", $RESPONSE);
+					switch ( $method ) {
+						case 'all': {
+							if ( count($methods) > 1 ) {
+//								json_EmitFatalError_BadRequest("Can't combine methods with all", $RESPONSE);
+							}
+							// totally fine, let it fall through
+							break;
 						}
-						// totally fine, let it fall through
-					}
-					if ( $method == 'authors' ) {
-						if ( count($methods) > 1 ) {
-//							json_EmitFatalError_BadRequest("Can't combine methods with authors", $RESPONSE);
+						case 'authors': {
+							if ( count($methods) > 1 ) {
+//								json_EmitFatalError_BadRequest("Can't combine methods with all", $RESPONSE);
+							}
+							// totally fine, let it fall through
+							break;
 						}
-//						else {
-//							json_EmitFatalError_BadRequest("Sorry. authors method not yet supported", $RESPONSE);
-//							// TODO: totally fine, let it fall through
-//						}
+						case 'danger': {
+							$method = 'grade';
+							$score_op = '<='.floatval(19.9999);
+							break;
+						}
 					}
-					else if ( !in_array($method, $allowed_methods) ) {
+
+					if ( !in_array($method, $allowed_methods) ) {
 						json_EmitFatalError_BadRequest("Invalid method: $method", $RESPONSE);
 					}
 				}
@@ -298,15 +315,6 @@ switch ( $action ) {
 					$RESPONSE['limit'] = 50;
 			}
 			
-			
-			$score_op = null;
-			if ( isset($_GET['max']) ) {
-				$score_op = '<='.floatval($_GET['max']);
-			}
-			else if ( isset($_GET['min']) ) {
-				$score_op = '>='.floatval($_GET['min']);
-			}
-
 			$RESPONSE['feed'] = nodeFeed_GetByMethod( $methods, $root, $types, $subtypes, $subsubtypes, $score_op, $RESPONSE['limit'], $RESPONSE['offset'] );
 
 //			$RESPONSE['feed'] = nodeFeed_GetByNodeMethodType( $root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset'] );

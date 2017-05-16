@@ -231,19 +231,75 @@ export default class ViewContent extends Component {
 			}
 //			else if ( Viewing == '/games' ) {
 			else if ( extra && extra.length && extra[0] == 'games' ) {
-				let SubSubType = 'compo+jam+release';
-				if ( extra.length > 1 ) {
-					if ( extra[1] != 'all' ) {
-						SubSubType = extra[1];
+				let DefaultSubFilter = 'all';
+				let DefaultFilter = 'smart';
+
+				let MappingTable = {
+					'all': 'compo+jam+craft+release',
+					'classic': 'cool',
+				};
+
+				if ( MappingTable[DefaultSubFilter] )
+					DefaultSubFilter = MappingTable[DefaultSubFilter];
+				if ( MappingTable[DefaultFilter] )
+					DefaultFilter = MappingTable[DefaultFilter];
+
+				let Methods = [];
+				let Filter = DefaultFilter;
+				let SubFilter = DefaultSubFilter;
+
+				if ( extra.length > 2 )
+					SubFilter = extra[2];
+				if ( extra.length > 1 )
+					Filter = extra[1];
+
+				// Determine Filter
+				if ( MappingTable[Filter] )
+					Filter = MappingTable[Filter];
+				if ( Filter.indexOf('-') == -1 ) {		// should be '+'
+					switch ( Filter ) {
+						case 'smart':
+						case 'cool':
+						case 'danger':
+						case 'grade':
+						case 'feedback':
+							Methods = [Filter];
+							break;
+
+						case 'jam':
+						case 'compo':
+						case 'craft':
+						case 'late':
+						case 'release':
+						case 'unfinished':
+							SubFilter = Filter;
+							Methods = [DefaultFilter];
+							break;
+
+						default:
+							Methods = ['null'];
+							break;
 					}
 				}
+				else {
+					// If '+' was found, assume it's a multi-part subfilter and not a filter
+					SubFilter = Filter.split('-');		// should be '+'
+					Methods = [DefaultFilter];
+				}
+
+				// Determine SubFilter
+				if ( MappingTable[SubFilter] )
+					SubFilter = MappingTable[SubFilter];
 				
 				return (
 					<div id="content">
 						{ShowNavRoot}
-						<ContentGames node={node} user={user} path={path} extra={extra} methods={['smart'/*'all'*/]} subsubtypes={SubSubType ? SubSubType : null} />
+						<ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />
 					</div>
 				);
+//						<div>Filter: {Filter}</div>
+//						<div>Method: {Methods}</div>
+//						<div>SubFilter: {SubFilter}</div>
 			}
 			else if ( Viewing == '/feed' ) {
 				return (
