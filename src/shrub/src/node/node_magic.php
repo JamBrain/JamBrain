@@ -10,12 +10,34 @@ function nodeMagic_GetByNode( $nodes, $offset = null, $limit = null ) {
 		"SELECT
 			node, name, score
 		FROM
-			".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC." 
+			".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC."
 		".dbQuery_MakeQuery($QUERY)."
 		".dbQuery_MakeLimit($offset, $limit, $ARGS)."
 		;",
 		...$ARGS
 	);
+}
+
+function nodeMagic_CountByParentName( $parent, $name, $score_op = null ) {
+	$QUERY = [];
+	$ARGS = [];
+	
+	dbQuery_MakeEq('parent', $parent, $QUERY, $ARGS);
+	dbQuery_MakeEq('name', $name, $QUERY, $ARGS);
+	
+	if ( $score_op )
+		$QUERY[] = 'score'.$score_op;
+
+	return db_QueryFetchValue(
+		"SELECT
+			count(id)
+		FROM
+			".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC."
+		".dbQuery_MakeQuery($QUERY)."
+		LIMIT 1
+		;",
+		...$ARGS
+	);	
 }
 
 function nodeMagic_GetNodeIdByParentName( $parent, $name, $limit = null ) {

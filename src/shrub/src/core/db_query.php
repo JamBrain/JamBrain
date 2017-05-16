@@ -39,10 +39,10 @@ function dbQuery_AreIdsValid( &$array ) {
 // Build a query fragment for id checks
 function dbQuery_MakeId( $ids, $id_name, &$QUERY, &$ARGS ) {
 	if ( is_array($ids) && count($ids) ) {
-		$QUERY[] = "$id_name IN (".implode(',', $ids).")";
+		$QUERY[] = "`$id_name` IN (".implode(',', $ids).")";
 	}
 	else if ( is_integer($ids) ) {
-		$QUERY[] = "$id_name=?";
+		$QUERY[] = "`$id_name`=?";
 		$ARGS[] = $ids;
 	}
 	else {
@@ -52,10 +52,10 @@ function dbQuery_MakeId( $ids, $id_name, &$QUERY, &$ARGS ) {
 }
 function dbQuery_MakeNotId( $ids, $id_name, &$QUERY, &$ARGS ) {
 	if ( is_array($ids) && count($ids) ) {
-		$QUERY[] = "$id_name NOT IN (".implode(',', $ids).")";
+		$QUERY[] = "`$id_name` NOT IN (".implode(',', $ids).")";
 	}
 	else if ( is_integer($ids) ) {
-		$QUERY = "$id_name!=?";
+		$QUERY = "`$id_name`!=?";
 		$ARGS = $ids;
 	}
 	else {
@@ -69,10 +69,10 @@ function dbQuery_Make( $items, $item_name, &$QUERY, &$ARGS ) {
 	// IMPORTANT: You must sanitize $items and $item_name
 	
 	if ( is_array($items) && count($items) ) {
-		$QUERY[] = $item_name.' IN ("'.implode('","', $items).'")';
+		$QUERY[] = '`'.$item_name.'` IN ("'.implode('","', $items).'")';
 	}
 	else if ( is_string($items) ) {
-		$QUERY[] = $item_name.'=?';
+		$QUERY[] = '`'.$item_name.'`=?';
 		$ARGS[] = $items;
 	}
 	else if ( is_null($items) ) {
@@ -87,10 +87,10 @@ function dbQuery_MakeNot( $items, $item_name, &$QUERY, &$ARGS ) {
 	// IMPORTANT: You must sanitize $items and $item_name
 	
 	if ( is_array($items) && count($items) ) {
-		$QUERY[] = $item_name.' NOT IN ("'.implode('","', $items).'")';
+		$QUERY[] = '`'.$item_name.'` NOT IN ("'.implode('","', $items).'")';
 	}
 	else if ( is_string($items) ) {
-		$QUERY[] = $item_name.'!=?';
+		$QUERY[] = '`'.$item_name.'`!=?';
 		$ARGS[] = $items;
 	}
 	else if ( is_null($items) ) {
@@ -123,7 +123,7 @@ function dbQuery_MakeLimit( $offset, $limit, &$ARGS ) {
 
 function dbQuery_MakeOp( $name, $op, $array, &$QUERY, &$ARGS ) {
 	if ( is_numeric($array) || is_string($array) ) {
-		$QUERY[] = $name.$op.'?';
+		$QUERY[] = '`'.$name.'`'.$op.'?';
 		$ARGS[] = $array;
 
 		return true;
@@ -147,11 +147,11 @@ function dbQuery_MakeOp( $name, $op, $array, &$QUERY, &$ARGS ) {
 			}
 			
 			if ( is_numeric($array) ) {
-				$QUERY[] = $name.' '.$op.' ('.implode(',', $array).')';
+				$QUERY[] = '`'.$name.'` '.$op.' ('.implode(',', $array).')';
 				return true;
 			}
 			else if ( is_string($array) ) {
-				$QUERY[] = $name.' '.$op.' ("'.implode('","', $array).'")';
+				$QUERY[] = '`'.$name.'` '.$op.' ("'.implode('","', $array).'")';
 				return true;
 			}
 		}
