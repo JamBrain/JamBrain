@@ -234,7 +234,7 @@ export default class ContentItem extends Component {
 //		}
 		
 		var ShowMetrics = null;
-		if ( node.magic && node_IsAuthor(node, user) ) {
+		if ( node.magic ) {
 			let Lines = [];
 			for ( var key in node.magic ) {
 				let parts = key.split('-');
@@ -251,8 +251,12 @@ export default class ContentItem extends Component {
 				let Metric = Lines[idx];
 
 				let Star = false;
+				let Warning = false;
+				let Icon = null;
 				let Title = Metric.key;
 				let Score = Metric.value;
+				
+				let HoverTitle = Score;
 
 				if ( Metric.key == 'smart' ) {
 					Title = "Smart Balance";
@@ -264,9 +268,22 @@ export default class ContentItem extends Component {
 				}
 				else if ( Metric.key == 'grade' ) {
 					Title = "Ratings received";
+					Warning = Score < 20.0;
+					if ( !Warning ) {
+						Icon = <SVGIcon baseline small>check</SVGIcon>;
+						HoverTitle = "You have enough";
+					}
+					else {
+						Icon = <SVGIcon baseline small>warning</SVGIcon>;
+						HoverTitle = "The minimum for a score is about 20";
+					}
 				}
 				else if ( Metric.key == 'given' ) {
 					Title = "Ratings given";
+					if ( Score > 20 ) {
+						Icon = <SVGIcon baseline small>check</SVGIcon>;
+						HoverTitle = "You have given the minimum required";
+					}
 				}
 				else if ( Metric.key == 'feedback' ) {
 					Title = "Karma for Feedback given";
@@ -277,15 +294,15 @@ export default class ContentItem extends Component {
 					SmallScore = Score.toString();
 
 				if ( Star )
-					AdvancedLines.push(<div class="-metric"><span class="-title">{Title}:</span> <strong title={Score}>{SmallScore} *</strong></div>);
+					AdvancedLines.push(<div class="-metric"><span class="-title">{Title}:</span> <span class="-value" title={HoverTitle}>{SmallScore} *{Icon}</span></div>);
 				else
-					SimpleLines.push(<div class="-metric"><span class="-title">{Title}:</span> <strong title={Score}>{SmallScore}</strong></div>);
+					SimpleLines.push(<div class={cN("-metric", Warning ? "-warning" : "")}><span class="-title">{Title}:</span> <span class="-value" title={HoverTitle}>{SmallScore}{Icon}</span></div>);
 			}
 
 			ShowMetrics = (
 				<ContentCommonBody class="-rating">
 					<div class="-header">Metrics</div>
-					<div class="-subtext">Advanced data on your game</div>
+					<div class="-subtext">Advanced data on this game</div>
 					<div class="-items">
 						{SimpleLines}
 						{AdvancedLines}
