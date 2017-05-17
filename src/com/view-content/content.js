@@ -367,6 +367,10 @@ export default class ViewContent extends Component {
 						case 'feedback':
 							Methods = [EvalFilter(Filter)];
 							break;
+						
+						case 'zero':
+							Methods = ['grade','reverse'];
+							break;
 
 						case 'jam':
 						case 'compo':
@@ -395,6 +399,7 @@ export default class ViewContent extends Component {
 					'unbound': <div><strong>Unbound</strong>: This is a variation of the Smart filter that is unbound. For curiousity.</div>,
 					'classic': <div><strong>Classic</strong>: This is the classic balancing filter. It balances the list based on ratings alone. You start seeing diminishing returns after 100 ratings.</div>,
 					'danger': <div><strong>Danger</strong>: This is the rescue filter. Everything with less than 20 ratings sorted top to bottom. Items on the first page are typically 1-2 rating away, so help them out!</div>, //'
+					'zero': <div><strong>Zero</strong>: This filter shows the most neglected games. These are often new users that didn't understand you should rate games. Leaving them some feedback is greatly appreciated.</div>, //'
 					'feedback': <div><strong>Feedback</strong>: This filter lets you find who is working the hardest, leaving quality feedback for others.</div>,
 					'grade': <div><strong>Grade</strong>: This filter lets you find the games that have the most ratings.</div>,
 				};
@@ -415,6 +420,7 @@ export default class ViewContent extends Component {
 								<CommonNavButton href={Path+'smart/'+SubFilter} class={Filter == 'smart' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Smart</div></CommonNavButton>
 								<CommonNavButton href={Path+'classic/'+SubFilter} class={Filter == 'classic' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Classic</div></CommonNavButton>
 								<CommonNavButton href={Path+'danger/'+SubFilter} class={Filter == 'danger' ? '-selected' : ''}><SVGIcon>help</SVGIcon><div>Danger</div></CommonNavButton>
+								<CommonNavButton href={Path+'zero/'+SubFilter} class={Filter == 'zero' ? '-selected' : ''}><SVGIcon>gift</SVGIcon><div>Zero</div></CommonNavButton>
 								<CommonNavButton href={Path+'feedback/'+SubFilter} class={Filter == 'feedback' ? '-selected' : ''}><SVGIcon>bubbles</SVGIcon><div>Feedback</div></CommonNavButton>
 								<CommonNavButton href={Path+'grade/'+SubFilter} class={Filter == 'grade' ? '-selected' : ''}><SVGIcon>todo</SVGIcon><div>Grade</div></CommonNavButton>
 							</CommonNav>
