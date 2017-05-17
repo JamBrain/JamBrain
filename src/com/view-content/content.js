@@ -296,7 +296,7 @@ export default class ViewContent extends Component {
 //						<CommonBody>{"Sorry, these aren't sorted correctly yet. For now, try "}<strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</CommonBody>
 //					</Common>
 //				);
-				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={['parent','danger']} subsubtypes={SubSubType ? SubSubType : null} />;
+				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={['parent','smart']} subsubtypes={SubSubType ? SubSubType : null} />;
 			}
 			else {
 				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
@@ -334,7 +334,7 @@ export default class ViewContent extends Component {
 //			else if ( Viewing == '/games' ) {
 			else if ( extra && extra.length && extra[0] == 'games' ) {
 				let DefaultSubFilter = 'all';
-				let DefaultFilter = 'danger';//'smart';
+				let DefaultFilter = 'smart';//'danger';//'smart';
 				
 				function EvalFilter(str) {
 					let MappingTable = {
