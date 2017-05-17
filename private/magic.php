@@ -15,6 +15,7 @@ const MAX_ITEMS_TO_CALC = 500;
 // TODO: Adjust the maximum effectiveness as the weeks go by. Start with like 50 initially (more than enough), but let it go up after.
 const FEEDBACK_PER_NOTE = 4.0;
 
+const COOL_MIN_POINTS = 1;		// In the future, set this to 3 or 4
 const COOL_MIN_GRADES = 1;		// In the future, set this to 3 or 4
 const COOL_MIN_FEEDBACK = 1;	// In the future, set this to 3 or 4
 const COOL_MAX_GRADES = 50;
@@ -196,8 +197,16 @@ if ( $featured_id ) {
 
 
 					// Final
-					$smart = $bound_grade + $bound_feedback;				// bound, so it will hit upper limits
-					$unbound = $unbound_grade + $unbound_feedback;			// unbound
+					//$smart = $bound_grade + $bound_feedback;				// bound, so it will hit upper limits
+					//$unbound = $unbound_grade + $unbound_feedback;			// unbound
+					
+//					$smart_for = max(COOL_MIN_POINTS, (min(COOL_MAX_GRADES, $team_grades) + min(COOL_MAX_FEEDBACK, $team_feedback));
+//					$smart_against = max(1.0, (min(COOL_MAX_GRADES, $given_grades) + min(COOL_MAX_FEEDBACK, $given_feedback));
+
+					// Bound everything except given grades, so a game can score below a game with no votes
+					$smart_for = max(COOL_MIN_POINTS, (min(COOL_MAX_GRADES, $team_grades) + min(COOL_MAX_FEEDBACK, $team_feedback)));
+					$smart_against = max(1.0, ($given_grades + min(COOL_MAX_FEEDBACK, $given_feedback)));
+					$smart = (sqrt($smart_for * 100.0 / $smart_against) * 100.0 / 10.0) - 100.0;
 
 					$cool = $classic_grade;									// ratings only, old algorithm
 				}
