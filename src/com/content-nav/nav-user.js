@@ -47,9 +47,9 @@ export default class ContentNavUser extends Component {
 //		}
 
         var HasGames = null;
-		if ( node['games'] > 0 ) {
+		//if ( node['games'] > 0 ) {
 			HasGames = <ContentNavButton path={PartPath} icon='gamepad' href={path+'/games'}>Games</ContentNavButton>;
-		}
+		//}
 
 		var HasArticles = null;
 		if ( node['articles'] > 0 ) {
