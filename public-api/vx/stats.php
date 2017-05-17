@@ -131,6 +131,7 @@ switch ( $node['type'] ) {
 			$stats['grade-10-15'] = nodeMagic_CountByParentName($node['id'], 'grade', '>=10') - ($stats['grade-20-plus'] + $stats['grade-15-20']);
 			$stats['grade-5-10'] = nodeMagic_CountByParentName($node['id'], 'grade', '>=5') - ($stats['grade-20-plus'] + $stats['grade-15-20'] + $stats['grade-10-15']);
 			$stats['grade-0-5'] = nodeMagic_CountByParentName($node['id'], 'grade', '<5');
+			$stats['grade-0'] = nodeMagic_CountByParentName($node['id'], 'grade', '=0');
 	
 			$stats['timestamp'] = str_replace('+00:00', 'Z', date(DATE_W3C, time()));
 			
