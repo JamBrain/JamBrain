@@ -1,5 +1,8 @@
 <?php
 
+// BUG: authornode should be authornote *
+// supernode (event), node (game), then author of the comment (i.e. authornote), and finally the author of the love
+
 function noteLove_CountByNode( $node ) {
 	$ret = db_QueryFetch(
 		"SELECT 
@@ -15,10 +18,11 @@ function noteLove_CountByNode( $node ) {
 	return $ret;
 }
 
-
-function noteLove_CountBySuperNotNodeAuthorKnownNotAuthor( $supernode, $node, $authors ) {
-	if ( !is_array($authors) )
-		$authors = [$authors];
+// For us: event_id, our game_id, our team's author ids
+// Not our node (i.e. other games), notes (comments) authored by us, ignoring love from us and our team
+function noteLove_CountBySuperNotNodeAuthorKnownNotAuthor( $supernode_id, $node_id, $author_ids ) {
+	if ( !is_array($author_ids) )
+		$author_ids = [$author_ids];
 	
 	return db_QueryFetchValue(
 		"SELECT 
@@ -28,18 +32,20 @@ function noteLove_CountBySuperNotNodeAuthorKnownNotAuthor( $supernode, $node, $a
 		WHERE 
 			supernode=?
 			AND node!=?
-			AND authornode IN (".implode(',', $authors).") 
+			AND authornode IN (".implode(',', $author_ids).") 
 			AND author > 0
+			AND author NOT IN (".implode(',', $author_ids).")
 		;",
-		$supernode,
-		$node
+		$supernode_id,
+		$node_id
 	);
 }
-//			AND author NOT IN (".implode(',', $authors).")
 
-function noteLove_CountBySuperNodeNotAuthorKnownNotAuthor( $supernode, $node, $authors ) {
-	if ( !is_array($authors) )
-		$authors = [$authors];
+// Against us: event_id, our game_id, our team's author ids
+// All notes (comments) on our game not by us, and ignoring any love by us and our team
+function noteLove_CountBySuperNodeNotAuthorKnownNotAuthor( $supernode_id, $node_id, $author_ids ) {
+	if ( !is_array($author_ids) )
+		$author_ids = [$author_ids];
 	
 	return db_QueryFetchValue(
 		"SELECT 
@@ -49,16 +55,14 @@ function noteLove_CountBySuperNodeNotAuthorKnownNotAuthor( $supernode, $node, $a
 		WHERE 
 			supernode=?
 			AND node=?
-			AND authornode NOT IN (".implode(',', $authors).")
+			AND authornode NOT IN (".implode(',', $author_ids).")
 			AND author > 0
+			AND author NOT IN (".implode(',', $author_ids).")
 		;",
-		$supernode,
-		$node
+		$supernode_id,
+		$node_id
 	);
 }
-//			AND author != authornode
-//			AND author NOT IN (".implode(',', $authors).")
-
 
 
 // This should actually work fine, I just want to discourage myself from using it, due to preformance
