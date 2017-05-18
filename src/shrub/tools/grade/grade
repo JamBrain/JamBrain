@@ -16,7 +16,7 @@ require_once __DIR__."/".SHRUB_PATH."grade/grade.php";
 if ( count($argv) < 2 ) {
 	echo "Usage: ".$argv[0]." [command]\n";
 	echo "\n";
-	echo "  score #     - Score Items given threshold #\n";
+	echo "  score grade-name #     - Score items by grade-name (grade-01) given threshold # (17)\n";
 	echo "\n";
 	die;
 }
@@ -70,8 +70,22 @@ if ( $COMMAND === "score" ) {
 	$NODES = nodeFeed_GetByMethod(['parent'], $EVENT_ID, 'item', 'game', ['jam','compo','craft'], null, null, null );
 	
 	echo count($NODES)." total.\n";
+
+	// TODO: Count grades
 	
+	print "Ready to start?\n";
+	print "\nAre you sure [type 'YES']? ";
+	flush();
+	$input = trim(fgets(STDIN));
+	if ( $input != "YES" ) {
+		print "Aborting...\n";
+		exit(1);
+	}
 	
+	$RESULT = [];
+	foreach ( $NODES as &$node_id ) {
+//		$grades = 
+	}
 	
 	
 }
