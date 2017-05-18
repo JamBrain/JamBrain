@@ -25,9 +25,9 @@ global_Load();
 
 $ARG_COMMAND = array_shift($argv);
 
-$EVENT_NODE = isset($SH['ludumdare-event']) ? intval($SH['ludumdare-event']) : 0;
-if ( !$EVENT_NODE ) {
-	echo "'ludumdare-event' is zero or not set ($EVENT_NODE)\n";
+$EVENT_ID = isset($SH['ludumdare-event']) ? intval($SH['ludumdare-event']) : 0;
+if ( !$EVENT_ID ) {
+	echo "'ludumdare-event' is zero or not set ($EVENT_ID)\n";
 	die;
 }
 
@@ -45,7 +45,7 @@ if ( $COMMAND === "score" ) {
 	
 	echo "Fetching Event... ";
 	
-	$EVENT = nodeComplete_GetById($EVENT_NODE);
+	$EVENT = nodeComplete_GetById($EVENT_ID);
 	
 	if ( !$EVENT ) {
 		echo "Problem loading event: $EVENT\n";
@@ -65,8 +65,13 @@ if ( $COMMAND === "score" ) {
 	foreach ( $GRADES as &$grade ) {
 		echo $grade."\n";
 	}
-
-	echo "Fetching Nodes...\n";
+	
+	echo "Fetching List of Nodes...";
+	$NODES = nodeFeed_GetByMethod(['parent'], $EVENT_ID, 'item', 'game', ['jam','compo','craft'], null, null, null );
+	
+	echo count($NODES)." total.\n";
+	
+	
 	
 	
 }

@@ -382,6 +382,17 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 		$MAGIC_QUERY[] = 'm.name=?';
 		$MAGIC_ARGS[] = $magic;
 	}
+
+	$LIMITS = [];
+	if ( $limit ) {
+		$LIMITS[] = 'LIMIT ?';
+		$ARGS[] = $limit;
+	}
+	if ( $offset ) {
+		$LIMITS[] = 'OFFSET ?';
+		$ARGS[] = $offset;
+	}
+	$LIMITS = implode(' ', $LIMITS);
 	
 	// Execute Query
 	if ( $magic && $link ) {
@@ -395,10 +406,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 
 		$QUERY = array_merge($NODE_QUERY, $LINK_QUERY);
 		$ARGS = array_merge($JOIN_ARGS, $NODE_ARGS, $LINK_ARGS);
-		
-		$ARGS[] = $limit;
-		$ARGS[] = $offset;
-		
+
 		$JOIN = count($JOIN_QUERY) ? implode(' ', $JOIN_QUERY) : '';
 		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
 
@@ -411,8 +419,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 				$JOIN
 			$WHERE
 			$ORDER_BY
-			LIMIT ?
-			OFFSET ?
+			$LIMITS
 			;",
 			...$ARGS
 		);		
@@ -422,9 +429,6 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 
 		$QUERY = array_merge($MAGIC_QUERY, $NODE_QUERY);
 		$ARGS = array_merge($MAGIC_ARGS, $NODE_ARGS);
-		
-		$ARGS[] = $limit;
-		$ARGS[] = $offset;
 
 		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
 
@@ -438,8 +442,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 				INNER JOIN ".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC." AS m ON n.id=m.node
 			$WHERE
 			$ORDER_BY
-			LIMIT ?
-			OFFSET ?
+			$LIMITS
 			;",
 			...$ARGS
 		);
@@ -453,9 +456,6 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 		$QUERY = $NODE_QUERY;
 		$ARGS = $NODE_ARGS;
 
-		$ARGS[] = $limit;
-		$ARGS[] = $offset;
-
 		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
 
 		return db_QueryFetch(
@@ -466,8 +466,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 				".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
 			$WHERE
 			$ORDER_BY
-			LIMIT ?
-			OFFSET ?
+			$LIMITS
 			;",
 			...$ARGS
 		);
