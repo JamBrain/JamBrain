@@ -78,23 +78,24 @@ export default class ContentStatsEvent extends Component {
 						<div><span class="-title">Signups:</span> <span class="-value">{stats.signups}</span></div>
 						<div><span class="-title">Unique Authors:</span> <span class="-value">{stats.authors}</span></div>
 						<div class="-gap"><span class="-title">Submissions:</span> <span class="-value">{stats.jam+stats.compo+stats.craft}</span></div>
-						<div><span class="-title -indent">Jam:</span> <span class="-value">{stats.jam}</span></div>
-						<div><span class="-title -indent">Compo:</span> <span class="-value">{stats.compo}</span></div>
-						<div><span class="-title -indent">Craft:</span> <span class="-value">{stats.craft}</span></div>
+						<div class="-indent"><span class="-title">Jam:</span> <span class="-value">{stats.jam}</span></div>
+						<div class="-indent"><span class="-title">Compo:</span> <span class="-value">{stats.compo}</span></div>
+						<div class="-indent"><span class="-title">Craft:</span> <span class="-value">{stats.craft}</span></div>
 						<div><span class="-title">Unfinished:</span> <span class="-value">{stats.unfinished}</span></div>
 						<div><span class="-title">Unpublished:</span> <span class="-value">{stats.unpublished}</span></div>
 						<div><span class="-title">Warmups:</span> <span class="-value">{stats.warmup}</span></div>
-						<div class="-gap"><span class="-title">Totals:</span> <span class="-value">{stats.games}</span></div>
-						<div><span class="-title -indent">Games:</span> <span class="-value">{stats.games}</span></div>
-						<div><span class="-title -indent">Crafts:</span> <span class="-value">{stats.craft}</span></div>
-						<div><span class="-title -indent">Demos:</span> <span class="-value">{stats.demo}</span></div>
 						<div class="-gap"><span class="-title">Ratings:</span></div>
-						<div><span class="-title -indent">20+:</span> <span class="-value">{stats['grade-20-plus']}</span></div>
-						<div><span class="-title -indent">15-20:</span> <span class="-value">{stats['grade-15-20']}</span></div>
-						<div><span class="-title -indent">10-15:</span> <span class="-value">{stats['grade-10-15']}</span></div>
-						<div><span class="-title -indent">5-10:</span> <span class="-value">{stats['grade-5-10']}</span></div>
-						<div><span class="-title -indent">0-5:</span> <span class="-value">{stats['grade-0-5']}</span></div>
+						<div class="-indent"><span class="-title">20+:</span> <span class="-value">{stats['grade-20-plus']}</span></div>
+						<div class="-indent"><span class="-title">15-20:</span> <span class="-value">{stats['grade-15-20']}</span></div>
+						<div class="-indent"><span class="-title">10-15:</span> <span class="-value">{stats['grade-10-15']}</span></div>
+						<div class="-indent"><span class="-title">5-10:</span> <span class="-value">{stats['grade-5-10']}</span></div>
+						<div class="-indent"><span class="-title">0-5:</span> <span class="-value">{stats['grade-0-5']}</span></div>
 						<div class="-gap"><span class="-title">With 0 ratings:</span> <span class="-value">{stats['grade-0-only']}</span></div>
+						<div class="-gap"><span class="-title">Totals:</span> <span class="-value">{stats.game}</span></div>
+						<div class="-indent"><span class="-title">Games:</span> <span class="-value">{stats.game}</span></div>
+						<div class="-indent"><span class="-title">Crafts:</span> <span class="-value">{stats.craft}</span></div>
+						<div class="-indent"><span class="-title">Demos:</span> <span class="-value">{stats.demo}</span></div>
+						<div class="-indent"><span class="-title">Tools:</span> <span class="-value">{stats.tool}</span></div>
 						<div class="-gap">Last Updated: {stats.timestamp}</div>
 					</ContentCommonBody>
 				</ContentCommon>
