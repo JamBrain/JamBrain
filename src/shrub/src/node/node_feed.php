@@ -383,16 +383,16 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 		$MAGIC_ARGS[] = $magic;
 	}
 
-	$LIMITS = [];
+	$LIMIT_QUERY = [];
+	$LIMIT_ARGS = [];
 	if ( $limit ) {
-		$LIMITS[] = 'LIMIT ?';
-		$ARGS[] = $limit;
+		$LIMIT_QUERY[] = 'LIMIT ?';
+		$LIMIT_ARGS[] = $limit;
 	}
 	if ( $offset ) {
-		$LIMITS[] = 'OFFSET ?';
-		$ARGS[] = $offset;
+		$LIMIT_QUERY[] = 'OFFSET ?';
+		$LIMIT_ARGS[] = $offset;
 	}
-	$LIMITS = implode(' ', $LIMITS);
 	
 	// Execute Query
 	if ( $magic && $link ) {
@@ -405,7 +405,9 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 			$ORDER_BY = "ORDER BY n.modified $SORT_ORDER";
 
 		$QUERY = array_merge($NODE_QUERY, $LINK_QUERY);
-		$ARGS = array_merge($JOIN_ARGS, $NODE_ARGS, $LINK_ARGS);
+		$ARGS = array_merge($JOIN_ARGS, $NODE_ARGS, $LINK_ARGS, $LIMIT_ARGS);
+
+		$LIMITS = implode(' ', $LIMIT_QUERY);
 
 		$JOIN = count($JOIN_QUERY) ? implode(' ', $JOIN_QUERY) : '';
 		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
@@ -428,7 +430,9 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 		$ORDER_BY = "ORDER BY m.score $SORT_ORDER";
 
 		$QUERY = array_merge($MAGIC_QUERY, $NODE_QUERY);
-		$ARGS = array_merge($MAGIC_ARGS, $NODE_ARGS);
+		$ARGS = array_merge($MAGIC_ARGS, $NODE_ARGS, $LIMIT_ARGS);
+
+		$LIMITS = implode(' ', $LIMIT_QUERY);
 
 		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
 
@@ -454,7 +458,9 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 			$ORDER_BY = "ORDER BY n.modified $SORT_ORDER";
 
 		$QUERY = $NODE_QUERY;
-		$ARGS = $NODE_ARGS;
+		$ARGS = array_merge($NODE_ARGS, $LIMIT_ARGS);
+
+		$LIMITS = implode(' ', $LIMIT_QUERY);
 
 		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
 
