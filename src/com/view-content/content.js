@@ -25,6 +25,7 @@ import ContentNavEvent					from 'com/content-nav/nav-event';
 import ContentNavTheme					from 'com/content-nav/nav-theme';
 
 import ContentEventTheme				from 'com/content-event/event-theme';
+import ContentStatsEvent				from 'com/content-stats/stats-event';
 
 import ContentPalette					from 'com/content-palette/palette';
 
@@ -275,7 +276,6 @@ export default class ViewContent extends Component {
 		}
 		else if ( node.type === 'event' ) {
 			var ShowNav = null;
-			var ShowInfo = null;
 			var ShowPage = null;
 
 			if ( extra && extra.length && extra[0] == 'theme' ) {
@@ -290,23 +290,18 @@ export default class ViewContent extends Component {
 					if ( extra[1] != 'all' )
 						SubSubType = extra[1];
 				}
-				
-//				ShowInfo = (
-//					<Common node={node}>
-//						<CommonBody>{"Sorry, these aren't sorted correctly yet. For now, try "}<strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</CommonBody>
-//					</Common>
-//				);
+
 				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={['parent','smart']} subsubtypes={SubSubType ? SubSubType : null} />;
 			}
 			else {
 				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
+				ShowPage = <ContentStatsEvent node={node} />;
 			}
 
 			return (
 				<div id="content">
 					<ContentEvent node={node} user={user} path={path} extra={extra} featured={featured} />
 					{ShowNav}
-					{ShowInfo}
 					{ShowPage}
 				</div>
 			);
