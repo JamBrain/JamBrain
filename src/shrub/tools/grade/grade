@@ -10,7 +10,8 @@ require_once __DIR__."/".SHRUB_PATH."core/core.php";
 require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
 require_once __DIR__."/".SHRUB_PATH."global/global.php";
 
-require_once __DIR__."/".SHRUB_PATH."theme/theme.php";
+require_once __DIR__."/".SHRUB_PATH."node/node.php";
+require_once __DIR__."/".SHRUB_PATH."grade/grade.php";
 
 if ( count($argv) < 2 ) {
 	echo "Usage: ".$argv[0]." [command]\n";
@@ -41,8 +42,31 @@ if ( $COMMAND === "score" ) {
 		print "Aborting...\n";
 		exit(1);
 	}
+	
+	echo "Fetching Event... ";
+	
+	$EVENT = nodeComplete_GetById($EVENT_NODE);
+	
+	if ( !$EVENT ) {
+		echo "Problem loading event: $EVENT\n";
+		exit(1);
+	}
+	echo $EVENT['name']."\n";
+	
+	$GRADES = [];
+	foreach ( $EVENT['meta'] as $key => &$value ) {
+		$part = explode('-', $key);
+		if ( count($part) == 2 && $part[0] == 'grade' ) {
+			$GRADES[] = $key;
+		}
+	}
+	
+	echo "Found Grades: \n";
+	foreach ( $GRADES as &$grade ) {
+		echo $grade."\n";
+	}
 
-	//echo "Fetching Idea List...\n";
+	echo "Fetching Nodes...\n";
 	
 	
 }
