@@ -1,0 +1,52 @@
+#!/usr/bin/env php
+<?php
+const CONFIG_PATH = "../../";
+const SHRUB_PATH = "../../src/";
+
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
+require_once __DIR__."/".SHRUB_PATH."core/core.php";
+require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
+require_once __DIR__."/".SHRUB_PATH."global/global.php";
+
+require_once __DIR__."/".SHRUB_PATH."theme/theme.php";
+
+if ( count($argv) < 2 ) {
+	echo "Usage: ".$argv[0]." [command]\n";
+	echo "\n";
+	echo "  score #     - Score Items given threshold #\n";
+	echo "\n";
+	die;
+}
+
+global_Load();
+
+$ARG_COMMAND = array_shift($argv);
+
+$EVENT_NODE = isset($SH['ludumdare-event']) ? intval($SH['ludumdare-event']) : 0;
+if ( !$EVENT_NODE ) {
+	echo "'ludumdare-event' is zero or not set ($EVENT_NODE)\n";
+	die;
+}
+
+$COMMAND = array_shift($argv);
+if ( $COMMAND === "score" ) {
+	print "\n*** WARNING ***\n\n";
+	print "You are about to generate scores.\n";
+	print "\nAre you sure [type 'YES']? ";
+	flush();
+	$input = trim(fgets(STDIN));
+	if ( $input != "YES" ) {
+		print "Aborting...\n";
+		exit(1);
+	}
+
+	//echo "Fetching Idea List...\n";
+	
+	
+}
+else {
+	echo "Error: Unknown command \"$COMMAND\"\n";
+	exit(1);
+}
