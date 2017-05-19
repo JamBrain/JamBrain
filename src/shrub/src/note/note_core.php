@@ -173,6 +173,62 @@ function note_GetByNode( $ids ) {
 	return $ret;
 }
 
+function _note_GetByAuthor( $ids ) {
+	$multi = is_array($ids);
+	if ( !$multi )
+		$ids = [$ids];
+	
+	if ( is_array($ids) ) {
+		// Confirm that all IDs are not zero
+		foreach( $ids as $id ) {
+			if ( intval($id) == 0 )
+				return null;
+		}
+
+		// Build IN string
+		$ids_string = implode(',', $ids);
+
+		$ret = db_QueryFetch(
+			"SELECT id, parent, 
+				node, supernode, 
+				author, 
+				".DB_FIELD_DATE('created').",
+				".DB_FIELD_DATE('modified').",
+				version,
+				body
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE." 
+			WHERE author IN ($ids_string)
+			;"
+		);
+		
+		return $ret;
+	}
+	
+	return null;
+}
+
+function note_GetByAuthor( $ids ) {
+	$notes = _note_GetByAuthor($ids);
+
+	$ret = [];
+
+	if ( is_array($ids) ) {
+		foreach( $ids as $id ) {
+			$ret[$id] = [];
+		}
+	
+		foreach( $notes as &$note ) {
+			$ret[$note['node']][$note['id']] = $note;
+		}
+	}
+	else {
+		foreach( $notes as &$note ) {
+			$ret[$note['id']] = $note;
+		}
+	}
+
+	return $ret;
+}
 
 function note_GetById( $ids ) {
 	$multi = is_array($ids);
