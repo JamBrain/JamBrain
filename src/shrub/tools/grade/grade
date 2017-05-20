@@ -164,7 +164,13 @@ if ( $COMMAND === "score" ) {
 		exit(1);
 	}
 
-	print_r($RESULT);
+	//print_r($RESULT);
+
+	foreach ( $RESULT as $key => &$nodes ) {
+		foreach ( $nodes as $id => &$node ) {
+			echo $key.'-score '.$node['id'].': '.implode(' ', $node)."\n";
+		}
+	}
 }
 else {
 	print "Error: Unknown command \"$COMMAND\"\n";
