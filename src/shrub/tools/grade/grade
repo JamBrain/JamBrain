@@ -81,12 +81,15 @@ if ( $COMMAND === "score" ) {
 	print "Fetching List of Nodes...";
 	$NODES = nodeFeed_GetByMethod(['parent'], $EVENT_ID, 'item', 'game', [$SUBSUBTYPE], null, null, null );
 //	$NODES = nodeFeed_GetByMethod(['parent'], $EVENT_ID, 'item', 'game', ['jam','compo'/*,'craft'*/], null, null, null );
-
-	print count($NODES)." total.\n";
+	
+	print count($NODES)." total\n";
 
 	// TODO: Count grades
 	
+	$LIST = [];
+	
 	foreach ( $NODES as &$node ) {
+		$LIST[] = $node['id'];
 		$grades = grade_GetByNode($node['id']);
 		
 		// insert grades to different lists
@@ -117,12 +120,14 @@ if ( $COMMAND === "score" ) {
 				$RESULT[$key][$node['id']] = [];
 			
 			$RESULT[$key][$node['id']]['id'] = $node['id'];
-			$RESULT[$key][$node['id']]['count'] = count($grade);
 			//$RESULT[$key][$node['id']]['grade'] = $grade;
+			$RESULT[$key][$node['id']]['count'] = count($grade);
 			$RESULT[$key][$node['id']]['true-average'] = $average[$key];
 			$RESULT[$key][$node['id']]['average'] = round($average[$key], 3);	// Old website was 2 digits
 		}
 	}
+
+	$NODE_DATA = node_IdToIndex(nodeComplete_GetById($LIST));
 	
 //	print_r($RESULT);
 	
@@ -164,17 +169,46 @@ if ( $COMMAND === "score" ) {
 	flush();
 	$input = trim(fgets(STDIN));
 	if ( $input != "YES" ) {
+		// Print the data
+		foreach ( $RESULT as $key => &$nodes ) {
+			foreach ( $nodes as $id => &$node ) {
+				echo $key.'-score: '.implode(' ', $node)."\n";
+			}
+		}
+		
 		print "Aborting...\n";
 		exit(1);
 	}
-
-	//print_r($RESULT);
-
+	
+	$db->begin_transaction();
 	foreach ( $RESULT as $key => &$nodes ) {
 		foreach ( $nodes as $id => &$node ) {
-			echo $key.'-score: '.implode(' ', $node)."\n";
+			nodeMagic_Add(
+				$NODE_DATA[$node['id']]['id'],
+				$NODE_DATA[$node['id']]['parent'],
+				$NODE_DATA[$node['id']]['superparent'],
+				$NODE_DATA[$node['id']]['author'],
+				$node['average'],
+				$key.'-average'
+			);
+			if ( $node['place'] ) {
+				nodeMagic_Add(
+					$NODE_DATA[$node['id']]['id'],
+					$NODE_DATA[$node['id']]['parent'],
+					$NODE_DATA[$node['id']]['superparent'],
+					$NODE_DATA[$node['id']]['author'],
+					$node['place'],
+					$key.'-result'
+				);
+			}
+			else {
+				// TODO: Delete node
+			}
+			
+//			echo $key.'-score: '.implode(' ', $node)."\n";
 		}
 	}
+	$db->commit();
 }
 else {
 	print "Error: Unknown command \"$COMMAND\"\n";
