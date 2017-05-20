@@ -191,7 +191,7 @@ if ( $COMMAND === "score" ) {
 				$node['average'],
 				$key.'-average'
 			);
-			if ( $node['place'] ) {
+			if ( isset($node['place']) ) {
 				nodeMagic_Add(
 					$NODE_DATA[$node['id']]['id'],
 					$NODE_DATA[$node['id']]['parent'],
