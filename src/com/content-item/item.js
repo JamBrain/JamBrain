@@ -335,24 +335,35 @@ export default class ContentItem extends Component {
 					let Line = Lines[idx];
 					
 					let Title = Line.value;
-					let Score = 0;
+					let Score = -1;
 					if ( node.grade ) {
 						Score = node.grade[Line.key];
 					}
 					
 					//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
 					
-					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
+					if (Score >= 0) {
+						VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
+					}
 				}
 
-				ShowGrade = (
-					<ContentCommonBody class="-rating">
-						<div class="-header">Total Ratings</div>
-						<div class="-subtext">Votes on your game so far</div>
-						<div class="-items">{VoteLines}</div>
-						<div class="-footer">To get a score at the end, you need about <strong>20</strong> ratings in a category. To get ratings: play, rate, and leave feedback on games. Every game you rate and leave quality feedback on scores you <strong>Coolness</strong> points. Having a high "Coolness" prioritizes your game.</div>
-					</ContentCommonBody>
-				);
+				if (VoteLines.length > 0) {
+					ShowGrade = (
+						<ContentCommonBody class="-rating">
+							<div class="-header">Total Ratings</div>
+							<div class="-subtext">Votes on your game so far</div>
+							<div class="-items">{VoteLines}</div>
+							<div class="-footer">To get a score at the end, you need about <strong>20</strong> ratings in a category. To get ratings: play, rate, and leave feedback on games. Every game you rate and leave quality feedback on scores you <strong>Coolness</strong> points. Having a high "Coolness" prioritizes your game.</div>
+						</ContentCommonBody>
+					);
+				} else {
+					ShowGrade = (
+						<ContentCommonBody class="-rating">
+							<div class="-header">Total Ratings</div>
+							<div class="-subtext"><strong>Could not retrieve votes on your game at this moment, please try again later and notify admin if it persists.</strong></div>
+						</ContentCommonBody>
+					);					
+				}
 			}
 			else if ( featured && featured.what_node && nodeKeys_HasPublishedParent(featured.what_node, node.parent) ) {
 				let Lines = [];
