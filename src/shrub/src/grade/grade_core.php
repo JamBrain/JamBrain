@@ -2,7 +2,7 @@
 
 
 function grade_GetByNode( $node_id ) {
-	return db_QueryFetchPair(
+	return db_QueryFetch(
 		"SELECT
 			name,
 			value 
