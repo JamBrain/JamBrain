@@ -102,9 +102,9 @@ if ( $COMMAND === "score" ) {
 		$average = [];
 		foreach ( $ordered as $key => &$grade ) {
 			sort($grade, SORT_NUMERIC);
-			if ( $THRESHOLD > 2 ) {
-				array_shift($grade);
-				array_pop($grade);
+			if ( $THRESHOLD >= 5 ) {
+				array_shift($grade);		// Remove Top
+				array_pop($grade);			// Remove Bottom
 			}
 			
 			if ( !count($grade) )
