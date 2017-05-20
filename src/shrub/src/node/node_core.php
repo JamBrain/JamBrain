@@ -336,7 +336,30 @@ function node_CountByAuthorType( $ids, $authors, $types = null, $subtypes = null
 //				GROUP BY id".($multi?';':' LIMIT 1;'),
 //				...$ARGS
 //			);
-	}
+			$QUERY[] = '`key`=?';
+			$ARGS[] = 'author';
+
+			$pre_query[] = 'b'.$node_query;
+			if ( isset($node_args) ) $ARGS[] = $node_args;
+			
+			$post_query[] = "id IN (SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." GROUP BY a, b, `key`)";
+			$post_query[] = "scope=?";
+			$ARGS[] = 0;
+			
+			$full_query = '';
+			if ( count($QUERY) )
+				$full_query = 'WHERE ('.implode(' AND ', $QUERY).')';
+	
+			$ret = db_QueryFetch(
+				"SELECT
+					a AS id, COUNT(id) AS count
+					".DB_FIELD_DATE('timestamp', 'modified')."
+				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+				$full_query
+				;",
+				...$ARGS
+			);
+		}
 		else {
 			$ret = db_QueryFetch(
 				"SELECT author AS id, COUNT(id) AS count
