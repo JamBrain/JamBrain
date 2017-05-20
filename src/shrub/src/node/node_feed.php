@@ -382,6 +382,17 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 		$MAGIC_QUERY[] = 'm.name=?';
 		$MAGIC_ARGS[] = $magic;
 	}
+
+	$LIMIT_QUERY = [];
+	$LIMIT_ARGS = [];
+	if ( $limit ) {
+		$LIMIT_QUERY[] = 'LIMIT ?';
+		$LIMIT_ARGS[] = $limit;
+	}
+	if ( $offset ) {
+		$LIMIT_QUERY[] = 'OFFSET ?';
+		$LIMIT_ARGS[] = $offset;
+	}
 	
 	// Execute Query
 	if ( $magic && $link ) {
@@ -394,11 +405,10 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 			$ORDER_BY = "ORDER BY n.modified $SORT_ORDER";
 
 		$QUERY = array_merge($NODE_QUERY, $LINK_QUERY);
-		$ARGS = array_merge($JOIN_ARGS, $NODE_ARGS, $LINK_ARGS);
-		
-		$ARGS[] = $limit;
-		$ARGS[] = $offset;
-		
+		$ARGS = array_merge($JOIN_ARGS, $NODE_ARGS, $LINK_ARGS, $LIMIT_ARGS);
+
+		$LIMITS = implode(' ', $LIMIT_QUERY);
+
 		$JOIN = count($JOIN_QUERY) ? implode(' ', $JOIN_QUERY) : '';
 		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
 
@@ -411,8 +421,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 				$JOIN
 			$WHERE
 			$ORDER_BY
-			LIMIT ?
-			OFFSET ?
+			$LIMITS
 			;",
 			...$ARGS
 		);		
@@ -421,10 +430,9 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 		$ORDER_BY = "ORDER BY m.score $SORT_ORDER";
 
 		$QUERY = array_merge($MAGIC_QUERY, $NODE_QUERY);
-		$ARGS = array_merge($MAGIC_ARGS, $NODE_ARGS);
-		
-		$ARGS[] = $limit;
-		$ARGS[] = $offset;
+		$ARGS = array_merge($MAGIC_ARGS, $NODE_ARGS, $LIMIT_ARGS);
+
+		$LIMITS = implode(' ', $LIMIT_QUERY);
 
 		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
 
@@ -438,8 +446,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 				INNER JOIN ".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC." AS m ON n.id=m.node
 			$WHERE
 			$ORDER_BY
-			LIMIT ?
-			OFFSET ?
+			$LIMITS
 			;",
 			...$ARGS
 		);
@@ -451,10 +458,9 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 			$ORDER_BY = "ORDER BY n.modified $SORT_ORDER";
 
 		$QUERY = $NODE_QUERY;
-		$ARGS = $NODE_ARGS;
+		$ARGS = array_merge($NODE_ARGS, $LIMIT_ARGS);
 
-		$ARGS[] = $limit;
-		$ARGS[] = $offset;
+		$LIMITS = implode(' ', $LIMIT_QUERY);
 
 		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
 
@@ -466,8 +472,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 				".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
 			$WHERE
 			$ORDER_BY
-			LIMIT ?
-			OFFSET ?
+			$LIMITS
 			;",
 			...$ARGS
 		);
