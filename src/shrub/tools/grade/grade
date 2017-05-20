@@ -124,7 +124,7 @@ if ( $COMMAND === "score" ) {
 		}
 	}
 	
-	print_r($RESULT);
+//	print_r($RESULT);
 	
 	// TODO: Figure out biggest/smallest, then provide an average that fits itself to the range
 
