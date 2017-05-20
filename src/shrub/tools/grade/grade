@@ -127,7 +127,7 @@ if ( $COMMAND === "score" ) {
 		}
 	}
 
-	$NODE_DATA = node_IdToIndex(nodeComplete_GetById($LIST));
+	$NODE_DATA = node_IdToIndex(nodeComplete_GetById($LIST, 0));
 	
 //	print_r($RESULT);
 	
