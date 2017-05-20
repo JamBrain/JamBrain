@@ -142,14 +142,14 @@ if ( $COMMAND === "score" ) {
 		$prev_average = -1;
 		foreach ( $result as &$item ) {
 			if ( !$THRESHOLD || $item['count'] >= $THRESHOLD ) {
-				$item['place'] = $next_place;
-				$place++;
-
 				// Ties
 				if ( $item['average'] !== $prev_average ) {
 					$next_place = $place;
 					$prev_average = $item['average'];
 				}
+
+				$item['place'] = $next_place;
+				$place++;
 			}
 			else {
 				if ( $place < 50 && $THRESHOLD2 && $item['count'] >= $THRESHOLD2 ) {
