@@ -83,8 +83,44 @@ if ( $COMMAND === "score" ) {
 	}
 	
 	$RESULT = [];
-	foreach ( $NODES as &$node_id ) {
-//		$grades = 
+	foreach ( $NODES as &$node ) {
+		$grades = grade_GetByNode($node['id']);
+		
+		// insert grades to different lists
+		$ordered = [];
+		foreach ( $grades as $key => &$grade ) {
+			if ( isset($ordered[$key]) )
+				$ordered[$key] = [];
+			$ordered[$key][] = $grade;
+		}
+	
+		// Sort, remove first/last, and calculate total and average
+		$total = [];
+		$average = [];
+		foreach ( $ordered as $key => &$grade ) {
+			sort($grade, SORT_NUMERIC);
+//			array_shift($grade);
+//			array_pop($grade);
+			
+			if ( !count($grade) )
+				continue;
+				
+			$sum[$key] = array_sum($grade);
+			$average[$key] = $sum[$key] / count($grade);
+		}
+		
+		print_r($average);
+		
+//		$total_grade = 0;
+//		$average_grade = 0;
+//		if ( count($grades) ) {
+//			foreach ( $grades as &$grade ) {
+//				$total_grade += $grade;
+//			}
+//			$average_grade = $total_grade / count($grades);
+//		}
+//		
+//		echo $node['id'].' '.count($grades).' '.$average_grade.' ('.$total_grade.")\n";
 	}
 	
 	
