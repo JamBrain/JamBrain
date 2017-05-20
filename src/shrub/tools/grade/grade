@@ -94,7 +94,7 @@ if ( $COMMAND === "score" ) {
 		foreach ( $grades as $key => &$grade ) {
 			if ( isset($ordered[$key]) )
 				$ordered[$key] = [];
-			$ordered[$key][] = $grade;
+			$ordered[$key][] = floatval($grade);
 		}
 	
 		// Sort, remove first/last, and calculate total and average
@@ -111,7 +111,7 @@ if ( $COMMAND === "score" ) {
 				continue;
 				
 			$sum[$key] = array_sum($grade);
-			$average[$key] = $sum[$key] / count($grade);
+			$average[$key] = $sum[$key] / (float)count($grade);
 
 			if ( !isset($RESULT[$key][$node['id']]) )
 				$RESULT[$key][$node['id']] = [];
