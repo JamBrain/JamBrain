@@ -91,12 +91,12 @@ if ( $COMMAND === "score" ) {
 		
 		// insert grades to different lists
 		$ordered = [];
-		foreach ( $grades as $key => &$grade ) {
-			if ( isset($ordered[$key]) )
-				$ordered[$key] = [];
-			$ordered[$key][] = floatval($grade);
+		foreach ( $grades as &$grade ) {
+			if ( !isset($ordered[$grade['name']]) )
+				$ordered[$grade['name']] = [];
+			$ordered[$grade['name']][] = floatval($grade['value']);
 		}
-	
+		
 		// Sort, remove first/last, and calculate total and average
 		$sum = [];
 		$average = [];
@@ -106,10 +106,10 @@ if ( $COMMAND === "score" ) {
 				array_shift($grade);		// Remove Top
 				array_pop($grade);			// Remove Bottom
 			}
-			
+
 			if ( !count($grade) )
 				continue;
-				
+
 			$sum[$key] = array_sum($grade);
 			$average[$key] = $sum[$key] / (float)count($grade);
 
@@ -123,6 +123,8 @@ if ( $COMMAND === "score" ) {
 			$RESULT[$key][$node['id']]['average'] = round($average[$key], 3);	// Old website was 2 digits
 		}
 	}
+	
+	print_r($RESULT);
 	
 	// TODO: Figure out biggest/smallest, then provide an average that fits itself to the range
 
