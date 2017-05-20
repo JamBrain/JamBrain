@@ -98,12 +98,14 @@ if ( $COMMAND === "score" ) {
 		}
 	
 		// Sort, remove first/last, and calculate total and average
-		$total = [];
+		$sum = [];
 		$average = [];
 		foreach ( $ordered as $key => &$grade ) {
 			sort($grade, SORT_NUMERIC);
-//			array_shift($grade);
-//			array_pop($grade);
+			if ( $THRESHOLD > 2 ) {
+				array_shift($grade);
+				array_pop($grade);
+			}
 			
 			if ( !count($grade) )
 				continue;
@@ -168,7 +170,7 @@ if ( $COMMAND === "score" ) {
 
 	foreach ( $RESULT as $key => &$nodes ) {
 		foreach ( $nodes as $id => &$node ) {
-			echo $key.'-score '.$node['id'].': '.implode(' ', $node)."\n";
+			echo $key.'-score: '.implode(' ', $node)."\n";
 		}
 	}
 }
