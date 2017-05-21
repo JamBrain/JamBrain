@@ -240,9 +240,9 @@ export default class ContentItem extends Component {
 				let parts = key.split('-');
 
 				// Ignore grades (i.e. grade-01)
-				//if ( parts.length && (parts[0] != 'grade' && parts.length > 1 ) {
+				if ( parts.length && !(parts[0] == 'grade' && parts.length > 1) ) {
 					Lines.push({'key': key, 'value': node.magic[key]});
-				//}
+				}
 			}
 
 			let SimpleLines = [];
@@ -312,9 +312,9 @@ export default class ContentItem extends Component {
 		}
 
 		var ShowResults = null;
-
+		
 		var ShowGrade = null;
-		if ( parent && node_CanGrade(parent) ) {
+		if ( parent && parseInt(parent.meta['can-grade']) && node_CanGrade(parent) ) {
 			if ( node_IsAuthor(node, user) ) {
 				let Lines = [];
 
@@ -436,8 +436,50 @@ export default class ContentItem extends Component {
 				);
 			}
 		}
-		else {
+		else if ( parent && !parseInt(parent.meta['can-grade']) ) {
 			// grading is closed
+			let Lines = [];
+
+			for ( var key in parent.meta ) {
+				// Is it a valid grade ?
+				let parts = key.split('-');
+				if ( parts.length == 2 && parts[0] == 'grade' ) {
+					// Make sure they user hasn't opted out
+					
+					if ( node.meta && !(node.meta[key+'-out']|0) ) {
+						Lines.push({'key': key, 'value': parent.meta[key]});
+					}
+				}
+			}
+			
+			let ResultLines = [];
+			for ( let idx = 0; idx < Lines.length; idx++ ) {
+				let Line = Lines[idx];
+				
+				let Title = Line.value;
+				let Place = "N/A";
+				if ( node.magic && node.magic[Line.key+'-result'] )
+					Place = node.magic[Line.key+'-result'];
+				let Average = 0;
+				if ( node.magic && node.magic[Line.key+'-average'] )
+					Average = node.magic[Line.key+'-average'];
+				let Count = 0;
+				if ( node.grade && node.grade[Line.key] )
+					Count = node.grade[Line.key];
+				
+				//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
+				
+				ResultLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Place}</strong> ({Average} average in {Count} ratings)</div>);
+			}
+
+			ShowGrade = (
+				<ContentCommonBody class="-rating">
+					<div class="-header">Results</div>
+					<div class="-subtext">Final results</div>
+					<div class="-items">{ResultLines}</div>
+					<div class="-footer">When a line is <strong>N/A</strong>, it means there weren't enough ratings for a reliable score. Don't forget to play and rate other people's games during events to prioritize your game.</div>
+				</ContentCommonBody>
+			);			
 		}
 		
 		var ShowPrePub = (

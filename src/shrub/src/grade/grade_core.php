@@ -1,6 +1,18 @@
 <?php
 
 
+function grade_GetByNode( $node_id ) {
+	return db_QueryFetch(
+		"SELECT
+			name,
+			value 
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_GRADE." 
+		WHERE node=?
+		;",
+		$node_id
+	);
+}
+
 function grade_GetByNodeAuthor( $node_id, $author_id ) {
 	return db_QueryFetchPair(
 		"SELECT

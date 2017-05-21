@@ -329,7 +329,7 @@ export default class ViewContent extends Component {
 //			else if ( Viewing == '/games' ) {
 			else if ( extra && extra.length && extra[0] == 'games' ) {
 				let DefaultSubFilter = 'all';
-				let DefaultFilter = 'smart';//'danger';//'smart';
+				let DefaultFilter = 'danger';//'smart';
 				
 				function EvalFilter(str) {
 					let MappingTable = {
