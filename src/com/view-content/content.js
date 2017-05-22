@@ -289,7 +289,7 @@ export default class ViewContent extends Component {
 				let DefaultSubFilter = 'jam';//'all';
 				let DefaultFilter = 'overall';
 				
-				function EvalFilter(str) {
+				function EvalFilter2(str) {
 					let MappingTable = {
 						'all': 'compo+jam',
 						'classic': 'cool',
@@ -336,7 +336,7 @@ export default class ViewContent extends Component {
 						case 'audio':
 						case 'humor':
 						case 'mood':
-							Methods = [EvalFilter(Filter)];
+							Methods = [EvalFilter2(Filter)];
 							break;
 						
 						case 'zero':
@@ -350,7 +350,7 @@ export default class ViewContent extends Component {
 						case 'release':
 						case 'unfinished':
 							SubFilter = Filter;
-							Methods = [EvalFilter(DefaultFilter)];
+							Methods = [EvalFilter2(DefaultFilter)];
 							break;
 
 						default:
@@ -361,7 +361,7 @@ export default class ViewContent extends Component {
 				else {
 					// If '+' was found, assume it's a multi-part subfilter and not a filter
 					SubFilter = Filter.split('-');		// should be '+'
-					Methods = [EvalFilter(DefaultFilter)];
+					Methods = [EvalFilter2(DefaultFilter)];
 				}
 
 /*
@@ -408,7 +408,7 @@ export default class ViewContent extends Component {
 //								<CommonNavButton href={Path+'feedback/'+SubFilter} class={Filter == 'feedback' ? '-selected' : ''}><SVGIcon>bubbles</SVGIcon><div>Feedback</div></CommonNavButton>
 //								<CommonNavButton href={Path+'grade/'+SubFilter} class={Filter == 'grade' ? '-selected' : ''}><SVGIcon>todo</SVGIcon><div>Grade</div></CommonNavButton>
 				
-				SubFilter = EvalFilter(SubFilter);
+				SubFilter = EvalFilter2(SubFilter);
 				
 				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />;
 
