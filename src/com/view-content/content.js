@@ -294,14 +294,14 @@ export default class ViewContent extends Component {
 						'all': 'compo+jam',
 						'classic': 'cool',
 						
-						'overall': 'grade-01-average',
-						'fun': 'grade-02-average',
-						'innovation': 'grade-03-average',
-						'theme': 'grade-04-average',
-						'graphics': 'grade-05-average',
-						'audio': 'grade-06-average',
-						'humor': 'grade-07-average',
-						'mood': 'grade-08-average',
+						'overall': 'grade-01-result',
+						'fun': 'grade-02-result',
+						'innovation': 'grade-03-result',
+						'theme': 'grade-04-result',
+						'graphics': 'grade-05-result',
+						'audio': 'grade-06-result',
+						'humor': 'grade-07-result',
+						'mood': 'grade-08-result',
 					};
 
 					if ( MappingTable[str] )

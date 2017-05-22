@@ -232,14 +232,14 @@ switch ( $action ) {
 					'grade',
 					'feedback',
 					
-					'grade-01-average',
-					'grade-02-average',
-					'grade-03-average',
-					'grade-04-average',
-					'grade-05-average',
-					'grade-06-average',
-					'grade-07-average',
-					'grade-08-average',
+					'grade-01-result',
+					'grade-02-result',
+					'grade-03-result',
+					'grade-04-result',
+					'grade-05-result',
+					'grade-06-result',
+					'grade-07-result',
+					'grade-08-result',
 				];
 				foreach ( $methods as &$method ) {
 					switch ( $method ) {
