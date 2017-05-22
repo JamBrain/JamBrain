@@ -412,7 +412,7 @@ export default class ViewContent extends Component {
 				
 				SubFilter = EvalFilter2(SubFilter);
 				
-				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />;
+				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />;
 
 //				let SubSubType = 'compo+jam';	// alphabetical
 //				if ( extra && extra.length > 1 ) {
