@@ -230,7 +230,16 @@ switch ( $action ) {
 					'cool',
 					'smart',
 					'grade',
-					'feedback'
+					'feedback',
+					
+					'grade-01-average',
+					'grade-02-average',
+					'grade-03-average',
+					'grade-04-average',
+					'grade-05-average',
+					'grade-06-average',
+					'grade-07-average',
+					'grade-08-average',
 				];
 				foreach ( $methods as &$method ) {
 					switch ( $method ) {
