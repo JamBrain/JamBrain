@@ -327,6 +327,8 @@ export default class ViewContent extends Component {
 						case 'danger':
 						case 'grade':
 						case 'feedback':
+							Methods = [EvalFilter2(Filter)];
+							break;
 
 						case 'overall':
 						case 'fun':
@@ -336,7 +338,7 @@ export default class ViewContent extends Component {
 						case 'audio':
 						case 'humor':
 						case 'mood':
-							Methods = [EvalFilter2(Filter)];
+							Methods = [EvalFilter2(Filter),'reverse'];
 							break;
 						
 						case 'zero':
