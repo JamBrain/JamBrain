@@ -355,6 +355,23 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 			case 'smart':
 			case 'grade':
 			case 'feedback':
+
+			case 'grade-01-result':
+			case 'grade-02-result':
+			case 'grade-03-result':
+			case 'grade-04-result':
+			case 'grade-05-result':
+			case 'grade-06-result':
+			case 'grade-07-result':
+			case 'grade-08-result':
+			case 'grade-01-average':
+			case 'grade-02-average':
+			case 'grade-03-average':
+			case 'grade-04-average':
+			case 'grade-05-average':
+			case 'grade-06-average':
+			case 'grade-07-average':
+			case 'grade-08-average':
 				$magic = $method;
 				break;
 		};
