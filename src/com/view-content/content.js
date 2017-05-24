@@ -487,9 +487,9 @@ export default class ViewContent extends Component {
 
 			let Viewing = '/'+ (extra ? extra.join('/') : '');
 			if ( Viewing == '/' ) {
-				Viewing = '/news';
+				Viewing = '/feed';
 				if ( user && user.id ) {
-					Viewing = '/feed';
+					Viewing = '/feed';		// Don't delete me
 				}
 			}
 
