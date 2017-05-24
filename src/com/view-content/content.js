@@ -36,10 +36,53 @@ import CommonBody						from 'com/content-common/common-body';
 import CommonNav						from 'com/content-common/common-nav';
 import CommonNavButton					from 'com/content-common/common-nav-button';
 
+import HeadMan 							from '../../internal/headman/headman';
+import marked 							from '../../internal/marked/marked';
 
 export default class ViewContent extends Component {
-	constructor( props ) {
-		super(props);
+  constructor(props) {
+    super(props);
+  }
+
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.node) {
+			this.generateMeta(nextProps.node);
+		}
+	}
+
+	generateMeta(node) {
+		var metaObject = {"og:type": "website", "og:site_name": "Ludum Dare", "og:url": window.location.href, "twitter:card": "summary", "twitter:site": "@ludumdare"};
+
+		if (node.name) {
+			metaObject["og:title"] = node.name;
+		} else {
+			metaObject["og:title"] = window.location.host;
+		}
+
+		if(node.body) {
+			metaObject["og:description"] = marked.cleanMarkdown(node.body.substring(0,256));
+			metaObject["description"] = marked.cleanMarkdown(node.body.substring(0,256));
+		}
+
+		if (node.meta.cover) {
+			metaObject["og:image"] = STATIC_ENDPOINT + node.meta.cover;
+		} else if (node.type == 'item') {
+			if (node.subtype == 'game') {
+				metaObject["og:image"] = "http:" + STATIC_ENDPOINT + '/content/internal/tvfail.png.480x384.fit.jpg';
+			}
+		}
+
+		if(node.type == "user") {
+			metaObject["og:type"] = 'profile';
+			metaObject["profile:username"] = node.name;
+			if (node.meta.avatar) {
+				metaObject["og:image"] = "http:" + STATIC_ENDPOINT + node.meta.avatar;
+			} else {
+				metaObject["og:image"] = "http:" + STATIC_ENDPOINT + '/content/internal/user64.png.64x64.fit.png';
+			}
+		}
+
+		HeadMan.insertMeta(metaObject);
 	}
 
 	getContent( {node, user, path, extra, featured} ) {
@@ -135,27 +178,27 @@ export default class ViewContent extends Component {
 /*
 						let DefaultSubFilter = 'all';
 						let DefaultFilter = 'smart';
-						
+
 						function EvalFilter(str) {
 							let MappingTable = {
 								'all': 'compo+jam+craft+release',
 								'classic': 'cool',
 							};
-		
+
 							if ( MappingTable[str] )
 								return MappingTable[str];
 							return str;
 						}
-		
+
 						let Methods = [];
 						let Filter = DefaultFilter;
 						let SubFilter = DefaultSubFilter;
-		
+
 						if ( extra.length > 2 )
 							SubFilter = extra[2];
 						if ( extra.length > 1 )
 							Filter = extra[1];
-		
+
 						// Determine Filter
 						if ( Filter.indexOf('-') == -1 ) {		// should be '+'
 							switch ( Filter ) {
@@ -167,7 +210,7 @@ export default class ViewContent extends Component {
 								case 'feedback':
 									Methods = [EvalFilter(Filter)];
 									break;
-		
+
 								case 'jam':
 								case 'compo':
 								case 'craft':
@@ -177,7 +220,7 @@ export default class ViewContent extends Component {
 									SubFilter = Filter;
 									Methods = [EvalFilter(DefaultFilter)];
 									break;
-		
+
 								default:
 									Methods = ['null'];
 									break;
@@ -188,8 +231,8 @@ export default class ViewContent extends Component {
 							SubFilter = Filter.split('-');		// should be '+'
 							Methods = [EvalFilter(DefaultFilter)];
 						}
-		
-		
+
+
 						let FilterDesc = {
 							'smart': <div><strong>Smart</strong>: This is the modern balacing filter. It balances the list using a combination of votes and the karma given to feedback. You start seeing diminishing returns after 50 ratings, but you can make up for it by leaving quality feedback.</div>,
 							'unbound': <div><strong>Unbound</strong>: This is a variation of the Smart filter that is unbound. For curiousity.</div>,
@@ -198,11 +241,11 @@ export default class ViewContent extends Component {
 							'feedback': <div><strong>Feedback</strong>: This filter lets you find who is working the hardest, leaving quality feedback for others.</div>,
 							'grade': <div><strong>Grade</strong>: This filter lets you find the games that have the most ratings.</div>,
 						};
-		
+
 						let ShowFilters = null;
 						if ( true ) {
 							let Path = this.props.path+'/games/';
-							
+
 							ShowFilters = (
 								<Common node={this.props.node} class="filter-item filter-game">
 									<CommonNav>
@@ -222,10 +265,10 @@ export default class ViewContent extends Component {
 								</Common>
 							);
 						}
-						
+
 						SubFilter = EvalFilter(SubFilter);
 						Methods.push('authors');
-						
+
 						View.push(ShowNavRoot);
 						View.push(ShowFilters);
 						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />);
@@ -236,7 +279,7 @@ export default class ViewContent extends Component {
 							if ( extra[1] != 'all' )
 								SubSubType = extra[1];
 						}
-						
+
 						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
 						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['authors']} subsubtypes={SubSubType ? SubSubType : ""} />);
 					}
@@ -492,7 +535,7 @@ export default class ViewContent extends Component {
 						case 'feedback':
 							Methods = [EvalFilter(Filter)];
 							break;
-						
+
 						case 'zero':
 							Methods = ['grade','reverse'];
 							break;
@@ -532,7 +575,7 @@ export default class ViewContent extends Component {
 				let ShowFilters = null;
 				if ( true ) {
 					let Path = this.props.path+'/games/';
-					
+
 					ShowFilters = (
 						<Common node={this.props.node} class="filter-item filter-game">
 							<CommonNav>
@@ -553,9 +596,9 @@ export default class ViewContent extends Component {
 						</Common>
 					);
 				}
-				
+
 				SubFilter = EvalFilter(SubFilter);
-				
+
 				return (
 					<div id="content">
 						{ShowNavRoot}
