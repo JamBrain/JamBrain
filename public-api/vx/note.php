@@ -34,6 +34,18 @@ switch ( $action ) {
 		$RESPONSE['note'] = noteComplete_GetByNode($ids[0]);
 
 		break; //case 'get': //note/get
+	case 'author': //note/author
+		json_ValidateHTTPMethod('GET');
+
+		$ids = explode('+', json_ArgGet(0));
+
+		if ( count($ids) !== 1 ) {
+			json_EmitFatalError_BadRequest(null, $RESPONSE);
+		}
+
+		$RESPONSE['note'] = noteInComplete_GetByAuthor($ids[0]);
+
+		break; //case 'get': //note/author	
 	case 'add': //note/add
 		json_ValidateHTTPMethod('POST');
 

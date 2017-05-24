@@ -27,11 +27,9 @@ export default class ContentNavRoot extends Component {
 		var NewPath = '/'+ (extra ? extra.join('/') : '');
 		var PartPath = '/'+ (extra && extra.length ? extra[0] : '');
 		
-		var ShowMyFeed = null;
 		if ( user && user.id ) {
 			if ( NewPath == '/' )
 				NewPath = '/feed';
-			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href='/feed'>Feed</ContentNavButton>;
 		}
 		// Default to normal /feed if not logged in
 		else {
@@ -42,7 +40,7 @@ export default class ContentNavRoot extends Component {
 		
 		return (
 			<div class="content-base content-nav content-nav-root">
-				{ShowMyFeed}
+				<ContentNavButton path={NewPath} icon='feed' href='/feed'>Feed</ContentNavButton>
 				<ContentNavButton path={NewPath} icon='news' href='/news'>News</ContentNavButton>
 				<ContentNavButton path={PartPath} icon='gamepad' href='/games'>Games</ContentNavButton>
 			</div>
