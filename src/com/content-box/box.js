@@ -114,18 +114,40 @@ export default class ContentBox extends Component {
 					SubEventClass = '-col-c';
 				}
 			}
+			
+			let ShowTrophies = null;
+			if ( node.magic ) {
+				ShowTrophies = [];
+				
+				for ( let key in node.magic ) {
+					let parts = key.split('-');
+					if ( /*ShowTrophies.length < 6 &&*/ parts.length == 3 && parts[0] == 'grade' && parts[2] == 'result' ) {
+						if ( node.magic[key] == 1 )
+							ShowTrophies.push(<span class="-first"><SVGIcon>trophy</SVGIcon></span>);
+						else if ( node.magic[key] == 2 )
+							ShowTrophies.push(<span class="-second"><SVGIcon>trophy</SVGIcon></span>);
+						else if ( node.magic[key] == 3 )
+							ShowTrophies.push(<span class="-third"><SVGIcon>trophy</SVGIcon></span>);
+					}
+				}
+			}
 
 			return (
 				<ButtonLink class={cN(Class, props.class)} href={node.path}>
 					{ShowHoverCover}
 					<IMG2 class="-cover" src={Cover} failsrc={CoverFail} />
-					<div class="-top">
+					<div class="-top-bar">
 						{ShowEvent}
 					</div>
 					<div class={cN("-sub-event", SubEventClass)}>
 						{ShowSubEvent}
 					</div>
-					<div class="-bot">
+					<div class="-bot-left">
+						{ShowTrophies}
+					</div>
+					<div class="-bot-right">
+					</div>
+					<div class="-bot-bar">
 						<div class="-title">{Title}</div>
 					</div>
 				</ButtonLink>
