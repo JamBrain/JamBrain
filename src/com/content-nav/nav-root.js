@@ -11,18 +11,6 @@ export default class ContentNavRoot extends Component {
 	}
 	
 	componentDidMount() {
-//		$Theme.GetStats(this.props.node.id)
-//		.then(r => {
-//			if ( r.stats ) {
-//				this.setState({ 'stats': r.stats });
-//			}
-//			else {
-//				this.setState({ 'stats': null });
-//			}
-//		})
-//		.catch(err => {
-//			this.setState({ error: err });
-//		});
 	}
 
 
@@ -45,9 +33,11 @@ export default class ContentNavRoot extends Component {
 				NewPath = '/feed';
 			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href='/feed'>Feed</ContentNavButton>;
 		}
-		// Default to /news if not logged in
-		else if ( NewPath == '/' ) {
-			NewPath = '/news';
+		// Default to normal /feed if not logged in
+		else {
+			if ( NewPath == '/' )
+				NewPath = '/feed';
+			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href='/feed'>Feed</ContentNavButton>;
 		}
 		
 		return (
