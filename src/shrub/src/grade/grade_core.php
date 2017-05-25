@@ -1,6 +1,18 @@
 <?php
 
 
+function grade_GetByNode( $node_id ) {
+	return db_QueryFetch(
+		"SELECT
+			name,
+			value 
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_GRADE." 
+		WHERE node=?
+		;",
+		$node_id
+	);
+}
+
 function grade_GetByNodeAuthor( $node_id, $author_id ) {
 	return db_QueryFetchPair(
 		"SELECT
@@ -73,18 +85,26 @@ function grade_CountByNodeAuthor( $node_id, $authors ) {
 }
 
 function grade_CountByNotNodeAuthor( $node_id, $authors ) {
-	$multi = is_array($authors);
-	if ( !$multi )
-		$authors = [$authors];
+	$QUERY = ['node!=?'];
+	$ARGS = [$node_id];
+	
+	if ( is_array($authors) ) {
+		$QUERY[] = "author IN (".implode(',', $authors).")";
+	}
+	else {
+		$QUERY[] = 'author=?';
+		$ARGS[] = $authors;
+	}
 	
 	return db_QueryFetchValue(
 		"SELECT
 			count(id) AS count
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_GRADE." 
-		WHERE node!=? AND author IN (".implode(',', $authors).")
+		WHERE ".implode(' AND ', $QUERY)."
 		LIMIT 1;",
-		$node_id
+		...$ARGS
 	);
+	 //node!=? AND author IN (".implode(',', $authors).")
 }
 
 function grade_CountByNodeNotAuthor( $node_id, $authors ) {
@@ -99,5 +119,25 @@ function grade_CountByNodeNotAuthor( $node_id, $authors ) {
 		WHERE node=? AND author NOT IN (".implode(',', $authors).")
 		LIMIT 1;",
 		$node_id
+	);
+}
+
+
+function grade_CountByNode( $node_id, $limit = 8*10 ) {
+	$multi = is_array($node_id);
+	if ( !$multi )
+		$node_id = [$node_id];
+	
+	return db_QueryFetchIdKeyValue(
+		"SELECT
+			node AS id,
+			name,
+			count(id) AS count
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_GRADE." 
+		WHERE node IN (".implode(',', $node_id).")
+		GROUP BY node, name
+		LIMIT ?
+		;",
+		$limit
 	);
 }

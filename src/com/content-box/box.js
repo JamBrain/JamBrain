@@ -2,6 +2,7 @@ import { h, Component } 				from 'preact/preact';
 import Shallow							from 'shallow/shallow';
 
 import ContentLoading					from 'com/content-loading/loading';
+import SVGIcon							from 'com/svg-icon/icon';
 import IMG2								from 'com/img2/img2';
 
 import ButtonLink						from 'com/button-link/link';
@@ -81,7 +82,11 @@ export default class ContentBox extends Component {
 			var ShowSubEvent = null;
 			var SubEventClass = null;
 			if ( !props.nosubevent && node.subtype ) {
-				if ( node.subtype == 'game' ) {
+				if ( !node.published ) {
+					ShowSubEvent = <div><SVGIcon baseline small>cross</SVGIcon></div>;
+				}
+				else if ( node.subtype == 'game' ) {
+					ShowSubEvent = <div>GAME</div>;
 					if ( node.subsubtype ) {
 						if ( node.subsubtype == 'jam' ) {
 							ShowSubEvent = <div>JAM</div>;
@@ -91,6 +96,17 @@ export default class ContentBox extends Component {
 							ShowSubEvent = <div>COMPO</div>;
 							SubEventClass = '-col-ab';
 						}
+						else if ( node.subsubtype == 'craft' ) {
+							ShowSubEvent = <div>CRAFT</div>;
+							SubEventClass = '-col-b';
+						}
+						else if ( node.subsubtype == 'release' ) {
+							ShowSubEvent = <div>RELEASE</div>;
+							SubEventClass = '-col-ca';
+						}
+						else if ( node.subsubtype == 'unfinished' ) {
+							ShowSubEvent = <div><SVGIcon baseline small>cross</SVGIcon></div>;
+						}
 					}
 				}
 				else if ( node.subtype == 'tool' ) {
@@ -98,18 +114,40 @@ export default class ContentBox extends Component {
 					SubEventClass = '-col-c';
 				}
 			}
+			
+			let ShowTrophies = null;
+			if ( node.magic ) {
+				ShowTrophies = [];
+				
+				for ( let key in node.magic ) {
+					let parts = key.split('-');
+					if ( /*ShowTrophies.length < 6 &&*/ parts.length == 3 && parts[0] == 'grade' && parts[2] == 'result' ) {
+						if ( node.magic[key] == 1 )
+							ShowTrophies.push(<span class="-first"><SVGIcon>trophy</SVGIcon></span>);
+						else if ( node.magic[key] == 2 )
+							ShowTrophies.push(<span class="-second"><SVGIcon>trophy</SVGIcon></span>);
+						else if ( node.magic[key] == 3 )
+							ShowTrophies.push(<span class="-third"><SVGIcon>trophy</SVGIcon></span>);
+					}
+				}
+			}
 
 			return (
 				<ButtonLink class={cN(Class, props.class)} href={node.path}>
 					{ShowHoverCover}
 					<IMG2 class="-cover" src={Cover} failsrc={CoverFail} />
-					<div class="-top">
+					<div class="-top-bar">
 						{ShowEvent}
 					</div>
 					<div class={cN("-sub-event", SubEventClass)}>
 						{ShowSubEvent}
 					</div>
-					<div class="-bot">
+					<div class="-bot-left">
+						{ShowTrophies}
+					</div>
+					<div class="-bot-right">
+					</div>
+					<div class="-bot-bar">
 						<div class="-title">{Title}</div>
 					</div>
 				</ButtonLink>

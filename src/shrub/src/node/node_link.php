@@ -20,7 +20,7 @@ function nodeLink_GetById( $ids ) {
 			"SELECT a, b, scope, `key`, `value`
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
 			WHERE id IN ($ids_string)
-			"
+			;"
 		);
 	}
 	
@@ -174,13 +174,57 @@ function nodeLink_GetByNode( $nodes, $scope_check = ">=0" ) {
 	return null;
 }
 
+// Variation that always returns null for values, no matter what they are set to 
+function nodeLink_GetNoValueByNode( $nodes, $scope_check = ">=0" ) {
+	$multi = is_array($nodes);
+	if ( !$multi )
+		$nodes = [$nodes];
+	
+	if ( is_array($nodes) ) {
+		// Confirm that all Nodes are not zero
+		foreach( $nodes as $node ) {
+			if ( intval($node) == 0 )
+				return null;
+		}
 
-function nodeLink_ParseByNode( $node_ids ) {
+		// Build IN string
+		$node_string = implode(',', $nodes);
+
+		if ( empty($scope_check) ) {
+			$scope_check_string = "";
+		}
+		else {
+			$scope_check_string = "scope".$scope_check." AND";
+		}
+
+		// NOTE: This may be poor performing once we have more nodes. See Meta above for some optimization homework
+		$ret = db_QueryFetch(
+			"SELECT a, b, scope, `key`, null AS `value`
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
+			WHERE $scope_check_string (a IN ($node_string) OR b IN ($node_string)) AND id IN (
+				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." GROUP BY a, b, `key`
+			);"
+		);
+		
+		if ( $multi )
+			return $ret;
+		else
+			return $ret ? $ret[0] : null;
+	}
+	
+	return null;
+}
+
+
+function nodeLink_ParseByNode( $node_ids, $get_values = true ) {
 	$multi = is_array($node_ids);
 	if ( !$multi )
 		$node_ids = [$node_ids];
 	
-	$links = nodeLink_GetByNode($node_ids);
+	if ( $get_values )
+		$links = nodeLink_GetByNode($node_ids);
+	else
+		$links = nodeLink_GetNoValueByNode($node_ids);
 
 	$ret = [];
 
@@ -287,4 +331,77 @@ function nodeLink_AddByNode( $a, $b, $scope, $key, $value = null ) {
 // NOTE: Doesn't actually remove, but adds an "ignore-me" entry
 function nodeLink_RemoveByNode( $a, $b, $scope, $key, $value = null ) {
 	return nodeLink_AddByNode($a, $b, $scope^-1, $key, $value);
+}
+
+
+function nodeLink_CountByABKeyScope( $parent = null, $a = null, $b = null, $key = null, $scope_op = '=0' ) {
+	$QUERY = [];
+	$OUTER_QUERY = [];
+	$INNER_QUERY = [];
+	$ARGS = [];
+
+	dbQuery_MakeEq('key', $key, $INNER_QUERY, $ARGS);
+
+	dbQuery_MakeEq('parent', $parent, $QUERY, $ARGS);
+
+	dbQuery_MakeEq('a', $a, $OUTER_QUERY, $ARGS);
+	dbQuery_MakeEq('b', $b, $OUTER_QUERY, $ARGS);
+	if ( $scope_op )
+		$OUTER_QUERY[] = 'scope'.$scope_op;
+
+//	return db_Echo(
+	return db_QueryFetchValue(
+		"SELECT
+			COUNT(DISTINCT o.b), o.a
+		FROM
+			".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." AS o
+			INNER JOIN (
+				SELECT
+					MAX(id) AS id
+				FROM
+					".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+				".dbQuery_MakeQuery($INNER_QUERY)."
+				GROUP BY 
+					a, b, `key`
+			) AS i ON o.id=i.id
+			INNER JOIN (
+				SELECT
+					id
+				FROM
+					".SH_TABLE_PREFIX.SH_TABLE_NODE."
+				".dbQuery_MakeQuery($QUERY)."
+			) AS n ON o.a=n.id
+		".dbQuery_MakeQuery($OUTER_QUERY)."
+		LIMIT 1
+		;",
+		...$ARGS
+	) |0;	// Clever: If nothing is returned, result is zero
+
+////	return db_Echo(
+//	return db_QueryFetchValue(
+//		"SELECT
+//			COUNT(DISTINCT o.b)
+//		FROM
+//			".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
+//			INNER JOIN (
+//				SELECT 
+//					id, a, b
+//				FROM
+//					".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+//				".dbQuery_MakeQuery($OUTER_QUERY)."
+//			) AS o ON n.id=o.a
+//			INNER JOIN (
+//				SELECT
+//					MAX(id) AS id
+//				FROM
+//					".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+//				".dbQuery_MakeQuery($INNER_QUERY)."
+//				GROUP BY 
+//					a, b, `key`
+//			) AS i ON o.id=i.id
+//		".dbQuery_MakeQuery($QUERY)."
+//		LIMIT 1
+//		;",
+//		...$ARGS
+//	) |0;	// Clever: If nothing is returned, result is zero
 }

@@ -9,12 +9,13 @@ var block = {
   heading: /^ *(#{1,6}) *([^\n]+?) *#* *(?:\n+|$)/,
   nptable: {exec: function(){}},
   lheading: /^([^\n]+)\n *(=|-){2,} *(?:\n+|$)/,
+  spoiler: /^( *\!>[^\n]+(\n(?!def)[^\n]+)*\n*)+/,
   blockquote: /^( *>[^\n]+(\n(?!def)[^\n]+)*\n*)+/,
   list: /^( *)(bull) [\s\S]+?(?:hr|def|\n{2,}(?! )(?!\1bull )\n*|\s*$)/,
   html: /^ *(?:comment *(?:\n|\s*$)|closed *(?:\n{2,}|\s*$)|closing *(?:\n{2,}|\s*$))/,
   def: /^ *\[([^\]]+)\]: *<?([^\s>]+)>?(?: +["(]([^\n]+)[")])? *(?:\n+|$)/,
   table: {exec: function(){}},
-  paragraph: /^((?:[^\n]+\n?(?!hr|heading|lheading|blockquote|tag|def))+)\n*/,
+  paragraph: /^((?:[^\n]+\n?(?!hr|heading|lheading|spoiler|blockquote|tag|def))+)\n*/,
   text: /^[^\n]+/
 };
 
@@ -23,6 +24,8 @@ block.item = /^( *)(bull) [^\n]*(?:\n(?!\1bull )[^\n]*)*/;
 block.item = Util.replace(block.item, 'gm')(/bull/g, block.bullet)();
 
 block.list = Util.replace(block.list)(/bull/g, block.bullet)('hr', '\\n+(?=\\1?(?:[-*_] *){3,}(?:\\n+|$))')('def', '\\n+(?=' + block.def.source + ')')();
+
+block.spoiler = Util.replace(block.spoiler)('def', block.def)();
 
 block.blockquote = Util.replace(block.blockquote)('def', block.def)();
 
@@ -33,7 +36,7 @@ block._tag = '(?!(?:' +
 
 block.html = Util.replace(block.html)('comment', /<!--[\s\S]*?-->/)('closed', /<(tag)[\s\S]+?<\/\1>/)('closing', /<tag(?:"[^"]*"|'[^']*'|[^'">])*?>/)(/tag/g, block._tag)();
 
-block.paragraph = Util.replace(block.paragraph)('hr', block.hr)('heading', block.heading)('lheading', block.lheading)('blockquote', block.blockquote)('tag', '<' + block._tag)('def', block.def)();
+block.paragraph = Util.replace(block.paragraph)('hr', block.hr)('heading', block.heading)('lheading', block.lheading)('spoiler', block.spoiler)('blockquote', block.blockquote)('tag', '<' + block._tag)('def', block.def)();
 
 /**
  * Normal Block Grammar
@@ -202,6 +205,25 @@ export default class Lexer {
         continue;
       }
 
+	  // spoiler
+      if (cap = this.rules.spoiler.exec(src)) {
+        src = src.substring(cap[0].length);
+
+        this.tokens.push({type: 'spoiler_start'});
+
+
+        cap = cap[0].replace(/^ *\!> ?/gm, '');
+
+        // Pass `top` to keep the current
+        // "toplevel" state. This is exactly
+        // how markdown.pl works.
+        this.token(cap, top, true);
+
+        this.tokens.push({type: 'spoiler_end'});
+
+        continue;
+      }
+	  
       // blockquote
       if (cap = this.rules.blockquote.exec(src)) {
         src = src.substring(cap[0].length);

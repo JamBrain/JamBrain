@@ -25,17 +25,64 @@ import ContentNavEvent					from 'com/content-nav/nav-event';
 import ContentNavTheme					from 'com/content-nav/nav-theme';
 
 import ContentEventTheme				from 'com/content-event/event-theme';
+import ContentStatsEvent				from 'com/content-stats/stats-event';
 
 import ContentPalette					from 'com/content-palette/palette';
 
 import NavLink							from 'com/nav-link/link';
-import ContentCommon					from 'com/content-common/common';
-import ContentCommonBody				from 'com/content-common/common-body';
+import SVGIcon							from 'com/svg-icon/icon';
+import Common							from 'com/content-common/common';
+import CommonBody						from 'com/content-common/common-body';
+import CommonNav						from 'com/content-common/common-nav';
+import CommonNavButton					from 'com/content-common/common-nav-button';
 
+import HeadMan 							from '../../internal/headman/headman';
+import marked 							from '../../internal/marked/marked';
 
 export default class ViewContent extends Component {
-	constructor( props ) {
-		super(props);
+  constructor(props) {
+    super(props);
+  }
+
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.node) {
+			this.generateMeta(nextProps.node);
+		}
+	}
+
+	generateMeta(node) {
+		var metaObject = {"og:type": "website", "og:site_name": "Ludum Dare", "og:url": window.location.href, "twitter:card": "summary", "twitter:site": "@ludumdare"};
+
+		if (node.name) {
+			metaObject["og:title"] = node.name;
+		} else {
+			metaObject["og:title"] = window.location.host;
+		}
+
+		if(node.body) {
+			metaObject["og:description"] = marked.cleanMarkdown(node.body.substring(0,256));
+			metaObject["description"] = marked.cleanMarkdown(node.body.substring(0,256));
+		}
+
+		if (node.meta.cover) {
+			metaObject["og:image"] = STATIC_ENDPOINT + node.meta.cover;
+		} else if (node.type == 'item') {
+			if (node.subtype == 'game') {
+				metaObject["og:image"] = "http:" + STATIC_ENDPOINT + '/content/internal/tvfail.png.480x384.fit.jpg';
+			}
+		}
+
+		if(node.type == "user") {
+			metaObject["og:type"] = 'profile';
+			metaObject["profile:username"] = node.name;
+			if (node.meta.avatar) {
+				metaObject["og:image"] = "http:" + STATIC_ENDPOINT + node.meta.avatar;
+			} else {
+				metaObject["og:image"] = "http:" + STATIC_ENDPOINT + '/content/internal/user64.png.64x64.fit.png';
+			}
+		}
+
+		HeadMan.insertMeta(metaObject);
 	}
 
 	getContent( {node, user, path, extra, featured} ) {
@@ -128,14 +175,113 @@ export default class ViewContent extends Component {
 //						View.push(<ContentPost node={node} user={user} path={path} extra={extra.splice(1)} by love edit />);
 					}
 					else if ( ViewType == 'games' ) {
+/*
+						let DefaultSubFilter = 'all';
+						let DefaultFilter = 'smart';
+
+						function EvalFilter(str) {
+							let MappingTable = {
+								'all': 'compo+jam+craft+release',
+								'classic': 'cool',
+							};
+
+							if ( MappingTable[str] )
+								return MappingTable[str];
+							return str;
+						}
+
+						let Methods = [];
+						let Filter = DefaultFilter;
+						let SubFilter = DefaultSubFilter;
+
+						if ( extra.length > 2 )
+							SubFilter = extra[2];
+						if ( extra.length > 1 )
+							Filter = extra[1];
+
+						// Determine Filter
+						if ( Filter.indexOf('-') == -1 ) {		// should be '+'
+							switch ( Filter ) {
+								case 'smart':
+								case 'classic':
+								case 'cool':
+								case 'danger':
+								case 'grade':
+								case 'feedback':
+									Methods = [EvalFilter(Filter)];
+									break;
+
+								case 'jam':
+								case 'compo':
+								case 'craft':
+								case 'late':
+								case 'release':
+								case 'unfinished':
+									SubFilter = Filter;
+									Methods = [EvalFilter(DefaultFilter)];
+									break;
+
+								default:
+									Methods = ['null'];
+									break;
+							}
+						}
+						else {
+							// If '+' was found, assume it's a multi-part subfilter and not a filter
+							SubFilter = Filter.split('-');		// should be '+'
+							Methods = [EvalFilter(DefaultFilter)];
+						}
+
+
+						let FilterDesc = {
+							'smart': <div><strong>Smart</strong>: This is the modern balacing filter. It balances the list using a combination of votes and the karma given to feedback. You start seeing diminishing returns after 50 ratings, but you can make up for it by leaving quality feedback.</div>,
+							'unbound': <div><strong>Unbound</strong>: This is a variation of the Smart filter that is unbound. For curiousity.</div>,
+							'classic': <div><strong>Classic</strong>: This is the classic balancing filter. It balances the list based on ratings alone. You start seeing diminishing returns after 100 ratings.</div>,
+							'danger': <div><strong>Danger</strong>: This is the rescue filter. Everything with less than 20 ratings sorted top to bottom. Items on the first page are typically 1-2 rating away, so help them out!</div>, //'
+							'feedback': <div><strong>Feedback</strong>: This filter lets you find who is working the hardest, leaving quality feedback for others.</div>,
+							'grade': <div><strong>Grade</strong>: This filter lets you find the games that have the most ratings.</div>,
+						};
+
+						let ShowFilters = null;
+						if ( true ) {
+							let Path = this.props.path+'/games/';
+
+							ShowFilters = (
+								<Common node={this.props.node} class="filter-item filter-game">
+									<CommonNav>
+										<CommonNavButton href={Path+Filter+'/all'} class={SubFilter == 'all' ? '-selected' : ''}><SVGIcon>gamepad</SVGIcon><div>All</div></CommonNavButton>
+										<CommonNavButton href={Path+Filter+'/jam'} class={SubFilter == 'jam' ? '-selected' : ''}><SVGIcon>trophy</SVGIcon><div>Jam</div></CommonNavButton>
+										<CommonNavButton href={Path+Filter+'/compo'} class={SubFilter == 'compo' ? '-selected' : ''}><SVGIcon>trophy</SVGIcon><div>Compo</div></CommonNavButton>
+										<CommonNavButton href={Path+Filter+'/unfinished'} class={SubFilter == 'unfinished' ? '-selected' : ''}><SVGIcon>trash</SVGIcon><div>Unfinished</div></CommonNavButton>
+									</CommonNav>
+									<CommonNav>
+										<CommonNavButton href={Path+'smart/'+SubFilter} class={Filter == 'smart' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Smart</div></CommonNavButton>
+										<CommonNavButton href={Path+'classic/'+SubFilter} class={Filter == 'classic' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Classic</div></CommonNavButton>
+										<CommonNavButton href={Path+'danger/'+SubFilter} class={Filter == 'danger' ? '-selected' : ''}><SVGIcon>help</SVGIcon><div>Danger</div></CommonNavButton>
+										<CommonNavButton href={Path+'feedback/'+SubFilter} class={Filter == 'feedback' ? '-selected' : ''}><SVGIcon>bubbles</SVGIcon><div>Feedback</div></CommonNavButton>
+										<CommonNavButton href={Path+'grade/'+SubFilter} class={Filter == 'grade' ? '-selected' : ''}><SVGIcon>todo</SVGIcon><div>Grade</div></CommonNavButton>
+									</CommonNav>
+									<CommonBody>{FilterDesc[Filter]}</CommonBody>
+								</Common>
+							);
+						}
+
+						SubFilter = EvalFilter(SubFilter);
+						Methods.push('authors');
+
+						View.push(ShowNavRoot);
+						View.push(ShowFilters);
+						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />);
+*/
+
 						let SubSubType = null;
 						if ( extra && extra.length > 1 ) {
 							if ( extra[1] != 'all' )
 								SubSubType = extra[1];
 						}
-						
+
 						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
-						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['author','cool']} subsubtypes={SubSubType ? SubSubType : ""} />);
+						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['authors']} subsubtypes={SubSubType ? SubSubType : ""} />);
 					}
 					else if ( ViewType == 'article' ) {
 
@@ -173,8 +319,8 @@ export default class ViewContent extends Component {
 		}
 		else if ( node.type === 'event' ) {
 			var ShowNav = null;
-			var ShowInfo = null;
 			var ShowPage = null;
+			var ShowFilters = null;
 
 			if ( extra && extra.length && extra[0] == 'theme' ) {
 				let NewPath = path+'/'+extra[0];
@@ -183,51 +329,155 @@ export default class ViewContent extends Component {
 				ShowPage = <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
 			}
 			else if( extra && extra.length && extra[0] == 'games' ){
-				let SubSubType = null;
-				if ( extra && extra.length > 1 ) {
-					if ( extra[1] != 'all' )
-						SubSubType = extra[1];
-				}
+				let DefaultSubFilter = 'jam';//'all';
+				let DefaultFilter = 'overall';
 				
-//				ShowInfo = (
-//					<ContentCommon node={node}>
-//						<ContentCommonBody>{"Sorry, these aren't sorted correctly yet. For now, try "}<strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</ContentCommonBody>
-//					</ContentCommon>
-//				);
-				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={['parent','cool']} subsubtypes={SubSubType ? SubSubType : null} />;
+				function EvalFilter2(str) {
+					let MappingTable = {
+						'all': 'compo+jam',
+						'classic': 'cool',
+						
+						'overall': 'grade-01-result',
+						'fun': 'grade-02-result',
+						'innovation': 'grade-03-result',
+						'theme': 'grade-04-result',
+						'graphics': 'grade-05-result',
+						'audio': 'grade-06-result',
+						'humor': 'grade-07-result',
+						'mood': 'grade-08-result',
+					};
+
+					if ( MappingTable[str] )
+						return MappingTable[str];
+					return str;
+				}
+
+				let Methods = [];
+				let Filter = DefaultFilter;
+				let SubFilter = DefaultSubFilter;
+
+				if ( extra.length > 2 )
+					SubFilter = extra[2];
+				if ( extra.length > 1 )
+					Filter = extra[1];
+
+				// Determine Filter
+				if ( Filter.indexOf('-') == -1 ) {		// should be '+'
+					switch ( Filter ) {
+						case 'smart':
+						case 'classic':
+						case 'cool':
+						case 'danger':
+						case 'grade':
+						case 'feedback':
+							Methods = [EvalFilter2(Filter)];
+							break;
+
+						case 'overall':
+						case 'fun':
+						case 'innovation':
+						case 'theme':
+						case 'graphics':
+						case 'audio':
+						case 'humor':
+						case 'mood':
+							Methods = [EvalFilter2(Filter),'reverse'];
+							break;
+						
+						case 'zero':
+							Methods = ['grade','reverse'];
+							break;
+
+						case 'jam':
+						case 'compo':
+						case 'craft':
+						case 'late':
+						case 'release':
+						case 'unfinished':
+							SubFilter = Filter;
+							Methods = [EvalFilter2(DefaultFilter)];
+							break;
+
+						default:
+							Methods = ['null'];
+							break;
+					}
+				}
+				else {
+					// If '+' was found, assume it's a multi-part subfilter and not a filter
+					SubFilter = Filter.split('-');		// should be '+'
+					Methods = [EvalFilter2(DefaultFilter)];
+				}
+
+/*
+				let FilterDesc = {
+					'smart': <div><strong>Smart</strong>: This is the modern balacing filter. It balances the list using a combination of votes and the karma given to feedback. You start seeing diminishing returns after 50 ratings, but you can make up for it by leaving quality feedback.</div>,
+					'unbound': <div><strong>Unbound</strong>: This is a variation of the Smart filter that is unbound. For curiousity.</div>,
+					'classic': <div><strong>Classic</strong>: This is the classic balancing filter. It balances the list based on ratings alone. You start seeing diminishing returns after 100 ratings.</div>,
+					'danger': <div><strong>Danger</strong>: This is the rescue filter. Everything with less than 20 ratings sorted top to bottom. Items on the first page are typically 1-2 rating away, so help them out!</div>, //'
+					'zero': <div><strong>Zero</strong>: This filter shows the most neglected games. These are often new users that didn't understand you should rate games. Leaving them some feedback is greatly appreciated.</div>, //'
+					'feedback': <div><strong>Feedback</strong>: This filter lets you find who is working the hardest, leaving quality feedback for others.</div>,
+					'grade': <div><strong>Grade</strong>: This filter lets you find the games that have the most ratings.</div>,
+				};
+*/
+
+				if ( true ) {
+					let Path = this.props.path+'/games/';
+					
+					ShowFilters = (
+						<Common node={this.props.node} class="filter-item filter-game">
+							<CommonNav>
+								<CommonNavButton href={Path+Filter+'/jam'} class={SubFilter == 'jam' ? '-selected' : ''}><SVGIcon>trophy</SVGIcon><div>Jam</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+'/compo'} class={SubFilter == 'compo' ? '-selected' : ''}><SVGIcon>trophy</SVGIcon><div>Compo</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+'/all'} class={SubFilter == 'all' ? '-selected' : ''}><SVGIcon>earth</SVGIcon><div>All</div></CommonNavButton>
+							</CommonNav>
+							<CommonNav>
+								<CommonNavButton href={Path+'overall/'+SubFilter} class={'-no-icon '+(Filter == 'overall' ? '-selected' : '')}><div>Overall</div></CommonNavButton>
+								<CommonNavButton href={Path+'fun/'+SubFilter} class={'-no-icon '+(Filter == 'fun' ? '-selected' : '')}><div>Fun</div></CommonNavButton>
+								<CommonNavButton href={Path+'innovation/'+SubFilter} class={'-no-icon '+(Filter == 'innovation' ? '-selected' : '')}><div>Innovation</div></CommonNavButton>
+								<CommonNavButton href={Path+'theme/'+SubFilter} class={'-no-icon '+(Filter == 'theme' ? '-selected' : '')}><div>Theme</div></CommonNavButton>
+								<CommonNavButton href={Path+'graphics/'+SubFilter} class={'-no-icon '+(Filter == 'graphics' ? '-selected' : '')}><div>Graphics</div></CommonNavButton>
+								<CommonNavButton href={Path+'audio/'+SubFilter} class={'-no-icon '+(Filter == 'audio' ? '-selected' : '')}><div>Audio</div></CommonNavButton>
+								<CommonNavButton href={Path+'humor/'+SubFilter} class={'-no-icon '+(Filter == 'humor' ? '-selected' : '')}><div>Humor</div></CommonNavButton>
+								<CommonNavButton href={Path+'mood/'+SubFilter} class={'-no-icon '+(Filter == 'mood' ? '-selected' : '')}><div>Mood</div></CommonNavButton>
+							</CommonNav>
+						</Common>
+					);
+				}
+//							<CommonBody>{FilterDesc[Filter]}</CommonBody>
+
+//								<CommonNavButton href={Path+'smart/'+SubFilter} class={Filter == 'smart' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Smart</div></CommonNavButton>
+//								<CommonNavButton href={Path+'classic/'+SubFilter} class={Filter == 'classic' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Classic</div></CommonNavButton>
+//								<CommonNavButton href={Path+'danger/'+SubFilter} class={Filter == 'danger' ? '-selected' : ''}><SVGIcon>help</SVGIcon><div>Danger</div></CommonNavButton>
+//								<CommonNavButton href={Path+'zero/'+SubFilter} class={Filter == 'zero' ? '-selected' : ''}><SVGIcon>gift</SVGIcon><div>Zero</div></CommonNavButton>
+//								<CommonNavButton href={Path+'feedback/'+SubFilter} class={Filter == 'feedback' ? '-selected' : ''}><SVGIcon>bubbles</SVGIcon><div>Feedback</div></CommonNavButton>
+//								<CommonNavButton href={Path+'grade/'+SubFilter} class={Filter == 'grade' ? '-selected' : ''}><SVGIcon>todo</SVGIcon><div>Grade</div></CommonNavButton>
+				
+				SubFilter = EvalFilter2(SubFilter);
+				
+				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />;
+
+//				let SubSubType = 'compo+jam';	// alphabetical
+//				if ( extra && extra.length > 1 ) {
+//					if ( extra[1] != 'all' )
+//						SubSubType = extra[1];
+//				}
+//
+//				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={['parent','smart']} subsubtypes={SubSubType ? SubSubType : null} />;
 			}
 			else {
 				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
+				ShowPage = <ContentStatsEvent node={node} />;
 			}
-
-//			else {
-/*				let Topic = 'news';
-				if ( extra.length )
-					Topic = extra.length;
-
-				if ( Topic == 'news' ) {
-					ShowPage = <ContentTimeline types={['post']} subtypes={['news']} node={node} user={user} path={path} extra={extra}></ContentTimeline>;
-				}
-				else if ( Topic == 'hot' ) {
-					ShowPage = <ContentTimeline node={node} user={user} path={path} extra={extra}></ContentTimeline>;
-				}
-				else if ( Topic == 'games' ) {
-					ShowPage = <ContentGames types={['game']} node={node} user={user} path={path} extra={extra}></ContentGames>;
-				}
-				else if ( Topic == 'feed' ) {
-					ShowPage = <ContentTimeline types='' node={node} user={user} path={path} extra={extra}></ContentTimeline>;
-				}*/
-//			}
 
 			return (
 				<div id="content">
 					<ContentEvent node={node} user={user} path={path} extra={extra} featured={featured} />
 					{ShowNav}
-					{ShowInfo}
+					{ShowFilters}
 					{ShowPage}
 				</div>
 			);
-//					<ContentNavEvent node={node} user={user} path={path} extra={extra} />;
 		}
 		else if ( node.type === 'events' || node.type === 'group' ) {
 			return <div id="content"><ContentGroup node={node} user={user} path={path} extra={extra} /></div>;
@@ -237,9 +487,9 @@ export default class ViewContent extends Component {
 
 			let Viewing = '/'+ (extra ? extra.join('/') : '');
 			if ( Viewing == '/' ) {
-				Viewing = '/news';
+				Viewing = '/feed';
 				if ( user && user.id ) {
-					Viewing = '/feed';
+					Viewing = '/feed';		// Don't delete me
 				}
 			}
 
@@ -251,24 +501,111 @@ export default class ViewContent extends Component {
 			}
 //			else if ( Viewing == '/games' ) {
 			else if ( extra && extra.length && extra[0] == 'games' ) {
-				let SubSubType = null;
-				if ( extra.length > 1 ) {
-					if ( extra[1] != 'all' ) {
-						SubSubType = extra[1];
+				let DefaultSubFilter = 'all';
+				let DefaultFilter = 'grade';//'danger';//'smart';
+				
+				function EvalFilter(str) {
+					let MappingTable = {
+						'all': 'compo+jam+craft+release',
+						'classic': 'cool',
+					};
+
+					if ( MappingTable[str] )
+						return MappingTable[str];
+					return str;
+				}
+
+				let Methods = [];
+				let Filter = DefaultFilter;
+				let SubFilter = DefaultSubFilter;
+
+				if ( extra.length > 2 )
+					SubFilter = extra[2];
+				if ( extra.length > 1 )
+					Filter = extra[1];
+
+				// Determine Filter
+				if ( Filter.indexOf('-') == -1 ) {		// should be '+'
+					switch ( Filter ) {
+						case 'smart':
+						case 'classic':
+						case 'cool':
+						case 'danger':
+						case 'grade':
+						case 'feedback':
+							Methods = [EvalFilter(Filter)];
+							break;
+
+						case 'zero':
+							Methods = ['grade','reverse'];
+							break;
+
+						case 'jam':
+						case 'compo':
+						case 'craft':
+						case 'late':
+						case 'release':
+						case 'unfinished':
+							SubFilter = Filter;
+							Methods = [EvalFilter(DefaultFilter)];
+							break;
+
+						default:
+							Methods = ['null'];
+							break;
 					}
 				}
-				
+				else {
+					// If '+' was found, assume it's a multi-part subfilter and not a filter
+					SubFilter = Filter.split('-');		// should be '+'
+					Methods = [EvalFilter(DefaultFilter)];
+				}
+
+
+				let FilterDesc = {
+					'smart': <div><strong>Smart</strong>: This is the modern balacing filter. It balances the list using a combination of votes and the karma given to feedback. You start seeing diminishing returns after 50 ratings, but you can make up for it by leaving quality feedback.</div>,
+					'unbound': <div><strong>Unbound</strong>: This is a variation of the Smart filter that is unbound. For curiousity.</div>,
+					'classic': <div><strong>Classic</strong>: This is the classic balancing filter. It balances the list based on ratings alone. You start seeing diminishing returns after 100 ratings.</div>,
+					'danger': <div><strong>Danger</strong>: This is the rescue filter. Everything with less than 20 ratings sorted top to bottom. Items on the first page are typically 1-2 rating away, so help them out!</div>, //'
+					'zero': <div><strong>Zero</strong>: This filter shows the most neglected games. These are often new users that didn't understand you should rate games. Leaving them some feedback is greatly appreciated.</div>, //'
+					'feedback': <div><strong>Feedback</strong>: This filter lets you find who is working the hardest, leaving quality feedback for others.</div>,
+					'grade': <div><strong>Grade</strong>: This filter lets you find the games that have the most ratings.</div>,
+				};
+
+				let ShowFilters = null;
+				if ( true ) {
+					let Path = this.props.path+'/games/';
+
+					ShowFilters = (
+						<Common node={this.props.node} class="filter-item filter-game">
+							<CommonNav>
+								<CommonNavButton href={Path+Filter+'/all'} class={SubFilter == 'all' ? '-selected' : ''}><SVGIcon>gamepad</SVGIcon><div>All</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+'/jam'} class={SubFilter == 'jam' ? '-selected' : ''}><SVGIcon>trophy</SVGIcon><div>Jam</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+'/compo'} class={SubFilter == 'compo' ? '-selected' : ''}><SVGIcon>trophy</SVGIcon><div>Compo</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+'/unfinished'} class={SubFilter == 'unfinished' ? '-selected' : ''}><SVGIcon>trash</SVGIcon><div>Unfinished</div></CommonNavButton>
+							</CommonNav>
+							<CommonNav>
+								<CommonNavButton href={Path+'smart/'+SubFilter} class={Filter == 'smart' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Smart</div></CommonNavButton>
+								<CommonNavButton href={Path+'classic/'+SubFilter} class={Filter == 'classic' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Classic</div></CommonNavButton>
+								<CommonNavButton href={Path+'danger/'+SubFilter} class={Filter == 'danger' ? '-selected' : ''}><SVGIcon>help</SVGIcon><div>Danger</div></CommonNavButton>
+								<CommonNavButton href={Path+'zero/'+SubFilter} class={Filter == 'zero' ? '-selected' : ''}><SVGIcon>gift</SVGIcon><div>Zero</div></CommonNavButton>
+								<CommonNavButton href={Path+'feedback/'+SubFilter} class={Filter == 'feedback' ? '-selected' : ''}><SVGIcon>bubbles</SVGIcon><div>Feedback</div></CommonNavButton>
+								<CommonNavButton href={Path+'grade/'+SubFilter} class={Filter == 'grade' ? '-selected' : ''}><SVGIcon>todo</SVGIcon><div>Grade</div></CommonNavButton>
+							</CommonNav>
+							<CommonBody>{FilterDesc[Filter]}</CommonBody>
+						</Common>
+					);
+				}
+
+				SubFilter = EvalFilter(SubFilter);
+
 				return (
 					<div id="content">
 						{ShowNavRoot}
-						<ContentGames node={node} user={user} path={path} extra={extra} methods={['cool'/*'all'*/]} subsubtypes={SubSubType ? SubSubType : null} />
+						{ShowFilters}
+						<ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />
 					</div>
 				);
-
-//						<ContentCommon node={node}>
-//							<ContentCommonBody>Sorry, these aren't sorted correctly yet. For now, try <strong><NavLink href="http://feedback.ld.intricati.com/">Feedback Friends</NavLink></strong>.</ContentCommonBody>
-//						</ContentCommon>
-
 			}
 			else if ( Viewing == '/feed' ) {
 				return (

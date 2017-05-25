@@ -1,6 +1,5 @@
 import { h, Component } 				from 'preact/preact';
 
-import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 import IMG2 							from 'com/img2/img2';
@@ -57,142 +56,6 @@ export default class ContentItem extends Component {
 			this.setState({ 'error': err });
 		});
 	}
-	
-//	onClickEdit(e) {
-//		console.log('edit');
-//		this.setState({ 'edit': true });
-//	}
-//	onClickPreview(e) {
-//		console.log('prev');
-//		this.setState({ 'edit': false });
-//	}
-//	onClickSave(e) {
-//		console.log('save');
-//		
-//		var Title = this.state.title ? this.state.title : this.props.node.name;
-//		var Body = this.state.body ? this.state.body : this.props.node.body;
-//		
-//		return $Node.Update(this.props.node.id, Title, Body)
-//		.then(r => {
-//			if ( r.status == 200 ) {
-//				this.setState({ 'modified': false });
-//			}
-//			else {
-//				if ( r.caller_id == 0 || (r.data && r.data.caller_id == 0) ) {
-//					location.hash = "#savebug";
-//				}
-//				else {
-//					this.setState({ 'error': r.status + ": " + r.error });
-//				}
-//			}
-//		})
-//		.catch(err => {
-//			console.log(err);
-//			this.setState({ 'error': err });
-//		});
-//	}
-//	onClickPublish(e) {
-//		console.log('pub');
-//		
-//		this.onClickSave(e)
-//		.then( rr => {
-//			console.log("LETS PUBLISH");
-//			$Node.Publish(this.props.node.id, "compo")
-//			.then(r => {
-//				if ( r.status == 200 ) {
-//					location.hash = "#submit";
-//				}
-//			})
-//			.catch(err => {
-//				this.setState({ 'error': err });
-//			});
-//		})
-//		.catch(err => {
-//			this.setState({ 'error': err });
-//		});
-//	}
-//
-//	onClickPublish2(e) {
-//		console.log('pub');
-//		
-//		this.onClickSave(e)
-//		.then( rr => {
-//			console.log("LETS PUBLISH");
-//			$Node.Publish(this.props.node.id, "jam")
-//			.then(r => {
-//				if ( r.status == 200 ) {
-//					location.hash = "#submit";
-//				}
-//			})
-//			.catch(err => {
-//				this.setState({ 'error': err });
-//			});
-//		})
-//		.catch(err => {
-//			this.setState({ 'error': err });
-//		});
-//	}	
-//	
-//	onModifyTitle( e ) {
-//		this.setState({ 'modified': true, 'title': e.target.value });
-//	}
-//	onModifyBody( e ) {
-//		this.setState({ 'modified': true, 'body': e.target.value });
-//	}
-//	
-//	
-//	
-//	render( {node, user, path, extra}, {edit, modified, authors, title, body, error} ) {
-//		var EditMode = false;
-//		
-//		var ShowError = null;
-//
-//		var ShowEditBar = null;
-//		var ShowItem = null;
-//		
-//		if ( error ) {
-//			ShowError = <div class="-error"><strong>Error</strong>: {error}</div>;
-//		}
-//
-//		// Hack Edit mode only if you're the author
-//		if ( user && user.id == node.author ) {
-//			var EditMode = extra.length ? extra[0] === 'edit' : false;
-//			
-//			var IsPublished = node.subsubtype.length;//;Number.parseInt(node.published) !== 0;
-//	
-//			if ( EditMode ) {
-//				ShowEditBar = <ContentHeadlineEdit edit={edit} modified={modified} published={IsPublished} onedit={this.onClickEdit} onpreview={this.onClickPreview} onsave={this.onClickSave} onpublish={this.onClickPublish} onpublish2={this.onClickPublish2} />;
-//			}
-//		}
-//
-//		if ( EditMode && edit ) {
-//			ShowItem = (
-//				<div class="content-base content-common content-item">
-//					<ContentHeaderEdit title={title ? title : node.name} event={node.subsubtype} onmodify={this.onModifyTitle} author={authors} />
-//					<ContentBody>{IsPublished ? "Event: "+node.subsubtype : ""}</ContentBody>
-//					<ContentBodyEdit onmodify={this.onModifyBody}>{body ? body : node.body}</ContentBodyEdit>
-//					<ContentFooterEdit node={node} user={user} love />
-//				</div>
-//			);
-//		}
-//		else {
-//			ShowItem = (
-//				<div class="content-base content-common content-item">
-//					<ContentHeaderCommon title={title ? title : node.name} path={path} />
-//					<ContentBody>{IsPublished ? (<div><strong>Event:</strong> {node.subsubtype}</div>) : ""}</ContentBody>
-//					<ContentBodyMarkup>{body ? body : node.body}</ContentBodyMarkup>
-//					<ContentFooterCommon node={node} user={user} love />
-//				</div>
-//			);
-//		}
-//		
-//		if ( EditMode ) {
-//			return <div>{ShowEditBar}{ShowError}{ShowItem}</div>;
-//		}
-//		else {
-//			return <div>{ShowItem}</div>;
-//		}
-//	}
 
 	setSubSubType( type ) {
 		return $Node.Transform(this.props.node.id, 'item', 'game', type)
@@ -323,6 +186,11 @@ export default class ContentItem extends Component {
 				props.headerClass = "-col-a";
 				props.titleIcon = "gamepad";
 			}
+			else if ( node.subtype == 'tool' ) {
+				props.header = "TOOL";
+				props.headerClass = "-col-c";
+				props.titleIcon = "hammer";
+			}
 			
 			if ( node.subsubtype == 'jam' ) {
 				props.header += ": JAM";
@@ -335,6 +203,15 @@ export default class ContentItem extends Component {
 			else if ( node.subsubtype == 'craft' ) {
 				props.header += ": CRAFT";
 				Category = '/craft';
+			}
+			else if ( node.subsubtype == 'release' ) {
+				props.header += ": RELEASE";
+				Category = '/release';
+			}
+			else if ( node.subsubtype == 'unfinished' ) {
+				props.headerClass = null;
+				props.header += ": UNFINISHED";
+				Category = '/unfinished';
 			}
 			else {
 				props.nopublish = true;
@@ -356,10 +233,126 @@ export default class ContentItem extends Component {
 //			);
 //		}
 		
+		var ShowMetrics = null;
+		if ( node.magic ) {
+			let Lines = [];
+			for ( var key in node.magic ) {
+				let parts = key.split('-');
+
+				// Ignore grades (i.e. grade-01)
+				if ( parts.length && !(parts[0] == 'grade' && parts.length > 1) ) {
+					Lines.push({'key': key, 'value': node.magic[key]});
+				}
+			}
+
+			let SimpleLines = [];
+			let AdvancedLines = [];
+			for ( let idx = 0; idx < Lines.length; idx++ ) {
+				let Metric = Lines[idx];
+
+				let Star = false;
+				let Warning = false;
+				let Icon = null;
+				let Title = Metric.key;
+				let Score = Metric.value;
+				
+				let HoverTitle = Score;
+
+				if ( Metric.key == 'smart' ) {
+					Title = "Smart Balance";
+					Star = true;
+				}
+				else if ( Metric.key == 'cool' ) {
+					Title = "Classic Balance";
+					Star = true;
+				}
+				else if ( Metric.key == 'grade' ) {
+					Title = "Ratings received";
+					Warning = Score < 20.0;
+					if ( !Warning ) {
+						Icon = <SVGIcon baseline small>checkmark</SVGIcon>;
+						HoverTitle = "This will be scored";
+					}
+					else {
+						Icon = <SVGIcon baseline small>warning</SVGIcon>;
+						HoverTitle = "The minimum needed to score is about 20";
+					}
+				}
+				else if ( Metric.key == 'given' ) {
+					Title = "Ratings given";
+					if ( Score > 25 ) {
+						Icon = <SVGIcon baseline small>checkmark</SVGIcon>;
+					}
+				}
+				else if ( Metric.key == 'feedback' ) {
+					Title = "Karma for Feedback given";
+				}
+				
+				let SmallScore = Score.toFixed(4);
+				if ( SmallScore.length > Score.toString().length )
+					SmallScore = Score.toString();
+
+				if ( Star )
+					AdvancedLines.push(<div class="-metric"><span class="-title">{Title}:</span> <span class="-value" title={HoverTitle}>{SmallScore} *{Icon}</span></div>);
+				else
+					SimpleLines.push(<div class={cN("-metric", Warning ? "-warning" : "")}><span class="-title">{Title}:</span> <span class="-value" title={HoverTitle}>{SmallScore}{Icon}</span></div>);
+			}
+
+			ShowMetrics = (
+				<ContentCommonBody class="-rating">
+					<div class="-header">Metrics</div>
+					<div class="-subtext">Advanced data on this game</div>
+					<div class="-items">
+						{SimpleLines}
+						{AdvancedLines}
+					</div>
+					<div class="-footer">Metrics update rougly every <strong>15 minutes</strong>. If they don't exactly match other data (i.e. ratings), this is because they haven't updated yet. Metrics with a <strong>*</strong> are dynamic, and change based on a variety of factors. It is normal for these numbers to go up and down.</div>
+				</ContentCommonBody>
+			);
+		}
+
+		var ShowResults = null;
+		
 		var ShowGrade = null;
-		if ( parent && node_CanGrade(parent) ) {
+		if ( parent && parseInt(parent.meta['can-grade']) && node_CanGrade(parent) ) {
 			if ( node_IsAuthor(node, user) ) {
-				//ShowGrade = <ContentCommonBody>You are an Author</ContentCommonBody>;
+				let Lines = [];
+
+				for ( var key in parent.meta ) {
+					// Is it a valid grade ?
+					let parts = key.split('-');
+					if ( parts.length == 2 && parts[0] == 'grade' ) {
+						// Make sure they user hasn't opted out
+						
+						if ( node.meta && !(node.meta[key+'-out']|0) ) {
+							Lines.push({'key': key, 'value': parent.meta[key]});
+						}
+					}
+				}
+				
+				let VoteLines = [];
+				for ( let idx = 0; idx < Lines.length; idx++ ) {
+					let Line = Lines[idx];
+					
+					let Title = Line.value;
+					let Score = 0;
+					if ( node.grade ) {
+						Score = node.grade[Line.key];
+					}
+					
+					//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
+					
+					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
+				}
+
+				ShowGrade = (
+					<ContentCommonBody class="-rating">
+						<div class="-header">Total Ratings</div>
+						<div class="-subtext">Votes on your game so far</div>
+						<div class="-items">{VoteLines}</div>
+						<div class="-footer">To get a score at the end, you need about <strong>20</strong> ratings in a category. To get ratings: play, rate, and leave feedback on games. Every game you rate and leave quality feedback on scores you <strong>Coolness</strong> points. Having a high "Coolness" prioritizes your game.</div>
+					</ContentCommonBody>
+				);
 			}
 			else if ( featured && featured.what_node && nodeKeys_HasPublishedParent(featured.what_node, node.parent) ) {
 				let Lines = [];
@@ -398,10 +391,17 @@ export default class ContentItem extends Component {
 					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> {Stars}</div>);
 				}
 				
+				let ShowRatingSubText = null;
+				if ( node.subsubtype == 'jam' )
+					ShowRatingSubText = <div class="-subtext">Jam game</div>;
+				else if ( node.subsubtype == 'compo' )
+					ShowRatingSubText = <div class="-subtext">Compo game</div>;
+				
 				ShowGrade = (
 					<ContentCommonBody class="-rating">
-						<h2>Ratings</h2>
-						{VoteLines}
+						<div class="-header">Ratings</div>
+						{ShowRatingSubText}
+						<div class="-items">{VoteLines}</div>
 						<div class="-footer">Ratings are saved automatically when you click. When they change, they're saved.</div>
 					</ContentCommonBody>
 				);
@@ -409,14 +409,66 @@ export default class ContentItem extends Component {
 				//'
 			}
 			else if ( !user || !user.id ) {
-				ShowGrade = <ContentCommonBody>Please login to rate this game</ContentCommonBody>;
+				ShowGrade = (
+					<ContentCommonBody class="-rating">
+						<div class="-header">Ratings</div>
+						<div class="-items">Please login to rate this game</div>
+					</ContentCommonBody>
+				);
 			}
 			else {
-				ShowGrade = <ContentCommonBody>At this time, only participants are able to rate games. Sorry!</ContentCommonBody>;
+				ShowGrade = (
+					<ContentCommonBody class="-rating">
+						<div class="-header">Ratings</div>
+						<div class="-items">Sorry! At this time, only participants are able to rate games.</div>
+					</ContentCommonBody>
+				);
 			}
 		}
-		else {
+		else if ( parent && !parseInt(parent.meta['can-grade']) ) {
 			// grading is closed
+			let Lines = [];
+
+			for ( var key in parent.meta ) {
+				// Is it a valid grade ?
+				let parts = key.split('-');
+				if ( parts.length == 2 && parts[0] == 'grade' ) {
+					// Make sure they user hasn't opted out
+					
+					if ( node.meta && !(node.meta[key+'-out']|0) ) {
+						Lines.push({'key': key, 'value': parent.meta[key]});
+					}
+				}
+			}
+			
+			let ResultLines = [];
+			for ( let idx = 0; idx < Lines.length; idx++ ) {
+				let Line = Lines[idx];
+				
+				let Title = Line.value;
+				let Place = "N/A";
+				if ( node.magic && node.magic[Line.key+'-result'] )
+					Place = node.magic[Line.key+'-result'];
+				let Average = 0;
+				if ( node.magic && node.magic[Line.key+'-average'] )
+					Average = node.magic[Line.key+'-average'];
+				let Count = 0;
+				if ( node.grade && node.grade[Line.key] )
+					Count = node.grade[Line.key];
+				
+				//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
+				
+				ResultLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Place}</strong> ({Average} average in {Count} ratings)</div>);
+			}
+
+			ShowGrade = (
+				<ContentCommonBody class="-rating">
+					<div class="-header">Results</div>
+					<div class="-subtext">Final results</div>
+					<div class="-items">{ResultLines}</div>
+					<div class="-footer">When a line is <strong>N/A</strong>, it means there weren't enough ratings for a reliable score. Don't forget to play and rate other people's games during events to prioritize your game.</div>
+				</ContentCommonBody>
+			);			
 		}
 		
 		var ShowPrePub = (
@@ -562,6 +614,8 @@ export default class ContentItem extends Component {
 		props.viewonly = (
 			<div>
 				{ShowGrade}
+				{ShowMetrics}
+				{ShowResults}
 			</div>
 		);
 		

@@ -35,6 +35,23 @@ export default class HeaderWhatsup extends Component {
 //				<span class="-title _font2">ON NOW:</span> Ludum Dare 38 <NavLink href="/events/ludum-dare/38"><SVGIcon baseline small gap>fire</SVGIcon>Theme Slaughter</NavLink>
 //			</div>
 //		);
+
+
+		if ( featured ) {
+			if ( featured.meta ) {
+				if ( featured.meta['event-theme'] ) {
+					return (
+						<div class="header-base header-whatsup outside">
+							<span class="-title _font2">RESULTS:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink>
+						</div>
+					);
+				}
+			}
+		}
+
+		return null; // HACK HAAAAAAAAAAACK!
+
+
 		if ( featured ) {
 			if ( featured.meta ) {
 				if ( featured.meta['event-theme'] ) {

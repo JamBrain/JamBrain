@@ -54,11 +54,11 @@ function nodeCache_GetById( $ids, &$cached_store = null ) {
 	}
 	
 	if ( count($uncached_ids) ) {
-		$uncached = nodeComplete_GetById($uncached_ids);
+		if ( $uncached = nodeComplete_GetById($uncached_ids) ) {
+			_nodeCache_CacheNodes($uncached);
 		
-		_nodeCache_CacheNodes($uncached);
-	
-		$nodes = array_merge($nodes, $uncached);
+			$nodes = array_merge($nodes, $uncached);
+		}
 	}
 		
 	if ($multi)

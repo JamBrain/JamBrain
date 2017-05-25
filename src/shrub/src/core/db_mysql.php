@@ -405,6 +405,15 @@ function _db_GetAssocFloatKey( $key, &$st ) {
 	}
 	return $ret;
 }
+/// Get an array of arrays of elements (without names)
+function _db_GetArray( &$st ) {
+	$result = $st->get_result();
+	$ret = [];
+	while ($row = $result->fetch_array(MYSQLI_NUM)) {
+		$ret[] = $row;
+	}
+	return $ret;
+}
 /// Get an array of just the first element
 function _db_GetFirst( &$st ) {
 	$result = $st->get_result();
@@ -523,6 +532,18 @@ function db_QueryFetch( $query, ...$args ) {
 	}
 	return null;
 }
+
+/// Return the result of the query, but as an array of values
+function db_QueryFetchArray( $query, ...$args ) {
+	$st = _db_Query($query, $args);
+	if ( $st ) {
+		$ret = _db_GetArray($st);
+		$st->close();
+		return $ret;
+	}
+	return null;
+}
+
 /// Fetch the first row (not the first field); Don't forget to add a **LIMIT 1**!
 /// @param [in] String $query MySQL query string
 /// @param [in] ... (optional) String arguments
@@ -653,3 +674,21 @@ function db_TableExists($name) {
 
 /// @}
 
+
+// Output an object containing id'd key/value pairs
+function db_QueryFetchIdKeyValue( $query, ...$args ) {
+	$out = db_QueryFetchArray($query, ...$args);
+	
+	$ret = [];
+	if ( is_array($out) ) {
+		foreach ( $out as &$value ) {
+			if ( !isset($ret[$value[0]]) ) {
+				$ret[$value[0]] = [];
+			}
+			
+			$ret[$value[0]][$value[1]] = $value[2];
+		}
+	}
+	
+	return $ret;
+}

@@ -129,7 +129,7 @@ export default class ContentGames extends Component {
 			props.subtypes ? props.subtypes : ['game'],
 			props.subsubtypes ? props.subsubtypes : null,
 			offset,
-			this.props.limit ? this.props.limit : 5+12
+			this.props.limit ? this.props.limit : 12+5
 		);
 
 		this.setState({'offset': offset + 12});

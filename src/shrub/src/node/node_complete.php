@@ -1,90 +1,156 @@
 <?php
 require_once __DIR__."/../note/note_core.php";
+require_once __DIR__."/../grade/grade_core.php";
 
-function nodeComplete_GetById( $ids ) {
+const F_NODE_ALL = 0xFFFFFF;			// NOTE: 24bit. Bits above 24bit must be explicitly included
+
+const F_NODE_META = 0x1;
+const F_NODE_LINK = 0x2;
+const F_NODE_PATH = 0x4;
+//const F_NODE_ = 0x8;
+const F_NODE_LOVE = 0x10;
+const F_NODE_COMMENT = 0x20;
+const F_NODE_COUNT = 0x40;
+//const F_NODE_ = 0x80;
+const F_NODE_GRADE = 0x100;
+const F_NODE_MAGIC = 0x200;
+//const F_NODE_ = 0x400;
+//const F_NODE_ = 0x800;
+
+const F_NODE_NO_BODY = 0x01000000;		// Get the node without the body
+const F_NODE_NO_LINKVALUE = 0x02000000;	// Get links without value
+
+function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 	$multi = is_array($ids);
 	if ( !$multi )
 		$ids = [$ids];
-	
-	$nodes = node_GetById($ids);
+
+	// Fetch nodes
+	if ( $flags & F_NODE_NO_BODY )
+		$nodes = node_GetNoBodyById($ids);
+	else
+		$nodes = node_GetById($ids);
+
 	if ( !$nodes )
 		return null;
-		
-	$metas = nodeMeta_ParseByNode($ids);
-	$links = nodeLink_ParseByNode($ids);
-
-	$loves = nodeLove_GetByNode($ids);
-	
-	$notes = note_CountByNode($ids);
-	
-	$games = node_IdToIndex(node_CountByAuthorType($ids, false, 'item', 'game'));
-	$articles = node_IdToIndex(node_CountByAuthorType($ids, false, 'page', 'article'));
-	$posts = node_IdToIndex(node_CountByAuthorType($ids, false, 'post'));
 
 	// Populate Metadata
-	foreach ( $nodes as &$node ) {
-		// Walk paths
-		$paths = node_GetPathById($node['id'], 1);	// 1 = root node
-		$node['path'] = $paths['path'];
-		$node['parents'] = $paths['parent'];
-		
-		if ( $node['type'] == 'user' ) {
-			$node['games'] = isset($games[$node['id']]) ? $games[$node['id']]['count'] : 0;
-			$node['articles'] = isset($articles[$node['id']]) ? $articles[$node['id']]['count'] : 0;
-			$node['posts'] = isset($posts[$node['id']]) ? $posts[$node['id']]['count'] : 0;
+	if ( $flags & F_NODE_META ) {
+		$metas = nodeMeta_ParseByNode($ids);
+		foreach ( $nodes as &$node ) {
+			// Store Public Metadata
+			if ( isset($metas[$node['id']][SH_NODE_META_PUBLIC]) ) {
+				$node['meta'] = $metas[$node['id']][SH_NODE_META_PUBLIC];
+			}
+			else {
+				$node['meta'] = [];
+			}
+	
+			// TODO: Store Protected and Private Metadata
 		}
-		
-		// Store Public Metadata
-		if ( isset($metas[$node['id']][SH_NODE_META_PUBLIC]) ) {
-			$node['meta'] = $metas[$node['id']][SH_NODE_META_PUBLIC];
-		}
-		else {
-			$node['meta'] = [];
-		}
-
-		// TODO: Store Protected and Private Metadata
 	}
 
 	// Populate Links (NOTE: Links come in Pairs)
-	foreach ( $nodes as &$node ) {
-		if ( isset($links[$node['id']][0][SH_NODE_META_PUBLIC]) ) {
-			$node['link'] = $links[$node['id']][0][SH_NODE_META_PUBLIC];
-		}
-		else {
-			$node['link'] = [];
-		}
-
-		// TODO: Store Protected and Private Metadata
-	}
-	
-	// Populate Love
-	foreach ( $nodes as &$node ) {
-		$node['love'] = 0;
-		
-		foreach ( $loves as $love ) {
-			if ( $node['id'] === $love['node'] ) {
-				$node['love'] = $love['count'];
-				$node['love-timestamp'] = $love['timestamp'];
+	if ( $flags & F_NODE_LINK ) {
+		$links = nodeLink_ParseByNode($ids, !($flags & F_NODE_NO_LINKVALUE));
+		foreach ( $nodes as &$node ) {
+			if ( isset($links[$node['id']][0][SH_NODE_META_PUBLIC]) ) {
+				$node['link'] = $links[$node['id']][0][SH_NODE_META_PUBLIC];
 			}
+			else {
+				$node['link'] = [];
+			}
+	
+			// TODO: Store Protected and Private Metadata
+		}
+	}
+
+	// Populate paths ** NOTE: Multiple queries!
+	if ( $flags & F_NODE_PATH ) {
+		foreach ( $nodes as &$node ) {
+			// Walk paths
+			$paths = node_GetPathById($node['id'], 1);	// 1 = root node
+			$node['path'] = $paths['path'];
+			$node['parents'] = $paths['parent'];
 		}
 	}
 	
-	// Populate Note (comment) Count
-	foreach ( $nodes as &$node ) {
-		// Check if note data is public for this Node type
-		if ( note_IsNotePublicByNode($node) ) {
-			$node['notes'] = 0;
+	// **** //
 
-			foreach ( $notes as $note ) {
-				if ( $node['id'] === $note['node'] ) {
-					$node['notes'] = $note['count'];
-					$node['notes-timestamp'] = $note['timestamp'];
+	// Populate Love
+	if ( $flags & F_NODE_LOVE ) {
+		$loves = nodeLove_GetByNode($ids);
+		foreach ( $nodes as &$node ) {
+			$node['love'] = 0;
+			
+			foreach ( $loves as &$love ) {
+				if ( $node['id'] === $love['node'] ) {
+					$node['love'] = $love['count'];
+					$node['love-timestamp'] = $love['timestamp'];
 				}
 			}
 		}
 	}
 
+	// Populate Note (comment) Count
+	if ( $flags & F_NODE_COMMENT ) {
+		$notes = note_CountByNode($ids);
+		foreach ( $nodes as &$node ) {
+			// Check if note data is public for this Node type
+			if ( note_IsNotePublicByNode($node) ) {
+				$node['notes'] = 0;
+	
+				foreach ( $notes as $note ) {
+					if ( $node['id'] === $note['node'] ) {
+						$node['notes'] = $note['count'];
+						$node['notes-timestamp'] = $note['timestamp'];
+					}
+				}
+			}
+		}
+	}
 
+	// Populate Counts
+	if ( $flags & F_NODE_COUNT ) {
+		$games = node_IdToIndex(node_CountByAuthorType($ids, false, 'item', 'game'));
+		$articles = node_IdToIndex(node_CountByAuthorType($ids, false, 'page', 'article'));
+		$posts = node_IdToIndex(node_CountByAuthorType($ids, false, 'post'));
+	
+		foreach ( $nodes as &$node ) {
+			if ( $node['type'] == 'user' ) {
+				$node['games'] = isset($games[$node['id']]) ? $games[$node['id']]['count'] : 0;
+				$node['articles'] = isset($articles[$node['id']]) ? $articles[$node['id']]['count'] : 0;
+				$node['posts'] = isset($posts[$node['id']]) ? $posts[$node['id']]['count'] : 0;
+			}
+		}
+	}
+	
+	// **** //
+
+	// Populate Grades
+	if ( $flags & F_NODE_GRADE ) {
+		$grades = grade_CountByNode($ids);
+		foreach ( $nodes as &$node ) {
+			foreach ( $grades as $key => &$grade ) {
+				if ( $node['id'] === $key ) {
+					$node['grade'] = $grade;
+				}
+			}
+		}
+	}
+	
+	// Populate Magic
+	if ( $flags & F_NODE_MAGIC ) {
+		$magics = nodeMagic_GetByNode($ids);
+		foreach ( $nodes as &$node ) {
+			foreach ( $magics as $key => &$magic ) {
+				if ( $node['id'] === $key ) {
+					$node['magic'] = $magic;
+				}
+			}
+		}
+	}
+	
 	if ($multi)
 		return $nodes;
 	else

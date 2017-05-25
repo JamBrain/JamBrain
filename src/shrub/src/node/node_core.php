@@ -193,47 +193,67 @@ function node_GetById( $ids ) {
 	return null;
 }
 
-function node_CountByParentAuthorType( $parent, $author = null, $type = null, $subtype = null, $subsubtype = null ) {
+// Like get, but omits the body (i.e. a string of indeterminate length)
+function node_GetNoBodyById( $ids ) {
+	$multi = is_array($ids);
+	if ( !$multi )
+		$ids = [$ids];
+	
+	if ( is_array($ids) ) {
+		// Confirm that all IDs are not zero
+		foreach( $ids as $id ) {
+			if ( intval($id) == 0 )
+				return null;
+		}
+
+		// Build IN string
+		$ids_string = implode(',', $ids);
+
+		$ret = db_QueryFetch(
+			"SELECT id, parent, superparent, author,
+				type, subtype, subsubtype,
+				".DB_FIELD_DATE('published').",
+				".DB_FIELD_DATE('created').",
+				".DB_FIELD_DATE('modified').",
+				version,
+				slug, name
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+			WHERE id IN ($ids_string);"
+		);
+
+		if ( $multi )
+			return $ret;
+		else
+			return $ret ? $ret[0] : null;
+	}
+	
+	return null;
+}
+
+function node_CountByParentAuthorType( $parent = null, $superparent = null, $author = null, $type = null, $subtype = null, $subsubtype = null, $published = true ) {
 	$QUERY = [];
 	$ARGS = [];
-
-	if ( $parent ) {
-		$QUERY[] = "parent=?";
-		$ARGS[] = $parent;
-	}
-
-	if ( $author ) {
-		$QUERY[] = "author=?";
-		$ARGS[] = $author;
-	}
-
-	if ( $type ) {
-		$QUERY[] = "type=?";
-		$ARGS[] = $type;
-	}
-	if ( $subtype ) {
-		$QUERY[] = "subtype=?";
-		$ARGS[] = $subtype;
-	}
-	if ( $subsubtype ) {
-		$QUERY[] = "subsubtype=?";
-		$ARGS[] = $subsubtype;
-	}
-
-	$full_query = implode(' AND ', $QUERY);
-
-	$ret = db_QueryFetch(
-		"SELECT author AS id, COUNT(id) AS count
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
-		WHERE $full_query
-		GROUP BY author
-		LIMIT 1;",
-		...$ARGS
-	);
 	
-	if ( count($ret) && isset($ret[0]['count']) )
-		return $ret[0]['count'];
-	return 0;
+	dbQuery_MakeEq('parent', $parent, $QUERY, $ARGS);
+	dbQuery_MakeEq('superparent', $superparent, $QUERY, $ARGS);
+	dbQuery_MakeEq('author', $author, $QUERY, $ARGS);
+	dbQuery_MakeEq('type', $type, $QUERY, $ARGS);
+	dbQuery_MakeEq('subtype', $subtype, $QUERY, $ARGS);
+	dbQuery_MakeEq('subsubtype', $subsubtype, $QUERY, $ARGS);
+	
+	if ( is_bool($published) )
+		dbQuery_MakeOp('published', $published ? '!=' : '=', 0, $QUERY, $ARGS);
+
+	return db_QueryFetchValue(
+		"SELECT 
+			COUNT(id)
+		FROM
+			".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		".dbQuery_MakeQuery($QUERY)."
+		LIMIT 1
+		;",
+		...$ARGS
+	) |0;	// Clever: If nothing is returned, result is zero
 }
 
 function node_CountByAuthorType( $ids, $authors, $types = null, $subtypes = null, $subsubtypes = null ) {
