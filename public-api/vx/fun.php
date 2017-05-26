@@ -7,7 +7,7 @@ require_once __DIR__."/".SHRUB_PATH."api.php";
 json_Begin();
 
 // Bail if not the development environment
-if ( !defined(SH_PHP_DEBUG) && !SH_PHP_DEBUG ) {
+if ( !defined("SH_PHP_DEBUG") || !SH_PHP_DEBUG ) {
 	json_EmitFatalError_Forbidden("Sorry, this server isn't fun", $RESPONSE);
 }
 
