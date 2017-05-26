@@ -4,6 +4,7 @@ require_once __DIR__."/../config.php";
 include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."api.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
+require_once __DIR__."/".SHRUB_PATH."link/link.php";
 
 json_Begin();
 
@@ -1080,6 +1081,28 @@ switch ( $action ) {
 				break; // case 'add': //node/meta/add/:node
 		};
 		break; // case 'meta': //node/meta
+	
+	case "external": //node/external/:type/:node_id/
+
+	//TODO:  Add user auth for storing this data
+		
+		//json_ValidateHTTPMethod('POST');
+		
+		$type = json_ArgShift();
+		$node_id = intval(json_ArgShift());
+		$RESPONSE['node'] = $node_id;
+		
+		switch ( $type ) {
+			case 'game_link':
+				if ( isset($_POST['uri']) ) {			
+					$RESPONSE['link'] = linkComplete_GetFromURI($_POST['uri']);
+				} else if ( isset($_GET['uri']) ) {		
+					$RESPONSE['link'] = linkComplete_GetFromURI($_GET['uri']);				
+				} else {
+					json_EmitFatalError_BadRequest(null, $RESPONSE);
+				}
+				break;
+		}
 		
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
