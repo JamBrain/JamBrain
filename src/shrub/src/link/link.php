@@ -14,9 +14,15 @@ function linkComplete_GetFromURI( $uri) {
 
 	$link = link_Parse($uri);
 	$contents = null;
-	$broken = false;
+
+	$headers = get_headers($link['full'], 1);
+	if (is_null($headers) || count($headers) === 0 || strpos($headers['0'], '200') === false) {
+		$broken = true;
+	} else {
+		$broken = false;
+	}
 	
-	if ($link['valid']) {
+	if (!$broken && $link['valid']) {
 
 		if ($link['domain'] == 'itch.io') {
 			$html = file_get_html($link['full']);
@@ -102,6 +108,7 @@ function linkComplete_GetFromURI( $uri) {
 			}
 			$contents['user-page'] = null;
 			$contents['provider-name'] = 'Custom Site';
+			
 		}
 	}
 	
