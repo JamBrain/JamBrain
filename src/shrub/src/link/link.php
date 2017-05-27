@@ -5,6 +5,8 @@ require_once __DIR__."/link_util.php";
 require_once __DIR__."/link_itchio.php";
 require_once __DIR__."/link_gamejolt.php";
 require_once __DIR__."/link_dropbox.php";
+require_once __DIR__."/link_github.php";
+require_once __DIR__."/link_googledrive.php";
 
 
 function linkComplete_GetFromURI( $uri) {
@@ -35,7 +37,30 @@ function linkComplete_GetFromURI( $uri) {
 			if (!$broken) {
 				$contents = link_ScrapeDropbox($html, $link);
 			}
-		
+		} else if ($link['domain'] == 'github.com'){
+			//Github source
+			$contents = link_GitHubLinkAsReleaseDownload($link);
+				if ($contents === null) {
+				$html = file_get_html($link['full']);
+				$broken = is_null($html) || trim($html) === '';
+				if (!$broken) {
+					$contents = link_GitHub($html, $link);
+				}
+			}
+		} else if ($link['domain'] == 'github.io') {
+			//Github pages
+			$html = file_get_html($link['full']);
+			$broken = is_null($html) || trim($html) === '';
+			if (!$broken) {
+				$contents = link_GitHubPages($html, $link);
+			}
+		} else if (explode('.', $link['domain'])[0] === 'google' && $link['subdomain'] === 'drive') {
+			$html = file_get_html($link['full']);
+			$broken = is_null($html) || trim($html) === '';
+			if (!$broken) {
+				$contents = link_GoogleDrive($html, $link);
+			}
+			//$contents['text'] = file_get_contents($uri);
 		} else {
 			
 			//Guessing

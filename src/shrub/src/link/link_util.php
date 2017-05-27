@@ -18,6 +18,8 @@ function link_resolvePlaformAlias($platform) {
 			return "webGL";
 		case "android":
 			return "Android";
+		case "source":
+			return "Source";
 	}
 }
 
@@ -31,18 +33,28 @@ function link_GuessPlatforms($text) {
 	}
 
 	$platforms = array();
+	$lowertext = strtolower($text);
 	
-	if (strpos(strtolower($text), 'win') !== false) {
+	if (strpos($lowertext, 'win') !== false) {
 		array_push($platforms, link_resolvePlaformAlias('windows'));
 	}
-	if (strpos(strtolower($text), 'mac') !== false) {
+	if (strpos($lowertext, 'mac') !== false) {
 		array_push($platforms, link_resolvePlaformAlias('macOS'));
 	}
-	if (strpos(strtolower($text), 'linux') !== false) {
+	if (strpos($lowertext, 'linux') !== false) {
 		array_push($platforms, link_resolvePlaformAlias('linux'));
 	}
-	if (strpos(strtolower($text), 'android') !== false) {
+	if (strpos($lowertext, 'android') !== false) {
 		array_push($platforms, link_resolvePlaformAlias('android'));
+	}
+	
+	if (count($platforms) === 0) {
+		if (strpos($lowertext, 'web') !== false || strpos($lowertext, 'html') !== false){ 
+			array_push($platforms, link_resolvePlaformAlias('web'));
+		}
+		if (strpos($lowertext, 'source') !== false){ 
+			array_push($platforms, link_resolvePlaformAlias('source'));
+		}
 	}
 	
 	return $platforms;
@@ -62,6 +74,7 @@ function link_Parse( $uri, $default_protocol = 'http://' ) {
 	}
 	
 	$domain_end = strpos($uri, '/', $domain_start);
+	$relative = null;	
 	
 	if ($domain_end === false) {
 		$domain = null;
@@ -105,6 +118,8 @@ function link_Parse( $uri, $default_protocol = 'http://' ) {
 				$valid = false;										
 				break;		
 		}
+		
+		$relative = substr($uri, $domain_end);
 	}
 
 	$params_start = strpos($uri, '?');
@@ -114,6 +129,9 @@ function link_Parse( $uri, $default_protocol = 'http://' ) {
 	} else {
 		$params = substr($uri, $params_start + 1);
 		$without_params = substr($uri, 0, $params_start);
+		if ($relative !== null) {
+			$relative = substr($relative, 0, strpos($relative, '?'));
+		}
 	}
 	
 	$link['valid'] = $valid;
@@ -122,10 +140,20 @@ function link_Parse( $uri, $default_protocol = 'http://' ) {
 	$link['subdomain'] = $subdomain;
 	$link['original'] = $uri;
 	$link['full'] = $full_uri;
+	$link['relative'] = $relative;
 	$link['params'] = $params;
 	$link['without_params'] = $without_params;
-	return $link;
-	
+	return $link;	
+}
+
+function link_GetParamValue($params, $key) {
+	$params = explode('+', $params);
+	foreach($params as $value) {		
+		$kvp = explode('=', $value);		
+		if ($kvp[0] === $key) {
+			return $kvp[1];
+		}		
+	}
 }
 
 ?>
