@@ -24,7 +24,10 @@ function link_resolvePlaformAlias($platform) {
 }
 
 function link_GuessPlatforms($text) {
-	if (strpos($text, '.jar') !== false) {
+
+	$lowertext = strtolower($text);
+
+	if (strpos($lowertext, '.jar') !== false) {
 		return [
 			link_resolvePlaformAlias('windows'),
 			link_resolvePlaformAlias('macOS'),
@@ -32,8 +35,11 @@ function link_GuessPlatforms($text) {
 		];
 	}
 
+	if (strpos($lowertext, '.apk') === count($lowertext) - 4) {
+		return [link_resolvePlaformAlias('android')];
+	}
+
 	$platforms = array();
-	$lowertext = strtolower($text);
 	
 	if (strpos($lowertext, 'win') !== false) {
 		array_push($platforms, link_resolvePlaformAlias('windows'));
@@ -125,10 +131,13 @@ function link_Parse( $uri, $default_protocol = 'http://' ) {
 	$params_start = strpos($uri, '?');
 	if ($params_start === false) {
 		$params = null;
-		$without_params = $uri;
+		$without_params = $full_uri;
 	} else {
 		$params = substr($uri, $params_start + 1);
 		$without_params = substr($uri, 0, $params_start);
+		if (strpos($without_params, $protocol) === false) {
+			$without_params = $protocol . $without_params;
+		}
 		if ($relative !== null) {
 			$relative = substr($relative, 0, strpos($relative, '?'));
 		}
@@ -154,6 +163,10 @@ function link_GetParamValue($params, $key) {
 			return $kvp[1];
 		}		
 	}
+}
+
+function link_NoContent($text) {
+	return is_null($text) || trim($text) === '';
 }
 
 ?>

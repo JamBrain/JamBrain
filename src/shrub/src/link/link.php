@@ -7,6 +7,7 @@ require_once __DIR__."/link_gamejolt.php";
 require_once __DIR__."/link_dropbox.php";
 require_once __DIR__."/link_github.php";
 require_once __DIR__."/link_googledrive.php";
+require_once __DIR__."/link_newgrounds.php";
 
 
 function linkComplete_GetFromURI( $uri) {
@@ -31,12 +32,33 @@ function linkComplete_GetFromURI( $uri) {
 				$json = json_decode($text, true);
 				$contents = link_ParseGameJolt($json, $link);
 			}
-		}  else if ($link['domain'] == 'dropbox.com') {
-			$html = file_get_html($link['full']);
+		}  else if ($link['domain'] === 'dropbox.com') {
+
+			$html = file_get_html($link['without_params'] . '?dl=0');
 			$broken = is_null($html) || trim($html) === '';
 			if (!$broken) {
 				$contents = link_ScrapeDropbox($html, $link);
+				if (count($contents['items']) === 1) {
+					$link['suggest_update'] = link_DropboxDownloadLink($link);
+					if ($link['suggest_update'] === $link['full']) {
+						$link['suggest_update'] = null;
+					}
+				}
 			}
+		} else if ( $link['domain'] === 'dropboxusercontent.com' ) {
+						
+			//Guessing
+			$platforms = link_GuessPlatforms($link['full']);
+			if (count($platforms)) {
+				$item = null;
+				$item['platforms'] = $platforms;
+				$contents['items'][] = $item;
+			} else {
+				$contents['items'] = null;
+			}
+			$contents['user-page'] = null;
+			$contents['provider-name'] = 'Dropbox';
+		
 		} else if ($link['domain'] == 'github.com'){
 			//Github source
 			$contents = link_GitHubLinkAsReleaseDownload($link);
@@ -54,14 +76,20 @@ function linkComplete_GetFromURI( $uri) {
 			if (!$broken) {
 				$contents = link_GitHubPages($html, $link);
 			}
-		} else if (explode('.', $link['domain'])[0] === 'google' && $link['subdomain'] === 'drive') {
+		} else if (explode('.', $link['domain'])[0] === 'google' && $link['subdomain'] === 'drive' || $link['domain'] === 'goo.gl') {
 			$html = file_get_html($link['full']);
 			$broken = is_null($html) || trim($html) === '';
 			if (!$broken) {
 				$contents = link_GoogleDrive($html, $link);
 			}
 			//$contents['text'] = file_get_contents($uri);
-		} else {
+		} else if ($link['domain'] === 'newgrounds.com') {
+			$html = file_get_html($link['full']);
+			$broken = is_null($html) || trim($html) === '';
+			if (!$broken) {
+				$contents = link_NewGrounds($html, $link);
+			}
+		}  else {
 			
 			//Guessing
 			$platforms = link_GuessPlatforms($link['full']);

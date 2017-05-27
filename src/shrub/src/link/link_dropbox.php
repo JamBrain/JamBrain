@@ -16,4 +16,10 @@ function link_ScrapeDropbox( $html, $link ) {
 
 }
 
+function link_DropboxDownloadLink( $link ) {
+	
+	return $link['without_params'] . '?dl=1';
+	
+}
+
 ?>
