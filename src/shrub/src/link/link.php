@@ -10,17 +10,43 @@ require_once __DIR__."/link_googledrive.php";
 require_once __DIR__."/link_newgrounds.php";
 
 
+function link_getExternal( $linkHash ) {
+	//TODO: Implement database thing
+	return 'http://www.ldjam.com';
+}
+
+function link_Ping( $linkHash, $isHash ) {
+	
+	if ($isHash === true) {
+		$uri = link_getExternal($linkHash);
+	} else {
+		$uri = $linkHash;
+	}
+	if ($uri === null) {
+		$ping['error'] = true;
+		$ping['message'] = 'Unknown hash';
+	}
+	$headers = get_headers($uri, 1);
+	if (is_null($headers) || count($headers) === 0) {
+		$ping['error'] = true;
+		$ping['message'] = 'No response';
+	} else if (strpos($headers['0'], '200') === false) {
+		$ping['error'] = true;
+		$ping['message'] = $headers['0'];
+	} else {
+		$ping['error'] = false;
+		$ping['message'] = $headers['0'];		
+	}
+	return $ping;
+}
+
 function linkComplete_GetFromURI( $uri) {
 
 	$link = link_Parse($uri);
 	$contents = null;
 
-	$headers = get_headers($link['full'], 1);
-	if (is_null($headers) || count($headers) === 0 || strpos($headers['0'], '200') === false) {
-		$broken = true;
-	} else {
-		$broken = false;
-	}
+	$ping = link_Ping($link['full'], false);
+	$broken = $ping['error'];
 	
 	if (!$broken && $link['valid']) {
 
