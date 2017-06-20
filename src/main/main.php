@@ -9,7 +9,7 @@ if ( !isset($_GET['ignore']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE') !== f
 	die();
 }
 
-@include __DIR__."/../config.php";
+@include __DIR__."/../shrub/config.php";
 
 // TODO: Figure out if this is the live server, and disable this feature if it is //
 define( 'USE_MINIFIED', isset($_GET['debug']) ? '' : '.min' );
