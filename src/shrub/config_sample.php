@@ -37,6 +37,7 @@ const SH_TABLE_PREFIX = 'sh_';
 //const SH_JS_DEBUG = true;			// JavaScript Debug Mode: Not minified, src includes.
 
 // Paths //
+//const API_DOMAIN = 'api.use.default';
 //const SH_STATIC_DIR = '/public-static';
 //if ( isset($_SERVER['SERVER_ADDR']) ) define("SH_STATIC_URL",'//'.$_SERVER['SERVER_ADDR'].':8080');
 
