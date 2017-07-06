@@ -69,9 +69,9 @@ export default class DialogCreate extends Component {
 				
 				return (
 					<DialogCommon ok onok={this.doCreate} cancel explicit {...new_props}>
-						<div><strong>Solo</strong> participants and <strong>Team Leaders</strong>, would you like to create a game?</div>
-						<div>If you are a <strong>Team Member</strong>, ask your <strong>Team Leader</strong> add you to the game</div>
-						<div>To join an event, you make a game. You need a game to make <strong>blog</strong> posts. When you are done, you <strong>Publish</strong> your game.</div>
+						<div><strong>Team Leaders</strong> and <strong>Solo</strong> participants, would you like to create a game?</div>
+						<div>If you are a <strong>Team Member</strong>, add your <strong>Team Leader</strong> as friend, then ask them to add you.</div>
+						<div>You need to <strong>make</strong> or <strong>join</strong> a game before you can create blog posts! When your team is done, you <strong>Publish</strong> your game (not before, thanks).</div>
 					</DialogCommon>
 				);
 			}
