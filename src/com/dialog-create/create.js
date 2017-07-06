@@ -64,7 +64,7 @@ export default class DialogCreate extends Component {
 		if ( TargetNode > 0 && What.length ) {
 			if ( What == "item/game" ) {
 				var ShowType = "Game";
-				new_props.title += ' '+ShowType+" for Ludum Dare 38";
+				new_props.title += ' '+ShowType+" for Ludum Dare";
 				new_props.oktext = "Create "+ShowType;
 				
 				return (
