@@ -34,25 +34,72 @@ function node_GetIdByParentSlug( $parent, $slug ) {
 
 function node_GetSlugByParentSlugLike( $parent, $slug ) {
 	return db_QueryFetchSingle(
-		"SELECT slug
+		"SELECT 
+			slug
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
-		WHERE parent=? AND slug LIKE ?;",
+		WHERE 
+			parent=? AND slug LIKE ?
+		;",
 		$parent, $slug
 	);	
 }
 
+function node_GetIdByParentType( $parent, $type, $subtype = null, $subsubtype = null ) {
+	// TODO: add subtype and subsubtype
+	return db_QueryFetchSingle(
+		"SELECT 
+			id
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+		WHERE 
+			parent=? AND type=?
+		;",
+		$parent, 
+		$type
+	);
+}
 
-function node_WalkById( $id, $top = 0, $timeout = 10 ) {
+function node_GetIdByParentTypePublished( $parent, $type, $subtype = null, $subsubtype = null ) {
+	// TODO: add subtype and subsubtype
+	return db_QueryFetchSingle(
+		"SELECT
+			id
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+		WHERE 
+			parent=? AND published>0 AND type=?
+		;",
+		$parent, 
+		$type
+	);
+}
+
+
+
+function _node_GetPathById( $id, $top = 0, $timeout = 10 ) {
+	if ( !$id )
+		return '';
+
 	$tree = [];
-//	$data = [];
-//	while ( $id > 0 && isset && ($data['parent'] !== $top) && !($timeout--) ) {
+	do {
 		$data = node_GetParentSlugById($id);
 		$tree[] = $data;
-//		$id = $data['parent'];
-//	};// while ( $id > 0 && ($data['parent'] !== $top) && !($timeout--) );
+		$id = $data['parent'];
+	} while ( $id > 0 && ($data['parent'] !== $top) && ($timeout--) );
 
 	return $tree;
 }
+function node_GetPathById( $id, $top = 0, $timeout = 10 ) {
+	$tree = _node_GetPathById($id, $top, $timeout);
+	
+	$path = '';
+	$parent = [];
+	foreach( $tree as &$leaf ) {
+		$path = '/'.($leaf['slug']).$path;
+		array_unshift($parent, $leaf['parent']);
+	}
+	
+	return [ 'path' => $path, 'parent' => $parent ];
+}
+
 
 const SH_MAX_SLUG_LENGTH = 96;
 const SH_MAX_SLUG_RETRIES = 100;
@@ -144,6 +191,69 @@ function node_GetById( $ids ) {
 	}
 	
 	return null;
+}
+
+// Like get, but omits the body (i.e. a string of indeterminate length)
+function node_GetNoBodyById( $ids ) {
+	$multi = is_array($ids);
+	if ( !$multi )
+		$ids = [$ids];
+	
+	if ( is_array($ids) ) {
+		// Confirm that all IDs are not zero
+		foreach( $ids as $id ) {
+			if ( intval($id) == 0 )
+				return null;
+		}
+
+		// Build IN string
+		$ids_string = implode(',', $ids);
+
+		$ret = db_QueryFetch(
+			"SELECT id, parent, superparent, author,
+				type, subtype, subsubtype,
+				".DB_FIELD_DATE('published').",
+				".DB_FIELD_DATE('created').",
+				".DB_FIELD_DATE('modified').",
+				version,
+				slug, name
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+			WHERE id IN ($ids_string);"
+		);
+
+		if ( $multi )
+			return $ret;
+		else
+			return $ret ? $ret[0] : null;
+	}
+	
+	return null;
+}
+
+function node_CountByParentAuthorType( $parent = null, $superparent = null, $author = null, $type = null, $subtype = null, $subsubtype = null, $published = true ) {
+	$QUERY = [];
+	$ARGS = [];
+	
+	dbQuery_MakeEq('parent', $parent, $QUERY, $ARGS);
+	dbQuery_MakeEq('superparent', $superparent, $QUERY, $ARGS);
+	dbQuery_MakeEq('author', $author, $QUERY, $ARGS);
+	dbQuery_MakeEq('type', $type, $QUERY, $ARGS);
+	dbQuery_MakeEq('subtype', $subtype, $QUERY, $ARGS);
+	dbQuery_MakeEq('subsubtype', $subsubtype, $QUERY, $ARGS);
+	
+	if ( is_bool($published) )
+		dbQuery_MakeOp('published', $published ? '!=' : '=', 0, $QUERY, $ARGS);
+
+	return db_QueryFetchValue(
+		"SELECT 
+			COUNT(id)
+		FROM
+			".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		".dbQuery_MakeQuery($QUERY)."
+		LIMIT 1
+		;",
+		...$ARGS
+	) |0;	// Clever: If nothing is returned, result is zero
 }
 
 function node_CountByAuthorType( $ids, $authors, $types = null, $subtypes = null, $subsubtypes = null ) {
@@ -376,4 +486,45 @@ function node_IdToIndex( $nodes ) {
 	}
 	
 	return $ret;
+}
+
+
+function node_SetAuthor( $id, $author ) {
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		SET
+			author=?
+		WHERE
+			id=?;",
+		$author, $id
+	);
+}
+function node_SetType( $id, $type, $subtype = null, $subsubtype = null ) {
+	$QUERY = [];
+	$ARGS = [];
+	
+	$QUERY[] = 'type=?';
+	$ARGS[] = $type;
+
+	if ( is_string($subtype) ) {
+		$QUERY[] = 'subtype=?';
+		$ARGS[] = $subtype;
+	}
+	if ( is_string($subsubtype) ) {
+		$QUERY[] = 'subsubtype=?';
+		$ARGS[] = $subsubtype;
+	}
+	
+	$ARGS[] = $id;
+	
+	$merged_query = implode(',', $QUERY);
+	
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		SET
+			$merged_query
+		WHERE
+			id=?;",
+		...$ARGS
+	);
 }

@@ -52,35 +52,35 @@ class Main extends Component {
 		var clean = this.cleanLocation(window.location);
 		if ( window.location.origin+clean.path !== window.location.href ) {
 			console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
-			
+
 			this.storeHistory(window.history.state, null, clean.path);
 		}
-	
+
 		this.state = {
 			// URL walking
 			'path': '',
 			'slugs': clean.slugs,
 			'extra': [],
-			
+
 			// Active Node
 			'node': {
 				'id': 0
 			},
-			
+
 			// Root Node
 			'root': null,
-			
+
 			// Featured node
 			'featured': null,
-			
+
 			// Active User
 			'user': null
 		};
-		
+
 		window.addEventListener('hashchange', this.onHashChange.bind(this));
 		window.addEventListener('navchange', this.onNavChange.bind(this));
 		window.addEventListener('popstate', this.onPopState.bind(this));
-		
+
 		this.onLogin = this.onLogin.bind(this);
 	}
 
@@ -88,7 +88,7 @@ class Main extends Component {
 		this.fetchData();
 		this.fetchRoot();
 	}
-	
+
 	storeHistory( input, page_title = null, page_url = null ) {
 		if ( window.history && window.history.replaceState && input ) {
 			history.replaceState({
@@ -101,7 +101,15 @@ class Main extends Component {
 	}
 
 	componentDidUpdate( prevProps, prevState ) {
+		if(window.location.href.substr(-3) == "#--") {
+			history.replaceState({}, '', window.location.href.replace("#--", ""));
+		}
+
 		this.storeHistory(this.state);
+
+		if(this.state.node != prevState.node) {
+			this.handleAnchors();
+		}
 	}
 
 	cleanLocation( location ) {
@@ -119,50 +127,52 @@ class Main extends Component {
 
 		return clean;
 	}
-	
+
 	getDialog() {
 		var props = Sanitize.parseHash(window.location.hash);
-		
+
 		if ( window.location.hash ) {
-			switch (props.path) {
-				case 'user-login':
-					props.onlogin = this.onLogin;
-					return <DialogLogin {...props} />;
-				case 'user-activate':
-					return <DialogActivate {...props} />;
-				case 'user-register':
-					return <DialogRegister {...props} />;
-				case 'user-auth':
-					return <DialogAuth {...props} />;
-				case 'user-reset':
-					return <DialogReset {...props} />;
-				case 'user-password':
-					return <DialogPassword {...props} />;
-				case 'expired':
-					return <DialogSession {...props} />;
-				case 'savebug':
-					return <DialogSavebug {...props} />;
-				case 'create':
-					return <DialogCreate {...props} />;
-				case 'submit':
-					return <DialogSubmit {...props} />;
-				case 'tv':
-					return <DialogTV {...props} />;
-				default:
-					return <DialogUnfinished {...props} />;
-			};
+			if ( window.location.hash.indexOf("/") != 1 && props.path !== "--") {
+				switch (props.path) {
+					case 'user-login':
+						props.onlogin = this.onLogin;
+						return <DialogLogin {...props} />;
+					case 'user-activate':
+						return <DialogActivate {...props} />;
+					case 'user-register':
+						return <DialogRegister {...props} />;
+					case 'user-auth':
+						return <DialogAuth {...props} />;
+					case 'user-reset':
+						return <DialogReset {...props} />;
+					case 'user-password':
+						return <DialogPassword {...props} />;
+					case 'expired':
+						return <DialogSession {...props} />;
+					case 'savebug':
+						return <DialogSavebug {...props} />;
+					case 'create':
+						return <DialogCreate {...props} />;
+					case 'submit':
+						return <DialogSubmit {...props} />;
+					case 'tv':
+						return <DialogTV {...props} />;
+					default:
+						return <DialogUnfinished {...props} />;
+				};
+			}
 		}
 		return null;
 	}
-	
+
 	// Called by the login dialog
 	onLogin() {
 		this.setState({ 'user': null });
 		this.fetchData();
 	}
-	
+
 	// *** //
-	
+
 	fetchRoot() {
 		console.log("[fetchRoot]");
 
@@ -170,13 +180,13 @@ class Main extends Component {
 		.then(r => {
 			if ( r.node.length ) {
 				var node = r.node[0];
-				
-				this.setState({ 
-					'root': node 
+
+				this.setState({
+					'root': node
 				});
-				
-				if ( node.meta['featured'] && Number.parseInt(node.meta['featured']) > 0 ) {
-					this.fetchFeatured(Number.parseInt(node.meta['featured']));
+
+				if ( node.meta['featured'] && (node.meta['featured']|0) > 0 ) {
+					return this.fetchFeatured(node.meta['featured']|0);
 				}
 				console.log("[fetchRoot] Done:", node.id);
 			}
@@ -184,57 +194,110 @@ class Main extends Component {
 				throw '[fetchRoot] Failed to load root node';
 			}
 		})
-		.catch(err => { 
-			this.setState({ 'error': err }); 
+		.catch(err => {
+			this.setState({ 'error': err });
 		});
 	}
-	
-	fetchFeatured( _node ) {
+
+	fetchFeatured( node_id ) {
 		console.log("[fetchFeatured]");
 
+		// Used across everything below
 		var Node = null;
-		
-		return $Node.Get(_node)
-		.then(r => {
-			// Parse node
-			if ( r && Array.isArray(r.node) && r.node.length ) {
-				Node = r.node[0];
-				console.log("[fetchFeatured] Loaded: ", Node.id);
-				
-				return $Node.What(Node.id);
-			}
-			return null;
-		})
-		.then(r => {
-			if ( r && r.what ) {
-				Node.what = r.what;
 
-				console.log('[fetchFeatured] My Game:', Node.what);
-			}
-			
-			this.setState({ 
-				'featured': Node 
-			});
+		return $Node.Get(node_id)
+			.then(r => {
+				// If 
+				if ( r && Array.isArray(r.node) && r.node.length ) {
+					Node = r.node[0];
 
-			console.log('[fetchFeatured] Done:', Node.id);
-		})
-		.catch(err => { 
-			this.setState({ 'error': err }); 
-		});
-	}
+					console.log("[fetchFeatured] +", Node.id);
 	
+					return $Node.What(Node.id);
+				}
+				
+				// No featured event
+				return null;
+			})
+			.then(r => {
+				if ( r && r.what ) {
+					Node.what = r.what;
+	
+					console.log('[fetchFeatured] My Game(s):', Node.what);
+	
+					if ( Node.what.length ) {
+						return $Node.GetKeyed(r.what);
+					}
+				}
+
+				return Promise.resolve({});
+			})
+			.then( r => {
+				if ( r && r.node ) {
+					Node.what_node = r.node;
+					
+					var Focus = 0;
+					var FocusDate = 0;
+					var LastPublished = 0;
+					
+					for ( var key in r.node ) {
+						var NewDate = new Date(r.node[key].modified).getTime();
+						if ( NewDate > FocusDate ) {
+							FocusDate = NewDate;
+							Focus = key|0;
+						}
+						if ( r.node[key].published ) {
+							LastPublished = key|0;
+							console.log('[fetchFeatured] '+key+' is published');
+						}
+					}
+					if ( Focus ) {
+						console.log('[fetchFeatured] '+Focus+' was the last modified');
+					}
+	
+					// If the last updated is published, focus on that
+					if ( r.node[Focus].published ) {
+						Node.focus = Focus;
+					}
+					// If not, make it the last known published game
+					else if ( LastPublished ) {
+						Node.focus = Lastpublished;
+					}
+					// Otherwise, just the last one we found
+					else if ( Focus > 0 ) {
+						Node.focus = Focus;
+					}
+					
+					if ( Node.focus || Node.focus === 0 ) {
+						console.log('[fetchFeatured] '+Node.focus+' chosen as Focus');
+					}
+				}
+	
+				this.setState({
+					'featured': Node
+				});
+			
+				console.log('[fetchFeatured] -', Node.id);
+	
+				return r;	
+			})
+			.catch(err => {
+				this.setState({ 'error': err });
+			});
+	}
+
 	fetchNode() {
-		console.log("[fetchNode]");
-		
+		//console.log("[fetchNode]");
+
 		var NewState = {};
-		
+
 		// Walk to the active node
 		return $Node.Walk(SITE_ROOT, this.state.slugs)
 		.then(r => {
 			if ( r && r.node ) {
 				NewState['path'] = (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/');
 				NewState['extra'] = r.extra;
-				
+
 				// Now, lookup the node
 				return $Node.Get(r.node);
 			}
@@ -248,19 +311,19 @@ class Main extends Component {
 			if ( r && r.node && r.node.length ) {
 				NewState['node'] = r.node[0];
 				this.setState(NewState);
-				
-				console.log("[fetchNode] Done:", NewState['node'].id);
+
+				//console.log("[fetchNode] Done:", NewState['node'].id);
 			}
 			else {
 				throw '[fetchNode] No nodes found';
 			}
 			return null;
 		})
-		.catch(err => { 
-			this.setState({ 'error': err }); 
+		.catch(err => {
+			this.setState({ 'error': err });
 		});
 	}
-	
+
 	fetchUser() {
 		console.log("[fetchUser]");
 
@@ -268,10 +331,10 @@ class Main extends Component {
 		var User = {
 			'id': 0
 		};
-		
+
 		// Fetch the Active User
 		return $User.Get().then(r => {
-			Caller = Number.parseInt(r.caller_id);
+			Caller = r.caller_id|0;
 			console.log("[fetchUser] caller_id:", Caller);
 
 			// Process my User
@@ -298,34 +361,34 @@ class Main extends Component {
 				User['private']['link'] = r.link;
 				User['private']['refs'] = r.refs;
 			}
-			
+
 			// Finally, user is ready
 			this.setState({
 				'user': User
 			});
-			
+
 			console.log("[fetchUser] Done:", Caller);
 
 			return null;	// Do we need this?
 		})
 		.catch(err => {
-			this.setState({ 
-				'error': err 
+			this.setState({
+				'error': err
 			});
 		});
 	}
 
-	
+
 	fetchData() {
 		console.log("[fetchData]");
-		
+
 		// If no user
 		if ( !this.state.user ) {
 			// First, fetch the user
 			return this.fetchUser().then(() => {
 				// Next, fetch the node (if not loaded)
 				if ( this.state.node && !this.state.node.id ) {
-					return this.fetchNode(); 
+					return this.fetchNode();
 				}
 				return null;
 			});
@@ -336,27 +399,48 @@ class Main extends Component {
 		}
 		return null;
 	}
-		
+
 	// *** //
-	
+
 	// Hash Changes are automatically differences
 	onHashChange( e ) {
 		console.log("hashchange: ", e.newURL);
-		
 		var slugs = this.cleanLocation(window.location).slugs;
-		
+
 		if ( slugs.join() === this.state.slugs.join() ) {
 			this.setState({});
 		}
 		else {
-			this.setState({ 
+			this.setState({
 				'slugs': slugs
 			});
 		}
+
+		this.handleAnchors();
 	}
+
+	handleAnchors() {
+		if( window.location.hash ) {
+			var hash = Sanitize.parseHash(window.location.hash);
+
+			if( hash.path === "" && hash.extra.length > 0 ) {
+				var heading = document.getElementById(hash.extra[0]);
+				if( heading ) {
+					heading.scrollIntoView();
+
+					var viewBar = document.getElementsByClassName("view-bar")[0];
+					if( viewBar ) {
+						window.scrollBy(0, -viewBar.clientHeight);
+					}
+				}
+			}
+		}
+	}
+
 	// When we navigate by clicking forward
 	onNavChange( e ) {
 		console.log('navchange:',e.detail.old.href,'=>',e.detail.location.href);
+
 		if ( e.detail.location.href !== e.detail.old.href ) {
 			var slugs = this.cleanLocation(e.detail.location).slugs;
 
@@ -367,14 +451,17 @@ class Main extends Component {
 					'slugs': slugs,
 					'node': {
 						'id': 0
-					} 
+					}
 				});
-				this.fetchNode();
 
-				// Scroll to top
-				window.scrollTo(0, 0);
+				this.fetchNode();
 			}
 		}
+
+		// Scroll to top
+		window.scrollTo(0, 0);
+
+		this.handleAnchors();
 	}
 	// When we navigate using back/forward buttons
 	onPopState( e ) {
@@ -383,14 +470,16 @@ class Main extends Component {
 		if ( e.state ) {
 			this.setState(e.state);
 		}
+
+		this.handleAnchors();
 	}
-	
+
 
 	render( {}, {node, user, featured, path, extra, error} ) {
 		var ShowContent = null;
-		
+
 		if ( node.id ) {
-			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} />;
+			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} featured={featured} />;
 		}
 		else {
 			ShowContent = (
@@ -410,7 +499,7 @@ class Main extends Component {
 						<ViewSidebar user={user} featured={featured} />
 					</div>
 					<ViewFooter />
-				</div>					
+				</div>
 				{this.getDialog()}
 			</div>
 		);

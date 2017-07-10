@@ -11,18 +11,6 @@ export default class ContentNavRoot extends Component {
 	}
 	
 	componentDidMount() {
-//		$Theme.GetStats(this.props.node.id)
-//		.then(r => {
-//			if ( r.stats ) {
-//				this.setState({ 'stats': r.stats });
-//			}
-//			else {
-//				this.setState({ 'stats': null });
-//			}
-//		})
-//		.catch(err => {
-//			this.setState({ error: err });
-//		});
 	}
 
 
@@ -37,26 +25,30 @@ export default class ContentNavRoot extends Component {
 //		}
 
 		var NewPath = '/'+ (extra ? extra.join('/') : '');
+		var PartPath = '/'+ (extra && extra.length ? extra[0] : '');
 		
 		var ShowMyFeed = null;
 		if ( user && user.id ) {
-			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href='/'>My Feed</ContentNavButton>;
+			if ( NewPath == '/' )
+				NewPath = '/feed';
+			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href='/feed'>Feed</ContentNavButton>;
 		}
-		// Default to /news if not logged in
-		else if ( NewPath === '/' ) {
-			NewPath = '/news';
+		// Default to normal /feed if not logged in
+		else {
+			if ( NewPath == '/' )
+				NewPath = '/feed';
+			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href='/feed'>Feed</ContentNavButton>;
 		}
 		
 		return (
-			<div class="-body">
-				<div class="content-base content-nav content-nav-root">
-					{ShowMyFeed}
-					<ContentNavButton path={NewPath} icon='news' href='/news'>News</ContentNavButton>
-					<ContentNavButton path={NewPath} icon='heart' href='/hot'>Popular</ContentNavButton>
-					<ContentNavButton path={NewPath} icon='gamepad' href='/games'>Games</ContentNavButton>
-				</div>
+			<div class="content-base content-nav content-nav-root">
+				{ShowMyFeed}
+				<ContentNavButton path={NewPath} icon='news' href='/news'>News</ContentNavButton>
+				<ContentNavButton path={PartPath} icon='gamepad' href='/games'>Games</ContentNavButton>
 			</div>
 		);
+
+//					<ContentNavButton path={NewPath} icon='heart' href='/hot'>Popular</ContentNavButton>
 	}
 }
 

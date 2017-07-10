@@ -45,6 +45,13 @@ function coreSanitize_Float( $str ) {
 	return floatval(trim($str));
 }
 
+function coreSanitize_Body( $str ) {
+	$str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');				// Remove invalid UTF-8 characters
+
+//	$str = trim($str);												// Trim whitespace
+	
+	return $str;
+}
 
 function coreEncode_String( $str ) {
 	// https://paragonie.com/blog/2015/06/preventing-xss-vulnerabilities-in-php-everything-you-need-know
@@ -104,7 +111,7 @@ function coreSanitize_Name( $str ) {
 	//$str = str_replace(' ', '_', $str);							// Spaces to underscores
 	//$str = trim($str, '_.- ');									// Trim start and end
 	$str = trim($str);												// Trim start and end
-	
+
 	return $str;
 }
 function coreSlugify_Name( $str ) {
@@ -115,9 +122,21 @@ function coreSlugify_Name( $str ) {
 	$str = preg_replace("/[^a-z0-9_.\- ]/", '', $str);				// Keep only these
 	$str = preg_replace("/[_.\- ]+/", '-', $str);					// Replace symbols with a single dash
 	$str = trim($str, '- ');										// Trim all dashes and spaces from the start and end
+
+	return $str;
+}
+function coreSlugify_File( $str ) {
+	$str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');				// Remove invalid UTF-8 characters
+	$str = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $str);			// Remove accents, non-ascii characters
+	$str = strip_tags($str);										// Remove any XML/HTML tags
+	$str = strtolower($str);										// To lower case
+	$str = preg_replace("/[^a-z0-9_.\- ]/", '', $str);				// Keep only these
+	$str = preg_replace("/[\- ]+/", '-', $str);						// Replace other symbols with a single dash
+	//$str = trim($str, '- ');										// Trim all dashes and spaces from the start and end
 	
 	return $str;
 }
+
 
 function coreSlugify_PathName( $str ) {
 	// Node slugs must be > 0
@@ -194,17 +213,25 @@ function core_RemovePathDotsFromArray($arr) {
 
 /// Internal parser for the API request
 function _core_GetAPIRequest() {
-	// If PATH_INFO is set, then Apache figured out our parts for us //
+	$PATH = '';
+	
+	// If PATH_INFO is set, then Apache figured out our parts for us
 	if ( isset($_SERVER['PATH_INFO']) ) {
-		$ret = ltrim(rtrim(filter_var($_SERVER['PATH_INFO'], FILTER_SANITIZE_URL), '/'), '/');
-		if ( empty($ret) /*&& $val !== '0'*/ ) {
-			return [''];
-		}
-		else {
-			return array_values(array_filter(explode('/',$ret), function($val) {
-				return !((empty($val) && $val !== '0') || ($val[0] === '.'));
-			}));
-		}
+		$PATH = $_SERVER['PATH_INFO'];
+	}
+	// Alternatively if REDIRECT_URL is set, then this was a redirect
+	else if ( isset($_SERVER['REDIRECT_URL']) ) {
+		$PATH = $_SERVER['REDIRECT_URL'];
+	}
+	
+	$ret = ltrim(rtrim(filter_var($PATH, FILTER_SANITIZE_URL), '/'), '/');
+	if ( empty($ret) /*&& $val !== '0'*/ ) {
+		return [''];
+	}
+	else {
+		return array_values(array_filter(explode('/', $ret), function($val) {
+			return !((empty($val) && $val !== '0') || ($val[0] === '.'));
+		}));
 	}
 
 	// If PATH_INFO isn't set, assume it's the same as '/'

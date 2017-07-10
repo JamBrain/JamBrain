@@ -2,7 +2,7 @@
 // General Shrub Configuration //
 const SH_USING_DB = true;
 const SH_USING_MYSQL = true;				// True if MySQL, MariaDB, PerconaDB, etc.
-//const SH_USING_MARIADB = true;
+const SH_USING_MARIADB = true;
 const SH_USING_APCU = true;
 //const SH_USING_MEMCACHED = true;
 //const SH_USING_REDIS = true;
@@ -37,9 +37,9 @@ const SH_TABLE_PREFIX = 'sh_';
 //const SH_JS_DEBUG = true;			// JavaScript Debug Mode: Not minified, src includes.
 
 // Paths //
+//const API_DOMAIN = 'api.use.default';
 //const SH_STATIC_DIR = '/public-static';
 //if ( isset($_SERVER['SERVER_ADDR']) ) define("SH_STATIC_URL",'//'.$_SERVER['SERVER_ADDR'].':8080');
-//const SH_THEME_BASE = '/themes';
 
 // Access Permission Whitelist (Can be arrays on PHP 5.6+) //
 //const SH_ACCESS_DATA = "192.168.48.1";
@@ -51,4 +51,3 @@ const TWITTER_API_KEY = '';
 const FACEBOOK_API_KEY = '';
 const INSTAGRAM_API_KEY = '';
 const TUMBLR_API_KEY = '';
-

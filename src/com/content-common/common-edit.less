@@ -3,9 +3,9 @@
 #content .content-common-body.-edit {
 	position: relative;
 	
-	/*height: 4em;*/
 	line-height: 1.25em;
-/*	font-size: 1.1em;*/
+
+	font-weight: bold;
 	
 	& > .-left,
 	& > .-right {
@@ -14,11 +14,13 @@
 		/* Button */
 		& > div {
 			position: relative;
+
+			height: 1.25em;
 			
 			padding: 0.5em 1em 0.5em 2em;
 			border: 1px solid;
 			
-			& span {
+			& div {
 				margin-left: 0.5em;
 			}
 			& svg {
@@ -58,13 +60,13 @@
 		
 			&.-save {
 				color: @COL_L;
-				border: 1px solid @COL_C;
-				background: @COL_C;
+				border: 1px solid @COL_CM;
+				background: @COL_CM;
 			}
 			&.-publish {
 				color: @COL_L;
-				border: 1px solid @COL_BC;
-				background: @COL_BC;
+				border: 1px solid @COL_C;
+				background: @COL_C;
 			}
 		}
 	}

@@ -8,7 +8,8 @@ function themeIdeaVote_GetMy( $event_id, $author_id ) {
 	return db_QueryFetchPair(
 		"SELECT idea, value 
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA_VOTE." 
-		WHERE node=? AND author=?;",
+		WHERE node=? AND author=?
+		ORDER BY id ASC;",
 		$event_id, 
 		$author_id
 	);
@@ -49,6 +50,13 @@ function themeIdeaVote_RemoveById( $id ) {
 	);
 }
 
+function themeIdeaVote_GetVotesForIdea( $idea ) {
+	return db_QueryFetchSingle(
+		"SELECT value FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA_VOTE." 
+		WHERE idea=?",
+		$idea
+	);	
+}
 
 // How to get Theme Slaughter theme scores (using a basic SUM), out as a CSV
 

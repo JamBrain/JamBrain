@@ -1,0 +1,132 @@
+@import "defs.less";
+
+
+// Grayscale colors
+@base03: @COL_NLLLL;
+@base02: @COL_NLLL;
+@base01: @COL_NLL;
+@base00: @COL_NL;
+
+@base:@COL_N;
+
+@base0: @COL_ND;
+@base1: @COL_NDD;
+@base2: @COL_NDDD;
+@base3: @COL_NDDDD;
+
+// highlight colors
+@yellow: @COL_B;
+@orange: @COL_AB;
+@red: @COL_A;
+@magenta: @COL_CA;
+@violet: @COL_CAM;
+@blue: @COL_CM;
+@cyan: @COL_C;
+@green: @COL_BC;
+
+// only target stuff within a markup block
+.markup{
+
+    // InLine Code
+    :not(pre) > code {
+        padding-left: 0.125em;
+        padding-right: 0.125em;
+        border-radius: 0.125em;
+        color: @base3;
+        background-color: @base03;
+        line-height: 1;
+        font-size: 75%;
+    }
+
+    // Code Blocks
+	pre {
+        color: @base02;
+		background-color: @base2;
+
+        padding: 0.5em;
+        border-radius: 0.25em;
+        overflow: auto;
+
+		font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+        font-size: 75%;
+
+        line-height: 1.1;
+        tab-size: 4;
+        text-align: left;
+		white-space: pre;
+		word-spacing: normal;
+		word-break: normal;
+		word-wrap: normal;
+        hyphens: none;
+	}
+
+	pre > code {
+		.token.comment,
+		.token.prolog,
+		.token.doctype,
+		.token.cdata {
+			color: @base;
+		}
+
+        .token.operator,
+		.token.punctuation {
+			color: @base03;
+		}
+
+		.token.property,
+		.token.tag,
+		.token.boolean,
+		.token.number,
+		.token.constant,
+		.token.symbol,
+		.token.deleted {
+			color: @blue;
+		}
+
+		.token.selector,
+		.token.attr-name,
+		.token.string,
+		.token.char,
+		.token.builtin,
+		.token.url,
+		.token.inserted {
+			color: @cyan;
+		}
+
+		.token.entity {
+			color: @base00;
+		}
+
+		.token.atrule,
+		.token.attr-value,
+		.token.keyword {
+			color: @green;
+		}
+
+		.token.function {
+			color: @yellow;
+		}
+
+		.token.regex,
+		.token.important,
+		.token.variable {
+			color: @orange;
+		}
+
+		.token.important,
+		.bold {
+			font-weight: bold;
+		}
+		.token.italic {
+			font-style: italic;
+		}
+
+		.token.entity {
+			cursor: help;
+		}
+	}
+
+    .namespace{
+        opacity:0.7;
+    }
+}

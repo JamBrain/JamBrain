@@ -7,7 +7,7 @@ import $User							from '../shrub/js/user/user';
 export default class DialogLogin extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {
 			login: "",
 			password: "",
@@ -33,15 +33,15 @@ export default class DialogLogin extends Component {
 	}
 
 	onKeyDown( e ) {
-		if (!e) { 
-			var e = window.event; 
+		if (!e) {
+			var e = window.event;
 		}
-		if (e.keyCode === 13) { 
+		if (e.keyCode === 13) {
 			this.onPasswordChange(e);
-			/*e.preventDefault();*/ 
-			this.doLogin(); 
+			/*e.preventDefault();*/
+			this.doLogin();
 		}
-	}	
+	}
 	doLogin() {
 		$User.Login( this.state.login.trim(), this.state.password.trim(), "" )
 			.then( r => {
@@ -69,19 +69,23 @@ export default class DialogLogin extends Component {
 		if ( error ) {
 			new_props.error = error;
 		}
-		
+
 		return (
 			<DialogCommon ok oktext="Log In" onok={this.doLogin} cancel {...new_props}>
 				<div>
-					<input autofocus id="dialog-login-login" onchange={this.onLoginChange} class="-text focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="254" value={login} />
+					<div class="-input-container">
+						<input autofocus id="dialog-login-login" onchange={this.onLoginChange} class="-text -block focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="254" value={login} />
+					</div>
 				</div>
 				<div>
-					<input id="dialog-login-password" onchange={this.onPasswordChange} onkeydown={this.onKeyDown} class="-text focusable" type="password" name="password" placeholder="Password" maxlength="128" value={password} />
+					<div class="-input-container">
+						<input id="dialog-login-password" onchange={this.onPasswordChange} onkeydown={this.onKeyDown} class="-text -block focusable" type="password" name="password" placeholder="Password" maxlength="128" value={password} />
+					</div>
 				</div>
 				<div style="overflow:hidden">
-					<div class="_float-right -link" id="dialog-login-forgot" onclick={e => { 
-						location.href = "#user-reset"; 
-						/*e.stopPropagation(); e.preventDefault();*/ 
+					<div class="_float-right -link" id="dialog-login-forgot" onclick={e => {
+						location.href = "#user-reset";
+						/*e.stopPropagation(); e.preventDefault();*/
 					} }>
 						Forgot Password?
 					</div>

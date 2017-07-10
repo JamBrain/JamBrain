@@ -1,5 +1,7 @@
 import { h, Component } 				from 'preact/preact';
 
+import NavLink							from 'com/nav-link/link';
+
 import ContentLoading					from 'com/content-loading/loading';
 import ContentError						from 'com/content-error/error';
 
@@ -10,6 +12,8 @@ import ContentCommonBodyBy				from 'com/content-common/common-body-by';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonBodyAvatar			from 'com/content-common/common-body-avatar';
 import ContentCommonBodyMarkup			from 'com/content-common/common-body-markup';
+
+import ContentCommonDraft				from 'com/content-common/common-draft';
 
 import ContentCommonEdit				from 'com/content-common/common-edit';
 
@@ -22,22 +26,33 @@ export default class ContentSimple extends Component {
 		
 		this.state = {
 			'author': {},
+			'authors': [],
 
 			'editing': this.isEditMode(),
 			'modified': false,
 
+			'name': props.node.name,
 			'body': props.node.body,
+			'avatar': '',
 		};
-
-		if ( props.authored )
-			this.getAuthor(props.node);
 
 		this.onEdit = this.onEdit.bind(this);
 		this.onPreview = this.onPreview.bind(this);
 		this.onSave = this.onSave.bind(this);
 		this.onPublish = this.onPublish.bind(this);
 
+		this.onModifyTitle = this.onModifyTitle.bind(this);
 		this.onModifyText = this.onModifyText.bind(this);
+		this.onModifyAvatar = this.onModifyAvatar.bind(this);
+	}
+	
+	componentDidMount() {
+		var props = this.props;
+		
+		if ( props.authored )
+			this.getAuthor(props.node);
+		if ( props.authors )
+			this.getAuthors(props.node);
 	}
 
 	componentWillUpdate( newProps, newState ) {
@@ -45,18 +60,43 @@ export default class ContentSimple extends Component {
 			if ( this.props.authored ) {
 				this.getAuthor(newProps.node);
 			}
+			if ( this.props.authors ) {
+				this.getAuthors(newProps.node);
+			}
+		}
+	}
+	
+	getAuthors( node ) {
+		// Clear the Authors
+//		this.setState({ authors: [] });
+
+		if ( node.link && node.link['author'] ) {
+			// Lookup the authors
+			$Node.Get( node.link['author'] )
+			.then(r => {
+				if ( r.node && r.node.length ) {
+					this.setState({ 'authors': r.node });
+				}
+				else {
+					this.setState({ 'error': "Authors not found" });
+				}
+			})
+			.catch(err => {
+				this.setState({ 'error': err });
+			});
 		}
 	}
 
 	getAuthor( node ) {
 		// Clear the Author
-		this.setState({ author: {} });
+//		this.setState({ author: {} });
 
 		// Lookup the author
 		$Node.Get( node.author )
 		.then(r => {
 			if ( r.node && r.node.length ) {
-				this.setState({ 'author': r.node[0] });
+				var author = r.node[0];
+				this.setState({ 'author': author, 'avatar': (author && author.meta && author.meta.avatar) ? author.meta.avatar : ''});
 			}
 			else {
 				this.setState({ 'error': "Author not found" });
@@ -74,13 +114,14 @@ export default class ContentSimple extends Component {
 		this.setState({'editing': false});
 	}
 	onSave( e ) {
-		//var Name = /*this.state.title ? this.state.title :*/ this.props.node.name;
+		var Title = this.state.name ? this.state.name : this.props.node.name;
 		var Body = this.state.body ? this.state.body : this.props.node.body;
 		
-		return $Node.Update(this.props.node.id, null, Body)
+		return $Node.Update(this.props.node.id, Title, Body)
 		.then(r => {
 			if ( r.status == 200 ) {
 				this.setState({ 'modified': false });
+				return true;
 			}
 			else {
 				if ( r.caller_id == 0 || (r.data && r.data.caller_id == 0) ) {
@@ -90,6 +131,7 @@ export default class ContentSimple extends Component {
 					this.setState({ 'error': r.status + ": " + r.error });
 				}
 			}
+			return false;
 		})
 		.catch(err => {
 			console.log(err);
@@ -97,11 +139,43 @@ export default class ContentSimple extends Component {
 		});
 	}
 	onPublish( e ) {
-		console.log( e );
+		// TODO: Confirm
+		console.log('do save first');
+		return this.onSave( e ).then( rr => {
+			if ( rr ) {
+				console.log('do publish');
+				$Node.Publish(this.props.node.id)
+				.then(r => {
+					console.log(r);
+					if ( r.status == 200 && r.path ) {
+						window.location.href = r.path;
+	//					this.setState({ 'modified': false });
+					}
+	//			else {
+	//				if ( r.caller_id == 0 || (r.data && r.data.caller_id == 0) ) {
+	//					location.hash = "#savebug";
+	//				}
+	//				else {
+	//					this.setState({ 'error': r.status + ": " + r.error });
+	//				}
+	//			}
+				})
+				.catch(err => {
+					console.log(err);
+					this.setState({ 'error': err });
+				});
+			}
+		});
 	}
 
+	onModifyTitle( e ) {
+		this.setState({'modified': true, 'name': e.target.value});
+	}
 	onModifyText( e ) {
 		this.setState({'modified': true, 'body': e.target.value});
+	}
+	onModifyAvatar( avatar ) {
+		this.setState({/*'modified': true,*/ 'avatar': avatar});
 	}
 	
 	isEditMode() {
@@ -111,6 +185,7 @@ export default class ContentSimple extends Component {
 	
 	render( props, state ) {
 		props = Object.assign({}, props);	// Shallow copy we can change props
+		var Class = [];
 
 		var node = props.node;
 		var user = props.user;
@@ -118,49 +193,142 @@ export default class ContentSimple extends Component {
 		var extra = props.extra;
 		
 		var author = state.author;
+		var authors = state.authors;
 	
-		if ( node && ((node.slug && !props.authored) || (node.slug && author && author.slug)) ) {
-			props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
-			props.class.push("content-simple");
+		if ( node && ((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length) ) {
+			Class.push("content-simple");
 
-			var EditBar = null;
-			var IsPublished = false;
+			var ShowEditBar = null;
+			var ShowOnly = null;
 
 			if ( this.isEditMode() ) {
-				// Check if user has permission to edit
-				if ( author.id != user.id ) {
-					return <ContentError code="401">Permission Denied</ContentError>;
+				if ( !node_IsAuthor(node, user) ) {
+					return <ContentError code="403">Forbidden: You do not have permission to edit this</ContentError>;
 				}
 				
-				// Hack
-				//var IsPublished = node.type.length;//;Number.parseInt(node.published) !== 0;
+				let EditProps = {
+					'editing': state.editing,
+					'modified': state.modified,
+					'published': !!node.published,
+					'onedit': this.onEdit,
+					'onpreview': this.onPreview,
+					'onsave': this.onSave,
+					'onpublish': this.onPublish,
+				};
+
+				EditProps.nopublish = props.nopublish;
 				
-				EditBar = <ContentCommonEdit editing={state.editing} modified={state.modified} published={IsPublished} onedit={this.onEdit} onpreview={this.onPreview} onsave={this.onSave} onpublish={this.onPublish} />;
+				ShowEditBar = <ContentCommonEdit {...EditProps} />;
 			}
 			else {
-				if ( user.id && (author.id === user.id) )
+				if ( node_IsAuthor(node, user) ) {
 					props.edit = 1;
+				}
 			}
 			
 			let ShowAvatar = null;
 			let ShowByLine = null;
 			if ( props.authored ) {
-				ShowAvatar = <ContentCommonBodyAvatar src={author.meta && author.meta.avatar ? author.meta.avatar : ''} />;
-				if ( props.by ) {
-					ShowByLine = <ContentCommonBodyBy node={node} author={author} label="published" when />;
+				ShowAvatar = <ContentCommonBodyAvatar node={node} user={user} src={state.avatar} editing={node_IsAuthor(node, user) ? state.editing : false} onchange={this.onModifyAvatar} />;
+				if ( props.by && !(props.notitleedit ? false : state.editing) ) {
+					ShowByLine = <ContentCommonBodyBy node={node} author={author} label={props.by.length ? props.by : "published"} noby={props.noby} when />;
 				}
 			}
-			else if ( props.updated ) {
+			else if ( props.authors ) {
+				if ( props.by && !state.editing ) {
+					ShowByLine = <ContentCommonBodyBy node={node} authors={authors} />;
+				}
+				else {
+					ShowByLine = (
+						<div class="content-common-body">
+							<div class="-label">Authors</div>
+							Visit <NavLink blank href={user.path+'/following'}>your userpage</NavLink> to add authors. <br />
+							<strong>NOTE:</strong> You can only add friends (users that follow each other).
+						</div>
+					);
+				}
+			}
+			else if ( props.updated && !state.editing ) {
 				ShowByLine = <ContentCommonBodyBy node={node} label="Last updated" modified />;					
+			}
+			
+			if ( state.editing && props.editonly ) {
+				ShowOnly = props.editonly;
+			}
+			else if ( !state.editing && props.viewonly ) {
+				ShowOnly = props.viewonly;
+			}
+//			else if ( state.editing && props.authors ) {
+//				ShowOnly = <ContentCommonBody>
+//					Hey sorry for the delay! Publishing your game is coming soon!<br />
+//					<br />
+//					If you're finished and you wont be able to submit before the compo deadline, don't worry! Do what you can above. We will make sure that you get your game in the compo.<br />
+//					<br />
+//					If you're new to Ludum Dare, you should know we don't host your downloads, just links to them. For recommendations where and how to host your files, check out the Hosting Guide:<br />
+//					<br />
+//					<NavLink blank href="/events/ludum-dare/hosting-guide">/ludum-dare/hosting-guide</NavLink><br />
+//					<br />
+//					</ContentCommonBody>;
+//			}
+
+			let ShowTitle = null;
+			if ( !props.notitle ) {
+				ShowTitle = <ContentCommonBodyTitle 
+					href={node.path} 
+					title={state.name} 
+					subtitle={props.subtitle}
+					titleIcon={props.titleIcon} 
+					editing={props.notitleedit ? false : state.editing} 
+					onmodify={this.onModifyTitle} 
+					limit="80"
+				/>;
+			}
+			
+			let ShowMarkup = null;
+			if ( !props.nomarkup ) {
+				ShowMarkup = (
+					<ContentCommonBodyMarkup 
+						node={node}
+						user={user}
+						label={props.label ? props.label : "Description"}
+						editing={state.editing}
+						placeholder="Say something"
+						class="-block-if-not-minimized"
+						onmodify={this.onModifyText}
+						minimized={props.minimized}
+						limit={props.limit}
+					>
+						{state.body}
+					</ContentCommonBodyMarkup>
+				);
+			}
+			
+			let ShowAbove = null;
+			if ( props.above ) {
+				ShowAbove = props.above;
+			}
+			
+			let ShowDraft = null;
+			if ( !node.published ) {
+				ShowDraft = <ContentCommonDraft draft={props.draft} />;
+			}
+			
+			props.class = cN(Class, props.class);
+			if ( this.isEditMode() ) {
+				props.minmax = null;
+				props.minimized = null;
 			}
 
 			return (
 				<ContentCommon {...props}>
-					{EditBar}
+					{ShowEditBar}
+					{ShowDraft}
 					{ShowAvatar}
-					<ContentCommonBodyTitle href={path} title={node.name} />
+					{ShowTitle}
+					{ShowAbove}
 					{ShowByLine}
-					<ContentCommonBodyMarkup node={node} editing={state.editing} placeholder="Say something" class="-block-if-not-minimized" onmodify={this.onModifyText}>{state.body}</ContentCommonBodyMarkup>
+					{ShowMarkup}
+					{ShowOnly}
 					{props.children}
 				</ContentCommon>
 			);

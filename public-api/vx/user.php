@@ -448,6 +448,9 @@ switch ( $action ) {
 					
 					node_Publish($user_id);
 					
+					if ( !node_SetAuthor($user_id, $user_id) ) {
+						json_EmitFatalError_Server("Unable to set author", $RESPONSE);
+					}
 					if ( !user_SetNode($id, $user_id) ) {
 						json_EmitFatalError_Server("Unable to set node", $RESPONSE);
 					}

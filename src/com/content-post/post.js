@@ -78,7 +78,9 @@ export default class ContentPost extends Component {
 	}
 */
 
-	render( props, {/*author, minimized,*/ error} ) {
+	render( props, state ) {
+		props = Object.assign({}, props);
+		
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
@@ -91,8 +93,16 @@ export default class ContentPost extends Component {
 			if ( node.subtype === 'news' ) {
 				props.header = "NEWS";
 				props.headerClass = "-col-c";
+			} else if ( node.subtype === 'info' ) {
+				props.header = "INFO";
+				props.headerClass = "-col-nddd";
+			} else if ( node.subtype === 'guide' ) {
+				props.header = "GUIDE";
+				props.headerClass = "-col-nddd";
 			}
 		}
+		
+		props.limit = 1024*24;
 		
 		return <ContentSimple {...props} />;
 		

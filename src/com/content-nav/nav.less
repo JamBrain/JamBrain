@@ -5,15 +5,32 @@
 @NAV_BUTTON_LIT: @COL_L;
 @NAV_BUTTON_LIT_BG: @COL_A;
 
+/* Nasty hack */
+#content .content-common-nav-button.-no-icon { 
+	padding: 0.5em 1em 0.5em 1em;
+	& > div {
+		padding-left: 0;
+	}
+	
+	&:last-child {
+		margin-right: 0;
+	}
+}
+
 #content {
 	& .content-nav {
+		margin: 1em 0;
+		
 		& > .-button {
 			position: relative;
 			line-height: 2.0em;
+			height: 2.0em;
+
+			display: inline-block;
 			
-			padding: 0.5em 1em 0.5em 1em;
+			padding: 0.125em 1em 0.125em 1em;
 			&.-has-icon {
-				padding: 0.5em 1em 0.5em 2.0em;
+				padding: 0.125em 1em 0.125em 2.0em;
 			}
 			
 			margin-right: 0.5em;

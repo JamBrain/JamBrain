@@ -15,7 +15,7 @@ import $ThemeHistory					from '../../shrub/js/theme/theme_history';
 export default class ContentEventList extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {
 			'lists': null,
 			'names': null,
@@ -23,24 +23,24 @@ export default class ContentEventList extends Component {
 			'page': 1,
 			'history': null
 		};
-		
+
 		this.renderList = this.renderList.bind(this);
 	}
-	
+
 	componentDidMount() {
 		var event_id = this.props.node.id;
-		
+
 		$ThemeList.Get(event_id)
 		.then(r => {
 			if ( r.lists ) {
-				var newstate = { 
-					'lists': r.lists, 
+				var newstate = {
+					'lists': r.lists,
 					'names': r.names
 				};
 				if ( r.allowed.length > 0 ) {
 					newstate['page'] = r.allowed[r.allowed.length-1];
 				}
-				
+
 				this.setState(newstate);
 			}
 			else {
@@ -50,7 +50,7 @@ export default class ContentEventList extends Component {
 		.catch(err => {
 			this.setState({ 'error': err });
 		});
-		
+
 		$ThemeHistory.Get()
 		.then(r => {
 			if ( r.history ) {
@@ -58,7 +58,7 @@ export default class ContentEventList extends Component {
 				for ( var idx in r.history ) {
 					ret[Sanitize.makeSlug(r.history[idx]['theme'])] = r.history[idx];
 				}
-				
+
 				this.setState({ 'history': ret });
 			}
 			else {
@@ -82,13 +82,13 @@ export default class ContentEventList extends Component {
 			this.setState({ error: err });
 		});
 	}
-	
+
 	addToVotes( id, value ) {
 		var votes = Object.assign({}, this.state.votes);
 		votes[id] = value;
 		this.setState({ 'votes': votes });
 	}
-	
+
 	_submitVote( command, id, e ) {
 		return $ThemeListVote[command](id)
 		.then(r => {
@@ -103,7 +103,7 @@ export default class ContentEventList extends Component {
 			this.setState({ error: err });
 		});
 	}
-	
+
 	onYes( id, e ) {
 		return this._submitVote('Yes', id, e);
 	}
@@ -113,7 +113,7 @@ export default class ContentEventList extends Component {
 	onNo( id, e ) {
 		return this._submitVote('No', id, e);
 	}
-	
+
 	voteToClass( vote ) {
 		if ( vote === 1 )
 			return ' -yes';
@@ -123,18 +123,18 @@ export default class ContentEventList extends Component {
 			return ' -no';
 		return '';
 	}
-	
+
 	renderList( list ) {
 		if ( this.state.lists[list] ) {
 			var ThemeMode = Number.parseInt(this.props.node.meta['theme-page-mode-'+list]);
 			if ( this.state.votes && ThemeMode === 1 ) {
 				var _class = "theme-item";
-				
+
 				var ShowHeadline = null;
-				
+
+//						<h3>{this.state.names[list]}</h3>
 				return (
 					<div class="theme-list">
-						<h3>{this.state.names[list]}</h3>
 						{this.state.lists[list].map(r => {
 							var ShowHistory = null;
 							if ( this.state.history ) {
@@ -147,11 +147,11 @@ export default class ContentEventList extends Component {
 									);
 								}
 							}
-							
+
 							return <div class={_class + this.voteToClass(this.state.votes[r.id])}>
-								<ButtonBase class="-button -yes" onClick={this.onYes.bind(this, r.id)}>+1</ButtonBase>
-								<ButtonBase class="-button -maybe" onClick={this.onMaybe.bind(this, r.id)}>0</ButtonBase>
 								<ButtonBase class="-button -no" onClick={this.onNo.bind(this, r.id)}>-1</ButtonBase>
+								<ButtonBase class="-button -maybe" onClick={this.onMaybe.bind(this, r.id)}>0</ButtonBase>
+								<ButtonBase class="-button -yes" onClick={this.onYes.bind(this, r.id)}>+1</ButtonBase>
 								<span class="-text">{r.theme}</span>
 								{ShowHistory}
 							</div>;
@@ -164,8 +164,9 @@ export default class ContentEventList extends Component {
 			}
 			else if ( ThemeMode === 2 ) {
 				return (
+//						<h3>{this.state.names[list]}</h3>
+
 					<div class="theme-list">
-						<h3>{this.state.names[list]}</h3>
 						<div>This round has ended.</div>
 						<br />
 						{this.state.lists[list].map(r => {
@@ -180,7 +181,7 @@ export default class ContentEventList extends Component {
 									);
 								}
 							}
-	
+
 							let new_class = "theme-item" + (this.state.votes ? this.voteToClass(this.state.votes[r.id]) : "");
 							return (
 								<div class={new_class}>
@@ -194,7 +195,7 @@ export default class ContentEventList extends Component {
 			}
 			else {
 				return [
-					<h3>{this.state.names[list]}</h3>,
+//					<h3>{this.state.names[list]}</h3>,
 					this.state.lists[list].map(r => {
 						return <div>{r.theme}</div>;
 					})
@@ -203,55 +204,67 @@ export default class ContentEventList extends Component {
 		}
 		else if ( this.state.names[list] ) {
 			return [
-				<h3>{this.state.names[list]}</h3>,
-				"This round hasn't started yet. Say tuned!"
+//				<h3>{this.state.names[list]}</h3>,
+				"This round hasn't started yet. Stay tuned!"
 			];
 		}
 		return null;
 	}
-	
+
 	render( {/*node,*/ user, path, extra}, {lists, names, votes, page, error} ) {
-		var Title = <h3>Theme Voting Round</h3>;
-	
-		// By default, the page is the last available round	
+		// By default, the page is the last available round
 		if ( (extra && extra.length && extra[0]) ) {
 			page = Number.parseInt(extra[0]);
 		}
-		
-		var Navigation = null;
+
 		if ( names ) {
-			Navigation = (
-				<div class="event-nav">
-					{Object.keys(names).map(v => <NavLink class={"-item" + ((v == page) ? " -selected" : "")} href={path+'/'+v}>{names[v]}</NavLink>)}
+			var Title = "Theme Voting "+names[page];
+
+			var Navigation = null;
+	//		if ( names ) {
+	//			Navigation = (
+	//				<div class="event-nav">
+	//					{Object.keys(names).map(v => <NavLink class={"-item" + ((v == page) ? " -selected" : "")} href={path+'/'+v}>{names[v]}</NavLink>)}
+	//				</div>
+	//			);
+	//		}
+
+			//console.log('lister',user,lists,votes);
+
+			// Page bodies
+			var Body = null;
+			if ( user && user['id'] && lists && votes ) {
+				Body = page ? this.renderList(page) : null;
+			}
+			else if ( lists && !lists['1'] ) {
+				Body = [
+					"This round hasn't started yet. Stay tuned!"
+				];
+			}
+			else if ( lists ) {
+				Body = [
+					<div class="-info"><h3>Please log in to vote</h3></div>,
+					page ? this.renderList(page) : null
+				];
+			}
+			else if ( error ) {
+				Body = <div>{error}</div>;
+			}
+			else {
+				Body = <NavSpinner />;
+			}
+
+			// Generate the page
+			return (
+				<div class="-body">
+					<h2><SVGIcon small baseline gap>ticket</SVGIcon>{Title}</h2>
+					{Navigation}
+					{Body}
 				</div>
 			);
 		}
-
-		// Page bodies		
-		var Body = null;
-		if ( user && user['id'] && lists && votes ) {
-			Body = page ? this.renderList(page) : null;
-		}
-		else if ( lists ) {
-			Body = [
-				<div class="-info">Please log in</div>,
-				page ? this.renderList(page) : null
-			];
-		}
-		else if ( error ) {
-			Body = <div>{error}</div>;
-		}
 		else {
-			Body = <NavSpinner />;
+			return null;
 		}
-
-		// Generate the page		
-		return (
-			<div class="-body">
-				{Title}
-				{Navigation}
-				{Body}
-			</div>
-		);
 	}
 }

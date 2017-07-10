@@ -39,22 +39,26 @@ function _nodeCache_CacheNodes( &$nodes ) {
 
 
 /// This is the cache wrapped version of nodeComplete_GetById
-function nodeCache_GetById( $ids ) {
+function nodeCache_GetById( $ids, &$cached_store = null ) {
 	$multi = is_array($ids);
 	if ( !$multi )
 		$ids = [$ids];
 	
 	$nodes = _nodeCache_GetCached($ids);
-	$cached_ids = _nodeList_GetIds($cached);
+	$cached_ids = nodeList_GetIds($nodes);
 	
 	$uncached_ids = array_diff($ids, $cached_ids);
 	
-	if ( count($uncached_ids) ) {
-		$uncached = nodeComplete_GetById($uncached_ids);
-		
-		_nodeCache_CacheNodes($uncached);
+	if ( !is_null($cached_store) ) {
+		$cached_store = $cached_ids;
+	}
 	
-		$nodes = array_merge($nodes, $uncached);
+	if ( count($uncached_ids) ) {
+		if ( $uncached = nodeComplete_GetById($uncached_ids) ) {
+			_nodeCache_CacheNodes($uncached);
+		
+			$nodes = array_merge($nodes, $uncached);
+		}
 	}
 		
 	if ($multi)

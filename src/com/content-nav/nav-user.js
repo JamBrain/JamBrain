@@ -9,54 +9,57 @@ export default class ContentNavUser extends Component {
 	constructor( props ) {
 		super(props);
 	}
-	
+
 	componentDidMount() {
 	}
 
 
 	render( {node, user, path, extra}, {} ) {
-		var NewPath = '/'+ (extra ? extra.join('/') : '');
+
+        var NewPath = '/'+ (extra ? extra.join('/') : '');
+		var PartPath = '/'+ (extra && extra.length ? extra[0] : '');
 
 		var ShowMyFeed = null;
 		if ( NewPath === '/' ) {
 			// Default to games, articles, or feed if no games/articles are available
-			if ( node['games'] > 0 )
+            // Disabled games as default because its doesn't work great.
+			/*if ( node['games'] > 0 )
 				NewPath = '/games';
-			else if ( node['articles'] > 0 )
+			else*/ if ( node['articles'] > 0 )
 				NewPath = '/articles';
 			else
 				NewPath = '/feed';
 		}
 		// Prefix with path
 		NewPath = path + NewPath;
+		PartPath = path + PartPath;
 
-		var HasGames = null;
-		if ( node['games'] > 0 ) {
-			HasGames = <ContentNavButton path={NewPath} icon='gamepad' href={path+'/games'}>Games</ContentNavButton>;
+		var HasFeed = <ContentNavButton path={NewPath} icon='feed' href={path+'/feed'}>Feed</ContentNavButton>;
+
+		var HasFollowing = null;
+		if ( user.id == node.id && user && user.private /*&& user.private["link"] && user.private.link["star"]*/ ) {
+			HasFollowing = <ContentNavButton path={NewPath} icon='user-check' href={path+'/following'}>Following</ContentNavButton>;
 		}
+
+		var HasFollowers = null;
+//		if ( user.id == node.id && user["private"] && user.private["refs"] && user.private.refs["star"]  ) {
+//			HasFollowers = <ContentNavButton path={NewPath} icon='users' href={path+'/followers'}>Followers</ContentNavButton>;
+//		}
+
+        var HasGames = null;
+		HasGames = <ContentNavButton path={PartPath} icon='gamepad' href={path+'/games'}>Games</ContentNavButton>;
 
 		var HasArticles = null;
 		if ( node['articles'] > 0 ) {
 			HasArticles = <ContentNavButton path={NewPath} icon='article' href={path+'/articles'}>Articles</ContentNavButton>;
 		}
 
-		var HasFeed = <ContentNavButton path={NewPath} icon='feed' href={path+'/feed'}>Feed</ContentNavButton>;
-
-		var HasFollowing = null;
-		if ( false ) {
-			HasFollowing = <ContentNavButton path={NewPath} icon='user-check' href={path+'/following'}>Following</ContentNavButton>;
-		}
-		var HasFollowers = null;
-		if ( false ) {
-			HasFollowers = <ContentNavButton path={NewPath} icon='users' href={path+'/followers'}>Followers</ContentNavButton>;
-		}
-		
 		return (
 			<div class="-body">
 				<div class="content-base content-nav content-nav-root">
-					{HasGames}
 					{HasArticles}
 					{HasFeed}
+                    {HasGames}
 					{HasFollowing}
 					{HasFollowers}
 				</div>

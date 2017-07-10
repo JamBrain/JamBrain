@@ -3,14 +3,37 @@
 #content .content-common-body.-title {
 	position: relative;
 
-	margin: 1em 1em 0;
+	margin: 1rem 1rem 0;
 	
 	& a, 
 	& a:visited {
+		line-height: 1.2em;
 		color: @COL_NDDD;
 		&:hover,
 		&:focus {
 			color: @COL_L;
+		}
+	}
+
+	&.-editing {
+		overflow: hidden; /* without this, the input will get pushed to the next line by the floating div */
+		& > input {
+			display: block;
+			box-sizing: border-box;
+			width: 100%;
+			
+			font-size: 1.2em;
+			
+			margin-bottom: 1em;
+			
+			background: @COL_NLLLL;
+			border: 1px solid @COL_NLLL;
+			border-radius: 0.25em;
+			padding: 0.25em;
+			
+			&:focus {
+				background: @COL_W;
+			}
 		}
 	}
 
@@ -38,5 +61,9 @@
 		& > .-text {
 			font-weight: bold;
 		}
+	}
+	
+	& svg {
+		margin-right: 0.5em;
 	}
 }

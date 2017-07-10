@@ -16,7 +16,7 @@ if ( count($argv) < 2 ) {
 	echo "Usage: ".$argv[0]." [command]\n";
 	echo "\n";
 	echo "  dupes      - Remove Duplicate Ideas\n";
-//	echo "  score      - Score Ideas\n";
+	echo "  score      - Score Ideas\n";
 //	echo "  promote    - Promote highest scored Ideas to Themes\n";
 //	echo "  page       - Assign pages to themes\n";
 	echo "  calc #     - Calculate Score for Page \"#\" (starts at 1)\n";
@@ -47,19 +47,19 @@ if ( $COMMAND === "dupes" ) {
 		print "Aborting...\n";
 		exit(1);
 	}
-	
+
 	echo "Fetching Idea List...\n";
-	
+
 	$all_ideas = themeIdea_Get($EVENT_NODE);
 
 	echo count($all_ideas) . " total.\n";
-	
+
 	// Generate Slugs
 	$slug_ideas = [];
 	$slug_parents = [];
 	foreach ($all_ideas as $key => $theme) {
 		$slug = coreSlugify_Name($theme);
-		
+
 		if ( isset($slug_ideas[$slug]) ) {
 			$slug_parents[] = [
 				'id' => $key,
@@ -73,9 +73,9 @@ if ( $COMMAND === "dupes" ) {
 			];
 		}
 	}
-	
+
 	echo count($slug_ideas) . " with duplicates removed.\n";
-	
+
 	echo "Updating Parents...\n";
 	foreach ($slug_parents as $theme) {
 		themeIdea_SetParent($theme['id'], $theme['parent']);
@@ -84,6 +84,81 @@ if ( $COMMAND === "dupes" ) {
 	echo "Done.\n";
 	exit;
 }
+else if ( $COMMAND === "score" ) {
+	print "\n*** WARNING ***\n\n";
+	print "You are about to flag all duplicate ideas. This will destroy any manual changes.\n";
+	print "\nAre you sure [type 'YES']? ";
+	flush();
+	$input = trim(fgets(STDIN));
+	if ( $input != "YES" ) {
+		print "Aborting...\n";
+		exit(1);
+	}
+
+	echo "Fetching Idea List...\n";
+
+	$theme_list = themeIdeaVote_GetIdeas($EVENT_NODE);
+
+	echo count($theme_list)." total\n";
+
+	echo "Scoring...\n";
+
+	// Stats //
+	$min_votes = null;
+	$max_votes = null;
+
+	$min_score = null;
+	$max_score = null;
+
+	$mins = [ -1 => null, 0 => null, 1 => null ];
+	$maxes = [ -1 => null, 0 => null, 1 => null ];
+	
+	$total_votes_count = 0;
+
+	foreach ( $theme_list as $key => $value ) {
+		$votes = themeIdeaVote_GetVotesForIdea($key);
+
+		$votes_count = count($votes);
+		$total_votes_count += $votes_count;
+		if ( $min_votes === null || $votes_count < $min_votes )
+			$min_votes = $votes_count;
+		if ( $max_votes === null || $votes_count > $max_votes )
+			$max_votes = $votes_count;
+
+		$score_sum = 0;
+		$scores = [ -1 => 0, 0 => 0, 1 => 0 ];
+
+		for ($idx = 0; $idx < $votes_count; $idx++ ) {
+			$score_sum += intval($votes[$idx]);
+			$scores[$votes[$idx]]++;
+		}
+
+		if ( $min_score === null || $score_sum < $min_score )
+			$min_score = $score_sum;
+		if ( $max_score === null || $score_sum > $max_score )
+			$max_score = $score_sum;
+
+		foreach ( [1,0,-1] as $idx ) {
+			if ( $mins[$idx] === null || $scores[$idx] < $mins[$idx] )
+				$mins[$idx] = $scores[$idx];
+			if ( $maxes[$idx] === null || $scores[$idx] > $maxes[$idx] )
+				$maxes[$idx] = $scores[$idx];
+		}
+
+		// Minimum 10 votes before we score an entry //
+		if ( $votes_count > 10 ) {
+			$score = ($score_sum / $votes_count) * 200.0;
+			themeIdea_SetScore($key,$score);
+		}
+	}
+
+	echo "Total Votes: ".$total_votes_count."\n";
+	echo "Votes: ".$min_votes." ... ".$max_votes."\n";
+	echo "Scores: ".$min_score." ... ".$max_score."\n";
+	foreach ( [1,0,-1] as $idx ) {
+		echo "[".$idx."]: ".$mins[$idx]." ... ".$maxes[$idx]."\n";
+	}
+}
 else if ( $COMMAND === "calc" ) {
 	if ( count($argv) < 1 ) {
 		print "Error: No page specified\n";
@@ -91,7 +166,7 @@ else if ( $COMMAND === "calc" ) {
 	}
 
 	$page = intval($argv[0]);
-	
+
 	if ( $page < 1 ) {
 		print "Error: Invalid page"+$page+"\n";
 		exit(1);
@@ -106,9 +181,9 @@ else if ( $COMMAND === "calc" ) {
 		print "Aborting...\n";
 		exit(1);
 	}
-	
+
 	print "Fetching Themes...\n";
-	
+
 	$themes = themeList_GetByNode($EVENT_NODE, $page);
 
 	print "Counting Scores...\n";
@@ -120,12 +195,12 @@ else if ( $COMMAND === "calc" ) {
 		foreach ( $votes[$theme['id']] as $key => &$value ) {
 			$sum += intval($key) * intval($value);
 		}
-		
+
 		echo $sum."\t".$theme['theme']."\t\t\t(".implode(", ",$votes[$theme['id']]).")\n";
 
 		$votes[$theme['id']]['sum'] = $sum;
 	}
-	
+
 	print "\n*** WARNING ***\n\n";
 	print "Commit these Scores to Round ".$page."?\n";
 	print "\nAre you sure [type 'YES']? ";
@@ -135,7 +210,7 @@ else if ( $COMMAND === "calc" ) {
 		print "Aborting...\n";
 		exit(1);
 	}
-	
+
 	print "Writing...\n";
 
 	foreach ( $votes as $key => &$vote ) {
@@ -157,11 +232,11 @@ else if ( $COMMAND === "finalize" ) {
 		exit(1);
 	}
 
-	echo "----------------------------------\n";	
+	echo "----------------------------------\n";
 
 	$themes = themeList_GetByNode($EVENT_NODE);
-	
-	// Sort Themes by score	
+
+	// Sort Themes by score
 	$cmp = function($a, $b) {
 	    if ($a['score'] == $b['score']) {
 	        return 0;
@@ -169,25 +244,25 @@ else if ( $COMMAND === "finalize" ) {
 	    return ($a['score'] > $b['score']) ? -1 : 1;
 	};
 	usort($themes, $cmp);
-	
+
 	$max_page = 0;
 	$idx = 0;
-	
+
 	foreach ( $themes as &$theme ) {
 		$theme['place'] = $idx;
-		
+
 		print $idx."\t".$theme['score']."\t".$theme['theme']." [".$theme['page']."]\n";
-		
+
 		if ( $theme['page'] > $max_page ) {
 			$max_page = $theme['page'];
 		}
-		
+
 		$idx++;
 		if ( $idx === $count ) {
-			echo "----------------------------------\n";	
+			echo "----------------------------------\n";
 		}
 	}
-	
+
 	print "\n*** WARNING ***\n\n";
 	print "You are about to make the above $count themes in to the Final Round\n";
 	print "\nAre you sure [type 'YES']? ";
@@ -205,7 +280,7 @@ else if ( $COMMAND === "finalize" ) {
 //		print_r($theme);
 		print $theme['place']."\t".$theme['id']."\t".$theme['score']."\t".$theme['theme']." [".$theme['page']."] {".$theme['idea']."} (".$theme['node'].")\n";
 	}
-	
+
 	$new_page = $max_page+1;
 
 	print "\n*** WARNING ***\n\n";
@@ -217,11 +292,11 @@ else if ( $COMMAND === "finalize" ) {
 		print "Aborting...\n";
 		exit(1);
 	}
-	
+
 	foreach ( $new_themes as &$theme ) {
 		$ret = themeList_Add($theme['node'], $theme['idea'], $theme['theme'], $new_page );
 	}
-	
+
 	echo "Done.\n";
 }
 else {

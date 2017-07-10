@@ -53,8 +53,8 @@ const SH_TABLE_NODE_VERSION =		"node_version";
 const SH_TABLE_NODE_LINK =			"node_link";
 const SH_TABLE_NODE_META =			"node_meta";
 const SH_TABLE_NODE_LOVE =			"node_love";
-//const SH_TABLE_NODE_STAR =			"node_star";
 const SH_TABLE_NODE_SEARCH =		"node_search";
+const SH_TABLE_NODE_MAGIC =			"node_magic";
 /// @}
 
 global_AddTableConstant( 
@@ -63,8 +63,8 @@ global_AddTableConstant(
 	'SH_TABLE_NODE_LINK',
 	'SH_TABLE_NODE_META',
 	'SH_TABLE_NODE_LOVE',
-//	'SH_TABLE_NODE_STAR',
-	'SH_TABLE_NODE_SEARCH'
+	'SH_TABLE_NODE_SEARCH',
+	'SH_TABLE_NODE_MAGIC'
 );
 
 global_AddReservedName(

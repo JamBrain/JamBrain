@@ -4,6 +4,8 @@ include __DIR__."/core/constants.php";
 include __DIR__."/global/constants.php";
 include __DIR__."/node/constants.php";
 
+include __DIR__."/asset/constants.php";
+include __DIR__."/grade/constants.php";
 include __DIR__."/jammer/constants.php";
 include __DIR__."/legacy/constants.php";
 include __DIR__."/note/constants.php";

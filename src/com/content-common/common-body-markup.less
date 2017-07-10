@@ -1,48 +1,50 @@
 @import 'defs.less';
 
+@BG: @COL_L;
+@DARK: @COL_NDDD;
+
 #content .content-common-body.-markup {
-	& .-textarea {
-		/*padding: 0.25em;*/
-		border: 1px solid @COL_NLLL;
-		
-		background: @COL_NLLLL;
-		
-		border-radius: 0.25em;
-		overflow: hidden;
-	}
-	& textarea {
-		width: 100%;
-		/*height: 100%;*/
-		max-width: 100%;			/* don't let the width exceed the width of the parent (do we need this anymore?) */
-		min-height: 6em;
-		
-		background: inherit;		/* let the parent dictate background color */
-		display: block;				/* removes gap on line after element */
+}
 
-		padding: 0.5em;
-		border: 0;
-		
-		overflow: hidden;			/* We're going to resize the box automatically (hopefully this is mobile friendly) */
-		resize: none;
-		
-		box-sizing: border-box;		/* Correctly fit to div-like shapes */
-		
-		outline: none;				/* Remove Chrome outline when focused (handled by a bg color change instead) */
-
-		&:focus {
-			background: @COL_W;
-		}
-	}
-	
-	& .-footer {
-		font-size: 0.8em;
-	}
-	
+#content .-markup {
 	/* Inline Code */
 	& code {
 	}
+	
+	& pre {
+		display:block;
+		width: 100%;
+		overflow:auto;
+		box-sizing: border-box;
+	}
+
 	/* Code Blocks */
 	& pre code {
-		font-size: 0.75em;
+		width: 100%;
+		box-sizing: border-box;
 	}
+
+    /* Tables */
+
+	& table {
+        border: 1px solid @COL_NLLL;
+        margin: 2% 0;
+        border-collapse: collapse;
+    }
+
+    & th, td {
+        vertical-align: center;
+        border: 1px solid @COL_NLLL;
+        padding: 0.5em;
+    }
+
+    & tbody {
+        tr:nth-child(even) {
+            background-color: @COL_NLLLL;
+        }
+
+        tr:nth-child(odd) {
+            background-color: inherit;
+        }
+    }
 }
