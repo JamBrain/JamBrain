@@ -39,7 +39,14 @@ export default class HeaderWhatsup extends Component {
 
 		if ( featured ) {
 			if ( featured.meta ) {
-				if ( featured.meta['event-theme'] ) {
+				if ( parseInt(featured.meta['theme-mode']) == 1 ) {
+					return (
+						<div class="header-base header-whatsup outside">
+							<span class="-title _font2">ON NOW:</span> {featured.name} <NavLink href={featured.path}><SVGIcon baseline small gap>suggestion</SVGIcon>Theme Suggestions</NavLink> are open!
+						</div>
+					);
+				}
+				else if ( featured.meta['event-theme'] ) {
 					return (
 						<div class="header-base header-whatsup outside">
 							<span class="-title _font2">RESULTS:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink>
