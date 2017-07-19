@@ -46,6 +46,13 @@ export default class HeaderWhatsup extends Component {
 						</div>
 					);
 				}
+				else if ( parseInt(featured.meta['theme-mode']) == 2 ) {
+					return (
+						<div class="header-base header-whatsup outside">
+							<span class="-title _font2">ON NOW:</span> {featured.name} <NavLink href={featured.path}><SVGIcon baseline small gap>fire</SVGIcon>Theme Slaughter Round</NavLink> is on!
+						</div>
+					);
+				}
 				else if ( featured.meta['event-theme'] ) {
 					return (
 						<div class="header-base header-whatsup outside">

@@ -44,6 +44,8 @@ const SH_TABLE_PREFIX = 'sh_';
 // Access Permission Whitelist (Can be arrays on PHP 5.6+) //
 //const SH_ACCESS_DATA = "192.168.48.1";
 
+//const SECURE_LOGIN_ONLY = true;
+
 // API Keys //
 const GOOGLE_API_KEY = '';
 const TWITCH_API_KEY = '';
