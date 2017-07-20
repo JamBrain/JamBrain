@@ -13,7 +13,7 @@ export default class SidebarCalendar extends Component {
 
 	genCalendar( today, rows ) {
 		let cols = 7;
-		/* Shifts the days to start with a Monday. Warning: still requires some modification of the CSS in order to highlight the correct weekend days. */
+		/* Shifts the days to start with a Monday. */
 		let startMonday = false; 
 		
 		let thisWeekday = today.getDay();
@@ -38,15 +38,16 @@ export default class SidebarCalendar extends Component {
 		nextDay = startDay.getDate();
 		thisYear = startDay.getFullYear();
 		thisMonth = startDay.getMonth();
+		let dayOfWeek = startDay.getDay();
 		let monthEndsOn = new Date(thisYear, thisMonth+1, 0).getDate();
-		
 		
 		// TODO: Insert scheduled events here
 		let data = Array(...Array(rows)).map(() => Array.from( Array(cols),function(){
 			let ret = {
 				'year': thisYear,
 				'month': thisMonth,
-				'day': nextDay
+				'day': nextDay,
+				'weekday': dayOfWeek
 			};
 			
 			if ( nextDay === thisDay ) {
@@ -56,13 +57,18 @@ export default class SidebarCalendar extends Component {
 				ret['toggle'] = true;
 			}
 			
+			dayOfWeek++;
+			if ( dayOfWeek > 6 ) {
+				dayOfWeek = 0;
+			}
+			
 			nextDay++;
 			if ( nextDay > monthEndsOn ) {
 				nextDay -= monthEndsOn;
 				thisMonth++;
-				if ( thisMonth > 12 ) {
+				if ( thisMonth >= 12 ) {
 					thisYear++;
-					thisMonth = 1;
+					thisMonth = 0;
 				}
 				/* Determine how many days are in this month to allow the calendar generation to proceed indefinitely. */
 				monthEndsOn = new Date(thisYear, thisMonth+1, 0).getDate();
@@ -85,12 +91,15 @@ export default class SidebarCalendar extends Component {
 			if ( col.toggle ) {
 				props.class.push('month');
 			}
+			if ( col.weekday == 0 || col.weekday == 6 ) {
+				props.class.push('weekend');
+			}
 			props.onclick = (e) => {
 				console.log('cal: ',col); 
-				window.location.hash = "#cal/"+col.year+"/"+col.month+"/"+col.day;
+				window.location.hash = "#cal/"+col.year+"/"+(col.month+1)+"/"+col.day;
 			};
 			// In case Intl extensions are not available
-			props.title = col.month+"-"+col.day+"-"+col.year;
+			props.title = (col.month+1)+"-"+col.day+"-"+col.year;
 			if ( window.Intl ) {
 				// http://stackoverflow.com/a/18648314/5678759
 				let objDate = new Date(col.year, col.month, col.day);
@@ -100,7 +109,7 @@ export default class SidebarCalendar extends Component {
 			// Hack
 			var ShowIcon = null;
 			if ( col.year == 2017 && col.month == 6 && (col.day >= 28 && col.day <= 31) ) {
-				if ( col.day === 21 ) {
+				if ( col.day === 28 ) {
 					ShowIcon = <SVGIcon class="-icon">trophy</SVGIcon>;
 				}
 				props.class.push('scheduled');
