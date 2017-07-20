@@ -4,10 +4,37 @@ import SVGIcon 							from 'com/svg-icon/icon';
 export default class SidebarCalendar extends Component {
 	constructor( props ) {
 		super(props);
+		this.state.date = new Date();
+	}
+	
+	componentDidMount() {
+		this.minuteTick();
+	}
+	
+	componentWillUnmount() {
+		clearTimeout(this.timer);
+	}
+	
+	minuteTick() {
+		/* Update the current time, which will rerender if the day changes */
+		let currentDate = new Date();
+		this.setState({ date: currentDate });
+		
+		/* Schedule an event to occur at the next minute change. */
+		var delayTime = 60000 - currentDate.getMilliseconds() - currentDate.getSeconds()*1000;
+		if ( delayTime < 1000 ) {
+			delayTime = 1000;
+		}
+		this.timer = setTimeout(() => { this.minuteTick(); }, delayTime);
 	}
 
 	shouldComponentUpdate( nextProps, nextState ) {
 		// At the moment, there are no external events that should trigger an update (I ignore my props)
+		
+		// But still update if the day changes.
+		if ( nextState.date.getDate() != this.state.date.getDate() ) {
+			return true; 
+		}
 		return false;
 	}
 
@@ -22,13 +49,12 @@ export default class SidebarCalendar extends Component {
 		let thisYear = today.getFullYear();
 		let originalMonth = thisMonth;
 		
-		/* Months and Weeks start at 0. Years and Days start at 1. Using 0th day is like -1 */
 		let nextDay = thisDay - thisWeekday;
 		
 		/* Advance the first day in the display to Monday for regions which prefer this style */
 		if ( startMonday ) {
 			nextDay++;
-			if ( nextDay >= thisDay ) {
+			if ( nextDay > thisDay ) {
 			  nextDay -= 7;
 			}
 		}
@@ -39,6 +65,8 @@ export default class SidebarCalendar extends Component {
 		thisYear = startDay.getFullYear();
 		thisMonth = startDay.getMonth();
 		let dayOfWeek = startDay.getDay();
+		
+		/* Months and Weeks start at 0. Years and Days start at 1. Using 0th day is like -1 */
 		let monthEndsOn = new Date(thisYear, thisMonth+1, 0).getDate();
 		
 		// TODO: Insert scheduled events here
@@ -155,7 +183,7 @@ export default class SidebarCalendar extends Component {
 		// TODO: Adjust noted days based on timezone
 		// TODO: Adjust selected day/week when time itself rolls over
 
-		let data = this.genCalendar(new Date(), rows ? rows : 3);
+		let data = this.genCalendar(this.state.date, rows ? rows : 3);
 		
 		return (
 			<div class="sidebar-base sidebar-calendar">
