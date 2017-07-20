@@ -13,23 +13,33 @@ export default class SidebarCalendar extends Component {
 
 	genCalendar( today, rows ) {
 		let cols = 7;
+		/* Shifts the days to start with a Monday. Warning: still requires some modification of the CSS in order to highlight the correct weekend days. */
+		let startMonday = false; 
+		
 		let thisWeekday = today.getDay();
 		let thisDay = today.getDate();
 		let thisMonth = today.getMonth();
 		let thisYear = today.getFullYear();
+		let originalMonth = thisMonth;
 		
 		/* Months and Weeks start at 0. Years and Days start at 1. Using 0th day is like -1 */
-		let monthEndsOn = new Date(thisYear, thisMonth+1, 0).getDate();
 		let nextDay = thisDay - thisWeekday;
-		let toggleMonth = false;
 		
-		if ( nextDay < 1 ) {
-			let lastMonth = new Date(thisYear, thisMonth, 0);
-			monthEndsOn = lastMonth.getDate();
-			//console.log( lastMonth.getFullYear(), lastMonth.getMonth(), lastMonth.getDate(), lastMonth.getDay() );
-			nextDay = lastMonth.getDate() - lastMonth.getDay();
-			toggleMonth = true;
+		/* Advance the first day in the display to Monday for regions which prefer this style */
+		if ( startMonday ) {
+			nextDay++;
+			if ( nextDay >= thisDay ) {
+			  nextDay -= 7;
+			}
 		}
+
+		/* Normalize date to get the correct year and month for the starting day. */
+		let startDay = new Date(thisYear, thisMonth, nextDay);
+		nextDay = startDay.getDate();
+		thisYear = startDay.getFullYear();
+		thisMonth = startDay.getMonth();
+		let monthEndsOn = new Date(thisYear, thisMonth+1, 0).getDate();
+		
 		
 		// TODO: Insert scheduled events here
 		let data = Array(...Array(rows)).map(() => Array.from( Array(cols),function(){
@@ -42,7 +52,7 @@ export default class SidebarCalendar extends Component {
 			if ( nextDay === thisDay ) {
 				ret['selected'] = true;
 			}
-			if ( toggleMonth ) {
+			if ( (originalMonth ^ thisMonth) & 1 === 1 ) {
 				ret['toggle'] = true;
 			}
 			
@@ -54,7 +64,8 @@ export default class SidebarCalendar extends Component {
 					thisYear++;
 					thisMonth = 1;
 				}
-				toggleMonth = !toggleMonth;
+				/* Determine how many days are in this month to allow the calendar generation to proceed indefinitely. */
+				monthEndsOn = new Date(thisYear, thisMonth+1, 0).getDate();
 			}
 			
 			return ret;
@@ -71,7 +82,7 @@ export default class SidebarCalendar extends Component {
 			if ( col.selected ) {
 				props.class.push('selected');
 			}
-			if ( col.toggle === true ) {
+			if ( col.toggle ) {
 				props.class.push('month');
 			}
 			props.onclick = (e) => {
