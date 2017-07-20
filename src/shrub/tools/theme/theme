@@ -35,6 +35,9 @@ if ( !$EVENT_NODE ) {
 	echo "'ludumdare-event' is zero or not set ($EVENT_NODE)\n";
 	die;
 }
+else {
+	echo "EVENT_NODE: $EVENT_NODE\n";
+}
 
 $COMMAND = array_shift($argv);
 if ( $COMMAND === "dupes" ) {
