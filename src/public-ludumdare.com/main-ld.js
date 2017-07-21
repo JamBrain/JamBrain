@@ -78,23 +78,20 @@ class Main extends Component {
 			// Active User
 			'user': null
 		};
-		
+
 		window.addEventListener('hashchange', this.onHashChange.bind(this));
 		window.addEventListener('navchange', this.onNavChange.bind(this));
 		window.addEventListener('popstate', this.onPopState.bind(this));
 
 		this.onLogin = this.onLogin.bind(this);
-		
+
 //		this.doEverything();
 	}
-	
-//	async doEverything() {
-//        var test = await new Promise(resolve => {setTimeout(pepper => { console.log("pepper"); resolve(); }, 1000); console.log("peter");});
-//    }
 
-	componentDidMount() {
+	async componentDidMount() {
 		this.fetchData();
 		this.fetchRoot();
+		var test = await new Promise(resolve => {setTimeout(pepper => { console.log("pepper"); resolve(); }, 1000); console.log("peter");});
 	}
 
 	storeHistory( input, page_title = null, page_url = null ) {
@@ -218,24 +215,24 @@ class Main extends Component {
 
 		return $Node.Get(node_id)
 			.then(r => {
-				// If 
+				// If
 				if ( r && Array.isArray(r.node) && r.node.length ) {
 					Node = r.node[0];
 
 					console.log("[fetchFeatured] +", Node.id);
-	
+
 					return $Node.What(Node.id);
 				}
-				
+
 				// No featured event
 				return null;
 			})
 			.then(r => {
 				if ( r && r.what ) {
 					Node.what = r.what;
-	
+
 					console.log('[fetchFeatured] My Game(s):', Node.what);
-	
+
 					if ( Node.what.length ) {
 						return $Node.GetKeyed(r.what);
 					}
@@ -246,11 +243,11 @@ class Main extends Component {
 			.then( r => {
 				if ( r && r.node ) {
 					Node.what_node = r.node;
-					
+
 					var Focus = 0;
 					var FocusDate = 0;
 					var LastPublished = 0;
-					
+
 					for ( var key in r.node ) {
 						var NewDate = new Date(r.node[key].modified).getTime();
 						if ( NewDate > FocusDate ) {
@@ -265,7 +262,7 @@ class Main extends Component {
 					if ( Focus ) {
 						console.log('[fetchFeatured] '+Focus+' was the last modified');
 					}
-	
+
 					// If the last updated is published, focus on that
 					if ( r.node[Focus].published ) {
 						Node.focus = Focus;
@@ -278,19 +275,19 @@ class Main extends Component {
 					else if ( Focus > 0 ) {
 						Node.focus = Focus;
 					}
-					
+
 					if ( Node.focus || Node.focus === 0 ) {
 						console.log('[fetchFeatured] '+Node.focus+' chosen as Focus');
 					}
 				}
-	
+
 				this.setState({
 					'featured': Node
 				});
-			
+
 				console.log('[fetchFeatured] -', Node.id);
-	
-				return r;	
+
+				return r;
 			})
 			.catch(err => {
 				this.setState({ 'error': err });
@@ -335,7 +332,7 @@ class Main extends Component {
 		});
 	}
 
-	fetchUser() {
+	async fetchUser() {
 		console.log("[fetchUser]");
 
 		var Caller = 0;
@@ -344,6 +341,11 @@ class Main extends Component {
 		};
 
 		// Fetch the Active User
+
+//ASYNC/AWAIT TEST
+		var user = await $User.Get();
+		console.log(user);
+
 		return $User.Get().then(r => {
 			Caller = r.caller_id|0;
 			console.log("[fetchUser] caller_id:", Caller);
@@ -390,7 +392,7 @@ class Main extends Component {
 	}
 
 
-	fetchData() {
+	async fetchData() {
 		console.log("[fetchData]");
 
 		// If no user
@@ -499,6 +501,8 @@ class Main extends Component {
 				</ViewContent>
 			);
 		}
+
+		//console.log(test);
 
 		return (
 			<div id="layout">

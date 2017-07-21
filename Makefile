@@ -103,7 +103,7 @@ default: target
 
 clean-target:
 	rm -f $(TARGET_FILES)
-	
+
 report: $(TARGET_FILES)
 	@echo \
 		"[JS]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)` (`$(call GZIP_SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`)	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`]\n" \
@@ -173,7 +173,9 @@ OUT_MAIN_JS			:=	$(subst $(SRC)/,$(OUT)/,$(MAIN_JS:.js=.es6.js))
 $(BUILD_FOLDER)/js.js: $(OUT_JS_FILES)
 	cat $^ > $@
 $(BUILD_FOLDER)/buble.js: $(OUT_MAIN_JS) $(OUT_ES6_FILES)
-	$(call ROLLUP,$<,$@.tmp)
+	$(call ROLLUP,$<,$<.tmp)
+	./node_modules/nodent/nodent.js --out --use=promises --noruntime $<.tmp >$@.tmp
+	rm -f $<.tmp
 	rm -f $@
 	mv $@.tmp $@
 $(BUILD_FOLDER)/all.js: $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js

@@ -2,7 +2,7 @@ import includePaths from 'rollup-plugin-includepaths';
 //import nodeResolve from 'rollup-plugin-node-resolve';
 
 export default {
-	plugins: [ 
+	plugins: [
 		includePaths({
 			paths: [
 				'.output',
@@ -13,8 +13,8 @@ export default {
 //				'preact':'output/external/preact/preact.o.js'
 //			},
 			extensions:['.es6.js'],
-		}),
-//		nodeResolve({
+		})
+		//		nodeResolve({
 //			jsnext: true
 //		}),
 	]

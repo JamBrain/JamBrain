@@ -21,5 +21,9 @@ ln -svf ../../.output/.build/public-jammer.bio/all.js /vagrant/www/public-jammer
 ln -svf ../../.output/.build/public-jammer.bio/all.css /vagrant/www/public-jammer.bio/-/all.css
 ln -svf ../../.output/.build/public-jammer.bio/all.svg /vagrant/www/public-jammer.bio/-/all.svg
 
+# Install fork of buble
+sudo npm install -g Noojuno/buble
+(cd /vagrant/www/; sudo npm install)
+
 # Create tables
 (cd /vagrant/www/src/shrub/tools; echo YES | php table-create)
