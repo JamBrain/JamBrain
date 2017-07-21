@@ -78,13 +78,19 @@ class Main extends Component {
 			// Active User
 			'user': null
 		};
-
+		
 		window.addEventListener('hashchange', this.onHashChange.bind(this));
 		window.addEventListener('navchange', this.onNavChange.bind(this));
 		window.addEventListener('popstate', this.onPopState.bind(this));
 
 		this.onLogin = this.onLogin.bind(this);
+		
+//		this.doEverything();
 	}
+	
+//	async doEverything() {
+//        var test = await new Promise(resolve => {setTimeout(pepper => { console.log("pepper"); resolve(); }, 1000); console.log("peter");});
+//    }
 
 	componentDidMount() {
 		this.fetchData();
