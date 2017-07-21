@@ -17,7 +17,8 @@
     "rollup-plugin-node-resolve": "*",
     "rollup-plugin-nodent": "0.1.0",
     "svgo": "*",
-    "uglify-js": "*"
+    "uglify-js": "*",
+    "nodent": "*"
   },
   "devDependencies": {},
   "scripts": {
