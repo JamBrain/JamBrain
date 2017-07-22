@@ -3,7 +3,8 @@
 
 # Settings #
 SRC					?=	src
-OUT					?=	$(HOME)/.starship
+OUT					?=	.output
+#OUT					?=	$(HOME)/.starship
 .BUILD				?=	.build
 NODEJS				?=	node_modules
 
