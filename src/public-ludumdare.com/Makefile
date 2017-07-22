@@ -2,7 +2,7 @@
 TARGET				:=	public-ludumdare.com
 
 MAIN_FOLDER			:=	src/$(TARGET)
-TARGET_FOLDER		:=	$(TARGET)/-/
+TARGET_FOLDER		:=	$(TARGET)/-
 
 INCLUDE_FOLDERS		:=	src/shrub/js/ \
 						src/com/ \
