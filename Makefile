@@ -3,7 +3,7 @@
 
 # Settings #
 SRC					?=	src
-OUT					?=	.output
+OUT					?=	$(HOME)/.starship
 .BUILD				?=	.build
 
 # Use 'TARGET=public-blah' if you want to build a specific build "blah" #
