@@ -189,15 +189,16 @@ export default class ContentTimeline extends Component {
 		var ShowFeed = [];
 
 		if ( error ) {
-			//ShowFeed.push(<ContentCommon {...props}><ContentCommonBody>error</ContentCommonBody></ContentCommon>);
-			ShowFeed.push(<ContentCommon><ContentCommonBody>error</ContentCommonBody></ContentCommon>);
+			ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>error</ContentCommonBody></ContentCommon>);
 		}
 		else if ( feed && feed.length ) {
 			ShowFeed = ShowFeed.concat(feed.map(this.makeFeedItem));
 		}
 		else if ( feed && feed.length == 0 ){
-			//ShowFeed.push(<ContentCommon {...props}><ContentCommonBody>Feed is empty</ContentCommonBody></ContentCommon>);
-			ShowFeed.push(<ContentCommon><h1>Sorry, there are no {props.types[0]}</h1></ContentCommon>);
+			if(!props.noemptymessage)
+			{
+				ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>Feed is empty</ContentCommonBody></ContentCommon>);
+			}
 		}
 
 		if ( !props.nomore && lastadded > 0 ) {

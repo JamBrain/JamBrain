@@ -611,7 +611,7 @@ export default class ViewContent extends Component {
 				return (
 					<ContentTimeline types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra}>
 						{ShowNavRoot}
-						<ContentTimeline types={['post']} subtypes={['news']} methods={['all']} minimized nomore limit={1} node={node} user={user} path={path} extra={extra} />
+						<ContentTimeline types={['post']} subtypes={['news']} methods={['all']} minimized nomore noemptymessage limit={1} node={node} user={user} path={path} extra={extra} />
 					</ContentTimeline>
 				);
 			}
