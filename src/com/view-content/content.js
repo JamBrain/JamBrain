@@ -457,7 +457,7 @@ export default class ViewContent extends Component {
 				
 				// Require games to be part of the content node passed
 				Methods.push('parent');
-				Methods.push('superparent');
+				//Methods.push('superparent');	// Why doesn't this work? It's unnecssary, but it should still work
 				
 				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />;
 
