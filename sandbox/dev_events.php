@@ -43,12 +43,20 @@ function loadEvents()
 	$suggestname = "Testumdare " . ($eventcount+1);  
 }
 loadEvents();
-print_r($events);
+//print_r($events);
+
+# Suggest event start/stop times
+$starttime = time();
+$endtime = $starttime + 48*60*60;
+$suggeststart = gmdate("Y-m-d\TH:i:s\Z", $starttime);
+$suggestend = gmdate("Y-m-d\TH:i:s\Z", $endtime);
+
+
 
 # Find the first user in the database
 $firstuserid = "<NO USERS>";
 $firstusername = "Add a user first";
-if($userlist = nodeFeed_GetByMethod( ["all"], null, ["user"], null, null, null, 1, 0))
+if($userlist = nodeFeed_GetByMethod( ["all", "reverse"], null, ["user"], null, null, null, 1, 0))
 {
 	if(count($userlist) > 0)
 	{
@@ -62,8 +70,8 @@ if($userlist = nodeFeed_GetByMethod( ["all"], null, ["user"], null, null, null, 
 
 # Get root node
 $rootnode = node_GetById(1, F_NODE_META);
-print("<br />");
-print_r($rootnode);
+//print("<br />");
+//print_r($rootnode);
 
 # Act on any requests
 echo http_build_query($_POST);
@@ -80,6 +88,10 @@ if($_POST)
 		$cmdparent = intval($_POST["eventRoot"]);
 		$cmdauthor = intval($_POST["eventAuthor"]);
 		$cmdcount = intval($_POST["eventCount"]);
+		$cmdstart = $_POST["eventStart"];
+		$cmdend = $_POST["eventEnd"];
+		$cmdcantheme = intval($_POST["canTheme"]);
+		$cmdthememode= intval($_POST["themeMode"]);
 		if($cmdcount === $eventcount) // only act on POST if conditions are as we expect.
 		{
 			// Create event node.
@@ -89,6 +101,12 @@ if($_POST)
 			
 			// Add metadata
 			nodeMeta_AddByNode($newevent, SH_NODE_META_PUBLIC, 'can-create', 'item/game');
+
+			nodeMeta_AddByNode($newevent, SH_NODE_META_PUBLIC, 'event-start', $cmdstart);
+			nodeMeta_AddByNode($newevent, SH_NODE_META_PUBLIC, 'event-end', $cmdend);
+
+			nodeMeta_AddByNode($newevent, SH_NODE_META_PUBLIC, 'can-theme', $cmdcantheme);
+			nodeMeta_AddByNode($newevent, SH_NODE_META_PUBLIC, 'theme-mode', $cmdthememode);
 			
 			// Make featured
 			nodeMeta_AddByNode(1, SH_NODE_META_PUBLIC, 'featured', "$newevent");
@@ -111,7 +129,7 @@ foreach($events as &$event)
 	$name = $event["name"];
 	$slug = $event["slug"];
 	// Naive url generation assumes root node parent
-	$url = "http://www.ludumdare.org/$slug";
+	$url = "http://ludumdare.org/$slug";
 
     // Load metadata
 	$metas = nodeMeta_ParseByNode($id);
@@ -136,6 +154,11 @@ foreach($events as &$event)
 Event Name: <input type="text" name="eventName" value="<?=$suggestname?>"/><br />
 Event Author: <input type="text" name="eventAuthor" value="<?=$firstuserid?>"/> (<?=$firstuserid?> =&gt; <?=$firstusername?>)<br />
 Event Root ID: <input type="text" name="eventRoot" value="1"/><br />
+Event Start Time: <input type="text" name="eventStart" value="<?=$suggeststart?>"/> (Default: Now)<br />
+Event End Time: <input type="text" name="eventEnd" value="<?=$suggestend?>"/> (Default: Now+48h)<br />
+can-theme: <input type="text" name="canTheme" value="1"/><br />
+theme-mode: <input type="text" name="themeMode" value="1"/><br />
+
 <input type="hidden" name="eventCount" value="<?=$eventcount?>"/>
 <input type="submit" name="command" value="Add Event"/>
 </form>
