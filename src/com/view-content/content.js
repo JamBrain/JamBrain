@@ -455,6 +455,10 @@ export default class ViewContent extends Component {
 				
 				SubFilter = EvalFilter2(SubFilter);
 				
+				// Require games to be part of the content node passed
+				Methods.push('parent');
+				Methods.push('superparent');
+				
 				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />;
 
 //				let SubSubType = 'compo+jam';	// alphabetical
