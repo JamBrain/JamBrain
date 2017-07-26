@@ -124,8 +124,12 @@ export default class Renderer {
     );
   };
 
-  emoji(text) {
-    return (<img class="emoji" alt={text} title={':' + text + ':'} src={window.emoji.shortnameToURL(text.join(''))}/>);
+  emoji( text ) {
+  	let shortname = window.emoji.shortnameToURL(text.join(''));
+  	if ( shortname ) {
+      return <img class="emoji" alt={text} title={':'+text+':'} src={shortname} />;
+    }
+    return ':'+text+':';
   };
 
   //email(text) {
