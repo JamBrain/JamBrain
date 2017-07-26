@@ -468,7 +468,7 @@ export default class ContentItem extends Component {
 				
 				//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
 				
-				ResultLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Place}</strong><sup>{positionSuffix(Place)}</sup> ({Average} average from {Count} ratings)</div>);
+				ResultLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Place}</strong><sup>{this.positionSuffix(Place)}</sup> ({Average} average from {Count} ratings)</div>);
 			}
 
 			ShowGrade = (
