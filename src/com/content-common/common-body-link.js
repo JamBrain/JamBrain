@@ -12,32 +12,38 @@ export default class ContentCommonBodyField extends Component {
 	}
 
 	render( props ) {
-		var Class = ["content-common-body","-field"];
-
-//		var Prefix = null;
-//		if ( props.titleIcon ) {
-//			Prefix = <SVGIcon baseline small>{props.titleIcon}</SVGIcon>;
-//		}
+		var Class = ["content-common-body","-link"];
 
 		var Limit = 64;
-		var Placeholder = props.placeholder ? props.placeholder : 'Field';
+		var NamePlaceholder = props.namePlaceholder ? props.namePlaceholder : 'Name';
+		var UrlPlaceholder = props.urlPlaceholder ? props.urlPlaceholder : 'Url';
 		
 		if (props.editing) {
 			Class.push('-editing');
 			return (
 				<div class={cN(Class, props.class)}>
-					<div class="-label">{props.label ? props.label : ""}</div>
-					<InputText 
-						value={props.value} 
+					<InputText class="-name"
+						value={props.name} 
 						onmodify={props.onmodify}
-						placeholder={Placeholder}
+						placeholder={NamePlaceholder}
+						max={Limit}
+					/>
+					<InputText class="-url"
+						value={props.url} 
+						onmodify={props.onmodify}
+						placeholder={UrlPlaceholder}
 						max={Limit}
 					/>
 				</div>
 			);
 		}
 		else {
-			return <div class={cN(Class, props.class)}>{props.value}</div>;
+			return (
+				<div class={cN(Class, props.class)}>
+					{props.name}
+					{props.url}
+				</div>
+			);
 		}
 	}
 }

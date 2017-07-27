@@ -7,6 +7,9 @@ import IMG2 							from 'com/img2/img2';
 import ButtonBase						from 'com/button-base/base';
 
 import ContentCommonBody				from 'com/content-common/common-body';
+import ContentCommonBodyField	        from 'com/content-common/common-body-field';
+import ContentCommonBodyLink	        from 'com/content-common/common-body-link';
+import ContentCommonBodyTitle	        from 'com/content-common/common-body-title';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
@@ -166,6 +169,24 @@ export default class ContentItem extends Component {
 					this.setState({ 'error': err });
 				});
 		}		
+	}
+
+	onSetUrl( e ) {
+		var node = this.props.node;
+		var user = this.props.user;
+
+		if ( !this.props.user )
+			return null;
+
+		let Name = 'url';
+		let Data = {};
+		Data[Name] = e.target.value;
+
+		return $NodeMeta.Add(node.id, Data);
+	}
+
+	onSave( e ) {
+		console.log("Save event received in child");
 	}
 
 	render( props, state ) {
@@ -471,19 +492,6 @@ export default class ContentItem extends Component {
 			);			
 		}
 		
-		var ShowPrePub = (
-			<div style="background: #E53; color: #FFF; padding: 0 0.5em;"><ContentCommonBody>
-				<strong>Hey folks!</strong> We're still finishing the data fields below. Please come back and update your page. We'll have new things fixed and added reguraly.<br />
-				<br />
-				I've included summaries of what to expect for each. In the mean time, I recommend you add your links above, and a screenshot or two. Here's an example:<br />
-				<br />
-				<div style="background:#FFF; color:#000; padding: 0.5em; border-radius: 0.25em"><strong>Sample Game:</strong> <NavLink blank href="/events/ludum-dare/38/ludum-dare-dot-com">Ludumdare.com</NavLink></div>
-				<br />
-				We'll have this cleaned up soon!
-			</ContentCommonBody></div>
-		);
-		
-		//'
 		
 		var ShowOptOut = null;
 		if ( parent ) {
@@ -559,15 +567,36 @@ export default class ContentItem extends Component {
 			);
 		}
 		
-		//'
-
 		var ShowLinks = null;
 		if ( true ) {
 			ShowLinks = (
 				<ContentCommonBody class="-links">
 					<div class="-label">Links</div>
-					<div>Download Links</div>
-					<div>Source Code</div>
+					<ContentCommonBodyLink
+						namePlaceholder="Web"
+						urlPlaceholder="http://example.com/web.html"
+						editing={true}
+					/>
+					<ContentCommonBodyLink
+						namePlaceholder="Windows"
+						urlPlaceholder="http://example.com/windows.exe"
+						editing={true}
+					/>
+					<ContentCommonBodyLink
+						namePlaceholder="Mac"
+						urlPlaceholder="http://example.com/mac.app"
+						editing={true}
+					/>
+					<ContentCommonBodyLink
+						namePlaceholder="Linux"
+						urlPlaceholder="http://example.com/linux.tar.gz"
+						editing={true}
+					/>
+					<ContentCommonBodyLink
+						namePlaceholder="Source"
+						urlPlaceholder="http://example.com/source.zip"
+						editing={true}
+					/>
 					<br />
 					If you're new to Ludum Dare, you should know we don't host your downloads, just links to them. For recommendations where and how to host your files, check out the Hosting Guide:<br />
 					<br />
@@ -587,14 +616,6 @@ export default class ContentItem extends Component {
 					<div><del>Hover Video - A GIF or silent MP4 video to play while hovering over Cover art.</del></div>
 					<div><del>Embed - This is coming later</del></div>
 					<br />
-					<div class="-label">Links</div>
-					<div>Download Links</div>
-					<div>Source Code</div>
-					<br />
-					If you're new to Ludum Dare, you should know we don't host your downloads, just links to them. For recommendations where and how to host your files, check out the Hosting Guide:<br />
-					<br />
-					<NavLink blank href="/events/ludum-dare/hosting-guide">/ludum-dare/hosting-guide</NavLink><br />
-					<br />
 				</ContentCommonBody>
 			);
 		}
@@ -605,10 +626,11 @@ export default class ContentItem extends Component {
 				{ShowEventPicker}
 				{ShowOptOut}
 				{ShowImages}
-				{ShowPrePub}
+				{ShowLinks}
 				{ShowUnfinished}
 			</div>
 		);
+		props.onSave = this.onSave;
 //				{ShowLinks}
 		
 		props.viewonly = (

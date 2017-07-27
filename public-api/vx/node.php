@@ -28,6 +28,7 @@ const VALID_META = [
 		'grade-06-out' => ['length' => 1],
 		'grade-07-out' => ['length' => 1],
 		'grade-08-out' => ['length' => 1],
+		'url' => ['length' => 256],
 	],
 	'user' => [
 		'real-name' => ['length' => 64],
@@ -560,7 +561,7 @@ switch ( $action ) {
 			else {
 				$name = $node['name'];
 			}
-				
+				 
 			if ( isset($_POST['body']) ) {
 				$body = coreSanitize_Body(substr($_POST['body'], 0, 32768));
 				if ( $body !== $node['body'] )
