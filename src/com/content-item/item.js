@@ -177,36 +177,35 @@ export default class ContentItem extends Component {
 		}		
 	}
 
-	onSetUrl( e ) {
+	onModifyLinkName( ix, e ) {
+		names = this.state.linkNames;
+		names[ix] = e.target.value;
+		this.setState({'modified': true, 'linkNames': names});
+	}
+
+	onModifyLinkUrl( ix, e ) {
+		urls = this.state.linkUrls;
+		urls[ix] = e.target.value;
+		this.setState({'modified': true, 'linkUrls': urls});
+	}
+
+	onSave( e ) {
+		console.log("Save?");
+
 		var node = this.props.node;
 		var user = this.props.user;
 
 		if ( !this.props.user )
 			return null;
 
-		let Name = 'url';
 		let Data = {};
-		Data[Name] = e.target.value;
+		for (let i = 0; i < 5; i ++) {
+			// TODO: Support more than 5 links?
+			Data['link-0' + i + '-name'] = this.state.linkNames[i];
+			Data['link-0' + i + '-url'] = this.state.linkUrls[i];
+		}
 
 		return $NodeMeta.Add(node.id, Data);
-	}
-
-	onModifyLinkName( id, e ) {
-		names = this.state.linkNames;
-		console.log(names);
-		names[id] = e.target.value;
-		this.setState({'modified': true, 'linkNames': names});
-	}
-
-	onModifyLinkUrl( id, e ) {
-		urls = this.state.linkUrls;
-		console.log(urls);
-		urls[id] = e.target.value;
-		this.setState({'modified': true, 'linkUrls': urls});
-	}
-
-	onSave( e ) {
-		console.log("Save event received in child");
 	}
 
 	render( props, state ) {
@@ -589,6 +588,7 @@ export default class ContentItem extends Component {
 		
 		var ShowLinks = null;
 		if ( true ) {
+			// TODO: Refactor this into a loop...
 			ShowLinks = (
 				<ContentCommonBody class="-links">
 					<div class="-label">Links</div>
