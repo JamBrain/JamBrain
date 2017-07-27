@@ -35,6 +35,9 @@ if ( !$EVENT_NODE ) {
 	echo "'ludumdare-event' is zero or not set ($EVENT_NODE)\n";
 	die;
 }
+else {
+	echo "EVENT_NODE: $EVENT_NODE\n";
+}
 
 $COMMAND = array_shift($argv);
 if ( $COMMAND === "dupes" ) {
@@ -86,7 +89,7 @@ if ( $COMMAND === "dupes" ) {
 }
 else if ( $COMMAND === "score" ) {
 	print "\n*** WARNING ***\n\n";
-	print "You are about to flag all duplicate ideas. This will destroy any manual changes.\n";
+	print "You are about to score the ideas.\n";
 	print "\nAre you sure [type 'YES']? ";
 	flush();
 	$input = trim(fgets(STDIN));

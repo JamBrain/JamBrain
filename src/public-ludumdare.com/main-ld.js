@@ -17,6 +17,8 @@ import DialogPassword					from 'com/dialog-password/password';
 import DialogAuth						from 'com/dialog-auth/auth';
 import DialogSession					from 'com/dialog-session/session';
 import DialogSavebug					from 'com/dialog-savebug/savebug';
+import DialogUserConfirm				from 'com/dialog-user/user-confirm';
+
 import DialogSubmit						from 'com/dialog-submit/submit';
 import DialogTV							from 'com/dialog-tv/tv';
 
@@ -76,13 +78,19 @@ class Main extends Component {
 			// Active User
 			'user': null
 		};
-
+		
 		window.addEventListener('hashchange', this.onHashChange.bind(this));
 		window.addEventListener('navchange', this.onNavChange.bind(this));
 		window.addEventListener('popstate', this.onPopState.bind(this));
 
 		this.onLogin = this.onLogin.bind(this);
+		
+//		this.doEverything();
 	}
+	
+//	async doEverything() {
+//        var test = await new Promise(resolve => {setTimeout(pepper => { console.log("pepper"); resolve(); }, 1000); console.log("peter");});
+//    }
 
 	componentDidMount() {
 		this.fetchData();
@@ -137,6 +145,8 @@ class Main extends Component {
 					case 'user-login':
 						props.onlogin = this.onLogin;
 						return <DialogLogin {...props} />;
+					case 'user-confirm':
+						return <DialogUserConfirm {...props} />;
 					case 'user-activate':
 						return <DialogActivate {...props} />;
 					case 'user-register':
@@ -147,6 +157,7 @@ class Main extends Component {
 						return <DialogReset {...props} />;
 					case 'user-password':
 						return <DialogPassword {...props} />;
+
 					case 'expired':
 						return <DialogSession {...props} />;
 					case 'savebug':
