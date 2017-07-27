@@ -24,13 +24,13 @@ export default class ContentCommonBodyField extends Component {
 				<div class={cN(Class, props.class)}>
 					<InputText class="-name"
 						value={props.name} 
-						onmodify={props.onmodify}
+						onmodify={props.onModifyName}
 						placeholder={NamePlaceholder}
 						max={Limit}
 					/>
 					<InputText class="-url"
 						value={props.url} 
-						onmodify={props.onmodify}
+						onmodify={props.onModifyUrl}
 						placeholder={UrlPlaceholder}
 						max={Limit}
 					/>

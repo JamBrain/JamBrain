@@ -27,8 +27,14 @@ export default class ContentItem extends Component {
 		
 		this.state = {
 			'parent': null,
-			'grade': null
+			'grade': null,
+			'linkNames': [],
+			'linkUrls': []
 		};
+		for (let i = 0; i < 5; i ++) {
+			this.state.linkNames[i] = '';
+			this.state.linkUrls[i] = '';
+		}
 
 		this.onSetJam = this.onSetJam.bind(this);
 		this.onSetCompo = this.onSetCompo.bind(this);
@@ -183,6 +189,20 @@ export default class ContentItem extends Component {
 		Data[Name] = e.target.value;
 
 		return $NodeMeta.Add(node.id, Data);
+	}
+
+	onModifyLinkName( id, e ) {
+		names = this.state.linkNames;
+		console.log(names);
+		//names[id] = e.target.value;
+		//this.setState({'modified': true, 'linkNames': names});
+	}
+
+	onModifyLinkUrl( id, e ) {
+		urls = this.state.linkUrls;
+		console.log(urls);
+		//urls[id] = e.target.value;
+		//this.setState({'modified': true, 'linkUrls': linkNames});
 	}
 
 	onSave( e ) {
@@ -573,29 +593,49 @@ export default class ContentItem extends Component {
 				<ContentCommonBody class="-links">
 					<div class="-label">Links</div>
 					<ContentCommonBodyLink
+						name={state.linkNames[0]}
+						url={state.linkUrls[0]}
 						namePlaceholder="Web"
 						urlPlaceholder="http://example.com/web.html"
 						editing={true}
+						onModifyName={this.onModifyLinkName.bind(this, 0)}
+						onModifyUrl={this.onModifyLinkUrl.bind(this, 0)}
 					/>
 					<ContentCommonBodyLink
+						name={state.linkNames[1]}
+						url={state.linkUrls[1]}
 						namePlaceholder="Windows"
 						urlPlaceholder="http://example.com/windows.exe"
 						editing={true}
+						onModifyName={this.onModifyLinkName.bind(this, 1)}
+						onModifyUrl={this.onModifyLinkUrl.bind(this, 1)}
 					/>
 					<ContentCommonBodyLink
+						name={state.linkNames[2]}
+						url={state.linkUrls[2]}
 						namePlaceholder="Mac"
 						urlPlaceholder="http://example.com/mac.app"
 						editing={true}
+						onModifyName={this.onModifyLinkName.bind(this, 2)}
+						onModifyUrl={this.onModifyLinkUrl.bind(this, 2)}
 					/>
 					<ContentCommonBodyLink
+						name={state.linkNames[3]}
+						url={state.linkUrls[3]}
 						namePlaceholder="Linux"
 						urlPlaceholder="http://example.com/linux.tar.gz"
 						editing={true}
+						onModifyName={this.onModifyLinkName.bind(this, 3)}
+						onModifyUrl={this.onModifyLinkUrl.bind(this, 3)}
 					/>
 					<ContentCommonBodyLink
+						name={state.linkNames[4]}
+						url={state.linkUrls[4]}
 						namePlaceholder="Source"
 						urlPlaceholder="http://example.com/source.zip"
 						editing={true}
+						onModifyName={this.onModifyLinkName.bind(this, 4)}
+						onModifyUrl={this.onModifyLinkUrl.bind(this, 4)}
 					/>
 					<br />
 					If you're new to Ludum Dare, you should know we don't host your downloads, just links to them. For recommendations where and how to host your files, check out the Hosting Guide:<br />
