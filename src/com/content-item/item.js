@@ -194,15 +194,15 @@ export default class ContentItem extends Component {
 	onModifyLinkName( id, e ) {
 		names = this.state.linkNames;
 		console.log(names);
-		//names[id] = e.target.value;
-		//this.setState({'modified': true, 'linkNames': names});
+		names[id] = e.target.value;
+		this.setState({'modified': true, 'linkNames': names});
 	}
 
 	onModifyLinkUrl( id, e ) {
 		urls = this.state.linkUrls;
 		console.log(urls);
-		//urls[id] = e.target.value;
-		//this.setState({'modified': true, 'linkUrls': linkNames});
+		urls[id] = e.target.value;
+		this.setState({'modified': true, 'linkUrls': urls});
 	}
 
 	onSave( e ) {
