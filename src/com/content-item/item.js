@@ -345,24 +345,35 @@ export default class ContentItem extends Component {
 					let Line = Lines[idx];
 					
 					let Title = Line.value;
-					let Score = 0;
+					let Score = -1;
 					if ( node.grade ) {
 						Score = node.grade[Line.key];
 					}
 					
 					//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
 					
-					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
+					if (Score >= 0) {
+						VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
+					}
 				}
 
-				ShowGrade = (
-					<ContentCommonBody class="-rating">
-						<div class="-header">Total Ratings</div>
-						<div class="-subtext">Votes on your game so far</div>
-						<div class="-items">{VoteLines}</div>
-						<div class="-footer">To get a score at the end, you need about <strong>20</strong> ratings in a category. To get ratings: play, rate, and leave feedback on games. Every game you rate and leave quality feedback on scores you <strong>Coolness</strong> points. Having a high "Coolness" prioritizes your game.</div>
-					</ContentCommonBody>
-				);
+				if (VoteLines.length > 0) {
+					ShowGrade = (
+						<ContentCommonBody class="-rating">
+							<div class="-header">Total Ratings</div>
+							<div class="-subtext">Votes on your game so far</div>
+							<div class="-items">{VoteLines}</div>
+							<div class="-footer">To get a score at the end, you need about <strong>20</strong> ratings in a category. To get ratings: play, rate, and leave feedback on games. Every game you rate and leave quality feedback on scores you <strong>Coolness</strong> points. Having a high "Coolness" prioritizes your game.</div>
+						</ContentCommonBody>
+					);
+				} else {
+					ShowGrade = (
+						<ContentCommonBody class="-rating">
+							<div class="-header">Total Ratings</div>
+							<div class="-subtext"><strong>Could not retrieve votes on your game at this moment, please try again later and notify admin if it persists.</strong></div>
+						</ContentCommonBody>
+					);					
+				}
 			}
 			else if ( featured && featured.what_node && nodeKeys_HasPublishedParent(featured.what_node, node.parent) ) {
 				let Lines = [];
@@ -451,34 +462,51 @@ export default class ContentItem extends Component {
 				}
 			}
 			
+			let AnyResults = false;
 			let ResultLines = [];
 			for ( let idx = 0; idx < Lines.length; idx++ ) {
 				let Line = Lines[idx];
 				
 				let Title = Line.value;
 				let Place = "N/A";
-				if ( node.magic && node.magic[Line.key+'-result'] )
+				if ( node.magic && node.magic[Line.key+'-result'] ) {
 					Place = node.magic[Line.key+'-result'];
-				let Average = 0;
-				if ( node.magic && node.magic[Line.key+'-average'] )
+					AnyResults = true;
+				}
+				let Average = "N/A";
+				if ( node.magic && node.magic[Line.key+'-average'] ) {
 					Average = node.magic[Line.key+'-average'];
-				let Count = 0;
-				if ( node.grade && node.grade[Line.key] )
+					AnyResults = true;
+				}
+				let Count = "N/A";
+				if ( node.grade && node.grade[Line.key] ) {
 					Count = node.grade[Line.key];
+					AnyResults = true;
+				}
 				
 				//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
 				
 				ResultLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Place}</strong><sup>{this.positionSuffix(Place)}</sup> ({Average} average from {Count} ratings)</div>);
 			}
 
-			ShowGrade = (
-				<ContentCommonBody class="-rating">
-					<div class="-header">Results</div>
-					<div class="-subtext">Final results</div>
-					<div class="-items">{ResultLines}</div>
-					<div class="-footer">When a line is <strong>N/A</strong>, it means there weren't enough ratings for a reliable score. Don't forget to play and rate other people's games during events to prioritize your game.</div>
-				</ContentCommonBody>
-			);			
+			if (AnyResults === true) {
+				ShowGrade = (
+					<ContentCommonBody class="-rating">
+						<div class="-header">Results</div>
+						<div class="-subtext">Final results</div>
+						<div class="-items">{ResultLines}</div>
+						<div class="-footer">When a line is <strong>N/A</strong>, it means there weren't enough ratings for a reliable score. Don't forget to play and rate other people's games during events to prioritize your game and remember to opt out of categories that don't apply to your game.</div>
+					</ContentCommonBody>
+				);
+			} else {
+				ShowGrade = (
+					<ContentCommonBody class="-rating">
+						<div class="-header">Results</div>
+						<div class="-subtext">Final results</div>
+						<div class="-footer">Could not find any results. This either means the server is taking too long to respond, or there were too few votes on the game to provide a reliable score. Remember that it is important to play and rate other's games during Ludum Dare to get any votes and comments on your own game.</div>
+					</ContentCommonBody>
+				);				
+			}
 		}
 		
 		var ShowPrePub = (
