@@ -4,13 +4,16 @@
 # Settings #
 SRC					?=	src
 OUT					?=	.output
+#OUT					?=	$(HOME)/.starship
 .BUILD				?=	.build
+NODEJS				?=	node_modules
 
 # Use 'TARGET=public-blah' if you want to build a specific build "blah" #
 ifdef TARGET
 ALL_MAKEFILES		:=	$(SRC)/$(subst /,,$(TARGET))/Makefile
 endif # BUILD
 
+# TODO: REMOVE THIS
 STATIC_DOMAIN		?=	static.jammer.work
 
 # Copy un-minified files
@@ -63,34 +66,34 @@ TARGET_DEPS			:=	$(OUT_FOLDERS) $(TARGET_FILES)
 
 # Tools #
 ESLINT_ARGS			:=	--config src/config/eslint.config.json
-ESLINT				=	eslint $(1) $(ESLINT_ARGS)
+ESLINT				=	$(NODEJS)/eslint/bin/eslint.js $(1) $(ESLINT_ARGS)
 # Ecmascript Linter: http://eslint.org/
 BUBLE_ARGS			:=	--no modules --jsx h --objectAssign Object.assign
-BUBLE				=	buble $(BUBLE_ARGS) $(1) -o $(2)
+BUBLE				=	$(NODEJS)/buble/bin/buble $(BUBLE_ARGS) $(1) -o $(2)
 # ES6 Compiler: https://buble.surge.sh/guide/
 ROLLUP_ARGS			:=	-c src/config/rollup.config.js
-ROLLUP				=	rollup $(ROLLUP_ARGS) $(1) > $(2)
+ROLLUP				=	$(NODEJS)/rollup/bin/rollup $(ROLLUP_ARGS) $(1) > $(2)
 # ES6 Include/Require Resolver: http://rollupjs.org/guide/
 MINIFY_JS_RESERVED	:=	VERSION_STRING,STATIC_DOMAIN
 MINIFY_JS_ARGS		:=	--compress --mangle -r "$(MINIFY_JS_RESERVED)"
-MINIFY_JS			=	uglifyjs $(MINIFY_JS_ARGS) -o $(2) -- $(1)
+MINIFY_JS			=	$(NODEJS)/uglify-js/bin/uglifyjs $(MINIFY_JS_ARGS) -o $(2) -- $(1)
 # JS Minifier: https://github.com/mishoo/UglifyJS2
 
 LESS_COMMON			:=	--global-var='STATIC_DOMAIN=$(STATIC_DOMAIN)' --include-path=$(MAIN_FOLDER)
 LESS_ARGS			:=	--autoprefix
-LESS_DEP			=	lessc $(LESS_COMMON) --depends $(1) $(2)>$(2).dep
-LESS				=	lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
+LESS_DEP			=	$(NODEJS)/less/bin/lessc $(LESS_COMMON) --depends $(1) $(2)>$(2).dep
+LESS				=	$(NODEJS)/less/bin/lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
 # CSS Compiler: http://lesscss.org/
-MINIFY_CSS			=	cat $(1) | cleancss -o $(2)
+MINIFY_CSS			=	cat $(1) | $(NODEJS)/clean-css-cli/bin/cleancss -o $(2)
 # CSS Minifier: https://github.com/jakubpawlowicz/clean-css/
 
 SVGO_ARGS			:=	-q
-SVGO				=	svgo $(SVGO_ARGS) -i $(1) -o $(2)
+SVGO				=	$(NODEJS)/svgo/bin/svgo $(SVGO_ARGS) -i $(1) -o $(2)
 # SVG "Compiler", same as the minifier: https://github.com/svg/svgo
 SVG_PACK			=	src/tools/svg-sprite-pack $(1) > $(2)
 # Mike's SVG Sprite Packer: https://github.com/povrazor/svg-sprite-tools
 MINIFY_SVG_ARGS		:=	--multipass --disable=cleanupIDs -q
-MINIFY_SVG			=	svgo $(MINIFY_SVG_ARGS) -i $(1) -o $(2)
+MINIFY_SVG			=	$(NODEJS)/svgo/bin/svgo $(MINIFY_SVG_ARGS) -i $(1) -o $(2)
 # SVG Minifier: https://github.com/svg/svgo
 
 SIZE				=	cat $(1) | wc -c

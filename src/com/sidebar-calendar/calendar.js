@@ -4,57 +4,102 @@ import SVGIcon 							from 'com/svg-icon/icon';
 export default class SidebarCalendar extends Component {
 	constructor( props ) {
 		super(props);
+		this.state.date = new Date();
+	}
+	
+	componentDidMount() {
+		this.minuteTick();
+	}
+	
+	componentWillUnmount() {
+		clearTimeout(this.timer);
+	}
+	
+	minuteTick() {
+		/* Update the current time, which will rerender if the day changes */
+		let currentDate = new Date();
+		this.setState({ date: currentDate });
+		
+		/* Schedule an event to occur at the next minute change. */
+		var delayTime = 60000 - currentDate.getMilliseconds() - currentDate.getSeconds()*1000;
+		if ( delayTime < 1000 ) {
+			delayTime = 1000;
+		}
+		this.timer = setTimeout(() => { this.minuteTick(); }, delayTime);
 	}
 
 	shouldComponentUpdate( nextProps, nextState ) {
 		// At the moment, there are no external events that should trigger an update (I ignore my props)
+		
+		// But still update if the day changes.
+		if ( nextState.date.getDate() != this.state.date.getDate() ) {
+			return true; 
+		}
 		return false;
 	}
 
 	genCalendar( today, rows ) {
 		let cols = 7;
+		/* Shifts the days to start with a Monday. */
+		let startMonday = false; 
+		
 		let thisWeekday = today.getDay();
 		let thisDay = today.getDate();
 		let thisMonth = today.getMonth();
 		let thisYear = today.getFullYear();
+		let originalMonth = thisMonth;
+		
+		let nextDay = thisDay - thisWeekday;
+		
+		/* Advance the first day in the display to Monday for regions which prefer this style */
+		if ( startMonday ) {
+			nextDay++;
+			if ( nextDay > thisDay ) {
+			  nextDay -= 7;
+			}
+		}
+
+		/* Normalize date to get the correct year and month for the starting day. */
+		let startDay = new Date(thisYear, thisMonth, nextDay);
+		nextDay = startDay.getDate();
+		thisYear = startDay.getFullYear();
+		thisMonth = startDay.getMonth();
+		let dayOfWeek = startDay.getDay();
 		
 		/* Months and Weeks start at 0. Years and Days start at 1. Using 0th day is like -1 */
 		let monthEndsOn = new Date(thisYear, thisMonth+1, 0).getDate();
-		let nextDay = thisDay - thisWeekday;
-		let toggleMonth = false;
-		
-		if ( nextDay < 1 ) {
-			let lastMonth = new Date(thisYear, thisMonth, 0);
-			monthEndsOn = lastMonth.getDate();
-			//console.log( lastMonth.getFullYear(), lastMonth.getMonth(), lastMonth.getDate(), lastMonth.getDay() );
-			nextDay = lastMonth.getDate() - lastMonth.getDay();
-			toggleMonth = true;
-		}
 		
 		// TODO: Insert scheduled events here
 		let data = Array(...Array(rows)).map(() => Array.from( Array(cols),function(){
 			let ret = {
 				'year': thisYear,
 				'month': thisMonth,
-				'day': nextDay
+				'day': nextDay,
+				'weekday': dayOfWeek
 			};
 			
 			if ( nextDay === thisDay ) {
 				ret['selected'] = true;
 			}
-			if ( toggleMonth ) {
+			if ( (originalMonth ^ thisMonth) & 1 === 1 ) {
 				ret['toggle'] = true;
+			}
+			
+			dayOfWeek++;
+			if ( dayOfWeek > 6 ) {
+				dayOfWeek = 0;
 			}
 			
 			nextDay++;
 			if ( nextDay > monthEndsOn ) {
 				nextDay -= monthEndsOn;
 				thisMonth++;
-				if ( thisMonth > 12 ) {
+				if ( thisMonth >= 12 ) {
 					thisYear++;
-					thisMonth = 1;
+					thisMonth = 0;
 				}
-				toggleMonth = !toggleMonth;
+				/* Determine how many days are in this month to allow the calendar generation to proceed indefinitely. */
+				monthEndsOn = new Date(thisYear, thisMonth+1, 0).getDate();
 			}
 			
 			return ret;
@@ -71,15 +116,18 @@ export default class SidebarCalendar extends Component {
 			if ( col.selected ) {
 				props.class.push('selected');
 			}
-			if ( col.toggle === true ) {
+			if ( col.toggle ) {
 				props.class.push('month');
+			}
+			if ( col.weekday == 0 || col.weekday == 6 ) {
+				props.class.push('weekend');
 			}
 			props.onclick = (e) => {
 				console.log('cal: ',col); 
-				window.location.hash = "#cal/"+col.year+"/"+col.month+"/"+col.day;
+				window.location.hash = "#cal/"+col.year+"/"+(col.month+1)+"/"+col.day;
 			};
 			// In case Intl extensions are not available
-			props.title = col.month+"-"+col.day+"-"+col.year;
+			props.title = (col.month+1)+"-"+col.day+"-"+col.year;
 			if ( window.Intl ) {
 				// http://stackoverflow.com/a/18648314/5678759
 				let objDate = new Date(col.year, col.month, col.day);
@@ -89,7 +137,7 @@ export default class SidebarCalendar extends Component {
 			// Hack
 			var ShowIcon = null;
 			if ( col.year == 2017 && col.month == 6 && (col.day >= 28 && col.day <= 31) ) {
-				if ( col.day === 21 ) {
+				if ( col.day === 28 ) {
 					ShowIcon = <SVGIcon class="-icon">trophy</SVGIcon>;
 				}
 				props.class.push('scheduled');
@@ -135,7 +183,7 @@ export default class SidebarCalendar extends Component {
 		// TODO: Adjust noted days based on timezone
 		// TODO: Adjust selected day/week when time itself rolls over
 
-		let data = this.genCalendar(new Date(), rows ? rows : 3);
+		let data = this.genCalendar(this.state.date, rows ? rows : 3);
 		
 		return (
 			<div class="sidebar-base sidebar-calendar">

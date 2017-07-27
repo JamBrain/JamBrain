@@ -67,10 +67,8 @@
 
 			&.scheduled,
 			&.scheduled.month,
-			&:first-child.scheduled,
-			&:last-child.scheduled,
-			&:first-child.scheduled.month,
-			&:last-child.scheduled.month {
+			&.weekend.scheduled,
+			&.weekend.scheduled.month {
 				background: @CAL_SCHEDULED_BG;
 				color: @CAL_SCHEDULED_COL;
 				border: @CAL_BORDER solid transparent;
@@ -85,10 +83,8 @@
 			/* Hover */
 			&:hover,
 			&:focus,
-			&:first-child:hover,
-			&:first-child:focus,
-			&:last-child:hover,
-			&:last-child:focus {
+			&.weekend:hover,
+			&.weekend:focus {
 				z-index:10;
 
 				&,
@@ -102,14 +98,12 @@
 				/*transform: scale(1.2, 1.2);*/
 			}
 			&:active,
-			&:first-child:active,
-			&:last-child:active {
+			&.weekend:active {
 				/*transform: scale(0.9, 0.9);*/
 			}
 
-			/* Sunday and Monday */
-			&:first-child,
-			&:last-child {
+			/* Saturday and Sunday */
+			&.weekend {
 				border: @CAL_BORDER solid @CAL_CMONTH_BG!important;/*@MAJOR_MUTE_D;*/
 				color: @CAL_CMONTH_BG;/*@MAJOR_MUTE_D;*/
 				background: @CAL_CMONTH_COL; /*@MAJOR_MUTE_D4;/*@MAJOR_COLOR_MUTE2;*/
@@ -127,8 +121,7 @@
 		}
 		& > .selected {
 			&,
-			&:first-child,
-			&:last-child {
+			&.weekend {
 				background: @COL_NLLLLL;/*@MAJOR_MUTE_L2;*/
 				color: @COL_NLL;/*@MAJOR_LIGHT;/*@MAJOR_MUTE_D3;*/
 				border: @CAL_BORDER solid transparent;/*@MAJOR_LIGHT;*/

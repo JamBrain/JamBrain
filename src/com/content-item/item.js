@@ -140,6 +140,16 @@ export default class ContentItem extends Component {
 		}
 	}
 	
+	positionSuffix(position) {
+	    let j = position % 10;
+		let k = position % 100;
+	
+	    if (j == 1 && k != 11) return "st";
+	    if (j == 2 && k != 12) return "nd";
+	    if (j == 3 && k != 13) return "rd";
+	    return "th";
+	}
+	
 	onUpload( name, e ) {
 		var node = this.props.node;
 		var user = this.props.user;
@@ -498,7 +508,7 @@ export default class ContentItem extends Component {
 				
 				//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
 				
-				ResultLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Place}</strong> ({Average} average in {Count} ratings)</div>);
+				ResultLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Place}</strong><sup>{this.positionSuffix(Place)}</sup> ({Average} average from {Count} ratings)</div>);
 			}
 
 			ShowGrade = (

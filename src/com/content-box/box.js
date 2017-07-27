@@ -130,6 +130,11 @@ export default class ContentBox extends Component {
 							ShowTrophies.push(<span class="-third"><SVGIcon>trophy</SVGIcon></span>);
 					}
 				}
+//				ShowTrophies.sort(function(a, b) {
+//					sortOrder = ['-first', '-second', '-third'];
+//					regexPattern = /class=\"([^\"]+)/;
+//					return sortOrder.indexOf(regexPattern.exec(a)[1]) - sortOrder.indexOf(regexPattern.exec(b)[1]); 
+//				});
 			}
 
 			return (

@@ -455,6 +455,10 @@ export default class ViewContent extends Component {
 				
 				SubFilter = EvalFilter2(SubFilter);
 				
+				// Require games to be part of the content node passed
+				Methods.push('parent');
+				//Methods.push('superparent');	// Why doesn't this work? It's unnecssary, but it should still work
+				
 				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />;
 
 //				let SubSubType = 'compo+jam';	// alphabetical
@@ -611,7 +615,7 @@ export default class ViewContent extends Component {
 				return (
 					<ContentTimeline types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra}>
 						{ShowNavRoot}
-						<ContentTimeline types={['post']} subtypes={['news']} methods={['all']} minimized nomore limit={1} node={node} user={user} path={path} extra={extra} />
+						<ContentTimeline types={['post']} subtypes={['news']} methods={['all']} minimized nomore noemptymessage limit={1} node={node} user={user} path={path} extra={extra} />
 					</ContentTimeline>
 				);
 			}
