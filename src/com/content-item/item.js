@@ -277,11 +277,6 @@ export default class ContentItem extends Component {
 					onModifyName={this.onModifyLinkName.bind(this, 4)}
 					onModifyUrl={this.onModifyLinkUrl.bind(this, 4)}
 				/>
-				<br />
-				If you're new to Ludum Dare, you should know we don't host your downloads, just links to them. For recommendations where and how to host your files, check out the Hosting Guide:<br />
-				<br />
-				<NavLink blank href="/events/ludum-dare/hosting-guide">/ludum-dare/hosting-guide</NavLink><br />
-				<br />
 			</ContentCommonBody>
 		);
 	}
@@ -670,6 +665,19 @@ export default class ContentItem extends Component {
 			ShowLinkEntry = this.makeLinks(true /* editing */);
 		}
 
+		var ShowUploadTips = null;
+		if ( true ) {
+			ShowUploadTips = (
+				<ContentCommonBody>
+					<br />
+					If you're new to Ludum Dare, you should know we don't host your downloads, just links to them. For recommendations where and how to host your files, check out the Hosting Guide:<br />
+					<br />
+					<NavLink blank href="/events/ludum-dare/hosting-guide">/ludum-dare/hosting-guide</NavLink><br />
+					<br />
+				</ContentCommonBody>
+			);
+		}
+
 		var ShowLinkView = null;
 		if ( true ) {
 			ShowLinkView = this.makeLinks(false /* editing */);
@@ -694,6 +702,7 @@ export default class ContentItem extends Component {
 				{ShowOptOut}
 				{ShowImages}
 				{ShowLinkEntry}
+				{ShowUploadTips}
 				{ShowUnfinished}
 			</div>
 		);
