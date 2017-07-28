@@ -66,7 +66,7 @@ export default class ContentItem extends Component {
 		});
 		for (let i = 0; i < 5; i ++) {
 			this.state.linkNames[i] = node.meta['link-0' + (i+1) + '-name'];
-			this.state.linkUrls[i] = node.meta['link-0' + (i+1) + '-name'];
+			this.state.linkUrls[i] = node.meta['link-0' + (i+1) + '-url'];
 		}
 	}
 
