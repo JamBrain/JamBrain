@@ -101,6 +101,13 @@ window.node_CanGrade = function( node ) {
 
 	return node.meta && node.meta['can-grade'];
 };
+window.node_isEventFinished = function( node ) {
+	// Return null if argument is invalid
+	if ( !node )
+		return null;
+
+	return node.meta && node.meta['event-finished'];
+};
 
 //window.nodeUser_IsTeamLeader = function( user, project ) {
 //	
