@@ -31,7 +31,7 @@ export default class ContentCommonBodyField extends Component {
 						value={props.value} 
 						onmodify={props.onmodify}
 						placeholder={Placeholder}
-						max={Limit}
+						maxlength={Limit}
 					/>
 				</div>
 			);

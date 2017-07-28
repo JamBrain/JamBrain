@@ -571,7 +571,7 @@ switch ( $action ) {
 			else {
 				$name = $node['name'];
 			}
-				 
+				
 			if ( isset($_POST['body']) ) {
 				$body = coreSanitize_Body(substr($_POST['body'], 0, 32768));
 				if ( $body !== $node['body'] )
