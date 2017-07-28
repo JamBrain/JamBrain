@@ -222,6 +222,66 @@ export default class ContentItem extends Component {
 		return $NodeMeta.Add(node.id, Data);
 	}
 
+	// Generates JSX for the links, depending on whether the page is editing or viewing
+	makeLinks( editing ) {
+		// TODO: Refactor this into a loop...
+		return (
+			<ContentCommonBody class="-links">
+				<div class="-label">Links</div>
+				<ContentCommonBodyLink
+					name={this.state.linkNames[0]}
+					url={this.state.linkUrls[0]}
+					namePlaceholder="Web"
+					urlPlaceholder="http://example.com/web.html"
+					editing={editing}
+					onModifyName={this.onModifyLinkName.bind(this, 0)}
+					onModifyUrl={this.onModifyLinkUrl.bind(this, 0)}
+				/>
+				<ContentCommonBodyLink
+					name={this.state.linkNames[1]}
+					url={this.state.linkUrls[1]}
+					namePlaceholder="Windows"
+					urlPlaceholder="http://example.com/windows.exe"
+					editing={editing}
+					onModifyName={this.onModifyLinkName.bind(this, 1)}
+					onModifyUrl={this.onModifyLinkUrl.bind(this, 1)}
+				/>
+				<ContentCommonBodyLink
+					name={this.state.linkNames[2]}
+					url={this.state.linkUrls[2]}
+					namePlaceholder="Mac"
+					urlPlaceholder="http://example.com/mac.app"
+					editing={editing}
+					onModifyName={this.onModifyLinkName.bind(this, 2)}
+					onModifyUrl={this.onModifyLinkUrl.bind(this, 2)}
+				/>
+				<ContentCommonBodyLink
+					name={this.state.linkNames[3]}
+					url={this.state.linkUrls[3]}
+					namePlaceholder="Linux"
+					urlPlaceholder="http://example.com/linux.tar.gz"
+					editing={editing}
+					onModifyName={this.onModifyLinkName.bind(this, 3)}
+					onModifyUrl={this.onModifyLinkUrl.bind(this, 3)}
+				/>
+				<ContentCommonBodyLink
+					name={this.state.linkNames[4]}
+					url={this.state.linkUrls[4]}
+					namePlaceholder="Source"
+					urlPlaceholder="http://example.com/source.zip"
+					editing={editing}
+					onModifyName={this.onModifyLinkName.bind(this, 4)}
+					onModifyUrl={this.onModifyLinkUrl.bind(this, 4)}
+				/>
+				<br />
+				If you're new to Ludum Dare, you should know we don't host your downloads, just links to them. For recommendations where and how to host your files, check out the Hosting Guide:<br />
+				<br />
+				<NavLink blank href="/events/ludum-dare/hosting-guide">/ludum-dare/hosting-guide</NavLink><br />
+				<br />
+			</ContentCommonBody>
+		);
+	}
+
 	render( props, state ) {
 		props = Object.assign({}, props);
 		
@@ -600,64 +660,15 @@ export default class ContentItem extends Component {
 			);
 		}
 		
-		var ShowLinks = null;
+		// Where you can enter your game links
+		var ShowLinkEntry = null;
 		if ( true ) {
-			// TODO: Refactor this into a loop...
-			ShowLinks = (
-				<ContentCommonBody class="-links">
-					<div class="-label">Links</div>
-					<ContentCommonBodyLink
-						name={state.linkNames[0]}
-						url={state.linkUrls[0]}
-						namePlaceholder="Web"
-						urlPlaceholder="http://example.com/web.html"
-						editing={true}
-						onModifyName={this.onModifyLinkName.bind(this, 0)}
-						onModifyUrl={this.onModifyLinkUrl.bind(this, 0)}
-					/>
-					<ContentCommonBodyLink
-						name={state.linkNames[1]}
-						url={state.linkUrls[1]}
-						namePlaceholder="Windows"
-						urlPlaceholder="http://example.com/windows.exe"
-						editing={true}
-						onModifyName={this.onModifyLinkName.bind(this, 1)}
-						onModifyUrl={this.onModifyLinkUrl.bind(this, 1)}
-					/>
-					<ContentCommonBodyLink
-						name={state.linkNames[2]}
-						url={state.linkUrls[2]}
-						namePlaceholder="Mac"
-						urlPlaceholder="http://example.com/mac.app"
-						editing={true}
-						onModifyName={this.onModifyLinkName.bind(this, 2)}
-						onModifyUrl={this.onModifyLinkUrl.bind(this, 2)}
-					/>
-					<ContentCommonBodyLink
-						name={state.linkNames[3]}
-						url={state.linkUrls[3]}
-						namePlaceholder="Linux"
-						urlPlaceholder="http://example.com/linux.tar.gz"
-						editing={true}
-						onModifyName={this.onModifyLinkName.bind(this, 3)}
-						onModifyUrl={this.onModifyLinkUrl.bind(this, 3)}
-					/>
-					<ContentCommonBodyLink
-						name={state.linkNames[4]}
-						url={state.linkUrls[4]}
-						namePlaceholder="Source"
-						urlPlaceholder="http://example.com/source.zip"
-						editing={true}
-						onModifyName={this.onModifyLinkName.bind(this, 4)}
-						onModifyUrl={this.onModifyLinkUrl.bind(this, 4)}
-					/>
-					<br />
-					If you're new to Ludum Dare, you should know we don't host your downloads, just links to them. For recommendations where and how to host your files, check out the Hosting Guide:<br />
-					<br />
-					<NavLink blank href="/events/ludum-dare/hosting-guide">/ludum-dare/hosting-guide</NavLink><br />
-					<br />
-				</ContentCommonBody>
-			);
+			ShowLinkEntry = this.makeLinks(true /* editing */);
+		}
+
+		var ShowLinkView = null;
+		if ( true ) {
+			ShowLinkView = this.makeLinks(false /* editing */);
 		}
 
 		var ShowUnfinished = null;
@@ -665,10 +676,8 @@ export default class ContentItem extends Component {
 			ShowUnfinished = (
 				<ContentCommonBody>
 					<div class="-label">Images</div>
-					<div>Screen Shots - These go up top, above your Title and Description. Try to keep your GIFs less than 640 pixels wide.</div>
-					<div>Video - Or we can put a YouTube video up top</div>
-					<div><del>Hover Video - A GIF or silent MP4 video to play while hovering over Cover art.</del></div>
-					<div><del>Embed - This is coming later</del></div>
+					<div>Screen Shots - These go up top, in your game's description. Try to keep your GIFs less than 640 pixels wide.</div>
+					<div>Video - You can add a YouTube video to your description too.</div>
 					<br />
 				</ContentCommonBody>
 			);
@@ -680,7 +689,7 @@ export default class ContentItem extends Component {
 				{ShowEventPicker}
 				{ShowOptOut}
 				{ShowImages}
-				{ShowLinks}
+				{ShowLinkEntry}
 				{ShowUnfinished}
 			</div>
 		);
@@ -688,6 +697,7 @@ export default class ContentItem extends Component {
 		
 		props.viewonly = (
 			<div>
+				{ShowLinkView}
 				{ShowGrade}
 				{ShowMetrics}
 				{ShowResults}

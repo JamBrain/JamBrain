@@ -40,8 +40,7 @@ export default class ContentCommonBodyField extends Component {
 		else {
 			return (
 				<div class={cN(Class, props.class)}>
-					{props.name}
-					{props.url}
+					<a href={props.url}>{props.name}</a>
 				</div>
 			);
 		}
