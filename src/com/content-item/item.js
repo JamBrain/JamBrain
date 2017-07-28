@@ -320,11 +320,11 @@ export default class ContentItem extends Component {
 				</ContentCommonBody>
 			);
 		}
-
-		var ShowResults = null;
 		
 		var ShowGrade = null;
-		if ( parent && parseInt(parent.meta['can-grade']) && node_CanGrade(parent) ) {
+		// Show Grading or Results
+		if ( parseInt(node_CanGrade(parent)) ) {
+			// If it's your game, show some stats
 			if ( node_IsAuthor(node, user) ) {
 				let Lines = [];
 
@@ -364,6 +364,7 @@ export default class ContentItem extends Component {
 					</ContentCommonBody>
 				);
 			}
+			// Judging
 			else if ( featured && featured.what_node && nodeKeys_HasPublishedParent(featured.what_node, node.parent) ) {
 				let Lines = [];
 				
@@ -435,7 +436,8 @@ export default class ContentItem extends Component {
 				);
 			}
 		}
-		else if ( parent && !parseInt(parent.meta['can-grade']) ) {
+		// Final Results
+		else if ( !parseInt(node_CanGrade(parent)) && node_isEventFinished(parent) ) {
 			// grading is closed
 			let Lines = [];
 
@@ -478,7 +480,7 @@ export default class ContentItem extends Component {
 					<div class="-items">{ResultLines}</div>
 					<div class="-footer">When a line is <strong>N/A</strong>, it means there weren't enough ratings for a reliable score. Don't forget to play and rate other people's games during events to prioritize your game.</div>
 				</ContentCommonBody>
-			);			
+			); //'
 		}
 		
 		var ShowPrePub = (
@@ -491,9 +493,7 @@ export default class ContentItem extends Component {
 				<br />
 				We'll have this cleaned up soon!
 			</ContentCommonBody></div>
-		);
-		
-		//'
+		); //'
 		
 		var ShowOptOut = null;
 		if ( parent ) {
@@ -625,7 +625,6 @@ export default class ContentItem extends Component {
 			<div>
 				{ShowGrade}
 				{ShowMetrics}
-				{ShowResults}
 			</div>
 		);
 		
