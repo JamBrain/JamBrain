@@ -195,12 +195,16 @@ export default class ContentItem extends Component {
 		names = this.state.linkNames;
 		names[ix] = e.target.value;
 		this.setState({'modified': true, 'linkNames': names});
+		// Update save button
+		this.contentSimple.setState({'modified': true});
 	}
 
 	onModifyLinkUrl( ix, e ) {
 		urls = this.state.linkUrls;
 		urls[ix] = e.target.value;
 		this.setState({'modified': true, 'linkUrls': urls});
+		// Update save button
+		this.contentSimple.setState({'modified': true});
 	}
 
 	onSave( e ) {
@@ -705,6 +709,9 @@ export default class ContentItem extends Component {
 		);
 		
 		props.class = cN("content-item", props.class);
+
+		// Shim to update the save button from this method. See https://facebook.github.io/react/docs/refs-and-the-dom.html
+		props.ref = c => { this.contentSimple = c; };
 
 		return <ContentSimple {...props} by authors />;
 	}

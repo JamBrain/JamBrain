@@ -44,8 +44,6 @@ export default class ContentSimple extends Component {
 		this.onModifyTitle = this.onModifyTitle.bind(this);
 		this.onModifyText = this.onModifyText.bind(this);
 		this.onModifyAvatar = this.onModifyAvatar.bind(this);
-
-		this.saveExtra = props.onSave;
 	}
 	
 	componentDidMount() {
