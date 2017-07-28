@@ -65,8 +65,11 @@ export default class ContentItem extends Component {
 			this.setState({ 'error': err });
 		});
 		for (let i = 0; i < 5; i ++) {
-			this.state.linkNames[i] = node.meta['link-0' + (i+1) + '-name'];
-			this.state.linkUrls[i] = node.meta['link-0' + (i+1) + '-url'];
+			// TODO: Support more than 9 links
+			var nameKey = 'link-0' + (i+1) + '-name';
+			var urlKey = 'link-0' + (i+1);
+			this.state.linkNames[i] = node.meta[nameKey] ? node.meta[nameKey] : '';
+			this.state.linkUrls[i] = node.meta[urlKey] ? node.meta[urlKey] : '';
 		}
 	}
 
@@ -220,7 +223,7 @@ export default class ContentItem extends Component {
 		for (let i = 0; i < 5; i ++) {
 			// TODO: Support more than 5 links?
 			Data['link-0' + (i+1) + '-name'] = this.state.linkNames[i];
-			Data['link-0' + (i+1) + '-url'] = this.state.linkUrls[i];
+			Data['link-0' + (i+1)] = this.state.linkUrls[i];
 		}
 
 		return $NodeMeta.Add(node.id, Data);
