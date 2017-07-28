@@ -211,8 +211,8 @@ export default class ContentItem extends Component {
 		let Data = {};
 		for (let i = 0; i < 5; i ++) {
 			// TODO: Support more than 5 links?
-			Data['link-0' + i + '-name'] = this.state.linkNames[i];
-			Data['link-0' + i + '-url'] = this.state.linkUrls[i];
+			Data['link-0' + (i+1) + '-name'] = this.state.linkNames[i];
+			Data['link-0' + (i+1) + '-url'] = this.state.linkUrls[i];
 		}
 
 		return $NodeMeta.Add(node.id, Data);
@@ -680,8 +680,7 @@ export default class ContentItem extends Component {
 				{ShowUnfinished}
 			</div>
 		);
-		props.onSave = this.onSave;
-//				{ShowLinks}
+		props.onSave = this.onSave.bind(this);
 		
 		props.viewonly = (
 			<div>

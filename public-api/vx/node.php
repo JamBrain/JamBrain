@@ -29,16 +29,16 @@ const VALID_META = [
 		'grade-07-out' => ['length' => 1],
 		'grade-08-out' => ['length' => 1],
 		
-		'link-01-name' => ['length' => 64]
-		'link-02-name' => ['length' => 64]
-		'link-03-name' => ['length' => 64]
-		'link-04-name' => ['length' => 64]
-		'link-05-name' => ['length' => 64]
-		'link-01-url' => ['length' => 128]
-		'link-02-url' => ['length' => 128]
-		'link-03-url' => ['length' => 128]
-		'link-04-url' => ['length' => 128]
-		'link-05-url' => ['length' => 128]
+		'link-01-name' => ['length' => 64],
+		'link-02-name' => ['length' => 64],
+		'link-03-name' => ['length' => 64],
+		'link-04-name' => ['length' => 64],
+		'link-05-name' => ['length' => 64],
+		'link-01-url' => ['length' => 128],
+		'link-02-url' => ['length' => 128],
+		'link-03-url' => ['length' => 128],
+		'link-04-url' => ['length' => 128],
+		'link-05-url' => ['length' => 128],
 	],
 	'user' => [
 		'real-name' => ['length' => 64],
