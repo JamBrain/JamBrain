@@ -116,6 +116,10 @@ export default class ContentSimple extends Component {
 	onSave( e ) {
 		var Title = this.state.name ? this.state.name : this.props.node.name;
 		var Body = this.state.body ? this.state.body : this.props.node.body;
+
+		if (this.props.onSave) {
+			this.props.onSave( e );
+		}
 		
 		return $Node.Update(this.props.node.id, Title, Body)
 		.then(r => {
