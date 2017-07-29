@@ -64,6 +64,7 @@ export default class ContentItem extends Component {
 		.catch(err => {
 			this.setState({ 'error': err });
 		});
+		
 		for (let i = 0; i < 5; i ++) {
 			// TODO: Support more than 9 links
 			var nameKey = 'link-0' + (i+1) + '-name';

@@ -6,12 +6,30 @@ import SVGIcon							from 'com/svg-icon/icon';
 
 import InputText						from 'com/input-text/text';
 
+import $Tag								from '../../shrub/js/tag/tag';
+
+
 export default class ContentCommonBodyField extends Component {
 	constructor( props ) {
 		super(props);
+		
+		this.state = {};
 	}
 
-	render( props ) {
+	componentDidMount() {
+		// Only load tags list if this is used for editing
+//		if ( this.props.editing ) {
+//			console.log($Tag);
+//			$Tag.Get('platform')
+//			.then(r => {
+//				if ( r.tag && r.tag.length ) {
+//					this.setState({'choice': r.tag});
+//				}
+//			});
+//		}
+	}
+
+	render( props, {tag} ) {
 		var Class = ["content-common-body","-link"];
 
 		var Limit = 64;
