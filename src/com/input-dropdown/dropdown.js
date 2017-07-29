@@ -49,7 +49,8 @@ export default class InputDropdown extends Component {
 	}
 	
 	onClick( e ) {
-		console.log('hee', e);
+		//console.log('hee', e.target.dataset.);
+		this.setState({ 'value': parseInt(e.target.dataset.index) });
 		this.doHide(e);
 	}
 	
@@ -59,9 +60,12 @@ export default class InputDropdown extends Component {
 			if ( show ) {
 				ShowItems = [];
 				
+				// Need this because 'this' is the function created below
+				let that = this;
+				let idx = 0;
 				props.items.forEach(function(item) {
 					ShowItems.push(
-						<div class="-item" onclick={this.onClick} alt={item[0]}>{item[1]}</div>
+						<div class="-item" onclick={that.onClick} data-index={idx++} data-id={item[0]}>{item[1]}</div>
 					);
 				});
 				
