@@ -108,6 +108,13 @@ window.node_isEventFinished = function( node ) {
 
 	return node.meta && node.meta['event-finished'];
 };
+window.node_canPublish = function( node ) {
+	// Return null if argument is invalid
+	if ( !node )
+		return null;
+
+	return node.meta && node.meta['can-publish'];
+};
 
 //window.nodeUser_IsTeamLeader = function( user, project ) {
 //	

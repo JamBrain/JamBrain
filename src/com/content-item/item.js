@@ -232,16 +232,16 @@ export default class ContentItem extends Component {
 		
 		var ShowEventPicker = null;
 		// TODO: Re-enable this to allow event selection
-//		if ( extra && extra.length && extra[0] == 'edit' ) {
-//			ShowEventPicker = (
-//				<ContentCommonNav>
-//					<div class="-label">Event</div>
-//					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
-//					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
-//					<div>Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know, pick the <strong>Jam</strong>.<br />Because {"we're"} running late, {"we're"} letting you choose all weekend. Honour system, ok?</div>
-//				</ContentCommonNav>
-//			);
-//		}
+		if ( extra && extra.length && extra[0] == 'edit' && node_CanPublish(parent) ) {
+			ShowEventPicker = (
+				<ContentCommonNav>
+					<div class="-label">Event</div>
+					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
+					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
+					<div>Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know, pick the <strong>Jam</strong>.<br />Because {"we're"} running late, {"we're"} letting you choose all weekend. Honour system, ok?</div>
+				</ContentCommonNav>
+			);
+		}
 		
 		var ShowMetrics = null;
 		if ( node.magic ) {
@@ -496,7 +496,7 @@ export default class ContentItem extends Component {
 		); //'
 		
 		var ShowOptOut = null;
-		if ( parent ) {
+		if ( parent && node_CanPublish(parent) ) {
 			let Lines = [];
 			
 			for ( var key in parent.meta ) {
