@@ -237,8 +237,10 @@ export default class ContentItem extends Component {
 					<div class="-label">Event</div>
 					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
 					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
-					<div><strong>NOTE</strong>: You <strong>MUST</strong> click this before you will be able to Publish.</div>
-					<div>Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know what to pick (or you only see Jam), pick the <strong>Jam</strong>.</div>
+					<div class="-footer">
+						<strong>NOTE</strong>: You <strong>MUST</strong> click this before you will be able to Publish.<br />
+						Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know what to pick, pick the <strong>Jam</strong>.
+					</div>
 				</ContentCommonNav>
 			);
 		}
