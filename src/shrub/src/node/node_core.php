@@ -155,6 +155,29 @@ function node_GetIdByType( $types ) {
 	return null;
 }
 
+// a "simple" is ID, Slug, Name
+function node_GetSimpleByType( $type, $subtype = null ) {
+	if ( is_string($subtype) ) {
+		return db_QueryFetch(
+			"SELECT id, slug, name
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+			WHERE type=? AND subtype=?;",
+			$type,
+			$subtype
+		);
+	}
+	else {
+		return db_QueryFetch(
+			"SELECT id, slug, name
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+			WHERE type=?;",
+			$type
+		);		
+	}
+}
+
+
+
 // Get Everything Functions
 
 function node_GetById( $ids ) {
