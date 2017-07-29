@@ -5,6 +5,7 @@ import NavLink							from 'com/nav-link/link';
 import SVGIcon							from 'com/svg-icon/icon';
 
 import InputText						from 'com/input-text/text';
+import InputDropdown					from 'com/input-dropdown/dropdown';
 
 import $Tag								from '../../shrub/js/tag/tag';
 
@@ -19,17 +20,21 @@ export default class ContentCommonBodyField extends Component {
 	componentDidMount() {
 		// Only load tags list if this is used for editing
 		if ( this.props.editing ) {
-			var zz = $Tag.Get(this.props.filter);
-
-			zz.then(r => {
-				if ( r.tag && r.tag.length ) {
-					this.setState({'choice': r.tag});
-				}
-			});
+			$Tag.Get(this.props.filter)
+				.then(r => {
+					if ( r.tag && r.tag.length ) {
+						let Items = [];
+						r.tag.forEach(function(item) {
+							Items.push([item.id, item.name]);
+						});
+						
+						this.setState({'items': Items});
+					}
+				});
 		}
 	}
 
-	render( props, {tag} ) {
+	render( props, {items} ) {
 		var Class = ["content-common-body","-link"];
 
 		var Limit = 64;
@@ -40,11 +45,8 @@ export default class ContentCommonBodyField extends Component {
 			Class.push('-editing');
 			return (
 				<div class={cN(Class, props.class)}>
-					<InputText class="-name"
-						value={props.name} 
-						onmodify={props.onModifyName}
-						placeholder={NamePlaceholder}
-						max={Limit}
+					<InputDropdown class="-name"
+						items={items}
 					/>
 					<InputText class="-url"
 						value={props.url} 
@@ -53,6 +55,13 @@ export default class ContentCommonBodyField extends Component {
 						max={Limit}
 					/>
 				</div>
+
+//					<InputText class="-name"
+//						value={props.name} 
+//						onmodify={props.onModifyName}
+//						placeholder={NamePlaceholder}
+//						max={Limit}
+//					/>
 			);
 		}
 		else {
