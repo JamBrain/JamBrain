@@ -25,15 +25,24 @@ export default class ContentItem extends Component {
 	constructor( props ) {
 		super(props);
 		
+		var node = props.node;
+		
 		this.state = {
 			'parent': null,
 			'grade': null,
+
+			'linkUrls': [],
 			'linkNames': [],
-			'linkUrls': []
+
+//			'platforms': [],
+//			'tags': [],
 		};
-		for (let i = 0; i < 5; i ++) {
-			this.state.linkNames[i] = '';
-			this.state.linkUrls[i] = '';
+
+		for (let i = 1; i < 10; i ++) {
+			let urlKey = 'link-0'+i;
+			let nameKey = urlKey+'-name';
+			this.state.linkUrls[i] = node.meta[urlKey] ? node.meta[urlKey] : '';
+			this.state.linkNames[i] = node.meta[nameKey] ? node.meta[nameKey] : '';
 		}
 
 		this.onSetJam = this.onSetJam.bind(this);
@@ -64,14 +73,6 @@ export default class ContentItem extends Component {
 		.catch(err => {
 			this.setState({ 'error': err });
 		});
-		
-		for (let i = 0; i < 5; i ++) {
-			// TODO: Support more than 9 links
-			var nameKey = 'link-0' + (i+1) + '-name';
-			var urlKey = 'link-0' + (i+1);
-			this.state.linkNames[i] = node.meta[nameKey] ? node.meta[nameKey] : '';
-			this.state.linkUrls[i] = node.meta[urlKey] ? node.meta[urlKey] : '';
-		}
 	}
 
 	setSubSubType( type ) {
@@ -212,19 +213,16 @@ export default class ContentItem extends Component {
 	}
 
 	onSave( e ) {
-		console.log("Save?");
-
 		var node = this.props.node;
 		var user = this.props.user;
 
-		if ( !this.props.user )
+		if ( !user )
 			return null;
 
 		let Data = {};
-		for (let i = 0; i < 5; i ++) {
-			// TODO: Support more than 5 links?
-			Data['link-0' + (i+1) + '-name'] = this.state.linkNames[i];
-			Data['link-0' + (i+1)] = this.state.linkUrls[i];
+		for (let i = 1; i < 10; i ++) {
+			Data['link-0'+i] = this.state.linkUrls[i];
+			Data['link-0'+i+'-name'] = this.state.linkNames[i];
 		}
 
 		return $NodeMeta.Add(node.id, Data);
@@ -232,61 +230,81 @@ export default class ContentItem extends Component {
 
 	// Generates JSX for the links, depending on whether the page is editing or viewing
 	makeLinks( editing ) {
-		// TODO: Refactor this into a loop...
-		return (
-			<ContentCommonBody class="-links">
-				<div class="-label">Links</div>
+		var LinkMeta = [];
+		
+		
+		for ( let idx = 0; idx < this.state.linkUrls.length; idx++ ) {
+			LinkMeta.push(
 				<ContentCommonBodyLink
-					name={this.state.linkNames[0]}
-					url={this.state.linkUrls[0]}
+					name={this.state.linkNames[idx]}
+					url={this.state.linkUrls[idx]}
 					namePlaceholder="Web"
 					urlPlaceholder="http://example.com/web.html"
 					editing={editing}
 					filter='platform'
-					onModifyName={this.onModifyLinkName.bind(this, 0)}
-					onModifyUrl={this.onModifyLinkUrl.bind(this, 0)}
+					onModifyName={this.onModifyLinkName.bind(this, idx)}
+					onModifyUrl={this.onModifyLinkUrl.bind(this, idx)}
 				/>
-				<ContentCommonBodyLink
-					name={this.state.linkNames[1]}
-					url={this.state.linkUrls[1]}
-					namePlaceholder="Windows"
-					urlPlaceholder="http://example.com/windows.exe"
-					editing={editing}
-					filter='platform'
-					onModifyName={this.onModifyLinkName.bind(this, 1)}
-					onModifyUrl={this.onModifyLinkUrl.bind(this, 1)}
-				/>
-				<ContentCommonBodyLink
-					name={this.state.linkNames[2]}
-					url={this.state.linkUrls[2]}
-					namePlaceholder="Mac"
-					urlPlaceholder="http://example.com/mac.app"
-					editing={editing}
-					filter='platform'
-					onModifyName={this.onModifyLinkName.bind(this, 2)}
-					onModifyUrl={this.onModifyLinkUrl.bind(this, 2)}
-				/>
-				<ContentCommonBodyLink
-					name={this.state.linkNames[3]}
-					url={this.state.linkUrls[3]}
-					namePlaceholder="Linux"
-					urlPlaceholder="http://example.com/linux.tar.gz"
-					editing={editing}
-					filter='platform'
-					onModifyName={this.onModifyLinkName.bind(this, 3)}
-					onModifyUrl={this.onModifyLinkUrl.bind(this, 3)}
-				/>
-				<ContentCommonBodyLink
-					name={this.state.linkNames[4]}
-					url={this.state.linkUrls[4]}
-					namePlaceholder="Source"
-					urlPlaceholder="http://example.com/source.zip"
-					editing={editing}
-					filter='source'
-					onModifyName={this.onModifyLinkName.bind(this, 4)}
-					onModifyUrl={this.onModifyLinkUrl.bind(this, 4)}
-				/>
+			);
+		}
+		
+		
+		return (
+			<ContentCommonBody class="-links">
+				<div class="-label">Links</div>
+				{LinkMeta}
 			</ContentCommonBody>
+
+//				<ContentCommonBodyLink
+//					name={this.state.linkNames[0]}
+//					url={this.state.linkUrls[0]}
+//					namePlaceholder="Web"
+//					urlPlaceholder="http://example.com/web.html"
+//					editing={editing}
+//					filter='platform'
+//					onModifyName={this.onModifyLinkName.bind(this, 0)}
+//					onModifyUrl={this.onModifyLinkUrl.bind(this, 0)}
+//				/>
+//				<ContentCommonBodyLink
+//					name={this.state.linkNames[1]}
+//					url={this.state.linkUrls[1]}
+//					namePlaceholder="Windows"
+//					urlPlaceholder="http://example.com/windows.exe"
+//					editing={editing}
+//					filter='platform'
+//					onModifyName={this.onModifyLinkName.bind(this, 1)}
+//					onModifyUrl={this.onModifyLinkUrl.bind(this, 1)}
+//				/>
+//				<ContentCommonBodyLink
+//					name={this.state.linkNames[2]}
+//					url={this.state.linkUrls[2]}
+//					namePlaceholder="Mac"
+//					urlPlaceholder="http://example.com/mac.app"
+//					editing={editing}
+//					filter='platform'
+//					onModifyName={this.onModifyLinkName.bind(this, 2)}
+//					onModifyUrl={this.onModifyLinkUrl.bind(this, 2)}
+//				/>
+//				<ContentCommonBodyLink
+//					name={this.state.linkNames[3]}
+//					url={this.state.linkUrls[3]}
+//					namePlaceholder="Linux"
+//					urlPlaceholder="http://example.com/linux.tar.gz"
+//					editing={editing}
+//					filter='platform'
+//					onModifyName={this.onModifyLinkName.bind(this, 3)}
+//					onModifyUrl={this.onModifyLinkUrl.bind(this, 3)}
+//				/>
+//				<ContentCommonBodyLink
+//					name={this.state.linkNames[4]}
+//					url={this.state.linkUrls[4]}
+//					namePlaceholder="Source"
+//					urlPlaceholder="http://example.com/source.zip"
+//					editing={editing}
+//					filter='source'
+//					onModifyName={this.onModifyLinkName.bind(this, 4)}
+//					onModifyUrl={this.onModifyLinkUrl.bind(this, 4)}
+//				/>
 		);
 	}
 

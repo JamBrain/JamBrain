@@ -13,7 +13,7 @@ export default class InputDropdown extends Component {
 			'value': 0
 		};
 		
-		this.onClick = this.onClick.bind(this);
+		this.onClickItem = this.onClickItem.bind(this);
 		
 		this.onShow = this.onShow.bind(this);
 		this.onHide = this.onHide.bind(this);
@@ -27,31 +27,38 @@ export default class InputDropdown extends Component {
 		this.setState({'show': false});
 		document.removeEventListener('click', this.onHide);
 	}
-	
-	onShow( e ) {
-		// Don't show if only 1 item
-		if ( !this.state.show && this.props.items && this.props.items.length > 1 ) {
-			console.log('drop');
-			this.doShow(e);
-		}
-	}
-	
-	onHide( e ) {
-		if ( this.dropdown != e.target.closest('.input-dropdown') ) {
-			console.log('blur', this.dropdown, e.target.closest('.input-dropdown'));
 
-			this.doHide(e);
-//			preventDefault();
+	// Clicking on the button
+	onShow( e ) {
+		if ( !this.state.show ) {
+			// Don't show if only 1 item
+			if ( this.props.items && this.props.items.length > 1 ) {
+				this.doShow(e);
+			}
 		}
 		else {
-			console.log('DROPDOWN');
+			this.doHide(e);
+		}
+	}
+
+	// Clicking outside the button and items
+	onHide( e ) {
+		if ( this.dropdown != e.target.closest('.input-dropdown') ) {
+			this.doHide(e);
 		}
 	}
 	
-	onClick( e ) {
-		//console.log('hee', e.target.dataset.);
-		this.setState({ 'value': parseInt(e.target.dataset.index) });
-		this.doHide(e);
+	// Clicking on an item
+	onClickItem( e ) {
+		// Only do click if the item has an index (i.e. not a separator)
+		if ( e.target.dataset.hasOwnProperty('index') ) {
+			if ( this.props.onModify ) {
+				this.props.onModify(parseInt(e.target.dataset.id));
+			}
+			
+			this.setState({ 'value': parseInt(e.target.dataset.index) });
+			this.doHide(e);
+		}
 	}
 	
 	render( props, {show, value} ) {
@@ -60,12 +67,12 @@ export default class InputDropdown extends Component {
 			if ( show ) {
 				ShowItems = [];
 				
-				// Need this because 'this' is the function created below
+				// Need 'that' because 'this' is the function created below
 				let that = this;
 				let idx = 0;
 				props.items.forEach(function(item) {
 					ShowItems.push(
-						<div class="-item" onclick={that.onClick} data-index={idx++} data-id={item[0]}>{item[1]}</div>
+						<div class="-item" onclick={that.onClickItem} data-index={idx++} data-id={item[0]}>{item[1]}</div>
 					);
 				});
 				

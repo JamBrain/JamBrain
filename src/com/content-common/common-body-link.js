@@ -47,6 +47,7 @@ export default class ContentCommonBodyField extends Component {
 				<div class={cN(Class, props.class)}>
 					<InputDropdown class="-name"
 						items={items}
+						onmodify={props.onModifyTarget}
 					/>
 					<InputText class="-url"
 						value={props.url} 
