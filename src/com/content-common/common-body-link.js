@@ -18,15 +18,15 @@ export default class ContentCommonBodyField extends Component {
 
 	componentDidMount() {
 		// Only load tags list if this is used for editing
-//		if ( this.props.editing ) {
-//			console.log($Tag);
-//			$Tag.Get('platform')
-//			.then(r => {
-//				if ( r.tag && r.tag.length ) {
-//					this.setState({'choice': r.tag});
-//				}
-//			});
-//		}
+		if ( this.props.editing ) {
+			var zz = $Tag.Get('platform');
+
+			zz.then(r => {
+				if ( r.tag && r.tag.length ) {
+					this.setState({'choice': r.tag});
+				}
+			});
+		}
 	}
 
 	render( props, {tag} ) {

@@ -21,7 +21,7 @@ function _Get( filter ) {
 
 export function Get( filter ) {
 	if ( _Exists(filter) ) {
-		return _Get(filter);
+		return Promise.resolve(_Get(filter));
 	}
 	
 	return GetFresh(filter);
@@ -30,10 +30,10 @@ export function GetFresh( filter ) {
 	return Fetch.Get(API_ENDPOINT+'/vx/tag/get/'+filter)
 		.then( r => {
 			if ( r.tag ) {
-				_Cache(filter, r.tag);
+				_Cache(filter, r);
 			}
 			
-			r.fresh = true;
+			//r.fresh = true;	// Caching will incorrectly mark it as fresh
 			return r;
 		});
 }
