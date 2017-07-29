@@ -32,17 +32,23 @@ export default class ContentItem extends Component {
 			'grade': null,
 
 			'linkUrls': [],
+			'linkTags': [],
 			'linkNames': [],
+			
+			'linksShown': 2,
 
 //			'platforms': [],
 //			'tags': [],
 		};
 
-		for (let i = 1; i < 10; i ++) {
-			let urlKey = 'link-0'+i;
-			let nameKey = urlKey+'-name';
-			this.state.linkUrls[i] = node.meta[urlKey] ? node.meta[urlKey] : '';
-			this.state.linkNames[i] = node.meta[nameKey] ? node.meta[nameKey] : '';
+		for (let i = 0; i < 9; i ++) {
+			this.state.linkUrls[i] = node.meta['link-0'+(i+1)] ? node.meta['link-0'+(i+1)] : '';
+			this.state.linkTags[i] = node.meta['link-0'+(i+1)+'-tag'] ? node.meta['link-0'+(i+1)+'-tag'] : '';
+			this.state.linkNames[i] = node.meta['link-0'+(i+1)+'-name'] ? node.meta['link-0'+(i+1)+'-name'] : '';
+			
+			if ( this.state.linkUrls[i] && i > this.state.linksShown ) {
+				this.state.linksShown = i;
+			}
 		}
 
 		this.onSetJam = this.onSetJam.bind(this);
@@ -220,9 +226,10 @@ export default class ContentItem extends Component {
 			return null;
 
 		let Data = {};
-		for (let i = 1; i < 10; i ++) {
-			Data['link-0'+i] = this.state.linkUrls[i];
-			Data['link-0'+i+'-name'] = this.state.linkNames[i];
+		for ( let i = 0; i < this.state.linkUrls.length; i++ ) {
+			Data['link-0'+(i+1)] = this.state.linkUrls[i];
+			Data['link-0'+(i+1)+'-tag'] = this.state.linkTags[i];
+			Data['link-0'+(i+1)+'-name'] = this.state.linkNames[i];
 		}
 
 		return $NodeMeta.Add(node.id, Data);
@@ -232,8 +239,7 @@ export default class ContentItem extends Component {
 	makeLinks( editing ) {
 		var LinkMeta = [];
 		
-		
-		for ( let idx = 0; idx < this.state.linkUrls.length; idx++ ) {
+		for ( let idx = 0; idx < this.state.linksShown; idx++ ) {
 			LinkMeta.push(
 				<ContentCommonBodyLink
 					name={this.state.linkNames[idx]}
@@ -248,63 +254,28 @@ export default class ContentItem extends Component {
 			);
 		}
 		
+		if ( this.state.linksShown < 9 ) {
+			LinkMeta.push(
+				<button onclick={e => this.setState({'linksShown': ++this.state.linksShown})}>+</button>
+			);
+		}
+		
+//					namePlaceholder="Web"
+//					urlPlaceholder="http://example.com/web.html"
+//					namePlaceholder="Windows"
+//					urlPlaceholder="http://example.com/windows.exe"
+//					namePlaceholder="Mac"
+//					urlPlaceholder="http://example.com/mac.app"
+//					namePlaceholder="Linux"
+//					urlPlaceholder="http://example.com/linux.tar.gz"
+//					namePlaceholder="Source"
+//					urlPlaceholder="http://example.com/source.zip"
 		
 		return (
 			<ContentCommonBody class="-links">
 				<div class="-label">Links</div>
 				{LinkMeta}
 			</ContentCommonBody>
-
-//				<ContentCommonBodyLink
-//					name={this.state.linkNames[0]}
-//					url={this.state.linkUrls[0]}
-//					namePlaceholder="Web"
-//					urlPlaceholder="http://example.com/web.html"
-//					editing={editing}
-//					filter='platform'
-//					onModifyName={this.onModifyLinkName.bind(this, 0)}
-//					onModifyUrl={this.onModifyLinkUrl.bind(this, 0)}
-//				/>
-//				<ContentCommonBodyLink
-//					name={this.state.linkNames[1]}
-//					url={this.state.linkUrls[1]}
-//					namePlaceholder="Windows"
-//					urlPlaceholder="http://example.com/windows.exe"
-//					editing={editing}
-//					filter='platform'
-//					onModifyName={this.onModifyLinkName.bind(this, 1)}
-//					onModifyUrl={this.onModifyLinkUrl.bind(this, 1)}
-//				/>
-//				<ContentCommonBodyLink
-//					name={this.state.linkNames[2]}
-//					url={this.state.linkUrls[2]}
-//					namePlaceholder="Mac"
-//					urlPlaceholder="http://example.com/mac.app"
-//					editing={editing}
-//					filter='platform'
-//					onModifyName={this.onModifyLinkName.bind(this, 2)}
-//					onModifyUrl={this.onModifyLinkUrl.bind(this, 2)}
-//				/>
-//				<ContentCommonBodyLink
-//					name={this.state.linkNames[3]}
-//					url={this.state.linkUrls[3]}
-//					namePlaceholder="Linux"
-//					urlPlaceholder="http://example.com/linux.tar.gz"
-//					editing={editing}
-//					filter='platform'
-//					onModifyName={this.onModifyLinkName.bind(this, 3)}
-//					onModifyUrl={this.onModifyLinkUrl.bind(this, 3)}
-//				/>
-//				<ContentCommonBodyLink
-//					name={this.state.linkNames[4]}
-//					url={this.state.linkUrls[4]}
-//					namePlaceholder="Source"
-//					urlPlaceholder="http://example.com/source.zip"
-//					editing={editing}
-//					filter='source'
-//					onModifyName={this.onModifyLinkName.bind(this, 4)}
-//					onModifyUrl={this.onModifyLinkUrl.bind(this, 4)}
-//				/>
 		);
 	}
 
