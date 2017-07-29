@@ -19,7 +19,7 @@ export default class ContentCommonBodyField extends Component {
 	componentDidMount() {
 		// Only load tags list if this is used for editing
 		if ( this.props.editing ) {
-			var zz = $Tag.Get('platform');
+			var zz = $Tag.Get(this.props.filter);
 
 			zz.then(r => {
 				if ( r.tag && r.tag.length ) {

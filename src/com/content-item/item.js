@@ -242,6 +242,7 @@ export default class ContentItem extends Component {
 					namePlaceholder="Web"
 					urlPlaceholder="http://example.com/web.html"
 					editing={editing}
+					filter='platform'
 					onModifyName={this.onModifyLinkName.bind(this, 0)}
 					onModifyUrl={this.onModifyLinkUrl.bind(this, 0)}
 				/>
@@ -251,6 +252,7 @@ export default class ContentItem extends Component {
 					namePlaceholder="Windows"
 					urlPlaceholder="http://example.com/windows.exe"
 					editing={editing}
+					filter='platform'
 					onModifyName={this.onModifyLinkName.bind(this, 1)}
 					onModifyUrl={this.onModifyLinkUrl.bind(this, 1)}
 				/>
@@ -260,6 +262,7 @@ export default class ContentItem extends Component {
 					namePlaceholder="Mac"
 					urlPlaceholder="http://example.com/mac.app"
 					editing={editing}
+					filter='platform'
 					onModifyName={this.onModifyLinkName.bind(this, 2)}
 					onModifyUrl={this.onModifyLinkUrl.bind(this, 2)}
 				/>
@@ -269,6 +272,7 @@ export default class ContentItem extends Component {
 					namePlaceholder="Linux"
 					urlPlaceholder="http://example.com/linux.tar.gz"
 					editing={editing}
+					filter='platform'
 					onModifyName={this.onModifyLinkName.bind(this, 3)}
 					onModifyUrl={this.onModifyLinkUrl.bind(this, 3)}
 				/>
@@ -278,6 +282,7 @@ export default class ContentItem extends Component {
 					namePlaceholder="Source"
 					urlPlaceholder="http://example.com/source.zip"
 					editing={editing}
+					filter='source'
 					onModifyName={this.onModifyLinkName.bind(this, 4)}
 					onModifyUrl={this.onModifyLinkUrl.bind(this, 4)}
 				/>
