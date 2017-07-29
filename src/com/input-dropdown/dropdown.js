@@ -29,25 +29,27 @@ export default class InputDropdown extends Component {
 	}
 	
 	onShow( e ) {
-		console.log('drop');
 		// Don't show if only 1 item
-		if ( this.props.items && this.props.items.length > 1 ) {
+		if ( !this.state.show && this.props.items && this.props.items.length > 1 ) {
+			console.log('drop');
 			this.doShow(e);
 		}
 	}
 	
 	onHide( e ) {
-		window.boo = e.target;
-		console.log('blur', this.dropdown, e.target.closest('.input-dropdown'));
-		
 		if ( this.dropdown != e.target.closest('.input-dropdown') ) {
+			console.log('blur', this.dropdown, e.target.closest('.input-dropdown'));
+
 			this.doHide(e);
 //			preventDefault();
+		}
+		else {
+			console.log('DROPDOWN');
 		}
 	}
 	
 	onClick( e ) {
-		console.log(e);
+		console.log('hee', e);
 		this.doHide(e);
 	}
 	
