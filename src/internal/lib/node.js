@@ -108,7 +108,7 @@ window.node_isEventFinished = function( node ) {
 
 	return node.meta && node.meta['event-finished'];
 };
-window.node_canPublish = function( node ) {
+window.node_CanPublish = function( node ) {
 	// Return null if argument is invalid
 	if ( !node )
 		return null;
