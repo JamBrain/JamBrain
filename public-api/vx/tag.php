@@ -25,8 +25,18 @@ switch ( $action ) {
 		else {
 			$filter = "";
 		}
+
+		$key = "SH_TAG_".($filter ? $filter : "");
+		$ttl = 2*60*1000;	// 2 minutes
 		
-		$RESPONSE['tag'] = node_GetSimpleByType('tag', $filter);
+		if ( cache_Exists($key) ) {
+			$RESPONSE['tag'] = cache_Fetch($key);
+			$RESPONSE['cached'] = true;
+		}
+		else {
+			$RESPONSE['tag'] = node_GetSimpleByType('tag', $filter);
+			cache_Store($key, $RESPONSE['tag'], $ttl);
+		}
 	
 		break; // case 'get': //tag/get/:filter
 	default:
