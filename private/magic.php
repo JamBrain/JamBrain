@@ -171,7 +171,7 @@ if ( $featured_id ) {
 					$given_grade_value = count(array_diff($grades_out, $node_grades_out));
 
 					// ** Calculate Grades **************************************
-					$raw_team_grades = grade_CountByNotNodeAuthor($node['id'], $authors);
+					$raw_team_grades = grade_CountByNotNodeAuthor($node['id'], $authors, $featured_id);
 					$raw_given_grades = grade_CountByNodeNotAuthor($node['id'], $authors);
 
 					$team_grades = $raw_team_grades / $team_grade_value;
