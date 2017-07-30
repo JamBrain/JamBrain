@@ -80,7 +80,7 @@ export default class ContentStatsEvent extends Component {
 				Data.push(<div><span class="-title">Signups:</span> <span class="-value">{stats.signups}</span></div>);
 				Data.push(<div><span class="-title">Unique Authors:</span> <span class="-value">{stats.authors}</span></div>);
 
-				if ( EventMode > 5 ) {
+				if ( EventMode >= 5 ) {
 					Data.push(<div class="-gap"><span class="-title">Submissions:</span> <span class="-value">{stats.jam+stats.compo+stats.craft}</span></div>);
 					Data.push(<div class="-indent"><span class="-title">Jam:</span> <span class="-value">{stats.jam}</span></div>);
 					Data.push(<div class="-indent"><span class="-title">Compo:</span> <span class="-value">{stats.compo}</span></div>);
@@ -89,7 +89,7 @@ export default class ContentStatsEvent extends Component {
 					Data.push(<div><span class="-title">Unpublished:</span> <span class="-value">{stats.unpublished}</span></div>);
 					Data.push(<div><span class="-title">Warmups:</span> <span class="-value">{stats.warmup}</span></div>);
 				}
-				if ( EventMode > 6 ) {
+				if ( EventMode >= 6 ) {
 					Data.push(<div class="-gap"><span class="-title">Ratings:</span></div>);
 					Data.push(<div class="-indent"><span class="-title">20+:</span> <span class="-value">{stats['grade-20-plus']}</span></div>);
 					Data.push(<div class="-indent"><span class="-title">15-20:</span> <span class="-value">{stats['grade-15-20']}</span></div>);
