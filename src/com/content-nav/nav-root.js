@@ -45,6 +45,7 @@ export default class ContentNavRoot extends Component {
 				{ShowMyFeed}
 				<ContentNavButton path={NewPath} icon='news' href='/news'>News</ContentNavButton>
 				<ContentNavButton path={PartPath} icon='gamepad' href='/games'>Games</ContentNavButton>
+				<ContentNavButton path={PartPath} icon='earth' href='/community'>Community</ContentNavButton>
 			</div>
 		);
 
