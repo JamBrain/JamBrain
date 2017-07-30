@@ -245,6 +245,7 @@ export default class ContentItem extends Component {
 				
 				if ( Old != New ) {
 					Data[Base] = this.state.linkUrls[i];
+					this.props.node.meta[Base] = Data[Base];
 					Changes++;
 				}
 			}
@@ -255,6 +256,7 @@ export default class ContentItem extends Component {
 				
 				if ( Old != New ) {
 					Data[Base+'-tag'] = this.state.linkTags[i];
+					this.props.node.meta[Base+'-tag'] = Data[Base+'-tag'];
 					Changes++;
 				}
 			}
@@ -265,10 +267,14 @@ export default class ContentItem extends Component {
 				
 				if ( Old != New ) {
 					Data[Base+'-name'] = this.state.linkNames[i];
+					this.props.node.meta[Base+'-name'] = Data[Base+'-name'];
 					Changes++;
 				}
 			}
 		}
+
+//		this.setState({});		
+//		console.log(Data);
 
 		return $NodeMeta.Add(node.id, Data);
 	}
