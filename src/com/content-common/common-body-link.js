@@ -18,36 +18,43 @@ export default class ContentCommonBodyField extends Component {
 	}
 
 	componentDidMount() {
-		// Only load tags list if this is used for editing
-		if ( this.props.editing ) {
-			$Tag.Get(this.props.filter)
-				.then(r => {
-					if ( r.tag && r.tag.length ) {
-						let Items = [];
-						r.tag.forEach(function(item) {
-							Items.push([item.id, item.name]);
-						});
+		$Tag.Get(this.props.filter)
+			.then(r => {
+				if ( r.tag && r.tag.length ) {
+					let that = this;
+
+					let NewState = {
+						'items': [],
+						'indexes': {}
+					};
+					r.tag.forEach(item => {
+//						if ( item.id === that.props.tag )
+//							NewState['value'] = NewState.items.length;
 						
-						this.setState({'items': Items});
-					}
-				});
-		}
+						NewState.indexes[item.id] = NewState.items.length;
+						NewState.items.push([item.id, item.name]);
+					});
+					
+					this.setState(NewState);
+				}
+			});
 	}
 
-	render( props, {items} ) {
+	render( props, state ) {
 		var Class = ["content-common-body","-link"];
 
 		var Limit = 64;
 		var NamePlaceholder = props.namePlaceholder ? props.namePlaceholder : 'Name';
 		var UrlPlaceholder = props.urlPlaceholder ? props.urlPlaceholder : 'Url';
 		
-		if (props.editing) {
+		if (props.editing && state.items) {
 			Class.push('-editing');
 			return (
 				<div class={cN(Class, props.class)}>
 					<InputDropdown class="-name"
-						items={items}
-						onmodify={props.onModifyTarget}
+						items={state.items}
+						value={state.indexes[props.tag]}
+						onmodify={props.onModifyTag}
 					/>
 					<InputText class="-url"
 						value={props.url} 
@@ -65,10 +72,12 @@ export default class ContentCommonBodyField extends Component {
 //					/>
 			);
 		}
-		else {
+		else if ( state.items ) {
+			var Tag = state.items[state.indexes[props.tag]];
+			
 			return (
 				<div class={cN(Class, props.class)}>
-					<a href={props.url}>{props.name}</a>
+					<strong title={Tag[0]}>{Tag[1]}: </strong><a href={props.url}>{props.url}</a>
 				</div>
 			);
 		}

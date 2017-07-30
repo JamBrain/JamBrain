@@ -29,15 +29,6 @@ const VALID_META = [
 		'grade-07-out' => ['length' => 1],
 		'grade-08-out' => ['length' => 1],
 		
-		'link-01-name' => ['length' => 64],
-		'link-02-name' => ['length' => 64],
-		'link-03-name' => ['length' => 64],
-		'link-04-name' => ['length' => 64],
-		'link-05-name' => ['length' => 64],
-		'link-06-name' => ['length' => 64],
-		'link-07-name' => ['length' => 64],
-		'link-08-name' => ['length' => 64],
-		'link-09-name' => ['length' => 64],
 		'link-01' => ['length' => 512],
 		'link-02' => ['length' => 512],
 		'link-03' => ['length' => 512],
@@ -47,6 +38,24 @@ const VALID_META = [
 		'link-07' => ['length' => 512],
 		'link-08' => ['length' => 512],
 		'link-09' => ['length' => 512],
+		'link-01-tag' => ['integer' => true],
+		'link-02-tag' => ['integer' => true],
+		'link-03-tag' => ['integer' => true],
+		'link-04-tag' => ['integer' => true],
+		'link-05-tag' => ['integer' => true],
+		'link-06-tag' => ['integer' => true],
+		'link-07-tag' => ['integer' => true],
+		'link-08-tag' => ['integer' => true],
+		'link-09-tag' => ['integer' => true],
+		'link-01-name' => ['length' => 64],
+		'link-02-name' => ['length' => 64],
+		'link-03-name' => ['length' => 64],
+		'link-04-name' => ['length' => 64],
+		'link-05-name' => ['length' => 64],
+		'link-06-name' => ['length' => 64],
+		'link-07-name' => ['length' => 64],
+		'link-08-name' => ['length' => 64],
+		'link-09-name' => ['length' => 64],
 	],
 	'user' => [
 		'real-name' => ['length' => 64],
@@ -1000,6 +1009,10 @@ switch ( $action ) {
 								$v = substr($v, 0, $detail['length']);
 							if ( isset($detail['empty']) && $detail['empty'] )
 								$v = null;
+							if ( isset($detail['number']) && $detail['number'] )
+								$v = floatval($v);
+							if ( isset($detail['integer']) && $detail['integer'] )
+								$v = intval($v);
 							
 							if ( $action == 'add' )
 								$changed = nodeMeta_AddByNode($node_id, $scope, $key, $v);
@@ -1075,6 +1088,10 @@ switch ( $action ) {
 								$v = substr($v, 0, $detail['length']);
 							if ( isset($detail['empty']) && $detail['empty'] )
 								$v = null;
+							if ( isset($detail['number']) && $detail['number'] )
+								$v = floatval($v);
+							if ( isset($detail['integer']) && $detail['integer'] )
+								$v = intval($v);
 							
 							if ( $action == 'add' )
 								$changed = nodeLink_AddByNode($node_a_id, $node_b_id, $scope, $key, $v);

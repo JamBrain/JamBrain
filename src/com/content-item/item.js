@@ -35,19 +35,19 @@ export default class ContentItem extends Component {
 			'linkTags': [],
 			'linkNames': [],
 			
-			'linksShown': 2,
+			'linksShown': 1,
 
 //			'platforms': [],
 //			'tags': [],
 		};
 
-		for (let i = 0; i < 9; i ++) {
+		for ( let i = 0; i < 9; i++ ) {
 			this.state.linkUrls[i] = node.meta['link-0'+(i+1)] ? node.meta['link-0'+(i+1)] : '';
 			this.state.linkTags[i] = node.meta['link-0'+(i+1)+'-tag'] ? parseInt(node.meta['link-0'+(i+1)+'-tag']) : 0;
 			this.state.linkNames[i] = node.meta['link-0'+(i+1)+'-name'] ? node.meta['link-0'+(i+1)+'-name'] : '';
 			
-			if ( this.state.linkUrls[i] && i > this.state.linksShown ) {
-				this.state.linksShown = i;
+			if ( this.state.linkUrls[i] && i+1 > this.state.linksShown ) {
+				this.state.linksShown = i+1;
 			}
 		}
 
@@ -202,25 +202,25 @@ export default class ContentItem extends Component {
 		}		
 	}
 
-	onModifyLinkName( ix, e ) {
+	onModifyLinkName( Index, e ) {
 		var Names = this.state.linkNames;
-		Names[ix] = e.target.value;
+		Names[Index] = e.target.value;
 		this.setState({'modified': true, 'linkNames': Names});
 		// Update save button
 		this.contentSimple.setState({'modified': true});
 	}
 
-	onModifyLinkTag( ix, e ) {
+	onModifyLinkTag( Index, e ) {
 		var Tags = this.state.linkTags;
-		Tags[ix] = e;//e.target.value;
+		Tags[Index] = e;//e.target.value;
 		this.setState({'modified': true, 'linkTags': Tags});
 		// Update save button
 		this.contentSimple.setState({'modified': true});
 	}
 
-	onModifyLinkUrl( ix, e ) {
+	onModifyLinkUrl( Index, e ) {
 		var URLs = this.state.linkUrls;
-		URLs[ix] = e.target.value;
+		URLs[Index] = e.target.value;
 		this.setState({'modified': true, 'linkUrls': URLs});
 		// Update save button
 		this.contentSimple.setState({'modified': true});
@@ -269,9 +269,6 @@ export default class ContentItem extends Component {
 				}
 			}
 		}
-		
-		console.log(Data);
-		return;
 
 		return $NodeMeta.Add(node.id, Data);
 	}
@@ -284,9 +281,9 @@ export default class ContentItem extends Component {
 			LinkMeta.push(
 				<ContentCommonBodyLink
 					name={this.state.linkNames[idx]}
+					tag={this.state.linkTags[idx]}
 					url={this.state.linkUrls[idx]}
-					namePlaceholder="Web"
-					urlPlaceholder="http://example.com/web.html"
+					urlPlaceholder="http://example.com/file.zip"
 					editing={editing}
 					filter='platform'
 					onModifyName={this.onModifyLinkName.bind(this, idx)}
@@ -653,8 +650,6 @@ export default class ContentItem extends Component {
 
 			for ( let idx = 0; idx < Lines.length; idx++ ) {
 				let Line = Lines[idx];
-				
-//				console.log( Line );
 				
 				let Icon = null;
 				if ( Line.value )
