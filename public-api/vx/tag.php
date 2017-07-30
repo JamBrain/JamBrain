@@ -27,7 +27,7 @@ switch ( $action ) {
 		}
 
 		$key = "SH_TAG_".($filter ? $filter : "");
-		$ttl = 2*60;	// 2 minutes
+		$ttl = 5*60;	// 5 minutes
 		
 		if ( cache_Exists($key) ) {
 			$RESPONSE['tag'] = cache_Fetch($key);
