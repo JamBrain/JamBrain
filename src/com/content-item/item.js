@@ -43,7 +43,7 @@ export default class ContentItem extends Component {
 
 		for (let i = 0; i < 9; i ++) {
 			this.state.linkUrls[i] = node.meta['link-0'+(i+1)] ? node.meta['link-0'+(i+1)] : '';
-			this.state.linkTags[i] = node.meta['link-0'+(i+1)+'-tag'] ? node.meta['link-0'+(i+1)+'-tag'] : '';
+			this.state.linkTags[i] = node.meta['link-0'+(i+1)+'-tag'] ? parseInt(node.meta['link-0'+(i+1)+'-tag']) : 0;
 			this.state.linkNames[i] = node.meta['link-0'+(i+1)+'-name'] ? node.meta['link-0'+(i+1)+'-name'] : '';
 			
 			if ( this.state.linkUrls[i] && i > this.state.linksShown ) {
@@ -203,17 +203,25 @@ export default class ContentItem extends Component {
 	}
 
 	onModifyLinkName( ix, e ) {
-		names = this.state.linkNames;
-		names[ix] = e.target.value;
-		this.setState({'modified': true, 'linkNames': names});
+		var Names = this.state.linkNames;
+		Names[ix] = e.target.value;
+		this.setState({'modified': true, 'linkNames': Names});
+		// Update save button
+		this.contentSimple.setState({'modified': true});
+	}
+
+	onModifyLinkTag( ix, e ) {
+		var Tags = this.state.linkTags;
+		Tags[ix] = e;//e.target.value;
+		this.setState({'modified': true, 'linkTags': Tags});
 		// Update save button
 		this.contentSimple.setState({'modified': true});
 	}
 
 	onModifyLinkUrl( ix, e ) {
-		urls = this.state.linkUrls;
-		urls[ix] = e.target.value;
-		this.setState({'modified': true, 'linkUrls': urls});
+		var URLs = this.state.linkUrls;
+		URLs[ix] = e.target.value;
+		this.setState({'modified': true, 'linkUrls': URLs});
 		// Update save button
 		this.contentSimple.setState({'modified': true});
 	}
@@ -226,11 +234,44 @@ export default class ContentItem extends Component {
 			return null;
 
 		let Data = {};
+		let Changes = 0;
 		for ( let i = 0; i < this.state.linkUrls.length; i++ ) {
-			Data['link-0'+(i+1)] = this.state.linkUrls[i];
-			Data['link-0'+(i+1)+'-tag'] = this.state.linkTags[i];
-			Data['link-0'+(i+1)+'-name'] = this.state.linkNames[i];
+			let Base = 'link-0'+(i+1);
+
+			// Figure out what data has changed
+			{
+				let Old = node.meta[Base] ? node.meta[Base] : '';
+				let New = this.state.linkUrls[i].trim();
+				
+				if ( Old != New ) {
+					Data[Base] = this.state.linkUrls[i];
+					Changes++;
+				}
+			}
+
+			{
+				let Old = node.meta[Base+'-tag'] ? parseInt(node.meta[Base+'-tag']) : 0;
+				let New = parseInt(this.state.linkTags[i]);
+				
+				if ( Old != New ) {
+					Data[Base+'-tag'] = this.state.linkTags[i];
+					Changes++;
+				}
+			}
+
+			{
+				let Old = node.meta[Base+'-name'] ? node.meta[Base+'-name'] : '';
+				let New = this.state.linkNames[i].trim();
+				
+				if ( Old != New ) {
+					Data[Base+'-name'] = this.state.linkNames[i];
+					Changes++;
+				}
+			}
 		}
+		
+		console.log(Data);
+		return;
 
 		return $NodeMeta.Add(node.id, Data);
 	}
@@ -249,12 +290,13 @@ export default class ContentItem extends Component {
 					editing={editing}
 					filter='platform'
 					onModifyName={this.onModifyLinkName.bind(this, idx)}
+					onModifyTag={this.onModifyLinkTag.bind(this, idx)}
 					onModifyUrl={this.onModifyLinkUrl.bind(this, idx)}
 				/>
 			);
 		}
 		
-		if ( this.state.linksShown < 9 ) {
+		if ( editing && this.state.linksShown < 9 ) {
 			LinkMeta.push(
 				<button onclick={e => this.setState({'linksShown': ++this.state.linksShown})}>+</button>
 			);

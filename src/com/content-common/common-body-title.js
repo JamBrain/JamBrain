@@ -50,9 +50,9 @@ export default class ContentCommonBodyTitle extends Component {
 			var Title = props.title.trim().length ? props.title.trim() : Placeholder;
 			var Body = [];
 			if ( props.href )
-				Body.push(<NavLink class="-text" href={props.href}>{Prefix}{Title}</NavLink>);
+				Body.push(<NavLink class="-text" href={props.href} title={props.hover}>{Prefix}{Title}</NavLink>);
 			else
-				Body.push(<div class="-text">{Prefix}{Title}</div>);
+				Body.push(<div class="-text" title={props.hover}>{Prefix}{Title}</div>);
 			
 			if ( props.subtitle ) {
 				Body.push(<span class="-subtext"> ({props.subtitle})</span>);
