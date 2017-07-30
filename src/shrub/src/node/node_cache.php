@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__."/../core/cache.php";
 
-const SH_NODE_CACHE_TTL = 1*60;
+const SH_NODE_CACHE_TTL = 3*60;
 
 function _nodeCache_GenKey( $id ) {
 	return "!SH!NODE!".$id;

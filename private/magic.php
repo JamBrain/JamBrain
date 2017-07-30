@@ -93,6 +93,9 @@ if ( $featured_id ) {
 			$magics = nodeMagic_GetOldestByParentName($featured_id, 'cool', MAX_ITEMS_TO_CALC);
 			
 			$node_ids = array_map(function($value) { return $value['node']; }, $magics);
+			// Bail if no nodes
+			if ( !count($node_ids) )
+				exit();
 			$nodes = node_IdToIndex(nodeComplete_GetById($node_ids, F_NODE_NO_BODY | F_NODE_META | F_NODE_LINK|F_NODE_NO_LINKVALUE));
 	
 			$scores = [];

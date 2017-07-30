@@ -329,8 +329,14 @@ export default class ViewContent extends Component {
 				ShowPage = <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
 			}
 			else if( extra && extra.length && extra[0] == 'games' ){
-				let DefaultSubFilter = 'jam';//'all';
-				let DefaultFilter = 'overall';
+				let DefaultSubFilter = 'all';
+				let DefaultFilter = 'smart';
+
+				// Results
+				if ( node && node.meta && node.meta['theme-mode'] >= 8 ) {
+					DefaultSubFilter = 'jam';//'all';
+					DefaultFilter = 'overall';
+				}
 				
 				function EvalFilter2(str) {
 					let MappingTable = {
@@ -409,7 +415,6 @@ export default class ViewContent extends Component {
 					Methods = [EvalFilter2(DefaultFilter)];
 				}
 
-/*
 				let FilterDesc = {
 					'smart': <div><strong>Smart</strong>: This is the modern balacing filter. It balances the list using a combination of votes and the karma given to feedback. You start seeing diminishing returns after 50 ratings, but you can make up for it by leaving quality feedback.</div>,
 					'unbound': <div><strong>Unbound</strong>: This is a variation of the Smart filter that is unbound. For curiousity.</div>,
@@ -419,9 +424,31 @@ export default class ViewContent extends Component {
 					'feedback': <div><strong>Feedback</strong>: This filter lets you find who is working the hardest, leaving quality feedback for others.</div>,
 					'grade': <div><strong>Grade</strong>: This filter lets you find the games that have the most ratings.</div>,
 				};
-*/
 
-				if ( true ) {
+				if ( node && node.meta && node.meta['theme-mode'] < 8 ) {
+					let Path = this.props.path+'/games/';
+
+					ShowFilters = (
+						<Common node={this.props.node} class="filter-item filter-game">
+							<CommonNav>
+								<CommonNavButton href={Path+Filter+'/all'} class={SubFilter == 'all' ? '-selected' : ''}><SVGIcon>gamepad</SVGIcon><div>All</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+'/jam'} class={SubFilter == 'jam' ? '-selected' : ''}><SVGIcon>trophy</SVGIcon><div>Jam</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+'/compo'} class={SubFilter == 'compo' ? '-selected' : ''}><SVGIcon>trophy</SVGIcon><div>Compo</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+'/unfinished'} class={SubFilter == 'unfinished' ? '-selected' : ''}><SVGIcon>trash</SVGIcon><div>Unfinished</div></CommonNavButton>
+							</CommonNav>
+							<CommonNav>
+								<CommonNavButton href={Path+'smart/'+SubFilter} class={Filter == 'smart' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Smart</div></CommonNavButton>
+								<CommonNavButton href={Path+'classic/'+SubFilter} class={Filter == 'classic' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Classic</div></CommonNavButton>
+								<CommonNavButton href={Path+'danger/'+SubFilter} class={Filter == 'danger' ? '-selected' : ''}><SVGIcon>help</SVGIcon><div>Danger</div></CommonNavButton>
+								<CommonNavButton href={Path+'zero/'+SubFilter} class={Filter == 'zero' ? '-selected' : ''}><SVGIcon>gift</SVGIcon><div>Zero</div></CommonNavButton>
+								<CommonNavButton href={Path+'feedback/'+SubFilter} class={Filter == 'feedback' ? '-selected' : ''}><SVGIcon>bubbles</SVGIcon><div>Feedback</div></CommonNavButton>
+								<CommonNavButton href={Path+'grade/'+SubFilter} class={Filter == 'grade' ? '-selected' : ''}><SVGIcon>todo</SVGIcon><div>Grade</div></CommonNavButton>
+							</CommonNav>
+							<CommonBody>{FilterDesc[Filter]}</CommonBody>
+						</Common>
+					);
+				}
+				else {	// results
 					let Path = this.props.path+'/games/';
 					
 					ShowFilters = (
@@ -506,8 +533,8 @@ export default class ViewContent extends Component {
 //			else if ( Viewing == '/games' ) {
 			else if ( extra && extra.length && extra[0] == 'games' ) {
 				let DefaultSubFilter = 'all';
-				let DefaultFilter = 'grade';//'danger';//'smart';
-				
+				let DefaultFilter = 'smart';
+
 				function EvalFilter(str) {
 					let MappingTable = {
 						'all': 'compo+jam+craft+release',

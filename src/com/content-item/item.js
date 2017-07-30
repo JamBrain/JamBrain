@@ -25,15 +25,30 @@ export default class ContentItem extends Component {
 	constructor( props ) {
 		super(props);
 		
+		var node = props.node;
+		
 		this.state = {
 			'parent': null,
 			'grade': null,
+
+			'linkUrls': [],
+			'linkTags': [],
 			'linkNames': [],
-			'linkUrls': []
+			
+			'linksShown': 1,
+
+//			'platforms': [],
+//			'tags': [],
 		};
-		for (let i = 0; i < 5; i ++) {
-			this.state.linkNames[i] = '';
-			this.state.linkUrls[i] = '';
+
+		for ( let i = 0; i < 9; i++ ) {
+			this.state.linkUrls[i] = node.meta['link-0'+(i+1)] ? node.meta['link-0'+(i+1)] : '';
+			this.state.linkTags[i] = node.meta['link-0'+(i+1)+'-tag'] ? parseInt(node.meta['link-0'+(i+1)+'-tag']) : 0;
+			this.state.linkNames[i] = node.meta['link-0'+(i+1)+'-name'] ? node.meta['link-0'+(i+1)+'-name'] : '';
+			
+			if ( this.state.linkUrls[i] && i+1 > this.state.linksShown ) {
+				this.state.linksShown = i+1;
+			}
 		}
 
 		this.onSetJam = this.onSetJam.bind(this);
@@ -64,13 +79,6 @@ export default class ContentItem extends Component {
 		.catch(err => {
 			this.setState({ 'error': err });
 		});
-		for (let i = 0; i < 5; i ++) {
-			// TODO: Support more than 9 links
-			var nameKey = 'link-0' + (i+1) + '-name';
-			var urlKey = 'link-0' + (i+1);
-			this.state.linkNames[i] = node.meta[nameKey] ? node.meta[nameKey] : '';
-			this.state.linkUrls[i] = node.meta[urlKey] ? node.meta[urlKey] : '';
-		}
 	}
 
 	setSubSubType( type ) {
@@ -194,92 +202,124 @@ export default class ContentItem extends Component {
 		}		
 	}
 
-	onModifyLinkName( ix, e ) {
-		names = this.state.linkNames;
-		names[ix] = e.target.value;
-		this.setState({'modified': true, 'linkNames': names});
+	onModifyLinkName( Index, e ) {
+		var Names = this.state.linkNames;
+		Names[Index] = e.target.value;
+		this.setState({'modified': true, 'linkNames': Names});
 		// Update save button
 		this.contentSimple.setState({'modified': true});
 	}
 
-	onModifyLinkUrl( ix, e ) {
-		urls = this.state.linkUrls;
-		urls[ix] = e.target.value;
-		this.setState({'modified': true, 'linkUrls': urls});
+	onModifyLinkTag( Index, e ) {
+		var Tags = this.state.linkTags;
+		Tags[Index] = e;//e.target.value;
+		this.setState({'modified': true, 'linkTags': Tags});
+		// Update save button
+		this.contentSimple.setState({'modified': true});
+	}
+
+	onModifyLinkUrl( Index, e ) {
+		var URLs = this.state.linkUrls;
+		URLs[Index] = e.target.value;
+		this.setState({'modified': true, 'linkUrls': URLs});
 		// Update save button
 		this.contentSimple.setState({'modified': true});
 	}
 
 	onSave( e ) {
-		console.log("Save?");
-
 		var node = this.props.node;
 		var user = this.props.user;
 
-		if ( !this.props.user )
+		if ( !user )
 			return null;
 
 		let Data = {};
-		for (let i = 0; i < 5; i ++) {
-			// TODO: Support more than 5 links?
-			Data['link-0' + (i+1) + '-name'] = this.state.linkNames[i];
-			Data['link-0' + (i+1)] = this.state.linkUrls[i];
+		let Changes = 0;
+		for ( let i = 0; i < this.state.linkUrls.length; i++ ) {
+			let Base = 'link-0'+(i+1);
+
+			// Figure out what data has changed
+			{
+				let Old = node.meta[Base] ? node.meta[Base] : '';
+				let New = this.state.linkUrls[i].trim();
+				
+				if ( Old != New ) {
+					Data[Base] = this.state.linkUrls[i];
+					this.props.node.meta[Base] = Data[Base];
+					Changes++;
+				}
+			}
+
+			{
+				let Old = node.meta[Base+'-tag'] ? parseInt(node.meta[Base+'-tag']) : 0;
+				let New = parseInt(this.state.linkTags[i]);
+				
+				if ( Old != New ) {
+					Data[Base+'-tag'] = this.state.linkTags[i];
+					this.props.node.meta[Base+'-tag'] = Data[Base+'-tag'];
+					Changes++;
+				}
+			}
+
+			{
+				let Old = node.meta[Base+'-name'] ? node.meta[Base+'-name'] : '';
+				let New = this.state.linkNames[i].trim();
+				
+				if ( Old != New ) {
+					Data[Base+'-name'] = this.state.linkNames[i];
+					this.props.node.meta[Base+'-name'] = Data[Base+'-name'];
+					Changes++;
+				}
+			}
 		}
+
+//		this.setState({});		
+//		console.log(Data);
 
 		return $NodeMeta.Add(node.id, Data);
 	}
 
 	// Generates JSX for the links, depending on whether the page is editing or viewing
 	makeLinks( editing ) {
-		// TODO: Refactor this into a loop...
+		var LinkMeta = [];
+		
+		for ( let idx = 0; idx < this.state.linksShown; idx++ ) {
+			LinkMeta.push(
+				<ContentCommonBodyLink
+					name={this.state.linkNames[idx]}
+					tag={this.state.linkTags[idx]}
+					url={this.state.linkUrls[idx]}
+					urlPlaceholder="http://example.com/file.zip"
+					editing={editing}
+					filter='platform'
+					onModifyName={this.onModifyLinkName.bind(this, idx)}
+					onModifyTag={this.onModifyLinkTag.bind(this, idx)}
+					onModifyUrl={this.onModifyLinkUrl.bind(this, idx)}
+				/>
+			);
+		}
+		
+		if ( editing && this.state.linksShown < 9 ) {
+			LinkMeta.push(
+				<button onclick={e => this.setState({'linksShown': ++this.state.linksShown})}>+</button>
+			);
+		}
+		
+//					namePlaceholder="Web"
+//					urlPlaceholder="http://example.com/web.html"
+//					namePlaceholder="Windows"
+//					urlPlaceholder="http://example.com/windows.exe"
+//					namePlaceholder="Mac"
+//					urlPlaceholder="http://example.com/mac.app"
+//					namePlaceholder="Linux"
+//					urlPlaceholder="http://example.com/linux.tar.gz"
+//					namePlaceholder="Source"
+//					urlPlaceholder="http://example.com/source.zip"
+		
 		return (
 			<ContentCommonBody class="-links">
 				<div class="-label">Links</div>
-				<ContentCommonBodyLink
-					name={this.state.linkNames[0]}
-					url={this.state.linkUrls[0]}
-					namePlaceholder="Web"
-					urlPlaceholder="http://example.com/web.html"
-					editing={editing}
-					onModifyName={this.onModifyLinkName.bind(this, 0)}
-					onModifyUrl={this.onModifyLinkUrl.bind(this, 0)}
-				/>
-				<ContentCommonBodyLink
-					name={this.state.linkNames[1]}
-					url={this.state.linkUrls[1]}
-					namePlaceholder="Windows"
-					urlPlaceholder="http://example.com/windows.exe"
-					editing={editing}
-					onModifyName={this.onModifyLinkName.bind(this, 1)}
-					onModifyUrl={this.onModifyLinkUrl.bind(this, 1)}
-				/>
-				<ContentCommonBodyLink
-					name={this.state.linkNames[2]}
-					url={this.state.linkUrls[2]}
-					namePlaceholder="Mac"
-					urlPlaceholder="http://example.com/mac.app"
-					editing={editing}
-					onModifyName={this.onModifyLinkName.bind(this, 2)}
-					onModifyUrl={this.onModifyLinkUrl.bind(this, 2)}
-				/>
-				<ContentCommonBodyLink
-					name={this.state.linkNames[3]}
-					url={this.state.linkUrls[3]}
-					namePlaceholder="Linux"
-					urlPlaceholder="http://example.com/linux.tar.gz"
-					editing={editing}
-					onModifyName={this.onModifyLinkName.bind(this, 3)}
-					onModifyUrl={this.onModifyLinkUrl.bind(this, 3)}
-				/>
-				<ContentCommonBodyLink
-					name={this.state.linkNames[4]}
-					url={this.state.linkUrls[4]}
-					namePlaceholder="Source"
-					urlPlaceholder="http://example.com/source.zip"
-					editing={editing}
-					onModifyName={this.onModifyLinkName.bind(this, 4)}
-					onModifyUrl={this.onModifyLinkUrl.bind(this, 4)}
-				/>
+				{LinkMeta}
 			</ContentCommonBody>
 		);
 	}
@@ -616,8 +656,6 @@ export default class ContentItem extends Component {
 
 			for ( let idx = 0; idx < Lines.length; idx++ ) {
 				let Line = Lines[idx];
-				
-//				console.log( Line );
 				
 				let Icon = null;
 				if ( Line.value )

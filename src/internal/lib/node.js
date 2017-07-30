@@ -116,6 +116,20 @@ window.node_CanPublish = function( node ) {
 	return node.meta && node.meta['can-publish'];
 };
 
+window.node_GetPlatforms = function( node ) {
+	if ( node && node.link && node.link.platform ) {
+		return node.link.platform;
+	}
+	return [];
+}
+window.node_GetTags = function( node ) {
+	if ( node && node.link && node.link.tag ) {
+		return node.link.tag;
+	}
+	return [];
+}
+
+
 //window.nodeUser_IsTeamLeader = function( user, project ) {
 //	
 //}

@@ -280,6 +280,7 @@ export default class ContentSimple extends Component {
 				ShowTitle = <ContentCommonBodyTitle 
 					href={node.path} 
 					title={state.name} 
+					hover={node.slug+' [$'+node.id+']'}
 					subtitle={props.subtitle}
 					titleIcon={props.titleIcon} 
 					editing={props.notitleedit ? false : state.editing} 
