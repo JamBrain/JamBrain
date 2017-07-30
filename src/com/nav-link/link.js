@@ -1,4 +1,5 @@
-import { h, Component } from 'preact/preact';
+import { h, Component }					from 'preact/preact';
+import Sanitize							from '../../internal/sanitize/sanitize';
 
 // TODO: Push the state (arg1 of pushShate/replaceState
 
@@ -101,7 +102,11 @@ export default class NavLink extends Component {
 //	}
 
 	render( props ) {
+		props = Object.assign({}, props);
+
 		if ( props.href ) {
+			props.href = Sanitize.sanitize_URI(props.href);
+
 			if ( props.href.indexOf('//') !== -1 ) {
 				props.target = "_blank";
 				props.rel = "noopener noreferrer";

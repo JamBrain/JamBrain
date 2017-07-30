@@ -1,5 +1,6 @@
 import { h, Component } 				from 'preact/preact';
 import { shallowDiff }	 				from 'shallow-compare/index';
+import Sanitize							from '../../internal/sanitize/sanitize';
 
 import NavLink							from 'com/nav-link/link';
 import SVGIcon							from 'com/svg-icon/icon';
@@ -28,9 +29,6 @@ export default class ContentCommonBodyField extends Component {
 						'indexes': {}
 					};
 					r.tag.forEach(item => {
-//						if ( item.id === that.props.tag )
-//							NewState['value'] = NewState.items.length;
-						
 						NewState.indexes[item.id] = NewState.items.length;
 						NewState.items.push([item.id, item.name]);
 					});
@@ -72,14 +70,20 @@ export default class ContentCommonBodyField extends Component {
 //					/>
 			);
 		}
-		else if ( state.items ) {
-			var Tag = state.items[state.indexes[props.tag]];
-			
+		else if ( state.items && props.tag ) {
+			var Index = state.indexes[props.tag];
+			var Tag = state.items[Index];
+			var Text = Sanitize.sanitize_URI(props.url);
+			var Href = Text.indexOf('//') != -1 ? Text : '';
+
+			var ShowLink = Href ? (<a href={Href} target="_blank">{Text}</a>) : <span>{Text}</span>;
+
 			return (
 				<div class={cN(Class, props.class)}>
-					<strong title={Tag[0]}>{Tag[1]}: </strong><a href={props.url}>{props.url}</a>
+					<strong title={Tag[0]}>{Tag[1]}:</strong> {ShowLink}
 				</div>
 			);
 		}
+		return <div />;
 	}
 }

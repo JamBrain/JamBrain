@@ -29,15 +29,15 @@ const VALID_META = [
 		'grade-07-out' => ['length' => 1],
 		'grade-08-out' => ['length' => 1],
 		
-		'link-01' => ['length' => 512],
-		'link-02' => ['length' => 512],
-		'link-03' => ['length' => 512],
-		'link-04' => ['length' => 512],
-		'link-05' => ['length' => 512],
-		'link-06' => ['length' => 512],
-		'link-07' => ['length' => 512],
-		'link-08' => ['length' => 512],
-		'link-09' => ['length' => 512],
+		'link-01' => ['length' => 512, 'url' => true],
+		'link-02' => ['length' => 512, 'url' => true],
+		'link-03' => ['length' => 512, 'url' => true],
+		'link-04' => ['length' => 512, 'url' => true],
+		'link-05' => ['length' => 512, 'url' => true],
+		'link-06' => ['length' => 512, 'url' => true],
+		'link-07' => ['length' => 512, 'url' => true],
+		'link-08' => ['length' => 512, 'url' => true],
+		'link-09' => ['length' => 512, 'url' => true],
 		'link-01-tag' => ['integer' => true],
 		'link-02-tag' => ['integer' => true],
 		'link-03-tag' => ['integer' => true],
@@ -47,15 +47,15 @@ const VALID_META = [
 		'link-07-tag' => ['integer' => true],
 		'link-08-tag' => ['integer' => true],
 		'link-09-tag' => ['integer' => true],
-		'link-01-name' => ['length' => 64],
-		'link-02-name' => ['length' => 64],
-		'link-03-name' => ['length' => 64],
-		'link-04-name' => ['length' => 64],
-		'link-05-name' => ['length' => 64],
-		'link-06-name' => ['length' => 64],
-		'link-07-name' => ['length' => 64],
-		'link-08-name' => ['length' => 64],
-		'link-09-name' => ['length' => 64],
+//		'link-01-name' => ['length' => 64],
+//		'link-02-name' => ['length' => 64],
+//		'link-03-name' => ['length' => 64],
+//		'link-04-name' => ['length' => 64],
+//		'link-05-name' => ['length' => 64],
+//		'link-06-name' => ['length' => 64],
+//		'link-07-name' => ['length' => 64],
+//		'link-08-name' => ['length' => 64],
+//		'link-09-name' => ['length' => 64],
 	],
 	'user' => [
 		'real-name' => ['length' => 64],
@@ -1007,6 +1007,8 @@ switch ( $action ) {
 							$v = $value;
 							if ( isset($detail['length']))
 								$v = substr($v, 0, $detail['length']);
+							if ( isset($detail['url']) && $detail['url'])
+								$v = coreSanitize_URL($v);
 							if ( isset($detail['empty']) && $detail['empty'] )
 								$v = null;
 							if ( isset($detail['number']) && $detail['number'] )
@@ -1086,6 +1088,8 @@ switch ( $action ) {
 							$v = $value;
 							if ( isset($detail['length']))
 								$v = substr($v, 0, $detail['length']);
+							if ( isset($detail['url']) && $detail['url'])
+								$v = coreSanitize_URL($v);
 							if ( isset($detail['empty']) && $detail['empty'] )
 								$v = null;
 							if ( isset($detail['number']) && $detail['number'] )

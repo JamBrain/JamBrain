@@ -27,6 +27,21 @@ class CSanitize {
 		return this.slugify_Name(str);
 	}
 
+	sanitize_URI( str ) {
+		// From marked/Renderer.js
+		try {
+			var Protocol = decodeURIComponent(unescape(str)).replace(/[^\w:]/g, '').toLowerCase();
+		}
+		catch (e) {
+			return '';
+		}
+
+		if ( Protocol.indexOf('javascript:') === 0 || Protocol.indexOf('vbscript:') === 0 || Protocol.indexOf('data:') === 0 ) {
+			return '';
+		}
+		return str;
+	}
+
 	// Backwards Compatible
 	makeSlug( str ) {
 		return this.slugify_Name(str);
