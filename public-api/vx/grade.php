@@ -82,7 +82,7 @@ switch ( $action ) {
 			json_EmitFatalError_BadRequest("Invalid grade: $grade", $RESPONSE);
 
 		if ( $score )
-			$RESPONSE['id'] = grade_AddByNodeAuthorName($node_id, $user_id, $grade, $score);
+			$RESPONSE['id'] = grade_AddByNodeAuthorName($node_id, $parent_id, $user_id, $grade, $score);
 		else 
 			$RESPONSE['changed'] = grade_RemoveByNodeAuthorName($node_id, $user_id, $grade);
 
