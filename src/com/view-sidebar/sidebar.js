@@ -19,10 +19,10 @@ export default class ViewSidebar extends Component {
 		let ldStartDate = new Date(Date.UTC(2017, 6, 29, 1, 0, 0));
 
 		let compoEndDate = new Date(Date.UTC(2017, 6, 31, 1, 0, 0));
-		let compoEndDate2 = new Date(Date.UTC(2017, 6, 31, 3, 0, 0));	// longer
+		let compoEndDate2 = new Date(Date.UTC(2017, 6, 31, 3, 30, 0));	// longer
 
 		let jamEndDate = new Date(Date.UTC(2017, 7, 1, 1, 0, 0));
-		let jamEndDate2 = new Date(Date.UTC(2017, 7, 1, 3, 0, 0));		// longer
+		let jamEndDate2 = new Date(Date.UTC(2017, 7, 1, 3, 30, 0));		// longer
 //		let jamEndDate3 = new Date(Date.UTC(2017, 6, 25, 4, 0, 0));
 
 		let now = new Date();
