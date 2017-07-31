@@ -138,3 +138,47 @@ function nodeCache_GetIdByParentSlug( $parent, $slug ) {
 
 	return $id;
 }
+
+
+const SH_NODE_PARENTSLUGBYID_CACHE_TTL = 5*60;
+function nodeCache_GetParentSlugById( $id ) {
+	$key = "!SH!NODE!PARENTSLUGBYID!".$id;
+	$parentslug = cache_Fetch($key);
+
+	if ( $parentslug )
+		return $parentslug;
+
+	$parentslug = node_GetParentSlugById($id);
+	cache_Store($key, $parentslug, SH_NODE_PARENTSLUGBYID_CACHE_TTL);
+
+	return $parentslug;
+}
+
+
+
+// Modified version from node_core //
+function _nodeCache_GetPathById( $id, $top = 0, $timeout = 10 ) {
+	if ( !$id )
+		return '';
+
+	$tree = [];
+	do {
+		$data = nodeCache_GetParentSlugById($id);
+		$tree[] = $data;
+		$id = $data['parent'];
+	} while ( $id > 0 && ($data['parent'] !== $top) && ($timeout--) );
+
+	return $tree;
+}
+function nodeCache_GetPathById( $id, $top = 0, $timeout = 10 ) {
+	$tree = _nodeCache_GetPathById($id, $top, $timeout);
+
+	$path = '';
+	$parent = [];
+	foreach( $tree as &$leaf ) {
+		$path = '/'.($leaf['slug']).$path;
+		array_unshift($parent, $leaf['parent']);
+	}
+
+	return [ 'path' => $path, 'parent' => $parent ];
+}

@@ -69,7 +69,7 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 	if ( $flags & F_NODE_PATH ) {
 		foreach ( $nodes as &$node ) {
 			// Walk paths
-			$paths = node_GetPathById($node['id'], 1);	// 1 = root node
+			$paths = nodeCache_GetPathById($node['id'], 1);	// 1 = root node
 			$node['path'] = $paths['path'];
 			$node['parents'] = $paths['parent'];
 		}
