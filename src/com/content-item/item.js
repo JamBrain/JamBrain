@@ -53,6 +53,7 @@ export default class ContentItem extends Component {
 
 		this.onSetJam = this.onSetJam.bind(this);
 		this.onSetCompo = this.onSetCompo.bind(this);
+		this.onSetUnfinished = this.onSetUnfinished.bind(this);
 	}
 	
 	componentDidMount() {
@@ -97,16 +98,19 @@ export default class ContentItem extends Component {
 	onSetJam( e ) {
 		return this.setSubSubType('jam')
 			.then( r => {
-				
 			});
 	}
 	onSetCompo( e ) {
 		return this.setSubSubType('compo')
 			.then( r => {
-				
 			});
 	}
-	
+	onSetUnfinished( e ) {
+		return this.setSubSubType('unfinished')
+			.then( r => {
+			});
+	}
+
 	onGrade( name, value ) {
 		var Node = this.props.node;
 		
@@ -383,6 +387,7 @@ export default class ContentItem extends Component {
 					<div class="-label">Event</div>
 					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
 					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
+					<ContentCommonNavButton onclick={this.onSetUnfinished} class={Category == '/unfinished' ? "-selected" : ""}><SVGIcon>trash</SVGIcon><div>Unfinished</div></ContentCommonNavButton>
 					<div class="-footer">
 						<strong>NOTE</strong>: You <strong>MUST</strong> click this before you will be able to Publish.<br />
 						Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know what to pick, pick the <strong>Jam</strong>.
