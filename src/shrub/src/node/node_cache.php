@@ -2,7 +2,6 @@
 require_once __DIR__."/../core/cache.php";
 
 const SH_NODE_CACHE_TTL = 3*60;
-
 function _nodeCache_GenKey( $id ) {
 	return "!SH!NODE!".$id;
 }
@@ -106,4 +105,36 @@ function nodeCache_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, 
 	$ret = node_Edit($node, $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag);
 	nodeCache_CacheById($node);
 	return $ret;
+}
+
+
+
+const SH_NODE_PARENTBYID_CACHE_TTL = 5*60;
+function nodeCache_GetParentById( $id ) {
+	$key = "!SH!NODE!PARENTBYID!".$id;
+	$parent = cache_Fetch($key);
+
+	if ( $parent )
+		return $parent;
+
+	$parent = node_GetParentById($id);
+	cache_Store($key, $parent, SH_NODE_PARENTBYID_CACHE_TTL);
+
+	return $parent;
+}
+
+
+
+const SH_NODE_IDBYPARENTSLUG_CACHE_TTL = 5*60;
+function nodeCache_GetIdByParentSlug( $parent, $slug ) {
+	$key = "!SH!NODE!IDBYPARENTSLUG!".$parent."!".$slug;
+	$id = cache_Fetch($key);
+
+	if ( $id )
+		return $id;
+
+	$id = node_GetIdByParentSlug($parent, $slug);
+	cache_Store($key, $id, SH_NODE_IDBYPARENTSLUG_CACHE_TTL);
+
+	return $id;
 }
