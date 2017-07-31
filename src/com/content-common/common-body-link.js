@@ -51,7 +51,7 @@ export default class ContentCommonBodyField extends Component {
 				<div class={cN(Class, props.class)}>
 					<InputDropdown class="-name"
 						items={state.items}
-						value={state.indexes[props.tag]}
+						value={state.indexes[props.tag ? props.tag : state.indexes[0]]}
 						onmodify={props.onModifyTag}
 					/>
 					<InputText class="-url"
