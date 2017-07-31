@@ -51,7 +51,7 @@ export default class ContentCommonBodyField extends Component {
 				<div class={cN(Class, props.class)}>
 					<InputDropdown class="-name"
 						items={state.items}
-						value={state.indexes[props.tag ? props.tag : state.indexes[0]]}
+						value={props.tag ? state.indexes[props.tag] : 0}
 						onmodify={props.onModifyTag}
 					/>
 					<InputText class="-url"
@@ -70,8 +70,8 @@ export default class ContentCommonBodyField extends Component {
 //					/>
 			);
 		}
-		else if ( state.items && props.tag ) {
-			var Index = state.indexes[props.tag];
+		else if ( state.items && props.url ) {
+			var Index = props.tag ? state.indexes[props.tag] : 0;
 			var Tag = state.items[Index];
 			var Text = Sanitize.sanitize_URI(props.url);
 			var Href = Text.indexOf('//') != -1 ? Text : '';
