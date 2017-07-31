@@ -191,12 +191,12 @@ switch ( $action ) {
 					$node = intval(substr($slug, 1));
 
 					// Validate that node's parent correct
-					if ( node_GetParentById($node) !== $parent ) {
+					if ( nodeCache_GetParentById($node) !== $parent ) {
 						$node = 0;
 					}
 				}
 				else {
-					$node = node_GetIdByParentSlug($parent, $slug);
+					$node = nodeCache_GetIdByParentSlug($parent, $slug);
 				}
 
 				if ( $node ) {
