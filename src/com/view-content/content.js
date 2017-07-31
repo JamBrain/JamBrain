@@ -535,9 +535,13 @@ export default class ViewContent extends Component {
 			else if ( Viewing == '/home' ) {
 				var ShowHome = null;
 				// If my entry is Published
-//				if ( featured && featured.what && featured.what.length && featured.what[0] && featured.what_node && featured.what_node[featured.what[0]] && featured.what_node[featured.what[0]].published ) {
-//					ShowHome = <div>FEETUR {featured.what[0]}</div>;
-//				}
+				if ( featured && featured.what && featured.what.length && featured.what[0] && featured.what_node && featured.what_node[featured.what[0]] && featured.what_node[featured.what[0]].published ) {
+					ShowHome = (
+						<Common node={node} user={user}>
+							<CommonBody>You can start playing and rating games <NavLink href={featured.path+'/games'}>here</NavLink>.</CommonBody>
+						</Common>
+					);
+				}
 				
 				return (
 					<ContentTimeline types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra}>
