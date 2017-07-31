@@ -103,6 +103,18 @@ const VALID_TRANSFORMS = [
 		'item/game/unfinished',
 		'item/craft/unfinished',
 	],
+	'item/game/unfinished' => [
+		'item/game/jam',
+		'item/game/compo',
+		'item/craft/jam',
+		'item/craft/unfinished',
+	],
+	'item/craft/unfinished' => [
+		'item/game/jam',
+		'item/game/compo',
+		'item/game/unfinished',
+		'item/craft/jam',
+	],
 ];
 
 const THINGS_I_CAN_FEED = [
