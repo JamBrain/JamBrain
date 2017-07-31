@@ -19,10 +19,10 @@ export default class ViewSidebar extends Component {
 		let ldStartDate = new Date(Date.UTC(2017, 6, 29, 1, 0, 0));
 
 		let compoEndDate = new Date(Date.UTC(2017, 6, 31, 1, 0, 0));
-		let compoEndDate2 = new Date(Date.UTC(2017, 6, 31, 2, 0, 0));
+		let compoEndDate2 = new Date(Date.UTC(2017, 6, 31, 3, 0, 0));	// longer
 
 		let jamEndDate = new Date(Date.UTC(2017, 7, 1, 1, 0, 0));
-		let jamEndDate2 = new Date(Date.UTC(2017, 7, 1, 2, 0, 0));
+		let jamEndDate2 = new Date(Date.UTC(2017, 7, 1, 3, 0, 0));		// longer
 //		let jamEndDate3 = new Date(Date.UTC(2017, 6, 25, 4, 0, 0));
 
 		let now = new Date();
@@ -36,14 +36,14 @@ export default class ViewSidebar extends Component {
 				ShowCountdown.push(<SidebarCountdown date={ compoEndDate } nc="compo" to="Compo" tt="Ends" />);
 			}
 			else if ( now < compoEndDate2 ) {
-				ShowCountdown.push(<SidebarCountdown date={ compoEndDate2 } nc="compo" to="Submission Hour" tt="Ends" />);
+				ShowCountdown.push(<SidebarCountdown date={ compoEndDate2 } nc="compo" to="Super Submission Hour" tt="Ends" />);
 			}
 			
 			if ( now < jamEndDate ) {
 				ShowCountdown.push(<SidebarCountdown date={ jamEndDate } nc="jam" to="Jam" tt="Ends" />);
 			}
 			else if ( now < jamEndDate2 ) {
-				ShowCountdown.push(<SidebarCountdown date={ jamEndDate2 } nc="jam" to="Submission Hour" tt="Ends" />);
+				ShowCountdown.push(<SidebarCountdown date={ jamEndDate2 } nc="jam" to="Super Submission Hour" tt="Ends" />);
 			}
 //			else if ( now < jamEndDate3 ) {
 //				ShowCountdown.push(<SidebarCountdown date={ jamEndDate3 } nc="jam" to="Submission Bonus" tt="Ends" />);
