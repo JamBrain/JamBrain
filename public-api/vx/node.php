@@ -81,19 +81,27 @@ const VALID_TRANSFORMS = [
 	'item/game' => [
 		'item/game/jam',
 		'item/game/compo',
+		'item/game/unfinished',
 		'item/craft/jam',
+		'item/craft/unfinished',
 	],
 	'item/game/compo' => [
 		'item/game/jam',
+		'item/game/unfinished',
 		'item/craft/jam',
+		'item/craft/unfinished',
 	],
 	'item/game/jam' => [
 		'item/game/compo',
+		'item/game/unfinished',
 		'item/craft/jam',
+		'item/craft/unfinished',
 	],
 	'item/craft/jam' => [
 		'item/game/jam',
 		'item/game/compo',
+		'item/game/unfinished',
+		'item/craft/unfinished',
 	],
 ];
 
