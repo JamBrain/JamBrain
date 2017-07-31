@@ -30,24 +30,25 @@ export default class ContentNavRoot extends Component {
 		var ShowMyFeed = null;
 		if ( user && user.id ) {
 			if ( NewPath == '/' )
-				NewPath = '/feed';
-			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href='/feed'>Feed</ContentNavButton>;
+				NewPath = '/home';
+			ShowMyFeed = <ContentNavButton path={PartPath} icon='home' href='/'></ContentNavButton>;
 		}
 		// Default to normal /feed if not logged in
 		else {
 			if ( NewPath == '/' )
 				NewPath = '/feed';
-			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href='/feed'>Feed</ContentNavButton>;
+//			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href='/feed'>Feed</ContentNavButton>;
 		}
 		
 		return (
 			<div class="content-base content-nav content-nav-root">
 				{ShowMyFeed}
+				<ContentNavButton path={NewPath} icon='feed' href='/feed'>Feed</ContentNavButton>
 				<ContentNavButton path={NewPath} icon='news' href='/news'>News</ContentNavButton>
 				<ContentNavButton path={PartPath} icon='gamepad' href='/games'>Games</ContentNavButton>
-				<ContentNavButton path={PartPath} icon='earth' href='/community'>Community</ContentNavButton>
 			</div>
 		);
+//				<ContentNavButton path={PartPath} icon='earth' href='/community'>Community</ContentNavButton>
 
 //					<ContentNavButton path={NewPath} icon='heart' href='/hot'>Popular</ContentNavButton>
 	}

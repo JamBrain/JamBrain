@@ -520,11 +520,34 @@ export default class ViewContent extends Component {
 			if ( Viewing == '/' ) {
 				Viewing = '/feed';
 				if ( user && user.id ) {
-					Viewing = '/feed';		// Don't delete me
+					Viewing = '/home';		// Don't delete me
 				}
 			}
 
-			if ( Viewing == '/news' ) {
+			if ( Viewing == '/feed' ) {
+				return (
+					<ContentTimeline types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra}>
+						{ShowNavRoot}
+						<ContentTimeline types={['post']} subtypes={['news']} methods={['all']} minimized nomore noemptymessage limit={1} node={node} user={user} path={path} extra={extra} />
+					</ContentTimeline>
+				);
+			}
+			else if ( Viewing == '/home' ) {
+				var ShowHome = null;
+				// If my entry is Published
+//				if ( featured && featured.what && featured.what.length && featured.what[0] && featured.what_node && featured.what_node[featured.what[0]] && featured.what_node[featured.what[0]].published ) {
+//					ShowHome = <div>FEETUR {featured.what[0]}</div>;
+//				}
+				
+				return (
+					<ContentTimeline types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra}>
+						{ShowNavRoot}
+						{ShowHome}
+						<ContentTimeline types={['post']} subtypes={['news']} methods={['all']} minimized nomore noemptymessage limit={1} node={node} user={user} path={path} extra={extra} />
+					</ContentTimeline>
+				);
+			}
+			else if ( Viewing == '/news' ) {
 				return <ContentTimeline types={['post']} subtypes={['news']} methods={['all']} node={node} user={user} path={path} extra={extra}>{ShowNavRoot}</ContentTimeline>;
 			}
 			else if ( Viewing == '/hot' ) {
@@ -636,14 +659,6 @@ export default class ViewContent extends Component {
 						{ShowFilters}
 						<ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />
 					</div>
-				);
-			}
-			else if ( Viewing == '/feed' ) {
-				return (
-					<ContentTimeline types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra}>
-						{ShowNavRoot}
-						<ContentTimeline types={['post']} subtypes={['news']} methods={['all']} minimized nomore noemptymessage limit={1} node={node} user={user} path={path} extra={extra} />
-					</ContentTimeline>
 				);
 			}
 			else if ( Viewing == '/palette' ) {
