@@ -25,6 +25,8 @@
 			position: relative;
 			line-height: 2.0em;
 			height: 2.0em;
+			
+			vertical-align: top;
 
 			display: inline-block;
 			
@@ -49,6 +51,10 @@
 				
 				@media (max-width: (@BASE_WIDTH - 20em)) {
 					display: none;
+				}
+				
+				&:empty {
+					padding-left: 0;
 				}
 			}
 			& > svg {
