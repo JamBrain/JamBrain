@@ -65,7 +65,7 @@ export default class ContentCommonBodyBy extends Component {
 			Body.push(<span>by </span>);
 			for ( var idx = 0; idx < props.authors.length; idx++ ) {
 				Body.push(<span class="-name">{this.getName(props.authors[idx])}</span>);
-				Body.push(<span> (<NavLink class="-at-name" href={this.getURL(props.authors[idx])}>@{this.getAtName(props.authors[idx])}</NavLink>)</span>);
+				Body.push(<span> (<NavLink class="-at-name" href={this.getURL(props.authors[idx])}>@{this.getAtName(props.authors[idx])}</NavLink>){(props.authors.length > 1 && props.authors[idx].id == props.node.author)?<span title='Team Leader'>*</span>:''}</span>);
 				if ( idx < props.authors.length-2 )
 					Body.push(<span>, </span>);
 				else if ( idx < props.authors.length-1 )
