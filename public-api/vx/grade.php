@@ -64,14 +64,14 @@ switch ( $action ) {
 			json_EmitFatalError_BadRequest("Invalid score: $score", $RESPONSE);
 
 		// Load Node
-		$node = nodeComplete_GetById($node_id);
+		$node = nodeCache_GetById($node_id);
 		$parent_id = $node['parent'];
 		
 		if ( !$parent_id )
 			json_EmitFatalError_BadRequest("Node is an orphan", $RESPONSE);
 		
 		// Load the Parent Node
-		$parent = nodeComplete_GetById($parent_id);
+		$parent = nodeCache_GetById($parent_id);
 
 		if ( !isset($parent['meta']) || !isset($parent['meta']['can-grade']) )
 			json_EmitFatalError_BadRequest("Parent is not accepting grades", $RESPONSE);
