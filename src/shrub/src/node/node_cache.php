@@ -109,7 +109,7 @@ function nodeCache_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, 
 
 
 
-const SH_NODE_PARENTBYID_CACHE_TTL = 5*60;
+const SH_NODE_PARENTBYID_CACHE_TTL = 10*60;
 function nodeCache_GetParentById( $id ) {
 	$key = "!SH!NODE!PARENTBYID!".$id;
 	$parent = cache_Fetch($key);
@@ -125,7 +125,7 @@ function nodeCache_GetParentById( $id ) {
 
 
 
-const SH_NODE_IDBYPARENTSLUG_CACHE_TTL = 5*60;
+const SH_NODE_IDBYPARENTSLUG_CACHE_TTL = 10*60;
 function nodeCache_GetIdByParentSlug( $parent, $slug ) {
 	$key = "!SH!NODE!IDBYPARENTSLUG!".$parent."!".$slug;
 	$id = cache_Fetch($key);
@@ -140,7 +140,7 @@ function nodeCache_GetIdByParentSlug( $parent, $slug ) {
 }
 
 
-const SH_NODE_PARENTSLUGBYID_CACHE_TTL = 5*60;
+const SH_NODE_PARENTSLUGBYID_CACHE_TTL = 10*60;
 function nodeCache_GetParentSlugById( $id ) {
 	$key = "!SH!NODE!PARENTSLUGBYID!".$id;
 	$parentslug = cache_Fetch($key);
