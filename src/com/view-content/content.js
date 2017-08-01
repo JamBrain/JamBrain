@@ -136,6 +136,20 @@ export default class ViewContent extends Component {
 				</div>
 			);
 		}
+		else if ( node.type === 'tag' ) {
+			
+			var Methods = ['parent'];
+			
+			return (
+				<div id="content">
+					<Common node={node} user={user} >
+						<CommonBody><h2>Tag: {node.name}</h2></CommonBody>
+					</Common>
+					<ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} />
+				</div>
+			);
+			
+		}
 		else if ( node.type === 'user' ) {
 			let View = [];
 			let ViewType = null;
