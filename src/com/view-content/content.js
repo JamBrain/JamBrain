@@ -656,10 +656,20 @@ export default class ViewContent extends Component {
 				}
 
 				SubFilter = EvalFilter(SubFilter);
+				
+				var ShowHeader = null;
+				if ( featured ) {
+					ShowHeader = (
+						<Common node={node} user={user}>
+							<CommonBody><SVGIcon pad>alert</SVGIcon> Below are <strong>all</strong> games across all events. <NavLink href={featured.path+'/games'}>Go here</NavLink> for <strong>{featured.name}</strong>.</CommonBody>
+						</Common>
+					);
+				}
 
 				return (
 					<div id="content">
 						{ShowNavRoot}
+						{ShowHeader}
 						{ShowFilters}
 						<ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />
 					</div>
