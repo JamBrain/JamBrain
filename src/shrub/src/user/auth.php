@@ -108,7 +108,7 @@ function userSession_Start() {
 	// Start Session	
 	session_start([
 		'name' => $sid_name,
-		'cookie_lifetime' => 2*24*60*60,			// Two days
+		'cookie_lifetime' => 3*24*60*60,			// Three days
 		'cookie_httponly' => 1,						// Don't pass SID to JavaScript
 		'cookie_secure' => $is_secure ? 1 : 0,
 		//'cookie_path' => '/',

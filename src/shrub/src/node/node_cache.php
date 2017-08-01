@@ -1,6 +1,20 @@
 <?php
 require_once __DIR__."/../core/cache.php";
 
+$CACHE_HIT = 0;
+$CACHE_MISS = 0;
+$CACHE_SKIP = 0;
+
+function nodeCache_GetStats() {
+	global $CACHE_HIT, $CACHE_MISS, $CACHE_SKIP;
+
+	return [
+		'hit' => $CACHE_HIT,
+		'miss' => $CACHE_MISS,
+		'skip' => $CACHE_SKIP,
+	];
+}
+
 const SH_NODE_CACHE_TTL = 3*60;
 function _nodeCache_GenKey( $id ) {
 	return "!SH!NODE!".$id;
@@ -39,12 +53,16 @@ function _nodeCache_CacheNodes( &$nodes ) {
 
 /// This is the cache wrapped version of nodeComplete_GetById
 function nodeCache_GetById( $ids, &$cached_store = null ) {
+	global $CACHE_HIT, $CACHE_MISS;
+
 	$multi = is_array($ids);
 	if ( !$multi )
 		$ids = [$ids];
 	
 	$nodes = _nodeCache_GetCached($ids);
 	$cached_ids = nodeList_GetIds($nodes);
+
+	$CACHE_HIT += count($cached_ids);
 	
 	$uncached_ids = array_diff($ids, $cached_ids);
 	
@@ -53,6 +71,7 @@ function nodeCache_GetById( $ids, &$cached_store = null ) {
 	}
 	
 	if ( count($uncached_ids) ) {
+		$CACHE_MISS += count($uncached_ids);
 		if ( $uncached = nodeComplete_GetById($uncached_ids) ) {
 			_nodeCache_CacheNodes($uncached);
 		
@@ -69,10 +88,13 @@ function nodeCache_GetById( $ids, &$cached_store = null ) {
 
 /// Overwrites the cache with fresh copies of these nodes
 function nodeCache_CacheById( $ids ) {
+	global $CACHE_SKIP;
+
 	$multi = is_array($ids);
 	if ( !$multi )
 		$ids = [$ids];
 
+	$CACHE_SKIP += count($ids);
 	$nodes = nodeComplete_GetById($ids);
 	
 	_nodeCache_CacheNodes($nodes);
@@ -109,47 +131,63 @@ function nodeCache_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, 
 
 
 
-const SH_NODE_PARENTBYID_CACHE_TTL = 10*60;
+const SH_NODE_PARENTBYID_CACHE_TTL = 5*60;
 function nodeCache_GetParentById( $id ) {
+	global $CACHE_HIT, $CACHE_MISS;
+
 	$key = "!SH!NODE!PARENTBYID!".$id;
 	$parent = cache_Fetch($key);
 
-	if ( $parent )
+	if ( $parent !== null ) {
+		$CACHE_HIT++;
 		return $parent;
+	}
+	$CACHE_MISS++;
 
 	$parent = node_GetParentById($id);
-	cache_Store($key, $parent, SH_NODE_PARENTBYID_CACHE_TTL);
+	cache_Store($key, $parent !== null ? $parent : 0, SH_NODE_PARENTBYID_CACHE_TTL);
 
 	return $parent;
 }
 
 
 
-const SH_NODE_IDBYPARENTSLUG_CACHE_TTL = 10*60;
+const SH_NODE_IDBYPARENTSLUG_CACHE_TTL = 5*60;
 function nodeCache_GetIdByParentSlug( $parent, $slug ) {
+	global $CACHE_HIT, $CACHE_MISS;
+
 	$key = "!SH!NODE!IDBYPARENTSLUG!".$parent."!".$slug;
 	$id = cache_Fetch($key);
 
-	if ( $id )
+	if ( $id !== null ) {
+		$CACHE_HIT++;
 		return $id;
+	}
+	$CACHE_MISS++;
 
 	$id = node_GetIdByParentSlug($parent, $slug);
-	cache_Store($key, $id, SH_NODE_IDBYPARENTSLUG_CACHE_TTL);
+	cache_Store($key, $id !== null ? $id : 0, SH_NODE_IDBYPARENTSLUG_CACHE_TTL);
 
 	return $id;
 }
 
 
-const SH_NODE_PARENTSLUGBYID_CACHE_TTL = 10*60;
+const SH_NODE_PARENTSLUGBYID_CACHE_TTL = 5*60;
 function nodeCache_GetParentSlugById( $id ) {
+	global $CACHE_HIT, $CACHE_MISS;
+
 	$key = "!SH!NODE!PARENTSLUGBYID!".$id;
 	$parentslug = cache_Fetch($key);
 
-	if ( $parentslug )
+	if ( $parentslug !== null ) {
+		$CACHE_HIT++;
 		return $parentslug;
+	}
+	$CACHE_MISS++;
 
 	$parentslug = node_GetParentSlugById($id);
-	cache_Store($key, $parentslug, SH_NODE_PARENTSLUGBYID_CACHE_TTL);
+	if ( $parentslug !== null )
+		cache_Store($key, $parentslug, SH_NODE_PARENTSLUGBYID_CACHE_TTL);
 
 	return $parentslug;
 }
