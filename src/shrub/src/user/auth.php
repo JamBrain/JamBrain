@@ -30,7 +30,8 @@ function userAuth_Start() {
 	// If session is set, lookup the node, and permissions
 	if ( $id = userAuth_GetId() ) {
 		// Lookup user
-		$USER = nodeComplete_GetById($id);
+		$USER = nodeCache_GetById($id);
+		//$USER = nodeComplete_GetById($id);
 		if ( $USER ) {
 			// Extract Permissions
 			//$USER['private'] = nodeMeta_GetPrivateByNode($id);
