@@ -40,9 +40,9 @@ import HeadMan 							from '../../internal/headman/headman';
 import marked 							from '../../internal/marked/marked';
 
 export default class ViewContent extends Component {
-  constructor(props) {
-    super(props);
-  }
+	constructor(props) {
+		super(props);
+	}
 
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.node) {
@@ -136,10 +136,17 @@ export default class ViewContent extends Component {
 				</div>
 			);
 		}
+		else if ( node.type === 'tags' ) {
+			return (
+				<div id="content">
+					<Common node={node} user={user} >
+						<CommonBody>Placeholder for <strong>Tags</strong> page</CommonBody>
+					</Common>
+				</div>
+			);
+		}
 		else if ( node.type === 'tag' ) {
-			
-			var Methods = ['parent'];
-			
+			var Methods = ['target'];
 			return (
 				<div id="content">
 					<Common node={node} user={user} >

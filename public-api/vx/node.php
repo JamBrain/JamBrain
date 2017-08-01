@@ -279,7 +279,9 @@ switch ( $action ) {
 					'smart',
 					'grade',
 					'feedback',
-					
+
+					'target',
+
 					'grade-01-result',
 					'grade-02-result',
 					'grade-03-result',
