@@ -47,7 +47,7 @@ export default class ViewSidebar extends Component {
 				ShowCountdown.push(<SidebarCountdown date={ jamEndDate2 } nc="jam" to="Submission Hour+" tt="Ends" />);
 			}
 
-			if ( now < compoEndDate2 || now < jamEndDate2 ) {
+			if ( now < compoEndDate2 || now < jamEndDate2 || now < gradeEndDate ) {
 				ShowCountdown.push(<SidebarCountdown date={ gradeEndDate } nc="jam" to="Play+Rate games" tt="Ends" />);
 			}
 		}
