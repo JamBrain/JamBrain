@@ -86,6 +86,8 @@ switch ( $action ) {
 		else 
 			$RESPONSE['changed'] = grade_RemoveByNodeAuthorName($node_id, $user_id, $grade);
 
+//		$RESPONSE['cache'] = nodeCache_GetStats();
+
 		break; // case 'upload': //grade/add/:node_id/:grade/:score
 
 	case 'getmy': //grade/getmy/:node_id

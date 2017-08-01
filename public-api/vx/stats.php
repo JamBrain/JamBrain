@@ -5,7 +5,7 @@ include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."api.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
 
-const CACHE_TTL = 30;
+const CACHE_TTL = 60+30;
 
 json_Begin();
 

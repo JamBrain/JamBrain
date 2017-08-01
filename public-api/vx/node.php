@@ -234,6 +234,7 @@ switch ( $action ) {
 			}
 			
 			$RESPONSE['node'] = $parent;
+//			$RESPONSE['cache'] = nodeCache_GetStats();
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
