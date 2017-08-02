@@ -36,8 +36,10 @@ import CommonBody						from 'com/content-common/common-body';
 import CommonNav						from 'com/content-common/common-nav';
 import CommonNavButton					from 'com/content-common/common-nav-button';
 
-import HeadMan 							from '../../internal/headman/headman';
-import marked 							from '../../internal/marked/marked';
+//import HeadMan 							from '../../internal/headman/headman';
+//import marked 							from '../../internal/marked/marked';
+
+import ViewContentPost					from 'content-post';
 
 export default class ViewContent extends Component {
 	constructor(props) {
@@ -45,11 +47,11 @@ export default class ViewContent extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if(nextProps.node) {
-			this.generateMeta(nextProps.node);
-		}
+//		if(nextProps.node) {
+//			this.generateMeta(nextProps.node);
+//		}
 	}
-
+/*
 	generateMeta(node) {
 		var metaObject = {"og:type": "website", "og:site_name": "Ludum Dare", "og:url": window.location.href, "twitter:card": "summary", "twitter:site": "@ludumdare"};
 
@@ -84,34 +86,41 @@ export default class ViewContent extends Component {
 
 		HeadMan.insertMeta(metaObject);
 	}
+*/
 
-	getContent( {node, user, path, extra, featured} ) {
+	getTitle( {node} ) {
+		let Title = "";
 		if ( node.name ) {
-			document.title = titleParser.parse(node.name, true);
-			if ( document.title === "" )
-				document.title = window.location.host;
+			Title = titleParser.parse(node.name, true);		// What is titleParser?
+			if ( Title === "" )
+				Title = window.location.host;
 			else
-				document.title += " | " + window.location.host;
+				Title += " | " + window.location.host;
 		}
 		else {
-			document.title = window.location.host;
+			Title = window.location.host;
 		}
+		return Title;
+	}
 
+	getContent( {node, user, path, extra, featured} ) {
 		var EditMode = extra && extra.length && extra[extra.length-1] == 'edit';
 
 		if ( node.type === 'post' ) {
-			var Content = [];
-			Content.push(<ContentPost node={node} user={user} path={path} extra={extra} authored by love />);
-
-			if ( !EditMode ) {
-				Content.push(<ContentComments node={node} user={user} path={path} extra={extra} />);
-			}
-
-			return (
-				<div id="content">
-					{Content}
-				</div>
-			);
+			return <ViewContentPost node={node} user={user} path={path} extra={extra} edit={EditMode} />;
+			
+//			var Content = [];
+//			Content.push(<ContentPost node={node} user={user} path={path} extra={extra} authored by love />);
+//
+//			if ( !EditMode ) {
+//				Content.push(<ContentComments node={node} user={user} path={path} extra={extra} />);
+//			}
+//
+//			return (
+//				<div id="content">
+//					{Content}
+//				</div>
+//			);
 		}
 		else if ( node.type === 'page' ) {
 			return (
@@ -710,6 +719,7 @@ export default class ViewContent extends Component {
 
 	render( props ) {
 		if ( props.node ) {
+			document.title = this.getTitle(props);
 			return this.getContent(props);
 		}
 		else {
