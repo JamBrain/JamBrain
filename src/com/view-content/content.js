@@ -36,8 +36,10 @@ import CommonBody						from 'com/content-common/common-body';
 import CommonNav						from 'com/content-common/common-nav';
 import CommonNavButton					from 'com/content-common/common-nav-button';
 
-import HeadMan 							from '../../internal/headman/headman';
-import marked 							from '../../internal/marked/marked';
+//import HeadMan 							from '../../internal/headman/headman';
+//import marked 							from '../../internal/marked/marked';
+
+import ViewContentPost					from 'content-post';
 
 export default class ViewContent extends Component {
 	constructor(props) {
@@ -45,11 +47,11 @@ export default class ViewContent extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if(nextProps.node) {
-			this.generateMeta(nextProps.node);
-		}
+//		if(nextProps.node) {
+//			this.generateMeta(nextProps.node);
+//		}
 	}
-
+/*
 	generateMeta(node) {
 		var metaObject = {"og:type": "website", "og:site_name": "Ludum Dare", "og:url": window.location.href, "twitter:card": "summary", "twitter:site": "@ludumdare"};
 
@@ -84,34 +86,41 @@ export default class ViewContent extends Component {
 
 		HeadMan.insertMeta(metaObject);
 	}
+*/
 
-	getContent( {node, user, path, extra, featured} ) {
+	getTitle( {node} ) {
+		let Title = "";
 		if ( node.name ) {
-			document.title = titleParser.parse(node.name, true);
-			if ( document.title === "" )
-				document.title = window.location.host;
+			Title = titleParser.parse(node.name, true);		// What is titleParser?
+			if ( Title === "" )
+				Title = window.location.host;
 			else
-				document.title += " | " + window.location.host;
+				Title += " | " + window.location.host;
 		}
 		else {
-			document.title = window.location.host;
+			Title = window.location.host;
 		}
+		return Title;
+	}
 
+	getContent( {node, user, path, extra, featured} ) {
 		var EditMode = extra && extra.length && extra[extra.length-1] == 'edit';
 
 		if ( node.type === 'post' ) {
-			var Content = [];
-			Content.push(<ContentPost node={node} user={user} path={path} extra={extra} authored by love />);
-
-			if ( !EditMode ) {
-				Content.push(<ContentComments node={node} user={user} path={path} extra={extra} />);
-			}
-
-			return (
-				<div id="content">
-					{Content}
-				</div>
-			);
+			return <ViewContentPost node={node} user={user} path={path} extra={extra} edit={EditMode} />;
+			
+//			var Content = [];
+//			Content.push(<ContentPost node={node} user={user} path={path} extra={extra} authored by love />);
+//
+//			if ( !EditMode ) {
+//				Content.push(<ContentComments node={node} user={user} path={path} extra={extra} />);
+//			}
+//
+//			return (
+//				<div id="content">
+//					{Content}
+//				</div>
+//			);
 		}
 		else if ( node.type === 'page' ) {
 			return (
@@ -580,6 +589,7 @@ export default class ViewContent extends Component {
 			}
 //			else if ( Viewing == '/games' ) {
 			else if ( extra && extra.length && extra[0] == 'games' ) {
+				let DefaultSubSubFilter = 'featured';
 				let DefaultSubFilter = 'all';
 				let DefaultFilter = 'smart';
 
@@ -597,7 +607,10 @@ export default class ViewContent extends Component {
 				let Methods = [];
 				let Filter = DefaultFilter;
 				let SubFilter = DefaultSubFilter;
+				let SubSubFilter = DefaultSubSubFilter;
 
+				if ( extra.length > 3 )
+					SubSubFilter = extra[3];
 				if ( extra.length > 2 )
 					SubFilter = extra[2];
 				if ( extra.length > 1 )
@@ -654,47 +667,54 @@ export default class ViewContent extends Component {
 				let ShowFilters = null;
 				if ( true ) {
 					let Path = this.props.path+'/games/';
+					
+					let WithSubFilter = SubFilter ? '/'+SubFilter : '';
+					let WithSubSubFilter = SubSubFilter && SubSubFilter != 'featured' ? '/'+SubSubFilter : '';
 
 					ShowFilters = (
 						<Common node={this.props.node} class="filter-item filter-game">
 							<CommonNav>
-								<CommonNavButton href={Path+Filter+'/all'} class={SubFilter == 'all' ? '-selected' : ''}><SVGIcon>gamepad</SVGIcon><div>All</div></CommonNavButton>
-								<CommonNavButton href={Path+Filter+'/jam'} class={SubFilter == 'jam' ? '-selected' : ''}><SVGIcon>trophy</SVGIcon><div>Jam</div></CommonNavButton>
-								<CommonNavButton href={Path+Filter+'/compo'} class={SubFilter == 'compo' ? '-selected' : ''}><SVGIcon>trophy</SVGIcon><div>Compo</div></CommonNavButton>
-								<CommonNavButton href={Path+Filter+'/unfinished'} class={SubFilter == 'unfinished' ? '-selected' : ''}><SVGIcon>trash</SVGIcon><div>Unfinished</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+WithSubFilter+''} class={SubSubFilter == 'featured' ? '-selected' : ''}><SVGIcon>tag</SVGIcon><div>Featured Event</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+WithSubFilter+'/everything'} class={SubSubFilter == 'everything' ? '-selected' : ''}><SVGIcon>tag</SVGIcon><div>All Events</div></CommonNavButton>
 							</CommonNav>
 							<CommonNav>
-								<CommonNavButton href={Path+'smart/'+SubFilter} class={Filter == 'smart' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Smart</div></CommonNavButton>
-								<CommonNavButton href={Path+'classic/'+SubFilter} class={Filter == 'classic' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Classic</div></CommonNavButton>
-								<CommonNavButton href={Path+'danger/'+SubFilter} class={Filter == 'danger' ? '-selected' : ''}><SVGIcon>help</SVGIcon><div>Danger</div></CommonNavButton>
-								<CommonNavButton href={Path+'zero/'+SubFilter} class={Filter == 'zero' ? '-selected' : ''}><SVGIcon>gift</SVGIcon><div>Zero</div></CommonNavButton>
-								<CommonNavButton href={Path+'feedback/'+SubFilter} class={Filter == 'feedback' ? '-selected' : ''}><SVGIcon>bubbles</SVGIcon><div>Feedback</div></CommonNavButton>
-								<CommonNavButton href={Path+'grade/'+SubFilter} class={Filter == 'grade' ? '-selected' : ''}><SVGIcon>todo</SVGIcon><div>Grade</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+'/all'+WithSubSubFilter} class={SubFilter == 'all' ? '-selected' : ''}><SVGIcon>gamepad</SVGIcon><div>All</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+'/jam'+WithSubSubFilter} class={SubFilter == 'jam' ? '-selected' : ''}><SVGIcon>trophy</SVGIcon><div>Jam</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+'/compo'+WithSubSubFilter} class={SubFilter == 'compo' ? '-selected' : ''}><SVGIcon>trophy</SVGIcon><div>Compo</div></CommonNavButton>
+								<CommonNavButton href={Path+Filter+'/unfinished'+WithSubSubFilter} class={SubFilter == 'unfinished' ? '-selected' : ''}><SVGIcon>trash</SVGIcon><div>Unfinished</div></CommonNavButton>
+							</CommonNav>
+							<CommonNav>
+								<CommonNavButton href={Path+'smart'+WithSubFilter+WithSubSubFilter} class={Filter == 'smart' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Smart</div></CommonNavButton>
+								<CommonNavButton href={Path+'classic'+WithSubFilter+WithSubSubFilter} class={Filter == 'classic' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Classic</div></CommonNavButton>
+								<CommonNavButton href={Path+'danger'+WithSubFilter+WithSubSubFilter} class={Filter == 'danger' ? '-selected' : ''}><SVGIcon>help</SVGIcon><div>Danger</div></CommonNavButton>
+								<CommonNavButton href={Path+'zero'+WithSubFilter+WithSubSubFilter} class={Filter == 'zero' ? '-selected' : ''}><SVGIcon>gift</SVGIcon><div>Zero</div></CommonNavButton>
+								<CommonNavButton href={Path+'feedback'+WithSubFilter+WithSubSubFilter} class={Filter == 'feedback' ? '-selected' : ''}><SVGIcon>bubbles</SVGIcon><div>Feedback</div></CommonNavButton>
+								<CommonNavButton href={Path+'grade'+WithSubFilter+WithSubSubFilter} class={Filter == 'grade' ? '-selected' : ''}><SVGIcon>todo</SVGIcon><div>Grade</div></CommonNavButton>
 							</CommonNav>
 							<CommonBody>{FilterDesc[Filter]}</CommonBody>
 						</Common>
 					);
 				}
+				
+				
+				let NodeArg = node;
+				if ( SubSubFilter == 'featured' ) {
+					Methods.push('parent');
+					NodeArg = featured;
+				}
 
 				SubFilter = EvalFilter(SubFilter);
 				
 				var ShowHeader = null;
-				if ( featured ) {
-					ShowHeader = (
-						<Common node={node} user={user}>
-							<CommonBody><SVGIcon pad>alert</SVGIcon> Below are <strong>all</strong> games across all events. <NavLink href={featured.path+'/games'}>Go here</NavLink> for <strong>{featured.name}</strong>.</CommonBody>
-						</Common>
+				if ( NodeArg ) {
+					return (
+						<div id="content">
+							{ShowNavRoot}
+							{ShowFilters}
+							<ContentGames node={NodeArg} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />
+						</div>
 					);
 				}
-
-				return (
-					<div id="content">
-						{ShowNavRoot}
-						{ShowHeader}
-						{ShowFilters}
-						<ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />
-					</div>
-				);
 			}
 			else if ( Viewing == '/palette' ) {
 				return <div id="content"><ContentPalette node={node} user={user} path={path} extra={extra} /></div>;
@@ -710,6 +730,7 @@ export default class ViewContent extends Component {
 
 	render( props ) {
 		if ( props.node ) {
+			document.title = this.getTitle(props);
 			return this.getContent(props);
 		}
 		else {
