@@ -53,14 +53,15 @@ export function Get( ids ) {
 		ids = [ids];
 	}
 
-//	let feed = null;
-//	if ( ids.length && Number.isInteger(ids.length) ) {
-//		feed = ids;
-//		ids = [];
-//		for (let idx = 0; idx < feed.length; idx++) {
-//			ids.push(feed[idx].id);
-//		}
-//	}
+	// Detect if the incoming data is in feed format
+	let feed = null;
+	if ( ids.length && ids[0].modified ) {
+		feed = ids;
+		ids = [];
+		for (let idx = 0; idx < feed.length; idx++) {
+			ids.push(feed[idx].id);
+		}
+	}
 	
 	var nodes = [];
 	var cached = [];

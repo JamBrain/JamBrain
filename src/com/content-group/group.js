@@ -45,7 +45,7 @@ export default class ContentGroup extends Component {
 		if ( items && items.length && nodes ) {
 			ShowBody = [];
 			for (let idx = 0; idx < items.length; idx++) {
-				ShowBody.push(<div><NavLink href={'./'+nodes[idx].slug}>{'/'+nodes[idx].slug}</NavLink><span>{nodes[idx].name}</span></div>);
+				ShowBody.push(<div><NavLink href={'./'+nodes[idx].slug}>{'/'+nodes[idx].name}</NavLink></div>);
 			}
 		}
 		else if ( items && items.length == 0 ) {
