@@ -23,7 +23,7 @@ export default class ContentGroup extends Component {
 		let props = this.props;
 		let node = props.node;
 		
-		$Node.GetFeed(node.id, 'parent', ['group', 'event', 'page'])
+		$Node.GetFeed(node.id, 'parent', ['group', 'event', 'page', 'tag'])
 			.then(r => {
 				if ( r && r.feed ) {
 					this.setState({'items': r.feed});
