@@ -40,19 +40,20 @@ export default class ContentGroup extends Component {
 
 	
 	render( {node, user, extra, featured}, {items, nodes} ) {
-		let ShowBody = null;
-		
+		let ShowBody = [];
 		if ( items && items.length && nodes ) {
-			ShowBody = [];
+			ShowBody.push(<div><NavLink href={node.path+'/..'}>/..</NavLink></div>);
+			
 			for (let idx = 0; idx < items.length; idx++) {
 				ShowBody.push(<div><NavLink href={nodes[idx].path}>{'/'+nodes[idx].name}</NavLink> [{nodes[idx].type}]</div>);
 			}
 		}
 		else if ( items && items.length == 0 ) {
-			ShowBody = <div><SVGIcon gap>info</SVGIcon> No nodes found</div>;
+			ShowBody.push(<h3><SVGIcon gap>info</SVGIcon> No nodes found</h3>);
+			ShowBody.push(<div><NavLink href={node.path+'/..'}>/..</NavLink></div>);
 		}
 		else {
-			ShowBody = <NavSpinner />;
+			ShowBody.push(<NavSpinner />);
 		}
 
 		return (
