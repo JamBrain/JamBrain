@@ -145,15 +145,15 @@ export default class ViewContent extends Component {
 				</div>
 			);
 		}
-		else if ( node.type === 'tags' ) {
-			return (
-				<div id="content">
-					<Common node={node} user={user} >
-						<CommonBody>Placeholder for <strong>Tags</strong> page</CommonBody>
-					</Common>
-				</div>
-			);
-		}
+//		else if ( node.type === 'tags' ) {
+//			return (
+//				<div id="content">
+//					<Common node={node} user={user} >
+//						<CommonBody>Placeholder for <strong>Tags</strong> page</CommonBody>
+//					</Common>
+//				</div>
+//			);
+//		}
 		else if ( node.type === 'tag' ) {
 			var Methods = ['target'];
 			return (
@@ -540,7 +540,7 @@ export default class ViewContent extends Component {
 				</div>
 			);
 		}
-		else if ( node.type === 'events' || node.type === 'group' ) {
+		else if ( node.type === 'events' || node.type === 'group' || node.type === 'tags' ) {
 			return <div id="content"><ContentGroup node={node} user={user} path={path} extra={extra} /></div>;
 		}
 		else if ( node.type === 'root' ) {

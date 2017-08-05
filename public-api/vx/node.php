@@ -123,6 +123,7 @@ const THINGS_I_CAN_FEED = [
 	'item',
 	'event',
 	'group',
+	'tag',
 ];
 
 // Do Actions
