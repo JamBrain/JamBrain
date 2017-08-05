@@ -28,7 +28,7 @@ export default class ContentGroup extends Component {
 				if ( r && r.feed ) {
 					this.setState({'items': r.feed});
 					
-					return $Node.Get(r.feed);
+					return $Node.GetKeyed(r.feed);
 				}
 			})
 			.then( r => {
@@ -45,7 +45,8 @@ export default class ContentGroup extends Component {
 			ShowBody.push(<div><NavLink href={node.path+'/..'}>/..</NavLink></div>);
 			
 			for (let idx = 0; idx < items.length; idx++) {
-				ShowBody.push(<div><NavLink href={nodes[idx].path}>{'/'+nodes[idx].name}</NavLink> [{nodes[idx].type}]</div>);
+				let n = nodes[items[idx].id];
+				ShowBody.push(<div><NavLink href={n.path}>{'/'+n.name}</NavLink> [{n.type}]</div>);
 			}
 		}
 		else if ( items && items.length == 0 ) {
