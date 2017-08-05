@@ -119,6 +119,7 @@ const VALID_TRANSFORMS = [
 
 const THINGS_I_CAN_FEED = [
 	'post',
+	'page',
 	'item',
 	'event',
 	'group',
