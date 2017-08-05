@@ -56,7 +56,7 @@ export default class ContentGroup extends Component {
 		}
 
 		return (
-			<Common node={node} user={user} header={"/"+node.name}>
+			<Common node={node} user={user} header={"/"+node.name.toUpperCase()}>
 				<CommonBody>
 					{ShowBody}
 				</CommonBody>
