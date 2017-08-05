@@ -14,7 +14,8 @@ export default class ContentGroup extends Component {
 		super(props);
 		
 		this.state = {
-			'items': null
+			'items': null,
+			'nodes': null
 		};
 	}
 	
@@ -26,21 +27,28 @@ export default class ContentGroup extends Component {
 			.then(r => {
 				if ( r && r.feed ) {
 					this.setState({'items': r.feed});
+					
+					return $Node.Get(r.feed);
+				}
+			})
+			.then( r => {
+				if ( r && r.node ) {
+					this.setState({'nodes': r.node});
 				}
 			});
 	}
 
 	
-	render( {node, user, extra, featured}, {items} ) {
+	render( {node, user, extra, featured}, {items, nodes} ) {
 		let ShowBody = null;
 		
-		if ( items && items.length ) {
+		if ( items && items.length && nodes ) {
 			ShowBody = [];
 			for (let idx = 0; idx < items.length; idx++) {
-				ShowBody.push(<div>{idx}: {items[idx]}</div>);
+				ShowBody.push(<div><NavLink href={'./'+nodes[idx].slug}>{'/'+nodes[idx].slug}</NavLink><span>{nodes[idx].name}</span></div>);
 			}
 		}
-		else if ( items ) {
+		else if ( items && items.length == 0 ) {
 			ShowBody = <div><SVGIcon gap>info</SVGIcon> No nodes found</div>;
 		}
 		else {
