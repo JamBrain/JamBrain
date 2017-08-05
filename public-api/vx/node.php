@@ -120,7 +120,8 @@ const VALID_TRANSFORMS = [
 const THINGS_I_CAN_FEED = [
 	'post',
 	'item',
-	'event'	
+	'event',
+	'group',
 ];
 
 // Do Actions
