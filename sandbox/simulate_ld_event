@@ -1,16 +1,5 @@
 #!/usr/bin/env php
 <?php 
-
-const CONFIG_PATH = "../src/shrub/";
-const SHRUB_PATH = "../src/shrub/src/";
-
-# Use shrub wrapper for db access
-include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/".SHRUB_PATH."constants.php";
-require_once __DIR__."/".SHRUB_PATH."core/db.php";
-require_once __DIR__."/".SHRUB_PATH."node/node.php";
-require_once __DIR__."/".SHRUB_PATH."user/user.php";
-
 /*
 	Summary of this program and its intent:
 	
@@ -23,6 +12,17 @@ The script will keep track of (some/much of) the data it generates, and will ver
 The exact flow will be documented in the data structures that guide the process, below.
 
 */
+
+const CONFIG_PATH = "../src/shrub/";
+const SHRUB_PATH = "../src/shrub/src/";
+
+# Use shrub wrapper for db access
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."constants.php";
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
+require_once __DIR__."/".SHRUB_PATH."node/node.php";
+require_once __DIR__."/".SHRUB_PATH."user/user.php";
+
 
 if ( count($argv) < 3  || ($argv[2] != "actions" && $argv[2] != "minutes")) {
 	print "LudumDare Event simulator. Quick summary:\n";
@@ -96,10 +96,10 @@ $stages = array(
 	// First stage, create users and generate the event
 	array(
 		"Name" => "Setup",
-		"Setup" => SetupEvent,
+		"StageStart" => 'SetupEvent',
 		"MaxMinutes" => 1,
 		"MaxEventsPerUser" => 15,
-		"LowChance" => array(PostImIn, CommentOnPost) // Early "I'm In" posts
+		"LowChance" => array('PostImIn', 'CommentOnPost') // Early "I'm In" posts
 	),
 	// Second stage, Theme voting
 	array(
@@ -107,39 +107,39 @@ $stages = array(
 		"Phases" => 7, // Theme suggestion + theme slaughter + 4 rounds of voting + theme selection
 		"MaxMinutes" => 1, // This is per phase
 		"MaxEventsPerUser" => 200,
-		"PhaseStart" => SetupThemePhase,
-		"HighChance" => UserVoteOnTheme,
-		"LowChance" => array(PostImIn, CommentOnPost)  // More various "I'm In" posts will trickle in
+		"PhaseStart" => 'SetupThemePhase',
+		"HighChance" => 'UserVoteOnTheme',
+		"LowChance" => array('PostImIn', 'CommentOnPost')  // More various "I'm In" posts will trickle in
 	),
 	// Third stage, LD Starts!
 	array(
 		"Name" => "Compo Running",
-		"Setup" => StartCompo,
-		"HighChance" => array(CompoPostUpdate, CompoEditGame, CommentOnPost),
-		"LowChance" => array(CommentOnGame, CompoPublishGame, CommentUnlike)
+		"StageStart" => 'StartCompo',
+		"HighChance" => array('CompoPostUpdate', 'CompoEditGame', 'CommentOnPost'),
+		"LowChance" => array('CommentOnGame', 'CompoPublishGame', 'CommentUnlike')
 	),
 	// Fourth stage, Submission deadline
 	array(
 		"Name" => "Compo Submission Period",
-		"Setup" => SetupSubmission,
+		"StageStart" => 'SetupSubmission',
 		"MaxMinutes" => 2,
 		"MaxEventsPerUser" => 20,
-		"HighChance" => array(CommentOnGame, CompoPublishGame),
-		"LowChance" => array(CompoPostUpdate, CompoEditGame, CommentOnPost, CommentUnlike),
+		"HighChance" => array('CommentOnGame', 'CompoPublishGame'),
+		"LowChance" => array('CompoPostUpdate', 'CompoEditGame', 'CommentOnPost', 'CommentUnlike'),
 	),
 	// Fifth stage, Voting
 	array(
 		"Name" => "Compo Voting",
-		"Setup" => SetupVoting,
+		"StageStart" => 'SetupVoting',
 		"MaxEventsPerUser" => 300,
-		"HighChance" => array(CommentOnGame, VoteOnGame),
-		"LowChance" => array(CommentOnPost, CompoEditGame, CompoPostUpdate, CommentUnlike)
+		"HighChance" => array('CommentOnGame', 'VoteOnGame'),
+		"LowChance" => array('CommentOnPost', 'CompoEditGame', 'CompoPostUpdate', 'CommentUnlike')
 	),
 	// Sixth stage - Closed / resuts
 	array(
 		"Name" => "Compo Results",
-		"Setup" => EndCompo,
-		LowChance => array(CommentOnGame, CommentOnPost, CompoEditGame, CompoPostUpdate, CommentUnlike, CompoPostResults)
+		"StageStart" => 'EndCompo',
+		"LowChance" => array('CommentOnGame', 'CommentOnPost', 'CompoEditGame', 'CompoPostUpdate', 'CommentUnlike', 'CompoPostResults')
 	)
 );
 
@@ -167,56 +167,157 @@ function SetupSubmission()
 {
 }
 
+// Submission is over, and now the voting period begins
+function SetupVoting()
+{
+}
+
+// Voting is over, close out the compo.
+function EndCompo()
+{
+}
+
 // User should discover and interact with the available options in the current theme voting phase.
 function UserVoteOnTheme($user, $phase)
 {
-
+	return false;
 }
 
 
 // Post a very simple "I'm In" post. Only do this once per event.
 function PostImIn($user, $phase)
 {
-
+	return false;
 }
 
 // Find a recent post in the feed, and post a comment - and optionally give it or one of its comments a like.
 function CommentOnPost($user, $phase)
 {
+	return false;
 }
 // Find a game through one of the game lists, and give it a comment, and optionally give it or one of its comments a like.
 function CommentOnGame($user, $phase)
 {
+	return false;
 }
 
 // Remove a like from some post/comment/game that was liked previously. The simulated user revisits the node and comments, and removes the like.
 function CommentUnlike($user, $phase)
 {
+	return false;
 }
 
 // Generate and post a new item to the compo feed
 function CompoPostUpdate($user, $phase)
 {
+	return false;
 }
 
 // And this is the part of the game where some users wish to parade their stats into the news feed, or complain about PoV :)
 function CompoPostResults($user, $phase)
 {
+	return false;
 }
 
 // Modify the record for the current user's game and submit an update.
 function CompoEditGame($user, $phase)
 {
-
+	return false;
 }
 // Can only be called once. If the game is not published, publish it.
 function CompoPublishGame($user, $phase)
 {
-
+	return false;
 }
 
 ////
 //// Code to drive the stage progression based on the $stages variable defined above.
+////
+$stagecount = count($stages);
+
+function Verbose($text)
+{
+	print($text . "\n");
+}
+
+for($curStage = 0; $curStage < $stagecount; $curStage++)
+{
+	$stage = $stages[$curStage];
+	Verbose("Starting stage " . $curStage . " - " . $stage["Name"]);
+
+	// Start stage function
+	if(key_exists("StageStart",$stage)) { $stage["StageStart"](); }
+
+	$phasecount = 1;
+	$hasPhases = false;
+	if(key_exists("Phases", $stage)) { 
+		$hasPhases = true;
+		$phasecount = $stage["Phases"];
+	}
+
+	for($phase = 0; $phase < $phasecount; $phase++)
+	{
+		if($hasPhases && key_exists("PhaseStart",$stage)) { $stage["PhaseStart"]($phase); }
+
+		PrepareStageActions($stage, $phase);
+
+		// Determine proper action limiting mechanism
+		if($runminutes)
+		{
+			// Use temporal limiting
+			$minutes = $runminutes;
+			if($stage["MaxMinutes"])
+			{
+				$minutes = Math.min($minutes, $stage["MaxMinutes"]);
+			}
+			$end = (new DateTime()).Add(new DateInterval("PT".$minutes."M"));
+			
+			while($end < new DateTime())
+			{
+				ExecuteStageAction($stage, $phase);
+			}
+		}
+		else
+		{
+			// Use event count limiting
+			for($action = 0; $action < $runactions; $action++)
+			{
+				ExecuteStageAction($stage, $phase);
+			}
+		}
+
+		// Excecute actions as available until limit is hit
+
+		// Ensure promised conditions about mandatory actions hold
+		CompleteMandatoryStageActions($stage, $phase);
+
+		if($hasPhases && key_exists("PhaseEnd",$stage)) { $stage["PhaseEnd"]($phase); }
+
+	}
+
+	// End stage function
+	if(key_exists("StageEnd",$stage)) { $stage["StageEnd"](); }
+  
+}
+
+function PrepareStageActions($stage, $phase)
+{
+
+}
+
+function ExecuteStageAction($stage, $phase)
+{
+	usleep(1000); // Delay 1ms
+}
+
+function CompleteMandatoryStageActions($stage, $phase)
+{
+
+}
+
+
+////
+//// Common functions to assist in doing normal tasks in the site
 ////
 
 
@@ -230,5 +331,5 @@ function CompoPublishGame($user, $phase)
 
 
 
-print "test\n";
+
 exit(0);
