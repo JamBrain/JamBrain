@@ -51,12 +51,33 @@ else
 
 ////////////////////////////////
 // Some global settings
+
+$apibase = "http://api.ludumdare.org/";
 $usercount = 40;
 $keepallposts = true;
 $keeppostcount = 100; // Number of posts per user to keep, when keep all posts is false (which it should be for high user counts or long runtimes / stress environments.)
 $verbose = true; // Display all of the details about what's going on?
 $verboselog = true; // Keep all details about what's going on in a log.
 $useprevioususers = false; // (not implemented) Load the set of users from the previous test event, instead of creating new users.
+
+$errorcount = 0;
+
+function TimeString()
+{
+  $d = new DateTime();
+  return $d->format("Y-m-d H:i:s");
+}
+
+function ReportError($text)
+{
+	global $errorcount;
+	$errorcount++;
+	print("[" . TimeString() . "] Error: " . $text . "\n");
+}
+function Verbose($text)
+{
+	print("[" . TimeString() . "] Verbose: " . $text . "\n");
+}
 
 
 
@@ -144,12 +165,21 @@ $stages = array(
 );
 
 
+$event_admin_user = null;
+$event_users = array();
+
+
 // Prepare the event. Create an admin superuser. Create all the compo users. Create the new LudumDare event. Publish the event node.
 // Some of this has to be done through the database directly (finding the email verification links, and creating the ludumdare event and setting it up)
 // We'll also use some data from the database to make the naming a bit more friendly.
 function SetupEvent()
 {
-
+	global $event_admin_user, $event_users;
+	
+	$event_admin_user = User_Create();
+	
+	
+	exit(0);
 }
 
 // Set up for each of the phases of the theme selection, in sequence.
@@ -235,10 +265,6 @@ function CompoPublishGame($user, $phase)
 ////
 $stagecount = count($stages);
 
-function Verbose($text)
-{
-	print($text . "\n");
-}
 
 for($curStage = 0; $curStage < $stagecount; $curStage++)
 {
@@ -272,7 +298,7 @@ for($curStage = 0; $curStage < $stagecount; $curStage++)
 			}
 			$end = (new DateTime()).Add(new DateInterval("PT".$minutes."M"));
 			
-			while($end < new DateTime())
+			while($end > new DateTime())
 			{
 				ExecuteStageAction($stage, $phase);
 			}
@@ -285,9 +311,7 @@ for($curStage = 0; $curStage < $stagecount; $curStage++)
 				ExecuteStageAction($stage, $phase);
 			}
 		}
-
-		// Excecute actions as available until limit is hit
-
+		
 		// Ensure promised conditions about mandatory actions hold
 		CompleteMandatoryStageActions($stage, $phase);
 
@@ -320,15 +344,302 @@ function CompleteMandatoryStageActions($stage, $phase)
 //// Common functions to assist in doing normal tasks in the site
 ////
 
+function User_Create()
+{
+	$username = GenerateRandomUsername();
+	$password = GenerateRandomPassword();
+	
+	// Construct a user object
+	$user = [
+		"username" => $username,
+		"password" => $password,
+		"cookies" => array(),
+		
+		// Further info for tracking data this user has posted and interacted with.
+		"posts" => array(),
+		"publishedgame" => "false"
+	];
+	
+	// Determine if username is in use
+	for($i = 0; $i < 20; $i++)
+	{
+		if(ApiUserHave($username))
+		{
+			// Username is in use, pick another
+			$username = GenerateRandomUsername();
+			$user["username"] = $username;
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	// API request to create user
+	$email = $username . "@ludumdare.org";
+	
+	$mailsent = ApiUserCreate($email, $user);
+	if(!$mailsent)
+	{
+		Verbose("Warning: User create didn't send mail. It's not strictly necessary to catch mail for this, but you probably don't have the mail catcher running.");
+	}
+	
+	// Dig out the email auth token from the database and activate the user
+	$userdata = user_GetByMail($email);
+	$id = $userdata["id"];
+	$key = $userdata["auth_key"];
+	
+	if(!ApiUserActivate($user, $id, $key))
+	{
+		ReportError("Error while creating user.");
+		return null;
+	}
+	
+	$user["id"] = $id;
+	
+	// Login the user
+	if(!ApiUserLogin($user))
+	{
+		ReportError("Unable to login new user.");
+		return null;	
+	}
+	
+	return $user;
+}
 
 
+
+
+// Does the site have this username already?
+function ApiUserHave($username)
+{
+	$value = LdApi::Post("vx/user/have","name=".$username);
+	if($value != null)
+	{
+		return !($value["available"]);
+	}
+	return false;
+}
+
+// Create a new user (by email address)
+function ApiUserCreate($email, &$user)
+{
+	$value = LdApi::Post("vx/user/create","mail=".$email, $user);
+	if($value != null)
+	{
+		return $value["sent"];
+	}
+	return false;
+}
+
+function ApiUserActivate(&$user, $id, $auth_key)
+{
+	$name = $user["username"];
+	$pw = $user["password"];
+	
+	$postString = "id=".$id."&key=".$auth_key."&name=".$name."&pw=".$pw;
+	$value = LdApi::Post("vx/user/activate",$postString,$user);
+	
+	if($value != null)
+	{
+		return $value["response_httpcode"] == "201";
+	}
+	return false;
+}
+
+function ApiUserLogin(&$user)
+{
+	$login = $user["username"];
+	$pw = $user["password"];
+	
+	$value = LdApi::Post("vx/user/login", "login=".$login."&pw=".$pw, $user);
+	
+	if($value != null)
+	{
+		return $value["response_httpcode"] == "200"; 
+	}
+	return $false;
+}
 
 ////
-//// Now that we're far enough down in the file that nobody will ever see it, it's time to unleash the true dark magic
-//// Below is code to greatly simplify the process of poking the LD API from the script. Its features will be summarized above for mere mortals.
+//// Low level helper / generation code
 ////
 
+function GenerateRandomUsername()
+{
+  $length = random_int(2, 10);
+  return bin2hex(random_bytes($length));
+}
 
+function GenerateRandomPassword()
+{
+  $length = random_int(5, 10);
+  return bin2hex(random_bytes($length));
+}
+
+// Future: something much more meaningful. Also figure out how to include image uploads, links, other fun feathres.
+function GenerateRandomPostText($minWords = 10, $maxWords = 200)
+{
+	$words = random_int($minWords, $maxWords);
+	$allwords = array();
+	for($i=0;$i<$words;$i++)
+	{
+		$wordlength = random_int(1,5);
+		$word = bin2hex(random_bytes($wordlength));
+		$allwords[] = $word;
+	}
+	return implode(" ",$allwords);
+}
+
+////
+//// Low level API interface code
+////
+
+class LdApi
+{
+	static $debug_api = true;
+
+	static function SetRequestUser($curl, &$user)
+	{
+		if($user != null)
+		{
+			// Generate cookie string for user and set it.
+			$cookies = [];
+			foreach($user["cookies"] as $c => $v)
+			{
+				$cookies[] = $c."=".$v;
+			}
+			$cookiestring = implode("; ", $cookies);
+			curl_setopt($curl, CURLOPT_COOKIE, $cookiestring);
+			if($cookiestring != "")
+			{
+				Verbose("Sending Cookie: ".$cookiestring);
+			}
+		}
+	}
+	static function UpdateUserCookie($headers, &$user)
+	{
+		if($user != null)
+		{
+			$lines = explode("\r\n", $headers);
+			foreach($lines as $v)
+			{
+				$parts = explode(": ",$v, 2);
+				if($parts[0] == "Set-Cookie")
+				{
+					Verbose("Receive Set-Cookie: ".$parts[1]);
+					$c = explode(";", $parts[1]);
+					$cookiedata = explode("=",$c[0],2);
+					// interpret "=deleted" as the condition to delete a cookie, as the code to check the expires time is annoying in php.
+					if($cookiedata[1] == "deleted")
+					{
+						unset($user["cookies"][$cookiedata[0]]);
+					}
+					else
+					{
+						$user["cookies"][$cookiedata[0]] = $cookiedata[1];
+					}
+				}			
+			}
+		}
+	}
+	static function ForUser(&$user)
+	{
+		if($user != null)
+		{
+			return " for user " . $user["username"];
+		}
+		return "";
+	}
+  
+	public static function Get($url, &$user = NULL, $report_error=true)
+	{
+		global $apibase;
+		$outputObject = NULL;
+		$url = $apibase . $url;
+		if(LdApi::$debug_api)
+		{
+			Verbose("GET '".$url."'".LdApi::ForUser($user));
+		}
+		
+		$c = curl_init($url);
+		
+		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($c, CURLOPT_HTTPGET, true);
+		
+		LdApi::SetRequestUser($c, $user);
+		
+		$result = curl_exec($c);
+		$success = !($result === false);
+		if($success)
+		{
+			$outputObject = json_decode($result, true);
+			$httpcode = curl_getinfo($c, CURLINFO_HTTP_CODE);
+			$outputObject["response_httpcode"] = $httpcode;			
+			LdApi::UpdateUserCookie($c, $user);
+		}
+		if(!$success && $report_error)
+		{
+			ReportError("Error getting '".$url ."'". LdApi::ForUser($user). " - " . curl_error($c));
+		}
+		
+		if(LdApi::$debug_api)
+		{
+			Verbose("Response '" . $result . "'");
+		}
+		curl_close($c);
+		
+		return $outputObject;
+	}
+	public static function Post($url, $postdata, &$user = NULL)
+	{
+		global $apibase;
+
+		$outputObject = NULL;
+		$url = $apibase . $url;		
+
+		if(LdApi::$debug_api)
+		{
+			Verbose("POST '".$url."' with data '".$postdata."'".LdApi::ForUser($user));
+		}
+		
+		$c = curl_init($url);
+		
+		curl_setopt($c, CURLOPT_HEADER, true);
+		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($c, CURLOPT_POST, true);
+		curl_setopt($c, CURLOPT_POSTFIELDS, $postdata);
+		
+		LdApi::SetRequestUser($c, $user);
+		
+		$content = "";
+		$result = curl_exec($c);
+		$success = !($result === false);
+		if($success)
+		{
+			$parts = explode("\r\n\r\n",$result);
+			$headers = $parts[0];
+			$content = $parts[1];
+		
+			$outputObject = json_decode($content, true);
+			$httpcode = curl_getinfo($c, CURLINFO_HTTP_CODE);
+			$outputObject["response_httpcode"] = $httpcode;
+			
+			LdApi::UpdateUserCookie($headers, $user);
+		}
+		if(!$success && $report_error)
+		{
+			ReportError("Error getting '".$url ."'". LdApi::ForUser($user) . " - " . curl_error($c));
+		}
+		if(LdApi::$debug_api)
+		{
+			Verbose("Response '" . $content . "'");
+		}
+		curl_close($c);
+		return $outputObject;	
+	
+	}
+}
 
 
 
