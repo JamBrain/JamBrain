@@ -52,8 +52,15 @@ else
 ////////////////////////////////
 // Some global settings
 
+$enable_file_logs = true;
+$logbase = "/tmp/ld_event"; // Logs will be put in /tmp
+// Generate 3 kinds of log. 
+//   <name>.<eventIndex>.event (Event information, user/password list)
+//   <name>.<eventIndex>.log (Full Detail Verbose log)
+//   <name>.<eventIndex>.err (Summary log and errors)
+
 $apibase = "http://api.ludumdare.org/";
-$usercount = 40;
+$usercount = 3; // Something like 40-50 is good for reasonable size tests.
 $keepallposts = true;
 $keeppostcount = 100; // Number of posts per user to keep, when keep all posts is false (which it should be for high user counts or long runtimes / stress environments.)
 $verbose = true; // Display all of the details about what's going on?
@@ -72,13 +79,97 @@ function ReportError($text)
 {
 	global $errorcount;
 	$errorcount++;
-	print("[" . TimeString() . "] Error: " . $text . "\n");
+	$text = "[" . TimeString() . "] Error: " . $text . "\n";
+	print($text);
+	LogFull($text);
+	LogErr($text);
 }
 function Verbose($text)
 {
-	print("[" . TimeString() . "] Verbose: " . $text . "\n");
+	$text = "[" . TimeString() . "] Verbose: " . $text . "\n";
+	print($text);
+	LogFull($text);
+}
+function Message($text)
+{
+	$text = "[" . TimeString() . "] " . $text . "\n";
+	print($text);
+	LogFull($text);
+	LogErr($text);
 }
 
+
+$flogfull = null;
+$flogerr = null;
+
+function LogFull($text)
+{
+	global $flogfull;
+	if($flogfull != null)
+	{
+		fwrite($flogfull, $text);
+		fflush($flogfull);
+	}
+}
+function LogErr($text)
+{
+	global $flogerr;
+	if($flogerr != null)
+	{
+		fwrite($flogerr, $text);
+		fflush($flogerr);
+	}
+}
+
+function OpenLogs($index)
+{
+	global $logbase;
+	global $flogfull;
+	global $flogerr;
+	$fulllog = $logbase . "." . $index . ".log";
+	$errlog = $logbase . "." . $index . ".err";
+	$flogfull = fopen($fulllog, "a");
+	$flogerr = fopen($errlog, "a");
+}
+
+function CloseLogs()
+{
+	global $flogfull;
+	global $flogerr;
+	fclose($flogfull);
+	fclose($flogerr);
+	$flogfull = null;
+	$flogerr = null;
+}
+
+function OpenEventFile()
+{
+	global $logbase;
+	global $eventindex;
+	$log = $logbase . "." . $eventindex . ".event";
+	return fopen($log, "a");
+}
+
+// Figure out event index to use for this run, and start loggers.
+
+$events = db_QueryFetch(
+		"SELECT
+			n.id, n.name, n.slug, 
+			".DB_FIELD_DATE('n.modified', 'modified')."
+		FROM
+			".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
+		WHERE n.type = 'event'
+		ORDER BY n.id
+		LIMIT 500
+		;"
+	);
+
+$eventindex = count($events) + 1;
+
+if($enable_file_logs)
+{
+	OpenLogs($eventindex);
+}
 
 
 /*
@@ -168,6 +259,7 @@ $stages = array(
 $event_admin_user = null;
 $event_users = array();
 
+$event_nodeid = null;
 
 // Prepare the event. Create an admin superuser. Create all the compo users. Create the new LudumDare event. Publish the event node.
 // Some of this has to be done through the database directly (finding the email verification links, and creating the ludumdare event and setting it up)
@@ -178,13 +270,78 @@ function SetupEvent()
 	
 	$event_admin_user = User_Create();
 	
+	// Now create the normal users
+	global $usercount;
+	for($i=0;$i < $usercount; $i++)
+	{
+		$event_users[] = User_Create();
+	}
 	
-	exit(0);
+	// Now generate an event
+	global $event_nodeid;
+	global $eventindex;
+	$parentnode = 1; // Future: build out a more complex structure for this test.
+	$author = $event_admin_user["id"];
+	$eventname = "Testumdare " . ($eventindex);  
+	
+	$starttime = time();
+	$endtime = $starttime + 48*60*60;
+	$formatStart = gmdate("Y-m-d\TH:i:s\Z", $starttime);
+	$formatEnd = gmdate("Y-m-d\TH:i:s\Z", $endtime);
+	
+	$event_nodeid = node_Add( $parentnode, $author, "event", "", "", null, $cmdname, "");
+
+	// Add metadata
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-create', 'item/game');
+
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-start', $formatStart);
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-end', $formatEnd);
+
+	// Also publish the event
+
+	// (soon)
+
+
+	// Make featured
+	nodeMeta_AddByNode(1, SH_NODE_META_PUBLIC, 'featured', "$event_nodeid");
+	
+	
+	// Save information about the users into a file
+	$f = OpenEventFile();
+	fwrite($f, "# For now, just spitting out event data in a semi human readable form.\n");
+	fwrite($f, "# First line is Admin, rest of the lines are normal users.\n");
+	fwrite($f, "# Each line is Username:Password\n");
+	
+	fwrite($f, $event_admin_user["username"] . ":" . $event_admin_user["password"] . "\n");
+
+	foreach($event_users as $u)
+	{
+		fwrite($f, $u["username"] . ":" . $u["password"] . "\n");	
+	}
+
+	fclose($f);
 }
 
 // Set up for each of the phases of the theme selection, in sequence.
 function SetupThemePhase($phase)
 {
+	global $event_nodeid;
+	
+	switch($phase)
+	{
+	case 0: // Theme Suggestion
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-theme', 1);
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 1);
+		break;
+		
+	case 1: // Theme Slaughter
+	case 2: // Theme voting
+	case 3:
+	case 4:
+	case 5:
+	case 6: // Final theme selection
+		break;
+	}
 }
 
 // The compo has now started, the theme voting is now locked and a theme is selected. The users will be sure to mention the theme in some of their posts.
@@ -269,7 +426,7 @@ $stagecount = count($stages);
 for($curStage = 0; $curStage < $stagecount; $curStage++)
 {
 	$stage = $stages[$curStage];
-	Verbose("Starting stage " . $curStage . " - " . $stage["Name"]);
+	Message("Starting stage " . $curStage . " - " . $stage["Name"]);
 
 	// Start stage function
 	if(key_exists("StageStart",$stage)) { $stage["StageStart"](); }
@@ -283,6 +440,10 @@ for($curStage = 0; $curStage < $stagecount; $curStage++)
 
 	for($phase = 0; $phase < $phasecount; $phase++)
 	{
+		if($hasPhases)
+		{
+			Message("Beginning Phase ".$phase);
+		}
 		if($hasPhases && key_exists("PhaseStart",$stage)) { $stage["PhaseStart"]($phase); }
 
 		PrepareStageActions($stage, $phase);
@@ -564,16 +725,22 @@ class LdApi
 		
 		$c = curl_init($url);
 		
+		curl_setopt($c, CURLOPT_HEADER, true);		
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($c, CURLOPT_HTTPGET, true);
 		
 		LdApi::SetRequestUser($c, $user);
 		
+		$content = "";
 		$result = curl_exec($c);
 		$success = !($result === false);
 		if($success)
 		{
-			$outputObject = json_decode($result, true);
+			$parts = explode("\r\n\r\n",$result);
+			$headers = $parts[0];
+			$content = $parts[1];
+		
+			$outputObject = json_decode($content, true);
 			$httpcode = curl_getinfo($c, CURLINFO_HTTP_CODE);
 			$outputObject["response_httpcode"] = $httpcode;			
 			LdApi::UpdateUserCookie($c, $user);
@@ -585,7 +752,7 @@ class LdApi
 		
 		if(LdApi::$debug_api)
 		{
-			Verbose("Response '" . $result . "'");
+			Verbose("Response '" . $content . "'");
 		}
 		curl_close($c);
 		
@@ -642,5 +809,5 @@ class LdApi
 }
 
 
-
+CloseLogs();
 exit(0);
