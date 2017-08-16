@@ -93,7 +93,7 @@ function Verbose($text)
 function VerboseAction($text)
 {
 	$text = "[" . TimeString() . "] Verbose: " . $text . "\n";
-	print( "\x1b[1,34m" . $text . "\x1b[m"); // Draw in blue with intensity
+	print( "\x1b[1;34m" . $text . "\x1b[m"); // Draw in blue with intensity
 	LogFull($text);
 }
 function Message($text)
@@ -226,7 +226,7 @@ $stages = array(
 		"MaxMinutes" => 1, // This is per phase
 		"MaxEventsPerUser" => 200,
 		"PhaseStart" => 'SetupThemePhase',
-		"HighChance" => 'UserVoteOnTheme',
+		"HighChance" => ['UserVoteOnTheme'],
 		"LowChance" => array('PostImIn', 'CommentOnPost')  // More various "I'm In" posts will trickle in
 	),
 	// Third stage, LD Starts!
@@ -274,7 +274,7 @@ function SetupEvent()
 {
 	global $event_admin_user, $event_users;
 	
-	$event_admin_user = User_Create();
+	$event_admin_user = &User_Create();
 	
 	// Now create the normal users
 	global $usercount;
@@ -377,7 +377,7 @@ function EndCompo()
 }
 
 // User should discover and interact with the available options in the current theme voting phase.
-function UserVoteOnTheme($user, $phase)
+function UserVoteOnTheme(&$user, $phase)
 {
 	switch($phase)
 	{
@@ -401,50 +401,102 @@ function UserVoteOnTheme($user, $phase)
 
 
 // Post a very simple "I'm In" post. Only do this once per event.
-function PostImIn($user, $phase)
+function PostImIn(&$user, $phase)
 {
+	if($user["postedimin"]) return false;
+	
+	$title = "I'm In";
+	$body = "I'm In " . GenerateRandomPostText();
+	CreatePost($user, $title, $body);
+	
+	$user["postedimin"] = true;
 	return false;
 }
 
 // Find a recent post in the feed, and post a comment - and optionally give it or one of its comments a like.
-function CommentOnPost($user, $phase)
+function CommentOnPost(&$user, $phase)
 {
 	return false;
 }
 // Find a game through one of the game lists, and give it a comment, and optionally give it or one of its comments a like.
-function CommentOnGame($user, $phase)
+function CommentOnGame(&$user, $phase)
+{
+	return false;
+}
+// Find a game through one of the game lists, and vote on it. Or change the votes to something else.
+function VoteOnGame(&$user, $phase)
 {
 	return false;
 }
 
 // Remove a like from some post/comment/game that was liked previously. The simulated user revisits the node and comments, and removes the like.
-function CommentUnlike($user, $phase)
+function CommentUnlike(&$user, $phase)
 {
 	return false;
 }
 
 // Generate and post a new item to the compo feed
-function CompoPostUpdate($user, $phase)
+function CompoPostUpdate(&$user, $phase)
 {
-	return false;
+	$title = GenerateRandomPostTitle();
+	$body = GenerateRandomPostText();
+	CreatePost($user, $title, $body);
+	return true;
 }
 
 // And this is the part of the game where some users wish to parade their stats into the news feed, or complain about PoV :)
-function CompoPostResults($user, $phase)
+function CompoPostResults(&$user, $phase)
 {
 	return false;
 }
 
 // Modify the record for the current user's game and submit an update.
-function CompoEditGame($user, $phase)
+function CompoEditGame(&$user, $phase)
 {
 	return false;
 }
 // Can only be called once. If the game is not published, publish it.
-function CompoPublishGame($user, $phase)
+function CompoPublishGame(&$user, $phase)
 {
 	return false;
 }
+
+
+////
+//// Quickly sanity check that all functions referenced in the above state system actually exist.
+//// 
+function EnsureFunction($funcname)
+{
+	if(!function_exists($funcname))
+	{
+		ReportError("Fatal error - Function ".$funcname.' referenced in the $stages array does not exist.');
+		exit(1);
+	}
+}
+function EnsureFunctionKey(&$stage, $keyname)
+{
+	if(key_exists($keyname, $stage)) { EnsureFunction($stage[$keyname]); }
+}
+function EnsureFunctionArray(&$stage, $keyname)
+{
+	if(key_exists($keyname, $stage)) 
+	{
+		foreach($stage[$keyname] as $f) EnsureFunction($f);
+	}
+}
+
+foreach($stages as $stage)
+{
+	EnsureFunctionKey($stage, "StageStart");
+	EnsureFunctionKey($stage, "StageEnd");
+	EnsureFunctionKey($stage, "PhaseStart");
+	EnsureFunctionKey($stage, "PhaseEnd");
+	EnsureFunctionKey($stage, "UserVerify");
+	EnsureFunctionArray($stage, "Always");
+	EnsureFunctionArray($stage, "LowChance");
+	EnsureFunctionArray($stage, "HighChance");
+}
+
 
 ////
 //// Code to drive the stage progression based on the $stages variable defined above.
@@ -522,20 +574,169 @@ for($curStage = 0; $curStage < $stagecount; $curStage++)
   
 }
 
+$currentstageactions = null;
+
 function PrepareStageActions($stage, $phase)
 {
+	global $event_users;
+	global $currentstageactions;
+	$currentstageactions = [ "Allowed" => [], "Required" => [], "Users" => [], "ActiveUsernames" => [] ];
+	
+	// Generate a reference list of users for the current stage
+	foreach($event_users as $u)
+	{
+		$currentstageactions["Users"][$u["username"]] = &$u;
+	}
+	
+	// Extract actions out from stage	
+	// Always => List of functions (actions) to be called by all simulated users in this phase
+	// LowChance => List of functions (actions) to be called by a few (at least one, but less than half) of the simulated users in this phase. Each function gets its own list of users
+	// HighChance => list of functions (actions) to be called by most (not all, but at least half) of the simulated users in this phase. Each function gets its own list of users
+	
+	if(key_exists("Always",$stage))
+	{
+		foreach($stage["Always"] as $action)
+		{
+			foreach($currentstageactions["Users"] as $u)
+			{	
+				$currentstageactions["Allowed"][$u["username"]][] = $action;
+				$currentstageactions["Required"][$u["username"]][] = $action;
+			}
+		}
+	}
+	$usercount = count($currentstageactions["Users"]);
+	$halflow = floor($usercount/2);
+	$halfhigh = ceil($usercount/2);
+	
+	if(key_exists("LowChance",$stage))
+	{
+		foreach($stage["LowChance"] as $action)
+		{
+			$users = random_int(1, $halfhigh);
+			$randomusers = PickRandomSubset($event_users, $users);
+			
+			foreach($randomusers as $u)
+			{	
+				$currentstageactions["Allowed"][$u["username"]][] = $action;
+				$currentstageactions["Required"][$u["username"]][] = $action;
+			}
+		}	
+	}
+	if(key_exists("HighChance",$stage))
+	{
+		foreach($stage["HighChance"] as $action)
+		{
+			$users = random_int($halflow, $usercount);
+			$randomusers = PickRandomSubset($event_users, $users);
+			
+			foreach($randomusers as $u)
+			{	
+				$currentstageactions["Allowed"][$u["username"]][] = $action;
+				$currentstageactions["Required"][$u["username"]][] = $action;
+			}
+		}	
+	}	
+	
+	// Compute ActiveUsernames from users that have actions still.
+	foreach($event_users as $u)
+	{
+		$n = $u["username"];
+		if(count($currentstageactions["Allowed"][$n]) > 0)
+		{
+			$currentstageactions["ActiveUsernames"][] = $n;
+		}
+	}
+}
 
+function PickRandomSubset($objects, $count)
+{
+	$subset = [];
+	for($i = 0;$i < $count && count($objects) > 0; $i++)
+	{
+		$pick = random_int(1,count($objects))-1;
+		$subset[] = $objects[$pick];
+		if($pick < (count($objects)-1)) { $objects[$pick] = $objects[count($objects)-1]; }
+		unset($objects[count($objects)-1]);
+	}
+	return $subset;
+}
+
+function RemoveElement(&$location, $action)
+{
+	$index = array_search($action, $location);
+	if($index === false) return;
+	
+	$last = count($location)-1;
+	if($index != $last)
+	{
+		$location[$index] = $location[$last];
+	}
+	unset($location[$last]);
+}
+
+function ExecuteAction(&$user, $action, $phase)
+{
+	$username = $user["username"];
+	
+	VerboseAction("Running action ".$action." with user ".$username);
+
+	return $action($user,$phase);
 }
 
 function ExecuteStageAction($stage, $phase)
 {
+	global $currentstageactions;	
+	if(count($currentstageactions["ActiveUsernames"]) == 0) return false; // Nothing to do!
 	
-	return false;
+	// Pick a random user from the active usernames
+	$userindex = random_int(1,count($currentstageactions["ActiveUsernames"]))-1;
+	$username = $currentstageactions["ActiveUsernames"][$userindex];
+	$user = $currentstageactions["Users"][$username];
+	
+	// Pick a random action from the available actions
+	$actions = $currentstageactions["Allowed"][$username];
+	if(count($actions) < 1)
+	{
+		ReportError("Debug - something has gone wrong.");
+		print_r($username);
+		print_r($currentstageactions);
+		return true;
+	}
+	$actionindex = random_int(1, count($actions)) - 1;
+	$action = $actions[$actionindex];
+	
+	// Execute the action
+	$result = ExecuteAction($user, $action, $phase);
+	
+	// Unmark the action from the Required list if present
+	RemoveElement($currentstageactions["Required"][$username], $action);
+	
+	// If the action has requested a stop, remove this action from the Allowed list, and possibly remove this username from the active usernames list.
+	if($result === false)
+	{
+		RemoveElement($currentstageactions["Allowed"][$username], $action);
+		if(count($currentstageactions["Allowed"][$username]) == 0)
+		{
+			RemoveElement($currentstageactions["ActiveUsernames"], $username);
+		}
+	}
+	
+	return true;
 }
 
 function CompleteMandatoryStageActions($stage, $phase)
 {
-
+	// Complete any remaining Required actions that we didn't get to already (and remove from the list).
+	global $currentstageactions;	
+	foreach($currentstageactions["Required"] as $u => $actions)
+	{
+		$user = $currentstageactions["Users"][$u];
+		
+		foreach($actions as $action)
+		{
+			ExecuteAction($user, $action, $phase);
+		}
+	}
 }
 
 
@@ -555,8 +756,11 @@ function User_Create()
 		"cookies" => array(),
 		
 		// Further info for tracking data this user has posted and interacted with.
+		"joinedevent" => false,
+		"game_node" => 0,
 		"posts" => array(),
-		"publishedgame" => "false"
+		"postedimin" => false,
+		"publishedgame" => false,
 	];
 	
 	// Determine if username is in use
@@ -608,10 +812,49 @@ function User_Create()
 	return $user;
 }
 
+function User_EnsureJoined(&$user)
+{
+	global $event_nodeid;
+	if(!$user["joinedevent"])
+	{
+		$user["game_node"] = ApiNodeAdd($user, $event_nodeid, "item/game");
+		$user["joinedevent"] = true;
+	}
+}
+
 
 function GetRecentEventPosts($count = 30)
 {
 	
+}
+
+function CreatePost(&$user, $title, $body)
+{
+	User_EnsureJoined($user);
+	
+	$nodeid = ApiNodeAdd($user, $user["game_node"], "post");
+	if($nodeid == null)
+	{
+		ReportError("Failure to add new post!");
+		return;
+	}	
+	if(!ApiNodeUpdate($user, $nodeid, $title, $body))
+	{
+		ReportError("Failure to update post being created.");
+		return;
+	}
+	if(!ApiNodePublish($user, $nodeid))
+	{
+		ReportError("Failure to publish post being created.");
+		return;
+	}
+	$user["posts"][] = $nodeid; // Track post for later use.
+}
+
+function CreateComment(&$user, $nodeid, $body)
+{
+	User_EnsureJoined($user);
+
 }
 
 
@@ -647,8 +890,8 @@ function ApiNodeFeed(&$user, $parentid, $methods, $type, $count, $offset = 0)
 // Pass type,subtype,subsubtype together as $type.
 function ApiNodeAdd(&$user, $parentid, $type)
 {  // POST node/add/:parent/:type/:subtype/:subsubtype
-	$value = LdApi::Post("vx/node/add/" . $nodeid , "", $user);
-	if($value != null)
+	$value = LdApi::Post("vx/node/add/" . $parentid . "/" . $type , "", $user);
+	if($value != null && key_exists("id",$value))
 	{
 		return $value["id"];
 	}
@@ -865,7 +1108,7 @@ class LdApi
 			curl_setopt($curl, CURLOPT_COOKIE, $cookiestring);
 			if($cookiestring != "")
 			{
-				Verbose("Sending Cookie: ".$cookiestring);
+				// debug debug Verbose("Sending Cookie: ".$cookiestring);
 			}
 		}
 	}
@@ -879,7 +1122,8 @@ class LdApi
 				$parts = explode(": ",$v, 2);
 				if($parts[0] == "Set-Cookie")
 				{
-					Verbose("Receive Set-Cookie: ".$parts[1]);
+					// debug debug Verbose("Receive Set-Cookie: ".$parts[1]);
+					
 					$c = explode(";", $parts[1]);
 					$cookiedata = explode("=",$c[0],2);
 					// interpret "=deleted" as the condition to delete a cookie, as the code to check the expires time is annoying in php.
