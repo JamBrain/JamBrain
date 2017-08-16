@@ -225,7 +225,7 @@ switch ( $action ) {
 						// NOTE: You are allowed to LOVE anonymously (it's just not fetchable)
 						$user_id = userAuth_GetID();
 
-						if ( $note = node_GetById($note_id) ) {
+						if ( $note = note_GetById($note_id) ) {
 //							if ( in_array($node['type'], THINGS_I_CAN_LOVE) ) {
 								$RESPONSE['removed'] = noteLove_RemoveByNote($note_id, $user_id);
 
