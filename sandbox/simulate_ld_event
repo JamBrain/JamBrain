@@ -80,7 +80,7 @@ function ReportError($text)
 	global $errorcount;
 	$errorcount++;
 	$text = "[" . TimeString() . "] Error: " . $text . "\n";
-	print($text);
+	print( "\x1b[1;31m" . $text . "\x1b[m"); // Draw with intense red color
 	LogFull($text);
 	LogErr($text);
 }
@@ -90,10 +90,16 @@ function Verbose($text)
 	print($text);
 	LogFull($text);
 }
+function VerboseAction($text)
+{
+	$text = "[" . TimeString() . "] Verbose: " . $text . "\n";
+	print( "\x1b[1,34m" . $text . "\x1b[m"); // Draw in blue with intensity
+	LogFull($text);
+}
 function Message($text)
 {
 	$text = "[" . TimeString() . "] " . $text . "\n";
-	print($text);
+	print( "\x1b[1m" . $text . "\x1b[m"); // Draw with greater intensity.
 	LogFull($text);
 	LogErr($text);
 }
@@ -283,13 +289,14 @@ function SetupEvent()
 	$parentnode = 1; // Future: build out a more complex structure for this test.
 	$author = $event_admin_user["id"];
 	$eventname = "Testumdare " . ($eventindex);  
+	$eventbody = GenerateRandomPostText();
 	
 	$starttime = time();
 	$endtime = $starttime + 48*60*60;
 	$formatStart = gmdate("Y-m-d\TH:i:s\Z", $starttime);
 	$formatEnd = gmdate("Y-m-d\TH:i:s\Z", $endtime);
 	
-	$event_nodeid = node_Add( $parentnode, $author, "event", "", "", null, $cmdname, "");
+	$event_nodeid = node_Add( $parentnode, $author, "event", "", "", null, $eventname, $eventbody);
 
 	// Add metadata
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-create', 'item/game');
@@ -298,9 +305,10 @@ function SetupEvent()
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-end', $formatEnd);
 
 	// Also publish the event
-
-	// (soon)
-
+	if(!ApiNodePublish($event_admin_user, $event_nodeid))
+	{
+		ReportError("Failed to publish the event node.");
+	}
 
 	// Make featured
 	nodeMeta_AddByNode(1, SH_NODE_META_PUBLIC, 'featured', "$event_nodeid");
@@ -335,6 +343,10 @@ function SetupThemePhase($phase)
 		break;
 		
 	case 1: // Theme Slaughter
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-theme', 1);
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 2);
+		break;
+	
 	case 2: // Theme voting
 	case 3:
 	case 4:
@@ -367,6 +379,23 @@ function EndCompo()
 // User should discover and interact with the available options in the current theme voting phase.
 function UserVoteOnTheme($user, $phase)
 {
+	switch($phase)
+	{
+	case 0: // Theme Suggestion
+		break;
+		
+	case 1: // Theme Slaughter
+	
+		break;
+		
+	case 2: // Theme voting
+	case 3:
+	case 4:
+	case 5:
+	case 6: // Final theme selection	
+	
+	}
+	
 	return false;
 }
 
@@ -458,10 +487,15 @@ for($curStage = 0; $curStage < $stagecount; $curStage++)
 				$minutes = Math.min($minutes, $stage["MaxMinutes"]);
 			}
 			$end = (new DateTime()).Add(new DateInterval("PT".$minutes."M"));
+			Message("Running for ".$minutes." minute".($minutes == 1?"":"s"));
 			
 			while($end > new DateTime())
 			{
-				ExecuteStageAction($stage, $phase);
+				if(!ExecuteStageAction($stage, $phase))
+				{
+					// Still wait for the period to complete before continuing
+					usleep(10000); // Delay 10ms
+				}
 			}
 		}
 		else
@@ -469,7 +503,10 @@ for($curStage = 0; $curStage < $stagecount; $curStage++)
 			// Use event count limiting
 			for($action = 0; $action < $runactions; $action++)
 			{
-				ExecuteStageAction($stage, $phase);
+				if(!ExecuteStageAction($stage, $phase))
+				{
+					break;
+				}
 			}
 		}
 		
@@ -492,7 +529,8 @@ function PrepareStageActions($stage, $phase)
 
 function ExecuteStageAction($stage, $phase)
 {
-	usleep(1000); // Delay 1ms
+	
+	return false;
 }
 
 function CompleteMandatoryStageActions($stage, $phase)
@@ -556,20 +594,165 @@ function User_Create()
 		return null;
 	}
 	
-	$user["id"] = $id;
-	
+		
 	// Login the user
-	if(!ApiUserLogin($user))
+	$userid = ApiUserLogin($user);
+	if(!$userid)
 	{
 		ReportError("Unable to login new user.");
 		return null;	
 	}
 	
+	$user["id"] = $userid;
+	
 	return $user;
 }
 
 
+function GetRecentEventPosts($count = 30)
+{
+	
+}
 
+
+
+////
+//// API Interface wrapper functions
+////
+
+// Get one or more nodes
+function ApiNodeGet(&$user, $nodeidlist)
+{
+	$value = LdApi::Post("vx/node/get/".$nodeidlist, $user);
+	if($value != null)
+	{
+		return $value["node"];
+	}
+	return null; 
+}
+
+// Enumerate nodes related to an event
+function ApiNodeFeed(&$user, $parentid, $methods, $type, $count, $offset = 0)
+{ // GET node/feed/:node_id/:methods[]/:type/[:subtype]/[:subsubtype] ?offset= ?limit=
+
+	$value = LdApi::Post("vx/node/feed/" . $methods . "/" . $type . "?offset=" . $offset . "&limit=" . $count, $user);
+	if($value != null)
+	{
+		return $value["feed"];
+	}
+	return null;
+}
+
+// Add item(/game[/compo, /jam]) or post (typically)
+// Pass type,subtype,subsubtype together as $type.
+function ApiNodeAdd(&$user, $parentid, $type)
+{  // POST node/add/:parent/:type/:subtype/:subsubtype
+	$value = LdApi::Post("vx/node/add/" . $nodeid , "", $user);
+	if($value != null)
+	{
+		return $value["id"];
+	}
+	return null;
+}
+
+// Edit name and body of a node (either can be skipped with null) (tag is also an option, but overlooking that for now)
+function ApiNodeUpdate(&$user, $nodeid, $newname = null, $newbody = null)
+{ // POST node/update/:node_id
+	$poststring = "";
+	if($newname != null) { $poststring = "name=".$newname; }
+	if($newbody != null)
+	{
+		if($poststring != "") { $poststring .= "&"; }
+		$poststring .= "body=".$newbody;
+	}
+
+	$value = LdApi::Post("vx/node/update/" . $nodeid , $poststring, $user);
+	return ResponseIs200($value);
+}
+
+// Change the type of a node (e.g. change item/game to item/game/compo, item/game/jam)
+function ApiNodeTransform(&$user, $nodeid, $newtype)
+{ // POST node/transform/:node_id/:type/[:subtype]/[:subsubtype]
+	$value = LdApi::Post("vx/node/transform/" . $nodeid . "/" . $newtype, "", $user);
+	return ResponseIs200($value);
+}
+
+// Just publish the node.
+function ApiNodePublish(&$user, $nodeid)
+{ // POST node/publish/:node_id
+	$value = LdApi::Post("vx/node/publish/" . $nodeid, "", $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeLoveAdd(&$user, $nodeid) //GET node/love/add/:node_id
+{
+	$value = LdApi::Get("vx/node/love/add" . $nodeid, $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeLoveRemove(&$user, $nodeid) //GET node/love/remove/:node_id
+{
+	$value = LdApi::Get("vx/node/love/add" . $nodeid, $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeMetaAdd(&$user, $nodeid, $key, $value) // POST node/meta/add/:node_id
+{
+	$value = LdApi::Post("vx/node/meta/add/".$nodeid, $key."=".$value, $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeMetaRemove(&$user, $nodeid, $key) // POST node/meta/remove/:node_id
+{
+	$value = LdApi::Post("vx/node/meta/remove/".$nodeid, $key."=", $user);
+	return ResponseIs200($value);
+}
+
+
+function ApiNoteAdd(&$user, $parentid, $body) // POST note/add
+{
+	$value = LdApi::Post("vx/note/add","parent=".$parentid."&body=".$body, $user);
+	if($value) { return $value["note"]; }
+	return null;
+}
+
+function ApiNoteUpdate(&$user, $parentid, $noteid, $newbody)
+{
+	$value = LdApi::Post("vx/note/update/".$noteid,"node=".$parentid."&body=".$body, $user);
+	return ResponseIs200($value);
+}
+
+// Get all notes for a node
+function ApiNoteGet(&$user, $nodeId)
+{
+	$value = LdApi::Get("vx/note/get/" + $nodeid, $user);
+	if($value)
+	{
+		return $value["note"];
+	}
+	return null;
+}
+
+function ApiNoteLoveAdd(&$user, $noteid)
+{
+	$value = LdApi::Get("vx/note/love/add" . $noteid, $user);
+	return ResponseIs200($value);
+}
+
+function ApiNoteLoveRemove(&$user, $noteid)
+{
+	$value = LdApi::Get("vx/note/love/remove" . $noteid, $user);
+	return ResponseIs200($value);
+}
+
+function ResponseIs200($response)
+{
+	if($response != null)
+	{
+		return $response["response_httpcode"] == "200"; 
+	}
+	return false;
+}
 
 // Does the site have this username already?
 function ApiUserHave($username)
@@ -617,9 +800,12 @@ function ApiUserLogin(&$user)
 	
 	if($value != null)
 	{
-		return $value["response_httpcode"] == "200"; 
+		if($value["response_httpcode"] == "200")
+		{
+			return $value["id"];
+		} 
 	}
-	return $false;
+	return 0;
 }
 
 ////
@@ -636,6 +822,11 @@ function GenerateRandomPassword()
 {
   $length = random_int(5, 10);
   return bin2hex(random_bytes($length));
+}
+
+function GenerateRandomPostTitle()
+{
+	return GenerateRandomPostText(3,12);
 }
 
 // Future: something much more meaningful. Also figure out how to include image uploads, links, other fun feathres.
