@@ -78,8 +78,11 @@ function TimeString()
 function ReportError($text)
 {
 	global $errorcount;
-	$errorcount++;
+	$errorcount++;	
 	$text = "[" . TimeString() . "] Error: " . $text . "\n";
+	
+	LdApi::PrintLastRequestResponse();
+	
 	print( "\x1b[1;31m" . $text . "\x1b[m"); // Draw with intense red color
 	LogFull($text);
 	LogErr($text);
@@ -90,6 +93,12 @@ function Verbose($text)
 	print($text);
 	LogFull($text);
 }
+function VerboseHidden($text)
+{
+	$text = "[" . TimeString() . "] Verbose: " . $text . "\n";
+	LogFull($text);
+}
+
 function VerboseAction($text)
 {
 	$text = "[" . TimeString() . "] Verbose: " . $text . "\n";
@@ -227,13 +236,13 @@ $stages = array(
 		"MaxEventsPerUser" => 200,
 		"PhaseStart" => 'SetupThemePhase',
 		"HighChance" => ['UserVoteOnTheme'],
-		"LowChance" => array('PostImIn', 'CommentOnPost')  // More various "I'm In" posts will trickle in
+		"LowChance" => array('PostImIn', 'CommentOnPost', 'LikePosts')  // More various "I'm In" posts will trickle in
 	),
 	// Third stage, LD Starts!
 	array(
 		"Name" => "Compo Running",
 		"StageStart" => 'StartCompo',
-		"HighChance" => array('CompoPostUpdate', 'CompoEditGame', 'CommentOnPost'),
+		"HighChance" => array('CompoPostUpdate', 'CompoEditGame', 'CommentOnPost', 'LikePosts'),
 		"LowChance" => array('CommentOnGame', 'CompoPublishGame', 'CommentUnlike')
 	),
 	// Fourth stage, Submission deadline
@@ -242,7 +251,7 @@ $stages = array(
 		"StageStart" => 'SetupSubmission',
 		"MaxMinutes" => 2,
 		"MaxEventsPerUser" => 20,
-		"HighChance" => array('CommentOnGame', 'CompoPublishGame'),
+		"HighChance" => array('CommentOnGame', 'CompoPublishGame', 'LikePosts'),
 		"LowChance" => array('CompoPostUpdate', 'CompoEditGame', 'CommentOnPost', 'CommentUnlike'),
 	),
 	// Fifth stage, Voting
@@ -250,20 +259,21 @@ $stages = array(
 		"Name" => "Compo Voting",
 		"StageStart" => 'SetupVoting',
 		"MaxEventsPerUser" => 300,
-		"HighChance" => array('CommentOnGame', 'VoteOnGame'),
+		"HighChance" => array('CommentOnGame', 'VoteOnGame', 'LikePosts', 'LikeGames'),
 		"LowChance" => array('CommentOnPost', 'CompoEditGame', 'CompoPostUpdate', 'CommentUnlike')
 	),
 	// Sixth stage - Closed / resuts
 	array(
 		"Name" => "Compo Results",
 		"StageStart" => 'EndCompo',
-		"LowChance" => array('CommentOnGame', 'CommentOnPost', 'CompoEditGame', 'CompoPostUpdate', 'CommentUnlike', 'CompoPostResults')
+		"LowChance" => array('CommentOnGame', 'CommentOnPost', 'CompoEditGame', 'CompoPostUpdate', 'CommentUnlike', 'CompoPostResults', 'LikePosts', 'LikeGames')
 	)
 );
 
 
 $event_admin_user = null;
-$event_users = array();
+$event_users = array(); // Only use for reference (e.g. getting usernames)
+$event_user_lookup = array(); // Only use this as a source for user objects, and get them by reference.
 
 $event_nodeid = null;
 
@@ -272,15 +282,19 @@ $event_nodeid = null;
 // We'll also use some data from the database to make the naming a bit more friendly.
 function SetupEvent()
 {
-	global $event_admin_user, $event_users;
+	global $event_admin_user, $event_users, $event_user_lookup;
 	
-	$event_admin_user = &User_Create();
+	$event_admin_user = User_Create();
 	
 	// Now create the normal users
 	global $usercount;
 	for($i=0;$i < $usercount; $i++)
 	{
 		$event_users[] = User_Create();
+	}
+	foreach($event_users as $user)
+	{
+		$event_user_lookup[$user["username"]] = $user;
 	}
 	
 	// Now generate an event
@@ -413,11 +427,71 @@ function PostImIn(&$user, $phase)
 	return false;
 }
 
-// Find a recent post in the feed, and post a comment - and optionally give it or one of its comments a like.
-function CommentOnPost(&$user, $phase)
+
+// Read through recent posts and comments on them, and randomly like comments
+function LikePosts(&$user, $phase)
+{
+	$posts = GetRecentEventPosts($posts);
+	if($posts != null)
+	{
+		LikeFeed($user, $posts);
+	}
+	return true;
+}
+
+// Read through highly sorted games and comments on them, and randomly like comments
+function LikeGames(&$user, $phase)
 {
 	return false;
 }
+
+// Helper: given a list of nodes, like at least one of them, and examine comments.
+function LikeFeed(&$user, $nodes)
+{
+	if($nodes == null || count($nodes) == 0) return;
+	
+	$likecount = 0;
+	foreach($nodes as $n)
+	{
+		if(random_int(1,10) == 1) LikeCommentsNode($user, $n);
+		if(random_int(1,40) == 1)
+		{
+			$likecount++;
+			LikeNode($user, $n["id"]);
+		}
+	}
+	if($likecount == 0)
+	{
+		$n = $nodes[random_int(1,count($nodes))-1];
+		LikeNode($user, $n["id"]);		
+	}	
+}
+
+// Helper: fetch a node's comments, and maybe like some of them.
+function LikeCommentsNode(&$user, $node)
+{
+	$comments = GetNodeComments($user, $node["id"]);
+	if($comments != null)
+	{
+		foreach($comments as $c)
+		{
+			if(random_int(1,20) == 1) LikeComment($user, $c["id"]);
+		}
+	}
+}
+
+// Find a recent post in the feed, and post a comment - and optionally give it or one of its comments a like.
+function CommentOnPost(&$user, $phase)
+{
+	$post = GetRandomRecentPost($user);
+	if($post != null)
+	{
+		$body = GenerateRandomPostText();
+		CreateComment($user, $post["id"], $body);
+	}
+	return true;
+}
+
 // Find a game through one of the game lists, and give it a comment, and optionally give it or one of its comments a like.
 function CommentOnGame(&$user, $phase)
 {
@@ -441,7 +515,9 @@ function CompoPostUpdate(&$user, $phase)
 	$title = GenerateRandomPostTitle();
 	$body = GenerateRandomPostText();
 	CreatePost($user, $title, $body);
-	return true;
+	
+	// There's a limit to how many posts a user should make. Try not to make too many more.
+	return count($user["posts"]) < 3;
 }
 
 // And this is the part of the game where some users wish to parade their stats into the news feed, or complain about PoV :)
@@ -573,20 +649,16 @@ for($curStage = 0; $curStage < $stagecount; $curStage++)
 	if(key_exists("StageEnd",$stage)) { $stage["StageEnd"](); }
   
 }
+Message("All Stages Complete!");
 
 $currentstageactions = null;
 
 function PrepareStageActions($stage, $phase)
 {
 	global $event_users;
+	global $event_user_lookup;
 	global $currentstageactions;
 	$currentstageactions = [ "Allowed" => [], "Required" => [], "Users" => [], "ActiveUsernames" => [] ];
-	
-	// Generate a reference list of users for the current stage
-	foreach($event_users as $u)
-	{
-		$currentstageactions["Users"][$u["username"]] = &$u;
-	}
 	
 	// Extract actions out from stage	
 	// Always => List of functions (actions) to be called by all simulated users in this phase
@@ -597,14 +669,14 @@ function PrepareStageActions($stage, $phase)
 	{
 		foreach($stage["Always"] as $action)
 		{
-			foreach($currentstageactions["Users"] as $u)
+			foreach($event_users as $u)
 			{	
 				$currentstageactions["Allowed"][$u["username"]][] = $action;
 				$currentstageactions["Required"][$u["username"]][] = $action;
 			}
 		}
 	}
-	$usercount = count($currentstageactions["Users"]);
+	$usercount = count($event_users);
 	$halflow = floor($usercount/2);
 	$halfhigh = ceil($usercount/2);
 	
@@ -641,7 +713,7 @@ function PrepareStageActions($stage, $phase)
 	foreach($event_users as $u)
 	{
 		$n = $u["username"];
-		if(count($currentstageactions["Allowed"][$n]) > 0)
+		if(key_exists($n,$currentstageactions["Allowed"]) && count($currentstageactions["Allowed"][$n]) > 0)
 		{
 			$currentstageactions["ActiveUsernames"][] = $n;
 		}
@@ -686,12 +758,13 @@ function ExecuteAction(&$user, $action, $phase)
 function ExecuteStageAction($stage, $phase)
 {
 	global $currentstageactions;	
+	global $event_user_lookup;	
 	if(count($currentstageactions["ActiveUsernames"]) == 0) return false; // Nothing to do!
 	
 	// Pick a random user from the active usernames
 	$userindex = random_int(1,count($currentstageactions["ActiveUsernames"]))-1;
 	$username = $currentstageactions["ActiveUsernames"][$userindex];
-	$user = $currentstageactions["Users"][$username];
+	$user = &$event_user_lookup[$username];
 	
 	// Pick a random action from the available actions
 	$actions = $currentstageactions["Allowed"][$username];
@@ -728,9 +801,10 @@ function CompleteMandatoryStageActions($stage, $phase)
 {
 	// Complete any remaining Required actions that we didn't get to already (and remove from the list).
 	global $currentstageactions;	
+	global $event_user_lookup;	
 	foreach($currentstageactions["Required"] as $u => $actions)
 	{
-		$user = $currentstageactions["Users"][$u];
+		$user = &$event_user_lookup[$u];
 		
 		foreach($actions as $action)
 		{
@@ -759,6 +833,8 @@ function User_Create()
 		"joinedevent" => false,
 		"game_node" => 0,
 		"posts" => array(),
+		"notes" => array(),
+		"love" => array(),
 		"postedimin" => false,
 		"publishedgame" => false,
 	];
@@ -809,6 +885,8 @@ function User_Create()
 	
 	$user["id"] = $userid;
 	
+	Verbose("Created user " . $username);
+	
 	return $user;
 }
 
@@ -817,21 +895,101 @@ function User_EnsureJoined(&$user)
 	global $event_nodeid;
 	if(!$user["joinedevent"])
 	{
+		Verbose("Creating a game to join the event...");
 		$user["game_node"] = ApiNodeAdd($user, $event_nodeid, "item/game");
 		$user["joinedevent"] = true;
 	}
 }
 
-
-function GetRecentEventPosts($count = 30)
+function GetRandomRecentPost(&$user)
 {
+	Verbose("Fetching a random post...");
+	$nodes = GetRecentEventPostNodes($user);
+	if(count($nodes) == 0) return null;
+	$i = random_int(1,count($nodes))-1;
+	$data = ApiNodeGet($user, $nodes[$i]["id"]);
+	if($data == null)
+	{
+		ReportError("Error fetching node " . $nodes[$i]);
+		return null;
+	}
+	return $data[0];
+}
+
+function WalkFeedId(&$feed, $key) { $feed = $feed["id"]; }
+
+function GetRecentEventPosts(&$user)
+{
+	Verbose("Reading over the recent posts...");
+	$nodes = GetRecentEventPostNodes($user);
+	$fullnodes = [];
+	$chunks = array_chunk($nodes, 30);
+	foreach($chunks as $c)
+	{
+		array_walk($c, "WalkFeedId");
+		$idjoin = implode("+",$c);
+		$data = ApiNodeGet($user, $idjoin);
+		if($data != null)
+		{
+			foreach($data as $n)
+			{
+				$fullnodes[$n["id"]] = $n;
+			}
+		}
+	}
+	$outdata = [];
+	foreach($nodes as $n)
+	{
+		$data = $fullnodes[$n["id"]];
+		if($data != null) { $outdata[] = $data; }
+	}
+	if(count($outdata) == 0) return null;
+	return $outdata;
+}
+
+function GetRecentEventPostNodes(&$user, $count = 60)
+{
+	global $event_nodeid;
+	$maxpage = 30;
+	$have = 0;
+	$out = [];
+	while($have < $count)
+	{
+		$fetch = $count - $have;
+		if($fetch > $maxpage) $fetch = $maxpage;
+		
+		$newdata = ApiNodeFeed($user, $event_nodeid, "all", "post", $fetch, $have);
+		if($newdata === null)
+		{
+			ReportError("Error getting feed.");
+		}
+		else
+		{
+			$out = array_merge($out, $newdata);
+		}
+		$have += $fetch;
+	}
 	
+	if(count($out) == 0) return null;
+	return $out;
+}
+
+function GetNodeComments(&$user, $nodeid)
+{
+	Verbose("Reading Comments for node ".$nodeid."...");
+	$notes = ApiNoteGet($user, $nodeid);
+	if($notes === null)
+	{
+		ReportError("Failed to get notes for node ".$nodeid);
+	}
+	return $notes;
 }
 
 function CreatePost(&$user, $title, $body)
 {
 	User_EnsureJoined($user);
 	
+	Verbose("Creating a new post.");
 	$nodeid = ApiNodeAdd($user, $user["game_node"], "post");
 	if($nodeid == null)
 	{
@@ -854,7 +1012,48 @@ function CreatePost(&$user, $title, $body)
 function CreateComment(&$user, $nodeid, $body)
 {
 	User_EnsureJoined($user);
+	Verbose("Posting a comment to node " . $nodeid);
+	$id = ApiNoteAdd($user, $nodeid, $body);
+	if(!$id)
+	{
+		ReportError("Failed to add comment");
+		return null;
+	}
+	$user["notes"][] = [ "Node" => $nodeid, "Note" => $id ];
+}
 
+function LikeNode(&$user, $nodeid)
+{
+	# If we haven't already, add a like to this node. 
+	if(array_key_exists($nodeid, $user["love"])) return;
+
+	Verbose("Add like for Node " . $nodeid);
+	if(!ApiNodeLoveAdd($user, $nodeid))
+	{
+		ReportError("Error adding node love for ".$nodeid);
+		return;
+	}
+	$user["love"][] = $nodeid;
+}
+
+function LikeComment(&$user, $commentid)
+{
+	# If we haven't already, add a like to this comment
+	if(array_key_exists(-$commentid, $user["love"])) return;
+	
+	Verbose("Add like for Note " . $commentid);
+	if(!ApiNoteLoveAdd($user, $commentid))
+	{
+		ReportError("Error adding note love for ".$commentid);
+		return;
+	}
+	$user["love"][] = -$commentid;
+}
+
+function RemoveLike(&$user, $thing)
+{
+	// Positive numbers = node love, Negative numbers = note love
+	
 }
 
 
@@ -866,7 +1065,7 @@ function CreateComment(&$user, $nodeid, $body)
 // Get one or more nodes
 function ApiNodeGet(&$user, $nodeidlist)
 {
-	$value = LdApi::Post("vx/node/get/".$nodeidlist, $user);
+	$value = LdApi::Get("vx/node/get/".$nodeidlist, $user);
 	if($value != null)
 	{
 		return $value["node"];
@@ -878,7 +1077,7 @@ function ApiNodeGet(&$user, $nodeidlist)
 function ApiNodeFeed(&$user, $parentid, $methods, $type, $count, $offset = 0)
 { // GET node/feed/:node_id/:methods[]/:type/[:subtype]/[:subsubtype] ?offset= ?limit=
 
-	$value = LdApi::Post("vx/node/feed/" . $methods . "/" . $type . "?offset=" . $offset . "&limit=" . $count, $user);
+	$value = LdApi::Get("vx/node/feed/" . $parentid . "/" . $methods . "/" . $type . "?offset=" . $offset . "&limit=" . $count, $user);
 	if($value != null)
 	{
 		return $value["feed"];
@@ -929,13 +1128,13 @@ function ApiNodePublish(&$user, $nodeid)
 
 function ApiNodeLoveAdd(&$user, $nodeid) //GET node/love/add/:node_id
 {
-	$value = LdApi::Get("vx/node/love/add" . $nodeid, $user);
+	$value = LdApi::Get("vx/node/love/add/" . $nodeid, $user);
 	return ResponseIs200($value);
 }
 
 function ApiNodeLoveRemove(&$user, $nodeid) //GET node/love/remove/:node_id
 {
-	$value = LdApi::Get("vx/node/love/add" . $nodeid, $user);
+	$value = LdApi::Get("vx/node/love/remove/" . $nodeid, $user);
 	return ResponseIs200($value);
 }
 
@@ -952,9 +1151,9 @@ function ApiNodeMetaRemove(&$user, $nodeid, $key) // POST node/meta/remove/:node
 }
 
 
-function ApiNoteAdd(&$user, $parentid, $body) // POST note/add
+function ApiNoteAdd(&$user, $nodeid, $body) // POST note/add
 {
-	$value = LdApi::Post("vx/note/add","parent=".$parentid."&body=".$body, $user);
+	$value = LdApi::Post("vx/note/add/".$nodeid,"parent=0&body=".$body, $user);
 	if($value) { return $value["note"]; }
 	return null;
 }
@@ -966,9 +1165,9 @@ function ApiNoteUpdate(&$user, $parentid, $noteid, $newbody)
 }
 
 // Get all notes for a node
-function ApiNoteGet(&$user, $nodeId)
+function ApiNoteGet(&$user, $nodeid)
 {
-	$value = LdApi::Get("vx/note/get/" + $nodeid, $user);
+	$value = LdApi::Get("vx/note/get/" . $nodeid, $user);
 	if($value)
 	{
 		return $value["note"];
@@ -978,13 +1177,13 @@ function ApiNoteGet(&$user, $nodeId)
 
 function ApiNoteLoveAdd(&$user, $noteid)
 {
-	$value = LdApi::Get("vx/note/love/add" . $noteid, $user);
+	$value = LdApi::Get("vx/note/love/add/" . $noteid, $user);
 	return ResponseIs200($value);
 }
 
 function ApiNoteLoveRemove(&$user, $noteid)
 {
-	$value = LdApi::Get("vx/note/love/remove" . $noteid, $user);
+	$value = LdApi::Get("vx/note/love/remove/" . $noteid, $user);
 	return ResponseIs200($value);
 }
 
@@ -1092,7 +1291,42 @@ function GenerateRandomPostText($minWords = 10, $maxWords = 200)
 
 class LdApi
 {
-	static $debug_api = true;
+	static $debug_api = false;
+
+	static $lastRequestLog = null;
+	static $lastResponseLog = null;
+
+	public static function PrintLastRequestResponse()
+	{
+		print( "\x1b[31mLast Request/Response:\x1b[m\n"); 
+		print( "\x1b[31m" . LdApi::$lastRequestLog . "\x1b[m\n"); 
+		print( "\x1b[31m" . LdApi::$lastResponseLog . "\x1b[m\n"); 
+	}
+
+	static function DebugRequestLog($log)
+	{
+		if(LdApi::$debug_api)
+		{
+			Verbose($log);
+		}
+		else
+		{
+			VerboseHidden($log);
+		}		
+		LdApi::$lastRequestLog = $log;
+	}
+	static function DebugResponseLog($log)
+	{
+		if(LdApi::$debug_api)
+		{
+			Verbose($log);
+		}
+		else
+		{
+			VerboseHidden($log);
+		}		
+		LdApi::$lastResponseLog = $log;	
+	}
 
 	static function SetRequestUser($curl, &$user)
 	{
@@ -1153,10 +1387,8 @@ class LdApi
 		global $apibase;
 		$outputObject = NULL;
 		$url = $apibase . $url;
-		if(LdApi::$debug_api)
-		{
-			Verbose("GET '".$url."'".LdApi::ForUser($user));
-		}
+		
+		LdApi::DebugRequestLog("GET '".$url."'".LdApi::ForUser($user));
 		
 		$c = curl_init($url);
 		
@@ -1172,23 +1404,26 @@ class LdApi
 		if($success)
 		{
 			$parts = explode("\r\n\r\n",$result);
+			while($parts[0] == "HTTP/1.1 100 Continue") { array_shift($parts); }
 			$headers = $parts[0];
 			$content = $parts[1];
 		
 			$outputObject = json_decode($content, true);
 			$httpcode = curl_getinfo($c, CURLINFO_HTTP_CODE);
 			$outputObject["response_httpcode"] = $httpcode;			
-			LdApi::UpdateUserCookie($c, $user);
+			LdApi::UpdateUserCookie($headers, $user);
 		}
 		if(!$success && $report_error)
 		{
 			ReportError("Error getting '".$url ."'". LdApi::ForUser($user). " - " . curl_error($c));
 		}
 		
-		if(LdApi::$debug_api)
+		LdApi::DebugResponseLog("Response '" . $content . "'");
+		if(substr($content,0,4) == "HTTP")
 		{
-			Verbose("Response '" . $content . "'");
-		}
+			Verbose("Debug: '" . $result);
+		}			
+
 		curl_close($c);
 		
 		return $outputObject;
@@ -1200,10 +1435,7 @@ class LdApi
 		$outputObject = NULL;
 		$url = $apibase . $url;		
 
-		if(LdApi::$debug_api)
-		{
-			Verbose("POST '".$url."' with data '".$postdata."'".LdApi::ForUser($user));
-		}
+		LdApi::DebugRequestLog("POST '".$url."' with data '".$postdata."'".LdApi::ForUser($user));
 		
 		$c = curl_init($url);
 		
@@ -1220,6 +1452,7 @@ class LdApi
 		if($success)
 		{
 			$parts = explode("\r\n\r\n",$result);
+			while($parts[0] == "HTTP/1.1 100 Continue") { array_shift($parts); }
 			$headers = $parts[0];
 			$content = $parts[1];
 		
@@ -1233,10 +1466,13 @@ class LdApi
 		{
 			ReportError("Error getting '".$url ."'". LdApi::ForUser($user) . " - " . curl_error($c));
 		}
-		if(LdApi::$debug_api)
+		
+		LdApi::DebugResponseLog("Response '" . $content . "'");
+		if(substr($content,0,4) == "HTTP")
 		{
-			Verbose("Response '" . $content . "'");
+			Verbose("Debug: '" . $result);
 		}
+
 		curl_close($c);
 		return $outputObject;	
 	
