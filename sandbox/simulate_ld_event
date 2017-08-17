@@ -1,0 +1,1663 @@
+#!/usr/bin/env php
+<?php 
+/*
+	Summary of this program and its intent:
+	
+This is an API test for the ludumdare website. It's goal is to interact with all API functionality by simulating a ludumdare.
+Users will be created, an event will be created, users will post, read other users posts, post comments, like, etc.
+Users will interact with the theme creation process stages, will publish games, will rate each other's games, and will observe the results.
+The script will keep track of (some/much of) the data it generates, and will verify that what it sees is what it expects.
+(Future) Users will maliciously interact with the API to verify that things cannot be changed (e.g. votes, theme creation) outside of the time when they are enabled to be changed.
+
+The exact flow will be documented in the data structures that guide the process, below.
+
+*/
+
+const CONFIG_PATH = "../src/shrub/";
+const SHRUB_PATH = "../src/shrub/src/";
+
+# Use shrub wrapper for db access
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."constants.php";
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
+require_once __DIR__."/".SHRUB_PATH."node/node.php";
+require_once __DIR__."/".SHRUB_PATH."user/user.php";
+
+
+if ( count($argv) < 3  || ($argv[2] != "actions" && $argv[2] != "minutes")) {
+	print "LudumDare Event simulator. Quick summary:\n";
+	print "  Creates a new event, and simulates a number of users interacting with it.\n";
+	print "  This is an API test, and does not aim to test the website's rendering.\n";
+	print "  (It does however provide a good way to generate data to test the website)\n";
+	print "\n";
+	print "Run simulation for 1000 actions per stage: ".$argv[0]." 1000 actions\n";
+	print "Run simulation for 5 minutes per stage: ".$argv[0]." 5 minutes\n";
+	print "\n";
+	exit(1);
+}
+
+
+$runminutes = null;
+$runactions = null;
+if($argv[2] == "minutes")
+{
+	$runminutes = intval($argv[1]);
+} 
+else 
+{
+	$runactions = intval($argv[1]);
+}
+
+
+////////////////////////////////
+// Some global settings
+
+$enable_file_logs = true;
+$logbase = "/tmp/ld_event"; // Logs will be put in /tmp
+// Generate 3 kinds of log. 
+//   <name>.<eventIndex>.event (Event information, user/password list)
+//   <name>.<eventIndex>.log (Full Detail Verbose log)
+//   <name>.<eventIndex>.err (Summary log and errors)
+
+$apibase = "http://api.ludumdare.org/";
+$usercount = 10; // Something like 40-50 is good for reasonable size tests.
+$keepallposts = true;
+$keeppostcount = 100; // Number of posts per user to keep, when keep all posts is false (which it should be for high user counts or long runtimes / stress environments.)
+$verbose = true; // Display all of the details about what's going on?
+$verboselog = true; // Keep all details about what's going on in a log.
+$useprevioususers = false; // (not implemented) Load the set of users from the previous test event, instead of creating new users.
+
+$errorcount = 0;
+
+function TimeString()
+{
+  $d = new DateTime();
+  return $d->format("Y-m-d H:i:s");
+}
+
+function ReportError($text)
+{
+	global $errorcount;
+	$errorcount++;	
+	$text = "[" . TimeString() . "] Error: " . $text . "\n";
+	
+	LdApi::PrintLastRequestResponse();
+	
+	print( "\x1b[1;31m" . $text . "\x1b[m"); // Draw with intense red color
+	LogFull($text);
+	LogErr($text);
+}
+function Verbose($text)
+{
+	$text = "[" . TimeString() . "] Verbose: " . $text . "\n";
+	print($text);
+	LogFull($text);
+}
+function VerboseHidden($text)
+{
+	$text = "[" . TimeString() . "] Verbose: " . $text . "\n";
+	LogFull($text);
+}
+
+function VerboseAction($text)
+{
+	$text = "[" . TimeString() . "] Verbose: " . $text . "\n";
+	print( "\x1b[1;34m" . $text . "\x1b[m"); // Draw in blue with intensity
+	LogFull($text);
+}
+function Message($text)
+{
+	$text = "[" . TimeString() . "] " . $text . "\n";
+	print( "\x1b[1m" . $text . "\x1b[m"); // Draw with greater intensity.
+	LogFull($text);
+	LogErr($text);
+}
+
+
+$flogfull = null;
+$flogerr = null;
+
+function LogFull($text)
+{
+	global $flogfull;
+	if($flogfull != null)
+	{
+		fwrite($flogfull, $text);
+		fflush($flogfull);
+	}
+}
+function LogErr($text)
+{
+	global $flogerr;
+	if($flogerr != null)
+	{
+		fwrite($flogerr, $text);
+		fflush($flogerr);
+	}
+}
+
+function OpenLogs($index)
+{
+	global $logbase;
+	global $flogfull;
+	global $flogerr;
+	$fulllog = $logbase . "." . $index . ".log";
+	$errlog = $logbase . "." . $index . ".err";
+	$flogfull = fopen($fulllog, "a");
+	$flogerr = fopen($errlog, "a");
+}
+
+function CloseLogs()
+{
+	global $flogfull;
+	global $flogerr;
+	fclose($flogfull);
+	fclose($flogerr);
+	$flogfull = null;
+	$flogerr = null;
+}
+
+function OpenEventFile()
+{
+	global $logbase;
+	global $eventindex;
+	$log = $logbase . "." . $eventindex . ".event";
+	return fopen($log, "a");
+}
+
+// Figure out event index to use for this run, and start loggers.
+
+$events = db_QueryFetch(
+		"SELECT
+			n.id, n.name, n.slug, 
+			".DB_FIELD_DATE('n.modified', 'modified')."
+		FROM
+			".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
+		WHERE n.type = 'event'
+		ORDER BY n.id
+		LIMIT 500
+		;"
+	);
+
+$eventindex = count($events) + 1;
+
+if($enable_file_logs)
+{
+	OpenLogs($eventindex);
+}
+
+
+/*
+	Stages definition:
+Each stage is a hashtable with a number of properties that are used to determine the behavior in that stage.
+Properties:
+	Name => Name to display for the stage
+	Phases => if present, number indicating how many phases there are to the stage (otherwise just one)
+	MaxMinutes => if present, override the time for each phase in this stage to avoid spending a lot of time on it.
+	MaxEventsPerUser => if present, impose a hard limit on events per user for each phase in this stage to avoid spending a lot of time on this section.
+	StageStart => Function that is called when the stage starts
+	StageEnd => Function that is called when the stage ends
+	PhaseStart => Function to be called when a phase starts
+	PhaseEnd => Function to be called when a phase ends
+	
+	Always => List of functions (actions) to be called by all simulated users in this phase
+	LowChance => List of functions (actions) to be called by a few (at least one, but less than half) of the simulated users in this phase. Each function gets its own list of users
+	HighChance => list of functions (actions) to be called by most (not all, but at least half) of the simulated users in this phase. Each function gets its own list of users
+	
+	UserVerify => Function that is called arbitrarily to ask the system to verify that the data it receives from the website for a specific user is consistent with what it expects.
+	
+About start/end functions:
+	Stage start and end have no argument
+	Phase start and end are passed the current phase index as an argument.
+	
+About actions:
+	The action function is always called to ask a specific user to take action.
+	The action function is passed a user array, and the phase index.
+	if the action function returns false, it will not be called again for that user in that phase. Otherwise it may be called multiple times.
+	
+About reporting errors:
+	TBD
+	
+*/
+$stages = array(
+	// First stage, create users and generate the event
+	array(
+		"Name" => "Setup",
+		"StageStart" => 'SetupEvent',
+		"MaxMinutes" => 1,
+		"MaxEventsPerUser" => 3,
+		"LowChance" => array('PostImIn', 'CommentOnPost') // Early "I'm In" posts
+	),
+	// Second stage, Theme voting
+	array(
+		"Name" => "Theme Voting",
+		"Phases" => 7, // Theme suggestion + theme slaughter + 4 rounds of voting + theme selection
+		"MaxMinutes" => 1, // This is per phase
+		"MaxEventsPerUser" => 5,
+		"PhaseStart" => 'SetupThemePhase',
+		"HighChance" => ['UserVoteOnTheme'],
+		"LowChance" => array('PostImIn', 'CommentOnPost', 'LikePosts', 'CommentUnlike')  // More various "I'm In" posts will trickle in
+	),
+	// Third stage, LD Starts!
+	array(
+		"Name" => "Compo Running",
+		"StageStart" => 'StartCompo',
+		"HighChance" => array('CompoPostUpdate', 'CompoEditGame', 'CommentOnPost', 'LikePosts'),
+		"LowChance" => array('CommentOnGame', 'CompoPublishGame', 'CommentUnlike')
+	),
+	// Fourth stage, Submission deadline
+	array(
+		"Name" => "Compo Submission Period",
+		"StageStart" => 'SetupSubmission',
+		"MaxMinutes" => 2,
+		"MaxEventsPerUser" => 10,
+		"HighChance" => array('CommentOnGame', 'CompoPublishGame', 'LikePosts'),
+		"LowChance" => array('CompoPostUpdate', 'CompoEditGame', 'CommentOnPost', 'CommentUnlike'),
+	),
+	// Fifth stage, Voting
+	array(
+		"Name" => "Compo Voting",
+		"StageStart" => 'SetupVoting',
+		"MaxEventsPerUser" => 80,
+		"HighChance" => array('CommentOnGame', 'VoteOnGame', 'LikePosts', 'LikeGames'),
+		"LowChance" => array('CommentOnPost', 'CompoEditGame', 'CompoPostUpdate', 'CommentUnlike')
+	),
+	// Sixth stage - Closed / resuts
+	array(
+		"Name" => "Compo Results",
+		"StageStart" => 'EndCompo',
+		"LowChance" => array('CommentOnGame', 'CommentOnPost', 'CompoEditGame', 'CompoPostUpdate', 'CommentUnlike', 'CompoPostResults', 'LikePosts', 'LikeGames')
+	)
+);
+
+
+$event_admin_user = null;
+$event_users = array(); // Only use for reference (e.g. getting usernames)
+$event_user_lookup = array(); // Only use this as a source for user objects, and get them by reference.
+
+$event_nodeid = null;
+
+// Prepare the event. Create an admin superuser. Create all the compo users. Create the new LudumDare event. Publish the event node.
+// Some of this has to be done through the database directly (finding the email verification links, and creating the ludumdare event and setting it up)
+// We'll also use some data from the database to make the naming a bit more friendly.
+function SetupEvent()
+{
+	global $event_admin_user, $event_users, $event_user_lookup;
+	
+	$event_admin_user = User_Create();
+	
+	// Now create the normal users
+	global $usercount;
+	for($i=0;$i < $usercount; $i++)
+	{
+		$event_users[] = User_Create();
+	}
+	foreach($event_users as $user)
+	{
+		$event_user_lookup[$user["username"]] = $user;
+	}
+	
+	// Now generate an event
+	global $event_nodeid;
+	global $eventindex;
+	$parentnode = 1; // Future: build out a more complex structure for this test.
+	$author = $event_admin_user["id"];
+	$eventname = "Testumdare " . ($eventindex);  
+	$eventbody = GenerateRandomPostText();
+	
+	$starttime = time();
+	$endtime = $starttime + 48*60*60;
+	$formatStart = gmdate("Y-m-d\TH:i:s\Z", $starttime);
+	$formatEnd = gmdate("Y-m-d\TH:i:s\Z", $endtime);
+	
+	$event_nodeid = node_Add( $parentnode, $author, "event", "", "", null, $eventname, $eventbody);
+
+	// Add metadata
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-create', 'item/game');
+
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-start', $formatStart);
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-end', $formatEnd);
+
+	// Also publish the event
+	if(!ApiNodePublish($event_admin_user, $event_nodeid))
+	{
+		ReportError("Failed to publish the event node.");
+	}
+
+	// Make featured
+	nodeMeta_AddByNode(1, SH_NODE_META_PUBLIC, 'featured', "$event_nodeid");
+	
+	
+	// Save information about the users into a file
+	$f = OpenEventFile();
+	fwrite($f, "# For now, just spitting out event data in a semi human readable form.\n");
+	fwrite($f, "# First line is Admin, rest of the lines are normal users.\n");
+	fwrite($f, "# Each line is Username:Password\n");
+	
+	fwrite($f, $event_admin_user["username"] . ":" . $event_admin_user["password"] . "\n");
+
+	foreach($event_users as $u)
+	{
+		fwrite($f, $u["username"] . ":" . $u["password"] . "\n");	
+	}
+
+	fclose($f);
+}
+
+// Set up for each of the phases of the theme selection, in sequence.
+function SetupThemePhase($phase)
+{
+	global $event_nodeid;
+	
+	switch($phase)
+	{
+	case 0: // Theme Suggestion
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-theme', 1);
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 1);
+		break;
+		
+	case 1: // Theme Slaughter
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-theme', 1);
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 2);
+		break;
+	
+	case 2: // Theme voting
+	case 3:
+	case 4:
+	case 5:
+	case 6: // Final theme selection
+		break;
+	}
+}
+
+// The compo has now started, the theme voting is now locked and a theme is selected. The users will be sure to mention the theme in some of their posts.
+function StartCompo()
+{
+}
+
+// The compo has now stopped and will only accept submissions for a limited amount of time. Configure the event to this mode.
+function SetupSubmission()
+{
+}
+
+// Submission is over, and now the voting period begins
+function SetupVoting()
+{
+}
+
+// Voting is over, close out the compo.
+function EndCompo()
+{
+}
+
+// User should discover and interact with the available options in the current theme voting phase.
+function UserVoteOnTheme(&$user, $phase)
+{
+	switch($phase)
+	{
+	case 0: // Theme Suggestion
+		break;
+		
+	case 1: // Theme Slaughter
+	
+		break;
+		
+	case 2: // Theme voting
+	case 3:
+	case 4:
+	case 5:
+	case 6: // Final theme selection	
+	
+	}
+	
+	return false;
+}
+
+
+// Post a very simple "I'm In" post. Only do this once per event.
+function PostImIn(&$user, $phase)
+{
+	if($user["postedimin"]) return false;
+	
+	$title = "I'm In";
+	$body = "I'm In " . GenerateRandomPostText();
+	CreatePost($user, $title, $body);
+	
+	$user["postedimin"] = true;
+	return false;
+}
+
+
+// Read through recent posts and comments on them, and randomly like comments
+function LikePosts(&$user, $phase)
+{
+	$posts = GetRecentEventPosts($user);
+	if($posts != null)
+	{
+		LikeFeed($user, $posts);
+	}
+	return true;
+}
+
+// Read through highly sorted games and comments on them, and randomly like comments
+function LikeGames(&$user, $phase)
+{
+	$posts = GetTopGames($user);
+	if($posts != null)
+	{
+		LikeFeed($user, $posts);
+	}
+	return false;
+}
+
+// Helper: given a list of nodes, like at least one of them, and examine comments.
+function LikeFeed(&$user, $nodes)
+{
+	if($nodes == null || count($nodes) == 0) return;
+	
+	$likecount = 0;
+	foreach($nodes as $n)
+	{
+		if(random_int(1,10) == 1) LikeCommentsNode($user, $n);
+		if(random_int(1,40) == 1)
+		{
+			$likecount++;
+			LikeNode($user, $n["id"]);
+		}
+	}
+	if($likecount == 0)
+	{
+		$n = $nodes[random_int(1,count($nodes))-1];
+		LikeNode($user, $n["id"]);		
+	}	
+}
+
+// Helper: fetch a node's comments, and maybe like some of them.
+function LikeCommentsNode(&$user, $node)
+{
+	$comments = GetNodeComments($user, $node["id"]);
+	if($comments != null)
+	{
+		foreach($comments as $c)
+		{
+			if(random_int(1,20) == 1) LikeComment($user, $c["id"]);
+		}
+	}
+}
+
+// Find a recent post in the feed, and post a comment - and optionally give it or one of its comments a like.
+function CommentOnPost(&$user, $phase)
+{
+	$commentcount = random_int(1,5);
+	for($i=0;$i<$commentcount;$i++)
+	{
+		$post = GetRandomRecentPost($user);
+		if($post != null)
+		{
+			$body = GenerateRandomPostText();
+			CreateComment($user, $post["id"], $body);
+		}
+	}
+	return true;
+}
+
+// Find a game through one of the game lists, and give it a comment, and optionally give it or one of its comments a like.
+function CommentOnGame(&$user, $phase)
+{
+	$commentcount = random_int(1,3);
+	for($i=0;$i<$commentcount;$i++)
+	{
+		$post = GetRandomTopGame($user);
+		if($post != null)
+		{
+			$body = GenerateRandomPostText();
+			CreateComment($user, $post["id"], $body);
+		}
+	}
+	return true;
+}
+// Find a game through one of the game lists, and vote on it. Or change the votes to something else.
+function VoteOnGame(&$user, $phase)
+{
+	return false;
+}
+
+// Remove a like from some post/comment/game that was liked previously. The simulated user revisits the node and comments, and removes the like.
+function CommentUnlike(&$user, $phase)
+{
+	UnlikeRandom($user);
+	return false;
+}
+
+// Generate and post a new item to the compo feed
+function CompoPostUpdate(&$user, $phase)
+{
+	$title = GenerateRandomPostTitle();
+	$body = GenerateRandomPostText();
+	CreatePost($user, $title, $body);
+	
+	// There's a limit to how many posts a user should make. Try not to make too many more.
+	return count($user["posts"]) < 3;
+}
+
+// And this is the part of the game where some users wish to parade their stats into the news feed, or complain about PoV :)
+function CompoPostResults(&$user, $phase)
+{
+	return false;
+}
+
+// Modify the record for the current user's game and submit an update.
+function CompoEditGame(&$user, $phase)
+{
+	// For now, just carelessly replace everything. Future: do something smarter.
+	$title = GenerateRandomPostTitle();
+	$body = GenerateRandomPostText();
+	ModifyGame($user, $title, $body);
+	return true;
+}
+// Can only be called once. If the game is not published, publish it.
+function CompoPublishGame(&$user, $phase)
+{
+	// Need to ensure there is something good before publish.
+	$title = GenerateRandomPostTitle();
+	$body = GenerateRandomPostText();
+	ModifyGame($user, $title, $body);
+
+	PublishGame($user);
+	return false;
+}
+
+
+////
+//// Quickly sanity check that all functions referenced in the above state system actually exist.
+//// 
+function EnsureFunction($funcname)
+{
+	if(!function_exists($funcname))
+	{
+		ReportError("Fatal error - Function ".$funcname.' referenced in the $stages array does not exist.');
+		exit(1);
+	}
+}
+function EnsureFunctionKey(&$stage, $keyname)
+{
+	if(key_exists($keyname, $stage)) { EnsureFunction($stage[$keyname]); }
+}
+function EnsureFunctionArray(&$stage, $keyname)
+{
+	if(key_exists($keyname, $stage)) 
+	{
+		foreach($stage[$keyname] as $f) EnsureFunction($f);
+	}
+}
+
+foreach($stages as $stage)
+{
+	EnsureFunctionKey($stage, "StageStart");
+	EnsureFunctionKey($stage, "StageEnd");
+	EnsureFunctionKey($stage, "PhaseStart");
+	EnsureFunctionKey($stage, "PhaseEnd");
+	EnsureFunctionKey($stage, "UserVerify");
+	EnsureFunctionArray($stage, "Always");
+	EnsureFunctionArray($stage, "LowChance");
+	EnsureFunctionArray($stage, "HighChance");
+}
+
+
+////
+//// Code to drive the stage progression based on the $stages variable defined above.
+////
+$stagecount = count($stages);
+
+
+for($curStage = 0; $curStage < $stagecount; $curStage++)
+{
+	$stage = $stages[$curStage];
+	Message("Starting stage " . $curStage . " - " . $stage["Name"]);
+
+	// Start stage function
+	if(key_exists("StageStart",$stage)) { $stage["StageStart"](); }
+
+	$phasecount = 1;
+	$hasPhases = false;
+	if(key_exists("Phases", $stage)) { 
+		$hasPhases = true;
+		$phasecount = $stage["Phases"];
+	}
+
+	for($phase = 0; $phase < $phasecount; $phase++)
+	{
+		if($hasPhases)
+		{
+			Message("Beginning Phase ".$phase);
+		}
+		if($hasPhases && key_exists("PhaseStart",$stage)) { $stage["PhaseStart"]($phase); }
+
+		PrepareStageActions($stage, $phase);
+
+		// Determine proper action limiting mechanism
+		if($runminutes)
+		{
+			// Use temporal limiting
+			$minutes = $runminutes;
+			if($stage["MaxMinutes"])
+			{
+				$minutes = Math.min($minutes, $stage["MaxMinutes"]);
+			}
+			$end = (new DateTime()).Add(new DateInterval("PT".$minutes."M"));
+			Message("Running for ".$minutes." minute".($minutes == 1?"":"s"));
+			
+			while($end > new DateTime())
+			{
+				if(!ExecuteStageAction($stage, $phase))
+				{
+					// Still wait for the period to complete before continuing
+					usleep(10000); // Delay 10ms
+				}
+			}
+		}
+		else
+		{
+			// Use event count limiting
+			for($action = 0; $action < $runactions; $action++)
+			{
+				if(!ExecuteStageAction($stage, $phase))
+				{
+					break;
+				}
+			}
+		}
+		
+		// Ensure promised conditions about mandatory actions hold
+		CompleteMandatoryStageActions($stage, $phase);
+
+		if($hasPhases && key_exists("PhaseEnd",$stage)) { $stage["PhaseEnd"]($phase); }
+
+	}
+
+	// End stage function
+	if(key_exists("StageEnd",$stage)) { $stage["StageEnd"](); }
+  
+}
+Message("All Stages Complete!");
+
+	Verbose("Kickoff cron magic.php task one last time to update necessary values in the db.");
+	exec("php ~/www/private/magic.php");
+
+
+$currentstageactions = null;
+
+function PrepareStageActions($stage, $phase)
+{
+	global $event_users;
+	global $event_user_lookup;
+	global $currentstageactions;
+	$currentstageactions = [ "Allowed" => [], "Required" => [], "Users" => [], "ActiveUsernames" => [], "ActionCount" => [] ];
+	
+	// Extract actions out from stage	
+	// Always => List of functions (actions) to be called by all simulated users in this phase
+	// LowChance => List of functions (actions) to be called by a few (at least one, but less than half) of the simulated users in this phase. Each function gets its own list of users
+	// HighChance => list of functions (actions) to be called by most (not all, but at least half) of the simulated users in this phase. Each function gets its own list of users
+	
+	if(key_exists("Always",$stage))
+	{
+		foreach($stage["Always"] as $action)
+		{
+			foreach($event_users as $u)
+			{	
+				$currentstageactions["Allowed"][$u["username"]][] = $action;
+				$currentstageactions["Required"][$u["username"]][] = $action;
+			}
+		}
+	}
+	$usercount = count($event_users);
+	$halflow = floor($usercount/2);
+	$halfhigh = ceil($usercount/2);
+	
+	if(key_exists("LowChance",$stage))
+	{
+		foreach($stage["LowChance"] as $action)
+		{
+			$users = random_int(1, $halfhigh);
+			$randomusers = PickRandomSubset($event_users, $users);
+			
+			foreach($randomusers as $u)
+			{	
+				$currentstageactions["Allowed"][$u["username"]][] = $action;
+				$currentstageactions["Required"][$u["username"]][] = $action;
+			}
+		}	
+	}
+	if(key_exists("HighChance",$stage))
+	{
+		foreach($stage["HighChance"] as $action)
+		{
+			$users = random_int($halflow, $usercount);
+			$randomusers = PickRandomSubset($event_users, $users);
+			
+			foreach($randomusers as $u)
+			{	
+				$currentstageactions["Allowed"][$u["username"]][] = $action;
+				$currentstageactions["Required"][$u["username"]][] = $action;
+			}
+		}	
+	}	
+
+	$eventsperuser = -1;
+	if(key_exists("MaxEventsPerUser",$stage)) { $eventsperuser = $stage["MaxEventsPerUser"]; } 
+	
+	// Compute ActiveUsernames from users that have actions still.
+	foreach($event_users as $u)
+	{
+		$n = $u["username"];
+		if(key_exists($n,$currentstageactions["Allowed"]) && count($currentstageactions["Allowed"][$n]) > 0)
+		{
+			$currentstageactions["ActiveUsernames"][] = $n;
+		}
+		$currentstageactions["ActionCount"][$n] = $eventsperuser;
+	}
+	
+}
+
+function PickRandomSubset($objects, $count)
+{
+	$subset = [];
+	for($i = 0;$i < $count && count($objects) > 0; $i++)
+	{
+		$pick = random_int(1,count($objects))-1;
+		$subset[] = $objects[$pick];
+		if($pick < (count($objects)-1)) { $objects[$pick] = $objects[count($objects)-1]; }
+		unset($objects[count($objects)-1]);
+	}
+	return $subset;
+}
+
+function RemoveElement(&$location, $action)
+{
+	$index = array_search($action, $location);
+	if($index === false) return;
+	
+	$last = count($location)-1;
+	if($index != $last)
+	{
+		$location[$index] = $location[$last];
+	}
+	unset($location[$last]);
+}
+
+function ExecuteAction(&$user, $action, $phase)
+{
+	$username = $user["username"];
+	
+	VerboseAction("Running action ".$action." with user ".$username);
+
+	return $action($user,$phase);
+}
+
+function ExecuteStageAction($stage, $phase)
+{
+	global $currentstageactions;	
+	global $event_user_lookup;	
+	if(count($currentstageactions["ActiveUsernames"]) == 0) return false; // Nothing to do!
+	
+	// Pick a random user from the active usernames
+	$userindex = random_int(1,count($currentstageactions["ActiveUsernames"]))-1;
+	$username = $currentstageactions["ActiveUsernames"][$userindex];
+	$user = &$event_user_lookup[$username];
+	
+	// Pick a random action from the available actions
+	$actions = $currentstageactions["Allowed"][$username];
+	if(count($actions) < 1)
+	{
+		ReportError("Debug - something has gone wrong.");
+		print_r($username);
+		print_r($currentstageactions);
+		return true;
+	}
+	$actionindex = random_int(1, count($actions)) - 1;
+	$action = $actions[$actionindex];
+	
+	// Execute the action
+	$result = ExecuteAction($user, $action, $phase);
+	
+	// Unmark the action from the Required list if present
+	RemoveElement($currentstageactions["Required"][$username], $action);
+	
+	// If the action has requested a stop, remove this action from the Allowed list, and possibly remove this username from the active usernames list.
+	if($result === false)
+	{
+		RemoveElement($currentstageactions["Allowed"][$username], $action);
+		if(count($currentstageactions["Allowed"][$username]) == 0)
+		{
+			RemoveElement($currentstageactions["ActiveUsernames"], $username);
+		}
+	}
+	
+	// Decrement action count & disable username if it hits zero.
+	$currentstageactions["ActionCount"][$username]--;
+	if($currentstageactions["ActionCount"][$username] == 0)
+	{
+		RemoveElement($currentstageactions["ActiveUsernames"], $username);
+	}
+	
+	return true;
+}
+
+function CompleteMandatoryStageActions($stage, $phase)
+{
+	// Complete any remaining Required actions that we didn't get to already (and remove from the list).
+	global $currentstageactions;	
+	global $event_user_lookup;	
+	foreach($currentstageactions["Required"] as $u => $actions)
+	{
+		$user = &$event_user_lookup[$u];
+		
+		foreach($actions as $action)
+		{
+			ExecuteAction($user, $action, $phase);
+		}
+	}
+}
+
+
+////
+//// Common functions to assist in doing normal tasks in the site
+////
+
+function User_Create()
+{
+	$username = GenerateRandomUsername();
+	$password = GenerateRandomPassword();
+	
+	// Construct a user object
+	$user = [
+		"username" => $username,
+		"password" => $password,
+		"cookies" => array(),
+		
+		// Further info for tracking data this user has posted and interacted with.
+		"joinedevent" => false,
+		"game_node" => 0,
+		"posts" => array(),
+		"notes" => array(),
+		"love" => array(),
+		"postedimin" => false,
+		"publishedgame" => false,
+	];
+	
+	// Determine if username is in use
+	for($i = 0; $i < 20; $i++)
+	{
+		if(ApiUserHave($username))
+		{
+			// Username is in use, pick another
+			$username = GenerateRandomUsername();
+			$user["username"] = $username;
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	// API request to create user
+	$email = $username . "@ludumdare.org";
+	
+	$mailsent = ApiUserCreate($email, $user);
+	if(!$mailsent)
+	{
+		Verbose("Warning: User create didn't send mail. It's not strictly necessary to catch mail for this, but you probably don't have the mail catcher running.");
+	}
+	
+	// Dig out the email auth token from the database and activate the user
+	$userdata = user_GetByMail($email);
+	$id = $userdata["id"];
+	$key = $userdata["auth_key"];
+	
+	if(!ApiUserActivate($user, $id, $key))
+	{
+		ReportError("Error while creating user.");
+		return null;
+	}
+	
+		
+	// Login the user
+	$userid = ApiUserLogin($user);
+	if(!$userid)
+	{
+		ReportError("Unable to login new user.");
+		return null;	
+	}
+	
+	$user["id"] = $userid;
+	
+	Verbose("Created user " . $username);
+	
+	return $user;
+}
+
+function User_EnsureJoined(&$user)
+{
+	global $event_nodeid;
+	if(!$user["joinedevent"])
+	{
+		Verbose("Creating a game to join the event...");
+		$user["game_node"] = ApiNodeAdd($user, $event_nodeid, "item/game");
+		$user["joinedevent"] = true;
+	}
+}
+
+function GetRandomRecentPost(&$user)
+{
+	Verbose("Fetching a random post...");
+	$nodes = GetRecentEventPostNodes($user);
+	if(count($nodes) == 0) return null;
+	$i = random_int(1,count($nodes))-1;
+	$data = ApiNodeGet($user, $nodes[$i]["id"]);
+	if($data == null)
+	{
+		ReportError("Error fetching node " . $nodes[$i]);
+		return null;
+	}
+	return $data[0];
+}
+
+function GetRandomTopGame(&$user)
+{
+	Verbose("Fetching a random game...");
+	$nodes = GetTopEventGameNodes($user);
+	if(count($nodes) == 0) return null;
+	$i = random_int(1,count($nodes))-1;
+	$data = ApiNodeGet($user, $nodes[$i]["id"]);
+	if($data == null)
+	{
+		ReportError("Error fetching node " . $nodes[$i]);
+		return null;
+	}
+	return $data[0];
+}
+
+function GetTopGames(&$user)
+{
+	Verbose("Reading over the top games...");
+	$nodes = GetTopEventGameNodes($user);
+	return GetNodesForFeed($user, $nodes);
+}
+
+function GetRecentEventPosts(&$user)
+{
+	Verbose("Reading over the recent posts...");
+	$nodes = GetRecentEventPostNodes($user);
+	return GetNodesForFeed($user, $nodes);
+}
+
+function WalkFeedId(&$feed, $key) { $feed = $feed["id"]; }
+
+function GetNodesForFeed(&$user, $feed)
+{
+	if(count($feed) == 0) return [];
+	$fullnodes = [];
+	$chunks = array_chunk($feed, 30);
+	foreach($chunks as $c)
+	{
+		array_walk($c, "WalkFeedId");
+		$idjoin = implode("+",$c);
+		$data = ApiNodeGet($user, $idjoin);
+		if($data != null)
+		{
+			foreach($data as $n)
+			{
+				$fullnodes[$n["id"]] = $n;
+			}
+		}
+	}
+	$outdata = [];
+	foreach($feed as $n)
+	{
+		$data = $fullnodes[$n["id"]];
+		if($data != null) { $outdata[] = $data; }
+	}
+	if(count($outdata) == 0) return null;
+	return $outdata;
+}
+
+function GetRecentEventPostNodes(&$user, $count = 60)
+{
+	global $event_nodeid;
+	$maxpage = 30;
+	$have = 0;
+	$out = [];
+	while($have < $count)
+	{
+		$fetch = $count - $have;
+		if($fetch > $maxpage) $fetch = $maxpage;
+		
+		$newdata = ApiNodeFeed($user, $event_nodeid, "all", "post", $fetch, $have);
+		if($newdata === null)
+		{
+			ReportError("Error getting feed.");
+		}
+		else
+		{
+			$out = array_merge($out, $newdata);
+		}
+		$have += $fetch;
+	}
+	
+	if(count($out) == 0) return null;
+	return $out;
+}
+
+function GetTopEventGameNodes(&$user, $count = 60)
+{
+	global $event_nodeid;
+	$maxpage = 30;
+	$have = 0;
+	$out = [];
+	while($have < $count)
+	{
+		$fetch = $count - $have;
+		if($fetch > $maxpage) $fetch = $maxpage;
+		
+		$newdata = ApiNodeFeed($user, $event_nodeid, "smart+parent", "item/game/compo+jam", $fetch, $have);
+		if($newdata === null)
+		{
+			ReportError("Error getting feed.");
+		}
+		else
+		{
+			$out = array_merge($out, $newdata);
+		}
+		$have += $fetch;
+	}
+	
+	if(count($out) == 0) return null;
+	return $out;
+}
+
+function GetNodeComments(&$user, $nodeid)
+{
+	Verbose("Reading Comments for node ".$nodeid."...");
+	$notes = ApiNoteGet($user, $nodeid);
+	if($notes === null)
+	{
+		ReportError("Failed to get notes for node ".$nodeid);
+	}
+	return $notes;
+}
+
+function CreatePost(&$user, $title, $body)
+{
+	User_EnsureJoined($user);
+	
+	Verbose("Creating a new post.");
+	$nodeid = ApiNodeAdd($user, $user["game_node"], "post");
+	if($nodeid == null)
+	{
+		ReportError("Failure to add new post!");
+		return;
+	}	
+	if(!ApiNodeUpdate($user, $nodeid, $title, $body))
+	{
+		ReportError("Failure to update post being created.");
+		return;
+	}
+	if(!ApiNodePublish($user, $nodeid))
+	{
+		ReportError("Failure to publish post being created.");
+		return;
+	}
+	$user["posts"][] = $nodeid; // Track post for later use.
+}
+
+function CreateComment(&$user, $nodeid, $body)
+{
+	User_EnsureJoined($user);
+	Verbose("Posting a comment to node " . $nodeid);
+	$id = ApiNoteAdd($user, $nodeid, $body);
+	if(!$id)
+	{
+		ReportError("Failed to add comment");
+		return null;
+	}
+	$user["notes"][] = [ "Node" => $nodeid, "Note" => $id ];
+}
+
+function LikeNode(&$user, $nodeid)
+{
+	# If we haven't already, add a like to this node. 
+	if(array_key_exists($nodeid, $user["love"])) return;
+
+	Verbose("Add like for Node " . $nodeid);
+	if(!ApiNodeLoveAdd($user, $nodeid))
+	{
+		ReportError("Error adding node love for ".$nodeid);
+		return;
+	}
+	$user["love"][] = $nodeid;
+}
+
+function LikeComment(&$user, $commentid)
+{
+	# If we haven't already, add a like to this comment
+	if(array_key_exists(-$commentid, $user["love"])) return;
+	
+	Verbose("Add like for Note " . $commentid);
+	if(!ApiNoteLoveAdd($user, $commentid))
+	{
+		ReportError("Error adding note love for ".$commentid);
+		return;
+	}
+	$user["love"][] = -$commentid;
+}
+
+function UnlikeRandom(&$user)
+{
+	$count = count($user["love"]);
+	if($count < 1) return;
+	
+	$item = random_int(1,$count)-1;
+	$remove = $user["love"][$item];
+	if($remove == null) { print_r($user); }
+	if($item != ($count-1)) $user["love"][$item] = $user["love"][$count-1];
+	unset($user["love"][$count-1]);
+	$user["love"] = array_values($user["love"]); // Reindex for good measure.
+	
+	RemoveLike($user, $remove);
+}
+
+function RemoveLike(&$user, $thing)
+{
+	// Positive numbers = node love, Negative numbers = note love
+	if($thing < 0)
+	{
+		$thing = -$thing;
+		Verbose("Remove note love ". $thing);
+		if(!ApiNoteLoveRemove($user, $thing))
+		{
+			ReportError("Failed to remove note love for ". $thing);
+		}
+	}
+	else
+	{
+		Verbose("Remove node love ". $thing);
+		if(!ApiNodeLoveRemove($user, $thing))
+		{
+			ReportError("Failed to remove node love for ". $thing);
+		}		
+	}
+}
+
+function ModifyGame(&$user, $newTitle, $newBody)
+{
+	User_EnsureJoined($user);
+	Verbose("Modifying game node information...");
+	
+	if(!ApiNodeUpdate($user, $user["game_node"], $newTitle, $newBody))
+	{
+		ReportError("Failure to update game.");
+		return;
+	}
+}
+
+function PublishGame(&$user)
+{
+	User_EnsureJoined($user);
+	// Bail early if user already published game.
+	if($user["publishedgame"]) return;
+	
+	Verbose("Publishing game node ".$user["game_node"]);
+	
+	// Transform game into compo or jam game
+	$newtype = ["item/game/compo","item/game/jam"][random_int(0,1)];
+	if(!ApiNodeTransform($user, $user["game_node"], $newtype))
+	{
+		ReportError("Failed to transform game node to " . $newtype);
+	}
+	
+	// other stuff (future: enable opt-outs and stuff)
+	
+	
+	// Publish!
+	if(!ApiNodePublish($user, $user["game_node"]))
+	{
+		ReportError("Failed to publish game!");
+	}
+	
+	$user["publishedgame"] = true;
+	
+	Verbose("Kickoff cron magic.php task to update necessary scores in the db.");
+	exec("php ~/www/private/magic.php");
+}
+
+
+
+////
+//// API Interface wrapper functions
+////
+
+// Get one or more nodes
+function ApiNodeGet(&$user, $nodeidlist)
+{
+	$value = LdApi::Get("vx/node/get/".$nodeidlist, $user);
+	if($value != null)
+	{
+		return $value["node"];
+	}
+	return null; 
+}
+
+// Enumerate nodes related to an event
+function ApiNodeFeed(&$user, $parentid, $methods, $type, $count, $offset = 0)
+{ // GET node/feed/:node_id/:methods[]/:type/[:subtype]/[:subsubtype] ?offset= ?limit=
+
+	$value = LdApi::Get("vx/node/feed/" . $parentid . "/" . $methods . "/" . $type . "?offset=" . $offset . "&limit=" . $count, $user);
+	if($value != null)
+	{
+		return $value["feed"];
+	}
+	return null;
+}
+
+// Add item(/game[/compo, /jam]) or post (typically)
+// Pass type,subtype,subsubtype together as $type.
+function ApiNodeAdd(&$user, $parentid, $type)
+{  // POST node/add/:parent/:type/:subtype/:subsubtype
+	$value = LdApi::Post("vx/node/add/" . $parentid . "/" . $type , "", $user);
+	if($value != null && key_exists("id",$value))
+	{
+		return $value["id"];
+	}
+	return null;
+}
+
+// Edit name and body of a node (either can be skipped with null) (tag is also an option, but overlooking that for now)
+function ApiNodeUpdate(&$user, $nodeid, $newname = null, $newbody = null)
+{ // POST node/update/:node_id
+	$poststring = "";
+	if($newname != null) { $poststring = "name=".$newname; }
+	if($newbody != null)
+	{
+		if($poststring != "") { $poststring .= "&"; }
+		$poststring .= "body=".$newbody;
+	}
+
+	$value = LdApi::Post("vx/node/update/" . $nodeid , $poststring, $user);
+	return ResponseIs200($value);
+}
+
+// Change the type of a node (e.g. change item/game to item/game/compo, item/game/jam)
+function ApiNodeTransform(&$user, $nodeid, $newtype)
+{ // POST node/transform/:node_id/:type/[:subtype]/[:subsubtype]
+	$value = LdApi::Post("vx/node/transform/" . $nodeid . "/" . $newtype, "", $user);
+	return ResponseIs200($value);
+}
+
+// Just publish the node.
+function ApiNodePublish(&$user, $nodeid)
+{ // POST node/publish/:node_id
+	$value = LdApi::Post("vx/node/publish/" . $nodeid, "", $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeLoveAdd(&$user, $nodeid) //GET node/love/add/:node_id
+{
+	$value = LdApi::Get("vx/node/love/add/" . $nodeid, $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeLoveRemove(&$user, $nodeid) //GET node/love/remove/:node_id
+{
+	$value = LdApi::Get("vx/node/love/remove/" . $nodeid, $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeMetaAdd(&$user, $nodeid, $key, $value) // POST node/meta/add/:node_id
+{
+	$value = LdApi::Post("vx/node/meta/add/".$nodeid, $key."=".$value, $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeMetaRemove(&$user, $nodeid, $key) // POST node/meta/remove/:node_id
+{
+	$value = LdApi::Post("vx/node/meta/remove/".$nodeid, $key."=", $user);
+	return ResponseIs200($value);
+}
+
+
+function ApiNoteAdd(&$user, $nodeid, $body) // POST note/add
+{
+	$value = LdApi::Post("vx/note/add/".$nodeid,"parent=0&body=".$body, $user);
+	if($value) { return $value["note"]; }
+	return null;
+}
+
+function ApiNoteUpdate(&$user, $parentid, $noteid, $newbody)
+{
+	$value = LdApi::Post("vx/note/update/".$noteid,"node=".$parentid."&body=".$body, $user);
+	return ResponseIs200($value);
+}
+
+// Get all notes for a node
+function ApiNoteGet(&$user, $nodeid)
+{
+	$value = LdApi::Get("vx/note/get/" . $nodeid, $user);
+	if($value)
+	{
+		return $value["note"];
+	}
+	return null;
+}
+
+function ApiNoteLoveAdd(&$user, $noteid)
+{
+	$value = LdApi::Get("vx/note/love/add/" . $noteid, $user);
+	return ResponseIs200($value);
+}
+
+function ApiNoteLoveRemove(&$user, $noteid)
+{
+	$value = LdApi::Get("vx/note/love/remove/" . $noteid, $user);
+	return ResponseIs200($value);
+}
+
+function ResponseIs200($response)
+{
+	if($response != null)
+	{
+		return $response["response_httpcode"] == "200"; 
+	}
+	return false;
+}
+
+// Does the site have this username already?
+function ApiUserHave($username)
+{
+	$value = LdApi::Post("vx/user/have","name=".$username);
+	if($value != null)
+	{
+		return !($value["available"]);
+	}
+	return false;
+}
+
+// Create a new user (by email address)
+function ApiUserCreate($email, &$user)
+{
+	$value = LdApi::Post("vx/user/create","mail=".$email, $user);
+	if($value != null)
+	{
+		return $value["sent"];
+	}
+	return false;
+}
+
+function ApiUserActivate(&$user, $id, $auth_key)
+{
+	$name = $user["username"];
+	$pw = $user["password"];
+	
+	$postString = "id=".$id."&key=".$auth_key."&name=".$name."&pw=".$pw;
+	$value = LdApi::Post("vx/user/activate",$postString,$user);
+	
+	if($value != null)
+	{
+		return $value["response_httpcode"] == "201";
+	}
+	return false;
+}
+
+function ApiUserLogin(&$user)
+{
+	$login = $user["username"];
+	$pw = $user["password"];
+	
+	$value = LdApi::Post("vx/user/login", "login=".$login."&pw=".$pw, $user);
+	
+	if($value != null)
+	{
+		if($value["response_httpcode"] == "200")
+		{
+			return $value["id"];
+		} 
+	}
+	return 0;
+}
+
+////
+//// Low level helper / generation code
+////
+
+function GenerateRandomUsername()
+{
+  $length = random_int(2, 10);
+  return bin2hex(random_bytes($length));
+}
+
+function GenerateRandomPassword()
+{
+  $length = random_int(5, 10);
+  return bin2hex(random_bytes($length));
+}
+
+function GenerateRandomPostTitle()
+{
+	return GenerateRandomPostText(3,12);
+}
+
+// Future: something much more meaningful. Also figure out how to include image uploads, links, other fun feathres.
+function GenerateRandomPostText($minWords = 10, $maxWords = 200)
+{
+	$words = random_int($minWords, $maxWords);
+	$allwords = array();
+	for($i=0;$i<$words;$i++)
+	{
+		$wordlength = random_int(1,5);
+		$word = bin2hex(random_bytes($wordlength));
+		$allwords[] = $word;
+	}
+	return implode(" ",$allwords);
+}
+
+////
+//// Low level API interface code
+////
+
+class LdApi
+{
+	static $debug_api = false;
+
+	static $lastRequestLog = null;
+	static $lastResponseLog = null;
+
+	public static function PrintLastRequestResponse()
+	{
+		print( "\x1b[31mLast Request/Response:\x1b[m\n"); 
+		print( "\x1b[31m" . LdApi::$lastRequestLog . "\x1b[m\n"); 
+		print( "\x1b[31m" . LdApi::$lastResponseLog . "\x1b[m\n"); 
+		
+		// Also put these in the error log for easier reference.
+		LogErr("Last Request/Response:\n");
+		LogErr(LdApi::$lastRequestLog . "\n");
+		LogErr(LdApi::$lastResponseLog . "\n");
+	}
+
+	static function DebugRequestLog($log)
+	{
+		if(LdApi::$debug_api)
+		{
+			Verbose($log);
+		}
+		else
+		{
+			VerboseHidden($log);
+		}		
+		LdApi::$lastRequestLog = $log;
+	}
+	static function DebugResponseLog($log)
+	{
+		if(LdApi::$debug_api)
+		{
+			Verbose($log);
+		}
+		else
+		{
+			VerboseHidden($log);
+		}		
+		LdApi::$lastResponseLog = $log;	
+	}
+
+	static function SetRequestUser($curl, &$user)
+	{
+		if($user != null)
+		{
+			// Generate cookie string for user and set it.
+			$cookies = [];
+			foreach($user["cookies"] as $c => $v)
+			{
+				$cookies[] = $c."=".$v;
+			}
+			$cookiestring = implode("; ", $cookies);
+			curl_setopt($curl, CURLOPT_COOKIE, $cookiestring);
+			if($cookiestring != "")
+			{
+				// debug debug Verbose("Sending Cookie: ".$cookiestring);
+			}
+		}
+	}
+	static function UpdateUserCookie($headers, &$user)
+	{
+		if($user != null)
+		{
+			$lines = explode("\r\n", $headers);
+			foreach($lines as $v)
+			{
+				$parts = explode(": ",$v, 2);
+				if($parts[0] == "Set-Cookie")
+				{
+					// debug debug Verbose("Receive Set-Cookie: ".$parts[1]);
+					
+					$c = explode(";", $parts[1]);
+					$cookiedata = explode("=",$c[0],2);
+					// interpret "=deleted" as the condition to delete a cookie, as the code to check the expires time is annoying in php.
+					if($cookiedata[1] == "deleted")
+					{
+						unset($user["cookies"][$cookiedata[0]]);
+					}
+					else
+					{
+						$user["cookies"][$cookiedata[0]] = $cookiedata[1];
+					}
+				}			
+			}
+		}
+	}
+	static function ForUser(&$user)
+	{
+		if($user != null)
+		{
+			return " for user " . $user["username"];
+		}
+		return "";
+	}
+  
+	public static function Get($url, &$user = NULL, $report_error=true)
+	{
+		global $apibase;
+		$outputObject = NULL;
+		$url = $apibase . $url;
+		
+		LdApi::DebugRequestLog("GET '".$url."'".LdApi::ForUser($user));
+		
+		$c = curl_init($url);
+		
+		curl_setopt($c, CURLOPT_HEADER, true);		
+		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($c, CURLOPT_HTTPGET, true);
+		
+		LdApi::SetRequestUser($c, $user);
+		
+		$content = "";
+		$result = curl_exec($c);
+		$success = !($result === false);
+		if($success)
+		{
+			$parts = explode("\r\n\r\n",$result);
+			while($parts[0] == "HTTP/1.1 100 Continue") { array_shift($parts); }
+			$headers = $parts[0];
+			$content = $parts[1];
+		
+			$outputObject = json_decode($content, true);
+			$httpcode = curl_getinfo($c, CURLINFO_HTTP_CODE);
+			$outputObject["response_httpcode"] = $httpcode;			
+			LdApi::UpdateUserCookie($headers, $user);
+		}
+		if(!$success && $report_error)
+		{
+			ReportError("Error getting '".$url ."'". LdApi::ForUser($user). " - " . curl_error($c));
+		}
+		
+		LdApi::DebugResponseLog("Response '" . $content . "'");
+		if(substr($content,0,4) == "HTTP")
+		{
+			Verbose("Debug: '" . $result);
+		}			
+
+		curl_close($c);
+		
+		return $outputObject;
+	}
+	public static function Post($url, $postdata, &$user = NULL)
+	{
+		global $apibase;
+
+		$outputObject = NULL;
+		$url = $apibase . $url;		
+
+		LdApi::DebugRequestLog("POST '".$url."' with data '".$postdata."'".LdApi::ForUser($user));
+		
+		$c = curl_init($url);
+		
+		curl_setopt($c, CURLOPT_HEADER, true);
+		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($c, CURLOPT_POST, true);
+		curl_setopt($c, CURLOPT_POSTFIELDS, $postdata);
+		
+		LdApi::SetRequestUser($c, $user);
+		
+		$content = "";
+		$result = curl_exec($c);
+		$success = !($result === false);
+		if($success)
+		{
+			$parts = explode("\r\n\r\n",$result);
+			while($parts[0] == "HTTP/1.1 100 Continue") { array_shift($parts); }
+			$headers = $parts[0];
+			$content = $parts[1];
+		
+			$outputObject = json_decode($content, true);
+			$httpcode = curl_getinfo($c, CURLINFO_HTTP_CODE);
+			$outputObject["response_httpcode"] = $httpcode;
+			
+			LdApi::UpdateUserCookie($headers, $user);
+		}
+		if(!$success && $report_error)
+		{
+			ReportError("Error getting '".$url ."'". LdApi::ForUser($user) . " - " . curl_error($c));
+		}
+		
+		LdApi::DebugResponseLog("Response '" . $content . "'");
+		if(substr($content,0,4) == "HTTP")
+		{
+			Verbose("Debug: '" . $result);
+		}
+
+		curl_close($c);
+		return $outputObject;	
+	
+	}
+}
+
+
+CloseLogs();
+exit(0);
