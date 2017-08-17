@@ -1158,8 +1158,10 @@ function UnlikeRandom(&$user)
 	
 	$item = random_int(1,$count)-1;
 	$remove = $user["love"][$item];
+	if($remove == null) { print_r($user); }
 	if($item != ($count-1)) $user["love"][$item] = $user["love"][$count-1];
 	unset($user["love"][$count-1]);
+	$user["love"] = array_values($user["love"]); // Reindex for good measure.
 	
 	RemoveLike($user, $remove);
 }
@@ -1473,6 +1475,11 @@ class LdApi
 		print( "\x1b[31mLast Request/Response:\x1b[m\n"); 
 		print( "\x1b[31m" . LdApi::$lastRequestLog . "\x1b[m\n"); 
 		print( "\x1b[31m" . LdApi::$lastResponseLog . "\x1b[m\n"); 
+		
+		// Also put these in the error log for easier reference.
+		LogErr("Last Request/Response:\n");
+		LogErr(LdApi::$lastRequestLog . "\n");
+		LogErr(LdApi::$lastResponseLog . "\n");
 	}
 
 	static function DebugRequestLog($log)
