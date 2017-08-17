@@ -60,7 +60,7 @@ $logbase = "/tmp/ld_event"; // Logs will be put in /tmp
 //   <name>.<eventIndex>.err (Summary log and errors)
 
 $apibase = "http://api.ludumdare.org/";
-$usercount = 3; // Something like 40-50 is good for reasonable size tests.
+$usercount = 10; // Something like 40-50 is good for reasonable size tests.
 $keepallposts = true;
 $keeppostcount = 100; // Number of posts per user to keep, when keep all posts is false (which it should be for high user counts or long runtimes / stress environments.)
 $verbose = true; // Display all of the details about what's going on?
@@ -225,7 +225,7 @@ $stages = array(
 		"Name" => "Setup",
 		"StageStart" => 'SetupEvent',
 		"MaxMinutes" => 1,
-		"MaxEventsPerUser" => 15,
+		"MaxEventsPerUser" => 3,
 		"LowChance" => array('PostImIn', 'CommentOnPost') // Early "I'm In" posts
 	),
 	// Second stage, Theme voting
@@ -233,10 +233,10 @@ $stages = array(
 		"Name" => "Theme Voting",
 		"Phases" => 7, // Theme suggestion + theme slaughter + 4 rounds of voting + theme selection
 		"MaxMinutes" => 1, // This is per phase
-		"MaxEventsPerUser" => 200,
+		"MaxEventsPerUser" => 5,
 		"PhaseStart" => 'SetupThemePhase',
 		"HighChance" => ['UserVoteOnTheme'],
-		"LowChance" => array('PostImIn', 'CommentOnPost', 'LikePosts')  // More various "I'm In" posts will trickle in
+		"LowChance" => array('PostImIn', 'CommentOnPost', 'LikePosts', 'CommentUnlike')  // More various "I'm In" posts will trickle in
 	),
 	// Third stage, LD Starts!
 	array(
@@ -250,7 +250,7 @@ $stages = array(
 		"Name" => "Compo Submission Period",
 		"StageStart" => 'SetupSubmission',
 		"MaxMinutes" => 2,
-		"MaxEventsPerUser" => 20,
+		"MaxEventsPerUser" => 10,
 		"HighChance" => array('CommentOnGame', 'CompoPublishGame', 'LikePosts'),
 		"LowChance" => array('CompoPostUpdate', 'CompoEditGame', 'CommentOnPost', 'CommentUnlike'),
 	),
@@ -258,7 +258,7 @@ $stages = array(
 	array(
 		"Name" => "Compo Voting",
 		"StageStart" => 'SetupVoting',
-		"MaxEventsPerUser" => 300,
+		"MaxEventsPerUser" => 80,
 		"HighChance" => array('CommentOnGame', 'VoteOnGame', 'LikePosts', 'LikeGames'),
 		"LowChance" => array('CommentOnPost', 'CompoEditGame', 'CompoPostUpdate', 'CommentUnlike')
 	),
@@ -431,7 +431,7 @@ function PostImIn(&$user, $phase)
 // Read through recent posts and comments on them, and randomly like comments
 function LikePosts(&$user, $phase)
 {
-	$posts = GetRecentEventPosts($posts);
+	$posts = GetRecentEventPosts($user);
 	if($posts != null)
 	{
 		LikeFeed($user, $posts);
@@ -442,6 +442,11 @@ function LikePosts(&$user, $phase)
 // Read through highly sorted games and comments on them, and randomly like comments
 function LikeGames(&$user, $phase)
 {
+	$posts = GetTopGames($user);
+	if($posts != null)
+	{
+		LikeFeed($user, $posts);
+	}
 	return false;
 }
 
@@ -483,11 +488,15 @@ function LikeCommentsNode(&$user, $node)
 // Find a recent post in the feed, and post a comment - and optionally give it or one of its comments a like.
 function CommentOnPost(&$user, $phase)
 {
-	$post = GetRandomRecentPost($user);
-	if($post != null)
+	$commentcount = random_int(1,5);
+	for($i=0;$i<$commentcount;$i++)
 	{
-		$body = GenerateRandomPostText();
-		CreateComment($user, $post["id"], $body);
+		$post = GetRandomRecentPost($user);
+		if($post != null)
+		{
+			$body = GenerateRandomPostText();
+			CreateComment($user, $post["id"], $body);
+		}
 	}
 	return true;
 }
@@ -495,7 +504,17 @@ function CommentOnPost(&$user, $phase)
 // Find a game through one of the game lists, and give it a comment, and optionally give it or one of its comments a like.
 function CommentOnGame(&$user, $phase)
 {
-	return false;
+	$commentcount = random_int(1,3);
+	for($i=0;$i<$commentcount;$i++)
+	{
+		$post = GetRandomTopGame($user);
+		if($post != null)
+		{
+			$body = GenerateRandomPostText();
+			CreateComment($user, $post["id"], $body);
+		}
+	}
+	return true;
 }
 // Find a game through one of the game lists, and vote on it. Or change the votes to something else.
 function VoteOnGame(&$user, $phase)
@@ -506,6 +525,7 @@ function VoteOnGame(&$user, $phase)
 // Remove a like from some post/comment/game that was liked previously. The simulated user revisits the node and comments, and removes the like.
 function CommentUnlike(&$user, $phase)
 {
+	UnlikeRandom($user);
 	return false;
 }
 
@@ -529,11 +549,21 @@ function CompoPostResults(&$user, $phase)
 // Modify the record for the current user's game and submit an update.
 function CompoEditGame(&$user, $phase)
 {
-	return false;
+	// For now, just carelessly replace everything. Future: do something smarter.
+	$title = GenerateRandomPostTitle();
+	$body = GenerateRandomPostText();
+	ModifyGame($user, $title, $body);
+	return true;
 }
 // Can only be called once. If the game is not published, publish it.
 function CompoPublishGame(&$user, $phase)
 {
+	// Need to ensure there is something good before publish.
+	$title = GenerateRandomPostTitle();
+	$body = GenerateRandomPostText();
+	ModifyGame($user, $title, $body);
+
+	PublishGame($user);
 	return false;
 }
 
@@ -651,6 +681,10 @@ for($curStage = 0; $curStage < $stagecount; $curStage++)
 }
 Message("All Stages Complete!");
 
+	Verbose("Kickoff cron magic.php task one last time to update necessary values in the db.");
+	exec("php ~/www/private/magic.php");
+
+
 $currentstageactions = null;
 
 function PrepareStageActions($stage, $phase)
@@ -658,7 +692,7 @@ function PrepareStageActions($stage, $phase)
 	global $event_users;
 	global $event_user_lookup;
 	global $currentstageactions;
-	$currentstageactions = [ "Allowed" => [], "Required" => [], "Users" => [], "ActiveUsernames" => [] ];
+	$currentstageactions = [ "Allowed" => [], "Required" => [], "Users" => [], "ActiveUsernames" => [], "ActionCount" => [] ];
 	
 	// Extract actions out from stage	
 	// Always => List of functions (actions) to be called by all simulated users in this phase
@@ -708,6 +742,9 @@ function PrepareStageActions($stage, $phase)
 			}
 		}	
 	}	
+
+	$eventsperuser = -1;
+	if(key_exists("MaxEventsPerUser",$stage)) { $eventsperuser = $stage["MaxEventsPerUser"]; } 
 	
 	// Compute ActiveUsernames from users that have actions still.
 	foreach($event_users as $u)
@@ -717,7 +754,9 @@ function PrepareStageActions($stage, $phase)
 		{
 			$currentstageactions["ActiveUsernames"][] = $n;
 		}
+		$currentstageactions["ActionCount"][$n] = $eventsperuser;
 	}
+	
 }
 
 function PickRandomSubset($objects, $count)
@@ -792,6 +831,13 @@ function ExecuteStageAction($stage, $phase)
 		{
 			RemoveElement($currentstageactions["ActiveUsernames"], $username);
 		}
+	}
+	
+	// Decrement action count & disable username if it hits zero.
+	$currentstageactions["ActionCount"][$username]--;
+	if($currentstageactions["ActionCount"][$username] == 0)
+	{
+		RemoveElement($currentstageactions["ActiveUsernames"], $username);
 	}
 	
 	return true;
@@ -916,14 +962,42 @@ function GetRandomRecentPost(&$user)
 	return $data[0];
 }
 
-function WalkFeedId(&$feed, $key) { $feed = $feed["id"]; }
+function GetRandomTopGame(&$user)
+{
+	Verbose("Fetching a random game...");
+	$nodes = GetTopEventGameNodes($user);
+	if(count($nodes) == 0) return null;
+	$i = random_int(1,count($nodes))-1;
+	$data = ApiNodeGet($user, $nodes[$i]["id"]);
+	if($data == null)
+	{
+		ReportError("Error fetching node " . $nodes[$i]);
+		return null;
+	}
+	return $data[0];
+}
+
+function GetTopGames(&$user)
+{
+	Verbose("Reading over the top games...");
+	$nodes = GetTopEventGameNodes($user);
+	return GetNodesForFeed($user, $nodes);
+}
 
 function GetRecentEventPosts(&$user)
 {
 	Verbose("Reading over the recent posts...");
 	$nodes = GetRecentEventPostNodes($user);
+	return GetNodesForFeed($user, $nodes);
+}
+
+function WalkFeedId(&$feed, $key) { $feed = $feed["id"]; }
+
+function GetNodesForFeed(&$user, $feed)
+{
+	if(count($feed) == 0) return [];
 	$fullnodes = [];
-	$chunks = array_chunk($nodes, 30);
+	$chunks = array_chunk($feed, 30);
 	foreach($chunks as $c)
 	{
 		array_walk($c, "WalkFeedId");
@@ -938,7 +1012,7 @@ function GetRecentEventPosts(&$user)
 		}
 	}
 	$outdata = [];
-	foreach($nodes as $n)
+	foreach($feed as $n)
 	{
 		$data = $fullnodes[$n["id"]];
 		if($data != null) { $outdata[] = $data; }
@@ -959,6 +1033,33 @@ function GetRecentEventPostNodes(&$user, $count = 60)
 		if($fetch > $maxpage) $fetch = $maxpage;
 		
 		$newdata = ApiNodeFeed($user, $event_nodeid, "all", "post", $fetch, $have);
+		if($newdata === null)
+		{
+			ReportError("Error getting feed.");
+		}
+		else
+		{
+			$out = array_merge($out, $newdata);
+		}
+		$have += $fetch;
+	}
+	
+	if(count($out) == 0) return null;
+	return $out;
+}
+
+function GetTopEventGameNodes(&$user, $count = 60)
+{
+	global $event_nodeid;
+	$maxpage = 30;
+	$have = 0;
+	$out = [];
+	while($have < $count)
+	{
+		$fetch = $count - $have;
+		if($fetch > $maxpage) $fetch = $maxpage;
+		
+		$newdata = ApiNodeFeed($user, $event_nodeid, "smart+parent", "item/game/compo+jam", $fetch, $have);
 		if($newdata === null)
 		{
 			ReportError("Error getting feed.");
@@ -1050,10 +1151,81 @@ function LikeComment(&$user, $commentid)
 	$user["love"][] = -$commentid;
 }
 
+function UnlikeRandom(&$user)
+{
+	$count = count($user["love"]);
+	if($count < 1) return;
+	
+	$item = random_int(1,$count)-1;
+	$remove = $user["love"][$item];
+	if($item != ($count-1)) $user["love"][$item] = $user["love"][$count-1];
+	unset($user["love"][$count-1]);
+	
+	RemoveLike($user, $remove);
+}
+
 function RemoveLike(&$user, $thing)
 {
 	// Positive numbers = node love, Negative numbers = note love
+	if($thing < 0)
+	{
+		$thing = -$thing;
+		Verbose("Remove note love ". $thing);
+		if(!ApiNoteLoveRemove($user, $thing))
+		{
+			ReportError("Failed to remove note love for ". $thing);
+		}
+	}
+	else
+	{
+		Verbose("Remove node love ". $thing);
+		if(!ApiNodeLoveRemove($user, $thing))
+		{
+			ReportError("Failed to remove node love for ". $thing);
+		}		
+	}
+}
+
+function ModifyGame(&$user, $newTitle, $newBody)
+{
+	User_EnsureJoined($user);
+	Verbose("Modifying game node information...");
 	
+	if(!ApiNodeUpdate($user, $user["game_node"], $newTitle, $newBody))
+	{
+		ReportError("Failure to update game.");
+		return;
+	}
+}
+
+function PublishGame(&$user)
+{
+	User_EnsureJoined($user);
+	// Bail early if user already published game.
+	if($user["publishedgame"]) return;
+	
+	Verbose("Publishing game node ".$user["game_node"]);
+	
+	// Transform game into compo or jam game
+	$newtype = ["item/game/compo","item/game/jam"][random_int(0,1)];
+	if(!ApiNodeTransform($user, $user["game_node"], $newtype))
+	{
+		ReportError("Failed to transform game node to " . $newtype);
+	}
+	
+	// other stuff (future: enable opt-outs and stuff)
+	
+	
+	// Publish!
+	if(!ApiNodePublish($user, $user["game_node"]))
+	{
+		ReportError("Failed to publish game!");
+	}
+	
+	$user["publishedgame"] = true;
+	
+	Verbose("Kickoff cron magic.php task to update necessary scores in the db.");
+	exec("php ~/www/private/magic.php");
 }
 
 
