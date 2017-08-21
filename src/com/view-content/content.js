@@ -591,7 +591,7 @@ export default class ViewContent extends Component {
 			else if ( extra && extra.length && extra[0] == 'games' ) {
 				let DefaultSubSubFilter = 'featured';
 				let DefaultSubFilter = 'all';
-				let DefaultFilter = 'smart';
+				let DefaultFilter = 'danger';//'smart';
 
 				function EvalFilter(str) {
 					let MappingTable = {
