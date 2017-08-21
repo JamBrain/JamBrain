@@ -24,7 +24,8 @@ export default class ViewSidebar extends Component {
 		let jamEndDate = new Date(Date.UTC(2017, 7, 1, 1, 0, 0));
 		let jamEndDate2 = new Date(Date.UTC(2017, 7, 1, 2, 30, 0));
 
-		let gradeEndDate = new Date(Date.UTC(2017, 7, 22, 1, 0, 0));
+		//let gradeEndDate = new Date(Date.UTC(2017, 7, 22, 1, 0, 0));
+		let gradeEndDate = new Date(Date.UTC(2017, 7, 22, 16, 0, 0));
 
 		let now = new Date();
 		
