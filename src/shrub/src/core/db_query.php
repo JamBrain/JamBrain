@@ -154,9 +154,9 @@ function dbQuery_MakeOp( $name, $op, $array, &$QUERY, &$ARGS ) {
 				$QUERY[] = '`'.$name.'` '.$op.' ("'.implode('","', $array).'")';
 				return true;
 			}
-			else if ( is_null($array[0]) ) {
-				return null;
-			}
+//			else if ( is_null($array[0]) ) {
+//				return null;
+//			}
 			else {
 				global $RESPONSE;
 				json_EmitFatalError_Server("Array of unknown type passed to ".__FUNCTION__, $RESPONSE);

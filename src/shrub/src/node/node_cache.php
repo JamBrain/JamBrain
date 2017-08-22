@@ -64,7 +64,7 @@ function nodeCache_GetById( $ids, &$cached_store = null ) {
 
 	$CACHE_HIT += count($cached_ids);
 	
-	$uncached_ids = array_diff($ids, $cached_ids);
+	$uncached_ids = array_values(array_diff($ids, $cached_ids));
 	
 	if ( !is_null($cached_store) ) {
 		$cached_store = $cached_ids;
