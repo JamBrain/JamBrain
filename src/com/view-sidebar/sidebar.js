@@ -26,6 +26,7 @@ export default class ViewSidebar extends Component {
 
 		//let gradeEndDate = new Date(Date.UTC(2017, 7, 22, 1, 0, 0));
 		let gradeEndDate = new Date(Date.UTC(2017, 7, 22, 16, 0, 0));
+		let resultsDate = new Date(Date.UTC(2017, 7, 22, 20, 0, 0));
 
 		let now = new Date();
 		
@@ -50,6 +51,11 @@ export default class ViewSidebar extends Component {
 
 			if ( now < compoEndDate2 || now < jamEndDate2 || now < gradeEndDate ) {
 				ShowCountdown.push(<SidebarCountdown date={ gradeEndDate } nc="jam" to="Play+Rate games" tt="Ends" />);
+			}
+			
+			// TODO: make this only appear a few hours before grading ends
+			if ( now < resultsDate ) {
+				ShowCountdown.push(<SidebarCountdown date={ resultsDate } nc="jam" to="Results" tt="live" />);
 			}
 		}
 
