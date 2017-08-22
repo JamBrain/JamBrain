@@ -358,7 +358,28 @@ export default class ViewContent extends Component {
 				ShowNav = <ContentNavTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
 				ShowPage = <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
 			}
-			else if( extra && extra.length && extra[0] == 'games' ){
+			else if ( extra && extra.length && extra[0] == 'results' ) {
+				if ( node && node.meta && node.meta['theme-mode'] < 8 ) {
+					return (
+						<div id="content">
+							<Common node={node} user={user}>
+								<CommonBody>Results not yet ready.</CommonBody>
+							</Common>
+						</div>
+					);
+					
+				}
+				else {
+					return (
+						<div id="content">
+							<Common node={node} user={user}>
+								<CommonBody>Yes</CommonBody>
+							</Common>
+						</div>
+					);
+				}
+			}
+			else if ( extra && extra.length && extra[0] == 'games' ){
 				let DefaultSubFilter = 'all';
 				let DefaultFilter = 'smart';
 
@@ -564,14 +585,16 @@ export default class ViewContent extends Component {
 			}
 			else if ( Viewing == '/home' ) {
 				var ShowHome = null;
+				// TODO: switch modes
+				
 				// If my entry is Published
-				if ( featured && featured.what && featured.what.length && featured.what[0] && featured.what_node && featured.what_node[featured.what[0]] && featured.what_node[featured.what[0]].published ) {
-					ShowHome = (
-						<Common node={node} user={user}>
-							<CommonBody>You can start playing and rating games <NavLink href={featured.path+'/games'}>here</NavLink>.</CommonBody>
-						</Common>
-					);
-				}
+//				if ( featured && featured.what && featured.what.length && featured.what[0] && featured.what_node && featured.what_node[featured.what[0]] && featured.what_node[featured.what[0]].published ) {
+//					ShowHome = (
+//						<Common node={node} user={user}>
+//							<CommonBody>You can start playing and rating games <NavLink href={featured.path+'/games'}>here</NavLink>.</CommonBody>
+//						</Common>
+//					);
+//				}
 				
 				return (
 					<ContentTimeline types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra}>
