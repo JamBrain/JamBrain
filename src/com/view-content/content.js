@@ -358,28 +358,28 @@ export default class ViewContent extends Component {
 				ShowNav = <ContentNavTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
 				ShowPage = <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />;
 			}
-			else if ( extra && extra.length && extra[0] == 'results' ) {
-				if ( node && node.meta && node.meta['theme-mode'] < 8 ) {
-					return (
-						<div id="content">
-							<Common node={node} user={user}>
-								<CommonBody>Results not yet ready.</CommonBody>
-							</Common>
-						</div>
-					);
-					
-				}
-				else {
-					return (
-						<div id="content">
-							<Common node={node} user={user}>
-								<CommonBody>Yes</CommonBody>
-							</Common>
-						</div>
-					);
-				}
-			}
-			else if ( extra && extra.length && extra[0] == 'games' ){
+//			else if ( extra && extra.length && extra[0] == 'results' ) {
+//				if ( node && node.meta && node.meta['theme-mode'] < 8 ) {
+//					return (
+//						<div id="content">
+//							<Common node={node} user={user}>
+//								<CommonBody>Results not yet ready.</CommonBody>
+//							</Common>
+//						</div>
+//					);
+//					
+//				}
+//				else {
+//					return (
+//						<div id="content">
+//							<Common node={node} user={user}>
+//								<CommonBody>Yes</CommonBody>
+//							</Common>
+//						</div>
+//					);
+//				}
+//			}
+			else if ( extra && extra.length && extra[0] == 'games' || extra[0] == 'results' ){
 				let DefaultSubFilter = 'all';
 				let DefaultFilter = 'smart';
 
@@ -477,7 +477,7 @@ export default class ViewContent extends Component {
 				};
 
 				if ( node && node.meta && node.meta['theme-mode'] < 8 ) {
-					let Path = this.props.path+'/games/';
+					let Path = this.props.path+'/'+extra[0]+'/';
 
 					ShowFilters = (
 						<Common node={this.props.node} class="filter-item filter-game">
@@ -500,7 +500,7 @@ export default class ViewContent extends Component {
 					);
 				}
 				else {	// results
-					let Path = this.props.path+'/games/';
+					let Path = this.props.path+'/'+extra[0]+'/';
 					
 					ShowFilters = (
 						<Common node={this.props.node} class="filter-item filter-game">
