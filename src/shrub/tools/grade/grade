@@ -16,7 +16,7 @@ require_once __DIR__."/".SHRUB_PATH."grade/grade.php";
 if ( count($argv) < 2 ) {
 	print "Usage: ".$argv[0]." [command]\n";
 	print "\n";
-	print "  score event # (#)    - Score items threshold # (17) with an optional 2nd threshold (15)\n";
+	print "  score event_name # (#)    - Score items from event_name (compo) with threshold # (17). An optional 2nd threshold (15) can check if a lower value is safe\n";
 	print "\n";
 	exit;
 }
