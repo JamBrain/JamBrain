@@ -102,7 +102,7 @@ export default class HeaderWhatsup extends Component {
 				else if ( parseInt(featured.meta['theme-mode']) == 8 && featured.meta['event-theme'] ) {
 					return (
 						<div class="header-base header-whatsup outside">
-							<span class="-title _font2">RESULTS:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink>
+							<span class="-title _font2">RESULTS:</span> <NavLink href={featured.path+'/results'}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink>
 						</div>
 					);
 				}
