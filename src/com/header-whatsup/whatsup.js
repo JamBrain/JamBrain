@@ -92,6 +92,13 @@ export default class HeaderWhatsup extends Component {
 						</div>
 					);
 				}
+				else if ( parseInt(featured.meta['theme-mode']) == 7 && featured.meta['event-theme'] ) {
+					return (
+						<div class="header-base header-whatsup outside">
+							<span class="-title _font2">RESULTS SOON:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink>. This can take a few hours. <NavLink href="https://twitter.com/ludumdare"><SVGIcon baseline small gap>twitter</SVGIcon>Stay tuned</NavLink>
+						</div>
+					);
+				}
 				else if ( parseInt(featured.meta['theme-mode']) == 8 && featured.meta['event-theme'] ) {
 					return (
 						<div class="header-base header-whatsup outside">
