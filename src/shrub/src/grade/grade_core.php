@@ -126,7 +126,7 @@ function grade_CountByNodeNotAuthor( $node_id, $authors ) {
 }
 
 
-function grade_CountByNode( $node_id, $limit = 8*10 ) {
+function grade_CountByNode( $node_id, $limit = 8*250 ) {
 	$multi = is_array($node_id);
 	if ( !$multi )
 		$node_id = [$node_id];
