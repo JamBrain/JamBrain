@@ -54,6 +54,7 @@ else
 
 $enable_file_logs = true;
 $logbase = "/tmp/ld_event"; // Logs will be put in /tmp
+$htmlbase = "ld_event"; // Put html report in current directory.
 // Generate 3 kinds of log. 
 //   <name>.<eventIndex>.event (Event information, user/password list)
 //   <name>.<eventIndex>.log (Full Detail Verbose log)
@@ -175,6 +176,14 @@ function OpenStatsFile()
 	return fopen($log, "a");
 }
 
+function OpenHtmlStatsFile()
+{
+	global $htmlbase;
+	global $eventindex;
+	$log = $htmlbase . "." . $eventindex . ".stats.html";
+	return fopen($log, "a");
+}
+
 
 // Figure out event index to use for this run, and start loggers.
 
@@ -288,13 +297,14 @@ $event_users = array(); // Only use for reference (e.g. getting usernames)
 $event_user_lookup = array(); // Only use this as a source for user objects, and get them by reference.
 
 $event_nodeid = null;
+$event_name = null;
 
 // Prepare the event. Create an admin superuser. Create all the compo users. Create the new LudumDare event. Publish the event node.
 // Some of this has to be done through the database directly (finding the email verification links, and creating the ludumdare event and setting it up)
 // We'll also use some data from the database to make the naming a bit more friendly.
 function SetupEvent()
 {
-	global $event_admin_user, $event_users, $event_user_lookup;
+	global $event_admin_user, $event_users, $event_user_lookup, $event_name;
 	
 	$event_admin_user = User_Create();
 	
@@ -315,6 +325,7 @@ function SetupEvent()
 	$parentnode = 1; // Future: build out a more complex structure for this test.
 	$author = $event_admin_user["id"];
 	$eventname = "Testumdare " . ($eventindex);  
+	$event_name = $eventname;
 	$eventbody = GenerateRandomPostText();
 	
 	$starttime = time();
@@ -1809,6 +1820,46 @@ function dump_stat_var(&$f, $var)
 	dump_stat_node($f, $GLOBALS[$var]);
 }
 
+
+function dump_stat_html_node(&$f, &$node, $prefix="root")
+{
+	$count = $node["count"];
+	$time = $node["time"];
+	$min = $node["mintime"];
+	$max = $node["maxtime"];
+	$avg = 0;
+	if($count > 0) { $avg = $time / $count; }
+
+	$summary = "$prefix - Count: $count, Total Time: $time, Min $min s / Avg $avg s / Max $max s";
+	
+	$html = <<<HTMLCHUNK
+<div class="hierarchy">
+  <div class="container">
+  <div class="summary" onclick="ShowHideElement(this.parentElement)">$summary</div>
+  <div class="collapse" style="display:none">
+  <div class="longcontent">
+  <pre>	
+HTMLCHUNK;
+	fwrite($f, $html);
+
+	foreach($node["top"] as $topobj)
+	{
+		fwrite($f, print_r($topobj,true) . "\n\n");
+	}
+	fwrite($f, "  </pre></div></div></div>\n");
+	
+	foreach($node["children"] as $key => $child)
+	{
+		dump_stat_html_node( $f, $child, $prefix . " / " . $key );
+	}
+	fwrite($f, "</div>\n");	
+}
+
+function dump_stat_html_var(&$f, $var)
+{
+	dump_stat_html_node($f, $GLOBALS[$var]);
+}
+
 function dump_stats()
 {
 	$f = OpenStatsFile();
@@ -1821,6 +1872,56 @@ function dump_stats()
 	fwrite($f, "\n\n####################\nDB Query stats:\n");
 	dump_stat_var($f, "stats_db");
 	
+	fclose($f);
+	
+	
+	
+	// Also generate HTML report
+	
+	global $event_name;
+	
+	$f = OpenHtmlStatsFile();
+	$html = <<<HTMLSTART
+<html>
+<head><title>Performance stats for $event_name</title></head>
+<body>
+<script>
+function ShowHideElement(value)
+{
+	var children = value.getElementsByClassName('collapse');
+	var element = children[0];
+	if(element.style.display == 'none')
+	{
+		element.style.display = 'inline';
+	}
+	else
+	{
+		element.style.display = 'none';
+	}
+}
+</script>
+<style>
+div.hierarchy { padding-left:20px; }
+div.container { }
+div.summary { margin:5px; padding:10px; background-color:#CCC }
+div.longcontent { margin:5px; padding:10px; background-color:#aaa }
+</style>
+
+HTMLSTART;
+
+	fwrite($f,  $html);
+
+	fwrite($f, "\n<h1>DB Connect stats:</h1>\n");
+	dump_stat_html_var($f, "stats_dbconnect");
+
+	fwrite($f, "\n<h1>API Access stats:</h1>\n");
+	dump_stat_html_var($f, "stats_api");
+
+	fwrite($f, "\n<h1>DB Query stats:</h1>\n");
+	dump_stat_html_var($f, "stats_db");
+
+
+	fwrite($f, "</body></html>\n");
 	fclose($f);
 }
 
