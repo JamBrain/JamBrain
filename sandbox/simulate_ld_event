@@ -67,6 +67,8 @@ $verbose = true; // Display all of the details about what's going on?
 $verboselog = true; // Keep all details about what's going on in a log.
 $useprevioususers = false; // (not implemented) Load the set of users from the previous test event, instead of creating new users.
 
+define("TOP_STATS",10); // keep top 10 stats
+
 $errorcount = 0;
 
 function TimeString()
@@ -165,6 +167,15 @@ function OpenEventFile()
 	return fopen($log, "a");
 }
 
+function OpenStatsFile()
+{
+	global $logbase;
+	global $eventindex;
+	$log = $logbase . "." . $eventindex . ".stats";
+	return fopen($log, "a");
+}
+
+
 // Figure out event index to use for this run, and start loggers.
 
 $events = db_QueryFetch(
@@ -186,6 +197,7 @@ if($enable_file_logs)
 	OpenLogs($eventindex);
 }
 
+stats_init();
 
 /*
 	Stages definition:
@@ -785,11 +797,14 @@ function RemoveElement(&$location, $action)
 	unset($location[$last]);
 }
 
+$ActionContext = [];
+
 function ExecuteAction(&$user, $action, $phase)
 {
 	$username = $user["username"];
 	
 	VerboseAction("Running action ".$action." with user ".$username);
+	$GLOBALS["ActionContext"] = ["action" => $action];
 
 	return $action($user,$phase);
 }
@@ -1565,9 +1580,13 @@ class LdApi
 	{
 		global $apibase;
 		$outputObject = NULL;
+		$urlpath = $url;
 		$url = $apibase . $url;
 		
 		LdApi::DebugRequestLog("GET '".$url."'".LdApi::ForUser($user));
+		
+		// Add "debug" get request
+		if(false === strpos($url,"?")) { $url .= "?debug"; } else { $url .= "&debug"; }		
 		
 		$c = curl_init($url);
 		
@@ -1590,6 +1609,9 @@ class LdApi
 			$outputObject = json_decode($content, true);
 			$httpcode = curl_getinfo($c, CURLINFO_HTTP_CODE);
 			$outputObject["response_httpcode"] = $httpcode;			
+			
+			stats_accumulate("GET", $urlpath, null, $outputObject, $user);
+			
 			LdApi::UpdateUserCookie($headers, $user);
 		}
 		if(!$success && $report_error)
@@ -1612,9 +1634,13 @@ class LdApi
 		global $apibase;
 
 		$outputObject = NULL;
+		$urlpath = $url;
 		$url = $apibase . $url;		
-
+		
 		LdApi::DebugRequestLog("POST '".$url."' with data '".$postdata."'".LdApi::ForUser($user));
+		
+		// Add "debug" get request
+		if(false === strpos($url,"?")) { $url .= "?debug"; } else { $url .= "&debug"; }		
 		
 		$c = curl_init($url);
 		
@@ -1639,6 +1665,8 @@ class LdApi
 			$httpcode = curl_getinfo($c, CURLINFO_HTTP_CODE);
 			$outputObject["response_httpcode"] = $httpcode;
 			
+			stats_accumulate("POST",$urlpath, $postdata, $outputObject, $user);
+			
 			LdApi::UpdateUserCookie($headers, $user);
 		}
 		if(!$success && $report_error)
@@ -1658,6 +1686,145 @@ class LdApi
 	}
 }
 
+////
+//// Statistical tracking for API information
+//// * Keep track of most expensive API requests overall and by type of API request. (to granularity of 2 levels, /vx/aaa/bbb)
+//// * Keep track of most expensive DB queries overall and by type of API request.
+////
+
+
+
+function stats_init()
+{
+	$GLOBALS["stats_api"] = stats_makenode();
+	$GLOBALS["stats_db"] = stats_makenode();
+	$GLOBALS["stats_dbconnect"] = stats_makenode();
+}
+
+function stats_accumulate($type, $url, $postdata, &$response, &$user)
+{
+	$statsobj = ["type"=>$type, "path"=>$url, "response"=> $response, "username" => $user["username"], "time" => $response["debug"]["request_time"] ];
+
+	$url = substr($url, 3); // skip vx/ prefix
+	$parts = explode("/",$url,3);
+	$statspath = array_merge([$type], array_slice($parts,0,2));
+
+	stats_accumulateobject("stats_api", $statsobj, $statspath);
+
+	// For each DB request in the response, also make an entry
+
+	unset($statsobj["response"]["debug"]); // Avoid storing / printing out entire DB debug path for every DB response.
+	
+	foreach($response["debug"]["db_details"] as $detail)
+	{
+		if($detail["action"] == "query")
+		{
+			$detail["context"] = $statsobj;
+			stats_accumulateobject("stats_db", $detail, $statspath);
+		}
+		if($detail["action"] == "connect")
+		{
+			// Also track DB connect stats, but only in a root node. It's not going to be affected by other factors.
+			stats_accumulateobject("stats_dbconnect",$detail,[]);
+		}
+	}
+
+}
+
+function stats_makenode()
+{
+	return [ "count"=>0, "time"=>0.0, "maxtime" => null, "mintime" => null, "top"=>[], "children" => [] ];
+}
+// Stats $obj will have at least a "time" element, which will be used to keep track of top stats objects and 
+function stats_accumulateobject($var, &$obj, $path)
+{
+	$target = &$GLOBALS[$var];
+	stats_adddata($target, $obj);
+	foreach($path as $pathelement)
+	{
+		if(!key_exists($pathelement, $target["children"]))
+		{
+			$target["children"][$pathelement] = stats_makenode();
+		}
+		$target = &$target["children"][$pathelement];
+		stats_adddata($target, $obj);
+	}
+}
+function stats_adddata(&$target, &$obj)
+{
+	$target["count"]++;
+	$target["time"] += $obj["time"];
+	if($target["maxtime"] === null) $target["maxtime"] = $obj["time"]; else $target["maxtime"] = max($target["maxtime"],$obj["time"]);
+	if($target["mintime"] === null) $target["mintime"] = $obj["time"]; else $target["mintime"] = min($target["mintime"],$obj["time"]);
+	
+	if(count($target["top"]) < TOP_STATS || end($target["top"])["time"] < $obj["time"])
+	{
+		// Merge new object into the array
+		$target["top"][] = $obj;
+		usort($target["top"], "statobj_sortfunc");
+		if(count($target["top"]) > TOP_STATS)
+		{
+			array_pop($target["top"]);
+		}
+	}
+}
+
+function sign($n)
+{
+	return $n>0?1:($n<0?-1:0);
+}
+function statobj_sortfunc($a, $b) // Sort by time descending.
+{
+	return sign($b["time"]-$a["time"]);
+}	
+
+function dump_stat_node(&$f, &$node, $prefix="root")
+{
+	$count = $node["count"];
+	$time = $node["time"];
+	$min = $node["mintime"];
+	$max = $node["maxtime"];
+	$avg = 0;
+	if($count > 0) { $avg = $time / $count; }
+
+	fwrite($f, ">>>> Stats ($prefix)\n");
+	fwrite($f, "  Request count: $count\n");
+	fwrite($f, "  Total time on requests: $time s\n");
+	fwrite($f, "  Min time: $min s / Avg time: $avg s / Max time: $max s\n");
+	fwrite($f, "  Top time-consumers:\n");
+	foreach($node["top"] as $topobj)
+	{
+		fwrite($f, print_r($topobj,true) . "\n\n");
+	}
+	fwrite($f, "\n");
+	
+	foreach($node["children"] as $key => $child)
+	{
+		dump_stat_node( $f, $child, $prefix . " / " . $key );
+	}
+}
+
+function dump_stat_var(&$f, $var)
+{
+	dump_stat_node($f, $GLOBALS[$var]);
+}
+
+function dump_stats()
+{
+	$f = OpenStatsFile();
+	fwrite($f, "\nDB Connect stats:\n");
+	dump_stat_var($f, "stats_dbconnect");
+
+	fwrite($f, "\n\n####################\nAPI Access stats:\n");
+	dump_stat_var($f, "stats_api");
+
+	fwrite($f, "\n\n####################\nDB Query stats:\n");
+	dump_stat_var($f, "stats_db");
+	
+	fclose($f);
+}
+
+dump_stats();
 
 CloseLogs();
 exit(0);

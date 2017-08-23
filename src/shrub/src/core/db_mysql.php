@@ -386,10 +386,8 @@ function _db_DebugEndQuery(&$st, &$result)
 		
 		global $DB_DEBUG_DATA;
 		$newdata = ['action'=>'query', 'time'=>($end-$start), 'query' => $GLOBALS['DB_LAST_QUERY']];
-		if($num_rows > 0) {
-			$newdata['num_rows'] = $num_rows;
-		}
-		if($st->affected_rows > 0) {
+		$newdata['num_rows'] = $num_rows;
+		if($st->affected_rows > 0 && $st->affected_rows != $num_rows) {
 			$newdata['affected_rows'] = $st->affected_rows;
 		}
 		if($st->insert_id > 0) {
