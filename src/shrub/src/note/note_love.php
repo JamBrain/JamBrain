@@ -10,7 +10,7 @@ function noteLove_CountByNode( $node ) {
 			COUNT(note) AS count, 
 			".DB_FIELD_DATE('MAX(timestamp)','timestamp')."
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
-		WHERE $node=?
+		WHERE node=?
 		GROUP BY note;",
 		$node
 	);
