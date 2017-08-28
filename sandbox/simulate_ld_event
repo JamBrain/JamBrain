@@ -1505,7 +1505,7 @@ function AddWikipediaText()
 	$data = LdApi::GetRaw("https://en.wikipedia.org/wiki/Special:Random");
 	
 	// Determine what article we got from the page- class in the body tag.
-	if(preg_match('/<body[^>]*body-([^\s]+) [^>]+>/', $data, $matches)
+	if(preg_match('/<body[^>]*body-([^\s]+) [^>]+>/', $data, $matches))
 	{
 		Message("Reading Wikipedia Article " . $matches[1]);
 	}
@@ -1531,14 +1531,14 @@ function AddWikipediaText()
 
 function MarkovReset()
 {
-	$GLOBALS["MarkovData"] = [ "Words"=[], "WordMap"=[] "Chain2"=[], "Chain3"=[], "Stats"=["UseChain3"=0, "UseChain2"=0, "UseRandom"=0]];
+	$GLOBALS["MarkovData"] = [ "Words"=>[], "WordMap"=>[], "Chain2"=>[], "Chain3"=>[], "Stats"=>["UseChain3"=>0, "UseChain2"=>0, "UseRandom"=>0]];
 }
 
 function MarkovTrain($statementarray)
 {
 	foreach($statementarray as $statement)
 	{
-		$words = preg_split("/[\s,]+/", $statement);
+		$words = preg_split('/[\s,]+/', $statement);
 		MarkovTrainWordArray($words);
 	}
 }
@@ -1588,7 +1588,7 @@ function MarkovRandomWord()
 {
 	MarkovEnsureWords();
 	global $MarkovData;
-	$index = random_int(1,count($MarkovData["Words"])-1;
+	$index = random_int(1,count($MarkovData["Words"]))-1;
 	return $MarkovData["Words"][$index];
 }
 
@@ -1926,6 +1926,58 @@ function statobj_sortfunc($a, $b) // Sort by time descending.
 	return sign($b["time"]-$a["time"]);
 }	
 
+function format_time($t)
+{
+	if($t >= 2)
+	{
+		$t = intval(round($t*1000));
+		return ($t/1000) . "s";
+	}
+	else
+	{
+		$t = intval(round($t*1000*1000));
+		return ($t/1000) . "ms";
+	}
+}
+
+function time_color($t, $basevalue)
+{
+	$green_time = $basevalue;
+	$yellow_time = $basevalue*5;
+	$red_time = $basevalue*25;
+	
+	$rgb = [0,0,0];
+	if($t < $green_time)
+	{
+		$rgb[1] = 1;
+	}
+	else if($t < $yellow_time)
+	{
+		// green-yellow
+		$v = ($t-$green_time)/($yellow_time-$green_time);
+		$rgb[0] = $v;
+		$rgb[1] = 1;
+	}
+	else if($t < $red_time)
+	{
+		// yellow-red
+		$v = ($t-$yellow_time)/($red_time-$yellow_time);
+		$rgb[0] = 1;
+		$rgb[1] = 1-$v;
+	}
+	else
+	{
+		$rgb[0] = 1;
+	}
+	
+	# Setup color
+	for($i=0;$i<3;$i++)
+	{
+		$rgb[$i] = intval(round($rgb[$i] * 80 + 128));
+	}
+	return "#".bin2hex(pack("CCC",$rgb[0],$rgb[1],$rgb[2]));
+}
+
 function dump_stat_node(&$f, &$node, $prefix="root")
 {
 	$count = $node["count"];
@@ -1933,7 +1985,7 @@ function dump_stat_node(&$f, &$node, $prefix="root")
 	$min = $node["mintime"];
 	$max = $node["maxtime"];
 	$avg = 0;
-	if($count > 0) { $avg = $time / $count; }
+	if($count > 0) { $avg = $time / $count; }	
 
 	fwrite($f, ">>>> Stats ($prefix)\n");
 	fwrite($f, "  Request count: $count\n");
@@ -1958,21 +2010,23 @@ function dump_stat_var(&$f, $var)
 }
 
 
-function dump_stat_html_node(&$f, &$node, $prefix="root")
+function dump_stat_html_node(&$f, &$node, $prefix="root", $timebasevalue)
 {
 	$count = $node["count"];
 	$time = $node["time"];
-	$min = $node["mintime"];
-	$max = $node["maxtime"];
+	$min = format_time($node["mintime"]);
+	$max = format_time($node["maxtime"]);
 	$avg = 0;
-	if($count > 0) { $avg = $time / $count; }
+	if($count > 0) { $avg = format_time($time / $count); }
+	$time = format_time($time);
+	$color = time_color($node["maxtime"], $timebasevalue);
 
-	$summary = "$prefix - Count: $count, Total Time: $time, Min $min s / Avg $avg s / Max $max s";
+	$summary = "$prefix - Count: $count, Total Time: $time, Min $min / Avg $avg / Max $max";
 	
 	$html = <<<HTMLCHUNK
 <div class="hierarchy">
   <div class="container">
-  <div class="summary" onclick="ShowHideElement(this.parentElement)">$summary</div>
+  <div class="summary" style="background-color:$color" onclick="ShowHideElement(this.parentElement)">$summary</div>
   <div class="collapse" style="display:none">
   <div class="longcontent">
   <pre>	
@@ -1987,14 +2041,19 @@ HTMLCHUNK;
 	
 	foreach($node["children"] as $key => $child)
 	{
-		dump_stat_html_node( $f, $child, $prefix . " / " . $key );
+		dump_stat_html_node( $f, $child, $prefix . " / " . $key, $timebasevalue );
 	}
 	fwrite($f, "</div>\n");	
 }
 
 function dump_stat_html_var(&$f, $var)
 {
-	dump_stat_html_node($f, $GLOBALS[$var]);
+	$node = &$GLOBALS[$var];
+	$basevalue = 0.005;
+	$count = $node["count"];
+	$time = $node["time"];
+	if($count > 0) { $basevalue = ($time / $count)/2; }
+	dump_stat_html_node($f, $node, "root", $basevalue);
 }
 
 function dump_stats()
