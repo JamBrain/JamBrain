@@ -502,7 +502,7 @@ switch ( $action ) {
 				'item/craft' => 0,			// i.e. can't create
 				'item/craft/jam' => 0,		// i.e. can't create
 				
-				'post' => -75,				// i.e. unlimited (was -25, but I haven't finished karma checking)
+				'post' => -50,				// i.e. unlimited (was -25, but I haven't finished karma checking)
 				'post/news' => 0,			// i.e. can't create
 			];
 			
