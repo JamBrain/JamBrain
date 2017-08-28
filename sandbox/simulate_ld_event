@@ -1485,6 +1485,120 @@ function GenerateRandomPostText($minWords = 10, $maxWords = 200)
 	return implode(" ",$allwords);
 }
 
+
+////
+//// Fetch some random wikipedia articles to seed the Markov text generation system
+////
+
+function SetupTextGeneration($articles = 5)
+{
+	MarkovReset();
+	for($i=0; $i < $articles; $i++)
+	{
+		AddWikipediaText();
+	}
+}
+
+function AddWikipediaText()
+{
+	// Fetch a random wikipedia article.
+	$data = LdApi::GetRaw("https://en.wikipedia.org/wiki/Special:Random");
+	
+	// Determine what article we got from the page- class in the body tag.
+	if(preg_match('/<body[^>]*body-([^\s]+) [^>]+>/', $data, $matches)
+	{
+		Message("Reading Wikipedia Article " . $matches[1]);
+	}
+	else
+	{
+		ReportError("Wikipedia data seems wrong. Please check.");
+		return;
+	}
+	
+	// Get data between '<div class="mw-parser-output">' and '<div role="navigation"'
+	
+	// Remove all html tags and [#] references. Remove quotation marks
+	
+	// Split on period and newline, eliminate duplicate spaces
+}
+
+
+////
+//// Generate text using markov chains derived from whatever source material you give it.
+//// (Well semi-markov, it doesn't really care about the statistical element, just the chains of sequential words.)
+////
+
+
+function MarkovReset()
+{
+	$GLOBALS["MarkovData"] = [ "Words"=[], "WordMap"=[] "Chain2"=[], "Chain3"=[], "Stats"=["UseChain3"=0, "UseChain2"=0, "UseRandom"=0]];
+}
+
+function MarkovTrain($statementarray)
+{
+	foreach($statementarray as $statement)
+	{
+		$words = preg_split("/[\s,]+/", $statement);
+		MarkovTrainWordArray($words);
+	}
+}
+
+function MarkovTrainWordArray($words)
+{
+	global $MarkovData;
+	
+	$prev1 = "";
+	$prev2 = "";	
+	$words[] = ""; // Add an empty value to the chains to indicate natural places where the generation can stop.
+	foreach($words as $word)
+	{
+		$key3 = "$prev2-$prev1";
+		$key2 = $prev1;
+	
+		// Add word to word list
+		if($word != "") {
+			if(key_exists($word, $MarkovData["WordMap"])) { $MarkovData["WordMap"][$word]++; } else { $MarkovData["WordMap"][$word] = 1; }
+		}
+		
+		// Add to 2-chain
+		if(!key_exists($key2, $MarkovData["Chain2"])) { 
+			$MarkovData["Chain2"][$key2] = [];
+		}
+		$MarkovData["Chain2"][$key2][$word] = true;
+				
+		// Add to 3-chain
+		if(!key_exists($key3, $MarkovData["Chain3"])) { 
+			$MarkovData["Chain3"][$key3] = [];
+		}
+		$MarkovData["Chain3"][$key3][$word] = true;
+		
+	}
+	$MarkovData["Words"] = null; // Word list needs to be rebuilt.
+}
+
+function MarkovEnsureWords()
+{
+	if(!$GLOBALS["MarkovData"]["Words"])
+	{
+		$GLOBALS["MarkovData"]["Words"] = array_keys($GLOBALS["MarkovData"]["WordMap"]);
+	}
+}
+
+function MarkovRandomWord()
+{
+	MarkovEnsureWords();
+	global $MarkovData;
+	$index = random_int(1,count($MarkovData["Words"])-1;
+	return $MarkovData["Words"][$index];
+}
+
+function MarkovRandomPhrase()
+{
+	MarkovEnsureWords();
+
+}
+
+
 ////
 //// Low level API interface code
 ////
@@ -1586,6 +1700,29 @@ class LdApi
 		}
 		return "";
 	}
+  
+	public static function GetRaw($url)
+	{
+
+		$c = curl_init($url);
+		
+		curl_setopt($c, CURLOPT_HEADER, false);		
+		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($c, CURLOPT_HTTPGET, true);
+
+		$result = curl_exec($c);
+		$success = !($result === false);
+
+		if(!$success)
+		{
+			ReportError("Error getting '".$url ."' - " . curl_error($c));
+		}
+		
+
+		curl_close($c);
+		
+		return $result;
+	}  
   
 	public static function Get($url, &$user = NULL, $report_error=true)
 	{
