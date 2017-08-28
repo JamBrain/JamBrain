@@ -264,6 +264,7 @@ function node_CountByParentAuthorType( $parent = null, $superparent = null, $aut
 	dbQuery_MakeEq('subtype', $subtype, $QUERY, $ARGS);
 	dbQuery_MakeEq('subsubtype', $subsubtype, $QUERY, $ARGS);
 	
+	// NOTE: Pass `null` if you want to ignore the published vs unpublished check. Passing a boolean checks for the exact case.
 	if ( is_bool($published) )
 		dbQuery_MakeOp('published', $published ? '!=' : '=', 0, $QUERY, $ARGS);
 
@@ -276,7 +277,7 @@ function node_CountByParentAuthorType( $parent = null, $superparent = null, $aut
 		LIMIT 1
 		;",
 		...$ARGS
-	) |0;	// Clever: If nothing is returned, result is zero
+	) |0;	// CLEVER: If nothing is returned, result is zero
 }
 
 function node_CountByAuthorType( $ids, $authors, $types = null, $subtypes = null, $subsubtypes = null ) {
