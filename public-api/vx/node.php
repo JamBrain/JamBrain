@@ -524,7 +524,7 @@ switch ( $action ) {
 			
 
 			// Check how many you have
-			$RESPONSE['count'] = node_CountByParentAuthorType($parent, $user_id, $type, $subtype, $subsubtype);
+			$RESPONSE['count'] = node_CountByParentAuthorType($parent, null, $user_id, $type, $subtype, $subsubtype);
 //			if ( isset($RESPONSE['count']) && count($RESPONSE['count']) == 0 ) {
 //				$RESPONSE['count'] = 0;
 //			}
