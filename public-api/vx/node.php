@@ -502,7 +502,7 @@ switch ( $action ) {
 				'item/craft' => 0,			// i.e. can't create
 				'item/craft/jam' => 0,		// i.e. can't create
 				
-				'post' => -75,				// i.e. unlimited (was -25, but I haven't finished karma checking)
+				'post' => -50,				// i.e. unlimited (was -25, but I haven't finished karma checking)
 				'post/news' => 0,			// i.e. can't create
 			];
 			
@@ -524,7 +524,7 @@ switch ( $action ) {
 			
 
 			// Check how many you have
-			$RESPONSE['count'] = node_CountByParentAuthorType($parent, $user_id, $type, $subtype, $subsubtype);
+			$RESPONSE['count'] = node_CountByParentAuthorType($parent, null, $user_id, $type, $subtype, $subsubtype, null);
 //			if ( isset($RESPONSE['count']) && count($RESPONSE['count']) == 0 ) {
 //				$RESPONSE['count'] = 0;
 //			}
