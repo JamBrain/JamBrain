@@ -2,6 +2,7 @@
 require_once __DIR__."/grade.php";
 
 const DB_TYPE_GRADE_VALUE = 'INT NOT NULL';
+const DB_TYPE_NEW_GRADE_VALUE = 'FLOAT(7,2) NOT NULL';
 
 $table = 'SH_TABLE_GRADE';
 if ( in_array($table, $TABLE_LIST) ) {
@@ -37,6 +38,12 @@ if ( in_array($table, $TABLE_LIST) ) {
 		$ok = table_Update( $table,
 			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
 				ADD INDEX parent (parent);"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+	case 3:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				MODIFY value ".DB_TYPE_NEW_GRADE_VALUE.";"
 			);
 		if (!$ok) break; $TABLE_VERSION++;
 	};

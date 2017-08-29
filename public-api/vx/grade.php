@@ -58,10 +58,12 @@ switch ( $action ) {
 		$score = json_ArgShift();
 		if ( is_null($score) && $action == 'add' )
 			json_EmitFatalError_BadRequest("No score", $RESPONSE);
-		$score = intval($score);
+		$score = floatval($score);
 
-		if ( $score < 0 || $score > 5 )
-			json_EmitFatalError_BadRequest("Invalid score: $score", $RESPONSE);
+		if ( $score < 0.0 || $score > 5.0 )
+			json_EmitFatalError_BadRequest("Score out of range [0-5]: $score", $RESPONSE);
+		if ( $score % 0.5 !== 0.0 )
+			json_EmitFatalError_BadRequest("Score has bad fraction: $score", $RESPONSE);
 
 		// Load Node
 		$node = nodeCache_GetById($node_id);
