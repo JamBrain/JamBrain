@@ -22,7 +22,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title>star-empty</dc:title>
+        <dc:title>star-right-empty</dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -49,7 +49,7 @@
      inkscape:window-maximized="1"
      inkscape:current-layer="svg6" />
   <title
-     id="title2">star-empty</title>
+     id="title2">star-right-empty</title>
   <path
      d="M 0,0.78320312 -4.943359,10.800781 -16,12.408203 -8,20.205078 -9.8886719,31.216797 0,26.017578 9.888672,31.216797 8,20.205078 16,12.408203 4.943359,10.800781 Z M 1.25,8.2558594 3.492188,12.800781 11.300781,13.935547 5.650391,19.441406 6.984375,27.21875 1.25,24.203125 Z m -2.5,0.00586 V 24.205078 l -5.7324219,3.013672 1.3339839,-7.777344 -5.65039,-5.505859 7.808594,-1.134766 z"
      id="path4"
