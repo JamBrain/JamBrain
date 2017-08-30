@@ -37,13 +37,24 @@ export default class InputStar extends Component {
 			ShowNumber = <div class='-number'>{Value.toFixed(2)}</div>;
 		}
 		
+		// NOTE: This looks interesting https://codepen.io/jamesbarnett/pen/vlpkh
+		
 		let Stars = [];
 		if ( props.edit ) {
+			// Mini Stars
+//			for ( let idx = 1.0; idx <= Math.floor(Value*2.0); idx++ ) {
+//				Stars.push(<ButtonBase class='-star -hover' onclick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon quarter={idx&1} pad={idx&1} baseline>star-full</SVGIcon></ButtonBase>);
+//			}
+//			for ( let idx = Math.ceil(Value*2.0)+1; idx <= (Count*2.0); idx++ ) {
+//				Stars.push(<ButtonBase class='-star -hover' onclick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon quarter={idx&1} pad={idx&1} baseline>star-empty</SVGIcon></ButtonBase>);
+//			}
+
+			// Half Stars
 			for ( let idx = 1.0; idx <= Math.floor(Value*2.0); idx++ ) {
-				Stars.push(<ButtonBase class='-star -hover' onclick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon half={idx&1} pad={idx&1} baseline>star-full</SVGIcon></ButtonBase>);
+				Stars.push(<ButtonBase class='-star -hover' onclick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon baseline>{'star-'+(idx&1?'left':'right')+'-full'}</SVGIcon></ButtonBase>);
 			}
 			for ( let idx = Math.ceil(Value*2.0)+1; idx <= (Count*2.0); idx++ ) {
-				Stars.push(<ButtonBase class='-star -hover' onclick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon half={idx&1} pad={idx&1} baseline>star-empty</SVGIcon></ButtonBase>);
+				Stars.push(<ButtonBase class='-star -hover' onclick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon baseline>{'star-'+(idx&1?'left':'right')+'-empty'}</SVGIcon></ButtonBase>);
 			}
 
 			// Delete button
