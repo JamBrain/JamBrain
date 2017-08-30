@@ -44,7 +44,7 @@ function themeIdea_Get( $event_id, $user_id = 0, $threshold = null, $query_suffi
 }
 
 function themeIdea_GetTopScoring( $event_id, $count) {
-	return db_QueryFetchPair(
+	return db_QueryFetch(
 		"SELECT id, node, theme, score 
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
 		WHERE node=? 

@@ -119,6 +119,12 @@ function Message($text)
 	LogErr($text);
 }
 
+function LogExec($execAction)
+{
+	exec($execAction, $results);
+	Verbose("Exec '$execAction':\n".implode("\n",$results));
+}
+
 
 $flogfull = null;
 $flogerr = null;
@@ -443,6 +449,8 @@ function SetupEvent()
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-07-optional', 1);
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-08-optional', 1);
 
+	nodeCache_InvalidateById($event_nodeid);
+	
 	// Also publish the event
 	if(!ApiNodePublish($event_admin_user, $event_nodeid))
 	{
@@ -480,48 +488,56 @@ function SetupThemePhase($phase)
 		Message("Starting Theme Suggestion");
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-theme', 1);
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 1);
+		nodeCache_InvalidateById($event_nodeid);
+
 		break;
 		
 	case 1: // Theme Slaughter
 		Message("Starting Theme Slaughter");
 		Verbose("Run external tool to perform suggestion deduplication");
-		exec("sudo ../src/shrub/tools/theme/theme itsautomatic dupes");
+		LogExec("sudo php ~/www/src/shrub/tools/theme/theme itsautomatic dupes");
 	
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 2); // Theme slaughter
+		nodeCache_InvalidateById($event_nodeid);
+
 		break;
 	
 	case 2: // Theme voting
 		Message("Starting Theme Voting Round 1");	
 		Verbose("Run external tool to score theme slaughter");
-		exec("sudo ../src/shrub/tools/theme/theme itsautomatic score");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic score");
 		
 		Verbose("Run external tool to populate theme voting pages");
-		exec("sudo ../src/shrub/tools/theme/theme itsautomatic simple-vote 3");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic simple-vote 3");
 	
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 4); // Theme voting
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-1', 1);
+		nodeCache_InvalidateById($event_nodeid);
 		break;
 		
 	case 3:
 		Message("Starting Theme Voting Round 2");	
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-2', 1);
+		nodeCache_InvalidateById($event_nodeid);
 		break;
 		
 	case 4:
 		Message("Starting Theme Voting Round 3");	
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-3', 1);
+		nodeCache_InvalidateById($event_nodeid);
 		break;
 
 	case 5:
 		Message("Starting Final Theme Voting Round");	
-		Verbose("Running external tool to sum votes and populate final round")
-		exec("sudo ../src/shrub/tools/theme/theme itsautomatic calc 1");
-		exec("sudo ../src/shrub/tools/theme/theme itsautomatic calc 2");
-		exec("sudo ../src/shrub/tools/theme/theme itsautomatic calc 3");
-		exec("sudo ../src/shrub/tools/theme/theme itsautomatic finalize 10"); // Compute top 10 scoring themes into final round.
+		Verbose("Running external tool to sum votes and populate final round");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic calc 1");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic calc 2");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic calc 3");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic finalize 10"); // Compute top 10 scoring themes into final round.
 		
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-4', 1);
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-name-4', "Final Round");
+		nodeCache_InvalidateById($event_nodeid);
 		break;
 
 	case 6: // Final theme selection
@@ -532,7 +548,7 @@ function SetupThemePhase($phase)
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-4', 2);
 		
 		Verbose("Run external tool to compute stats for final round");
-		exec("sudo ../src/shrub/tools/theme/theme itsautomatic calc 4");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic calc 4");
 		
 		// Determine theme from the data
 		$themes = themeList_GetByNode($event_nodeid, 4);
@@ -548,10 +564,11 @@ function SetupThemePhase($phase)
 		$theme = "Fluffy Bunnies";
 		if(count($themes) > 0)
 		{
-			$theme = $themes[0].theme;
+			$theme = $themes[0]["theme"];
 		}
-		
+		Message("Setting Event theme to $theme");
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-theme', $theme);
+		nodeCache_InvalidateById($event_nodeid);
 		break;
 	}
 }
@@ -562,6 +579,7 @@ function StartCompo()
 	global $event_nodeid;
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 5); // Theme voting closed (re-set for sanity reasons)
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-publish', 1); // No effect on API, just a site effect (at the moment)
+	nodeCache_InvalidateById($event_nodeid);
 }
 
 // The compo has now stopped and will only accept submissions for a limited amount of time. Configure the event to this mode.
@@ -571,6 +589,7 @@ function SetupSubmission()
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 6); // Enter rating mode
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-publish', 1); // No effect on API, just a site effect (at the moment) 
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', 1); // enable voting
+	nodeCache_InvalidateById($event_nodeid);
 }
 
 // Submission is over, and now the voting period begins
@@ -580,6 +599,7 @@ function SetupVoting()
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 6); // Play+rate mode
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-publish', 0); // Disable publishing. No effect on API, just a site effect (at the moment)
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', 1);
+	nodeCache_InvalidateById($event_nodeid);
 }
 
 // Voting is over, close out the compo.
@@ -589,6 +609,7 @@ function EndCompo()
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 8); // Results mode
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', 0); // Disable voting
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-finished', 1); // Enable showing results
+	nodeCache_InvalidateById($event_nodeid);
 }
 
 // User should discover and interact with the available options in the current theme voting phase.
@@ -601,17 +622,19 @@ function UserVoteOnTheme(&$user, $phase)
 	case 0: // Theme Suggestion
 		$suggest_count = random_int(1,3);
 		$existing_themes = ApiThemeIdeaGetmy($user, $event_nodeid);
+		$theme_keys = array_keys($existing_themes);
 		if($existing_themes === null)
 		{
 			ReportError("Failed to GetMy Theme Ideas");
 			return false;
 		}
 		$total = $suggest_count + count($existing_themes);
-		while($total -gt 3)
+		while($total > 3)
 		{
-			$removetheme = shift($existing_themes);
+			$removeid = array_shift($theme_keys);
+			Verbose("Removing theme ".$existing_themes[$removeid]);
 			// Remove themes!
-			if(null === ApiThemeIdeaRemove($user, $event_nodeid, $shift["id"]))
+			if(null === ApiThemeIdeaRemove($user, $event_nodeid, $removeid))
 			{
 				ReportError("Failed to remove theme!");
 			}
@@ -621,6 +644,7 @@ function UserVoteOnTheme(&$user, $phase)
 		for($i=0;$i<$suggest_count;$i++)
 		{
 			$suggestion = GenerateRandomPhrase(1,4);
+			Verbose("Suggesting theme $suggestion");
 			if(null === ApiThemeIdeaAdd($user, $event_nodeid, $suggestion))
 			{
 				ReportError("Failed to suggest theme!");
@@ -650,10 +674,11 @@ function UserVoteOnTheme(&$user, $phase)
 			return false;
 		}
 		
+		Verbose("Got ".count($allslaughter)." slaughter items - Going to vote on $slaughter_count");
 		$keys = array_keys($allslaughter);
 		for($i=0;$i<$slaughter_count;$i++)
 		{
-			$index = random_int(1,count($keys));
+			$index = random_int(1,count($keys))-1;
 			$id = $keys[$index];
 			
 			$value = random_int(0,1); // vote yes/no.
@@ -683,6 +708,37 @@ function UserVoteOnTheme(&$user, $phase)
 		$page = $phase-1;
 		
 		$votecount = random_int(2,10);
+	
+		$voteable = ApiThemeListGet($user, $event_nodeid, $page);
+		if($voteable === null) 
+		{
+			ReportError("Unable to get theme voting list");
+			return false;
+		}
+		if(count($voteable) == 0)
+		{
+			Verbose("Warning: Voting page $page does not have any entries to vote on!");
+			return false;
+		}
+	
+		Verbose("Got ".count($voteable)." theme voting items - Going to vote on $votecount");
+		for($i=0;$i<$votecount;$i++)
+		{
+			$index = random_int(1,count($voteable))-1;
+			$vote = random_int(0,2)-1;
+			
+			$result = ApiThemeListVoteSet($user, $voteable[$index]["id"], $vote);
+			if($result === null)
+			{
+				ReportError("Api rejected theme list vote");
+			}
+		}
+
+		$myvotes = ApiThemeListVoteGetmy($user, $event_nodeid);
+		if(count($myvotes) < 1)
+		{
+			ReportError("Expected to see theme votes, but did not find any");
+		}
 	
 		break;
 	case 6: // Final theme selection	
@@ -1735,14 +1791,14 @@ function ApiThemeIdeaGetmy(&$user, $event_id)
 function ApiThemeIdeaAdd(&$user, $event_id, $themeidea)
 {
 	$value = LdApi::Post("vx/theme/idea/add/".$event_id, "idea=".urlencode($themeidea), $user);
-	if(!ResponseIs200($value)) { return null; }
+	if(!ResponseIs201($value)) { return null; }
 	return $value["response"];
 }
 
 function ApiThemeIdeaRemove(&$user, $event_id, $themeid)
 {
 	$value = LdApi::Post("vx/theme/idea/remove/".$event_id, "id=$themeid", $user);
-	if(!ResponseIs200($value)) { return null; }
+	if(!ResponseIs201($value)) { return null; }
 	return $value["response"];
 }
 
@@ -1767,12 +1823,36 @@ function ApiThemeIdeaVoteSet(&$user, $idea_id, $vote)
 {
 	$votetype = [ -1 => "flag", 0 => "no", 1 => "yes" ];
 	$type = $votetype[$vote];
-	$value = LdApi::Post("vx/theme/idea/vote/$type/$idea_id", "", $user);
+	$value = LdApi::Get("vx/theme/idea/vote/$type/$idea_id", $user);
 	if(!ResponseIs200($value)) { return null; }
 	return $value["id"]; // Vote ID. Not that it matters.
 }
 
+// Get a single page (The API can also return all pages, but don't care at the moment)
+function ApiThemeListGet(&$user, $event_id, $page)
+{
+	$value = LdApi::Get("vx/theme/list/get/$event_id/$page", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["lists"][$page];
+}
 
+function ApiThemeListVoteGetmy($user, $event_id)
+{
+	$value = LdApi::Get("vx/theme/list/vote/getmy/$event_id", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["votes"];
+}
+
+
+// Vote (either +1, -1, or 0)
+function ApiThemeListVoteSet(&$user, $themelist_id, $vote)
+{
+	$votetype = [ -1 => "no", 0 => "maybe", 1 => "yes" ];
+	$type = $votetype[$vote];
+	$value = LdApi::Get("vx/theme/list/vote/$type/$themelist_id", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["id"]; // Vote ID. Not that it matters.
+}
 
 
 function ResponseIs200($response)
@@ -1780,6 +1860,15 @@ function ResponseIs200($response)
 	if($response != null)
 	{
 		return $response["response_httpcode"] == "200"; 
+	}
+	return false;
+}
+
+function ResponseIs201($response)
+{
+	if($response != null)
+	{
+		return $response["response_httpcode"] == "201"; 
 	}
 	return false;
 }
