@@ -62,7 +62,7 @@ switch ( $action ) {
 
 		if ( $score < 0.0 || $score > 5.0 )
 			json_EmitFatalError_BadRequest("Score out of range [0-5]: $score", $RESPONSE);
-		if ( $score % 0.5 !== 0.0 )
+		if ( $score*2.0 != intval($score*2.0) )
 			json_EmitFatalError_BadRequest("Score has bad fraction: $score", $RESPONSE);
 
 		// Load Node

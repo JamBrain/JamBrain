@@ -22,6 +22,7 @@ require_once __DIR__."/".SHRUB_PATH."constants.php";
 require_once __DIR__."/".SHRUB_PATH."core/db.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
 require_once __DIR__."/".SHRUB_PATH."user/user.php";
+require_once __DIR__."/".SHRUB_PATH."theme/theme.php";
 
 
 if ( count($argv) < 3  || ($argv[2] != "actions" && $argv[2] != "minutes")) {
@@ -53,7 +54,8 @@ else
 // Some global settings
 
 $enable_file_logs = true;
-$logbase = "/tmp/ld_event"; // Logs will be put in /tmp
+$logbase = "/tmp/ld_event"; // Logs and scratch data will be put in /tmp
+$eventbase = "ld_event"; // Put event related files in current directory
 $htmlbase = "ld_event"; // Put html report in current directory.
 // Generate 3 kinds of log. 
 //   <name>.<eventIndex>.event (Event information, user/password list)
@@ -61,12 +63,13 @@ $htmlbase = "ld_event"; // Put html report in current directory.
 //   <name>.<eventIndex>.err (Summary log and errors)
 
 $apibase = "http://api.ludumdare.org/";
-$usercount = 10; // Something like 40-50 is good for reasonable size tests.
+$usercount = 40; // Something like 40-50 is good for reasonable size tests.
 $keepallposts = true;
 $keeppostcount = 100; // Number of posts per user to keep, when keep all posts is false (which it should be for high user counts or long runtimes / stress environments.)
 $verbose = true; // Display all of the details about what's going on?
 $verboselog = true; // Keep all details about what's going on in a log.
-$useprevioususers = false; // (not implemented) Load the set of users from the previous test event, instead of creating new users.
+$useprevioususers = true; // Load the set of users from the previous test event, instead of creating new users.
+$usewikitext = true;
 
 define("TOP_STATS",10); // keep top 10 stats
 
@@ -116,6 +119,18 @@ function Message($text)
 	LogErr($text);
 }
 
+function LogExec($execAction)
+{
+	exec($execAction, $results);
+	Verbose("Exec '$execAction':\n".implode("\n",$results));
+}
+
+function RunMagic()
+{
+	Verbose("Kickoff cron magic.php task to update necessary values in the db.");
+	exec("php ~/www/private/magic.php");
+}
+
 
 $flogfull = null;
 $flogerr = null;
@@ -160,11 +175,35 @@ function CloseLogs()
 	$flogerr = null;
 }
 
+function OpenPreviousEventFile()
+{
+	global $eventbase;
+	global $eventindex;
+	$log = $eventbase . "." . ($eventindex-1) . ".event";
+	return fopen($log, "r");
+}
+
 function OpenEventFile()
+{
+	global $eventbase;
+	global $eventindex;
+	$log = $eventbase . "." . $eventindex . ".event";
+	return fopen($log, "a");
+}
+
+function OpenMarkovFile()
 {
 	global $logbase;
 	global $eventindex;
-	$log = $logbase . "." . $eventindex . ".event";
+	$log = $logbase . "." . $eventindex . ".markov";
+	return fopen($log, "a");
+}
+
+function OpenWikiDataFile()
+{
+	global $logbase;
+	global $eventindex;
+	$log = $logbase . "." . $eventindex . ".lastwikidata";
 	return fopen($log, "a");
 }
 
@@ -207,6 +246,11 @@ if($enable_file_logs)
 }
 
 stats_init();
+
+if($usewikitext)
+{
+	SetupTextGeneration();
+}
 
 /*
 	Stages definition:
@@ -299,12 +343,37 @@ $event_user_lookup = array(); // Only use this as a source for user objects, and
 $event_nodeid = null;
 $event_name = null;
 
-// Prepare the event. Create an admin superuser. Create all the compo users. Create the new LudumDare event. Publish the event node.
-// Some of this has to be done through the database directly (finding the email verification links, and creating the ludumdare event and setting it up)
-// We'll also use some data from the database to make the naming a bit more friendly.
-function SetupEvent()
+
+function LoadPreviousUsers()
 {
-	global $event_admin_user, $event_users, $event_user_lookup, $event_name;
+	global $event_admin_user, $event_users;
+	$f = OpenPreviousEventFile();
+	$users=[];
+	if($f === false) { return false; }
+	
+	while(!feof($f))
+	{
+		$line = fgets($f);
+		$start = substr(trim($line),0,1);
+		if($start === false || $start == "#") { continue; }
+		$parts = explode(":",$line,2);
+		if(count($parts) != 2) { continue; }
+		$u = trim($parts[0]);
+		$p = trim($parts[1]);
+		$users[] = User_Load($u,$p);
+	}
+	
+	global $usercount;
+	if(count($users) != ($usercount+1)) { return false; } // Future: be smarter. Could maybe just generate / discard some users to fix this mismatch.
+	
+	$event_admin_user = array_shift($users);
+	$event_users = $users;
+	return true;
+}
+
+function GenerateNewUsers()
+{
+	global $event_admin_user, $event_users;
 	
 	$event_admin_user = User_Create();
 	
@@ -314,6 +383,36 @@ function SetupEvent()
 	{
 		$event_users[] = User_Create();
 	}
+}
+
+
+
+// Prepare the event. Create an admin superuser. Create all the compo users. Create the new LudumDare event. Publish the event node.
+// Some of this has to be done through the database directly (finding the email verification links, and creating the ludumdare event and setting it up)
+// We'll also use some data from the database to make the naming a bit more friendly.
+function SetupEvent()
+{
+	global $event_admin_user, $event_users, $event_user_lookup, $event_name;
+	global $useprevioususers;
+	
+	$usersloaded = false;
+	if($useprevioususers)
+	{
+		$usersloaded = LoadPreviousUsers();
+	}
+	if($usersloaded)
+	{
+		Verbose("Loaded users from previous event.");
+		
+		// Todo: User shift (replace a few users with new users)
+		
+	}
+	else
+	{
+		Verbose("Generating new users for this event.");
+		GenerateNewUsers();
+	}
+
 	foreach($event_users as $user)
 	{
 		$event_user_lookup[$user["username"]] = $user;
@@ -341,6 +440,23 @@ function SetupEvent()
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-start', $formatStart);
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-end', $formatEnd);
 
+	// Create metadata for grading
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-01', 'Overall');
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-02', 'Silliness');
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-03', 'Hexadecimal');
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-04', '100101101001');
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-05', 'Logicality');
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-06', 'Complexity');
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-07', 'Infinitude');
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-08', 'Waterproofness');
+
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-05-optional', 1);
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-06-optional', 1);
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-07-optional', 1);
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-08-optional', 1);
+
+	nodeCache_InvalidateById($event_nodeid);
+	
 	// Also publish the event
 	if(!ApiNodePublish($event_admin_user, $event_nodeid))
 	{
@@ -375,20 +491,90 @@ function SetupThemePhase($phase)
 	switch($phase)
 	{
 	case 0: // Theme Suggestion
+		Message("Starting Theme Suggestion");
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-theme', 1);
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 1);
+		nodeCache_InvalidateById($event_nodeid);
+
 		break;
 		
 	case 1: // Theme Slaughter
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-theme', 1);
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 2);
+		Message("Starting Theme Slaughter");
+		Verbose("Run external tool to perform suggestion deduplication");
+		LogExec("sudo php ~/www/src/shrub/tools/theme/theme itsautomatic dupes");
+	
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 2); // Theme slaughter
+		nodeCache_InvalidateById($event_nodeid);
+
 		break;
 	
 	case 2: // Theme voting
+		Message("Starting Theme Voting Round 1");	
+		Verbose("Run external tool to score theme slaughter");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic score");
+		
+		Verbose("Run external tool to populate theme voting pages");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic simple-vote 3");
+	
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 4); // Theme voting
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-1', 1);
+		nodeCache_InvalidateById($event_nodeid);
+		break;
+		
 	case 3:
+		Message("Starting Theme Voting Round 2");	
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-2', 1);
+		nodeCache_InvalidateById($event_nodeid);
+		break;
+		
 	case 4:
+		Message("Starting Theme Voting Round 3");	
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-3', 1);
+		nodeCache_InvalidateById($event_nodeid);
+		break;
+
 	case 5:
+		Message("Starting Final Theme Voting Round");	
+		Verbose("Running external tool to sum votes and populate final round");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic calc 1");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic calc 2");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic calc 3");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic finalize 10"); // Compute top 10 scoring themes into final round.
+		
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-4', 1);
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-name-4', "Final Round");
+		nodeCache_InvalidateById($event_nodeid);
+		break;
+
 	case 6: // Final theme selection
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 5); // Theme voting closed
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-1', 2);
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-2', 2);
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-3', 2);
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-4', 2);
+		
+		Verbose("Run external tool to compute stats for final round");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic calc 4");
+		
+		// Determine theme from the data
+		$themes = themeList_GetByNode($event_nodeid, 4);
+		
+		$cmp = function($a, $b) {
+			if ($a['score'] == $b['score']) {
+				return 0;
+			}
+			return ($a['score'] > $b['score']) ? -1 : 1;
+		};
+		usort($themes, $cmp);		
+
+		$theme = "Fluffy Bunnies";
+		if(count($themes) > 0)
+		{
+			$theme = $themes[0]["theme"];
+		}
+		Message("Setting Event theme to $theme");
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-theme', $theme);
+		nodeCache_InvalidateById($event_nodeid);
 		break;
 	}
 }
@@ -396,44 +582,181 @@ function SetupThemePhase($phase)
 // The compo has now started, the theme voting is now locked and a theme is selected. The users will be sure to mention the theme in some of their posts.
 function StartCompo()
 {
+	global $event_nodeid;
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 5); // Theme voting closed (re-set for sanity reasons)
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-publish', 1); // No effect on API, just a site effect (at the moment)
+	nodeCache_InvalidateById($event_nodeid);
 }
 
 // The compo has now stopped and will only accept submissions for a limited amount of time. Configure the event to this mode.
 function SetupSubmission()
 {
+	global $event_nodeid;
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 6); // Enter rating mode
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-publish', 1); // No effect on API, just a site effect (at the moment) 
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', 1); // enable voting
+	nodeCache_InvalidateById($event_nodeid);
 }
 
 // Submission is over, and now the voting period begins
 function SetupVoting()
 {
+	global $event_nodeid;
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 6); // Play+rate mode
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-publish', 0); // Disable publishing. No effect on API, just a site effect (at the moment)
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', 1);
+	nodeCache_InvalidateById($event_nodeid);
 }
 
 // Voting is over, close out the compo.
 function EndCompo()
 {
+	global $event_nodeid;
+	
+	Verbose("Computing results...");
+	LogExec("sudo php ../src/shrub/tools/grade/grade itsautomatic score compo 7"); # Require 7 ratings to be placed.
+	LogExec("sudo php ../src/shrub/tools/grade/grade itsautomatic score jam 7"); # Require 7 ratings to be placed.
+	
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 8); // Results mode
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', 0); // Disable voting
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-finished', 1); // Enable showing results
+	nodeCache_InvalidateById($event_nodeid);
 }
 
 // User should discover and interact with the available options in the current theme voting phase.
 function UserVoteOnTheme(&$user, $phase)
 {
+	global $event_nodeid;
+	
 	switch($phase)
 	{
 	case 0: // Theme Suggestion
+		$suggest_count = random_int(1,3);
+		$existing_themes = ApiThemeIdeaGetmy($user, $event_nodeid);
+		$theme_keys = array_keys($existing_themes);
+		if($existing_themes === null)
+		{
+			ReportError("Failed to GetMy Theme Ideas");
+			return false;
+		}
+		$total = $suggest_count + count($existing_themes);
+		while($total > 3)
+		{
+			$removeid = array_shift($theme_keys);
+			Verbose("Removing theme ".$existing_themes[$removeid]);
+			// Remove themes!
+			if(null === ApiThemeIdeaRemove($user, $event_nodeid, $removeid))
+			{
+				ReportError("Failed to remove theme!");
+			}
+			$total--;
+		}
+		
+		for($i=0;$i<$suggest_count;$i++)
+		{
+			$suggestion = GenerateRandomPhrase(1,4);
+			Verbose("Suggesting theme $suggestion");
+			if(null === ApiThemeIdeaAdd($user, $event_nodeid, $suggestion))
+			{
+				ReportError("Failed to suggest theme!");
+			}
+		}
+		
+		$existing_themes = ApiThemeIdeaGetmy($user, $event_nodeid);
+		if($existing_themes === null)
+		{
+			ReportError("Failed to GetMy Theme Ideas again");
+			return false;
+		}
+		
+		if(count($existing_themes) < 1)
+		{
+			ReportError("Suggested themes were not returned in theme/idea/getmy");
+		}
 		break;
 		
 	case 1: // Theme Slaughter
+		$slaughter_count = random_int(5,20);
+		
+		$allslaughter = ApiThemeIdeaVoteGet($user, $event_nodeid);
+		if(null === $allslaughter)
+		{
+			ReportError("Failed to get theme suggestions for slaughter");
+			return false;
+		}
+		
+		Verbose("Got ".count($allslaughter)." slaughter items - Going to vote on $slaughter_count");
+		$keys = array_keys($allslaughter);
+		for($i=0;$i<$slaughter_count;$i++)
+		{
+			$index = random_int(1,count($keys))-1;
+			$id = $keys[$index];
+			
+			$value = random_int(0,1); // vote yes/no.
+			if(random_int(1,100) == 1) 
+			{
+				$value = -1; // Occasionally, flag.
+			}
+			
+			if(null === ApiThemeIdeaVoteSet($user, $id, $value))
+			{
+				ReportError("Failed to theme/idea/vote");
+			}
+		}
 	
+		$myslaughter = ApiThemeIdeaVoteGet($user, $event_nodeid);
+		if(count($myslaughter) < 1)
+		{
+			ReportError("Expected to see slaughter votes, but did not find any");
+		}
+		
 		break;
 		
 	case 2: // Theme voting
 	case 3:
 	case 4:
 	case 5:
-	case 6: // Final theme selection	
+		$page = $phase-1;
+		
+		$votecount = random_int(2,10);
 	
+		$voteable = ApiThemeListGet($user, $event_nodeid, $page);
+		if($voteable === null) 
+		{
+			ReportError("Unable to get theme voting list");
+			return false;
+		}
+		if(count($voteable) == 0)
+		{
+			Verbose("Warning: Voting page $page does not have any entries to vote on!");
+			return false;
+		}
+	
+		Verbose("Got ".count($voteable)." theme voting items - Going to vote on $votecount");
+		for($i=0;$i<$votecount;$i++)
+		{
+			$index = random_int(1,count($voteable))-1;
+			$vote = random_int(0,2)-1;
+			
+			$result = ApiThemeListVoteSet($user, $voteable[$index]["id"], $vote);
+			if($result === null)
+			{
+				ReportError("Api rejected theme list vote");
+			}
+		}
+
+		$myvotes = ApiThemeListVoteGetmy($user, $event_nodeid);
+		if(count($myvotes) < 1)
+		{
+			ReportError("Expected to see theme votes, but did not find any");
+		}
+	
+		break;
+	case 6: // Final theme selection	
+		return false; // Nothing to do in this case.
 	}
 	
-	return false;
+	return true;
 }
 
 
@@ -542,7 +865,59 @@ function CommentOnGame(&$user, $phase)
 // Find a game through one of the game lists, and vote on it. Or change the votes to something else.
 function VoteOnGame(&$user, $phase)
 {
-	return false;
+	$games = GetTopGames($user);
+	
+	$rate_count = random_int(5,10);
+	// Walk through games in order until we find a number of games we haven't ranked.
+	// For games we havne't ranked, vote on them and add to the ranked list.
+	
+	foreach($games as $game)
+	{
+		$id = $game["id"];
+		if(key_exists($id, $user["rated_games"])) 
+		{ 
+			// Chance to re-rate a rated game, but usually we'll rate new games.
+			if(random_int(1,20) != 1) { continue; } 
+		}
+		
+		Verbose("Voting on game ID $id");
+		
+		// Future, consider opt-outs on this game. For now just vote all categories.
+		// We know there are 8 categories, so hardcoding for now
+		
+		for($i=1;$i<=8;$i++)
+		{
+			$value = random_int(1,10) / 2.0;
+			$result = ApiGradeAdd($user,$id,"grade-0".$i,$value);
+			if($result === null)
+			{
+				ReportError("Failed to add vote");
+			}
+		}
+	
+		// Sometimes randomly remove one of the votes, to test that path
+		if(random_int(1,10) == 1)
+		{
+			$remove = random_int(1,8);
+			$result = ApiGradeRemove($user,$id,"grade-0".$remove);
+			if($result === null)
+			{
+				ReportError("Failed to remove vote");
+			}
+		}
+		
+		$grades = ApiGradeGetmy($user,$id);
+		if(count($grades) < 1)
+		{
+			ReportError("My grades don't appear for this node.");
+		}
+
+		$user["rated_games"][$id] = true;
+		$rate_count--;
+		if($rate_count < 1) { break; }
+	}
+	RunMagic();
+	return true;
 }
 
 // Remove a like from some post/comment/game that was liked previously. The simulated user revisits the node and comments, and removes the like.
@@ -556,7 +931,7 @@ function CommentUnlike(&$user, $phase)
 function CompoPostUpdate(&$user, $phase)
 {
 	$title = GenerateRandomPostTitle();
-	$body = GenerateRandomPostText();
+	$body = GenerateRandomPostText(5);
 	CreatePost($user, $title, $body);
 	
 	// There's a limit to how many posts a user should make. Try not to make too many more.
@@ -574,7 +949,7 @@ function CompoEditGame(&$user, $phase)
 {
 	// For now, just carelessly replace everything. Future: do something smarter.
 	$title = GenerateRandomPostTitle();
-	$body = GenerateRandomPostText();
+	$body = GenerateRandomPostText(6);
 	ModifyGame($user, $title, $body);
 	return true;
 }
@@ -583,7 +958,7 @@ function CompoPublishGame(&$user, $phase)
 {
 	// Need to ensure there is something good before publish.
 	$title = GenerateRandomPostTitle();
-	$body = GenerateRandomPostText();
+	$body = GenerateRandomPostText(6);
 	ModifyGame($user, $title, $body);
 
 	PublishGame($user);
@@ -704,8 +1079,7 @@ for($curStage = 0; $curStage < $stagecount; $curStage++)
 }
 Message("All Stages Complete!");
 
-	Verbose("Kickoff cron magic.php task one last time to update necessary values in the db.");
-	exec("php ~/www/private/magic.php");
+	RunMagic();
 
 
 $currentstageactions = null;
@@ -890,12 +1264,8 @@ function CompleteMandatoryStageActions($stage, $phase)
 //// Common functions to assist in doing normal tasks in the site
 ////
 
-function User_Create()
+function User_DataStructure($username, $password)
 {
-	$username = GenerateRandomUsername();
-	$password = GenerateRandomPassword();
-	
-	// Construct a user object
 	$user = [
 		"username" => $username,
 		"password" => $password,
@@ -907,9 +1277,40 @@ function User_Create()
 		"posts" => array(),
 		"notes" => array(),
 		"love" => array(),
+		"rated_games" => array(),
 		"postedimin" => false,
 		"publishedgame" => false,
 	];
+	
+	return $user;
+}
+
+function User_Load($username, $password)
+{
+	$user = User_DataStructure($username, $password);
+
+	// Login the user
+	$userid = ApiUserLogin($user);
+	if(!$userid)
+	{
+		ReportError("Unable to login new user.");
+		return null;	
+	}
+	
+	$user["id"] = $userid;
+	
+	Verbose("Loaded user " . $username);
+	
+	return $user;
+}
+
+function User_Create()
+{
+	$username = GenerateRandomUsername();
+	$password = GenerateRandomPassword();
+	
+	// Construct a user object
+	$user = User_DataStructure($username, $password);
 	
 	// Determine if username is in use
 	for($i = 0; $i < 20; $i++)
@@ -1252,8 +1653,7 @@ function PublishGame(&$user)
 	
 	$user["publishedgame"] = true;
 	
-	Verbose("Kickoff cron magic.php task to update necessary scores in the db.");
-	exec("php ~/www/private/magic.php");
+	RunMagic();
 }
 
 
@@ -1301,11 +1701,11 @@ function ApiNodeAdd(&$user, $parentid, $type)
 function ApiNodeUpdate(&$user, $nodeid, $newname = null, $newbody = null)
 { // POST node/update/:node_id
 	$poststring = "";
-	if($newname != null) { $poststring = "name=".$newname; }
+	if($newname != null) { $poststring = "name=".urlencode($newname); }
 	if($newbody != null)
 	{
 		if($poststring != "") { $poststring .= "&"; }
-		$poststring .= "body=".$newbody;
+		$poststring .= "body=".urlencode($newbody);
 	}
 
 	$value = LdApi::Post("vx/node/update/" . $nodeid , $poststring, $user);
@@ -1353,14 +1753,14 @@ function ApiNodeMetaRemove(&$user, $nodeid, $key) // POST node/meta/remove/:node
 
 function ApiNoteAdd(&$user, $nodeid, $body) // POST note/add
 {
-	$value = LdApi::Post("vx/note/add/".$nodeid,"parent=0&body=".$body, $user);
+	$value = LdApi::Post("vx/note/add/".$nodeid,"parent=0&body=".urlencode($body), $user);
 	if($value) { return $value["note"]; }
 	return null;
 }
 
 function ApiNoteUpdate(&$user, $parentid, $noteid, $newbody)
 {
-	$value = LdApi::Post("vx/note/update/".$noteid,"node=".$parentid."&body=".$body, $user);
+	$value = LdApi::Post("vx/note/update/".$noteid,"node=".$parentid."&body=".urlencode($body), $user);
 	return ResponseIs200($value);
 }
 
@@ -1387,19 +1787,11 @@ function ApiNoteLoveRemove(&$user, $noteid)
 	return ResponseIs200($value);
 }
 
-function ResponseIs200($response)
-{
-	if($response != null)
-	{
-		return $response["response_httpcode"] == "200"; 
-	}
-	return false;
-}
 
 // Does the site have this username already?
 function ApiUserHave($username)
 {
-	$value = LdApi::Post("vx/user/have","name=".$username);
+	$value = LdApi::Post("vx/user/have","name=".urlencode($username));
 	if($value != null)
 	{
 		return !($value["available"]);
@@ -1410,7 +1802,7 @@ function ApiUserHave($username)
 // Create a new user (by email address)
 function ApiUserCreate($email, &$user)
 {
-	$value = LdApi::Post("vx/user/create","mail=".$email, $user);
+	$value = LdApi::Post("vx/user/create","mail=".urlencode($email), $user);
 	if($value != null)
 	{
 		return $value["sent"];
@@ -1423,7 +1815,7 @@ function ApiUserActivate(&$user, $id, $auth_key)
 	$name = $user["username"];
 	$pw = $user["password"];
 	
-	$postString = "id=".$id."&key=".$auth_key."&name=".$name."&pw=".$pw;
+	$postString = "id=".$id."&key=".$auth_key."&name=".urlencode($name)."&pw=".urlencode($pw);
 	$value = LdApi::Post("vx/user/activate",$postString,$user);
 	
 	if($value != null)
@@ -1438,7 +1830,7 @@ function ApiUserLogin(&$user)
 	$login = $user["username"];
 	$pw = $user["password"];
 	
-	$value = LdApi::Post("vx/user/login", "login=".$login."&pw=".$pw, $user);
+	$value = LdApi::Post("vx/user/login", "login=".urlencode($login)."&pw=".urlencode($pw), $user);
 	
 	if($value != null)
 	{
@@ -1450,12 +1842,146 @@ function ApiUserLogin(&$user)
 	return 0;
 }
 
+
+function ApiThemeIdeaGetmy(&$user, $event_id)
+{
+	$value = LdApi::Get("vx/theme/idea/getmy/".$event_id, $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["ideas"];
+}
+
+function ApiThemeIdeaAdd(&$user, $event_id, $themeidea)
+{
+	$value = LdApi::Post("vx/theme/idea/add/".$event_id, "idea=".urlencode($themeidea), $user);
+	if(!ResponseIs201($value)) { return null; }
+	return $value["response"];
+}
+
+function ApiThemeIdeaRemove(&$user, $event_id, $themeid)
+{
+	$value = LdApi::Post("vx/theme/idea/remove/".$event_id, "id=$themeid", $user);
+	if(!ResponseIs201($value)) { return null; }
+	return $value["response"];
+}
+
+// Returns all theme ideas
+function ApiThemeIdeaVoteGet(&$user, $event_id)
+{
+	$value = LdApi::Get("vx/theme/idea/vote/get/".$event_id, $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["ideas"];
+}
+
+// Return your theme slaughter votes
+function ApiThemeIdeaVoteGetmy(&$user, $event_id)
+{
+	$value = LdApi::Get("vx/theme/idea/vote/getmy/".$event_id, $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["votes"];
+}
+
+// Vote (either +1, -1, or 0)
+function ApiThemeIdeaVoteSet(&$user, $idea_id, $vote)
+{
+	$votetype = [ -1 => "flag", 0 => "no", 1 => "yes" ];
+	$type = $votetype[$vote];
+	$value = LdApi::Get("vx/theme/idea/vote/$type/$idea_id", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["id"]; // Vote ID. Not that it matters.
+}
+
+// Get a single page (The API can also return all pages, but don't care at the moment)
+function ApiThemeListGet(&$user, $event_id, $page)
+{
+	$value = LdApi::Get("vx/theme/list/get/$event_id/$page", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["lists"][$page];
+}
+
+function ApiThemeListVoteGetmy($user, $event_id)
+{
+	$value = LdApi::Get("vx/theme/list/vote/getmy/$event_id", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["votes"];
+}
+
+
+// Vote (either +1, -1, or 0)
+function ApiThemeListVoteSet(&$user, $themelist_id, $vote)
+{
+	$votetype = [ -1 => "no", 0 => "maybe", 1 => "yes" ];
+	$type = $votetype[$vote];
+	$value = LdApi::Get("vx/theme/list/vote/$type/$themelist_id", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["id"]; // Vote ID. Not that it matters.
+}
+
+function ApiGradeAdd(&$user, $node, $grade, $score)
+{
+	$value = LdApi::Get("vx/grade/add/$node/$grade/$score", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["id"]; // Vote ID. Not that it matters.
+}
+
+function ApiGradeRemove(&$user, $node, $grade)
+{
+	$value = LdApi::Get("vx/grade/remove/$node/$grade", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["changed"];
+}
+
+function ApiGradeGetmy(&$user, $node)
+{
+	$value = LdApi::Get("vx/grade/getmy/$node", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["grade"]; // Vote ID. Not that it matters.
+}
+
+
+function ResponseIs200($response)
+{
+	if($response != null)
+	{
+		return $response["response_httpcode"] == "200"; 
+	}
+	return false;
+}
+
+function ResponseIs201($response)
+{
+	if($response != null)
+	{
+		return $response["response_httpcode"] == "201"; 
+	}
+	return false;
+}
+
 ////
 //// Low level helper / generation code
 ////
 
 function GenerateRandomUsername()
 {
+	global $usewikitext;
+	if($usewikitext)
+	{
+		// glue a few alphanumeric words together
+		$length = random_int(3, 15);
+		$maxlength = $length+5;
+		$username = "";
+		while(strlen($username) < $length)
+		{
+			$word = MarkovRandomWord();
+			$safeword = preg_replace("/[^a-zA-Z0-9]/","",$word);
+			$username .= $safeword;
+		}
+		if(strlen($username) > $maxlength)
+		{
+			$username = substr($username,0,$maxlength);
+		}
+		return $username;
+	}
+
   $length = random_int(2, 10);
   return bin2hex(random_bytes($length));
 }
@@ -1468,12 +1994,39 @@ function GenerateRandomPassword()
 
 function GenerateRandomPostTitle()
 {
-	return GenerateRandomPostText(3,12);
+	return GenerateRandomPhrase(2,7);
 }
 
-// Future: something much more meaningful. Also figure out how to include image uploads, links, other fun feathres.
-function GenerateRandomPostText($minWords = 10, $maxWords = 200)
+// Future: something much more meaningful. Also figure out how to include image uploads, links, other fun features.
+function GenerateRandomPostText($maxParagraphs = 3)
 {
+	global $usewikitext;
+	if($usewikitext)
+	{
+		$paragraphs = random_int(1,$maxParagraphs);
+		$output = "";
+		for($p =0;$p<$paragraphs;$p++)
+		{
+			$sentences = random_int(1,10);
+			for($s=0;$s<$sentences;$s++)
+			{
+				$output .= GenerateRandomPhrase(3,17) . ". ";
+			}
+			$output .= "\n\n";
+		}
+		return $output;
+	}
+
+}
+
+function GenerateRandomPhrase($minWords, $maxWords)
+{
+	global $usewikitext;
+	if($usewikitext)
+	{
+		return MarkovRandomPhrase($minWords, $maxWords);		
+	}
+	
 	$words = random_int($minWords, $maxWords);
 	$allwords = array();
 	for($i=0;$i<$words;$i++)
@@ -1484,6 +2037,212 @@ function GenerateRandomPostText($minWords = 10, $maxWords = 200)
 	}
 	return implode(" ",$allwords);
 }
+
+////
+//// Fetch some random wikipedia articles to seed the Markov text generation system
+////
+
+function SetupTextGeneration($articles = 10)
+{
+	MarkovReset();
+	for($i=0; $i < $articles; $i++)
+	{
+		AddWikipediaText();
+	}
+	
+	// Export markov data to file (mostly for examination)
+	$f = OpenMarkovFile();
+	MarkovExport($f);
+	fclose($f);
+}
+
+function AddWikipediaText()
+{
+	// Fetch a random wikipedia article.
+	$data = LdApi::GetRaw("https://en.wikipedia.org/wiki/Special:Random");
+
+	$f = OpenWikiDataFile();
+	fprintf($f,"%s",$data);
+	fclose($f);
+	
+	// Determine what article we got from the page- class in the body tag.
+	if(preg_match('/<body[^>]*page-([^\s]+) [^>]+>/', $data, $matches))
+	{
+		Message("Reading Wikipedia Article " . $matches[1]);
+	}
+	else
+	{
+		ReportError("Wikipedia data seems wrong. Please check.");
+		return;
+	}
+	
+	// Get data between '<div class="mw-parser-output">' and '<div class="printfooter">'
+	$parts1 = explode('<div class="mw-parser-output">', $data, 2);
+	if(count($parts1) != 2) { ReportError("Error in parsing wikipedia page"); return; }
+	$parts2 = explode('<div class="printfooter">',$parts1[1], 2);
+	if(count($parts2) != 2) { ReportError("Error in parsing wikipedia page"); return; }
+	
+	// Remove all html tags and [#] references. Remove quotation marks. Remove commas.
+	$content = preg_replace('/<[^>]+>/','',$parts2[0]);
+	$content = preg_replace('/\[\d+\]/','',$content);
+	$content = str_replace('"','',$content);
+	$content = str_replace(',','',$content);
+	
+	// Split on period and newline, eliminate duplicate spaces
+	$content = str_replace('.',"\n",$content);
+	
+	$statements = explode("\n",$content);
+	MarkovTrain($statements);
+}
+
+
+////
+//// Generate text using markov chains derived from whatever source material you give it.
+//// (Well semi-markov, it doesn't really care about the statistical element, just the chains of sequential words.)
+////
+
+
+function MarkovReset()
+{
+	$GLOBALS["MarkovData"] = [ "Words"=>[], "WordMap"=>[], "Chain2"=>[], "Chain3"=>[], "Stats"=>["UseChain3"=>0, "UseChain2"=>0, "UseRandom"=>0]];
+}
+
+function MarkovExport($f)
+{
+	MarkovEnsureWords();
+	fprintf($f, "# Words\n");
+	fprintf($f, "%s", implode(",",$GLOBALS["MarkovData"]["Words"]) . "\n");
+	fprintf($f, "# Chain2\n");
+	$keys = array_keys($GLOBALS["MarkovData"]["Chain2"]);
+	sort($keys);
+	foreach($keys as $k)
+	{
+		$values = array_keys($GLOBALS["MarkovData"]["Chain2"][$k]);
+		sort($values);
+		fprintf($f, "%s", $k ."," . implode(",",$values) . "\n");
+	}
+	fprintf($f, "# Chain3\n");
+	$keys = array_keys($GLOBALS["MarkovData"]["Chain3"]);
+	sort($keys);
+	foreach($keys as $k)
+	{
+		$values = array_keys($GLOBALS["MarkovData"]["Chain3"][$k]);
+		sort($values);
+		fprintf($f, "%s", $k ."," . implode(",",$values) . "\n");
+	}	
+}
+
+function MarkovTrain($statementarray)
+{
+	foreach($statementarray as $statement)
+	{
+		$statement = trim($statement);
+		if($statement == "") { continue; }
+		$words = preg_split('/[\s,]+/', $statement);
+		MarkovTrainWordArray($words);
+	}
+}
+
+function MarkovTrainWordArray($words)
+{
+	global $MarkovData;
+
+	$prev1 = "";
+	$prev2 = "";	
+	$words[] = ""; // Add an empty value to the chains to indicate natural places where the generation can stop.
+	foreach($words as $word)
+	{
+		$key3 = "$prev2-$prev1";
+		$key2 = $prev1;
+	
+		// Add word to word list
+		if($word != "") {
+			if(key_exists($word, $MarkovData["WordMap"])) { $MarkovData["WordMap"][$word]++; } else { $MarkovData["WordMap"][$word] = 1; }
+		}
+		
+		// Add to 2-chain
+		if(!key_exists($key2, $MarkovData["Chain2"])) { 
+			$MarkovData["Chain2"][$key2] = [];
+		}
+		$MarkovData["Chain2"][$key2][$word] = true;
+				
+		// Add to 3-chain
+		if(!key_exists($key3, $MarkovData["Chain3"])) { 
+			$MarkovData["Chain3"][$key3] = [];
+		}
+		$MarkovData["Chain3"][$key3][$word] = true;
+		
+		
+		$prev2 = $prev1;
+		$prev1 = $word;
+	}
+	$MarkovData["Words"] = null; // Word list needs to be rebuilt.
+}
+
+function MarkovEnsureWords()
+{
+	if(!$GLOBALS["MarkovData"]["Words"])
+	{
+		$GLOBALS["MarkovData"]["Words"] = array_keys($GLOBALS["MarkovData"]["WordMap"]);
+		sort($GLOBALS["MarkovData"]["Words"]);
+	}
+}
+
+function MarkovRandomWord()
+{
+	MarkovEnsureWords();
+	global $MarkovData;
+	$index = random_int(1,count($MarkovData["Words"]))-1;
+	return $MarkovData["Words"][$index];
+}
+
+function MarkovRandomPhrase($minwords = 3, $maxwords = 25)
+{
+	global $MarkovData;
+	MarkovEnsureWords();
+
+	$makewords = random_int($minwords, $maxwords);
+
+	$prev2 = "";
+	$prev1 = MarkovRandomWord();
+	$words = [$prev1];
+	
+	for($i=1;$i<$makewords;$i++)
+	{
+		// Try to generate a new word from markov-3, if we can't, try markov-2, then just a random word.
+		$key3 = "$prev2-$prev1";
+		$key2 = $prev1;
+		
+		$word = "";
+		if(key_exists($key3, $MarkovData["Chain3"]))
+		{
+			// Pick a random option
+			$options = array_keys($MarkovData["Chain3"][$key3]);
+			$index = random_int(1,count($options))-1;
+			$word = $options[$index];
+		}
+		
+		// If we don't have a word, try to generate from markov-2
+		if($word == "" && key_exists($key2, $MarkovData["Chain2"]))
+		{
+			$options = array_keys($MarkovData["Chain2"][$key2]);
+			$index = random_int(1,count($options))-1;
+			$word = $options[$index];
+		}
+		
+		if($word == "")
+		{
+			$word = MarkovRandomWord();
+		}
+		
+		$words[] = $word;
+		$prev2 = $prev1;
+		$prev1 = $word;
+	}
+
+	return implode(" ",$words);
+}
+
 
 ////
 //// Low level API interface code
@@ -1586,6 +2345,30 @@ class LdApi
 		}
 		return "";
 	}
+  
+	public static function GetRaw($url)
+	{
+
+		$c = curl_init($url);
+		
+		curl_setopt($c, CURLOPT_HEADER, false);		
+		curl_setopt($c, CURLOPT_FOLLOWLOCATION, true);		
+		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($c, CURLOPT_HTTPGET, true);
+
+		$result = curl_exec($c);
+		$success = !($result === false);
+
+		if(!$success)
+		{
+			ReportError("Error getting '".$url ."' - " . curl_error($c));
+		}
+		
+
+		curl_close($c);
+		
+		return $result;
+	}  
   
 	public static function Get($url, &$user = NULL, $report_error=true)
 	{
@@ -1789,6 +2572,58 @@ function statobj_sortfunc($a, $b) // Sort by time descending.
 	return sign($b["time"]-$a["time"]);
 }	
 
+function format_time($t)
+{
+	if($t >= 2)
+	{
+		$t = intval(round($t*1000));
+		return ($t/1000) . "s";
+	}
+	else
+	{
+		$t = intval(round($t*1000*1000));
+		return ($t/1000) . "ms";
+	}
+}
+
+function time_color($t, $basevalue)
+{
+	$green_time = $basevalue;
+	$yellow_time = $basevalue*5;
+	$red_time = $basevalue*25;
+	
+	$rgb = [0,0,0];
+	if($t < $green_time)
+	{
+		$rgb[1] = 1;
+	}
+	else if($t < $yellow_time)
+	{
+		// green-yellow
+		$v = ($t-$green_time)/($yellow_time-$green_time);
+		$rgb[0] = $v;
+		$rgb[1] = 1;
+	}
+	else if($t < $red_time)
+	{
+		// yellow-red
+		$v = ($t-$yellow_time)/($red_time-$yellow_time);
+		$rgb[0] = 1;
+		$rgb[1] = 1-$v;
+	}
+	else
+	{
+		$rgb[0] = 1;
+	}
+	
+	# Setup color
+	for($i=0;$i<3;$i++)
+	{
+		$rgb[$i] = intval(round($rgb[$i] * 80 + 128));
+	}
+	return "#".bin2hex(pack("CCC",$rgb[0],$rgb[1],$rgb[2]));
+}
+
 function dump_stat_node(&$f, &$node, $prefix="root")
 {
 	$count = $node["count"];
@@ -1796,7 +2631,7 @@ function dump_stat_node(&$f, &$node, $prefix="root")
 	$min = $node["mintime"];
 	$max = $node["maxtime"];
 	$avg = 0;
-	if($count > 0) { $avg = $time / $count; }
+	if($count > 0) { $avg = $time / $count; }	
 
 	fwrite($f, ">>>> Stats ($prefix)\n");
 	fwrite($f, "  Request count: $count\n");
@@ -1821,21 +2656,23 @@ function dump_stat_var(&$f, $var)
 }
 
 
-function dump_stat_html_node(&$f, &$node, $prefix="root")
+function dump_stat_html_node(&$f, &$node, $prefix="root", $timebasevalue)
 {
 	$count = $node["count"];
 	$time = $node["time"];
-	$min = $node["mintime"];
-	$max = $node["maxtime"];
+	$min = format_time($node["mintime"]);
+	$max = format_time($node["maxtime"]);
 	$avg = 0;
-	if($count > 0) { $avg = $time / $count; }
+	if($count > 0) { $avg = format_time($time / $count); }
+	$time = format_time($time);
+	$color = time_color($node["maxtime"], $timebasevalue);
 
-	$summary = "$prefix - Count: $count, Total Time: $time, Min $min s / Avg $avg s / Max $max s";
+	$summary = "$prefix - Count: $count, Total Time: $time, Min $min / Avg $avg / Max $max";
 	
 	$html = <<<HTMLCHUNK
 <div class="hierarchy">
   <div class="container">
-  <div class="summary" onclick="ShowHideElement(this.parentElement)">$summary</div>
+  <div class="summary" style="background-color:$color" onclick="ShowHideElement(this.parentElement)">$summary</div>
   <div class="collapse" style="display:none">
   <div class="longcontent">
   <pre>	
@@ -1850,14 +2687,19 @@ HTMLCHUNK;
 	
 	foreach($node["children"] as $key => $child)
 	{
-		dump_stat_html_node( $f, $child, $prefix . " / " . $key );
+		dump_stat_html_node( $f, $child, $prefix . " / " . $key, $timebasevalue );
 	}
 	fwrite($f, "</div>\n");	
 }
 
 function dump_stat_html_var(&$f, $var)
 {
-	dump_stat_html_node($f, $GLOBALS[$var]);
+	$node = &$GLOBALS[$var];
+	$basevalue = 0.005;
+	$count = $node["count"];
+	$time = $node["time"];
+	if($count > 0) { $basevalue = ($time / $count)/2; }
+	dump_stat_html_node($f, $node, "root", $basevalue);
 }
 
 function dump_stats()
