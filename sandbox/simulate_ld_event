@@ -53,7 +53,8 @@ else
 // Some global settings
 
 $enable_file_logs = true;
-$logbase = "/tmp/ld_event"; // Logs will be put in /tmp
+$logbase = "/tmp/ld_event"; // Logs and scratch data will be put in /tmp
+$eventbase = "ld_event"; // Put event related files in current directory
 $htmlbase = "ld_event"; // Put html report in current directory.
 // Generate 3 kinds of log. 
 //   <name>.<eventIndex>.event (Event information, user/password list)
@@ -66,7 +67,8 @@ $keepallposts = true;
 $keeppostcount = 100; // Number of posts per user to keep, when keep all posts is false (which it should be for high user counts or long runtimes / stress environments.)
 $verbose = true; // Display all of the details about what's going on?
 $verboselog = true; // Keep all details about what's going on in a log.
-$useprevioususers = false; // (not implemented) Load the set of users from the previous test event, instead of creating new users.
+$useprevioususers = true; // (not implemented) Load the set of users from the previous test event, instead of creating new users.
+$usewikitext = true;
 
 define("TOP_STATS",10); // keep top 10 stats
 
@@ -160,11 +162,35 @@ function CloseLogs()
 	$flogerr = null;
 }
 
+function OpenPreviousEventFile()
+{
+	global $eventbase;
+	global $eventindex;
+	$log = $eventbase . "." . ($eventindex-1) . ".event";
+	return fopen($log, "r");
+}
+
 function OpenEventFile()
+{
+	global $eventbase;
+	global $eventindex;
+	$log = $eventbase . "." . $eventindex . ".event";
+	return fopen($log, "a");
+}
+
+function OpenMarkovFile()
 {
 	global $logbase;
 	global $eventindex;
-	$log = $logbase . "." . $eventindex . ".event";
+	$log = $logbase . "." . $eventindex . ".markov";
+	return fopen($log, "a");
+}
+
+function OpenWikiDataFile()
+{
+	global $logbase;
+	global $eventindex;
+	$log = $logbase . "." . $eventindex . ".lastwikidata";
 	return fopen($log, "a");
 }
 
@@ -207,6 +233,11 @@ if($enable_file_logs)
 }
 
 stats_init();
+
+if($usewikitext)
+{
+	SetupTextGeneration();
+}
 
 /*
 	Stages definition:
@@ -299,12 +330,38 @@ $event_user_lookup = array(); // Only use this as a source for user objects, and
 $event_nodeid = null;
 $event_name = null;
 
-// Prepare the event. Create an admin superuser. Create all the compo users. Create the new LudumDare event. Publish the event node.
-// Some of this has to be done through the database directly (finding the email verification links, and creating the ludumdare event and setting it up)
-// We'll also use some data from the database to make the naming a bit more friendly.
-function SetupEvent()
+
+function LoadPreviousUsers()
 {
-	global $event_admin_user, $event_users, $event_user_lookup, $event_name;
+	global $event_admin_user, $event_users;
+	$f = OpenPreviousEventFile();
+	$users=[];
+	if($f === false) { return false; }
+	
+	while(!feof($f))
+	{
+		$line = fgets($f);
+		$start = substr(trim($line),0,1);
+		if($start === false || $start == "#") { continue; }
+		$parts = explode(":",$line,2);
+		if(count($parts) != 2) { continue; }
+		$u = trim($parts[0]);
+		$p = trim($parts[1]);
+		
+		$users[] = User_Load($u,$p);
+	}
+	
+	global $usercount;
+	if($users.count != ($usercount+1)) { return $false; } // Future: be smarter. Could maybe just generate / discard some users to fix this mismatch.
+	
+	$event_admin_user = array_shift($users);
+	$event_users = $users;
+	return true;
+}
+
+function GenerateNewUsers()
+{
+	global $event_admin_user, $event_users;
 	
 	$event_admin_user = User_Create();
 	
@@ -314,6 +371,37 @@ function SetupEvent()
 	{
 		$event_users[] = User_Create();
 	}
+}
+
+
+
+// Prepare the event. Create an admin superuser. Create all the compo users. Create the new LudumDare event. Publish the event node.
+// Some of this has to be done through the database directly (finding the email verification links, and creating the ludumdare event and setting it up)
+// We'll also use some data from the database to make the naming a bit more friendly.
+function SetupEvent()
+{
+	global $event_admin_user, $event_users, $event_user_lookup, $event_name;
+	global $loadprevioususers;
+	
+	$usersloaded = false;
+	if($loadprevioususers)
+	{
+		$usersloaded = LoadPreviousUsers();
+	}
+	if($usersloaded)
+	{
+		Verbose("Loaded users from previous event.");
+		
+		// Todo: User shift (replace a few users with new users)
+		
+	}
+	else
+	{
+		Verbose("Generating new users for this event.");
+		GenerateNewUsers();
+	}
+	
+
 	foreach($event_users as $user)
 	{
 		$event_user_lookup[$user["username"]] = $user;
@@ -340,6 +428,21 @@ function SetupEvent()
 
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-start', $formatStart);
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-end', $formatEnd);
+
+	// Create metadata for grading
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-01', 'Overall');
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-02', 'Silliness');
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-03', 'Hexadecimal');
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-04', '100101101001');
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-05', 'Logicality');
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-06', 'Complexity');
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-07', 'Infinitude');
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-08', 'Waterproofness');
+
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-05-optional', 1);
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-06-optional', 1);
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-07-optional', 1);
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-08-optional', 1);
 
 	// Also publish the event
 	if(!ApiNodePublish($event_admin_user, $event_nodeid))
@@ -380,15 +483,38 @@ function SetupThemePhase($phase)
 		break;
 		
 	case 1: // Theme Slaughter
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-theme', 1);
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 2);
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 2); // Theme slaughter
 		break;
 	
 	case 2: // Theme voting
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 4); // Theme voting
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-1', 1);
+		break;
+		
 	case 3:
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-2', 1);
+		break;
+		
 	case 4:
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-3', 1);
+		break;
+
 	case 5:
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-4', 1);
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-name-4', "Final Round");
+		break;
+
 	case 6: // Final theme selection
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 5); // Theme voting closed
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-1', 2);
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-2', 2);
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-3', 2);
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-4', 2);
+		
+		// Todo: determine theme from the data.
+		$theme = "Fluffy Bunnies";
+		
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-theme', $theme);
 		break;
 	}
 }
@@ -396,21 +522,32 @@ function SetupThemePhase($phase)
 // The compo has now started, the theme voting is now locked and a theme is selected. The users will be sure to mention the theme in some of their posts.
 function StartCompo()
 {
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 5); // Theme voting closed (re-set for sanity reasons)
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-publish', 1); // No effect on API, just a site effect (at the moment)
 }
 
 // The compo has now stopped and will only accept submissions for a limited amount of time. Configure the event to this mode.
 function SetupSubmission()
 {
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 6); // Enter rating mode
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-publish', 1); // No effect on API, just a site effect (at the moment) 
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', 1); // enable voting
 }
 
 // Submission is over, and now the voting period begins
 function SetupVoting()
 {
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 6); // Play+rate mode
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-publish', 0); // Disable publishing. No effect on API, just a site effect (at the moment)
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', 1);
 }
 
 // Voting is over, close out the compo.
 function EndCompo()
 {
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 8); // Results mode
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', 0); // Disable voting
+	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-finished', 1); // Enable showing results
 }
 
 // User should discover and interact with the available options in the current theme voting phase.
@@ -890,12 +1027,8 @@ function CompleteMandatoryStageActions($stage, $phase)
 //// Common functions to assist in doing normal tasks in the site
 ////
 
-function User_Create()
+function User_DataStructure($username, $password)
 {
-	$username = GenerateRandomUsername();
-	$password = GenerateRandomPassword();
-	
-	// Construct a user object
 	$user = [
 		"username" => $username,
 		"password" => $password,
@@ -910,6 +1043,36 @@ function User_Create()
 		"postedimin" => false,
 		"publishedgame" => false,
 	];
+	
+	return $user;
+}
+
+function User_Load($username, $password)
+{
+	$user = User_DataStructure($username, $password);
+
+	// Login the user
+	$userid = ApiUserLogin($user);
+	if(!$userid)
+	{
+		ReportError("Unable to login new user.");
+		return null;	
+	}
+	
+	$user["id"] = $userid;
+	
+	Verbose("Loaded user " . $username);
+	
+	return $user;
+}
+
+function User_Create()
+{
+	$username = GenerateRandomUsername();
+	$password = GenerateRandomPassword();
+	
+	// Construct a user object
+	$user = User_DataStructure($username, $password);
 	
 	// Determine if username is in use
 	for($i = 0; $i < 20; $i++)
@@ -1456,6 +1619,25 @@ function ApiUserLogin(&$user)
 
 function GenerateRandomUsername()
 {
+	global $usewikitext;
+	if($usewikitext)
+	{
+		// glue a few alphanumeric words together
+		$length = random_int(3, 10);
+		$username = "";
+		while(strlen($username) < $length)
+		{
+			$word = MarkovRandomWord();
+			$safeword = preg_replace("/[^a-zA-Z0-9]/","",$word);
+			$username .= $safeword;
+		}
+		if(strlen($username) > $length*2)
+		{
+			$username = substr($username,0,$length*2);
+		}
+		return $username;
+	}
+
   $length = random_int(2, 10);
   return bin2hex(random_bytes($length));
 }
@@ -1468,12 +1650,33 @@ function GenerateRandomPassword()
 
 function GenerateRandomPostTitle()
 {
+	global $usewikitext;
+	if($usewikitext)
+	{
+		return MarkovRandomPhrase(3,12);
+	}
 	return GenerateRandomPostText(3,12);
 }
 
-// Future: something much more meaningful. Also figure out how to include image uploads, links, other fun feathres.
+// Future: something much more meaningful. Also figure out how to include image uploads, links, other fun features.
 function GenerateRandomPostText($minWords = 10, $maxWords = 200)
 {
+	global $usewikitext;
+	if($usewikitext)
+	{
+		$paragraphs = random_int(1,3);
+		$output = "";
+		for($p =0;$p<$paragraphs;$p++)
+		{
+			$sentences = random_int(1,10);
+			for($s=0;$s<$sentences;$s++)
+			{
+				$output .= MarkovRandomPhrase(3,17) . ". ";
+			}
+			$output .= "\n\n";
+		}
+		return $output;
+	}
 	$words = random_int($minWords, $maxWords);
 	$allwords = array();
 	for($i=0;$i<$words;$i++)
@@ -1490,22 +1693,31 @@ function GenerateRandomPostText($minWords = 10, $maxWords = 200)
 //// Fetch some random wikipedia articles to seed the Markov text generation system
 ////
 
-function SetupTextGeneration($articles = 5)
+function SetupTextGeneration($articles = 10)
 {
 	MarkovReset();
 	for($i=0; $i < $articles; $i++)
 	{
 		AddWikipediaText();
 	}
+	
+	// Export markov data to file (mostly for examination)
+	$f = OpenMarkovFile();
+	MarkovExport($f);
+	fclose($f);
 }
 
 function AddWikipediaText()
 {
 	// Fetch a random wikipedia article.
 	$data = LdApi::GetRaw("https://en.wikipedia.org/wiki/Special:Random");
+
+	$f = OpenWikiDataFile();
+	fprintf($f,"%s",$data);
+	fclose($f);
 	
 	// Determine what article we got from the page- class in the body tag.
-	if(preg_match('/<body[^>]*body-([^\s]+) [^>]+>/', $data, $matches))
+	if(preg_match('/<body[^>]*page-([^\s]+) [^>]+>/', $data, $matches))
 	{
 		Message("Reading Wikipedia Article " . $matches[1]);
 	}
@@ -1515,11 +1727,23 @@ function AddWikipediaText()
 		return;
 	}
 	
-	// Get data between '<div class="mw-parser-output">' and '<div role="navigation"'
+	// Get data between '<div class="mw-parser-output">' and '<div class="printfooter">'
+	$parts1 = explode('<div class="mw-parser-output">', $data, 2);
+	if(count($parts1) != 2) { ReportError("Error in parsing wikipedia page"); return; }
+	$parts2 = explode('<div class="printfooter">',$parts1[1], 2);
+	if(count($parts2) != 2) { ReportError("Error in parsing wikipedia page"); return; }
 	
-	// Remove all html tags and [#] references. Remove quotation marks
+	// Remove all html tags and [#] references. Remove quotation marks. Remove commas.
+	$content = preg_replace('/<[^>]+>/','',$parts2[0]);
+	$content = preg_replace('/\[\d+\]/','',$content);
+	$content = str_replace('"','',$content);
+	$content = str_replace(',','',$content);
 	
 	// Split on period and newline, eliminate duplicate spaces
+	$content = str_replace('.',"\n",$content);
+	
+	$statements = explode("\n",$content);
+	MarkovTrain($statements);
 }
 
 
@@ -1534,10 +1758,37 @@ function MarkovReset()
 	$GLOBALS["MarkovData"] = [ "Words"=>[], "WordMap"=>[], "Chain2"=>[], "Chain3"=>[], "Stats"=>["UseChain3"=>0, "UseChain2"=>0, "UseRandom"=>0]];
 }
 
+function MarkovExport($f)
+{
+	MarkovEnsureWords();
+	fprintf($f, "# Words\n");
+	fprintf($f, implode(",",$GLOBALS["MarkovData"]["Words"]) . "\n");
+	fprintf($f, "# Chain2\n");
+	$keys = array_keys($GLOBALS["MarkovData"]["Chain2"]);
+	sort($keys);
+	foreach($keys as $k)
+	{
+		$values = array_keys($GLOBALS["MarkovData"]["Chain2"][$k]);
+		sort($values);
+		fprintf($f, $k ."," . implode(",",$values) . "\n");
+	}
+	fprintf($f, "# Chain3\n");
+	$keys = array_keys($GLOBALS["MarkovData"]["Chain3"]);
+	sort($keys);
+	foreach($keys as $k)
+	{
+		$values = array_keys($GLOBALS["MarkovData"]["Chain3"][$k]);
+		sort($values);
+		fprintf($f, $k ."," . implode(",",$values) . "\n");
+	}	
+}
+
 function MarkovTrain($statementarray)
 {
 	foreach($statementarray as $statement)
 	{
+		$statement = trim($statement);
+		if($statement == "") { continue; }
 		$words = preg_split('/[\s,]+/', $statement);
 		MarkovTrainWordArray($words);
 	}
@@ -1546,7 +1797,7 @@ function MarkovTrain($statementarray)
 function MarkovTrainWordArray($words)
 {
 	global $MarkovData;
-	
+
 	$prev1 = "";
 	$prev2 = "";	
 	$words[] = ""; // Add an empty value to the chains to indicate natural places where the generation can stop.
@@ -1572,6 +1823,9 @@ function MarkovTrainWordArray($words)
 		}
 		$MarkovData["Chain3"][$key3][$word] = true;
 		
+		
+		$prev2 = $prev1;
+		$prev1 = $word;
 	}
 	$MarkovData["Words"] = null; // Word list needs to be rebuilt.
 }
@@ -1581,6 +1835,7 @@ function MarkovEnsureWords()
 	if(!$GLOBALS["MarkovData"]["Words"])
 	{
 		$GLOBALS["MarkovData"]["Words"] = array_keys($GLOBALS["MarkovData"]["WordMap"]);
+		sort($GLOBALS["MarkovData"]["Words"]);
 	}
 }
 
@@ -1592,10 +1847,51 @@ function MarkovRandomWord()
 	return $MarkovData["Words"][$index];
 }
 
-function MarkovRandomPhrase()
+function MarkovRandomPhrase($minwords = 3, $maxwords = 25)
 {
+	global $MarkovData;
 	MarkovEnsureWords();
 
+	$makewords = random_int($minwords, $maxwords);
+
+	$prev2 = "";
+	$prev1 = MarkovRandomWord();
+	$words = [$prev1];
+	
+	for($i=1;$i<$makewords;$i++)
+	{
+		// Try to generate a new word from markov-3, if we can't, try markov-2, then just a random word.
+		$key3 = "$prev2-$prev1";
+		$key2 = $prev1;
+		
+		$word = "";
+		if(key_exists($key3, $MarkovData["Chain3"]))
+		{
+			// Pick a random option
+			$options = array_keys($MarkovData["Chain3"][$key3]);
+			$index = random_int(1,count($options))-1;
+			$word = $options[$index];
+		}
+		
+		// If we don't have a word, try to generate from markov-2
+		if($word == "" && key_exists($key2, $MarkovData["Chain2"]))
+		{
+			$options = array_keys($MarkovData["Chain2"][$key2]);
+			$index = random_int(1,count($options))-1;
+			$word = $options[$index];
+		}
+		
+		if($word == "")
+		{
+			$word = MarkovRandomWord();
+		}
+		
+		$words[] = $word;
+		$prev2 = $prev1;
+		$prev1 = $word;
+	}
+
+	return implode(" ",$words);
 }
 
 
@@ -1707,6 +2003,7 @@ class LdApi
 		$c = curl_init($url);
 		
 		curl_setopt($c, CURLOPT_HEADER, false);		
+		curl_setopt($c, CURLOPT_FOLLOWLOCATION, true);		
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($c, CURLOPT_HTTPGET, true);
 
