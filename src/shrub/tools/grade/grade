@@ -25,13 +25,37 @@ global_Load();
 
 $ARG_COMMAND = array_shift($argv);
 
-$EVENT_ID = isset($SH['ludumdare-event']) ? intval($SH['ludumdare-event']) : 0;
+$root = nodeComplete_GetById(1);
+$EVENT_ID = intval($root["meta"]["featured"]);
+
 if ( !$EVENT_ID ) {
-	print "'ludumdare-event' is zero or not set ($EVENT_ID)\n";
+	print "featured event is zero or not set ($EVENT_ID)\n";
 	exit;
 }
 
+$automatic = false;
 $COMMAND = array_shift($argv);
+
+if($COMMAND == "itsautomatic") {
+	$COMMAND = array_shift($argv);
+	$automatic = true;
+}
+
+function AreYouSure() {
+	global $automatic;
+	if(!$automatic) {
+		print "\nAre you sure [type 'YES']? ";
+		flush();
+		$input = trim(fgets(STDIN));
+		if ( $input != "YES" ) {
+			print "Aborting...\n";
+			exit(1);
+		}
+	}
+}
+
+
+
 if ( $COMMAND === "score" ) {
 	$SUBSUBTYPE = array_shift($argv);
 	$THRESHOLD = array_shift($argv);
@@ -44,13 +68,7 @@ if ( $COMMAND === "score" ) {
 	
 	print "\n*** WARNING ***\n\n";
 	print "You are about to generate scores for \"$SUBSUBTYPE\".\n";
-	print "\nAre you sure [type 'YES']? ";
-	flush();
-	$input = trim(fgets(STDIN));
-	if ( $input != "YES" ) {
-		print "Aborting...\n";
-		exit(1);
-	}
+	AreYouSure();
 	
 	print "Fetching Event... ";
 	
@@ -164,20 +182,22 @@ if ( $COMMAND === "score" ) {
 		}
 	}
 
-	print "\n*** WARNING ***\n\n";
-	print "Last chance to back out! Do you wish to commit these changes? [type 'YES']? ";
-	flush();
-	$input = trim(fgets(STDIN));
-	if ( $input != "YES" ) {
-		// Print the data
-		foreach ( $RESULT as $key => &$nodes ) {
-			foreach ( $nodes as $id => &$node ) {
-				echo $key.'-score: '.implode(' ', $node)."\n";
+	if(!$automatic) {
+		print "\n*** WARNING ***\n\n";
+		print "Last chance to back out! Do you wish to commit these changes? [type 'YES']? ";
+		flush();
+		$input = trim(fgets(STDIN));
+		if ( $input != "YES" ) {
+			// Print the data
+			foreach ( $RESULT as $key => &$nodes ) {
+				foreach ( $nodes as $id => &$node ) {
+					echo $key.'-score: '.implode(' ', $node)."\n";
+				}
 			}
+			
+			print "Aborting...\n";
+			exit(1);
 		}
-		
-		print "Aborting...\n";
-		exit(1);
 	}
 	
 	$db->begin_transaction();

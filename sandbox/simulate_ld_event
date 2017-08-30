@@ -125,6 +125,12 @@ function LogExec($execAction)
 	Verbose("Exec '$execAction':\n".implode("\n",$results));
 }
 
+function RunMagic()
+{
+	Verbose("Kickoff cron magic.php task to update necessary values in the db.");
+	exec("php ~/www/private/magic.php");
+}
+
 
 $flogfull = null;
 $flogerr = null;
@@ -606,6 +612,11 @@ function SetupVoting()
 function EndCompo()
 {
 	global $event_nodeid;
+	
+	Verbose("Computing results...");
+	LogExec("sudo php ../src/shrub/tools/grade/grade itsautomatic score compo 7"); # Require 7 ratings to be placed.
+	LogExec("sudo php ../src/shrub/tools/grade/grade itsautomatic score jam 7"); # Require 7 ratings to be placed.
+	
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 8); // Results mode
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', 0); // Disable voting
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-finished', 1); // Enable showing results
@@ -854,7 +865,59 @@ function CommentOnGame(&$user, $phase)
 // Find a game through one of the game lists, and vote on it. Or change the votes to something else.
 function VoteOnGame(&$user, $phase)
 {
-	return false;
+	$games = GetTopGames($user);
+	
+	$rate_count = random_int(5,10);
+	// Walk through games in order until we find a number of games we haven't ranked.
+	// For games we havne't ranked, vote on them and add to the ranked list.
+	
+	foreach($games as $game)
+	{
+		$id = $game["id"];
+		if(key_exists($id, $user["rated_games"])) 
+		{ 
+			// Chance to re-rate a rated game, but usually we'll rate new games.
+			if(random_int(1,20) != 1) { continue; } 
+		}
+		
+		Verbose("Voting on game ID $id");
+		
+		// Future, consider opt-outs on this game. For now just vote all categories.
+		// We know there are 8 categories, so hardcoding for now
+		
+		for($i=1;$i<=8;$i++)
+		{
+			$value = random_int(1,5);
+			$result = ApiGradeAdd($user,$id,"grade-0".$i,$value);
+			if($result === null)
+			{
+				ReportError("Failed to add vote");
+			}
+		}
+	
+		// Sometimes randomly remove one of the votes, to test that path
+		if(random_int(1,10) == 1)
+		{
+			$remove = random_int(1,8);
+			$result = ApiGradeRemove($user,$id,"grade-0".$remove);
+			if($result === null)
+			{
+				ReportError("Failed to remove vote");
+			}
+		}
+		
+		$grades = ApiGradeGetmy($user,$id);
+		if(count($grades) < 1)
+		{
+			ReportError("My grades don't appear for this node.");
+		}
+
+		$user["rated_games"][$id] = true;
+		$rate_count--;
+		if($rate_count < 1) { break; }
+	}
+	RunMagic();
+	return true;
 }
 
 // Remove a like from some post/comment/game that was liked previously. The simulated user revisits the node and comments, and removes the like.
@@ -1016,8 +1079,7 @@ for($curStage = 0; $curStage < $stagecount; $curStage++)
 }
 Message("All Stages Complete!");
 
-	Verbose("Kickoff cron magic.php task one last time to update necessary values in the db.");
-	exec("php ~/www/private/magic.php");
+	RunMagic();
 
 
 $currentstageactions = null;
@@ -1215,6 +1277,7 @@ function User_DataStructure($username, $password)
 		"posts" => array(),
 		"notes" => array(),
 		"love" => array(),
+		"rated_games" => array(),
 		"postedimin" => false,
 		"publishedgame" => false,
 	];
@@ -1590,8 +1653,7 @@ function PublishGame(&$user)
 	
 	$user["publishedgame"] = true;
 	
-	Verbose("Kickoff cron magic.php task to update necessary scores in the db.");
-	exec("php ~/www/private/magic.php");
+	RunMagic();
 }
 
 
@@ -1852,6 +1914,27 @@ function ApiThemeListVoteSet(&$user, $themelist_id, $vote)
 	$value = LdApi::Get("vx/theme/list/vote/$type/$themelist_id", $user);
 	if(!ResponseIs200($value)) { return null; }
 	return $value["id"]; // Vote ID. Not that it matters.
+}
+
+function ApiGradeAdd(&$user, $node, $grade, $score)
+{
+	$value = LdApi::Get("vx/grade/add/$node/$grade/$score", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["id"]; // Vote ID. Not that it matters.
+}
+
+function ApiGradeRemove(&$user, $node, $grade)
+{
+	$value = LdApi::Get("vx/grade/remove/$node/$grade", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["changed"];
+}
+
+function ApiGradeGetmy(&$user, $node)
+{
+	$value = LdApi::Get("vx/grade/getmy/$node", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["grade"]; // Vote ID. Not that it matters.
 }
 
 
