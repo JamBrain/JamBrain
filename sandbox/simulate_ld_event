@@ -22,6 +22,7 @@ require_once __DIR__."/".SHRUB_PATH."constants.php";
 require_once __DIR__."/".SHRUB_PATH."core/db.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
 require_once __DIR__."/".SHRUB_PATH."user/user.php";
+require_once __DIR__."/".SHRUB_PATH."theme/theme.php";
 
 
 if ( count($argv) < 3  || ($argv[2] != "actions" && $argv[2] != "minutes")) {
@@ -62,12 +63,12 @@ $htmlbase = "ld_event"; // Put html report in current directory.
 //   <name>.<eventIndex>.err (Summary log and errors)
 
 $apibase = "http://api.ludumdare.org/";
-$usercount = 10; // Something like 40-50 is good for reasonable size tests.
+$usercount = 40; // Something like 40-50 is good for reasonable size tests.
 $keepallposts = true;
 $keeppostcount = 100; // Number of posts per user to keep, when keep all posts is false (which it should be for high user counts or long runtimes / stress environments.)
 $verbose = true; // Display all of the details about what's going on?
 $verboselog = true; // Keep all details about what's going on in a log.
-$useprevioususers = true; // (not implemented) Load the set of users from the previous test event, instead of creating new users.
+$useprevioususers = true; // Load the set of users from the previous test event, instead of creating new users.
 $usewikitext = true;
 
 define("TOP_STATS",10); // keep top 10 stats
@@ -347,12 +348,11 @@ function LoadPreviousUsers()
 		if(count($parts) != 2) { continue; }
 		$u = trim($parts[0]);
 		$p = trim($parts[1]);
-		
 		$users[] = User_Load($u,$p);
 	}
 	
 	global $usercount;
-	if($users.count != ($usercount+1)) { return $false; } // Future: be smarter. Could maybe just generate / discard some users to fix this mismatch.
+	if(count($users) != ($usercount+1)) { return false; } // Future: be smarter. Could maybe just generate / discard some users to fix this mismatch.
 	
 	$event_admin_user = array_shift($users);
 	$event_users = $users;
@@ -381,10 +381,10 @@ function GenerateNewUsers()
 function SetupEvent()
 {
 	global $event_admin_user, $event_users, $event_user_lookup, $event_name;
-	global $loadprevioususers;
+	global $useprevioususers;
 	
 	$usersloaded = false;
-	if($loadprevioususers)
+	if($useprevioususers)
 	{
 		$usersloaded = LoadPreviousUsers();
 	}
@@ -400,7 +400,6 @@ function SetupEvent()
 		Verbose("Generating new users for this event.");
 		GenerateNewUsers();
 	}
-	
 
 	foreach($event_users as $user)
 	{
@@ -478,28 +477,49 @@ function SetupThemePhase($phase)
 	switch($phase)
 	{
 	case 0: // Theme Suggestion
+		Message("Starting Theme Suggestion");
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-theme', 1);
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 1);
 		break;
 		
 	case 1: // Theme Slaughter
+		Message("Starting Theme Slaughter");
+		Verbose("Run external tool to perform suggestion deduplication");
+		exec("sudo ../src/shrub/tools/theme/theme itsautomatic dupes");
+	
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 2); // Theme slaughter
 		break;
 	
 	case 2: // Theme voting
+		Message("Starting Theme Voting Round 1");	
+		Verbose("Run external tool to score theme slaughter");
+		exec("sudo ../src/shrub/tools/theme/theme itsautomatic score");
+		
+		Verbose("Run external tool to populate theme voting pages");
+		exec("sudo ../src/shrub/tools/theme/theme itsautomatic simple-vote 3");
+	
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 4); // Theme voting
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-1', 1);
 		break;
 		
 	case 3:
+		Message("Starting Theme Voting Round 2");	
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-2', 1);
 		break;
 		
 	case 4:
+		Message("Starting Theme Voting Round 3");	
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-3', 1);
 		break;
 
 	case 5:
+		Message("Starting Final Theme Voting Round");	
+		Verbose("Running external tool to sum votes and populate final round")
+		exec("sudo ../src/shrub/tools/theme/theme itsautomatic calc 1");
+		exec("sudo ../src/shrub/tools/theme/theme itsautomatic calc 2");
+		exec("sudo ../src/shrub/tools/theme/theme itsautomatic calc 3");
+		exec("sudo ../src/shrub/tools/theme/theme itsautomatic finalize 10"); // Compute top 10 scoring themes into final round.
+		
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-4', 1);
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-name-4', "Final Round");
 		break;
@@ -511,8 +531,25 @@ function SetupThemePhase($phase)
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-3', 2);
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-4', 2);
 		
-		// Todo: determine theme from the data.
+		Verbose("Run external tool to compute stats for final round");
+		exec("sudo ../src/shrub/tools/theme/theme itsautomatic calc 4");
+		
+		// Determine theme from the data
+		$themes = themeList_GetByNode($event_nodeid, 4);
+		
+		$cmp = function($a, $b) {
+			if ($a['score'] == $b['score']) {
+				return 0;
+			}
+			return ($a['score'] > $b['score']) ? -1 : 1;
+		};
+		usort($themes, $cmp);		
+
 		$theme = "Fluffy Bunnies";
+		if(count($themes) > 0)
+		{
+			$theme = $themes[0].theme;
+		}
 		
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-theme', $theme);
 		break;
@@ -522,6 +559,7 @@ function SetupThemePhase($phase)
 // The compo has now started, the theme voting is now locked and a theme is selected. The users will be sure to mention the theme in some of their posts.
 function StartCompo()
 {
+	global $event_nodeid;
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 5); // Theme voting closed (re-set for sanity reasons)
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-publish', 1); // No effect on API, just a site effect (at the moment)
 }
@@ -529,6 +567,7 @@ function StartCompo()
 // The compo has now stopped and will only accept submissions for a limited amount of time. Configure the event to this mode.
 function SetupSubmission()
 {
+	global $event_nodeid;
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 6); // Enter rating mode
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-publish', 1); // No effect on API, just a site effect (at the moment) 
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', 1); // enable voting
@@ -537,6 +576,7 @@ function SetupSubmission()
 // Submission is over, and now the voting period begins
 function SetupVoting()
 {
+	global $event_nodeid;
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 6); // Play+rate mode
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-publish', 0); // Disable publishing. No effect on API, just a site effect (at the moment)
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', 1);
@@ -545,6 +585,7 @@ function SetupVoting()
 // Voting is over, close out the compo.
 function EndCompo()
 {
+	global $event_nodeid;
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 8); // Results mode
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', 0); // Disable voting
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-finished', 1); // Enable showing results
@@ -553,24 +594,102 @@ function EndCompo()
 // User should discover and interact with the available options in the current theme voting phase.
 function UserVoteOnTheme(&$user, $phase)
 {
+	global $event_nodeid;
+	
 	switch($phase)
 	{
 	case 0: // Theme Suggestion
+		$suggest_count = random_int(1,3);
+		$existing_themes = ApiThemeIdeaGetmy($user, $event_nodeid);
+		if($existing_themes === null)
+		{
+			ReportError("Failed to GetMy Theme Ideas");
+			return false;
+		}
+		$total = $suggest_count + count($existing_themes);
+		while($total -gt 3)
+		{
+			$removetheme = shift($existing_themes);
+			// Remove themes!
+			if(null === ApiThemeIdeaRemove($user, $event_nodeid, $shift["id"]))
+			{
+				ReportError("Failed to remove theme!");
+			}
+			$total--;
+		}
+		
+		for($i=0;$i<$suggest_count;$i++)
+		{
+			$suggestion = GenerateRandomPhrase(1,4);
+			if(null === ApiThemeIdeaAdd($user, $event_nodeid, $suggestion))
+			{
+				ReportError("Failed to suggest theme!");
+			}
+		}
+		
+		$existing_themes = ApiThemeIdeaGetmy($user, $event_nodeid);
+		if($existing_themes === null)
+		{
+			ReportError("Failed to GetMy Theme Ideas again");
+			return false;
+		}
+		
+		if(count($existing_themes) < 1)
+		{
+			ReportError("Suggested themes were not returned in theme/idea/getmy");
+		}
 		break;
 		
 	case 1: // Theme Slaughter
+		$slaughter_count = random_int(5,20);
+		
+		$allslaughter = ApiThemeIdeaVoteGet($user, $event_nodeid);
+		if(null === $allslaughter)
+		{
+			ReportError("Failed to get theme suggestions for slaughter");
+			return false;
+		}
+		
+		$keys = array_keys($allslaughter);
+		for($i=0;$i<$slaughter_count;$i++)
+		{
+			$index = random_int(1,count($keys));
+			$id = $keys[$index];
+			
+			$value = random_int(0,1); // vote yes/no.
+			if(random_int(1,100) == 1) 
+			{
+				$value = -1; // Occasionally, flag.
+			}
+			
+			if(null === ApiThemeIdeaVoteSet($user, $id, $value))
+			{
+				ReportError("Failed to theme/idea/vote");
+			}
+		}
 	
+		$myslaughter = ApiThemeIdeaVoteGet($user, $event_nodeid);
+		if(count($myslaughter) < 1)
+		{
+			ReportError("Expected to see slaughter votes, but did not find any");
+		}
+		
 		break;
 		
 	case 2: // Theme voting
 	case 3:
 	case 4:
 	case 5:
-	case 6: // Final theme selection	
+		$page = $phase-1;
+		
+		$votecount = random_int(2,10);
 	
+		break;
+	case 6: // Final theme selection	
+		return false; // Nothing to do in this case.
 	}
 	
-	return false;
+	return true;
 }
 
 
@@ -693,7 +812,7 @@ function CommentUnlike(&$user, $phase)
 function CompoPostUpdate(&$user, $phase)
 {
 	$title = GenerateRandomPostTitle();
-	$body = GenerateRandomPostText();
+	$body = GenerateRandomPostText(5);
 	CreatePost($user, $title, $body);
 	
 	// There's a limit to how many posts a user should make. Try not to make too many more.
@@ -711,7 +830,7 @@ function CompoEditGame(&$user, $phase)
 {
 	// For now, just carelessly replace everything. Future: do something smarter.
 	$title = GenerateRandomPostTitle();
-	$body = GenerateRandomPostText();
+	$body = GenerateRandomPostText(6);
 	ModifyGame($user, $title, $body);
 	return true;
 }
@@ -720,7 +839,7 @@ function CompoPublishGame(&$user, $phase)
 {
 	// Need to ensure there is something good before publish.
 	$title = GenerateRandomPostTitle();
-	$body = GenerateRandomPostText();
+	$body = GenerateRandomPostText(6);
 	ModifyGame($user, $title, $body);
 
 	PublishGame($user);
@@ -1464,11 +1583,11 @@ function ApiNodeAdd(&$user, $parentid, $type)
 function ApiNodeUpdate(&$user, $nodeid, $newname = null, $newbody = null)
 { // POST node/update/:node_id
 	$poststring = "";
-	if($newname != null) { $poststring = "name=".$newname; }
+	if($newname != null) { $poststring = "name=".urlencode($newname); }
 	if($newbody != null)
 	{
 		if($poststring != "") { $poststring .= "&"; }
-		$poststring .= "body=".$newbody;
+		$poststring .= "body=".urlencode($newbody);
 	}
 
 	$value = LdApi::Post("vx/node/update/" . $nodeid , $poststring, $user);
@@ -1516,14 +1635,14 @@ function ApiNodeMetaRemove(&$user, $nodeid, $key) // POST node/meta/remove/:node
 
 function ApiNoteAdd(&$user, $nodeid, $body) // POST note/add
 {
-	$value = LdApi::Post("vx/note/add/".$nodeid,"parent=0&body=".$body, $user);
+	$value = LdApi::Post("vx/note/add/".$nodeid,"parent=0&body=".urlencode($body), $user);
 	if($value) { return $value["note"]; }
 	return null;
 }
 
 function ApiNoteUpdate(&$user, $parentid, $noteid, $newbody)
 {
-	$value = LdApi::Post("vx/note/update/".$noteid,"node=".$parentid."&body=".$body, $user);
+	$value = LdApi::Post("vx/note/update/".$noteid,"node=".$parentid."&body=".urlencode($body), $user);
 	return ResponseIs200($value);
 }
 
@@ -1550,19 +1669,11 @@ function ApiNoteLoveRemove(&$user, $noteid)
 	return ResponseIs200($value);
 }
 
-function ResponseIs200($response)
-{
-	if($response != null)
-	{
-		return $response["response_httpcode"] == "200"; 
-	}
-	return false;
-}
 
 // Does the site have this username already?
 function ApiUserHave($username)
 {
-	$value = LdApi::Post("vx/user/have","name=".$username);
+	$value = LdApi::Post("vx/user/have","name=".urlencode($username));
 	if($value != null)
 	{
 		return !($value["available"]);
@@ -1573,7 +1684,7 @@ function ApiUserHave($username)
 // Create a new user (by email address)
 function ApiUserCreate($email, &$user)
 {
-	$value = LdApi::Post("vx/user/create","mail=".$email, $user);
+	$value = LdApi::Post("vx/user/create","mail=".urlencode($email), $user);
 	if($value != null)
 	{
 		return $value["sent"];
@@ -1586,7 +1697,7 @@ function ApiUserActivate(&$user, $id, $auth_key)
 	$name = $user["username"];
 	$pw = $user["password"];
 	
-	$postString = "id=".$id."&key=".$auth_key."&name=".$name."&pw=".$pw;
+	$postString = "id=".$id."&key=".$auth_key."&name=".urlencode($name)."&pw=".urlencode($pw);
 	$value = LdApi::Post("vx/user/activate",$postString,$user);
 	
 	if($value != null)
@@ -1601,7 +1712,7 @@ function ApiUserLogin(&$user)
 	$login = $user["username"];
 	$pw = $user["password"];
 	
-	$value = LdApi::Post("vx/user/login", "login=".$login."&pw=".$pw, $user);
+	$value = LdApi::Post("vx/user/login", "login=".urlencode($login)."&pw=".urlencode($pw), $user);
 	
 	if($value != null)
 	{
@@ -1611,6 +1722,66 @@ function ApiUserLogin(&$user)
 		} 
 	}
 	return 0;
+}
+
+
+function ApiThemeIdeaGetmy(&$user, $event_id)
+{
+	$value = LdApi::Get("vx/theme/idea/getmy/".$event_id, $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["ideas"];
+}
+
+function ApiThemeIdeaAdd(&$user, $event_id, $themeidea)
+{
+	$value = LdApi::Post("vx/theme/idea/add/".$event_id, "idea=".urlencode($themeidea), $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["response"];
+}
+
+function ApiThemeIdeaRemove(&$user, $event_id, $themeid)
+{
+	$value = LdApi::Post("vx/theme/idea/remove/".$event_id, "id=$themeid", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["response"];
+}
+
+// Returns all theme ideas
+function ApiThemeIdeaVoteGet(&$user, $event_id)
+{
+	$value = LdApi::Get("vx/theme/idea/vote/get/".$event_id, $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["ideas"];
+}
+
+// Return your theme slaughter votes
+function ApiThemeIdeaVoteGetmy(&$user, $event_id)
+{
+	$value = LdApi::Get("vx/theme/idea/vote/getmy/".$event_id, $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["votes"];
+}
+
+// Vote (either +1, -1, or 0)
+function ApiThemeIdeaVoteSet(&$user, $idea_id, $vote)
+{
+	$votetype = [ -1 => "flag", 0 => "no", 1 => "yes" ];
+	$type = $votetype[$vote];
+	$value = LdApi::Post("vx/theme/idea/vote/$type/$idea_id", "", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["id"]; // Vote ID. Not that it matters.
+}
+
+
+
+
+function ResponseIs200($response)
+{
+	if($response != null)
+	{
+		return $response["response_httpcode"] == "200"; 
+	}
+	return false;
 }
 
 ////
@@ -1623,7 +1794,8 @@ function GenerateRandomUsername()
 	if($usewikitext)
 	{
 		// glue a few alphanumeric words together
-		$length = random_int(3, 10);
+		$length = random_int(3, 15);
+		$maxlength = $length+5;
 		$username = "";
 		while(strlen($username) < $length)
 		{
@@ -1631,9 +1803,9 @@ function GenerateRandomUsername()
 			$safeword = preg_replace("/[^a-zA-Z0-9]/","",$word);
 			$username .= $safeword;
 		}
-		if(strlen($username) > $length*2)
+		if(strlen($username) > $maxlength)
 		{
-			$username = substr($username,0,$length*2);
+			$username = substr($username,0,$maxlength);
 		}
 		return $username;
 	}
@@ -1650,33 +1822,39 @@ function GenerateRandomPassword()
 
 function GenerateRandomPostTitle()
 {
-	global $usewikitext;
-	if($usewikitext)
-	{
-		return MarkovRandomPhrase(3,12);
-	}
-	return GenerateRandomPostText(3,12);
+	return GenerateRandomPhrase(2,7);
 }
 
 // Future: something much more meaningful. Also figure out how to include image uploads, links, other fun features.
-function GenerateRandomPostText($minWords = 10, $maxWords = 200)
+function GenerateRandomPostText($maxParagraphs = 3)
 {
 	global $usewikitext;
 	if($usewikitext)
 	{
-		$paragraphs = random_int(1,3);
+		$paragraphs = random_int(1,$maxParagraphs);
 		$output = "";
 		for($p =0;$p<$paragraphs;$p++)
 		{
 			$sentences = random_int(1,10);
 			for($s=0;$s<$sentences;$s++)
 			{
-				$output .= MarkovRandomPhrase(3,17) . ". ";
+				$output .= GenerateRandomPhrase(3,17) . ". ";
 			}
 			$output .= "\n\n";
 		}
 		return $output;
 	}
+
+}
+
+function GenerateRandomPhrase($minWords, $maxWords)
+{
+	global $usewikitext;
+	if($usewikitext)
+	{
+		return MarkovRandomPhrase($minWords, $maxWords);		
+	}
+	
 	$words = random_int($minWords, $maxWords);
 	$allwords = array();
 	for($i=0;$i<$words;$i++)
@@ -1687,7 +1865,6 @@ function GenerateRandomPostText($minWords = 10, $maxWords = 200)
 	}
 	return implode(" ",$allwords);
 }
-
 
 ////
 //// Fetch some random wikipedia articles to seed the Markov text generation system
@@ -1762,7 +1939,7 @@ function MarkovExport($f)
 {
 	MarkovEnsureWords();
 	fprintf($f, "# Words\n");
-	fprintf($f, implode(",",$GLOBALS["MarkovData"]["Words"]) . "\n");
+	fprintf($f, "%s", implode(",",$GLOBALS["MarkovData"]["Words"]) . "\n");
 	fprintf($f, "# Chain2\n");
 	$keys = array_keys($GLOBALS["MarkovData"]["Chain2"]);
 	sort($keys);
@@ -1770,7 +1947,7 @@ function MarkovExport($f)
 	{
 		$values = array_keys($GLOBALS["MarkovData"]["Chain2"][$k]);
 		sort($values);
-		fprintf($f, $k ."," . implode(",",$values) . "\n");
+		fprintf($f, "%s", $k ."," . implode(",",$values) . "\n");
 	}
 	fprintf($f, "# Chain3\n");
 	$keys = array_keys($GLOBALS["MarkovData"]["Chain3"]);
@@ -1779,7 +1956,7 @@ function MarkovExport($f)
 	{
 		$values = array_keys($GLOBALS["MarkovData"]["Chain3"][$k]);
 		sort($values);
-		fprintf($f, $k ."," . implode(",",$values) . "\n");
+		fprintf($f, "%s", $k ."," . implode(",",$values) . "\n");
 	}	
 }
 

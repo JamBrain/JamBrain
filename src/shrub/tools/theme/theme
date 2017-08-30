@@ -9,19 +9,21 @@ require_once __DIR__."/".SHRUB_PATH."core/db.php";
 require_once __DIR__."/".SHRUB_PATH."core/core.php";
 require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
 require_once __DIR__."/".SHRUB_PATH."global/global.php";
+require_once __DIR__."/".SHRUB_PATH."node/node.php";
 
 require_once __DIR__."/".SHRUB_PATH."theme/theme.php";
 
 if ( count($argv) < 2 ) {
 	echo "Usage: ".$argv[0]." [command]\n";
 	echo "\n";
-	echo "  dupes      - Remove Duplicate Ideas\n";
-	echo "  score      - Score Ideas\n";
-//	echo "  promote    - Promote highest scored Ideas to Themes\n";
-//	echo "  page       - Assign pages to themes\n";
-	echo "  calc #     - Calculate Score for Page \"#\" (starts at 1)\n";
-	echo "  finalize # - Take the top # themes and make a new (Final) Round\n";
-//	echo "  calc-final - Calculate the Final Score\n";
+	echo "  dupes         - Remove Duplicate Ideas\n";
+	echo "  score         - Score Ideas\n";
+//	echo "  promote       - Promote highest scored Ideas to Themes\n";
+//	echo "  page          - Assign pages to themes\n";
+	echo "  simple-vote # - Simple method to assign highest scored ideas to first # voting pages\n";
+	echo "  calc #        - Calculate Score for Page \"#\" (starts at 1)\n";
+	echo "  finalize #    - Take the top # themes and make a new (Final) Round\n";
+//	echo "  calc-final    - Calculate the Final Score\n";
 	echo "\n";
 	die;
 }
@@ -30,27 +32,45 @@ global_Load();
 
 $ARG_COMMAND = array_shift($argv);
 
-$EVENT_NODE = isset($SH['ludumdare-event']) ? intval($SH['ludumdare-event']) : 0;
+
+$root = nodeComplete_GetById(1);
+$EVENT_NODE = intval($root["meta"]["featured"]);
+
 if ( !$EVENT_NODE ) {
-	echo "'ludumdare-event' is zero or not set ($EVENT_NODE)\n";
+	echo "featured event is zero or not set ($EVENT_NODE)\n";
 	die;
 }
 else {
 	echo "EVENT_NODE: $EVENT_NODE\n";
 }
 
+$automatic = false;
 $COMMAND = array_shift($argv);
+
+if($COMMAND == "itsautomatic") {
+	$COMMAND = array_shift($argv);
+	$automatic = true;
+}
+
+function AreYouSure() {
+	global $automatic;
+	if(!$automatic) {
+		print "\nAre you sure [type 'YES']? ";
+		flush();
+		$input = trim(fgets(STDIN));
+		if ( $input != "YES" ) {
+			print "Aborting...\n";
+			exit(1);
+		}
+	}
+}
+
+
 if ( $COMMAND === "dupes" ) {
 	print "\n*** WARNING ***\n\n";
 	print "You are about to flag all duplicate ideas. This will destroy any manual changes.\n";
-	print "\nAre you sure [type 'YES']? ";
-	flush();
-	$input = trim(fgets(STDIN));
-	if ( $input != "YES" ) {
-		print "Aborting...\n";
-		exit(1);
-	}
-
+	AreYouSure();
+	
 	echo "Fetching Idea List...\n";
 
 	$all_ideas = themeIdea_Get($EVENT_NODE);
@@ -90,14 +110,8 @@ if ( $COMMAND === "dupes" ) {
 else if ( $COMMAND === "score" ) {
 	print "\n*** WARNING ***\n\n";
 	print "You are about to score the ideas.\n";
-	print "\nAre you sure [type 'YES']? ";
-	flush();
-	$input = trim(fgets(STDIN));
-	if ( $input != "YES" ) {
-		print "Aborting...\n";
-		exit(1);
-	}
-
+	AreYouSure();
+	
 	echo "Fetching Idea List...\n";
 
 	$theme_list = themeIdeaVote_GetIdeas($EVENT_NODE);
@@ -177,14 +191,9 @@ else if ( $COMMAND === "calc" ) {
 
 	print "\n*** WARNING ***\n\n";
 	print "You are about to Score Round ".$page."\n";
-	print "\nAre you sure [type 'YES']? ";
-	flush();
-	$input = trim(fgets(STDIN));
-	if ( $input != "YES" ) {
-		print "Aborting...\n";
-		exit(1);
-	}
-
+	AreYouSure();
+	
+	
 	print "Fetching Themes...\n";
 
 	$themes = themeList_GetByNode($EVENT_NODE, $page);
@@ -206,14 +215,8 @@ else if ( $COMMAND === "calc" ) {
 
 	print "\n*** WARNING ***\n\n";
 	print "Commit these Scores to Round ".$page."?\n";
-	print "\nAre you sure [type 'YES']? ";
-	flush();
-	$input = trim(fgets(STDIN));
-	if ( $input != "YES" ) {
-		print "Aborting...\n";
-		exit(1);
-	}
-
+	AreYouSure();
+	
 	print "Writing...\n";
 
 	foreach ( $votes as $key => &$vote ) {
@@ -268,14 +271,8 @@ else if ( $COMMAND === "finalize" ) {
 
 	print "\n*** WARNING ***\n\n";
 	print "You are about to make the above $count themes in to the Final Round\n";
-	print "\nAre you sure [type 'YES']? ";
-	flush();
-	$input = trim(fgets(STDIN));
-	if ( $input != "YES" ) {
-		print "Aborting...\n";
-		exit(1);
-	}
-
+	AreYouSure();
+	
 	$new_themes = array_slice($themes, 0, $count);
 	shuffle($new_themes);
 
@@ -288,19 +285,57 @@ else if ( $COMMAND === "finalize" ) {
 
 	print "\n*** WARNING ***\n\n";
 	print "Is this Randomization Good? This will become page ".($new_page).". Last chance to back out!!!!\n";
-	print "\nAre you sure [type 'YES']? ";
-	flush();
-	$input = trim(fgets(STDIN));
-	if ( $input != "YES" ) {
-		print "Aborting...\n";
-		exit(1);
-	}
-
+	AreYouSure();
+	
 	foreach ( $new_themes as &$theme ) {
 		$ret = themeList_Add($theme['node'], $theme['idea'], $theme['theme'], $new_page );
 	}
 
 	echo "Done.\n";
+}
+else if ( $COMMAND === "simple-vote" ) {	
+	if ( count($argv) < 1 ) {
+		print "Error: No count specified\n";
+		exit(1);
+	}
+
+	$pages = intval($argv[0]);
+	if ( $pages < 1 ) {
+		print "Error: Invalid page count:"+$pages+"\n";
+		exit(1);
+	}
+	
+	$themes_per_page = 10;
+	
+	$recv_count = $themes_per_page*$pages;
+	
+	$top_themes = themeIdea_GetTopScoring($EVENT_NODE,$recv_count);
+	shuffle($top_themes);
+	for($page=1; $page <= $pages; $page++)
+	{
+		$thispage = array_slice($top_themes,($page-1)*$themes_per_page, $themes_per_page);
+		
+		foreach($thispage as $idea)
+		{
+			print $idea['score']."\t".$idea['theme']." [$page]\n";
+		}
+		echo "----------------------------------\n";
+	}
+
+	print "\n*** WARNING ***\n\n";
+	print "You are about to make the above theme voting rounds into pages\n";
+	AreYouSure();
+
+	for($page=1; $page <= $pages; $page++)
+	{
+		$thispage = array_slice($top_themes,($page-1)*$themes_per_page, $themes_per_page);
+		foreach($thispage as $idea)
+		{
+			$ret = themeList_Add($idea['node'], $idea['id'], $idea['theme'], $page );
+		}
+	}
+
+
 }
 else {
 	echo "Error: Unknown command \"$COMMAND\"\n";
