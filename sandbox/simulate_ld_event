@@ -887,7 +887,7 @@ function VoteOnGame(&$user, $phase)
 		
 		for($i=1;$i<=8;$i++)
 		{
-			$value = random_int(1,5);
+			$value = random_int(1,10) / 2.0;
 			$result = ApiGradeAdd($user,$id,"grade-0".$i,$value);
 			if($result === null)
 			{
