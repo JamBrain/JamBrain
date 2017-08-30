@@ -69,7 +69,8 @@ if($userlist = nodeFeed_GetByMethod( ["all", "reverse"], null, ["user"], null, n
 }
 
 # Get root node
-$rootnode = node_GetById(1, F_NODE_META);
+$rootnode = nodeComplete_GetById(1);
+$featured = $rootnode["meta"]["featured"];
 //print("<br />");
 //print_r($rootnode);
 
@@ -119,6 +120,80 @@ if($_POST)
 
 	}
 }
+if($_GET)
+{
+	if(key_exists("cmd",$_GET))
+	{
+		$cmd = $_GET["cmd"];
+		
+		if($cmd == "setstate" && key_exists("state",$_GET))
+		{	
+			$event_nodeid = $featured;
+			$state = $_GET["state"];
+			switch($state)
+			{
+				case 1: // Theme Suggestion
+					nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 1);
+					break;
+				case 2: // Theme Slaughter
+					nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 2);
+					break;
+				case 3: // Theme Voting
+				case 4: // Theme Final Voting
+					nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 4);
+					break;
+				case 5: // Compo Running
+					nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 5);
+					break;
+				case 6: // Voting
+					nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 6);
+					break;
+				case 7: // Closed
+					nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 8);					
+					break;
+			
+			}
+			
+			if($state<3)
+			{
+				nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-1', 0);
+				nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-2', 0);
+				nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-3', 0);
+				nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-4', 0);
+			} 
+			else if($state == 3)
+			{
+				nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-1', 1);
+				nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-2', 1);
+				nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-3', 1);
+				nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-4', 0);
+			}
+			else if($state == 4)
+			{
+				nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-1', 2);
+				nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-2', 2);
+				nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-3', 2);
+				nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-4', 1);
+			}
+			else
+			{
+				nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-1', 2);
+				nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-2', 2);
+				nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-3', 2);
+				nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-4', 2);
+			}
+			
+			nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-theme', 1);
+			nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-publish', $state < 6 ? 1 : 0); 
+			nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', $state == 6 ? 1 : 0);
+			nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-finished', $state == 7 ? 1 : 0);
+
+			
+		}
+	
+	}
+
+}
 
 
 # spit out existing events and configuration options
@@ -149,6 +224,19 @@ foreach($events as &$event)
 
 
 ?>
+
+<h1 id="eventMode">Set Current Event Mode</h1>
+Featured node <?=$featured?> - 
+<a href="?cmd=setstate&state=1#eventMode">Theme Suggestion</a> - 
+<a href="?cmd=setstate&state=2#eventMode">Theme Slaughter</a> - 
+<a href="?cmd=setstate&state=3#eventMode">Theme Voting</a> - 
+<a href="?cmd=setstate&state=4#eventMode">Theme Final Voting</a> - 
+<a href="?cmd=setstate&state=5#eventMode">Compo Running</a> - 
+<a href="?cmd=setstate&state=6#eventMode">Voting</a> - 
+<a href="?cmd=setstate&state=7#eventMode">Compo Closed</a>
+
+
+
 <h1>Create Event</h1>
 <form action="#" method="post">
 Event Name: <input type="text" name="eventName" value="<?=$suggestname?>"/><br />
