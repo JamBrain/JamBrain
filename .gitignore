@@ -9,6 +9,7 @@ obj/
 .build/
 error_log
 /sandbox/dev/
+/sandbox/*.event
 /public-static/raw/
 /public-static/content/
 config.php
@@ -18,3 +19,4 @@ node_modules/
 -/
 *.gz
 /src/shrub/docs
+

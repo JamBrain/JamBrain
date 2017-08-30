@@ -13,6 +13,8 @@ import ContentCommonBodyTitle	        from 'com/content-common/common-body-title
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
+import InputStar						from 'com/input-star/star';
+
 import ContentSimple					from 'com/content-simple/simple';
 
 
@@ -551,6 +553,10 @@ export default class ContentItem extends Component {
 						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
 					}
 					Stars.push(<ButtonBase class='-delete' onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
+					
+					Stars.push(<InputStar value='2.5' max='5' small number />);
+					Stars.push(<InputStar value='2.5' max='5' number />);
+					Stars.push(<InputStar value='2.5' edit delete number />);
 					
 					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> {Stars}</div>);
 				}
