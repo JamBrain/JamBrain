@@ -55,12 +55,11 @@ function proc_Parse( $file ) {
 	return $item;
 }
 
+const CACHE_KEY = '!SYSTEM_STATUS';
 
+$RESPONSE['info'] = cache_Fetch(CACHE_KEY);
 
-//$RESPONSE['info'] = cache_Fetch('!SYSTEM_STATUS');
-//
-//if (!$RESPONSE['info']) {
-
+if (!$RESPONSE['info']) {
 	$self = [];
 	$remote = [];
 	
@@ -107,6 +106,7 @@ function proc_Parse( $file ) {
 	
 //	$remote['ee'] = db_QueryFetch("SHOW GLOBAL STATUS;");
 
-//}
+	cache_Store(CACHE_KEY, $RESPONSE['info'], rand(30, 60));	// NOTE: TTL is random here as a partial countermeasure to certain attacks
+}
 
 json_End();
