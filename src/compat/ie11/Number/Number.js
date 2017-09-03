@@ -7,4 +7,7 @@
 		Math.floor(value) === value;
 	};
 	
+	if (Number.parseInt === undefined)
+		Number.parseInt = window.parseInt;
+		
 })();
