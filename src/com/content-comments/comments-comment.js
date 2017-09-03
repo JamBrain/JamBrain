@@ -139,7 +139,7 @@ export default class ContentCommentsComment extends Component {
 
 			var Avatar = "///other/dummy/user64.png";
 			if ( author.meta['avatar'] )
-				Avatar = author.meta['avatar'];
+				Avatar = author.meta['avatar'] + ".64x64.fit.png";;
 
 			var ShowTitle = null;
 			if ( !state.editing || state.preview ) {
