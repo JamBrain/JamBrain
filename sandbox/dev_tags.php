@@ -56,9 +56,7 @@ function LoadTagsForCategory($category)
 	{
 		$tagids[] = $s["id"];
 	}
-	print_r($category);
-	print_r($simple);
-
+	
 	# Get complete nodes for the tags.
 	if(count($tagids) > 0)
 	{
@@ -99,10 +97,12 @@ function ClearWarning($id)
 	nodeMeta_RemoveByNode($id, SH_NODE_META_PUBLIC, 'tag-warning', "");
 }
 
-function RemoveTag($id)
+function RemoveTag($id, $node)
 {
-	// don't actually delete the node, just change subtype to "deleted".
-	node_SetType($id, "tags", "deleted");
+	// don't actually delete the node, just revert slug and change subtype to "deleted".
+	$slug = "$". $id;
+	node_Edit($id, $node["parent"], $node["author"], $node["type"], $node["subtype"], $node["subsubtype"], $slug, $node["name"], $node["body"]);
+	node_SetType($id, "tag", "deleted");
 }
 
 $nodes = LoadTagsForCategory($category);
@@ -132,7 +132,7 @@ if($_GET)
 		$nodebyname = [];
 		foreach($nodes as $n)
 		{
-			$nodebyname[$n["name"]] = $node;
+			$nodebyname[$n["name"]] = $n;
 		}
 		
 		foreach($defaulttags as $tag)
@@ -165,7 +165,7 @@ if($_POST)
 			if($n["id"] == $id) { $node = $n; break; }
 		}
 		
-		if($n && $id)
+		if($node && $id)
 		{
 			if(key_exists("changename",$_POST))
 			{
@@ -188,12 +188,12 @@ if($_POST)
 			if(key_exists("addwarning",$_POST))
 			{
 				$index = random_int(1,count($randomwarnings))-1;
-				SetWarning($id, $randomwarnings($index));		
+				SetWarning($id, $randomwarnings[$index]);		
 			}
 			
 			if(key_exists("delete",$_POST))
 			{
-				RemoveTag($id);
+				RemoveTag($id, $node);
 			}
 			
 			$nodes = LoadTagsForCategory($category);
@@ -229,14 +229,14 @@ foreach($nodes as $node)
 ?>
 <div style="border:5px; background-color: #EEE">
 <h3><a href="http://api.ludumdare.org/vx/node/get/<?=$tagid?>?pretty"><?=$tagid?></a> <?=$tagname?></h3>
-<form action="<?=$action?>/>" method="post">
+<form action="<?=$action?>" method="post">
 Tag Name: <input type="text" name="tagname" value="<?=$tagname?>"/> <input type="submit" name="changename" value="Change Name"/><br />
 <?php
 	if($haswarning)
 	{
 
 ?>
-Warning Text: <input type="text" name="tagwarning" value="<?=$warningtext?>"/> <input type="submit" name="changewarning" value="Change Warning"/> <input type="submit" name="removewarning" value="Remove Warning"/><br />
+Warning Text: <input style="width: 600px" type="text" name="tagwarning" value="<?=$warningtext?>"/> <input type="submit" name="changewarning" value="Change Warning"/> <input type="submit" name="removewarning" value="Remove Warning"/><br />
 <?php
 	} else {
 ?>
@@ -261,7 +261,7 @@ Create a set of default tags, if they do not already exist.
 
 <div style="border:5px; background-color: #EEE">
 <h3>Create new Tag</h3>
-<form action="<?=$action?>/>" method="post">
+<form action="<?=$action?>" method="post">
 Tag Name: <input type="text" name="tagname" value=""/><br />
 <input type="submit" name="create" value="Create Tag"/>
 </form>
