@@ -71,8 +71,9 @@
 			top: 0.5rem;
 			/*text-shadow: 0 0 5px black;*/
 			background: @COL_L;
-			padding: 0 10px 0 5px;
-			border-radius: 10px;
+
+			padding: 0.1em 0.5em;
+			border-radius: 1em;
 
 			& > svg {
 				color: @COL_A;
@@ -94,7 +95,9 @@
 			left: 0.5rem;
 			bottom: 0.5rem;
 
-			padding: 0.05em 0.5em;
+			padding: 0.1em 0.5em 0.2em;
+			border-radius: 1em;
+			
 			&.stream-twitch {
 				background: rgb(100,65,165);
 			}
@@ -106,30 +109,28 @@
 			& > svg {
 				font-size: 0.75em;
 			}
-
-			border-radius: 10px;
 		}
 		& > .-viewers {
 			position: absolute;
 			right: 0.5rem;
 			top: 0.5rem;
 
-			padding: 0.05em 0.5em;
+			padding: 0.1em 0.5em 0.2em;
+			border-radius: 1em;
+
 			background: fade(@COL_D, 100%);
 
 			color: @COL_L;
 			& > svg {
 				font-size: 0.75em;
 			}
-
-			border-radius: 10px;
 		}
 		& > .-play {
 			position: absolute;
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%,-50%);
-			/*opacity:0.3;*/
+
 			font-size: 3em;
 			color: @COL_L;
 			transition: all 0.2s;
