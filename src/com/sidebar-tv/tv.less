@@ -58,6 +58,10 @@
 			/*padding:0.5em;*/
 			height: 0;
 			padding-bottom: 56.25%;
+			
+			opacity: 1.0;
+			transition: opacity 0.2s;
+			
 			& > img {
 				width: 100%;
 				/*width: calc(~"100% - 1em");*/
@@ -145,6 +149,9 @@
 		&:hover > .-play {
 			font-size: 4em;
 			background: @COL_A;
+		}
+		&:hover > .-img {
+			opacity: 0.5;
 		}
 		&:active > .-play {
 			font-size: 2.5em;
@@ -234,6 +241,7 @@
 			cursor: pointer;
 			
 			background: @STV_BG;
+			transition: background 0.2s;
 
 			margin-right: 1px;
 			&:last-child {
@@ -246,6 +254,9 @@
 				& > img {
 					max-width: 100%;
 					display: block;
+					
+					opacity: 1.0;
+					transition: opacity 0.2s;
 				}
 			}
 
@@ -255,6 +266,10 @@
 			&:hover,
 			&:focus {
 				background: @COL_A;
+			}
+			
+			&:hover > div > img {
+				opacity: 0.5;
 			}
 		}
 	}
