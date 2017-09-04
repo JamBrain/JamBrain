@@ -1,5 +1,13 @@
 @import "defs.less";
 
+/* Sidebar TV (STV) */
+
+@STV_BG: @COL_NLLL;
+@STV_COL: @COL_NL;
+
+@STV_SEL_BG: @COL_L;
+@STV_SEL_COL: @COL_NLL;
+
 #sidebar > .sidebar-tv {
 /*	background: @COL_NDDDD;*/
 
@@ -8,8 +16,7 @@
 	& > .-view {
 		display: flex;
 		
-		margin: 0.5em 0;
-		color: @COL_NDDD;
+		margin-bottom: 1px;
 		
 		& > div {
 			padding: 0.5em;
@@ -17,21 +24,28 @@
 			text-align: center;
 			font-weight: bold;
 			
-			border: 1px solid;
+			background: @STV_BG;
+			color: @STV_COL;
+
+			margin-right: 1px;
+			&:last-child {
+				margin-right: 0;
+			}
 
 			&.selected {
-				background: @COL_NLLLLL;
-				color: @COL_NDDDD;
-				
-				border: 1px solid transparent;
+				background: @STV_SEL_BG;
+				color: @STV_SEL_COL;
+			}
+			
+			&:hover {
+				background: @COL_A;
+				color: @COL_L;
 			}
 		}
-		
+
 		& > .-live {
-			margin-right: 0.25em;
 		}
 		& > .-vod {
-			margin-left: 0.25em;
 		}
 	}
 
@@ -53,8 +67,8 @@
 		}
 		& > .-live {
 			position: absolute;
-			left: 0.5em;
-			top: 0.5em;
+			left: 0.5rem;
+			top: 0.5rem;
 			/*text-shadow: 0 0 5px black;*/
 			background: @COL_L;
 			padding: 0 10px 0 5px;
@@ -77,8 +91,8 @@
 		}
 		& > .-name {
 			position: absolute;
-			left: 0.5em;
-			bottom: 0.5em;
+			left: 0.5rem;
+			bottom: 0.5rem;
 
 			padding: 0.05em 0.5em;
 			&.stream-twitch {
@@ -97,8 +111,8 @@
 		}
 		& > .-viewers {
 			position: absolute;
-			right: 0.5em;
-			top: 0.5em;
+			right: 0.5rem;
+			top: 0.5rem;
 
 			padding: 0.05em 0.5em;
 			background: fade(@COL_D, 100%);
@@ -136,8 +150,8 @@
 
 		& > .-external {
 			position: absolute;
-			bottom: 1rem;
-			right: 1rem;
+			bottom: 0.5rem;		/* REM instead of EM because we're changing the font size */
+			right: 0.5rem;
 			font-size: 1.5em;
 
 			padding: 0.25em;
@@ -155,7 +169,7 @@
 
 			&:hover {
 				background: @COL_A;
-    			transform: scale(1.5, 1.5);
+    			transform: scale(1.25, 1.25);
 /*				
 				font-size: 2em;
 				bottom: 0.5em;
@@ -178,12 +192,13 @@
 		height:2.5em;
 		overflow: hidden;
 
+		background: @COL_NL;
 		color: @COL_NLLLL;
-		
-		margin: 0.5em 0;
+		padding: 0.25em 0;
+		margin: 1px 0;
 
 		& > svg {
-			color: @COL_NL;
+			color: @COL_NLL;
 			padding: 0 0.4em;
 			display: block;
 
@@ -210,29 +225,35 @@
 
 		/*padding: 0.5em 0.25em 0.25em;*/
 		
-		margin: 0.5em 0;
+		/*margin: 0.5em 0;*/
 
 		& > div {
-			width:100%;
-			cursor:pointer;
+			width: 100%;
+			cursor: pointer;
+			
+			background: @STV_BG;
+
+			margin-right: 1px;
+			&:last-child {
+				margin-right: 0;
+			}
 
 			& > div {
-				padding:0.25em;
+				padding: 0.25em;
 
 				& > img {
-					max-width:100%;
-					display:block;
+					max-width: 100%;
+					display: block;
 				}
 			}
 
 			&.selected {
-				background: @COL_NLLL;
+				background: @STV_SEL_BG;
 			}
 			&:hover,
 			&:focus {
 				background: @COL_A;
 			}
-
 		}
 	}
 }
