@@ -27,6 +27,8 @@
 			
 			background: @STV_BG;
 			color: @STV_COL;
+			
+			transition: background 0.2s, color 0.2s;
 
 			margin-right: 1px;
 			&:last-child {
@@ -61,6 +63,8 @@
 			
 			opacity: 1.0;
 			transition: opacity 0.2s;
+			
+			backface-visibility: hidden;	/* Fixes the jitter on Chrome during hover */
 			
 			& > img {
 				width: 100%;
@@ -257,6 +261,8 @@
 					
 					opacity: 1.0;
 					transition: opacity 0.2s;
+					
+					backface-visibility: hidden;	/* Fixes the jitter on Chrome during hover */
 				}
 			}
 
