@@ -7,6 +7,8 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import IMG	 							from 'com/img2/img2';
 
+import ButtonBase						from 'com/button-base/base';
+
 export default class SidebarTV extends Component {
 	constructor( props ) {
 		super(props);
@@ -198,6 +200,10 @@ export default class SidebarTV extends Component {
 
 			return (
 				<div class="sidebar-base sidebar-tv">
+					<div class="-view">
+						<ButtonBase class="-live selected">LIVE</ButtonBase>
+						<ButtonBase class="-vod ">VOD</ButtonBase>
+					</div>
 					<div class="-active" onclick={e => {
 							console.log('tv');
 							/*window.open("https://www.twitch.tv/directory/game/Creative/ldjam", '_blank');*/

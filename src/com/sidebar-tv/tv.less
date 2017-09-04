@@ -1,20 +1,51 @@
 @import "defs.less";
 
 #sidebar > .sidebar-tv {
-	background: @COL_NDDDD;
+/*	background: @COL_NDDDD;*/
 
 	min-height: 3rem;
+	
+	& > .-view {
+		display: flex;
+		
+		margin: 0.5em 0;
+		color: @COL_NDDD;
+		
+		& > div {
+			padding: 0.5em;
+			width: 100%;
+			text-align: center;
+			font-weight: bold;
+			
+			border: 1px solid;
+
+			&.selected {
+				background: @COL_NLLLLL;
+				color: @COL_NDDDD;
+				
+				border: 1px solid transparent;
+			}
+		}
+		
+		& > .-live {
+			margin-right: 0.25em;
+		}
+		& > .-vod {
+			margin-left: 0.25em;
+		}
+	}
 
 	& > .-active {
 		position: relative;
 		cursor: pointer;
 
 		& > .-img {
-			padding:0.5em;
+			/*padding:0.5em;*/
 			height: 0;
 			padding-bottom: 56.25%;
 			& > img {
-				width: calc(~"100% - 1em");
+				width: 100%;
+				/*width: calc(~"100% - 1em");*/
 				display:block;
 				position: absolute;
 				height: auto;
@@ -22,8 +53,8 @@
 		}
 		& > .-live {
 			position: absolute;
-			left: 1em;
-			top: 1em;
+			left: 0.5em;
+			top: 0.5em;
 			/*text-shadow: 0 0 5px black;*/
 			background: @COL_L;
 			padding: 0 10px 0 5px;
@@ -46,10 +77,10 @@
 		}
 		& > .-name {
 			position: absolute;
-			left:1em;
-			bottom:1em;
+			left: 0.5em;
+			bottom: 0.5em;
 
-			padding:0.05em 0.5em;
+			padding: 0.05em 0.5em;
 			&.stream-twitch {
 				background: rgb(100,65,165);
 			}
@@ -66,10 +97,10 @@
 		}
 		& > .-viewers {
 			position: absolute;
-			right:1em;
-			top:1em;
+			right: 0.5em;
+			top: 0.5em;
 
-			padding:0.05em 0.5em;
+			padding: 0.05em 0.5em;
 			background: fade(@COL_D, 100%);
 
 			color: @COL_L;
@@ -125,10 +156,11 @@
 			&:hover {
 				background: @COL_A;
     			transform: scale(1.5, 1.5);
-				
-//				font-size: 2em;
-//				bottom: 0.5em;
-//				right: 0.5em;
+/*				
+				font-size: 2em;
+				bottom: 0.5em;
+				right: 0.5em;
+*/
 			}
 			&:hover + .-play {
 				background: fade(@COL_D, 50%);
@@ -142,14 +174,16 @@
 	& > .-detail {
 		/*margin-bottom:0.5em;*/
 
-		line-height:1.25em;
+		line-height: 1.25em;
 		height:2.5em;
 		overflow: hidden;
 
-		color: @COL_NL;
+		color: @COL_NLLLL;
+		
+		margin: 0.5em 0;
 
 		& > svg {
-			color: @COL_NDD;
+			color: @COL_NL;
 			padding: 0 0.4em;
 			display: block;
 
@@ -174,7 +208,9 @@
 		flex-wrap:nowrap;
 		align-items:stretch;
 
-		padding: 0.5em 0.25em 0.25em;
+		/*padding: 0.5em 0.25em 0.25em;*/
+		
+		margin: 0.5em 0;
 
 		& > div {
 			width:100%;
@@ -190,7 +226,7 @@
 			}
 
 			&.selected {
-				background: @COL_N;
+				background: @COL_NLLL;
 			}
 			&:hover,
 			&:focus {
