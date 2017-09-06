@@ -194,7 +194,7 @@ export default class SidebarTV extends Component {
 				<div class="sidebar-base sidebar-tv">
 					<div class="-view">
 						<ButtonBase class="-live selected"><SVGIcon baseline small>video-camera</SVGIcon> <span>LIVE</span></ButtonBase>
-						<ButtonBase class="-vod "><SVGIcon baseline small>video</SVGIcon> <span>VOD</span></ButtonBase>
+						<ButtonBase class="-vod "><SVGIcon baseline small>video</SVGIcon> <span>VIDEO</span></ButtonBase>
 					</div>
 					<div class="-active" onclick={e => {
 							console.log('tv');
