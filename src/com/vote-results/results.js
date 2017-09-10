@@ -9,34 +9,29 @@ export default class VoteResults extends Component {
 		super(props);
 	}
 
-	hasFinalResults(grandParent) {
-		return !parseInt(node_CanGrade(grandParent)) && node_isEventFinished(grandParent);
+	hasFinalResults() {
+		const nodeComponent = this.props.nodeComponent;
+		return !parseInt(node_CanGrade(nodeComponent)) && node_isEventFinished(nodeComponent);
 	}
 	render() {
+		
+		const nodeComponent = this.props.nodeComponent;
 
-		const parent = state.parent;
-		const grandParent = state.parent.parent;
-
-		if (!hasFinalResults(grandParent)) {
+		if (!hasFinalResults()) {
 			return null;
 		}
 		
-		const node = parent.props.node;
-		const user = parent.props.user;
-		const path = parent.props.path;
-		const extra = parent.props.extra;
-		const featured = parent.props.featured;
-		
+		const node = props.node;		
 		let Lines = [];
 
-		for ( let key in grandParent.meta ) {
+		for ( let key in nodeComponent.meta ) {
 			// Is it a valid grade ?
 			let parts = key.split('-');
 			if ( parts.length == 2 && parts[0] == 'grade' ) {
 				// Make sure they user hasn't opted out
 				
 				if ( node.meta && !(node.meta[key+'-out']|0) ) {
-					Lines.push({'key': key, 'value': grandParent.meta[key]});
+					Lines.push({'key': key, 'value': nodeComponent.meta[key]});
 				}
 			}
 		}

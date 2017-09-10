@@ -16,6 +16,9 @@ import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 import ContentSimple					from 'com/content-simple/simple';
 
 import VoteResults						from 'com/vote-results/results';
+import VoteCurrent						from 'com/vote-current/current';
+import VoteMetrics						from 'com/vote-metrics/metrics';
+import VoteOptOut						from 'com/vote-optout/optout';
 
 
 import $Node							from '../../shrub/js/node/node';
@@ -127,38 +130,6 @@ export default class ContentItem extends Component {
 				}
 				return r;
 			});
-	}
-
-	onOptOut( name, value ) {
-		var Node = this.props.node;
-		
-		let Name = name+'-out';
-		let Data = {};
-		
-		if ( value ) {
-			Data[Name] = 1;
-			
-			return $NodeMeta.Add(Node.id, Data)
-				.then(r => {
-					if ( r && r.changed ) {
-						this.props.node.meta[Name] = Data[Name];
-						this.setState({});
-					}
-					return r;
-				});
-		}
-		else {
-			Data[Name] = 0;
-
-			return $NodeMeta.Remove(Node.id, Data)
-				.then(r => {
-					if ( r && r.changed ) {
-						this.props.node.meta[Name] = Data[Name];
-						this.setState({});
-					}
-					return r;
-				});			
-		}
 	}
 	
 	positionSuffix(position) {
@@ -404,132 +375,20 @@ export default class ContentItem extends Component {
 			);
 		}
 		
-		var ShowMetrics = null;
-		if ( node.magic ) {
-			let Lines = [];
-			for ( var key in node.magic ) {
-				let parts = key.split('-');
-
-				// Ignore grades (i.e. grade-01)
-				if ( parts.length && !(parts[0] == 'grade' && parts.length > 1) ) {
-					Lines.push({'key': key, 'value': node.magic[key]});
-				}
-			}
-
-			let SimpleLines = [];
-			let AdvancedLines = [];
-			for ( let idx = 0; idx < Lines.length; idx++ ) {
-				let Metric = Lines[idx];
-
-				let Star = false;
-				let Warning = false;
-				let Icon = null;
-				let Title = Metric.key;
-				let Score = Metric.value;
-				
-				let HoverTitle = Score;
-
-				if ( Metric.key == 'smart' ) {
-					Title = "Smart Balance";
-					Star = true;
-				}
-				else if ( Metric.key == 'cool' ) {
-					Title = "Classic Balance";
-					Star = true;
-				}
-				else if ( Metric.key == 'grade' ) {
-					Title = "Ratings received";
-					Warning = Score < 20.0;
-					if ( !Warning ) {
-						Icon = <SVGIcon baseline small>checkmark</SVGIcon>;
-						HoverTitle = "This will be scored";
-					}
-					else {
-						Icon = <SVGIcon baseline small>warning</SVGIcon>;
-						HoverTitle = "The minimum needed to score is about 20";
-					}
-				}
-				else if ( Metric.key == 'given' ) {
-					Title = "Ratings given";
-					if ( Score > 25 ) {
-						Icon = <SVGIcon baseline small>checkmark</SVGIcon>;
-					}
-				}
-				else if ( Metric.key == 'feedback' ) {
-					Title = "Karma for Feedback given";
-				}
-				
-				let SmallScore = Score.toFixed(4);
-				if ( SmallScore.length > Score.toString().length )
-					SmallScore = Score.toString();
-
-				if ( Star )
-					AdvancedLines.push(<div class="-metric"><span class="-title">{Title}:</span> <span class="-value" title={HoverTitle}>{SmallScore} *{Icon}</span></div>);
-				else
-					SimpleLines.push(<div class={cN("-metric", Warning ? "-warning" : "")}><span class="-title">{Title}:</span> <span class="-value" title={HoverTitle}>{SmallScore}{Icon}</span></div>);
-			}
-
-			ShowMetrics = (
-				<ContentCommonBody class="-rating">
-					<div class="-header">Metrics</div>
-					<div class="-subtext">Advanced data on this game</div>
-					<div class="-items">
-						{SimpleLines}
-						{AdvancedLines}
-					</div>
-					<div class="-footer">Metrics update rougly every <strong>15 minutes</strong>. If they don't exactly match other data (i.e. ratings), this is because they haven't updated yet. Metrics with a <strong>*</strong> are dynamic, and change based on a variety of factors. It is normal for these numbers to go up and down.</div>
-				</ContentCommonBody>
-			);
-		}
+		let ShowMetrics = (<VoteMetrics node={node} />);
 		
-		var ShowGrade = null;
+		let ShowGrade = null;
 		// Show Grading or Results
 		if ( parseInt(node_CanGrade(parent)) ) {
 			// If it's your game, show some stats
 			if ( node_IsAuthor(node, user) ) {
-				let Lines = [];
-
-				for ( var key in parent.meta ) {
-					// Is it a valid grade ?
-					let parts = key.split('-');
-					if ( parts.length == 2 && parts[0] == 'grade' ) {
-						// Make sure they user hasn't opted out
-						
-						if ( node.meta && !(node.meta[key+'-out']|0) ) {
-							Lines.push({'key': key, 'value': parent.meta[key]});
-						}
-					}
-				}
-				
-				let VoteLines = [];
-				for ( let idx = 0; idx < Lines.length; idx++ ) {
-					let Line = Lines[idx];
-					
-					let Title = Line.value;
-					let Score = 0;
-					if ( node.grade ) {
-						Score = node.grade[Line.key];
-					}
-					
-					//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
-					
-					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
-				}
-
-				ShowGrade = (
-					<ContentCommonBody class="-rating">
-						<div class="-header">Total Ratings</div>
-						<div class="-subtext">Votes on your game so far</div>
-						<div class="-items">{VoteLines}</div>
-						<div class="-footer">To get a score at the end, you need about <strong>20</strong> ratings in a category. To get ratings: play, rate, and leave feedback on games. Every game you rate and leave quality feedback on scores you <strong>Coolness</strong> points. Having a high "Coolness" prioritizes your game.</div>
-					</ContentCommonBody>
-				);
+				ShowGrade = (<VoteCurrent node={node} nodeComponent={parent} />);
 			}
 			// Judging
 			else if ( featured && featured.what_node && nodeKeys_HasPublishedParent(featured.what_node, node.parent) ) {
 				let Lines = [];
 				
-				for ( var key in parent.meta ) {
+				for ( let key in parent.meta ) {
 					// Is it a valid grade ?
 					let parts = key.split('-');
 					if ( parts.length == 2 && parts[0] == 'grade' ) {
@@ -600,57 +459,11 @@ export default class ContentItem extends Component {
 		// Final Results
 		else {
 			// grading is closed
-			ShowGrade = (<VoteResults />);
+			ShowGrade = (<VoteResults node={node} nodeComponent={parent} />);
 
 		}
 		
-		var ShowOptOut = null;
-		if ( parent && node_CanPublish(parent) ) {
-			let Lines = [];
-			
-			for ( var key in parent.meta ) {
-				// Is it a valid grade ?
-				let parts = key.split('-');
-				if ( parts.length == 3 && parts[0] == 'grade' && parts[2] == 'optional' ) {
-					// Assuming the category isn't optional
-					if ( parent.meta[key]|0 ) {
-						let BaseKey = parts[0]+'-'+parts[1];
-						
-						Lines.push({
-							'key': BaseKey, 
-							'name': parent.meta[BaseKey],
-							'value': (node.meta ? !(node.meta[BaseKey+'-out']|0) : false)
-						});
-					}
-				}
-			}
-
-			let OptLines = [];
-
-			for ( let idx = 0; idx < Lines.length; idx++ ) {
-				let Line = Lines[idx];
-				
-				let Icon = null;
-				if ( Line.value )
-					Icon = <SVGIcon small baseline>checkbox-unchecked</SVGIcon>;
-				else
-					Icon = <SVGIcon small baseline>checkbox-checked</SVGIcon>;
-				
-				OptLines.push(<ButtonBase onclick={this.onOptOut.bind(this, Line.key, Line.value)}>{Icon} Do not rate me in <strong>{Line.name}</strong></ButtonBase>);
-			}
-			
-			ShowOptOut = (
-				<ContentCommonBody class="-opt-out">
-					<div class="-label">Voting Category Opt-outs</div>
-					{OptLines}
-					<div class="-footer">
-						Opt-out of categories here if your team didn't make all your graphics, audio, or music during the event.
-						Many participants are making original graphics, audio and music from scratch during the event. As a courtesy, we ask you to opt-out if you didn't do the same.
-						Also, some games are not meant to be Humourous or Moody, so you can choose to opt-out of these too.
-					</div>
-				</ContentCommonBody>
-			);
-		}
+		let ShowOptOut = (<VoteOptOut nodeComponent={parent} optOutCallback={() => this.setState({})} />);
 		
 		var ShowImages = null;
 		if ( true ) {
