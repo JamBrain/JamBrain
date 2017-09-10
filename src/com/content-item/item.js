@@ -19,6 +19,7 @@ import VoteResults						from 'com/vote-results/results';
 import VoteCurrent						from 'com/vote-current/current';
 import VoteMetrics						from 'com/vote-metrics/metrics';
 import VoteOptOut						from 'com/vote-optout/optout';
+import VoteVoting						from 'com/vote-voting/voting';
 
 
 import $Node							from '../../shrub/js/node/node';
