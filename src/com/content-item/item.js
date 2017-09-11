@@ -15,16 +15,12 @@ import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
 import ContentSimple					from 'com/content-simple/simple';
 
-import VoteResults						from 'com/vote-results/results';
-import VoteCurrent						from 'com/vote-current/current';
 import VoteMetrics						from 'com/vote-metrics/metrics';
 import VoteOptOut						from 'com/vote-optout/optout';
-import VoteVoting						from 'com/vote-voting/voting';
-
+import VoteOrResults					from 'com/vote-modal/modal';
 
 import $Node							from '../../shrub/js/node/node';
 import $NodeMeta						from '../../shrub/js/node/node_meta';
-import $Grade							from '../../shrub/js/grade/grade';
 import $Asset							from '../../shrub/js/asset/asset';
 
 export default class ContentItem extends Component {
@@ -35,7 +31,6 @@ export default class ContentItem extends Component {
 		
 		this.state = {
 			'parent': null,
-			'grade': null,
 
 			'linkUrls': [],
 			'linkTags': [],
@@ -70,18 +65,9 @@ export default class ContentItem extends Component {
 			if ( r.node && r.node.length ) {
 				var Parent = r.node[0];
 				this.setState({'parent': Parent});
-				
-				return $Grade.GetMy(node.id);
+								
 			}
 			return Promise.resolve({});
-		})
-		.then(r => {
-			if ( r.grade ) {
-				this.setState({'grade': r.grade});
-			}
-			else {
-				this.setState({'grade': []});
-			}
 		})
 		.catch(err => {
 			this.setState({ 'error': err });
@@ -115,32 +101,6 @@ export default class ContentItem extends Component {
 		return this.setSubSubType('unfinished')
 			.then( r => {
 			});
-	}
-
-	onGrade( name, value ) {
-		var Node = this.props.node;
-		
-		return $Grade.Add(Node.id, name, value)
-			.then(r => {
-				if ( r && r.id || !!r.changed ) {
-					var Grades = this.state.grade;
-					
-					Grades[name] = value;
-					
-					this.setState({'grade': Grades});
-				}
-				return r;
-			});
-	}
-	
-	positionSuffix(position) {
-	    let j = position % 10;
-		let k = position % 100;
-	
-	    if (j == 1 && k != 11) return "st";
-	    if (j == 2 && k != 12) return "nd";
-	    if (j == 3 && k != 13) return "rd";
-	    return "th";
 	}
 	
 	onUpload( name, e ) {
@@ -358,7 +318,7 @@ export default class ContentItem extends Component {
 		const parent = state.parent;
 		
 		// This seems wrong, it would make more sense to update state.
-		const Category = updatePropsAndGetCategory(props, node);
+		const Category = this.updatePropsAndGetCategory(props, node);
 		
 		var ShowEventPicker = null;
 		if ( extra && extra.length && extra[0] == 'edit' && node_CanPublish(parent) ) {
@@ -376,94 +336,9 @@ export default class ContentItem extends Component {
 			);
 		}
 		
-		let ShowMetrics = (<VoteMetrics node={node} />);
-		
-		let ShowGrade = null;
-		// Show Grading or Results
-		if ( parseInt(node_CanGrade(parent)) ) {
-			// If it's your game, show some stats
-			if ( node_IsAuthor(node, user) ) {
-				ShowGrade = (<VoteCurrent node={node} nodeComponent={parent} />);
-			}
-			// Judging
-			else if ( featured && featured.what_node && nodeKeys_HasPublishedParent(featured.what_node, node.parent) ) {
-				let Lines = [];
-				
-				for ( let key in parent.meta ) {
-					// Is it a valid grade ?
-					let parts = key.split('-');
-					if ( parts.length == 2 && parts[0] == 'grade' ) {
-						// Make sure they user hasn't opted out
-						
-						if ( node.meta && !(node.meta[key+'-out']|0) ) {
-							Lines.push({'key': key, 'value': parent.meta[key]});
-						}
-					}
-				}
-				
-				let VoteLines = [];
-				for ( let idx = 0; idx < Lines.length; idx++ ) {
-					let Line = Lines[idx];
-					
-					let Title = Line.value;
-					let Score = '?';
-					if ( state.grade ) {
-						Score = state.grade[Line.key] ? state.grade[Line.key] : 0;
-					}
-					
-					let Stars = [];
-					for ( let idx2 = 0; idx2 < Score; idx2++ ) {
-						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
-					}
-					for ( let idx2 = Score; idx2 < 5; idx2++ ) {
-						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
-					}
-					Stars.push(<ButtonBase class='-delete' onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
-					
-					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> {Stars}</div>);
-				}
-				
-				let ShowRatingSubText = null;
-				if ( node.subsubtype == 'jam' )
-					ShowRatingSubText = <div class="-subtext">Jam game</div>;
-				else if ( node.subsubtype == 'compo' )
-					ShowRatingSubText = <div class="-subtext">Compo game</div>;
-				
-				ShowGrade = (
-					<ContentCommonBody class="-rating">
-						<div class="-header">Ratings</div>
-						{ShowRatingSubText}
-						<div class="-items">{VoteLines}</div>
-						<div class="-footer">Ratings are saved automatically when you click. When they change, they're saved.</div>
-					</ContentCommonBody>
-				);
-				
-				//'
-			}
-			else if ( !user || !user.id ) {
-				ShowGrade = (
-					<ContentCommonBody class="-rating">
-						<div class="-header">Ratings</div>
-						<div class="-items">Please login to rate this game</div>
-					</ContentCommonBody>
-				);
-			}
-			else {
-				ShowGrade = (
-					<ContentCommonBody class="-rating">
-						<div class="-header">Ratings</div>
-						<div class="-items">Sorry! At this time, only participants are able to rate games.</div>
-					</ContentCommonBody>
-				);
-			}
-		}
-		// Final Results
-		else {
-			// grading is closed
-			ShowGrade = (<VoteResults node={node} nodeComponent={parent} />);
-
-		}
-		
+		//Votes, grades and metrics
+		let ShowMetrics = (<VoteMetrics node={node} />);		
+		let ShowGrade = (<VoteOrResults node={node} nodeComponent={parent} user={user} featured={featured} />);				
 		let ShowOptOut = (<VoteOptOut nodeComponent={parent} optOutCallback={() => this.setState({})} />);
 		
 		var ShowImages = null;

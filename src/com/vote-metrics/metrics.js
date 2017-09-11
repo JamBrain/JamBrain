@@ -11,13 +11,13 @@ export default class VoteMetrics extends Component {
 		super(props);
 	}
 
-	render() {
+	render(props, state) {
 		
 		const node = props.node;
 		const voteWarningValue = 20.0;
 		const voteCheckmarkValue = 25.0;
 		
-		if ( node.magic ) {
+		if ( !node.magic ) {
 			return null;
 		}
 		

@@ -13,14 +13,24 @@ export default class VoteResults extends Component {
 		const nodeComponent = this.props.nodeComponent;
 		return !parseInt(node_CanGrade(nodeComponent)) && node_isEventFinished(nodeComponent);
 	}
-	render() {
-		
-		const nodeComponent = this.props.nodeComponent;
-
-		if (!hasFinalResults()) {
+	
+	positionSuffix(position) {
+	    let j = position % 10;
+		let k = position % 100;
+	
+	    if (j == 1 && k != 11) return "st";
+	    if (j == 2 && k != 12) return "nd";
+	    if (j == 3 && k != 13) return "rd";
+	    return "th";
+	}
+	
+	render(props, state) {
+				
+		if (!this.hasFinalResults()) {
 			return null;
 		}
-		
+
+		const nodeComponent = props.nodeComponent;
 		const node = props.node;		
 		let Lines = [];
 

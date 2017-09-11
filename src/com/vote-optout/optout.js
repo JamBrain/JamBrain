@@ -50,13 +50,13 @@ export default class VoteOptOut extends Component {
 		}
 	}
 	
-	render() {
+	render(props, state) {
 		
-		if (!canOptOut()) {
+		if (!this.canOptOut()) {
 			return null;
 		}
 		
-		const nodeComponent = this.props.nodeComponent;
+		const nodeComponent = props.nodeComponent;
 		
 		let Lines = [];
 		
