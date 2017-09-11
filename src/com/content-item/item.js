@@ -302,7 +302,7 @@ export default class ContentItem extends Component {
 		);
 	}
 
-	updatePropsAndGetCategory(node) {
+	updatePropsAndGetCategory(props, node) {
 		let Category = '/';
 		
 		if ( node ) {
@@ -358,7 +358,7 @@ export default class ContentItem extends Component {
 		const parent = state.parent;
 		
 		// This seems wrong, it would make more sense to update state.
-		const Category = updatePropsAndGetCategory(node);
+		const Category = updatePropsAndGetCategory(props, node);
 		
 		var ShowEventPicker = null;
 		if ( extra && extra.length && extra[0] == 'edit' && node_CanPublish(parent) ) {
