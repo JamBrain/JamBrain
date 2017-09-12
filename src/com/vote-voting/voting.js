@@ -20,9 +20,8 @@ export default class VoteVoting extends Component {
 
 	}
 	
-	static canReciveVotes(featuered, node) {
-		
-		return featured && featured.what_node && nodeKeys_HasPublishedParent(featured.what_node, node.parent);
+	static canReciveVotes(featured, node) {		
+		return featured && node && featured.what_node && nodeKeys_HasPublishedParent(featured.what_node, node.parent);
 	}
 	
 	onGrade( name, value ) {
@@ -103,7 +102,7 @@ export default class VoteVoting extends Component {
 		else if ( node.subsubtype == 'compo' )
 			ShowRatingSubText = <div class="-subtext">Compo game</div>;
 		
-		ShowGrade = (
+		return (
 			<ContentCommonBody class="-rating">
 				<div class="-header">Ratings</div>
 				{ShowRatingSubText}

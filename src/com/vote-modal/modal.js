@@ -15,7 +15,6 @@ export default class VoteOrResults extends Component {
 	
 	constructor( props ) {
 		super(props);
-
 	}
 	
 	render(props, state) {

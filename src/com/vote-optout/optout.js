@@ -1,6 +1,7 @@
 import { h, Component } 				from 'preact/preact';
 
 import SVGIcon 							from 'com/svg-icon/icon';
+import ButtonBase						from 'com/button-base/base';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 import $NodeMeta						from '../../shrub/js/node/node_meta';
@@ -13,8 +14,7 @@ export default class VoteOptOut extends Component {
 		super(props);
 	}
 
-	canOptOut() {
-		const nodeComponent = this.props.nodeComponent;
+	static canOptOut(nodeComponent) {
 		return nodeComponent && node_CanPublish(nodeComponent);
 	}
 	
@@ -51,12 +51,9 @@ export default class VoteOptOut extends Component {
 	}
 	
 	render(props, state) {
-		
-		if (!this.canOptOut()) {
-			return null;
-		}
-		
+
 		const nodeComponent = props.nodeComponent;
+		const node = props.node;
 		
 		let Lines = [];
 		
@@ -91,7 +88,7 @@ export default class VoteOptOut extends Component {
 			OptLines.push(<ButtonBase onclick={this.onOptOut.bind(this, Line.key, Line.value)}>{Icon} Do not rate me in <strong>{Line.name}</strong></ButtonBase>);
 		}
 		
-		ShowOptOut = (
+		return (
 			<ContentCommonBody class="-opt-out">
 				<div class="-label">Voting Category Opt-outs</div>
 				{OptLines}

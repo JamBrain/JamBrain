@@ -338,7 +338,10 @@ export default class ContentItem extends Component {
 		//Votes, grades and metrics
 		let ShowMetrics = (<VoteMetrics node={node} />);		
 		let ShowGrade = (<VoteOrResults node={node} nodeComponent={parent} user={user} featured={featured} />);				
-		let ShowOptOut = (<VoteOptOut nodeComponent={parent} optOutCallback={() => this.setState({})} />);
+		let ShowOptOut = null;
+		if (VoteOptOut.canOptOut(parent)) {
+			ShowOptOut = (<VoteOptOut nodeComponent={parent} node={node} optOutCallback={ () => this.setState({}) } />);
+		}
 		
 		var ShowImages = null;
 		if ( true ) {
