@@ -27,7 +27,7 @@ export default class ContentItem extends Component {
 	constructor( props ) {
 		super(props);
 		
-		var node = props.node;
+		let node = props.node;
 		
 		this.state = {
 			'parent': null,
@@ -312,15 +312,15 @@ export default class ContentItem extends Component {
 		const node = props.node;
 		const user = props.user;
 		const path = props.path;
-		var extra = props.extra;
-		var featured = props.featured;
+		const extra = props.extra;
+		const featured = props.featured;
 		const parent = state.parent;
-		
+		const editing = extra && extra.length && extra[0] == 'edit' && node_CanPublish(parent);
 		// This seems wrong, it would make more sense to update state.
 		const Category = this.updatePropsAndGetCategory(props, node);
 		
-		var ShowEventPicker = null;
-		if ( extra && extra.length && extra[0] == 'edit' && node_CanPublish(parent) ) {
+		let ShowEventPicker = null;
+		if ( editing ) {
 			ShowEventPicker = (
 				<ContentCommonNav>
 					<div class="-label">Event</div>
@@ -343,7 +343,7 @@ export default class ContentItem extends Component {
 			ShowOptOut = (<VoteOptOut nodeComponent={parent} node={node} optOutCallback={ () => this.setState({}) } />);
 		}
 		
-		var ShowImages = null;
+		let ShowImages = null;
 		if ( true ) {
 			let ShowImage = null;
 			if ( node.meta && node.meta.cover ) {
@@ -367,13 +367,7 @@ export default class ContentItem extends Component {
 			);
 		}
 		
-		// Where you can enter your game links
-		var ShowLinkEntry = null;
-		if ( true ) {
-			ShowLinkEntry = this.makeLinks(true /* editing */);
-		}
-
-		var ShowUploadTips = null;
+		let ShowUploadTips = null;
 		if ( true ) {
 			ShowUploadTips = (
 				<ContentCommonBody>
@@ -385,13 +379,16 @@ export default class ContentItem extends Component {
 				</ContentCommonBody>
 			);
 		}
-
-		var ShowLinkView = null;
-		if ( true ) {
+		// Where you can enter your game links
+		let ShowLinkEntry = null;
+		let ShowLinkView = null;
+		if ( editing ) {
+			ShowLinkEntry = this.makeLinks(true /* editing */);
+		} else {
 			ShowLinkView = this.makeLinks(false /* editing */);
 		}
 
-		var ShowUnfinished = null;
+		let ShowUnfinished = null;
 		if ( true ) {
 			ShowUnfinished = (
 				<ContentCommonBody>
