@@ -219,8 +219,7 @@ export default class ContentItem extends Component {
 
 	// Generates JSX for the links, depending on whether the page is editing or viewing
 	makeLinks( editing ) {
-		var LinkMeta = [];
-		
+		let LinkMeta = [];
 		for ( let idx = 0; idx < this.state.linksShown; idx++ ) {
 			LinkMeta.push(
 				<ContentCommonBodyLink

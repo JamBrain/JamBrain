@@ -19,22 +19,24 @@ export default class ContentCommonBodyField extends Component {
 	}
 
 	componentDidMount() {
+
 		$Tag.Get(this.props.filter)
 			.then(r => {
-				if ( r.tag && r.tag.length ) {
-					let that = this;
+				let NewState = {
+					'items': [],
+					'indexes': {}
+				};
 
-					let NewState = {
-						'items': [],
-						'indexes': {}
-					};
+				if ( r.tag && r.tag.length ) {
+
 					r.tag.forEach(item => {
 						NewState.indexes[item.id] = NewState.items.length;
 						NewState.items.push([item.id, item.name]);
 					});
-					
-					this.setState(NewState);
 				}
+					
+				this.setState(NewState);
+				
 			});
 	}
 
