@@ -13,11 +13,11 @@ import ContentCommonBodyTitle	        from 'com/content-common/common-body-title
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
-import ContentSimple					from 'com/content-simple/simple';
+import VoteMetrics						from 'com/content-item/vote-metrics';
+import VoteOptOut						from 'com/content-item/vote-optout';
+import VoteOrResults					from 'com/content-item/vote-modal';
 
-import VoteMetrics						from 'com/vote-metrics/metrics';
-import VoteOptOut						from 'com/vote-optout/optout';
-import VoteOrResults					from 'com/vote-modal/modal';
+import ContentSimple					from 'com/content-simple/simple';
 
 import $Node							from '../../shrub/js/node/node';
 import $NodeMeta						from '../../shrub/js/node/node_meta';

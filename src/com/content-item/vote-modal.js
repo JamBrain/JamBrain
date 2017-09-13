@@ -6,9 +6,9 @@ import ButtonBase						from 'com/button-base/base';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 
-import VoteResults						from 'com/vote-results/results';
-import VoteCurrent						from 'com/vote-current/current';
-import VoteVoting						from 'com/vote-voting/voting';
+import VoteResults						from 'com/content-item/vote-results';
+import VoteCurrent						from 'com/content-item/vote-current';
+import VoteVoting						from 'com/content-item/vote-voting';
 
 
 export default class VoteOrResults extends Component {
