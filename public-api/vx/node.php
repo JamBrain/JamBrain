@@ -16,6 +16,17 @@ const THINGS_I_CAN_STAR = [
 	'user'
 ];
 
+const ADMIN_VALID_META = [
+	'event' => [
+		'can-create' => ['length' => 64],
+		'can-grade' => ['integer' => true],
+		'can-publish' => ['integer' => true],
+		'can-theme' => ['integer' => true],
+		'event-finished' => ['integer' => true],
+		'theme-mode' => ['integer' => true]
+	],
+];
+
 const VALID_META = [
 	'item' => [
 		'author-name' => ['length' => 64],
@@ -1005,42 +1016,57 @@ switch ( $action ) {
 
 				$node_id = intval(json_ArgGet(0));
 				$user_id = userAuth_GetID();
+				$user_is_admin = userAuth_IsAdmin();
 
 				if ( $node_id && $user_id ) {
 					if ( $node = nodeComplete_GetById($node_id) ) {
 						if ( !node_IsAuthor($node, $user_id) )
 							json_EmitFatalError_Permission(null, $RESPONSE);
 
-						if ( !isset(VALID_META[$node['type']]) )
-							json_EmitFatalError_BadRequest("Can't set '".$node['type']."' metadata", $RESPONSE);
+						$meta_detail = [];
 						
 						// Validate that all posts are legal
 						foreach ( $_POST as $key => &$value ) {
-							if ( !isset(VALID_META[$node['type']][$key]) ) {
-								json_EmitFatalError_BadRequest("Can't set '$key' metadata in '".$node['type']."'", $RESPONSE);
+							// Can meta be set as a standard user?
+							if ( isset(VALID_META[$node['type']]) ) {
+								if ( isset(VALID_META[$node['type']][$key]) ) {
+									$meta_detail[$key] = VALID_META[$node['type']][$key];
+									continue; // Yes.
+								}
 							}
+							// No, can meta be set as an admin user, and is this an admin user?
+							if ( $user_is_admin && isset(ADMIN_VALID_META[$node['type']]) ) {
+								if ( isset(ADMIN_VALID_META[$node['type']][$key]) ) {
+									$meta_detail[$key] = ADMIN_VALID_META[$node['type']][$key];
+									continue; // Yes.
+								}														
+							}
+							// This meta can't be set.
+							json_EmitFatalError_BadRequest("Can't set '$key' metadata in '".$node['type']."'", $RESPONSE);
 						}
 						
 						// node, scope, key, value
 						// bigint, tinyint, char32, text65535
 						
-						$scope = 0;
+						$scope = SH_NODE_META_PUBLIC;
 						$RESPONSE['changed'] = [];
 						
 						foreach ( $_POST as $key => &$value ) {
-							$detail = VALID_META[$node['type']][$key];
+							$detail = $meta_detail[$key];
 							
 							$v = $value;
 							if ( isset($detail['length']))
 								$v = substr($v, 0, $detail['length']);
-							if ( isset($detail['url']) && $detail['url'])
+							else if ( isset($detail['url']) && $detail['url'])
 								$v = coreSanitize_URL($v);
-							if ( isset($detail['empty']) && $detail['empty'] )
+							else if ( isset($detail['empty']) && $detail['empty'] )
 								$v = null;
-							if ( isset($detail['number']) && $detail['number'] )
+							else if ( isset($detail['number']) && $detail['number'] )
 								$v = floatval($v);
-							if ( isset($detail['integer']) && $detail['integer'] )
+							else if ( isset($detail['integer']) && $detail['integer'] )
 								$v = intval($v);
+							else
+								json_EmitFatalError_BadRequest("Internal error while applying '$key' metadata in '".$node['type']."'", $RESPONSE);
 							
 							if ( $action == 'add' )
 								$changed = nodeMeta_AddByNode($node_id, $scope, $key, $v);
@@ -1105,7 +1131,7 @@ switch ( $action ) {
 						// a, b, scope, key, value
 						// bigint, bigint, tinyint, char32, text65535
 						
-						$scope = 0;
+						$scope = SH_NODE_META_PUBLIC;
 						$RESPONSE['changed'] = [];
 						
 						foreach ( $_POST as $key => &$value ) {
@@ -1114,14 +1140,16 @@ switch ( $action ) {
 							$v = $value;
 							if ( isset($detail['length']))
 								$v = substr($v, 0, $detail['length']);
-							if ( isset($detail['url']) && $detail['url'])
+							else if ( isset($detail['url']) && $detail['url'])
 								$v = coreSanitize_URL($v);
-							if ( isset($detail['empty']) && $detail['empty'] )
+							else if ( isset($detail['empty']) && $detail['empty'] )
 								$v = null;
-							if ( isset($detail['number']) && $detail['number'] )
+							else if ( isset($detail['number']) && $detail['number'] )
 								$v = floatval($v);
-							if ( isset($detail['integer']) && $detail['integer'] )
+							else if ( isset($detail['integer']) && $detail['integer'] )
 								$v = intval($v);
+							else 
+								json_EmitFatalError_BadRequest("Internal error in applying requested '$key' link between '".$node_a['type']."' and '".$node_b['type']."'", $RESPONSE);
 							
 							if ( $action == 'add' )
 								$changed = nodeLink_AddByNode($node_a_id, $node_b_id, $scope, $key, $v);
