@@ -431,12 +431,18 @@ function SetupEvent()
 	$endtime = $starttime + 48*60*60;
 	$formatStart = gmdate("Y-m-d\TH:i:s\Z", $starttime);
 	$formatEnd = gmdate("Y-m-d\TH:i:s\Z", $endtime);
-	
+
+
+	// Promote our admin user to administrator
+	nodeMeta_AddByNode($author, SH_NODE_META_PUBLIC, 'can-create', 'event');
+	// Set a meta through the API to cause cache invalidation
+	if(!ApiNodeMetaAdd($event_admin_user, $author, 'real-name', "Super Admin User")) ReportError("Failed to add user meta through API");
+
+
+	// Create event
 	$event_nodeid = node_Add( $parentnode, $author, "event", "", "", null, $eventname, $eventbody);
 
 	// Add metadata
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-create', 'item/game');
-
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-start', $formatStart);
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-end', $formatEnd);
 
@@ -455,7 +461,8 @@ function SetupEvent()
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-07-optional', 1);
 	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-08-optional', 1);
 
-	nodeCache_InvalidateById($event_nodeid);
+	// Add last meta through API, to invalidate cache.
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-create', 'item/game')) ReportError("Failed to add event meta through API");
 	
 	// Also publish the event
 	if(!ApiNodePublish($event_admin_user, $event_nodeid))
@@ -486,16 +493,14 @@ function SetupEvent()
 // Set up for each of the phases of the theme selection, in sequence.
 function SetupThemePhase($phase)
 {
-	global $event_nodeid;
+	global $event_nodeid, $event_admin_user;
 	
 	switch($phase)
 	{
 	case 0: // Theme Suggestion
 		Message("Starting Theme Suggestion");
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-theme', 1);
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 1);
-		nodeCache_InvalidateById($event_nodeid);
-
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-theme', '1')) ReportError("Failed to add event meta through API");
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '1')) ReportError("Failed to add event meta through API");
 		break;
 		
 	case 1: // Theme Slaughter
@@ -503,9 +508,7 @@ function SetupThemePhase($phase)
 		Verbose("Run external tool to perform suggestion deduplication");
 		LogExec("sudo php ~/www/src/shrub/tools/theme/theme itsautomatic dupes");
 	
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 2); // Theme slaughter
-		nodeCache_InvalidateById($event_nodeid);
-
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '2')) ReportError("Failed to add event meta through API");
 		break;
 	
 	case 2: // Theme voting
@@ -516,21 +519,20 @@ function SetupThemePhase($phase)
 		Verbose("Run external tool to populate theme voting pages");
 		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic simple-vote 3");
 	
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 4); // Theme voting
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-1', 1);
-		nodeCache_InvalidateById($event_nodeid);
+		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-1', 1); // This meta isn't yet supported to be added by admin.
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '4')) ReportError("Failed to add event meta through API");
 		break;
 		
 	case 3:
 		Message("Starting Theme Voting Round 2");	
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-2', 1);
-		nodeCache_InvalidateById($event_nodeid);
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '4')) ReportError("Failed to add event meta through API");
 		break;
 		
 	case 4:
 		Message("Starting Theme Voting Round 3");	
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-3', 1);
-		nodeCache_InvalidateById($event_nodeid);
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '4')) ReportError("Failed to add event meta through API");
 		break;
 
 	case 5:
@@ -543,15 +545,16 @@ function SetupThemePhase($phase)
 		
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-4', 1);
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-name-4', "Final Round");
-		nodeCache_InvalidateById($event_nodeid);
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '4')) ReportError("Failed to add event meta through API");
 		break;
 
 	case 6: // Final theme selection
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 5); // Theme voting closed
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-1', 2);
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-2', 2);
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-3', 2);
 		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-4', 2);
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '5')) ReportError("Failed to add event meta through API");
+		
 		
 		Verbose("Run external tool to compute stats for final round");
 		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic calc 4");
@@ -573,7 +576,8 @@ function SetupThemePhase($phase)
 			$theme = $themes[0]["theme"];
 		}
 		Message("Setting Event theme to $theme");
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-theme', $theme);
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'event-theme', $theme)) ReportError("Failed to add event meta through API");
+
 		nodeCache_InvalidateById($event_nodeid);
 		break;
 	}
@@ -582,45 +586,41 @@ function SetupThemePhase($phase)
 // The compo has now started, the theme voting is now locked and a theme is selected. The users will be sure to mention the theme in some of their posts.
 function StartCompo()
 {
-	global $event_nodeid;
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 5); // Theme voting closed (re-set for sanity reasons)
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-publish', 1); // No effect on API, just a site effect (at the moment)
-	nodeCache_InvalidateById($event_nodeid);
+	global $event_nodeid, $event_admin_user;
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '5')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-publish', '1')) ReportError("Failed to add event meta through API");
 }
 
 // The compo has now stopped and will only accept submissions for a limited amount of time. Configure the event to this mode.
 function SetupSubmission()
 {
-	global $event_nodeid;
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 6); // Enter rating mode
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-publish', 1); // No effect on API, just a site effect (at the moment) 
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', 1); // enable voting
-	nodeCache_InvalidateById($event_nodeid);
+	global $event_nodeid, $event_admin_user;
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '6')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-publish', '1')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-grade', '1')) ReportError("Failed to add event meta through API");
 }
 
 // Submission is over, and now the voting period begins
 function SetupVoting()
 {
-	global $event_nodeid;
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 6); // Play+rate mode
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-publish', 0); // Disable publishing. No effect on API, just a site effect (at the moment)
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', 1);
-	nodeCache_InvalidateById($event_nodeid);
+	global $event_nodeid, $event_admin_user;
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '6')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-publish', '0')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-grade', '1')) ReportError("Failed to add event meta through API");
 }
 
 // Voting is over, close out the compo.
 function EndCompo()
 {
-	global $event_nodeid;
+	global $event_nodeid, $event_admin_user;
 	
 	Verbose("Computing results...");
 	LogExec("sudo php ../src/shrub/tools/grade/grade itsautomatic score compo 7"); # Require 7 ratings to be placed.
 	LogExec("sudo php ../src/shrub/tools/grade/grade itsautomatic score jam 7"); # Require 7 ratings to be placed.
 	
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-mode', 8); // Results mode
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', 0); // Disable voting
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-finished', 1); // Enable showing results
-	nodeCache_InvalidateById($event_nodeid);
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '8')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-grade', '0')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'event-finished', '1')) ReportError("Failed to add event meta through API");
 }
 
 // User should discover and interact with the available options in the current theme voting phase.
@@ -1740,13 +1740,13 @@ function ApiNodeLoveRemove(&$user, $nodeid) //GET node/love/remove/:node_id
 
 function ApiNodeMetaAdd(&$user, $nodeid, $key, $value) // POST node/meta/add/:node_id
 {
-	$value = LdApi::Post("vx/node/meta/add/".$nodeid, $key."=".$value, $user);
+	$value = LdApi::Post("vx/node/meta/add/".$nodeid, urlencode($key)."=".urlencode($value), $user);
 	return ResponseIs200($value);
 }
 
 function ApiNodeMetaRemove(&$user, $nodeid, $key) // POST node/meta/remove/:node_id
 {
-	$value = LdApi::Post("vx/node/meta/remove/".$nodeid, $key."=", $user);
+	$value = LdApi::Post("vx/node/meta/remove/".$nodeid, urlencode($key)."=", $user);
 	return ResponseIs200($value);
 }
 

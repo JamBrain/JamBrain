@@ -23,6 +23,7 @@ const ADMIN_VALID_META = [
 		'can-publish' => ['integer' => true],
 		'can-theme' => ['integer' => true],
 		'event-finished' => ['integer' => true],
+		'event-theme' => ['length' => 256],
 		'theme-mode' => ['integer' => true]
 	],
 ];
