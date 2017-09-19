@@ -793,7 +793,7 @@ switch ( $action ) {
 					$RESPONSE['path'] = node_GetPathById($node_id, 1)['path']; // Root node
 					
 					// notify users watching the author of the published node
-					notification_AddForPublishedNode($node_id);
+					notification_AddForPublishedNode($node_id, $node['author'], $node['type']);
 				}
 			}
 			else {

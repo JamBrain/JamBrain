@@ -6,7 +6,7 @@
 ///	@addtogroup NotificationTypes
 /// @name Notification Types
 /// @{
-const SH_NOTIFICATION_COMMENT =			'comment';
+const SH_NOTIFICATION_NOTE =			'note';
 /// @}
 
 
