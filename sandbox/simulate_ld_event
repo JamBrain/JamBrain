@@ -159,8 +159,9 @@ function OpenLogs($index)
 	global $logbase;
 	global $flogfull;
 	global $flogerr;
+	global $eventbase;
 	$fulllog = $logbase . "." . $index . ".log";
-	$errlog = $logbase . "." . $index . ".err";
+	$errlog = $eventbase . "." . $index . ".err";
 	$flogfull = fopen($fulllog, "a");
 	$flogerr = fopen($errlog, "a");
 }
@@ -180,6 +181,7 @@ function OpenPreviousEventFile()
 	global $eventbase;
 	global $eventindex;
 	$log = $eventbase . "." . ($eventindex-1) . ".event";
+	if(!is_file($log)) { return false; }
 	return fopen($log, "r");
 }
 
@@ -429,7 +431,7 @@ function SetupEvent()
 	{
 		$node = ApiNodeGetMy($event_user_lookup[$user["username"]]);
 		if($node == null) { ReportError("Failed to get node"); }
-		$node["username"] = $user["username"];
+		$node["name"] = $user["username"];
 		if( isset($node['link']) && isset($node['link']['star']) && count($node['link']['star']) > 0 )
 		{
 			continue;
