@@ -80,7 +80,7 @@ switch ( $action ) {
 		
 			if ( !isset($_POST['max_read']) )
 				json_EmitFatalError_BadRequest("Missing max_read parameter", $RESPONSE);
-			$max_read = intval($_POST['parent']);
+			$max_read = intval($_POST['max_read']);
 			
 			// Sanity check the value being passed in here.
 			$prev_cursor = user_GetLastReadNotificationByNode($user_id);
@@ -92,7 +92,7 @@ switch ( $action ) {
 			
 			$success = user_SetLastReadNotificationByNode($user_id, $max_read);
 			if( !$success ) {
-				json_EmitFatalError_ServerError(null, $RESPONSE);
+				json_EmitFatalError_Server(null, $RESPONSE);
 			}
 			
 			$RESPONSE['max_read'] = $max_read;

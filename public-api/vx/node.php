@@ -564,7 +564,7 @@ switch ( $action ) {
 						nodeLink_AddbyNode($new_node, $user_id, SH_NODE_META_PUBLIC, 'author');
 					}
 					else {
-						json_EmitFatalError_ServerError(null, $RESPONSE);
+						json_EmitFatalError_Server(null, $RESPONSE);
 					}
 					
 					nodeCache_InvalidateById($new_node);
@@ -580,7 +580,7 @@ switch ( $action ) {
 					if ( $new_node ) {
 					}
 					else {
-						json_EmitFatalError_ServerError(null, $RESPONSE);
+						json_EmitFatalError_Server(null, $RESPONSE);
 					}
 
 					nodeCache_InvalidateById($new_node);

@@ -62,7 +62,7 @@ function notification_Max( $user ) {
 		WHERE user=?;",
 		$user
 	);
-	if ( length($counts) == 0 ) {
+	if ( count($counts) == 0 ) {
 		return 0;
 	}
 	return $counts[0];
