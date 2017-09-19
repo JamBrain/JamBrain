@@ -1,6 +1,8 @@
 <?php
 
 require_once __DIR__."/../node/node.php";
+require_once __DIR__."/../user/user.php";
+
 
 const NOTIFY_ON_NODE_TYPE = [
 	'post',
@@ -78,7 +80,7 @@ function notification_CountUnread( $user ) {
 }
 
 function notification_GetUnread( $user, $limit = 20, $offset = 0 ) {
-	$last_read = user_GetLastReadNotificationByNode( $user )
+	$last_read = user_GetLastReadNotificationByNode( $user );
 	return db_QueryFetch(
 		"SELECT id, node, note, type, created
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION."
@@ -121,14 +123,12 @@ function notification_Get( $user, $limit = 20, $offset = 0 ) {
 
 function notification_AddForPublishedNode( $node, $author, $type ) {
 	if ( in_array($type, NOTIFY_ON_NODE_TYPE) ) {
-	{
 		// Identify users following the author and push notifications.
 		$notifications = [];
 		// "Following" is a "star" link between a=user id, and b=starred node id. Find the stars on the author's node.
 		// Unfortunately, this gets both the people who have starred the author, as well as the author's starred nodes. We'll filter them out.
 		$starlinks = nodeLink_GetByKeyNode('star', $author);
-		foreach($starlinks as $star)
-		{
+		foreach($starlinks as $star) {
 			if( $star['b'] == $author ) {
 				// Notify this user
 				$user = $star['a'];
@@ -142,11 +142,13 @@ function notification_AddForPublishedNode( $node, $author, $type ) {
 function notification_AddForNote( $node, $note, $author ) {
 	// Look up the users who participated in this thread and send them notifications, except for the author.
 	$users = note_InterestedUsers($node);
-	$users[] = $author;
+	$nodeauthor = node_GetAuthor($node);
+	if ( $nodeauthor ) {
+		$users[] = $nodeauthor;
+	}
 	
 	$notifications = [];
-	foreach($users as $uid)
-	{
+	foreach($users as $uid)	{
 		if ( $uid == $author )
 			continue; // Don't bother sending the author of the note a notification for their own note.
 			

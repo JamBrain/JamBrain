@@ -20,7 +20,7 @@ if ( in_array($table, $TABLE_LIST) ) {
 				node ".DB_TYPE_ID.",
 				note ".DB_TYPE_ID.",
 				type ".DB_TYPE_ASCII(8).", 
-				created ".DB_TYPE_TIMESTAMP.",
+				created ".DB_TYPE_TIMESTAMP."
 			)".DB_CREATE_SUFFIX);
 		$created = true;
 		if (!$ok) break; $TABLE_VERSION++;

@@ -4,6 +4,7 @@ require_once __DIR__."/../config.php";
 include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."api.php";
 require_once __DIR__."/".SHRUB_PATH."note/note.php";
+require_once __DIR__."/".SHRUB_PATH."notification/notification.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
 
 json_Begin();
@@ -67,11 +68,11 @@ switch ( $action ) {
 					json_EmitFatalError_Permission("Temporary: No children", $RESPONSE);
 
 				$note_id = note_AddByNode($node['id'], $node['parent'], $author, $parent, $body, $version_tag);
-				$RESPONSE['note'] = $note_id
+				$RESPONSE['note'] = $note_id;
 				
 				// Add notifications for users watching this thread
 				if ( $note_id ) {
-					notification_AddForNote($node['id'], $note, $author);
+					notification_AddForNote($node['id'], $note_id, $author);
 				}
 			}
 			else {

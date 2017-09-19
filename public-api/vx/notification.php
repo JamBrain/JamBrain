@@ -5,6 +5,7 @@ include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."api.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
 require_once __DIR__."/".SHRUB_PATH."notification/notification.php";
+require_once __DIR__."/".SHRUB_PATH."user/user.php";
 
 json_Begin();
 
@@ -90,13 +91,13 @@ switch ( $action ) {
 			}
 			
 			$success = user_SetLastReadNotificationByNode($user_id, $max_read);
-			if( !$success )
+			if( !$success ) {
 				json_EmitFatalError_ServerError(null, $RESPONSE);
 			}
 			
 			$RESPONSE['max_read'] = $max_read;
 			
-		else {
+		} else {
 			json_EmitFatalError_Permission(null, $RESPONSE);
 		}		
 		break;
