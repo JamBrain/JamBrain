@@ -211,14 +211,14 @@ export default class DropdownNotification extends Component {
 							const firstAt = notification.note.body.indexOf(myAtName);
 							if (firstAt > -1) {
 								Notifications.push((
-									<div>
+									<div onclick={(e) => window.location = notification.node.path}>
 									{noteAuthor.name} mentioned you in a commented on {nodeAuthor.name}'s {nodeType}
 									&nbsp;"<em>{notification.node.name}</em>"
 									</div>								
 								));								
 							} else {
 								Notifications.push((
-									<div>
+									<div onclick={(e) => window.location = notification.node.path}>
 									{noteAuthor.name} commented on {nodeAuthor.name}'s {nodeType}
 									&nbsp;"<em>{notification.node.name}</em>"
 									</div>								
@@ -226,7 +226,7 @@ export default class DropdownNotification extends Component {
 							}
 						} else if (notification.node.selfauthored && !notification.note.selfauthored) {							
 							Notifications.push((
-								<div>
+								<div onclick={(e) => window.location = notification.node.path}>
 								{noteAuthor.name} commented on your {nodeType}
 								&nbsp;"<em>{notification.node.name}</em>"
 								</div>								
@@ -234,7 +234,7 @@ export default class DropdownNotification extends Component {
 						} else {
 							//Notification about weird stuff
 							Notifications.push((
-								<div>
+								<div onclick={(e) => window.location = notification.node.path}>
 								You recieved notification that you posted a comment on {nodeAuthor.name}'s {nodeType}
 								&nbsp;"<em>{notification.node.name}</em>"&nbsp;
 								please report to dev-team that you already knew this.
@@ -245,7 +245,7 @@ export default class DropdownNotification extends Component {
 						if (notification.node.selfauthored) {
 							
 							Notifications.push((
-								<div>
+								<div onclick={(e) => window.location = notification.node.path}>
 								Your {nodeType}
 								&nbsp;"<em>{notification.node.name}</em>"&nbsp;
 								was either created or updated.
@@ -268,14 +268,14 @@ export default class DropdownNotification extends Component {
 							
 							if (notification.node.type == 'post') {
 								Notifications.push((
-									<div>
+									<div onclick={(e) => window.location = notification.node.path}>
 									{User} posted
 									&nbsp;"<em>{notification.node.name}</em>"&nbsp;									
 									</div>
 								));
 							} else {
 								Notifications.push((
-									<div>
+									<div onclick={(e) => window.location = notification.node.path}>
 									{User} posted a {nodeType}
 									&nbsp;"<em>{notification.node.name}</em>"&nbsp;									
 									</div>
