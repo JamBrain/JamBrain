@@ -1,4 +1,5 @@
 import { h, render, Component, options }			from 'preact/preact';
+import { initDevTools } 							from 'preact-devtools/devtools';
 import Sanitize							from '../internal/sanitize/sanitize';
 import NavSpinner						from 'com/nav-spinner/spinner';
 
@@ -32,6 +33,10 @@ import $NodeLove						from '../shrub/js/node/node_love';
 
 window.LUDUMDARE_ROOT = '/';
 window.SITE_ROOT = 1;
+
+if ( SITE_DEBUG ) {
+	initDevTools();
+}
 
 // Add special behavior: when class attribute is an array, flatten it to a string
 options.vnode = function(vnode) {
