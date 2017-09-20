@@ -134,7 +134,6 @@ export default class ViewBar extends Component {
 			if (this.state.showNotifications) {
 				ShowNotifications = (<DropdownNotification getNew={this.state.notifications > 0} />);
 			}
-			
 
 			let NotificationCount = null;
 			if (this.state.notifications > 0) {
