@@ -45,6 +45,7 @@ export default class DropdownNotification extends Component {
 	queryInfoForNotification(caller_id, notification) {
 		
 		let results = {
+			caller_id: caller_id,
 			users: new Map([[caller_id, null]]),
 			usersCompleted: 'no',
 			people: {},
@@ -205,13 +206,24 @@ export default class DropdownNotification extends Component {
 					if (notification.notification.note) {
 
 						if (!notification.node.selfauthored && !notification.note.selfauthored) {
-							Notifications.push((
-								<div>
-								{noteAuthor.name} commented on {nodeAuthor.name}'s {nodeType}
-								&nbsp;"<em>{notification.node.name}</em>"&nbsp;
-								that you have commented on as well.
-								</div>								
-							));
+							
+							const myAtName = "@" + notification.users.get(notification.caller_id).name;
+							const firstAt = notification.note.body.indexOf(myAtName);
+							if (firstAt > -1) {
+								Notifications.push((
+									<div>
+									{noteAuthor.name} mentioned you in a commented on {nodeAuthor.name}'s {nodeType}
+									&nbsp;"<em>{notification.node.name}</em>"
+									</div>								
+								));								
+							} else {
+								Notifications.push((
+									<div>
+									{noteAuthor.name} commented on {nodeAuthor.name}'s {nodeType}
+									&nbsp;"<em>{notification.node.name}</em>"
+									</div>								
+								));
+							}
 						} else if (notification.node.selfauthored && !notification.note.selfauthored) {							
 							Notifications.push((
 								<div>
