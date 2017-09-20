@@ -1165,7 +1165,8 @@ switch ( $action ) {
 								$RESPONSE['changed'][$key] = $v;
 						}
 						if ( count($RESPONSE['changed']) ) {
-							nodeCache_InvalidateById($node_id);
+							nodeCache_InvalidateById($node_a_id);
+							nodeCache_InvalidateById($node_b_id);
 						}
 
 					}

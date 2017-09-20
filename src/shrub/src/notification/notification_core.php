@@ -147,6 +147,19 @@ function notification_AddForNote( $node, $note, $author ) {
 		$users[] = $nodeauthor;
 	}
 	
+	// Find other authors linked to this node.
+	// Allow the link to be in either direction, Currently website adds author links as <game node>, <user id>
+	$authorlinks = nodeLink_GetByKeyNode('author', $node);
+	foreach($authorlinks as $link) {
+		if ( $link['a'] == $node )
+			$users[] = $link['b'];
+		if ( $link['b'] == $node )
+			$users[] = $link['a'];
+	}
+	
+	// Eliminate duplicate users - don't send duplicate notifications.
+	$users = array_unique($users);
+	
 	$notifications = [];
 	foreach($users as $uid)	{
 		if ( $uid == $author )
