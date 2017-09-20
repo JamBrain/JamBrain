@@ -14,22 +14,30 @@ export default class DropdownNotification extends Component {
 		super(props);
 		
 		this.state = {
-			notifications: new Map(),			
+			notifications: [],
+			notificationsTotal: -1,
 		};
 	}
 
 	componentDidMount() {
 		if (this.props.getNew) {
 			$Notification.GetFeedUnread(0, 8).then((r) => {
-				//TODO: Spinner should only stop when all notifications have been processed or discarded
-				this.setState({status: r.status});
-				this.queryInfoForNotification(r.caller_id, r.feed[0]);
+				const caller_id = r.caller_id;							
+				this.setState({
+					status: r.status,
+					notificationsTotal: r.feed.length
+				});
+				r.feed.forEach((notification) => {
+					this.queryInfoForNotification(caller_id, notification);
+				});
 
 			}).catch((e)=> console.log('[Notification error]', e));
 		} else {
 			$Notification.GetFeedAll(-8, 8).then((r) => {
-				this.queryInfoForNotification(r.feed[0]);
-				
+				const caller_id = r.caller_id;				
+				r.feed.forEach((notification) => {
+					this.queryInfoForNotification(caller_id, notification);
+				});
 			});			
 		}
 	}
@@ -140,17 +148,41 @@ export default class DropdownNotification extends Component {
 			return;
 		}
 		
-		this.setState(
-			{notifications: new Map(
-				[...this.state.notifications]
-					.concat([[notification.notification.id, notification]]))});		
+		let notifications = [...this.state.notifications];
+		notifications.push(notification);
+		this.setState({notifications: notifications});
 	}
+	
+	getSocialStringList(notification, relation) {
+		const social = notification.people[relation];
+		let isFriend = social.has(notification.node.author);
+		let myFriends = isFriend ? new Set(notification.users.get(notification.node.author)) : new Set();
+		
+		if (notification.node.link) {
+			notification.node.link.forEach((author) => {
+				if (social.has(author)) {
+					isFriend = true;
+					myFriends.add(notification.users.get(author));
+				}
+			});
+		}
+		
+		let User = null;
+		const friendArray = [...myFriends];
+		let names = null;
+		if (friendArray.length > 1) {
+			names = friendArray.slice(0, friendArray.length - 1).join(', ') + ' & ' + friendArray[friendArray.length - 1];
+		} else {
+			names = friendArray[0];
+		}	
+		return {count: myFriends.size, string: names, list: myFriends};
+	}	
 	
 	getNotifications() {
 		let Notifications = [];
 		const feed = this.state.notifications;
 		
-		if (feed && feed.size > 0) {
+		if (feed && feed.length > 0) {
 			
 			feed.forEach((notification) => {
 				if (notification) {
@@ -170,20 +202,74 @@ export default class DropdownNotification extends Component {
 						noteAuthor = notification.users.get(notification.note.author);
 					}
 					
-					if (notification.notification.note && !notification.node.selfauthored && !notification.note.selfauthored) {
-						Notifications.push((
-							<div>
-							{noteAuthor.name} commented on {nodeAuthor.name}'s {nodeType}
-							&nbsp;"<em>{notification.node.name}</em>"&nbsp;
-							that you have commented on as well.
-							</div>
-							
-						));
+					if (notification.notification.note) {
+
+						if (!notification.node.selfauthored && !notification.note.selfauthored) {
+							Notifications.push((
+								<div>
+								{noteAuthor.name} commented on {nodeAuthor.name}'s {nodeType}
+								&nbsp;"<em>{notification.node.name}</em>"&nbsp;
+								that you have commented on as well.
+								</div>								
+							));
+						} else if (notification.node.selfauthored && !notification.note.selfauthored) {							
+							Notifications.push((
+								<div>
+								{noteAuthor.name} commented on your {nodeType}
+								&nbsp;"<em>{notification.node.name}</em>"
+								</div>								
+							));							
+						} else {
+							//Notification about weird stuff
+							Notifications.push((
+								<div>
+								You recieved notification that you posted a comment on {nodeAuthor.name}'s {nodeType}
+								&nbsp;"<em>{notification.node.name}</em>"&nbsp;
+								please report to dev-team that you already knew this.
+								</div>
+							));
+						}
 					} else {
-					
-						Notifications.push((
-							<div>Type: {nodeType}, {notification.node.name}: {notification.notification.note}<br />
-							({notification.notification.created})</div>));
+						if (notification.node.selfauthored) {
+							
+							Notifications.push((
+								<div>
+								Your {nodeType}
+								&nbsp;"<em>{notification.node.name}</em>"&nbsp;
+								was either created or updated.
+								</div>
+							));
+						} else {
+
+							const friends = this.getSocialStringList(notification, 'friends');
+							
+							if (friends.count > 0) {
+								User = (<span>Your friend{friends.count > 1 ? 's' : ''} {friends.string}</span>);
+							} else {
+								const following = this.getSocialStringList(notification, 'following');
+								if (following.count > 0) {
+									User = (<span>{following.string}</span>);
+								} else {
+									User = (<span>{nodeAuthor.name}</span>);
+								}
+							}
+							
+							if (notification.node.type == 'post') {
+								Notifications.push((
+									<div>
+									{User} posted
+									&nbsp;"<em>{notification.node.name}</em>"&nbsp;									
+									</div>
+								));
+							} else {
+								Notifications.push((
+									<div>
+									{User} posted a {nodeType}
+									&nbsp;"<em>{notification.node.name}</em>"&nbsp;									
+									</div>
+								));								
+							}
+						}
 						
 					}
 				} else {
@@ -192,6 +278,7 @@ export default class DropdownNotification extends Component {
 			});
 
 		}
+		console.log(Notifications.length, feed.length);
 		return Notifications;
 	}
 	
@@ -206,6 +293,9 @@ export default class DropdownNotification extends Component {
 		} else if (state.status != 200) {
 			Notifications = (<div>An error occurred retrieving the notifications...</div>);
 		} else {
+			if (state.notificationsTotal > state.notifications.length) {
+				ShowSpinner = (<NavSpinner />);
+			}
 			Notifications = this.getNotifications();
 		}
 		
