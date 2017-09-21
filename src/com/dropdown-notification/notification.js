@@ -99,6 +99,7 @@ export default class DropdownNotification extends Component {
 				this.processNotificationStepTwo(results);
 			} else {
 				results.node = {corrupted: true, completed: true};
+				this.setState({notificationsTotal: this.state.notificationsTotal - 1});
 			}
 		});
 		
