@@ -22,13 +22,18 @@ function make_url( url ) {
 export default class ViewBar extends Component {
 	constructor( props ) {
 		super(props);
+		
+		this.state - {
+			notifications: 0,
+			notificationCountAdjustment: 0,
+		};
 	}
 
 	checkNotificationCount() {
 		$Notification.GetCountUnread()
 		.then((r) => {
 			if (this.state.notifications != r.count) {
-				this.setState({notifications: r.count});
+				this.setState({notifications: r.count, notificationCountAdjustment: 0});
 			}
 			setTimeout(() => this.checkNotificationCount(), 60000);
 		})
@@ -130,14 +135,15 @@ export default class ViewBar extends Component {
 			}
 			
 			// Notifications
-			let ShowNotifications = null;
-			if (this.state.showNotifications) {
-				ShowNotifications = (<DropdownNotification getNew={this.state.notifications > 0} />);
+			let NotificationCount = null;
+			const notificationCount = Math.max(0, this.state.notifications - this.state.notificationCountAdjustment);
+			if (notificationCount > 0) {
+				NotificationCount = (<div class="-count">{notificationCount}</div>);
 			}
 
-			let NotificationCount = null;
-			if (this.state.notifications > 0) {
-				NotificationCount = (<div class="-count">{this.state.notifications}</div>);
+			let ShowNotifications = null;
+			if (this.state.showNotifications) {
+				ShowNotifications = (<DropdownNotification getNew={notificationCount > 0} totalNew={this.state.notifications} countCallback={(offset) => this.setState({notificationCountAdjustment: offset})} />);
 			}
 			
 			Notification = (

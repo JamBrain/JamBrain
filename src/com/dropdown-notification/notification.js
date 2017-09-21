@@ -20,8 +20,9 @@ export default class DropdownNotification extends Component {
 	}
 
 	componentDidMount() {
+		const showCount = 8;
 		if (this.props.getNew) {
-			$Notification.GetFeedUnread(0, 8).then((r) => {
+			$Notification.GetFeedUnread(Math.max(0, this.props.totalNew - showCount), showCount).then((r) => {
 				const caller_id = r.caller_id;							
 				this.setState({
 					status: r.status,
@@ -33,8 +34,12 @@ export default class DropdownNotification extends Component {
 
 			}).catch((e)=> console.log('[Notification error]', e));
 		} else {
-			$Notification.GetFeedAll(-8, 8).then((r) => {
+			$Notification.GetFeedAll(0, showCount ).then((r) => {
 				const caller_id = r.caller_id;				
+				this.setState({
+					status: r.status,
+					notificationsTotal: r.feed.length
+				});
 				r.feed.forEach((notification) => {
 					this.queryInfoForNotification(caller_id, notification);
 				});
@@ -152,7 +157,21 @@ export default class DropdownNotification extends Component {
 		
 		let notifications = [...this.state.notifications];
 		notifications.push(notification);
-		this.setState({notifications: notifications});
+		this.setState({notifications: notifications});		
+		
+		if (this.props.getNew && notifications.length >= this.state.notificationsTotal && notifications.length > 0) {
+			let maxId = -1;
+			notifications[0].notification.id;
+			notifications.forEach((notification) => {
+				if (notification.notification.id > maxId) {
+					maxId = notification.notification.id;
+				}
+			});
+			$Notification.SetMarkRead(maxId);
+			if (this.props.countCallback) {
+				this.props.countCallback(notifications.length);
+			}
+		}
 	}
 	
 	getSocialStringList(notification, relation) {
@@ -188,8 +207,10 @@ export default class DropdownNotification extends Component {
 			
 			feed.forEach((notification) => {
 				if (notification) {
-					console.log('feed:notification', notification);
-					//TODO: Make real notifications based on the notification-data
+					//console.log('feed:notification', notification);
+					
+					//Todo look for atting in posts I haven't written
+					
 					let nodeType = notification.node.type;
 					if (notification.node.subtype) {
 						nodeType = notification.node.subtype;
@@ -291,7 +312,7 @@ export default class DropdownNotification extends Component {
 			});
 
 		}
-		console.log(Notifications.length, feed.length);
+		
 		return Notifications;
 	}
 	
