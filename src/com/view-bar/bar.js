@@ -95,6 +95,7 @@ export default class ViewBar extends Component {
 		var Login = null;
 		var GoSecure = null;
 		var ShowSpinner = null;
+		let ShowNotifications = null;
 
 		// Disallow insecure login
 		if ( SECURE_LOGIN_ONLY && (location.protocol !== 'https:') ) {
@@ -141,19 +142,17 @@ export default class ViewBar extends Component {
 				NotificationCount = (<div class="-count">{notificationCount}</div>);
 			}
 
-			let ShowNotifications = null;
 			if (this.state.showNotifications) {
 				ShowNotifications = (<DropdownNotification getNew={notificationCount > 0} totalNew={notificationCount} countCallback={(offset) => this.setState({notificationCountAdjustment: offset})} />);
 			}
 			
-			Notification = (
+			Notification = (				
 				<ButtonBase class="-icon" onclick={(e) => {
 					this.setState({showNotifications: !this.state.showNotifications});
 				}}>
 					<SVGIcon baseline>bubble</SVGIcon>
 					{NotificationCount}
-					{ShowNotifications}
-				</ButtonBase>
+				</ButtonBase>				
 			);
 			
 			// TODO: Pull this out of the user meta, else use a dummy
@@ -203,6 +202,7 @@ export default class ViewBar extends Component {
 					{ShowCalendar}
 					{Search}
 					{Notification}
+					{ShowNotifications}
 					{ShowUser}
 					{Register}
 					{Login}

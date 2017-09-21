@@ -334,7 +334,7 @@ export default class DropdownNotification extends Component {
 		}
 		
 		return (
-			<DropdownCommon>
+			<DropdownCommon class='-notifications'>
 			{Notifications}
 			{ShowSpinner}
 			</DropdownCommon>
