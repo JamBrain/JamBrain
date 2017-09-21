@@ -143,7 +143,7 @@ export default class ViewBar extends Component {
 
 			let ShowNotifications = null;
 			if (this.state.showNotifications) {
-				ShowNotifications = (<DropdownNotification getNew={notificationCount > 0} totalNew={this.state.notifications} countCallback={(offset) => this.setState({notificationCountAdjustment: offset})} />);
+				ShowNotifications = (<DropdownNotification getNew={notificationCount > 0} totalNew={notificationCount} countCallback={(offset) => this.setState({notificationCountAdjustment: offset})} />);
 			}
 			
 			Notification = (
