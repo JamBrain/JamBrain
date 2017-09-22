@@ -1,5 +1,29 @@
+@import 'defs.less';
+
 .-notifications {
-	width: 200%;
-	max-width: 480px;
-	
+	& .-items {
+		width: 480px;
+		max-width: 480px !important;
+		right: 0px;
+		top: 55px;
+		background: @COL_W !important;
+
+		& .-item {
+			background: @COL_W !important;
+			a {
+				text-decoration: none;
+				color: @COL_NDDD;
+			}
+						
+			&:hover {
+				background: @COL_A !important;
+				
+				a {
+					color: @COL_W;
+					text-decoration: none;
+				}
+			}
+
+		}
+	}
 }

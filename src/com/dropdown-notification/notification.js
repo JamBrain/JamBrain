@@ -1,8 +1,9 @@
 import { h, Component } 				from 'preact/preact';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
+import NavLink 							from 'com/nav-link/link';
 
-import DropdownCommon					from 'com/dropdown-common/common';
+import DropdownCommon					from 'com/input-dropdown/dropdown';
 
 import $Notification					from '../../shrub/js/notification/notification';
 import $Node							from '../../shrub/js/node/node';
@@ -210,6 +211,7 @@ export default class DropdownNotification extends Component {
 					//console.log('feed:notification', notification);
 					
 					//Todo look for atting in posts I haven't written
+					let Notification = null;
 					
 					let nodeType = notification.node.type;
 					if (notification.node.subtype) {
@@ -232,47 +234,40 @@ export default class DropdownNotification extends Component {
 							const myAtName = "@" + notification.users.get(notification.caller_id).name;
 							const firstAt = notification.note.body.indexOf(myAtName);
 							if (firstAt > -1) {
-								Notifications.push((
-									<div onclick={(e) => window.location = notification.node.path}>
-									{noteAuthor.name} mentioned you in a commented on {nodeAuthor.name}'s {nodeType}
-									&nbsp;"<em>{notification.node.name}</em>"
-									</div>								
-								));								
+								Notification = (								
+									<NavLink href={notification.node.path}>
+									{noteAuthor.name} mentioned you in a commented on {nodeAuthor.name}'s {nodeType} "<em>{notification.node.name}</em>"
+									</NavLink>							
+								);								
 							} else {
-								Notifications.push((
-									<div onclick={(e) => window.location = notification.node.path}>
-									{noteAuthor.name} commented on {nodeAuthor.name}'s {nodeType}
-									&nbsp;"<em>{notification.node.name}</em>"
-									</div>								
-								));
+								Notification = (
+									<NavLink href={notification.node.path}>
+									{noteAuthor.name} commented on {nodeAuthor.name}'s {nodeType} "<em>{notification.node.name}</em>"
+									</NavLink>
+								);
 							}
 						} else if (notification.node.selfauthored && !notification.note.selfauthored) {							
-							Notifications.push((
-								<div onclick={(e) => window.location = notification.node.path}>
-								{noteAuthor.name} commented on your {nodeType}
-								&nbsp;"<em>{notification.node.name}</em>"
-								</div>								
-							));							
+							Notification = (
+								<NavLink href={notification.node.path}>
+								{noteAuthor.name} commented on your {nodeType} "<em>{notification.node.name}</em>"
+								</NavLink>
+							);							
 						} else {
 							//Notification about weird stuff
-							Notifications.push((
-								<div onclick={(e) => window.location = notification.node.path}>
-								You recieved notification that you posted a comment on {nodeAuthor.name}'s {nodeType}
-								&nbsp;"<em>{notification.node.name}</em>"&nbsp;
-								please report to dev-team that you already knew this.
-								</div>
-							));
+							Notification = (
+								<NavLink href={notification.node.path}>
+								You recieved notification that you posted a comment on {nodeAuthor.name}'s {nodeType} "<em>{notification.node.name}</em>" please report to dev-team that you already knew this.
+								</NavLink>
+							);
 						}
 					} else {
 						if (notification.node.selfauthored) {
 							
-							Notifications.push((
-								<div onclick={(e) => window.location = notification.node.path}>
-								Your {nodeType}
-								&nbsp;"<em>{notification.node.name}</em>"&nbsp;
-								was either created or updated.
-								</div>
-							));
+							Notification = (
+								<NavLink href={notification.node.path}>
+								Your {nodeType} "<em>{notification.node.name}</em>" was either created or updated.
+								</NavLink>							
+							);
 						} else {
 
 							const friends = this.getSocialStringList(notification, 'friends');
@@ -289,22 +284,24 @@ export default class DropdownNotification extends Component {
 							}
 							
 							if (notification.node.type == 'post') {
-								Notifications.push((
-									<div onclick={(e) => window.location = notification.node.path}>
-									{User} posted
-									&nbsp;"<em>{notification.node.name}</em>"&nbsp;									
-									</div>
-								));
+								Notification = (
+									<NavLink href={notification.node.path}>
+									{User} posted "<em>{notification.node.name}</em>"
+									</NavLink>								
+								);
 							} else {
-								Notifications.push((
-									<div onclick={(e) => window.location = notification.node.path}>
-									{User} posted a {nodeType}
-									&nbsp;"<em>{notification.node.name}</em>"&nbsp;									
-									</div>
-								));								
+								Notification = (
+									<NavLink href={notification.node.path}>
+									{User} posted a {nodeType} "<em>{notification.node.name}</em>"
+									</NavLink>								
+								);								
 							}
 						}
 						
+					}
+					
+					if (Notification !== null) {
+						Notifications.push([notification.notification.id, Notification]);
 					}
 				} else {
 					console.log('[rejectedNotification]', notification);
@@ -316,28 +313,43 @@ export default class DropdownNotification extends Component {
 		return Notifications;
 	}
 	
+	onModifyFunction(id) {
+		if (id == -1) {
+			if (this.props.hideCallback) {
+				this.props.hideCallback();
+			}
+		}
+	}
+	
 	render( props ) {
 		const state = this.state;
 		
 		let ShowSpinner = null;
-		let Notifications = null;
+		let Notifications = [];
 		
 		if (state.status === undefined) {
 			ShowSpinner = (<NavSpinner />);
 		} else if (state.status != 200) {
-			Notifications = (<div>An error occurred retrieving the notifications...</div>);
+			Notifications = [[null, (<div>An error occurred retrieving the notifications...</div>)]];
 		} else {
 			if (state.notificationsTotal > state.notifications.length) {
 				ShowSpinner = (<NavSpinner />);
 			}
 			Notifications = this.getNotifications();
 		}
+
+		if (ShowSpinner !== null) {
+			Notifications.push([null, ShowSpinner]);
+		}
+		
+		if (Notifications.length > 0) {
+			Notifications.push([-1, (<NavLink href='/home/notifications'><em>View notifications feed...</em></NavLink>)]);
+		}
+		
+		//TODO: Push link to /home/notifications
 		
 		return (
-			<DropdownCommon class='-notifications'>
-			{Notifications}
-			{ShowSpinner}
-			</DropdownCommon>
+			<DropdownCommon className='-notifications' items={Notifications} startExpanded={true} hideSelectedField={true} onmodify={ (id) => this.onModifyFunction(id) } />			
 		);
 	}
 	

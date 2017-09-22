@@ -9,7 +9,7 @@ export default class InputDropdown extends Component {
 		super(props);
 		
 		this.state = {
-			'show': false,
+			'show': props.startExpanded,
 			'value': props.value ? props.value : 0
 		};
 		
@@ -82,12 +82,26 @@ export default class InputDropdown extends Component {
 					</div>				
 				);
 			}
-	
-			return (
-				<div class="input-dropdown" ref={(input) => { this.dropdown = input; }}>
+			
+			let SelectedField = null;
+			if (!props.hideSelectedField) {
+				
+				SelectedField = (
 					<button type="button" onclick={this.onShow}>
 						{props.items[value][1]}
 					</button>
+
+				);
+			}
+			
+			let className = 'input-dropdown';
+			if (props.className) {
+				className = className + ' ' + props.className;
+			}
+			
+			return (
+				<div class={className} ref={(input) => { this.dropdown = input; }}>
+					{SelectedField}
 					{ShowItems}
 				</div>
 			);
