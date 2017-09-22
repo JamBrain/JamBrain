@@ -392,7 +392,9 @@ switch ( $action ) {
 		json_ValidateHTTPMethod('GET');
 
 		if ( $user_id = userAuth_GetID() ) {
-			// Merge shared and private data in to a single response (client side this will be known as 'private')
+			// Merge shared and private data in to a single response (client side this will be known as 'private').
+			// NOTE: It is not an issue that these get merged. Different scopes do not make metadata in to unique indexes.
+			// WARNING: Don't ever send the full ParseByNode response to the user. SH_NODE_META_SERVER scope data must never be seen by a client.
 
 			$metas = nodeMeta_ParseByNode($user_id);
 			$meta_out = array_merge([],
