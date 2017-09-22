@@ -1017,7 +1017,6 @@ switch ( $action ) {
 
 				$node_id = intval(json_ArgGet(0));
 				$user_id = userAuth_GetID();
-				$user_is_admin = userAuth_IsAdmin();
 
 				if ( $node_id && $user_id ) {
 					if ( $node = nodeComplete_GetById($node_id) ) {
@@ -1036,7 +1035,7 @@ switch ( $action ) {
 								}
 							}
 							// No, can meta be set as an admin user, and is this an admin user?
-							if ( $user_is_admin && isset(ADMIN_VALID_META[$node['type']]) ) {
+							if ( userAuth_IsAdmin() && isset(ADMIN_VALID_META[$node['type']]) ) {
 								if ( isset(ADMIN_VALID_META[$node['type']][$key]) ) {
 									$meta_detail[$key] = ADMIN_VALID_META[$node['type']][$key];
 									continue; // Yes.
