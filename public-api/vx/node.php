@@ -392,6 +392,8 @@ switch ( $action ) {
 		json_ValidateHTTPMethod('GET');
 
 		if ( $user_id = userAuth_GetID() ) {
+			// Merge shared and private data in to a single response (client side this will be known as 'private')
+
 			$metas = nodeMeta_ParseByNode($user_id);
 			$meta_out = array_merge([],
 				// Public metadata (this is already in the node)
