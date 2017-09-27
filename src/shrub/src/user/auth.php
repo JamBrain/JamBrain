@@ -51,6 +51,7 @@ function userAuth_GetId() {
 /// Is active user an administrator
 function userAuth_IsAdmin() {
 	global $USER;
+	// TODO: MK REMOVE THIS!!
 	if ( isset($USER) && isset($USER['meta']) && isset($USER['meta']['can-create']) && $USER['meta']['can-create'] === "event") {
 		return true;
 	}
