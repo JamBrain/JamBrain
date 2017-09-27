@@ -4,6 +4,7 @@ require_once __DIR__."/../config.php";
 include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."api.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
+require_once __DIR__."/".SHRUB_PATH."notification/notification.php";
 
 json_Begin();
 
@@ -563,7 +564,7 @@ switch ( $action ) {
 						nodeLink_AddbyNode($new_node, $user_id, SH_NODE_META_PUBLIC, 'author');
 					}
 					else {
-						json_EmitFatalError_ServerError(null, $RESPONSE);
+						json_EmitFatalError_Server(null, $RESPONSE);
 					}
 					
 					nodeCache_InvalidateById($new_node);
@@ -579,7 +580,7 @@ switch ( $action ) {
 					if ( $new_node ) {
 					}
 					else {
-						json_EmitFatalError_ServerError(null, $RESPONSE);
+						json_EmitFatalError_Server(null, $RESPONSE);
 					}
 
 					nodeCache_InvalidateById($new_node);
@@ -791,6 +792,9 @@ switch ( $action ) {
 				
 				if ( $RESPONSE['publish'] ) {
 					$RESPONSE['path'] = node_GetPathById($node_id, 1)['path']; // Root node
+					
+					// notify users watching the author of the published node
+					notification_AddForPublishedNode($node_id, $node['author'], $node['type']);
 				}
 			}
 			else {
@@ -1160,7 +1164,8 @@ switch ( $action ) {
 								$RESPONSE['changed'][$key] = $v;
 						}
 						if ( count($RESPONSE['changed']) ) {
-							nodeCache_InvalidateById($node_id);
+							nodeCache_InvalidateById($node_a_id);
+							nodeCache_InvalidateById($node_b_id);
 						}
 
 					}

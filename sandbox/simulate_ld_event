@@ -159,8 +159,9 @@ function OpenLogs($index)
 	global $logbase;
 	global $flogfull;
 	global $flogerr;
+	global $eventbase;
 	$fulllog = $logbase . "." . $index . ".log";
-	$errlog = $logbase . "." . $index . ".err";
+	$errlog = $eventbase . "." . $index . ".err";
 	$flogfull = fopen($fulllog, "a");
 	$flogerr = fopen($errlog, "a");
 }
@@ -180,6 +181,7 @@ function OpenPreviousEventFile()
 	global $eventbase;
 	global $eventindex;
 	$log = $eventbase . "." . ($eventindex-1) . ".event";
+	if(!is_file($log)) { return false; }
 	return fopen($log, "r");
 }
 
@@ -301,14 +303,14 @@ $stages = array(
 		"MaxEventsPerUser" => 5,
 		"PhaseStart" => 'SetupThemePhase',
 		"HighChance" => ['UserVoteOnTheme'],
-		"LowChance" => array('PostImIn', 'CommentOnPost', 'LikePosts', 'CommentUnlike')  // More various "I'm In" posts will trickle in
+		"LowChance" => array('PostImIn', 'CommentOnPost', 'LikePosts', 'CommentUnlike', 'ReadNotifications')  // More various "I'm In" posts will trickle in
 	),
 	// Third stage, LD Starts!
 	array(
 		"Name" => "Compo Running",
 		"StageStart" => 'StartCompo',
 		"HighChance" => array('CompoPostUpdate', 'CompoEditGame', 'CommentOnPost', 'LikePosts'),
-		"LowChance" => array('CommentOnGame', 'CompoPublishGame', 'CommentUnlike')
+		"LowChance" => array('CommentOnGame', 'CompoPublishGame', 'CommentUnlike', 'ReadNotifications')
 	),
 	// Fourth stage, Submission deadline
 	array(
@@ -317,7 +319,7 @@ $stages = array(
 		"MaxMinutes" => 2,
 		"MaxEventsPerUser" => 10,
 		"HighChance" => array('CommentOnGame', 'CompoPublishGame', 'LikePosts'),
-		"LowChance" => array('CompoPostUpdate', 'CompoEditGame', 'CommentOnPost', 'CommentUnlike'),
+		"LowChance" => array('CompoPostUpdate', 'CompoEditGame', 'CommentOnPost', 'CommentUnlike', 'ReadNotifications'),
 	),
 	// Fifth stage, Voting
 	array(
@@ -325,13 +327,13 @@ $stages = array(
 		"StageStart" => 'SetupVoting',
 		"MaxEventsPerUser" => 80,
 		"HighChance" => array('CommentOnGame', 'VoteOnGame', 'LikePosts', 'LikeGames'),
-		"LowChance" => array('CommentOnPost', 'CompoEditGame', 'CompoPostUpdate', 'CommentUnlike')
+		"LowChance" => array('CommentOnPost', 'CompoEditGame', 'CompoPostUpdate', 'CommentUnlike', 'ReadNotifications')
 	),
 	// Sixth stage - Closed / resuts
 	array(
 		"Name" => "Compo Results",
 		"StageStart" => 'EndCompo',
-		"LowChance" => array('CommentOnGame', 'CommentOnPost', 'CompoEditGame', 'CompoPostUpdate', 'CommentUnlike', 'CompoPostResults', 'LikePosts', 'LikeGames')
+		"LowChance" => array('CommentOnGame', 'CommentOnPost', 'CompoEditGame', 'CompoPostUpdate', 'CommentUnlike', 'CompoPostResults', 'LikePosts', 'LikeGames', 'ReadNotifications')
 	)
 );
 
@@ -413,10 +415,55 @@ function SetupEvent()
 		GenerateNewUsers();
 	}
 
+	$userids = [];
 	foreach($event_users as $user)
 	{
 		$event_user_lookup[$user["username"]] = $user;
+		$userids[] = $user["id"];
 	}
+	
+	// Make sure all but a few users have some of the other users starred.
+	//function ApiNodeStarAdd(&$user, $nodeid) // GET node/star/add/:node_id
+	//function ApiNodeStarRemove(&$user, $nodeid) // GET node/star/remove/:node_id
+
+	$nostars = [];
+	foreach($event_users as $user)
+	{
+		$node = ApiNodeGetMy($event_user_lookup[$user["username"]]);
+		if($node == null) { ReportError("Failed to get node"); }
+		$node["name"] = $user["username"];
+		if( isset($node['link']) && isset($node['link']['star']) && count($node['link']['star']) > 0 )
+		{
+			continue;
+		}
+		$nostars[] = $node;
+	}
+	
+	shuffle($nostars);
+	
+	$nostarcount = intval(count($userids) / 2);
+	while(count($nostars) > $nostarcount)
+	{
+		$node = array_shift($nostars);
+		
+		$avoid = [$node["id"]];
+		for($i = 0; $i < 3; $i++)
+		{
+			$index = random_int(1,count($userids))-1;
+			$otheruser = $userids[$index];
+			if(in_array($otheruser, $avoid)) { continue; }
+			
+			$username = $node["name"];
+			Verbose("User ".$node["id"]." ($username) adding star for $otheruser");
+			if(!ApiNodeStarAdd($event_user_lookup[$username], $otheruser))
+			{
+				ReportError("Failed to star another user.");
+			}
+			$avoid[] = $otheruser;
+		}
+	}
+	
+	
 	
 	// Now generate an event
 	global $event_nodeid;
@@ -964,6 +1011,51 @@ function CompoPublishGame(&$user, $phase)
 	PublishGame($user);
 	return false;
 }
+
+// function ApiNotificationFeed(&$user, $type, $offset = null, $limit = null)
+// function ApiNotificationCount(&$user, $type)
+// function ApiNotificationMarkRead(&$user, $max_read)
+
+function ReadNotifications(&$user, $phase)
+{
+	// Mostly exercising this code, looking for errors.
+	$count = ApiNotificationCount($user, "unread");
+	if($count === null) { ReportError("Failed to get notification count"); }
+	$allcount = ApiNotificationCount($user, "all");
+	if($allcount === null) { ReportError("Failed to get notification count"); }
+
+	Verbose("Have $allcount notifications, $count unread.");
+
+	$feed = ApiNotificationFeed($user, "unread");
+	if($feed === null) { ReportError("Failed to get notification feed"); }
+	if(count($feed) == 0 && $count > 0)
+	{
+		ReportError("Something wrong with notifications - Unread count was >0, but unread feed is empty.");
+	}
+
+	$allfeed = ApiNotificationFeed($user, "all");
+	if($allfeed === null) { ReportError("Failed to get notification feed"); }
+	
+	if($count > 20) {
+		$feed2 = ApiNotificationFeed($user, "unread", 20, 20);
+		if($feed2 === null) { ReportError("Failed to get notification feed"); }
+	}
+	if($allcount > 20) {
+		$allfeed2 = ApiNotificationFeed($user, "all", 20, 20);
+		if($allfeed2 === null) { ReportError("Failed to get notification feed"); }
+	}
+	
+	if(count($feed) > 0)
+	{
+		Verbose("Marking all notifications read. ". $feed[0]['id']);
+		if(!ApiNotificationMarkRead($user, $feed[0]['id']))
+		{
+			ReportError("Failed to mark notifications as read");
+		}
+	}
+}
+
+
 
 
 ////
@@ -1662,6 +1754,33 @@ function PublishGame(&$user)
 //// API Interface wrapper functions
 ////
 
+function ApiNotificationFeed(&$user, $type, $offset = null, $limit = null)
+{
+	$args = [];
+	if($offset != null) { $args[] = "offset=$offset"; }
+	if($limit != null) { $args[] = "limit=$limit"; }
+	$add = "";
+	if(count($args)>0) { $add = "?".implode("&",$args); }
+	$value = LdApi::Get("vx/notification/$type/feed".$add, $user);
+	if(!ResponseIs200($value)) return null;
+	return $value['feed'];
+}
+
+function ApiNotificationCount(&$user, $type)
+{
+	$value = LdApi::Get("vx/notification/$type/count", $user);
+	if(!ResponseIs200($value)) return null;
+	return $value['count'];
+}
+
+function ApiNotificationMarkRead(&$user, $max_read)
+{
+	$value = LdApi::Post("vx/notification/markread","max_read=$max_read", $user);
+	if(!ResponseIs200($value)) return null;
+	return $value['max_read'];
+}
+
+
 // Get one or more nodes
 function ApiNodeGet(&$user, $nodeidlist)
 {
@@ -1671,6 +1790,12 @@ function ApiNodeGet(&$user, $nodeidlist)
 		return $value["node"];
 	}
 	return null; 
+}
+
+function ApiNodeGetMy(&$user)
+{
+	$value = LdApi::Get("vx/node/getmy", $user);
+	return $value;
 }
 
 // Enumerate nodes related to an event
@@ -1750,6 +1875,29 @@ function ApiNodeMetaRemove(&$user, $nodeid, $key) // POST node/meta/remove/:node
 	return ResponseIs200($value);
 }
 
+function ApiNodeStarAdd(&$user, $nodeid) // GET node/star/add/:node_id
+{
+	$value = LdApi::Get("vx/node/star/add/".$nodeid, $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeStarRemove(&$user, $nodeid) // GET node/star/remove/:node_id
+{
+	$value = LdApi::Get("vx/node/star/remove/".$nodeid, $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeLinkAdd(&$user, $node_a, $node_b, $key) // POST node/link/add/:node_a/:node_b
+{
+	$value = LdApi::Post("vx/node/link/add/$node_a/$node_b", urlencode($key)."=", $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeLinkRemove(&$user, $node_a, $node_b, $key) // POST node/link/remove/:node_a/:node_b
+{
+	$value = LdApi::Post("vx/node/link/remove/$node_a/$node_b", urlencode($key)."=", $user);
+	return ResponseIs200($value);
+}
 
 function ApiNoteAdd(&$user, $nodeid, $body) // POST note/add
 {

@@ -44,6 +44,13 @@ if ( in_array($table, $TABLE_LIST) ) {
 				last_auth ".DB_TYPE_TIMESTAMP."
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD COLUMN last_read_notification ".DB_TYPE_ID."
+					AFTER last_auth;"
+			);
+		if (!$ok) break; $TABLE_VERSION++;		
 	};
 	table_Exit($table);
 }
