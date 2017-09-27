@@ -26,7 +26,7 @@ if ( $input != "YES" ) {
 }
 
 echo "\n\n";
-echo "IMPORTANT! We are about to copy everything found in 'sh_node_link' to 'sh_node_meta_version'!\n";
+echo "1. IMPORTANT! We are about to copy everything found in 'sh_node_link' to 'sh_node_meta_version'!\n";
 echo "THIS CANNOT BE UNDONE! Ensure you have backups before continuing! This can take a while.\n";
 echo "\n";
 
@@ -53,9 +53,9 @@ $total = db_QueryDelete("
 echo $total." items added.\n";
 
 echo "\n\n";
-echo "The 'sh_node_link' table is no longer needed, and can be dropped.\n";
-echo "Also all the sh_global entries 'SH_TABLE_NODE_LINK' can be removed.\n";
-echo "\n";
+echo "2. The 'sh_node_link' table is no longer needed, and can be dropped.\n";
+echo "\n\n";
+echo "3. All the sh_global entries 'SH_TABLE_NODE_LINK' can be removed.\n";
 
 echo "\n\n";
 echo "This is the end of STAGE 2.\n";
