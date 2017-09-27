@@ -481,7 +481,7 @@ function SetupEvent()
 
 
 	// Promote our admin user to administrator
-	nodeMeta_AddByNode($author, SH_NODE_META_PUBLIC, 'can-create', 'event');
+	nodeMeta_AddByNode($author, SH_SCOPE_PUBLIC, 'can-create', 'event');
 	// Set a meta through the API to cause cache invalidation
 	if(!ApiNodeMetaAdd($event_admin_user, $author, 'real-name', "Super Admin User")) ReportError("Failed to add user meta through API");
 
@@ -490,23 +490,23 @@ function SetupEvent()
 	$event_nodeid = node_Add( $parentnode, $author, "event", "", "", null, $eventname, $eventbody);
 
 	// Add metadata
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-start', $formatStart);
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-end', $formatEnd);
+	nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'event-start', $formatStart);
+	nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'event-end', $formatEnd);
 
 	// Create metadata for grading
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-01', 'Overall');
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-02', 'Silliness');
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-03', 'Hexadecimal');
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-04', '100101101001');
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-05', 'Logicality');
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-06', 'Complexity');
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-07', 'Infinitude');
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-08', 'Waterproofness');
+	nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'grade-01', 'Overall');
+	nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'grade-02', 'Silliness');
+	nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'grade-03', 'Hexadecimal');
+	nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'grade-04', '100101101001');
+	nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'grade-05', 'Logicality');
+	nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'grade-06', 'Complexity');
+	nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'grade-07', 'Infinitude');
+	nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'grade-08', 'Waterproofness');
 
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-05-optional', 1);
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-06-optional', 1);
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-07-optional', 1);
-	nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'grade-08-optional', 1);
+	nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'grade-05-optional', 1);
+	nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'grade-06-optional', 1);
+	nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'grade-07-optional', 1);
+	nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'grade-08-optional', 1);
 
 	// Add last meta through API, to invalidate cache.
 	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-create', 'item/game')) ReportError("Failed to add event meta through API");
@@ -518,7 +518,7 @@ function SetupEvent()
 	}
 
 	// Make featured
-	nodeMeta_AddByNode(1, SH_NODE_META_PUBLIC, 'featured', "$event_nodeid");
+	nodeMeta_AddByNode(1, SH_SCOPE_PUBLIC, 'featured', "$event_nodeid");
 	
 	
 	// Save information about the users into a file
@@ -566,19 +566,19 @@ function SetupThemePhase($phase)
 		Verbose("Run external tool to populate theme voting pages");
 		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic simple-vote 3");
 	
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-1', 1); // This meta isn't yet supported to be added by admin.
+		nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-1', 1); // This meta isn't yet supported to be added by admin.
 		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '4')) ReportError("Failed to add event meta through API");
 		break;
 		
 	case 3:
 		Message("Starting Theme Voting Round 2");	
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-2', 1);
+		nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-2', 1);
 		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '4')) ReportError("Failed to add event meta through API");
 		break;
 		
 	case 4:
 		Message("Starting Theme Voting Round 3");	
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-3', 1);
+		nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-3', 1);
 		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '4')) ReportError("Failed to add event meta through API");
 		break;
 
@@ -590,16 +590,16 @@ function SetupThemePhase($phase)
 		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic calc 3");
 		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic finalize 10"); // Compute top 10 scoring themes into final round.
 		
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-4', 1);
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-name-4', "Final Round");
+		nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-4', 1);
+		nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-name-4', "Final Round");
 		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '4')) ReportError("Failed to add event meta through API");
 		break;
 
 	case 6: // Final theme selection
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-1', 2);
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-2', 2);
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-3', 2);
-		nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'theme-page-mode-4', 2);
+		nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-1', 2);
+		nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-2', 2);
+		nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-3', 2);
+		nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-4', 2);
 		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '5')) ReportError("Failed to add event meta through API");
 		
 		
