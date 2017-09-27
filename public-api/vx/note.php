@@ -67,12 +67,11 @@ switch ( $action ) {
 				if ( $parent !== 0 )
 					json_EmitFatalError_Permission("Temporary: No children", $RESPONSE);
 
-				$note_id = note_AddByNode($node['id'], $node['parent'], $author, $parent, $body, $version_tag);
-				$RESPONSE['note'] = $note_id;
+				$RESPONSE['note'] = note_AddByNode($node['id'], $node['parent'], $author, $parent, $body, $version_tag);
 				
 				// Add notifications for users watching this thread
-				if ( $note_id ) {
-					notification_AddForNote($node['id'], $note_id, $author);
+				if ( $RESPONSE['note'] ) {
+					notification_AddForNote($node['id'], $RESPONSE['note'], $author);
 				}
 			}
 			else {
