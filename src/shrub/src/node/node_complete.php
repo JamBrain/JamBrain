@@ -39,8 +39,8 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 		$metas = nodeMeta_ParseByNode($ids);
 		foreach ( $nodes as &$node ) {
 			// Store Public Metadata
-			if ( isset($metas[$node['id']][SH_NODE_META_PUBLIC]) ) {
-				$node['meta'] = $metas[$node['id']][SH_NODE_META_PUBLIC];
+			if ( isset($metas[$node['id']][SH_SCOPE_PUBLIC]) ) {
+				$node['meta'] = $metas[$node['id']][SH_SCOPE_PUBLIC];
 			}
 			else {
 				$node['meta'] = [];
@@ -54,8 +54,8 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 	if ( $flags & F_NODE_LINK ) {
 		$links = nodeLink_ParseByNode($ids, !($flags & F_NODE_NO_LINKVALUE));
 		foreach ( $nodes as &$node ) {
-			if ( isset($links[$node['id']][0][SH_NODE_META_PUBLIC]) ) {
-				$node['link'] = $links[$node['id']][0][SH_NODE_META_PUBLIC];
+			if ( isset($links[$node['id']][0][SH_SCOPE_PUBLIC]) ) {
+				$node['link'] = $links[$node['id']][0][SH_SCOPE_PUBLIC];
 			}
 			else {
 				$node['link'] = [];
@@ -166,7 +166,7 @@ function nodeComplete_GetAuthored( $id ) {
 	$author_ids = [];
 	foreach( $author_links as &$link ) {
 		// We only care about public (for now)
-		if ( $link['scope'] == SH_NODE_META_PUBLIC ) {
+		if ( $link['scope'] == SH_SCOPE_PUBLIC ) {
 			if ( $link['b'] == $id ) {
 				$author_ids[] = $link['a'];
 			}
@@ -180,7 +180,7 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 	$ret = [];
 	
 	// Scan for public nodes with 'can-create' metadata
-	$public_metas = nodeMeta_GetByKey("can-create", null, '='.SH_NODE_META_PUBLIC);
+	$public_metas = nodeMeta_GetByKey("can-create", null, '='.SH_SCOPE_PUBLIC);
 	
 	// Add public nodes
 	foreach( $public_metas as &$meta ) {
@@ -196,7 +196,7 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 	$authored_ids = nodeComplete_GetAuthored($id);
 	if ( !empty($authored_ids) ) {
 		// Scan for shared nodes I authored
-		$shared_metas = nodeMeta_GetByKeyNode("can-create", $authored_ids, '='.SH_NODE_META_SHARED);
+		$shared_metas = nodeMeta_GetByKeyNode("can-create", $authored_ids, '='.SH_SCOPE_SHARED);
 	
 		// Add shared nodes
 		foreach( $shared_metas as &$meta ) {
@@ -218,7 +218,7 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 //	
 //	foreach( $metas as &$meta ) {
 //		// Add public nodes
-//		if ( $meta['scope'] == SH_NODE_META_PUBLIC ) {
+//		if ( $meta['scope'] == SH_SCOPE_PUBLIC ) {
 //			if ( !isset($ret[$meta['value']]) ) {
 //				$ret[$meta['value']] = [];
 //			}
@@ -226,7 +226,7 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 //			$ret[$meta['value']][] = $meta['node'];
 //		}
 //		// Add shared nodes (primarily authored nodes)
-//		else if ( $meta['scope'] == SH_NODE_META_SHARED ) {
+//		else if ( $meta['scope'] == SH_SCOPE_SHARED ) {
 //			if ( in_array($meta['node'], $node_ids) ) {
 //				if ( !isset($ret[$meta['value']]) ) {
 //					$ret[$meta['value']] = [];
