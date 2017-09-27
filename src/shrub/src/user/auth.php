@@ -51,7 +51,7 @@ function userAuth_GetId() {
 /// Is active user an administrator
 function userAuth_IsAdmin() {
 	global $USER;
-	// TODO: MK REMOVE THIS!!
+	// TODO: MK Remove this! This is not a legal way to check for admin (there was a bug with $USER['private'], sorry).
 	if ( isset($USER) && isset($USER['meta']) && isset($USER['meta']['can-create']) && $USER['meta']['can-create'] === "event") {
 		return true;
 	}
