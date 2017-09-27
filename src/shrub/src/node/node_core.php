@@ -512,6 +512,19 @@ function node_IdToIndex( $nodes ) {
 	return $ret;
 }
 
+function node_GetAuthor( $id ) {
+	$ret = db_QueryFetchSingle(
+		"SELECT author 
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		WHERE
+			id=?;",
+		$id
+	);
+	if ( count($ret) == 0 ) {
+		return null;
+	}
+	return $ret[0];
+}
 
 function node_SetAuthor( $id, $author ) {
 	return db_QueryUpdate(

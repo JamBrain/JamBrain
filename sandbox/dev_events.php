@@ -128,7 +128,7 @@ if($_GET)
 		
 		if($cmd == "setstate" && key_exists("state",$_GET))
 		{	
-			$event_nodeid = $featured;
+			$event_nodeid = intval($featured);
 			$state = $_GET["state"];
 			switch($state)
 			{
@@ -188,6 +188,9 @@ if($_GET)
 			nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'can-grade', $state == 6 ? 1 : 0);
 			nodeMeta_AddByNode($event_nodeid, SH_NODE_META_PUBLIC, 'event-finished', $state == 7 ? 1 : 0);
 
+
+			// Since this is a website, invalidating the node cache should work for the API's cache.
+			nodeCache_InvalidateById($event_nodeid);
 			
 		}
 	
