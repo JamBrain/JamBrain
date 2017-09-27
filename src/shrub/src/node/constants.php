@@ -27,6 +27,7 @@ const SH_NODE_TYPE_USER =			'user';
 const SH_NODE_TYPE_POST =			'post';
 /// @}
 
+// TODO: MK Move these to src/shrub/src/scope/constants.php
 ///	@addtogroup NodeMetaPrivacy
 /// @name Privacy Types
 /// @{
@@ -46,20 +47,22 @@ const SH_SCOPE_SERVER_DELETED = 		64^-1;
 /// @{
 const SH_TABLE_NODE =				"node";
 const SH_TABLE_NODE_VERSION =		"node_version";
-const SH_TABLE_NODE_LINK =			"node_link";
+const SH_TABLE_NODE_LINK =			"node_link";	// TODO: MK Remove Me
 const SH_TABLE_NODE_META =			"node_meta";
+const SH_TABLE_NODE_META_VERSION =	"node_meta_version";
 const SH_TABLE_NODE_LOVE =			"node_love";
-const SH_TABLE_NODE_SEARCH =		"node_search";
+const SH_TABLE_NODE_SEARCH =		"node_search";	// TODO: MK Should this be removed? Put blob in NODE?
 const SH_TABLE_NODE_MAGIC =			"node_magic";
 /// @}
 
 global_AddTableConstant( 
 	'SH_TABLE_NODE',
 	'SH_TABLE_NODE_VERSION',
-	'SH_TABLE_NODE_LINK',
+	'SH_TABLE_NODE_LINK',		// TODO: MK Remove Me
 	'SH_TABLE_NODE_META',
+	'SH_TABLE_NODE_META_VERSION',
 	'SH_TABLE_NODE_LOVE',
-	'SH_TABLE_NODE_SEARCH',
+	'SH_TABLE_NODE_SEARCH',		// TODO: MK Should this be removed? Put blob in NODE?
 	'SH_TABLE_NODE_MAGIC'
 );
 
