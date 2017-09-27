@@ -406,14 +406,18 @@ switch ( $action ) {
 		json_ValidateHTTPMethod('GET');
 
 		if ( $user_id = userAuth_GetID() ) {
+			// Merge shared and private data in to a single response (client side this will be known as 'private').
+			// NOTE: It is not an issue that these get merged. Different scopes do not make metadata in to unique indexes.
+			// WARNING: Don't ever send the full ParseByNode response to the user. SH_NODE_META_SERVER scope data must never be seen by a client.
+
 			$metas = nodeMeta_ParseByNode($user_id);
 			$meta_out = array_merge([],
 				// Public metadata (this is already in the node)
 				//isset($metas[SH_NODE_META_PUBLIC]) ? $metas[SH_NODE_META_PUBLIC] : [],
 				// Shared metadata (authors??)
 				isset($metas[SH_NODE_META_SHARED]) ? $metas[SH_NODE_META_SHARED] : [],
-				// Protected metadata
-				isset($metas[SH_NODE_META_PROTECTED]) ? $metas[SH_NODE_META_PROTECTED] : []
+				// Private metadata
+				isset($metas[SH_NODE_META_PRIVATE]) ? $metas[SH_NODE_META_PRIVATE] : []
 			);
 
 			$links = nodeLink_ParseByNode($user_id);
@@ -423,7 +427,7 @@ switch ( $action ) {
 				// Shared Links from me
 				isset($links[0][SH_NODE_META_SHARED]) ? $links[0][SH_NODE_META_SHARED] : [],
 				// Procted Links from me
-				isset($links[0][SH_NODE_META_PROTECTED]) ? $links[0][SH_NODE_META_PROTECTED] : []
+				isset($links[0][SH_NODE_META_PRIVATE]) ? $links[0][SH_NODE_META_PRIVATE] : []
 			);
 			$refs_out = array_merge([],
 				// Public links to me
