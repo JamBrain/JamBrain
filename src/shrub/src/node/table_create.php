@@ -219,6 +219,12 @@ if ( in_array($table, $TABLE_LIST) ) {
 				`value` ".DB_TYPE_NODE_LINK_VALUE."
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD UNIQUE `a_b_key` (`a`, `b`, `key`);"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 
 		// NOTE: `value` cannot be indexed, since it is not a VARCHAR
 		// NOTE: `scope` needs to be indexed, so we can do >= 0 check

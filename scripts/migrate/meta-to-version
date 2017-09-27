@@ -7,3 +7,60 @@
 //   - SH_TABLE_NODE_META -> SH_TABLE_NODE_META_VERSION (DO THIS BY HAND)
 // - re-create 'sh_node_meta', and upgrade tables (sudo ./table-create)
 // - walk the versions table, find the newest instance of each unique piece of metadata, add it to 'sh_node_meta'
+
+const CONFIG_PATH = "../../src/shrub/";
+const SHRUB_PATH = "../../src/shrub/src/";
+
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
+
+
+echo "\n** META MIGRATION -- STAGE 1 **\n";
+echo "\n";
+echo "Migrating requires you to do a few steps manually. We'll walk through them here.\n";
+echo "\n";
+echo "1. Rename the 'sh_node_meta' table to 'sh_node_meta_version'.\n";
+echo "\n";
+echo "   Open up http://192.168.48.48/dev/phpmyadmin/ and find 'sh_node_meta' inside the scotchbox DB.\n";
+echo "   Table rename can be found in the 'Operations' tab.\n";
+
+echo "\nContinue [type 'YES']? ";
+flush();
+$input = trim(fgets(STDIN));
+if ( $input != "YES" ) {
+	echo "Aborting...\n";
+	exit(1);
+}
+
+echo "\n\n";
+echo "2. Inside 'sh_global', rename all 'SH_TABLE_NODE_META' keys to 'SH_TABLE_NODE_META_VERSION'.\n";
+echo "\n";
+echo "   TIP: Use a search to find them all, and just double click on the key field to edit.\n";
+
+echo "\nContinue [type 'YES']? ";
+flush();
+$input = trim(fgets(STDIN));
+if ( $input != "YES" ) {
+	echo "Aborting...\n";
+	exit(1);
+}
+
+echo "\n\n";
+echo "3. Run the 'table-create' script from 'src/shrub/tools'.\n";
+echo "\n";
+echo "   The script requires root. i.e. 'sudo ./table-create'.\n";
+
+echo "\nContinue [type 'YES']? ";
+flush();
+$input = trim(fgets(STDIN));
+if ( $input != "YES" ) {
+	echo "Aborting...\n";
+	exit(1);
+}
+
+echo "\n\n";
+echo "This is the end of STAGE 1.\n";
+echo "Next, go run the 'link-to-version' script for the next set of instructions.\n";
+echo "\n";
+
+exit(0);

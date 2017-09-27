@@ -1,0 +1,5 @@
+#!/usr/bin/env php
+<?php
+// Migrating SH_NODE_LINK to SH_NODE_META_VERSION
+// 
+// - follow the steps of 'meta-to-version' first
