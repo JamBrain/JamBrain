@@ -352,5 +352,4 @@ export default class DropdownNotification extends Component {
 			<DropdownCommon className='-notifications' items={Notifications} startExpanded={true} hideSelectedField={true} onmodify={ (id) => this.onModifyFunction(id) } />			
 		);
 	}
-	
 }
