@@ -17,6 +17,7 @@ const THINGS_I_CAN_STAR = [
 	'user'
 ];
 
+// TODO: MK Rename and adjust this for privileged users, not Admins  
 const ADMIN_VALID_META = [
 	'event' => [
 		'can-create' => ['length' => 64],
