@@ -349,7 +349,7 @@ export default class DropdownNotification extends Component {
 		//TODO: Push link to /home/notifications
 		
 		return (
-			<DropdownCommon className='-notifications' items={Notifications} startExpanded={true} hideSelectedField={true} onmodify={ (id) => this.onModifyFunction(id) } />			
+			<DropdownCommon class='-notifications' items={Notifications} startExpanded={true} hideSelectedField={true} onmodify={ (id) => this.onModifyFunction(id) } />			
 		);
 	}
 }
