@@ -89,12 +89,12 @@ Function AddNewTag($category, $name, $warning = null)
 
 function SetWarning($id, $warning)
 {
-	nodeMeta_AddByNode($id, SH_NODE_META_PUBLIC, 'tag-warning', $warning);
+	nodeMeta_AddByNode($id, SH_SCOPE_PUBLIC, 'tag-warning', $warning);
 }
 
 function ClearWarning($id)
 {
-	nodeMeta_RemoveByNode($id, SH_NODE_META_PUBLIC, 'tag-warning', "");
+	nodeMeta_RemoveByNode($id, SH_SCOPE_PUBLIC, 'tag-warning', "");
 }
 
 function RemoveTag($id, $node)
