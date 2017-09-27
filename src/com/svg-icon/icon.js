@@ -17,8 +17,11 @@ export default class SVGIcon extends Component {
 		if ( props['text-bottom'] )		svg_props['class'] += " -text-bottom";
 		if ( props['middle'] )			svg_props['class'] += " -middle";
 		if ( props['small'] )			svg_props['class'] += " -small";
+		if ( props['half'] )			svg_props['class'] += " -half";
+		if ( props['quarter'] )			svg_props['class'] += " -quarter";
 		if ( props['block'] )			svg_props['class'] += " -block";
 		if ( props['gap'] )				svg_props['class'] += " -gap";
+		if ( props['pad'] )				svg_props['class'] += " -pad";
 		
 		// What Icon //
 		if ( props.name ) {
