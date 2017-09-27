@@ -1028,6 +1028,7 @@ switch ( $action ) {
 						if ( !node_IsAuthor($node, $user_id) )
 							json_EmitFatalError_Permission(null, $RESPONSE);
 
+						// TODO: MK This and all related code needs to be adapted to be privileged users with specific matching permissions, or an admin 
 						$meta_detail = [];
 						
 						// Validate that all posts are legal
@@ -1057,6 +1058,8 @@ switch ( $action ) {
 						$RESPONSE['changed'] = [];
 						
 						foreach ( $_POST as $key => &$value ) {
+							// TODO: MK this may need to change back to this older code, depending on permission implementation 
+							//$detail = VALID_META[$node['type']][$key];
 							$detail = $meta_detail[$key];
 							
 							$v = $value;
