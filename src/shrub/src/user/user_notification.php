@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__."/../node/node.php";
 
+// TODO: MK Determine if the user table is really the best place for this. 
+//       i.e. for security reasons, access to the user table needs to be HEAVILY restricted.
 
 /// @retval Integer Id of highest read notification.
 function user_GetLastReadNotificationByNode( $node ) {
