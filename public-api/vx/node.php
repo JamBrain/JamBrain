@@ -406,30 +406,34 @@ switch ( $action ) {
 		json_ValidateHTTPMethod('GET');
 
 		if ( $user_id = userAuth_GetID() ) {
+			// Merge shared and private data in to a single response (client side this will be known as 'private').
+			// NOTE: It is not an issue that these get merged. Different scopes do not make metadata in to unique indexes.
+			// WARNING: Don't ever send the full ParseByNode response to the user. SH_NODE_META_SERVER scope data must never be seen by a client.
+
 			$metas = nodeMeta_ParseByNode($user_id);
 			$meta_out = array_merge([],
 				// Public metadata (this is already in the node)
-				//isset($metas[SH_SCOPE_PUBLIC]) ? $metas[SH_SCOPE_PUBLIC] : [],
+				//isset($metas[SH_NODE_META_PUBLIC]) ? $metas[SH_NODE_META_PUBLIC] : [],
 				// Shared metadata (authors??)
-				isset($metas[SH_SCOPE_SHARED]) ? $metas[SH_SCOPE_SHARED] : [],
-				// Protected metadata
-				isset($metas[SH_SCOPE_PROTECTED]) ? $metas[SH_SCOPE_PROTECTED] : []
+				isset($metas[SH_NODE_META_SHARED]) ? $metas[SH_NODE_META_SHARED] : [],
+				// Private metadata
+				isset($metas[SH_NODE_META_PRIVATE]) ? $metas[SH_NODE_META_PRIVATE] : []
 			);
 
 			$links = nodeLink_ParseByNode($user_id);
 			$link_out = array_merge([],
 				// Public Links from me (this is already in the node)
-				//isset($links[0][SH_SCOPE_PUBLIC]) ? $links[0][SH_SCOPE_PUBLIC] : [],
+				//isset($links[0][SH_NODE_META_PUBLIC]) ? $links[0][SH_NODE_META_PUBLIC] : [],
 				// Shared Links from me
-				isset($links[0][SH_SCOPE_SHARED]) ? $links[0][SH_SCOPE_SHARED] : [],
+				isset($links[0][SH_NODE_META_SHARED]) ? $links[0][SH_NODE_META_SHARED] : [],
 				// Procted Links from me
-				isset($links[0][SH_SCOPE_PROTECTED]) ? $links[0][SH_SCOPE_PROTECTED] : []
+				isset($links[0][SH_NODE_META_PRIVATE]) ? $links[0][SH_NODE_META_PRIVATE] : []
 			);
 			$refs_out = array_merge([],
 				// Public links to me
-				isset($links[1][SH_SCOPE_PUBLIC]) ? $links[1][SH_SCOPE_PUBLIC] : [],
+				isset($links[1][SH_NODE_META_PUBLIC]) ? $links[1][SH_NODE_META_PUBLIC] : [],
 				// Shared links to me
-				isset($links[1][SH_SCOPE_SHARED]) ? $links[1][SH_SCOPE_SHARED] : []
+				isset($links[1][SH_NODE_META_SHARED]) ? $links[1][SH_NODE_META_SHARED] : []
 			);
 				
 			$RESPONSE['id'] = $user_id;
@@ -560,9 +564,9 @@ switch ( $action ) {
 					$new_node = node_Add($parent, $user_id, $type, $subtype, "", null, "", "");
 					if ( $new_node ) {
 						// Allow posts under the game
-						nodeMeta_AddByNode($new_node, SH_SCOPE_SHARED, 'can-create', 'post');
+						nodeMeta_AddByNode($new_node, SH_NODE_META_SHARED, 'can-create', 'post');
 						// Add yourself as an author of the game
-						nodeLink_AddbyNode($new_node, $user_id, SH_SCOPE_PUBLIC, 'author');
+						nodeLink_AddbyNode($new_node, $user_id, SH_NODE_META_PUBLIC, 'author');
 					}
 					else {
 						json_EmitFatalError_Server(null, $RESPONSE);
@@ -947,7 +951,7 @@ switch ( $action ) {
 							if ( in_array($node['type'], THINGS_I_CAN_STAR) ) {
 								// TODO: Check if this exact value isn't the newest
 
-								$RESPONSE['id'] = nodeLink_AddByNode($user_id, $node_id, SH_SCOPE_SHARED, 'star');
+								$RESPONSE['id'] = nodeLink_AddByNode($user_id, $node_id, SH_NODE_META_SHARED, 'star');
 								if ( $RESPONSE['id'] ) {
 									nodeCache_InvalidateById($node_id);
 								}
@@ -981,7 +985,7 @@ switch ( $action ) {
 							if ( in_array($node['type'], THINGS_I_CAN_STAR) ) {
 								// TODO: Check if this exact value isn't the newest
 								
-								$RESPONSE['id'] = nodeLink_RemoveByNode($user_id, $node_id, SH_SCOPE_SHARED, 'star');
+								$RESPONSE['id'] = nodeLink_RemoveByNode($user_id, $node_id, SH_NODE_META_SHARED, 'star');
 								if ( $RESPONSE['id'] ) {
 									nodeCache_InvalidateById($node_id);
 								}
@@ -1054,7 +1058,7 @@ switch ( $action ) {
 						// node, scope, key, value
 						// bigint, tinyint, char32, text65535
 						
-						$scope = SH_SCOPE_PUBLIC;
+						$scope = SH_NODE_META_PUBLIC;
 						$RESPONSE['changed'] = [];
 						
 						foreach ( $_POST as $key => &$value ) {
@@ -1139,7 +1143,7 @@ switch ( $action ) {
 						// a, b, scope, key, value
 						// bigint, bigint, tinyint, char32, text65535
 						
-						$scope = SH_SCOPE_PUBLIC;
+						$scope = SH_NODE_META_PUBLIC;
 						$RESPONSE['changed'] = [];
 						
 						foreach ( $_POST as $key => &$value ) {
