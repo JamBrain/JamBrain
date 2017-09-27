@@ -25,6 +25,8 @@ if ( in_array($table, $TABLE_LIST) ) {
 		$created = true;
 		if (!$ok) break; $TABLE_VERSION++;
 	case 1:
+		// TODO: MK DB_TYPE_UID is an autoincrement type, and will always start at 1. This should not be necessary.
+			
 		// Enforce that notification IDs start at 1, rather than 0. 
 		// This statement has no effect if there is already data in the table with higher id values. (according to mysql docs)
 		$ok = table_Update( $table,
