@@ -174,6 +174,17 @@ function note_GetByNode( $ids ) {
 }
 
 
+function note_InterestedUsers( $node )
+{
+	return db_QueryFetchSingle(
+		"SELECT DISTINCT author
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE." 
+		WHERE node = ?;",
+		$node
+	);
+}
+
+
 function note_GetById( $ids ) {
 	$multi = is_array($ids);
 	if ( !$multi )

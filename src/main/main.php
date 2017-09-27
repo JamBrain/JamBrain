@@ -12,7 +12,8 @@ if ( !isset($_GET['ignore']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE') !== f
 @include __DIR__."/../shrub/config.php";
 
 // TODO: Figure out if this is the live server, and disable this feature if it is //
-define( 'USE_MINIFIED', isset($_GET['debug']) ? '' : '.min' );
+define( 'SITE_DEBUG', isset($_GET['debug'])?1:0 );
+define( 'USE_MINIFIED', SITE_DEBUG ? '' : '.min' );
 define( 'VERSION_STRING', defined('GIT_VERSION') ? 'v='.GIT_VERSION : '' );
 const STATIC_DOMAINS = [ 
 	'ludumdare.org' => 'static.jammer.work',
@@ -53,6 +54,7 @@ if ( !isset($_GET['nopreload']) ) {
 <body>
 	<script>
 		<?php /* Output PHP Variables for JS */ ?>
+		var SITE_DEBUG = <?=SITE_DEBUG?>;
 		var VERSION_STRING = "<?=VERSION_STRING?>";
 		var STATIC_DOMAIN = "<?=STATIC_DOMAIN?>";
 		var STATIC_ENDPOINT = "<?=STATIC_ENDPOINT?>";

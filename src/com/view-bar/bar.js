@@ -8,10 +8,12 @@ import NavLink 							from 'com/nav-link/link';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
 
-import DropdownUser 					from 'com/dropdown-user/user';
-//import DropdownNotification				from 'com/dropdown-notification/notification';
+//import DropdownUser 					from 'com/dropdown-user/user';
+import DropdownNotification				from 'com/dropdown-notification/notification';
 
 //import $Node							from '../../shrub/js/node/node';
+import $Notification					from '../../shrub/js/notification/notification';
+
 
 function make_url( url ) {
 	return url + window.location.search;
@@ -20,22 +22,44 @@ function make_url( url ) {
 export default class ViewBar extends Component {
 	constructor( props ) {
 		super(props);
+		
+		this.state - {
+			notifications: 0,
+			notificationCountAdjustment: 0,
+		};
+	}
+
+	checkNotificationCount() {
+		$Notification.GetCountUnread()
+		.then((r) => {
+			if (this.state.notifications != r.count) {
+				this.setState({notifications: r.count, notificationCountAdjustment: 0});
+			}
+			setTimeout(() => this.checkNotificationCount(), 60000);
+		})
+		.catch((e) => {
+			setTimeout(() => this.checkNotificationCount(), 5 * 60000);
+			console.log('[Notificaton error]', e);
+		});
 	}
 
 	componentDidMount() {
 		document.body.classList.add('_use-view-bar');
+	
+		this.checkNotificationCount();
 	}
+
 	componentWillUnmount() {
 		document.body.classList.remove('_use-view-bar');
 		document.body.classList.remove('_static-view-bar');
 	}
-	
+
 //	componentWillReceiveProps( nextProps ) {
 //		if ( Shallow.Diff(nextProps, this.props) ) {
 ////			console.log('featured',nextProps.featured);
 //		}
 //	}
-	
+
 	shouldComponentUpdate( nextProps, nextState ) {
 		var ret = Shallow.Compare(this, nextProps, nextState);
 		//console.log(ret, nextProps.featured);
@@ -44,7 +68,7 @@ export default class ViewBar extends Component {
 
 	renderLeft() {
 	}
-	
+
 	renderRight( user, featured ) {
 		var Search = null;
 //		var Search = (
@@ -52,23 +76,24 @@ export default class ViewBar extends Component {
 //				<SVGIcon baseline>search</SVGIcon>
 //			</ButtonBase>
 //		);
-		
+
 		var ShowCalendar = (
 			<ButtonBase class="-button if-no-sidebar-block" onclick={e => { console.log('calendar'); window.location.hash = "#cal"; }}>
 				<SVGIcon baseline>calendar</SVGIcon>
 				<div class="if-sidebar-block">Schedule</div>
-			</ButtonBase>		
+			</ButtonBase>
 		);
-		
+
 		var ShowJoin = null;
 		var ShowMyGame = null;
 		var NewPost = null;
-		var Notification = null;
+		let Notification = null;
 		var ShowUser = null;
 		var Register = null;
 		var Login = null;
 		var GoSecure = null;
 		var ShowSpinner = null;
+		let ShowNotifications = null;
 
 		// Disallow insecure login
 		if ( SECURE_LOGIN_ONLY && (location.protocol !== 'https:') ) {
@@ -90,7 +115,7 @@ export default class ViewBar extends Component {
 							<div class="if-sidebar-block">My Game</div>
 						</ButtonLink>
 					);
-					
+
 					NewPost = (
 						<ButtonBase class="-button" onclick={e => { window.location.hash = "#create/"+featured.focus+"/post"; }}>
 							<SVGIcon>edit</SVGIcon>
@@ -107,13 +132,22 @@ export default class ViewBar extends Component {
 					);
 				}
 			}
+
+			// Notifications
+			let NotificationCount = null;
+			const notificationCount = Math.max(0, this.state.notifications - this.state.notificationCountAdjustment);
+			if (notificationCount > 0) {
+				NotificationCount = (<div class="-count">{notificationCount}</div>);
+			}
+
+			if (this.state.showNotifications) {
+				ShowNotifications = (<DropdownNotification getNew={notificationCount > 0} totalNew={notificationCount} countCallback={ (offset) => this.setState({notificationCountAdjustment: offset}) } hideCallback={ () => this.setState({showNotifications: false}) } />);
+			}
 			
-			// TODO: Figure out how many notifications a user has
-			let NotificationCount = false ? (
-				<div class="-new">2</div>
-			) : "";
-			var Notification = (
-				<ButtonBase class="-icon" onclick={e => {console.log('notification'); window.location.hash = "#dummy";}}>
+			Notification = (
+				<ButtonBase class="-icon" onclick={(e) => {
+					this.setState({showNotifications: !this.state.showNotifications});
+				}}>
 					<SVGIcon baseline>bubble</SVGIcon>
 					{NotificationCount}
 				</ButtonBase>
@@ -148,7 +182,7 @@ export default class ViewBar extends Component {
 		// Still waiting
 		else {
 			ShowSpinner = <NavSpinner />;
-		}		
+		}
 
 		if ( ShowSpinner ) {
 			return (
@@ -166,6 +200,7 @@ export default class ViewBar extends Component {
 					{ShowCalendar}
 					{Search}
 					{Notification}
+					{ShowNotifications}
 					{ShowUser}
 					{Register}
 					{Login}
@@ -174,7 +209,7 @@ export default class ViewBar extends Component {
 			);
 		}
 	}
-	
+
 	render( {user, featured}, {} ) {
 		return (
 			<div class="view-bar">
