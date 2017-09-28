@@ -2,4 +2,33 @@
 <?php
 // Migrating SH_NODE_LINK to SH_NODE_META_VERSION
 // 
-// - follow the steps of 'meta-to-version' first
+// - follow the steps of 'meta-to-version' and 'link-to-version' first
+// - scan sh_node_meta_version
+//   - Find newest version of each
+//   - Add to to sh_node_meta, referencing the version found
+
+const CONFIG_PATH = "../../src/shrub/";
+const SHRUB_PATH = "../../src/shrub/src/";
+
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
+require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
+
+echo "\n** LINK MIGRATION -- STAGE 3 **\n";
+echo "\n";
+echo "IMPORTANT! Make sure you've complete STAGE 2 (meta-to-version) and STAGE 3 (link-to-version) before continuing.\n";
+
+echo "\nContinue [type 'YES']? ";
+flush();
+$input = trim(fgets(STDIN));
+if ( $input != "YES" ) {
+	echo "Aborting...\n";
+	exit(1);
+}
+
+echo "\n\n";
+echo "1. IMPORTANT! We are about to scan and populate the new 'sh_node_meta' table!\n";
+echo "THIS CANNOT BE UNDONE! Ensure you have backups before continuing! This can take a while.\n";
+echo "\n";
+
