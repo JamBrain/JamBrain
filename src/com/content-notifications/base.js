@@ -19,10 +19,11 @@ export default class NotificationsBase extends Component {
 		let notifications = [];
 		r.feed.forEach((notification) => {
 			notifications.push(
-				[notification.id, <Notification failCallback={ (id) => this.failCallback(id) } caller_id={caller_id} notification={notification} markReadyCallback={(id) => this.markReady(id) } />, false]);					
+				[notification.id, <Notification failCallback={ (id) => this.failCallback(id) } caller_id={caller_id} notification={notification} markReadyCallback={(id) => this.markReady(id) } />, false, notification]);					
 		});	
 		
 		this.setState({
+			caller_id: caller_id,
 			status: r.status,
 			notifications: notifications,
 			notificationsTotal: r.feed.length + this.state.notifications.length,
@@ -30,13 +31,12 @@ export default class NotificationsBase extends Component {
 	}
 	
 	removeFailed(id) {
-		let notifications = this.state.notifications.filter(([cur_id, notification, loaded]) => cur_id != id);
+		let notifications = this.state.notifications.filter(([cur_id, notification, loaded, notificationData]) => cur_id != id);
 		this.updateCallback();
 		this.setState({notifications: notifications});		
 	}
 	
 	markReady(id) {
-		console.log('Mark ready', id);
 		let notifications = [...this.state.notifications];
 		for (let i=0; i<notifications.length; i++) {
 			if (notifications[i][0] == id) {
@@ -49,7 +49,7 @@ export default class NotificationsBase extends Component {
 		if (this.props.getNew && !this.isLoading()) {
 			let maxId = -1;
 			
-			notifications.forEach(([id, notification, loaded]) => {
+			notifications.forEach(([id, notification, loaded, notificationData]) => {
 				if (id > maxId) {
 					maxId = id;
 				}
@@ -70,26 +70,25 @@ export default class NotificationsBase extends Component {
 	
 	isLoading() {
 		let loading = this.state.notificationsTotal < 0;
-		this.state.notifications.forEach(([id, notification, loaded]) => {
+		this.state.notifications.forEach(([id, notification, loaded, notificationData]) => {
 			if (!loaded) {
 				loading = true;
-				console.log('Loading', id, loaded);
 			}
 		});
-		console.log('Loading', loading);
 		return loading;
 	};
 		
 	getNotifications() {
 		let Notifications = [];
 		const feed = this.state.notifications;
+		const caller_id = this.state.caller_id;
 		
 		if (feed && feed.length > 0) {
 			
-			feed.forEach(([id, notification, loaded]) => {
+			feed.forEach(([id, notification, loaded, notificationData]) => {
 				if (true) {
-					Notifications.push([id, notification]);
-					console.log('Render', id, notification);
+					let N = notification; // (<Notification failCallback={ (nid) => this.failCallback(nid) } caller_id={caller_id} notification={notificationData} markReadyCallback={(nid) => this.markReady(nid) } />);
+					Notifications.push([id, N]);
 				}
 			});
 

@@ -6,7 +6,7 @@ import $Notification					from '../../shrub/js/notification/notification';
 import $Node							from '../../shrub/js/node/node';
 import $Note							from '../../shrub/js/note/note';
 
-export default class DropdownNotification extends Component {
+export default class NotificationItem extends Component {
 	
 	constructor( props ) {
 		super(props);
@@ -22,7 +22,6 @@ export default class DropdownNotification extends Component {
 	}
 
 	queryInfoForNotification(caller_id, notification) {
-		console.log('notification', notification.id);
 		let results = {
 			caller_id: caller_id,
 			users: new Map([[caller_id, null]]),
@@ -173,12 +172,6 @@ export default class DropdownNotification extends Component {
 			return null;
 		}
 		
-		console.log('Render notification content', notification);
-		//console.log('feed:notification', notification);
-		
-		//Todo look for atting in posts I haven't written
-		let Notification = null;
-		
 		let nodeType = notification.node.type;
 		if (notification.node.subtype) {
 			nodeType = notification.node.subtype;
@@ -196,49 +189,44 @@ export default class DropdownNotification extends Component {
 		if (notification.notification.note) {
 
 			if (!notification.node.selfauthored && !notification.note.selfauthored) {
-				console.log('Other persons note and node');
 				const myAtName = "@" + notification.users.get(notification.caller_id).name;
 				const firstAt = notification.note.body.indexOf(myAtName);
 				if (firstAt > -1) {
-					Notification = (								
+					return (								
 						<NavLink href={notification.node.path}>
 						{noteAuthor.name} mentioned you in a commented on {nodeAuthor.name}'s {nodeType} "<em>{notification.node.name}</em>"
-						</NavLink>							
-					);								
+						</NavLink>);								
 				} else {
-					Notification = (
+					return (
 						<NavLink href={notification.node.path}>
 						{noteAuthor.name} commented on {nodeAuthor.name}'s {nodeType} "<em>{notification.node.name}</em>"
-						</NavLink>
-					);
+						</NavLink>);
 				}
 			} else if (notification.node.selfauthored && !notification.note.selfauthored) {							
-				console.log('Other persons note on my node');
-				Notification = (
+				return (
 					<NavLink href={notification.node.path}>
 					{noteAuthor.name} commented on your {nodeType} "<em>{notification.node.name}</em>"
-					</NavLink>
-				);							
+					</NavLink>);							
 			} else {
-				//Notification about weird stuff
-				console.log('My note and node');
-				Notification = (
+				return (
 					<NavLink href={notification.node.path}>
 					You recieved notification that you posted a comment on {nodeAuthor.name}'s {nodeType} "<em>{notification.node.name}</em>" please report to dev-team that you already knew this.
-					</NavLink>
-				);
+					</NavLink>);
 			}
 		} else {
 			if (notification.node.selfauthored) {
-				console.log('My node');
-				Notification = (
+				return (
 					<NavLink href={notification.node.path}>
 					Your {nodeType} "<em>{notification.node.name}</em>" was either created or updated.
-					</NavLink>							
-				);
+					</NavLink>);
 			} else {
-				console.log('Other\'s node');
-
+				//Todo look for atting in posts I haven't written
+				const myAtName = "@" + notification.users.get(notification.caller_id).name;
+				const mentioned = Math.max(
+					notification.node.body.indexOf(myAtName),
+					notification.node.name.indexOf(myAtName)) > -1;
+				
+			
 				const friends = this.getSocialStringList(notification, 'friends');
 				
 				if (friends.count > 0) {
@@ -253,24 +241,36 @@ export default class DropdownNotification extends Component {
 				}
 				
 				if (notification.node.type == 'post') {
-					Notification = (
-						<NavLink href={notification.node.path}>
-						{User} posted "<em>{notification.node.name}</em>"
-						</NavLink>								
-					);
+					if (mentioned) {
+						return (
+							<NavLink href={notification.node.path}>
+							{User} mentioned you in their post "<em>{notification.node.name}</em>"
+							</NavLink>);
+					} else {
+						return (
+							<NavLink href={notification.node.path}>
+							{User} posted "<em>{notification.node.name}</em>"
+							</NavLink>);						
+					}						
+					
 				} else {
-					Notification = (
-						<NavLink href={notification.node.path}>
-						{User} posted a {nodeType} "<em>{notification.node.name}</em>"
-						</NavLink>								
-					);								
+					if (mentioned) {
+						return (
+							<NavLink href={notification.node.path}>
+							{User} mentioned you in their {nodeType} "<em>{notification.node.name}</em>"
+							</NavLink>);
+					} else {
+						return (
+							<NavLink href={notification.node.path}>
+							{User} posted a {nodeType} "<em>{notification.node.name}</em>"
+							</NavLink>);
+						
+					}						
 				}
 			}
 			
 		}
-		console.log("Notification", Notification);
-		return ({Notification});
-		
+
 	}
 	
 	
