@@ -8,6 +8,7 @@ import ViewHeader						from 'com/view-header/header';
 import ViewSidebar						from 'com/view-sidebar/sidebar';
 import ViewContent						from 'com/view-content/content';
 import ViewFooter						from 'com/view-footer/footer';
+import ViewHome							from 'com/view-home/home';
 
 import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
 import DialogLogin						from 'com/dialog-login/login';
@@ -470,7 +471,11 @@ class Main extends Component {
 					}
 				});
 
-				this.fetchNode();
+				if (slugs[0] == 'home') {					
+					this.setState({home: slugs.slice(1)});
+				} else {
+					this.fetchNode();
+				}
 			}
 		}
 
@@ -491,11 +496,13 @@ class Main extends Component {
 	}
 
 
-	render( {}, {node, user, featured, path, extra, error} ) {
+	render( {}, {node, user, featured, path, extra, error, home} ) {
 		var ShowContent = null;
 
 		if ( node.id ) {
 			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} featured={featured} />;
+		} else if (Array.isArray(home)) {
+			ShowContent = <ViewHome show={home} />;
 		}
 		else {
 			ShowContent = (
