@@ -87,8 +87,7 @@ export default class NotificationsBase extends Component {
 			
 			feed.forEach(([id, notification, loaded, notificationData]) => {
 				if (true) {
-					let N = notification; // (<Notification failCallback={ (nid) => this.failCallback(nid) } caller_id={caller_id} notification={notificationData} markReadyCallback={(nid) => this.markReady(nid) } />);
-					Notifications.push([id, N]);
+					Notifications.push([id, notification]);
 				}
 			});
 

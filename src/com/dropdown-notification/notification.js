@@ -10,12 +10,6 @@ import $Notification					from '../../shrub/js/notification/notification';
 
 export default class DropdownNotification extends NotificationsBase {
 	
-	constructor( props ) {
-		super(props);
-		
-		this.hackInt = 0;
-	}
-	
 	componentDidMount() {
 		const showCount = 8;
 		if (this.props.getNew) {
@@ -36,12 +30,7 @@ export default class DropdownNotification extends NotificationsBase {
 			}
 		}
 	}
-	
-	updateCallback() {
-		this.hackInt++;
-		console.log('hackint', this.hackInt);
-	}
-	
+		
 	render( props ) {
 		const state = this.state;
 		const loading = this.isLoading();
