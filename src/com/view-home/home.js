@@ -8,8 +8,13 @@ export default class ViewHome extends Component {
 	}
 
 	render ( props, state) {
-		return (<div class='contents'>
-		<h1>Landing Page</h1>
-		</div>);
+		let ShowContent = null;
+		if (Array.isArray(props.show) && props.show[0] == 'notifications') {
+			ShowContent = <Notifications />;
+		}
+		return (
+			<div id="content">
+			{ShowContent}
+			</div>);
 	}
 }

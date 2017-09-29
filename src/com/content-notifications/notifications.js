@@ -1,6 +1,7 @@
 import { h, Component } 				from 'preact/preact';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
+import NavLink 							from 'com/nav-link/link';
 
 import DropdownNotification				from '../dropdown-notification/notification';
 
@@ -24,29 +25,51 @@ export default class NotificationsFeed extends NotificationsBase {
 	}
 	
 	componentDidMount() {
-		const showCount = 8;
+		const showCount = 30;
 
 		$Notification.GetFeedAll(this.state.offset, showCount ).then((r) => {
 			this.processNotificationFeed(r);
 		});
 	}
 	
+	getFormattedNotifications() {
+		let Notifications = [];
+		this.getNotifications().forEach(([id, notification]) => {
+			Notifications.push((
+				<div class={"-item -notification -indent-"+1}>
+					{notification}
+				</div>
+			));
+		});
+	}
+	
 	render( props, state ) {
 		
 		const processing = state.status === null || this.isLoading();
-		const ShowNotifications = this.getNotifications();
-		let ShowGetMore = processing ? null : (<div>MORE</div>);
-		let ShowSetAllRead = procesing ? null : (<div>Mark all commentes as read</div>);
+		const ShowNotifications = this.getFormattedNotifications();
+		
+		let ShowGetMore = processing ? null : (
+			<div class={"-item -notification -indent-"+1}>
+				<NavLink onclick={(e)=> console.log('MOAR')}>MORE...</NavLink>
+			</div>
+			);
+			
+		let ShowSetAllRead = processing ? null : (
+			<div class={"-item -notification -indent-"+1}>
+				<NavLink onclick={ (e) => console.log('Read') }>Mark all commentes as read</NavLink>
+			</div>
+			);
 		const ShowSpinner = processing ? <NavSpinner /> : null;
 
 		return (
 			<div class={['content-base','content-common',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
-				<div class="-headline">NOTIFICATIONS</div>
-				{ShowSetAllRead}
-				{ShowNotifications}
-				{ShowGetMore}
-				{ShowSpinner}
-				<div class="content-footer content-footer-common -footer" style="height:0" />
+				<div class={"-item -indent-0"}>
+					<div class="-headline">NOTIFICATIONS</div>
+					{ShowSetAllRead}
+					{ShowNotifications}
+					{ShowGetMore}
+					{ShowSpinner}
+				</div>
 			</div>
 
 		);
