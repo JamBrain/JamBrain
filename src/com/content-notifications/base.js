@@ -10,6 +10,7 @@ export default class NotificationsBase extends Component {
 		this.state = {
 			notifications: [],
 			notificationsTotal: -1,
+			count: 0,
 			status: null,
 		};
 	}
@@ -25,6 +26,7 @@ export default class NotificationsBase extends Component {
 		this.setState({
 			caller_id: caller_id,
 			status: r.status,
+			count: r.count,
 			notifications: notifications,
 			notificationsTotal: r.feed.length + this.state.notifications.length,
 		});

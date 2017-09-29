@@ -15,8 +15,12 @@ export default class NotificationsFeed extends NotificationsBase {
 		super(props);
 
 		this.state = {
+			maxReadId: 0,
 			offset: 0,
 			limit: 20,
+			count: 0,
+			existingNotifications: 0,
+			unreadNotifications: 0,
 			notifications: [],
 			notificationsTotal: -1,
 			status: null,
@@ -30,35 +34,48 @@ export default class NotificationsFeed extends NotificationsBase {
 		$Notification.GetFeedAll(this.state.offset, showCount ).then((r) => {
 			this.processNotificationFeed(r);
 		});
+		
+		$Notification.GetCountAll().then((r) => {
+			this.setState({existingNotifications: r.count});
+		});
+		
+		$Notification.GetCountUnread().then((r) => {
+			this.setState({unreadNotifications: r.count});
+		});
 	}
 	
 	getFormattedNotifications() {
+		const maxReadId = this.state.unreadNotifications;
 		let Notifications = [];
-		this.getNotifications().forEach(([id, notification]) => {
+		this.getNotifications().forEach(([id, notification], index) => {
 			Notifications.push((
-				<div class={"-item -notification -indent-"+1}>
+				<div class={["-item -notification -indent-"+1,index<unreadNotifications?'-new-comment':'']}>
 					{notification}
 				</div>
 			));
 		});
+		
+		return Notifications;
 	}
 	
 	render( props, state ) {
 		
 		const processing = state.status === null || this.isLoading();
+		const hasMore = !processing && state.offset + state.count < state.existingNotifications;
 		const ShowNotifications = this.getFormattedNotifications();
 		
-		let ShowGetMore = processing ? null : (
+		const ShowGetMore = hasMore ? (
 			<div class={"-item -notification -indent-"+1}>
 				<NavLink onclick={(e)=> console.log('MOAR')}>MORE...</NavLink>
 			</div>
-			);
+			) : null;
 			
-		let ShowSetAllRead = processing ? null : (
+		const ShowSetAllRead = processing ? null : (
 			<div class={"-item -notification -indent-"+1}>
 				<NavLink onclick={ (e) => console.log('Read') }>Mark all commentes as read</NavLink>
 			</div>
 			);
+			
 		const ShowSpinner = processing ? <NavSpinner /> : null;
 
 		return (
