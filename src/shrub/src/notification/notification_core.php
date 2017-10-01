@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__."/../node/node.php";
-require_once __DIR__."/../user/user.php";
 
 
 const NOTIFY_ON_NODE_TYPE = [
@@ -69,7 +68,7 @@ function notification_Max( $user ) {
 }
 
 function notification_CountUnread( $user ) {
-	$last_read = user_GetLastReadNotificationByNode( $user );
+	$last_read = notification_GetLastReadNotification( $user );
 	$counts = db_QueryFetchSingle(
 		"SELECT count(*)
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION." 
@@ -80,7 +79,7 @@ function notification_CountUnread( $user ) {
 }
 
 function notification_GetUnread( $user, $limit = 20, $offset = 0 ) {
-	$last_read = user_GetLastReadNotificationByNode( $user );
+	$last_read = notification_GetLastReadNotification( $user );
 	return db_QueryFetch(
 		"SELECT id, node, note, type, created
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION."
@@ -170,3 +169,21 @@ function notification_AddForNote( $node, $note, $author ) {
 
 	notification_AddMultiple($notifications);	
 }
+
+
+/// @retval Integer Id of highest read notification.
+function notification_GetLastReadNotification( $node ) {
+	// Future: Once server private meta has been added to the global user node, rework this to avoid a db lookup.
+
+	$meta = nodeMeta_GetByKeyNode('last_read_notification',$node);
+	$id = 0;
+	if ( count($meta) > 0 ) {
+		$id = intval($meta[0]['value']);
+	}
+	return $id;
+}
+
+function notification_SetLastReadNotification( $node, $notification ) {
+	nodeMeta_AddByNode($node, SH_SCOPE_SERVER, 'last_read_notification', $notification);
+}
+
