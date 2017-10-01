@@ -167,7 +167,7 @@ export default class NotificationItem extends Component {
 	render() {
 
 		const notification = this.state.notification;
-		
+				
 		if (notification == null || !this.state.loaded) {
 			return null;
 		}
@@ -193,30 +193,30 @@ export default class NotificationItem extends Component {
 				const firstAt = notification.note.body.indexOf(myAtName);
 				if (firstAt > -1) {
 					return (								
-						<NavLink href={notification.node.path}>
+						<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
 						{noteAuthor.name} mentioned you in a commented on {nodeAuthor.name}'s {nodeType} "<em>{notification.node.name}</em>"
 						</NavLink>);								
 				} else {
 					return (
-						<NavLink href={notification.node.path}>
+						<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
 						{noteAuthor.name} commented on {nodeAuthor.name}'s {nodeType} "<em>{notification.node.name}</em>"
 						</NavLink>);
 				}
 			} else if (notification.node.selfauthored && !notification.note.selfauthored) {							
 				return (
-					<NavLink href={notification.node.path}>
+					<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
 					{noteAuthor.name} commented on your {nodeType} "<em>{notification.node.name}</em>"
 					</NavLink>);							
 			} else {
 				return (
-					<NavLink href={notification.node.path}>
+					<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
 					You recieved notification that you posted a comment on {nodeAuthor.name}'s {nodeType} "<em>{notification.node.name}</em>" please report to dev-team that you already knew this.
 					</NavLink>);
 			}
 		} else {
 			if (notification.node.selfauthored) {
 				return (
-					<NavLink href={notification.node.path}>
+					<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
 					Your {nodeType} "<em>{notification.node.name}</em>" was either created or updated.
 					</NavLink>);
 			} else {
@@ -243,25 +243,25 @@ export default class NotificationItem extends Component {
 				if (notification.node.type == 'post') {
 					if (mentioned) {
 						return (
-							<NavLink href={notification.node.path}>
-							{User} mentioned you in their post "<em>{notification.node.name}</em>"
+							<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
+								{User} mentioned you in their post "<em>{notification.node.name}</em>"
 							</NavLink>);
 					} else {
 						return (
-							<NavLink href={notification.node.path}>
-							{User} posted "<em>{notification.node.name}</em>"
+							<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
+								{User} posted "<em>{notification.node.name}</em>"
 							</NavLink>);						
 					}						
 					
 				} else {
 					if (mentioned) {
 						return (
-							<NavLink href={notification.node.path}>
+							<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
 							{User} mentioned you in their {nodeType} "<em>{notification.node.name}</em>"
 							</NavLink>);
 					} else {
 						return (
-							<NavLink href={notification.node.path}>
+							<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
 							{User} posted a {nodeType} "<em>{notification.node.name}</em>"
 							</NavLink>);
 						
