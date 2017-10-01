@@ -45,28 +45,22 @@ export default class NotificationsFeed extends NotificationsBase {
 		});
 	}
 	
-	getFormattedNotifications() {
-		const maxReadId = this.state.unreadNotifications;
-		let Notifications = [];
-		const notifications = this.getNotifications();
-		
-		notifications.forEach(([id, notification], index) => {
-			Notifications.push((
-				<div class={["-item -notification",index<maxReadId?'-new-comment':'']}>
-					{notification}
-				</div>
-			));
-		});
-		
-		return Notifications;
-	}
-	
 	render( props, state ) {
 		
+		const maxReadId = this.state.unreadNotifications;
 		const processing = state.status === null || this.isLoading();
 		const hasMore = !processing && state.offset + state.count < state.existingNotifications;
-		const ShowNotifications = this.getFormattedNotifications();
+
+		let ShowNotifications = [];
 		
+		this.getNotifications()
+			.forEach(([identifier, notification], index) => {
+				ShowNotifications.push(<div class={cN("-item -notification",(index<maxReadId)?'-new-comment':'')} id={'notification-' + identifier} >
+					{notification}
+				</div>);
+				console.log('[Notifications:Render]', index, notification);
+			});
+	
 		const ShowGetMore = hasMore ? (
 			<div class={"-item -notification -indent -action"}>
 				<NavLink onclick={(e)=> console.log('MOAR')} href="#">MORE...</NavLink>
@@ -82,7 +76,7 @@ export default class NotificationsFeed extends NotificationsBase {
 		const ShowSpinner = processing ? <NavSpinner /> : null;
 
 		return (
-			<div class={['content-base','content-common','content-notifications',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
+			<div class={cN('content-base','content-common','content-notifications',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'')}>
 				<div class="-headline -indent">NOTIFICATIONS</div>
 				{ShowSetAllRead}
 				{ShowNotifications}
