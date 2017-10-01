@@ -194,12 +194,12 @@ export default class NotificationItem extends Component {
 				if (firstAt > -1) {
 					return (								
 						<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
-						<div class='-at-name'>@{noteAuthor.name}</div> mentioned you in a commented on {nodeAuthor.name}'s {nodeType} "<em>{notification.node.name}</em>"
+						<div class='-at-name'>@{noteAuthor.name}</div> mentioned you in a commented on <div class='-at-name'>@{nodeAuthor.name}</div>'s {nodeType} "<em>{notification.node.name}</em>"
 						</NavLink>);								
 				} else {
 					return (
 						<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
-						<div class='-at-name'>@{noteAuthor.name}</div> commented on {nodeAuthor.name}'s {nodeType} "<em>{notification.node.name}</em>"
+						<div class='-at-name'>@{noteAuthor.name}</div> commented on <div class='-at-name'>@{nodeAuthor.name}</div>'s {nodeType} "<em>{notification.node.name}</em>"
 						</NavLink>);
 				}
 			} else if (notification.node.selfauthored && !notification.note.selfauthored) {							
@@ -210,7 +210,7 @@ export default class NotificationItem extends Component {
 			} else {
 				return (
 					<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
-					You recieved notification that you posted a comment on {nodeAuthor.name}'s {nodeType} "<em>{notification.node.name}</em>" please report to dev-team that you already knew this.
+					You recieved notification that you posted a comment on <div class='-at-name'>@{nodeAuthor.name}</div>'s {nodeType} "<em>{notification.node.name}</em>" please report to dev-team that you already knew this.
 					</NavLink>);
 			}
 		} else {
