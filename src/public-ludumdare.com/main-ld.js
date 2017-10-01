@@ -466,6 +466,7 @@ class Main extends Component {
 
 				this.setState({
 					'slugs': slugs,
+					'home': null,
 					'node': {
 						'id': 0
 					}

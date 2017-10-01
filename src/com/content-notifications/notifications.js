@@ -47,7 +47,10 @@ export default class NotificationsFeed extends NotificationsBase {
 	getFormattedNotifications() {
 		const maxReadId = this.state.unreadNotifications;
 		let Notifications = [];
-		this.getNotifications().forEach(([id, notification], index) => {
+		const notifications = this.getNotifications();
+		
+		notifications.forEach(([id, notification], index) => {
+			console.log('Notification', id, notification);
 			Notifications.push((
 				<div class={["-item -notification",index<maxReadId?'-new-comment':'']}>
 					{notification}
