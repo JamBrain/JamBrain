@@ -10,7 +10,7 @@ export default class NotificationItem extends Component {
 	
 	constructor( props ) {
 		super(props);
-		
+		console.log('[Notification:Loading]', props.notification.id);
 		this.state = {
 			notification: null,
 			loaded: false,
@@ -154,7 +154,7 @@ export default class NotificationItem extends Component {
 		}
 		
 		let User = null;
-		const friendArray = [...myFriends];
+		const friendArray = [...myFriends].map((friend) => '<div class=\'-at-name\'>@' + friend + '</div>');
 		let names = null;
 		if (friendArray.length > 1) {
 			names = friendArray.slice(0, friendArray.length - 1).join(', ') + ' & ' + friendArray[friendArray.length - 1];
@@ -194,18 +194,18 @@ export default class NotificationItem extends Component {
 				if (firstAt > -1) {
 					return (								
 						<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
-						{noteAuthor.name} mentioned you in a commented on {nodeAuthor.name}'s {nodeType} "<em>{notification.node.name}</em>"
+						<div class='-at-name'>@{noteAuthor.name}</div> mentioned you in a commented on {nodeAuthor.name}'s {nodeType} "<em>{notification.node.name}</em>"
 						</NavLink>);								
 				} else {
 					return (
 						<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
-						{noteAuthor.name} commented on {nodeAuthor.name}'s {nodeType} "<em>{notification.node.name}</em>"
+						<div class='-at-name'>@{noteAuthor.name}</div> commented on {nodeAuthor.name}'s {nodeType} "<em>{notification.node.name}</em>"
 						</NavLink>);
 				}
 			} else if (notification.node.selfauthored && !notification.note.selfauthored) {							
 				return (
 					<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
-					{noteAuthor.name} commented on your {nodeType} "<em>{notification.node.name}</em>"
+					<div class='-at-name'>@{noteAuthor.name}</div> commented on your {nodeType} "<em>{notification.node.name}</em>"
 					</NavLink>);							
 			} else {
 				return (

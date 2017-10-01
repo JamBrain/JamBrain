@@ -29,18 +29,19 @@ export default class NotificationsFeed extends NotificationsBase {
 	}
 	
 	componentDidMount() {
+		console.log('[NotificationsFeed:Mounted]');
 		const showCount = 30;
 
 		$Notification.GetFeedAll(this.state.offset, showCount ).then((r) => {
 			this.processNotificationFeed(r);
 		});
 		
-		$Notification.GetCountAll().then((r) => {
-			this.setState({existingNotifications: r.count});
+		$Notification.GetCountAll().then((r2) => {
+			this.setState({existingNotifications: r2.count});
 		});
 		
-		$Notification.GetCountUnread().then((r) => {
-			this.setState({unreadNotifications: r.count});
+		$Notification.GetCountUnread().then((r3) => {
+			this.setState({unreadNotifications: r3.count});
 		});
 	}
 	
@@ -50,7 +51,6 @@ export default class NotificationsFeed extends NotificationsBase {
 		const notifications = this.getNotifications();
 		
 		notifications.forEach(([id, notification], index) => {
-			console.log('Notification', id, notification);
 			Notifications.push((
 				<div class={["-item -notification",index<maxReadId?'-new-comment':'']}>
 					{notification}
