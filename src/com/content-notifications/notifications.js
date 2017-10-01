@@ -49,7 +49,7 @@ export default class NotificationsFeed extends NotificationsBase {
 		let Notifications = [];
 		this.getNotifications().forEach(([id, notification], index) => {
 			Notifications.push((
-				<div class={["-item -notification -indent-"+1,index<unreadNotifications?'-new-comment':'']}>
+				<div class={["-item -notification",index<maxReadId?'-new-comment':'']}>
 					{notification}
 				</div>
 			));
@@ -65,28 +65,27 @@ export default class NotificationsFeed extends NotificationsBase {
 		const ShowNotifications = this.getFormattedNotifications();
 		
 		const ShowGetMore = hasMore ? (
-			<div class={"-item -notification -indent-"+1}>
-				<NavLink onclick={(e)=> console.log('MOAR')}>MORE...</NavLink>
+			<div class={"-item -notification -indent -action"}>
+				<NavLink onclick={(e)=> console.log('MOAR')} href="#">MORE...</NavLink>
 			</div>
 			) : null;
 			
 		const ShowSetAllRead = processing ? null : (
-			<div class={"-item -notification -indent-"+1}>
-				<NavLink onclick={ (e) => console.log('Read') }>Mark all commentes as read</NavLink>
+			<div class={"-item -notification -indent -action"}>
+				<NavLink onclick={ (e) => console.log('Read') } href="#">Mark all commentes as read</NavLink>
 			</div>
 			);
 			
 		const ShowSpinner = processing ? <NavSpinner /> : null;
 
 		return (
-			<div class={['content-base','content-common',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
-				<div class={"-item -indent-0"}>
-					<div class="-headline">NOTIFICATIONS</div>
-					{ShowSetAllRead}
-					{ShowNotifications}
-					{ShowGetMore}
-					{ShowSpinner}
-				</div>
+			<div class={['content-base','content-common','content-notifications',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
+				<div class="-headline -indent">NOTIFICATIONS</div>
+				{ShowSetAllRead}
+				{ShowNotifications}
+				{ShowGetMore}
+				{ShowSpinner}
+
 			</div>
 
 		);

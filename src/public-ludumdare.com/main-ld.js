@@ -495,16 +495,31 @@ class Main extends Component {
 		this.handleAnchors();
 	}
 
+	isHomeView() {
+
+		if (Array.isArray(this.state.home)) {
+			console.log('[isHome]', this.state.home);
+			return true;
+		}
+		const slugs = this.state.slugs;
+		
+		if (Array.isArray(slugs) && slugs[0] == 'home') {	
+			this.setState({home: slugs.slice(1)});
+			return true;
+		}
+		return false;
+	}
 
 	render( {}, {node, user, featured, path, extra, error, home} ) {
 		var ShowContent = null;
 
-		if ( node.id ) {
-			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} featured={featured} />;
-		} else if (Array.isArray(home)) {
-			ShowContent = <ViewHome show={home} />;
+		if (this.isHomeView()) {
+			ShowContent = <ViewHome show={home} />;			
 		}
-		else {
+		else if ( node.id ) {
+			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} featured={featured} />;
+		} else {
+			console.log('[Error]');
 			ShowContent = (
 				<ViewContent>
 					{error ? error : <NavSpinner />}
