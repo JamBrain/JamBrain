@@ -69,7 +69,7 @@ export default class NotificationsBase extends Component {
 			notification2nodeAndNote.set(id, {node: node, note: note});
 		});
 		
-		$Node.Get(nodes)
+		let nodesPromise = $Node.Get(nodes)
 			.then((response) => {
 				console.log('[Notifications:Nodes]', response.node);
 				if (response.node) {
@@ -88,29 +88,23 @@ export default class NotificationsBase extends Component {
 					});
 				}
 				
-				return $Note.Get(nodes);
-			})
-			.then((response) => {
-				console.log('[Notifications:Notes]', response.note);
-				if (response.note) {
-					response.note.forEach((note) => {
-						//Only keep notes we are interested in
-						if (node2notes.get(note.node).indexOf(note.id) >= 0) {
-							noteLookup.set(note.id, note);
-							
-							if (note.author && users.indexOf(note.author) >= 0) {
-								users.push(note.author);
-							}							
-						}
-					});
-				}
-				if (users.length > 0) {
-					return $Node.Get(users);
-				} else {
-					console.log('[Error/NotificationsBase]', "No users made the comments/posts");
-				}			
-			})
-			.then((response) => {
+			});
+		let notesPromise = $Note.Get(nodes).then((response) => {
+			console.log('[Notifications:Notes]', response.note);
+			if (response.note) {
+				response.note.forEach((note) => {
+					//Only keep notes we are interested in
+					if (node2notes.get(note.node).indexOf(note.id) >= 0) {
+						noteLookup.set(note.id, note);
+						
+						if (note.author && users.indexOf(note.author) >= 0) {
+							users.push(note.author);
+						}							
+					}
+				});
+			}	
+		});
+		Promise.all(nodesPromise, notesPromise).then(() => { return $Node.Get(users);}).then((response) => {
 				console.log('[Notifications:Users]', response.node);
 				if (response.node) {
 					response.node.forEach((node) => {
