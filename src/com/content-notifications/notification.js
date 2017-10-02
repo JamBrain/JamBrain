@@ -10,7 +10,7 @@ export default class NotificationItem extends Component {
 	
 	constructor( props ) {
 		super(props);
-		console.log('[Notification:Loading]', props.notification.id);
+		//console.log('[Notification:Loading]', props.notification.id);
 		this.state = {
 			notification: null,
 			loaded: false,
@@ -152,11 +152,12 @@ export default class NotificationItem extends Component {
 				}
 			});
 		}
-		
 		let User = null;
-		const friendArray = [...myFriends].map((friend) => '<div class=\'-at-name\'>@' + friend + '</div>');
+		const friendArray = [...myFriends].map((friend) => '<NavLink class=\'-at-name\'>@' + friend + '</NavLink>');
 		let names = null;
-		if (friendArray.length > 1) {
+		if (friendArray.length > 3) {
+			names = friendArray.slice(0, 3).join(', ') + ' & more';
+		} else if (friendArray.length > 1) {
 			names = friendArray.slice(0, friendArray.length - 1).join(', ') + ' & ' + friendArray[friendArray.length - 1];
 		} else {
 			names = friendArray[0];
@@ -194,23 +195,23 @@ export default class NotificationItem extends Component {
 				if (firstAt > -1) {
 					return (								
 						<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
-						<div class='-at-name'>@{noteAuthor.name}</div> mentioned you in a commented on <div class='-at-name'>@{nodeAuthor.name}</div>'s {nodeType} "<em>{notification.node.name}</em>"
+						<NavLink class='-at-name'>@{noteAuthor.name}</NavLink> mentioned you in a commented on <NavLink class='-at-name'>@{nodeAuthor.name}</NavLink>'s {nodeType} "<em>{notification.node.name}</em>"
 						</NavLink>);								
 				} else {
 					return (
 						<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
-						<div class='-at-name'>@{noteAuthor.name}</div> also commented on <div class='-at-name'>@{nodeAuthor.name}</div>'s {nodeType} "<em>{notification.node.name}</em>"
+						<NavLink class='-at-name'>@{noteAuthor.name}</NavLink> also commented on <NavLink class='-at-name'>@{nodeAuthor.name}</NavLink>'s {nodeType} "<em>{notification.node.name}</em>"
 						</NavLink>);
 				}
 			} else if (notification.node.selfauthored && !notification.note.selfauthored) {							
 				return (
 					<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
-					<div class='-at-name'>@{noteAuthor.name}</div> commented on your {nodeType} "<em>{notification.node.name}</em>"
+					<NavLink class='-at-name'>@{noteAuthor.name}</NavLink> commented on your {nodeType} "<em>{notification.node.name}</em>"
 					</NavLink>);							
 			} else {
 				return (
 					<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id}>
-					You recieved notification that you posted a comment on <div class='-at-name'>@{nodeAuthor.name}</div>'s {nodeType} "<em>{notification.node.name}</em>" please report to dev-team that you already knew this.
+					You recieved notification that you posted a comment on <NavLink class='-at-name'>@{nodeAuthor.name}</NavLink>'s {nodeType} "<em>{notification.node.name}</em>" please report to dev-team that you already knew this.
 					</NavLink>);
 			}
 		} else {

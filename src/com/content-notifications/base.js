@@ -2,6 +2,9 @@ import { h, Component } 				from 'preact/preact';
 
 import Notification						from 'com/content-notifications/notification';
 
+import $Node							from '../../shrub/js/node/node';
+import $Note							from '../../shrub/js/note/note';
+
 export default class NotificationsBase extends Component {
 	
 	constructor( props ) {
@@ -32,6 +35,49 @@ export default class NotificationsBase extends Component {
 			notifications: notifications,
 			notificationsTotal: r.feed.length + this.state.notifications.length,
 		});
+		this.collectAllNodesAndNodes(r.feed);
+	}
+	
+	collectAllNodesAndNodes(feed) {
+		let nodeLookup = new Map();
+		let nodes = [];
+		feed.forEach(({node}) => {
+			if (nodes.indexOf(node) < 0) {
+				nodes.push(node);
+			}
+		});
+		
+		let node2notes = new Map();
+		let notification2nodeAndNote = new Map();
+		let noteLookup = new Map();
+		
+		feed.forEach(({id, node, note}) => {
+			if (feed.has(node)) {
+				node2notes.set(node, [note]);
+			} else {
+				node2notes.get(node).push(note);
+			}
+			notification2nodeAndNote.set(id, {node: node, note: note});
+		});
+		
+		$Node.Get(nodes)
+			.then((response) => {
+				if (response.node) {
+					response.node.forEach((node) => {
+						nodeLookup.set(node.id, node);
+					});
+				}
+				
+				return $Note.Get(nodes);
+			})
+			.then((response) => {
+				if (response.note) {
+					response.note.forEach((note) => {
+						noteLookup.set(note.id, note);
+					});
+				}
+				console.log(noteLookup, nodeLookup, node2notes, notification2nodeAndNote);
+			});
 	}
 	
 	removeFailed(id) {
