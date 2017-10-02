@@ -6,10 +6,7 @@
 	
 <?php 
 	// Read the SVG file as an array of lines
-	$lines = file( __DIR__."/../public-ludumdare.com/-/all.svg"); 
-	// The first line is an XML declaration. Emit all but the first. (Not that there's more than one, but in case it changes in the future)
-	array_shift($lines);
-	echo implode("",$lines);
+	readfile( __DIR__."/../public-ludumdare.com/-/all.min.svg"); 
 ?>
 
 <style>
