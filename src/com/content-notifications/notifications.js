@@ -6,6 +6,7 @@ import NavLink 							from 'com/nav-link/link';
 import DropdownNotification				from '../dropdown-notification/notification';
 
 import NotificationsBase				from 'com/content-notifications/base';
+import Notification						from 'com/content-notifications/notification';
 
 import $Notification					from '../../shrub/js/notification/notification';
 
@@ -52,7 +53,7 @@ export default class NotificationsFeed extends NotificationsBase {
 		const hasMore = !processing && state.offset + state.count < state.existingNotifications;
 
 		let ShowNotifications = [];
-		
+		/*
 		this.getNotifications()
 			.forEach(([identifier, notification], index) => {
 				ShowNotifications.push(<div class={cN("-item -notification",(index<maxReadId)?'-new-comment':'')} id={'notification-' + identifier} >
@@ -60,7 +61,23 @@ export default class NotificationsFeed extends NotificationsBase {
 				</div>);
 				console.log('[Notifications:Render]', index, notification);
 			});
-	
+		*/	
+		const feed = state.notifications;
+		const caller_id = state.caller_id;
+		
+		if (feed && feed.length > 0) {
+			
+			feed.forEach(([identifier, notification, loaded, notificationData], index) => {
+				if (true) {
+					ShowNotifications.push((
+						<Notification failCallback={ (identifier) => this.failCallback(identifier) } caller_id={caller_id} notification={notificationData} markReadyCallback={(identifier) => this.markReady(identifier) } class={cN("-item -notification",(index<maxReadId)?'-new-comment':'')} id={'notification-' + identifier} />
+					));
+				}
+			});
+
+		}
+
+		
 		const ShowGetMore = hasMore ? (
 			<div class={"-item -notification -indent -action"}>
 				<NavLink onclick={(e)=> console.log('MOAR')} href="#">MORE...</NavLink>

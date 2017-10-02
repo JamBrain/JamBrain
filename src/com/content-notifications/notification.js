@@ -164,11 +164,11 @@ export default class NotificationItem extends Component {
 		return {count: myFriends.size, string: names, list: myFriends};
 	}	
 
-	render() {
+	render( props, state ) {
 
-		const notification = this.state.notification;
+		const notification = state.notification;
 				
-		if (notification == null || !this.state.loaded) {
+		if (notification == null || !state.loaded) {
 			return null;
 		}
 		
@@ -193,30 +193,30 @@ export default class NotificationItem extends Component {
 				const firstAt = notification.note.body.indexOf(myAtName);
 				if (firstAt > -1) {
 					return (								
-						<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
+						<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
 						<div class='-at-name'>@{noteAuthor.name}</div> mentioned you in a commented on <div class='-at-name'>@{nodeAuthor.name}</div>'s {nodeType} "<em>{notification.node.name}</em>"
 						</NavLink>);								
 				} else {
 					return (
-						<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
-						<div class='-at-name'>@{noteAuthor.name}</div> commented on <div class='-at-name'>@{nodeAuthor.name}</div>'s {nodeType} "<em>{notification.node.name}</em>"
+						<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
+						<div class='-at-name'>@{noteAuthor.name}</div> also commented on <div class='-at-name'>@{nodeAuthor.name}</div>'s {nodeType} "<em>{notification.node.name}</em>"
 						</NavLink>);
 				}
 			} else if (notification.node.selfauthored && !notification.note.selfauthored) {							
 				return (
-					<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
+					<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
 					<div class='-at-name'>@{noteAuthor.name}</div> commented on your {nodeType} "<em>{notification.node.name}</em>"
 					</NavLink>);							
 			} else {
 				return (
-					<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
+					<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id}>
 					You recieved notification that you posted a comment on <div class='-at-name'>@{nodeAuthor.name}</div>'s {nodeType} "<em>{notification.node.name}</em>" please report to dev-team that you already knew this.
 					</NavLink>);
 			}
 		} else {
 			if (notification.node.selfauthored) {
 				return (
-					<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
+					<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id}>
 					Your {nodeType} "<em>{notification.node.name}</em>" was either created or updated.
 					</NavLink>);
 			} else {
@@ -243,12 +243,12 @@ export default class NotificationItem extends Component {
 				if (notification.node.type == 'post') {
 					if (mentioned) {
 						return (
-							<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
+							<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
 								{User} mentioned you in their post "<em>{notification.node.name}</em>"
 							</NavLink>);
 					} else {
 						return (
-							<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
+							<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
 								{User} posted "<em>{notification.node.name}</em>"
 							</NavLink>);						
 					}						
@@ -256,12 +256,12 @@ export default class NotificationItem extends Component {
 				} else {
 					if (mentioned) {
 						return (
-							<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
+							<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
 							{User} mentioned you in their {nodeType} "<em>{notification.node.name}</em>"
 							</NavLink>);
 					} else {
 						return (
-							<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id}>
+							<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
 							{User} posted a {nodeType} "<em>{notification.node.name}</em>"
 							</NavLink>);
 						
