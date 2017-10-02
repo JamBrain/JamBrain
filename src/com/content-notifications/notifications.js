@@ -53,15 +53,6 @@ export default class NotificationsFeed extends NotificationsBase {
 		const hasMore = !processing && state.offset + state.count < state.existingNotifications;
 
 		let ShowNotifications = [];
-		/*
-		this.getNotifications()
-			.forEach(([identifier, notification], index) => {
-				ShowNotifications.push(<div class={cN("-item -notification",(index<maxReadId)?'-new-comment':'')} id={'notification-' + identifier} >
-					{notification}
-				</div>);
-				console.log('[Notifications:Render]', index, notification);
-			});
-		*/	
 		const feed = state.notifications;
 		const caller_id = state.caller_id;
 		
