@@ -63,15 +63,17 @@ SVG Size:  <select onchange="changeStyle(this);" >
 
 	// Identify the css rule for .svg-icon
 	var iconcss = null;
-	Array.from(document.styleSheets).forEach((stylesheet) => {
-		if ( !iconcss ) {
-			Array.from(stylesheet.cssRules).forEach((rule) => {
-				if ( rule.selectorText == ".svg-icon" ) {
-					iconcss = rule;
-				}
-			});
+	for(var i = 0; i < document.styleSheets.length; i++) {
+		var stylesheet = document.styleSheets[i];
+		for(var j = 0; j < stylesheet.cssRules.length; j++) {
+			var rule = stylesheet.cssRules[j];
+			if ( rule.selectorText == ".svg-icon" ) {
+				iconcss = rule;
+				break;
+			}
 		}
-	});
+		if ( iconcss ) break;
+	}
 
 	function changeStyle(src) {
 		var newSize = src.value;
@@ -87,9 +89,14 @@ SVG Size:  <select onchange="changeStyle(this);" >
 	var panel = document.getElementById('iconPanel');
 	
 	if ( svg ) {
-		var allIcons = Array.from(svg.children).map((a) => a.getAttribute('id'));
+		var allIcons = [];
+		for(var i = 0; i < svg.childNodes.length; i++) {
+			allIcons.push(svg.childNodes[i].id);
+		}
 		allIcons.sort();
-		allIcons.forEach((iconid) => {
+		for(var i = 0; i < allIcons.length; i++) {
+			var iconid = allIcons[i];
+			
 			var div = document.createElement('div');
 			div.setAttribute('class','iconDisplay');
 			
@@ -97,8 +104,8 @@ SVG Size:  <select onchange="changeStyle(this);" >
 			
 			div.innerHTML = '<svg class="' + iconid + ' svg-icon"><use href="#' + iconid + '"></use></svg><div class="iconText">' + iconName + '</div>';
 			
-			panel.append(div);
-		});
+			panel.appendChild(div);
+		}
 	}
 	
 </script>
