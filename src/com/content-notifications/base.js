@@ -35,49 +35,157 @@ export default class NotificationsBase extends Component {
 			notifications: notifications,
 			notificationsTotal: r.feed.length + this.state.notifications.length,
 		});
-		this.collectAllNodesAndNodes(r.feed);
+		this.collectAllNodesAndNodes(r.feed, caller_id);
 	}
 	
-	collectAllNodesAndNodes(feed) {
+	collectAllNodesAndNodes(feed, caller_id) {
+		//promise.all
 		let nodeLookup = new Map();
 		let nodes = [];
-		feed.forEach(({node}) => {
-			if (nodes.indexOf(node) < 0) {
-				nodes.push(node);
+		let notificationLookup = new Map();
+		
+		feed.forEach((notification) => {
+			if (nodes.indexOf(notification.node) < 0) {
+				nodes.push(notification.node);
 			}
+			notificationLookup.set(notification.id, notification);
 		});
 		
 		let node2notes = new Map();
 		let notification2nodeAndNote = new Map();
 		let noteLookup = new Map();
+		let users = [];
+		let usersLookup = new Map();
+		
+		users.push(caller_id);
 		
 		feed.forEach(({id, node, note}) => {
-			if (feed.has(node)) {
-				node2notes.set(node, [note]);
-			} else {
+			if (node2notes.has(node)) {
 				node2notes.get(node).push(note);
+			} else {
+				node2notes.set(node, [note]);
+				
 			}
 			notification2nodeAndNote.set(id, {node: node, note: note});
 		});
 		
 		$Node.Get(nodes)
 			.then((response) => {
+				console.log('[Notifications:Nodes]', response.node);
 				if (response.node) {
 					response.node.forEach((node) => {
 						nodeLookup.set(node.id, node);
+						if (node.author && users.indexOf(node.author) >= 0) {
+							users.push(node.author);
+						}
+						if (node.link && node.link.author) {
+							node.link.author.forEach((author) => {
+								if (users.indexOf(author) >= 0) {
+									users.push(author);
+								}
+							});
+						}
 					});
 				}
 				
 				return $Note.Get(nodes);
 			})
 			.then((response) => {
+				console.log('[Notifications:Notes]', response.note);
 				if (response.note) {
 					response.note.forEach((note) => {
-						noteLookup.set(note.id, note);
+						//Only keep notes we are interested in
+						if (node2notes.get(note.node).indexOf(note.id) >= 0) {
+							noteLookup.set(note.id, note);
+							
+							if (note.author && users.indexOf(note.author) >= 0) {
+								users.push(note.author);
+							}							
+						}
 					});
 				}
-				console.log(noteLookup, nodeLookup, node2notes, notification2nodeAndNote);
+				if (users.length > 0) {
+					return $Node.Get(users);
+				} else {
+					console.log('[Error/NotificationsBase]', "No users made the comments/posts");
+				}			
+			})
+			.then((response) => {
+				console.log('[Notifications:Users]', response.node);
+				if (response.node) {
+					response.node.forEach((node) => {
+						if (node.type == 'user') {
+							usersLookup.set(node.id, node);
+						}
+					});
+				}
+				this.composeNotifications(feed, caller_id, notification2nodeAndNote, node2notes, nodeLookup, noteLookup, usersLookup, notificationLookup);
 			});
+	}
+	
+	composeNotifications(feed, caller_id, notification2nodeAndNote, node2notes, nodeLookup, noteLookup, usersLookup, notificationLookup) {
+		
+		const myAtName = '@' + usersLookup.get(caller_id).name;
+		noteLookup.forEach((note, id) => {
+			note.selfauthored = note.author == caller_id;
+			note.mention = note.body.indexOf(myAtName) >= 0;
+		});
+		
+		nodeLookup.forEach((node, id) => {
+			node.selfauthored = false;
+			if (node.author == caller_id) {
+				node.selfauthored = true;
+			} else if (node.link && node.link.author) {
+				node.link.author.forEach((author) => {
+					if (author == caller_id) {
+						node.selfauthored = true;
+					}
+				});
+			}
+			node.mention = node.body.indexOf(myAtName) >= 0 || node.name.indexOf(myAtName) >= 0;
+		});
+		
+		let notifications = [];
+		let processedNotifications = [];
+		
+		feed.forEach((notification) => {
+			if (processedNotifications.indexOf(notification.id) < 0) {
+				
+				let data = {
+					notifications: [],
+					node: nodeLookup.get(notification.node),
+					note: undefined,
+					notification: [notification],
+					multi: false
+				};
+				
+				if (notification.note) {
+					let firstNote = noteLookup.get(notification.note); 
+					data.note = [firstNote];
+					
+					if (!firstNote.mention && !firstNote.selfauthored) {
+						node2notes.get(notification.node).forEach((note) => {
+							if (note != notification.note) {
+								let noteData = noteLookup.get(note);
+								if (!noteData.mention && !noteData.selfauthored) {
+									notification2nodeAndNote.forEach((otherData, otherNotification) => {
+										if (otherData.note == note) {
+											processedNotifications.push(otherNotification);
+											data.notification.push(notificationLookup.get(otherNotification));
+										}
+									});
+									data.note.push(noteData);
+									data.multi = true;
+								}
+							}
+						});
+					}
+				}
+				notifications.push(data);			
+				processedNotifications.push(notification.id);
+			}
+		});
+		console.log(notifications);
 	}
 	
 	removeFailed(id) {
