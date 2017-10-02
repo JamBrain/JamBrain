@@ -39,10 +39,18 @@ export default class NotificationsBase extends Component {
 	}
 	
 	collectAllNodesAndNodes(feed, caller_id) {
-		//promise.all
+		
 		let nodeLookup = new Map();
 		let nodes = [];
 		let notificationLookup = new Map();
+		let social = {};
+		
+		let soicialPromise = $Node.GetMy().then((response) => {
+			
+			social.following = response.star ? response.star : [];
+			social.followers = response.refs.star ? response.refs.star : [];
+			social.friends = Array.isArray(response.refs.star) ? new Set([...response.star].filter((i) => response.refs.star.indexOf(i) > -1)) : [];
+		});
 		
 		feed.forEach((notification) => {
 			if (nodes.indexOf(notification.node) < 0) {
@@ -89,6 +97,7 @@ export default class NotificationsBase extends Component {
 				}
 				
 			});
+			
 		let notesPromise = $Note.Get(nodes).then((response) => {
 			console.log('[Notifications:Notes]', response.note);
 			if (response.note) {
@@ -104,7 +113,8 @@ export default class NotificationsBase extends Component {
 				});
 			}	
 		});
-		Promise.all(nodesPromise, notesPromise).then(() => { return $Node.Get(users);}).then((response) => {
+		
+		Promise.all(nodesPromise, notesPromise, soicialPromise).then(() => { return $Node.Get(users);}).then((response) => {
 				console.log('[Notifications:Users]', response.node);
 				if (response.node) {
 					response.node.forEach((node) => {
