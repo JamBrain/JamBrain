@@ -49,7 +49,7 @@ export default class NotificationsBase extends Component {
 			
 			social.following = response.star ? response.star : [];
 			social.followers = response.refs.star ? response.refs.star : [];
-			social.friends = Array.isArray(response.refs.star) ? new Set([...response.star].filter((i) => response.refs.star.indexOf(i) > -1)) : [];
+			social.friends = social.followers.filter((i) => social.following.indexOf(i) > -1);
 		});
 		
 		feed.forEach((notification) => {
