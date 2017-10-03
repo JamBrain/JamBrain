@@ -98,18 +98,17 @@ export default class NotificationsBase extends Component {
 				
 			});
 			
-		let notesPromise = $Note.Get(nodes).then((response) => {
+		let notesPromise = $Note.Pick(node2notes).then((response) => {
 			console.log('[Notifications:Notes]', response.note);
 			if (response.note) {
-				response.note.forEach((note) => {
-					//Only keep notes we are interested in
-					if (node2notes.get(note.node).indexOf(note.id) >= 0) {
+				response.note.forEach((notes, node) => {
+					notes.forEach((note) => {
 						noteLookup.set(note.id, note);
 						
 						if (note.author && users.indexOf(note.author) >= 0) {
 							users.push(note.author);
 						}							
-					}
+					});
 				});
 			}	
 		});
@@ -119,15 +118,20 @@ export default class NotificationsBase extends Component {
 				if (response.node) {
 					response.node.forEach((node) => {
 						if (node.type == 'user') {
+							node.isFriend = social.friends.indexOf(node.id) > -1;
+							node.isFollowing = node.isFriend && social.following.indexOf(node.id) > -1;
+							node.isFollower = node.isFriend && social.followers.indexOf(node.id) > -1;
+							
 							usersLookup.set(node.id, node);
 						}
 					});
 				}
+				
 				this.composeNotifications(feed, caller_id, notification2nodeAndNote, node2notes, nodeLookup, noteLookup, usersLookup, notificationLookup);
 			});
 	}
 	
-	composeNotifications(feed, caller_id, notification2nodeAndNote, node2notes, nodeLookup, noteLookup, usersLookup, notificationLookup) {
+	composeNotifications(feed, caller_id, notification2nodeAndNote, node2notes, nodeLookup, noteLookup, usersLookup, notificationLookup, social) {
 		
 		const myAtName = '@' + usersLookup.get(caller_id).name;
 		noteLookup.forEach((note, id) => {
@@ -149,23 +153,37 @@ export default class NotificationsBase extends Component {
 			node.mention = node.body.indexOf(myAtName) >= 0 || node.name.indexOf(myAtName) >= 0;
 		});
 		
-		let notifications = [];
+		let notifications = new Map();
 		let processedNotifications = [];
 		
 		feed.forEach((notification) => {
 			if (processedNotifications.indexOf(notification.id) < 0) {
-				
+				let node = nodeLookup.get(notification.node);
 				let data = {
-					notifications: [],
-					node: nodeLookup.get(notification.node),
+					node: node,
 					note: undefined,
 					notification: [notification],
-					multi: false
+					multi: false,
+					users: new Map(),
 				};
+				
+				data.users.set(caller_id, usersLookup.get(caller_id));
+				data.users.set(node.author, usersLookup.get(node.author));
+				
+				if (node.link && node.link.author) {
+					node.link.author.forEach((author) => {
+						if (!data.users.has(author)) {
+							data.users.set(author, usersLookup.get(author));
+						}
+					});
+				}
 				
 				if (notification.note) {
 					let firstNote = noteLookup.get(notification.note); 
 					data.note = [firstNote];
+					if (!data.users.has(firstNote.author)) {
+						data.users.set(firstNote.author, firstNote);
+					}
 					
 					if (!firstNote.mention && !firstNote.selfauthored) {
 						node2notes.get(notification.node).forEach((note) => {
@@ -176,16 +194,19 @@ export default class NotificationsBase extends Component {
 										if (otherData.note == note) {
 											processedNotifications.push(otherNotification);
 											data.notification.push(notificationLookup.get(otherNotification));
+											data.note.push(noteData);
+											if (!data.users.has(noteData.author)) {
+												data.users.set(noteData.author, noteData);
+											}
+											data.multi = true;
 										}
 									});
-									data.note.push(noteData);
-									data.multi = true;
 								}
 							}
 						});
 					}
 				}
-				notifications.push(data);			
+				notifications.set(data.notifications.sort()[0].id, data);			
 				processedNotifications.push(notification.id);
 			}
 		});
