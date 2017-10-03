@@ -196,6 +196,7 @@ export default class NotificationItem extends Component {
 
 		const nodeAuthor = notification.users.get(caller_id).name;
 		const NodeAuthor = this.isNoteNodeAuthor(node, note) ? 'their' : (<span><NavLink class='-at-name'>@{nodeAuthor}</NavLink>'s</span>);
+		const notificationData = notification.notification[0];
 		
 		if (notification.multi) {
 			const count = notification.notification.length;
@@ -221,7 +222,7 @@ export default class NotificationItem extends Component {
 				
 				return (
 					<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
-					Your friends {friends.string} {extra} commented on {NodeAuthor} {nodeType} "<em>{notification.node.name}</em>"
+					Your friends {friends.string} {extra} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 					</NavLink>);
 					
 			} else {
@@ -250,8 +251,7 @@ export default class NotificationItem extends Component {
 			}
 				
 		} else if(notification.notification.note) {
-			const note = notification.note[0];
-			const notificationData = notification.notification[0];
+			const note = notification.note[0];			
 			const NoteAuthor = <NavLink class='-at-name'>@{notification.users.get(note.author).name}</NavLink>;
 			
 			if (!node.selfauthored && !note.selfauthored) {				

@@ -146,7 +146,7 @@ export default class NotificationsBase extends Component {
 					});
 				}
 				
-				this.composeNotifications(feed, caller_id, notification2nodeAndNote, node2notes, nodeLookup, noteLookup, usersLookup, notificationLookup);
+				this.composeNotifications(feed, caller_id, notification2nodeAndNote, node2notes, nodeLookup, noteLookup, usersLookup, notificationLookup, social);
 			});
 	}
 	
@@ -186,6 +186,7 @@ export default class NotificationsBase extends Component {
 					notification: [notification],
 					multi: false,
 					users: new Map(),
+					social: social,
 				};
 				
 				data.users.set(caller_id, usersLookup.get(caller_id));
