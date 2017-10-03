@@ -22,8 +22,9 @@ export default class NotificationsFeed extends NotificationsBase {
 			count: 0,
 			existingNotifications: 0,
 			unreadNotifications: 0,
-			/*notifications: [],
-			notificationsTotal: -1,*/
+			notifications: null,
+			notificationIds: [],
+			//notificationsTotal: -1,
 			status: null,
 		};
 		
@@ -60,7 +61,7 @@ export default class NotificationsFeed extends NotificationsBase {
 			
 			notificationsOrder.forEach((identifier) => {
 				let notification = notifications.get(identifier);
-				console.log(notification, identifier, notifications, notificationsOrder);
+				//console.log(notification, identifier, notifications, notificationsOrder);
 				ShowNotifications.push((
 					<Notification caller_id={caller_id} notification={notification} class={cN("-item -notification",(notification.notification[0].id<maxReadId)?'-new-comment':'')} id={'notification-' + identifier} />
 				));

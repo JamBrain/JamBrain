@@ -207,6 +207,7 @@ export default class NotificationItem extends Component {
 				}
 			});
 			
+			console.log(authors, notification, notification.social);
 			const friends = this.getSocialStringList(authors, notification.social.friends);
 			
 			if (friends.count > 0) {

@@ -12,6 +12,7 @@ export default class NotificationsBase extends Component {
 		
 		this.state = {
 			notifications: null,
+			notificationIds: [],
 			notificationsTotal: -1,
 			count: 0,
 			status: null,
@@ -171,7 +172,9 @@ export default class NotificationsBase extends Component {
 			node.mention = node.body.indexOf(myAtName) >= 0 || node.name.indexOf(myAtName) >= 0;
 		});
 		
-		let notifications = this.state.notifications ? new Map([...this.state.notifications]) : new Map();
+		let notifications = this.state.notifications ? this.state.notifications : new Map();
+		let notificationIds = this.state.notificationIds;
+		
 		let processedNotifications = [];
 		
 		feed.forEach((notification) => {
@@ -224,13 +227,16 @@ export default class NotificationsBase extends Component {
 						});
 					}
 				}
-				notifications.set(data.notification.sort()[0].id, data);			
+				let notificationId = data.notification.sort()[0].id;
+				notificationIds.push(notificationId);
+				notifications.set(notificationId, data);			
 				processedNotifications.push(notification.id);
 			}
 		});
 		
 		this.setState({
 			notifications: notifications,
+			notificationIds: notificationIds.sort((a, b) => b - a),
 			loading: false,
 		});
 	}
@@ -241,7 +247,7 @@ export default class NotificationsBase extends Component {
 		this.updateCallback();
 		this.setState({notifications: notifications});		
 	}
-	*/
+	
 	
 	markReady(id) {
 		let notifications = [...this.state.notifications];
@@ -270,7 +276,8 @@ export default class NotificationsBase extends Component {
 			}
 		}
 	}
-
+	*/
+	
 	updateCallback() {
 		//For subclass to do stuff with
 	}
@@ -288,11 +295,14 @@ export default class NotificationsBase extends Component {
 	};
 		
 	getNotificationsOrder() {
+		return this.state.notificationIds;
+		/*
 		if (this.state.notifications) {
-			return [...[...this.state.notifications.keys()].sort((a, b) => b - a)];
+			console.log(this.state.notifications, [...this.state.notifications], [...this.state.notifications].map(([key, val]) => key), [...this.state.notifications].map(([key, val]) => key).sort((a, b) => b - a));
+			return [...this.state.notifications].map(([key, val]) => key).sort((a, b) => b - a);
 		} else {
-			return [];
-		}
+			return []; 
+		}*/
 	}
 	
 	getNotifications() {
