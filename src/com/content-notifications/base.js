@@ -11,31 +11,36 @@ export default class NotificationsBase extends Component {
 		super(props);
 		
 		this.state = {
-			notifications: [],
+			notifications: null,
 			notificationsTotal: -1,
 			count: 0,
 			status: null,
 			feed: [],
+			loading: true,
 		};
 	}
 	
 	processNotificationFeed(r) {
+		
 		const caller_id = r.caller_id;							
+		/*
 		let notifications = [];
 		r.feed.forEach((notification) => {
 			notifications.push(
 				[notification.id, <Notification failCallback={ (id) => this.failCallback(id) } caller_id={caller_id} notification={notification} markReadyCallback={(id) => this.markReady(id) } />, false, notification]);					
 		});	
+		*/
+		this.collectAllNodesAndNodes(r.feed, caller_id);
 		
 		this.setState({
 			feed: r.feed,
 			caller_id: caller_id,
 			status: r.status,
 			count: r.count,
-			notifications: notifications,
-			notificationsTotal: r.feed.length + this.state.notifications.length,
+			loading: true,
+			//notifications: notifications,
+			//notificationsTotal: r.feed.length + this.state.notifications.length,
 		});
-		this.collectAllNodesAndNodes(r.feed, caller_id);
 	}
 	
 	collectAllNodesAndNodes(feed, caller_id) {
@@ -82,17 +87,23 @@ export default class NotificationsBase extends Component {
 				console.log('[Notifications:Nodes]', response.node);
 				if (response.node) {
 					response.node.forEach((node) => {
-						nodeLookup.set(node.id, node);
+						node.authors = [];
 						if (node.author && users.indexOf(node.author) >= 0) {
 							users.push(node.author);
+							
+							node.authors.push(node.author);
 						}
 						if (node.link && node.link.author) {
 							node.link.author.forEach((author) => {
-								if (users.indexOf(author) >= 0) {
+								if (users.indexOf(author) < 0) {
 									users.push(author);
+								}
+								if (node.authors.indexOf(author) < 0) {
+									node.authors.push(author);
 								}
 							});
 						}
+						nodeLookup.set(node.id, node);
 					});
 				}
 				
@@ -105,7 +116,7 @@ export default class NotificationsBase extends Component {
 					notes.forEach((note) => {
 						noteLookup.set(note.id, note);
 						
-						if (note.author && users.indexOf(note.author) >= 0) {
+						if (note.author && users.indexOf(note.author) < 0) {
 							users.push(note.author);
 						}							
 					});
@@ -113,8 +124,15 @@ export default class NotificationsBase extends Component {
 			}	
 		});
 		
-		Promise.all(nodesPromise, notesPromise, soicialPromise).then(() => { return $Node.Get(users);}).then((response) => {
-				console.log('[Notifications:Users]', response.node);
+		Promise.all([nodesPromise, notesPromise, soicialPromise])
+			.then(() => { 
+				noteLookup.forEach((note, id) => {
+					note.isNodeAuthor = nodeLookup.get(note.node).authors.indexOf(note.author) > -1;
+				});
+				return $Node.Get(users);
+			})			
+			.then((response) => {
+				//console.log('[Notifications:Users]', response.node);
 				if (response.node) {
 					response.node.forEach((node) => {
 						if (node.type == 'user') {
@@ -153,7 +171,7 @@ export default class NotificationsBase extends Component {
 			node.mention = node.body.indexOf(myAtName) >= 0 || node.name.indexOf(myAtName) >= 0;
 		});
 		
-		let notifications = new Map();
+		let notifications = this.state.notifications ? new Map([...this.state.notifications]) : new Map();
 		let processedNotifications = [];
 		
 		feed.forEach((notification) => {
@@ -185,11 +203,11 @@ export default class NotificationsBase extends Component {
 						data.users.set(firstNote.author, firstNote);
 					}
 					
-					if (!firstNote.mention && !firstNote.selfauthored) {
+					if (!firstNote.mention && !firstNote.selfauthored && !firstNote.isNodeAuthor) {
 						node2notes.get(notification.node).forEach((note) => {
 							if (note != notification.note) {
 								let noteData = noteLookup.get(note);
-								if (!noteData.mention && !noteData.selfauthored) {
+								if (!noteData.mention && !noteData.selfauthored && !noteData.isNodeAuthor) {
 									notification2nodeAndNote.forEach((otherData, otherNotification) => {
 										if (otherData.note == note) {
 											processedNotifications.push(otherNotification);
@@ -210,14 +228,20 @@ export default class NotificationsBase extends Component {
 				processedNotifications.push(notification.id);
 			}
 		});
-		console.log(notifications);
+		
+		this.setState({
+			notifications: notifications,
+			loading: false,
+		});
 	}
 	
+	/*
 	removeFailed(id) {
 		let notifications = this.state.notifications.filter(([cur_id, notification, loaded, notificationData]) => cur_id != id);
 		this.updateCallback();
 		this.setState({notifications: notifications});		
 	}
+	*/
 	
 	markReady(id) {
 		let notifications = [...this.state.notifications];
@@ -252,26 +276,35 @@ export default class NotificationsBase extends Component {
 	}
 	
 	isLoading() {
+		/*
 		let loading = this.state.notificationsTotal < 0;
 		this.state.notifications.forEach(([id, notification, loaded, notificationData]) => {
 			if (!loaded) {
 				loading = true;
 			}
 		});
-		return loading;
+		return loading;*/
+		return this.state.loading;
 	};
 		
+	getNotificationsOrder() {
+		if (this.state.notifications) {
+			return [...[...this.state.notifications.keys()].sort((a, b) => b - a)];
+		} else {
+			return [];
+		}
+	}
+	
 	getNotifications() {
 		let Notifications = [];
-		const feed = this.state.notifications;
+		const notifications = this.state.notifications;
+		const notificationsOrder = this.getNotificationsOrder();
 		const caller_id = this.state.caller_id;
-		
-		if (feed && feed.length > 0) {
+		if (!this.state.loading) {
 			
-			feed.forEach(([id, notification, loaded, notificationData]) => {
-				if (true) {
-					Notifications.push([id, notification]);
-				}
+			notificationsOrder.forEach((id) => {
+				let notification = notifications.get(id);
+				Notifications.push([id, <Notification caller_id={caller_id} notification={notification} />]);
 			});
 
 		}

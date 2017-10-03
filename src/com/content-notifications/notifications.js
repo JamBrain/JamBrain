@@ -22,8 +22,8 @@ export default class NotificationsFeed extends NotificationsBase {
 			count: 0,
 			existingNotifications: 0,
 			unreadNotifications: 0,
-			notifications: [],
-			notificationsTotal: -1,
+			/*notifications: [],
+			notificationsTotal: -1,*/
 			status: null,
 		};
 		
@@ -53,22 +53,21 @@ export default class NotificationsFeed extends NotificationsBase {
 		const hasMore = !processing && state.offset + state.count < state.existingNotifications;
 
 		let ShowNotifications = [];
-		const feed = state.notifications;
 		const caller_id = state.caller_id;
-		
-		if (feed && feed.length > 0) {
+		const notifications = state.notifications;
+		const notificationsOrder = this.getNotificationsOrder();
+		if (!this.state.loading) {
 			
-			feed.forEach(([identifier, notification, loaded, notificationData], index) => {
-				if (true) {
-					ShowNotifications.push((
-						<Notification failCallback={ (identifier) => this.failCallback(identifier) } caller_id={caller_id} notification={notificationData} markReadyCallback={(identifier) => this.markReady(identifier) } class={cN("-item -notification",(index<maxReadId)?'-new-comment':'')} id={'notification-' + identifier} />
-					));
-				}
+			notificationsOrder.forEach((identifier) => {
+				let notification = notifications.get(identifier);
+				console.log(notification, identifier, notifications, notificationsOrder);
+				ShowNotifications.push((
+					<Notification caller_id={caller_id} notification={notification} class={cN("-item -notification",(notification.notification[0].id<maxReadId)?'-new-comment':'')} id={'notification-' + identifier} />
+				));
 			});
 
 		}
-
-		
+				
 		const ShowGetMore = hasMore ? (
 			<div class={"-item -notification -indent -action"}>
 				<NavLink onclick={(e)=> console.log('MOAR')} href="#">MORE...</NavLink>

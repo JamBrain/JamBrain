@@ -11,12 +11,12 @@ export default class NotificationItem extends Component {
 	constructor( props ) {
 		super(props);
 		//console.log('[Notification:Loading]', props.notification.id);
-		this.state = {
+		/*this.state = {
 			notification: null,
 			loaded: false,
-		};
+		};*/
 	}
-	
+	/*
 	componentDidMount() {
 		this.queryInfoForNotification(this.props.caller_id, this.props.notification);		
 	}
@@ -138,46 +138,49 @@ export default class NotificationItem extends Component {
 		}
 				
 	}
-
-	getSocialStringList(notification, relation) {
-		const social = notification.people[relation];
-		let isFriend = social.has(notification.node.author);
-		let myFriends = isFriend ? new Set(notification.users.get(notification.node.author)) : new Set();
+	*/
+	
+	getSocialStringList(authors, relation) {
+		let isRelation = authors.map((a) => relation.indexOf(a) > -1);
+		let anyRelation = isRelation.reduce((l, r) => l || r);
+		let names = '';
+		let Relations = [];
 		
-		if (notification.node.link) {
-			notification.node.link.forEach((author) => {
-				if (social.has(author)) {
-					isFriend = true;
-					myFriends.add(notification.users.get(author));
-				}
-			});
+		if (isRelation) {
+			
+			isRelation.forEach((e, i) => { if (e) { Relations.push('<NavLink class=\'-at-name\'>@' + authors[i] + '</NavLink>');}});
+			if (Relations.length > 3) {
+				names = Relations.slice(0, 3).join(', ') + ' & more';
+			} else if (Relations.length > 1) {
+				names = Relations.slice(0, Relations.length - 1).join(', ') + ' & ' + Relations[Relations.length - 1];
+			} else {
+				names = Relations[0];
+			}	
+
 		}
-		let User = null;
-		const friendArray = [...myFriends].map((friend) => '<NavLink class=\'-at-name\'>@' + friend + '</NavLink>');
-		let names = null;
-		if (friendArray.length > 3) {
-			names = friendArray.slice(0, 3).join(', ') + ' & more';
-		} else if (friendArray.length > 1) {
-			names = friendArray.slice(0, friendArray.length - 1).join(', ') + ' & ' + friendArray[friendArray.length - 1];
-		} else {
-			names = friendArray[0];
-		}	
-		return {count: myFriends.size, string: names, list: myFriends};
+		
+		return {count: Relations.length, string: names};
+
 	}	
 
-	render( props, state ) {
-
-		const notification = state.notification;
+	isNoteNodeAuthor(node, note) {
+		return note ? node.authors.indexOf(note.author) > -1 : false;
+	}
+	
+	render( {caller_id, notification}, state ) {
 				
+		/*
 		if (notification == null || !state.loaded) {
 			return null;
 		}
+		*/
 		
 		let nodeType = notification.node.type;
 		if (notification.node.subtype) {
 			nodeType = notification.node.subtype;
 		}
 		
+		/*
 		let nodeAuthor = null;
 		if (notification.node) {
 			nodeAuthor = notification.users.get(notification.node.author);
@@ -186,83 +189,137 @@ export default class NotificationItem extends Component {
 		if (notification.note) {
 			noteAuthor = notification.users.get(notification.note.author);
 		}
-		
-		if (notification.notification.note) {
+		*/
+		const myAtName = "@" + notification.users.get(caller_id).name;
+		const node = notification.node;
+		const note = notification.note && notification.note.length == 1 ? notification.note[0] : null;
 
-			if (!notification.node.selfauthored && !notification.note.selfauthored) {
-				const myAtName = "@" + notification.users.get(notification.caller_id).name;
-				const firstAt = notification.note.body.indexOf(myAtName);
-				if (firstAt > -1) {
-					return (								
-						<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
-						<NavLink class='-at-name'>@{noteAuthor.name}</NavLink> mentioned you in a commented on <NavLink class='-at-name'>@{nodeAuthor.name}</NavLink>'s {nodeType} "<em>{notification.node.name}</em>"
-						</NavLink>);								
+		const nodeAuthor = notification.users.get(caller_id).name;
+		const NodeAuthor = this.isNoteNodeAuthor(node, note) ? 'their' : (<span><NavLink class='-at-name'>@{nodeAuthor}</NavLink>'s</span>);
+		
+		if (notification.multi) {
+			const count = notification.notification.length;
+			const authors = [];
+
+			notification.note.forEach((note) => {
+				if (authors.indexOf(note.author) == -1) {
+					authors.push(note.author);
+				}
+			});
+			
+			const friends = this.getSocialStringList(authors, notification.social.friends);
+			
+			if (friends.count > 0) {
+				let others = count - following.count;					
+				let extra = null;
+				if (others == 1) {
+					extra = ' & one more';
+				} else if (others > 1) {
+					extra = ' & ' + others + ' more';
+				}
+				
+				return (
+					<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
+					Your friends {friends.string} {extra} commented on {NodeAuthor} {nodeType} "<em>{notification.node.name}</em>"
+					</NavLink>);
+					
+			} else {
+				const following = this.getSocialStringList(authors, notification.social.following);
+				if (following.count) {
+					let others = count - following.count;					
+					let extra = null;
+					if (others == 1) {
+						extra = ' & one more';
+					} else if (others > 1) {
+						extra = ' & ' + others + ' more';
+					}
+					
+					return (
+						<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
+						{following.string} {extra} commented on {NodeAuthor} {nodeType} "<em>{notification.node.name}</em>"
+						</NavLink>);
+					
 				} else {
 					return (
-						<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
-						<NavLink class='-at-name'>@{noteAuthor.name}</NavLink> also commented on <NavLink class='-at-name'>@{nodeAuthor.name}</NavLink>'s {nodeType} "<em>{notification.node.name}</em>"
+						<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
+						{count} users commented on {NodeAuthor} {nodeType} "<em>{notification.node.name}</em>"
+						</NavLink>);
+					
+				}
+			}
+				
+		} else if(notification.notification.note) {
+			const note = notification.note[0];
+			const notificationData = notification.notification[0];
+			const NoteAuthor = <NavLink class='-at-name'>@{notification.users.get(note.author).name}</NavLink>;
+			
+			if (!node.selfauthored && !note.selfauthored) {				
+				
+				if (note.mention) {
+					return (								
+						<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
+						{NoteAuthor} mentioned you in a commented on {NodeAuthor} {nodeType} "<em>{notification.node.name}</em>"
+						</NavLink>);							
+				} else {
+					return (
+						<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
+						{NoteAuthor} also commented on {NodeAuthor} {nodeType} "<em>{notification.node.name}</em>"
 						</NavLink>);
 				}
 			} else if (notification.node.selfauthored && !notification.note.selfauthored) {							
 				return (
-					<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
-					<NavLink class='-at-name'>@{noteAuthor.name}</NavLink> commented on your {nodeType} "<em>{notification.node.name}</em>"
+					<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
+					{NoteAuthor} commented on your {nodeType} "<em>{notification.node.name}</em>"
 					</NavLink>);							
 			} else {
 				return (
-					<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id}>
-					You recieved notification that you posted a comment on <NavLink class='-at-name'>@{nodeAuthor.name}</NavLink>'s {nodeType} "<em>{notification.node.name}</em>" please report to dev-team that you already knew this.
+					<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id}>
+					You recieved notification that you posted a comment on <NavLink class='-at-name'>@{nodeAuthor.name}</NavLink>'s {nodeType} "<em>{notification.node.name}</em>" please report to the dev-team that you already knew this.
 					</NavLink>);
 			}
 		} else {
-			if (notification.node.selfauthored) {
+			if (node.selfauthored) {
 				return (
-					<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id}>
+					<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id}>
 					Your {nodeType} "<em>{notification.node.name}</em>" was either created or updated.
 					</NavLink>);
 			} else {
-				//Todo look for atting in posts I haven't written
-				const myAtName = "@" + notification.users.get(notification.caller_id).name;
-				const mentioned = Math.max(
-					notification.node.body.indexOf(myAtName),
-					notification.node.name.indexOf(myAtName)) > -1;
-				
-			
-				const friends = this.getSocialStringList(notification, 'friends');
+							
+				const friends = this.getSocialStringList(node.authors, notification.social.friends);
 				
 				if (friends.count > 0) {
 					User = (<span>Your friend{friends.count > 1 ? 's' : ''} {friends.string}</span>);
 				} else {
-					const following = this.getSocialStringList(notification, 'following');
+					const following = this.getSocialStringList(note.authors, notification.social.following);
 					if (following.count > 0) {
 						User = (<span>{following.string}</span>);
 					} else {
-						User = (<span>{nodeAuthor.name}</span>);
+						User = (NodeAuthor);
 					}
 				}
 				
 				if (notification.node.type == 'post') {
-					if (mentioned) {
+					if (node.mention) {
 						return (
-							<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
+							<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
 								{User} mentioned you in their post "<em>{notification.node.name}</em>"
 							</NavLink>);
 					} else {
 						return (
-							<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
+							<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
 								{User} posted "<em>{notification.node.name}</em>"
 							</NavLink>);						
 					}						
 					
 				} else {
-					if (mentioned) {
+					if (node.mention) {
 						return (
-							<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
+							<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
 							{User} mentioned you in their {nodeType} "<em>{notification.node.name}</em>"
 							</NavLink>);
 					} else {
 						return (
-							<NavLink href={notification.node.path} title={'Notifiaction Id: ' + notification.notification.id} class={props.class} id={props.id} >
+							<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
 							{User} posted a {nodeType} "<em>{notification.node.name}</em>"
 							</NavLink>);
 						
