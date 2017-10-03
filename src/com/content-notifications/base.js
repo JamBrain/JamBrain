@@ -206,7 +206,7 @@ export default class NotificationsBase extends Component {
 						});
 					}
 				}
-				notifications.set(data.notifications.sort()[0].id, data);			
+				notifications.set(data.notification.sort()[0].id, data);			
 				processedNotifications.push(notification.id);
 			}
 		});
