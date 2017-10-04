@@ -24,13 +24,6 @@ export default class NotificationsBase extends Component {
 	processNotificationFeed(r) {
 		
 		const caller_id = r.caller_id;							
-		/*
-		let notifications = [];
-		r.feed.forEach((notification) => {
-			notifications.push(
-				[notification.id, <Notification failCallback={ (id) => this.failCallback(id) } caller_id={caller_id} notification={notification} markReadyCallback={(id) => this.markReady(id) } />, false, notification]);					
-		});	
-		*/
 		this.collectAllNodesAndNodes(r.feed, caller_id);
 		
 		this.setState({
@@ -39,8 +32,6 @@ export default class NotificationsBase extends Component {
 			status: r.status,
 			count: r.count,
 			loading: true,
-			//notifications: notifications,
-			//notificationsTotal: r.feed.length + this.state.notifications.length,
 		});
 	}
 	
@@ -242,68 +233,16 @@ export default class NotificationsBase extends Component {
 		});
 	}
 	
-	/*
-	removeFailed(id) {
-		let notifications = this.state.notifications.filter(([cur_id, notification, loaded, notificationData]) => cur_id != id);
-		this.updateCallback();
-		this.setState({notifications: notifications});		
-	}
-	
-	
-	markReady(id) {
-		let notifications = [...this.state.notifications];
-		for (let i=0; i<notifications.length; i++) {
-			if (notifications[i][0] == id) {
-				notifications[i][2] = true;
-			}
-		}
-		this.updateCallback();
-		this.setState({notifications: notifications});
-		
-		if (this.props.getNew && !this.isLoading()) {
-			let maxId = -1;
-			
-			notifications.forEach(([id, notification, loaded, notificationData]) => {
-				if (id > maxId) {
-					maxId = id;
-				}
-			});
-			
-			if (id >= 0){
-				$Notification.SetMarkRead(maxId);
-			}
-			if (this.props.countCallback) {
-				this.props.countCallback(notifications.length);
-			}
-		}
-	}
-	*/
-	
 	updateCallback() {
 		//For subclass to do stuff with
 	}
 	
 	isLoading() {
-		/*
-		let loading = this.state.notificationsTotal < 0;
-		this.state.notifications.forEach(([id, notification, loaded, notificationData]) => {
-			if (!loaded) {
-				loading = true;
-			}
-		});
-		return loading;*/
 		return this.state.loading;
 	};
 		
 	getNotificationsOrder() {
 		return this.state.notificationIds;
-		/*
-		if (this.state.notifications) {
-			console.log(this.state.notifications, [...this.state.notifications], [...this.state.notifications].map(([key, val]) => key), [...this.state.notifications].map(([key, val]) => key).sort((a, b) => b - a));
-			return [...this.state.notifications].map(([key, val]) => key).sort((a, b) => b - a);
-		} else {
-			return []; 
-		}*/
 	}
 	
 	getNotifications() {

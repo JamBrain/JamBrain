@@ -2,143 +2,11 @@ import { h, Component } 				from 'preact/preact';
 
 import NavLink 							from 'com/nav-link/link';
 
-import $Notification					from '../../shrub/js/notification/notification';
-import $Node							from '../../shrub/js/node/node';
-import $Note							from '../../shrub/js/note/note';
-
 export default class NotificationItem extends Component {
 	
 	constructor( props ) {
 		super(props);
-		//console.log('[Notification:Loading]', props.notification.id);
-		/*this.state = {
-			notification: null,
-			loaded: false,
-		};*/
 	}
-	/*
-	componentDidMount() {
-		this.queryInfoForNotification(this.props.caller_id, this.props.notification);		
-	}
-
-	queryInfoForNotification(caller_id, notification) {
-		let results = {
-			caller_id: caller_id,
-			users: new Map([[caller_id, null]]),
-			usersCompleted: 'no',
-			people: {},
-			node: {},
-			note: {},
-			notification: notification,
-		};
-		
-		$Node.GetMy().then((response) => {
-			results.people = {
-				following: response.star ? response.star : [],
-				followers: response.refs.star ? response.refs.star : [],
-				friends: Array.isArray(response.refs.star) ? new Set([...response.star].filter((i) => response.refs.star.indexOf(i) > -1)) : [],			
-			};
-			results.people.following.forEach((user) => {
-				results.users.set(user, null);
-			});
-			results.people.followers.forEach((user) => {
-				results.users.set(user, null);
-			});
-			results.people.completed = true;
-			this.processNotificationStepTwo(results);
-		});
-		
-		$Node.Get(notification.node).then((response) => {
-			const nodes = response.node;
-			if (nodes && nodes.length == 1) {
-				const node = nodes[0];
-				results.node = node;
-				results.node.selfauthored = false;
-				if (node.author == caller_id) {
-					results.node.selfauthored = true;
-				} else if (node.link && node.link.author) {
-					node.link.author.forEach((author) => {
-						if (author == caller_id) {
-							results.node.selfauthored = true;
-						}
-					});
-				}
-				
-				results.node.completed = true;
-				
-				if (!results.node.selfauthored) {
-					results.users.set(node.author, null);
-					if (node.link.author) {
-						node.link.author.forEach((user_id) => {
-							results.users.set(user_id, null);
-						});
-					}					
-				}
-				this.processNotificationStepTwo(results);
-			} else {
-				results.node = {corrupted: true, completed: true};
-				
-				if (this.props.failCallback) {
-					this.props.failCallback(this.props.id);
-				}
-			}
-		});
-		
-		if (notification.note) {
-			$Note.Get(notification.node).then((response) => {
-				if (response.note && response.note.length > 0) {
-					response.note.forEach((note) => {
-						if (note.id == notification.note) {
-							results.note = note;
-							results.note.selfauthored = note.author == caller_id;
-							results.note.completed = true;
-							if (!results.note.selfauthored) {
-								results.users.set(note.author, null);
-							}						
-						}
-						
-					});
-				}
-				this.processNotificationStepTwo(results);
-			});
-		} else {
-			results.note.completed = true;
-			this.processNotificationStepTwo(results);
-		}
-			
-	}
-	
-	processNotificationStepTwo(notification) {
-		if (!(notification.people.completed && notification.note.completed && notification.node.completed)) {
-			return;
-		}
-		
-		if (notification.usersCompleted == 'no') {
-			notification.usersCompleted = 'started';
-			let users = [];
-			notification.users.forEach((value, key) => users.push(key));			
-			$Node.Get(users).then((response) => {
-				response.node.forEach((node) => {
-					if (node.type == 'user') {
-						notification.users.set(node.id, node);
-					}
-				});
-				notification.usersCompleted = 'yes';
-				this.processNotificationStepTwo(notification);
-			});			
-			return;
-		} else if (notification.usersCompleted == 'started') {
-			return;
-		}
-
-		this.setState({notification: notification, loaded: true});
-		
-		if (this.props.markReadyCallback) {
-			this.props.markReadyCallback(notification.notification.id);
-		}
-				
-	}
-	*/
 	
 	getSocialStringList(authors, relation) {
 		let isRelation = authors.map((a) => relation.indexOf(a) > -1);
@@ -169,11 +37,6 @@ export default class NotificationItem extends Component {
 	
 	render( props, state ) {
 				
-		/*
-		if (notification == null || !state.loaded) {
-			return null;
-		}
-		*/
 		const caller_id = props.caller_id;
 		const notification = props.notification;
 		
@@ -182,16 +45,6 @@ export default class NotificationItem extends Component {
 			nodeType = notification.node.subtype;
 		}
 		
-		/*
-		let nodeAuthor = null;
-		if (notification.node) {
-			nodeAuthor = notification.users.get(notification.node.author);
-		}
-		let noteAuthor = null;
-		if (notification.note) {
-			noteAuthor = notification.users.get(notification.note.author);
-		}
-		*/
 		const myAtName = "@" + notification.users.get(caller_id).name;
 		const node = notification.node;
 		const note = notification.note && notification.note.length == 1 ? notification.note[0] : null;
