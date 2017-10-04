@@ -49,7 +49,7 @@ export default class NotificationItem extends Component {
 		const node = notification.node;
 		const note = notification.note && notification.note.length == 1 ? notification.note[0] : null;
 
-		const nodeAuthor = notification.users.get(caller_id).name;
+		const nodeAuthor = notification.users.get(node.author).name;
 		const NodeAuthor = this.isNoteNodeAuthor(node, note) ? 'their' : (<span><NavLink class='-at-name'>@{nodeAuthor}</NavLink>'s</span>);
 		const notificationData = notification.notification[0];
 		
@@ -77,7 +77,7 @@ export default class NotificationItem extends Component {
 				
 				return (
 					<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
-					Your friends {friends.string} {extra} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+					Your friends {friends.string} {extra} also commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 					</NavLink>);
 					
 			} else {
@@ -93,13 +93,13 @@ export default class NotificationItem extends Component {
 					
 					return (
 						<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
-						{following.string} {extra} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+						{following.string} {extra} also commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 						</NavLink>);
 					
 				} else {
 					return (
 						<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
-						{count} users commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+						{count} users also commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 						</NavLink>);
 					
 				}
