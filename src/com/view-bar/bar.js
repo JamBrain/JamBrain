@@ -30,17 +30,23 @@ export default class ViewBar extends Component {
 	}
 
 	checkNotificationCount() {
-		$Notification.GetCountUnread()
-		.then((r) => {
-			if (this.state.notifications != r.count) {
-				this.setState({notifications: r.count, notificationCountAdjustment: 0});
-			}
-			setTimeout(() => this.checkNotificationCount(), 60000);
-		})
-		.catch((e) => {
-			setTimeout(() => this.checkNotificationCount(), 5 * 60000);
-			console.log('[Notificaton error]', e);
-		});
+		const loggedIn = this.props.user && this.props.user.id > -1;
+		
+		if (loggedIn) {
+			$Notification.GetCountUnread()
+			.then((r) => {
+				if (this.state.notifications != r.count) {
+					this.setState({notifications: r.count, notificationCountAdjustment: 0});
+				}
+				setTimeout(() => this.checkNotificationCount(), 60000);
+			})
+			.catch((e) => {
+				setTimeout(() => this.checkNotificationCount(), 5 * 60000);
+				console.log('[Notificaton error]', e);
+			});
+		} else {
+			setTimeout(() => this.checkNotificationCount(), 5 *  60000);
+		}
 	}
 
 	componentDidMount() {
