@@ -41,17 +41,14 @@ export default class NotificationsFeed extends NotificationsBase {
 			this.setState({existingNotifications: r2.count});
 		});
 		
-		$Notification.GetCountUnread().then((r3) => {
-			this.setState({unreadNotifications: r3.count});
-		});
 	}
 	
 	render( props, state ) {
 		
-		const maxReadId = this.state.unreadNotifications;
+		const maxReadId = this.state.highestRead;
 		const processing = state.status === null || this.isLoading();
 		const hasMore = !processing && state.offset + state.count < state.existingNotifications;
-
+		const hasUnread = this.getHighestNotificationInFeed() > state.highestRead;
 		let ShowNotifications = [];
 		const caller_id = state.caller_id;
 		const notifications = state.notifications;
@@ -73,11 +70,11 @@ export default class NotificationsFeed extends NotificationsBase {
 			</div>
 			) : null;
 			
-		const ShowSetAllRead = processing ? null : (
+		const ShowSetAllRead = hasUnread ? (
 			<div class={"-item -notification -indent -action"}>
 				<NavLink onclick={ (e) => console.log('Read') } href="#">Mark all commentes as read</NavLink>
 			</div>
-			);
+			) : null;
 			
 		const ShowSpinner = processing ? <NavSpinner /> : null;
 

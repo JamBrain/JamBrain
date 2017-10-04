@@ -18,20 +18,43 @@ export default class NotificationsBase extends Component {
 			status: null,
 			feed: [],
 			loading: true,
+			highestRead: -1,
 		};
+	}
+	
+	markReadHighest() {
+		const highestInFeed = this.getHighestNotificationInFeed();
+		if (highestInFeed !== null) {
+			if (highestInFeed > this.state.highestRead) {
+				$Notification.SetMarkRead(highestInFeed).then((r) => {
+					if (r.status == 200) {
+						this.setState({highestRead: highestInFeed});
+					}
+				});
+			}
+		}
+	}
+	
+	getHighestNotificationInFeed() {
+		const notificationsOrder = this.getNotificationsOrder();
+		if (notificationsOrder && notificationsOrder.length > 0) {
+			return notificationsOrder[0];
+		}
+		return null;
 	}
 	
 	processNotificationFeed(r) {
 		
 		const caller_id = r.caller_id;							
 		this.collectAllNodesAndNodes(r.feed, caller_id);
-		
+		let highestRead = r.max_id !== undefined ? r.max_id : this.state.highestRead;
 		this.setState({
 			feed: r.feed,
 			caller_id: caller_id,
 			status: r.status,
 			count: r.count,
 			loading: true,
+			highestRead: highestRead,
 		});
 	}
 	
