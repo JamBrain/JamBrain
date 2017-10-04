@@ -155,7 +155,7 @@ switch ( $action ) {
 
 				// Check if you have permission to add comment to node
 				if ( note_IsNotePublicByNode($node) ) {
-					$RESPONSE['updated'] = note_SafeEdit($note_id, $author, $body, $version_tag, $note.flags);
+					$RESPONSE['updated'] = note_SafeEdit($note_id, $author, $body, $version_tag, $note['flags']);
 				}
 				else {
 					json_EmitFatalError_Forbidden("This node type does now allow notes (yet)", $RESPONSE);
