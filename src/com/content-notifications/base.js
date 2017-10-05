@@ -103,17 +103,16 @@ export default class NotificationsBase extends Component {
 				if (response.node) {
 					response.node.forEach((node) => {
 						node.authors = [];
-						if (node.author && users.indexOf(node.author) >= 0) {
+						if (node.author > 0 && users.indexOf(node.author) < 0) {
 							users.push(node.author);
-							
 							node.authors.push(node.author);
 						}
 						if (node.link && node.link.author) {
 							node.link.author.forEach((author) => {
-								if (users.indexOf(author) < 0) {
+								if (author > 0 && users.indexOf(author) < 0) {
 									users.push(author);
 								}
-								if (node.authors.indexOf(author) < 0) {
+								if (author > 0 && node.authors.indexOf(author) < 0) {
 									node.authors.push(author);
 								}
 							});
@@ -131,7 +130,7 @@ export default class NotificationsBase extends Component {
 					notes.forEach((note) => {
 						noteLookup.set(note.id, note);
 						
-						if (note.author && users.indexOf(note.author) < 0) {
+						if (note.author > 0 && users.indexOf(note.author) < 0) {
 							users.push(note.author);
 						}							
 					});

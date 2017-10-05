@@ -21,10 +21,10 @@ export default class NotificationsFeed extends NotificationsBase {
 			limit: 20,
 			count: 0,
 			existingNotifications: 0,
-			unreadNotifications: 0,
 			notifications: null,
 			notificationIds: [],
 			status: null,
+			highestRead: -1,
 		};
 		
 	}
