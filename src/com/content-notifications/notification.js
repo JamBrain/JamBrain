@@ -55,6 +55,7 @@ export default class NotificationItem extends Component {
 
 		const nodeAuthor = notification.users.get(node.author).name;
 		let NodeAuthor = this.isNoteNodeAuthor(node, note) ? 'their' : (<span><NavLink class='-at-name'>@{nodeAuthor}</NavLink>'s</span>);
+		let NodeAuthorSubject = this.isNoteNodeAuthor(node, note) ? 'their' : (<span><NavLink class='-at-name'>@{nodeAuthor}</NavLink></span>);
 		const notificationData = notification.notification[0];
 		
 		if (notification.multi) {
@@ -138,7 +139,7 @@ export default class NotificationItem extends Component {
 			} else {
 				return (
 					<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id}>
-					You recieved notification that you posted a comment on <NavLink class='-at-name'>@{nodeAuthor.name}</NavLink>'s {nodeType} "<em>{node.name}</em>" please report to the dev-team that you already knew this.
+					You recieved notification that you posted a comment on {NodeAuthor} {nodeType} "<em>{node.name}</em>" please report to the dev-team that you already knew this.
 					</NavLink>);
 			}
 		} else {
@@ -154,11 +155,11 @@ export default class NotificationItem extends Component {
 				if (friends.count > 0) {
 					User = (<span>Your friend{friends.count > 1 ? 's' : ''} {friends.string}</span>);
 				} else {
-					const following = this.getSocialStringList(note.authors, notification.social.following);
+					const following = this.getSocialStringList(node.authors, notification.social.following);
 					if (following.count > 0) {
 						User = (<span>{following.string}</span>);
 					} else {
-						User = (NodeAuthor);
+						User = (NodeAuthorSubject);
 					}
 				}
 				
