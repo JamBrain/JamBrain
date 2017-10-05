@@ -9,10 +9,10 @@ import Video							from '../../internal/video/video';
 export default class DialogTV extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = this.calcSizes();
 		this.state.showchat = false;
-		
+
 		this.onResize = this.onResize.bind(this);
 		this.onChatClick = this.onChatClick.bind(this);
 
@@ -37,14 +37,14 @@ export default class DialogTV extends Component {
 	componentWillUnmount() {
 		window.removeEventListener('resize', this.onResize);
 	}
-	
+
 	canShowChat() {
 		var WindowWidth = window.innerWidth;
 		var ViewWidth = Math.floor(WindowWidth - 32); /* ?? */
 
 		return ViewWidth >= (this.defaults.MinWidth + this.defaults.ChatWidth); // 800		
 	}
-	
+
 	calcSizes() {
 		var ret = {};
 
@@ -66,17 +66,17 @@ export default class DialogTV extends Component {
 		if ( !CanHaveChat ) {
 			ret.showchat = false;
 		}
-		
+
 		var Width = ViewWidth - (ret.showchat ? ChatWidth : 0);
 		var Height = ViewHeight - BarHeight;
 
 		// Minimum sizes //
 		if ( Width < MinWidth ) Width = MinWidth;
 		if ( Height < MinHeight ) Height = MinHeight;
-		
+
 		var AspectRatio = Width / Height;
 		var TargetRatio = 16 / 9;
-		
+
 		if ( AspectRatio > TargetRatio ) {
 			Width = Math.floor(Height * TargetRatio);
 		}
@@ -137,7 +137,7 @@ export default class DialogTV extends Component {
 		//console.log(sizes);
 		this.setState(sizes);
 	}
-	
+
 	onChatClick( e ) {
 		if ( this.canShowChat() ) {
 			//console.log("chat: ",this.state.showchat);
@@ -145,7 +145,7 @@ export default class DialogTV extends Component {
 			this.onResize(e);
 		}
 	}
-	
+
 	render( props, state ) {
 		var ShowStream = null;
 		var ShowSide = <div class="-chat" style={'width:'+state.chat[0]+'px; height:'+state.chat[1]+'px;'}></div>;
@@ -158,7 +158,7 @@ export default class DialogTV extends Component {
 					state.video[0],
 					state.video[1]
 				);
-	
+
 				if ( state.showchat ) {
 					ShowSide = Video.EmbedTwitch(
 						"-chat",
@@ -169,7 +169,7 @@ export default class DialogTV extends Component {
 				}
 			}
 		}
-		
+
 		var ShowBar = null;
 		if ( true ) {
 			var Left = null;
@@ -182,7 +182,7 @@ export default class DialogTV extends Component {
 					</div>
 				);
 			};
-			
+
 			ShowBar = (
 				<div class="-bar">
 					<div class="-right">

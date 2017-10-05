@@ -5,7 +5,7 @@ import NavLink 			from 'com/nav-link/link';
 export default class SidebarSupport extends Component {
 	constructor() {
 	}
-	
+
 	render( props, state ) {
 		return (
 			<div class="sidebar-base sidebar-shortlist sidebar-upcoming">

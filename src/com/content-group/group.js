@@ -12,22 +12,22 @@ import $Node							from '../../shrub/js/node/node';
 export default class ContentGroup extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {
 			'items': null,
 			'nodes': null
 		};
 	}
-	
+
 	componentDidMount() {
 		let props = this.props;
 		let node = props.node;
-		
+
 		$Node.GetFeed(node.id, 'parent', ['group', 'event', 'page', 'tag'])
 			.then(r => {
 				if ( r && r.feed ) {
 					this.setState({'items': r.feed});
-					
+
 					return $Node.GetKeyed(r.feed);
 				}
 			})
@@ -38,12 +38,12 @@ export default class ContentGroup extends Component {
 			});
 	}
 
-	
+
 	render( {node, user, extra, featured}, {items, nodes} ) {
 		let ShowBody = [];
 		if ( items && items.length && nodes ) {
 			ShowBody.push(<div><NavLink href={node.path+'/..'}>/..</NavLink></div>);
-			
+
 			for (let idx = 0; idx < items.length; idx++) {
 				let n = nodes[items[idx].id];
 				ShowBody.push(<div><NavLink href={n.path}>{'/'+n.name}</NavLink> [{n.type}]</div>);

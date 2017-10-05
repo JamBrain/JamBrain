@@ -6,9 +6,9 @@ export default class ContentUsers extends Component {
 	constructor( props ) {
 		super(props);
 	}
-	
+
 	render( {extra} ) {
-		
+
 		if ( extra.length ) {
 			return (
 				<div class="content-base content-post">

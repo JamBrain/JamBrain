@@ -5,7 +5,7 @@ export default class ButtonLink extends NavLink {
 	constructor( props ) {
 		super(props);
 	}
-	
+
 	render(props,state) {
 		if ( props.class )
 			props.class = "button-base button-link " + props.class;
@@ -14,7 +14,7 @@ export default class ButtonLink extends NavLink {
 
 		let doHistory;
 		if ( props.href ) {
-			if ( props.href.indexOf('//') !== -1 ) {		
+			if ( props.href.indexOf('//') !== -1 ) {
 				props.target = "_blank";
 				props.rel = "noopener noreferrer";
 			}
@@ -32,10 +32,10 @@ export default class ButtonLink extends NavLink {
 		props.onclick = (e) => {
 			if ( onClickFunc )
 				onClickFunc(e);
-			
+
 			if ( doHistory )
 				doHistory.call(this.base,e);
-			
+
 			if ( typeof document.activeElement.blur !== "undefined" ) {
 				document.activeElement.blur();
 			}
@@ -44,13 +44,13 @@ export default class ButtonLink extends NavLink {
 				document.activeElement.parentNode.blur();
 			}
 		};
-		
+
 		props.onkeydown = (e) => {
 			if ( e.keyCode === 13 ) {
 				props.onclick();
 			}
 		};
-			
+
 		return (
 			<a {...props} />
 		);

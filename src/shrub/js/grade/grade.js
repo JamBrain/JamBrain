@@ -3,10 +3,10 @@ import Fetch	 				from '../internal/fetch';
 export default {
 	GetMy,
 	GetInfo,
-	
+
 	Add,
 	Remove,
-	
+
 	OptOut,
 	OptIn
 };

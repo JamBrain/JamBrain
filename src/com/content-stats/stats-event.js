@@ -19,16 +19,16 @@ import $Stats							from '../../shrub/js/stats/stats';
 export default class ContentStatsEvent extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {
 			'stats': null
 		};
 	}
-	
+
 	componentDidMount() {
 		//var props = this.props;
 		var state = this.state;
-		
+
 //		if ( state.stats )
 		this.getStats();
 	}
@@ -46,14 +46,14 @@ export default class ContentStatsEvent extends Component {
 
 	getStats() {
 		var props = this.props;
-		
+
 		$Stats.Get(props.node.id).then(r => {
 			if ( r.stats ) {
 				this.setState({'stats': r.stats});
 			}
 		});
 	}
-	
+
 	render( props, state ) {
 		props = Object.assign({}, props);	// Shallow copy we can change props
 		var Class = [];
@@ -62,19 +62,19 @@ export default class ContentStatsEvent extends Component {
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
-		
+
 		if ( node && node.slug && state.stats ) {
 			var stats = state.stats;
-			
+
 			Class.push("content-stats");
 			Class.push("content-stats-event");
-			
+
 			//console.log(state.stats);
-			
+
 			var EventMode = 0;
 			if ( node && node.meta && node.meta['theme-mode'] )
 				EventMode = parseInt(node.meta['theme-mode']);
-			
+
 			var Data = [];
 			if ( EventMode ) {
 				Data.push(<div><span class="-title">Signups:</span> <span class="-value">{stats.signups}</span></div>);
@@ -105,7 +105,7 @@ export default class ContentStatsEvent extends Component {
 				}
 
 				Data.push(<div class="-gap">Last Updated: {stats.timestamp}</div>);
-				
+
 				return (
 					<ContentCommon {...props} class={cN(Class)}>
 						<ContentCommonBodyTitle title="Statistics" />

@@ -54,12 +54,12 @@ export function Password( id, key, password ) {
 		'id': id,
 		'key': key,
 		'pw': password
-	});	
+	});
 }
 
 export function Have( name, mail = null ) {
 	return Fetch.Post(API_ENDPOINT+'/vx/user/have', {
 		'name': name,
 		'mail': mail
-	});	
+	});
 }

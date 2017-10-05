@@ -22,7 +22,7 @@ function make_url( url ) {
 export default class ViewBar extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state - {
 			notifications: 0,
 			notificationCountAdjustment: 0,
@@ -45,7 +45,7 @@ export default class ViewBar extends Component {
 
 	componentDidMount() {
 		document.body.classList.add('_use-view-bar');
-	
+
 		this.checkNotificationCount();
 	}
 
@@ -143,7 +143,7 @@ export default class ViewBar extends Component {
 			if (this.state.showNotifications) {
 				ShowNotifications = (<DropdownNotification getNew={notificationCount > 0} totalNew={notificationCount} countCallback={ (offset) => this.setState({notificationCountAdjustment: offset}) } hideCallback={ () => this.setState({showNotifications: false}) } />);
 			}
-			
+
 			Notification = (
 				<ButtonBase class="-icon" onclick={(e) => {
 					this.setState({showNotifications: !this.state.showNotifications});
@@ -152,7 +152,7 @@ export default class ViewBar extends Component {
 					{NotificationCount}
 				</ButtonBase>
 			);
-			
+
 			// TODO: Pull this out of the user meta, else use a dummy
 			let Avatar = (user.meta && user.meta.avatar) ? <img src={"//"+STATIC_DOMAIN+user.meta.avatar} /> : <img src={'//'+STATIC_DOMAIN+'/other/dummy/user64.png'} />;
 			//'/other/logo/mike/Chicken64.png';
@@ -217,7 +217,7 @@ export default class ViewBar extends Component {
 					<div class="-left">
 						<ButtonLink href="/" class="-logo">
 							<SVGIcon class="if-sidebar-block" baseline>ludum</SVGIcon><SVGIcon class="if-sidebar-block" baseline>dare</SVGIcon>
-							<SVGIcon class="if-no-sidebar-block" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-block" baseline>d-are</SVGIcon>							
+							<SVGIcon class="if-no-sidebar-block" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-block" baseline>d-are</SVGIcon>
 						</ButtonLink>
 					</div>
 					{this.renderRight(user, featured)}

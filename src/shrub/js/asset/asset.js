@@ -7,7 +7,7 @@ export default {
 export function Upload( author, data ) {
 	var fd = new FormData();
 	fd.append('asset', data);
-	
+
 	return fetch(API_ENDPOINT+'/vx/asset/upload/'+author, {
 		'method': 'POST',
 		'credentials': 'include',
@@ -28,7 +28,7 @@ export function Upload( author, data ) {
 		}
 		return null;
 	});
-	
-	
+
+
 //	return Fetch.Post(, data);
 }

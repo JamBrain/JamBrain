@@ -10,11 +10,11 @@ export default class ContentNavTheme extends Component {
 	constructor( props ) {
 		super(props);
 	}
-	
+
 	render( {node, user, path, extra}, {} ) {
 		if ( node.slug ) {
 			let ThemeMode = (node.meta['theme-mode']) ? parseInt(node.meta['theme-mode']) : 0;
-	
+
 			var NewPath = '/'+ (extra ? extra.join('/') : '');
 
 			// Figure out Default Page (this needs to be done first, otherwise Defaults are set wrong)
@@ -58,12 +58,12 @@ export default class ContentNavTheme extends Component {
 						let Name = "Round "+idx;
 						if ( node.meta['theme-page-name-'+idx] )
 							Name = node.meta['theme-page-name-'+idx];
-						
+
 						ShowRounds.push(<ContentNavButton path={path+NewPath} icon='ticket' href={path+'/'+idx}>{Name}</ContentNavButton>);
 					}
 				}
 			}
-			
+
 			return (
 				<div class="content-base content-nav content-nav-root">
 					{ShowRounds}

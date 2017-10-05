@@ -5,7 +5,7 @@ export default class NavSpinner extends Component {
 	constructor( props ) {
 		super(props);
 	}
-	
+
 	render( props, state ) {
 		// NOTE: Needs an extra div for IE, which can't apply transformations to SVG elemenst
 		return (

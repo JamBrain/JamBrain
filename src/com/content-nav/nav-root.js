@@ -9,7 +9,7 @@ export default class ContentNavRoot extends Component {
 	constructor( props ) {
 		super(props);
 	}
-	
+
 	componentDidMount() {
 	}
 
@@ -26,7 +26,7 @@ export default class ContentNavRoot extends Component {
 
 		var NewPath = '/'+ (extra ? extra.join('/') : '');
 		var PartPath = '/'+ (extra && extra.length ? extra[0] : '');
-		
+
 		var ShowMyFeed = null;
 		if ( user && user.id ) {
 			if ( NewPath == '/' )
@@ -39,7 +39,7 @@ export default class ContentNavRoot extends Component {
 				NewPath = '/feed';
 //			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href='/feed'>Feed</ContentNavButton>;
 		}
-		
+
 		// TODO: Check if Jammer.vg vs ludumdare. Use different path on each
 		let ShowEvents = null;
 		if ( true ) {
@@ -48,7 +48,7 @@ export default class ContentNavRoot extends Component {
 		else {
 			ShowEvents = <ContentNavButton path={PartPath} icon='trophy' href='/events'>Events</ContentNavButton>;
 		}
-		
+
 		return (
 			<div class="content-base content-nav content-nav-root">
 				{ShowMyFeed}

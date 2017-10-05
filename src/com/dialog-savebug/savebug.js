@@ -8,7 +8,7 @@ export default class DialogSavebug extends Component {
 
 	componentDidMount() {
 	}
-	
+
 	render( props, {} ) {
 		return (
 			<DialogCommon title="Oops!" ok>

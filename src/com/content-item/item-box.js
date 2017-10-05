@@ -11,12 +11,12 @@ export default class ContentItemBox extends Component {
 
 	render( props, state ) {
 		props = Object.assign({}, props);
-		
+
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
-		
+
 		return <ContentBox {...props} />;
 	}
 }

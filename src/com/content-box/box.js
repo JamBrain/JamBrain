@@ -18,11 +18,11 @@ export default class ContentBox extends Component {
 			'parent': null,
 		};
 	}
-	
+
 	componentDidMount() {
 		this.getParent(this.props);
 	}
-	
+
 	componentWillReceiveProps( nextProps ) {
 		if ( Shallow.Diff(this.props, nextProps) ) {
 			this.getParent(nextProps);
@@ -31,7 +31,7 @@ export default class ContentBox extends Component {
 
 	getParent( props ) {
 		var node = props.node;
-		
+
 		if ( node && node.parent ) {
 			return $Node.Get(node.parent)
 				.then(r => {
@@ -45,7 +45,7 @@ export default class ContentBox extends Component {
 	}
 
 	getAuthors() {
-		
+
 	}
 
 	render( props, state ) {
@@ -60,7 +60,7 @@ export default class ContentBox extends Component {
 			var Class = ["content-box"];
 
 			var Title = node.name;
-			
+
 			var CoverFail = '///content/internal/tvfail.png';
 			var Cover = (node.meta && node.meta.cover) ? node.meta.cover : CoverFail;
 			var HoverCover = (node.meta && node.meta['hover-cover']) ? node.meta['hover-cover'] : CoverFail;
@@ -68,17 +68,17 @@ export default class ContentBox extends Component {
 //			Cover += '.320x256.fit.jpg';
 //			Cover += '.640x512.fit.jpg';
 			Cover += '.480x384.fit.jpg';
-			
+
 			var ShowHoverCover = null;
 			if ( node.meta['cover-hover'] ) {
 				ShowHoverCover = <IMG2 class="-cover-hover" src={HoverCover} failsrc={CoverFail} />;
 			}
-			
+
 			var ShowEvent = null;
 			if ( !props.noevent && state.parent && state.parent.name ) {
 				ShowEvent = <div>{state.parent.name}</div>;
 			}
-			
+
 			var ShowSubEvent = null;
 			var SubEventClass = null;
 			if ( !props.nosubevent && node.subtype ) {
@@ -114,11 +114,11 @@ export default class ContentBox extends Component {
 					SubEventClass = '-col-c';
 				}
 			}
-			
+
 			let ShowTrophies = null;
 			if ( node.magic ) {
 				ShowTrophies = [];
-				
+
 				for ( let key in node.magic ) {
 					let parts = key.split('-');
 					if ( /*ShowTrophies.length < 6 &&*/ parts.length == 3 && parts[0] == 'grade' && parts[2] == 'result' ) {
