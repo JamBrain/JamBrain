@@ -42,6 +42,7 @@ const VALID_META = [
 		'grade-06-out' => ['length' => 1],
 		'grade-07-out' => ['length' => 1],
 		'grade-08-out' => ['length' => 1],
+		'allow-anonymous-comments' => ['length' => 1],
 		
 		'link-01' => ['length' => 512, 'url' => true],
 		'link-02' => ['length' => 512, 'url' => true],

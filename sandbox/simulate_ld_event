@@ -814,7 +814,8 @@ function PostImIn(&$user, $phase)
 	
 	$title = "I'm In";
 	$body = "I'm In " . GenerateRandomPostText();
-	CreatePost($user, $title, $body);
+	$nodeid = CreatePost($user, $title, $body);
+	MaybeReactToPost($user, $nodeid);
 	
 	$user["postedimin"] = true;
 	return false;
@@ -865,6 +866,57 @@ function LikeFeed(&$user, $nodes)
 	}	
 }
 
+function MaybeReactToPost(&$user, $nodeid)
+{
+	// Don't react to every post.
+	if(random_int(1,3) == 1)
+	{
+		$nodes = ApiNodeGet($user, $nodeid);
+		if($nodes == null) 
+		{
+			ReportError("Could not get post to react to.");
+			return;
+		}
+		ReactToPost($user, $nodes[0]);
+	}
+}
+
+// Grab a subset of users in the system and ask them to look at this newly generated post. They may like, comment.
+function ReactToPost(&$user, $node)
+{
+	global $event_user_lookup;
+	$usernames = array_keys($event_user_lookup);
+	
+	$min_users = count($usernames)/10;
+	$max_users = count($usernames)/3;
+	$react_count = random_int($min_users, $max_users);
+	
+	for($i=0; $i<$react_count; $i++)
+	{
+		$random_user = random_int(1,count($usernames))-1;
+		$username = $usernames[$random_user];
+		$reactuser = &$event_user_lookup[$username];
+		
+		Verbose("User " . $username . " reacting to post...");
+		
+		if(random_int(1,3) == 1)
+		{
+			LikeNode($reactuser, $node["id"]);
+		}
+		
+		// Add likes to the comments on the node
+		LikeCommentsNode($reactuser, $node);
+		
+		if(random_int(1,5) == 1)
+		{
+			// Maybe comment on the post.
+			$body = GenerateRandomPostText();
+			CreateComment($reactuser, $node["id"], $body);
+		}
+		
+	}
+}
+
 // Helper: fetch a node's comments, and maybe like some of them.
 function LikeCommentsNode(&$user, $node)
 {
@@ -873,7 +925,7 @@ function LikeCommentsNode(&$user, $node)
 	{
 		foreach($comments as $c)
 		{
-			if(random_int(1,20) == 1) LikeComment($user, $c["id"]);
+			if(random_int(1,10) == 1) LikeComment($user, $c["id"]);
 		}
 	}
 }
@@ -903,8 +955,15 @@ function CommentOnGame(&$user, $phase)
 		$post = GetRandomTopGame($user);
 		if($post != null)
 		{
+			$anonymous = null;
+			// If Anonymous comments are enabled, we might generate an anonymous comment.
+			if( isset($post['meta']['allow-anonymous-comments']) && $post['meta']['allow-anonymous-comments'] )
+			{
+				$anonymous = random_int(1,5) == 1;
+			}
+		
 			$body = GenerateRandomPostText();
-			CreateComment($user, $post["id"], $body);
+			CreateComment($user, $post["id"], $body, $anonymous);
 		}
 	}
 	return true;
@@ -979,7 +1038,8 @@ function CompoPostUpdate(&$user, $phase)
 {
 	$title = GenerateRandomPostTitle();
 	$body = GenerateRandomPostText(5);
-	CreatePost($user, $title, $body);
+	$nodeid = CreatePost($user, $title, $body);
+	MaybeReactToPost($user, $nodeid);
 	
 	// There's a limit to how many posts a user should make. Try not to make too many more.
 	return count($user["posts"]) < 3;
@@ -1627,13 +1687,15 @@ function CreatePost(&$user, $title, $body)
 		return;
 	}
 	$user["posts"][] = $nodeid; // Track post for later use.
+	return $nodeid;
 }
 
-function CreateComment(&$user, $nodeid, $body)
+function CreateComment(&$user, $nodeid, $body, $anonymous = null)
 {
 	User_EnsureJoined($user);
-	Verbose("Posting a comment to node " . $nodeid);
-	$id = ApiNoteAdd($user, $nodeid, $body);
+	$anon = $anonymous ? "n anonymous": "";
+	Verbose("Posting a" . $anon. " comment to node " . $nodeid);
+	$id = ApiNoteAdd($user, $nodeid, $body, $anonymous);
 	if(!$id)
 	{
 		ReportError("Failed to add comment");
@@ -1734,7 +1796,19 @@ function PublishGame(&$user)
 		ReportError("Failed to transform game node to " . $newtype);
 	}
 	
-	// other stuff (future: enable opt-outs and stuff)
+	// Enable opt-outs
+	if(random_int(1,3) == 1) 
+	{
+		// Future: Determine possible opt-outs and opt out of one or more of them.
+	}
+	
+	// Enable anonymous comments
+	if(random_int(1,3) == 1) 
+	{	
+		Verbose("Enabling anonymous comments");
+		if(!ApiNodeMetaAdd($user, $user["game_node"], 'allow-anonymous-comments', '1')) ReportError("Unable to enable anonymous comments meta.");
+	}	
+	
 	
 	
 	// Publish!
@@ -1899,9 +1973,14 @@ function ApiNodeLinkRemove(&$user, $node_a, $node_b, $key) // POST node/link/rem
 	return ResponseIs200($value);
 }
 
-function ApiNoteAdd(&$user, $nodeid, $body) // POST note/add
+function ApiNoteAdd(&$user, $nodeid, $body, $anonymous) // POST note/add
 {
-	$value = LdApi::Post("vx/note/add/".$nodeid,"parent=0&body=".urlencode($body), $user);
+	$anon = "";
+	if($anonymous !== null)
+	{
+		$anon = "&anonymous=".$anonymous;
+	}
+	$value = LdApi::Post("vx/note/add/".$nodeid,"parent=0&body=".urlencode($body).$anon, $user);
 	if($value) { return $value["note"]; }
 	return null;
 }

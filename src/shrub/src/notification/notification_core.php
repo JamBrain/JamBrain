@@ -184,6 +184,6 @@ function notification_GetLastReadNotification( $node ) {
 }
 
 function notification_SetLastReadNotification( $node, $notification ) {
-	nodeMeta_AddByNode($node, SH_SCOPE_SERVER, 'last_read_notification', $notification);
+	return nodeMeta_AddByNode($node, SH_SCOPE_SERVER, 'last_read_notification', $notification);
 }
 
