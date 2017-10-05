@@ -54,7 +54,7 @@ export default class NotificationItem extends Component {
 		const note = notification.note && notification.note.length == 1 ? notification.note[0] : null;
 
 		const nodeAuthor = notification.users.get(node.author).name;
-		const NodeAuthor = this.isNoteNodeAuthor(node, note) ? 'their' : (<span><NavLink class='-at-name'>@{nodeAuthor}</NavLink>'s</span>);
+		let NodeAuthor = this.isNoteNodeAuthor(node, note) ? 'their' : (<span><NavLink class='-at-name'>@{nodeAuthor}</NavLink>'s</span>);
 		const notificationData = notification.notification[0];
 		
 		if (notification.multi) {
@@ -67,8 +67,12 @@ export default class NotificationItem extends Component {
 				}
 			});
 			
-			console.log(authors, notification, notification.social);
 			const friends = this.getSocialStringList(authors, notification.social.friends);
+			let also = 'also ';
+			if (node.selfauthored) {
+				NodeAuthor = 'your';
+				also='';
+			}
 			
 			if (friends.count > 0) {
 				let others = count - following.count;					
@@ -81,7 +85,7 @@ export default class NotificationItem extends Component {
 				
 				return (
 					<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
-					Your friends {friends.string} {extra} also commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+					Your friends {friends.string} {extra} {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 					</NavLink>);
 					
 			} else {
@@ -97,13 +101,13 @@ export default class NotificationItem extends Component {
 					
 					return (
 						<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
-						{following.string} {extra} also commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+						{following.string} {extra} {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 						</NavLink>);
 					
 				} else {
 					return (
 						<NavLink href={node.path} title={'Notifiaction Id: ' + notificationData.id} class={props.class} id={props.id} >
-						{count} users also commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+						{count} users {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 						</NavLink>);
 					
 				}
