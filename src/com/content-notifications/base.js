@@ -50,7 +50,7 @@ export default class NotificationsBase extends Component {
 		
 		const caller_id = r.caller_id;							
 		this.collectAllNodesAndNodes(r.feed, caller_id);
-		let highestRead = r.max_id !== undefined ? r.max_id : this.state.highestRead;
+		let highestRead = r.max_read !== undefined ? r.max_read : this.state.highestRead;
 		this.setState({
 			feed: r.feed,
 			caller_id: caller_id,
