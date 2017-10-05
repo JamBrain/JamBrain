@@ -21,7 +21,7 @@ export default class NotificationsFeed extends NotificationsBase {
 		this.state = {
 			maxReadId: 0,
 			offset: 0,
-			limit: 10,
+			limit: 30,
 			count: 0,
 			notifications: null,
 			notificationIds: [],
