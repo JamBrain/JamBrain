@@ -113,7 +113,9 @@ export default class ContentComments extends Component {
 			var Authors = [];
 			// Extract a list of all authors from comments
 			for ( var idx = 0; idx < comments.length; idx++ ) {
-				Authors.push(comments[idx].author);
+				if ( comments[idx].author != 0  ) {
+					Authors.push(comments[idx].author);
+				}
 			}
 			// Add self (in case we start making comments
 			if ( user && user.id ) {

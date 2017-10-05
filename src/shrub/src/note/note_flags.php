@@ -1,5 +1,7 @@
 <?php
 
+// Filter notes through this function before returning to a user.
+// Rewrites comments to add some convenience fields based on flags, and mask anonymous commentors.
 function noteFlags_Filter( $notes, $current_user_id ) {
 	$multi = is_array($notes);
 	if ( !$multi )
@@ -9,8 +11,8 @@ function noteFlags_Filter( $notes, $current_user_id ) {
 		if ( $note['flags'] & SH_NOTE_FLAG_ANONYMOUS ) {
 			if ( $note['author'] != $current_user_id ) {
 				$note['author'] = 0;
-				$note['anonymous'] = true;
 			}
+			$note['anonymous'] = true;
 		}
 		if ( $note['flags'] & SH_NOTE_FLAG_HIDDEN ) {
 			$note['hidden'] = true;

@@ -80,9 +80,9 @@ switch ( $action ) {
 
 
 			if ( isset($_POST['anonymous']) && $_POST['anonymous'] ) {
-				// Only allow anonymous comments to be posted if the node has "allow_anonymous_comments" meta set.
+				// Only allow anonymous comments to be posted if the node has "allow-anonymous-comments" meta set.
 				
-				$meta = nodeMeta_GetByKeyNode('allow_anonymous_comments',$node_id);
+				$meta = nodeMeta_GetByKeyNode('allow-anonymous-comments',$node_id);
 				if ( count($meta) == 0 || !$meta[0]['value'] ) {
 					json_EmitFatalError_BadRequest("Cannot post anonymous comment: Node doesn't allow anonymous comments.", $RESPONSE);
 				}
