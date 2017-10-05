@@ -1,4 +1,6 @@
 {
+	"note": "Hey! These are things we want to eventually do in eslint.",
+
 	"parserOptions": {
 		"ecmaVersion": 2017,
 		"sourceType": "module",
@@ -9,8 +11,10 @@
 	"rules": {
 		"semi": ["error", "always"],
 		"eol-last": ["error", "always"],
+		"indent": ["error", "tab"],
 		"no-mixed-spaces-and-tabs": "error",
 		"no-trailing-spaces": "error",
-		"no-multi-spaces": "error"
+		"no-multi-spaces": "error",
+		"no-unused-vars": "error"
 	}
 }

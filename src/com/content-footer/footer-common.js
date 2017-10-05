@@ -17,14 +17,14 @@ export default class ContentFooterCommon extends Component {
 		if ( love ) {
 			ShowLove = <ContentFooterButtonLove node={node} user={user} wedge_left_bottom />;
 		}
-		
+
 		return (
 			<div class="content-footer content-footer-common">
 				<div class="-left">
 				</div>
 				<div class="-right">
-		  			{ShowLove}
-		  		</div>
+					{ShowLove}
+				</div>
 			</div>
 		);
 	}

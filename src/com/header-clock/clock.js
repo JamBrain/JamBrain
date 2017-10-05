@@ -9,7 +9,7 @@ export default class HeaderClock extends Component {
 
 	render( props ) {
 		return <div></div>;
-		
+
 //		let EventDate = Date.UTC(2016,11,10, 2,0,0);
 //		
 //		return (

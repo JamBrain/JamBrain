@@ -71,7 +71,7 @@ export default class ContentCommon extends Component {
 
 				let Right = [];
 				if ( props['love'] )
-					Right.push(<FooterButtonLove node={node} user={user} path={path}  />);
+					Right.push(<FooterButtonLove node={node} user={user} path={path} />);
 				if ( props['comments'] )
 					Right.push(<FooterButtonComments node={node} user={user} path={path} />);
 				if ( props['star'] )
@@ -88,8 +88,8 @@ export default class ContentCommon extends Component {
 							{Left}
 						</div>
 						<div class="-right">
-				  			{Right}
-				  		</div>
+							{Right}
+						</div>
 					</div>
 				);
 			}

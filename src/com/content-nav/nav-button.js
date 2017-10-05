@@ -7,7 +7,7 @@ export default class ContentNavButton extends Component {
 	constructor( props ) {
 		super(props);
 	}
-	
+
 	componentDidMount() {
 	}
 
@@ -19,17 +19,17 @@ export default class ContentNavButton extends Component {
 			props.class = [];
 		}
 		props.class.push('-button');
-		
+
 		if ( props.path === props.href ) {
 			props.class.push('-selected');
 		}
-		
+
 		var ShowIcon = null;
 		if ( props.icon ) {
 			ShowIcon = <SVGIcon>{props.icon}</SVGIcon>;
 			props.class.push('-has-icon');
 		}
-		
+
 		return (
 			<NavLink {...props}>{ShowIcon}<span>{props.children}</span></NavLink>
 		);

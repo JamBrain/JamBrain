@@ -18,11 +18,11 @@ export default class ContentUserBar extends Component {
 		this.onAddTo = this.onAddTo.bind(this);
 		this.onRemoveFrom = this.onRemoveFrom.bind(this);
 	}
-	
+
 	onAddTo() {
 		var node = this.props.node;
 		var featured = this.props.featured;
-		
+
 		if ( featured && featured.focus && confirm("Add to Team?") ) {
 
 			$NodeLink.Add(featured.focus, node.id, {'author':null})
@@ -38,7 +38,7 @@ export default class ContentUserBar extends Component {
 	onRemoveFrom() {
 		var node = this.props.node;
 		var featured = this.props.featured;
-		
+
 		if ( featured && featured.focus && confirm("Remove from Team?") ) {
 			$NodeLink.Remove(featured.focus, node.id, {'author':null})
 			.then( r => {
@@ -57,13 +57,13 @@ export default class ContentUserBar extends Component {
 //		var games =  node.games;
 //		var articles = node.articles;
 //		var posts = node.posts;
-		
+
 		var ShowFollow = null;
 		var ShowAddToTeam = null;
-		
+
 		if ( user && user.id ) {
 			ShowFollow = <CommonButtonFollow node={node} user={user} />;
-			
+
 			// Only team leaders can add team members
 			if ( featured && featured.focus && featured.what_node && featured.what_node[featured.focus] && featured.what_node[featured.focus].author == user.id ) {
 				// You can only add friends
@@ -79,7 +79,7 @@ export default class ContentUserBar extends Component {
 				}
 			}
 		}
-	
+
 		return (
 			<div class="content-user-bar">
 				<ContentCommonBodyAvatar src={node.meta && node.meta.avatar ? node.meta.avatar : ''} />

@@ -8,12 +8,12 @@ export default class ToolTipText extends ToolTip {
 		if (!props.lineHeight) {
 			props.lineHeight = 18;
 		}
-		
+
 		this.textSpan = null;
 		props.PopUpContent = <div class='-tooltip-text' ref={(span) => this.textSpan = span}>{props.Text}</div>;
 		super(props);
 	}
-	
+
 	reshapeIfNeeded() {
 		if (this.textSpan && this.state.showPopUp) {
 			const docWidth = document.documentElement.clientWidth;
@@ -23,7 +23,7 @@ export default class ToolTipText extends ToolTip {
 				const bestWidth = Math.min(maxWidth, Math.floor(rect.height / this.props.lineHeight) * rect.width);
 				this.textSpan.style.width = bestWidth + 'px';
 			}
-		
+
 		} else {
 			this.textSpan = null;
 		}

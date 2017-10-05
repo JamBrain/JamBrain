@@ -14,16 +14,16 @@ export default class ContentCommonFooterButtonLove extends Component {
 
 		this.onLove = this.onLove.bind(this);
 	}
-	
+
 	componentDidMount() {
 		// TODO: Extract Love from the global love pool (props.node.id)
-		
-		if ( this.props.user && this.props.user.id ) {	
+
+		if ( this.props.user && this.props.user.id ) {
 			$NodeLove.GetMy(this.props.node.id)
 			.then(r => {
 				this.setState({ 'loved': r });
 			});
-		}		
+		}
 	}
 
 	onLove( e ) {

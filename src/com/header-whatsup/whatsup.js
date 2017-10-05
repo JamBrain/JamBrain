@@ -13,14 +13,14 @@ export default class HeaderWhatsup extends Component {
 		var path = props.path;
 		var extra = props.extra;
 		var featured = props.featured;
-		
+
 		// NOTE: For Theme Voting, look at what's in 'available' returned by the theme list.
 		// Then use that to check the name in 'names'. 
-		
+
 		// TODO: Write code to convert an array to "1 and 2" or "1, 2, and 3"
-		
+
 		// TODO: The actual theme can be found in the the public metatag "event-theme" (private one before event)
-		
+
 //		return null;
 
 
@@ -120,7 +120,7 @@ export default class HeaderWhatsup extends Component {
 							<div class="header-base header-whatsup outside">
 								<span class="-title _font2">JUDGING NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
 							</div>
-						);						
+						);
 					}
 					else {
 						return (
@@ -139,7 +139,7 @@ export default class HeaderWhatsup extends Component {
 
 //							<br /><br />Game Publishing (Submission) is coming! Sorry for the <NavLink href="https://twitter.com/mikekasprzak"><SVGIcon baseline small gap>twitter</SVGIcon>delay</NavLink>!
 //							<br />We will make sure you get your compo games in the compo!
-			
+
 			return (
 				<div class="header-base header-whatsup outside">
 					<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> Theme Announcement Soon! <NavLink href="https://twitter.com/ludumdare"><SVGIcon baseline small gap>twitter</SVGIcon>Check Twitter</NavLink>
@@ -149,7 +149,7 @@ export default class HeaderWhatsup extends Component {
 		return null;
 
 //					<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> Final Round Theme Voting
-		
+
 //				<span class="-title _font2">ON NOW:</span> <NavLink href="/events/ludum-dare/38"><SVGIcon baseline small gap>trophy</SVGIcon>Ludum Dare 38</NavLink> Final Round Theme Voting
 
 //				<span class="-title _font2">ON NOW:</span> <NavLink href="/events/ludum-dare/38"><SVGIcon baseline small gap>trophy</SVGIcon>Ludum Dare 38</NavLink> <SVGIcon baseline small gap>ticket</SVGIcon>Theme Voting

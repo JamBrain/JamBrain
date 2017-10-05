@@ -6,7 +6,7 @@ export default class ContentCommonFooterButtonComments extends Component {
 	constructor( props ) {
 		super(props);
 	}
-	
+
 	componentDidMount() {
 	}
 

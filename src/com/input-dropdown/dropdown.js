@@ -7,14 +7,14 @@ import SVGIcon							from 'com/svg-icon/icon';
 export default class InputDropdown extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {
 			'show': props.startExpanded,
 			'value': props.value ? props.value : 0
 		};
-		
+
 		this.onClickItem = this.onClickItem.bind(this);
-		
+
 		this.onShow = this.onShow.bind(this);
 		this.onHide = this.onHide.bind(this);
 	}
@@ -47,7 +47,7 @@ export default class InputDropdown extends Component {
 			this.doHide(e);
 		}
 	}
-	
+
 	// Clicking on an item
 	onClickItem( e ) {
 		// Only do click if the item has an index (i.e. not a separator)
@@ -55,18 +55,18 @@ export default class InputDropdown extends Component {
 			if ( this.props.onmodify ) {
 				this.props.onmodify(parseInt(e.target.dataset.id));
 			}
-			
+
 			this.setState({'value': parseInt(e.target.dataset.index)});
 			this.doHide(e);
 		}
 	}
-	
+
 	render( props, {show, value} ) {
 		if ( props.items && props.items.length ) {
 			let ShowItems = null;
 			if ( show ) {
 				ShowItems = [];
-				
+
 				// Need 'that' because 'this' is the function created below
 				let that = this;
 				let idx = 0;
@@ -75,17 +75,17 @@ export default class InputDropdown extends Component {
 						<div class="-item" onclick={that.onClickItem} data-index={idx++} data-id={item[0]}>{item[1]}</div>
 					);
 				});
-				
+
 				ShowItems = (
 					<div class="-items">
 						{ShowItems}
-					</div>				
+					</div>
 				);
 			}
-			
+
 			let SelectedField = null;
 			if (!props.hideSelectedField) {
-				
+
 				SelectedField = (
 					<button type="button" onclick={this.onShow}>
 						{props.items[value][1]}
@@ -93,7 +93,7 @@ export default class InputDropdown extends Component {
 
 				);
 			}
-			
+
 			return (
 				<div class={cN('input-dropdown', props.class)} ref={(input) => { this.dropdown = input; }}>
 					{SelectedField}
