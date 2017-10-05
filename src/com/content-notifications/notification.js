@@ -10,11 +10,11 @@ export default class NotificationItem extends Component {
 	
 	getSocialStringList(authors, relation) {
 		let isRelation = authors.map((a) => relation.indexOf(a) > -1);
-		let anyRelation = isRelation.reduce((l, r) => l || r);
+		let anyRelation = isRelation.length > 0 ? isRelation.reduce((l, r) => l || r) : false;
 		let names = '';
 		let Relations = [];
 		
-		if (isRelation) {
+		if (anyRelation) {
 			
 			isRelation.forEach((e, i) => { if (e) { Relations.push('<NavLink class=\'-at-name\'>@' + authors[i] + '</NavLink>');}});
 			if (Relations.length > 3) {
