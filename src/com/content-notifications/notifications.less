@@ -5,6 +5,8 @@
 
 	background: @COL_NLLLL;
 	
+	padding-bottom: 12px;
+	
 	&.-no-gap {
 		margin-top: 0;
 	}
@@ -99,6 +101,25 @@
 		}
 		
 	}
+	
+	& > .-button {
+		display: inline-block;
+		padding: 0.5rem 1rem;
+		border: 1px solid @COL_N;
+		margin: 0.5rem 0.25rem;
+
+		font-weight:700;
+
+		&:hover, &:focus {
+			background: @COL_A;
+			color: @COL_L;
+			border: 1px solid @COL_A;
+		}
+	}
+	& > .-light {
+		border: 1px solid;
+	}
+
 }
 
 .-at-name {

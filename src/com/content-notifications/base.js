@@ -4,6 +4,7 @@ import Notification						from 'com/content-notifications/notification';
 
 import $Node							from '../../shrub/js/node/node';
 import $Note							from '../../shrub/js/note/note';
+import $Notification					from '../../shrub/js/notification/notification';
 
 export default class NotificationsBase extends Component {
 	
@@ -101,7 +102,7 @@ export default class NotificationsBase extends Component {
 		
 		let nodesPromise = $Node.Get(nodes)
 			.then((response) => {
-				console.log('[Notifications:Nodes]', response.node);
+				//console.log('[Notifications:Nodes]', response.node);
 				if (response.node) {
 					response.node.forEach((node) => {
 						node.authors = [];
@@ -126,7 +127,7 @@ export default class NotificationsBase extends Component {
 			});
 			
 		let notesPromise = $Note.Pick(node2notes).then((response) => {
-			console.log('[Notifications:Notes]', response.note);
+			//console.log('[Notifications:Notes]', response.note);
 			if (response.note) {
 				response.note.forEach((notes, node) => {
 					notes.forEach((note) => {
@@ -254,6 +255,7 @@ export default class NotificationsBase extends Component {
 			notifications: notifications,
 			notificationIds: notificationIds.sort((a, b) => b - a),
 			loading: false,
+			feedSize: (this.state.feedSize ? this.state.feedSize : 0) + processedNotifications.length,
 		});
 	}
 	

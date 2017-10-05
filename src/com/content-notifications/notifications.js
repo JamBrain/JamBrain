@@ -4,6 +4,7 @@ import ButtonBase						from '../button-base/base';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
+import ContentMore						from 'com/content-more/more';
 
 import DropdownNotification				from '../dropdown-notification/notification';
 
@@ -22,13 +23,12 @@ export default class NotificationsFeed extends NotificationsBase {
 			offset: 0,
 			limit: 10,
 			count: 0,
-			existingNotifications: 0,
 			notifications: null,
 			notificationIds: [],
 			status: null,
 			highestRead: -1,
 		};
-		
+		this.fetchMore = this.fetchMore.bind(this);
 	}
 	
 	componentDidMount() {
@@ -36,47 +36,44 @@ export default class NotificationsFeed extends NotificationsBase {
 		$Notification.GetFeedAll(this.state.offset, this.state.limit ).then((r) => {
 			this.processNotificationFeed(r);
 		});
-		
-		$Notification.GetCountAll().then((r2) => {
-			this.setState({existingNotifications: r2.count});
+
+	}
+	
+	fetchMore() {
+		const offset = this.state.offset + this.state.feedSize;
+		$Notification.GetFeedAll(offset, this.state.limit ).then((r) => {
+			this.processNotificationFeed(r);
 		});
-		
+		this.setState({offset:offset});
 	}
 	
 	render( props, state ) {
 		
 		const maxReadId = state.highestRead;
 		const processing = state.status === null || this.isLoading();
-		const hasMore = !processing && state.offset + state.count < state.existingNotifications;
+		const hasMore = !processing && state.offset + state.feedSize < state.count;
+		//console.log(processing, state.offset, state.feedSize, state.count);
 		const hasUnread = this.getHighestNotificationInFeed() > maxReadId;
 		let ShowNotifications = [];
 		const caller_id = state.caller_id;
 		const notifications = state.notifications;
 		const notificationsOrder = this.getNotificationsOrder();
-		if (!this.state.loading) {
-			
-			notificationsOrder.forEach((identifier) => {
-				let notification = notifications.get(identifier);
-				ShowNotifications.push((
-					<Notification caller_id={caller_id} notification={notification} class={cN("-item -notification",(notification.notification[0].id<maxReadId)?'-new-comment':'')} id={'notification-' + identifier} />
-				));
-			});
-
-		}
+		notificationsOrder.forEach((identifier) => {
+			let notification = notifications.get(identifier);
+			ShowNotifications.push((
+				<Notification caller_id={caller_id} notification={notification} class={cN("-item -notification",(notification.notification[0].id>maxReadId)?'-new-comment':'')} id={'notification-' + identifier} />
+			));
+		});
 				
-		const ShowGetMore = hasMore ? (
-			<div class={"-item -notification -indent -action"}>
-				<NavLink onclick={(e)=> console.log('MOAR')} href="#">MORE...</NavLink>
-			</div>
-			) : null;
+		const ShowGetMore = hasMore ? (<ContentMore onclick={this.fetchMore} />) : null;
 			
 		const ShowSetAllRead = hasUnread ? (
-				<ButtonBase
-					class={"-item -notification -indent -action"}
-					onclick={(e) => {this.markReadHighest();}}>
-					Mark all commentes as read
-				</ButtonBase>
-			) : null;
+			<ButtonBase 
+				class="-button -light focusable"
+				id="button-mark-read"
+				onclick={(e) => {this.markReadHighest();}}>				
+				Mark all commentes as read
+			</ButtonBase>) : null;
 			
 		const ShowSpinner = processing ? <NavSpinner /> : null;
 
@@ -87,7 +84,6 @@ export default class NotificationsFeed extends NotificationsBase {
 				{ShowNotifications}
 				{ShowGetMore}
 				{ShowSpinner}
-
 			</div>
 
 		);
