@@ -89,6 +89,7 @@ export default class NotificationsBase extends Component {
 		let usersLookup = new Map();
 		
 		users.push(caller_id);
+		let notes = [];
 		
 		feed.forEach(({id, node, note}) => {
 			if (node2notes.has(node)) {
@@ -97,6 +98,7 @@ export default class NotificationsBase extends Component {
 				node2notes.set(node, [note]);
 				
 			}
+			notes.push(note);
 			notification2nodeAndNote.set(id, {node: node, note: note});
 		});
 		
@@ -126,17 +128,15 @@ export default class NotificationsBase extends Component {
 				
 			});
 			
-		let notesPromise = $Note.Pick(node2notes).then((response) => {
+		let notesPromise = $Note.Pick(notes).then((response) => {
 			//console.log('[Notifications:Notes]', response.note);
-			if (response.note) {
-				response.note.forEach((notes, node) => {
-					notes.forEach((note) => {
-						noteLookup.set(note.id, note);
-						
-						if (note.author > 0 && users.indexOf(note.author) < 0) {
-							users.push(note.author);
-						}							
-					});
+			if (response.notes) {
+				response.notes.forEach((note) => {
+					noteLookup.set(note.id, note);
+					
+					if (note.author > 0 && users.indexOf(note.author) < 0) {
+						users.push(note.author);
+					}												
 				});
 			}	
 		});
