@@ -36,7 +36,11 @@ export default class NotificationItem extends Component {
 	}
 	
 	render( props, state ) {
-				
+		
+		//TODO: Potentially add a svg-icon circle with number for how many notifications are per line since number of
+		//notification-rows here will not match the notifications count if the rows have been collapsed into
+		//multi-notification
+		
 		const caller_id = props.caller_id;
 		const notification = props.notification;
 		

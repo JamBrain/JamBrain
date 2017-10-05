@@ -23,6 +23,8 @@ export default class NotificationsBase extends Component {
 	}
 	
 	markReadHighest() {
+		// TODO: Triggering this should immidiately update the counter on the
+		// icon in the top bar
 		const highestInFeed = this.getHighestNotificationInFeed();
 		if (highestInFeed !== null) {
 			if (highestInFeed > this.state.highestRead) {

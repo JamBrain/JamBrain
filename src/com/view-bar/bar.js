@@ -152,6 +152,8 @@ export default class ViewBar extends Component {
 			
 			Notification = (
 				<ButtonBase class="-icon" onclick={(e) => {
+					// TODO: if the main content is the notifications feed, clicking the button should
+					// probably not show the dropdown, but load new comments into the feed.
 					this.setState({showNotifications: !this.state.showNotifications});
 				}}>
 					<SVGIcon baseline>bubble</SVGIcon>

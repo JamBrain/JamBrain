@@ -1,5 +1,7 @@
 import { h, Component } 				from 'preact/preact';
 
+import ButtonBase						from '../button-base/base';
+
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 
@@ -45,10 +47,10 @@ export default class NotificationsFeed extends NotificationsBase {
 	
 	render( props, state ) {
 		
-		const maxReadId = this.state.highestRead;
+		const maxReadId = state.highestRead;
 		const processing = state.status === null || this.isLoading();
 		const hasMore = !processing && state.offset + state.count < state.existingNotifications;
-		const hasUnread = this.getHighestNotificationInFeed() > state.highestRead;
+		const hasUnread = this.getHighestNotificationInFeed() > maxReadId;
 		let ShowNotifications = [];
 		const caller_id = state.caller_id;
 		const notifications = state.notifications;
@@ -71,9 +73,11 @@ export default class NotificationsFeed extends NotificationsBase {
 			) : null;
 			
 		const ShowSetAllRead = hasUnread ? (
-			<div class={"-item -notification -indent -action"}>
-				<NavLink onclick={ (e) => console.log('Read') } href="#">Mark all commentes as read</NavLink>
-			</div>
+				<ButtonBase
+					class={"-item -notification -indent -action"}
+					onclick={(e) => {this.markReadHighest();}}>
+					Mark all commentes as read
+				</ButtonBase>
 			) : null;
 			
 		const ShowSpinner = processing ? <NavSpinner /> : null;
