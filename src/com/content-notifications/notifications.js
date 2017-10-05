@@ -20,7 +20,7 @@ export default class NotificationsFeed extends NotificationsBase {
 		this.state = {
 			maxReadId: 0,
 			offset: 0,
-			limit: 20,
+			limit: 10,
 			count: 0,
 			existingNotifications: 0,
 			notifications: null,
@@ -32,10 +32,8 @@ export default class NotificationsFeed extends NotificationsBase {
 	}
 	
 	componentDidMount() {
-		console.log('[NotificationsFeed:Mounted]');
-		const showCount = 30;
 
-		$Notification.GetFeedAll(this.state.offset, showCount ).then((r) => {
+		$Notification.GetFeedAll(this.state.offset, this.state.limit ).then((r) => {
 			this.processNotificationFeed(r);
 		});
 		
