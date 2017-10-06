@@ -8,6 +8,7 @@ import ViewHeader						from 'com/view-header/header';
 import ViewSidebar						from 'com/view-sidebar/sidebar';
 import ViewContent						from 'com/view-content/content';
 import ViewFooter						from 'com/view-footer/footer';
+import ViewHome							from 'com/view-home/home';
 
 import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
 import DialogLogin						from 'com/dialog-login/login';
@@ -465,12 +466,17 @@ class Main extends Component {
 
 				this.setState({
 					'slugs': slugs,
+					'home': null,
 					'node': {
 						'id': 0
 					}
 				});
 
-				this.fetchNode();
+				if (slugs[0] == 'home') {
+					this.setState({home: slugs.slice(1)});
+				} else {
+					this.fetchNode();
+				}
 			}
 		}
 
@@ -490,14 +496,31 @@ class Main extends Component {
 		this.handleAnchors();
 	}
 
+	isHomeView() {
 
-	render( {}, {node, user, featured, path, extra, error} ) {
+		if (Array.isArray(this.state.home)) {
+			console.log('[isHome]', this.state.home);
+			return true;
+		}
+		const slugs = this.state.slugs;
+
+		if (Array.isArray(slugs) && slugs[0] == 'home') {
+			this.setState({home: slugs.slice(1)});
+			return true;
+		}
+		return false;
+	}
+
+	render( {}, {node, user, featured, path, extra, error, home} ) {
 		var ShowContent = null;
 
-		if ( node.id ) {
-			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} featured={featured} />;
+		if (this.isHomeView()) {
+			ShowContent = <ViewHome show={home} />;
 		}
-		else {
+		else if ( node.id ) {
+			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} featured={featured} />;
+		} else {
+			console.log('[Error]');
 			ShowContent = (
 				<ViewContent>
 					{error ? error : <NavSpinner />}

@@ -2,7 +2,7 @@ import Fetch	 				from '../internal/fetch';
 
 export default {
 	Get,
-
+	Pick,
 	Add,
 	Update
 };
@@ -12,6 +12,13 @@ export function Get( node ) {
 	return Fetch.Get(API_ENDPOINT+'/vx/note/get/'+node, true);
 }
 
+export function Pick( notes ) {
+	if ( Number.isInteger(notes) ) {
+		notes = [notes];
+	}
+
+	return Fetch.Get(API_ENDPOINT+'/vx/note/getnote/'+notes.join('+'), true);
+}
 
 export function Add( parent, node, body, tag ) {
 	var Data = {};

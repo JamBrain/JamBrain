@@ -23,6 +23,7 @@ export default class InputDropdown extends Component {
 		this.setState({'show': true});
 		document.addEventListener('click', this.onHide);
 	}
+
 	doHide( e ) {
 		this.setState({'show': false});
 		document.removeEventListener('click', this.onHide);
