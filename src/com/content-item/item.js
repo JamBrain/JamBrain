@@ -37,8 +37,7 @@ export default class ContentItem extends Component {
 
 			'linksShown': 1,
 
-//			'platforms': [],
-//			'tags': [],
+			'allowAnonymous': node.meta['allow-anonymous-comments'] ? true : false,
 		};
 
 		for ( let i = 0; i < 9; i++ ) {
@@ -54,6 +53,7 @@ export default class ContentItem extends Component {
 		this.onSetJam = this.onSetJam.bind(this);
 		this.onSetCompo = this.onSetCompo.bind(this);
 		this.onSetUnfinished = this.onSetUnfinished.bind(this);
+		this.onAnonymousComments = this.onAnonymousComments.bind(this);
 	}
 
 	componentDidMount() {
@@ -204,6 +204,18 @@ export default class ContentItem extends Component {
 					this.setState({ 'error': err });
 				});
 		}
+	}
+
+	onAnonymousComments () {
+		const anon = this.state.allowAnonymous;
+		const node = this.props.node;
+
+		return $NodeMeta.Add(node.id, {'allow-anonymous-comments': anon ? 1 : 0})
+			.then(r => {
+				if ( r && r.changed ) {
+					this.setState({allowAnonymous: !anon});
+				}
+			});
 	}
 
 	onModifyLinkName( Index, e ) {
@@ -714,6 +726,13 @@ export default class ContentItem extends Component {
 			ShowLinkEntry = this.makeLinks(true /* editing */);
 		}
 
+		let ShowAnonymousComments = null;
+		if ( true ) {
+			ShowAnonymousComments = (
+				<ContentCommonNavButton onclick={this.onAnonymousComments} class={state.allowAnonymous ? "-selected" : ""}><SVGIcon>warning</SVGIcon><div>Allow anonymous comments</div></ContentCommonNavButton>);
+
+		}
+
 		var ShowUploadTips = null;
 		if ( true ) {
 			ShowUploadTips = (
@@ -744,7 +763,6 @@ export default class ContentItem extends Component {
 			);
 		}
 
-
 		props.editonly = (
 			<div>
 				{ShowEventPicker}
@@ -753,6 +771,7 @@ export default class ContentItem extends Component {
 				{ShowLinkEntry}
 				{ShowUploadTips}
 				{ShowUnfinished}
+				{ShowAnonymousComments}
 			</div>
 		);
 		props.onSave = this.onSave.bind(this);
