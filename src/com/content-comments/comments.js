@@ -212,10 +212,6 @@ export default class ContentComments extends Component {
 		var path = props.path;
 		var extra = props.extra;
 
-//		var FooterItems = [];
-//		if ( !props['no_comments'] )
-//			FooterItems.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
-
 		var ShowComments = <NavSpinner />;
 		if ( comments && tree && authors ) {
 			if ( comments.length )
@@ -242,11 +238,4 @@ export default class ContentComments extends Component {
 		);
 	}
 
-//				<div class="content-footer content-footer-common -footer">
-//					<div class="-left">
-//					</div>
-//					<div class="-right">
-//			  			{FooterItems}
-//			  		</div>
-//				</div>
 }
