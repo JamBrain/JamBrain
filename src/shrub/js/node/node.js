@@ -22,7 +22,9 @@ export default {
 	AddMeta,
 	RemoveMeta,
 	AddLink,
-	RemoveLink
+	RemoveLink,
+
+	InvalidateNodeCache,
 };
 
 var NODE_CACHE = {};
@@ -38,6 +40,9 @@ function _Get( node_id ) {
 	return NODE_CACHE[node_id];
 }
 
+export function InvalidateNodeCache( node_id ) {
+	NODE_CACHE[node_id] = undefined;
+}
 
 // http://stackoverflow.com/a/4026828/5678759
 function ArrayDiff(a, b) {

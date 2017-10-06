@@ -208,9 +208,14 @@ export default class ContentItem extends Component {
 	onAnonymousComments () {
 		const anon = this.state.allowAnonymous;
 		const node = this.props.node;
+		let update = null;
+		if (anon) {
+			update = $NodeMeta.Remove(node.id, {'allow-anonymous-comments': 0});
+		} else {
+			update = $NodeMeta.Add(node.id, {'allow-anonymous-comments': 1});
+		}
 
-		return $NodeMeta.Add(node.id, {'allow-anonymous-comments': anon ? 1 : 0})
-			.then(r => {
+		return update.then(r => {
 				if ( r && r.changed ) {
 					this.setState({allowAnonymous: !anon});
 				}
