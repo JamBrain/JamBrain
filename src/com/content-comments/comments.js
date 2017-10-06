@@ -40,7 +40,6 @@ export default class ContentComments extends Component {
 			'parent': 0,
 			'node': this.props.node.id,
 			'author': this.props.user.id,
-			'allowAnonymous': this.props.node.meta['allow-anonymous-comments'] ? true : false,
 			'body': '',
 			'love': 0,
 			'loved': false
@@ -166,12 +165,13 @@ export default class ContentComments extends Component {
 	}
 
 	renderPostNew() {
-		var user = this.props.user;
-		var authors = this.state.authors;
-		var comment = this.state.newcomment;
-		var author = authors[comment.author];
+		const user = this.props.user;
+		const authors = this.state.authors;
+		const comment = this.state.newcomment;
+		const author = authors[comment.author];
+		const allowAnonymous = this.props.node.meta['allow-anonymous-comments'] ? true : false;
 
-		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove /></div>;
+		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove allowAnonymous={allowAnonymous} /></div>;
 	}
 
 	onPublish( e, publishAnon ) {
@@ -187,7 +187,7 @@ export default class ContentComments extends Component {
 					'created': Now.toISOString(),
 					'modified': Now.toISOString()
 				}, newcomment);
-
+				
 				// TODO: insert properly
 				this.state.comments.push(comment);
 
