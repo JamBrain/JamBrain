@@ -40,6 +40,7 @@ export default class ContentComments extends Component {
 			'parent': 0,
 			'node': this.props.node.id,
 			'author': this.props.user.id,
+			'allowAnonymous': this.props.node.meta['allow-anonymous-comments'] ? true : false,
 			'body': '',
 			'love': 0,
 			'loved': false
@@ -173,11 +174,11 @@ export default class ContentComments extends Component {
 		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove /></div>;
 	}
 
-	onPublish( e ) {
-		var node = this.props.node;
-		var newcomment = this.state.newcomment;
+	onPublish( e, publishAnon ) {
+		const node = this.props.node;
+		const newcomment = this.state.newcomment;
 
-		$Note.Add( newcomment.parent, newcomment.node, newcomment.body )
+		$Note.Add( newcomment.parent, newcomment.node, newcomment.body, null, publishAnon )
 		.then(r => {
 			if ( r.note ) {
 				var Now = new Date();

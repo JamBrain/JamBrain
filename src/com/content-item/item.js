@@ -728,7 +728,14 @@ export default class ContentItem extends Component {
 		let ShowAnonymousComments = null;
 		if ( true ) {
 			ShowAnonymousComments = (
-				<ContentCommonNavButton onclick={this.onAnonymousComments} class={state.allowAnonymous ? "-selected" : ""}><SVGIcon>warning</SVGIcon><div>Allow anonymous comments</div></ContentCommonNavButton>);
+				<ContentCommonBody>
+					<ContentCommonNavButton onclick={this.onAnonymousComments} class={state.allowAnonymous ? "-selected" : ""}>
+						<SVGIcon>warning</SVGIcon>
+						<div>Allow anonymous comments</div>
+					</ContentCommonNavButton>
+					<br />
+					Click to <em>{state.allowAnonymous ? "deactivate" : "activate"}</em> anonymous comments.
+				</ContentCommonBody>);
 
 		}
 

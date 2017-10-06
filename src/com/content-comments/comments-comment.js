@@ -38,7 +38,7 @@ export default class ContentCommentsComment extends Component {
 		this.onSave = this.onSave.bind(this);
 		this.onCancel = this.onCancel.bind(this);
 		this.onPublish = this.onPublish.bind(this);
-
+		this.onPublishAnon = this.onPublishAnon.bind(this);
 		this.onLove = this.onLove.bind(this);
 		this.onReply = this.onReply.bind(this);
 	}
@@ -79,6 +79,14 @@ export default class ContentCommentsComment extends Component {
 		.catch(err => {
 			this.setState({ 'error': err });
 		});
+	}
+
+	onPublishAnon( e ) {
+		if (this.canSave() ) {
+			if ( this.props.onpublish ) {
+				this.props.onpublish(e, true);
+			}
+		}
 	}
 
 	onPublish( e ) {
@@ -225,6 +233,9 @@ export default class ContentCommentsComment extends Component {
 
 				var ShowRight = [];
 				if ( props.publish ) {
+					if (props.allowAnonymous) {
+						ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublishAnon}><SVGIcon>publish</SVGIcon><div>Publish Anonymously</div></div>);
+					}
 					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublish}><SVGIcon>publish</SVGIcon><div>Publish</div></div>);
 				}
 				else {
