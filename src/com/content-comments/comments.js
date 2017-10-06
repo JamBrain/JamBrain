@@ -113,7 +113,7 @@ export default class ContentComments extends Component {
 			var Authors = [];
 			// Extract a list of all authors from comments
 			for ( var idx = 0; idx < comments.length; idx++ ) {
-				if ( comments[idx].author != 0  ) {
+				if ( comments[idx].author != 0 ) {
 					Authors.push(comments[idx].author);
 				}
 			}

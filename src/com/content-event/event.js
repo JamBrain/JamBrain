@@ -101,20 +101,20 @@ export default class ContentEvent extends Component {
                 Class = "-selected";
             }
 
-    		// NOTE: THIS IS WRONG! We should be asking the event node (i.e. this) for `what`. Alas, with 1 event we can cheat
-    		if ( featured && featured.what && featured.what.length ) {
-    			var FeaturedGame = featured.what[featured.what.length-1]; // Hack
+			// NOTE: THIS IS WRONG! We should be asking the event node (i.e. this) for `what`. Alas, with 1 event we can cheat
+			if ( featured && featured.what && featured.what.length ) {
+				var FeaturedGame = featured.what[featured.what.length-1]; // Hack
 //				ShowGame =
 
-    		}
-    		else {
-    			ShowJoin = (
-    				<ContentCommonNavButton onclick={this.onJoin} class={Class}>
-    					<SVGIcon>publish</SVGIcon><div class="if-sidebar-inline">Join Event</div>
-    				</ContentCommonNavButton>
-    			);
-    		}
-        }
+			}
+			else {
+				ShowJoin = (
+					<ContentCommonNavButton onclick={this.onJoin} class={Class}>
+						<SVGIcon>publish</SVGIcon><div class="if-sidebar-inline">Join Event</div>
+					</ContentCommonNavButton>
+				);
+			}
+		}
 
 		var ShowFeed = null;
 //		if ( true ) {
@@ -161,7 +161,7 @@ export default class ContentEvent extends Component {
 			if ( navigator.languages ) {
 				LanguagePrefix += "["+navigator.languages.join(',')+"] ";
 			}
-			
+
 			ShowEventTheme = null;
 			if ( node.meta['event-theme'] ) {
 				ShowEventTheme = <div><SVGIcon small baseline gap>lightbulb</SVGIcon> Theme: <strong>{node.meta['event-theme']}</strong></div>;
@@ -175,7 +175,7 @@ export default class ContentEvent extends Component {
 				</ContentCommonBody>
 			);
 		}
-		
+
 		props.minmax = true;
 		if ( !IsHome )
 			props.minimized = true;

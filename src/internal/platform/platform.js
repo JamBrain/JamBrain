@@ -9,7 +9,7 @@
 // Extract versions followed by a space or a slash. Case insensitive.
 function ua_ExtractVersion(Str) {
 	var ua = navigator.userAgent.toUpperCase();
-	
+
 	var StrUp = Str.toUpperCase();
 	var Pos = ua.indexOf(StrUp);
 	if ( Pos >= 0 ) {

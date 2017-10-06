@@ -9,15 +9,15 @@ export default class ContentNavItem extends Component {
 	constructor( props ) {
 		super(props);
 	}
-	
+
 	render( {node, user, path, extra}, {} ) {
 		var NewPath = '/'+ (extra ? extra.join('/') : '');
-		
+
 		// Default to /hot if not logged in
 		if ( NewPath === '/' ) {
 			NewPath = '/comments';
 		}
-		
+
 		return (
 			<div class="-body">
 				<div class="content-base content-nav content-nav-root">

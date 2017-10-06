@@ -19,7 +19,7 @@ export default class ContentCommonEdit extends Component {
 		var ShowPreview = null;
 		var ShowSave = null;
 		var ShowPublish = null;
-		
+
 		if ( props.editing ) {
 			ShowEdit = <ButtonBase class="-selected"><SVGIcon>edit</SVGIcon><div class="if-sidebar-block">Edit</div></ButtonBase>;
 			ShowPreview = <ButtonBase onclick={props.onpreview}><SVGIcon>preview</SVGIcon><div class="if-sidebar-block">Preview</div></ButtonBase>;
@@ -45,7 +45,7 @@ export default class ContentCommonEdit extends Component {
 			}
 			// Otherwise, published is null, so publish button is not shown
 		}
-	
+
 		return (
 			<div class="content-common-body -edit">
 				<div class="-right">

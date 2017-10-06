@@ -130,7 +130,7 @@ export default class ContentCommentsComment extends Component {
 		var user = props.user;
 		var comment = props.comment;
 		var author = props.author;
-		
+
 //		console.log('R '+comment.id+": ", state.editing, state.preview);
 
 		if ( author || comment.author == 0 ) {
@@ -168,7 +168,7 @@ export default class ContentCommentsComment extends Component {
 						<div class="-title">
 							<span class="-author">{Name}</span>
 						</div>,
-					];				
+					];
 				}
 				if ( comment.created ) {
 					ShowTitle.push(<div class="-date">posted <span title={getLocaleTimeStamp(Created)}>{getRoughAge(DateDiff)}</span><span title={getLocaleDate(Modified)}>{HasEdited?" (edited)":""}</span></div>);
@@ -207,7 +207,7 @@ export default class ContentCommentsComment extends Component {
 							{ShowLove}
 							{ShowEdit}
 						</div>
-						
+
 						<div class="-left">{ShowReply}</div>
 					</div>
 				);

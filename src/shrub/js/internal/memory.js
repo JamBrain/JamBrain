@@ -65,7 +65,7 @@ export function Store( key, value, ttl = null ) {
 	else {
 		_RemoveTTL(key);
 	}
-	
+
 	// Store the value (it's string storage, so we JSONify)
 	return _StoreVal(key, value);
 }
@@ -80,7 +80,7 @@ export function Fetch( key, ttl = null ) {
 			return null;
 		}
 	}
-	
+
 	// Fetch the data
 	var ret = _FetchVal(key);
 	if ( !ret ) {
@@ -93,7 +93,7 @@ export function Fetch( key, ttl = null ) {
 	}
 
 	// Return the parsed data
-	return ret;		
+	return ret;
 }
 
 export function Push( key, value, ttl = null ) {

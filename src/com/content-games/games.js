@@ -135,7 +135,7 @@ export default class ContentGames extends Component {
 		this.setState({'offset': offset + 12});
 	}
 
-	render( props, {feed, added, error, loaded}  ) {
+	render( props, {feed, added, error, loaded} ) {
 		var Class = ['content-base'];
 //        props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 //        props.class.push("content-games");

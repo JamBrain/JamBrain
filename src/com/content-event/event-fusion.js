@@ -12,14 +12,14 @@ export default class ContentEventFusion extends Component {
 		super(props);
 
 	}
-	
+
 	componentDidMount() {
 	}
 
 
 	render( {/*node,*/ user/*, path, extra*/} ) {
 		var Title = <h3>Theme Fusion Round</h3>;
-		
+
 		if ( user && user['id'] ) {
 			return (
 				<div class="-body">

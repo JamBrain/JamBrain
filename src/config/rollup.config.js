@@ -3,7 +3,9 @@ import includePaths		from 'rollup-plugin-includepaths';
 import nodent			from 'rollup-plugin-nodent';
 
 export default {
-	'format': 'es',
+	'output': {
+		'format': 'es'
+	},
 	'plugins': [
 		includePaths({
 			'paths': [

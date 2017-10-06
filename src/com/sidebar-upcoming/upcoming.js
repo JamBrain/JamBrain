@@ -6,7 +6,7 @@ export default class SidebarUpcoming extends Component {
 	constructor( props ) {
 		super(props);
 	}
-	
+
 	render( {}, {} ) {
 		var Items = [
 //			<div class="-item"><strong>Mar 24th</strong> - Theme Suggestions Open <SVGIcon baseline small>suggestion</SVGIcon></div>,
@@ -19,7 +19,7 @@ export default class SidebarUpcoming extends Component {
 			<div class="-item"><strong>December 29th</strong> - Results <SVGIcon baseline small>checker</SVGIcon></div>,
 //			<div class="-item"><strong>December 1st</strong> - Ludum Dare 40 <SVGIcon baseline small>trophy</SVGIcon></div>,	// Spoilers
 		];
-		
+
 		return (
 			<div class="sidebar-base sidebar-shortlist sidebar-upcoming">
 				<div class="-title _font2"><SVGIcon baseline>calendar-wide</SVGIcon> <span class="-text">Coming Up</span></div>

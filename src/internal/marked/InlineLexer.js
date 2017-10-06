@@ -22,7 +22,7 @@ var inline = {
   emoji: /^:([a-z_]+):/,
   email:  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})/i,
   atname: /^@([A-Za-z0-9-]+)(?!@)/,
-  
+
   ///^(?<=^|(?<=[^a-zA-Z0-9-_\.]))@([A-Za-z0-9]+)/,
 };
 
@@ -131,7 +131,7 @@ export default class InlineLexer {
         out.push(this.renderer.mail(leftSide, rightSide, text));
         continue;
       }
-	  
+
       // autolink
       if (cap = this.rules.autolink.exec(src)) {
         src = src.substring(cap[0].length);
@@ -252,7 +252,7 @@ export default class InlineLexer {
 
       // text
       if (cap = this.rules.text.exec(src)) {
-		
+
 		//Text is too aggressive so we only parse it until first space in case
 		//there's an email comming in the text
 		l = cap[0].indexOf(' ');

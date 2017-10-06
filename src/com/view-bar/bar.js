@@ -9,7 +9,7 @@ import NavLink 							from 'com/nav-link/link';
 import NavSpinner						from 'com/nav-spinner/spinner';
 
 //import DropdownUser 					from 'com/dropdown-user/user';
-import DropdownNotification				from 'com/dropdown-notification/notification';
+import DropdownNotification				from 'com/view-bar/bar-notifications';
 
 //import $Node							from '../../shrub/js/node/node';
 import $Notification					from '../../shrub/js/notification/notification';
@@ -22,7 +22,7 @@ function make_url( url ) {
 export default class ViewBar extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state - {
 			notifications: 0,
 			notificationCountAdjustment: 0,
@@ -30,22 +30,28 @@ export default class ViewBar extends Component {
 	}
 
 	checkNotificationCount() {
-		$Notification.GetCountUnread()
-		.then((r) => {
-			if (this.state.notifications != r.count) {
-				this.setState({notifications: r.count, notificationCountAdjustment: 0});
-			}
-			setTimeout(() => this.checkNotificationCount(), 60000);
-		})
-		.catch((e) => {
+		const loggedIn = this.props.user && this.props.user.id > -1;
+
+		if (loggedIn) {
+			$Notification.GetCountUnread()
+			.then((r) => {
+				if (this.state.notifications != r.count) {
+					this.setState({notifications: r.count, notificationCountAdjustment: 0});
+				}
+				setTimeout(() => this.checkNotificationCount(), 60000);
+			})
+			.catch((e) => {
+				setTimeout(() => this.checkNotificationCount(), 5 * 60000);
+				console.log('[Notificaton error]', e);
+			});
+		} else {
 			setTimeout(() => this.checkNotificationCount(), 5 * 60000);
-			console.log('[Notificaton error]', e);
-		});
+		}
 	}
 
 	componentDidMount() {
 		document.body.classList.add('_use-view-bar');
-	
+
 		this.checkNotificationCount();
 	}
 
@@ -143,16 +149,18 @@ export default class ViewBar extends Component {
 			if (this.state.showNotifications) {
 				ShowNotifications = (<DropdownNotification getNew={notificationCount > 0} totalNew={notificationCount} countCallback={ (offset) => this.setState({notificationCountAdjustment: offset}) } hideCallback={ () => this.setState({showNotifications: false}) } />);
 			}
-			
+
 			Notification = (
 				<ButtonBase class="-icon" onclick={(e) => {
+					// TODO: if the main content is the notifications feed, clicking the button should
+					// probably not show the dropdown, but load new comments into the feed.
 					this.setState({showNotifications: !this.state.showNotifications});
 				}}>
 					<SVGIcon baseline>bubble</SVGIcon>
 					{NotificationCount}
 				</ButtonBase>
 			);
-			
+
 			// TODO: Pull this out of the user meta, else use a dummy
 			let Avatar = (user.meta && user.meta.avatar) ? <img src={"//"+STATIC_DOMAIN+user.meta.avatar} /> : <img src={'//'+STATIC_DOMAIN+'/other/dummy/user64.png'} />;
 			//'/other/logo/mike/Chicken64.png';
@@ -217,7 +225,7 @@ export default class ViewBar extends Component {
 					<div class="-left">
 						<ButtonLink href="/" class="-logo">
 							<SVGIcon class="if-sidebar-block" baseline>ludum</SVGIcon><SVGIcon class="if-sidebar-block" baseline>dare</SVGIcon>
-							<SVGIcon class="if-no-sidebar-block" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-block" baseline>d-are</SVGIcon>							
+							<SVGIcon class="if-no-sidebar-block" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-block" baseline>d-are</SVGIcon>
 						</ButtonLink>
 					</div>
 					{this.renderRight(user, featured)}

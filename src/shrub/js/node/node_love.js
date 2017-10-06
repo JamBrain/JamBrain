@@ -24,7 +24,7 @@ function _GetMy() {
 export function GetMy( node ) {
 	return new Promise((resolve, reject) => {
 		var key = 'NODE|LOVE|MINE';
-		
+
 		var Data = STORAGE.Fetch(key);
 		if ( Data ) {
 			if ( node )
@@ -37,7 +37,7 @@ export function GetMy( node ) {
 			.then(r => {
 				Data = r['my-love'];
 				STORAGE.Store(key, Data);
-				
+
 				if ( node )
 					resolve(Data.indexOf(node) !== -1);
 				else

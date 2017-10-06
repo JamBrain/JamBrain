@@ -9,7 +9,7 @@ export default class DropdownBase extends Component {
 		var new_props = {
 			'class': 'dropdown-base' + (props.class ? ' '+props.class : '')
 		};
-		
+
 		return (
 			<div {...new_props}>
 				{props.children}

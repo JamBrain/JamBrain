@@ -23,7 +23,7 @@ export function Get( filter ) {
 	if ( _Exists(filter) ) {
 		return Promise.resolve(_Get(filter));
 	}
-	
+
 	return GetFresh(filter);
 }
 export function GetFresh( filter ) {
@@ -32,7 +32,7 @@ export function GetFresh( filter ) {
 			if ( r.tag ) {
 				_Cache(filter, r);
 			}
-			
+
 			//r.fresh = true;	// Caching will incorrectly mark it as fresh
 			return r;
 		});
