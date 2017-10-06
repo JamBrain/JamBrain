@@ -1,0 +1,130 @@
+@import "defs.less";
+
+#content .content-notifications {
+	position: relative;
+
+	background: @COL_NLLLL;
+	
+	padding-bottom: 12px;
+	
+	&.-no-gap {
+		margin-top: 0;
+	}
+
+	& .-no-header {
+	}
+
+	& .-headline {
+		padding-top: 0.5em;
+		position: relative;
+
+		background: @COL_NDDD;
+		color: @COL_NLLLL;
+		height: 1em;
+		font-size: 2em;
+		font-weight: bold;
+		font-style: italic;
+		overflow: hidden;
+		padding-left: 0.5em;
+	}
+	
+	& .-action {
+		position: relative;
+
+		background: @COL_NDDD;
+		font-style: italic;
+		background: @COL_NDDD;
+		height: 1em;
+		font-size: 1em;
+
+		& > a {
+			color: @COL_NLLLL;
+		}
+	}
+	
+	& .-indent {
+		padding-left: 4.5em;
+	}
+	
+	& .-item {
+	
+		position: relative;
+		display: block;
+
+		overflow: auto;
+
+		border-top: 1px solid @COL_NLL;
+		padding-left: 1em;
+		padding-right: 1em;
+		padding-top: 0.5em;
+		padding-bottom: 0.5em;
+		
+		&:nth-child(2){
+			border-top: none;
+		}
+	
+		&:nth-child(odd) {
+			
+			background: @COL_L;
+				
+			& .-at-name {
+				background: @COL_NLLLL;
+			}			
+		}
+		
+		&:nth-child(even) {
+							
+			& .-at-name {
+				background: @COL_L;
+			}			
+		}
+		
+		
+		&.-new-comment {
+			font-weight: bold;
+			&:nth-child(even) {
+				background: @COL_NDDDG;
+				
+				& .-at-name {
+					background: @COL_NDDDDG;
+				}
+			}
+			&:nth-child(odd) {
+				background: @COL_NLLLG;
+				
+				& .-at-name {
+					background: @COL_NLLLLG;
+				}
+
+			}
+			
+		}
+		
+	}
+	
+	& > .-button {
+		display: inline-block;
+		padding: 0.5rem 1rem;
+		border: 1px solid @COL_N;
+		margin: 0.5rem 0.25rem;
+
+		font-weight:700;
+
+		&:hover, &:focus {
+			background: @COL_A;
+			color: @COL_L;
+			border: 1px solid @COL_A;
+		}
+	}
+	& > .-light {
+		border: 1px solid;
+	}
+
+}
+
+.-at-name {
+	display: inline-block;
+	font-weight: bold;			
+	padding-left: 0.25em;
+	padding-right: 0.25em;
+}
