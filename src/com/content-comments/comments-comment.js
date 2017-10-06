@@ -6,8 +6,6 @@ import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 import IMG2 							from 'com/img2/img2';
 
-import ContentFooterButtonComments		from 'com/content-footer/footer-button-comments';
-
 import ContentCommentsMarkup			from 'comments-markup';
 
 import $Note							from '../../shrub/js/note/note';
@@ -29,7 +27,6 @@ export default class ContentCommentsComment extends Component {
 			'lovecount': props.comment.love,
 		};
 
-//		console.log('C '+props.comment.id+": ", this.state.editing,this.state.preview);
 
 		this.onEditing = this.onEditing.bind(this);
 		this.onPreview = this.onPreview.bind(this);
@@ -95,7 +92,6 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onEdit( e ) {
-		console.log('edit');
 		this.setState({'editing': true, 'preview': false});
 	}
 
@@ -130,8 +126,6 @@ export default class ContentCommentsComment extends Component {
 		var user = props.user;
 		var comment = props.comment;
 		var author = props.author;
-
-//		console.log('R '+comment.id+": ", state.editing, state.preview);
 
 		if ( author || comment.author == 0 ) {
 			var Name = "Anonymous";

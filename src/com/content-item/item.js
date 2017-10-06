@@ -15,7 +15,6 @@ import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
 import ContentSimple					from 'com/content-simple/simple';
 
-
 import $Node							from '../../shrub/js/node/node';
 import $NodeMeta						from '../../shrub/js/node/node_meta';
 import $Grade							from '../../shrub/js/grade/grade';
