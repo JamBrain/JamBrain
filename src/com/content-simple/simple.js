@@ -23,7 +23,7 @@ import $Node							from '../../shrub/js/node/node';
 export default class ContentSimple extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {
 			'author': {},
 			'authors': [],
@@ -45,10 +45,10 @@ export default class ContentSimple extends Component {
 		this.onModifyText = this.onModifyText.bind(this);
 		this.onModifyAvatar = this.onModifyAvatar.bind(this);
 	}
-	
+
 	componentDidMount() {
 		var props = this.props;
-		
+
 		if ( props.authored )
 			this.getAuthor(props.node);
 		if ( props.authors )
@@ -65,7 +65,7 @@ export default class ContentSimple extends Component {
 			}
 		}
 	}
-	
+
 	getAuthors( node ) {
 		// Clear the Authors
 //		this.setState({ authors: [] });
@@ -120,7 +120,7 @@ export default class ContentSimple extends Component {
 		if (this.props.onSave) {
 			this.props.onSave( e );
 		}
-		
+
 		return $Node.Update(this.props.node.id, Title, Body)
 		.then(r => {
 			if ( r.status == 200 ) {
@@ -181,12 +181,12 @@ export default class ContentSimple extends Component {
 	onModifyAvatar( avatar ) {
 		this.setState({/*'modified': true,*/ 'avatar': avatar});
 	}
-	
+
 	isEditMode() {
 		var extra = this.props.extra;
 		return extra && extra.length && extra[extra.length-1] == 'edit';
 	}
-	
+
 	render( props, state ) {
 		props = Object.assign({}, props);	// Shallow copy we can change props
 		var Class = [];
@@ -195,10 +195,10 @@ export default class ContentSimple extends Component {
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
-		
+
 		var author = state.author;
 		var authors = state.authors;
-	
+
 		if ( node && ((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length) ) {
 			Class.push("content-simple");
 
@@ -209,7 +209,7 @@ export default class ContentSimple extends Component {
 				if ( !node_IsAuthor(node, user) ) {
 					return <ContentError code="403">Forbidden: You do not have permission to edit this</ContentError>;
 				}
-				
+
 				let EditProps = {
 					'editing': state.editing,
 					'modified': state.modified,
@@ -221,7 +221,7 @@ export default class ContentSimple extends Component {
 				};
 
 				EditProps.nopublish = props.nopublish;
-				
+
 				ShowEditBar = <ContentCommonEdit {...EditProps} />;
 			}
 			else {
@@ -229,7 +229,7 @@ export default class ContentSimple extends Component {
 					props.edit = 1;
 				}
 			}
-			
+
 			let ShowAvatar = null;
 			let ShowByLine = null;
 			if ( props.authored ) {
@@ -253,9 +253,9 @@ export default class ContentSimple extends Component {
 				}
 			}
 			else if ( props.updated && !state.editing ) {
-				ShowByLine = <ContentCommonBodyBy node={node} label="Last updated" modified />;					
+				ShowByLine = <ContentCommonBodyBy node={node} label="Last updated" modified />;
 			}
-			
+
 			if ( state.editing && props.editonly ) {
 				ShowOnly = props.editonly;
 			}
@@ -277,22 +277,22 @@ export default class ContentSimple extends Component {
 
 			let ShowTitle = null;
 			if ( !props.notitle ) {
-				ShowTitle = <ContentCommonBodyTitle 
-					href={node.path} 
-					title={state.name} 
+				ShowTitle = <ContentCommonBodyTitle
+					href={node.path}
+					title={state.name}
 					hover={node.slug+' [$'+node.id+']'}
 					subtitle={props.subtitle}
-					titleIcon={props.titleIcon} 
-					editing={props.notitleedit ? false : state.editing} 
-					onmodify={this.onModifyTitle} 
+					titleIcon={props.titleIcon}
+					editing={props.notitleedit ? false : state.editing}
+					onmodify={this.onModifyTitle}
 					limit="80"
 				/>;
 			}
-			
+
 			let ShowMarkup = null;
 			if ( !props.nomarkup ) {
 				ShowMarkup = (
-					<ContentCommonBodyMarkup 
+					<ContentCommonBodyMarkup
 						node={node}
 						user={user}
 						label={props.label ? props.label : "Description"}
@@ -307,17 +307,17 @@ export default class ContentSimple extends Component {
 					</ContentCommonBodyMarkup>
 				);
 			}
-			
+
 			let ShowAbove = null;
 			if ( props.above ) {
 				ShowAbove = props.above;
 			}
-			
+
 			let ShowDraft = null;
 			if ( !node.published ) {
 				ShowDraft = <ContentCommonDraft draft={props.draft} />;
 			}
-			
+
 			props.class = cN(Class, props.class);
 			if ( this.isEditMode() ) {
 				props.minmax = null;

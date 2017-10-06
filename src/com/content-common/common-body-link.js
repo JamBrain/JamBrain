@@ -14,7 +14,7 @@ import $Tag								from '../../shrub/js/tag/tag';
 export default class ContentCommonBodyField extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {};
 	}
 
@@ -32,7 +32,7 @@ export default class ContentCommonBodyField extends Component {
 						NewState.indexes[item.id] = NewState.items.length;
 						NewState.items.push([item.id, item.name]);
 					});
-					
+
 					this.setState(NewState);
 				}
 			});
@@ -44,7 +44,7 @@ export default class ContentCommonBodyField extends Component {
 		var Limit = 64;
 		var NamePlaceholder = props.namePlaceholder ? props.namePlaceholder : 'Name';
 		var UrlPlaceholder = props.urlPlaceholder ? props.urlPlaceholder : 'Url';
-		
+
 		if (props.editing && state.items) {
 			Class.push('-editing');
 			return (
@@ -55,7 +55,7 @@ export default class ContentCommonBodyField extends Component {
 						onmodify={props.onModifyTag}
 					/>
 					<InputText class="-url"
-						value={props.url} 
+						value={props.url}
 						onmodify={props.onModifyUrl}
 						placeholder={UrlPlaceholder}
 						max={Limit}

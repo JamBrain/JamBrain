@@ -80,15 +80,15 @@ export default class ContentPost extends Component {
 
 	render( props, state ) {
 		props = Object.assign({}, props);
-		
+
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
-		
+
 		// Additional properties		
 		//props.authored = 1;
-		
+
 		if ( node ) {
 			if ( node.subtype === 'news' ) {
 				props.header = "NEWS";
@@ -101,12 +101,12 @@ export default class ContentPost extends Component {
 				props.headerClass = "-col-nddd";
 			}
 		}
-		
+
 		props.limit = 1024*24;
-		
+
 		return <ContentSimple {...props} />;
-		
-		
+
+
 /*		
 		// If a Minimized property was included, invert the internal state
 		if (props.minimized) {

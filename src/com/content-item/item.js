@@ -7,9 +7,9 @@ import IMG2 							from 'com/img2/img2';
 import ButtonBase						from 'com/button-base/base';
 
 import ContentCommonBody				from 'com/content-common/common-body';
-import ContentCommonBodyField	        from 'com/content-common/common-body-field';
-import ContentCommonBodyLink	        from 'com/content-common/common-body-link';
-import ContentCommonBodyTitle	        from 'com/content-common/common-body-title';
+import ContentCommonBodyField			from 'com/content-common/common-body-field';
+import ContentCommonBodyLink			from 'com/content-common/common-body-link';
+import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
@@ -26,9 +26,9 @@ import $Asset							from '../../shrub/js/asset/asset';
 export default class ContentItem extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		var node = props.node;
-		
+
 		this.state = {
 			'parent': null,
 			'grade': null,
@@ -36,7 +36,7 @@ export default class ContentItem extends Component {
 			'linkUrls': [],
 			'linkTags': [],
 			'linkNames': [],
-			
+
 			'linksShown': 1,
 
 //			'platforms': [],
@@ -47,7 +47,7 @@ export default class ContentItem extends Component {
 			this.state.linkUrls[i] = node.meta['link-0'+(i+1)] ? node.meta['link-0'+(i+1)] : '';
 			this.state.linkTags[i] = node.meta['link-0'+(i+1)+'-tag'] ? parseInt(node.meta['link-0'+(i+1)+'-tag']) : 0;
 			this.state.linkNames[i] = node.meta['link-0'+(i+1)+'-name'] ? node.meta['link-0'+(i+1)+'-name'] : '';
-			
+
 			if ( this.state.linkUrls[i] && i+1 > this.state.linksShown ) {
 				this.state.linksShown = i+1;
 			}
@@ -57,16 +57,16 @@ export default class ContentItem extends Component {
 		this.onSetCompo = this.onSetCompo.bind(this);
 		this.onSetUnfinished = this.onSetUnfinished.bind(this);
 	}
-	
+
 	componentDidMount() {
 		var node = this.props.node;
-		
+
 		$Node.Get(node.parent)
 		.then(r => {
 			if ( r.node && r.node.length ) {
 				var Parent = r.node[0];
 				this.setState({'parent': Parent});
-				
+
 				return $Grade.GetMy(node.id);
 			}
 			return Promise.resolve({});
@@ -115,14 +115,14 @@ export default class ContentItem extends Component {
 
 	onGrade( name, value ) {
 		var Node = this.props.node;
-		
+
 		return $Grade.Add(Node.id, name, value)
 			.then(r => {
 				if ( r && r.id || !!r.changed ) {
 					var Grades = this.state.grade;
-					
+
 					Grades[name] = value;
-					
+
 					this.setState({'grade': Grades});
 				}
 				return r;
@@ -131,13 +131,13 @@ export default class ContentItem extends Component {
 
 	onOptOut( name, value ) {
 		var Node = this.props.node;
-		
+
 		let Name = name+'-out';
 		let Data = {};
-		
+
 		if ( value ) {
 			Data[Name] = 1;
-			
+
 			return $NodeMeta.Add(Node.id, Data)
 				.then(r => {
 					if ( r && r.changed ) {
@@ -157,29 +157,29 @@ export default class ContentItem extends Component {
 						this.setState({});
 					}
 					return r;
-				});			
+				});
 		}
 	}
-	
+
 	positionSuffix(position) {
-	    let j = position % 10;
+		let j = position % 10;
 		let k = position % 100;
-	
-	    if (j == 1 && k != 11) return "st";
-	    if (j == 2 && k != 12) return "nd";
-	    if (j == 3 && k != 13) return "rd";
-	    return "th";
+
+		if (j == 1 && k != 11) return "st";
+		if (j == 2 && k != 12) return "nd";
+		if (j == 3 && k != 13) return "rd";
+		return "th";
 	}
-	
+
 	onUpload( name, e ) {
 		var node = this.props.node;
 		var user = this.props.user;
 
 		if ( !this.props.user )
 			return null;
-			
+
 		var FileName = null;
-		
+
 		if ( e.target.files && e.target.files.length ) {
 			var file = e.target.files[0];
 
@@ -187,10 +187,10 @@ export default class ContentItem extends Component {
 				.then(r => {
 					if ( r && r.path ) {
 						FileName = '///content/'+r.path;
-						
+
 						let Data = {};
 						Data[name] = FileName;
-						
+
 						return $NodeMeta.Add(node.id, Data);
 					}
 
@@ -205,7 +205,7 @@ export default class ContentItem extends Component {
 				.catch(err => {
 					this.setState({ 'error': err });
 				});
-		}		
+		}
 	}
 
 	onModifyLinkName( Index, e ) {
@@ -248,7 +248,7 @@ export default class ContentItem extends Component {
 			{
 				let Old = node.meta[Base] ? node.meta[Base] : '';
 				let New = this.state.linkUrls[i].trim();
-				
+
 				if ( Old != New ) {
 					Data[Base] = this.state.linkUrls[i];
 					this.props.node.meta[Base] = Data[Base];
@@ -259,7 +259,7 @@ export default class ContentItem extends Component {
 			{
 				let Old = node.meta[Base+'-tag'] ? parseInt(node.meta[Base+'-tag']) : 0;
 				let New = parseInt(this.state.linkTags[i]);
-				
+
 				if ( Old != New ) {
 					Data[Base+'-tag'] = this.state.linkTags[i];
 					this.props.node.meta[Base+'-tag'] = Data[Base+'-tag'];
@@ -270,7 +270,7 @@ export default class ContentItem extends Component {
 			{
 				let Old = node.meta[Base+'-name'] ? node.meta[Base+'-name'] : '';
 				let New = this.state.linkNames[i].trim();
-				
+
 				if ( Old != New ) {
 					Data[Base+'-name'] = this.state.linkNames[i];
 					this.props.node.meta[Base+'-name'] = Data[Base+'-name'];
@@ -288,7 +288,7 @@ export default class ContentItem extends Component {
 	// Generates JSX for the links, depending on whether the page is editing or viewing
 	makeLinks( editing ) {
 		var LinkMeta = [];
-		
+
 		for ( let idx = 0; idx < this.state.linksShown; idx++ ) {
 			LinkMeta.push(
 				<ContentCommonBodyLink
@@ -304,13 +304,13 @@ export default class ContentItem extends Component {
 				/>
 			);
 		}
-		
+
 		if ( editing && this.state.linksShown < 9 ) {
 			LinkMeta.push(
 				<button onclick={e => this.setState({'linksShown': ++this.state.linksShown})}>+</button>
 			);
 		}
-		
+
 //					namePlaceholder="Web"
 //					urlPlaceholder="http://example.com/web.html"
 //					namePlaceholder="Windows"
@@ -321,7 +321,7 @@ export default class ContentItem extends Component {
 //					urlPlaceholder="http://example.com/linux.tar.gz"
 //					namePlaceholder="Source"
 //					urlPlaceholder="http://example.com/source.zip"
-		
+
 		return (
 			<ContentCommonBody class="-links">
 				<div class="-label">Links</div>
@@ -332,14 +332,14 @@ export default class ContentItem extends Component {
 
 	render( props, state ) {
 		props = Object.assign({}, props);
-		
+
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
 		var featured = props.featured;
 		var parent = state.parent;
-		
+
 		var Category = '/';
 
 		if ( node ) {
@@ -353,7 +353,7 @@ export default class ContentItem extends Component {
 				props.headerClass = "-col-c";
 				props.titleIcon = "hammer";
 			}
-			
+
 			if ( node.subsubtype == 'jam' ) {
 				props.header += ": JAM";
 				Category = '/jam';
@@ -378,10 +378,10 @@ export default class ContentItem extends Component {
 			else {
 				props.nopublish = true;
 			}
-			
+
 			props.draft = "Game";
 		}
-		
+
 		var ShowEventPicker = null;
 		if ( extra && extra.length && extra[0] == 'edit' && node_CanPublish(parent) ) {
 			ShowEventPicker = (
@@ -397,7 +397,7 @@ export default class ContentItem extends Component {
 				</ContentCommonNav>
 			);
 		}
-		
+
 		var ShowMetrics = null;
 		if ( node.magic ) {
 			let Lines = [];
@@ -420,7 +420,7 @@ export default class ContentItem extends Component {
 				let Icon = null;
 				let Title = Metric.key;
 				let Score = Metric.value;
-				
+
 				let HoverTitle = Score;
 
 				if ( Metric.key == 'smart' ) {
@@ -452,7 +452,7 @@ export default class ContentItem extends Component {
 				else if ( Metric.key == 'feedback' ) {
 					Title = "Karma for Feedback given";
 				}
-				
+
 				let SmallScore = Score.toFixed(4);
 				if ( SmallScore.length > Score.toString().length )
 					SmallScore = Score.toString();
@@ -475,7 +475,7 @@ export default class ContentItem extends Component {
 				</ContentCommonBody>
 			);
 		}
-		
+
 		var ShowGrade = null;
 		// Show Grading or Results
 		if ( parseInt(node_CanGrade(parent)) ) {
@@ -488,25 +488,25 @@ export default class ContentItem extends Component {
 					let parts = key.split('-');
 					if ( parts.length == 2 && parts[0] == 'grade' ) {
 						// Make sure they user hasn't opted out
-						
+
 						if ( node.meta && !(node.meta[key+'-out']|0) ) {
 							Lines.push({'key': key, 'value': parent.meta[key]});
 						}
 					}
 				}
-				
+
 				let VoteLines = [];
 				for ( let idx = 0; idx < Lines.length; idx++ ) {
 					let Line = Lines[idx];
-					
+
 					let Title = Line.value;
 					let Score = 0;
 					if ( node.grade ) {
 						Score = node.grade[Line.key];
 					}
-					
+
 					//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
-					
+
 					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
 				}
 
@@ -522,29 +522,29 @@ export default class ContentItem extends Component {
 			// Judging
 			else if ( featured && featured.what_node && nodeKeys_HasPublishedParent(featured.what_node, node.parent) ) {
 				let Lines = [];
-				
+
 				for ( var key in parent.meta ) {
 					// Is it a valid grade ?
 					let parts = key.split('-');
 					if ( parts.length == 2 && parts[0] == 'grade' ) {
 						// Make sure they user hasn't opted out
-						
+
 						if ( node.meta && !(node.meta[key+'-out']|0) ) {
 							Lines.push({'key': key, 'value': parent.meta[key]});
 						}
 					}
 				}
-				
+
 				let VoteLines = [];
 				for ( let idx = 0; idx < Lines.length; idx++ ) {
 					let Line = Lines[idx];
-					
+
 					let Title = Line.value;
 					let Score = '?';
 					if ( state.grade ) {
 						Score = state.grade[Line.key] ? state.grade[Line.key] : 0;
 					}
-					
+
 					let Stars = [];
 					for ( let idx2 = 0; idx2 < Score; idx2++ ) {
 						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
@@ -553,20 +553,20 @@ export default class ContentItem extends Component {
 						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
 					}
 					Stars.push(<ButtonBase class='-delete' onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
-					
+
 					Stars.push(<InputStar value='2.5' max='5' small number />);
 					Stars.push(<InputStar value='2.5' max='5' number />);
 					Stars.push(<InputStar value='2.5' edit delete number />);
-					
+
 					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> {Stars}</div>);
 				}
-				
+
 				let ShowRatingSubText = null;
 				if ( node.subsubtype == 'jam' )
 					ShowRatingSubText = <div class="-subtext">Jam game</div>;
 				else if ( node.subsubtype == 'compo' )
 					ShowRatingSubText = <div class="-subtext">Compo game</div>;
-				
+
 				ShowGrade = (
 					<ContentCommonBody class="-rating">
 						<div class="-header">Ratings</div>
@@ -575,7 +575,7 @@ export default class ContentItem extends Component {
 						<div class="-footer">Ratings are saved automatically when you click. When they change, they're saved.</div>
 					</ContentCommonBody>
 				);
-				
+
 				//'
 			}
 			else if ( !user || !user.id ) {
@@ -605,17 +605,17 @@ export default class ContentItem extends Component {
 				let parts = key.split('-');
 				if ( parts.length == 2 && parts[0] == 'grade' ) {
 					// Make sure they user hasn't opted out
-					
+
 					if ( node.meta && !(node.meta[key+'-out']|0) ) {
 						Lines.push({'key': key, 'value': parent.meta[key]});
 					}
 				}
 			}
-			
+
 			let ResultLines = [];
 			for ( let idx = 0; idx < Lines.length; idx++ ) {
 				let Line = Lines[idx];
-				
+
 				let Title = Line.value;
 				let Place = "N/A";
 				if ( node.magic && node.magic[Line.key+'-result'] )
@@ -626,9 +626,9 @@ export default class ContentItem extends Component {
 				let Count = 0;
 				if ( node.grade && node.grade[Line.key] )
 					Count = node.grade[Line.key];
-				
+
 				//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
-				
+
 				ResultLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Place}</strong><sup>{this.positionSuffix(Place)}</sup> ({Average} average from {Count} ratings)</div>);
 			}
 
@@ -641,11 +641,11 @@ export default class ContentItem extends Component {
 				</ContentCommonBody>
 			); //'
 		}
-		
+
 		var ShowOptOut = null;
 		if ( parent && node_CanPublish(parent) ) {
 			let Lines = [];
-			
+
 			for ( var key in parent.meta ) {
 				// Is it a valid grade ?
 				let parts = key.split('-');
@@ -653,9 +653,9 @@ export default class ContentItem extends Component {
 					// Assuming the category isn't optional
 					if ( parent.meta[key]|0 ) {
 						let BaseKey = parts[0]+'-'+parts[1];
-						
+
 						Lines.push({
-							'key': BaseKey, 
+							'key': BaseKey,
 							'name': parent.meta[BaseKey],
 							'value': (node.meta ? !(node.meta[BaseKey+'-out']|0) : false)
 						});
@@ -667,16 +667,16 @@ export default class ContentItem extends Component {
 
 			for ( let idx = 0; idx < Lines.length; idx++ ) {
 				let Line = Lines[idx];
-				
+
 				let Icon = null;
 				if ( Line.value )
 					Icon = <SVGIcon small baseline>checkbox-unchecked</SVGIcon>;
 				else
 					Icon = <SVGIcon small baseline>checkbox-checked</SVGIcon>;
-				
+
 				OptLines.push(<ButtonBase onclick={this.onOptOut.bind(this, Line.key, Line.value)}>{Icon} Do not rate me in <strong>{Line.name}</strong></ButtonBase>);
 			}
-			
+
 			ShowOptOut = (
 				<ContentCommonBody class="-opt-out">
 					<div class="-label">Voting Category Opt-outs</div>
@@ -689,14 +689,14 @@ export default class ContentItem extends Component {
 				</ContentCommonBody>
 			);
 		}
-		
+
 		var ShowImages = null;
 		if ( true ) {
 			let ShowImage = null;
 			if ( node.meta && node.meta.cover ) {
 				ShowImage = <IMG2 class="-img" src={node.meta && node.meta.cover ? node.meta.cover+'.320x256.fit.jpg' : "" } />;
 			}
-			
+
 			ShowImages = (
 				<ContentCommonBody class="-images">
 					<div class="-label">Images</div>
@@ -713,7 +713,7 @@ export default class ContentItem extends Component {
 				</ContentCommonBody>
 			);
 		}
-		
+
 		// Where you can enter your game links
 		var ShowLinkEntry = null;
 		if ( true ) {
@@ -750,7 +750,7 @@ export default class ContentItem extends Component {
 			);
 		}
 
-		
+
 		props.editonly = (
 			<div>
 				{ShowEventPicker}
@@ -762,7 +762,7 @@ export default class ContentItem extends Component {
 			</div>
 		);
 		props.onSave = this.onSave.bind(this);
-		
+
 		props.viewonly = (
 			<div>
 				{ShowLinkView}
@@ -770,7 +770,7 @@ export default class ContentItem extends Component {
 				{ShowMetrics}
 			</div>
 		);
-		
+
 		props.class = cN("content-item", props.class);
 
 		// Shim to update the save button from this method. See https://facebook.github.io/react/docs/refs-and-the-dom.html

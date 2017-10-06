@@ -16,7 +16,7 @@ export default class ContentHeaderCommon extends Component {
 
 	render( {title, path}, state ) {
 		var dangerousParsedTitle = { __html:titleParser.parse(title) };
-		
+
 		return (
 			<div class="content-header content-header-common">
 				<div class="-title _font2">

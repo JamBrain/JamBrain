@@ -8,14 +8,14 @@ import ButtonBase						from 'com/button-base/base';
 export default class InputStar extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {
 		};
 	}
 
 	onClick( e, t, index ) {
 		console.log(index);
-		
+
 		// Only do click if the item has an index (i.e. not a separator)
 //		if ( e.target.dataset.hasOwnProperty('index') ) {
 //			if ( this.props.onmodify ) {
@@ -26,19 +26,19 @@ export default class InputStar extends Component {
 //			this.doHide(e);
 //		}
 	}
-	
+
 	render( props, state ) {
 		let Value = state.value || parseFloat(props.value);
 		let Count = parseInt(props.max) || 5;
 		let Title = null;
-		
+
 		let ShowNumber = null;
 		if ( props.number ) {
 			ShowNumber = <div class='-number'>{Value.toFixed(2)}</div>;
 		}
-		
+
 		// NOTE: This looks interesting https://codepen.io/jamesbarnett/pen/vlpkh
-		
+
 		let Stars = [];
 		if ( props.edit ) {
 			// Mini Stars
@@ -72,10 +72,10 @@ export default class InputStar extends Component {
 			for ( let idx = Math.ceil(Value); idx < Count; idx++ ) {
 				Stars.push(<div class='-star'><SVGIcon small={props.small} baseline>star-empty</SVGIcon></div>);
 			}
-			
+
 			Title = Value+' of '+Count;
 		}
-		
+
 		return (
 			<div class="input-star" title={Title}>
 				{props.prefix}

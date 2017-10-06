@@ -17,7 +17,7 @@ export function send( title, body, icon ) {
 		if ( body )
 			options['body'] = body;
 		if ( icon )
-			options['icon'] = icon;		
+			options['icon'] = icon;
 		return new window.Notification( title, options );
 	}
 }

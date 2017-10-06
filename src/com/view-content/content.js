@@ -5,8 +5,8 @@ import ContentPost						from 'com/content-post/post';
 import ContentUsers						from 'com/content-users/users';
 import ContentUser						from 'com/content-user/user';
 //import ContentUserGames                 from 'com/content-user/user-games';
-import ContentUserFollowing             from 'com/content-user/user-following';
-import ContentUserFollowers             from 'com/content-user/user-followers';
+import ContentUserFollowing from 'com/content-user/user-following';
+import ContentUserFollowers from 'com/content-user/user-followers';
 
 import ContentTimeline					from 'com/content-timeline/timeline';
 import ContentGames						from 'com/content-games/games';
@@ -108,7 +108,7 @@ export default class ViewContent extends Component {
 
 		if ( node.type === 'post' ) {
 			return <ViewContentPost node={node} user={user} path={path} extra={extra} edit={EditMode} />;
-			
+
 //			var Content = [];
 //			Content.push(<ContentPost node={node} user={user} path={path} extra={extra} authored by love />);
 //
@@ -164,7 +164,7 @@ export default class ViewContent extends Component {
 					<ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} />
 				</div>
 			);
-			
+
 		}
 		else if ( node.type === 'user' ) {
 			let View = [];
@@ -388,12 +388,12 @@ export default class ViewContent extends Component {
 					DefaultSubFilter = 'jam';//'all';
 					DefaultFilter = 'overall';
 				}
-				
+
 				function EvalFilter2(str) {
 					let MappingTable = {
 						'all': 'compo+jam',
 						'classic': 'cool',
-						
+
 						'overall': 'grade-01-result',
 						'fun': 'grade-02-result',
 						'innovation': 'grade-03-result',
@@ -440,7 +440,7 @@ export default class ViewContent extends Component {
 						case 'mood':
 							Methods = [EvalFilter2(Filter),'reverse'];
 							break;
-						
+
 						case 'zero':
 							Methods = ['grade','reverse'];
 							break;
@@ -501,7 +501,7 @@ export default class ViewContent extends Component {
 				}
 				else {	// results
 					let Path = this.props.path+'/'+extra[0]+'/';
-					
+
 					ShowFilters = (
 						<Common node={this.props.node} class="filter-item filter-game">
 							<CommonNav>
@@ -530,13 +530,13 @@ export default class ViewContent extends Component {
 //								<CommonNavButton href={Path+'zero/'+SubFilter} class={Filter == 'zero' ? '-selected' : ''}><SVGIcon>gift</SVGIcon><div>Zero</div></CommonNavButton>
 //								<CommonNavButton href={Path+'feedback/'+SubFilter} class={Filter == 'feedback' ? '-selected' : ''}><SVGIcon>bubbles</SVGIcon><div>Feedback</div></CommonNavButton>
 //								<CommonNavButton href={Path+'grade/'+SubFilter} class={Filter == 'grade' ? '-selected' : ''}><SVGIcon>todo</SVGIcon><div>Grade</div></CommonNavButton>
-				
+
 				SubFilter = EvalFilter2(SubFilter);
-				
+
 				// Require games to be part of the content node passed
 				Methods.push('parent');
 				//Methods.push('superparent');	// Why doesn't this work? It's unnecssary, but it should still work
-				
+
 				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />;
 
 //				let SubSubType = 'compo+jam';	// alphabetical
@@ -586,7 +586,7 @@ export default class ViewContent extends Component {
 			else if ( Viewing == '/home' ) {
 				var ShowHome = null;
 				// TODO: switch modes
-				
+
 				// If my entry is Published
 //				if ( featured && featured.what && featured.what.length && featured.what[0] && featured.what_node && featured.what_node[featured.what[0]] && featured.what_node[featured.what[0]].published ) {
 //					ShowHome = (
@@ -595,7 +595,7 @@ export default class ViewContent extends Component {
 //						</Common>
 //					);
 //				}
-				
+
 				return (
 					<ContentTimeline types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra}>
 						{ShowNavRoot}
@@ -690,7 +690,7 @@ export default class ViewContent extends Component {
 				let ShowFilters = null;
 				if ( true ) {
 					let Path = this.props.path+'/games/';
-					
+
 					let WithSubFilter = SubFilter ? '/'+SubFilter : '';
 					let WithSubSubFilter = SubSubFilter && SubSubFilter != 'featured' ? '/'+SubSubFilter : '';
 
@@ -718,8 +718,8 @@ export default class ViewContent extends Component {
 						</Common>
 					);
 				}
-				
-				
+
+
 				let NodeArg = node;
 				if ( SubSubFilter == 'featured' ) {
 					Methods.push('parent');
@@ -727,7 +727,7 @@ export default class ViewContent extends Component {
 				}
 
 				SubFilter = EvalFilter(SubFilter);
-				
+
 				var ShowHeader = null;
 				if ( NodeArg ) {
 					return (

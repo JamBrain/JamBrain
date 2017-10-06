@@ -4,7 +4,7 @@ import SVGIcon 			from 'com/svg-icon/icon';
 export default class SidebarTrending extends Component {
 	constructor() {
 	}
-	
+
 	render( props, state ) {
 		return (
 			<div class="sidebar-base sidebar-shortlist sidebar-trending">

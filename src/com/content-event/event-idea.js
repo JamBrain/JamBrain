@@ -13,20 +13,20 @@ const MAX_IDEAS = 3;
 export default class ContentEventIdea extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {
 			idea: "",
 			ideas: null
 		};
-		
+
 		this.onKeyDown = this.onKeyDown.bind(this);
 		this.textChange = this.textChange.bind(this);
 //		this.removeIdea = this.removeIdea.bind(this);
 		this.submitIdeaForm = this.submitIdeaForm.bind(this);
-		
+
 		this.renderIdea = this.renderIdea.bind(this);
 	}
-	
+
 	componentDidMount() {
 		$ThemeIdea.GetMy([this.props.node.id])
 		.then(r => {
@@ -52,23 +52,23 @@ export default class ContentEventIdea extends Component {
 	textChange( e ) {
 		this.setState({ idea: e.target.value.trim() });
 	}
-	
+
 	onKeyDown( e ) {
-		if (!e) { 
-			var e = window.event; 
+		if (!e) {
+			var e = window.event;
 		}
-		if (e.keyCode === 13) { 
+		if (e.keyCode === 13) {
 			this.textChange(e);
 			/*e.preventDefault();*/ 
-			this.submitIdeaForm(); 
+			this.submitIdeaForm();
 		}
 	}
 
 	removeIdea( id, e ) {
 		id = parseInt(id);
-		
+
 		console.log('remove:', id );
-		
+
 		if ( id ) {
 			$ThemeIdea.Remove(this.props.node.id, id)
 			.then(r => {
@@ -83,11 +83,11 @@ export default class ContentEventIdea extends Component {
 			this.setState({ error: "Problem with length" });
 		}
 	}
-	
+
 	submitIdeaForm( e ) {
 		var idea = this.state.idea.trim();
 		console.log('submit:', idea);
-		
+
 		if ( idea.length > 0 && idea.length <= 64 ) {
 			$ThemeIdea.Add(this.props.node.id, idea)
 			.then(r => {
@@ -105,7 +105,7 @@ export default class ContentEventIdea extends Component {
 
 	renderIdea( id ) {
 		var idea = this.state.ideas[id];
-		
+
 		return (
 			<div class="-item">
 				<div class='-x' onclick={this.removeIdea.bind(this, id)}><SVGIcon>cross</SVGIcon></div>

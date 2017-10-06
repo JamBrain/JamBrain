@@ -5,7 +5,6 @@ include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."api.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
 require_once __DIR__."/".SHRUB_PATH."notification/notification.php";
-require_once __DIR__."/".SHRUB_PATH."user/user.php";
 
 json_Begin();
 
@@ -53,6 +52,7 @@ switch ( $action ) {
 							$RESPONSE['limit'] = 100;
 					}
 					
+					$RESPONSE['max_read'] = notification_GetLastReadNotification($user_id);
 					
 					if ( $notification_type == 'unread' ) {
 						$RESPONSE['count'] = notification_CountUnread($user_id);
@@ -83,14 +83,14 @@ switch ( $action ) {
 			$max_read = intval($_POST['max_read']);
 			
 			// Sanity check the value being passed in here.
-			$prev_cursor = user_GetLastReadNotificationByNode($user_id);
+			$prev_cursor = notification_GetLastReadNotification($user_id);
 			$max_notification = notification_Max($user_id);
 			
 			if ( $max_read < $prev_cursor || $max_read > $max_notification ) {
 				json_EmitFatalError_BadRequest("New max_read notification index is out of range", $RESPONSE);
 			}
 			
-			$success = user_SetLastReadNotificationByNode($user_id, $max_read);
+			$success = notification_SetLastReadNotification($user_id, $max_read);
 			if( !$success ) {
 				json_EmitFatalError_Server(null, $RESPONSE);
 			}

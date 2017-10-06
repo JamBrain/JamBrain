@@ -4,7 +4,7 @@ import ContentLoading					from 'com/content-loading/loading';
 import ContentError						from 'com/content-error/error';
 
 import ContentSimple					from 'com/content-simple/simple';
-import ContentUserBar       			from 'com/content-user/user-bar';
+import ContentUserBar from 'com/content-user/user-bar';
 import ContentCommon					from 'com/content-common/common';
 
 import $Node							from '../../shrub/js/node/node';

@@ -5,14 +5,14 @@ export default {
 	GetFresh,
 	GetKeyed,
 	GetFreshKeyed,
-	
+
 	Walk,
 	GetFeed,
-	
+
 	GetMy,
 	Where,
 	What,
-	
+
 	Add,
 	Update,
 	Publish,
@@ -42,7 +42,7 @@ function _Get( node_id ) {
 // http://stackoverflow.com/a/4026828/5678759
 function ArrayDiff(a, b) {
     return a.filter(function(i) {
-    	return b.indexOf(i) < 0;
+		return b.indexOf(i) < 0;
     });
 }
 
@@ -62,7 +62,7 @@ export function Get( ids ) {
 			ids.push(feed[idx].id);
 		}
 	}
-	
+
 	var nodes = [];
 	var cached = [];
 	for ( var idx = 0; idx < ids.length; idx++ ) {
@@ -71,9 +71,9 @@ export function Get( ids ) {
 			cached.push(ids[idx]);
 		}
 	}
-	
+
 	var uncached = ArrayDiff(ids, cached);
-	
+
 	var ret = null;
 	if ( uncached.length > 0 ) {
 		ret = GetFresh(uncached);
@@ -85,7 +85,7 @@ export function Get( ids ) {
 			'fresh': true,	// As fresh as nothing can be
 		});
 	}
-		
+
 	return ret.then( r => {
 			// Append our locally cached values
 			r.node = r.node.concat(nodes);
@@ -114,11 +114,11 @@ export function GetFresh( ids ) {
 					_Cache(r.node[idx]);
 				}
 			}
-			
+
 			// Inform the caller that these results are fresh
 			r.fresh = true;
-		
-			return r;	
+
+			return r;
 		});
 }
 
@@ -127,7 +127,7 @@ export function GetFresh( ids ) {
 function _Keyed( promise, member = 'node', key = 'id' ) {
 	return promise.then( r => {
 		var node = r[member];
-		
+
 		r[member] = {};
 		for ( var idx = 0; idx < node.length; idx++ ) {
 			r[member][node[idx][key]] = node[idx];
@@ -199,22 +199,22 @@ export function GetFeed( id, methods, types, subtypes, subsubtypes, more, limit 
 			}
 		}
 	}
-	
+
 	var query = [];
-	
+
 	if ( more ) {
 		query.push("offset="+more);
 	}
 	if ( limit ) {
 		query.push("limit="+limit);
 	}
-	
+
 	if ( query.length )
 		query = "?"+query.join('&');
 
 	return Fetch.Get(API_ENDPOINT+'/vx/node/feed/'+args.join('/')+query, true)
 		.then( r => {
-			
+
 			return r;
 		});
 }
@@ -242,11 +242,11 @@ export function Add( id, node_type, node_subtype, node_subsubtype ) {
 	}
 	if ( node_subtype ) {
 		args.push(node_subtype);
-	}	
+	}
 	if ( node_subsubtype ) {
 		args.push(node_subsubtype);
-	}	
-	
+	}
+
 	return Fetch.Post(API_ENDPOINT+'/vx/node/add/'+args.join('/'), {});
 
 }
@@ -274,7 +274,7 @@ export function Transform( id, type, subtype, subsubtype ) {
 		new_type += '/'+subtype;
 	if ( subsubtype )
 		new_type += '/'+subsubtype;
-	
+
 	return Fetch.Post(API_ENDPOINT+'/vx/node/transform/'+id+'/'+new_type, {});
 }
 
