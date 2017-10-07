@@ -23,12 +23,12 @@ export default class GamesFilter extends Component {
     render ( props, state ) {
         const {node} = props;
         const { Path, Filter, SubFilter, SubSubFilter} = props;
-        const {showFeatures, showEvent, showVotingCategory, showRatingSort, showRatingSortDesc} = props;
+        const {showFeatured, showEvent, showVotingCategory, showRatingSort, showRatingSortDesc} = props;
         const WithSubFilter = SubFilter ? '/'+SubFilter : '';
         const WithSubSubFilter = SubSubFilter && SubSubFilter != 'featured' ? '/'+SubSubFilter : '';
 
         let ShowFeatured = null;
-        if (showFeatures) {
+        if (showFeatured) {
             ShowFeatured = (
                 <CommonNav>
                     <CommonNavButton href={Path+Filter+WithSubFilter+''} class={SubSubFilter == 'featured' ? '-selected' : ''}><SVGIcon>tag</SVGIcon><div>Featured Event</div></CommonNavButton>

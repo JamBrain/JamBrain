@@ -657,7 +657,8 @@ export default class ViewContent extends Component {
 						onchangefilter={(filter)=>this.setState({gamesFilter: filter})}
 						showFeatured={true}
 						showEvent={true}
-						showVotingCategory={true}
+						showRatingSort={true}
+						showRatingSortDesc={true}
 					/>;
 				}
 
