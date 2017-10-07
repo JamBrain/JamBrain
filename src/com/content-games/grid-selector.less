@@ -1,0 +1,19 @@
+.grid-selector {
+    display: inline-block;
+    float: right;
+    width: 2rem;
+
+    & .input-dropdown {
+
+        & > button {
+            visibility: hidden;
+            height: 0;
+            width: 0;
+        }
+
+        & > .-items {
+            min-width: 10 rem;
+            right: 8rem;
+        }
+    }
+}
