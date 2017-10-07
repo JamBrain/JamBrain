@@ -50,11 +50,7 @@ export default class ContentBox extends Component {
 
 	render( props, state ) {
 		props = Object.assign({}, props);
-
-		var node = props.node;
-		var user = props.user;
-		var path = props.path;
-		var extra = props.extra;
+		const {node, user, path, extra} = props;
 
 		if ( node /* && state.authors */ ) {
 			var Class = ["content-box"];
@@ -133,7 +129,7 @@ export default class ContentBox extends Component {
 //				ShowTrophies.sort(function(a, b) {
 //					sortOrder = ['-first', '-second', '-third'];
 //					regexPattern = /class=\"([^\"]+)/;
-//					return sortOrder.indexOf(regexPattern.exec(a)[1]) - sortOrder.indexOf(regexPattern.exec(b)[1]); 
+//					return sortOrder.indexOf(regexPattern.exec(a)[1]) - sortOrder.indexOf(regexPattern.exec(b)[1]);
 //				});
 			}
 
@@ -157,6 +153,8 @@ export default class ContentBox extends Component {
 					</div>
 				</ButtonLink>
 			);
+		} else if (props.placeHolder) {
+			return <div class={cN(Class, props.class, '-place-holder')} />;
 		}
 		else {
 			return <ContentLoading />;
