@@ -135,21 +135,37 @@ export default class ContentGames extends Component {
 		this.setState({'offset': offset + 12});
 	}
 
+	static matchesFilter(node) {
+		console.log(node);
+		return true;
+	}
+
 	render( props, {feed, added, error, loaded} ) {
+
 		var Class = ['content-base'];
 //        props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 //        props.class.push("content-games");
 //        props.class.push("content-item-boxes");
 
 		var LoadMore = null;
+		const Games = [];
+		const filter = 'll';
 
 		if (error){
 			return <ContentError code="400">"Bad Request : Couldn't load games"</ContentError>;
 		}
 		else if(feed && feed.length > 0)
 		{
-			var Games = feed.map(r => {
-				return <ContentItemBox node={r.node} user={props.user} path={props.path} noevent={props.noevent ? props.noevent : null} />;
+			feed.forEach( r => {
+				if (ContentGames.matchesFilter(r.node, filter)) {
+					Games.push(
+						<ContentItemBox
+							node={r.node}
+							user={props.user}
+							path={props.path}
+							noevent={props.noevent ? props.noevent : null} />
+						);
+				}
 			});
 
 			if ( !props.nomore /*|| added >= 10*/ ){
