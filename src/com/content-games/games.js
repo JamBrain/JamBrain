@@ -10,6 +10,8 @@ import ContentItemBox					from 'com/content-item/item-box';
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
+import GridSelector						from './grid-selector';
+
 //import ContentPost						from 'com/content-post/post';
 //import ContentUser						from 'com/content-user/user';
 import ContentMore						from 'com/content-more/more';
@@ -26,7 +28,9 @@ export default class ContentGames extends Component {
 			hash: {},
 			offset: 12-5, //10-5
 			added: null,
-			loaded: false
+			loaded: false,
+			defaultLayout: 3,
+			layout: 3,
 		};
 
 		this.fetchMore = this.fetchMore.bind(this);
@@ -135,7 +139,7 @@ export default class ContentGames extends Component {
 		this.setState({'offset': offset + 12});
 	}
 
-	render( props, {feed, added, error, loaded} ) {
+	render( props, {feed, added, error, loaded, defaultLayout, layout} ) {
 		var Class = ['content-base'];
 //        props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 //        props.class.push("content-games");
@@ -152,14 +156,28 @@ export default class ContentGames extends Component {
 				return <ContentItemBox node={r.node} user={props.user} path={props.path} noevent={props.noevent ? props.noevent : null} />;
 			});
 
+			while (Games.length % layout !== 0) {
+				Games.push(<ContentItemBox placeHolder={true} />);
+			}
+
 			if ( !props.nomore /*|| added >= 10*/ ){
 				LoadMore = <ContentMore onclick={this.fetchMore} />;
 			}
 
+			const gridClass = `-columns-${layout}`;
+
 			return(
 				<div class={cN(Class, props.class)}>
 					{props.children}
-					<div class='content-boxes'>
+					<GridSelector
+						defaultLayout={defaultLayout}
+						onChangeLayout={
+							(gridLayout) => {
+								this.setState({layout: gridLayout,});
+							}
+						}
+					/>
+					<div class={cN('content-boxes', gridClass)}>
 						{Games}
 					</div>
 					{LoadMore}
