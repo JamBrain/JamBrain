@@ -5,6 +5,7 @@ import CommonNav						from 'com/content-common/common-nav';
 import CommonNavButton					from 'com/content-common/common-nav-button';
 import SVGIcon							from 'com/svg-icon/icon';
 import InputText from 'com/input-text/text';
+import FilterSpecial from 'com/content-games/filter-special';
 
 const FilterDesc = {
     'smart': <div><strong>Smart</strong>: This is the modern balancing filter. It balances the list using a combination of votes and the karma given to feedback. You start seeing diminishing returns after 50 ratings, but you can make up for it by leaving quality feedback.</div>,
@@ -50,13 +51,17 @@ export default class GamesFilter extends Component {
         const {showFeatured, showEvent, showVotingCategory, showRatingSort, showRatingSortDesc} = props;
         const WithSubFilter = SubFilter ? '/'+SubFilter : '';
         const WithSubSubFilter = SubSubFilter && SubSubFilter != 'featured' ? '/'+SubSubFilter : '';
-
+        const tag = 'Linux';
         const ShowTextFilter = (
-            <InputText
-                onmodify={this.onModifyTextFilter}
-                onBlur={this.onTextFilerBlur}
-                onFocus={this.onTextFilerFocus}
-            />
+            <div class='feed-filter'>
+                <span>Filter:</span>
+                <FilterSpecial text={'Linux'} icon={'tag'} onclick={(value) => console.log(value)} />
+                <InputText
+                    onmodify={this.onModifyTextFilter}
+                    onBlur={this.onTextFilerBlur}
+                    onFocus={this.onTextFilerFocus}
+                />
+            </div>
         );
 
         let ShowFeatured = null;
