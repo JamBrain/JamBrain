@@ -1,4 +1,4 @@
 #!/usr/bin/env php
 <?php
-# Stub to redirect into new location.
+# Stub to redirect into the simulator. See simulator/main for documentation
 include __DIR__."/simulator/main";

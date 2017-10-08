@@ -1,0 +1,288 @@
+<?php
+/*
+	stats		Statistical tracking for API information
+ 
+ * Keep track of most expensive API requests overall and by type of API request. (to granularity of 2 levels, /vx/aaa/bbb)
+ * Keep track of most expensive DB queries overall and by type of API request.
+
+
+*/
+
+function stats_init()
+{
+	$GLOBALS["stats_api"] = stats_makenode();
+	$GLOBALS["stats_db"] = stats_makenode();
+	$GLOBALS["stats_dbconnect"] = stats_makenode();
+}
+
+function stats_accumulate($type, $url, $postdata, &$response, &$user)
+{
+	$statsobj = ["type"=>$type, "path"=>$url, "response"=> $response, "username" => $user["username"], "time" => $response["debug"]["request_time"] ];
+
+	$url = substr($url, 3); // skip vx/ prefix
+	$parts = explode("/",$url,3);
+	$statspath = array_merge([$type], array_slice($parts,0,2));
+
+	stats_accumulateobject("stats_api", $statsobj, $statspath);
+
+	// For each DB request in the response, also make an entry
+
+	unset($statsobj["response"]["debug"]); // Avoid storing / printing out entire DB debug path for every DB response.
+	
+	foreach($response["debug"]["db_details"] as $detail)
+	{
+		if($detail["action"] == "query")
+		{
+			$detail["context"] = $statsobj;
+			stats_accumulateobject("stats_db", $detail, $statspath);
+		}
+		if($detail["action"] == "connect")
+		{
+			// Also track DB connect stats, but only in a root node. It's not going to be affected by other factors.
+			stats_accumulateobject("stats_dbconnect",$detail,[]);
+		}
+	}
+
+}
+
+function stats_makenode()
+{
+	return [ "count"=>0, "time"=>0.0, "maxtime" => null, "mintime" => null, "top"=>[], "children" => [] ];
+}
+// Stats $obj will have at least a "time" element, which will be used to keep track of top stats objects and 
+function stats_accumulateobject($var, &$obj, $path)
+{
+	$target = &$GLOBALS[$var];
+	stats_adddata($target, $obj);
+	foreach($path as $pathelement)
+	{
+		if(!key_exists($pathelement, $target["children"]))
+		{
+			$target["children"][$pathelement] = stats_makenode();
+		}
+		$target = &$target["children"][$pathelement];
+		stats_adddata($target, $obj);
+	}
+}
+function stats_adddata(&$target, &$obj)
+{
+	$target["count"]++;
+	$target["time"] += $obj["time"];
+	if($target["maxtime"] === null) $target["maxtime"] = $obj["time"]; else $target["maxtime"] = max($target["maxtime"],$obj["time"]);
+	if($target["mintime"] === null) $target["mintime"] = $obj["time"]; else $target["mintime"] = min($target["mintime"],$obj["time"]);
+	
+	if(count($target["top"]) < TOP_STATS || end($target["top"])["time"] < $obj["time"])
+	{
+		// Merge new object into the array
+		$target["top"][] = $obj;
+		usort($target["top"], "statobj_sortfunc");
+		if(count($target["top"]) > TOP_STATS)
+		{
+			array_pop($target["top"]);
+		}
+	}
+}
+
+function sign($n)
+{
+	return $n>0?1:($n<0?-1:0);
+}
+function statobj_sortfunc($a, $b) // Sort by time descending.
+{
+	return sign($b["time"]-$a["time"]);
+}	
+
+function format_time($t)
+{
+	if($t >= 2)
+	{
+		$t = intval(round($t*1000));
+		return ($t/1000) . "s";
+	}
+	else
+	{
+		$t = intval(round($t*1000*1000));
+		return ($t/1000) . "ms";
+	}
+}
+
+function time_color($t, $basevalue)
+{
+	$green_time = $basevalue;
+	$yellow_time = $basevalue*5;
+	$red_time = $basevalue*25;
+	
+	$rgb = [0,0,0];
+	if($t < $green_time)
+	{
+		$rgb[1] = 1;
+	}
+	else if($t < $yellow_time)
+	{
+		// green-yellow
+		$v = ($t-$green_time)/($yellow_time-$green_time);
+		$rgb[0] = $v;
+		$rgb[1] = 1;
+	}
+	else if($t < $red_time)
+	{
+		// yellow-red
+		$v = ($t-$yellow_time)/($red_time-$yellow_time);
+		$rgb[0] = 1;
+		$rgb[1] = 1-$v;
+	}
+	else
+	{
+		$rgb[0] = 1;
+	}
+	
+	# Setup color
+	for($i=0;$i<3;$i++)
+	{
+		$rgb[$i] = intval(round($rgb[$i] * 80 + 128));
+	}
+	return "#".bin2hex(pack("CCC",$rgb[0],$rgb[1],$rgb[2]));
+}
+
+function dump_stat_node(&$f, &$node, $prefix="root")
+{
+	$count = $node["count"];
+	$time = $node["time"];
+	$min = $node["mintime"];
+	$max = $node["maxtime"];
+	$avg = 0;
+	if($count > 0) { $avg = $time / $count; }	
+
+	fwrite($f, ">>>> Stats ($prefix)\n");
+	fwrite($f, "  Request count: $count\n");
+	fwrite($f, "  Total time on requests: $time s\n");
+	fwrite($f, "  Min time: $min s / Avg time: $avg s / Max time: $max s\n");
+	fwrite($f, "  Top time-consumers:\n");
+	foreach($node["top"] as $topobj)
+	{
+		fwrite($f, print_r($topobj,true) . "\n\n");
+	}
+	fwrite($f, "\n");
+	
+	foreach($node["children"] as $key => $child)
+	{
+		dump_stat_node( $f, $child, $prefix . " / " . $key );
+	}
+}
+
+function dump_stat_var(&$f, $var)
+{
+	dump_stat_node($f, $GLOBALS[$var]);
+}
+
+
+function dump_stat_html_node(&$f, &$node, $prefix="root", $timebasevalue)
+{
+	$count = $node["count"];
+	$time = $node["time"];
+	$min = format_time($node["mintime"]);
+	$max = format_time($node["maxtime"]);
+	$avg = 0;
+	if($count > 0) { $avg = format_time($time / $count); }
+	$time = format_time($time);
+	$color = time_color($node["maxtime"], $timebasevalue);
+
+	$summary = "$prefix - Count: $count, Total Time: $time, Min $min / Avg $avg / Max $max";
+	
+	$html = <<<HTMLCHUNK
+<div class="hierarchy">
+  <div class="container">
+  <div class="summary" style="background-color:$color" onclick="ShowHideElement(this.parentElement)">$summary</div>
+  <div class="collapse" style="display:none">
+  <div class="longcontent">
+  <pre>	
+HTMLCHUNK;
+	fwrite($f, $html);
+
+	foreach($node["top"] as $topobj)
+	{
+		fwrite($f, print_r($topobj,true) . "\n\n");
+	}
+	fwrite($f, "  </pre></div></div></div>\n");
+	
+	foreach($node["children"] as $key => $child)
+	{
+		dump_stat_html_node( $f, $child, $prefix . " / " . $key, $timebasevalue );
+	}
+	fwrite($f, "</div>\n");	
+}
+
+function dump_stat_html_var(&$f, $var)
+{
+	$node = &$GLOBALS[$var];
+	$basevalue = 0.005;
+	$count = $node["count"];
+	$time = $node["time"];
+	if($count > 0) { $basevalue = ($time / $count)/2; }
+	dump_stat_html_node($f, $node, "root", $basevalue);
+}
+
+function dump_stats()
+{
+	$f = OpenStatsFile();
+	fwrite($f, "\nDB Connect stats:\n");
+	dump_stat_var($f, "stats_dbconnect");
+
+	fwrite($f, "\n\n####################\nAPI Access stats:\n");
+	dump_stat_var($f, "stats_api");
+
+	fwrite($f, "\n\n####################\nDB Query stats:\n");
+	dump_stat_var($f, "stats_db");
+	
+	fclose($f);
+	
+	
+	
+	// Also generate HTML report
+	
+	global $event_name;
+	
+	$f = OpenHtmlStatsFile();
+	$html = <<<HTMLSTART
+<html>
+<head><title>Performance stats for $event_name</title></head>
+<body>
+<script>
+function ShowHideElement(value)
+{
+	var children = value.getElementsByClassName('collapse');
+	var element = children[0];
+	if(element.style.display == 'none')
+	{
+		element.style.display = 'inline';
+	}
+	else
+	{
+		element.style.display = 'none';
+	}
+}
+</script>
+<style>
+div.hierarchy { padding-left:20px; }
+div.container { }
+div.summary { margin:5px; padding:10px; background-color:#CCC }
+div.longcontent { margin:5px; padding:10px; background-color:#aaa }
+</style>
+
+HTMLSTART;
+
+	fwrite($f,  $html);
+
+	fwrite($f, "\n<h1>DB Connect stats:</h1>\n");
+	dump_stat_html_var($f, "stats_dbconnect");
+
+	fwrite($f, "\n<h1>API Access stats:</h1>\n");
+	dump_stat_html_var($f, "stats_api");
+
+	fwrite($f, "\n<h1>DB Query stats:</h1>\n");
+	dump_stat_html_var($f, "stats_db");
+
+
+	fwrite($f, "</body></html>\n");
+	fclose($f);
+}
