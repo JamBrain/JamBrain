@@ -152,3 +152,11 @@ function OpenHtmlStatsFile()
 	$log = $htmlbase . "." . $eventindex . ".stats.html";
 	return fopen($log, "a");
 }
+
+function OpenRawStatsFile()
+{
+	global $htmlbase;
+	global $eventindex;
+	$log = $htmlbase . "." . $eventindex . ".rawstats.csv";
+	return fopen($log, "a");
+}

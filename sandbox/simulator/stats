@@ -8,6 +8,8 @@
 
 */
 
+define("HISTOGRAM_POWER",1.01);
+
 function stats_init()
 {
 	$GLOBALS["stats_api"] = stats_makenode();
@@ -42,13 +44,51 @@ function stats_accumulate($type, $url, $postdata, &$response, &$user)
 			stats_accumulateobject("stats_dbconnect",$detail,[]);
 		}
 	}
-
 }
 
 function stats_makenode()
 {
-	return [ "count"=>0, "time"=>0.0, "maxtime" => null, "mintime" => null, "top"=>[], "children" => [] ];
+	return [ "count"=>0, "time"=>0.0, "maxtime" => null, "mintime" => null, "top"=>[], "children" => [], "histogram" => [] ];
 }
+
+function histogram_accumulate(&$stats, $value)
+{
+	if($value == 0) $value = 0.000001; // Avoid errors in output.
+	$index = intval(round(log($value)/log(HISTOGRAM_POWER)));
+	if(!isset($stats['histogram'][$index])) 
+	{ 
+		$stats['histogram'][$index] = 1; 
+	} else {
+		$stats['histogram'][$index]++; 
+	}
+}
+// Resolve histogram into a 101-entry sequence of 0th to 100th percentiles (minimum through maximum values in accordance with how frequently they are encountered
+function histogram_complete(&$stats)
+{
+	$h = $stats['histogram'];
+	$count = $stats['count'];
+	$keys = array_keys($h);
+	sort($keys);
+	$outdata = [];
+	$cursor = -1;
+	$taken = 0;
+	foreach($keys as $k)
+	{
+		$taken += $h[$k];
+		$max_cursor = intval(floor($taken * 100 / $count));
+		if($max_cursor > $cursor)
+		{
+			$keyvalue = pow(HISTOGRAM_POWER, $k);
+			for($i = $cursor+1; $i <= $max_cursor; $i++)
+			{
+				$outdata[$i] = $keyvalue;
+			}
+			$cursor = $max_cursor;
+		}
+	}
+	return $outdata;
+}
+
 // Stats $obj will have at least a "time" element, which will be used to keep track of top stats objects and 
 function stats_accumulateobject($var, &$obj, $path)
 {
@@ -70,6 +110,8 @@ function stats_adddata(&$target, &$obj)
 	$target["time"] += $obj["time"];
 	if($target["maxtime"] === null) $target["maxtime"] = $obj["time"]; else $target["maxtime"] = max($target["maxtime"],$obj["time"]);
 	if($target["mintime"] === null) $target["mintime"] = $obj["time"]; else $target["mintime"] = min($target["mintime"],$obj["time"]);
+	
+	histogram_accumulate($target, $obj["time"]);
 	
 	if(count($target["top"]) < TOP_STATS || end($target["top"])["time"] < $obj["time"])
 	{
@@ -213,7 +255,7 @@ HTMLCHUNK;
 }
 
 function dump_stat_html_var(&$f, $var)
-{
+{	
 	$node = &$GLOBALS[$var];
 	$basevalue = 0.005;
 	$count = $node["count"];
@@ -221,6 +263,25 @@ function dump_stat_html_var(&$f, $var)
 	if($count > 0) { $basevalue = ($time / $count)/2; }
 	dump_stat_html_node($f, $node, "root", $basevalue);
 }
+
+
+function dump_stat_csv_node(&$f, &$node, $prefix="root")
+{
+	$hist = histogram_complete($node);
+	
+	fwrite($f, $prefix . "," . implode(",",$hist) . "\n");
+		
+	foreach($node["children"] as $key => $child)
+	{
+		dump_stat_csv_node( $f, $child, $prefix . "/" . $key );
+	}
+}
+
+function dump_stat_csv_var(&$f, $var)
+{
+	dump_stat_csv_node($f, $GLOBALS[$var], $var);
+}
+
 
 function dump_stats()
 {
@@ -284,5 +345,13 @@ HTMLSTART;
 
 
 	fwrite($f, "</body></html>\n");
+	fclose($f);
+	
+	
+	// Also generate a CSV file that can be used to graph performance in a spreadsheet program.
+	$f = OpenRawStatsFile();
+	dump_stat_csv_var($f, "stats_dbconnect");
+	dump_stat_csv_var($f, "stats_api");
+	dump_stat_csv_var($f, "stats_db");
 	fclose($f);
 }
