@@ -22,6 +22,8 @@ export default class GamesFilter extends Component {
         this.onModifyTextFilter = this.onModifyTextFilter.bind(this);
         this.onTextFilerFocus = this.onTextFilerFocus.bind(this);
         this.onTextFilerBlur = this.onTextFilerBlur.bind(this);
+
+        this.state = {allowShowFilters: true};
     }
 
     onModifyTextFilter (e) {
@@ -35,14 +37,14 @@ export default class GamesFilter extends Component {
     }
 
     onTextFilerFocus (e) {
-        console.log('Focus', e);
+        this.setState({allowShowFilters: false});
     }
 
     onTextFilerBlur(e) {
-        console.log('Blur', e);
+        this.setState({allowShowFilters: true});
     }
 
-    render ( props, state ) {
+    render ( props, {allowShowFilters}) {
         const {node} = props;
         const { Path, Filter, SubFilter, SubSubFilter} = props;
         const {showFeatured, showEvent, showVotingCategory, showRatingSort, showRatingSortDesc} = props;
@@ -58,7 +60,7 @@ export default class GamesFilter extends Component {
         );
 
         let ShowFeatured = null;
-        if (showFeatured) {
+        if (showFeatured && allowShowFilters) {
             ShowFeatured = (
                 <CommonNav>
                     <CommonNavButton href={Path+Filter+WithSubFilter+''} class={SubSubFilter == 'featured' ? '-selected' : ''}><SVGIcon>tag</SVGIcon><div>Featured Event</div></CommonNavButton>
@@ -68,7 +70,7 @@ export default class GamesFilter extends Component {
         }
 
         let ShowEvent = null;
-        if (showEvent) {
+        if (showEvent && allowShowFilters) {
             ShowEvent = (
                 <CommonNav>
                     <CommonNavButton href={Path+Filter+'/all'+WithSubSubFilter} class={SubFilter == 'all' ? '-selected' : ''}><SVGIcon>gamepad</SVGIcon><div>All</div></CommonNavButton>
@@ -80,7 +82,7 @@ export default class GamesFilter extends Component {
         }
 
         let ShowVotingCategory = null;
-        if (showVotingCategory) {
+        if (showVotingCategory && allowShowFilters) {
             ShowVotingCategory = (
                 <CommonNav>
                     <CommonNavButton href={Path+'overall/'+SubFilter} class={'-no-icon '+(Filter == 'overall' ? '-selected' : '')}><div>Overall</div></CommonNavButton>
@@ -97,7 +99,7 @@ export default class GamesFilter extends Component {
 
         let ShowRatingSort = null;
         let ShowRatingSortDesc = null;
-        if (showRatingSort) {
+        if (showRatingSort && allowShowFilters) {
             if (showRatingSortDesc) {
                 ShowRatingSortDesc = (<CommonBody>{FilterDesc[Filter]}</CommonBody>);
             }
