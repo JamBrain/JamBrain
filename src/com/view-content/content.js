@@ -106,6 +106,7 @@ export default class ViewContent extends Component {
 
 	getContent( {node, user, path, extra, featured} ) {
 		var EditMode = extra && extra.length && extra[extra.length-1] == 'edit';
+		const GamesFeedFilter = this.state.gamesFilter;
 
 		if ( node.type === 'post' ) {
 			return <ViewContentPost node={node} user={user} path={path} extra={extra} edit={EditMode} />;
@@ -162,7 +163,7 @@ export default class ViewContent extends Component {
 					<Common node={node} user={user} >
 						<CommonBody><h2>Tag: {node.name}</h2></CommonBody>
 					</Common>
-					<ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} />
+					<ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} filter={GamesFeedFilter} />
 				</div>
 			);
 
@@ -312,7 +313,7 @@ export default class ViewContent extends Component {
 						}
 
 						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} />);
-						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['authors']} subsubtypes={SubSubType ? SubSubType : ""} />);
+						View.push(<ContentGames node={node} user={user} path={path} extra={extra} methods={['authors']} subsubtypes={SubSubType ? SubSubType : ""} filter={GamesFeedFilter} />);
 					}
 					else if ( ViewType == 'article' ) {
 
@@ -507,7 +508,7 @@ export default class ViewContent extends Component {
 				Methods.push('parent');
 				//Methods.push('superparent');	// Why doesn't this work? It's unnecssary, but it should still work
 
-				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />;
+				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={Methods} subsubtypes={SubFilter ? SubFilter : null} filter={GamesFeedFilter} />;
 
 //				let SubSubType = 'compo+jam';	// alphabetical
 //				if ( extra && extra.length > 1 ) {
@@ -658,7 +659,7 @@ export default class ViewContent extends Component {
 						showFeatured={true}
 						showEvent={true}
 						showRatingSort={true}
-						showRatingSortDesc={true}
+						showRatingSort={true}
 					/>;
 				}
 
@@ -676,7 +677,7 @@ export default class ViewContent extends Component {
 						<div id="content">
 							{ShowNavRoot}
 							{ShowFilters}
-							<ContentGames node={NodeArg} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} />
+							<ContentGames node={NodeArg} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} filter={GamesFeedFilter}/>
 						</div>
 					);
 				}
