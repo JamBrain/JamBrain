@@ -141,9 +141,16 @@ export default class ContentGames extends Component {
 		}
 		//console.log(filter);
 		if (filter && filter.active) {
-			const {text} = filter;
-			if (text && (node.name.indexOf(text) > -1 || node.body.indexOf(text) > -1)) {
-				return true;
+			const {words} = filter;
+			if (words.length > 0) {
+				let matches = 0;
+				words.forEach((text) => {
+
+					if (text && (node.name.indexOf(text) > -1 || node.body.indexOf(text) > -1)) {
+						matches++;
+					}
+				});
+				return matches > 0;
 			}
 			//TODO: check tags
 			return !text;

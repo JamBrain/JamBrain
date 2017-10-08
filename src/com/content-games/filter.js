@@ -17,6 +17,10 @@ const FilterDesc = {
     'grade': <div><strong>Grade</strong>: This filter lets you find the games that have the most ratings.</div>,
 };
 
+const PatternTag = /#[\w\d-]*/g;
+const PatternAtName = /@[\w\d-]*/g;
+const PatternWord = /[^ ]+/g;
+
 export default class GamesFilter extends Component {
     constructor ( props ) {
         super(props);
@@ -33,7 +37,14 @@ export default class GamesFilter extends Component {
         if (onchangefilter && e.target) {
             //console.log('New filter is', e.target.value);
             const { value } = e.target;
-            onchangefilter({text: value, active: !!value});
+            const freeWords = value.replace(PatternTag, '').replace(PatternAtName, '');
+            onchangefilter({
+                text: value,
+                active: !!value,
+                words: freeWords.match(PatternWord),
+                atnames: value.match(PatternAtName),
+                tags: value.match(PatternTag),
+            });
         }
     }
 
