@@ -135,8 +135,19 @@ export default class ContentGames extends Component {
 		this.setState({'offset': offset + 12});
 	}
 
-	static matchesFilter(node) {
-		console.log(node);
+	static matchesFilter(node, filter) {
+		if (node === undefined) {
+			return false;
+		}
+		//console.log(filter);
+		if (filter && filter.active) {
+			const {text} = filter;
+			if (text && (node.name.indexOf(text) > -1 || node.body.indexOf(text) > -1)) {
+				return true;
+			}
+			//TODO: check tags
+			return !text;
+		}
 		return true;
 	}
 
@@ -149,8 +160,7 @@ export default class ContentGames extends Component {
 
 		var LoadMore = null;
 		const Games = [];
-		const filter = 'll';
-
+		const {filter} = props;
 		if (error){
 			return <ContentError code="400">"Bad Request : Couldn't load games"</ContentError>;
 		}
