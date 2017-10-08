@@ -4,6 +4,7 @@ import CommonBody						from 'com/content-common/common-body';
 import CommonNav						from 'com/content-common/common-nav';
 import CommonNavButton					from 'com/content-common/common-nav-button';
 import SVGIcon							from 'com/svg-icon/icon';
+import InputText from 'com/input-text/text';
 
 const FilterDesc = {
     'smart': <div><strong>Smart</strong>: This is the modern balancing filter. It balances the list using a combination of votes and the karma given to feedback. You start seeing diminishing returns after 50 ratings, but you can make up for it by leaving quality feedback.</div>,
@@ -18,6 +19,27 @@ const FilterDesc = {
 export default class GamesFilter extends Component {
     constructor ( props ) {
         super(props);
+        this.onModifyTextFilter = this.onModifyTextFilter.bind(this);
+        this.onTextFilerFocus = this.onTextFilerFocus.bind(this);
+        this.onTextFilerBlur = this.onTextFilerBlur.bind(this);
+    }
+
+    onModifyTextFilter (e) {
+        e.preventDefault();
+        const {onchangefilter} = this.props;
+        if (onchangefilter && e.target) {
+            //console.log('New filter is', e.target.value);
+            const { value } = e.target;
+            onchangefilter({text: value, active: !!value});
+        }
+    }
+
+    onTextFilerFocus (e) {
+        console.log('Focus', e);
+    }
+
+    onTextFilerBlur(e) {
+        console.log('Blur', e);
     }
 
     render ( props, state ) {
@@ -26,6 +48,14 @@ export default class GamesFilter extends Component {
         const {showFeatured, showEvent, showVotingCategory, showRatingSort, showRatingSortDesc} = props;
         const WithSubFilter = SubFilter ? '/'+SubFilter : '';
         const WithSubSubFilter = SubSubFilter && SubSubFilter != 'featured' ? '/'+SubSubFilter : '';
+
+        const ShowTextFilter = (
+            <InputText
+                onmodify={this.onModifyTextFilter}
+                onBlur={this.onTextFilerBlur}
+                onFocus={this.onTextFilerFocus}
+            />
+        );
 
         let ShowFeatured = null;
         if (showFeatured) {
@@ -85,6 +115,7 @@ export default class GamesFilter extends Component {
 
         return (
             <Common node={node} class="filter-item filter-game">
+                {ShowTextFilter}
                 {ShowFeatured}
                 {ShowEvent}
                 {ShowVotingCategory}
