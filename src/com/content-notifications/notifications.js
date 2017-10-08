@@ -6,8 +6,6 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import ContentMore						from 'com/content-more/more';
 
-import DropdownNotification				from '../dropdown-notification/notification';
-
 import NotificationsBase				from 'com/content-notifications/base';
 import Notification						from 'com/content-notifications/notification';
 
