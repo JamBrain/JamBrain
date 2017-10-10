@@ -45,13 +45,11 @@ function GenerateRandomPostTitle()
 // Future: something much more meaningful. Also figure out how to include image uploads, links, other fun features.
 function GenerateRandomPostText($maxParagraphs = 3)
 {
-	$output = "";
-
-	// Add text to the post
 	global $usewikitext;
 	if($usewikitext)
 	{
 		$paragraphs = random_int(1,$maxParagraphs);
+		$output = "";
 		for($p =0;$p<$paragraphs;$p++)
 		{
 			$sentences = random_int(1,10);
@@ -59,10 +57,10 @@ function GenerateRandomPostText($maxParagraphs = 3)
 			{
 				$output .= GenerateRandomPhrase(3,17) . ". ";
 			}
-			$output .= "\n";
+			$output .= "\n\n";
 		}
+		return $output;
 	}
-
 
 	// Add youtube video to the post
 	global $useyoutubevideos;
@@ -76,6 +74,7 @@ function GenerateRandomPostText($maxParagraphs = 3)
 	$output .= "\n\n";
 
 	return $output;
+
 }
 
 function GenerateRandomPhrase($minWords, $maxWords)
@@ -343,3 +342,4 @@ function YoutubeRandomVideo()
 
 	return "";
 }
+

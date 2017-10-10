@@ -87,8 +87,6 @@ $verbose = true; // Display all of the details about what's going on?
 $verboselog = true; // Keep all details about what's going on in a log.
 $useprevioususers = true; // Load the set of users from the previous test event, instead of creating new users.
 $usewikitext = true;
-$useyoutubevideos = true;
-$youtubevideochance = 10; // if 10 then every tenth video will have a YT video
 
 define("TOP_STATS",10); // keep top 10 stats
 
