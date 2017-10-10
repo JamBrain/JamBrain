@@ -50,6 +50,7 @@ function GenerateRandomPostText($maxParagraphs = 3)
 	{
 		$paragraphs = random_int(1,$maxParagraphs);
 		$output = "";
+
 		for($p =0;$p<$paragraphs;$p++)
 		{
 			$sentences = random_int(1,10);
@@ -57,9 +58,8 @@ function GenerateRandomPostText($maxParagraphs = 3)
 			{
 				$output .= GenerateRandomPhrase(3,17) . ". ";
 			}
-			$output .= "\n\n";
+			$output .= "\n";
 		}
-		return $output;
 	}
 
 	// Add youtube video to the post
@@ -313,7 +313,7 @@ function YoutubeRandomVideo()
 		$url = "https://www.youtube.com/watch?v=";
 
 		// Using a fixed pool of YT videos (LudumDare keynotes)
-		$videoids = [
+		$videoids = array(
 			"Hrkv31Lep9s",
 			"dOcstOra19w",
 			"u3R70NlGvKk",
@@ -328,7 +328,7 @@ function YoutubeRandomVideo()
 			"PaYpgb3vTrY",
 			"Dtu-tStT75Q",
 			"e1LVakqPJXE"
-		];
+		);
 
 		// chose which video to display and build it's url
 		$index = random_int(0,count($videoids)-1);
