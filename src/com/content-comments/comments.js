@@ -169,7 +169,7 @@ export default class ContentComments extends Component {
 		const authors = this.state.authors;
 		const comment = this.state.newcomment;
 		const author = authors[comment.author];
-		const allowAnonymous = this.props.node.meta['allow-anonymous-comments'] ? true : false;
+		const allowAnonymous = parseInt(this.props.node.meta['allow-anonymous-comments']);
 
 		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove allowAnonymous={allowAnonymous} /></div>;
 	}

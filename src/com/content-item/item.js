@@ -36,7 +36,7 @@ export default class ContentItem extends Component {
 
 			'linksShown': 1,
 
-			'allowAnonymous': node.meta['allow-anonymous-comments'] ? true : false,
+			'allowAnonymous': parseInt(node.meta['allow-anonymous-comments']),
 		};
 
 		for ( let i = 0; i < 9; i++ ) {
