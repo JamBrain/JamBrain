@@ -67,7 +67,7 @@ function GenerateRandomPostText($maxParagraphs = 3)
 	// Add youtube video to the post
 	global $useyoutubevideos;
 	global $youtubevideochance;
-	if ($useyoutubevideos and random_int(0, $youtubevideochance) == 0)
+	if ($useyoutubevideos and random_int(0, $youtubevideochance-1) == 0)
 	{
 		$output .= "\n";
 		$output .= YoutubeRandomVideo();
@@ -315,24 +315,24 @@ function YoutubeRandomVideo()
 
 		// Using a fixed pool of YT videos (LudumDare keynotes)
 		$videoids = [
-			1 => "Hrkv31Lep9s",
-			2 => "dOcstOra19w",
-			3 => "u3R70NlGvKk",
-			4 => "mFef1bOn4EI",
-			5 => "8rLma_1RPU8",
-			6 => "XVrgCgtKobI",
-			7 => "vPneI5IYwnc",
-			8 => "9OjIIhm8ZVk",
-			9 => "sw3hv23GVo0",
-			10 => "OZ_jgNQNqzI",
-			11 => "W9BurFrSNpA",
-			12 => "PaYpgb3vTrY",
-			13 => "Dtu-tStT75Q",
-			14 => "e1LVakqPJXE"
+			"Hrkv31Lep9s",
+			"dOcstOra19w",
+			"u3R70NlGvKk",
+			"mFef1bOn4EI",
+			"8rLma_1RPU8",
+			"XVrgCgtKobI",
+			"vPneI5IYwnc",
+			"9OjIIhm8ZVk",
+			"sw3hv23GVo0",
+			"OZ_jgNQNqzI",
+			"W9BurFrSNpA",
+			"PaYpgb3vTrY",
+			"Dtu-tStT75Q",
+			"e1LVakqPJXE"
 		];
 
 		// chose which video to display and build it's url
-		$index = random_int(1,count($videoids))-1;
+		$index = random_int(0,count($videoids)-1);
 		$url .= $videoids[$index];
 
 		Message("Linking to Youtube video " . $url);
