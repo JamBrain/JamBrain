@@ -1,5 +1,5 @@
 @import 'defs.less';
-
+@import '../BrandColors/brandcolors.less';
 /*
 iframe {
 	margin: auto;
@@ -27,6 +27,7 @@ iframe {
     	position: relative;
 
         & > .-overlay {
+
             position: absolute;
 
             width: 100%;
@@ -36,6 +37,7 @@ iframe {
             z-index: 10;
 
             & > .-play {
+
     			position: absolute;
 
     			top: 50%;
@@ -69,6 +71,12 @@ iframe {
 
     			font-size: 1.5em;
     			color: @COL_L;
+
+                &.youtube{
+                    &:hover {
+                        background: @bc-youtube;
+                    }
+                }
 
     			opacity: 0;
     			transform: scale(1, 1);
