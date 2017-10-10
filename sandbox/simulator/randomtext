@@ -45,13 +45,11 @@ function GenerateRandomPostTitle()
 // Future: something much more meaningful. Also figure out how to include image uploads, links, other fun features.
 function GenerateRandomPostText($maxParagraphs = 3)
 {
-	$output = "";
-
-	// Add text to the post
 	global $usewikitext;
 	if($usewikitext)
 	{
 		$paragraphs = random_int(1,$maxParagraphs);
+		$output = "";
 		for($p =0;$p<$paragraphs;$p++)
 		{
 			$sentences = random_int(1,10);
@@ -59,23 +57,11 @@ function GenerateRandomPostText($maxParagraphs = 3)
 			{
 				$output .= GenerateRandomPhrase(3,17) . ". ";
 			}
-			$output .= "\n";
+			$output .= "\n\n";
 		}
+		return $output;
 	}
 
-
-	// Add youtube video to the post
-	global $useyoutubevideos;
-	global $youtubevideochance;
-	if ($useyoutubevideos and random_int(0, $youtubevideochance) == 0)
-	{
-		$output .= "\n";
-		$output .= YoutubeRandomVideo();
-	}
-
-	$output .= "\n\n";
-
-	return $output;
 }
 
 function GenerateRandomPhrase($minWords, $maxWords)
@@ -302,44 +288,3 @@ function MarkovRandomPhrase($minwords = 3, $maxwords = 25)
 	return implode(" ",$words);
 }
 
-/// Generate 'Random' Youtube Video
-
-function YoutubeRandomVideo()
-{
-	global $useyoutubevideos;
-
-	if ($useyoutubevideos)
-	{
-
-		$url = "https://www.youtube.com/watch?v=";
-
-		// Using a fixed pool of YT videos (LudumDare keynotes)
-		$videoids = [
-			1 => "Hrkv31Lep9s",
-			2 => "dOcstOra19w",
-			3 => "u3R70NlGvKk",
-			4 => "mFef1bOn4EI",
-			5 => "8rLma_1RPU8",
-			6 => "XVrgCgtKobI",
-			7 => "vPneI5IYwnc",
-			8 => "9OjIIhm8ZVk",
-			9 => "sw3hv23GVo0",
-			10 => "OZ_jgNQNqzI",
-			11 => "W9BurFrSNpA",
-			12 => "PaYpgb3vTrY",
-			13 => "Dtu-tStT75Q",
-			14 => "e1LVakqPJXE"
-		];
-
-		// chose which video to display and build it's url
-		$index = random_int(1,count($videoids))-1;
-		$url .= $videoids[$index];
-
-		Message("Linking to Youtube video " . $url);
-
-
-		return $url;
-	}
-
-	return "";
-}
