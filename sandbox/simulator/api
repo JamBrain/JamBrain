@@ -1,0 +1,599 @@
+<?php
+/*
+	api		Functions that wrap calling the API directly
+			Also, code to make the HTTP calls
+	
+*/
+
+
+function ApiNotificationFeed(&$user, $type, $offset = null, $limit = null)
+{
+	$args = [];
+	if($offset != null) { $args[] = "offset=$offset"; }
+	if($limit != null) { $args[] = "limit=$limit"; }
+	$add = "";
+	if(count($args)>0) { $add = "?".implode("&",$args); }
+	$value = LdApi::Get("vx/notification/$type/feed".$add, $user);
+	if(!ResponseIs200($value)) return null;
+	return $value['feed'];
+}
+
+function ApiNotificationCount(&$user, $type)
+{
+	$value = LdApi::Get("vx/notification/$type/count", $user);
+	if(!ResponseIs200($value)) return null;
+	return $value['count'];
+}
+
+function ApiNotificationMarkRead(&$user, $max_read)
+{
+	$value = LdApi::Post("vx/notification/markread","max_read=$max_read", $user);
+	if(!ResponseIs200($value)) return null;
+	return $value['max_read'];
+}
+
+
+// Get one or more nodes
+function ApiNodeGet(&$user, $nodeidlist)
+{
+	$value = LdApi::Get("vx/node/get/".$nodeidlist, $user);
+	if($value != null)
+	{
+		return $value["node"];
+	}
+	return null; 
+}
+
+function ApiNodeGetMy(&$user)
+{
+	$value = LdApi::Get("vx/node/getmy", $user);
+	return $value;
+}
+
+// Enumerate nodes related to an event
+function ApiNodeFeed(&$user, $parentid, $methods, $type, $count, $offset = 0)
+{ // GET node/feed/:node_id/:methods[]/:type/[:subtype]/[:subsubtype] ?offset= ?limit=
+
+	$value = LdApi::Get("vx/node/feed/" . $parentid . "/" . $methods . "/" . $type . "?offset=" . $offset . "&limit=" . $count, $user);
+	if($value != null)
+	{
+		return $value["feed"];
+	}
+	return null;
+}
+
+// Add item(/game[/compo, /jam]) or post (typically)
+// Pass type,subtype,subsubtype together as $type.
+function ApiNodeAdd(&$user, $parentid, $type)
+{  // POST node/add/:parent/:type/:subtype/:subsubtype
+	$value = LdApi::Post("vx/node/add/" . $parentid . "/" . $type , "", $user);
+	if($value != null && key_exists("id",$value))
+	{
+		return $value["id"];
+	}
+	return null;
+}
+
+// Edit name and body of a node (either can be skipped with null) (tag is also an option, but overlooking that for now)
+function ApiNodeUpdate(&$user, $nodeid, $newname = null, $newbody = null)
+{ // POST node/update/:node_id
+	$poststring = "";
+	if($newname != null) { $poststring = "name=".urlencode($newname); }
+	if($newbody != null)
+	{
+		if($poststring != "") { $poststring .= "&"; }
+		$poststring .= "body=".urlencode($newbody);
+	}
+
+	$value = LdApi::Post("vx/node/update/" . $nodeid , $poststring, $user);
+	return ResponseIs200($value);
+}
+
+// Change the type of a node (e.g. change item/game to item/game/compo, item/game/jam)
+function ApiNodeTransform(&$user, $nodeid, $newtype)
+{ // POST node/transform/:node_id/:type/[:subtype]/[:subsubtype]
+	$value = LdApi::Post("vx/node/transform/" . $nodeid . "/" . $newtype, "", $user);
+	return ResponseIs200($value);
+}
+
+// Just publish the node.
+function ApiNodePublish(&$user, $nodeid)
+{ // POST node/publish/:node_id
+	$value = LdApi::Post("vx/node/publish/" . $nodeid, "", $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeLoveAdd(&$user, $nodeid) //GET node/love/add/:node_id
+{
+	$value = LdApi::Get("vx/node/love/add/" . $nodeid, $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeLoveRemove(&$user, $nodeid) //GET node/love/remove/:node_id
+{
+	$value = LdApi::Get("vx/node/love/remove/" . $nodeid, $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeMetaAdd(&$user, $nodeid, $key, $value) // POST node/meta/add/:node_id
+{
+	$value = LdApi::Post("vx/node/meta/add/".$nodeid, urlencode($key)."=".urlencode($value), $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeMetaRemove(&$user, $nodeid, $key) // POST node/meta/remove/:node_id
+{
+	$value = LdApi::Post("vx/node/meta/remove/".$nodeid, urlencode($key)."=", $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeStarAdd(&$user, $nodeid) // GET node/star/add/:node_id
+{
+	$value = LdApi::Get("vx/node/star/add/".$nodeid, $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeStarRemove(&$user, $nodeid) // GET node/star/remove/:node_id
+{
+	$value = LdApi::Get("vx/node/star/remove/".$nodeid, $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeLinkAdd(&$user, $node_a, $node_b, $key) // POST node/link/add/:node_a/:node_b
+{
+	$value = LdApi::Post("vx/node/link/add/$node_a/$node_b", urlencode($key)."=", $user);
+	return ResponseIs200($value);
+}
+
+function ApiNodeLinkRemove(&$user, $node_a, $node_b, $key) // POST node/link/remove/:node_a/:node_b
+{
+	$value = LdApi::Post("vx/node/link/remove/$node_a/$node_b", urlencode($key)."=", $user);
+	return ResponseIs200($value);
+}
+
+function ApiNoteAdd(&$user, $nodeid, $body, $anonymous) // POST note/add
+{
+	$anon = "";
+	if($anonymous !== null)
+	{
+		$anon = "&anonymous=".$anonymous;
+	}
+	$value = LdApi::Post("vx/note/add/".$nodeid,"parent=0&body=".urlencode($body).$anon, $user);
+	if($value) { return $value["note"]; }
+	return null;
+}
+
+function ApiNoteUpdate(&$user, $parentid, $noteid, $newbody)
+{
+	$value = LdApi::Post("vx/note/update/".$noteid,"node=".$parentid."&body=".urlencode($body), $user);
+	return ResponseIs200($value);
+}
+
+// Get all notes for a node
+function ApiNoteGet(&$user, $nodeid)
+{
+	$value = LdApi::Get("vx/note/get/" . $nodeid, $user);
+	if($value)
+	{
+		return $value["note"];
+	}
+	return null;
+}
+
+function ApiNoteLoveAdd(&$user, $noteid)
+{
+	$value = LdApi::Get("vx/note/love/add/" . $noteid, $user);
+	return ResponseIs200($value);
+}
+
+function ApiNoteLoveRemove(&$user, $noteid)
+{
+	$value = LdApi::Get("vx/note/love/remove/" . $noteid, $user);
+	return ResponseIs200($value);
+}
+
+
+// Does the site have this username already?
+function ApiUserHave($username)
+{
+	$value = LdApi::Post("vx/user/have","name=".urlencode($username));
+	if($value != null)
+	{
+		return !($value["available"]);
+	}
+	return false;
+}
+
+// Create a new user (by email address)
+function ApiUserCreate($email, &$user)
+{
+	$value = LdApi::Post("vx/user/create","mail=".urlencode($email), $user);
+	if($value != null)
+	{
+		return $value["sent"];
+	}
+	return false;
+}
+
+function ApiUserActivate(&$user, $id, $auth_key)
+{
+	$name = $user["username"];
+	$pw = $user["password"];
+	
+	$postString = "id=".$id."&key=".$auth_key."&name=".urlencode($name)."&pw=".urlencode($pw);
+	$value = LdApi::Post("vx/user/activate",$postString,$user);
+	
+	if($value != null)
+	{
+		return $value["response_httpcode"] == "201";
+	}
+	return false;
+}
+
+function ApiUserLogin(&$user)
+{
+	$login = $user["username"];
+	$pw = $user["password"];
+	
+	$value = LdApi::Post("vx/user/login", "login=".urlencode($login)."&pw=".urlencode($pw), $user);
+	
+	if($value != null)
+	{
+		if($value["response_httpcode"] == "200")
+		{
+			return $value["id"];
+		} 
+	}
+	return 0;
+}
+
+
+function ApiThemeIdeaGetmy(&$user, $event_id)
+{
+	$value = LdApi::Get("vx/theme/idea/getmy/".$event_id, $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["ideas"];
+}
+
+function ApiThemeIdeaAdd(&$user, $event_id, $themeidea)
+{
+	$value = LdApi::Post("vx/theme/idea/add/".$event_id, "idea=".urlencode($themeidea), $user);
+	if(!ResponseIs201($value)) { return null; }
+	return $value["response"];
+}
+
+function ApiThemeIdeaRemove(&$user, $event_id, $themeid)
+{
+	$value = LdApi::Post("vx/theme/idea/remove/".$event_id, "id=$themeid", $user);
+	if(!ResponseIs201($value)) { return null; }
+	return $value["response"];
+}
+
+// Returns all theme ideas
+function ApiThemeIdeaVoteGet(&$user, $event_id)
+{
+	$value = LdApi::Get("vx/theme/idea/vote/get/".$event_id, $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["ideas"];
+}
+
+// Return your theme slaughter votes
+function ApiThemeIdeaVoteGetmy(&$user, $event_id)
+{
+	$value = LdApi::Get("vx/theme/idea/vote/getmy/".$event_id, $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["votes"];
+}
+
+// Vote (either +1, -1, or 0)
+function ApiThemeIdeaVoteSet(&$user, $idea_id, $vote)
+{
+	$votetype = [ -1 => "flag", 0 => "no", 1 => "yes" ];
+	$type = $votetype[$vote];
+	$value = LdApi::Get("vx/theme/idea/vote/$type/$idea_id", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["id"]; // Vote ID. Not that it matters.
+}
+
+// Get a single page (The API can also return all pages, but don't care at the moment)
+function ApiThemeListGet(&$user, $event_id, $page)
+{
+	$value = LdApi::Get("vx/theme/list/get/$event_id/$page", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["lists"][$page];
+}
+
+function ApiThemeListVoteGetmy($user, $event_id)
+{
+	$value = LdApi::Get("vx/theme/list/vote/getmy/$event_id", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["votes"];
+}
+
+
+// Vote (either +1, -1, or 0)
+function ApiThemeListVoteSet(&$user, $themelist_id, $vote)
+{
+	$votetype = [ -1 => "no", 0 => "maybe", 1 => "yes" ];
+	$type = $votetype[$vote];
+	$value = LdApi::Get("vx/theme/list/vote/$type/$themelist_id", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["id"]; // Vote ID. Not that it matters.
+}
+
+function ApiGradeAdd(&$user, $node, $grade, $score)
+{
+	$value = LdApi::Get("vx/grade/add/$node/$grade/$score", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["id"]; // Vote ID. Not that it matters.
+}
+
+function ApiGradeRemove(&$user, $node, $grade)
+{
+	$value = LdApi::Get("vx/grade/remove/$node/$grade", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["changed"];
+}
+
+function ApiGradeGetmy(&$user, $node)
+{
+	$value = LdApi::Get("vx/grade/getmy/$node", $user);
+	if(!ResponseIs200($value)) { return null; }
+	return $value["grade"]; // Vote ID. Not that it matters.
+}
+
+
+function ResponseIs200($response)
+{
+	if($response != null)
+	{
+		return $response["response_httpcode"] == "200"; 
+	}
+	return false;
+}
+
+function ResponseIs201($response)
+{
+	if($response != null)
+	{
+		return $response["response_httpcode"] == "201"; 
+	}
+	return false;
+}
+
+
+////
+//// Low level API interface code
+////
+
+class LdApi
+{
+	static $debug_api = false;
+
+	static $lastRequestLog = null;
+	static $lastResponseLog = null;
+
+	public static function PrintLastRequestResponse()
+	{
+		print( "\x1b[31mLast Request/Response:\x1b[m\n"); 
+		print( "\x1b[31m" . LdApi::$lastRequestLog . "\x1b[m\n"); 
+		print( "\x1b[31m" . LdApi::$lastResponseLog . "\x1b[m\n"); 
+		
+		// Also put these in the error log for easier reference.
+		LogErr("Last Request/Response:\n");
+		LogErr(LdApi::$lastRequestLog . "\n");
+		LogErr(LdApi::$lastResponseLog . "\n");
+	}
+
+	static function DebugRequestLog($log)
+	{
+		if(LdApi::$debug_api)
+		{
+			Verbose($log);
+		}
+		else
+		{
+			VerboseHidden($log);
+		}		
+		LdApi::$lastRequestLog = $log;
+	}
+	static function DebugResponseLog($log)
+	{
+		if(LdApi::$debug_api)
+		{
+			Verbose($log);
+		}
+		else
+		{
+			VerboseHidden($log);
+		}		
+		LdApi::$lastResponseLog = $log;	
+	}
+
+	static function SetRequestUser($curl, &$user)
+	{
+		if($user != null)
+		{
+			// Generate cookie string for user and set it.
+			$cookies = [];
+			foreach($user["cookies"] as $c => $v)
+			{
+				$cookies[] = $c."=".$v;
+			}
+			$cookiestring = implode("; ", $cookies);
+			curl_setopt($curl, CURLOPT_COOKIE, $cookiestring);
+			if($cookiestring != "")
+			{
+				// debug debug Verbose("Sending Cookie: ".$cookiestring);
+			}
+		}
+	}
+	static function UpdateUserCookie($headers, &$user)
+	{
+		if($user != null)
+		{
+			$lines = explode("\r\n", $headers);
+			foreach($lines as $v)
+			{
+				$parts = explode(": ",$v, 2);
+				if($parts[0] == "Set-Cookie")
+				{
+					// debug debug Verbose("Receive Set-Cookie: ".$parts[1]);
+					
+					$c = explode(";", $parts[1]);
+					$cookiedata = explode("=",$c[0],2);
+					// interpret "=deleted" as the condition to delete a cookie, as the code to check the expires time is annoying in php.
+					if($cookiedata[1] == "deleted")
+					{
+						unset($user["cookies"][$cookiedata[0]]);
+					}
+					else
+					{
+						$user["cookies"][$cookiedata[0]] = $cookiedata[1];
+					}
+				}			
+			}
+		}
+	}
+	static function ForUser(&$user)
+	{
+		if($user != null)
+		{
+			return " for user " . $user["username"];
+		}
+		return "";
+	}
+  
+	public static function GetRaw($url)
+	{
+
+		$c = curl_init($url);
+		
+		curl_setopt($c, CURLOPT_HEADER, false);		
+		curl_setopt($c, CURLOPT_FOLLOWLOCATION, true);		
+		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($c, CURLOPT_HTTPGET, true);
+
+		$result = curl_exec($c);
+		$success = !($result === false);
+
+		if(!$success)
+		{
+			ReportError("Error getting '".$url ."' - " . curl_error($c));
+		}
+		
+
+		curl_close($c);
+		
+		return $result;
+	}  
+  
+	public static function Get($url, &$user = NULL, $report_error=true)
+	{
+		global $apibase;
+		$outputObject = NULL;
+		$urlpath = $url;
+		$url = $apibase . $url;
+		
+		LdApi::DebugRequestLog("GET '".$url."'".LdApi::ForUser($user));
+		
+		// Add "debug" get request
+		if(false === strpos($url,"?")) { $url .= "?debug"; } else { $url .= "&debug"; }		
+		
+		$c = curl_init($url);
+		
+		curl_setopt($c, CURLOPT_HEADER, true);		
+		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($c, CURLOPT_HTTPGET, true);
+		
+		LdApi::SetRequestUser($c, $user);
+		
+		$content = "";
+		$result = curl_exec($c);
+		$success = !($result === false);
+		if($success)
+		{
+			$parts = explode("\r\n\r\n",$result);
+			while($parts[0] == "HTTP/1.1 100 Continue") { array_shift($parts); }
+			$headers = $parts[0];
+			$content = $parts[1];
+		
+			$outputObject = json_decode($content, true);
+			$httpcode = curl_getinfo($c, CURLINFO_HTTP_CODE);
+			$outputObject["response_httpcode"] = $httpcode;			
+			
+			stats_accumulate("GET", $urlpath, null, $outputObject, $user);
+			
+			LdApi::UpdateUserCookie($headers, $user);
+		}
+		if(!$success && $report_error)
+		{
+			ReportError("Error getting '".$url ."'". LdApi::ForUser($user). " - " . curl_error($c));
+		}
+		
+		LdApi::DebugResponseLog("Response '" . $content . "'");
+		if(substr($content,0,4) == "HTTP")
+		{
+			Verbose("Debug: '" . $result);
+		}			
+
+		curl_close($c);
+		
+		return $outputObject;
+	}
+	public static function Post($url, $postdata, &$user = NULL)
+	{
+		global $apibase;
+
+		$outputObject = NULL;
+		$urlpath = $url;
+		$url = $apibase . $url;		
+		
+		LdApi::DebugRequestLog("POST '".$url."' with data '".$postdata."'".LdApi::ForUser($user));
+		
+		// Add "debug" get request
+		if(false === strpos($url,"?")) { $url .= "?debug"; } else { $url .= "&debug"; }		
+		
+		$c = curl_init($url);
+		
+		curl_setopt($c, CURLOPT_HEADER, true);
+		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($c, CURLOPT_POST, true);
+		curl_setopt($c, CURLOPT_POSTFIELDS, $postdata);
+		
+		LdApi::SetRequestUser($c, $user);
+		
+		$content = "";
+		$result = curl_exec($c);
+		$success = !($result === false);
+		if($success)
+		{
+			$parts = explode("\r\n\r\n",$result);
+			while($parts[0] == "HTTP/1.1 100 Continue") { array_shift($parts); }
+			$headers = $parts[0];
+			$content = $parts[1];
+		
+			$outputObject = json_decode($content, true);
+			$httpcode = curl_getinfo($c, CURLINFO_HTTP_CODE);
+			$outputObject["response_httpcode"] = $httpcode;
+			
+			stats_accumulate("POST",$urlpath, $postdata, $outputObject, $user);
+			
+			LdApi::UpdateUserCookie($headers, $user);
+		}
+		if(!$success && $report_error)
+		{
+			ReportError("Error getting '".$url ."'". LdApi::ForUser($user) . " - " . curl_error($c));
+		}
+		
+		LdApi::DebugResponseLog("Response '" . $content . "'");
+		if(substr($content,0,4) == "HTTP")
+		{
+			Verbose("Debug: '" . $result);
+		}
+
+		curl_close($c);
+		return $outputObject;	
+	
+	}
+}

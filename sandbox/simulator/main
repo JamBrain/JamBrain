@@ -1,0 +1,130 @@
+<?php
+/*
+	Summary of this program and its intent:
+	
+This is an API test for the ludumdare website. It's goal is to interact with all API functionality by simulating a ludumdare.
+Users will be created, an event will be created, users will post, read other users posts, post comments, like, etc.
+Users will interact with the theme creation process stages, will publish games, will rate each other's games, and will observe the results.
+The script will keep track of (some/much of) the data it generates, and will verify that what it sees is what it expects.
+(Future) Users will maliciously interact with the API to verify that things cannot be changed (e.g. votes, theme creation) outside of the time when they are enabled to be changed.
+
+The exact flow will be documented in the data structures that guide the process, below.
+
+*/
+
+const CONFIG_PATH = "../../src/shrub/";
+const SHRUB_PATH = "../../src/shrub/src/";
+
+# Use shrub wrapper for db access
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."constants.php";
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
+require_once __DIR__."/".SHRUB_PATH."node/node.php";
+require_once __DIR__."/".SHRUB_PATH."user/user.php";
+require_once __DIR__."/".SHRUB_PATH."theme/theme.php";
+
+# Include subcomponents
+include __DIR__."/api";
+include __DIR__."/helper";
+include __DIR__."/logging";
+include __DIR__."/randomtext";
+include __DIR__."/run_model";
+include __DIR__."/stats";
+
+
+
+if ( count($argv) < 3  || ($argv[2] != "actions" && $argv[2] != "minutes")) {
+	print "LudumDare Event simulator. Quick summary:\n";
+	print "  Creates a new event, and simulates a number of users interacting with it.\n";
+	print "  This is an API test, and does not aim to test the website's rendering.\n";
+	print "  (It does however provide a good way to generate data to test the website)\n";
+	print "\n";
+	print "Run simulation for 1000 actions per stage: ".$argv[0]." 1000 actions\n";
+	print "Run simulation for 5 minutes per stage: ".$argv[0]." 5 minutes\n";
+	print "\n";
+	exit(1);
+}
+
+
+# Decide what model to use for this run
+$model = "model_default";
+
+
+
+# Load model
+include __DIR__."/".$model;
+
+
+$runminutes = null;
+$runactions = null;
+if($argv[2] == "minutes")
+{
+	$runminutes = intval($argv[1]);
+} 
+else 
+{
+	$runactions = intval($argv[1]);
+}
+
+
+////////////////////////////////
+// Some global settings
+
+$enable_file_logs = true;
+$logbase = "/tmp/ld_event"; // Logs and scratch data will be put in /tmp
+$eventbase = "ld_event"; // Put event related files in current directory
+$htmlbase = "ld_event"; // Put html report in current directory.
+// Generate 3 kinds of log. 
+//   <name>.<eventIndex>.event (Event information, user/password list)
+//   <name>.<eventIndex>.log (Full Detail Verbose log)
+//   <name>.<eventIndex>.err (Summary log and errors)
+
+$apibase = "http://api.ludumdare.org/";
+$usercount = 40; // Something like 40-50 is good for reasonable size tests.
+$keepallposts = true;
+$keeppostcount = 100; // Number of posts per user to keep, when keep all posts is false (which it should be for high user counts or long runtimes / stress environments.)
+$verbose = true; // Display all of the details about what's going on?
+$verboselog = true; // Keep all details about what's going on in a log.
+$useprevioususers = true; // Load the set of users from the previous test event, instead of creating new users.
+$usewikitext = true;
+
+define("TOP_STATS",10); // keep top 10 stats
+
+
+
+// Figure out event index to use for this run, and start loggers.
+
+$events = db_QueryFetch(
+		"SELECT
+			n.id, n.name, n.slug, 
+			".DB_FIELD_DATE('n.modified', 'modified')."
+		FROM
+			".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
+		WHERE n.type = 'event'
+		ORDER BY n.id
+		LIMIT 500
+		;"
+	);
+
+$eventindex = count($events) + 1;
+
+if($enable_file_logs)
+{
+	OpenLogs($eventindex);
+}
+
+stats_init();
+
+if($usewikitext)
+{
+	SetupTextGeneration();
+}
+
+ModelSanityCheck();
+ModelExecute();
+RunMagic();
+
+dump_stats();
+
+CloseLogs();
+exit(0);
