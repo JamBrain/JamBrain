@@ -64,16 +64,36 @@ export default class InputDropdown extends Component {
 
 	render( props, {show, value} ) {
 		if ( props.items && props.items.length ) {
+			let ClickCatcher = null;
 			let ShowItems = null;
 			if ( show ) {
 				ShowItems = [];
 
-				// Need 'that' because 'this' is the function created below
-				let that = this;
 				let idx = 0;
-				props.items.forEach(function(item) {
+				props.items.forEach((item) => {
+
+					if (props.useClickCatcher) {
+						ClickCatcher = (
+							<div
+								class="-click-catcher"
+								onclick={this.onClickItem}
+								data-index={idx}
+								data-id={item[0]}
+							/>
+						);
+					} else {
+						ClickCatcher = null;
+					}
+
 					ShowItems.push(
-						<div class="-item" onclick={that.onClickItem} data-index={idx++} data-id={item[0]}>{item[1]}</div>
+						<div class="-item"
+							onclick={this.onClickItem}
+							data-index={idx++}
+							data-id={item[0]}
+						>
+							{item[1]}
+							{ClickCatcher}
+						</div>
 					);
 				});
 
