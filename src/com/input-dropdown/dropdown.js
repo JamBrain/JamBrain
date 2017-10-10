@@ -52,6 +52,7 @@ export default class InputDropdown extends Component {
 	// Clicking on an item
 	onClickItem( e ) {
 		// Only do click if the item has an index (i.e. not a separator)
+		e.preventDefault();
 		if ( e.target.dataset.hasOwnProperty('index') ) {
 			if ( this.props.onmodify ) {
 				this.props.onmodify(parseInt(e.target.dataset.id));
