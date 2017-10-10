@@ -211,7 +211,8 @@ export default class ContentItem extends Component {
 		let update = null;
 		if (anon) {
 			update = $NodeMeta.Remove(node.id, {'allow-anonymous-comments': 0});
-		} else {
+		}
+		else {
 			update = $NodeMeta.Add(node.id, {'allow-anonymous-comments': 1});
 		}
 

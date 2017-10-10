@@ -41,7 +41,7 @@ function _Get( node_id ) {
 }
 
 export function InvalidateNodeCache( node_id ) {
-	NODE_CACHE[node_id] = undefined;
+	NODE_CACHE[node_id] = null;
 }
 
 // http://stackoverflow.com/a/4026828/5678759
