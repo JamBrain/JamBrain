@@ -153,7 +153,8 @@ export default class ContentBox extends Component {
 					</div>
 				</ButtonLink>
 			);
-		} else if (props.placeHolder) {
+		}
+		else if (props.placeHolder) {
 			return <div class={cN(Class, props.class, '-place-holder')} />;
 		}
 		else {

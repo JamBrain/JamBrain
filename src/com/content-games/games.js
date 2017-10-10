@@ -164,9 +164,9 @@ export default class ContentGames extends Component {
 				LoadMore = <ContentMore onclick={this.fetchMore} />;
 			}
 
-			const gridClass = `-columns-${layout}`;
+			const gridClass = '-columns-' + layout;
 
-			return(
+			return (
 				<div class={cN(Class, props.class)}>
 					{props.children}
 					<GridSelector
