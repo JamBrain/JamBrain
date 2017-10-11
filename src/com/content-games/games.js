@@ -168,13 +168,13 @@ export default class ContentGames extends Component {
 		var LoadMore = null;
 		const Games = [];
 		const {filter} = props;
-		if (error){
+		if ( error ){
 			return <ContentError code="400">"Bad Request : Couldn't load games"</ContentError>;
 		}
-		else if(feed && feed.length > 0)
+		else if( feed && feed.length > 0 )
 		{
 			feed.forEach( r => {
-				if (ContentGames.matchesFilter(r.node, filter)) {
+				if ( ContentGames.matchesFilter(r.node, filter) ) {
 					Games.push(
 						<ContentItemBox
 							node={r.node}

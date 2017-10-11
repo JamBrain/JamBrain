@@ -475,7 +475,7 @@ export default class ViewContent extends Component {
 							SubSubFilter={SubSubFilter}
 							Path={`${this.props.path}/${extra[0]}/`}
 							node={node}
-							onchangefilter={(filter)=>this.setState({gamesFilter: filter})}
+							onchangefilter={(filter)=>{this.setState({'gamesFilter': filter});}}
 							showEvent={true}
 							showRatingSort={true}
 							showRatingSortDesc={true}
@@ -488,7 +488,7 @@ export default class ViewContent extends Component {
 							SubSubFilter={SubSubFilter}
 							Path={`${this.props.path}/${extra[0]}/`}
 							node={node}
-							onchangefilter={(filter)=>this.setState({gamesFilter: filter})}
+							onchangefilter={(filter)=>{this.setState({'gamesFilter': filter});}}
 							showEvent={true}
 							showVotingCategory={true}
 						/>;
@@ -655,7 +655,7 @@ export default class ViewContent extends Component {
 						SubSubFilter={SubSubFilter}
 						Path={`${this.props.path}/games/`}
 						node={node}
-						onchangefilter={(filter)=>this.setState({gamesFilter: filter})}
+						onchangefilter={(filter)=>{this.setState({'gamesFilter': filter});}}
 						showFeatured={true}
 						showEvent={true}
 						showRatingSort={true}
