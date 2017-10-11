@@ -58,7 +58,7 @@ export default class GamesFilter extends Component {
         //this.setState({allowShowFilters: true});
     }
 
-    render ( props, {allowShowFilters, dropDownItemLookup} ) {
+    render ( props, {allowShowFilters} ) {
         const {node} = props;
         const {Path, Filter, SubFilter, SubSubFilter} = props;
         const {showFeatured, showEvent, showVotingCategory, showRatingSort, showRatingSortDesc} = props;
@@ -137,7 +137,7 @@ export default class GamesFilter extends Component {
             }
             ShowEvent = (
                 <InputDropdown
-                    value={dropDownItemLookup.eventType.selected}
+                    value={value}
                     items={Items}
                     useClickCatcher={true}
                     class='-filter-event'
@@ -212,7 +212,7 @@ export default class GamesFilter extends Component {
                     value={value}
                     items={Items}
                     useClickCatcher={true}
-                    class='-filter-event'
+                    class='-filter-category'
                     selfManaged={false}
                 />
             );
@@ -221,9 +221,6 @@ export default class GamesFilter extends Component {
         let ShowRatingSort = null;
         let ShowRatingSortDesc = null;
         if ( showRatingSort && allowShowFilters ) {
-            if (showRatingSortDesc) {
-                ShowRatingSortDesc = dropDownItemLookup.sort.desc;
-            }
             let Items = [
                [
                    1,

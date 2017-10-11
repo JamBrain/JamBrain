@@ -70,12 +70,30 @@ export default class InputDropdown extends Component {
 			let ShowItems = null;
 			let SelectedField = null;
 
+			if ( !props.hideSelectedField) {
+				props.items.forEach(([dataId, Contents, Overlay]) => {
+					if ( dataId == value ) {
+						SelectedField = (
+							<button type="button" onclick={this.onShow}>
+								{Contents}
+							</button>
+						);
+					}
+				});
+				if (SelectedField == null) {
+					SelectedField = (
+						<button type="button" onclick={this.onShow}>
+							{props.items[0][1]}
+						</button>
+					);
+				}
+			}
+
 			if ( show ) {
 				ShowItems = [];
 
 				let idx = 0;
 				props.items.forEach(([dataId, Contents, Overlay]) => {
-					console.log(dataId, Contents, Overlay, value);
 					if ( !props.hideSelectedField && dataId == value ) {
 
 						SelectedField = (
