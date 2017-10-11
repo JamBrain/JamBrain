@@ -1,4 +1,6 @@
 
+@import 'defs.less';
+
 .piechart-figure {
 
     display: flex;
@@ -39,6 +41,29 @@
                 height: 32px;
                 border-radius: 50%;
             }
+
+            p {
+                display: inline-block;
+                margin-left: 1em;
+                margin-top: 0.5em;
+                margin-bottom: 0.5em;
+
+            }
         }
     }
 }
+
+
+.piechart_color_1 {stroke: @COL_A;}
+.piechart_color_2 {stroke: @COL_B;}
+.piechart_color_3 {stroke: @COL_C;}
+.piechart_color_4 {stroke: @COL_AB;}
+.piechart_color_5 {stroke: @COL_BC;}
+.piechart_color_6 {stroke: @COL_CA;}
+
+.ledgend_color_1 {background-color: @COL_A;}
+.ledgend_color_2 {background-color: @COL_B;}
+.ledgend_color_3 {background-color: @COL_C;}
+.ledgend_color_4 {background-color: @COL_AB;}
+.ledgend_color_5 {background-color: @COL_BC;}
+.ledgend_color_6 {background-color: @COL_CA;}

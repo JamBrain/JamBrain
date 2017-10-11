@@ -13,11 +13,12 @@ export default class PieChart extends Component {
         let angle = props.angle;
         let offset = 100 - props.offset + 25;
         let color = props.color;
+        let segmentclass = "piechart-segment piechart_color_"+color;
 
         let dash = angle + " " + (100 - angle);
 
         return (
-            <circle class="piechart-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke={color} stroke-width="6" stroke-dasharray={dash} stroke-dashoffset={offset}></circle>
+            <circle class={segmentclass} cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke-width="6" stroke-dasharray={dash} stroke-dashoffset={offset}></circle>
         );
     }
 }
