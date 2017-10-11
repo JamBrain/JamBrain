@@ -29,8 +29,25 @@
 		"no-unsafe-negation": "error",
 		"use-isnan": "warn",
 		"valid-typeof": "error",
+		"block-spacing": "warn",
+		"brace-style": ["warn", "stroustrup"],
+		"comma-style": ["error", "last"],
+		"consistent-this": ["warn", "that"],
+		"func-call-spacing": ["error", "never"],
+		"func-names": ["warn", "as-needed"],
 		"object-curly-spacing": ["error", "never"],
+		"key-spacing": ["warn", { "beforeColon": false }],
+		"keyword-spacing": ["warn", {"before": true, "after": true}],
+		"no-mixed-operators": "warn",
+		"no-new-object": "error",
+		"no-whitespace-before-property": "error",
 		"array-bracket-spacing": ["error", "never"],
-		"comma-spacing": ["error", {"before": false, "after": true}]
+		"comma-spacing": ["error", {"before": false, "after": true}],
+		"object-curly-spacing": ["warn", "never"],
+		"quote-props": ["warn", "always"],
+		"space-before-blocks": "warn",
+		"space-before-function-paren": ["warn", "never", {"asyncArrow": "always"}],
+		"switch-colon-spacing": "error",
+		"jsx-quotes": ["warn", "prefer-double"]
 	}
 }

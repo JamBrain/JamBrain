@@ -9,19 +9,25 @@
 		}
 	},
 	"rules": {
-		"semi": ["error", "always"],
-		"eol-last": ["error", "always"],
 		"indent": ["error", "tab"],
-		"no-mixed-spaces-and-tabs": "error",
-		"no-trailing-spaces": "error",
-		"no-multi-spaces": "error",
+		
 		"no-unused-vars": "error",
+
 		"no-empty-character-class": "error",			// prevents certain regex mistakes
 		no-invalid-regexp: "error"						// prevents other regex errors
 		no-regex-spaces: "error"						// ja
 		
+		wrap-regex: "error"
+		
 		no-sparse-arrays: "error"						// stop stray commas ['red',,'blue'] in arrays. doesn't affect trailing comma
 		
 		valid-jsdoc: "error"							// require proper /** JS DOC **/ syntax
+		
+		
+		nonblock-statement-body-position: ["error", "beside"]
+		
+		quotes: ["error", "single", { "allowTemplateLiterals": true }]		// somehow disable backticks
+		
+		space-in-parens: ["error", "never"]									// TODO: enable only for if/for etc
 	}
 }
