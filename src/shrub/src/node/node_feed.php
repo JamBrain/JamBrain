@@ -351,6 +351,13 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 				$SORT_ORDER = 'ASC';
 				break;
 
+			case 'target':
+				// All links that reference this
+
+				// NOTE: This WAS a double inner join, but maybe it's worth fixing this.
+
+				break;
+
 			case 'cool':
 			case 'smart':
 			case 'grade':

@@ -8,7 +8,7 @@ export default class DialogUnfinished extends Component {
 
 	componentDidMount() {
 	}
-	
+
 	render( props, {} ) {
 		return (
 			<DialogCommon title="Unavailable" ok>

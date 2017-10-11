@@ -248,6 +248,15 @@ function json_Emit( $out, $allow_jsonp = true ) {
 		if ( getenv('REDIRECT_QUERY_STRING') ) {
 			$out['debug']['redirect_query'] = getenv('REDIRECT_QUERY_STRING');
 		}
+		
+		global $json_starttime;
+		$json_endtime = microtime(true);
+		$totaltime = $json_endtime - $json_starttime;
+		
+		$out['debug']['request_time'] = $totaltime;
+		
+		global $DB_DEBUG_DATA;
+		$out['debug']['db_details'] = $DB_DEBUG_DATA;
 	}
 	
 	// Output the Page
@@ -319,6 +328,16 @@ function json_ArgCount() {
 
 function json_Begin() {
 	global $RESPONSE, $REQUEST;
+	
+	// Track starting time
+	global $json_starttime;
+	$json_starttime = microtime(true);
+	
+	if ( defined('SH_PHP_DEBUG') && isset($_GET['debug']) ) {
+		// If debugging enabled, tell the system to track additional data.
+		global $DB_ENABLE_DEBUG;
+		$DB_ENABLE_DEBUG = true;
+	}
 	
 	// Begin
 	$RESPONSE = json_NewResponse();

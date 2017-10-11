@@ -1,0 +1,427 @@
+<?php
+/*
+	helper		Functions that provide utility functionality on top of the API or to provide other services.
+	
+*/
+
+
+
+function RunMagic()
+{
+	Verbose("Kickoff cron magic.php task to update necessary values in the db.");
+	exec("php ~/www/private/magic.php");
+}
+
+
+
+////
+//// Common functions to assist in doing normal tasks in the site
+////
+
+function User_DataStructure($username, $password)
+{
+	$user = [
+		"username" => $username,
+		"password" => $password,
+		"cookies" => array(),
+		
+		// Further info for tracking data this user has posted and interacted with.
+		"joinedevent" => false,
+		"game_node" => 0,
+		"posts" => array(),
+		"notes" => array(),
+		"love" => array(),
+		"rated_games" => array(),
+		"postedimin" => false,
+		"publishedgame" => false,
+	];
+	
+	return $user;
+}
+
+function User_Load($username, $password)
+{
+	$user = User_DataStructure($username, $password);
+
+	// Login the user
+	$userid = ApiUserLogin($user);
+	if(!$userid)
+	{
+		ReportError("Unable to login new user.");
+		return null;	
+	}
+	
+	$user["id"] = $userid;
+	
+	Verbose("Loaded user " . $username);
+	
+	return $user;
+}
+
+function User_Create()
+{
+	$username = GenerateRandomUsername();
+	$password = GenerateRandomPassword();
+	
+	// Construct a user object
+	$user = User_DataStructure($username, $password);
+	
+	// Determine if username is in use
+	for($i = 0; $i < 20; $i++)
+	{
+		if(ApiUserHave($username))
+		{
+			// Username is in use, pick another
+			$username = GenerateRandomUsername();
+			$user["username"] = $username;
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	// API request to create user
+	$email = $username . "@ludumdare.org";
+	
+	$mailsent = ApiUserCreate($email, $user);
+	if(!$mailsent)
+	{
+		Verbose("Warning: User create didn't send mail. It's not strictly necessary to catch mail for this, but you probably don't have the mail catcher running.");
+	}
+	
+	// Dig out the email auth token from the database and activate the user
+	$userdata = user_GetByMail($email);
+	$id = $userdata["id"];
+	$key = $userdata["auth_key"];
+	
+	if(!ApiUserActivate($user, $id, $key))
+	{
+		ReportError("Error while creating user.");
+		return null;
+	}
+	
+		
+	// Login the user
+	$userid = ApiUserLogin($user);
+	if(!$userid)
+	{
+		ReportError("Unable to login new user.");
+		return null;	
+	}
+	
+	$user["id"] = $userid;
+	
+	Verbose("Created user " . $username);
+	
+	return $user;
+}
+
+function User_EnsureJoined(&$user)
+{
+	global $event_nodeid;
+	if(!$user["joinedevent"])
+	{
+		Verbose("Creating a game to join the event...");
+		$user["game_node"] = ApiNodeAdd($user, $event_nodeid, "item/game");
+		$user["joinedevent"] = true;
+	}
+}
+
+function GetRandomRecentPost(&$user)
+{
+	Verbose("Fetching a random post...");
+	$nodes = GetRecentEventPostNodes($user);
+	if(count($nodes) == 0) return null;
+	$i = random_int(1,count($nodes))-1;
+	$data = ApiNodeGet($user, $nodes[$i]["id"]);
+	if($data == null)
+	{
+		ReportError("Error fetching node " . $nodes[$i]);
+		return null;
+	}
+	return $data[0];
+}
+
+function GetRandomTopGame(&$user)
+{
+	Verbose("Fetching a random game...");
+	$nodes = GetTopEventGameNodes($user);
+	if(count($nodes) == 0) return null;
+	$i = random_int(1,count($nodes))-1;
+	$data = ApiNodeGet($user, $nodes[$i]["id"]);
+	if($data == null)
+	{
+		ReportError("Error fetching node " . $nodes[$i]);
+		return null;
+	}
+	return $data[0];
+}
+
+function GetTopGames(&$user)
+{
+	Verbose("Reading over the top games...");
+	$nodes = GetTopEventGameNodes($user);
+	return GetNodesForFeed($user, $nodes);
+}
+
+function GetRecentEventPosts(&$user)
+{
+	Verbose("Reading over the recent posts...");
+	$nodes = GetRecentEventPostNodes($user);
+	return GetNodesForFeed($user, $nodes);
+}
+
+function WalkFeedId(&$feed, $key) { $feed = $feed["id"]; }
+
+function GetNodesForFeed(&$user, $feed)
+{
+	if(count($feed) == 0) return [];
+	$fullnodes = [];
+	$chunks = array_chunk($feed, 30);
+	foreach($chunks as $c)
+	{
+		array_walk($c, "WalkFeedId");
+		$idjoin = implode("+",$c);
+		$data = ApiNodeGet($user, $idjoin);
+		if($data != null)
+		{
+			foreach($data as $n)
+			{
+				$fullnodes[$n["id"]] = $n;
+			}
+		}
+	}
+	$outdata = [];
+	foreach($feed as $n)
+	{
+		$data = $fullnodes[$n["id"]];
+		if($data != null) { $outdata[] = $data; }
+	}
+	if(count($outdata) == 0) return null;
+	return $outdata;
+}
+
+function GetRecentEventPostNodes(&$user, $count = 60)
+{
+	global $event_nodeid;
+	$maxpage = 30;
+	$have = 0;
+	$out = [];
+	while($have < $count)
+	{
+		$fetch = $count - $have;
+		if($fetch > $maxpage) $fetch = $maxpage;
+		
+		$newdata = ApiNodeFeed($user, $event_nodeid, "all", "post", $fetch, $have);
+		if($newdata === null)
+		{
+			ReportError("Error getting feed.");
+		}
+		else
+		{
+			$out = array_merge($out, $newdata);
+		}
+		$have += $fetch;
+	}
+	
+	if(count($out) == 0) return null;
+	return $out;
+}
+
+function GetTopEventGameNodes(&$user, $count = 60)
+{
+	global $event_nodeid;
+	$maxpage = 30;
+	$have = 0;
+	$out = [];
+	while($have < $count)
+	{
+		$fetch = $count - $have;
+		if($fetch > $maxpage) $fetch = $maxpage;
+		
+		$newdata = ApiNodeFeed($user, $event_nodeid, "smart+parent", "item/game/compo+jam", $fetch, $have);
+		if($newdata === null)
+		{
+			ReportError("Error getting feed.");
+		}
+		else
+		{
+			$out = array_merge($out, $newdata);
+		}
+		$have += $fetch;
+	}
+	
+	if(count($out) == 0) return null;
+	return $out;
+}
+
+function GetNodeComments(&$user, $nodeid)
+{
+	Verbose("Reading Comments for node ".$nodeid."...");
+	$notes = ApiNoteGet($user, $nodeid);
+	if($notes === null)
+	{
+		ReportError("Failed to get notes for node ".$nodeid);
+	}
+	return $notes;
+}
+
+function CreatePost(&$user, $title, $body)
+{
+	User_EnsureJoined($user);
+	
+	Verbose("Creating a new post.");
+	$nodeid = ApiNodeAdd($user, $user["game_node"], "post");
+	if($nodeid == null)
+	{
+		ReportError("Failure to add new post!");
+		return;
+	}	
+	if(!ApiNodeUpdate($user, $nodeid, $title, $body))
+	{
+		ReportError("Failure to update post being created.");
+		return;
+	}
+	if(!ApiNodePublish($user, $nodeid))
+	{
+		ReportError("Failure to publish post being created.");
+		return;
+	}
+	$user["posts"][] = $nodeid; // Track post for later use.
+	return $nodeid;
+}
+
+function CreateComment(&$user, $nodeid, $body, $anonymous = null)
+{
+	User_EnsureJoined($user);
+	$anon = $anonymous ? "n anonymous": "";
+	Verbose("Posting a" . $anon. " comment to node " . $nodeid);
+	$id = ApiNoteAdd($user, $nodeid, $body, $anonymous);
+	if(!$id)
+	{
+		ReportError("Failed to add comment");
+		return null;
+	}
+	$user["notes"][] = [ "Node" => $nodeid, "Note" => $id ];
+}
+
+function LikeNode(&$user, $nodeid)
+{
+	# If we haven't already, add a like to this node. 
+	if(array_key_exists($nodeid, $user["love"])) return;
+
+	Verbose("Add like for Node " . $nodeid);
+	if(!ApiNodeLoveAdd($user, $nodeid))
+	{
+		ReportError("Error adding node love for ".$nodeid);
+		return;
+	}
+	$user["love"][] = $nodeid;
+}
+
+function LikeComment(&$user, $commentid)
+{
+	# If we haven't already, add a like to this comment
+	if(array_key_exists(-$commentid, $user["love"])) return;
+	
+	Verbose("Add like for Note " . $commentid);
+	if(!ApiNoteLoveAdd($user, $commentid))
+	{
+		ReportError("Error adding note love for ".$commentid);
+		return;
+	}
+	$user["love"][] = -$commentid;
+}
+
+function UnlikeRandom(&$user)
+{
+	$count = count($user["love"]);
+	if($count < 1) return;
+	
+	$item = random_int(1,$count)-1;
+	$remove = $user["love"][$item];
+	if($remove == null) { print_r($user); }
+	if($item != ($count-1)) $user["love"][$item] = $user["love"][$count-1];
+	unset($user["love"][$count-1]);
+	$user["love"] = array_values($user["love"]); // Reindex for good measure.
+	
+	RemoveLike($user, $remove);
+}
+
+function RemoveLike(&$user, $thing)
+{
+	// Positive numbers = node love, Negative numbers = note love
+	if($thing < 0)
+	{
+		$thing = -$thing;
+		Verbose("Remove note love ". $thing);
+		if(!ApiNoteLoveRemove($user, $thing))
+		{
+			ReportError("Failed to remove note love for ". $thing);
+		}
+	}
+	else
+	{
+		Verbose("Remove node love ". $thing);
+		if(!ApiNodeLoveRemove($user, $thing))
+		{
+			ReportError("Failed to remove node love for ". $thing);
+		}		
+	}
+}
+
+function ModifyGame(&$user, $newTitle, $newBody)
+{
+	User_EnsureJoined($user);
+	Verbose("Modifying game node information...");
+	
+	if(!ApiNodeUpdate($user, $user["game_node"], $newTitle, $newBody))
+	{
+		ReportError("Failure to update game.");
+		return;
+	}
+}
+
+function PublishGame(&$user)
+{
+	User_EnsureJoined($user);
+	// Bail early if user already published game.
+	if($user["publishedgame"]) return;
+	
+	Verbose("Publishing game node ".$user["game_node"]);
+	
+	// Transform game into compo or jam game
+	$newtype = ["item/game/compo","item/game/jam"][random_int(0,1)];
+	if(!ApiNodeTransform($user, $user["game_node"], $newtype))
+	{
+		ReportError("Failed to transform game node to " . $newtype);
+	}
+	
+	// Enable opt-outs
+	if(random_int(1,3) == 1) 
+	{
+		// Future: Determine possible opt-outs and opt out of one or more of them.
+	}
+	
+	// Enable anonymous comments
+	if(random_int(1,3) == 1) 
+	{	
+		Verbose("Enabling anonymous comments");
+		if(!ApiNodeMetaAdd($user, $user["game_node"], 'allow-anonymous-comments', '1')) ReportError("Unable to enable anonymous comments meta.");
+	}	
+	
+	
+	
+	// Publish!
+	if(!ApiNodePublish($user, $user["game_node"]))
+	{
+		ReportError("Failed to publish game!");
+	}
+	
+	$user["publishedgame"] = true;
+	
+	RunMagic();
+}
+
+

@@ -25,6 +25,8 @@
 			position: relative;
 			line-height: 2.0em;
 			height: 2.0em;
+			
+			vertical-align: top;
 
 			display: inline-block;
 			
@@ -50,6 +52,10 @@
 				@media (max-width: (@BASE_WIDTH - 20em)) {
 					display: none;
 				}
+				
+				&:empty {
+					padding-left: 0;
+				}
 			}
 			& > svg {
 				position: absolute;
@@ -67,8 +73,8 @@
 				color: @NAV_BUTTON_COL;
 				
 				&.-selected {
-					background: @NAV_BUTTON_COL;
-					color: @NAV_BUTTON_BG;
+					background: @COL_L;/*@NAV_BUTTON_COL;*/
+					color: @COL_NDDDD;/*@NAV_BUTTON_BG;*/
 					border: 1px solid transparent;
 				}
 			}

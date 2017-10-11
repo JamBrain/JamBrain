@@ -13,7 +13,7 @@ export default class ContentCommonFooterButtonStar extends Component {
 
 		this.onStar = this.onStar.bind(this);
 	}
-	
+
 	componentDidMount() {
 //		// TODO: Extract Love from the global love pool (props.node.id)
 //		

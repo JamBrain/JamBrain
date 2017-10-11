@@ -130,16 +130,20 @@ export default class ContentCommentsComment extends Component {
 		var user = props.user;
 		var comment = props.comment;
 		var author = props.author;
-		
-//		console.log('R '+comment.id+": ", state.editing, state.preview);
-		if ( author ) {
-			var Name = author.name;
-			if ( author.meta['real-name'] )
-				Name = author.meta['real-name'];
 
+//		console.log('R '+comment.id+": ", state.editing, state.preview);
+
+		if ( author || comment.author == 0 ) {
+			var Name = "Anonymous";
 			var Avatar = "///other/dummy/user64.png";
-			if ( author.meta['avatar'] )
-				Avatar = author.meta['avatar'];
+			if ( author ) {
+				Name = author.name;
+				if ( author.meta['real-name'] )
+					Name = author.meta['real-name'];
+
+				if ( author.meta['avatar'] )
+					Avatar = author.meta['avatar'] + ".64x64.fit.png";;
+			}
 
 			var ShowTitle = null;
 			if ( !state.editing || state.preview ) {
@@ -152,12 +156,20 @@ export default class ContentCommentsComment extends Component {
 				// 1 minute leeway on edits
 				var HasEdited = ModDiff > (60*1000);
 
-				ShowTitle = [
-					<div class="-title">
-						<span class="-author">{Name}</span> (<NavLink class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</NavLink>)
-					</div>,
-				];
-
+				if ( author ) {
+					ShowTitle = [
+						<div class="-title">
+							<span class="-author">{Name}</span> (<NavLink class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</NavLink>){comment.anonymous?" (Posted Anonymously)":""}
+						</div>,
+					];
+				}
+				else {
+					ShowTitle = [
+						<div class="-title">
+							<span class="-author">{Name}</span>
+						</div>,
+					];
+				}
 				if ( comment.created ) {
 					ShowTitle.push(<div class="-date">posted <span title={getLocaleTimeStamp(Created)}>{getRoughAge(DateDiff)}</span><span title={getLocaleDate(Modified)}>{HasEdited?" (edited)":""}</span></div>);
 				}
@@ -195,7 +207,7 @@ export default class ContentCommentsComment extends Component {
 							{ShowLove}
 							{ShowEdit}
 						</div>
-						
+
 						<div class="-left">{ShowReply}</div>
 					</div>
 				);

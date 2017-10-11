@@ -44,7 +44,7 @@ export default class ContentTimeline extends Component {
 	appendFeed( newfeed ) {
 		var feed = this.state.feed;
 		var hash = this.state.hash;
-		
+
 		var added = 0;
 
 		for ( var idx = 0; idx < newfeed.length; idx++ ) {
@@ -99,7 +99,7 @@ export default class ContentTimeline extends Component {
 		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, more, limit )
 		.then(r => {
 			this.setState({'loaded': true});
-			
+
 			// make sure we have a feed
 			if ( r.feed && r.feed.length ) {
 				this.appendFeed(r.feed);
@@ -189,13 +189,16 @@ export default class ContentTimeline extends Component {
 		var ShowFeed = [];
 
 		if ( error ) {
-			ShowFeed.push(<ContentCommon><ContentCommonBody>error</ContentCommonBody></ContentCommon>);
+			ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>error</ContentCommonBody></ContentCommon>);
 		}
 		else if ( feed && feed.length ) {
 			ShowFeed = ShowFeed.concat(feed.map(this.makeFeedItem));
 		}
 		else if ( feed && feed.length == 0 ){
-			ShowFeed.push(<ContentCommon><h1>Sorry, there are no {props.types[0]}</h1></ContentCommon>);
+			if(!props.noemptymessage)
+			{
+				ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>Feed is empty</ContentCommonBody></ContentCommon>);
+			}
 		}
 
 		if ( !props.nomore && lastadded > 0 ) {

@@ -90,6 +90,8 @@ const SH_FIELD_TYPE_JSON = 5;			///< JSON encoded strings
 /// @{
 $db = null;				///< The global database object
 $DB_QUERY_COUNT = 0;	///< How many queries have been run
+$DB_ENABLE_DEBUG = 0;	///< Collect additional data about queries being run for debugging purposes
+$DB_DEBUG_DATA = [];	///< Store structured data about each individual query performed, if debugging is enabled.
 /// @}
 
 /// @name Internal: Error Logging
@@ -174,6 +176,10 @@ function _db_Connect(
 {
 	// Safely call this multiple times, only the first time has any effect //
 	if ( !_db_IsConnected() ) {
+		if($GLOBALS['DB_ENABLE_DEBUG']) {
+			$start = microtime(true);
+		}
+		
 		global $db;
 		$db = mysqli_init();
 		
@@ -198,6 +204,12 @@ function _db_Connect(
     	// Set character set to utf8mb4 mode (default is utf8mb3 (utf8). mb4 is required for Emoji)
     	mysqli_set_charset($db, 'utf8mb4');
     	// More info: http://stackoverflow.com/questions/279170/utf-8-all-the-way-through
+		
+		if($GLOBALS['DB_ENABLE_DEBUG']) {
+			$end = microtime(true);
+			global $DB_DEBUG_DATA;
+			$DB_DEBUG_DATA[] = ['action'=>'connect', 'time'=>($end-$start)];
+		}
 	}
 }
 
@@ -353,10 +365,47 @@ function _db_BindExecute( &$st, $args ) {
 
 /* *********************************************************************************************** */
 
+function _db_DebugStartQuery($query)
+{
+	if($GLOBALS['DB_ENABLE_DEBUG']) {
+		$GLOBALS['DB_LAST_QUERY'] = $query;
+		$GLOBALS['DB_LAST_QUERY_START'] = microtime(true);
+	}
+}
+
+function _db_DebugEndQuery(&$st, &$result)
+{
+	if($GLOBALS['DB_ENABLE_DEBUG'])
+	{
+		$start = $GLOBALS['DB_LAST_QUERY_START'];
+		$end = microtime(true);
+		$num_rows = $st->num_rows;
+		if($result != null) {
+			$num_rows = $result->num_rows;
+		}
+		
+		global $DB_DEBUG_DATA;
+		$newdata = ['action'=>'query', 'time'=>($end-$start), 'query' => $GLOBALS['DB_LAST_QUERY']];
+		$newdata['num_rows'] = $num_rows;
+		if($st->affected_rows > 0 && $st->affected_rows != $num_rows) {
+			$newdata['affected_rows'] = $st->affected_rows;
+		}
+		if($st->insert_id > 0) {
+			$newdata['insert_id'] = $st->insert_id;
+		}	
+		
+		$DB_DEBUG_DATA[] = $newdata;
+	}
+}
+
+/* *********************************************************************************************** */
+
 /// This, the underscore version doesn't close $st; It returns it instead
 function _db_Query( $query, $args ) {
 	_db_Connect();
 
+	_db_DebugStartQuery($query);
+		
 	$st = _db_Prepare($query);
 	if ( $st && _db_BindExecute($st, $args) ) {
 		return $st;
@@ -372,6 +421,7 @@ function _db_Query( $query, $args ) {
 /// @{
 function _db_GetAssoc( &$st ) {
 	$result = $st->get_result();
+	_db_DebugEndQuery($st, $result);
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_ASSOC /*MYSQLI_NUM*/)) {
 		$ret[] = $row;
@@ -381,6 +431,7 @@ function _db_GetAssoc( &$st ) {
 /// Given a key (field name), populate an array using the value of the key as the index
 function _db_GetAssocStringKey( $key, &$st ) {
 	$result = $st->get_result();
+	_db_DebugEndQuery($st, $result);
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_ASSOC /*MYSQLI_NUM*/)) {
 		$ret[$row[$key]] = $row;
@@ -390,6 +441,7 @@ function _db_GetAssocStringKey( $key, &$st ) {
 /// Same as _db_GetAssocStringKey, but assume the key is an integer, not a string
 function _db_GetAssocIntKey( $key, &$st ) {
 	$result = $st->get_result();
+	_db_DebugEndQuery($st, $result);	
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_ASSOC /*MYSQLI_NUM*/)) {
 		$ret[intval($row[$key])] = $row;
@@ -399,6 +451,7 @@ function _db_GetAssocIntKey( $key, &$st ) {
 /// Same as _db_GetAssocStringKey, but assume the key is a float, not a string
 function _db_GetAssocFloatKey( $key, &$st ) {
 	$result = $st->get_result();
+	_db_DebugEndQuery($st, $result);	
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_ASSOC /*MYSQLI_NUM*/)) {
 		$ret[floatval($row[$key])] = $row;
@@ -408,6 +461,7 @@ function _db_GetAssocFloatKey( $key, &$st ) {
 /// Get an array of arrays of elements (without names)
 function _db_GetArray( &$st ) {
 	$result = $st->get_result();
+	_db_DebugEndQuery($st, $result);	
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_NUM)) {
 		$ret[] = $row;
@@ -417,6 +471,7 @@ function _db_GetArray( &$st ) {
 /// Get an array of just the first element
 function _db_GetFirst( &$st ) {
 	$result = $st->get_result();
+	_db_DebugEndQuery($st, $result);	
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_NUM)) {
 		$ret[] = $row[0];
@@ -426,6 +481,7 @@ function _db_GetFirst( &$st ) {
 /// Make a key=value pair array, where 0 is the key, and 1 is the value 
 function _db_GetPair( &$st ) {
 	$result = $st->get_result();
+	_db_DebugEndQuery($st, $result);	
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_NUM)) {
 		$ret[$row[0]] = $row[1];
@@ -435,6 +491,7 @@ function _db_GetPair( &$st ) {
 /// Same as _db_GetPair, but make sure the key is an integer
 function _db_GetIntPair( &$st ) {
 	$result = $st->get_result();
+	_db_DebugEndQuery($st, $result);	
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_NUM)) {
 		$ret[intval($row[0])] = $row[1];
@@ -460,6 +517,7 @@ function _db_GetIntPair( &$st ) {
 function db_Query( $query, ...$args ) {
 	$st = _db_Query($query, $args);
 	if ( $st ) {
+		_db_DebugEndQuery($st, $null);		
 		return $st->close();
 	}
 	return false;
@@ -472,6 +530,7 @@ function db_Query( $query, ...$args ) {
 function db_QueryInsert( $query, ...$args ) {
 	$st = _db_Query($query, $args);
 	if ( $st ) {
+		_db_DebugEndQuery($st, $null);		
 		$index = $st->insert_id;
 		$st->close();
 		return $index;
@@ -486,6 +545,7 @@ function db_QueryInsert( $query, ...$args ) {
 function db_QueryDelete( $query, ...$args ) {
 	$st = _db_Query($query, $args);
 	if ( $st ) {
+		_db_DebugEndQuery($st, $null);		
 		$index = $st->affected_rows;
 		$st->close();
 		return $index;
@@ -505,6 +565,7 @@ function db_QueryUpdate( $query, ...$args ) {
 function db_QueryNumRows( $query, ...$args ) {
 	$st = _db_Query($query, $args);
 	if ( $st ) {
+		_db_DebugEndQuery($st, $null);			
 		print_r($query);
 		print_r($st);
 		$rows = $st->num_rows;

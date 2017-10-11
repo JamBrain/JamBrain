@@ -4,17 +4,17 @@ import DialogCommon						from 'com/dialog-common/common';
 export default class DialogSubmit extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.onClick = this.onClick.bind(this);
 	}
 
 	componentDidMount() {
 	}
-	
+
 	onClick( e ) {
 		window.location.href = window.location.pathname;
 	}
-	
+
 	render( props, {} ) {
 		return (
 			<DialogCommon title="Publish Game" ok explicit onok={this.onClick}>

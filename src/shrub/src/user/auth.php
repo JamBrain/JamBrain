@@ -30,7 +30,8 @@ function userAuth_Start() {
 	// If session is set, lookup the node, and permissions
 	if ( $id = userAuth_GetId() ) {
 		// Lookup user
-		$USER = nodeComplete_GetById($id);
+		$USER = nodeCache_GetById($id);
+		//$USER = nodeComplete_GetById($id);
 		if ( $USER ) {
 			// Extract Permissions
 			//$USER['private'] = nodeMeta_GetPrivateByNode($id);
@@ -50,6 +51,10 @@ function userAuth_GetId() {
 /// Is active user an administrator
 function userAuth_IsAdmin() {
 	global $USER;
+	// TODO: MK Remove this! This is not a legal way to check for admin (there was a bug with $USER['private'], sorry).
+	if ( isset($USER) && isset($USER['meta']) && isset($USER['meta']['can-create']) && $USER['meta']['can-create'] === "event") {
+		return true;
+	}
 	return isset($USER) && isset($USER['private']) && isset($USER['private']['admin']) && ($USER['private']['admin'] === 1);
 }
 
@@ -108,7 +113,7 @@ function userSession_Start() {
 	// Start Session	
 	session_start([
 		'name' => $sid_name,
-		'cookie_lifetime' => 2*24*60*60,			// Two days
+		'cookie_lifetime' => 3*24*60*60,			// Three days
 		'cookie_httponly' => 1,						// Don't pass SID to JavaScript
 		'cookie_secure' => $is_secure ? 1 : 0,
 		//'cookie_path' => '/',

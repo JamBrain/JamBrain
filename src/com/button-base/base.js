@@ -4,7 +4,7 @@ export default class ButtonBase extends Component {
 	constructor( props ) {
 		super(props);
 	}
-	
+
 	render( props, {} ) {
 		if ( !props.hasOwnProperty('tabIndex') )
 			props.tabIndex = "0";
@@ -13,7 +13,7 @@ export default class ButtonBase extends Component {
 			props.class = "button-base " + props.class;
 		else
 			props.class = "button-base";
-			
+
 		if ( props.onclick ) {
 			// As long as you don't set the "keep focus" property //
 			if ( !props.keepFocus ) {
@@ -30,14 +30,14 @@ export default class ButtonBase extends Component {
 					}
 				};
 			}
-			
+
 			props.onkeydown = (e) => {
 				if ( e.keyCode === 13 ) {
 					props.onclick();
 				}
 			};
 		}
-			
+
 		return (
 			<div {...props} />
 		);

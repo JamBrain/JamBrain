@@ -38,6 +38,19 @@ function coreSanitize_String( $str ) {
 	
 	return $str;
 }
+function coreSanitize_URL( $str ) {
+	$str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');				// Remove invalid UTF-8 characters
+	$str = strip_tags($str);										// Remove any XML/HTML tags
+	$str = trim($str);												// Trim whitespace
+
+	// nuke strings containing JS script executing keywords
+	$lower = strtolower($str);
+	if ( strpos($lower, 'javascript:') !== false || strpos($lower, 'vbscript:') !== false || strpos($lower, 'data:') !==false ) {
+		$str = "";
+	}
+
+	return $str;
+}
 function coreSanitize_Integer( $str ) {
 	return intval(trim($str));
 }

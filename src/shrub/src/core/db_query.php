@@ -146,13 +146,20 @@ function dbQuery_MakeOp( $name, $op, $array, &$QUERY, &$ARGS ) {
 				}
 			}
 			
-			if ( is_numeric($array) ) {
+			if ( is_numeric($array[0]) ) {
 				$QUERY[] = '`'.$name.'` '.$op.' ('.implode(',', $array).')';
 				return true;
 			}
-			else if ( is_string($array) ) {
+			else if ( is_string($array[0]) ) {
 				$QUERY[] = '`'.$name.'` '.$op.' ("'.implode('","', $array).'")';
 				return true;
+			}
+//			else if ( is_null($array[0]) ) {
+//				return null;
+//			}
+			else {
+				global $RESPONSE;
+				json_EmitFatalError_Server("Array of unknown type passed to ".__FUNCTION__, $RESPONSE);
 			}
 		}
 		else {

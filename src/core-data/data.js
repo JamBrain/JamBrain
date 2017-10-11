@@ -53,7 +53,7 @@ class CCoreData {
 				author:3,
 				body:"",
 			},
-			
+
 			6: {
 				name:"Articles",
 				slug:'articles',
@@ -61,9 +61,9 @@ class CCoreData {
 				subtype:"article",
 				parent:1,
 				author:0,
-				body:"",				
+				body:"",
 			},
-			
+
 			10:{
 				name:"**Alpha Testing**: Week 1",
 				slug:"alpha-testing-week-1",
@@ -114,7 +114,7 @@ class CCoreData {
 					"On **Hitbox**, set your game to **Ludum Dare**. Include hashtags to let us know _what_ you're doing.\n\n"+
 					"Support for other streaming services (**YouTube**, **Beam**) will return for future events."
 			},
-			
+
 			12:{
 				name:"Hello World",
 				slug:"hello-world",
@@ -149,29 +149,29 @@ class CCoreData {
 //				body:"This is message for @PoV. Are you here @PoV? I need @help.\n\n```js\n  var Muffin = 10;\n  Muffin += 2;\n\n  echo \"The Wheel\";```\n\nWhoa.\n\nAlso call @murr-DEATH-weasel."
 //			}			
 		};
-		
+
 		this.slugs = {};
-		
+
 		this.NODE_NULL = 0;
 		this.NODE_ROOT = 1;
 		this.NODE_USERS = 2;
-		
+
 		// Populate slugs table with keys (parent!slug) //
 		this.addNodeSlugKeys( this.nodes );
 	}
-	
+
 	addNodeSlugKeys( nodes ) {
 		for ( node in nodes ) {
 			this.slugs[ this.nodes[node].parent+'!'+this.nodes[node].slug ] = node;
-		}		
+		}
 	}
-	
+
 	getNodeById( id ) {
 		// Convert Number to a String. Counter intuative yes, but this saves an extra cast //
 		if ( typeof id === 'number' ) {
 			id = id.toString();
 		}
-		
+
 		// True test //
 		if ( typeof id === 'string' ) {
 			if ( id == '0' ) {
@@ -182,7 +182,7 @@ class CCoreData {
 			}
 			else {
 				// Fetch Missing //
-				
+
 				// Return Nodes //
 			}
 		}
@@ -191,19 +191,19 @@ class CCoreData {
 			let missing = id.filter( node => {
 				return !(node in this.nodes);
 			});
-			
+
 			// Fetch Missing //
-			
-			
+
+
 			// Return Nodes //
 			return id.map( node => {
 				return this.nodes[node] || null;
 			});
 		}
-		
+
 		return null;
 	}
-	
+
 	getNodeTypeById( id ) {
 		// Convert Number to a String. Counter intuative yes, but this saves an extra cast //
 		if ( typeof id === 'number' )
@@ -213,7 +213,7 @@ class CCoreData {
 			return this.nodes[id].type;
 		return null;
 	}
-	
+
 	getNodeParentById( id ) {
 		// Convert Number to a String. Counter intuative yes, but this saves an extra cast //
 		if ( typeof id === 'number' )
@@ -243,17 +243,17 @@ class CCoreData {
 			return this.nodes[id].slug;
 		return null;
 	}
-	
+
 	// Prefetching is an optimization. To make it clearer that you are prefetching, use this function //
 	preFetchNodeById( id ) {
 		this.getNodeById( id );
 	}
-	
+
 	preFetchNodeWithAuthorById( id ) {
 		this.getNodeById( id );
 		this.getNodeById( this.getAuthorOfNodeById(id) );
 	}
-	
+
 	getNodeIdByParentAndSlug( parent, slug ) {
 		let key = parent+'!'+slug;
 		if ( this.slugs[key] ) {
@@ -261,14 +261,14 @@ class CCoreData {
 		}
 
 		// Slug not found. We'll have to do work //
-		
+
 		return null;
 	}
-	
+
 
 	getAuthorOfNodeById( id ) {
 		let nodes = this.getNodeById( id );
-		
+
 		if ( Array.isArray(id) ) {
 			// Fetch all authors, removing duplicates //
 			let authors = {};
@@ -278,7 +278,7 @@ class CCoreData {
 					authors[ nodes[node].author ] = nodes[node].author;
 				}
 			}
-			
+
 			return Object.keys(authors).map(key => authors[key]);
 		}
 		else {
@@ -286,7 +286,7 @@ class CCoreData {
 				return nodes.author;
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -295,13 +295,13 @@ class CCoreData {
 	getNodeIdByParentAndSlugs( parent, slugs ) {
 		if ( !parent )
 			return null;
-		
+
 		// Check if special //
 		var parent_data = this.getNodeById(parent);
 		if ( parent_data.type === 'symlink' ) {
 			parent = parent_data.extra;
 		}
-		
+
 		if ( (slugs.length == 1) && (slugs[0] === "") ) {
 			// Cleverness: only the root should ever have a blank slug //
 			return parent;
@@ -331,7 +331,7 @@ class CCoreData {
 			ids = [ parent.toString() ];
 		else
 			ids.push( parent );
-			
+
 		if ( (slugs.length == 1) && (slugs[0] === "") ) {
 			// Cleverness: only the root node should ever have a blank slug //
 			return parent;
@@ -340,7 +340,7 @@ class CCoreData {
 			// Cleverness: slugs gets shifted before the main function is called.
 			return this.getNodePathByParentAndSlugs( this.getNodeIdByParentAndSlug(parent, slugs.shift()), slugs, ids );
 		}
-		
+
 		return ids;
 
 //		else if ( slugs[0] === "" ) {
@@ -356,12 +356,12 @@ class CCoreData {
 	getNodePathById( id, ids ) {
 		if ( !id )
 			return ids;
-			
+
 		if ( !Array.isArray(ids) )
 			ids = [ id.toString() ];
 		else
 			ids.unshift( id.toString() );
-		
+
 		return this.getNodePathById( this.getNodeParentById(id), ids );
 	}
 
@@ -369,12 +369,12 @@ class CCoreData {
 	getNodePathSlugsById( id, ids ) {
 		if ( !id )
 			return ids;
-			
+
 		if ( !Array.isArray(ids) )
 			ids = [ this.getNodeSlugById(id) ];
 		else
 			ids.unshift( this.getNodeSlugById(id) );
-		
+
 		return this.getNodePathSlugsById( this.getNodeParentById(id), ids );
 	}
 

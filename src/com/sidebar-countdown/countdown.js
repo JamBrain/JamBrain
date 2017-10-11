@@ -157,7 +157,7 @@ export default class SidebarCountdown extends Component {
 		return (
 			<div>
 				<div class={ "figure " + classname + " " + classname + "-1" }>
-					<span class="top">{  Digit1 }</span>
+					<span class="top">{ Digit1 }</span>
 					<span class="top-back">
 						<span>{ Digit1 }</span>
 					</span>
@@ -168,7 +168,7 @@ export default class SidebarCountdown extends Component {
 				</div>
 
 				<div class={ "figure " + classname + " " + classname + "-2" }>
-					<span class="top">{  Digit2 }</span>
+					<span class="top">{ Digit2 }</span>
 					<span class="top-back">
 						<span>{ Digit2 }</span>
 					</span>
@@ -225,12 +225,12 @@ export default class SidebarCountdown extends Component {
 				seconds: ss
 			};
 		}
-		
+
 		var LanguagePrefix = "["+navigator.language+"] ";
 		if ( navigator.languages ) {
 			LanguagePrefix += "["+navigator.languages.join(',')+"] ";
 		}
-		
+
 		var Title = null;
 		if ( props.to ) {
 			Title = <h1 class="_font2">{ props.to } <strong>{ props.tt }</strong></h1>;
@@ -241,28 +241,28 @@ export default class SidebarCountdown extends Component {
 					{Title}
 					<div class={ urgentclass }>
 
-					<div class="bloc-time days" data-init-value="00"  ref={c => this.daysblock=c} style={ daysblock }>
+					<div class="bloc-time days" data-init-value="00" ref={c => this.daysblock=c} style={ daysblock }>
 						<span class="count-title _font2">Days</span>
 
 						{ this.renderDigit(this.values.days, "days") }
 
 					</div>
 
-						<div class="bloc-time hours" data-init-value="00"  ref={c => this.hoursblock=c}>
+						<div class="bloc-time hours" data-init-value="00" ref={c => this.hoursblock=c}>
 							<span class="count-title _font2">Hours</span>
 
 							{ this.renderDigit(this.values.hours, "hours") }
 
 						</div>
 
-						<div class="bloc-time min" data-init-value="0"  ref={c => this.minutesblock=c} style={this.state.ShowDays ? "margin-right: 0px;" : ""}>
+						<div class="bloc-time min" data-init-value="0" ref={c => this.minutesblock=c} style={this.state.ShowDays ? "margin-right: 0px;" : ""}>
 							<span class="count-title _font2">Minutes</span>
 
 							{ this.renderDigit(this.values.minutes, "minutes") }
 
 						</div>
 
-						<div class="bloc-time sec" data-init-value="0" style={ secondsblock }  ref={c => this.secondsblock=c}>
+						<div class="bloc-time sec" data-init-value="0" style={ secondsblock } ref={c => this.secondsblock=c}>
 							<span class="count-title _font2">Seconds</span>
 
 							{ this.renderDigit(this.values.seconds, "seconds") }

@@ -137,7 +137,7 @@ function _note_GetByNode( $ids ) {
 				author, 
 				".DB_FIELD_DATE('created').",
 				".DB_FIELD_DATE('modified').",
-				version,
+				version, flags,
 				body
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE." 
 			WHERE node IN ($ids_string)
@@ -174,6 +174,17 @@ function note_GetByNode( $ids ) {
 }
 
 
+function note_InterestedUsers( $node )
+{
+	return db_QueryFetchSingle(
+		"SELECT DISTINCT author
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE." 
+		WHERE node = ?;",
+		$node
+	);
+}
+
+
 function note_GetById( $ids ) {
 	$multi = is_array($ids);
 	if ( !$multi )
@@ -195,7 +206,7 @@ function note_GetById( $ids ) {
 				author, 
 				".DB_FIELD_DATE('created').",
 				".DB_FIELD_DATE('modified').",
-				version,
+				version, flags,
 				body
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE." 
 			WHERE id IN ($ids_string)
@@ -212,33 +223,33 @@ function note_GetById( $ids ) {
 }
 
 
-function _note_AddByNode( $node, $supernode, $author, $parent, $body, $version_tag ) {
+function _note_AddByNode( $node, $supernode, $author, $parent, $body, $version_tag, $flags ) {
 	// Insert Proxy
 	$note_id = db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NOTE." (
 			parent,
 			node, supernode,
-			author,
+			author, flags,
 			created
 		)
 		VALUES (
 			?,
 			?, ?,
-			?,
+			?, ?,
 			NOW()
 		)",
 		$parent,
 		$node, $supernode,
-		$author
+		$author, $flags
 	);
 
-	$edit = note_SafeEdit( $note_id, $author, $body, $version_tag );
+	$edit = note_SafeEdit( $note_id, $author, $body, $version_tag, $flags );
 	
 	return $note_id;
 }
 
-function note_AddByNode( $node, $supernode, $author, $parent, $body, $version_tag ) {
-	$note_id = _note_AddByNode($node, $supernode, $author, $parent, $body, $version_tag);
+function note_AddByNode( $node, $supernode, $author, $parent, $body, $version_tag, $flags = 0 ) {
+	$note_id = _note_AddByNode($node, $supernode, $author, $parent, $body, $version_tag, $flags);
 	
 	// Hack: Adding just the root entry to the tree
 	$tree = noteTree_Add($node, $note_id, 0, 1);
@@ -246,18 +257,20 @@ function note_AddByNode( $node, $supernode, $author, $parent, $body, $version_ta
 	return $note_id;
 }
 
-function note_SafeEdit( $note_id, $author, $body, $version_tag ) {
-	$version_id = noteVersion_Add($note_id, $author, $body, $version_tag);
+function note_SafeEdit( $note_id, $author, $body, $version_tag, $flags ) {
+	$version_id = noteVersion_Add($note_id, $author, $body, $version_tag, $flags);
 
 	return db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NOTE."
 		SET
 			modified=NOW(),
 			version=?,
+			flags=?,
 			body=?
 		WHERE
 			id=?;",
 		$version_id,
+		$flags,
 		$body,
 	
 		$note_id

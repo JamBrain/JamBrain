@@ -1,4 +1,5 @@
-import { h, Component } from 'preact/preact';
+import { h, Component }					from 'preact/preact';
+import Sanitize							from '../../internal/sanitize/sanitize';
 
 // TODO: Push the state (arg1 of pushShate/replaceState
 
@@ -46,7 +47,7 @@ export default class NavLink extends Component {
 
 		// Internet Explorer 11 doesn't set the origin, so we need to extract it
 		// Cleverness: we slice at the 1st slash, but offset by length of 'https://' first, so it's after the domain
-		let origin = this.base && (this.base.origin || (this.base.href && this.base.href.slice(0, this.href.base.indexOf('/','https://'.length))));
+		let origin = this.base && (this.base.origin || (this.base.href && this.base.href.slice(0, this.base.href.indexOf('/','https://'.length))));
 
 		// If the origin (http+domain) of the current and next URL is the same, navigate by manipulating the history
 		if ( origin === window.location.origin ) {
@@ -101,7 +102,11 @@ export default class NavLink extends Component {
 //	}
 
 	render( props ) {
+		props = Object.assign({}, props);
+
 		if ( props.href ) {
+			props.href = Sanitize.sanitize_URI(props.href);
+
 			if ( props.href.indexOf('//') !== -1 ) {
 				props.target = "_blank";
 				props.rel = "noopener noreferrer";

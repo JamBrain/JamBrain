@@ -27,16 +27,18 @@ function grade_GetByNodeAuthor( $node_id, $author_id ) {
 }
 
 
-function grade_AddByNodeAuthorName( $node_id, $author_id, $name, $value ) {
+function grade_AddByNodeAuthorName( $node_id, $parent_id, $author_id, $name, $value ) {
 	return db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_GRADE." (
 			node,
+			parent,
 			author,
 			name,
 			value,
 			timestamp
 		)
 		VALUES (
+			?,
 			?,
 			?,
 			?,
@@ -48,6 +50,7 @@ function grade_AddByNodeAuthorName( $node_id, $author_id, $name, $value ) {
 			timestamp=VALUES(timestamp)
 		;",
 		$node_id,
+		$parent_id,
 		$author_id,
 		$name,
 		$value
@@ -84,9 +87,9 @@ function grade_CountByNodeAuthor( $node_id, $authors ) {
 	);
 }
 
-function grade_CountByNotNodeAuthor( $node_id, $authors ) {
-	$QUERY = ['node!=?'];
-	$ARGS = [$node_id];
+function grade_CountByNotNodeAuthor( $node_id, $authors, $parent_id ) {
+	$QUERY = ['parent=?','node!=?'];
+	$ARGS = [$parent_id, $node_id];
 	
 	if ( is_array($authors) ) {
 		$QUERY[] = "author IN (".implode(',', $authors).")";
@@ -123,7 +126,7 @@ function grade_CountByNodeNotAuthor( $node_id, $authors ) {
 }
 
 
-function grade_CountByNode( $node_id, $limit = 8*10 ) {
+function grade_CountByNode( $node_id, $limit = 8*250 ) {
 	$multi = is_array($node_id);
 	if ( !$multi )
 		$node_id = [$node_id];

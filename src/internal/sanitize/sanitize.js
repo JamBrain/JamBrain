@@ -27,6 +27,21 @@ class CSanitize {
 		return this.slugify_Name(str);
 	}
 
+	sanitize_URI( str ) {
+		// From marked/Renderer.js
+		try {
+			var Protocol = decodeURIComponent(unescape(str)).replace(/[^\w:]/g, '').toLowerCase();
+		}
+		catch (e) {
+			return '';
+		}
+
+		if ( Protocol.indexOf('javascript:') === 0 || Protocol.indexOf('vbscript:') === 0 || Protocol.indexOf('data:') === 0 ) {
+			return '';
+		}
+		return str;
+	}
+
 	// Backwards Compatible
 	makeSlug( str ) {
 		return this.slugify_Name(str);
@@ -65,55 +80,55 @@ class CSanitize {
 //		str = str.replace(/^-|-$/g,'');				// Prefix and suffix -'s with nothing
 		return str;
 	}
-	
+
 	trimSlashes( str ) {
 		return str.replace(/^\/|\/$/g,'');
 	}
-	
+
 	validateMail( mail ) {
 		// http://stackoverflow.com/a/9204568/5678759
 		return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
 	}
-	
+
 	parseHash( raw_hash ) {
 		var ret = {
 			'path': "",
 			'extra': [],
 			'args': {}
 		};
-		
+
 		if ( !raw_hash.length )
 			return ret;
-		
+
 		var query_pos = raw_hash.indexOf('?');
 		var query = (query_pos != -1) ? raw_hash.substr(query_pos+1) : '';
 		if ( query.length ) {
-			query.split('&').forEach(v => { 
-				let _var = v.split('='); 
-				ret.args[_var[0]] = (_var.length > 1) ? _var[1] : true; 
+			query.split('&').forEach(v => {
+				let _var = v.split('=');
+				ret.args[_var[0]] = (_var.length > 1) ? _var[1] : true;
 			});
 		}
 
 		var full_path = (query_pos != -1) ? raw_hash.substr(1, query_pos-1) : raw_hash.substr(1);
 		ret.extra = full_path.split('/');
 		ret.path = ret.extra.shift();
-		
+
 		return ret;
 	}
-	
+
 	getHTTPVars() {
 		var ret = {};
-		
+
 		if (location.search) {
-		    var parts = location.search.substring(1).split('&');
-		
-		    for (var i = 0; i < parts.length; i++) {
-		        var nv = parts[i].split('=');
-		        if (!nv[0]) continue;
-		        ret[nv[0]] = nv[1] || true;
-		    }
+			var parts = location.search.substring(1).split('&');
+
+			for (var i = 0; i < parts.length; i++) {
+				var nv = parts[i].split('=');
+				if (!nv[0]) continue;
+				ret[nv[0]] = nv[1] || true;
+			}
 		}
-		
+
 		return ret;
 	}
 };

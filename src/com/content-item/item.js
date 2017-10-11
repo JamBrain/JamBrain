@@ -7,6 +7,9 @@ import IMG2 							from 'com/img2/img2';
 import ButtonBase						from 'com/button-base/base';
 
 import ContentCommonBody				from 'com/content-common/common-body';
+import ContentCommonBodyField			from 'com/content-common/common-body-field';
+import ContentCommonBodyLink			from 'com/content-common/common-body-link';
+import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
@@ -21,25 +24,47 @@ import $Asset							from '../../shrub/js/asset/asset';
 export default class ContentItem extends Component {
 	constructor( props ) {
 		super(props);
-		
+
+		var node = props.node;
+
 		this.state = {
 			'parent': null,
-			'grade': null
+			'grade': null,
+
+			'linkUrls': [],
+			'linkTags': [],
+			'linkNames': [],
+
+			'linksShown': 1,
+
+//			'platforms': [],
+//			'tags': [],
 		};
+
+		for ( let i = 0; i < 9; i++ ) {
+			this.state.linkUrls[i] = node.meta['link-0'+(i+1)] ? node.meta['link-0'+(i+1)] : '';
+			this.state.linkTags[i] = node.meta['link-0'+(i+1)+'-tag'] ? parseInt(node.meta['link-0'+(i+1)+'-tag']) : 0;
+			this.state.linkNames[i] = node.meta['link-0'+(i+1)+'-name'] ? node.meta['link-0'+(i+1)+'-name'] : '';
+
+			if ( this.state.linkUrls[i] && i+1 > this.state.linksShown ) {
+				this.state.linksShown = i+1;
+			}
+		}
 
 		this.onSetJam = this.onSetJam.bind(this);
 		this.onSetCompo = this.onSetCompo.bind(this);
+		this.onSetUnfinished = this.onSetUnfinished.bind(this);
 	}
-	
+
 	componentDidMount() {
 		var node = this.props.node;
-		
+
 		$Node.Get(node.parent)
 		.then(r => {
 			if ( r.node && r.node.length ) {
 				var Parent = r.node[0];
 				this.setState({'parent': Parent});
-				
+
 				return $Grade.GetMy(node.id);
 			}
 			return Promise.resolve({});
@@ -73,26 +98,29 @@ export default class ContentItem extends Component {
 	onSetJam( e ) {
 		return this.setSubSubType('jam')
 			.then( r => {
-				
 			});
 	}
 	onSetCompo( e ) {
 		return this.setSubSubType('compo')
 			.then( r => {
-				
 			});
 	}
-	
+	onSetUnfinished( e ) {
+		return this.setSubSubType('unfinished')
+			.then( r => {
+			});
+	}
+
 	onGrade( name, value ) {
 		var Node = this.props.node;
-		
+
 		return $Grade.Add(Node.id, name, value)
 			.then(r => {
 				if ( r && r.id || !!r.changed ) {
 					var Grades = this.state.grade;
-					
+
 					Grades[name] = value;
-					
+
 					this.setState({'grade': Grades});
 				}
 				return r;
@@ -101,13 +129,13 @@ export default class ContentItem extends Component {
 
 	onOptOut( name, value ) {
 		var Node = this.props.node;
-		
+
 		let Name = name+'-out';
 		let Data = {};
-		
+
 		if ( value ) {
 			Data[Name] = 1;
-			
+
 			return $NodeMeta.Add(Node.id, Data)
 				.then(r => {
 					if ( r && r.changed ) {
@@ -127,19 +155,29 @@ export default class ContentItem extends Component {
 						this.setState({});
 					}
 					return r;
-				});			
+				});
 		}
 	}
-	
+
+	positionSuffix(position) {
+		let j = position % 10;
+		let k = position % 100;
+
+		if (j == 1 && k != 11) return "st";
+		if (j == 2 && k != 12) return "nd";
+		if (j == 3 && k != 13) return "rd";
+		return "th";
+	}
+
 	onUpload( name, e ) {
 		var node = this.props.node;
 		var user = this.props.user;
 
 		if ( !this.props.user )
 			return null;
-			
+
 		var FileName = null;
-		
+
 		if ( e.target.files && e.target.files.length ) {
 			var file = e.target.files[0];
 
@@ -147,10 +185,10 @@ export default class ContentItem extends Component {
 				.then(r => {
 					if ( r && r.path ) {
 						FileName = '///content/'+r.path;
-						
+
 						let Data = {};
 						Data[name] = FileName;
-						
+
 						return $NodeMeta.Add(node.id, Data);
 					}
 
@@ -165,19 +203,141 @@ export default class ContentItem extends Component {
 				.catch(err => {
 					this.setState({ 'error': err });
 				});
-		}		
+		}
+	}
+
+	onModifyLinkName( Index, e ) {
+		var Names = this.state.linkNames;
+		Names[Index] = e.target.value;
+		this.setState({'modified': true, 'linkNames': Names});
+		// Update save button
+		this.contentSimple.setState({'modified': true});
+	}
+
+	onModifyLinkTag( Index, e ) {
+		var Tags = this.state.linkTags;
+		Tags[Index] = e;//e.target.value;
+		this.setState({'modified': true, 'linkTags': Tags});
+		// Update save button
+		this.contentSimple.setState({'modified': true});
+	}
+
+	onModifyLinkUrl( Index, e ) {
+		var URLs = this.state.linkUrls;
+		URLs[Index] = e.target.value;
+		this.setState({'modified': true, 'linkUrls': URLs});
+		// Update save button
+		this.contentSimple.setState({'modified': true});
+	}
+
+	onSave( e ) {
+		var node = this.props.node;
+		var user = this.props.user;
+
+		if ( !user )
+			return null;
+
+		let Data = {};
+		let Changes = 0;
+		for ( let i = 0; i < this.state.linkUrls.length; i++ ) {
+			let Base = 'link-0'+(i+1);
+
+			// Figure out what data has changed
+			{
+				let Old = node.meta[Base] ? node.meta[Base] : '';
+				let New = this.state.linkUrls[i].trim();
+
+				if ( Old != New ) {
+					Data[Base] = this.state.linkUrls[i];
+					this.props.node.meta[Base] = Data[Base];
+					Changes++;
+				}
+			}
+
+			{
+				let Old = node.meta[Base+'-tag'] ? parseInt(node.meta[Base+'-tag']) : 0;
+				let New = parseInt(this.state.linkTags[i]);
+
+				if ( Old != New ) {
+					Data[Base+'-tag'] = this.state.linkTags[i];
+					this.props.node.meta[Base+'-tag'] = Data[Base+'-tag'];
+					Changes++;
+				}
+			}
+
+			{
+				let Old = node.meta[Base+'-name'] ? node.meta[Base+'-name'] : '';
+				let New = this.state.linkNames[i].trim();
+
+				if ( Old != New ) {
+					Data[Base+'-name'] = this.state.linkNames[i];
+					this.props.node.meta[Base+'-name'] = Data[Base+'-name'];
+					Changes++;
+				}
+			}
+		}
+
+//		this.setState({});		
+//		console.log(Data);
+
+		return $NodeMeta.Add(node.id, Data);
+	}
+
+	// Generates JSX for the links, depending on whether the page is editing or viewing
+	makeLinks( editing ) {
+		var LinkMeta = [];
+
+		for ( let idx = 0; idx < this.state.linksShown; idx++ ) {
+			LinkMeta.push(
+				<ContentCommonBodyLink
+					name={this.state.linkNames[idx]}
+					tag={this.state.linkTags[idx]}
+					url={this.state.linkUrls[idx]}
+					urlPlaceholder="http://example.com/file.zip"
+					editing={editing}
+					filter='platform'
+					onModifyName={this.onModifyLinkName.bind(this, idx)}
+					onModifyTag={this.onModifyLinkTag.bind(this, idx)}
+					onModifyUrl={this.onModifyLinkUrl.bind(this, idx)}
+				/>
+			);
+		}
+
+		if ( editing && this.state.linksShown < 9 ) {
+			LinkMeta.push(
+				<button onclick={e => this.setState({'linksShown': ++this.state.linksShown})}>+</button>
+			);
+		}
+
+//					namePlaceholder="Web"
+//					urlPlaceholder="http://example.com/web.html"
+//					namePlaceholder="Windows"
+//					urlPlaceholder="http://example.com/windows.exe"
+//					namePlaceholder="Mac"
+//					urlPlaceholder="http://example.com/mac.app"
+//					namePlaceholder="Linux"
+//					urlPlaceholder="http://example.com/linux.tar.gz"
+//					namePlaceholder="Source"
+//					urlPlaceholder="http://example.com/source.zip"
+
+		return (
+			<ContentCommonBody class="-links">
+				<div class="-label">Links</div>
+				{LinkMeta}
+			</ContentCommonBody>
+		);
 	}
 
 	render( props, state ) {
 		props = Object.assign({}, props);
-		
+
 		var node = props.node;
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
 		var featured = props.featured;
 		var parent = state.parent;
-		
+
 		var Category = '/';
 
 		if ( node ) {
@@ -191,7 +351,7 @@ export default class ContentItem extends Component {
 				props.headerClass = "-col-c";
 				props.titleIcon = "hammer";
 			}
-			
+
 			if ( node.subsubtype == 'jam' ) {
 				props.header += ": JAM";
 				Category = '/jam';
@@ -216,23 +376,26 @@ export default class ContentItem extends Component {
 			else {
 				props.nopublish = true;
 			}
-			
+
 			props.draft = "Game";
 		}
-		
+
 		var ShowEventPicker = null;
-		// TODO: Re-enable this to allow event selection
-//		if ( extra && extra.length && extra[0] == 'edit' ) {
-//			ShowEventPicker = (
-//				<ContentCommonNav>
-//					<div class="-label">Event</div>
-//					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
-//					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
-//					<div>Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know, pick the <strong>Jam</strong>.<br />Because {"we're"} running late, {"we're"} letting you choose all weekend. Honour system, ok?</div>
-//				</ContentCommonNav>
-//			);
-//		}
-		
+		if ( extra && extra.length && extra[0] == 'edit' && node_CanPublish(parent) ) {
+			ShowEventPicker = (
+				<ContentCommonNav>
+					<div class="-label">Event</div>
+					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
+					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
+					<ContentCommonNavButton onclick={this.onSetUnfinished} class={Category == '/unfinished' ? "-selected" : ""}><SVGIcon>trash</SVGIcon><div>Unfinished</div></ContentCommonNavButton>
+					<div class="-footer">
+						<strong>NOTE</strong>: You <strong>MUST</strong> click this before you will be able to Publish.<br />
+						Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know what to pick, pick the <strong>Jam</strong>.
+					</div>
+				</ContentCommonNav>
+			);
+		}
+
 		var ShowMetrics = null;
 		if ( node.magic ) {
 			let Lines = [];
@@ -255,7 +418,7 @@ export default class ContentItem extends Component {
 				let Icon = null;
 				let Title = Metric.key;
 				let Score = Metric.value;
-				
+
 				let HoverTitle = Score;
 
 				if ( Metric.key == 'smart' ) {
@@ -287,7 +450,7 @@ export default class ContentItem extends Component {
 				else if ( Metric.key == 'feedback' ) {
 					Title = "Karma for Feedback given";
 				}
-				
+
 				let SmallScore = Score.toFixed(4);
 				if ( SmallScore.length > Score.toString().length )
 					SmallScore = Score.toString();
@@ -311,10 +474,10 @@ export default class ContentItem extends Component {
 			);
 		}
 
-		var ShowResults = null;
-		
 		var ShowGrade = null;
-		if ( parent && parseInt(parent.meta['can-grade']) && node_CanGrade(parent) ) {
+		// Show Grading or Results
+		if ( parseInt(node_CanGrade(parent)) ) {
+			// If it's your game, show some stats
 			if ( node_IsAuthor(node, user) ) {
 				let Lines = [];
 
@@ -323,25 +486,25 @@ export default class ContentItem extends Component {
 					let parts = key.split('-');
 					if ( parts.length == 2 && parts[0] == 'grade' ) {
 						// Make sure they user hasn't opted out
-						
+
 						if ( node.meta && !(node.meta[key+'-out']|0) ) {
 							Lines.push({'key': key, 'value': parent.meta[key]});
 						}
 					}
 				}
-				
+
 				let VoteLines = [];
 				for ( let idx = 0; idx < Lines.length; idx++ ) {
 					let Line = Lines[idx];
-					
+
 					let Title = Line.value;
 					let Score = 0;
 					if ( node.grade ) {
 						Score = node.grade[Line.key];
 					}
-					
+
 					//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
-					
+
 					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
 				}
 
@@ -354,31 +517,32 @@ export default class ContentItem extends Component {
 					</ContentCommonBody>
 				);
 			}
+			// Judging
 			else if ( featured && featured.what_node && nodeKeys_HasPublishedParent(featured.what_node, node.parent) ) {
 				let Lines = [];
-				
+
 				for ( var key in parent.meta ) {
 					// Is it a valid grade ?
 					let parts = key.split('-');
 					if ( parts.length == 2 && parts[0] == 'grade' ) {
 						// Make sure they user hasn't opted out
-						
+
 						if ( node.meta && !(node.meta[key+'-out']|0) ) {
 							Lines.push({'key': key, 'value': parent.meta[key]});
 						}
 					}
 				}
-				
+
 				let VoteLines = [];
 				for ( let idx = 0; idx < Lines.length; idx++ ) {
 					let Line = Lines[idx];
-					
+
 					let Title = Line.value;
 					let Score = '?';
 					if ( state.grade ) {
 						Score = state.grade[Line.key] ? state.grade[Line.key] : 0;
 					}
-					
+
 					let Stars = [];
 					for ( let idx2 = 0; idx2 < Score; idx2++ ) {
 						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
@@ -387,16 +551,16 @@ export default class ContentItem extends Component {
 						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
 					}
 					Stars.push(<ButtonBase class='-delete' onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
-					
+
 					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> {Stars}</div>);
 				}
-				
+
 				let ShowRatingSubText = null;
 				if ( node.subsubtype == 'jam' )
 					ShowRatingSubText = <div class="-subtext">Jam game</div>;
 				else if ( node.subsubtype == 'compo' )
 					ShowRatingSubText = <div class="-subtext">Compo game</div>;
-				
+
 				ShowGrade = (
 					<ContentCommonBody class="-rating">
 						<div class="-header">Ratings</div>
@@ -405,7 +569,7 @@ export default class ContentItem extends Component {
 						<div class="-footer">Ratings are saved automatically when you click. When they change, they're saved.</div>
 					</ContentCommonBody>
 				);
-				
+
 				//'
 			}
 			else if ( !user || !user.id ) {
@@ -425,7 +589,8 @@ export default class ContentItem extends Component {
 				);
 			}
 		}
-		else if ( parent && !parseInt(parent.meta['can-grade']) ) {
+		// Final Results
+		else if ( !parseInt(node_CanGrade(parent)) && node_isEventFinished(parent) ) {
 			// grading is closed
 			let Lines = [];
 
@@ -434,17 +599,17 @@ export default class ContentItem extends Component {
 				let parts = key.split('-');
 				if ( parts.length == 2 && parts[0] == 'grade' ) {
 					// Make sure they user hasn't opted out
-					
+
 					if ( node.meta && !(node.meta[key+'-out']|0) ) {
 						Lines.push({'key': key, 'value': parent.meta[key]});
 					}
 				}
 			}
-			
+
 			let ResultLines = [];
 			for ( let idx = 0; idx < Lines.length; idx++ ) {
 				let Line = Lines[idx];
-				
+
 				let Title = Line.value;
 				let Place = "N/A";
 				if ( node.magic && node.magic[Line.key+'-result'] )
@@ -455,10 +620,10 @@ export default class ContentItem extends Component {
 				let Count = 0;
 				if ( node.grade && node.grade[Line.key] )
 					Count = node.grade[Line.key];
-				
+
 				//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
-				
-				ResultLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Place}</strong> ({Average} average in {Count} ratings)</div>);
+
+				ResultLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Place}</strong><sup>{this.positionSuffix(Place)}</sup> ({Average} average from {Count} ratings)</div>);
 			}
 
 			ShowGrade = (
@@ -468,27 +633,13 @@ export default class ContentItem extends Component {
 					<div class="-items">{ResultLines}</div>
 					<div class="-footer">When a line is <strong>N/A</strong>, it means there weren't enough ratings for a reliable score. Don't forget to play and rate other people's games during events to prioritize your game.</div>
 				</ContentCommonBody>
-			);			
+			); //'
 		}
-		
-		var ShowPrePub = (
-			<div style="background: #E53; color: #FFF; padding: 0 0.5em;"><ContentCommonBody>
-				<strong>Hey folks!</strong> We're still finishing the data fields below. Please come back and update your page. We'll have new things fixed and added reguraly.<br />
-				<br />
-				I've included summaries of what to expect for each. In the mean time, I recommend you add your links above, and a screenshot or two. Here's an example:<br />
-				<br />
-				<div style="background:#FFF; color:#000; padding: 0.5em; border-radius: 0.25em"><strong>Sample Game:</strong> <NavLink blank href="/events/ludum-dare/38/ludum-dare-dot-com">Ludumdare.com</NavLink></div>
-				<br />
-				We'll have this cleaned up soon!
-			</ContentCommonBody></div>
-		);
-		
-		//'
-		
+
 		var ShowOptOut = null;
-		if ( parent ) {
+		if ( parent && node_CanPublish(parent) ) {
 			let Lines = [];
-			
+
 			for ( var key in parent.meta ) {
 				// Is it a valid grade ?
 				let parts = key.split('-');
@@ -496,9 +647,9 @@ export default class ContentItem extends Component {
 					// Assuming the category isn't optional
 					if ( parent.meta[key]|0 ) {
 						let BaseKey = parts[0]+'-'+parts[1];
-						
+
 						Lines.push({
-							'key': BaseKey, 
+							'key': BaseKey,
 							'name': parent.meta[BaseKey],
 							'value': (node.meta ? !(node.meta[BaseKey+'-out']|0) : false)
 						});
@@ -510,18 +661,16 @@ export default class ContentItem extends Component {
 
 			for ( let idx = 0; idx < Lines.length; idx++ ) {
 				let Line = Lines[idx];
-				
-//				console.log( Line );
-				
+
 				let Icon = null;
 				if ( Line.value )
 					Icon = <SVGIcon small baseline>checkbox-unchecked</SVGIcon>;
 				else
 					Icon = <SVGIcon small baseline>checkbox-checked</SVGIcon>;
-				
+
 				OptLines.push(<ButtonBase onclick={this.onOptOut.bind(this, Line.key, Line.value)}>{Icon} Do not rate me in <strong>{Line.name}</strong></ButtonBase>);
 			}
-			
+
 			ShowOptOut = (
 				<ContentCommonBody class="-opt-out">
 					<div class="-label">Voting Category Opt-outs</div>
@@ -534,14 +683,14 @@ export default class ContentItem extends Component {
 				</ContentCommonBody>
 			);
 		}
-		
+
 		var ShowImages = null;
 		if ( true ) {
 			let ShowImage = null;
 			if ( node.meta && node.meta.cover ) {
 				ShowImage = <IMG2 class="-img" src={node.meta && node.meta.cover ? node.meta.cover+'.320x256.fit.jpg' : "" } />;
 			}
-			
+
 			ShowImages = (
 				<ContentCommonBody class="-images">
 					<div class="-label">Images</div>
@@ -558,16 +707,17 @@ export default class ContentItem extends Component {
 				</ContentCommonBody>
 			);
 		}
-		
-		//'
 
-		var ShowLinks = null;
+		// Where you can enter your game links
+		var ShowLinkEntry = null;
 		if ( true ) {
-			ShowLinks = (
-				<ContentCommonBody class="-links">
-					<div class="-label">Links</div>
-					<div>Download Links</div>
-					<div>Source Code</div>
+			ShowLinkEntry = this.makeLinks(true /* editing */);
+		}
+
+		var ShowUploadTips = null;
+		if ( true ) {
+			ShowUploadTips = (
+				<ContentCommonBody>
 					<br />
 					If you're new to Ludum Dare, you should know we don't host your downloads, just links to them. For recommendations where and how to host your files, check out the Hosting Guide:<br />
 					<br />
@@ -575,6 +725,11 @@ export default class ContentItem extends Component {
 					<br />
 				</ContentCommonBody>
 			);
+		}
+
+		var ShowLinkView = null;
+		if ( true ) {
+			ShowLinkView = this.makeLinks(false /* editing */);
 		}
 
 		var ShowUnfinished = null;
@@ -582,44 +737,38 @@ export default class ContentItem extends Component {
 			ShowUnfinished = (
 				<ContentCommonBody>
 					<div class="-label">Images</div>
-					<div>Screen Shots - These go up top, above your Title and Description. Try to keep your GIFs less than 640 pixels wide.</div>
-					<div>Video - Or we can put a YouTube video up top</div>
-					<div><del>Hover Video - A GIF or silent MP4 video to play while hovering over Cover art.</del></div>
-					<div><del>Embed - This is coming later</del></div>
-					<br />
-					<div class="-label">Links</div>
-					<div>Download Links</div>
-					<div>Source Code</div>
-					<br />
-					If you're new to Ludum Dare, you should know we don't host your downloads, just links to them. For recommendations where and how to host your files, check out the Hosting Guide:<br />
-					<br />
-					<NavLink blank href="/events/ludum-dare/hosting-guide">/ludum-dare/hosting-guide</NavLink><br />
+					<div>Screen Shots - These go up top, in your game's description. Try to keep your GIFs less than 640 pixels wide.</div>
+					<div>Video - You can add a YouTube video to your description too.</div>
 					<br />
 				</ContentCommonBody>
 			);
 		}
 
-		
+
 		props.editonly = (
 			<div>
 				{ShowEventPicker}
 				{ShowOptOut}
 				{ShowImages}
-				{ShowPrePub}
+				{ShowLinkEntry}
+				{ShowUploadTips}
 				{ShowUnfinished}
 			</div>
 		);
-//				{ShowLinks}
-		
+		props.onSave = this.onSave.bind(this);
+
 		props.viewonly = (
 			<div>
+				{ShowLinkView}
 				{ShowGrade}
 				{ShowMetrics}
-				{ShowResults}
 			</div>
 		);
-		
+
 		props.class = cN("content-item", props.class);
+
+		// Shim to update the save button from this method. See https://facebook.github.io/react/docs/refs-and-the-dom.html
+		props.ref = c => { this.contentSimple = c; };
 
 		return <ContentSimple {...props} by authors />;
 	}

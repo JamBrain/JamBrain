@@ -1,12 +1,16 @@
 {
 	"parserOptions": {
-		"ecmaVersion": 6,
+		"ecmaVersion": 2017,
 		"sourceType": "module",
 		"ecmaFeatures": {
 			"jsx": true
 		}
 	},
 	"rules": {
-		"semi": 2
+		"semi": ["error", "always"],
+		"eol-last": ["error", "always"],
+		"no-mixed-spaces-and-tabs": "error",
+		"no-trailing-spaces": "error",
+		"no-multi-spaces": "error"
 	}
 }

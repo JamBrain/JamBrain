@@ -13,14 +13,14 @@ export default class HeaderWhatsup extends Component {
 		var path = props.path;
 		var extra = props.extra;
 		var featured = props.featured;
-		
+
 		// NOTE: For Theme Voting, look at what's in 'available' returned by the theme list.
 		// Then use that to check the name in 'names'. 
-		
+
 		// TODO: Write code to convert an array to "1 and 2" or "1, 2, and 3"
-		
+
 		// TODO: The actual theme can be found in the the public metatag "event-theme" (private one before event)
-		
+
 //		return null;
 
 
@@ -39,10 +39,70 @@ export default class HeaderWhatsup extends Component {
 
 		if ( featured ) {
 			if ( featured.meta ) {
-				if ( featured.meta['event-theme'] ) {
+				if ( parseInt(featured.meta['theme-mode']) == 1 ) {
 					return (
 						<div class="header-base header-whatsup outside">
-							<span class="-title _font2">RESULTS:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink>
+							<span class="-title _font2">ON NOW:</span> {featured.name} <NavLink href={featured.path}><SVGIcon baseline small gap>suggestion</SVGIcon>Theme Suggestions</NavLink> are open!
+						</div>
+					);
+				}
+				else if ( parseInt(featured.meta['theme-mode']) == 2 ) {
+					return (
+						<div class="header-base header-whatsup outside">
+							<span class="-title _font2">ON NOW:</span> {featured.name} <NavLink href={featured.path}><SVGIcon baseline small gap>fire</SVGIcon>Theme Slaughter Round</NavLink>
+						</div>
+					);
+				}
+				else if ( parseInt(featured.meta['theme-mode']) == 3 ) {
+					return (
+						<div class="header-base header-whatsup outside">
+							<span class="-title _font2">ON NOW:</span> {featured.name} <NavLink href={featured.path}><SVGIcon baseline small gap>fire</SVGIcon>Theme Fusion Round</NavLink>
+						</div>
+					);
+				}
+				else if ( parseInt(featured.meta['theme-mode']) == 4 ) {
+					return (
+						<div class="header-base header-whatsup outside">
+							<span class="-title _font2">ON NOW:</span> {featured.name} <NavLink href={featured.path}><SVGIcon baseline small gap>ticket</SVGIcon>Theme Voting</NavLink>
+						</div>
+					);
+				}
+				else if ( parseInt(featured.meta['theme-mode']) == 5 ) {
+					// Theme is revealed
+					if ( featured.meta['event-theme'] ) {
+						return (
+							<div class="header-base header-whatsup outside">
+								<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
+							</div>
+						);
+					}
+					// Theme is not yet revealed
+					else {
+						return (
+							<div class="header-base header-whatsup outside">
+								<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> Theme Announcement Soon! <NavLink href="https://twitter.com/ludumdare"><SVGIcon baseline small gap>twitter</SVGIcon>Check Twitter</NavLink>
+							</div>
+						);
+					}
+				}
+				else if ( parseInt(featured.meta['theme-mode']) == 6 && featured.meta['event-theme'] ) {
+					return (
+						<div class="header-base header-whatsup outside">
+							<span class="-title _font2">PLAY+RATE NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
+						</div>
+					);
+				}
+				else if ( parseInt(featured.meta['theme-mode']) == 7 && featured.meta['event-theme'] ) {
+					return (
+						<div class="header-base header-whatsup outside">
+							<span class="-title _font2">RESULTS SOON:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink>. This can take a few hours. <NavLink href="https://twitter.com/ludumdare"><SVGIcon baseline small gap>twitter</SVGIcon>Stay tuned</NavLink>
+						</div>
+					);
+				}
+				else if ( parseInt(featured.meta['theme-mode']) == 8 && featured.meta['event-theme'] ) {
+					return (
+						<div class="header-base header-whatsup outside">
+							<span class="-title _font2">RESULTS:</span> <NavLink href={featured.path+'/results'}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink>
 						</div>
 					);
 				}
@@ -60,7 +120,7 @@ export default class HeaderWhatsup extends Component {
 							<div class="header-base header-whatsup outside">
 								<span class="-title _font2">JUDGING NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
 							</div>
-						);						
+						);
 					}
 					else {
 						return (
@@ -79,7 +139,7 @@ export default class HeaderWhatsup extends Component {
 
 //							<br /><br />Game Publishing (Submission) is coming! Sorry for the <NavLink href="https://twitter.com/mikekasprzak"><SVGIcon baseline small gap>twitter</SVGIcon>delay</NavLink>!
 //							<br />We will make sure you get your compo games in the compo!
-			
+
 			return (
 				<div class="header-base header-whatsup outside">
 					<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> Theme Announcement Soon! <NavLink href="https://twitter.com/ludumdare"><SVGIcon baseline small gap>twitter</SVGIcon>Check Twitter</NavLink>
@@ -89,7 +149,7 @@ export default class HeaderWhatsup extends Component {
 		return null;
 
 //					<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> Final Round Theme Voting
-		
+
 //				<span class="-title _font2">ON NOW:</span> <NavLink href="/events/ludum-dare/38"><SVGIcon baseline small gap>trophy</SVGIcon>Ludum Dare 38</NavLink> Final Round Theme Voting
 
 //				<span class="-title _font2">ON NOW:</span> <NavLink href="/events/ludum-dare/38"><SVGIcon baseline small gap>trophy</SVGIcon>Ludum Dare 38</NavLink> <SVGIcon baseline small gap>ticket</SVGIcon>Theme Voting

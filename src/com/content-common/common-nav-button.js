@@ -12,7 +12,7 @@ export default class ContentCommonNavButton extends Component {
 		var Class = ['content-common-nav-button'];
 		if ( props.class )
 			Class = Class.concat(props.class.split(' '));
-		
+
 		if ( props.href ) {
 			return (
 				<ButtonLink class={Class} href={props.href} onclick={props.onclick}>

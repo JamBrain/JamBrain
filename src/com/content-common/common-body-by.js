@@ -11,7 +11,7 @@ export default class ContentCommonBodyBy extends Component {
 	shouldComponentUpdate( nextProps ) {
 		return shallowDiff(this.props.children, nextProps.children);
 	}
-	
+
 	getName( node ) {
 		if ( node.meta['real-name'] )
 			return node.meta['real-name'];
@@ -25,7 +25,7 @@ export default class ContentCommonBodyBy extends Component {
 	getURL( node ) {
 		return '/users/'+node.slug;
 	}
-	
+
 	getWhen( node, label ) {
 		if ( node.published ) {
 			var date_pub = new Date(node.published);
@@ -34,19 +34,19 @@ export default class ContentCommonBodyBy extends Component {
 			}
 			var date_now = new Date();
 			var pub_diff = (date_now.getTime() - date_pub.getTime());// - (date_now.getTimezoneOffset()*60);
-			
+
 			// x minutes ago
 			return <span>{label} <span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span></span>;
 		}
 		else {
-			return <span>not {label} yet</span>;			
+			return <span>not {label} yet</span>;
 		}
 	}
 	getModified( node, label ) {
 		var date_pub = new Date(node.modified);
 		var date_now = new Date();
 		var pub_diff = (date_now.getTime() - date_pub.getTime());// - (date_now.getTimezoneOffset()*60);
-		
+
 		// x minutes ago
 		return <span>{this.props.label} <span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span></span>;
 	}
@@ -55,7 +55,7 @@ export default class ContentCommonBodyBy extends Component {
 		props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 		props.class.push("content-common-body");
 		props.class.push("-by");
-		
+
 		var Body = [];
 		if ( !props.noby && props.author ) {
 			Body.push(<span class="-name">by {this.getName(props.author)}</span>);
@@ -65,7 +65,7 @@ export default class ContentCommonBodyBy extends Component {
 			Body.push(<span>by </span>);
 			for ( var idx = 0; idx < props.authors.length; idx++ ) {
 				Body.push(<span class="-name">{this.getName(props.authors[idx])}</span>);
-				Body.push(<span> (<NavLink class="-at-name" href={this.getURL(props.authors[idx])}>@{this.getAtName(props.authors[idx])}</NavLink>)</span>);
+				Body.push(<span> (<NavLink class="-at-name" href={this.getURL(props.authors[idx])}>@{this.getAtName(props.authors[idx])}</NavLink>){(props.authors.length > 1 && props.authors[idx].id == props.node.author)?<span title='Team Leader'>*</span>:''}</span>);
 				if ( idx < props.authors.length-2 )
 					Body.push(<span>, </span>);
 				else if ( idx < props.authors.length-1 )
@@ -78,7 +78,7 @@ export default class ContentCommonBodyBy extends Component {
 		else if ( props.modified && props.node ) {
 			Body.push(<span class="-when">{Body.length ? ', ' : ''}{this.getModified(props.node, props.label)}</span>);
 		}
-		
+
 		return <div class={props.class}>{Body}{props.children}</div>;
 	}
 }

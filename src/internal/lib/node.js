@@ -101,6 +101,34 @@ window.node_CanGrade = function( node ) {
 
 	return node.meta && node.meta['can-grade'];
 };
+window.node_isEventFinished = function( node ) {
+	// Return null if argument is invalid
+	if ( !node )
+		return null;
+
+	return node.meta && node.meta['event-finished'];
+};
+window.node_CanPublish = function( node ) {
+	// Return null if argument is invalid
+	if ( !node )
+		return null;
+
+	return node.meta && node.meta['can-publish'];
+};
+
+window.node_GetPlatforms = function( node ) {
+	if ( node && node.link && node.link.platform ) {
+		return node.link.platform;
+	}
+	return [];
+}
+window.node_GetTags = function( node ) {
+	if ( node && node.link && node.link.tag ) {
+		return node.link.tag;
+	}
+	return [];
+}
+
 
 //window.nodeUser_IsTeamLeader = function( user, project ) {
 //	

@@ -43,6 +43,18 @@ function themeIdea_Get( $event_id, $user_id = 0, $threshold = null, $query_suffi
 	}
 }
 
+function themeIdea_GetTopScoring( $event_id, $count) {
+	return db_QueryFetch(
+		"SELECT id, node, theme, score 
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_THEME_IDEA." 
+		WHERE node=? 
+		ORDER BY score DESC
+		LIMIT ?;",
+		$event_id,
+		$count
+	);
+}
+
 /// Ideas are considered original if they have no parent
 function themeIdea_GetOriginal( $event_id, $user_id = 0, $threshold = null, $query_suffix = ";" ) {
 	if ( $user_id ) {
