@@ -9,45 +9,48 @@ export default class PieChart extends Component {
 
     }
 
-    normalize ( values ) {
+    // Converts an array of number to an array of percentages
+    convertToPercentage ( values ) {
+        // calculate total
         let total = 0;
-
         values.forEach( ( v ) => ( total += v ) );
 
-        console.log(total);
+        // scale values so there sum is 100%
+        let percentages = values.map( ( v ) => ( (100 * v) / total ) );
 
-        let n_values = values.map( ( v ) => ( (100 * v) / total ) );
-
-        return n_values;
+        return percentages;
     }
 
     render( props ) {
-        console.log(props);
+
+        if ( !(props && props['lables'] && props['values'])) {
+            console.warn('PieChart was created with invalid props', props);
+            return <div> No Data! </div>;
+        }
 
         let lables = props.lables;
         let values = props.values;
 
-        let n_values = this.normalize(values);
+        let percentages = this.convertToPercentage(values);
 
         let Segments = [];
         let Ledgend = [];
 
         let offset = 0;
-
-        for (var i = 0; i < n_values.length; i++) {
+        for (var i = 0; i < percentages.length; i++) {
 
             let color = 1 + ( i % 6 );
             let ledgendclass = "shape-circle ledgend_color_"+color;
 
-            Segments.push(<PieSegment angle={n_values[i]} offset={offset} color={color}></PieSegment>);
+            Segments.push(<PieSegment angle={percentages[i]} offset={offset} color={color}></PieSegment>);
             Ledgend.push(
                 <li>
                     <span class={ledgendclass}></span>
-                    <p>{lables[i]} ({values[i]} / {Math.round(n_values[i] * 100) / 100}%)</p>
+                    <p>{lables[i]} ({values[i]} / {Math.round(percentages[i] * 100) / 100}%)</p>
                 </li>
             );
 
-            offset += n_values[i];
+            offset += percentages[i];
         }
 
         return (

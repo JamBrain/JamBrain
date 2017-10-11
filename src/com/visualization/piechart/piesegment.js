@@ -1,6 +1,6 @@
 import {h, Component} 				from 'preact/preact';
 
-export default class PieChart extends Component {
+export default class PieSegment extends Component {
 
 	constructor( props ) {
 		super(props);
@@ -8,13 +8,23 @@ export default class PieChart extends Component {
     }
 
     render( props ) {
-        console.log(props);
+
+        // it's valid for offset to be zero so we have to check it against undefined.
+        if ( !(props && props['angle'] && props['offset'] != undefined && props['color'])) {
+            console.warn('PieSegment was created with invalid props', props);
+            return;
+        }
 
         let angle = props.angle;
+
+        // drawing a segment of 0 width causes artifacting so bail out.
+        if (angle == 0) {
+            return;
+        }
+
         let offset = 100 - props.offset + 25;
         let color = props.color;
         let segmentclass = "piechart-segment piechart_color_"+color;
-
         let dash = angle + " " + (100 - angle);
 
         return (
