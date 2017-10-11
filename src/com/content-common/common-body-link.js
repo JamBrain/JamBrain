@@ -48,7 +48,7 @@ export default class ContentCommonBodyField extends Component {
 		const UrlPlaceholder = props.urlPlaceholder ? props.urlPlaceholder : 'Url';
 		const HasItems = props.items && props.items.length > 0;
 
-    if (props.editing && state.items) {
+		if (props.editing && state.items) {
 			Class.push('-editing');
 			let TagDropDown = null;
 			if (HasItems) {
