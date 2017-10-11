@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 				from 'preact/preact';
 
 import NavLink							from 'com/nav-link/link';
 
@@ -12,6 +12,9 @@ import ContentCommonBodyBy				from 'com/content-common/common-body-by';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonBodyAvatar			from 'com/content-common/common-body-avatar';
 import ContentCommonBodyMarkup			from 'com/content-common/common-body-markup';
+
+import PieChart							from 'com/visualization/piechart/piechart';
+
 
 import $Stats							from '../../shrub/js/stats/stats';
 
@@ -105,6 +108,26 @@ export default class ContentStatsEvent extends Component {
 				}
 
 				Data.push(<div class="-gap">Last Updated: {stats.timestamp}</div>);
+
+				let values = [
+					stats['grade-20-plus'],
+					stats['grade-15-20'],
+					stats['grade-10-15'],
+					stats['grade-5-10'],
+					stats['grade-0-5']-stats['grade-0-only'],
+					stats['grade-0-only']
+				];
+
+				let lables = [
+					'grade-20-plus',
+					'grade-15-20',
+					'grade-10-15',
+					'grade-5-10',
+					'grade-1-5',
+					'grade-0'
+				];
+
+				Data.push(<PieChart values={values} lables={lables}></PieChart>);
 
 				return (
 					<ContentCommon {...props} class={cN(Class)}>

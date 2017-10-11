@@ -1,0 +1,44 @@
+
+.piechart-figure {
+
+    display: flex;
+    justify-content: space-around;
+    margin-left: -15px;
+    margin-right: -15px;
+
+    flex-direction: column;    
+    @media (min-width: 768px) {
+        flex-direction: row;
+    }
+
+    .piechart {
+        flex: 1;
+        padding-left: 15px;
+        padding-right: 15px;
+        align-self: center;
+
+        .piechart-svg {
+            .piechart-segment {
+            }
+        }
+    }
+
+    .ledgend {
+        flex: 1;
+        padding-left: 15px;
+        padding-right: 15px;
+        align-self: center;
+          
+        li {
+            list-style: none;
+            
+            .shape-circle {
+                display: inline-block;
+                vertical-align: middle;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+            }
+        }
+    }
+}
