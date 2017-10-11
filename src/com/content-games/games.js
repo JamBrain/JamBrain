@@ -1,5 +1,4 @@
 import { h, Component } 				from 'preact/preact';
-import NavSpinner						from 'com/nav-spinner/spinner';
 
 import ContentLoading					from 'com/content-loading/loading';
 import ContentError						from 'com/content-error/error';
@@ -12,8 +11,6 @@ import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
 import GridSelector						from './grid-selector';
 
-//import ContentPost						from 'com/content-post/post';
-//import ContentUser						from 'com/content-user/user';
 import ContentMore						from 'com/content-more/more';
 
 import $Node							from '../../shrub/js/node/node';
@@ -24,13 +21,13 @@ export default class ContentGames extends Component {
 		super(props);
 
 		this.state = {
-			feed: [],
-			hash: {},
-			offset: 12-5, //10-5
-			added: null,
-			loaded: false,
-			defaultLayout: 3,
-			layout: 3,
+			'feed': [],
+			'hash': {},
+			'offset': 12-5, //10-5
+			'added': null,
+			'loaded': false,
+			'defaultLayout': 3,
+			'layout': 3,
 		};
 
 		this.fetchMore = this.fetchMore.bind(this);
@@ -147,10 +144,10 @@ export default class ContentGames extends Component {
 
 		var LoadMore = null;
 
-		if (error){
+		if ( error ) {
 			return <ContentError code="400">"Bad Request : Couldn't load games"</ContentError>;
 		}
-		else if(feed && feed.length > 0)
+		else if ( feed && feed.length > 0 )
 		{
 			var Games = feed.map(r => {
 				return <ContentItemBox node={r.node} user={props.user} path={props.path} noevent={props.noevent ? props.noevent : null} />;
@@ -162,7 +159,7 @@ export default class ContentGames extends Component {
 				keep adding placeholder elements so that the last
 				row looks nice
 			*/
-			while (Games.length % layout !== 0) {
+			while ( Games.length % layout !== 0 ) {
 				Games.push(<ContentItemBox placeHolder={true} />);
 			}
 

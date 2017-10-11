@@ -17,15 +17,15 @@ export default class GridSelector extends Component {
     }
 
     componentDidMount() {
-       if (!this.state.selected) {
+       if ( !this.state.selected ) {
           this.handleNewSelection(this.props.defaultLayout);
        }
     }
 
-    handleNewSelection(selected) {
+    handleNewSelection( selected ) {
         const onChangeLayout = this.props.onChangeLayout;
         this.setState({'selected': selected});
-        if (onChangeLayout) {
+        if ( onChangeLayout ) {
             onChangeLayout(selected);
         }
     }
@@ -35,7 +35,7 @@ export default class GridSelector extends Component {
         this.setState({'expanded': !this.state.expanded});
     }
 
-    onSelectLayout(index) {
+    onSelectLayout( index ) {
         this.handleNewSelection(index);
         this.setState({
             expanded: false,
@@ -52,7 +52,7 @@ export default class GridSelector extends Component {
             </ButtonBase>
        );
 
-       if (expanded) {
+       if ( expanded ) {
            const options = [
                [1, '1 per line'],
                [2, '2 per line'],
