@@ -8,8 +8,8 @@ export default class GridSelector extends Component {
     constructor( props ) {
 		super(props);
         this.state = {
-            expanded: false,
-            selected: null,
+            'expanded': false,
+            'selected': null,
         };
 
         this.onSelectLayout = this.onSelectLayout.bind(this);
@@ -24,7 +24,7 @@ export default class GridSelector extends Component {
 
     handleNewSelection(selected) {
         const onChangeLayout = this.props.onChangeLayout;
-        this.setState({selected: selected});
+        this.setState({'selected': selected});
         if (onChangeLayout) {
             onChangeLayout(selected);
         }
@@ -32,7 +32,7 @@ export default class GridSelector extends Component {
 
     onToggleDropDown() {
         console.log('toggle dropdown', this.state);
-        this.setState({expanded: !this.state.expanded});
+        this.setState({'expanded': !this.state.expanded});
     }
 
     onSelectLayout(index) {

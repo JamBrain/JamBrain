@@ -156,6 +156,12 @@ export default class ContentGames extends Component {
 				return <ContentItemBox node={r.node} user={props.user} path={props.path} noevent={props.noevent ? props.noevent : null} />;
 			});
 
+			/*
+				As long as the number of items in the Games array
+				doesn't evenly divide by the number of columns
+				keep adding placeholder elements so that the last
+				row looks nice
+			*/
 			while (Games.length % layout !== 0) {
 				Games.push(<ContentItemBox placeHolder={true} />);
 			}
@@ -173,7 +179,7 @@ export default class ContentGames extends Component {
 						defaultLayout={defaultLayout}
 						onChangeLayout={
 							(gridLayout) => {
-								this.setState({layout: gridLayout,});
+								this.setState({'layout': gridLayout,});
 							}
 						}
 					/>
