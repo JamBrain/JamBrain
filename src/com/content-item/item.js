@@ -218,9 +218,9 @@ export default class ContentItem extends Component {
 
 	// Generates JSX for the links, depending on whether the page is editing or viewing
 	makeLinks( editing ) {
-    let LinkMeta = [];
+		let LinkMeta = [];
 
-    for ( let idx = 0; idx < this.state.linksShown; idx++ ) {
+		for ( let idx = 0; idx < this.state.linksShown; idx++ ) {
 			LinkMeta.push(
 				<ContentCommonBodyLink
 					name={this.state.linkNames[idx]}
@@ -264,7 +264,7 @@ export default class ContentItem extends Component {
 	updatePropsAndGetCategory(props, node) {
 		let Category = '/';
 
-    if ( node ) {
+		if ( node ) {
 			if ( node.subtype == 'game' ) {
 				props.header = "GAME";
 				props.headerClass = "-col-a";
@@ -345,7 +345,7 @@ export default class ContentItem extends Component {
 		
 		let ShowImages = null;
 
-    if ( true ) {
+		if ( true ) {
 			let ShowImage = null;
 			if ( node.meta && node.meta.cover ) {
 				ShowImage = <IMG2 class="-img" src={node.meta && node.meta.cover ? node.meta.cover+'.320x256.fit.jpg' : "" } />;
@@ -368,9 +368,9 @@ export default class ContentItem extends Component {
 			);
 		}
 
-    let ShowUploadTips = null;
+		let ShowUploadTips = null;
 
-    if ( true ) {
+		if ( true ) {
 			ShowUploadTips = (
 				<ContentCommonBody>
 					<br />
