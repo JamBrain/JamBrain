@@ -19,41 +19,50 @@ export default class ContentCommonBodyField extends Component {
 	}
 
 	componentDidMount() {
+
 		$Tag.Get(this.props.filter)
 			.then(r => {
-				if ( r.tag && r.tag.length ) {
-					let that = this;
+				let NewState = {
+					'items': [],
+					'indexes': {}
+				};
 
-					let NewState = {
-						'items': [],
-						'indexes': {}
-					};
+				if ( r.tag && r.tag.length ) {
+
 					r.tag.forEach(item => {
 						NewState.indexes[item.id] = NewState.items.length;
 						NewState.items.push([item.id, item.name]);
 					});
-
-					this.setState(NewState);
 				}
+					
+				this.setState(NewState);
+				
 			});
 	}
 
 	render( props, state ) {
-		var Class = ["content-common-body","-link"];
+		let Class = ["content-common-body","-link"];
 
-		var Limit = 64;
-		var NamePlaceholder = props.namePlaceholder ? props.namePlaceholder : 'Name';
-		var UrlPlaceholder = props.urlPlaceholder ? props.urlPlaceholder : 'Url';
+		const Limit = 64;
+		const NamePlaceholder = props.namePlaceholder ? props.namePlaceholder : 'Name';
+		const UrlPlaceholder = props.urlPlaceholder ? props.urlPlaceholder : 'Url';
+		const HasItems = props.items && props.items.length > 0;
 
 		if (props.editing && state.items) {
 			Class.push('-editing');
-			return (
-				<div class={cN(Class, props.class)}>
+			let TagDropDown = null;
+			if (HasItems) {
+				TagDropDown = (
 					<InputDropdown class="-name"
 						items={state.items}
 						value={props.tag ? state.indexes[props.tag] : 0}
 						onmodify={props.onModifyTag}
-					/>
+					/>);
+			}
+			
+			return (
+				<div class={cN(Class, props.class)}>
+					{TagDropDown}
 					<InputText class="-url"
 						value={props.url}
 						onmodify={props.onModifyUrl}
@@ -62,25 +71,24 @@ export default class ContentCommonBodyField extends Component {
 					/>
 				</div>
 
-//					<InputText class="-name"
-//						value={props.name} 
-//						onmodify={props.onModifyName}
-//						placeholder={NamePlaceholder}
-//						max={Limit}
-//					/>
 			);
 		}
 		else if ( state.items && props.url ) {
-			var Index = props.tag ? state.indexes[props.tag] : 0;
-			var Tag = state.items[Index];
-			var Text = Sanitize.sanitize_URI(props.url);
-			var Href = Text.indexOf('//') != -1 ? Text : '';
+			const Index = props.tag ? state.indexes[props.tag] : 0;
+			const Text = Sanitize.sanitize_URI(props.url);
+			const Href = Text.indexOf('//') != -1 ? Text : '';
 
-			var ShowLink = Href ? (<a href={Href} target="_blank">{Text}</a>) : <span>{Text}</span>;
+			const ShowLink = Href ? (<a href={Href} target="_blank">{Text}</a>) : <span>{Text}</span>;
 
+			let ShowTag = null;
+			if (HasItems)  {
+				const Tag = state.items[Index];
+				ShowTag = (<strong title={Tag[0]}>{Tag[1]}:</strong> );
+			}
+			
 			return (
 				<div class={cN(Class, props.class)}>
-					<strong title={Tag[0]}>{Tag[1]}:</strong> {ShowLink}
+					{ShowTag}{ShowLink}
 				</div>
 			);
 		}
