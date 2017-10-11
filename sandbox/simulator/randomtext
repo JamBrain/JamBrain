@@ -1,0 +1,345 @@
+<?php
+/*
+	randomtext		Support functions to generate randomized text for the content of posts, etc.
+	
+*/
+
+
+function GenerateRandomUsername()
+{
+	global $usewikitext;
+	if($usewikitext)
+	{
+		// glue a few alphanumeric words together
+		$length = random_int(3, 15);
+		$maxlength = $length+5;
+		$username = "";
+		while(strlen($username) < $length)
+		{
+			$word = MarkovRandomWord();
+			$safeword = preg_replace("/[^a-zA-Z0-9]/","",$word);
+			$username .= $safeword;
+		}
+		if(strlen($username) > $maxlength)
+		{
+			$username = substr($username,0,$maxlength);
+		}
+		return $username;
+	}
+
+  $length = random_int(2, 10);
+  return bin2hex(random_bytes($length));
+}
+
+function GenerateRandomPassword()
+{
+  $length = random_int(5, 10);
+  return bin2hex(random_bytes($length));
+}
+
+function GenerateRandomPostTitle()
+{
+	return GenerateRandomPhrase(2,7);
+}
+
+// Future: something much more meaningful. Also figure out how to include image uploads, links, other fun features.
+function GenerateRandomPostText($maxParagraphs = 3)
+{
+	global $usewikitext;
+	if($usewikitext)
+	{
+		$paragraphs = random_int(1,$maxParagraphs);
+		$output = "";
+
+		for($p =0;$p<$paragraphs;$p++)
+		{
+			$sentences = random_int(1,10);
+			for($s=0;$s<$sentences;$s++)
+			{
+				$output .= GenerateRandomPhrase(3,17) . ". ";
+			}
+			$output .= "\n";
+		}
+	}
+
+	// Add youtube video to the post
+	global $useyoutubevideos;
+	global $youtubevideochance;
+	if ($useyoutubevideos and random_int(0, $youtubevideochance-1) == 0)
+	{
+		$output .= "\n";
+		$output .= YoutubeRandomVideo();
+	}
+
+	$output .= "\n\n";
+
+	return $output;
+
+}
+
+function GenerateRandomPhrase($minWords, $maxWords)
+{
+	global $usewikitext;
+	if($usewikitext)
+	{
+		return MarkovRandomPhrase($minWords, $maxWords);		
+	}
+	
+	$words = random_int($minWords, $maxWords);
+	$allwords = array();
+	for($i=0;$i<$words;$i++)
+	{
+		$wordlength = random_int(1,5);
+		$word = bin2hex(random_bytes($wordlength));
+		$allwords[] = $word;
+	}
+	return implode(" ",$allwords);
+}
+
+////
+//// Fetch some random wikipedia articles to seed the Markov text generation system
+////
+
+function SetupTextGeneration($articles = 10)
+{
+	MarkovReset();
+	for($i=0; $i < $articles; $i++)
+	{
+		AddWikipediaText();
+	}
+	
+	// Export markov data to file (mostly for examination)
+	$f = OpenMarkovFile();
+	MarkovExport($f);
+	fclose($f);
+}
+
+function AddWikipediaText()
+{
+	// Fetch a random wikipedia article.
+	$data = LdApi::GetRaw("https://en.wikipedia.org/wiki/Special:Random");
+
+	$f = OpenWikiDataFile();
+	fprintf($f,"%s",$data);
+	fclose($f);
+	
+	// Determine what article we got from the page- class in the body tag.
+	if(preg_match('/<body[^>]*page-([^\s]+) [^>]+>/', $data, $matches))
+	{
+		Message("Reading Wikipedia Article " . $matches[1]);
+	}
+	else
+	{
+		ReportError("Wikipedia data seems wrong. Please check.");
+		return;
+	}
+	
+	// Get data between '<div class="mw-parser-output">' and '<div class="printfooter">'
+	$parts1 = explode('<div class="mw-parser-output">', $data, 2);
+	if(count($parts1) != 2) { ReportError("Error in parsing wikipedia page"); return; }
+	$parts2 = explode('<div class="printfooter">',$parts1[1], 2);
+	if(count($parts2) != 2) { ReportError("Error in parsing wikipedia page"); return; }
+	
+	// Remove all html tags and [#] references. Remove quotation marks. Remove commas.
+	$content = preg_replace('/<[^>]+>/','',$parts2[0]);
+	$content = preg_replace('/\[\d+\]/','',$content);
+	$content = str_replace('"','',$content);
+	$content = str_replace(',','',$content);
+	
+	// Split on period and newline, eliminate duplicate spaces
+	$content = str_replace('.',"\n",$content);
+	
+	$statements = explode("\n",$content);
+	MarkovTrain($statements);
+}
+
+
+////
+//// Generate text using markov chains derived from whatever source material you give it.
+//// (Well semi-markov, it doesn't really care about the statistical element, just the chains of sequential words.)
+////
+
+
+function MarkovReset()
+{
+	$GLOBALS["MarkovData"] = [ "Words"=>[], "WordMap"=>[], "Chain2"=>[], "Chain3"=>[], "Stats"=>["UseChain3"=>0, "UseChain2"=>0, "UseRandom"=>0]];
+}
+
+function MarkovExport($f)
+{
+	MarkovEnsureWords();
+	fprintf($f, "# Words\n");
+	fprintf($f, "%s", implode(",",$GLOBALS["MarkovData"]["Words"]) . "\n");
+	fprintf($f, "# Chain2\n");
+	$keys = array_keys($GLOBALS["MarkovData"]["Chain2"]);
+	sort($keys);
+	foreach($keys as $k)
+	{
+		$values = array_keys($GLOBALS["MarkovData"]["Chain2"][$k]);
+		sort($values);
+		fprintf($f, "%s", $k ."," . implode(",",$values) . "\n");
+	}
+	fprintf($f, "# Chain3\n");
+	$keys = array_keys($GLOBALS["MarkovData"]["Chain3"]);
+	sort($keys);
+	foreach($keys as $k)
+	{
+		$values = array_keys($GLOBALS["MarkovData"]["Chain3"][$k]);
+		sort($values);
+		fprintf($f, "%s", $k ."," . implode(",",$values) . "\n");
+	}	
+}
+
+function MarkovTrain($statementarray)
+{
+	foreach($statementarray as $statement)
+	{
+		$statement = trim($statement);
+		if($statement == "") { continue; }
+		$words = preg_split('/[\s,]+/', $statement);
+		MarkovTrainWordArray($words);
+	}
+}
+
+function MarkovTrainWordArray($words)
+{
+	global $MarkovData;
+
+	$prev1 = "";
+	$prev2 = "";	
+	$words[] = ""; // Add an empty value to the chains to indicate natural places where the generation can stop.
+	foreach($words as $word)
+	{
+		$key3 = "$prev2-$prev1";
+		$key2 = $prev1;
+	
+		// Add word to word list
+		if($word != "") {
+			if(key_exists($word, $MarkovData["WordMap"])) { $MarkovData["WordMap"][$word]++; } else { $MarkovData["WordMap"][$word] = 1; }
+		}
+		
+		// Add to 2-chain
+		if(!key_exists($key2, $MarkovData["Chain2"])) { 
+			$MarkovData["Chain2"][$key2] = [];
+		}
+		$MarkovData["Chain2"][$key2][$word] = true;
+				
+		// Add to 3-chain
+		if(!key_exists($key3, $MarkovData["Chain3"])) { 
+			$MarkovData["Chain3"][$key3] = [];
+		}
+		$MarkovData["Chain3"][$key3][$word] = true;
+		
+		
+		$prev2 = $prev1;
+		$prev1 = $word;
+	}
+	$MarkovData["Words"] = null; // Word list needs to be rebuilt.
+}
+
+function MarkovEnsureWords()
+{
+	if(!$GLOBALS["MarkovData"]["Words"])
+	{
+		$GLOBALS["MarkovData"]["Words"] = array_keys($GLOBALS["MarkovData"]["WordMap"]);
+		sort($GLOBALS["MarkovData"]["Words"]);
+	}
+}
+
+function MarkovRandomWord()
+{
+	MarkovEnsureWords();
+	global $MarkovData;
+	$index = random_int(1,count($MarkovData["Words"]))-1;
+	return $MarkovData["Words"][$index];
+}
+
+function MarkovRandomPhrase($minwords = 3, $maxwords = 25)
+{
+	global $MarkovData;
+	MarkovEnsureWords();
+
+	$makewords = random_int($minwords, $maxwords);
+
+	$prev2 = "";
+	$prev1 = MarkovRandomWord();
+	$words = [$prev1];
+	
+	for($i=1;$i<$makewords;$i++)
+	{
+		// Try to generate a new word from markov-3, if we can't, try markov-2, then just a random word.
+		$key3 = "$prev2-$prev1";
+		$key2 = $prev1;
+		
+		$word = "";
+		if(key_exists($key3, $MarkovData["Chain3"]))
+		{
+			// Pick a random option
+			$options = array_keys($MarkovData["Chain3"][$key3]);
+			$index = random_int(1,count($options))-1;
+			$word = $options[$index];
+		}
+		
+		// If we don't have a word, try to generate from markov-2
+		if($word == "" && key_exists($key2, $MarkovData["Chain2"]))
+		{
+			$options = array_keys($MarkovData["Chain2"][$key2]);
+			$index = random_int(1,count($options))-1;
+			$word = $options[$index];
+		}
+		
+		if($word == "")
+		{
+			$word = MarkovRandomWord();
+		}
+		
+		$words[] = $word;
+		$prev2 = $prev1;
+		$prev1 = $word;
+	}
+
+	return implode(" ",$words);
+}
+
+/// Generate 'Random' Youtube Video
+
+function YoutubeRandomVideo()
+{
+	global $useyoutubevideos;
+
+	if ($useyoutubevideos)
+	{
+
+		$url = "https://www.youtube.com/watch?v=";
+
+		// Using a fixed pool of YT videos (LudumDare keynotes)
+		$videoids = array(
+			"Hrkv31Lep9s",
+			"dOcstOra19w",
+			"u3R70NlGvKk",
+			"mFef1bOn4EI",
+			"8rLma_1RPU8",
+			"XVrgCgtKobI",
+			"vPneI5IYwnc",
+			"9OjIIhm8ZVk",
+			"sw3hv23GVo0",
+			"OZ_jgNQNqzI",
+			"W9BurFrSNpA",
+			"PaYpgb3vTrY",
+			"Dtu-tStT75Q",
+			"e1LVakqPJXE"
+		);
+
+		// chose which video to display and build it's url
+		$index = random_int(0,count($videoids)-1);
+		$url .= $videoids[$index];
+
+		Message("Linking to Youtube video " . $url);
+
+
+		return $url;
+	}
+
+	return "";
+}
+

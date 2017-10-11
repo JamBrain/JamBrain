@@ -1,0 +1,310 @@
+<?php
+/*
+	run_model		code to sanity check and execute a model with the specified parameters.
+
+*/
+
+
+
+////
+//// Quickly sanity check that all functions referenced in the above state system actually exist.
+//// 
+function EnsureFunction($funcname)
+{
+	if(!function_exists($funcname))
+	{
+		ReportError("Fatal error - Function ".$funcname.' referenced in the $stages array does not exist.');
+		exit(1);
+	}
+}
+function EnsureFunctionKey(&$stage, $keyname)
+{
+	if(key_exists($keyname, $stage)) { EnsureFunction($stage[$keyname]); }
+}
+function EnsureFunctionArray(&$stage, $keyname)
+{
+	if(key_exists($keyname, $stage)) 
+	{
+		foreach($stage[$keyname] as $f) EnsureFunction($f);
+	}
+}
+
+function ModelSanityCheck()
+{
+	global $stages;
+	
+	foreach($stages as $stage)
+	{
+		EnsureFunctionKey($stage, "StageStart");
+		EnsureFunctionKey($stage, "StageEnd");
+		EnsureFunctionKey($stage, "PhaseStart");
+		EnsureFunctionKey($stage, "PhaseEnd");
+		EnsureFunctionKey($stage, "UserVerify");
+		EnsureFunctionArray($stage, "Always");
+		EnsureFunctionArray($stage, "LowChance");
+		EnsureFunctionArray($stage, "HighChance");
+	}
+}
+
+////
+//// Code to drive the stage progression based on the $stages variable defined above.
+////
+function ModelExecute()
+{
+	global $stages;
+	global $runminutes, $runactions;
+
+	$stagecount = count($stages);
+
+
+	for($curStage = 0; $curStage < $stagecount; $curStage++)
+	{
+		$stage = $stages[$curStage];
+		Message("Starting stage " . $curStage . " - " . $stage["Name"]);
+
+		// Start stage function
+		if(key_exists("StageStart",$stage)) { $stage["StageStart"](); }
+
+		$phasecount = 1;
+		$hasPhases = false;
+		if(key_exists("Phases", $stage)) { 
+			$hasPhases = true;
+			$phasecount = $stage["Phases"];
+		}
+
+		for($phase = 0; $phase < $phasecount; $phase++)
+		{
+			if($hasPhases)
+			{
+				Message("Beginning Phase ".$phase);
+			}
+			if($hasPhases && key_exists("PhaseStart",$stage)) { $stage["PhaseStart"]($phase); }
+
+			PrepareStageActions($stage, $phase);
+
+			// Determine proper action limiting mechanism
+			if($runminutes)
+			{
+				// Use temporal limiting
+				$minutes = $runminutes;
+				if($stage["MaxMinutes"])
+				{
+					$minutes = Math.min($minutes, $stage["MaxMinutes"]);
+				}
+				$end = (new DateTime()).Add(new DateInterval("PT".$minutes."M"));
+				Message("Running for ".$minutes." minute".($minutes == 1?"":"s"));
+				
+				while($end > new DateTime())
+				{
+					if(!ExecuteStageAction($stage, $phase))
+					{
+						// Still wait for the period to complete before continuing
+						usleep(10000); // Delay 10ms
+					}
+				}
+			}
+			else
+			{
+				// Use event count limiting
+				for($action = 0; $action < $runactions; $action++)
+				{
+					if(!ExecuteStageAction($stage, $phase))
+					{
+						break;
+					}
+				}
+			}
+			
+			// Ensure promised conditions about mandatory actions hold
+			CompleteMandatoryStageActions($stage, $phase);
+
+			if($hasPhases && key_exists("PhaseEnd",$stage)) { $stage["PhaseEnd"]($phase); }
+
+		}
+
+		// End stage function
+		if(key_exists("StageEnd",$stage)) { $stage["StageEnd"](); }
+	  
+	}
+	Message("All Stages Complete!");
+
+}
+
+
+
+$currentstageactions = null;
+
+function PrepareStageActions($stage, $phase)
+{
+	global $event_users;
+	global $event_user_lookup;
+	global $currentstageactions;
+	$currentstageactions = [ "Allowed" => [], "Required" => [], "Users" => [], "ActiveUsernames" => [], "ActionCount" => [] ];
+	
+	// Extract actions out from stage	
+	// Always => List of functions (actions) to be called by all simulated users in this phase
+	// LowChance => List of functions (actions) to be called by a few (at least one, but less than half) of the simulated users in this phase. Each function gets its own list of users
+	// HighChance => list of functions (actions) to be called by most (not all, but at least half) of the simulated users in this phase. Each function gets its own list of users
+	
+	if(key_exists("Always",$stage))
+	{
+		foreach($stage["Always"] as $action)
+		{
+			foreach($event_users as $u)
+			{	
+				$currentstageactions["Allowed"][$u["username"]][] = $action;
+				$currentstageactions["Required"][$u["username"]][] = $action;
+			}
+		}
+	}
+	$usercount = count($event_users);
+	$halflow = floor($usercount/2);
+	$halfhigh = ceil($usercount/2);
+	
+	if(key_exists("LowChance",$stage))
+	{
+		foreach($stage["LowChance"] as $action)
+		{
+			$users = random_int(1, $halfhigh);
+			$randomusers = PickRandomSubset($event_users, $users);
+			
+			foreach($randomusers as $u)
+			{	
+				$currentstageactions["Allowed"][$u["username"]][] = $action;
+				$currentstageactions["Required"][$u["username"]][] = $action;
+			}
+		}	
+	}
+	if(key_exists("HighChance",$stage))
+	{
+		foreach($stage["HighChance"] as $action)
+		{
+			$users = random_int($halflow, $usercount);
+			$randomusers = PickRandomSubset($event_users, $users);
+			
+			foreach($randomusers as $u)
+			{	
+				$currentstageactions["Allowed"][$u["username"]][] = $action;
+				$currentstageactions["Required"][$u["username"]][] = $action;
+			}
+		}	
+	}	
+
+	$eventsperuser = -1;
+	if(key_exists("MaxEventsPerUser",$stage)) { $eventsperuser = $stage["MaxEventsPerUser"]; } 
+	
+	// Compute ActiveUsernames from users that have actions still.
+	foreach($event_users as $u)
+	{
+		$n = $u["username"];
+		if(key_exists($n,$currentstageactions["Allowed"]) && count($currentstageactions["Allowed"][$n]) > 0)
+		{
+			$currentstageactions["ActiveUsernames"][] = $n;
+		}
+		$currentstageactions["ActionCount"][$n] = $eventsperuser;
+	}
+	
+}
+
+function PickRandomSubset($objects, $count)
+{
+	$subset = [];
+	for($i = 0;$i < $count && count($objects) > 0; $i++)
+	{
+		$pick = random_int(1,count($objects))-1;
+		$subset[] = $objects[$pick];
+		if($pick < (count($objects)-1)) { $objects[$pick] = $objects[count($objects)-1]; }
+		unset($objects[count($objects)-1]);
+	}
+	return $subset;
+}
+
+function RemoveElement(&$location, $action)
+{
+	$index = array_search($action, $location);
+	if($index === false) return;
+	
+	$last = count($location)-1;
+	if($index != $last)
+	{
+		$location[$index] = $location[$last];
+	}
+	unset($location[$last]);
+}
+
+$ActionContext = [];
+
+function ExecuteAction(&$user, $action, $phase)
+{
+	$username = $user["username"];
+	
+	VerboseAction("Running action ".$action." with user ".$username);
+	$GLOBALS["ActionContext"] = ["action" => $action];
+
+	return $action($user,$phase);
+}
+
+function ExecuteStageAction($stage, $phase)
+{
+	global $currentstageactions;	
+	global $event_user_lookup;	
+	if(count($currentstageactions["ActiveUsernames"]) == 0) return false; // Nothing to do!
+	
+	// Pick a random user from the active usernames
+	$userindex = random_int(1,count($currentstageactions["ActiveUsernames"]))-1;
+	$username = $currentstageactions["ActiveUsernames"][$userindex];
+	$user = &$event_user_lookup[$username];
+	
+	// Pick a random action from the available actions
+	$actions = $currentstageactions["Allowed"][$username];
+	if(count($actions) < 1)
+	{
+		ReportError("Debug - something has gone wrong.");
+		print_r($username);
+		print_r($currentstageactions);
+		return true;
+	}
+	$actionindex = random_int(1, count($actions)) - 1;
+	$action = $actions[$actionindex];
+	
+	// Execute the action
+	$result = ExecuteAction($user, $action, $phase);
+	
+	// Unmark the action from the Required list if present
+	RemoveElement($currentstageactions["Required"][$username], $action);
+	
+	// If the action has requested a stop, remove this action from the Allowed list, and possibly remove this username from the active usernames list.
+	if($result === false)
+	{
+		RemoveElement($currentstageactions["Allowed"][$username], $action);
+		if(count($currentstageactions["Allowed"][$username]) == 0)
+		{
+			RemoveElement($currentstageactions["ActiveUsernames"], $username);
+		}
+	}
+	
+	// Decrement action count & disable username if it hits zero.
+	$currentstageactions["ActionCount"][$username]--;
+	if($currentstageactions["ActionCount"][$username] == 0)
+	{
+		RemoveElement($currentstageactions["ActiveUsernames"], $username);
+	}
+	
+	return true;
+}
+
+function CompleteMandatoryStageActions($stage, $phase)
+{
+	// Complete any remaining Required actions that we didn't get to already (and remove from the list).
+	global $currentstageactions;	
+	global $event_user_lookup;	
+	foreach($currentstageactions["Required"] as $u => $actions)
+	{
+		$user = &$event_user_lookup[$u];
+		
+		foreach($actions as $action)
+		{
+			ExecuteAction($user, $action, $phase);
+		}
+	}
+}

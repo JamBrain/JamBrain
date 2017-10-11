@@ -30,7 +30,7 @@ export default class YoutubeEmbed extends Component {
 
     if (state.iframe) {
       return (
-        <div class="embed-video">
+        <div class="embed-video -youtube">
           <div class="-video">
             <iframe src={'https://www.youtube.com/embed/' + video_id + '?' + args.join('&')} frameborder="0" allowfullscreen></iframe>
           </div>
@@ -39,7 +39,7 @@ export default class YoutubeEmbed extends Component {
     }
 
     return (
-      <div class="embed-video">
+      <div class="embed-video -youtube">
         <div class="-thumbnail">
           <div class="-overlay" onclick={this.onClick} href={props.href}>
             <div class="-play">
