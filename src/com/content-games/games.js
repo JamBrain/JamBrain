@@ -136,24 +136,24 @@ export default class ContentGames extends Component {
 	}
 
 	static matchesFilter(node, filter) {
-		if (node === undefined) {
+		if ( node === undefined ) {
 			return false;
 		}
 		//console.log(filter);
-		if (filter && filter.active) {
-			const {words} = filter;
-			if (words.length > 0) {
+		if ( filter && filter.active ) {
+			const {wordsLowerCase} = filter;
+			if ( wordsLowerCase.length > 0 ) {
 				let matches = 0;
-				words.forEach((text) => {
+				wordsLowerCase.forEach((text) => {
 
-					if (text && (node.name.indexOf(text) > -1 || node.body.indexOf(text) > -1)) {
+					if ( text && (node.name.toLowerCase().indexOf(text) > -1 || node.body.toLowerCase().indexOf(text) > -1) ) {
 						matches++;
 					}
 				});
 				return matches > 0;
 			}
 			//TODO: check tags
-			return !text;
+			return true;
 		}
 		return true;
 	}

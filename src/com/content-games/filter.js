@@ -39,12 +39,15 @@ export default class GamesFilter extends Component {
         if ( onchangefilter && e.target ) {
             const { value } = e.target;
             const freeWords = value.replace(PatternTag, '').replace(PatternAtName, '');
+            const words = simpleFilter ? value.match(PatternWord) : freeWords.match(PatternWord);
+
             const filter = {
-                text: value,
-                active: !!value,
-                words: simpleFilter ? value.match(PatternWord) : freeWords.match(PatternWord),
-                atnames: value.match(PatternAtName),
-                tags: value.match(PatternTag),
+                'text': value,
+                'active': !!value,
+                'words': words,
+                'wordsLowerCase': words.map(w => w.toLowerCase()),
+                'atnames': value.match(PatternAtName),
+                'tags': value.match(PatternTag),
             };
             onchangefilter(filter);
         }
@@ -225,32 +228,32 @@ export default class GamesFilter extends Component {
                [
                    1,
                    <div><SVGIcon>ticket</SVGIcon><div>Smart</div></div>,
-                   <NavLink href={Path+'smart/'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                   <NavLink href={Path+'smart'+WithSubFilter} class="-click-catcher" />,
                ],
                [
                    2,
                    <div><SVGIcon>ticket</SVGIcon><div>Classic</div></div>,
-                   <NavLink href={Path+'classic/'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                   <NavLink href={Path+'classic'+WithSubFilter} class="-click-catcher" />,
                ],
                [
                    3,
                    <div><SVGIcon>help</SVGIcon><div>Danger</div></div>,
-                   <NavLink href={Path+'danger/'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                   <NavLink href={Path+'danger'+WithSubFilter} class="-click-catcher" />,
                ],
                [
                    4,
                    <div><SVGIcon>gift</SVGIcon><div>Zero</div></div>,
-                   <NavLink href={Path+'zero/'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                   <NavLink href={Path+'zero'+WithSubFilter} class="-click-catcher" />,
                ],
                [
                    5,
                    <div><SVGIcon>bubbles</SVGIcon><div>Feedback</div></div>,
-                   <NavLink href={Path+'feedback/'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                   <NavLink href={Path+'feedback'+WithSubFilter} class="-click-catcher" />,
                ],
                [
                    6,
                    <div><SVGIcon>todo</SVGIcon><div>Grade</div></div>,
-                   <NavLink href={Path+'grade/'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                   <NavLink href={Path+'grade'+WithSubFilter} class="-click-catcher" />,
                ],
             ];
             let value = 1;
