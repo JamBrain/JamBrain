@@ -7,6 +7,9 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import IMG	 							from 'com/img2/img2';
 
+import ButtonBase						from 'com/button-base/base';
+import ButtonLink						from 'com/button-link/link';
+
 export default class SidebarTV extends Component {
 	constructor( props ) {
 		super(props);
@@ -154,20 +157,11 @@ export default class SidebarTV extends Component {
 
 	showOthers( others, active ) {
 		return others.map((other, index) => {
-			if (other === active) {
-				return (
-					<div class="selected" onclick={this.setActive.bind(this, index)}>
-						<div><IMG src={ other && other.meta ? other.meta.thumbnail : ""} failsrc={this.FailImage} /></div>
-					</div>
-				);
-			}
-			else {
-				return (
-					<div onclick={this.setActive.bind(this, index)}>
-						<div><IMG src={ other && other.meta ? other.meta.thumbnail : ""} failsrc={this.FailImage} /></div>
-					</div>
-				);
-			}
+			return (
+				<div class={cN(other === active ? "selected" : "")} onclick={this.setActive.bind(this, index)} title={other && other.meta.name ? other.meta.name : ""}>
+					<div><IMG src={ other && other.meta ? other.meta.thumbnail : ""} failsrc={this.FailImage} /></div>
+				</div>
+			);
 		});
 	}
 
@@ -198,6 +192,10 @@ export default class SidebarTV extends Component {
 
 			return (
 				<div class="sidebar-base sidebar-tv">
+					<div class="-view">
+						<ButtonBase class="-live selected"><SVGIcon baseline small>video-camera</SVGIcon> <span>LIVE</span></ButtonBase>
+						<ButtonBase class="-vod "><SVGIcon baseline small>video</SVGIcon> <span>VIDEO</span></ButtonBase>
+					</div>
 					<div class="-active" onclick={e => {
 							console.log('tv');
 							/*window.open("https://www.twitch.tv/directory/game/Creative/ldjam", '_blank');*/
@@ -224,6 +222,9 @@ export default class SidebarTV extends Component {
 					</div>
 					<div class="-browse">
 						{this.showOthers(others,active)}
+						<ButtonLink class="-more" href="http://www.twitch.tv/communities/ludumdare" title="MORE">
+							<div><SVGIcon>circle</SVGIcon> <SVGIcon>circle</SVGIcon> <SVGIcon>circle</SVGIcon></div>
+						</ButtonLink>
 					</div>
 				</div>
 			);

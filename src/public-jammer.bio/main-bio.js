@@ -4,15 +4,15 @@ import ContentPost						from 'com/content-post/post';
 class Main extends Component {
 	constructor() {
 		this.state = {};
-		this.state.posts = [ 
+		this.state.posts = [
 			"jammer bio"
 		];
 	}
-	
+
 	componentDidMount() {
 		// Startup //
 	}
-	
+
 	render( props, state ) {
 		return (
 			<div id="layout">

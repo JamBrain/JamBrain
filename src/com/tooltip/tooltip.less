@@ -1,0 +1,26 @@
+@import 'defs.less';
+
+.-tooltip {
+	position: absolute;
+	z-index: 10000;
+	bottom: 20px;
+	left: -5px;
+	color: @COL_L;
+	background: @COL_NDDD;
+	border-radius: 4px;
+	padding: 2px 15px;
+	overflow-x: hidden;
+}
+
+.tooltip-container {
+	position: relative;	
+	display: inline;
+	margin: 0px;
+	padding: 0px;
+}
+	
+.button-base {
+	&.-tooltip-icon {
+		display: inline-block;
+	}
+}

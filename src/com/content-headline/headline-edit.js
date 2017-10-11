@@ -21,7 +21,7 @@ export default class ContentHeadlineEdit extends Component {
 		var ShowPreview = null;
 		var ShowSave = null;
 		var ShowPublish = null;
-		
+
 		if ( edit ) {
 			ShowEdit = <ButtonBase class="-selected"><SVGIcon>edit</SVGIcon> Edit</ButtonBase>;
 			ShowPreview = <ButtonBase onclick={onpreview}><SVGIcon>preview</SVGIcon> Preview</ButtonBase>;
@@ -47,7 +47,7 @@ export default class ContentHeadlineEdit extends Component {
 				<ButtonBase class="-available -green" onclick={onpublish2}><SVGIcon>publish</SVGIcon> Publish Jam</ButtonBase>
 			];
 		}
-	
+
 		return (
 			<div class="content-headline content-headline-edit">
 				<div class="-left">

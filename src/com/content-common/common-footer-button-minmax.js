@@ -9,7 +9,7 @@ export default class ContentCommonFooterButtonMinMax extends Component {
 	render( {onclick} ) {
 		if ( !onclick )
 			onclick = function(){};
-		
+
 		return (
 			<div class="content-common-footer-button -minmax" onclick={onclick}>
 				<SVGIcon class="-inline-if-not-minimized">arrow-up</SVGIcon>

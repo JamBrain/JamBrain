@@ -14,7 +14,7 @@ import $Tag								from '../../shrub/js/tag/tag';
 export default class ContentCommonBodyField extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {};
 	}
 
@@ -47,8 +47,8 @@ export default class ContentCommonBodyField extends Component {
 		const NamePlaceholder = props.namePlaceholder ? props.namePlaceholder : 'Name';
 		const UrlPlaceholder = props.urlPlaceholder ? props.urlPlaceholder : 'Url';
 		const HasItems = props.items && props.items.length > 0;
-		
-		if (props.editing && state.items) {
+
+    if (props.editing && state.items) {
 			Class.push('-editing');
 			let TagDropDown = null;
 			if (HasItems) {
@@ -64,7 +64,7 @@ export default class ContentCommonBodyField extends Component {
 				<div class={cN(Class, props.class)}>
 					{TagDropDown}
 					<InputText class="-url"
-						value={props.url} 
+						value={props.url}
 						onmodify={props.onModifyUrl}
 						placeholder={UrlPlaceholder}
 						max={Limit}

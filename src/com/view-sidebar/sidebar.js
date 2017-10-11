@@ -4,7 +4,6 @@ import SidebarCountdown					from 'com/sidebar-countdown/countdown';
 import SidebarCalendar					from 'com/sidebar-calendar/calendar';
 import SidebarUpcoming					from 'com/sidebar-upcoming/upcoming';
 import SidebarTV						from 'com/sidebar-tv/tv';
-import SidebarDummyTV					from 'com/sidebar-dummytv/dummytv';
 import SidebarTrending					from 'com/sidebar-trending/trending';
 import SidebarSponsor					from 'com/sidebar-sponsor/sponsor';
 import SidebarSupport					from 'com/sidebar-support/support';
@@ -30,7 +29,7 @@ export default class ViewSidebar extends Component {
 		let resultsDate = new Date(Date.UTC(2017, 7, 22, 17, 0, 0));
 
 		let now = new Date();
-		
+
 		let ShowCountdown = [];
 		if ( now < ldStartDate ) {
 			ShowCountdown.push(<SidebarCountdown date={ ldStartDate } nc="ld" tt="Starts" />); /*to="Ludum Dare"*/
@@ -42,7 +41,7 @@ export default class ViewSidebar extends Component {
 			else if ( now < compoEndDate2 ) {
 				ShowCountdown.push(<SidebarCountdown date={ compoEndDate2 } nc="compo" to="Submission Hour" tt="Ends" />);
 			}
-			
+
 			if ( now < jamEndDate ) {
 				ShowCountdown.push(<SidebarCountdown date={ jamEndDate } nc="jam" to="Jam" tt="Ends" />);
 			}
@@ -53,7 +52,7 @@ export default class ViewSidebar extends Component {
 			if ( now < compoEndDate2 || now < jamEndDate2 || now < gradeEndDate ) {
 				ShowCountdown.push(<SidebarCountdown date={ gradeEndDate } nc="jam" to="Play+Rate games" tt="Ends" />);
 			}
-			
+
 			// TODO: make this only appear a few hours before grading ends
 			if ( now < resultsDate ) {
 				ShowCountdown.push(<SidebarCountdown date={ resultsDate } nc="jam" to="Results" tt="live" />);
@@ -66,7 +65,6 @@ export default class ViewSidebar extends Component {
 				<SidebarCalendar rows={ShowCountdown.length ? 2 : 3} />
 				<SidebarUpcoming />
 				<SidebarTV />
-				<SidebarDummyTV />
 				<SidebarSponsor />
 				<SidebarSupport />
 			</div>

@@ -21,7 +21,7 @@ export default class ContentCommonBodyTitle extends Component {
 		props.class.push("-title");
 		if ( props.subtitle )
 			props.class.push("-has-subtitle");
-		
+
 		var Prefix = null;
 		if ( props.titleIcon ) {
 			Prefix = <SVGIcon baseline small>{props.titleIcon}</SVGIcon>;
@@ -29,14 +29,14 @@ export default class ContentCommonBodyTitle extends Component {
 
 		var Limit = props.limit ? props.limit : 64;	// True limit is 96
 		var Placeholder = props.placeholder ? props.placeholder : 'Title';
-		
+
 		if (props.editing) {
 			props.class.push('-editing');
 			return (
 				<div class={props.class}>
 					<div class="-label">Title</div>
-					<InputText 
-						value={props.title} 
+					<InputText
+						value={props.title}
 						onmodify={props.onmodify}
 						placeholder={Placeholder}
 						maxlength={Limit}
@@ -46,18 +46,18 @@ export default class ContentCommonBodyTitle extends Component {
 		}
 		else {
 			props.class.push("_font2");
-			
+
 			var Title = props.title.trim().length ? props.title.trim() : Placeholder;
 			var Body = [];
 			if ( props.href )
 				Body.push(<NavLink class="-text" href={props.href} title={props.hover}>{Prefix}{Title}</NavLink>);
 			else
 				Body.push(<div class="-text" title={props.hover}>{Prefix}{Title}</div>);
-			
+
 			if ( props.subtitle ) {
 				Body.push(<span class="-subtext"> ({props.subtitle})</span>);
 			}
-			
+
 			return <div class={props.class}>{Body}</div>;
 		}
 	}

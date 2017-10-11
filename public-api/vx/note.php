@@ -4,6 +4,7 @@ require_once __DIR__."/../config.php";
 include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."api.php";
 require_once __DIR__."/".SHRUB_PATH."note/note.php";
+require_once __DIR__."/".SHRUB_PATH."notification/notification.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
 
 json_Begin();
@@ -31,9 +32,23 @@ switch ( $action ) {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
 		}
 
-		$RESPONSE['note'] = noteComplete_GetByNode($ids[0]);
+		$RESPONSE['note'] = noteFlags_Filter(noteComplete_GetByNode($ids[0]), userAuth_GetID());
 
-		break; //case 'get': //note/get
+		break; //case 'get': //note/get		
+	case 'getnote': //note/getnote
+		// Temporary "Get note by note ID" call. To be renamed when the renaming time comes.
+		json_ValidateHTTPMethod('GET');
+
+		$ids = explode('+', json_ArgGet(0));
+
+		// Limit number of notes
+		if ( count($ids) > 250 ) {
+			json_EmitFatalError_BadRequest("Too many notes", $RESPONSE);
+		}
+		
+		$RESPONSE['notes'] = noteFlags_Filter(noteComplete_Get($ids), userAuth_GetID());
+
+		break; //case 'getnote': //note/getnote
 	case 'add': //note/add
 		json_ValidateHTTPMethod('POST');
 
@@ -44,6 +59,7 @@ switch ( $action ) {
 			}
 
 			$author = $user_id;
+			$flags = 0;
 
 			if ( !isset($_POST['parent']) )
 				json_EmitFatalError_BadRequest("No parent", $RESPONSE);
@@ -57,8 +73,22 @@ switch ( $action ) {
 			if ( isset($_POST['tag']) )
 				$version_tag = coreSlugify_Name($_POST['tag']);
 
+			$parent = intval($_POST['parent']);
+
 			// Load Node
 			$node = node_GetById($node_id);
+
+
+			if ( isset($_POST['anonymous']) && $_POST['anonymous'] ) {
+				// Only allow anonymous comments to be posted if the node has "allow-anonymous-comments" meta set.
+				
+				$meta = nodeMeta_GetByKeyNode('allow-anonymous-comments',$node_id);
+				if ( count($meta) == 0 || !$meta[0]['value'] ) {
+					json_EmitFatalError_BadRequest("Cannot post anonymous comment: Node doesn't allow anonymous comments.", $RESPONSE);
+				}
+				
+				$flags |= SH_NOTE_FLAG_ANONYMOUS;
+			}
 
 			// Check if you have permission to add comment to node
 			if ( note_IsNotePublicByNode($node) ) {
@@ -66,7 +96,12 @@ switch ( $action ) {
 				if ( $parent !== 0 )
 					json_EmitFatalError_Permission("Temporary: No children", $RESPONSE);
 
-				$RESPONSE['note'] = note_AddByNode($node['id'], $node['parent'], $author, $parent, $body, $version_tag);
+				$RESPONSE['note'] = note_AddByNode($node['id'], $node['parent'], $author, $parent, $body, $version_tag, $flags);
+				
+				// Add notifications for users watching this thread
+				if ( $RESPONSE['note'] ) {
+					notification_AddForNote($node['id'], $RESPONSE['note'], $author);
+				}
 			}
 			else {
 				json_EmitFatalError_Permission(null, $RESPONSE);
@@ -109,6 +144,10 @@ switch ( $action ) {
 			if ( $note['node'] !== $node_id )
 				json_EmitFatalError_Permission("Invalid node", $RESPONSE);
 
+			if ( $note['author'] !== $author )
+				json_EmitFatalError_Permission("Not allowed to edit other people's comments.", $RESPONSE);
+
+
 			// Are bodies different?
 			if ( $body !== $note['body'] ) {
 				// Load Node
@@ -116,7 +155,7 @@ switch ( $action ) {
 
 				// Check if you have permission to add comment to node
 				if ( note_IsNotePublicByNode($node) ) {
-					$RESPONSE['updated'] = note_SafeEdit($note_id, $author, $body, $version_tag);
+					$RESPONSE['updated'] = note_SafeEdit($note_id, $author, $body, $version_tag, $note['flags']);
 				}
 				else {
 					json_EmitFatalError_Forbidden("This node type does now allow notes (yet)", $RESPONSE);

@@ -11,7 +11,7 @@ import $Asset							from '../../shrub/js/asset/asset';
 export default class ContentCommonBodyAvatar extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.onEdit = this.onEdit.bind(this);
 	}
 
@@ -22,10 +22,10 @@ export default class ContentCommonBodyAvatar extends Component {
 	onEdit( e ) {
 		var node = this.props.node;
 		var user = this.props.user;
-		
+
 		if ( !user || !user.id )
 			return null;
-		
+
 		if ( e.target.files && e.target.files.length ) {
 			var file = e.target.files[0];
 
@@ -33,11 +33,11 @@ export default class ContentCommonBodyAvatar extends Component {
 				.then( r => {
 					if ( r.path ) {
 						var Avatar = '///content/'+r.path;
-						
+
 						if ( this.props.onchange ) {
 							this.props.onchange(Avatar);
 						}
-						
+
 						return $Node.AddMeta(node.id, {'avatar': Avatar});
 					}
 					else {
@@ -51,12 +51,12 @@ export default class ContentCommonBodyAvatar extends Component {
 	}
 	render( props ) {
 		var Class = cN("content-common-body -avatar", props.class, props.editing ? '-editing' : '');
-		
+
 		var AvatarFail = '///content/internal/user64.png';
 		var Avatar = props.src ? props.src : AvatarFail;
-			
+
 		Avatar += ".64x64.fit.png";
-		
+
 		if ( props.editing ) {
 			return (
 				<label>
@@ -67,7 +67,7 @@ export default class ContentCommonBodyAvatar extends Component {
 					</div>
 				</label>
 			);
-		}		
+		}
 		return (
 			<div class={Class}>
 				<IMG2 src={Avatar} failsrc={AvatarFail} />

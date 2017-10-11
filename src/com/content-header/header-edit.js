@@ -17,10 +17,10 @@ export default class ContentHeaderEdit extends Component {
 			ShowAuthors = authors.map( v => {
 				<div class="-author">{v.name}</div>;
 			});
-			
+
 			ShowAuthors.unshift(<div class="-label">Authors:</div>);
 		}
-		
+
 		var ShowLink = null;
 		if ( link ) {
 			ShowLink = [
@@ -28,8 +28,8 @@ export default class ContentHeaderEdit extends Component {
 				<div>{link}{published ? "" : " (unpublished)"}</div>
 			];
 		}
-		
-		
+
+
 		return (
 			<div class="content-header content-header-common content-header-edit">
 				<div class="-label">Title:</div>

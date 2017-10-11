@@ -13,7 +13,7 @@ export default class ContentBodyMarkup extends Component {
 
 	render( props ) {
 		var mrkd = new marked();
-		
+
 		var markedOptions = {
 			highlight: function(code, lang) {
 				var language = Prism.languages.clike;

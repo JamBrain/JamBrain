@@ -51,7 +51,7 @@ export default class ContentPalette extends Component {
 			<div class="-bg-d">D</div>,
 			<div class="-bg-m">M</div>,
 		];
-		
+
 		this.ColorPerception = [
 			<div class="-col-ag">A</div>,
 			<div class="-col-abg">AB</div>,
@@ -107,7 +107,7 @@ export default class ContentPalette extends Component {
 			<div class="-bg-nllllg">4</div>,
 			<div class="-bg-nlllllg">5</div>,
 		];	}
-	
+
 	genBGRow( symbol ) {
 		return (
 			<div class={'-bg-'+symbol}>
@@ -143,7 +143,7 @@ export default class ContentPalette extends Component {
 			</div>
 		);
 	}
-	
+
 	genBGPRowG( symbol ) {
 		return (
 			<div class={'-bg-'+symbol+'g'}>
@@ -173,7 +173,7 @@ export default class ContentPalette extends Component {
 					{this.genBGRow('c')}
 					{this.genBGRow('ca')}
 					{this.genBGRow('n')}
-	
+
 					{this.genColorRow('a')}
 					{this.genColorRow('ab')}
 					{this.genColorRow('b')}
@@ -182,7 +182,7 @@ export default class ContentPalette extends Component {
 					{this.genColorRow('ca')}
 					{this.genColorRow('n')}
 				</div>
-	
+
 				<h1>Mute Colors</h1>
 				<div class="palette">
 					{this.genBGRow('am')}
@@ -191,7 +191,7 @@ export default class ContentPalette extends Component {
 					{this.genBGRow('bcm')}
 					{this.genBGRow('cm')}
 					{this.genBGRow('cam')}
-	
+
 					{this.genColorRow('am')}
 					{this.genColorRow('abm')}
 					{this.genColorRow('bm')}
@@ -213,7 +213,7 @@ export default class ContentPalette extends Component {
 					{this.genBGRow('nlll')}
 					{this.genBGRow('nllll')}
 					{this.genBGRow('nlllll')}
-	
+
 					{this.genColorRow('nddddd')}
 					{this.genColorRow('ndddd')}
 					{this.genColorRow('nddd')}
@@ -226,7 +226,7 @@ export default class ContentPalette extends Component {
 					{this.genColorRow('nllll')}
 					{this.genColorRow('nlllll')}
 				</div>
-				
+
 				<h1>Color vs. Perception</h1>
 				<div class="palette">
 					{this.genBGPRow('a')}
@@ -235,7 +235,7 @@ export default class ContentPalette extends Component {
 					{this.genBGPRow('bc')}
 					{this.genBGPRow('c')}
 					{this.genBGPRow('ca')}
-	
+
 					{this.genColorPRow('a')}
 					{this.genColorPRow('ab')}
 					{this.genColorPRow('b')}
@@ -249,7 +249,7 @@ export default class ContentPalette extends Component {
 					{this.genBGPRow('bcm')}
 					{this.genBGPRow('cm')}
 					{this.genBGPRow('cam')}
-	
+
 					{this.genColorPRow('am')}
 					{this.genColorPRow('abm')}
 					{this.genColorPRow('bm')}
@@ -268,7 +268,7 @@ export default class ContentPalette extends Component {
 					{this.genBGPRow('nlll')}
 					{this.genBGPRow('nllll')}
 					{this.genBGPRow('nlllll')}
-	
+
 					{this.genColorPRow('nddddd')}
 					{this.genColorPRow('ndddd')}
 					{this.genColorPRow('nddd')}
@@ -290,7 +290,7 @@ export default class ContentPalette extends Component {
 					{this.genBGPRowG('bc')}
 					{this.genBGPRowG('c')}
 					{this.genBGPRowG('ca')}
-	
+
 					{this.genColorPRowG('a')}
 					{this.genColorPRowG('ab')}
 					{this.genColorPRowG('b')}
@@ -304,7 +304,7 @@ export default class ContentPalette extends Component {
 					{this.genBGPRowG('bcm')}
 					{this.genBGPRowG('cm')}
 					{this.genBGPRowG('cam')}
-	
+
 					{this.genColorPRowG('am')}
 					{this.genColorPRowG('abm')}
 					{this.genColorPRowG('bm')}
@@ -323,7 +323,7 @@ export default class ContentPalette extends Component {
 					{this.genBGPRowG('nlll')}
 					{this.genBGPRowG('nllll')}
 					{this.genBGPRowG('nlllll')}
-	
+
 					{this.genColorPRowG('nddddd')}
 					{this.genColorPRowG('ndddd')}
 					{this.genColorPRowG('nddd')}

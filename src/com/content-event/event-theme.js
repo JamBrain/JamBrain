@@ -25,7 +25,7 @@ export default class ContentEventTheme extends Component {
 		super(props);
 
 	}
-	
+
 	componentDidMount() {
 	}
 
@@ -35,12 +35,12 @@ export default class ContentEventTheme extends Component {
 		var user = props.user;
 		var path = props.path;
 		var extra = props.extra;
-		
+
 		if ( node.slug ) {
 			let ThemeMode = (node.meta['theme-mode']) ? parseInt(node.meta['theme-mode']) : 0;
 
 			var NewPath = '/'+ (extra ? extra.join('/') : '');
-			
+
 			// Figure out Round Name (this needs to be done first, otherwise Defaults are set wrong)
 			var RoundName = '';
 			if ( ThemeMode >= 1 ) {
@@ -78,10 +78,10 @@ export default class ContentEventTheme extends Component {
 			else if ( parseInt(NewPath.substr(1)) > 0 ) {
 				ShowBody = <ContentEventList node={node} user={user} path={path} extra={extra} />;
 			}
-			
+
 			console.log( NewPath );
-			
-		
+
+
 			return (
 				<ContentCommon {...props}>
 					<ContentCommonBody>{ShowBody}</ContentCommonBody>

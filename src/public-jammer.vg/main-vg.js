@@ -15,7 +15,7 @@ class Main extends Component {
 			root: 1,
 			active: 1,
 		};
-		
+
 		this.setActive(window.location);
 
 		// Bind Events to handle future changes //
@@ -42,11 +42,11 @@ class Main extends Component {
 //		str = str.replace(/^-|-$/g,'');				// Prefix and suffix -'s with nothing
 		return str;
 	}
-	
+
 	trimSlashes( str ) {
 		return str.replace(/^\/|\/$/g,'');
 	}
-		
+
 	setActive( whom ) {
 		// Clean the URL //
 		var clean = {
@@ -55,27 +55,27 @@ class Main extends Component {
 			hash: this.makeClean(whom.hash),
 		};
 		var clean_path = clean.pathname+clean.search+clean.hash;
-		
+
 		// If current URL is unclean, replace it //
 		if ( whom.pathname !== clean.pathname || whom.hash !== clean.hash ) {
 			window.history.replaceState( null, null, clean_path );
 		}
-		
+
 		// Parse the clean URL //
 		var slugs = this.trimSlashes(clean.pathname).split('/');
-		
+
 		// Figure out what our active page_id actually is //
 //		this.state.active = CoreData.getItemIdByParentAndSlugs( this.state.root, slugs );
 	}
 
-	
+
 	componentDidMount() {
 		// Startup //
 	}
-	
+
 	onHashChange() {
 		let state = this.state;
-		
+
 		this.setState(state);
 	}
 	onNavChange( e ) {
@@ -85,11 +85,11 @@ class Main extends Component {
 			this.setState(this.state);
 		}
 	}
-	
+
 	getView( props, state ) {
 		if ( state.active ) {
 //			var item = CoreData.getItemById( state.active );
-	
+
 //			if ( item.type === 'root' ) {
 //				return <ViewTimeline item={state.active} />;
 //			}
@@ -104,11 +104,11 @@ class Main extends Component {
 			return <div>404</div>;
 		}
 	}
-	
+
 	render( props, state ) {
 		//let hasHash = window.location.hash ? <div>{window.location.hash}</div> : <div />;
 		//console.log("paint:",state);
-		
+
 		return (
 			<div id="layout">
 				<ViewBar />

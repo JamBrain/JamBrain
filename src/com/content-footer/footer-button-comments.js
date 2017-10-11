@@ -8,7 +8,7 @@ export default class ContentFooterButtonComments extends Component {
 	constructor( props ) {
 		super(props);
 	}
-	
+
 	componentDidMount() {
 	}
 

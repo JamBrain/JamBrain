@@ -1,4 +1,5 @@
 import { h, render, Component, options }			from 'preact/preact';
+import { initDevTools } 							from 'preact-devtools/devtools';
 import Sanitize							from '../internal/sanitize/sanitize';
 import NavSpinner						from 'com/nav-spinner/spinner';
 
@@ -7,6 +8,7 @@ import ViewHeader						from 'com/view-header/header';
 import ViewSidebar						from 'com/view-sidebar/sidebar';
 import ViewContent						from 'com/view-content/content';
 import ViewFooter						from 'com/view-footer/footer';
+import ViewHome							from 'com/view-home/home';
 
 import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
 import DialogLogin						from 'com/dialog-login/login';
@@ -32,6 +34,10 @@ import $NodeLove						from '../shrub/js/node/node_love';
 
 window.LUDUMDARE_ROOT = '/';
 window.SITE_ROOT = 1;
+
+if ( SITE_DEBUG ) {
+	initDevTools();
+}
 
 // Add special behavior: when class attribute is an array, flatten it to a string
 options.vnode = function(vnode) {
@@ -78,16 +84,16 @@ class Main extends Component {
 			// Active User
 			'user': null
 		};
-		
+
 		window.addEventListener('hashchange', this.onHashChange.bind(this));
 		window.addEventListener('navchange', this.onNavChange.bind(this));
 		window.addEventListener('popstate', this.onPopState.bind(this));
 
 		this.onLogin = this.onLogin.bind(this);
-		
+
 //		this.doEverything();
 	}
-	
+
 //	async doEverything() {
 //        var test = await new Promise(resolve => {setTimeout(pepper => { console.log("pepper"); resolve(); }, 1000); console.log("peter");});
 //    }
@@ -223,19 +229,19 @@ class Main extends Component {
 					Node = r.node[0];
 
 					console.log("[fetchFeatured] +", Node.id);
-	
+
 					return $Node.What(Node.id);
 				}
-				
+
 				// No featured event
 				return null;
 			})
 			.then(r => {
 				if ( r && r.what ) {
 					Node.what = r.what;
-	
+
 					console.log('[fetchFeatured] My Game(s):', Node.what);
-	
+
 					if ( Node.what.length ) {
 						return $Node.GetKeyed(r.what);
 					}
@@ -246,11 +252,11 @@ class Main extends Component {
 			.then( r => {
 				if ( r && r.node ) {
 					Node.what_node = r.node;
-					
+
 					var Focus = 0;
 					var FocusDate = 0;
 					var LastPublished = 0;
-					
+
 					for ( var key in r.node ) {
 						var NewDate = new Date(r.node[key].modified).getTime();
 						if ( NewDate > FocusDate ) {
@@ -265,7 +271,7 @@ class Main extends Component {
 					if ( Focus ) {
 						console.log('[fetchFeatured] '+Focus+' was the last modified');
 					}
-	
+
 					// If the last updated is published, focus on that
 					if ( r.node[Focus].published ) {
 						Node.focus = Focus;
@@ -278,19 +284,19 @@ class Main extends Component {
 					else if ( Focus > 0 ) {
 						Node.focus = Focus;
 					}
-					
+
 					if ( Node.focus || Node.focus === 0 ) {
 						console.log('[fetchFeatured] '+Node.focus+' chosen as Focus');
 					}
 				}
-	
+
 				this.setState({
 					'featured': Node
 				});
-			
+
 				console.log('[fetchFeatured] -', Node.id);
-	
-				return r;	
+
+				return r;
 			})
 			.catch(err => {
 				this.setState({ 'error': err });
@@ -460,12 +466,17 @@ class Main extends Component {
 
 				this.setState({
 					'slugs': slugs,
+					'home': null,
 					'node': {
 						'id': 0
 					}
 				});
 
-				this.fetchNode();
+				if (slugs[0] == 'home') {
+					this.setState({home: slugs.slice(1)});
+				} else {
+					this.fetchNode();
+				}
 			}
 		}
 
@@ -485,14 +496,31 @@ class Main extends Component {
 		this.handleAnchors();
 	}
 
+	isHomeView() {
 
-	render( {}, {node, user, featured, path, extra, error} ) {
+		if (Array.isArray(this.state.home)) {
+			console.log('[isHome]', this.state.home);
+			return true;
+		}
+		const slugs = this.state.slugs;
+
+		if (Array.isArray(slugs) && slugs[0] == 'home') {
+			this.setState({home: slugs.slice(1)});
+			return true;
+		}
+		return false;
+	}
+
+	render( {}, {node, user, featured, path, extra, error, home} ) {
 		var ShowContent = null;
 
-		if ( node.id ) {
-			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} featured={featured} />;
+		if (this.isHomeView()) {
+			ShowContent = <ViewHome show={home} />;
 		}
-		else {
+		else if ( node.id ) {
+			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} featured={featured} />;
+		} else {
+			console.log('[Error]');
 			ShowContent = (
 				<ViewContent>
 					{error ? error : <NavSpinner />}

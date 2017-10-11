@@ -5,14 +5,14 @@ import NavLink 						from 'com/nav-link/link';
 export default class HeaderNoob extends Component {
 	constructor( props ) {
 		super(props);
-		
+
 		this.state = {
 			'hidden': false
 		};
-		
+
 		this.onClick = this.onClick.bind(this);
 	}
-	
+
 	onClick( e ) {
 		this.setState({'hidden': true});
 	}

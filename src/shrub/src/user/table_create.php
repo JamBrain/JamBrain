@@ -43,7 +43,7 @@ if ( in_array($table, $TABLE_LIST) ) {
 				auth_key ".DB_TYPE_ASCII(32*2).",
 				last_auth ".DB_TYPE_TIMESTAMP."
 			)".DB_CREATE_SUFFIX);
-		if (!$ok) break; $TABLE_VERSION++;
+		if (!$ok) break; $TABLE_VERSION++;		
 	};
 	table_Exit($table);
 }

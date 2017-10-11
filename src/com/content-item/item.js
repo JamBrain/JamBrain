@@ -7,9 +7,9 @@ import IMG2 							from 'com/img2/img2';
 import ButtonBase						from 'com/button-base/base';
 
 import ContentCommonBody				from 'com/content-common/common-body';
-import ContentCommonBodyField	        from 'com/content-common/common-body-field';
-import ContentCommonBodyLink	        from 'com/content-common/common-body-link';
-import ContentCommonBodyTitle	        from 'com/content-common/common-body-title';
+import ContentCommonBodyField			from 'com/content-common/common-body-field';
+import ContentCommonBodyLink			from 'com/content-common/common-body-link';
+import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
@@ -26,16 +26,16 @@ import $Asset							from '../../shrub/js/asset/asset';
 export default class ContentItem extends Component {
 	constructor( props ) {
 		super(props);
-		
-		let node = props.node;
-		
-		this.state = {
+
+    let node = props.node;
+
+    this.state = {
 			'parent': null,
 
 			'linkUrls': [],
 			'linkTags': [],
 			'linkNames': [],
-			
+
 			'linksShown': 1,
 
 //			'platforms': [],
@@ -46,7 +46,7 @@ export default class ContentItem extends Component {
 			this.state.linkUrls[i] = node.meta['link-0'+(i+1)] ? node.meta['link-0'+(i+1)] : '';
 			this.state.linkTags[i] = node.meta['link-0'+(i+1)+'-tag'] ? parseInt(node.meta['link-0'+(i+1)+'-tag']) : 0;
 			this.state.linkNames[i] = node.meta['link-0'+(i+1)+'-name'] ? node.meta['link-0'+(i+1)+'-name'] : '';
-			
+
 			if ( this.state.linkUrls[i] && i+1 > this.state.linksShown ) {
 				this.state.linksShown = i+1;
 			}
@@ -56,16 +56,15 @@ export default class ContentItem extends Component {
 		this.onSetCompo = this.onSetCompo.bind(this);
 		this.onSetUnfinished = this.onSetUnfinished.bind(this);
 	}
-	
+
 	componentDidMount() {
 		var node = this.props.node;
-		
+
 		$Node.Get(node.parent)
 		.then(r => {
 			if ( r.node && r.node.length ) {
 				var Parent = r.node[0];
 				this.setState({'parent': Parent});
-								
 			}
 			return Promise.resolve({});
 		})
@@ -102,16 +101,16 @@ export default class ContentItem extends Component {
 			.then( r => {
 			});
 	}
-	
-	onUpload( name, e ) {
+
+  onUpload( name, e ) {
 		var node = this.props.node;
 		var user = this.props.user;
 
 		if ( !this.props.user )
 			return null;
-			
+
 		var FileName = null;
-		
+
 		if ( e.target.files && e.target.files.length ) {
 			var file = e.target.files[0];
 
@@ -119,10 +118,10 @@ export default class ContentItem extends Component {
 				.then(r => {
 					if ( r && r.path ) {
 						FileName = '///content/'+r.path;
-						
+
 						let Data = {};
 						Data[name] = FileName;
-						
+
 						return $NodeMeta.Add(node.id, Data);
 					}
 
@@ -137,7 +136,7 @@ export default class ContentItem extends Component {
 				.catch(err => {
 					this.setState({ 'error': err });
 				});
-		}		
+		}
 	}
 
 	onModifyLinkName( Index, e ) {
@@ -180,7 +179,7 @@ export default class ContentItem extends Component {
 			{
 				let Old = node.meta[Base] ? node.meta[Base] : '';
 				let New = this.state.linkUrls[i].trim();
-				
+
 				if ( Old != New ) {
 					Data[Base] = this.state.linkUrls[i];
 					this.props.node.meta[Base] = Data[Base];
@@ -191,7 +190,7 @@ export default class ContentItem extends Component {
 			{
 				let Old = node.meta[Base+'-tag'] ? parseInt(node.meta[Base+'-tag']) : 0;
 				let New = parseInt(this.state.linkTags[i]);
-				
+
 				if ( Old != New ) {
 					Data[Base+'-tag'] = this.state.linkTags[i];
 					this.props.node.meta[Base+'-tag'] = Data[Base+'-tag'];
@@ -202,7 +201,7 @@ export default class ContentItem extends Component {
 			{
 				let Old = node.meta[Base+'-name'] ? node.meta[Base+'-name'] : '';
 				let New = this.state.linkNames[i].trim();
-				
+
 				if ( Old != New ) {
 					Data[Base+'-name'] = this.state.linkNames[i];
 					this.props.node.meta[Base+'-name'] = Data[Base+'-name'];
@@ -219,8 +218,9 @@ export default class ContentItem extends Component {
 
 	// Generates JSX for the links, depending on whether the page is editing or viewing
 	makeLinks( editing ) {
-		let LinkMeta = [];
-		for ( let idx = 0; idx < this.state.linksShown; idx++ ) {
+    let LinkMeta = [];
+
+    for ( let idx = 0; idx < this.state.linksShown; idx++ ) {
 			LinkMeta.push(
 				<ContentCommonBodyLink
 					name={this.state.linkNames[idx]}
@@ -235,13 +235,13 @@ export default class ContentItem extends Component {
 				/>
 			);
 		}
-		
+
 		if ( editing && this.state.linksShown < 9 ) {
 			LinkMeta.push(
 				<button onclick={e => this.setState({'linksShown': ++this.state.linksShown})}>+</button>
 			);
 		}
-		
+
 //					namePlaceholder="Web"
 //					urlPlaceholder="http://example.com/web.html"
 //					namePlaceholder="Windows"
@@ -252,7 +252,7 @@ export default class ContentItem extends Component {
 //					urlPlaceholder="http://example.com/linux.tar.gz"
 //					namePlaceholder="Source"
 //					urlPlaceholder="http://example.com/source.zip"
-		
+
 		return (
 			<ContentCommonBody class="-links">
 				<div class="-label">Links</div>
@@ -263,8 +263,8 @@ export default class ContentItem extends Component {
 
 	updatePropsAndGetCategory(props, node) {
 		let Category = '/';
-		
-		if ( node ) {
+
+    if ( node ) {
 			if ( node.subtype == 'game' ) {
 				props.header = "GAME";
 				props.headerClass = "-col-a";
@@ -275,7 +275,7 @@ export default class ContentItem extends Component {
 				props.headerClass = "-col-c";
 				props.titleIcon = "hammer";
 			}
-			
+
 			if ( node.subsubtype == 'jam' ) {
 				props.header += ": JAM";
 				Category = '/jam';
@@ -300,7 +300,7 @@ export default class ContentItem extends Component {
 			else {
 				props.nopublish = true;
 			}
-			
+
 			props.draft = "Game";
 		}
 		return Category;
@@ -335,7 +335,7 @@ export default class ContentItem extends Component {
 			);
 		}
 		
-		//Votes, grades and metrics
+		// Votes, grades and metrics
 		let ShowMetrics = (<VoteMetrics node={node} />);		
 		let ShowGrade = (<VoteOrResults node={node} nodeComponent={parent} user={user} featured={featured} />);				
 		let ShowOptOut = null;
@@ -344,12 +344,13 @@ export default class ContentItem extends Component {
 		}
 		
 		let ShowImages = null;
-		if ( true ) {
+
+    if ( true ) {
 			let ShowImage = null;
 			if ( node.meta && node.meta.cover ) {
 				ShowImage = <IMG2 class="-img" src={node.meta && node.meta.cover ? node.meta.cover+'.320x256.fit.jpg' : "" } />;
 			}
-			
+
 			ShowImages = (
 				<ContentCommonBody class="-images">
 					<div class="-label">Images</div>
@@ -366,9 +367,10 @@ export default class ContentItem extends Component {
 				</ContentCommonBody>
 			);
 		}
-		
-		let ShowUploadTips = null;
-		if ( true ) {
+
+    let ShowUploadTips = null;
+
+    if ( true ) {
 			ShowUploadTips = (
 				<ContentCommonBody>
 					<br />
@@ -400,7 +402,7 @@ export default class ContentItem extends Component {
 			);
 		}
 
-		
+
 		props.editonly = (
 			<div>
 				{ShowEventPicker}
@@ -412,7 +414,7 @@ export default class ContentItem extends Component {
 			</div>
 		);
 		props.onSave = this.onSave.bind(this);
-		
+
 		props.viewonly = (
 			<div>
 				{ShowLinkView}
@@ -420,7 +422,7 @@ export default class ContentItem extends Component {
 				{ShowMetrics}
 			</div>
 		);
-		
+
 		props.class = cN("content-item", props.class);
 
 		// Shim to update the save button from this method. See https://facebook.github.io/react/docs/refs-and-the-dom.html

@@ -4,6 +4,7 @@ require_once __DIR__."/../config.php";
 include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."api.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
+require_once __DIR__."/".SHRUB_PATH."notification/notification.php";
 
 json_Begin();
 
@@ -14,6 +15,19 @@ const THINGS_I_CAN_LOVE = [
 
 const THINGS_I_CAN_STAR = [
 	'user'
+];
+
+// TODO: MK Rename and adjust this for privileged users, not Admins  
+const ADMIN_VALID_META = [
+	'event' => [
+		'can-create' => ['length' => 64],
+		'can-grade' => ['integer' => true],
+		'can-publish' => ['integer' => true],
+		'can-theme' => ['integer' => true],
+		'event-finished' => ['integer' => true],
+		'event-theme' => ['length' => 256],
+		'theme-mode' => ['integer' => true]
+	],
 ];
 
 const VALID_META = [
@@ -28,6 +42,7 @@ const VALID_META = [
 		'grade-06-out' => ['length' => 1],
 		'grade-07-out' => ['length' => 1],
 		'grade-08-out' => ['length' => 1],
+		'allow-anonymous-comments' => ['length' => 1],
 		
 		'link-01' => ['length' => 512, 'url' => true],
 		'link-02' => ['length' => 512, 'url' => true],
@@ -392,30 +407,34 @@ switch ( $action ) {
 		json_ValidateHTTPMethod('GET');
 
 		if ( $user_id = userAuth_GetID() ) {
+			// Merge shared and private data in to a single response (client side this will be known as 'private').
+			// NOTE: It is not an issue that these get merged. Different scopes do not make metadata in to unique indexes.
+			// WARNING: Don't ever send the full ParseByNode response to the user. SH_SCOPE_SERVER scope data must never be seen by a client.
+
 			$metas = nodeMeta_ParseByNode($user_id);
 			$meta_out = array_merge([],
 				// Public metadata (this is already in the node)
-				//isset($metas[SH_NODE_META_PUBLIC]) ? $metas[SH_NODE_META_PUBLIC] : [],
+				//isset($metas[SH_SCOPE_PUBLIC]) ? $metas[SH_SCOPE_PUBLIC] : [],
 				// Shared metadata (authors??)
-				isset($metas[SH_NODE_META_SHARED]) ? $metas[SH_NODE_META_SHARED] : [],
-				// Protected metadata
-				isset($metas[SH_NODE_META_PROTECTED]) ? $metas[SH_NODE_META_PROTECTED] : []
+				isset($metas[SH_SCOPE_SHARED]) ? $metas[SH_SCOPE_SHARED] : [],
+				// Private metadata
+				isset($metas[SH_SCOPE_PRIVATE]) ? $metas[SH_SCOPE_PRIVATE] : []
 			);
 
 			$links = nodeLink_ParseByNode($user_id);
 			$link_out = array_merge([],
 				// Public Links from me (this is already in the node)
-				//isset($links[0][SH_NODE_META_PUBLIC]) ? $links[0][SH_NODE_META_PUBLIC] : [],
+				//isset($links[0][SH_SCOPE_PUBLIC]) ? $links[0][SH_SCOPE_PUBLIC] : [],
 				// Shared Links from me
-				isset($links[0][SH_NODE_META_SHARED]) ? $links[0][SH_NODE_META_SHARED] : [],
+				isset($links[0][SH_SCOPE_SHARED]) ? $links[0][SH_SCOPE_SHARED] : [],
 				// Procted Links from me
-				isset($links[0][SH_NODE_META_PROTECTED]) ? $links[0][SH_NODE_META_PROTECTED] : []
+				isset($links[0][SH_SCOPE_PRIVATE]) ? $links[0][SH_SCOPE_PRIVATE] : []
 			);
 			$refs_out = array_merge([],
 				// Public links to me
-				isset($links[1][SH_NODE_META_PUBLIC]) ? $links[1][SH_NODE_META_PUBLIC] : [],
+				isset($links[1][SH_SCOPE_PUBLIC]) ? $links[1][SH_SCOPE_PUBLIC] : [],
 				// Shared links to me
-				isset($links[1][SH_NODE_META_SHARED]) ? $links[1][SH_NODE_META_SHARED] : []
+				isset($links[1][SH_SCOPE_SHARED]) ? $links[1][SH_SCOPE_SHARED] : []
 			);
 				
 			$RESPONSE['id'] = $user_id;
@@ -546,12 +565,12 @@ switch ( $action ) {
 					$new_node = node_Add($parent, $user_id, $type, $subtype, "", null, "", "");
 					if ( $new_node ) {
 						// Allow posts under the game
-						nodeMeta_AddByNode($new_node, SH_NODE_META_SHARED, 'can-create', 'post');
+						nodeMeta_AddByNode($new_node, SH_SCOPE_SHARED, 'can-create', 'post');
 						// Add yourself as an author of the game
-						nodeLink_AddbyNode($new_node, $user_id, SH_NODE_META_PUBLIC, 'author');
+						nodeLink_AddbyNode($new_node, $user_id, SH_SCOPE_PUBLIC, 'author');
 					}
 					else {
-						json_EmitFatalError_ServerError(null, $RESPONSE);
+						json_EmitFatalError_Server(null, $RESPONSE);
 					}
 					
 					nodeCache_InvalidateById($new_node);
@@ -567,7 +586,7 @@ switch ( $action ) {
 					if ( $new_node ) {
 					}
 					else {
-						json_EmitFatalError_ServerError(null, $RESPONSE);
+						json_EmitFatalError_Server(null, $RESPONSE);
 					}
 
 					nodeCache_InvalidateById($new_node);
@@ -779,6 +798,9 @@ switch ( $action ) {
 				
 				if ( $RESPONSE['publish'] ) {
 					$RESPONSE['path'] = node_GetPathById($node_id, 1)['path']; // Root node
+					
+					// notify users watching the author of the published node
+					notification_AddForPublishedNode($node_id, $node['author'], $node['type']);
 				}
 			}
 			else {
@@ -930,7 +952,7 @@ switch ( $action ) {
 							if ( in_array($node['type'], THINGS_I_CAN_STAR) ) {
 								// TODO: Check if this exact value isn't the newest
 
-								$RESPONSE['id'] = nodeLink_AddByNode($user_id, $node_id, SH_NODE_META_SHARED, 'star');
+								$RESPONSE['id'] = nodeLink_AddByNode($user_id, $node_id, SH_SCOPE_SHARED, 'star');
 								if ( $RESPONSE['id'] ) {
 									nodeCache_InvalidateById($node_id);
 								}
@@ -964,7 +986,7 @@ switch ( $action ) {
 							if ( in_array($node['type'], THINGS_I_CAN_STAR) ) {
 								// TODO: Check if this exact value isn't the newest
 								
-								$RESPONSE['id'] = nodeLink_RemoveByNode($user_id, $node_id, SH_NODE_META_SHARED, 'star');
+								$RESPONSE['id'] = nodeLink_RemoveByNode($user_id, $node_id, SH_SCOPE_SHARED, 'star');
 								if ( $RESPONSE['id'] ) {
 									nodeCache_InvalidateById($node_id);
 								}
@@ -1011,36 +1033,53 @@ switch ( $action ) {
 						if ( !node_IsAuthor($node, $user_id) )
 							json_EmitFatalError_Permission(null, $RESPONSE);
 
-						if ( !isset(VALID_META[$node['type']]) )
-							json_EmitFatalError_BadRequest("Can't set '".$node['type']."' metadata", $RESPONSE);
+						// TODO: MK This and all related code needs to be adapted to be privileged users with specific matching permissions, or an admin 
+						$meta_detail = [];
 						
 						// Validate that all posts are legal
 						foreach ( $_POST as $key => &$value ) {
-							if ( !isset(VALID_META[$node['type']][$key]) ) {
-								json_EmitFatalError_BadRequest("Can't set '$key' metadata in '".$node['type']."'", $RESPONSE);
+							// Can meta be set as a standard user?
+							if ( isset(VALID_META[$node['type']]) ) {
+								if ( isset(VALID_META[$node['type']][$key]) ) {
+									$meta_detail[$key] = VALID_META[$node['type']][$key];
+									continue; // Yes.
+								}
 							}
+							// No, can meta be set as an admin user, and is this an admin user?
+							if ( userAuth_IsAdmin() && isset(ADMIN_VALID_META[$node['type']]) ) {
+								if ( isset(ADMIN_VALID_META[$node['type']][$key]) ) {
+									$meta_detail[$key] = ADMIN_VALID_META[$node['type']][$key];
+									continue; // Yes.
+								}														
+							}
+							// This meta can't be set.
+							json_EmitFatalError_BadRequest("Can't set '$key' metadata in '".$node['type']."'", $RESPONSE);
 						}
 						
 						// node, scope, key, value
 						// bigint, tinyint, char32, text65535
 						
-						$scope = 0;
+						$scope = SH_SCOPE_PUBLIC;
 						$RESPONSE['changed'] = [];
 						
 						foreach ( $_POST as $key => &$value ) {
-							$detail = VALID_META[$node['type']][$key];
+							// TODO: MK this may need to change back to this older code, depending on permission implementation 
+							//$detail = VALID_META[$node['type']][$key];
+							$detail = $meta_detail[$key];
 							
 							$v = $value;
 							if ( isset($detail['length']))
 								$v = substr($v, 0, $detail['length']);
-							if ( isset($detail['url']) && $detail['url'])
+							else if ( isset($detail['url']) && $detail['url'])
 								$v = coreSanitize_URL($v);
-							if ( isset($detail['empty']) && $detail['empty'] )
+							else if ( isset($detail['empty']) && $detail['empty'] )
 								$v = null;
-							if ( isset($detail['number']) && $detail['number'] )
+							else if ( isset($detail['number']) && $detail['number'] )
 								$v = floatval($v);
-							if ( isset($detail['integer']) && $detail['integer'] )
+							else if ( isset($detail['integer']) && $detail['integer'] )
 								$v = intval($v);
+							else
+								json_EmitFatalError_BadRequest("Internal error while applying '$key' metadata in '".$node['type']."'", $RESPONSE);
 							
 							if ( $action == 'add' )
 								$changed = nodeMeta_AddByNode($node_id, $scope, $key, $v);
@@ -1105,7 +1144,7 @@ switch ( $action ) {
 						// a, b, scope, key, value
 						// bigint, bigint, tinyint, char32, text65535
 						
-						$scope = 0;
+						$scope = SH_SCOPE_PUBLIC;
 						$RESPONSE['changed'] = [];
 						
 						foreach ( $_POST as $key => &$value ) {
@@ -1114,14 +1153,16 @@ switch ( $action ) {
 							$v = $value;
 							if ( isset($detail['length']))
 								$v = substr($v, 0, $detail['length']);
-							if ( isset($detail['url']) && $detail['url'])
+							else if ( isset($detail['url']) && $detail['url'])
 								$v = coreSanitize_URL($v);
-							if ( isset($detail['empty']) && $detail['empty'] )
+							else if ( isset($detail['empty']) && $detail['empty'] )
 								$v = null;
-							if ( isset($detail['number']) && $detail['number'] )
+							else if ( isset($detail['number']) && $detail['number'] )
 								$v = floatval($v);
-							if ( isset($detail['integer']) && $detail['integer'] )
+							else if ( isset($detail['integer']) && $detail['integer'] )
 								$v = intval($v);
+							else 
+								json_EmitFatalError_BadRequest("Internal error in applying requested '$key' link between '".$node_a['type']."' and '".$node_b['type']."'", $RESPONSE);
 							
 							if ( $action == 'add' )
 								$changed = nodeLink_AddByNode($node_a_id, $node_b_id, $scope, $key, $v);
@@ -1132,7 +1173,8 @@ switch ( $action ) {
 								$RESPONSE['changed'][$key] = $v;
 						}
 						if ( count($RESPONSE['changed']) ) {
-							nodeCache_InvalidateById($node_id);
+							nodeCache_InvalidateById($node_a_id);
+							nodeCache_InvalidateById($node_b_id);
 						}
 
 					}

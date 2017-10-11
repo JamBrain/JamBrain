@@ -137,7 +137,7 @@ export default class ClockFlip extends Component {
 		return (
 			<div>
 				<div class={ "figure " + classname + " " + classname + "-1" }>
-					<span class="top">{  Digit1 }</span>
+					<span class="top">{ Digit1 }</span>
 					<span class="top-back">
 						<span>{ Digit1 }</span>
 					</span>
@@ -147,7 +147,7 @@ export default class ClockFlip extends Component {
 					</span>
 				</div>
 				<div class={ "figure " + classname + " " + classname + "-2" }>
-					<span class="top">{  Digit2 }</span>
+					<span class="top">{ Digit2 }</span>
 					<span class="top-back">
 						<span>{ Digit2 }</span>
 					</span>
@@ -201,17 +201,17 @@ export default class ClockFlip extends Component {
 							<span class="count-title _font2">Days</span>
 							{ this.renderDigit(this.state.values.days, "days") }
 						</div>
-		
+
 						<div class="bloc-time hours" data-init-value="00" ref={c => this.hoursblock=c}>
 							<span class="count-title _font2">Hours</span>
 							{ this.renderDigit(this.state.values.hours, "hours") }
 						</div>
-		
+
 						<div class="bloc-time min" data-init-value="0" ref={c => this.minutesblock=c} style={this.state.ShowDays ? "margin-right: 0px;" : ""}>
 							<span class="count-title _font2">Minutes</span>
 							{ this.renderDigit(this.state.values.minutes, "minutes") }
 						</div>
-		
+
 						<div class="bloc-time sec" data-init-value="0" style={ secondsblock } ref={c => this.secondsblock=c}>
 							<span class="count-title _font2">Seconds</span>
 							{ this.renderDigit(this.state.values.seconds, "seconds") }

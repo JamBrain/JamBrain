@@ -44,7 +44,7 @@ export default class ContentTimeline extends Component {
 	appendFeed( newfeed ) {
 		var feed = this.state.feed;
 		var hash = this.state.hash;
-		
+
 		var added = 0;
 
 		for ( var idx = 0; idx < newfeed.length; idx++ ) {
@@ -99,7 +99,7 @@ export default class ContentTimeline extends Component {
 		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, more, limit )
 		.then(r => {
 			this.setState({'loaded': true});
-			
+
 			// make sure we have a feed
 			if ( r.feed && r.feed.length ) {
 				this.appendFeed(r.feed);
