@@ -472,7 +472,6 @@ export default class ViewContent extends Component {
 					ShowFilters = <GamesFilter
 							Filter={Filter}
 							SubFilter={SubFilter}
-							SubSubFilter={SubSubFilter}
 							Path={`${this.props.path}/${extra[0]}/`}
 							node={node}
 							onchangefilter={(filter)=>{this.setState({'gamesFilter': filter});}}
@@ -485,7 +484,6 @@ export default class ViewContent extends Component {
 					ShowFilters = <GamesFilter
 							Filter={Filter}
 							SubFilter={SubFilter}
-							SubSubFilter={SubSubFilter}
 							Path={`${this.props.path}/${extra[0]}/`}
 							node={node}
 							onchangefilter={(filter)=>{this.setState({'gamesFilter': filter});}}

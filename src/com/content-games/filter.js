@@ -155,42 +155,42 @@ export default class GamesFilter extends Component {
                 [
                     1,
                     <div>Overall</div>,
-                    <NavLink href={Path+'overall/'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                    <NavLink href={Path+'overall'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     2,
                     <div>Fun</div>,
-                    <NavLink href={Path+'fun/'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                    <NavLink href={Path+'fun'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     3,
                     <div>Innovation</div>,
-                    <NavLink href={Path+'innovation/'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                    <NavLink href={Path+'innovation'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     4,
                     <div>Theme</div>,
-                    <NavLink href={Path+'theme/'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                    <NavLink href={Path+'theme'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     5,
                     <div>Graphics</div>,
-                    <NavLink href={Path+'graphics/'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                    <NavLink href={Path+'graphics'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     6,
                     <div>Audio</div>,
-                    <NavLink href={Path+'audio/'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                    <NavLink href={Path+'audio'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     7,
                     <div>Humor</div>,
-                    <NavLink href={Path+'humor/'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                    <NavLink href={Path+'humor'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     8,
                     <div>Mood</div>,
-                    <NavLink href={Path+'mood/'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                    <NavLink href={Path+'mood'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
                 ],
             ];
 
