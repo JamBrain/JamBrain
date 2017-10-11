@@ -58,7 +58,7 @@ export default class InputDropdown extends Component {
 				this.props.onmodify(parseInt(e.target.dataset.id));
 			}
 
-			this.setState({'value': parseInt(e.target.dataset.index)});
+			this.setState({'value': parseInt(e.target.dataset.id)});
 			this.doHide(e);
 		}
 	}
