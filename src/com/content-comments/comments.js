@@ -1,14 +1,6 @@
 import { h, Component } 				from 'preact/preact';
-//import ShallowCompare	 				from 'shallow-compare/index';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
-import NavLink 							from 'com/nav-link/link';
-import SVGIcon 							from 'com/svg-icon/icon';
-import IMG2 							from 'com/img2/img2';
-
-import ContentFooterButtonComments		from 'com/content-footer/footer-button-comments';
-
-import ContentCommentsMarkup			from 'comments-markup';
 
 import ContentCommentsComment			from 'comments-comment';
 
@@ -24,7 +16,6 @@ export default class ContentComments extends Component {
 			'comments': null,
 			'tree': null,
 			'authors': null,
-
 			'newcomment': null,
 		};
 
@@ -143,7 +134,7 @@ export default class ContentComments extends Component {
 
 		var lovedComments = this.state.lovedComments;
 		var actualLove = [];
-		for (var item in lovedComments) {
+		for ( var item in lovedComments ) {
 			actualLove.push(lovedComments[item]['note']);
 		}
 
@@ -183,10 +174,10 @@ export default class ContentComments extends Component {
 			if ( r.note ) {
 				var Now = new Date();
 				var comment = Object.assign({
-					id: r.note,
-					created: Now.toISOString(),
-					modified: Now.toISOString(),
-					anonymous: publishAnon,
+					'id': r.note,
+					'created': Now.toISOString(),
+					'modified': Now.toISOString(),
+					'anonymous': publishAnon,
 				}, newcomment);
 
 				// TODO: insert properly
@@ -199,19 +190,16 @@ export default class ContentComments extends Component {
 				this.setState({'tree': this.buildTree()});
 			}
 			else {
-				this.setState({ 'error': err });
+				this.setState({'error': err});
 			}
 		})
 		.catch(err => {
-			this.setState({ 'error': err });
+			this.setState({'error': err});
 		});
 	}
 
 	render( props, {comments, tree, authors, newcomment} ) {
-		var node = props.node;
-		var user = props.user;
-		var path = props.path;
-		var extra = props.extra;
+		let {node, user, path, extra} = props;
 
 		var ShowComments = <NavSpinner />;
 		if ( comments && tree && authors ) {

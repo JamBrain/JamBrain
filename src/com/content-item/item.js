@@ -218,7 +218,7 @@ export default class ContentItem extends Component {
 
 		return update.then(r => {
 				if ( r && r.changed ) {
-					this.setState({allowAnonymous: !anon});
+					this.setState({'allowAnonymous': !anon});
 				}
 			});
 	}
