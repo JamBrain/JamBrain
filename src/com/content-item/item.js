@@ -27,9 +27,9 @@ export default class ContentItem extends Component {
 	constructor( props ) {
 		super(props);
 
-    let node = props.node;
+		let node = props.node;
 
-    this.state = {
+		this.state = {
 			'parent': null,
 
 			'linkUrls': [],
