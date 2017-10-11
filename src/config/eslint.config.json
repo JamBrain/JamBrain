@@ -11,6 +11,26 @@
 		"eol-last": ["error", "always"],
 		"no-mixed-spaces-and-tabs": "error",
 		"no-trailing-spaces": "error",
-		"no-multi-spaces": "error"
+		"no-multi-spaces": "error",
+		"no-compare-neg-zero": "error",
+		"no-dupe-args": "error",
+		"no-dupe-keys": "error",
+		"no-duplicate-case": "error",
+		"no-empty": ["warn", {"allowEmptyCatch": true}],
+		"no-ex-assign": "error",
+		"no-extra-semi": "error",
+		"semi-spacing": "error",
+		"no-obj-calls": "error",
+		"no-template-curly-in-string": "error",
+		"no-unexpected-multiline": "error",
+		"space-unary-ops": "error",
+		"no-unreachable": "warn",
+		"no-unsafe-finally": "error",
+		"no-unsafe-negation": "error",
+		"use-isnan": "warn",
+		"valid-typeof": "error",
+		"object-curly-spacing": ["error", "never"],
+		"array-bracket-spacing": ["error", "never"],
+		"comma-spacing": ["error", {"before": false, "after": true}]
 	}
 }
