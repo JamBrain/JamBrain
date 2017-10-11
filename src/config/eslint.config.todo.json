@@ -24,6 +24,9 @@
 		valid-jsdoc: "error"							// require proper /** JS DOC **/ syntax
 		
 		
+		"space-before-function-paren": ["warn", "never", {"asyncArrow": "always"}],
+		
+		
 		nonblock-statement-body-position: ["error", "beside"]
 		
 		quotes: ["error", "single", { "allowTemplateLiterals": true }]		// somehow disable backticks

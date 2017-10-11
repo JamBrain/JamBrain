@@ -42,11 +42,10 @@
 		"no-new-object": "error",
 		"no-whitespace-before-property": "error",
 		"array-bracket-spacing": ["error", "never"],
-		"comma-spacing": ["error", {"before": false, "after": true}],
+		"comma-spacing": ["warn", {"before": false, "after": true}],
 		"object-curly-spacing": ["warn", "never"],
 		"quote-props": ["warn", "always"],
 		"space-before-blocks": "warn",
-		"space-before-function-paren": ["warn", "never", {"asyncArrow": "always"}],
 		"switch-colon-spacing": "error",
 		"jsx-quotes": ["warn", "prefer-double"]
 	}
