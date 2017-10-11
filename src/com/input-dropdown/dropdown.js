@@ -65,34 +65,48 @@ export default class InputDropdown extends Component {
 
 	render( props, {show, value} ) {
 		if ( props.items && props.items.length ) {
+			let {selfManaged, useClickCatcher} = props;
 			let ClickCatcher = null;
 			let ShowItems = null;
+			let SelectedField = null;
+
 			if ( show ) {
 				ShowItems = [];
 
 				let idx = 0;
-				props.items.forEach((item) => {
+				props.items.forEach(([dataId, Contents, Overlay]) => {
+					console.log(dataId, Contents, Overlay, value);
+					if ( !props.hideSelectedField && dataId == value ) {
 
-					if (props.useClickCatcher) {
+						SelectedField = (
+							<button type="button" onclick={this.onShow}>
+								{Contents}
+							</button>
+						);
+					}
+
+					if ( useClickCatcher && !Overlay ) {
 						ClickCatcher = (
 							<div
 								class="-click-catcher"
-								onclick={this.onClickItem}
+								onclick={selfManaged ? this.onClickItem : ()=>{}}
 								data-index={idx}
-								data-id={item[0]}
+								data-id={dataId}
 							/>
 						);
-					} else {
+					}
+					else {
 						ClickCatcher = null;
 					}
 
 					ShowItems.push(
 						<div class="-item"
-							onclick={this.onClickItem}
+							onclick={selfManaged && !useClickCatcher ? this.onClickItem : ()=>{}}
 							data-index={idx++}
-							data-id={item[0]}
+							data-id={dataId}
 						>
-							{item[1]}
+							{Contents}
+							{Overlay}
 							{ClickCatcher}
 						</div>
 					);
@@ -105,16 +119,6 @@ export default class InputDropdown extends Component {
 				);
 			}
 
-			let SelectedField = null;
-			if (!props.hideSelectedField) {
-
-				SelectedField = (
-					<button type="button" onclick={this.onShow}>
-						{props.items[value][1]}
-					</button>
-
-				);
-			}
 
 			return (
 				<div class={cN('input-dropdown', props.class)} ref={(input) => { this.dropdown = input; }}>
