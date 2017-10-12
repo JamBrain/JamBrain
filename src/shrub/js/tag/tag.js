@@ -22,7 +22,7 @@ function _Get( filter ) {
 
 export function GetContains( subString ) {
 	pattern = new RegExp(subString.match(/^#?(.+)/)[1], 'i');
-	GetAll()
+	return GetAll()
 		.then( (r) => {
 			const newResponse = Object.assign({}, r);
 			newResponse.tag = [];
