@@ -1,6 +1,6 @@
 import includePaths		from 'rollup-plugin-includepaths';
 //import nodeResolve	from 'rollup-plugin-node-resolve';
-import nodent			from 'rollup-plugin-nodent';
+//import nodent			from 'rollup-plugin-nodent';
 
 export default {
 	'output': {
