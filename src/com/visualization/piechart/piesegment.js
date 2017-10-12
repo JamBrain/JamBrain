@@ -9,8 +9,8 @@ export default class PieSegment extends Component {
 
     render( props ) {
 
-        // it's valid for offset to be zero so we have to check it against undefined.
-        if ( !(props && props['angle'] && props['offset'] != undefined && props['color'])) {
+        // it's valid for offset/angle to be zero so we have to check it against undefined.
+        if ( !(props && props['angle'] != undefined && props['offset'] != undefined && props['color']) ) {
             console.warn('PieSegment was created with invalid props', props);
             return;
         }
@@ -18,13 +18,13 @@ export default class PieSegment extends Component {
         let angle = props.angle;
 
         // drawing a segment of 0 width causes artifacting so bail out.
-        if (angle == 0) {
+        if ( angle == 0 ) {
             return;
         }
 
         let offset = 100 - props.offset + 25;
         let color = props.color;
-        let segmentclass = "piechart-segment piechart_color_"+color;
+        let segmentclass = cN("piechart-segment", "piechart_color_"+color, props.class);
         let dash = angle + " " + (100 - angle);
 
         return (
