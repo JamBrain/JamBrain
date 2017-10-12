@@ -45,7 +45,7 @@ export default class GamesFilter extends Component {
                 'text': value,
                 'active': !!value,
                 'words': words,
-                'wordsLowerCase': words.map(w => w.toLowerCase()),
+                'wordsLowerCase': words ? words.map(w => w.toLowerCase()) : [],
                 'atnames': value.match(PatternAtName),
                 'tags': value.match(PatternTag),
             };
