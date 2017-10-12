@@ -116,7 +116,12 @@ export default class NotificationItem extends Component {
 
 		} else if(notification.notification.note) {
 			const note = notification.note[0];
-			const NoteAuthor = <NavLink class='-at-name'>@{notification.users.get(note.author).name}</NavLink>;
+			let NoteAuthor = null;
+			if (note.author > 0) {
+				NoteAuthor = <NavLink class='-at-name'>@{notification.users.get(note.author).name}</NavLink>;
+			} else {
+				NoteAuthor = <NavLink class='-at-name -anonymous'>An anonymous user</NavLink>;
+			}
 
 			if (!node.selfauthored && !note.selfauthored) {
 

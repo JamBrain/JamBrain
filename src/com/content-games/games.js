@@ -1,5 +1,4 @@
 import { h, Component } 				from 'preact/preact';
-import NavSpinner						from 'com/nav-spinner/spinner';
 
 import ContentLoading					from 'com/content-loading/loading';
 import ContentError						from 'com/content-error/error';
@@ -10,8 +9,8 @@ import ContentItemBox					from 'com/content-item/item-box';
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
-//import ContentPost						from 'com/content-post/post';
-//import ContentUser						from 'com/content-user/user';
+import GridSelector						from './grid-selector';
+
 import ContentMore						from 'com/content-more/more';
 
 import $Node							from '../../shrub/js/node/node';
@@ -22,11 +21,13 @@ export default class ContentGames extends Component {
 		super(props);
 
 		this.state = {
-			feed: [],
-			hash: {},
-			offset: 12-5, //10-5
-			added: null,
-			loaded: false
+			'feed': [],
+			'hash': {},
+			'offset': 12-5, //10-5
+			'added': null,
+			'loaded': false,
+			'defaultLayout': 3,
+			'layout': 3,
 		};
 
 		this.fetchMore = this.fetchMore.bind(this);
@@ -158,8 +159,7 @@ export default class ContentGames extends Component {
 		return true;
 	}
 
-	render( props, {feed, added, error, loaded} ) {
-
+	render( props, {feed, added, error, loaded, defaultLayout, layout} ) {
 		var Class = ['content-base'];
 //        props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 //        props.class.push("content-games");
@@ -185,14 +185,34 @@ export default class ContentGames extends Component {
 				}
 			});
 
+			/*
+				As long as the number of items in the Games array
+				doesn't evenly divide by the number of columns
+				keep adding placeholder elements so that the last
+				row looks nice
+			*/
+			while ( Games.length % layout !== 0 ) {
+				Games.push(<ContentItemBox placeHolder={true} />);
+			}
+
 			if ( !props.nomore /*|| added >= 10*/ ){
 				LoadMore = <ContentMore onclick={this.fetchMore} />;
 			}
 
-			return(
+			const gridClass = '-columns-' + layout;
+
+			return (
 				<div class={cN(Class, props.class)}>
 					{props.children}
-					<div class='content-boxes'>
+					<GridSelector
+						defaultLayout={defaultLayout}
+						onChangeLayout={
+							(gridLayout) => {
+								this.setState({'layout': gridLayout,});
+							}
+						}
+					/>
+					<div class={cN('content-boxes', gridClass)}>
 						{Games}
 					</div>
 					{LoadMore}
