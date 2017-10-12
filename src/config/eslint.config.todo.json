@@ -5,7 +5,8 @@
 		"ecmaVersion": 2017,
 		"sourceType": "module",
 		"ecmaFeatures": {
-			"jsx": true
+			"jsx": true,
+			"experimentalObjectRestSpread": true		// until rest-spread support is better, leave this disabled
 		}
 	},
 	"rules": {
