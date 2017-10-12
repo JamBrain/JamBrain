@@ -18,12 +18,15 @@ export default {
 //			},
 			'extensions': ['.es6.js'],
 		}),
-		nodent({
-			'promises': true,
-			'noRuntime': true,
-			//'sourcemap': true,
-			//'es6target': true,
-		}),
+
+		// Sorry, we need to temporarily disable this, until nodent fully supports rest-spread
+//		nodent({
+//			'promises': true,
+//			'noRuntime': true,
+//			//'sourcemap': true,
+//			//'es6target': true,
+//		}),
+
 //		nodeResolve({
 //			'jsnext': true
 //		}),
