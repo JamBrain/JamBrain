@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 				from 'preact/preact';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
@@ -6,6 +6,8 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import ButtonBase						from 'com/button-base/base';
 
 import $ThemeIdeaVote					from '../../shrub/js/theme/theme_idea_vote';
+
+import PieChart							from 'com/visualization/piechart/piechart';
 
 
 export default class ContentEventSlaughter extends Component {
@@ -41,32 +43,32 @@ export default class ContentEventSlaughter extends Component {
 
 				// NOTE: The 'recent' order is quite random. Better than nothing though
 
-				this.setState({ 'votes': r.votes, 'recent': Object.keys(r.votes).slice(Start).reverse() });
+				this.setState({'votes': r.votes, 'recent': Object.keys(r.votes).slice(Start).reverse()});
 			}
 			else {
-				this.setState({ 'votes': [] });
+				this.setState({'votes': []});
 			}
 		})
 		.catch(err => {
-			this.setState({ error: err });
+			this.setState({'error': err});
 		});
 
 		var onIdeas = $ThemeIdeaVote.Get(this.props.node.id)
 		.then(r => {
 			if ( r.ideas ) {
 				//console.log('get',r);
-				this.setState({ 'ideas': r.ideas });
+				this.setState({'ideas': r.ideas});
 			}
 			else {
-				this.setState({ 'ideas': [] });
+				this.setState({'ideas': []});
 			}
 		})
 		.catch(err => {
-			this.setState({ error: err });
+			this.setState({'error': err});
 		});
 
 		// Once Finished
-		Promise.all([ onVotes, onIdeas ])
+		Promise.all([onVotes, onIdeas])
 		.then(r => {
 			console.log("Loaded my Ideas and Themes", r);
 
@@ -85,15 +87,15 @@ export default class ContentEventSlaughter extends Component {
 			var available = idea_keys.filter(key => vote_keys.indexOf(key) === -1);
 
 			if ( available.length === 0 ) {
-				this.setState({ 'done': true, 'votes-left': available.length });
+				this.setState({'done': true, 'votes-left': available.length});
 			}
 
 			var id = parseInt(Math.random() * available.length);
 
-			this.setState({ 'current': available[id], 'votes-left': available.length });
+			this.setState({'current': available[id], 'votes-left': available.length});
 		}
 		else {
-			this.setState({ 'error': 'Not loaded' });
+			this.setState({'error': 'Not loaded'});
 		}
 	}
 
@@ -102,10 +104,10 @@ export default class ContentEventSlaughter extends Component {
 
 		while (this.state.recent.length > 50) {
 			var junk = this.state.recent.shift();
-			console.log("trimmed",junk);
+			console.log("trimmed", junk);
 		}
 
-		this.setState({ 'recent': this.state.recent });
+		this.setState({'recent': this.state.recent});
 	}
 
 	renderIcon( value ) {
@@ -153,7 +155,7 @@ export default class ContentEventSlaughter extends Component {
 			}
 		})
 		.catch(err => {
-			this.setState({ error: err });
+			this.setState({'error': err});
 		});
 	}
 	submitYesVote( e ) {
@@ -178,7 +180,7 @@ export default class ContentEventSlaughter extends Component {
 
 		return (
 			<div class="-item">
-				<div class='-text' title={idea}>{idea}</div>
+				<div class="-text" title={idea}>{idea}</div>
 			</div>
 		);
 	}
@@ -186,24 +188,43 @@ export default class ContentEventSlaughter extends Component {
 		return Object.keys(this.state.ideas).map(this._renderMyIdea);
 	}
 
-	renderBody( {current, votes, ideas, done/*, error*/} ) {
+	renderBody( state /*{current, votes, votes-left,  ideas, done, error}*/ ) {
+
+		console.log(state.votes);
+		let kept = Object.values(state.votes).reduce((t, v) => {
+			return t+v;
+		});
+
+		var values = [
+			kept,
+			Object.keys(state.votes).length - kept,
+			state['votes-left']
+		];
+
+		var labels = [
+			'kept',
+			'slaughtered',
+			'left'
+		];
+
 		var StatsAndDetails = (
 			<div>
 				<h3>Recent Themes</h3>
 				{this.renderRecentQueue()}
+				<PieChart values={values} labels={labels} />
 			</div>
 		);
 
-		if ( done ) {
+		if ( state.done ) {
 			return (
 				<div>
-					<div>Wow! {"You're totally done!"} Amazing! You slaughtered {Object.keys(votes).length} themes!</div>
+					<div>Wow! {"You're totally done!"} Amazing! You slaughtered {Object.keys(state.votes).length} themes!</div>
 					{StatsAndDetails}
 				</div>
 			);
 		}
-		else if ( current ) {
-			var ThemeName = (ideas[current]);
+		else if ( state.current ) {
+			var ThemeName = (state.ideas[state.current]);
 			return (
 				<div class="event-slaughter">
 					<div class="-title">Would this be a good Theme?</div>
@@ -211,14 +232,14 @@ export default class ContentEventSlaughter extends Component {
 						<div>{ThemeName}</div>
 					</div>
 					<div class="-buttons">
-						<button class="middle big -green" onclick={this.submitYesVote} title='Good'>YES ✓</button>
-						<button class="middle big -red" onclick={this.submitNoVote} title='Bad'>NO ✕</button>
+						<button class="middle big -green" onclick={this.submitYesVote} title="Good">YES ✓</button>
+						<button class="middle big -red" onclick={this.submitNoVote} title="Bad">NO ✕</button>
 
 						<div class="-title">If inappropriate or offensive, you can <button class="-tiny" onclick={this.submitFlagVote}>Flag ⚑</button> it.</div>
 					</div>
 					<div class="-stats">
 						<div>
-							<strong>Themes Slaughtered:</strong> <span>{Object.keys(votes).length}</span>
+							<strong>Themes Slaughtered:</strong> <span>{Object.keys(state.votes).length}</span>
 						</div>
 						{StatsAndDetails}
 					</div>
@@ -228,6 +249,9 @@ export default class ContentEventSlaughter extends Component {
 	}
 
 	render( {node, user/*, path, extra*/}, state ) {
+
+		console.log(state);
+
 		var Title = (<h3>Theme Slaughter Round</h3>);
 
 		if ( node.slug && state.votes && state.ideas ) {

@@ -23,12 +23,12 @@ export default class PieChart extends Component {
 
     render( props ) {
 
-        if ( !(props && props['lables'] && props['values']) ) {
+        if ( !(props && props['labels'] && props['values']) ) {
             console.warn('PieChart was created with invalid props', props);
             return <div>No Data!</div>;
         }
 
-        let lables = props.lables;
+        let labels = props.labels;
         let values = props.values;
 
         let percentages = this.convertToPercentage(values);
@@ -46,7 +46,7 @@ export default class PieChart extends Component {
             Legend.push(
                 <li>
                     <span class={legendclass}></span>
-                    <p>{lables[i]} ({values[i]} / {Math.round(percentages[i] * 100) / 100}%)</p>
+                    <p>{labels[i]} ({values[i]} / {Math.round(percentages[i] * 100) / 100}%)</p>
                 </li>
             );
 
