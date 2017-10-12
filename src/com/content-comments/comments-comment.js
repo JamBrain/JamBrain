@@ -6,8 +6,6 @@ import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 import IMG2 							from 'com/img2/img2';
 
-import ContentFooterButtonComments		from 'com/content-footer/footer-button-comments';
-
 import ContentCommentsMarkup			from 'comments-markup';
 
 import $Note							from '../../shrub/js/note/note';
@@ -29,7 +27,6 @@ export default class ContentCommentsComment extends Component {
 			'lovecount': props.comment.love,
 		};
 
-//		console.log('C '+props.comment.id+": ", this.state.editing,this.state.preview);
 
 		this.onEditing = this.onEditing.bind(this);
 		this.onPreview = this.onPreview.bind(this);
@@ -41,7 +38,7 @@ export default class ContentCommentsComment extends Component {
 		this.onSave = this.onSave.bind(this);
 		this.onCancel = this.onCancel.bind(this);
 		this.onPublish = this.onPublish.bind(this);
-
+		this.onPublishAnon = this.onPublishAnon.bind(this);
 		this.onLove = this.onLove.bind(this);
 		this.onReply = this.onReply.bind(this);
 	}
@@ -84,6 +81,14 @@ export default class ContentCommentsComment extends Component {
 		});
 	}
 
+	onPublishAnon( e ) {
+		if (this.canSave() ) {
+			if ( this.props.onpublish ) {
+				this.props.onpublish(e, true);
+			}
+		}
+	}
+
 	onPublish( e ) {
 		if ( this.canSave() ) {
 			if ( this.props.onpublish ) {
@@ -95,7 +100,6 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onEdit( e ) {
-		console.log('edit');
 		this.setState({'editing': true, 'preview': false});
 	}
 
@@ -130,8 +134,6 @@ export default class ContentCommentsComment extends Component {
 		var user = props.user;
 		var comment = props.comment;
 		var author = props.author;
-
-//		console.log('R '+comment.id+": ", state.editing, state.preview);
 
 		if ( author || comment.author == 0 ) {
 			var Name = "Anonymous";
@@ -231,6 +233,9 @@ export default class ContentCommentsComment extends Component {
 
 				var ShowRight = [];
 				if ( props.publish ) {
+					if (props.allowAnonymous) {
+						ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublishAnon}><SVGIcon>publish</SVGIcon><div>Publish Anonymously</div></div>);
+					}
 					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublish}><SVGIcon>publish</SVGIcon><div>Publish</div></div>);
 				}
 				else {
