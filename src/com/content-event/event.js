@@ -82,7 +82,6 @@ export default class ContentEvent extends Component {
 
 		var ShowGame = null;
 		if ( true ) {
-            console.log(extra);
 			let Class = null;
 			if ( extra && extra.length > 0 && extra[0] == "games") {
 				Class = "-selected";
