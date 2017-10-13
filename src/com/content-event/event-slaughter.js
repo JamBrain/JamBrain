@@ -188,38 +188,46 @@ export default class ContentEventSlaughter extends Component {
 		return Object.keys(this.state.ideas).map(this._renderMyIdea);
 	}
 
-	renderBody( state /*{current, votes, votes-left,  ideas, done, error}*/ ) {
+	renderBody( state ) {
 
-		console.log(state.votes);
-		let kept = Object.values(state.votes).reduce((t, v) => {
-			return t+v;
-		});
-
-		var values = [
-			kept,
-			Object.keys(state.votes).length - kept,
-			state['votes-left']
-		];
+		let seen = Object.keys(state.votes).length;
 
 		var labels = [
-			'kept',
 			'slaughtered',
+			'kept',
 			'left'
 		];
 
+		var values = [
+			0,
+			0,
+			state['votes-left']
+		];
+
+		if ( seen != 0 ) {
+			Object.values(state.votes).forEach((v) => {
+				if ( v == 0 ) {
+					values[0]++;
+				}
+				else if ( v == 1 ) {
+					values[1]++;
+				}
+				// else if v=2 it's flagged
+			});
+		}
+
 		var StatsAndDetails = (
-			<div>
+			<div class="history">
 				<h3>Recent Themes</h3>
 				{this.renderRecentQueue()}
-				<PieChart values={values} labels={labels} />
 			</div>
 		);
 
 		if ( state.done ) {
 			return (
-				<div>
+				<div class="-stats">
 					<div>Wow! {"You're totally done!"} Amazing! You slaughtered {Object.keys(state.votes).length} themes!</div>
-					{StatsAndDetails}
+					<PieChart values={values} labels={labels} />
 				</div>
 			);
 		}
@@ -242,6 +250,7 @@ export default class ContentEventSlaughter extends Component {
 							<strong>Themes Slaughtered:</strong> <span>{Object.keys(state.votes).length}</span>
 						</div>
 						{StatsAndDetails}
+						<PieChart values={values} labels={labels} />
 					</div>
 				</div>
 			);
@@ -249,8 +258,6 @@ export default class ContentEventSlaughter extends Component {
 	}
 
 	render( {node, user/*, path, extra*/}, state ) {
-
-		console.log(state);
 
 		var Title = (<h3>Theme Slaughter Round</h3>);
 
