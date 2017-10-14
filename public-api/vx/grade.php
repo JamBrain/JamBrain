@@ -132,7 +132,7 @@ switch ( $action ) {
 			json_EmitFatalError_BadRequest("Unspecified event", $RESPONSE);
 		
 		$RESPONSE['event_id'] = $parent_id;
-		$RESPONSE['games'] = grade_GetByAuthorParent($user_id, $parent_id);
+		$RESPONSE['games'] = grade_GetNodeByAuthorParent($user_id, $parent_id);
 			
 		break; // case 'getgames': //grade/getgames[/:event_id]
 /*

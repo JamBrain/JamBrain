@@ -38,7 +38,7 @@ switch ( $action ) {
 			$rootnode = nodeCache_GetById(1);
 			if ( isset($rootnode['meta']) && isset($rootnode['meta']['featured']) ) {
 				$featured = intval($rootnode['meta']['featured']);
-				$votedgames = grade_GetByAuthorParent($user_id, $featured);
+				$votedgames = grade_GetNodeByAuthorParent($user_id, $featured);
 				$excludegames = array_merge($excludegames, $votedgames);
 			}
 		}

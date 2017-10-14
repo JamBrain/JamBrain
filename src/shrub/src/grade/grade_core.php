@@ -26,7 +26,7 @@ function grade_GetByNodeAuthor( $node_id, $author_id ) {
 	);
 }
 
-function grade_GetByAuthorParent( $author_id, $parent_id ) {
+function grade_GetNodeByAuthorParent( $author_id, $parent_id ) {
 	return db_QueryFetchSingle(
 		"SELECT
 			DISTINCT node 
