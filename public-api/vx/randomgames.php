@@ -33,8 +33,15 @@ switch ( $action ) {
 				// This will only go one way, but guard anyway.
 				if ( $authorlink['b'] == $user_id ) { $excludegames[] = $authorlink['a']; }
 			}
+			
+			// Also exclude games the user has voted for already.
+			$rootnode = nodeCache_GetById(1);
+			if ( isset($rootnode['meta']) && isset($rootnode['meta']['featured']) ) {
+				$featured = intval($rootnode['meta']['featured']);
+				$votedgames = grade_GetByAuthorParent($user_id, $featured);
+				$excludegames = array_merge($excludegames, $votedgames);
+			}
 		}
-		
 
 		$gamelist = nodeRandomGames_GetGames($count, $excludegames, $filter);
 		

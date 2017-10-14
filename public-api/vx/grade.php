@@ -107,6 +107,34 @@ switch ( $action ) {
 		$RESPONSE['grade'] = grade_GetByNodeAuthor($node_id, $user_id);
 			
 		break; // case 'getmy': //grade/getmy/:node_id
+		
+	case 'getgames': //grade/getgames[/:event_id]
+		json_ValidateHTTPMethod('GET');
+		
+		// Authenticate User		
+		$user_id = userAuth_GetId();
+		if ( !$user_id )
+			json_EmitFatalError_Permission(null, $RESPONSE);
+
+		$parent_id = 0;
+		if ( json_ArgCount() > 0 ) {
+			$parent_id = intval(json_ArgShift());
+		}
+		else {
+			// Get current featured event as the default value
+			$rootnode = nodeCache_GetById(1);
+			if ( isset($rootnode['meta']) && isset($rootnode['meta']['featured']) ) {
+				$parent_id = intval($rootnode['meta']['featured']);
+			}
+		}
+		
+		if ( !$parent_id )
+			json_EmitFatalError_BadRequest("Unspecified event", $RESPONSE);
+		
+		$RESPONSE['event_id'] = $parent_id;
+		$RESPONSE['games'] = grade_GetByAuthorParent($user_id, $parent_id);
+			
+		break; // case 'getgames': //grade/getgames[/:event_id]
 /*
 	case 'get': //grade/get/:node_id
 		json_ValidateHTTPMethod('GET');
