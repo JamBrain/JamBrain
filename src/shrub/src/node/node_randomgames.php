@@ -21,10 +21,13 @@ function nodeRandomGames_CurrentGamesList( ) {
 			return null;
 		}
 
-		// Are we in a voting period?
+		// Are we in a voting period, or has the event been completed? Return if neither of these is the case.
+		// Only allow random games API to work in these conditions.
 		$event = nodeCache_GetById($featured_event);
 		
-		if ( !(isset($event['meta']) && isset($event['meta']['can-grade']) && $event['meta']['can-grade']) ) {
+		if ( !(isset($event['meta']) && 
+			((isset($event['meta']['can-grade']) && $event['meta']['can-grade'] == '1') ||
+			(isset($event['meta']['event-finished']) && $event['meta']['event-finished'] == '1'))) ) {
 			// Nope.
 			return null;		
 		}
@@ -124,14 +127,13 @@ function nodeRandomGames_GetGames( $count, $removegames, $filter = null ) {
 	$listout = [];
 	$filterfunc = null;
 	$totalweight = $gamedata['totalweight'];
-	if ( $filter != null ) {
-		$filterfunc = function($a) { return $a['type'] == $filter; };
-	}
 	if ( $filter == 'compo' ) {
 		$totalweight = $gamedata['compoweight'];
+		$filterfunc = function($a) { return $a['type'] == 'compo'; };
 	}
 	if ( $filter == 'jam' ) {
 		$totalweight = $gamedata['jamweight'];
+		$filterfunc = function($a) { return $a['type'] == 'jam'; };
 	}
 	
 	$weightedlist = $gamedata['weightedgames'];
