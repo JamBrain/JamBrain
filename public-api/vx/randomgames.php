@@ -38,7 +38,7 @@ switch ( $action ) {
 
 		$gamelist = nodeRandomGames_GetGames($count, $excludegames, $filter);
 		
-		$RESPONSE['votingenabled'] = ($gamelist != null); 
+		$RESPONSE['listenabled'] = ($gamelist != null); 
 		$RESPONSE['games'] = ($gamelist != null) ? $gamelist : []; 
 
 		break; //case 'get': //randomgames/get[/compo|jam]
