@@ -4,7 +4,8 @@ const SH_NODERG_CACHE_TTL = 3*60;
 const SH_NODERG_CACHE_KEY = "!SH!NODE!RG";
 
 function nodeRandomGames_CurrentGamesList( ) {
-	$data = cache_Fetch($key);
+	$data = cache_Fetch(SH_NODERG_CACHE_KEY);
+	// Only generate data if it's not cached.
 	if ( $data == null ) {
 		// What is the current event?
 		// Get root node
@@ -53,7 +54,7 @@ function nodeRandomGames_CurrentGamesList( ) {
 				node, name, score
 			FROM
 				".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC."
-			WHERE node in (" . $nodeidlist . " AND
+			WHERE node in (" . $nodeidlist . ") AND
 				name in ('smart','grade');"
 		);
 
@@ -65,7 +66,7 @@ function nodeRandomGames_CurrentGamesList( ) {
 		$compoweight = 0;
 		$jamweight = 0;
 		foreach( $magic as $node => $magicdata ) {
-			if ( isset($magicdata['grade'] && isset($magicdata['smart'] ) {
+			if ( isset($magicdata['grade']) && isset($magicdata['smart']) ) {
 				$votecount = $magicdata['grade'];
 				$smartrating = $magicdata['smart'];
 				
@@ -109,7 +110,7 @@ function nodeRandomGames_InvalidateCache( ) {
 	cache_Delete(SH_NODERG_CACHE_KEY);
 }
 
-function nodeRandomGames_GetGames( $count, $filter = null ) {
+function nodeRandomGames_GetGames( $count, $removegames, $filter = null ) {
 	$gamedata = nodeRandomGames_CurrentGamesList();
 	if ( !$gamedata ) {
 		// If gamedata is null, then we are not currently in a voting period. Just return an empty list.
@@ -124,7 +125,7 @@ function nodeRandomGames_GetGames( $count, $filter = null ) {
 	$filterfunc = null;
 	$totalweight = $gamedata['totalweight'];
 	if ( $filter != null ) {
-		$filterfunc = function($a) { return $a['type'] == $filter };
+		$filterfunc = function($a) { return $a['type'] == $filter; };
 	}
 	if ( $filter == 'compo' ) {
 		$totalweight = $gamedata['compoweight'];
@@ -138,8 +139,18 @@ function nodeRandomGames_GetGames( $count, $filter = null ) {
 		$weightedlist = array_filter($weightedlist, $filterfunc);
 	}
 	
-	$retrycount = 0;
+	// Remove games in removegames list
+	$removemap = [];
+	foreach( $removegames as $gameid ) { $removemap[intval($gameid)] = true; }
 	
+	foreach( $weightedlist as $key => $game ) {
+		if ( isset($removemap[$game['id']]) ) {
+			$totalweight -= $game['weight'];
+			unset($weightedlist[$key]);
+		}
+	}
+	
+	$retrycount = 0;
 	while ( $count > 0 ) {
 		// Satisfy game requests from weighted random pool, while it's possible
 		if ( count($weightedlist) == 0 ) {
@@ -176,12 +187,24 @@ function nodeRandomGames_GetGames( $count, $filter = null ) {
 		// Satisfy game requests from unweighted random pool, when we're out of entries in the weighted list
 		
 		$unweightedlist = $gamedata['unweightedgames'];
-		if ( $filterfunc != null ) { 
-			// Note: use array_values to preserve 0..n indexing.
-			$unweightedlist = array_values(array_filter($unweightedlist, $filterfunc));
+		if ( $filterfunc != null ) { 			
+			$unweightedlist = array_filter($unweightedlist, $filterfunc);
 		}
+		
+		foreach( $unweightedlist as $key => $game ) {
+			if ( isset($removemap[$game['id']]) ) {
+				unset($unweightedlist[$key]);
+			}
+		}
+		
+		// Note: use array_values to preserve 0..n indexing.
+		$unweightedlist = array_values($unweightedlist);
 	
 		while ( $count > 0 ) {
+			if ( count($unweightedlist) == 0 ) {
+				break;
+			}
+		
 			$index = random_int(1,count($unweightedlist))-1;
 			
 			$listout[] = $unweightedlist[$index]['id'];
