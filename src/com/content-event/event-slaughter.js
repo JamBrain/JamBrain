@@ -226,7 +226,7 @@ export default class ContentEventSlaughter extends Component {
 		if ( state.done ) {
 			return (
 				<div class="-stats">
-					<div>Wow! {"You're totally done!"} Amazing! You slaughtered {Object.keys(state.votes).length} themes!</div>
+					<div>Wow! You're totally done! Amazing! You slaughtered {Object.keys(state.votes).length} themes!</div>
 					<PieChart values={values} labels={labels} />
 				</div>
 			);
