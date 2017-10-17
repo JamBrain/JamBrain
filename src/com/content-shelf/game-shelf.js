@@ -28,8 +28,17 @@ export default class GameShelf extends Component {
 		});
     }
 
+    getGameBoxes(games) {
+        if ( games ) {
+            return games.map( ( node ) => <ContentBox node={node} /> );
+        }
+        else {
+            return [];
+        }
+    }
+
     render ( props, {games} ) {
-        let Games = games.map( ( node ) => <ContentBox node={node} /> );
+        let Games = this.getGameBoxes(games);
         let Props = Object.assing({}, props);
         delete Props.node;
         return <Shelf {...Props}>{Games}</Shelf>;
