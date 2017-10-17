@@ -14,6 +14,7 @@ export default class Shelf extends Component {
 
         const Shelves = [];
         let Cards = [];
+        let cardsOnShelf = false;
         children.forEach( ( card ) => {
             Cards.push(card);
             if ( Cards.length == slots ) {
@@ -23,13 +24,20 @@ export default class Shelf extends Component {
                         {Cards}
                     </div>
                 );
+                cardsOnShelf = true;
                 Cards = [];
+            }
+            else {
+                cardsOnShelf = false;
             }
         });
 
-		while ( Cards.length % slots !== 0 ) {
-			Cards.push(<div class="-shelf-card -placeholder" />);
-		}
+        if (!cardsOnShelf && Cards.length > 0) {
+    		while ( Cards.length < slots ) {
+    			Cards.push(<div class="-shelf-card -placeholder" />);
+    		}
+        }
+
 
         return (
             <ContentCommon class={cN('content-shelf', this.props.class)}>

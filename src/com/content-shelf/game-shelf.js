@@ -39,8 +39,9 @@ export default class GameShelf extends Component {
 
     render ( props, {games} ) {
         let Games = this.getGameBoxes(games);
-        let Props = Object.assing({}, props);
+        let Props = Object.assign({}, props);
         delete Props.node;
+        console.log(Games, Props);
         return <Shelf {...Props}>{Games}</Shelf>;
     }
 }

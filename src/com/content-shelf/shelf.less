@@ -1,3 +1,5 @@
+@import 'defs.less';
+
 .content-shelf {
     paddining: 1.5rem 1rem 0.5rem;
     & > .-shelf-tools {
@@ -14,7 +16,7 @@
         width: 100%;
         position: relative;
         margin: -0.5rem;	/* to undo the effect of the 0.5rem margin in items */
-
+        box-shadow: 0 0 3px @COL_ND;
     	&.-placeholder {
     		visibility: hidden;
     	}
