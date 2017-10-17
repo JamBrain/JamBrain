@@ -31,13 +31,12 @@ export default class Shelf extends Component {
                 cardsOnShelf = false;
             }
         });
-
+        
         if (!cardsOnShelf && Cards.length > 0) {
-    		while ( Cards.length < slots ) {
-    			Cards.push(<div class="-shelf-card -placeholder" />);
-    		}
+            while ( Cards.length < slots ) {
+                Cards.push(<div class="-shelf-card -placeholder" />);
+            }
         }
-
 
         return (
             <ContentCommon class={cN('content-shelf', this.props.class)}>
