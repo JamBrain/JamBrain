@@ -5,6 +5,15 @@ import SVGicon from 'com/svg-icon/icon';
 
 export default class Shelf extends Component {
 
+    pushCardsAsNewShelf(Shelves, Cards, slots, expanded) {
+        const invisible = expanded || Shelves.length == 0 ? '' : '-elf-shelf';
+        Shelves.push(
+            <div class={cN('-shelf', '-columns-' + slots, invisible)}>
+                {Cards}
+            </div>
+        );
+    }
+
     render ( {slots, children, expandable}, {expanded} ) {
         if (!slots) {
             slots = 5;
@@ -22,12 +31,7 @@ export default class Shelf extends Component {
         children.forEach( ( card ) => {
             Cards.push(card);
             if ( Cards.length == slots ) {
-                const invisible = expanded || Shelves.length == 0 ? '' : '-elf-shelf';
-                Shelves.push(
-                    <div class={cN('-shelf', '-columns-' + slots, invisible)}>
-                        {Cards}
-                    </div>
-                );
+                this.pushCardsAsNewShelf(Shelves, Cards, slots, expanded);
                 cardsOnShelf = true;
                 Cards = [];
             }
@@ -37,23 +41,17 @@ export default class Shelf extends Component {
         });
 
         if (!cardsOnShelf && Cards.length > 0) {
-            console.log(Cards.length, slots);
             while ( Cards.length < slots ) {
                 Cards.push(<div class="-shelf-card -placeholder" />);
             }
-            const invisible = expanded || Shelves.length == 0 ? '' : '-elf-shelf';
-            Shelves.push(
-                <div class={cN('-shelf', '-columns-' + slots, invisible)}>
-                    {Cards}
-                </div>
-            );
+            this.pushCardsAsNewShelf(Shelves, Cards, slots, expanded);
         }
         console.log(Shelves);
         return (
-            <ContentCommon class={cN('content-shelf', this.props.class)}>
+            <div class={cN('content-shelf', expandable ? '-expandable' : '-in-expandable', this.props.class)}>
                 {ExpandCollapseIcon}
                 {Shelves}
-            </ContentCommon>
+            </div>
         );
     }
 }

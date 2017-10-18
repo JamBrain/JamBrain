@@ -16,11 +16,25 @@ export default class GameShelf extends Component {
 		const subsubtypes = props.subsubtypes ? props.subsubtypes : null;
 		const more = null;
 		const limit = props.slots ? props.slots : 5;
+        const {expandable} = props;
 
 		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, more, limit )
 		.then(r => {
 			if ( r.feed && r.feed.length ) {
-                this.setState({'games': r.feed});
+                const nodes = [];
+                r.feed.forEach( (node) => {
+                    if (expandable || nodes.length < limit) {
+                        nodes.push(node.id);
+                    }
+                });
+                return $Node.Get(nodes)
+                    .then( r => {
+                        console.log(r);
+                        this.setState({'games': r.node});
+                    })
+                    .catch(err => {
+                        this.setState({'error': err});
+                    });
 			}
 		})
 		.catch(err => {
@@ -29,8 +43,9 @@ export default class GameShelf extends Component {
     }
 
     getGameBoxes(games) {
+        const {user, path, noevent} = this.props;
         if ( games ) {
-            return games.map( ( node ) => <ContentBox node={node} /> );
+            return games.map( ( node ) => <ContentBox node={node} user={user} path={path} noevent={noevent ? noevent : null} /> );
         }
         else {
             return [];
