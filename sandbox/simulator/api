@@ -11,7 +11,7 @@ function ApiRandomGamesGet(&$user, $count = null, $filter = null)
 	$addpath = "";
 	if($filter != null) { $addpath = "/$filter"; }
 	if($count != null) { $addpath .= "?count=$count"; }
-	$value = LdApi::Get("vx/randomgames/get" . $addpath, $user);
+	$value = LdApi::Get("vx/random/game/get" . $addpath, $user);
 	if(!ResponseIs200($value)) return null;
 	return $value['games'];	
 }
