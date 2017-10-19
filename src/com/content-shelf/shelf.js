@@ -19,6 +19,8 @@ export default class Shelf extends Component {
             slots = 5;
         }
 
+        expandable = expandable && (children.length > slots);
+
         const ExpandCollapseIcon = expandable ? (
             <SVGicon onclick={ () => this.setState({'expaned': !expaned}) } class="-shelf-tools">
                 {expaned ? 'arrow-up' : 'arrow-down'}
@@ -46,7 +48,6 @@ export default class Shelf extends Component {
             }
             this.pushCardsAsNewShelf(Shelves, Cards, slots, expanded);
         }
-        console.log(Shelves);
         return (
             <div class={cN('content-shelf', expandable ? '-expandable' : '-in-expandable', this.props.class)}>
                 {ExpandCollapseIcon}
