@@ -145,17 +145,74 @@ function GetRandomRecentPost(&$user)
 
 function GetRandomTopGame(&$user)
 {
-	Verbose("Fetching a random game...");
-	$nodes = GetTopEventGameNodes($user);
-	if(count($nodes) == 0) return null;
-	$i = random_int(1,count($nodes))-1;
-	$data = ApiNodeGet($user, $nodes[$i]["id"]);
+	$gameid = 0;
+	if(random_int(1,2) == 1)
+	{
+		Verbose("Fetching a random game via randomgames api...");
+		// Use randomgames api
+		$count = null;
+		if(random_int(1,2) == 1) { $count = random_int(3,15); }
+		$filter = ["compo","jam",null][random_int(0,2)];
+		$games = ApiRandomGamesGet($user, $count, $filter);
+		if($games === null)
+		{
+			ReportError("RandomGames API failed.");
+			return null;
+		}		
+	
+		// It's legitimate for this API to return no games before the voting period stops. 
+		// In this case, fall back to the feed API below
+		if(count($games) != 0)
+		{
+			// Sanity check: ensure our game is not present in the list.
+			foreach($games as $game) 
+			{
+				if($game == $user['game_node']) { ReportError("RandomGames API should not be returning the user's own game."); }
+			}
+			
+			$i = random_int(1,count($games))-1;
+			$gameid = $games[$i];
+		}
+	} 
+	
+	if($gameid == 0) 
+	{
+		Verbose("Fetching a random game via feed...");
+		// Use feed
+		$nodes = GetTopEventGameNodes($user);
+		if(count($nodes) == 0) return null;
+		$i = random_int(1,count($nodes))-1;
+		$gameid = $nodes[$i]["id"];
+	}
+	
+	$data = ApiNodeGet($user, $gameid);
 	if($data == null)
 	{
-		ReportError("Error fetching node " . $nodes[$i]);
+		ReportError("Error fetching node " . $gameid);
 		return null;
 	}
 	return $data[0];
+}
+
+function GetVoteGames(&$user)
+{
+	if(random_int(1,2) == 1)
+	{
+		return GetTopGames($user);
+	} else {
+		Verbose("Fetching games to rate from randomgames api...");
+		$games = ApiRandomGamesGet($user, 15);
+		if($games === null)
+		{
+			ReportError("Failed to get random games");
+		}
+		$out = [];
+		foreach($games as $game)
+		{
+			$out[] = ["id" => $game];
+		}
+		return $out;
+	}
 }
 
 function GetTopGames(&$user)
