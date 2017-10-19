@@ -64,6 +64,30 @@
 	
 	& .-stats {
 		text-align: left;
+
+		& .history {
+			width: 100%;
+			
+			@media (min-width: 768px) {
+				width: 50%;
+				display: inline-block;
+			}
+		}
+
+		& .piechart-figure {
+			width: 100%;
+			
+			@media (min-width: 768px) {
+				width: 50%;
+				display: inline-block;
+			}
+			
+			& .piechart{
+				@media (min-width: 768px) {
+					width: 75%;
+				}
+			}
+		}
 	}
 	
 	& .-recent {
