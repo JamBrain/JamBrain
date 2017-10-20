@@ -237,4 +237,7 @@ if ( $featured_id ) {
 			$db->commit();
 		}
 	}
+	
+	// Invalidate cached object that selects random games based on smart ratings.
+	nodeRandomGames_InvalidateCache();
 }

@@ -26,6 +26,18 @@ function grade_GetByNodeAuthor( $node_id, $author_id ) {
 	);
 }
 
+function grade_GetNodeByAuthorParent( $author_id, $parent_id ) {
+	return db_QueryFetchSingle(
+		"SELECT
+			DISTINCT node 
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_GRADE." 
+		WHERE author=? AND parent=?
+		;",
+		$author_id,
+		$parent_id 
+	);
+}
+
 
 function grade_AddByNodeAuthorName( $node_id, $parent_id, $author_id, $name, $value ) {
 	return db_QueryInsert(

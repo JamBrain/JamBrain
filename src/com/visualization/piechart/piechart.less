@@ -1,7 +1,7 @@
 
 @import 'defs.less';
 
-.piechart-figure {
+.chart-pie {
 
     display: flex;
     justify-content: space-around;
@@ -13,19 +13,20 @@
         flex-direction: row;
     }
 
-    & .piechart {
+    & > .-chart {
         flex: 1;
         padding-left: 15px;
         padding-right: 15px;
         align-self: center;
 
-        & .piechart-svg {
-            & .piechart-segment {
+        & > .-svg {
+            & > .-segment {
+                // maybe animate the segements changing
             }
         }
     }
 
-    & .legend {
+    & .-legend {
         flex: 1;
         padding-left: 15px;
         padding-right: 15px;
@@ -34,7 +35,7 @@
         & li {
             list-style: none;
             
-            & .shape-circle {
+            & .-shape-circle {
                 display: inline-block;
                 vertical-align: middle;
                 width: 32px;
