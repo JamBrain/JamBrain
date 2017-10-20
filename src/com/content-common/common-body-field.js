@@ -14,11 +14,6 @@ export default class ContentCommonBodyField extends Component {
 	render( props ) {
 		var Class = ["content-common-body","-field"];
 
-//		var Prefix = null;
-//		if ( props.titleIcon ) {
-//			Prefix = <SVGIcon baseline small>{props.titleIcon}</SVGIcon>;
-//		}
-
 		var Limit = 64;
 		var Placeholder = props.placeholder ? props.placeholder : 'Field';
 
