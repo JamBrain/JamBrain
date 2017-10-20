@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 				from 'preact/preact';
 import Shallow							from 'shallow/shallow';
 
 import ContentLoading					from 'com/content-loading/loading';
