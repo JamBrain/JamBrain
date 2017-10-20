@@ -8,10 +8,8 @@ import NavLink 							from 'com/nav-link/link';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
 
-//import DropdownUser 					from 'com/dropdown-user/user';
 import DropdownNotification				from 'com/view-bar/bar-notifications';
 
-//import $Node							from '../../shrub/js/node/node';
 import $Notification					from '../../shrub/js/notification/notification';
 
 
