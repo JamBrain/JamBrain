@@ -17,7 +17,6 @@ export default class InputDropdown extends Component {
 	}
 
 	componentWillReceiveProps( nextProps ) {
-		this.props = nextProps;
 		let { value } = this.state;
 		if (nextProps.value != undefined) {
 			value = nextProps.value;
@@ -84,23 +83,21 @@ export default class InputDropdown extends Component {
 			let ShowItems = null;
 			let SelectedField = null;
 
-			if ( !props.hideSelectedField) {
-				props.items.forEach(([dataId, Contents, Overlay]) => {
-					if ( dataId == value ) {
-						SelectedField = (
-							<button type="button" onclick={this.onShow}>
-								{Contents}
-							</button>
-						);
-					}
-				});
-				if (SelectedField == null) {
+			props.items.forEach(([dataId, Contents, Overlay]) => {
+				if ( dataId == value ) {
 					SelectedField = (
 						<button type="button" onclick={this.onShow}>
-							{props.items[0][1]}
+							{Contents}
 						</button>
 					);
 				}
+			});
+			if (SelectedField == null) {
+				SelectedField = (
+					<button type="button" onclick={this.onShow}>
+						{props.items[0][1]}
+					</button>
+				);
 			}
 
 			if ( show ) {

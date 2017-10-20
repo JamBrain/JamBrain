@@ -99,9 +99,7 @@ export default class GamesFilter extends Component {
                 <InputDropdown
                     value={value}
                     items={Items}
-                    useClickCatcher={true}
                     class='-filter-featured'
-                    selfManaged={false}
                 />
             );
         }
@@ -142,9 +140,7 @@ export default class GamesFilter extends Component {
                 <InputDropdown
                     value={value}
                     items={Items}
-                    useClickCatcher={true}
                     class='-filter-event'
-                    selfManaged={false}
                 />
             );
         }
@@ -214,9 +210,7 @@ export default class GamesFilter extends Component {
                 <InputDropdown
                     value={value}
                     items={Items}
-                    useClickCatcher={true}
                     class='-filter-category'
-                    selfManaged={false}
                 />
             );
         }
@@ -278,9 +272,7 @@ export default class GamesFilter extends Component {
                 <InputDropdown
                     value={value}
                     items={Items}
-                    useClickCatcher={true}
-                    class='-filter-event'
-                    selfManaged={false}
+                    class='-filter-sort'
                 />
             );
         }
