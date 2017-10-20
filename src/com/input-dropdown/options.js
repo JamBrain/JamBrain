@@ -44,7 +44,7 @@ export default class OptionsList extends Component {
 		});
 
 		return (
-			<div class="-items">
+			<div class="option-list">
 				{ShowItems}
 			</div>
 		);

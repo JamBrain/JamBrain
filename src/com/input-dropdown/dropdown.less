@@ -23,40 +23,4 @@
 		cursor: pointer;
 	}
 
-	& > .-items {
-		z-index: 100;
-		position: absolute;
-		width: 100%;
-
-		background: @COL_W;
-		box-shadow: 0 2px 5px rgba(0,0,0,0.25);
-
-		max-width: 20em;
-		max-height: 15em;
-		overflow-x: hidden;
-		overflow-y: scroll;
-
-		border: 1px solid @COL_NLLL;
-
-		& > .-item {
-			padding: 0.5em 1.0em;
-			background: @COL_W;
-			position: relative;
-
-			cursor: pointer;
-
-			&:hover {
-				background: @COL_A;
-				color: @COL_W;
-			}
-
-			& > .-click-catcher {
-				position: absolute;
-				left: 0px;
-				right: 0px;
-				top: 0px;
-				bottom: 0px;
-			}
-		}
-	}
 }
