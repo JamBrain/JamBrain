@@ -65,6 +65,11 @@ export default class ViewBar extends Component {
 ////			console.log('featured',nextProps.featured);
 //		}
 //	}
+	componentWillReceiveProps( nextProps ) {
+		if ( nextProps.hideNotifications ) {
+			this.setState({'showNotifications': false});
+		}
+	}
 
 	shouldComponentUpdate( nextProps, nextState ) {
 		var ret = Shallow.Compare(this, nextProps, nextState);
