@@ -23,7 +23,7 @@ export default class PieChart extends Component {
 
     render( props ) {
 
-        if ( !(props && props.labels != 0 && props.values != 0) ) {
+        if ( !(props && props.labels && props.values) ) {
             console.warn('PieChart was created with invalid props', props);
             return <div>No Data!</div>;
         }
