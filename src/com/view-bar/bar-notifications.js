@@ -4,11 +4,16 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 
 import NotificationsBase				from 'com/content-notifications/base';
-import Dropdown							from 'com/input-dropdown/dropdown';
+import OptionsList from 'com/input-dropdown/options';
 
 import $Notification					from '../../shrub/js/notification/notification';
 
 export default class DropdownNotification extends NotificationsBase {
+
+    constructor( props ) {
+		super(props);
+		this.onModifyFunction = this.onModifyFunction.bind(this);
+	}
 
 	componentDidMount() {
 		const showCount = 8;
@@ -40,7 +45,7 @@ export default class DropdownNotification extends NotificationsBase {
 		if (state.status === null) {
 			ShowSpinner = (<NavSpinner />);
 		} else if (state.status != 200) {
-			Notifications = [[null, (<div>An error occurred retrieving the notifications...</div>)]];
+			Notifications = [[undefined, (<div>An error occurred retrieving the notifications...</div>)]];
 		} else {
 			if (loading) {
 				ShowSpinner = (<NavSpinner />);
@@ -49,15 +54,15 @@ export default class DropdownNotification extends NotificationsBase {
 		}
 
 		if (ShowSpinner !== null) {
-			Notifications.push([null, ShowSpinner]);
+			Notifications.push([undefined, ShowSpinner]);
 		}
 
 		if (Notifications.length > 0 && !loading) {
-			Notifications.push([-1, (<NavLink href='/home/notifications'><em>View notifications feed...</em></NavLink>)]);
+			Notifications.push([-1, undefined, (<NavLink href='/home/notifications'><em>View notifications feed...</em></NavLink>)]);
 		}
 
 		return (
-			<Dropdown class='-notifications' items={Notifications} startExpanded={true} hideSelectedField={true} onmodify={ (id) => this.onModifyFunction(id) } />
+			<OptionsList items={Notifications} onClickItem={this.onModifyFunction} />
 		);
 	}
 }
