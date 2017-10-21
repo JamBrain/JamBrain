@@ -1,4 +1,4 @@
-import { h, Component } from 'preact/preact';
+import {h, Component} from 'preact/preact';
 import Common							from 'com/content-common/common';
 import CommonBody						from 'com/content-common/common-body';
 import SVGIcon							from 'com/svg-icon/icon';
@@ -21,15 +21,58 @@ const PatternTag = /#[\w\d-]*/g;
 const PatternAtName = /@[\w\d-]*/g;
 const PatternWord = /[^ ]+/g;
 
+const VotingCategoryIds = {
+    'overall': 1,
+    'fun': 2,
+    'innovation': 3,
+    'theme': 4,
+    'graphics': 5,
+    'audio': 6,
+    'humor': 7,
+    'mood': 8,
+};
+
+const EventCategoryIds = {
+    'all': 1,
+    'jam': 2,
+    'compo': 3,
+    'unfinished': 4,
+};
+
+const SortCategoryIds = {
+    'smart': 1,
+    'classic': 2,
+    'danger': 3,
+    'zero': 4,
+    'feedback': 5,
+    'grade': 6,
+};
+
 export default class GamesFilter extends Component {
     constructor ( props ) {
         super(props);
 
-        this.state = {allowShowFilters: true, simpleFilter: true};
+        this.state = {
+            'allowShowFilters': true,
+            'simpleFilter': true,
+            'reloads': {
+                'sort': 0,
+                'featured': 0,
+                'voting': 0,
+                'event': 0,
+            },
+        };
 
         this.onModifyTextFilter = this.onModifyTextFilter.bind(this);
         this.onTextFilerFocus = this.onTextFilerFocus.bind(this);
         this.onTextFilerBlur = this.onTextFilerBlur.bind(this);
+        this.onFakeReload = this.onFakeReload.bind(this);
+    }
+
+    onFakeReload(category) {
+        const reloads = this.state.reloads;
+        reloads[category] += 1;
+        this.setState({'reloads': reloads});
     }
 
     onModifyTextFilter ( e ) {
@@ -37,7 +80,7 @@ export default class GamesFilter extends Component {
         const {onchangefilter} = this.props;
         const {simpleFilter} = this.state;
         if ( onchangefilter && e.target ) {
-            const { value } = e.target;
+            const {value} = e.target;
             const freeWords = value.replace(PatternTag, '').replace(PatternAtName, '');
             const words = simpleFilter ? value.match(PatternWord) : freeWords.match(PatternWord);
 
@@ -68,13 +111,14 @@ export default class GamesFilter extends Component {
         const WithSubFilter = SubFilter ? '/'+SubFilter : '';
         const WithSubSubFilter = SubSubFilter && SubSubFilter != 'featured' ? '/'+SubSubFilter : '';
         const ShowTextFilter = (
-            <div class='feed-filter'>
-                <label><div class='-label'>Filter:</div>
-                <InputText
-                    onmodify={this.onModifyTextFilter}
-                    onBlur={this.onTextFilerBlur}
-                    onFocus={this.onTextFilerFocus}
-                />
+            <div class="feed-filter">
+                <label>
+                    <div class="-label">Filter:</div>
+                    <InputText
+                        onmodify={this.onModifyTextFilter}
+                        onBlur={this.onTextFilerBlur}
+                        onFocus={this.onTextFilerFocus}
+                    />
                 </label>
             </div>
         );
@@ -82,141 +126,113 @@ export default class GamesFilter extends Component {
         let ShowFeatured = null;
 
         if ( showFeatured && allowShowFilters ) {
+            const value = SubSubFilter == 'featured' ? 1 : 2;
             let Items = [
                 [
                     1,
                     <div><SVGIcon>tag</SVGIcon><div>Featured Event</div></div>,
-                    <NavLink href={Path+Filter+WithSubFilter+''} class="-click-catcher" />,
+                    value == 1 ? undefined : <NavLink href={Path+Filter+WithSubFilter+''} class="-click-catcher" />,
                 ],
                 [
                     2,
                     <div><SVGIcon>tag</SVGIcon><div>All Events</div></div>,
-                    <NavLink href={Path+Filter+WithSubFilter+'/everything'} class="-click-catcher" />,
+                    value == 2 ? undefined : <NavLink href={Path+Filter+WithSubFilter+'/everything'} class="-click-catcher" />,
                 ],
             ];
-            const value = SubSubFilter == 'featured' ? 1 : 2;
             ShowFeatured = (
                 <InputDropdown
                     value={value}
                     items={Items}
-                    useClickCatcher={true}
-                    class='-filter-featured'
-                    selfManaged={false}
+                    class="-filter-featured"
                 />
             );
         }
 
         let ShowEvent = null;
         if ( showEvent && allowShowFilters ) {
+            let value = EventCategoryIds[SubFilter];
             let Items = [
                 [
                     1,
                     <div><SVGIcon>gamepad</SVGIcon><div>All</div></div>,
-                    <NavLink href={Path+Filter+'/all'+WithSubSubFilter} class="-click-catcher" />,
+                    value == 1 ? undefined : <NavLink href={Path+Filter+'/all'+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     2,
                     <div><SVGIcon>trophy</SVGIcon><div>Jam</div></div>,
-                    <NavLink href={Path+Filter+'/jam'+WithSubSubFilter} class="-click-catcher" />,
+                    value == 2 ? undefined : <NavLink href={Path+Filter+'/jam'+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     3,
                     <div><SVGIcon>trophy</SVGIcon><div>Compo</div></div>,
-                    <NavLink href={Path+Filter+'/compo'+WithSubSubFilter} class="-click-catcher" />,
+                    value == 3 ? undefined : <NavLink href={Path+Filter+'/compo'+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     4,
                     <div><SVGIcon>trash</SVGIcon><div>Unfinished</div></div>,
-                    <NavLink href={Path+Filter+'/unfinished'+WithSubSubFilter} class="-click-catcher" />,
+                    value == 4 ? undefined : <NavLink href={Path+Filter+'/unfinished'+WithSubSubFilter} class="-click-catcher" />,
                 ],
             ];
-            let value = 1;
-            if (SubFilter == 'jam') {
-                value = 2;
-            } else if (SubFilter == 'compo') {
-                value = 3;
-            } else if (SubFilter == 'unfinished'){
-                value = 4;
-            }
             ShowEvent = (
                 <InputDropdown
                     value={value}
                     items={Items}
-                    useClickCatcher={true}
-                    class='-filter-event'
-                    selfManaged={false}
+                    class="-filter-event"
                 />
             );
         }
 
         let ShowVotingCategory = null;
         if ( showVotingCategory && allowShowFilters ) {
+            let value = VotingCategoryIds[Filter];
             let Items = [
                 [
                     1,
                     <div>Overall</div>,
-                    <NavLink href={Path+'overall'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                    value == 1 ? undefined : <NavLink href={Path+'overall'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     2,
                     <div>Fun</div>,
-                    <NavLink href={Path+'fun'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                    value == 2 ? undefined : <NavLink href={Path+'fun'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     3,
                     <div>Innovation</div>,
-                    <NavLink href={Path+'innovation'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                    value == 3 ? undefined : <NavLink href={Path+'innovation'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     4,
                     <div>Theme</div>,
-                    <NavLink href={Path+'theme'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                    value == 4 ? undefined : <NavLink href={Path+'theme'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     5,
                     <div>Graphics</div>,
-                    <NavLink href={Path+'graphics'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                    value == 5 ? undefined : <NavLink href={Path+'graphics'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     6,
                     <div>Audio</div>,
-                    <NavLink href={Path+'audio'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                    value == 6 ? undefined : <NavLink href={Path+'audio'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     7,
                     <div>Humor</div>,
-                    <NavLink href={Path+'humor'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                    value == 7 ? undefined : <NavLink href={Path+'humor'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
                 ],
                 [
                     8,
                     <div>Mood</div>,
-                    <NavLink href={Path+'mood'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
+                    value == 8 ? undefined : <NavLink href={Path+'mood'+WithSubFilter+WithSubSubFilter} class="-click-catcher" />,
                 ],
             ];
 
-            let value = 1;
-            if (Filter == 'fun') {
-                value = 2;
-            } else if (Filter == 'innovation') {
-                value = 3;
-            } else if (Filter == 'theme') {
-                value = 4;
-            } else if (Filter == 'graphics') {
-                value = 5;
-            } else if (Filter == 'audio') {
-                value = 6;
-            } else if (Filter == 'humor') {
-                value = 7;
-            } else if (Filter == 'mood') {
-                value = 8;
-            }
             ShowVotingCategory = (
                 <InputDropdown
                     value={value}
                     items={Items}
-                    useClickCatcher={true}
-                    class='-filter-category'
-                    selfManaged={false}
+                    class="-filter-category"
                 />
             );
         }
@@ -224,50 +240,39 @@ export default class GamesFilter extends Component {
         let ShowRatingSort = null;
         let ShowRatingSortDesc = null;
         if ( showRatingSort && allowShowFilters ) {
+            let value = SortCategoryIds[Filter];
             let Items = [
                [
                    1,
                    <div><SVGIcon>ticket</SVGIcon><div>Smart</div></div>,
-                   <NavLink href={Path+'smart'+WithSubFilter} class="-click-catcher" />,
+                   value == 1 ? undefined : <NavLink href={Path+'smart'+WithSubFilter} class="-click-catcher" />,
                ],
                [
                    2,
                    <div><SVGIcon>ticket</SVGIcon><div>Classic</div></div>,
-                   <NavLink href={Path+'classic'+WithSubFilter} class="-click-catcher" />,
+                   value == 2 ? undefined : <NavLink href={Path+'classic'+WithSubFilter} class="-click-catcher" />,
                ],
                [
                    3,
                    <div><SVGIcon>help</SVGIcon><div>Danger</div></div>,
-                   <NavLink href={Path+'danger'+WithSubFilter} class="-click-catcher" />,
+                   value == 3 ? undefined : <NavLink href={Path+'danger'+WithSubFilter} class="-click-catcher" />,
                ],
                [
                    4,
                    <div><SVGIcon>gift</SVGIcon><div>Zero</div></div>,
-                   <NavLink href={Path+'zero'+WithSubFilter} class="-click-catcher" />,
+                   value == 4 ? undefined : <NavLink href={Path+'zero'+WithSubFilter} class="-click-catcher" />,
                ],
                [
                    5,
                    <div><SVGIcon>bubbles</SVGIcon><div>Feedback</div></div>,
-                   <NavLink href={Path+'feedback'+WithSubFilter} class="-click-catcher" />,
+                   value == 5 ? undefined : <NavLink href={Path+'feedback'+WithSubFilter} class="-click-catcher" />,
                ],
                [
                    6,
                    <div><SVGIcon>todo</SVGIcon><div>Grade</div></div>,
-                   <NavLink href={Path+'grade'+WithSubFilter} class="-click-catcher" />,
+                   value == 6 ? undefined : <NavLink href={Path+'grade'+WithSubFilter} class="-click-catcher" />,
                ],
             ];
-            let value = 1;
-            if (Filter == 'classic') {
-                value = 2;
-            } else if (Filter == 'danger') {
-                value = 3;
-            } else if (Filter == 'zero') {
-                value = 4;
-            } else if (Filter == 'feedback') {
-                value = 5;
-            } else if (Filter == 'grade') {
-                value = 6;
-            }
             if (showRatingSortDesc) {
                 ShowRatingSortDesc = (
                     <CommonBody>{FilterDesc[Filter]}</CommonBody>
@@ -278,9 +283,7 @@ export default class GamesFilter extends Component {
                 <InputDropdown
                     value={value}
                     items={Items}
-                    useClickCatcher={true}
-                    class='-filter-event'
-                    selfManaged={false}
+                    class="-filter-sort"
                 />
             );
         }

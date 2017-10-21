@@ -1,6 +1,6 @@
 import {h, Component} 				from 'preact/preact';
 
-import Dropdown							from 'com/input-dropdown/dropdown';
+import OptionsList from 'com/input-dropdown/options';
 import ButtonBase						from '../button-base/base';
 import SVGIcon 							from 'com/svg-icon/icon';
 
@@ -36,7 +36,6 @@ export default class GridSelector extends Component {
     }
 
     onToggleDropDown() {
-        console.log('toggle dropdown', this.state);
         this.setState({'expanded': !this.state.expanded});
     }
 
@@ -45,39 +44,31 @@ export default class GridSelector extends Component {
     }
 
     render( props, {expanded, selected} ) {
-       let ShowDropDown = null;
+        let ShowGridOptions = null;
 
-       const ShowToggle = (
+        const ShowToggle = (
             <ButtonBase onclick={this.onToggleDropDown}>
                 <SVGIcon>cog</SVGIcon>
             </ButtonBase>
-       );
+        );
 
-       if ( expanded ) {
-           const options = [
-               [1, '1 per line', <div onclick={()=>this.onSelectLayout(1)} class="-click-catcher" />],
-               [1, '2 per line', <div onclick={()=>this.onSelectLayout(2)} class="-click-catcher" />],
-               [1, '3 per line', <div onclick={()=>this.onSelectLayout(3)} class="-click-catcher" />],
-               [1, '4 per line', <div onclick={()=>this.onSelectLayout(4)} class="-click-catcher" />],
-               [1, '5 per line', <div onclick={()=>this.onSelectLayout(5)} class="-click-catcher" />],
-               [1, '6 per line', <div onclick={()=>this.onSelectLayout(6)} class="-click-catcher" />],
-           ];
-
-           ShowDropDown = (
-               <Dropdown
-                    items={options}
-                    onmodify={this.onSelectLayout}
-                    startExpanded={true}
-                    value={selected}
-                    selfManaged={false}
-                />
-            );
+        if ( expanded ) {
+            const options = [
+                [1, '1 per line', <div onclick={()=>this.onSelectLayout(1)} class="-click-catcher" />],
+                [1, '2 per line', <div onclick={()=>this.onSelectLayout(2)} class="-click-catcher" />],
+                [1, '3 per line', <div onclick={()=>this.onSelectLayout(3)} class="-click-catcher" />],
+                [1, '4 per line', <div onclick={()=>this.onSelectLayout(4)} class="-click-catcher" />],
+                [1, '5 per line', <div onclick={()=>this.onSelectLayout(5)} class="-click-catcher" />],
+                [1, '6 per line', <div onclick={()=>this.onSelectLayout(6)} class="-click-catcher" />],
+            ];
+            ShowGridOptions = (
+                <OptionsList items={options} onClickItem={this.onSelectLayout} value={selected} />);
        }
 
        return (
            <div class={cN(props.class, 'grid-selector')}>
                 {ShowToggle}
-                {ShowDropDown}
+                {ShowGridOptions}
            </div>
        );
     }

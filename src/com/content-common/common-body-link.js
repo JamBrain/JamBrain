@@ -16,6 +16,18 @@ export default class ContentCommonBodyField extends Component {
 		super(props);
 
 		this.state = {};
+		this.onModifyTag = this.onModifyTag.bind(this);
+	}
+
+	onModifyTag( e ) {
+		const nextSelected = e.target.dataset.id;
+		const onModifyTag = this.props.onModifyTag;
+
+		this.setState({'value': parseInt(nextSelected)});
+
+		if ( onModifyTag ) {
+			onModifyTag(e);
+		}
 	}
 
 	componentDidMount() {
@@ -47,14 +59,14 @@ export default class ContentCommonBodyField extends Component {
 
 		if (props.editing && state.items) {
 			Class.push('-editing');
+			const value = state.value != undefined ? state.value : (props.tag ? props.tag : 0);
 			return (
 				<div class={cN(Class, props.class)}>
 					<InputDropdown class="-name"
 						items={state.items}
-						value={props.tag ? props.tag : 0}
-						onmodify={props.onModifyTag}
+						value={value}
+						onmodify={this.onModifyTag}
 						useClickCatcher={true}
-						selfManaged={true}
 					/>
 					<InputText class="-url"
 						value={props.url}
@@ -64,12 +76,6 @@ export default class ContentCommonBodyField extends Component {
 					/>
 				</div>
 
-//					<InputText class="-name"
-//						value={props.name} 
-//						onmodify={props.onModifyName}
-//						placeholder={NamePlaceholder}
-//						max={Limit}
-//					/>
 			);
 		}
 		else if ( state.items && props.url ) {

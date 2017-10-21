@@ -224,7 +224,7 @@ class Main extends Component {
 
 		return $Node.Get(node_id)
 			.then(r => {
-				// If 
+				// If
 				if ( r && Array.isArray(r.node) && r.node.length ) {
 					Node = r.node[0];
 
@@ -499,7 +499,6 @@ class Main extends Component {
 	isHomeView() {
 
 		if (Array.isArray(this.state.home)) {
-			console.log('[isHome]', this.state.home);
 			return true;
 		}
 		const slugs = this.state.slugs;
@@ -512,10 +511,13 @@ class Main extends Component {
 	}
 
 	render( {}, {node, user, featured, path, extra, error, home} ) {
-		var ShowContent = null;
-
+		let ShowContent = null;
+		let hideNotifications = false;
 		if (this.isHomeView()) {
 			ShowContent = <ViewHome show={home} />;
+			if ( home == 'notifications' ) {
+				hideNotifications = true;
+			}
 		}
 		else if ( node.id ) {
 			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} featured={featured} />;
@@ -530,7 +532,7 @@ class Main extends Component {
 
 		return (
 			<div id="layout">
-				<ViewBar user={user} featured={featured} />
+				<ViewBar user={user} featured={featured} hideNotifications={hideNotifications} />
 				<div class="view">
 					<ViewHeader user={user} featured={featured} />
 					<div id="content-sidebar">
