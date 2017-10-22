@@ -5,14 +5,15 @@ export default class Col extends Component {
 		super(props);
 	}
 
-	render( {children, flex = 1, flexBasis = 100} ) {
-    // if(!flex) {
-    //   flex = 1;
-    // }
-    var props = Object.assign({}, this.props, {flex: undefined, flexBasis: undefined});
+	render( {children, flex = 1, flexGrow, flexShrink, flexBasis = 100} ) {
+
+    var props = Object.assign({}, this.props, {flex: undefined, flexBasis: undefined, flexGrow: undefined, flexShrink: undefined});
+
+    var flexGrow = flexGrow != undefined ? flexGrow : flex;
+    var flexShrink = flexShrink != undefined ? flexShrink : flex;
 
 		return (
-			<div class="-col" style={`flex: ${flex} ${flex} ${flexBasis}%;`} {...props}>
+			<div class="-col" style={`flex: ${flexGrow} ${flexShrink} ${flexBasis}%;`} {...props}>
         {children}
       </div>
 		);

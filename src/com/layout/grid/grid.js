@@ -10,10 +10,10 @@ export default class Grid extends Component {
 
   render( {children, columns = 3} ) {
     return (
-      <Container class="-grid">
+      <Container {...this.props} class={[...this.props.class, " -grid"]}>
         {children.map((child, index) => {
           return (
-            <Col flexBasis={100 / (columns + 1)}>{child}</Col>
+            <Col flexGrow={0} flexBasis={100 / (columns)}>{child}</Col>
           );
         }, this)}
       </Container>
