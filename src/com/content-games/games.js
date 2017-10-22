@@ -13,7 +13,7 @@ import GridSelector						from './grid-selector';
 
 import ContentMore						from 'com/content-more/more';
 
-import Grid from 'com/layout/grid/grid';
+import Grid 							from 'com/layout/grid/grid';
 
 import $Node							from '../../shrub/js/node/node';
 
@@ -201,8 +201,6 @@ export default class ContentGames extends Component {
 				LoadMore = <ContentMore onclick={this.fetchMore} />;
 			}
 
-			const gridClass = '-columns-' + layout;
-
 			return (
 				<div class={cN(Class, props.class)}>
 					{props.children}
@@ -210,7 +208,7 @@ export default class ContentGames extends Component {
 						defaultLayout={defaultLayout}
 						onChangeLayout={
 							(gridLayout) => {
-								this.setState({'layout': gridLayout,});
+								this.setState({'layout': gridLayout});
 							}
 						}
 					/>

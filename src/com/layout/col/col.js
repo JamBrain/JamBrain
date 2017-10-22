@@ -9,9 +9,10 @@ export default class Col extends Component {
     // if(!flex) {
     //   flex = 1;
     // }
+    var props = Object.assign({}, this.props, {flex: undefined, flexBasis: undefined});
 
 		return (
-			<div class="-col" style={`flex: ${flex} ${flex} ${flexBasis}%;`}>
+			<div class="-col" style={`flex: ${flex} ${flex} ${flexBasis}%;`} {...props}>
         {children}
       </div>
 		);

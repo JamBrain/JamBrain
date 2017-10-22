@@ -7,7 +7,7 @@ export default class Container extends Component {
 
 	render( props ) {
 		return (
-			<div class={["container", props.class]}>
+			<div {...props} class={["container", props.class]}>
         {props.children}
       </div>
 		);
