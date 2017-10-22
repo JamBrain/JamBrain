@@ -9,8 +9,6 @@ import ContentItemBox					from 'com/content-item/item-box';
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
-import GridSelector						from 'com/layout/grid/grid-selector';
-
 import ContentMore						from 'com/content-more/more';
 
 import SelectableGrid 							from 'com/layout/grid/selectable-grid';
