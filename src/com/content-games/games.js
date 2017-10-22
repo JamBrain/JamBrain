@@ -164,28 +164,27 @@ export default class ContentGames extends Component {
 //        props.class.push("content-item-boxes");
 
 		var LoadMore = null;
-		const Games = [];
+		var Games = [];
 		const {filter} = props;
 		if ( error ){
 			return <ContentError code="400">"Bad Request : Couldn't load games"</ContentError>;
 		}
 		else if( feed && feed.length > 0 )
 		{
-			feed.forEach( r => {
-				if ( ContentGames.matchesFilter(r.node, filter) ) {
-					Games.push(
-						<ContentItemBox
-							node={r.node}
-							user={props.user}
-							path={props.path}
-							noevent={props.noevent ? props.noevent : null} />
-						);
-				}
-			});
-
 			if ( !props.nomore /*|| added >= 10*/ ){
 				LoadMore = <ContentMore onclick={this.fetchMore} />;
 			}
+
+			Games = feed.map((r, index) => {
+				if ( ContentGames.matchesFilter(r.node, filter) ) {
+					return (<ContentItemBox
+						node={r.node}
+						user={props.user}
+						path={props.path}
+						noevent={props.noevent ? props.noevent : null} />
+					);
+				}
+			});
 
 			return (
 				<div class={cN(Class, props.class)}>
