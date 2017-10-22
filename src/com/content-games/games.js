@@ -9,11 +9,11 @@ import ContentItemBox					from 'com/content-item/item-box';
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
-import GridSelector						from './grid-selector';
+import GridSelector						from 'com/layout/grid/grid-selector';
 
 import ContentMore						from 'com/content-more/more';
 
-import Grid 							from 'com/layout/grid/grid';
+import SelectableGrid 							from 'com/layout/grid/selectable-grid';
 
 import $Node							from '../../shrub/js/node/node';
 
@@ -27,9 +27,7 @@ export default class ContentGames extends Component {
 			'hash': {},
 			'offset': 12-5, //10-5
 			'added': null,
-			'loaded': false,
-			'defaultLayout': 3,
-			'layout': 3,
+			'loaded': false
 		};
 
 		this.fetchMore = this.fetchMore.bind(this);
@@ -187,16 +185,6 @@ export default class ContentGames extends Component {
 				}
 			});
 
-			/*
-				As long as the number of items in the Games array
-				doesn't evenly divide by the number of columns
-				keep adding placeholder elements so that the last
-				row looks nice
-			*/
-			while ( Games.length % layout !== 0 ) {
-				Games.push(<ContentItemBox placeHolder={true} />);
-			}
-
 			if ( !props.nomore /*|| added >= 10*/ ){
 				LoadMore = <ContentMore onclick={this.fetchMore} />;
 			}
@@ -204,17 +192,9 @@ export default class ContentGames extends Component {
 			return (
 				<div class={cN(Class, props.class)}>
 					{props.children}
-					<GridSelector
-						defaultLayout={defaultLayout}
-						onChangeLayout={
-							(gridLayout) => {
-								this.setState({'layout': gridLayout});
-							}
-						}
-					/>
-					<Grid columns={layout}>
+					<SelectableGrid columns={layout}>
 						{Games}
-					</Grid>
+					</SelectableGrid>
 					{LoadMore}
 				</div>
 			);
