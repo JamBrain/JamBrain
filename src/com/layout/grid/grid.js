@@ -11,7 +11,7 @@ export default class Grid extends Component {
   render( {children, columns = 3} ) {
     return (
       <Container class="-grid">
-        {children.map(function(child, index) {
+        {children.map((child, index) => {
           return (
             <Col flexBasis={100 / (columns + 1)}>{child}</Col>
           );

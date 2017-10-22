@@ -13,6 +13,8 @@ import GridSelector						from './grid-selector';
 
 import ContentMore						from 'com/content-more/more';
 
+import Grid from 'com/layout/grid/grid';
+
 import $Node							from '../../shrub/js/node/node';
 
 export default class ContentGames extends Component {
@@ -212,9 +214,9 @@ export default class ContentGames extends Component {
 							}
 						}
 					/>
-					<div class={cN('content-boxes', gridClass)}>
+					<Grid columns={layout}>
 						{Games}
-					</div>
+					</Grid>
 					{LoadMore}
 				</div>
 			);
