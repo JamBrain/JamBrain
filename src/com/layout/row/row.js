@@ -7,7 +7,7 @@ export default class Row extends Component {
 
 	render( props ) {
 		return (
-			<div {...props} class="-row">
+			<div {...props} class={cN([props.class, "-row"])}>
 				{props.children}
 			</div>
 		);

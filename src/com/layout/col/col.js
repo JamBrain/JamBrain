@@ -22,7 +22,7 @@ export default class Col extends Component {
       : flex;
 
     return (
-      <div class="-col" style={`flex: ${flexGrow} ${flexShrink} ${flexBasis}%; max-width: ${flexBasis}%;`} {...this.props}>
+      <div class={cN([this.props.class, "-col"])} style={`flex: ${flexGrow} ${flexShrink} ${flexBasis}%; max-width: ${flexBasis}%;`} {...this.props}>
         {children}
       </div>
     );
