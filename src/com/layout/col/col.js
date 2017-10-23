@@ -6,12 +6,12 @@ export default class Col extends Component {
   }
 
   render({children, flex = 1, flexGrow, flexShrink, flexBasis = 100}) {
-    let props = Object.assign({}, this.props, {
-      flex: undefined,
-      flexBasis: undefined,
-      flexGrow: undefined,
-      flexShrink: undefined
-    });
+    // let props = Object.assign({}, this.props, {
+    //   flex: undefined,
+    //   flexBasis: undefined,
+    //   flexGrow: undefined,
+    //   flexShrink: undefined
+    // });
 
     flexGrow = flexGrow != undefined
       ? flexGrow
@@ -22,7 +22,7 @@ export default class Col extends Component {
       : flex;
 
     return (
-      <div class="-col" style={`flex: ${flexGrow} ${flexShrink} ${flexBasis}%; max-width: ${flexBasis}%;`} {...props}>
+      <div class="-col" style={`flex: ${flexGrow} ${flexShrink} ${flexBasis}%; max-width: ${flexBasis}%;`} {...this.props}>
         {children}
       </div>
     );
