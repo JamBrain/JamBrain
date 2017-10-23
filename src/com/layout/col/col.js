@@ -6,16 +6,25 @@ export default class Col extends Component {
 	}
 
 	render( {children, flex = 1, flexGrow, flexShrink, flexBasis = 100} ) {
+	  let props = Object.assign({}, this.props, {
+		  flex: undefined,
+		  flexBasis: undefined,
+		  flexGrow: undefined,
+		  flexShrink: undefined
+		});
 
-    var props = Object.assign({}, this.props, {flex: undefined, flexBasis: undefined, flexGrow: undefined, flexShrink: undefined});
+		let flexGrow = flexGrow != undefined
+								  ? flexGrow
+								  : flex;
 
-    var flexGrow = flexGrow != undefined ? flexGrow : flex;
-    var flexShrink = flexShrink != undefined ? flexShrink : flex;
+		let flexShrink = flexShrink != undefined
+								  ? flexShrink
+								  : flex;
 
 		return (
-			<div class="-col" style={`flex: ${flexGrow} ${flexShrink} ${flexBasis}%;`} {...props}>
-        {children}
-      </div>
+		  <div class="-col" style={`flex: ${flexGrow} ${flexShrink} ${flexBasis}%;`} {...props}>
+		    {children}
+		  </div>
 		);
 	}
 }

@@ -164,7 +164,7 @@ export default class ContentGames extends Component {
 //        props.class.push("content-item-boxes");
 
 		var LoadMore = null;
-		var Games = [];
+		let Games = [];
 		const {filter} = props;
 		if ( error ){
 			return <ContentError code="400">"Bad Request : Couldn't load games"</ContentError>;
