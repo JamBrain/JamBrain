@@ -8,8 +8,8 @@ export default class Row extends Component {
 	render( props ) {
 		return (
 			<div {...props} class="-row">
-        {props.children}
-      </div>
+				{props.children}
+			</div>
 		);
 	}
 }
