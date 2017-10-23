@@ -136,6 +136,29 @@ export default class ContentGames extends Component {
 		this.setState({'offset': offset + 12});
 	}
 
+	static matchesFilter(node, filter) {
+		if ( node === undefined ) {
+			return false;
+		}
+		//console.log(filter);
+		if ( filter && filter.active ) {
+			const {wordsLowerCase} = filter;
+			if ( wordsLowerCase.length > 0 ) {
+				let matches = 0;
+				wordsLowerCase.forEach((text) => {
+
+					if ( text && (node.name.toLowerCase().indexOf(text) > -1 || node.body.toLowerCase().indexOf(text) > -1) ) {
+						matches++;
+					}
+				});
+				return matches > 0;
+			}
+			//TODO: check tags
+			return true;
+		}
+		return true;
+	}
+
 	render( props, {feed, added, error, loaded, defaultLayout, layout} ) {
 		var Class = ['content-base'];
 //        props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
@@ -143,14 +166,23 @@ export default class ContentGames extends Component {
 //        props.class.push("content-item-boxes");
 
 		var LoadMore = null;
-
-		if ( error ) {
+		const Games = [];
+		const {filter} = props;
+		if ( error ){
 			return <ContentError code="400">"Bad Request : Couldn't load games"</ContentError>;
 		}
-		else if ( feed && feed.length > 0 )
+		else if( feed && feed.length > 0 )
 		{
-			var Games = feed.map(r => {
-				return <ContentItemBox node={r.node} user={props.user} path={props.path} noevent={props.noevent ? props.noevent : null} />;
+			feed.forEach( r => {
+				if ( ContentGames.matchesFilter(r.node, filter) ) {
+					Games.push(
+						<ContentItemBox
+							node={r.node}
+							user={props.user}
+							path={props.path}
+							noevent={props.noevent ? props.noevent : null} />
+						);
+				}
 			});
 
 			/*

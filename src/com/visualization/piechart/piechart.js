@@ -23,12 +23,12 @@ export default class PieChart extends Component {
 
     render( props ) {
 
-        if ( !(props && props['lables'] && props['values']) ) {
+        if ( !(props && props.labels && props.values) ) {
             console.warn('PieChart was created with invalid props', props);
             return <div>No Data!</div>;
         }
 
-        let lables = props.lables;
+        let labels = props.labels;
         let values = props.values;
 
         let percentages = this.convertToPercentage(values);
@@ -40,13 +40,13 @@ export default class PieChart extends Component {
         for ( var i = 0; i < percentages.length; i++ ) {
 
             let color = 1 + ( i % 6 );
-            let legendclass = cN("shape-circle", "legend_color_"+color, props.class);
+            let legendclass = cN("-shape-circle", "legend_color_"+color, props.class);
 
             Segments.push(<PieSegment angle={percentages[i]} offset={offset} color={color} />);
             Legend.push(
                 <li>
                     <span class={legendclass}></span>
-                    <p>{lables[i]} ({values[i]} / {Math.round(percentages[i] * 100) / 100}%)</p>
+                    <p>{labels[i]} ({values[i]} / {Math.round(percentages[i] * 100) / 100}%)</p>
                 </li>
             );
 
@@ -54,13 +54,13 @@ export default class PieChart extends Component {
         }
 
         return (
-            <div class="piechart-figure">
-                <div class="piechart">
-                    <svg class="piechart-svg" viewBox="0 0 42 42" width="100%" height="100%">
+            <div class="chart-pie">
+                <div class="-chart">
+                    <svg class="-svg" viewBox="0 0 42 42" width="100%" height="100%">
                         {Segments}
                     </svg>
                 </div>
-                <div class="legend">
+                <div class="-legend">
                     {Legend}
                 </div>
             </div>

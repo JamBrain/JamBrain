@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 				from 'preact/preact';
 
 import Dropdown							from 'com/input-dropdown/dropdown';
 import ButtonBase						from '../button-base/base';
@@ -24,7 +24,12 @@ export default class GridSelector extends Component {
 
     handleNewSelection( selected ) {
         const onChangeLayout = this.props.onChangeLayout;
-        this.setState({'selected': selected});
+        this.setState(
+            {
+                'selected': selected,
+                'expanded': false,
+            }
+        );
         if ( onChangeLayout ) {
             onChangeLayout(selected);
         }
@@ -37,10 +42,6 @@ export default class GridSelector extends Component {
 
     onSelectLayout( index ) {
         this.handleNewSelection(index);
-        this.setState({
-            expanded: false,
-            selected: index,
-        });
     }
 
     render( props, {expanded, selected} ) {
@@ -54,12 +55,12 @@ export default class GridSelector extends Component {
 
        if ( expanded ) {
            const options = [
-               [1, '1 per line'],
-               [2, '2 per line'],
-               [3, '3 per line'],
-               [4, '4 per line'],
-               [5, '5 per line'],
-               [6, '6 per line'],
+               [1, '1 per line', <div onclick={()=>this.onSelectLayout(1)} class="-click-catcher" />],
+               [1, '2 per line', <div onclick={()=>this.onSelectLayout(2)} class="-click-catcher" />],
+               [1, '3 per line', <div onclick={()=>this.onSelectLayout(3)} class="-click-catcher" />],
+               [1, '4 per line', <div onclick={()=>this.onSelectLayout(4)} class="-click-catcher" />],
+               [1, '5 per line', <div onclick={()=>this.onSelectLayout(5)} class="-click-catcher" />],
+               [1, '6 per line', <div onclick={()=>this.onSelectLayout(6)} class="-click-catcher" />],
            ];
 
            ShowDropDown = (
@@ -67,6 +68,8 @@ export default class GridSelector extends Component {
                     items={options}
                     onmodify={this.onSelectLayout}
                     startExpanded={true}
+                    value={selected}
+                    selfManaged={false}
                 />
             );
        }

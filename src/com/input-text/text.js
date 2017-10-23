@@ -22,11 +22,11 @@ export default class InputText extends Component {
 
 	render( props ) {
 		//props = Object.assign({}, props);
-
+		const {maxlength} = props;
 		var ShowLimit = null;
-		if ( props.maxlength )
-			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{props.maxlength}</span></div>;
-
+		if ( maxlength )
+			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{maxlength}</span></div>;
+		console.log('[Rend input]', this.textinput);
 		return (
 			<div class="input-text">
 				<input {...props}
