@@ -1,30 +1,30 @@
-import {h, Component} 				from 'preact/preact';
+import {h, Component} from 'preact/preact';
 
 export default class Col extends Component {
-	constructor( props ) {
-		super(props);
-	}
+  constructor(props) {
+    super(props);
+  }
 
-	render( {children, flex = 1, flexGrow, flexShrink, flexBasis = 100} ) {
-	  let props = Object.assign({}, this.props, {
-		  flex: undefined,
-		  flexBasis: undefined,
-		  flexGrow: undefined,
-		  flexShrink: undefined
-		});
+  render({children, flex = 1, flexGrow, flexShrink, flexBasis = 100}) {
+    let props = Object.assign({}, this.props, {
+      flex: undefined,
+      flexBasis: undefined,
+      flexGrow: undefined,
+      flexShrink: undefined
+    });
 
-		let flexGrow = flexGrow != undefined
-								  ? flexGrow
-								  : flex;
+    flexGrow = flexGrow != undefined
+      ? flexGrow
+      : flex;
 
-		let flexShrink = flexShrink != undefined
-								  ? flexShrink
-								  : flex;
+    flexShrink = flexShrink != undefined
+      ? flexShrink
+      : flex;
 
-		return (
-		  <div class="-col" style={`flex: ${flexGrow} ${flexShrink} ${flexBasis}%;`} {...props}>
-		    {children}
-		  </div>
-		);
-	}
+    return (
+      <div class="-col" style={`flex: ${flexGrow} ${flexShrink} ${flexBasis}%; max-width: ${flexBasis}%;`} {...props}>
+        {children}
+      </div>
+    );
+  }
 }
