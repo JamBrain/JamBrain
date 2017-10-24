@@ -1,7 +1,7 @@
 import {h, Component} from 'preact/preact';
 
 export default class LayoutCol extends Component {
-  constructor(props) {
+  constructor( props ) {
     super(props);
   }
 

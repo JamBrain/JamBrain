@@ -3,7 +3,7 @@ import LayoutGrid from 'com/layout/grid/grid';
 import GridSelector from 'com/layout/grid/grid-selector';
 
 export default class LayoutChangeableGrid extends Component {
-  constructor(props) {
+  constructor( props ) {
     super(props);
 
     this.state = {
