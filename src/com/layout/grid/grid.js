@@ -15,7 +15,7 @@ export default class LayoutGrid extends Component {
       <LayoutContainer {...props} class={cN(props.class, "-grid")}>
         {props.children.map((child, index) => {
           return (
-            <Col flexGrow={0} flexBasis={100 / columns}>{child}</Col>
+            <LayoutCol flexGrow={0} flexBasis={100 / columns}>{child}</LayoutCol>
           );
         })}
       </LayoutContainer>

@@ -24,9 +24,9 @@ export default class LayoutChangeableGrid extends Component {
             }
           }
         />
-        <Grid {...props} columns={columns} class={cN(props.class, "-selectable")}>
+        <LayoutGrid {...props} columns={columns} class={cN(props.class, "-selectable")}>
           {props.children}
-        </Grid>
+        </LayoutGrid>
       </div>
     );
   }
