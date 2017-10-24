@@ -1,7 +1,7 @@
 import {h, Component} 				from 'preact/preact';
 
 import Dropdown							from 'com/input-dropdown/dropdown';
-import ButtonBase						from '../button-base/base';
+import ButtonBase						from 'com/button-base/base';
 import SVGIcon 							from 'com/svg-icon/icon';
 
 export default class GridSelector extends Component {
