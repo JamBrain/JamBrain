@@ -1,29 +1,21 @@
 import {h, Component} from 'preact/preact';
 
-export default class Col extends Component {
+export default class LayoutCol extends Component {
   constructor(props) {
     super(props);
   }
 
-  render({children, flex = 1, flexGrow, flexShrink, flexBasis = 100}) {
-    // let props = Object.assign({}, this.props, {
-    //   flex: undefined,
-    //   flexBasis: undefined,
-    //   flexGrow: undefined,
-    //   flexShrink: undefined
-    // });
+  render( props ) {
+    let {flex = 1, flexGrow, flexShrink, flexBasis = 100} = props;
 
-    flexGrow = flexGrow != undefined
-      ? flexGrow
-      : flex;
+    flexGrow = (flexGrow != null) ? flexGrow : flex;
+    flexShrink = (flexShrink != null) ? flexShrink : flex;
 
-    flexShrink = flexShrink != undefined
-      ? flexShrink
-      : flex;
+    let style = "flex: " + flexGrow + " " + flexShrink + "" + flexBasis + "%; max-width: " + flexBasis + "%;";
 
     return (
-      <div class={cN([this.props.class, "-col"])} style={`flex: ${flexGrow} ${flexShrink} ${flexBasis}%; max-width: ${flexBasis}%;`} {...this.props}>
-        {children}
+      <div class={cN(this.props.class, "-col")} style={style} {...this.props}>
+        {props.children}
       </div>
     );
   }

@@ -1,22 +1,24 @@
 import {h, Component} from 'preact/preact';
-import Col from 'com/layout/col/col';
-import Row from 'com/layout/row/row';
-import Container from 'com/layout/container/container';
+import LayoutCol from 'com/layout/col/col';
+import LayoutRow from 'com/layout/row/row';
+import LayoutContainer from 'com/layout/container/container';
 
-export default class Grid extends Component {
+export default class LayoutGrid extends Component {
   constructor(props) {
     super(props);
   }
 
-  render( {children, columns = 3} ) {
+  render( props ) {
+    let {columns = 3} = props;
+
     return (
-      <Container {...this.props} class={cN([this.props.class, "-grid"])}>
-        {children.map((child, index) => {
+      <LayoutContainer {...props} class={cN(props.class, "-grid")}>
+        {props.children.map((child, index) => {
           return (
-            <Col flexGrow={0} flexBasis={100 / (columns)}>{child}</Col>
+            <Col flexGrow={0} flexBasis={100 / columns}>{child}</Col>
           );
-        }, this)}
-      </Container>
+        })}
+      </LayoutContainer>
     );
   }
 }

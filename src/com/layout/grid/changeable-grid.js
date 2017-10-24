@@ -1,17 +1,19 @@
 import {h, Component} from 'preact/preact';
-import Grid from 'com/layout/grid/grid';
+import LayoutGrid from 'com/layout/grid/grid';
 import GridSelector from 'com/layout/grid/grid-selector';
 
-export default class SelectableGrid extends Component {
+export default class LayoutChangeableGrid extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-			'columns': 3
-		};
+      'columns': 3
+    };
   }
 
-  render(props, {columns}) {
+  render( props, state ) {
+    let {columns} = state;
+
     return (
       <div>
         <GridSelector
@@ -22,7 +24,7 @@ export default class SelectableGrid extends Component {
             }
           }
         />
-        <Grid {...props} columns={columns} class={cN([props.class, "-selectable"])}>
+        <Grid {...props} columns={columns} class={cN(props.class, "-selectable")}>
           {props.children}
         </Grid>
       </div>

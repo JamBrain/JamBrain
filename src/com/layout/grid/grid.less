@@ -1,19 +1,19 @@
-.container {
+.layout-container {
   &.-grid {
     flex-wrap: wrap;
     flex-direction: row;
+    justify-content: flex-start;
 
-    justify-content: flex-start; /* space-between; */
     align-items: flex-start;
-    margin: -0.5rem;	/* to undo the effect of the 0.5rem margin in items */
+    margin: -0.5rem;
 
     & .-col {
       padding: 0.5rem;
       box-sizing: border-box;
     }
-  }
 
-  &.-selectable {
-    padding-top: 0.75rem;
+    &.-selectable {
+      padding-top: 0.75rem;
+    }
   }
 }

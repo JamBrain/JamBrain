@@ -11,7 +11,7 @@ import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
 import ContentMore						from 'com/content-more/more';
 
-import SelectableGrid 							from 'com/layout/grid/selectable-grid';
+import LayoutChangeableGrid 							from 'com/layout/grid/changeable-grid';
 
 import $Node							from '../../shrub/js/node/node';
 
@@ -157,31 +157,33 @@ export default class ContentGames extends Component {
 		return true;
 	}
 
-	render( props, {feed, added, error, loaded, defaultLayout, layout} ) {
+	render( props, state ) {
 		var Class = ['content-base'];
+		let {feed, added, error, loaded, defaultLayout, layout} = state;
 //        props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 //        props.class.push("content-games");
 //        props.class.push("content-item-boxes");
 
 		var LoadMore = null;
-		let Games = [];
 		const {filter} = props;
-		if ( error ){
+		if ( error ) {
 			return <ContentError code="400">"Bad Request : Couldn't load games"</ContentError>;
 		}
 		else if( feed && feed.length > 0 )
 		{
-			if ( !props.nomore /*|| added >= 10*/ ){
+			if ( !props.nomore /*|| added >= 10*/ ) {
 				LoadMore = <ContentMore onclick={this.fetchMore} />;
 			}
 
-			Games = feed.map((r, index) => {
+			let Games = feed.map((r, index) => {
 				if ( ContentGames.matchesFilter(r.node, filter) ) {
-					return (<ContentItemBox
-						node={r.node}
-						user={props.user}
-						path={props.path}
-						noevent={props.noevent ? props.noevent : null} />
+					return (
+						<ContentItemBox
+							node={r.node}
+							user={props.user}
+							path={props.path}
+							noevent={props.noevent ? props.noevent : null}
+						/>
 					);
 				}
 			});
