@@ -170,7 +170,6 @@ export default class ContentGames extends Component {
 			return <ContentError code="400">"Bad Request : Couldn't load games"</ContentError>;
 		}
 		else if ( feed && (feed.length > 0) ) {
-		{
 			if ( !props.nomore /*|| added >= 10*/ ) {
 				LoadMore = <ContentMore onclick={this.fetchMore} />;
 			}
