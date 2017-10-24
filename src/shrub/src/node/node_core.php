@@ -73,6 +73,28 @@ function node_GetIdByParentTypePublished( $parent, $type, $subtype = null, $subs
 }
 
 
+// Used to find multiple user node IDs quickly for a list of slugs
+// Returns a map with the slug as a key and id as value.
+function node_GetUserIdBySlug( $slugs ) {
+	if ( !count($slugs) ) {
+		return [];
+	}
+	
+	$safeslugs = [];
+	foreach( $slugs as $s ) {
+		// single quote should not exist in the dataset this is called with, but be extra safe.
+		$safeslugs[] = "'" . str_replace("'", "''", $s) . "'";
+	}
+	$sluglist = implode(",", $safeslugs);
+	
+	return db_QueryFetchPair(
+		"SELECT slug, id
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+		WHERE type='user' AND slug IN (" . $sluglist . ");"
+	);
+}
+
+
 
 function _node_GetPathById( $id, $top = 0, $timeout = 10 ) {
 	if ( !$id )

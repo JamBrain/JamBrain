@@ -3,6 +3,8 @@
 require_once __DIR__."/../node/node.php";
 
 
+const MAX_MENTIONS_TO_NOTIFY = 50;
+
 const NOTIFY_ON_NODE_TYPE = [
 	'post',
 	'item'
@@ -120,25 +122,38 @@ function notification_Get( $user, $limit = 20, $offset = 0 ) {
 }
 
 
-function notification_AddForPublishedNode( $node, $author, $type ) {
+function notification_AddForPublishedNode( $node, $author, $type, $mentions = [] ) {
 	if ( in_array($type, NOTIFY_ON_NODE_TYPE) ) {
 		// Identify users following the author and push notifications.
 		$notifications = [];
 		// "Following" is a "star" link between a=user id, and b=starred node id. Find the stars on the author's node.
 		// Unfortunately, this gets both the people who have starred the author, as well as the author's starred nodes. We'll filter them out.
 		$starlinks = nodeLink_GetByKeyNode('star', $author);
+		$starusers = [];
 		foreach($starlinks as $star) {
 			if( $star['b'] == $author ) {
-				// Notify this user
-				$user = $star['a'];
-				$notifications[] = ['user' => $user, 'node' => $node, 'note' => 0, 'type' => $type]; 
+				$starusers[] = $star['a']; // Notify this user
 			}
 		}
+		
+		$starusers = array_diff($starusers, $mentions);
+		foreach($starusers as $user)
+		{
+			$notifications[] = ['user' => $user, 'node' => $node, 'note' => 0, 'type' => $type]; 
+		}
+		foreach($mentions as $user)
+		{
+			if ( $user == $author ) { 
+				continue; // don't inform author that they mentioned themselves. That would be silly.
+			}
+			$notifications[] = ['user' => $user, 'node' => $node, 'note' => 0, 'type' => SH_NOTIFICATION_MENTION]; 
+		}
+		
 		notification_AddMultiple($notifications);	
 	}
 }
 
-function notification_AddForNote( $node, $note, $author ) {
+function notification_AddForNote( $node, $note, $author, $mentions = [] ) {
 	// Look up the users who participated in this thread and send them notifications, except for the author.
 	$users = note_InterestedUsers($node);
 	$nodeauthor = node_GetAuthor($node);
@@ -158,6 +173,8 @@ function notification_AddForNote( $node, $note, $author ) {
 	
 	// Eliminate duplicate users - don't send duplicate notifications.
 	$users = array_unique($users);
+	// Supersede normal notifications with "mention" notifications if the user was at-mentioned
+	$users = array_diff($users, $mentions); 
 	
 	$notifications = [];
 	foreach($users as $uid)	{
@@ -166,6 +183,12 @@ function notification_AddForNote( $node, $note, $author ) {
 			
 		$notifications[] = ['user' => $uid, 'node' => $node, 'note' => $note, 'type' => SH_NOTIFICATION_NOTE];
 	}
+	foreach($mentions as $uid)	{
+		if ( $uid == $author )
+			continue; // Don't bother sending the author of the note a notification for their own note.
+			
+		$notifications[] = ['user' => $uid, 'node' => $node, 'note' => $note, 'type' => SH_NOTIFICATION_MENTION];
+	}	
 
 	notification_AddMultiple($notifications);	
 }
@@ -185,5 +208,39 @@ function notification_GetLastReadNotification( $node ) {
 
 function notification_SetLastReadNotification( $node, $notification ) {
 	return nodeMeta_AddByNode($node, SH_SCOPE_SERVER, 'last_read_notification', $notification);
+}
+
+/// @retval List of author IDs for any at-mentions in the text (or new at-mentions in the edited text.)
+function notification_GetMentionedUsers($text, $previoustext = null) {
+	$mentioned = notification_AtTokens($text);
+	if ( $previoustext ) {
+		$remove = notification_AtTokens($previoustext);
+		$mentioned = array_diff($mentioned, $remove);
+	}
+	
+	if ( count($mentioned) == 0 ) {
+		return [];
+	}
+	
+	// Limit the number of mentions that will actually work.
+	if ( count($mentioned) > MAX_MENTIONS_TO_NOTIFY ) {
+		$mentioned = array_chunk($mentioned, MAX_MENTIONS_TO_NOTIFY)[0];
+	}
+	
+	// Resolve mentioned user slugs to user node IDs, if possible.
+	$idmap = node_GetUserIdBySlug($mentioned);
+	
+	return array_values($idmap);
+}
+
+// Find the list of at-tokens in the specified text. Return the slugs without the at-s
+// We'll define an at-token as [start of string or non-sluggable-character] [@] [string of sluggable characters]
+function notification_AtTokens($text) {
+	$text = strip_tags($text);
+	$text = strtolower($text);	
+	if ( preg_match_all("/(?:^|[^a-z0-9_.\-])@([a-z0-9_.\-])+/", $text, $matches) ) {
+		return array_unique($matches[1]);
+	}
+	return [];
 }
 
