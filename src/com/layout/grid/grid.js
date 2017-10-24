@@ -4,7 +4,7 @@ import LayoutRow from 'com/layout/row/row';
 import LayoutContainer from 'com/layout/container/container';
 
 export default class LayoutGrid extends Component {
-  constructor(props) {
+  constructor( props ) {
     super(props);
   }
 
