@@ -18,7 +18,7 @@ export default class LayoutGrid extends Component {
               return (
                 <LayoutCol flexGrow={0} flexBasis={100 / columns}>{child}</LayoutCol>
               );
-            })
+          });
         }
       </LayoutContainer>
     );
