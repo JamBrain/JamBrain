@@ -14,7 +14,7 @@ export default class LayoutCol extends Component {
     let style = "flex: " + flexGrow + " " + flexShrink + "" + flexBasis + "%; max-width: " + flexBasis + "%;";
 
     return (
-      <div class={cN(this.props.class, "-col")} style={style} {...this.props}>
+      <div class={cN(props.class, "-col")} style={style} {...props}>
         {props.children}
       </div>
     );

@@ -13,11 +13,13 @@ export default class LayoutGrid extends Component {
 
     return (
       <LayoutContainer {...props} class={cN(props.class, "-grid")}>
-        {props.children.map((child, index) => {
-          return (
-            <LayoutCol flexGrow={0} flexBasis={100 / columns}>{child}</LayoutCol>
-          );
-        })}
+        {
+            props.children.map((child, index) => {
+              return (
+                <LayoutCol flexGrow={0} flexBasis={100 / columns}>{child}</LayoutCol>
+              );
+            })
+        }
       </LayoutContainer>
     );
   }
