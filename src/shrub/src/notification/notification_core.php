@@ -251,7 +251,7 @@ function notification_GetMentionedUsers($text, $previoustext = null) {
 function notification_AtTokens($text) {
 	$text = strip_tags($text);
 	$text = strtolower($text);	
-	if ( preg_match_all("/(?:^|[^a-z0-9_.\-])@([a-z0-9_.\-])+/", $text, $matches) ) {
+	if ( preg_match_all("/(?:^|[^a-z0-9_.\-])@([a-z0-9_.\-]+)/", $text, $matches) ) {
 		return array_unique($matches[1]);
 	}
 	return [];
