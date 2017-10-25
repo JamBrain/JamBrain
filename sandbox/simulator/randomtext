@@ -73,6 +73,8 @@ function GenerateRandomPostText($maxParagraphs = 8)
 			{
 				$markdown = "";
 				if(random_int(1,6) == 1) {	$markdown = ["*","**","`","~~"][random_int(0,3)]; }
+				// Occasionally mention another user
+				if(random_int(1,50) == 1) { $output .= "@" . RandomUserName() . " "; }
 				$output .= $markdown.GenerateRandomPhrase(3,17).$markdown . ". ";
 			}
 			$output .= "\n";

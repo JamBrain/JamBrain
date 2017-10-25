@@ -87,13 +87,20 @@ $stages = array(
 	)
 );
 
-
+// Future: move user creation out of the model and make it smarter.
 $event_admin_user = null;
 $event_users = array(); // Only use for reference (e.g. getting usernames)
 $event_user_lookup = array(); // Only use this as a source for user objects, and get them by reference.
 
 $event_nodeid = null;
 $event_name = null;
+
+function RandomUserName()
+{
+	global $event_users;
+	$i = random_int(1, count($event_users)) - 1;
+	return $event_users[$i]["username"];
+}
 
 
 function LoadPreviousUsers()
