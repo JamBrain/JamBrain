@@ -22,7 +22,7 @@ const API_CHARGE_1 = 	1;	// Charge a single unit to the rate limit system for th
 /// Available flags are API_GET, API_POST, API_AUTH
 /// 
 /// 	api_Exec([
-/// 		["/node/getmy", API_GET | API_AUTH, API_CHARGE_1, function(&$RESPONSE) {
+/// 		["unread/count", API_GET | API_AUTH, API_CHARGE_1, function(&$RESPONSE) {
 ///				// Interact with $RESPONSE or such
 ///			}],
 ///			... 
@@ -32,10 +32,20 @@ const API_CHARGE_1 = 	1;	// Charge a single unit to the rate limit system for th
 /// @retval None
 function api_Exec( $apidesc ) {
 	json_Begin();
+	global $REQUEST, $RESPONSE;
+	
+	// Determine API file name from script filename (.../somefile.php)
+	// This should be reliable in all cases.
+	$pathparts = explode("/",$_SERVER['SCRIPT_NAME']);
+	$filename = "";
+	$file = $pathparts[count($pathparts)-1];
+	if ( substr($file,-4) != ".php") {
+		json_EmitFatalError("Unable to determine filename for API.", $RESPONSE);
+	}
+	$filename = substr($file, 0, strlen($file) - 4);
 
 	// Reconstruct the full request path (from sanitized request array) to match against the API prefixes.
-	global $REQUEST, $RESPONSE;
-	$fullpath = implode("/",$REQUEST);
+	$fullpath = $filename . "/" . implode("/",$REQUEST);
 	$fullpathlen = strlen($fullpath);
 
 	// Find first matching API record
@@ -49,6 +59,7 @@ function api_Exec( $apidesc ) {
 			
 			// This API request is the one we'll handle.
 			$apiused = $api;
+			$GLOBAL["API_NAME"] = $api[0]; // Used later for accumulating statistics per API.
 			
 			// Pull arguments off the request stack based on the number of elements in the request.
 			$segments = explode("/",$api[0]);

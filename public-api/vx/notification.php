@@ -36,21 +36,21 @@ function GetFeed($notification_type, &$RESPONSE) {
 }
 
 api_Exec([
-["unread/count", API_GET | API_AUTH, API_CHARGE_0, function(&$RESPONSE) {
+["notification/unread/count", API_GET | API_AUTH, API_CHARGE_0, function(&$RESPONSE) {
 	$user_id = userAuth_GetID(); // Since API_AUTH is present, we can be confident there will be a user ID.
 	$RESPONSE['count'] = notification_CountUnread($user_id);
 }],
-["all/count", API_GET | API_AUTH, API_CHARGE_0, function(&$RESPONSE) {
+["notification/all/count", API_GET | API_AUTH, API_CHARGE_0, function(&$RESPONSE) {
 	$user_id = userAuth_GetID();
 	$RESPONSE['count'] = notification_Count($user_id);
 }],
-["unread/feed", API_GET | API_AUTH, API_CHARGE_0, function(&$RESPONSE) {
+["notification/unread/feed", API_GET | API_AUTH, API_CHARGE_0, function(&$RESPONSE) {
 	GetFeed("unread",$RESPONSE);
 }],
-["all/feed", API_GET | API_AUTH, API_CHARGE_0, function(&$RESPONSE) {
+["notification/all/feed", API_GET | API_AUTH, API_CHARGE_0, function(&$RESPONSE) {
 	GetFeed("all",$RESPONSE);
 }],
-["markread", API_POST | API_AUTH, API_CHARGE_0, function(&$RESPONSE) {
+["notification/markread", API_POST | API_AUTH, API_CHARGE_0, function(&$RESPONSE) {
 	$user_id = userAuth_GetID();
 
 	if ( !isset($_POST['max_read']) )
