@@ -7,6 +7,7 @@
 /// @name Notification Types
 /// @{
 const SH_NOTIFICATION_NOTE =			'note';
+const SH_NOTIFICATION_MENTION =			'mention';
 /// @}
 
 
