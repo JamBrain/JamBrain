@@ -121,9 +121,12 @@ function notification_Get( $user, $limit = 20, $offset = 0 ) {
 	);
 }
 
+function notification_EnabledForNodeType( $type ) {
+	return in_array($type, NOTIFY_ON_NODE_TYPE);
+}
 
 function notification_AddForPublishedNode( $node, $author, $type, $mentions = [] ) {
-	if ( in_array($type, NOTIFY_ON_NODE_TYPE) ) {
+	if ( notification_EnabledForNodeType($type) ) {
 		// Identify users following the author and push notifications.
 		$notifications = [];
 		// "Following" is a "star" link between a=user id, and b=starred node id. Find the stars on the author's node.

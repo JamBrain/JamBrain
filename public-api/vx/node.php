@@ -672,8 +672,8 @@ switch ( $action ) {
 
 					nodeCache_InvalidateById($node_id);
 					
-					if ( $node['published'] ) {
-						// Add mention notifications for at-mentions of users that were added in this edit.
+					if ( $node['published'] && notification_EnabledForNodeType($node['type']) ) {
+						// Add mention notifications for at-mentions of users that were added in this edit, if this node is published and of a type that supports notifications.
 						$newmentions = notification_GetMentionedUsers($body, $node['body']);
 						notification_AddForEdit($node_id, 0, $user_id, $newmentions);
 					}
