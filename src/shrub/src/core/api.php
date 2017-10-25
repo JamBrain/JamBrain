@@ -52,7 +52,7 @@ function api_Exec( $apidesc ) {
 			
 			// Pull arguments off the request stack based on the number of elements in the request.
 			$segments = explode("/",$api[0]);
-			for( $i = 0; $i < count(segments); $i++)	{
+			for( $i = 0; $i < count($segments); $i++)	{
 				json_ArgShift();
 			}
 			
@@ -74,7 +74,7 @@ function api_Exec( $apidesc ) {
 				}
 			}
 			
-			if ( flags & API_AUTH ) {
+			if ( $flags & API_AUTH ) {
 				// Require user to be authenticated.
 				if ( !userAuth_GetID() ) {
 					json_EmitFatalError_Permission(null, $RESPONSE);
