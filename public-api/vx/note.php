@@ -100,7 +100,8 @@ switch ( $action ) {
 				
 				// Add notifications for users watching this thread
 				if ( $RESPONSE['note'] ) {
-					notification_AddForNote($node['id'], $RESPONSE['note'], $author);
+					$mentions = notification_GetMentionedUsers($body);
+					notification_AddForNote($node['id'], $RESPONSE['note'], $author, $mentions);
 				}
 			}
 			else {
@@ -156,6 +157,10 @@ switch ( $action ) {
 				// Check if you have permission to add comment to node
 				if ( note_IsNotePublicByNode($node) ) {
 					$RESPONSE['updated'] = note_SafeEdit($note_id, $author, $body, $version_tag, $note['flags']);
+					
+					// Add mention notifications for at-mentions of users that were added in this edit.
+					$newmentions = notification_GetMentionedUsers($body, $note['body']);
+					notification_AddForEdit($node_id, $note_id, $author, $newmentions);
 				}
 				else {
 					json_EmitFatalError_Forbidden("This node type does now allow notes (yet)", $RESPONSE);

@@ -193,6 +193,19 @@ function notification_AddForNote( $node, $note, $author, $mentions = [] ) {
 	notification_AddMultiple($notifications);	
 }
 
+function notification_AddForEdit($node, $note, $author, $mentions = []) {
+
+	$notifications = [];
+	foreach($mentions as $uid)	{
+		if ( $uid == $author )
+			continue; // Don't bother sending the author of the note a notification for their own note.
+			
+		$notifications[] = ['user' => $uid, 'node' => $node, 'note' => $note, 'type' => SH_NOTIFICATION_MENTION];
+	}	
+	
+	notification_AddMultiple($notifications);	
+}
+
 
 /// @retval Integer Id of highest read notification.
 function notification_GetLastReadNotification( $node ) {
