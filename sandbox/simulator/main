@@ -31,7 +31,7 @@ include __DIR__."/randomtext";
 include __DIR__."/run_model";
 include __DIR__."/stats";
 
-
+$starttime = microtime(1);
 
 if ( count($argv) < 3  || ($argv[2] != "actions" && $argv[2] != "minutes")) {
 	print "LudumDare Event simulator. Quick summary:\n";
@@ -128,6 +128,16 @@ if($usewikitext)
 ModelSanityCheck();
 ModelExecute();
 RunMagic();
+
+$endtime = microtime(1);
+$totalseconds = intval($endtime - $starttime);
+$hours = intval(floor($totalseconds / 3600));
+$totalseconds -= $hours * 3600;
+$minutes = intval(floor($totalseconds / 60));
+$totalseconds -= $minutes * 60;
+
+Message("Run completed $actioncount actions in ".sprintf("%02d:%02d:%02d", $hours, $minutes, $totalseconds));
+
 ErrorSummary();
 
 dump_stats();
