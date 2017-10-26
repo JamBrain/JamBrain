@@ -180,7 +180,8 @@ function User_Load($username, $password)
 function User_Create()
 {
 	$username = GenerateRandomUsername();
-	$password = GenerateRandomPassword();
+	$password = $username;
+	while(strlen($password) < 8) { $password .= "a"; }
 	
 	// Construct a user object
 	$user = User_DataStructure($username, $password);
