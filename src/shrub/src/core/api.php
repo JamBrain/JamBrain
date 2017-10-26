@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__."/core.php";
 require_once __DIR__."/json.php";
+require_once __DIR__."/ratelimit.php";
 
 /// @defgroup API
 /// @brief API Framework - Accept a data structure describing API calls and dispatch the call appropriately.
@@ -88,14 +89,17 @@ function api_Exec( $apidesc ) {
 			if ( $flags & API_AUTH ) {
 				// Require user to be authenticated.
 				if ( !userAuth_GetID() ) {
-					json_EmitFatalError_Permission(null, $RESPONSE);
+					json_EmitFatalError_Permission("User must be logged in to access this resource.", $RESPONSE);
 				}
 			}
 			
 			// Charge the user's pool based on the rate limiting settings
 			$ratelimit = $api[2];
 			if ( $ratelimit ) {
-				// Future: charge API and fail if charge cannot be allocated.
+				if ( !rateLimit_Charge($ratelimit) ) {
+					json_EmitFatalError_Permission("Rate limit exceeded. Please try again later.", $RESPONSE);
+				}
+				$RESPONSE['rate_limit'] = ['cost' => $ratelimit, 'remaining' => rateLimit_RemainingCharge()];
 			}
 			
 			
