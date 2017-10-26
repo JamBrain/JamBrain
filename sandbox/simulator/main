@@ -80,12 +80,13 @@ $htmlbase = "ld_event"; // Put html report in current directory.
 //   <name>.<eventIndex>.err (Summary log and errors)
 
 $apibase = "http://api.ludumdare.org/";
+const MAXKEEPUSERS = 1000; // Maximum number of users to store in the event file.
 $usercount = 40; // Something like 40-50 is good for reasonable size tests.
+$userchurn = 5; // Get some new users every event.
 $keepallposts = true;
 $keeppostcount = 100; // Number of posts per user to keep, when keep all posts is false (which it should be for high user counts or long runtimes / stress environments.)
 $verbose = true; // Display all of the details about what's going on?
 $verboselog = true; // Keep all details about what's going on in a log.
-$useprevioususers = true; // Load the set of users from the previous test event, instead of creating new users.
 $usewikitext = true;
 $useyoutubevideos = true;
 $youtubevideochance = 10; // if 10 then every tenth video will have a YT video

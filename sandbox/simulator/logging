@@ -118,7 +118,7 @@ function OpenEventFile()
 	global $eventbase;
 	global $eventindex;
 	$log = $eventbase . "." . $eventindex . ".event";
-	return fopen($log, "a");
+	return fopen($log, "w");
 }
 
 function OpenMarkovFile()

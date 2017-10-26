@@ -14,6 +14,114 @@ function RunMagic()
 
 
 
+$event_admin_user = null;
+$event_users = array(); // Only use for reference (e.g. getting usernames)
+$event_user_lookup = array(); // Only use this as a source for user objects, and get them by reference.
+$event_userids = array();
+
+function RandomUserName()
+{
+	global $event_users;
+	$i = random_int(1, count($event_users)) - 1;
+	return $event_users[$i]["username"];
+}
+
+
+function LoadPreviousUsers()
+{
+	global $event_admin_user, $event_users;
+	$f = OpenPreviousEventFile();
+	$users=[];
+	if($f === false) { return false; }
+	Verbose("Loading users from previous event...");
+	while(!feof($f))
+	{
+		$line = fgets($f);
+		$start = substr(trim($line),0,1);
+		if($start === false || $start == "#") { continue; }
+		$parts = explode(":",$line,2);
+		if(count($parts) != 2) { continue; }
+		$u = trim($parts[0]);
+		$p = trim($parts[1]);
+		$users[] = User_Load($u,$p);
+	}
+	
+	global $usercount;
+	if(count($users) != ($usercount+1)) { return false; } // Future: be smarter. Could maybe just generate / discard some users to fix this mismatch.
+	
+	$event_admin_user = array_shift($users);
+	$event_users = $users;
+	return true;
+}
+
+
+// Create an admin user and $usercount other users. Load users from last event if possible. Save users to this event's event file. 
+// Churn some users out and create some fresh users. If there are more created users than needed users, preserve the full userlist but only use the tail end of it.
+function Create_Users($usercount, $user_churn = 0)
+{
+	global $event_admin_user, $event_users, $event_user_lookup, $event_userids;
+	LoadPreviousUsers();
+	
+	if($event_admin_user == null)
+	{
+		$event_admin_user = User_Create();
+	}
+	
+	$created = 0;
+	while(count($event_users) < $usercount)
+	{
+		$event_users[] = User_Create();
+		$created++;
+	}
+	while($created < $user_churn)
+	{
+		$event_users[] = User_Create();
+		$created++;
+	}
+	
+	// Save information about all users into a file
+	$f = OpenEventFile();
+	fwrite($f, "# For now, just spitting out event data in a semi human readable form.\n");
+	fwrite($f, "# First line is Admin, rest of the lines are normal users.\n");
+	fwrite($f, "# Each line is Username:Password\n");
+	
+	fwrite($f, $event_admin_user["username"] . ":" . $event_admin_user["password"] . "\n");
+
+	if(count($event_users) > MAXKEEPUSERS)
+	{
+		$event_users = array_slice($event_users,-MAXKEEPUSERS);
+	}
+	
+	foreach($event_users as $u)
+	{
+		if($u == null) continue; // Failed user creation - don't cause problems for subsequent runs.
+		fwrite($f, $u["username"] . ":" . $u["password"] . "\n");	
+	}
+
+	fclose($f);
+	
+	// Now, select the set of users to use for this event and log them in.
+	
+	if(!User_Login($event_admin_user))
+	{
+		return false;
+	}
+	
+	$event_users = array_slice($event_users, -$usercount);
+	
+	$userids = [];
+	foreach($event_users as $user)
+	{
+		if(!User_Login($user)) return false;
+		$event_user_lookup[$user["username"]] = $user;
+		$userids[] = $user["id"];
+	}
+	$event_userids = $userids;
+	
+	return true;
+}
+
+
 ////
 //// Common functions to assist in doing normal tasks in the site
 ////
@@ -39,22 +147,26 @@ function User_DataStructure($username, $password)
 	return $user;
 }
 
-function User_Load($username, $password)
+function User_Login(&$user)
 {
-	$user = User_DataStructure($username, $password);
-
+	if($user == null) { return false; }
+	Verbose("Logging in user ". $user["username"] . "...");
+	
 	// Login the user
 	$userid = ApiUserLogin($user);
 	if(!$userid)
 	{
-		ReportError("Unable to login new user.");
-		return null;	
+		ReportError("Unable to login user ". $user["username"]);
+		return false;	
 	}
 	
 	$user["id"] = $userid;
-	
-	Verbose("Loaded user " . $username);
-	
+	return true;
+}
+
+function User_Load($username, $password)
+{
+	$user = User_DataStructure($username, $password);
 	return $user;
 }
 
@@ -102,16 +214,6 @@ function User_Create()
 	}
 	
 		
-	// Login the user
-	$userid = ApiUserLogin($user);
-	if(!$userid)
-	{
-		ReportError("Unable to login new user.");
-		return null;	
-	}
-	
-	$user["id"] = $userid;
-	
 	Verbose("Created user " . $username);
 	
 	return $user;
