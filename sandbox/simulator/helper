@@ -45,10 +45,9 @@ function LoadPreviousUsers()
 		$p = trim($parts[1]);
 		$users[] = User_Load($u,$p);
 	}
-	
-	global $usercount;
-	if(count($users) != ($usercount+1)) { return false; } // Future: be smarter. Could maybe just generate / discard some users to fix this mismatch.
-	
+
+	Verbose("Loaded ".count($users)." users.");
+
 	$event_admin_user = array_shift($users);
 	$event_users = $users;
 	return true;
@@ -68,10 +67,18 @@ function Create_Users($usercount, $user_churn = 0)
 	}
 	
 	$created = 0;
+	if(count($event_users) < $usercount)
+	{
+		Verbose("Not enough users to start event, creating some more users.");
+	}
 	while(count($event_users) < $usercount)
 	{
 		$event_users[] = User_Create();
 		$created++;
+	}
+	if($created < $user_churn)
+	{
+		Verbose("Creating a few additional users to churn the userbase.");
 	}
 	while($created < $user_churn)
 	{
@@ -581,6 +588,82 @@ function PublishGame(&$user)
 	$user["publishedgame"] = true;
 	
 	RunMagic();
+}
+
+
+function AddMissingTags()
+{
+	global $event_admin_user;
+	
+	// Platform tags
+	$defaulttags = [
+		"Source Code", "Windows", "Linux", "Html5 (Web)", "macOS", "Android", "Gameboy", "Toaster"
+	];
+	$defaultwarnings = [
+		"Linux" => "If you used the default Unity export options for Linux, you may want to re-export with the 'Universal' preset to make the game playable by more Linux users.",
+		"Toaster" => "Please remember to warn your users to unplug the appliance while inserting and removing games"
+	];
+	
+	# Enumerate existing tags in category.
+	function LoadTagsForCategory($category)
+	{
+		$simple = node_GetSimpleByType("tag",$category);
+		$tagids = [];
+		foreach($simple as $s)
+		{
+			$tagids[] = $s["id"];
+		}
+		
+		# Get complete nodes for the tags.
+		if(count($tagids) > 0)
+		{
+			$nodes = nodeComplete_GetById($tagids);
+			return $nodes;
+		}
+		return [];
+	}
+
+	function SetWarning($id, $warning)
+	{
+		nodeMeta_AddByNode($id, SH_SCOPE_PUBLIC, 'tag-warning', $warning);
+	}
+	Function AddNewTag($userid, $category, $name, $warning = null)
+	{
+		$parent = 1; // For now hardcode root = 1
+		$slug = coreSlugify_Name($name);
+		$newtag = node_Add( $parent, $userid, "tag", $category, "", $slug, $name, "");
+
+		if($warning != null)
+		{
+			SetWarning($newtag, $warning);
+		}
+	}
+
+
+	$userid = $event_admin_user["id"];
+	$nodes = LoadTagsForCategory("platform");
+
+	$nodebyname = [];
+	foreach($nodes as $n)
+	{
+		$nodebyname[$n["name"]] = $n;
+	}
+	
+	foreach($defaulttags as $tag)
+	{
+		$warning = null;
+		if(key_exists($tag, $defaultwarnings))
+		{
+			$warning = $defaultwarnings[$tag];
+		}
+		
+		if(!key_exists($tag, $nodebyname))
+		{
+			Verbose("Adding missing platform tag '$tag'");
+			
+			AddNewTag($userid, $category, $tag, $warning);
+		}
+	}
 }
 
 

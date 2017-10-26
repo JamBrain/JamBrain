@@ -128,8 +128,10 @@ if($usewikitext)
 ModelSanityCheck();
 ModelExecute();
 RunMagic();
+ErrorSummary();
 
 dump_stats();
+
 
 CloseLogs();
 exit(0);

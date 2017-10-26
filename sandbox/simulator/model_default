@@ -106,6 +106,9 @@ function SetupEvent()
 		Message("Failing due to errors creating / logging in users.");
 		exit;
 	}
+	
+	AddMissingTags();
+	
 
 	// Make sure all but a few users have some of the other users starred.
 	//function ApiNodeStarAdd(&$user, $nodeid) // GET node/star/add/:node_id
