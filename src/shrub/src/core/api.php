@@ -79,7 +79,7 @@ function api_Exec( $apidesc ) {
 			}
 			else { 
 				if( $flags & API_POST ) {
-					json_ValidateHTTPMethod('GET');
+					json_ValidateHTTPMethod('POST');
 				}
 				else {
 					json_EmitFatalError("API record must have one of GET or POST flags.", $RESPONSE);
