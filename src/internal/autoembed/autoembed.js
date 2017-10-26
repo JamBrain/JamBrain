@@ -40,20 +40,19 @@
 
 		ret.internal = false;
 
-		// if its not already an external link with a protocol and it has a dot in it
-		// then make it an external link becuase not internal links have dots
-		if ( (ret.url.indexOf('//') == -1) && (ret.url.indexOf('.') != -1) && (ret.url.indexOf('/') == -1 || ret.url.indexOf('.') < ret.url.indexOf('/')) ) {
-			// Assume HTTP. Most HTTPS sites will autoredirect to HTTPS
-			ret.url = 'http://' + ret.url;
-		}
-		else if ( ret.url.indexOf('//') == -1 ) {
-			ret.internal = true;
-		}
+		if (ret.origin.indexOf('/') == 0 || ret.origin.indexOf('.') == -1) {
+      //NOTE:: This check for internal links
+      //NOTE:: link starting with '/', '//' or '///' are internal links
+      //NOTE:: Links that don't have '.' in them have to be internal
 
-		// Original # hash anchor remap function
-		//if ( ret.url.indexOf('#') != -1 && ret.url.indexOf('#/') == -1 && ret.url.indexOf('//') == -1) {
-		//	ret.url = ret.url.replace("#", "#/");
-		//}
+      ret.internal = true;
+		}
+    else if ( (ret.url.indexOf('//') == -1) && (ret.url.indexOf('.') != -1) && (ret.url.indexOf('/') == -1 || ret.url.indexOf('.') < ret.url.indexOf('/')) ) {
+      // External links without protocols need a protocol attaching to it
+      // Assume HTTP. Most HTTPS sites will autoredirect to HTTPS
+
+      ret.url = 'http://' + ret.url;
+    }
 
 		// Remap # hash anchor urls to #/
 		if ( ret.internal && ret.hash.length ) {
@@ -90,6 +89,8 @@
 
 		// If we just use 'str', the &amp; isn't properly decoded
 		ret.href = ret.url + (ret.query ? ret.query : '') + (ret.hash ? ret.hash : '');
+
+    //console.log(ret);
 
 		return ret;
 	}

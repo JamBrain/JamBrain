@@ -1,3 +1,5 @@
+@import "defs.less";
+
 .smart-link {
 	overflow-wrap: break-word;
 	word-wrap: break-word;
@@ -12,4 +14,32 @@
 		font-weight: bold;
 		margin-left: 0.25em;
 	}
+}
+
+.local-link{
+    & .-icon-domain {
+
+        & > svg {
+            &.icon-l-udum{
+                color: @COL_A;
+            }
+            &.icon-d-are{
+                color: @COL_AB;
+            }
+        }
+    }
+
+    &:hover,
+    &:active{
+        & .-icon-domain {
+            & > svg {
+                &.icon-l-udum{
+                    color: @COL_L;
+                }
+                &.icon-d-are{
+                    color: @COL_B;
+                }
+            }
+        }
+    }
 }

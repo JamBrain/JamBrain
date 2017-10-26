@@ -4,14 +4,193 @@ import Util 				from './Util';
 
 //COMPONENT IMPORTS
 import NavLink 				from 'com/nav-link/link';
+import LocalLink from 'com/autoembed/locallink';
 import LinkMail				from 'com/link-mail/mail';		// TODO: Obsolete me
 import AutoEmbed 			from 'com/autoembed/autoembed';
 import BlockSpoiler 		from 'com/block-spoiler/spoiler';
 
 export default class Renderer {
-	constructor(options) {
-		this.options = options || {};
-	}
+  constructor(options) {
+    this.options = options || {};
+  }
+
+  code(code, lang, escaped) {
+    if (this.options.highlight) {
+      var out = this.options.highlight(code, lang);
+      if (out != null && out !== code) {
+        escaped = true;
+        code = out;
+
+        return (<pre><code class={this.options.langPrefix + escape(lang, true)} dangerouslySetInnerHTML={{ __html: out}}></code></pre>);
+      }
+    }
+
+    if (!lang) {
+      return (
+        <pre class="language-"><code>{(escaped
+        ? code
+        : Util.escape(code, true))}</code></pre>
+      );
+    }
+
+    return (
+      <pre><code class={this.options.langPrefix + escape(lang, true)}>
+        {(escaped ? code : Util.escape(code, true))}
+      </code></pre>
+    );
+  };
+  spoiler(secret) {
+    return (
+      <BlockSpoiler>{secret}</BlockSpoiler>
+    );
+  };
+  blockquote(quote) {
+    return (
+      <blockquote>{quote}</blockquote>
+    );
+  };
+
+  html(html) {
+    return {html};
+  };
+
+  heading(text, level, raw) {
+    const HeaderTag = `h${level}`;
+    return (
+      <HeaderTag id={this.options.headerPrefix + raw.toLowerCase().replace(/[^\w]+/g, '-').replace(/-$/, "")}>{text}</HeaderTag>
+    );
+  };
+
+  hr() {
+    return (<hr/>);
+  };
+
+  list(body, ordered) {
+    var Type = ordered
+      ? 'ol'
+      : 'ul';
+    return (
+      <Type>{'\n'}{body}</Type>
+    );
+  };
+
+  listitem(text) {
+    return (
+      <li>{text}</li>
+    );
+  };
+
+  paragraph(text) {
+    return (
+      <p>{text}</p>
+    );
+  };
+
+  table(header, body) {
+    return (
+      <table>
+        <thead>{header}</thead>
+        <tbody>{body}</tbody>
+      </table>
+    );
+  };
+
+  tablerow(content) {
+    return (
+      <tr>{content}</tr>
+    );
+  };
+
+  tablecell(content, flags) {
+    var Type = flags.header
+      ? 'th'
+      : 'td';
+    return (
+      <Type style={"text-align:" + flags.align
+        ? flags.align
+        : ''}>{content}</Type>
+    );
+  };
+
+  // span level renderer
+  strong(text) {
+    return (
+      <strong>{text}</strong>
+    );
+  };
+
+  em(text) {
+    return (
+      <em>{text}</em>
+    );
+  };
+
+  emoji(text) {
+    return (<img class="emoji" alt={text} title={':' + text + ':'} src={window.emoji.shortnameToURL(text.join(''))}/>);
+  };
+
+  //email(text) {
+  //  return 'VEOO'+text+'OOEV';
+  //};
+
+  atname(text) {
+    return (
+      <NavLink href={"/users/" + text}>@{text}</NavLink>
+    );
+  };
+
+  codespan(text) {
+    return (
+      <code>{Util.htmldecode(text)}</code>
+    );
+    // text.replace('\n','') // ??
+  };
+
+  br() {
+    //    if(this.options.xhtml) {
+    return (<br/>);
+    // } else {
+    //   return (<br>);
+    // }
+
+  };
+
+  del(text) {
+    return (
+      <del>{text}</del>
+    );
+  };
+
+  link(href, title, text) {
+    if (this.options.sanitize) {
+      try {
+        var prot = decodeURIComponent(unescape(href)).replace(/[^\w:]/g, '').toLowerCase();
+      } catch (e) {
+        return '';
+      }
+      if (prot.indexOf('javascript:') === 0 || prot.indexOf('vbscript:') === 0 || prot.indexOf('data:') === 0) {
+        return '';
+      }
+    }
+
+    url = extractFromURL(href);
+    href = url.href;
+
+    var isInternal = url.internal;
+    var isExternal = !isInternal;
+
+    if ( isInternal ) {
+      isExternal = false;
+
+      // Use the markdown text if it
+      let name = (text && /\S/.test(text))?text:url.origin;
+
+      return (<LocalLink href={url.origin} text={name} title={''} target={"_self"}/>);
+    }
+
+    if ( isExternal ) {
+		  var target = "_blank";
+	  }
 
 	code(code, lang, escaped) {
 		if (this.options.highlight) {
