@@ -6,6 +6,8 @@ import Util 				from './Util';
 import NavLink 				from 'com/nav-link/link';
 import LinkMail				from 'com/link-mail/mail';		// TODO: Obsolete me
 import AutoEmbed 			from 'com/autoembed/autoembed';
+import SmartLink 			from 'com/autoembed/smartlink';
+import {SmartDomains} 		from 'com/autoembed/smartdomains';
 import BlockSpoiler 		from 'com/block-spoiler/spoiler';
 
 export default class Renderer {
@@ -20,7 +22,7 @@ export default class Renderer {
 				escaped = true;
 				code = out;
 
-				return (<pre><code class={this.options.langPrefix + escape(lang, true)} dangerouslySetInnerHTML={{ __html: out}}></code></pre>);
+				return (<pre><code class={this.options.langPrefix + escape(lang, true)} dangerouslySetInnerHTML={{"__html":"out"}}></code></pre>);
 			}
 		}
 
@@ -37,32 +39,32 @@ export default class Renderer {
 				{(escaped ? code : Util.escape(code, true))}
 			</code></pre>
 		);
-	};
+	}
 	spoiler(secret) {
 		return (
 			<BlockSpoiler>{secret}</BlockSpoiler>
 		);
-	};
+	}
 	blockquote(quote) {
 		return (
 			<blockquote>{quote}</blockquote>
 		);
-	};
+	}
 
 	html(html) {
 		return {html};
-	};
+	}
 
 	heading(text, level, raw) {
 		const HeaderTag = `h${level}`;
 		return (
 			<HeaderTag id={this.options.headerPrefix + raw.toLowerCase().replace(/[^\w]+/g, '-').replace(/-$/, "")}>{text}</HeaderTag>
 		);
-	};
+	}
 
 	hr() {
 		return (<hr/>);
-	};
+	}
 
 	list(body, ordered) {
 		var Type = ordered
@@ -71,19 +73,19 @@ export default class Renderer {
 		return (
 			<Type>{'\n'}{body}</Type>
 		);
-	};
+	}
 
 	listitem(text) {
 		return (
 			<li>{text}</li>
 		);
-	};
+	}
 
 	paragraph(text) {
 		return (
 			<p>{text}</p>
 		);
-	};
+	}
 
 	table(header, body) {
 		return (
@@ -92,13 +94,13 @@ export default class Renderer {
 				<tbody>{body}</tbody>
 			</table>
 		);
-	};
+	}
 
 	tablerow(content) {
 		return (
 			<tr>{content}</tr>
 		);
-	};
+	}
 
 	tablecell(content, flags) {
 		var Type = flags.header
@@ -109,20 +111,20 @@ export default class Renderer {
 				? flags.align
 				: ''}>{content}</Type>
 		);
-	};
+	}
 
 	// span level renderer
 	strong(text) {
 		return (
 			<strong>{text}</strong>
 		);
-	};
+	}
 
 	em(text) {
 		return (
 			<em>{text}</em>
 		);
-	};
+	}
 
 	emoji( text ) {
 	let shortname = window.emoji.shortnameToURL(text.join(''));
@@ -130,7 +132,7 @@ export default class Renderer {
 			return <img class="emoji" alt={text} title={':'+text+':'} src={shortname} />;
 		}
 		return ':'+text+':';
-	};
+	}
 
 	//email(text) {
 	//  return 'VEOO'+text+'OOEV';
@@ -140,14 +142,14 @@ export default class Renderer {
 		return (
 			<NavLink href={"/users/" + text}>@{text}</NavLink>
 		);
-	};
+	}
 
 	codespan(text) {
 		return (
 			<code>{Util.htmldecode(text)}</code>
 		);
 		// text.replace('\n','') // ??
-	};
+	}
 
 	br() {
 		//    if(this.options.xhtml) {
@@ -156,13 +158,55 @@ export default class Renderer {
 		//   return (<br>);
 		// }
 
-	};
+	}
 
 	del(text) {
 		return (
 			<del>{text}</del>
 		);
-	};
+	}
+
+	parseLink(href) {
+		url = extractFromURL(href);
+
+		if (url.domain) {
+
+			if (url.domain.indexOf('//'+window.location.hostname) !== -1) {
+				console.log("same domain link", url.href);
+				return { "type" : "internal" };
+			}
+
+			if (SmartDomains) {
+
+				for (var i=0; i < SmartDomains.length; i++) {
+					let smartdomain = SmartDomains[i];
+
+					if (url.domain.indexOf(smartdomain.domain) !== -1) {
+
+						if ( smartdomain.embed_test )
+						{
+
+							let test = new RegExp(smartdomain.embed_test);
+							let match = test.exec(url.href);
+
+							if ( match !== null ) {
+								console.log("embedable domain found", url.href);
+								return { "type" : "embed", "match" : match[1], "info" : smartdomain };
+							}
+						}
+						console.log("smart but none embedable domain found", url.href);
+						return { "type" : "smart", "info" : smartdomain };
+					}
+				}
+			}
+
+			console.log("simple link", url.href);
+			return { "type" : "simple" };
+		}
+
+		console.log("no domain input", url.href);
+		return null;
+	}
 
 	link(href, title, text) {
 		if (this.options.sanitize) {
@@ -194,16 +238,24 @@ export default class Renderer {
 			text = href;
 		}
 
-		if(AutoEmbed.hasEmbed(href) || AutoEmbed.hasSmartLink(href)) {
-			return (<AutoEmbed href={href} title={title} text={text} />);
+		let result = this.parseLink(href);
+		console.log("result ", result);
+
+
+		if(result.type == "simple") {
+			console.log("simple");
+			return <NavLink href={href} title={title} target={target}>{text}</NavLink>;
 		}
-
-		var out = (
-			<NavLink href={href} title={title} target={target}>{text}</NavLink>
-		);
-		return out;
-
-	};
+		else if (result.type == "smart"){
+			console.log("smart");
+			let partial = href.substring(href.indexOf(result.info.domain) + 1);
+			return <SmartLink icon_name={result.info.icon_name} full_url={href} domain={link.info.domain} part_url={partial}></SmartLink>;
+		}
+		else if (result.type == "embed"){
+			console.log("embed");
+			return <AutoEmbed link={result} title={title} text={text} />;
+		}
+	}
 
 	mail(leftSide, rightSide, text) {
 		href = '{0}@{1}'.replace('{1}', rightSide, 1).replace('{0}', leftSide, 1);
@@ -226,7 +278,7 @@ export default class Renderer {
 
 		return out;
 
-	};
+	}
 
 	image(href, title, text) {
 		// Customized. Disable image rendering if URLs are used to files not on our safe list.
@@ -256,5 +308,5 @@ export default class Renderer {
 
 	text(text) {
 		return (Util.htmldecode(text));
-	};
+	}
 }
