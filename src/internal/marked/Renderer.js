@@ -1,13 +1,16 @@
 import {h} 					from 'preact/preact';
 
-import Util 				from './Util';
+import Util					from './Util';
 
 //COMPONENT IMPORTS
-import NavLink 				from 'com/nav-link/link';
 import LinkMail				from 'com/link-mail/mail';		// TODO: Obsolete me
-import AutoEmbed 			from 'com/autoembed/autoembed';
+import NavLink 				from 'com/nav-link/link';
 import SmartLink 			from 'com/autoembed/smartlink';
+import LocalLink			from 'com/autoembed/locallink';
+
+import AutoEmbed 			from 'com/autoembed/autoembed';
 import {SmartDomains} 		from 'com/autoembed/smartdomains';
+
 import BlockSpoiler 		from 'com/block-spoiler/spoiler';
 
 export default class Renderer {
@@ -167,14 +170,25 @@ export default class Renderer {
 	}
 
 	parseLink(href) {
+
+		console.log("Parsing ", href);
+
+		if (href.indexOf('///') == 0) {
+			console.log("static domain link", href);
+			return { "type" : "static" };
+		}
+		else if (href.indexOf('//') == 0) {
+			console.log("same domain link", href);
+			return { "type" : "internal" };
+		}
+		else if (href.indexOf('/') == 0) {
+			console.log("relative domain link", href);
+			return { "type" : "relative" };
+		}
+
 		url = extractFromURL(href);
 
 		if (url.domain) {
-
-			if (url.domain.indexOf('//'+window.location.hostname) !== -1) {
-				console.log("same domain link", url.href);
-				return { "type" : "internal" };
-			}
 
 			if (SmartDomains) {
 
@@ -222,17 +236,6 @@ export default class Renderer {
 
 		href = extractFromURL(href).href;
 
-		var isExternal = href.indexOf('//') != -1;
-		var isInternal = href.indexOf('///') === 0;
-		if ( isInternal ) {
-			isExternal = false;
-			href = href.substr(2);
-		}
-
-		if ( isExternal ) {
-			var target = "_blank";
-		}
-
 		// If text is blank, use the URL itself
 		if ( !text || text.length < 1 ) {
 			text = href;
@@ -241,19 +244,34 @@ export default class Renderer {
 		let result = this.parseLink(href);
 		console.log("result ", result);
 
+		if (result == null) {
+			// wasn't a link
+			console.warn("Could not parse link", href);
+			return "";
+		}
 
 		if(result.type == "simple") {
 			console.log("simple");
-			return <NavLink href={href} title={title} target={target}>{text}</NavLink>;
+			return <NavLink href={href} title={title} target={"_blank"}>{text}</NavLink>;
 		}
 		else if (result.type == "smart"){
 			console.log("smart");
-			let partial = href.substring(href.indexOf(result.info.domain) + 1);
-			return <SmartLink icon_name={result.info.icon_name} full_url={href} domain={link.info.domain} part_url={partial}></SmartLink>;
+			let partial = href.substring(href.indexOf(result.info.domain) + result.info.domain.length);
+			return <SmartLink icon_name={result.info.icon_name} full_url={href} domain={result.info.domain} part_url={partial}></SmartLink>;
 		}
 		else if (result.type == "embed"){
 			console.log("embed");
 			return <AutoEmbed link={result} title={title} text={text} />;
+		}
+		else if (result.type == "relative"){
+			return <LocalLink href={href} text={href} title={''} target={"_blank"}/>;
+		}
+		else if (result.type == "internal"){
+			return <LocalLink href={href} text={href.substr(2)} title={''} target={"_blank"}/>;
+		}
+		else if (result.type == "static"){
+			let static_domain = "static.jam.vg";
+			return <NavLink href={"//" + static_domain + href.substr(2)} text={static_domain + href.substr(2)} title={''} target={"_blank"}/>;
 		}
 	}
 
