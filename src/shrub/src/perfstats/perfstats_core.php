@@ -3,6 +3,8 @@
 const PERFSTAT_MAX_COUNTER_LENGTH = 64;
 const PERFSTAT_PERIOD_LENGTH = 15*60; // Number of seconds - Should divide evenly into a day, otherwise a period at the day transition will be missed.
 const PERFSTAT_BUFFER_LENGTH = 10*60;
+const PERFSTAT_ROLLOVER_DELAY = 10; // Allow a few seconds before committing the previous period to ensure no API is still touching it.
+const PERFSTAT_CACHE_TIMEOUT = PERFSTAT_PERIOD_LENGTH*2 + PERFSTAT_BUFFER_LENGTH;
 
 const HISTOGRAM_POWER = 1.08;
 const HISTOGRAM_ORIGIN = 0.0005;
@@ -44,16 +46,14 @@ function perfstats_MicrosecondTime($time) {
 }
 
 function perfstats_Accumulate($period, $countername, $microseconds, $bucket) {
-	$timeout = PERFSTAT_PERIOD_LENGTH*2 + PERFSTAT_BUFFER_LENGTH;
-	
 	$keycount = "!SH!PERFSTATS!" . $period . "!" . $countername;
 	$keytime = $keycount . "!TIME";
 	$keybucket = $keycount . "!" . $bucket;
 
 	// Ensure apcu records are created for this period
-	apcu_add($keycount, 0, $timeout);
-	apcu_add($keytime, 0, $timeout);
-	apcu_add($keybucket, 0, $timeout);
+	apcu_add($keycount, 0, PERFSTAT_CACHE_TIMEOUT);
+	apcu_add($keytime, 0, PERFSTAT_CACHE_TIMEOUT);
+	apcu_add($keybucket, 0, PERFSTAT_CACHE_TIMEOUT);
 	
 	// Accumulate APCU records with new data
 	apcu_inc($keycount, 1);
@@ -65,16 +65,40 @@ function perfstats_Accumulate($period, $countername, $microseconds, $bucket) {
 
 function perfstats_ComputeCachedPeriodStats($periodend)
 {
-
+	$keybase = "!SH!PERFSTATS!" . $periodend . "!";
+	
+	
 
 }
 
+function perfstats_AddToDatabase($perioddata)
+{
 
+}
+
+function perfstats_DeleteApcuKeys($perioddata)
+{
+
+}
 
 // If we crossed a time interval, collect and store the previous period's stats and remove the cache objects.
 function perfstats_Cron()
 {
+	$currentend = perfstats_GetCurrentPeriodEnd();
+	$prevperiod = $currentend - PERFSTAT_PERIOD_LENGTH;
+	$key = "!SH!PERFSTATS!CRON";
+	$prevcron = apcu_fetch($key);
+	if ( $prevcron === false ) {
+		$prevcron = $prevperiod; // If previous cron tag doesn't exist, assume we need to process the previous period
+	}
+	
+	if ( ($prevcron < $currentend) && (time() >= ($prevperiod + PERFSTAT_ROLLOVER_DELAY) ) {
+		apcu_store($key, $currentend, PERFSTAT_CACHE_TIMEOUT);
 
+		// Process previous period data.
+		$data = perfstats_ComputeCachedPeriodStats($prevperiod);
+	
+	}
 }
 
 
