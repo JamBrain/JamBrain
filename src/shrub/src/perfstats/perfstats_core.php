@@ -30,7 +30,7 @@ function perfstats_GetPeriodId($periodtime = null) {
 	return $periodtime;
 }
 
-function perfstats_HistogramBucket($time) [
+function perfstats_HistogramBucket($time) {
 	$bucket = intval(round(log($time/HISTOGRAM_ORIGIN, HISTOGRAM_POWER)));
 	if ( $bucket < 0 ) {
 		$bucket = 0;
@@ -67,8 +67,18 @@ function perfstats_ComputeCachedPeriodStats($periodend)
 {
 	$keybase = "!SH!PERFSTATS!" . $periodend . "!";
 	
+	$apcudata = [];
+	$stats = [];
+	
+	// Enumerate APCU keys for this period
+	foreach (new APCUIterator("/^$keybase.*/") as $entry) {
+		$apcudata[$entry["key"]] = $entry["value"];
+	}
+
+	// Generate stats from information in keys
 	
 
+	return 	["apcudata" => $apcudata, "stats" => $stats];
 }
 
 function perfstats_AddToDatabase($perioddata)
@@ -81,7 +91,8 @@ function perfstats_DeleteApcuKeys($perioddata)
 
 }
 
-// If we crossed a time interval, collect and store the previous period's stats and remove the cache objects.
+// If we crossed a time interval, collect and store the previous period's stats and remove the cache objects. 
+// This should take significantly less than 100 milliseconds.
 function perfstats_Cron()
 {
 	$currentend = perfstats_GetCurrentPeriodEnd();
@@ -92,12 +103,13 @@ function perfstats_Cron()
 		$prevcron = $prevperiod; // If previous cron tag doesn't exist, assume we need to process the previous period
 	}
 	
-	if ( ($prevcron < $currentend) && (time() >= ($prevperiod + PERFSTAT_ROLLOVER_DELAY) ) {
+	if ( ($prevcron < $currentend) && (time() >= ($prevperiod + PERFSTAT_ROLLOVER_DELAY)) ) {
 		apcu_store($key, $currentend, PERFSTAT_CACHE_TIMEOUT);
 
-		// Process previous period data.
+		// Process previous period data. 
 		$data = perfstats_ComputeCachedPeriodStats($prevperiod);
-	
+		perfstats_AddToDatabase($data);
+		perfstats_DeleteApcuKeys($data);
 	}
 }
 
@@ -121,6 +133,6 @@ function perfstats_RecordApiPerformance($apiname, $totaltime) {
 function perfstats_GetCurrentPeriodStats()
 {
 	$period = perfstats_GetCurrentPeriodEnd();
-	$stats = perfstats_ComputeCachedPeriodStats();
+	$stats = perfstats_ComputeCachedPeriodStats($period);
 	return $stats; // todo: Don't send back administrative data that was collected.
 }
