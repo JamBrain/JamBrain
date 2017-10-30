@@ -1,7 +1,7 @@
 <?php
 
 const PERFSTAT_MAX_COUNTER_LENGTH = 64;
-const PERFSTAT_PERIOD_LENGTH = 15*60; // Number of seconds - Should divide evenly into a day, otherwise a period at the day transition will be missed.
+const PERFSTAT_PERIOD_LENGTH = 1*60; // Number of seconds - Should divide evenly into a day, otherwise a period at the day transition will be missed.
 const PERFSTAT_BUFFER_LENGTH = 10*60;
 const PERFSTAT_ROLLOVER_DELAY = 10; // Allow a few seconds before committing the previous period to ensure no API is still touching it.
 const PERFSTAT_CACHE_TIMEOUT = PERFSTAT_PERIOD_LENGTH*2 + PERFSTAT_BUFFER_LENGTH;
@@ -11,6 +11,8 @@ const HISTOGRAM_ORIGIN = 0.0005;
 const HISTOGRAM_BUCKET_MAX = 127;
 // With a base/origin value of 0.0005 (0.5 ms) and a step of 8% (1.08), +127 steps is 8.785 seconds
 // So the accurate range of the histogram is 0.5ms to 8.7 seconds in logarithmic steps (smaller steps near lower values)
+
+const PERCENTILE_TAPS = [0,10,20,30,40,50,60,70,80,90,95,98,100];
 
 function perfstats_GetCurrentPeriodEnd() {
 	// Date manipulation in php is the worst.
@@ -64,7 +66,7 @@ function perfstats_Accumulate($period, $countername, $microseconds, $bucket) {
 
 function perfstats_ComputeHistogramPercentiles(&$stats)
 {
-	$taps = [0,10,20,30,40,50,60,70,80,90,95,98,100]; // Percentiles to compute
+	$taps = PERCENTILE_TAPS; // Percentiles to compute
 	
 	$h = $stats["Histogram"]["Buckets"];
 	$count = $stats['Count'];
@@ -157,14 +159,63 @@ function perfstats_ComputeCachedPeriodStats($periodend)
 	return 	["apcudata" => $apcudata, "stats" => $stats];
 }
 
-function perfstats_AddToDatabase($perioddata)
+function perfstats_AddToDatabase($periodend, $perioddata)
 {
+	$taps = PERCENTILE_TAPS;
+	$periodend = date('c', $periodend);
+	$periodduration = PERFSTAT_PERIOD_LENGTH;
+	
+	$tapnames = [];
+	foreach($taps as $tap) {
+		$tapnames[] = "p".$tap;
+	}
+	$tapnames = implode(",",$tapnames);
+	
+	$values = [];
+	foreach($perioddata["stats"] as $k => $v) {
+		$name = str_replace("'","''",$k);
+		$count = $v["Count"];
+		$avg = $v["AverageTime"];
+		
+		$tapvalues = [];
+		foreach($taps as $tap) {
+			$tapvalues[] = $v["Percentiles"][$tap];
+		}
+		$tapvalues = implode(",",$tapvalues);
+		
+		$values[] = "('$name','$periodend',$periodduration,$count,$avg,$tapvalues)";
+	}
+	
+	if ( count($values) > 0 ) {
+		
+		$query = 		"INSERT INTO ".SH_TABLE_PREFIX.SH_TABLE_PERFSTATS." (
+				apiname, 
+				periodend, periodduration,
+				count, avg,
+				".$tapnames."
+			)
+			VALUES " . implode(",",$values) . ";";
+			
+		print($query);
 
+		db_QueryInsert(
+			"INSERT INTO ".SH_TABLE_PREFIX.SH_TABLE_PERFSTATS." (
+				apiname, 
+				periodend, periodduration,
+				count, avg,
+				".$tapnames."
+			)
+			VALUES " . implode(",",$values) . ";"
+		);
+	}
 }
 
 function perfstats_DeleteApcuKeys($perioddata)
 {
-
+	foreach($perioddata["apcudata"] as $k => $v)
+	{
+		apcu_delete($k);
+	}
 }
 
 // If we crossed a time interval, collect and store the previous period's stats and remove the cache objects. 
@@ -181,11 +232,11 @@ function perfstats_Cron()
 	
 	if ( ($prevcron < $currentend) && (time() >= ($prevperiod + PERFSTAT_ROLLOVER_DELAY)) ) {
 		apcu_store($key, $currentend, PERFSTAT_CACHE_TIMEOUT);
-
+		echo "Cron: Store to DB\n";
 		// Process previous period data. 
 		$data = perfstats_ComputeCachedPeriodStats($prevperiod);
-		perfstats_AddToDatabase($data);
-		perfstats_DeleteApcuKeys($data);
+		perfstats_AddToDatabase($prevperiod, $data);
+		//perfstats_DeleteApcuKeys($data);
 	}
 }
 
