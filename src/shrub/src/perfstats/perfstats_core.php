@@ -62,6 +62,35 @@ function perfstats_Accumulate($period, $countername, $microseconds, $bucket) {
 }
 
 
+function perfstats_ComputeHistogramPercentiles(&$stats)
+{
+	$taps = [0,10,20,30,40,50,60,70,80,90,95,98,100]; // Percentiles to compute
+	
+	$h = $stats["Histogram"]["Buckets"];
+	$count = $stats['Count'];
+	$keys = array_keys($h);
+	sort($keys);
+	$percentiles = [];
+	$cursor = -1;
+	$taken = 0;
+	$tapindex = 0;
+	foreach($keys as $k)
+	{
+		$taken += $h[$k];
+		$max_cursor = intval(floor($taken * 100 / $count));
+		if($max_cursor > $cursor)
+		{
+			$keyvalue = HISTOGRAM_ORIGIN * pow(HISTOGRAM_POWER, $k);
+			while ( $tapindex < count($taps) && $taps[$tapindex] <= $max_cursor ) {
+				$percentiles[$taps[$tapindex]] = $keyvalue;
+				$tapindex++;
+			}
+			$cursor = $max_cursor;
+		}
+	}
+	
+	$stats["Percentiles"] = $percentiles;
+}
 
 function perfstats_ComputeCachedPeriodStats($periodend)
 {
@@ -69,14 +98,61 @@ function perfstats_ComputeCachedPeriodStats($periodend)
 	
 	$apcudata = [];
 	$stats = [];
+
+	$now = time();
 	
 	// Enumerate APCU keys for this period
 	foreach (new APCUIterator("/^$keybase.*/") as $entry) {
 		$apcudata[$entry["key"]] = $entry["value"];
 	}
 
-	// Generate stats from information in keys
+	$durationseconds = $now - ($periodend - PERFSTAT_PERIOD_LENGTH);
+	if ( $durationseconds < 1 ) {
+		$durationseconds = 1;
+	}
 	
+	// Generate stats from information in keys
+	$skip = strlen($keybase);
+	foreach($apcudata as $k => $v)
+	{
+		$parts = explode("!",substr($k, $skip));
+		// Parts is now <apiname>, (nothing or "TIME" or bucket)
+		$apiname = $parts[0];
+		if ( !isset($stats[$apiname]) ) {
+			$stats[$apiname] = [ "Count" => 0, "AverageTime" => 0, "DurationSeconds" => $durationseconds, "UsedTime" => 0, "RPM" => 0, 
+								"Histogram" => [ "Origin" => HISTOGRAM_ORIGIN, "Power" => HISTOGRAM_POWER, "Buckets" => [] ] ];
+		}
+		
+		if ( count($parts) == 1 ) {
+			// This is a count
+			$stats[$apiname]["Count"] = $v;
+		}
+		else {
+			if ( $parts[1] == "TIME" ) {
+				// Total time (in microseconds);
+				$time = $v / 1000000.0;
+				$stats[$apiname]["UsedTime"] = $time;
+			}
+			else {
+				// This is a bucket index
+				$bucket = intval($parts[1]);
+				$stats[$apiname]["Histogram"]["Buckets"][$bucket] = $v;
+			}
+		}
+	}
+
+	// Compute percentile stats & requests/minute
+	foreach($stats as $k => &$v) {
+		$rpm = $v["Count"] * 60 / $durationseconds;
+		$v["RPM"] = $rpm;
+		if ( $v["Count"] > 0 ) { 
+			$avg = $v["UsedTime"] / $v["Count"];
+			$v["AverageTime"] = $avg;
+		}
+		
+		perfstats_ComputeHistogramPercentiles($v);
+	}
+
 
 	return 	["apcudata" => $apcudata, "stats" => $stats];
 }
