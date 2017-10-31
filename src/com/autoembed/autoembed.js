@@ -4,13 +4,13 @@ import YoutubeEmbed from 'com/autoembed/youtube';
 
 
 export default class AutoEmbed extends Component {
-  constructor(props) {
+  constructor( props ) {
     super(props);
   }
 
-  render(props) {
+  render( props ) {
 
-    switch(props.link.info.domain) {
+    switch ( props.link.info.domain ) {
       case "youtube.com":
         return <YoutubeEmbed id={props.link.match} />;
       default:

@@ -2,7 +2,7 @@ import {h, Component} from 'preact/preact';
 import SVGIcon from 'com/svg-icon/icon';
 
 export default class YoutubeEmbed extends Component {
-  constructor(props) {
+  constructor( props ) {
     super(props);
 
     this.state = {
@@ -12,22 +12,22 @@ export default class YoutubeEmbed extends Component {
     this.onClick = this.onClick.bind(this);
   }
 
-  onClick(e) {
+  onClick( e ) {
     this.setState({'iframe': true});
   }
 
-  render(props, state) {
+  render( props, state ) {
     var yt_thumbnail_prefix = "https://i.ytimg.com/vi/";
     var yt_thumbnail_suffix = "/mqdefault.jpg";
 
     var video_id = props.id;
 
     var args = ['autoplay=1'];
-    if (url.args.t) {
+    if ( url.args.t ) {
       args.push('start=' + parseInt(url.args.t));
     }
 
-    if (state.iframe) {
+    if ( state.iframe ) {
       return (
         <div class="embed-video -youtube">
           <div class="-video">
@@ -45,7 +45,9 @@ export default class YoutubeEmbed extends Component {
               <SVGIcon middle>play</SVGIcon>
             </div>
             <div class="-external">
-              <a href={"//www.youtube.com/watch?v="+video_id} target="_blank" onclick={(e) => {e.stopPropagation();}}>
+              <a href={"//www.youtube.com/watch?v="+video_id} target="_blank" onclick={(e) => {
+                e.stopPropagation();
+              }}>
                 <SVGIcon middle block>youtube</SVGIcon>
               </a>
             </div>

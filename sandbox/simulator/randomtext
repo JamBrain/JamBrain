@@ -334,7 +334,7 @@ function YoutubeRandomVideo()
 {
 	global $useyoutubevideos;
 
-	if ($useyoutubevideos)
+	if ( $useyoutubevideos )
 	{
 
 		$url = "https://www.youtube.com/watch?v=";
@@ -375,7 +375,7 @@ function RandomLink()
 {
 	global $uselinks;
 
-	if ($uselinks)
+	if ( $uselinks )
 	{
 
 		// Using a fixed pool of links
@@ -406,13 +406,13 @@ function RandomLink()
 
 		$type = random_int(0,3);		
 
-		if ($type==0) {
+		if ( $type == 0 ) {
 			return "[](www." . $url . ")";			
 		}
-		elseif ($type==1) {
+		elseif ( $type == 1 ) {
 			return "[](https://www." . $url . ")";			
 		}
-		elseif ($type==2) {
+		elseif ( $type == 2 ) {
 			return "[Click Me!](https://www." . $url . ")";						
 		}
 		else {
