@@ -89,6 +89,8 @@ $useprevioususers = true; // Load the set of users from the previous test event,
 $usewikitext = true;
 $useyoutubevideos = true;
 $youtubevideochance = 10; // if 10 then every tenth video will have a YT video
+$uselinks = true;
+$linkchance = 5;
 
 define("TOP_STATS",10); // keep top 10 stats
 
