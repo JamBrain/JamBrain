@@ -18,6 +18,7 @@ const SHRUB_PATH = "../../src/shrub/src/";
 # Use shrub wrapper for db access
 include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."constants.php";
+require_once __DIR__."/".SHRUB_PATH."core/core.php";
 require_once __DIR__."/".SHRUB_PATH."core/db.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
 require_once __DIR__."/".SHRUB_PATH."user/user.php";

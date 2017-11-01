@@ -641,8 +641,9 @@ function AddMissingTags()
 	}
 
 
+	$category = "platform";
 	$userid = $event_admin_user["id"];
-	$nodes = LoadTagsForCategory("platform");
+	$nodes = LoadTagsForCategory($category);
 
 	$nodebyname = [];
 	foreach($nodes as $n)
