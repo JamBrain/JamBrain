@@ -93,7 +93,7 @@ function GenerateRandomPostText($maxParagraphs = 8)
 	// Add link to the post
 	global $uselinks;
 	global $linkchance;
-	if ($uselinks and random_int(0, $linkchance-1) == 0)
+	if ($uselinks && random_int(0, $linkchance-1) == 0)
 	{
 		$output .= "\n";
 		$output .= RandomLink();

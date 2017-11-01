@@ -9,7 +9,7 @@ import SmartLink 			from 'com/autoembed/smartlink';
 import LocalLink			from 'com/autoembed/locallink';
 
 import AutoEmbed 			from 'com/autoembed/autoembed';
-import {SmartDomains} 		from 'com/autoembed/smartdomains';
+import SmartDomains			from 'com/autoembed/smartdomains';
 
 import BlockSpoiler 		from 'com/block-spoiler/spoiler';
 
@@ -247,7 +247,6 @@ export default class Renderer {
 		}
 
 		let result = this.parseLink(href);
-		console.log("result ", result);
 
 		if ( result == null ) {
 			// wasn't a link
@@ -265,15 +264,14 @@ export default class Renderer {
 		else if ( result.type == "embed" ) {
 			return <AutoEmbed link={result} title={title} text={text} />;
 		}
-		else if (result.type == "relative") {
+		else if ( result.type == "relative" ) {
 			return <LocalLink href={href} text={href} title={''} target={"_blank"}/>;
 		}
-		else if (result.type == "internal") {
-			return <LocalLink href={"//" + href.substr(1)} text={href.substr(1)} title={''} target={"_blank"}/>;
+		else if ( result.type == "internal" ) {
+			return <LocalLink href={"//" + window.location.hostname + href.substr(1)} text={href.substr(1)} title={''} target={"_blank"}/>;
 		}
-		else if (result.type == "static") {
-			let static_domain = "static.jam.vg"; //TODO:: Grab this from global
-			return <NavLink href={"//" + static_domain + href.substr(2)} text={static_domain + href.substr(2)} title={''} target={"_blank"}/>;
+		else if ( result.type == "static" ) {
+			return <NavLink href={"//" + STATIC_DOMAIN + href.substr(2)} text={STATIC_DOMAIN + href.substr(2)} title={''} target={"_blank"}/>;
 		}
 	}
 

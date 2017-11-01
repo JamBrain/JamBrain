@@ -4,11 +4,11 @@ import NavLink				from 'com/nav-link/link';
 import SVGIcon				from 'com/svg-icon/icon';
 
 export default class LocalLink extends Component {
-	constructor(props) {
+	constructor( props ) {
 		super(props);
 	}
 
-	render(props) {
+	render( props ) {
 
 		return (
 			<span class="smart-link local-link">
