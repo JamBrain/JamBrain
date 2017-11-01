@@ -1,4 +1,4 @@
-import { h, Component }				from 'preact/preact';
+import {h, Component}				from 'preact/preact';
 import SVGIcon 						from 'com/svg-icon/icon';
 import NavLink 						from 'com/nav-link/link';
 
@@ -15,7 +15,7 @@ export default class HeaderWhatsup extends Component {
 		var featured = props.featured;
 
 		// NOTE: For Theme Voting, look at what's in 'available' returned by the theme list.
-		// Then use that to check the name in 'names'. 
+		// Then use that to check the name in 'names'.
 
 		// TODO: Write code to convert an array to "1 and 2" or "1, 2, and 3"
 
