@@ -60,11 +60,12 @@ function api_Exec( $apidesc ) {
 			
 			// This API request is the one we'll handle.
 			$apiused = $api;
-			$GLOBAL["API_NAME"] = $api[0]; // Used later for accumulating statistics per API.
+			$GLOBALS["API_NAME"] = $api[0]; // Used later for accumulating statistics per API.
 			
 			// Pull arguments off the request stack based on the number of elements in the request.
+			// Skip one though, as we added an artificial element for the filename.
 			$segments = explode("/",$api[0]);
-			for( $i = 0; $i < count($segments); $i++)	{
+			for( $i = 1; $i < count($segments); $i++)	{
 				json_ArgShift();
 			}
 			
