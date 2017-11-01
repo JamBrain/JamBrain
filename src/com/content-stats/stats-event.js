@@ -14,6 +14,7 @@ import ContentCommonBodyAvatar			from 'com/content-common/common-body-avatar';
 import ContentCommonBodyMarkup			from 'com/content-common/common-body-markup';
 
 import PieChart							from 'com/visualization/piechart/piechart';
+import BarChart							from 'com/visualization/barchart/barchart';
 
 
 import $Stats							from '../../shrub/js/stats/stats';
@@ -118,7 +119,7 @@ export default class ContentStatsEvent extends Component {
 						'1-5',
 						'0'
 					];
-					Data.push(<PieChart values={grades} labels={gradenames}></PieChart>);
+					Data.push(<BarChart values={grades} labels={gradenames}></BarChart>);
 
 					Data.push(<div class="-gap"><span class="-title">Types of Entries:</span></div>);
 					let types = [

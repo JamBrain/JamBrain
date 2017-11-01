@@ -1,0 +1,58 @@
+
+@import 'defs.less';
+
+.legend {
+	flex: 1;
+	padding-left: 15px;
+	padding-right: 15px;
+	align-self: center;
+	  
+	& li {
+		list-style: none;
+		
+		& .-shape-circle {
+			display: inline-block;
+			vertical-align: middle;
+			width: 32px;
+			height: 32px;
+			border-radius: 50%;
+		}
+
+		& p {
+			display: inline-block;
+			margin-left: 1em;
+			margin-top: 0.5em;
+			margin-bottom: 0.5em;
+
+		}
+	}
+}
+
+
+.vis_stroke_color_1 {stroke: @COL_A;}
+.vis_stroke_color_2 {stroke: @COL_B;}
+.vis_stroke_color_3 {stroke: @COL_C;}
+.vis_stroke_color_4 {stroke: @COL_AB;}
+.vis_stroke_color_5 {stroke: @COL_BC;}
+.vis_stroke_color_6 {stroke: @COL_CA;}
+
+.vis_fill_color_1 {fill: @COL_A;}
+.vis_fill_color_2 {fill: @COL_B;}
+.vis_fill_color_3 {fill: @COL_C;}
+.vis_fill_color_4 {fill: @COL_AB;}
+.vis_fill_color_5 {fill: @COL_BC;}
+.vis_fill_color_6 {fill: @COL_CA;}
+
+.vis_fg_color_1 {color: @COL_A;}
+.vis_fg_color_2 {color: @COL_B;}
+.vis_fg_color_3 {color: @COL_C;}
+.vis_fg_color_4 {color: @COL_AB;}
+.vis_fg_color_5 {color: @COL_BC;}
+.vis_fg_color_6 {color: @COL_CA;}
+
+.vis_bg_color_1 {background-color: @COL_A;}
+.vis_bg_color_2 {background-color: @COL_B;}
+.vis_bg_color_3 {background-color: @COL_C;}
+.vis_bg_color_4 {background-color: @COL_AB;}
+.vis_bg_color_5 {background-color: @COL_BC;}
+.vis_bg_color_6 {background-color: @COL_CA;}
