@@ -10,7 +10,7 @@ export default class PieSegment extends Component {
     render( props ) {
 
         // it's valid for offset/angle to be zero so we have to check it against undefined.
-        if ( !(props && props['angle'] != undefined && props['offset'] != undefined && props['color']) ) {
+        if ( !(props && props.angle != undefined && props.offset != undefined && props.color) ) {
             console.warn('PieSegment was created with invalid props', props);
             return;
         }

@@ -29,8 +29,7 @@ export default class PieChart extends Component {
             return <div>No Data!</div>;
         }
 
-        let labels = props.labels;
-        let values = props.values;
+        let {labels, values} = props;
 
         let percentages = this.convertToPercentage(values);
 

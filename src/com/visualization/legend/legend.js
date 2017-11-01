@@ -9,17 +9,12 @@ export default class Legend extends Component {
 
     render( props ) {
 
-        if ( !(
-			props &&
-			props['colors'] &&
-			props['names']
-		) ) {
+        if ( !(props && props.colors && props.names) ) {
             console.warn('Legend was created with invalid props', props);
             return;
         }
 
-		let colors = props.colors;
-		let names = props.names;
+		let {colors, names} = props;
 
         let Legend = [];
 		for (var index = 0; index < names.length; index++) {

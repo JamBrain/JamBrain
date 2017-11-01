@@ -12,19 +12,16 @@ export default class Bar extends Component {
         // it's valid for height/width/index to be zero so we have to check it against undefined.
         if ( !(
 			props &&
-			props['height']	!= undefined &&
-			props['index']	!= undefined &&
-			props['width']	!= undefined &&
-			props['color']
+			props.height	!= null &&
+			props.index		!= null &&
+			props.width		!= null &&
+			props.color
 		) ) {
             console.warn('Bar was created with invalid props', props);
             return;
         }
 
-        let height = props.height;
-        let width = props.width;
-        let index = props.index;
-		let color = props.color;
+        let {height, width, index, color} = props;
 
 		const width_gap_ratio = 0.8;
 

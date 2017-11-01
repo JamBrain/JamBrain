@@ -30,8 +30,7 @@ export default class BarChart extends Component {
             return <div>No Data!</div>;
         }
 
-        let labels = props.labels;
-        let values = props.values;
+        let {labels, values} = props;
 
         let adjusted = this.scaleValues(values);
 		let width = 100/values.length;
