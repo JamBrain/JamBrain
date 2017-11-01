@@ -14,6 +14,7 @@ import ContentCommonBodyAvatar			from 'com/content-common/common-body-avatar';
 import ContentCommonBodyMarkup			from 'com/content-common/common-body-markup';
 
 import PieChart							from 'com/visualization/piechart/piechart';
+import BarChart							from 'com/visualization/barchart/barchart';
 
 
 import $Stats							from '../../shrub/js/stats/stats';
@@ -111,14 +112,15 @@ export default class ContentStatsEvent extends Component {
 						stats['grade-0-only']
 					];
 					let gradenames = [
-						'20-plus',
-						'15-20',
-						'10-15',
-						'5-10',
-						'1-5',
+						'20 or more',
+						'15 to 20',
+						'10 to 15',
+						'5 to 10',
+						'1 to 5',
 						'0'
 					];
-					Data.push(<PieChart values={grades} labels={gradenames}></PieChart>);
+
+					Data.push(<BarChart values={grades.reverse()} labels={gradenames.reverse()}></BarChart>);
 
 					Data.push(<div class="-gap"><span class="-title">Types of Entries:</span></div>);
 					let types = [
@@ -149,39 +151,6 @@ export default class ContentStatsEvent extends Component {
 				);
 			}
 			return <div />;
-/*
-			return (
-				<ContentCommon {...props} class={cN(Class)}>
-					<ContentCommonBodyTitle title="Statistics" />
-					<ContentCommonBody>
-						<div><span class="-title">Signups:</span> <span class="-value">{stats.signups}</span></div>
-						<div><span class="-title">Unique Authors:</span> <span class="-value">{stats.authors}</span></div>
-
-						<div class="-gap"><span class="-title">Submissions:</span> <span class="-value">{stats.jam+stats.compo+stats.craft}</span></div>
-						<div class="-indent"><span class="-title">Jam:</span> <span class="-value">{stats.jam}</span></div>
-						<div class="-indent"><span class="-title">Compo:</span> <span class="-value">{stats.compo}</span></div>
-						<div class="-indent"><span class="-title">Craft:</span> <span class="-value">{stats.craft}</span></div>
-						<div><span class="-title">Unfinished:</span> <span class="-value">{stats.unfinished}</span></div>
-						<div><span class="-title">Unpublished:</span> <span class="-value">{stats.unpublished}</span></div>
-						<div><span class="-title">Warmups:</span> <span class="-value">{stats.warmup}</span></div>
-
-						<div class="-gap"><span class="-title">Ratings:</span></div>
-						<div class="-indent"><span class="-title">20+:</span> <span class="-value">{stats['grade-20-plus']}</span></div>
-						<div class="-indent"><span class="-title">15-20:</span> <span class="-value">{stats['grade-15-20']}</span></div>
-						<div class="-indent"><span class="-title">10-15:</span> <span class="-value">{stats['grade-10-15']}</span></div>
-						<div class="-indent"><span class="-title">5-10:</span> <span class="-value">{stats['grade-5-10']}</span></div>
-						<div class="-indent"><span class="-title">0-5:</span> <span class="-value">{stats['grade-0-5']}</span></div>
-						<div class="-gap"><span class="-title">With 0 ratings:</span> <span class="-value">{stats['grade-0-only']}</span></div>
-						<div class="-gap"><span class="-title">Totals:</span> <span class="-value">{stats.game}</span></div>
-						<div class="-indent"><span class="-title">Games:</span> <span class="-value">{stats.game}</span></div>
-						<div class="-indent"><span class="-title">Crafts:</span> <span class="-value">{stats.craft}</span></div>
-						<div class="-indent"><span class="-title">Demos:</span> <span class="-value">{stats.demo}</span></div>
-						<div class="-indent"><span class="-title">Tools:</span> <span class="-value">{stats.tool}</span></div>
-						<div class="-gap">Last Updated: {stats.timestamp}</div>
-					</ContentCommonBody>
-				</ContentCommon>
-			);
-*/
 		}
 		else {
 			return <ContentLoading />;
