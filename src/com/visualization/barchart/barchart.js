@@ -1,6 +1,7 @@
 import {h, Component} 				from 'preact/preact';
 
 import Bar							from 'com/visualization/barchart/bar';
+import Legend						from 'com/visualization/legend/legend';
 
 export default class BarChart extends Component {
 
@@ -36,21 +37,15 @@ export default class BarChart extends Component {
 		let width = 100/values.length;
 
         let Bars = [];
-        let Legend = [];
+        let Names = [];
+		let Colors = [];
 
         for ( var i = 0; i < values.length; i++ ) {
 
             let color = 1 + ( i % 6 );
-            let legendclass = cN("-shape-circle", "vis_bg_color_"+color, props.class);
-
             Bars.push(<Bar height={adjusted[i]} width={width} index={i} color={color} />);
-            Legend.push(
-                <li>
-                    <span class={legendclass}></span>
-                    <p>{labels[i]} ({values[i]})</p>
-                </li>
-            );
-
+			Names.push(labels[i] +" (" + values[i] + ")");
+            Colors.push(color);
         }
 
         return (
@@ -62,9 +57,7 @@ export default class BarChart extends Component {
 						</g>
                     </svg>
                 </div>
-                <div class="-legend">
-                    {Legend}
-                </div>
+				<Legend names={Names} colors={Colors}/>
             </div>
         );
     }

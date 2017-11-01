@@ -1,6 +1,7 @@
 import {h, Component} 				from 'preact/preact';
 
 import PieSegment					from 'com/visualization/piechart/piesegment';
+import Legend						from 'com/visualization/legend/legend';
 
 export default class PieChart extends Component {
 
@@ -34,7 +35,8 @@ export default class PieChart extends Component {
         let percentages = this.convertToPercentage(values);
 
         let Segments = [];
-        let Legend = [];
+		let Names = [];
+		let Colors = [];
 
         let offset = 0;
         for ( var i = 0; i < percentages.length; i++ ) {
@@ -43,12 +45,8 @@ export default class PieChart extends Component {
             let legendclass = cN("-shape-circle", "vis_bg_color_"+color, props.class);
 
             Segments.push(<PieSegment angle={percentages[i]} offset={offset} color={color} />);
-            Legend.push(
-                <li>
-                    <span class={legendclass}></span>
-                    <p>{labels[i]} ({values[i]} / {Math.round(percentages[i] * 100) / 100}%)</p>
-                </li>
-            );
+            Names.push(labels[i] +" (" + values[i] + " : " + (Math.round(percentages[i] * 100) / 100) + "%)");
+            Colors.push(color);
 
             offset += percentages[i];
         }
@@ -60,9 +58,7 @@ export default class PieChart extends Component {
                         {Segments}
                     </svg>
                 </div>
-                <div class="-legend">
-                    {Legend}
-                </div>
+                <Legend names={Names} colors={Colors}/>
             </div>
         );
     }

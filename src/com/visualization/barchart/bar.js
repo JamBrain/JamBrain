@@ -29,9 +29,9 @@ export default class Bar extends Component {
 		const width_gap_ratio = 0.8;
 
         // drawing a bar of 0 height causes artifacting so bail out.
-        if ( height == 0 || width == 0 ) {
-            return;
-        }
+        //if ( height == 0 || width == 0 ) {
+        //    return;
+        //}
 
         let segmentclass = cN("-bar", "vis_fill_color_"+color, props.class);
 
