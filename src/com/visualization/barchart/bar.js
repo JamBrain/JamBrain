@@ -10,13 +10,7 @@ export default class Bar extends Component {
     render( props ) {
 
         // it's valid for height/width/index to be zero so we have to check it against undefined.
-        if ( !(
-			props &&
-			props.height	!= null &&
-			props.index		!= null &&
-			props.width		!= null &&
-			props.color
-		) ) {
+        if ( !(props && (props.height != null) && (props.index != null) && (props.width != null) && props.color) ) {
             console.warn('Bar was created with invalid props', props);
             return;
         }

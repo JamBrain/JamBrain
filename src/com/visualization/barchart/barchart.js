@@ -11,7 +11,7 @@ export default class BarChart extends Component {
     }
 
 
-    scaleValues ( values ) {
+    scaleValues( values ) {
 
         let max = 1;
         values.forEach( ( v ) => ( max = (v > max) ? v : max ) );
