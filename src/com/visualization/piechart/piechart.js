@@ -54,13 +54,13 @@ export default class PieChart extends Component {
         }
 
         return (
-            <div class="chart-pie">
-                <div class="-chart">
+            <div class="chart">
+                <div class="-pie">
                     <svg class="-svg" viewBox="0 0 42 42" width="100%" height="100%">
                         {Segments}
                     </svg>
                 </div>
-                <div class="legend">
+                <div class="-legend">
                     {Legend}
                 </div>
             </div>

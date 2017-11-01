@@ -9,11 +9,12 @@ export default class Bar extends Component {
 
     render( props ) {
 
-        // it's valid for height/offset to be zero so we have to check it against undefined.
+        // it's valid for height/width/index to be zero so we have to check it against undefined.
         if ( !(
 			props &&
 			props['height']	!= undefined &&
-			props['offset']	!= undefined &&
+			props['index']	!= undefined &&
+			props['width']	!= undefined &&
 			props['color']
 		) ) {
             console.warn('Bar was created with invalid props', props);
@@ -21,21 +22,21 @@ export default class Bar extends Component {
         }
 
         let height = props.height;
-        let index = props.offset;
+        let width = props.width;
+        let index = props.index;
 		let color = props.color;
 
-		const offset = "2";
-		const width = "1";
+		const width_gap_ratio = 0.8;
 
         // drawing a bar of 0 height causes artifacting so bail out.
-        if ( height == 0) {
+        if ( height == 0 || width == 0 ) {
             return;
         }
 
         let segmentclass = cN("-bar", "vis_fill_color_"+color, props.class);
 
         return (
-            <rect class={segmentclass} x={offset + ((index) * (width*1.25))} y={offset} width={width} height={height}/>
+            <rect class={segmentclass} x={width * index} y={0} width={width * width_gap_ratio} height={height}/>
         );
     }
 }

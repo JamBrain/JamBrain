@@ -1,33 +1,46 @@
 
 @import 'defs.less';
 
-.legend {
-	flex: 1;
-	padding-left: 15px;
-	padding-right: 15px;
-	align-self: center;
-	  
-	& li {
-		list-style: none;
+.chart {
+	
+	display: flex;
+	justify-content: space-around;
+	margin-left: -15px;
+	margin-right: -15px;
+
+	flex-direction: column;    
+	@media (min-width: 768px) {
+		flex-direction: row;
+	}
+	
+
+	& > .-legend {
+		flex: 1;
+		padding-left: 15px;
+		padding-right: 15px;
+		align-self: center;
 		
-		& .-shape-circle {
-			display: inline-block;
-			vertical-align: middle;
-			width: 32px;
-			height: 32px;
-			border-radius: 50%;
-		}
+		& li {
+			list-style: none;
+			
+			& .-shape-circle {
+				display: inline-block;
+				vertical-align: middle;
+				width: 32px;
+				height: 32px;
+				border-radius: 50%;
+			}
 
-		& p {
-			display: inline-block;
-			margin-left: 1em;
-			margin-top: 0.5em;
-			margin-bottom: 0.5em;
+			& p {
+				display: inline-block;
+				margin-left: 1em;
+				margin-top: 0.5em;
+				margin-bottom: 0.5em;
 
+			}
 		}
 	}
 }
-
 
 .vis_stroke_color_1 {stroke: @COL_A;}
 .vis_stroke_color_2 {stroke: @COL_B;}
