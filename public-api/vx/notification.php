@@ -29,7 +29,8 @@ function GetFeed($notification_type, &$RESPONSE) {
 	if ( $notification_type == 'unread' ) {
 		$RESPONSE['count'] = notification_CountUnread($user_id);
 		$RESPONSE['feed'] = notification_GetUnread($user_id, $RESPONSE['limit'], $RESPONSE['offset']);
-	} else {
+	} 
+	else {
 		$RESPONSE['count'] = notification_Count($user_id);
 		$RESPONSE['feed'] = notification_Get($user_id, $RESPONSE['limit'], $RESPONSE['offset']);
 	}
@@ -45,10 +46,10 @@ api_Exec([
 	$RESPONSE['count'] = notification_Count($user_id);
 }],
 ["notification/unread/feed", API_GET | API_AUTH, API_CHARGE_1, function(&$RESPONSE) {
-	GetFeed("unread",$RESPONSE);
+	GetFeed("unread", $RESPONSE);
 }],
 ["notification/all/feed", API_GET | API_AUTH, API_CHARGE_1, function(&$RESPONSE) {
-	GetFeed("all",$RESPONSE);
+	GetFeed("all", $RESPONSE);
 }],
 ["notification/markread", API_POST | API_AUTH, API_CHARGE_1, function(&$RESPONSE) {
 	$user_id = userAuth_GetID();
@@ -61,12 +62,12 @@ api_Exec([
 	$prev_cursor = notification_GetLastReadNotification($user_id);
 	$max_notification = notification_Max($user_id);
 	
-	if ( $max_read < $prev_cursor || $max_read > $max_notification ) {
+	if ( ($max_read < $prev_cursor) || ($max_read > $max_notification) ) {
 		json_EmitFatalError_BadRequest("New max_read notification index is out of range", $RESPONSE);
 	}
 	
 	$success = notification_SetLastReadNotification($user_id, $max_read);
-	if( !$success ) {
+	if ( !$success ) {
 		json_EmitFatalError_Server(null, $RESPONSE);
 	}
 	

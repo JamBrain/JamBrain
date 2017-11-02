@@ -37,26 +37,26 @@ function api_Exec( $apidesc ) {
 	
 	// Determine API file name from script filename (.../somefile.php)
 	// This should be reliable in all cases.
-	$pathparts = explode("/",$_SERVER['SCRIPT_NAME']);
+	$pathparts = explode("/", $_SERVER['SCRIPT_NAME']);
 	$filename = "";
 	$file = $pathparts[count($pathparts)-1];
-	if ( substr($file,-4) != ".php") {
+	if ( substr($file, -4) != ".php") {
 		json_EmitFatalError("Unable to determine filename for API.", $RESPONSE);
 	}
 	$filename = substr($file, 0, strlen($file) - 4);
 
 	// Reconstruct the full request path (from sanitized request array) to match against the API prefixes.
-	$fullpath = $filename . "/" . implode("/",$REQUEST);
+	$fullpath = $filename . "/" . implode("/", $REQUEST);
 	$fullpathlen = strlen($fullpath);
 
 	// Find first matching API record
 	$apiused = null;
-	foreach( $apidesc as $api ) {
+	foreach ( $apidesc as $api ) {
 		$pathlength = strlen($api[0]);
 
 		// If the prefix matches, further confirm that the path is the entire string, or followed by a /		
 		if ( (strncmp($fullpath, $api[0], $pathlength) == 0) &&
-			(($fullpathlen == $pathlength) || (substr($fullpath, $pathlength, 1) == "/"))) {
+			(($fullpathlen == $pathlength) || (substr($fullpath, $pathlength, 1) == "/")) ) {
 			
 			// This API request is the one we'll handle.
 			$apiused = $api;
@@ -64,22 +64,22 @@ function api_Exec( $apidesc ) {
 			
 			// Pull arguments off the request stack based on the number of elements in the request.
 			// Skip one though, as we added an artificial element for the filename.
-			$segments = explode("/",$api[0]);
-			for( $i = 1; $i < count($segments); $i++)	{
+			$segments = explode("/", $api[0]);
+			for ( $i = 1; $i < count($segments); $i++ )	{
 				json_ArgShift();
 			}
 			
 			// Require a GET or POST flag
 			$flags = $api[1];
 			if ( $flags & API_GET ) {
-				if( $flags & API_POST ) {
+				if ( $flags & API_POST ) {
 					// note EmitFatalError calls exit; and don't continue executing.
 					json_EmitFatalError("API record must not have both GET and POST flags.", $RESPONSE);
 				}
 				json_ValidateHTTPMethod('GET');
 			}
 			else { 
-				if( $flags & API_POST ) {
+				if ( $flags & API_POST ) {
 					json_ValidateHTTPMethod('POST');
 				}
 				else {
@@ -113,8 +113,7 @@ function api_Exec( $apidesc ) {
 		}
 	}
 	
-	if($apiused == null)
-	{
+	if ( $apiused == null )	{
 		// No path matched.
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 	}
