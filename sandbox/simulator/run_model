@@ -4,7 +4,7 @@
 
 */
 
-
+$actioncount = 0;
 
 ////
 //// Quickly sanity check that all functions referenced in the above state system actually exist.
@@ -236,6 +236,9 @@ $ActionContext = [];
 
 function ExecuteAction(&$user, $action, $phase)
 {
+	global $actioncount;
+	$actioncount++;
+	
 	$username = $user["username"];
 	
 	VerboseAction("Running action ".$action." with user ".$username);

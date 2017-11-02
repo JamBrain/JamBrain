@@ -8,6 +8,14 @@
 $errorcount = 0;
 
 
+function ErrorSummary()
+{
+	global $errorcount;
+	$s = ($errorcount==1)?"":"s";
+	Message($errorcount . " error$s during this run.");
+	// Future: maybe relog the last few errors for reference?
+}
+
 function TimeString()
 {
   $d = new DateTime();
@@ -118,7 +126,7 @@ function OpenEventFile()
 	global $eventbase;
 	global $eventindex;
 	$log = $eventbase . "." . $eventindex . ".event";
-	return fopen($log, "a");
+	return fopen($log, "w");
 }
 
 function OpenMarkovFile()
