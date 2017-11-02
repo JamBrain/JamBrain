@@ -159,15 +159,17 @@ export default class ContentComments extends Component {
 		const user = this.props.user;
 		const authors = this.state.authors;
 		const comment = this.state.newcomment;
+		const error = this.state.error;
 		const author = authors[comment.author];
 		const allowAnonymous = parseInt(this.props.node.meta['allow-anonymous-comments']);
 
-		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove allowAnonymous={allowAnonymous} /></div>;
+		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove allowAnonymous={allowAnonymous} error={error} /></div>;
 	}
 
 	onPublish( e, publishAnon ) {
 		const node = this.props.node;
 		const newcomment = this.state.newcomment;
+		this.setState({'error': null });
 
 		$Note.Add( newcomment.parent, newcomment.node, newcomment.body, null, publishAnon )
 		.then(r => {
@@ -190,7 +192,7 @@ export default class ContentComments extends Component {
 				this.setState({'tree': this.buildTree()});
 			}
 			else {
-				this.setState({'error': err});
+				this.setState({'error': (r.message ? r.message : "Unknown error when posting comment")});
 			}
 		})
 		.catch(err => {
