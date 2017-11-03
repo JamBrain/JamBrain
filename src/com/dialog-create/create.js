@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 				from 'preact/preact';
 import Sanitize							from '../internal/sanitize/sanitize';
 
 import DialogCommon						from 'com/dialog-common/common';
@@ -22,7 +22,7 @@ export default class DialogCreate extends Component {
 		if ( event_id ) {
 			$Node.Add(event_id, node_type, node_subtype)
 			.then(r => {
-				console.log('hurr',r);
+				console.log('hurr', r);
 
 				if ( r.path ) {
 					if ( r.type == 'post' ) {
@@ -36,7 +36,7 @@ export default class DialogCreate extends Component {
 					window.location.href = window.location.pathname;
 			})
 			.catch(err => {
-				this.setState({ 'error': err });
+				this.setState({'error': err});
 			});
 		}
 	}
@@ -94,7 +94,7 @@ export default class DialogCreate extends Component {
 //				var ShowType = "Game";
 //				new_props.title += ' '+ShowType;
 //				new_props.oktext = "Create "+ShowType;
-//				
+//
 //				return (
 //					<DialogCommon ok onok={this.doCreate} cancel explicit {...new_props}>
 //						<div>Create a game for the active event?</div>

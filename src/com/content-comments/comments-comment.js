@@ -134,6 +134,7 @@ export default class ContentCommentsComment extends Component {
 		var user = props.user;
 		var comment = props.comment;
 		var author = props.author;
+		var error = props.error;
 
 		if ( author || comment.author == 0 ) {
 			var Name = "Anonymous";
@@ -251,11 +252,19 @@ export default class ContentCommentsComment extends Component {
 				);
 			}
 
+			var ShowError = null;
+			if ( error ) {
+				ShowError = (
+					<div class="-error">{"Failed to post comment: " + error}</div>
+				);
+			}
+
 			return (
 				<div id={"comment-"+comment.id} class={"-item -comment -indent-"+props.indent}>
 					<div class="-avatar"><IMG2 src={Avatar} /></div>
 					<div class="-body">
 						{ShowTopNav}
+						{ShowError}
 						<div class="-text">
 							{ShowTitle}
 							<ContentCommentsMarkup user={user} editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here" limit={props.limit}>{comment.body}</ContentCommentsMarkup>

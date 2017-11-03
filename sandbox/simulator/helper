@@ -14,6 +14,121 @@ function RunMagic()
 
 
 
+$event_admin_user = null;
+$event_users = array(); // Only use for reference (e.g. getting usernames)
+$event_user_lookup = array(); // Only use this as a source for user objects, and get them by reference.
+$event_userids = array();
+
+function RandomUserName()
+{
+	global $event_users;
+	$i = random_int(1, count($event_users)) - 1;
+	return $event_users[$i]["username"];
+}
+
+
+function LoadPreviousUsers()
+{
+	global $event_admin_user, $event_users;
+	$f = OpenPreviousEventFile();
+	$users=[];
+	if($f === false) { return false; }
+	Verbose("Loading users from previous event...");
+	while(!feof($f))
+	{
+		$line = fgets($f);
+		$start = substr(trim($line),0,1);
+		if($start === false || $start == "#") { continue; }
+		$parts = explode(":",$line,2);
+		if(count($parts) != 2) { continue; }
+		$u = trim($parts[0]);
+		$p = trim($parts[1]);
+		$users[] = User_Load($u,$p);
+	}
+
+	Verbose("Loaded ".count($users)." users.");
+
+	$event_admin_user = array_shift($users);
+	$event_users = $users;
+	return true;
+}
+
+
+// Create an admin user and $usercount other users. Load users from last event if possible. Save users to this event's event file. 
+// Churn some users out and create some fresh users. If there are more created users than needed users, preserve the full userlist but only use the tail end of it.
+function Create_Users($usercount, $user_churn = 0)
+{
+	global $event_admin_user, $event_users, $event_user_lookup, $event_userids;
+	LoadPreviousUsers();
+	
+	if($event_admin_user == null)
+	{
+		$event_admin_user = User_Create();
+	}
+	
+	$created = 0;
+	if(count($event_users) < $usercount)
+	{
+		Verbose("Not enough users to start event, creating some more users.");
+	}
+	while(count($event_users) < $usercount)
+	{
+		$event_users[] = User_Create();
+		$created++;
+	}
+	if($created < $user_churn)
+	{
+		Verbose("Creating a few additional users to churn the userbase.");
+	}
+	while($created < $user_churn)
+	{
+		$event_users[] = User_Create();
+		$created++;
+	}
+	
+	// Save information about all users into a file
+	$f = OpenEventFile();
+	fwrite($f, "# For now, just spitting out event data in a semi human readable form.\n");
+	fwrite($f, "# First line is Admin, rest of the lines are normal users.\n");
+	fwrite($f, "# Each line is Username:Password\n");
+	
+	fwrite($f, $event_admin_user["username"] . ":" . $event_admin_user["password"] . "\n");
+
+	if(count($event_users) > MAXKEEPUSERS)
+	{
+		$event_users = array_slice($event_users,-MAXKEEPUSERS);
+	}
+	
+	foreach($event_users as $u)
+	{
+		if($u == null) continue; // Failed user creation - don't cause problems for subsequent runs.
+		fwrite($f, $u["username"] . ":" . $u["password"] . "\n");	
+	}
+
+	fclose($f);
+	
+	// Now, select the set of users to use for this event and log them in.
+	
+	if(!User_Login($event_admin_user))
+	{
+		return false;
+	}
+	
+	$event_users = array_slice($event_users, -$usercount);
+	
+	$userids = [];
+	foreach($event_users as $user)
+	{
+		if(!User_Login($user)) return false;
+		$event_user_lookup[$user["username"]] = $user;
+		$userids[] = $user["id"];
+	}
+	$event_userids = $userids;
+	
+	return true;
+}
+
+
 ////
 //// Common functions to assist in doing normal tasks in the site
 ////
@@ -39,29 +154,34 @@ function User_DataStructure($username, $password)
 	return $user;
 }
 
-function User_Load($username, $password)
+function User_Login(&$user)
 {
-	$user = User_DataStructure($username, $password);
-
+	if($user == null) { return false; }
+	Verbose("Logging in user ". $user["username"] . "...");
+	
 	// Login the user
 	$userid = ApiUserLogin($user);
 	if(!$userid)
 	{
-		ReportError("Unable to login new user.");
-		return null;	
+		ReportError("Unable to login user ". $user["username"]);
+		return false;	
 	}
 	
 	$user["id"] = $userid;
-	
-	Verbose("Loaded user " . $username);
-	
+	return true;
+}
+
+function User_Load($username, $password)
+{
+	$user = User_DataStructure($username, $password);
 	return $user;
 }
 
 function User_Create()
 {
 	$username = GenerateRandomUsername();
-	$password = GenerateRandomPassword();
+	$password = $username;
+	while(strlen($password) < 8) { $password .= "a"; }
 	
 	// Construct a user object
 	$user = User_DataStructure($username, $password);
@@ -102,16 +222,6 @@ function User_Create()
 	}
 	
 		
-	// Login the user
-	$userid = ApiUserLogin($user);
-	if(!$userid)
-	{
-		ReportError("Unable to login new user.");
-		return null;	
-	}
-	
-	$user["id"] = $userid;
-	
 	Verbose("Created user " . $username);
 	
 	return $user;
@@ -145,17 +255,74 @@ function GetRandomRecentPost(&$user)
 
 function GetRandomTopGame(&$user)
 {
-	Verbose("Fetching a random game...");
-	$nodes = GetTopEventGameNodes($user);
-	if(count($nodes) == 0) return null;
-	$i = random_int(1,count($nodes))-1;
-	$data = ApiNodeGet($user, $nodes[$i]["id"]);
+	$gameid = 0;
+	if(random_int(1,2) == 1)
+	{
+		Verbose("Fetching a random game via randomgames api...");
+		// Use randomgames api
+		$count = null;
+		if(random_int(1,2) == 1) { $count = random_int(3,15); }
+		$filter = ["compo","jam",null][random_int(0,2)];
+		$games = ApiRandomGamesGet($user, $count, $filter);
+		if($games === null)
+		{
+			ReportError("RandomGames API failed.");
+			return null;
+		}		
+	
+		// It's legitimate for this API to return no games before the voting period stops. 
+		// In this case, fall back to the feed API below
+		if(count($games) != 0)
+		{
+			// Sanity check: ensure our game is not present in the list.
+			foreach($games as $game) 
+			{
+				if($game == $user['game_node']) { ReportError("RandomGames API should not be returning the user's own game."); }
+			}
+			
+			$i = random_int(1,count($games))-1;
+			$gameid = $games[$i];
+		}
+	} 
+	
+	if($gameid == 0) 
+	{
+		Verbose("Fetching a random game via feed...");
+		// Use feed
+		$nodes = GetTopEventGameNodes($user);
+		if(count($nodes) == 0) return null;
+		$i = random_int(1,count($nodes))-1;
+		$gameid = $nodes[$i]["id"];
+	}
+	
+	$data = ApiNodeGet($user, $gameid);
 	if($data == null)
 	{
-		ReportError("Error fetching node " . $nodes[$i]);
+		ReportError("Error fetching node " . $gameid);
 		return null;
 	}
 	return $data[0];
+}
+
+function GetVoteGames(&$user)
+{
+	if(random_int(1,2) == 1)
+	{
+		return GetTopGames($user);
+	} else {
+		Verbose("Fetching games to rate from randomgames api...");
+		$games = ApiRandomGamesGet($user, 15);
+		if($games === null)
+		{
+			ReportError("Failed to get random games");
+		}
+		$out = [];
+		foreach($games as $game)
+		{
+			$out[] = ["id" => $game];
+		}
+		return $out;
+	}
 }
 
 function GetTopGames(&$user)
@@ -422,6 +589,83 @@ function PublishGame(&$user)
 	$user["publishedgame"] = true;
 	
 	RunMagic();
+}
+
+
+function AddMissingTags()
+{
+	global $event_admin_user;
+	
+	// Platform tags
+	$defaulttags = [
+		"Source Code", "Windows", "Linux", "Html5 (Web)", "macOS", "Android", "Gameboy", "Toaster"
+	];
+	$defaultwarnings = [
+		"Linux" => "If you used the default Unity export options for Linux, you may want to re-export with the 'Universal' preset to make the game playable by more Linux users.",
+		"Toaster" => "Please remember to warn your users to unplug the appliance while inserting and removing games"
+	];
+	
+	# Enumerate existing tags in category.
+	function LoadTagsForCategory($category)
+	{
+		$simple = node_GetSimpleByType("tag",$category);
+		$tagids = [];
+		foreach($simple as $s)
+		{
+			$tagids[] = $s["id"];
+		}
+		
+		# Get complete nodes for the tags.
+		if(count($tagids) > 0)
+		{
+			$nodes = nodeComplete_GetById($tagids);
+			return $nodes;
+		}
+		return [];
+	}
+
+	function SetWarning($id, $warning)
+	{
+		nodeMeta_AddByNode($id, SH_SCOPE_PUBLIC, 'tag-warning', $warning);
+	}
+	Function AddNewTag($userid, $category, $name, $warning = null)
+	{
+		$parent = 1; // For now hardcode root = 1
+		$slug = coreSlugify_Name($name);
+		$newtag = node_Add( $parent, $userid, "tag", $category, "", $slug, $name, "");
+
+		if($warning != null)
+		{
+			SetWarning($newtag, $warning);
+		}
+	}
+
+
+	$category = "platform";
+	$userid = $event_admin_user["id"];
+	$nodes = LoadTagsForCategory($category);
+
+	$nodebyname = [];
+	foreach($nodes as $n)
+	{
+		$nodebyname[$n["name"]] = $n;
+	}
+	
+	foreach($defaulttags as $tag)
+	{
+		$warning = null;
+		if(key_exists($tag, $defaultwarnings))
+		{
+			$warning = $defaultwarnings[$tag];
+		}
+		
+		if(!key_exists($tag, $nodebyname))
+		{
+			Verbose("Adding missing platform tag '$tag'");
+			
+			AddNewTag($userid, $category, $tag, $warning);
+		}
+	}
 }
 
 

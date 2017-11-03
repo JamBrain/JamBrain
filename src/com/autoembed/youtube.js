@@ -2,7 +2,7 @@ import {h, Component} from 'preact/preact';
 import SVGIcon from 'com/svg-icon/icon';
 
 export default class YoutubeEmbed extends Component {
-  constructor(props) {
+  constructor( props ) {
     super(props);
 
     this.state = {
@@ -12,23 +12,22 @@ export default class YoutubeEmbed extends Component {
     this.onClick = this.onClick.bind(this);
   }
 
-  onClick(e) {
+  onClick( e ) {
     this.setState({'iframe': true});
   }
 
-  render(props, state) {
+  render( props, state ) {
     var yt_thumbnail_prefix = "https://i.ytimg.com/vi/";
     var yt_thumbnail_suffix = "/mqdefault.jpg";
 
-    var url = extractFromURL(props.href);
-    var video_id = url.args.v;
+    var video_id = props.id;
 
     var args = ['autoplay=1'];
-    if (url.args.t) {
+    if ( url.args.t ) {
       args.push('start=' + parseInt(url.args.t));
     }
 
-    if (state.iframe) {
+    if ( state.iframe ) {
       return (
         <div class="embed-video -youtube">
           <div class="-video">
@@ -41,12 +40,14 @@ export default class YoutubeEmbed extends Component {
     return (
       <div class="embed-video -youtube">
         <div class="-thumbnail">
-          <div class="-overlay" onclick={this.onClick} href={props.href}>
+          <div class="-overlay" onclick={this.onClick} >
             <div class="-play">
               <SVGIcon middle>play</SVGIcon>
             </div>
             <div class="-external">
-              <a href={props.href} target="_blank" onclick={(e) => {e.stopPropagation();}}>
+              <a href={"//www.youtube.com/watch?v="+video_id} target="_blank" onclick={(e) => {
+                e.stopPropagation();
+              }}>
                 <SVGIcon middle block>youtube</SVGIcon>
               </a>
             </div>

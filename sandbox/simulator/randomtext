@@ -43,20 +43,39 @@ function GenerateRandomPostTitle()
 }
 
 // Future: something much more meaningful. Also figure out how to include image uploads, links, other fun features.
-function GenerateRandomPostText($maxParagraphs = 3)
+function GenerateRandomPostText($maxParagraphs = 8)
 {
 	global $usewikitext;
 	if($usewikitext)
 	{
-		$paragraphs = random_int(1,$maxParagraphs);
+		$stack = 10;
+		$paragraphs = 0;
+		for($i=0;$i<$stack;$i++) { $paragraphs += random_int(-$maxParagraphs,$maxParagraphs); }
+		
+		$paragraphs = ceil($paragraphs/$stack);
+		if($paragraphs < 1) $paragraphs = 1;
+		
 		$output = "";
 
 		for($p =0;$p<$paragraphs;$p++)
 		{
+			if($p > 0 && random_int(1,5) == 1) { $output .= "\n"; } // Occasionally add double-newline to seperate text blocks.
+			
+			if(random_int(1,20) == 1) { // Occasionally add a header
+				$prefix = ["#","##","###"][random_int(0,2)];
+				$output .= $prefix." ".GenerateRandomPhrase(2,10)."\n"; 
+			}
+			
+			if(random_int(1,20) == 1) { $output .= "> "; }  // Occasionally blockquote an entire paragraph.
+			
 			$sentences = random_int(1,10);
 			for($s=0;$s<$sentences;$s++)
 			{
-				$output .= GenerateRandomPhrase(3,17) . ". ";
+				$markdown = "";
+				if(random_int(1,6) == 1) {	$markdown = ["*","**","`","~~"][random_int(0,3)]; }
+				// Occasionally mention another user
+				if(random_int(1,50) == 1) { $output .= "@" . RandomUserName() . " "; }
+				$output .= $markdown.GenerateRandomPhrase(3,17).$markdown . ". ";
 			}
 			$output .= "\n";
 		}
@@ -69,6 +88,15 @@ function GenerateRandomPostText($maxParagraphs = 3)
 	{
 		$output .= "\n";
 		$output .= YoutubeRandomVideo();
+	}
+
+	// Add link to the post
+	global $uselinks;
+	global $linkchance;
+	if ($uselinks && random_int(0, $linkchance-1) == 0)
+	{
+		$output .= "\n";
+		$output .= RandomLink();
 	}
 
 	$output .= "\n\n";
@@ -302,12 +330,11 @@ function MarkovRandomPhrase($minwords = 3, $maxwords = 25)
 }
 
 /// Generate 'Random' Youtube Video
-
 function YoutubeRandomVideo()
 {
 	global $useyoutubevideos;
 
-	if ($useyoutubevideos)
+	if ( $useyoutubevideos )
 	{
 
 		$url = "https://www.youtube.com/watch?v=";
@@ -334,10 +361,64 @@ function YoutubeRandomVideo()
 		$index = random_int(0,count($videoids)-1);
 		$url .= $videoids[$index];
 
-		Message("Linking to Youtube video " . $url);
+		Verbose("Linking to Youtube video " . $url);
 
 
 		return $url;
+	}
+
+	return "";
+}
+
+/// Generate 'Random' Link
+function RandomLink()
+{
+	global $uselinks;
+
+	if ( $uselinks )
+	{
+
+		// Using a fixed pool of links
+		$links = array(
+			"youtube.com",
+			"youtube.com/feed/subscriptions",
+			"youtube.com/user/JupCraftGaming",
+			"github.com",
+			"github.com/ludumdare",
+			"github.com/ludumdare/ludumdare",
+			"twitch.tv",
+			"twitch.tv/quill18",
+			"reddit.com",
+			"reddit.com/r/ludumdare",
+			"twitter.com",
+			"twitter.com/ludumdare",
+			"twitter.com/ludumdarefeed/status/870705616175603712",
+			"soundcloud.com",
+			"soundcloud.com/ludumdare",
+			"soundcloud.com/ludumdare/amen"
+		);
+
+		// chose which video to display and build it's url
+		$index = random_int(0,count($links)-1);
+		$url = $links[$index];
+
+		Verbose("Linking to " . $url);
+
+		$type = random_int(0,3);		
+
+		if ( $type == 0 ) {
+			return "[](www." . $url . ")";			
+		}
+		elseif ( $type == 1 ) {
+			return "[](https://www." . $url . ")";			
+		}
+		elseif ( $type == 2 ) {
+			return "[Click Me!](https://www." . $url . ")";						
+		}
+		else {
+			return "https://www." . $url;									
+		}
+
 	}
 
 	return "";

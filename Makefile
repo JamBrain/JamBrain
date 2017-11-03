@@ -87,7 +87,7 @@ LESS				=	$(NODEJS)/less/bin/lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
 MINIFY_CSS			=	cat $(1) | $(NODEJS)/clean-css-cli/bin/cleancss -o $(2)
 # CSS Minifier: https://github.com/jakubpawlowicz/clean-css/
 
-SVGO_ARGS			:=	-q
+SVGO_ARGS			:=	-q --disable=removeTitle --disable=removeDimensions --disable=removeViewBox
 SVGO				=	$(NODEJS)/svgo/bin/svgo $(SVGO_ARGS) -i $(1) -o $(2)
 # SVG "Compiler", same as the minifier: https://github.com/svg/svgo
 SVG_PACK			=	src/tools/svg-sprite-pack $(1) > $(2)
@@ -106,7 +106,7 @@ default: target
 
 clean-target:
 	rm -f $(TARGET_FILES)
-	
+
 report: $(TARGET_FILES)
 	@echo \
 		"[JS]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)` (`$(call GZIP_SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`)	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`]\n" \
@@ -202,7 +202,8 @@ endif # COPY_UNMIN
 
 # SVG # src/icons/icomoon/icons.svg
 $(BUILD_FOLDER)/svg.svg: $(OUT_SVG_FILES)
-	$(call SVG_PACK,$^,$@)
+	$(call SVG_PACK,$^,$@.out)
+	cat $@.out > $@
 #	cat $^ > $@
 $(BUILD_FOLDER)/all.svg: $(BUILD_FOLDER)/svg.svg
 	cat $^ > $@

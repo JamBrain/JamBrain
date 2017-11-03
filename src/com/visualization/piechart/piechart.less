@@ -1,69 +1,15 @@
 
-@import 'defs.less';
-
-.piechart-figure {
-
-    display: flex;
-    justify-content: space-around;
-    margin-left: -15px;
-    margin-right: -15px;
-
-    flex-direction: column;    
-    @media (min-width: 768px) {
-        flex-direction: row;
-    }
-
-    & .piechart {
+.chart {
+    & > .-pie {
         flex: 1;
         padding-left: 15px;
         padding-right: 15px;
         align-self: center;
 
-        & .piechart-svg {
-            & .piechart-segment {
-            }
-        }
-    }
-
-    & .legend {
-        flex: 1;
-        padding-left: 15px;
-        padding-right: 15px;
-        align-self: center;
-          
-        & li {
-            list-style: none;
-            
-            & .shape-circle {
-                display: inline-block;
-                vertical-align: middle;
-                width: 32px;
-                height: 32px;
-                border-radius: 50%;
-            }
-
-            & p {
-                display: inline-block;
-                margin-left: 1em;
-                margin-top: 0.5em;
-                margin-bottom: 0.5em;
-
+        & > .-svg {
+            & > .-segment {
+                // maybe animate the segements changing
             }
         }
     }
 }
-
-
-.piechart_color_1 {stroke: @COL_A;}
-.piechart_color_2 {stroke: @COL_B;}
-.piechart_color_3 {stroke: @COL_C;}
-.piechart_color_4 {stroke: @COL_AB;}
-.piechart_color_5 {stroke: @COL_BC;}
-.piechart_color_6 {stroke: @COL_CA;}
-
-.legend_color_1 {background-color: @COL_A;}
-.legend_color_2 {background-color: @COL_B;}
-.legend_color_3 {background-color: @COL_C;}
-.legend_color_4 {background-color: @COL_AB;}
-.legend_color_5 {background-color: @COL_BC;}
-.legend_color_6 {background-color: @COL_CA;}

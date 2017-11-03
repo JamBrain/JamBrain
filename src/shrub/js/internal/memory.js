@@ -72,7 +72,7 @@ export function Store( key, value, ttl = null ) {
 export function Fetch( key, ttl = null ) {
 	var timestamp = _FetchTTL(key);
 
-	// Check if it's expired	
+	// Check if it's expired
 	if ( timestamp ) {
 		if ( Date.now() > timestamp ) {
 			_RemoveTTL(key);
