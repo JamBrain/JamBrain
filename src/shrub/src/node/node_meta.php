@@ -8,11 +8,18 @@ function nodeMeta_GetById( $ids ) {
 			return null;
 
 		return db_QueryFetch(
-			"SELECT node, scope, `key`, `value`
+			"SELECT a, b, scope, `key`, `value`
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 			WHERE id=?;",
 			$ids
 		);
+
+//		return db_QueryFetch(
+//			"SELECT node, scope, `key`, `value`
+//			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
+//			WHERE id=?;",
+//			$ids
+//		);
 	}
 	else if ( is_array($ids) ) {
 		// Confirm that all IDs are not zero
@@ -25,10 +32,16 @@ function nodeMeta_GetById( $ids ) {
 		$ids_string = implode(',', $ids);
 
 		return db_QueryFetch(
-			"SELECT node, scope, `key`, `value`
+			"SELECT a, b, scope, `key`, `value`
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 			WHERE id IN ($ids_string);"
 		);
+
+//		return db_QueryFetch(
+//			"SELECT node, scope, `key`, `value`
+//			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
+//			WHERE id IN ($ids_string);"
+//		);
 	}
 
 	return null;
@@ -79,13 +92,20 @@ function nodeMeta_GetByKey( $keys, $values = null, $scope_check = ">=0", $scope_
 	$where_string = implode(' AND ', $WHERE);
 
 	return db_QueryFetch(
-		"SELECT node, scope, `key`, `value`
+		"SELECT a, b, scope, `key`, `value`
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
-		WHERE $where_string AND id IN (
-			SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
-		);",
+		WHERE $where_string;",
 		...$ARGS
 	);
+
+//	return db_QueryFetch(
+//		"SELECT node, scope, `key`, `value`
+//		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
+//		WHERE $where_string AND id IN (
+//			SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
+//		);",
+//		...$ARGS
+//	);
 }
 
 // Please sanitize before calling
