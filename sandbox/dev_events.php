@@ -183,7 +183,7 @@ if($_GET)
 			}
 			
 			nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'can-theme', 1);
-			nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'can-publish', $state < 6 ? 1 : 0); 
+			nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'can-publish', $state < 6 ? 1 : 0);
 			nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'can-grade', $state == 6 ? 1 : 0);
 			nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'event-finished', $state == 7 ? 1 : 0);
 
