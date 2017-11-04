@@ -565,9 +565,9 @@ switch ( $action ) {
 					$new_node = node_Add($parent, $user_id, $type, $subtype, "", null, "", "");
 					if ( $new_node ) {
 						// Allow posts under the game
-						nodeMeta_AddByNode($new_node, SH_SCOPE_SHARED, 'can-create', 'post');
+						nodeMeta_Add($new_node, 0, SH_SCOPE_SHARED, 'can-create', 'post');
 						// Add yourself as an author of the game
-						nodeLink_AddbyNode($new_node, $user_id, SH_SCOPE_PUBLIC, 'author');
+						nodeLink_Add($new_node, 0, $user_id, SH_SCOPE_PUBLIC, 'author');
 					}
 					else {
 						json_EmitFatalError_Server(null, $RESPONSE);
@@ -1089,9 +1089,9 @@ switch ( $action ) {
 								json_EmitFatalError_BadRequest("Internal error while applying '$key' metadata in '".$node['type']."'", $RESPONSE);
 							
 							if ( $action == 'add' )
-								$changed = nodeMeta_AddByNode($node_id, $scope, $key, $v);
+								$changed = nodeMeta_Add($node_id, 0, $scope, $key, $v);
 							else if ( $action == 'remove' )
-								$changed = nodeMeta_RemoveByNode($node_id, $scope, $key, $v);
+								$changed = nodeMeta_Remove($node_id, 0, $scope, $key, $v);
 							
 							if ( $changed )
 								$RESPONSE['changed'][$key] = $v;

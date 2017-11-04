@@ -223,7 +223,7 @@ function notification_GetLastReadNotification( $node ) {
 }
 
 function notification_SetLastReadNotification( $node, $notification ) {
-	return nodeMeta_AddByNode($node, SH_SCOPE_SERVER, 'last_read_notification', $notification);
+	return nodeMeta_AddOrphan($node, 0, SH_SCOPE_SERVER, 'last_read_notification', $notification);
 }
 
 /// @retval List of author IDs for any at-mentions in the text (or new at-mentions in the edited text.)

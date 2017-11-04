@@ -101,16 +101,16 @@ if($_POST)
 			print_r($newevent);	    
 			
 			// Add metadata
-			nodeMeta_AddByNode($newevent, SH_SCOPE_PUBLIC, 'can-create', 'item/game');
+			nodeMeta_Add($newevent, 0, SH_SCOPE_PUBLIC, 'can-create', 'item/game');
 
-			nodeMeta_AddByNode($newevent, SH_SCOPE_PUBLIC, 'event-start', $cmdstart);
-			nodeMeta_AddByNode($newevent, SH_SCOPE_PUBLIC, 'event-end', $cmdend);
+			nodeMeta_Add($newevent, 0, SH_SCOPE_PUBLIC, 'event-start', $cmdstart);
+			nodeMeta_Add($newevent, 0, SH_SCOPE_PUBLIC, 'event-end', $cmdend);
 
-			nodeMeta_AddByNode($newevent, SH_SCOPE_PUBLIC, 'can-theme', $cmdcantheme);
-			nodeMeta_AddByNode($newevent, SH_SCOPE_PUBLIC, 'theme-mode', $cmdthememode);
+			nodeMeta_Add($newevent, 0, SH_SCOPE_PUBLIC, 'can-theme', $cmdcantheme);
+			nodeMeta_Add($newevent, 0, SH_SCOPE_PUBLIC, 'theme-mode', $cmdthememode);
 			
 			// Make featured
-			nodeMeta_AddByNode(1, SH_SCOPE_PUBLIC, 'featured', "$newevent");
+			nodeMeta_Add(1, 0, SH_SCOPE_PUBLIC, 'featured', "$newevent");
 			
 			// Reload event list
 			loadEvents();
@@ -133,60 +133,59 @@ if($_GET)
 			switch($state)
 			{
 				case 1: // Theme Suggestion
-					nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-mode', 1);
+					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-mode', 1);
 					break;
 				case 2: // Theme Slaughter
-					nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-mode', 2);
+					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-mode', 2);
 					break;
 				case 3: // Theme Voting
 				case 4: // Theme Final Voting
-					nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-mode', 4);
+					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-mode', 4);
 					break;
 				case 5: // Compo Running
-					nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-mode', 5);
+					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-mode', 5);
 					break;
 				case 6: // Voting
-					nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-mode', 6);
+					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-mode', 6);
 					break;
 				case 7: // Closed
-					nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-mode', 8);					
+					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-mode', 8);
 					break;
-			
 			}
 			
 			if($state<3)
 			{
-				nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-1', 0);
-				nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-2', 0);
-				nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-3', 0);
-				nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-4', 0);
+				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-1', 0);
+				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-2', 0);
+				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-3', 0);
+				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-4', 0);
 			} 
 			else if($state == 3)
 			{
-				nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-1', 1);
-				nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-2', 1);
-				nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-3', 1);
-				nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-4', 0);
+				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-1', 1);
+				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-2', 1);
+				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-3', 1);
+				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-4', 0);
 			}
 			else if($state == 4)
 			{
-				nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-1', 2);
-				nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-2', 2);
-				nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-3', 2);
-				nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-4', 1);
+				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-1', 2);
+				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-2', 2);
+				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-3', 2);
+				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-4', 1);
 			}
 			else
 			{
-				nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-1', 2);
-				nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-2', 2);
-				nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-3', 2);
-				nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'theme-page-mode-4', 2);
+				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-1', 2);
+				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-2', 2);
+				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-3', 2);
+				nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-4', 2);
 			}
 			
-			nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'can-theme', 1);
-			nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'can-publish', $state < 6 ? 1 : 0); 
-			nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'can-grade', $state == 6 ? 1 : 0);
-			nodeMeta_AddByNode($event_nodeid, SH_SCOPE_PUBLIC, 'event-finished', $state == 7 ? 1 : 0);
+			nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'can-theme', 1);
+			nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'can-publish', $state < 6 ? 1 : 0); 
+			nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'can-grade', $state == 6 ? 1 : 0);
+			nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'event-finished', $state == 7 ? 1 : 0);
 
 
 			// Since this is a website, invalidating the node cache should work for the API's cache.

@@ -626,7 +626,7 @@ function AddMissingTags()
 
 	function SetWarning($id, $warning)
 	{
-		nodeMeta_AddByNode($id, SH_SCOPE_PUBLIC, 'tag-warning', $warning);
+		nodeMeta_Add($id, 0, SH_SCOPE_PUBLIC, 'tag-warning', $warning);
 	}
 	Function AddNewTag($userid, $category, $name, $warning = null)
 	{
