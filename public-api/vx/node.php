@@ -567,7 +567,7 @@ switch ( $action ) {
 						// Allow posts under the game
 						nodeMeta_Add($new_node, 0, SH_SCOPE_SHARED, 'can-create', 'post');
 						// Add yourself as an author of the game
-						nodeLink_Add($new_node, 0, $user_id, SH_SCOPE_PUBLIC, 'author');
+						nodeMeta_Add($new_node, $user_id, SH_SCOPE_PUBLIC, 'author');
 					}
 					else {
 						json_EmitFatalError_Server(null, $RESPONSE);
@@ -959,7 +959,7 @@ switch ( $action ) {
 							if ( in_array($node['type'], THINGS_I_CAN_STAR) ) {
 								// TODO: Check if this exact value isn't the newest
 
-								$RESPONSE['id'] = nodeLink_AddByNode($user_id, $node_id, SH_SCOPE_SHARED, 'star');
+								$RESPONSE['id'] = nodeMeta_Add($user_id, $node_id, SH_SCOPE_SHARED, 'star');
 								if ( $RESPONSE['id'] ) {
 									nodeCache_InvalidateById($node_id);
 								}
@@ -993,7 +993,7 @@ switch ( $action ) {
 							if ( in_array($node['type'], THINGS_I_CAN_STAR) ) {
 								// TODO: Check if this exact value isn't the newest
 								
-								$RESPONSE['id'] = nodeLink_RemoveByNode($user_id, $node_id, SH_SCOPE_SHARED, 'star');
+								$RESPONSE['id'] = nodeMeta_Remove($user_id, $node_id, SH_SCOPE_SHARED, 'star');
 								if ( $RESPONSE['id'] ) {
 									nodeCache_InvalidateById($node_id);
 								}
@@ -1172,9 +1172,9 @@ switch ( $action ) {
 								json_EmitFatalError_BadRequest("Internal error in applying requested '$key' link between '".$node_a['type']."' and '".$node_b['type']."'", $RESPONSE);
 							
 							if ( $action == 'add' )
-								$changed = nodeLink_AddByNode($node_a_id, $node_b_id, $scope, $key, $v);
+								$changed = nodeMeta_Add($node_a_id, $node_b_id, $scope, $key, $v);
 							else if ( $action == 'remove' )
-								$changed = nodeLink_RemoveByNode($node_a_id, $node_b_id, $scope, $key, $v);
+								$changed = nodeMeta_Remove($node_a_id, $node_b_id, $scope, $key, $v);
 							
 							if ( $changed )
 								$RESPONSE['changed'][$key] = $v;

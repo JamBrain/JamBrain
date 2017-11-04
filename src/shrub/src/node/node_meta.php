@@ -9,7 +9,7 @@ function nodeMeta_GetById( $ids ) {
 
 		return db_QueryFetch(
 			"SELECT node, scope, `key`, `value`
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." 
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 			WHERE id=?;",
 			$ids
 		);
@@ -26,7 +26,7 @@ function nodeMeta_GetById( $ids ) {
 
 		return db_QueryFetch(
 			"SELECT node, scope, `key`, `value`
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." 
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 			WHERE id IN ($ids_string);"
 		);
 	}
@@ -63,7 +63,7 @@ function nodeMeta_GetByKey( $keys, $values = null, $scope_check = ">=0", $scope_
 		// Unknown key type, bail
 		return null;
 	}
-			
+
 	// Values
 	if ( is_integer($values) ) {
 		$values = strval($values);
@@ -75,7 +75,7 @@ function nodeMeta_GetByKey( $keys, $values = null, $scope_check = ">=0", $scope_
 	else if ( is_array($values) ) {
 		$WHERE[] = '`value` IN ("'.implode('","', $values).'")';
 	}
-	
+
 	$where_string = implode(' AND ', $WHERE);
 
 	return db_QueryFetch(
@@ -116,7 +116,7 @@ function nodeMeta_GetByKeyNode( $keys, $nodes, $scope_check = ">=0", $scope_chec
 		// Unknown key type, bail
 		return null;
 	}
-			
+
 	// Nodes
 	if ( is_integer($nodes) ) {
 		$WHERE[] = "node=?";
@@ -145,7 +145,7 @@ function nodeMeta_GetByNode( $nodes, $scope_check = ">=0" ) {
 	$multi = is_array($nodes);
 	if ( !$multi )
 		$nodes = [$nodes];
-	
+
 	if ( is_array($nodes) ) {
 		// Confirm that all Nodes are not zero
 		foreach( $nodes as $node ) {
@@ -155,7 +155,7 @@ function nodeMeta_GetByNode( $nodes, $scope_check = ">=0" ) {
 
 		// Build IN string
 		$node_string = implode(',', $nodes);
-		
+
 		if ( empty($scope_check) ) {
 			$scope_check_string = "";
 		}
@@ -165,14 +165,14 @@ function nodeMeta_GetByNode( $nodes, $scope_check = ">=0" ) {
 
 //		// Original Query
 //		SELECT node, scope, `key`, `value`
-//		FROM sh_node_meta 
+//		FROM sh_node_meta
 //		WHERE scope>=0 AND node IN (11,12) AND id IN (
 //			SELECT MAX(id) FROM sh_node_meta GROUP BY node, `key`
 //		);
 
-//		// Potential faster query (uses where)	
+//		// Potential faster query (uses where)
 //		SELECT node, scope, `key`, `value`
-//		FROM sh_node_meta 
+//		FROM sh_node_meta
 //		WHERE scope>=0 AND node IN (11,12) AND id IN (
 //			SELECT MAX(id) FROM sh_node_meta WHERE scope>=0 AND node IN (11,12) GROUP BY node, `key`
 //		);
@@ -201,22 +201,22 @@ function nodeMeta_GetByNode( $nodes, $scope_check = ">=0" ) {
 
 
 		// http://stackoverflow.com/questions/1299556/sql-group-by-max
-		
+
 		// NOTE: This query may need some work. The subquery may be doing a full table scan
 		$ret = db_QueryFetch(
 			"SELECT node, scope, `key`, `value`
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." 
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 			WHERE $scope_check_string node IN ($node_string) AND id IN (
 				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
 			);"
 		);
-		
+
 		if ( $multi )
 			return $ret;
 		else
 			return $ret ? $ret[0] : null;
 	}
-	
+
 	return null;
 }
 
@@ -225,7 +225,7 @@ function nodeMeta_ParseByNode( $node_ids ) {
 	$multi = is_array($node_ids);
 	if ( !$multi )
 		$node_ids = [$node_ids];
-	
+
 	$metas = nodeMeta_GetByNode($node_ids);
 
 	$ret = [];
@@ -241,16 +241,16 @@ function nodeMeta_ParseByNode( $node_ids ) {
 				if ( isset($raw_meta[$meta['scope']]) && !is_array($raw_meta[$meta['scope']]) ) {
 					$raw_meta[$meta['scope']] = [];
 				}
-				
+
 				// Store
 				$raw_meta[$meta['scope']][$meta['key']] = $meta['value'];
 			}
 		}
 //		arsort($raw_meta);
-		
+
 		$ret[$node_id] = $raw_meta;
 	}
-	
+
 	if ($multi)
 		return $ret;
 	else
@@ -258,35 +258,34 @@ function nodeMeta_ParseByNode( $node_ids ) {
 }
 
 
-/*
-function nodeMeta_AddByNode( $node, $scope, $key, $value ) {
-	return db_QueryInsert(
-		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." (
-			node,
-			scope,
-			`key`,
-			`value`,
-			timestamp
-		)
-		VALUES ( 
-			?,
-			?,			
-			?,
-			?,
-			NOW()
-		);",
-		$node,
-		$scope,
-		$key,
-		$value
-	);
-}
+//function nodeMeta_AddByNode( $node, $scope, $key, $value ) {
+//	return db_QueryInsert(
+//		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." (
+//			node,
+//			scope,
+//			`key`,
+//			`value`,
+//			timestamp
+//		)
+//		VALUES (
+//			?,
+//			?,
+//			?,
+//			?,
+//			NOW()
+//		);",
+//		$node,
+//		$scope,
+//		$key,
+//		$value
+//	);
+//}
+//
+//// NOTE: Doesn't actually remove, but adds an "ignore-me" entry
+//function nodeMeta_RemoveByNode( $node, $scope, $key, $value ) {
+//	return nodeMeta_AddByNode($node, $scope^-1, $key, $value);
+//}
 
-// NOTE: Doesn't actually remove, but adds an "ignore-me" entry
-function nodeMeta_RemoveByNode( $node, $scope, $key, $value ) {
-	return nodeMeta_AddByNode($node, $scope^-1, $key, $value);
-}
-*/
 
 function _nodeMetaVersion_Add( $a, $b, $scope, $key, $value ) {
 	return db_QueryInsert(
