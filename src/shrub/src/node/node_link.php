@@ -1,5 +1,5 @@
 <?php
-
+/*
 // This isn't what you want
 function nodeLink_GetById( $ids ) {
 	if ( is_integer($ids) ) {
@@ -408,3 +408,4 @@ function nodeLink_CountByABKeyScope( $parent = null, $a = null, $b = null, $key 
 //		...$ARGS
 //	) |0;	// Clever: If nothing is returned, result is zero
 }
+*/

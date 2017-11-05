@@ -139,29 +139,36 @@ function nodeMeta_GetByKeyNode( $keys, $nodes, $scope_check = ">=0", $scope_chec
 
 	// Nodes
 	if ( is_integer($nodes) ) {
-		$WHERE[] = "node=?";
+		$WHERE[] = "a=?";
 		$ARGS[] = $nodes;
 	}
 	else if ( is_array($nodes) ) {
-		$WHERE[] = 'node IN ('.implode(',', $nodes).')';
+		$WHERE[] = 'a IN ('.implode(',', $nodes).')';
 	}
 
 	$where_string = implode(' AND ', $WHERE);
 
 	return db_QueryFetch(
-		"SELECT node, scope, `key`, `value`
+		"SELECT a, b, scope, `key`, `value`
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
-		WHERE $where_string AND id IN (
-			SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
-		);",
+		WHERE $where_string;",
 		...$ARGS
 	);
+
+//	return db_QueryFetch(
+//		"SELECT node, scope, `key`, `value`
+//		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
+//		WHERE $where_string AND id IN (
+//			SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
+//		);",
+//		...$ARGS
+//	);
 }
 
 
 /// NOTE: By default, this ignores any node with a scope less than 0 (that is how deleting works)
 /// Pass $scope_check as null to get everything, or "=64" to get specific
-function nodeMeta_GetByNode( $nodes, $scope_check = ">=0" ) {
+function nodeMeta_GetByNode( $nodes, $scope_check = ">=0", $all_null_values = false ) {
 	$multi = is_array($nodes);
 	if ( !$multi )
 		$nodes = [$nodes];
@@ -182,6 +189,23 @@ function nodeMeta_GetByNode( $nodes, $scope_check = ">=0" ) {
 		else {
 			$scope_check_string = "scope".$scope_check." AND";
 		}
+
+		// Allows you to get all null's for values, for a slight performance boost
+		if ( $all_null_values ) {
+			$ret = db_QueryFetch(
+				"SELECT a, b, scope, `key`, null AS `value`
+				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
+				WHERE $scope_check_string (a IN ($node_string) OR b IN ($node_string));"
+			);
+		}
+		else {
+			$ret = db_QueryFetch(
+				"SELECT a, b, scope, `key`, `value`
+				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
+				WHERE $scope_check_string (a IN ($node_string) OR b IN ($node_string));"
+			);
+		}
+
 
 //		// Original Query
 //		SELECT node, scope, `key`, `value`
@@ -219,17 +243,16 @@ function nodeMeta_GetByNode( $nodes, $scope_check = ">=0" ) {
 //		JOIN sh_node_meta _in
 //		ON _in.id = _out.max_id
 
-
 		// http://stackoverflow.com/questions/1299556/sql-group-by-max
 
-		// NOTE: This query may need some work. The subquery may be doing a full table scan
-		$ret = db_QueryFetch(
-			"SELECT node, scope, `key`, `value`
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
-			WHERE $scope_check_string node IN ($node_string) AND id IN (
-				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
-			);"
-		);
+//		// NOTE: This query may need some work. The subquery may be doing a full table scan
+//		$ret = db_QueryFetch(
+//			"SELECT node, scope, `key`, `value`
+//			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
+//			WHERE $scope_check_string node IN ($node_string) AND id IN (
+//				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
+//			);"
+//		);
 
 		if ( $multi )
 			return $ret;
@@ -241,34 +264,94 @@ function nodeMeta_GetByNode( $nodes, $scope_check = ">=0" ) {
 }
 
 
-function nodeMeta_ParseByNode( $node_ids ) {
+function nodeMeta_ParseByNode( $node_ids /*, $get_values = true*/ ) {
 	$multi = is_array($node_ids);
 	if ( !$multi )
 		$node_ids = [$node_ids];
 
 	$metas = nodeMeta_GetByNode($node_ids);
+//	if ( $get_values )
+//		$links = nodeLink_GetByNode($node_ids);
+//	else
+//		$links = nodeLink_GetNoValueByNode($node_ids);
 
 	$ret = [];
 
 	// Populate Metadata (NOTE: This is a full-scan per node requested. Could be quicker)
 	foreach ( $node_ids as $node_id ) {
-		$raw_meta = [];
+//		$raw_meta = [];
+		$raw_a = [];
+		$raw_b = [];
 
 		foreach ( $metas as $meta ) {
-			// If this item in the meta list belongs to us
-			if ( $node_id === $meta['node'] ) {
-				// Create Scope array (if missing)
-				if ( isset($raw_meta[$meta['scope']]) && !is_array($raw_meta[$meta['scope']]) ) {
-					$raw_meta[$meta['scope']] = [];
-				}
+			// If 'b' is zero, it's regular solo metedata
+			if ( $meta['b'] != 0 ) {
+				// If this item in the meta list belongs to us
+				if ( $node_id === $meta['a'] ) {
+					// Create Scope array (if missing)
+					if ( isset($raw_a[$meta['scope']]) && !is_array($raw_a[$meta['scope']]) ) {
+						$raw_a[$meta['scope']] = [];
+					}
 
-				// Store
-				$raw_meta[$meta['scope']][$meta['key']] = $meta['value'];
+					// Store
+					$raw_a[$meta['scope']][$meta['key']] = $meta['value'];
+				}
+			}
+			// If 'b' is non-zero, it's paired metadata
+			else {
+				// Question: Should we support circular links (if so, remove "else" from "else if")?
+				if ( $node_id === $meta['a'] ) {
+					if ( isset($raw_a[$meta['scope']]) && !is_array($raw_a[$meta['scope']]) ) {
+						$raw_a[$meta['scope']] = [];
+					}
+
+					if ( $meta['value'] === null ) {
+						if ( isset($raw_a[$meta['scope']][$meta['key']]) ) {
+							$raw_a[$meta['scope']][$meta['key']][] = $meta['b'];
+						}
+						else {
+							$raw_a[$meta['scope']][$meta['key']] = [$meta['b']];
+						}
+					}
+					else {
+						if ( isset($raw_a[$meta['scope']][$meta['key']]) ) {
+							$raw_a[$meta['scope']][$meta['key']][$meta['b']] = $meta['value'];
+						}
+						else {
+							$raw_a[$meta['scope']][$meta['key']] = [$meta['b'] => $meta['value']];
+						}
+					}
+				}
+				else if ( $node_id === $meta['b'] ) {
+					if ( isset($raw_b[$meta['scope']]) && !is_array($raw_b[$meta['scope']]) ) {
+						$raw_b[$meta['scope']] = [];
+					}
+
+					if ( $meta['value'] === null ) {
+						if ( isset($raw_b[$meta['scope']][$meta['key']]) ) {
+							$raw_b[$meta['scope']][$meta['key']][] = $meta['a'];
+						}
+						else {
+							$raw_b[$meta['scope']][$meta['key']] = [$meta['a']];
+						}
+					}
+					else {
+						if ( isset($raw_b[$meta['scope']][$meta['key']]) ) {
+							$raw_b[$meta['scope']][$meta['key']][$meta['a']] = $meta['value'];
+						}
+						else {
+							$raw_b[$meta['scope']][$meta['key']] = [$meta['a'] => $meta['value']];
+						}
+					}
+				}
 			}
 		}
 //		arsort($raw_meta);
+//		asort($raw_a);
+//		asort($raw_b);
 
-		$ret[$node_id] = $raw_meta;
+//		$ret[$node_id] = $raw_meta;
+		$ret[$node_id] = [$raw_a, $raw_b];
 	}
 
 	if ($multi)
