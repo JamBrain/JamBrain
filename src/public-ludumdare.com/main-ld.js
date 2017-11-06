@@ -522,7 +522,6 @@ class Main extends Component {
 			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} featured={featured} />;
 		}
 		else {
-			console.log('[Error]');
 			ShowContent = (
 				<ViewContent>
 					{error ? error : <NavSpinner />}
