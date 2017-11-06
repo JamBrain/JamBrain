@@ -73,6 +73,8 @@ function GenerateRandomPostText($maxParagraphs = 8)
 			{
 				$markdown = "";
 				if(random_int(1,6) == 1) {	$markdown = ["*","**","`","~~"][random_int(0,3)]; }
+				// Occasionally mention another user
+				if(random_int(1,50) == 1) { $output .= "@" . RandomUserName() . " "; }
 				$output .= $markdown.GenerateRandomPhrase(3,17).$markdown . ". ";
 			}
 			$output .= "\n";
@@ -86,6 +88,15 @@ function GenerateRandomPostText($maxParagraphs = 8)
 	{
 		$output .= "\n";
 		$output .= YoutubeRandomVideo();
+	}
+
+	// Add link to the post
+	global $uselinks;
+	global $linkchance;
+	if ($uselinks && random_int(0, $linkchance-1) == 0)
+	{
+		$output .= "\n";
+		$output .= RandomLink();
 	}
 
 	$output .= "\n\n";
@@ -319,12 +330,11 @@ function MarkovRandomPhrase($minwords = 3, $maxwords = 25)
 }
 
 /// Generate 'Random' Youtube Video
-
 function YoutubeRandomVideo()
 {
 	global $useyoutubevideos;
 
-	if ($useyoutubevideos)
+	if ( $useyoutubevideos )
 	{
 
 		$url = "https://www.youtube.com/watch?v=";
@@ -355,6 +365,60 @@ function YoutubeRandomVideo()
 
 
 		return $url;
+	}
+
+	return "";
+}
+
+/// Generate 'Random' Link
+function RandomLink()
+{
+	global $uselinks;
+
+	if ( $uselinks )
+	{
+
+		// Using a fixed pool of links
+		$links = array(
+			"youtube.com",
+			"youtube.com/feed/subscriptions",
+			"youtube.com/user/JupCraftGaming",
+			"github.com",
+			"github.com/ludumdare",
+			"github.com/ludumdare/ludumdare",
+			"twitch.tv",
+			"twitch.tv/quill18",
+			"reddit.com",
+			"reddit.com/r/ludumdare",
+			"twitter.com",
+			"twitter.com/ludumdare",
+			"twitter.com/ludumdarefeed/status/870705616175603712",
+			"soundcloud.com",
+			"soundcloud.com/ludumdare",
+			"soundcloud.com/ludumdare/amen"
+		);
+
+		// chose which video to display and build it's url
+		$index = random_int(0,count($links)-1);
+		$url = $links[$index];
+
+		Verbose("Linking to " . $url);
+
+		$type = random_int(0,3);		
+
+		if ( $type == 0 ) {
+			return "[](www." . $url . ")";			
+		}
+		elseif ( $type == 1 ) {
+			return "[](https://www." . $url . ")";			
+		}
+		elseif ( $type == 2 ) {
+			return "[Click Me!](https://www." . $url . ")";						
+		}
+		else {
+			return "https://www." . $url;									
+		}
+
 	}
 
 	return "";

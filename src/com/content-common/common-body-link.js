@@ -1,5 +1,5 @@
-import { h, Component } 				from 'preact/preact';
-import { shallowDiff }	 				from 'shallow-compare/index';
+import {h, Component} 				from 'preact/preact';
+import {shallowDiff}	 				from 'shallow-compare/index';
 import Sanitize							from '../../internal/sanitize/sanitize';
 
 import NavLink							from 'com/nav-link/link';
@@ -39,7 +39,7 @@ export default class ContentCommonBodyField extends Component {
 	}
 
 	render( props, state ) {
-		var Class = ["content-common-body","-link"];
+		var Class = ["content-common-body", "-link"];
 
 		var Limit = 64;
 		var NamePlaceholder = props.namePlaceholder ? props.namePlaceholder : 'Name';
@@ -65,7 +65,7 @@ export default class ContentCommonBodyField extends Component {
 				</div>
 
 //					<InputText class="-name"
-//						value={props.name} 
+//						value={props.name}
 //						onmodify={props.onModifyName}
 //						placeholder={NamePlaceholder}
 //						max={Limit}

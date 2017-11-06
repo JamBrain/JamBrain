@@ -671,6 +671,12 @@ switch ( $action ) {
 					);
 
 					nodeCache_InvalidateById($node_id);
+					
+					if ( $node['published'] && notification_EnabledForNodeType($node['type']) ) {
+						// Add mention notifications for at-mentions of users that were added in this edit, if this node is published and of a type that supports notifications.
+						$newmentions = notification_GetMentionedUsers($body, $node['body']);
+						notification_AddForEdit($node_id, 0, $user_id, $newmentions);
+					}
 				}
 			}
 			else {
@@ -800,7 +806,8 @@ switch ( $action ) {
 					$RESPONSE['path'] = node_GetPathById($node_id, 1)['path']; // Root node
 					
 					// notify users watching the author of the published node
-					notification_AddForPublishedNode($node_id, $node['author'], $node['type']);
+					$mentions = notification_GetMentionedUsers($node['body']);
+					notification_AddForPublishedNode($node_id, $node['author'], $node['type'], $mentions);
 				}
 			}
 			else {

@@ -18,7 +18,7 @@ function CollectGarbage() {
 		if ( key[0] == '!' ) {
 			var timestamp = _Fetch(key);
 
-			// Check if it's expired	
+			// Check if it's expired
 			if ( timestamp ) {
 				if ( Date.now() > timestamp ) {
 					_Remove('!'+key);
@@ -55,7 +55,7 @@ export function Store( key, value, ttl = null ) {
 export function Fetch( key, ttl = null ) {
 	var timestamp = _Fetch('!'+key);
 
-	// Check if it's expired	
+	// Check if it's expired
 	if ( timestamp ) {
 		if ( Date.now() > timestamp ) {
 			_Remove('!'+key);

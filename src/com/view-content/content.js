@@ -1,4 +1,4 @@
-import { h, Component }					from 'preact/preact';
+import {h, Component}					from 'preact/preact';
 
 import ContentPost						from 'com/content-post/post';
 
@@ -318,11 +318,11 @@ export default class ViewContent extends Component {
 					else if ( ViewType == 'article' ) {
 
 					}
-					else if ( ViewType == 'following'){
+					else if ( ViewType == 'following') {
 						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} featured={featured} />);
 						View.push(<ContentUserFollowing node={node} user={user} path={path} extra={extra} featured={featured} />);
 					}
-					else if ( ViewType == 'followers'){
+					else if ( ViewType == 'followers') {
 						View.push(<ContentNavUser node={node} user={user} path={path} extra={extra} featured={featured} />);
 						View.push(<ContentUserFollowers node={node} user={user} path={path} extra={extra} featured={featured} />);
 					}
@@ -369,7 +369,7 @@ export default class ViewContent extends Component {
 //							</Common>
 //						</div>
 //					);
-//					
+//
 //				}
 //				else {
 //					return (
@@ -381,7 +381,7 @@ export default class ViewContent extends Component {
 //					);
 //				}
 //			}
-			else if ( extra && extra.length && extra[0] == 'games' || extra[0] == 'results' ){
+			else if ( extra && extra.length && extra[0] == 'games' || extra[0] == 'results' ) {
 				let DefaultSubFilter = 'all';
 				let DefaultFilter = 'smart';
 
@@ -440,11 +440,11 @@ export default class ViewContent extends Component {
 						case 'audio':
 						case 'humor':
 						case 'mood':
-							Methods = [EvalFilter2(Filter),'reverse'];
+							Methods = [EvalFilter2(Filter), 'reverse'];
 							break;
 
 						case 'zero':
-							Methods = ['grade','reverse'];
+							Methods = ['grade', 'reverse'];
 							break;
 
 						case 'jam':
@@ -621,7 +621,7 @@ export default class ViewContent extends Component {
 							break;
 
 						case 'zero':
-							Methods = ['grade','reverse'];
+							Methods = ['grade', 'reverse'];
 							break;
 
 						case 'jam':
@@ -688,7 +688,7 @@ export default class ViewContent extends Component {
 			}
 		}
 		else {
-			return <div id="content"><div class='content-base'>Unsupported Node Type: {""+node.type}</div></div>;
+			return <div id="content"><div class="content-base">Unsupported Node Type: {""+node.type}</div></div>;
 		}
 	}
 
@@ -701,4 +701,4 @@ export default class ViewContent extends Component {
 			return <div id="content">{this.props.children}</div>;
 		}
 	}
-};
+}

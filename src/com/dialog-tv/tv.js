@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 				from 'preact/preact';
 import SVGIcon 							from 'com/svg-icon/icon';
 
 import DialogBase 						from 'com/dialog-base/base';
@@ -42,7 +42,7 @@ export default class DialogTV extends Component {
 		var WindowWidth = window.innerWidth;
 		var ViewWidth = Math.floor(WindowWidth - 32); /* ?? */
 
-		return ViewWidth >= (this.defaults.MinWidth + this.defaults.ChatWidth); // 800		
+		return ViewWidth >= (this.defaults.MinWidth + this.defaults.ChatWidth); // 800
 	}
 
 	calcSizes() {
@@ -121,7 +121,7 @@ export default class DialogTV extends Component {
 //
 //		stream.style.width = ChatWidth + "px";
 //		stream.style.height = (Height+BarHeight) + "px";
-//		
+//
 //		if ( ShowChat ) {
 //			chat.style.visibility = "visible";
 //		}
@@ -181,12 +181,12 @@ export default class DialogTV extends Component {
 						<div class="-button"><SVGIcon baseline>{props.following ? 'star-full' : 'star-empty'}</SVGIcon><div>Follow Project</div></div>
 					</div>
 				);
-			};
+			}
 
 			ShowBar = (
 				<div class="-bar">
 					<div class="-right">
-						<div class={["-button",this.canShowChat() ? "" : "-disabled"]} onclick={this.onChatClick}>
+						<div class={["-button", this.canShowChat() ? "" : "-disabled"]} onclick={this.onChatClick}>
 							<SVGIcon baseline>{state.showchat ? 'bubble' : 'bubble-empty'}</SVGIcon>
 							<div>Chat</div>
 						</div>

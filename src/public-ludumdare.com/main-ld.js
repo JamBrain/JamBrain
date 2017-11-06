@@ -1,5 +1,5 @@
-import { h, render, Component, options }			from 'preact/preact';
-import { initDevTools } 							from 'preact-devtools/devtools';
+import {h, render, Component, options}			from 'preact/preact';
+import {initDevTools} 							from 'preact-devtools/devtools';
 import Sanitize							from '../internal/sanitize/sanitize';
 import NavSpinner						from 'com/nav-spinner/spinner';
 
@@ -115,13 +115,13 @@ class Main extends Component {
 	}
 
 	componentDidUpdate( prevProps, prevState ) {
-		if(window.location.href.substr(-3) == "#--") {
+		if (window.location.href.substr(-3) == "#--") {
 			history.replaceState({}, '', window.location.href.replace("#--", ""));
 		}
 
 		this.storeHistory(this.state);
 
-		if(this.state.node != prevState.node) {
+		if (this.state.node != prevState.node) {
 			this.handleAnchors();
 		}
 	}
@@ -129,9 +129,9 @@ class Main extends Component {
 	cleanLocation( location ) {
 		// Clean the URL
 		var clean = {
-			pathname: Sanitize.clean_Path(location.pathname),
-			search: Sanitize.clean_Query(location.search),
-			hash: Sanitize.clean_Hash(location.hash),
+			"pathname": Sanitize.clean_Path(location.pathname),
+			"search": Sanitize.clean_Query(location.search),
+			"hash": Sanitize.clean_Hash(location.hash),
 		};
 
 		clean.path = clean.pathname + clean.search + clean.hash;
@@ -176,7 +176,7 @@ class Main extends Component {
 						return <DialogTV {...props} />;
 					default:
 						return <DialogUnfinished {...props} />;
-				};
+				}
 			}
 		}
 		return null;
@@ -184,7 +184,7 @@ class Main extends Component {
 
 	// Called by the login dialog
 	onLogin() {
-		this.setState({ 'user': null });
+		this.setState({'user': null});
 		this.fetchData();
 	}
 
@@ -212,7 +212,7 @@ class Main extends Component {
 			}
 		})
 		.catch(err => {
-			this.setState({ 'error': err });
+			this.setState({'error': err});
 		});
 	}
 
@@ -224,7 +224,7 @@ class Main extends Component {
 
 		return $Node.Get(node_id)
 			.then(r => {
-				// If 
+				// If
 				if ( r && Array.isArray(r.node) && r.node.length ) {
 					Node = r.node[0];
 
@@ -299,7 +299,7 @@ class Main extends Component {
 				return r;
 			})
 			.catch(err => {
-				this.setState({ 'error': err });
+				this.setState({'error': err});
 			});
 	}
 
@@ -337,7 +337,7 @@ class Main extends Component {
 			return null;
 		})
 		.catch(err => {
-			this.setState({ 'error': err });
+			this.setState({'error': err});
 		});
 	}
 
@@ -437,16 +437,16 @@ class Main extends Component {
 	}
 
 	handleAnchors() {
-		if( window.location.hash ) {
+		if ( window.location.hash ) {
 			var hash = Sanitize.parseHash(window.location.hash);
 
-			if( hash.path === "" && hash.extra.length > 0 ) {
+			if ( hash.path === "" && hash.extra.length > 0 ) {
 				var heading = document.getElementById(hash.extra[0]);
-				if( heading ) {
+				if ( heading ) {
 					heading.scrollIntoView();
 
 					var viewBar = document.getElementsByClassName("view-bar")[0];
-					if( viewBar ) {
+					if ( viewBar ) {
 						window.scrollBy(0, -viewBar.clientHeight);
 					}
 				}
@@ -456,7 +456,7 @@ class Main extends Component {
 
 	// When we navigate by clicking forward
 	onNavChange( e ) {
-		console.log('navchange:',e.detail.old.href,'=>',e.detail.location.href);
+		console.log('navchange:', e.detail.old.href, '=>', e.detail.location.href);
 
 		if ( e.detail.location.href !== e.detail.old.href ) {
 			var slugs = this.cleanLocation(e.detail.location).slugs;
@@ -473,8 +473,9 @@ class Main extends Component {
 				});
 
 				if (slugs[0] == 'home') {
-					this.setState({home: slugs.slice(1)});
-				} else {
+					this.setState({"home": slugs.slice(1)});
+				}
+				else {
 					this.fetchNode();
 				}
 			}
@@ -505,7 +506,7 @@ class Main extends Component {
 		const slugs = this.state.slugs;
 
 		if (Array.isArray(slugs) && slugs[0] == 'home') {
-			this.setState({home: slugs.slice(1)});
+			this.setState({"home": slugs.slice(1)});
 			return true;
 		}
 		return false;
@@ -519,7 +520,8 @@ class Main extends Component {
 		}
 		else if ( node.id ) {
 			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} featured={featured} />;
-		} else {
+		}
+		else {
 			console.log('[Error]');
 			ShowContent = (
 				<ViewContent>
@@ -543,6 +545,6 @@ class Main extends Component {
 			</div>
 		);
 	}
-};
+}
 
 render(<Main />, document.body);

@@ -88,55 +88,8 @@ $stages = array(
 );
 
 
-$event_admin_user = null;
-$event_users = array(); // Only use for reference (e.g. getting usernames)
-$event_user_lookup = array(); // Only use this as a source for user objects, and get them by reference.
-
 $event_nodeid = null;
 $event_name = null;
-
-
-function LoadPreviousUsers()
-{
-	global $event_admin_user, $event_users;
-	$f = OpenPreviousEventFile();
-	$users=[];
-	if($f === false) { return false; }
-	
-	while(!feof($f))
-	{
-		$line = fgets($f);
-		$start = substr(trim($line),0,1);
-		if($start === false || $start == "#") { continue; }
-		$parts = explode(":",$line,2);
-		if(count($parts) != 2) { continue; }
-		$u = trim($parts[0]);
-		$p = trim($parts[1]);
-		$users[] = User_Load($u,$p);
-	}
-	
-	global $usercount;
-	if(count($users) != ($usercount+1)) { return false; } // Future: be smarter. Could maybe just generate / discard some users to fix this mismatch.
-	
-	$event_admin_user = array_shift($users);
-	$event_users = $users;
-	return true;
-}
-
-function GenerateNewUsers()
-{
-	global $event_admin_user, $event_users;
-	
-	$event_admin_user = User_Create();
-	
-	// Now create the normal users
-	global $usercount;
-	for($i=0;$i < $usercount; $i++)
-	{
-		$event_users[] = User_Create();
-	}
-}
-
 
 
 // Prepare the event. Create an admin superuser. Create all the compo users. Create the new LudumDare event. Publish the event node.
@@ -144,34 +97,19 @@ function GenerateNewUsers()
 // We'll also use some data from the database to make the naming a bit more friendly.
 function SetupEvent()
 {
-	global $event_admin_user, $event_users, $event_user_lookup, $event_name;
-	global $useprevioususers;
-	
-	$usersloaded = false;
-	if($useprevioususers)
-	{
-		$usersloaded = LoadPreviousUsers();
-	}
-	if($usersloaded)
-	{
-		Verbose("Loaded users from previous event.");
-		
-		// Todo: User shift (replace a few users with new users)
-		
-	}
-	else
-	{
-		Verbose("Generating new users for this event.");
-		GenerateNewUsers();
-	}
+	global $event_admin_user, $event_users, $event_user_lookup, $event_name, $event_userids;
+	global $usercount, $userchurn;
 
-	$userids = [];
-	foreach($event_users as $user)
+	// Load or create users
+	if(!Create_Users($usercount,$userchurn))
 	{
-		$event_user_lookup[$user["username"]] = $user;
-		$userids[] = $user["id"];
+		Message("Failing due to errors creating / logging in users.");
+		exit;
 	}
 	
+	AddMissingTags();
+	
+
 	// Make sure all but a few users have some of the other users starred.
 	//function ApiNodeStarAdd(&$user, $nodeid) // GET node/star/add/:node_id
 	//function ApiNodeStarRemove(&$user, $nodeid) // GET node/star/remove/:node_id
@@ -191,7 +129,7 @@ function SetupEvent()
 	
 	shuffle($nostars);
 	
-	$nostarcount = intval(count($userids) / 2);
+	$nostarcount = intval(count($event_userids) / 4);
 	while(count($nostars) > $nostarcount)
 	{
 		$node = array_shift($nostars);
@@ -199,8 +137,8 @@ function SetupEvent()
 		$avoid = [$node["id"]];
 		for($i = 0; $i < 3; $i++)
 		{
-			$index = random_int(1,count($userids))-1;
-			$otheruser = $userids[$index];
+			$index = random_int(1,count($event_userids))-1;
+			$otheruser = $event_userids[$index];
 			if(in_array($otheruser, $avoid)) { continue; }
 			
 			$username = $node["name"];
@@ -271,20 +209,7 @@ function SetupEvent()
 	nodeMeta_AddByNode(1, SH_SCOPE_PUBLIC, 'featured', "$event_nodeid");
 	
 	
-	// Save information about the users into a file
-	$f = OpenEventFile();
-	fwrite($f, "# For now, just spitting out event data in a semi human readable form.\n");
-	fwrite($f, "# First line is Admin, rest of the lines are normal users.\n");
-	fwrite($f, "# Each line is Username:Password\n");
-	
-	fwrite($f, $event_admin_user["username"] . ":" . $event_admin_user["password"] . "\n");
 
-	foreach($event_users as $u)
-	{
-		fwrite($f, $u["username"] . ":" . $u["password"] . "\n");	
-	}
-
-	fclose($f);
 }
 
 // Set up for each of the phases of the theme selection, in sequence.

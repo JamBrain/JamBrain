@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 				from 'preact/preact';
 //import ShallowCompare	 				from 'shallow-compare/index';
 
 //import NavSpinner						from 'com/nav-spinner/spinner';
@@ -73,7 +73,7 @@ export default class ContentPost extends Component {
 
 	onMinMax( e ) {
 		this.setState({
-			'minimized': !this.state.minimized 
+			'minimized': !this.state.minimized
 		});
 	}
 */
@@ -86,17 +86,19 @@ export default class ContentPost extends Component {
 		var path = props.path;
 		var extra = props.extra;
 
-		// Additional properties		
+		// Additional properties
 		//props.authored = 1;
 
 		if ( node ) {
 			if ( node.subtype === 'news' ) {
 				props.header = "NEWS";
 				props.headerClass = "-col-c";
-			} else if ( node.subtype === 'info' ) {
+			}
+			else if ( node.subtype === 'info' ) {
 				props.header = "INFO";
 				props.headerClass = "-col-nddd";
-			} else if ( node.subtype === 'guide' ) {
+			}
+			else if ( node.subtype === 'guide' ) {
 				props.header = "GUIDE";
 				props.headerClass = "-col-nddd";
 			}
@@ -107,14 +109,14 @@ export default class ContentPost extends Component {
 		return <ContentSimple {...props} />;
 
 
-/*		
+/*
 		// If a Minimized property was included, invert the internal state
 		if (props.minimized) {
 			minimized = !minimized;
 		}
-		
+
 		var EditMode = extra.length ? extra[0] === 'edit' : false;
-		
+
 		if ( node.slug && author.slug ) {
 			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 
@@ -133,7 +135,7 @@ export default class ContentPost extends Component {
 			}
 
 			var post_avatar = this.getAvatar( author );
-			
+
 			var HasHeadline = null;
 			if ( node.subtype === 'news' ) {
 				HasHeadline = <div class='-headline -news'>NEWS</div>;
@@ -141,7 +143,7 @@ export default class ContentPost extends Component {
 			else if ( node.subtype === 'event' ) {
 				HasHeadline = <div class='-headline -event'><SVGIcon>trophy</SVGIcon> EVENT</div>;
 			}
-			
+
 			let RightFooterItems = [];
 			if ( !props['no_love'] )
 				RightFooterItems.push(<ContentFooterButtonLove user={user} node={node} wedge_left_bottom />);

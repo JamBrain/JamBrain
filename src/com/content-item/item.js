@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 				from 'preact/preact';
 
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
@@ -77,7 +77,7 @@ export default class ContentItem extends Component {
 			}
 		})
 		.catch(err => {
-			this.setState({ 'error': err });
+			this.setState({'error': err});
 		});
 	}
 
@@ -200,7 +200,7 @@ export default class ContentItem extends Component {
 					}
 				})
 				.catch(err => {
-					this.setState({ 'error': err });
+					this.setState({'error': err});
 				});
 		}
 	}
@@ -294,7 +294,7 @@ export default class ContentItem extends Component {
 			}
 		}
 
-//		this.setState({});		
+//		this.setState({});
 //		console.log(Data);
 
 		return $NodeMeta.Add(node.id, Data);
@@ -312,7 +312,7 @@ export default class ContentItem extends Component {
 					url={this.state.linkUrls[idx]}
 					urlPlaceholder="http://example.com/file.zip"
 					editing={editing}
-					filter='platform'
+					filter="platform"
 					onModifyName={this.onModifyLinkName.bind(this, idx)}
 					onModifyTag={this.onModifyLinkTag.bind(this, idx)}
 					onModifyUrl={this.onModifyLinkUrl.bind(this, idx)}
@@ -562,12 +562,12 @@ export default class ContentItem extends Component {
 
 					let Stars = [];
 					for ( let idx2 = 0; idx2 < Score; idx2++ ) {
-						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
+						Stars.push(<ButtonBase class="-star" onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
 					}
 					for ( let idx2 = Score; idx2 < 5; idx2++ ) {
-						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
+						Stars.push(<ButtonBase class="-star" onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
 					}
-					Stars.push(<ButtonBase class='-delete' onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
+					Stars.push(<ButtonBase class="-delete" onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
 
 					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> {Stars}</div>);
 				}
@@ -715,7 +715,7 @@ export default class ContentItem extends Component {
 					<div class="-upload">
 						<div class="-path">{node.meta && node.meta.cover ? node.meta.cover : "" }</div>
 						<label>
-							<input type="file" name="asset" style="display: none;" onchange={this.onUpload.bind(this,'cover')} />
+							<input type="file" name="asset" style="display: none;" onchange={this.onUpload.bind(this, 'cover')} />
 							<ButtonBase class="-button"><SVGIcon small baseline gap>upload</SVGIcon>Upload</ButtonBase>
 						</label>
 						{ShowImage}
@@ -799,7 +799,9 @@ export default class ContentItem extends Component {
 		props.class = cN("content-item", props.class);
 
 		// Shim to update the save button from this method. See https://facebook.github.io/react/docs/refs-and-the-dom.html
-		props.ref = c => { this.contentSimple = c; };
+		props.ref = c => {
+ this.contentSimple = c;
+};
 
 		return <ContentSimple {...props} by authors />;
 	}

@@ -2,76 +2,76 @@
 class CCoreData {
 	constructor() {
 		this.nodes = {
-			1: {
-				name:"",
-				slug:'roots',
-				type:"roots",
-				subtype:"",
-				parent:0,
-				author:0,
-				body:"",
+			"1": {
+				"name": "",
+				"slug": 'roots',
+				"type": "roots",
+				"subtype": "",
+				"parent": 0,
+				"author": 0,
+				"body": "",
 			},
-			2: {
-				name:"Users",
-				slug:'u',
-				type:"users",
-				subtype:"user",
-				parent:1,
-				author:0,
-				body:"",
+			"2": {
+				"name": "Users",
+				"slug": 'u',
+				"type": "users",
+				"subtype": "user",
+				"parent": 1,
+				"author": 0,
+				"body": "",
 			},
-			3: {
-				name:'PoV',
-				slug:'pov',
-				type:"user",
-				subtype:"",
-				parent:2,
-				author:0,
-				body:"Confirmed Human",
-				meta: {
-					avatar:'/other/logo/mike/Chicken64.png',
-					twitter:'mikekasprzak',
+			"3": {
+				"name": 'PoV',
+				"slug": 'pov',
+				"type": "user",
+				"subtype": "",
+				"parent": 2,
+				"author": 0,
+				"body": "Confirmed Human",
+				"meta": {
+					"avatar": '/other/logo/mike/Chicken64.png',
+					"twitter": 'mikekasprzak',
 				}
 			},
-			4: {
-				name:'',
-				slug:'mikekasprzak',
-				type:"symlink",
-				subtype:"",
-				parent:2,
-				author:0,
-				body:"",
-				extra:3,		// What we point at //
+			"4": {
+				"name": '',
+				"slug": 'mikekasprzak',
+				"type": "symlink",
+				"subtype": "",
+				"parent": 2,
+				"author": 0,
+				"body": "",
+				"extra": 3,		// What we point at //
 			},
 
-			5: {
-				name:"Ludum Dare",
-				slug:'ludum-dare',
-				type:"event",
-				subtype:"",
-				parent:1,
-				author:3,
-				body:"",
+			"5": {
+				"name": "Ludum Dare",
+				"slug": 'ludum-dare',
+				"type": "event",
+				"subtype": "",
+				"parent": 1,
+				"author": 3,
+				"body": "",
 			},
 
-			6: {
-				name:"Articles",
-				slug:'articles',
-				type:"browse",
-				subtype:"article",
-				parent:1,
-				author:0,
-				body:"",
+			"6": {
+				"name": "Articles",
+				"slug": 'articles',
+				"type": "browse",
+				"subtype": "article",
+				"parent": 1,
+				"author": 0,
+				"body": "",
 			},
 
-			10:{
-				name:"**Alpha Testing**: Week 1",
-				slug:"alpha-testing-week-1",
-				type:"post",
-				subtype:"",
-				parent:5,
-				author:3,
-				body:"Hi everybody! Welcome to the new site!\n\n"+
+			"10": {
+				"name": "**Alpha Testing**: Week 1",
+				"slug": "alpha-testing-week-1",
+				"type": "post",
+				"subtype": "",
+				"parent": 5,
+				"author": 3,
+				"body": "Hi everybody! Welcome to the new site!\n\n"+
 					"Over the next few weeks, we'll be gradually rolling out **core** features of this website. "+
 					"It's going to be a little bumpy. Many things you're expecting wont be available right away (Posting, Commenting, Notifications, Mobile, ... well really, most features are either unfinished or disabled). Have patience! We'll get there.\n\n"+
 					"This week we're starting with just two things:\n\n"+
@@ -92,14 +92,14 @@ class CCoreData {
 					"We'll be back soon with more rounds of **Theme Selection**, and to start making **Teams**."
 			},
 
-			11:{
-				name:"**Live Streaming**: The New Way",
-				slug:"live-streaming-the-new-way",
-				type:"post",
-				subtype:"",
-				parent:5,
-				author:3,
-				body:"Hey streamers!\n\n"+
+			"11": {
+				"name": "**Live Streaming**: The New Way",
+				"slug": "live-streaming-the-new-way",
+				"type": "post",
+				"subtype": "",
+				"parent": 5,
+				"author": 3,
+				"body": "Hey streamers!\n\n"+
 					"I've been chatting with the team at **Twitch**, and they've asked me to ask you _veeeeery nicely_ to move our **Ludum Dare** Twitch streams over to **https://twitch.tv/Creative**.\n\n"+
 					"How do you do that?\n\n"+
 					"Set your game to **Creative** on Twitch, and include the hashtag **#LDJAM** in your title. Easy.\n\n"+
@@ -115,14 +115,14 @@ class CCoreData {
 					"Support for other streaming services (**YouTube**, **Beam**) will return for future events."
 			},
 
-			12:{
-				name:"Hello World",
-				slug:"hello-world",
-				type:"post",
-				subtype:"",
-				parent:5,
-				author:3,
-				body:"Well, the first post always has to be \"Hello World\", right? It's the law. :smile:"
+			"12": {
+				"name": "Hello World",
+				"slug": "hello-world",
+				"type": "post",
+				"subtype": "",
+				"parent": 5,
+				"author": 3,
+				"body": "Well, the first post always has to be \"Hello World\", right? It's the law. :smile:"
 			},
 //			11:{
 //				name:"**True Story:** The Internet is ~~DEAD~~ _REAL_",
@@ -147,7 +147,7 @@ class CCoreData {
 //				parent:6,
 //				author:3,
 //				body:"This is message for @PoV. Are you here @PoV? I need @help.\n\n```js\n  var Muffin = 10;\n  Muffin += 2;\n\n  echo \"The Wheel\";```\n\nWhoa.\n\nAlso call @murr-DEATH-weasel."
-//			}			
+//			}
 		};
 
 		this.slugs = {};
@@ -328,7 +328,7 @@ class CCoreData {
 
 		// Build List //
 		if ( !Array.isArray(ids) )
-			ids = [ parent.toString() ];
+			ids = [parent.toString()];
 		else
 			ids.push( parent );
 
@@ -358,7 +358,7 @@ class CCoreData {
 			return ids;
 
 		if ( !Array.isArray(ids) )
-			ids = [ id.toString() ];
+			ids = [id.toString()];
 		else
 			ids.unshift( id.toString() );
 
@@ -371,14 +371,14 @@ class CCoreData {
 			return ids;
 
 		if ( !Array.isArray(ids) )
-			ids = [ this.getNodeSlugById(id) ];
+			ids = [this.getNodeSlugById(id)];
 		else
 			ids.unshift( this.getNodeSlugById(id) );
 
 		return this.getNodePathSlugsById( this.getNodeParentById(id), ids );
 	}
 
-};
+}
 
 // Singleton //
 let CoreData = new CCoreData();
