@@ -41,9 +41,11 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 			// Store Public Metadata
 			if ( isset($metas[$node['id']][0][SH_SCOPE_PUBLIC]) ) {
 				$node['meta'] = $metas[$node['id']][0][SH_SCOPE_PUBLIC];
+//				$node['refs'] = $metas[$node['id']][0][SH_SCOPE_PUBLIC];
 			}
 			else {
 				$node['meta'] = [];
+//				$node['refs'] = [];
 			}
 	
 			// TODO: Store Protected and Private Metadata

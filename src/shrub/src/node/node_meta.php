@@ -269,7 +269,7 @@ function nodeMeta_ParseByNode( $node_ids, $get_values = true ) {
 	if ( !$multi )
 		$node_ids = [$node_ids];
 
-	$metas = nodeMeta_GetByNode($node_ids, ">=0", $get_values);
+	$metas = nodeMeta_GetByNode($node_ids, ">=0", !$get_values);
 
 	$ret = [];
 
@@ -281,7 +281,7 @@ function nodeMeta_ParseByNode( $node_ids, $get_values = true ) {
 
 		foreach ( $metas as $meta ) {
 			// If 'b' is zero, it's regular solo metedata
-			if ( $meta['b'] != 0 ) {
+			if ( $meta['b'] == 0 ) {
 				// If this item in the meta list belongs to us
 				if ( $node_id === $meta['a'] ) {
 					// Create Scope array (if missing)
