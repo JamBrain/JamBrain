@@ -36,6 +36,7 @@
 
 			background: @CAL_MONTH1_BG;
 			color: @CAL_MONTH1_COL;
+
 			&.month {
 				background: @CAL_MONTH2_BG;
 				color: @CAL_MONTH2_COL;
@@ -51,6 +52,7 @@
 
 			/* This is the perfect square trickery: http://stackoverflow.com/a/23754080 */
 			width: 100%;
+
 			&::after {
 				padding-bottom: 100%; /* Previously: 14.29% (100 / 7) */
 				/* The trick used to work by padding/margin with %'s, which were based on width. */
@@ -105,6 +107,7 @@
 
 				/*transform: scale(1.2, 1.2);*/
 			}
+
 			&:active,
 			&.weekend:active {
 				/*transform: scale(0.9, 0.9);*/
@@ -115,6 +118,7 @@
 				border: @CAL_BORDER solid @CAL_MONTH1_BG;
 				color: @CAL_MONTH1_BG;
 				background: @CAL_MONTH1_COL;
+
 				&.month {
 					border: @CAL_BORDER solid @CAL_MONTH2_BG;
 					color: @CAL_MONTH2_BG;
@@ -137,6 +141,7 @@
 				background: @CAL_SEL_BG;
 				color: @CAL_SEL_COL;
 			}
+
 			&.scheduled,
 			&.scheduled.weekend {
 				background: @CAL_SCHEDULED_BG_SEL;
@@ -148,6 +153,7 @@
 			&.scheduled {
 				border: @CAL_BORDER solid transparent;
 			}
+
 			&.weekend,
 			&.weekend.scheduled {
 				border: @CAL_BORDER solid @CAL_SCHEDULED_COL_SEL;

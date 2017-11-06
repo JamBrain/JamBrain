@@ -5,13 +5,14 @@
 @NAV_BUTTON_LIT: @COL_L;
 @NAV_BUTTON_LIT_BG: @COL_A;
 
-/* Nasty hack */
-#content .content-common-nav-button.-no-icon { 
-	padding: 0.5em 1em 0.5em 1em;
+/* TODO:: Nasty hack */
+#content .content-common-nav-button.-no-icon {
+	padding: 0.5em 1em;
+
 	& > div {
 		padding-left: 0;
 	}
-	
+
 	&:last-child {
 		margin-right: 0;
 	}
@@ -20,50 +21,53 @@
 #content {
 	& .content-nav {
 		margin: 1em 0;
-		
+
 		& > .-button {
 			position: relative;
 			line-height: 2.0em;
 			height: 2.0em;
-			
+
 			vertical-align: top;
 
 			display: inline-block;
-			
-			padding: 0.125em 1em 0.125em 1em;
+
+			padding: 0.125em 1em;
+
 			&.-has-icon {
 				padding: 0.125em 1em 0.125em 2.0em;
 			}
-			
+
 			margin-right: 0.5em;
+
 			&:last-child {
 				margin-right: 0;
 			}
-			
+
 			text-decoration: none;
 			font-weight: bold;
-			
+
 			border: 1px solid;
-			
+
 			& > span {
 				position: relative;
 				padding-left: 0.5em;
-				
+
 				@media (max-width: (@BASE_WIDTH - 20em)) {
 					display: none;
 				}
-				
+
 				&:empty {
 					padding-left: 0;
 				}
 			}
+
 			& > svg {
 				position: absolute;
-				
+
 				top: 0;
 				bottom: 0;
 				left: 1em;
-				
+
 				margin: auto;
 				display: block;
 			}
@@ -71,13 +75,14 @@
 			&,
 			&:visited {
 				color: @NAV_BUTTON_COL;
-				
+
 				&.-selected {
 					background: @COL_L;/*@NAV_BUTTON_COL;*/
 					color: @COL_NDDDD;/*@NAV_BUTTON_BG;*/
 					border: 1px solid transparent;
 				}
 			}
+
 			&:hover,
 			&:focus {
 				&,

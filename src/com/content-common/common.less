@@ -7,7 +7,7 @@
 
 #content .content-common {
 	position: relative;
-	
+
 	color: @DARK;
 
 	background: @BG;
@@ -20,33 +20,38 @@
 		border-radius: 0.05em;
 		/*margin: -0.1em -0.075em 0;*/
 	}
-	
+
 	& .-block-if-minimized,
 	& .-inline-if-minimized {
 		display: none;
 	}
+
 	& .-block-if-not-minimized {
 		display: block;
 	}
+
 	& .-inline-if-not-minimized {
 		display: inline-block;
 	}
+
 	&.minimized {
 		& .-block-if-not-minimized,
 		& .-inline-if-not-minimized {
 			display: none;
 		}
+
 		& .-block-if-minimized {
 			display: block;
 		}
+
 		& .-inline-if-minimized {
 			display: inline-block;
 		}
 	}
-	
+
 	& > .-bodies {
 		overflow: hidden;
-		
+
 		overflow-wrap: break-word;
 		hyphens: auto;
 	}

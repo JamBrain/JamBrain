@@ -86,6 +86,9 @@ LESS				=	$(NODEJS)/less/bin/lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
 # CSS Compiler: http://lesscss.org/
 MINIFY_CSS			=	cat $(1) | $(NODEJS)/clean-css-cli/bin/cleancss -o $(2)
 # CSS Minifier: https://github.com/jakubpawlowicz/clean-css/
+STYLELINT_ARGS			:=	--syntax less
+STYLELINT				=	$(NODEJS)/stylelint/bin/stylelint.js $(1) $(STYLELINT_ARGS)
+# CSS Linter: http://stylelint.io/
 
 SVGO_ARGS			:=	-q --disable=removeTitle --disable=removeDimensions --disable=removeViewBox
 SVGO				=	$(NODEJS)/svgo/bin/svgo $(SVGO_ARGS) -i $(1) -o $(2)
@@ -159,6 +162,7 @@ $(OUT)/%.o.js:$(SRC)/%.js
 	cp $< $@
 
 $(OUT)/%.less.css:$(SRC)/%.less
+	$(call STYLELINT,$<)
 	$(call LESS,$<,$@); $(call LESS_DEP,$<,$@)
 
 $(OUT)/%.o.css:$(SRC)/%.css
