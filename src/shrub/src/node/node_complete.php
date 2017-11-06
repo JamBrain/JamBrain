@@ -47,8 +47,6 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 				$node['meta'] = [];
 //				$node['refs'] = [];
 			}
-	
-			// TODO: Store Protected and Private Metadata
 		}
 	}
 
