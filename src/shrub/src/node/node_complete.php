@@ -39,8 +39,8 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 		$metas = nodeMeta_ParseByNode($ids);//, !($flags & F_NODE_NO_LINKVALUE));
 		foreach ( $nodes as &$node ) {
 			// Store Public Metadata
-			if ( isset($metas[$node['id']][SH_SCOPE_PUBLIC]) ) {
-				$node['meta'] = $metas[$node['id']][SH_SCOPE_PUBLIC];
+			if ( isset($metas[$node['id']][0][SH_SCOPE_PUBLIC]) ) {
+				$node['meta'] = $metas[$node['id']][0][SH_SCOPE_PUBLIC];
 			}
 			else {
 				$node['meta'] = [];
