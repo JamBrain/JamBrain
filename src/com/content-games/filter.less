@@ -1,14 +1,16 @@
 @import 'defs.less' ;
 
 .feed-filter {
-    padding-top: 0.5rem;
-    padding-right: 1rem;
-    & .-label {
-        display: inline-block;
-    }
-    & >  input {
-        display: inline-block;
-    }
+	padding-top: 0.5rem;
+	padding-right: 1rem;
+
+	& .-label {
+		display: inline-block;
+	}
+
+	& >  input {
+		display: inline-block;
+	}
 }
 
 .filter-special {
@@ -17,58 +19,57 @@
 }
 
 .filter-item {
-    & > .-bodies {
-        overflow: visible !important;
-    }
+	& > .-bodies {
+		overflow: visible !important;
+	}
 
-    & .-bodies {
-        margin-left: 0.5em;
-        padding-bottom: 0.5em;
-    }
+	& .-bodies {
+		margin-left: 0.5em;
+		padding-bottom: 0.5em;
+	}
 
-    & .input-dropdown {
-        display: inline-block;
-        margin-right: 0.5em;
-        margin-top: 0.25em;
+	& .input-dropdown {
+		display: inline-block;
+		margin-right: 0.5em;
+		margin-top: 0.25em;
 
-        & svg {
-            display: inline-block;
-        }
+		& svg {
+			display: inline-block;
+		}
 
-        & button {
-            & > div {
-                & > div {
-                    display: inline-block;
-                    margin-left: 0.5em;
-                }
-            }
-        }
+		& button {
+			& > div {
+				& > div {
+					display: inline-block;
+					margin-left: 0.5em;
+				}
+			}
+		}
 
-        & .-item > div {
+		& .-item > div {
+			& * {
+				display: inline-block;
+			}
 
-            & * {
-                display: inline-block;
-            }
+			& div {
+				margin-left: 0.5em;
+			}
+		}
 
-            & div {
-                margin-left: 0.5em;
-            }
-        }
+		&.-filter-featured {
+			width: 12.5rem;
+		}
 
-        &.-filter-featured {
-            width: 12.5rem;
-        }
+		&.-filter-event {
+			width: 11rem;
+		}
 
-        &.-filter-event {
-            width: 11rem;
-        }
+		&.-filter-category {
+			width: 13rem;
+		}
 
-        &.-filter-category {
-            width: 13rem;
-        }
-
-        &.-filter-sort {
-            width: 14rem;
-        }
-    }
+		&.-filter-sort {
+			width: 14rem;
+		}
+	}
 }

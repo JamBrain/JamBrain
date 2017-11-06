@@ -5,7 +5,7 @@
 	height: 4em;
 	line-height: 1.5em;
 	font-size: 1.1em;
-	
+
 	& > .-left,
 	& > .-right {
 		display: flex;
@@ -13,7 +13,7 @@
 		/* Button */
 		& > div {
 			padding: 0.5em 1em;
-			margin: 0.25em 0.25em;
+			margin: 0.25em;
 
 			color: @MAJOR_MUTE_L2;
 			background: @MAJOR_MUTE_D3;
@@ -29,23 +29,25 @@
 				background: @MAJOR_COLOR1;
 				color: @MAJOR_LIGHT;
 			}
+
 			&:active {
 				border: 1px solid @MAJOR_LIGHT;
 				background: @MAJOR_LIGHT;
 				color: @MAJOR_COLOR1;
 			}
-			
+
 			&.-selected {
 				color: @MAJOR_MUTE_D5;
 				background: @MAJOR_MUTE_L2;
 				border: 1px solid @MAJOR_MUTE_L2;
 			}
-			
+
 			&.-blue {
 				border: 1px solid @MAJOR_BLUE;
 				background: @MAJOR_BLUE;
 				color: @MAJOR_MUTE_D5;
 			}
+
 			&.-green {
 				border: 1px solid @MAJOR_GREEN;
 				background: @MAJOR_GREEN;
