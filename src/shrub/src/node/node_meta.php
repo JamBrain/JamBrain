@@ -13,13 +13,6 @@ function nodeMeta_GetById( $ids ) {
 			WHERE id=?;",
 			$ids
 		);
-
-//		return db_QueryFetch(
-//			"SELECT node, scope, `key`, `value`
-//			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
-//			WHERE id=?;",
-//			$ids
-//		);
 	}
 	else if ( is_array($ids) ) {
 		// Confirm that all IDs are not zero
@@ -36,12 +29,6 @@ function nodeMeta_GetById( $ids ) {
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 			WHERE id IN ($ids_string);"
 		);
-
-//		return db_QueryFetch(
-//			"SELECT node, scope, `key`, `value`
-//			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
-//			WHERE id IN ($ids_string);"
-//		);
 	}
 
 	return null;
