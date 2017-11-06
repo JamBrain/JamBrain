@@ -375,7 +375,7 @@ class Main extends Component {
 			// Process private User data
 			if ( r ) {
 				User['private']['meta'] = r.meta;
-				User['private']['link'] = r.link;
+//				User['private']['link'] = r.link;
 				User['private']['refs'] = r.refs;
 			}
 

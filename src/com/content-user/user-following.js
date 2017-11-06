@@ -31,7 +31,7 @@ export default class ContentUserFollowing extends Component {
         // make sure we actually have a following to display
         if (this.hasFollowing() && this.hasPermission()){
             // if were looking at our own page then display following
-            this.getFollowing(this.props.user.private.link.star);
+            this.getFollowing(this.props.user.private.meta.star);
         }
 
     }
@@ -41,7 +41,7 @@ export default class ContentUserFollowing extends Component {
     }
 
     hasFollowing(){
-        return (this.props.user['private'] && this.props.user.private['link']&& this.props.user.private.link['star']);
+        return (this.props.user['private'] && this.props.user.private['meta']&& this.props.user.private.meta['star']);
     }
 
     getFollowing(ids){

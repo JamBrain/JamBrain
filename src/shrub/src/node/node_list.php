@@ -33,8 +33,8 @@ function nodeList_GetAuthors( &$_nodes ) {
 	foreach ( $nodes as &$node ) {
 		$authors[] = $node['author'];
 		
-		if ( isset($node['link']['author']) ) {
-			foreach ( $node['link']['author'] as &$author ) {
+		if ( isset($node['meta']['author']) ) {
+			foreach ( $node['meta']['author'] as &$author ) {
 				$authors[] = $author;
 			}
 		}

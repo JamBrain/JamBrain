@@ -112,8 +112,8 @@ export default class NotificationsBase extends Component {
 							users.push(node.author);
 							node.authors.push(node.author);
 						}
-						if (node.link && node.link.author) {
-							node.link.author.forEach((author) => {
+						if (node.meta && node.meta.author) {
+							node.meta.author.forEach((author) => {
 								if (author > 0 && users.indexOf(author) < 0) {
 									users.push(author);
 								}
@@ -178,8 +178,8 @@ export default class NotificationsBase extends Component {
 			node.selfauthored = false;
 			if (node.author == caller_id) {
 				node.selfauthored = true;
-			} else if (node.link && node.link.author) {
-				node.link.author.forEach((author) => {
+			} else if (node.meta && node.meta.author) {
+				node.meta.author.forEach((author) => {
 					if (author == caller_id) {
 						node.selfauthored = true;
 					}
@@ -208,8 +208,8 @@ export default class NotificationsBase extends Component {
 				data.users.set(caller_id, usersLookup.get(caller_id));
 				data.users.set(node.author, usersLookup.get(node.author));
 
-				if (node.link && node.link.author) {
-					node.link.author.forEach((author) => {
+				if (node.meta && node.meta.author) {
+					node.meta.author.forEach((author) => {
 						if (!data.users.has(author)) {
 							data.users.set(author, usersLookup.get(author));
 						}

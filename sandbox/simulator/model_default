@@ -120,7 +120,7 @@ function SetupEvent()
 		$node = ApiNodeGetMy($event_user_lookup[$user["username"]]);
 		if($node == null) { ReportError("Failed to get node"); }
 		$node["name"] = $user["username"];
-		if( isset($node['link']) && isset($node['link']['star']) && count($node['link']['star']) > 0 )
+		if( isset($node['meta']) && isset($node['meta']['star']) && count($node['meta']['star']) > 0 )
 		{
 			continue;
 		}
