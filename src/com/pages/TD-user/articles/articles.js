@@ -1,0 +1,13 @@
+import {h, Component} from 'preact/preact';
+
+export default class UserArticles extends Component {
+    constructor( props ) {}
+
+    render( props, state ) {
+        let {node, user, featured, path, extra, error, home} = props;
+
+        return (
+            <ContentTimeline types={['page']} methods={['author']} node={node} user={user} path={path} extra={extra} />
+        );
+    }
+}
