@@ -264,16 +264,12 @@ function nodeMeta_GetByNode( $nodes, $scope_check = ">=0", $all_null_values = fa
 }
 
 
-function nodeMeta_ParseByNode( $node_ids /*, $get_values = true*/ ) {
+function nodeMeta_ParseByNode( $node_ids, $get_values = true ) {
 	$multi = is_array($node_ids);
 	if ( !$multi )
 		$node_ids = [$node_ids];
 
-	$metas = nodeMeta_GetByNode($node_ids);
-//	if ( $get_values )
-//		$links = nodeLink_GetByNode($node_ids);
-//	else
-//		$links = nodeLink_GetNoValueByNode($node_ids);
+	$metas = nodeMeta_GetByNode($node_ids, ">=0", $get_values);
 
 	$ret = [];
 

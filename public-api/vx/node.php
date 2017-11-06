@@ -411,35 +411,51 @@ switch ( $action ) {
 			// NOTE: It is not an issue that these get merged. Different scopes do not make metadata in to unique indexes.
 			// WARNING: Don't ever send the full ParseByNode response to the user. SH_SCOPE_SERVER scope data must never be seen by a client.
 
-			$metas = nodeMeta_ParseByNode($user_id);
-			$meta_out = array_merge([],
-				// Public metadata (this is already in the node)
-				//isset($metas[SH_SCOPE_PUBLIC]) ? $metas[SH_SCOPE_PUBLIC] : [],
-				// Shared metadata (authors??)
-				isset($metas[SH_SCOPE_SHARED]) ? $metas[SH_SCOPE_SHARED] : [],
-				// Private metadata
-				isset($metas[SH_SCOPE_PRIVATE]) ? $metas[SH_SCOPE_PRIVATE] : []
-			);
+//			$metas = nodeMeta_ParseByNode($user_id);
+//			$meta_out = array_merge([],
+//				// Public metadata (this is already in the node)
+//				//isset($metas[SH_SCOPE_PUBLIC]) ? $metas[SH_SCOPE_PUBLIC] : [],
+//				// Shared metadata (authors??)
+//				isset($metas[SH_SCOPE_SHARED]) ? $metas[SH_SCOPE_SHARED] : [],
+//				// Private metadata
+//				isset($metas[SH_SCOPE_PRIVATE]) ? $metas[SH_SCOPE_PRIVATE] : []
+//			);
+//
+//			$links = nodeLink_ParseByNode($user_id);
+//			$link_out = array_merge([],
+//				// Public Links from me (this is already in the node)
+//				//isset($links[0][SH_SCOPE_PUBLIC]) ? $links[0][SH_SCOPE_PUBLIC] : [],
+//				// Shared Links from me
+//				isset($links[0][SH_SCOPE_SHARED]) ? $links[0][SH_SCOPE_SHARED] : [],
+//				// Procted Links from me
+//				isset($links[0][SH_SCOPE_PRIVATE]) ? $links[0][SH_SCOPE_PRIVATE] : []
+//			);
+//			$refs_out = array_merge([],
+//				// Public links to me
+//				isset($links[1][SH_SCOPE_PUBLIC]) ? $links[1][SH_SCOPE_PUBLIC] : [],
+//				// Shared links to me
+//				isset($links[1][SH_SCOPE_SHARED]) ? $links[1][SH_SCOPE_SHARED] : []
+//			);
 
-			$links = nodeLink_ParseByNode($user_id);
-			$link_out = array_merge([],
-				// Public Links from me (this is already in the node)
-				//isset($links[0][SH_SCOPE_PUBLIC]) ? $links[0][SH_SCOPE_PUBLIC] : [],
-				// Shared Links from me
-				isset($links[0][SH_SCOPE_SHARED]) ? $links[0][SH_SCOPE_SHARED] : [],
-				// Procted Links from me
-				isset($links[0][SH_SCOPE_PRIVATE]) ? $links[0][SH_SCOPE_PRIVATE] : []
+			$meta = nodeMeta_ParseByNode($user_id);
+			$meta_out = array_merge([],
+				// Public Meta from me (this is already in the node)
+				//isset($meta[0][SH_SCOPE_PUBLIC]) ? $meta[0][SH_SCOPE_PUBLIC] : [],
+				// Shared Meta from me
+				isset($meta[0][SH_SCOPE_SHARED]) ? $meta[0][SH_SCOPE_SHARED] : [],
+				// Procted Meta from me
+				isset($meta[0][SH_SCOPE_PRIVATE]) ? $meta[0][SH_SCOPE_PRIVATE] : []
 			);
 			$refs_out = array_merge([],
-				// Public links to me
-				isset($links[1][SH_SCOPE_PUBLIC]) ? $links[1][SH_SCOPE_PUBLIC] : [],
-				// Shared links to me
-				isset($links[1][SH_SCOPE_SHARED]) ? $links[1][SH_SCOPE_SHARED] : []
+				// Public meta to me
+				isset($meta[1][SH_SCOPE_PUBLIC]) ? $meta[1][SH_SCOPE_PUBLIC] : [],
+				// Shared meta to me
+				isset($meta[1][SH_SCOPE_SHARED]) ? $meta[1][SH_SCOPE_SHARED] : []
 			);
 				
 			$RESPONSE['id'] = $user_id;
 			$RESPONSE['meta'] = $meta_out;
-			$RESPONSE['link'] = $link_out;
+//			$RESPONSE['link'] = $link_out;
 			$RESPONSE['refs'] = $refs_out;
 		}
 		else {

@@ -36,7 +36,7 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 
 	// Populate Metadata
 	if ( $flags & F_NODE_META ) {
-		$metas = nodeMeta_ParseByNode($ids);
+		$metas = nodeMeta_ParseByNode($ids);//, !($flags & F_NODE_NO_LINKVALUE));
 		foreach ( $nodes as &$node ) {
 			// Store Public Metadata
 			if ( isset($metas[$node['id']][SH_SCOPE_PUBLIC]) ) {
@@ -50,20 +50,20 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 		}
 	}
 
-	// Populate Links (NOTE: Links come in Pairs)
-	if ( $flags & F_NODE_LINK ) {
-		$links = nodeLink_ParseByNode($ids, !($flags & F_NODE_NO_LINKVALUE));
-		foreach ( $nodes as &$node ) {
-			if ( isset($links[$node['id']][0][SH_SCOPE_PUBLIC]) ) {
-				$node['link'] = $links[$node['id']][0][SH_SCOPE_PUBLIC];
-			}
-			else {
-				$node['link'] = [];
-			}
-	
-			// TODO: Store Protected and Private Metadata
-		}
-	}
+//	// Populate Links (NOTE: Links come in Pairs)
+//	if ( $flags & F_NODE_LINK ) {
+//		$links = nodeLink_ParseByNode($ids, !($flags & F_NODE_NO_LINKVALUE));
+//		foreach ( $nodes as &$node ) {
+//			if ( isset($links[$node['id']][0][SH_SCOPE_PUBLIC]) ) {
+//				$node['link'] = $links[$node['id']][0][SH_SCOPE_PUBLIC];
+//			}
+//			else {
+//				$node['link'] = [];
+//			}
+//	
+//			// TODO: Store Protected and Private Metadata
+//		}
+//	}
 
 	// Populate paths ** NOTE: Multiple queries!
 	if ( $flags & F_NODE_PATH ) {
