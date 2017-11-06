@@ -27,37 +27,37 @@
 // only target stuff within a markup block
 .markup{
 
-    // InLine Code
-    :not(pre) > code {
-        padding-left: 0.125em;
-        padding-right: 0.125em;
-        border-radius: 0.125em;
-        color: @base3;
-        background-color: @base03;
-        line-height: 1;
-        font-size: 75%;
-    }
+	// InLine Code
+	:not(pre) > code {
+		padding-left: 0.125em;
+		padding-right: 0.125em;
+		border-radius: 0.125em;
+		color: @base3;
+		background-color: @base03;
+		line-height: 1;
+		font-size: 75%;
+	}
 
-    // Code Blocks
+	// Code Blocks
 	pre {
-        color: @base02;
+		color: @base02;
 		background-color: @base2;
 
-        padding: 0.5em;
-        border-radius: 0.25em;
-        overflow: auto;
+		padding: 0.5em;
+		border-radius: 0.25em;
+		overflow: auto;
 
 		font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-        font-size: 75%;
+		font-size: 75%;
 
-        line-height: 1.1;
-        tab-size: 4;
-        text-align: left;
+		line-height: 1.1;
+		tab-size: 4;
+		text-align: left;
 		white-space: pre;
 		word-spacing: normal;
 		word-break: normal;
 		word-wrap: normal;
-        hyphens: none;
+		hyphens: none;
 	}
 
 	pre > code {
@@ -68,7 +68,7 @@
 			color: @base;
 		}
 
-        .token.operator,
+		.token.operator,
 		.token.punctuation {
 			color: @base03;
 		}
@@ -117,6 +117,7 @@
 		.bold {
 			font-weight: bold;
 		}
+
 		.token.italic {
 			font-style: italic;
 		}
@@ -126,7 +127,7 @@
 		}
 	}
 
-    .namespace{
-        opacity:0.7;
-    }
+	.namespace{
+		opacity:0.7;
+	}
 }

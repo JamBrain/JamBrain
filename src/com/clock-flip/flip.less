@@ -46,6 +46,7 @@
 		text-align: center;
 		overflow: hidden;
 	}
+
 	& .-clock .-countdown .bloc-time:last-child {
 		margin-right: 0;
 	}
@@ -70,9 +71,11 @@
 		border-radius: 8px;
 		box-shadow: 0 3px 4px 0 rgba(0, 0, 0, .2), inset 2px 4px 0 0 rgba(255, 255, 255, 0.8);
 	}
+
 	& .-clock .-countdown .figure:last-child {
 		margin-right: 0px;
 	}
+
 	& .-clock .-countdown .figure  span {
 		position: absolute;
 		left: 0.5px;
@@ -84,9 +87,11 @@
 		/*color: @MAJOR_COLOR1;*/
 		color: @MAJOR_MUTE_D5;
 	}
+
 	& .-clock .-countdown.urgent .figure span {
 		color: @MAJOR_COLOR1;
 	}
+
 	& .-clock .-countdown .figure .top:after, & .-clock .-countdown .figure .bottom-back:after {
 		content: "";
 		position: absolute;
@@ -97,6 +102,7 @@
 		height: 100%;
 		border-bottom: 1px solid rgba(0, 0, 0, .1);
 	}
+
 	& .-clock .-countdown .figure .top {
 		z-index: 3;
 		background-color: #f7f7f7;
@@ -106,9 +112,11 @@
 		border-top-left-radius: 10px;
 		transform: perspective(200px);
 	}
+
 	& .-clock .-countdown .figure .bottom {
 		z-index: 1;
 	}
+
 	& .-clock .-countdown .figure .bottom:before {
 		content: "";
 		position: absolute;
@@ -119,6 +127,7 @@
 		height: 50%;
 		background-color: rgba(0, 0, 0, .02);
 	}
+
 	& .-clock .-countdown .figure .bottom-back {
 		z-index: 2;
 		top: 0;
@@ -128,6 +137,7 @@
 		border-top-right-radius: 10px;
 		border-top-left-radius: 10px;
 	}
+
 	& .-clock .-countdown .figure .bottom-back span {
 		position: absolute;
 		top: 0;
@@ -152,6 +162,7 @@
 		border-bottom-right-radius: 10px;
 		border-bottom-left-radius: 10px;
 	}
+
 	& .-clock .-countdown .figure .top-back span {
 		position: absolute;
 		top: -100%;

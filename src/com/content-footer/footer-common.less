@@ -6,18 +6,18 @@
 
 #content .content-footer-common {
 	position: relative;
-	
+
 	border-bottom: 8px solid @FOOT_DARK;
 	color: @MAJOR_MUTE;
 	height: 2em;
-	
+
 	& a,
 	& a:visited {
 		margin: 0;
 		padding-top: 0;
 		padding-bottom: 0;
 		color: inherit;
-		
+
 		text-decoration: none;
 	}
 
@@ -42,10 +42,10 @@
 			padding-left: 1rem;
 			padding-right: 1rem;
 			background: @FOOT_DARK;
-			
+
 			&:after {
 				color: @FOOT_DARK;
-				
+
 				content:'';
 				left: 3.5rem;
 				top: -2.5rem;
@@ -53,35 +53,37 @@
 				border-right: 2.5rem/2 solid transparent;
 				border-bottom: 2.5rem/2 solid;
 				border-left: 2.5rem/2 solid;
-				
+
 				display: block;
 				position: relative;
 			}
-			
+
 			&:hover {
 				cursor: pointer;
-				
+
 				color: @MAJOR_LIGHT;
 				background: @FOOT_BUTTON_LIT;
+
 				&:after {
 					color: @FOOT_BUTTON_LIT;
 				}
 			}
 
-			&:active, 
+			&:active,
 			&:focus {
 				color: @FOOT_BUTTON_LIT;
 				background: @MAJOR_LIGHT;
+
 				&:after {
 					color: @MAJOR_LIGHT;
 				}
 			}
 		}
 	}
-	
+
 	& > .-right {
 		position: absolute;
-		
+
 		right: 0;
 		bottom: -8px;
 		display: flex;
@@ -96,7 +98,7 @@
 			padding-right: 2.5rem;
 
 			text-decoration: none;
-		
+
 			&:last-child {
 				padding-right: 1rem;	/* match whatever button uses */
 
@@ -109,8 +111,10 @@
 		& > .-wedge-right {
 			background: linear-gradient(45deg, @FOOT_DARK 0px, @FOOT_DARK 30px, transparent 30px);
 		}
+
 		& > .-spacer {
 			background: @FOOT_DARK;
+
 			& > svg {
 				width: 100%;
 				height: 100%;
@@ -125,6 +129,7 @@
 			padding-right: 1rem;
 			background: @MAJOR_MUTE_D5;
 		}
+
 		& > .-comment-count {
 			width: auto;
 			padding-right: 1rem;
@@ -135,6 +140,7 @@
 
 		& > .-spacer2 {
 			background: @MAJOR_MUTE_D5;
+
 			& > svg {
 				width: 100%;
 				height: 100%;
@@ -142,20 +148,20 @@
 				display: block;
 			}
 		}
-		
+
 		& > .-gear {
 			background: @MAJOR_MUTE_D4;
 			width: 2.5em;
 		}
 	}
-	
-	@media (max-width: 26em) { 
+
+	@media (max-width: 26em) {
 		& .-heart-count {
 			display: none !important;
 		}
 	}
-	
-	@media (max-width: 22em) { 
+
+	@media (max-width: 22em) {
 		& .-comment-count {
 			display: none !important;
 		}
