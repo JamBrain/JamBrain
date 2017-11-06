@@ -4,22 +4,22 @@
   "description": "Custom CMS Platform",
   "main": "gulpfile.js",
   "dependencies": {
-	"buble": "Noojuno/buble",
-	"nodent": "*",
+    "buble": "Noojuno/buble",
+    "nodent": "*",
     "rollup": "*",
     "rollup-plugin-includepaths": "*",
     "rollup-plugin-node-resolve": "*",
-	"rollup-plugin-nodent": "*",
-	"uglify-js": "*",	
-	"eslint": "*",	
+    "rollup-plugin-nodent": "*",
+    "uglify-js": "*",  
+    "eslint": "*",  
     "es6": "*",
     "es6-promise": "*",
-	
-	"less": "*",
+
+    "less": "*",
     "less-plugin-autoprefix": "*",
     "clean-css-cli": "*",
-	"stylelint": "^8.2.0",
-	"stylelint-config-recommended": "^1.0.0",
+    "stylelint": "^8.2.0",
+    "stylelint-config-recommended": "^1.0.0",
 
     "svgo": "*"
   },
