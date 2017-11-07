@@ -13,7 +13,7 @@ export default class UserGames extends Component {
         }
 
         return (
-            <ContentTimeline types={['post']} methods={Methods} node={node} user={user} path={path} extra={extra} />
+            <ContentGames node={node} user={user} path={path} extra={extra} methods={['authors']} subsubtypes={SubSubType ? SubSubType : ""} filter={GamesFeedFilter} />
         );
     }
 }

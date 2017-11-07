@@ -1,9 +1,9 @@
 import {h, Component} from 'preact/preact';
 
 import LayoutSidebar from 'com/layouts/sidebar/sidebar';
-import ContentPost						from 'com/content-post/post';
+import ContentError						from 'com/content-error/error';
 
-export default class PagePage extends Component {
+export default class PageError extends Component {
     constructor( props ) {}
 
     render( props, state ) {
@@ -12,8 +12,8 @@ export default class PagePage extends Component {
         return (
             <LayoutSidebar {...props}>
                 <div id="content">
-					<ContentPost node={node} user={user} path={path} extra={extra} updated />
-				</div>
+                    <ContentError {...props} />
+                </div>
             </LayoutSidebar>
         );
     }

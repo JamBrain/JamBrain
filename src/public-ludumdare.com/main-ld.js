@@ -13,6 +13,18 @@ import ViewHome from 'com/view-home/home';
 import Router from 'com/router/router';
 import Route from 'com/router/route';
 
+import PageHome from 'com/pages/home/home';
+import PagePage from 'com/pages/page/page';
+import PagePost from 'com/pages/post/post';
+import PageItem from 'com/pages/item/item';
+// import PageGames from 'com/pages/games/games'; //TODO: FIX
+import PageTag from 'com/pages/tag/tag';
+import PageUser from 'com/pages/user/user';
+import PageUsers from 'com/pages/users/users';
+import PageEvent from 'com/pages/event/event';
+import PageEvents from 'com/pages/events/events';
+import PageError from 'com/pages/error/error';
+
 import DialogUnfinished from 'com/dialog-unfinished/unfinished';
 import DialogLogin from 'com/dialog-login/login';
 import DialogRegister from 'com/dialog-register/register';
@@ -470,9 +482,6 @@ class Main extends Component {
                 this.setState({
                     'slugs': slugs,
                     'home': null,
-                    'node': {
-                        'id': 0
-                    }
                 });
 
                 if (slugs[0] == 'home') {
@@ -536,25 +545,25 @@ class Main extends Component {
         return (
             <div id="app">
                 <Router node={node} props={{node: node, user: user, featured: featured, path: path, extra: extra, error: error, home: home}} path={extra}>
-                    <Route default type="root" component={PageRoot} /> // home, feed, news, hot
+                    <Route type="root" component={PageHome} />
 
                     <Route type="page" component={PagePage} />
                     <Route type="post" component={PagePost} />
 
-                    <Route type="item">
-                        <Route subtype="game" component={PageGame} />
+                    }<Route type="item">
+                        <Route subtype="game" component={PageItem} />
                     </Route>
-                    <Route type="games" component={PageGames} />
+                    {/* <Route type="games" component={PageGames} />  //TODO: FIX
 
                     <Route type="tag" component={PageTag} />
 
                     <Route type="user" component={PageUser} /> //articles, feed(d), post, games, article, following, followers
                     <Route type="users" component={PageUsers} />
 
-                    <Route type="event" component={PageEvent} /> //theme, games/results, stats(d)
-                    <Route type="events" component={PageEvents} />
+                    <Route type="event" component={PageEvent} /> //theme, games/results, stats(d) */}
+                    <Route type={["events", "group", "tags"]} component={PageEvents} /> */}
 
-                    <Route error type="*" component={PageError} />
+                    <Route type="error" component={PageError} />
                 </Router>
                 {this.getDialog()}
             </div>

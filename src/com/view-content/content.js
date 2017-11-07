@@ -372,14 +372,6 @@ export default class ViewContent extends Component {
 							showVotingCategory={true}
 						/>;
 				}
-//							<CommonBody>{FilterDesc[Filter]}</CommonBody>
-
-//								<CommonNavButton href={Path+'smart/'+SubFilter} class={Filter == 'smart' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Smart</div></CommonNavButton>
-//								<CommonNavButton href={Path+'classic/'+SubFilter} class={Filter == 'classic' ? '-selected' : ''}><SVGIcon>ticket</SVGIcon><div>Classic</div></CommonNavButton>
-//								<CommonNavButton href={Path+'danger/'+SubFilter} class={Filter == 'danger' ? '-selected' : ''}><SVGIcon>help</SVGIcon><div>Danger</div></CommonNavButton>
-//								<CommonNavButton href={Path+'zero/'+SubFilter} class={Filter == 'zero' ? '-selected' : ''}><SVGIcon>gift</SVGIcon><div>Zero</div></CommonNavButton>
-//								<CommonNavButton href={Path+'feedback/'+SubFilter} class={Filter == 'feedback' ? '-selected' : ''}><SVGIcon>bubbles</SVGIcon><div>Feedback</div></CommonNavButton>
-//								<CommonNavButton href={Path+'grade/'+SubFilter} class={Filter == 'grade' ? '-selected' : ''}><SVGIcon>todo</SVGIcon><div>Grade</div></CommonNavButton>
 
 				SubFilter = EvalFilter2(SubFilter);
 
