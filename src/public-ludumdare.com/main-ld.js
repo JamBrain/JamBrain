@@ -553,14 +553,13 @@ class Main extends Component {
                     }<Route type="item">
                         <Route subtype="game" component={PageItem} />
                     </Route>
-                    {/* <Route type="games" component={PageGames} />  //TODO: FIX
 
                     <Route type="tag" component={PageTag} />
 
                     <Route type="user" component={PageUser} /> //articles, feed(d), post, games, article, following, followers
                     <Route type="users" component={PageUsers} />
 
-                    <Route type="event" component={PageEvent} /> //theme, games/results, stats(d) */}
+                    <Route type="event" component={PageEvent} /> //theme, games/results, stats(d)
                     <Route type={["events", "group", "tags"]} component={PageEvents} /> */}
 
                     <Route type="error" component={PageError} />

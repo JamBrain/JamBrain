@@ -1,5 +1,7 @@
 import {h, Component} from 'preact/preact';
 
+import ContentStatsEvent				from 'com/content-stats/stats-event';
+
 export default class UserStats extends Component {
     constructor( props ) {}
 

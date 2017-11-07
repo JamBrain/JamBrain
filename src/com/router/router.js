@@ -11,7 +11,8 @@ export default class Router extends Component {
         this.state = {
             "routes": [],
             "current": null,
-            "match": match
+            "match": match,
+            "forceRenderKey": null
         };
 
 
@@ -37,7 +38,7 @@ export default class Router extends Component {
 
             if (this.matchRoute(route.attributes, node)) {
                 if (route.attributes.static && route.attributes.path) {
-                    if (!this.matchPath(route.attributes.path)) {
+                    if (!this.matchPath(route.attributes.path, route.attributes.morePaths)) {
                         continue;
                     }
                 }
@@ -57,18 +58,28 @@ export default class Router extends Component {
     }
 
     // Checks if path is a match
-    matchPath( path ) {
+    matchPath( path, morePaths ) {
         if(Array.isArray(path)) {
             for(let v in path) {
-                if(this.matchPath(path[v])) {
+                if(this.matchPath(path[v], morePaths)) {
                     return true;
                 }
             }
             return false;
         }
 
-        let urlPath = (this.props.path ? this.props.path : window.location.pathname.split("/")).filter(n => n).reverse();
-        let pathArray = path.split("/").filter(n => n).reverse();
+        let urlPath = (this.props.path ? this.props.path : window.location.pathname
+                        .replace(this.props.node.path, "")
+                        .replace("/$" + this.props.node.id, "")
+                        .split("/"))
+                        .filter(n => n);
+        let pathArray = path.split("/")
+                        .filter(n => n);
+
+        if(!morePaths) {
+            urlPath = urlPath.reverse();
+            pathArray = pathArray.reverse();
+        }
 
         if(pathArray.length <= 0) {
             pathArray = [""];
@@ -101,12 +112,11 @@ export default class Router extends Component {
             }
 
             if(Array.isArray(aMatch)) {
-                if(!aMatch.contains(bMatch)) {
+                if(!aMatch.includes(bMatch)) {
                     return false;
                 }
             }
-
-            if (aMatch != bMatch) {
+            else if (aMatch != bMatch) {
                 return false;
             }
         }
@@ -152,7 +162,7 @@ export default class Router extends Component {
             parent = parent ? parent : child;
 
             let cloneProps = Object.assign(
-                                {},
+                                {ref: (r) => {this.cRoute = r;}},
                                 parent.attributes,
                                 child.attributes
                             );

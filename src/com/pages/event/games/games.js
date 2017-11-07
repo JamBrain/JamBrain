@@ -1,7 +1,16 @@
 import {h, Component} from 'preact/preact';
 
+import ContentGames						from 'com/content-games/games';
+import GamesFilter from 'com/content-games/filter';
+
 export default class UserGames extends Component {
-    constructor( props ) {}
+    constructor( props ) {
+        window.addEventListener('navchange', this.onNavChange.bind(this));
+    }
+
+    onNavChange( e ) {
+        this.forceUpdate();
+    }
 
     render( props, state ) {
         let {node, user, featured, path, extra, error, home} = props;
@@ -14,6 +23,8 @@ export default class UserGames extends Component {
             DefaultSubFilter = 'jam';//'all';
             DefaultFilter = 'overall';
         }
+
+        const GamesFeedFilter = this.state.gamesFilter;
 
         function EvalFilter2(str) {
             let MappingTable = {

@@ -1,5 +1,8 @@
 import {h, Component} from 'preact/preact';
 
+import ContentEventTheme				from 'com/content-event/event-theme';
+import ContentNavTheme					from 'com/content-nav/nav-theme';
+
 export default class UserStats extends Component {
     constructor( props ) {}
 
@@ -10,7 +13,10 @@ export default class UserStats extends Component {
         let NewExtra = extra.slice(1);
 
         return (
-            <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />
+            <div>
+                <ContentNavTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />
+                <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />
+            </div>
         );
     }
 }
