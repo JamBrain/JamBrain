@@ -515,7 +515,6 @@ switch ( $action ) {
 			if ( empty($parent) || empty($type) ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
 			}
-
 			// MK: This is a potential place you'll need to fix things once users are restricted from posting under other people's `can-create` nodes
 			// MK: oh. after a quick glance it might be fine, but you should check it out again.
 			$where = nodeComplete_GetWhereIdCanCreate($user_id);
@@ -573,6 +572,7 @@ switch ( $action ) {
 			if ( $RESPONSE['count'] >= $RESPONSE['limit'] ) {
 				json_EmitFatalError_Permission("You don't have permission to create any more $fulltype's here", $RESPONSE);
 			}
+
 
 			switch ( $fulltype ) {
 				case 'item/game':

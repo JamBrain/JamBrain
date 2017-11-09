@@ -400,6 +400,36 @@ function _nodeMetaVersion_Add( $a, $b, $scope, $key, $value ) {
 }
 
 function _nodeMeta_Add( $a, $b, $version, $scope, $key, $value, $timestamp = null ) {
+	if ( $timestamp ) {
+		return db_QueryInsert(
+			"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." (
+				a,
+				b,
+				version,
+				scope,
+				`key`,
+				`value`,
+				timestamp
+			)
+			VALUES (
+				?,
+				?,
+				?,
+				?,
+				?,
+				?,
+				?
+			);",
+			$a,
+			$b,
+			$version,
+			$scope,
+			$key,
+			$value,
+			$timestamp
+		);
+	}
+
 	return db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." (
 			a,
@@ -417,15 +447,14 @@ function _nodeMeta_Add( $a, $b, $version, $scope, $key, $value, $timestamp = nul
 			?,
 			?,
 			?,
-			".($timestamp ? '?' : 'NOW()')."
+			NOW()
 		);",
 		$a,
 		$b,
 		$version,
 		$scope,
 		$key,
-		$value,
-		$timestamp
+		$value
 	);
 }
 

@@ -160,7 +160,8 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 
 function nodeComplete_GetAuthored( $id ) {
 	// Scan for things I am the author of
-	$author_links = nodeLink_GetByKeyNode("author", $id);
+//	$author_links = nodeLink_GetByKeyNode("author", $id);
+	$author_links = nodeMeta_GetByKeyNode("author", $id);
 
 	// Populate a list of things I authored
 	$author_ids = [];
@@ -188,7 +189,7 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 			$ret[$meta['value']] = [];
 		}
 		
-		$ret[$meta['value']][] = $meta['node'];
+		$ret[$meta['value']][] = $meta['a'];
 	}
 
 
@@ -200,12 +201,12 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 	
 		// Add shared nodes
 		foreach( $shared_metas as &$meta ) {
-			if ( in_array($meta['node'], $authored_ids) ) {
+			if ( in_array($meta['a'], $authored_ids) ) {
 				if ( !isset($ret[$meta['value']]) ) {
 					$ret[$meta['value']] = [];
 				}
 				
-				$ret[$meta['value']][] = $meta['node'];
+				$ret[$meta['value']][] = $meta['a'];
 			}
 		}
 	}
@@ -223,16 +224,16 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 //				$ret[$meta['value']] = [];
 //			}
 //			
-//			$ret[$meta['value']][] = $meta['node'];
+//			$ret[$meta['value']][] = $meta['a'];
 //		}
 //		// Add shared nodes (primarily authored nodes)
 //		else if ( $meta['scope'] == SH_SCOPE_SHARED ) {
-//			if ( in_array($meta['node'], $node_ids) ) {
+//			if ( in_array($meta['a'], $node_ids) ) {
 //				if ( !isset($ret[$meta['value']]) ) {
 //					$ret[$meta['value']] = [];
 //				}
 //				
-//				$ret[$meta['value']][] = $meta['node'];
+//				$ret[$meta['value']][] = $meta['a'];
 //			}
 //		}
 //	}
