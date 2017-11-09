@@ -23,8 +23,9 @@ export default class PageUser extends Component {
 
         let articlesDefault = node['articles'] > 0 ? true : false;
         let ShowNav = (<ContentNavUser node={node} user={user} path={path} extra={extra} />);
+        let editing = extra[extra.length - 1] == "edit";
 
-        if(extra[extra.length - 1] == "edit") {
+        if(editing) {
             ShowNav = null;
         }
 

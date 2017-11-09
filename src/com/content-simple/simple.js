@@ -56,6 +56,12 @@ export default class ContentSimple extends Component {
 	}
 
 	componentWillUpdate( newProps, newState ) {
+		//Editing is done in constructor and since this isn't reloaded in most instances it requires a hack
+		let editingNext = newProps.extra && newProps.extra.length && newProps.extra[newProps.extra.length-1] == 'edit';
+		if( editingNext && !this.isEditMode() ) {
+			this.setState({ "editing": true });
+		}
+
 		if ( this.props.node !== newProps.node ) {
 			if ( this.props.authored ) {
 				this.getAuthor(newProps.node);
