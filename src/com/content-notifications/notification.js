@@ -114,7 +114,7 @@ export default class NotificationItem extends Component {
 				}
 			}
 
-		} else if(notification.notification.note) {
+		} else if( notification.note ) {
 			const note = notification.note[0];
 			let NoteAuthor = null;
 			if (note.author > 0) {

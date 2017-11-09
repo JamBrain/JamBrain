@@ -222,7 +222,7 @@ export default class NotificationsBase extends Component {
 					let firstNote = noteLookup.get(notification.note);
 					data.note = [firstNote];
 					if (!data.users.has(firstNote.author)) {
-						data.users.set(firstNote.author, firstNote);
+						data.users.set(firstNote.author, usersLookup.get(firstNote.author));
 					}
 
 					if (!firstNote.mention && !firstNote.selfauthored && !firstNote.isNodeAuthor) {
