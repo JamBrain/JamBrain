@@ -9,7 +9,12 @@ import ViewFooter						from 'com/view-footer/footer';
 
 export default class LayoutSidebar extends Component {
     render( props, state ) {
-        let {user, featured} = props;
+        let {user, featured, noSidebar} = props;
+        let SidebarView = (<ViewSidebar user={user} featured={featured}/>);
+
+        if(noSidebar) {
+
+        }
 
         return (
             <div id="layout">
@@ -18,7 +23,7 @@ export default class LayoutSidebar extends Component {
                     <ViewHeader user={user} featured={featured}/>
                     <div id="content-sidebar">
                         {props.children}
-                        <ViewSidebar user={user} featured={featured}/>
+                        {SidebarView}
                     </div>
                     <ViewFooter/>
                 </div>

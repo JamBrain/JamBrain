@@ -54,7 +54,6 @@ export default class Router extends Component {
         }
 
         this.setState({"current": currentRoute});
-        console.log("current:", currentRoute.attributes.key);
     }
 
     // Checks if path is a match
@@ -95,8 +94,6 @@ export default class Router extends Component {
                 return false;
             }
         }
-
-        console.log(urlPath, "matches", pathArray);
         return true;
     }
 
@@ -123,28 +120,6 @@ export default class Router extends Component {
         return true;
     }
 
-    generateKey( route ) {
-        let key = "";
-
-        for (let i in this.state.match) {
-            let prop = this.state.match[i];
-
-            if ( route.hasOwnProperty(prop) ) {
-                key += route[prop];
-
-                if ( i < this.state.match.length - 1 ) {
-                    key += "/";
-                }
-            }
-        }
-
-        if ( route.static && route.path ) {
-            key += route.path;
-        }
-
-        return key;
-    }
-
     // Iterate through all routes and flatten them
     flattenRoutes( children, parent, reset ) {
         for (let i in children) {
@@ -163,9 +138,6 @@ export default class Router extends Component {
                 ...node.attributes,
                 ...child.attributes
             };
-
-            props["key"] = this.generateKey(props);
-
 
             if ( props.default && props.static && props.path ) {
                 props.path = ["/", ...props.path];
@@ -187,10 +159,6 @@ export default class Router extends Component {
             this.setState({"routes": []});
             this.flattenRoutes(next.children);
             this.getCurrentRoute(next);
-
-            if (next.node.id != this.props.node.id) {
-                this.forceUpdate();
-            }
         }
     }
 
@@ -199,6 +167,6 @@ export default class Router extends Component {
             return;
         }
 
-        return cloneElement(state.current, props);
+        return cloneElement(state.current, ...props);
     }
 }

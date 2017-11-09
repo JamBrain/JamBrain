@@ -29,7 +29,7 @@ export default class PageUser extends Component {
         }
 
         return (
-            <LayoutSidebar {...props}>
+            <LayoutSidebar noSidebar {...props}>
                 <div id="content">
                     {ShowNav}
                     <ContentUser node={node} user={user} path={path} extra={extra}/>
@@ -39,6 +39,7 @@ export default class PageUser extends Component {
                         <Route static path="/games" component={UserGames} />
                         <Route static path="/following" component={UserFollowing} />
                         <Route static path="/followers" component={UserFollowers} />
+                        <Route static path="/edit" />
 
                         <Route type="error" component={ContentError} />
                     </Router>
