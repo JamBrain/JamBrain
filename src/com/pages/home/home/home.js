@@ -9,7 +9,7 @@ export default class HomeHome extends Component {
     render( props, state ) {
         let {node, user, featured, path, extra, error, home} = props;
 
-        var ShowHome = <h1>Home!</h1>;
+        var ShowHome = null;
 
         return (
             <ContentTimeline types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra}>

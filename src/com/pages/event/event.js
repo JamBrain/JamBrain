@@ -4,6 +4,9 @@ import LayoutSidebar from 'com/layouts/sidebar/sidebar';
 import ContentEvent						from 'com/content-event/event';
 import ContentNavEvent					from 'com/content-nav/nav-event';
 import ContentNavTheme					from 'com/content-nav/nav-theme';
+
+import ContentError						from 'com/content-error/error';
+
 import Router from 'com/router/router';
 import Route from 'com/router/route';
 
@@ -35,8 +38,10 @@ export default class PageEvent extends Component {
 					<ContentEvent node={node} user={user} path={path} extra={extra} featured={featured} />
                     <Router node={node} props={{...props}}>
                         <Route default static path="/stats" component={EventStats} />
-                        <Route static path={"/theme"} morePaths component={EventTheme} />
-                        <Route static path={["/games", "/results"]} morePaths component={EventGames} />
+                        <Route static path="/theme" morePaths component={EventTheme} />
+                        <Route static path={["/games", "/results"]} morePaths component={EventGames} />\
+
+                        <Route type="error" component={ContentError} />
                     </Router>
 				</div>
             </LayoutSidebar>

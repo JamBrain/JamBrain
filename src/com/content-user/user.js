@@ -86,6 +86,7 @@ export default class ContentUser extends Component {
 
 	isEditMode() {
 		var extra = this.props.extra;
+		console.log(extra && extra.length && extra[extra.length-1]);
 		return extra && extra.length && extra[extra.length-1] == 'edit';
 	}
 

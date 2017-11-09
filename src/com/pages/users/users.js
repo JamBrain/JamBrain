@@ -1,6 +1,7 @@
 import {h, Component} from 'preact/preact';
 
 import LayoutSidebar from 'com/layouts/sidebar/sidebar';
+import ContentUsers						from 'com/content-user/user';
 
 export default class PageUsers extends Component {
     constructor( props ) {}

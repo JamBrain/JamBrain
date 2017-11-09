@@ -1,5 +1,7 @@
 import {h, Component} from 'preact/preact';
 
+import ContentTimeline					from 'com/content-timeline/timeline';
+
 export default class UserFeed extends Component {
     constructor( props ) {}
 

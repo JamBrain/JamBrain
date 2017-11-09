@@ -10,6 +10,11 @@ export default class UserGames extends Component {
 
     onNavChange( e ) {
         this.forceUpdate();
+        console.log("nav");
+    }
+
+    componentDidMount(){
+        console.log("mount");
     }
 
     render( props, state ) {

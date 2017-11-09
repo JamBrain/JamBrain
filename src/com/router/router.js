@@ -12,11 +12,10 @@ export default class Router extends Component {
             "routes": [],
             "current": null,
             "match": match,
-            "forceRenderKey": null
         };
 
 
-        if(this.props.node.id !== 0) {
+        if (this.props.node.id !== 0) {
             this.flattenRoutes(this.props.children);
             this.getCurrentRoute();
         }
@@ -45,65 +44,65 @@ export default class Router extends Component {
                 currentRoute = route;
             }
 
-            if(route.attributes.type == "error") {
+            if (route.attributes.type == "error") {
                 errorRoute = route;
             }
         }
 
-        if(!currentRoute && errorRoute) {
+        if (!currentRoute && errorRoute) {
             currentRoute = errorRoute;
         }
 
         this.setState({"current": currentRoute});
+        console.log("current:", currentRoute.attributes.key);
     }
 
     // Checks if path is a match
     matchPath( path, morePaths ) {
-        if(Array.isArray(path)) {
-            for(let v in path) {
-                if(this.matchPath(path[v], morePaths)) {
+        if (Array.isArray(path)) {
+            for (let v in path) {
+                if (this.matchPath(path[v], morePaths)) {
                     return true;
                 }
             }
             return false;
         }
 
-        let urlPath = (this.props.path ? this.props.path : window.location.pathname
-                        .replace(this.props.node.path, "")
-                        .replace("/$" + this.props.node.id, "")
-                        .split("/"))
-                        .filter(n => n);
+        let urlPath = window.location.pathname
+                        .replace(this.props.node.path, "") //remove path
+                        .replace("/$" + this.props.node.id, "") //remove /${nodeid}
+                        .split("/") //split by slashes into array
+                        .filter(n => n); //remove null entries
+
         let pathArray = path.split("/")
                         .filter(n => n);
 
-        if(!morePaths) {
+        if (!morePaths) {
             urlPath = urlPath.reverse();
             pathArray = pathArray.reverse();
         }
 
-        if(pathArray.length <= 0) {
+        if (pathArray.length <= 0) {
             pathArray = [""];
         }
 
-        if(urlPath.length <= 0) {
+        if (urlPath.length <= 0) {
             urlPath = [""];
         }
 
-        for(let i in pathArray) {
+        for (let i in pathArray) {
             if (pathArray[i] != urlPath[i]) {
                 return false;
             }
         }
+
+        console.log(urlPath, "matches", pathArray);
         return true;
     }
 
     // Checks if route is a match
     matchRoute( a, b ) {
         for (let i in this.state.match) {
-            if((a[this.state.match[i]] || b[this.state.match[i]]) == "*") {
-                return true;
-            }
-
             let aMatch = a[this.state.match[i]] == "" ? null : a[this.state.match[i]];
             let bMatch = b[this.state.match[i]] == "" ? null : b[this.state.match[i]];
 
@@ -111,12 +110,12 @@ export default class Router extends Component {
                 continue;
             }
 
-            if(Array.isArray(aMatch)) {
-                if(!aMatch.includes(bMatch)) {
+            if ( Array.isArray(aMatch) ) {
+                if ( !aMatch.includes(bMatch) ) {
                     return false;
                 }
             }
-            else if (aMatch != bMatch) {
+            else if ( aMatch != bMatch ) {
                 return false;
             }
         }
@@ -127,19 +126,19 @@ export default class Router extends Component {
     generateKey( route ) {
         let key = "";
 
-        for(let i in this.state.match) {
+        for (let i in this.state.match) {
             let prop = this.state.match[i];
 
-            if(route.hasOwnProperty(prop)) {
+            if ( route.hasOwnProperty(prop) ) {
                 key += route[prop];
 
-                if(i >= this.state.match.length) {
+                if ( i < this.state.match.length - 1 ) {
                     key += "/";
                 }
             }
         }
 
-        if(route.static && route.path) {
+        if ( route.static && route.path ) {
             key += route.path;
         }
 
@@ -148,36 +147,35 @@ export default class Router extends Component {
 
     // Iterate through all routes and flatten them
     flattenRoutes( children, parent, reset ) {
-        if(reset) {
-            this.setState({routes: []});
-        }
-
         for (let i in children) {
             let child = children[i];
 
-            if(child.nodeName !== Route) {
+            if (child.nodeName !== Route) {
                 continue;
             }
 
-            parent = parent ? parent : child;
-
-            let cloneProps = Object.assign(
-                                {ref: (r) => {this.cRoute = r;}},
-                                parent.attributes,
-                                child.attributes
-                            );
-
-            let key = this.generateKey(cloneProps);
-
-            if(cloneProps.default && cloneProps.static && cloneProps.path) {
-                cloneProps.path = ["/", cloneProps.path];
+            let node = child;
+            if ( parent ) {
+                node = parent;
             }
 
-            child = cloneElement(child, Object.assign({}, cloneProps, {key: key}));
+            let props = {
+                ...node.attributes,
+                ...child.attributes
+            };
+
+            props["key"] = this.generateKey(props);
+
+
+            if ( props.default && props.static && props.path ) {
+                props.path = ["/", ...props.path];
+            }
+
+            child = cloneElement(child, {...props});
 
             this.state.routes.push(child);
 
-            if (child.children.length > 0) {
+            if ( child.children.length > 0 ) {
                 this.flattenRoutes(child.children, child);
             }
         }
@@ -186,13 +184,18 @@ export default class Router extends Component {
     //Re-calculate routes when router props change
     componentWillReceiveProps( next ) {
         if (next.node.id) {
-            this.flattenRoutes(next.children, null, true);
+            this.setState({"routes": []});
+            this.flattenRoutes(next.children);
             this.getCurrentRoute(next);
+
+            if (next.node.id != this.props.node.id) {
+                this.forceUpdate();
+            }
         }
     }
 
     render( props, state ) {
-        if (!state.current) {
+        if ( !state.current ) {
             return;
         }
 

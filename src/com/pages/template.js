@@ -1,8 +1,6 @@
 import {h, Component} from 'preact/preact';
 
 import LayoutSidebar from 'com/layouts/sidebar/sidebar';
-import Router from 'com/router/router';
-import Route from 'com/router/route';
 
 export default class Page extends Component {
     constructor( props ) {}

@@ -1,5 +1,7 @@
 import {h, Component} from 'preact/preact';
 
+import ContentUserFollowers from 'com/content-user/user-followers';
+
 export default class UserFollowers extends Component {
     constructor( props ) {}
 
