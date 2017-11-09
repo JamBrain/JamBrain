@@ -32,8 +32,13 @@ export default class DialogCreate extends Component {
 						window.location.href = r.path;
 					}
 				}
-				else
-					window.location.href = window.location.pathname;
+				else {
+					this.setState({'error': r.message});
+				}
+
+				// This was the the old else
+//				else
+//					window.location.href = window.location.pathname;
 			})
 			.catch(err => {
 				this.setState({'error': err});

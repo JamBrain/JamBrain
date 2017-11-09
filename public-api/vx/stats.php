@@ -64,7 +64,7 @@ switch ( $node['type'] ) {
 				'item', null, null,
 				null
 			);
-			$stats['authors'] = nodeLink_CountByABKeyScope(
+			$stats['authors'] = nodeMeta_CountByABKeyScope(
 				$node['id'], null, null, 'author'
 			);
 			

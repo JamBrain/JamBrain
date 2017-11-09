@@ -32,7 +32,7 @@ switch ( $action ) {
 				// If there is a user id, find the user's games and exclude them
 				$excludegames = [];
 				if ( $user_id = userAuth_GetID() ) {		
-					$userauthoredlinks = nodeLink_GetByKeyNode("author", $user_id);
+					$userauthoredlinks = nodeMeta_GetByKeyNode("author", $user_id);
 					foreach( $userauthoredlinks as $authorlink ) {
 						// This will only go one way, but guard anyway.
 						if ( $authorlink['b'] == $user_id ) { $excludegames[] = $authorlink['a']; }

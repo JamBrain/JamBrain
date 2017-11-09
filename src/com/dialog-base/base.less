@@ -8,18 +8,19 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	
+
 	z-index: 9999;
 
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	
+
 	animation: dialog-background-fadein 0.5s;
 
 	@keyframes dialog-background-fadein {
-	    0%		{ opacity: 0; }
-	    50%		{ opacity: 1; }
+		0%		{ opacity: 0; }
+
+		50%		{ opacity: 1; }
 	}
 }
 
@@ -27,6 +28,7 @@
 .if-dialog-not-small-block {
 	display: block;
 }
+
 .if-dialog-not-small-inline {
 	display: inline-block;
 }
@@ -36,7 +38,7 @@
 	display: none;
 }
 
-@media (max-width: 40em) { 
+@media (max-width: 40em) {
 	.if-dialog-not-small-block,
 	.if-dialog-not-small-inline {
 		display: none;
@@ -45,6 +47,7 @@
 	.if-dialog-small-block {
 		display: block;
 	}
+
 	.if-dialog-small-inline {
 		display: inline-block;
 	}
@@ -55,12 +58,14 @@
 .dialog-base {
 	position: relative;
 	z-index: 10000;
-	
+
 	animation: dialog-base-fadein 0.5s;
 
 	@keyframes dialog-base-fadein {
-	    0%		{ opacity: 0; }
-	    25%		{ opacity: 0; }
-	    75%		{ opacity: 1; }
+		0%		{ opacity: 0; }
+
+		25%		{ opacity: 0; }
+
+		75%		{ opacity: 1; }
 	}
 }

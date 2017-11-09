@@ -411,35 +411,51 @@ switch ( $action ) {
 			// NOTE: It is not an issue that these get merged. Different scopes do not make metadata in to unique indexes.
 			// WARNING: Don't ever send the full ParseByNode response to the user. SH_SCOPE_SERVER scope data must never be seen by a client.
 
-			$metas = nodeMeta_ParseByNode($user_id);
-			$meta_out = array_merge([],
-				// Public metadata (this is already in the node)
-				//isset($metas[SH_SCOPE_PUBLIC]) ? $metas[SH_SCOPE_PUBLIC] : [],
-				// Shared metadata (authors??)
-				isset($metas[SH_SCOPE_SHARED]) ? $metas[SH_SCOPE_SHARED] : [],
-				// Private metadata
-				isset($metas[SH_SCOPE_PRIVATE]) ? $metas[SH_SCOPE_PRIVATE] : []
-			);
+//			$metas = nodeMeta_ParseByNode($user_id);
+//			$meta_out = array_merge([],
+//				// Public metadata (this is already in the node)
+//				//isset($metas[SH_SCOPE_PUBLIC]) ? $metas[SH_SCOPE_PUBLIC] : [],
+//				// Shared metadata (authors??)
+//				isset($metas[SH_SCOPE_SHARED]) ? $metas[SH_SCOPE_SHARED] : [],
+//				// Private metadata
+//				isset($metas[SH_SCOPE_PRIVATE]) ? $metas[SH_SCOPE_PRIVATE] : []
+//			);
+//
+//			$links = nodeLink_ParseByNode($user_id);
+//			$link_out = array_merge([],
+//				// Public Links from me (this is already in the node)
+//				//isset($links[0][SH_SCOPE_PUBLIC]) ? $links[0][SH_SCOPE_PUBLIC] : [],
+//				// Shared Links from me
+//				isset($links[0][SH_SCOPE_SHARED]) ? $links[0][SH_SCOPE_SHARED] : [],
+//				// Procted Links from me
+//				isset($links[0][SH_SCOPE_PRIVATE]) ? $links[0][SH_SCOPE_PRIVATE] : []
+//			);
+//			$refs_out = array_merge([],
+//				// Public links to me
+//				isset($links[1][SH_SCOPE_PUBLIC]) ? $links[1][SH_SCOPE_PUBLIC] : [],
+//				// Shared links to me
+//				isset($links[1][SH_SCOPE_SHARED]) ? $links[1][SH_SCOPE_SHARED] : []
+//			);
 
-			$links = nodeLink_ParseByNode($user_id);
-			$link_out = array_merge([],
-				// Public Links from me (this is already in the node)
-				//isset($links[0][SH_SCOPE_PUBLIC]) ? $links[0][SH_SCOPE_PUBLIC] : [],
-				// Shared Links from me
-				isset($links[0][SH_SCOPE_SHARED]) ? $links[0][SH_SCOPE_SHARED] : [],
-				// Procted Links from me
-				isset($links[0][SH_SCOPE_PRIVATE]) ? $links[0][SH_SCOPE_PRIVATE] : []
+			$meta = nodeMeta_ParseByNode($user_id);
+			$meta_out = array_merge([],
+				// Public Meta from me (this is already in the node)
+				//isset($meta[0][SH_SCOPE_PUBLIC]) ? $meta[0][SH_SCOPE_PUBLIC] : [],
+				// Shared Meta from me
+				isset($meta[0][SH_SCOPE_SHARED]) ? $meta[0][SH_SCOPE_SHARED] : [],
+				// Procted Meta from me
+				isset($meta[0][SH_SCOPE_PRIVATE]) ? $meta[0][SH_SCOPE_PRIVATE] : []
 			);
 			$refs_out = array_merge([],
-				// Public links to me
-				isset($links[1][SH_SCOPE_PUBLIC]) ? $links[1][SH_SCOPE_PUBLIC] : [],
-				// Shared links to me
-				isset($links[1][SH_SCOPE_SHARED]) ? $links[1][SH_SCOPE_SHARED] : []
+				// Public meta to me
+				isset($meta[1][SH_SCOPE_PUBLIC]) ? $meta[1][SH_SCOPE_PUBLIC] : [],
+				// Shared meta to me
+				isset($meta[1][SH_SCOPE_SHARED]) ? $meta[1][SH_SCOPE_SHARED] : []
 			);
 				
 			$RESPONSE['id'] = $user_id;
 			$RESPONSE['meta'] = $meta_out;
-			$RESPONSE['link'] = $link_out;
+//			$RESPONSE['link'] = $link_out;
 			$RESPONSE['refs'] = $refs_out;
 		}
 		else {
@@ -499,7 +515,6 @@ switch ( $action ) {
 			if ( empty($parent) || empty($type) ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
 			}
-
 			// MK: This is a potential place you'll need to fix things once users are restricted from posting under other people's `can-create` nodes
 			// MK: oh. after a quick glance it might be fine, but you should check it out again.
 			$where = nodeComplete_GetWhereIdCanCreate($user_id);
@@ -558,6 +573,7 @@ switch ( $action ) {
 				json_EmitFatalError_Permission("You don't have permission to create any more $fulltype's here", $RESPONSE);
 			}
 
+
 			switch ( $fulltype ) {
 				case 'item/game':
 					// TODO: Rollback
@@ -565,9 +581,9 @@ switch ( $action ) {
 					$new_node = node_Add($parent, $user_id, $type, $subtype, "", null, "", "");
 					if ( $new_node ) {
 						// Allow posts under the game
-						nodeMeta_AddByNode($new_node, SH_SCOPE_SHARED, 'can-create', 'post');
+						nodeMeta_Add($new_node, 0, SH_SCOPE_SHARED, 'can-create', 'post');
 						// Add yourself as an author of the game
-						nodeLink_AddbyNode($new_node, $user_id, SH_SCOPE_PUBLIC, 'author');
+						nodeMeta_Add($new_node, $user_id, SH_SCOPE_PUBLIC, 'author');
 					}
 					else {
 						json_EmitFatalError_Server(null, $RESPONSE);
@@ -959,7 +975,7 @@ switch ( $action ) {
 							if ( in_array($node['type'], THINGS_I_CAN_STAR) ) {
 								// TODO: Check if this exact value isn't the newest
 
-								$RESPONSE['id'] = nodeLink_AddByNode($user_id, $node_id, SH_SCOPE_SHARED, 'star');
+								$RESPONSE['id'] = nodeMeta_Add($user_id, $node_id, SH_SCOPE_SHARED, 'star');
 								if ( $RESPONSE['id'] ) {
 									nodeCache_InvalidateById($node_id);
 								}
@@ -993,7 +1009,7 @@ switch ( $action ) {
 							if ( in_array($node['type'], THINGS_I_CAN_STAR) ) {
 								// TODO: Check if this exact value isn't the newest
 								
-								$RESPONSE['id'] = nodeLink_RemoveByNode($user_id, $node_id, SH_SCOPE_SHARED, 'star');
+								$RESPONSE['id'] = nodeMeta_Remove($user_id, $node_id, SH_SCOPE_SHARED, 'star');
 								if ( $RESPONSE['id'] ) {
 									nodeCache_InvalidateById($node_id);
 								}
@@ -1089,9 +1105,9 @@ switch ( $action ) {
 								json_EmitFatalError_BadRequest("Internal error while applying '$key' metadata in '".$node['type']."'", $RESPONSE);
 							
 							if ( $action == 'add' )
-								$changed = nodeMeta_AddByNode($node_id, $scope, $key, $v);
+								$changed = nodeMeta_Add($node_id, 0, $scope, $key, $v);
 							else if ( $action == 'remove' )
-								$changed = nodeMeta_RemoveByNode($node_id, $scope, $key, $v);
+								$changed = nodeMeta_Remove($node_id, 0, $scope, $key, $v);
 							
 							if ( $changed )
 								$RESPONSE['changed'][$key] = $v;
@@ -1172,9 +1188,9 @@ switch ( $action ) {
 								json_EmitFatalError_BadRequest("Internal error in applying requested '$key' link between '".$node_a['type']."' and '".$node_b['type']."'", $RESPONSE);
 							
 							if ( $action == 'add' )
-								$changed = nodeLink_AddByNode($node_a_id, $node_b_id, $scope, $key, $v);
+								$changed = nodeMeta_Add($node_a_id, $node_b_id, $scope, $key, $v);
 							else if ( $action == 'remove' )
-								$changed = nodeLink_RemoveByNode($node_a_id, $node_b_id, $scope, $key, $v);
+								$changed = nodeMeta_Remove($node_a_id, $node_b_id, $scope, $key, $v);
 							
 							if ( $changed )
 								$RESPONSE['changed'][$key] = $v;

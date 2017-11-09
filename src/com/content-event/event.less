@@ -14,7 +14,7 @@
 		display: inline;
 		vertical-align: middle;
 	}
-	
+
 	.-single {
 		border:0;
 		padding:12px 20px;
@@ -23,23 +23,24 @@
 		font-size:1em;
 		box-shadow: 0 1px 6px rgba(0,0,0,0.2);
 		background:#EEE;
-		
+
 		outline: none;
-		
+
 		&:focus {
 			background:#FFF;
 			color:#000;
 		}
 	}
-	
+
 	& .-submit {
 		background:#AAA;
 		color:#DDD;
-		
+
 		&:focus {
 			background: @MAJOR_COLOR1;
 			color: @MAJOR_LIGHT;
 		}
+
 		&:active {
 			background: @MAJOR_LIGHT;
 			color: @MAJOR_COLOR1;
@@ -50,17 +51,17 @@
 	& button {
 		background:#AAA;
 		color:#DDD;
-	
+
 		border:0;
 		padding:12px 28px;
 		cursor:pointer;
-	
+
 		margin:0.5em;
 		border-radius:2.0em;
 		font-weight:700;
-	    outline: none;
-	
-/*	    transition: transform 0.2s <?=BEZIER_NO_DIP_BIG_POP?>;*/
+		outline: none;
+
+		/*	    transition: transform 0.2s <?=BEZIER_NO_DIP_BIG_POP?>;*/
 
 		/*&:hover {
 			transform: scale(1.25);
@@ -68,17 +69,18 @@
 		&:focus {
 			background:#666;
 			color:#FFF;
-			
+
 			padding:10px 26px;
 			/*border:2px dotted #FFF;*/
 			border:2px solid #FFF;
 		}
+
 		&:active {
 			background:#FFF;
 			color:#666;
 			/*transform: scale(1.5);*/
 		}
-	}	
+	}
 }
 
 .foot-note {
@@ -93,7 +95,7 @@
 		border: 1px solid @MAJOR_MUTE_D2;
 		display: inline-block;
 		font-weight: bold;
-		
+
 		&:hover,
 		&:focus,
 		&.-selected:hover,
@@ -102,20 +104,21 @@
 			background: @MAJOR_COLOR1;
 			border: 1px solid @MAJOR_COLOR1;
 		}
-		
+
 		&.-selected {
 			color: @MAJOR_MUTE_L2;
 			background: @MAJOR_MUTE_D2;
-			border: 1px solid @MAJOR_MUTE_D2;			
+			border: 1px solid @MAJOR_MUTE_D2;
 		}
 
 		&:first-child {
 			margin-left: 0;
 		}
+
 		&:last-child {
 			margin-right: 0;
 		}
-		
+
 		color: @MAJOR_MUTE_D2;
 	}
 }

@@ -5,7 +5,7 @@
 
 #sidebar > .sidebar-countdown {
 	color: @COL_NLLL;/*@MAJOR_MUTE;*/
-	
+
 	& a,
 	& a:visited {
 		color: @COL_NLLLLL;
@@ -59,6 +59,7 @@
 		text-align: center;
 		overflow: hidden;
 	}
+
 	& > .-clock > .-countdown .bloc-time:last-child {
 		margin-right: 0;
 	}
@@ -84,9 +85,11 @@
 		/*box-shadow: 0 3px 4px 0 fade(@COL_D, 20%), inset 2px 4px 0 0 fade(@COL_L, 80%);*/
 		box-shadow: 0 1px 4px 0 fade(@COL_D, 60%);
 	}
+
 	& > .-clock > .-countdown .figure:last-child {
 		margin-right: 0px;
 	}
+
 	& > .-clock > .-countdown .figure  span {
 		position: absolute;
 		left: 0.5px;
@@ -97,10 +100,12 @@
 		font-weight: 700;
 		color: @COL_NDDD;/*@MAJOR_MUTE_D5;*/
 	}
+
 	& > .-clock > .-countdown.urgent .figure span {
 		color: @COL_A; /*@MAJOR_COLOR1;*/
 	}
-	& > .-clock > .-countdown .figure .top:after, 
+
+	& > .-clock > .-countdown .figure .top:after,
 	& > .-clock > .-countdown .figure .bottom-back:after {
 		content: "";
 		position: absolute;
@@ -111,6 +116,7 @@
 		height: 100%;
 		border-bottom: 1px solid fade(@COL_D, 10%);
 	}
+
 	& > .-clock > .-countdown .figure .top {
 		z-index: 3;
 		background-color: @COL_L;
@@ -120,9 +126,11 @@
 		border-top-left-radius: @RADIUS_A;
 		transform: perspective(200px);
 	}
+
 	& > .-clock > .-countdown .figure .bottom {
 		z-index: 1;
 	}
+
 	& > .-clock > .-countdown .figure .bottom:before {
 		content: "";
 		position: absolute;
@@ -133,6 +141,7 @@
 		height: 50%;
 		background-color: fade(@COL_D, 2%);
 	}
+
 	& > .-clock > .-countdown .figure .bottom-back {
 		z-index: 2;
 		top: 0;
@@ -142,6 +151,7 @@
 		border-top-right-radius: @RADIUS_A;
 		border-top-left-radius: @RADIUS_A;
 	}
+
 	& > .-clock > .-countdown .figure .bottom-back span {
 		position: absolute;
 		top: 0;
@@ -150,7 +160,7 @@
 		margin: auto;
 	}
 
-	& > .-clock > .-countdown .figure .top, 
+	& > .-clock > .-countdown .figure .top,
 	& > .-clock > .-countdown .figure .top-back {
 		height: 50%;
 		overflow: hidden;
@@ -167,6 +177,7 @@
 		border-bottom-right-radius: @RADIUS_A;
 		border-bottom-left-radius: @RADIUS_A;
 	}
+
 	& > .-clock > .-countdown .figure .top-back span {
 		position: absolute;
 		top: -100%;

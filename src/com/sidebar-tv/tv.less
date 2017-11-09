@@ -9,28 +9,29 @@
 @STV_SEL_COL: @COL_NLL;
 
 #sidebar > .sidebar-tv {
-/*	background: @COL_NDDDD;*/
+	/*	background: @COL_NDDDD;*/
 
 	min-height: 3rem;
-	
+
 	& > .-view {
 		display: flex;
-		
+
 		margin-bottom: 1px;
 		font-size: 1.25em;
-		
+
 		& > div {
 			padding: 0.5rem;
 			width: 100%;
 			text-align: center;
 			font-weight: bold;
-			
+
 			background: @STV_BG;
 			color: @STV_COL;
-			
+
 			transition: background 0.2s, color 0.2s;
 
 			margin-right: 1px;
+
 			&:last-child {
 				margin-right: 0;
 			}
@@ -39,17 +40,19 @@
 				background: @STV_SEL_BG;
 				color: @STV_SEL_COL;
 			}
-			
+
 			&:hover {
 				background: @COL_A;
 				color: @COL_L;
 			}
 		}
 
+		/*
 		& > .-live {
 		}
 		& > .-vod {
 		}
+		*/
 	}
 
 	& > .-active {
@@ -60,12 +63,12 @@
 			/*padding:0.5em;*/
 			height: 0;
 			padding-bottom: 56.25%;
-			
+
 			opacity: 0.7;
 			transition: opacity 0.2s;
-			
+
 			backface-visibility: hidden;	/* Fixes the jitter on Chrome during hover */
-			
+
 			& > img {
 				width: 100%;
 				/*width: calc(~"100% - 1em");*/
@@ -74,6 +77,7 @@
 				height: auto;
 			}
 		}
+
 		& > .-live {
 			position: absolute;
 			left: 0.5rem;
@@ -90,7 +94,9 @@
 			}
 			@keyframes blinker {
 				5% { opacity: 1.0; }
+
 				10% { opacity: 0.2; }
+
 				15% { opacity: 1.0; }
 			}
 
@@ -99,6 +105,7 @@
 				font-weight: bold;
 			}
 		}
+
 		& > .-name {
 			position: absolute;
 			left: 0.5rem;
@@ -106,19 +113,22 @@
 
 			padding: 0.1em 0.5em 0.2em;
 			border-radius: 1em;
-			
+
 			&.stream-twitch {
 				background: rgb(100,65,165);
 			}
+
 			&.stream-youtube {
 				background: rgb(230,33,23);
 			}
 
 			color: @COL_L;
+
 			& > svg {
 				font-size: 0.75em;
 			}
 		}
+
 		& > .-viewers {
 			position: absolute;
 			right: 0.5rem;
@@ -130,10 +140,12 @@
 			background: fade(@COL_D, 100%);
 
 			color: @COL_L;
+
 			& > svg {
 				font-size: 0.75em;
 			}
 		}
+
 		& > .-play {
 			position: absolute;
 			top: 50%;
@@ -150,13 +162,16 @@
 
 			background: fade(@COL_D, 50%);
 		}
+
 		&:hover > .-play {
 			font-size: 4em;
 			background: @COL_A;
 		}
+
 		&:hover > .-img {
 			opacity: 0.35;
 		}
+
 		&:active > .-play {
 			font-size: 2.5em;
 		}
@@ -171,33 +186,36 @@
 			color: @COL_L;
 			background: fade(@COL_D, 50%);
 
-   			transform: scale(1, 1);
+			transform: scale(1, 1);
 
 			transition: all 0.2s;
 			opacity: 0;
-			
+
 			& svg {
 				display: block;
 			}
 
 			&:hover {
 				background: @COL_A;
-    			transform: scale(1.25, 1.25);
-/*				
+				transform: scale(1.25, 1.25);
+				/*
 				font-size: 2em;
 				bottom: 0.5em;
 				right: 0.5em;
 */
 			}
+
 			&:hover + .-play {
 				background: fade(@COL_D, 50%);
 				font-size: 3em;
 			}
 		}
+
 		&:hover > .-external {
 			opacity: 1.0;
 		}
 	}
+
 	& > .-detail {
 		/*margin-bottom:0.5em;*/
 
@@ -217,10 +235,12 @@
 
 			position: relative;
 		}
+
 		& > .icon-quotes-left {
 			top: 0em - 0.1em;
 			float: left;
 		}
+
 		& > .icon-quotes-right {
 			top: 2.5em - 0.9em;
 			float: right;
@@ -231,24 +251,26 @@
 			font-style: italic;
 		}
 	}
+
 	& > .-browse {
 		display: flex;
 		flex-wrap: nowrap;
 		align-items: stretch;
 
 		/*padding: 0.5em 0.25em 0.25em;*/
-		
+
 		/*margin: 0.5em 0;*/
 
 		& > * {
 			width: 100%;
 			cursor: pointer;
-			
+
 			background: @STV_BG;
 			color: @STV_COL;
 			transition: background 0.2s, color 0.2s;
 
 			margin-right: 1px;
+
 			&:last-child {
 				margin-right: 0;
 			}
@@ -257,9 +279,9 @@
 				width: auto;
 				display: flex;
 				align-items: center;
-				
+
 				text-decoration: none;	/* removes stray underlines */
-				
+
 				& > div {
 					font-size: 0.5em;
 					white-space: nowrap;
@@ -275,10 +297,10 @@
 				& > img {
 					max-width: 100%;
 					display: block;
-					
+
 					opacity: 0.70;
 					transition: opacity 0.2s;
-					
+
 					backface-visibility: hidden;	/* Fixes the jitter on Chrome during hover */
 				}
 			}
@@ -286,12 +308,13 @@
 			&.selected {
 				background: @STV_SEL_BG;
 			}
+
 			&:hover,
 			&:focus {
 				background: @COL_A;
 				color: @COL_L;
 			}
-			
+
 			&:hover > div > img {
 				opacity: 0.35;
 			}

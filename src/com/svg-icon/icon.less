@@ -1,58 +1,70 @@
 .svg-icon {
 	display: inline-block;
-	
+
 	width: 1em;
 	height: 1em;
 	vertical-align: middle;
 
 	pointer-events: none;	/* disable the hover event that shows the title (title has a different meaning in SVG) */
-	
+
 	stroke-width: 0;
 	stroke: currentColor;
 	fill: currentColor;
-	
+
 	&.-baseline {
 		vertical-align: baseline !important;
 	}
+
 	&.-top {
 		vertical-align: top !important;
 	}
+
 	&.-bottom {
 		vertical-align: bottom !important;
 	}
+
 	&.-middle {
 		vertical-align: middle !important;
 	}
+
 	&.-text-top {
 		vertical-align: text-top !important;
 	}
+
 	&.-text-bottom {
 		vertical-align: text-bottom !important;
 	}
+
 	&.-small {
 		font-size: 0.75em;
 	}
+
 	&.-half {
 		font-size: 0.7em; 			/* Should be 0.70711, but I rounded down */
 	}
+
 	&.-quarter {
 		font-size: 0.5em;
 	}
+
 	&.-block {
 		display: block;
 	}
+
 	&.-gap {
 		padding: 0 0.25em;
 	}
-	
+
 	/* Pad to the full size if using a size modifier like small or half */
 	&.-pad {
 		&.-small {
 			padding: 0.1666em;		/* at 75% size, 0.3333em */
 		}
+
 		&.-half {
 			padding: 0.2144em;		/* at 70% size, 0.4288em */
 		}
+
 		&.-quarter {
 			padding: 0.5em;			/* at 50% size */
 		}

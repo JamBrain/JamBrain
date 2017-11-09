@@ -76,9 +76,9 @@ export default class ContentSimple extends Component {
 		// Clear the Authors
 //		this.setState({ authors: [] });
 
-		if ( node.link && node.link['author'] ) {
+		if ( node.meta && node.meta['author'] ) {
 			// Lookup the authors
-			$Node.Get( node.link['author'] )
+			$Node.Get( node.meta['author'] )
 			.then(r => {
 				if ( r.node && r.node.length ) {
 					this.setState({ 'authors': r.node });

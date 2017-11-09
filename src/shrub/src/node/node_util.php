@@ -13,7 +13,7 @@ function node_IsAuthor( &$node, &$user_id ) {
 		return true;
 		
 	// Check if you are on the list of authors (metadata)
-	if ( isset($node['link']) && isset($node['link']['author']) && in_array($user_id, $node['link']['author']) )
+	if ( isset($node['meta']) && isset($node['meta']['author']) && in_array($user_id, $node['meta']['author']) )
 		return true;
 	
 	return false;

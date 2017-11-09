@@ -2,61 +2,62 @@
 
 #content .content-item-box-old {
 
-    margin: 0.25em;
+	margin: 0.25em;
 
-    width: 32%;
-    height: inherit;
-    max-height: @BASE_WIDTH /8;
-    overflow: hidden;
+	width: 32%;
+	height: inherit;
+	max-height: @BASE_WIDTH /8;
+	overflow: hidden;
 
-    box-sizing: border-box;
+	box-sizing: border-box;
 
-    @media only screen and (max-width: 970px) {
-        width: 48%;
-        max-height: @BASE_WIDTH /6;
-    }
+	@media only screen and (max-width: 970px) {
+		width: 48%;
+		max-height: @BASE_WIDTH /6;
+	}
 
-    @media only screen and (max-width: 500px) {
-        width: 96%;
-        max-height: @BASE_WIDTH /4;
-    }
+	@media only screen and (max-width: 500px) {
+		width: 96%;
+		max-height: @BASE_WIDTH /4;
+	}
 
-    & > .content-common-footer {
-        position: absolute;
-        bottom: 0px;
-        left: 0px;
-        right: 0px;
-    }
+	& > .content-common-footer {
+		position: absolute;
+		bottom: 0px;
+		left: 0px;
+		right: 0px;
+	}
 
-    & > .-bodies {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
+	& > .-bodies {
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
 
-        & > img{
-            width: 100%;
-            height: auto;
-            overflow: hidden;
-        }
+		& > img{
+			width: 100%;
+			height: auto;
+			overflow: hidden;
+		}
 
-        & > .-title{
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: auto;
-            height: auto;
-            z-index: 10;
-            & > a.-text {
-                font-size: 1.25em;
-                color: @COL_NLLLL;
-                background-color: @COL_NDDDDD;
-            }
+		& > .-title{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: auto;
+			height: auto;
+			z-index: 10;
 
-            & > a:hover {
-                color: @COL_NLLLLL;
-                background-color: @COL_A;
-            }
-        }
+			& > a.-text {
+				font-size: 1.25em;
+				color: @COL_NLLLL;
+				background-color: @COL_NDDDDD;
+			}
 
-    }
+			& > a:hover {
+				color: @COL_NLLLLL;
+				background-color: @COL_A;
+			}
+		}
+
+	}
 }

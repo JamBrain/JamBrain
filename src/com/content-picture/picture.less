@@ -6,67 +6,70 @@
 
 #content > .content-picture {
 	position: relative;
-	
+
 	/*width:90%;*/
 	margin:auto;
-	
+
 	/*border: 1px solid rgba(0,0,0,0.2);*/
 	border-top: 4px solid #653;
-	
+
 	background: lighten(@MAIN_BACKGROUND,5%);
 	box-shadow: 0px 0px 3px rgba(64,0,0,0.2);
-	
+
 	background-size: scale;
-    background-repeat: no-repeat;
-    background-position: center center;      
-    
-    color: #FFF;   
+	background-repeat: no-repeat;
+	background-position: center center;
+
+	color: #FFF;
 
 	& > .-header {
 		padding: 1em;
 		background: @OVERLAY_COLOR;
-		
+
 		& > .-title {
 			font-size: 2.0em;
 			font-weight:bold;
 		}
+
 		& > .-subtext {
 			font-size: 0.8em;
 		}
+
 		& > .-avatar {
 			margin: -0.5em;
 			float:right;
 			cursor: pointer;
+
 			&:hover {
 				background: #D63;
 			}
+
 			& > img {
 				display:block;
 				padding: 0.5em;
 			}
 		}
 	}
+
 	& > .-space {
 		line-height: 8rem;
 		font-size: 2em;
 		text-align:center;
 		cursor:pointer;
-		
+
 		filter: drop-shadow( 0px 0px 4px #000 );
 		opacity: 0.5;
-		
+
 		&:hover {
 			opacity: 0.9;
 			font-size: 3em;
 		}
-	}	
+	}
 
 	& > .-body {
 		padding: 1em;
-		
+
 		background: @OVERLAY_COLOR;
-	}	
-	& > .-footer {
 	}
 }
 

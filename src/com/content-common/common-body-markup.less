@@ -3,14 +3,11 @@
 @BG: @COL_L;
 @DARK: @COL_NDDD;
 
-#content .content-common-body.-markup {
-}
-
 #content .-markup {
-	/* Inline Code */
-	& code {
-	}
-	
+	/*
+	Code Styled in com/content-common/common-code.less
+	*/
+
 	& pre {
 		display:block;
 		width: 100%;
@@ -24,27 +21,26 @@
 		box-sizing: border-box;
 	}
 
-    /* Tables */
-
+	/* Tables */
 	& table {
-        border: 1px solid @COL_NLLL;
-        margin: 2% 0;
-        border-collapse: collapse;
-    }
+		border: 1px solid @COL_NLLL;
+		margin: 2% 0;
+		border-collapse: collapse;
+	}
 
-    & th, td {
-        vertical-align: center;
-        border: 1px solid @COL_NLLL;
-        padding: 0.5em;
-    }
+	& th, td {
+		vertical-align: center;
+		border: 1px solid @COL_NLLL;
+		padding: 0.5em;
+	}
 
-    & tbody {
-        tr:nth-child(even) {
-            background-color: @COL_NLLLL;
-        }
+	& tbody {
+		tr:nth-child(even) {
+			background-color: @COL_NLLLL;
+		}
 
-        tr:nth-child(odd) {
-            background-color: inherit;
-        }
-    }
+		tr:nth-child(odd) {
+			background-color: inherit;
+		}
+	}
 }

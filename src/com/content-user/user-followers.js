@@ -71,8 +71,8 @@ export default class ContentUserFollowers extends Component {
             var followers = state.followerNodes
             .sort( (a,b) => {
 
-                var a_friend = props.user.private.link.star.indexOf(a.id) != -1;
-                var b_friend = props.user.private.link.star.indexOf(b.id) != -1;
+                var a_friend = props.user.private.meta.star.indexOf(a.id) != -1;
+                var b_friend = props.user.private.meta.star.indexOf(b.id) != -1;
 
                 if ( a_friend == b_friend){ // either their both freinds or both followers
                     return 0;
