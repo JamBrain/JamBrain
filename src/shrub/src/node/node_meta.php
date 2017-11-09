@@ -461,7 +461,7 @@ function nodeMeta_CountByABKeyScope( $parent = null, $a = null, $b = null, $key 
 //}
 
 
-function _nodeMetaVersion_Add( $a, $b, $scope, $key, $value ) {
+function _nodeMetaVersion_Add( $a, $b, $scope, $key, $value = null ) {
 	return db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_META_VERSION." (
 			a,
@@ -487,7 +487,7 @@ function _nodeMetaVersion_Add( $a, $b, $scope, $key, $value ) {
 	);
 }
 
-function _nodeMeta_Add( $a, $b, $version, $scope, $key, $value, $timestamp = null ) {
+function _nodeMeta_Add( $a, $b, $version, $scope, $key, $value = null, $timestamp = null ) {
 	if ( $timestamp ) {
 		return db_QueryInsert(
 			"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." (
@@ -546,19 +546,19 @@ function _nodeMeta_Add( $a, $b, $version, $scope, $key, $value, $timestamp = nul
 	);
 }
 
-function nodeMeta_Add( $a, $b, $scope, $key, $value ) {
+function nodeMeta_Add( $a, $b, $scope, $key, $value = null ) {
 	$version = _nodeMetaVersion_Add($a, $b, $scope, $key, $value);
 	return _nodeMeta_Add($a, $b, $version, $scope, $key, $value);
 }
 // NOTE: Doesn't actually remove, but adds an "ignore-me" entry
-function nodeMeta_Remove( $a, $b, $scope, $key, $value ) {
+function nodeMeta_Remove( $a, $b, $scope, $key, $value = null ) {
 	return nodeMeta_Add($a, $b, $scope^-1, $key, $value);
 }
 
 // Orphaned Metedata is metadata without versions (history)
-function nodeMeta_AddOrphan( $a, $b, $scope, $key, $value ) {
+function nodeMeta_AddOrphan( $a, $b, $scope, $key, $value = null ) {
 	return _nodeMeta_Add($a, $b, 0, $scope, $key, $value);
 }
-function nodeMeta_RemoveOrphan( $a, $b, $scope, $key, $value ) {
+function nodeMeta_RemoveOrphan( $a, $b, $scope, $key, $value = null ) {
 	return nodeMeta_AddOrphan($a, $b, $scope^-1, $key, $value);
 }
