@@ -124,13 +124,23 @@ function nodeMeta_GetByKeyNode( $keys, $nodes, $scope_check = ">=0", $scope_chec
 		return null;
 	}
 
+//	// Nodes
+//	if ( is_integer($nodes) ) {
+//		$WHERE[] = "a=?";
+//		$ARGS[] = $nodes;
+//	}
+//	else if ( is_array($nodes) ) {
+//		$WHERE[] = 'a IN ('.implode(',', $nodes).')';
+//	}
+
 	// Nodes
 	if ( is_integer($nodes) ) {
-		$WHERE[] = "a=?";
+		$WHERE[] = "(`a`=? OR `b`=?)";
+		$ARGS[] = $nodes;
 		$ARGS[] = $nodes;
 	}
 	else if ( is_array($nodes) ) {
-		$WHERE[] = 'a IN ('.implode(',', $nodes).')';
+		$WHERE[] = '(`a` IN ('.implode(',', $nodes).') OR `b` IN ('.implode(',', $nodes).'))';
 	}
 
 	$where_string = implode(' AND ', $WHERE);
