@@ -131,7 +131,7 @@ function notification_AddForPublishedNode( $node, $author, $type, $mentions = []
 		$notifications = [];
 		// "Following" is a "star" link between a=user id, and b=starred node id. Find the stars on the author's node.
 		// Unfortunately, this gets both the people who have starred the author, as well as the author's starred nodes. We'll filter them out.
-		$starlinks = nodeLink_GetByKeyNode('star', $author);
+		$starlinks = nodeMeta_GetByKeyNode('star', $author);
 		$starusers = [];
 		foreach($starlinks as $star) {
 			if( $star['b'] == $author ) {
@@ -166,7 +166,7 @@ function notification_AddForNote( $node, $note, $author, $mentions = [] ) {
 	
 	// Find other authors linked to this node.
 	// Allow the link to be in either direction, Currently website adds author links as <game node>, <user id>
-	$authorlinks = nodeLink_GetByKeyNode('author', $node);
+	$authorlinks = nodeMeta_GetByKeyNode('author', $node);
 	foreach($authorlinks as $link) {
 		if ( $link['a'] == $node )
 			$users[] = $link['b'];
