@@ -507,7 +507,13 @@ function _nodeMeta_Add( $a, $b, $version, $scope, $key, $value = null, $timestam
 				?,
 				?,
 				?
-			);",
+			)
+			ON DUPLICATE KEY UPDATE
+				version=VALUES(version),
+				scope=VALUES(scope),
+				`value`=VALUES(`value`),
+				timestamp=VALUES(timestamp)
+			;",
 			$a,
 			$b,
 			$version,
@@ -536,7 +542,13 @@ function _nodeMeta_Add( $a, $b, $version, $scope, $key, $value = null, $timestam
 			?,
 			?,
 			NOW()
-		);",
+		)
+		ON DUPLICATE KEY UPDATE
+			version=VALUES(version),
+			scope=VALUES(scope),
+			`value`=VALUES(`value`),
+			timestamp=VALUES(timestamp)
+		;",
 		$a,
 		$b,
 		$version,
