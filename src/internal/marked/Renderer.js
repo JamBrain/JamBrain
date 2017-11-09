@@ -242,9 +242,7 @@ export default class Renderer {
 		href = extractFromURL(href).href;
 
 		// If text is blank, use the URL itself
-		if ( !text || text.length < 1 ) {
-			text = href;
-		}
+		let hasText = ( text && text.length > 0 );
 
 		let result = this.parseLink(href);
 
@@ -255,23 +253,25 @@ export default class Renderer {
 		}
 
 		if ( result.type == "simple" ) {
-			return <NavLink href={href} title={title} target={"_blank"}>{text}</NavLink>;
+			hasText &= !/^\s+$/.test(text); // make sure the link isn't all whitespace too
+			return <NavLink href={href} title={title} target={"_blank"}>{(hasText) ? text : href}</NavLink>;
 		}
 		else if ( result.type == "smart" ) {
 			let partial = href.substring(href.indexOf(result.info.domain) + result.info.domain.length);
-			return <SmartLink icon_name={result.info.icon_name} full_url={href} domain={result.info.domain} part_url={partial}></SmartLink>;
+			return <SmartLink icon_name={result.info.icon_name} full_url={href} domain={(hasText) ? "" : result.info.domain} part_url={(hasText) ? text : href}></SmartLink>;
 		}
 		else if ( result.type == "embed" ) {
-			return <AutoEmbed link={result} title={title} text={text} />;
+			return <AutoEmbed link={result} title={title} text={(hasText) ? text : href} />;
 		}
 		else if ( result.type == "relative" ) {
-			return <LocalLink href={href} text={href} title={''} target={"_blank"}/>;
+			return <LocalLink href={href} text={(hasText) ? text : href} title={title} target={"_blank"}/>;
 		}
 		else if ( result.type == "internal" ) {
-			return <LocalLink href={"//" + window.location.hostname + href.substr(1)} text={href.substr(1)} title={''} target={"_blank"}/>;
+			return <LocalLink href={"//" + window.location.hostname + href.substr(1)} text={(hasText) ? text : href.substr(1)} title={title} target={"_blank"}/>;
 		}
 		else if ( result.type == "static" ) {
-			return <NavLink href={"//" + STATIC_DOMAIN + href.substr(2)} text={STATIC_DOMAIN + href.substr(2)} title={''} target={"_blank"}/>;
+			hasText &= !/^\s+$/.test(text); // make sure the link isn't all whitespace too
+			return <NavLink href={"//" + STATIC_DOMAIN + href.substr(2)} text={(hasText) ? text : (STATIC_DOMAIN + href.substr(2))} title={title} target={"_blank"}/>;
 		}
 	}
 
