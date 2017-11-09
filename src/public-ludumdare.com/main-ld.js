@@ -375,7 +375,7 @@ class Main extends Component {
 			// Process private User data
 			if ( r ) {
 				User['private']['meta'] = r.meta;
-				User['private']['link'] = r.link;
+//				User['private']['link'] = r.link;
 				User['private']['refs'] = r.refs;
 			}
 
@@ -522,7 +522,6 @@ class Main extends Component {
 			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} featured={featured} />;
 		}
 		else {
-			console.log('[Error]');
 			ShowContent = (
 				<ViewContent>
 					{error ? error : <NavSpinner />}

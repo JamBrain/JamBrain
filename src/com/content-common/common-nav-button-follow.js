@@ -24,7 +24,7 @@ export default class ContentCommonNavButtonFollow extends Component {
 		var user = this.props.user;
 		var following = this.state.isFollowing;
 
-		return following !== null ? following : user.private && user.private.link && user.private.link.star && user.private.link.star.indexOf(node.id) !== -1;
+		return following !== null ? following : user.private && user.private.meta && user.private.meta.star && user.private.meta.star.indexOf(node.id) !== -1;
 	}
 	isFriend() {
 		var node = this.props.node;

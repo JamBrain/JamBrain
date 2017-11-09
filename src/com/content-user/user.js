@@ -209,7 +209,7 @@ export default class ContentUser extends Component {
 
 			let ShowFollow = [];
 			if ( user && user.id && node.id !== user.id ) {
-				if ( hasClicked ? following : user.private && user.private.link && user.private.link.star && user.private.link.star.indexOf(node.id) !== -1 ) {
+				if ( hasClicked ? following : user.private && user.private.meta && user.private.meta.star && user.private.meta.star.indexOf(node.id) !== -1 ) {
 					if ( user.private.refs.star && user.private.refs.star.indexOf(node.id) !== -1 ) {
 						ShowFollow = <ButtonBase class="-button -green" onclick={this.onUnfriend}><SVGIcon class="if-not-hover-block">users</SVGIcon><SVGIcon class="if-hover-block">user-minus</SVGIcon> Friend</ButtonBase>;
 					}

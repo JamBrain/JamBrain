@@ -36,34 +36,34 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 
 	// Populate Metadata
 	if ( $flags & F_NODE_META ) {
-		$metas = nodeMeta_ParseByNode($ids);
+		$metas = nodeMeta_ParseByNode($ids);//, !($flags & F_NODE_NO_LINKVALUE));
 		foreach ( $nodes as &$node ) {
 			// Store Public Metadata
-			if ( isset($metas[$node['id']][SH_SCOPE_PUBLIC]) ) {
-				$node['meta'] = $metas[$node['id']][SH_SCOPE_PUBLIC];
+			if ( isset($metas[$node['id']][0][SH_SCOPE_PUBLIC]) ) {
+				$node['meta'] = $metas[$node['id']][0][SH_SCOPE_PUBLIC];
+//				$node['refs'] = $metas[$node['id']][0][SH_SCOPE_PUBLIC];
 			}
 			else {
 				$node['meta'] = [];
+//				$node['refs'] = [];
 			}
-	
-			// TODO: Store Protected and Private Metadata
 		}
 	}
 
-	// Populate Links (NOTE: Links come in Pairs)
-	if ( $flags & F_NODE_LINK ) {
-		$links = nodeLink_ParseByNode($ids, !($flags & F_NODE_NO_LINKVALUE));
-		foreach ( $nodes as &$node ) {
-			if ( isset($links[$node['id']][0][SH_SCOPE_PUBLIC]) ) {
-				$node['link'] = $links[$node['id']][0][SH_SCOPE_PUBLIC];
-			}
-			else {
-				$node['link'] = [];
-			}
-	
-			// TODO: Store Protected and Private Metadata
-		}
-	}
+//	// Populate Links (NOTE: Links come in Pairs)
+//	if ( $flags & F_NODE_LINK ) {
+//		$links = nodeLink_ParseByNode($ids, !($flags & F_NODE_NO_LINKVALUE));
+//		foreach ( $nodes as &$node ) {
+//			if ( isset($links[$node['id']][0][SH_SCOPE_PUBLIC]) ) {
+//				$node['link'] = $links[$node['id']][0][SH_SCOPE_PUBLIC];
+//			}
+//			else {
+//				$node['link'] = [];
+//			}
+//	
+//			// TODO: Store Protected and Private Metadata
+//		}
+//	}
 
 	// Populate paths ** NOTE: Multiple queries!
 	if ( $flags & F_NODE_PATH ) {
@@ -160,7 +160,8 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 
 function nodeComplete_GetAuthored( $id ) {
 	// Scan for things I am the author of
-	$author_links = nodeLink_GetByKeyNode("author", $id);
+//	$author_links = nodeLink_GetByKeyNode("author", $id);
+	$author_links = nodeMeta_GetByKeyNode("author", $id);
 
 	// Populate a list of things I authored
 	$author_ids = [];
@@ -188,7 +189,7 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 			$ret[$meta['value']] = [];
 		}
 		
-		$ret[$meta['value']][] = $meta['node'];
+		$ret[$meta['value']][] = $meta['a'];
 	}
 
 
@@ -200,12 +201,12 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 	
 		// Add shared nodes
 		foreach( $shared_metas as &$meta ) {
-			if ( in_array($meta['node'], $authored_ids) ) {
+			if ( in_array($meta['a'], $authored_ids) ) {
 				if ( !isset($ret[$meta['value']]) ) {
 					$ret[$meta['value']] = [];
 				}
 				
-				$ret[$meta['value']][] = $meta['node'];
+				$ret[$meta['value']][] = $meta['a'];
 			}
 		}
 	}
@@ -223,16 +224,16 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 //				$ret[$meta['value']] = [];
 //			}
 //			
-//			$ret[$meta['value']][] = $meta['node'];
+//			$ret[$meta['value']][] = $meta['a'];
 //		}
 //		// Add shared nodes (primarily authored nodes)
 //		else if ( $meta['scope'] == SH_SCOPE_SHARED ) {
-//			if ( in_array($meta['node'], $node_ids) ) {
+//			if ( in_array($meta['a'], $node_ids) ) {
 //				if ( !isset($ret[$meta['value']]) ) {
 //					$ret[$meta['value']] = [];
 //				}
 //				
-//				$ret[$meta['value']][] = $meta['node'];
+//				$ret[$meta['value']][] = $meta['a'];
 //			}
 //		}
 //	}
