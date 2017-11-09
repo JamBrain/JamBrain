@@ -41,7 +41,7 @@ export default class PageUser extends Component {
                         <Route static path="/following" component={UserFollowing} />
                         <Route static path="/followers" component={UserFollowers} />
                         <Route static path="/edit" />
-
+                        
                         <Route type="error" component={ContentError} />
                     </Router>
                 </div>

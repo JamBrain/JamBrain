@@ -23,8 +23,6 @@ export default class ContentGroup extends Component {
 		let props = this.props;
 		let node = props.node;
 
-		console.log("mount");
-
 		$Node.GetFeed(node.id, 'parent', ['group', 'event', 'page', 'tag'])
 			.then(r => {
 				if ( r && r.feed ) {
