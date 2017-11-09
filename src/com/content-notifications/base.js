@@ -96,9 +96,11 @@ export default class NotificationsBase extends Component {
 				node2notes.get(node).push(note);
 			} else {
 				node2notes.set(node, [note]);
-
 			}
-			notes.push(note);
+			if ( note ) {
+				// Only fetch nonzero notes.
+				notes.push(note);
+			}
 			notification2nodeAndNote.set(id, {node: node, note: note});
 		});
 
