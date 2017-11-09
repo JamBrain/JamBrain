@@ -1,102 +1,113 @@
-import {h, render, Component, options}			from 'preact/preact';
-import {initDevTools} 							from 'preact-devtools/devtools';
-import Sanitize							from '../internal/sanitize/sanitize';
-import NavSpinner						from 'com/nav-spinner/spinner';
+import {h, render, Component, options} from 'preact/preact';
+import {initDevTools} from 'preact-devtools/devtools';
+import Sanitize from '../internal/sanitize/sanitize';
+import NavSpinner from 'com/nav-spinner/spinner';
 
-import ViewBar 							from 'com/view-bar/bar';
-import ViewHeader						from 'com/view-header/header';
-import ViewSidebar						from 'com/view-sidebar/sidebar';
-import ViewContent						from 'com/view-content/content';
-import ViewFooter						from 'com/view-footer/footer';
-import ViewHome							from 'com/view-home/home';
+import ViewBar from 'com/view-bar/bar';
+import ViewHeader from 'com/view-header/header';
+import ViewSidebar from 'com/view-sidebar/sidebar';
+import ViewContent from 'com/view-content/content';
+import ViewFooter from 'com/view-footer/footer';
+import ViewHome from 'com/view-home/home';
 
-import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
-import DialogLogin						from 'com/dialog-login/login';
-import DialogRegister					from 'com/dialog-register/register';
-import DialogActivate					from 'com/dialog-activate/activate';
-import DialogReset						from 'com/dialog-reset/reset';
-import DialogPassword					from 'com/dialog-password/password';
-import DialogAuth						from 'com/dialog-auth/auth';
-import DialogSession					from 'com/dialog-session/session';
-import DialogSavebug					from 'com/dialog-savebug/savebug';
-import DialogUserConfirm				from 'com/dialog-user/user-confirm';
+import Router from 'com/router/router';
+import Route from 'com/router/route';
 
-import DialogSubmit						from 'com/dialog-submit/submit';
-import DialogTV							from 'com/dialog-tv/tv';
+import PageHome from 'com/pages/home/home';
+import PagePage from 'com/pages/page/page';
+import PagePost from 'com/pages/post/post';
+import PageItem from 'com/pages/item/item';
+// import PageGames from 'com/pages/games/games'; //TODO: FIX
+import PageTag from 'com/pages/tag/tag';
+import PageUser from 'com/pages/user/user';
+import PageUsers from 'com/pages/users/users';
+import PageEvent from 'com/pages/event/event';
+import PageEvents from 'com/pages/events/events';
+import PageError from 'com/pages/error/error';
 
-import DialogCreate						from 'com/dialog-create/create';
+import DialogUnfinished from 'com/dialog-unfinished/unfinished';
+import DialogLogin from 'com/dialog-login/login';
+import DialogRegister from 'com/dialog-register/register';
+import DialogActivate from 'com/dialog-activate/activate';
+import DialogReset from 'com/dialog-reset/reset';
+import DialogPassword from 'com/dialog-password/password';
+import DialogAuth from 'com/dialog-auth/auth';
+import DialogSession from 'com/dialog-session/session';
+import DialogSavebug from 'com/dialog-savebug/savebug';
+import DialogUserConfirm from 'com/dialog-user/user-confirm';
 
-//import AlertBase						from 'com/alert-base/base';
+import DialogSubmit from 'com/dialog-submit/submit';
+import DialogTV from 'com/dialog-tv/tv';
 
-import $Node							from '../shrub/js/node/node';
-import $User							from '../shrub/js/user/user';
-import $NodeLove						from '../shrub/js/node/node_love';
+import DialogCreate from 'com/dialog-create/create';
+
+//import AlertBase                        from 'com/alert-base/base';
+
+import $Node from '../shrub/js/node/node';
+import $User from '../shrub/js/user/user';
+import $NodeLove from '../shrub/js/node/node_love';
 
 window.LUDUMDARE_ROOT = '/';
 window.SITE_ROOT = 1;
 
 if ( SITE_DEBUG ) {
-	initDevTools();
+    initDevTools();
 }
 
 // Add special behavior: when class attribute is an array, flatten it to a string
 options.vnode = function(vnode) {
-	if ( vnode && vnode.attributes && Array.isArray(vnode.attributes.class) ) {
-		if ( vnode.attributes.class.length ) {
-			vnode.attributes.class = vnode.attributes.class.join(' ');
-		}
-		else {
-			// NOTE: this might be slow. You can disable this, and the .length check for a potential speedup
-			delete vnode.attributes.class;
-		}
-	}
+    if ( vnode && vnode.attributes && Array.isArray(vnode.attributes.class) ) {
+        if ( vnode.attributes.class.length ) {
+            vnode.attributes.class = vnode.attributes.class.join(' ');
+        }
+        else {
+            // NOTE: this might be slow. You can disable this, and the .length check for a potential speedup
+            delete vnode.attributes.class;
+        }
+    }
 };
 
 class Main extends Component {
-	constructor( props ) {
-		super(props);
-		console.log('[constructor]');
+    constructor( props ) {
+        super(props);
+        console.log('[constructor]');
 
-		var clean = this.cleanLocation(window.location);
-		if ( window.location.origin+clean.path !== window.location.href ) {
-			console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
+        var clean = this.cleanLocation(window.location);
+        if ( window.location.origin+clean.path !== window.location.href ) {
+            console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
 
-			this.storeHistory(window.history.state, null, clean.path);
-		}
+            this.storeHistory(window.history.state, null, clean.path);
+        }
 
-		this.state = {
-			// URL walking
-			'path': '',
-			'slugs': clean.slugs,
-			'extra': [],
+        this.state = {
+            // URL walking
+            'path': '',
+            'slugs': clean.slugs,
+            'extra': [],
 
-			// Active Node
-			'node': {
-				'id': 0
-			},
+            // Active Node
+            'node': {
+                'id': 0
+            },
 
-			// Root Node
-			'root': null,
+            // Root Node
+            'root': null,
 
-			// Featured node
-			'featured': null,
+            // Featured node
+            'featured': null,
 
-			// Active User
-			'user': null
-		};
+            // Active User
+            'user': null
+        };
 
-		window.addEventListener('hashchange', this.onHashChange.bind(this));
-		window.addEventListener('navchange', this.onNavChange.bind(this));
-		window.addEventListener('popstate', this.onPopState.bind(this));
+        window.addEventListener('hashchange', this.onHashChange.bind(this));
+        window.addEventListener('navchange', this.onNavChange.bind(this));
+        window.addEventListener('popstate', this.onPopState.bind(this));
 
-		this.onLogin = this.onLogin.bind(this);
+        this.onLogin = this.onLogin.bind(this);
 
-//		this.doEverything();
-	}
-
-//	async doEverything() {
-//        var test = await new Promise(resolve => {setTimeout(pepper => { console.log("pepper"); resolve(); }, 1000); console.log("peter");});
-//    }
+//        this.doEverything();
+    }
 
 	componentDidMount() {
 		this.fetchData();
@@ -529,20 +540,31 @@ class Main extends Component {
 			);
 		}
 
-		return (
-			<div id="layout">
-				<ViewBar user={user} featured={featured} />
-				<div class="view">
-					<ViewHeader user={user} featured={featured} />
-					<div id="content-sidebar">
-						{ShowContent}
-						<ViewSidebar user={user} featured={featured} />
-					</div>
-					<ViewFooter />
-				</div>
-				{this.getDialog()}
-			</div>
-		);
+        return (
+            <div id="app">
+                <Router node={node} props={{node: node, user: user, featured: featured, path: path, extra: extra, error: error, home: home}} path={extra}>
+                    <Route type="root" component={PageHome} />
+
+                    <Route type="page" component={PagePage} />
+                    <Route type="post" component={PagePost} />
+
+                    }<Route type="item">
+                        <Route subtype="game" component={PageItem} />
+                    </Route>
+
+                    <Route type="tag" component={PageTag} />
+
+                    <Route type="user" component={PageUser} /> //articles, feed(d), post, games, article, following, followers
+                    <Route type="users" component={PageUsers} />
+
+                    <Route type="event" component={PageEvent} /> //theme, games/results, stats(d)
+                    <Route type={["events", "group", "tags"]} component={PageEvents} /> */}
+
+                    <Route type="error" component={PageError} />
+                </Router>
+                {this.getDialog()}
+            </div>
+        );
 	}
 }
 
