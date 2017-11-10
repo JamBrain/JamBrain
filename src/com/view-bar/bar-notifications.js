@@ -51,6 +51,10 @@ export default class DropdownNotification extends NotificationsBase {
 			Notifications.push([null, ShowSpinner]);
 		}
 
+		if ( !loading && (state.count == 0) ) {
+			Notifications.push([-3, (<div>You have no notifications.</div>)]);
+		}
+
 		if ( !loading && this.hasUnreadNotifications() ) {
 			Notifications.push([-2, (<ButtonLink onclick={ e => { this.clearNotifications(); } } ><em>Mark all as read</em></ButtonLink>)]);
 		}
