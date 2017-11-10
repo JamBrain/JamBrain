@@ -23,18 +23,27 @@ export default class NotificationsBase extends Component {
 		};
 	}
 
-	markReadHighest() {
-		// TODO: Triggering this should immidiately update the counter on the
-		// icon in the top bar
+
+	hasUnreadNotifications() {
 		const highestInFeed = this.getHighestNotificationInFeed();
 		if (highestInFeed !== null) {
 			if (highestInFeed > this.state.highestRead) {
-				$Notification.SetMarkRead(highestInFeed).then((r) => {
-					if (r.status == 200) {
-						this.setState({highestRead: highestInFeed});
-					}
-				});
+				return true;
 			}
+		}
+		return false;
+	}
+
+	markReadHighest() {
+		// TODO: Triggering this should immidiately update the counter on the
+		// icon in the top bar
+		if ( this.hasUnreadNotifications() ) {
+			const highestInFeed = this.getHighestNotificationInFeed();
+			$Notification.SetMarkRead(highestInFeed).then((r) => {
+				if (r.status == 200) {
+					this.setState({highestRead: highestInFeed});
+				}
+			});
 		}
 	}
 
@@ -96,9 +105,11 @@ export default class NotificationsBase extends Component {
 				node2notes.get(node).push(note);
 			} else {
 				node2notes.set(node, [note]);
-
 			}
-			notes.push(note);
+			if ( note ) {
+				// Only fetch nonzero notes.
+				notes.push(note);
+			}
 			notification2nodeAndNote.set(id, {node: node, note: note});
 		});
 
@@ -220,7 +231,7 @@ export default class NotificationsBase extends Component {
 					let firstNote = noteLookup.get(notification.note);
 					data.note = [firstNote];
 					if (!data.users.has(firstNote.author)) {
-						data.users.set(firstNote.author, firstNote);
+						data.users.set(firstNote.author, usersLookup.get(firstNote.author));
 					}
 
 					if (!firstNote.mention && !firstNote.selfauthored && !firstNote.isNodeAuthor) {
