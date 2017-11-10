@@ -132,7 +132,7 @@ export default class Renderer {
 	}
 
 	emoji( text ) {
-		let shortname = window.emoji.shortnameToURL(text.join(''));
+		let shortname = window.emoji.shortnameToURL(Array.isArray(text) ? text.join('') : text);
 		if ( shortname ) {
 			return <img class="emoji" alt={text} title={':'+text+':'} src={shortname} />;
 		}
@@ -242,7 +242,8 @@ export default class Renderer {
 		href = extractFromURL(href).href;
 
 		// If text is blank, use the URL itself
-		let hasText = ( text && text.length > 0 );
+		let hasText = text && (text.length > 0);
+		let joinedText = Array.isArray(text) ? text.join("") : text;
 
 		let result = this.parseLink(href);
 
@@ -257,7 +258,7 @@ export default class Renderer {
 			return <NavLink href={href} title={title} target={"_blank"}>{(hasText) ? text : href}</NavLink>;
 		}
 		else if ( result.type == "smart" ) {
-			hasText = hasText && !/^\s+$/.test(text.join("")); // make sure the link isn't all whitespace too
+			hasText = hasText && !/^\s+$/.test(joinedText); // make sure the link isn't all whitespace too
 			let partial = href.substring(href.indexOf(result.info.domain) + result.info.domain.length);
 			return <SmartLink icon_name={result.info.icon_name} full_url={href} domain={(hasText) ? "" : result.info.domain} part_url={(hasText) ? text : partial}></SmartLink>;
 		}
@@ -268,12 +269,12 @@ export default class Renderer {
 			return <LocalLink href={href} text={(hasText) ? text : href} title={title} target={"_blank"}/>;
 		}
 		else if ( result.type == "protocol" ) {
-			hasText = hasText && !/^\s+$/.test(text.join("")); // make sure the link isn't all whitespace too
-			return <NavLink href={href} text={(hasText) ? text.join("") : href.substr(2)} title={title} target={"_blank"}/>;
+			hasText = hasText && !/^\s+$/.test(joinedText); // make sure the link isn't all whitespace too
+			return <NavLink href={href} text={(hasText) ? joinedText : href.substr(2)} title={title} target={"_blank"}/>;
 		}
 		else if ( result.type == "static" ) {
-			hasText = hasText && !/^\s+$/.test(text.join("")); // make sure the link isn't all whitespace too
-			return <NavLink href={"//" + STATIC_DOMAIN + href.substr(2)} text={(hasText) ? text.join("") : (STATIC_DOMAIN + href.substr(2))} title={title} target={"_blank"}/>;
+			hasText = hasText && !/^\s+$/.test(joinedText); // make sure the link isn't all whitespace too
+			return <NavLink href={"//" + STATIC_DOMAIN + href.substr(2)} text={(hasText) ? joinedText : (STATIC_DOMAIN + href.substr(2))} title={title} target={"_blank"}/>;
 		}
 	}
 
