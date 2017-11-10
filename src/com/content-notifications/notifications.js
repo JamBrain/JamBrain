@@ -38,7 +38,7 @@ export default class NotificationsFeed extends NotificationsBase {
 	}
 
 	fetchMore() {
-		const offset = this.state.offset + this.state.feedSize;
+		const offset = this.state.offset + this.state.limit;
 		$Notification.GetFeedAll(offset, this.state.limit ).then((r) => {
 			this.processNotificationFeed(r);
 		});
@@ -49,7 +49,7 @@ export default class NotificationsFeed extends NotificationsBase {
 
 		const maxReadId = state.highestRead;
 		const processing = state.status === null || this.isLoading();
-		const hasMore = !processing && state.offset + state.feedSize < state.count;
+		const hasMore = !processing && ((state.offset + this.state.limit) < state.count);
 		//console.log(processing, state.offset, state.feedSize, state.count);
 		const hasUnread = this.getHighestNotificationInFeed() > maxReadId;
 		let ShowNotifications = [];
