@@ -36,17 +36,24 @@ export default class ViewBar extends Component {
 
 		if (loggedIn) {
 			this.StartedNotificationLoop = true;
-			$Notification.GetCountUnread()
-			.then((r) => {
-				if (this.state.notifications != r.count) {
-					this.setState({notifications: r.count, notificationCountAdjustment: 0});
-				}
-				setTimeout(() => this.checkNotificationCount(), 60000);
-			})
-			.catch((e) => {
-				setTimeout(() => this.checkNotificationCount(), 5 * 60000);
-				console.log('[Notificaton error]', e);
-			});
+
+			if ( document.hidden ) {
+				// Page is hidden - Don't do any actual querying, just set the timeout to come back later
+				setTimeout(() => this.checkNotificationCount(), 20000);
+			}
+			else {
+				$Notification.GetCountUnread()
+				.then((r) => {
+					if (this.state.notifications != r.count) {
+						this.setState({notifications: r.count, notificationCountAdjustment: 0});
+					}
+					setTimeout(() => this.checkNotificationCount(), 60000);
+				})
+				.catch((e) => {
+					setTimeout(() => this.checkNotificationCount(), 5 * 60000);
+					console.log('[Notificaton error]', e);
+				});
+			}
 		}
 		else {
 			this.StartedNotificationLoop = false;
