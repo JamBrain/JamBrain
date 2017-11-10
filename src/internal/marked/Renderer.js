@@ -253,11 +253,11 @@ export default class Renderer {
 		}
 
 		if ( result.type == "simple" ) {
-			hasText &= !/^\s+$/.test(text); // make sure the link isn't all whitespace too
+			hasText = hasText && !/^\s+$/.test(text); // make sure the link isn't all whitespace too
 			return <NavLink href={href} title={title} target={"_blank"}>{(hasText) ? text : href}</NavLink>;
 		}
 		else if ( result.type == "smart" ) {
-			hasText &= !/^\s+$/.test(text.join("")); // make sure the link isn't all whitespace too
+			hasText = hasText && !/^\s+$/.test(text.join("")); // make sure the link isn't all whitespace too
 			let partial = href.substring(href.indexOf(result.info.domain) + result.info.domain.length);
 			return <SmartLink icon_name={result.info.icon_name} full_url={href} domain={(hasText) ? "" : result.info.domain} part_url={(hasText) ? text : partial}></SmartLink>;
 		}
@@ -268,11 +268,11 @@ export default class Renderer {
 			return <LocalLink href={href} text={(hasText) ? text : href} title={title} target={"_blank"}/>;
 		}
 		else if ( result.type == "protocol" ) {
-			hasText &= !/^\s+$/.test(text.join("")); // make sure the link isn't all whitespace too
+			hasText = hasText && !/^\s+$/.test(text.join("")); // make sure the link isn't all whitespace too
 			return <NavLink href={href} text={(hasText) ? text.join("") : href.substr(2)} title={title} target={"_blank"}/>;
 		}
 		else if ( result.type == "static" ) {
-			hasText &= !/^\s+$/.test(text.join("")); // make sure the link isn't all whitespace too
+			hasText = hasText && !/^\s+$/.test(text.join("")); // make sure the link isn't all whitespace too
 			return <NavLink href={"//" + STATIC_DOMAIN + href.substr(2)} text={(hasText) ? text.join("") : (STATIC_DOMAIN + href.substr(2))} title={title} target={"_blank"}/>;
 		}
 	}
