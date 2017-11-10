@@ -23,18 +23,27 @@ export default class NotificationsBase extends Component {
 		};
 	}
 
-	markReadHighest() {
-		// TODO: Triggering this should immidiately update the counter on the
-		// icon in the top bar
+
+	hasUnreadNotifications() {
 		const highestInFeed = this.getHighestNotificationInFeed();
 		if (highestInFeed !== null) {
 			if (highestInFeed > this.state.highestRead) {
-				$Notification.SetMarkRead(highestInFeed).then((r) => {
-					if (r.status == 200) {
-						this.setState({highestRead: highestInFeed});
-					}
-				});
+				return true;
 			}
+		}
+		return false;
+	}
+
+	markReadHighest() {
+		// TODO: Triggering this should immidiately update the counter on the
+		// icon in the top bar
+		if ( this.hasUnreadNotifications() ) {
+			const highestInFeed = this.getHighestNotificationInFeed();
+			$Notification.SetMarkRead(highestInFeed).then((r) => {
+				if (r.status == 200) {
+					this.setState({highestRead: highestInFeed});
+				}
+			});
 		}
 	}
 

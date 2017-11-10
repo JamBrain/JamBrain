@@ -70,7 +70,7 @@ export default class NotificationsFeed extends NotificationsBase {
 				class="-button -light focusable"
 				id="button-mark-read"
 				onclick={(e) => {this.markReadHighest();}}>
-				Mark all comments as read
+				Mark all notifications as read
 			</ButtonBase>) : null;
 
 		const ShowSpinner = processing ? <NavSpinner /> : null;
