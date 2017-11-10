@@ -103,9 +103,10 @@ export default class NotificationsBase extends Component {
 		feed.forEach(({id, node, note}) => {
 			if ( note ) {
 				// Only fetch nonzero notes. Don't add zero notes to the list of notes in a node
-				if (node2notes.has(node)) {
+				if ( node2notes.has(node) ) {
 					node2notes.get(node).push(note);
-				} else {
+				} 
+				else {
 					node2notes.set(node, [note]);
 				}
 				notes.push(note);
