@@ -101,16 +101,17 @@ export default class NotificationsBase extends Component {
 		let notes = [];
 
 		feed.forEach(({id, node, note}) => {
-			if (node2notes.has(node)) {
-				node2notes.get(node).push(note);
-			} else {
-				node2notes.set(node, [note]);
-			}
 			if ( note ) {
-				// Only fetch nonzero notes.
+				// Only fetch nonzero notes. Don't add zero notes to the list of notes in a node
+				if ( node2notes.has(node) ) {
+					node2notes.get(node).push(note);
+				} 
+				else {
+					node2notes.set(node, [note]);
+				}
 				notes.push(note);
+				notification2nodeAndNote.set(id, {node: node, note: note});
 			}
-			notification2nodeAndNote.set(id, {node: node, note: note});
 		});
 
 		let nodesPromise = $Node.Get(nodes)

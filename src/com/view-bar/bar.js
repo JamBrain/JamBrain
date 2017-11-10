@@ -35,10 +35,12 @@ export default class ViewBar extends Component {
 		const loggedIn = this.props.user && this.props.user.id > -1;
 
 		if (loggedIn) {
+			let firstCall = !this.StartedNotificationLoop;
 			this.StartedNotificationLoop = true;
 
-			if ( document.hidden ) {
+			if ( document.hidden && !firstCall ) {
 				// Page is hidden - Don't do any actual querying, just set the timeout to come back later
+				// But, if this was the first check, always try to get the notifications regardless.
 				setTimeout(() => this.checkNotificationCount(), 20000);
 			}
 			else {

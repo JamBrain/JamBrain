@@ -88,8 +88,8 @@ export default class ContentStatsEvent extends Component {
 				if ( EventMode >= 5 ) {
 					Data.push(<div class="-gap"><span class="-title">Number of Submissions:</span> <span class="-value -title">{stats.jam+stats.compo+stats.craft}</span></div>);
 					let entries = [
-						stats.compo,
-						stats.jam
+						stats.jam,
+						stats.compo
 					];
 					let entrienames = [
 						'Jam',
