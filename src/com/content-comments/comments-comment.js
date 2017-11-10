@@ -148,7 +148,7 @@ export default class ContentCommentsComment extends Component {
 					Avatar = author.meta['avatar'] + ".64x64.fit.png";;
 			}
 
-			var ShowTitle = null;
+			var ShowTitle = [];
 			if ( !state.editing || state.preview ) {
 				var Created = new Date(comment.created);
 				var Modified = new Date(comment.modified);
@@ -159,25 +159,23 @@ export default class ContentCommentsComment extends Component {
 				// 1 minute leeway on edits
 				var HasEdited = ModDiff > (60*1000);
 
+				ShowTitle.push(
+					<span>by <span class="-author">{Name}</span></span>
+				);
+
 				if ( author ) {
-					ShowTitle = [
-						<div class="-title">
-							<span class="-author">{Name}</span> (<NavLink class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</NavLink>){comment.anonymous?" (Posted Anonymously)":""}
-						</div>,
-					];
+					ShowTitle.push(
+						<span>&nbsp;(<NavLink class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</NavLink>){comment.anonymous ? " (Published Anonymously)" : ""}</span>
+					);
 				}
-				else {
-					ShowTitle = [
-						<div class="-title">
-							<span class="-author">{Name}</span>
-						</div>,
-					];
-				}
+
 				if ( comment.created ) {
-					ShowTitle.push(<div class="-date">posted <span title={getLocaleTimeStamp(Created)}>{getRoughAge(DateDiff)}</span><span title={getLocaleDate(Modified)}>{HasEdited?" (edited)":""}</span></div>);
+					ShowTitle.push(
+						<span>, published <span class="-date" title={getLocaleTimeStamp(Created)}>{getRoughAge(DateDiff)}</span><span title={getLocaleDate(Modified)}>{HasEdited?" (edited)":""}</span></span>
+					);
 				}
 				else {
-					ShowTitle.push(<div class="-date">not yet posted</div>);
+					ShowTitle.push(<span>, not yet published</span>);
 				}
 			}
 
@@ -266,7 +264,7 @@ export default class ContentCommentsComment extends Component {
 						{ShowTopNav}
 						{ShowError}
 						<div class="-text">
-							{ShowTitle}
+							<div class="-title">{ShowTitle}</div>
 							<ContentCommentsMarkup user={user} editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here" limit={props.limit}>{comment.body}</ContentCommentsMarkup>
 						</div>
 						{ShowBottomNav}
