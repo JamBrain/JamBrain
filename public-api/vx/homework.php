@@ -26,7 +26,16 @@ api_Exec([
 	$RESPONSE['homework'] = [];
 	
 	if ( $mode == 1 ) {
-		$RESPONSE['homework'][] = ["Get some fresh air", false];
+		$ideas_required = isset($event['meta']['theme-idea-limit']) ? intval($event['meta']['theme-idea-limit']) : 3;
+
+		$ideas = themeIdea_Get($event['id'], $user_id);
+		$idea_count = count($ideas);
+
+		$RESPONSE['homework'][] = [
+			'task' => "Suggest ".$ideas_required." themes", 
+			'complete' => ($idea_count > $ideas_required),
+			'detail' => $idea_count." of ".$ideas_required
+		];
 	}
 }],
 ]);
