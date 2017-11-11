@@ -74,5 +74,3 @@ api_Exec([
 	$RESPONSE['max_read'] = $max_read;
 }],
 ]);
-
-
