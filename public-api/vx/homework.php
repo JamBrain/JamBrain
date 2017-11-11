@@ -32,6 +32,7 @@ api_Exec([
 	// complete: if task is complete
 	// user: if task is something the user decides they've finished
 	// dummy: a task that doesn't require any user intervention (typically a child)
+	// ignore: this task and its childen can be ignored
 	// children: tasks that are grouped under this task
 
 	// Pre-Event Tasks that you can do any time during the pre-event, that should come before per-round tasks
@@ -92,6 +93,7 @@ api_Exec([
 				],
 			],
 			'complete' => $warmup_complete,
+			'ignore' => true,
 		];
 	}
 
@@ -99,5 +101,3 @@ api_Exec([
 
 }],
 ]);
-
-
