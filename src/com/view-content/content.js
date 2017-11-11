@@ -581,7 +581,7 @@ export default class ViewContent extends Component {
 			}
 //			else if ( Viewing == '/games' ) {
 			else if ( extra && extra.length && extra[0] == 'games' ) {
-				let DefaultSubSubFilter = 'featured';
+				let DefaultSubSubFilter = (featured && (featured.meta['theme-mode'] > 5)) ? 'featured' : 'all';
 				let DefaultSubFilter = 'all';
 				let DefaultFilter = 'danger';//'smart';
 
