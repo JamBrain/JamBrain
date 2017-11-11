@@ -20,7 +20,7 @@ api_Exec([
 	$user_id = userAuth_GetID();
 	
 	$mode = intval($event['meta']['theme-mode']);
-	$making_what = substr(strrchr($event['meta']['can-create'], '/'), 0);
+	$making_what = substr(strrchr($event['meta']['can-create'], '/'), 1);
 
 	//$RESPONSE['ev'] = $event;
 	
@@ -32,7 +32,6 @@ api_Exec([
 	// complete: if task is complete
 	// user: if task is something the user decides they've finished
 	// children: tasks that are grouped under this task
-	// unlock: tasks to unlock once this task is complete. Not grouped as children
 
 	// Pre-Event Tasks that you can do any time during the pre-event, that should come before per-round tasks
 	if ( ($mode >= 1) && ($mode <= 5) ) {
@@ -65,6 +64,11 @@ api_Exec([
 			'task' => "Decide what tools you are going to use",
 			'user' => true,		// the user decides when they are done
 		];
+		
+		// TODO: detect when the user has submitted a warmup game		
+		$submitted_warmup = false;
+		$completed_warmup = $submitted_warmup;
+		
 		$RESPONSE['homework'][] = [
 			'task' => "Make a warmup ".$making_what,
 			'children' => [
@@ -83,9 +87,10 @@ api_Exec([
 					'task' => "Submit your warmup ".$making_what,
 					'detail' => "Submitting a warmup is not required. If this is your first event, it's a good idea to familiarize yourself with how submissions work.",
 					'link' => $event['path'].'/warmup',
-					'user' => true,		// the user decides when they are done
+					'complete' => $submitted_warmup,
 				],
 			],
+			'complete' => $completed_warmup,
 		];
 	}
 
