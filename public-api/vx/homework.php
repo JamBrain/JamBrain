@@ -31,6 +31,7 @@ api_Exec([
 	// link: a URL we should recommend for doing the task
 	// complete: if task is complete
 	// user: if task is something the user decides they've finished
+	// dummy: a task that doesn't require any user intervention (typically a child)
 	// children: tasks that are grouped under this task
 
 	// Pre-Event Tasks that you can do any time during the pre-event, that should come before per-round tasks
@@ -67,7 +68,7 @@ api_Exec([
 		
 		// TODO: detect when the user has submitted a warmup game		
 		$submitted_warmup = false;
-		$completed_warmup = $submitted_warmup;
+		$warmup_complete = $submitted_warmup;
 		
 		$RESPONSE['homework'][] = [
 			'task' => "Make a warmup ".$making_what,
@@ -75,13 +76,13 @@ api_Exec([
 				[
 					'task' => "Make something with your tools",
 					'detail' => "A quick warmup just to be sure your tools work as expected.",
-					'user' => true,		// the user decides when they are done
+					'dummy' => true,		// no need to do anything
 				],
 				[
 					'task' => "Package up a download that others can try",
 					'detail' => "We don't host downloads, so it's wise to figure out where you're going to do that.",
 					'link' => '/events/ludum-dare/hosting-guide',
-					'user' => true,		// the user decides when they are done
+					'dummy' => true,		// no need to do anything
 				],
 				[
 					'task' => "Submit your warmup ".$making_what,
@@ -90,7 +91,7 @@ api_Exec([
 					'complete' => $submitted_warmup,
 				],
 			],
-			'complete' => $completed_warmup,
+			'complete' => $warmup_complete,
 		];
 	}
 
