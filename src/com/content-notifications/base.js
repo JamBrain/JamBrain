@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact/preact';
 
 import Notification						from 'com/content-notifications/notification';
 
@@ -7,34 +7,42 @@ import $Note							from '../../shrub/js/note/note';
 import $Notification					from '../../shrub/js/notification/notification';
 
 export default class NotificationsBase extends Component {
-
 	constructor( props ) {
 		super(props);
 
 		this.state = {
-			notifications: null,
-			notificationIds: [],
-			notificationsTotal: -1,
-			count: 0,
-			status: null,
-			feed: [],
-			loading: true,
-			highestRead: -1,
+			"notifications": null,
+			"notificationIds": [],
+			"notificationsTotal": -1,
+			"count": 0,
+			"status": null,
+			"feed": [],
+			"loading": true,
+			"highestRead": -1,
 		};
+	}
+
+
+	hasUnreadNotifications() {
+		const highestInFeed = this.getHighestNotificationInFeed();
+		if (highestInFeed !== null) {
+			if (highestInFeed > this.state.highestRead) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	markReadHighest() {
 		// TODO: Triggering this should immidiately update the counter on the
 		// icon in the top bar
-		const highestInFeed = this.getHighestNotificationInFeed();
-		if (highestInFeed !== null) {
-			if (highestInFeed > this.state.highestRead) {
-				$Notification.SetMarkRead(highestInFeed).then((r) => {
-					if (r.status == 200) {
-						this.setState({highestRead: highestInFeed});
-					}
-				});
-			}
+		if ( this.hasUnreadNotifications() ) {
+			const highestInFeed = this.getHighestNotificationInFeed();
+			$Notification.SetMarkRead(highestInFeed).then((r) => {
+				if (r.status == 200) {
+					this.setState({"highestRead": highestInFeed});
+				}
+			});
 		}
 	}
 
@@ -52,12 +60,12 @@ export default class NotificationsBase extends Component {
 		this.collectAllNodesAndNodes(r.feed, caller_id);
 		let highestRead = r.max_read !== undefined ? r.max_read : this.state.highestRead;
 		this.setState({
-			feed: r.feed,
-			caller_id: caller_id,
-			status: r.status,
-			count: r.count,
-			loading: true,
-			highestRead: highestRead,
+			"feed": r.feed,
+			"caller_id": caller_id,
+			"status": r.status,
+			"count": r.count,
+			"loading": true,
+			"highestRead": highestRead,
 		});
 	}
 
@@ -92,14 +100,17 @@ export default class NotificationsBase extends Component {
 		let notes = [];
 
 		feed.forEach(({id, node, note}) => {
-			if (node2notes.has(node)) {
-				node2notes.get(node).push(note);
-			} else {
-				node2notes.set(node, [note]);
-
+			if ( note ) {
+				// Only fetch nonzero notes. Don't add zero notes to the list of notes in a node
+				if ( node2notes.has(node) ) {
+					node2notes.get(node).push(note);
+				}
+				else {
+					node2notes.set(node, [note]);
+				}
+				notes.push(note);
+				notification2nodeAndNote.set(id, {"node": node, "note": note});
 			}
-			notes.push(note);
-			notification2nodeAndNote.set(id, {node: node, note: note});
 		});
 
 		let nodesPromise = $Node.Get(nodes)
@@ -178,7 +189,8 @@ export default class NotificationsBase extends Component {
 			node.selfauthored = false;
 			if (node.author == caller_id) {
 				node.selfauthored = true;
-			} else if (node.meta && node.meta.author) {
+			}
+			else if (node.meta && node.meta.author) {
 				node.meta.author.forEach((author) => {
 					if (author == caller_id) {
 						node.selfauthored = true;
@@ -197,12 +209,12 @@ export default class NotificationsBase extends Component {
 			if (processedNotifications.indexOf(notification.id) < 0) {
 				let node = nodeLookup.get(notification.node);
 				let data = {
-					node: node,
-					note: undefined,
-					notification: [notification],
-					multi: false,
-					users: new Map(),
-					social: social,
+					"node": node,
+					"note": undefined,
+					"notification": [notification],
+					"multi": false,
+					"users": new Map(),
+					"social": social,
 				};
 
 				data.users.set(caller_id, usersLookup.get(caller_id));
@@ -220,7 +232,7 @@ export default class NotificationsBase extends Component {
 					let firstNote = noteLookup.get(notification.note);
 					data.note = [firstNote];
 					if (!data.users.has(firstNote.author)) {
-						data.users.set(firstNote.author, firstNote);
+						data.users.set(firstNote.author, usersLookup.get(firstNote.author));
 					}
 
 					if (!firstNote.mention && !firstNote.selfauthored && !firstNote.isNodeAuthor) {
@@ -252,10 +264,10 @@ export default class NotificationsBase extends Component {
 		});
 
 		this.setState({
-			notifications: notifications,
-			notificationIds: notificationIds.sort((a, b) => b - a),
-			loading: false,
-			feedSize: (this.state.feedSize ? this.state.feedSize : 0) + processedNotifications.length,
+			"notifications": notifications,
+			"notificationIds": notificationIds.sort((a, b) => b - a),
+			"loading": false,
+			"feedSize": (this.state.feedSize ? this.state.feedSize : 0) + processedNotifications.length,
 		});
 	}
 
@@ -265,7 +277,7 @@ export default class NotificationsBase extends Component {
 
 	isLoading() {
 		return this.state.loading;
-	};
+	}
 
 	getNotificationsOrder() {
 		return this.state.notificationIds;

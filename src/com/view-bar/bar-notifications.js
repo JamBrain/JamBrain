@@ -1,7 +1,7 @@
 import { h, Component } 				from 'preact/preact';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
-import NavLink 							from 'com/nav-link/link';
+import ButtonLink						from '../button-link/link';
 
 import NotificationsBase				from 'com/content-notifications/base';
 import Dropdown							from 'com/input-dropdown/dropdown';
@@ -12,22 +12,21 @@ export default class DropdownNotification extends NotificationsBase {
 
 	componentDidMount() {
 		const showCount = 8;
-		if (this.props.getNew) {
-			$Notification.GetFeedUnread(Math.max(0, this.props.totalNew - showCount), showCount).then((r) => {
-				this.processNotificationFeed(r);
-			}).catch((e)=> console.log('[Notification error]', e));
-		} else {
-			$Notification.GetFeedAll(0, showCount ).then((r) => {
-				this.processNotificationFeed(r);
-			}).catch((e)=> console.log('[Notification error]', e));
+		$Notification.GetFeedAll(0, showCount ).then((r) => {
+			this.processNotificationFeed(r);
+		}).catch((e)=> console.log('[Notification error]', e));
+	}
+
+	hide() {
+		if (this.props.hideCallback) {
+			this.props.hideCallback();
 		}
 	}
 
-	onModifyFunction(id) {
-		if (id == -1) {
-			if (this.props.hideCallback) {
-				this.props.hideCallback();
-			}
+	clearNotifications() {
+		this.markReadHighest();
+		if (this.props.clearCallback) {
+			this.props.clearCallback();
 		}
 	}
 
@@ -52,12 +51,18 @@ export default class DropdownNotification extends NotificationsBase {
 			Notifications.push([null, ShowSpinner]);
 		}
 
-		if (Notifications.length > 0 && !loading) {
-			Notifications.push([-1, (<NavLink href='/home/notifications'><em>View notifications feed...</em></NavLink>)]);
+		if ( !loading && (state.count == 0) ) {
+			Notifications.push([-3, (<div>You have no notifications.</div>)]);
 		}
 
+		if ( !loading && this.hasUnreadNotifications() ) {
+			Notifications.push([-2, (<ButtonLink onclick={ e => { this.clearNotifications(); } } ><em>Mark all as read</em></ButtonLink>)]);
+		}
+
+		Notifications.push([-1, (<ButtonLink onclick={ e => { this.hide(); } } href='/home/notifications'><em>Open notifications feed...</em></ButtonLink>)]);
+
 		return (
-			<Dropdown class='-notifications' items={Notifications} startExpanded={true} hideSelectedField={true} onmodify={ (id) => this.onModifyFunction(id) } />
+			<Dropdown class='-notifications' items={Notifications} startExpanded={true} hideSelectedField={true} />
 		);
 	}
 }

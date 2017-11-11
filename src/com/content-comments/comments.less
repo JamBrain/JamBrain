@@ -21,7 +21,7 @@
 
 		background: @COL_NDDD;
 		color: @COL_NLLLL;
-		height: 1em;
+		height: 0.9em;
 		font-size: 2em;
 		font-weight: bold;
 		font-style: italic;
@@ -49,10 +49,9 @@
 
 	& .-item {
 		position: relative;
-
 		overflow: auto;
 
-		border-top: 1px solid @COL_NLL;
+		/*border-top: 1px solid @COL_NLL;*/
 
 		&:nth-child(odd) {
 			&.-indent-0 {
@@ -96,10 +95,12 @@
 		}
 
 		& > .-body {
-			margin-left: 4.5em;
-			margin-top: 0.5em;
+			margin-left: 5rem;
+			margin-top: 0.5rem;
 
-			margin-right: 1em;
+			margin-right: 1rem;
+
+			font-size: 0.95em;
 
 			overflow-wrap: break-word;
 			hyphens: auto;
@@ -107,23 +108,20 @@
 			& > .-text {
 				margin: 0.5em 0;
 
-				& .-author {
-					font-size: 1.1em;
-					font-weight: bold;
-				}
-
-				& .-date {
-					margin-top: 0;
-					font-size: 0.8em;
-				}
-
 				& > .-title {
-					/*margin: 0.5em 0;*/
-				}
+					font-size: 0.8em;
+					color: @COL_NL;
 
-				//				& > * {
-				//					margin: 0.5rem 0 0;
-				//				}
+					& .-author {
+						font-weight: bold;
+					}
+
+					& .-atname {
+					}
+
+					& .-date {
+					}
+				}
 			}
 
 			& > .-nav {
@@ -156,13 +154,6 @@
 					line-height: 2em;
 					height: 2em;
 					vertical-align: top;
-
-					//					margin-right: 0.5em;
-					//					/*border: 1px solid;*/
-					//
-					//					&:last-child {
-					//						margin-right: 0;
-					//					}
 
 					&:hover,
 					&:focus {

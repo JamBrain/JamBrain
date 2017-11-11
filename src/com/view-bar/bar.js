@@ -23,6 +23,8 @@ export default class ViewBar extends Component {
 	constructor( props ) {
 		super(props);
 
+		this.StartedNotificationLoop = false;
+
 		this.state - {
 			notifications: 0,
 			notificationCountAdjustment: 0,
@@ -33,19 +35,30 @@ export default class ViewBar extends Component {
 		const loggedIn = this.props.user && this.props.user.id > -1;
 
 		if (loggedIn) {
-			$Notification.GetCountUnread()
-			.then((r) => {
-				if (this.state.notifications != r.count) {
-					this.setState({notifications: r.count, notificationCountAdjustment: 0});
-				}
-				setTimeout(() => this.checkNotificationCount(), 60000);
-			})
-			.catch((e) => {
-				setTimeout(() => this.checkNotificationCount(), 5 * 60000);
-				console.log('[Notificaton error]', e);
-			});
-		} else {
-			setTimeout(() => this.checkNotificationCount(), 5 * 60000);
+			let firstCall = !this.StartedNotificationLoop;
+			this.StartedNotificationLoop = true;
+
+			if ( document.hidden && !firstCall ) {
+				// Page is hidden - Don't do any actual querying, just set the timeout to come back later
+				// But, if this was the first check, always try to get the notifications regardless.
+				setTimeout(() => this.checkNotificationCount(), 20000);
+			}
+			else {
+				$Notification.GetCountUnread()
+				.then((r) => {
+					if (this.state.notifications != r.count) {
+						this.setState({notifications: r.count, notificationCountAdjustment: 0});
+					}
+					setTimeout(() => this.checkNotificationCount(), 60000);
+				})
+				.catch((e) => {
+					setTimeout(() => this.checkNotificationCount(), 5 * 60000);
+					console.log('[Notificaton error]', e);
+				});
+			}
+		}
+		else {
+			this.StartedNotificationLoop = false;
 		}
 	}
 
@@ -70,6 +83,13 @@ export default class ViewBar extends Component {
 		var ret = Shallow.Compare(this, nextProps, nextState);
 		//console.log(ret, nextProps.featured);
 		return ret;
+	}
+
+	componentDidUpdate() {
+		// When the user changes (and anything else changes) check to see if we should start the notification checking loop.
+		if ( !this.StartedNotificationLoop ) {
+			this.checkNotificationCount();
+		}
 	}
 
 	renderLeft() {
@@ -147,7 +167,7 @@ export default class ViewBar extends Component {
 			}
 
 			if (this.state.showNotifications) {
-				ShowNotifications = (<DropdownNotification getNew={notificationCount > 0} totalNew={notificationCount} countCallback={ (offset) => this.setState({notificationCountAdjustment: offset}) } hideCallback={ () => this.setState({showNotifications: false}) } />);
+				ShowNotifications = (<DropdownNotification clearCallback={ () => this.setState({notifications: 0}) } hideCallback={ () => this.setState({showNotifications: false}) } />);
 			}
 
 			Notification = (
