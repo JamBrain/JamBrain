@@ -3,20 +3,7 @@ import {h, Component} from 'preact/preact';
 import ContentGames						from 'com/content-games/games';
 import GamesFilter from 'com/content-games/filter';
 
-export default class UserGames extends Component {
-    constructor( props ) {
-        window.addEventListener('navchange', this.onNavChange.bind(this));
-    }
-
-    onNavChange( e ) {
-        this.forceUpdate();
-        console.log("nav");
-    }
-
-    componentDidMount(){
-        console.log("mount");
-    }
-
+export default class EventGames extends Component {
     render( props, state ) {
         let {node, user, featured, path, extra, error, home} = props;
 

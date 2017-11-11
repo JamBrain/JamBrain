@@ -1,6 +1,12 @@
 import {h, Component, cloneElement} from 'preact/preact';
 
 export default class Route extends Component {
+	shouldComponentUpdate(nextProps, nextState) {
+		if(nextProps.node.id == 0) {
+			return false;
+		}
+	}
+
 	render( props, state ) {
 		let {component, render} = props;
 		let key = props.node.id;

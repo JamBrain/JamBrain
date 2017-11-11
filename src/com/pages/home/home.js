@@ -10,6 +10,7 @@ import ContentError						from 'com/content-error/error';
 import HomeFeed from './feed/feed';
 import HomeHome from './home/home';
 import HomeNews from './news/news';
+import HomeGames from './games/games';
 
 export default class PageHome extends Component {
     constructor( props ) {}
@@ -26,6 +27,7 @@ export default class PageHome extends Component {
                         <Route default={!loggedIn} static path="/feed" component={HomeFeed}/>
                         <Route default={loggedIn} static path="/home" component={HomeHome}/>
                         <Route static path="/news" component={HomeNews} />
+                        <Route static path="/games" morePaths component={HomeGames} />
                         {/* <Route static path="/hot" component={HomeHot} /> */}
 
                         {/* <Route static path="/palette" component={HomePalette} /> */}
