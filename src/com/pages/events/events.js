@@ -4,7 +4,9 @@ import LayoutSidebar from 'com/layouts/sidebar/sidebar';
 import ContentGroup						from 'com/content-group/group';
 
 export default class PageEvents extends Component {
-    constructor( props ) {}
+    constructor( props ) {
+        super(props);
+    }
 
     render( props, state ) {
         let {node, user, featured, path, extra, error, home} = props;

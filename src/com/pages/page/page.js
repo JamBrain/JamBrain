@@ -4,7 +4,9 @@ import LayoutSidebar from 'com/layouts/sidebar/sidebar';
 import ContentPost						from 'com/content-post/post';
 
 export default class PagePage extends Component {
-    constructor( props ) {}
+    constructor( props ) {
+        super(props);
+    }
 
     render( props, state ) {
         let {node, user, featured, path, extra, error, home} = props;

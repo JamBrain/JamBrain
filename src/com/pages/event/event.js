@@ -15,7 +15,9 @@ import EventTheme from './theme/theme';
 import EventGames from './games/games';
 
 export default class PageEvent extends Component {
-    constructor( props ) {}
+    constructor( props ) {
+        super(props);
+    }
 
     render( props, state ) {
         let {node, user, featured, path, extra, error, home} = props;

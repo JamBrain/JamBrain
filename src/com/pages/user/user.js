@@ -16,7 +16,9 @@ import Router from 'com/router/router';
 import Route from 'com/router/route';
 
 export default class PageUser extends Component {
-    constructor( props ) {}
+    constructor( props ) {
+        super(props);
+    }
 
     render( props, state ) {
         let {node, user, featured, path, extra, error, home} = props;
@@ -25,7 +27,7 @@ export default class PageUser extends Component {
         let ShowNav = (<ContentNavUser node={node} user={user} path={path} extra={extra} />);
         let editing = extra[extra.length - 1] == "edit";
 
-        if(editing) {
+        if ( editing ) {
             ShowNav = null;
         }
 

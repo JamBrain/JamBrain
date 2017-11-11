@@ -4,7 +4,9 @@ import ContentEventTheme				from 'com/content-event/event-theme';
 import ContentNavTheme					from 'com/content-nav/nav-theme';
 
 export default class UserStats extends Component {
-    constructor( props ) {}
+    constructor( props ) {
+        super(props);
+    }
 
     render( props, state ) {
         let {node, user, featured, path, extra, error, home} = props;

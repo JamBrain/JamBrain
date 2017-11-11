@@ -4,7 +4,9 @@ import ContentTimeline					from 'com/content-timeline/timeline';
 
 
 export default class HomeHome extends Component {
-    constructor( props ) {}
+    constructor( props ) {
+        super(props);
+    }
 
     render( props, state ) {
         let {node, user, featured, path, extra, error, home} = props;

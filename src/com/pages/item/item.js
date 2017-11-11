@@ -7,7 +7,9 @@ import ContentNavItem					from 'com/content-nav/nav-item';
 import ContentItem						from 'com/content-item/item';
 
 export default class PageItem extends Component {
-    constructor( props ) {}
+    constructor( props ) {
+        super(props);
+    }
 
     render( props, state ) {
         let {node, user, featured, path, extra, error, home} = props;

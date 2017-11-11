@@ -3,7 +3,9 @@ import {h, Component} from 'preact/preact';
 import ContentGames						from 'com/content-games/games';
 
 export default class UserGames extends Component {
-    constructor( props ) {}
+    constructor( props ) {
+        super(props);
+    }
 
     render( props, state ) {
         let {node, user, featured, path, extra, error, home} = props;

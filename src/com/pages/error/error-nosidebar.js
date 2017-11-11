@@ -4,7 +4,9 @@ import LayoutSidebar from 'com/layouts/sidebar/sidebar';
 import ContentError						from 'com/content-error/error';
 
 export default class PageError extends Component {
-    constructor( props ) {}
+    constructor( props ) {
+        super(props);
+    }
 
     render( props, state ) {
         let {node, user, featured, path, extra, error, home} = props;

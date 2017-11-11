@@ -13,7 +13,9 @@ import HomeNews from './news/news';
 import HomeGames from './games/games';
 
 export default class PageHome extends Component {
-    constructor( props ) {}
+    constructor( props ) {
+        super(props);
+    }
 
     render( props, state ) {
         let {node, user, featured, path, extra, error, home} = props;

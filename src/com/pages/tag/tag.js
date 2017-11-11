@@ -7,7 +7,9 @@ import Common							from 'com/content-common/common';
 import CommonBody						from 'com/content-common/common-body';
 
 export default class PageTag extends Component {
-    constructor( props ) {}
+    constructor( props ) {
+        super(props);
+    }
 
     render( props, state ) {
         let {node, user, featured, path, extra, error, home} = props;
