@@ -12,10 +12,6 @@ export default class LayoutSidebar extends Component {
         let {user, featured, noSidebar} = props;
         let SidebarView = (<ViewSidebar user={user} featured={featured}/>);
 
-        if(noSidebar) {
-
-        }
-
         return (
             <div id="layout">
                 <ViewBar user={user} featured={featured}/>

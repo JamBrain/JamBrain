@@ -19,7 +19,7 @@ export default class PageHome extends Component {
 
     render( props, state ) {
         let {node, user, featured, path, extra, error, home} = props;
-        let loggedIn = user && user.id !== 0 ? true : false;
+        let loggedIn = user && (user.id !== 0);
 
         return (
             <LayoutSidebar {...props}>

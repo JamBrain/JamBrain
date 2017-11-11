@@ -79,7 +79,7 @@ export default class HomeGames extends Component {
                 Filter={Filter}
                 SubFilter={SubFilter}
                 SubSubFilter={SubSubFilter}
-                Path={`${this.props.path}/games/`}
+                Path={this.props.path+'/games/'}
                 node={node}
                 onchangefilter={(filter)=>{this.setState({'gamesFilter': filter});}}
                 showFeatured={true}

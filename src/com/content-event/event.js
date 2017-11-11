@@ -152,8 +152,6 @@ export default class ContentEvent extends Component {
 		props.class = 'content-event';
 		props.above = [];
 
-		console.log(node);
-
 		if ( node.meta['event-start'] && node.meta['event-end'] ) {
 			let Start = new Date(node.meta['event-start']);
 			let End = new Date(node.meta['event-end']);

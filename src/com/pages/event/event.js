@@ -26,7 +26,7 @@ export default class PageEvent extends Component {
         let DefaultFilter = 'smart';
 
         // Results
-        if ( node && node.meta && node.meta['theme-mode'] >= 8 ) {
+        if ( node && node.meta && (node.meta['theme-mode'] >= 8) ) {
             DefaultSubFilter = 'jam';//'all';
             DefaultFilter = 'overall';
         }
@@ -41,7 +41,7 @@ export default class PageEvent extends Component {
                     <Router node={node} props={{...props}}>
                         <Route default static path="/stats" component={EventStats} />
                         <Route static path="/theme" morePaths component={EventTheme} />
-                        <Route static path={["/games", "/results"]} morePaths component={EventGames} />\
+                        <Route static path={["/games", "/results"]} morePaths component={EventGames} />
 
                         <Route type="error" component={ContentError} />
                     </Router>

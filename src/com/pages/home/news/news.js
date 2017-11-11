@@ -9,8 +9,6 @@ export default class HomeFeed extends Component {
     render( props, state ) {
         let {node, user, featured, path, extra, error, home} = props;
 
-        console.log("news");
-
         return (
             <ContentTimeline types={['post']} subtypes={['news']} methods={['all']} node={node} user={user} path={path} extra={extra} />
         );

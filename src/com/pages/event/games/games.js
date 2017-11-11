@@ -11,7 +11,7 @@ export default class EventGames extends Component {
         let DefaultFilter = 'smart';
 
         // Results
-        if ( node && node.meta && node.meta['theme-mode'] >= 8 ) {
+        if ( node && node.meta && (node.meta['theme-mode'] >= 8) ) {
             DefaultSubFilter = 'jam';//'all';
             DefaultFilter = 'overall';
         }
@@ -95,11 +95,11 @@ export default class EventGames extends Component {
             Methods = [EvalFilter2(DefaultFilter)];
         }
 
-        if ( node && node.meta && node.meta['theme-mode'] < 8 ) {
+        if ( node && node.meta && (node.meta['theme-mode'] < 8) ) {
             ShowFilters = <GamesFilter
                     Filter={Filter}
                     SubFilter={SubFilter}
-                    Path={`${this.props.path}/${extra[0]}/`}
+                    Path={this.props.path+'/'+extra[0]+'/'}
                     node={node}
                     onchangefilter={(filter)=>{this.setState({'gamesFilter': filter});}}
                     showEvent={true}
@@ -111,7 +111,7 @@ export default class EventGames extends Component {
             ShowFilters = <GamesFilter
                     Filter={Filter}
                     SubFilter={SubFilter}
-                    Path={`${this.props.path}/${extra[0]}/`}
+                    Path={this.props.path+'/'+extra[0]+'/'}
                     node={node}
                     onchangefilter={(filter)=>{this.setState({'gamesFilter': filter});}}
                     showEvent={true}
