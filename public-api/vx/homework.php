@@ -34,7 +34,8 @@ api_Exec([
 		$RESPONSE['homework'][] = [
 			'task' => "Suggest ".$ideas_required." themes", 
 			'complete' => ($idea_count >= $ideas_required),
-			'detail' => $idea_count." of ".$ideas_required
+			'detail' => $idea_count." of ".$ideas_required,
+			'link' => $event['path'].'/theme'
 		];
 	}
 }],
