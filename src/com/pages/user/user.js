@@ -32,11 +32,11 @@ export default class PageUser extends Component {
         }
 
         return (
-            <LayoutSidebar noSidebar {...props}>
+            <LayoutSidebar {...props}>
                 <div id="content">
                     {ShowNav}
                     <ContentUser node={node} user={user} path={path} extra={extra}/>
-                    <Router node={node} props={{...props}}>
+                    <Router node={node} props={props}>
                         <Route default={!articlesDefault} static path="/feed" component={UserFeed} />
                         <Route default={articlesDefault} static path="/articles" component={UserArticles} />
                         <Route static path="/games" component={UserGames} />

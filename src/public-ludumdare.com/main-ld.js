@@ -54,6 +54,7 @@ if ( SITE_DEBUG ) {
     initDevTools();
 }
 
+// NOTE: Deprecated
 // Add special behavior: when class attribute is an array, flatten it to a string
 options.vnode = function(vnode) {
     if ( vnode && vnode.attributes && Array.isArray(vnode.attributes.class) ) {
@@ -548,17 +549,17 @@ class Main extends Component {
                     <Route type="page" component={PagePage} />
                     <Route type="post" component={PagePost} />
 
-                    }<Route type="item">
+                    <Route type="item">
                         <Route subtype="game" component={PageItem} />
                     </Route>
 
                     <Route type="tag" component={PageTag} />
 
-                    <Route type="user" component={PageUser} /> //articles, feed(d), post, games, article, following, followers
+                    <Route type="user" component={PageUser} />
                     <Route type="users" component={PageUsers} />
 
-                    <Route type="event" component={PageEvent} /> //theme, games/results, stats(d)
-                    <Route type={["events", "group", "tags"]} component={PageEvents} /> */}
+                    <Route type="event" component={PageEvent} />
+                    <Route type={["events", "group", "tags"]} component={PageEvents} />
 
                     <Route type="error" component={PageError} />
                 </Router>
