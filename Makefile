@@ -1,21 +1,21 @@
-
 -include config.mk	# Create and use this file to override any of 'Settings' #
 
 # Settings #
 SRC					?=	src
 OUT					?=	.output
-#OUT					?=	$(HOME)/.starship
 .BUILD				?=	.build
 NODEJS				?=	node_modules
 
-# Use 'TARGET=public-blah' if you want to build a specific build "blah" #
-#ifdef TARGET
-ifneq ($(TARGET),)
-ALL_MAKEFILES		:=	$(SRC)/$(subst /,,$(TARGET))/Makefile
+# Use 'TARGET=public-ludumdare.com' if you want to build a specific build (such as public-ludumdare.com) #
+ifneq ($(strip $(TARGET)),)
+THE_MAKEFILES			:=	$(SRC)/$(subst /,,$(TARGET))/Makefile
 endif # BUILD
 
 # if JOBS are specified in config.mk, then use that to start a parallel build
 ifdef JOBS
+ifdef MAIN_FOLDER
+$(info [*] Running with $(JOBS) JOBS)
+endif # MAIN_FOLDER
 JOBS				:=	-j $(JOBS)
 endif # JOBS
 
@@ -24,15 +24,20 @@ STATIC_DOMAIN		?=	static.jammer.work
 
 # Copy un-minified files
 ifdef WINDOWS_HOST
+ifndef MAIN_FOLDER
+$(info [*] Running on WINDOWS_HOST)
+endif # MAIN_FOLDER
 COPY_UNMIN			:= true
 endif # WINDOWS_HOST
 
 # Include Folders (modified by recursive scripts) #
 ifdef INCLUDE_FOLDERS
 INCLUDE_FOLDERS		+=	src/compat/
-endif
+endif # INCLUDE_FOLDERS
 INCLUDE_FOLDERS		?=	$(SRC)/
+#ifdef MAIN_FOLDER
 BUILD_FOLDER		:=	$(OUT)/$(.BUILD)/$(subst /,,$(TARGET))
+#endif # MAIN_FOLDER
 
 # Functions (must use '=', and not ':=') #
 REMOVE_UNDERSCORE	=	$(foreach v,$(1),$(if $(findstring /_,$(v)),,$(v)))
@@ -113,7 +118,7 @@ MINIFY_SVG_ARGS		:=	--multipass --disable=cleanupIDs -q
 MINIFY_SVG			=	$(NODEJS)/svgo/bin/svgo $(MINIFY_SVG_ARGS) -i $(1) -o $(2)
 
 # Remove Empty Directories
-RM_EMPTY_DIRS		=	find $(1) -type d -empty -delete
+RM_EMPTY_DIRS		=	find $(1) -type d -empty -delete 2>/dev/null |true
 
 # Get size in bytes (compress and uncompressed)
 SIZE				=	cat $(1) | wc -c
@@ -122,15 +127,6 @@ GZIP_SIZE			=	gzip -c $(1) | wc -c
 
 # Rules #
 default: target
-
-#clean-target-svg:
-#	rm -f $(TARGET_FILE_SVG)
-#clean-target-css:
-#	rm -f $(TARGET_FILE_CSS)
-#clean-target-js:
-#	rm -f $(TARGET_FILE_JS)
-#clean-target:
-#	rm -f $(TARGET_FILES)
 
 report: $(TARGET_FILES)
 	@echo \
@@ -149,7 +145,6 @@ lint-php:
 
 lint: lint-svg lint-css lint-js lint-php
 
-
 lint-all-svg:
 
 lint-all-css:
@@ -158,40 +153,36 @@ lint-all-js:
 
 lint-all-php:
 
-lint-all:
+lint-all: lint-all-svg lint-all-css lint-all-js lint-all-php
 
 
 # If not called recursively, figure out who the targes are and call them #
 ifndef MAIN_FOLDER # ---- #
 
-ALL_MAKEFILES		?=	$(call FIND_FILE,$(SRC)/,Makefile)
-BUILDS				:=	$(subst $(SRC)/,$(OUT)/$(.BUILD)/,$(ALL_MAKEFILES))
+# MAKEFILES is a reserved word, so we're using THE_MAKEFILES
+THE_MAKEFILES		?=	$(call FIND_FILE,$(SRC)/,Makefile)
+BUILDS				:=	$(subst $(SRC)/,$(OUT)/$(.BUILD)/,$(THE_MAKEFILES))
+ALL_MAKEFILES		:=	$(call FIND_FILE,$(SRC)/,Makefile)
+ALL_BUILDS			:=	$(subst $(SRC)/,$(OUT)/$(.BUILD)/,$(ALL_MAKEFILES))
 
 # Recursively re-call this makefile for all TARGETs
 clean:
-	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) clean -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 clean-svg:
-	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-svg -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) clean-svg -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 clean-css:
-	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-css -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) clean-css -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 clean-js:
-	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-js -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) clean-js -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 
-#clean:
-#	rm -fr $(OUT)
-#	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-target -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
-#
-#clean-svg:
-#	rm -fr $(OUT_FILES_SVG) $(OUT_FILES_SVG:.svg=.svg.out)
-#	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-target-svg -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
-#
-#clean-css:
-#	rm -fr $(OUT_CSS_FILES) $(OUT_LESS_FILES) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.dep)
-#	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-target-css -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
-#
-#clean-js:
-#	rm -fr $(OUT_JS_FILES) $(OUT_ES_FILES) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep)
-#	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-target-js -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+clean-all:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+clean-all-svg:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-svg -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+clean-all-css:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-css -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+clean-all-js:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-js -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 
 #ifdef COPY_UNMIN
 #	rm -f $(TARGET_FOLDER)/all.js
@@ -204,20 +195,25 @@ clean-version:
 
 mini: clean-version target
 
+all: $(ALL_BUILDS) $(OUT)/git-version.php
 target: $(BUILDS) $(OUT)/git-version.php
 # NOTE: git-version should be last! Generation of this file doubles as the "install complete" notification.
 
-$(BUILDS):
+#$(BUILDS):
+#	@echo "[+] Building \"$(subst /Makefile,,$(subst $(OUT)/$(.BUILD)/,,$@))\"..."
+#	@$(MAKE) --no-print-directory $(JOBS) -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$@)
+$(ALL_BUILDS):
 	@echo "[+] Building \"$(subst /Makefile,,$(subst $(OUT)/$(.BUILD)/,,$@))\"..."
 	@$(MAKE) --no-print-directory $(JOBS) -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$@)
 
-endif # $(BUILDS) # ---- #
+else # MAIN_FOLDER # ---- #
 
+#endif # MAIN_FOLDER # ---- #
+#ifdef MAIN_FOLDER # ---- #
 
 # Folder Rules #
 $(OUT_FOLDERS):
 	mkdir -p $@
-
 
 # File Rules #
 $(OUT)/%.es.js:$(SRC)/%.js
@@ -237,27 +233,18 @@ $(OUT)/%.o.css:$(SRC)/%.css
 $(OUT)/%.min.svg:$(SRC)/%.svg
 	$(call SVGO,$<,$@)
 
-# Concat Rules #
-ifdef MAIN_FOLDER # ---- #
 
 clean:
 	rm -fr $(OUT) $(TARGET_FILES)
-#	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-target -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
-
 clean-svg:
 	rm -fr $(OUT_FILES_SVG) $(OUT_FILES_SVG:.svg=.svg.out) $(TARGET_FILE_SVG) $(BUILD_FOLDER)/svg.svg $(BUILD_FOLDER)/all.svg
-	$(call RM_EMPTY_DIRS,.output)
-#	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-target-svg -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
-
+	-$(call RM_EMPTY_DIRS,.output)
 clean-css:
 	rm -fr $(OUT_CSS_FILES) $(OUT_LESS_FILES) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.css.dep) $(TARGET_FILE_CSS) $(BUILD_FOLDER)/less.css $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/all.css
-	$(call RM_EMPTY_DIRS,.output)
-#	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-target-css -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
-
+	-$(call RM_EMPTY_DIRS,.output)
 clean-js:
 	rm -fr $(OUT_JS_FILES) $(OUT_ES_FILES) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILE_JS) $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js $(BUILD_FOLDER)/all.js
-	$(call RM_EMPTY_DIRS,.output)
-#	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-target-js -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+	-$(call RM_EMPTY_DIRS,.output)
 
 
 OUT_MAIN_JS			:=	$(subst $(SRC)/,$(OUT)/,$(MAIN_JS:.js=.es.js))
@@ -322,7 +309,7 @@ $(OUT)/git-version.php:
 
 
 # Phony Rules #
-.PHONY: default build clean target clean-target clean-version clean-svg clean-css clean-js lint lint-all lint-svg lint-css lint-js lint-php lint-all-svg lint-all-css lint-all-js lint-all-php fail report $(BUILDS)
+.PHONY: default build target all clean clean-all clean-target clean-version clean-svg clean-css clean-js clean-all-svg clean-all-css clean-all-js lint lint-all lint-svg lint-css lint-js lint-php lint-all-svg lint-all-css lint-all-js lint-all-php fail report $(BUILDS)
 
 
 # Dependencies #
