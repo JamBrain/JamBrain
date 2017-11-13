@@ -1,6 +1,6 @@
 # Ludum Dare
 
-This is the new pre-alpha Ludum Dare site! It's currently live here: 
+This is the source code for the Ludum Dare family of websites! It's currently live here: 
 
 https://ldjam.com/
 
@@ -22,7 +22,7 @@ Source code is found here:
 * [/src](src/) - Source Code (PHP, JavaScript, CSS, etc)
 
 ### Live sites
-These folders contain the live sites that are served. They tend to be simple `PHP` files that include things in the `/src` folder. They also contain the output of the toolchain (in the `/-/` subfolder).
+These folders contain the live sites that are served. They tend to be simple `PHP` files that include things from the `/src` folder. They also contain the output of the toolchain (in the `/-/` subfolder).
 
 * [/public-ludumdare.com](public-ludumdare.com/) - Ludum Dare focused version of the common site -- https://ldjam.com
   * This will be moving to `ludumdare.com` eventually.
@@ -40,9 +40,14 @@ These are not currently in active development.
   * NOTE: `/vx/` is experimental and may change. We are working towards a `/v1/` launch soon.
 * [/public-static](public-static/) - Where static files go. Images, etc. -- https://static.jam.vg
 * [/sandbox](sandbox/) - Old code, experiments, and debugging tools. Very chaotic here.
-* `Makefile` - The core build script. Runs a variety of tools. Invoke from inside the VM (or outside with appropriate config).
-  * `make` - Build changes
-  * `make clean` - Delete all intermediate files so you can rebuild from scratch
+
+# The Makefile
+The `Makefile` is the core build script. It is used to build the project. Invoke it with the `make` command from inside the VM (or outside with appropriate config).
+
+Usage:
+  * `make` - Compile all changed files and build the target
+  * `make clean` - Delete all intermediate files. NOTE: When you `make` again, everything needs to be recompiled
+  * `make lint` - Run all code through the linter. NOTE: `make` only lints files that have changed. This lints everything
   * Advanced build options
     * `make all` - Build all targets (default, until you set TARGET in `config.mk`)
     * `make TARGET=public-ludumdare.com` - Make a specific target (in this case, `public-ludumdare.com`)
@@ -50,6 +55,9 @@ These are not currently in active development.
     * `make clean-all` - Clean all targets
     * `make clean-svg`, `make clean-css`, `make clean-js` - Clean specifically the SVG, CSS, or JS
     * `make clean-all-svg`, `make clean-all-css`, `make clean-all-js` - Clean specifically the SVG, CSS, or JS of all targets
+    * `make lint-all` - Lint all code for all targets
+    * `make lint-css`, `make lint-js`, `make lint-php` - Lint specifically the CSS, JS and PHP code
+    * `make lint-all-css`, `make lint-all-js`, `make lint-all-php` - Lint specifically the CSS, JS, or PHP code of all targets
   * `config.mk` - Create this file and you can hardcode makefile settings
     * `TARGET=public-ludumdare.com` to build just Ludum Dare
     * `JOBS=2` to compile using 2 threads (parallel build)

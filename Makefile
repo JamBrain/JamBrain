@@ -13,7 +13,7 @@ endif # BUILD
 
 # if JOBS are specified in config.mk, then use that to start a parallel build
 ifdef JOBS
-ifdef MAIN_FOLDER
+ifndef MAIN_FOLDER
 $(info [*] Running with $(JOBS) JOBS)
 endif # MAIN_FOLDER
 JOBS				:=	-j $(JOBS)
@@ -133,27 +133,6 @@ report: $(TARGET_FILES)
 		"[SVG] GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)` (`$(call GZIP_SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`)	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`]\n" \
 		| column -t
 
-lint-svg:
-
-lint-css:
-
-lint-js:
-
-lint-php:
-
-lint: lint-svg lint-css lint-js lint-php
-
-lint-all-svg:
-
-lint-all-css:
-
-lint-all-js:
-
-lint-all-php:
-
-lint-all: lint-all-svg lint-all-css lint-all-js lint-all-php
-
-
 # If not called recursively, figure out who the targes are and call them #
 ifndef MAIN_FOLDER # ---- #
 
@@ -182,16 +161,37 @@ clean-all-css:
 clean-all-js:
 	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-js -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 
+clean-version:
+	rm $(OUT)/git-version.php
+
+mini: clean-version target
+
 #ifdef COPY_UNMIN
 #	rm -f $(TARGET_FOLDER)/all.js
 #	rm -f $(TARGET_FOLDER)/all.css
 #	rm -f $(TARGET_FOLDER)/all.svg
 #endif # COPY_UNMIN
 
-clean-version:
-	rm $(OUT)/git-version.php
+lint: lint-svg lint-css lint-js lint-php
+lint-svg:
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) lint-svg -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+lint-css:
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) lint-css -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+lint-js:
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) lint-js -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+lint-php:
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) lint-php -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 
-mini: clean-version target
+lint-all: lint-all-svg lint-all-css lint-all-js lint-all-php
+lint-all-svg:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) lint-svg -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+lint-all-css:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) lint-css -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+lint-all-js:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) lint-js -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+lint-all-php:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) lint-php -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+
 
 all: $(ALL_BUILDS) $(OUT)/git-version.php
 target: $(BUILDS) $(OUT)/git-version.php
@@ -206,6 +206,15 @@ else # MAIN_FOLDER # ---- #
 # Folder Rules #
 $(OUT_FOLDERS):
 	mkdir -p $@
+
+
+lint-svg:
+lint-css: $(LESS_FILES)
+	$(call STYLELINT,$^)
+lint-js: $(ES_FILES)
+	$(call ESLINT,$^)
+lint-php:
+
 
 # File Rules #
 $(OUT)/%.es.js:$(SRC)/%.js
