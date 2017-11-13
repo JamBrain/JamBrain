@@ -13,6 +13,11 @@ ifdef TARGET
 ALL_MAKEFILES		:=	$(SRC)/$(subst /,,$(TARGET))/Makefile
 endif # BUILD
 
+# if JOBS are specified in config.mk, then use that to start a parallel build
+ifdef JOBS
+JOBS				:=	-j $(JOBS)
+endif # JOBS
+
 # TODO: REMOVE THIS
 STATIC_DOMAIN		?=	static.jammer.work
 
@@ -143,7 +148,7 @@ target: $(BUILDS) $(OUT)/git-version.php
 
 $(BUILDS):
 	@echo "[+] Building \"$(subst /Makefile,,$(subst $(OUT)/$(.BUILD)/,,$@))\"..."
-	@$(MAKE) --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$@)
+	@$(MAKE) --no-print-directory $(JOBS) -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$@)
 
 endif # $(BUILDS) # ---- #
 
