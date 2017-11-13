@@ -40,7 +40,11 @@ These are not currently in active development.
   * NOTE: `/vx/` is experimental and may change. We are working towards a `/v1/` launch soon.
 * [/public-static](public-static/) - Where static files go. Images, etc. -- https://static.jam.vg
 * [/sandbox](sandbox/) - Old code, experiments, and debugging tools. Very chaotic here.
-* `Makefile` - The core build script. Runs a variety of tools. Invoke from inside the VM (or outside with appropriate config).
+
+# The Makefile
+The `Makefile` is the core build script. It is used to build the project. Invoke it with the `make` command from inside the VM (or outside with appropriate config).
+
+Usage:
   * `make` - Compile all changed files and build the target
   * `make clean` - Delete all intermediate files. NOTE: When you `make` again, everything needs to be recompiled
   * `make lint` - Run all code through the linter. NOTE: `make` only lints files that have changed. This lints everything
