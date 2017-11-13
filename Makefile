@@ -35,9 +35,7 @@ ifdef INCLUDE_FOLDERS
 INCLUDE_FOLDERS		+=	src/compat/
 endif # INCLUDE_FOLDERS
 INCLUDE_FOLDERS		?=	$(SRC)/
-#ifdef MAIN_FOLDER
 BUILD_FOLDER		:=	$(OUT)/$(.BUILD)/$(subst /,,$(TARGET))
-#endif # MAIN_FOLDER
 
 # Functions (must use '=', and not ':=') #
 REMOVE_UNDERSCORE	=	$(foreach v,$(1),$(if $(findstring /_,$(v)),,$(v)))
@@ -199,17 +197,11 @@ all: $(ALL_BUILDS) $(OUT)/git-version.php
 target: $(BUILDS) $(OUT)/git-version.php
 # NOTE: git-version should be last! Generation of this file doubles as the "install complete" notification.
 
-#$(BUILDS):
-#	@echo "[+] Building \"$(subst /Makefile,,$(subst $(OUT)/$(.BUILD)/,,$@))\"..."
-#	@$(MAKE) --no-print-directory $(JOBS) -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$@)
 $(ALL_BUILDS):
 	@echo "[+] Building \"$(subst /Makefile,,$(subst $(OUT)/$(.BUILD)/,,$@))\"..."
 	@$(MAKE) --no-print-directory $(JOBS) -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$@)
 
 else # MAIN_FOLDER # ---- #
-
-#endif # MAIN_FOLDER # ---- #
-#ifdef MAIN_FOLDER # ---- #
 
 # Folder Rules #
 $(OUT_FOLDERS):
