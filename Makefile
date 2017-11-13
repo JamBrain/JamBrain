@@ -45,27 +45,33 @@ ALL_LESS_FILES		:=	$(filter-out %.min.less,$(call FIND_FILE,$(SRC)/,*.less))
 ALL_CSS_FILES		:=	$(filter-out %.min.css,$(call FIND_FILE,$(SRC)/,*.css))
 ALL_SVG_FILES		:=	$(filter-out %.min.svg,$(call FIND_FILE,$(SRC)/,*.svg))
 
-ALL_ES6IGNORE_FILES	:=	$(call FIND_FILE,$(SRC)/,.es6ignore)
-ES6IGNORE_FOLDERS	:=	$(addsuffix %,$(dir $(ALL_ES6IGNORE_FILES)))
+ALL_ESIGNORE_FILES	:=	$(call FIND_FILE,$(SRC)/,.es6ignore)
+ESIGNORE_FOLDERS	:=	$(addsuffix %,$(dir $(ALL_ESIGNORE_FILES)))
 
 # Transforms #
-ES6_FILES 			:=	$(filter-out $(ES6IGNORE_FOLDERS),$(ALL_JS_FILES))
-JS_FILES 			:=	$(filter $(ES6IGNORE_FOLDERS),$(ALL_JS_FILES))
+ES_FILES 			:=	$(filter-out $(ESIGNORE_FOLDERS),$(ALL_JS_FILES))
+JS_FILES 			:=	$(filter $(ESIGNORE_FOLDERS),$(ALL_JS_FILES))
 LESS_FILES			:=	$(ALL_LESS_FILES)
 CSS_FILES			:=	$(ALL_CSS_FILES)
 SVG_FILES			:=	$(ALL_SVG_FILES)
 
-OUT_ES6_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(ES6_FILES:.js=.es6.js))
+OUT_ES_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(ES_FILES:.js=.es.js))
 OUT_JS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(JS_FILES:.js=.o.js))
 OUT_LESS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(LESS_FILES:.less=.less.css))
 OUT_CSS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(CSS_FILES:.css=.o.css))
 OUT_SVG_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(SVG_FILES:.svg=.min.svg))
 
-OUT_FILES			:=	$(OUT_SVG_FILES) $(OUT_CSS_FILES) $(OUT_LESS_FILES) $(OUT_JS_FILES) $(OUT_ES6_FILES)
-DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES6_FILES) $(OUT_LESS_FILES))
+OUT_FILES_SVG		:=	$(OUT_SVG_FILES)
+OUT_FILES_CSS		:=	$(OUT_CSS_FILES) $(OUT_LESS_FILES)
+OUT_FILES_JS		:=	$(OUT_JS_FILES) $(OUT_ES_FILES)
+OUT_FILES			:=	$(OUT_FILES_SVG) $(OUT_FILES_CSS) $(OUT_FILES_JS)
+DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES_FILES) $(OUT_LESS_FILES))
 OUT_FOLDERS			:=	$(sort $(dir $(OUT_FILES) $(BUILD_FOLDER)/))
 
-TARGET_FILES		:=	$(TARGET_FOLDER)/all.min.svg $(TARGET_FOLDER)/all.min.css $(TARGET_FOLDER)/all.min.js
+TARGET_FILE_SVG		:=	$(TARGET_FOLDER)/all.min.svg
+TARGET_FILE_CSS		:=	$(TARGET_FOLDER)/all.min.css
+TARGET_FILE_JS		:=	$(TARGET_FOLDER)/all.min.js
+TARGET_FILES		:=	$(TARGET_FILE_SVG) $(TARGET_FILE_CSS) $(TARGET_FILE_JS)
 TARGET_DEPS			:=	$(OUT_FOLDERS) $(TARGET_FILES)
 
 
@@ -75,10 +81,10 @@ ESLINT				=	$(NODEJS)/eslint/bin/eslint.js $(1) $(ESLINT_ARGS)
 # Ecmascript Linter: http://eslint.org/
 BUBLE_ARGS			:=	--no modules --jsx h --objectAssign Object.assign
 BUBLE				=	$(NODEJS)/buble/bin/buble $(BUBLE_ARGS) $(1) -o $(2)
-# ES6 Compiler: https://buble.surge.sh/guide/
+# ES Compiler: https://buble.surge.sh/guide/
 ROLLUP_ARGS			:=	-c src/config/rollup.config.js
 ROLLUP				=	$(NODEJS)/rollup/bin/rollup $(ROLLUP_ARGS) $(1) > $(2)
-# ES6 Include/Require Resolver: http://rollupjs.org/guide/
+# ES Include/Require Resolver: http://rollupjs.org/guide/
 MINIFY_JS_RESERVED	:=	VERSION_STRING,STATIC_DOMAIN
 MINIFY_JS_ARGS		:=	--compress --mangle -r "$(MINIFY_JS_RESERVED)"
 MINIFY_JS			=	$(NODEJS)/uglify-js/bin/uglifyjs $(MINIFY_JS_ARGS) -o $(2) -- $(1)
@@ -91,7 +97,7 @@ LESS				=	$(NODEJS)/less/bin/lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
 # CSS Compiler: http://lesscss.org/
 MINIFY_CSS			=	cat $(1) | $(NODEJS)/clean-css-cli/bin/cleancss -o $(2)
 # CSS Minifier: https://github.com/jakubpawlowicz/clean-css/
-STYLELINT_ARGS			:=	--syntax less
+STYLELINT_ARGS			:=	--syntax less --config src/config/.stylelintrc
 STYLELINT				=	$(NODEJS)/stylelint/bin/stylelint.js $(1) $(STYLELINT_ARGS)
 # CSS Linter: http://stylelint.io/
 
@@ -122,6 +128,28 @@ report: $(TARGET_FILES)
 		"[SVG] GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)` (`$(call GZIP_SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`)	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`]\n" \
 		| column -t
 
+lint-svg:
+
+lint-css:
+
+lint-js:
+
+lint-php:
+
+lint: lint-svg lint-css lint-js lint-php
+
+
+lint-all-svg:
+
+lint-all-css:
+
+lint-all-js:
+
+lint-all-php:
+
+lint-all:
+
+
 # If not called recursively, figure out who the targes are and call them #
 ifndef MAIN_FOLDER # ---- #
 
@@ -131,6 +159,15 @@ BUILDS				:=	$(subst $(SRC)/,$(OUT)/$(.BUILD)/,$(ALL_MAKEFILES))
 clean:
 	rm -fr $(OUT)
 	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-target -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+
+clean-svg:
+	rm -fr $(OUT_FILES_SVG) $(OUT_FILES_SVG:.svg=.svg.out) $(TARGET_FILE_SVG)
+
+clean-css:
+	rm -fr $(OUT_CSS_FILES) $(OUT_LESS_FILES) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.dep) $(TARGET_FILE_CSS)
+
+clean-js:
+	rm -fr $(OUT_JS_FILES) $(OUT_ES_FILES) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILE_JS)
 
 #ifdef COPY_UNMIN
 #	rm -f $(TARGET_FOLDER)/all.js
@@ -159,7 +196,7 @@ $(OUT_FOLDERS):
 
 
 # File Rules #
-$(OUT)/%.es6.js:$(SRC)/%.js
+$(OUT)/%.es.js:$(SRC)/%.js
 	$(call ESLINT,$<)
 	$(call BUBLE,$<,$@)
 
@@ -179,12 +216,12 @@ $(OUT)/%.min.svg:$(SRC)/%.svg
 # Concat Rules #
 ifdef MAIN_FOLDER # ---- #
 
-OUT_MAIN_JS			:=	$(subst $(SRC)/,$(OUT)/,$(MAIN_JS:.js=.es6.js))
+OUT_MAIN_JS			:=	$(subst $(SRC)/,$(OUT)/,$(MAIN_JS:.js=.es.js))
 
 # JavaScript #
 $(BUILD_FOLDER)/js.js: $(OUT_JS_FILES)
 	cat $^ > $@
-$(BUILD_FOLDER)/buble.js: $(OUT_MAIN_JS) $(OUT_ES6_FILES)
+$(BUILD_FOLDER)/buble.js: $(OUT_MAIN_JS) $(OUT_ES_FILES)
 	$(call ROLLUP,$<,$@.tmp)
 	rm -f $@
 	mv $@.tmp $@
@@ -240,7 +277,7 @@ $(OUT)/git-version.php:
 
 
 # Phony Rules #
-.PHONY: default build clean target clean-target clean-version fail report $(BUILDS)
+.PHONY: default build clean target clean-target clean-version clean-svg clean-css clean-js lint lint-all lint-svg lint-css lint-js lint-php lint-all-svg lint-all-css lint-all-js lint-all-php fail report $(BUILDS)
 
 
 # Dependencies #
