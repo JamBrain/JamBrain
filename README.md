@@ -44,8 +44,12 @@ These are not currently in active development.
   * `make` - Build changes
   * `make clean` - Delete all intermediate files so you can rebuild from scratch
   * Advanced build options
-    * `make mini` - Like `make`, but this can be used to refresh the UID (used to bypass caching proxies, etc)
-    * `make TARGET=public-ludumdare.com` - Make a specific target
+    * `make all` - Build all targets (default, until you set TARGET in `config.mk`)
+    * `make TARGET=public-ludumdare.com` - Make a specific target (in this case, `public-ludumdare.com`)
+    * `make mini` - Like `make`, but refreshes the UID (used to bypass caching proxies, etc)
+    * `make clean-all` - Clean all targets
+    * `make clean-svg`, `make clean-css`, `make clean-js` - Clean specifically the SVG, CSS, or JS
+    * `make clean-all-svg`, `make clean-all-css`, `make clean-all-js` - Clean specifically the SVG, CSS, or JS of all targets
   * `config.mk` - Create this file and you can hardcode makefile settings
     * `TARGET=public-ludumdare.com` to build just Ludum Dare
     * `JOBS=2` to compile using 2 threads (parallel build)
