@@ -1,6 +1,6 @@
 # Ludum Dare
 
-This is the new pre-alpha Ludum Dare site! It's currently live here: 
+This is the source code for the Ludum Dare family of websites! It's currently live here: 
 
 https://ldjam.com/
 
@@ -22,7 +22,7 @@ Source code is found here:
 * [/src](src/) - Source Code (PHP, JavaScript, CSS, etc)
 
 ### Live sites
-These folders contain the live sites that are served. They tend to be simple `PHP` files that include things in the `/src` folder. They also contain the output of the toolchain (in the `/-/` subfolder).
+These folders contain the live sites that are served. They tend to be simple `PHP` files that include things from the `/src` folder. They also contain the output of the toolchain (in the `/-/` subfolder).
 
 * [/public-ludumdare.com](public-ludumdare.com/) - Ludum Dare focused version of the common site -- https://ldjam.com
   * This will be moving to `ludumdare.com` eventually.
