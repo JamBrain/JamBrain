@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact/preact';
 
 import SVGIcon							from 'com/svg-icon/icon';
 import ContentCommonNav					from 'com/content-common/common-nav';
@@ -9,7 +9,8 @@ import ContentCommon					from 'com/content-common/common';
 import ContentCommonBodyAvatar			from 'com/content-common/common-body-avatar';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
-import $NodeLink						from '../../shrub/js/node/node_link';
+import $Node							from '../../shrub/js/node/node';
+//import $NodeLink						from '../../shrub/js/node/node_link';
 
 export default class ContentUserBar extends Component {
 	constructor( props ) {
@@ -25,12 +26,12 @@ export default class ContentUserBar extends Component {
 
 		if ( featured && featured.focus && confirm("Add to Team?") ) {
 
-			$NodeLink.Add(featured.focus, node.id, {'author':null})
+			$Node.AddLink(featured.focus, node.id, {'author': null})
 				.then( r => {
-					console.log('did it',r);
+					console.log('did it', r);
 				})
 				.catch( err => {
-					this.setState({ 'error': err });
+					this.setState({'error': err});
 				});
 		}
 	}
@@ -40,12 +41,12 @@ export default class ContentUserBar extends Component {
 		var featured = this.props.featured;
 
 		if ( featured && featured.focus && confirm("Remove from Team?") ) {
-			$NodeLink.Remove(featured.focus, node.id, {'author':null})
+			$Node.RemoveLink(featured.focus, node.id, {'author': null})
 			.then( r => {
-				console.log('did it',r);
+				console.log('did it', r);
 			})
 			.catch( err => {
-				this.setState({ 'error': err });
+				this.setState({'error': err});
 			});
 		}
 	}

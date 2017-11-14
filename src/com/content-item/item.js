@@ -16,7 +16,7 @@ import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 import ContentSimple					from 'com/content-simple/simple';
 
 import $Node							from '../../shrub/js/node/node';
-import $NodeMeta						from '../../shrub/js/node/node_meta';
+//import $NodeMeta						from '../../shrub/js/node/node_meta';
 import $Grade							from '../../shrub/js/grade/grade';
 import $Asset							from '../../shrub/js/asset/asset';
 
@@ -115,7 +115,7 @@ export default class ContentItem extends Component {
 
 		return $Grade.Add(Node.id, name, value)
 			.then(r => {
-				if ( r && r.id || !!r.changed ) {
+				if ( (r && r.id) || !!r.changed ) {
 					var Grades = this.state.grade;
 
 					Grades[name] = value;
@@ -135,7 +135,7 @@ export default class ContentItem extends Component {
 		if ( value ) {
 			Data[Name] = 1;
 
-			return $NodeMeta.Add(Node.id, Data)
+			return $Node.AddMeta(Node.id, Data)
 				.then(r => {
 					if ( r && r.changed ) {
 						this.props.node.meta[Name] = Data[Name];
@@ -147,7 +147,7 @@ export default class ContentItem extends Component {
 		else {
 			Data[Name] = 0;
 
-			return $NodeMeta.Remove(Node.id, Data)
+			return $Node.RemoveMeta(Node.id, Data)
 				.then(r => {
 					if ( r && r.changed ) {
 						this.props.node.meta[Name] = Data[Name];
@@ -188,7 +188,7 @@ export default class ContentItem extends Component {
 						let Data = {};
 						Data[name] = FileName;
 
-						return $NodeMeta.Add(node.id, Data);
+						return $Node.AddMeta(node.id, Data);
 					}
 
 					return Promise.resolve({});
@@ -210,10 +210,10 @@ export default class ContentItem extends Component {
 		const node = this.props.node;
 		let update = null;
 		if (anon) {
-			update = $NodeMeta.Remove(node.id, {'allow-anonymous-comments': 0});
+			update = $Node.RemoveMeta(node.id, {'allow-anonymous-comments': 0});
 		}
 		else {
-			update = $NodeMeta.Add(node.id, {'allow-anonymous-comments': 1});
+			update = $Node.AddMeta(node.id, {'allow-anonymous-comments': 1});
 		}
 
 		return update.then(r => {
@@ -297,7 +297,7 @@ export default class ContentItem extends Component {
 //		this.setState({});
 //		console.log(Data);
 
-		return $NodeMeta.Add(node.id, Data);
+		return $Node.AddMeta(node.id, Data);
 	}
 
 	// Generates JSX for the links, depending on whether the page is editing or viewing
