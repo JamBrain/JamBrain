@@ -1,6 +1,6 @@
 import {h, Component} from 'preact/preact';
 
-import ViewContentPost from 'content-post';
+import ViewContentPost from 'com/view-content/content-post';
 
 export default class PagePost extends Component {
     render( props, state ) {
