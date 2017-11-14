@@ -256,7 +256,11 @@ export function Add( id, node_type, node_subtype, node_subsubtype ) {
 
 }
 export function Publish( id ) {
-	return Fetch.Post(API_ENDPOINT+'/vx/node/publish/'+id, {});
+	return Fetch.Post(API_ENDPOINT+'/vx/node/publish/'+id, {})
+		.then( r => {
+			InvalidateNodeCache(id);
+			return r;
+		});
 }
 
 export function Update( id, name, body, tag ) {
@@ -269,7 +273,11 @@ export function Update( id, name, body, tag ) {
 	if ( tag )
 		Data.tag = tag;
 
-	return Fetch.Post(API_ENDPOINT+'/vx/node/update/'+id, Data);
+	return Fetch.Post(API_ENDPOINT+'/vx/node/update/'+id, Data)
+		.then( r => {
+			InvalidateNodeCache(id);
+			return r;
+		});
 }
 
 
@@ -280,7 +288,11 @@ export function Transform( id, type, subtype, subsubtype ) {
 	if ( subsubtype )
 		new_type += '/'+subsubtype;
 
-	return Fetch.Post(API_ENDPOINT+'/vx/node/transform/'+id+'/'+new_type, {});
+	return Fetch.Post(API_ENDPOINT+'/vx/node/transform/'+id+'/'+new_type, {})
+		.then( r => {
+			InvalidateNodeCache(id);
+			return r;
+		});
 }
 
 export function AddMeta( id, data ) {
