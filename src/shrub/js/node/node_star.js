@@ -11,7 +11,11 @@ export default {
 export function Add( node ) {
 	return Fetch.Get(API_ENDPOINT+'/vx/node/star/add/'+node, true)
 		.then( r => {
-			InvalidateNodeCache(node);
+			//InvalidateNodeCache(node);
+			if ( r && r.caller_id ) {
+				////InvalidateNodeCache(r.caller_id);
+				//InvalidatePrivateData
+			}
 			return r;
 		});
 }
@@ -19,7 +23,11 @@ export function Add( node ) {
 export function Remove( node ) {
 	return Fetch.Get(API_ENDPOINT+'/vx/node/star/remove/'+node, true)
 		.then( r => {
-			InvalidateNodeCache(node);
+			//InvalidateNodeCache(node);
+			if ( r && r.caller_id ) {
+				////InvalidateNodeCache(r.caller_id);
+				//InvalidatePrivateData
+			}
 			return r;
 		});
 }
