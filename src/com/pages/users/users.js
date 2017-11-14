@@ -8,7 +8,7 @@ export default class PageUsers extends Component {
     }
 
     render( props, state ) {
-        let {node, user, featured, path, extra, error, home} = props;
+        let {node, user,path, extra} = props;
 
         return (
             <div id="content">

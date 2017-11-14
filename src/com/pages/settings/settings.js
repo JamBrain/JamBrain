@@ -1,12 +1,8 @@
 import {h, Component} from 'preact/preact';
 
 export default class PageSettings extends Component {
-    constructor( props ) {
-        super(props);
-    }
-
     render( props, state ) {
-        let {node, user, featured, path, extra, error, home} = props;
+        let {user} = props;
 
         return (
             <div id="content">

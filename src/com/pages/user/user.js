@@ -14,12 +14,8 @@ import Router from 'com/router/router';
 import Route from 'com/router/route';
 
 export default class PageUser extends Component {
-    constructor( props ) {
-        super(props);
-    }
-
     render( props, state ) {
-        let {node, user, featured, path, extra, error, home} = props;
+        let {node, user,path, extra} = props;
 
         let articlesDefault = node['articles'] > 0 ? true : false;
         let ShowNav = (<ContentNavUser node={node} user={user} path={path} extra={extra} />);

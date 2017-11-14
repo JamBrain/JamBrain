@@ -27,13 +27,13 @@ export default class Router extends Component {
         let {node} = next ? next : this.props;
         let {routes} = this.state;
 
-        if (!node) {
+        if ( !node ) {
             return;
         }
 
         let currentRoute, errorRoute;
 
-        for (let i in routes) {
+        for ( let i in routes ) {
             let route = routes[i];
 
             if ( this.matchRoute(route.attributes, node) ) {
@@ -59,7 +59,7 @@ export default class Router extends Component {
 
     matchPath ( path ) {
         if ( Array.isArray(path) ) {
-            for (let v in path) {
+            for ( let v in path ) {
                 if ( this.matchPath(path[v] )) {
                     return true;
                 }
@@ -97,7 +97,7 @@ export default class Router extends Component {
 
     // Checks if route is a match
     matchRoute( a, b ) {
-        for (let i in this.state.match) {
+        for ( let i in this.state.match ) {
             let aMatch = a[this.state.match[i]] == "" ? null : a[this.state.match[i]];
             let bMatch = b[this.state.match[i]] == "" ? null : b[this.state.match[i]];
 
@@ -120,10 +120,10 @@ export default class Router extends Component {
 
     // Iterate through all routes and flatten them
     flattenRoutes( children, parent, reset ) {
-        for (let i in children) {
+        for ( let i in children ) {
             let child = children[i];
 
-            if (child.nodeName !== Route) {
+            if ( child.nodeName !== Route ) {
                 continue;
             }
 
@@ -157,7 +157,7 @@ export default class Router extends Component {
 
     //Re-calculate routes when router props change
     componentWillReceiveProps( next ) {
-        if (next.node.id) {
+        if ( next.node.id ) {
             this.setState({"routes": [], "params": {}});
             this.flattenRoutes(next.children);
             this.getCurrentRoute(next);
@@ -166,7 +166,7 @@ export default class Router extends Component {
 
     render( props, state ) {
         if ( !state.current ) {
-            return;
+            return <Route />;
         }
 
         return cloneElement(state.current, {...props, "params": state.params});

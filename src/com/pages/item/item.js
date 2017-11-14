@@ -5,12 +5,8 @@ import ContentNavItem					from 'com/content-nav/nav-item';
 import ContentItem						from 'com/content-item/item';
 
 export default class PageItem extends Component {
-    constructor( props ) {
-        super(props);
-    }
-
     render( props, state ) {
-        let {node, user, featured, path, extra, error, home} = props;
+        let {node, user, featured, path, extra} = props;
 
         let EditMode = extra && extra.length && extra[extra.length-1] == 'edit';
 

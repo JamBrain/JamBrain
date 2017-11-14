@@ -14,12 +14,8 @@ import EventTheme from "./theme/theme";
 import EventGames from "./games/games";
 
 export default class PageEvent extends Component {
-    constructor( props ) {
-        super(props);
-    }
-
     render( props, state ) {
-        let {node, user, featured, path, extra, error} = props;
+        let {node, user, featured, path, extra} = props;
 
         let DefaultSubFilter = "all";
         let DefaultFilter = "smart";

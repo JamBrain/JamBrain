@@ -23,7 +23,7 @@ export default class PageHome extends Component {
         return (
             <div id="content">
                 <ContentNavRoot node={node} user={user} path={path} extra={extra} />
-                <Router node={node} props={{...props}}>
+                <Router node={node} props={props}>
                     <Route default={!loggedIn} static path="/feed" component={HomeFeed}/>
                     <Route default={loggedIn} static path="/home" component={HomeHome}/>
                     <Route static path="/news" component={HomeNews} />

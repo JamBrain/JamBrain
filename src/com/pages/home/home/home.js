@@ -4,18 +4,11 @@ import ContentTimeline					from 'com/content-timeline/timeline';
 
 
 export default class HomeHome extends Component {
-    constructor( props ) {
-        super(props);
-    }
-
     render( props, state ) {
-        let {node, user, featured, path, extra, error, home} = props;
-
-        var ShowHome = null;
+        let {node, user, path, extra} = props;
 
         return (
             <ContentTimeline types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra}>
-                {ShowHome}
                 <ContentTimeline types={['post']} subtypes={['news']} methods={['all']} minimized nomore noemptymessage limit={1} node={node} user={user} path={path} extra={extra} />
             </ContentTimeline>
         );

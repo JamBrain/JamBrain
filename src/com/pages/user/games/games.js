@@ -3,12 +3,8 @@ import {h, Component} from 'preact/preact';
 import ContentGames						from 'com/content-games/games';
 
 export default class UserGames extends Component {
-    constructor( props ) {
-        super(props);
-    }
-
     render( props, state ) {
-        let {node, user, featured, path, extra, error, home} = props;
+        let {node, user,path, extra} = props;
 
         let GamesFeedFilter = null;
 

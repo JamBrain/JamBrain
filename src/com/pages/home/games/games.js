@@ -9,7 +9,7 @@ export default class HomeGames extends Component {
 
         const GamesFeedFilter = this.state.gamesFilter;
 
-        let DefaultSubSubFilter = 'featured';
+        let DefaultSubSubFilter = (featured && (featured.meta['theme-mode'] > 5)) ? 'featured' : 'all';
         let DefaultSubFilter = 'all';
         let DefaultFilter = 'danger';//'smart';
 

@@ -13,7 +13,7 @@ import ViewHome from 'com/view-home/home';
 import Router from 'com/router/router';
 import Route from 'com/router/route';
 
-import LayoutSidebar from "com/layouts/sidebar/sidebar";
+import Layout from "com/pages/layout";
 
 import PageHome from 'com/pages/home/home';
 import PagePage from 'com/pages/page/page';
