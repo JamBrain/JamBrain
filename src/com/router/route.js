@@ -2,20 +2,20 @@ import {h, Component, cloneElement} from 'preact/preact';
 
 export default class Route extends Component {
 	shouldComponentUpdate(nextProps, nextState) {
-		if(nextProps.node.id == 0) {
+		if ( nextProps.node.id == 0 ) {
 			return false;
 		}
 	}
 
 	render( props, state ) {
-		let {component, render} = props;
+		let {component, render, params} = props;
 		let key = props.node.id;
 
-		if(props.morePaths) {
+		if ( Object.keys(params).length > 0 ) {
 			key += props.props.extra.join("+");
 		}
 
-		let newProps = Object.assign(props.props, {key: key});
+		let newProps = Object.assign(props.props, {"key": key, "params": params});
 
 		if ( component ) {
 			return h(component, props.props);

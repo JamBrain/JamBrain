@@ -1,7 +1,7 @@
 import {h, Component, cloneElement} from 'preact/preact';
 import Route from './route';
 import PageError from 'com/pages/error/error';
-import {pathToRegexp} from 'external/path-to-regexp/index';
+import {pathToRegexp, compile} from 'external/path-to-regexp/index';
 
 export default class Router extends Component {
     constructor( props ) {
@@ -13,6 +13,7 @@ export default class Router extends Component {
             "routes": [],
             "current": null,
             "match": match,
+            "params": {}
         };
 
         if (this.props.node.id !== 0) {
@@ -30,73 +31,63 @@ export default class Router extends Component {
             return;
         }
 
-        let currentRoute, defaultRoute, errorRoute;
+        let currentRoute, errorRoute;
 
         for (let i in routes) {
             let route = routes[i];
 
-            if (this.matchRoute(route.attributes, node)) {
-                if (route.attributes.static && route.attributes.path) {
-                    if (!this.matchPath(route.attributes.path, route.attributes.morePaths)) {
+            if ( this.matchRoute(route.attributes, node) ) {
+                if ( route.attributes.static && route.attributes.path ) {
+                    if ( !this.matchPath(route.attributes.path) ) {
                         continue;
                     }
                 }
                 currentRoute = route;
             }
 
-            if (route.attributes.type == "error") {
+            if ( route.attributes.type == "error" ) {
                 errorRoute = route;
             }
         }
 
-        if (!currentRoute && errorRoute) {
+        if ( !currentRoute && errorRoute ) {
             currentRoute = errorRoute;
         }
 
         this.setState({"current": currentRoute});
     }
 
-    // Checks if path is a match
-    matchPath( path, morePaths ) {
-        var a = pathToRegexp(path);
-        console.log(path, a.exec(window.location.pathname));
-
-        if (Array.isArray(path)) {
+    matchPath ( path ) {
+        if ( Array.isArray(path) ) {
             for (let v in path) {
-                if (this.matchPath(path[v], morePaths)) {
+                if ( this.matchPath(path[v] )) {
                     return true;
                 }
             }
             return false;
         }
 
-        let urlPath = window.location.pathname
-                        .replace(this.props.node.path, "") //remove path
-                        .replace("/$" + this.props.node.id, "") //remove /${nodeid}
-                        .split("/") //split by slashes into array
-                        .filter(n => n); //remove null entries
+        let keys = [];
+        let pathRegex = pathToRegexp(path, keys);
+        let url = window.location.pathname
+            .replace(this.props.node.path, "") //remove path
+            .replace("/$" + this.props.node.id, ""); //remove /${nodeid}
 
-        let pathArray = path.split("/")
-                        .filter(n => n);
+        let params = {};
+        let out = pathRegex.exec(url);
 
-        if (!morePaths) {
-            urlPath = urlPath.reverse();
-            pathArray = pathArray.reverse();
+        if ( !out ) {
+            return false;
         }
 
-        if (pathArray.length <= 0) {
-            pathArray = [""];
-        }
-
-        if (urlPath.length <= 0) {
-            urlPath = [""];
-        }
-
-        for (let i in pathArray) {
-            if (pathArray[i] != urlPath[i]) {
-                return false;
+        if ( keys.length > 0) {
+            for ( let i in keys ) {
+                let index = parseInt((i) + 1);
+                params[keys[i]["name"]] = out[index];
             }
         }
+
+        this.setState({"params": params});
         return true;
     }
 
@@ -106,7 +97,7 @@ export default class Router extends Component {
             let aMatch = a[this.state.match[i]] == "" ? null : a[this.state.match[i]];
             let bMatch = b[this.state.match[i]] == "" ? null : b[this.state.match[i]];
 
-            if (aMatch == null || bMatch == null) {
+            if ( aMatch == null || bMatch == null ) {
                 continue;
             }
 
@@ -159,7 +150,7 @@ export default class Router extends Component {
     //Re-calculate routes when router props change
     componentWillReceiveProps( next ) {
         if (next.node.id) {
-            this.setState({"routes": []});
+            this.setState({"routes": [], "params": {}});
             this.flattenRoutes(next.children);
             this.getCurrentRoute(next);
         }
@@ -170,6 +161,6 @@ export default class Router extends Component {
             return;
         }
 
-        return cloneElement(state.current, ...props);
+        return cloneElement(state.current, {...props, "params": state.params});
     }
 }

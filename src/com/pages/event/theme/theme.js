@@ -9,10 +9,14 @@ export default class UserStats extends Component {
     }
 
     render( props, state ) {
-        let {node, user, featured, path, extra, error, home} = props;
+        let {node, user, featured, path, extra, error, home, params} = props;
 
         let NewPath = path+'/'+extra[0];
-        let NewExtra = extra.slice(1);
+        let NewExtra = [];
+
+        if ( params && params.page ) {
+            NewExtra = [params.page];
+        }
 
         return (
             <div>

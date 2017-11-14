@@ -144,6 +144,7 @@ export default class ContentEventSlaughter extends Component {
 	_submitVote( command, e ) {
 		return $ThemeIdeaVote[command](this.state.current)
 		.then(r => {
+			console.log("r:", r);
 			if ( r.status === 200 ) {
 				this.state.votes[this.state.current] = r.value;
 				this.addToRecentQueue(this.state.current);
