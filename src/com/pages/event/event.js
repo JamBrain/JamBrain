@@ -20,7 +20,7 @@ export default class PageEvent extends Component {
     }
 
     render( props, state ) {
-        let {node, user, featured, path, extra, error, home} = props;
+        let {node, user, featured, path, extra, error} = props;
 
         let DefaultSubFilter = 'all';
         let DefaultFilter = 'smart';
@@ -31,19 +31,19 @@ export default class PageEvent extends Component {
             DefaultFilter = 'overall';
         }
 
-        let NewPath = path+'/'+extra[0];
+        let NewPath = path + '/' + extra[0];
         let NewExtra = extra.slice(1);
 
         return (
             <LayoutSidebar {...props}>
-                <div id="content">
+                <div id='content'>
 					<ContentEvent node={node} user={user} path={path} extra={extra} featured={featured} />
-                    <Router node={node} props={{...props}}>
-                        <Route default static path="/stats" component={EventStats} />
-                        <Route static path="/theme" morePaths component={EventTheme} />
-                        <Route static path={["/games", "/results"]} morePaths component={EventGames} />
+                    <Router node={node} props={props}>
+                        <Route default static path='/stats' component={EventStats} />
+                        <Route static path='/theme/:page(\\d+)?' component={EventTheme} />
+                        <Route static path={['/games', '/results']} morePaths component={EventGames} />
 
-                        <Route type="error" component={ContentError} />
+                        <Route type='error' component={ContentError} />
                     </Router>
 				</div>
             </LayoutSidebar>

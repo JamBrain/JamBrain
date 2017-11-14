@@ -1,6 +1,7 @@
 import {h, Component, cloneElement} from 'preact/preact';
 import Route from './route';
 import PageError from 'com/pages/error/error';
+import {pathToRegexp} from 'external/path-to-regexp/index';
 
 export default class Router extends Component {
     constructor( props ) {
@@ -13,7 +14,6 @@ export default class Router extends Component {
             "current": null,
             "match": match,
         };
-
 
         if (this.props.node.id !== 0) {
             this.flattenRoutes(this.props.children);
@@ -58,6 +58,9 @@ export default class Router extends Component {
 
     // Checks if path is a match
     matchPath( path, morePaths ) {
+        var a = pathToRegexp(path);
+        console.log(path, a.exec(window.location.pathname));
+
         if (Array.isArray(path)) {
             for (let v in path) {
                 if (this.matchPath(path[v], morePaths)) {
