@@ -374,12 +374,12 @@ function nodeMeta_CountByABKeyScope( $parent = null, $a = null, $b = null, $key 
 		"SELECT
 			COUNT(DISTINCT o.b), o.a
 		FROM
-			".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." AS o
+			".SH_TABLE_PREFIX.SH_TABLE_NODE_META." AS o
 			INNER JOIN (
 				SELECT
 					MAX(id) AS id
 				FROM
-					".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+					".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 				".dbQuery_MakeQuery($INNER_QUERY)."
 				GROUP BY
 					a, b, `key`
@@ -410,14 +410,14 @@ function nodeMeta_CountByABKeyScope( $parent = null, $a = null, $b = null, $key 
 //				SELECT
 //					id, a, b
 //				FROM
-//					".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+//					".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 //				".dbQuery_MakeQuery($OUTER_QUERY)."
 //			) AS o ON n.id=o.a
 //			INNER JOIN (
 //				SELECT
 //					MAX(id) AS id
 //				FROM
-//					".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+//					".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 //				".dbQuery_MakeQuery($INNER_QUERY)."
 //				GROUP BY
 //					a, b, `key`
