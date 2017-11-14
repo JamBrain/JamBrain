@@ -1,4 +1,4 @@
-import { h, Component }					from 'preact/preact';
+import {h, Component}					from 'preact/preact';
 
 import SidebarCountdown					from 'com/sidebar/countdown/countdown';
 import SidebarCalendar					from 'com/sidebar/calendar/calendar';
@@ -13,7 +13,7 @@ export default class ViewSidebar extends Component {
 		super(props);
 	}
 
-	render( props, state ) {
+	render( props ) {
 		// TODO: cleanup
 		let ldStartDate = new Date(Date.UTC(2017, 11, 2, 2, 0, 0));
 

@@ -1,18 +1,18 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact/preact';
 import Shallow			 				from 'shallow/shallow';
 
-import ButtonBase						from '../button-base/base';
-import ButtonLink						from '../button-link/link';
+import ButtonBase						from 'com/button-base/base';
+import ButtonLink						from 'com/button-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
 
 //import DropdownUser 					from 'com/dropdown-user/user';
-import DropdownNotification				from 'com/view-bar/bar-notifications';
+import DropdownNotification				from 'com/view/bar/bar-notifications';
 
-//import $Node							from '../../shrub/js/node/node';
-import $Notification					from '../../shrub/js/notification/notification';
+//import $Node							from 'shrub/js/node/node';
+import $Notification					from 'shrub/js/notification/notification';
 
 
 function make_url( url ) {

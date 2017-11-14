@@ -1,14 +1,14 @@
-import { h, Component }					from 'preact/preact';
+import {h, Component}					from 'preact/preact';
 
 import ClockComponent					from 'com/clock-base/clock';
 import SidebarCountdown					from 'com/sidebar/countdown/countdown';
 
-export default class ViewSingle extends Component {
+export default class ViewJumboClock extends Component {
 	constructor( props ) {
 		super(props);
 	}
 
-	render( props, state ) {
+	render( props ) {
 		let jamEndDate = new Date(Date.UTC(2016, 11, 13, 2, 0, 0));
 		let compoEndDate = new Date(Date.UTC(2016, 11, 12, 2, 0, 0));
 		let ldStartDate = new Date(Date.UTC(2016, 11, 10, 2, 0, 0));
