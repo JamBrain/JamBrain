@@ -5,7 +5,7 @@ import GamesFilter from 'com/content-games/filter';
 
 export default class HomeGames extends Component {
     render( props, state ) {
-        let {node, user, featured, path, extra, error, home} = props;
+        let {node, user, path, extra} = props;
 
         const GamesFeedFilter = this.state.gamesFilter;
 

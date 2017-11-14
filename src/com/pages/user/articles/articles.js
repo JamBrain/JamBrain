@@ -8,7 +8,7 @@ export default class UserArticles extends Component {
     }
 
     render( props, state ) {
-        let {node, user, featured, path, extra, error, home} = props;
+        let {node, user, path, extra} = props;
 
         return (
             <ContentTimeline types={['page']} methods={['author']} node={node} user={user} path={path} extra={extra} />
