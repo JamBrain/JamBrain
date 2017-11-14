@@ -1,4 +1,4 @@
-import {h, Component} from "preact/preact";
+import {h, Component}					from "preact/preact";
 
 import ContentEvent						from "com/content-event/event";
 import ContentNavEvent					from "com/content-nav/nav-event";
@@ -6,12 +6,12 @@ import ContentNavTheme					from "com/content-nav/nav-theme";
 
 import ContentError						from "com/content-error/error";
 
-import Router from "com/router/router";
-import Route from "com/router/route";
+import Router							from "com/router/router";
+import Route							from "com/router/route";
 
-import EventStats from "./stats/stats";
-import EventTheme from "./theme/theme";
-import EventGames from "./games/games";
+import EventStats						from "./stats/stats";
+import EventTheme						from "./theme/theme";
+import EventGames						from "./games/games";
 
 export default class PageEvent extends Component {
     render( props, state ) {

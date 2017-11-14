@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact/preact';
 import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
 
@@ -10,11 +10,8 @@ export default class ContentNavUser extends Component {
 		super(props);
 	}
 
-	componentDidMount() {
-	}
-
-
-	render( {node, user, path, extra}, {} ) {
+	render( props ) {
+		let {node, user, path, extra} = props;
 
         var NewPath = '/'+ (extra ? extra.join('/') : '');
 		var PartPath = '/'+ (extra && extra.length ? extra[0] : '');
@@ -22,10 +19,9 @@ export default class ContentNavUser extends Component {
 		var ShowMyFeed = null;
 		if ( NewPath === '/' ) {
 			// Default to games, articles, or feed if no games/articles are available
-            // Disabled games as default because its doesn't work great.
-			/*if ( node['games'] > 0 )
+			if ( node['games'] > 0 )
 				NewPath = '/games';
-			else*/ if ( node['articles'] > 0 )
+			else if ( node['articles'] > 0 )
 				NewPath = '/articles';
 			else
 				NewPath = '/feed';
@@ -34,35 +30,36 @@ export default class ContentNavUser extends Component {
 		NewPath = path + NewPath;
 		PartPath = path + PartPath;
 
-		var HasFeed = <ContentNavButton path={NewPath} icon='feed' href={path+'/feed'}>Feed</ContentNavButton>;
-
-		var HasFollowing = null;
-		if ( user.id == node.id && user && user.private /*&& user.private["meta"] && user.private.meta["star"]*/ ) {
-			HasFollowing = <ContentNavButton path={NewPath} icon='user-check' href={path+'/following'}>Following</ContentNavButton>;
+		var ShowGames = null;
+		if ( node['games'] > 0 ) {
+			ShowGames = <ContentNavButton path={NewPath} icon="gamepad" href={path+'/games'}>Games</ContentNavButton>;
 		}
 
-		var HasFollowers = null;
+		var ShowArticles = null;
+		if ( node['articles'] > 0 ) {
+			ShowArticles = <ContentNavButton path={NewPath} icon="article" href={path+'/articles'}>Articles</ContentNavButton>;
+		}
+
+		var ShowFeed = <ContentNavButton path={NewPath} icon="feed" href={path+'/feed'}>Feed</ContentNavButton>;
+
+		var ShowFollowing = null;
+		if ( user.id == node.id && user && user.private /*&& user.private["meta"] && user.private.meta["star"]*/ ) {
+			ShowFollowing = <ContentNavButton path={NewPath} icon="user-check" href={path+'/following'}>Following</ContentNavButton>;
+		}
+
+		var ShowFollowers = null;
 //		if ( user.id == node.id && user["private"] && user.private["refs"] && user.private.refs["star"]  ) {
-//			HasFollowers = <ContentNavButton path={NewPath} icon='users' href={path+'/followers'}>Followers</ContentNavButton>;
+//			ShowFollowers = <ContentNavButton path={NewPath} icon='users' href={path+'/followers'}>Followers</ContentNavButton>;
 //		}
 
-        var HasGames = null;
-		HasGames = <ContentNavButton path={PartPath} icon='gamepad' href={path+'/games'}>Games</ContentNavButton>;
-
-		var HasArticles = null;
-		if ( node['articles'] > 0 ) {
-			HasArticles = <ContentNavButton path={NewPath} icon='article' href={path+'/articles'}>Articles</ContentNavButton>;
-		}
-
 		return (
-			<div class="-body">
-				<div class="content-base content-nav content-nav-root">
-					{HasArticles}
-					{HasFeed}
-                    {HasGames}
-					{HasFollowing}
-					{HasFollowers}
-				</div>
+			<div class="content-base content-nav content-nav-user">
+				<ContentNavButton path={PartPath} icon="previous" href="/" />
+                {ShowGames}
+				{ShowArticles}
+				{ShowFeed}
+				{ShowFollowing}
+				{ShowFollowers}
 			</div>
 		);
 	}
