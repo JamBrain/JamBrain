@@ -58,6 +58,7 @@ Usage:
     * `make lint-all` - Lint all code for all targets
     * `make lint-css`, `make lint-js`, `make lint-php` - Lint specifically the CSS, JS and PHP code
     * `make lint-all-css`, `make lint-all-js`, `make lint-all-php` - Lint specifically the CSS, JS, or PHP code of all targets
+    * `make clean-lint` - Force re-linting of everything on build
   * `config.mk` - Create this file and you can hardcode makefile settings
     * `TARGET=public-ludumdare.com` to build just Ludum Dare
     * `JOBS=2` to compile using 2 threads (parallel build)
