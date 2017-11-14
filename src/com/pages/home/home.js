@@ -1,6 +1,5 @@
 import {h, Component} from 'preact/preact';
 
-import LayoutSidebar from 'com/layouts/sidebar/sidebar';
 import Router from 'com/router/router';
 import Route from 'com/router/route';
 import ContentTimeline					from 'com/content-timeline/timeline';
@@ -22,21 +21,19 @@ export default class PageHome extends Component {
         let loggedIn = user && (user.id !== 0);
 
         return (
-            <LayoutSidebar {...props}>
-                <div id="content">
-                    <ContentNavRoot node={node} user={user} path={path} extra={extra} />
-                    <Router node={node} props={{...props}}>
-                        <Route default={!loggedIn} static path="/feed" component={HomeFeed}/>
-                        <Route default={loggedIn} static path="/home" component={HomeHome}/>
-                        <Route static path="/news" component={HomeNews} />
-                        <Route static path="/games/:filter?/:subfilter?/:target?" morePaths component={HomeGames} />
-                        {/* <Route static path="/hot" component={HomeHot} /> */}
+            <div id="content">
+                <ContentNavRoot node={node} user={user} path={path} extra={extra} />
+                <Router node={node} props={{...props}}>
+                    <Route default={!loggedIn} static path="/feed" component={HomeFeed}/>
+                    <Route default={loggedIn} static path="/home" component={HomeHome}/>
+                    <Route static path="/news" component={HomeNews} />
+                    <Route static path="/games/:filter?/:subfilter?/:target?" morePaths component={HomeGames} />
+                    {/* <Route static path="/hot" component={HomeHot} /> */}
 
-                        {/* <Route static path="/palette" component={HomePalette} /> */}
-                        <Route type="error" component={ContentError} />
-                    </Router>
-                </div>
-            </LayoutSidebar>
+                    {/* <Route static path="/palette" component={HomePalette} /> */}
+                    <Route type="error" component={ContentError} />
+                </Router>
+            </div>
         );
     }
 }

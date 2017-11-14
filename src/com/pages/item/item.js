@@ -1,7 +1,5 @@
 import {h, Component} from 'preact/preact';
 
-import LayoutSidebar from 'com/layouts/sidebar/sidebar';
-
 import ContentComments					from 'com/content-comments/comments';
 import ContentNavItem					from 'com/content-nav/nav-item';
 import ContentItem						from 'com/content-item/item';
@@ -24,13 +22,11 @@ export default class PageItem extends Component {
         }
 
         return (
-            <LayoutSidebar {...props}>
-                <div id="content">
-                    <ContentItem node={node} user={user} path={path} extra={extra} featured={featured} />
-                    {ShowNav}
-                    {ShowFeed}
-                </div>
-            </LayoutSidebar>
+            <div id="content">
+                <ContentItem node={node} user={user} path={path} extra={extra} featured={featured} />
+                {ShowNav}
+                {ShowFeed}
+            </div>
         );
     }
 }

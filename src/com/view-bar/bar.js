@@ -238,7 +238,12 @@ export default class ViewBar extends Component {
 		}
 	}
 
-	render( {user, featured}, {} ) {
+	render( {user, featured, loading}, {} ) {
+		let ShowLoading;
+		if ( loading ) {
+			ShowLoading = (<NavSpinner />);
+		}
+
 		return (
 			<div class="view-bar">
 				<div class="-content">
@@ -248,6 +253,7 @@ export default class ViewBar extends Component {
 							<SVGIcon class="if-no-sidebar-block" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-block" baseline>d-are</SVGIcon>
 						</ButtonLink>
 					</div>
+					{ShowLoading}
 					{this.renderRight(user, featured)}
 				</div>
 			</div>

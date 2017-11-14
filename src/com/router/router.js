@@ -73,6 +73,10 @@ export default class Router extends Component {
             .replace(this.props.node.path, "") //remove path
             .replace("/$" + this.props.node.id, ""); //remove /${nodeid}
 
+        if ( url === "" ) {
+            url = "/";
+        }
+
         let params = {};
         let out = pathRegex.exec(url);
 
@@ -132,6 +136,10 @@ export default class Router extends Component {
                 ...node.attributes,
                 ...child.attributes
             };
+
+            if ( props.static && parent && parent.attributes.path && child.attributes.path ) {
+                props.path = parent.attributes.path + child.attributes.path;
+            }
 
             if ( props.default && props.static && props.path ) {
                 props.path = ["/", ...props.path];

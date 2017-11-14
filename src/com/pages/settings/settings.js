@@ -1,8 +1,6 @@
 import {h, Component} from 'preact/preact';
 
-import ContentError						from 'com/content-error/error';
-
-export default class PageError extends Component {
+export default class PageSettings extends Component {
     constructor( props ) {
         super(props);
     }
@@ -11,7 +9,9 @@ export default class PageError extends Component {
         let {node, user, featured, path, extra, error, home} = props;
 
         return (
-            <ContentError />
+            <div id="content">
+                //content
+            </div>
         );
     }
 }

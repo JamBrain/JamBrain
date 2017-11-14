@@ -9,12 +9,13 @@ import ViewFooter						from 'com/view-footer/footer';
 
 export default class LayoutSidebar extends Component {
     render( props, state ) {
-        let {user, featured, noSidebar} = props;
+        let {user, featured, node} = props;
         let SidebarView = (<ViewSidebar user={user} featured={featured}/>);
+        let loading = (!node || node.id == 0);
 
         return (
             <div id="layout">
-                <ViewBar user={user} featured={featured}/>
+                <ViewBar user={user} featured={featured} loading={loading}/>
                 <div class="view">
                     <ViewHeader user={user} featured={featured}/>
                     <div id="content-sidebar">

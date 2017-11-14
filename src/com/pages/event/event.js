@@ -1,6 +1,5 @@
 import {h, Component} from "preact/preact";
 
-import LayoutSidebar from "com/layouts/sidebar/sidebar";
 import ContentEvent						from "com/content-event/event";
 import ContentNavEvent					from "com/content-nav/nav-event";
 import ContentNavTheme					from "com/content-nav/nav-theme";
@@ -35,18 +34,16 @@ export default class PageEvent extends Component {
         let NewExtra = extra.slice(1);
 
         return (
-            <LayoutSidebar {...props}>
-                <div id="content">
-					<ContentEvent node={node} user={user} path={path} extra={extra} featured={featured} />
-                    <Router node={node} props={props}>
-                        <Route default static path="/stats" component={EventStats} />
-                        <Route static path="/theme/:page?" component={EventTheme} />
-                        <Route static path={["/games/:filter?/:subfilter?", "/results/:filter?/:subfilter?"]} component={EventGames} />
+            <div id="content">
+				<ContentEvent node={node} user={user} path={path} extra={extra} featured={featured} />
+                <Router node={node} props={props}>
+                    <Route default static path="/stats" component={EventStats} />
+                    <Route static path="/theme/:page?" component={EventTheme} />
+                    <Route static path={["/games/:filter?/:subfilter?", "/results/:filter?/:subfilter?"]} component={EventGames} />
 
-                        <Route type="error" component={ContentError} />
-                    </Router>
-				</div>
-            </LayoutSidebar>
+                    <Route type="error" component={ContentError} />
+                </Router>
+			</div>
         );
     }
 }
