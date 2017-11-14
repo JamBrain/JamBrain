@@ -1,4 +1,4 @@
-import {h, Component} from 'preact/preact';
+import {h, Component}					from 'preact/preact';
 
 import ViewBar 							from 'com/view-bar/bar';
 import ViewHeader						from 'com/view-header/header';

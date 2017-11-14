@@ -1,31 +1,25 @@
 import {h, render, Component, options}	from 'preact/preact';
 import {initDevTools}					from 'preact-devtools/devtools';
-import Sanitize							from '../internal/sanitize/sanitize';
-//import NavSpinner						from 'com/nav-spinner/spinner';
-
-//import ViewBar from 'com/view-bar/bar';
-//import ViewHeader from 'com/view-header/header';
-//import ViewSidebar from 'com/view-sidebar/sidebar';
-//import ViewFooter from 'com/view-footer/footer';
-//import ViewHome from 'com/view-home/home';
+import Sanitize							from 'internal/sanitize/sanitize';
 
 import Router							from 'com/router/router';
 import Route							from 'com/router/route';
-import Layout							from "com/pages/layout";
 
-import PageHome 						from 'com/pages/home/home';
-import PagePage 						from 'com/pages/page/page';
-import PagePost 						from 'com/pages/post/post';
-import PageItem 						from 'com/pages/item/item';
-import PageTag 							from 'com/pages/tag/tag';
-import PageUser 						from 'com/pages/user/user';
-import PageUsers 						from 'com/pages/users/users';
-import PageEvent 						from 'com/pages/event/event';
-import PageEvents 						from 'com/pages/events/events';
-import PageError 						from 'com/pages/error/error';
-import PageMySettings 					from 'com/pages/my/settings';
-import PageMyNotifications 				from 'com/pages/my/notifications';
-import PageDevPalette 					from 'com/pages/dev/palette';
+import Layout							from "com/page/layout";
+
+import PageHome 						from 'com/page/home/home';
+import PagePage 						from 'com/page/page/page';
+import PagePost 						from 'com/page/post/post';
+import PageItem 						from 'com/page/item/item';
+import PageTag 							from 'com/page/tag/tag';
+import PageUser 						from 'com/page/user/user';
+import PageUsers 						from 'com/page/users/users';
+import PageEvent 						from 'com/page/event/event';
+import PageEvents 						from 'com/page/events/events';
+import PageError 						from 'com/page/error/error';
+import PageMySettings 					from 'com/page/my/settings';
+import PageMyNotifications 				from 'com/page/my/notifications';
+import PageDevPalette 					from 'com/page/dev/palette';
 
 import DialogUnfinished					from 'com/dialog/unfinished/unfinished';
 import DialogLogin						from 'com/dialog/login/login';
@@ -41,11 +35,11 @@ import DialogSubmit						from 'com/dialog/submit/submit';
 import DialogTV							from 'com/dialog/tv/tv';
 import DialogCreate						from 'com/dialog/create/create';
 
-//import AlertBase                        from 'com/alert-base/base';
+//import AlertBase						from 'com/alert-base/base';
 
-import $Node							from '../shrub/js/node/node';
-import $User							from '../shrub/js/user/user';
-import $NodeLove						from '../shrub/js/node/node_love';
+import $Node							from 'shrub/js/node/node';
+import $User							from 'shrub/js/user/user';
+import $NodeLove						from 'shrub/js/node/node_love';
 
 
 window.LUDUMDARE_ROOT = '/';
