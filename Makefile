@@ -1,20 +1,21 @@
-
 -include config.mk	# Create and use this file to override any of 'Settings' #
 
 # Settings #
 SRC					?=	src
 OUT					?=	.output
-#OUT					?=	$(HOME)/.starship
 .BUILD				?=	.build
 NODEJS				?=	node_modules
 
-# Use 'TARGET=public-blah' if you want to build a specific build "blah" #
-ifdef TARGET
-ALL_MAKEFILES		:=	$(SRC)/$(subst /,,$(TARGET))/Makefile
+# Use 'TARGET=public-ludumdare.com' if you want to build a specific build (such as public-ludumdare.com) #
+ifneq ($(strip $(TARGET)),)
+THE_MAKEFILES			:=	$(SRC)/$(subst /,,$(TARGET))/Makefile
 endif # BUILD
 
 # if JOBS are specified in config.mk, then use that to start a parallel build
 ifdef JOBS
+ifndef MAIN_FOLDER
+$(info [*] Running with $(JOBS) JOBS)
+endif # MAIN_FOLDER
 JOBS				:=	-j $(JOBS)
 endif # JOBS
 
@@ -23,13 +24,16 @@ STATIC_DOMAIN		?=	static.jammer.work
 
 # Copy un-minified files
 ifdef WINDOWS_HOST
+ifndef MAIN_FOLDER
+$(info [*] Running on WINDOWS_HOST)
+endif # MAIN_FOLDER
 COPY_UNMIN			:= true
 endif # WINDOWS_HOST
 
 # Include Folders (modified by recursive scripts) #
 ifdef INCLUDE_FOLDERS
 INCLUDE_FOLDERS		+=	src/compat/
-endif
+endif # INCLUDE_FOLDERS
 INCLUDE_FOLDERS		?=	$(SRC)/
 BUILD_FOLDER		:=	$(OUT)/$(.BUILD)/$(subst /,,$(TARGET))
 
@@ -45,75 +49,81 @@ ALL_LESS_FILES		:=	$(filter-out %.min.less,$(call FIND_FILE,$(SRC)/,*.less))
 ALL_CSS_FILES		:=	$(filter-out %.min.css,$(call FIND_FILE,$(SRC)/,*.css))
 ALL_SVG_FILES		:=	$(filter-out %.min.svg,$(call FIND_FILE,$(SRC)/,*.svg))
 
-ALL_ES6IGNORE_FILES	:=	$(call FIND_FILE,$(SRC)/,.es6ignore)
-ES6IGNORE_FOLDERS	:=	$(addsuffix %,$(dir $(ALL_ES6IGNORE_FILES)))
+ALL_ESIGNORE_FILES	:=	$(call FIND_FILE,$(SRC)/,.es6ignore)
+ESIGNORE_FOLDERS	:=	$(addsuffix %,$(dir $(ALL_ESIGNORE_FILES)))
 
 # Transforms #
-ES6_FILES 			:=	$(filter-out $(ES6IGNORE_FOLDERS),$(ALL_JS_FILES))
-JS_FILES 			:=	$(filter $(ES6IGNORE_FOLDERS),$(ALL_JS_FILES))
+ES_FILES 			:=	$(filter-out $(ESIGNORE_FOLDERS),$(ALL_JS_FILES))
+JS_FILES 			:=	$(filter $(ESIGNORE_FOLDERS),$(ALL_JS_FILES))
 LESS_FILES			:=	$(ALL_LESS_FILES)
 CSS_FILES			:=	$(ALL_CSS_FILES)
 SVG_FILES			:=	$(ALL_SVG_FILES)
 
-OUT_ES6_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(ES6_FILES:.js=.es6.js))
+OUT_ES_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(ES_FILES:.js=.es.js))
 OUT_JS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(JS_FILES:.js=.o.js))
 OUT_LESS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(LESS_FILES:.less=.less.css))
 OUT_CSS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(CSS_FILES:.css=.o.css))
 OUT_SVG_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(SVG_FILES:.svg=.min.svg))
 
-OUT_FILES			:=	$(OUT_SVG_FILES) $(OUT_CSS_FILES) $(OUT_LESS_FILES) $(OUT_JS_FILES) $(OUT_ES6_FILES)
-DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES6_FILES) $(OUT_LESS_FILES))
+OUT_FILES_SVG		:=	$(OUT_SVG_FILES)
+OUT_FILES_CSS		:=	$(OUT_CSS_FILES) $(OUT_LESS_FILES)
+OUT_FILES_JS		:=	$(OUT_JS_FILES) $(OUT_ES_FILES)
+OUT_FILES			:=	$(OUT_FILES_SVG) $(OUT_FILES_CSS) $(OUT_FILES_JS)
+DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES_FILES) $(OUT_LESS_FILES))
 OUT_FOLDERS			:=	$(sort $(dir $(OUT_FILES) $(BUILD_FOLDER)/))
 
-TARGET_FILES		:=	$(TARGET_FOLDER)/all.min.svg $(TARGET_FOLDER)/all.min.css $(TARGET_FOLDER)/all.min.js
-TARGET_DEPS			:=	$(OUT_FOLDERS) $(TARGET_FILES)
+TARGET_FILE_SVG		:=	$(TARGET_FOLDER)/all.min.svg
+TARGET_FILE_CSS		:=	$(TARGET_FOLDER)/all.min.css
+TARGET_FILE_JS		:=	$(TARGET_FOLDER)/all.min.js
+TARGET_FILES		:=	$(TARGET_FILE_SVG) $(TARGET_FILE_CSS) $(TARGET_FILE_JS)
 
 
 # Tools #
+
+# Ecmascript Linter: http://eslint.org/
 ESLINT_ARGS			:=	--config src/config/eslint.config.json
 ESLINT				=	$(NODEJS)/eslint/bin/eslint.js $(1) $(ESLINT_ARGS)
-# Ecmascript Linter: http://eslint.org/
+# ES Compiler: https://buble.surge.sh/guide/
 BUBLE_ARGS			:=	--no modules --jsx h --objectAssign Object.assign
 BUBLE				=	$(NODEJS)/buble/bin/buble $(BUBLE_ARGS) $(1) -o $(2)
-# ES6 Compiler: https://buble.surge.sh/guide/
+# ES Include/Require Resolver: http://rollupjs.org/guide/
 ROLLUP_ARGS			:=	-c src/config/rollup.config.js
 ROLLUP				=	$(NODEJS)/rollup/bin/rollup $(ROLLUP_ARGS) $(1) > $(2)
-# ES6 Include/Require Resolver: http://rollupjs.org/guide/
+# JS Minifier: https://github.com/mishoo/UglifyJS2
 MINIFY_JS_RESERVED	:=	VERSION_STRING,STATIC_DOMAIN
 MINIFY_JS_ARGS		:=	--compress --mangle -r "$(MINIFY_JS_RESERVED)"
 MINIFY_JS			=	$(NODEJS)/uglify-js/bin/uglifyjs $(MINIFY_JS_ARGS) -o $(2) -- $(1)
-# JS Minifier: https://github.com/mishoo/UglifyJS2
 
+# CSS Compiler: http://lesscss.org/
 LESS_COMMON			:=	--global-var='STATIC_DOMAIN=$(STATIC_DOMAIN)' --include-path=$(MAIN_FOLDER)
 LESS_ARGS			:=	--autoprefix
 LESS_DEP			=	$(NODEJS)/less/bin/lessc $(LESS_COMMON) --depends $(1) $(2)>$(2).dep
 LESS				=	$(NODEJS)/less/bin/lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
-# CSS Compiler: http://lesscss.org/
-MINIFY_CSS			=	cat $(1) | $(NODEJS)/clean-css-cli/bin/cleancss -o $(2)
 # CSS Minifier: https://github.com/jakubpawlowicz/clean-css/
-STYLELINT_ARGS			:=	--syntax less
-STYLELINT				=	$(NODEJS)/stylelint/bin/stylelint.js $(1) $(STYLELINT_ARGS)
+MINIFY_CSS			=	cat $(1) | $(NODEJS)/clean-css-cli/bin/cleancss -o $(2)
 # CSS Linter: http://stylelint.io/
+STYLELINT_ARGS			:=	--syntax less --config src/config/.stylelintrc --config-basedir ../../
+STYLELINT				=	$(NODEJS)/stylelint/bin/stylelint.js $(1) $(STYLELINT_ARGS)
 
+# SVG "Compiler", same as the minifier: https://github.com/svg/svgo
 SVGO_ARGS			:=	-q --disable=removeTitle --disable=removeDimensions --disable=removeViewBox
 SVGO				=	$(NODEJS)/svgo/bin/svgo $(SVGO_ARGS) -i $(1) -o $(2)
-# SVG "Compiler", same as the minifier: https://github.com/svg/svgo
-SVG_PACK			=	src/tools/svg-sprite-pack $(1) > $(2)
 # Mike's SVG Sprite Packer: https://github.com/povrazor/svg-sprite-tools
+SVG_PACK			=	src/tools/svg-sprite-pack $(1) > $(2)
+# SVG Minifier: https://github.com/svg/svgo
 MINIFY_SVG_ARGS		:=	--multipass --disable=cleanupIDs -q
 MINIFY_SVG			=	$(NODEJS)/svgo/bin/svgo $(MINIFY_SVG_ARGS) -i $(1) -o $(2)
-# SVG Minifier: https://github.com/svg/svgo
 
+# Remove Empty Directories
+RM_EMPTY_DIRS		=	find $(1) -type d -empty -delete 2>/dev/null |true
+
+# Get size in bytes (compress and uncompressed)
 SIZE				=	cat $(1) | wc -c
 GZIP_SIZE			=	gzip -c $(1) | wc -c
-# Get size in bytes (compress and uncompressed)
 
 
 # Rules #
 default: target
-
-clean-target:
-	rm -f $(TARGET_FILES)
 
 report: $(TARGET_FILES)
 	@echo \
@@ -125,12 +135,43 @@ report: $(TARGET_FILES)
 # If not called recursively, figure out who the targes are and call them #
 ifndef MAIN_FOLDER # ---- #
 
-ALL_MAKEFILES		?=	$(call FIND_FILE,$(SRC)/,Makefile)
-BUILDS				:=	$(subst $(SRC)/,$(OUT)/$(.BUILD)/,$(ALL_MAKEFILES))
+# MAKEFILES is a reserved word, so we're using THE_MAKEFILES
+THE_MAKEFILES		?=	$(call FIND_FILE,$(SRC)/,Makefile)
+BUILDS				:=	$(subst $(SRC)/,$(OUT)/$(.BUILD)/,$(THE_MAKEFILES))
+ALL_MAKEFILES		:=	$(call FIND_FILE,$(SRC)/,Makefile)
+ALL_BUILDS			:=	$(subst $(SRC)/,$(OUT)/$(.BUILD)/,$(ALL_MAKEFILES))
 
+
+# Recursively re-call this makefile for all TARGETs
 clean:
-	rm -fr $(OUT)
-	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-target -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) clean -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+clean-svg:
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) clean-svg -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+clean-css:
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) clean-css -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+clean-js:
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) clean-js -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+clean-lint:
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) clean-lint -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+
+clean-all:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+clean-all-svg:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-svg -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+clean-all-css:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-css -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+clean-all-js:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-js -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+clean-all-lint:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-lint -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+
+clean-version:
+	rm $(OUT)/git-version.php
+
+mini: clean-version target
+
+#test:
+#	@$(foreach b,$(THE_MAKEFILES),$(MAKE) test -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 
 #ifdef COPY_UNMIN
 #	rm -f $(TARGET_FOLDER)/all.js
@@ -138,37 +179,78 @@ clean:
 #	rm -f $(TARGET_FOLDER)/all.svg
 #endif # COPY_UNMIN
 
-clean-version:
-	rm $(OUT)/git-version.php
+lint: lint-svg lint-css lint-js lint-php
+lint-svg:
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) lint-svg -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+lint-css:
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) lint-css -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+lint-js:
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) lint-js -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+lint-php:
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) lint-php -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 
-mini: clean-version target
+lint-all: lint-all-svg lint-all-css lint-all-js lint-all-php
+lint-all-svg:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) lint-svg -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+lint-all-css:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) lint-css -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+lint-all-js:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) lint-js -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+lint-all-php:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) lint-php -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 
+
+all: $(ALL_BUILDS) $(OUT)/git-version.php
 target: $(BUILDS) $(OUT)/git-version.php
 # NOTE: git-version should be last! Generation of this file doubles as the "install complete" notification.
 
-$(BUILDS):
+$(ALL_BUILDS):
 	@echo "[+] Building \"$(subst /Makefile,,$(subst $(OUT)/$(.BUILD)/,,$@))\"..."
 	@$(MAKE) --no-print-directory $(JOBS) -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$@)
 
-endif # $(BUILDS) # ---- #
-
+else # MAIN_FOLDER # ---- #
 
 # Folder Rules #
 $(OUT_FOLDERS):
 	mkdir -p $@
 
 
+lint-svg:
+lint-css: $(LESS_FILES)
+	$(call STYLELINT,$^)
+lint-js: $(ES_FILES)
+	$(call ESLINT,$^)
+lint-php:
+
+clean-lint:
+	rm -fr $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/less.lint
+
+
+#test: $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/less.lint
+
+
+$(BUILD_FOLDER)/buble.lint: $(ES_FILES)
+	$(call ESLINT,$?)
+	@touch $@
+
+$(BUILD_FOLDER)/less.lint: $(LESS_FILES)
+	$(call STYLELINT,$?)
+	@touch $@
+
+
 # File Rules #
-$(OUT)/%.es6.js:$(SRC)/%.js
-	$(call ESLINT,$<)
+$(OUT)/%.es.js:$(SRC)/%.js $(BUILD_FOLDER)/buble.lint
 	$(call BUBLE,$<,$@)
+
+#	$(call ESLINT,$<)
 
 $(OUT)/%.o.js:$(SRC)/%.js
 	cp $< $@
 
-$(OUT)/%.less.css:$(SRC)/%.less
-	$(call STYLELINT,$<)
+$(OUT)/%.less.css:$(SRC)/%.less $(BUILD_FOLDER)/less.lint
 	$(call LESS,$<,$@); $(call LESS_DEP,$<,$@)
+
+#	$(call STYLELINT,$<)
 
 $(OUT)/%.o.css:$(SRC)/%.css
 	cp $< $@
@@ -176,15 +258,26 @@ $(OUT)/%.o.css:$(SRC)/%.css
 $(OUT)/%.min.svg:$(SRC)/%.svg
 	$(call SVGO,$<,$@)
 
-# Concat Rules #
-ifdef MAIN_FOLDER # ---- #
 
-OUT_MAIN_JS			:=	$(subst $(SRC)/,$(OUT)/,$(MAIN_JS:.js=.es6.js))
+clean:
+	rm -fr $(OUT) $(TARGET_FILES)
+clean-svg:
+	rm -fr $(OUT_FILES_SVG) $(OUT_FILES_SVG:.svg=.svg.out) $(TARGET_FILE_SVG) $(BUILD_FOLDER)/svg.svg $(BUILD_FOLDER)/all.svg 
+	-$(call RM_EMPTY_DIRS,.output)
+clean-css:
+	rm -fr $(OUT_CSS_FILES) $(OUT_LESS_FILES) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.css.dep) $(TARGET_FILE_CSS) $(BUILD_FOLDER)/less.css $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.lint $(BUILD_FOLDER)/all.css
+	-$(call RM_EMPTY_DIRS,.output)
+clean-js:
+	rm -fr $(OUT_JS_FILES) $(OUT_ES_FILES) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILE_JS) $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/all.js
+	-$(call RM_EMPTY_DIRS,.output)
+
+
+OUT_MAIN_JS			:=	$(subst $(SRC)/,$(OUT)/,$(MAIN_JS:.js=.es.js))
 
 # JavaScript #
 $(BUILD_FOLDER)/js.js: $(OUT_JS_FILES)
 	cat $^ > $@
-$(BUILD_FOLDER)/buble.js: $(OUT_MAIN_JS) $(OUT_ES6_FILES)
+$(BUILD_FOLDER)/buble.js: $(OUT_MAIN_JS) $(OUT_ES_FILES)
 	$(call ROLLUP,$<,$@.tmp)
 	rm -f $@
 	mv $@.tmp $@
@@ -212,8 +305,9 @@ endif # COPY_UNMIN
 # SVG # src/icons/icomoon/icons.svg
 $(BUILD_FOLDER)/svg.svg: $(OUT_SVG_FILES)
 	$(call SVG_PACK,$^,$@.out)
-	cat $@.out > $@
-#	cat $^ > $@
+	rm -f $@	
+	mv $@.out $@
+	# NOTE: needs to work like this, 'cause SVG_PACK outputs to stdout. Otherwise we wont stop on SVG errors
 $(BUILD_FOLDER)/all.svg: $(BUILD_FOLDER)/svg.svg
 	cat $^ > $@
 $(TARGET_FOLDER)/all.min.svg: $(BUILD_FOLDER)/all.svg
@@ -223,7 +317,7 @@ ifdef COPY_UNMIN
 endif # COPY_UNMIN
 
 # Target #
-target: $(TARGET_DEPS) report
+target: $(OUT_FOLDERS) $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/less.lint $(TARGET_FILES) report
 	@echo "[-] Done \"$(subst /,,$(TARGET))\""
 
 endif # MAIN_FOLDER # ---- #
@@ -240,7 +334,7 @@ $(OUT)/git-version.php:
 
 
 # Phony Rules #
-.PHONY: default build clean target clean-target clean-version fail report $(BUILDS)
+.PHONY: default build target all clean clean-all clean-target clean-version clean-lint clean-svg clean-css clean-js clean-all-svg clean-all-css clean-all-js lint lint-all lint-svg lint-css lint-js lint-php lint-all-svg lint-all-css lint-all-js lint-all-php fail report $(BUILDS)
 
 
 # Dependencies #
