@@ -26,6 +26,7 @@ import PageEvents from 'com/pages/events/events';
 import PageError from 'com/pages/error/error';
 import PageSettings from 'com/pages/settings/settings';
 import PageNotifications from 'com/pages/notifications/notifications';
+import PageDevPalette from 'com/pages/dev/palette';
 
 import DialogUnfinished from 'com/dialog-unfinished/unfinished';
 import DialogLogin from 'com/dialog-login/login';
@@ -515,6 +516,9 @@ class Main extends Component {
 							<Route static path="/me">
 								<Route static path="/settings" component={PageSettings} />
 								<Route static path="/notifications" component={PageNotifications} />
+							</Route>
+							<Route static path="/dev">
+								<Route static path="/palette" component={PageDevPalette} />
 							</Route>
 						</Route>
 
