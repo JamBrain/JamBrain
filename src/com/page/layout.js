@@ -1,9 +1,9 @@
 import {h, Component}					from 'preact/preact';
 
-import ViewBar 							from 'com/view-bar/bar';
-import ViewHeader						from 'com/view-header/header';
-import ViewSidebar						from 'com/view-sidebar/sidebar';
-import ViewFooter						from 'com/view-footer/footer';
+import ViewBar 							from 'com/view/bar/bar';
+import ViewHeader						from 'com/view/header/header';
+import ViewSidebar						from 'com/view/sidebar/sidebar';
+import ViewFooter						from 'com/view/footer/footer';
 
 
 export default class Layout extends Component {

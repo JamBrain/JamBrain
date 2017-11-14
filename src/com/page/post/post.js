@@ -1,9 +1,8 @@
-import {h, Component} from 'preact/preact';
-
-import ViewContentPost from 'com/view-content/content-post';
+import {h, Component}					from 'preact/preact';
+import ViewContentPost					from 'com/view/content/content-post';
 
 export default class PagePost extends Component {
-    render( props, state ) {
+    render( props ) {
         let {node, user, path, extra} = props;
 
         let EditMode = extra && extra.length && (extra[extra.length-1] == 'edit');
@@ -11,6 +10,5 @@ export default class PagePost extends Component {
         return (
             <ViewContentPost node={node} user={user} path={path} extra={extra} edit={EditMode} />
         );
-
     }
 }

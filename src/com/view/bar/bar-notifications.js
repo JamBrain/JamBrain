@@ -1,12 +1,12 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact/preact';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
-import ButtonLink						from '../button-link/link';
+import ButtonLink						from 'com/button-link/link';
 
 import NotificationsBase				from 'com/content-notifications/base';
 import Dropdown							from 'com/input-dropdown/dropdown';
 
-import $Notification					from '../../shrub/js/notification/notification';
+import $Notification					from 'shrub/js/notification/notification';
 
 export default class DropdownNotification extends NotificationsBase {
 
