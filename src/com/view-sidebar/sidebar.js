@@ -1,12 +1,12 @@
 import { h, Component }					from 'preact/preact';
 
-import SidebarCountdown					from 'com/sidebar-countdown/countdown';
-import SidebarCalendar					from 'com/sidebar-calendar/calendar';
-import SidebarUpcoming					from 'com/sidebar-upcoming/upcoming';
-import SidebarTV						from 'com/sidebar-tv/tv';
-import SidebarTrending					from 'com/sidebar-trending/trending';
-import SidebarSponsor					from 'com/sidebar-sponsor/sponsor';
-import SidebarSupport					from 'com/sidebar-support/support';
+import SidebarCountdown					from 'com/sidebar/countdown/countdown';
+import SidebarCalendar					from 'com/sidebar/calendar/calendar';
+import SidebarUpcoming					from 'com/sidebar/upcoming/upcoming';
+import SidebarTV						from 'com/sidebar/tv/tv';
+import SidebarTrending					from 'com/sidebar/trending/trending';
+import SidebarSponsor					from 'com/sidebar/sponsor/sponsor';
+import SidebarSupport					from 'com/sidebar/support/support';
 
 export default class ViewSidebar extends Component {
 	constructor( props ) {

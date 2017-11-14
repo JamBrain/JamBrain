@@ -1,7 +1,7 @@
 import { h, Component }					from 'preact/preact';
 
 import ClockComponent					from 'com/clock-base/clock';
-import SidebarCountdown					from 'com/sidebar-countdown/countdown';
+import SidebarCountdown					from 'com/sidebar/countdown/countdown';
 
 export default class ViewSingle extends Component {
 	constructor( props ) {
