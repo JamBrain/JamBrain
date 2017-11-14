@@ -1,36 +1,54 @@
-import {h, render, Component, options}			from 'preact/preact';
-import {initDevTools} 							from 'preact-devtools/devtools';
-import Sanitize							from '../internal/sanitize/sanitize';
-import NavSpinner						from 'com/nav-spinner/spinner';
+import {h, render, Component, options} from 'preact/preact';
+import {initDevTools} from 'preact-devtools/devtools';
+import Sanitize from '../internal/sanitize/sanitize';
+import NavSpinner from 'com/nav-spinner/spinner';
 
-import ViewBar 							from 'com/view-bar/bar';
-import ViewHeader						from 'com/view-header/header';
-import ViewSidebar						from 'com/view-sidebar/sidebar';
-import ViewContent						from 'com/view-content/content';
-import ViewFooter						from 'com/view-footer/footer';
-import ViewHome							from 'com/view-home/home';
+import ViewBar from 'com/view-bar/bar';
+import ViewHeader from 'com/view-header/header';
+import ViewSidebar from 'com/view-sidebar/sidebar';
+import ViewFooter from 'com/view-footer/footer';
+import ViewHome from 'com/view-home/home';
 
-import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
-import DialogLogin						from 'com/dialog-login/login';
-import DialogRegister					from 'com/dialog-register/register';
-import DialogActivate					from 'com/dialog-activate/activate';
-import DialogReset						from 'com/dialog-reset/reset';
-import DialogPassword					from 'com/dialog-password/password';
-import DialogAuth						from 'com/dialog-auth/auth';
-import DialogSession					from 'com/dialog-session/session';
-import DialogSavebug					from 'com/dialog-savebug/savebug';
-import DialogUserConfirm				from 'com/dialog-user/user-confirm';
+import Router from 'com/router/router';
+import Route from 'com/router/route';
 
-import DialogSubmit						from 'com/dialog-submit/submit';
-import DialogTV							from 'com/dialog-tv/tv';
+import Layout from "com/pages/layout";
 
-import DialogCreate						from 'com/dialog-create/create';
+import PageHome from 'com/pages/home/home';
+import PagePage from 'com/pages/page/page';
+import PagePost from 'com/pages/post/post';
+import PageItem from 'com/pages/item/item';
+import PageTag from 'com/pages/tag/tag';
+import PageUser from 'com/pages/user/user';
+import PageUsers from 'com/pages/users/users';
+import PageEvent from 'com/pages/event/event';
+import PageEvents from 'com/pages/events/events';
+import PageError from 'com/pages/error/error';
+import PageSettings from 'com/pages/settings/settings';
+import PageNotifications from 'com/pages/notifications/notifications';
+import PageDevPalette from 'com/pages/dev/palette';
 
-//import AlertBase						from 'com/alert-base/base';
+import DialogUnfinished from 'com/dialog-unfinished/unfinished';
+import DialogLogin from 'com/dialog-login/login';
+import DialogRegister from 'com/dialog-register/register';
+import DialogActivate from 'com/dialog-activate/activate';
+import DialogReset from 'com/dialog-reset/reset';
+import DialogPassword from 'com/dialog-password/password';
+import DialogAuth from 'com/dialog-auth/auth';
+import DialogSession from 'com/dialog-session/session';
+import DialogSavebug from 'com/dialog-savebug/savebug';
+import DialogUserConfirm from 'com/dialog-user/user-confirm';
 
-import $Node							from '../shrub/js/node/node';
-import $User							from '../shrub/js/user/user';
-import $NodeLove						from '../shrub/js/node/node_love';
+import DialogSubmit from 'com/dialog-submit/submit';
+import DialogTV from 'com/dialog-tv/tv';
+
+import DialogCreate from 'com/dialog-create/create';
+
+//import AlertBase                        from 'com/alert-base/base';
+
+import $Node from '../shrub/js/node/node';
+import $User from '../shrub/js/user/user';
+import $NodeLove from '../shrub/js/node/node_love';
 
 window.LUDUMDARE_ROOT = '/';
 window.SITE_ROOT = 1;
@@ -39,6 +57,7 @@ if ( SITE_DEBUG ) {
 	initDevTools();
 }
 
+// NOTE: Deprecated
 // Add special behavior: when class attribute is an array, flatten it to a string
 options.vnode = function(vnode) {
 	if ( vnode && vnode.attributes && Array.isArray(vnode.attributes.class) ) {
@@ -91,12 +110,8 @@ class Main extends Component {
 
 		this.onLogin = this.onLogin.bind(this);
 
-//		this.doEverything();
+//        this.doEverything();
 	}
-
-//	async doEverything() {
-//        var test = await new Promise(resolve => {setTimeout(pepper => { console.log("pepper"); resolve(); }, 1000); console.log("peter");});
-//    }
 
 	componentDidMount() {
 		this.fetchData();
@@ -466,18 +481,11 @@ class Main extends Component {
 
 				this.setState({
 					'slugs': slugs,
-					'home': null,
 					'node': {
 						'id': 0
 					}
 				});
-
-				if (slugs[0] == 'home') {
-					this.setState({"home": slugs.slice(1)});
-				}
-				else {
-					this.fetchNode();
-				}
+				this.fetchNode();
 			}
 		}
 
@@ -497,50 +505,42 @@ class Main extends Component {
 		this.handleAnchors();
 	}
 
-	isHomeView() {
-
-		if (Array.isArray(this.state.home)) {
-			console.log('[isHome]', this.state.home);
-			return true;
-		}
-		const slugs = this.state.slugs;
-
-		if (Array.isArray(slugs) && slugs[0] == 'home') {
-			this.setState({"home": slugs.slice(1)});
-			return true;
-		}
-		return false;
-	}
-
-	render( {}, {node, user, featured, path, extra, error, home} ) {
+	render( {}, {node, user, featured, path, extra, error} ) {
 		var ShowContent = null;
-
-		if (this.isHomeView()) {
-			ShowContent = <ViewHome show={home} />;
-		}
-		else if ( node.id ) {
-			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} featured={featured} />;
-		}
-		else {
-			ShowContent = (
-				<ViewContent>
-					{error ? error : <NavSpinner />}
-				</ViewContent>
-			);
-		}
-
+		let props = {node, user, featured, path, extra, error};
 		return (
-			<div id="layout">
-				<ViewBar user={user} featured={featured} />
-				<div class="view">
-					<ViewHeader user={user} featured={featured} />
-					<div id="content-sidebar">
-						{ShowContent}
-						<ViewSidebar user={user} featured={featured} />
-					</div>
-					<ViewFooter />
-				</div>
-				{this.getDialog()}
+			<div id="app">
+				<Layout {...this.state}>
+					<Router node={node} props={props} path={extra}>
+						<Route type="root" component={PageHome}>
+							<Route static path="/me">
+								<Route static path="/settings" component={PageSettings} />
+								<Route static path="/notifications" component={PageNotifications} />
+							</Route>
+							<Route static path="/dev">
+								<Route static path="/palette" component={PageDevPalette} />
+							</Route>
+						</Route>
+
+						<Route type="page" component={PagePage} />
+						<Route type="post" component={PagePost} />
+
+						<Route type="item">
+							<Route subtype="game" component={PageItem} />
+						</Route>
+
+						<Route type="tag" component={PageTag} />
+
+						<Route type="user" component={PageUser} />
+						<Route type="users" component={PageUsers} />
+
+						<Route type="event" component={PageEvent} />
+						<Route type={["events", "group", "tags"]} component={PageEvents} />
+
+						<Route type="error" component={PageError} />
+					</Router>
+					{this.getDialog()}
+				</Layout>
 			</div>
 		);
 	}
