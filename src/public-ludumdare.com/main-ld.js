@@ -14,19 +14,19 @@ import Route from 'com/router/route';
 
 import Layout from "com/pages/layout";
 
-import PageHome from 'com/pages/home/home';
-import PagePage from 'com/pages/page/page';
-import PagePost from 'com/pages/post/post';
-import PageItem from 'com/pages/item/item';
-import PageTag from 'com/pages/tag/tag';
-import PageUser from 'com/pages/user/user';
-import PageUsers from 'com/pages/users/users';
-import PageEvent from 'com/pages/event/event';
-import PageEvents from 'com/pages/events/events';
-import PageError from 'com/pages/error/error';
-import PageSettings from 'com/pages/settings/settings';
-import PageNotifications from 'com/pages/notifications/notifications';
-import PageDevPalette from 'com/pages/dev/palette';
+import PageHome 						from 'com/pages/home/home';
+import PagePage 						from 'com/pages/page/page';
+import PagePost 						from 'com/pages/post/post';
+import PageItem 						from 'com/pages/item/item';
+import PageTag 							from 'com/pages/tag/tag';
+import PageUser 						from 'com/pages/user/user';
+import PageUsers 						from 'com/pages/users/users';
+import PageEvent 						from 'com/pages/event/event';
+import PageEvents 						from 'com/pages/events/events';
+import PageError 						from 'com/pages/error/error';
+import PageMySettings 					from 'com/pages/my/settings';
+import PageMyNotifications 				from 'com/pages/my/notifications';
+import PageDevPalette 					from 'com/pages/dev/palette';
 
 import DialogUnfinished from 'com/dialog-unfinished/unfinished';
 import DialogLogin from 'com/dialog-login/login';
@@ -513,9 +513,9 @@ class Main extends Component {
 				<Layout {...this.state}>
 					<Router node={node} props={props} path={extra}>
 						<Route type="root" component={PageHome}>
-							<Route static path="/me">
-								<Route static path="/settings" component={PageSettings} />
-								<Route static path="/notifications" component={PageNotifications} />
+							<Route static path="/my">
+								<Route static path="/settings" component={PageMySettings} />
+								<Route static path="/notifications" component={PageMyNotifications} />
 							</Route>
 							<Route static path="/dev">
 								<Route static path="/palette" component={PageDevPalette} />
