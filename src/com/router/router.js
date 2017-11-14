@@ -1,7 +1,7 @@
-import {h, Component, cloneElement} from 'preact/preact';
-import Route from './route';
-import PageError from 'com/pages/error/error';
-import {pathToRegexp, compile} from 'external/path-to-regexp/index';
+import {h, Component, cloneElement}		from 'preact/preact';
+import Route							from './route';
+import PageError						from 'com/page/error/error';
+import {pathToRegexp, compile}			from 'external/path-to-regexp/index';
 
 export default class Router extends Component {
     constructor( props ) {
