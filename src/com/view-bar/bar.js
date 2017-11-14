@@ -238,8 +238,10 @@ export default class ViewBar extends Component {
 		}
 	}
 
-	render( {user, featured, loading}, {} ) {
+	render( props ) {
+		let {user, featured, loading} = props;
 		let ShowLoading;
+
 		if ( loading ) {
 			ShowLoading = (<NavSpinner />);
 		}
