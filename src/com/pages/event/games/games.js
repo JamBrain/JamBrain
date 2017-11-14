@@ -5,7 +5,7 @@ import GamesFilter from 'com/content-games/filter';
 
 export default class EventGames extends Component {
     render( props, state ) {
-        let {node, user, path, extra} = props;
+        let {node, user, path, extra, featured} = props;
 
         let DefaultSubFilter = 'all';
         let DefaultFilter = 'smart';

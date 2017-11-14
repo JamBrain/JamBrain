@@ -10,7 +10,7 @@ import ViewFooter						from 'com/view-footer/footer';
 export default class Layout extends Component {
     render( props, state ) {
         let {user, featured, node} = props;
-        let ShowSidebar = (props.noSidebar ? <ViewSidebar user={user} featured={featured} /> : null);
+        let ShowSidebar = (!props.noSidebar ? <ViewSidebar user={user} featured={featured} /> : null);
         let loading = (!node || node.id == 0);
 
         return (

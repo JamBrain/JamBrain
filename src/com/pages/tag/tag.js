@@ -10,7 +10,7 @@ export default class PageTag extends Component {
     }
 
     render( props, state ) {
-        let {node, user, featured, path, extra, error, home} = props;
+        let {node, user, path, extra} = props;
 
         let GamesFeedFilter = null; //This is undefined on the current site??
         var Methods = ['target'];

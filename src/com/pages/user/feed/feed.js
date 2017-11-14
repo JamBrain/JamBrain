@@ -8,7 +8,7 @@ export default class UserFeed extends Component {
     }
 
     render( props, state ) {
-        let {node, user, featured, path, extra, error, home} = props;
+        let {node, user, path, extra} = props;
 
         let Methods = ['author'];
         if ( node.id == user.id ) {

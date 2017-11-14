@@ -145,7 +145,7 @@ export default class Router extends Component {
                 props.path = ["/", ...props.path];
             }
 
-            child = cloneElement(child, {...props});
+            child = cloneElement(child, props);
 
             this.state.routes.push(child);
 
@@ -166,7 +166,7 @@ export default class Router extends Component {
 
     render( props, state ) {
         if ( !state.current ) {
-            return <Route />;
+            return <div />;
         }
 
         return cloneElement(state.current, {...props, "params": state.params});

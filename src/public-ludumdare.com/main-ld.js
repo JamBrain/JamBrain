@@ -546,7 +546,7 @@ class Main extends Component {
 
         return (
             <div id="app">
-                <LayoutSidebar {...this.state}>
+                <Layout {...this.state}>
                     <Router node={node} props={props} path={extra}>
                         <Route type="root" component={PageHome}>
                             <Route static path="/me">
@@ -572,7 +572,7 @@ class Main extends Component {
                         <Route type="error" component={PageError} />
                     </Router>
                     {this.getDialog()}
-                </LayoutSidebar>
+                </Layout>
             </div>
         );
 	}
