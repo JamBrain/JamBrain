@@ -76,7 +76,6 @@ TARGET_FILE_SVG		:=	$(TARGET_FOLDER)/all.min.svg
 TARGET_FILE_CSS		:=	$(TARGET_FOLDER)/all.min.css
 TARGET_FILE_JS		:=	$(TARGET_FOLDER)/all.min.js
 TARGET_FILES		:=	$(TARGET_FILE_SVG) $(TARGET_FILE_CSS) $(TARGET_FILE_JS)
-TARGET_DEPS			:=	$(OUT_FOLDERS) $(TARGET_FILES)
 
 
 # Tools #
@@ -142,6 +141,7 @@ BUILDS				:=	$(subst $(SRC)/,$(OUT)/$(.BUILD)/,$(THE_MAKEFILES))
 ALL_MAKEFILES		:=	$(call FIND_FILE,$(SRC)/,Makefile)
 ALL_BUILDS			:=	$(subst $(SRC)/,$(OUT)/$(.BUILD)/,$(ALL_MAKEFILES))
 
+
 # Recursively re-call this makefile for all TARGETs
 clean:
 	@$(foreach b,$(THE_MAKEFILES),$(MAKE) clean -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
@@ -151,6 +151,8 @@ clean-css:
 	@$(foreach b,$(THE_MAKEFILES),$(MAKE) clean-css -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 clean-js:
 	@$(foreach b,$(THE_MAKEFILES),$(MAKE) clean-js -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+clean-lint:
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) clean-lint -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 
 clean-all:
 	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
@@ -160,11 +162,16 @@ clean-all-css:
 	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-css -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 clean-all-js:
 	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-js -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
+clean-all-lint:
+	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-lint -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 
 clean-version:
 	rm $(OUT)/git-version.php
 
 mini: clean-version target
+
+#test:
+#	@$(foreach b,$(THE_MAKEFILES),$(MAKE) test -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 
 #ifdef COPY_UNMIN
 #	rm -f $(TARGET_FOLDER)/all.js
@@ -215,18 +222,35 @@ lint-js: $(ES_FILES)
 	$(call ESLINT,$^)
 lint-php:
 
+clean-lint:
+	rm -fr $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/less.lint
+
+
+#test: $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/less.lint
+
+
+$(BUILD_FOLDER)/buble.lint: $(ES_FILES)
+	$(call ESLINT,$?)
+	@touch $@
+
+$(BUILD_FOLDER)/less.lint: $(LESS_FILES)
+	$(call STYLELINT,$?)
+	@touch $@
+
 
 # File Rules #
-$(OUT)/%.es.js:$(SRC)/%.js
-	$(call ESLINT,$<)
+$(OUT)/%.es.js:$(SRC)/%.js $(BUILD_FOLDER)/buble.lint
 	$(call BUBLE,$<,$@)
+
+#	$(call ESLINT,$<)
 
 $(OUT)/%.o.js:$(SRC)/%.js
 	cp $< $@
 
-$(OUT)/%.less.css:$(SRC)/%.less
-	$(call STYLELINT,$<)
+$(OUT)/%.less.css:$(SRC)/%.less $(BUILD_FOLDER)/less.lint
 	$(call LESS,$<,$@); $(call LESS_DEP,$<,$@)
+
+#	$(call STYLELINT,$<)
 
 $(OUT)/%.o.css:$(SRC)/%.css
 	cp $< $@
@@ -238,13 +262,13 @@ $(OUT)/%.min.svg:$(SRC)/%.svg
 clean:
 	rm -fr $(OUT) $(TARGET_FILES)
 clean-svg:
-	rm -fr $(OUT_FILES_SVG) $(OUT_FILES_SVG:.svg=.svg.out) $(TARGET_FILE_SVG) $(BUILD_FOLDER)/svg.svg $(BUILD_FOLDER)/all.svg
+	rm -fr $(OUT_FILES_SVG) $(OUT_FILES_SVG:.svg=.svg.out) $(TARGET_FILE_SVG) $(BUILD_FOLDER)/svg.svg $(BUILD_FOLDER)/all.svg 
 	-$(call RM_EMPTY_DIRS,.output)
 clean-css:
-	rm -fr $(OUT_CSS_FILES) $(OUT_LESS_FILES) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.css.dep) $(TARGET_FILE_CSS) $(BUILD_FOLDER)/less.css $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/all.css
+	rm -fr $(OUT_CSS_FILES) $(OUT_LESS_FILES) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.css.dep) $(TARGET_FILE_CSS) $(BUILD_FOLDER)/less.css $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.lint $(BUILD_FOLDER)/all.css
 	-$(call RM_EMPTY_DIRS,.output)
 clean-js:
-	rm -fr $(OUT_JS_FILES) $(OUT_ES_FILES) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILE_JS) $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js $(BUILD_FOLDER)/all.js
+	rm -fr $(OUT_JS_FILES) $(OUT_ES_FILES) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILE_JS) $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/all.js
 	-$(call RM_EMPTY_DIRS,.output)
 
 
@@ -293,7 +317,7 @@ ifdef COPY_UNMIN
 endif # COPY_UNMIN
 
 # Target #
-target: $(TARGET_DEPS) report
+target: $(OUT_FOLDERS) $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/less.lint $(TARGET_FILES) report
 	@echo "[-] Done \"$(subst /,,$(TARGET))\""
 
 endif # MAIN_FOLDER # ---- #
@@ -310,7 +334,7 @@ $(OUT)/git-version.php:
 
 
 # Phony Rules #
-.PHONY: default build target all clean clean-all clean-target clean-version clean-svg clean-css clean-js clean-all-svg clean-all-css clean-all-js lint lint-all lint-svg lint-css lint-js lint-php lint-all-svg lint-all-css lint-all-js lint-all-php fail report $(BUILDS)
+.PHONY: default build target all clean clean-all clean-target clean-version clean-lint clean-svg clean-css clean-js clean-all-svg clean-all-css clean-all-js lint lint-all lint-svg lint-css lint-js lint-php lint-all-svg lint-all-css lint-all-js lint-all-php fail report $(BUILDS)
 
 
 # Dependencies #
