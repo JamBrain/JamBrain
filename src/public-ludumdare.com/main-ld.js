@@ -27,19 +27,19 @@ import PageMySettings 					from 'com/pages/my/settings';
 import PageMyNotifications 				from 'com/pages/my/notifications';
 import PageDevPalette 					from 'com/pages/dev/palette';
 
-import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
-import DialogLogin						from 'com/dialog-login/login';
-import DialogRegister					from 'com/dialog-register/register';
-import DialogActivate					from 'com/dialog-activate/activate';
-import DialogReset						from 'com/dialog-reset/reset';
-import DialogPassword					from 'com/dialog-password/password';
-import DialogAuth						from 'com/dialog-auth/auth';
-import DialogSession					from 'com/dialog-session/session';
-import DialogSavebug					from 'com/dialog-savebug/savebug';
-import DialogUserConfirm				from 'com/dialog-user/user-confirm';
-import DialogSubmit						from 'com/dialog-submit/submit';
-import DialogTV							from 'com/dialog-tv/tv';
-import DialogCreate						from 'com/dialog-create/create';
+import DialogUnfinished					from 'com/dialog/unfinished/unfinished';
+import DialogLogin						from 'com/dialog/login/login';
+import DialogRegister					from 'com/dialog/register/register';
+import DialogActivate					from 'com/dialog/activate/activate';
+import DialogReset						from 'com/dialog/reset/reset';
+import DialogPassword					from 'com/dialog/password/password';
+import DialogAuth						from 'com/dialog/auth/auth';
+import DialogSession					from 'com/dialog/session/session';
+import DialogSavebug					from 'com/dialog/savebug/savebug';
+import DialogUserConfirm				from 'com/dialog/user/user-confirm';
+import DialogSubmit						from 'com/dialog/submit/submit';
+import DialogTV							from 'com/dialog/tv/tv';
+import DialogCreate						from 'com/dialog/create/create';
 
 //import AlertBase                        from 'com/alert-base/base';
 
