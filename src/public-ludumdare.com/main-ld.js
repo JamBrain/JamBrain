@@ -6,7 +6,6 @@ import NavSpinner from 'com/nav-spinner/spinner';
 import ViewBar from 'com/view-bar/bar';
 import ViewHeader from 'com/view-header/header';
 import ViewSidebar from 'com/view-sidebar/sidebar';
-import ViewContent from 'com/view-content/content';
 import ViewFooter from 'com/view-footer/footer';
 import ViewHome from 'com/view-home/home';
 
@@ -26,6 +25,7 @@ import PageEvent from 'com/pages/event/event';
 import PageEvents from 'com/pages/events/events';
 import PageError from 'com/pages/error/error';
 import PageSettings from 'com/pages/settings/settings';
+import PageNotifications from 'com/pages/notifications/notifications';
 
 import DialogUnfinished from 'com/dialog-unfinished/unfinished';
 import DialogLogin from 'com/dialog-login/login';
@@ -480,18 +480,11 @@ class Main extends Component {
 
 				this.setState({
 					'slugs': slugs,
-					'home': null,
 					'node': {
 						'id': 0
 					}
 				});
-
-				if (slugs[0] == 'home') {
-					this.setState({"home": slugs.slice(1)});
-				}
-				else {
-					this.fetchNode();
-				}
+				this.fetchNode();
 			}
 		}
 
@@ -511,39 +504,9 @@ class Main extends Component {
 		this.handleAnchors();
 	}
 
-	isHomeView() {
-
-		if (Array.isArray(this.state.home)) {
-			console.log('[isHome]', this.state.home);
-			return true;
-		}
-		const slugs = this.state.slugs;
-
-		if (Array.isArray(slugs) && slugs[0] == 'home') {
-			this.setState({"home": slugs.slice(1)});
-			return true;
-		}
-		return false;
-	}
-
-	render( {}, {node, user, featured, path, extra, error, home} ) {
+	render( {}, {node, user, featured, path, extra, error} ) {
 		var ShowContent = null;
-		let props = {node, user, featured, path, extra, error, home};
-
-		if (this.isHomeView()) {
-			ShowContent = <ViewHome show={home} />;
-		}
-		else if ( node.id ) {
-			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} featured={featured} />;
-		}
-		else {
-			ShowContent = (
-				<ViewContent>
-					{error ? error : <NavSpinner />}
-				</ViewContent>
-			);
-		}
-
+		let props = {node, user, featured, path, extra, error};
 		return (
 			<div id="app">
 				<Layout {...this.state}>
@@ -551,6 +514,7 @@ class Main extends Component {
 						<Route type="root" component={PageHome}>
 							<Route static path="/me">
 								<Route static path="/settings" component={PageSettings} />
+								<Route static path="/notifications" component={PageNotifications} />
 							</Route>
 						</Route>
 
