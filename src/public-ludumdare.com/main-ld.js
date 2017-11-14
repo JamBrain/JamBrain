@@ -53,64 +53,64 @@ window.LUDUMDARE_ROOT = '/';
 window.SITE_ROOT = 1;
 
 if ( SITE_DEBUG ) {
-    initDevTools();
+	initDevTools();
 }
 
 // NOTE: Deprecated
 // Add special behavior: when class attribute is an array, flatten it to a string
 options.vnode = function(vnode) {
-    if ( vnode && vnode.attributes && Array.isArray(vnode.attributes.class) ) {
-        if ( vnode.attributes.class.length ) {
-            vnode.attributes.class = vnode.attributes.class.join(' ');
-        }
-        else {
-            // NOTE: this might be slow. You can disable this, and the .length check for a potential speedup
-            delete vnode.attributes.class;
-        }
-    }
+	if ( vnode && vnode.attributes && Array.isArray(vnode.attributes.class) ) {
+		if ( vnode.attributes.class.length ) {
+			vnode.attributes.class = vnode.attributes.class.join(' ');
+		}
+		else {
+			// NOTE: this might be slow. You can disable this, and the .length check for a potential speedup
+			delete vnode.attributes.class;
+		}
+	}
 };
 
 class Main extends Component {
-    constructor( props ) {
-        super(props);
-        console.log('[constructor]');
+	constructor( props ) {
+		super(props);
+		console.log('[constructor]');
 
-        var clean = this.cleanLocation(window.location);
-        if ( window.location.origin+clean.path !== window.location.href ) {
-            console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
+		var clean = this.cleanLocation(window.location);
+		if ( window.location.origin+clean.path !== window.location.href ) {
+			console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
 
-            this.storeHistory(window.history.state, null, clean.path);
-        }
+			this.storeHistory(window.history.state, null, clean.path);
+		}
 
-        this.state = {
-            // URL walking
-            'path': '',
-            'slugs': clean.slugs,
-            'extra': [],
+		this.state = {
+			// URL walking
+			'path': '',
+			'slugs': clean.slugs,
+			'extra': [],
 
-            // Active Node
-            'node': {
-                'id': 0
-            },
+			// Active Node
+			'node': {
+				'id': 0
+			},
 
-            // Root Node
-            'root': null,
+			// Root Node
+			'root': null,
 
-            // Featured node
-            'featured': null,
+			// Featured node
+			'featured': null,
 
-            // Active User
-            'user': null
-        };
+			// Active User
+			'user': null
+		};
 
-        window.addEventListener('hashchange', this.onHashChange.bind(this));
-        window.addEventListener('navchange', this.onNavChange.bind(this));
-        window.addEventListener('popstate', this.onPopState.bind(this));
+		window.addEventListener('hashchange', this.onHashChange.bind(this));
+		window.addEventListener('navchange', this.onNavChange.bind(this));
+		window.addEventListener('popstate', this.onPopState.bind(this));
 
-        this.onLogin = this.onLogin.bind(this);
+		this.onLogin = this.onLogin.bind(this);
 
 //        this.doEverything();
-    }
+	}
 
 	componentDidMount() {
 		this.fetchData();
@@ -528,7 +528,7 @@ class Main extends Component {
 
 	render( {}, {node, user, featured, path, extra, error, home} ) {
 		var ShowContent = null;
-        let props = {node, user, featured, path, extra, error, home};
+		let props = {node, user, featured, path, extra, error, home};
 
 		if (this.isHomeView()) {
 			ShowContent = <ViewHome show={home} />;
@@ -544,37 +544,37 @@ class Main extends Component {
 			);
 		}
 
-        return (
-            <div id="app">
-                <Layout {...this.state}>
-                    <Router node={node} props={props} path={extra}>
-                        <Route type="root" component={PageHome}>
-                            <Route static path="/me">
-                                <Route static path="/settings" component={PageSettings} />
-                            </Route>
-                        </Route>
+		return (
+			<div id="app">
+				<Layout {...this.state}>
+					<Router node={node} props={props} path={extra}>
+						<Route type="root" component={PageHome}>
+							<Route static path="/me">
+								<Route static path="/settings" component={PageSettings} />
+							</Route>
+						</Route>
 
-                        <Route type="page" component={PagePage} />
-                        <Route type="post" component={PagePost} />
+						<Route type="page" component={PagePage} />
+						<Route type="post" component={PagePost} />
 
-                        <Route type="item">
-                            <Route subtype="game" component={PageItem} />
-                        </Route>
+						<Route type="item">
+							<Route subtype="game" component={PageItem} />
+						</Route>
 
-                        <Route type="tag" component={PageTag} />
+						<Route type="tag" component={PageTag} />
 
-                        <Route type="user" component={PageUser} />
-                        <Route type="users" component={PageUsers} />
+						<Route type="user" component={PageUser} />
+						<Route type="users" component={PageUsers} />
 
-                        <Route type="event" component={PageEvent} />
-                        <Route type={["events", "group", "tags"]} component={PageEvents} />
+						<Route type="event" component={PageEvent} />
+						<Route type={["events", "group", "tags"]} component={PageEvents} />
 
-                        <Route type="error" component={PageError} />
-                    </Router>
-                    {this.getDialog()}
-                </Layout>
-            </div>
-        );
+						<Route type="error" component={PageError} />
+					</Router>
+					{this.getDialog()}
+				</Layout>
+			</div>
+		);
 	}
 }
 
