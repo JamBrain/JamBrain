@@ -166,7 +166,7 @@ export default class Router extends Component {
 
     render( props, state ) {
         if ( !state.current ) {
-            return <div />;
+            return <div id="content" />;
         }
 
         return cloneElement(state.current, {...props, "params": state.params});
