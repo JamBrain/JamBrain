@@ -170,15 +170,6 @@ clean-version:
 
 mini: clean-version target
 
-#test:
-#	@$(foreach b,$(THE_MAKEFILES),$(MAKE) test -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
-
-#ifdef COPY_UNMIN
-#	rm -f $(TARGET_FOLDER)/all.js
-#	rm -f $(TARGET_FOLDER)/all.css
-#	rm -f $(TARGET_FOLDER)/all.svg
-#endif # COPY_UNMIN
-
 lint: lint-svg lint-css lint-js lint-php
 lint-svg:
 	@$(foreach b,$(THE_MAKEFILES),$(MAKE) lint-svg -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
@@ -226,9 +217,6 @@ clean-lint:
 	rm -fr $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/less.lint
 
 
-#test: $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/less.lint
-
-
 $(BUILD_FOLDER)/buble.lint: $(ES_FILES)
 	$(call ESLINT,$?)
 	@touch $@
@@ -239,18 +227,14 @@ $(BUILD_FOLDER)/less.lint: $(LESS_FILES)
 
 
 # File Rules #
-$(OUT)/%.es.js:$(SRC)/%.js $(BUILD_FOLDER)/buble.lint
+$(OUT)/%.es.js:$(SRC)/%.js
 	$(call BUBLE,$<,$@)
-
-#	$(call ESLINT,$<)
 
 $(OUT)/%.o.js:$(SRC)/%.js
 	cp $< $@
 
-$(OUT)/%.less.css:$(SRC)/%.less $(BUILD_FOLDER)/less.lint
+$(OUT)/%.less.css:$(SRC)/%.less
 	$(call LESS,$<,$@); $(call LESS_DEP,$<,$@)
-
-#	$(call STYLELINT,$<)
 
 $(OUT)/%.o.css:$(SRC)/%.css
 	cp $< $@
@@ -270,6 +254,12 @@ clean-css:
 clean-js:
 	rm -fr $(OUT_JS_FILES) $(OUT_ES_FILES) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILE_JS) $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/all.js
 	-$(call RM_EMPTY_DIRS,.output)
+
+#ifdef COPY_UNMIN
+#	rm -f $(TARGET_FOLDER)/all.js
+#	rm -f $(TARGET_FOLDER)/all.css
+#	rm -f $(TARGET_FOLDER)/all.svg
+#endif # COPY_UNMIN
 
 
 OUT_MAIN_JS			:=	$(subst $(SRC)/,$(OUT)/,$(MAIN_JS:.js=.es.js))
