@@ -1,7 +1,7 @@
 <?php
 
 const PERFSTAT_MAX_COUNTER_LENGTH = 64;
-const PERFSTAT_PERIOD_LENGTH = 1*60; // Number of seconds - Should divide evenly into a day, otherwise a period at the day transition will be missed.
+const PERFSTAT_PERIOD_LENGTH = 15*60; // Number of seconds - Should divide evenly into a day, otherwise a period at the day transition will be missed.
 const PERFSTAT_BUFFER_LENGTH = 10*60;
 const PERFSTAT_ROLLOVER_DELAY = 10; // Allow a few seconds before committing the previous period to ensure no API is still touching it.
 const PERFSTAT_CACHE_TIMEOUT = PERFSTAT_PERIOD_LENGTH*2 + PERFSTAT_BUFFER_LENGTH;
@@ -13,6 +13,20 @@ const HISTOGRAM_BUCKET_MAX = 127;
 // So the accurate range of the histogram is 0.5ms to 8.7 seconds in logarithmic steps (smaller steps near lower values)
 
 const PERCENTILE_TAPS = [0,10,20,30,40,50,60,70,80,90,95,98,100];
+
+function perfstats_GetRedis() {
+	if ( isset($GLOBALS["REDIS_INSTANCE"]) ) {
+		return $GLOBALS["REDIS_INSTANCE"];
+	}
+	
+	$redis = new Redis();
+	if ( $redis->connect(SH_REDIS_HOST) ) {
+		$GLOBALS["REDIS_INSTANCE"] = $redis;
+		return $redis;
+	}
+	
+	return null;
+}
 
 function perfstats_GetCurrentPeriodEnd() {
 	// Date manipulation in php is the worst.
@@ -52,15 +66,30 @@ function perfstats_Accumulate($period, $countername, $microseconds, $bucket) {
 	$keytime = $keycount . "!TIME";
 	$keybucket = $keycount . "!" . $bucket;
 
-	// Ensure apcu records are created for this period
-	apcu_add($keycount, 0, PERFSTAT_CACHE_TIMEOUT);
-	apcu_add($keytime, 0, PERFSTAT_CACHE_TIMEOUT);
-	apcu_add($keybucket, 0, PERFSTAT_CACHE_TIMEOUT);
-	
-	// Accumulate APCU records with new data
-	apcu_inc($keycount, 1);
-	apcu_inc($keytime, $microseconds);
-	apcu_inc($keybucket, 1);
+//	// Ensure apcu records are created for this period
+//	apcu_add($keycount, 0, PERFSTAT_CACHE_TIMEOUT);
+//	apcu_add($keytime, 0, PERFSTAT_CACHE_TIMEOUT);
+//	apcu_add($keybucket, 0, PERFSTAT_CACHE_TIMEOUT);
+//	
+//	// Accumulate APCU records with new data
+//	apcu_inc($keycount, 1);
+//	apcu_inc($keytime, $microseconds);
+//	apcu_inc($keybucket, 1);
+
+	// Open a connection to Redis, and accumulate data there. 
+	// Redis does have a floating point increment unlike APCU, but we'll count microseconds as integers instead.
+	$redis = perfstats_GetRedis();
+	if ( $redis ) {
+		// Add counts to redis
+		$redis->incr($keycount);
+		$redis->incr($keybucket);
+		$redis->incrBy($keytime, $microseconds);
+		
+		// Enforce timeouts on redis values, so in case the collection task doesn't run, these records don't accumulate forever.
+		$redis->expire($keycount, PERFSTAT_CACHE_TIMEOUT);
+		$redis->expire($keybucket, PERFSTAT_CACHE_TIMEOUT);
+		$redis->expire($keytime, PERFSTAT_CACHE_TIMEOUT);
+	}
 }
 
 
@@ -103,9 +132,22 @@ function perfstats_ComputeCachedPeriodStats($periodend)
 
 	$now = time();
 	
-	// Enumerate APCU keys for this period
-	foreach (new APCUIterator("/^$keybase.*/") as $entry) {
-		$apcudata[$entry["key"]] = $entry["value"];
+//	// Enumerate APCU keys for this period
+//	foreach (new APCUIterator("/^$keybase.*/") as $entry) {
+//		$apcudata[$entry["key"]] = $entry["value"];
+//	}
+
+	// Enumerate redis keys for this period
+	$redis = perfstats_GetRedis();
+	if ( $redis ) {
+		$keys = $redis->keys($keybase . "*");
+		$values = $redis->mGet($keys);
+		
+		for ( $i = 0; $i < count($keys); $i++ ) {
+			if ( $values[$i] !== false ) {			
+				$apcudata[$keys[$i]] = $values[$i];
+			}
+		}
 	}
 
 	$durationseconds = $now - ($periodend - PERFSTAT_PERIOD_LENGTH);
@@ -188,7 +230,7 @@ function perfstats_AddToDatabase($periodend, $perioddata)
 	
 	if ( count($values) > 0 ) {
 		
-		$query = 		"INSERT INTO ".SH_TABLE_PREFIX.SH_TABLE_PERFSTATS." (
+		$query = "INSERT INTO ".SH_TABLE_PREFIX.SH_TABLE_PERFSTATS." (
 				apiname, 
 				periodend, periodduration,
 				count, avg,
@@ -196,26 +238,20 @@ function perfstats_AddToDatabase($periodend, $perioddata)
 			)
 			VALUES " . implode(",",$values) . ";";
 			
-		print($query);
+		// print($query); // For debugging
 
-		db_QueryInsert(
-			"INSERT INTO ".SH_TABLE_PREFIX.SH_TABLE_PERFSTATS." (
-				apiname, 
-				periodend, periodduration,
-				count, avg,
-				".$tapnames."
-			)
-			VALUES " . implode(",",$values) . ";"
-		);
+		db_QueryInsert($query);
 	}
 }
 
 function perfstats_DeleteApcuKeys($perioddata)
 {
-	foreach($perioddata["apcudata"] as $k => $v)
-	{
-		apcu_delete($k);
-	}
+	//foreach($perioddata["apcudata"] as $k => $v)
+	//{
+	//	apcu_delete($k);
+	//}
+	$redis = perfstats_GetRedis();
+	$redis->delete(array_keys($perioddata["apcudata"]));
 }
 
 // If we crossed a time interval, collect and store the previous period's stats and remove the cache objects. 
@@ -225,18 +261,21 @@ function perfstats_Cron()
 	$currentend = perfstats_GetCurrentPeriodEnd();
 	$prevperiod = $currentend - PERFSTAT_PERIOD_LENGTH;
 	$key = "!SH!PERFSTATS!CRON";
-	$prevcron = apcu_fetch($key);
+	//$prevcron = apcu_fetch($key);
+	$redis = perfstats_GetRedis();
+	$prevcron = $redis->get($key);
 	if ( $prevcron === false ) {
 		$prevcron = $prevperiod; // If previous cron tag doesn't exist, assume we need to process the previous period
 	}
 	
 	if ( ($prevcron < $currentend) && (time() >= ($prevperiod + PERFSTAT_ROLLOVER_DELAY)) ) {
-		apcu_store($key, $currentend, PERFSTAT_CACHE_TIMEOUT);
-		echo "Cron: Store to DB\n";
+		//apcu_store($key, $currentend, PERFSTAT_CACHE_TIMEOUT);
+		$redis->setEx($key, PERFSTAT_CACHE_TIMEOUT, $currentend);
+		// echo "Cron: Store to DB\n"; // Debugging
 		// Process previous period data. 
 		$data = perfstats_ComputeCachedPeriodStats($prevperiod);
 		perfstats_AddToDatabase($prevperiod, $data);
-		//perfstats_DeleteApcuKeys($data);
+		perfstats_DeleteApcuKeys($data);
 	}
 }
 
@@ -261,5 +300,46 @@ function perfstats_GetCurrentPeriodStats()
 {
 	$period = perfstats_GetCurrentPeriodEnd();
 	$stats = perfstats_ComputeCachedPeriodStats($period);
-	return $stats; // todo: Don't send back administrative data that was collected.
+	return $stats["stats"];
+}
+
+function perfstats_GetRecentStats($apifilter = null, $count = 48) {
+	$currentend = perfstats_GetCurrentPeriodEnd();
+	$querystart = $currentend - PERFSTAT_PERIOD_LENGTH * ($count+2);
+	$startstring = date('c', $querystart);
+
+	if ( $apifilter == null ) {
+		$apifilter = "%";
+	}
+		
+	$rawdata = db_QueryFetch(
+			"SELECT *
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_PERFSTATS." 
+			WHERE periodend >= '$startstring' AND
+			apiname like ?;",
+			$apifilter
+		);
+
+	// Reformat DB records into something consistent with what the current period stats looks like.
+	$returndata = [];
+	
+	foreach ( $rawdata as $row ) {
+		$obj = [ "Count" => $row["count"], "AverageTime" => $row["avg"], "DurationSeconds" => $row["periodduration"], "UsedTime" => 0, "RPM" => 0 ];
+
+		$obj["PeriodEnd"] = $row["periodend"];
+
+		$obj["UsedTime"] = $obj["Count"] * $obj["AverageTime"];
+		$rpm = $obj["Count"] * 60 / $obj["DurationSeconds"];
+		$obj["RPM"] = $rpm;
+		
+		$percentile = [];
+		foreach ( PERCENTILE_TAPS as $tap ) {
+			$percentile[$tap] = $row["p".$tap];
+		}
+		$obj["Percentiles"] = $percentile;
+		
+		$returndata[] = $obj;
+	}
+
+	return $returndata;
 }

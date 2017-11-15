@@ -8,8 +8,10 @@ require_once __DIR__."/".SHRUB_PATH."node/node.php";
 const CACHE_TTL = 60+30;
 
 
-$node_id = intval(json_ArgShift());
 api_Exec([
+["stats/api/history", API_GET, API_CHARGE_1, function(&$RESPONSE) {
+	$RESPONSE['stats'] = perfstats_GetRecentStats();
+}],
 ["stats/api", API_GET, API_CHARGE_1, function(&$RESPONSE) {
 	$RESPONSE['stats'] = perfstats_GetCurrentPeriodStats();
 }],
