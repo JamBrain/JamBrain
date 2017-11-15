@@ -469,7 +469,7 @@ class Main extends Component {
 			var slugs = this.cleanLocation(e.detail.location).slugs;
 
 			if ( slugs.join() !== this.state.slugs.join() ) {
-				history.pushState(null, null, e.detail.location.pathname+e.detail.location.search);
+				history.pushState(null, null, e.detail.location.pathname + e.detail.location.search);
 
 				this.setState({
 					'slugs': slugs,
@@ -497,9 +497,32 @@ class Main extends Component {
 		this.handleAnchors();
 	}
 
+	getTitle( node ) {
+		let Title = "";
+
+		if ( node.name ) {
+			Title = titleParser.parse(node.name, true);		// What is titleParser?
+			if ( Title === "" ) {
+				Title = window.location.host;
+			}
+			else {
+				Title += " | " + window.location.host;
+			}
+		}
+		else {
+			Title = window.location.host;
+		}
+		return Title;
+	}
+
 	render( {}, {node, user, featured, path, extra, error} ) {
 		var ShowContent = null;
 		let props = {node, user, featured, path, extra, error};
+
+		if ( node ) {
+			document.title = this.getTitle(node);
+		}
+
 		return (
 			<div id="app">
 				<Layout {...this.state}>
