@@ -1,4 +1,4 @@
-import {h, Component} 				from 'preact/preact';
+import {h, Component} 					from 'preact/preact';
 //import ShallowCompare	 				from 'shallow-compare/index';
 
 //import NavSpinner						from 'com/nav-spinner/spinner';

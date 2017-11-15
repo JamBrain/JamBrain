@@ -1,53 +1,46 @@
-import {h, render, Component, options} from 'preact/preact';
-import {initDevTools} from 'preact-devtools/devtools';
-import Sanitize from '../internal/sanitize/sanitize';
-import NavSpinner from 'com/nav-spinner/spinner';
+import {h, render, Component, options}	from 'preact/preact';
+import {initDevTools}					from 'preact-devtools/devtools';
+import Sanitize							from 'internal/sanitize/sanitize';
 
-import ViewBar from 'com/view-bar/bar';
-import ViewHeader from 'com/view-header/header';
-import ViewSidebar from 'com/view-sidebar/sidebar';
-import ViewFooter from 'com/view-footer/footer';
-import ViewHome from 'com/view-home/home';
+import Router							from 'com/router/router';
+import Route							from 'com/router/route';
 
-import Router from 'com/router/router';
-import Route from 'com/router/route';
+import Layout							from "com/page/layout";
 
-import Layout from "com/pages/layout";
+import PageHome 						from 'com/page/home/home';
+import PagePage 						from 'com/page/page/page';
+import PagePost 						from 'com/page/post/post';
+import PageItem 						from 'com/page/item/item';
+import PageTag 							from 'com/page/tag/tag';
+import PageUser 						from 'com/page/user/user';
+import PageUsers 						from 'com/page/users/users';
+import PageEvent 						from 'com/page/event/event';
+import PageEvents 						from 'com/page/events/events';
+import PageError 						from 'com/page/error/error';
+import PageMySettings 					from 'com/page/my/settings';
+import PageMyNotifications 				from 'com/page/my/notifications';
+import PageDevPalette 					from 'com/page/dev/palette';
 
-import PageHome from 'com/pages/home/home';
-import PagePage from 'com/pages/page/page';
-import PagePost from 'com/pages/post/post';
-import PageItem from 'com/pages/item/item';
-import PageTag from 'com/pages/tag/tag';
-import PageUser from 'com/pages/user/user';
-import PageUsers from 'com/pages/users/users';
-import PageEvent from 'com/pages/event/event';
-import PageEvents from 'com/pages/events/events';
-import PageError from 'com/pages/error/error';
-import PageSettings from 'com/pages/settings/settings';
-import PageNotifications from 'com/pages/notifications/notifications';
+import DialogUnfinished					from 'com/dialog/unfinished/unfinished';
+import DialogLogin						from 'com/dialog/login/login';
+import DialogRegister					from 'com/dialog/register/register';
+import DialogActivate					from 'com/dialog/activate/activate';
+import DialogReset						from 'com/dialog/reset/reset';
+import DialogPassword					from 'com/dialog/password/password';
+import DialogAuth						from 'com/dialog/auth/auth';
+import DialogSession					from 'com/dialog/session/session';
+import DialogSavebug					from 'com/dialog/savebug/savebug';
+import DialogUserConfirm				from 'com/dialog/user/user-confirm';
+import DialogSubmit						from 'com/dialog/submit/submit';
+import DialogTV							from 'com/dialog/tv/tv';
+import DialogCreate						from 'com/dialog/create/create';
 
-import DialogUnfinished from 'com/dialog-unfinished/unfinished';
-import DialogLogin from 'com/dialog-login/login';
-import DialogRegister from 'com/dialog-register/register';
-import DialogActivate from 'com/dialog-activate/activate';
-import DialogReset from 'com/dialog-reset/reset';
-import DialogPassword from 'com/dialog-password/password';
-import DialogAuth from 'com/dialog-auth/auth';
-import DialogSession from 'com/dialog-session/session';
-import DialogSavebug from 'com/dialog-savebug/savebug';
-import DialogUserConfirm from 'com/dialog-user/user-confirm';
+//import AlertBase						from 'com/alert-base/base';
 
-import DialogSubmit from 'com/dialog-submit/submit';
-import DialogTV from 'com/dialog-tv/tv';
+import $Node							from 'shrub/js/node/node';
+import $User							from 'shrub/js/user/user';
+import $NodeLove						from 'shrub/js/node/node_love';
 
-import DialogCreate from 'com/dialog-create/create';
-
-//import AlertBase                        from 'com/alert-base/base';
-
-import $Node from '../shrub/js/node/node';
-import $User from '../shrub/js/user/user';
-import $NodeLove from '../shrub/js/node/node_love';
 
 window.LUDUMDARE_ROOT = '/';
 window.SITE_ROOT = 1;
@@ -512,9 +505,12 @@ class Main extends Component {
 				<Layout {...this.state}>
 					<Router node={node} props={props} path={extra}>
 						<Route type="root" component={PageHome}>
-							<Route static path="/me">
-								<Route static path="/settings" component={PageSettings} />
-								<Route static path="/notifications" component={PageNotifications} />
+							<Route static path="/my">
+								<Route static path="/settings" component={PageMySettings} />
+								<Route static path="/notifications" component={PageMyNotifications} />
+							</Route>
+							<Route static path="/dev">
+								<Route static path="/palette" component={PageDevPalette} />
 							</Route>
 						</Route>
 
