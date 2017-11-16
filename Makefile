@@ -25,6 +25,12 @@ $(info [*] Debug output enabled)
 endif # DEBUG
 endif # MAIN_FOLDER
 
+ifndef MAIN_FOLDER
+ifdef SOURCEMAPS
+$(info [*] Source Maps enabled)
+endif # SOURCEMAPS
+endif # MAIN_FOLDER
+
 # TODO: REMOVE THIS
 STATIC_DOMAIN		?=	static.jammer.work
 
@@ -77,10 +83,14 @@ OUT_FILES			:=	$(OUT_FILES_SVG) $(OUT_FILES_CSS) $(OUT_FILES_JS)
 DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES_FILES) $(OUT_LESS_FILES))
 OUT_FOLDERS			:=	$(sort $(dir $(OUT_FILES) $(BUILD_FOLDER)/))
 
-TARGET_FILE_SVG		:=	$(TARGET_FOLDER)/all.min.svg
-TARGET_FILE_CSS		:=	$(TARGET_FOLDER)/all.min.css
-TARGET_FILE_JS		:=	$(TARGET_FOLDER)/all.min.js
-TARGET_FILES		:=	$(TARGET_FILE_SVG) $(TARGET_FILE_CSS) $(TARGET_FILE_JS)
+TARGET_FILES_SVG		:=	$(TARGET_FOLDER)/all.min.svg
+TARGET_FILES_CSS		:=	$(TARGET_FOLDER)/all.min.css
+TARGET_FILES_JS		:=	$(TARGET_FOLDER)/all.min.js
+ifdef DEBUG
+TARGET_FILES_CSS		+=	$(TARGET_FOLDER)/all.debug.css
+TARGET_FILES_JS		+=	$(TARGET_FOLDER)/all.debug.js
+endif # DEBUG
+TARGET_FILES		:=	$(TARGET_FILES_SVG) $(TARGET_FILES_CSS) $(TARGET_FILES_JS)
 
 
 # Tools #
@@ -90,9 +100,15 @@ ESLINT_ARGS			:=	--config src/config/eslint.config.json
 ESLINT				=	$(NODEJS)/eslint/bin/eslint.js $(1) $(ESLINT_ARGS)
 # ES Compiler: https://buble.surge.sh/guide/
 BUBLE_ARGS			:=	--no modules --jsx h --objectAssign Object.assign
-BUBLE				=	$(NODEJS)/buble/bin/buble $(BUBLE_ARGS) $(1) -o $(2)
+ifdef SOURCEMAPS
+BUBLE_ARGS			+=	-m inline
+endif # SOURCEMAPS
+BUBLE				=	$(NODEJS)/buble/bin/buble $(BUBLE_ARGS) -i $(1) -o $(2)
 # ES Include/Require Resolver: http://rollupjs.org/guide/
 ROLLUP_ARGS			:=	-c src/config/rollup.config.js
+ifdef SOURCEMAPS
+ROLLUP_ARGS			+=	-m inline
+endif # SOURCEMAPS
 ROLLUP				=	$(NODEJS)/rollup/bin/rollup $(ROLLUP_ARGS) $(1) > $(2)
 # JS Preprocessor: https://github.com/moisesbaez/preprocess-cli-tool
 JS_PP_DEBUG			=	$(NODEJS)/preprocess-cli-tool/bin/preprocess.js -f $(1) -d $(2) -c '{"DEBUG": true}' -t js
@@ -256,13 +272,13 @@ $(OUT)/%.min.svg:$(SRC)/%.svg
 clean:
 	rm -fr $(OUT) $(TARGET_FILES)
 clean-svg:
-	rm -fr $(OUT_FILES_SVG) $(OUT_FILES_SVG:.svg=.svg.out) $(TARGET_FILE_SVG) $(BUILD_FOLDER)/svg.svg $(BUILD_FOLDER)/all.svg 
+	rm -fr $(OUT_FILES_SVG) $(OUT_FILES_SVG:.svg=.svg.out) $(TARGET_FILES_SVG) $(BUILD_FOLDER)/svg.svg $(BUILD_FOLDER)/all.svg 
 	-$(call RM_EMPTY_DIRS,.output)
 clean-css:
-	rm -fr $(OUT_CSS_FILES) $(OUT_LESS_FILES) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.css.dep) $(TARGET_FILE_CSS) $(BUILD_FOLDER)/less.css $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.lint $(BUILD_FOLDER)/all.css
+	rm -fr $(OUT_CSS_FILES) $(OUT_LESS_FILES) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.css.dep) $(TARGET_FILES_CSS) $(BUILD_FOLDER)/less.css $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.lint $(BUILD_FOLDER)/all.css
 	-$(call RM_EMPTY_DIRS,.output)
 clean-js:
-	rm -fr $(OUT_JS_FILES) $(OUT_ES_FILES) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILE_JS) $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/all.js
+	rm -fr $(OUT_JS_FILES) $(OUT_ES_FILES) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILES_JS) $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/all.js
 	-$(call RM_EMPTY_DIRS,.output)
 
 
@@ -279,14 +295,21 @@ $(BUILD_FOLDER)/buble.js: $(OUT_MAIN_JS) $(OUT_ES_FILES)
 $(BUILD_FOLDER)/all.js: $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js
 	cat $^ > $@
 $(BUILD_FOLDER)/all.release.js: $(BUILD_FOLDER)/all.js
-	$(call JS_PP_DEBUG,$<,$(@D)/all.debug.js)
 	$(call JS_PP_RELEASE,$<,$@)
 $(TARGET_FOLDER)/all.min.js: $(BUILD_FOLDER)/all.release.js
 	$(call MINIFY_JS,$<,$@)
-ifdef DEBUG
-	cp -f --remove-destination $(<D)/all.debug.js $(@D)/all.debug.js
-	touch $(@D)/Promise.js.map
-endif
+$(BUILD_FOLDER)/all.debug.js: $(BUILD_FOLDER)/all.js
+	$(call JS_PP_DEBUG,$<,$@)
+$(TARGET_FOLDER)/all.debug.js: $(BUILD_FOLDER)/all.debug.js
+	cp -f --remove-destination $< $@
+
+#	$(call JS_PP_DEBUG,$<,$(@D)/all.debug.js)
+
+#	$(call MINIFY_JS,$<,$@)
+#
+#ifdef DEBUG
+#	cp -f --remove-destination $(<D)/all.debug.js $(@D)/all.debug.js
+#endif
 
 
 # CSS #
@@ -298,9 +321,12 @@ $(BUILD_FOLDER)/all.css: $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.css
 	cat $^ > $@
 $(TARGET_FOLDER)/all.min.css: $(BUILD_FOLDER)/all.css
 	$(call MINIFY_CSS,$<,$@)
-ifdef DEBUG
-	cp -f --remove-destination $< $(@D)/all.debug.css
-endif
+$(TARGET_FOLDER)/all.debug.css: $(BUILD_FOLDER)/all.css
+	cp -f --remove-destination $< $@
+
+#ifdef DEBUG
+#	cp -f --remove-destination $< $(@D)/all.debug.css
+#endif
 
 
 # SVG # src/icons/icomoon/icons.svg
