@@ -10,16 +10,5 @@ cd $SCRIPTPATH
 # Add Apache Ports and Domain Mappings
 (cd apache ; sh add-ports.sh)
 
-# Add Symlinks to output files
-ln -svf ../../.output/.build/public-ludumdare.com/all.js /vagrant/www/public-ludumdare.com/-/all.js
-ln -svf ../../.output/.build/public-ludumdare.com/all.css /vagrant/www/public-ludumdare.com/-/all.css
-ln -svf ../../.output/.build/public-ludumdare.com/all.svg /vagrant/www/public-ludumdare.com/-/all.svg
-ln -svf ../../.output/.build/public-jammer.vg/all.js /vagrant/www/public-jammer.vg/-/all.js
-ln -svf ../../.output/.build/public-jammer.vg/all.css /vagrant/www/public-jammer.vg/-/all.css
-ln -svf ../../.output/.build/public-jammer.vg/all.svg /vagrant/www/public-jammer.vg/-/all.svg
-ln -svf ../../.output/.build/public-jammer.bio/all.js /vagrant/www/public-jammer.bio/-/all.js
-ln -svf ../../.output/.build/public-jammer.bio/all.css /vagrant/www/public-jammer.bio/-/all.css
-ln -svf ../../.output/.build/public-jammer.bio/all.svg /vagrant/www/public-jammer.bio/-/all.svg
-
 # Create tables
 (cd /vagrant/www/src/shrub/tools; echo YES | php table-create)

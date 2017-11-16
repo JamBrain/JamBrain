@@ -15,6 +15,7 @@
     "rollup-plugin-node-resolve": "*",
     "rollup-plugin-nodent": "*",
     "uglify-js": "*",
+    "preprocess-cli-tool": "*",
 
     "less": "*",
     "less-plugin-autoprefix": "*",

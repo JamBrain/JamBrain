@@ -1,3 +1,4 @@
+// @ifdef DEBUG
 /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */
 
 import { options } from '../preact/preact';
@@ -389,3 +390,7 @@ export function initDevTools() {
 		options.beforeUnmount = nextBeforeUnmount;
 	};
 }
+
+// MK
+initDevTools();
+// @endif
