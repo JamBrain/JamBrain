@@ -62,7 +62,7 @@ Usage:
   * `config.mk` - Create this file and you can hardcode makefile settings
     * `TARGET=public-ludumdare.com` to build just Ludum Dare
     * `DEBUG=true` to enable debug builds (append `?debug` to the URL)
-    * `SOURCEMAPS=true` to enable Source Maps
+    * `SOURCEMAPS=true` to enable Source Maps. **NOTE:** Requires a full rebuild when changed
     * `JOBS=2` to compile using 2 threads (parallel build)
       * **NOTE**: VirtualBox is really bad at threads. Beyond 2, you start seeing serious diminishing returns, to the point where it actually gets worse than 2 the higher you go.
       * If you actually want to try values other than `1` and `2`, it you'll need to change the number of CPUs in `Vagrantfile`, as well as set JOBS.
