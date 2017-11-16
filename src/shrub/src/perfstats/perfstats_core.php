@@ -246,7 +246,11 @@ function perfstats_AddToDatabase($periodend, $perioddata)
 		}
 		$tapvalues = implode(",",$tapvalues);
 		
-		$values[] = "('$name','$periodend',$periodduration,$count,$avg,$tapvalues)";
+		$r2xx = $v["Status"]["2xx"];
+		$r4xx = $v["Status"]["4xx"];
+		$r5xx = $v["Status"]["5xx"];
+		
+		$values[] = "('$name','$periodend',$periodduration,$count,$avg,$tapvalues,$r2xx,$r4xx,$r5xx)";
 	}
 	
 	if ( count($values) > 0 ) {
@@ -255,7 +259,8 @@ function perfstats_AddToDatabase($periodend, $perioddata)
 				apiname, 
 				periodend, periodduration,
 				count, avg,
-				".$tapnames."
+				".$tapnames.",
+				r2xx, r4xx, r5xx
 			)
 			VALUES " . implode(",",$values) . ";";
 			
@@ -349,7 +354,7 @@ function perfstats_GetRecentStats($apifilter = null, $count = 48) {
 	$returndata = [];
 	
 	foreach ( $rawdata as $row ) {
-		$obj = [ "Count" => $row["count"], "AverageTime" => $row["avg"], "DurationSeconds" => $row["periodduration"], "UsedTime" => 0, "RPM" => 0 ];
+		$obj = [ "Count" => $row["count"], "AverageTime" => $row["avg"], "DurationSeconds" => $row["periodduration"], "UsedTime" => 0, "RPM" => 0, "Status" => [] ];
 
 		$obj["PeriodEnd"] = $row["periodend"];
 
@@ -363,7 +368,17 @@ function perfstats_GetRecentStats($apifilter = null, $count = 48) {
 		}
 		$obj["Percentiles"] = $percentile;
 		
-		$returndata[] = $obj;
+		$obj["Status"]["2xx"] = $row["r2xx"];
+		$obj["Status"]["4xx"] = $row["r4xx"];
+		$obj["Status"]["5xx"] = $row["r5xx"];
+		
+		$name = $row["apiname"];
+		
+		if ( !isset($returndata[$name]) ) {
+			$returndata[$name] = [];
+		}
+		
+		$returndata[$name][] = $obj;
 	}
 
 	return $returndata;
