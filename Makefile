@@ -100,9 +100,9 @@ ESLINT_ARGS			:=	--config src/config/eslint.config.json
 ESLINT				=	$(NODEJS)/eslint/bin/eslint.js $(1) $(ESLINT_ARGS)
 # ES Compiler: https://buble.surge.sh/guide/
 BUBLE_ARGS			:=	--no modules --jsx h --objectAssign Object.assign
-ifdef SOURCEMAPS
-BUBLE_ARGS			+=	-m inline
-endif # SOURCEMAPS
+#ifdef SOURCEMAPS
+#BUBLE_ARGS			+=	-m inline
+#endif # SOURCEMAPS
 BUBLE				=	$(NODEJS)/buble/bin/buble $(BUBLE_ARGS) -i $(1) -o $(2)
 # ES Include/Require Resolver: http://rollupjs.org/guide/
 ROLLUP_ARGS			:=	-c src/config/rollup.config.js
