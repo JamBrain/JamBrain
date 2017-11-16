@@ -20,6 +20,8 @@ import PageError 						from 'com/page/error/error';
 import PageMySettings 					from 'com/page/my/settings';
 import PageMyNotifications 				from 'com/page/my/notifications';
 import PageDevPalette 					from 'com/page/dev/palette';
+import PageDevApiHealth					from 'com/page/dev/apihealth';
+import PageDevApiStats					from 'com/page/dev/apistats';
 
 import DialogUnfinished					from 'com/dialog/unfinished/unfinished';
 import DialogLogin						from 'com/dialog/login/login';
@@ -534,6 +536,8 @@ class Main extends Component {
 							</Route>
 							<Route static path="/dev">
 								<Route static path="/palette" component={PageDevPalette} />
+								<Route static path="/apihealth" component={PageDevApiHealth} />
+								<Route static path="/apistats" component={PageDevApiStats} />
 							</Route>
 						</Route>
 
