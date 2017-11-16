@@ -285,6 +285,7 @@ $(TARGET_FOLDER)/all.min.js: $(BUILD_FOLDER)/all.release.js
 	$(call MINIFY_JS,$<,$@)
 ifdef DEBUG
 	cp -f --remove-destination $(<D)/all.debug.js $(@D)/all.debug.js
+	touch $(@D)/Promise.js.map
 endif
 
 
@@ -297,6 +298,9 @@ $(BUILD_FOLDER)/all.css: $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.css
 	cat $^ > $@
 $(TARGET_FOLDER)/all.min.css: $(BUILD_FOLDER)/all.css
 	$(call MINIFY_CSS,$<,$@)
+ifdef DEBUG
+	cp -f --remove-destination $< $(@D)/all.debug.css
+endif
 
 
 # SVG # src/icons/icomoon/icons.svg

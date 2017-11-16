@@ -33,7 +33,7 @@ if ( !defined('API_DOMAIN') ) {
 define( 'API_ENDPOINT', '//'.API_DOMAIN );
 
 define( 'JS_FILE',   "/-/all".USE_MINIFIED.".js?".VERSION_STRING );
-define( 'CSS_FILE',  "/-/all.min.css?".VERSION_STRING );
+define( 'CSS_FILE',  "/-/all".USE_MINIFIED.".css?".VERSION_STRING );
 define( 'SVG_FILE',  "/-/all.min.svg?".VERSION_STRING );
 define( 'FONT_FILE', "//fonts.googleapis.com/css?family=Raleway:600,600italic,800,800italic|Roboto:300,300italic,700,700italic" );
 
