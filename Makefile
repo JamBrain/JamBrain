@@ -33,7 +33,6 @@ ifdef WINDOWS_HOST
 ifndef MAIN_FOLDER
 $(info [*] Running on WINDOWS_HOST)
 endif # MAIN_FOLDER
-#COPY_UNMIN			:= true
 endif # WINDOWS_HOST
 
 # Include Folders (modified by recursive scripts) #
@@ -266,14 +265,9 @@ clean-js:
 	rm -fr $(OUT_JS_FILES) $(OUT_ES_FILES) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILE_JS) $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/all.js
 	-$(call RM_EMPTY_DIRS,.output)
 
-#ifdef COPY_UNMIN
-#	rm -f $(TARGET_FOLDER)/all.js
-#	rm -f $(TARGET_FOLDER)/all.css
-#	rm -f $(TARGET_FOLDER)/all.svg
-#endif # COPY_UNMIN
-
 
 OUT_MAIN_JS			:=	$(subst $(SRC)/,$(OUT)/,$(MAIN_JS:.js=.es.js))
+
 
 # JavaScript #
 $(BUILD_FOLDER)/js.js: $(OUT_JS_FILES)
@@ -293,9 +287,6 @@ ifdef DEBUG
 	cp -f --remove-destination $(<D)/all.debug.js $(@D)/all.debug.js
 endif
 
-#ifdef COPY_UNMIN
-#	cp -f --remove-destination $< $(subst all.min.js,all.js,$@)
-#endif # COPY_UNMIN
 
 # CSS #
 $(BUILD_FOLDER)/css.css: $(OUT_CSS_FILES)
@@ -306,9 +297,7 @@ $(BUILD_FOLDER)/all.css: $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.css
 	cat $^ > $@
 $(TARGET_FOLDER)/all.min.css: $(BUILD_FOLDER)/all.css
 	$(call MINIFY_CSS,$<,$@)
-#ifdef COPY_UNMIN
-#	cp -f --remove-destination $< $(subst all.min.css,all.css,$@)
-#endif # COPY_UNMIN
+
 
 # SVG # src/icons/icomoon/icons.svg
 $(BUILD_FOLDER)/svg.svg: $(OUT_SVG_FILES)
@@ -320,9 +309,7 @@ $(BUILD_FOLDER)/all.svg: $(BUILD_FOLDER)/svg.svg
 	cat $^ > $@
 $(TARGET_FOLDER)/all.min.svg: $(BUILD_FOLDER)/all.svg
 	$(call MINIFY_SVG,$<,$@)
-#ifdef COPY_UNMIN
-#	cp -f --remove-destination $< $(subst all.min.svg,all.svg,$@)
-#endif # COPY_UNMIN
+
 
 # Target #
 target: $(OUT_FOLDERS) $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/less.lint $(TARGET_FILES) report
