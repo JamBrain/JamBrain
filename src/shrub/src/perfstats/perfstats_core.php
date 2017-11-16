@@ -61,9 +61,10 @@ function perfstats_MicrosecondTime($time) {
 	return intval(round($time*1000000));
 }
 
-function perfstats_Accumulate($period, $countername, $microseconds, $bucket) {
+function perfstats_Accumulate($period, $countername, $microseconds, $bucket, $code) {
 	$keycount = "!SH!PERFSTATS!" . $period . "!" . $countername;
 	$keytime = $keycount . "!TIME";
+	$keycode = $keycount . "!CODE!" . $code;
 	$keybucket = $keycount . "!" . $bucket;
 
 //	// Ensure apcu records are created for this period
@@ -83,11 +84,13 @@ function perfstats_Accumulate($period, $countername, $microseconds, $bucket) {
 		// Add counts to redis
 		$redis->incr($keycount);
 		$redis->incr($keybucket);
+		$redis->incr($keycode);
 		$redis->incrBy($keytime, $microseconds);
 		
 		// Enforce timeouts on redis values, so in case the collection task doesn't run, these records don't accumulate forever.
 		$redis->expire($keycount, PERFSTAT_CACHE_TIMEOUT);
 		$redis->expire($keybucket, PERFSTAT_CACHE_TIMEOUT);
+		$redis->expire($keycode, PERFSTAT_CACHE_TIMEOUT);
 		$redis->expire($keytime, PERFSTAT_CACHE_TIMEOUT);
 	}
 }
@@ -164,7 +167,8 @@ function perfstats_ComputeCachedPeriodStats($periodend)
 		$apiname = $parts[0];
 		if ( !isset($stats[$apiname]) ) {
 			$stats[$apiname] = [ "Count" => 0, "AverageTime" => 0, "DurationSeconds" => $durationseconds, "UsedTime" => 0, "RPM" => 0, 
-								"Histogram" => [ "Origin" => HISTOGRAM_ORIGIN, "Power" => HISTOGRAM_POWER, "Buckets" => [] ] ];
+								"Histogram" => [ "Origin" => HISTOGRAM_ORIGIN, "Power" => HISTOGRAM_POWER, "Buckets" => [] ],
+								"Status" => ["2xx" => 0, "4xx" => 0, "5xx" => 0], "StatusCodes" => [] ];
 		}
 		
 		if ( count($parts) == 1 ) {
@@ -177,6 +181,10 @@ function perfstats_ComputeCachedPeriodStats($periodend)
 				$time = $v / 1000000.0;
 				$stats[$apiname]["UsedTime"] = $time;
 			}
+			else if ( $parts[1] == "CODE" ) {
+				// This is a return code bucket			
+				$stats[$apiname]["StatusCodes"][$parts[2]] = $v;
+			}
 			else {
 				// This is a bucket index
 				$bucket = intval($parts[1]);
@@ -185,7 +193,7 @@ function perfstats_ComputeCachedPeriodStats($periodend)
 		}
 	}
 
-	// Compute percentile stats & requests/minute
+	// Compute percentile stats & requests/minute, and roll up classes of return codes into 2xx,4xx,5xx
 	foreach($stats as $k => &$v) {
 		$rpm = $v["Count"] * 60 / $durationseconds;
 		$v["RPM"] = $rpm;
@@ -195,6 +203,19 @@ function perfstats_ComputeCachedPeriodStats($periodend)
 		}
 		
 		perfstats_ComputeHistogramPercentiles($v);
+		
+		foreach ( $v["StatusCodes"] as $code => $count ) {
+			$status = intval($code);
+			if ( $status >= 200 && $status < 300 ) { 
+				$v["Status"]["2xx"] += $count;
+			}
+			else if ( $status >= 400 && $status < 500 ) { 
+				$v["Status"]["4xx"] += $count;
+			}
+			else if ( $status >= 500 && $status < 600 ) { 
+				$v["Status"]["5xx"] += $count;
+			}
+		}
 	}
 
 
@@ -282,8 +303,12 @@ function perfstats_Cron()
 
 
 
-function perfstats_RecordApiPerformance($apiname, $totaltime) {
+function perfstats_RecordApiPerformance($apiname, $totaltime, $code) {
 	$period = perfstats_GetPeriodId();
+	
+	if ( $code === null ) {
+		$code = 0;
+	}
 	
 	if ( strlen($apiname) > PERFSTAT_MAX_COUNTER_LENGTH ) {
 		$apiname = substr($apiname, 0, PERFSTAT_MAX_COUNTER_LENGTH);
@@ -292,8 +317,8 @@ function perfstats_RecordApiPerformance($apiname, $totaltime) {
 	$bucket = perfstats_HistogramBucket($totaltime);
 	$microseconds = perfstats_MicrosecondTime($totaltime);
 
-	perfstats_Accumulate($period, "all", $microseconds, $bucket);
-	perfstats_Accumulate($period, $apiname, $microseconds, $bucket);
+	perfstats_Accumulate($period, "all", $microseconds, $bucket, $code);
+	perfstats_Accumulate($period, $apiname, $microseconds, $bucket, $code);
 }
 
 function perfstats_GetCurrentPeriodStats()

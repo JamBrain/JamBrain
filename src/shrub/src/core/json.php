@@ -225,7 +225,7 @@ function json_Emit( $out, $allow_jsonp = true ) {
 	if ( isset($GLOBALS["API_NAME"]) ) {
 		$apiname = $GLOBALS["API_NAME"];
 	}
-	perfstats_RecordApiPerformance($apiname, $totaltime);
+	perfstats_RecordApiPerformance($apiname, $totaltime, http_response_code());
 	
 		
 	// Debug Info //
