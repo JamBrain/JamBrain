@@ -19,6 +19,12 @@ endif # MAIN_FOLDER
 JOBS				:=	-j $(JOBS)
 endif # JOBS
 
+ifndef MAIN_FOLDER
+ifdef DEBUG
+$(info [*] Debug output enabled)
+endif # DEBUG
+endif # MAIN_FOLDER
+
 # TODO: REMOVE THIS
 STATIC_DOMAIN		?=	static.jammer.work
 
@@ -27,7 +33,7 @@ ifdef WINDOWS_HOST
 ifndef MAIN_FOLDER
 $(info [*] Running on WINDOWS_HOST)
 endif # MAIN_FOLDER
-COPY_UNMIN			:= true
+#COPY_UNMIN			:= true
 endif # WINDOWS_HOST
 
 # Include Folders (modified by recursive scripts) #
@@ -89,6 +95,9 @@ BUBLE				=	$(NODEJS)/buble/bin/buble $(BUBLE_ARGS) $(1) -o $(2)
 # ES Include/Require Resolver: http://rollupjs.org/guide/
 ROLLUP_ARGS			:=	-c src/config/rollup.config.js
 ROLLUP				=	$(NODEJS)/rollup/bin/rollup $(ROLLUP_ARGS) $(1) > $(2)
+# JS Preprocessor: https://github.com/moisesbaez/preprocess-cli-tool
+JS_PP_DEBUG			=	$(NODEJS)/preprocess-cli-tool/bin/preprocess.js -f $(1) -d $(2) -c '{"DEBUG": true}' -t js
+JS_PP_RELEASE		=	$(NODEJS)/preprocess-cli-tool/bin/preprocess.js -f $(1) -d $(2) -t js
 # JS Minifier: https://github.com/mishoo/UglifyJS2
 MINIFY_JS_RESERVED	:=	VERSION_STRING,STATIC_DOMAIN
 MINIFY_JS_ARGS		:=	--compress --mangle -r "$(MINIFY_JS_RESERVED)"
@@ -127,9 +136,11 @@ default: target
 
 report: $(TARGET_FILES)
 	@echo \
-		"[JS]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)` (`$(call GZIP_SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`)	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`]\n" \
-		"[CSS] GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)` (`$(call GZIP_SIZE,$(BUILD_FOLDER)/all.css 2>/dev/null)`)	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.css 2>/dev/null)`]\n" \
-		"[SVG] GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)` (`$(call GZIP_SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`)	[Minified: `$(call SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`]	[Original: `$(call SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`]\n" \
+		"[JS_RAW]  GZIP: `$(call GZIP_SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)` MINIFY: N/A	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`\n" \
+		"[JS_DEBUG]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.debug.js 2>/dev/null)` MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.debug.js 2>/dev/null)`*	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.debug.js 2>/dev/null)`\n" \
+		"[JS_RELEASE]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`   MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`    ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.release.js 2>/dev/null)`\n" \
+		"[CSS]     GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`  MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.css 2>/dev/null)`\n" \
+		"[SVG]     GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`  MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`\n" \
 		| column -t
 
 # If not called recursively, figure out who the targes are and call them #
@@ -273,11 +284,18 @@ $(BUILD_FOLDER)/buble.js: $(OUT_MAIN_JS) $(OUT_ES_FILES)
 	mv $@.tmp $@
 $(BUILD_FOLDER)/all.js: $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js
 	cat $^ > $@
-$(TARGET_FOLDER)/all.min.js: $(BUILD_FOLDER)/all.js
+$(BUILD_FOLDER)/all.release.js: $(BUILD_FOLDER)/all.js
+	$(call JS_PP_DEBUG,$<,$(@D)/all.debug.js)
+	$(call JS_PP_RELEASE,$<,$@)
+$(TARGET_FOLDER)/all.min.js: $(BUILD_FOLDER)/all.release.js
 	$(call MINIFY_JS,$<,$@)
-ifdef COPY_UNMIN
-	cp -f --remove-destination $< $(subst all.min.js,all.js,$@)
-endif # COPY_UNMIN
+ifdef DEBUG
+	cp -f --remove-destination $(<D)/all.debug.js $(@D)/all.debug.js
+endif
+
+#ifdef COPY_UNMIN
+#	cp -f --remove-destination $< $(subst all.min.js,all.js,$@)
+#endif # COPY_UNMIN
 
 # CSS #
 $(BUILD_FOLDER)/css.css: $(OUT_CSS_FILES)
@@ -288,9 +306,9 @@ $(BUILD_FOLDER)/all.css: $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.css
 	cat $^ > $@
 $(TARGET_FOLDER)/all.min.css: $(BUILD_FOLDER)/all.css
 	$(call MINIFY_CSS,$<,$@)
-ifdef COPY_UNMIN
-	cp -f --remove-destination $< $(subst all.min.css,all.css,$@)
-endif # COPY_UNMIN
+#ifdef COPY_UNMIN
+#	cp -f --remove-destination $< $(subst all.min.css,all.css,$@)
+#endif # COPY_UNMIN
 
 # SVG # src/icons/icomoon/icons.svg
 $(BUILD_FOLDER)/svg.svg: $(OUT_SVG_FILES)
@@ -302,9 +320,9 @@ $(BUILD_FOLDER)/all.svg: $(BUILD_FOLDER)/svg.svg
 	cat $^ > $@
 $(TARGET_FOLDER)/all.min.svg: $(BUILD_FOLDER)/all.svg
 	$(call MINIFY_SVG,$<,$@)
-ifdef COPY_UNMIN
-	cp -f --remove-destination $< $(subst all.min.svg,all.svg,$@)
-endif # COPY_UNMIN
+#ifdef COPY_UNMIN
+#	cp -f --remove-destination $< $(subst all.min.svg,all.svg,$@)
+#endif # COPY_UNMIN
 
 # Target #
 target: $(OUT_FOLDERS) $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/less.lint $(TARGET_FILES) report

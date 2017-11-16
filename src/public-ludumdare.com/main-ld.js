@@ -1,5 +1,9 @@
 import {h, render, Component, options}	from 'preact/preact';
-import {initDevTools}					from 'preact-devtools/devtools';
+
+// @ifdef DEBUG
+import {}								from 'preact-devtools/devtools';
+// @endif
+
 import Sanitize							from 'internal/sanitize/sanitize';
 
 import Router							from 'com/router/router';
@@ -45,9 +49,6 @@ import $NodeLove						from 'shrub/js/node/node_love';
 window.LUDUMDARE_ROOT = '/';
 window.SITE_ROOT = 1;
 
-if ( SITE_DEBUG ) {
-	initDevTools();
-}
 
 // NOTE: Deprecated
 // Add special behavior: when class attribute is an array, flatten it to a string
@@ -66,11 +67,16 @@ options.vnode = function(vnode) {
 class Main extends Component {
 	constructor( props ) {
 		super(props);
-		console.log('[constructor]');
+		console.log("[constructor]");
+		// @ifdef DEBUG
+		console.log("Running in DEBUG mode");
+		// @endif
 
 		var clean = this.cleanLocation(window.location);
 		if ( window.location.origin+clean.path !== window.location.href ) {
+			// @ifdef DEBUG
 			console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
+			// @endif
 
 			this.storeHistory(window.history.state, null, clean.path);
 		}
