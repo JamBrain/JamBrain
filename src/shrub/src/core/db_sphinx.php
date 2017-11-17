@@ -7,14 +7,8 @@ $SEARCHDB_QUERY_COUNT = 0;
 if ( !defined('SH_SEARCHDB_HOST') ) {
 	_db_FatalError("SH_SEARCHDB_HOST not set");
 }
-if ( !defined('SH_SEARCHDB_NAME') ) {
-	_db_FatalError("SH_SEARCHDB_NAME not set.");
-}
-if ( !defined('SH_SEARCHDB_LOGIN') ) {
-	_db_FatalError("SH_SEARCHDB_LOGIN not set.");
-}
-if ( !defined('SH_SEARCHDB_PASSWORD') ) {
-	_db_FatalError("SH_SEARCHDB_PASSWORD not set.");
+if ( !defined('SH_SEARCHDB_PORT') ) {
+	_db_FatalError("SH_SEARCHDB_PORT not set.");
 }
 
 
@@ -28,7 +22,6 @@ function _searchDB_FatalDBError( $public = false ) {
 }
 
 
-
 function _searchDB_IsConnected() {
 	global $SearchDB;
 	return isset($SearchDB);
@@ -36,9 +29,6 @@ function _searchDB_IsConnected() {
 
 function _searchDB_Connect(
 	$host = SH_SEARCHDB_HOST,
-	$login = SH_SEARCHDB_LOGIN,
-	$password = SH_SEARCHDB_PASSWORD,
-	$name = SH_SEARCHDB_NAME,
 	$port = SH_SEARCHDB_PORT
 )
 {
@@ -52,14 +42,11 @@ function _searchDB_Connect(
 		$SearchDB = mysqli_init();
 		
 		//mysqli_options($db, ...);
-
-		if ( defined('SH_SEARCHDB_PORT') )
-			$port = SH_SEARCHDB_PORT;
 		
 		$flags = null;
 
 		// Connect to the database //
-		mysqli_real_connect($SearchDB, $host, $login, $password, $name, $port, null, $flags);
+		mysqli_real_connect($SearchDB, $host, '', '', '', $port, '', $flags);
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
 		if ($SearchDB->connect_errno) {
@@ -87,83 +74,57 @@ function _searchDB_Close() {
 	}
 }
 
-
-
-function _searchDB_Prepare( $query ) {
-	global $SearchDB;
-	return mysqli_prepare($SearchDB, $query);
+// https://github.com/WhatCD/Gazelle/blob/master/classes/sphinxql.class.php
+function searchDB_Escape( $string ) {
+//	return strtr(strtolower($string), [
+	return strtr($string, [
+		'('=>'\\\\(',
+		')'=>'\\\\)',
+		'|'=>'\\\\|',
+		'-'=>'\\\\-',
+		'@'=>'\\\\@',
+		'~'=>'\\\\~',
+		'&'=>'\\\\&',
+		'\''=>'\\\'',
+		'<'=>'\\\\<',
+		'!'=>'\\\\!',
+		'"'=>'\\\\"',
+		'/'=>'\\\\/',
+		'*'=>'\\\\*',
+		'$'=>'\\\\$',
+		'^'=>'\\\\^',
+		'\\'=>'\\\\\\\\']
+	);
+}
+function searchDB_String( $string ) {
+   return "'".searchDB_Escape($string)."'";
 }
 
-function _searchDB_BindExecute( &$st, $args ) {
-	if ( count($args) > 0 ) {
-		// Build the type string //
-		$arg_types_string = "";
-		foreach ( $args as &$arg ) {
-			if ( is_integer($arg) ) {
-				$arg_types_string .= 'i';
-			}
-			else if ( is_float($arg) ) {
-				$arg_types_string .= 'd';
-			}
-			else if ( is_string($arg) ) {
-				$arg_types_string .= 's';
-			}
-			else if ( is_bool($arg) ) {
-				$arg_types_string .= 'i';
-				$arg = $arg ? 1 : 0;
-			}
-			else if ( is_array($arg) ) {
-				$arg_types_string .= 's';
-				$arg = json_encode($arg,true);
-			}
-			else if ( is_null($arg) ) {
-				$arg_types_string .= 's';
-			}
-			// date+time?
-			else {
-				_db_FatalError("Unable to parse ".gettype($arg));
-			}
-		}
-		
-		$st->bind_param($arg_types_string, ...$args);
-	}
-
-	$GLOBALS['SEARCHDB_QUERY_COUNT']++;
-	$ret = $st->execute();
-	
-	if ( !$ret || $st->errno ) {
-		_searchDB_FatalDBError();
-		$st->close();
-		return false;
-	}
-
-	return true;
+function searchDB_TimeStamp( $timestamp ) {
+   return $timestamp ? $timestamp : 0;
 }
 
 
 function _searchDB_Query( $query, $args ) {
 	_searchDB_Connect();
-	
-	global $SearchDB;
-	$st = mysqli_query($SearchDB, $query);
-	if ( $st )
-		return $st;
 
 	//_db_DebugStartQuery($query);
-		
-//	$st = _searchDB_Prepare($query);
-//	if ( $st && _searchDB_BindExecute($st, $args) ) {
-//		return $st;
-//	}
+	
+	global $SearchDB;
+	$ret = mysqli_real_query($SearchDB, $query);
+
+	if ( $ret ) {
+		return $ret;
+	}
 	_searchDB_DBError();
 	return false;
 }
 
 function searchDB_Query( $query, ...$args ) {
-	$st = _searchDB_Query($query, $args);
-	if ( $st ) {
-//		_db_DebugEndQuery($st, $null);		
-		return $st->close();
+	$ret = _searchDB_Query($query, $args);
+	if ( $ret ) {
+//		_db_DebugEndQuery($ret, $null);
+		return $ret;
 	}
 	return false;
 }
