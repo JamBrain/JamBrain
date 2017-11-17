@@ -83,7 +83,7 @@ function notification_CountUnread( $user ) {
 function notification_GetUnread( $user, $limit = 20, $offset = 0 ) {
 	$last_read = notification_GetLastReadNotification( $user );
 	return db_QueryFetch(
-		"SELECT id, node, note, type, created
+		"SELECT id, node, note, type, ".DB_FIELD_DATE('created')."
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION."
 		WHERE user=? AND id > ?
 		ORDER BY id DESC
@@ -108,7 +108,7 @@ function notification_Count( $user ) {
 
 function notification_Get( $user, $limit = 20, $offset = 0 ) {
 	return db_QueryFetch(
-		"SELECT id, node, note, type, created
+		"SELECT id, node, note, type, ".DB_FIELD_DATE('created')."
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION."
 		WHERE user=?
 		ORDER BY id DESC
