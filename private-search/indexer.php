@@ -9,9 +9,32 @@ require_once __DIR__."/".SHRUB_PATH."/node/node.php";
 require_once __DIR__."/".SHRUB_PATH."/core/db_sphinx.php";
 
 
-$nodes = node_GetSearchIndexes(0, 1000);
+$last_modified = 0;
+$count = 1000;
 
+$nodes = node_GetSearchIndexes($last_modified, $count);
+$ids = array_keys($nodes);
+foreach ( $nodes as &$node ) {
+	$node['authors'] = [];
+	$node['tags'] = [];
+}
+
+$tags = nodeMeta_GetByKeyNode('tag', $ids);
+$authors = nodeMeta_GetByKeyNode('author', $ids);
+
+foreach ( $authors as &$author ) {
+	if ( isset($nodes[$author['a']]) )
+		$nodes[$author['a']]['authors'][] = $author['b'];
+}
+foreach ( $tags as &$tag ) {
+	if ( isset($nodes[$tag['a']]) )
+		$nodes[$tag['a']]['tags'][] = $author['b'];
+}
+
+//print_r($ids);
 //print_r($nodes);
+//print_r($tags);
+//print_r($authors);
 
 _searchDB_Connect();
 
@@ -22,6 +45,7 @@ foreach ( $nodes as &$node ) {
 			id,
 			parent,
 			superparent,
+			author,
 
 			type,
 			subtype,
@@ -33,12 +57,16 @@ foreach ( $nodes as &$node ) {
 
 			slug,
 			name,
-			body
+			body,
+			
+			authors,
+			tags
 		)
 		VALUES (
 			".$node['id'].",
 			".$node['parent'].",
 			".$node['superparent'].",
+			".$node['author'].",
 			".searchDB_String($node['type']).",
 			".searchDB_String($node['subtype']).",
 			".searchDB_String($node['subsubtype']).",
@@ -47,7 +75,9 @@ foreach ( $nodes as &$node ) {
 			".searchDB_TimeStamp($node['modified']).",
 			".searchDB_String($node['slug']).",
 			".searchDB_String($node['name']).",
-			".searchDB_String($node['body'])."
+			".searchDB_String($node['body']).",
+			(".implode(',', $node['authors'])."),
+			(".implode(',', $node['tags']).")
 		)"
 	);
 }
