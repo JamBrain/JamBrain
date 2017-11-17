@@ -254,8 +254,8 @@ export default class NotificationsBase extends Component {
 				let doMerge = false;
 				if ( previousData && data.mergeable && previousData.mergeable ) {
 					// We can only merge if they're both on the same node, both on the same side of the "read" boundary, and within a certain amount of time.
-					if ( data.unread == previousData.unread ) {
-						let MaximumMergeTime = 4*60*60; // 4 hours
+					if ( (notification.node == previousData.notification[0].node) && (data.unread == previousData.unread) ) {
+						let MaximumMergeTime = 4*60*60*1000; // 4 hours in milliseconds
 						if ( Math.abs(data.time - previousData.time) < MaximumMergeTime ) {
 							doMerge = true;
 						}
