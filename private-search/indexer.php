@@ -74,8 +74,8 @@ foreach ( $nodes as &$node ) {
 			".searchDB_TimeStamp($node['created']).",
 			".searchDB_TimeStamp($node['modified']).",
 			".searchDB_String($node['slug']).",
-			".searchDB_String($node['name']).",
-			".searchDB_String($node['body']).",
+			".searchDB_Field($node['name']).",
+			".searchDB_Field($node['body']).",
 			(".implode(',', $node['authors'])."),
 			(".implode(',', $node['tags']).")
 		)"

@@ -74,30 +74,57 @@ function _searchDB_Close() {
 	}
 }
 
-// https://github.com/WhatCD/Gazelle/blob/master/classes/sphinxql.class.php
+// See below. This is a modified version of DoubleEscape
 function searchDB_Escape( $string ) {
-//	return strtr(strtolower($string), [
 	return strtr($string, [
-		'('=>'\\\\(',
-		')'=>'\\\\)',
-		'|'=>'\\\\|',
-		'-'=>'\\\\-',
-		'@'=>'\\\\@',
-		'~'=>'\\\\~',
-		'&'=>'\\\\&',
-		'\''=>'\\\'',
-		'<'=>'\\\\<',
-		'!'=>'\\\\!',
-		'"'=>'\\\\"',
-		'/'=>'\\\\/',
-		'*'=>'\\\\*',
-		'$'=>'\\\\$',
-		'^'=>'\\\\^',
-		'\\'=>'\\\\\\\\']
-	);
+		'(' =>  '\\(',
+		')' =>  '\\)',
+		'|' =>  '\\|',
+		'-' =>  '\\-',
+		'@' =>  '\\@',
+		'~' =>  '\\~',
+		'&' =>  '\\&',
+		'\'' => '\'',
+		'<' =>  '\\<',
+		'!' =>  '\\!',
+		'"' =>  '\\"',
+		'/' =>  '\\/',
+		'*' =>  '\\*',
+		'$' =>  '\\$',
+		'^' =>  '\\^',
+		'\\' => '\\\\'
+	]);
 }
 function searchDB_String( $string ) {
    return "'".searchDB_Escape($string)."'";
+}
+
+
+// https://github.com/WhatCD/Gazelle/blob/master/classes/sphinxql.class.php
+// NOTE: I don't know why \' has only 3 \'s. This could be a bug, except it's working
+function searchDB_DoubleEscape( $string ) {
+//	return strtr(strtolower($string), [
+	return strtr($string, [
+		'(' =>  '\\\\(',
+		')' =>  '\\\\)',
+		'|' =>  '\\\\|',
+		'-' =>  '\\\\-',
+		'@' =>  '\\\\@',
+		'~' =>  '\\\\~',
+		'&' =>  '\\\\&',
+		'\'' => '\\\'',
+		'<' =>  '\\\\<',
+		'!' =>  '\\\\!',
+		'"' =>  '\\\\"',
+		'/' =>  '\\\\/',
+		'*' =>  '\\\\*',
+		'$' =>  '\\\\$',
+		'^' =>  '\\\\^',
+		'\\' => '\\\\\\\\'
+	]);
+}
+function searchDB_Field( $string ) {
+   return "'".searchDB_DoubleEscape($string)."'";
 }
 
 function searchDB_TimeStamp( $timestamp ) {
