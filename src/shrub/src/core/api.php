@@ -16,7 +16,20 @@ const API_AUTH = 		0x0004; // Require calling user to be authenticated.
 
 
 const API_CHARGE_0 = 	0;	// Do not interact with the rate limit system before dispatching this API call
-const API_CHARGE_1 = 	1;	// Charge a single unit to the rate limit system for this call, and bail early if there is not enough credit.
+const API_CHARGE_1 = 	1;	// Charge a single unit to the default rate limit pool for this call, and bail early if there is not enough credit.
+
+const API_RATELIMIT_PROVIDER_MASK 	= 0x7F000000;
+const API_RATELIMIT_CHARGE_MASK 	= 0x00FFFFFF;
+const API_CHARGE_DEFAULT 			= 0x00000000; // Can use API_CHARGE_DEFAULT | 1 or API_CHARGE_1 as a shortcut.
+const API_CHARGE_SEARCH 			= 0x01000000; // Use like: API_CHARGE_SEARCH | 1
+const API_CHARGE_RANDOM				= 0x02000000;
+
+
+const API_RATELIMIT_DEFINITION = [
+	API_CHARGE_DEFAULT => false, // Use default settings for ratelimit api
+	API_CHARGE_SEARCH => [ 'name' => 'search', 'size' => 100, 'time' => 5*60 ],
+	API_CHARGE_RANDOM => [ 'name' => 'random', 'size' => 50, 'time' => 3*60 ],
+];
 
 /// Handles an API request by dispatching it to the appropriate handler in the passed-in table.
 /// The table contains the API name, flags declaring usage requirements, the rate limiting charge, and a function that will handle the API request.
@@ -95,12 +108,31 @@ function api_Exec( $apidesc ) {
 			}
 			
 			// Charge the user's pool based on the rate limiting settings
-			$ratelimit = $api[2];
+			$ratelimit = $api[2];			
 			if ( $ratelimit ) {
-				if ( !rateLimit_Charge($ratelimit) ) {
-					json_EmitFatalError_Permission("Rate limit exceeded. Please try again later.", $RESPONSE);
+				$cost = $ratelimit & API_RATELIMIT_CHARGE_MASK;
+				$providerid = $ratelimit & API_RATELIMIT_PROVIDER_MASK;
+				if ( !isset(API_RATELIMIT_DEFINITION[$providerid]) ) {
+					json_EmitFatalError("Unrecognized rate-limiting provider was specified in API definition.", $RESPONSE);
 				}
-				$RESPONSE['rate_limit'] = ['cost' => $ratelimit, 'remaining' => rateLimit_RemainingCharge()];
+				
+				$provider = API_RATELIMIT_DEFINITION[$providerid];
+				$poolname = null;
+				if ( $provider === false ) {
+					if ( !rateLimit_Charge($cost) ) {
+						json_EmitFatalError_Permission("Rate limit exceeded. Please try again later.", $RESPONSE);
+					}
+				}
+				else {
+					$poolname = $provider['name'];
+					$poolsize = $provider['size'];
+					$pooltime = $provider['time'];
+
+					if ( !rateLimit_Charge($cost, $poolname, $poolsize, $pooltime) ) {
+						json_EmitFatalError_Permission("Rate limit exceeded. Please try again later.", $RESPONSE);
+					}					
+				}
+				$RESPONSE['rate_limit'] = ['cost' => $cost, 'remaining' => rateLimit_RemainingCharge($poolname)];
 			}
 			
 			
