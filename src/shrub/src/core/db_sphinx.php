@@ -88,9 +88,13 @@ function _searchDB_GetAssoc() {
 }
 
 
+function searchDB_FixString( $string ) {
+	return preg_replace('/[\x00-\x1F\x7F]/u', '', $string);
+}
+
 // See below. This is a modified version of DoubleEscape
 function searchDB_Escape( $string ) {
-	return strtr($string, [
+	return strtr(searchDB_FixString($string), [
 		'(' =>  '\\(',
 		')' =>  '\\)',
 		'|' =>  '\\|',
@@ -113,12 +117,11 @@ function searchDB_String( $string ) {
    return "'".searchDB_Escape($string)."'";
 }
 
-
 // https://github.com/WhatCD/Gazelle/blob/master/classes/sphinxql.class.php
 // NOTE: I don't know why \' has only 3 \'s. This could be a bug, except it's working
 function searchDB_DoubleEscape( $string ) {
 //	return strtr(strtolower($string), [
-	return strtr($string, [
+	return strtr(searchDB_FixString($string), [
 		'(' =>  '\\\\(',
 		')' =>  '\\\\)',
 		'|' =>  '\\\\|',
