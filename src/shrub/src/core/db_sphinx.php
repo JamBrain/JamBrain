@@ -49,7 +49,7 @@ function _searchDB_Connect(
 		mysqli_real_connect($SearchDB, $host, '', '', '', $port, '', $flags);
 		
 		// http://php.net/manual/en/mysqli.quickstart.connections.php
-		if ($SearchDB->connect_errno) {
+		if ( $SearchDB->connect_errno ) {
     		_db_Error("Failed to connect: (".$SearchDB->connect_errno.") ".$SearchDB->connect_error);
     	}
     	
@@ -79,7 +79,6 @@ function _searchDB_GetAssoc() {
 	global $SearchDB;
 	$result = mysqli_use_result($SearchDB);
 
-//	$result = $st->get_result();
 //	_db_DebugEndQuery($st, $result);
 	$ret = [];
 	while ($row = $result->fetch_array(MYSQLI_ASSOC)) {

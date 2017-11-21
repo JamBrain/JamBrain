@@ -205,7 +205,7 @@ function node_GetSearchIndexes( $timestamp, $limit = 50 ) {
 		"SELECT id, parent, superparent, author, type, subtype, subsubtype,
 			UNIX_TIMESTAMP(published) AS published, UNIX_TIMESTAMP(created) AS created, UNIX_TIMESTAMP(modified) AS modified, slug, name, body
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
-		WHERE modified>=?
+		WHERE UNIX_TIMESTAMP(modified)>=?
 		ORDER BY modified ASC
 		LIMIT ?;",
 		$timestamp,
