@@ -12,3 +12,10 @@ cd $SCRIPTPATH
 
 # Create tables
 (cd /vagrant/www/src/shrub/tools; echo YES | php table-create)
+
+# Setup Sphinx
+mv /etc/sphinxsearch/sphinx.conf /etc/sphinxsearch/_sphinx.conf
+ln -s /vagrant/www/private-search/sphinx.conf /etc/sphinxsearch/sphinx.conf
+ln -s /var/lib/sphinxsearch/data /home/vagrant/sphinx-data
+ln -s /vagrant/www/private-search/sphinx.conf /home/vagrant/sphinx.conf
+service sphinxsearch restart
