@@ -74,6 +74,21 @@ function _searchDB_Close() {
 	}
 }
 
+
+function _searchDB_GetAssoc() {
+	global $SearchDB;
+	$result = mysqli_use_result($SearchDB);
+
+//	$result = $st->get_result();
+//	_db_DebugEndQuery($st, $result);
+	$ret = [];
+	while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+		$ret[] = $row;
+	}
+	return $ret;
+}
+
+
 // See below. This is a modified version of DoubleEscape
 function searchDB_Escape( $string ) {
 	return strtr($string, [
@@ -132,7 +147,7 @@ function searchDB_TimeStamp( $timestamp ) {
 }
 
 
-function _searchDB_Query( $query, $args ) {
+function _searchDB_Query( $query /*, $args*/ ) {
 	_searchDB_Connect();
 
 	//_db_DebugStartQuery($query);
@@ -147,11 +162,18 @@ function _searchDB_Query( $query, $args ) {
 	return false;
 }
 
-function searchDB_Query( $query, ...$args ) {
-	$ret = _searchDB_Query($query, $args);
-	if ( $ret ) {
+function searchDB_Query( $query /*, ...$args*/ ) {
+	if ( $ret = _searchDB_Query($query /*, $args*/) ) {
 //		_db_DebugEndQuery($ret, $null);
 		return $ret;
+	}
+	return false;
+}
+
+function searchDB_QueryFetch( $query /*, ...$args*/ ) {
+	if ( _searchDB_Query($query /*, $args*/) ) {
+//		_db_DebugEndQuery($ret, $null);
+		return _searchDB_GetAssoc();
 	}
 	return false;
 }
