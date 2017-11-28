@@ -666,6 +666,11 @@ function VoteOnGame(&$user, $phase)
 			if(random_int(1,20) != 1) { continue; } 
 		}
 		
+		if ( $id == $user["game_node"] ) {
+			Verbose("Skipping game ID $id as this is the user's game");
+			continue;
+		}
+		
 		Verbose("Voting on game ID $id");
 		
 		// Future, consider opt-outs on this game. For now just vote all categories.

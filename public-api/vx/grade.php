@@ -80,8 +80,9 @@ switch ( $action ) {
 
 		// Determine the user's game in the referenced event.
 		$published_game = false;
-		$authored_list = nodeComplete_GetWhatIdHasAuthoredByParent($user_id, $parent_id);
-		if ( count($authored_list) > 0 ) [
+		$authored_ids = nodeComplete_GetWhatIdHasAuthoredByParent($user_id, $parent_id);
+		if ( !empty($authored_ids) ) {
+			$authored_list = nodeCache_GetById($authored_ids);
 			foreach ( $authored_list as $authored ) {
 				// Don't allow user to vote on a game they're the author of
 				if ( $authored['id'] == $node_id ) {
