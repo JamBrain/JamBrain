@@ -646,6 +646,11 @@ function CommentOnGame(&$user, $phase)
 // Find a game through one of the game lists, and vote on it. Or change the votes to something else.
 function VoteOnGame(&$user, $phase)
 {
+	if ( !$user["publishedgame"] ) {
+		Verbose("Not going to vote because game is unpublished.");
+		return false;
+	}
+
 	$games = GetVoteGames($user);
 	
 	$rate_count = random_int(5,10);

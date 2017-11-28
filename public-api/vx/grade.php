@@ -39,7 +39,7 @@ switch ( $action ) {
 		break; // case 'stats': //grade/stats
 		
 	case 'add': //grade/add/:node_id/:grade/:score
-	case 'remove': //grade/add/:node_id/:grade
+	case 'remove': //grade/remove/:node_id/:grade
 		json_ValidateHTTPMethod('GET');
 		
 		// Authenticate User		
@@ -77,6 +77,33 @@ switch ( $action ) {
 
 		if ( !isset($parent['meta']) || !isset($parent['meta']['can-grade']) )
 			json_EmitFatalError_BadRequest("Parent is not accepting grades", $RESPONSE);
+
+		// Determine the user's game in the referenced event.
+		$published_game = false;
+		$authored_list = nodeComplete_GetWhatIdHasAuthoredByParent($user_id, $parent_id);
+		if ( count($authored_list) > 0 ) [
+			foreach ( $authored_list as $authored ) {
+				// Don't allow user to vote on a game they're the author of
+				if ( $authored['id'] == $node_id ) {
+					json_EmitFatalError_BadRequest("Not allowed to vote on a game you authored", $RESPONSE);
+				}
+
+				// Check whether the user has a published game.
+				if ( $authored['published'] ) {
+					$published_game = true;
+				}
+			}
+		}
+
+		// Sanity check in case author tag is missing - Don't allow user to vote if they are the author of this node.
+		if ( $node['author'] == $user_id ) {
+			json_EmitFatalError_BadRequest("Not allowed to vote on a game you authored", $RESPONSE);
+		}
+
+		// Don't allow user to vote if their game is not published.
+		if ( !$published_game ) {
+			json_EmitFatalError_BadRequest("Not allowed to vote if you did not publish a game", $RESPONSE);
+		}
 
 		$grades = GetGrades($parent);
 		
