@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__."/core.php";
+require_once __DIR__."/../perfstats/perfstats.php";
 
 /// @defgroup JSON
 /// @brief JSON emitting module (typically for making APIs) 
@@ -215,6 +216,18 @@ function json_Emit( $out, $allow_jsonp = true ) {
 	// Prepend the status code //
 	$out = ['status' => http_response_code()]+$out;
 		
+		
+	// Compute / Update API stats //
+	global $json_starttime;
+	$json_endtime = microtime(true);
+	$totaltime = $json_endtime - $json_starttime;		
+	$apiname = "unknown";
+	if ( isset($GLOBALS["API_NAME"]) ) {
+		$apiname = $GLOBALS["API_NAME"];
+	}
+	perfstats_RecordApiPerformance($apiname, $totaltime, http_response_code());
+	
+		
 	// Debug Info //
 	if ( defined('SH_PHP_DEBUG') && isset($_GET['debug']) ) {
 		$out['debug'] = [];
@@ -248,10 +261,6 @@ function json_Emit( $out, $allow_jsonp = true ) {
 		if ( getenv('REDIRECT_QUERY_STRING') ) {
 			$out['debug']['redirect_query'] = getenv('REDIRECT_QUERY_STRING');
 		}
-		
-		global $json_starttime;
-		$json_endtime = microtime(true);
-		$totaltime = $json_endtime - $json_starttime;
 		
 		$out['debug']['request_time'] = $totaltime;
 		

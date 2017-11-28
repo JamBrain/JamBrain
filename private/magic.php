@@ -7,6 +7,7 @@ require_once __DIR__."/".SHRUB_PATH."/cron.php";
 require_once __DIR__."/".SHRUB_PATH."/node/node.php";
 require_once __DIR__."/".SHRUB_PATH."/note/note.php";
 require_once __DIR__."/".SHRUB_PATH."/grade/grade.php";
+require_once __DIR__."/".SHRUB_PATH."/perfstats/perfstats.php";
 
 // This is a CRON job that regularly updates magic
 const MAX_ITEMS_TO_ADD = 500;
@@ -51,6 +52,9 @@ function AddMagic( $name, $parent ) {
 		$db->commit();
 	}
 }
+
+// Store API performance statistics to DB if necessary (quick)
+perfstats_Cron();
 
 // Get the root node
 $root = nodeComplete_GetById(1);
@@ -237,7 +241,4 @@ if ( $featured_id ) {
 			$db->commit();
 		}
 	}
-	
-	// Invalidate cached object that selects random games based on smart ratings.
-	nodeRandomGames_InvalidateCache();
 }

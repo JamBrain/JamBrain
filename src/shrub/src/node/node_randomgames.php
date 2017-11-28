@@ -1,6 +1,6 @@
 <?php
 
-const SH_NODERG_CACHE_TTL = 3*60;
+const SH_NODERG_CACHE_TTL = 90;
 const SH_NODERG_CACHE_KEY = "!SH!NODE!RG";
 
 function nodeRandomGames_CurrentGamesList( ) {
@@ -107,10 +107,6 @@ function nodeRandomGames_CurrentGamesList( ) {
 		cache_Store(SH_NODERG_CACHE_KEY, $data, SH_NODERG_CACHE_TTL);
 	}
 	return $data;
-}
-
-function nodeRandomGames_InvalidateCache( ) {
-	cache_Delete(SH_NODERG_CACHE_KEY);
 }
 
 function nodeRandomGames_GetGames( $count, $removegames, $filter = null ) {
