@@ -251,12 +251,8 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 function nodeComplete_GetWhatIdHasAuthoredByParent( $id, $parent ) {
 	$node_ids = nodeComplete_GetAuthored($id);
 	if ( !empty($node_ids) ) {
-		$nodes = node_GetById($node_ids);			// OPTIMIZE: Use a cached function (we only need parent)
-		
-		global $RESPONSE;
-		$RESPONSE['_node_ids'] = $node_ids;
-		$RESPONSE['_nodes'] = $nodes;
-		
+		$nodes = nodeCache_GetById($node_ids);
+
 		$authored_ids = [];
 		foreach ( $nodes as &$node ) {
 			if ( $node['parent'] == $parent ) {
