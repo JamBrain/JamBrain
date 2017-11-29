@@ -1,0 +1,67 @@
+@import "defs.less";
+
+#content .content-headliner {
+	background: @COL_C;
+	color: @COL_L;
+
+	& > .-name {
+		background: @COL_L;
+		color: @COL_C;
+
+		&:hover {
+			background: @COL_A;
+			color: @COL_L;
+
+			&::after {
+				color: @COL_A;
+			}
+		}
+
+		float: left;
+		padding-left: 1rem;
+		margin-right: 1.5em;
+		line-height: 1.5em;
+		font-size: 1.5em;
+		font-weight: bold;
+
+		position: relative;
+
+		&::after {
+			position: absolute;
+			display: block;
+			content: '';
+			right: -1.5em;
+			top: 0;
+			border-top: 0.75em solid;
+			border-right: 0.75em solid transparent;
+			border-bottom: 0.75em solid transparent;
+			border-left: 0.75em solid;
+
+			color: @COL_L;
+		}
+	}
+
+	& > .-item {
+		padding: 0.125rem 1rem;
+
+		& > .-text {
+			font-size: 1.25em;
+		}
+
+		& > .-subtext {
+			font-size: 0.75em;
+		}
+
+		&:hover {
+			background: @COL_A;
+		}
+	}
+
+	& > .-more {
+		text-align: center;
+		font-size: 0.5em;
+		& > svg {
+			margin: 0.25em;
+		}
+	}
+}
