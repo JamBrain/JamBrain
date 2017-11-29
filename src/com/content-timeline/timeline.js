@@ -1,6 +1,7 @@
 import { h, Component } 				from 'preact/preact';
 //import NavSpinner						from 'com/nav-spinner/spinner';
 
+import ContentList						from 'com/content-list/list';
 import ContentPost						from 'com/content-post/post';
 import ContentUser						from 'com/content-user/user';
 import ContentMore						from 'com/content-more/more';
@@ -185,8 +186,9 @@ export default class ContentTimeline extends Component {
 		return null;
 	}
 
-	render( props, {feed, lastadded, error, loaded} ) {
-		var ShowFeed = [];
+	render( props, state ) {
+		let {feed, lastadded, error, loaded} = state;
+		let ShowFeed = [];
 
 		if ( error ) {
 			ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>error</ContentCommonBody></ContentCommon>);
@@ -194,23 +196,20 @@ export default class ContentTimeline extends Component {
 		else if ( feed && feed.length ) {
 			ShowFeed = ShowFeed.concat(feed.map(this.makeFeedItem));
 		}
-		else if ( feed && feed.length == 0 ){
-			if(!props.noemptymessage)
-			{
+		else if ( feed && (feed.length == 0) ){
+			if ( !props.noemptymessage ) {
 				ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>Feed is empty</ContentCommonBody></ContentCommon>);
 			}
 		}
 
-		if ( !props.nomore && lastadded > 0 ) {
+		if ( !props.nomore && (lastadded > 0) ) {
 			ShowFeed.push(<ContentMore loading={!loaded} onclick={this.fetchMore} />);
 		}
 
-		// TERRIBLE HACK! There are two #content's!!
 		return (
-			<div id="content">
-				{props.children}
+			<ContentList class="content-timeline">
 				{ShowFeed}
-			</div>
+			</ContentList>
 		);
 	}
 }

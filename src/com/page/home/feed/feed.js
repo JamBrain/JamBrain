@@ -1,15 +1,17 @@
-import {h, Component} from 'preact/preact';
+import {h, Component}					from 'preact/preact';
 
+import ContentList						from 'com/content-list/list';
 import ContentTimeline					from 'com/content-timeline/timeline';
 
-export default class HomeFeed extends Component {
-    render( props, state ) {
-        let {node, user, path, extra} = props;
+export default class PageHomeFeed extends Component {
+	render( props ) {
+		let {node, user, path, extra} = props;
 
-        return (
-            <ContentTimeline types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra}>
-                <ContentTimeline types={['post']} subtypes={['news']} methods={['all']} minimized nomore noemptymessage limit={1} node={node} user={user} path={path} extra={extra} />
-            </ContentTimeline>
-        );
-    }
+		return (
+			<ContentList class="page-home-feed">
+				<ContentTimeline types={['post']} subtypes={['news']} methods={['all']} minimized nomore noemptymessage limit={1} node={node} user={user} path={path} extra={extra} />
+				<ContentTimeline types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra} />
+			</ContentList>
+		);
+	}
 }

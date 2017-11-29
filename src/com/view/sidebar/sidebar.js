@@ -68,4 +68,4 @@ export default class ViewSidebar extends Component {
 			</div>
 		);
 	}
-};
+}
