@@ -1,5 +1,4 @@
-import { h, Component } 				from 'preact/preact';
-//import NavSpinner						from 'com/nav-spinner/spinner';
+import {h, Component} 					from 'preact/preact';
 
 import ContentList						from 'com/content-list/list';
 import ContentPost						from 'com/content-post/post';
@@ -16,11 +15,11 @@ export default class ContentTimeline extends Component {
 		super(props);
 
 		this.state = {
-			feed: [],
-			hash: {},
-			offset: 5, //10
-			lastadded: null,
-			loaded: false
+			'feed': [],
+			'hash': {},
+			'offset': 5, //10
+			'lastadded': null,
+			'loaded': false
 		};
 
 		this.makeFeedItem = this.makeFeedItem.bind(this);
@@ -89,7 +88,7 @@ export default class ContentTimeline extends Component {
 					this.setState({'feed': feed, 'hash': hash});
 				})
 				.catch(err => {
-					this.setState({ 'error': err });
+					this.setState({'error': err});
 				});
 		}
 
@@ -108,7 +107,7 @@ export default class ContentTimeline extends Component {
 			}
 		})
 		.catch(err => {
-			this.setState({ 'error': err });
+			this.setState({'error': err});
 		});
 	}
 
@@ -180,7 +179,7 @@ export default class ContentTimeline extends Component {
 				return <ContentUser node={node} user={user} path={path} extra={extra} minmax />;
 			}
 			else {
-				return <div class='content-base'>Unsupported Node Type: {""+node.type}</div>;
+				return <div class="content-base">Unsupported Node Type: {""+node.type}</div>;
 			}
 		}
 		return null;
@@ -196,7 +195,7 @@ export default class ContentTimeline extends Component {
 		else if ( feed && feed.length ) {
 			ShowFeed = ShowFeed.concat(feed.map(this.makeFeedItem));
 		}
-		else if ( feed && (feed.length == 0) ){
+		else if ( feed && (feed.length == 0) ) {
 			if ( !props.noemptymessage ) {
 				ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>Feed is empty</ContentCommonBody></ContentCommon>);
 			}
@@ -207,7 +206,7 @@ export default class ContentTimeline extends Component {
 		}
 
 		return (
-			<ContentList class="content-timeline">
+			<ContentList class={cN("content-timeline", props.class)}>
 				{ShowFeed}
 			</ContentList>
 		);

@@ -8,34 +8,36 @@ import ContentTimeline					from 'com/content-timeline/timeline';
 import ContentNavRoot					from 'com/content-nav/nav-root';
 import ContentError						from 'com/content-error/error';
 
-import HomeFeed							from './feed/feed';
-import HomeHome							from './home/home';
-import HomeNews							from './news/news';
-import HomeGames						from './games/games';
+import PageHomeFeed						from './feed/feed';
+import PageHomeHome						from './home/home';
+import PageHomeNews						from './news/news';
+import PageHomeGames					from './games/games';
 
 export default class PageHome extends Component {
-    constructor( props ) {
-        super(props);
-    }
+	constructor( props ) {
+		super(props);
+	}
 
-    render( props ) {
-        let {node, user, path, extra} = props;
-        let loggedIn = user && (user.id !== 0);
+	render( props ) {
+		let {node, user, path, extra} = props;
+		//let loggedIn = user && (user.id !== 0);
 
-        return (
-            <ContentList class="page-home">
-                <ContentNavRoot node={node} user={user} path={path} extra={extra} />
-                <Router node={node} props={props}>
-                    <Route default={!loggedIn} static path="/feed" component={HomeFeed}/>
-                    <Route default={loggedIn} static path="/home" component={HomeHome}/>
-                    <Route static path="/news" component={HomeNews} />
-                    <Route static path="/games/:filter?/:subfilter?/:target?" component={HomeGames} />
-                    {/* <Route static path="/hot" component={HomeHot} /> */}
+		return (
+			<ContentList class="page-home">
+				<ContentNavRoot node={node} user={user} path={path} extra={extra} />
+				<Router node={node} props={props}>
+					<Route default={true} static path="/home" component={PageHomeHome} />
+					<Route static path="/feed" component={PageHomeFeed} />
+					<Route static path="/news" component={PageHomeNews} />
+					<Route static path="/games/:filter?/:subfilter?/:target?" component={PageHomeGames} />
+					{/* <Route static path="/hot" component={PageHomeHot} /> */}
 
-                    {/* <Route static path="/palette" component={HomePalette} /> */}
-                    <Route type="error" component={ContentError} />
-                </Router>
-            </ContentList>
-        );
-    }
+					<Route type="error" component={ContentError} />
+				</Router>
+			</ContentList>
+		);
+	}
+
+//					<Route default={loggedIn} static path="/home" component={PageHomeHome} />
+//					<Route default={!loggedIn} static path="/feed" component={PageHomeFeed} />
 }

@@ -6,7 +6,7 @@ export default class PageHomeNews extends Component {
         let {node, user, path, extra} = props;
 
         return (
-            <ContentTimeline types={['post']} subtypes={['news']} methods={['all']} node={node} user={user} path={path} extra={extra} />
+            <ContentTimeline class="content-timeline-news" types={['post']} subtypes={['news']} methods={['all']} node={node} user={user} path={path} extra={extra} />
         );
     }
 }

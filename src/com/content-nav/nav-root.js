@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component}	 				from 'preact/preact';
 import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
 
@@ -14,7 +14,9 @@ export default class ContentNavRoot extends Component {
 	}
 
 
-	render( {node, user, path, extra}, {} ) {
+	render( props ) {
+		let {node, user, path, extra} = props;
+
 //		let ThemeMode = (node.meta['theme-mode']) ? parseInt(node.meta['theme-mode']) : 0;
 
 //		var ThemeSelectionDiv = ThemeModeText ? <NavLink href={path+'/theme'} class="-item"><SVGIcon>mallet</SVGIcon> {ThemeModeText}</NavLink> : "";
@@ -27,34 +29,36 @@ export default class ContentNavRoot extends Component {
 		var NewPath = '/'+ (extra ? extra.join('/') : '');
 		var PartPath = '/'+ (extra && extra.length ? extra[0] : '');
 
-		var ShowMyFeed = null;
-		if ( user && user.id ) {
-			if ( NewPath == '/' )
-				NewPath = '/home';
-			ShowMyFeed = <ContentNavButton path={PartPath} icon='home' href='/'></ContentNavButton>;
-		}
-		// Default to normal /feed if not logged in
-		else {
-			if ( NewPath == '/' )
-				NewPath = '/feed';
-//			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href='/feed'>Feed</ContentNavButton>;
-		}
+//		var ShowMyFeed = null;
+//		if ( user && user.id ) {
+
+		if ( NewPath == '/' )
+			NewPath = '/home';
+//		ShowMyFeed = <ContentNavButton path={PartPath} icon='home' href='/'></ContentNavButton>;
+
+//		}
+//		// Default to normal /feed if not logged in
+//		else {
+//			if ( NewPath == '/' )
+//				NewPath = '/feed';
+////			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href='/feed'>Feed</ContentNavButton>;
+//		}
 
 		// TODO: Check if Jammer.vg vs ludumdare. Use different path on each
 		let ShowEvents = null;
 		if ( true ) {
-			ShowEvents = <ContentNavButton path={PartPath} icon='trophy' href='/events/ludum-dare'>Events</ContentNavButton>;
+			ShowEvents = <ContentNavButton path={PartPath} icon="trophy" href="/events/ludum-dare">Events</ContentNavButton>;
 		}
 		else {
-			ShowEvents = <ContentNavButton path={PartPath} icon='trophy' href='/events'>Events</ContentNavButton>;
+			ShowEvents = <ContentNavButton path={PartPath} icon="trophy" href="/events">Events</ContentNavButton>;
 		}
 
 		return (
 			<div class="content-base content-nav content-nav-root">
-				{ShowMyFeed}
-				<ContentNavButton path={NewPath} icon='feed' href='/feed'>Feed</ContentNavButton>
-				<ContentNavButton path={NewPath} icon='news' href='/news'>News</ContentNavButton>
-				<ContentNavButton path={PartPath} icon='gamepad' href='/games'>Games</ContentNavButton>
+				<ContentNavButton path={PartPath} icon="home" href="/"></ContentNavButton>
+				<ContentNavButton path={NewPath} icon="news" href="/news">News</ContentNavButton>
+				<ContentNavButton path={NewPath} icon="feed" href="/feed">Feed</ContentNavButton>
+				<ContentNavButton path={PartPath} icon="gamepad" href="/games">Games</ContentNavButton>
 				{ShowEvents}
 			</div>
 		);
