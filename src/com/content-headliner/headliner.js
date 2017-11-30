@@ -67,6 +67,10 @@ export default class ContentHeadliner extends Component {
 			let ret = [];
 
 			// TODO: optionally include [NEW] label if <24 hours old
+			if ( pub_diff < 24*60*60*1000 ) {
+				ret.push(<span class="-label -inv">NEW</span>);
+				ret.push(' ');
+			}
 
 			ret.push(<span>{label}</span>);
 			ret.push(' ');
