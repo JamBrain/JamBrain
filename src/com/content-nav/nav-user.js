@@ -18,13 +18,14 @@ export default class ContentNavUser extends Component {
 
 		var ShowMyFeed = null;
 		if ( NewPath === '/' ) {
-			// Default to games, articles, or feed if no games/articles are available
-			if ( node['games'] > 0 )
-				NewPath = '/games';
-			else if ( node['articles'] > 0 )
-				NewPath = '/articles';
-			else
-				NewPath = '/feed';
+			NewPath = '/home';
+//			// Default to games, articles, or feed if no games/articles are available
+//			if ( node['games'] > 0 )
+//				NewPath = '/games';
+//			else if ( node['articles'] > 0 )
+//				NewPath = '/articles';
+//			else
+//				NewPath = '/feed';
 		}
 		// Prefix with path
 		NewPath = path + NewPath;
@@ -52,12 +53,16 @@ export default class ContentNavUser extends Component {
 //			ShowFollowers = <ContentNavButton path={NewPath} icon='users' href={path+'/followers'}>Followers</ContentNavButton>;
 //		}
 
+		var ShowStats = <ContentNavButton path={NewPath} icon="stats" href={path+'/stats'}>Stats</ContentNavButton>;
+
 		return (
 			<div class="content-base content-nav content-nav-user">
 				<ContentNavButton path={PartPath} icon="previous" href="/" />
+				<ContentNavButton path={PartPath} icon="user" href={path+'/'}>User</ContentNavButton>
                 {ShowGames}
 				{ShowArticles}
 				{ShowFeed}
+				{ShowStats}
 				{ShowFollowing}
 				{ShowFollowers}
 			</div>

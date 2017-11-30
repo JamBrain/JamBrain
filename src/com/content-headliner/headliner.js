@@ -17,7 +17,7 @@ export default class ContentHeadliner extends Component {
 			let Subtext = [];
 
 			if ( props.published ) {
-				Subtext.push(this.getWhen(node, 'published'));
+				Subtext.push(this.getWhen(node, (typeof props.published == 'string') ? props.published : 'published'));
 			}
 
 			if ( props.love ) {
@@ -55,7 +55,7 @@ export default class ContentHeadliner extends Component {
 		}
 	}
 
-	getWhen( node, label ) {
+	getWhen( node, label, newage ) {
 		if ( node.published ) {
 			let date_pub = new Date(node.published);
 			if ( node.meta['origin-date'] ) {
@@ -67,7 +67,7 @@ export default class ContentHeadliner extends Component {
 			let ret = [];
 
 			// TODO: optionally include [NEW] label if <24 hours old
-			if ( pub_diff < 24*60*60*1000 ) {
+			if ( pub_diff < (newage ? parseInt(newage) : (24*60*60*1000)) ) {
 				ret.push(<span class="-label -inv">NEW</span>);
 				ret.push(' ');
 			}
@@ -106,9 +106,9 @@ export default class ContentHeadliner extends Component {
 
 		let ShowName = null;
 		if ( props.href )
-			ShowName = <ButtonLink class="-name" href={props.href}>{Name}</ButtonLink>;
+			ShowName = <ButtonLink class="-name -inv" href={props.href}>{Name}</ButtonLink>;
 		else
-			ShowName = <div class="-name">{Name}</div>;
+			ShowName = <div class="-name -inv">{Name}</div>;
 
 		if ( node ) {
 			return (

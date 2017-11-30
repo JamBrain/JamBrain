@@ -10,7 +10,7 @@ export default class PageHomeHome extends Component {
 
 		return (
 			<ContentList class="page-home-home">
-				<ContentHeadlinerFeed node={node} types={['post']} subtypes={['news']} methods={['all']} limit={1} name="news" icon="news" published love comments more="/news" />
+				<ContentHeadlinerFeed node={node} types={['post']} subtypes={['news']} methods={['all']} limit={1} name="news" icon="news" class="-col-c" published love comments more="/news" />
 				<ContentTimeline class="content-timeline-posts" types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra} />
 			</ContentList>
 		);
