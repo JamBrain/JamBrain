@@ -53,19 +53,14 @@ export default class ContentEvent extends Component {
 	}
 
 	render( props, state ) {
+		let {node, user, path, extra, featured} = props;
 		props = Object.assign({}, props);
-
-		var node = props.node;
-		var user = props.user;
-		var path = props.path;
-		var extra = props.extra;
-
-		var featured = props.featured;
 
 		if ( node ) {
 			props.header = "EVENT";
+			props.headerIcon = "trophy";
 			props.headerClass = "-col-ab";
-			props.titleIcon = "trophy";
+//			props.titleIcon = "trophy";
 		}
 
 		var ShowHome = null;
