@@ -31,6 +31,7 @@ export default class ContentUser extends Component {
 		}
 
 		props.header = "USER";
+		props.headerIcon = "user";
 		props.headerClass = "-col-ab";
 
 		props.subtitle = '@'+node.slug;
