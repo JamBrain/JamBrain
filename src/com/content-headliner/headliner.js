@@ -52,9 +52,20 @@ export default class ContentHeadliner extends Component {
 				);
 			}
 
+			let ShowSubTitle = null;
+			if ( props.at ) {
+				ShowSubTitle = [
+					' ',
+					<span class="-subtitle -at">(@{node.slug})</span>
+				];
+			}
+
 			return (
 				<ButtonLink class="-item" href={node.path}>
-					<div class="-text _font2">{node.name}</div>
+					<div class="-text _font2">
+						<span class="-title">{node.name}</span>
+						{ShowSubTitle}
+					</div>
 					<div class="-subtext">{Subtext}</div>
 				</ButtonLink>
 			);

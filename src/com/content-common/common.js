@@ -66,7 +66,7 @@ export default class ContentCommon extends Component {
 				let HeaderClass = cN('content-common-header', props.headerClass ? props.headerClass : '');
 
 				if ( props.headerIcon )
-					HasHeader = <div class={HeaderClass}><SVGIcon small>{props.headerIcon}</SVGIcon> <span>{props.header}</span></div>;
+					HasHeader = <div class={HeaderClass}><SVGIcon>{props.headerIcon}</SVGIcon> <span>{props.header}</span></div>;
 				else
 					HasHeader = <div class={HeaderClass}><span>{props.header}</span></div>;
 			}
