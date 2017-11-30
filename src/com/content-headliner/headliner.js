@@ -57,19 +57,23 @@ export default class ContentHeadliner extends Component {
 
 	getWhen( node, label ) {
 		if ( node.published ) {
-			var date_pub = new Date(node.published);
+			let date_pub = new Date(node.published);
 			if ( node.meta['origin-date'] ) {
 				date_pub = new Date(node.meta['origin-date']);
 			}
-			var date_now = new Date();
-			var pub_diff = (date_now.getTime() - date_pub.getTime());// - (date_now.getTimezoneOffset()*60);
+			let date_now = new Date();
+			let pub_diff = (date_now.getTime() - date_pub.getTime());// - (date_now.getTimezoneOffset()*60);
+
+			let ret = [];
+
+			// TODO: optionally include [NEW] label if <24 hours old
+
+			ret.push(<span>{label}</span>);
+			ret.push(' ');
+			ret.push(<span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span>);
 
 			// x minutes ago
-			return [
-				<span>{label}</span>,
-				' ',
-				<span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span>
-			];
+			return ret;
 		}
 		else {
 			return <span>not {label} yet</span>;

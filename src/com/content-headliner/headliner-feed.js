@@ -48,6 +48,7 @@ export default class ContentHeadlinerFeed extends Component {
 
 	render( props, state ) {
 		if ( state.nodes ) {
+			// TODO: Nodes should be ordered by feed
 			return <ContentHeadliner {...props} node={state.nodes} />;
 		}
 
