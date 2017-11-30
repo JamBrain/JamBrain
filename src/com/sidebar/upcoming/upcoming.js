@@ -1,13 +1,13 @@
-import { h, Component } from 'preact/preact';
-import SVGIcon 			from 'com/svg-icon/icon';
-import ButtonLink		from 'com/button-link/link';
+import {h, Component}					from 'preact/preact';
+import SVGIcon							from 'com/svg-icon/icon';
+import ButtonLink						from 'com/button-link/link';
 
 export default class SidebarUpcoming extends Component {
 	constructor( props ) {
 		super(props);
 	}
 
-	render( {}, {} ) {
+	render( props ) {
 		var Items = [
 //			<div class="-item"><strong>Mar 24th</strong> - Theme Suggestions Open <SVGIcon baseline small>suggestion</SVGIcon></div>,
 //			<div class="-item"><strong>Apr 7th</strong> - Theme Selection Starts <SVGIcon baseline small>mallet</SVGIcon></div>,

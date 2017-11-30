@@ -1,107 +1,118 @@
-import {h, Component} from 'preact/preact';
+import {h, Component}					from 'preact/preact';
 
+import ContentList						from 'com/content-list/list';
 import ContentGames						from 'com/content-games/games';
-import GamesFilter from 'com/content-games/filter';
+import GamesFilter						from 'com/content-games/filter';
 
-export default class HomeGames extends Component {
-    render( props, state ) {
-        let {node, user, path, extra, featured} = props;
+export default class PageHomeGames extends Component {
+	constructor( props ) {
+		super(props);
 
-        const GamesFeedFilter = this.state.gamesFilter;
+		this.state = {
+			'gamesFilter': null,
+		};
+	}
 
-        let DefaultSubSubFilter = (featured && (featured.meta['theme-mode'] > 5)) ? 'featured' : 'all';
-        let DefaultSubFilter = 'all';
-        let DefaultFilter = 'danger';//'smart';
+	render( props, state ) {
+		let {node, user, path, extra, featured} = props;
 
-        function EvalFilter(str) {
-            let MappingTable = {
-                'all': 'compo+jam+craft+release',
-                'classic': 'cool',
-            };
+		const GamesFeedFilter = state.gamesFilter;
 
-            if ( MappingTable[str] )
-                return MappingTable[str];
-            return str;
-        }
+		let DefaultSubSubFilter = (featured && (featured.meta['theme-mode'] > 5)) ? 'featured' : 'all';
+		let DefaultSubFilter = 'all';
+		let DefaultFilter = 'danger';//'smart';
 
-        let Methods = [];
-        let Filter = DefaultFilter;
-        let SubFilter = DefaultSubFilter;
-        let SubSubFilter = DefaultSubSubFilter;
+		function EvalFilter(str) {
+			let MappingTable = {
+				'all': 'compo+jam+craft+release',
+				'classic': 'cool',
+			};
 
-        if ( extra.length > 3 )
-            SubSubFilter = extra[3];
-        if ( extra.length > 2 )
-            SubFilter = extra[2];
-        if ( extra.length > 1 )
-            Filter = extra[1];
+			if ( MappingTable[str] )
+				return MappingTable[str];
+			return str;
+		}
 
-        // Determine Filter
-        if ( Filter.indexOf('-') == -1 ) {		// should be '+'
-            switch ( Filter ) {
-                case 'smart':
-                case 'classic':
-                case 'cool':
-                case 'danger':
-                case 'grade':
-                case 'feedback':
-                    Methods = [EvalFilter(Filter)];
-                    break;
+		let Methods = [];
+		let Filter = DefaultFilter;
+		let SubFilter = DefaultSubFilter;
+		let SubSubFilter = DefaultSubSubFilter;
 
-                case 'zero':
-                    Methods = ['grade', 'reverse'];
-                    break;
+		if ( extra.length > 3 )
+			SubSubFilter = extra[3];
+		if ( extra.length > 2 )
+			SubFilter = extra[2];
+		if ( extra.length > 1 )
+			Filter = extra[1];
 
-                case 'jam':
-                case 'compo':
-                case 'craft':
-                case 'late':
-                case 'release':
-                case 'unfinished':
-                    SubFilter = Filter;
-                    Methods = [EvalFilter(DefaultFilter)];
-                    break;
+		// Determine Filter
+		if ( Filter.indexOf('-') == -1 ) {		// should be '+'
+			switch ( Filter ) {
+				case 'smart':
+				case 'classic':
+				case 'cool':
+				case 'danger':
+				case 'grade':
+				case 'feedback':
+					Methods = [EvalFilter(Filter)];
+					break;
 
-                default:
-                    Methods = ['null'];
-                    break;
-            }
-        }
-        else {
-            // If '+' was found, assume it's a multi-part subfilter and not a filter
-            SubFilter = Filter.split('-');		// should be '+'
-            Methods = [EvalFilter(DefaultFilter)];
-        }
+				case 'zero':
+					Methods = ['grade', 'reverse'];
+					break;
 
-        let ShowFilters = null;
-        if ( true ) {
-            ShowFilters = <GamesFilter
-                Filter={Filter}
-                SubFilter={SubFilter}
-                SubSubFilter={SubSubFilter}
-                Path={this.props.path+'/games/'}
-                node={node}
-                onchangefilter={(filter)=>{this.setState({'gamesFilter': filter});}}
-                showFeatured={true}
-                showEvent={true}
-                showRatingSort={true}
-                showRatingSort={true}
-            />;
-        }
+				case 'jam':
+				case 'compo':
+				case 'craft':
+				case 'late':
+				case 'release':
+				case 'unfinished':
+					SubFilter = Filter;
+					Methods = [EvalFilter(DefaultFilter)];
+					break;
 
-        let NodeArg = node;
-        if ( SubSubFilter == 'featured' ) {
-            Methods.push('parent');
-            NodeArg = featured;
-        }
+				default:
+					Methods = ['null'];
+					break;
+			}
+		}
+		else {
+			// If '+' was found, assume it's a multi-part subfilter and not a filter
+			SubFilter = Filter.split('-');		// should be '+'
+			Methods = [EvalFilter(DefaultFilter)];
+		}
 
-        SubFilter = EvalFilter(SubFilter);
+		let ShowFilters = null;
+		if ( true ) {
+			ShowFilters = <GamesFilter
+				Filter={Filter}
+				SubFilter={SubFilter}
+				SubSubFilter={SubSubFilter}
+				Path={this.props.path+'/games/'}
+				node={node}
+				onchangefilter={(filter)=>{
+					this.setState({'gamesFilter': filter});
+				}}
+				showFeatured={true}
+				showEvent={true}
+				showRatingSort={true}
+				showRatingSort={true}
+			/>;
+		}
 
-        return (
-            <div id="content">
-                {ShowFilters}
-                <ContentGames node={NodeArg} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} filter={GamesFeedFilter}/>
-            </div>
-        );
-    }
+		let NodeArg = node;
+		if ( SubSubFilter == 'featured' ) {
+			Methods.push('parent');
+			NodeArg = featured;
+		}
+
+		SubFilter = EvalFilter(SubFilter);
+
+		return (
+			<ContentList class="page-home-games">
+				{ShowFilters}
+				<ContentGames node={NodeArg} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} filter={GamesFeedFilter}/>
+			</ContentList>
+		);
+	}
 }
