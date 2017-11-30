@@ -1,18 +1,79 @@
 @import "defs.less";
 
 #content .content-headliner {
-	background: @COL_C;
+	/* Default Palette */
+	background: @COL_NDDD;
 	color: @COL_L;
 
 	& .-inv {
 		background: @COL_L;
-		color: @COL_C;
+		color: @COL_NDDD;
 	}
 
-	& > .-name {
-		background: @COL_L;
-		color: @COL_C;
+	/* Specific Palettes */
+	&.-col-a {
+		background: @COL_A;
+		color: @COL_L;
 
+		& .-inv {
+			background: @COL_L;
+			color: @COL_A;
+		}
+	}
+
+	&.-col-ab {
+		background: @COL_AB;
+		color: @COL_L;
+
+		& .-inv {
+			background: @COL_L;
+			color: @COL_AB;
+		}
+	}
+
+	&.-col-b {
+		background: @COL_B;
+		color: @COL_L;
+
+		& .-inv {
+			background: @COL_L;
+			color: @COL_B;
+		}
+	}
+
+	&.-col-bc {
+		background: @COL_BC;
+		color: @COL_L;
+
+		& .-inv {
+			background: @COL_L;
+			color: @COL_BC;
+		}
+	}
+
+	&.-col-c {
+		background: @COL_C;
+		color: @COL_L;
+
+		& .-inv {
+			background: @COL_L;
+			color: @COL_C;
+		}
+	}
+
+	&.-col-ca {
+		background: @COL_CA;
+		color: @COL_L;
+
+		& .-inv {
+			background: @COL_L;
+			color: @COL_CA;
+		}
+	}
+
+
+	/* Styles */
+	& > .-name {
 		&.button-base:hover {
 			background: @COL_A;
 			color: @COL_L;
