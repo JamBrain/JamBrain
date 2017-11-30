@@ -4,6 +4,11 @@
 	background: @COL_C;
 	color: @COL_L;
 
+	& .-inv {
+		background: @COL_L;
+		color: @COL_C;
+	}
+
 	& > .-name {
 		background: @COL_L;
 		color: @COL_C;
@@ -68,10 +73,20 @@
 			& > svg {
 				padding-left: 2em;
 			}
+
+			& > .-label {
+				font-size: 0.75em;
+				padding: 0.1em 0.3em;
+				border-radius: 0.3em;
+			}
 		}
 
 		&.button-base:hover {
 			background: @COL_A;
+
+			& .-inv {
+				color: @COL_A;
+			}
 		}
 	}
 

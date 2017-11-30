@@ -144,6 +144,8 @@ function _Keyed( promise, member = 'node', key = 'id' ) {
 
 // Like Get, but nodes will be an object of keys rather than an array of objects
 export function GetKeyed( ids ) {
+	// TODO: decode feed format
+
 	return Get(ids).then( r => {
 		var node = r.node;
 		r.node = {};
