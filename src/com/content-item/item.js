@@ -346,27 +346,22 @@ export default class ContentItem extends Component {
 	}
 
 	render( props, state ) {
+		let {node, user, path, extra, featured} = props;
+		let {parent} = state;
 		props = Object.assign({}, props);
 
-		var node = props.node;
-		var user = props.user;
-		var path = props.path;
-		var extra = props.extra;
-		var featured = props.featured;
-		var parent = state.parent;
-
-		var Category = '/';
+		let Category = '/';
 
 		if ( node ) {
 			if ( node.subtype == 'game' ) {
 				props.header = "GAME";
 				props.headerClass = "-col-a";
-				props.titleIcon = "gamepad";
+				props.headerIcon = "gamepad";
 			}
 			else if ( node.subtype == 'tool' ) {
 				props.header = "TOOL";
 				props.headerClass = "-col-c";
-				props.titleIcon = "hammer";
+				props.headerIcon = "hammer";
 			}
 
 			if ( node.subsubtype == 'jam' ) {
@@ -397,7 +392,7 @@ export default class ContentItem extends Component {
 			props.draft = "Game";
 		}
 
-		var ShowEventPicker = null;
+		let ShowEventPicker = null;
 		if ( extra && extra.length && extra[0] == 'edit' && node_CanPublish(parent) ) {
 			ShowEventPicker = (
 				<ContentCommonNav>
@@ -413,7 +408,7 @@ export default class ContentItem extends Component {
 			);
 		}
 
-		var ShowMetrics = null;
+		let ShowMetrics = null;
 		if ( node.magic ) {
 			let Lines = [];
 			for ( var key in node.magic ) {
@@ -491,7 +486,7 @@ export default class ContentItem extends Component {
 			);
 		}
 
-		var ShowGrade = null;
+		let ShowGrade = null;
 		// Show Grading or Results
 		if ( parseInt(node_CanGrade(parent)) ) {
 			// If it's your game, show some stats
@@ -653,7 +648,7 @@ export default class ContentItem extends Component {
 			); //'
 		}
 
-		var ShowOptOut = null;
+		let ShowOptOut = null;
 		if ( parent && node_CanPublish(parent) ) {
 			let Lines = [];
 
@@ -701,7 +696,7 @@ export default class ContentItem extends Component {
 			);
 		}
 
-		var ShowImages = null;
+		let ShowImages = null;
 		if ( true ) {
 			let ShowImage = null;
 			if ( node.meta && node.meta.cover ) {
@@ -726,7 +721,7 @@ export default class ContentItem extends Component {
 		}
 
 		// Where you can enter your game links
-		var ShowLinkEntry = null;
+		let ShowLinkEntry = null;
 		if ( true ) {
 			ShowLinkEntry = this.makeLinks(true /* editing */);
 		}
@@ -745,7 +740,7 @@ export default class ContentItem extends Component {
 
 		}
 
-		var ShowUploadTips = null;
+		let ShowUploadTips = null;
 		if ( true ) {
 			ShowUploadTips = (
 				<ContentCommonBody>
@@ -758,12 +753,12 @@ export default class ContentItem extends Component {
 			);
 		}
 
-		var ShowLinkView = null;
+		let ShowLinkView = null;
 		if ( true ) {
 			ShowLinkView = this.makeLinks(false /* editing */);
 		}
 
-		var ShowUnfinished = null;
+		let ShowUnfinished = null;
 		if ( true ) {
 			ShowUnfinished = (
 				<ContentCommonBody>
@@ -800,8 +795,8 @@ export default class ContentItem extends Component {
 
 		// Shim to update the save button from this method. See https://facebook.github.io/react/docs/refs-and-the-dom.html
 		props.ref = c => {
- this.contentSimple = c;
-};
+			this.contentSimple = c;
+		};
 
 		return <ContentSimple {...props} by authors />;
 	}

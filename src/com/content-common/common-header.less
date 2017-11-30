@@ -8,6 +8,89 @@
 
 	background: @DARK;
 	color: @BG;
+
+	font-size: 2em;
+/*	line-height: 1.35em;*/
+	line-height: 2em;
+	height: 1.5em;
+	font-weight: bold;
+	font-style: italic;
+
+	padding-left: 1rem;
+	margin-right: 1.5em;
+
+	float: left;
+
+	& > svg {
+		font-size: 1em; /*0.75em;*/
+	}
+
+	&::after {
+		position: absolute;
+		display: block;
+		content: '';
+		right: -1.5em;
+		top: 0;
+		border-top: 0.75em solid;
+		border-right: 0.75em solid transparent;
+		border-bottom: 0.75em solid transparent;
+		border-left: 0.75em solid;
+
+		color: @DARK;
+	}
+
+	& > span {
+		vertical-align: middle;
+	}
+
+	&.-col-a {
+		background: @COL_A;
+		&::after {
+			color: @COL_A;
+		}
+	}
+
+	&.-col-ab {
+		background: @COL_AB;
+		&::after {
+			color: @COL_AB;
+		}
+	}
+
+	&.-col-b {
+		background: @COL_B;
+		&::after {
+			color: @COL_B;
+		}
+	}
+
+	&.-col-bc {
+		background: @COL_BC;
+		&::after {
+			color: @COL_BC;
+		}
+	}
+
+	&.-col-c {
+		background: @COL_C;
+		&::after {
+			color: @COL_C;
+		}
+	}
+
+	&.-col-ca {
+		background: @COL_CA;
+		&::after {
+			color: @COL_CA;
+		}
+	}
+}
+
+#content .content-common-old-header {
+	position: relative;
+
+	background: @DARK;
+	color: @BG;
 	height: 0.9em;
 	font-size: 2em;
 	font-weight: bold;

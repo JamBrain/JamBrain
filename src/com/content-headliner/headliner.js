@@ -21,20 +21,51 @@ export default class ContentHeadliner extends Component {
 			}
 
 			if ( props.love ) {
-				Subtext.push(<SVGIcon small>heart</SVGIcon>);
-				Subtext.push(' ');
-				Subtext.push(<span>{node.love}</span>);
+				Subtext.push(
+					<span title="Love">
+						<SVGIcon small>heart</SVGIcon> <span>{node.love}</span>
+					</span>
+				);
 			}
 
 			if ( props.comments ) {
-				Subtext.push(<SVGIcon small>bubble</SVGIcon>);
-				Subtext.push(' ');
-				Subtext.push(<span>{node.notes}</span>);
+				Subtext.push(
+					<span title="Comments">
+						<SVGIcon small>bubble</SVGIcon> <span>{node.notes}</span>
+					</span>
+				);
+			}
+
+			if ( props.games && node.games ) {
+				Subtext.push(
+					<span title="Games">
+						<SVGIcon small>gamepad</SVGIcon> <span>{node.games}</span>
+					</span>
+				);
+			}
+
+			if ( props.articles && node.articles ) {
+				Subtext.push(
+					<span title="Articles">
+						<SVGIcon small>article</SVGIcon> <span>{node.articles}</span>
+					</span>
+				);
+			}
+
+			let ShowSubTitle = null;
+			if ( props.at ) {
+				ShowSubTitle = [
+					' ',
+					<span class="-subtitle -at">(@{node.slug})</span>
+				];
 			}
 
 			return (
 				<ButtonLink class="-item" href={node.path}>
-					<div class="-text _font2">{node.name}</div>
+					<div class="-text _font2">
+						<span class="-title">{node.name}</span>
+						{ShowSubTitle}
+					</div>
 					<div class="-subtext">{Subtext}</div>
 				</ButtonLink>
 			);
@@ -77,7 +108,7 @@ export default class ContentHeadliner extends Component {
 			ret.push(<span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span>);
 
 			// x minutes ago
-			return ret;
+			return <span>{ret}</span>;
 		}
 		else {
 			return <span>not {label} yet</span>;

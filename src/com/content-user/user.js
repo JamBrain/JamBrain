@@ -31,7 +31,8 @@ export default class ContentUser extends Component {
 		}
 
 		props.header = "USER";
-		props.headerClass = "-col-ab";
+		props.headerIcon = "user";
+		props.headerClass = "-col-bc";
 
 		props.subtitle = '@'+node.slug;
 		props.notitleedit = true;
@@ -63,7 +64,7 @@ export default class ContentUser extends Component {
 			);
 		}
 		return (
-			<ContentHeadliner node={node} name="user" icon="user" published="joined" class="-col-ab" />
+			<ContentHeadliner node={node} name="user" icon="user" class="-col-bc" published="Joined" at games articles trophies />
 		);
 	}
 }
