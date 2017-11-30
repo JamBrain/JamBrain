@@ -97,11 +97,12 @@ export default class ContentHeadliner extends Component {
 		}
 
 		let Name = [];
+		let NameClass = cN('-text', props.icon ? 'if-sidebar-inline' : '');
 		if ( props.icon ) {
 			Name.push(<SVGIcon>{props.icon}</SVGIcon>);
 			Name.push(' ');
 		}
-		Name.push(<span class="-text">{props.name.toUpperCase()}</span>);
+		Name.push(<span class={NameClass}>{props.name.toUpperCase()}</span>);
 
 		let ShowName = null;
 		if ( props.href )
