@@ -8,7 +8,7 @@
 		background: @COL_L;
 		color: @COL_C;
 
-		&:hover {
+		&.button-base:hover {
 			background: @COL_A;
 			color: @COL_L;
 
@@ -20,11 +20,21 @@
 		float: left;
 		padding-left: 1rem;
 		margin-right: 1.5em;
-		line-height: 1.5em;
+		line-height: 1.45em;	/* hack for better alignment (should be 1.5) */
+		height: 1.5em;			/* Need this, otherwise vertical-align: middle makes line height report wrong height */
 		font-size: 1.5em;
 		font-weight: bold;
+		font-style: italic;
 
 		position: relative;
+
+		& > .-text {
+			vertical-align: middle;
+		}
+
+		& > svg {
+			font-size: 0.65em;
+		}
 
 		&::after {
 			position: absolute;
@@ -50,9 +60,17 @@
 
 		& > .-subtext {
 			font-size: 0.75em;
+
+			& > span {
+				vertical-align: middle;
+			}
+
+			& > svg {
+				padding-left: 2em;
+			}
 		}
 
-		&:hover {
+		&.button-base:hover {
 			background: @COL_A;
 		}
 	}
@@ -60,6 +78,7 @@
 	& > .-more {
 		text-align: center;
 		font-size: 0.5em;
+
 		& > svg {
 			margin: 0.25em;
 		}

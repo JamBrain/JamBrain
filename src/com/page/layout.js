@@ -12,7 +12,7 @@ export default class Layout extends Component {
 		let {user, featured, node} = props;
 
 		let ShowSidebar = (!props.noSidebar ? <ViewSidebar user={user} featured={featured} /> : null);
-		let loading = (!node || node.id == 0);
+		let loading = !node || (node.id == 0);
 
 		return (
 			<div id="layout">
