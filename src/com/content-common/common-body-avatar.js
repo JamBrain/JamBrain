@@ -1,12 +1,13 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact/preact';
 import Shallow			 				from 'shallow/shallow';
 
 import NavLink							from 'com/nav-link/link';
+import ButtonLink						from 'com/button-link/link';
 import IMG2								from 'com/img2/img2';
 import SVGIcon							from 'com/svg-icon/icon';
 
-import $Node							from '../../shrub/js/node/node';
-import $Asset							from '../../shrub/js/asset/asset';
+import $Node							from 'shrub/js/node/node';
+import $Asset							from 'shrub/js/asset/asset';
 
 export default class ContentCommonBodyAvatar extends Component {
 	constructor( props ) {
@@ -20,8 +21,7 @@ export default class ContentCommonBodyAvatar extends Component {
 //	}
 
 	onEdit( e ) {
-		var node = this.props.node;
-		var user = this.props.user;
+		let {node, user} = this.props;
 
 		if ( !user || !user.id )
 			return null;
@@ -45,15 +45,15 @@ export default class ContentCommonBodyAvatar extends Component {
 					}
 				})
 				.catch(err => {
-					this.setState({ 'error': err });
+					this.setState({'error': err});
 				});
 		}
 	}
 	render( props ) {
-		var Class = cN("content-common-body -avatar", props.class, props.editing ? '-editing' : '');
+		let Classes = cN("content-common-body -avatar", props.class, props.editing ? '-editing' : '');
 
-		var AvatarFail = '///content/internal/user64.png';
-		var Avatar = props.src ? props.src : AvatarFail;
+		let AvatarFail = '///content/internal/user64.png';
+		let Avatar = props.src ? props.src : AvatarFail;
 
 		Avatar += ".64x64.fit.png";
 
@@ -61,7 +61,7 @@ export default class ContentCommonBodyAvatar extends Component {
 			return (
 				<label>
 					<input type="file" name="asset" style="display: none;" onchange={this.onEdit} />
-					<div class={Class}>
+					<div class={Classes}>
 						<IMG2 src={Avatar} failsrc={AvatarFail} />
 						<SVGIcon>edit</SVGIcon>
 					</div>
@@ -69,9 +69,9 @@ export default class ContentCommonBodyAvatar extends Component {
 			);
 		}
 		return (
-			<div class={Class}>
+			<ButtonLink class={Classes} href={props.href}>
 				<IMG2 src={Avatar} failsrc={AvatarFail} />
-			</div>
+			</ButtonLink>
 		);
 	}
 }
