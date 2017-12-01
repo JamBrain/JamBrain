@@ -1,6 +1,8 @@
 @import "defs.less";
 
 #content .content-headliner {
+	overflow: hidden;
+
 	/* Default Palette */
 	background: @COL_NDDD;
 	color: @COL_L;
@@ -85,10 +87,10 @@
 
 		float: left;
 		padding-left: 1rem;
-		margin-right: 1.5em;
+		margin-right: 2.25em;
 		/*line-height: 1.45em;*/	/* hack for better alignment (should be 1.5) */
-		line-height: 2em;
-		height: 1.5em;			/* Need this, otherwise vertical-align: middle makes line height report wrong height */
+		line-height: 2.2em;
+		height: 2.25em;			/* Need this, otherwise vertical-align: middle makes line height report wrong height */
 		font-size: 1.5em;
 		font-weight: bold;
 		font-style: italic;
@@ -107,12 +109,12 @@
 			position: absolute;
 			display: block;
 			content: '';
-			right: -1.5em;
+			right: -2.25em;
 			top: 0;
-			border-top: 0.75em solid;
-			border-right: 0.75em solid transparent;
-			border-bottom: 0.75em solid transparent;
-			border-left: 0.75em solid;
+			border-top: 1.125em solid;
+			border-right: 1.125em solid transparent;
+			border-bottom: 1.125em solid transparent;
+			border-left: 1.125em solid;
 
 			color: @COL_L;
 		}
