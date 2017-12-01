@@ -48,7 +48,7 @@ export default class ContentCommonBodyBy extends Component {
 		let pub_diff = (date_now.getTime() - date_pub.getTime());// - (date_now.getTimezoneOffset()*60);
 
 		// x minutes ago
-		return <span>{this.props.label} <span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span></span>;
+		return <span>{label} <span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span></span>;
 	}
 
 	render( props ) {
@@ -91,6 +91,11 @@ export default class ContentCommonBodyBy extends Component {
 			ret.push(<span class="-when">{ret.length ? ", " : ''}{this.getModified(props.node, props.label)}</span>);
 		}
 
-		return <div class={cN('content-common-body', '-by', props.class)}>{ret}{props.children}</div>;
+		return (
+			<div class={cN('content-common-body', '-by', props.class)}>
+				{ret}
+				{props.children}
+			</div>
+		);
 	}
 }

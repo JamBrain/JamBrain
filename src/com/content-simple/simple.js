@@ -194,9 +194,9 @@ export default class ContentSimple extends Component {
 	}
 
 	render( props, state ) {
+		props = Object.assign({}, props);	// Shallow copy we can change props
 		let {node, user, path, extra} = props;
 		let {author, authors} = state;
-		props = Object.assign({}, props);	// Shallow copy we can change props
 
 
 		if ( node && ((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length) ) {
@@ -232,7 +232,7 @@ export default class ContentSimple extends Component {
 			let ShowByLine = null;
 			if ( props.authored ) {
 				ShowAvatar = <ContentCommonBodyAvatar node={node} user={user} src={state.avatar} editing={node_IsAuthor(node, user) ? state.editing : false} onchange={this.onModifyAvatar} />;
-				if ( props.by && !(props.notitleedit ? false : state.editing) ) {
+				if ( !(props.notitleedit ? false : state.editing) ) {
 					ShowByLine = <ContentCommonBodyBy node={node} author={author} by={typeof props.by == 'string' ? props.by : null} label={props.label ? props.label : "published"} noby={props.noby} when />;
 				}
 			}
