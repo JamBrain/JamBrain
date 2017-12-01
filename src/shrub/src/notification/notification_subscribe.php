@@ -22,7 +22,7 @@ function notification_GetSubscriptionForNode( $user, $node ) {
 	if ( empty($sub) ) {
 		return null;
 	}
-	return $sub ? true : false;
+	return $sub['subscribed'] ? true : false;
 }
 
 
@@ -41,7 +41,7 @@ function notification_SetSubscriptionForNode( $user, $node, $subscribed ) {
 			?,
 		)
 		ON DUPLICATE KEY UPDATE
-			subscribed=VALUES(subscribed),
+			subscribed=VALUES(subscribed)
 		;",
 		$user,
 		$node,
