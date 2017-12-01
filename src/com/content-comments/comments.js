@@ -44,7 +44,7 @@ export default class ContentComments extends Component {
 
 	getComments( node ) {
 		let user = this.props.user;
-		if ( user & user.id ) {
+		if ( user && user.id ) {
 			$Notification.GetSubscription( node.id )
 			.then(r => {
 				// Determine whether user is subscribed to the thread explicitly
