@@ -346,43 +346,43 @@ export default class ContentItem extends Component {
 	}
 
 	render( props, state ) {
+		props = Object.assign({}, props);
 		let {node, user, path, extra, featured} = props;
 		let {parent} = state;
-		props = Object.assign({}, props);
 
 		let Category = '/';
 
 		if ( node ) {
 			if ( node.subtype == 'game' ) {
-				props.header = "GAME";
-				props.headerClass = "-col-a";
+				props.by = "GAME";
 				props.headerIcon = "gamepad";
+				props.headerClass = "-col-a";
 			}
 			else if ( node.subtype == 'tool' ) {
-				props.header = "TOOL";
-				props.headerClass = "-col-c";
+				props.by = "TOOL";
 				props.headerIcon = "hammer";
+				props.headerClass = "-col-c";
 			}
 
 			if ( node.subsubtype == 'jam' ) {
-				props.header += ": JAM";
+				props.by = "JAM "+props.by;
 				Category = '/jam';
 			}
 			else if ( node.subsubtype == 'compo' ) {
-				props.header += ": COMPO";
+				props.by = "COMPO "+props.by;
 				Category = '/compo';
 			}
 			else if ( node.subsubtype == 'craft' ) {
-				props.header += ": CRAFT";
+				props.by = "CRAFT";
 				Category = '/craft';
 			}
 			else if ( node.subsubtype == 'release' ) {
-				props.header += ": RELEASE";
+				props.by = "RELEASED "+props.by;
 				Category = '/release';
 			}
 			else if ( node.subsubtype == 'unfinished' ) {
 				props.headerClass = null;
-				props.header += ": UNFINISHED";
+				props.by = "UNFINISHED "+props.by;
 				Category = '/unfinished';
 			}
 			else {
@@ -393,7 +393,7 @@ export default class ContentItem extends Component {
 		}
 
 		let ShowEventPicker = null;
-		if ( extra && extra.length && extra[0] == 'edit' && node_CanPublish(parent) ) {
+		if ( extra && extra.length && (extra[0] == 'edit') && node_CanPublish(parent) ) {
 			ShowEventPicker = (
 				<ContentCommonNav>
 					<div class="-label">Event</div>
@@ -798,6 +798,6 @@ export default class ContentItem extends Component {
 			this.contentSimple = c;
 		};
 
-		return <ContentSimple {...props} by authors />;
+		return <ContentSimple {...props} authors />;
 	}
 }

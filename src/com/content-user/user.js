@@ -22,15 +22,15 @@ export default class ContentUser extends Component {
 	}
 
 	render( props ) {
-		let {node, user, path, extra} = props;
 		props = Object.assign({}, props);	// Shallow copy we can change props
+		let {node, user, path, extra} = props;
 
 		let IsHome = false;
 		if ( extra && (extra.length == 0) ) {
 			IsHome = true;
 		}
 
-		props.header = "USER";
+		//props.header = "USER";
 		props.headerIcon = "user";
 		props.headerClass = "-col-bc";
 
@@ -38,33 +38,31 @@ export default class ContentUser extends Component {
 		props.notitleedit = true;
 
 		props.authored = true;
-		props.by = "Joined";
+		props.label = "Joined";
 		props.noby = true;
 
-		props.label = "Biography";
+		//props.label = "Biography";
 
 //		props.minmax = true;
 //		if ( !IsHome ) {
 //			props.minimized = true;
 //		}
 
-		let BodyNavBar = [];
-		if ( !this.isEditMode() ) {
-			if ( user && user.id && (node.id !== user.id) ) {
-				BodyNavBar.push(<ButtonFollow node={node} user={user} />);
-			}
-		}
-
-		let ShowContent = null;
 		if ( IsHome || this.isEditMode() ) {
+			let BodyNavBar = [];
+			if ( !this.isEditMode() ) {
+				if ( user && user.id && (node.id !== user.id) ) {
+					BodyNavBar.push(<ButtonFollow node={node} user={user} />);
+				}
+			}
+
 			return (
 				<ContentSimple {...props} class={cN("content-user", props.class)}>
 					<ContentCommonNav>{BodyNavBar}</ContentCommonNav>
 				</ContentSimple>
 			);
 		}
-		return (
-			<ContentHeadliner node={node} name="user" icon="user" class="-col-bc" published="Joined" at games articles trophies />
-		);
+
+		return <ContentHeadliner node={node} name="user" icon="user" class="-col-bc" published="Joined" at games articles trophies />;
 	}
 }
