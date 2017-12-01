@@ -241,10 +241,10 @@ export default class ContentCommentsComment extends Component {
 				var ShowRight = [];
 
 				if ( props.cansubscribe ) {
-					ShowRight.push(<div class={"-button -publish -modified"} onclick={this.onSubscribe}><div>Follow Thread</div></div>);
+					ShowRight.push(<div class={"-button -subscribe"} onclick={this.onSubscribe}><SVGIcon>bubble</SVGIcon><div>Follow Thread</div></div>);
 				}
 				else {
-					ShowRight.push(<div class={"-button -publish -modified"} onclick={this.onSubscribe}><div>Unfollow Thread</div></div>);
+					ShowRight.push(<div class={"-button -unsubscribe"} onclick={this.onSubscribe}><SVGIcon>bubble-empty</SVGIcon><div>Unfollow Thread</div></div>);
 				}
 
 				if ( props.publish ) {
