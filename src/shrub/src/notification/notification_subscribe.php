@@ -38,7 +38,7 @@ function notification_SetSubscriptionForNode( $user, $node, $subscribed ) {
 		VALUES (
 			?,
 			?,
-			?,
+			?
 		)
 		ON DUPLICATE KEY UPDATE
 			subscribed=VALUES(subscribed)
