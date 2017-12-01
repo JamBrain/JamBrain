@@ -56,7 +56,7 @@ export default class ContentUser extends Component {
 		}
 
 		let ShowContent = null;
-		if ( IsHome ) {
+		if ( IsHome || this.isEditMode() ) {
 			return (
 				<ContentSimple {...props} class={cN("content-user", props.class)}>
 					<ContentCommonNav>{BodyNavBar}</ContentCommonNav>
