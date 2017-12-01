@@ -36,6 +36,37 @@ function GetFeed($notification_type, &$RESPONSE) {
 	}
 }
 
+function GetSubscription(&$RESPONSE) {
+	$user_id = userAuth_GetID();
+	$node_id = intval(json_ArgShift());
+	if ( $node_id === 0 ) {
+		json_EmitFatalError_BadRequest("Missing node ID parameter", $RESPONSE);
+	}
+	
+	$RESPONSE['node'] = $node_id;
+	$RESPONSE['subscribed'] = notification_GetSubscriptionForNode($user_id, $node_id);
+}
+
+function SetSubscription($value, &$RESPONSE) {
+	$user_id = userAuth_GetID();
+	$node_id = intval(json_ArgShift());
+	if ( $node_id === 0 ) {
+		json_EmitFatalError_BadRequest("Missing node ID parameter", $RESPONSE);
+	}
+
+	$RESPONSE['node'] = $node_id;
+	
+	// Verify that this node makes sense to subscribe to (use the same rules as note posting)
+	$node = node_GetById($node_id);
+	if ( !note_IsNotePublicByNode($node) ) {
+		json_EmitFatalError_Permission("You don't have permission to subscribe to this node.", $RESPONSE);
+	}
+
+	notification_SetSubscriptionForNode($user_id, $node_id, $value);
+	$RESPONSE['subscribed'] = $value;
+}
+
+
 api_Exec([
 ["notification/unread/count", API_GET | API_AUTH, API_CHARGE_1, function(&$RESPONSE) {
 	$user_id = userAuth_GetID(); // Since API_AUTH is present, we can be confident there will be a user ID.
@@ -50,6 +81,18 @@ api_Exec([
 }],
 ["notification/all/feed", API_GET | API_AUTH, API_CHARGE_1, function(&$RESPONSE) {
 	GetFeed("all", $RESPONSE);
+}],
+["notification/subscription/get", API_GET | API_AUTH, API_CHARGE_1, function(&$RESPONSE) {
+	// Are we subscribed to this thread ID?
+	GetSubscription($RESPONSE);
+}],
+["notification/subscription/add", API_POST | API_AUTH, API_CHARGE_1, function(&$RESPONSE) {
+	// User wants notifications for this thread.
+	SetSubscription(true, $RESPONSE);
+}],
+["notification/subscription/remove", API_POST | API_AUTH, API_CHARGE_1, function(&$RESPONSE) {
+	// User doesn't want notifications for this thread.
+	SetSubscription(false, $RESPONSE);
 }],
 ["notification/markread", API_POST | API_AUTH, API_CHARGE_1, function(&$RESPONSE) {
 	$user_id = userAuth_GetID();
