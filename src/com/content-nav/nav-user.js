@@ -1,6 +1,4 @@
 import {h, Component} 					from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
-import NavLink 							from 'com/nav-link/link';
 
 import ContentNavButton					from 'com/content-nav/nav-button';
 
@@ -13,19 +11,12 @@ export default class ContentNavUser extends Component {
 	render( props ) {
 		let {node, user, path, extra} = props;
 
-        var NewPath = '/'+ (extra ? extra.join('/') : '');
-		var PartPath = '/'+ (extra && extra.length ? extra[0] : '');
+        let NewPath = '/'+ (extra ? extra.join('/') : '');
+		let PartPath = '/'+ (extra && extra.length ? extra[0] : '');
 
-		var ShowMyFeed = null;
+		let ShowMyFeed = null;
 		if ( NewPath === '/' ) {
 			NewPath = '/home';
-//			// Default to games, articles, or feed if no games/articles are available
-//			if ( node['games'] > 0 )
-//				NewPath = '/games';
-//			else if ( node['articles'] > 0 )
-//				NewPath = '/articles';
-//			else
-//				NewPath = '/feed';
 		}
 		// Prefix with path
 		NewPath = path + NewPath;
