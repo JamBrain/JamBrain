@@ -27,13 +27,14 @@ export default class PageUser extends Component {
 
 		let editing = extra[extra.length - 1] == "edit";
 
-		if ( editing ) {
-			ShowNav = null;
+		let ShowNav = null;
+		if ( !editing ) {
+			ShowNav = <ContentNavUser node={node} user={user} path={path} extra={extra} />;
 		}
 
 		return (
 			<ContentList class="page-user">
-				<ContentNavUser node={node} user={user} path={path} extra={extra} />
+				{ShowNav}
 				<ContentUser node={node} user={user} path={path} extra={extra}/>
 				<Router node={node} props={props}>
 					<Route default={true} static path="/home" />
