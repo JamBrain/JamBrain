@@ -22,7 +22,7 @@ function notification_GetSubscriptionForNode( $user, $node ) {
 	if ( empty($sub) ) {
 		return null;
 	}
-	return $sub['subscribed'] ? true : false;
+	return $sub[0] ? true : false;
 }
 
 
