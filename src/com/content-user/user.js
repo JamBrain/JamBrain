@@ -30,7 +30,7 @@ export default class ContentUser extends Component {
 			IsHome = true;
 		}
 
-		props.header = "USER";
+		//props.header = "USER";
 		props.headerIcon = "user";
 		props.headerClass = "-col-bc";
 

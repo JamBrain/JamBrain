@@ -17,17 +17,20 @@ export default class ContentPost extends Component {
 
 		if ( node ) {
 			if ( node.subtype === 'news' ) {
-				props.header = "NEWS";
+				//props.header = "NEWS";
+				props.by = "NEWS";
 				props.headerIcon = "news";
 				props.headerClass = "-col-c";
 			}
 			else if ( node.subtype === 'info' ) {
-				props.header = "INFO";
+				//props.header = "INFO";
+				props.by = "INFO";
 				props.headerIcon = "info";
 				props.headerClass = "-col-nddd";
 			}
 			else if ( node.subtype === 'guide' ) {
-				props.header = "GUIDE";
+				//props.header = "GUIDE";
+				props.by = "GUIDE";
 				props.headerIcon = "article";
 				props.headerClass = "-col-nddd";
 			}
