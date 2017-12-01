@@ -1,7 +1,7 @@
 @import 'defs.less';
 
-@NAV_BUTTON_COL: @COL_NDDD;
-@NAV_BUTTON_BG: @COL_N;
+@NAV_BUTTON_COL: @COL_NDD;
+@NAV_BUTTON_BG: @COL_NL;
 @NAV_BUTTON_LIT: @COL_L;
 @NAV_BUTTON_LIT_BG: @COL_A;
 
@@ -46,7 +46,7 @@
 			text-decoration: none;
 			font-weight: bold;
 
-			border: 1px solid;
+			/*border: 1px solid;*/
 
 			& > span {
 				position: relative;
@@ -75,11 +75,12 @@
 			&,
 			&:visited {
 				color: @NAV_BUTTON_COL;
+				background: @NAV_BUTTON_BG;
 
 				&.-selected {
 					background: @COL_L;/*@NAV_BUTTON_COL;*/
 					color: @COL_NDDDD;/*@NAV_BUTTON_BG;*/
-					border: 1px solid transparent;
+					/*border: 1px solid transparent;*/
 				}
 			}
 
@@ -89,7 +90,7 @@
 				&.-selected {
 					background: @NAV_BUTTON_LIT_BG;
 					color: @NAV_BUTTON_LIT;
-					border: 1px solid transparent;
+					/*border: 1px solid transparent;*/
 					z-index: 10;
 				}
 			}

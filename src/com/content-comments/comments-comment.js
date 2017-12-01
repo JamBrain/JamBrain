@@ -1,8 +1,9 @@
-import { h, Component } 				from 'preact/preact';
-import { shallowDiff }	 				from 'shallow-compare/index';
+import {h, Component}	 				from 'preact/preact';
+import {shallowDiff}	 				from 'shallow-compare/index';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
+import ButtonLink 						from 'com/button-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 import IMG2 							from 'com/img2/img2';
 
@@ -131,14 +132,11 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	render( props, state ) {
-		var user = props.user;
-		var comment = props.comment;
-		var author = props.author;
-		var error = props.error;
+		let {user, comment, author, error} = props;
 
 		if ( author || comment.author == 0 ) {
-			var Name = "Anonymous";
-			var Avatar = "///other/dummy/user64.png";
+			let Name = "Anonymous";
+			let Avatar = "///other/dummy/user64.png";
 			if ( author ) {
 				Name = author.name;
 				if ( author.meta['real-name'] )
@@ -148,7 +146,7 @@ export default class ContentCommentsComment extends Component {
 					Avatar = author.meta['avatar'] + ".64x64.fit.png";;
 			}
 
-			var ShowTitle = [];
+			let ShowTitle = [];
 			if ( !state.editing || state.preview ) {
 				var Created = new Date(comment.created);
 				var Modified = new Date(comment.modified);
@@ -179,15 +177,15 @@ export default class ContentCommentsComment extends Component {
 				}
 			}
 
-			var ShowReply = null;
+			let ShowReply = null;
 			//if ( user && user.id )
 			//	ShowReply = <div class="-button -reply" onclick={this.onReply}><SVGIcon>reply</SVGIcon><div>Reply</div></div>;
 
-			var ShowEdit = null;
+			let ShowEdit = null;
 			if ( user && comment.author === user.id && !state.editing )
 				ShowEdit = <div class="-button -edit" onclick={this.onEdit}><SVGIcon>edit</SVGIcon></div>;
 
-			var ShowLove = null;
+			let ShowLove = null;
 			if ( !props.nolove ) {
 				ShowLove = (
 					<div class={"-button -love"+(state.loved?" -loved":"")} onclick={this.onLove}>
@@ -199,7 +197,7 @@ export default class ContentCommentsComment extends Component {
 				);
 			}
 
-			var ShowBottomNav = null;
+			let ShowBottomNav = null;
 			//if ( !state.editing )
 			{
 				ShowBottomNav = (
@@ -214,9 +212,9 @@ export default class ContentCommentsComment extends Component {
 				);
 			}
 
-			var ShowTopNav = null;
+			let ShowTopNav = null;
 			if ( state.editing ) {
-				var ShowLeft = [];
+				let ShowLeft = [];
 				if ( !state.preview ) {
 					ShowLeft = [
 						<div class="-button -preview" onclick={this.onPreview}><SVGIcon>preview</SVGIcon><div class="if-sidebar-block">Preview</div></div>,
@@ -250,7 +248,7 @@ export default class ContentCommentsComment extends Component {
 				);
 			}
 
-			var ShowError = null;
+			let ShowError = null;
 			if ( error ) {
 				ShowError = (
 					<div class="-error">{"Failed to post comment: " + error}</div>
@@ -259,7 +257,7 @@ export default class ContentCommentsComment extends Component {
 
 			return (
 				<div id={"comment-"+comment.id} class={"-item -comment -indent-"+props.indent}>
-					<div class="-avatar"><IMG2 src={Avatar} /></div>
+					<ButtonLink class="-avatar" href={author.path}><IMG2 src={Avatar} /></ButtonLink>
 					<div class="-body">
 						{ShowTopNav}
 						{ShowError}
