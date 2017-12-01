@@ -42,6 +42,7 @@ export default class ContentCommentsComment extends Component {
 		this.onPublishAnon = this.onPublishAnon.bind(this);
 		this.onLove = this.onLove.bind(this);
 		this.onReply = this.onReply.bind(this);
+		this.onSubscribe = this.onSubscribe.bind(this);
 	}
 
 	onEditing( e ) {
@@ -129,6 +130,13 @@ export default class ContentCommentsComment extends Component {
 
 	onReply( e ) {
 		console.log('reply');
+	}
+
+	onSubscribe( e ) {
+		// consider disabling element temporarily. But this should go by quickly
+		if ( this.props.onsubscribe ) {
+			this.props.onsubscribe(e, this.props.cansubscribe);
+		}
 	}
 
 	render( props, state ) {
@@ -229,6 +237,14 @@ export default class ContentCommentsComment extends Component {
 				}
 
 				var ShowRight = [];
+
+				if ( props.cansubscribe ) {
+					ShowRight.push(<div class={"-button -subscribe"} onclick={this.onSubscribe}><SVGIcon>bubble</SVGIcon><div>Follow Thread</div></div>);
+				}
+				else {
+					ShowRight.push(<div class={"-button -unsubscribe"} onclick={this.onSubscribe}><SVGIcon>bubble-empty</SVGIcon><div>Unfollow Thread</div></div>);
+				}
+
 				if ( props.publish ) {
 					if (props.allowAnonymous) {
 						ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublishAnon}><SVGIcon>publish</SVGIcon><div>Publish Anonymously</div></div>);

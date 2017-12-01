@@ -174,8 +174,25 @@ function notification_AddForNote( $node, $note, $author, $mentions = [] ) {
 			$users[] = $link['a'];
 	}
 	
+	// Look up what users have expressly opted in and out of notifications for this thread.
+	$subs = notification_GetAllSubscriptionsForNode($node);
+	$optin = [];
+	$optout = [];
+	foreach ( $subs as $sub ) {
+		if ( $sub['subscribed'] ) {
+			$optin[] = $sub['user'];
+		}
+		else {
+			$optout[] = $sub['user'];
+		}
+	}
+	
+	// Add users that are opting in to notifications
+	$users = array_merge($users, $optin);	
 	// Eliminate duplicate users - don't send duplicate notifications.
 	$users = array_unique($users);
+	// Remove users that opt-out of notifications
+	$users = array_diff($users, $optout);
 	// Supersede normal notifications with "mention" notifications if the user was at-mentioned
 	$users = array_diff($users, $mentions); 
 	
