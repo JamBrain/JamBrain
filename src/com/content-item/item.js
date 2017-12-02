@@ -308,7 +308,7 @@ export default class ContentItem extends Component {
 				<div class={cN('content-common-link', '-editing', '-header')}>
 					<div class="-tag">Platform</div>
 					<div class="-name">Description (optional)</div>
-					<div class="-url">URL</div>
+					<div class="-url">URL (leave blank to omit)</div>
 				</div>
 			);
 		}
