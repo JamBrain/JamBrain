@@ -1,4 +1,4 @@
-import {h, Component} 				from 'preact/preact';
+import {h, Component} 					from 'preact/preact';
 
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
@@ -248,8 +248,7 @@ export default class ContentItem extends Component {
 	}
 
 	onSave( e ) {
-		var node = this.props.node;
-		var user = this.props.user;
+		let {node, user} = this.props;
 
 		if ( !user )
 			return null;
@@ -302,7 +301,17 @@ export default class ContentItem extends Component {
 
 	// Generates JSX for the links, depending on whether the page is editing or viewing
 	makeLinks( editing ) {
-		var LinkMeta = [];
+		let LinkMeta = [];
+
+		if ( editing ) {
+			LinkMeta.push(
+				<div class={cN('content-common-link', '-editing', '-header')}>
+					<div class="-tag">Platform</div>
+					<div class="-name">Description (optional)</div>
+					<div class="-url">URL</div>
+				</div>
+			);
+		}
 
 		for ( let idx = 0; idx < this.state.linksShown; idx++ ) {
 			LinkMeta.push(
@@ -338,9 +347,11 @@ export default class ContentItem extends Component {
 //					urlPlaceholder="http://example.com/source.zip"
 
 		return (
-			<ContentCommonBody class="-links">
-				<div class="-label">Links</div>
-				{LinkMeta}
+			<ContentCommonBody>
+				<div class="-label">Downloads and Links</div>
+				<div class="-links">
+					{LinkMeta}
+				</div>
 			</ContentCommonBody>
 		);
 	}
