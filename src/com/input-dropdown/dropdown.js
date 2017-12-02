@@ -76,6 +76,7 @@ export default class InputDropdown extends Component {
 						SelectedField = (
 							<button type="button" onclick={this.onShow}>
 								{Contents}
+								<SVGIcon right>hamburger</SVGIcon>
 							</button>
 						);
 					}
