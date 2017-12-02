@@ -92,7 +92,7 @@ export default class ContentCommonBodyField extends Component {
 
 			return (
 				<div class={cN('content-common-link', props.class)}>
-					<div class="-name" title={Tag[0]}><SVGIcon small>earth</SVGIcon> <span>{ShowName}</span></div>
+					<div class="-name" title={Tag[0]+" "+Tag[1]}><SVGIcon small>earth</SVGIcon> <span>{ShowName}</span></div>
 					<div class="-url">{ShowLink}</div>
 				</div>
 			);
