@@ -7,13 +7,20 @@ export default class ContentCommonFooterButtonComments extends Component {
 		super(props);
 	}
 
-	componentDidMount() {
-	}
+	render( props ) {
+		let {node} = props;
 
-	render( {node}, {} ) {
+		let CountClass = '';
+		if ( node.notes >= 10 )
+			CountClass = '-count-10';
+		else if ( node.notes >= 4 )
+			CountClass = '-count-4';
+		else if ( node.notes >= 1 )
+			CountClass = '-count-1';
+
 		if ( node && Number.isInteger(node.notes) ) {
 			return (
-				<NavLink href={node.path} class="content-common-footer-button -comments" title="Comments">
+				<NavLink href={node.path} class={cN("content-common-footer-button -comments", CountClass)} title="Comments">
 					<SVGIcon>bubbles</SVGIcon>
 					<div class="-count">{node.notes}</div>
 				</NavLink>
