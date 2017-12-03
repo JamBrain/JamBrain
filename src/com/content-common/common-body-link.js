@@ -16,8 +16,9 @@ export default class ContentCommonBodyField extends Component {
 		super(props);
 
 		this.state = {
-			'items': null,
-			'indexes': null,
+			'items': null,			// raw tag results
+			'itemlist': null,		// pairs (index, name) for the drop-down
+			'indexes': null,		// lookup table that takes ids and converts them in to dropdown indexes
 			'tag': props.tag ? props.tag : 0,
 		};
 
@@ -27,20 +28,21 @@ export default class ContentCommonBodyField extends Component {
 	componentDidMount() {
 		$Tag.Get(this.props.filter)
 			.then(r => {
-				if ( r.tag && r.tag.length ) {
+				if ( r && r.tag && r.tag.length ) {
 					let that = this;
 
 					let NewState = {
-						'items': [],
+						'items': r.tag,
+						'itemlist': [],
 						'indexes': {},
 						'tag': 0,
 					};
 					r.tag.forEach(item => {
-						NewState.indexes[item.id] = NewState.items.length;
-						NewState.items.push([item.id, item.name]);
+						NewState.indexes[item.id] = NewState.itemlist.length;
+						NewState.itemlist.push([item.id, item.name]);
 					});
 
-					NewState.tag = NewState.items[0][0];
+					NewState.tag = NewState.itemlist[0][0];
 
 					this.setState(NewState);
 				}
@@ -55,11 +57,11 @@ export default class ContentCommonBodyField extends Component {
 	render( props, state ) {
 		let UrlPlaceholder = props.urlPlaceholder ? props.urlPlaceholder : 'URL (example: http://some.website.com/file.zip)';
 
-		if ( props.editing && state.items && state.indexes ) {
+		if ( props.editing && state.itemlist && state.indexes ) {
 			return (
 				<div class={cN('content-common-link', '-editing', props.class)}>
 					<InputDropdown class="-tag"
-						items={state.items}
+						items={state.itemlist}
 						value={state.tag}
 						onmodify={this.onModifyTag}
 						useClickCatcher={true}
@@ -68,7 +70,7 @@ export default class ContentCommonBodyField extends Component {
 					<InputText class="-name"
 						value={props.name}
 						onmodify={props.onModifyName}
-						placeholder={state.items[state.indexes[state.tag]][1]}
+						placeholder={state.itemlist[state.indexes[state.tag]][1]}
 						maxlength={64}
 					/>
 					<InputText class="-url"
@@ -80,9 +82,9 @@ export default class ContentCommonBodyField extends Component {
 				</div>
 			);
 		}
-		else if ( state.items && props.url ) {
+		else if ( state.itemlist && props.url ) {
 			let Index = props.tag ? state.indexes[props.tag] : 0;
-			let Tag = state.items[Index];
+			let Tag = state.itemlist[Index];
 			let Text = Sanitize.sanitize_URI(props.url);
 			let Href = Text.indexOf('//') != -1 ? Text : '';
 
@@ -90,9 +92,14 @@ export default class ContentCommonBodyField extends Component {
 
 			let ShowName = props.name ? props.name : Tag[1];
 
+			let Icon = 'earth';
+			if ( state.items[Index].icon ) {
+				Icon = state.items[Index].icon;
+			}
+
 			return (
 				<div class={cN('content-common-link', props.class)}>
-					<div class="-name" title={'$'+Tag[0]+" - "+Tag[1]}><SVGIcon small>earth</SVGIcon> <span>{ShowName}</span></div>
+					<div class="-name" title={'$'+Tag[0]+" - "+Tag[1]}><SVGIcon small>{Icon}</SVGIcon> <span>{ShowName}</span></div>
 					<div class="-url">{ShowLink}</div>
 				</div>
 			);
