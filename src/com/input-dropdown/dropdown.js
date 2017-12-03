@@ -1,5 +1,5 @@
-import { h, Component } 				from 'preact/preact';
-import { shallowDiff }	 				from 'shallow-compare/index';
+import {h, Component}	 				from 'preact/preact';
+import {shallowDiff}	 				from 'shallow-compare/index';
 
 import NavLink							from 'com/nav-link/link';
 import SVGIcon							from 'com/svg-icon/icon';
@@ -75,8 +75,8 @@ export default class InputDropdown extends Component {
 					if ( dataId == value ) {
 						SelectedField = (
 							<button type="button" onclick={this.onShow}>
+								<SVGIcon>hamburger</SVGIcon>
 								{Contents}
-								<SVGIcon right>hamburger</SVGIcon>
 							</button>
 						);
 					}

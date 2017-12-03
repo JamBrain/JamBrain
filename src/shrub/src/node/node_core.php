@@ -25,7 +25,7 @@ function node_GetParentSlugById( $id ) {
 function node_GetIdByParentSlug( $parent, $slug ) {
 	return db_QueryFetchValue(
 		"SELECT id
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 		WHERE parent=? AND slug=?
 		LIMIT 1;",
 		$parent, $slug
@@ -34,26 +34,26 @@ function node_GetIdByParentSlug( $parent, $slug ) {
 
 function node_GetSlugByParentSlugLike( $parent, $slug ) {
 	return db_QueryFetchSingle(
-		"SELECT 
+		"SELECT
 			slug
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
-		WHERE 
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		WHERE
 			parent=? AND slug LIKE ?
 		;",
 		$parent, $slug
-	);	
+	);
 }
 
 function node_GetIdByParentType( $parent, $type, $subtype = null, $subsubtype = null ) {
 	// TODO: add subtype and subsubtype
 	return db_QueryFetchSingle(
-		"SELECT 
+		"SELECT
 			id
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
-		WHERE 
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		WHERE
 			parent=? AND type=?
 		;",
-		$parent, 
+		$parent,
 		$type
 	);
 }
@@ -63,11 +63,11 @@ function node_GetIdByParentTypePublished( $parent, $type, $subtype = null, $subs
 	return db_QueryFetchSingle(
 		"SELECT
 			id
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
-		WHERE 
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		WHERE
 			parent=? AND published>0 AND type=?
 		;",
-		$parent, 
+		$parent,
 		$type
 	);
 }
@@ -79,17 +79,17 @@ function node_GetUserIdBySlug( $slugs ) {
 	if ( !count($slugs) ) {
 		return [];
 	}
-	
+
 	$safeslugs = [];
 	foreach( $slugs as $s ) {
 		// single quote should not exist in the dataset this is called with, but be extra safe.
 		$safeslugs[] = "'" . str_replace("'", "''", $s) . "'";
 	}
 	$sluglist = implode(",", $safeslugs);
-	
+
 	return db_QueryFetchPair(
 		"SELECT slug, id
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 		WHERE type='user' AND slug IN (" . $sluglist . ");"
 	);
 }
@@ -111,14 +111,14 @@ function _node_GetPathById( $id, $top = 0, $timeout = 10 ) {
 }
 function node_GetPathById( $id, $top = 0, $timeout = 10 ) {
 	$tree = _node_GetPathById($id, $top, $timeout);
-	
+
 	$path = '';
 	$parent = [];
 	foreach( $tree as &$leaf ) {
 		$path = '/'.($leaf['slug']).$path;
 		array_unshift($parent, $leaf['parent']);
 	}
-	
+
 	return [ 'path' => $path, 'parent' => $parent ];
 }
 
@@ -129,20 +129,20 @@ const SH_MAX_SLUG_RETRIES = 100;
 function node_GetUniqueSlugByParentSlug( $parent, $slug ) {
 	// Trim the slug
 	$slug = substr($slug, 0, SH_MAX_SLUG_LENGTH);
-	
+
 	// Search for similar slugs
 	$slugs = node_GetSlugByParentSlugLike($parent, $slug.'%');
-	
+
 	// If not found, success
 	if ( !in_array($slug, $slugs) ) {
 		return $slug;
 	}
-	
+
 	// Try up to 100 different variants
 	for ( $idx = 1; $idx < SH_MAX_SLUG_RETRIES; $idx++ ) {
 		$append = '-'.$idx;
 		$append_length = strlen($append);
-		
+
 		$try = $slug.$append;
 		if ( strlen($try) > SH_MAX_SLUG_LENGTH ) {
 			$try = substr($try, 0, SH_MAX_SLUG_LENGTH-$append_length).$append;
@@ -160,7 +160,7 @@ function node_GetIdByType( $types ) {
 	if ( is_string($types) ) {
 		return db_QueryFetchSingle(
 			"SELECT id
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 			WHERE type=?;",
 			$types
 		);
@@ -170,7 +170,7 @@ function node_GetIdByType( $types ) {
 
 		return db_QueryFetchSingle(
 			"SELECT id
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 			WHERE type IN ($types_string);"
 		);
 	}
@@ -182,7 +182,7 @@ function node_GetSimpleByType( $type, $subtype = null ) {
 	if ( is_string($subtype) ) {
 		return db_QueryFetch(
 			"SELECT id, slug, name
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 			WHERE type=? AND subtype=?;",
 			$type,
 			$subtype
@@ -191,10 +191,10 @@ function node_GetSimpleByType( $type, $subtype = null ) {
 	else {
 		return db_QueryFetch(
 			"SELECT id, slug, name
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 			WHERE type=?;",
 			$type
-		);		
+		);
 	}
 }
 
@@ -220,7 +220,7 @@ function node_GetById( $ids ) {
 	$multi = is_array($ids);
 	if ( !$multi )
 		$ids = [$ids];
-	
+
 	if ( is_array($ids) ) {
 		// Confirm that all IDs are not zero
 		foreach( $ids as $id ) {
@@ -239,7 +239,7 @@ function node_GetById( $ids ) {
 				".DB_FIELD_DATE('modified').",
 				version,
 				slug, name, body
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 			WHERE id IN ($ids_string);"
 		);
 
@@ -248,7 +248,7 @@ function node_GetById( $ids ) {
 		else
 			return $ret ? $ret[0] : null;
 	}
-	
+
 	return null;
 }
 
@@ -257,7 +257,7 @@ function node_GetNoBodyById( $ids ) {
 	$multi = is_array($ids);
 	if ( !$multi )
 		$ids = [$ids];
-	
+
 	if ( is_array($ids) ) {
 		// Confirm that all IDs are not zero
 		foreach( $ids as $id ) {
@@ -276,7 +276,7 @@ function node_GetNoBodyById( $ids ) {
 				".DB_FIELD_DATE('modified').",
 				version,
 				slug, name
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 			WHERE id IN ($ids_string);"
 		);
 
@@ -285,27 +285,27 @@ function node_GetNoBodyById( $ids ) {
 		else
 			return $ret ? $ret[0] : null;
 	}
-	
+
 	return null;
 }
 
 function node_CountByParentAuthorType( $parent = null, $superparent = null, $author = null, $type = null, $subtype = null, $subsubtype = null, $published = true ) {
 	$QUERY = [];
 	$ARGS = [];
-	
+
 	dbQuery_MakeEq('parent', $parent, $QUERY, $ARGS);
 	dbQuery_MakeEq('superparent', $superparent, $QUERY, $ARGS);
 	dbQuery_MakeEq('author', $author, $QUERY, $ARGS);
 	dbQuery_MakeEq('type', $type, $QUERY, $ARGS);
 	dbQuery_MakeEq('subtype', $subtype, $QUERY, $ARGS);
 	dbQuery_MakeEq('subsubtype', $subsubtype, $QUERY, $ARGS);
-	
+
 	// NOTE: Pass `null` if you want to ignore the published vs unpublished check. Passing a boolean checks for the exact case.
 	if ( is_bool($published) )
 		dbQuery_MakeOp('published', $published ? '!=' : '=', 0, $QUERY, $ARGS);
 
 	return db_QueryFetchValue(
-		"SELECT 
+		"SELECT
 			COUNT(id)
 		FROM
 			".SH_TABLE_PREFIX.SH_TABLE_NODE."
@@ -320,17 +320,17 @@ function node_CountByAuthorType( $ids, $authors, $types = null, $subtypes = null
 	$multi = is_array($ids);
 	if ( !$multi )
 		$ids = [$ids];
-	
+
 	if ( is_array($ids) ) {
 		// Confirm that all IDs are not zero
 		foreach( $ids as $id ) {
 			if ( intval($id) == 0 )
 				return null;
 		}
-		
+
 		$QUERY = [];
 		$ARGS = [];
-		
+
 		// Build query fragment for the types check
 		if ( is_array($types) ) {
 			$QUERY[] = 'type IN ("'.implode('","', $types).'")';
@@ -344,7 +344,7 @@ function node_CountByAuthorType( $ids, $authors, $types = null, $subtypes = null
 		else {
 			return null;	// Non strings, non arrays
 		}
-	
+
 		// Build query fragment for the subtypes check
 		if ( is_array($subtypes) ) {
 			$QUERY[] = 'subtype IN ("'.implode('","', $subtypes).'")';
@@ -358,7 +358,7 @@ function node_CountByAuthorType( $ids, $authors, $types = null, $subtypes = null
 		else {
 			return null;	// Non strings, non arrays
 		}
-	
+
 		// Build query fragment for the subsubtypes check
 		if ( is_array($subsubtypes) ) {
 			$QUERY[] = 'subsubtype IN ("'.implode('","', $subsubtypes).'")';
@@ -378,7 +378,7 @@ function node_CountByAuthorType( $ids, $authors, $types = null, $subtypes = null
 
 
 		$full_query = '('.implode(' AND ', $QUERY).')';
-		
+
 //		$ARGS[] = $limit;
 //		$ARGS[] = $offset;
 
@@ -390,7 +390,7 @@ function node_CountByAuthorType( $ids, $authors, $types = null, $subtypes = null
 			// Sub query? Find all valid nodes, then check if they match the types (in theory an user will have authored less co-authored items)
 //			$ret = db_QueryFetch(
 //				"SELECT id, COUNT(id) AS count
-//				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." 
+//				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 //				WHERE author IN ($ids_string)
 //				AND $full_query
 //				GROUP BY id".($multi?';':' LIMIT 1;'),
@@ -400,7 +400,7 @@ function node_CountByAuthorType( $ids, $authors, $types = null, $subtypes = null
 		else {
 			$ret = db_QueryFetch(
 				"SELECT author AS id, COUNT(id) AS count
-				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
+				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 				WHERE author IN ($ids_string)
 				AND $full_query
 				GROUP BY author".($multi?';':' LIMIT 1;'),
@@ -413,7 +413,7 @@ function node_CountByAuthorType( $ids, $authors, $types = null, $subtypes = null
 		else
 			return $ret ? $ret[0] : null;
 	}
-	
+
 	return null;
 }
 
@@ -461,7 +461,7 @@ function _node_Add( $parent, $superparent, $author, $type, $subtype, $subsubtype
 	// NOTE: If the edit below fails, the node will have a $$ prefixed slug, and a parent of 0 (orphaned)
 
 	$edit = _node_Edit($node, $parent, $superparent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, "!ZERO");
-	
+
 	return $node;
 }
 function node_Add( $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body ) {
@@ -488,15 +488,15 @@ function _node_Edit( $node, $parent, $superparent, $author, $type, $subtype, $su
 		/**/
 		$version,
 		$slug, $name, $body,
-		
+
 		$node
 	);
-	
+
 	return $success;
 }
 function node_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag = "" ) {
 	// Lookup superpaprent (skip this step by calling _node_Edit directly)
-	$superparent = $parent ? node_GetParentById($parent) : 0;	
+	$superparent = $parent ? node_GetParentById($parent) : 0;
 	return _node_Edit($node, $parent, $superparent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag);
 }
 
@@ -504,29 +504,31 @@ function node_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, $slug
 function node_SafeEdit( $node, $slug, $name, $body, $tag = "" ) {
 	// TODO: wrap in a db lock
 	$old = node_GetById($node);		// uncached
-	
+
 	return _node_Edit($node, $old['parent'], $old['superparent'], $old['author'], $old['type'], $old['subtype'], $old['subsubtype'], $slug, $name, $body, $tag);
 }
 
 
-// TODO: optional 'set slug'
+// TODO: optional 'set slug' (... why?)
 function node_Publish( $node, $state = true ) {
 	if ( $state ) {
 		return db_QueryUpdate(
 			"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 			SET
-				published=NOW()
+				published=NOW(),
+				modified=NOW()
 			WHERE
 				id=?;",
 			$node
 		);
 	}
-	
+
 	// Unpublish
 	return db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 		SET
-			published=0
+			published=0,
+			modified=NOW()
 		WHERE
 			id=?;",
 		$node
@@ -538,19 +540,19 @@ function node_Publish( $node, $state = true ) {
 function node_IdToIndex( $nodes ) {
 	if ( !is_array($nodes) )
 		return null;
-	
+
 	$ret = [];
-	
+
 	foreach ( $nodes as &$node ) {
 		$ret[$node['id']] = $node;
 	}
-	
+
 	return $ret;
 }
 
 function node_GetAuthor( $id ) {
 	$ret = db_QueryFetchSingle(
-		"SELECT author 
+		"SELECT author
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 		WHERE
 			id=?;",
@@ -562,20 +564,24 @@ function node_GetAuthor( $id ) {
 	return $ret[0];
 }
 
+// NOTE: This is history safe, because as far as history is concerned, it only cares about the author of a change, not the current author
 function node_SetAuthor( $id, $author ) {
 	return db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 		SET
-			author=?
+			author=?,
+			modified=NOW()
 		WHERE
 			id=?;",
 		$author, $id
 	);
 }
+
+// NOTE: Version/history not set! Potential bug!
 function node_SetType( $id, $type, $subtype = null, $subsubtype = null ) {
 	$QUERY = [];
 	$ARGS = [];
-	
+
 	$QUERY[] = 'type=?';
 	$ARGS[] = $type;
 
@@ -587,15 +593,16 @@ function node_SetType( $id, $type, $subtype = null, $subsubtype = null ) {
 		$QUERY[] = 'subsubtype=?';
 		$ARGS[] = $subsubtype;
 	}
-	
+
 	$ARGS[] = $id;
-	
+
 	$merged_query = implode(',', $QUERY);
-	
+
 	return db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 		SET
-			$merged_query
+			$merged_query,
+			modified=NOW()
 		WHERE
 			id=?;",
 		...$ARGS
