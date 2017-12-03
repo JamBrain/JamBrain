@@ -1,5 +1,5 @@
-import { h, Component } 				from 'preact/preact';
-import { shallowDiff }	 				from 'shallow-compare/index';
+import {h, Component} 					from 'preact/preact';
+import {shallowDiff}	 				from 'shallow-compare/index';
 
 import SVGIcon							from 'com/svg-icon/icon';
 import ButtonBase						from 'com/button-base/base';
@@ -21,7 +21,7 @@ export default class InputStar extends Component {
 //			if ( this.props.onmodify ) {
 //				this.props.onmodify(parseInt(e.target.dataset.id));
 //			}
-//			
+//
 //			this.setState({'value': parseInt(e.target.dataset.index)});
 //			this.doHide(e);
 //		}
