@@ -646,6 +646,11 @@ function CommentOnGame(&$user, $phase)
 // Find a game through one of the game lists, and vote on it. Or change the votes to something else.
 function VoteOnGame(&$user, $phase)
 {
+	if ( !$user["publishedgame"] ) {
+		Verbose("Not going to vote because game is unpublished.");
+		return false;
+	}
+
 	$games = GetVoteGames($user);
 	
 	$rate_count = random_int(5,10);
@@ -659,6 +664,11 @@ function VoteOnGame(&$user, $phase)
 		{ 
 			// Chance to re-rate a rated game, but usually we'll rate new games.
 			if(random_int(1,20) != 1) { continue; } 
+		}
+		
+		if ( $id == $user["game_node"] ) {
+			Verbose("Skipping game ID $id as this is the user's game");
+			continue;
 		}
 		
 		Verbose("Voting on game ID $id");

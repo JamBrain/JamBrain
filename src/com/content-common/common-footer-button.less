@@ -1,6 +1,6 @@
 @import "defs.less";
 
-@BUTTON_BG: @COL_NDDD;
+@BUTTON_BG: @COL_NLLL;
 @BUTTON_COL: @COL_N;
 @BUTTON_LIT_BG: @COL_A;
 @BUTTON_LIT_COL: @COL_L;
@@ -24,7 +24,21 @@
 		margin: auto;
 		top: 0;
 		bottom: 0;
-		left: 1rem;
+		left: 0; /*1rem;*/
+	}
+	&.-minmax {
+		/* hack */
+		background: @COL_L;
+		color: @COL_NLLLL;
+
+		&:before,
+		&:after {
+			color: @COL_L;
+		}
+
+		& > svg {
+			left: 1rem;
+		}
 	}
 
 	/* Here, because this plays nicer with the colors below */
@@ -81,7 +95,7 @@
 
 	& > .-count {
 		width: auto;
-		padding-left: 2.25rem;
+		padding-left: 1.25rem;
 		font-size: 1.5em;
 		line-height: 2.8rem;
 	}

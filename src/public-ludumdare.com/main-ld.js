@@ -530,39 +530,37 @@ class Main extends Component {
 		}
 
 		return (
-			<div id="app">
-				<Layout {...this.state}>
-					<Router node={node} props={props} path={extra}>
-						<Route type="root" component={PageHome}>
-							<Route static path="/my">
-								<Route static path="/settings" component={PageMySettings} />
-								<Route static path="/notifications" component={PageMyNotifications} />
-							</Route>
-							<Route static path="/dev">
-								<Route static path="/palette" component={PageDevPalette} />
-							</Route>
+			<Layout {...this.state}>
+				<Router node={node} props={props} path={extra}>
+					<Route type="root" component={PageHome}>
+						<Route static path="/my">
+							<Route static path="/settings" component={PageMySettings} />
+							<Route static path="/notifications" component={PageMyNotifications} />
 						</Route>
-
-						<Route type="page" component={PagePage} />
-						<Route type="post" component={PagePost} />
-
-						<Route type="item">
-							<Route subtype="game" component={PageItem} />
+						<Route static path="/dev">
+							<Route static path="/palette" component={PageDevPalette} />
 						</Route>
+					</Route>
 
-						<Route type="tag" component={PageTag} />
+					<Route type="page" component={PagePage} />
+					<Route type="post" component={PagePost} />
 
-						<Route type="user" component={PageUser} />
-						<Route type="users" component={PageUsers} />
+					<Route type="item">
+						<Route subtype="game" component={PageItem} />
+					</Route>
 
-						<Route type="event" component={PageEvent} />
-						<Route type={["events", "group", "tags"]} component={PageEvents} />
+					<Route type="tag" component={PageTag} />
 
-						<Route type="error" component={PageError} />
-					</Router>
-					{this.getDialog()}
-				</Layout>
-			</div>
+					<Route type="user" component={PageUser} />
+					<Route type="users" component={PageUsers} />
+
+					<Route type="event" component={PageEvent} />
+					<Route type={["events", "group", "tags"]} component={PageEvents} />
+
+					<Route type="error" component={PageError} />
+				</Router>
+				{this.getDialog()}
+			</Layout>
 		);
 	}
 }

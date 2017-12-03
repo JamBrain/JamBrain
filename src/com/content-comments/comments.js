@@ -7,6 +7,7 @@ import ContentCommentsComment			from 'comments-comment';
 import $Note							from '../../shrub/js/note/note';
 import $Node							from '../../shrub/js/node/node';
 import $NoteLove						from '../../shrub/js/note/note_love';
+import $Notification					from '../../shrub/js/notification/notification';
 
 export default class ContentComments extends Component {
 	constructor( props ) {
@@ -17,9 +18,13 @@ export default class ContentComments extends Component {
 			'tree': null,
 			'authors': null,
 			'newcomment': null,
+			'subscribed': null,
+			'hascomment': false,
+			'isauthor': false,
 		};
 
 		this.onPublish = this.onPublish.bind(this);
+		this.onSubscribe = this.onSubscribe.bind(this);
 	}
 
 	componentWillMount() {
@@ -38,15 +43,47 @@ export default class ContentComments extends Component {
 	}
 
 	getComments( node ) {
+		let user = this.props.user;
+		if ( user && user.id ) {
+			$Notification.GetSubscription( node.id )
+			.then(r => {
+				// Determine whether user is subscribed to the thread explicitly
+				this.setState({'subscribed': r['subscribed']});
+			});
+		}
+
 		$Note.Get( node.id )
 		.then(r => {
+			// Determine if current user is one of the authors of this node
+			let isauthor = false;
+			if ( node.meta && node.meta.authors ) {
+				for ( const index in node.meta.authors ) {
+					if ( node.meta.authors[index] == user.id ) {
+						isauthor = true;
+						break;
+					}
+				}
+			}
+			if ( node.author == user.id ) {
+				isauthor = true;
+			}
+			this.setState({'isauthor': isauthor});
+
 			// Has comments
 			if ( r.note && r.note.length ) {
-				this.setState({ 'comments': r.note, 'tree': null, 'authors': null });
+				// Determine whether the user has made a comment in this thread.
+				let hasComment = false;
+				for ( const index in r.note ) {
+					if ( r.note[index].author == user.id ) {
+						hasComment = true;
+						break;
+					}
+				}
+				this.setState({'comments': r.note, 'tree': null, 'authors': null, 'hascomment': hasComment});
 			}
 			// Does not have comments
 			else if ( r.note ) {
-				this.setState({ 'comments': [], 'tree': null, 'authors': null });
+				this.setState({'comments': [], 'tree': null, 'authors': null});
 			}
 
 			// Async first
@@ -56,14 +93,14 @@ export default class ContentComments extends Component {
 
 			$NoteLove.GetMy(node.id)
 			.then(r => {
-					this.setState({ "lovedComments": r["my-love"]});
+					this.setState({"lovedComments": r["my-love"]});
 
 					// Sync last
 					this.setState({'tree': this.buildTree()});
 			});
 		})
 		.catch(err => {
-			this.setState({ 'error': err });
+			this.setState({'error': err});
 		});
 	}
 
@@ -163,7 +200,10 @@ export default class ContentComments extends Component {
 		const author = authors[comment.author];
 		const allowAnonymous = parseInt(this.props.node.meta['allow-anonymous-comments']);
 
-		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove allowAnonymous={allowAnonymous} error={error} /></div>;
+		// We can subscribe if we haven't subscribed and we don't have a comment in this thread, and we're not an author. Otherwise we can unsubscribe.
+		let canSubscribe = (this.state.subscribed === null) ? !( this.state.hascomment || this.state.isauthor ) : !this.state.subscribed;
+
+		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove allowAnonymous={allowAnonymous} error={error} cansubscribe={canSubscribe} onsubscribe={this.onSubscribe} /></div>;
 	}
 
 	onPublish( e, publishAnon ) {
@@ -189,7 +229,7 @@ export default class ContentComments extends Component {
 				newcomment.parent = 0;
 				newcomment.body = '';
 
-				this.setState({'tree': this.buildTree()});
+				this.setState({'tree': this.buildTree(), 'hascomment': true});
 			}
 			else {
 				this.setState({'error': (r.message ? r.message : "Unknown error when posting comment")});
@@ -197,6 +237,20 @@ export default class ContentComments extends Component {
 		})
 		.catch(err => {
 			this.setState({'error': err});
+		});
+	}
+
+	onSubscribe( e, subscribe ) {
+		let promise = null;
+		if ( subscribe ) {
+			promise = $Notification.Subscribe( this.props.node.id );
+		}
+		else {
+			promise = $Notification.Unsubscribe( this.props.node.id );
+		}
+
+		promise.then(r => {
+			this.setState({'subscribed': subscribe});
 		});
 	}
 

@@ -1,6 +1,6 @@
-import { h, Component } 				from 'preact/preact';
-//import NavSpinner						from 'com/nav-spinner/spinner';
+import {h, Component} 					from 'preact/preact';
 
+import ContentList						from 'com/content-list/list';
 import ContentPost						from 'com/content-post/post';
 import ContentUser						from 'com/content-user/user';
 import ContentMore						from 'com/content-more/more';
@@ -15,11 +15,11 @@ export default class ContentTimeline extends Component {
 		super(props);
 
 		this.state = {
-			feed: [],
-			hash: {},
-			offset: 5, //10
-			lastadded: null,
-			loaded: false
+			'feed': [],
+			'hash': {},
+			'offset': 5, //10
+			'lastadded': null,
+			'loaded': false
 		};
 
 		this.makeFeedItem = this.makeFeedItem.bind(this);
@@ -88,7 +88,7 @@ export default class ContentTimeline extends Component {
 					this.setState({'feed': feed, 'hash': hash});
 				})
 				.catch(err => {
-					this.setState({ 'error': err });
+					this.setState({'error': err});
 				});
 		}
 
@@ -107,7 +107,7 @@ export default class ContentTimeline extends Component {
 			}
 		})
 		.catch(err => {
-			this.setState({ 'error': err });
+			this.setState({'error': err});
 		});
 	}
 
@@ -179,14 +179,15 @@ export default class ContentTimeline extends Component {
 				return <ContentUser node={node} user={user} path={path} extra={extra} minmax />;
 			}
 			else {
-				return <div class='content-base'>Unsupported Node Type: {""+node.type}</div>;
+				return <div class="content-base">Unsupported Node Type: {""+node.type}</div>;
 			}
 		}
 		return null;
 	}
 
-	render( props, {feed, lastadded, error, loaded} ) {
-		var ShowFeed = [];
+	render( props, state ) {
+		let {feed, lastadded, error, loaded} = state;
+		let ShowFeed = [];
 
 		if ( error ) {
 			ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>error</ContentCommonBody></ContentCommon>);
@@ -194,23 +195,20 @@ export default class ContentTimeline extends Component {
 		else if ( feed && feed.length ) {
 			ShowFeed = ShowFeed.concat(feed.map(this.makeFeedItem));
 		}
-		else if ( feed && feed.length == 0 ){
-			if(!props.noemptymessage)
-			{
+		else if ( feed && (feed.length == 0) ) {
+			if ( !props.noemptymessage ) {
 				ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>Feed is empty</ContentCommonBody></ContentCommon>);
 			}
 		}
 
-		if ( !props.nomore && lastadded > 0 ) {
+		if ( !props.nomore && (lastadded > 0) ) {
 			ShowFeed.push(<ContentMore loading={!loaded} onclick={this.fetchMore} />);
 		}
 
-		// TERRIBLE HACK! There are two #content's!!
 		return (
-			<div id="content">
-				{props.children}
+			<ContentList class={cN("content-timeline", props.class)}>
 				{ShowFeed}
-			</div>
+			</ContentList>
 		);
 	}
 }

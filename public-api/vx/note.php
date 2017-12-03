@@ -103,6 +103,9 @@ switch ( $action ) {
 					$mentions = notification_GetMentionedUsers($body);
 					notification_AddForNote($node['id'], $RESPONSE['note'], $author, $mentions);
 				}
+
+				// Invalidate the cache for the containing node so we recompute the note count immediately on the site.
+				nodeCache_InvalidateById($node['id']);
 			}
 			else {
 				json_EmitFatalError_Permission(null, $RESPONSE);

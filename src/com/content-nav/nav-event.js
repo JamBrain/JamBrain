@@ -1,7 +1,5 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact/preact';
 import SVGIcon 							from 'com/svg-icon/icon';
-import NavLink 							from 'com/nav-link/link';
-
 import ContentNavButton					from 'com/content-nav/nav-button';
 
 
@@ -10,7 +8,9 @@ export default class ContentNavEvent extends Component {
 		super(props);
 	}
 
-	render( {node, user, path, extra}, {} ) {
+	render( props ) {
+		let {node, user, path, extra} = props;
+
 		var NewPath = '/'+ (extra ? extra.join('/') : '');
 		var PartPath = '/'+ (extra && extra.length ? extra[0] : '');
 

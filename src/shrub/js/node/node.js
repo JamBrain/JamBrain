@@ -61,10 +61,19 @@ export function Get( ids ) {
 	// Detect if the incoming data is in feed format
 	let feed = null;
 	if ( ids.length && ids[0].modified ) {
+		// ids is now feed, and we will rebuild ids
 		feed = ids;
 		ids = [];
 		for (let idx = 0; idx < feed.length; idx++) {
-			ids.push(feed[idx].id);
+			let node_id = feed[idx].id;
+			ids.push(node_id);
+
+			// Fetch node if it's already in cache, and invalidate if the feed date is newer
+			let node = _Get(node_id);
+			if ( node && (feed[idx].modified > node.modified) ) {
+				//console.log("Node "+node_id+" was Invalidated ("+feed[idx].modified+" > "+node.modified+")");
+				InvalidateNodeCache(node_id);
+			}
 		}
 	}
 
@@ -144,6 +153,8 @@ function _Keyed( promise, member = 'node', key = 'id' ) {
 
 // Like Get, but nodes will be an object of keys rather than an array of objects
 export function GetKeyed( ids ) {
+	// TODO: decode feed format
+
 	return Get(ids).then( r => {
 		var node = r.node;
 		r.node = {};

@@ -1,4 +1,4 @@
-import {h, Component} 				from 'preact/preact';
+import {h, Component} 					from 'preact/preact';
 
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
@@ -248,8 +248,7 @@ export default class ContentItem extends Component {
 	}
 
 	onSave( e ) {
-		var node = this.props.node;
-		var user = this.props.user;
+		let {node, user} = this.props;
 
 		if ( !user )
 			return null;
@@ -302,7 +301,17 @@ export default class ContentItem extends Component {
 
 	// Generates JSX for the links, depending on whether the page is editing or viewing
 	makeLinks( editing ) {
-		var LinkMeta = [];
+		let LinkMeta = [];
+
+		if ( editing ) {
+			LinkMeta.push(
+				<div class={cN('content-common-link', '-editing', '-header')}>
+					<div class="-tag">Platform</div>
+					<div class="-name">Description (optional)</div>
+					<div class="-url">URL (leave blank to omit)</div>
+				</div>
+			);
+		}
 
 		for ( let idx = 0; idx < this.state.linksShown; idx++ ) {
 			LinkMeta.push(
@@ -338,56 +347,53 @@ export default class ContentItem extends Component {
 //					urlPlaceholder="http://example.com/source.zip"
 
 		return (
-			<ContentCommonBody class="-links">
-				<div class="-label">Links</div>
-				{LinkMeta}
+			<ContentCommonBody>
+				<div class="-label">Downloads and Links</div>
+				<div class="-links">
+					{LinkMeta}
+				</div>
 			</ContentCommonBody>
 		);
 	}
 
 	render( props, state ) {
 		props = Object.assign({}, props);
+		let {node, user, path, extra, featured} = props;
+		let {parent} = state;
 
-		var node = props.node;
-		var user = props.user;
-		var path = props.path;
-		var extra = props.extra;
-		var featured = props.featured;
-		var parent = state.parent;
-
-		var Category = '/';
+		let Category = '/';
 
 		if ( node ) {
 			if ( node.subtype == 'game' ) {
-				props.header = "GAME";
+				props.by = "GAME";
+				props.headerIcon = "gamepad";
 				props.headerClass = "-col-a";
-				props.titleIcon = "gamepad";
 			}
 			else if ( node.subtype == 'tool' ) {
-				props.header = "TOOL";
+				props.by = "TOOL";
+				props.headerIcon = "hammer";
 				props.headerClass = "-col-c";
-				props.titleIcon = "hammer";
 			}
 
 			if ( node.subsubtype == 'jam' ) {
-				props.header += ": JAM";
+				props.by = "JAM "+props.by;
 				Category = '/jam';
 			}
 			else if ( node.subsubtype == 'compo' ) {
-				props.header += ": COMPO";
+				props.by = "COMPO "+props.by;
 				Category = '/compo';
 			}
 			else if ( node.subsubtype == 'craft' ) {
-				props.header += ": CRAFT";
+				props.by = "CRAFT";
 				Category = '/craft';
 			}
 			else if ( node.subsubtype == 'release' ) {
-				props.header += ": RELEASE";
+				props.by = "RELEASED "+props.by;
 				Category = '/release';
 			}
 			else if ( node.subsubtype == 'unfinished' ) {
 				props.headerClass = null;
-				props.header += ": UNFINISHED";
+				props.by = "UNFINISHED "+props.by;
 				Category = '/unfinished';
 			}
 			else {
@@ -397,8 +403,8 @@ export default class ContentItem extends Component {
 			props.draft = "Game";
 		}
 
-		var ShowEventPicker = null;
-		if ( extra && extra.length && extra[0] == 'edit' && node_CanPublish(parent) ) {
+		let ShowEventPicker = null;
+		if ( extra && extra.length && (extra[0] == 'edit') && node_CanPublish(parent) ) {
 			ShowEventPicker = (
 				<ContentCommonNav>
 					<div class="-label">Event</div>
@@ -413,7 +419,7 @@ export default class ContentItem extends Component {
 			);
 		}
 
-		var ShowMetrics = null;
+		let ShowMetrics = null;
 		if ( node.magic ) {
 			let Lines = [];
 			for ( var key in node.magic ) {
@@ -491,7 +497,7 @@ export default class ContentItem extends Component {
 			);
 		}
 
-		var ShowGrade = null;
+		let ShowGrade = null;
 		// Show Grading or Results
 		if ( parseInt(node_CanGrade(parent)) ) {
 			// If it's your game, show some stats
@@ -653,7 +659,7 @@ export default class ContentItem extends Component {
 			); //'
 		}
 
-		var ShowOptOut = null;
+		let ShowOptOut = null;
 		if ( parent && node_CanPublish(parent) ) {
 			let Lines = [];
 
@@ -701,7 +707,7 @@ export default class ContentItem extends Component {
 			);
 		}
 
-		var ShowImages = null;
+		let ShowImages = null;
 		if ( true ) {
 			let ShowImage = null;
 			if ( node.meta && node.meta.cover ) {
@@ -726,7 +732,7 @@ export default class ContentItem extends Component {
 		}
 
 		// Where you can enter your game links
-		var ShowLinkEntry = null;
+		let ShowLinkEntry = null;
 		if ( true ) {
 			ShowLinkEntry = this.makeLinks(true /* editing */);
 		}
@@ -745,7 +751,7 @@ export default class ContentItem extends Component {
 
 		}
 
-		var ShowUploadTips = null;
+		let ShowUploadTips = null;
 		if ( true ) {
 			ShowUploadTips = (
 				<ContentCommonBody>
@@ -758,12 +764,12 @@ export default class ContentItem extends Component {
 			);
 		}
 
-		var ShowLinkView = null;
+		let ShowLinkView = null;
 		if ( true ) {
 			ShowLinkView = this.makeLinks(false /* editing */);
 		}
 
-		var ShowUnfinished = null;
+		let ShowUnfinished = null;
 		if ( true ) {
 			ShowUnfinished = (
 				<ContentCommonBody>
@@ -800,9 +806,9 @@ export default class ContentItem extends Component {
 
 		// Shim to update the save button from this method. See https://facebook.github.io/react/docs/refs-and-the-dom.html
 		props.ref = c => {
- this.contentSimple = c;
-};
+			this.contentSimple = c;
+		};
 
-		return <ContentSimple {...props} by authors />;
+		return <ContentSimple {...props} authors />;
 	}
 }

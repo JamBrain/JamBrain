@@ -1,6 +1,8 @@
-import { h, Component }				from 'preact/preact';
+import {h, Component}					from 'preact/preact';
 
 import ContentLoading					from 'com/content-loading/loading';
+
+import SVGIcon							from 'com/svg-icon/icon';
 
 import FooterButtonMinMax				from 'com/content-common/common-footer-button-minmax';
 import FooterButtonStar					from 'com/content-common/common-footer-button-star';
@@ -25,11 +27,9 @@ export default class ContentCommon extends Component {
 		});
 	}
 
-	render( props, {minimized, error} ) {
-		var node = props.node;
-		var user = props.user;
-		var path = props.path;
-		var extra = props.extra;
+	render( props, state ) {
+		let {node, user, path, extra} = props;
+		let {minimized, error} = state;
 
 		// If a Minimized property was included, invert the internal state
 		if ( props.minimized ) {
@@ -51,13 +51,26 @@ export default class ContentCommon extends Component {
 			if ( minimized )
 				MainClass.push('minimized');
 
+			let HasOldHeader = null;
+//			if ( props.oldheader ) {
+//				let HeaderClass = cN('content-common-old-header', props.headerClass ? props.headerClass : '');
+//
+//				if ( props.headerIcon )
+//					HasOldHeader = <div class={HeaderClass}><SVGIcon small>{props.headerIcon}</SVGIcon> {props.oldheader}</div>;
+//				else
+//					HasOldHeader = <div class={HeaderClass}>{props.oldheader}</div>;
+//			}
+
 			let HasHeader = null;
-			if ( props.header ) {
-				HasHeader = <div class={[
-					'content-common-header',
-					props.headerClass ? props.headerClass : ''
-				]}>{props.header}</div>;
+			if ( props.header || props.headerIcon ) {
+				let HeaderClass = cN('content-common-header', props.headerClass ? props.headerClass : '');
+
+				if ( props.headerIcon )
+					HasHeader = <div class={HeaderClass}><SVGIcon>{props.headerIcon}</SVGIcon> <span>{props.header}</span></div>;
+				else if ( props.header )
+					HasHeader = <div class={HeaderClass}><span>{props.header}</span></div>;
 			}
+
 
 //			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 
@@ -80,10 +93,7 @@ export default class ContentCommon extends Component {
 					Right.push(<FooterButtonEdit node={node} user={user} path={path} />);
 
 				HasFooter = (
-					<div class={[
-						'content-common-footer',
-						(Left.length + Right.length) ? '-has-items' : ''
-					]}>
+					<div class={cN('content-common-footer', (Left.length + Right.length) ? '-has-items' : '')}>
 						<div class="-left">
 							{Left}
 						</div>
@@ -96,8 +106,11 @@ export default class ContentCommon extends Component {
 
 			return (
 				<div class={MainClass}>
-					{HasHeader}
-					<div class="-bodies">{props.children}</div>
+					{HasOldHeader}
+					<div class="-bodies">
+						{HasHeader}
+						{props.children}
+					</div>
 					{HasFooter}
 				</div>
 			);

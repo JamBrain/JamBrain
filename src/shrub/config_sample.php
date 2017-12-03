@@ -24,6 +24,9 @@ const SH_DB_PASSWORD = 'root';
 
 const SH_TABLE_PREFIX = 'sh_';
 
+const SH_SEARCHDB_HOST = '127.0.0.1';
+const SH_SEARCHDB_PORT = 9306;
+
 // Memcached Config //
 //const SH_MEMCACHED_HOST = 'localhost';
 //const SH_MEMCACHED_PORT = 11211;
