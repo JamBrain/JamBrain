@@ -509,15 +509,14 @@ function node_SafeEdit( $node, $slug, $name, $body, $tag = "" ) {
 }
 
 
-// TODO: optional 'set slug'
-// NOTE: Modified not set! Potential bug!
-// NOTE: This should not need a version change. Version change should only be needed by other changes.
+// TODO: optional 'set slug' (... why?)
 function node_Publish( $node, $state = true ) {
 	if ( $state ) {
 		return db_QueryUpdate(
 			"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 			SET
-				published=NOW()
+				published=NOW(),
+				modified=NOW()
 			WHERE
 				id=?;",
 			$node
@@ -528,7 +527,8 @@ function node_Publish( $node, $state = true ) {
 	return db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 		SET
-			published=0
+			published=0,
+			modified=NOW()
 		WHERE
 			id=?;",
 		$node
@@ -564,19 +564,19 @@ function node_GetAuthor( $id ) {
 	return $ret[0];
 }
 
-// NOTE: Modified not set! Potential bug!
-// NOTE: Version/history not updated! Potential bug!
+// NOTE: This is history safe, because as far as history is concerned, it only cares about the author of a change, not the current author
 function node_SetAuthor( $id, $author ) {
 	return db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 		SET
-			author=?
+			author=?,
+			modified=NOW()
 		WHERE
 			id=?;",
 		$author, $id
 	);
 }
-// NOTE: Modified not set! Potential bug!
+
 // NOTE: Version/history not set! Potential bug!
 function node_SetType( $id, $type, $subtype = null, $subsubtype = null ) {
 	$QUERY = [];
@@ -601,7 +601,8 @@ function node_SetType( $id, $type, $subtype = null, $subsubtype = null ) {
 	return db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 		SET
-			$merged_query
+			$merged_query,
+			modified=NOW()
 		WHERE
 			id=?;",
 		...$ARGS
