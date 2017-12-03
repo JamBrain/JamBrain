@@ -6,8 +6,6 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import ContentMore						from 'com/content-more/more';
 
-import DropdownNotification				from '../dropdown-notification/notification';
-
 import NotificationsBase				from 'com/content-notifications/base';
 import Notification						from 'com/content-notifications/notification';
 
@@ -19,6 +17,7 @@ export default class NotificationsFeed extends NotificationsBase {
 		super(props);
 
 		this.state = {
+			errorStatus: 0,
 			maxReadId: 0,
 			offset: 0,
 			limit: 30,
@@ -34,24 +33,34 @@ export default class NotificationsFeed extends NotificationsBase {
 	componentDidMount() {
 
 		$Notification.GetFeedAll(this.state.offset, this.state.limit ).then((r) => {
-			this.processNotificationFeed(r);
+			if (r.status == 200) {
+				this.processNotificationFeed(r);
+			}
+			else {
+				this.setState({errorStatus:r.status});
+			}
 		});
 
 	}
 
 	fetchMore() {
-		const offset = this.state.offset + this.state.feedSize;
+		const offset = this.state.offset + this.state.limit;
 		$Notification.GetFeedAll(offset, this.state.limit ).then((r) => {
-			this.processNotificationFeed(r);
+			if (r.status == 200) {
+				this.processNotificationFeed(r);
+				this.setState({offset:offset});
+			}
+			else {
+				this.setState({errorStatus:r.status});
+			}
 		});
-		this.setState({offset:offset});
 	}
 
 	render( props, state ) {
 
 		const maxReadId = state.highestRead;
 		const processing = state.status === null || this.isLoading();
-		const hasMore = !processing && state.offset + state.feedSize < state.count;
+		const hasMore = !processing && ((state.offset + this.state.limit) < state.count);
 		//console.log(processing, state.offset, state.feedSize, state.count);
 		const hasUnread = this.getHighestNotificationInFeed() > maxReadId;
 		let ShowNotifications = [];
@@ -65,6 +74,12 @@ export default class NotificationsFeed extends NotificationsBase {
 			));
 		});
 
+		if ( ShowNotifications.length == 0 ) {
+			ShowNotifications.push((
+				<div>There are no notifications here. You'll get notifications when other people reply to posts you've made or commented on.</div>
+			));
+		}
+
 		const ShowGetMore = hasMore ? (<ContentMore onclick={this.fetchMore} />) : null;
 
 		const ShowSetAllRead = hasUnread ? (
@@ -72,15 +87,18 @@ export default class NotificationsFeed extends NotificationsBase {
 				class="-button -light focusable"
 				id="button-mark-read"
 				onclick={(e) => {this.markReadHighest();}}>
-				Mark all commentes as read
+				Mark all notifications as read
 			</ButtonBase>) : null;
 
 		const ShowSpinner = processing ? <NavSpinner /> : null;
+
+		const ShowError = state.errorStatus ? ( <div class="-error">Error code {state.errorStatus} while fetching notifications</div> ) : null;
 
 		return (
 			<div class={cN('content-base','content-common','content-notifications',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'')}>
 				<div class="-headline -indent">NOTIFICATIONS</div>
 				{ShowSetAllRead}
+				{ShowError}
 				{ShowNotifications}
 				{ShowGetMore}
 				{ShowSpinner}

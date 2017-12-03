@@ -3,6 +3,8 @@
 /// Also be sure to include the configuration file before including this one.
 /// Configuration is not auto-included, in case you want to customize it
 
+require_once __DIR__."/db_common.php";
+
 /// @defgroup DB
 /// The Database Library (wraps MySQLi)
 /// @ingroup Core
@@ -94,30 +96,6 @@ $DB_ENABLE_DEBUG = 0;	///< Collect additional data about queries being run for d
 $DB_DEBUG_DATA = [];	///< Store structured data about each individual query performed, if debugging is enabled.
 /// @}
 
-/// @name Internal: Error Logging
-/// Used internally for logging database errors.
-/// @{
-function _db_Error( $msg, $public = false ) {
-	$unique = uniqid();
-	$error = "shrub/src/core/db_mysql.php [$unique]: ".$msg;
-	
-	// Log the error to system log
-	error_log($error);
-	
-	if ( php_sapi_name() === 'cli' ) {
-		// CLI, we assume is private
-		echo($error."\n");
-	}
-	else {
-		require_once __DIR__."/json.php";
-		json_EmitError(500, $public ? $error : "See Log [$unique]");
-	}
-}
-function _db_FatalError( $msg, $public = false ) {
-	_db_Error($msg, $public);
-	exit;
-}
-
 function _db_DBError( $public = false ) {
 	global $db;
 	
@@ -127,8 +105,6 @@ function _db_FatalDBError( $public = false ) {
 	_db_DBError($public);
 	exit;
 }
-/// @}
-
 /// @endcond
 
 

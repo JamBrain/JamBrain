@@ -1,22 +1,37 @@
 @import "defs.less";
 
-#content .content-common-body.-link {
-	font-size: 0.75em;
-	padding-top: 0;
+#content .content-common-link {
+	display: flex;
+	font-size: 1em;
+	line-height: 1.5em;
 
-	& .input-text,
-	& .input-dropdown {
-		display: inline-block;
-	}
-	& .input-dropdown {
-		width: 20%;
-	}
-	& .input-text {
-		width: 75%;
-		padding-left: 5%;
+	& > * > span {
+		vertical-align: middle;
 	}
 
-	& a {
-		font-size: 1.25em;
+	& > .-tag,
+	& > .-name {
+		flex: 1;
+	}
+
+	& > .-url {
+		flex: 3;
+	}
+
+	&.-editing {
+		font-size: 0.75em;
+		margin: 0;
+	}
+
+	& > * {
+		margin: 0 0.5em;
+
+		&:first-child {
+			margin-left: 0;
+		}
+
+		&:last-child {
+			margin-right: 0;
+		}
 	}
 }

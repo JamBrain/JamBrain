@@ -7,14 +7,14 @@
 
 #content .content-post {
 	position: relative;
-	
+
 	& > .-header {
 		/*margin: 1em;*/
 		padding: 1em;
 		padding-bottom: 0;
-		
+
 		@spacing: 1.5em;
-		
+
 		& > .-title {
 			font-size: 2.2em;
 			/*font-variant: small-caps;*/
@@ -23,29 +23,34 @@
 			left: -0.1em;
 			margin-right:64px;
 		}
+
 		& > .-subtext {
 			font-size: 0.8em;
 			margin:0.2em 0;
 			margin-right:64px;
 		}
+
 		& > .-avatar {
 			margin: -0.5em;
 			float:right;
 			cursor: pointer;
-			
+
 			position: relative;
-			
+
 			&:hover {
 				background: @POST_BUTTON_LIT;
+
 				& > .-info {
 					display: block;
 					color: @MAJOR_LIGHT;
 				}
 			}
+
 			& > img {
 				display:block;
 				padding: 0.5em;
 			}
+
 			& > .-info {
 				position: absolute;
 				margin: auto;
@@ -54,153 +59,28 @@
 				left: 0;
 				right: 0;
 				font-size: 2em;
-				
+
 				display: none;
 			}
 		}
+
 		& .-author {
 			font-weight:bold;
 		}
-	}	
+	}
+
 	& > .-body {
 		margin: 1em;
 		font-size: 1.1em;
 		line-height: 1.5em;
-	}	
-/*
-	& > .-footer {
-		border-bottom:8px solid @POST_DARK;
-		color: @MAJOR_MUTE;
-		height: 2em;
-
-		& > .-left {
-			position: absolute;
-			left:0;
-			bottom:0;
-			display:flex;
-
-			& > div {
-				line-height:2.5rem;
-				width:2.5rem;
-				height:2.5rem;
-				text-align:center;
-			}
-
-			& > .-minmax {
-				width:auto;
-				padding-left:1rem;
-				padding-right:1rem;
-				background: @POST_DARK;
-				
-				&:after {
-					color: @POST_DARK;
-					
-					content:'';
-					left: 3.5rem;
-					top: -2.5rem;
-					border-top: 2.5rem/2 solid transparent;
-					border-right: 2.5rem/2 solid transparent;
-					border-bottom: 2.5rem/2 solid;
-					border-left: 2.5rem/2 solid;
-					
-					display: block;
-    				position: relative;
-				}
-				
-				&:hover {
-					cursor: pointer;
-					
-					color: @MAJOR_LIGHT;
-					background: @POST_BUTTON_LIT;
-					&:after {
-						color: @POST_BUTTON_LIT;
-					}
-				}
-
-				&:active, &:focus {
-					color: @POST_BUTTON_LIT;
-					background: @MAJOR_LIGHT;
-					&:after {
-						color: @MAJOR_LIGHT;
-					}
-				}
-			}
-		}
-		
-		& > .-right {
-			position: absolute;
-			right: 0;
-			bottom: 0;
-			display: flex;
-
-			& > div {
-				line-height: 2.5rem;
-				height: 2.5rem;
-				text-align: center;
-			}
-			
-			
-			& > .-wedge-right {
-				background: linear-gradient(45deg, @POST_DARK 0px, @POST_DARK 30px, transparent 30px);
-			}
-			& > .-spacer {
-				background: @POST_DARK;
-				& > svg {
-					width:100%;
-					height:100%;
-					color: @MAJOR_MUTE_D5;
-					display:block;
-				}
-			}
-
-			& > .-comment {
-				width:auto;
-				padding-left:1rem;
-				padding-right:1rem;
-				background: @MAJOR_MUTE_D5;
-			}
-			& > .-comment-count {
-				width:auto;
-				padding-right:1rem;
-				background: @MAJOR_MUTE_D5;
-				font-size:1.5em;
-				line-height:2.8rem;
-			}
-
-			& > .-spacer2 {
-				background: @MAJOR_MUTE_D5;
-				& > svg {
-					width:100%;
-					height:100%;
-					color: @MAJOR_MUTE_D4;
-					display:block;
-				}
-			}
-			
-			& > .-gear {
-				background: @MAJOR_MUTE_D4;
-				width:2.5em;
-			}
-		}
 	}
-	
-	@media (max-width: 26em) { 
-		& .-heart-count {
-			display: none !important;
-		}
-	}
-	
-	@media (max-width: 22em) { 
-		& .-comment-count {
-			display: none !important;
-		}
-	}
-*/	
+
 	&.-has-headline {
 		border-top: 0 solid;
+
 		& .-headline {
 			position: relative;
-			
+
 			background: @POST_DARK;
 			color: @POST_BG;
 			height: 1em;
@@ -209,10 +89,11 @@
 			font-style: italic;
 			overflow: hidden;
 			padding-left: 0.5em;
-			
+
 			&.-news {
 				background: @COL_C;
 			}
+
 			&.-event {
 				background: @COL_AB;
 			}

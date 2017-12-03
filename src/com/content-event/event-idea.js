@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 				from 'preact/preact';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
@@ -15,8 +15,8 @@ export default class ContentEventIdea extends Component {
 		super(props);
 
 		this.state = {
-			idea: "",
-			ideas: null
+			"idea": "",
+			"ideas": null
 		};
 
 		this.onKeyDown = this.onKeyDown.bind(this);
@@ -31,14 +31,14 @@ export default class ContentEventIdea extends Component {
 		$ThemeIdea.GetMy([this.props.node.id])
 		.then(r => {
 			if ( r.ideas ) {
-				this.setState({ ideas: r.ideas });
+				this.setState({"ideas": r.ideas});
 			}
 			else {
-				this.setState({ ideas: {} });
+				this.setState({"ideas": {}});
 			}
 		})
 		.catch(err => {
-			this.setState({ error: err });
+			this.setState({"error": err});
 		});
 	}
 
@@ -50,7 +50,7 @@ export default class ContentEventIdea extends Component {
 //		</script>
 
 	textChange( e ) {
-		this.setState({ idea: e.target.value.trim() });
+		this.setState({"idea": e.target.value.trim()});
 	}
 
 	onKeyDown( e ) {
@@ -59,7 +59,7 @@ export default class ContentEventIdea extends Component {
 		}
 		if (e.keyCode === 13) {
 			this.textChange(e);
-			/*e.preventDefault();*/ 
+			/*e.preventDefault();*/
 			this.submitIdeaForm();
 		}
 	}
@@ -73,14 +73,14 @@ export default class ContentEventIdea extends Component {
 			$ThemeIdea.Remove(this.props.node.id, id)
 			.then(r => {
 				//console.log(r.ideas);
-				this.setState({ ideas: r.ideas });
+				this.setState({"ideas": r.ideas});
 			})
 			.catch(err => {
-				this.setState({ error: err });
+				this.setState({"error": err});
 			});
 		}
 		else {
-			this.setState({ error: "Problem with length" });
+			this.setState({"error": "Problem with length"});
 		}
 	}
 
@@ -91,15 +91,15 @@ export default class ContentEventIdea extends Component {
 		if ( idea.length > 0 && idea.length <= 64 ) {
 			$ThemeIdea.Add(this.props.node.id, idea)
 			.then(r => {
-				console.log('r',r);
-				this.setState({ ideas: r.ideas, idea: r.status === 201 ? "" : idea });
+				console.log('r', r);
+				this.setState({"ideas": r.ideas, "idea": r.status === 201 ? "" : idea});
 			})
 			.catch(err => {
-				this.setState({ error: err });
+				this.setState({"error": err});
 			});
 		}
 		else {
-			this.setState({ error: "Problem with length" });
+			this.setState({"error": "Problem with length"});
 		}
 	}
 
@@ -108,8 +108,8 @@ export default class ContentEventIdea extends Component {
 
 		return (
 			<div class="-item">
-				<div class='-x' onclick={this.removeIdea.bind(this, id)}><SVGIcon>cross</SVGIcon></div>
-				<div class='-text' title={idea}>{idea}</div>
+				<div class="-x" onclick={this.removeIdea.bind(this, id)}><SVGIcon>cross</SVGIcon></div>
+				<div class="-text" title={idea}>{idea}</div>
 			</div>
 		);
 	}
@@ -117,7 +117,7 @@ export default class ContentEventIdea extends Component {
 		return Object.keys(this.state.ideas).map(this.renderIdea);
 	}
 
-	render( {node, user, /*path, extra*/}, {idea, ideas, error} ) {
+	render( {node, user/*, path, extra*/ }, {idea, ideas, error} ) {
 		if ( node.slug && ideas ) {
 			if ( user && user['id'] ) {
 				return (

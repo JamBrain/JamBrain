@@ -1,0 +1,170 @@
+<?php
+/*
+	logging		Functions to manage logs and other related files, and calls to write log text
+	
+*/
+
+
+$errorcount = 0;
+
+
+function ErrorSummary()
+{
+	global $errorcount;
+	$s = ($errorcount==1)?"":"s";
+	Message($errorcount . " error$s during this run.");
+	// Future: maybe relog the last few errors for reference?
+}
+
+function TimeString()
+{
+  $d = new DateTime();
+  return $d->format("Y-m-d H:i:s");
+}
+
+function ReportError($text)
+{
+	global $errorcount;
+	$errorcount++;	
+	$text = "[" . TimeString() . "] Error: " . $text . "\n";
+	
+	LdApi::PrintLastRequestResponse();
+	
+	print( "\x1b[1;31m" . $text . "\x1b[m"); // Draw with intense red color
+	LogFull($text);
+	LogErr($text);
+}
+function Verbose($text)
+{
+	$text = "[" . TimeString() . "] Verbose: " . $text . "\n";
+	print($text);
+	LogFull($text);
+}
+function VerboseHidden($text)
+{
+	$text = "[" . TimeString() . "] Verbose: " . $text . "\n";
+	LogFull($text);
+}
+
+function VerboseAction($text)
+{
+	$text = "[" . TimeString() . "] Verbose: " . $text . "\n";
+	print( "\x1b[1;34m" . $text . "\x1b[m"); // Draw in blue with intensity
+	LogFull($text);
+}
+function Message($text)
+{
+	$text = "[" . TimeString() . "] " . $text . "\n";
+	print( "\x1b[1m" . $text . "\x1b[m"); // Draw with greater intensity.
+	LogFull($text);
+	LogErr($text);
+}
+
+function LogExec($execAction)
+{
+	exec($execAction, $results);
+	Verbose("Exec '$execAction':\n".implode("\n",$results));
+}
+
+
+
+$flogfull = null;
+$flogerr = null;
+
+function LogFull($text)
+{
+	global $flogfull;
+	if($flogfull != null)
+	{
+		fwrite($flogfull, $text);
+		fflush($flogfull);
+	}
+}
+function LogErr($text)
+{
+	global $flogerr;
+	if($flogerr != null)
+	{
+		fwrite($flogerr, $text);
+		fflush($flogerr);
+	}
+}
+
+function OpenLogs($index)
+{
+	global $logbase;
+	global $flogfull;
+	global $flogerr;
+	global $eventbase;
+	$fulllog = $logbase . "." . $index . ".log";
+	$errlog = $eventbase . "." . $index . ".err";
+	$flogfull = fopen($fulllog, "a");
+	$flogerr = fopen($errlog, "a");
+}
+
+function CloseLogs()
+{
+	global $flogfull;
+	global $flogerr;
+	fclose($flogfull);
+	fclose($flogerr);
+	$flogfull = null;
+	$flogerr = null;
+}
+
+function OpenPreviousEventFile()
+{
+	global $eventbase;
+	global $eventindex;
+	$log = $eventbase . "." . ($eventindex-1) . ".event";
+	if(!is_file($log)) { return false; }
+	return fopen($log, "r");
+}
+
+function OpenEventFile()
+{
+	global $eventbase;
+	global $eventindex;
+	$log = $eventbase . "." . $eventindex . ".event";
+	return fopen($log, "w");
+}
+
+function OpenMarkovFile()
+{
+	global $logbase;
+	global $eventindex;
+	$log = $logbase . "." . $eventindex . ".markov";
+	return fopen($log, "a");
+}
+
+function OpenWikiDataFile()
+{
+	global $logbase;
+	global $eventindex;
+	$log = $logbase . "." . $eventindex . ".lastwikidata";
+	return fopen($log, "a");
+}
+
+function OpenStatsFile()
+{
+	global $logbase;
+	global $eventindex;
+	$log = $logbase . "." . $eventindex . ".stats";
+	return fopen($log, "a");
+}
+
+function OpenHtmlStatsFile()
+{
+	global $htmlbase;
+	global $eventindex;
+	$log = $htmlbase . "." . $eventindex . ".stats.html";
+	return fopen($log, "a");
+}
+
+function OpenRawStatsFile()
+{
+	global $htmlbase;
+	global $eventindex;
+	$log = $htmlbase . "." . $eventindex . ".rawstats.csv";
+	return fopen($log, "a");
+}

@@ -1,0 +1,192 @@
+@import "defs.less";
+
+#content .content-headliner {
+	overflow: hidden;
+
+	/* Default Palette */
+	background: @COL_NDDD;
+	color: @COL_L;
+
+	& .-inv {
+		background: @COL_L;
+		color: @COL_NDDD;
+	}
+
+	/* Specific Palettes */
+	&.-col-a {
+		background: @COL_A;
+		color: @COL_L;
+
+		& .-inv {
+			background: @COL_L;
+			color: @COL_A;
+		}
+	}
+
+	&.-col-ab {
+		background: @COL_AB;
+		color: @COL_L;
+
+		& .-inv {
+			background: @COL_L;
+			color: @COL_AB;
+		}
+	}
+
+	&.-col-b {
+		background: @COL_B;
+		color: @COL_L;
+
+		& .-inv {
+			background: @COL_L;
+			color: @COL_B;
+		}
+	}
+
+	&.-col-bc {
+		background: @COL_BC;
+		color: @COL_L;
+
+		& .-inv {
+			background: @COL_L;
+			color: @COL_BC;
+		}
+	}
+
+	&.-col-c {
+		background: @COL_C;
+		color: @COL_L;
+
+		& .-inv {
+			background: @COL_L;
+			color: @COL_C;
+		}
+	}
+
+	&.-col-ca {
+		background: @COL_CA;
+		color: @COL_L;
+
+		& .-inv {
+			background: @COL_L;
+			color: @COL_CA;
+		}
+	}
+
+
+	/* Styles */
+	& > .-name {
+		&.button-base:hover {
+			background: @COL_A;
+			color: @COL_L;
+
+			&::after {
+				color: @COL_A;
+			}
+		}
+
+		float: left;
+		padding-left: 1rem;
+		margin-right: 2.25em;
+		/*line-height: 1.45em;*/	/* hack for better alignment (should be 1.5) */
+		line-height: 2.2em;
+		height: 2.25em;			/* Need this, otherwise vertical-align: middle makes line height report wrong height */
+		font-size: 1.5em;
+		font-weight: bold;
+		font-style: italic;
+
+		position: relative;
+
+		& > .-text {
+			vertical-align: middle;
+		}
+
+		& > svg {
+			font-size: 1em;/*0.75em;*/
+		}
+
+		&::after {
+			position: absolute;
+			display: block;
+			content: '';
+			right: -2.25em;
+			top: 0;
+			border-top: 1.125em solid;
+			border-right: 1.125em solid transparent;
+			border-bottom: 1.125em solid transparent;
+			border-left: 1.125em solid;
+
+			color: @COL_L;
+		}
+	}
+
+	& > .-item {
+		padding: 0.25rem 1rem;
+
+		& > .-text,
+		& > .-subtext {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		& > .-text {
+			font-size: 1.25em;
+
+			& .-title {
+				font-weight: bold;
+			}
+
+			& .-subtitle {
+				font-size: 0.8em;
+				opacity: 0.7;
+			}
+		}
+
+		& > .-subtext {
+			font-size: 0.75em;
+			/*padding: 0.125rem 0;*/
+
+			& span {
+				vertical-align: middle;
+			}
+
+			& .-label {
+				font-size: 0.75em;
+				padding: 0.1em 0.3em;
+				border-radius: 0.3em;
+			}
+
+			/* gaps */
+			& > span {
+				padding-left: 1em;
+				padding-right: 1em;
+
+				&:first-child {
+					padding-left: 0;
+				}
+
+				&:last-child {
+					padding-right: 0;
+				}
+			}
+		}
+
+		&.button-base:hover {
+			background: @COL_A;
+
+			& .-inv {
+				color: @COL_A;
+			}
+		}
+	}
+
+	& > .-more {
+		text-align: center;
+		font-size: 0.5em;
+
+		& > svg {
+			margin: 0.25em;
+		}
+	}
+}

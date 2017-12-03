@@ -99,7 +99,8 @@ if ( in_array($table, $TABLE_LIST) ) {
 }
 
 
-$table = 'SH_TABLE_NODE_META';
+//$table = 'SH_TABLE_NODE_META';
+$table = 'SH_TABLE_NODE_META_VERSION';
 if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
 	
@@ -130,7 +131,103 @@ if ( in_array($table, $TABLE_LIST) ) {
 			);
 		if (!$ok) break; $TABLE_VERSION++;
 		
+	// *** This was formerly SH_TABLE_NODE_META. As of now it's SH_TABLE_NODE_META_VERSION *** //
+	
+	case 3:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE `node` `a` ".DB_TYPE_ID.";"
+			);
+			// Rename 'node' to 'a'
+		if (!$ok) break; $TABLE_VERSION++;
+	case 4:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD COLUMN b ".DB_TYPE_ID."
+					AFTER a;"
+			);
+			// Add the 'b' column 
+		if (!$ok) break; $TABLE_VERSION++;
+	case 5:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				DROP INDEX node;"
+			);
+			// remove the old 'node' index (MariaDB can't rename)
+		if (!$ok) break; $TABLE_VERSION++;
+	case 6:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD INDEX a (a);"
+			);
+			// Add a new index for `a` (MariaDB can't rename)
+		if (!$ok) break; $TABLE_VERSION++;
+	case 7:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD INDEX b (b);"
+			);
+			// Index the new 'b' column
+		if (!$ok) break; $TABLE_VERSION++;
+	case 8:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				MODIFY COLUMN timestamp ".DB_TYPE_TIMESTAMP."
+					AFTER b;"
+			);
+			// Move timestamp after b
+		if (!$ok) break; $TABLE_VERSION++;
+	case 9:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				MODIFY COLUMN `key` ".DB_TYPE_ASCII(31).";"
+			);
+			// Make `key` 31 characters instead of 32 (scope+key = 1+31 bytes)
+		if (!$ok) break; $TABLE_VERSION++;
+	case 10:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				MODIFY COLUMN `value` ".DB_TYPE_NODE_LINK_VALUE.";"
+			);
+			// Allow null `value`
+		if (!$ok) break; $TABLE_VERSION++;
+	};
+	table_Exit($table);
+}
+
+
+$table = 'SH_TABLE_NODE_META';
+if ( in_array($table, $TABLE_LIST) ) {
+	$ok = null;
+	
+	table_Init($table);
+	switch ( $TABLE_VERSION ) {
+	case 0:
+		$ok = table_Create( $table,
+			"CREATE TABLE ".SH_TABLE_PREFIX.constant($table)." (
+				id ".DB_TYPE_UID.",
+				a ".DB_TYPE_ID.",
+					INDEX(a),
+				b ".DB_TYPE_ID.",
+					INDEX(b),
+				timestamp ".DB_TYPE_TIMESTAMP.",
+				version ".DB_TYPE_ID.",
+				scope ".DB_TYPE_NODE_SCOPE.",
+					INDEX(scope),
+				`key` ".DB_TYPE_ASCII(31).",
+					INDEX(`key`),
+				`value` ".DB_TYPE_NODE_LINK_VALUE."
+			)".DB_CREATE_SUFFIX);
+		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD UNIQUE `a_b_key` (`a`, `b`, `key`);"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+
 		// NOTE: `value` cannot be indexed, since it is not a VARCHAR
+		// NOTE: `scope` needs to be indexed, so we can do >= 0 check
 	};
 	table_Exit($table);
 }

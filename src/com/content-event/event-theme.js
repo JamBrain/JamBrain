@@ -26,10 +26,6 @@ export default class ContentEventTheme extends Component {
 
 	}
 
-	componentDidMount() {
-	}
-
-
 	render( props ) {
 		var node = props.node;
 		var user = props.user;
@@ -78,9 +74,6 @@ export default class ContentEventTheme extends Component {
 			else if ( parseInt(NewPath.substr(1)) > 0 ) {
 				ShowBody = <ContentEventList node={node} user={user} path={path} extra={extra} />;
 			}
-
-			console.log( NewPath );
-
 
 			return (
 				<ContentCommon {...props}>

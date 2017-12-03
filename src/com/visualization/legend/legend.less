@@ -1,0 +1,31 @@
+
+.chart {
+	& > .-legend {
+		flex: 1;
+		padding-left: 15px;
+		padding-right: 15px;
+		align-self: center;
+
+		& > ul {
+			& > li {
+				list-style: none;
+
+				& > .-shape-circle {
+					display: inline-block;
+					vertical-align: middle;
+					width: 32px;
+					height: 32px;
+					border-radius: 50%;
+				}
+
+				& > p {
+					display: inline-block;
+					margin-left: 1em;
+					margin-top: 0.5em;
+					margin-bottom: 0.5em;
+
+				}
+			}
+		}
+	}
+}

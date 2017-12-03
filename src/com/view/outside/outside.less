@@ -1,0 +1,19 @@
+@import "defs.less";
+
+/* NOTE: This a specialty style for views that should look as if they are outside the content view */
+
+.outside {
+	color: @MAJOR_MUTE;
+
+	& a, & a:visited {
+		color: @MAJOR_COLOR3;
+
+		white-space: nowrap;
+		text-decoration: none;
+	}
+
+	& a:hover, & a:focus {
+		color: @MAJOR_LIGHT;
+		background: @MAJOR_COLOR1;
+	}
+}

@@ -1,8 +1,8 @@
-import { h, render, Component }			from 'preact/preact';
-import ViewBar 							from 'com/view-bar/bar';
+import {h, render, Component}			from 'preact/preact';
+import ViewBar 							from 'com/view/bar/bar';
 
-//import ViewTimeline						from 'com/view-timeline/timeline';
-//import ViewSingle						from 'com/view-single/single';
+//import ViewTimeline						from 'com/view/timeline/timeline';
+//import ViewSingle						from 'com/view/single/single';
 
 //import CoreData							from '../core-data/data';
 

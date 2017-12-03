@@ -1,18 +1,49 @@
-
 #content .content-boxes {
 	display: flex;
+	flex-flow: wrap;
 	flex-direction: row;
-	flex-wrap: wrap;
 	justify-content: flex-start; /* space-between; */
 	align-items: flex-start;
-	
 	margin: -0.5rem;	/* to undo the effect of the 0.5rem margin in items */
-	
+	margin-top: 2.25rem !important;
+
 	& > * {
-		flex: 1;
-		
-		min-width: 240px;
-		max-width: 640px;
 		margin: 0.5rem;
+	}
+
+	&.-columns-1 {
+		& > * {
+			flex: 1 1 100% !important;
+		}
+	}
+
+	&.-columns-2 {
+		& > * {
+			flex: 1 1 45% !important;
+		}
+	}
+
+	&.-columns-3 {
+		& > * {
+			flex: 1 1 25% !important;
+		}
+	}
+
+	&.-columns-4 {
+		& > * {
+			flex: 1 1 20% !important;
+		}
+	}
+
+	&.-columns-5 {
+		& > * {
+			flex: 1 1 16% !important;
+		}
+	}
+
+	&.-columns-6 {
+		& > * {
+			flex: 1 1 13% !important;
+		}
 	}
 }

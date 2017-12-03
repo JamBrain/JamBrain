@@ -5,30 +5,31 @@
 		display: block;
 		box-sizing: border-box;
 		width: 100%;
-		
+
 		font-size: 1.2em;
-		
+
 		/*margin-bottom: 1em;*/
-		
+
 		background: @COL_NLLLL;
 		border: 1px solid @COL_NLLL;
 		border-radius: 0.25em;
 		padding: 0.25em;
-		
+
 		&:focus {
 			background: @COL_W;
 		}
 	}
+
 	& > .-footer {
 		font-size: 0.8em;
 		overflow: hidden;
 
-		& > .-left {}
+		& > .-left {
+			float: right;
+		}
+
 		& > .-right {
 			float: right;
 		}
-		
-		& .-chars {}
-		& .-limit {}
 	}
 }

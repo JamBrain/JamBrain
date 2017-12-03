@@ -1,0 +1,798 @@
+<?php
+/*
+	model_default	This file is the default model to be used by the Ludumdare event simulator.
+					Contains a model data structure and all the related action functions.
+
+
+
+	Stages definition:
+Each stage is a hashtable with a number of properties that are used to determine the behavior in that stage.
+Properties:
+	Name => Name to display for the stage
+	Phases => if present, number indicating how many phases there are to the stage (otherwise just one)
+	MaxMinutes => if present, override the time for each phase in this stage to avoid spending a lot of time on it.
+	MaxEventsPerUser => if present, impose a hard limit on events per user for each phase in this stage to avoid spending a lot of time on this section.
+	StageStart => Function that is called when the stage starts
+	StageEnd => Function that is called when the stage ends
+	PhaseStart => Function to be called when a phase starts
+	PhaseEnd => Function to be called when a phase ends
+	
+	Always => List of functions (actions) to be called by all simulated users in this phase
+	LowChance => List of functions (actions) to be called by a few (at least one, but less than half) of the simulated users in this phase. Each function gets its own list of users
+	HighChance => list of functions (actions) to be called by most (not all, but at least half) of the simulated users in this phase. Each function gets its own list of users
+	
+	UserVerify => Function that is called arbitrarily to ask the system to verify that the data it receives from the website for a specific user is consistent with what it expects.
+	
+About start/end functions:
+	Stage start and end have no argument
+	Phase start and end are passed the current phase index as an argument.
+	
+About actions:
+	The action function is always called to ask a specific user to take action.
+	The action function is passed a user array, and the phase index.
+	if the action function returns false, it will not be called again for that user in that phase. Otherwise it may be called multiple times.
+	
+About reporting errors:
+	TBD
+	
+*/
+$stages = array(
+	// First stage, create users and generate the event
+	array(
+		"Name" => "Setup",
+		"StageStart" => 'SetupEvent',
+		"MaxMinutes" => 1,
+		"MaxEventsPerUser" => 3,
+		"LowChance" => array('PostImIn', 'CommentOnPost') // Early "I'm In" posts
+	),
+	// Second stage, Theme voting
+	array(
+		"Name" => "Theme Voting",
+		"Phases" => 7, // Theme suggestion + theme slaughter + 4 rounds of voting + theme selection
+		"MaxMinutes" => 1, // This is per phase
+		"MaxEventsPerUser" => 5,
+		"PhaseStart" => 'SetupThemePhase',
+		"HighChance" => ['UserVoteOnTheme'],
+		"LowChance" => array('PostImIn', 'CommentOnPost', 'LikePosts', 'CommentUnlike', 'ReadNotifications')  // More various "I'm In" posts will trickle in
+	),
+	// Third stage, LD Starts!
+	array(
+		"Name" => "Compo Running",
+		"StageStart" => 'StartCompo',
+		"HighChance" => array('CompoPostUpdate', 'CompoEditGame', 'CommentOnPost', 'LikePosts'),
+		"LowChance" => array('CommentOnGame', 'CompoPublishGame', 'CommentUnlike', 'ReadNotifications')
+	),
+	// Fourth stage, Submission deadline
+	array(
+		"Name" => "Compo Submission Period",
+		"StageStart" => 'SetupSubmission',
+		"MaxMinutes" => 2,
+		"MaxEventsPerUser" => 10,
+		"HighChance" => array('CommentOnGame', 'CompoPublishGame', 'LikePosts'),
+		"LowChance" => array('CompoPostUpdate', 'CompoEditGame', 'CommentOnPost', 'CommentUnlike', 'ReadNotifications'),
+	),
+	// Fifth stage, Voting
+	array(
+		"Name" => "Compo Voting",
+		"StageStart" => 'SetupVoting',
+		"MaxEventsPerUser" => 80,
+		"HighChance" => array('CommentOnGame', 'VoteOnGame', 'LikePosts', 'LikeGames'),
+		"LowChance" => array('CommentOnPost', 'CompoEditGame', 'CompoPostUpdate', 'CommentUnlike', 'ReadNotifications')
+	),
+	// Sixth stage - Closed / resuts
+	array(
+		"Name" => "Compo Results",
+		"StageStart" => 'EndCompo',
+		"LowChance" => array('CommentOnGame', 'CommentOnPost', 'CompoEditGame', 'CompoPostUpdate', 'CommentUnlike', 'CompoPostResults', 'LikePosts', 'LikeGames', 'ReadNotifications')
+	)
+);
+
+
+$event_nodeid = null;
+$event_name = null;
+
+
+// Prepare the event. Create an admin superuser. Create all the compo users. Create the new LudumDare event. Publish the event node.
+// Some of this has to be done through the database directly (finding the email verification links, and creating the ludumdare event and setting it up)
+// We'll also use some data from the database to make the naming a bit more friendly.
+function SetupEvent()
+{
+	global $event_admin_user, $event_users, $event_user_lookup, $event_name, $event_userids;
+	global $usercount, $userchurn;
+
+	// Load or create users
+	if(!Create_Users($usercount,$userchurn))
+	{
+		Message("Failing due to errors creating / logging in users.");
+		exit;
+	}
+	
+	AddMissingTags();
+	
+
+	// Make sure all but a few users have some of the other users starred.
+	//function ApiNodeStarAdd(&$user, $nodeid) // GET node/star/add/:node_id
+	//function ApiNodeStarRemove(&$user, $nodeid) // GET node/star/remove/:node_id
+
+	$nostars = [];
+	foreach($event_users as $user)
+	{
+		$node = ApiNodeGetMy($event_user_lookup[$user["username"]]);
+		if($node == null) { ReportError("Failed to get node"); }
+		$node["name"] = $user["username"];
+		if( isset($node['meta']) && isset($node['meta']['star']) && count($node['meta']['star']) > 0 )
+		{
+			continue;
+		}
+		$nostars[] = $node;
+	}
+	
+	shuffle($nostars);
+	
+	$nostarcount = intval(count($event_userids) / 4);
+	while(count($nostars) > $nostarcount)
+	{
+		$node = array_shift($nostars);
+		
+		$avoid = [$node["id"]];
+		for($i = 0; $i < 3; $i++)
+		{
+			$index = random_int(1,count($event_userids))-1;
+			$otheruser = $event_userids[$index];
+			if(in_array($otheruser, $avoid)) { continue; }
+			
+			$username = $node["name"];
+			Verbose("User ".$node["id"]." ($username) adding star for $otheruser");
+			if(!ApiNodeStarAdd($event_user_lookup[$username], $otheruser))
+			{
+				ReportError("Failed to star another user.");
+			}
+			$avoid[] = $otheruser;
+		}
+	}
+	
+	
+	
+	// Now generate an event
+	global $event_nodeid;
+	global $eventindex;
+	$parentnode = 1; // Future: build out a more complex structure for this test.
+	$author = $event_admin_user["id"];
+	$eventname = "Testumdare " . ($eventindex);  
+	$event_name = $eventname;
+	$eventbody = GenerateRandomPostText();
+	
+	$starttime = time();
+	$endtime = $starttime + 48*60*60;
+	$formatStart = gmdate("Y-m-d\TH:i:s\Z", $starttime);
+	$formatEnd = gmdate("Y-m-d\TH:i:s\Z", $endtime);
+
+
+	// Promote our admin user to administrator
+	nodeMeta_Add($author, 0, SH_SCOPE_PUBLIC, 'can-create', 'event');
+	// Set a meta through the API to cause cache invalidation
+	if(!ApiNodeMetaAdd($event_admin_user, $author, 'real-name', "Super Admin User")) ReportError("Failed to add user meta through API");
+
+
+	// Create event
+	$event_nodeid = node_Add( $parentnode, $author, "event", "", "", null, $eventname, $eventbody);
+
+	// Add metadata
+	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'event-start', $formatStart);
+	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'event-end', $formatEnd);
+
+	// Create metadata for grading
+	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'grade-01', 'Overall');
+	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'grade-02', 'Silliness');
+	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'grade-03', 'Hexadecimal');
+	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'grade-04', '100101101001');
+	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'grade-05', 'Logicality');
+	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'grade-06', 'Complexity');
+	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'grade-07', 'Infinitude');
+	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'grade-08', 'Waterproofness');
+
+	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'grade-05-optional', 1);
+	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'grade-06-optional', 1);
+	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'grade-07-optional', 1);
+	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'grade-08-optional', 1);
+
+	// Add last meta through API, to invalidate cache.
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-create', 'item/game')) ReportError("Failed to add event meta through API");
+	
+	// Also publish the event
+	if(!ApiNodePublish($event_admin_user, $event_nodeid))
+	{
+		ReportError("Failed to publish the event node.");
+	}
+
+	// Make featured
+	nodeMeta_Add(1, 0, SH_SCOPE_PUBLIC, 'featured', "$event_nodeid");
+	
+	
+
+}
+
+// Set up for each of the phases of the theme selection, in sequence.
+function SetupThemePhase($phase)
+{
+	global $event_nodeid, $event_admin_user;
+	
+	switch($phase)
+	{
+	case 0: // Theme Suggestion
+		Message("Starting Theme Suggestion");
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-theme', '1')) ReportError("Failed to add event meta through API");
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '1')) ReportError("Failed to add event meta through API");
+		break;
+		
+	case 1: // Theme Slaughter
+		Message("Starting Theme Slaughter");
+		Verbose("Run external tool to perform suggestion deduplication");
+		LogExec("sudo php ~/www/src/shrub/tools/theme/theme itsautomatic dupes");
+	
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '2')) ReportError("Failed to add event meta through API");
+		break;
+	
+	case 2: // Theme voting
+		Message("Starting Theme Voting Round 1");	
+		Verbose("Run external tool to score theme slaughter");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic score");
+		
+		Verbose("Run external tool to populate theme voting pages");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic simple-vote 3");
+	
+		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-1', 1); // This meta isn't yet supported to be added by admin.
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '4')) ReportError("Failed to add event meta through API");
+		break;
+		
+	case 3:
+		Message("Starting Theme Voting Round 2");	
+		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-2', 1);
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '4')) ReportError("Failed to add event meta through API");
+		break;
+		
+	case 4:
+		Message("Starting Theme Voting Round 3");	
+		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-3', 1);
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '4')) ReportError("Failed to add event meta through API");
+		break;
+
+	case 5:
+		Message("Starting Final Theme Voting Round");	
+		Verbose("Running external tool to sum votes and populate final round");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic calc 1");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic calc 2");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic calc 3");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic finalize 10"); // Compute top 10 scoring themes into final round.
+		
+		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-4', 1);
+		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-name-4', "Final Round");
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '4')) ReportError("Failed to add event meta through API");
+		break;
+
+	case 6: // Final theme selection
+		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-1', 2);
+		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-2', 2);
+		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-3', 2);
+		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-4', 2);
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '5')) ReportError("Failed to add event meta through API");
+		
+		
+		Verbose("Run external tool to compute stats for final round");
+		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic calc 4");
+		
+		// Determine theme from the data
+		$themes = themeList_GetByNode($event_nodeid, 4);
+		
+		$cmp = function($a, $b) {
+			if ($a['score'] == $b['score']) {
+				return 0;
+			}
+			return ($a['score'] > $b['score']) ? -1 : 1;
+		};
+		usort($themes, $cmp);		
+
+		$theme = "Fluffy Bunnies";
+		if(count($themes) > 0)
+		{
+			$theme = $themes[0]["theme"];
+		}
+		Message("Setting Event theme to $theme");
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'event-theme', $theme)) ReportError("Failed to add event meta through API");
+
+		nodeCache_InvalidateById($event_nodeid);
+		break;
+	}
+}
+
+// The compo has now started, the theme voting is now locked and a theme is selected. The users will be sure to mention the theme in some of their posts.
+function StartCompo()
+{
+	global $event_nodeid, $event_admin_user;
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '5')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-publish', '1')) ReportError("Failed to add event meta through API");
+}
+
+// The compo has now stopped and will only accept submissions for a limited amount of time. Configure the event to this mode.
+function SetupSubmission()
+{
+	global $event_nodeid, $event_admin_user;
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '6')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-publish', '1')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-grade', '1')) ReportError("Failed to add event meta through API");
+}
+
+// Submission is over, and now the voting period begins
+function SetupVoting()
+{
+	global $event_nodeid, $event_admin_user;
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '6')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-publish', '0')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-grade', '1')) ReportError("Failed to add event meta through API");
+}
+
+// Voting is over, close out the compo.
+function EndCompo()
+{
+	global $event_nodeid, $event_admin_user;
+	
+	Verbose("Computing results...");
+	LogExec("sudo php ../src/shrub/tools/grade/grade itsautomatic score compo 7"); # Require 7 ratings to be placed.
+	LogExec("sudo php ../src/shrub/tools/grade/grade itsautomatic score jam 7"); # Require 7 ratings to be placed.
+	
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '8')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-grade', '0')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'event-finished', '1')) ReportError("Failed to add event meta through API");
+}
+
+// User should discover and interact with the available options in the current theme voting phase.
+function UserVoteOnTheme(&$user, $phase)
+{
+	global $event_nodeid;
+	
+	switch($phase)
+	{
+	case 0: // Theme Suggestion
+		$suggest_count = random_int(1,3);
+		$existing_themes = ApiThemeIdeaGetmy($user, $event_nodeid);
+		$theme_keys = array_keys($existing_themes);
+		if($existing_themes === null)
+		{
+			ReportError("Failed to GetMy Theme Ideas");
+			return false;
+		}
+		$total = $suggest_count + count($existing_themes);
+		while($total > 3)
+		{
+			$removeid = array_shift($theme_keys);
+			Verbose("Removing theme ".$existing_themes[$removeid]);
+			// Remove themes!
+			if(null === ApiThemeIdeaRemove($user, $event_nodeid, $removeid))
+			{
+				ReportError("Failed to remove theme!");
+			}
+			$total--;
+		}
+		
+		for($i=0;$i<$suggest_count;$i++)
+		{
+			$suggestion = GenerateRandomPhrase(1,4);
+			Verbose("Suggesting theme $suggestion");
+			if(null === ApiThemeIdeaAdd($user, $event_nodeid, $suggestion))
+			{
+				ReportError("Failed to suggest theme!");
+			}
+		}
+		
+		$existing_themes = ApiThemeIdeaGetmy($user, $event_nodeid);
+		if($existing_themes === null)
+		{
+			ReportError("Failed to GetMy Theme Ideas again");
+			return false;
+		}
+		
+		if(count($existing_themes) < 1)
+		{
+			ReportError("Suggested themes were not returned in theme/idea/getmy");
+		}
+		break;
+		
+	case 1: // Theme Slaughter
+		$slaughter_count = random_int(5,20);
+		
+		$allslaughter = ApiThemeIdeaVoteGet($user, $event_nodeid);
+		if(null === $allslaughter)
+		{
+			ReportError("Failed to get theme suggestions for slaughter");
+			return false;
+		}
+		
+		Verbose("Got ".count($allslaughter)." slaughter items - Going to vote on $slaughter_count");
+		$keys = array_keys($allslaughter);
+		for($i=0;$i<$slaughter_count;$i++)
+		{
+			$index = random_int(1,count($keys))-1;
+			$id = $keys[$index];
+			
+			$value = random_int(0,1); // vote yes/no.
+			if(random_int(1,100) == 1) 
+			{
+				$value = -1; // Occasionally, flag.
+			}
+			
+			if(null === ApiThemeIdeaVoteSet($user, $id, $value))
+			{
+				ReportError("Failed to theme/idea/vote");
+			}
+		}
+	
+		$myslaughter = ApiThemeIdeaVoteGet($user, $event_nodeid);
+		if(count($myslaughter) < 1)
+		{
+			ReportError("Expected to see slaughter votes, but did not find any");
+		}
+		
+		break;
+		
+	case 2: // Theme voting
+	case 3:
+	case 4:
+	case 5:
+		$page = $phase-1;
+		
+		$votecount = random_int(2,10);
+	
+		$voteable = ApiThemeListGet($user, $event_nodeid, $page);
+		if($voteable === null) 
+		{
+			ReportError("Unable to get theme voting list");
+			return false;
+		}
+		if(count($voteable) == 0)
+		{
+			Verbose("Warning: Voting page $page does not have any entries to vote on!");
+			return false;
+		}
+	
+		Verbose("Got ".count($voteable)." theme voting items - Going to vote on $votecount");
+		for($i=0;$i<$votecount;$i++)
+		{
+			$index = random_int(1,count($voteable))-1;
+			$vote = random_int(0,2)-1;
+			
+			$result = ApiThemeListVoteSet($user, $voteable[$index]["id"], $vote);
+			if($result === null)
+			{
+				ReportError("Api rejected theme list vote");
+			}
+		}
+
+		$myvotes = ApiThemeListVoteGetmy($user, $event_nodeid);
+		if(count($myvotes) < 1)
+		{
+			ReportError("Expected to see theme votes, but did not find any");
+		}
+	
+		break;
+	case 6: // Final theme selection	
+		return false; // Nothing to do in this case.
+	}
+	
+	return true;
+}
+
+
+// Post a very simple "I'm In" post. Only do this once per event.
+function PostImIn(&$user, $phase)
+{
+	if($user["postedimin"]) return false;
+	
+	$title = "I'm In";
+	$body = "I'm In " . GenerateRandomPostText();
+	$nodeid = CreatePost($user, $title, $body);
+	MaybeReactToPost($user, $nodeid);
+	
+	$user["postedimin"] = true;
+	return false;
+}
+
+
+// Read through recent posts and comments on them, and randomly like comments
+function LikePosts(&$user, $phase)
+{
+	$posts = GetRecentEventPosts($user);
+	if($posts != null)
+	{
+		LikeFeed($user, $posts);
+	}
+	return true;
+}
+
+// Read through highly sorted games and comments on them, and randomly like comments
+function LikeGames(&$user, $phase)
+{
+	$posts = GetTopGames($user);
+	if($posts != null)
+	{
+		LikeFeed($user, $posts);
+	}
+	return false;
+}
+
+// Helper: given a list of nodes, like at least one of them, and examine comments.
+function LikeFeed(&$user, $nodes)
+{
+	if($nodes == null || count($nodes) == 0) return;
+	
+	$likecount = 0;
+	foreach($nodes as $n)
+	{
+		if(random_int(1,10) == 1) LikeCommentsNode($user, $n);
+		if(random_int(1,40) == 1)
+		{
+			$likecount++;
+			LikeNode($user, $n["id"]);
+		}
+	}
+	if($likecount == 0)
+	{
+		$n = $nodes[random_int(1,count($nodes))-1];
+		LikeNode($user, $n["id"]);		
+	}	
+}
+
+function MaybeReactToPost(&$user, $nodeid)
+{
+	// Don't react to every post.
+	if(random_int(1,3) == 1)
+	{
+		$nodes = ApiNodeGet($user, $nodeid);
+		if($nodes == null) 
+		{
+			ReportError("Could not get post to react to.");
+			return;
+		}
+		ReactToPost($user, $nodes[0]);
+	}
+}
+
+// Grab a subset of users in the system and ask them to look at this newly generated post. They may like, comment.
+function ReactToPost(&$user, $node)
+{
+	global $event_user_lookup;
+	$usernames = array_keys($event_user_lookup);
+	
+	$min_users = count($usernames)/10;
+	$max_users = count($usernames)/3;
+	$react_count = random_int($min_users, $max_users);
+	
+	for($i=0; $i<$react_count; $i++)
+	{
+		$random_user = random_int(1,count($usernames))-1;
+		$username = $usernames[$random_user];
+		$reactuser = &$event_user_lookup[$username];
+		
+		Verbose("User " . $username . " reacting to post...");
+		
+		if(random_int(1,3) == 1)
+		{
+			LikeNode($reactuser, $node["id"]);
+		}
+		
+		// Add likes to the comments on the node
+		LikeCommentsNode($reactuser, $node);
+		
+		if(random_int(1,5) == 1)
+		{
+			// Maybe comment on the post.
+			$body = GenerateRandomPostText();
+			CreateComment($reactuser, $node["id"], $body);
+		}
+		
+	}
+}
+
+// Helper: fetch a node's comments, and maybe like some of them.
+function LikeCommentsNode(&$user, $node)
+{
+	$comments = GetNodeComments($user, $node["id"]);
+	if($comments != null)
+	{
+		foreach($comments as $c)
+		{
+			if(random_int(1,10) == 1) LikeComment($user, $c["id"]);
+		}
+	}
+}
+
+// Find a recent post in the feed, and post a comment - and optionally give it or one of its comments a like.
+function CommentOnPost(&$user, $phase)
+{
+	$commentcount = random_int(1,5);
+	for($i=0;$i<$commentcount;$i++)
+	{
+		$post = GetRandomRecentPost($user);
+		if($post != null)
+		{
+			$body = GenerateRandomPostText();
+			CreateComment($user, $post["id"], $body);
+		}
+	}
+	return true;
+}
+
+// Find a game through one of the game lists, and give it a comment, and optionally give it or one of its comments a like.
+function CommentOnGame(&$user, $phase)
+{
+	$commentcount = random_int(1,3);
+	for($i=0;$i<$commentcount;$i++)
+	{
+		$post = GetRandomTopGame($user);
+		if($post != null)
+		{
+			$anonymous = null;
+			// If Anonymous comments are enabled, we might generate an anonymous comment.
+			if( isset($post['meta']['allow-anonymous-comments']) && $post['meta']['allow-anonymous-comments'] )
+			{
+				$anonymous = random_int(1,5) == 1;
+			}
+		
+			$body = GenerateRandomPostText();
+			CreateComment($user, $post["id"], $body, $anonymous);
+		}
+	}
+	return true;
+}
+// Find a game through one of the game lists, and vote on it. Or change the votes to something else.
+function VoteOnGame(&$user, $phase)
+{
+	if ( !$user["publishedgame"] ) {
+		Verbose("Not going to vote because game is unpublished.");
+		return false;
+	}
+
+	$games = GetVoteGames($user);
+	
+	$rate_count = random_int(5,10);
+	// Walk through games in order until we find a number of games we haven't ranked.
+	// For games we havne't ranked, vote on them and add to the ranked list.
+	
+	foreach($games as $game)
+	{
+		$id = $game["id"];
+		if(key_exists($id, $user["rated_games"])) 
+		{ 
+			// Chance to re-rate a rated game, but usually we'll rate new games.
+			if(random_int(1,20) != 1) { continue; } 
+		}
+		
+		if ( $id == $user["game_node"] ) {
+			Verbose("Skipping game ID $id as this is the user's game");
+			continue;
+		}
+		
+		Verbose("Voting on game ID $id");
+		
+		// Future, consider opt-outs on this game. For now just vote all categories.
+		// We know there are 8 categories, so hardcoding for now
+		
+		for($i=1;$i<=8;$i++)
+		{
+			$value = random_int(1,10) / 2.0;
+			$result = ApiGradeAdd($user,$id,"grade-0".$i,$value);
+			if($result === null)
+			{
+				ReportError("Failed to add vote");
+			}
+		}
+	
+		// Sometimes randomly remove one of the votes, to test that path
+		if(random_int(1,10) == 1)
+		{
+			$remove = random_int(1,8);
+			$result = ApiGradeRemove($user,$id,"grade-0".$remove);
+			if($result === null)
+			{
+				ReportError("Failed to remove vote");
+			}
+		}
+		
+		$grades = ApiGradeGetmy($user,$id);
+		if(count($grades) < 1)
+		{
+			ReportError("My grades don't appear for this node.");
+		}
+
+		$user["rated_games"][$id] = true;
+		$rate_count--;
+		if($rate_count < 1) { break; }
+	}
+	RunMagic();
+	return true;
+}
+
+// Remove a like from some post/comment/game that was liked previously. The simulated user revisits the node and comments, and removes the like.
+function CommentUnlike(&$user, $phase)
+{
+	UnlikeRandom($user);
+	return false;
+}
+
+// Generate and post a new item to the compo feed
+function CompoPostUpdate(&$user, $phase)
+{
+	$title = GenerateRandomPostTitle();
+	$body = GenerateRandomPostText(5);
+	$nodeid = CreatePost($user, $title, $body);
+	MaybeReactToPost($user, $nodeid);
+	
+	// There's a limit to how many posts a user should make. Try not to make too many more.
+	return count($user["posts"]) < 3;
+}
+
+// And this is the part of the game where some users wish to parade their stats into the news feed, or complain about PoV :)
+function CompoPostResults(&$user, $phase)
+{
+	return false;
+}
+
+// Modify the record for the current user's game and submit an update.
+function CompoEditGame(&$user, $phase)
+{
+	// For now, just carelessly replace everything. Future: do something smarter.
+	$title = GenerateRandomPostTitle();
+	$body = GenerateRandomPostText(6);
+	ModifyGame($user, $title, $body);
+	return true;
+}
+// Can only be called once. If the game is not published, publish it.
+function CompoPublishGame(&$user, $phase)
+{
+	// Need to ensure there is something good before publish.
+	$title = GenerateRandomPostTitle();
+	$body = GenerateRandomPostText(6);
+	ModifyGame($user, $title, $body);
+
+	PublishGame($user);
+	return false;
+}
+function ReadNotifications(&$user, $phase)
+{
+	// Mostly exercising this code, looking for errors.
+	$count = ApiNotificationCount($user, "unread");
+	if($count === null) { ReportError("Failed to get notification count"); }
+	$allcount = ApiNotificationCount($user, "all");
+	if($allcount === null) { ReportError("Failed to get notification count"); }
+
+	Verbose("Have $allcount notifications, $count unread.");
+
+	$feed = ApiNotificationFeed($user, "unread");
+	if($feed === null) { ReportError("Failed to get notification feed"); }
+	if(count($feed) == 0 && $count > 0)
+	{
+		ReportError("Something wrong with notifications - Unread count was >0, but unread feed is empty.");
+	}
+
+	$allfeed = ApiNotificationFeed($user, "all");
+	if($allfeed === null) { ReportError("Failed to get notification feed"); }
+	
+	if($count > 20) {
+		$feed2 = ApiNotificationFeed($user, "unread", 20, 20);
+		if($feed2 === null) { ReportError("Failed to get notification feed"); }
+	}
+	if($allcount > 20) {
+		$allfeed2 = ApiNotificationFeed($user, "all", 20, 20);
+		if($allfeed2 === null) { ReportError("Failed to get notification feed"); }
+	}
+	
+	if(count($feed) > 0)
+	{
+		Verbose("Marking all notifications read. ". $feed[0]['id']);
+		if(!ApiNotificationMarkRead($user, $feed[0]['id']))
+		{
+			ReportError("Failed to mark notifications as read");
+		}
+	}
+}
+
+

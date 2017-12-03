@@ -1,0 +1,65 @@
+#!/usr/bin/env php
+<?php
+// Migrating SH_NODE_LINK to SH_NODE_META_VERSION
+// 
+// - follow the steps of 'meta-to-version' first
+// - copy everything from sh_node_link to sh_node_meta_version (table is nearly an exact match)
+
+const CONFIG_PATH = "../../src/shrub/";
+const SHRUB_PATH = "../../src/shrub/src/";
+
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
+require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
+
+echo "\n** LINK MIGRATION -- STAGE 2 **\n";
+echo "\n";
+echo "IMPORTANT! Make sure you've complete STAGE 1 (i.e. meta-to-version) before continuing.\n";
+
+echo "\nContinue [type 'YES']? ";
+flush();
+$input = trim(fgets(STDIN));
+if ( $input != "YES" ) {
+	echo "Aborting...\n";
+	exit(1);
+}
+
+echo "\n\n";
+echo "1. IMPORTANT! We are about to copy everything found in 'sh_node_link' to 'sh_node_meta_version'!\n";
+echo "THIS CANNOT BE UNDONE! Ensure you have backups before continuing! This can take a while.\n";
+echo "\n";
+
+echo "\nContinue [type 'YES']? ";
+flush();
+$input = trim(fgets(STDIN));
+if ( $input != "YES" ) {
+	echo "Aborting...\n";
+	exit(1);
+}
+
+echo "\n\n";
+echo "Importing...\n";
+
+// NOTE: MK db_QueryDelete is actually a query that returns how many rows were changed. Fix this.
+$total = db_QueryDelete("
+	INSERT IGNORE
+	  INTO sh_node_meta_version
+	  (a, b, timestamp, scope, `key`, `value`)
+	SELECT a, b, timestamp, scope, `key`, `value`
+	  FROM sh_node_link;
+	");
+
+echo $total." items added.\n";
+
+echo "\n\n";
+echo "2. The 'sh_node_link' table is no longer needed, and can be dropped.\n";
+echo "\n\n";
+echo "3. All the sh_global entries 'SH_TABLE_NODE_LINK' can be removed.\n";
+
+echo "\n\n";
+echo "This is the end of STAGE 2.\n";
+echo "Finally, go run the 'version-to-meta' script for the final set of instructions.\n";
+echo "\n";
+
+exit(0);

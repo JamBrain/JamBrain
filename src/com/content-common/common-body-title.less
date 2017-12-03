@@ -2,13 +2,14 @@
 
 #content .content-common-body.-title {
 	position: relative;
-
 	margin: 1rem 1rem 0;
-	
-	& a, 
+	line-height: 1.75em;
+
+	& a,
 	& a:visited {
 		line-height: 1.2em;
 		color: @COL_NDDD;
+
 		&:hover,
 		&:focus {
 			color: @COL_L;
@@ -21,16 +22,16 @@
 			display: block;
 			box-sizing: border-box;
 			width: 100%;
-			
+
 			font-size: 1.2em;
-			
+
 			margin-bottom: 1em;
-			
+
 			background: @COL_NLLLL;
 			border: 1px solid @COL_NLLL;
 			border-radius: 0.25em;
 			padding: 0.25em;
-			
+
 			&:focus {
 				background: @COL_W;
 			}
@@ -40,14 +41,15 @@
 	& > .-text {
 		position: relative;
 
-		font-size: 2.1em;
-		
+		font-size: 1.75em;
+
 		@media (max-width: (@BASE_WIDTH - 20em)) {
 			font-size: 1.9em;
 		}
 	}
+
 	& > .-subtext {
-		font-size: 1.9em;
+		font-size: 1.5em;
 
 		color: @COL_NL;
 
@@ -56,13 +58,13 @@
 		}
 	}
 
-	
+
 	&.-has-subtitle {
 		& > .-text {
 			font-weight: bold;
 		}
 	}
-	
+
 	& svg {
 		margin-right: 0.5em;
 	}

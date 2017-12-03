@@ -1,5 +1,4 @@
 import { h, Component } 				from 'preact/preact';
-import NavSpinner						from 'com/nav-spinner/spinner';
 
 import ContentLoading					from 'com/content-loading/loading';
 import ContentError						from 'com/content-error/error';
@@ -10,9 +9,9 @@ import ContentItemBox					from 'com/content-item/item-box';
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
-//import ContentPost						from 'com/content-post/post';
-//import ContentUser						from 'com/content-user/user';
 import ContentMore						from 'com/content-more/more';
+
+import LayoutChangeableGrid 							from 'com/layout/grid/changeable-grid';
 
 import $Node							from '../../shrub/js/node/node';
 
@@ -22,11 +21,11 @@ export default class ContentGames extends Component {
 		super(props);
 
 		this.state = {
-			feed: [],
-			hash: {},
-			offset: 12-5, //10-5
-			added: null,
-			loaded: false
+			'feed': [],
+			'hash': {},
+			'offset': 12-5, //10-5
+			'added': null,
+			'loaded': false
 		};
 
 		this.fetchMore = this.fetchMore.bind(this);
@@ -135,33 +134,65 @@ export default class ContentGames extends Component {
 		this.setState({'offset': offset + 12});
 	}
 
-	render( props, {feed, added, error, loaded} ) {
+	static matchesFilter(node, filter) {
+		if ( node === undefined ) {
+			return false;
+		}
+		//console.log(filter);
+		if ( filter && filter.active ) {
+			const {wordsLowerCase} = filter;
+			if ( wordsLowerCase.length > 0 ) {
+				let matches = 0;
+				wordsLowerCase.forEach((text) => {
+
+					if ( text && (node.name.toLowerCase().indexOf(text) > -1 || node.body.toLowerCase().indexOf(text) > -1) ) {
+						matches++;
+					}
+				});
+				return matches > 0;
+			}
+			//TODO: check tags
+			return true;
+		}
+		return true;
+	}
+
+	render( props, state ) {
 		var Class = ['content-base'];
+		let {feed, added, error, loaded, defaultLayout, layout} = state;
 //        props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 //        props.class.push("content-games");
 //        props.class.push("content-item-boxes");
 
 		var LoadMore = null;
-
-		if (error){
+		const {filter} = props;
+		if ( error ) {
 			return <ContentError code="400">"Bad Request : Couldn't load games"</ContentError>;
 		}
-		else if(feed && feed.length > 0)
-		{
-			var Games = feed.map(r => {
-				return <ContentItemBox node={r.node} user={props.user} path={props.path} noevent={props.noevent ? props.noevent : null} />;
-			});
-
-			if ( !props.nomore /*|| added >= 10*/ ){
+		else if ( feed && (feed.length > 0) ) {
+			if ( !props.nomore /*|| added >= 10*/ ) {
 				LoadMore = <ContentMore onclick={this.fetchMore} />;
 			}
 
-			return(
+			let Games = feed.map((r, index) => {
+				if ( ContentGames.matchesFilter(r.node, filter) ) {
+					return (
+						<ContentItemBox
+							node={r.node}
+							user={props.user}
+							path={props.path}
+							noevent={props.noevent ? props.noevent : null}
+						/>
+					);
+				}
+			});
+
+			return (
 				<div class={cN(Class, props.class)}>
 					{props.children}
-					<div class='content-boxes'>
+					<LayoutChangeableGrid columns={layout}>
 						{Games}
-					</div>
+					</LayoutChangeableGrid>
 					{LoadMore}
 				</div>
 			);

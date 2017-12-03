@@ -1,0 +1,171 @@
+@import "defs.less";
+
+/* All cells have a border (though it's sometimes transparent) */
+@CAL_BORDER: 2px;
+
+/* The calender can show up to 2 months at once */
+@CAL_MONTH1_BG: @COL_NLLL;
+@CAL_MONTH1_COL: @COL_NL;
+@CAL_MONTH2_BG: @COL_NLL;
+@CAL_MONTH2_COL: @COL_N;
+
+/* Scheduled events override the MONTH1/2 behavior */
+@CAL_SCHEDULED_BG: @COL_CM;
+@CAL_SCHEDULED_COL: @COL_NLLLL;
+
+/* Selected (today) also overrides the MONTH1/2 behavior (but it's different for scheduled days) */
+@CAL_SEL_BG: @COL_L;
+@CAL_SEL_COL: @COL_NLL;
+@CAL_SCHEDULED_BG_SEL: lighten(@CAL_SCHEDULED_BG, 20%);
+@CAL_SCHEDULED_COL_SEL: @COL_L;
+
+/* Hovering overrides all behaviors */
+@CAL_LIT_BG: @COL_A;
+@CAL_LIT_COL: @COL_W;
+
+#sidebar > .sidebar-calendar {
+	box-shadow: 0 0 5px rgba(0,0,0,0.25);
+
+	& > .-week {
+		display: flex;
+		align-items: stretch;
+
+		& > div {
+			position: relative;
+
+			font-weight: bold;
+			cursor: pointer;
+
+			background: @CAL_MONTH1_BG;
+			color: @CAL_MONTH1_COL;
+
+			&.month {
+				background: @CAL_MONTH2_BG;
+				color: @CAL_MONTH2_COL;
+			}
+			border: @CAL_BORDER solid transparent;
+
+			transition: background 0.1s, color 0.2s, border 0.2s;
+
+			margin-right: 1px;
+			margin-bottom: 1px;
+
+			/*transition: transform 0.1s, z-index 0.1s;*/
+
+			/* This is the perfect square trickery: http://stackoverflow.com/a/23754080 */
+			width: 100%;
+
+			&::after {
+				padding-bottom: 100%; /* Previously: 14.29% (100 / 7) */
+				/* The trick used to work by padding/margin with %'s, which were based on width. */
+				/* Now you add a dummy element, which we do here via the pseudo element. */
+
+				content: '';
+				display: block;
+			}
+
+
+			/* Elements are positioned absolutely, so not to affect the flow (and make the box bigger) */
+			& > .-text {
+				position: absolute;
+				top: -1px;/*0.1em;*/
+				left: 2px;/*0.1em;*/
+			}
+
+			& > .-icon {
+				position: absolute;
+				bottom: 2px;
+				right: 2px;
+			}
+
+
+			&.scheduled,
+			&.scheduled.month {
+				background: @CAL_SCHEDULED_BG;
+				color: @CAL_SCHEDULED_COL;
+				border: @CAL_BORDER solid transparent;
+
+				&.weekend {
+					background: @CAL_SCHEDULED_BG;
+					color: @CAL_SCHEDULED_COL;
+					border: @CAL_BORDER solid @CAL_SCHEDULED_BG_SEL;
+				}
+			}
+
+			/* Hover */
+			&:hover,
+			&:focus,
+			&.weekend:hover,
+			&.weekend:focus {
+				z-index:10;
+
+				&,
+				&.month,
+				&.scheduled {
+					background: @CAL_LIT_BG;
+					color: @CAL_LIT_COL;
+					border: @CAL_BORDER solid transparent;
+				}
+
+				/*transform: scale(1.2, 1.2);*/
+			}
+
+			&:active,
+			&.weekend:active {
+				/*transform: scale(0.9, 0.9);*/
+			}
+
+			/* Saturday and Sunday */
+			&.weekend {
+				border: @CAL_BORDER solid @CAL_MONTH1_BG;
+				color: @CAL_MONTH1_BG;
+				background: @CAL_MONTH1_COL;
+
+				&.month {
+					border: @CAL_BORDER solid @CAL_MONTH2_BG;
+					color: @CAL_MONTH2_BG;
+					background: @CAL_MONTH2_COL;
+				}
+			}
+
+			/* Cleanup */
+			&:last-child {
+				margin-right: 0;
+			}
+		}
+
+		/* Selected */
+		& > .selected,
+		& > .selected.month {
+			/* Text and BG */
+			&,
+			&.weekend {
+				background: @CAL_SEL_BG;
+				color: @CAL_SEL_COL;
+			}
+
+			&.scheduled,
+			&.scheduled.weekend {
+				background: @CAL_SCHEDULED_BG_SEL;
+				color: @CAL_SCHEDULED_COL_SEL;
+			}
+
+			/* Borders */
+			&,
+			&.scheduled {
+				border: @CAL_BORDER solid transparent;
+			}
+
+			&.weekend,
+			&.weekend.scheduled {
+				border: @CAL_BORDER solid @CAL_SCHEDULED_COL_SEL;
+			}
+		}
+
+		& > .event {
+			font-weight: bold;
+		}
+	}
+
+	/*box-shadow: 0px 0px 3px rgba(64,0,0,0.2);*/
+}

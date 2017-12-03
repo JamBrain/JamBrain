@@ -1,0 +1,81 @@
+@import "defs.less";
+
+
+#sidebar > .sidebar-shortlist {
+	margin: 1em;
+	color: @COL_NLLL;/*@MAJOR_MUTE;*/
+
+	& > .-title {
+		font-size: 1.4em;
+		padding-bottom: 0.125em;
+		margin-bottom: 0.5rem;
+		border-bottom: 1px solid @COL_NLLL;/*@MAJOR_MUTE;*/
+
+		color: @COL_B; /*@MAJOR_COLOR4;*/
+
+		& > svg {
+			color: @COL_NLLLL; /*@MAJOR_COLOR3;*/
+		}
+
+		& > .-text {
+			font-size: 1.3em;
+			/*font-weight: bold;*/
+			/*margin-left: 0.25em;*/
+		}
+	}
+
+	& > .-summary {
+		font-style: italic;
+	}
+
+	& > .-gap {
+		margin-bottom: 1em;
+	}
+
+	& > .-footer {
+		margin: 1em 0;
+		padding: 0.5em;
+		text-align: center;
+		cursor: pointer;
+		font-weight: bold;
+		border: 1px solid;
+
+		transition: background 0.1s, color 0.1s, border 0s;
+
+		&:hover,
+		&:focus {
+			background: @COL_A; /*@MAJOR_COLOR1*/
+			border: 1px solid transparent;
+			color: @COL_W; /*@MAJOR_LIGHT;*/
+		}
+	}
+
+	& a,
+	& a:visited {
+		color: @COL_B; /*@MAJOR_COLOR3;*/
+
+		&.-footer {
+			color: @COL_NLLL;
+
+			&:hover,
+			&:focus {
+				border: 1px solid transparent;
+				color: @COL_W;
+			}
+		}
+
+		transition: background 0.1s, color 0.1s, border 0s;
+
+		white-space: nowrap;
+		text-decoration: none;
+		/*		padding: .1em .15em 0;
+		border-radius: .05em;
+		margin: -.1em -.075em 0;*/
+	}
+
+	& a:hover,
+	& a:focus {
+		color: @COL_W; /*@MAJOR_LIGHT;*/
+		background: @COL_A; /*@MAJOR_COLOR1;*/
+	}
+}

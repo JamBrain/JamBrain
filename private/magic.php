@@ -157,7 +157,7 @@ if ( $featured_id ) {
 
 				$node = &$nodes[$magic['node']];
 				if ( $node ) {
-					$authors = $node['link']['author'];
+					$authors = $node['meta']['author'];
 					
 					$node_grades_out = [];
 					foreach ( $node['meta'] as $key => &$value ) {
@@ -237,4 +237,7 @@ if ( $featured_id ) {
 			$db->commit();
 		}
 	}
+	
+	// Invalidate cached object that selects random games based on smart ratings.
+	nodeRandomGames_InvalidateCache();
 }

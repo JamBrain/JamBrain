@@ -164,7 +164,7 @@ function note_GetByNode( $ids ) {
 			$ret[$note['node']][$note['id']] = $note;
 		}
 	}
-	else {
+	else if ( is_array($notes) ) {
 		foreach( $notes as &$note ) {
 			$ret[$note['id']] = $note;
 		}

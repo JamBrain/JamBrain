@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact/preact';
 
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
@@ -17,9 +17,8 @@ import InputStar						from 'com/input-star/star';
 
 import ContentSimple					from 'com/content-simple/simple';
 
-
 import $Node							from '../../shrub/js/node/node';
-import $NodeMeta						from '../../shrub/js/node/node_meta';
+//import $NodeMeta						from '../../shrub/js/node/node_meta';
 import $Grade							from '../../shrub/js/grade/grade';
 import $Asset							from '../../shrub/js/asset/asset';
 
@@ -39,8 +38,7 @@ export default class ContentItem extends Component {
 
 			'linksShown': 1,
 
-//			'platforms': [],
-//			'tags': [],
+			'allowAnonymous': parseInt(node.meta['allow-anonymous-comments']),
 		};
 
 		for ( let i = 0; i < 9; i++ ) {
@@ -56,6 +54,7 @@ export default class ContentItem extends Component {
 		this.onSetJam = this.onSetJam.bind(this);
 		this.onSetCompo = this.onSetCompo.bind(this);
 		this.onSetUnfinished = this.onSetUnfinished.bind(this);
+		this.onAnonymousComments = this.onAnonymousComments.bind(this);
 	}
 
 	componentDidMount() {
@@ -80,7 +79,7 @@ export default class ContentItem extends Component {
 			}
 		})
 		.catch(err => {
-			this.setState({ 'error': err });
+			this.setState({'error': err});
 		});
 	}
 
@@ -118,7 +117,7 @@ export default class ContentItem extends Component {
 
 		return $Grade.Add(Node.id, name, value)
 			.then(r => {
-				if ( r && r.id || !!r.changed ) {
+				if ( (r && r.id) || !!r.changed ) {
 					var Grades = this.state.grade;
 
 					Grades[name] = value;
@@ -138,7 +137,7 @@ export default class ContentItem extends Component {
 		if ( value ) {
 			Data[Name] = 1;
 
-			return $NodeMeta.Add(Node.id, Data)
+			return $Node.AddMeta(Node.id, Data)
 				.then(r => {
 					if ( r && r.changed ) {
 						this.props.node.meta[Name] = Data[Name];
@@ -150,7 +149,7 @@ export default class ContentItem extends Component {
 		else {
 			Data[Name] = 0;
 
-			return $NodeMeta.Remove(Node.id, Data)
+			return $Node.RemoveMeta(Node.id, Data)
 				.then(r => {
 					if ( r && r.changed ) {
 						this.props.node.meta[Name] = Data[Name];
@@ -191,7 +190,7 @@ export default class ContentItem extends Component {
 						let Data = {};
 						Data[name] = FileName;
 
-						return $NodeMeta.Add(node.id, Data);
+						return $Node.AddMeta(node.id, Data);
 					}
 
 					return Promise.resolve({});
@@ -203,9 +202,27 @@ export default class ContentItem extends Component {
 					}
 				})
 				.catch(err => {
-					this.setState({ 'error': err });
+					this.setState({'error': err});
 				});
 		}
+	}
+
+	onAnonymousComments () {
+		const anon = this.state.allowAnonymous;
+		const node = this.props.node;
+		let update = null;
+		if (anon) {
+			update = $Node.RemoveMeta(node.id, {'allow-anonymous-comments': 0});
+		}
+		else {
+			update = $Node.AddMeta(node.id, {'allow-anonymous-comments': 1});
+		}
+
+		return update.then(r => {
+				if ( r && r.changed ) {
+					this.setState({'allowAnonymous': !anon});
+				}
+			});
 	}
 
 	onModifyLinkName( Index, e ) {
@@ -233,8 +250,7 @@ export default class ContentItem extends Component {
 	}
 
 	onSave( e ) {
-		var node = this.props.node;
-		var user = this.props.user;
+		let {node, user} = this.props;
 
 		if ( !user )
 			return null;
@@ -279,15 +295,25 @@ export default class ContentItem extends Component {
 			}
 		}
 
-//		this.setState({});		
+//		this.setState({});
 //		console.log(Data);
 
-		return $NodeMeta.Add(node.id, Data);
+		return $Node.AddMeta(node.id, Data);
 	}
 
 	// Generates JSX for the links, depending on whether the page is editing or viewing
 	makeLinks( editing ) {
-		var LinkMeta = [];
+		let LinkMeta = [];
+
+		if ( editing ) {
+			LinkMeta.push(
+				<div class={cN('content-common-link', '-editing', '-header')}>
+					<div class="-tag">Platform</div>
+					<div class="-name">Description (optional)</div>
+					<div class="-url">URL (leave blank to omit)</div>
+				</div>
+			);
+		}
 
 		for ( let idx = 0; idx < this.state.linksShown; idx++ ) {
 			LinkMeta.push(
@@ -297,7 +323,7 @@ export default class ContentItem extends Component {
 					url={this.state.linkUrls[idx]}
 					urlPlaceholder="http://example.com/file.zip"
 					editing={editing}
-					filter='platform'
+					filter="platform"
 					onModifyName={this.onModifyLinkName.bind(this, idx)}
 					onModifyTag={this.onModifyLinkTag.bind(this, idx)}
 					onModifyUrl={this.onModifyLinkUrl.bind(this, idx)}
@@ -323,56 +349,53 @@ export default class ContentItem extends Component {
 //					urlPlaceholder="http://example.com/source.zip"
 
 		return (
-			<ContentCommonBody class="-links">
-				<div class="-label">Links</div>
-				{LinkMeta}
+			<ContentCommonBody>
+				<div class="-label">Downloads and Links</div>
+				<div class="-links">
+					{LinkMeta}
+				</div>
 			</ContentCommonBody>
 		);
 	}
 
 	render( props, state ) {
 		props = Object.assign({}, props);
+		let {node, user, path, extra, featured} = props;
+		let {parent} = state;
 
-		var node = props.node;
-		var user = props.user;
-		var path = props.path;
-		var extra = props.extra;
-		var featured = props.featured;
-		var parent = state.parent;
-
-		var Category = '/';
+		let Category = '/';
 
 		if ( node ) {
 			if ( node.subtype == 'game' ) {
-				props.header = "GAME";
+				props.by = "GAME";
+				props.headerIcon = "gamepad";
 				props.headerClass = "-col-a";
-				props.titleIcon = "gamepad";
 			}
 			else if ( node.subtype == 'tool' ) {
-				props.header = "TOOL";
+				props.by = "TOOL";
+				props.headerIcon = "hammer";
 				props.headerClass = "-col-c";
-				props.titleIcon = "hammer";
 			}
 
 			if ( node.subsubtype == 'jam' ) {
-				props.header += ": JAM";
+				props.by = "JAM "+props.by;
 				Category = '/jam';
 			}
 			else if ( node.subsubtype == 'compo' ) {
-				props.header += ": COMPO";
+				props.by = "COMPO "+props.by;
 				Category = '/compo';
 			}
 			else if ( node.subsubtype == 'craft' ) {
-				props.header += ": CRAFT";
+				props.by = "CRAFT";
 				Category = '/craft';
 			}
 			else if ( node.subsubtype == 'release' ) {
-				props.header += ": RELEASE";
+				props.by = "RELEASED "+props.by;
 				Category = '/release';
 			}
 			else if ( node.subsubtype == 'unfinished' ) {
 				props.headerClass = null;
-				props.header += ": UNFINISHED";
+				props.by = "UNFINISHED "+props.by;
 				Category = '/unfinished';
 			}
 			else {
@@ -382,8 +405,8 @@ export default class ContentItem extends Component {
 			props.draft = "Game";
 		}
 
-		var ShowEventPicker = null;
-		if ( extra && extra.length && extra[0] == 'edit' && node_CanPublish(parent) ) {
+		let ShowEventPicker = null;
+		if ( extra && extra.length && (extra[0] == 'edit') && node_CanPublish(parent) ) {
 			ShowEventPicker = (
 				<ContentCommonNav>
 					<div class="-label">Event</div>
@@ -398,7 +421,7 @@ export default class ContentItem extends Component {
 			);
 		}
 
-		var ShowMetrics = null;
+		let ShowMetrics = null;
 		if ( node.magic ) {
 			let Lines = [];
 			for ( var key in node.magic ) {
@@ -476,7 +499,7 @@ export default class ContentItem extends Component {
 			);
 		}
 
-		var ShowGrade = null;
+		let ShowGrade = null;
 		// Show Grading or Results
 		if ( parseInt(node_CanGrade(parent)) ) {
 			// If it's your game, show some stats
@@ -547,12 +570,12 @@ export default class ContentItem extends Component {
 
 					let Stars = [];
 					for ( let idx2 = 0; idx2 < Score; idx2++ ) {
-						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
+						Stars.push(<ButtonBase class="-star" onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
 					}
 					for ( let idx2 = Score; idx2 < 5; idx2++ ) {
-						Stars.push(<ButtonBase class='-star' onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
+						Stars.push(<ButtonBase class="-star" onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
 					}
-					Stars.push(<ButtonBase class='-delete' onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
+					Stars.push(<ButtonBase class="-delete" onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
 
 					Stars.push(<InputStar value='2.5' max='5' small number />);
 					Stars.push(<InputStar value='2.5' max='5' number />);
@@ -642,7 +665,7 @@ export default class ContentItem extends Component {
 			); //'
 		}
 
-		var ShowOptOut = null;
+		let ShowOptOut = null;
 		if ( parent && node_CanPublish(parent) ) {
 			let Lines = [];
 
@@ -690,7 +713,7 @@ export default class ContentItem extends Component {
 			);
 		}
 
-		var ShowImages = null;
+		let ShowImages = null;
 		if ( true ) {
 			let ShowImage = null;
 			if ( node.meta && node.meta.cover ) {
@@ -704,7 +727,7 @@ export default class ContentItem extends Component {
 					<div class="-upload">
 						<div class="-path">{node.meta && node.meta.cover ? node.meta.cover : "" }</div>
 						<label>
-							<input type="file" name="asset" style="display: none;" onchange={this.onUpload.bind(this,'cover')} />
+							<input type="file" name="asset" style="display: none;" onchange={this.onUpload.bind(this, 'cover')} />
 							<ButtonBase class="-button"><SVGIcon small baseline gap>upload</SVGIcon>Upload</ButtonBase>
 						</label>
 						{ShowImage}
@@ -715,12 +738,26 @@ export default class ContentItem extends Component {
 		}
 
 		// Where you can enter your game links
-		var ShowLinkEntry = null;
+		let ShowLinkEntry = null;
 		if ( true ) {
 			ShowLinkEntry = this.makeLinks(true /* editing */);
 		}
 
-		var ShowUploadTips = null;
+		let ShowAnonymousComments = null;
+		if ( true ) {
+			ShowAnonymousComments = (
+				<ContentCommonBody>
+					<ContentCommonNavButton onclick={this.onAnonymousComments} class={state.allowAnonymous ? "-selected" : ""}>
+						<SVGIcon>warning</SVGIcon>
+						<div>Allow anonymous comments</div>
+					</ContentCommonNavButton>
+					<br />
+					Click to <em>{state.allowAnonymous ? "deactivate" : "activate"}</em> anonymous comments.
+				</ContentCommonBody>);
+
+		}
+
+		let ShowUploadTips = null;
 		if ( true ) {
 			ShowUploadTips = (
 				<ContentCommonBody>
@@ -733,12 +770,12 @@ export default class ContentItem extends Component {
 			);
 		}
 
-		var ShowLinkView = null;
+		let ShowLinkView = null;
 		if ( true ) {
 			ShowLinkView = this.makeLinks(false /* editing */);
 		}
 
-		var ShowUnfinished = null;
+		let ShowUnfinished = null;
 		if ( true ) {
 			ShowUnfinished = (
 				<ContentCommonBody>
@@ -750,7 +787,6 @@ export default class ContentItem extends Component {
 			);
 		}
 
-
 		props.editonly = (
 			<div>
 				{ShowEventPicker}
@@ -759,6 +795,7 @@ export default class ContentItem extends Component {
 				{ShowLinkEntry}
 				{ShowUploadTips}
 				{ShowUnfinished}
+				{ShowAnonymousComments}
 			</div>
 		);
 		props.onSave = this.onSave.bind(this);
@@ -774,8 +811,10 @@ export default class ContentItem extends Component {
 		props.class = cN("content-item", props.class);
 
 		// Shim to update the save button from this method. See https://facebook.github.io/react/docs/refs-and-the-dom.html
-		props.ref = c => { this.contentSimple = c; };
+		props.ref = c => {
+			this.contentSimple = c;
+		};
 
-		return <ContentSimple {...props} by authors />;
+		return <ContentSimple {...props} authors />;
 	}
 }

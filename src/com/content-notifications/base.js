@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact/preact';
 
 import Notification						from 'com/content-notifications/notification';
 
@@ -7,34 +7,42 @@ import $Note							from '../../shrub/js/note/note';
 import $Notification					from '../../shrub/js/notification/notification';
 
 export default class NotificationsBase extends Component {
-
 	constructor( props ) {
 		super(props);
 
 		this.state = {
-			notifications: null,
-			notificationIds: [],
-			notificationsTotal: -1,
-			count: 0,
-			status: null,
-			feed: [],
-			loading: true,
-			highestRead: -1,
+			"notifications": null,
+			"notificationIds": [],
+			"notificationsTotal": -1,
+			"count": 0,
+			"status": null,
+			"feed": [],
+			"loading": true,
+			"highestRead": -1,
 		};
+	}
+
+
+	hasUnreadNotifications() {
+		const highestInFeed = this.getHighestNotificationInFeed();
+		if (highestInFeed !== null) {
+			if (highestInFeed > this.state.highestRead) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	markReadHighest() {
 		// TODO: Triggering this should immidiately update the counter on the
 		// icon in the top bar
-		const highestInFeed = this.getHighestNotificationInFeed();
-		if (highestInFeed !== null) {
-			if (highestInFeed > this.state.highestRead) {
-				$Notification.SetMarkRead(highestInFeed).then((r) => {
-					if (r.status == 200) {
-						this.setState({highestRead: highestInFeed});
-					}
-				});
-			}
+		if ( this.hasUnreadNotifications() ) {
+			const highestInFeed = this.getHighestNotificationInFeed();
+			$Notification.SetMarkRead(highestInFeed).then((r) => {
+				if (r.status == 200) {
+					this.setState({"highestRead": highestInFeed});
+				}
+			});
 		}
 	}
 
@@ -52,12 +60,12 @@ export default class NotificationsBase extends Component {
 		this.collectAllNodesAndNodes(r.feed, caller_id);
 		let highestRead = r.max_read !== undefined ? r.max_read : this.state.highestRead;
 		this.setState({
-			feed: r.feed,
-			caller_id: caller_id,
-			status: r.status,
-			count: r.count,
-			loading: true,
-			highestRead: highestRead,
+			"feed": r.feed,
+			"caller_id": caller_id,
+			"status": r.status,
+			"count": r.count,
+			"loading": true,
+			"highestRead": highestRead,
 		});
 	}
 
@@ -92,14 +100,17 @@ export default class NotificationsBase extends Component {
 		let notes = [];
 
 		feed.forEach(({id, node, note}) => {
-			if (node2notes.has(node)) {
-				node2notes.get(node).push(note);
-			} else {
-				node2notes.set(node, [note]);
-
+			if ( note ) {
+				// Only fetch nonzero notes. Don't add zero notes to the list of notes in a node
+				if ( node2notes.has(node) ) {
+					node2notes.get(node).push(note);
+				}
+				else {
+					node2notes.set(node, [note]);
+				}
+				notes.push(note);
+				notification2nodeAndNote.set(id, {"node": node, "note": note});
 			}
-			notes.push(note);
-			notification2nodeAndNote.set(id, {node: node, note: note});
 		});
 
 		let nodesPromise = $Node.Get(nodes)
@@ -112,8 +123,8 @@ export default class NotificationsBase extends Component {
 							users.push(node.author);
 							node.authors.push(node.author);
 						}
-						if (node.link && node.link.author) {
-							node.link.author.forEach((author) => {
+						if (node.meta && node.meta.author) {
+							node.meta.author.forEach((author) => {
 								if (author > 0 && users.indexOf(author) < 0) {
 									users.push(author);
 								}
@@ -144,7 +155,9 @@ export default class NotificationsBase extends Component {
 		Promise.all([nodesPromise, notesPromise, soicialPromise])
 			.then(() => {
 				noteLookup.forEach((note, id) => {
-					note.isNodeAuthor = nodeLookup.get(note.node).authors.indexOf(note.author) > -1;
+					if ( note.node ) {
+						note.isNodeAuthor = nodeLookup.get(note.node).authors.indexOf(note.author) > -1;
+					}
 				});
 				return $Node.Get(users);
 			})
@@ -178,8 +191,9 @@ export default class NotificationsBase extends Component {
 			node.selfauthored = false;
 			if (node.author == caller_id) {
 				node.selfauthored = true;
-			} else if (node.link && node.link.author) {
-				node.link.author.forEach((author) => {
+			}
+			else if (node.meta && node.meta.author) {
+				node.meta.author.forEach((author) => {
 					if (author == caller_id) {
 						node.selfauthored = true;
 					}
@@ -193,69 +207,95 @@ export default class NotificationsBase extends Component {
 
 		let processedNotifications = [];
 
+		let previousData = null;
+
 		feed.forEach((notification) => {
-			if (processedNotifications.indexOf(notification.id) < 0) {
+			if ( processedNotifications.indexOf(notification.id) < 0 ) {
 				let node = nodeLookup.get(notification.node);
 				let data = {
-					node: node,
-					note: undefined,
-					notification: [notification],
-					multi: false,
-					users: new Map(),
-					social: social,
+					"node": node,
+					"note": undefined,
+					"time": new Date(notification.created).getTime(),
+					"earliestNoteId": undefined, // Track the note id to link to for this notification.
+					"unread": (notification.id > this.state.highestRead),
+					"notification": [notification],
+					"mergeable": false,
+					"multi": false,
+					"users": new Map(),
+					"social": social,
 				};
 
+				// Look up user records for self and node author.
 				data.users.set(caller_id, usersLookup.get(caller_id));
 				data.users.set(node.author, usersLookup.get(node.author));
 
-				if (node.link && node.link.author) {
-					node.link.author.forEach((author) => {
-						if (!data.users.has(author)) {
+				// Look up other authors for the node (for team games)
+				if ( node.meta && node.meta.author ) {
+					node.meta.author.forEach((author) => {
+						if ( !data.users.has(author) ) {
 							data.users.set(author, usersLookup.get(author));
 						}
 					});
 				}
 
-				if (notification.note) {
-					let firstNote = noteLookup.get(notification.note);
-					data.note = [firstNote];
-					if (!data.users.has(firstNote.author)) {
-						data.users.set(firstNote.author, firstNote);
-					}
-
-					if (!firstNote.mention && !firstNote.selfauthored && !firstNote.isNodeAuthor) {
-						node2notes.get(notification.node).forEach((note) => {
-							if (note != notification.note) {
-								let noteData = noteLookup.get(note);
-								if (!noteData.mention && !noteData.selfauthored && !noteData.isNodeAuthor) {
-									notification2nodeAndNote.forEach((otherData, otherNotification) => {
-										if (otherData.note == note) {
-											processedNotifications.push(otherNotification);
-											data.notification.push(notificationLookup.get(otherNotification));
-											data.note.push(noteData);
-											if (!data.users.has(noteData.author)) {
-												data.users.set(noteData.author, noteData);
-											}
-											data.multi = true;
-										}
-									});
-								}
-							}
-						});
+				// Add author for note, check if this notification be merged
+				// Allow merge if it's a note, and if it doesn't contain a mention, isn't self authored, and isn't written by the note author.
+				if ( notification.note ) {
+					let note = noteLookup.get(notification.note);
+					data.note = [note];
+					data.earliestNote = notification.note;
+					data.users.set(note.author, usersLookup.get(note.author));
+					if ( !note.mention && !note.selfauthored && !note.isNodeAuthor ) {
+						data.mergeable = true;
 					}
 				}
-				let notificationId = data.notification.sort()[0].id;
-				notificationIds.push(notificationId);
-				notifications.set(notificationId, data);
+
+				// Will this notification merge with the previous notification?
+				let doMerge = false;
+				if ( previousData && data.mergeable && previousData.mergeable ) {
+					// We can only merge if they're both on the same node, both on the same side of the "read" boundary, and within a certain amount of time.
+					if ( (notification.node == previousData.notification[0].node) && (data.unread == previousData.unread) ) {
+						let MaximumMergeTime = 4*60*60*1000; // 4 hours in milliseconds
+						if ( Math.abs(data.time - previousData.time) < MaximumMergeTime ) {
+							doMerge = true;
+						}
+					}
+				}
+
+				let notificationId = data.notification[0].id;
 				processedNotifications.push(notification.id);
+
+				// Skip processing if notification is malformed (note.node == 0)
+				if ( data.note && data.note[0].node == 0 ) {
+					// Don't use this notification
+				}
+				else if ( doMerge ) {
+					// Roll current notification into previousData
+					previousData.multi = true;
+					previousData.notification.push(notification);
+
+					// Add this note and note's author to the previousData lists.
+					let note = noteLookup.get(notification.note);
+					previousData.note.push(note);
+					previousData.users.set(note.author, usersLookup.get(note.author));
+					previousData.earliestNote = Math.min(previousData.earliestNote, notification.note);
+				}
+				else {
+					// Not merged into another notification, just add the data structure to output.
+
+					notifications.set(notificationId, data);
+					previousData = data;
+					notificationIds.push(notificationId);
+				}
+
 			}
 		});
 
 		this.setState({
-			notifications: notifications,
-			notificationIds: notificationIds.sort((a, b) => b - a),
-			loading: false,
-			feedSize: (this.state.feedSize ? this.state.feedSize : 0) + processedNotifications.length,
+			"notifications": notifications,
+			"notificationIds": notificationIds.sort((a, b) => b - a),
+			"loading": false,
+			"feedSize": (this.state.feedSize ? this.state.feedSize : 0) + processedNotifications.length,
 		});
 	}
 
@@ -265,7 +305,7 @@ export default class NotificationsBase extends Component {
 
 	isLoading() {
 		return this.state.loading;
-	};
+	}
 
 	getNotificationsOrder() {
 		return this.state.notificationIds;

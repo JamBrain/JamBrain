@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact/preact';
 
 import NavLink							from 'com/nav-link/link';
 
@@ -56,6 +56,12 @@ export default class ContentSimple extends Component {
 	}
 
 	componentWillUpdate( newProps, newState ) {
+		//Editing is done in constructor and since this isn't reloaded in most instances it requires a hack
+		let editingNext = newProps.extra && newProps.extra.length && (newProps.extra[newProps.extra.length-1] == 'edit');
+		if ( editingNext && !this.isEditMode() ) {
+			this.setState({'editing': true});
+		}
+
 		if ( this.props.node !== newProps.node ) {
 			if ( this.props.authored ) {
 				this.getAuthor(newProps.node);
@@ -70,19 +76,19 @@ export default class ContentSimple extends Component {
 		// Clear the Authors
 //		this.setState({ authors: [] });
 
-		if ( node.link && node.link['author'] ) {
+		if ( node.meta && node.meta['author'] ) {
 			// Lookup the authors
-			$Node.Get( node.link['author'] )
+			$Node.Get( node.meta['author'] )
 			.then(r => {
 				if ( r.node && r.node.length ) {
-					this.setState({ 'authors': r.node });
+					this.setState({'authors': r.node});
 				}
 				else {
-					this.setState({ 'error': "Authors not found" });
+					this.setState({'error': "Authors not found"});
 				}
 			})
 			.catch(err => {
-				this.setState({ 'error': err });
+				this.setState({'error': err});
 			});
 		}
 	}
@@ -96,14 +102,14 @@ export default class ContentSimple extends Component {
 		.then(r => {
 			if ( r.node && r.node.length ) {
 				var author = r.node[0];
-				this.setState({ 'author': author, 'avatar': (author && author.meta && author.meta.avatar) ? author.meta.avatar : ''});
+				this.setState({'author': author, 'avatar': (author && author.meta && author.meta.avatar) ? author.meta.avatar : ''});
 			}
 			else {
-				this.setState({ 'error': "Author not found" });
+				this.setState({'error': "Author not found"});
 			}
 		})
 		.catch(err => {
-			this.setState({ 'error': err });
+			this.setState({'error': err});
 		});
 	}
 
@@ -124,22 +130,22 @@ export default class ContentSimple extends Component {
 		return $Node.Update(this.props.node.id, Title, Body)
 		.then(r => {
 			if ( r.status == 200 ) {
-				this.setState({ 'modified': false });
+				this.setState({'modified': false});
 				return true;
 			}
 			else {
-				if ( r.caller_id == 0 || (r.data && r.data.caller_id == 0) ) {
+				if ( (r.caller_id == 0) || (r.data && (r.data.caller_id == 0)) ) {
 					location.hash = "#savebug";
 				}
 				else {
-					this.setState({ 'error': r.status + ": " + r.error });
+					this.setState({'error': r.status + ": " + r.error});
 				}
 			}
 			return false;
 		})
 		.catch(err => {
 			console.log(err);
-			this.setState({ 'error': err });
+			this.setState({'error': err});
 		});
 	}
 	onPublish( e ) {
@@ -151,7 +157,7 @@ export default class ContentSimple extends Component {
 				$Node.Publish(this.props.node.id)
 				.then(r => {
 					console.log(r);
-					if ( r.status == 200 && r.path ) {
+					if ( (r.status == 200) && r.path ) {
 						window.location.href = r.path;
 	//					this.setState({ 'modified': false });
 					}
@@ -166,7 +172,7 @@ export default class ContentSimple extends Component {
 				})
 				.catch(err => {
 					console.log(err);
-					this.setState({ 'error': err });
+					this.setState({'error': err});
 				});
 			}
 		});
@@ -179,29 +185,21 @@ export default class ContentSimple extends Component {
 		this.setState({'modified': true, 'body': e.target.value});
 	}
 	onModifyAvatar( avatar ) {
-		this.setState({/*'modified': true,*/ 'avatar': avatar});
+		this.setState({/*'modified': true,*/'avatar': avatar});
 	}
 
 	isEditMode() {
-		var extra = this.props.extra;
-		return extra && extra.length && extra[extra.length-1] == 'edit';
+		let {extra} = this.props;
+		return extra && extra.length && (extra[extra.length-1] == 'edit');
 	}
 
 	render( props, state ) {
 		props = Object.assign({}, props);	// Shallow copy we can change props
-		var Class = [];
+		let {node, user, path, extra} = props;
+		let {author, authors} = state;
 
-		var node = props.node;
-		var user = props.user;
-		var path = props.path;
-		var extra = props.extra;
-
-		var author = state.author;
-		var authors = state.authors;
 
 		if ( node && ((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length) ) {
-			Class.push("content-simple");
-
 			var ShowEditBar = null;
 			var ShowOnly = null;
 
@@ -233,14 +231,14 @@ export default class ContentSimple extends Component {
 			let ShowAvatar = null;
 			let ShowByLine = null;
 			if ( props.authored ) {
-				ShowAvatar = <ContentCommonBodyAvatar node={node} user={user} src={state.avatar} editing={node_IsAuthor(node, user) ? state.editing : false} onchange={this.onModifyAvatar} />;
-				if ( props.by && !(props.notitleedit ? false : state.editing) ) {
-					ShowByLine = <ContentCommonBodyBy node={node} author={author} label={props.by.length ? props.by : "published"} noby={props.noby} when />;
+				ShowAvatar = <ContentCommonBodyAvatar node={node} user={user} src={state.avatar} editing={node_IsAuthor(node, user) ? state.editing : false} onchange={this.onModifyAvatar} href={state.author.path} />;
+				if ( !(props.notitleedit ? false : state.editing) ) {
+					ShowByLine = <ContentCommonBodyBy node={node} author={author} by={typeof props.by == 'string' ? props.by : null} label={props.label ? props.label : "published"} noby={props.noby} when />;
 				}
 			}
-			else if ( props.authors ) {
-				if ( props.by && !state.editing ) {
-					ShowByLine = <ContentCommonBodyBy node={node} authors={authors} />;
+			else if ( props.authors && props.by ) {
+				if ( !state.editing ) {
+					ShowByLine = <ContentCommonBodyBy node={node} authors={authors} by={typeof props.by == 'string' ? props.by : null} />;
 				}
 				else {
 					ShowByLine = (
@@ -318,7 +316,7 @@ export default class ContentSimple extends Component {
 				ShowDraft = <ContentCommonDraft draft={props.draft} />;
 			}
 
-			props.class = cN(Class, props.class);
+			props.class = cN('content-simple', props.class);
 			if ( this.isEditMode() ) {
 				props.minmax = null;
 				props.minimized = null;

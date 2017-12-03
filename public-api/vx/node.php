@@ -17,7 +17,7 @@ const THINGS_I_CAN_STAR = [
 	'user'
 ];
 
-// TODO: MK Rename and adjust this for privileged users, not Admins  
+// TODO: MK Rename and adjust this for privileged users, not Admins
 const ADMIN_VALID_META = [
 	'event' => [
 		'can-create' => ['length' => 64],
@@ -43,7 +43,7 @@ const VALID_META = [
 		'grade-07-out' => ['length' => 1],
 		'grade-08-out' => ['length' => 1],
 		'allow-anonymous-comments' => ['length' => 1],
-		
+
 		'link-01' => ['length' => 512, 'url' => true],
 		'link-02' => ['length' => 512, 'url' => true],
 		'link-03' => ['length' => 512, 'url' => true],
@@ -62,15 +62,15 @@ const VALID_META = [
 		'link-07-tag' => ['integer' => true],
 		'link-08-tag' => ['integer' => true],
 		'link-09-tag' => ['integer' => true],
-//		'link-01-name' => ['length' => 64],
-//		'link-02-name' => ['length' => 64],
-//		'link-03-name' => ['length' => 64],
-//		'link-04-name' => ['length' => 64],
-//		'link-05-name' => ['length' => 64],
-//		'link-06-name' => ['length' => 64],
-//		'link-07-name' => ['length' => 64],
-//		'link-08-name' => ['length' => 64],
-//		'link-09-name' => ['length' => 64],
+		'link-01-name' => ['length' => 64],
+		'link-02-name' => ['length' => 64],
+		'link-03-name' => ['length' => 64],
+		'link-04-name' => ['length' => 64],
+		'link-05-name' => ['length' => 64],
+		'link-06-name' => ['length' => 64],
+		'link-07-name' => ['length' => 64],
+		'link-08-name' => ['length' => 64],
+		'link-09-name' => ['length' => 64],
 	],
 	'user' => [
 		'real-name' => ['length' => 64],
@@ -146,7 +146,7 @@ $action = json_ArgShift();
 switch ( $action ) {
 	case 'get': //node/get
 		json_ValidateHTTPMethod('GET');
-		
+
 		if ( json_ArgCount() ) {
 			// Extract requests
 			$node_ids = explode('+', json_ArgGet(0));
@@ -154,7 +154,7 @@ switch ( $action ) {
 			// Sanitize
 			foreach ( $node_ids as &$id ) {
 				$id = intval($id);
-				
+
 				if ( !$id ) {
 					json_EmitFatalError_BadRequest("Bad ID", $RESPONSE);
 				}
@@ -165,14 +165,14 @@ switch ( $action ) {
 			if ( count($node_ids) > 250 ) {
 				json_EmitFatalError_BadRequest("Too many nodes", $RESPONSE);
 			}
-			
+
 			$RESPONSE['cached'] = true;
-			
+
 //			$nodes = nodeComplete_GetById($node_ids);
 			$nodes = nodeCache_GetById($node_ids, $RESPONSE['cached']);
 
 			// TODO: Determine if we're allowed to view the requested nodes
-			
+
 			$out = [];
 			if ( $nodes ) {
 				foreach( $nodes as &$node ) {
@@ -180,11 +180,11 @@ switch ( $action ) {
 					// MK: This might not be doing anything!! That should explain why users were able to see unpublished content
 					if ( $node['published'] === "0000-00-00T00:00:00Z" ) {
 						$user_id = userAuth_GetId();
-	
+
 						// Bad Id
 						if ( $user_id == 0 )
 							continue;
-						
+
 						// Not the author
 						if ( $user_id != $node['author'] ) {
 							// Not on the author list
@@ -196,7 +196,7 @@ switch ( $action ) {
 							}
 						}
 					}
-					
+
 					// If we get here, we're allowed to view the node
 					$out[] = $node;
 				}
@@ -211,17 +211,17 @@ switch ( $action ) {
 
 	case 'walk': //node/walk
 		json_ValidateHTTPMethod('GET');
-		
+
 		// TODO: Support Symlinks and HardLinks (?)
 
 		if ( json_ArgCount() ) {
 			$root = intval(json_ArgShift());
 			$RESPONSE['root'] = $root;
-			
+
 			$parent = $root;
 			$RESPONSE['path'] = [];
 			$RESPONSE['extra'] = [];
-			
+
 			foreach ( json_ArgGet() as $slug ) {
 				$slug = coreSlugify_PathName($slug);
 
@@ -250,7 +250,7 @@ switch ( $action ) {
 					}
 				}
 			}
-			
+
 			$RESPONSE['node'] = $parent;
 //			$RESPONSE['cache'] = nodeCache_GetStats();
 		}
@@ -282,18 +282,18 @@ switch ( $action ) {
 			}
 			else {
 				$methods = array_map("coreSlugify_Name", explode('+', $methods));
-				
+
 				$allowed_methods = [
 					'parent',
 					'superparent',
 					'author',
-					
+
 					'all',
 					'authors',
-					
+
 					'unpublished',
 					'reverse',
-					
+
 					'cool',
 					'smart',
 					'grade',
@@ -352,7 +352,7 @@ switch ( $action ) {
 						json_EmitFatalError_BadRequest("Invalid type: $type", $RESPONSE);
 					}
 				}
-				
+
 				if ( count($types) == 1 )
 					$types = $types[0];
 
@@ -365,7 +365,7 @@ switch ( $action ) {
 
 				if ( count($subtypes) == 1 )
 					$subtypes = $subtypes[0];
-				
+
 				$RESPONSE['subtypes'] = $subtypes;
 			}
 
@@ -375,10 +375,10 @@ switch ( $action ) {
 
 				if ( count($subsubtypes) == 1 )
 					$subsubtypes = $subsubtypes[0];
-				
+
 				$RESPONSE['subsubtypes'] = $subsubtypes;
 			}
-			
+
 			$RESPONSE['offset'] = 0;
 			$RESPONSE['limit'] = 10;
 
@@ -392,7 +392,7 @@ switch ( $action ) {
 				if ( $RESPONSE['limit'] > 50 )
 					$RESPONSE['limit'] = 50;
 			}
-			
+
 			$RESPONSE['feed'] = nodeFeed_GetByMethod( $methods, $root, $types, $subtypes, $subsubtypes, $score_op, $RESPONSE['limit'], $RESPONSE['offset'] );
 
 //			$RESPONSE['feed'] = nodeFeed_GetByNodeMethodType( $root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset'] );
@@ -411,35 +411,51 @@ switch ( $action ) {
 			// NOTE: It is not an issue that these get merged. Different scopes do not make metadata in to unique indexes.
 			// WARNING: Don't ever send the full ParseByNode response to the user. SH_SCOPE_SERVER scope data must never be seen by a client.
 
-			$metas = nodeMeta_ParseByNode($user_id);
-			$meta_out = array_merge([],
-				// Public metadata (this is already in the node)
-				//isset($metas[SH_SCOPE_PUBLIC]) ? $metas[SH_SCOPE_PUBLIC] : [],
-				// Shared metadata (authors??)
-				isset($metas[SH_SCOPE_SHARED]) ? $metas[SH_SCOPE_SHARED] : [],
-				// Private metadata
-				isset($metas[SH_SCOPE_PRIVATE]) ? $metas[SH_SCOPE_PRIVATE] : []
-			);
+//			$metas = nodeMeta_ParseByNode($user_id);
+//			$meta_out = array_merge([],
+//				// Public metadata (this is already in the node)
+//				//isset($metas[SH_SCOPE_PUBLIC]) ? $metas[SH_SCOPE_PUBLIC] : [],
+//				// Shared metadata (authors??)
+//				isset($metas[SH_SCOPE_SHARED]) ? $metas[SH_SCOPE_SHARED] : [],
+//				// Private metadata
+//				isset($metas[SH_SCOPE_PRIVATE]) ? $metas[SH_SCOPE_PRIVATE] : []
+//			);
+//
+//			$links = nodeLink_ParseByNode($user_id);
+//			$link_out = array_merge([],
+//				// Public Links from me (this is already in the node)
+//				//isset($links[0][SH_SCOPE_PUBLIC]) ? $links[0][SH_SCOPE_PUBLIC] : [],
+//				// Shared Links from me
+//				isset($links[0][SH_SCOPE_SHARED]) ? $links[0][SH_SCOPE_SHARED] : [],
+//				// Procted Links from me
+//				isset($links[0][SH_SCOPE_PRIVATE]) ? $links[0][SH_SCOPE_PRIVATE] : []
+//			);
+//			$refs_out = array_merge([],
+//				// Public links to me
+//				isset($links[1][SH_SCOPE_PUBLIC]) ? $links[1][SH_SCOPE_PUBLIC] : [],
+//				// Shared links to me
+//				isset($links[1][SH_SCOPE_SHARED]) ? $links[1][SH_SCOPE_SHARED] : []
+//			);
 
-			$links = nodeLink_ParseByNode($user_id);
-			$link_out = array_merge([],
-				// Public Links from me (this is already in the node)
-				//isset($links[0][SH_SCOPE_PUBLIC]) ? $links[0][SH_SCOPE_PUBLIC] : [],
-				// Shared Links from me
-				isset($links[0][SH_SCOPE_SHARED]) ? $links[0][SH_SCOPE_SHARED] : [],
-				// Procted Links from me
-				isset($links[0][SH_SCOPE_PRIVATE]) ? $links[0][SH_SCOPE_PRIVATE] : []
+			$meta = nodeMeta_ParseByNode($user_id);
+			$meta_out = array_merge([],
+				// Public Meta from me (this is already in the node)
+				//isset($meta[0][SH_SCOPE_PUBLIC]) ? $meta[0][SH_SCOPE_PUBLIC] : [],
+				// Shared Meta from me
+				isset($meta[0][SH_SCOPE_SHARED]) ? $meta[0][SH_SCOPE_SHARED] : [],
+				// Procted Meta from me
+				isset($meta[0][SH_SCOPE_PRIVATE]) ? $meta[0][SH_SCOPE_PRIVATE] : []
 			);
 			$refs_out = array_merge([],
-				// Public links to me
-				isset($links[1][SH_SCOPE_PUBLIC]) ? $links[1][SH_SCOPE_PUBLIC] : [],
-				// Shared links to me
-				isset($links[1][SH_SCOPE_SHARED]) ? $links[1][SH_SCOPE_SHARED] : []
+				// Public meta to me
+				isset($meta[1][SH_SCOPE_PUBLIC]) ? $meta[1][SH_SCOPE_PUBLIC] : [],
+				// Shared meta to me
+				isset($meta[1][SH_SCOPE_SHARED]) ? $meta[1][SH_SCOPE_SHARED] : []
 			);
-				
+
 			$RESPONSE['id'] = $user_id;
 			$RESPONSE['meta'] = $meta_out;
-			$RESPONSE['link'] = $link_out;
+//			$RESPONSE['link'] = $link_out;
 			$RESPONSE['refs'] = $refs_out;
 		}
 		else {
@@ -450,7 +466,7 @@ switch ( $action ) {
 	// Where can I create content?
 	case 'where': //node/where
 		json_ValidateHTTPMethod('GET');
-		
+
 		// if not logged in, where will be blank
 		if ( $user_id = userAuth_GetID() ) {
 			$RESPONSE['where'] = nodeComplete_GetWhereIdCanCreate($user_id);
@@ -463,7 +479,7 @@ switch ( $action ) {
 	// Get what a list of everything I authored under this node
 	case 'what': //node/what/:node_id
 		json_ValidateHTTPMethod('GET');
-		
+
 		// if not logged in, where will be blank
 		if ( $user_id = userAuth_GetID() ) {
 			$parent = intval(json_ArgShift());
@@ -478,7 +494,7 @@ switch ( $action ) {
 			json_EmitFatalError_Permission(null, $RESPONSE);
 		}
 		break; //case 'what': //node/what
-	
+
 	case 'add': //node/add/:parent/:type/:subtype/:subsubtype
 		json_ValidateHTTPMethod('POST');
 
@@ -499,16 +515,15 @@ switch ( $action ) {
 			if ( empty($parent) || empty($type) ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
 			}
-
 			// MK: This is a potential place you'll need to fix things once users are restricted from posting under other people's `can-create` nodes
 			// MK: oh. after a quick glance it might be fine, but you should check it out again.
 			$where = nodeComplete_GetWhereIdCanCreate($user_id);
 			//$RESPONSE['where'] = $where;
-			
+
 			if ( !isset($where[$fulltype]) || !in_array($parent, $where[$fulltype]) ) {
 				json_EmitFatalError_BadRequest("Can't create a $fulltype under this node", $RESPONSE);
 			}
-			
+
 			// Default create limits
 			$create_limits = [
 				'item/game' => 1,
@@ -520,27 +535,27 @@ switch ( $action ) {
 
 				'item/craft' => 0,			// i.e. can't create
 				'item/craft/jam' => 0,		// i.e. can't create
-				
+
 				'post' => -50,				// i.e. unlimited (was -25, but I haven't finished karma checking)
 				'post/news' => 0,			// i.e. can't create
 			];
-			
+
 			// TODO: Do things that modify limits here
 			$true_limit = 2;	// TODO: up this as a user becomes more trustworthy.
 
 
 			// Check if you haven't exceeded the limit
 			$RESPONSE['limit'] = isset($create_limits[$fulltype]) ? $create_limits[$fulltype] : 0;
-			
+
 			if ( $RESPONSE['limit'] === 0 ) {
 				json_EmitFatalError_Permission("You don't have permission to create a $fulltype here", $RESPONSE);
 			}
-			
+
 			// Negatives are a pseudolimit
 			if ( $RESPONSE['limit'] < 0 ) {
 				$RESPONSE['limit'] = $true_limit * (-$RESPONSE['limit']);
 			}
-			
+
 
 			// Check how many you have
 			$RESPONSE['count'] = node_CountByParentAuthorType($parent, null, $user_id, $type, $subtype, $subsubtype, null);
@@ -553,10 +568,11 @@ switch ( $action ) {
 //			else {
 //				json_EmitFatalError_BadRequest("Problem", $RESPONSE);
 //			}
-			
+
 			if ( $RESPONSE['count'] >= $RESPONSE['limit'] ) {
 				json_EmitFatalError_Permission("You don't have permission to create any more $fulltype's here", $RESPONSE);
 			}
+
 
 			switch ( $fulltype ) {
 				case 'item/game':
@@ -565,22 +581,22 @@ switch ( $action ) {
 					$new_node = node_Add($parent, $user_id, $type, $subtype, "", null, "", "");
 					if ( $new_node ) {
 						// Allow posts under the game
-						nodeMeta_AddByNode($new_node, SH_SCOPE_SHARED, 'can-create', 'post');
+						nodeMeta_Add($new_node, 0, SH_SCOPE_SHARED, 'can-create', 'post');
 						// Add yourself as an author of the game
-						nodeLink_AddbyNode($new_node, $user_id, SH_SCOPE_PUBLIC, 'author');
+						nodeMeta_Add($new_node, $user_id, SH_SCOPE_PUBLIC, 'author');
 					}
 					else {
 						json_EmitFatalError_Server(null, $RESPONSE);
 					}
-					
+
 					nodeCache_InvalidateById($new_node);
-					
+
 					$RESPONSE['type'] = $type;
 					$RESPONSE['path'] = node_GetPathById($new_node, 1)['path']; // Root node
 					$RESPONSE['count']++;
 					$RESPONSE['id'] = $new_node;
 					break;
-					
+
 				case 'post':
 					$new_node = node_Add($parent, $user_id, $type, $subtype, "", null, "", "");
 					if ( $new_node ) {
@@ -614,16 +630,16 @@ switch ( $action ) {
 			if ( empty($node_id) ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
 			}
-			
+
 			$changes = 0;
 
 			// Fetch Node
 			$node = nodeComplete_GetById($node_id);
 			//$authors = nodeList_GetAuthors($node);
-			
+
 			if ( !$node )
 				json_EmitFatalError_BadRequest("Problem fetching node", $RESPONSE);
-			
+
 			// Parse POST
 			if ( isset($_POST['name']) ) {
 				$name = coreSanitize_String(substr($_POST['name'], 0, 96));
@@ -633,7 +649,7 @@ switch ( $action ) {
 			else {
 				$name = $node['name'];
 			}
-				
+
 			if ( isset($_POST['body']) ) {
 				$body = coreSanitize_Body(substr($_POST['body'], 0, 32768));
 				if ( $body !== $node['body'] )
@@ -651,7 +667,7 @@ switch ( $action ) {
 			else {
 				$version_tag = "";
 			}
-				
+
 			// If you are authorized to edit
 //			if ( $user_id === $node_id || $user_id === $node['author'] || in_array($user_id, $authors) ) {
 			if ( node_IsAuthor($node, $user_id) ) {		// NEEDS links!
@@ -662,7 +678,7 @@ switch ( $action ) {
 				else {
 					$RESPONSE['updated'] = node_Edit(
 						$node_id,
-						$node['parent'], $node['author'], 
+						$node['parent'], $node['author'],
 						$node['type'], $node['subtype'], $node['subsubtype'],
 						$node['slug'],
 						$name,
@@ -671,6 +687,12 @@ switch ( $action ) {
 					);
 
 					nodeCache_InvalidateById($node_id);
+
+					if ( $node['published'] && notification_EnabledForNodeType($node['type']) ) {
+						// Add mention notifications for at-mentions of users that were added in this edit, if this node is published and of a type that supports notifications.
+						$newmentions = notification_GetMentionedUsers($body, $node['body']);
+						notification_AddForEdit($node_id, 0, $user_id, $newmentions);
+					}
 				}
 			}
 			else {
@@ -694,38 +716,38 @@ switch ( $action ) {
 				if ( !node_IsAuthor($node, $user_id) ) { // NEEDS LINKS!
 					json_EmitFatalError_Forbidden("Forbidden: You don't have permission to transform this", $RESPONSE);
 				}
-				
+
 				$old_type = $node['type'];
 				if ( $node['subtype'] )
 					$old_type .= '/'.$node['subtype'];
 				if ( $node['subsubtype'] )
 					$old_type .= '/'.$node['subsubtype'];
-				
+
 				$RESPONSE['id'] = $node_id;
 				$RESPONSE['before'] = $old_type;
-				
+
 				$type = json_ArgShift();
 				$subtype = json_ArgShift();
 				$subsubtype = json_ArgShift();
-				
+
 				$type = $type ? coreSlugify_Name($type) : $type;
 				$subtype = $subtype ? coreSlugify_Name($subtype) : $subtype;
 				$subsubtype = $subsubtype ? coreSlugify_Name($subsubtype) : $subsubtype;
-				
+
 				$new_type = $type;
 				if ( $subtype )
 					$new_type .= '/'.$subtype;
 				if ( $subsubtype )
 					$new_type .= '/'.$subsubtype;
-				
+
 				$RESPONSE['after'] = $new_type;
-				
+
 				if ( $new_type == $old_type ) {
 					$RESPONSE['changed'] = 0;
 				}
 				else if ( in_array($new_type, VALID_TRANSFORMS[$old_type]) ) {
 					$RESPONSE['changed'] = node_SetType($node_id, $type ? $type : "", $subtype ? $subtype : "", $subsubtype ? $subsubtype : "");
-					
+
 					nodeCache_InvalidateById($node_id);
 				}
 				else {
@@ -741,13 +763,13 @@ switch ( $action ) {
 
 	case 'publish': //node/publish/:node_id
 		json_ValidateHTTPMethod('POST');
-		
+
 		if ( $user_id = userAuth_GetID() ) {
 			$node_id = intval(json_ArgShift());
 			if ( empty($node_id) ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
 			}
-			
+
 			// Parse POST
 //			if ( isset($_POST['parent']) )
 //				$parent = intval($_POST['parent']);
@@ -760,12 +782,12 @@ switch ( $action ) {
 //				json_EmitFatalError_BadRequest("Unsupported 'event'", $RESPONSE);
 //			}
 
-			// Fetch Node			
+			// Fetch Node
 			$node = nodeComplete_GetById($node_id);
 			if ( $node['published'] ) {
 				json_EmitFatalError_BadRequest("Already published", $RESPONSE);
 			}
-			
+
 			$authors = nodeList_GetAuthors($node);
 
 			// If you are authorized to edit
@@ -774,33 +796,34 @@ switch ( $action ) {
 				if ( in_array($slug, $SH_NAME_RESERVED) ) {
 					json_EmitFatalError_BadRequest("Name is a reserved word", $RESPONSE);
 				}
-				
+
 				$new_slug = node_GetUniqueSlugByParentSlug($node['parent'], $slug);
-			
+
 				if ( strlen($new_slug) < 3 ) {
 					json_EmitFatalError_BadRequest("Name is too short (minumum 3 characters)", $RESPONSE);
 				}
-				
+
 				$RESPONSE['edit'] = node_Edit(
 					$node_id,
-					$node['parent'], $node['author'], 
+					$node['parent'], $node['author'],
 					$node['type'], $node['subtype'], $node['subsubtype'],
 					$new_slug,
 					$node['name'],
 					$node['body'],
 					"!PUBLISH");
 
-				nodeCache_InvalidateById($node_id);
-				
 				$RESPONSE['publish'] = node_Publish(
 					$node_id
 				);
-				
+
+				nodeCache_InvalidateById($node_id);
+
 				if ( $RESPONSE['publish'] ) {
 					$RESPONSE['path'] = node_GetPathById($node_id, 1)['path']; // Root node
-					
+
 					// notify users watching the author of the published node
-					notification_AddForPublishedNode($node_id, $node['author'], $node['type']);
+					$mentions = notification_GetMentionedUsers($node['body']);
+					notification_AddForPublishedNode($node_id, $node['author'], $node['type'], $mentions);
 				}
 			}
 			else {
@@ -818,30 +841,30 @@ switch ( $action ) {
 		switch ( $action ) {
 			case 'get': //node/love/get/:node_id[]
 				json_ValidateHTTPMethod('GET');
-				
+
 				if ( json_ArgCount() ) {
 					$node_ids = explode('+', json_ArgGet(0));
-		
+
 					// Sanitize
 					foreach ( $node_ids as &$id ) {
 						$id = intval($id);
-						
+
 						if ( !$id ) {
 							json_EmitFatalError_BadRequest("Invalid ID requested", $RESPONSE);
 						}
 					}
 					sort($node_ids);
-					
+
 					$RESPONSE['love'] = nodeLove_GetByNode($node_ids);
 				}
 				else {
 					json_EmitFatalError_BadRequest(null, $RESPONSE);
 				}
 				break; // case 'get': //node/love/get
-				
+
 			case 'getmy': //node/love/getmy
 				json_ValidateHTTPMethod('GET');
-				
+
 				if ( $user_id = userAuth_GetID() ) {
 					// Limit to last 500 love?
 
@@ -854,10 +877,10 @@ switch ( $action ) {
 
 			case 'add': //node/love/add/:node_id
 				json_ValidateHTTPMethod('GET');
-				
+
 				if ( json_ArgCount() ) {
 					$node_id = intval(json_ArgGet(0));
-					
+
 					if ( $node_id ) {
 						// NOTE: You are allowed to LOVE anonymously (it's just not fetchable)
 						$user_id = userAuth_GetID();
@@ -868,7 +891,7 @@ switch ( $action ) {
 								if ( $RESPONSE['id'] ) {
 									nodeCache_InvalidateById($node_id);
 								}
-								
+
 								$RESPONSE['love'] = nodeLove_GetByNode($node_id);
 							}
 							else {
@@ -893,7 +916,7 @@ switch ( $action ) {
 
 				if ( json_ArgCount() ) {
 					$node_id = intval(json_ArgGet(0));
-					
+
 					if ( $node_id ) {
 						// NOTE: You are allowed to LOVE anonymously (it's just not fetchable)
 						$user_id = userAuth_GetID();
@@ -904,7 +927,7 @@ switch ( $action ) {
 								if ( $RESPONSE['removed'] ) {
 									nodeCache_InvalidateById($node_id);
 								}
-								
+
 								$RESPONSE['love'] = nodeLove_GetByNode($node_id);
 								if ( !isset($RESPONSE['love']) )
 									$RESPONSE['love'] = [
@@ -929,7 +952,7 @@ switch ( $action ) {
 					json_EmitFatalError_BadRequest(null, $RESPONSE);
 				}
 				break; // case 'remove': //node/love/remove
-				
+
 			default:
 			json_EmitFatalError_Forbidden(null, $RESPONSE);
 				break; // default
@@ -942,17 +965,17 @@ switch ( $action ) {
 		switch ( $action ) {
 			case 'add': //node/star/add/:node_id
 				json_ValidateHTTPMethod('GET');
-				
+
 				if ( json_ArgCount() ) {
 					$node_id = intval(json_ArgGet(0));
 					$user_id = userAuth_GetID();
-					
+
 					if ( $node_id && $user_id ) {
 						if ( $node = node_GetById($node_id) ) {
 							if ( in_array($node['type'], THINGS_I_CAN_STAR) ) {
 								// TODO: Check if this exact value isn't the newest
 
-								$RESPONSE['id'] = nodeLink_AddByNode($user_id, $node_id, SH_SCOPE_SHARED, 'star');
+								$RESPONSE['id'] = nodeMeta_Add($user_id, $node_id, SH_SCOPE_SHARED, 'star');
 								if ( $RESPONSE['id'] ) {
 									nodeCache_InvalidateById($node_id);
 								}
@@ -980,13 +1003,13 @@ switch ( $action ) {
 				if ( json_ArgCount() ) {
 					$node_id = intval(json_ArgGet(0));
 					$user_id = userAuth_GetID();
-					
+
 					if ( $node_id && $user_id ) {
 						if ( $node = node_GetById($node_id) ) {
 							if ( in_array($node['type'], THINGS_I_CAN_STAR) ) {
 								// TODO: Check if this exact value isn't the newest
-								
-								$RESPONSE['id'] = nodeLink_RemoveByNode($user_id, $node_id, SH_SCOPE_SHARED, 'star');
+
+								$RESPONSE['id'] = nodeMeta_Remove($user_id, $node_id, SH_SCOPE_SHARED, 'star');
 								if ( $RESPONSE['id'] ) {
 									nodeCache_InvalidateById($node_id);
 								}
@@ -1007,7 +1030,7 @@ switch ( $action ) {
 					json_EmitFatalError_BadRequest(null, $RESPONSE);
 				}
 				break; // case 'remove': //node/star/remove
-				
+
 			default:
 			json_EmitFatalError_Forbidden(null, $RESPONSE);
 				break; // default
@@ -1021,7 +1044,7 @@ switch ( $action ) {
 			case 'add': //node/meta/add/:node_id
 			case 'remove': //node/meta/remove/:node_id
 				json_ValidateHTTPMethod('POST');
-				
+
 				if ( !count($_POST) )
 					json_EmitFatalError_BadRequest("No metadata set", $RESPONSE);
 
@@ -1033,9 +1056,9 @@ switch ( $action ) {
 						if ( !node_IsAuthor($node, $user_id) )
 							json_EmitFatalError_Permission(null, $RESPONSE);
 
-						// TODO: MK This and all related code needs to be adapted to be privileged users with specific matching permissions, or an admin 
+						// TODO: MK This and all related code needs to be adapted to be privileged users with specific matching permissions, or an admin
 						$meta_detail = [];
-						
+
 						// Validate that all posts are legal
 						foreach ( $_POST as $key => &$value ) {
 							// Can meta be set as a standard user?
@@ -1050,23 +1073,23 @@ switch ( $action ) {
 								if ( isset(ADMIN_VALID_META[$node['type']][$key]) ) {
 									$meta_detail[$key] = ADMIN_VALID_META[$node['type']][$key];
 									continue; // Yes.
-								}														
+								}
 							}
 							// This meta can't be set.
 							json_EmitFatalError_BadRequest("Can't set '$key' metadata in '".$node['type']."'", $RESPONSE);
 						}
-						
+
 						// node, scope, key, value
 						// bigint, tinyint, char32, text65535
-						
+
 						$scope = SH_SCOPE_PUBLIC;
 						$RESPONSE['changed'] = [];
-						
+
 						foreach ( $_POST as $key => &$value ) {
-							// TODO: MK this may need to change back to this older code, depending on permission implementation 
+							// TODO: MK this may need to change back to this older code, depending on permission implementation
 							//$detail = VALID_META[$node['type']][$key];
 							$detail = $meta_detail[$key];
-							
+
 							$v = $value;
 							if ( isset($detail['length']))
 								$v = substr($v, 0, $detail['length']);
@@ -1080,12 +1103,12 @@ switch ( $action ) {
 								$v = intval($v);
 							else
 								json_EmitFatalError_BadRequest("Internal error while applying '$key' metadata in '".$node['type']."'", $RESPONSE);
-							
+
 							if ( $action == 'add' )
-								$changed = nodeMeta_AddByNode($node_id, $scope, $key, $v);
+								$changed = nodeMeta_Add($node_id, 0, $scope, $key, $v);
 							else if ( $action == 'remove' )
-								$changed = nodeMeta_RemoveByNode($node_id, $scope, $key, $v);
-							
+								$changed = nodeMeta_Remove($node_id, 0, $scope, $key, $v);
+
 							if ( $changed )
 								$RESPONSE['changed'][$key] = $v;
 						}
@@ -1114,7 +1137,7 @@ switch ( $action ) {
 
 				if ( !count($_POST) )
 					json_EmitFatalError_BadRequest("No links set", $RESPONSE);
-				
+
 				$node_a_id = intval(json_ArgGet(0));
 				$node_b_id = intval(json_ArgGet(1));
 				$user_id = userAuth_GetID();
@@ -1133,23 +1156,23 @@ switch ( $action ) {
 
 						if ( !isset(VALID_LINK[$node_a['type']][$node_b['type']]) )
 							json_EmitFatalError_BadRequest("Can't link '".$node_a['type']."' to '".$node_b['type']."'", $RESPONSE);
-						
+
 						// Validate that all posts are legal
 						foreach ( $_POST as $key => &$value ) {
 							if ( !isset(VALID_LINK[$node_a['type']][$node_b['type']][$key]) ) {
 								json_EmitFatalError_BadRequest("Can't create '$key' link between '".$node_a['type']."' and '".$node_b['type']."'", $RESPONSE);
 							}
 						}
-						
+
 						// a, b, scope, key, value
 						// bigint, bigint, tinyint, char32, text65535
-						
+
 						$scope = SH_SCOPE_PUBLIC;
 						$RESPONSE['changed'] = [];
-						
+
 						foreach ( $_POST as $key => &$value ) {
 							$detail = VALID_LINK[$node_a['type']][$node_b['type']][$key];
-							
+
 							$v = $value;
 							if ( isset($detail['length']))
 								$v = substr($v, 0, $detail['length']);
@@ -1161,14 +1184,14 @@ switch ( $action ) {
 								$v = floatval($v);
 							else if ( isset($detail['integer']) && $detail['integer'] )
 								$v = intval($v);
-							else 
+							else
 								json_EmitFatalError_BadRequest("Internal error in applying requested '$key' link between '".$node_a['type']."' and '".$node_b['type']."'", $RESPONSE);
-							
+
 							if ( $action == 'add' )
-								$changed = nodeLink_AddByNode($node_a_id, $node_b_id, $scope, $key, $v);
+								$changed = nodeMeta_Add($node_a_id, $node_b_id, $scope, $key, $v);
 							else if ( $action == 'remove' )
-								$changed = nodeLink_RemoveByNode($node_a_id, $node_b_id, $scope, $key, $v);
-							
+								$changed = nodeMeta_Remove($node_a_id, $node_b_id, $scope, $key, $v);
+
 							if ( $changed )
 								$RESPONSE['changed'][$key] = $v;
 						}
@@ -1188,7 +1211,7 @@ switch ( $action ) {
 				break; // case 'add': //node/meta/add/:node
 		};
 		break; // case 'meta': //node/meta
-		
+
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
 		break; // default

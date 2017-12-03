@@ -22,7 +22,9 @@ export default {
 	AddMeta,
 	RemoveMeta,
 	AddLink,
-	RemoveLink
+	RemoveLink,
+
+	InvalidateNodeCache,
 };
 
 var NODE_CACHE = {};
@@ -38,6 +40,9 @@ function _Get( node_id ) {
 	return NODE_CACHE[node_id];
 }
 
+export function InvalidateNodeCache( node_id ) {
+	NODE_CACHE[node_id] = null;
+}
 
 // http://stackoverflow.com/a/4026828/5678759
 function ArrayDiff(a, b) {
@@ -56,10 +61,19 @@ export function Get( ids ) {
 	// Detect if the incoming data is in feed format
 	let feed = null;
 	if ( ids.length && ids[0].modified ) {
+		// ids is now feed, and we will rebuild ids
 		feed = ids;
 		ids = [];
 		for (let idx = 0; idx < feed.length; idx++) {
-			ids.push(feed[idx].id);
+			let node_id = feed[idx].id;
+			ids.push(node_id);
+
+			// Fetch node if it's already in cache, and invalidate if the feed date is newer
+			let node = _Get(node_id);
+			if ( node && (feed[idx].modified > node.modified) ) {
+				//console.log("Node "+node_id+" was Invalidated ("+feed[idx].modified+" > "+node.modified+")");
+				InvalidateNodeCache(node_id);
+			}
 		}
 	}
 
@@ -139,6 +153,8 @@ function _Keyed( promise, member = 'node', key = 'id' ) {
 
 // Like Get, but nodes will be an object of keys rather than an array of objects
 export function GetKeyed( ids ) {
+	// TODO: decode feed format
+
 	return Get(ids).then( r => {
 		var node = r.node;
 		r.node = {};
@@ -251,7 +267,11 @@ export function Add( id, node_type, node_subtype, node_subsubtype ) {
 
 }
 export function Publish( id ) {
-	return Fetch.Post(API_ENDPOINT+'/vx/node/publish/'+id, {});
+	return Fetch.Post(API_ENDPOINT+'/vx/node/publish/'+id, {})
+		.then( r => {
+			InvalidateNodeCache(id);
+			return r;
+		});
 }
 
 export function Update( id, name, body, tag ) {
@@ -264,7 +284,11 @@ export function Update( id, name, body, tag ) {
 	if ( tag )
 		Data.tag = tag;
 
-	return Fetch.Post(API_ENDPOINT+'/vx/node/update/'+id, Data);
+	return Fetch.Post(API_ENDPOINT+'/vx/node/update/'+id, Data)
+		.then( r => {
+			InvalidateNodeCache(id);
+			return r;
+		});
 }
 
 
@@ -275,18 +299,38 @@ export function Transform( id, type, subtype, subsubtype ) {
 	if ( subsubtype )
 		new_type += '/'+subsubtype;
 
-	return Fetch.Post(API_ENDPOINT+'/vx/node/transform/'+id+'/'+new_type, {});
+	return Fetch.Post(API_ENDPOINT+'/vx/node/transform/'+id+'/'+new_type, {})
+		.then( r => {
+			InvalidateNodeCache(id);
+			return r;
+		});
 }
 
 export function AddMeta( id, data ) {
-	return Fetch.Post(API_ENDPOINT+'/vx/node/meta/add/'+id, data);
+	return Fetch.Post(API_ENDPOINT+'/vx/node/meta/add/'+id, data)
+		.then( r => {
+			InvalidateNodeCache(id);
+			return r;
+		});
 }
 export function RemoveMeta( id, data ) {
-	return Fetch.Post(API_ENDPOINT+'/vx/node/meta/remove/'+id, data);
+	return Fetch.Post(API_ENDPOINT+'/vx/node/meta/remove/'+id, data)
+		.then( r => {
+			InvalidateNodeCache(id);
+			return r;
+		});
 }
 export function AddLink( a, b, data ) {
-	return Fetch.Post(API_ENDPOINT+'/vx/node/link/add/'+a+'/'+b, data);
+	return Fetch.Post(API_ENDPOINT+'/vx/node/link/add/'+a+'/'+b, data)
+		.then( r => {
+			InvalidateNodeCache(id);
+			return r;
+		});
 }
 export function RemoveLink( a, b, data ) {
-	return Fetch.Post(API_ENDPOINT+'/vx/node/link/remove/'+a+'/'+b, data);
+	return Fetch.Post(API_ENDPOINT+'/vx/node/link/remove/'+a+'/'+b, data)
+		.then( r => {
+			InvalidateNodeCache(id);
+			return r;
+		});
 }

@@ -58,7 +58,7 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 					$pre_query[] = 'b'.$node_query;
 					if ( isset($node_args) ) $ARGS[] = $node_args;
 					
-					$post_query[] = "id IN (SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." GROUP BY a, b, `key`)";
+					$post_query[] = "id IN (SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY a, b, `key`)";
 					$post_query[] = "scope=?";
 					$ARGS[] = 0;
 					
@@ -189,7 +189,7 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 			"SELECT
 				a AS id,
 				".DB_FIELD_DATE('timestamp', 'modified')."
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 			$full_query
 			ORDER BY id DESC
 			LIMIT ?
@@ -314,7 +314,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 						SELECT
 							id, a, b
 						FROM 
-							".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+							".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 						WHERE
 							scope=0
 					) 
@@ -327,7 +327,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 						SELECT
 							MAX(id) AS max
 						FROM
-							".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
+							".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 						WHERE
 							`key`='author'
 						GROUP BY 

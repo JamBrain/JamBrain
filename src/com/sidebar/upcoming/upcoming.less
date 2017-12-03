@@ -1,0 +1,38 @@
+@import "defs.less";
+
+#sidebar > .sidebar-upcoming {
+	& > .-item {
+		cursor: pointer;
+		transition: background 0.1s, color 0.1s;
+
+		&:hover,
+		&:focus {
+			background: @COL_A; /*@MAJOR_COLOR1;*/
+			color: @COL_W; /*@MAJOR_LIGHT;*/
+		}
+	}
+}
+
+#sidebar {
+	& .icon-trophy {
+		color: @COL_B;
+		filter: drop-shadow( 0px 0px 1px rgba(0,0,0,0.5) )
+	}
+
+	& .icon-checker {
+		color: @COL_L;
+		filter: drop-shadow( 0px 0px 1px rgba(0,0,0,0.5) )
+	}
+
+	& .icon-mallet {
+		color: @COL_ABM;
+		filter: drop-shadow( 0px 0px 1px rgba(0,0,0,0.5) )
+	}
+
+	& .icon-suggestion {
+		color: @COL_L;
+		filter: drop-shadow( 0px 0px 1px rgba(0,0,0,0.5) )
+	}
+}
+
+/* #E63 #EA3 */

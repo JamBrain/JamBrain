@@ -1,0 +1,280 @@
+@import "defs.less";
+
+@VIEWBAR_HEIGHT: 4rem;
+@VIEWBAR_COL: fade(@COL_D, 100%); /* was 80% */
+
+@LOGO_COL_A: @COL_A;
+@LOGO_COL_B: @COL_AB;
+@LOGO_COL_C: @COL_B;
+@LOGO_LIT_A: @COL_W;
+@LOGO_LIT_B: @COL_B;
+@LOGO_LIT_C: @COL_W;
+@LOGO_LIT_BG: @COL_A;
+
+@BUTTON_COL_TEXT: @COL_A;
+@BUTTON_COL_SVG: @COL_NLLL;
+@BUTTON_LIT_TEXT: @COL_W;
+@BUTTON_LIT_SVG: @COL_W;
+@BUTTON_LIT_BG: @COL_A;
+
+.view-bar {
+	position: fixed;
+
+	/* Needed for click-off and drag un-highlighting buttons to work (i.e. no selections) */
+	user-select: none;
+
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+
+	height: @VIEWBAR_HEIGHT;
+	background: @VIEWBAR_COL;
+
+	& > .-content {
+		position: relative;
+
+		margin: auto;
+		max-width: @BASE_WIDTH + 2rem; /* 2rem, so when we lose our full width, it's padded */
+		height: @VIEWBAR_HEIGHT;
+
+		& > .-left {
+			position: absolute;
+
+			left: 1rem; 	/* 1rem, so when we lose our full width, it's padded */
+			bottom: 0;
+			top: 0;
+			height: 2.5em; 	/* Required, otherwise top+bottom fills the whole parent div */
+
+			& > .-logo {
+				font-size: 2.5em;
+				display: flex;
+
+				padding: 0.3em;
+
+				transition: background 0.1s, color 0.2s;
+
+				& > svg {
+					display: block;
+					transition: color 0.2s;
+				}
+
+				& > .icon-ludum,
+				& > .icon-l-udum {
+					color: @LOGO_COL_A;
+				}
+
+				& > .icon-dare,
+				& > .icon-d-are {
+					color: @LOGO_COL_B;
+				}
+
+				& > .icon-ldnum {
+					color: @LOGO_COL_C;
+				}
+
+				&:hover,
+				&:focus {
+					background: @LOGO_LIT_BG;
+
+					& > .icon-ludum,
+					& > .icon-l-udum {
+						color: @LOGO_LIT_A;
+					}
+
+					& > .icon-dare,
+					& > .icon-d-are {
+						color: @LOGO_LIT_B;
+					}
+
+					& > .icon-ldnum {
+						color: @LOGO_LIT_C;
+					}
+				}
+			}
+		}
+
+		& > .-fake-right,
+		& > .-right {
+			position: absolute;
+
+			right: 1rem;	/* 1rem, so when we lose our full width, it's padded */
+			bottom: 0;
+			top: 0;
+			margin: auto;
+			height: 3em; 	/* Required, otherwise top+bottom fills the whole parent div */
+			min-width: 3em;
+
+		}
+
+		& > .-right {
+			/* Everything */
+			& > div,
+			& > a,
+			& > a:visited {
+				margin-left: 0.5em;
+				float: left;
+				text-decoration: none;
+
+				transition: background 0.1s;
+
+				& div {
+					color: @BUTTON_COL_TEXT;
+					transition: color 0.2s;
+				}
+
+				& svg {
+					color: @BUTTON_COL_SVG;
+					transition: color 0.2s;
+				}
+
+				&:hover,
+				&:focus,
+				&:active,
+				&:hover:active {
+					background: @BUTTON_LIT_BG;
+
+					& svg {
+						color: @BUTTON_LIT_SVG;
+					}
+
+					& div {
+						background: transparent;	/* Background color cascades from parent, so this fixes that */
+						color: @BUTTON_LIT_TEXT;
+					}
+				}
+			}
+
+			/* Buttons (Text with SVG) */
+			& > .-button {
+				position: relative;
+
+				line-height: 2em;
+				padding: 0.5em 1em;
+				padding-left: 3em;
+
+				@media (max-width: (@BASE_WIDTH - 20em)) {
+					height: 3em;
+					width: 3em;
+					padding: 0;
+				}
+
+				& > svg {
+					position: absolute;
+
+					font-size: 1.5em;
+
+					top: 0;
+					bottom: 0;
+					left: 1rem;
+					margin: auto;
+
+					display:block;
+
+					@media (max-width: (@BASE_WIDTH - 20em)) {
+						font-size: 2em;
+						left:0;
+						right:0;
+					}
+				}
+
+				& > div {
+					font-size: 1.3em;
+					font-weight: 400;
+				}
+			}
+
+			/* Avatar */
+			& > .-user {
+				position: relative;
+
+				height: 3em;
+				width: 3em;
+
+				z-index: 1001;
+
+				& img {
+					position: absolute;
+
+					top: 0;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					margin: auto;
+					display: block;
+
+					width: 2.5em;
+					height: 2.5em;
+				}
+			}
+
+			/* Icon-only Button (with overlays) */
+			& > .-icon {
+				position: relative;
+
+				height: 3em;
+				width: 3em;
+
+				& > svg {
+					position: absolute;
+
+					font-size: 2em;
+					top: 0;
+					bottom: 0;
+					left: 0;
+					right: 0;
+					margin: auto;
+					display: block;
+				}
+
+				& > .-count {
+					position: absolute;
+
+					font-size: 0.75em;
+					z-index: 4;
+
+					text-align: center;
+					height: 1em;
+
+					top:0;
+					bottom:0.3em;
+					left:0;
+					right:0;
+					margin:auto;
+
+					color: @COL_A; /*@COL_D; /*@MAJOR_DARK;*/
+					font-weight: bold;
+				}
+
+				& > .-new {
+					position: absolute;
+
+					font-weight: bold;
+					background: @COL_A; /*@MAJOR_COLOR1; #F00;*/
+
+					font-size:0.75em;
+
+					width: 1.75em;
+					line-height: 1.75em;
+					height: 1.75em;
+					text-align:center;
+					border-radius:50%;
+
+					top:0.25rem;
+					right:0.25rem;
+					margin:auto;
+
+					z-index: 5;
+
+					color: @COL_L; /*@MAJOR_LIGHT;*/
+				}
+			}
+		}
+	}
+}
+
+/* When using the view-bar, we offset the body */
+body {
+	position: relative;
+	top: @VIEWBAR_HEIGHT;
+}

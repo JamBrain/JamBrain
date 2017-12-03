@@ -6,31 +6,40 @@
 }
 
 #content .content-item {
-	& .-opt-out {
-		
+	& .-links {
+		margin: 1rem;
+
+		& > .-header {
+			font-size: 0.75em;
+		}
 	}
+
 	& .-rating {
 		& .-header {
 			font-size: 1.5em;
 			margin-top: 1em;
 			font-weight: bold;
 		}
-		& .-subtext { 
+
+		& .-subtext {
 			font-size: 0.8em;
 		}
+
 		& .-items {
 			margin-top: 1em;
 			margin-bottom: 1em;
 
 			& .-metric {
 				font-size: 1.2em;
-				
+
 				& > .-value {
 					font-weight: bold;
 				}
+
 				&.-warning > .-value {
 					color: @COL_A;
 				}
+
 				& svg {
 					padding-left: 0.5em;
 				}
@@ -38,22 +47,25 @@
 
 			& .-grade {
 				font-size: 1.2em;
-				
+
 				& > .-title {
 					display: inline-block;
 					width: 5.5em;
 				}
-				
+
 				& > .-star {
 					display: inline-block;
+
 					&:hover {
 						color: @COL_A;
 					}
 				}
+
 				& > .-delete {
 					color: @COL_NLLLL;
-					
+
 					display: inline-block;
+
 					&:hover {
 						color: @COL_A;
 					}
@@ -62,7 +74,7 @@
 			}
 		}
 	}
-	
+
 	& .-upload {
 		& .-path,
 		& .-button {
@@ -75,12 +87,13 @@
 			border-radius: 0.125em;
 			background: @COL_NLLLL;
 		}
+
 		& .-button {
 			color: @COL_NDD;
 			border: 1px solid;
-			
+
 			margin-left: 0.5em;
-			
+
 			&:hover,
 			&:focus {
 				color: @COL_L;
@@ -88,6 +101,7 @@
 				background: @COL_A;
 			}
 		}
+
 		& .-img {
 			width: 100%;
 			max-width: 320px;

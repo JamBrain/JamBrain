@@ -1,11 +1,11 @@
 <?php
-
+/*
 // This isn't what you want
 function nodeLink_GetById( $ids ) {
 	if ( is_integer($ids) ) {
 		$ids = [$ids];
 	}
-	
+
 	if ( is_array($ids) ) {
 		// Confirm that all IDs are not zero
 		foreach( $ids as $id ) {
@@ -18,12 +18,12 @@ function nodeLink_GetById( $ids ) {
 
 		return db_QueryFetch(
 			"SELECT a, b, scope, `key`, `value`
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
 			WHERE id IN ($ids_string)
 			;"
 		);
 	}
-	
+
 	return null;
 }
 
@@ -56,7 +56,7 @@ function nodeLink_GetByKey( $keys, $values = null, $scope_check = ">=0", $scope_
 		// Unknown key type, bail
 		return null;
 	}
-			
+
 	// Values
 	if ( is_integer($values) ) {
 		$values = strval($values);
@@ -68,12 +68,12 @@ function nodeLink_GetByKey( $keys, $values = null, $scope_check = ">=0", $scope_
 	else if ( is_array($values) ) {
 		$WHERE[] = '`value` IN ("'.implode('","', $values).'")';
 	}
-	
+
 	$where_string = implode(' AND ', $WHERE);
 
 	return db_QueryFetch(
 		"SELECT a, b, scope, `key`, `value`
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
 		WHERE $where_string AND id IN (
 			SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." GROUP BY a, b, `key`
 		);",
@@ -110,7 +110,7 @@ function nodeLink_GetByKeyNode( $keys, $nodes, $scope_check = ">=0", $scope_chec
 		// Unknown key type, bail
 		return null;
 	}
-			
+
 	// Nodes
 	if ( is_integer($nodes) ) {
 		$WHERE[] = "(`a`=? OR `b`=?)";
@@ -120,12 +120,12 @@ function nodeLink_GetByKeyNode( $keys, $nodes, $scope_check = ">=0", $scope_chec
 	else if ( is_array($nodes) ) {
 		$WHERE[] = '(`a` IN ('.implode(',', $nodes).') OR `b` IN ('.implode(',', $nodes).'))';
 	}
-	
+
 	$where_string = implode(' AND ', $WHERE);
 
 	return db_QueryFetch(
 		"SELECT a, b, scope, `key`, `value`
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
 		WHERE $where_string AND id IN (
 			SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." GROUP BY a, b, `key`
 		);",
@@ -138,7 +138,7 @@ function nodeLink_GetByNode( $nodes, $scope_check = ">=0" ) {
 	$multi = is_array($nodes);
 	if ( !$multi )
 		$nodes = [$nodes];
-	
+
 	if ( is_array($nodes) ) {
 		// Confirm that all Nodes are not zero
 		foreach( $nodes as $node ) {
@@ -159,27 +159,27 @@ function nodeLink_GetByNode( $nodes, $scope_check = ">=0" ) {
 		// NOTE: This may be poor performing once we have more nodes. See Meta above for some optimization homework
 		$ret = db_QueryFetch(
 			"SELECT a, b, scope, `key`, `value`
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
 			WHERE $scope_check_string (a IN ($node_string) OR b IN ($node_string)) AND id IN (
 				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." GROUP BY a, b, `key`
 			);"
 		);
-		
+
 		if ( $multi )
 			return $ret;
 		else
 			return $ret ? $ret[0] : null;
 	}
-	
+
 	return null;
 }
 
-// Variation that always returns null for values, no matter what they are set to 
+// Variation that always returns null for values, no matter what they are set to
 function nodeLink_GetNoValueByNode( $nodes, $scope_check = ">=0" ) {
 	$multi = is_array($nodes);
 	if ( !$multi )
 		$nodes = [$nodes];
-	
+
 	if ( is_array($nodes) ) {
 		// Confirm that all Nodes are not zero
 		foreach( $nodes as $node ) {
@@ -200,18 +200,18 @@ function nodeLink_GetNoValueByNode( $nodes, $scope_check = ">=0" ) {
 		// NOTE: This may be poor performing once we have more nodes. See Meta above for some optimization homework
 		$ret = db_QueryFetch(
 			"SELECT a, b, scope, `key`, null AS `value`
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." 
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
 			WHERE $scope_check_string (a IN ($node_string) OR b IN ($node_string)) AND id IN (
 				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." GROUP BY a, b, `key`
 			);"
 		);
-		
+
 		if ( $multi )
 			return $ret;
 		else
 			return $ret ? $ret[0] : null;
 	}
-	
+
 	return null;
 }
 
@@ -220,7 +220,7 @@ function nodeLink_ParseByNode( $node_ids, $get_values = true ) {
 	$multi = is_array($node_ids);
 	if ( !$multi )
 		$node_ids = [$node_ids];
-	
+
 	if ( $get_values )
 		$links = nodeLink_GetByNode($node_ids);
 	else
@@ -232,7 +232,7 @@ function nodeLink_ParseByNode( $node_ids, $get_values = true ) {
 	foreach ( $node_ids as $node_id ) {
 		$raw_a = [];
 		$raw_b = [];
-		
+
 		foreach ( $links as $link ) {
 			// Question: Should we support circular links (i.e. remove "else" from "else if")?
 			if ( $node_id === $link['a'] ) {
@@ -287,7 +287,7 @@ function nodeLink_ParseByNode( $node_ids, $get_values = true ) {
 
 		$ret[$node_id] = [$raw_a, $raw_b];
 	}
-	
+
 	if ($multi)
 		return $ret;
 	else
@@ -295,43 +295,43 @@ function nodeLink_ParseByNode( $node_ids, $get_values = true ) {
 }
 
 
-function nodeLink_AddByNode( $a, $b, $scope, $key, $value = null ) {
-	return db_QueryInsert(
-		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." (
-			a,
-			b,
-			
-			scope,
-			
-			`key`,
-			`value`,
-			timestamp
-		)
-		VALUES ( 
-			?,
-			?,
-			
-			?,
-			
-			?,
-			?,
-			NOW()
-		);",
-		$a,
-		$b,
-		
-		$scope,
-		
-		$key,
-		$value
-	);
-}
+//function nodeLink_AddByNode( $a, $b, $scope, $key, $value = null ) {
+//	return db_QueryInsert(
+//		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK." (
+//			a,
+//			b,
+//
+//			scope,
+//
+//			`key`,
+//			`value`,
+//			timestamp
+//		)
+//		VALUES (
+//			?,
+//			?,
+//
+//			?,
+//
+//			?,
+//			?,
+//			NOW()
+//		);",
+//		$a,
+//		$b,
+//
+//		$scope,
+//
+//		$key,
+//		$value
+//	);
+//}
 
 
-// NOTE: Doesn't actually remove, but adds an "ignore-me" entry
-function nodeLink_RemoveByNode( $a, $b, $scope, $key, $value = null ) {
-	return nodeLink_AddByNode($a, $b, $scope^-1, $key, $value);
-}
+//// NOTE: Doesn't actually remove, but adds an "ignore-me" entry
+//function nodeLink_RemoveByNode( $a, $b, $scope, $key, $value = null ) {
+//	return nodeLink_AddByNode($a, $b, $scope^-1, $key, $value);
+//}
 
 
 function nodeLink_CountByABKeyScope( $parent = null, $a = null, $b = null, $key = null, $scope_op = '=0' ) {
@@ -361,7 +361,7 @@ function nodeLink_CountByABKeyScope( $parent = null, $a = null, $b = null, $key 
 				FROM
 					".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
 				".dbQuery_MakeQuery($INNER_QUERY)."
-				GROUP BY 
+				GROUP BY
 					a, b, `key`
 			) AS i ON o.id=i.id
 			INNER JOIN (
@@ -377,6 +377,9 @@ function nodeLink_CountByABKeyScope( $parent = null, $a = null, $b = null, $key 
 		...$ARGS
 	) |0;	// Clever: If nothing is returned, result is zero
 
+
+
+
 ////	return db_Echo(
 //	return db_QueryFetchValue(
 //		"SELECT
@@ -384,7 +387,7 @@ function nodeLink_CountByABKeyScope( $parent = null, $a = null, $b = null, $key 
 //		FROM
 //			".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
 //			INNER JOIN (
-//				SELECT 
+//				SELECT
 //					id, a, b
 //				FROM
 //					".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
@@ -396,7 +399,7 @@ function nodeLink_CountByABKeyScope( $parent = null, $a = null, $b = null, $key 
 //				FROM
 //					".SH_TABLE_PREFIX.SH_TABLE_NODE_LINK."
 //				".dbQuery_MakeQuery($INNER_QUERY)."
-//				GROUP BY 
+//				GROUP BY
 //					a, b, `key`
 //			) AS i ON o.id=i.id
 //		".dbQuery_MakeQuery($QUERY)."
@@ -405,3 +408,4 @@ function nodeLink_CountByABKeyScope( $parent = null, $a = null, $b = null, $key 
 //		...$ARGS
 //	) |0;	// Clever: If nothing is returned, result is zero
 }
+*/

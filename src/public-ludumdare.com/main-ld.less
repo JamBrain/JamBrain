@@ -31,13 +31,15 @@ body {
 /* Content Section */
 #content {
 	flex: 3;
-	
-	font-size: 1.125rem;
-	
+
+	/*font-size: 1.125rem;*/
+
 	overflow: hidden;
-	
-	& > div {
-		margin-top: 1rem;
+
+	& > div,
+	& .content-list > div {
+		margin-top: 0.5rem;
+
 		&:first-child {
 			margin-top: 0;
 		}
@@ -47,17 +49,18 @@ body {
 /* Content's Sidebar */
 #sidebar {
 	flex: 1;
-	
+
 	/*font-size: 1vw;*/
 
 	width: 100%;
-	
+
 	max-width: 20em;
 	min-width: 16em;
 	margin-left: 1rem;
-	
+
 	& > div {
 		margin-top: 1em;
+
 		&:first-child {
 			margin-top: 0;
 		}
@@ -81,34 +84,46 @@ body {
 
 /* Has Sidebar */
 .if-sidebar-block { display: block !important; }
+
 .if-sidebar-inline { display: inline-block !important; }
+
 .if-no-sidebar-block { display: none !important; }
+
 .if-no-sidebar-inline { display: none !important; }
 
 /* No Sidebar */
-@media (max-width: (@BASE_WIDTH - 20em)) { 
+@media (max-width: (@BASE_WIDTH - 20em)) {
 	#sidebar {
 		display: none;
 	}
-	
+
 	.if-no-sidebar-block { display: block !important; }
+
 	.if-no-sidebar-inline { display: inline-block !important; }
+
 	.if-sidebar-block { display: none !important; }
+
 	.if-sidebar-inline { display: none !important; }
 }
 
 
 /* Not Small Mode */
 .if-small-block { display: none !important; }
+
 .if-small-inline { display: none !important; }
+
 .if-not-small-block { display: block !important; }
+
 .if-not-small-inline { display: inline-block !important; }
 
 /* Small Mode */
-@media (max-width: (@BASE_WIDTH - 320px - 320px)) { 	
+@media (max-width: (@BASE_WIDTH - 320px - 320px)) {
 	.if-small-block { display: block !important; }
+
 	.if-small-inline { display: inline-block !important; }
+
 	.if-not-small-block { display: none !important; }
+
 	.if-not-small-inline { display: none !important; }
 }
 
@@ -116,16 +131,16 @@ body {
 /* EXTRAS: Need to make own file */
 .twitter-box {
 	border: 3px solid #55ACEE;
-	
+
 	background-color: #FFF;
 	background-image: url('//@{STATIC_DOMAIN}/other/logo/twitter/bird-logo-2012.svg');
 	background-repeat: no-repeat;
 	background-position: right 0px bottom -64px;
-	
+
 	border-radius: 20px;
 	width: 80%;
 	margin: auto;
-	
+
 	> div {
 		margin: 20px;
 	}

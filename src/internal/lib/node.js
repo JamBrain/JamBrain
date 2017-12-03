@@ -30,7 +30,7 @@ window.node_IsAuthor = function( node, user ) {
 		return true;
 		
 	// Check if you are on the list of authors (metadata)
-	if ( node.link && node.link.author && node.link.author.indexOf(user.id) != -1 )
+	if ( node.meta && node.meta.author && node.meta.author.indexOf(user.id) != -1 )
 		return true;
 	
 	return false;
@@ -52,8 +52,8 @@ window.nodeUser_IsFriend = function( user, node ) {
 		return null;
 
 	// Refs checks are first, because it's an early rejection
-	if ( node.id && user.private && user.private.refs && user.private.refs.star && user.private.link && user.private.link.star ) {
-		return (user.private.refs.star.indexOf(node.id) !== -1) && (user.private.link.star.indexOf(node.id) !== -1);
+	if ( node.id && user.private && user.private.refs && user.private.refs.star && user.private.meta && user.private.meta.star ) {
+		return (user.private.refs.star.indexOf(node.id) !== -1) && (user.private.meta.star.indexOf(node.id) !== -1);
 	}
 	return false;
 }
@@ -63,8 +63,8 @@ window.nodeUser_IsFollowing = function( user, node ) {
 	if ( !user || !node )
 		return null;
 
-	if ( node.id && user.private && user.private.link && user.private.link.star ) {
-		return (user.private.link.star.indexOf(node.id) !== -1);
+	if ( node.id && user.private && user.private.meta && user.private.meta.star ) {
+		return (user.private.meta.star.indexOf(node.id) !== -1);
 	}
 	return false;
 }
@@ -74,8 +74,8 @@ window.nodeUser_GetFriends = function( user ) {
 	if ( !user )
 		return null;
 
-	if ( user.private && user.private.refs && user.private.refs.star && user.private.link && user.private.link.star ) {
-		return intersection(user.private.link.star, user.private.refs.star);
+	if ( user.private && user.private.refs && user.private.refs.star && user.private.meta && user.private.meta.star ) {
+		return intersection(user.private.meta.star, user.private.refs.star);
 	}
 	return [];
 }
@@ -117,14 +117,14 @@ window.node_CanPublish = function( node ) {
 };
 
 window.node_GetPlatforms = function( node ) {
-	if ( node && node.link && node.link.platform ) {
-		return node.link.platform;
+	if ( node && node.meta && node.meta.platform ) {
+		return node.meta.platform;
 	}
 	return [];
 }
 window.node_GetTags = function( node ) {
-	if ( node && node.link && node.link.tag ) {
-		return node.link.tag;
+	if ( node && node.meta && node.meta.tag ) {
+		return node.meta.tag;
 	}
 	return [];
 }

@@ -2,51 +2,59 @@
 
 #content .content-box {
 	position: relative;
-	
-/*	max-width: 308px;*/
-/*	width: 308px;*/
-/*	height: 246px;	/* 5:4 */
-	
+
+	/*	max-width: 308px;*/
+	/*	width: 308px;*/
+	/*	height: 246px;	/* 5:4 */
+
 	overflow: hidden;
-	
+
+	&.-place-holder {
+		visibility: hidden;
+	}
+
 	& > .-cover {
 		box-sizing: border-box;
-		
+
 		width: 100%;
 		/*height: 100%;*/
 	}
+
 	& > .-cover-hover {
 		position: absolute;
-		
+
 		left: 0;
 		right: 0;
 		top: 0;
 		bottom: 0;
-		
+
 		box-sizing: border-box;
-		
+
 		width: 100%;
 		height: 100%;
 	}
+
 	& img {
 		display: block;
 	}
 
 	& > .-cover {
 		z-index: 0;
-		
+
 		transform: scale(1);
 		transition: transform 0.2s ease-in;
 	}
+
 	& > .-cover-hover {
 		display: none;
 		z-index: 2;
 	}
+
 	&:hover {
 		& > .-cover-hover {
 			display: block;
 		}
-		
+
 		& > .-cover {
 			transform: scale(1.05);
 		}
@@ -70,20 +78,20 @@
 		opacity: 1;
 
 		white-space: nowrap;
-		
+
 		transition: opacity 0.4s ease-in;
-		opacity: 1;
 	}
 
-		
+
 	& > .-avatars {
 		position: absolute;
-		
+
 		z-index: 10;
-		
+
 		right: 0.5em;
 		bottom: 0.5em;
 	}
+
 	& > .-bot-bar {
 		bottom: 0;
 		left: 0;
@@ -91,100 +99,114 @@
 
 		line-height: 2rem;
 		padding: 0 0.5em;
-		
+
 		background: fade(@COL_NDDD, 85%);
 		color: @COL_L;
 	}
-	
+
 	& > .-bot-left {
 		bottom: 2.5rem;
 		left: 0.5rem;
-		
+
 		& > * {
 			filter: drop-shadow(0 0 3px rgba(0, 0, 0, 1.0));
 			margin: 0.125em;
 		}
-		
+
 		& .-first {
 			color: @COL_B;
 		}
+
 		& .-second {
 			color: @COL_NLL;
 		}
+
 		& .-third {
 			color: @COL_ABM;
 		}
 	}
+
 	& > .-bot-right {
 		bottom: 2.5rem;
 		right: 0.5em;
 	}
-	
+
 	& > .-top-bar {
 		top: 0;
 		left: 0;
 		right: 0;
-		
+
 		line-height: 2rem;
 		padding: 0 0.5em;
-		
+
 		background: fade(@COL_NDDD, 85%);
 		color: @COL_L;
 	}
-	
+
 	& > .-sub-event {
 		position: absolute;
 		box-sizing: border-box;
-		
+
 		z-index: 10;
-		
+
 		top: 0;
 		right: 0;
-		
+
 		background: @COL_ND;
 		color: @COL_L;
 
 		&:before {
 			color: @COL_ND;
 		}
-		
+
 		&.-col-a {
 			background: @COL_A;
+
 			&:before { color: @COL_A; }
 		}
+
 		&.-col-ab {
 			background: @COL_AB;
+
 			&:before { color: @COL_AB; }
 		}
+
 		&.-col-b {
 			background: @COL_B;
+
 			&:before { color: @COL_B; }
 		}
+
 		&.-col-bc {
 			background: @COL_BC;
+
 			&:before { color: @COL_BC; }
 		}
+
 		&.-col-c {
 			background: @COL_C;
+
 			&:before { color: @COL_C; }
 		}
+
 		&.-col-ca {
 			background: @COL_CA;
+
 			&:before { color: @COL_CA; }
 		}
-		
+
 		font-size: 1.2em;
 		line-height: 2rem;
 		font-weight: bold;
 
 		padding: 0 0.5em;
-		
-				
+
+
 		/* Left Wedge */
 		&:before {
 			position: absolute;
 			display: block;
-			
+
 			content: '';
 			left: -2rem;
 			top: 0;

@@ -1,31 +1,31 @@
 @import 'defs.less';
 
-@COL: @COL_NLL;
-@DARK: @COL_NDDD;
+@COL: @COL_NLLLLL;
+@DARK: @COL_NLLL;
 @BUTTON_LIT: @COL_A;
 @BUTTON_LIT_BG: @COL_L;
 
 #content .content-common-footer {
 	position: relative;
-	
-	border-bottom: 8px solid @DARK;
+
+	border-bottom: 8px solid @COL;/*@DARK;*/
 	color: @COL;
-	
+
 	margin-top: -4px; /* Not sure why this needs to be -4px, and not -8px */
-	
+
 	&.-has-items {
 		height: 2em;
 	}
-	
+
 	& a,
 	& a:visited {
 		margin: 0;
 		padding-top: 0;
 		padding-bottom: 0;
 		color: @COL;
-		
+
 		text-decoration: none;
-		
+
 		&:hover,
 		&:focus {
 			color: @BUTTON_LIT_BG;
@@ -45,17 +45,17 @@
 
 		& > div,
 		& > a {
-			padding-left: 1rem + 2.5rem;
+			padding-left: /*1rem +*/ 2.5rem;
 
 			&:first-child {
-				padding-left: 1rem;	/* match whatever button uses */
+				padding-left: 0; /*1rem;	/* match whatever button uses */
 			}
 
 			/* Right Wedge */
 			&:after {
 				position: absolute;
 				display: block;
-				
+
 				content:'';
 				right: -2.5rem;
 				top: 0;
@@ -66,27 +66,30 @@
 			}
 		}
 	}
-	
+
 	& > .-right {
 		position: absolute;
-		
+
 		right: 0;
 		bottom: -8px;
 		display: flex;
-		
+
 		& > div,
 		& > a {
-			padding-right: 1rem + 2.5rem;
+			padding-right: /*1rem +*/ 2.5rem;
 
 			&:last-child {
 				padding-right: 1rem;	/* match whatever button uses */
 			}
-		
+			&.-edit {
+				padding-right: 0;
+			}
+
 			/* Left Wedge */
 			&:before {
 				position: absolute;
 				display: block;
-				
+
 				content: '';
 				left: -2.5rem;
 				top: 0;
@@ -97,14 +100,14 @@
 			}
 		}
 	}
-/*	
-	@media (max-width: 26em) { 
+	/*
+	@media (max-width: 26em) {
 		& .-heart-count {
 			display: none !important;
 		}
 	}
-	
-	@media (max-width: 22em) { 
+
+	@media (max-width: 22em) {
 		& .-comment-count {
 			display: none !important;
 		}

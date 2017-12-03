@@ -20,7 +20,7 @@ export function Pick( notes ) {
 	return Fetch.Get(API_ENDPOINT+'/vx/note/getnote/'+notes.join('+'), true);
 }
 
-export function Add( parent, node, body, tag ) {
+export function Add( parent, node, body, tag, anonymous ) {
 	var Data = {};
 
 	if ( Number.isInteger(parent) )
@@ -29,6 +29,10 @@ export function Add( parent, node, body, tag ) {
 		Data.body = body;
 	if ( tag )
 		Data.tag = tag;
+
+	if ( anonymous ) {
+		Data.anonymous = anonymous;
+	}
 
 	return Fetch.Post(API_ENDPOINT+'/vx/note/add/'+node, Data);
 }

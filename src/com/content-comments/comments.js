@@ -1,20 +1,13 @@
 import { h, Component } 				from 'preact/preact';
-//import ShallowCompare	 				from 'shallow-compare/index';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
-import NavLink 							from 'com/nav-link/link';
-import SVGIcon 							from 'com/svg-icon/icon';
-import IMG2 							from 'com/img2/img2';
-
-import ContentFooterButtonComments		from 'com/content-footer/footer-button-comments';
-
-import ContentCommentsMarkup			from 'comments-markup';
 
 import ContentCommentsComment			from 'comments-comment';
 
 import $Note							from '../../shrub/js/note/note';
 import $Node							from '../../shrub/js/node/node';
 import $NoteLove						from '../../shrub/js/note/note_love';
+import $Notification					from '../../shrub/js/notification/notification';
 
 export default class ContentComments extends Component {
 	constructor( props ) {
@@ -24,11 +17,14 @@ export default class ContentComments extends Component {
 			'comments': null,
 			'tree': null,
 			'authors': null,
-
 			'newcomment': null,
+			'subscribed': null,
+			'hascomment': false,
+			'isauthor': false,
 		};
 
 		this.onPublish = this.onPublish.bind(this);
+		this.onSubscribe = this.onSubscribe.bind(this);
 	}
 
 	componentWillMount() {
@@ -47,15 +43,47 @@ export default class ContentComments extends Component {
 	}
 
 	getComments( node ) {
+		let user = this.props.user;
+		if ( user && user.id ) {
+			$Notification.GetSubscription( node.id )
+			.then(r => {
+				// Determine whether user is subscribed to the thread explicitly
+				this.setState({'subscribed': r['subscribed']});
+			});
+		}
+
 		$Note.Get( node.id )
 		.then(r => {
+			// Determine if current user is one of the authors of this node
+			let isauthor = false;
+			if ( node.meta && node.meta.authors ) {
+				for ( const index in node.meta.authors ) {
+					if ( node.meta.authors[index] == user.id ) {
+						isauthor = true;
+						break;
+					}
+				}
+			}
+			if ( node.author == user.id ) {
+				isauthor = true;
+			}
+			this.setState({'isauthor': isauthor});
+
 			// Has comments
 			if ( r.note && r.note.length ) {
-				this.setState({ 'comments': r.note, 'tree': null, 'authors': null });
+				// Determine whether the user has made a comment in this thread.
+				let hasComment = false;
+				for ( const index in r.note ) {
+					if ( r.note[index].author == user.id ) {
+						hasComment = true;
+						break;
+					}
+				}
+				this.setState({'comments': r.note, 'tree': null, 'authors': null, 'hascomment': hasComment});
 			}
 			// Does not have comments
 			else if ( r.note ) {
-				this.setState({ 'comments': [], 'tree': null, 'authors': null });
+				this.setState({'comments': [], 'tree': null, 'authors': null});
 			}
 
 			// Async first
@@ -65,14 +93,14 @@ export default class ContentComments extends Component {
 
 			$NoteLove.GetMy(node.id)
 			.then(r => {
-					this.setState({ "lovedComments": r["my-love"]});
+					this.setState({"lovedComments": r["my-love"]});
 
 					// Sync last
 					this.setState({'tree': this.buildTree()});
 			});
 		})
 		.catch(err => {
-			this.setState({ 'error': err });
+			this.setState({'error': err});
 		});
 	}
 
@@ -143,7 +171,7 @@ export default class ContentComments extends Component {
 
 		var lovedComments = this.state.lovedComments;
 		var actualLove = [];
-		for (var item in lovedComments) {
+		for ( var item in lovedComments ) {
 			actualLove.push(lovedComments[item]['note']);
 		}
 
@@ -165,26 +193,33 @@ export default class ContentComments extends Component {
 	}
 
 	renderPostNew() {
-		var user = this.props.user;
-		var authors = this.state.authors;
-		var comment = this.state.newcomment;
-		var author = authors[comment.author];
+		const user = this.props.user;
+		const authors = this.state.authors;
+		const comment = this.state.newcomment;
+		const error = this.state.error;
+		const author = authors[comment.author];
+		const allowAnonymous = parseInt(this.props.node.meta['allow-anonymous-comments']);
 
-		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove /></div>;
+		// We can subscribe if we haven't subscribed and we don't have a comment in this thread, and we're not an author. Otherwise we can unsubscribe.
+		let canSubscribe = (this.state.subscribed === null) ? !( this.state.hascomment || this.state.isauthor ) : !this.state.subscribed;
+
+		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove allowAnonymous={allowAnonymous} error={error} cansubscribe={canSubscribe} onsubscribe={this.onSubscribe} /></div>;
 	}
 
-	onPublish( e ) {
-		var node = this.props.node;
-		var newcomment = this.state.newcomment;
+	onPublish( e, publishAnon ) {
+		const node = this.props.node;
+		const newcomment = this.state.newcomment;
+		this.setState({'error': null });
 
-		$Note.Add( newcomment.parent, newcomment.node, newcomment.body )
+		$Note.Add( newcomment.parent, newcomment.node, newcomment.body, null, publishAnon )
 		.then(r => {
 			if ( r.note ) {
 				var Now = new Date();
 				var comment = Object.assign({
 					'id': r.note,
 					'created': Now.toISOString(),
-					'modified': Now.toISOString()
+					'modified': Now.toISOString(),
+					'anonymous': publishAnon,
 				}, newcomment);
 
 				// TODO: insert properly
@@ -194,26 +229,33 @@ export default class ContentComments extends Component {
 				newcomment.parent = 0;
 				newcomment.body = '';
 
-				this.setState({'tree': this.buildTree()});
+				this.setState({'tree': this.buildTree(), 'hascomment': true});
 			}
 			else {
-				this.setState({ 'error': err });
+				this.setState({'error': (r.message ? r.message : "Unknown error when posting comment")});
 			}
 		})
 		.catch(err => {
-			this.setState({ 'error': err });
+			this.setState({'error': err});
+		});
+	}
+
+	onSubscribe( e, subscribe ) {
+		let promise = null;
+		if ( subscribe ) {
+			promise = $Notification.Subscribe( this.props.node.id );
+		}
+		else {
+			promise = $Notification.Unsubscribe( this.props.node.id );
+		}
+
+		promise.then(r => {
+			this.setState({'subscribed': subscribe});
 		});
 	}
 
 	render( props, {comments, tree, authors, newcomment} ) {
-		var node = props.node;
-		var user = props.user;
-		var path = props.path;
-		var extra = props.extra;
-
-//		var FooterItems = [];
-//		if ( !props['no_comments'] )
-//			FooterItems.push(<ContentFooterButtonComments href={path} node={node} wedge_left_bottom />);
+		let {node, user, path, extra} = props;
 
 		var ShowComments = <NavSpinner />;
 		if ( comments && tree && authors ) {
@@ -241,11 +283,4 @@ export default class ContentComments extends Component {
 		);
 	}
 
-//				<div class="content-footer content-footer-common -footer">
-//					<div class="-left">
-//					</div>
-//					<div class="-right">
-//			  			{FooterItems}
-//			  		</div>
-//				</div>
 }

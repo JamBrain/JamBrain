@@ -1,44 +1,56 @@
-import { h, render, Component, options }			from 'preact/preact';
-import { initDevTools } 							from 'preact-devtools/devtools';
-import Sanitize							from '../internal/sanitize/sanitize';
-import NavSpinner						from 'com/nav-spinner/spinner';
+import {h, render, Component, options}	from 'preact/preact';
 
-import ViewBar 							from 'com/view-bar/bar';
-import ViewHeader						from 'com/view-header/header';
-import ViewSidebar						from 'com/view-sidebar/sidebar';
-import ViewContent						from 'com/view-content/content';
-import ViewFooter						from 'com/view-footer/footer';
-import ViewHome							from 'com/view-home/home';
+// @ifdef DEBUG
+import {}								from 'preact-devtools/devtools';
+// @endif
 
-import DialogUnfinished					from 'com/dialog-unfinished/unfinished';
-import DialogLogin						from 'com/dialog-login/login';
-import DialogRegister					from 'com/dialog-register/register';
-import DialogActivate					from 'com/dialog-activate/activate';
-import DialogReset						from 'com/dialog-reset/reset';
-import DialogPassword					from 'com/dialog-password/password';
-import DialogAuth						from 'com/dialog-auth/auth';
-import DialogSession					from 'com/dialog-session/session';
-import DialogSavebug					from 'com/dialog-savebug/savebug';
-import DialogUserConfirm				from 'com/dialog-user/user-confirm';
+import Sanitize							from 'internal/sanitize/sanitize';
 
-import DialogSubmit						from 'com/dialog-submit/submit';
-import DialogTV							from 'com/dialog-tv/tv';
+import Router							from 'com/router/router';
+import Route							from 'com/router/route';
 
-import DialogCreate						from 'com/dialog-create/create';
+import Layout							from "com/page/layout";
+
+import PageHome 						from 'com/page/home/home';
+import PagePage 						from 'com/page/page/page';
+import PagePost 						from 'com/page/post/post';
+import PageItem 						from 'com/page/item/item';
+import PageTag 							from 'com/page/tag/tag';
+import PageUser 						from 'com/page/user/user';
+import PageUsers 						from 'com/page/users/users';
+import PageEvent 						from 'com/page/event/event';
+import PageEvents 						from 'com/page/events/events';
+import PageError 						from 'com/page/error/error';
+import PageMySettings 					from 'com/page/my/settings';
+import PageMyNotifications 				from 'com/page/my/notifications';
+import PageDevPalette 					from 'com/page/dev/palette';
+
+import DialogUnfinished					from 'com/dialog/unfinished/unfinished';
+import DialogLogin						from 'com/dialog/login/login';
+import DialogRegister					from 'com/dialog/register/register';
+import DialogActivate					from 'com/dialog/activate/activate';
+import DialogReset						from 'com/dialog/reset/reset';
+import DialogPassword					from 'com/dialog/password/password';
+import DialogAuth						from 'com/dialog/auth/auth';
+import DialogSession					from 'com/dialog/session/session';
+import DialogSavebug					from 'com/dialog/savebug/savebug';
+import DialogUserConfirm				from 'com/dialog/user/user-confirm';
+import DialogSubmit						from 'com/dialog/submit/submit';
+import DialogTV							from 'com/dialog/tv/tv';
+import DialogCreate						from 'com/dialog/create/create';
 
 //import AlertBase						from 'com/alert-base/base';
 
-import $Node							from '../shrub/js/node/node';
-import $User							from '../shrub/js/user/user';
-import $NodeLove						from '../shrub/js/node/node_love';
+import $Node							from 'shrub/js/node/node';
+import $User							from 'shrub/js/user/user';
+import $NodeLove						from 'shrub/js/node/node_love';
+
 
 window.LUDUMDARE_ROOT = '/';
 window.SITE_ROOT = 1;
 
-if ( SITE_DEBUG ) {
-	initDevTools();
-}
 
+// NOTE: Deprecated
 // Add special behavior: when class attribute is an array, flatten it to a string
 options.vnode = function(vnode) {
 	if ( vnode && vnode.attributes && Array.isArray(vnode.attributes.class) ) {
@@ -55,11 +67,16 @@ options.vnode = function(vnode) {
 class Main extends Component {
 	constructor( props ) {
 		super(props);
-		console.log('[constructor]');
+		console.log("[constructor]");
+		// @ifdef DEBUG
+		console.log("Running in DEBUG mode");
+		// @endif
 
 		var clean = this.cleanLocation(window.location);
 		if ( window.location.origin+clean.path !== window.location.href ) {
+			// @ifdef DEBUG
 			console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
+			// @endif
 
 			this.storeHistory(window.history.state, null, clean.path);
 		}
@@ -91,12 +108,8 @@ class Main extends Component {
 
 		this.onLogin = this.onLogin.bind(this);
 
-//		this.doEverything();
+//        this.doEverything();
 	}
-
-//	async doEverything() {
-//        var test = await new Promise(resolve => {setTimeout(pepper => { console.log("pepper"); resolve(); }, 1000); console.log("peter");});
-//    }
 
 	componentDidMount() {
 		this.fetchData();
@@ -115,13 +128,13 @@ class Main extends Component {
 	}
 
 	componentDidUpdate( prevProps, prevState ) {
-		if(window.location.href.substr(-3) == "#--") {
+		if (window.location.href.substr(-3) == "#--") {
 			history.replaceState({}, '', window.location.href.replace("#--", ""));
 		}
 
 		this.storeHistory(this.state);
 
-		if(this.state.node != prevState.node) {
+		if (this.state.node != prevState.node) {
 			this.handleAnchors();
 		}
 	}
@@ -129,9 +142,9 @@ class Main extends Component {
 	cleanLocation( location ) {
 		// Clean the URL
 		var clean = {
-			pathname: Sanitize.clean_Path(location.pathname),
-			search: Sanitize.clean_Query(location.search),
-			hash: Sanitize.clean_Hash(location.hash),
+			"pathname": Sanitize.clean_Path(location.pathname),
+			"search": Sanitize.clean_Query(location.search),
+			"hash": Sanitize.clean_Hash(location.hash),
 		};
 
 		clean.path = clean.pathname + clean.search + clean.hash;
@@ -176,7 +189,7 @@ class Main extends Component {
 						return <DialogTV {...props} />;
 					default:
 						return <DialogUnfinished {...props} />;
-				};
+				}
 			}
 		}
 		return null;
@@ -184,7 +197,7 @@ class Main extends Component {
 
 	// Called by the login dialog
 	onLogin() {
-		this.setState({ 'user': null });
+		this.setState({'user': null});
 		this.fetchData();
 	}
 
@@ -212,7 +225,7 @@ class Main extends Component {
 			}
 		})
 		.catch(err => {
-			this.setState({ 'error': err });
+			this.setState({'error': err});
 		});
 	}
 
@@ -224,7 +237,7 @@ class Main extends Component {
 
 		return $Node.Get(node_id)
 			.then(r => {
-				// If 
+				// If
 				if ( r && Array.isArray(r.node) && r.node.length ) {
 					Node = r.node[0];
 
@@ -299,7 +312,7 @@ class Main extends Component {
 				return r;
 			})
 			.catch(err => {
-				this.setState({ 'error': err });
+				this.setState({'error': err});
 			});
 	}
 
@@ -337,7 +350,7 @@ class Main extends Component {
 			return null;
 		})
 		.catch(err => {
-			this.setState({ 'error': err });
+			this.setState({'error': err});
 		});
 	}
 
@@ -375,7 +388,7 @@ class Main extends Component {
 			// Process private User data
 			if ( r ) {
 				User['private']['meta'] = r.meta;
-				User['private']['link'] = r.link;
+//				User['private']['link'] = r.link;
 				User['private']['refs'] = r.refs;
 			}
 
@@ -437,16 +450,16 @@ class Main extends Component {
 	}
 
 	handleAnchors() {
-		if( window.location.hash ) {
+		if ( window.location.hash ) {
 			var hash = Sanitize.parseHash(window.location.hash);
 
-			if( hash.path === "" && hash.extra.length > 0 ) {
+			if ( hash.path === "" && hash.extra.length > 0 ) {
 				var heading = document.getElementById(hash.extra[0]);
-				if( heading ) {
+				if ( heading ) {
 					heading.scrollIntoView();
 
 					var viewBar = document.getElementsByClassName("view-bar")[0];
-					if( viewBar ) {
+					if ( viewBar ) {
 						window.scrollBy(0, -viewBar.clientHeight);
 					}
 				}
@@ -456,27 +469,21 @@ class Main extends Component {
 
 	// When we navigate by clicking forward
 	onNavChange( e ) {
-		console.log('navchange:',e.detail.old.href,'=>',e.detail.location.href);
+		console.log('navchange:', e.detail.old.href, '=>', e.detail.location.href);
 
 		if ( e.detail.location.href !== e.detail.old.href ) {
 			var slugs = this.cleanLocation(e.detail.location).slugs;
 
 			if ( slugs.join() !== this.state.slugs.join() ) {
-				history.pushState(null, null, e.detail.location.pathname+e.detail.location.search);
+				history.pushState(null, null, e.detail.location.pathname + e.detail.location.search);
 
 				this.setState({
 					'slugs': slugs,
-					'home': null,
 					'node': {
 						'id': 0
 					}
 				});
-
-				if (slugs[0] == 'home') {
-					this.setState({home: slugs.slice(1)});
-				} else {
-					this.fetchNode();
-				}
+				this.fetchNode();
 			}
 		}
 
@@ -496,53 +503,66 @@ class Main extends Component {
 		this.handleAnchors();
 	}
 
-	isHomeView() {
+	getTitle( node ) {
+		let Title = "";
 
-		if (Array.isArray(this.state.home)) {
-			console.log('[isHome]', this.state.home);
-			return true;
+		if ( node.name ) {
+			Title = titleParser.parse(node.name, true);		// What is titleParser?
+			if ( Title === "" ) {
+				Title = window.location.host;
+			}
+			else {
+				Title += " | " + window.location.host;
+			}
 		}
-		const slugs = this.state.slugs;
-
-		if (Array.isArray(slugs) && slugs[0] == 'home') {
-			this.setState({home: slugs.slice(1)});
-			return true;
+		else {
+			Title = window.location.host;
 		}
-		return false;
+		return Title;
 	}
 
-	render( {}, {node, user, featured, path, extra, error, home} ) {
+	render( {}, {node, user, featured, path, extra, error} ) {
 		var ShowContent = null;
+		let props = {node, user, featured, path, extra, error};
 
-		if (this.isHomeView()) {
-			ShowContent = <ViewHome show={home} />;
-		}
-		else if ( node.id ) {
-			ShowContent = <ViewContent node={node} user={user} path={path} extra={extra} featured={featured} />;
-		} else {
-			console.log('[Error]');
-			ShowContent = (
-				<ViewContent>
-					{error ? error : <NavSpinner />}
-				</ViewContent>
-			);
+		if ( node ) {
+			document.title = this.getTitle(node);
 		}
 
 		return (
-			<div id="layout">
-				<ViewBar user={user} featured={featured} />
-				<div class="view">
-					<ViewHeader user={user} featured={featured} />
-					<div id="content-sidebar">
-						{ShowContent}
-						<ViewSidebar user={user} featured={featured} />
-					</div>
-					<ViewFooter />
-				</div>
+			<Layout {...this.state}>
+				<Router node={node} props={props} path={extra}>
+					<Route type="root" component={PageHome}>
+						<Route static path="/my">
+							<Route static path="/settings" component={PageMySettings} />
+							<Route static path="/notifications" component={PageMyNotifications} />
+						</Route>
+						<Route static path="/dev">
+							<Route static path="/palette" component={PageDevPalette} />
+						</Route>
+					</Route>
+
+					<Route type="page" component={PagePage} />
+					<Route type="post" component={PagePost} />
+
+					<Route type="item">
+						<Route subtype="game" component={PageItem} />
+					</Route>
+
+					<Route type="tag" component={PageTag} />
+
+					<Route type="user" component={PageUser} />
+					<Route type="users" component={PageUsers} />
+
+					<Route type="event" component={PageEvent} />
+					<Route type={["events", "group", "tags"]} component={PageEvents} />
+
+					<Route type="error" component={PageError} />
+				</Router>
 				{this.getDialog()}
-			</div>
+			</Layout>
 		);
 	}
-};
+}
 
 render(<Main />, document.body);
