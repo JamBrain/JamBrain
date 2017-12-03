@@ -198,6 +198,27 @@ function node_GetSimpleByType( $type, $subtype = null ) {
 	}
 }
 
+// Specialized Get for fetching data we care about as a tag
+function node_CustomGetTagByType( $type, $subtype = null ) {
+	if ( is_string($subtype) ) {
+		return db_QueryFetch(
+			"SELECT id, slug, name, subsubtype AS type
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+			WHERE type=? AND subtype=?;",
+			$type,
+			$subtype
+		);
+	}
+	else {
+		return db_QueryFetch(
+			"SELECT id, slug, name, subsubtype AS type
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+			WHERE type=?;",
+			$type
+		);
+	}
+}
+
 
 function node_GetSearchIndexes( $timestamp, $limit = 50 ) {
 	return db_QueryFetchWithIntKey(
