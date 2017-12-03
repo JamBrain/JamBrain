@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 16 32"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="star-left-empty.svg"
+   width="16"
+   height="32"
+   inkscape:version="0.92.1 r15371">
+  <metadata
+     id="metadata12">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>star-left-empty</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs10" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1366"
+     inkscape:window-height="747"
+     id="namedview8"
+     showgrid="false"
+     inkscape:zoom="20.85965"
+     inkscape:cx="12.606863"
+     inkscape:cy="15.78289"
+     inkscape:window-x="0"
+     inkscape:window-y="21"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg6" />
+  <title
+     id="title2">star-left-empty</title>
+  <path
+     d="M 16 0.78320312 L 11.056641 10.800781 L 0 12.408203 L 8 20.205078 L 6.1113281 31.216797 L 16 26.017578 L 25.888672 31.216797 L 24 20.205078 L 32 12.408203 L 20.943359 10.800781 L 16 0.78320312 z M 17.25 8.2558594 L 19.492188 12.800781 L 27.300781 13.935547 L 21.650391 19.441406 L 22.984375 27.21875 L 17.25 24.203125 L 17.25 8.2558594 z M 14.75 8.2617188 L 14.75 24.205078 L 9.0175781 27.21875 L 10.351562 19.441406 L 4.7011719 13.935547 L 12.509766 12.800781 L 14.75 8.2617188 z "
+     id="path4" />
+</svg>
