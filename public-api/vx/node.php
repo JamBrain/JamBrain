@@ -812,11 +812,11 @@ switch ( $action ) {
 					$node['body'],
 					"!PUBLISH");
 
-				nodeCache_InvalidateById($node_id);
-
 				$RESPONSE['publish'] = node_Publish(
 					$node_id
 				);
+
+				nodeCache_InvalidateById($node_id);
 
 				if ( $RESPONSE['publish'] ) {
 					$RESPONSE['path'] = node_GetPathById($node_id, 1)['path']; // Root node
