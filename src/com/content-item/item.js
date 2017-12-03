@@ -115,8 +115,6 @@ export default class ContentItem extends Component {
 	onGrade( name, value ) {
 		let Node = this.props.node;
 
-		console.log(name, value);
-
 		return $Grade.Add(Node.id, name, value)
 			.then(r => {
 				if ( (r && r.id) || !!r.changed ) {
