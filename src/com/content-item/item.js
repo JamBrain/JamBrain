@@ -113,7 +113,9 @@ export default class ContentItem extends Component {
 	}
 
 	onGrade( name, value ) {
-		var Node = this.props.node;
+		let Node = this.props.node;
+
+		console.log(name, value);
 
 		return $Grade.Add(Node.id, name, value)
 			.then(r => {
@@ -568,20 +570,25 @@ export default class ContentItem extends Component {
 						Score = state.grade[Line.key] ? state.grade[Line.key] : 0;
 					}
 
-					let Stars = [];
-					for ( let idx2 = 0; idx2 < Score; idx2++ ) {
-						Stars.push(<ButtonBase class="-star" onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
-					}
-					for ( let idx2 = Score; idx2 < 5; idx2++ ) {
-						Stars.push(<ButtonBase class="-star" onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
-					}
-					Stars.push(<ButtonBase class="-delete" onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
+//					let Stars = [];
+//					for ( let idx2 = 0; idx2 < Score; idx2++ ) {
+//						Stars.push(<ButtonBase class="-star" onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
+//					}
+//					for ( let idx2 = Score; idx2 < 5; idx2++ ) {
+//						Stars.push(<ButtonBase class="-star" onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
+//					}
+//					Stars.push(<ButtonBase class="-delete" onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
 
-					Stars.push(<InputStar value='2.5' max='5' small number />);
-					Stars.push(<InputStar value='2.5' max='5' number />);
-					Stars.push(<InputStar value='2.5' edit delete number />);
+//					Stars.push(<InputStar value='2.5' max='5' small number />);
+//					Stars.push(<InputStar value='2.5' max='5' number />);
+//					Stars.push(<InputStar value={Score} onclick={this.onGrade.bind(this, Line.key)} ondelete={this.onGrade.bind(this, Line.key, 0)} edit delete number />);
 
-					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> {Stars}</div>);
+					VoteLines.push(
+						<div class="-grade">
+							<span class="-title">{Title}:</span>
+							<InputStar value={Score} onclick={this.onGrade.bind(this, Line.key)} ondelete={this.onGrade.bind(this, Line.key, 0)} edit delete number />
+						</div>
+					);
 				}
 
 				let ShowRatingSubText = null;
