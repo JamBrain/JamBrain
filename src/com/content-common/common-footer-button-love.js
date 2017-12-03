@@ -42,13 +42,23 @@ export default class ContentCommonFooterButtonLove extends Component {
 	}
 
 	render( {node}, {loved, lovecount} ) {
-		var _class = "content-common-footer-button -love" + (loved ? " loved" : "");
+		let Love = Number.isInteger(lovecount) ? lovecount : node.love;
+		let LoveClass = '';
+		if ( Love >= 10 )
+			LoveClass = '-count-10';
+		else if ( Love >= 4 )
+			LoveClass = '-count-4';
+		else if ( Love >= 1 )
+			LoveClass = '-count-1';
+
+		let Classes = cN("content-common-footer-button -love", (loved ? " loved" : ""), LoveClass );
+
 		return (
-			<div class={_class} onclick={this.onLove}>
+			<div class={Classes} onclick={this.onLove}>
 				<SVGIcon class="-hover-hide">heart</SVGIcon>
 				<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
 				<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
-				<div class="-count">{Number.isInteger(lovecount) ? lovecount : node.love}</div>
+				<div class="-count">{Love}</div>
 			</div>
 		);
 	}
