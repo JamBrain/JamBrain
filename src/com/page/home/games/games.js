@@ -20,7 +20,7 @@ export default class PageHomeGames extends Component {
 
 		let DefaultSubSubFilter = (featured && (featured.meta['theme-mode'] >= 5)) ? 'featured' : 'everything';
 		let DefaultSubFilter = 'all';
-		let DefaultFilter = 'danger';//'smart';
+		let DefaultFilter = 'smart';
 
 		function EvalFilter(str) {
 			let MappingTable = {
