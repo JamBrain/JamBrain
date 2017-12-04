@@ -145,10 +145,9 @@ export default class ContentCommentsComment extends Component {
 		if ( author || comment.author == 0 ) {
 			let Name = "Anonymous";
 			let Avatar = "///other/dummy/user64.png";
-			let AuthorPath = null;
+
 			if ( author ) {
 				Name = author.name;
-				AuthorPath = author.path;
 
 				if ( author.meta['real-name'] )
 					Name = author.meta['real-name'];
@@ -274,9 +273,17 @@ export default class ContentCommentsComment extends Component {
 				);
 			}
 
+			let ShowAvatar = null;
+			if ( author ) {
+				ShowAvatar = <ButtonLink class="-avatar" href={author.path}><IMG2 src={Avatar} /></ButtonLink>;
+			}
+			else {
+				ShowAvatar = <div class="-avatar"><IMG2 src={Avatar} /></div>;
+			}
+
 			return (
 				<div id={"comment-"+comment.id} class={"-item -comment -indent-"+props.indent}>
-					<ButtonLink class="-avatar" href={AuthorPath}><IMG2 src={Avatar} /></ButtonLink>
+					{ShowAvatar}
 					<div class="-body">
 						{ShowTopNav}
 						{ShowError}
