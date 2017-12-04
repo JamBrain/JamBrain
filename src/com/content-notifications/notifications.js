@@ -9,8 +9,9 @@ import ContentMore						from 'com/content-more/more';
 import NotificationsBase				from 'com/content-notifications/base';
 import Notification						from 'com/content-notifications/notification';
 
-import $Notification					from '../../shrub/js/notification/notification';
+import $Notification					from 'shrub/js/notification/notification';
 
+import ContentSimple					from 'com/content-simple/simple';
 
 export default class NotificationsFeed extends NotificationsBase {
 	constructor( props ) {
@@ -57,7 +58,6 @@ export default class NotificationsFeed extends NotificationsBase {
 	}
 
 	render( props, state ) {
-
 		const maxReadId = state.highestRead;
 		const processing = state.status === null || this.isLoading();
 		const hasMore = !processing && ((state.offset + this.state.limit) < state.count);
@@ -70,7 +70,12 @@ export default class NotificationsFeed extends NotificationsBase {
 		notificationsOrder.forEach((identifier) => {
 			let notification = notifications.get(identifier);
 			ShowNotifications.push((
-				<Notification caller_id={caller_id} notification={notification} class={cN("-item -notification",(notification.notification[0].id>maxReadId)?'-new-comment':'')} id={'notification-' + identifier} />
+				<Notification
+					caller_id={caller_id}
+					notification={notification}
+					class={cN("-item -notification",(notification.notification[0].id>maxReadId)?'-new-comment':'')}
+					id={'notification-' + identifier}
+				/>
 			));
 		});
 
@@ -94,16 +99,18 @@ export default class NotificationsFeed extends NotificationsBase {
 
 		const ShowError = state.errorStatus ? ( <div class="-error">Error code {state.errorStatus} while fetching notifications</div> ) : null;
 
-		return (
-			<div class={cN('content-base','content-common','content-notifications',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'')}>
-				<div class="-headline -indent">NOTIFICATIONS</div>
+		const view = (
+			<div class="-notifications">
 				{ShowSetAllRead}
 				{ShowError}
 				{ShowNotifications}
 				{ShowGetMore}
 				{ShowSpinner}
 			</div>
+			);
 
+		return (
+			<ContentSimple class="content-notifications" {...props} notitle nofooter nomarkup viewonly={view} header={"NOTIFICATIONS"} headerIcon="bubble" />
 		);
 	}
 
