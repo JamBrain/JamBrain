@@ -494,7 +494,7 @@ export default class ContentItem extends Component {
 						{SimpleLines}
 						{AdvancedLines}
 					</div>
-					<div class="-footer">Metrics update rougly every <strong>15 minutes</strong>. If they don't exactly match other data (i.e. ratings), this is because they haven't updated yet. Metrics with a <strong>*</strong> are dynamic, and change based on a variety of factors. It is normal for these numbers to go up and down.</div>
+					<div class="-footer">Metrics update roughly every <strong>15 minutes</strong>. If they don't exactly match other data (i.e. ratings), this is because they haven't updated yet. Metrics with a <strong>*</strong> are dynamic, and change based on a variety of factors. It is normal for these numbers to go up and down.</div>
 				</ContentCommonBody>
 			);
 		}
