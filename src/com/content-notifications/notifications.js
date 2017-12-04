@@ -9,7 +9,7 @@ import ContentMore						from 'com/content-more/more';
 import NotificationsBase				from 'com/content-notifications/base';
 import Notification						from 'com/content-notifications/notification';
 
-import $Notification					from '../../shrub/js/notification/notification';
+import $Notification					from 'shrub/js/notification/notification';
 
 import ContentSimple					from 'com/content-simple/simple';
 
