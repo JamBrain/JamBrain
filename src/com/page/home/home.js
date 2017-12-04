@@ -11,6 +11,7 @@ import ContentError						from 'com/content-error/error';
 import PageHomeFeed						from './feed/feed';
 import PageHomeHome						from './home/home';
 import PageHomeNews						from './news/news';
+import PageHomeSearch					from './search/search';
 import PageHomeGames					from './games/games';
 
 export default class PageHome extends Component {
@@ -32,6 +33,7 @@ export default class PageHome extends Component {
 					<Route static path="/games/:filter?/:subfilter?/:target?" component={PageHomeGames} />
 					{/* <Route static path="/hot" component={PageHomeHot} /> */}
 
+					<Route static path="/search" component={PageHomeSearch} />
 					<Route type="error" component={ContentError} />
 				</Router>
 			</ContentList>

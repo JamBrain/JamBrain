@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component}	 				from 'preact/preact';
 
 import ContentLoading					from 'com/content-loading/loading';
 import ContentError						from 'com/content-error/error';
@@ -11,7 +11,7 @@ import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
 import ContentMore						from 'com/content-more/more';
 
-import LayoutChangeableGrid 							from 'com/layout/grid/changeable-grid';
+import LayoutChangeableGrid 			from 'com/layout/grid/changeable-grid';
 
 import $Node							from '../../shrub/js/node/node';
 
@@ -29,12 +29,10 @@ export default class ContentGames extends Component {
 		};
 
 		this.fetchMore = this.fetchMore.bind(this);
-
 	}
 
 	componentDidMount() {
-
-		var props = this.props;
+		let props = this.props;
 
 		this.getFeed(
 			props.node.id,
@@ -42,6 +40,7 @@ export default class ContentGames extends Component {
 			props.types ? props.types : ['item'],
 			props.subtypes ? props.subtypes : ['game'],
 			props.subsubtypes ? props.subsubtypes : null,
+			props.tags ? props.tags : null,
 			null,
 			this.props.limit ? this.props.limit : 12
 		);
@@ -97,8 +96,8 @@ export default class ContentGames extends Component {
 
 	}
 
-	getFeed( id, methods, types, subtypes, subsubtypes, more, limit ) {
-		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, more, limit )
+	getFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit ) {
+		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit )
 		.then(r => {
 			this.setState({ 'loaded': true });
 
@@ -127,6 +126,7 @@ export default class ContentGames extends Component {
 			props.types ? props.types : ['item'],
 			props.subtypes ? props.subtypes : ['game'],
 			props.subsubtypes ? props.subsubtypes : null,
+			props.tags ? props.tags : null,
 			offset,
 			this.props.limit ? this.props.limit : 12+5
 		);
@@ -158,14 +158,12 @@ export default class ContentGames extends Component {
 	}
 
 	render( props, state ) {
-		var Class = ['content-base'];
-		let {feed, added, error, loaded, defaultLayout, layout} = state;
-//        props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
-//        props.class.push("content-games");
-//        props.class.push("content-item-boxes");
-
-		var LoadMore = null;
 		const {filter} = props;
+		let {feed, added, error, loaded, defaultLayout, layout} = state;
+
+		let LoadMore = null;
+
+
 		if ( error ) {
 			return <ContentError code="400">"Bad Request : Couldn't load games"</ContentError>;
 		}
@@ -188,7 +186,7 @@ export default class ContentGames extends Component {
 			});
 
 			return (
-				<div class={cN(Class, props.class)}>
+				<div class={cN('content-base', props.class)}>
 					{props.children}
 					<LayoutChangeableGrid columns={layout}>
 						{Games}
@@ -197,7 +195,7 @@ export default class ContentGames extends Component {
 				</div>
 			);
 		}
-		else if ( loaded && feed && feed.length == 0 ){
+		else if ( loaded && feed && (feed.length == 0) ){
 			return (
 				<ContentCommon {...props}>
 					<ContentCommonBodyTitle href={""} title={"No Games!"} />
@@ -205,9 +203,8 @@ export default class ContentGames extends Component {
 				</ContentCommon>
 			);
 		}
-		else {
-			// Show a spinner whilst were loading
-			return <ContentLoading />;
-		}
+
+		// Show a spinner whilst were loading
+		return <ContentLoading />;
 	}
 }
