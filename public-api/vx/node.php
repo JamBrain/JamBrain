@@ -275,6 +275,12 @@ switch ( $action ) {
 				$score_op = '>='.floatval($_GET['min']);
 			}
 
+			$tags = null;
+			if ( isset($_GET['tags']) ) {
+				$tags = array_map("coreSlugify_Name", explode('+', $_GET['tags']));
+				$RESPONSE['tags'] = $tags;
+			}
+
 			// Methods
 			$methods = json_ArgShift();
 			if ( empty($methods) ) {
