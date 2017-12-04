@@ -18,7 +18,7 @@ export default class PageHomeGames extends Component {
 
 		const GamesFeedFilter = state.gamesFilter;
 
-		let DefaultSubSubFilter = (featured && (featured.meta['theme-mode'] > 5)) ? 'featured' : 'all';
+		let DefaultSubSubFilter = (featured && (featured.meta['theme-mode'] >= 5)) ? 'featured' : 'everything';
 		let DefaultSubFilter = 'all';
 		let DefaultFilter = 'danger';//'smart';
 
