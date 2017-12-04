@@ -79,7 +79,7 @@ export default class ContentCommentsComment extends Component {
 			this.setState({'modified': false, 'editing': false, 'preview': false, 'original': this.props.comment.body});
 		})
 		.catch(err => {
-			this.setState({ 'error': err });
+			this.setState({'error': err});
 		});
 	}
 
@@ -107,20 +107,20 @@ export default class ContentCommentsComment extends Component {
 
 	onLove( e ) {
 		if ( this.props.user.id != 0 && this.props.user.id != null ) {
-			if( this.props.comment.id != null) {
+			if ( this.props.comment.id != null ) {
 				if ( this.state.loved ) {
 					$NoteLove.Remove(this.props.comment.node, this.props.comment.id)
 					.then(r => {
-						if(r.removed != 0) {
-							this.setState({ 'loved': false, 'lovecount': this.state.lovecount - 1 });
+						if ( r.removed != 0 ) {
+							this.setState({'loved': false, 'lovecount': this.state.lovecount - 1});
 						}
 					});
 				}
 				else {
 					$NoteLove.Add(this.props.comment.node, this.props.comment.id)
 					.then(r => {
-						if(r.id != 0) {
-							this.setState({ 'loved': true, 'lovecount': this.state.lovecount + 1 });
+						if ( r.id != 0 ) {
+							this.setState({'loved': true, 'lovecount': this.state.lovecount + 1});
 						}
 					});
 				}
@@ -145,13 +145,15 @@ export default class ContentCommentsComment extends Component {
 		if ( author || comment.author == 0 ) {
 			let Name = "Anonymous";
 			let Avatar = "///other/dummy/user64.png";
+
 			if ( author ) {
 				Name = author.name;
+
 				if ( author.meta['real-name'] )
 					Name = author.meta['real-name'];
 
 				if ( author.meta['avatar'] )
-					Avatar = author.meta['avatar'] + ".64x64.fit.png";;
+					Avatar = author.meta['avatar'] + ".64x64.fit.png";
 			}
 
 			let ShowTitle = [];
@@ -271,9 +273,17 @@ export default class ContentCommentsComment extends Component {
 				);
 			}
 
+			let ShowAvatar = null;
+			if ( author ) {
+				ShowAvatar = <ButtonLink class="-avatar" href={author.path}><IMG2 src={Avatar} /></ButtonLink>;
+			}
+			else {
+				ShowAvatar = <div class="-avatar"><IMG2 src={Avatar} /></div>;
+			}
+
 			return (
 				<div id={"comment-"+comment.id} class={"-item -comment -indent-"+props.indent}>
-					<ButtonLink class="-avatar" href={author.path}><IMG2 src={Avatar} /></ButtonLink>
+					{ShowAvatar}
 					<div class="-body">
 						{ShowTopNav}
 						{ShowError}
