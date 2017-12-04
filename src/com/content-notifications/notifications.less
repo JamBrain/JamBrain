@@ -3,26 +3,22 @@
 #content .content-notifications {
 	position: relative;
 
-	background: @COL_NLLLL;
+	padding-bottom: 10px;
 
-	padding-bottom: 12px;
+	& .-notifications {
+		padding-top: 4em;
+	}
+
+	& .content-common-header {
+		background: @COL_A;
+	}
+
+	& .content-common-header:after {
+		color: @COL_A;
+	}
 
 	&.-no-gap {
 		margin-top: 0;
-	}
-
-	& .-headline {
-		padding-top: 0.5em;
-		position: relative;
-
-		background: @COL_NDDD;
-		color: @COL_NLLLL;
-		height: 1em;
-		font-size: 2em;
-		font-weight: bold;
-		font-style: italic;
-		overflow: hidden;
-		padding-left: 0.5em;
 	}
 
 	& .-action {
@@ -43,7 +39,7 @@
 	}
 
 	& .-item {
-
+		color: @COL_NDDD;
 		position: relative;
 		display: block;
 
@@ -53,51 +49,33 @@
 
 		padding: 0.5em 1em;
 
-		&:nth-child(2){
-			border-top: none;
-		}
-
-		&:nth-child(odd) {
-
-			background: @COL_L;
+		&:hover {
+			background: @COL_A !important;
+			color: @COL_NLLLLL !important;
 
 			& .-at-name {
-				background: @COL_NLLLL;
+				background: @COL_A !important;
 			}
 		}
 
-		&:nth-child(even) {
-			& .-at-name {
-				background: @COL_L;
-			}
-		}
+		background: @COL_NLLLL;
 
+		& .-at-name {
+			background: @COL_NLLLL;
+		}
 
 		&.-new-comment {
 			font-weight: bold;
 
-			&:nth-child(even) {
-				background: @COL_NDDDG;
+			background: @COL_L;
 
-				& .-at-name {
-					background: @COL_NDDDDG;
-				}
+			& .-at-name {
+				background: @COL_L;
 			}
-
-			&:nth-child(odd) {
-				background: @COL_NLLLG;
-
-				& .-at-name {
-					background: @COL_NLLLLG;
-				}
-
-			}
-
 		}
-
 	}
 
-	& > .-button {
+	&  .-button {
 		display: inline-block;
 		padding: 0.5rem 1rem;
 		border: 1px solid @COL_N;
@@ -112,7 +90,7 @@
 		}
 	}
 
-	& > .-light {
+	& .-light {
 		border: 1px solid;
 	}
 
