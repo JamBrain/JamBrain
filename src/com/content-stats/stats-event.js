@@ -95,7 +95,7 @@ export default class ContentStatsEvent extends Component {
 						'Jam',
 						'Compo'
 					];
-					Data.push(<PieChart values={entries} labels={entrienames}></PieChart>);
+					Data.push(<PieChart values={entries} labels={entrienames} use_percentages={true}></PieChart>);
 
 					Data.push(<div><span>Unfinished:</span> <span class="-value">{stats.unfinished}</span></div>);
 					Data.push(<div><span>Unpublished:</span> <span class="-value">{stats.unpublished}</span></div>);
@@ -120,7 +120,7 @@ export default class ContentStatsEvent extends Component {
 						'0'
 					];
 
-					Data.push(<BarChart values={grades.reverse()} labels={gradenames.reverse()}></BarChart>);
+					Data.push(<BarChart values={grades.reverse()} labels={gradenames.reverse()} use_percentages={true}></BarChart>);
 
 					Data.push(<div class="-gap"><span class="-title">Types of Entries:</span></div>);
 					let types = [
@@ -135,7 +135,7 @@ export default class ContentStatsEvent extends Component {
 						'Demos',
 						'Tools'
 					];
-					Data.push(<PieChart values={types} labels={typenames}></PieChart>);
+					Data.push(<PieChart values={types} labels={typenames} use_percentages={true}></PieChart>);
 
 				}
 
