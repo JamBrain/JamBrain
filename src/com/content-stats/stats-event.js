@@ -149,7 +149,7 @@ export default class ContentStatsEvent extends Component {
 						'0'
 					];
 
-					ratings.push(<BarChart values={grades.reverse()} labels={gradenames.reverse() use_percentages={true}}></BarChart>);
+					ratings.push(<BarChart values={grades.reverse()} labels={gradenames.reverse()} use_percentages={true}></BarChart>);
 
 					Data.push(<div class="section -ratings">{ratings}</div>);
 
