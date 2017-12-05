@@ -249,8 +249,10 @@ export default class ContentEventSlaughter extends Component {
 						<div>
 							<strong>Themes Slaughtered:</strong> <span>{Object.keys(state.votes).length}</span>
 						</div>
-						{StatsAndDetails}
-						<PieChart values={values} labels={labels} />
+						<div>
+							<div class="section -onethird">{StatsAndDetails}</div>
+							<div class="section -twothird"><PieChart values={values} labels={labels} /></div>
+						</div>
 					</div>
 				</div>
 			);

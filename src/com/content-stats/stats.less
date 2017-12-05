@@ -4,21 +4,45 @@
 	& .content-common-body {
 		font-size: 1.2em;
 
-		& > div {
-			&.-gap {
-				margin-top: 1em;
+		& > .section {
+			width: 48%;
+			//height: 500px;
+			margin: 0;
+			padding: 1%;
+			display: inline-block;
+
+			vertical-align: top;
+
+			@media (max-width: 768px) {
+				width: 100%!important;
+				display: block;
 			}
 
-			&.-indent {
-				margin-left: 2em;
+			& > div {
+				&.-gap {
+					margin-top: 1em;
+				}
+
+				&.-indent {
+					margin-left: 2em;
+				}
+
+				& > .-title {
+					font-size: 1.5em;
+				}
+
+				& > .-value {
+					font-weight: bold;
+				}
 			}
 
-			& > .-title {
-				font-size: 1.5em;
-			}
+			& > .chart {
+				width: 100%;
 
-			& > .-value {
-				font-weight: bold;
+				& .-legend ul li .-shape-circle {
+					width: 16px;
+					height: 16px;
+				}
 			}
 		}
 	}
