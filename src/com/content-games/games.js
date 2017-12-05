@@ -23,7 +23,7 @@ export default class ContentGames extends Component {
 		this.state = {
 			'feed': [],
 			'hash': {},
-			'offset': 12-5, //10-5
+			'offset': 24-5, //10-5
 			'added': null,
 			'loaded': false
 		};
@@ -42,7 +42,7 @@ export default class ContentGames extends Component {
 			props.subsubtypes ? props.subsubtypes : null,
 			props.tags ? props.tags : null,
 			null,
-			this.props.limit ? this.props.limit : 12
+			this.props.limit ? this.props.limit : 24
 		);
 	}
 
@@ -128,10 +128,10 @@ export default class ContentGames extends Component {
 			props.subsubtypes ? props.subsubtypes : null,
 			props.tags ? props.tags : null,
 			offset,
-			this.props.limit ? this.props.limit : 12+5
+			this.props.limit ? this.props.limit : 24+5
 		);
 
-		this.setState({'offset': offset + 12});
+		this.setState({'offset': offset + 24});
 	}
 
 	static matchesFilter(node, filter) {
