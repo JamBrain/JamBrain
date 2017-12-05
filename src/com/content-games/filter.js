@@ -285,9 +285,9 @@ export default class GamesFilter extends Component {
             );
         }
 
-        return (
+//				{ShowTextFilter}
+       return (
             <Common node={node} class="filter-item filter-game">
-                {ShowTextFilter}
                 {ShowFeatured}
                 {ShowEvent}
                 {ShowVotingCategory}

@@ -1,13 +1,13 @@
-import {h, Component} from 'preact/preact';
-import LayoutGrid from 'com/layout/grid/grid';
-import GridSelector from 'com/layout/grid/grid-selector';
+import {h, Component}					from 'preact/preact';
+import LayoutGrid						from 'com/layout/grid/grid';
+import GridSelector						from 'com/layout/grid/grid-selector';
 
 export default class LayoutChangeableGrid extends Component {
   constructor( props ) {
     super(props);
 
     this.state = {
-      'columns': 3
+      'columns': 4
     };
   }
 
