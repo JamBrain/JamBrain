@@ -30,20 +30,31 @@ export default class BarChart extends Component {
             return <div>No Data!</div>;
         }
 
-        let {labels, values} = props;
+		props["use_percentages"] = (props.use_percentages && props.use_percentages == true)? true : false;
+
+        let {labels, values, use_percentages} = props;
 
         let adjusted = this.scaleValues(values);
 		let width = 100/values.length;
 
-        let Bars = [];
+		let total = values.reduce((a, b) => a + b, 0);
+		let percentages = values.map((x) => { return Math.round((100*(x/total))*100)/100; });
+
+		let Bars = [];
         let Names = [];
 		let Colors = [];
 
         for ( var i = 0; i < values.length; i++ ) {
 
             let color = 1 + ( i % 6 );
-            Bars.push(<Bar height={adjusted[i]} width={width} index={i} color={color} />);
-			Names.push(labels[i] +" (" + values[i] + ")");
+			Bars.push(<Bar height={adjusted[i]} width={width} index={i} color={color} />);
+
+			if (use_percentages) {
+				Names.push(labels[i] +" (" + values[i] + " : " + percentages[i] + "%)");
+			}
+			else {
+				Names.push(labels[i] +" (" + values[i] + ")");
+			}
             Colors.push(color);
         }
 

@@ -99,7 +99,8 @@ export default class ContentStatsEvent extends Component {
 						'Jam',
 						'Compo'
 					];
-					submissions.push(<PieChart values={entries} labels={entrienames}></PieChart>);
+
+					submissions.push(<PieChart values={entries} labels={entrienames} use_percentages={true}></PieChart>);
 
 					submissions.push(<div><span>Unfinished:</span> <span class="-value">{stats.unfinished}</span></div>);
 					submissions.push(<div><span>Unpublished:</span> <span class="-value">{stats.unpublished}</span></div>);
@@ -124,7 +125,7 @@ export default class ContentStatsEvent extends Component {
 						'Demos',
 						'Tools'
 					];
-					types.push(<PieChart values={typescount} labels={typenames}></PieChart>);
+					types.push(<PieChart values={typescount} labels={typenames} use_percentages={true}></PieChart>);
 
 					Data.push(<div class="section -types">{types}</div>);
 
@@ -148,7 +149,7 @@ export default class ContentStatsEvent extends Component {
 						'0'
 					];
 
-					ratings.push(<BarChart values={grades.reverse()} labels={gradenames.reverse()}></BarChart>);
+					ratings.push(<BarChart values={grades.reverse()} labels={gradenames.reverse() use_percentages={true}}></BarChart>);
 
 					Data.push(<div class="section -ratings">{ratings}</div>);
 
