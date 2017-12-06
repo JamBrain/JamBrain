@@ -2,6 +2,8 @@ import {h, Component}	 				from 'preact/preact';
 
 import NavLink 							from 'com/nav-link/link';
 
+import SVGIcon 							from 'com/svg-icon/icon';
+
 export default class NotificationItem extends Component {
 
 	constructor( props ) {
@@ -118,14 +120,14 @@ export default class NotificationItem extends Component {
 
 					return (
 						<NavLink {...navProps} >
-						{timePrefix} {following.string} {extra} {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+						<SVGIcon>bubble</SVGIcon>{timePrefix} {following.string} {extra} {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 						</NavLink>);
 
 				}
 				else {
 					return (
 						<NavLink {...navProps} >
-						{timePrefix} {count} users {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+						<SVGIcon>bubble</SVGIcon>{timePrefix} {count} users {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 						</NavLink>);
 
 				}
@@ -146,26 +148,26 @@ export default class NotificationItem extends Component {
 				if ( note.mention ) {
 					return (
 						<NavLink {...navProps} >
-						{timePrefix} {NoteAuthor} mentioned you in a comment on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+						<SVGIcon>at</SVGIcon> {timePrefix} {NoteAuthor} mentioned you in a comment on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 						</NavLink>);
 				}
 				else {
 					return (
 						<NavLink {...navProps} >
-						{timePrefix} {NoteAuthor} also commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+						<SVGIcon>bubble</SVGIcon>{timePrefix} {NoteAuthor} also commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 						</NavLink>);
 				}
 			}
 			else if ( notification.node.selfauthored && !notification.note.selfauthored ) {
 				return (
 					<NavLink {...navProps} >
-					{timePrefix} {NoteAuthor} commented on your {nodeType} "<em>{node.name}</em>"
+					<SVGIcon>bubble</SVGIcon>{timePrefix} {NoteAuthor} commented on your {nodeType} "<em>{node.name}</em>"
 					</NavLink>);
 			}
 			else {
 				return (
 					<NavLink {...navProps} >
-					{timePrefix} You recieved a notification that you posted a comment on {NodeAuthor} {nodeType} "<em>{node.name}</em>" please report to the dev-team that you already knew this.
+					<SVGIcon>question</SVGIcon>{timePrefix} You recieved a notification that you posted a comment on {NodeAuthor} {nodeType} "<em>{node.name}</em>" please report to the dev-team that you already knew this.
 					</NavLink>);
 			}
 		}
@@ -206,13 +208,26 @@ export default class NotificationItem extends Component {
 				if (node.mention) {
 					return (
 						<NavLink {...navProps} >
-						{timePrefix} {User} mentioned you in their {thing} "<em>{node.name}</em>"
+						<SVGIcon>at</SVGIcon> {timePrefix} {User} mentioned you in their {thing} "<em>{node.name}</em>"
 						</NavLink>);
 				}
 				else {
+					let icon = "info";
+					if (thing == "game") {
+						icon = "gamepad";
+					}
+					else if (thing == "post") {
+						icon = "feed";
+					}
+					else if (thing == "article") {
+						icon = "article";
+					}
+					else {
+						console.log(thing);
+					}
 					return (
 						<NavLink {...navProps} >
-						{timePrefix} {User} {posted} "<em>{node.name}</em>"
+						<SVGIcon>{icon}</SVGIcon> {timePrefix} {User} {posted} "<em>{node.name}</em>"
 						</NavLink>);
 				}
 			}
