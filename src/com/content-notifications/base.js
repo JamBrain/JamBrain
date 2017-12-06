@@ -19,10 +19,10 @@ export default class NotificationsBase extends Component {
 			"feed": [],
 			"loading": true,
 			"highestRead": -1,
-			"filter": {'comments': false},
+			"filters": {'comments': false},
 		};
 
-		this.setNotificationsFiltering = this.setNotificationsFiltering.bind(this);
+		this.handleFilterChange = this.handleFilterChange.bind(this);
 	}
 
 
@@ -355,9 +355,21 @@ export default class NotificationsBase extends Component {
 		return true;
 	}
 
-	handleFilterChange(notificationsFilter) {
-		let oldFilter = Object.assign({}, this.state.notificationsFilter);
-
-	this.setState({'filter': Object.assign(oldFilter, notificationsFilter)});
+	handleFilterChange(filterType, otherStuff) {
+		let oldFilter = Object.assign({}, this.state.filters);
+		if (filterType == 'comments') {
+			oldFilter.comment = oldFilter.comment === undefined ? false : !oldFilter.comment;
+		}
+		else if (filterType == 'selfComment') {
+			oldFilter.selfComment = oldFilter.selfComment === undefined ? false : !oldFilter.selfComment;
+		}
+		else if (filterType == 'friendPost') {
+			oldFilter.friendPost = oldFilter.friendPost === undefined ? false : !oldFilter.friendPost;
+		}
+		else if (filterType == 'friendGame') {
+			oldFilter.friendGame = oldFilter.friendGame === undefined ? false : !oldFilter.friendGame;
+		}
+		console.log('test', filterType, otherStuff, this.state.filters, oldFilter);
+		this.setState({'filters': oldFilter});
 	}
 }

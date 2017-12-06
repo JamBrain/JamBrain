@@ -6,19 +6,40 @@ export default class NotificationsFilter extends Component {
 
 	constructor(props) {
 		super(props);
-		this.onToggleComments = this.onFilterChange.bind(this, 'comments');
-		this.onToggleSelfComments = this.onFilterChange.bind(this, 'selfComment');
-	}
-
-	onFilterChange(filterKey) {
-		this.props.handleFilterChange({filterKey: this.props.filters[filterKey] === undefined ? false: !this.props.filters[filterKey]});
+		this.onToggleComments = () => props.handleFilterChange('comment');
+		this.onToggleSelfComments = () => props.handleFilterChange('selfComment');
+		this.onToggleFriendPost = () => props.handleFilterChange('friendPost');
+		this.onToggleFriendGame = () => props.handleFilterChange('friendGame');
 	}
 
 	render(props, state) {
+		const {comment, selfComment, friendGame, friendPost} = props.filters;
 		return (
 			<div>
-				<ButtonBase onclick={this.onToggleSelfComments}><SVGIcon>bubbles</SVGIcon><div>Comments on my stuff</div></ButtonBase>
-				<ButtonBase onclick={this.onToggleComments}><SVGIcon>bubble</SVGIcon><div>Comments</div></ButtonBase>
+				<div
+					class={cN('-item', selfComment === false ? '' : '-selected')}
+					onclick={this.onToggleSelfComments}
+				>
+					<SVGIcon>bubble-empty</SVGIcon><span>Comments on your stuff</span>
+				</div>
+				<div
+					class={cN('-item', comment === false ? '' : '-selected')}
+					onclick={this.onToggleComments}
+				>
+					<SVGIcon>bubble</SVGIcon><span>Comments</span>
+				</div>
+				<div
+					class={cN('-item', friendGame === false ? '' : '-selected')}
+					onclick={this.onToggleFriendGame}
+				>
+					<SVGIcon>gamepad</SVGIcon><span>Friend's new games</span>
+				</div>
+				<div
+					class={cN('-item', friendPost === false ? '' : '-selected')}
+					onclick={this.onToggleFriendPost}
+				>
+					<SVGIcon>feed</SVGIcon><span>Friend's new posts</span>
+				</div>
 			</div>
 		);
 	}

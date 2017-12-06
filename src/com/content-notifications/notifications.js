@@ -28,6 +28,7 @@ export default class NotificationsFeed extends NotificationsBase {
 			'notificationIds': [],
 			'status': null,
 			'highestRead': -1,
+			'filters': {'comment': false},
 		};
 		this.fetchMore = this.fetchMore.bind(this);
 	}
@@ -39,7 +40,7 @@ export default class NotificationsFeed extends NotificationsBase {
 				this.processNotificationFeed(r);
 			}
 			else {
-				this.setState({errorStatus:r.status});
+				this.setState({'errorStatus': r.status});
 			}
 		});
 
@@ -50,10 +51,10 @@ export default class NotificationsFeed extends NotificationsBase {
 		$Notification.GetFeedAll(offset, this.state.limit ).then((r) => {
 			if (r.status == 200) {
 				this.processNotificationFeed(r);
-				this.setState({offset:offset});
+				this.setState({'offset': offset});
 			}
 			else {
-				this.setState({errorStatus:r.status});
+				this.setState({'errorStatus': r.status});
 			}
 		});
 	}
@@ -92,7 +93,7 @@ export default class NotificationsFeed extends NotificationsBase {
 			<ButtonBase
 				class="-button -light focusable"
 				id="button-mark-read"
-				onclick={(e) => {this.markReadHighest();}}>
+				onclick={(e) => { this.markReadHighest(); }}>
 				Mark all notifications as read
 			</ButtonBase>) : null;
 
@@ -102,6 +103,7 @@ export default class NotificationsFeed extends NotificationsBase {
 
 		const view = (
 			<div class="-notifications">
+				<NotificationsFilter handleFilterChange={this.handleFilterChange} filters={state.filters} />
 				{ShowSetAllRead}
 				{ShowError}
 				{ShowNotifications}
