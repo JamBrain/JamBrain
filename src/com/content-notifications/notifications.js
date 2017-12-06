@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 				from 'preact/preact';
 
 import ButtonBase						from '../button-base/base';
 
@@ -8,6 +8,7 @@ import ContentMore						from 'com/content-more/more';
 
 import NotificationsBase				from 'com/content-notifications/base';
 import Notification						from 'com/content-notifications/notification';
+import NotificationsFilter				from 'com/content-notifications/filter';
 
 import $Notification					from 'shrub/js/notification/notification';
 
@@ -18,15 +19,15 @@ export default class NotificationsFeed extends NotificationsBase {
 		super(props);
 
 		this.state = {
-			errorStatus: 0,
-			maxReadId: 0,
-			offset: 0,
-			limit: 30,
-			count: 0,
-			notifications: null,
-			notificationIds: [],
-			status: null,
-			highestRead: -1,
+			'errorStatus': 0,
+			'maxReadId': 0,
+			'offset': 0,
+			'limit': 30,
+			'count': 0,
+			'notifications': null,
+			'notificationIds': [],
+			'status': null,
+			'highestRead': -1,
 		};
 		this.fetchMore = this.fetchMore.bind(this);
 	}

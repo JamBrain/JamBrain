@@ -19,7 +19,10 @@ export default class NotificationsBase extends Component {
 			"feed": [],
 			"loading": true,
 			"highestRead": -1,
+			"filter": {'comments': false},
 		};
+
+		this.setNotificationsFiltering = this.setNotificationsFiltering.bind(this);
 	}
 
 
@@ -320,7 +323,9 @@ export default class NotificationsBase extends Component {
 
 			notificationsOrder.forEach((id) => {
 				let notification = notifications.get(id);
-				Notifications.push([id, <Notification caller_id={caller_id} notification={notification} />]);
+				if (shouldShowNotification(notification)) {
+					Notifications.push([id, <Notification caller_id={caller_id} notification={notification} />]);
+				}
 			});
 
 		}
@@ -328,4 +333,31 @@ export default class NotificationsBase extends Component {
 		return Notifications;
 	}
 
+	shouldShowNotification(notification) {
+		let {mention, friendGame, friendPost, selfComment, comment} = this.state.filter;
+		if (notification.isNodeAuthor && selfComment !== false) {
+			return true;
+		}
+		else if ((notification.node.mention || (notification.note && notification.note.mention)) && mention !== false) {
+			return true;
+		}
+		else if (!notification.note) {
+			if (notification.node.type == 'item' && friendGame !== false) {
+				return true;
+			}
+			else if (friendPost !== false) {
+				return true;
+			}
+		}
+		else if (comment !== false) {
+			return true;
+		}
+		return true;
+	}
+
+	handleFilterChange(notificationsFilter) {
+		let oldFilter = Object.assign({}, this.state.notificationsFilter);
+
+	this.setState({'filter': Object.assign(oldFilter, notificationsFilter)});
+	}
 }
