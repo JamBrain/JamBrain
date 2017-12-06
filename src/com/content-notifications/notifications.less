@@ -7,6 +7,13 @@
 
 	& .-notifications {
 		padding-top: 4em;
+
+		& > .-notification {
+			& > svg {
+				padding-right: 1em;
+			}
+		}
+
 	}
 
 	& .content-common-header {
@@ -101,4 +108,21 @@
 	font-weight: bold;
 	padding-left: 0.25em;
 	padding-right: 0.25em;
+}
+
+& .view-bar > .-content > .-right > .-notifications > .-items > .-item {
+
+	z-index: 999;
+
+	&:hover {
+		& > a > svg {
+			color: @COL_L !important;
+		}
+	}
+
+	& > a > svg {
+		padding-right: 0.5em;
+		padding-bottom: 0.25em;
+		color: @COL_D;
+	}
 }
