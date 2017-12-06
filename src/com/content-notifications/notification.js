@@ -167,7 +167,7 @@ export default class NotificationItem extends Component {
 			else {
 				return (
 					<NavLink {...navProps} >
-					{timePrefix} You recieved a notification that you posted a comment on {NodeAuthor} {nodeType} "<em>{node.name}</em>" please report to the dev-team that you already knew this.
+					<SVGIcon>question</SVGIcon>{timePrefix} You recieved a notification that you posted a comment on {NodeAuthor} {nodeType} "<em>{node.name}</em>" please report to the dev-team that you already knew this.
 					</NavLink>);
 			}
 		}
@@ -212,9 +212,22 @@ export default class NotificationItem extends Component {
 						</NavLink>);
 				}
 				else {
+					let icon = "info";
+					if (thing == "game") {
+						icon = "gamepad";
+					}
+					else if (thing == "post") {
+						icon = "feed";
+					}
+					else if (thing == "article") {
+						icon = "article";
+					}
+					else {
+						console.log(thing);
+					}
 					return (
 						<NavLink {...navProps} >
-						{timePrefix} {User} {posted} "<em>{node.name}</em>"
+						<SVGIcon>{icon}</SVGIcon> {timePrefix} {User} {posted} "<em>{node.name}</em>"
 						</NavLink>);
 				}
 			}
