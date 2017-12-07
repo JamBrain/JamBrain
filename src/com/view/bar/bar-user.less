@@ -31,6 +31,27 @@
 			& > .ui-icon {
 				font-size: 1.25em;
 			}
+
+			background: transparent;
+			transition: background 0.1s;
+			& > * {
+				color: @COL_NDDDD;
+				transition: color 0.2s;
+			}
+			& > svg {
+				color: @COL_ND;
+			}
+
+			&:hover,
+			&:focus,
+			&:active,
+			&:hover:active {
+				background: @COL_A;
+
+				& > * {
+					color: @COL_W;
+				}
+			}
 		}
 
 		& > .-gap {
