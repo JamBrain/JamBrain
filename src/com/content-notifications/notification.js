@@ -92,6 +92,7 @@ export default class NotificationItem extends Component {
 		if ( notification.node.subtype ) {
 			nodeType = notification.node.subtype;
 		}
+		const isMention = isNotificationMention(notification);
 
 		const myAtName = "@" + notification.users.get(caller_id).name;
 		const node = notification.node;
@@ -107,7 +108,13 @@ export default class NotificationItem extends Component {
 			navProps.href += "#/comment-" + notification.earliestNote;
 		}
 
-		if ( notification.multi ) {
+		if (isNotificationOther(notification)) {
+			return (
+				<NavLink {...navProps} >
+				<SVGIcon>quesition</SVGIcon> {NodeAuthor} caused unhandled notification {notification.notification.type} with their {nodeType} "<em>{node.name}</em>"
+				</NavLink>);
+		}
+		else if ( notification.multi ) {
 			const count = notification.notification.length;
 			const authors = [];
 
@@ -179,7 +186,7 @@ export default class NotificationItem extends Component {
 
 			if ( !node.selfauthored && !note.selfauthored ) {
 
-				if ( note.mention ) {
+				if ( isMention ) {
 					return (
 						<NavLink {...navProps} >
 						<SVGIcon>at</SVGIcon> {timePrefix} {NoteAuthor} mentioned you in a comment on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
@@ -239,7 +246,7 @@ export default class NotificationItem extends Component {
 					posted = "posted a game";
 				}
 
-				if (node.mention) {
+				if (isMention) {
 					return (
 						<NavLink {...navProps} >
 						<SVGIcon>at</SVGIcon> {timePrefix} {User} mentioned you in their {thing} "<em>{node.name}</em>"
