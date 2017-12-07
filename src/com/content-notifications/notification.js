@@ -120,14 +120,14 @@ export default class NotificationItem extends Component {
 
 					return (
 						<NavLink {...navProps} >
-						<SVGIcon>bubble</SVGIcon>{timePrefix} {following.string} {extra} {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+						<SVGIcon>bubble-empty</SVGIcon>{timePrefix} {following.string} {extra} {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 						</NavLink>);
 
 				}
 				else {
 					return (
 						<NavLink {...navProps} >
-						<SVGIcon>bubble</SVGIcon>{timePrefix} {count} users {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+						<SVGIcon>{NodeAuthor == 'your' ? 'bubble' : 'bubble-empty'}</SVGIcon>{timePrefix} {count} users {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 						</NavLink>);
 
 				}
@@ -154,7 +154,7 @@ export default class NotificationItem extends Component {
 				else {
 					return (
 						<NavLink {...navProps} >
-						<SVGIcon>bubble</SVGIcon>{timePrefix} {NoteAuthor} also commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+						<SVGIcon>bubble-empty</SVGIcon>{timePrefix} {NoteAuthor} also commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 						</NavLink>);
 				}
 			}
