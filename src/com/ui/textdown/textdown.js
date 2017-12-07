@@ -84,7 +84,7 @@ export default class UITextdown extends Component {
 //			];
 //		}
 
-		let ShowItems = this.renderItems(props.items);
+		let ShowItems = <div class="-items">{this.renderItems(props.items)}</div>;
 
 		let Classes = cN(
 			'ui-textdown',
@@ -95,7 +95,7 @@ export default class UITextdown extends Component {
 
 		return (
 			<div class={Classes} ref={(input) => { this.ref = input; }}>
-				<UIText onmodify={this.onModify} maxlength={props.maxlength} value={props.value} placeholder={props.placeholder} />
+				<UIText class="-text" onmodify={this.onModify} maxlength={props.maxlength} value={props.value} placeholder={props.placeholder} />
 
 				{ShowItems}
 			</div>
