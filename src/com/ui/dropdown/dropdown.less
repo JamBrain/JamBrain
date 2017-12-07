@@ -4,57 +4,14 @@
 	vertical-align: top;
 	position: relative;
 
-	& > button {
-		display: block;
-		text-align: left;
-		box-sizing: border-box;
-		width: 100%;
-
-		font-size: 1.2em;
-
-		background: @COL_NLLLL;
-		border: 1px solid @COL_NLLL;
-		border-radius: 0.25em;
-		padding: 0.25em;
-
-		&:focus {
-			background: @COL_W;
-		}
-
-		cursor: pointer;
-
-		& > svg {
-			float: right;
-		}
+	& > .ui-button {
 	}
 
 	& > .-items {
 		z-index: 100;
 		position: absolute;
-		width: 100%;
-
-		background: @COL_W;
-		box-shadow: 0 2px 5px rgba(0,0,0,0.25);
-
-		max-width: 20em;
-		max-height: 15em;
-		overflow-x: hidden;
-		overflow-y: scroll;
-
-		border: 1px solid @COL_NLLL;
-
+		/*
 		& > .-item {
-			padding: 0.5em 1.0em;
-			background: @COL_W;
-			position: relative;
-
-			cursor: pointer;
-
-			&:hover {
-				background: @COL_A;
-				color: @COL_W;
-			}
-
 			& > .-click-catcher {
 				position: absolute;
 				left: 0px;
@@ -63,5 +20,6 @@
 				bottom: 0px;
 			}
 		}
+		*/
 	}
 }

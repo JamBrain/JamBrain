@@ -9,7 +9,8 @@ import NavLink 							from 'com/nav-link/link';
 import NavSpinner						from 'com/nav-spinner/spinner';
 
 //import DropdownUser 					from 'com/dropdown-user/user';
-import DropdownNotification				from 'com/view/bar/bar-notifications';
+import BarNotification					from 'bar-notifications';
+import BarUser							from 'bar-user';
 
 //import $Node							from 'shrub/js/node/node';
 import $Notification					from 'shrub/js/notification/notification';
@@ -110,15 +111,15 @@ export default class ViewBar extends Component {
 			</ButtonBase>
 		);
 
-		var ShowJoin = null;
-		var ShowMyGame = null;
-		var NewPost = null;
+		let ShowJoin = null;
+		let ShowMyGame = null;
+		let NewPost = null;
 		let Notification = null;
-		var ShowUser = null;
-		var Register = null;
-		var Login = null;
-		var GoSecure = null;
-		var ShowSpinner = null;
+		let ShowUser = null;
+		let Register = null;
+		let Login = null;
+		let GoSecure = null;
+		let ShowSpinner = null;
 		let ShowNotifications = null;
 
 		// Disallow insecure login
@@ -167,7 +168,7 @@ export default class ViewBar extends Component {
 			}
 
 			if (this.state.showNotifications) {
-				ShowNotifications = (<DropdownNotification clearCallback={ () => this.setState({notifications: 0}) } hideCallback={ () => this.setState({showNotifications: false}) } />);
+				ShowNotifications = (<BarNotification clearCallback={ () => this.setState({notifications: 0}) } hideCallback={ () => this.setState({showNotifications: false}) } />);
 			}
 
 			Notification = (
@@ -181,6 +182,7 @@ export default class ViewBar extends Component {
 				</ButtonBase>
 			);
 
+/*
 			// TODO: Pull this out of the user meta, else use a dummy
 			let Avatar = (user.meta && user.meta.avatar) ? <img src={"//"+STATIC_DOMAIN+user.meta.avatar} /> : <img src={'//'+STATIC_DOMAIN+'/other/dummy/user64.png'} />;
 			//'/other/logo/mike/Chicken64.png';
@@ -191,6 +193,9 @@ export default class ViewBar extends Component {
 				</ButtonBase>,
 //				<DropdownUser />
 			];
+*/
+
+			ShowUser = <BarUser user={user} />;
 		}
 		// If user has finished loading (and is not logged in)
 		else if ( user ) {

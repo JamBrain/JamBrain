@@ -1,5 +1,5 @@
 import {h, Component}					from 'preact/preact';
-import Sanitize							from '../../internal/sanitize/sanitize';
+import Sanitize							from 'internal/sanitize/sanitize';
 
 // TODO: Push the state (arg1 of pushShate/replaceState (MK: what?)
 // MK TODO: give this file a serious look. tidy up
