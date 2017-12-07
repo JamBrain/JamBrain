@@ -15,7 +15,10 @@ export default class ViewBarUser extends Component {
 		this.onLogout = this.onLogout.bind(this);
 	}
 
+
 	onLogout() {
+		console.log('laaaaaaaaaaaaawwwwwwwwwwwgggggggg');
+
 		$User.Logout()
 		.then(r => {
 			location.reload();
