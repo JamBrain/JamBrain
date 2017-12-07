@@ -3,6 +3,9 @@ import UIIcon							from 'com/ui/icon/icon';
 import UITagbox							from 'com/ui/tagbox/tagbox';
 import UIText							from 'com/ui/text/text';
 import UIDropdown						from 'com/ui/dropdown/dropdown';
+import UITextdown						from 'com/ui/textdown/textdown';
+
+import $Tag								from 'shrub/js/tag/tag';
 
 export default class ItemFilter extends Component {
 	constructor( props ) {
@@ -10,7 +13,9 @@ export default class ItemFilter extends Component {
 
 		this.state = {
 			'query': "",
-			'tags': [],
+			'tags': null,
+			'randomtag': null,
+			'mytags': [],
 		};
 
 		this.onTagClick = this.onTagClick.bind(this);
@@ -18,29 +23,18 @@ export default class ItemFilter extends Component {
 	}
 
 	componentDidMount() {
-		this.setState({'tags': [
-			{
-				'id': 44,
-				'slug': "frog",
-				'name': "Frog",
-			},
-			{
-				'id': 45,
-				'slug': "dog-waffle",
-				'name': "Dog Waffle",
-			},
-			{
-				'id': 46,
-				'slug': "towel",
-				'name': "Towel",
-			},
-		]});
+		$Tag.Get('platform')
+		.then(r => {
+			if ( r && r.tag ) {
+				this.setState({'tags': r.tag, 'randomtag': Math.floor(Math.random()*r.tag.length)});
+			}
+		});
 	}
 
 	onTagClick( index ) {
-		let tags = this.state.tags.slice();		// copy
-		tags.splice(index, 1);					// remove
-		this.setState({'tags': tags});
+		let mytags = this.state.mytags.slice();		// copy
+		mytags.splice(index, 1);					// remove
+		this.setState({'mytags': mytags});
 	}
 
 	onModifyQuery( e ) {
@@ -48,10 +42,12 @@ export default class ItemFilter extends Component {
 	}
 
 	render( props, state ) {
+		if ( !state.tags )
+			return null;
 
-		let ShowFilters = null;;
-		if ( state.tags.length )
-			ShowFilters = <UITagbox tags={state.tags} onclick={this.onTagClick} />;
+		let ShowFilters = null;
+		if ( state.mytags && state.mytags.length )
+			ShowFilters = <UITagbox tags={state.mytags} onclick={this.onTagClick} />;
 		else
 			ShowFilters = <div>None</div>;
 
@@ -61,7 +57,7 @@ export default class ItemFilter extends Component {
 				<div class="-body -flex">
 					<div class="-query">
 						<div class="-title">Platform/Tag:</div>
-						<UIText onmodify={this.onModifyQuery} maxlength={64} value={state.query} />
+						<UITextdown onmodify={this.onModifyQuery} maxlength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
 					</div>
 					<div class="-event">
 						<div class="-title">Event:</div>

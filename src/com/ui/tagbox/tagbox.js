@@ -26,7 +26,6 @@ export default class UITagbox extends Component {
 		}
 		return null;
 	}
-
 	renderTags( tags ) {
 		let Out = [];
 
