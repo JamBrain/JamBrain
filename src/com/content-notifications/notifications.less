@@ -101,6 +101,24 @@
 		border: 1px solid;
 	}
 
+	& .-filter {
+		display: inline-block;
+		height: 1em;
+		font-size: 1em;
+		padding: 0.5rem 1rem 1rem;
+		border: 1px solid @COL_N;
+		margin: 0.5rem 0.25rem;
+
+		& span {
+			margin-left: 6px;
+		}
+
+		&.-toggled {
+			border: 1px solid @COL_A;
+			color: @COL_L;
+			background: @COL_A;
+		}
+	}
 }
 
 .-at-name {
