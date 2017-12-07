@@ -1,0 +1,32 @@
+@import 'defs.less';
+
+.ui-text {
+	& > input {
+		display: block;
+		box-sizing: border-box;
+		width: 100%;
+
+		font-size: 1.2em;
+
+		background: @COL_NLLLL;
+		border: 1px solid @COL_NLLL;
+		padding: 0.25em;
+
+		&:focus {
+			background: @COL_W;
+		}
+	}
+
+	& > .-footer {
+		font-size: 0.8em;
+		overflow: hidden;
+
+		& > .-left {
+			float: right;
+		}
+
+		& > .-right {
+			float: right;
+		}
+	}
+}
