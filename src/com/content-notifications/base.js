@@ -1,6 +1,13 @@
 import {h, Component} 					from 'preact/preact';
 
-import Notification						from 'com/content-notifications/notification';
+import Notification, {
+	isNotifactionComment,
+	isNotificationFeedback,
+	isNotificationFriendGame,
+	isNotificationFriendPost,
+	isNotificationMention,
+	isNotificationOther
+}						from 'com/content-notifications/notification';
 
 import $Node							from '../../shrub/js/node/node';
 import $Note							from '../../shrub/js/note/note';
@@ -21,10 +28,6 @@ export default class NotificationsBase extends Component {
 			"highestRead": -1,
 			"filters": {
 				'comments': false,
-				'mention': true,
-				'friendGame': true,
-				'friendPost': true,
-				'selfComment': true,
 			},
 		};
 		this.handleFilterChange = this.handleFilterChange.bind(this);
@@ -337,27 +340,23 @@ export default class NotificationsBase extends Component {
 	}
 
 	shouldShowNotification(notification) {
-		const {mention, friendGame, friendPost, selfComment, comment} = this.state.filters;
-		console.log(notification.notification);
-		const {node, note} = notification;
-		if (node.selfauthored && selfComment !== false) {
+		const {mention, friendGame, friendPost, feedback, comment, other} = this.state.filters;
+		if (feedback !== false && isNotificationFeedback(notification)) {
 			return true;
 		}
-		else if ((node.mention || (note && note.filter(e => e.mention).length > 0)) && mention !== false) {
+		else if (mention !== false && isNotificationMention(notification)) {
 			return true;
 		}
-		else if (note === undefined) {
-			if (node.type == 'item' && friendGame !== false) {
-				return true;
-			}
-			else if (node.type !== 'item' && friendPost !== false) {
-				return true;
-			}
-		}
-		else if (note && comment !== false) {
+		else if (friendGame !== false && isNotificationFriendGame(notification)) {
 			return true;
 		}
-		return false;
+		else if (friendPost !== false && isNotificationFriendPost(notification)) {
+			return true;
+		}
+		else if (comment !== false && isNotifactionComment(notification)) {
+			return true;
+		}
+		return other !== false && isNotificationOther(notification);
 	}
 
 	handleFilterChange(filterType, otherStuff) {
@@ -365,8 +364,8 @@ export default class NotificationsBase extends Component {
 		if (filterType == 'comment') {
 			oldFilter.comment = oldFilter.comment === undefined ? false : !oldFilter.comment;
 		}
-		else if (filterType == 'selfComment') {
-			oldFilter.selfComment = oldFilter.selfComment === undefined ? false : !oldFilter.selfComment;
+		else if (filterType == 'feedback') {
+			oldFilter.feedback = oldFilter.feedback === undefined ? false : !oldFilter.feedback;
 		}
 		else if (filterType == 'friendPost') {
 			oldFilter.friendPost = oldFilter.friendPost === undefined ? false : !oldFilter.friendPost;

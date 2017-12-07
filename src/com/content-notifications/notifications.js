@@ -30,10 +30,6 @@ export default class NotificationsFeed extends NotificationsBase {
 			'highestRead': -1,
 			'filters': {
 				'comment': false,
-				'mention': true,
-				'friendGame': true,
-				'friendPost': true,
-				'selfComment': true,
 			},
 		};
 		this.fetchMore = this.fetchMore.bind(this);
@@ -69,14 +65,15 @@ export default class NotificationsFeed extends NotificationsBase {
 		const maxReadId = state.highestRead;
 		const processing = state.status === null || this.isLoading();
 		const hasMore = !processing && ((state.offset + this.state.limit) < state.count);
-		//console.log(processing, state.offset, state.feedSize, state.count);
 		const hasUnread = this.getHighestNotificationInFeed() > maxReadId;
 		let ShowNotifications = [];
 		const caller_id = state.caller_id;
 		const notifications = state.notifications;
 		const notificationsOrder = this.getNotificationsOrder();
+		const notificationsArray = [];
 		notificationsOrder.forEach((identifier) => {
 			let notification = notifications.get(identifier);
+			notificationsArray.push(notification);
 			if (this.shouldShowNotification(notification)) {
 				ShowNotifications.push((
 					<Notification
@@ -115,7 +112,7 @@ export default class NotificationsFeed extends NotificationsBase {
 
 		const view = (
 			<div class="-notifications">
-				<NotificationsFilter handleFilterChange={this.handleFilterChange} filters={state.filters} />
+				<NotificationsFilter handleFilterChange={this.handleFilterChange} filters={state.filters} notifications={notificationsArray}/>
 				{ShowSetAllRead}
 				{ShowError}
 				{ShowNotifications}
