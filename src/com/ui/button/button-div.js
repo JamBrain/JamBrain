@@ -7,7 +7,6 @@ export default class UIButtonDiv extends Component {
 
 	render( props ) {
 		props = Object.assign({}, props);
-		props.class = cN("ui-button ui-button-div", props.class);
 
 //		if ( !props.hasOwnProperty('tabIndex') )
 		if ( props.tabIndex != null )
@@ -37,6 +36,6 @@ export default class UIButtonDiv extends Component {
 			};
 		}
 
-		return <div {...props} />;
+		return <div {...props} class={cN("ui-button", props.class)} />;
 	}
 }

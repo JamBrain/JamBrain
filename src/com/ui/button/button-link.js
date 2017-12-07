@@ -8,7 +8,6 @@ export default class UIButtonLink extends UILink {
 
 	render( props ) {
 		props = Object.assign({}, props);
-		props.class = cN("ui-button ui-button-link", props.class);
 
 		let doHistory;
 		if ( props.href ) {
@@ -49,6 +48,6 @@ export default class UIButtonLink extends UILink {
 			}
 		};
 
-		return <a {...props} />;
+		return <a {...props} class={cN("ui-button", props.class)} />;
 	}
 }
