@@ -4,6 +4,9 @@ import ContentList						from 'com/content-list/list';
 import ContentGames						from 'com/content-games/games';
 import GamesFilter						from 'com/content-games/filter';
 
+import ContentItemFilter				from 'com/content-itemfilter/itemfilter';
+import UITagbox							from 'com/ui/tagbox/tagbox';
+
 export default class PageHomeGames extends Component {
 	constructor( props ) {
 		super(props);
@@ -108,9 +111,13 @@ export default class PageHomeGames extends Component {
 
 		SubFilter = EvalFilter(SubFilter);
 
+
+		let ShowNewFilterbox = <ContentItemFilter />;
+
 		return (
 			<ContentList class="page-home-games">
 				{ShowFilters}
+				{ShowNewFilterbox}
 				<ContentGames node={NodeArg} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} filter={GamesFeedFilter}/>
 			</ContentList>
 		);

@@ -1,0 +1,26 @@
+@import "defs.less";
+
+#content .content-itemfilter {
+	& > .-body {
+		& > .ui-tagbox {
+			margin: 1rem 0;
+
+			& > .-tag {
+				display: inline-block;
+				line-height: 2em;
+				padding: 0 1em;
+				margin-right: 0.5rem;
+
+				border-radius: 0.5em;
+
+				color: @COL_NLLLL;
+				background: @COL_CM;
+
+				&:hover {
+					color: @COL_L;
+					background: @COL_A;
+				}
+			}
+		}
+	}
+}
