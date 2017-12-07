@@ -71,14 +71,16 @@ export default class NotificationsFeed extends NotificationsBase {
 		const notificationsOrder = this.getNotificationsOrder();
 		notificationsOrder.forEach((identifier) => {
 			let notification = notifications.get(identifier);
-			ShowNotifications.push((
-				<Notification
-					caller_id={caller_id}
-					notification={notification}
-					class={cN("-item -notification",(notification.notification[0].id>maxReadId)?'-new-comment':'')}
-					id={'notification-' + identifier}
-				/>
-			));
+			if (shouldShowNotification(notification)) {
+				ShowNotifications.push((
+					<Notification
+						caller_id={caller_id}
+						notification={notification}
+						class={cN("-item -notification",(notification.notification[0].id>maxReadId)?'-new-comment':'')}
+						id={'notification-' + identifier}
+					/>
+				));
+			}
 		});
 
 		if ( ShowNotifications.length == 0 ) {

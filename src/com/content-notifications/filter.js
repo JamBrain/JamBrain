@@ -16,30 +16,30 @@ export default class NotificationsFilter extends Component {
 		const {comment, selfComment, friendGame, friendPost} = props.filters;
 		return (
 			<div>
-				<div
-					class={cN('-item', selfComment === false ? '' : '-selected')}
+				<ButtonBase
+					class={cN('-filter', selfComment === false ? '' : '-selected')}
 					onclick={this.onToggleSelfComments}
 				>
 					<SVGIcon>bubble-empty</SVGIcon><span>Comments on your stuff</span>
-				</div>
-				<div
-					class={cN('-item', comment === false ? '' : '-selected')}
+				</ButtonBase>
+				<ButtonBase
+					class={cN('-filter', comment === false ? '' : '-selected')}
 					onclick={this.onToggleComments}
 				>
 					<SVGIcon>bubble</SVGIcon><span>Comments</span>
-				</div>
-				<div
-					class={cN('-item', friendGame === false ? '' : '-selected')}
+				</ButtonBase>
+				<ButtonBase
+					class={cN('-filter', friendGame === false ? '' : '-selected')}
 					onclick={this.onToggleFriendGame}
 				>
 					<SVGIcon>gamepad</SVGIcon><span>Friend's new games</span>
-				</div>
-				<div
-					class={cN('-item', friendPost === false ? '' : '-selected')}
+				</ButtonBase>
+				<ButtonBase
+					class={cN('-filter', friendPost === false ? '' : '-selected')}
 					onclick={this.onToggleFriendPost}
 				>
 					<SVGIcon>feed</SVGIcon><span>Friend's new posts</span>
-				</div>
+				</ButtonBase>
 			</div>
 		);
 	}

@@ -15,7 +15,7 @@
 		}
 
 	}
-
+	
 	& .content-common-header {
 		background: @COL_A;
 	}
@@ -26,6 +26,19 @@
 
 	&.-no-gap {
 		margin-top: 0;
+	}
+
+	
+	& .-filter {
+	
+		display: inline-block;
+		height: 1em;
+		font-size: 1em;
+		background: @COL_NDDD;
+		
+		& .- selected {
+			background: @COL_A;
+		}
 	}
 
 	& .-action {

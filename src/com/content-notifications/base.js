@@ -323,9 +323,7 @@ export default class NotificationsBase extends Component {
 
 			notificationsOrder.forEach((id) => {
 				let notification = notifications.get(id);
-				if (shouldShowNotification(notification)) {
-					Notifications.push([id, <Notification caller_id={caller_id} notification={notification} />]);
-				}
+				Notifications.push([id, <Notification caller_id={caller_id} notification={notification} />]);
 			});
 
 		}
