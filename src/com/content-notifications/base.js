@@ -19,9 +19,14 @@ export default class NotificationsBase extends Component {
 			"feed": [],
 			"loading": true,
 			"highestRead": -1,
-			"filters": {'comments': false},
+			"filters": {
+				'comments': false,
+				'mention': true,
+				'friendGame': true,
+				'friendPost': true,
+				'selfComment': true,
+			},
 		};
-
 		this.handleFilterChange = this.handleFilterChange.bind(this);
 	}
 
@@ -332,30 +337,32 @@ export default class NotificationsBase extends Component {
 	}
 
 	shouldShowNotification(notification) {
-		let {mention, friendGame, friendPost, selfComment, comment} = this.state.filter;
-		if (notification.isNodeAuthor && selfComment !== false) {
+		const {mention, friendGame, friendPost, selfComment, comment} = this.state.filters;
+		console.log(notification.notification);
+		const {node, note} = notification;
+		if (node.selfauthored && selfComment !== false) {
 			return true;
 		}
-		else if ((notification.node.mention || (notification.note && notification.note.mention)) && mention !== false) {
+		else if ((node.mention || (note && note.filter(e => e.mention).length > 0)) && mention !== false) {
 			return true;
 		}
-		else if (!notification.note) {
-			if (notification.node.type == 'item' && friendGame !== false) {
+		else if (note === undefined) {
+			if (node.type == 'item' && friendGame !== false) {
 				return true;
 			}
-			else if (friendPost !== false) {
+			else if (node.type !== 'item' && friendPost !== false) {
 				return true;
 			}
 		}
-		else if (comment !== false) {
+		else if (note && comment !== false) {
 			return true;
 		}
-		return true;
+		return false;
 	}
 
 	handleFilterChange(filterType, otherStuff) {
 		let oldFilter = Object.assign({}, this.state.filters);
-		if (filterType == 'comments') {
+		if (filterType == 'comment') {
 			oldFilter.comment = oldFilter.comment === undefined ? false : !oldFilter.comment;
 		}
 		else if (filterType == 'selfComment') {
@@ -367,7 +374,12 @@ export default class NotificationsBase extends Component {
 		else if (filterType == 'friendGame') {
 			oldFilter.friendGame = oldFilter.friendGame === undefined ? false : !oldFilter.friendGame;
 		}
-		console.log('test', filterType, otherStuff, this.state.filters, oldFilter);
+		else if (filterType == 'mention') {
+			oldFilter.mention = oldFilter.mention === undefined ? false : !oldFilter.mention;
+		}
+		else if (filterType == 'other') {
+			oldFilter.other = oldFilter.other === undefined ? false : !oldFilter.other;
+		}
 		this.setState({'filters': oldFilter});
 	}
 }

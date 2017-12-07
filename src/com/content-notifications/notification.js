@@ -161,7 +161,7 @@ export default class NotificationItem extends Component {
 			else if ( notification.node.selfauthored && !notification.note.selfauthored ) {
 				return (
 					<NavLink {...navProps} >
-					<SVGIcon>bubble</SVGIcon>{timePrefix} {NoteAuthor} commented on your {nodeType} "<em>{node.name}</em>"
+					<SVGIcon>bubble-empty</SVGIcon>{timePrefix} {NoteAuthor} commented on your {nodeType} "<em>{node.name}</em>"
 					</NavLink>);
 			}
 			else {

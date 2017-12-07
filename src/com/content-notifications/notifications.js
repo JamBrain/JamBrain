@@ -28,7 +28,13 @@ export default class NotificationsFeed extends NotificationsBase {
 			'notificationIds': [],
 			'status': null,
 			'highestRead': -1,
-			'filters': {'comment': false},
+			'filters': {
+				'comment': false,
+				'mention': true,
+				'friendGame': true,
+				'friendPost': true,
+				'selfComment': true,
+			},
 		};
 		this.fetchMore = this.fetchMore.bind(this);
 	}
@@ -71,12 +77,12 @@ export default class NotificationsFeed extends NotificationsBase {
 		const notificationsOrder = this.getNotificationsOrder();
 		notificationsOrder.forEach((identifier) => {
 			let notification = notifications.get(identifier);
-			if (shouldShowNotification(notification)) {
+			if (this.shouldShowNotification(notification)) {
 				ShowNotifications.push((
 					<Notification
 						caller_id={caller_id}
 						notification={notification}
-						class={cN("-item -notification",(notification.notification[0].id>maxReadId)?'-new-comment':'')}
+						class={cN("-item -notification", (notification.notification[0].id>maxReadId)?'-new-comment':'')}
 						id={'notification-' + identifier}
 					/>
 				));
@@ -95,7 +101,11 @@ export default class NotificationsFeed extends NotificationsBase {
 			<ButtonBase
 				class="-button -light focusable"
 				id="button-mark-read"
-				onclick={(e) => { this.markReadHighest(); }}>
+				onclick={
+					(e) => {
+						this.markReadHighest();
+					}
+				}>
 				Mark all notifications as read
 			</ButtonBase>) : null;
 
