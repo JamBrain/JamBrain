@@ -592,7 +592,7 @@ switch ( $action ) {
 		break; // case 'login': //user/login
 
 	case 'logout': //user/logout
-		json_ValidateHTTPMethod('GET');
+		//json_ValidateHTTPMethod('GET');
 
 		$RESPONSE['id'] = userAuth_Logout();
 		break; // case 'logout': //user/logout

@@ -8,8 +8,11 @@ import NavLink 							from 'com/nav-link/link';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
 
+import UIButton							from 'com/ui/button/button';
+
 //import DropdownUser 					from 'com/dropdown-user/user';
-import DropdownNotification				from 'com/view/bar/bar-notifications';
+import BarNotification					from 'bar-notifications';
+import BarUser							from 'bar-user';
 
 //import $Node							from 'shrub/js/node/node';
 import $Notification					from 'shrub/js/notification/notification';
@@ -32,7 +35,8 @@ export default class ViewBar extends Component {
 	}
 
 	checkNotificationCount() {
-		const loggedIn = this.props.user && this.props.user.id > -1;
+		const {user} = this.props;
+		const loggedIn = user && (user.id > 0);
 
 		if (loggedIn) {
 			let firstCall = !this.StartedNotificationLoop;
@@ -98,37 +102,37 @@ export default class ViewBar extends Component {
 	renderRight( user, featured ) {
 		var Search = null;
 //		var Search = (
-//			<ButtonBase class="-icon" onclick={e => { console.log('search'); window.location.hash = "#search"; }}>
+//			<ButtonBase class="-bar-icon" onclick={e => { console.log('search'); window.location.hash = "#search"; }}>
 //				<SVGIcon baseline>search</SVGIcon>
 //			</ButtonBase>
 //		);
 
 		var ShowCalendar = (
-			<ButtonBase class="-button if-no-sidebar-block" onclick={e => { console.log('calendar'); window.location.hash = "#cal"; }}>
+			<UIButton class="-bar-button if-no-sidebar-block" onclick={e => { console.log('calendar'); window.location.hash = "#cal"; }}>
 				<SVGIcon baseline>calendar</SVGIcon>
 				<div class="if-sidebar-block">Schedule</div>
-			</ButtonBase>
+			</UIButton>
 		);
 
-		var ShowJoin = null;
-		var ShowMyGame = null;
-		var NewPost = null;
+		let ShowJoin = null;
+		let ShowMyGame = null;
+		let NewPost = null;
 		let Notification = null;
-		var ShowUser = null;
-		var Register = null;
-		var Login = null;
-		var GoSecure = null;
-		var ShowSpinner = null;
+		let ShowUser = null;
+		let Register = null;
+		let Login = null;
+		let GoSecure = null;
+		let ShowSpinner = null;
 		let ShowNotifications = null;
 
 		// Disallow insecure login
 		if ( SECURE_LOGIN_ONLY && (location.protocol !== 'https:') ) {
 			let SecureURL = 'https://'+location.hostname+location.pathname+location.search+location.hash;
 			GoSecure = (
-				<ButtonBase class="-button" href={SecureURL} onclick={e => {console.log('secure'); location.href = SecureURL;}}>
+				<UIButton class="-bar-button" href={SecureURL} onclick={e => {console.log('secure'); location.href = SecureURL;}}>
 					<SVGIcon>unlocked</SVGIcon>
 					<div class="if-sidebar-block">Go to Secure Site</div>
-				</ButtonBase>
+				</UIButton>
 			);
 		}
 		// Both user and user.id means logged in
@@ -136,25 +140,25 @@ export default class ViewBar extends Component {
 			if ( featured && featured.id ) {
 				if ( featured.focus ) {
 					ShowMyGame = (
-						<ButtonLink href={featured.what_node[featured.focus].path} class="-button">
+						<UIButton href={featured.what_node[featured.focus].path} class="-bar-button">
 							<SVGIcon>gamepad</SVGIcon>
 							<div class="if-sidebar-block">My Game</div>
-						</ButtonLink>
+						</UIButton>
 					);
 
 					NewPost = (
-						<ButtonBase class="-button" onclick={e => { window.location.hash = "#create/"+featured.focus+"/post"; }}>
+						<UIButton class="-bar-button" onclick={e => { window.location.hash = "#create/"+featured.focus+"/post"; }}>
 							<SVGIcon>edit</SVGIcon>
 							<div class="if-sidebar-block">New</div>
-						</ButtonBase>
+						</UIButton>
 					);
 				}
 				else if ( node_CanCreate(featured) ) {
 					ShowJoin = (
-						<ButtonBase class="-button" onclick={e => { window.location.hash = "#create/"+featured.id+"/item/game"; }}>
+						<UIButton class="-bar-button" onclick={e => { window.location.hash = "#create/"+featured.id+"/item/game"; }}>
 							<SVGIcon>publish</SVGIcon>
 							<div class="if-sidebar-block">Join Event</div>
-						</ButtonBase>
+						</UIButton>
 					);
 				}
 			}
@@ -167,44 +171,48 @@ export default class ViewBar extends Component {
 			}
 
 			if (this.state.showNotifications) {
-				ShowNotifications = (<DropdownNotification clearCallback={ () => this.setState({notifications: 0}) } hideCallback={ () => this.setState({showNotifications: false}) } />);
+				ShowNotifications = (<BarNotification clearCallback={ () => this.setState({notifications: 0}) } hideCallback={ () => this.setState({showNotifications: false}) } />);
 			}
 
 			Notification = (
-				<ButtonBase class="-icon" onclick={(e) => {
+				<UIButton class="-bar-icon" onclick={(e) => {
 					// TODO: if the main content is the notifications feed, clicking the button should
 					// probably not show the dropdown, but load new comments into the feed.
 					this.setState({showNotifications: !this.state.showNotifications});
 				}}>
 					<SVGIcon baseline>bubble</SVGIcon>
 					{NotificationCount}
-				</ButtonBase>
+				</UIButton>
 			);
 
+/*
 			// TODO: Pull this out of the user meta, else use a dummy
 			let Avatar = (user.meta && user.meta.avatar) ? <img src={"//"+STATIC_DOMAIN+user.meta.avatar} /> : <img src={'//'+STATIC_DOMAIN+'/other/dummy/user64.png'} />;
 			//'/other/logo/mike/Chicken64.png';
 			let MyURL = '/users/'+user.slug+'/';
 			ShowUser = [
-				<ButtonBase class="-user">
+				<UIButton class="-user">
 					<NavLink href={MyURL}>{Avatar}</NavLink>
-				</ButtonBase>,
+				</UIButton>,
 //				<DropdownUser />
 			];
+*/
+
+			ShowUser = <BarUser user={user} />;
 		}
 		// If user has finished loading (and is not logged in)
 		else if ( user ) {
 			Register = (
-				<ButtonBase class="-button" onclick={e => { console.log('register'); window.location.hash = "#user-register"; }}>
+				<UIButton class="-bar-button" onclick={e => { console.log('register'); window.location.hash = "#user-register"; }}>
 					<SVGIcon>user-plus</SVGIcon>
 					<div class="if-sidebar-block">Create Account</div>
-				</ButtonBase>
+				</UIButton>
 			);
 			Login = (
-				<ButtonBase class="-button" onclick={e => { console.log('login'); window.location.hash = "#user-login"; }}>
+				<UIButton class="-bar-button" onclick={e => { console.log('login'); window.location.hash = "#user-login"; }}>
 					<SVGIcon>key</SVGIcon>
 					<div class="if-sidebar-block">Login</div>
-				</ButtonBase>
+				</UIButton>
 			);
 		}
 		// Still waiting
@@ -250,10 +258,10 @@ export default class ViewBar extends Component {
 			<div class="view-bar">
 				<div class="-content">
 					<div class="-left">
-						<ButtonLink href="/" class="-logo">
+						<UIButton href="/" class="-logo">
 							<SVGIcon class="if-sidebar-block" baseline>ludum</SVGIcon><SVGIcon class="if-sidebar-block" baseline>dare</SVGIcon>
 							<SVGIcon class="if-no-sidebar-block" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-block" baseline>d-are</SVGIcon>
-						</ButtonLink>
+						</UIButton>
 					</div>
 					{ShowLoading}
 					{this.renderRight(user, featured)}

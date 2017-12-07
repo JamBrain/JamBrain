@@ -35,12 +35,12 @@ export default class ContentNavUser extends Component {
 		var ShowFeed = <ContentNavButton path={NewPath} icon="feed" href={path+'/feed'}>Feed</ContentNavButton>;
 
 		var ShowFollowing = null;
-		if ( user.id == node.id && user && user.private /*&& user.private["meta"] && user.private.meta["star"]*/ ) {
+		if ( user && (user.id == node.id) && user.private /*&& user.private["meta"] && user.private.meta["star"]*/ ) {
 			ShowFollowing = <ContentNavButton path={NewPath} icon="user-check" href={path+'/following'}>Following</ContentNavButton>;
 		}
 
 		var ShowFollowers = null;
-//		if ( user.id == node.id && user["private"] && user.private["refs"] && user.private.refs["star"]  ) {
+//		if ( user && (user.id == node.id) && user["private"] && user.private["refs"] && user.private.refs["star"]  ) {
 //			ShowFollowers = <ContentNavButton path={NewPath} icon='users' href={path+'/followers'}>Followers</ContentNavButton>;
 //		}
 
