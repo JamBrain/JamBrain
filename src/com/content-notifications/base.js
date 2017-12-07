@@ -1,7 +1,7 @@
 import {h, Component} 					from 'preact/preact';
 
 import Notification, {
-	isNotifactionComment,
+	isNotificationComment,
 	isNotificationFeedback,
 	isNotificationFriendGame,
 	isNotificationFriendPost,
@@ -353,7 +353,7 @@ export default class NotificationsBase extends Component {
 		else if (friendPost !== false && isNotificationFriendPost(notification)) {
 			return true;
 		}
-		else if (comment !== false && isNotifactionComment(notification)) {
+		else if (comment !== false && isNotificationComment(notification)) {
 			return true;
 		}
 		return other !== false && isNotificationOther(notification);
@@ -361,24 +361,7 @@ export default class NotificationsBase extends Component {
 
 	handleFilterChange(filterType, otherStuff) {
 		let oldFilter = Object.assign({}, this.state.filters);
-		if (filterType == 'comment') {
-			oldFilter.comment = oldFilter.comment === undefined ? false : !oldFilter.comment;
-		}
-		else if (filterType == 'feedback') {
-			oldFilter.feedback = oldFilter.feedback === undefined ? false : !oldFilter.feedback;
-		}
-		else if (filterType == 'friendPost') {
-			oldFilter.friendPost = oldFilter.friendPost === undefined ? false : !oldFilter.friendPost;
-		}
-		else if (filterType == 'friendGame') {
-			oldFilter.friendGame = oldFilter.friendGame === undefined ? false : !oldFilter.friendGame;
-		}
-		else if (filterType == 'mention') {
-			oldFilter.mention = oldFilter.mention === undefined ? false : !oldFilter.mention;
-		}
-		else if (filterType == 'other') {
-			oldFilter.other = oldFilter.other === undefined ? false : !oldFilter.other;
-		}
+		oldFilter[filterType] = oldFilter[filterType] === undefined ? false : !oldFilter[filterType];
 		this.setState({'filters': oldFilter});
 	}
 }

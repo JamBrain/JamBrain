@@ -3,38 +3,38 @@ import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
 
-export const isNotifactionType = (notification, notificationType) => {
+export const isNotificationType = (notification, notificationType) => {
 	return notification.notification
 		.map(e => e.type)
 		.indexOf(notificationType) > -1;
 };
 
 export const isNotificationMention = (notification) => {
-	return isNotifactionType(notification, 'mention');
+	return isNotificationType(notification, 'mention');
 };
 
 export const isNotificationFeedback = (notification) => {
 	const {node, note} = notification;
-	return node.selfauthored && note && isNotifactionType(notification, 'note');
+	return node.selfauthored && note && isNotificationType(notification, 'note');
 };
 
 export const isNotificationFriendGame = (notification) => {
 	const {node} = notification;
-	return node.type == 'item' && isNotifactionType(notification, 'item');
+	return node.type == 'item' && isNotificationType(notification, 'item');
 };
 
 export const isNotificationFriendPost = (notification) => {
 	const {node} = notification;
-	return node.type !== 'item' && isNotifactionType(notification, 'post');
+	return node.type !== 'item' && isNotificationType(notification, 'post');
 };
 
-export const isNotifactionComment = (notification) => {
+export const isNotificationComment = (notification) => {
 	const {node, note} = notification;
-	return notification.multi || (note && isNotifactionType(notification, 'note') && !isNotificationFeedback(notification) && !isNotificationFeedback(notification));
+	return notification.multi || (note && isNotificationType(notification, 'note') && !isNotificationFeedback(notification) && !isNotificationFeedback(notification));
 };
 
 export const isNotificationOther = (notification) => {
-	return !isNotifactionType(notification, 'note') && !isNotifactionType(notification, 'node') && !isNotifactionType(notification, 'item') && !isNotifactionType(notification, 'post') && !isNotifactionType(notification, 'mention');
+	return !isNotificationType(notification, 'note') && !isNotificationType(notification, 'node') && !isNotificationType(notification, 'item') && !isNotificationType(notification, 'post') && !isNotificationType(notification, 'mention');
 };
 
 export default class NotificationItem extends Component {

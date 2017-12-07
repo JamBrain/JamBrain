@@ -2,7 +2,7 @@ import {h, Component}	 				from 'preact/preact';
 import SVGIcon							from 'com/svg-icon/icon';
 import ButtonBase						from 'com/button-base/base';
 import {
-	isNotifactionComment,
+	isNotificationComment,
 	isNotificationFeedback,
 	isNotificationFriendGame,
 	isNotificationFriendPost,
@@ -28,7 +28,7 @@ export default class NotificationsFilter extends Component {
 
 		let hiddenComments = null;
 		if (comment === false) {
-			const count = notifications.filter(e => isNotifactionComment(e)).length;
+			const count = notifications.filter(e => isNotificationComment(e)).length;
 			hiddenComments = ` (${count})`;
 		}
 		let hiddenFeedback = null;
