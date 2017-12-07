@@ -1,12 +1,25 @@
 import {h, Component} 					from 'preact/preact';
 //import Shallow			 				from 'shallow/shallow';
 
+import UIIcon							from 'com/ui/icon/icon';
 import UIImage							from 'com/ui/image/image';
 import UIButton							from 'com/ui/button/button';
+import UIDropdown						from 'com/ui/dropdown/dropdown';
+
+import $User							from 'shrub/js/user/user';
 
 export default class ViewBarUser extends Component {
 	constructor( props ) {
 		super(props);
+
+		this.onLogout = this.onLogout.bind(this);
+	}
+
+	onLogout() {
+		$User.Logout()
+		.then(r => {
+			location.reload();
+		});
 	}
 
 	render( props ) {
@@ -23,9 +36,13 @@ export default class ViewBarUser extends Component {
 			UserAvatar = '//'+STATIC_DOMAIN+user.meta.avatar;
 
 		return (
-			<UIButton class="-user" href={UserURL}>
-				<UIImage src={UserAvatar} />
-			</UIButton>
+			<UIDropdown class="-user" right>
+				<UIImage src={UserAvatar} block />
+				<UIButton href={UserURL}><UIIcon>user</UIIcon><span>My Profile</span></UIButton>
+				<UIButton href={UserURL+'games'}><UIIcon>gamepad</UIIcon><span>My Games</span></UIButton>
+				<div class="-gap" />
+				<UIButton onclick={this.onLogout}><UIIcon>logout</UIIcon><span>Logout</span></UIButton>
+			</UIDropdown>
 		);
 	}
 }

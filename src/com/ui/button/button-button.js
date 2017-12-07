@@ -6,6 +6,6 @@ export default class UIButtonButton extends Component {
 	}
 
 	render( props ) {
-		return <button {...props} props={cN("ui-button", props.class)} />;
+		return <button {...props} type="button" class={cN("ui-button", props.class)} />;
 	}
 }

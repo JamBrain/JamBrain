@@ -104,28 +104,26 @@
 			margin: auto;
 			height: 3em; 	/* Required, otherwise top+bottom fills the whole parent div */
 			min-width: 3em;
-
 		}
 
 		& > .-right {
 			/* Everything */
-			& > div,
-			& > a,
-			& > a:visited {
+			& > * {
 				margin-left: 0.5em;
 				float: left;
 				text-decoration: none;
+			}
 
+			& .ui-button {
 				transition: background 0.1s;
 
-				& div {
+				& > * {
 					color: @BUTTON_COL_TEXT;
 					transition: color 0.2s;
 				}
 
-				& svg {
+				& > svg {
 					color: @BUTTON_COL_SVG;
-					transition: color 0.2s;
 				}
 
 				&:hover,
@@ -134,19 +132,19 @@
 				&:hover:active {
 					background: @BUTTON_LIT_BG;
 
-					& svg {
-						color: @BUTTON_LIT_SVG;
-					}
-
-					& div {
+					& > * {
 						background: transparent;	/* Background color cascades from parent, so this fixes that */
 						color: @BUTTON_LIT_TEXT;
+					}
+
+					& > svg {
+						color: @BUTTON_LIT_SVG;
 					}
 				}
 			}
 
 			/* Buttons (Text with SVG) */
-			& > .-button {
+			& > .-bar-button {
 				position: relative;
 
 				line-height: 2em;
@@ -185,13 +183,11 @@
 			}
 
 			/* Avatar */
-			& > .-user {
+/*			& > .-user {
 				position: relative;
 
 				height: 3em;
 				width: 3em;
-
-				z-index: 1001;
 
 				& img {
 					position: absolute;
@@ -206,10 +202,10 @@
 					width: 2.5em;
 					height: 2.5em;
 				}
-			}
+			}*/
 
 			/* Icon-only Button (with overlays) */
-			& > .-icon {
+			& > .-bar-icon {
 				position: relative;
 
 				height: 3em;

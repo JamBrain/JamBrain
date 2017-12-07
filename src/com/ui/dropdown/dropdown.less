@@ -4,22 +4,49 @@
 	vertical-align: top;
 	position: relative;
 
-	& > .ui-button {
+	& > .-button {
+		z-index: 10001;
+		overflow: auto;
 	}
 
-	& > .-items {
-		z-index: 100;
+	& > .-content {
+		z-index: 10000;
 		position: absolute;
-		/*
-		& > .-item {
-			& > .-click-catcher {
-				position: absolute;
-				left: 0px;
-				right: 0px;
-				top: 0px;
-				bottom: 0px;
-			}
+
+		white-space: nowrap;
+
+		& .-gap {
+			height: 0.5em;
 		}
-		*/
+	}
+	& > .-click-catcher {
+		z-index: 9999;
+
+		/*background: rgba(0,0,0,0.0);
+		transition: background 1.25s;*/
+
+		position: fixed;
+		left: 0px;
+		right: 0px;
+		top: 0px;
+		bottom: 0px;
+	}
+	/*&:hover > .-click-catcher {
+		background: rgba(0,0,0,0.2);
+		&:hover {
+			background: rgba(0,0,0,0.1);
+		}
+	}*/
+
+
+	&.-right {
+		& > .-content {
+			right: 0;
+		}
+	}
+	&.-left {
+		& > .-content {
+			left: 0;
+		}
 	}
 }

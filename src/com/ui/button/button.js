@@ -10,6 +10,6 @@ export default class UIButton extends Component {
 	render( props ) {
 		if ( props.href )
 			return <UIButtonLink {...props} />;
-		return <UIButtonBase {...props} />;
+		return <UIButtonDiv {...props} />;
 	}
 }

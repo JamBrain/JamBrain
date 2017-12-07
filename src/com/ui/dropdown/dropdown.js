@@ -1,8 +1,5 @@
 import {h, Component}	 				from 'preact/preact';
-import {shallowDiff}	 				from 'shallow-compare/index';
-
-import NavLink							from 'com/nav-link/link';
-import SVGIcon							from 'com/svg-icon/icon';
+import UIButton							from 'com/ui/button/button';		// specifically the button-button
 
 export default class UIDropdown extends Component {
 	constructor( props ) {
@@ -12,31 +9,29 @@ export default class UIDropdown extends Component {
 			'show': props.startOpen ? true : false,
 		};
 
-		this.onClickItem = this.onClickItem.bind(this);
-
 		this.onShow = this.onShow.bind(this);
 		this.onHide = this.onHide.bind(this);
+
+		this.doShow = this.doShow.bind(this);
+		this.doHide = this.doHide.bind(this);
 	}
 
 	doShow( e ) {
 		this.setState({'show': true});
-		document.addEventListener('click', this.onHide);
+//		document.addEventListener('click', this.onHide);
 	}
 	doHide( e ) {
 		this.setState({'show': false});
-		document.removeEventListener('click', this.onHide);
+//		document.removeEventListener('click', this.onHide);
 	}
 
 	// Clicking on the button
 	onShow( e ) {
-		if ( !this.state.show ) {
+		if ( !this.state.show )
 			this.doShow(e);
-		}
-		else {
+		else
 			this.doHide(e);
-		}
 	}
-
 	// Clicking outside the button and items
 	onHide( e ) {
 		if ( this.dropdown != e.target.closest('.ui-dropdown') ) {
@@ -45,25 +40,24 @@ export default class UIDropdown extends Component {
 	}
 
 	render( props, state ) {
-		let ButtonContent = null;
-
-		console.log(props.children);
-
-		let BodyContent = null;
+		let Button = props.children.slice(0, 1);
+		let Body = [];
 		if ( state.show ) {
-			BodyContent = (
-				<div class="-content">
-					{ShowItems}
-				</div>
-			);
+			Body.push(<div class="-content">{props.children.slice(1)}</div>);
+			Body.push(<div class="-click-catcher" onclick={this.doHide} />);
 		}
 
+		let Classes = cN(
+			'ui-dropdown',
+			props.class,
+			props.left ? '-left' : null,
+			props.right ? '-right' : null
+		);
+
 		return (
-			<div class={cN('ui-dropdown', props.class)} ref={(input) => { this.dropdown = input; }}>
-				<button type="button" onclick={this.onShow}>
-					{ButtonContent}
-				</button>
-				{BodyContent}
+			<div class={Classes} ref={(input) => { this.dropdown = input; }}>
+				<UIButton class="-button" onclick={this.onShow}>{Button}</UIButton>
+				{Body}
 			</div>
 		);
 	}

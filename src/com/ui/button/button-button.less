@@ -2,6 +2,10 @@
 /* Make a 'button' act identical to a 'div' */
 button.ui-button {
 	display: block;
-	text-align: inherit;
-	box-sizing: border-box;
+	text-align: inherit;		/* rather than left align, inherit */
+	box-sizing: border-box;		/* uses other weird metrics */
+	background: transparent;	/* has a pre-defined color, border, padding */
+	border: 0;
+	padding: 0;
+	overflow: auto;				/* otherwise images wont work */
 }

@@ -36,6 +36,12 @@ export default class UIImage extends Component {
 			props.failsrc = STATIC_ENDPOINT + props.failsrc.substr(2);
 		}
 
-		return <img {...props} onerror={this.onError} />;
+		let Classes = cN(
+			'ui-image',
+			props.class,
+			props.block ? '-block' : null
+		);
+
+		return <img {...props} class={Classes} onerror={this.onError} />;
 	}
 }
