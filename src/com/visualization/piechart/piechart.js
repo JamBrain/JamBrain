@@ -10,18 +10,6 @@ export default class PieChart extends Component {
 
     }
 
-    // Converts an array of number to an array of percentages
-    convertToPercentage ( values ) {
-        // calculate total
-        let total = 0;
-        values.forEach( ( v ) => ( total += v ) );
-
-        // scale values so there sum is 100%
-        let percentages = values.map( ( v ) => ( (100 * v) / total ) );
-
-        return percentages;
-    }
-
     render( props ) {
 
         if ( !(props && props.labels && props.values) ) {
@@ -29,9 +17,12 @@ export default class PieChart extends Component {
             return <div>No Data!</div>;
         }
 
-        let {labels, values} = props;
+        props["use_percentages"] = (props.use_percentages && props.use_percentages == true)? true : false;
 
-        let percentages = this.convertToPercentage(values);
+		let {labels, values, use_percentages} = props;
+
+        let total = values.reduce((a, b) => a + b, 0);
+		let percentages = values.map((x) => { return Math.round((100*(x/total))*100)/100; });
 
         let Segments = [];
 		let Names = [];
@@ -43,8 +34,15 @@ export default class PieChart extends Component {
             let color = 1 + ( i % 6 );
             let legendclass = cN("-shape-circle", "vis_bg_color_"+color, props.class);
 
-            Segments.push(<PieSegment angle={percentages[i]} offset={offset} color={color} />);
-            Names.push(labels[i] +" (" + values[i] + " : " + (Math.round(percentages[i] * 100) / 100) + "%)");
+			Segments.push(<PieSegment angle={percentages[i]} offset={offset} color={color} />);
+
+			if (use_percentages) {
+				Names.push(labels[i] +" (" + values[i] + " : " + percentages[i] + "%)");
+			}
+			else {
+				Names.push(labels[i] +" (" + values[i] + ")");
+			}
+
             Colors.push(color);
 
             offset += percentages[i];

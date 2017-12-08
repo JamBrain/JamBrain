@@ -24,7 +24,7 @@ const IMAGE_CONSTANTS = [
 const MAX_IMAGE_WIDTH = 4096;
 const MAX_IMAGE_HEIGHT = MAX_IMAGE_WIDTH;
 
-		
+
 // ********************* //
 // These two functions come from here: http://stackoverflow.com/a/25370978/5678759
 // Which if I understand is lifted right from Drupal
@@ -82,7 +82,7 @@ switch ( $action ) {
 		//		"size": 476
 		//	}
 
-		// Authenticate User		
+		// Authenticate User
 		$user_id = userAuth_GetId();
 		if ( !$user_id )
 			json_EmitFatalError_Permission(null, $RESPONSE);
@@ -95,19 +95,19 @@ switch ( $action ) {
 		// Confirm an asset was included
 		if ( !isset($_FILES["asset"]) )
 			json_EmitFatalError_BadRequest("No 'asset' found. Max upload size is ".file_upload_max_size()." bytes", $RESPONSE);
-			
+
 		$asset = $_FILES["asset"];	// copy, so we can change it
 
 		// http://stackoverflow.com/a/21715692/5678759
 		// NOTE! Uploads that are too large are a difficult error to handle.
 		// The error is thrown BEFORE your script executes. The only way to stop this is to disable this behavior (php.ini)
-			
+
 		// Check errors
 		if ( $error = intval($asset['error']) ) {
 			// http://php.net/manual/en/features.file-upload.errors.php
-			if ( $error == 1 && $error == 2 )
+			if ( $error == 1 || $error == 2 )
 				json_EmitFatalError_BadRequest("Asset is larger than ".file_upload_max_size()." bytes", $RESPONSE);
-			
+
 			json_EmitFatalError_BadRequest("Other asset error: ".$error, $RESPONSE);
 		}
 
@@ -116,7 +116,7 @@ switch ( $action ) {
 		$raw_size = $asset["size"];
 		if ( !$raw_file && !$raw_size )
 			json_EmitFatalError_BadRequest("Problem with 'asset'", $RESPONSE);
-		
+
 		//$RESPONSE['uu'] = imagetypes(); // & IMG_PNG is a bitmask
 		//$RESPONSE['gd'] = gd_info();
 
@@ -133,7 +133,7 @@ switch ( $action ) {
 				$asset['mime'] = $image_info['mime'];
 			if ( isset($image_info['bits']) )
 				$asset['bits'] = $image_info['bits'];
-	
+
 			//$RESPONSE['asset'] = $asset;
 
 			if ( $asset['width'] > MAX_IMAGE_WIDTH )
@@ -148,7 +148,7 @@ switch ( $action ) {
 				'name' => substr($asset['name'], 0, 96),	// max length
 				'ext' => $asset['type']
 			]);
-			
+
 			// Success
 			if ( $asset_id ) {
 				$RESPONSE['mime'] = $asset['mime'];

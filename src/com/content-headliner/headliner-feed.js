@@ -22,13 +22,14 @@ export default class ContentHeadlinerFeed extends Component {
 			props.types ? props.types : ['post'],
 			props.subtypes ? props.subtypes : null,
 			props.subsubtypes ? props.subsubtypes : null,
+			props.tags ? props.tags : null,
 			null,
 			this.props.limit
 		);
 	}
 
-	getFeed( id, methods, types, subtypes, subsubtypes, more, limit ) {
-		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, more, limit )
+	getFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit ) {
+		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit )
 		.then(r => {
 			if ( r && r.feed && r.feed.length ) {
 				this.setState({'feed': r.feed});

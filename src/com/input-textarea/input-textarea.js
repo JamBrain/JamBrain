@@ -99,11 +99,15 @@ export default class InputTextarea extends Component {
 						this.textarea.dispatchEvent( new Event('input') );
 					}
 					else {
-						alert(r.message);
+						console.error("Unable to upload image.");
+						window.location.hash = "#error-upload/"+encodeURI(r.message);
+						//alert(r.message);
 					}
 				})
 				.catch(err => {
-					this.setState({ 'error': err });
+					console.error("Unable to upload image.");
+					window.location.hash = "#error-upload";
+					//this.setState({ 'error': err });
 				});
 		}
 	}

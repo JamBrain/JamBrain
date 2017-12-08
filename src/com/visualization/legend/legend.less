@@ -2,13 +2,16 @@
 .chart {
 	& > .-legend {
 		flex: 1;
-		padding-left: 15px;
-		padding-right: 15px;
+		padding-left: 2%;
+		padding-right: 2%;
 		align-self: center;
 
 		& > ul {
+			padding-left: 2%;
+
 			& > li {
 				list-style: none;
+				white-space: nowrap;
 
 				& > .-shape-circle {
 					display: inline-block;
@@ -16,11 +19,12 @@
 					width: 32px;
 					height: 32px;
 					border-radius: 50%;
+
 				}
 
 				& > p {
 					display: inline-block;
-					margin-left: 1em;
+					margin-left: 0.5em;
 					margin-top: 0.5em;
 					margin-bottom: 0.5em;
 

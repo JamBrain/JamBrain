@@ -38,6 +38,8 @@ import DialogUserConfirm				from 'com/dialog/user/user-confirm';
 import DialogSubmit						from 'com/dialog/submit/submit';
 import DialogTV							from 'com/dialog/tv/tv';
 import DialogCreate						from 'com/dialog/create/create';
+import DialogErrorUpload				from 'com/dialog/errorupload/errorupload';
+import DialogErrorPublish				from 'com/dialog/errorpublish/errorpublish';
 
 //import AlertBase						from 'com/alert-base/base';
 
@@ -176,7 +178,6 @@ class Main extends Component {
 						return <DialogReset {...props} />;
 					case 'user-password':
 						return <DialogPassword {...props} />;
-
 					case 'expired':
 						return <DialogSession {...props} />;
 					case 'savebug':
@@ -187,6 +188,10 @@ class Main extends Component {
 						return <DialogSubmit {...props} />;
 					case 'tv':
 						return <DialogTV {...props} />;
+					case 'error-upload':
+						return <DialogErrorUpload {...props} />;
+					case 'error-publish':
+						return <DialogErrorPublish {...props} />;
 					default:
 						return <DialogUnfinished {...props} />;
 				}

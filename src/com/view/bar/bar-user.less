@@ -1,0 +1,61 @@
+@import 'defs.less';
+
+.view-bar .-user {
+	& > .-button {
+		position: relative;
+		font-size: 2em;
+
+		& > .ui-image {
+			width: 1.25em;
+			height: 1.25em;
+
+			margin: 0.125em;
+		}
+	}
+
+	& > .-content {
+		background: @COL_L;
+		box-shadow: 0 0 4px rgba(0,0,0,0.35);
+
+		font-size: 1.25em;
+
+		& > * {
+			line-height: 2em;
+			padding: 0 1em;
+
+			& > span {
+				vertical-align: middle;
+				margin-left: 0.5em;
+			}
+
+			& > .ui-icon {
+				font-size: 1.25em;
+			}
+
+			background: transparent;
+			transition: background 0.1s;
+			& > * {
+				color: @COL_NDDDD;
+				transition: color 0.2s;
+			}
+			& > svg {
+				color: @COL_ND;
+			}
+
+			&:hover,
+			&:focus,
+			&:active,
+			&:hover:active {
+				background: @COL_A;
+
+				& > * {
+					color: @COL_W;
+				}
+			}
+		}
+
+		& > .-gap {
+			background: @COL_NLLLL;
+		}
+	}
+}

@@ -70,16 +70,45 @@
 	& .-stats {
 		text-align: left;
 
-		& .history {
-			width: 100%;
 
-			@media (min-width: 768px) {
-				width: 50%;
-				display: inline-block;
+		& > div .section {
+			width: 48%;
+			//height: 500px;
+			margin: 0;
+			padding: 1%;
+			display: inline-block;
+
+			vertical-align: top;
+
+			&.-onethird{
+				width: 32%;
+			}
+
+			&.-twothird{
+				width: 64%;
+			}
+
+			@media (max-width: 768px) {
+				width: 100%!important;
+				display: block;
+			}
+
+			& .history {
+				width: 100%;
+			}
+
+
+
+			& > .chart {
+				width: 100%;
+
+				& .-legend ul li .-shape-circle {
+					width: 16px;
+					height: 16px;
+				}
 			}
 		}
-
-		& .piechart-figure {
+		/*& .piechart-figure {
 			width: 100%;
 
 			@media (min-width: 768px) {
@@ -92,7 +121,7 @@
 					width: 75%;
 				}
 			}
-		}
+		}*/
 	}
 
 	& .-recent {

@@ -5,6 +5,11 @@ export default SmartDomains = [
         "icon_name": "youtube",
         "embed_test": "(?:youtube\\.com\\/watch\\?v=)(.*)(?:)",
 
+	},
+	{
+        "domain": "youtu.be",
+        "icon_name": "youtube",
+        "embed_test": "(?:youtu\\.be\\/)(.*)(?:)",
     },
     {
         "domain": "github.com",

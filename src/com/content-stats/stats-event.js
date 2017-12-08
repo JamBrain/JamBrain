@@ -81,12 +81,16 @@ export default class ContentStatsEvent extends Component {
 
 			var Data = [];
 			if ( EventMode ) {
-				Data.push(<div class="-gap"><span class="-title">Number of Users:</span></div>);
-				Data.push(<div><span>Signups:</span> <span class="-value">{stats.signups}</span></div>);
-				Data.push(<div><span>Unique Authors:</span> <span class="-value">{stats.authors}</span></div>);
+				let participation = [];
+				participation.push(<div class="-gap"><span class="-title">Number of Users:</span></div>);
+				participation.push(<div><span>Signups:</span> <span class="-value">{stats.signups}</span></div>);
+				participation.push(<div><span>Unique Authors:</span> <span class="-value">{stats.authors}</span></div>);
+				Data.push(<div class="-participation">{participation}</div>);
 
 				if ( EventMode >= 5 ) {
-					Data.push(<div class="-gap"><span class="-title">Number of Submissions:</span> <span class="-value -title">{stats.jam+stats.compo+stats.craft}</span></div>);
+					let submissions = [];
+
+					submissions.push(<div class="-gap"><span class="-title">Number of Submissions:</span> <span class="-value -title">{stats.jam+stats.compo+stats.craft}</span></div>);
 					let entries = [
 						stats.jam,
 						stats.compo
@@ -95,14 +99,39 @@ export default class ContentStatsEvent extends Component {
 						'Jam',
 						'Compo'
 					];
-					Data.push(<PieChart values={entries} labels={entrienames}></PieChart>);
 
-					Data.push(<div><span>Unfinished:</span> <span class="-value">{stats.unfinished}</span></div>);
-					Data.push(<div><span>Unpublished:</span> <span class="-value">{stats.unpublished}</span></div>);
-					Data.push(<div><span>Warmups:</span> <span class="-value">{stats.warmup}</span></div>);
+					submissions.push(<PieChart values={entries} labels={entrienames} use_percentages={true}></PieChart>);
+
+					submissions.push(<div><span>Unfinished:</span> <span class="-value">{stats.unfinished}</span></div>);
+					submissions.push(<div><span>Unpublished:</span> <span class="-value">{stats.unpublished}</span></div>);
+					submissions.push(<div><span>Warmups:</span> <span class="-value">{stats.warmup}</span></div>);
+
+					Data.push(<div class="section -submissions">{submissions}</div>);
 				}
 				if ( EventMode >= 6 ) {
-					Data.push(<div class="-gap"><span class="-title">Number of Ratings Recived (Per Game):</span></div>);
+
+					let types = [];
+
+					types.push(<div class="-gap"><span class="-title">Types of Entries:</span></div>);
+					let typescount = [
+						stats.game,
+						stats.craft,
+						stats.demo,
+						stats.tool
+					];
+					let typenames = [
+						'Games',
+						'Crafts',
+						'Demos',
+						'Tools'
+					];
+					types.push(<PieChart values={typescount} labels={typenames} use_percentages={true}></PieChart>);
+
+					Data.push(<div class="section -types">{types}</div>);
+
+					let ratings = [];
+
+					ratings.push(<div class="-gap"><span class="-title">Ratings Received per Entry:</span></div>);
 					let grades = [
 						stats['grade-20-plus'],
 						stats['grade-15-20'],
@@ -120,22 +149,9 @@ export default class ContentStatsEvent extends Component {
 						'0'
 					];
 
-					Data.push(<BarChart values={grades.reverse()} labels={gradenames.reverse()}></BarChart>);
+					ratings.push(<BarChart values={grades.reverse()} labels={gradenames.reverse()} use_percentages={true}></BarChart>);
 
-					Data.push(<div class="-gap"><span class="-title">Types of Entries:</span></div>);
-					let types = [
-						stats.game,
-						stats.craft,
-						stats.demo,
-						stats.tool
-					];
-					let typenames = [
-						'Games',
-						'Crafts',
-						'Demos',
-						'Tools'
-					];
-					Data.push(<PieChart values={types} labels={typenames}></PieChart>);
+					Data.push(<div class="section -ratings">{ratings}</div>);
 
 				}
 

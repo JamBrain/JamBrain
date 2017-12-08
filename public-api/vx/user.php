@@ -82,7 +82,7 @@ function mailSend_Now( $mail, $subject, $message ) {
 	$headers = mailGen_Headers();
 	return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers), '-f '.SH_MAILER_RETURN);
 }
-	
+
 
 function mailSend_UserAdd( $mail, $id, $key ) {
 	$subject = mailGen_Subject("Confirming your e-mail address");
@@ -100,7 +100,7 @@ function mailSend_UserAdd( $mail, $id, $key ) {
 		"If that wasn't you then oops! Feel free to ignore this e-mail.",
 		""
 	];
-	
+
 	return mailSend_Now($mail, $subject, $message);
 }
 
@@ -112,7 +112,7 @@ function mailSend_UserCreate( $mail, $slug ) {
 		"You can now log in on: ".SH_URL_SITE,
 		""
 	];
-	
+
 	return mailSend_Now($mail, $subject, $message);
 }
 
@@ -128,7 +128,7 @@ function mailSend_UserPasswordReset( $mail, $slug, $id, $key ) {
 		"If you do not wish to reset your password, or it was sent in error, then feel free to ignore this email.",
 		""
 	];
-	
+
 	return mailSend_Now($mail, $subject, $message);
 }
 
@@ -195,7 +195,7 @@ function getSanitizedKeyFromPost( $optional = false ) {
 			json_EmitFatalError_BadRequest("'key' not found in POST", $RESPONSE);
 		$key = "";
 	}
-	
+
 	return $key;
 }
 
@@ -262,7 +262,7 @@ function getSanitizedLoginFromPost( $optional = false ) {
 function validateUserWithIdKey( $id, $key ) {
 	global $RESPONSE;
 	$user = null;
-	
+
 	// If Non-zero $id and non-empty $key value
 	if ( $id && strlen($key) ) {
 		$user = user_GetById($id);
@@ -272,7 +272,7 @@ function validateUserWithIdKey( $id, $key ) {
 			if ( $key == $user['auth_key'] ) {
 				// Success. Remember that we successfully authenticated
 				user_AuthTimeSetNow($id);
-				
+
 				return $user;
 			}
 			else {
@@ -280,7 +280,7 @@ function validateUserWithIdKey( $id, $key ) {
 				if ( !user_AuthKeyClear($id) ) {
 					json_EmitFatalError_Server("Unable to clear key", $RESPONSE);
 				}
-				
+
 				json_EmitFatalError_Permission(null, $RESPONSE);
 			}
 		}
@@ -296,13 +296,13 @@ function validateUserWithIdKey( $id, $key ) {
 }
 
 
-function validateUserWithLogin( $login ) {	
+function validateUserWithLogin( $login ) {
 	global $RESPONSE;
-	
+
 	$name = null;
 	$mail = null;
 	$user = null;
-	
+
 	// Decode the login as either an e-mail address, or a username
 	if ( coreValidate_Mail($login) ) {
 		$mail = coreSanitize_Mail($login);
@@ -312,7 +312,7 @@ function validateUserWithLogin( $login ) {
 		$name = coreSlugify_Name($login);
 		$RESPONSE['name'] = $name;
 	}
-	
+
 	// If an e-mail login attempt
 	if ( $mail ) {
 		$user = user_GetByMail( $mail );
@@ -321,12 +321,12 @@ function validateUserWithLogin( $login ) {
 	else if ( $name ) {
 		$user = user_GetBySlug( $name );
 	}
-	
+
 	// Bail if no user was found, or if their node is zero (not associated with an account)
 	if ( !isset($user) || !($user['node'] > 0) ) {
 		json_EmitFatalError_Permission(null, $RESPONSE);
 	}
-	
+
 	return $user;
 }
 
@@ -337,17 +337,17 @@ switch ( $action ) {
 	// Create a new user activation
 	case 'create': //user/create
 		json_ValidateHTTPMethod('POST');
-		
+
 		// NOTE: Accounts can be created while logged in. Should we do anything about that?
 
 		$mail = getSanitizedMailFromPost();
 		$RESPONSE['mail'] = $mail;
-		
+
 		/// @todo Add e-mail blacklist checking here
 		/*|| plugin_Call('api_user_create_mail_allowed', $mail)*/
-		
+
 		$ex_user = user_GetByMail($mail);
-		
+
 		// Is the email provided one that already exists?
 		if ( isset($ex_user) ) {
 			if ( !$ex_user['node'] ) {
@@ -370,7 +370,7 @@ switch ( $action ) {
 			if ( $user ) {
 				// Send an e-mail
 				$RESPONSE['sent'] = intval(mailSend_UserAdd($mail, $user['id'], $user['auth_key']));
-				
+
 				// Successfully Created.
 				json_RespondCreated();
 			}
@@ -383,7 +383,7 @@ switch ( $action ) {
 	// Fully activate a user
 	case 'activate': //user/activate
 		json_ValidateHTTPMethod('POST');
-		
+
 		// NOTE: Accounts can be activated while logged in. Should we do anything about that?
 
 		$id = getSanitizedIdFromPost();
@@ -393,7 +393,7 @@ switch ( $action ) {
 		$pw = getSanitizedPwFromPost(true);
 
 		$user = validateUserWithIdKey($id, $key);
-		
+
 		// If Node is already non-zero, bail. Don't double activate!
 		if ( $user['node'] ) {
 			json_EmitFatalError_Server(null, $RESPONSE);
@@ -406,12 +406,12 @@ switch ( $action ) {
 				$RESPONSE['slug'] = userReserved_GetSlugByMail(strtolower($user['mail']));
 				break; // case 'activate': //user/activate
 			}
-			
+
 			// If name is too short
 			if ( strlen($name) < USERNAME_MIN_LENGTH ) {
 				json_EmitFatalError_Permission("Name is too short (minimum ".USERNAME_MIN_LENGTH.")", $RESPONSE);
 			}
-			
+
 			$slug = coreSlugify_Name($name);
 
 			if ( in_array($slug, $SH_NAME_RESERVED) ) {
@@ -422,7 +422,7 @@ switch ( $action ) {
 			if ( strlen($pw) < PASSWORD_MIN_LENGTH ) {
 				json_EmitFatalError_Permission("Password is too short (minimum ".PASSWORD_MIN_LENGTH." characters)", $RESPONSE);
 			}
-				
+
 			// Does that name already exist?
 			if ( node_GetIdByParentSlug(SH_NODE_ID_USERS, $slug) ) {
 				json_EmitFatalError_Server("Sorry. Account \"$slug\" already exists", $RESPONSE);
@@ -436,21 +436,22 @@ switch ( $action ) {
 						json_EmitFatalError_Server("Sorry. \"$slug\" is reserved. Is this you? Try using your original e-mail address", $RESPONSE);
 					}
 				}
-				
+
 				// @TODO wrap these so we can rollback
 				$user_id = userNode_Add(
 					$slug,
 					$name
 				);
-				
+
 				if ( $user_id ) {
 					// @TODO wrap these so we can rollback
-					
-					node_Publish($user_id);
-					
+
 					if ( !node_SetAuthor($user_id, $user_id) ) {
 						json_EmitFatalError_Server("Unable to set author", $RESPONSE);
 					}
+
+					node_Publish($user_id);
+
 					if ( !user_SetNode($id, $user_id) ) {
 						json_EmitFatalError_Server("Unable to set node", $RESPONSE);
 					}
@@ -460,10 +461,10 @@ switch ( $action ) {
 					if ( !user_AuthKeyClear($id) ) {
 						json_EmitFatalError_Server("Unable to clear key", $RESPONSE);
 					}
-					
+
 					// Send an e-mail
 					$RESPONSE['sent'] = intval(mailSend_UserCreate($user['mail'], $slug));
-					
+
 					// Successfully Created.
 					json_RespondCreated();
 				}
@@ -476,7 +477,7 @@ switch ( $action ) {
 
 	case 'password': //user/password
 		json_ValidateHTTPMethod('POST');
-		
+
 		// NOTE: Passwords can be reset while logged in? Is that weird?
 
 		$id = getSanitizedIdFromPost();
@@ -488,12 +489,12 @@ switch ( $action ) {
 
 		if ( $user['node'] ) {
 			$node = nodeComplete_GetById($user['node']);
-			
+
 			// In the unlikely situation where there is no node associated with a user
 			if ( !$node && !isset($node['id']) && !isset($node['slug']) ) {
 				json_EmitFatalError_Server(null, $RESPONSE);
 			}
-			
+
 			// If no password specified, that's okay
 			if ( !strlen($pw) ) {
 				$RESPONSE['node'] = $node['id'];
@@ -504,7 +505,7 @@ switch ( $action ) {
 			if ( strlen($pw) < PASSWORD_MIN_LENGTH ) {
 				json_EmitFatalError_Permission("Password is too short (minimum ".PASSWORD_MIN_LENGTH." characters)", $RESPONSE);
 			}
-			
+
 			// OKAY! LETS DO IT!
 
 			// Set the hash to the new password
@@ -514,10 +515,10 @@ switch ( $action ) {
 			if ( !user_AuthKeyClear($id) ) {
 				json_EmitFatalError_Server("Unable to clear key", $RESPONSE);
 			}
-			
+
 			// Send an e-mail
 			//$RESPONSE['sent'] = intval(mailSend_UserPasswordReset($user['mail'], $node['slug'], $id, $key));
-			
+
 			// Need to do something to inform the user the password was successfully reset
 			$RESPONSE['sent'] = 1;
 		}
@@ -528,24 +529,24 @@ switch ( $action ) {
 
 	case 'login': //user/login
 		json_ValidateHTTPMethod('POST');
-		
+
 		// NOTE: You can login while logged in. Weird huh.
 
 		$login = getSanitizedLoginFromPost();
 		$pw = getSanitizedPwFromPost();
 		$secret = null;
-	
+
 		// TODO: Secret
 		if ( isset($_POST['secret']) ) {
 			$secret = coreSanitize_String($_POST['secret']);
 		}
 
 		$user = validateUserWithLogin($login);
-		
+
 //		$name = null;
 //		$mail = null;
 //		$user = null;
-//		
+//
 //		// Decode the login as either an e-mail address, or a username
 //		if ( coreValidate_Mail($login) ) {
 //			$mail = coreSanitize_Mail($login);
@@ -555,7 +556,7 @@ switch ( $action ) {
 //			$name = coreSlugify_Name($login);
 //			$RESPONSE['name'] = $name;
 //		}
-//		
+//
 //		// If an e-mail login attempt
 //		if ( $mail ) {
 //			$user = user_GetByMail( $mail );
@@ -564,25 +565,25 @@ switch ( $action ) {
 //		else if ( $name ) {
 //			$user = user_GetBySlug( $name );
 //		}
-//		
+//
 //		// Bail if no user was found, or if their node is zero (not associated with an account)
 //		if ( !isset($user) || !($user['node'] > 0) ) {
 //			json_EmitFatalError_Permission(null, $RESPONSE);
 //		}
-				
+
 		// If hashes match, it's a success, so log the user in
 		if ( isset($user['hash']) && userPassword_Verify($pw, $user['hash']) ) {
 			// Does the user have a secret?
-			
-			
+
+
 			// Success
 			$RESPONSE['id'] = $user['node'];
-			
+
 			userSession_Start();
 			$_SESSION['id'] = $user['node'];
 			$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
 			userSession_End();
-			
+
 			break; // case 'login': //user/login
 		}
 
@@ -591,23 +592,23 @@ switch ( $action ) {
 		break; // case 'login': //user/login
 
 	case 'logout': //user/logout
-		json_ValidateHTTPMethod('GET');
-		
+		//json_ValidateHTTPMethod('GET');
+
 		$RESPONSE['id'] = userAuth_Logout();
 		break; // case 'logout': //user/logout
 
 	case 'reset': //user/reset
 		json_ValidateHTTPMethod('POST');
-		
+
 		// NOTE: You can reset password while logged in.
 
 		$login = getSanitizedLoginFromPost();
-		
+
 		$user = validateUserWithLogin($login);
 
 		if ( isset($user) && isset($user['mail']) ) {
 			$node = nodeComplete_GetById($user['node']);
-			
+
 			if ( isset($node) && isset($node['slug']) ) {
 				$ex_new = user_AuthKeyGen($user['id']);
 
@@ -622,17 +623,17 @@ switch ( $action ) {
 			json_EmitFatalError_Permission(null, $RESPONSE);
 		}
 		break; // case 'reset': //user/reset
-	
+
 	case 'have': //user/have
 		json_ValidateHTTPMethod('POST');
 
 		$mail = strtolower(getSanitizedMailFromPost(true));
 		$name = getSanitizedNameFromPost();
-		
+
 		// TODO: If logged in, get your user, and make the current name valid
-		
+
 		//$user = user_GetByMail($mail);
-		
+
 		$slug = coreSlugify_Name($name);
 
 		// If on the internal reserved list
@@ -640,7 +641,7 @@ switch ( $action ) {
 			$RESPONSE['available'] = false;
 			break; // case 'have': //user/have
 		}
-		
+
 		// If on the user reserved list.
 		$reserved = userReserved_GetMailBySlug($slug);
 		if ( count($reserved) ) {
@@ -649,7 +650,7 @@ switch ( $action ) {
 				break; // case 'have': //user/have
 			}
 		}
-		
+
 		// If user exsts
 		$node = user_GetBySlug($slug);
 		if ( $node ) {
@@ -659,12 +660,12 @@ switch ( $action ) {
 
 		$RESPONSE['available'] = true;
 		break; // case 'have': //user/have
-	
+
 	case 'get': //user/get
 		json_ValidateHTTPMethod('GET');
 
 		$id = userAuth_GetId();
-		
+
 		if ( $id > 0 ) {
 			$node = nodeComplete_GetById($id);
 			if ( count($node) ) {
@@ -681,7 +682,7 @@ switch ( $action ) {
 //		$RESPONSE['server'] = $_SERVER;
 //		$RESPONSE['method'] = $_SERVER['REQUEST_METHOD'];
 //		$RESPONSE['post'] = $_POST;
-//		
+//
 ////
 ////		if ( userAuth_IsAdmin() ) {
 ////			$RESPONSE['global'] = $SH;

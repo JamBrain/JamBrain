@@ -13,6 +13,8 @@ export default class AutoEmbed extends Component {
     switch ( props.link.info.domain ) {
       case "youtube.com":
         return <YoutubeEmbed id={props.link.match} />;
+      case "youtu.be":
+        return <YoutubeEmbed id={props.link.match} />;
       default:
         console.warn("failed to embed link", props.link);
     }

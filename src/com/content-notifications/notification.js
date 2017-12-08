@@ -1,6 +1,41 @@
 import {h, Component}	 				from 'preact/preact';
-
 import NavLink 							from 'com/nav-link/link';
+import SVGIcon 							from 'com/svg-icon/icon';
+
+
+export const isNotificationType = (notification, notificationType) => {
+	return notification.notification
+		.map(e => e.type)
+		.indexOf(notificationType) > -1;
+};
+
+export const isNotificationMention = (notification) => {
+	return isNotificationType(notification, 'mention');
+};
+
+export const isNotificationFeedback = (notification) => {
+	const {node, note} = notification;
+	return node.selfauthored && note && isNotificationType(notification, 'note');
+};
+
+export const isNotificationFriendGame = (notification) => {
+	const {node} = notification;
+	return node.type == 'item' && isNotificationType(notification, 'item');
+};
+
+export const isNotificationFriendPost = (notification) => {
+	const {node} = notification;
+	return node.type !== 'item' && isNotificationType(notification, 'post');
+};
+
+export const isNotificationComment = (notification) => {
+	const {node, note} = notification;
+	return notification.multi || (note && isNotificationType(notification, 'note') && !isNotificationFeedback(notification) && !isNotificationFeedback(notification));
+};
+
+export const isNotificationOther = (notification) => {
+	return !isNotificationType(notification, 'note') && !isNotificationType(notification, 'node') && !isNotificationType(notification, 'item') && !isNotificationType(notification, 'post') && !isNotificationType(notification, 'mention');
+};
 
 export default class NotificationItem extends Component {
 
@@ -57,6 +92,7 @@ export default class NotificationItem extends Component {
 		if ( notification.node.subtype ) {
 			nodeType = notification.node.subtype;
 		}
+		const isMention = isNotificationMention(notification);
 
 		const myAtName = "@" + notification.users.get(caller_id).name;
 		const node = notification.node;
@@ -72,7 +108,13 @@ export default class NotificationItem extends Component {
 			navProps.href += "#/comment-" + notification.earliestNote;
 		}
 
-		if ( notification.multi ) {
+		if (isNotificationOther(notification)) {
+			return (
+				<NavLink {...navProps} >
+				<SVGIcon>quesition</SVGIcon> {NodeAuthor} caused unhandled notification {notification.notification.type} with their {nodeType} "<em>{node.name}</em>"
+				</NavLink>);
+		}
+		else if ( notification.multi ) {
 			const count = notification.notification.length;
 			const authors = [];
 
@@ -81,12 +123,13 @@ export default class NotificationItem extends Component {
 					authors.push(note.author);
 				}
 			});
-
+			let multiIcon = 'bubbles';
 			const friends = this.getSocialStringList(authors, notification.social.friends);
 			let also = 'also ';
 			if ( node.selfauthored ) {
 				NodeAuthor = 'your';
 				also='';
+				multiIcon = 'bubble-empty';
 			}
 
 			if ( friends.count > 0 ) {
@@ -101,7 +144,7 @@ export default class NotificationItem extends Component {
 
 				return (
 					<NavLink {...navProps} >
-					{timePrefix} Your friends {friends.string} {extra} {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+					<SVGIcon>{multiIcon}</SVGIcon> Your friends {friends.string} {extra} {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 					</NavLink>);
 			}
 			else {
@@ -118,14 +161,14 @@ export default class NotificationItem extends Component {
 
 					return (
 						<NavLink {...navProps} >
-						{timePrefix} {following.string} {extra} {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+						<SVGIcon>{multiIcon}</SVGIcon>{timePrefix} {following.string} {extra} {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 						</NavLink>);
 
 				}
 				else {
 					return (
 						<NavLink {...navProps} >
-						{timePrefix} {count} users {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+						<SVGIcon>{multiIcon}</SVGIcon>{timePrefix} {count} users {also} commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 						</NavLink>);
 
 				}
@@ -143,29 +186,29 @@ export default class NotificationItem extends Component {
 
 			if ( !node.selfauthored && !note.selfauthored ) {
 
-				if ( note.mention ) {
+				if ( isMention ) {
 					return (
 						<NavLink {...navProps} >
-						{timePrefix} {NoteAuthor} mentioned you in a comment on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+						<SVGIcon>at</SVGIcon> {timePrefix} {NoteAuthor} mentioned you in a comment on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 						</NavLink>);
 				}
 				else {
 					return (
 						<NavLink {...navProps} >
-						{timePrefix} {NoteAuthor} also commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
+						<SVGIcon>bubble</SVGIcon>{timePrefix} {NoteAuthor} also commented on {NodeAuthor} {nodeType} "<em>{node.name}</em>"
 						</NavLink>);
 				}
 			}
 			else if ( notification.node.selfauthored && !notification.note.selfauthored ) {
 				return (
 					<NavLink {...navProps} >
-					{timePrefix} {NoteAuthor} commented on your {nodeType} "<em>{node.name}</em>"
+					<SVGIcon>bubble-empty</SVGIcon>{timePrefix} {NoteAuthor} commented on your {nodeType} "<em>{node.name}</em>"
 					</NavLink>);
 			}
 			else {
 				return (
 					<NavLink {...navProps} >
-					{timePrefix} You recieved a notification that you posted a comment on {NodeAuthor} {nodeType} "<em>{node.name}</em>" please report to the dev-team that you already knew this.
+					<SVGIcon>question</SVGIcon>{timePrefix} You recieved a notification that you posted a comment on {NodeAuthor} {nodeType} "<em>{node.name}</em>" please report to the dev-team that you already knew this.
 					</NavLink>);
 			}
 		}
@@ -203,16 +246,29 @@ export default class NotificationItem extends Component {
 					posted = "posted a game";
 				}
 
-				if (node.mention) {
+				if (isMention) {
 					return (
 						<NavLink {...navProps} >
-						{timePrefix} {User} mentioned you in their {thing} "<em>{node.name}</em>"
+						<SVGIcon>at</SVGIcon> {timePrefix} {User} mentioned you in their {thing} "<em>{node.name}</em>"
 						</NavLink>);
 				}
 				else {
+					let icon = "info";
+					if (thing == "game") {
+						icon = "gamepad";
+					}
+					else if (thing == "post") {
+						icon = "feed";
+					}
+					else if (thing == "article") {
+						icon = "article";
+					}
+					else {
+						console.log(thing);
+					}
 					return (
 						<NavLink {...navProps} >
-						{timePrefix} {User} {posted} "<em>{node.name}</em>"
+						<SVGIcon>{icon}</SVGIcon> {timePrefix} {User} {posted} "<em>{node.name}</em>"
 						</NavLink>);
 				}
 			}
