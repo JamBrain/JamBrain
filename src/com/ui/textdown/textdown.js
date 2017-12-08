@@ -12,6 +12,8 @@ export default class UITextdown extends Component {
 
 		this.doShow = this.doShow.bind(this);
 		this.doHide = this.doHide.bind(this);
+
+		this.onModify = this.onModify.bind(this);
 	}
 
 	doShow( e ) {
@@ -19,6 +21,12 @@ export default class UITextdown extends Component {
 	}
 	doHide( e ) {
 		this.setState({'show': false});
+	}
+
+	onModify( e ) {
+		if ( this.props.onmodify ) {
+			this.props.onmodify(e);
+		}
 	}
 
 	onClick( index ) {
@@ -42,7 +50,7 @@ export default class UITextdown extends Component {
 			Out.push(this.renderItem(items[idx], idx));
 		}
 
-		return Out;
+		return <div class="-items">{Out}</div>;
 	}
 
 	render( props, state ) {
@@ -84,7 +92,19 @@ export default class UITextdown extends Component {
 //			];
 //		}
 
-		let ShowItems = <div class="-items">{this.renderItems(props.items)}</div>;
+		let ShowItems = null;
+		if ( props.value && props.value.length ) {
+			let Query = props.value.trim().toLowerCase();
+
+			let Items = props.items;
+			Items = Items.filter(word => word && word.name && word.name.indexOf && (word.name.toLowerCase().indexOf(Query) > -1));
+			if ( Items.length ) {
+				ShowItems = this.renderItems(Items);
+			}
+			else {
+				ShowItems = <div class="-items"><div class="-item">No matching tag found</div></div>;
+			}
+		}
 
 		let Classes = cN(
 			'ui-textdown',
