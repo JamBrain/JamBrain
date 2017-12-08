@@ -132,7 +132,8 @@ export default class Renderer {
 	}
 
 	emoji( text ) {
-		let shortname = window.emoji.shortnameToURL(Array.isArray(text) ? text.join('') : text);
+		text = Array.isArray(text) ? text.join('') : text;
+		let shortname = window.emoji.shortnameToURL(text);
 		if ( shortname ) {
 			return <img class="emoji" alt={text} title={':'+text+':'} src={shortname} />;
 		}

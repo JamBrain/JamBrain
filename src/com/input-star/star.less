@@ -1,0 +1,38 @@
+@import 'defs.less';
+
+.input-star {
+	& > * {
+		display: inline-block;
+	}
+
+	& > .-number {
+		margin-left: 0.5em;
+	}
+
+	& > .-delete {
+		color: @COL_NLLLL;
+		margin-left: 0.5em;
+	}
+
+	& > .-stars {
+		display: inline-block;
+		& > * {
+			display: inline-block;
+		}
+
+		color: @COL_ND;
+		& > .-lit {
+			color: @COL_AB;
+		}
+
+		& > .-star {
+		}
+
+		& .-star.-hover:hover ~ .-star.-hover {
+			color: @COL_ND;
+		}
+		&:hover > .-star.-hover {
+			color: @COL_A;
+		}
+	}
+}

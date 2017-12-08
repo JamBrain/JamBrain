@@ -1,7 +1,11 @@
 @import "defs.less";
 
 @BUTTON_BG: @COL_NLLL;
+@BUTTON_BG_1: @COL_NLL;	/* 1+ votes */
+@BUTTON_BG_2: mix(@COL_NLL, @COL_A, 75%);	/* 4+ votes */
+@BUTTON_BG_3: mix(@COL_NLL, @COL_A, 50%);	/* 10+ votes */
 @BUTTON_COL: @COL_N;
+
 @BUTTON_LIT_BG: @COL_A;
 @BUTTON_LIT_COL: @COL_L;
 
@@ -12,6 +16,30 @@
 	padding-left: 1rem;
 	padding-right: 1rem;
 	background: @BUTTON_BG;
+	&.-count-1 {
+		background: @BUTTON_BG_1;
+
+		&:before,
+		&:after {
+			color: @BUTTON_BG_1;
+		}
+	}
+	&.-count-4 {
+		background: @BUTTON_BG_2;
+
+		&:before,
+		&:after {
+			color: @BUTTON_BG_2;
+		}
+	}
+	&.-count-10 {
+		background: @BUTTON_BG_3;
+
+		&:before,
+		&:after {
+			color: @BUTTON_BG_3;
+		}
+	}
 
 	display: flex;
 

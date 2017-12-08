@@ -182,7 +182,7 @@ export function Walk( parent, slugs ) {
 	return Fetch.Get(API_ENDPOINT+'/vx/node/walk/'+parent+'/'+slugs.join('/'), true);
 }
 
-export function GetFeed( id, methods, types, subtypes, subsubtypes, more, limit ) {
+export function GetFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit ) {
 	let args = [];
 
 	args.push(id);
@@ -217,6 +217,15 @@ export function GetFeed( id, methods, types, subtypes, subsubtypes, more, limit 
 	}
 
 	var query = [];
+
+	if ( tags ) {
+		if ( tags.length && tags.join ) {
+			query.push("tags="+tags.join('+'));
+		}
+		else {
+			query.push("tags="+tags);
+		}
+	}
 
 	if ( more ) {
 		query.push("offset="+more);

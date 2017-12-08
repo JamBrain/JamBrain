@@ -36,6 +36,7 @@ export default class ContentTimeline extends Component {
 			props.types ? props.types : ['post'],
 			props.subtypes ? props.subtypes : null,
 			props.subsubtypes ? props.subsubtypes : null,
+			props.tags ? props.tags : null,
 			null,
 			this.props.limit
 		);
@@ -94,9 +95,9 @@ export default class ContentTimeline extends Component {
 
 	}
 
-	getFeed( id, methods, types, subtypes, subsubtypes, more, limit ) {
+	getFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit ) {
 		this.setState({'loaded': false});
-		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, more, limit )
+		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit )
 		.then(r => {
 			this.setState({'loaded': true});
 
@@ -111,40 +112,6 @@ export default class ContentTimeline extends Component {
 		});
 	}
 
-//	getFeed( id, methods, types, subtypes, subsubtypes ) {
-//		$Node.GetFeed( id, methods, types, subtypes, subsubtypes )
-//		.then(r => {
-//			// If the feed is not empty
-//			if ( r.feed && r.feed.length ) {
-//				var keys = r.feed.map(v => v['id']);
-//				$Node.Get( keys )
-//					.then(rr => {
-//						// Make a id mapping object
-//						let nodemap = {};
-//						for ( let idx = 0; idx < rr.node.length; idx++ ) {
-//							nodemap[rr.node[idx].id] = rr.node[idx];
-//						}
-//
-//						// Using the original keys, return an ordered array of nodes
-//						let new_state = {
-//							'feed': keys.map(v => nodemap[v])
-//						};
-//
-//						this.setState(new_state);
-//					})
-//					.catch(err => {
-//						this.setState({ 'error': err });
-//					});
-//			}
-//			else {
-//				this.setState({ 'feed': [] });
-//			}
-//		})
-//		.catch(err => {
-//			this.setState({ 'error': err });
-//		});
-//	}
-
 	fetchMore( offset ) {
 		var props = this.props;
 		var offset = this.state.offset;
@@ -157,6 +124,7 @@ export default class ContentTimeline extends Component {
 			props.types ? props.types : ['post'],
 			props.subtypes ? props.subtypes : null,
 			props.subsubtypes ? props.subsubtypes : null,
+			props.tags ? props.tags : null,
 			offset,
 			this.props.limit ? this.props.limit : 15
 		);

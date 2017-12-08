@@ -13,6 +13,8 @@ import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
+import InputStar						from 'com/input-star/star';
+
 import ContentSimple					from 'com/content-simple/simple';
 
 import $Node							from '../../shrub/js/node/node';
@@ -111,7 +113,7 @@ export default class ContentItem extends Component {
 	}
 
 	onGrade( name, value ) {
-		var Node = this.props.node;
+		let Node = this.props.node;
 
 		return $Grade.Add(Node.id, name, value)
 			.then(r => {
@@ -492,7 +494,7 @@ export default class ContentItem extends Component {
 						{SimpleLines}
 						{AdvancedLines}
 					</div>
-					<div class="-footer">Metrics update rougly every <strong>15 minutes</strong>. If they don't exactly match other data (i.e. ratings), this is because they haven't updated yet. Metrics with a <strong>*</strong> are dynamic, and change based on a variety of factors. It is normal for these numbers to go up and down.</div>
+					<div class="-footer">Metrics update roughly every <strong>15 minutes</strong>. If they don't exactly match other data (i.e. ratings), this is because they haven't updated yet. Metrics with a <strong>*</strong> are dynamic, and change based on a variety of factors. It is normal for these numbers to go up and down.</div>
 				</ContentCommonBody>
 			);
 		}
@@ -566,16 +568,25 @@ export default class ContentItem extends Component {
 						Score = state.grade[Line.key] ? state.grade[Line.key] : 0;
 					}
 
-					let Stars = [];
-					for ( let idx2 = 0; idx2 < Score; idx2++ ) {
-						Stars.push(<ButtonBase class="-star" onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
-					}
-					for ( let idx2 = Score; idx2 < 5; idx2++ ) {
-						Stars.push(<ButtonBase class="-star" onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
-					}
-					Stars.push(<ButtonBase class="-delete" onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
+//					let Stars = [];
+//					for ( let idx2 = 0; idx2 < Score; idx2++ ) {
+//						Stars.push(<ButtonBase class="-star" onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
+//					}
+//					for ( let idx2 = Score; idx2 < 5; idx2++ ) {
+//						Stars.push(<ButtonBase class="-star" onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
+//					}
+//					Stars.push(<ButtonBase class="-delete" onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
 
-					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> {Stars}</div>);
+//					Stars.push(<InputStar value='2.5' max='5' small number />);
+//					Stars.push(<InputStar value='2.5' max='5' number />);
+//					Stars.push(<InputStar value={Score} onclick={this.onGrade.bind(this, Line.key)} ondelete={this.onGrade.bind(this, Line.key, 0)} edit delete number />);
+
+					VoteLines.push(
+						<div class="-grade">
+							<span class="-title">{Title}:</span>
+							<InputStar value={Score} onclick={this.onGrade.bind(this, Line.key)} ondelete={this.onGrade.bind(this, Line.key, 0)} edit delete number />
+						</div>
+					);
 				}
 
 				let ShowRatingSubText = null;

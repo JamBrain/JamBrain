@@ -61,7 +61,7 @@ export default class GamesFilter extends Component {
         //this.setState({allowShowFilters: true});
     }
 
-    render ( props, {allowShowFilters} ) {
+    render( props, {allowShowFilters} ) {
         const {node} = props;
         const {Path, Filter, SubFilter, SubSubFilter} = props;
         const {showFeatured, showEvent, showVotingCategory, showRatingSort, showRatingSortDesc} = props;
