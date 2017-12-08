@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 				from 'preact/preact';
 
 import ButtonBase						from '../button-base/base';
 
@@ -8,6 +8,7 @@ import ContentMore						from 'com/content-more/more';
 
 import NotificationsBase				from 'com/content-notifications/base';
 import Notification						from 'com/content-notifications/notification';
+import NotificationsFilter				from 'com/content-notifications/filter';
 
 import $Notification					from 'shrub/js/notification/notification';
 
@@ -18,15 +19,18 @@ export default class NotificationsFeed extends NotificationsBase {
 		super(props);
 
 		this.state = {
-			errorStatus: 0,
-			maxReadId: 0,
-			offset: 0,
-			limit: 30,
-			count: 0,
-			notifications: null,
-			notificationIds: [],
-			status: null,
-			highestRead: -1,
+			'errorStatus': 0,
+			'maxReadId': 0,
+			'offset': 0,
+			'limit': 30,
+			'count': 0,
+			'notifications': null,
+			'notificationIds': [],
+			'status': null,
+			'highestRead': -1,
+			'filters': {
+				'comment': false,
+			},
 		};
 		this.fetchMore = this.fetchMore.bind(this);
 	}
@@ -38,7 +42,7 @@ export default class NotificationsFeed extends NotificationsBase {
 				this.processNotificationFeed(r);
 			}
 			else {
-				this.setState({errorStatus:r.status});
+				this.setState({'errorStatus': r.status});
 			}
 		});
 
@@ -49,10 +53,10 @@ export default class NotificationsFeed extends NotificationsBase {
 		$Notification.GetFeedAll(offset, this.state.limit ).then((r) => {
 			if (r.status == 200) {
 				this.processNotificationFeed(r);
-				this.setState({offset:offset});
+				this.setState({'offset': offset});
 			}
 			else {
-				this.setState({errorStatus:r.status});
+				this.setState({'errorStatus': r.status});
 			}
 		});
 	}
@@ -61,22 +65,25 @@ export default class NotificationsFeed extends NotificationsBase {
 		const maxReadId = state.highestRead;
 		const processing = state.status === null || this.isLoading();
 		const hasMore = !processing && ((state.offset + this.state.limit) < state.count);
-		//console.log(processing, state.offset, state.feedSize, state.count);
 		const hasUnread = this.getHighestNotificationInFeed() > maxReadId;
 		let ShowNotifications = [];
 		const caller_id = state.caller_id;
 		const notifications = state.notifications;
 		const notificationsOrder = this.getNotificationsOrder();
+		const notificationsArray = [];
 		notificationsOrder.forEach((identifier) => {
 			let notification = notifications.get(identifier);
-			ShowNotifications.push((
-				<Notification
-					caller_id={caller_id}
-					notification={notification}
-					class={cN("-item -notification",(notification.notification[0].id>maxReadId)?'-new-comment':'')}
-					id={'notification-' + identifier}
-				/>
-			));
+			notificationsArray.push(notification);
+			if (this.shouldShowNotification(notification)) {
+				ShowNotifications.push((
+					<Notification
+						caller_id={caller_id}
+						notification={notification}
+						class={cN("-item -notification", (notification.notification[0].id>maxReadId)?'-new-comment':'')}
+						id={'notification-' + identifier}
+					/>
+				));
+			}
 		});
 
 		if ( ShowNotifications.length == 0 ) {
@@ -91,7 +98,11 @@ export default class NotificationsFeed extends NotificationsBase {
 			<ButtonBase
 				class="-button -light focusable"
 				id="button-mark-read"
-				onclick={(e) => {this.markReadHighest();}}>
+				onclick={
+					(e) => {
+						this.markReadHighest();
+					}
+				}>
 				Mark all notifications as read
 			</ButtonBase>) : null;
 
@@ -101,6 +112,7 @@ export default class NotificationsFeed extends NotificationsBase {
 
 		const view = (
 			<div class="-notifications">
+				<NotificationsFilter handleFilterChange={this.handleFilterChange} filters={state.filters} notifications={notificationsArray}/>
 				{ShowSetAllRead}
 				{ShowError}
 				{ShowNotifications}

@@ -1,6 +1,13 @@
 import {h, Component} 					from 'preact/preact';
 
-import Notification						from 'com/content-notifications/notification';
+import Notification, {
+	isNotificationComment,
+	isNotificationFeedback,
+	isNotificationFriendGame,
+	isNotificationFriendPost,
+	isNotificationMention,
+	isNotificationOther
+}						from 'com/content-notifications/notification';
 
 import $Node							from '../../shrub/js/node/node';
 import $Note							from '../../shrub/js/note/note';
@@ -19,7 +26,11 @@ export default class NotificationsBase extends Component {
 			"feed": [],
 			"loading": true,
 			"highestRead": -1,
+			"filters": {
+				'comments': false,
+			},
 		};
+		this.handleFilterChange = this.handleFilterChange.bind(this);
 	}
 
 
@@ -328,4 +339,29 @@ export default class NotificationsBase extends Component {
 		return Notifications;
 	}
 
+	shouldShowNotification(notification) {
+		const {mention, friendGame, friendPost, feedback, comment, other} = this.state.filters;
+		if (feedback !== false && isNotificationFeedback(notification)) {
+			return true;
+		}
+		else if (mention !== false && isNotificationMention(notification)) {
+			return true;
+		}
+		else if (friendGame !== false && isNotificationFriendGame(notification)) {
+			return true;
+		}
+		else if (friendPost !== false && isNotificationFriendPost(notification)) {
+			return true;
+		}
+		else if (comment !== false && isNotificationComment(notification)) {
+			return true;
+		}
+		return other !== false && isNotificationOther(notification);
+	}
+
+	handleFilterChange(filterType, otherStuff) {
+		let oldFilter = Object.assign({}, this.state.filters);
+		oldFilter[filterType] = oldFilter[filterType] === undefined ? false : !oldFilter[filterType];
+		this.setState({'filters': oldFilter});
+	}
 }
