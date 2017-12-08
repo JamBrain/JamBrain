@@ -1,6 +1,6 @@
 import {h, render} from 'preact/preact';
 
-import DialogPromise from "com/dialog-promise/promise";
+import DialogPromise from "com/dialog/promise/promise";
 
 export default class Dialog {
   static popup(title, body, props) {
@@ -8,7 +8,7 @@ export default class Dialog {
       props = {};
     }
 
-    var defaults = {
+    let defaults = {
       title: title,
       ok: true,
     };
@@ -17,7 +17,7 @@ export default class Dialog {
       body = <div>{body}</div>;
     }
 
-    props = Object.assign(defaults, props);
+    props = Object.assign({}, defaults, props);
 
     return new Promise(function(resolve, reject) {
       try {
@@ -35,12 +35,12 @@ export default class Dialog {
       props = {};
     }
 
-    var defaults = {
+    let defaults = {
       ok: true,
       cancel: true
     };
 
-    props = Object.assign(defaults, props);
+    props = Object.assign({}, defaults, props);
 
     return this.popup(title, body, props);
   }
