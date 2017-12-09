@@ -19,6 +19,8 @@ export default class ItemFilter extends Component {
 		};
 
 		this.onTagClick = this.onTagClick.bind(this);
+		this.onTagAdd = this.onTagAdd.bind(this);
+
 		this.onModifyQuery = this.onModifyQuery.bind(this);
 	}
 
@@ -35,6 +37,22 @@ export default class ItemFilter extends Component {
 		let mytags = this.state.mytags.slice();		// copy
 		mytags.splice(index, 1);					// remove
 		this.setState({'mytags': mytags});
+	}
+	onTagAdd( item ) {
+		// Only allow add if we have an item
+		if ( item ) {
+			let mytags = this.state.mytags;
+
+			for ( let idx = 0; idx < mytags.length; idx++ ) {
+				if ( item.id == mytags[idx].id ) {
+					this.setState({query: ''});		// do nothing, except reset the query
+					return;
+				}
+			}
+
+			mytags.push(item);
+			this.setState({'mytags': mytags, query: ''});
+		}
 	}
 
 	onModifyQuery( e ) {
@@ -57,7 +75,7 @@ export default class ItemFilter extends Component {
 				<div class="-body -flex">
 					<div class="-query">
 						<div class="-title">Platform/Tag:</div>
-						<UITextdown onmodify={this.onModifyQuery} maxlength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
+						<UITextdown onmodify={this.onModifyQuery} onselect={this.onTagAdd} maxlength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
 					</div>
 					<div class="-event">
 						<div class="-title">Event:</div>

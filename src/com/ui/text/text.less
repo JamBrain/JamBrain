@@ -12,6 +12,11 @@
 		border: 1px solid @COL_NLLL;
 		padding: 0.25em;
 
+		&::placeholder {
+			color: @COL_NLLL;
+			opacity: 1;			/* because suposedly some browsers use a non zero opacity */
+		}
+
 		&:focus {
 			background: @COL_W;
 		}

@@ -8,18 +8,48 @@ export default class UITextdown extends Component {
 
 		this.state = {
 			'show': false,
+
+			// Cache. Not necessary but saves us from redoing work
+			'items': null,
+			'query': null,
 		};
 
 		this.doShow = this.doShow.bind(this);
 		this.doHide = this.doHide.bind(this);
 
 		this.onModify = this.onModify.bind(this);
+		this.onSelect = this.onSelect.bind(this);
+	}
+
+	componentDidMount() {
+		this.updateFilter();
+	}
+	componentWillReceiveProps( nextProps, nextState ) {
+		this.updateFilter(this.getQuery(nextProps.value));
+	}
+
+	/// Expects str to be trimmed and lower case
+	filterItems( str ) {
+		return this.props.items.filter(word => word && word.name && word.name.indexOf && (word.name.toLowerCase().indexOf(str) > -1));
+	}
+	getQuery( value = this.props.value ) {
+		if ( value && value.length )
+			return value.trim().toLowerCase();
+		return '';
+	}
+	updateFilter( Query = this.getQuery() ) {
+		this.setState({
+			'items': this.filterItems(Query),
+			'query': Query,
+		});
 	}
 
 	doShow( e ) {
+		//console.log('show');
 		this.setState({'show': true});
 	}
 	doHide( e ) {
+		//console.log('hide');
 		this.setState({'show': false});
 	}
 
@@ -28,15 +58,23 @@ export default class UITextdown extends Component {
 			this.props.onmodify(e);
 		}
 	}
+	onSelect( e ) {
+		if ( this.props.onselect && this.state.query ) {
+			let item = (this.state.items && this.state.items.length) ? this.state.items[0] : null;
+			this.props.onselect(item);
+		}
+	}
 
-	onClick( index ) {
-		console.log(index);
+	onClickItem( item ) {
+		if ( this.props.onselect ) {
+			this.props.onselect(item);
+		}
 	}
 
 	renderItem( item, index ) {
 		if ( item && item.name ) {
 			return (
-				<UIButton class="-item" title={item.id+' - '+item.slug} onclick={this.onClick.bind(this, index)}>
+				<UIButton class="-item" title={item.id+' - '+item.slug} onclick={this.onClickItem.bind(this, item)}>
 					{item.name}
 				</UIButton>
 			);
@@ -54,58 +92,6 @@ export default class UITextdown extends Component {
 	}
 
 	render( props, state ) {
-//		let Button = props.children.slice(0, 1);
-//
-//		let ShowContent = null;
-//		if ( state.show ) {
-//			let that = this;
-//			let Children = props.children.slice(1);
-//
-//			let Content = [];
-//			for ( let idx = 0; idx < Children.length; idx++ ) {
-//				if ( Children[idx].attributes.onclick ) {
-//					let OldClick = Children[idx].attributes.onclick;
-//					Content.push(cloneElement(Children[idx], {
-//						'onclick': function(e) {
-//							that.doHide();
-//							OldClick();
-//						}
-//					}));
-//				}
-//				else if ( Children[idx].attributes.href ) {
-//					Content.push(cloneElement(Children[idx], {
-//						'onclick': function(e) {
-//							that.doHide();
-//						}
-//					}));
-//				}
-//				else {
-//					Content.push(cloneElement(Children[idx]));
-//				}
-//			}
-//
-//			ShowContent = [
-//				<div class="-content">
-//					{Content}
-//				</div>,
-//				<div class="-click-catcher" onclick={this.doHide} />
-//			];
-//		}
-
-		let ShowItems = null;
-		if ( props.value && props.value.length ) {
-			let Query = props.value.trim().toLowerCase();
-
-			let Items = props.items;
-			Items = Items.filter(word => word && word.name && word.name.indexOf && (word.name.toLowerCase().indexOf(Query) > -1));
-			if ( Items.length ) {
-				ShowItems = this.renderItems(Items);
-			}
-			else {
-				ShowItems = <div class="-items"><div class="-item">No matching tag found</div></div>;
-			}
-		}
-
 		let Classes = cN(
 			'ui-textdown',
 			props.class,
@@ -113,10 +99,18 @@ export default class UITextdown extends Component {
 			props.right ? '-right' : null
 		);
 
-		return (
-			<div class={Classes} ref={(input) => { this.ref = input; }}>
-				<UIText class="-text" onmodify={this.onModify} maxlength={props.maxlength} value={props.value} placeholder={props.placeholder} />
+		let ShowItems = null;
+		if ( state.items && state.query && state.show ) {
+			if ( state.items.length )
+				ShowItems = this.renderItems(state.items);
+			else
+				ShowItems = <div class="-items" tabindex="-1"><div class="-item -fail">No match found</div></div>;
+		}
 
+		// NOTE: a tabindex is required to us focusin and focusout
+		return (
+			<div class={Classes} tabindex="-1" onfocusin={this.doShow} onfocusout={this.doHide} ref={(input) => { this.ref = input; }}>
+				<UIText class="-text" value={props.value} placeholder={props.placeholder} onmodify={this.onModify} onselect={this.onSelect} maxlength={props.maxlength} showlength={false} />
 				{ShowItems}
 			</div>
 		);

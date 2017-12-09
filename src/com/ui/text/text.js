@@ -1,15 +1,11 @@
 import {h, Component}	 				from 'preact/preact';
 
-import UIIcon							from 'com/ui/icon/icon';
-import UILink							from 'com/ui/link/link';
-import UIButton							from 'com/ui/button/button';
-
 export default class UIText extends Component {
 	constructor( props ) {
 		super(props);
 
 		this.onModify = this.onModify.bind(this);
-		this.onClick = this.onClick.bind(this);
+		this.onKey = this.onKey.bind(this);
 	}
 
 //	shouldComponentUpdate( nextProps ) {
@@ -21,21 +17,17 @@ export default class UIText extends Component {
 			this.props.onmodify(e, this.textinput);
 	}
 
-	onClick( e ) {
-		if ( this.props.onclick )
-			this.props.onclick(e);
+	onKey( e ) {
+		if ( (e.keyCode === 13) && this.props.onselect ) {
+			e.preventDefault();
+			this.props.onselect(e);
+		}
 	}
 
 	render( props ) {
 		let ShowLimit = null;
-		if ( props.maxlength )
+		if ( props.maxlength && (props.showlength != false) )
 			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{props.maxlength}</span></div>;
-
-//		let ShowButton = null;
-//		if ( props.onclick ) {
-//			ShowButton = <UIButton onclick={this.onClick}>SEND</UIButton>;
-//		}
-//				{ShowButton}
 
 		return (
 			<div class={cN('ui-text', props.class)}>
@@ -45,6 +37,7 @@ export default class UIText extends Component {
 					maxlength={props.maxlength}
 					type="text"
 					oninput={this.onModify}
+					onkeypress={this.onKey}
 					ref={(input) => { this.textinput = input; }}
 				/>
 				<div class="-footer">

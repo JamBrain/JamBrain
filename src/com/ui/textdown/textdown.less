@@ -1,13 +1,42 @@
 @import "defs.less";
 
 .ui-textdown {
-	& .-items {
+	& > .-items {
 		position: absolute;
-		background: @COL_L;
+		background: @COL_W;
 		box-shadow: 0 0 4px rgba(0,0,0,0.25);
 
 		z-index: 100;
 
-		line-height: 1.5em;
+		line-height: 2em;
+
+		& > .-item {
+			padding: 0 1em;
+
+			&:first-child {
+				background: @COL_CM;
+				color: @COL_L;
+			}
+
+			&.-fail:first-child {
+				background: inherit;
+				color: inherit;
+			}
+		}
+
+		&:hover {
+			& > .-item,
+			& > .-item:first-child {
+				background: inherit;
+				color: inherit;
+
+				/* disabled for now, until firefox works better */
+				/*
+				&:hover {
+					background: @COL_A;
+					color: @COL_W;
+				}*/
+			}
+		}
 	}
 }
