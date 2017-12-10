@@ -55,15 +55,15 @@ export const GetFilters = () => {
 const ShouldShow = (notification, settings) => {
 	switch (notification.type) {
 		case 'note':
-			return settings.Comments;
+			return settings.Comment;
 		case 'mention':
-			return settings.Mentions;
+			return settings.Mention;
 		case 'feedback':
 			return settings.Feedback;
 		case 'item':
-			return settings.FriendsGames;
+			return settings.FriendGame;
 		case 'post':
-			return settings.FriendsPosts;
+			return settings.FriendPost;
 		default:
 			return settings.Other;
 	}
@@ -73,9 +73,9 @@ const FilterResponse = (response) => {
 	const settings = GetFilters();
 	if (response.feed) {
 		response.filtered = [];
-		for (let i=response.feed.length; i>-1; i-=1) {
-			if (!ShouldShow(response.feed[i])) {
-				const item = response.feed.splice(i, 1);
+		for (let i=response.feed.length - 1; i>-1; i-=1) {
+			if (!ShouldShow(response.feed[i], settings)) {
+				const item = response.feed.splice(i, 1)[0];
 				response.filtered.push(item);
 			}
 		}
@@ -100,7 +100,7 @@ export function GetFeedUnread( offset, length ) {
 	return Fetch.Get(API_ENDPOINT+'/vx/notification/unread/feed?offset=' + offset + '&limit=' + length, true);
 }
 
-export const GetUnreadFiltered = (offset, length) => {
+export const GetFeedUnreadFiltered = (offset, length) => {
 	return GetFeedUnread(offset, length).then(r => FilterResponse(r));
 };
 
@@ -108,6 +108,10 @@ export const GetUnreadFiltered = (offset, length) => {
 export function GetFeedAll( offset, length ) {
 	return Fetch.Get(API_ENDPOINT+'/vx/notification/all/feed?offset=' + offset + '&limit=' + length, true);
 }
+
+export const GetFeedAllFiltered = (offset, length) => {
+	return GetFeedAll(offset, length).then(r => FilterResponse(r));
+};
 
 export function SetMarkRead( id ) {
 	return Fetch.Post(API_ENDPOINT+'/vx/notification/markread', {'max_read': id});
@@ -136,5 +140,6 @@ export default {
 	Unsubscribe,
 	SetFilters,
 	GetFilters,
-	GetUnreadFiltered,
+	GetFeedAllFiltered,
+	GetFeedUnreadFiltered,
 };

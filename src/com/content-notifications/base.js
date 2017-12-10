@@ -319,7 +319,7 @@ export default class NotificationsBase extends Component {
 		return this.state.notificationIds;
 	}
 
-	getNotifications() {
+	getNotifications(maxCount) {
 		let Notifications = [];
 		const notifications = this.state.notifications;
 		const notificationsOrder = this.getNotificationsOrder();
@@ -328,7 +328,10 @@ export default class NotificationsBase extends Component {
 
 			notificationsOrder.forEach((id) => {
 				let notification = notifications.get(id);
-				Notifications.push([id, <Notification caller_id={caller_id} notification={notification} />]);
+				if (maxCount > 0 && this.shouldShowNotification(notification)) {
+					Notifications.push([id, <Notification caller_id={caller_id} notification={notification} />]);
+					maxCount -= 1;
+				}
 			});
 
 		}
