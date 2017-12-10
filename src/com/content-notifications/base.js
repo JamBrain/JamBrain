@@ -26,9 +26,6 @@ export default class NotificationsBase extends Component {
 			"feed": [],
 			"loading": true,
 			"highestRead": -1,
-			"filters": {
-				'comments': false,
-			},
 		};
 		this.handleFilterChange = this.handleFilterChange.bind(this);
 	}
@@ -340,28 +337,30 @@ export default class NotificationsBase extends Component {
 	}
 
 	shouldShowNotification(notification) {
-		const {mention, friendGame, friendPost, feedback, comment, other} = this.state.filters;
-		if (feedback !== false && isNotificationFeedback(notification)) {
+		const {Mention, FriendGame, FriendPost, Feedback, Comment, Other} = $Notification.GetFilters();
+		if (Feedback !== false && isNotificationFeedback(notification)) {
 			return true;
 		}
-		else if (mention !== false && isNotificationMention(notification)) {
+		else if (Mention !== false && isNotificationMention(notification)) {
 			return true;
 		}
-		else if (friendGame !== false && isNotificationFriendGame(notification)) {
+		else if (FriendGame !== false && isNotificationFriendGame(notification)) {
 			return true;
 		}
-		else if (friendPost !== false && isNotificationFriendPost(notification)) {
+		else if (FriendPost !== false && isNotificationFriendPost(notification)) {
 			return true;
 		}
-		else if (comment !== false && isNotificationComment(notification)) {
+		else if (Comment !== false && isNotificationComment(notification)) {
 			return true;
 		}
-		return other !== false && isNotificationOther(notification);
+		return Other !== false && isNotificationOther(notification);
 	}
 
 	handleFilterChange(filterType, otherStuff) {
-		let oldFilter = Object.assign({}, this.state.filters);
-		oldFilter[filterType] = oldFilter[filterType] === undefined ? false : !oldFilter[filterType];
-		this.setState({'filters': oldFilter});
+		const myFilter = $Notification.GetFilters();
+		myFilter[filterType] = myFilter[filterType] === undefined ? false : !myFilter[filterType];
+		$Notification.SetFilters(myFilter);
+		this.setState({'filters': isFinite(this.state.filters) ? this.state.filters + 1 : 1});
+		//this.setState({'filters': myFilter});
 	}
 }
