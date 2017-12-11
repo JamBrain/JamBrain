@@ -24,6 +24,7 @@ export default class NotificationsBase extends Component {
 			"count": 0,
 			"status": null,
 			"feed": [],
+			"filtered": null,
 			"loading": true,
 			"highestRead": -1,
 		};
@@ -38,6 +39,7 @@ export default class NotificationsBase extends Component {
 			"count": 0,
 			"status": null,
 			"feed": [],
+			"filtered": null,
 			"loading": true,
 			"highestRead": -1,
 		});
@@ -68,8 +70,21 @@ export default class NotificationsBase extends Component {
 
 	getHighestNotificationInFeed() {
 		const notificationsOrder = this.getNotificationsOrder();
+		const {filtered} = this.state;
+		let highestFiltered = -1;
+		if (filtered) {
+			for (let i=0; i<filtered.length; i+=1) {
+				const nid = filtered[i].id;
+				if (nid > highestFiltered) {
+					highestFiltered = nid;
+				}
+			}
+		}
 		if (notificationsOrder && notificationsOrder.length > 0) {
-			return notificationsOrder[0];
+			return Math.max(notificationsOrder[0], highestFiltered);
+		}
+		else if (highestFiltered > -1) {
+			return highestFiltered;
 		}
 		return null;
 	}
@@ -81,6 +96,7 @@ export default class NotificationsBase extends Component {
 		let highestRead = r.max_read !== undefined ? r.max_read : this.state.highestRead;
 		this.setState({
 			"feed": r.feed,
+			"filtered": r.filtered,
 			"caller_id": caller_id,
 			"status": r.status,
 			"count": r.count,

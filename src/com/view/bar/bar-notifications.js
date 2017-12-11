@@ -42,7 +42,6 @@ export default class DropdownNotification extends NotificationsBase {
 	}
 
 	componentWillRecieveProps(nextProps) {
-		console.log(nextProps.feed);
 		if (this.hasNewNotification(nextProps.feed)) {
 			this.clearNotifications();
 			this.processNotificationFeed(nextProps.feed);
