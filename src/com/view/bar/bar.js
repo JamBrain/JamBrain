@@ -38,7 +38,7 @@ export default class ViewBar extends Component {
 	checkNotificationCount() {
 		const {user} = this.props;
 		const loggedIn = user && (user.id > 0);
-		const fetchCount = 10;
+		const fetchCount = 40;
 
 		if (loggedIn) {
 			let firstCall = !this.StartedNotificationLoop;
@@ -196,22 +196,22 @@ export default class ViewBar extends Component {
 			let NotificationCount = null;
 			const notificationCount = this.state.notifications;
 			if (notificationCount > 0) {
+				/*
 				if (this.state.notificationsMore) {
 					NotificationCount = (<div class="-count">{notificationCount}<sup>+</sup></div>);
 
 				}
-				else {
-					NotificationCount = (<div class="-count">{notificationCount}</div>);
-				}
+				else { */
+				NotificationCount = (<div class="-count">{notificationCount}</div>);
 			}
-			else if (this.state.notificationsMore) {
+			/* else if (this.state.notificationsMore) {
 				if (NotificationCount === null) {
 					NotificationCount = (<div class="-count">+</div>);
 				}
 			}
 			else if (this.state.notificationsHidden) {
 				NotificationCount = (<div class="-count">({this.state.notificationsHidden})</div>);
-			}
+			} */
 
 			if (this.state.showNotifications) {
 				ShowNotifications = (
