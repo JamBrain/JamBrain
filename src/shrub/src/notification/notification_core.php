@@ -167,6 +167,9 @@ function notification_AddForNote( $node, $note, $author, $mentions = [] ) {
 	// Find other authors linked to this node.
 	// Allow the link to be in either direction, Currently website adds author links as <game node>, <user id>
 	$authors = nodeMeta_GetAuthors($node);
+	$authors[] = $author;
+	$authors = array_unique($authors);
+	
 	// Add users that are co-authors notifications
 	$users = array_merge($users, $authors);	
 	
