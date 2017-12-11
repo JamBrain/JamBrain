@@ -1,5 +1,7 @@
 import {h, Component}	 				from 'preact/preact';
 
+import ContentError						from 'com/content-error/error';
+
 import ContentList						from 'com/content-list/list';
 import ContentSimple					from 'com/content-simple/simple';
 import ContentHeadliner					from 'com/content-headliner/headliner';
@@ -24,6 +26,10 @@ export default class ContentUser extends Component {
 	render( props ) {
 		props = Object.assign({}, props);	// Shallow copy we can change props
 		let {node, user, path, extra} = props;
+
+		// HACK! This should not need to be here
+		if ( node.type != 'user' )
+			return <ContentError>User {extra.length ? '"'+extra[0]+'"' : ''} not found</ContentError>;
 
 		let IsHome = false;
 		if ( extra && (extra.length == 0) ) {
