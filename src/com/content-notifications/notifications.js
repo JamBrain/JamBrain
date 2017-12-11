@@ -22,7 +22,7 @@ export default class NotificationsFeed extends NotificationsBase {
 			'errorStatus': 0,
 			'maxReadId': 0,
 			'offset': 0,
-			'limit': 30,
+			'limit': 40,
 			'count': 0,
 			'notifications': null,
 			'notificationIds': [],

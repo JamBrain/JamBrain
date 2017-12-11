@@ -30,6 +30,18 @@ export default class NotificationsBase extends Component {
 		this.handleFilterChange = this.handleFilterChange.bind(this);
 	}
 
+	clearNotifications() {
+		this.setState({
+			"notifications": null,
+			"notificationIds": [],
+			"notificationsTotal": -1,
+			"count": 0,
+			"status": null,
+			"feed": [],
+			"loading": true,
+			"highestRead": -1,
+		});
+	}
 
 	hasUnreadNotifications() {
 		const highestInFeed = this.getHighestNotificationInFeed();

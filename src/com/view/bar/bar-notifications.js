@@ -10,11 +10,43 @@ import $Notification					from 'shrub/js/notification/notification';
 
 export default class DropdownNotification extends NotificationsBase {
 
+	constructor( props ) {
+		super(props);
+
+		this.state = {
+			"notifications": null,
+			"notificationIds": [],
+			"notificationsTotal": -1,
+			"count": 0,
+			"status": null,
+			"feed": [],
+			"loading": true,
+			"highestRead": -1,
+		};
+		this.hide = this.hide.bind(this);
+		this.clearNotifications = this.clearNotifications.bind(this);
+	}
+
 	componentDidMount() {
-		const showCount = 24;
-		$Notification.GetFeedAllFiltered(0, showCount ).then((r) => {
-			this.processNotificationFeed(r);
-		}).catch((e)=> console.log('[Notification error]', e));
+		this.processNotificationFeed(this.props.feed);
+	}
+
+	hasNewNotification(feed) {
+		const {notificationIds} = this.state;
+		for (let i=0; i<feed.length; i++) {
+			if (notificationIds.indexOf(feed[i].id) == -1) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	componentWillRecieveProps(nextProps) {
+		console.log(nextProps.feed);
+		if (this.hasNewNotification(nextProps.feed)) {
+			this.clearNotifications();
+			this.processNotificationFeed(nextProps.feed);
+		}
 	}
 
 	hide() {
@@ -59,10 +91,10 @@ export default class DropdownNotification extends NotificationsBase {
 		}
 
 		if ( !loading && this.hasUnreadNotifications() ) {
-			Notifications.push([-2, (<ButtonLink onclick={ e => { this.clearNotifications(); } } ><em>Mark all as read</em></ButtonLink>)]);
+			Notifications.push([-2, (<ButtonLink onclick={this.clearNotifications} ><em>Mark all as read</em></ButtonLink>)]);
 		}
 
-		Notifications.push([-1, (<ButtonLink onclick={ e => { this.hide(); } } href="/my/notifications"><em>Open notifications feed...</em></ButtonLink>)]);
+		Notifications.push([-1, (<ButtonLink onclick={this.hide} href="/my/notifications"><em>Open notifications feed...</em></ButtonLink>)]);
 
 		return (
 			<Dropdown class="-notifications" items={Notifications} startExpanded={true} hideSelectedField={true} />

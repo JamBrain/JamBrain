@@ -31,8 +31,25 @@ export default class ViewBar extends Component {
 		this.state - {
 			'notifications': 0,
 			'notificationsHidden': 0,
+			'notificationsFeed': {},
 			'notificationsMore': false,
 		};
+
+		this.handleNotificationsClear = this.handleNotificationsClear.bind(this);
+		this.handleNotificationsHide = this.handleNotificationsHide.bind(this);
+	}
+
+	handleNotificationsClear() {
+		this.setState({
+			'notifications': 0,
+			'notificationsHidden': 0,
+			'notificationsFeed': {},
+			'notificationsMore': false,
+		});
+	}
+
+	handleNotificationsHide() {
+		this.setState({'showNotifications': false});
 	}
 
 	checkNotificationCount() {
@@ -52,11 +69,13 @@ export default class ViewBar extends Component {
 			else {
 				$Notification.GetFeedUnreadFiltered(0, fetchCount)
 				.then(r => {
+					console.log(r);
 					if (this.state.notifications != r.count) {
 						this.setState({
 							'notifications': r.count,
 							'notificationsHidden': r.countFiltered,
 							'notificationsMore': r.countFiltered + r.count == fetchCount,
+							'notificationsFeed': r,
 						});
 					}
 					setTimeout(() => this.checkNotificationCount(), 60000);
@@ -216,8 +235,9 @@ export default class ViewBar extends Component {
 			if (this.state.showNotifications) {
 				ShowNotifications = (
 					<BarNotification
-						clearCallback={ () => this.setState({'notifications': 0}) }
-						hideCallback={ () => this.setState({'showNotifications': false}) }
+						feed={this.state.notificationsFeed}
+						clearCallback={this.handleNotificationsClear}
+						hideCallback={this.handleNotificationsHide}
 					/>
 				);
 			}
