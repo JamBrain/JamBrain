@@ -166,13 +166,9 @@ function notification_AddForNote( $node, $note, $author, $mentions = [] ) {
 	
 	// Find other authors linked to this node.
 	// Allow the link to be in either direction, Currently website adds author links as <game node>, <user id>
-	$authorlinks = nodeMeta_GetByKeyNode('author', $node);
-	foreach($authorlinks as $link) {
-		if ( $link['a'] == $node )
-			$users[] = $link['b'];
-		if ( $link['b'] == $node )
-			$users[] = $link['a'];
-	}
+	$authors = nodeMeta_GetAuthors($node);
+	// Add users that are co-authors notifications
+	$users = array_merge($users, $authors);	
 	
 	// Look up what users have expressly opted in and out of notifications for this thread.
 	$subs = notification_GetAllSubscriptionsForNode($node);
@@ -195,6 +191,10 @@ function notification_AddForNote( $node, $note, $author, $mentions = [] ) {
 	$users = array_diff($users, $optout);
 	// Supersede normal notifications with "mention" notifications if the user was at-mentioned
 	$users = array_diff($users, $mentions); 
+	// Supersede feedback with "mention" notifications if the user was at-mentioned
+	$authors = array_diff($authors, $mentions); 
+	// Supersede normal notifications with feedback notifications if the user was a (co)=author
+	$users = array_diff($users, $authors); 
 	
 	$notifications = [];
 	foreach($users as $uid)	{
@@ -208,6 +208,12 @@ function notification_AddForNote( $node, $note, $author, $mentions = [] ) {
 			continue; // Don't bother sending the author of the note a notification for their own note.
 			
 		$notifications[] = ['user' => $uid, 'node' => $node, 'note' => $note, 'type' => SH_NOTIFICATION_MENTION];
+	}	
+	foreach($authors as $uid)	{
+		if ( $uid == $author )
+			continue; // Don't bother sending the author of the note a notification for their own note.
+			
+		$notifications[] = ['user' => $uid, 'node' => $node, 'note' => $note, 'type' => SH_NOTIFICATION_FEEDBACK];
 	}	
 
 	notification_AddMultiple($notifications);	

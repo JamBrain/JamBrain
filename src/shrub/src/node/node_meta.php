@@ -574,3 +574,17 @@ function nodeMeta_AddOrphan( $a, $b, $scope, $key, $value = null ) {
 function nodeMeta_RemoveOrphan( $a, $b, $scope, $key, $value = null ) {
 	return nodeMeta_AddOrphan($a, $b, $scope^-1, $key, $value);
 }
+
+function nodeMeta_GetAuthors( $node_id ) {
+	$authorlinks = nodeMeta_GetByKeyNode('author', $node_id);
+	$authors = [];
+	foreach($authorlinks as $link) {
+		if ( $link['a'] == $node_id ) {
+			$authors[] = $link['b'];
+		}
+		if ( $link['b'] == $node_id ) {
+			$authors[] = $link['a'];
+		}
+	}
+	return $authors;
+}
