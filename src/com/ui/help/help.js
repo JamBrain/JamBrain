@@ -21,7 +21,7 @@ export default class UIHelp extends Component {
 	render( props ) {
 		return (
 			<UIButton class={cN('ui-help', props.class)} onclick={this.onClick}>
-				<UIIcon src="info" />
+				<UIIcon src="question" />
 			</UIButton>
 		);
 	}

@@ -1,6 +1,7 @@
 import {h, Component}					from 'preact/preact';
 
 import UIIcon							from 'com/ui/icon/icon';
+import UIButton							from 'com/ui/button/button';
 import UITagbox							from 'com/ui/tagbox/tagbox';
 import UIText							from 'com/ui/text/text';
 import UIDropdown						from 'com/ui/dropdown/dropdown';
@@ -48,6 +49,8 @@ export default class ItemFilter extends Component {
 //				['alpha', [<UIIcon src="sort-amount-asc" />, <span>Alphabetical</span>]],
 //				['pub', [<UIIcon src="publish" />, <span>Published</span>]],
 			],
+
+			'grid': 4,
 		};
 
 		this.onTagClick = this.onTagClick.bind(this);
@@ -57,6 +60,8 @@ export default class ItemFilter extends Component {
 		this.onModifyEvent = this.onModifyEvent.bind(this);
 		this.onModifyCategory = this.onModifyCategory.bind(this);
 		this.onModifyOrder = this.onModifyOrder.bind(this);
+
+		//this.onModifyGrid = this.onModifyGrid.bind(this);
 	}
 
 	componentDidMount() {
@@ -104,6 +109,11 @@ export default class ItemFilter extends Component {
 
 	onModifyOrder( value, index ) {
 		this.setState({'order': value});
+	}
+
+	onModifyGrid( value, index ) {
+		console.log(value);
+		this.setState({'grid': value});
 	}
 
 	render( props, state ) {
@@ -156,7 +166,7 @@ export default class ItemFilter extends Component {
 				<div class="-header"></div>
 				<div class="-body -flex">
 					<div class="-query">
-						<div class="-title">Platform/Tag:<UIHelp>{HelpSearch}</UIHelp></div>
+						<div class="-title">Platform/Tag filters:<UIHelp>{HelpSearch}</UIHelp></div>
 						<UITextdown onmodify={this.onModifyQuery} onselect={this.onTagAdd} maxlength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
 					</div>
 					<div class="-event">
@@ -173,9 +183,17 @@ export default class ItemFilter extends Component {
 					</div>
 				</div>
 				<div class="-body">
-					<div class="-title">Filters:</div>
+					<div class="-title">Filtering by:</div>
 					{ShowFilters}
-					<UIIcon src="grid" class="-grid-menu" />
+					<UIDropdown class="-grid" value={state.grid} right>
+						<UIIcon src="grid" />
+						<UIButton class="-item if-no-sidebar-block" onclick={this.onModifyGrid.bind(this, 1)}>1 Wide</UIButton>
+						<UIButton class="-item if-no-sidebar-block" onclick={this.onModifyGrid.bind(this, 2)}>2 Wide</UIButton>
+						<UIButton class="-item" onclick={this.onModifyGrid.bind(this, 3)}>3 Wide</UIButton>
+						<UIButton class="-item" onclick={this.onModifyGrid.bind(this, 4)}>4 Wide</UIButton>
+						<UIButton class="-item if-sidebar-block" onclick={this.onModifyGrid.bind(this, 5)}>5 Wide</UIButton>
+						<UIButton class="-item if-sidebar-block" onclick={this.onModifyGrid.bind(this, 6)}>6 Wide</UIButton>
+					</UIDropdown>
 				</div>
 				<div class="-footer">
 				</div>
