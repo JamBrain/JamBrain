@@ -69,7 +69,6 @@ export default class ViewBar extends Component {
 			else {
 				$Notification.GetFeedUnreadFiltered(0, fetchCount)
 				.then(r => {
-					console.log(r);
 					if (this.state.notifications != r.count) {
 						this.setState({
 							'notifications': r.count,
