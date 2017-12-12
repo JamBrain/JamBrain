@@ -38,10 +38,10 @@ export default class DropdownNotification extends NotificationsBase {
 				return true;
 			}
 		}
-		return false;
+		return notificationIds.length != feed.length;
 	}
 
-	componentWillRecieveProps(nextProps) {
+	componentWillReceiveProps(nextProps) {
 		if (this.hasNewNotification(nextProps.feed)) {
 			this.clearNotifications();
 			this.processNotificationFeed(nextProps.feed);
@@ -68,7 +68,7 @@ export default class DropdownNotification extends NotificationsBase {
 		let ShowSpinner = null;
 		let Notifications = [];
 
-		if (state.status === null) {
+		if (state.loading) {
 			ShowSpinner = (<NavSpinner />);
 		}
 		else if (state.status != 200) {
