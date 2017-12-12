@@ -25,6 +25,7 @@ export default class UIDropdownList extends Component {
 			'show': props.show,
 			'right': props.right,
 			'left': props.left,
+			'tick': props.tick ? props.tick : true,		// default is "show the tick"
 		};
 
 		let Value = null;

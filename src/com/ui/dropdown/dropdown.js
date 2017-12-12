@@ -1,5 +1,6 @@
 import {h, Component, cloneElement}		from 'preact/preact';
 import UIButton							from 'com/ui/button/button';
+import UIIcon							from 'com/ui/icon/icon';
 
 export default class UIDropdown extends Component {
 	constructor( props ) {
@@ -68,6 +69,15 @@ export default class UIDropdown extends Component {
 			];
 		}
 
+		// The little tick symbol along the right side
+		let ShowTick = null;
+		if ( props.tick ) {
+			if ( ShowContent )
+				ShowTick = <UIIcon src="tick-up" class="-tick" />;
+			else
+				ShowTick = <UIIcon src="tick-down" class="-tick" />;
+		}
+
 		let Classes = cN(
 			'ui-dropdown',
 			props.class,
@@ -78,7 +88,7 @@ export default class UIDropdown extends Component {
 
 		return (
 			<div class={Classes} ref={(input) => { this.dropdown = input; }}>
-				<UIButton class="-button" onclick={this.onButton}>{Button}</UIButton>
+				<UIButton class="-button" onclick={this.onButton}>{ShowTick}{Button}</UIButton>
 				{ShowContent}
 			</div>
 		);

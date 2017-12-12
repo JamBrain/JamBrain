@@ -45,12 +45,18 @@
 			&.-show {
 				& > .-button {
 					background: @COL_W;
+					box-shadow: 0 0 4px rgba(0,0,0,0.25);
 				}
 			}
 
 			& > .-button {
 				line-height: 2em;
 				padding: 0 0.5em;
+
+				&:hover {
+					background: @COL_A;
+					color: @COL_W;
+				}
 			}
 
 			& > .-content {

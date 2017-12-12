@@ -42,9 +42,9 @@ export default class ItemFilter extends Component {
 				['feedback', [<UIIcon src="bubbles" />, <span>Feedback</span>]],
 				['grade', [<UIIcon src="todo" />, <span>Grade</span>]],
 
-				['rel', [<UIIcon src="checkmark" />, <span>Relevence</span>]],
-				['alpha', [<UIIcon src="sort-amount-asc" />, <span>Alphabetical</span>]],
-				['pub', [<UIIcon src="publish" />, <span>Published</span>]],
+//				['rel', [<UIIcon src="checkmark" />, <span>Relevence</span>]],
+//				['alpha', [<UIIcon src="sort-amount-asc" />, <span>Alphabetical</span>]],
+//				['pub', [<UIIcon src="publish" />, <span>Published</span>]],
 			],
 		};
 
