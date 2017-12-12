@@ -19,7 +19,7 @@
 			font-size: 0.75em;
 		}
 
-		& .ui-icon.icon-cog {
+		& .ui-icon.-grid-menu {
 			position: absolute;
 			right: 0;
 			bottom: 0;
@@ -30,12 +30,19 @@
 			display: flex;
 
 			& > div {
-				flex: 1;
+				flex: 3;
 				margin-right: 0.5em;
 
 				&:last-child {
 					margin-right: 0;
 				}
+			}
+
+			& > .-query {
+				flex: 4;
+			}
+			& > .-event {
+				flex: 4;
 			}
 		}
 

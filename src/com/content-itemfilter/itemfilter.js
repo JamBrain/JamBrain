@@ -124,21 +124,21 @@ export default class ItemFilter extends Component {
 					</div>
 					<div class="-event">
 						<div class="-title">Event:</div>
-						<UIDropdownList onmodify={this.onModifyEvent} value={state.event} items={state.events} />
+						<UIDropdownList onmodify={this.onModifyEvent} value={state.event} items={state.events} right />
 					</div>
 					<div class="-category">
 						<div class="-title">Category:</div>
-						<UIDropdownList onmodify={this.onModifyCategory} value={state.category} items={state.categories} />
+						<UIDropdownList onmodify={this.onModifyCategory} value={state.category} items={state.categories} right />
 					</div>
 					<div class="-order">
 						<div class="-title">Order by:</div>
-						<UIDropdownList onmodify={this.onModifyOrder} value={state.order} items={state.orders} />
+						<UIDropdownList onmodify={this.onModifyOrder} value={state.order} items={state.orders} right />
 					</div>
 				</div>
 				<div class="-body">
 					<div class="-title">Filters:</div>
 					{ShowFilters}
-					<UIIcon>cog</UIIcon>
+					<UIIcon src="grid" class="-grid-menu" />
 				</div>
 				<div class="-footer">
 				</div>
