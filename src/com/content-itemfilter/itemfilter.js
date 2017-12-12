@@ -1,8 +1,10 @@
 import {h, Component}					from 'preact/preact';
+
 import UIIcon							from 'com/ui/icon/icon';
 import UITagbox							from 'com/ui/tagbox/tagbox';
 import UIText							from 'com/ui/text/text';
 import UIDropdown						from 'com/ui/dropdown/dropdown';
+import UIDropdownList					from 'com/ui/dropdown/dropdown-list';
 import UITextdown						from 'com/ui/textdown/textdown';
 
 import $Tag								from 'shrub/js/tag/tag';
@@ -16,12 +18,43 @@ export default class ItemFilter extends Component {
 			'tags': null,
 			'randomtag': null,
 			'mytags': [],
+
+			'event': 'featured',
+			'events': [
+				['featured', "Featured Event"],
+				['all', "All Events"],
+			],
+
+			'category': 'all',
+			'categories': [
+				['all', "All"],
+				['jam', "Jam"],
+				['compo', "Compo"],
+				['unfinished', "Unfinished"],
+			],
+
+			'order': 'smart',
+			'orders': [
+				['smart', "Smart"],
+				['classic', "Classic"],
+				['danger', "Danger"],
+				['zero', "Zero"],
+				['feedback', "Feedback"],
+				['grade', "Grade"],
+
+				['rel', "Relevence"],
+				['alpha', "Alphabetical"],
+				['pub', "Published"],
+			],
 		};
 
 		this.onTagClick = this.onTagClick.bind(this);
 		this.onTagAdd = this.onTagAdd.bind(this);
 
 		this.onModifyQuery = this.onModifyQuery.bind(this);
+		this.onModifyEvent = this.onModifyEvent.bind(this);
+		this.onModifyCategory = this.onModifyCategory.bind(this);
+		this.onModifyOrder = this.onModifyOrder.bind(this);
 	}
 
 	componentDidMount() {
@@ -45,18 +78,30 @@ export default class ItemFilter extends Component {
 
 			for ( let idx = 0; idx < mytags.length; idx++ ) {
 				if ( item.id == mytags[idx].id ) {
-					this.setState({query: ''});		// do nothing, except reset the query
+					this.setState({'query': ''});		// do nothing, except reset the query
 					return;
 				}
 			}
 
 			mytags.push(item);
-			this.setState({'mytags': mytags, query: ''});
+			this.setState({'mytags': mytags, 'query': ''});
 		}
 	}
 
 	onModifyQuery( e ) {
 		this.setState({'query': e.target.value});
+	}
+
+	onModifyEvent( value, index ) {
+		this.setState({'event': value});
+	}
+
+	onModifyCategory( value, index ) {
+		this.setState({'category': value});
+	}
+
+	onModifyOrder( value, index ) {
+		this.setState({'order': value});
 	}
 
 	render( props, state ) {
@@ -79,15 +124,15 @@ export default class ItemFilter extends Component {
 					</div>
 					<div class="-event">
 						<div class="-title">Event:</div>
-						<UIDropdown />
+						<UIDropdownList onmodify={this.onModifyEvent} value={state.event} items={state.events} />
 					</div>
 					<div class="-category">
 						<div class="-title">Category:</div>
-						<UIDropdown />
+						<UIDropdownList onmodify={this.onModifyCategory} value={state.category} items={state.categories} />
 					</div>
 					<div class="-order">
 						<div class="-title">Order by:</div>
-						<UIDropdown />
+						<UIDropdownList onmodify={this.onModifyOrder} value={state.order} items={state.orders} />
 					</div>
 				</div>
 				<div class="-body">
