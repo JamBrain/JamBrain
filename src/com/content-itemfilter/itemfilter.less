@@ -8,8 +8,15 @@
 	& > .-footer {
 		overflow: hidden;
 		position: relative;
+	}
 
+	& .ui-help {
+		padding: 0 0.25em;
 
+		&:hover {
+			background: @COL_A;
+			color: @COL_W;
+		}
 	}
 
 	& > .-body {
@@ -17,6 +24,10 @@
 		& > * > .-title {
 			margin: 0.25em 0;
 			font-size: 0.75em;
+
+			& > span {
+				vertical-align: middle;
+			}
 		}
 
 		& .ui-icon.-grid-menu {

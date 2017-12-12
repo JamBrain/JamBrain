@@ -7,6 +7,8 @@ import UIDropdown						from 'com/ui/dropdown/dropdown';
 import UIDropdownList					from 'com/ui/dropdown/dropdown-list';
 import UITextdown						from 'com/ui/textdown/textdown';
 
+import UIHelp							from 'com/ui/help/help';
+
 import $Tag								from 'shrub/js/tag/tag';
 
 export default class ItemFilter extends Component {
@@ -114,24 +116,59 @@ export default class ItemFilter extends Component {
 		else
 			ShowFilters = <div>None</div>;
 
+		const HelpSearch = [
+			<p>
+				Start typing potential platform names, genres, or other details, and a list of choices will appear below.
+				Push <strong>ENTER</strong> to add the highlighted item the filters below.
+			</p>,
+		];
+
+		const HelpEvent = [
+			<p>
+				<strong>Featured Event:</strong> The currently active event that is going on right now.
+			</p>,
+			<p>
+				<strong>All Events:</strong> The currently active event that is going on right now.
+			</p>,
+		];
+
+		const HelpCategory = [
+			<p>
+				<strong>Fooo Event:</strong> The currently active event that is going on right now.
+			</p>,
+			<p>
+				<strong>All Events:</strong> The currently active event that is going on right now.
+			</p>,
+		];
+
+		const HelpOrder = [
+			<p>
+				<strong>Feee Event:</strong> The currently active event that is going on right now.
+			</p>,
+			<p>
+				<strong>All Events:</strong> The currently active event that is going on right now.
+			</p>,
+		];
+
+
 		return (
 			<div class="content-base content-common content-itemfilter">
 				<div class="-header"></div>
 				<div class="-body -flex">
 					<div class="-query">
-						<div class="-title">Platform/Tag:</div>
+						<div class="-title">Platform/Tag:<UIHelp>{HelpSearch}</UIHelp></div>
 						<UITextdown onmodify={this.onModifyQuery} onselect={this.onTagAdd} maxlength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
 					</div>
 					<div class="-event">
-						<div class="-title">Event:</div>
+						<div class="-title"><span>Event:</span><UIHelp>{HelpEvent}</UIHelp></div>
 						<UIDropdownList onmodify={this.onModifyEvent} value={state.event} items={state.events} right />
 					</div>
 					<div class="-category">
-						<div class="-title">Category:</div>
+						<div class="-title">Category:<UIHelp>{HelpCategory}</UIHelp></div>
 						<UIDropdownList onmodify={this.onModifyCategory} value={state.category} items={state.categories} right />
 					</div>
 					<div class="-order">
-						<div class="-title">Order by:</div>
+						<div class="-title">Order by:<UIHelp>{HelpOrder}</UIHelp></div>
 						<UIDropdownList onmodify={this.onModifyOrder} value={state.order} items={state.orders} right />
 					</div>
 				</div>
