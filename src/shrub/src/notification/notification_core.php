@@ -156,24 +156,7 @@ function notification_AddForPublishedNode( $node, $author, $type, $mentions = []
 	}
 }
 
-function notification_AddForNote( $node_id, $note, $author, $mentions = [] ) {
-	// Look up the users who participated in this thread and send them notifications, except for the author.
-	$users = note_InterestedUsers($node_id);
-	$nodeauthor = node_GetAuthor($node_id);
-	if ( $nodeauthor ) {
-		$users[] = $nodeauthor;
-	}
-	
-	// Find other authors linked to this node.
-	// Allow the link to be in either direction, Currently website adds author links as <game node>, <user id>
-	$authors = nodeMeta_GetAuthors($node_id);
-	$authors[] = $nodeauthor;
-	$authors = array_unique($authors);
-	
-	// Add users that are co-authors notifications
-	$users = array_merge($users, $authors);	
-	
-	// Look up what users have expressly opted in and out of notifications for this thread.
+function notification_GetSubscribers( $node_id ) {
 	$subs = notification_GetAllSubscriptionsForNode($node_id);
 	$optin = [];
 	$optout = [];
@@ -185,35 +168,57 @@ function notification_AddForNote( $node_id, $note, $author, $mentions = [] ) {
 			$optout[] = $sub['user'];
 		}
 	}
+	return ['optin' => $optin, 'optout' => $optout];
+}
+
+function notification_AddForNote( $node_id, $note, $author, $mentions = [] ) {
+	// Look up the users who participated in this thread and send them notifications, except for the author.
+	$base_notify = note_InterestedUsers($node_id);
+	$nodeauthor = node_GetAuthor($node_id);
+	
+	// Find other authors linked to this node.
+	// Allow the link to be in either direction, Currently website adds author links as <game node>, <user id>
+	// No need to add all authors to users though since they will get feedback type instead of note
+	$feedback_notify = nodeMeta_GetAuthors($node_id);
+	if ($nodeauthor) {
+		$feedback_notify[] = $nodeauthor;
+	}
+	$feedback_notify = array_unique($feedback_notify);
+	
+	// Look up what users have expressly opted in and out of notifications for this thread.
+	$subscriptions = notification_GetSubscribers($node_id);
 	
 	// Add users that are opting in to notifications
-	$users = array_merge($users, $optin);	
+	$base_notify = array_merge($base_notify, $subscriptions['optin']);	
 	// Eliminate duplicate users - don't send duplicate notifications.
-	$users = array_unique($users);
+	$base_notify = array_unique($base_notify);
 	// Remove users that opt-out of notifications
-	$users = array_diff($users, $optout);
+	$base_notify = array_diff($base_notify, $subscriptions['optout']);
 	// Supersede normal notifications with "mention" notifications if the user was at-mentioned
-	$users = array_diff($users, $mentions); 
+	$base_notify = array_diff($base_notify, $mention_notify); 
+	
 	// Supersede feedback with "mention" notifications if the user was at-mentioned
-	$authors = array_diff($authors, $mentions); 
+	$feedback_notify = array_diff($feedback_notify, $mention_notify);
+	// Remove users who have opted out
+	$feedback_notify = array_diff($feedback_notify, $subscriptions['optout']);	
 	// Supersede normal notifications with feedback notifications if the user was a (co)=author
-	$users = array_diff($users, $authors); 
+	$base_notify = array_diff($base_notify, $feedback_notify); 
 	
 	$notifications = [];
-	foreach($users as $uid)	{
+	foreach($base_notify as $uid)	{
 		if ( $uid == $author )
 			continue; // Don't bother sending the author of the note a notification for their own note.
 			
 		$notifications[] = ['user' => $uid, 'node' => $node_id, 'note' => $note, 'type' => SH_NOTIFICATION_NOTE];
 	}
-	foreach($mentions as $uid)	{
+	foreach($mention_notify as $uid)	{
 		if ( $uid == $author )
 			continue; // Don't bother sending the author of the note a notification for their own note.
 			
 		$notifications[] = ['user' => $uid, 'node' => $node_id, 'note' => $note, 'type' => SH_NOTIFICATION_MENTION];
 	}	
-	foreach($authors as $uid)	{
-		if ( $uid == $author )
+	foreach($feedback_notify as $uid)	{
+		if ( $uid == $nodeauthor )
 			continue; // Don't bother sending the author of the note a notification for their own note.
 			
 		$notifications[] = ['user' => $uid, 'node' => $node_id, 'note' => $note, 'type' => SH_NOTIFICATION_FEEDBACK];
