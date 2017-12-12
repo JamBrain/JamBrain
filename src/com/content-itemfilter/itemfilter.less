@@ -40,15 +40,42 @@
 		}
 
 		& .ui-dropdown {
-			background: @COL_W;
+			background: @COL_NLLLL;
 
-			& > * > .-item {
-				background: @COL_W;
+			&.-show {
+				& > .-button {
+					background: @COL_W;
+				}
+			}
+
+			& > .-button {
 				line-height: 2em;
+				padding: 0 0.5em;
+			}
 
-				&:hover {
-					background: @COL_A;
-					color: @COL_W;
+			& > .-content {
+				box-shadow: 0 0 4px rgba(0,0,0,0.25);
+
+				& > .-item {
+					background: @COL_W;
+					line-height: 2em;
+					padding: 0 1rem;
+
+					&:hover {
+						background: @COL_A;
+						color: @COL_W;
+					}
+				}
+			}
+
+			& > .-button > *,
+			& > .-content > .-item {
+				& > .ui-icon {
+					margin-right: 0.5em;
+				}
+
+				& > span {
+					vertical-align: middle;
 				}
 			}
 		}

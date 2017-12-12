@@ -21,30 +21,30 @@ export default class ItemFilter extends Component {
 
 			'event': 'featured',
 			'events': [
-				['featured', "Featured Event"],
-				['all', "All Events"],
+				['featured', [<UIIcon src="tag" />, <span>Featured Event</span>]],
+				['all', [<UIIcon src="tags" />, <span>All Events</span>]],
 			],
 
 			'category': 'all',
 			'categories': [
-				['all', "All"],
-				['jam', "Jam"],
-				['compo', "Compo"],
-				['unfinished', "Unfinished"],
+				['all', [<UIIcon src="gamepad" />, <span>All</span>]],
+				['jam', [<UIIcon src="trophy" />, <span>Jam</span>]],
+				['compo', [<UIIcon src="trophy" />, <span>Compo</span>]],
+				['unfinished', [<UIIcon src="trash" />, <span>Unfinished</span>]],
 			],
 
 			'order': 'smart',
 			'orders': [
-				['smart', "Smart"],
-				['classic', "Classic"],
-				['danger', "Danger"],
-				['zero', "Zero"],
-				['feedback', "Feedback"],
-				['grade', "Grade"],
+				['smart', [<UIIcon src="ticket" />, <span>Smart</span>]],
+				['classic', [<UIIcon src="ticket" />, <span>Classic</span>]],
+				['danger', [<UIIcon src="help" />, <span>Danger</span>]],
+				['zero', [<UIIcon src="gift" />, <span>Zero</span>]],
+				['feedback', [<UIIcon src="bubbles" />, <span>Feedback</span>]],
+				['grade', [<UIIcon src="todo" />, <span>Grade</span>]],
 
-				['rel', "Relevence"],
-				['alpha', "Alphabetical"],
-				['pub', "Published"],
+				['rel', [<UIIcon src="checkmark" />, <span>Relevence</span>]],
+				['alpha', [<UIIcon src="sort-amount-asc" />, <span>Alphabetical</span>]],
+				['pub', [<UIIcon src="publish" />, <span>Published</span>]],
 			],
 		};
 

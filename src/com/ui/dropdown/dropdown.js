@@ -71,6 +71,7 @@ export default class UIDropdown extends Component {
 		let Classes = cN(
 			'ui-dropdown',
 			props.class,
+			ShowContent ? '-show' : null,
 			props.left ? '-left' : null,
 			props.right ? '-right' : null
 		);
