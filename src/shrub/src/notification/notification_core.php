@@ -172,7 +172,7 @@ function notification_GetSubscribers( $node_id ) {
 }
 
 function notification_AddForNote( $node_id, $note, $author, $mentions = [] ) {
-	// Look up the users who participated in this thread and send them notifications, except for the author.
+	// Look up the users who participated in this thread and send them notifications, except for the author.	
 	$base_notify = note_InterestedUsers($node_id);
 	$nodeauthor = node_GetAuthor($node_id);
 	
@@ -195,10 +195,10 @@ function notification_AddForNote( $node_id, $note, $author, $mentions = [] ) {
 	// Remove users that opt-out of notifications
 	$base_notify = array_diff($base_notify, $subscriptions['optout']);
 	// Supersede normal notifications with "mention" notifications if the user was at-mentioned
-	$base_notify = array_diff($base_notify, $mention_notify); 
+	$base_notify = array_diff($base_notify, $mentions);
 	
 	// Supersede feedback with "mention" notifications if the user was at-mentioned
-	$feedback_notify = array_diff($feedback_notify, $mention_notify);
+	$feedback_notify = array_diff($feedback_notify, $mentions);
 	// Remove users who have opted out
 	$feedback_notify = array_diff($feedback_notify, $subscriptions['optout']);	
 	// Supersede normal notifications with feedback notifications if the user was a (co)=author
@@ -211,7 +211,7 @@ function notification_AddForNote( $node_id, $note, $author, $mentions = [] ) {
 			
 		$notifications[] = ['user' => $uid, 'node' => $node_id, 'note' => $note, 'type' => SH_NOTIFICATION_NOTE];
 	}
-	foreach($mention_notify as $uid)	{
+	foreach($mentions as $uid)	{
 		if ( $uid == $author )
 			continue; // Don't bother sending the author of the note a notification for their own note.
 			
