@@ -1,18 +1,20 @@
 import Fetch	 				from '../internal/fetch';
 
-const setNotificationSettingsCookie = (filter, value) => {
-	const d = new Date();
-	//Last for 20 days
-	d.setTime(d.getTime() + (20 * 24 * 60 * 60 * 1000));
-	document.cookie = `notificationsFilter${filter}=${value ? 1 : 0};expires=${d.toUTCString()};path=/`;
+
+const setNotificationSettingsFromStorage = (filter, value) => {
+	const storage = window.localStorage;
+	storage.setItem(`notificationFilter${filter}`, value);
+	console.log('setting', filter, value);
 };
 
-const getNotificationSettingsFromCookie = (filter) => {
-	const decodedCookie = decodeURIComponent(document.cookie);
-	const pattern = new RegExp(` *notificationsFilter${filter}=([^;]*)`);
-	const match = decodedCookie.match(pattern);
-	if (match && match.length == 2) {
-		return Boolean(Number(match[1]));
+const getNotificationSettingsFromStorage = (filter) => {
+	const storage = window.localStorage;
+	const value = storage.getItem(`notificationFilter${filter}`);
+	if (value === 'true') {
+		return true;
+	}
+	else if (value === 'false') {
+		return false;
 	}
 	return undefined;
 };
@@ -31,10 +33,11 @@ const DefaultFilters = {
 };
 
 export const SetFilters = (filterSettings) => {
+	console.log('settings update', filterSettings);
 	for (let i = 0; i<Filters.length; i+=1) {
 		const key = Filters[i];
 		if (filterSettings[key] !== undefined) {
-			setNotificationSettingsCookie(key, filterSettings[key]);
+			setNotificationSettingsFromStorage(key, filterSettings[key]);
 		}
 	}
 };
@@ -43,7 +46,7 @@ export const GetFilters = () => {
 	const filterSettings = {};
 	for (let i = 0; i<Filters.length; i+=1) {
 		const key = Filters[i];
-		let setting = getNotificationSettingsFromCookie(key);
+		let setting = getNotificationSettingsFromStorage(key);
 		if (setting === undefined) {
 			setting = DefaultFilters[key];
 		}
