@@ -12,6 +12,37 @@ import UIHelp							from 'com/ui/help/help';
 
 import $Tag								from 'shrub/js/tag/tag';
 
+
+const HelpItemSearch = [
+	<p>Start typing platform names, genres, and other details. A list of choices will appear below. Push <strong>ENTER</strong> to add the item.</p>,
+];
+
+const HelpItemEvent = [
+	<p><strong>Featured Event:</strong> Items from the currently active event.</p>,
+	<p><strong>All Events:</strong> Items from all events.</p>,
+];
+
+const HelpItemCategory = [
+	<p><strong>Jam:</strong> Things created for the 72 hour <strong>Jam</strong> event.</p>,
+	<p><strong>Compo:</strong> Things created for the 48 hour <strong>Compo</strong> event.</p>,
+	<p><strong>Craft:</strong> Things created for the <strong>Craft</strong> event, or things impractical to rate by normal means.</p>,
+	<p><strong>Unfinished:</strong> Unfinished things from any event.</p>,
+	<p><strong>Warmup:</strong> Things created in preparation for an event.</p>,
+	<p><strong>Release:</strong> Things created after the event, based on something created for the event.</p>,
+];
+
+const HelpItemOrder = [
+	<p><strong>Smart</strong>: This is the modern balancing filter. It balances the list using a combination of votes and the karma given to feedback. You start seeing diminishing returns after 50 ratings, but you can make up for it by leaving quality feedback.</p>,
+	<p><strong>Unbound</strong>: This is a variation of the Smart filter that is unbound. For curiousity.</p>,
+	<p><strong>Classic</strong>: This is the classic balancing filter. It balances the list based on ratings alone. You start seeing diminishing returns after 100 ratings.</p>,
+	<p><strong>Danger</strong>: This is the rescue filter. Everything with less than 20 ratings sorted top to bottom. Items on the first page are typically 1-2 rating away, so help them out!</p>,
+	<p><strong>Zero</strong>: This filter shows the most neglected games. These are often new users that didn't understand you should rate games. Leaving them some feedback is greatly appreciated.</p>,
+	<p><strong>Feedback</strong>: This filter lets you find who is working the hardest, leaving quality feedback for others.</p>,
+	<p><strong>Grade</strong>: This filter lets you find the games that have the most ratings.</p>,
+];
+//'
+
+
 export default class ItemFilter extends Component {
 	constructor( props ) {
 		super(props);
@@ -133,59 +164,24 @@ export default class ItemFilter extends Component {
 		else
 			ShowFilters = <div>None</div>;
 
-		const HelpSearch = [
-			<p>
-				Start typing potential platform names, genres, or other details, and a list of choices will appear below.
-				Push <strong>ENTER</strong> to add the highlighted item the filters below.
-			</p>,
-		];
-
-		const HelpEvent = [
-			<p>
-				<strong>Featured Event:</strong> The currently active event that is going on right now.
-			</p>,
-			<p>
-				<strong>All Events:</strong> The currently active event that is going on right now.
-			</p>,
-		];
-
-		const HelpCategory = [
-			<p>
-				<strong>Fooo Event:</strong> The currently active event that is going on right now.
-			</p>,
-			<p>
-				<strong>All Events:</strong> The currently active event that is going on right now.
-			</p>,
-		];
-
-		const HelpOrder = [
-			<p>
-				<strong>Feee Event:</strong> The currently active event that is going on right now.
-			</p>,
-			<p>
-				<strong>All Events:</strong> The currently active event that is going on right now.
-			</p>,
-		];
-
-
 		return (
 			<div class="content-base content-common content-itemfilter">
 				<div class="-header"></div>
 				<div class="-body -flex">
 					<div class="-query">
-						<div class="-title"><UIHelp>{HelpSearch}</UIHelp>Platform/Tag filters:</div>
+						<div class="-title"><UIHelp>{HelpItemSearch}</UIHelp>Platform/Tag filters:</div>
 						<UITextdown onmodify={this.onModifyQuery} onselect={this.onTagAdd} maxlength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
 					</div>
 					<div class="-event">
-						<div class="-title"><UIHelp>{HelpEvent}</UIHelp><span>Event:</span></div>
+						<div class="-title"><UIHelp>{HelpItemEvent}</UIHelp><span>Event:</span></div>
 						<UIDropdownList onmodify={this.onModifyEvent} value={state.event} items={state.events} right />
 					</div>
 					<div class="-category">
-						<div class="-title"><UIHelp>{HelpCategory}</UIHelp>Category:</div>
+						<div class="-title"><UIHelp>{HelpItemCategory}</UIHelp>Category:</div>
 						<UIDropdownList onmodify={this.onModifyCategory} value={state.category} items={state.categories} right />
 					</div>
 					<div class="-order">
-						<div class="-title"><UIHelp>{HelpOrder}</UIHelp>Order by:</div>
+						<div class="-title"><UIHelp>{HelpItemOrder}</UIHelp>Order by:</div>
 						<UIDropdownList onmodify={this.onModifyOrder} value={state.order} items={state.orders} right />
 					</div>
 				</div>

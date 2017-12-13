@@ -11,14 +11,23 @@
 	}
 
 	& .ui-help {
-		padding: 0.25em;
-		margin: -0.25em 0;
-		color: @COL_NLL;
 		float: right;
 
-		&:hover {
-			background: @COL_A;
+		& > .-button {
+			padding: 0.25em;
+			margin: -0.25em 0;
+			color: @COL_NLL;
+
+			&:hover {
+				background: @COL_A;
+				color: @COL_W;
+			}
+		}
+
+		& > .ui-dialog > .-window {
 			color: @COL_W;
+			padding: 1em;
+			background: @COL_N;
 		}
 	}
 
