@@ -30,7 +30,7 @@ export default class ItemFilter extends Component {
 
 			'category': 'all',
 			'categories': [
-				['all', [<UIIcon src="trophys" />, <span>All</span>]],
+				['all', [<UIIcon src="trophys" />, <span>Jam+Compo</span>]],
 				['jam', [<UIIcon src="trophy" />, <span>Jam</span>]],
 				['compo', [<UIIcon src="trophy" />, <span>Compo</span>]],
 				['unfinished', [<UIIcon src="trash" />, <span>Unfinished</span>]],
@@ -38,8 +38,8 @@ export default class ItemFilter extends Component {
 
 			'order': 'smart',
 			'orders': [
-				['smart', [<UIIcon src="ticket" />, <span>Smart</span>]],
-				['classic', [<UIIcon src="ticket" />, <span>Classic</span>]],
+				['smart', [<UIIcon src="meter" />, <span>Smart</span>]],
+				['classic', [<UIIcon src="meter" />, <span>Classic</span>]],
 				['danger', [<UIIcon src="help" />, <span>Danger</span>]],
 				['zero', [<UIIcon src="no" />, <span>Zero</span>]],
 				['feedback', [<UIIcon src="bubbles" />, <span>Feedback</span>]],
