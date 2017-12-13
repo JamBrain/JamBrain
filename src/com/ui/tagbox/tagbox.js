@@ -1,4 +1,5 @@
 import {h, Component}					from 'preact/preact';
+import UIIcon							from 'com/ui/icon/icon';
 import UIButton							from 'com/ui/button/button';
 
 export default class UITagbox extends Component {
@@ -20,7 +21,12 @@ export default class UITagbox extends Component {
 		if ( tag && tag.name ) {
 			return (
 				<UIButton class="-tag" title={tag.id+' - '+tag.slug} onclick={this.onClick.bind(this, index)}>
-					{tag.name}
+					<div class="-text">{tag.name}</div>
+					<div class="-tail-icon">
+						<UIIcon class="_if-parent-parent-no-hover-inline" src="circle" small />
+						<UIIcon class="_if-parent-parent-hover-inline" src="cross" small />
+					</div>
+					<div class="-tail" />
 				</UIButton>
 			);
 		}
