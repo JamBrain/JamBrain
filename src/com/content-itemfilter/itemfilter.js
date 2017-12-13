@@ -24,13 +24,13 @@ export default class ItemFilter extends Component {
 
 			'event': 'featured',
 			'events': [
-				['featured', [<UIIcon src="tag" />, <span>Featured Event</span>]],
-				['all', [<UIIcon src="tags" />, <span>All Events</span>]],
+				['featured', [<UIIcon src="calendar-event" />, <span>Featured Event</span>]],
+				['all', [<UIIcon src="calendar-wide" />, <span>All Events</span>]],
 			],
 
 			'category': 'all',
 			'categories': [
-				['all', [<UIIcon src="gamepad" />, <span>All</span>]],
+				['all', [<UIIcon src="trophys" />, <span>All</span>]],
 				['jam', [<UIIcon src="trophy" />, <span>Jam</span>]],
 				['compo', [<UIIcon src="trophy" />, <span>Compo</span>]],
 				['unfinished', [<UIIcon src="trash" />, <span>Unfinished</span>]],
@@ -41,7 +41,7 @@ export default class ItemFilter extends Component {
 				['smart', [<UIIcon src="ticket" />, <span>Smart</span>]],
 				['classic', [<UIIcon src="ticket" />, <span>Classic</span>]],
 				['danger', [<UIIcon src="help" />, <span>Danger</span>]],
-				['zero', [<UIIcon src="gift" />, <span>Zero</span>]],
+				['zero', [<UIIcon src="no" />, <span>Zero</span>]],
 				['feedback', [<UIIcon src="bubbles" />, <span>Feedback</span>]],
 				['grade', [<UIIcon src="todo" />, <span>Grade</span>]],
 
@@ -166,19 +166,19 @@ export default class ItemFilter extends Component {
 				<div class="-header"></div>
 				<div class="-body -flex">
 					<div class="-query">
-						<div class="-title">Platform/Tag filters:<UIHelp>{HelpSearch}</UIHelp></div>
+						<div class="-title"><UIHelp>{HelpSearch}</UIHelp>Platform/Tag filters:</div>
 						<UITextdown onmodify={this.onModifyQuery} onselect={this.onTagAdd} maxlength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
 					</div>
 					<div class="-event">
-						<div class="-title"><span>Event:</span><UIHelp>{HelpEvent}</UIHelp></div>
+						<div class="-title"><UIHelp>{HelpEvent}</UIHelp><span>Event:</span></div>
 						<UIDropdownList onmodify={this.onModifyEvent} value={state.event} items={state.events} right />
 					</div>
 					<div class="-category">
-						<div class="-title">Category:<UIHelp>{HelpCategory}</UIHelp></div>
+						<div class="-title"><UIHelp>{HelpCategory}</UIHelp>Category:</div>
 						<UIDropdownList onmodify={this.onModifyCategory} value={state.category} items={state.categories} right />
 					</div>
 					<div class="-order">
-						<div class="-title">Order by:<UIHelp>{HelpOrder}</UIHelp></div>
+						<div class="-title"><UIHelp>{HelpOrder}</UIHelp>Order by:</div>
 						<UIDropdownList onmodify={this.onModifyOrder} value={state.order} items={state.orders} right />
 					</div>
 				</div>
