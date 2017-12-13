@@ -1,6 +1,6 @@
 import {h, Component}	 				from 'preact/preact';
 import SVGIcon							from 'com/svg-icon/icon';
-import ButtonBase						from 'com/button-base/base';
+import UICheckbox						from 'com/ui/checkbox/checkbox';
 import {
 	isNotificationComment,
 	isNotificationFeedback,
@@ -59,42 +59,48 @@ export default class NotificationsFilter extends Component {
 
 		return (
 			<div>
-				<ButtonBase
-					class={cN('-filter', Mention === false ? '' : '-toggled')}
+				<UICheckbox
+					class="-filter"
+					value={Mention !== false}
 					onclick={this.onToggleMention}
 				>
 					<SVGIcon>at</SVGIcon><span>Mentions{hiddenMention}</span>
-				</ButtonBase>
-				<ButtonBase
-					class={cN('-filter', Feedback === false ? '' : '-toggled')}
+				</UICheckbox>
+				<UICheckbox
+					class="-filter"
+					value={Feedback !== false}
 					onclick={this.onToggleFeedback}
 				>
 					<SVGIcon>bubble-empty</SVGIcon><span>Feedback{hiddenFeedback}</span>
-				</ButtonBase>
-				<ButtonBase
-					class={cN('-filter', Comment === false ? '' : '-toggled')}
+				</UICheckbox>
+				<UICheckbox
+					class="-filter"
+					value={Comment !== false}
 					onclick={this.onToggleComments}
 				>
 					<SVGIcon>bubble</SVGIcon><span>Comments{hiddenComments}</span>
-				</ButtonBase>
-				<ButtonBase
-					class={cN('-filter', FriendGame === false ? '' : '-toggled')}
+				</UICheckbox>
+				<UICheckbox
+					class="-filter"
+					value={FriendGame !== false}
 					onclick={this.onToggleFriendGame}
 				>
 					<SVGIcon>gamepad</SVGIcon><span>Friend's games{hiddenFriendGame}</span>
-				</ButtonBase>
-				<ButtonBase
-					class={cN('-filter', FriendPost === false ? '' : '-toggled')}
+				</UICheckbox>
+				<UICheckbox
+					class="-filter"
+					value={FriendPost !== false}
 					onclick={this.onToggleFriendPost}
 				>
 					<SVGIcon>feed</SVGIcon><span>Friend's posts{hiddenFriendPost}</span>
-				</ButtonBase>
-				<ButtonBase
-					class={cN('-filter', Other === false ? '' : '-toggled')}
+				</UICheckbox>
+				<UICheckbox
+					class="-filter"
+					value={Other !== false}
 					onclick={this.onToggleOther}
 				>
 					<SVGIcon>question</SVGIcon><span>Other{hiddenOther}</span>
-				</ButtonBase>
+				</UICheckbox>
 			</div>
 		);
 	}
