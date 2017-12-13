@@ -39,14 +39,23 @@ export default class UIDropdownList extends Component {
 				let itemValue = props.items[idx][0];
 				let itemName = props.items[idx][1];
 
-				if ( itemValue == props.value )
-					Value = <div>{itemName}</div>;
+				if ( itemValue !== null ) {
+					if ( itemValue == props.value )
+						Value = <div>{itemName}</div>;
 
-				Items.push(
-					<UIButton class="-item" onclick={this.onModify.bind(this, itemValue, idx)}>
-						{itemName}
-					</UIButton>
-				);
+					Items.push(
+						<UIButton class="-item" onclick={this.onModify.bind(this, itemValue, idx)}>
+							{itemName}
+						</UIButton>
+					);
+				}
+				else {
+					Items.push(
+						<div class="-null">
+							{itemName}
+						</div>
+					);
+				}
 			}
 		}
 		// ID & Name pair: { 'id': 10, 'name': "Monkey" }

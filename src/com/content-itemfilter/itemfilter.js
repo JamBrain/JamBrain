@@ -33,21 +33,28 @@ export default class ItemFilter extends Component {
 				['all', [<UIIcon src="trophys" />, <span>Jam+Compo</span>]],
 				['jam', [<UIIcon src="trophy" />, <span>Jam</span>]],
 				['compo', [<UIIcon src="trophy" />, <span>Compo</span>]],
+//				['craft', [<UIIcon src="craft" />, <span>Craft</span>]],
 				['unfinished', [<UIIcon src="trash" />, <span>Unfinished</span>]],
+				['warmup', [<UIIcon src="science" />, <span>Warmup</span>]],
+//				['release', [<UIIcon src="publish" />, <span>Release</span>]],
 			],
 
 			'order': 'smart',
 			'orders': [
+//				[null, <span>Standard</span>],
+//				['rel', [<UIIcon src="checkmark" />, <span>Relevence</span>]],
+
+//				['pub', [<UIIcon src="publish" />, <span>Publish Date</span>]],
+//				['az-asc', [<UIIcon src="sort-amount-asc" />, <span>Ascending A-Z</span>]],
+//				['az-desc', [<UIIcon src="sort-amount-desc" />, <span>Descending Z-A</span>]],
+
+				[null, <span>Event Specific</span>],
 				['smart', [<UIIcon src="meter" />, <span>Smart</span>]],
 				['classic', [<UIIcon src="meter" />, <span>Classic</span>]],
 				['danger', [<UIIcon src="help" />, <span>Danger</span>]],
 				['zero', [<UIIcon src="no" />, <span>Zero</span>]],
 				['feedback', [<UIIcon src="bubbles" />, <span>Feedback</span>]],
 				['grade', [<UIIcon src="todo" />, <span>Grade</span>]],
-
-//				['rel', [<UIIcon src="checkmark" />, <span>Relevence</span>]],
-//				['alpha', [<UIIcon src="sort-amount-asc" />, <span>Alphabetical</span>]],
-//				['pub', [<UIIcon src="publish" />, <span>Published</span>]],
 			],
 
 			'grid': 4,
