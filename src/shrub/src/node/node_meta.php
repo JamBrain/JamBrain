@@ -579,6 +579,7 @@ function nodeMeta_GetAuthors( $node_id ) {
 	$authorlinks = nodeMeta_GetByKeyNode('author', $node_id);
 	$authors = [];
 	foreach($authorlinks as $link) {
+		// MK TODO: Verify if this logic is correct (I think you only need one of these)
 		if ( $link['a'] == $node_id ) {
 			$authors[] = $link['b'];
 		}
