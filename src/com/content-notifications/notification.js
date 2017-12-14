@@ -14,27 +14,23 @@ export const isNotificationMention = (notification) => {
 };
 
 export const isNotificationFeedback = (notification) => {
-	const {node, note} = notification;
-	return node.selfauthored && note && isNotificationType(notification, 'note');
+	return isNotificationType(notification, 'feedback');
 };
 
 export const isNotificationFriendGame = (notification) => {
-	const {node} = notification;
-	return node.type == 'item' && isNotificationType(notification, 'item');
+	return isNotificationType(notification, 'item');
 };
 
 export const isNotificationFriendPost = (notification) => {
-	const {node} = notification;
-	return node.type !== 'item' && isNotificationType(notification, 'post');
+	return isNotificationType(notification, 'post');
 };
 
 export const isNotificationComment = (notification) => {
-	const {node, note} = notification;
-	return notification.multi || (note && isNotificationType(notification, 'note') && !isNotificationFeedback(notification) && !isNotificationFeedback(notification));
+	return isNotificationType(notification, 'note');
 };
 
 export const isNotificationOther = (notification) => {
-	return !isNotificationType(notification, 'note') && !isNotificationType(notification, 'node') && !isNotificationType(notification, 'item') && !isNotificationType(notification, 'post') && !isNotificationType(notification, 'mention');
+	return !isNotificationType(notification, 'note') && !isNotificationType(notification, 'node') && !isNotificationType(notification, 'item') && !isNotificationType(notification, 'post') && !isNotificationType(notification, 'mention') && !isNotificationType(notification, 'feedback');
 };
 
 export default class NotificationItem extends Component {

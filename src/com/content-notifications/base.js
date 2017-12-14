@@ -24,15 +24,26 @@ export default class NotificationsBase extends Component {
 			"count": 0,
 			"status": null,
 			"feed": [],
+			"filtered": null,
 			"loading": true,
 			"highestRead": -1,
-			"filters": {
-				'comments': false,
-			},
 		};
 		this.handleFilterChange = this.handleFilterChange.bind(this);
 	}
 
+	clearNotifications() {
+		this.setState({
+			"notifications": null,
+			"notificationIds": [],
+			"notificationsTotal": -1,
+			"count": 0,
+			"status": null,
+			"feed": [],
+			"filtered": null,
+			"loading": true,
+			"highestRead": -1,
+		});
+	}
 
 	hasUnreadNotifications() {
 		const highestInFeed = this.getHighestNotificationInFeed();
@@ -59,8 +70,21 @@ export default class NotificationsBase extends Component {
 
 	getHighestNotificationInFeed() {
 		const notificationsOrder = this.getNotificationsOrder();
+		const {filtered} = this.state;
+		let highestFiltered = -1;
+		if (filtered) {
+			for (let i=0; i<filtered.length; i+=1) {
+				const nid = filtered[i].id;
+				if (nid > highestFiltered) {
+					highestFiltered = nid;
+				}
+			}
+		}
 		if (notificationsOrder && notificationsOrder.length > 0) {
-			return notificationsOrder[0];
+			return Math.max(notificationsOrder[0], highestFiltered);
+		}
+		else if (highestFiltered > -1) {
+			return highestFiltered;
 		}
 		return null;
 	}
@@ -72,6 +96,7 @@ export default class NotificationsBase extends Component {
 		let highestRead = r.max_read !== undefined ? r.max_read : this.state.highestRead;
 		this.setState({
 			"feed": r.feed,
+			"filtered": r.filtered,
 			"caller_id": caller_id,
 			"status": r.status,
 			"count": r.count,
@@ -322,7 +347,7 @@ export default class NotificationsBase extends Component {
 		return this.state.notificationIds;
 	}
 
-	getNotifications() {
+	getNotifications(maxCount) {
 		let Notifications = [];
 		const notifications = this.state.notifications;
 		const notificationsOrder = this.getNotificationsOrder();
@@ -331,7 +356,10 @@ export default class NotificationsBase extends Component {
 
 			notificationsOrder.forEach((id) => {
 				let notification = notifications.get(id);
-				Notifications.push([id, <Notification caller_id={caller_id} notification={notification} />]);
+				if (maxCount > 0 && this.shouldShowNotification(notification)) {
+					Notifications.push([id, <Notification caller_id={caller_id} notification={notification} />]);
+					maxCount -= 1;
+				}
 			});
 
 		}
@@ -340,28 +368,30 @@ export default class NotificationsBase extends Component {
 	}
 
 	shouldShowNotification(notification) {
-		const {mention, friendGame, friendPost, feedback, comment, other} = this.state.filters;
-		if (feedback !== false && isNotificationFeedback(notification)) {
+		const {Mention, FriendGame, FriendPost, Feedback, Comment, Other} = $Notification.GetFilters();
+		if (Feedback !== false && isNotificationFeedback(notification)) {
 			return true;
 		}
-		else if (mention !== false && isNotificationMention(notification)) {
+		else if (Mention !== false && isNotificationMention(notification)) {
 			return true;
 		}
-		else if (friendGame !== false && isNotificationFriendGame(notification)) {
+		else if (FriendGame !== false && isNotificationFriendGame(notification)) {
 			return true;
 		}
-		else if (friendPost !== false && isNotificationFriendPost(notification)) {
+		else if (FriendPost !== false && isNotificationFriendPost(notification)) {
 			return true;
 		}
-		else if (comment !== false && isNotificationComment(notification)) {
+		else if (Comment !== false && isNotificationComment(notification)) {
 			return true;
 		}
-		return other !== false && isNotificationOther(notification);
+		return Other !== false && isNotificationOther(notification);
 	}
 
 	handleFilterChange(filterType, otherStuff) {
-		let oldFilter = Object.assign({}, this.state.filters);
-		oldFilter[filterType] = oldFilter[filterType] === undefined ? false : !oldFilter[filterType];
-		this.setState({'filters': oldFilter});
+		const myFilter = $Notification.GetFilters();
+		myFilter[filterType] = myFilter[filterType] === undefined ? false : !myFilter[filterType];
+		$Notification.SetFilters(myFilter);
+		this.setState({'filters': isFinite(this.state.filters) ? this.state.filters + 1 : 1});
+		//this.setState({'filters': myFilter});
 	}
 }
