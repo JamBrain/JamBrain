@@ -29,14 +29,33 @@ export default class ViewBar extends Component {
 		this.StartedNotificationLoop = false;
 
 		this.state - {
-			notifications: 0,
-			notificationCountAdjustment: 0,
+			'notifications': 0,
+			'notificationsHidden': 0,
+			'notificationsFeed': {},
+			'notificationsMore': false,
 		};
+
+		this.handleNotificationsClear = this.handleNotificationsClear.bind(this);
+		this.handleNotificationsHide = this.handleNotificationsHide.bind(this);
+	}
+
+	handleNotificationsClear() {
+		this.setState({
+			'notifications': 0,
+			'notificationsHidden': 0,
+			'notificationsFeed': {},
+			'notificationsMore': false,
+		});
+	}
+
+	handleNotificationsHide() {
+		this.setState({'showNotifications': false});
 	}
 
 	checkNotificationCount() {
 		const {user} = this.props;
 		const loggedIn = user && (user.id > 0);
+		const fetchCount = 40;
 
 		if (loggedIn) {
 			let firstCall = !this.StartedNotificationLoop;
@@ -48,10 +67,15 @@ export default class ViewBar extends Component {
 				setTimeout(() => this.checkNotificationCount(), 20000);
 			}
 			else {
-				$Notification.GetCountUnread()
-				.then((r) => {
+				$Notification.GetFeedUnreadFiltered(0, fetchCount)
+				.then(r => {
 					if (this.state.notifications != r.count) {
-						this.setState({notifications: r.count, notificationCountAdjustment: 0});
+						this.setState({
+							'notifications': r.count,
+							'notificationsHidden': r.countFiltered,
+							'notificationsMore': r.countFiltered + r.count == fetchCount,
+							'notificationsFeed': r,
+						});
 					}
 					setTimeout(() => this.checkNotificationCount(), 60000);
 				})
@@ -108,7 +132,13 @@ export default class ViewBar extends Component {
 //		);
 
 		var ShowCalendar = (
-			<UIButton class="-bar-button if-no-sidebar-block" onclick={e => { console.log('calendar'); window.location.hash = "#cal"; }}>
+			<UIButton
+				class="-bar-button if-no-sidebar-block"
+				onclick={e => {
+						console.log('calendar');
+						window.location.hash = "#cal";
+				}}
+			>
 				<SVGIcon baseline>calendar</SVGIcon>
 				<div class="if-sidebar-block">Schedule</div>
 			</UIButton>
@@ -129,7 +159,14 @@ export default class ViewBar extends Component {
 		if ( SECURE_LOGIN_ONLY && (location.protocol !== 'https:') ) {
 			let SecureURL = 'https://'+location.hostname+location.pathname+location.search+location.hash;
 			GoSecure = (
-				<UIButton class="-bar-button" href={SecureURL} onclick={e => {console.log('secure'); location.href = SecureURL;}}>
+				<UIButton
+					class="-bar-button"
+					href={SecureURL}
+					onclick={ e => {
+						console.log('secure');
+						location.href = SecureURL;
+					}}
+				>
 					<SVGIcon>unlocked</SVGIcon>
 					<div class="if-sidebar-block">Go to Secure Site</div>
 				</UIButton>
@@ -147,7 +184,12 @@ export default class ViewBar extends Component {
 					);
 
 					NewPost = (
-						<UIButton class="-bar-button" onclick={e => { window.location.hash = "#create/"+featured.focus+"/post"; }}>
+						<UIButton
+							class="-bar-button"
+							onclick={e => {
+								window.location.hash = "#create/"+featured.focus+"/post";
+							}}
+						>
 							<SVGIcon>edit</SVGIcon>
 							<div class="if-sidebar-block">New</div>
 						</UIButton>
@@ -155,7 +197,12 @@ export default class ViewBar extends Component {
 				}
 				else if ( node_CanCreate(featured) ) {
 					ShowJoin = (
-						<UIButton class="-bar-button" onclick={e => { window.location.hash = "#create/"+featured.id+"/item/game"; }}>
+						<UIButton
+							class="-bar-button"
+							onclick={e => {
+								window.location.hash = "#create/"+featured.id+"/item/game";
+							}}
+						>
 							<SVGIcon>publish</SVGIcon>
 							<div class="if-sidebar-block">Join Event</div>
 						</UIButton>
@@ -165,20 +212,40 @@ export default class ViewBar extends Component {
 
 			// Notifications
 			let NotificationCount = null;
-			const notificationCount = Math.max(0, this.state.notifications - this.state.notificationCountAdjustment);
+			const notificationCount = this.state.notifications;
 			if (notificationCount > 0) {
+				/*
+				if (this.state.notificationsMore) {
+					NotificationCount = (<div class="-count">{notificationCount}<sup>+</sup></div>);
+
+				}
+				else { */
 				NotificationCount = (<div class="-count">{notificationCount}</div>);
 			}
+			/* else if (this.state.notificationsMore) {
+				if (NotificationCount === null) {
+					NotificationCount = (<div class="-count">+</div>);
+				}
+			}
+			else if (this.state.notificationsHidden) {
+				NotificationCount = (<div class="-count">({this.state.notificationsHidden})</div>);
+			} */
 
 			if (this.state.showNotifications) {
-				ShowNotifications = (<BarNotification clearCallback={ () => this.setState({notifications: 0}) } hideCallback={ () => this.setState({showNotifications: false}) } />);
+				ShowNotifications = (
+					<BarNotification
+						feed={this.state.notificationsFeed}
+						clearCallback={this.handleNotificationsClear}
+						hideCallback={this.handleNotificationsHide}
+					/>
+				);
 			}
 
 			Notification = (
 				<UIButton class="-bar-icon" onclick={(e) => {
 					// TODO: if the main content is the notifications feed, clicking the button should
 					// probably not show the dropdown, but load new comments into the feed.
-					this.setState({showNotifications: !this.state.showNotifications});
+					this.setState({'showNotifications': !this.state.showNotifications});
 				}}>
 					<SVGIcon baseline>bubble</SVGIcon>
 					{NotificationCount}
@@ -203,13 +270,25 @@ export default class ViewBar extends Component {
 		// If user has finished loading (and is not logged in)
 		else if ( user ) {
 			Register = (
-				<UIButton class="-bar-button" onclick={e => { console.log('register'); window.location.hash = "#user-register"; }}>
+				<UIButton
+					class="-bar-button"
+					onclick={e => {
+						console.log('register');
+						window.location.hash = "#user-register";
+					}}
+				>
 					<SVGIcon>user-plus</SVGIcon>
 					<div class="if-sidebar-block">Create Account</div>
 				</UIButton>
 			);
 			Login = (
-				<UIButton class="-bar-button" onclick={e => { console.log('login'); window.location.hash = "#user-login"; }}>
+				<UIButton
+					class="-bar-button"
+					onclick={e => {
+						console.log('login');
+						window.location.hash = "#user-login";
+					}}
+				>
 					<SVGIcon>key</SVGIcon>
 					<div class="if-sidebar-block">Login</div>
 				</UIButton>
