@@ -218,7 +218,7 @@ function notification_AddForNote( $node_id, $note, $author, $mentions = [] ) {
 		$notifications[] = ['user' => $uid, 'node' => $node_id, 'note' => $note, 'type' => SH_NOTIFICATION_MENTION];
 	}	
 	foreach($feedback_notify as $uid)	{
-		if ( $uid == $nodeauthor )
+		if ( $uid == $author )
 			continue; // Don't bother sending the author of the note a notification for their own note.
 			
 		$notifications[] = ['user' => $uid, 'node' => $node_id, 'note' => $note, 'type' => SH_NOTIFICATION_FEEDBACK];
