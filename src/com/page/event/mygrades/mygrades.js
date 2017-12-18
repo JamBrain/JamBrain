@@ -64,7 +64,7 @@ export default class MyGrades extends Component {
 			if (gameIds.length < shouldGradeNoGames) {
 				ShowWarning = (
 					<p class="-warning">
-						To fully participate in Ludum Dare you need to play and grade other's games.
+						To fully participate in Ludum Dare you need to play and grade others' games.
 						You should aim at playing at least {shouldGradeNoGames} games.
 						Doing so will also ensure that when the event is over, your game will be
 						ranked and given a grade.
