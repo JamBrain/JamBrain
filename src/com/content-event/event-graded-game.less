@@ -1,0 +1,23 @@
+@import "defs.less";
+
+.event-graded-game {
+	color: @COL_NDDD;
+	position: relative;
+	display: block;
+
+	overflow: auto;
+
+	border-top: 1px solid @COL_NLL;
+
+	padding: 0.5em 1em;
+
+	&:hover {
+		background: @COL_A !important;
+		color: @COL_NLLLLL !important;
+	}
+
+	& > * {
+		margin: 0.5em;
+		padding: 0.1em 1em;
+	}
+}

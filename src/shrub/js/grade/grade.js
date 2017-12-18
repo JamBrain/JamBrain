@@ -3,6 +3,7 @@ import Fetch	 				from '../internal/fetch';
 export default {
 	GetMy,
 	GetInfo,
+	GetGameList,
 
 	Add,
 	Remove,
@@ -23,6 +24,10 @@ export function Add( node, grade, value ) {
 }
 export function Remove( node, grade ) {
 	return Fetch.Get(API_ENDPOINT+'/vx/grade/remove/'+node+'/'+grade, true);
+}
+
+export function GetGameList( node ) {
+	return Fetch.Get(API_ENDPOINT+'/vx/grade/getgames/' + node, true);
 }
 
 // These use the NODE API
