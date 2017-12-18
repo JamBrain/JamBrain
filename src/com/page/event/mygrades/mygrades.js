@@ -6,19 +6,19 @@ import ContentList				from 'com/content-list/list';
 import GradedGame				from 'com/content-event/event-graded-game';
 import ContentLoading			from 'com/content-loading/loading';
 
-import $Grade					from '../shrub/js/grade/grade';
-import $Node					from '../shrub/js/node/node';
+import $Grade					from 'shrub/js/grade/grade';
+import $Node					from 'shrub/js/node/node';
 
 export default class MyGrades extends Component {
 
-	constructor(props) {
+	constructor( props ) {
 		super(props);
-		this.state ={
+		this.state = {
 			'loading': true,
 		};
 	}
 	componentDidMount() {
-		$Grade.GetGameList(this.props.node.id)
+		$Grade.GetMyList(this.props.node.id)
 			.then(r => {
 				this.setState({'gameIds': r.games, 'nodes': new Map(), 'loading': true, 'error': null});
 				this.collectNodes(r.games);
@@ -28,7 +28,7 @@ export default class MyGrades extends Component {
 			});
 	}
 
-	collectNodes(gameIds) {
+	collectNodes( gameIds ) {
 		let promises = [];
 		let mapping = new Map();
 		const chunkSize = 20;
@@ -51,7 +51,8 @@ export default class MyGrades extends Component {
 			});
 	}
 
-    render( props, {gameIds, error, nodes, loading} ) {
+    render( props, state ) {
+		const {gameIds, error, nodes, loading} = state;
 		const shouldGradeNoGames = 20;
 		const hasResults = !loading && !error;
 		const ShowError = error ? <p class="-warning">Could not retrieve your votes. Are you logged in?</p> : null;

@@ -1,10 +1,9 @@
 import {h, Component}					from 'preact/preact';
 import UIButtonLink from 'com/ui/button/button-link';
 
-export default class GradedGame extends Component {
+export default class GradedItem extends Component {
 	render( props ) {
 		const {node} = props;
-		console.log(node);
 		return (
 			<UIButtonLink class={cN("event-graded-game", props.class)} href={node.path}>
 				<strong>{node.name}</strong>
