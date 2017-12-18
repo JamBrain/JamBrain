@@ -55,29 +55,24 @@ export default class MyGrades extends Component {
 		const {gameIds, error, nodes, loading} = state;
 		const shouldGradeNoGames = 20;
 		const hasResults = !loading && !error;
-		const ShowError = error ? <p class="-warning">Could not retrieve your votes. Are you logged in?</p> : null;
+		const ShowError = error ? <div class="-warning">Could not retrieve your votes. Are you logged in?</div> : null;
 
 		let ShowLoading = !gameIds && !error ? <ContentLoading /> : null;
 		let ShowParagraph = null;
+		let ShowWarning = null;
 
 		if (!!gameIds) {
-			let ShowWarning = null;
 			if (gameIds.length < shouldGradeNoGames) {
 				ShowWarning = (
-					<p class="-warning">
+					<div class="-warning">
 						To fully participate in Ludum Dare you need to play and grade others' games.
 						You should aim at playing at least {shouldGradeNoGames} games.
 						Doing so will also ensure that when the event is over, your game will be
 						ranked and given a grade.
-					</p>
+					</div>
 				);
 			}
-			ShowParagraph = (
-				<div>
-					{ShowWarning}
-					<p>You have graded {gameIds.length} games.</p>
-				</div>
-			);
+			ShowParagraph = <div class='-info'>You have graded {gameIds.length} game{gameIds.length == 1 ? "" : "s"}.</div>;
 		}
 
 		let ShowResults = null;
@@ -94,6 +89,7 @@ export default class MyGrades extends Component {
 				<h2>Games you have graded</h2>
 				{ShowLoading}
 				{ShowError}
+				{ShowWarning}
 				{ShowParagraph}
 				{ShowResults}
 			</div>
