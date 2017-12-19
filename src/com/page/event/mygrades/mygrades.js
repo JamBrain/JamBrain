@@ -3,8 +3,9 @@ import {h, Component} from 'preact/preact';
 import ContentSimple					from 'com/content-simple/simple';
 
 import ContentList				from 'com/content-list/list';
-import GradedGame				from 'com/content-event/event-graded-game';
 import ContentLoading			from 'com/content-loading/loading';
+
+import UIButtonLink from 'com/ui/button/button-link';
 
 import $Grade					from 'shrub/js/grade/grade';
 import $Node					from 'shrub/js/node/node';
@@ -72,21 +73,21 @@ export default class MyGrades extends Component {
 					</div>
 				);
 			}
-			ShowParagraph = <div class='-info'>You have graded {gameIds.length} game{gameIds.length == 1 ? "" : "s"}.</div>;
+			ShowParagraph = <div class="-info">You have graded {gameIds.length} game{gameIds.length == 1 ? "" : "s"}.</div>;
 		}
 
 		let ShowResults = null;
 		if (hasResults) {
-			let Games = [];
+			let Items = [];
 			gameIds.map(nodeId => {
-				Games.push(<GradedGame node={nodes[nodeId]} key={nodeId} />);
+				Items.push(<GradedItem node={nodes[nodeId]} key={nodeId} />);
 			});
-			ShowResults = <ContentList>{Games}</ContentList>;
+			ShowResults = <ContentList>{Items}</ContentList>;
 		}
 
         return (
 			<div class="content-common event-mygraded">
-				<h2>Games you have graded</h2>
+				<h2>Items you have graded</h2>
 				{ShowLoading}
 				{ShowError}
 				{ShowWarning}
@@ -95,4 +96,16 @@ export default class MyGrades extends Component {
 			</div>
         );
     }
+}
+
+class GradedItem extends Component {
+	render( props ) {
+		const {node} = props;
+		return (
+			<UIButtonLink class={cN("graded-item", props.class)} href={node.path}>
+				<strong>{node.name}</strong>
+				<p>{node.body.substr(0, 100)}...</p>
+			</UIButtonLink>
+		);
+	}
 }
