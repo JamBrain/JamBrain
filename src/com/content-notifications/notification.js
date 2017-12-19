@@ -51,7 +51,8 @@ export default class NotificationItem extends Component {
 	}
 
 	getSocial( users, authors, relation, possesive=false ) {
-		const isRelation = authors.map(a => relation.indexOf(a) > -1);
+		const uniqueAuthors = authors.filter((a, i) => authors.indexOf(a) == i);
+		const isRelation = uniqueAuthors.map(a => relation.indexOf(a) > -1);
 		const count = isRelation.filter(e => e).length;
 		let Relations = [];
 
@@ -60,21 +61,21 @@ export default class NotificationItem extends Component {
 			isRelation.forEach((e, i) => {
 				if ( e ) {
 					if (possesive) {
-						Relations.push(<span><NavLink class="-at-name" key={i}>{'@' + users.get(authors[i]).name}</NavLink>'s</span>);
+						Relations.push(<span><NavLink class="-at-name" key={i}>{'@' + users.get(uniqueAuthors[i]).name}</NavLink>'s</span>);
 					}
 					else {
-						Relations.push(<NavLink class="-at-name" key={i}>{'@' + users.get(authors[i]).name}</NavLink>);
+						Relations.push(<NavLink class="-at-name" key={i}>{'@' + users.get(uniqueAuthors[i]).name}</NavLink>);
 					}
 				}
 			});
 			const nRelations = Relations.length;
-			if (nRelations > 3 || nRelations < authors.length) {
+			if (nRelations > 3 || nRelations < uniqueAuthors.length) {
 				Relations = Relations.slice(0, 3);
 				const listed = Relations.length;
 				for (let i=Relations.length - 1; i>0; i-=1) {
 					Relations.splice(i, 0, ', ');
 				}
-				Relations.push(' & ' + (authors.length - listed) + ' more');
+				Relations.push(' & ' + (uniqueAuthors.length - listed) + ' more');
 			}
 			else if ( nRelations > 1 ) {
 				for (let i=nRelations-1; i>0; i-=1) {
