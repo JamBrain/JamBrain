@@ -3,6 +3,17 @@ import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
 
+export const noteAuthorIsAmongNodeAuthors = (notification) => {
+	const {node, note} = notification;
+	return note
+		.map(n => node.authors.indexOf(n.author) > -1)
+		.indexOf(true) > -1;
+}
+
+export const callerIDIsAmongNodeAuthors = (notification) => {
+	return notification.node.authors.indexOf(notification.callerId);
+}
+
 export const isNotificationType = (notification, notificationType) => {
 	return notification.notification
 		.map(e => e.type)
@@ -14,7 +25,7 @@ export const isNotificationMention = (notification) => {
 };
 
 export const isNotificationFeedback = (notification) => {
-	return isNotificationType(notification, 'feedback');
+	return isNotificationType(notification, 'feedback') || (isNotificationType(notification, 'note') && callerIDIsAmongNodeAuthors(notification));
 };
 
 export const isNotificationFriendGame = (notification) => {
@@ -26,7 +37,7 @@ export const isNotificationFriendPost = (notification) => {
 };
 
 export const isNotificationComment = (notification) => {
-	return isNotificationType(notification, 'note');
+	return isNotificationType(notification, 'note') && !callerIDIsAmongNodeAuthors(notification);
 };
 
 export const isNotificationOther = (notification) => {
@@ -77,8 +88,7 @@ export default class NotificationItem extends Component {
 		//TODO: Potentially add a svg-icon circle with number for how many notifications are per line since number of
 		//notification-rows here will not match the notifications count if the rows have been collapsed into
 		//multi-notification
-
-		const caller_id = props.caller_id;
+		
 		const notification = props.notification;
 		const date_now = new Date();
 		const time_diff = (date_now.getTime() - notification.time);
@@ -90,7 +100,7 @@ export default class NotificationItem extends Component {
 		}
 		const isMention = isNotificationMention(notification);
 
-		const myAtName = "@" + notification.users.get(caller_id).name;
+		const myAtName = "@" + notification.users.get(notification.callerID).name;
 		const node = notification.node;
 		const note = notification.note && notification.note.length == 1 ? notification.note[0] : null;
 

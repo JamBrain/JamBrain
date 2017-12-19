@@ -91,13 +91,13 @@ export default class NotificationsBase extends Component {
 
 	processNotificationFeed(r) {
 
-		const caller_id = r.caller_id;
-		this.collectAllNodesAndNodes(r.feed, caller_id);
+		const callerID = r.caller_id;
+		this.collectAllNodesAndNodes(r.feed, callerID);
 		let highestRead = r.max_read !== undefined ? r.max_read : this.state.highestRead;
 		this.setState({
 			"feed": r.feed,
 			"filtered": r.filtered,
-			"caller_id": caller_id,
+			"callerID": callerID,
 			"status": r.status,
 			"count": r.count,
 			"loading": true,
@@ -105,7 +105,7 @@ export default class NotificationsBase extends Component {
 		});
 	}
 
-	collectAllNodesAndNodes(feed, caller_id) {
+	collectAllNodesAndNodes(feed, callerID) {
 
 		let nodeLookup = new Map();
 		let nodes = [];
@@ -132,7 +132,7 @@ export default class NotificationsBase extends Component {
 		let users = [];
 		let usersLookup = new Map();
 
-		users.push(caller_id);
+		users.push(callerID);
 		let notes = [];
 
 		feed.forEach(({id, node, note}) => {
@@ -211,26 +211,26 @@ export default class NotificationsBase extends Component {
 					});
 				}
 
-				this.composeNotifications(feed, caller_id, notification2nodeAndNote, node2notes, nodeLookup, noteLookup, usersLookup, notificationLookup, social);
+				this.composeNotifications(feed, callerID, notification2nodeAndNote, node2notes, nodeLookup, noteLookup, usersLookup, notificationLookup, social);
 			});
 	}
 
-	composeNotifications(feed, caller_id, notification2nodeAndNote, node2notes, nodeLookup, noteLookup, usersLookup, notificationLookup, social) {
+	composeNotifications(feed, callerID, notification2nodeAndNote, node2notes, nodeLookup, noteLookup, usersLookup, notificationLookup, social) {
 
-		const myAtName = '@' + usersLookup.get(caller_id).name;
+		const myAtName = '@' + usersLookup.get(callerID).name;
 		noteLookup.forEach((note, id) => {
-			note.selfauthored = note.author == caller_id;
+			note.selfauthored = note.author == callerID;
 			note.mention = note.body.indexOf(myAtName) >= 0;
 		});
 
 		nodeLookup.forEach((node, id) => {
 			node.selfauthored = false;
-			if (node.author == caller_id) {
+			if (node.author == callerID) {
 				node.selfauthored = true;
 			}
 			else if (node.meta && node.meta.author) {
 				node.meta.author.forEach((author) => {
-					if (author == caller_id) {
+					if (author == callerID) {
 						node.selfauthored = true;
 					}
 				});
@@ -262,7 +262,7 @@ export default class NotificationsBase extends Component {
 				};
 
 				// Look up user records for self and node author.
-				data.users.set(caller_id, usersLookup.get(caller_id));
+				data.users.set(callerID, usersLookup.get(callerID));
 				data.users.set(node.author, usersLookup.get(node.author));
 
 				// Look up other authors for the node (for team games)
@@ -351,13 +351,13 @@ export default class NotificationsBase extends Component {
 		let Notifications = [];
 		const notifications = this.state.notifications;
 		const notificationsOrder = this.getNotificationsOrder();
-		const caller_id = this.state.caller_id;
+		const callerID = this.state.callerID;
 		if (!this.state.loading) {
 
 			notificationsOrder.forEach((id) => {
 				let notification = notifications.get(id);
 				if (maxCount > 0 && this.shouldShowNotification(notification)) {
-					Notifications.push([id, <Notification caller_id={caller_id} notification={notification} />]);
+					Notifications.push([id, <Notification callerID={callerID} notification={notification} />]);
 					maxCount -= 1;
 				}
 			});
