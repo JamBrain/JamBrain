@@ -80,7 +80,7 @@ export default class NotificationItem extends Component {
 	}
 
 	isNoteNodeAuthor( node, note ) {
-		return note ? node.authors.indexOf(id) > -1 : false;
+		return note && note.length == 1 ? node.authors.indexOf(note[0].author) > -1 : false;
 	}
 
 	getNodeAuthorAsSubjectJSX( notification ) {
@@ -98,13 +98,13 @@ export default class NotificationItem extends Component {
 				return <span>{following.string}</span>;
 			}
 			else {
-				return (<span><NavLink class="-at-name">@{users.get(node.author)}</NavLink></span>);
+				return (<span><NavLink class="-at-name">@{users.get(node.author).name}</NavLink></span>);
 			}
 		}
 	}
 
 	getNodeAuthorAsObjectJSX( notification ) {
-		const {node, social, users, callerID} = notification;
+		const {node, social, users, callerID, note} = notification;
 		const friends = this.getSocialStringList(node.authors, social.friends);
 		if ( node.authors.indexOf(callerID) > -1) {
 			return <span>your</span>;
@@ -121,17 +121,17 @@ export default class NotificationItem extends Component {
 				return (<span>{following.string}</span>);
 			}
 			else {
-				return (<span><NavLink class="-at-name">@{users.get(node.author)}</NavLink></span>);
+				return (<span><NavLink class="-at-name">@{users.get(node.author).name}</NavLink></span>);
 			}
 		}
 	}
 
 	getNoteAuthorAsSubjectJSX( notification ) {
-		const {note, social, users} = notification;
+		const {note, social, users, callerID} = notification;
 		const noteAuthors = note.map(n => n.author);
 		const friends = this.getSocialStringList(noteAuthors, social.friends);
 
-		if ( node.authors.indexOf(callerID) > -1) {
+		if ( noteAuthors.indexOf(callerID) > -1) {
 			return <span>You</span>;
 		}
 		else if ( friends.count > 0 ) {
@@ -143,10 +143,13 @@ export default class NotificationItem extends Component {
 				return <span>{following.string}</span>;
 			}
 			else if (noteAuthors.length > 1) {
-				return <span>{noteAuthor.length} users</span>;
+				return <span>{noteAuthors.length} users</span>;
+			}
+			else if (noteAuthors.length == 1 && users.get(noteAuthors[0])) {
+				return <span><NavLink class="-at-name">@{users.get(noteAuthors[0]).name}</NavLink></span>;
 			}
 			else {
-				return (<span><NavLink class="-at-name">@{users.get(noteAuthors[0])}</NavLink></span>);
+				return <span>Someone</span>;
 			}
 		}
 	}
@@ -159,7 +162,8 @@ export default class NotificationItem extends Component {
 		return nodeType;
 	}
 
-	getNavProps( notification, props ) {
+	getNavProps( props ) {
+		const {notification} = props;
 		const notificationData = notification.notification[0];
 		const navProps = {"href": notification.node.path, "title": ('Notification Id: ' + notificationData.id), "class": props.class, "id": props.id};
 
@@ -216,11 +220,11 @@ export default class NotificationItem extends Component {
 		const NoteAuthor = this.getNoteAuthorAsSubjectJSX(notification);
 		const NodeAuthor = this.getNodeAuthorAsObjectJSX(notification);
 		const NodeType = this.getNodeType(notification);
-		const {node} = notification;
+		const {node, note} = notification;
 
 		return (
 			<NavLink {...navProps} >
-				<SVGIcon>bubble{node.length > 1 ? 's' : ''}</SVGIcon>{timePrefix} {NoteAuthor} commented on {NodeAuthor} {NodeType} "<em>{node.name}</em>"
+				<SVGIcon>{note.length > 1 ? 'bubbles' : 'bubble'}</SVGIcon>{timePrefix} {NoteAuthor} commented on {NodeAuthor} {NodeType} "<em>{node.name}</em>"
 			</NavLink>
 		);
 	}
@@ -232,7 +236,7 @@ export default class NotificationItem extends Component {
 
 		return (
 			<NavLink {...navProps} >
-				<SVGIcon>gamepad</SVGIcon> {timePrefix} {NodeAuthor} published a {NoteType} "<em>{node.name}</em>"
+				<SVGIcon>gamepad</SVGIcon> {timePrefix} {NodeAuthor} published a {NodeType} "<em>{node.name}</em>"
 			</NavLink>
 		);
 	}
@@ -274,8 +278,8 @@ export default class NotificationItem extends Component {
 	render( props, state ) {
 
 		const {notification} = props;
-		const navProps = this.getNavProps(notification, props);
-		const timePrefix = this.getTimePrefix();
+		const navProps = this.getNavProps(props);
+		const timePrefix = this.getTimePrefix(notification);
 
 		if (isNotificationFeedback(notification)) {
 			return this.renderFeedback(notification, timePrefix, navProps);
