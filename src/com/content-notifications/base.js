@@ -97,7 +97,6 @@ export default class NotificationsBase extends Component {
 		this.setState({
 			"feed": r.feed,
 			"filtered": r.filtered,
-			"callerID": callerID,
 			"status": r.status,
 			"count": r.count,
 			"loading": true,
@@ -259,6 +258,7 @@ export default class NotificationsBase extends Component {
 					"multi": false,
 					"users": new Map(),
 					"social": social,
+					"callerID": callerID,
 				};
 
 				// Look up user records for self and node author.
@@ -351,13 +351,12 @@ export default class NotificationsBase extends Component {
 		let Notifications = [];
 		const notifications = this.state.notifications;
 		const notificationsOrder = this.getNotificationsOrder();
-		const callerID = this.state.callerID;
 		if (!this.state.loading) {
 
 			notificationsOrder.forEach((id) => {
 				let notification = notifications.get(id);
 				if (maxCount > 0 && this.shouldShowNotification(notification)) {
-					Notifications.push([id, <Notification callerID={callerID} notification={notification} />]);
+					Notifications.push([id, <Notification notification={notification} />]);
 					maxCount -= 1;
 				}
 			});
