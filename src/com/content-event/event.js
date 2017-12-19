@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 				from 'preact/preact';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
@@ -83,6 +83,16 @@ export default class ContentEvent extends Component {
 			}
 
 			ShowGame = <ContentCommonNavButton href={path+'/games'} class={Class}><SVGIcon>gamepad</SVGIcon><div class="if-sidebar-inline">Games</div></ContentCommonNavButton>;
+		}
+
+		let ShowMyGrades = null;
+		//TODO: How to know if we're grading or have graded?
+		if ( true ) {
+			if ( extra && extra.length > 0 && extra[0] == "mygrades") {
+				Class = "-selected";
+			}
+
+			ShowMyGrades = <ContentCommonNavButton href={path+'/mygrades'} class={Class}><SVGIcon>star-half</SVGIcon><div class="if-sidebar-inline">My Grades</div></ContentCommonNavButton>;
 		}
 
 //		if ( extra && extra.length ) {
@@ -180,6 +190,7 @@ export default class ContentEvent extends Component {
 					{ShowHome}
                     {ShowJoin}
 					{ShowGame}
+					{ShowMyGrades}
 					{ShowFeed}
 					{ShowTheme}
 				</ContentCommonNav>

@@ -136,7 +136,7 @@ switch ( $action ) {
 			
 		break; // case 'getmy': //grade/getmy/:node_id
 		
-	case 'getgames': //grade/getgames[/:event_id]
+	case 'getmylist': //grade/getmylist[/:event_id]
 		json_ValidateHTTPMethod('GET');
 		
 		// Authenticate User		
@@ -162,7 +162,7 @@ switch ( $action ) {
 		$RESPONSE['event_id'] = $parent_id;
 		$RESPONSE['games'] = grade_GetNodeByAuthorParent($user_id, $parent_id);
 			
-		break; // case 'getgames': //grade/getgames[/:event_id]
+		break; // case 'getmylist': //grade/getmylist[/:event_id]
 /*
 	case 'get': //grade/get/:node_id
 		json_ValidateHTTPMethod('GET');
