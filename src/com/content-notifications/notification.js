@@ -8,11 +8,11 @@ export const noteAuthorIsAmongNodeAuthors = (notification) => {
 	return note
 		.map(n => node.authors.indexOf(n.author) > -1)
 		.indexOf(true) > -1;
-}
+};
 
 export const callerIDIsAmongNodeAuthors = (notification) => {
-	return notification.node.authors.indexOf(notification.callerId);
-}
+	return notification.node.authors.indexOf(notification.callerId) > -1;
+};
 
 export const isNotificationType = (notification, notificationType) => {
 	return notification.notification
@@ -88,7 +88,7 @@ export default class NotificationItem extends Component {
 		//TODO: Potentially add a svg-icon circle with number for how many notifications are per line since number of
 		//notification-rows here will not match the notifications count if the rows have been collapsed into
 		//multi-notification
-		
+
 		const notification = props.notification;
 		const date_now = new Date();
 		const time_diff = (date_now.getTime() - notification.time);
