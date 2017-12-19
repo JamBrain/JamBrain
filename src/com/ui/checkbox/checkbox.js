@@ -8,7 +8,7 @@ export default class UICheckbox extends Component {
 		const iconName = (props.radio ? 'radio' : 'checkbox') + (props.value ? '-checked' : '-unchecked');
 		return (
 			<UIButton class={cN('ui-checkbox', props.class)} onclick={props.onclick} >
-				<UIIcon name={iconName} />
+				<UIIcon src={iconName} />
 				<span class="-text">{props.children}</span>
 			</UIButton>
 		);
