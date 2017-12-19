@@ -50,33 +50,40 @@ export default class NotificationItem extends Component {
 		super(props);
 	}
 
-	getSocialStringList( authors, relation ) {
-		let isRelation = authors.map((a) => relation.indexOf(a) > -1);
-		let anyRelation = isRelation.length > 0 ? isRelation.reduce((l, r) => l || r) : false;
-		let names = '';
+	getSocial( users, authors, relation, possesive=false ) {
+		const isRelation = authors.map(a => relation.indexOf(a) > -1);
+		const count = isRelation.filter(e => e).length;
 		let Relations = [];
 
-		if (anyRelation) {
+		if (count > 0) {
 
 			isRelation.forEach((e, i) => {
 				if ( e ) {
-					Relations.push('<NavLink class=\'-at-name\'>@' + authors[i] + '</NavLink>');
+					if (possesive) {
+						Relations.push(<span><NavLink class="-at-name" key={i}>{'@' + users.get(authors[i]).name}</NavLink>'s</span>);
+					}
+					else {
+						Relations.push(<NavLink class="-at-name" key={i}>{'@' + users.get(authors[i]).name}</NavLink>);
+					}
 				}
 			});
-			if ( Relations.length > 3 ) {
-				names = Relations.slice(0, 3).join(', ') + ' & more';
+			const nRelations = Relations.length;
+			if (nRelations > 3 || nRelations < authors.length) {
+				Relations = Relations.slice(0, 3);
+				const listed = Relations.length;
+				for (let i=Relations.length - 1; i>0; i-=1) {
+					Relations.splice(i, 0, ', ');
+				}
+				Relations.push(' & ' + (authors.length - listed) + ' more');
 			}
-			else if ( Relations.length > 1 ) {
-				names = Relations.slice(0, Relations.length - 1).join(', ') + ' & ' + Relations[Relations.length - 1];
+			else if ( nRelations > 1 ) {
+				for (let i=nRelations-1; i>0; i-=1) {
+					Relations.splice(i, 0, i == nRelations - 1 ? ' & ' : ', ');
+				}
 			}
-			else {
-				names = Relations[0];
-			}
-
 		}
 
-		return {"count": Relations.length, "string": names};
-
+		return {"count": count, "content": Relations};
 	}
 
 	isNoteNodeAuthor( node, note ) {
@@ -85,17 +92,17 @@ export default class NotificationItem extends Component {
 
 	getNodeAuthorAsSubjectJSX( notification ) {
 		const {node, social, users, callerID} = notification;
-		const friends = this.getSocialStringList(node.authors, social.friends);
+		const friends = this.getSocial(users, node.authors, social.friends);
 		if ( node.authors.indexOf(callerID) > -1) {
 			return <span>You</span>;
 		}
 		else if ( friends.count > 0 ) {
-			return (<span>Your friend{friends.count > 1 ? 's' : ''} {friends.string}</span>);
+			return (<span>Your friend{friends.count > 1 ? 's' : ''} {friends.content}</span>);
 		}
 		else {
-			const following = this.getSocialStringList(node.authors, social.following);
+			const following = this.getSocial(users, node.authors, social.following);
 			if ( following.count > 0 ) {
-				return <span>{following.string}</span>;
+				return <span>{following.content}</span>;
 			}
 			else {
 				return (<span><NavLink class="-at-name">@{users.get(node.author).name}</NavLink></span>);
@@ -105,7 +112,7 @@ export default class NotificationItem extends Component {
 
 	getNodeAuthorAsObjectJSX( notification ) {
 		const {node, social, users, callerID, note} = notification;
-		const friends = this.getSocialStringList(node.authors, social.friends);
+		const friends = this.getSocial(users, node.authors, social.friends, true);
 		if ( node.authors.indexOf(callerID) > -1) {
 			return <span>your</span>;
 		}
@@ -113,15 +120,15 @@ export default class NotificationItem extends Component {
 			return <span>their</span>;
 		}
 		else if ( friends.count > 0 ) {
-			return (<span>your friend{friends.count > 1 ? 's' : ''} {friends.string}</span>);
+			return (<span>your friend{friends.count > 1 ? 's' : ''} {friends.content}</span>);
 		}
 		else {
-			const following = this.getSocialStringList(node.authors, social.following);
+			const following = this.getSocial(users, node.authors, social.following, true);
 			if ( following.count > 0 ) {
-				return (<span>{following.string}</span>);
+				return (<span>{following.content}</span>);
 			}
 			else {
-				return (<span><NavLink class="-at-name">@{users.get(node.author).name}</NavLink></span>);
+				return (<span><NavLink class="-at-name">@{users.get(node.author).name}</NavLink>'s</span>);
 			}
 		}
 	}
@@ -129,18 +136,18 @@ export default class NotificationItem extends Component {
 	getNoteAuthorAsSubjectJSX( notification ) {
 		const {note, social, users, callerID} = notification;
 		const noteAuthors = note.map(n => n.author);
-		const friends = this.getSocialStringList(noteAuthors, social.friends);
+		const friends = this.getSocial(users, noteAuthors, social.friends);
 
 		if ( noteAuthors.indexOf(callerID) > -1) {
 			return <span>You</span>;
 		}
 		else if ( friends.count > 0 ) {
-			noteAuthor = (<span>Your friend{friends.count > 1 ? 's' : ''} {friends.string}</span>);
+			return (<span>Your friend{friends.count > 1 ? 's' : ''} {friends.content}</span>);
 		}
 		else {
-			const following = this.getSocialStringList(noteAuthors, social.following);
+			const following = this.getSocial(users, noteAuthors, social.following);
 			if ( following.count > 0 ) {
-				return <span>{following.string}</span>;
+				return <span>{following.content}</span>;
 			}
 			else if (noteAuthors.length > 1) {
 				return <span>{noteAuthors.length} users</span>;

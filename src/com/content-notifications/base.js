@@ -154,8 +154,10 @@ export default class NotificationsBase extends Component {
 				if (response.node) {
 					response.node.forEach((node) => {
 						node.authors = [];
-						if (node.author > 0 && users.indexOf(node.author) < 0) {
-							users.push(node.author);
+						if (node.author > 0) {
+							if (users.indexOf(node.author) < 0) {
+								users.push(node.author);
+							}
 							node.authors.push(node.author);
 						}
 						if (node.meta && node.meta.author) {
