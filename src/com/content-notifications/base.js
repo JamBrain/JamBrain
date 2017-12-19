@@ -113,7 +113,7 @@ export default class NotificationsBase extends Component {
 
 		let soicialPromise = $Node.GetMy().then((response) => {
 
-			social.following = response.star ? response.star : [];
+			social.following = response.meta.star ? response.meta.star : [];
 			social.followers = response.refs.star ? response.refs.star : [];
 			social.friends = social.followers.filter((i) => social.following.indexOf(i) > -1);
 		});
