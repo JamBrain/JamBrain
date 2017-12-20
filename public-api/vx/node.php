@@ -17,6 +17,19 @@ const THINGS_I_CAN_STAR = [
 	'user'
 ];
 
+const MAX_URL_LENGTH = 512;
+const MAX_SLUG_LENGTH = 64;
+
+// length: limit value's length to this number
+// integer: if true, cast value to an integer before storing
+// number: if true, cast value to a float before storing
+// url: if true, sanitize value as a URL before storing
+// slug: if true, sanitize value as a slug before storing
+// empty: if true, store `null` in value
+// boolean: if true, imply length is 1 and a number
+// b_value: if true, store value in `b` instead of `value`
+// b_constraint: if false, the unique constraint should be a+key, not a+b+key as is usual
+
 // TODO: MK Rename and adjust this for privileged users, not Admins
 const ADMIN_VALID_META = [
 	'event' => [
@@ -44,24 +57,24 @@ const VALID_META = [
 		'grade-08-out' => ['length' => 1],
 		'allow-anonymous-comments' => ['length' => 1],
 
-		'link-01' => ['length' => 512, 'url' => true],
-		'link-02' => ['length' => 512, 'url' => true],
-		'link-03' => ['length' => 512, 'url' => true],
-		'link-04' => ['length' => 512, 'url' => true],
-		'link-05' => ['length' => 512, 'url' => true],
-		'link-06' => ['length' => 512, 'url' => true],
-		'link-07' => ['length' => 512, 'url' => true],
-		'link-08' => ['length' => 512, 'url' => true],
-		'link-09' => ['length' => 512, 'url' => true],
-		'link-01-tag' => ['integer' => true],
-		'link-02-tag' => ['integer' => true],
-		'link-03-tag' => ['integer' => true],
-		'link-04-tag' => ['integer' => true],
-		'link-05-tag' => ['integer' => true],
-		'link-06-tag' => ['integer' => true],
-		'link-07-tag' => ['integer' => true],
-		'link-08-tag' => ['integer' => true],
-		'link-09-tag' => ['integer' => true],
+		'link-01' => ['url' => true],
+		'link-02' => ['url' => true],
+		'link-03' => ['url' => true],
+		'link-04' => ['url' => true],
+		'link-05' => ['url' => true],
+		'link-06' => ['url' => true],
+		'link-07' => ['url' => true],
+		'link-08' => ['url' => true],
+		'link-09' => ['url' => true],
+		'link-01-tag' => ['b_value' => true, 'b_constraint' => false],
+		'link-02-tag' => ['b_value' => true, 'b_constraint' => false],
+		'link-03-tag' => ['b_value' => true, 'b_constraint' => false],
+		'link-04-tag' => ['b_value' => true, 'b_constraint' => false],
+		'link-05-tag' => ['b_value' => true, 'b_constraint' => false],
+		'link-06-tag' => ['b_value' => true, 'b_constraint' => false],
+		'link-07-tag' => ['b_value' => true, 'b_constraint' => false],
+		'link-08-tag' => ['b_value' => true, 'b_constraint' => false],
+		'link-09-tag' => ['b_value' => true, 'b_constraint' => false],
 		'link-01-name' => ['length' => 64],
 		'link-02-name' => ['length' => 64],
 		'link-03-name' => ['length' => 64],
@@ -1097,23 +1110,34 @@ switch ( $action ) {
 							$detail = $meta_detail[$key];
 
 							$v = $value;
-							if ( isset($detail['length']))
+							$b = 0;
+							$b_constraint = isset($detail['b_constraint']) ? $detail['b_constraint'] : true;
+
+							if ( isset($detail['url']) && $detail['url'] )
+								$v = substr(coreSanitize_URL($v), 0, MAX_URL_LENGTH);
+							else if ( isset($detail['slug']) && $detail['slug'] )
+								$v = substr(coreSanitize_Slug($v), 0, MAX_SLUG_LENGTH);
+							else if ( isset($detail['length']) )
 								$v = substr($v, 0, $detail['length']);
-							else if ( isset($detail['url']) && $detail['url'])
-								$v = coreSanitize_URL($v);
+							else if ( isset($detail['b_value']) && $detail['b_value'] ) {
+								$b = intval($v);
+								$v = null;
+							}
 							else if ( isset($detail['empty']) && $detail['empty'] )
 								$v = null;
 							else if ( isset($detail['number']) && $detail['number'] )
 								$v = floatval($v);
 							else if ( isset($detail['integer']) && $detail['integer'] )
 								$v = intval($v);
+							else if ( isset($detail['boolean']) && $detail['boolean'] )
+								$v = intval($v) ? '1' : '0';
 							else
 								json_EmitFatalError_BadRequest("Internal error while applying '$key' metadata in '".$node['type']."'", $RESPONSE);
 
 							if ( $action == 'add' )
-								$changed = nodeMeta_Add($node_id, 0, $scope, $key, $v);
+								$changed = nodeMeta_Add($node_id, $b, $scope, $key, $v, $b_constraint);
 							else if ( $action == 'remove' )
-								$changed = nodeMeta_Remove($node_id, 0, $scope, $key, $v);
+								$changed = nodeMeta_Remove($node_id, $b, $scope, $key, $v, $b_constraint);
 
 							if ( $changed )
 								$RESPONSE['changed'][$key] = $v;
