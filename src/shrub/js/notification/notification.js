@@ -4,7 +4,6 @@ import Fetch	 				from '../internal/fetch';
 const setNotificationSettingsFromStorage = (filter, value) => {
 	const storage = window.localStorage;
 	storage.setItem(`notificationFilter${filter}`, value);
-	console.log('setting', filter, value);
 };
 
 const getNotificationSettingsFromStorage = (filter) => {
@@ -33,7 +32,6 @@ const DefaultFilters = {
 };
 
 export const SetFilters = (filterSettings) => {
-	console.log('settings update', filterSettings);
 	for (let i = 0; i<Filters.length; i+=1) {
 		const key = Filters[i];
 		if (filterSettings[key] !== undefined) {
