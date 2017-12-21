@@ -21,19 +21,6 @@ switch ( $action ) {
 
 		$ids = explode('+', json_ArgGet(0));
 
-		if ( count($ids) !== 1 ) {
-			json_EmitFatalError_BadRequest(null, $RESPONSE);
-		}
-
-		$RESPONSE['note'] = commentFlags_Filter(commentComplete_GetByNode($ids[0]), userAuth_GetID());
-
-		break; //case 'get': //comment/get
-	case 'getcomment': //comment/getcomment
-		// Temporary "Get comment by comment ID" call. To be renamed when the renaming time comes.
-		json_ValidateHTTPMethod('GET');
-
-		$ids = explode('+', json_ArgGet(0));
-
 		// Limit number of comments
 		if ( count($ids) > 250 ) {
 			json_EmitFatalError_BadRequest("Too many comments", $RESPONSE);
@@ -41,7 +28,19 @@ switch ( $action ) {
 
 		$RESPONSE['note'] = commentFlags_Filter(commentComplete_Get($ids), userAuth_GetID());
 
-		break; //case 'getcomment': //comment/getcomment
+		break; //case 'get': //comment/get
+	case 'getbynode': //comment/getbynode
+		json_ValidateHTTPMethod('GET');
+
+		$ids = explode('+', json_ArgGet(0));
+
+		if ( count($ids) !== 1 ) {
+			json_EmitFatalError_BadRequest(null, $RESPONSE);
+		}
+
+		$RESPONSE['note'] = commentFlags_Filter(commentComplete_GetByNode($ids[0]), userAuth_GetID());
+
+		break; //case 'getbynode': //comment/getbynode
 	case 'add': //comment/add
 		json_ValidateHTTPMethod('POST');
 
