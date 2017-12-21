@@ -201,6 +201,26 @@ class GradedItem extends Component {
 		return shortened;
 	}
 
+	getItemType( node ) {
+		let TypeString = null;
+		if (node.subtype) {
+			if (node.subsubtype) {
+				TypeString = node.subsubtype.toUpperCase() + ": " + node.subtype.toUpperCase();
+			}
+			else {
+				TypeString = node.subtype.toUpperCase();
+			}
+		}
+		else if (node.type) {
+			TypeString = node.type.toUpperCase();
+		}
+
+		if (TypeString) {
+			return <div class="-item-type">{TypeString}</div>;
+		}
+		return null;
+	}
+
 	render( props ) {
 		const {node, authors} = props;
 		let description = this.cleanGameDescription(node.body);
@@ -221,6 +241,7 @@ class GradedItem extends Component {
 		}
 		return (
 			<UIButtonLink class={cN("graded-item", props.class)} href={node.path}>
+				{this.getItemType(node)}
 				<strong>{node.name}</strong>
 				{ShowAuthors}
 				<p>{description}</p>
