@@ -10,7 +10,7 @@ import Notification, {
 }						from 'com/content-notifications/notification';
 
 import $Node							from '../../shrub/js/node/node';
-import $Note							from '../../shrub/js/note/note';
+import $Comment							from '../../shrub/js/comment/comment';
 import $Notification					from '../../shrub/js/notification/notification';
 
 export default class NotificationsBase extends Component {
@@ -176,7 +176,7 @@ export default class NotificationsBase extends Component {
 
 			});
 
-		let notesPromise = $Note.Pick(notes).then((response) => {
+		let notesPromise = $Comment.Pick(notes).then((response) => {
 			//console.log('[Notifications:Notes]', response.note);
 			if (response.notes) {
 				response.notes.forEach((note) => {

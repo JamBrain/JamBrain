@@ -3,7 +3,7 @@ require_once __DIR__."/../config.php";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."api.php";
-require_once __DIR__."/".SHRUB_PATH."note/note.php";
+require_once __DIR__."/".SHRUB_PATH."comment/comment.php";
 require_once __DIR__."/".SHRUB_PATH."notification/notification.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
 
@@ -16,14 +16,7 @@ const CACHE_TTL = 60;
 // Do Actions
 $action = json_ArgShift();
 switch ( $action ) {
-	case 'stats': //note/stats
-		json_ValidateHTTPMethod('GET');
-		//$event_id = intval(json_ArgGet(0));
-
-		$RESPONSE['ham'] = "true";
-
-		break; // case 'stats': //note/stats
-	case 'get': //note/get
+	case 'get': //comment/get
 		json_ValidateHTTPMethod('GET');
 
 		$ids = explode('+', json_ArgGet(0));
@@ -32,24 +25,24 @@ switch ( $action ) {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
 		}
 
-		$RESPONSE['note'] = noteFlags_Filter(noteComplete_GetByNode($ids[0]), userAuth_GetID());
+		$RESPONSE['note'] = commentFlags_Filter(commentComplete_GetByNode($ids[0]), userAuth_GetID());
 
-		break; //case 'get': //note/get		
-	case 'getnote': //note/getnote
-		// Temporary "Get note by note ID" call. To be renamed when the renaming time comes.
+		break; //case 'get': //comment/get
+	case 'getcomment': //comment/getcomment
+		// Temporary "Get comment by comment ID" call. To be renamed when the renaming time comes.
 		json_ValidateHTTPMethod('GET');
 
 		$ids = explode('+', json_ArgGet(0));
 
-		// Limit number of notes
+		// Limit number of comments
 		if ( count($ids) > 250 ) {
-			json_EmitFatalError_BadRequest("Too many notes", $RESPONSE);
+			json_EmitFatalError_BadRequest("Too many comments", $RESPONSE);
 		}
-		
-		$RESPONSE['notes'] = noteFlags_Filter(noteComplete_Get($ids), userAuth_GetID());
 
-		break; //case 'getnote': //note/getnote
-	case 'add': //note/add
+		$RESPONSE['note'] = commentFlags_Filter(commentComplete_Get($ids), userAuth_GetID());
+
+		break; //case 'getcomment': //comment/getcomment
+	case 'add': //comment/add
 		json_ValidateHTTPMethod('POST');
 
 		if ( $user_id = userAuth_GetID() ) {
@@ -81,30 +74,30 @@ switch ( $action ) {
 
 			if ( isset($_POST['anonymous']) && $_POST['anonymous'] ) {
 				// Only allow anonymous comments to be posted if the node has "allow-anonymous-comments" meta set.
-				
+
 				$meta = nodeMeta_GetByKeyNode('allow-anonymous-comments',$node_id);
 				if ( count($meta) == 0 || !$meta[0]['value'] ) {
 					json_EmitFatalError_BadRequest("Cannot post anonymous comment: Node doesn't allow anonymous comments.", $RESPONSE);
 				}
-				
-				$flags |= SH_NOTE_FLAG_ANONYMOUS;
+
+				$flags |= SH_COMMENT_FLAG_ANONYMOUS;
 			}
 
 			// Check if you have permission to add comment to node
-			if ( note_IsNotePublicByNode($node) ) {
+			if ( comment_IsCommentPublicByNode($node) ) {
 				// hack for now
 				if ( $parent !== 0 )
 					json_EmitFatalError_Permission("Temporary: No children", $RESPONSE);
 
-				$RESPONSE['note'] = note_AddByNode($node['id'], $node['parent'], $author, $parent, $body, $version_tag, $flags);
-				
+				$RESPONSE['note'] = comment_AddByNode($node['id'], $node['parent'], $author, $parent, $body, $version_tag, $flags);
+
 				// Add notifications for users watching this thread
 				if ( $RESPONSE['note'] ) {
 					$mentions = notification_GetMentionedUsers($body);
-					notification_AddForNote($node['id'], $RESPONSE['note'], $author, $mentions);
+					notification_AddForComment($node['id'], $RESPONSE['note'], $author, $mentions);
 				}
 
-				// Invalidate the cache for the containing node so we recompute the note count immediately on the site.
+				// Invalidate the cache for the containing node so we recompute the comment count immediately on the site.
 				nodeCache_InvalidateById($node['id']);
 			}
 			else {
@@ -115,14 +108,14 @@ switch ( $action ) {
 			json_EmitFatalError_Permission(null, $RESPONSE);
 		}
 
-		break; //case 'add': //note/add
+		break; //case 'add': //comment/add
 
-	case 'update': //note/update
+	case 'update': //comment/update
 		json_ValidateHTTPMethod('POST');
 
 		if ( $user_id = userAuth_GetID() ) {
-			$note_id = intval(json_ArgShift());
-			if ( empty($note_id) ) {
+			$comment_id = intval(json_ArgShift());
+			if ( empty($comment_id) ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
 			}
 
@@ -143,30 +136,30 @@ switch ( $action ) {
 			if ( isset($_POST['tag']) )
 				$version_tag = coreSlugify_Name($_POST['tag']);
 
-			// Load Note
-			$note = note_GetById($note_id);
-			if ( $note['node'] !== $node_id )
+			// Load Comment
+			$comment = comment_GetById($comment_id);
+			if ( $comment['node'] !== $node_id )
 				json_EmitFatalError_Permission("Invalid node", $RESPONSE);
 
-			if ( $note['author'] !== $author )
+			if ( $comment['author'] !== $author )
 				json_EmitFatalError_Permission("Not allowed to edit other people's comments.", $RESPONSE);
 
 
 			// Are bodies different?
-			if ( $body !== $note['body'] ) {
+			if ( $body !== $comment['body'] ) {
 				// Load Node
 				$node = node_GetById($node_id);
 
 				// Check if you have permission to add comment to node
-				if ( note_IsNotePublicByNode($node) ) {
-					$RESPONSE['updated'] = note_SafeEdit($note_id, $author, $body, $version_tag, $note['flags']);
-					
+				if ( comment_IsCommentPublicByNode($node) ) {
+					$RESPONSE['updated'] = comment_SafeEdit($comment_id, $author, $body, $version_tag, $comment['flags']);
+
 					// Add mention notifications for at-mentions of users that were added in this edit.
-					$newmentions = notification_GetMentionedUsers($body, $note['body']);
-					notification_AddForEdit($node_id, $note_id, $author, $newmentions);
+					$newmentions = notification_GetMentionedUsers($body, $comment['body']);
+					notification_AddForEdit($node_id, $comment_id, $author, $newmentions);
 				}
 				else {
-					json_EmitFatalError_Forbidden("This node type does now allow notes (yet)", $RESPONSE);
+					json_EmitFatalError_Forbidden("This node type does now allow comments (yet)", $RESPONSE);
 				}
 			}
 			else {
@@ -177,10 +170,10 @@ switch ( $action ) {
 		else {
 			json_EmitFatalError_Permission(null, $RESPONSE);
 		}
-		break; //case 'update': //note/update
+		break; //case 'update': //comment/update
 
 /*
-	case 'count': //note/count
+	case 'count': //comment/count
 		json_ValidateHTTPMethod('GET');
 
 		if ( json_ArgCount() ) {
@@ -201,48 +194,48 @@ switch ( $action ) {
 
 
 
-			$RESPONSE['comments'] = note_CountByNode($node_ids);
+			$RESPONSE['comments'] = comment_CountByNode($node_ids);
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
 		}
-		break; // case 'count': //note/count
+		break; // case 'count': //comment/count
 */
 
-	case 'love': //note/love
+	case 'love': //comment/love
 		$old_action = $action;
 		$action = json_ArgShift();
 		switch ( $action ) {
-//			case 'getmy': //note/love/getmy
+//			case 'getmy': //comment/love/getmy
 //				json_ValidateHTTPMethod('GET');
 //
 //				if ( $user_id = userAuth_GetID() ) {
 //					// Limit to last 500 love?
 //
-//					$RESPONSE['my-love'] = noteLove_GetByAuthor($user_id);
+//					$RESPONSE['my-love'] = commentLove_GetByAuthor($user_id);
 //				}
 //				else {
 //					json_EmitFatalError_Permission(null, $RESPONSE);
 //				}
-//				break; // case 'getmy': //note/love/getmy
+//				break; // case 'getmy': //comment/love/getmy
 
-			case 'add': //note/love/add
+			case 'add': //comment/love/add
 				json_ValidateHTTPMethod('GET');
 
 				if ( json_ArgCount() ) {
-					$note_id = intval(json_ArgGet(0));
+					$comment_id = intval(json_ArgGet(0));
 
-					if ( $note_id ) {
+					if ( $comment_id ) {
 						// NOTE: You are allowed to LOVE anonymously (it's just not fetchable)
 						$user_id = userAuth_GetID();
 
-						if ( $note = note_GetById($note_id) ) {
-							if ( $note['id'] ) {
+						if ( $comment = comment_GetById($comment_id) ) {
+							if ( $comment['id'] ) {
 
 //							if ( in_array($node['type'], THINGS_I_CAN_LOVE) ) {
-								$RESPONSE['id'] = noteLove_AddByNote($note_id, $user_id, $note['node'], $note['supernode'], $note['author'] );
+								$RESPONSE['id'] = commentLove_AddByComment($comment_id, $user_id, $comment['node'], $comment['supernode'], $comment['author'] );
 
-//								$RESPONSE['love'] = noteLove_GetByNode($node_id);
+//								$RESPONSE['love'] = commentLove_GetByNode($node_id);
 //							}
 //							else {
 //								json_EmitFatalError_BadRequest("Can't love ".$node['type'], $RESPONSE);
@@ -260,21 +253,21 @@ switch ( $action ) {
 				else {
 					json_EmitFatalError_BadRequest(null, $RESPONSE);
 				}
-				break; // case 'add': //note/love/add
+				break; // case 'add': //comment/love/add
 
-			case 'remove': //note/love/remove
+			case 'remove': //comment/love/remove
 				json_ValidateHTTPMethod('GET');
 
 				if ( json_ArgCount() ) {
-					$note_id = intval(json_ArgGet(0));
+					$comment_id = intval(json_ArgGet(0));
 
-					if ( $note_id ) {
+					if ( $comment_id ) {
 						// NOTE: You are allowed to LOVE anonymously (it's just not fetchable)
 						$user_id = userAuth_GetID();
 
-						if ( $note = note_GetById($note_id) ) {
+						if ( $comment = comment_GetById($comment_id) ) {
 //							if ( in_array($node['type'], THINGS_I_CAN_LOVE) ) {
-								$RESPONSE['removed'] = noteLove_RemoveByNote($note_id, $user_id);
+								$RESPONSE['removed'] = commentLove_RemoveByComment($comment_id, $user_id);
 
 //								$RESPONSE['love'] = nodeLove_GetByNode($node_id);
 //								if ( !isset($RESPONSE['love']) )
@@ -299,9 +292,9 @@ switch ( $action ) {
 				else {
 					json_EmitFatalError_BadRequest(null, $RESPONSE);
 				}
-				break; // case 'remove': //note/love/remove
+				break; // case 'remove': //comment/love/remove
 
-				case 'getmy': //note/love/remove
+				case 'getmy': //comment/love/remove
 					json_ValidateHTTPMethod('GET');
 
 					if ( json_ArgCount() ) {
@@ -310,7 +303,7 @@ switch ( $action ) {
 						if ( $node_id ) {
 							$user_id = userAuth_GetID();
 
-							$RESPONSE['my-love'] = noteLove_GetByAuthor($user_id, $node_id);
+							$RESPONSE['my-love'] = commentLove_GetByAuthor($user_id, $node_id);
 						}
 						else {
 							json_EmitFatalError_BadRequest(null, $RESPONSE);
@@ -319,12 +312,12 @@ switch ( $action ) {
 					else {
 						json_EmitFatalError_BadRequest(null, $RESPONSE);
 					}
-					break; // case 'remove': //note/love/remove
+					break; // case 'remove': //comment/love/remove
 			default:
 			json_EmitFatalError_Forbidden(null, $RESPONSE);
 				break; // default
 		};
-		break; // case 'love': //note/love
+		break; // case 'love': //comment/love
 
 	default:
 		json_EmitFatalError_Forbidden(null, $RESPONSE);
