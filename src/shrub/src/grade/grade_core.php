@@ -30,7 +30,7 @@ function grade_GetByNodeAuthor( $node_id, $author_id ) {
 function grade_GetByAuthorParent( $author_id, $parent_id ) {
 	return db_QueryFetchIdKeyValue(
 		"SELECT
-			node,
+			node AS id,
 			name,
 			value
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_GRADE."
