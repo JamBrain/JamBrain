@@ -2,7 +2,7 @@ import Fetch	 				from '../internal/fetch';
 
 export default {
 	Get,
-	Pick,
+	GetByNode,
 
 	Add,
 	Remove,
@@ -10,17 +10,18 @@ export default {
 };
 
 
-export function Get( node ) {
-	return Fetch.Get(API_ENDPOINT+'/vx/comment/get/'+node, true);
-}
-
-export function Pick( comments ) {
+export function Get( comments ) {
 	if ( Number.isInteger(comments) ) {
 		comments = [comments];
 	}
 
-	return Fetch.Get(API_ENDPOINT+'/vx/comment/getcomment/'+comments.join('+'), true);
+	return Fetch.Get(API_ENDPOINT+'/vx/comment/get/'+comments.join('+'), true);
 }
+
+export function GetByNode( node ) {
+	return Fetch.Get(API_ENDPOINT+'/vx/comment/getbynode/'+node, true);
+}
+
 
 export function Add( parent, node, body, tag, anonymous ) {
 	var Data = {};
