@@ -11,7 +11,7 @@ const NOTIFY_ON_NODE_TYPE = [
 ];
 
 // Users are being referenced by user node ID.
-function notification_Add( $user, $node, $note, $type ) {
+function notification_Add( $user, $node, $comment, $type ) {
 	$notification_id = db_QueryInsert(
 		"INSERT INTO ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION." (
 			user,
@@ -26,7 +26,7 @@ function notification_Add( $user, $node, $note, $type ) {
 			NOW()
 		);",
 		$user,
-		$node, $note,
+		$node, $comment,
 		$type
 	);
 	return $notification_id;
@@ -35,14 +35,14 @@ function notification_Add( $user, $node, $note, $type ) {
 function notification_AddMultiple($notifications) {
 	if( count($notifications) == 0 )
 		return;
-	
+
 	$values = [];
 	foreach($notifications as $n) {
 		$user = intval($n['user']);
-		$note = intval($n['note']);
+		$comment = intval($n['note']);
 		$node = intval($n['node']);
 		$type = str_replace("'","''",$n['type']); // Note string originates from website code, not user data.
-		$values[] = "($user, $node, $note, '$type', NOW())";
+		$values[] = "($user, $node, $comment, '$type', NOW())";
 	}
 	db_QueryInsert(
 		"INSERT INTO ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION." (
@@ -59,7 +59,7 @@ function notification_AddMultiple($notifications) {
 function notification_Max( $user ) {
 	$counts = db_QueryFetchSingle(
 		"SELECT max(id)
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION." 
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION."
 		WHERE user=?;",
 		$user
 	);
@@ -73,7 +73,7 @@ function notification_CountUnread( $user ) {
 	$last_read = notification_GetLastReadNotification( $user );
 	$counts = db_QueryFetchSingle(
 		"SELECT count(*)
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION." 
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION."
 		WHERE user=? AND id > ?;",
 		$user, $last_read
 	);
@@ -99,7 +99,7 @@ function notification_GetUnread( $user, $limit = 20, $offset = 0 ) {
 function notification_Count( $user ) {
 	$counts = db_QueryFetchSingle(
 		"SELECT count(*)
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION." 
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION."
 		WHERE user=?;",
 		$user
 	);
@@ -138,21 +138,21 @@ function notification_AddForPublishedNode( $node, $author, $type, $mentions = []
 				$starusers[] = $star['a']; // Notify this user
 			}
 		}
-		
+
 		$starusers = array_diff($starusers, $mentions);
 		foreach($starusers as $user)
 		{
-			$notifications[] = ['user' => $user, 'node' => $node, 'note' => 0, 'type' => $type]; 
+			$notifications[] = ['user' => $user, 'node' => $node, 'note' => 0, 'type' => $type];
 		}
 		foreach($mentions as $user)
 		{
-			if ( $user == $author ) { 
+			if ( $user == $author ) {
 				continue; // don't inform author that they mentioned themselves. That would be silly.
 			}
-			$notifications[] = ['user' => $user, 'node' => $node, 'note' => 0, 'type' => SH_NOTIFICATION_MENTION]; 
+			$notifications[] = ['user' => $user, 'node' => $node, 'note' => 0, 'type' => SH_NOTIFICATION_MENTION];
 		}
-		
-		notification_AddMultiple($notifications);	
+
+		notification_AddMultiple($notifications);
 	}
 }
 
@@ -171,11 +171,11 @@ function notification_GetSubscribers( $node_id ) {
 	return ['optin' => $optin, 'optout' => $optout];
 }
 
-function notification_AddForNote( $node_id, $note, $author, $mentions = [] ) {
-	// Look up the users who participated in this thread and send them notifications, except for the author.	
-	$base_notify = note_InterestedUsers($node_id);
+function notification_AddForComment( $node_id, $comment, $author, $mentions = [] ) {
+	// Look up the users who participated in this thread and send them notifications, except for the author.
+	$base_notify = comment_InterestedUsers($node_id);
 	$nodeauthor = node_GetAuthor($node_id);
-	
+
 	// Find other authors linked to this node.
 	// Allow the link to be in either direction, Currently website adds author links as <game node>, <user id>
 	// No need to add all authors to users though since they will get feedback type instead of note
@@ -184,60 +184,60 @@ function notification_AddForNote( $node_id, $note, $author, $mentions = [] ) {
 		$feedback_notify[] = $nodeauthor;
 	}
 	$feedback_notify = array_unique($feedback_notify);
-	
+
 	// Look up what users have expressly opted in and out of notifications for this thread.
 	$subscriptions = notification_GetSubscribers($node_id);
-	
+
 	// Add users that are opting in to notifications
-	$base_notify = array_merge($base_notify, $subscriptions['optin']);	
+	$base_notify = array_merge($base_notify, $subscriptions['optin']);
 	// Eliminate duplicate users - don't send duplicate notifications.
 	$base_notify = array_unique($base_notify);
 	// Remove users that opt-out of notifications
 	$base_notify = array_diff($base_notify, $subscriptions['optout']);
 	// Supersede normal notifications with "mention" notifications if the user was at-mentioned
 	$base_notify = array_diff($base_notify, $mentions);
-	
+
 	// Supersede feedback with "mention" notifications if the user was at-mentioned
 	$feedback_notify = array_diff($feedback_notify, $mentions);
 	// Remove users who have opted out
-	$feedback_notify = array_diff($feedback_notify, $subscriptions['optout']);	
+	$feedback_notify = array_diff($feedback_notify, $subscriptions['optout']);
 	// Supersede normal notifications with feedback notifications if the user was a (co)=author
-	$base_notify = array_diff($base_notify, $feedback_notify); 
-	
+	$base_notify = array_diff($base_notify, $feedback_notify);
+
 	$notifications = [];
 	foreach($base_notify as $uid)	{
 		if ( $uid == $author )
 			continue; // Don't bother sending the author of the note a notification for their own note.
-			
-		$notifications[] = ['user' => $uid, 'node' => $node_id, 'note' => $note, 'type' => SH_NOTIFICATION_NOTE];
+
+		$notifications[] = ['user' => $uid, 'node' => $node_id, 'note' => $comment, 'type' => SH_NOTIFICATION_NOTE];
 	}
 	foreach($mentions as $uid)	{
 		if ( $uid == $author )
 			continue; // Don't bother sending the author of the note a notification for their own note.
-			
-		$notifications[] = ['user' => $uid, 'node' => $node_id, 'note' => $note, 'type' => SH_NOTIFICATION_MENTION];
-	}	
+
+		$notifications[] = ['user' => $uid, 'node' => $node_id, 'note' => $comment, 'type' => SH_NOTIFICATION_MENTION];
+	}
 	foreach($feedback_notify as $uid)	{
 		if ( $uid == $author )
 			continue; // Don't bother sending the author of the note a notification for their own note.
-			
-		$notifications[] = ['user' => $uid, 'node' => $node_id, 'note' => $note, 'type' => SH_NOTIFICATION_FEEDBACK];
-	}	
 
-	notification_AddMultiple($notifications);	
+		$notifications[] = ['user' => $uid, 'node' => $node_id, 'note' => $comment, 'type' => SH_NOTIFICATION_FEEDBACK];
+	}
+
+	notification_AddMultiple($notifications);
 }
 
-function notification_AddForEdit($node, $note, $author, $mentions = []) {
+function notification_AddForEdit($node, $comment, $author, $mentions = []) {
 
 	$notifications = [];
 	foreach($mentions as $uid)	{
 		if ( $uid == $author )
-			continue; // Don't bother sending the author of the note a notification for their own note.
-			
-		$notifications[] = ['user' => $uid, 'node' => $node, 'note' => $note, 'type' => SH_NOTIFICATION_MENTION];
-	}	
-	
-	notification_AddMultiple($notifications);	
+			continue; // Don't bother sending the author of the comment a notification for their own comment.
+
+		$notifications[] = ['user' => $uid, 'node' => $node, 'note' => $comment, 'type' => SH_NOTIFICATION_MENTION];
+	}
+
+	notification_AddMultiple($notifications);
 }
 
 
@@ -264,19 +264,19 @@ function notification_GetMentionedUsers($text, $previoustext = null) {
 		$remove = notification_AtTokens($previoustext);
 		$mentioned = array_diff($mentioned, $remove);
 	}
-	
+
 	if ( count($mentioned) == 0 ) {
 		return [];
 	}
-	
+
 	// Limit the number of mentions that will actually work.
 	if ( count($mentioned) > MAX_MENTIONS_TO_NOTIFY ) {
 		$mentioned = array_chunk($mentioned, MAX_MENTIONS_TO_NOTIFY)[0];
 	}
-	
+
 	// Resolve mentioned user slugs to user node IDs, if possible.
 	$idmap = node_GetUserIdBySlug($mentioned);
-	
+
 	return array_values($idmap);
 }
 
@@ -284,7 +284,7 @@ function notification_GetMentionedUsers($text, $previoustext = null) {
 // We'll define an at-token as [start of string or non-sluggable-character] [@] [string of sluggable characters]
 function notification_AtTokens($text) {
 	$text = strip_tags($text);
-	$text = strtolower($text);	
+	$text = strtolower($text);
 	if ( preg_match_all("/(?:^|[^a-z0-9_.\-])@([a-z0-9_.\-]+)/", $text, $matches) ) {
 		return array_unique($matches[1]);
 	}

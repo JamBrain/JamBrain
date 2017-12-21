@@ -3,21 +3,23 @@ import Fetch	 				from '../internal/fetch';
 export default {
 	Get,
 	Pick,
+
 	Add,
+	Remove,
 	Update
 };
 
 
 export function Get( node ) {
-	return Fetch.Get(API_ENDPOINT+'/vx/note/get/'+node, true);
+	return Fetch.Get(API_ENDPOINT+'/vx/comment/get/'+node, true);
 }
 
-export function Pick( notes ) {
-	if ( Number.isInteger(notes) ) {
-		notes = [notes];
+export function Pick( comments ) {
+	if ( Number.isInteger(comments) ) {
+		comments = [comments];
 	}
 
-	return Fetch.Get(API_ENDPOINT+'/vx/note/getnote/'+notes.join('+'), true);
+	return Fetch.Get(API_ENDPOINT+'/vx/comment/getcomment/'+comments.join('+'), true);
 }
 
 export function Add( parent, node, body, tag, anonymous ) {
@@ -34,7 +36,11 @@ export function Add( parent, node, body, tag, anonymous ) {
 		Data.anonymous = anonymous;
 	}
 
-	return Fetch.Post(API_ENDPOINT+'/vx/note/add/'+node, Data);
+	return Fetch.Post(API_ENDPOINT+'/vx/comment/add/'+node, Data);
+}
+
+export function Remove( comment_id ) {
+	return false;
 }
 
 export function Update( id, node, body, tag ) {
@@ -47,5 +53,5 @@ export function Update( id, node, body, tag ) {
 	if ( tag )
 		Data.tag = tag;
 
-	return Fetch.Post(API_ENDPOINT+'/vx/note/update/'+id, Data);
+	return Fetch.Post(API_ENDPOINT+'/vx/comment/update/'+id, Data);
 }

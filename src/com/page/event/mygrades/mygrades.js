@@ -32,27 +32,23 @@ export default class MyGrades extends Component {
 	}
 
 	componentDidMount() {
+		$Grade.GetAllMy(this.props.node.id)
+			.then(r => {
+				this.setState({'grades': r.grade});
+			});
+
 		$Grade.GetMyList(this.props.node.id)
 			.then(r => {
 				this.setState({
-					'gameIds': r.games,
-					'grades': this.produceGradesMap(r.games, r.grades),
+					'gameIds': r.items,
 					'nodes': new Map(),
 					'loading': true,
 					'error': null});
-				this.collectNodes(r.games, this.props.node.id);
+				this.collectNodes(r.items, this.props.node.id);
 			})
 			.catch(r => {
 				this.setState({'error': r, 'gameIds': null, 'loading': false});
 			});
-	}
-
-	produceGradesMap( gameIds, grades ) {
-		const mapping = new Map();
-		for (let i=0; i<gameIds.length; i+=1) {
-			mapping[gameIds[i]] = grades[i];
-		}
-		return mapping;
 	}
 
 	collectNodes( gameIds, eventId ) {
