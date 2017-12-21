@@ -15,6 +15,10 @@ const SORT_ORDER = 0;
 const SORT_ALPHA = 1;
 const SORT_TYPE = 2;
 
+const pad = (number, digits) => {
+	return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
+};
+
 export default class MyGrades extends Component {
 
 	constructor( props ) {
@@ -25,22 +29,52 @@ export default class MyGrades extends Component {
 
 		this.onSortByChange = this.onSortByChange.bind(this);
 	}
+
 	componentDidMount() {
 		$Grade.GetMyList(this.props.node.id)
 			.then(r => {
-				this.setState({'gameIds': r.games, 'nodes': new Map(), 'loading': true, 'error': null});
-				this.collectNodes(r.games);
+				this.setState({
+					'gameIds': r.games,
+					'grades': this.produceGradesMap(r.games, r.grades),
+					'nodes': new Map(),
+					'loading': true,
+					'error': null});
+				this.collectNodes(r.games, this.props.node.id);
 			})
 			.catch(r => {
 				this.setState({'error': r, 'gameIds': null, 'loading': false});
 			});
 	}
 
-	collectNodes( gameIds ) {
+	produceGradesMap( gameIds, grades ) {
+		const mapping = new Map();
+		for (let i=0; i<gameIds.length; i+=1) {
+			mapping[gameIds[i]] = grades[i];
+		}
+		return mapping;
+	}
+
+	collectNodes( gameIds, eventId ) {
 		let promises = [];
-		let mapping = new Map();
+		let nodeMapping = new Map();
+		let gradeMapping = new Map();
 		const chunkSize = 20;
 		let i = 0;
+		promises.push($Node.Get(eventId).then(r => {
+			const {meta} = r.node[0];
+			let gradeIndex = 1;
+			while (true) {
+				const gradeKey = `grade-${pad(gradeIndex, 2)}`;
+				const gradeName = meta[gradeKey];
+				if (gradeName) {
+					gradeMapping[gradeKey] = gradeName;
+					gradeIndex += 1;
+				}
+				else {
+					break;
+				}
+			}
+		}));
 		while (true) {
 			const chunk = gameIds.slice(i, i + chunkSize);
 			if (chunk.length == 0) {
@@ -49,7 +83,7 @@ export default class MyGrades extends Component {
 			promises.push($Node.Get(chunk)
 				.then(r => {
 					r.node.map(node => {
-						mapping[node.id] = node;
+						nodeMapping[node.id] = node;
 					});
 				})
 				.catch(r => {
@@ -61,8 +95,8 @@ export default class MyGrades extends Component {
 
 		Promise.all(promises)
 			.then(r => {
-				this.setState({'loading': false, 'nodes': mapping});
-				return this.collectAuthors(mapping, gameIds);
+				this.setState({'loading': false, 'nodes': nodeMapping, 'gradeNames': gradeMapping});
+				return this.collectAuthors(nodeMapping, gameIds);
 			});
 	}
 
@@ -161,7 +195,7 @@ export default class MyGrades extends Component {
 	}
 
     render( props, state ) {
-		const {error, nodes, loading} = state;
+		const {error, nodes, loading, grades, gradeNames} = state;
 		const gameIds = this.getSortedGames();
 		const shouldGradeNoGames = 20;
 		const hasResults = !loading && !error;
@@ -190,11 +224,16 @@ export default class MyGrades extends Component {
 		if (hasResults) {
 			let Items = [];
 			gameIds.map(nodeId => {
-				Items.push(<GradedItem node={nodes[nodeId]} authors={this.getItemAuthorsFromState(nodeId)} key={nodeId} />);
+				Items.push((<GradedItem
+					node={nodes[nodeId]}
+					grades={grades[nodeId]}
+					gradeNames={gradeNames}
+					authors={this.getItemAuthorsFromState(nodeId)}
+					key={nodeId} />));
 			});
 			ShowResults = <ContentList>{Items}</ContentList>;
 			ShowSorting = (
-				<div class='-sort-by'>
+				<div class="-sort-by">
 					Sort by:
 					<InputDropdown class="-tag"
 						items={[[SORT_ORDER, 'Grading order'], [SORT_ALPHA, 'Alphabetically'], [SORT_TYPE, 'Type']]}
@@ -267,7 +306,7 @@ class GradedItem extends Component {
 	}
 
 	render( props ) {
-		const {node, authors} = props;
+		const {node, authors, grades, gradeNames} = props;
 		let description = this.cleanGameDescription(node.body);
 		description = this.trimDescriptionToLength(description, 100, 175);
 		let ShowAuthors = null;
@@ -284,12 +323,20 @@ class GradedItem extends Component {
 			});
 			ShowAuthors = <p class="-authors">{AuthorList}</p>;
 		}
+
+		const Grades = [];
+		for (let grade in grades) {
+			Grades.push(<div class="-grade" key={grade}><div class="-grade-label">{gradeNames[grade]}:</div>{grades[grade]}</div>);
+		}
+		const ShowGrades = <div class="-grades">{Grades}</div>;
+
 		return (
 			<UIButtonLink class={cN("graded-item", props.class)} href={node.path}>
 				{this.getItemType(node)}
 				<strong>{node.name}</strong>
 				{ShowAuthors}
 				<p>{description}</p>
+				{ShowGrades}
 			</UIButtonLink>
 		);
 	}
