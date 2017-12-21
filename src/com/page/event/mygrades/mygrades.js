@@ -6,9 +6,14 @@ import ContentList				from 'com/content-list/list';
 import ContentLoading			from 'com/content-loading/loading';
 
 import UIButtonLink from 'com/ui/button/button-link';
+import InputDropdown					from 'com/input-dropdown/dropdown';
 
 import $Grade					from 'shrub/js/grade/grade';
 import $Node					from 'shrub/js/node/node';
+
+const SORT_ORDER = 0;
+const SORT_ALPHA = 1;
+const SORT_TYPE = 2;
 
 export default class MyGrades extends Component {
 
@@ -17,6 +22,8 @@ export default class MyGrades extends Component {
 		this.state = {
 			'loading': true,
 		};
+
+		this.onSortByChange = this.onSortByChange.bind(this);
 	}
 	componentDidMount() {
 		$Grade.GetMyList(this.props.node.id)
@@ -130,8 +137,32 @@ export default class MyGrades extends Component {
 		return itemAuthors;
 	}
 
+	onSortByChange( newSort ) {
+		this.setState({'sortBy': newSort});
+	}
+
+	getSortedGames() {
+		const {gameIds, nodes} = this.state;
+		switch (this.state.sortBy) {
+			case SORT_TYPE:
+				return gameIds
+					.map(id => [id, nodes[id].subsubtype + nodes[id].subtype + nodes[id].type]) //Get type string
+					.sort((a, b) => a[1] > b[1]) //Order by type string
+					.map(elem => elem[0]); //Return ids
+			case SORT_ALPHA:
+				return gameIds
+					.map(id => [id, nodes[id].name]) //Get ids and names
+					.sort((a, b) => a[1] > b[1]) //Order by names
+					.map(elem => elem[0]); //Return ids
+			case SORT_ORDER:
+			default:
+				return gameIds;
+		}
+	}
+
     render( props, state ) {
-		const {gameIds, error, nodes, loading} = state;
+		const {error, nodes, loading} = state;
+		const gameIds = this.getSortedGames();
 		const shouldGradeNoGames = 20;
 		const hasResults = !loading && !error;
 		const ShowError = error ? <div class="-warning">Could not retrieve your votes. Are you logged in?</div> : null;
@@ -139,6 +170,7 @@ export default class MyGrades extends Component {
 		let ShowLoading = !gameIds && !error ? <ContentLoading /> : null;
 		let ShowParagraph = null;
 		let ShowWarning = null;
+		let ShowSorting = null;
 
 		if (!!gameIds) {
 			if (gameIds.length < shouldGradeNoGames) {
@@ -161,6 +193,18 @@ export default class MyGrades extends Component {
 				Items.push(<GradedItem node={nodes[nodeId]} authors={this.getItemAuthorsFromState(nodeId)} key={nodeId} />);
 			});
 			ShowResults = <ContentList>{Items}</ContentList>;
+			ShowSorting = (
+				<div class='-sort-by'>
+					Sort by:
+					<InputDropdown class="-tag"
+						items={[[SORT_ORDER, 'Grading order'], [SORT_ALPHA, 'Alphabetically'], [SORT_TYPE, 'Type']]}
+						value={state.sortBy}
+						onmodify={this.onSortByChange}
+						useClickCatcher={false}
+						selfManaged={true}
+					/>
+				</div>
+			);
 		}
 
         return (
@@ -170,6 +214,7 @@ export default class MyGrades extends Component {
 				{ShowError}
 				{ShowWarning}
 				{ShowParagraph}
+				{ShowSorting}
 				{ShowResults}
 			</div>
         );

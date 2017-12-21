@@ -14,7 +14,20 @@
 		margin: 0.5em 0em;
 	}
 
+	& > .-sort-by {
+		display: inline-block;
+
+		& > .input-dropdown {
+			display: inline-block;
+			vertical-align: baseline;
+			width: 15em;
+			max-width: 80vw;
+		}
+	}
+
 	& > .content-list {
+		margin-top: 0.5em;
+
 		& > .graded-item {
 			color: @COL_NDDD;
 			position: relative;
@@ -29,6 +42,13 @@
 			&:hover {
 				background: @COL_A;
 				color: @COL_NLLLLL;
+
+				& > .-authors {
+					& > .-at-name {
+						background: @COL_A;
+						color: @COL_NLLLLL;
+					}
+				}
 			}
 
 			& > * {
