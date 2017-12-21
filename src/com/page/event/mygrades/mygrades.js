@@ -14,7 +14,7 @@ import $Node					from 'shrub/js/node/node';
 const SORT_ORDER = 0;
 const SORT_ALPHA = 1;
 const SORT_TYPE = 2;
-const SORT_GRADE_AVERAGE = 3;
+const SORT_GRADE_AVERAGE = 3; //The value should be the highest of the permanent sortings!
 
 const pad = (number, digits) => {
 	return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
@@ -206,11 +206,17 @@ export default class MyGrades extends Component {
 					})
 					.sort((a, b) => b[1] - a[1]) //Order by avg grade descending
 					.map(elem => elem[0]); //Return ids
+			default: // Sorting by one of the grades
+				const gradeKey = `grade-${pad(sortBy - SORT_GRADE_AVERAGE, 2)}`;
+				return gameIds
+					.map(id => [id, grades[id][gradeKey] ? grades[id][gradeKey] : -1]) // Make those who don't have grade come last
+					.sort((a, b) => b[1] - a[1]) //Order by grade descending
+					.map(elem => elem[0]); //Return ids
 		}
 	}
 
     render( props, state ) {
-		const {error, nodes, loading, grades, gradeNames} = state;
+		const {error, nodes, loading, grades, gradeNames, sortBy} = state;
 		const gameIds = this.getSortedGames();
 		const shouldGradeNoGames = 20;
 		const hasResults = !loading && !error;
@@ -238,25 +244,33 @@ export default class MyGrades extends Component {
 		let ShowResults = null;
 		if (hasResults) {
 			let Items = [];
+			const gradeKey = sortBy && sortBy > SORT_GRADE_AVERAGE ? `grade-${pad(sortBy - SORT_GRADE_AVERAGE, 2)}` : null;
 			gameIds.map(nodeId => {
 				Items.push((<GradedItem
 					node={nodes[nodeId]}
 					grades={grades[nodeId]}
 					gradeNames={gradeNames}
+					focusGrade={gradeKey}
 					authors={this.getItemAuthorsFromState(nodeId)}
 					key={nodeId} />));
 			});
 			ShowResults = <ContentList>{Items}</ContentList>;
+			sortOptions = [
+				[SORT_ORDER, 'Grading order'],
+				[SORT_ALPHA, 'Alphabetically'],
+				[SORT_TYPE, 'Type'],
+				[SORT_GRADE_AVERAGE, 'Average grade'],
+			];
+			let gradeIndex = 1;
+			for (let gradeKey in gradeNames) {
+				sortOptions.push([gradeIndex + SORT_GRADE_AVERAGE, gradeNames[gradeKey]]);
+				gradeIndex += 1;
+			}
 			ShowSorting = (
 				<div class="-sort-by">
 					Sort by:
 					<InputDropdown class="-tag"
-						items={[
-							[SORT_ORDER, 'Grading order'],
-							[SORT_ALPHA, 'Alphabetically'],
-							[SORT_TYPE, 'Type'],
-							[SORT_GRADE_AVERAGE, 'Average grade'],
-						]}
+						items={sortOptions}
 						value={state.sortBy}
 						onmodify={this.onSortByChange}
 						useClickCatcher={false}
@@ -326,7 +340,7 @@ class GradedItem extends Component {
 	}
 
 	render( props ) {
-		const {node, authors, grades, gradeNames} = props;
+		const {node, authors, grades, gradeNames, focusGrade} = props;
 		let description = this.cleanGameDescription(node.body);
 		description = this.trimDescriptionToLength(description, 100, 175);
 		let ShowAuthors = null;
@@ -346,7 +360,7 @@ class GradedItem extends Component {
 
 		const Grades = [];
 		for (let grade in grades) {
-			Grades.push(<div class="-grade" key={grade}><div class="-grade-label">{gradeNames[grade]}:</div>{grades[grade]}</div>);
+			Grades.push(<div class={cN("-grade", grade == focusGrade ? "-focused" : "")} key={grade}><div class="-grade-label">{gradeNames[grade]}:</div>{grades[grade]}</div>);
 		}
 		const ShowGrades = <div class="-grades">{Grades}</div>;
 

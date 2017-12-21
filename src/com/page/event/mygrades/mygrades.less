@@ -79,6 +79,14 @@
 					display: inline-block;
 					margin-right: 0.75em;
 
+					&.-focused {
+						text-decoration: underline;
+
+						& > * {
+							text-decoration: underline;
+						}
+					}
+
 					& > .-grade-label {
 						display: inline-block;
 						font-weight: bold;
