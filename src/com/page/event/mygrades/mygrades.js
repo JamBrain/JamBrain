@@ -5,13 +5,14 @@ import ContentSimple					from 'com/content-simple/simple';
 import ContentList				from 'com/content-list/list';
 import ContentLoading			from 'com/content-loading/loading';
 
-import UIButtonLink from 'com/ui/button/button-link';
+import UIButtonLink						from 'com/ui/button/button-link';
 import InputDropdown					from 'com/input-dropdown/dropdown';
-
+import SVGIcon 							from 'com/svg-icon/icon';
 import BarChart							from 'com/visualization/barchart/barchart';
 
 import $Grade					from 'shrub/js/grade/grade';
 import $Node					from 'shrub/js/node/node';
+import $Comment					from 'shrub/js/comment/comment';
 
 const SORT_ORDER = 0;
 const SORT_ALPHA = 1;
@@ -34,7 +35,8 @@ export default class MyGrades extends Component {
 	}
 
 	componentDidMount() {
-		$Grade.GetAllMy(this.props.node.id)
+		const eventId = this.props.node.id;
+		$Grade.GetAllMy(eventId)
 			.then(r => {
 				this.setState({'grades': r.grade});
 			});
@@ -46,15 +48,43 @@ export default class MyGrades extends Component {
 					'nodes': new Map(),
 					'loading': true,
 					'error': null});
-				this.collectNodes(r.items, this.props.node.id);
+				this.collectNodes(r.items, eventId);
 			})
 			.catch(r => {
 				this.setState({'error': r, 'gameIds': null, 'loading': false});
 			});
+
+		$Comment.GetMyListByParentNode(eventId).then(r => this.collectComments(r.comment));
+	}
+
+	collectComments( commentIds ) {
+		const chunkSize = 200;
+		let chunkStart = 0;
+		const promises = [];
+		const nodesWithMyComments = new Map();
+		while (true) {
+			const chunk = commentIds.slice(chunkStart, chunkSize);
+			if (chunk.length == 0) {
+				break;
+			}
+			promises.push($Comment.Get(chunk).then(r => r.note.forEach(note => {
+				if (nodesWithMyComments[note.node]) {
+					nodesWithMyComments[note.node] += 1;
+				}
+				else {
+					nodesWithMyComments[note.node] = 1;
+				}
+			})));
+			chunkStart += 1;
+		}
+
+		return Promise.all(promises).then(r => {
+			this.setState({'myComments': nodesWithMyComments});
+		});
 	}
 
 	collectNodes( gameIds, eventId ) {
-		let promises = [];
+		const promises = [];
 		let nodeMapping = new Map();
 		let gradeMapping = new Map();
 		const chunkSize = 20;
@@ -92,7 +122,7 @@ export default class MyGrades extends Component {
 			i += chunkSize;
 		}
 
-		Promise.all(promises)
+		return Promise.all(promises)
 			.then(r => {
 				this.setState({'loading': false, 'nodes': nodeMapping, 'gradeNames': gradeMapping});
 				return this.collectAuthors(nodeMapping, gameIds);
@@ -214,7 +244,7 @@ export default class MyGrades extends Component {
 	}
 
     render( props, state ) {
-		const {error, nodes, loading, grades, gradeNames, sortBy} = state;
+		const {error, nodes, loading, grades, gradeNames, sortBy, myComments} = state;
 		const gameIds = this.getSortedGames();
 		const shouldGradeNoGames = 20;
 		const hasResults = !loading && !error;
@@ -250,6 +280,7 @@ export default class MyGrades extends Component {
 					grades={grades[nodeId]}
 					gradeNames={gradeNames}
 					focusGrade={gradeKey}
+					comments={myComments ? myComments[nodeId] : null}
 					authors={this.getItemAuthorsFromState(nodeId)}
 					key={nodeId} />));
 			});
@@ -341,7 +372,7 @@ class GradedItem extends Component {
 	}
 
 	render( props ) {
-		const {node, authors, grades, gradeNames, focusGrade} = props;
+		const {node, authors, grades, gradeNames, focusGrade, comments} = props;
 		let description = this.cleanGameDescription(node.body);
 		description = this.trimDescriptionToLength(description, 100, 175);
 		let ShowAuthors = null;
@@ -364,11 +395,13 @@ class GradedItem extends Component {
 			Grades.push(<div class={cN("-grade", grade == focusGrade ? "-focused" : "")} key={grade}><div class="-grade-label">{gradeNames[grade]}:</div>{grades[grade]}</div>);
 		}
 		const ShowGrades = <div class="-grades">{Grades}</div>;
+		const ShowComments = comments ? <SVGIcon>{comments > 1 ? 'bubbles' : 'bubble'}</SVGIcon> : null;
 
 		return (
 			<UIButtonLink class={cN("graded-item", props.class)} href={node.path}>
 				{this.getItemType(node)}
 				<strong>{node.name}</strong>
+				{ShowComments}
 				{ShowAuthors}
 				<p>{description}</p>
 				{ShowGrades}
