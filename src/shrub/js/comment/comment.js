@@ -23,7 +23,7 @@ export function GetByNode( node ) {
 	return Fetch.Get(API_ENDPOINT+'/vx/comment/getbynode/'+node, true);
 }
 
-export function GetMyListbyParentNode( node ) {
+export function GetMyListByParentNode( node ) {
 	return Fetch.Get(API_ENDPOINT+'/vx/comment/getmylistbyparentnode/'+node, true);
 }
 
