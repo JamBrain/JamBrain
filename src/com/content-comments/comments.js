@@ -4,9 +4,9 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 
 import ContentCommentsComment			from 'comments-comment';
 
-import $Note							from '../../shrub/js/note/note';
+import $Comment							from '../../shrub/js/comment/comment';
 import $Node							from '../../shrub/js/node/node';
-import $NoteLove						from '../../shrub/js/note/note_love';
+import $CommentLove						from '../../shrub/js/comment/comment_love';
 import $Notification					from '../../shrub/js/notification/notification';
 
 export default class ContentComments extends Component {
@@ -52,7 +52,7 @@ export default class ContentComments extends Component {
 			});
 		}
 
-		$Note.Get( node.id )
+		$Comment.Get( node.id )
 		.then(r => {
 			// Determine if current user is one of the authors of this node
 			let isauthor = false;
@@ -91,7 +91,7 @@ export default class ContentComments extends Component {
 				this.setState({'newcomment': this.genComment()});
 			});
 
-			$NoteLove.GetMy(node.id)
+			$CommentLove.GetMy(node.id)
 			.then(r => {
 					this.setState({"lovedComments": r["my-love"]});
 
@@ -211,7 +211,7 @@ export default class ContentComments extends Component {
 		const newcomment = this.state.newcomment;
 		this.setState({'error': null });
 
-		$Note.Add( newcomment.parent, newcomment.node, newcomment.body, null, publishAnon )
+		$Comment.Add( newcomment.parent, newcomment.node, newcomment.body, null, publishAnon )
 		.then(r => {
 			if ( r.note ) {
 				var Now = new Date();

@@ -1,6 +1,6 @@
 <?php
 
-function noteTree_Add( $node, $note, $ancestor, $hops ) {
+function commentTree_Add( $node, $comment, $ancestor, $hops ) {
 	$ret = db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NOTE_TREE." (
 			node,
@@ -15,10 +15,10 @@ function noteTree_Add( $node, $note, $ancestor, $hops ) {
 			?
 		)",
 		$node,
-		$note,
+		$comment,
 		$ancestor,
 		$hops
 	);
-	
+
 	return $ret;
 }

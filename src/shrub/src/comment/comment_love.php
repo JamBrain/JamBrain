@@ -1,13 +1,13 @@
 <?php
 
-// BUG: authornode should be authornote *
-// supernode (event), node (game), then author of the comment (i.e. authornote), and finally the author of the love
+// BUG: authornode should be authorcomment *
+// supernode (event), node (game), then author of the comment (i.e. authorcomment), and finally the author of the love
 
-function noteLove_CountByNode( $node ) {
+function commentLove_CountByNode( $node ) {
 	$ret = db_QueryFetch(
-		"SELECT 
-			note, 
-			COUNT(note) AS count, 
+		"SELECT
+			note,
+			COUNT(note) AS count,
 			".DB_FIELD_DATE('MAX(timestamp)','timestamp')."
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
 		WHERE node=?
@@ -19,20 +19,20 @@ function noteLove_CountByNode( $node ) {
 }
 
 // For us: event_id, our game_id, our team's author ids
-// Not our node (i.e. other games), notes (comments) authored by us, ignoring love from us and our team
-function noteLove_CountBySuperNotNodeAuthorKnownNotAuthor( $supernode_id, $node_id, $author_ids ) {
+// Not our node (i.e. other games), comments (comments) authored by us, ignoring love from us and our team
+function commentLove_CountBySuperNotNodeAuthorKnownNotAuthor( $supernode_id, $node_id, $author_ids ) {
 	if ( !is_array($author_ids) )
 		$author_ids = [$author_ids];
-	
+
 	return db_QueryFetchValue(
-		"SELECT 
+		"SELECT
 			COUNT(id) AS count
-		FROM 
+		FROM
 			".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
-		WHERE 
+		WHERE
 			supernode=?
 			AND node!=?
-			AND authornode IN (".implode(',', $author_ids).") 
+			AND authornode IN (".implode(',', $author_ids).")
 			AND author > 0
 			AND author NOT IN (".implode(',', $author_ids).")
 		;",
@@ -42,17 +42,17 @@ function noteLove_CountBySuperNotNodeAuthorKnownNotAuthor( $supernode_id, $node_
 }
 
 // Against us: event_id, our game_id, our team's author ids
-// All notes (comments) on our game not by us, and ignoring any love by us and our team
-function noteLove_CountBySuperNodeNotAuthorKnownNotAuthor( $supernode_id, $node_id, $author_ids ) {
+// All comments (comments) on our game not by us, and ignoring any love by us and our team
+function commentLove_CountBySuperNodeNotAuthorKnownNotAuthor( $supernode_id, $node_id, $author_ids ) {
 	if ( !is_array($author_ids) )
 		$author_ids = [$author_ids];
-	
+
 	return db_QueryFetchValue(
-		"SELECT 
+		"SELECT
 			COUNT(id) AS count
-		FROM 
+		FROM
 			".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
-		WHERE 
+		WHERE
 			supernode=?
 			AND node=?
 			AND authornode NOT IN (".implode(',', $author_ids).")
@@ -66,25 +66,25 @@ function noteLove_CountBySuperNodeNotAuthorKnownNotAuthor( $supernode_id, $node_
 
 
 // This should actually work fine, I just want to discourage myself from using it, due to preformance
-function noteLove_GetByNote( $notes ) {
-	$multi = is_array($notes);
+function commentLove_GetByComment( $comments ) {
+	$multi = is_array($comments);
 	if ( !$multi )
-		$notes = [$notes];
+		$comments = [$comments];
 
-	if ( is_array($notes) ) {
-		// Confirm that all Notes are not zero
-		foreach( $notes as $note ) {
-			if ( intval($note) == 0 )
+	if ( is_array($comments) ) {
+		// Confirm that all Comments are not zero
+		foreach( $comments as $comment ) {
+			if ( intval($comment) == 0 )
 				return null;
 		}
 
 		// Build IN string
-		$note_string = implode(',', $notes);
+		$comment_string = implode(',', $comments);
 
 		$ret = db_QueryFetch(
 			"SELECT note, COUNT(note) AS count, ".DB_FIELD_DATE('MAX(timestamp)','timestamp')."
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
-			WHERE note IN ($note_string)
+			WHERE note IN ($comment_string)
 			GROUP BY note".($multi?';':' LIMIT 1;')
 		);
 
@@ -99,7 +99,7 @@ function noteLove_GetByNote( $notes ) {
 
 
 /// Can only add 1 love at a time (NOTE: has an extra arguments versus the node code)
-function noteLove_AddByNote( $id, $author, $node, $supernode, $authornode ) {
+function commentLove_AddByComment( $id, $author, $node, $supernode, $authornode ) {
 	if ( is_array($id) ) {
 		return null;
 	}
@@ -144,7 +144,7 @@ function noteLove_AddByNote( $id, $author, $node, $supernode, $authornode ) {
 }
 
 /// Can only remove 1 love at a time
-function noteLove_RemoveByNote( $id, $author ) {
+function commentLove_RemoveByComment( $id, $author ) {
 	if ( is_array($id) ) {
 		return null;
 	}
@@ -169,7 +169,7 @@ function noteLove_RemoveByNote( $id, $author ) {
 	);
 }
 
-function noteLove_GetByAuthor( $author, $node = null, $limit = 200 ) {
+function commentLove_GetByAuthor( $author, $node = null, $limit = 200 ) {
 	if ( is_array($author) ) {
 		return null;
 	}
