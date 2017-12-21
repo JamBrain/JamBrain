@@ -29,6 +29,7 @@ switch ( $action ) {
 		$RESPONSE['note'] = commentFlags_Filter(commentComplete_Get($ids), userAuth_GetID());
 
 		break; //case 'get': //comment/get
+
 	case 'getbynode': //comment/getbynode
 		json_ValidateHTTPMethod('GET');
 
@@ -41,6 +42,25 @@ switch ( $action ) {
 		$RESPONSE['note'] = commentFlags_Filter(commentComplete_GetByNode($ids[0]), userAuth_GetID());
 
 		break; //case 'getbynode': //comment/getbynode
+
+
+	case 'getmylistbyparentnode': //comment/getmylistbyparentnode
+		json_ValidateHTTPMethod('GET');
+
+		if ( !($user_id = userAuth_GetID()) ) {
+			json_EmitFatalError_Forbidden(null, $RESPONSE);
+		}
+
+		$ids = explode('+', json_ArgGet(0));
+
+		if ( count($ids) !== 1 ) {
+			json_EmitFatalError_BadRequest(null, $RESPONSE);
+		}
+
+		$RESPONSE['comment'] = comment_GetNodeIdBySuperNodeAuthor($ids[0], $user_id);
+
+		break; //case 'getmylistbyparentnode': //comment/getmylistbyparentnode
+
 	case 'add': //comment/add
 		json_ValidateHTTPMethod('POST');
 
