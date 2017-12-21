@@ -10,7 +10,7 @@ json_Begin();
 
 // ********************* //
 
-function GetGrades( $node ) {
+function GetGradeNames( $node ) {
 	$ret = [];
 	if ( isset($node['meta']) ) {
 		foreach ( $node['meta'] as $key => &$value ) {
@@ -21,7 +21,7 @@ function GetGrades( $node ) {
 			}
 		}
 	}
-	
+
 	return $ret;
 }
 
@@ -30,19 +30,11 @@ function GetGrades( $node ) {
 // Do Actions
 $action = json_ArgShift();
 switch ( $action ) {
-	case 'stats': //grade/stats
-		json_ValidateHTTPMethod('GET');
-		//$event_id = intval(json_ArgGet(0));
-
-		$RESPONSE['ham'] = "true";
-
-		break; // case 'stats': //grade/stats
-		
 	case 'add': //grade/add/:node_id/:grade/:score
 	case 'remove': //grade/remove/:node_id/:grade
 		json_ValidateHTTPMethod('GET');
-		
-		// Authenticate User		
+
+		// Authenticate User
 		$user_id = userAuth_GetId();
 		if ( !$user_id )
 			json_EmitFatalError_Permission(null, $RESPONSE);
@@ -50,7 +42,7 @@ switch ( $action ) {
 		$node_id = intval(json_ArgShift());
 		if ( !$node_id )
 			json_EmitFatalError_BadRequest("Unspecified node", $RESPONSE);
-		
+
 		$grade = coreSlugify_Name(json_ArgShift());
 		if ( !$grade )
 			json_EmitFatalError_BadRequest("No grade", $RESPONSE);
@@ -68,10 +60,10 @@ switch ( $action ) {
 		// Load Node
 		$node = nodeCache_GetById($node_id);
 		$parent_id = $node['parent'];
-		
+
 		if ( !$parent_id )
 			json_EmitFatalError_BadRequest("Node is an orphan", $RESPONSE);
-		
+
 		// Load the Parent Node
 		$parent = nodeCache_GetById($parent_id);
 
@@ -106,14 +98,14 @@ switch ( $action ) {
 			json_EmitFatalError_BadRequest("Not allowed to vote if you did not publish a game", $RESPONSE);
 		}
 
-		$grades = GetGrades($parent);
-		
+		$grades = GetGradeNames($parent);
+
 		if ( !in_array($grade, $grades) )
 			json_EmitFatalError_BadRequest("Invalid grade: $grade", $RESPONSE);
 
 		if ( $score )
 			$RESPONSE['id'] = grade_AddByNodeAuthorName($node_id, $parent_id, $user_id, $grade, $score);
-		else 
+		else
 			$RESPONSE['changed'] = grade_RemoveByNodeAuthorName($node_id, $user_id, $grade);
 
 //		$RESPONSE['cache'] = nodeCache_GetStats();
@@ -122,8 +114,8 @@ switch ( $action ) {
 
 	case 'getmy': //grade/getmy/:node_id
 		json_ValidateHTTPMethod('GET');
-		
-		// Authenticate User		
+
+		// Authenticate User
 		$user_id = userAuth_GetId();
 		if ( !$user_id )
 			json_EmitFatalError_Permission(null, $RESPONSE);
@@ -131,15 +123,31 @@ switch ( $action ) {
 		$node_id = intval(json_ArgShift());
 		if ( !$node_id )
 			json_EmitFatalError_BadRequest("Unspecified node", $RESPONSE);
-		
+
 		$RESPONSE['grade'] = grade_GetByNodeAuthor($node_id, $user_id);
-			
+
 		break; // case 'getmy': //grade/getmy/:node_id
-		
+
+	case 'getallmy': //grade/getallmy/:event_id
+		json_ValidateHTTPMethod('GET');
+
+		// Authenticate User
+		$user_id = userAuth_GetId();
+		if ( !$user_id )
+			json_EmitFatalError_Permission(null, $RESPONSE);
+
+		$node_id = intval(json_ArgShift());
+		if ( !$node_id )
+			json_EmitFatalError_BadRequest("Unspecified node", $RESPONSE);
+
+		$RESPONSE['grade'] = grade_GetByAuthorParent($user_id, $node_id);
+
+		break; // case 'getallmy': //grade/getallmy/:event_id
+
 	case 'getmylist': //grade/getmylist[/:event_id]
 		json_ValidateHTTPMethod('GET');
-		
-		// Authenticate User		
+
+		// Authenticate User
 		$user_id = userAuth_GetId();
 		if ( !$user_id )
 			json_EmitFatalError_Permission(null, $RESPONSE);
@@ -155,13 +163,13 @@ switch ( $action ) {
 				$parent_id = intval($rootnode['meta']['featured']);
 			}
 		}
-		
+
 		if ( !$parent_id )
 			json_EmitFatalError_BadRequest("Unspecified event", $RESPONSE);
-		
+
 		$RESPONSE['event_id'] = $parent_id;
-		$RESPONSE['games'] = grade_GetNodeByAuthorParent($user_id, $parent_id);
-			
+		$RESPONSE['items'] = grade_GetNodeIdByAuthorParent($user_id, $parent_id);
+
 		break; // case 'getmylist': //grade/getmylist[/:event_id]
 /*
 	case 'get': //grade/get/:node_id
@@ -173,9 +181,9 @@ switch ( $action ) {
 
 		// Data
 		$RESPONSE['grade'] = grade_CountByNode($node_id);
-		
+
 		// Results
-	
+
 		break; // case 'get': //grade/get/:node_id
 */
 	default:
