@@ -3,6 +3,7 @@ import Fetch	 				from '../internal/fetch';
 export default {
 	Get,
 	GetByNode,
+	GetMyListByParentNode,		// Typically used for fetching the ids of all items you've left feedback on
 
 	Add,
 	Remove,
@@ -21,6 +22,11 @@ export function Get( comments ) {
 export function GetByNode( node ) {
 	return Fetch.Get(API_ENDPOINT+'/vx/comment/getbynode/'+node, true);
 }
+
+export function GetMyListbyParentNode( node ) {
+	return Fetch.Get(API_ENDPOINT+'/vx/comment/getmylistbyparentnode/'+node, true);
+}
+
 
 
 export function Add( parent, node, body, tag, anonymous ) {

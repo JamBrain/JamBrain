@@ -173,6 +173,17 @@ function comment_GetByNode( $ids ) {
 	return $ret;
 }
 
+function comment_GetNodeIdBySuperNodeAuthor( $supernode_id, $author_id ) {
+	return db_QueryFetchSingle(
+		"SELECT id
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE."
+		WHERE supernode=? AND author=?
+		;",
+		$supernode_id,
+		$author_id
+	);
+}
+
 
 function comment_InterestedUsers( $node )
 {
