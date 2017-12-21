@@ -8,6 +8,8 @@ import ContentLoading			from 'com/content-loading/loading';
 import UIButtonLink from 'com/ui/button/button-link';
 import InputDropdown					from 'com/input-dropdown/dropdown';
 
+import BarChart							from 'com/visualization/barchart/barchart';
+
 import $Grade					from 'shrub/js/grade/grade';
 import $Node					from 'shrub/js/node/node';
 
@@ -238,6 +240,7 @@ export default class MyGrades extends Component {
 		}
 
 		let ShowResults = null;
+		let ShowStats = null;
 		if (hasResults) {
 			let Items = [];
 			const gradeKey = sortBy && sortBy > SORT_GRADE_AVERAGE ? `grade-${pad(sortBy - SORT_GRADE_AVERAGE, 2)}` : null;
@@ -274,6 +277,7 @@ export default class MyGrades extends Component {
 					/>
 				</div>
 			);
+			ShowStats = <GradeStats grades={grades} gradeNames={gradeNames} focusGrade={gradeKey} />;
 		}
 
         return (
@@ -283,6 +287,7 @@ export default class MyGrades extends Component {
 				{ShowError}
 				{ShowWarning}
 				{ShowParagraph}
+				{ShowStats}
 				{ShowSorting}
 				{ShowResults}
 			</div>
@@ -368,6 +373,88 @@ class GradedItem extends Component {
 				<p>{description}</p>
 				{ShowGrades}
 			</UIButtonLink>
+		);
+	}
+}
+
+class GradeStats extends Component {
+	getHistogram( grades, gradeKey, hist) {
+		if (!hist) {
+			hist = {};
+		}
+		for (let gradedItem in grades) {
+			const grade = grades[gradedItem][gradeKey];
+			if (grade) {
+				if (!hist[grade]) {
+					hist[grade] = 1;
+				}
+				else {
+					hist[grade] += 1;
+				}
+			}
+		}
+		return hist;
+	}
+
+	getGlobalHistogram( grades, gradeNames ) {
+		let hist = {};
+		for (let gradeKey in gradeNames) {
+			hist = this.getHistogram(grades, gradeKey, hist);
+		}
+		return hist;
+	}
+
+	getAverage( grades, gradeKey ) {
+		let sum = 0;
+		let n = 0;
+		for (let gradedItem in grades) {
+			const grade = grades[gradedItem][gradeKey];
+			if (grade) {
+				sum += grade;
+				n += 1;
+			}
+		}
+		return sum / n;
+	}
+
+	render( props ) {
+		const {grades, gradeNames, focusGrade} = props;
+		const gradeAvgs = [];
+		const gradeNamesList = [];
+		for (let grade in gradeNames) {
+			gradeNamesList.push(gradeNames[grade]);
+			gradeAvgs.push(this.getAverage(grades, grade));
+		}
+		const ShowAvgPerType = <BarChart values={gradeAvgs} labels={gradeNamesList} use_percentages={false}/>;
+		let HistName = null;
+		let hist = null;
+		if (focusGrade) {
+			hist = this.getHistogram(grades, focusGrade);
+			HistName = gradeNames[focusGrade];
+		}
+		else {
+			hist = this.getGlobalHistogram(grades, gradeNames);
+			HistName = "total";
+		}
+		const gradeLevels = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
+		const ShowHistGraph = (
+			<BarChart
+				values={gradeLevels.map(v => hist[v] ? hist[v] : 0)}
+				labels={gradeLevels.map(v => `${v} star${v > 1 ? 's' : ''}`)}
+				use_percentages={false} />
+		);
+
+		return (
+			<div class="-graphs">
+				<div class="-graph">
+					<h3>Average grade per category:</h3>
+					{ShowAvgPerType}
+				</div>
+				<div>
+					<h3>Distribution of stars ({HistName}):</h3>
+					{ShowHistGraph}
+				</div>
+			</div>
 		);
 	}
 }
