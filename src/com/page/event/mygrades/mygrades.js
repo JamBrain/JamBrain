@@ -14,6 +14,7 @@ import $Node					from 'shrub/js/node/node';
 const SORT_ORDER = 0;
 const SORT_ALPHA = 1;
 const SORT_TYPE = 2;
+const SORT_GRADE_AVERAGE = 3;
 
 const pad = (number, digits) => {
 	return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
@@ -176,8 +177,8 @@ export default class MyGrades extends Component {
 	}
 
 	getSortedGames() {
-		const {gameIds, nodes} = this.state;
-		switch (this.state.sortBy) {
+		const {gameIds, nodes, sortBy, grades} = this.state;
+		switch (sortBy) {
 			case SORT_TYPE:
 				return gameIds
 					.map(id => [id, nodes[id].subsubtype + nodes[id].subtype + nodes[id].type]) //Get type string
@@ -189,8 +190,22 @@ export default class MyGrades extends Component {
 					.sort((a, b) => a[1] > b[1]) //Order by names
 					.map(elem => elem[0]); //Return ids
 			case SORT_ORDER:
-			default:
+			case undefined:
 				return gameIds;
+			case SORT_GRADE_AVERAGE:
+				return gameIds
+					.map(id => {
+						let currentGrades = grades[id];
+						let n = 0;
+						let total = 0;
+						for (let grade in currentGrades) {
+							n += 1;
+							total += currentGrades[grade];
+						}
+						return [id, total / n];
+					})
+					.sort((a, b) => b[1] - a[1]) //Order by avg grade descending
+					.map(elem => elem[0]); //Return ids
 		}
 	}
 
@@ -236,7 +251,12 @@ export default class MyGrades extends Component {
 				<div class="-sort-by">
 					Sort by:
 					<InputDropdown class="-tag"
-						items={[[SORT_ORDER, 'Grading order'], [SORT_ALPHA, 'Alphabetically'], [SORT_TYPE, 'Type']]}
+						items={[
+							[SORT_ORDER, 'Grading order'],
+							[SORT_ALPHA, 'Alphabetically'],
+							[SORT_TYPE, 'Type'],
+							[SORT_GRADE_AVERAGE, 'Average grade'],
+						]}
 						value={state.sortBy}
 						onmodify={this.onSortByChange}
 						useClickCatcher={false}
