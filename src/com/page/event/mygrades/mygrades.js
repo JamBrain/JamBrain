@@ -33,8 +33,13 @@ export default class MyGrades extends Component {
 		let promises = [];
 		let mapping = new Map();
 		const chunkSize = 20;
-		for (let i = 0; i < gameIds.length; i += chunkSize) {
-			promises.push($Node.Get(gameIds.slice(i, i + chunkSize))
+		let i = 0;
+		while (true) {
+			const chunk = gameIds.slice(i, i + chunkSize);
+			if (chunk.length == 0) {
+				break;
+			}
+			promises.push($Node.Get(chunk)
 				.then(r => {
 					r.node.map(node => {
 						mapping[node.id] = node;
@@ -44,12 +49,85 @@ export default class MyGrades extends Component {
 					this.setState({'error': r});
 				})
 			);
+			i += chunkSize;
 		}
 
 		Promise.all(promises)
 			.then(r => {
 				this.setState({'loading': false, 'nodes': mapping});
+				return this.collectAuthors(mapping, gameIds);
 			});
+	}
+
+	collectAuthors( mapping, gameIds ) {
+		let authors = [];
+		const authorsMapping = new Map();
+		let promises = [];
+		const chunkSize = 20;
+
+		for (let i = 0; i < gameIds.length; i+=1) {
+			const node = mapping[gameIds[i]];
+			if (node.author && node.author > 0) {
+				authors.push(node.author);
+			}
+			if (node.meta && node.meta.authors) {
+				node.meta.authors.forEach(author => {
+					if (author != node.author) {
+						authors.push(author);
+					}
+				});
+			}
+		}
+		authors = authors.filter((author, index) => authors.indexOf(author) == index);
+
+		let i = 0;
+		while (true) {
+			const chunk = authors.slice(i, i + chunkSize);
+			if (chunk.length == 0) {
+				break;
+			}
+			promises.push($Node.Get(chunk)
+				.then(r => {
+					r.node.map(node => {
+						authorsMapping[node.id] = node;
+					});
+				})
+				.catch(r => {
+					this.setState({'error': r});
+				})
+			);
+			i += chunkSize;
+		}
+
+		return Promise.all(promises)
+			.then(r => {
+				this.setState({'authors': authorsMapping});
+			});
+	}
+
+	getItemAuthorsFromState( gameId ) {
+		const item = this.state.nodes[gameId];
+		const authors = this.state.authors;
+		if (!authors) {
+			return [];
+		}
+
+		const itemAuthors = [];
+		const mainAuthor = authors[item.author];
+		if (mainAuthor) {
+			itemAuthors.push(mainAuthor);
+		}
+		if (item.meta && item.meta.authors) {
+			item.meta.authors.forEach(author => {
+				if (author != item.author) {
+					const authorData = authors[author];
+					if (authorData) {
+						itemAuthors.push(authorData);
+					}
+				}
+			});
+		}
+		return itemAuthors;
 	}
 
     render( props, state ) {
@@ -80,7 +158,7 @@ export default class MyGrades extends Component {
 		if (hasResults) {
 			let Items = [];
 			gameIds.map(nodeId => {
-				Items.push(<GradedItem node={nodes[nodeId]} key={nodeId} />);
+				Items.push(<GradedItem node={nodes[nodeId]} authors={this.getItemAuthorsFromState(nodeId)} key={nodeId} />);
 			});
 			ShowResults = <ContentList>{Items}</ContentList>;
 		}
@@ -124,13 +202,27 @@ class GradedItem extends Component {
 	}
 
 	render( props ) {
-		const {node} = props;
+		const {node, authors} = props;
 		let description = this.cleanGameDescription(node.body);
 		description = this.trimDescriptionToLength(description, 100, 175);
-
+		let ShowAuthors = null;
+		if (authors && authors.length > 0) {
+			const AuthorList = [];
+			authors.forEach((author, index) => {
+				if (index > 0 && index == authors.length - 1) {
+					AuthorList.push(' & ');
+				}
+				else if (index > 0) {
+					AuthorList.push(', ');
+				}
+				AuthorList.push(<div class="-at-name">@{author.slug}</div>);
+			});
+			ShowAuthors = <p class="-authors">{AuthorList}</p>;
+		}
 		return (
 			<UIButtonLink class={cN("graded-item", props.class)} href={node.path}>
 				<strong>{node.name}</strong>
+				{ShowAuthors}
 				<p>{description}</p>
 			</UIButtonLink>
 		);
