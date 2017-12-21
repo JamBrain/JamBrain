@@ -99,12 +99,39 @@ export default class MyGrades extends Component {
 }
 
 class GradedItem extends Component {
+	cleanGameDescription(description) {
+		return description
+		.replace(/!?\[[^\]]+]\([^)]+\)/g, '') //We don't want images or links
+		.replace(/\*{1,2}/g, '') //We don't care for bold formatting
+		.replace(/\~~[^~]+~~/g, '') //We don't want to see stuff that was over-stricken
+		.replace(/#{1,3}/g, '') //Headings are just text
+		.replace(/\n/g, ' '); //New line should be a space
+	}
+
+	trimDescriptionToLength(description, targetLength, maxLength) {
+		const maxDescription = description.substr(0, maxLength);
+		let lastPunctuation = Math.max(maxDescription.lastIndexOf('.'), maxDescription.lastIndexOf('?'), maxDescription.lastIndexOf('!'));
+		if (lastPunctuation < targetLength) {
+			lastPunctuation = Math.max(maxDescription.lastIndexOf(','), maxDescription.lastIndexOf(':'));
+		}
+		let shortened = description.substr(0, Math.max(targetLength, lastPunctuation));
+		const abbreviated = shortened.length < description.length;
+		shortened = shortened.trim();
+		if (abbreviated) {
+			shortened += shortened[shortened.length - 1] == "." ? ".." : "...";
+		}
+		return shortened;
+	}
+
 	render( props ) {
 		const {node} = props;
+		let description = this.cleanGameDescription(node.body);
+		description = this.trimDescriptionToLength(description, 100, 175);
+
 		return (
 			<UIButtonLink class={cN("graded-item", props.class)} href={node.path}>
 				<strong>{node.name}</strong>
-				<p>{node.body.substr(0, 100)}...</p>
+				<p>{description}</p>
 			</UIButtonLink>
 		);
 	}
