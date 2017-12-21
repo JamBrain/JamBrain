@@ -21,8 +21,8 @@ export default class MyGrades extends Component {
 	componentDidMount() {
 		$Grade.GetMyList(this.props.node.id)
 			.then(r => {
-				this.setState({'gameIds': r.games, 'nodes': new Map(), 'loading': true, 'error': null});
-				this.collectNodes(r.games);
+				this.setState({'gameIds': r.items, 'nodes': new Map(), 'loading': true, 'error': null});
+				this.collectNodes(r.items);
 			})
 			.catch(r => {
 				this.setState({'error': r, 'gameIds': null, 'loading': false});
