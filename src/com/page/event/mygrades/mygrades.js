@@ -265,6 +265,7 @@ export default class MyGrades extends Component {
 						gradeNames={gradeNames}
 						focusGrade={gradeKey}
 						showByType={sortBy == SORT_TYPE}
+						showTrend={sortBy == SORT_ORDER || !sortBy}
 						nodes={gameIds.map(id => nodes[id])}
 					/>
 				);
@@ -486,13 +487,74 @@ class GradeStats extends Component {
 		return bias;
 	}
 
+	binGrades( grades, gradeNames ) {
+		bins = {};
+		for (let gradedItemId in grades) {
+			const gradedItem = grades[gradedItemId];
+			for (let gradeKey in gradeNames) {
+				const grade = gradedItem[gradeKey];
+				if (grade) {
+					const bin = gradedItem[gradeKey + "-timestamp"].split(' ', 1)[0]; //Get date
+					if (bins[bin]) {
+						bins[bin].push([gradedItemId, grade]);
+					}
+					else {
+						bins[bin] = [[gradedItemId, grade]];
+					}
+				}
+			}
+
+		}
+		return bins;
+	}
+
+	getDateRange(startDate, endDate) {
+		const addDay = d => new Date(d.getTime() + (24 * 60 * 60000));
+		let dates = [];
+		let mm = startDate.getMonth() + 1;
+		let dd = startDate.getDate();
+
+		dates.push([startDate.getFullYear(), (mm > 9 ? '' : '0') + mm, (dd > 9 ? '' : '0') + dd].join('-'));
+		let cur = addDay(startDate);
+		while (cur <= endDate) {
+			mm = cur.getMonth() + 1;
+			dd = cur.getDate();
+			dates.push([cur.getFullYear(), (mm > 9 ? '' : '0') + mm, (dd > 9 ? '' : '0') + dd].join('-'));
+			cur = addDay(cur);
+		}
+		return dates;
+	}
+
+	getDayLabels( binnedGrades ) {
+		let labels = [];
+		for (let label in binnedGrades) {
+			labels.push(label);
+		}
+		if (labels.length > 0) {
+			labels = labels.map(date => new Date(date)).sort((a, b) => a - b);
+			return this.getDateRange(labels[0], labels[labels.length - 1]);
+		}
+		else {
+			return [];
+		}
+	}
+
+	averageArray( arr ) {
+		let sum = 0;
+		arr.forEach(elem => {
+			sum += elem;
+		});
+		return sum / arr.length;
+	}
+
 	render( props ) {
-		const {grades, gradeNames, focusGrade, nodes, showByType} = props;
+		const {grades, gradeNames, focusGrade, nodes, showByType, showTrend} = props;
 		const gradeAvgs = [];
 		const GradeNamesList = [];
+		let ShowSummaryGraph = null;
 		let ShowDetailGraph = null;
-		let ShowAvgGraph = null;
-		let ShowTypesGraph = null;
+		const binnedGrades = showTrend ? this.binGrades(grades, gradeNames) : null;
+		const binnedGradesDays = showTrend ? this.getDayLabels(binnedGrades) : null;
 		for (let grade in gradeNames) {
 			GradeNamesList.push(gradeNames[grade]);
 		}
@@ -507,22 +569,32 @@ class GradeStats extends Component {
 				typeCounts.push(counts[countLabel]);
 				sum += counts[countLabel];
 			}
-			console.log(typeCounts, typeLabels, counts);
-			ShowTypesGraph = (
+			ShowSummaryGraph = (
 				<div class="-graph">
-					<h3>Graded items per type:</h3>
+					<h3>Graded items per type</h3>
 					<PieChart values={typeCounts} labels={typeLabels} use_percentages={true}/>
 				</div>
 			);
+		}
+		else if (showTrend) {
+			let GradeCounts = binnedGradesDays.map(date => binnedGrades[date] ? binnedGrades[date].map(e => e[0]) : []); //Get lists of item IDs per date
+			GradeCounts = GradeCounts.map(items => items.filter((itemId, idx) => items.indexOf(itemId) == idx).length); //Unique item ID count per date
+			ShowSummaryGraph = (
+				<div class="-graph">
+					<h3>Graded items per day</h3>
+					<BarChart values={GradeCounts} labels={binnedGradesDays} use_percentages={false}/>
+				</div>
+			);
+
 		}
 		else {
 			for (let grade in gradeNames) {
 				gradeAvgs.push(this.getAverage(grades, grade));
 			}
-			ShowAvgGraph = (
+			ShowSummaryGraph = (
 				<div class="-graph">
-					<h3>Average grade per category:</h3>
-					<BarChart values={gradeAvgs} labels={GradeNamesList} use_percentages={false}/>;
+					<h3>Average grade per category</h3>
+					<BarChart values={gradeAvgs} labels={GradeNamesList} use_percentages={false}/>
 				</div>
 			);
 		}
@@ -548,12 +620,17 @@ class GradeStats extends Component {
 			for (let grade in gradeNames) {
 				DetailValues.push(votesData[grade]);
 			}
-			console.log(DetailValues, DetailLabels, votesData);
 			DetailCaption = <div class="-caption">Positive values indicate you give higher grades to JAM items. Negative that you give higher grades to COMPO items.</div>;
+		}
+		else if (showTrend) {
+			DetailGraphTitle = 'Total average grade per day';
+			DetailValues = binnedGradesDays.map(date => binnedGrades[date] ? this.averageArray(binnedGrades[date].map(e => e[1])) : NaN);
+			DetailLabels = binnedGradesDays;
+
 		}
 		else {
 			votesData = this.getGlobalHistogram(grades, gradeNames);
-			DetailGraphTitle = 'Total distribution of stars:';
+			DetailGraphTitle = 'Total distribution of stars';
 			DetailValues = gradeLevels.map(v => votesData[v] ? votesData[v] : 0);
 			DetailLabels = gradeLevels.map(v => `${v} star${v > 1 ? 's' : ''}`);
 		}
@@ -572,8 +649,7 @@ class GradeStats extends Component {
 
 		return (
 			<div class="-graphs">
-				{ShowAvgGraph}
-				{ShowTypesGraph}
+				{ShowSummaryGraph}
 				{ShowDetailGraph}
 			</div>
 		);
