@@ -75,7 +75,7 @@ export default class MyGrades extends Component {
 					nodesWithMyComments[note.node] = 1;
 				}
 			})));
-			chunkStart += 1;
+			chunkStart += chunkSize;
 		}
 
 		return Promise.all(promises).then(r => {
