@@ -405,7 +405,9 @@ class GradedItem extends Component {
 
 		const Grades = [];
 		for (let grade in grades) {
-			Grades.push(<div class={cN("-grade", grade == focusGrade ? "-focused" : "")} key={grade}><div class="-grade-label">{gradeNames[grade]}:</div>{grades[grade]}</div>);
+			if (gradeNames[grade]) {
+				Grades.push(<div class={cN("-grade", grade == focusGrade ? "-focused" : "")} key={grade}><div class="-grade-label">{gradeNames[grade]}:</div>{grades[grade]}</div>);
+			}
 		}
 		const ShowGrades = <div class="-grades">{Grades}</div>;
 		const ShowComments = comments ? <SVGIcon>{comments > 1 ? 'bubbles' : 'bubble'}</SVGIcon> : null;
