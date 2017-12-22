@@ -23,10 +23,22 @@
 			width: 15em;
 			max-width: 80vw;
 		}
+
+		& > .-description {
+			font-size: 80%;
+		}
 	}
 
 	& > .-graphs {
 		display: flex;
+
+		& > .-graph {
+			flex-basis: 50%;
+
+			& > .-caption {
+				font-size: 80%;
+			}
+		}
 	}
 
 	& > .content-list {

@@ -1,15 +1,12 @@
 import {h, Component} from 'preact/preact';
-
 import ContentSimple					from 'com/content-simple/simple';
-
 import ContentList				from 'com/content-list/list';
 import ContentLoading			from 'com/content-loading/loading';
-
 import UIButtonLink						from 'com/ui/button/button-link';
 import InputDropdown					from 'com/input-dropdown/dropdown';
 import SVGIcon 							from 'com/svg-icon/icon';
 import BarChart							from 'com/visualization/barchart/barchart';
-
+import PieChart							from 'com/visualization/piechart/piechart';
 import $Grade					from 'shrub/js/grade/grade';
 import $Node					from 'shrub/js/node/node';
 import $Comment					from 'shrub/js/comment/comment';
@@ -24,13 +21,11 @@ const pad = (number, digits) => {
 };
 
 export default class MyGrades extends Component {
-
 	constructor( props ) {
 		super(props);
 		this.state = {
 			'loading': true,
 		};
-
 		this.onSortByChange = this.onSortByChange.bind(this);
 	}
 
@@ -40,7 +35,6 @@ export default class MyGrades extends Component {
 			.then(r => {
 				this.setState({'grades': r.grade});
 			});
-
 		$Grade.GetMyList(this.props.node.id)
 			.then(r => {
 				this.setState({
@@ -53,7 +47,6 @@ export default class MyGrades extends Component {
 			.catch(r => {
 				this.setState({'error': r, 'gameIds': null, 'loading': false});
 			});
-
 		$Comment.GetMyListByParentNode(eventId).then(r => this.collectComments(r.comment));
 	}
 
@@ -79,7 +72,6 @@ export default class MyGrades extends Component {
 			}));
 			chunkStart += chunkSize;
 		}
-
 		return Promise.all(promises).then(r => {
 			this.setState({'myComments': nodesWithMyComments});
 		});
@@ -123,7 +115,6 @@ export default class MyGrades extends Component {
 			);
 			i += chunkSize;
 		}
-
 		return Promise.all(promises)
 			.then(r => {
 				this.setState({'loading': false, 'nodes': nodeMapping, 'gradeNames': gradeMapping});
@@ -136,7 +127,6 @@ export default class MyGrades extends Component {
 		const authorsMapping = new Map();
 		let promises = [];
 		const chunkSize = 20;
-
 		for (let i = 0; i < gameIds.length; i+=1) {
 			const node = mapping[gameIds[i]];
 			if (node.author && node.author > 0) {
@@ -151,7 +141,6 @@ export default class MyGrades extends Component {
 			}
 		}
 		authors = authors.filter((author, index) => authors.indexOf(author) == index);
-
 		let i = 0;
 		while (true) {
 			const chunk = authors.slice(i, i + chunkSize);
@@ -170,7 +159,6 @@ export default class MyGrades extends Component {
 			);
 			i += chunkSize;
 		}
-
 		return Promise.all(promises)
 			.then(r => {
 				this.setState({'authors': authorsMapping});
@@ -183,7 +171,6 @@ export default class MyGrades extends Component {
 		if (!authors) {
 			return [];
 		}
-
 		const itemAuthors = [];
 		const mainAuthor = authors[item.author];
 		if (mainAuthor) {
@@ -251,11 +238,13 @@ export default class MyGrades extends Component {
 		const shouldGradeNoGames = 20;
 		const hasResults = !loading && !error;
 		const ShowError = error ? <div class="-warning">Could not retrieve your votes. Are you logged in?</div> : null;
-
+		const gradeKey = sortBy && sortBy > SORT_GRADE_AVERAGE ? `grade-${pad(sortBy - SORT_GRADE_AVERAGE, 2)}` : null;
 		let ShowLoading = !gameIds && !error ? <ContentLoading /> : null;
 		let ShowParagraph = null;
 		let ShowWarning = null;
 		let ShowSorting = null;
+		let ShowResults = null;
+		let ShowStats = null;
 
 		if (!!gameIds) {
 			if (gameIds.length < shouldGradeNoGames) {
@@ -269,13 +258,21 @@ export default class MyGrades extends Component {
 				);
 			}
 			ShowParagraph = <div class="-info">You have graded {gameIds.length} game{gameIds.length == 1 ? "" : "s"}.</div>;
+			if (gameIds.length > 0) {
+				ShowStats = (
+					<GradeStats
+						grades={grades}
+						gradeNames={gradeNames}
+						focusGrade={gradeKey}
+						showByType={sortBy == SORT_TYPE}
+						nodes={gameIds.map(id => nodes[id])}
+					/>
+				);
+			}
 		}
 
-		let ShowResults = null;
-		let ShowStats = null;
 		if (hasResults) {
 			let Items = [];
-			const gradeKey = sortBy && sortBy > SORT_GRADE_AVERAGE ? `grade-${pad(sortBy - SORT_GRADE_AVERAGE, 2)}` : null;
 			gameIds.map(nodeId => {
 				Items.push((<GradedItem
 					node={nodes[nodeId]}
@@ -287,6 +284,7 @@ export default class MyGrades extends Component {
 					key={nodeId} />));
 			});
 			ShowResults = <ContentList>{Items}</ContentList>;
+			let SortDescription = null;
 			sortOptions = [
 				[SORT_ORDER, 'Grading order'],
 				[SORT_ALPHA, 'Alphabetically'],
@@ -298,6 +296,18 @@ export default class MyGrades extends Component {
 				sortOptions.push([gradeIndex + SORT_GRADE_AVERAGE, gradeNames[gradeKey]]);
 				gradeIndex += 1;
 			}
+			switch (sortBy) {
+				case SORT_ORDER:
+				case undefined:
+					SortDescription = <div class="-description">Showing the games in the order you graded them.</div>;
+					break;
+				case SORT_TYPE:
+					SortDescription = <div class="-description">Showing first by class (JAM/COMPO) and then by item type (probably just GAME).</div>;
+					break;
+				case SORT_GRADE_AVERAGE:
+					SortDescription = <div class="-description">Showing by average grade across all categories.</div>;
+					break;
+			}
 			ShowSorting = (
 				<div class="-sort-by">
 					Sort by:
@@ -308,9 +318,9 @@ export default class MyGrades extends Component {
 						useClickCatcher={false}
 						selfManaged={true}
 					/>
+					{SortDescription}
 				</div>
 			);
-			ShowStats = <GradeStats grades={grades} gradeNames={gradeNames} focusGrade={gradeKey} />;
 		}
 
         return (
@@ -320,8 +330,8 @@ export default class MyGrades extends Component {
 				{ShowError}
 				{ShowWarning}
 				{ShowParagraph}
-				{ShowStats}
 				{ShowSorting}
+				{ShowStats}
 				{ShowResults}
 			</div>
         );
@@ -366,7 +376,6 @@ class GradedItem extends Component {
 		else if (node.type) {
 			TypeString = node.type.toUpperCase();
 		}
-
 		if (TypeString) {
 			return <div class="-item-type">{TypeString}</div>;
 		}
@@ -377,6 +386,7 @@ class GradedItem extends Component {
 		const {node, authors, grades, gradeNames, focusGrade, comments} = props;
 		let description = this.cleanGameDescription(node.body);
 		description = this.trimDescriptionToLength(description, 100, 175);
+
 		let ShowAuthors = null;
 		if (authors && authors.length > 0) {
 			const AuthorList = [];
@@ -452,43 +462,119 @@ class GradeStats extends Component {
 		return sum / n;
 	}
 
-	render( props ) {
-		const {grades, gradeNames, focusGrade} = props;
-		const gradeAvgs = [];
-		const gradeNamesList = [];
-		for (let grade in gradeNames) {
-			gradeNamesList.push(gradeNames[grade]);
-			gradeAvgs.push(this.getAverage(grades, grade));
+	countTypes( nodes ) {
+		const counter = {};
+		nodes.forEach(node => {
+			const nodeType = node.subsubtype.toUpperCase() + ': ' + node.subtype.toUpperCase();
+			if (counter[nodeType]) {
+				counter[nodeType] += 1;
+			}
+			else {
+				counter[nodeType] = 1;
+			}
+		});
+		return counter;
+	}
+
+	getVotesBias( grades, filter, gradeNames ) {
+		const bias = {};
+		for (let gradeKey in gradeNames) {
+			const groupA = this.getAverage(grades.filter((f, idx) => filter[idx]), gradeKey);
+			const groupB = this.getAverage(grades.filter((f, idx) => !filter[idx]), gradeKey);
+			bias[gradeKey] = groupA - groupB;
 		}
-		const ShowAvgPerType = <BarChart values={gradeAvgs} labels={gradeNamesList} use_percentages={false}/>;
-		let HistName = null;
-		let hist = null;
-		if (focusGrade) {
-			hist = this.getHistogram(grades, focusGrade);
-			HistName = gradeNames[focusGrade];
+		return bias;
+	}
+
+	render( props ) {
+		const {grades, gradeNames, focusGrade, nodes, showByType} = props;
+		const gradeAvgs = [];
+		const GradeNamesList = [];
+		let ShowDetailGraph = null;
+		let ShowAvgGraph = null;
+		let ShowTypesGraph = null;
+		for (let grade in gradeNames) {
+			GradeNamesList.push(gradeNames[grade]);
+		}
+
+		if (showByType) {
+			const counts = this.countTypes(nodes);
+			let sum = 0;
+			const typeLabels = [];
+			const typeCounts = [];
+			for (let countLabel in counts) {
+				typeLabels.push(countLabel);
+				typeCounts.push(counts[countLabel]);
+				sum += counts[countLabel];
+			}
+			console.log(typeCounts, typeLabels, counts);
+			ShowTypesGraph = (
+				<div class="-graph">
+					<h3>Graded items per type:</h3>
+					<PieChart values={typeCounts} labels={typeLabels} use_percentages={true}/>
+				</div>
+			);
 		}
 		else {
-			hist = this.getGlobalHistogram(grades, gradeNames);
-			HistName = "total";
+			for (let grade in gradeNames) {
+				gradeAvgs.push(this.getAverage(grades, grade));
+			}
+			ShowAvgGraph = (
+				<div class="-graph">
+					<h3>Average grade per category:</h3>
+					<BarChart values={gradeAvgs} labels={GradeNamesList} use_percentages={false}/>;
+				</div>
+			);
 		}
+
+		let DetailGraphTitle = null;
+		let votesData = null;
+		let DetailLabels = null;
+		let DetailValues = null;
+		let DetailCaption = null;
 		const gradeLevels = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
-		const ShowHistGraph = (
-			<BarChart
-				values={gradeLevels.map(v => hist[v] ? hist[v] : 0)}
-				labels={gradeLevels.map(v => `${v} star${v > 1 ? 's' : ''}`)}
-				use_percentages={false} />
+
+		if (focusGrade) {
+			votesData = this.getHistogram(grades, focusGrade);
+			DetailGraphTitle = `Distribution of stars (${gradeNames[focusGrade]}):`;
+			DetailValues = gradeLevels.map(v => votesData[v] ? votesData[v] : 0);
+			DetailLabels = gradeLevels.map(v => `${v} star${v > 1 ? 's' : ''}`);
+		}
+		else if (showByType) {
+			DetailGraphTitle = 'JAM vs COMPO average bias';
+			DetailLabels = GradeNamesList;
+			votesData = this.getVotesBias(nodes.map(node => grades[node.id]), nodes.map(node => node.subsubtype == 'jam'), gradeNames);
+			DetailValues = [];
+			for (let grade in gradeNames) {
+				DetailValues.push(votesData[grade]);
+			}
+			console.log(DetailValues, DetailLabels, votesData);
+			DetailCaption = <div class="-caption">Positive values indicate you give higher grades to JAM items. Negative that you give higher grades to COMPO items.</div>;
+		}
+		else {
+			votesData = this.getGlobalHistogram(grades, gradeNames);
+			DetailGraphTitle = 'Total distribution of stars:';
+			DetailValues = gradeLevels.map(v => votesData[v] ? votesData[v] : 0);
+			DetailLabels = gradeLevels.map(v => `${v} star${v > 1 ? 's' : ''}`);
+		}
+
+		ShowDetailGraph = (
+			<div class="-graph">
+				<h3>{DetailGraphTitle}</h3>
+				<BarChart
+					values={DetailValues}
+					labels={DetailLabels}
+					use_percentages={false}
+				/>
+				{DetailCaption}
+			</div>
 		);
 
 		return (
 			<div class="-graphs">
-				<div class="-graph">
-					<h3>Average grade per category:</h3>
-					{ShowAvgPerType}
-				</div>
-				<div>
-					<h3>Distribution of stars ({HistName}):</h3>
-					{ShowHistGraph}
-				</div>
+				{ShowAvgGraph}
+				{ShowTypesGraph}
+				{ShowDetailGraph}
 			</div>
 		);
 	}
