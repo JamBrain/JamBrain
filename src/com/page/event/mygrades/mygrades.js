@@ -67,14 +67,16 @@ export default class MyGrades extends Component {
 			if (chunk.length == 0) {
 				break;
 			}
-			promises.push($Comment.Get(chunk).then(r => r.note.forEach(note => {
-				if (nodesWithMyComments[note.node]) {
-					nodesWithMyComments[note.node] += 1;
-				}
-				else {
-					nodesWithMyComments[note.node] = 1;
-				}
-			})));
+			promises.push($Comment.Get(chunk).then(r => {
+				r.comment.forEach(comment => {
+					if (nodesWithMyComments[comment.node]) {
+						nodesWithMyComments[comment.node] += 1;
+					}
+					else {
+						nodesWithMyComments[comment.node] = 1;
+					}
+				});
+			}));
 			chunkStart += chunkSize;
 		}
 
