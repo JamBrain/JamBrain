@@ -26,7 +26,7 @@ switch ( $action ) {
 			json_EmitFatalError_BadRequest("Too many comments", $RESPONSE);
 		}
 
-		$RESPONSE['note'] = commentFlags_Filter(commentComplete_Get($ids), userAuth_GetID());
+		$RESPONSE['comment'] = commentFlags_Filter(commentComplete_Get($ids), userAuth_GetID());
 
 		break; //case 'get': //comment/get
 

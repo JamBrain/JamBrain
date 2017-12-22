@@ -175,8 +175,8 @@ export default class NotificationsBase extends Component {
 
 		let notesPromise = $Comment.Get(notes).then((response) => {
 			//console.log('[Notifications:Notes]', response.note);
-			if ( response.notes ) {
-				response.notes.forEach((note) => {
+			if ( response.comment ) {
+				response.comment.forEach((note) => {
 					noteLookup.set(note.id, note);
 
 					if ( (note.author > 0) && (users.indexOf(note.author) < 0) ) {
