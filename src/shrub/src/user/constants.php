@@ -45,4 +45,5 @@ const USER_GROUP_FLAG_MEDIA = 4;
 const USER_GROUP_FLAG_ADMIN = 5;
 const USER_GROUP_FLAG_CAN_NEWS = 6;
 const USER_GROUP_FLAG_ACTIVE_EVENT_HOST = 7;
+const USER_GROUP_FLAG_OWNER = 8;
 //SMALLINT allows adding up to 18 non-exclusive categories

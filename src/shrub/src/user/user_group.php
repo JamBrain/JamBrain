@@ -8,7 +8,8 @@ const USER_GROUP_NAMES_MAP = [
 	USER_GROUP_FLAG_MEDIA => 'media',
 	USER_GROUP_FLAG_ADMIN => 'admin',
 	USER_GROUP_FLAG_CAN_NEWS => 'canNews',
-	USER_GROUP_FLAG_ACTIVE_EVENT_HOST => 'activeEventHost'
+	USER_GROUP_FLAG_ACTIVE_EVENT_HOST => 'activeEventHost',
+	USER_GROUP_FLAG_OWNER => 'owner',
 ];
 
 function _userGroup_GetFlagStatus( $status, $flag ) {
