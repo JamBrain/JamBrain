@@ -86,12 +86,11 @@ export default class DialogCreate extends Component {
 				let ShowInfo = null;
 				if ( What == 'post/news' ) {
 					ShowType = TargetNode == 1 ? "General News Post" : "Event News Post";
-					ShowInfo = <div>You have to keep track of the URI if you don't write and publish in one go...</div>;
 				}
 				else {
 					ShowType = "Blog Post";
-					ShowInfo = <div>You can find your unpublished draft posts on your user page.</div>;
 				}
+				ShowInfo = <div>You can find your unpublished draft posts on your user page.</div>;
 
 				new_props.title += ' '+ShowType;
 				new_props.oktext = "Create "+ShowType;
