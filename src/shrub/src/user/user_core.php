@@ -6,7 +6,7 @@ require_once __DIR__."/../node/node.php";
 const _SH_USER_ROW_MAP = [
 	'id'=>SH_FIELD_TYPE_INT,
 	'node'=>SH_FIELD_TYPE_INT,
-	'user_group'=>SH_FIELD_TYPE_INT,
+//	'user_group'=>SH_FIELD_TYPE_INT,
 //	'created'=>SH_FIELD_TYPE_DATETIME,
 //	'last_auth'=>SH_FIELD_TYPE_DATETIME,
 ];
