@@ -23,7 +23,8 @@ export default class ContentNavUser extends Component {
 		PartPath = path + PartPath;
 
 		var ShowGames = null;
-		if ( node['games'] > 0 ) {
+		// TODO: Remove `true` when endpoint actually returns number of games user participated on!
+		if ( true || node['games'] > 0 ) {
 			ShowGames = <ContentNavButton path={NewPath} icon="gamepad" href={path+'/games'}>Games</ContentNavButton>;
 		}
 
