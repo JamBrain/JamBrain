@@ -38,7 +38,7 @@ function _userGroup_GetByNode( $node_id, $query_suffix = ";" ) {
 function userGroup_GetStatusCodeFromFlags( ...$flags ) {
 	$status = 0;
 	foreach ($flags as $flag) {
-		$status = _userGroup_GetUpdatedFlagStatusAdd($flag);
+		$status = _userGroup_GetUpdatedFlagStatusAdd($status, $flag);
 	}
 	return $status;
 }
