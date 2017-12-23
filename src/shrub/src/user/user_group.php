@@ -57,12 +57,24 @@ function userGroup_GetUserStatusNames( $node_id ) {
 	return $names;
 }
 
-function userGroup_GetUserHasStatus( $node_id, $userGroupStatus ) {
+function userGroup_GetUserHasStatus( $node_id, ...$userGroupStatus ) {
+	$multi = is_array($userGroupStatus);
+	if (!$multi) {
+		$userGroupStatus = [$userGroupStatus];
+	}	
 	$data = _userGroup_GetByNode($node_id);
-	if ($data && isset($data['user_group'])) {
-		return _userGroup_GetFlagStatus($data['user_group'], $userGroupStatus);
+	$status = $data && isset($data['user_group']) ? $data['user_group'] : 0;
+	$ret = [];
+	foreach ($userGroupStatus as $statusFlag) {
+		 $ret[] = _userGroup_GetFlagStatus($data['user_group'], $statusFlag);
 	}
-	return false;
+	if ($multi) {
+		return $ret;
+	}
+	else {
+		$ret[0];
+	}
+	
 }
 
 function userGroup_SetUserStatusAdd( $node_id, $flag ) {

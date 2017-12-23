@@ -35,8 +35,6 @@ global_AddReservedName(
 	'anon'
 );
 
-//ALTER TABLE `sh_user` ADD `user_group` SMALLINT UNSIGNED NOT NULL DEFAULT '0' AFTER `last_auth`;
-
 const USER_GROUP_FLAG_PARTICIPANT = 0;
 const USER_GROUP_FLAG_VETERAN = 1;
 const USER_GROUP_FLAG_MODERATOR = 2;
