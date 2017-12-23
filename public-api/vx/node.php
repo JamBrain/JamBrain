@@ -5,6 +5,7 @@ include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."api.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
 require_once __DIR__."/".SHRUB_PATH."notification/notification.php";
+require_once __DIR__."/".SHRUB_PATH."user/user.php";
 
 json_Begin();
 
@@ -547,6 +548,10 @@ switch ( $action ) {
 			];
 
 			// TODO: Do things that modify limits here
+			if (userGroup_GetUserHasStatus($user_id, USER_GROUP_FLAG_CAN_NEWS)) {
+				$create_limits['post/news'] = -1;
+			}
+
 			$true_limit = 2;	// TODO: up this as a user becomes more trustworthy.
 
 
