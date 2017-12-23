@@ -32,9 +32,10 @@ export default class PageHomeNews extends Component {
     render( props, state ) {
         const {node, user, path, extra, featured} = props;
 		const {showDialog} = state;
-		let ShowCreateNews = null;
-		let ShowCreteEventNews = null;
+		let ShowCreateItems = [];
+		let ShowCreateBar = null;
 		let ShowDialog = null;
+
 		if (showDialog) {
 			const extra = [];
 			if (showDialog == 'general') {
@@ -47,16 +48,21 @@ export default class PageHomeNews extends Component {
 			extra.push('news');
 			ShowDialog = <DialogCreate extra={extra} onAbort={this.onAbortCreate}/>;
 		}
+
+
 		if (this.userCanCreateNews(user)) {
-			ShowCreateNews = <UIButton onClick={this.onCreateGeneralNews}>Create general news post</UIButton>;
+			ShowCreateItems.push(<UIButton onClick={this.onCreateGeneralNews} key="general">Create general news post</UIButton>);
 		}
 		if (featured && this.userCanCreateEventNews(user)) {
-			ShowCreteEventNews = <UIButton onClick={this.onCreateEventNews}>Create event news post</UIButton>;
+			ShowCreateItems.push(<UIButton onClick={this.onCreateEventNews} key="event">Create event news post</UIButton>);
 		}
+		if (ShowCreateItems.length > 0) {
+			ShowCreateBar = <div class="news-create-bar">{ShowCreateItems}</div>;
+		}
+
         return (
 			<div>
-				{ShowCreateNews}
-				{ShowCreteEventNews}
+				{ShowCreateBar}
 				<ContentTimeline class="content-timeline-news" types={['post']} subtypes={['news']} methods={['all']} node={node} user={user} path={path} extra={extra} />
 				{ShowDialog}
 			</div>
