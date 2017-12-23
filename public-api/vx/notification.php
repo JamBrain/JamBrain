@@ -58,7 +58,7 @@ function SetSubscription($value, &$RESPONSE) {
 	
 	// Verify that this node makes sense to subscribe to (use the same rules as note posting)
 	$node = node_GetById($node_id);
-	if ( !note_IsNotePublicByNode($node) ) {
+	if ( !comment_IsCommentPublicByNode($node) ) {
 		json_EmitFatalError_Permission("You don't have permission to subscribe to this node.", $RESPONSE);
 	}
 
