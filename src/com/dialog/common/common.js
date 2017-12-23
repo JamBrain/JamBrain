@@ -96,7 +96,10 @@ export default class DialogCommon extends Component {
 	onAbort() {
 		//console.log(location.pathname + location.search);
 		//window.history.pushState(null, null, location.pathname + location.search);
-    window.location.hash = "--";
+		window.location.hash = "--";
+		if (this.props.onAbort) {
+			this.props.onAbort();
+		}
 		//location.href = location.pathname+location.search;
 	}
 

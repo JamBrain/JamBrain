@@ -48,7 +48,8 @@ export default class DialogCreate extends Component {
 
 	render( props, {error} ) {
 		var new_props = {
-			'title': 'Create'
+			'title': 'Create',
+			'onAbort': props.onAbort,
 		};
 		if ( error ) {
 			new_props.error = error;
@@ -80,15 +81,25 @@ export default class DialogCreate extends Component {
 					</DialogCommon>
 				);
 			}
-			if ( What == "post" ) {
-				var ShowType = "Blog Post";
+			if ( What.startsWith("post" )) {
+				let ShowType = null;
+				let ShowInfo = null;
+				if ( What == 'post/news' ) {
+					ShowType = TargetNode == 1 ? "General News Post" : "Event News Post";
+					ShowInfo = <div>You have to keep track of the URI if you don't write and publish in one go...</div>;
+				}
+				else {
+					ShowType = "Blog Post";
+					ShowInfo = <div>You can find your unpublished draft posts on your user page.</div>;
+				}
+
 				new_props.title += ' '+ShowType;
 				new_props.oktext = "Create "+ShowType;
 
 				return (
 					<DialogCommon ok onok={this.doCreate} cancel explicit {...new_props}>
-						<div>Create a new Blog Post?</div>
-						<div>You can find your unpublished draft posts on your user page.</div>
+						<div>Create a new {ShowType}?</div>
+						{ShowInfo}
 					</DialogCommon>
 				);
 			}
