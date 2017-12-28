@@ -15,9 +15,8 @@ export default class SidebarUpcoming extends Component {
 //			<div class="-item"><strong>May 19th</strong> - Results <SVGIcon baseline small>checker</SVGIcon></div>,
 //			<div class="-item"><strong>July 28th</strong> - Ludum Dare 39 <SVGIcon baseline small>trophy</SVGIcon></div>,
 //			<div class="-item"><strong>August 23rd</strong> - Results <SVGIcon baseline small>checker</SVGIcon></div>,
-//			<div class="-item"><strong>December 1st</strong> - Ludum Dare 40 <SVGIcon baseline small>trophy</SVGIcon></div>,
-			<div class="-item"><strong>December 28th</strong> - Results <SVGIcon baseline small>checker</SVGIcon></div>,
-//			<div class="-item"><strong>December 1st</strong> - Ludum Dare 40 <SVGIcon baseline small>trophy</SVGIcon></div>,	// Spoilers
+			<div class="-item"><strong>April 20th</strong> - Ludum Dare 41 <SVGIcon baseline small>trophy</SVGIcon></div>,
+//			<div class="-item"><strong>December 28th</strong> - Results <SVGIcon baseline small>checker</SVGIcon></div>,
 		];
 
 		return (
