@@ -14,7 +14,7 @@ export default class EventGames extends Component {
 
         // Results
         if ( node && node.meta && (node.meta['theme-mode'] >= 8) ) {
-            DefaultSubFilter = 'jam';//'all';
+            DefaultSubFilter = 'all';
             DefaultFilter = 'overall';
         }
 
