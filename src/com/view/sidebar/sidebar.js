@@ -47,7 +47,7 @@ export default class ViewSidebar extends Component {
 				ShowCountdown.push(<SidebarCountdown date={ jamEndDate2 } nc="jam" to="Submission Hour+" tt="Ends" />);
 			}
 
-			if ( props.featured && props.featured.meta && props.featured.meta['can-grade'] ) { //now < compoEndDate2 || now < jamEndDate2 || now < gradeEndDate ) {
+			if ( now < gradeEndDate && props.featured && props.featured.meta && props.featured.meta['can-grade'] ) { //now < compoEndDate2 || now < jamEndDate2 || now < gradeEndDate ) {
 				ShowCountdown.push(<SidebarCountdown date={ gradeEndDate } nc="jam" to="Play+Rate games" tt="Ends" />);
 			}
 
