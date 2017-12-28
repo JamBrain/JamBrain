@@ -8,7 +8,7 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import IMG2 							from 'com/img2/img2';
 
 import ContentCommentsMarkup			from 'comments-markup';
-
+import {AutocompleteAtNames}			from 'comment-autocomplete';
 import $Note							from '../../shrub/js/note/note';
 import $NoteLove						from '../../shrub/js/note/note_love';
 
@@ -43,6 +43,7 @@ export default class ContentCommentsComment extends Component {
 		this.onLove = this.onLove.bind(this);
 		this.onReply = this.onReply.bind(this);
 		this.onSubscribe = this.onSubscribe.bind(this);
+		this.onAutocompleteSelect = this.onAutocompleteSelect.bind(this);
 	}
 
 	onEditing( e ) {
@@ -59,8 +60,14 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onModify( e ) {
+		//console.log('modified', e);
 		this.props.comment.body = e.target.value;
-		this.setState({'modified': this.canSave()});
+		this.setState({
+			'modified': this.canSave(),
+			'editText': e.target.value,
+			'editCursorPos': e.target.selectionStart,
+			'replaceText': null,
+		});
 	}
 
 	onCancel( e ) {
@@ -137,6 +144,15 @@ export default class ContentCommentsComment extends Component {
 		if ( this.props.onsubscribe ) {
 			this.props.onsubscribe(e, this.props.cansubscribe);
 		}
+	}
+
+	onAutocompleteSelect(replaceText) {
+		this.setState({
+			'editText': replaceText,
+			'replaceText': replaceText,
+			'cursorPos': 0, //TODO: fix
+		});
+		
 	}
 
 	render( props, state ) {
@@ -284,12 +300,13 @@ export default class ContentCommentsComment extends Component {
 			return (
 				<div id={"comment-"+comment.id} class={"-item -comment -indent-"+props.indent}>
 					{ShowAvatar}
+					<AutocompleteAtNames text={state.editText} cursorPos={state.editCursorPos} authors={props.authors} onSelect={this.onAutocompleteSelect}/>
 					<div class="-body">
 						{ShowTopNav}
 						{ShowError}
 						<div class="-text">
 							<div class="-title">{ShowTitle}</div>
-							<ContentCommentsMarkup user={user} editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here" limit={props.limit}>{comment.body}</ContentCommentsMarkup>
+							<ContentCommentsMarkup user={user} editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here" limit={props.limit} replaceText={state.replaceText}>{comment.body}</ContentCommentsMarkup>
 						</div>
 						{ShowBottomNav}
 					</div>

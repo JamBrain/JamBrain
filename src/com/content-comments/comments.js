@@ -203,7 +203,7 @@ export default class ContentComments extends Component {
 		// We can subscribe if we haven't subscribed and we don't have a comment in this thread, and we're not an author. Otherwise we can unsubscribe.
 		let canSubscribe = (this.state.subscribed === null) ? !( this.state.hascomment || this.state.isauthor ) : !this.state.subscribed;
 
-		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove allowAnonymous={allowAnonymous} error={error} cansubscribe={canSubscribe} onsubscribe={this.onSubscribe} /></div>;
+		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove allowAnonymous={allowAnonymous} error={error} cansubscribe={canSubscribe} onsubscribe={this.onSubscribe} authors={authors}/></div>;
 	}
 
 	onPublish( e, publishAnon ) {

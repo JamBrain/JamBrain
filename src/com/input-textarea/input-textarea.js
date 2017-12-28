@@ -26,6 +26,15 @@ export default class InputTextarea extends Component {
 		return Shallow.Diff(this.props, nextProps);
 	}
 
+	componentWillReceiveProps(nextProps) {
+		const {replaceText} = nextProps;
+		this.props.value = replaceText;
+		if (replaceText && this.textarea) {
+			this.textarea.value = replaceText;
+			this.textarea.focus();
+		}
+	}
+
 	resizeTextarea() {
 		// Reference: http://stackoverflow.com/a/18262927/5678759
 		// Reference: https://quirksmode.org/dom/core/
