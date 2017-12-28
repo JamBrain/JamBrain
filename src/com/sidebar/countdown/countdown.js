@@ -151,34 +151,59 @@ export default class SidebarCountdown extends Component {
 		}, 1000);
 	}
 
-	renderDigit( value, classname ) {
-		let Digit1 = Math.floor(value / 10);
-		let Digit2 = value % 10;
+	renderDigit( value, Classes ) {
 		return (
-			<div>
-				<div class={ "figure " + classname + " " + classname + "-1" }>
-					<span class="top">{ Digit1 }</span>
-					<span class="top-back">
-						<span>{ Digit1 }</span>
-					</span>
-					<span class="bottom">{ Digit1 }</span>
-					<span class="bottom-back">
-						<span >{ Digit1 }</span>
-					</span>
-				</div>
-
-				<div class={ "figure " + classname + " " + classname + "-2" }>
-					<span class="top">{ Digit2 }</span>
-					<span class="top-back">
-						<span>{ Digit2 }</span>
-					</span>
-					<span class="bottom">{ Digit2 }</span>
-					<span class="bottom-back">
-						<span >{ Digit2 }</span>
-					</span>
-				</div>
+			<div class={cN("figure", Classes)}>
+				<span class="top">{ value }</span>
+				<span class="top-back">
+					<span>{ value }</span>
+				</span>
+				<span class="bottom">{ value }</span>
+				<span class="bottom-back">
+					<span >{ value }</span>
+				</span>
 			</div>
 		);
+	}
+
+	renderDigits( value, classname ) {
+		let Digit0 = Math.floor(value / 100);
+		let Digit1 = Math.floor(value / 10) % 10;
+		let Digit2 = Math.floor(value) % 10;
+
+		let Digits = [];
+		if ( Math.abs(Digit0) )
+			Digits.push(this.renderDigit(Digit0, cN(classname, classname+'-0')));
+		Digits.push(this.renderDigit(Digit1, cN(classname, classname+'-1')));
+		Digits.push(this.renderDigit(Digit2, cN(classname, classname+'-2')));
+
+		return <div>{Digits}</div>;
+
+//		return (
+//			<div>
+//				<div class={ "figure " + classname + " " + classname + "-1" }>
+//					<span class="top">{ Digit1 }</span>
+//					<span class="top-back">
+//						<span>{ Digit1 }</span>
+//					</span>
+//					<span class="bottom">{ Digit1 }</span>
+//					<span class="bottom-back">
+//						<span >{ Digit1 }</span>
+//					</span>
+//				</div>
+//
+//				<div class={ "figure " + classname + " " + classname + "-2" }>
+//					<span class="top">{ Digit2 }</span>
+//					<span class="top-back">
+//						<span>{ Digit2 }</span>
+//					</span>
+//					<span class="bottom">{ Digit2 }</span>
+//					<span class="bottom-back">
+//						<span >{ Digit2 }</span>
+//					</span>
+//				</div>
+//			</div>
+//		);
 	}
 
 	render( props ) {
@@ -244,28 +269,28 @@ export default class SidebarCountdown extends Component {
 					<div class="bloc-time days" data-init-value="00" ref={c => this.daysblock=c} style={ daysblock }>
 						<span class="count-title _font2">Days</span>
 
-						{ this.renderDigit(this.values.days, "days") }
+						{ this.renderDigits(this.values.days, "days") }
 
 					</div>
 
 						<div class="bloc-time hours" data-init-value="00" ref={c => this.hoursblock=c}>
 							<span class="count-title _font2">Hours</span>
 
-							{ this.renderDigit(this.values.hours, "hours") }
+							{ this.renderDigits(this.values.hours, "hours") }
 
 						</div>
 
 						<div class="bloc-time min" data-init-value="0" ref={c => this.minutesblock=c} style={this.state.ShowDays ? "margin-right: 0px;" : ""}>
 							<span class="count-title _font2">Minutes</span>
 
-							{ this.renderDigit(this.values.minutes, "minutes") }
+							{ this.renderDigits(this.values.minutes, "minutes") }
 
 						</div>
 
 						<div class="bloc-time sec" data-init-value="0" style={ secondsblock } ref={c => this.secondsblock=c}>
 							<span class="count-title _font2">Seconds</span>
 
-							{ this.renderDigit(this.values.seconds, "seconds") }
+							{ this.renderDigits(this.values.seconds, "seconds") }
 
 						</div>
 					</div>
