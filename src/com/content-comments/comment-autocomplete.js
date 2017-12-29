@@ -65,6 +65,7 @@ class Autocompletions extends Component {
 					'match': matchObj.match,
 					'matchStart': matchObj.matchStart,
 					'matchEnd': matchObj.matchEnd,
+					'selected': null,
 				});
 			}
 			else {
@@ -101,16 +102,35 @@ class Autocompletions extends Component {
 		}
 		else {
 			const matchObj = this.getMatch(updatedText, cursorPos);
-			this.setState({'text': updatedText, 'cursorPos': cursorPos - 1, 'match': matchObj.match, 'matchEnd': matchObj.matchEnd});
+			if (matchObj) {
+				this.setState({'text': updatedText, 'cursorPos': cursorPos - 1, 'match': matchObj.match, 'matchEnd': matchObj.matchEnd});	
+			} else {
+				//TODO: first characters..
+			}
+			
 		}
 	}
 
 	updateText( key, hasShift ) {
 		if (key.length == 1) {
 			const {text, cursorPos, matchEnd} = this.state;
+			const {onSelect} = this.props;
 			const updatedText = text.slice(0, cursorPos) + (hasShift ? key.toUpperCase() : key) + text.slice(cursorPos);
 			const matchObj = this.getMatch(updatedText, cursorPos);
-			this.setState({'text': updatedText, 'cursorPos': cursorPos + 1, 'match': matchObj.match, 'matchEnd': matchObj.matchEnd});
+			if (matchObj) {
+				this.setState({'text': updatedText, 'cursorPos': cursorPos + 1, 'match': matchObj.match, 'matchEnd': matchObj.matchEnd});
+				if (this.getMatching(matchObj.match).length == 0) {
+					if (onSelect) {
+						onSelect(updatedText, cursorPos + 1);
+					}
+				}
+			}
+			else {
+				this.setState({'selected': null, 'text': updatedText});
+				if (onSelect) {
+					onSelect(updatedText, cursorPos + 1);
+				}
+			}
 		}
 	}
 
@@ -175,8 +195,13 @@ class Autocompletions extends Component {
 
 	render( props, state ) {
 		const {selected, match} = state;
+		let {maxItems} = state;
+
 		if (match && match != selected) {
-			const matches = this.getMatching(match).sort((a, b) => b.score - a.score);
+			if (!maxItems) {
+				maxItems = 8;
+			}
+			const matches = this.getMatching(match).sort((a, b) => b.score - a.score).slice(0, maxItems);
 			let selectedIndex = 0;
 			if (selected) {
 				const selectedMatch = matches.map((m, i) => [m, i]).filter(m => m[0].name == selected);
@@ -198,8 +223,10 @@ class Autocompletions extends Component {
 		if (this.autocompleteContainer && !this.autocompleteContainer.onkeyup) {
 			this.autocompleteContainer.onkeyup = this.onKeyUp;
 			this.autocompleteContainer.onkeydown = this.onKeyDown;
-			this.autocompleteContainer.focus();
 			//console.log(this.autocompleteContainer, this.autocompleteContainer.focus);
+		}
+		if (this.autocompleteContainer) {
+			this.autocompleteContainer.focus();
 		}
 	}
 }
@@ -210,6 +237,7 @@ export class AutocompleteAtNames extends Autocompletions {
 		this.state = {
 			'startPattern': /([\s ]|^)(@[A-Za-z-_0-9]*)$/,
 			'endPattern': /^[A-Za-z-_0-9]*/,
+			'maxItems': 8,
 		};
 	}
 
