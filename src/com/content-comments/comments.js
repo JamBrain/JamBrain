@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 				from 'preact/preact';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
 
@@ -29,7 +29,6 @@ export default class ContentComments extends Component {
 
 	componentWillMount() {
 		this.getComments(this.props.node);
-		console.log(this.props.node);
 	}
 
 	genComment() {
@@ -135,8 +134,8 @@ export default class ContentComments extends Component {
 	}
 
 	getAuthors() {
-		var user = this.props.user;
-		var comments = this.state.comments;
+		const {user, node} = this.props;
+		const comments = this.state.comments;
 
 		if ( comments ) {
 			var Authors = [];
@@ -150,18 +149,28 @@ export default class ContentComments extends Component {
 			if ( user && user.id ) {
 				Authors.push(user.id);
 			}
+
+			// Add authors from node
+			if (node.meta && node.meta.authors) {
+				node.meta.authors.forEach((author) => Authors.push(author));
+			}
+			else if (node) {
+				Authors.push(node.author);
+			}
+
 			// http://stackoverflow.com/a/23282067/5678759
 			// Remove Duplicates
-			Authors = Authors.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+			// Skip anonymous comments (user 0)
+			Authors = Authors.filter((item, i, ar) => ar.indexOf(item) === i && item > 0);
 
 			// Fetch authors
 
 			return $Node.GetKeyed( Authors )
 			.then(r => {
-				this.setState({ 'authors': r.node });
+				this.setState({'authors': r.node});
 			})
 			.catch(err => {
-				this.setState({ 'error': err });
+				this.setState({'error': err});
 			});
 		}
 	}
@@ -185,7 +194,8 @@ export default class ContentComments extends Component {
 
 			if ( tree[item].child ) {
 				ret.push(<ContentCommentsComment user={user} comment={comment} author={author} indent={indent}><div class="-indent">{this.renderComments(tree[item].child, indent+1)}</div></ContentCommentsComment>);
-			} else {
+			}
+			else {
 				ret.push(<ContentCommentsComment user={user} comment={comment} author={author} indent={indent}/>);
 			}
 		}
@@ -210,7 +220,7 @@ export default class ContentComments extends Component {
 	onPublish( e, publishAnon ) {
 		const node = this.props.node;
 		const newcomment = this.state.newcomment;
-		this.setState({'error': null });
+		this.setState({'error': null});
 
 		$Note.Add( newcomment.parent, newcomment.node, newcomment.body, null, publishAnon )
 		.then(r => {
@@ -275,7 +285,7 @@ export default class ContentComments extends Component {
 		}
 
 		return (
-			<div class={['content-base','content-common','content-comments',props['no_gap']?'-no-gap':'',props['no_header']?'-no-header':'']}>
+			<div class={['content-base', 'content-common', 'content-comments', props['no_gap'] ? '-no-gap' : '', props['no_header'] ? '-no-header' : '']}>
 				<div class="-headline">COMMENTS</div>
 				{ShowComments}
 				{ShowPostNew}
