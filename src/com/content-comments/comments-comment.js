@@ -33,7 +33,6 @@ export default class ContentCommentsComment extends Component {
 		this.onPreview = this.onPreview.bind(this);
 
 		this.onModify = this.onModify.bind(this);
-
 		this.onEdit = this.onEdit.bind(this);
 
 		this.onSave = this.onSave.bind(this);
@@ -300,7 +299,7 @@ export default class ContentCommentsComment extends Component {
 			return (
 				<div id={"comment-"+comment.id} class={"-item -comment -indent-"+props.indent}>
 					{ShowAvatar}
-					<AutocompleteAtNames text={state.editText} cursorPos={state.editCursorPos} authors={props.authors} onSelect={this.onAutocompleteSelect}/>
+					<AutocompleteAtNames text={state.editText} cursorPos={state.editCursorPos} authors={props.authors} onSelect={this.onAutocompleteSelect} />
 					<div class="-body">
 						{ShowTopNav}
 						{ShowError}
