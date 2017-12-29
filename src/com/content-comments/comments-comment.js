@@ -146,13 +146,13 @@ export default class ContentCommentsComment extends Component {
 		}
 	}
 
-	onAutocompleteSelect(replaceText) {
+	onAutocompleteSelect(replaceText, cursorPosAfterUpdate) {
+		this.props.comment.body = replaceText;
 		this.setState({
 			'editText': replaceText,
 			'replaceText': replaceText,
-			'cursorPos': 0, //TODO: fix
+			'cursorPos': cursorPosAfterUpdate,
 		});
-		
 	}
 
 	render( props, state ) {
@@ -306,7 +306,7 @@ export default class ContentCommentsComment extends Component {
 						{ShowError}
 						<div class="-text">
 							<div class="-title">{ShowTitle}</div>
-							<ContentCommentsMarkup user={user} editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here" limit={props.limit} replaceText={state.replaceText}>{comment.body}</ContentCommentsMarkup>
+							<ContentCommentsMarkup user={user} editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here" limit={props.limit} replaceText={state.replaceText} cursorPos={state.cursorPos}>{comment.body}</ContentCommentsMarkup>
 						</div>
 						{ShowBottomNav}
 					</div>

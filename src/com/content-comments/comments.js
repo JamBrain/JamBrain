@@ -29,6 +29,7 @@ export default class ContentComments extends Component {
 
 	componentWillMount() {
 		this.getComments(this.props.node);
+		console.log(this.props.node);
 	}
 
 	genComment() {

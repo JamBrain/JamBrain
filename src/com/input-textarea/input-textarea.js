@@ -27,11 +27,13 @@ export default class InputTextarea extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const {replaceText} = nextProps;
+		const {replaceText, cursorPos} = nextProps;
 		this.props.value = replaceText;
 		if (replaceText && this.textarea) {
 			this.textarea.value = replaceText;
 			this.textarea.focus();
+			this.textarea.selectionStart = cursorPos;
+			this.textarea.selectionEnd = cursorPos;
 		}
 	}
 

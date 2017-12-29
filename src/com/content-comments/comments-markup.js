@@ -39,6 +39,7 @@ export default class ContentCommentsMarkup extends Component {
 						onmodify={props.onmodify}
 						placeholder={props.placeholder}
 						replaceText={props.replaceText}
+						cursorPos={props.cursorPos}
 						ref={(input) => { this.textarea = input; }}
 						maxlength={Limit}
 					/>

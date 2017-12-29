@@ -38,7 +38,7 @@ class Autocompletions extends Component {
 			'text': updatedText,
 		});
 		if (onSelect) {
-			onSelect(updatedText);
+			onSelect(updatedText, matchStart + item.name.length);
 		}
 	}
 
