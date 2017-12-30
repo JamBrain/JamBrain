@@ -47,6 +47,8 @@
 
 	& .-item {
 		color: @COL_NDDD;
+		background: @COL_NLLLL;
+
 		position: relative;
 		display: block;
 
@@ -57,27 +59,21 @@
 		padding: 0.5em 1em;
 
 		&:hover {
-			background: @COL_A !important;
-			color: @COL_NLLLLL !important;
-
-			& .-at-name {
-				background: @COL_A !important;
-			}
+			background: @COL_A;
+			color: @COL_NLLLLL;
 		}
 
-		background: @COL_NLLLL;
-
 		& .-at-name {
-			background: @COL_NLLLL;
+			padding: 0;
 		}
 
 		&.-new-comment {
 			font-weight: bold;
-
 			background: @COL_L;
 
-			& .-at-name {
-				background: @COL_L;
+			&:hover {
+				background: @COL_A;
+				color: @COL_NLLLLL;
 			}
 		}
 	}

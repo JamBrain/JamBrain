@@ -1,6 +1,6 @@
 <?php
 
-function noteVersion_Add( $note, $author, $body, $tag = "", $flags = 0 ) {
+function commentVersion_Add( $comment, $author, $body, $tag = "", $flags = 0 ) {
 	$ret = db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NOTE_VERSION." (
 			note,
@@ -18,12 +18,12 @@ function noteVersion_Add( $note, $author, $body, $tag = "", $flags = 0 ) {
 			?,
 			?
 		)",
-		$note,
+		$comment,
 		$author,
 		$body,
 		$tag,
 		$flags
 	);
-	
+
 	return $ret;
 }

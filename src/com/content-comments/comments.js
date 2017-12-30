@@ -1,13 +1,13 @@
-import {h, Component} 				from 'preact/preact';
+import {h, Component}	 				from 'preact/preact';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
 
 import ContentCommentsComment			from 'comments-comment';
 
-import $Note							from '../../shrub/js/note/note';
-import $Node							from '../../shrub/js/node/node';
-import $NoteLove						from '../../shrub/js/note/note_love';
-import $Notification					from '../../shrub/js/notification/notification';
+import $Comment							from 'shrub/js/comment/comment';
+import $Node							from 'shrub/js/node/node';
+import $CommentLove						from 'shrub/js/comment/comment_love';
+import $Notification					from 'shrub/js/notification/notification';
 
 export default class ContentComments extends Component {
 	constructor( props ) {
@@ -52,7 +52,7 @@ export default class ContentComments extends Component {
 			});
 		}
 
-		$Note.Get( node.id )
+		$Comment.GetByNode(node.id)
 		.then(r => {
 			// Determine if current user is one of the authors of this node
 			let isauthor = false;
@@ -91,7 +91,7 @@ export default class ContentComments extends Component {
 				this.setState({'newcomment': this.genComment()});
 			});
 
-			$NoteLove.GetMy(node.id)
+			$CommentLove.GetMy(node.id)
 			.then(r => {
 					this.setState({"lovedComments": r["my-love"]});
 
@@ -218,11 +218,11 @@ export default class ContentComments extends Component {
 	}
 
 	onPublish( e, publishAnon ) {
-		const node = this.props.node;
-		const newcomment = this.state.newcomment;
+		const {node} = this.props;
+		const {newcomment} = this.state;
 		this.setState({'error': null});
 
-		$Note.Add( newcomment.parent, newcomment.node, newcomment.body, null, publishAnon )
+		$Comment.Add(newcomment.parent, newcomment.node, newcomment.body, null, publishAnon)
 		.then(r => {
 			if ( r.note ) {
 				var Now = new Date();
@@ -285,7 +285,7 @@ export default class ContentComments extends Component {
 		}
 
 		return (
-			<div class={['content-base', 'content-common', 'content-comments', props['no_gap'] ? '-no-gap' : '', props['no_header'] ? '-no-header' : '']}>
+			<div class={cN("content-base content-common content-comments", props['no_gap'] ? '-no-gap' : '', props['no_header'] ? '-no-header' : '')}>
 				<div class="-headline">COMMENTS</div>
 				{ShowComments}
 				{ShowPostNew}

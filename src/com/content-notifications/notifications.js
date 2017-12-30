@@ -64,7 +64,6 @@ export default class NotificationsFeed extends NotificationsBase {
 		const hasMore = !processing && ((state.offset + this.state.limit) < state.count);
 		const hasUnread = this.getHighestNotificationInFeed() > maxReadId;
 		let ShowNotifications = [];
-		const caller_id = state.caller_id;
 		const notifications = state.notifications;
 		const notificationsOrder = this.getNotificationsOrder();
 		const notificationsArray = [];
@@ -74,7 +73,6 @@ export default class NotificationsFeed extends NotificationsBase {
 			if (this.shouldShowNotification(notification)) {
 				ShowNotifications.push((
 					<Notification
-						caller_id={caller_id}
 						notification={notification}
 						class={cN("-item -notification", (notification.notification[0].id>maxReadId)?'-new-comment':'')}
 						id={'notification-' + identifier}
