@@ -1,5 +1,5 @@
-import { h, Component } 				from 'preact/preact';
-import { shallowDiff }	 				from 'shallow-compare/index';
+import {h, Component} 				from 'preact/preact';
+import {shallowDiff}	 				from 'shallow-compare/index';
 
 import NavLink							from 'com/nav-link/link';
 import SVGIcon							from 'com/svg-icon/icon';
@@ -37,6 +37,8 @@ export default class ContentCommentsMarkup extends Component {
 						user={props.user}
 						value={Text}
 						onmodify={props.onmodify}
+						onkeydown={props.onkeydown}
+						onkeyup={props.onkeyup}
 						placeholder={props.placeholder}
 						replaceText={props.replaceText}
 						cursorPos={props.cursorPos}

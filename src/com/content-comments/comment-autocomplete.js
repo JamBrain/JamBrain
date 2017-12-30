@@ -4,30 +4,10 @@ import UIButton						from 'com/ui/button/button';
 class Autocompletions extends Component {
 	constructor(props) {
 		super(props);
-		this.onKeyUp = this.onKeyUp.bind(this);
 		this.onKeyDown = this.onKeyDown.bind(this);
-		//this.handleAbort = this.handleAbort.bind(this);
-		//this.updateSelected = this.updateSelected.bind(this);
-		//this.selectSelected = this.selectSelected.bind(this);
-		//this.removeCharacter = this.removeCharacter.bind(this);
-		//this.updateText = this.updateText.bind(this);
 	}
 
 	onKeyDown( e ) {
-		e.preventDefault();
-		switch (e.key) {
-			case "Shift":
-				this.setState({'shiftKey': true});
-				break;
-			default:
-				this.updateText(e.key, this.state.shiftKey);
-		}
-		return false;
-	}
-
-	onKeyUp( e ) {
-		//console.log("Key Event", this, e);
-		e.preventDefault();
 		switch (e.key) {
 			case "Escape":
 				this.handleAbort();
@@ -41,15 +21,8 @@ class Autocompletions extends Component {
 			case "Enter":
 				this.selectSelected();
 				return false;
-			case "Shift":
-				this.setState({'shiftKey': false});
-				return false;
-			case "Backspace":
-				this.removeCharacter();
-				return false;
-			default:
-				return false;
 		}
+		return true;
 	}
 
 	componentWillReceiveProps( nextProps ) {
@@ -91,49 +64,6 @@ class Autocompletions extends Component {
 		};
 	}
 
-	removeCharacter() {
-		const {text, cursorPos, matchStart, matchEnd} = this.state;
-		const {onSelect} = this.props;
-		const updatedText = text.slice(0, cursorPos - 1) + text.slice(cursorPos);
-		if (cursorPos - 1 == matchStart) {
-			if (onSelect) {
-				onSelect(updatedText, cursorPos - 1);
-			}
-		}
-		else {
-			const matchObj = this.getMatch(updatedText, cursorPos);
-			if (matchObj) {
-				this.setState({'text': updatedText, 'cursorPos': cursorPos - 1, 'match': matchObj.match, 'matchEnd': matchObj.matchEnd});	
-			} else {
-				//TODO: first characters..
-			}
-			
-		}
-	}
-
-	updateText( key, hasShift ) {
-		if (key.length == 1) {
-			const {text, cursorPos, matchEnd} = this.state;
-			const {onSelect} = this.props;
-			const updatedText = text.slice(0, cursorPos) + (hasShift ? key.toUpperCase() : key) + text.slice(cursorPos);
-			const matchObj = this.getMatch(updatedText, cursorPos);
-			if (matchObj) {
-				this.setState({'text': updatedText, 'cursorPos': cursorPos + 1, 'match': matchObj.match, 'matchEnd': matchObj.matchEnd});
-				if (this.getMatching(matchObj.match).length == 0) {
-					if (onSelect) {
-						onSelect(updatedText, cursorPos + 1);
-					}
-				}
-			}
-			else {
-				this.setState({'selected': null, 'text': updatedText});
-				if (onSelect) {
-					onSelect(updatedText, cursorPos + 1);
-				}
-			}
-		}
-	}
-
 	selectSelected() {
 		const {text, cursorPos, match, matchStart, matchEnd} = this.state;
 		const {onSelect} = this.props;
@@ -150,7 +80,6 @@ class Autocompletions extends Component {
 	}
 
 	updateSelected(indexChange) {
-
 	}
 
 	handleAbort() {
@@ -194,8 +123,8 @@ class Autocompletions extends Component {
 	}
 
 	render( props, state ) {
-		const {selected, match} = state;
-		let {maxItems} = state;
+		const {match, name} = state;
+		let {maxItems, selected} = state;
 
 		if (match && match != selected) {
 			if (!maxItems) {
@@ -209,16 +138,23 @@ class Autocompletions extends Component {
 					selectedIndex = selectedMatch[0][1];
 				}
 			}
-			if (selected ? matches.length > 1 || (matches.length == 1 && matches[0].length != selected) : matches.length > 0) {
+			else if (matches.length > 0) {
+				selected = matches[0].name;
+			}
+			if (selected ? matches.length > 1 || (matches.length == 1 && matches[0].name != match) : matches.length > 0) {
+				props.captureKeyDown(name, this.onKeyDown);
 				return (
 					<div class={cN("-auto-complete", props.class)} tabindex="0" ref={(elem) => this.autocompleteContainer = elem}>
 						{matches.map((m, i) => this.renderSuggestion(m, i == selectedIndex ? '-selected' : ''))}
 					</div>
 				);
 			}
+			else {
+				props.captureKeyDown(name, null);
+			}
 		}
 	}
-
+/*
 	componentDidUpdate() {
 		if (this.autocompleteContainer && !this.autocompleteContainer.onkeyup) {
 			this.autocompleteContainer.onkeyup = this.onKeyUp;
@@ -226,15 +162,17 @@ class Autocompletions extends Component {
 			//console.log(this.autocompleteContainer, this.autocompleteContainer.focus);
 		}
 		if (this.autocompleteContainer) {
-			this.autocompleteContainer.focus();
+			//this.autocompleteContainer.focus();
 		}
 	}
+	*/
 }
 
 export class AutocompleteAtNames extends Autocompletions {
 	constructor(props) {
 		super(props);
 		this.state = {
+			'name': 'at-names',
 			'startPattern': /([\s ]|^)(@[A-Za-z-_0-9]*)$/,
 			'endPattern': /^[A-Za-z-_0-9]*/,
 			'maxItems': 8,

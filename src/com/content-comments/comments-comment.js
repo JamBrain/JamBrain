@@ -28,11 +28,16 @@ export default class ContentCommentsComment extends Component {
 			'lovecount': props.comment.love,
 		};
 
+		// A bit of a hack but important that changing this doesn't trigger render
+		// and easier to keep outside state.
+		this.autocompleters = {};
 
 		this.onEditing = this.onEditing.bind(this);
 		this.onPreview = this.onPreview.bind(this);
 
 		this.onModify = this.onModify.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
+		this.onKeyUp = this.onKeyUp.bind(this);
 		this.onEdit = this.onEdit.bind(this);
 
 		this.onSave = this.onSave.bind(this);
@@ -42,7 +47,10 @@ export default class ContentCommentsComment extends Component {
 		this.onLove = this.onLove.bind(this);
 		this.onReply = this.onReply.bind(this);
 		this.onSubscribe = this.onSubscribe.bind(this);
+
 		this.onAutocompleteSelect = this.onAutocompleteSelect.bind(this);
+		this.onAutoselectCaptureKeyDown = this.onAutoselectCaptureKeyDown.bind(this);
+		this.onAutoselectCaptureKeyUp = this.onAutoselectCaptureKeyUp.bind(this);
 	}
 
 	onEditing( e ) {
@@ -67,6 +75,28 @@ export default class ContentCommentsComment extends Component {
 			'editCursorPos': e.target.selectionStart,
 			'replaceText': null,
 		});
+	}
+
+	onKeyDown( e ) {
+		const {autocompleters} = this;
+		for (let autocompleter in autocompleters) {
+			const state = autocompleters[autocompleter];
+			if (state.captureKeyDown && !state.captureKeyDown(e)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	onKeyUp( e ) {
+		const {autocompleters} = this;
+		for (let autocompleter in autocompleters) {
+			const state = autocompleters[autocompleter];
+			if (state.captureKeyUp && !state.captureKeyUp(e)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	onCancel( e ) {
@@ -152,6 +182,22 @@ export default class ContentCommentsComment extends Component {
 			'replaceText': replaceText,
 			'cursorPos': cursorPosAfterUpdate,
 		});
+	}
+
+	onAutoselectCaptureKeyDown(autocompleter, callback) {
+		const {autocompleters} = this;
+		if (!autocompleters[autocompleter]) {
+			autocompleters[autocompleter] = {};
+		}
+		autocompleters[autocompleter].captureKeyDown = callback;
+	}
+
+	onAutoselectCaptureKeyUp(autocompleter, callback) {
+		const {autocompleters} = this;
+		if (!autocompleters[autocompleter]) {
+			autocompleters[autocompleter] = {};
+		}
+		autocompleters[autocompleter].captureKeyUp = callback;
 	}
 
 	render( props, state ) {
@@ -299,13 +345,20 @@ export default class ContentCommentsComment extends Component {
 			return (
 				<div id={"comment-"+comment.id} class={"-item -comment -indent-"+props.indent}>
 					{ShowAvatar}
-					<AutocompleteAtNames text={state.editText} cursorPos={state.editCursorPos} authors={props.authors} onSelect={this.onAutocompleteSelect} />
+					<AutocompleteAtNames
+						text={state.editText}
+						cursorPos={state.editCursorPos}
+						authors={props.authors}
+						onSelect={this.onAutocompleteSelect}
+						captureKeyDown={this.onAutoselectCaptureKeyDown}
+						captureKeyUp={this.onAutoselectCaptureKeyUp}
+					/>
 					<div class="-body">
 						{ShowTopNav}
 						{ShowError}
 						<div class="-text">
 							<div class="-title">{ShowTitle}</div>
-							<ContentCommentsMarkup user={user} editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here" limit={props.limit} replaceText={state.replaceText} cursorPos={state.cursorPos}>{comment.body}</ContentCommentsMarkup>
+							<ContentCommentsMarkup user={user} editing={state.editing && !state.preview} onmodify={this.onModify} onkeydown={this.onKeyDown} onkeyup={this.onKeyUp} placeholder="type a comment here" limit={props.limit} replaceText={state.replaceText} cursorPos={state.cursorPos}>{comment.body}</ContentCommentsMarkup>
 						</div>
 						{ShowBottomNav}
 					</div>

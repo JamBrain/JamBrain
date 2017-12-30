@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 				from 'preact/preact';
 import Shallow			 				from 'shallow/shallow';
 
 import NavLink							from 'com/nav-link/link';
@@ -19,6 +19,8 @@ export default class InputTextarea extends Component {
 		};
 
 		this.onInput = this.onInput.bind(this);
+		this.onKeyUp = this.onKeyUp.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
 		this.onFileChange = this.onFileChange.bind(this);
 	}
 
@@ -128,9 +130,23 @@ export default class InputTextarea extends Component {
 			this.props.onmodify(e);
 		}
 
-		if( this.state.microsoftEdge ) {
+		if ( this.state.microsoftEdge ) {
 			e.preventDefault();
 			this.setState({'cursorPos': e.target.selectionEnd});
+		}
+	}
+
+	onKeyDown( e ) {
+		const {onkeydown} = this.props;
+		if (onkeydown && !onkeydown(e)) {
+			e.preventDefault();
+		}
+	}
+
+	onKeyUp( e ) {
+		const {onkeyup} = this.props;
+		if (onkeyup && !onkeyup(e)) {
+			e.preventDefault();
 		}
 	}
 
@@ -144,6 +160,8 @@ export default class InputTextarea extends Component {
 				<div class="-textarea">
 					<textarea {...props}
 						oninput={this.onInput}
+						onkeydown={this.onKeyDown}
+						onkeyup={this.onKeyUp}
 						ref={(input) => { this.textarea = input; }}
 					/>
 				</div>
