@@ -94,12 +94,7 @@ class Autocompletions extends Component {
 	}
 
 	handleAbort() {
-		const {text, cursorPos, match} = this.state;
-		const {onSelect} = this.props;
-		this.setState({'selected': match});
-		if (onSelect) {
-			onSelect(text, cursorPos);
-		}
+		this.setState({'selected': this.state.match});
 	}
 
 	handleSelect( item, e ) {
@@ -160,7 +155,7 @@ class Autocompletions extends Component {
 			if (options.length > 0 && !selected) {
 				selected = options[0].name;
 			}
-			if (selected ? options.length > 1 || (options.length == 1 && options[0].name != match) : options.length > 0) {
+			if (selected ? options.length > 1 || (options.length == 1 && options[0].name != match && match != selected) : options.length > 0) {
 				props.captureKeyDown(name, this.onKeyDown);
 				return (
 					<div class={cN("-auto-complete", props.class)}>
