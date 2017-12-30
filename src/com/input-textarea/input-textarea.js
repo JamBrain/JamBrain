@@ -24,6 +24,7 @@ export default class InputTextarea extends Component {
 		this.onFileChange = this.onFileChange.bind(this);
 		this.onBlur = this.onBlur.bind(this);
 		this.onFocus = this.onFocus.bind(this);
+		this.onClick = this.onClick.bind(this);
 	}
 
 	shouldComponentUpdate( nextProps ) {
@@ -139,9 +140,25 @@ export default class InputTextarea extends Component {
 	}
 
 	onKeyDown( e ) {
-		const {onkeydown} = this.props;
+		const {onkeydown, oncaret} = this.props;
 		if (onkeydown && !onkeydown(e)) {
 			e.preventDefault();
+		}
+		else if (oncaret) {
+			switch (e.key) {
+				case "ArrowUp":
+				case "ArrowDown":
+				case "ArrowLeft":
+				case "ArrowRight":
+				case "Home":
+				case "End":
+				case "PageUp":
+				case "PageDown":
+					if (!oncaret(e)) {
+						e.preventDefault();
+					}
+					break;
+			}
 		}
 	}
 
@@ -160,8 +177,18 @@ export default class InputTextarea extends Component {
 	}
 
 	onFocus( e ) {
-		const {onfocus} = this.props;
+		const {onfocus, oncaret} = this.props;
 		if (onfocus && !onfocus(e)) {
+			e.preventDefault();
+		}
+		if (oncaret && !oncaret(e)) {
+			e.preventDefault();
+		}
+	}
+
+	onClick( e ) {
+		const {oncaret} = this.props;
+		if (oncaret && !oncaret(e)) {
 			e.preventDefault();
 		}
 	}
@@ -178,6 +205,7 @@ export default class InputTextarea extends Component {
 						oninput={this.onInput}
 						onkeydown={this.onKeyDown}
 						onkeyup={this.onKeyUp}
+						onclick={this.onClick}
 						ref={(input) => { this.textarea = input; }}
 					/>
 				</div>

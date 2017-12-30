@@ -50,6 +50,7 @@ export default class ContentCommentsComment extends Component {
 
 		this.onTextAreaBlur = this.onTextAreaBlur.bind(this);
 		this.onTextAreaFocus = this.onTextAreaFocus.bind(this);
+		this.onTextAreaCaret = this.onTextAreaCaret.bind(this);
 
 		this.onAutocompleteSelect = this.onAutocompleteSelect.bind(this);
 		this.onAutoselectCaptureKeyDown = this.onAutoselectCaptureKeyDown.bind(this);
@@ -109,6 +110,11 @@ export default class ContentCommentsComment extends Component {
 
 	onTextAreaBlur( e ) {
 		this.setState({'textareaFocus': false});
+		return true;
+	}
+
+	onTextAreaCaret( e ) {
+		this.setState({'editCursorPos': e.target.selectionStart});
 		return true;
 	}
 
@@ -384,6 +390,7 @@ export default class ContentCommentsComment extends Component {
 								onkeyup={this.onKeyUp}
 								onfocus={this.onTextAreaFocus}
 								onblur={this.onTextAreaBlur}
+								oncaret={this.onTextAreaCaret}
 								placeholder="type a comment here"
 								limit={props.limit}
 								replaceText={state.replaceText}

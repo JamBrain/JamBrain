@@ -41,6 +41,7 @@ export default class ContentCommentsMarkup extends Component {
 						onkeyup={props.onkeyup}
 						onblur={props.onblur}
 						onfocus={props.onfocus}
+						oncaret={props.oncaret}
 						placeholder={props.placeholder}
 						replaceText={props.replaceText}
 						cursorPos={props.cursorPos}
