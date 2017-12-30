@@ -22,6 +22,8 @@ export default class InputTextarea extends Component {
 		this.onKeyUp = this.onKeyUp.bind(this);
 		this.onKeyDown = this.onKeyDown.bind(this);
 		this.onFileChange = this.onFileChange.bind(this);
+		this.onBlur = this.onBlur.bind(this);
+		this.onFocus = this.onFocus.bind(this);
 	}
 
 	shouldComponentUpdate( nextProps ) {
@@ -146,6 +148,20 @@ export default class InputTextarea extends Component {
 	onKeyUp( e ) {
 		const {onkeyup} = this.props;
 		if (onkeyup && !onkeyup(e)) {
+			e.preventDefault();
+		}
+	}
+
+	onBlur( e ) {
+		const {onblur} = this.props;
+		if (onblur && !onblur(e)) {
+			e.preventDefault();
+		}
+	}
+
+	onFocus( e ) {
+		const {onfocus} = this.props;
+		if (onfocus && !onfocus(e)) {
 			e.preventDefault();
 		}
 	}

@@ -48,6 +48,9 @@ export default class ContentCommentsComment extends Component {
 		this.onReply = this.onReply.bind(this);
 		this.onSubscribe = this.onSubscribe.bind(this);
 
+		this.onTextAreaBlur = this.onTextAreaBlur.bind(this);
+		this.onTextAreaFocus = this.onTextAreaFocus.bind(this);
+
 		this.onAutocompleteSelect = this.onAutocompleteSelect.bind(this);
 		this.onAutoselectCaptureKeyDown = this.onAutoselectCaptureKeyDown.bind(this);
 		this.onAutoselectCaptureKeyUp = this.onAutoselectCaptureKeyUp.bind(this);
@@ -96,6 +99,16 @@ export default class ContentCommentsComment extends Component {
 				return false;
 			}
 		}
+		return true;
+	}
+
+	onTextAreaFocus( e ) {
+		this.setState({'textareaFocus': true});
+		return true;
+	}
+
+	onTextAreaBlur( e ) {
+		this.setState({'textareaFocus': false});
 		return true;
 	}
 
@@ -342,23 +355,42 @@ export default class ContentCommentsComment extends Component {
 				ShowAvatar = <div class="-avatar"><IMG2 src={Avatar} /></div>;
 			}
 
+			let ShowAutocompleteAt = null;
+			if (state.textareaFocus) {
+				ShowAutocompleteAt = <AutocompleteAtNames
+					text={state.editText}
+					cursorPos={state.editCursorPos}
+					authors={props.authors}
+					onSelect={this.onAutocompleteSelect}
+					captureKeyDown={this.onAutoselectCaptureKeyDown}
+					captureKeyUp={this.onAutoselectCaptureKeyUp}
+				/>;
+			}
+
 			return (
 				<div id={"comment-"+comment.id} class={"-item -comment -indent-"+props.indent}>
 					{ShowAvatar}
-					<AutocompleteAtNames
-						text={state.editText}
-						cursorPos={state.editCursorPos}
-						authors={props.authors}
-						onSelect={this.onAutocompleteSelect}
-						captureKeyDown={this.onAutoselectCaptureKeyDown}
-						captureKeyUp={this.onAutoselectCaptureKeyUp}
-					/>
+					{ShowAutocompleteAt}
 					<div class="-body">
 						{ShowTopNav}
 						{ShowError}
 						<div class="-text">
 							<div class="-title">{ShowTitle}</div>
-							<ContentCommentsMarkup user={user} editing={state.editing && !state.preview} onmodify={this.onModify} onkeydown={this.onKeyDown} onkeyup={this.onKeyUp} placeholder="type a comment here" limit={props.limit} replaceText={state.replaceText} cursorPos={state.cursorPos}>{comment.body}</ContentCommentsMarkup>
+							<ContentCommentsMarkup
+								user={user}
+								editing={state.editing && !state.preview}
+								onmodify={this.onModify}
+								onkeydown={this.onKeyDown}
+								onkeyup={this.onKeyUp}
+								onfocus={this.onTextAreaFocus}
+								onblur={this.onTextAreaBlur}
+								placeholder="type a comment here"
+								limit={props.limit}
+								replaceText={state.replaceText}
+								cursorPos={state.cursorPos}
+							>
+								{comment.body}
+							</ContentCommentsMarkup>
 						</div>
 						{ShowBottomNav}
 					</div>
