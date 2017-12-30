@@ -80,6 +80,17 @@ class Autocompletions extends Component {
 	}
 
 	updateSelected(indexChange) {
+		const {selectedIndex, options} = this.getSelected();
+		let nextIndex = selectedIndex + indexChange;
+		if (nextIndex < 0) {
+			nextIndex = options.length - 1;
+		}
+		else {
+			nextIndex %= options.length;
+		}
+		if (nextIndex < options.length) {
+			this.setState({'selected': options[nextIndex].name});
+		}
 	}
 
 	handleAbort() {
@@ -107,7 +118,7 @@ class Autocompletions extends Component {
 		}
 	}
 
-	getMatching( hint ) {
+	getOptions( hint ) {
 		/* Should return an array of objects that contains the
 		fields `name` and `score`. Could have more fields if useful for the render function and callbacks.
 		Name should be the exact word that is expected to be written in
@@ -122,30 +133,38 @@ class Autocompletions extends Component {
 		return null;
 	}
 
+	getSelected() {
+		const {match, selected} = this.state;
+		let {maxItems} = this.state;
+		if (!maxItems) {
+			maxItems = 4;
+		}
+		let selectedIndex = 0;
+		const options = this.getOptions(match).sort((a, b) => b.score - a.score).slice(0, maxItems);
+		if (options) {
+			const selectedMatch = options.map((opt, i) => [opt, i]).filter(item => item[0].name == selected);
+			if (selectedMatch.length == 1) {
+				selectedIndex = selectedMatch[0][1];
+			}
+		}
+		return {'selected': selected, 'selectedIndex': selectedIndex, 'options': options};
+	}
+
 	render( props, state ) {
 		const {match, name} = state;
 		let {maxItems, selected} = state;
 
 		if (match && match != selected) {
-			if (!maxItems) {
-				maxItems = 8;
+
+			let {selected, options, selectedIndex} = this.getSelected();
+			if (options.length > 0 && !selected) {
+				selected = options[0].name;
 			}
-			const matches = this.getMatching(match).sort((a, b) => b.score - a.score).slice(0, maxItems);
-			let selectedIndex = 0;
-			if (selected) {
-				const selectedMatch = matches.map((m, i) => [m, i]).filter(m => m[0].name == selected);
-				if (selectedMatch.length == 1) {
-					selectedIndex = selectedMatch[0][1];
-				}
-			}
-			else if (matches.length > 0) {
-				selected = matches[0].name;
-			}
-			if (selected ? matches.length > 1 || (matches.length == 1 && matches[0].name != match) : matches.length > 0) {
+			if (selected ? options.length > 1 || (options.length == 1 && options[0].name != match) : options.length > 0) {
 				props.captureKeyDown(name, this.onKeyDown);
 				return (
-					<div class={cN("-auto-complete", props.class)} tabindex="0" ref={(elem) => this.autocompleteContainer = elem}>
-						{matches.map((m, i) => this.renderSuggestion(m, i == selectedIndex ? '-selected' : ''))}
+					<div class={cN("-auto-complete", props.class)}>
+						{options.map((m, i) => this.renderSuggestion(m, i == selectedIndex ? '-selected' : ''))}
 					</div>
 				);
 			}
@@ -154,18 +173,6 @@ class Autocompletions extends Component {
 			}
 		}
 	}
-/*
-	componentDidUpdate() {
-		if (this.autocompleteContainer && !this.autocompleteContainer.onkeyup) {
-			this.autocompleteContainer.onkeyup = this.onKeyUp;
-			this.autocompleteContainer.onkeydown = this.onKeyDown;
-			//console.log(this.autocompleteContainer, this.autocompleteContainer.focus);
-		}
-		if (this.autocompleteContainer) {
-			//this.autocompleteContainer.focus();
-		}
-	}
-	*/
 }
 
 export class AutocompleteAtNames extends Autocompletions {
@@ -175,13 +182,12 @@ export class AutocompleteAtNames extends Autocompletions {
 			'name': 'at-names',
 			'startPattern': /([\s ]|^)(@[A-Za-z-_0-9]*)$/,
 			'endPattern': /^[A-Za-z-_0-9]*/,
-			'maxItems': 8,
 		};
 	}
 
-	getMatching(hint) {
+	getOptions(hint) {
 		const {authors} = this.props;
-		const matches = [];
+		const options = [];
 		const hintWithoutAt = hint.substr(1);
 		if (authors) {
 			for (let author in authors) {
@@ -190,14 +196,14 @@ export class AutocompleteAtNames extends Autocompletions {
 				if (hint.length == 0 || matchStart > -1) {
 					let score = matchStart == 0 ? 1 : 0.5;
 					score = Math.pow(hint.length / authorData.name.length, score);
-					matches.push({
+					options.push({
 						'name': '@' + authorData.name,
 						'score': score,
 					});
 				}
 			}
 		}
-		return matches;
+		return options;
 	}
 
 	renderSuggestion(item, classModifier) {
