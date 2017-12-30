@@ -69,7 +69,7 @@ class Autocompletions extends Component {
 		const {onSelect} = this.props;
 		let {selected} = this.state;
 		if (!selected) {
-			selected = this.getMatching(match).sort((a, b) => b.score - a.score)[0].name;
+			selected = this.getOptions(match).sort((a, b) => b.score - a.score)[0].name;
 		}
 		const updatedText = text.slice(0, matchStart) + selected + text.slice(matchEnd);
 		this.setState({'text': updatedText});
