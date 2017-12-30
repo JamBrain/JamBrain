@@ -178,7 +178,8 @@ export class AutocompleteEmojis extends Autocompletions {
 		this.state = {
 			'name': 'emojis',
 			'startPattern': /([\s ]|^)(:[A-Za-z_0-9]*)$/,
-			'endPattern': /^[A-Za-z-_0-9]*/,
+			'endPattern': /^[A-Za-z-_0-9]*:?/,
+			'maxItems': 16,
 		};
 	}
 
@@ -231,7 +232,7 @@ export class AutocompleteAtNames extends Autocompletions {
 		this.state = {
 			'name': 'at-names',
 			'startPattern': /([\s ]|^)(@[A-Za-z-_0-9]*)$/,
-			'endPattern': /^[A-Za-z-_0-9]*:?/,
+			'endPattern': /^[A-Za-z-_0-9]*/,
 			'maxItems': 8,
 		};
 	}

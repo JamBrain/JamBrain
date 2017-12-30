@@ -109,7 +109,7 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onTextAreaBlur( e ) {
-		//this.setState({'textareaFocus': false});
+		this.setState({'textareaFocus': false});
 		return true;
 	}
 
