@@ -1,5 +1,7 @@
 import {h, Component} 				from 'preact/preact';
 import UIButton						from 'com/ui/button/button';
+import marked 						from '../../internal/marked/marked';
+
 
 class Autocompletions extends Component {
 	constructor(props) {
@@ -170,13 +172,67 @@ class Autocompletions extends Component {
 	}
 }
 
+export class AutocompleteEmojis extends Autocompletions {
+	constructor(props) {
+		super(props);
+		this.state = {
+			'name': 'emojis',
+			'startPattern': /([\s ]|^)(:[A-Za-z_0-9]*)$/,
+			'endPattern': /^[A-Za-z-_0-9]*/,
+		};
+	}
+
+	getOptions(hint) {
+		const {emojiList} = window.emoji;
+		const options = [];
+		const hintWithoutColon = hint.substr(1);
+		for (let emoji in emojiList) {
+			const matchStart = emoji.indexOf(hintWithoutColon);
+			if (hint.length == 0 || matchStart > -1) {
+				let score = matchStart == 0 ? 1 : 0.5;
+				score = Math.pow(hint.length / emoji.length, score);
+				options.push({
+					'name': ':' + emoji + ':',
+					'score': score,
+				});
+			}
+		}
+		return options;
+	}
+
+	renderSuggestion(item, classModifier) {
+		let {match} = this.state;
+		match = match.substr(1);
+		let ShowLeft = null;
+		let ShowMatch = null;
+		let ShowRight = null;
+		if (match.length) {
+			const matchStart = item.name.indexOf(match);
+			ShowLeft = item.name.substr(0, matchStart);
+			ShowMatch = <b>{match}</b>;
+			ShowRight = item.name.substr(matchStart + match.length);
+		}
+		else {
+			ShowLeft = item.name;
+		}
+		const mrkd = new marked();
+		const ShowEmoji = mrkd.parse(item.name, {});
+
+		return (
+			<UIButton key={item.name} class={cN(classModifier)} onclick={this.handleSelect.bind(this, item)}>
+				<div class="-emoji-autocomplete-markup">{ShowEmoji}</div>{ShowLeft}{ShowMatch}{ShowRight}
+			</UIButton>);
+	}
+}
+
 export class AutocompleteAtNames extends Autocompletions {
 	constructor(props) {
 		super(props);
 		this.state = {
 			'name': 'at-names',
 			'startPattern': /([\s ]|^)(@[A-Za-z-_0-9]*)$/,
-			'endPattern': /^[A-Za-z-_0-9]*/,
+			'endPattern': /^[A-Za-z-_0-9]*:?/,
+			'maxItems': 8,
 		};
 	}
 

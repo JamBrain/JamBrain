@@ -8,7 +8,7 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import IMG2 							from 'com/img2/img2';
 
 import ContentCommentsMarkup			from 'comments-markup';
-import {AutocompleteAtNames}			from 'comment-autocomplete';
+import {AutocompleteAtNames, AutocompleteEmojis}			from 'comment-autocomplete';
 import $Note							from '../../shrub/js/note/note';
 import $NoteLove						from '../../shrub/js/note/note_love';
 
@@ -109,7 +109,7 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onTextAreaBlur( e ) {
-		this.setState({'textareaFocus': false});
+		//this.setState({'textareaFocus': false});
 		return true;
 	}
 
@@ -362,8 +362,17 @@ export default class ContentCommentsComment extends Component {
 			}
 
 			let ShowAutocompleteAt = null;
+			let ShowAutocompleteEmoji = null;
 			if (state.textareaFocus) {
 				ShowAutocompleteAt = <AutocompleteAtNames
+					text={state.editText}
+					cursorPos={state.editCursorPos}
+					authors={props.authors}
+					onSelect={this.onAutocompleteSelect}
+					captureKeyDown={this.onAutoselectCaptureKeyDown}
+					captureKeyUp={this.onAutoselectCaptureKeyUp}
+				/>;
+				ShowAutocompleteEmoji = <AutocompleteEmojis
 					text={state.editText}
 					cursorPos={state.editCursorPos}
 					authors={props.authors}
@@ -377,6 +386,7 @@ export default class ContentCommentsComment extends Component {
 				<div id={"comment-"+comment.id} class={"-item -comment -indent-"+props.indent}>
 					{ShowAvatar}
 					{ShowAutocompleteAt}
+					{ShowAutocompleteEmoji}
 					<div class="-body">
 						{ShowTopNav}
 						{ShowError}
