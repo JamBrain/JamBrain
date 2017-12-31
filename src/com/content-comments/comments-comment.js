@@ -375,7 +375,6 @@ export default class ContentCommentsComment extends Component {
 				ShowAutocompleteEmoji = <AutocompleteEmojis
 					text={state.editText}
 					cursorPos={state.editCursorPos}
-					authors={props.authors}
 					onSelect={this.onAutocompleteSelect}
 					captureKeyDown={this.onAutoselectCaptureKeyDown}
 					captureKeyUp={this.onAutoselectCaptureKeyUp}
