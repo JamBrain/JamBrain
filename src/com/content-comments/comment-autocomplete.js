@@ -55,6 +55,7 @@ class Autocompletions extends Component {
 	getMatch( text, cursorPos ) {
 		const {startPattern, endPattern} = this.state;
 		const left = text.slice(0, cursorPos).match(startPattern);
+		//console.log('Matching:', text, '|', left);
 		if (!left) {
 			return null;
 		}
@@ -190,7 +191,7 @@ export class AutocompleteEmojis extends Autocompletions {
 		for (let emoji in emojiList) {
 			const matchStart = emoji.indexOf(hintWithoutColon);
 			if (hint.length == 0 || matchStart > -1) {
-				let score = matchStart == 0 ? 1 : 0.5;
+				let score = matchStart == 0 ? 0.5 : 1;
 				score = Math.pow(hint.length / emoji.length, score);
 				options.push({
 					'name': ':' + emoji + ':',
@@ -246,7 +247,7 @@ export class AutocompleteAtNames extends Autocompletions {
 				const authorData = authors[author];
 				const matchStart = authorData.name.indexOf(hintWithoutAt);
 				if (hint.length == 0 || matchStart > -1) {
-					let score = matchStart == 0 ? 1 : 0.5;
+					let score = matchStart == 0 ? 0.5 : 1;
 					score = Math.pow(hint.length / authorData.name.length, score);
 					options.push({
 						'name': '@' + authorData.name,
