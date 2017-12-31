@@ -1,0 +1,21 @@
+@import "defs.less";
+
+& .news-create-bar {
+	margin: 0.5em 0em;
+
+	& > .ui-button {
+		display: inline-block;
+		padding: 0.5em 1em;
+		border: 1px solid @COL_C;
+		margin: 0 0.5em 0 0;
+		color: @MAJOR_LIGHT;
+		background: @COL_C;
+		font-weight: bold;
+
+		&:hover, &:focus {
+			background: @MAJOR_COLOR1;
+			border: 1px solid @MAJOR_COLOR1;
+			color: @MAJOR_LIGHT;
+		}
+	}
+}

@@ -5,6 +5,7 @@ include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."api.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
 require_once __DIR__."/".SHRUB_PATH."notification/notification.php";
+require_once __DIR__."/".SHRUB_PATH."user/user.php";
 
 json_Begin();
 
@@ -511,7 +512,8 @@ switch ( $action ) {
 			$type = coreSlugify_Name(json_ArgShift());
 			$subtype = coreSlugify_Name(json_ArgShift());
 			$subsubtype = coreSlugify_Name(json_ArgShift());
-
+			$createNewsPrivileges = userGroup_GetUserHasStatus($user_id, USER_GROUP_FLAG_CAN_NEWS, USER_GROUP_FLAG_ACTIVE_EVENT_HOST);
+			
 			$fulltype = $type;
 			if ( $subtype )
 				$fulltype .= '/'.$subtype;
@@ -524,9 +526,11 @@ switch ( $action ) {
 			// MK: This is a potential place you'll need to fix things once users are restricted from posting under other people's `can-create` nodes
 			// MK: oh. after a quick glance it might be fine, but you should check it out again.
 			$where = nodeComplete_GetWhereIdCanCreate($user_id);
+			// TODO: replace final false with a check that $parent is the featured event.
+			$canCreateNews = $fulltype == 'post/news' && (($createNewsPrivileges[0] && $parent == 1) || ($createNewsPrivileges[1] && $parent >  1 && false));
 			//$RESPONSE['where'] = $where;
 
-			if ( !isset($where[$fulltype]) || !in_array($parent, $where[$fulltype]) ) {
+			if ( !$canCreateNews && (!isset($where[$fulltype]) || !in_array($parent, $where[$fulltype])) ) {
 				json_EmitFatalError_BadRequest("Can't create a $fulltype under this node", $RESPONSE);
 			}
 
@@ -547,6 +551,10 @@ switch ( $action ) {
 			];
 
 			// TODO: Do things that modify limits here
+			if ($canCreateNews) {
+				$create_limits['post/news'] = -1;
+			}
+
 			$true_limit = 2;	// TODO: up this as a user becomes more trustworthy.
 
 
@@ -603,6 +611,7 @@ switch ( $action ) {
 					$RESPONSE['id'] = $new_node;
 					break;
 
+				case 'post/news':
 				case 'post':
 					$new_node = node_Add($parent, $user_id, $type, $subtype, "", null, "", "");
 					if ( $new_node ) {
@@ -618,7 +627,7 @@ switch ( $action ) {
 					$RESPONSE['count']++;
 					$RESPONSE['id'] = $new_node;
 					break;
-
+				
 				default:
 					break;
 			};

@@ -669,7 +669,8 @@ switch ( $action ) {
 		if ( $id > 0 ) {
 			$node = nodeComplete_GetById($id);
 			if ( count($node) ) {
-				$RESPONSE['node'] = $node;
+				$node['meta']['group'] = userGroup_GetUserStatusNames($id);
+				$RESPONSE['node'] = $node;				
 			}
 			else {
 				$id = 0;
