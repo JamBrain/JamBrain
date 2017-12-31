@@ -71,30 +71,32 @@ export default class DialogLogin extends Component {
 		}
 
 		return (
-			<DialogCommon ok oktext="Log In" onok={this.doLogin} cancel {...new_props}>
-				<div>
-					<div class="-input-container">
-						<input autofocus id="dialog-login-login" onchange={this.onLoginChange} class="-text -block focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="254" value={login} />
+			<form>
+				<DialogCommon ok oktext="Log In" onok={this.doLogin} cancel {...new_props}>
+					<div>
+						<div class="-input-container">
+							<input autofocus id="dialog-login-login" onchange={this.onLoginChange} class="-text -block focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="254" value={login} />
+						</div>
 					</div>
-				</div>
-				<div>
-					<div class="-input-container">
-						<input id="dialog-login-password" onchange={this.onPasswordChange} onkeydown={this.onKeyDown} class="-text -block focusable" type="password" name="password" placeholder="Password" maxlength="128" value={password} />
+					<div>
+						<div class="-input-container">
+							<input id="dialog-login-password" onchange={this.onPasswordChange} onkeydown={this.onKeyDown} class="-text -block focusable" type="password" name="password" placeholder="Password" maxlength="128" value={password} />
+						</div>
 					</div>
-				</div>
-				<div style="overflow:hidden">
-					<div class="_float-right -link" id="dialog-login-forgot" onclick={e => {
-						location.href = "#user-reset";
-						/*e.stopPropagation(); e.preventDefault();*/
-					} }>
-						Forgot Password?
+					<div style="overflow:hidden">
+						<div class="_float-right -link" id="dialog-login-forgot" onclick={e => {
+							location.href = "#user-reset";
+							/*e.stopPropagation(); e.preventDefault();*/
+						} }>
+							Forgot Password?
+						</div>
+						<div title="LOL. This is broken. Sorry!" class="_hidden">
+							<input id="dialog-login-remember" onchange={this.onRememberChange} class="focusable" type="checkbox" name="remember" checked={remember} />
+							<span>Stay Logged In</span>
+						</div>
 					</div>
-					<div title="LOL. This is broken. Sorry!" class="_hidden">
-						<input id="dialog-login-remember" onchange={this.onRememberChange} class="focusable" type="checkbox" name="remember" checked={remember} />
-						<span>Stay Logged In</span>
-					</div>
-				</div>
-			</DialogCommon>
+				</DialogCommon>
+			</form>
 		);
 	}
 }
