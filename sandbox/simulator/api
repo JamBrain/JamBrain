@@ -2,18 +2,18 @@
 /*
 	api		Functions that wrap calling the API directly
 			Also, code to make the HTTP calls
-	
+
 */
 
 
-function ApiRandomGamesGet(&$user, $count = null, $filter = null) 
+function ApiRandomGamesGet(&$user, $count = null, $filter = null)
 {
 	$addpath = "";
 	if($filter != null) { $addpath = "/$filter"; }
 	if($count != null) { $addpath .= "?count=$count"; }
 	$value = LdApi::Get("vx/random/game/get" . $addpath, $user);
 	if(!ResponseIs200($value)) return null;
-	return $value['games'];	
+	return $value['games'];
 }
 
 function ApiNotificationFeed(&$user, $type, $offset = null, $limit = null)
@@ -51,7 +51,7 @@ function ApiNodeGet(&$user, $nodeidlist)
 	{
 		return $value["node"];
 	}
-	return null; 
+	return null;
 }
 
 function ApiNodeGetMy(&$user)
@@ -168,21 +168,21 @@ function ApiNoteAdd(&$user, $nodeid, $body, $anonymous) // POST note/add
 	{
 		$anon = "&anonymous=".$anonymous;
 	}
-	$value = LdApi::Post("vx/note/add/".$nodeid,"parent=0&body=".urlencode($body).$anon, $user);
+	$value = LdApi::Post("vx/comment/add/".$nodeid,"parent=0&body=".urlencode($body).$anon, $user);
 	if($value) { return $value["note"]; }
 	return null;
 }
 
 function ApiNoteUpdate(&$user, $parentid, $noteid, $newbody)
 {
-	$value = LdApi::Post("vx/note/update/".$noteid,"node=".$parentid."&body=".urlencode($body), $user);
+	$value = LdApi::Post("vx/comment/update/".$noteid,"node=".$parentid."&body=".urlencode($body), $user);
 	return ResponseIs200($value);
 }
 
 // Get all notes for a node
 function ApiNoteGet(&$user, $nodeid)
 {
-	$value = LdApi::Get("vx/note/get/" . $nodeid, $user);
+	$value = LdApi::Get("vx/comment/getbynode/" . $nodeid, $user);
 	if($value)
 	{
 		return $value["note"];
@@ -192,13 +192,13 @@ function ApiNoteGet(&$user, $nodeid)
 
 function ApiNoteLoveAdd(&$user, $noteid)
 {
-	$value = LdApi::Get("vx/note/love/add/" . $noteid, $user);
+	$value = LdApi::Get("vx/comment/love/add/" . $noteid, $user);
 	return ResponseIs200($value);
 }
 
 function ApiNoteLoveRemove(&$user, $noteid)
 {
-	$value = LdApi::Get("vx/note/love/remove/" . $noteid, $user);
+	$value = LdApi::Get("vx/comment/love/remove/" . $noteid, $user);
 	return ResponseIs200($value);
 }
 
@@ -229,10 +229,10 @@ function ApiUserActivate(&$user, $id, $auth_key)
 {
 	$name = $user["username"];
 	$pw = $user["password"];
-	
+
 	$postString = "id=".$id."&key=".$auth_key."&name=".urlencode($name)."&pw=".urlencode($pw);
 	$value = LdApi::Post("vx/user/activate",$postString,$user);
-	
+
 	if($value != null)
 	{
 		return $value["response_httpcode"] == "201";
@@ -244,15 +244,15 @@ function ApiUserLogin(&$user)
 {
 	$login = $user["username"];
 	$pw = $user["password"];
-	
+
 	$value = LdApi::Post("vx/user/login", "login=".urlencode($login)."&pw=".urlencode($pw), $user);
-	
+
 	if($value != null)
 	{
 		if($value["response_httpcode"] == "200")
 		{
 			return $value["id"];
-		} 
+		}
 	}
 	return 0;
 }
@@ -357,7 +357,7 @@ function ResponseIs200($response)
 {
 	if($response != null)
 	{
-		return $response["response_httpcode"] == "200"; 
+		return $response["response_httpcode"] == "200";
 	}
 	return false;
 }
@@ -366,7 +366,7 @@ function ResponseIs201($response)
 {
 	if($response != null)
 	{
-		return $response["response_httpcode"] == "201"; 
+		return $response["response_httpcode"] == "201";
 	}
 	return false;
 }
@@ -385,10 +385,10 @@ class LdApi
 
 	public static function PrintLastRequestResponse()
 	{
-		print( "\x1b[31mLast Request/Response:\x1b[m\n"); 
-		print( "\x1b[31m" . LdApi::$lastRequestLog . "\x1b[m\n"); 
-		print( "\x1b[31m" . LdApi::$lastResponseLog . "\x1b[m\n"); 
-		
+		print( "\x1b[31mLast Request/Response:\x1b[m\n");
+		print( "\x1b[31m" . LdApi::$lastRequestLog . "\x1b[m\n");
+		print( "\x1b[31m" . LdApi::$lastResponseLog . "\x1b[m\n");
+
 		// Also put these in the error log for easier reference.
 		LogErr("Last Request/Response:\n");
 		LogErr(LdApi::$lastRequestLog . "\n");
@@ -404,7 +404,7 @@ class LdApi
 		else
 		{
 			VerboseHidden($log);
-		}		
+		}
 		LdApi::$lastRequestLog = $log;
 	}
 	static function DebugResponseLog($log)
@@ -416,8 +416,8 @@ class LdApi
 		else
 		{
 			VerboseHidden($log);
-		}		
-		LdApi::$lastResponseLog = $log;	
+		}
+		LdApi::$lastResponseLog = $log;
 	}
 
 	static function SetRequestUser($curl, &$user)
@@ -449,7 +449,7 @@ class LdApi
 				if($parts[0] == "Set-Cookie")
 				{
 					// debug debug Verbose("Receive Set-Cookie: ".$parts[1]);
-					
+
 					$c = explode(";", $parts[1]);
 					$cookiedata = explode("=",$c[0],2);
 					// interpret "=deleted" as the condition to delete a cookie, as the code to check the expires time is annoying in php.
@@ -461,7 +461,7 @@ class LdApi
 					{
 						$user["cookies"][$cookiedata[0]] = $cookiedata[1];
 					}
-				}			
+				}
 			}
 		}
 	}
@@ -473,14 +473,14 @@ class LdApi
 		}
 		return "";
 	}
-  
+
 	public static function GetRaw($url)
 	{
 
 		$c = curl_init($url);
-		
-		curl_setopt($c, CURLOPT_HEADER, false);		
-		curl_setopt($c, CURLOPT_FOLLOWLOCATION, true);		
+
+		curl_setopt($c, CURLOPT_HEADER, false);
+		curl_setopt($c, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($c, CURLOPT_HTTPGET, true);
 
@@ -491,33 +491,33 @@ class LdApi
 		{
 			ReportError("Error getting '".$url ."' - " . curl_error($c));
 		}
-		
+
 
 		curl_close($c);
-		
+
 		return $result;
-	}  
-  
+	}
+
 	public static function Get($url, &$user = NULL, $report_error=true)
 	{
 		global $apibase;
 		$outputObject = NULL;
 		$urlpath = $url;
 		$url = $apibase . $url;
-		
+
 		LdApi::DebugRequestLog("GET '".$url."'".LdApi::ForUser($user));
-		
+
 		// Add "debug" get request
-		if(false === strpos($url,"?")) { $url .= "?debug"; } else { $url .= "&debug"; }		
-		
+		if(false === strpos($url,"?")) { $url .= "?debug"; } else { $url .= "&debug"; }
+
 		$c = curl_init($url);
-		
-		curl_setopt($c, CURLOPT_HEADER, true);		
+
+		curl_setopt($c, CURLOPT_HEADER, true);
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($c, CURLOPT_HTTPGET, true);
-		
+
 		LdApi::SetRequestUser($c, $user);
-		
+
 		$content = "";
 		$result = curl_exec($c);
 		$success = !($result === false);
@@ -527,28 +527,28 @@ class LdApi
 			while($parts[0] == "HTTP/1.1 100 Continue") { array_shift($parts); }
 			$headers = $parts[0];
 			$content = $parts[1];
-		
+
 			$outputObject = json_decode($content, true);
 			$httpcode = curl_getinfo($c, CURLINFO_HTTP_CODE);
-			$outputObject["response_httpcode"] = $httpcode;			
-			
+			$outputObject["response_httpcode"] = $httpcode;
+
 			stats_accumulate("GET", $urlpath, null, $outputObject, $user);
-			
+
 			LdApi::UpdateUserCookie($headers, $user);
 		}
 		if(!$success && $report_error)
 		{
 			ReportError("Error getting '".$url ."'". LdApi::ForUser($user). " - " . curl_error($c));
 		}
-		
+
 		LdApi::DebugResponseLog("Response '" . $content . "'");
 		if(substr($content,0,4) == "HTTP")
 		{
 			Verbose("Debug: '" . $result);
-		}			
+		}
 
 		curl_close($c);
-		
+
 		return $outputObject;
 	}
 	public static function Post($url, $postdata, &$user = NULL)
@@ -557,22 +557,22 @@ class LdApi
 
 		$outputObject = NULL;
 		$urlpath = $url;
-		$url = $apibase . $url;		
-		
+		$url = $apibase . $url;
+
 		LdApi::DebugRequestLog("POST '".$url."' with data '".$postdata."'".LdApi::ForUser($user));
-		
+
 		// Add "debug" get request
-		if(false === strpos($url,"?")) { $url .= "?debug"; } else { $url .= "&debug"; }		
-		
+		if(false === strpos($url,"?")) { $url .= "?debug"; } else { $url .= "&debug"; }
+
 		$c = curl_init($url);
-		
+
 		curl_setopt($c, CURLOPT_HEADER, true);
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($c, CURLOPT_POST, true);
 		curl_setopt($c, CURLOPT_POSTFIELDS, $postdata);
-		
+
 		LdApi::SetRequestUser($c, $user);
-		
+
 		$content = "";
 		$result = curl_exec($c);
 		$success = !($result === false);
@@ -582,20 +582,20 @@ class LdApi
 			while($parts[0] == "HTTP/1.1 100 Continue") { array_shift($parts); }
 			$headers = $parts[0];
 			$content = $parts[1];
-		
+
 			$outputObject = json_decode($content, true);
 			$httpcode = curl_getinfo($c, CURLINFO_HTTP_CODE);
 			$outputObject["response_httpcode"] = $httpcode;
-			
+
 			stats_accumulate("POST",$urlpath, $postdata, $outputObject, $user);
-			
+
 			LdApi::UpdateUserCookie($headers, $user);
 		}
 		if(!$success && $report_error)
 		{
 			ReportError("Error getting '".$url ."'". LdApi::ForUser($user) . " - " . curl_error($c));
 		}
-		
+
 		LdApi::DebugResponseLog("Response '" . $content . "'");
 		if(substr($content,0,4) == "HTTP")
 		{
@@ -603,7 +603,7 @@ class LdApi
 		}
 
 		curl_close($c);
-		return $outputObject;	
-	
+		return $outputObject;
+
 	}
 }
