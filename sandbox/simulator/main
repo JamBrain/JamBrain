@@ -100,17 +100,24 @@ define("TOP_STATS",10); // keep top 10 stats
 
 // Figure out event index to use for this run, and start loggers.
 
-$events_root = db_QueryFetch(
+$eventsId = db_QueryFetchValue(
 		"SELECT
-			n.id,
-			".DB_FIELD_DATE('n.modified', 'modified')."
+			n.id
 		FROM
 			".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
 		WHERE n.type = 'events'
 		LIMIT 1
 		;"
 	);
-	
+
+if ($eventsId == null) {
+	ReportError("Your databases are not correctly setup");
+	print "\n";
+	print "  In the home directory of your scotch box, run db-create.sh\n";
+	print "  Then you can return and simulate an event.\n";
+	exit(1);	
+}
+
 $events = db_QueryFetch(
 		"SELECT
 			n.id, n.name, n.slug, 
@@ -124,7 +131,6 @@ $events = db_QueryFetch(
 	);
 
 $eventindex = count($events) + 1;
-$eventsId = $events_root[0]['id'];
 
 if($enable_file_logs)
 {
