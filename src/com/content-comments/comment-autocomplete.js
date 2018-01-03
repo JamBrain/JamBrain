@@ -180,7 +180,7 @@ export class AutocompleteEmojis extends Autocompletions {
 			'name': 'emojis',
 			'startPattern': /([\s ]|^)(:[A-Za-z_0-9]*)$/,
 			'endPattern': /^[A-Za-z-_0-9]*:?/,
-			'maxItems': 16,
+			'maxItems': 8,
 		};
 	}
 
