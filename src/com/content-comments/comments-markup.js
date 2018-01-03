@@ -44,6 +44,7 @@ export default class ContentCommentsMarkup extends Component {
 						oncaret={props.oncaret}
 						placeholder={props.placeholder}
 						replaceText={props.replaceText}
+						replaceTextEvent={props.replaceTextEvent}
 						cursorPos={props.cursorPos}
 						ref={(input) => { this.textarea = input; }}
 						maxlength={Limit}

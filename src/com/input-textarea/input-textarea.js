@@ -15,7 +15,7 @@ export default class InputTextarea extends Component {
 		this.state = {
 			'cursorPos': (props.value || '').length,
 			'microsoftEdge': /Edge/.test(navigator.userAgent),
-			'prevHeight': -1	// This allows us to not scroll adjust wrong on first change
+			'prevHeight': -1,	// This allows us to not scroll adjust wrong on first change
 		};
 
 		this.onInput = this.onInput.bind(this);
@@ -25,6 +25,9 @@ export default class InputTextarea extends Component {
 		this.onBlur = this.onBlur.bind(this);
 		this.onFocus = this.onFocus.bind(this);
 		this.onClick = this.onClick.bind(this);
+
+		//Needs to not be state and not trigger renders
+		this.replaceTextEvent = -1;
 	}
 
 	shouldComponentUpdate( nextProps ) {
@@ -32,13 +35,16 @@ export default class InputTextarea extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const {replaceText, cursorPos} = nextProps;
+		const {replaceText, cursorPos, replaceTextEvent} = nextProps;
+		const prevReplaceTextEvent = this.replaceTextEvent;
 		this.props.value = replaceText;
-		if (replaceText && this.textarea) {
+		// console.log(!!replaceText, this.textarea, replaceTextEvent, prevReplaceTextEvent);
+		if (replaceText && this.textarea && replaceTextEvent != prevReplaceTextEvent) {
 			this.textarea.value = replaceText;
 			this.textarea.focus();
 			this.textarea.selectionStart = cursorPos;
 			this.textarea.selectionEnd = cursorPos;
+			this.replaceTextEvent = replaceTextEvent;
 		}
 	}
 

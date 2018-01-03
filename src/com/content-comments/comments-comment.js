@@ -71,14 +71,16 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onModify( e ) {
-		//console.log('modified', e);
+		//console.log('modified', e.target, this.state.editText, this.state.editCursorPos, this.state.textareaFocus);
 		this.props.comment.body = e.target.value;
 		this.setState({
 			'modified': this.canSave(),
 			'editText': e.target.value,
 			'editCursorPos': e.target.selectionStart,
 			'replaceText': null,
+			'textareaFocus': true,
 		});
+		return true;
 	}
 
 	onKeyDown( e ) {
@@ -109,7 +111,7 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onTextAreaBlur( e ) {
-		this.setState({'textareaFocus': false});
+		setTimeout(() => this.setState({'textareaFocus': false}), 300);
 		return true;
 	}
 
@@ -119,7 +121,6 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onCancel( e ) {
-		console.log('cancel');
 		this.props.comment.body = this.state.original;
 		this.setState({'modified': false, 'editing': false, 'preview': false});
 	}
@@ -197,9 +198,11 @@ export default class ContentCommentsComment extends Component {
 	onAutocompleteSelect(replaceText, cursorPosAfterUpdate) {
 		this.props.comment.body = replaceText;
 		this.setState({
+			'modified': this.canSave(),
 			'editText': replaceText,
 			'replaceText': replaceText,
-			'cursorPos': cursorPosAfterUpdate,
+			'replaceCursorPos': cursorPosAfterUpdate,
+			'replaceTextEvent': this.state.replaceTextEvent ? this.state.replaceTextEvent + 1 : 1,
 		});
 	}
 
@@ -403,7 +406,8 @@ export default class ContentCommentsComment extends Component {
 								placeholder="type a comment here"
 								limit={props.limit}
 								replaceText={state.replaceText}
-								cursorPos={state.cursorPos}
+								cursorPos={state.replaceCursorPos}
+								replaceTextEvent={state.replaceTextEvent}
 							>
 								{comment.body}
 							</ContentCommentsMarkup>
