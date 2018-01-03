@@ -178,7 +178,7 @@ export class AutocompleteEmojis extends Autocompletions {
 		super(props);
 		this.state = {
 			'name': 'emojis',
-			'startPattern': /([\s ]|^)(:[A-Za-z_0-9]*)$/,
+			'startPattern': /([\s ]|^)(:[A-Za-z-_0-9]*)$/,
 			'endPattern': /^[A-Za-z-_0-9]*:?/,
 			'maxItems': 8,
 		};
@@ -187,15 +187,19 @@ export class AutocompleteEmojis extends Autocompletions {
 	getOptions(hint) {
 		const {emojiList} = window.emoji;
 		const options = [];
-		const hintWithoutColon = hint.substr(1);
+		const matcher = new RegExp(hint ? hint.substr(1).replace('-', '_') : '', 'i');
 		for (let emoji in emojiList) {
-			const matchStart = emoji.indexOf(hintWithoutColon);
-			if (hint.length == 0 || matchStart > -1) {
+			const matches = matcher.exec(emoji);
+			if (hint.length == 0 || matches) {
+				const matchStart = matches ? emoji.indexOf(matches[0]) + 1 : 0;
+				const matchEnd = matches ? matchStart + matches[0].length : 0;
 				let score = matchStart == 0 ? 0.5 : 1;
 				score = Math.pow(hint.length / emoji.length, score);
 				options.push({
 					'name': ':' + emoji + ':',
 					'score': score,
+					'matchStart': matchStart,
+					'matchEnd': matchEnd,
 				});
 			}
 		}
@@ -203,25 +207,23 @@ export class AutocompleteEmojis extends Autocompletions {
 	}
 
 	renderSuggestion(item, classModifier) {
-		let {match} = this.state;
-		match = match.substr(1);
+		const {matchStart, matchEnd, name} = item;
 		let ShowLeft = null;
 		let ShowMatch = null;
 		let ShowRight = null;
-		if (match.length) {
-			const matchStart = item.name.indexOf(match);
-			ShowLeft = item.name.substr(0, matchStart);
-			ShowMatch = <b>{match}</b>;
-			ShowRight = item.name.substr(matchStart + match.length);
+		if (matchEnd != matchStart) {
+			ShowLeft = name.substr(0, matchStart);
+			ShowMatch = <b>{name.substr(matchStart, matchEnd - matchStart)}</b>;
+			ShowRight = name.substr(matchEnd);
 		}
 		else {
-			ShowLeft = item.name;
+			ShowLeft = name;
 		}
 		const mrkd = new marked();
-		const ShowEmoji = mrkd.parse(item.name, {});
+		const ShowEmoji = mrkd.parse(name, {});
 
 		return (
-			<UIButton key={item.name} class={cN(classModifier)} onclick={this.handleSelect.bind(this, item)}>
+			<UIButton key={name} class={cN(classModifier)} onclick={this.handleSelect.bind(this, item)}>
 				<div class="-emoji-autocomplete-markup">{ShowEmoji}</div>{ShowLeft}{ShowMatch}{ShowRight}
 			</UIButton>);
 	}
@@ -241,17 +243,21 @@ export class AutocompleteAtNames extends Autocompletions {
 	getOptions(hint) {
 		const {authors} = this.props;
 		const options = [];
-		const hintWithoutAt = hint.substr(1);
+		const matcher = new RegExp(hint ? hint.substr(1) : '', 'i');
 		if (authors) {
 			for (let author in authors) {
 				const authorData = authors[author];
-				const matchStart = authorData.name.indexOf(hintWithoutAt);
-				if (hint.length == 0 || matchStart > -1) {
+				const matches = matcher.exec(authorData.name);
+				if (hint.length == 0 || matches) {
+					const matchStart = matches ? authorData.name.indexOf(matches[0]) + 1 : 0;
+					const matchEnd = matches ? matchStart + matches[0].length : 0;
 					let score = matchStart == 0 ? 0.5 : 1;
 					score = Math.pow(hint.length / authorData.name.length, score);
 					options.push({
 						'name': '@' + authorData.name,
 						'score': score,
+						'matchStart': matchStart,
+						'matchEnd': matchEnd,
 					});
 				}
 			}
@@ -260,20 +266,18 @@ export class AutocompleteAtNames extends Autocompletions {
 	}
 
 	renderSuggestion(item, classModifier) {
-		let {match} = this.state;
-		match = match.substr(1);
+		const {matchStart, matchEnd, name} = item;
 		let ShowLeft = null;
 		let ShowMatch = null;
 		let ShowRight = null;
-		if (match.length) {
-			const matchStart = item.name.indexOf(match);
-			ShowLeft = item.name.substr(0, matchStart);
-			ShowMatch = <b>{match}</b>;
-			ShowRight = item.name.substr(matchStart + match.length);
+		if (matchStart != matchEnd) {
+			ShowLeft = name.substr(0, matchStart);
+			ShowMatch = <b>{name.substr(matchStart, matchEnd - matchStart)}</b>;
+			ShowRight = name.substr(matchEnd);
 		}
 		else {
-			ShowLeft = item.name;
+			ShowLeft = name;
 		}
-		return <UIButton key={item.name} class={cN(classModifier)} onclick={this.handleSelect.bind(this, item)}>{ShowLeft}{ShowMatch}{ShowRight}</UIButton>;
+		return <UIButton key={name} class={cN(classModifier)} onclick={this.handleSelect.bind(this, item)}>{ShowLeft}{ShowMatch}{ShowRight}</UIButton>;
 	}
 }
