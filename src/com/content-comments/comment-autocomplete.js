@@ -41,7 +41,7 @@ class Autocompletions extends Component {
 		if (text) {
 			cursorPos = cursorPos ? cursorPos : 0;
 			const matchObj = this.getMatch(text, cursorPos);
-			//console.log('Autocomplete props', matchObj, `'${this.state.selected}'`, text);
+			console.log('Autocomplete props', matchObj, `'${this.state.selected}'`, text.substr(0, cursorPos) + '|' + text.substr(cursorPos));
 			if (matchObj) {
 				this.setState({
 					'text': text,
@@ -52,11 +52,11 @@ class Autocompletions extends Component {
 				});
 			}
 			else {
-				this.setState({'match': null});
+				this.setState({'match': null, 'cursorPos': cursorPos});
 			}
 		}
 		else {
-			this.setState({'match': null});
+			this.setState({'match': null, 'cursorPos': cursorPos});
 		}
 	}
 
@@ -188,8 +188,8 @@ export class AutocompleteEmojis extends Autocompletions {
 		super(props);
 		this.state = {
 			'name': 'emojis',
-			'startPattern': /([\s ]|^)(:[A-Za-z-_0-9]*)$/,
-			'endPattern': /^([A-Za-z-_0-9]*:?)([\s ]+|$)/,
+			'startPattern': /( |^)(:[A-Za-z-_0-9]*)$/,
+			'endPattern': /^([A-Za-z-_0-9]*:?)( +|$)/,
 			'maxItems': 8,
 			'mrkd': new marked(),
 		};
@@ -245,8 +245,8 @@ export class AutocompleteAtNames extends Autocompletions {
 		super(props);
 		this.state = {
 			'name': 'at-names',
-			'startPattern': /([\s ]|^)(@[A-Za-z-_0-9]*)$/,
-			'endPattern': /^([A-Za-z-_0-9]*)([\s ]+|$)/,
+			'startPattern': /( |^)(@[A-Za-z-_0-9]*)$/,
+			'endPattern': /^([A-Za-z-_0-9]*)( +|$)/,
 			'maxItems': 8,
 		};
 	}

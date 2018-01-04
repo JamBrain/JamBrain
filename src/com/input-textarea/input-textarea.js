@@ -40,11 +40,13 @@ export default class InputTextarea extends Component {
 		this.props.value = replaceText;
 		// console.log(!!replaceText, this.textarea, replaceTextEvent, prevReplaceTextEvent);
 		if (replaceText && this.textarea && replaceTextEvent != prevReplaceTextEvent) {
+			const {oncaret} = this.props;
 			this.textarea.value = replaceText;
 			this.textarea.focus();
 			this.textarea.selectionStart = cursorPos;
 			this.textarea.selectionEnd = cursorPos;
 			this.replaceTextEvent = replaceTextEvent;
+			oncaret({'target': this.textarea, 'key': 'ImaginaryKey'});
 		}
 	}
 
@@ -150,6 +152,13 @@ export default class InputTextarea extends Component {
 		if (onkeydown && !onkeydown(e)) {
 			e.preventDefault();
 		}
+	}
+
+	onKeyUp( e ) {
+		const {onkeyup, oncaret} = this.props;
+		if (onkeyup && !onkeyup(e)) {
+			e.preventDefault();
+		}
 		else if (oncaret) {
 			switch (e.key) {
 				case "ArrowUp":
@@ -165,13 +174,6 @@ export default class InputTextarea extends Component {
 					}
 					break;
 			}
-		}
-	}
-
-	onKeyUp( e ) {
-		const {onkeyup} = this.props;
-		if (onkeyup && !onkeyup(e)) {
-			e.preventDefault();
 		}
 	}
 
