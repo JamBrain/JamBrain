@@ -10,6 +10,10 @@ class Autocompletions extends Component {
 	}
 
 	onKeyDown( e ) {
+		const {match} = this.state;
+		if (!match) {
+			return true;
+		}
 		switch (e.key) {
 			case "Escape":
 				this.handleAbort();
@@ -26,6 +30,10 @@ class Autocompletions extends Component {
 				return false;
 		}
 		return true;
+	}
+
+	componentDidMount() {
+		this.componentWillReceiveProps(this.props);
 	}
 
 	componentWillReceiveProps( nextProps ) {
@@ -69,6 +77,9 @@ class Autocompletions extends Component {
 
 	selectSelected() {
 		const {match, matchStart, matchEnd} = this.state;
+		if (!match) {
+			return;
+		}
 		let {selected} = this.state;
 		selected = this.getOptions(selected ? selected : match).sort((a, b) => b.score - a.score)[0].name;
 		this.executeSelect(selected);
@@ -77,13 +88,18 @@ class Autocompletions extends Component {
 	handleSelect( item, e ) {
 		/* Bind per element so that the match/item is the first argument.
 		*/
+		const {match} = this.state;
+		if (!match) {
+			return;
+		}
+
 		this.executeSelect(item.name);
 	}
 
 	executeSelect(selected) {
-		selected = `${selected} `;
+		const {matchStart, matchEnd, match} = this.state;
 		const {onSelect, text} = this.props;
-		const {matchStart, matchEnd} = this.state;
+		selected = `${selected} `;
 		const updatedText = text.slice(0, matchStart) + selected + text.slice(matchEnd);
 		this.setState({'text': updatedText, 'selected': selected});
 		if (onSelect) {
@@ -144,7 +160,6 @@ class Autocompletions extends Component {
 	render( props, state ) {
 		const {match, name} = state;
 		let {maxItems, selected} = state;
-
 		if (match && match != selected) {
 			let {selected, options, selectedIndex} = this.getSelected();
 			if (options.length > 0 && (!selected || selectedIndex < 0)) {
