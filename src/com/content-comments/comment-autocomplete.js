@@ -10,8 +10,8 @@ class Autocompletions extends Component {
 	}
 
 	onKeyDown( e ) {
-		const {match} = this.state;
-		if (!match) {
+		const {editMode} = this.state;
+		if (!editMode) {
 			return true;
 		}
 		switch (e.key) {
@@ -43,7 +43,9 @@ class Autocompletions extends Component {
 			const matchObj = this.getMatch(text, cursorPos);
 			//console.log('Autocomplete props', matchObj, `'${this.state.selected}'`, text.substr(0, cursorPos) + '|' + text.substr(cursorPos));
 			if (matchObj) {
+				const editMode = text !== this.state.text || this.state.editMode;
 				this.setState({
+					'editMode': editMode,
 					'text': text,
 					'cursorPos': cursorPos,
 					'match': matchObj.match,
@@ -52,11 +54,11 @@ class Autocompletions extends Component {
 				});
 			}
 			else {
-				this.setState({'match': null, 'cursorPos': cursorPos});
+				this.setState({'match': null, 'cursorPos': cursorPos, 'editMode': false});
 			}
 		}
 		else {
-			this.setState({'match': null, 'cursorPos': cursorPos});
+			this.setState({'match': null, 'cursorPos': cursorPos, 'editMode': false});
 		}
 	}
 
@@ -77,8 +79,8 @@ class Autocompletions extends Component {
 	}
 
 	selectSelected() {
-		const {match, matchStart, matchEnd} = this.state;
-		if (!match) {
+		const {match, editMode, matchStart, matchEnd} = this.state;
+		if (!editMode) {
 			return;
 		}
 		let {selected} = this.state;
@@ -89,8 +91,8 @@ class Autocompletions extends Component {
 	handleSelect( item, e ) {
 		/* Bind per element so that the match/item is the first argument.
 		*/
-		const {match} = this.state;
-		if (!match) {
+		const {editMode} = this.state;
+		if (!editMode) {
 			return;
 		}
 
@@ -159,9 +161,9 @@ class Autocompletions extends Component {
 	}
 
 	render( props, state ) {
-		const {match, name} = state;
+		const {editMode, match, name} = state;
 		let {maxItems, selected} = state;
-		if (match && match != selected) {
+		if (editMode && match && match != selected) {
 			let {selected, options, selectedIndex} = this.getSelected();
 			if (options.length > 0 && (!selected || selectedIndex < 0)) {
 				selected = options[0].name;
