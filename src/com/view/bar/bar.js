@@ -31,7 +31,7 @@ export default class ViewBar extends Component {
 		this.state - {
 			'notifications': 0,
 			'notificationsHidden': 0,
-			'notificationsFeed': {},
+			'notificationsFeed': null,
 			'notificationsMore': false,
 		};
 
@@ -43,7 +43,7 @@ export default class ViewBar extends Component {
 		this.setState({
 			'notifications': 0,
 			'notificationsHidden': 0,
-			'notificationsFeed': {},
+			'notificationsFeed': null,
 			'notificationsMore': false,
 		});
 	}
