@@ -14,7 +14,7 @@ install:
   - git clone https://github.com/ludumdare/dairybox.git $TRAVIS_REPO_SLUG
   - cd /
   - sudo /opt/vagrant/bin/vagrant plugin install vagrant-exec
-  - cd $TRAVIS_REPO_SLUG/www
+  - cd "$TRAVIS_REPO_SLUG/www"
   - git init
   - git remote add origin https://github.com/ludumdare/ludumdare.git
   - git fetch
