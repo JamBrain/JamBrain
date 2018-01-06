@@ -11,8 +11,9 @@ install:
   - VBoxManage -v
   - wget https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_i686.deb
   - sudo dpkg -i vagrant_2.0.1_i686.deb
-  - sudo /opt/vagrant/bin/vagrant plugin install vagrant-exec
   - git clone https://github.com/ludumdare/dairybox.git $TRAVIS_REPO_SLUG
+  - cd /
+  - sudo /opt/vagrant/bin/vagrant plugin install vagrant-exec
   - cd $TRAVIS_REPO_SLUG/www
   - git init
   - git remote add origin https://github.com/ludumdare/ludumdare.git
