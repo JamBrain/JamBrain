@@ -8,8 +8,8 @@ install:
   - sudo apt-get -y install linux-headers-$(uname -r)
   - sudo apt-get -y install virtualbox-4.2
   - VBoxManage -v
-  - wget http://files.vagrantup.com/packages/be0bc66efc0c5919e92d8b79e973d9911f2a511f/vagrant_1.0.5_i686.deb
-  - sudo dpkg -i vagrant_1.0.5_i686.deb
+  - wget https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_i686.deb
+  - sudo dpkg -i vagrant_2.0.1_i686.deb
   - sudo vagrant plugin install vagrant-exec
   - git clone https://github.com/ludumdare/dairybox.git $TRAVIS_REPO_SLUG
   - cd $TRAVIS_REPO_SLUG/www
