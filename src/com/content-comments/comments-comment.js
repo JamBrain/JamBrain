@@ -9,8 +9,8 @@ import IMG2 							from 'com/img2/img2';
 
 import ContentCommentsMarkup			from 'comments-markup';
 import {AutocompleteAtNames, AutocompleteEmojis}			from 'comment-autocomplete';
-import $Comment							from '../../shrub/js/comment/comment';
-import $CommentLove						from '../../shrub/js/comment/comment_love';
+import $Comment							from 'shrub/js/comment/comment';
+import $CommentLove						from 'shrub/js/comment/comment_love';
 
 export default class ContentCommentsComment extends Component {
 	constructor( props ) {
@@ -24,7 +24,7 @@ export default class ContentCommentsComment extends Component {
 			// NOTE: Set this upon save, or use it to cancel
 			'original': props.comment.body,
 
-			'loved': props.comment.loved ? true: false,
+			'loved': props.comment.loved ? true : false,
 			'lovecount': props.comment.love,
 		};
 
@@ -67,7 +67,7 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	canSave() {
-		return this.props.comment.body.trim().length > 1;
+		return (this.props.comment.body.trim().length > 1);
 	}
 
 	onModify( e ) {
@@ -85,9 +85,9 @@ export default class ContentCommentsComment extends Component {
 
 	onKeyDown( e ) {
 		const {autocompleters} = this;
-		for (let autocompleter in autocompleters) {
+		for ( let autocompleter in autocompleters ) {
 			const state = autocompleters[autocompleter];
-			if (state.captureKeyDown && !state.captureKeyDown(e)) {
+			if ( state.captureKeyDown && !state.captureKeyDown(e) ) {
 				return false;
 			}
 		}
@@ -96,9 +96,9 @@ export default class ContentCommentsComment extends Component {
 
 	onKeyUp( e ) {
 		const {autocompleters} = this;
-		for (let autocompleter in autocompleters) {
+		for ( let autocompleter in autocompleters ) {
 			const state = autocompleters[autocompleter];
-			if (state.captureKeyUp && !state.captureKeyUp(e)) {
+			if ( state.captureKeyUp && !state.captureKeyUp(e) ) {
 				return false;
 			}
 		}
@@ -142,7 +142,7 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onPublishAnon( e ) {
-		if (this.canSave() ) {
+		if ( this.canSave() ) {
 			if ( this.props.onpublish ) {
 				this.props.onpublish(e, true);
 			}
@@ -164,7 +164,7 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onLove( e ) {
-		if ( this.props.user.id != 0 && this.props.user.id != null ) {
+		if ( (this.props.user.id != 0) && (this.props.user.id != null) ) {
 			if ( this.props.comment.id != null ) {
 				if ( this.state.loved ) {
 					$CommentLove.Remove(this.props.comment.node, this.props.comment.id)
@@ -210,7 +210,7 @@ export default class ContentCommentsComment extends Component {
 
 	onAutoselectCaptureKeyDown(autocompleter, callback) {
 		const {autocompleters} = this;
-		if (!autocompleters[autocompleter]) {
+		if ( !autocompleters[autocompleter] ) {
 			autocompleters[autocompleter] = {};
 		}
 		autocompleters[autocompleter].captureKeyDown = callback;
@@ -218,7 +218,7 @@ export default class ContentCommentsComment extends Component {
 
 	onAutoselectCaptureKeyUp(autocompleter, callback) {
 		const {autocompleters} = this;
-		if (!autocompleters[autocompleter]) {
+		if ( !autocompleters[autocompleter] ) {
 			autocompleters[autocompleter] = {};
 		}
 		autocompleters[autocompleter].captureKeyUp = callback;
@@ -227,7 +227,7 @@ export default class ContentCommentsComment extends Component {
 	render( props, state ) {
 		let {user, comment, author, error} = props;
 
-		if ( author || comment.author == 0 ) {
+		if ( author || (comment.author == 0) ) {
 			let Name = "Anonymous";
 			let Avatar = "///other/dummy/user64.png";
 
@@ -277,7 +277,7 @@ export default class ContentCommentsComment extends Component {
 			//	ShowReply = <div class="-button -reply" onclick={this.onReply}><SVGIcon>reply</SVGIcon><div>Reply</div></div>;
 
 			let ShowEdit = null;
-			if ( user && comment.author === user.id && !state.editing )
+			if ( user && (comment.author === user.id) && !state.editing )
 				ShowEdit = <div class="-button -edit" onclick={this.onEdit}><SVGIcon>edit</SVGIcon></div>;
 
 			let ShowLove = null;
@@ -333,7 +333,7 @@ export default class ContentCommentsComment extends Component {
 				}
 
 				if ( props.publish ) {
-					if (props.allowAnonymous) {
+					if ( props.allowAnonymous ) {
 						ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublishAnon}><SVGIcon>publish</SVGIcon><div>Publish Anonymously</div></div>);
 					}
 					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublish}><SVGIcon>publish</SVGIcon><div>Publish</div></div>);
