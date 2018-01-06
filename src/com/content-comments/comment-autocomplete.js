@@ -1,20 +1,20 @@
 import {h, Component} 				from 'preact/preact';
 import UIButton						from 'com/ui/button/button';
-import marked 						from '../../internal/marked/marked';
+import marked 						from 'internal/marked/marked';
 
 
 class Autocompletions extends Component {
-	constructor(props) {
+	constructor( props ) {
 		super(props);
 		this.onKeyDown = this.onKeyDown.bind(this);
 	}
 
 	onKeyDown( e ) {
 		const {editMode} = this.state;
-		if (!editMode) {
+		if ( !editMode ) {
 			return true;
 		}
-		switch (e.key) {
+		switch ( e.key ) {
 			case "Escape":
 				this.handleAbort();
 				return false;
@@ -39,16 +39,16 @@ class Autocompletions extends Component {
 	componentWillReceiveProps( nextProps ) {
 		let {text, cursorPos, textareaFocus} = nextProps;
 		cursorPos = cursorPos ? cursorPos : 0;
-		if (!textareaFocus) {
+		if ( !textareaFocus ) {
 			//text = text ? text : '';
 			//console.log("No focus", textareaFocus, text.substr(0, cursorPos) + '|' + text.substr(cursorPos));
 			this.setState({'match': null, 'cursorPos': cursorPos, 'editMode': false, 'text': text});
 		}
-		else if (text) {
+		else if ( text ) {
 			const matchObj = this.getMatch(text, cursorPos);
 			//console.log('Autocomplete props', matchObj, `'${this.state.selected}'`, text.substr(0, cursorPos) + '|' + text.substr(cursorPos));
-			if (matchObj) {
-				const editMode = text !== this.state.text || this.state.editMode;
+			if ( matchObj ) {
+				const editMode = (text !== this.state.text) || this.state.editMode;
 				this.setState({
 					'editMode': editMode,
 					'text': text,
@@ -71,7 +71,7 @@ class Autocompletions extends Component {
 		const {startPattern, endPattern} = this.state;
 		const left = text.slice(0, cursorPos).match(startPattern);
 		//console.log('Matching:', text, '|', left);
-		if (!left) {
+		if ( !left ) {
 			return null;
 		}
 		const right = text.slice(cursorPos).match(endPattern);
@@ -85,7 +85,7 @@ class Autocompletions extends Component {
 
 	selectSelected() {
 		const {match, editMode, matchStart, matchEnd} = this.state;
-		if (!editMode) {
+		if ( !editMode ) {
 			return;
 		}
 		let {selected} = this.state;
@@ -97,34 +97,34 @@ class Autocompletions extends Component {
 		/* Bind per element so that the match/item is the first argument.
 		*/
 		const {editMode} = this.state;
-		if (!editMode) {
+		if ( !editMode ) {
 			return;
 		}
 
 		this.executeSelect(item.name);
 	}
 
-	executeSelect(selected) {
+	executeSelect( selected ) {
 		const {matchStart, matchEnd, match} = this.state;
 		const {onSelect, text} = this.props;
 		selected = `${selected} `;
 		const updatedText = text.slice(0, matchStart) + selected + text.slice(matchEnd);
 		this.setState({'text': updatedText, 'selected': selected, 'editMode': false});
-		if (onSelect) {
+		if ( onSelect ) {
 			onSelect(updatedText, matchStart + selected.length);
 		}
 	}
 
-	updateSelected(indexChange) {
+	updateSelected( indexChange ) {
 		const {selectedIndex, options} = this.getSelected();
 		let nextIndex = selectedIndex + indexChange;
-		if (nextIndex < 0) {
+		if ( nextIndex < 0 ) {
 			nextIndex = options.length - 1;
 		}
 		else {
 			nextIndex %= options.length;
 		}
-		if (nextIndex < options.length) {
+		if ( nextIndex < options.length ) {
 			this.setState({'selected': options[nextIndex].name});
 		}
 	}
@@ -142,7 +142,7 @@ class Autocompletions extends Component {
 		return [];
 	}
 
-	renderSuggestion(item, classModifier) {
+	renderSuggestion( item, classModifier ) {
 		/* Should return a JSX element rendering the option
 		*/
 		return null;
@@ -151,14 +151,14 @@ class Autocompletions extends Component {
 	getSelected() {
 		const {match, selected} = this.state;
 		let {maxItems} = this.state;
-		if (!maxItems) {
+		if ( !maxItems ) {
 			maxItems = 4;
 		}
 		let selectedIndex = selected ? -1 : 0;
 		const options = this.getOptions(match).sort((a, b) => b.score - a.score).slice(0, maxItems);
-		if (options) {
+		if ( options ) {
 			const selectedMatch = options.map((opt, i) => [opt, i]).filter(item => item[0].name == selected);
-			if (selectedMatch.length == 1) {
+			if ( selectedMatch.length == 1 ) {
 				selectedIndex = selectedMatch[0][1];
 			}
 		}
@@ -168,15 +168,15 @@ class Autocompletions extends Component {
 	render( props, state ) {
 		const {editMode, match, name} = state;
 		let {maxItems, selected} = state;
-		if (editMode && match && match != selected) {
+		if ( editMode && match && (match != selected) ) {
 			let {selected, options, selectedIndex} = this.getSelected();
-			if (options.length > 0 && (!selected || selectedIndex < 0)) {
+			if ( (options.length > 0) && (!selected || (selectedIndex < 0)) ) {
 				selected = options[0].name;
-				if (selectedIndex < 0) {
+				if ( selectedIndex < 0 ) {
 					this.setState({'selected': selected});
 				}
 			}
-			if (selected ? options.length > 1 || (options.length == 1 && options[0].name != match && match != selected) : options.length > 0) {
+			if ( selected ? ((options.length > 1) || ((options.length == 1) && (options[0].name != match) && (match != selected))) : (options.length > 0) ) {
 				props.captureKeyDown(name, this.onKeyDown);
 				return (
 					<div class={cN("-auto-complete", props.class)}>
@@ -193,7 +193,7 @@ class Autocompletions extends Component {
 }
 
 export class AutocompleteEmojis extends Autocompletions {
-	constructor(props) {
+	constructor( props ) {
 		super(props);
 		this.state = {
 			'name': 'emojis',
@@ -204,16 +204,16 @@ export class AutocompleteEmojis extends Autocompletions {
 		};
 	}
 
-	getOptions(hint) {
+	getOptions( hint ) {
 		const {emojiList} = window.emoji;
 		const options = [];
 		const matcher = new RegExp(hint ? hint.trim().substr(1).replace(':', '').replace('-', '_') : '', 'i');
-		for (let emoji in emojiList) {
+		for ( let emoji in emojiList ) {
 			const matches = matcher.exec(emoji);
-			if (hint.length == 0 || matches) {
-				const matchStart = matches ? emoji.indexOf(matches[0]) + 1 : 0;
-				const matchEnd = matches ? matchStart + matches[0].length : 0;
-				let score = matchStart == 0 ? 0.5 : 1;
+			if ( (hint.length == 0) || matches ) {
+				const matchStart = matches ? (emoji.indexOf(matches[0]) + 1) : 0;
+				const matchEnd = matches ? (matchStart + matches[0].length) : 0;
+				let score = (matchStart == 0) ? 0.5 : 1;
 				score = Math.pow(hint.length / emoji.length, score);
 				options.push({
 					'name': ':' + emoji + ':',
@@ -226,12 +226,12 @@ export class AutocompleteEmojis extends Autocompletions {
 		return options;
 	}
 
-	renderSuggestion(item, classModifier) {
+	renderSuggestion( item, classModifier ) {
 		const {matchStart, matchEnd, name} = item;
 		let ShowLeft = null;
 		let ShowMatch = null;
 		let ShowRight = null;
-		if (matchEnd != matchStart) {
+		if ( matchEnd != matchStart ) {
 			ShowLeft = name.substr(0, matchStart);
 			ShowMatch = <b>{name.substr(matchStart, matchEnd - matchStart)}</b>;
 			ShowRight = name.substr(matchEnd);
@@ -250,7 +250,7 @@ export class AutocompleteEmojis extends Autocompletions {
 }
 
 export class AutocompleteAtNames extends Autocompletions {
-	constructor(props) {
+	constructor( props ) {
 		super(props);
 		this.state = {
 			'name': 'at-names',
@@ -260,18 +260,18 @@ export class AutocompleteAtNames extends Autocompletions {
 		};
 	}
 
-	getOptions(hint) {
+	getOptions( hint ) {
 		const {authors} = this.props;
 		const options = [];
 		const matcher = new RegExp(hint ? hint.trim().substr(1) : '', 'i');
-		if (authors) {
-			for (let author in authors) {
+		if ( authors ) {
+			for ( let author in authors ) {
 				const authorData = authors[author];
 				const matches = matcher.exec(authorData.name);
-				if (hint.length == 0 || matches) {
-					const matchStart = matches ? authorData.name.indexOf(matches[0]) + 1 : 0;
-					const matchEnd = matches ? matchStart + matches[0].length : 0;
-					let score = matchStart == 0 ? 0.5 : 1;
+				if ( (hint.length == 0) || matches ) {
+					const matchStart = matches ? (authorData.name.indexOf(matches[0]) + 1) : 0;
+					const matchEnd = matches ? (matchStart + matches[0].length) : 0;
+					let score = (matchStart == 0) ? 0.5 : 1;
 					score = Math.pow(hint.length / authorData.name.length, score);
 					options.push({
 						'name': '@' + authorData.name,
@@ -285,12 +285,12 @@ export class AutocompleteAtNames extends Autocompletions {
 		return options;
 	}
 
-	renderSuggestion(item, classModifier) {
+	renderSuggestion( item, classModifier ) {
 		const {matchStart, matchEnd, name} = item;
 		let ShowLeft = null;
 		let ShowMatch = null;
 		let ShowRight = null;
-		if (matchStart != matchEnd) {
+		if ( matchStart != matchEnd ) {
 			ShowLeft = name.substr(0, matchStart);
 			ShowMatch = <b>{name.substr(matchStart, matchEnd - matchStart)}</b>;
 			ShowRight = name.substr(matchEnd);
