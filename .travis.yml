@@ -14,17 +14,18 @@ install:
   - pwd
   - echo $HOME
   - echo $TRAVIS_REPO_SLUG
-  - git clone https://github.com/ludumdare/dairybox.git "$HOME/$TRAVIS_REPO_SLUG"
+  - git clone https://github.com/ludumdare/dairybox.git dairybox
   - sudo /opt/vagrant/bin/vagrant plugin install vagrant-exec
-  - cd "$HOME/$TRAVIS_REPO_SLUG/www"
+  - cd "dairybox/www"
   - git init
   - git remote add origin https://github.com/ludumdare/ludumdare.git
   - git fetch
   - git checkout -t origin/master
   
 script:
- 
-  - cd "$HOME/$TRAVIS_REPO_SLUG/www"
+  - pwd
+  - ls
+  - cd "dairybox/www"
   - /opt/vagrant/bin/vagrant up
   - /opt/vagrant/bin/vagrant ssh --command "cd www && make"
   - /opt/vagrant/bin/vagrant ssh --command "./www/sandbox/simulate_ld_event 5 actions"
