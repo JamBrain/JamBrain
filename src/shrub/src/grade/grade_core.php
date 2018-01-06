@@ -26,9 +26,27 @@ function grade_GetByNodeAuthor( $node_id, $author_id ) {
 	);
 }
 
+// Output an object containing id'd key/value pairs
+function _grade_QueryFetchIdKeyValueMeta( $query, $metaName, ...$args ) {
+	$out = db_QueryFetchArray($query, ...$args);
+	
+	$ret = [];
+	if ( is_array($out) ) {
+		foreach ( $out as &$value ) {
+			if ( !isset($ret[$value[0]]) ) {
+				$ret[$value[0]] = [];
+			}
+			
+			$ret[$value[0]][$value[1]] = $value[2];			
+			$ret[$value[0]][$value[1] . $metaName] = $value[3];			
+		}
+	}
+	
+	return $ret;
+}
 
 function grade_GetByAuthorParent( $author_id, $parent_id ) {
-	return db_QueryFetchIdKeyValueMeta(
+	return _grade_QueryFetchIdKeyValueMeta(
 		"SELECT
 			node AS id,
 			name,

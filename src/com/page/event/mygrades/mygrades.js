@@ -87,7 +87,7 @@ export default class MyGrades extends Component {
 			const {meta} = r.node[0];
 			let gradeIndex = 1;
 			while ( true ) {
-				const gradeKey = `grade-${pad(gradeIndex, 2)}`;
+				const gradeKey = 'grade-' + pad(gradeIndex, 2);
 				const gradeName = meta[gradeKey];
 				if ( gradeName ) {
 					gradeMapping[gradeKey] = gradeName;
@@ -224,7 +224,7 @@ export default class MyGrades extends Component {
 					.sort((a, b) => (b[1] - a[1])) //Order by avg grade descending
 					.map(elem => elem[0]); //Return ids
 			default: // Sorting by one of the grades
-				const gradeKey = `grade-${pad(sortBy - SORT_GRADE_AVERAGE, 2)}`;
+				const gradeKey = 'grade-' + pad(sortBy - SORT_GRADE_AVERAGE, 2);
 				return gameIds
 					.map(id => [id, grades[id][gradeKey] ? grades[id][gradeKey] : -1]) // Make those who don't have grade come last
 					.sort((a, b) => (b[1] - a[1])) //Order by grade descending
@@ -238,7 +238,7 @@ export default class MyGrades extends Component {
 		const shouldGradeNoGames = 20;
 		const hasResults = !loading && !error;
 		const ShowError = error ? (<div class="-warning">Could not retrieve your votes. Are you logged in?</div>) : null;
-		const gradeKey = sortBy && ((sortBy > SORT_GRADE_AVERAGE) ? (`grade-${pad(sortBy - SORT_GRADE_AVERAGE, 2)}`) : null);
+		const gradeKey = sortBy && ((sortBy > SORT_GRADE_AVERAGE) ? ('grade-' + pad(sortBy - SORT_GRADE_AVERAGE, 2)) : null);
 		let ShowLoading = !gameIds && (!error ? <ContentLoading /> : null);
 		let ShowParagraph = null;
 		let ShowWarning = null;
@@ -611,9 +611,9 @@ class GradeStats extends Component {
 
 		if ( focusGrade ) {
 			votesData = this.getHistogram(grades, focusGrade);
-			DetailGraphTitle = `Distribution of stars (${gradeNames[focusGrade]}):`;
+			DetailGraphTitle = 'Distribution of stars (' + gradeNames[focusGrade] + '):';
 			DetailValues = gradeLevels.map(v => votesData[v] ? votesData[v] : 0);
-			DetailLabels = gradeLevels.map(v => `${v} star${(v > 1) ? 's' : ''}`);
+			DetailLabels = gradeLevels.map(v => v + ' star' + (v > 1 ? 's' : ''));
 		}
 		else if ( showByType ) {
 			DetailGraphTitle = 'JAM vs COMPO average bias';
@@ -635,7 +635,7 @@ class GradeStats extends Component {
 			votesData = this.getGlobalHistogram(grades, gradeNames);
 			DetailGraphTitle = 'Total distribution of stars';
 			DetailValues = gradeLevels.map(v => votesData[v] ? votesData[v] : 0);
-			DetailLabels = gradeLevels.map(v => (`${v} star${(v > 1) ? 's' : ''}`));
+			DetailLabels = gradeLevels.map(v => v + ' star' + (v > 1 ? 's' : ''));
 		}
 
 		ShowDetailGraph = (
