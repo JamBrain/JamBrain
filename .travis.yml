@@ -11,10 +11,9 @@ install:
   - VBoxManage -v
   - wget https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_x86_64.deb
   - sudo dpkg -i vagrant_2.0.1_x86_64.deb
-  - git clone https://github.com/ludumdare/dairybox.git $TRAVIS_REPO_SLUG
-  - cd /
+  - git clone https://github.com/ludumdare/dairybox.git "$HOME/$TRAVIS_REPO_SLUG"
   - sudo /opt/vagrant/bin/vagrant plugin install vagrant-exec
-  - cd "$TRAVIS_REPO_SLUG/www"
+  - cd "$HOME/$TRAVIS_REPO_SLUG/www"
   - git init
   - git remote add origin https://github.com/ludumdare/ludumdare.git
   - git fetch
@@ -22,7 +21,7 @@ install:
   
 script:
  
-  - cd $TRAVIS_REPO_SLUG/www
+  - cd "$HOME/$TRAVIS_REPO_SLUG/www"
   - /opt/vagrant/bin/vagrant up
   - /opt/vagrant/bin/vagrant ssh --command "cd www && make"
   - /opt/vagrant/bin/vagrant ssh --command "./www/sandbox/simulate_ld_event 5 actions"
