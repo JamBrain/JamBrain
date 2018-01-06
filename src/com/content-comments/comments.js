@@ -117,7 +117,7 @@ export default class ContentComments extends Component {
 				};
 			}
 			else if ( comments[idx].parent && tree[comments[idx].parent] ) {
-				if (!tree[comments[idx].parent].child) {
+				if ( !tree[comments[idx].parent].child ) {
 					tree[comments[idx].parent].child = {};
 				}
 
@@ -151,7 +151,7 @@ export default class ContentComments extends Component {
 			}
 
 			// Add authors from node
-			if (node.meta && node.meta.authors) {
+			if ( node.meta && node.meta.authors ) {
 				node.meta.authors.forEach((author) => Authors.push(author));
 			}
 			else if (node) {
@@ -161,7 +161,7 @@ export default class ContentComments extends Component {
 			// http://stackoverflow.com/a/23282067/5678759
 			// Remove Duplicates
 			// Skip anonymous comments (user 0)
-			Authors = Authors.filter((item, i, ar) => ar.indexOf(item) === i && item > 0);
+			Authors = Authors.filter((item, i, ar) => (ar.indexOf(item) === i) && (item > 0));
 
 			// Fetch authors
 
@@ -189,7 +189,7 @@ export default class ContentComments extends Component {
 
 		for ( var item in tree ) {
 			var comment = tree[item].node;
-			comment.loved = actualLove.indexOf(comment.id) !== -1 ? true : false;
+			comment.loved = (actualLove.indexOf(comment.id) !== -1) ? true : false;
 			var author = authors[comment.author];
 
 			if ( tree[item].child ) {
