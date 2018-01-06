@@ -40,15 +40,16 @@ class Autocompletions extends Component {
 		let {text, cursorPos, textareaFocus} = nextProps;
 		cursorPos = cursorPos ? cursorPos : 0;
 		if ( !textareaFocus ) {
-			//text = text ? text : '';
+			text = text ? text : '';
 			//console.log("No focus", textareaFocus, text.substr(0, cursorPos) + '|' + text.substr(cursorPos));
 			this.setState({'match': null, 'cursorPos': cursorPos, 'editMode': false, 'text': text});
 		}
 		else if ( text ) {
 			const matchObj = this.getMatch(text, cursorPos);
-			//console.log('Autocomplete props', matchObj, `'${this.state.selected}'`, text.substr(0, cursorPos) + '|' + text.substr(cursorPos));
+			// console.log('Autocomplete props', matchObj, `'${this.state.selected}'`, text.substr(0, cursorPos) + '|' + text.substr(cursorPos));
 			if ( matchObj ) {
 				const editMode = (text !== this.state.text) || this.state.editMode;
+				//console.log('Matching', matchObj, editMode, `'${this.state.selected}'`, text.substr(0, cursorPos) + '|' + text.substr(cursorPos));
 				this.setState({
 					'editMode': editMode,
 					'text': text,
@@ -130,7 +131,7 @@ class Autocompletions extends Component {
 	}
 
 	handleAbort() {
-		this.setState({'selected': this.state.match, 'editMode': false});
+		this.setState({'selected': null, 'editMode': false});
 	}
 
 	getOptions( hint ) {
