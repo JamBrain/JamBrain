@@ -2,12 +2,12 @@ language: node_js
 #sudo: enabled
 
 install:
-  - sudo echo "deb http://download.virtualbox.org/virtualbox/debian precise contrib" | sudo tee -a /etc/apt/sources.list
+  - sudo echo "deb http://download.virtualbox.org/virtualbox/debian $(uname -r) contrib" | sudo tee -a /etc/apt/sources.list
   - wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
   - wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
   - sudo apt-get update
   - sudo apt-get -y install linux-headers-$(uname -r)
-  - sudo apt-get -y install virtualbox-5.2
+  - sudo apt-get -y install virtualbox-5.1
   - VBoxManage -v
   - wget https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_i686.deb
   - sudo dpkg -i vagrant_2.0.1_i686.deb
