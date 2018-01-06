@@ -32,7 +32,7 @@ export default class ViewBar extends Component {
 			'notifications': 0,
 			'notificationsHidden': 0,
 			'notificationsFeed': null,
-			'notificationsMore': false,
+			//'notificationsMore': false,
 		};
 
 		this.handleNotificationsClear = this.handleNotificationsClear.bind(this);
@@ -44,7 +44,7 @@ export default class ViewBar extends Component {
 			'notifications': 0,
 			'notificationsHidden': 0,
 			'notificationsFeed': null,
-			'notificationsMore': false,
+			//'notificationsMore': false,
 		});
 	}
 
@@ -67,25 +67,35 @@ export default class ViewBar extends Component {
 				setTimeout(() => this.checkNotificationCount(), 20000);
 			}
 			else {
-				$Notification.GetFeedUnreadFiltered(0, fetchCount)
+				$Notification.GetCountUnread()
 				.then(r => {
-					if (this.state.notifications != r.count) {
-						this.setState({
-							'notifications': r.count,
-							'notificationsHidden': r.countFiltered,
-							'notificationsMore': r.countFiltered + r.count == fetchCount,
-							'notificationsFeed': r,
-						});
-					}
-					setTimeout(() => this.checkNotificationCount(), 60000);
+					const newUnfilteredCount = r.count;
+					const request = newUnfilteredCount > 0 ? $Notification.GetFeedUnreadFiltered : $Notification.GetFeedAllFiltered;
+					request(0, fetchCount)
+					.then(r => {
+						if (this.state.notifications != r.count) {
+							this.setState({
+								'notifications': newUnfilteredCount > 0 ? r.count : 0,
+								'notificationsHidden': r.countFiltered,
+								//'notificationsMore': r.countFiltered + r.count == fetchCount,
+								'notificationsFeed': r,
+							});
+						}
+						setTimeout(() => this.checkNotificationCount(), 60000);
+					})
+					.catch((e) => {
+						setTimeout(() => this.checkNotificationCount(), 5 * 60000);
+						console.log('[Notificaton error]', e);
+					});
 				})
 				.catch((e) => {
 					setTimeout(() => this.checkNotificationCount(), 5 * 60000);
-					console.log('[Notificaton error]', e);
+					console.log('[Notificaton count error]', e);
 				});
 			}
 		}
 		else {
+			this.handleNotificationsClear();
 			this.StartedNotificationLoop = false;
 		}
 	}
