@@ -1,15 +1,15 @@
-import {h, Component} from 'preact/preact';
+import {h, Component}					from 'preact/preact';
 import ContentSimple					from 'com/content-simple/simple';
-import ContentList				from 'com/content-list/list';
-import ContentLoading			from 'com/content-loading/loading';
+import ContentList						from 'com/content-list/list';
+import ContentLoading					from 'com/content-loading/loading';
 import UIButtonLink						from 'com/ui/button/button-link';
 import InputDropdown					from 'com/input-dropdown/dropdown';
 import SVGIcon 							from 'com/svg-icon/icon';
 import BarChart							from 'com/visualization/barchart/barchart';
 import PieChart							from 'com/visualization/piechart/piechart';
-import $Grade					from 'shrub/js/grade/grade';
-import $Node					from 'shrub/js/node/node';
-import $Comment					from 'shrub/js/comment/comment';
+import $Grade							from 'shrub/js/grade/grade';
+import $Node							from 'shrub/js/node/node';
+import $Comment							from 'shrub/js/comment/comment';
 
 const SORT_ORDER = 0;
 const SORT_ALPHA = 1;
@@ -55,9 +55,9 @@ export default class MyGrades extends Component {
 		let chunkStart = 0;
 		const promises = [];
 		const nodesWithMyComments = new Map();
-		while (true) {
+		while ( true ) {
 			const chunk = commentIds.slice(chunkStart, chunkSize);
-			if (chunk.length == 0) {
+			if ( chunk.length == 0 ) {
 				break;
 			}
 			promises.push($Comment.Get(chunk).then(r => {
@@ -86,10 +86,10 @@ export default class MyGrades extends Component {
 		promises.push($Node.Get(eventId).then(r => {
 			const {meta} = r.node[0];
 			let gradeIndex = 1;
-			while (true) {
+			while ( true ) {
 				const gradeKey = `grade-${pad(gradeIndex, 2)}`;
 				const gradeName = meta[gradeKey];
-				if (gradeName) {
+				if ( gradeName ) {
 					gradeMapping[gradeKey] = gradeName;
 					gradeIndex += 1;
 				}
@@ -98,9 +98,9 @@ export default class MyGrades extends Component {
 				}
 			}
 		}));
-		while (true) {
+		while ( true ) {
 			const chunk = gameIds.slice(i, i + chunkSize);
-			if (chunk.length == 0) {
+			if ( chunk.length == 0 ) {
 				break;
 			}
 			promises.push($Node.Get(chunk)
@@ -127,24 +127,24 @@ export default class MyGrades extends Component {
 		const authorsMapping = new Map();
 		let promises = [];
 		const chunkSize = 20;
-		for (let i = 0; i < gameIds.length; i+=1) {
+		for ( let i = 0; i < gameIds.length; i+=1 ) {
 			const node = mapping[gameIds[i]];
-			if (node.author && node.author > 0) {
+			if ( node.author && (node.author > 0) ) {
 				authors.push(node.author);
 			}
-			if (node.meta && node.meta.authors) {
+			if ( node.meta && node.meta.authors ) {
 				node.meta.authors.forEach(author => {
-					if (author != node.author) {
+					if ( author != node.author ) {
 						authors.push(author);
 					}
 				});
 			}
 		}
-		authors = authors.filter((author, index) => authors.indexOf(author) == index);
+		authors = authors.filter((author, index) => (authors.indexOf(author) == index));
 		let i = 0;
-		while (true) {
+		while ( true ) {
 			const chunk = authors.slice(i, i + chunkSize);
-			if (chunk.length == 0) {
+			if ( chunk.length == 0 ) {
 				break;
 			}
 			promises.push($Node.Get(chunk)
@@ -168,19 +168,19 @@ export default class MyGrades extends Component {
 	getItemAuthorsFromState( gameId ) {
 		const item = this.state.nodes[gameId];
 		const authors = this.state.authors;
-		if (!authors) {
+		if ( !authors ) {
 			return [];
 		}
 		const itemAuthors = [];
 		const mainAuthor = authors[item.author];
-		if (mainAuthor) {
+		if ( mainAuthor ) {
 			itemAuthors.push(mainAuthor);
 		}
-		if (item.meta && item.meta.authors) {
+		if ( item.meta && item.meta.authors ) {
 			item.meta.authors.forEach(author => {
-				if (author != item.author) {
+				if ( author != item.author ) {
 					const authorData = authors[author];
-					if (authorData) {
+					if ( authorData ) {
 						itemAuthors.push(authorData);
 					}
 				}
@@ -195,16 +195,16 @@ export default class MyGrades extends Component {
 
 	getSortedGames() {
 		const {gameIds, nodes, sortBy, grades} = this.state;
-		switch (sortBy) {
+		switch ( sortBy ) {
 			case SORT_TYPE:
 				return gameIds
 					.map(id => [id, nodes[id].subsubtype + nodes[id].subtype + nodes[id].type]) //Get type string
-					.sort((a, b) => a[1] > b[1]) //Order by type string
+					.sort((a, b) => (a[1] > b[1])) //Order by type string
 					.map(elem => elem[0]); //Return ids
 			case SORT_ALPHA:
 				return gameIds
 					.map(id => [id, nodes[id].name]) //Get ids and names
-					.sort((a, b) => a[1] > b[1]) //Order by names
+					.sort((a, b) => (a[1] > b[1])) //Order by names
 					.map(elem => elem[0]); //Return ids
 			case SORT_ORDER:
 			case undefined:
@@ -215,19 +215,19 @@ export default class MyGrades extends Component {
 						let currentGrades = grades[id];
 						let n = 0;
 						let total = 0;
-						for (let grade in currentGrades) {
+						for ( let grade in currentGrades ) {
 							n += 1;
 							total += currentGrades[grade];
 						}
 						return [id, total / n];
 					})
-					.sort((a, b) => b[1] - a[1]) //Order by avg grade descending
+					.sort((a, b) => (b[1] - a[1])) //Order by avg grade descending
 					.map(elem => elem[0]); //Return ids
 			default: // Sorting by one of the grades
 				const gradeKey = `grade-${pad(sortBy - SORT_GRADE_AVERAGE, 2)}`;
 				return gameIds
 					.map(id => [id, grades[id][gradeKey] ? grades[id][gradeKey] : -1]) // Make those who don't have grade come last
-					.sort((a, b) => b[1] - a[1]) //Order by grade descending
+					.sort((a, b) => (b[1] - a[1])) //Order by grade descending
 					.map(elem => elem[0]); //Return ids
 		}
 	}
@@ -237,17 +237,18 @@ export default class MyGrades extends Component {
 		const gameIds = this.getSortedGames();
 		const shouldGradeNoGames = 20;
 		const hasResults = !loading && !error;
-		const ShowError = error ? <div class="-warning">Could not retrieve your votes. Are you logged in?</div> : null;
-		const gradeKey = sortBy && sortBy > SORT_GRADE_AVERAGE ? `grade-${pad(sortBy - SORT_GRADE_AVERAGE, 2)}` : null;
-		let ShowLoading = !gameIds && !error ? <ContentLoading /> : null;
+		const ShowError = error ? (<div class="-warning">Could not retrieve your votes. Are you logged in?</div>) : null;
+		const gradeKey = sortBy && ((sortBy > SORT_GRADE_AVERAGE) ? (`grade-${pad(sortBy - SORT_GRADE_AVERAGE, 2)}`) : null);
+		let ShowLoading = !gameIds && (!error ? <ContentLoading /> : null);
 		let ShowParagraph = null;
 		let ShowWarning = null;
 		let ShowSorting = null;
 		let ShowResults = null;
 		let ShowStats = null;
 
-		if (!!gameIds) {
-			if (gameIds.length < shouldGradeNoGames) {
+		// Is this (!!) intentional? If so, document why.
+		if ( !!gameIds ) {
+			if ( gameIds.length < shouldGradeNoGames ) {
 				ShowWarning = (
 					<div class="-warning">
 						To fully participate in Ludum Dare you need to play and grade others' games.
@@ -258,21 +259,21 @@ export default class MyGrades extends Component {
 				);
 			}
 			ShowParagraph = <div class="-info">You have graded {gameIds.length} game{gameIds.length == 1 ? "" : "s"}.</div>;
-			if (gameIds.length > 0) {
+			if ( gameIds.length > 0 ) {
 				ShowStats = (
 					<GradeStats
 						grades={grades}
 						gradeNames={gradeNames}
 						focusGrade={gradeKey}
 						showByType={sortBy == SORT_TYPE}
-						showTrend={sortBy == SORT_ORDER || !sortBy}
+						showTrend={(sortBy == SORT_ORDER) || !sortBy}
 						nodes={gameIds.map(id => nodes[id])}
 					/>
 				);
 			}
 		}
 
-		if (hasResults) {
+		if ( hasResults ) {
 			let Items = [];
 			gameIds.map(nodeId => {
 				Items.push((<GradedItem
@@ -293,11 +294,11 @@ export default class MyGrades extends Component {
 				[SORT_GRADE_AVERAGE, 'Average grade'],
 			];
 			let gradeIndex = 1;
-			for (let gradeKey in gradeNames) {
+			for ( let gradeKey in gradeNames ) {
 				sortOptions.push([gradeIndex + SORT_GRADE_AVERAGE, gradeNames[gradeKey]]);
 				gradeIndex += 1;
 			}
-			switch (sortBy) {
+			switch ( sortBy ) {
 				case SORT_ORDER:
 				case undefined:
 					SortDescription = <div class="-description">Showing the games in the order you graded them.</div>;
@@ -340,44 +341,44 @@ export default class MyGrades extends Component {
 }
 
 class GradedItem extends Component {
-	cleanGameDescription(description) {
+	cleanGameDescription( description ) {
 		return description
-		.replace(/!?\[[^\]]+]\([^)]+\)/g, '') //We don't want images or links
-		.replace(/\*{1,2}/g, '') //We don't care for bold formatting
-		.replace(/\~~[^~]+~~/g, '') //We don't want to see stuff that was over-stricken
-		.replace(/#{1,3}/g, '') //Headings are just text
-		.replace(/\n/g, ' '); //New line should be a space
+			.replace(/!?\[[^\]]+]\([^)]+\)/g, '') //We don't want images or links
+			.replace(/\*{1,2}/g, '') //We don't care for bold formatting
+			.replace(/\~~[^~]+~~/g, '') //We don't want to see stuff that was over-stricken
+			.replace(/#{1,3}/g, '') //Headings are just text
+			.replace(/\n/g, ' '); //New line should be a space
 	}
 
-	trimDescriptionToLength(description, targetLength, maxLength) {
+	trimDescriptionToLength( description, targetLength, maxLength ) {
 		const maxDescription = description.substr(0, maxLength);
 		let lastPunctuation = Math.max(maxDescription.lastIndexOf('.'), maxDescription.lastIndexOf('?'), maxDescription.lastIndexOf('!'));
-		if (lastPunctuation < targetLength) {
+		if ( lastPunctuation < targetLength ) {
 			lastPunctuation = Math.max(maxDescription.lastIndexOf(','), maxDescription.lastIndexOf(':'));
 		}
 		let shortened = description.substr(0, Math.max(targetLength, lastPunctuation));
 		const abbreviated = shortened.length < description.length;
 		shortened = shortened.trim();
-		if (abbreviated) {
-			shortened += shortened[shortened.length - 1] == "." ? ".." : "...";
+		if ( abbreviated ) {
+			shortened += (shortened[shortened.length - 1] == ".") ? ".." : "...";
 		}
 		return shortened;
 	}
 
 	getItemType( node ) {
 		let TypeString = null;
-		if (node.subtype) {
-			if (node.subsubtype) {
+		if ( node.subtype ) {
+			if ( node.subsubtype ) {
 				TypeString = node.subsubtype.toUpperCase() + ": " + node.subtype.toUpperCase();
 			}
 			else {
 				TypeString = node.subtype.toUpperCase();
 			}
 		}
-		else if (node.type) {
+		else if ( node.type ) {
 			TypeString = node.type.toUpperCase();
 		}
-		if (TypeString) {
+		if ( TypeString ) {
 			return <div class="-item-type">{TypeString}</div>;
 		}
 		return null;
@@ -389,13 +390,13 @@ class GradedItem extends Component {
 		description = this.trimDescriptionToLength(description, 100, 175);
 
 		let ShowAuthors = null;
-		if (authors && authors.length > 0) {
+		if ( authors && (authors.length > 0) ) {
 			const AuthorList = [];
 			authors.forEach((author, index) => {
-				if (index > 0 && index == authors.length - 1) {
+				if ( (index > 0) && (index == (authors.length - 1)) ) {
 					AuthorList.push(' & ');
 				}
-				else if (index > 0) {
+				else if ( index > 0 ) {
 					AuthorList.push(', ');
 				}
 				AuthorList.push(<div class="-at-name">@{author.slug}</div>);
@@ -404,9 +405,9 @@ class GradedItem extends Component {
 		}
 
 		const Grades = [];
-		for (let grade in grades) {
-			if (gradeNames[grade]) {
-				Grades.push(<div class={cN("-grade", grade == focusGrade ? "-focused" : "")} key={grade}><div class="-grade-label">{gradeNames[grade]}:</div>{grades[grade]}</div>);
+		for ( let grade in grades ) {
+			if ( gradeNames[grade] ) {
+				Grades.push(<div class={cN("-grade", (grade == focusGrade) ? "-focused" : "")} key={grade}><div class="-grade-label">{gradeNames[grade]}:</div>{grades[grade]}</div>);
 			}
 		}
 		const ShowGrades = <div class="-grades">{Grades}</div>;
@@ -426,14 +427,14 @@ class GradedItem extends Component {
 }
 
 class GradeStats extends Component {
-	getHistogram( grades, gradeKey, hist) {
-		if (!hist) {
+	getHistogram( grades, gradeKey, hist ) {
+		if ( !hist ) {
 			hist = {};
 		}
-		for (let gradedItem in grades) {
+		for ( let gradedItem in grades ) {
 			const grade = grades[gradedItem][gradeKey];
-			if (grade) {
-				if (!hist[grade]) {
+			if ( grade ) {
+				if ( !hist[grade] ) {
 					hist[grade] = 1;
 				}
 				else {
@@ -446,7 +447,7 @@ class GradeStats extends Component {
 
 	getGlobalHistogram( grades, gradeNames ) {
 		let hist = {};
-		for (let gradeKey in gradeNames) {
+		for ( let gradeKey in gradeNames ) {
 			hist = this.getHistogram(grades, gradeKey, hist);
 		}
 		return hist;
@@ -455,9 +456,9 @@ class GradeStats extends Component {
 	getAverage( grades, gradeKey ) {
 		let sum = 0;
 		let n = 0;
-		for (let gradedItem in grades) {
+		for ( let gradedItem in grades ) {
 			const grade = grades[gradedItem][gradeKey];
-			if (grade) {
+			if ( grade ) {
 				sum += grade;
 				n += 1;
 			}
@@ -469,7 +470,7 @@ class GradeStats extends Component {
 		const counter = {};
 		nodes.forEach(node => {
 			const nodeType = node.subsubtype.toUpperCase() + ': ' + node.subtype.toUpperCase();
-			if (counter[nodeType]) {
+			if ( counter[nodeType] ) {
 				counter[nodeType] += 1;
 			}
 			else {
@@ -481,7 +482,7 @@ class GradeStats extends Component {
 
 	getVotesBias( grades, filter, gradeNames ) {
 		const bias = {};
-		for (let gradeKey in gradeNames) {
+		for ( let gradeKey in gradeNames ) {
 			const groupA = this.getAverage(grades.filter((f, idx) => filter[idx]), gradeKey);
 			const groupB = this.getAverage(grades.filter((f, idx) => !filter[idx]), gradeKey);
 			bias[gradeKey] = groupA - groupB;
@@ -491,13 +492,13 @@ class GradeStats extends Component {
 
 	binGrades( grades, gradeNames ) {
 		bins = {};
-		for (let gradedItemId in grades) {
+		for ( let gradedItemId in grades ) {
 			const gradedItem = grades[gradedItemId];
-			for (let gradeKey in gradeNames) {
+			for ( let gradeKey in gradeNames ) {
 				const grade = gradedItem[gradeKey];
-				if (grade) {
+				if ( grade ) {
 					const bin = gradedItem[gradeKey + "-timestamp"].split(' ', 1)[0]; //Get date
-					if (bins[bin]) {
+					if ( bins[bin] ) {
 						bins[bin].push([gradedItemId, grade]);
 					}
 					else {
@@ -510,18 +511,18 @@ class GradeStats extends Component {
 		return bins;
 	}
 
-	getDateRange(startDate, endDate) {
+	getDateRange( startDate, endDate ) {
 		const addDay = d => new Date(d.getTime() + (24 * 60 * 60000));
 		let dates = [];
 		let mm = startDate.getMonth() + 1;
 		let dd = startDate.getDate();
 
-		dates.push([startDate.getFullYear(), (mm > 9 ? '' : '0') + mm, (dd > 9 ? '' : '0') + dd].join('-'));
+		dates.push([startDate.getFullYear(), ((mm > 9) ? '' : '0') + mm, ((dd > 9) ? '' : '0') + dd].join('-'));
 		let cur = addDay(startDate);
-		while (cur <= endDate) {
+		while ( cur <= endDate ) {
 			mm = cur.getMonth() + 1;
 			dd = cur.getDate();
-			dates.push([cur.getFullYear(), (mm > 9 ? '' : '0') + mm, (dd > 9 ? '' : '0') + dd].join('-'));
+			dates.push([cur.getFullYear(), ((mm > 9) ? '' : '0') + mm, ((dd > 9) ? '' : '0') + dd].join('-'));
 			cur = addDay(cur);
 		}
 		return dates;
@@ -529,11 +530,11 @@ class GradeStats extends Component {
 
 	getDayLabels( binnedGrades ) {
 		let labels = [];
-		for (let label in binnedGrades) {
+		for ( let label in binnedGrades ) {
 			labels.push(label);
 		}
-		if (labels.length > 0) {
-			labels = labels.map(date => new Date(date)).sort((a, b) => a - b);
+		if ( labels.length > 0 ) {
+			labels = labels.map(date => new Date(date)).sort((a, b) => (a - b));
 			return this.getDateRange(labels[0], labels[labels.length - 1]);
 		}
 		else {
@@ -557,16 +558,16 @@ class GradeStats extends Component {
 		let ShowDetailGraph = null;
 		const binnedGrades = showTrend ? this.binGrades(grades, gradeNames) : null;
 		const binnedGradesDays = showTrend ? this.getDayLabels(binnedGrades) : null;
-		for (let grade in gradeNames) {
+		for ( let grade in gradeNames ) {
 			GradeNamesList.push(gradeNames[grade]);
 		}
 
-		if (showByType) {
+		if ( showByType ) {
 			const counts = this.countTypes(nodes);
 			let sum = 0;
 			const typeLabels = [];
 			const typeCounts = [];
-			for (let countLabel in counts) {
+			for ( let countLabel in counts ) {
 				typeLabels.push(countLabel);
 				typeCounts.push(counts[countLabel]);
 				sum += counts[countLabel];
@@ -578,9 +579,9 @@ class GradeStats extends Component {
 				</div>
 			);
 		}
-		else if (showTrend) {
+		else if ( showTrend ) {
 			let GradeCounts = binnedGradesDays.map(date => binnedGrades[date] ? binnedGrades[date].map(e => e[0]) : []); //Get lists of item IDs per date
-			GradeCounts = GradeCounts.map(items => items.filter((itemId, idx) => items.indexOf(itemId) == idx).length); //Unique item ID count per date
+			GradeCounts = GradeCounts.map(items => items.filter((itemId, idx) => (items.indexOf(itemId) == idx)).length); //Unique item ID count per date
 			ShowSummaryGraph = (
 				<div class="-graph">
 					<h3>Graded items per day</h3>
@@ -590,7 +591,7 @@ class GradeStats extends Component {
 
 		}
 		else {
-			for (let grade in gradeNames) {
+			for ( let grade in gradeNames ) {
 				gradeAvgs.push(this.getAverage(grades, grade));
 			}
 			ShowSummaryGraph = (
@@ -608,23 +609,23 @@ class GradeStats extends Component {
 		let DetailCaption = null;
 		const gradeLevels = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 
-		if (focusGrade) {
+		if ( focusGrade ) {
 			votesData = this.getHistogram(grades, focusGrade);
 			DetailGraphTitle = `Distribution of stars (${gradeNames[focusGrade]}):`;
 			DetailValues = gradeLevels.map(v => votesData[v] ? votesData[v] : 0);
-			DetailLabels = gradeLevels.map(v => `${v} star${v > 1 ? 's' : ''}`);
+			DetailLabels = gradeLevels.map(v => `${v} star${(v > 1) ? 's' : ''}`);
 		}
-		else if (showByType) {
+		else if ( showByType ) {
 			DetailGraphTitle = 'JAM vs COMPO average bias';
 			DetailLabels = GradeNamesList;
-			votesData = this.getVotesBias(nodes.map(node => grades[node.id]), nodes.map(node => node.subsubtype == 'jam'), gradeNames);
+			votesData = this.getVotesBias(nodes.map(node => grades[node.id]), nodes.map(node => (node.subsubtype == 'jam')), gradeNames);
 			DetailValues = [];
-			for (let grade in gradeNames) {
+			for ( let grade in gradeNames ) {
 				DetailValues.push(votesData[grade]);
 			}
 			DetailCaption = <div class="-caption">Positive values indicate you give higher grades to JAM items. Negative that you give higher grades to COMPO items.</div>;
 		}
-		else if (showTrend) {
+		else if ( showTrend ) {
 			DetailGraphTitle = 'Total average grade per day';
 			DetailValues = binnedGradesDays.map(date => binnedGrades[date] ? this.averageArray(binnedGrades[date].map(e => e[1])) : NaN);
 			DetailLabels = binnedGradesDays;
@@ -634,7 +635,7 @@ class GradeStats extends Component {
 			votesData = this.getGlobalHistogram(grades, gradeNames);
 			DetailGraphTitle = 'Total distribution of stars';
 			DetailValues = gradeLevels.map(v => votesData[v] ? votesData[v] : 0);
-			DetailLabels = gradeLevels.map(v => `${v} star${v > 1 ? 's' : ''}`);
+			DetailLabels = gradeLevels.map(v => (`${v} star${(v > 1) ? 's' : ''}`));
 		}
 
 		ShowDetailGraph = (
