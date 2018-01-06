@@ -107,7 +107,7 @@ class Autocompletions extends Component {
 	executeSelect( selected ) {
 		const {matchStart, matchEnd, match} = this.state;
 		const {onSelect, text} = this.props;
-		selected = `${selected} `;
+		selected = selected + ' ';
 		const updatedText = text.slice(0, matchStart) + selected + text.slice(matchEnd);
 		this.setState({'text': updatedText, 'selected': selected, 'editMode': false});
 		if ( onSelect ) {
