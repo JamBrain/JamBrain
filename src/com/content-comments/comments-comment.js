@@ -107,6 +107,7 @@ export default class ContentCommentsComment extends Component {
 
 	onTextAreaFocus( e ) {
 		this.setState({'textareaFocus': true});
+		//console.log("TextAreaFocus");
 		return true;
 	}
 
@@ -117,6 +118,7 @@ export default class ContentCommentsComment extends Component {
 
 	onTextAreaCaret( e ) {
 		this.setState({'editCursorPos': e.target.selectionStart});
+		//console.log("TextAreaCursor");
 		return true;
 	}
 
@@ -364,25 +366,23 @@ export default class ContentCommentsComment extends Component {
 				ShowAvatar = <div class="-avatar"><IMG2 src={Avatar} /></div>;
 			}
 
-			let ShowAutocompleteAt = null;
-			let ShowAutocompleteEmoji = null;
-			if (state.textareaFocus) {
-				ShowAutocompleteAt = <AutocompleteAtNames
-					text={state.editText}
-					cursorPos={state.editCursorPos}
-					authors={props.authors}
-					onSelect={this.onAutocompleteSelect}
-					captureKeyDown={this.onAutoselectCaptureKeyDown}
-					captureKeyUp={this.onAutoselectCaptureKeyUp}
-				/>;
-				ShowAutocompleteEmoji = <AutocompleteEmojis
-					text={state.editText}
-					cursorPos={state.editCursorPos}
-					onSelect={this.onAutocompleteSelect}
-					captureKeyDown={this.onAutoselectCaptureKeyDown}
-					captureKeyUp={this.onAutoselectCaptureKeyUp}
-				/>;
-			}
+			const ShowAutocompleteAt = <AutocompleteAtNames
+				text={state.editText}
+				cursorPos={state.editCursorPos}
+				authors={props.authors}
+				textareaFocus={state.textareaFocus}
+				onSelect={this.onAutocompleteSelect}
+				captureKeyDown={this.onAutoselectCaptureKeyDown}
+				captureKeyUp={this.onAutoselectCaptureKeyUp}
+			/>;
+			const ShowAutocompleteEmoji = <AutocompleteEmojis
+				text={state.editText}
+				cursorPos={state.editCursorPos}
+				textareaFocus={state.textareaFocus}
+				onSelect={this.onAutocompleteSelect}
+				captureKeyDown={this.onAutoselectCaptureKeyDown}
+				captureKeyUp={this.onAutoselectCaptureKeyUp}
+			/>;
 
 			return (
 				<div id={"comment-"+comment.id} class={"-item -comment -indent-"+props.indent}>

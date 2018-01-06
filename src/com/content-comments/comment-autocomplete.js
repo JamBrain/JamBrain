@@ -37,9 +37,14 @@ class Autocompletions extends Component {
 	}
 
 	componentWillReceiveProps( nextProps ) {
-		let {text, cursorPos} = nextProps;
-		if (text) {
-			cursorPos = cursorPos ? cursorPos : 0;
+		let {text, cursorPos, textareaFocus} = nextProps;
+		cursorPos = cursorPos ? cursorPos : 0;
+		if (!textareaFocus) {
+			//text = text ? text : '';
+			//console.log("No focus", textareaFocus, text.substr(0, cursorPos) + '|' + text.substr(cursorPos));
+			this.setState({'match': null, 'cursorPos': cursorPos, 'editMode': false, 'text': text});
+		}
+		else if (text) {
 			const matchObj = this.getMatch(text, cursorPos);
 			//console.log('Autocomplete props', matchObj, `'${this.state.selected}'`, text.substr(0, cursorPos) + '|' + text.substr(cursorPos));
 			if (matchObj) {
@@ -54,11 +59,11 @@ class Autocompletions extends Component {
 				});
 			}
 			else {
-				this.setState({'match': null, 'cursorPos': cursorPos, 'editMode': false});
+				this.setState({'match': null, 'cursorPos': cursorPos, 'editMode': false, 'text': text});
 			}
 		}
 		else {
-			this.setState({'match': null, 'cursorPos': cursorPos, 'editMode': false});
+			this.setState({'match': null, 'cursorPos': cursorPos, 'editMode': false, 'text': text});
 		}
 	}
 
