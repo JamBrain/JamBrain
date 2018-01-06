@@ -23,9 +23,6 @@ install:
   - git checkout -t origin/master
   
 script:
-  - pwd
-  - ls
-  - cd "dairybox/www"
-  - /opt/vagrant/bin/vagrant up
-  - /opt/vagrant/bin/vagrant ssh --command "cd www && make"
-  - /opt/vagrant/bin/vagrant ssh --command "./www/sandbox/simulate_ld_event 5 actions"
+  - sudo /opt/vagrant/bin/vagrant up
+  - sudo /opt/vagrant/bin/vagrant ssh --command "cd www && make"
+  - sudo /opt/vagrant/bin/vagrant ssh --command "./www/sandbox/simulate_ld_event 5 actions"
