@@ -173,7 +173,13 @@ export default class NotificationItem extends Component {
 	getNavProps( props ) {
 		const {notification} = props;
 		const notificationData = notification.notification[0];
-		const navProps = {"href": notification.node.path, "title": ('Notification Id: ' + notificationData.id), "class": props.class, "id": props.id};
+		const navProps = {
+			"href": notification.node.path,
+			"title": ('Notification Id: ' + notificationData.id),
+			"class": props.class,
+			"id": props.id,
+			'onclick': props.onclick,
+		};
 
 		if ( notification.note ) {
 			navProps.href += "#/comment-" + notification.earliestNote;

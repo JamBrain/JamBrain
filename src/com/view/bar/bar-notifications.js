@@ -86,7 +86,7 @@ export default class DropdownNotification extends NotificationsBase {
 			if (loading) {
 				ShowSpinner = (<NavSpinner />);
 			}
-			Notifications = this.getNotifications(showMax);
+			Notifications = this.getNotifications(showMax, props.hideCallback);
 		}
 
 		if (ShowSpinner !== null) {
