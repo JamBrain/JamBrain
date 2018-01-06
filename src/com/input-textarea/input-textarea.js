@@ -1,11 +1,11 @@
-import {h, Component} 				from 'preact/preact';
+import {h, Component} 					from 'preact/preact';
 import Shallow			 				from 'shallow/shallow';
 
 import NavLink							from 'com/nav-link/link';
 import ButtonLink						from 'com/button-link/link';
 import SVGIcon							from 'com/svg-icon/icon';
 
-import $Asset							from '../../shrub/js/asset/asset';
+import $Asset							from 'shrub/js/asset/asset';
 
 
 export default class InputTextarea extends Component {
@@ -39,7 +39,7 @@ export default class InputTextarea extends Component {
 		const prevReplaceTextEvent = this.replaceTextEvent;
 		this.props.value = replaceText;
 		// console.log(!!replaceText, this.textarea, replaceTextEvent, prevReplaceTextEvent);
-		if (replaceText && this.textarea && replaceTextEvent != prevReplaceTextEvent) {
+		if ( replaceText && this.textarea && (replaceTextEvent != prevReplaceTextEvent) ) {
 			const {oncaret} = this.props;
 			this.textarea.value = replaceText;
 			this.textarea.focus();
@@ -67,7 +67,7 @@ export default class InputTextarea extends Component {
 			this.textarea.style.height = this.textarea.scrollHeight + 'px';
 
 			// Calculate the size change since last time here
-			var delta = this.state.prevHeight > 0 ? this.textarea.scrollHeight - this.state.prevHeight : 0;
+			var delta = (this.state.prevHeight > 0) ? (this.textarea.scrollHeight - this.state.prevHeight) : 0;
 
 			// This works around the jumping by restoring the scroll positions to where they should have been
 			window.scrollTo(scrollLeft, scrollTop + delta);
@@ -97,7 +97,7 @@ export default class InputTextarea extends Component {
 		var ta = this.textarea;
 
 		// http://stackoverflow.com/a/11077016/5678759
-		if ( ta.selectionStart || ta.selectionStart == '0') {	// Is Number
+		if ( ta.selectionStart || (ta.selectionStart == '0') ) {	// Is Number
 			var startPos = ta.selectionStart;
 			var endPos = ta.selectionEnd;
 			ta.value = ta.value.substring(0, startPos) + Text + ta.value.substring(endPos, ta.value.length);
@@ -149,14 +149,14 @@ export default class InputTextarea extends Component {
 
 	onKeyDown( e ) {
 		const {onkeydown, oncaret} = this.props;
-		if (onkeydown && !onkeydown(e)) {
+		if ( onkeydown && !onkeydown(e) ) {
 			e.preventDefault();
 		}
 	}
 
 	onKeyUp( e ) {
 		const {onkeyup, oncaret} = this.props;
-		if (onkeyup && !onkeyup(e)) {
+		if ( onkeyup && !onkeyup(e) ) {
 			e.preventDefault();
 		}
 		else if (oncaret) {
@@ -179,24 +179,24 @@ export default class InputTextarea extends Component {
 
 	onBlur( e ) {
 		const {onblur} = this.props;
-		if (onblur && !onblur(e)) {
+		if ( onblur && !onblur(e) ) {
 			e.preventDefault();
 		}
 	}
 
 	onFocus( e ) {
 		const {onfocus, oncaret} = this.props;
-		if (onfocus && !onfocus(e)) {
+		if ( onfocus && !onfocus(e) ) {
 			e.preventDefault();
 		}
-		if (oncaret && !oncaret(e)) {
+		if ( oncaret && !oncaret(e) ) {
 			e.preventDefault();
 		}
 	}
 
 	onClick( e ) {
 		const {oncaret} = this.props;
-		if (oncaret && !oncaret(e)) {
+		if ( oncaret && !oncaret(e) ) {
 			e.preventDefault();
 		}
 	}
