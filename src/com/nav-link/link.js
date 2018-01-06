@@ -45,10 +45,6 @@ export default class NavLink extends Component {
 		if (e.shiftKey || e.metaKey || e.ctrlKey || e.altKey)
 			return;
 
-		if (this.props.onclick) {
-			this.props.onclick(e);
-		}
-
 		// Internet Explorer 11 doesn't set the origin, so we need to extract it
 		// Cleverness: we slice at the 1st slash, but offset by length of 'https://' first, so it's after the domain
 		let origin = this.base && (this.base.origin || (this.base.href && this.base.href.slice(0, this.base.href.indexOf('/','https://'.length))));

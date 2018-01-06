@@ -1,5 +1,6 @@
 import {h, Component}	 				from 'preact/preact';
 import NavLink 							from 'com/nav-link/link';
+import ButtonLink						from 'com/button-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
 
@@ -203,17 +204,17 @@ export default class NotificationItem extends Component {
 			const NoteAuthor = this.getNoteAuthorAsSubjectJSX(notification);
 			const NodeAuthor = this.getNodeAuthorAsObjectJSX(notification);
 			return (
-				<NavLink {...navProps} >
+				<ButtonLink {...navProps} >
 					<SVGIcon>quesition</SVGIcon>{timePrefix} {NoteAuthor} caused unhandled notification {NotificationType} for {NodeAuthor} {NodeType} "<em>{node.name}</em>"
-				</NavLink>
+				</ButtonLink>
 			);
 		}
 		else {
 			const NodeAuthor = this.getNodeAuthorAsSubjectJSX(notification);
 			return (
-				<NavLink {...navProps} >
+				<ButtonLink {...navProps} >
 					<SVGIcon>quesition</SVGIcon>{timePrefix} {NodeAuthor} caused unhandled notification {NotificationType} with their {NodeType} "<em>{node.name}</em>"
-				</NavLink>
+				</ButtonLink>
 			);
 		}
 	}
@@ -224,9 +225,9 @@ export default class NotificationItem extends Component {
 		const {node} = notification;
 
 		return (
-			<NavLink {...navProps} >
+			<ButtonLink {...navProps} >
 				<SVGIcon>bubble-empty</SVGIcon>{timePrefix} {NoteAuthor} commented on your {NodeType} "<em>{node.name}</em>"
-			</NavLink>
+			</ButtonLink>
 		);
 	}
 
@@ -237,9 +238,9 @@ export default class NotificationItem extends Component {
 		const {node, note} = notification;
 
 		return (
-			<NavLink {...navProps} >
+			<ButtonLink {...navProps} >
 				<SVGIcon>{note.length > 1 ? 'bubbles' : 'bubble'}</SVGIcon>{timePrefix} {NoteAuthor} commented on {NodeAuthor} {NodeType} "<em>{node.name}</em>"
-			</NavLink>
+			</ButtonLink>
 		);
 	}
 
@@ -249,9 +250,9 @@ export default class NotificationItem extends Component {
 		const {node} = notification;
 
 		return (
-			<NavLink {...navProps} >
+			<ButtonLink {...navProps} >
 				<SVGIcon>gamepad</SVGIcon> {timePrefix} {NodeAuthor} published a {NodeType} "<em>{node.name}</em>"
-			</NavLink>
+			</ButtonLink>
 		);
 	}
 
@@ -260,9 +261,9 @@ export default class NotificationItem extends Component {
 		const {node} = notification;
 
 		return (
-			<NavLink {...navProps} >
+			<ButtonLink {...navProps} >
 				<SVGIcon>feed</SVGIcon> {timePrefix} {NodeAuthor} posted "<em>{node.name}</em>"
-			</NavLink>
+			</ButtonLink>
 		);
 	}
 
@@ -274,17 +275,17 @@ export default class NotificationItem extends Component {
 			const NoteAuthor = this.getNoteAuthorAsSubjectJSX(notification);
 			const NodeAuthor = this.getNodeAuthorAsObjectJSX(notification);
 			return (
-				<NavLink {...navProps} >
+				<ButtonLink {...navProps} >
 					<SVGIcon>at</SVGIcon> {timePrefix} {NoteAuthor} mentioned you in a comment on {NodeAuthor} {NodeType} "<em>{node.name}</em>"
-				</NavLink>
+				</ButtonLink>
 			);
 		}
 		else {
 			const NodeAuthor = this.getNodeAuthorAsSubjectJSX(notification);
 			return (
-				<NavLink {...navProps} >
+				<ButtonLink {...navProps} >
 					<SVGIcon>at</SVGIcon> {timePrefix} {NodeAuthor} mentioned you in their {NodeType} "<em>{node.name}</em>"
-				</NavLink>
+				</ButtonLink>
 			);
 		}
 	}
