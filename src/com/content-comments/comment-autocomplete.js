@@ -104,7 +104,7 @@ class Autocompletions extends Component {
 		const {onSelect, text} = this.props;
 		selected = `${selected} `;
 		const updatedText = text.slice(0, matchStart) + selected + text.slice(matchEnd);
-		this.setState({'text': updatedText, 'selected': selected});
+		this.setState({'text': updatedText, 'selected': selected, 'editMode': false});
 		if (onSelect) {
 			onSelect(updatedText, matchStart + selected.length);
 		}
@@ -125,7 +125,7 @@ class Autocompletions extends Component {
 	}
 
 	handleAbort() {
-		this.setState({'selected': this.state.match});
+		this.setState({'selected': this.state.match, 'editMode': false});
 	}
 
 	getOptions( hint ) {
@@ -181,6 +181,7 @@ class Autocompletions extends Component {
 			}
 			else {
 				props.captureKeyDown(name, null);
+				this.setState({'editMode': false});
 			}
 		}
 	}
