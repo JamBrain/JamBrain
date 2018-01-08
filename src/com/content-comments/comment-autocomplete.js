@@ -110,7 +110,7 @@ class Autocompletions extends Component {
 		const {onSelect, text} = this.props;
 		selected = selected + ' ';
 		const updatedText = text.slice(0, matchStart) + selected + text.slice(matchEnd);
-		this.setState({'text': updatedText, 'selected': selected, 'editMode': false});
+		this.setState({'text': updatedText, 'selected': null, 'editMode': false});
 		if ( onSelect ) {
 			onSelect(updatedText, matchStart + selected.length);
 		}
@@ -199,7 +199,7 @@ export class AutocompleteEmojis extends Autocompletions {
 		this.state = {
 			'name': 'emojis',
 			'startPattern': /(\s| |^)(:[A-Za-z-_0-9]*)$/,
-			'endPattern': /^([A-Za-z-_0-9]*:?)( +|$)/,
+			'endPattern': /^([A-Za-z-_0-9]*:?)( +|$|\n)/,
 			'maxItems': 8,
 			'mrkd': new marked(),
 		};
@@ -256,7 +256,7 @@ export class AutocompleteAtNames extends Autocompletions {
 		this.state = {
 			'name': 'at-names',
 			'startPattern': /(\s| |^)(@[A-Za-z-_0-9]*)$/,
-			'endPattern': /^([A-Za-z-_0-9]*)( +|$)/,
+			'endPattern': /^([A-Za-z-_0-9]*)( +|$|\n)/,
 			'maxItems': 8,
 		};
 	}
