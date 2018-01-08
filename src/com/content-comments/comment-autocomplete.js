@@ -57,6 +57,7 @@ class Autocompletions extends Component {
 					'match': matchObj.match,
 					'matchStart': matchObj.matchStart,
 					'matchEnd': matchObj.matchEnd,
+					'matchEndNewLine': matchObj.matchEndNewLine
 				});
 			}
 			else {
@@ -76,11 +77,13 @@ class Autocompletions extends Component {
 			return null;
 		}
 		const right = text.slice(cursorPos).match(endPattern);
+		const endsInNewline = right[2] == '\n';
 		//console.log(left, right);
 		return {
 			'match': left[2] + (right ? right[0] : ''),
 			'matchStart': cursorPos - left[2].length,
 			'matchEnd': cursorPos + (right ? right[0].length : 0),
+			'matchEndNewLine': endsInNewline,
 		};
 	}
 
@@ -106,13 +109,13 @@ class Autocompletions extends Component {
 	}
 
 	executeSelect( selected ) {
-		const {matchStart, matchEnd, match} = this.state;
+		const {matchStart, matchEnd, match, matchEndNewLine} = this.state;
 		const {onSelect, text} = this.props;
-		selected = selected + ' ';
+		selected = selected + ' ' + (matchEndNewLine ? '\n' : '');
 		const updatedText = text.slice(0, matchStart) + selected + text.slice(matchEnd);
 		this.setState({'text': updatedText, 'selected': null, 'editMode': false});
 		if ( onSelect ) {
-			onSelect(updatedText, matchStart + selected.length);
+			onSelect(updatedText, matchStart + selected.length - (matchEndNewLine ? 1: 0));
 		}
 	}
 
