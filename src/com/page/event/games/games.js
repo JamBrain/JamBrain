@@ -8,11 +8,13 @@ export default class EventGames extends Component {
         let {node, user, path, extra, featured} = props;
 
         let DefaultSubFilter = 'all';
+
+        //TODO:: Make this automatically change between smart and danger
         let DefaultFilter = 'smart';
 
         // Results
         if ( node && node.meta && (node.meta['theme-mode'] >= 8) ) {
-            DefaultSubFilter = 'jam';//'all';
+            DefaultSubFilter = 'all';
             DefaultFilter = 'overall';
         }
 

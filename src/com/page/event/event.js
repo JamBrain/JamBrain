@@ -12,6 +12,8 @@ import Route							from "com/router/route";
 import EventStats						from "./stats/stats";
 import EventTheme						from "./theme/theme";
 import EventGames						from "./games/games";
+import EventMyGrades					from "./mygrades/mygrades";
+
 
 export default class PageEvent extends Component {
     render( props, state ) {
@@ -36,7 +38,7 @@ export default class PageEvent extends Component {
                     <Route default static path="/stats" component={EventStats} />
                     <Route static path="/theme/:page?" component={EventTheme} />
                     <Route static path={["/games/:filter?/:subfilter?", "/results/:filter?/:subfilter?"]} component={EventGames} />
-
+					<Route static path="/mygrades" component={EventMyGrades} node={node} />
                     <Route type="error" component={ContentError} />
                 </Router>
 			</div>

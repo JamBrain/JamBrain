@@ -20,6 +20,8 @@ export default class PageHomeGames extends Component {
 
 		let DefaultSubSubFilter = (featured && (featured.meta['theme-mode'] >= 5)) ? 'featured' : 'everything';
 		let DefaultSubFilter = 'all';
+
+		//TODO:: Make this automatically change between smart and danger
 		let DefaultFilter = 'smart';
 
 		function EvalFilter(str) {

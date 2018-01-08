@@ -5,7 +5,7 @@ const SHRUB_PATH = "../src/shrub/src";
 include_once __DIR__."/".CONFIG_PATH."/config.php";
 require_once __DIR__."/".SHRUB_PATH."/cron.php";
 require_once __DIR__."/".SHRUB_PATH."/node/node.php";
-require_once __DIR__."/".SHRUB_PATH."/note/note.php";
+require_once __DIR__."/".SHRUB_PATH."/comment/comment.php";
 require_once __DIR__."/".SHRUB_PATH."/grade/grade.php";
 
 // This is a CRON job that regularly updates magic
@@ -188,8 +188,8 @@ if ( $featured_id ) {
 					$classic_grade = sqrt($classic_team_grades * 100.0 / max(1.0, $classic_given_grades)) * 100.0 / 10.0;
 
 					// ** Calculate Feedback Score **************************************
-					$raw_team_feedback = noteLove_CountBySuperNotNodeAuthorKnownNotAuthor($node['parent'], $node['id'], $authors);
-					$raw_given_feedback = noteLove_CountBySuperNodeNotAuthorKnownNotAuthor($node['parent'], $node['id'], $authors);
+					$raw_team_feedback = commentLove_CountBySuperNotNodeAuthorKnownNotAuthor($node['parent'], $node['id'], $authors);
+					$raw_given_feedback = commentLove_CountBySuperNodeNotAuthorKnownNotAuthor($node['parent'], $node['id'], $authors);
 
 					$team_feedback = $raw_team_feedback / FEEDBACK_PER_NOTE;
 					$given_feedback = $raw_given_feedback / FEEDBACK_PER_NOTE;

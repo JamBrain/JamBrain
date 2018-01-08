@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__."/../note/note_core.php";
+require_once __DIR__."/../comment/comment_core.php";
 require_once __DIR__."/../grade/grade_core.php";
 
 const F_NODE_ALL = 0xFFFFFF;			// NOTE: 24bit. Bits above 24bit must be explicitly included
@@ -60,7 +60,7 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 //			else {
 //				$node['link'] = [];
 //			}
-//	
+//
 //			// TODO: Store Protected and Private Metadata
 //		}
 //	}
@@ -74,7 +74,7 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 			$node['parents'] = $paths['parent'];
 		}
 	}
-	
+
 	// **** //
 
 	// Populate Love
@@ -82,7 +82,7 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 		$loves = nodeLove_GetByNode($ids);
 		foreach ( $nodes as &$node ) {
 			$node['love'] = 0;
-			
+
 			foreach ( $loves as &$love ) {
 				if ( $node['id'] === $love['node'] ) {
 					$node['love'] = $love['count'];
@@ -94,16 +94,16 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 
 	// Populate Note (comment) Count
 	if ( $flags & F_NODE_COMMENT ) {
-		$notes = note_CountByNode($ids);
+		$comments = comment_CountByNode($ids);
 		foreach ( $nodes as &$node ) {
-			// Check if note data is public for this Node type
-			if ( note_IsNotePublicByNode($node) ) {
+			// Check if comment data is public for this Node type
+			if ( comment_IsCommentPublicByNode($node) ) {
 				$node['notes'] = 0;
-	
-				foreach ( $notes as $note ) {
-					if ( $node['id'] === $note['node'] ) {
-						$node['notes'] = $note['count'];
-						$node['notes-timestamp'] = $note['timestamp'];
+
+				foreach ( $comments as $comment ) {
+					if ( $node['id'] === $comment['node'] ) {
+						$node['notes'] = $comment['count'];
+						$node['notes-timestamp'] = $comment['timestamp'];
 					}
 				}
 			}
@@ -115,7 +115,7 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 		$games = node_IdToIndex(node_CountByAuthorType($ids, false, 'item', 'game'));
 		$articles = node_IdToIndex(node_CountByAuthorType($ids, false, 'page', 'article'));
 		$posts = node_IdToIndex(node_CountByAuthorType($ids, false, 'post'));
-	
+
 		foreach ( $nodes as &$node ) {
 			if ( $node['type'] == 'user' ) {
 				$node['games'] = isset($games[$node['id']]) ? $games[$node['id']]['count'] : 0;
@@ -124,7 +124,7 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 			}
 		}
 	}
-	
+
 	// **** //
 
 	// Populate Grades
@@ -138,7 +138,7 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 			}
 		}
 	}
-	
+
 	// Populate Magic
 	if ( $flags & F_NODE_MAGIC ) {
 		$magics = nodeMagic_GetByNode($ids);
@@ -150,7 +150,7 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 			}
 		}
 	}
-	
+
 	if ($multi)
 		return $nodes;
 	else
@@ -173,22 +173,22 @@ function nodeComplete_GetAuthored( $id ) {
 			}
 		}
 	}
-	
+
 	return $author_ids;
 }
 
 function nodeComplete_GetWhereIdCanCreate( $id ) {
 	$ret = [];
-	
+
 	// Scan for public nodes with 'can-create' metadata
 	$public_metas = nodeMeta_GetByKey("can-create", null, '='.SH_SCOPE_PUBLIC);
-	
+
 	// Add public nodes
 	foreach( $public_metas as &$meta ) {
 		if ( !isset($ret[$meta['value']]) ) {
 			$ret[$meta['value']] = [];
 		}
-		
+
 		$ret[$meta['value']][] = $meta['a'];
 	}
 
@@ -198,32 +198,32 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 	if ( !empty($authored_ids) ) {
 		// Scan for shared nodes I authored
 		$shared_metas = nodeMeta_GetByKeyNode("can-create", $authored_ids, '='.SH_SCOPE_SHARED);
-	
+
 		// Add shared nodes
 		foreach( $shared_metas as &$meta ) {
 			if ( in_array($meta['a'], $authored_ids) ) {
 				if ( !isset($ret[$meta['value']]) ) {
 					$ret[$meta['value']] = [];
 				}
-				
+
 				$ret[$meta['value']][] = $meta['a'];
 			}
 		}
 	}
 
-	
+
 //	// NOTE: This will get slower as the number of games increase
 //
 //	// Scan for nodes with 'can-create' metadata
 //	$metas = nodeMeta_GetByKey("can-create");
-//	
+//
 //	foreach( $metas as &$meta ) {
 //		// Add public nodes
 //		if ( $meta['scope'] == SH_SCOPE_PUBLIC ) {
 //			if ( !isset($ret[$meta['value']]) ) {
 //				$ret[$meta['value']] = [];
 //			}
-//			
+//
 //			$ret[$meta['value']][] = $meta['a'];
 //		}
 //		// Add shared nodes (primarily authored nodes)
@@ -232,7 +232,7 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 //				if ( !isset($ret[$meta['value']]) ) {
 //					$ret[$meta['value']] = [];
 //				}
-//				
+//
 //				$ret[$meta['value']][] = $meta['a'];
 //			}
 //		}
@@ -243,7 +243,7 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 //	$RESPONSE['where']['post'][] = $user_id;
 //	$RESPONSE['where']['item'][] = $user_id;
 //	$RESPONSE['where']['article'][] = $user_id;
-	
+
 	return $ret;
 }
 
@@ -259,7 +259,7 @@ function nodeComplete_GetWhatIdHasAuthoredByParent( $id, $parent ) {
 				$authored_ids[] = $node['id'];
 			}
 		}
-		
+
 		return $authored_ids;
 	}
 	return [];

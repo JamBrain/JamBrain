@@ -22,15 +22,12 @@ export default class NotificationsFeed extends NotificationsBase {
 			'errorStatus': 0,
 			'maxReadId': 0,
 			'offset': 0,
-			'limit': 30,
+			'limit': 40,
 			'count': 0,
 			'notifications': null,
 			'notificationIds': [],
 			'status': null,
 			'highestRead': -1,
-			'filters': {
-				'comment': false,
-			},
 		};
 		this.fetchMore = this.fetchMore.bind(this);
 	}
@@ -67,7 +64,6 @@ export default class NotificationsFeed extends NotificationsBase {
 		const hasMore = !processing && ((state.offset + this.state.limit) < state.count);
 		const hasUnread = this.getHighestNotificationInFeed() > maxReadId;
 		let ShowNotifications = [];
-		const caller_id = state.caller_id;
 		const notifications = state.notifications;
 		const notificationsOrder = this.getNotificationsOrder();
 		const notificationsArray = [];
@@ -77,7 +73,6 @@ export default class NotificationsFeed extends NotificationsBase {
 			if (this.shouldShowNotification(notification)) {
 				ShowNotifications.push((
 					<Notification
-						caller_id={caller_id}
 						notification={notification}
 						class={cN("-item -notification", (notification.notification[0].id>maxReadId)?'-new-comment':'')}
 						id={'notification-' + identifier}
@@ -110,9 +105,10 @@ export default class NotificationsFeed extends NotificationsBase {
 
 		const ShowError = state.errorStatus ? ( <div class="-error">Error code {state.errorStatus} while fetching notifications</div> ) : null;
 
+		const filters = $Notification.GetFilters();
 		const view = (
 			<div class="-notifications">
-				<NotificationsFilter handleFilterChange={this.handleFilterChange} filters={state.filters} notifications={notificationsArray}/>
+				<NotificationsFilter handleFilterChange={this.handleFilterChange} filters={filters} notifications={notificationsArray}/>
 				{ShowSetAllRead}
 				{ShowError}
 				{ShowNotifications}

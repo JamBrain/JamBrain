@@ -9,8 +9,8 @@ import IMG2 							from 'com/img2/img2';
 
 import ContentCommentsMarkup			from 'comments-markup';
 
-import $Note							from '../../shrub/js/note/note';
-import $NoteLove						from '../../shrub/js/note/note_love';
+import $Comment							from '../../shrub/js/comment/comment';
+import $CommentLove						from '../../shrub/js/comment/comment_love';
 
 export default class ContentCommentsComment extends Component {
 	constructor( props ) {
@@ -72,7 +72,7 @@ export default class ContentCommentsComment extends Component {
 	onSave( e ) {
 		var comment = this.props.comment;
 
-		$Note.Update( comment.id, comment.node, comment.body )
+		$Comment.Update( comment.id, comment.node, comment.body )
 		.then(r => {
 			console.log(r);
 
@@ -109,7 +109,7 @@ export default class ContentCommentsComment extends Component {
 		if ( this.props.user.id != 0 && this.props.user.id != null ) {
 			if ( this.props.comment.id != null ) {
 				if ( this.state.loved ) {
-					$NoteLove.Remove(this.props.comment.node, this.props.comment.id)
+					$CommentLove.Remove(this.props.comment.node, this.props.comment.id)
 					.then(r => {
 						if ( r.removed != 0 ) {
 							this.setState({'loved': false, 'lovecount': this.state.lovecount - 1});
@@ -117,7 +117,7 @@ export default class ContentCommentsComment extends Component {
 					});
 				}
 				else {
-					$NoteLove.Add(this.props.comment.node, this.props.comment.id)
+					$CommentLove.Add(this.props.comment.node, this.props.comment.id)
 					.then(r => {
 						if ( r.id != 0 ) {
 							this.setState({'loved': true, 'lovecount': this.state.lovecount + 1});
