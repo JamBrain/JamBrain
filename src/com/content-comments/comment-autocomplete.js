@@ -77,7 +77,7 @@ class Autocompletions extends Component {
 			return null;
 		}
 		const right = text.slice(cursorPos).match(endPattern);
-		const endsInNewline = right[2] == '\n';
+		const endsInNewline = right && right[2] == '\n';
 		//console.log(left, right);
 		return {
 			'match': left[2] + (right ? right[0] : ''),
