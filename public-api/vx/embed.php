@@ -13,8 +13,8 @@
 	function getEmbedType($url_to_parse) {
 		global $embed_type, $regex_json;
 
-		$twitter_regex = "/^(?:http|https):\/\/twitter\.com\/(\w+)\/status(?:es)*\/(\d+)$/";
-		$itch_regex = "/^(?:http|https):\/\/(.*)\.itch\.io\/(.*+)$/";
+		$twitter_regex = "/twitter\.com\/(\w+)\/status(?:es)*\/(\d+)$/";
+		$itch_regex = "/(.*)\.itch\.io\/(.+)$/";
 		//$soundcloud_regex = "/^(?:http|https):\/\/(.*)\.itch\.io\/(.*+)$/";
 
 		if(preg_match($twitter_regex, $url_to_parse, $regex_json) == 1) {
@@ -116,8 +116,14 @@
 
 				case "itch":
 					JavaScript.load("https://static.itch.io/api.js", function() {
+						var url = regexJson[1].split("//");
+						var user = url[0];
+						if(url.length >= 1) {
+							user = url[1];
+						}
+
 						Itch.getGameData({
-							user: regexJson[1],
+							user: user,
 							game: regexJson[2],
 							onComplete: function(data) {
 								target.innerHTML = '<iframe class="itch" src="https://itch.io/embed/' + data.id + '" width="552" frameborder="0" height="167" />';
