@@ -205,7 +205,7 @@ export default class Renderer {
 
 							if ( match !== null ) {
 								// embedable domain found, will embed this content in the page.
-								return {"type": "embed", "match": match[1], "info": smartdomain};
+								return {"type": "embed", "match": match[1], "info": smartdomain, "url": url.href};
 							}
 						}
 						// smart but none embedable domain found, these get icons next to them

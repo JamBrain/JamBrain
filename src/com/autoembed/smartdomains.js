@@ -25,11 +25,16 @@ export default SmartDomains = [
     },
     {
         "domain": "twitter.com",
-        "icon_name": "twitter"
+        "icon_name": "twitter",
+        "embed_test": /twitter\.com\/(\w+)\/status(?:es)*\/(\d+)$/
     },
     {
         "domain": "soundcloud.com",
         "icon_name": "soundcloud"
+    },
+    {
+        "domain": "itch.io",
+        "embed_test": "(.*)\.itch\.io\/(.+)$"
     }
 ];
 
