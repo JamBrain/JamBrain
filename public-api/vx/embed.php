@@ -15,12 +15,15 @@
 
 		$twitter_regex = "/twitter\.com\/(\w+)\/status(?:es)*\/(\d+)$/";
 		$itch_regex = "/(.*)\.itch\.io\/(.+)$/";
+		$gfycat_regex = "/gfycat\.com\/(\w+)/";
 		//$soundcloud_regex = "/^(?:http|https):\/\/(.*)\.itch\.io\/(.*+)$/";
 
 		if(preg_match($twitter_regex, $url_to_parse, $regex_json) == 1) {
 			$embed_type = "twitter";
 		} else if(preg_match($itch_regex, $url_to_parse, $regex_json) == 1) {
 			$embed_type = "itch";
+		} else if(preg_match($gfycat_regex, $url_to_parse, $regex_json) == 1) {
+			$embed_type = "gfycat";
 		}
 		/* else if(preg_match($soundcloud_regex, $url_to_parse, $regex_json) == 1) {
 			$embed_type = "soundcloud";
@@ -139,6 +142,9 @@
 					    	maxwidth: 552,
 					  	}).then(messageClient);
 					  });
+				  	break;
+				case "gfycat": 
+					target.innerHTML = "<div style='position:relative;padding-bottom:51%'><iframe src='https://gfycat.com/ifr/" + regexJson[1] + "' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen></iframe></div>";
 				  	break;
 			}
 		}

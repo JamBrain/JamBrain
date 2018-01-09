@@ -35,6 +35,10 @@ export default SmartDomains = [
     {
         "domain": "itch.io",
         "embed_test": "(.*)\.itch\.io\/(.+)$"
+    },
+    {
+        "domain": "gfycat.com",
+        "embed_test": /gfycat\.com\/(\w+)/
     }
 ];
 

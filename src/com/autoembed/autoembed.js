@@ -18,6 +18,7 @@ export default class AutoEmbed extends Component {
       case "soundcloud.com":
       case "itch.io":
       case "twitter.com":
+      case "gfycat.com":
         return <UIEmbedFrame url={props.link.url} id={props.link.match} />;
         break;
       default:
