@@ -20,6 +20,7 @@ install:
 #  - sudo apt-get install -y nodejs
 
 # Install Node packages
+  - npm --version
   - npm install
   
 script:
