@@ -2,27 +2,43 @@ language: node_js
 #sudo: enabled
 
 install:
-  - sudo echo "deb http://download.virtualbox.org/virtualbox/debian wheezy contrib" | sudo tee -a /etc/apt/sources.list
-  - wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
-  - wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
-  - sudo apt-get update
-  - sudo apt-get -y install linux-headers-$(uname -r)
-  - sudo apt-get -y install virtualbox-5.2
-  - VBoxManage -v
-  - wget https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_x86_64.deb
-  - sudo dpkg -i vagrant_2.0.1_x86_64.deb
-  - pwd
-  - echo $HOME
-  - echo $TRAVIS_REPO_SLUG
-  - git clone https://github.com/ludumdare/dairybox.git dairybox
-  - sudo /opt/vagrant/bin/vagrant plugin install vagrant-exec
-  - cd "dairybox/www"
-  - git init
-  - git remote add origin https://github.com/ludumdare/ludumdare.git
-  - git fetch
-  - git checkout -t origin/master
+  - sudo add-apt-repository -y ppa:ondrej/php
+  - sudo apt update
+  - sudo apt install php7.0 php7.0-mbstring php7.0-xml
+
+# Install Image and Video/GIF Manipulation Tools
+  - sudo add-apt-repository -y ppa:mc3man/trusty-media
+  - sudo add-apt-repository -y ppa:jamedjo/ppa
+  - sudo apt update
+  - sudo apt install ffmpeg imagemagick pngquant gifsicle webp
+
+
+# Install Node.js (note you may need to uninstall it first for this to work)
+  - curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
+  - sudo apt install -y nodejs
+
+# Install Node packages
+  - npm install
+#  - sudo echo "deb http://download.virtualbox.org/virtualbox/debian wheezy contrib" | sudo tee -a /etc/apt/sources.list
+#  - wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
+#  - wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
+#  - sudo apt-get update
+#  - sudo apt-get -y install linux-headers-$(uname -r)
+#  - sudo apt-get -y install virtualbox-5.2
+#  - VBoxManage -v
+#  - wget https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_x86_64.deb
+#  - sudo dpkg -i vagrant_2.0.1_x86_64.deb
+#  - pwd
+#  - echo $HOME
+#  - echo $TRAVIS_REPO_SLUG
+#  - git clone https://github.com/ludumdare/dairybox.git dairybox
+#  - sudo /opt/vagrant/bin/vagrant plugin install vagrant-exec
+#  - cd "dairybox/www"
+#  - git init
+#  - git remote add origin https://github.com/ludumdare/ludumdare.git
+#  - git fetch
+#  - git checkout -t origin/master
   
 script:
-  - sudo /opt/vagrant/bin/vagrant up
-  - sudo /opt/vagrant/bin/vagrant ssh --command "cd www && make"
-  - sudo /opt/vagrant/bin/vagrant ssh --command "./www/sandbox/simulate_ld_event 5 actions"
+  - cd www && make
+  - ./www/sandbox/simulate_ld_event 5 actions
