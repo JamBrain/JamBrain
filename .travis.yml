@@ -1,7 +1,13 @@
 language: node_js
 #sudo: enabled
 before_install: 
-  - if [[ `npm -v` != 5* ]]; then npm i -g npm@5; fi
+  - if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
+# Install Node.js (note you may need to uninstall it first for this to work)
+  - curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
+  - sudo apt-get install -y nodejs
+
+# Install Node packages
+  - npm --version
   
 install:
   - sudo add-apt-repository -y ppa:ondrej/php
@@ -15,12 +21,6 @@ install:
   - sudo apt-get install -y ffmpeg imagemagick pngquant gifsicle webp
 
 
-# Install Node.js (note you may need to uninstall it first for this to work)
-  - curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
-  - sudo apt-get install -y nodejs
-
-# Install Node packages
-  - npm --version
   - npm install
   
 script:
