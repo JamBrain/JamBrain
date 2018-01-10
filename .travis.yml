@@ -40,8 +40,5 @@ install:
 #  - git checkout -t origin/master
   
 script:
-  - pwd
-  - ls
-  - ls $TRAVIS_BUILD_DIR
-  - cd $TRAVIS_BUILD_DIR/www && make
-  - ./www/sandbox/simulate_ld_event 5 actions
+  - make
+  - ./sandbox/simulate_ld_event 5 actions
