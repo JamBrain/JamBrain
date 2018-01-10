@@ -19,26 +19,6 @@ install:
 
 # Install Node packages
   - npm install
-#  - sudo echo "deb http://download.virtualbox.org/virtualbox/debian wheezy contrib" | sudo tee -a /etc/apt/sources.list
-#  - wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
-#  - wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
-#  - sudo apt-get update
-#  - sudo apt-get -y install linux-headers-$(uname -r)
-#  - sudo apt-get -y install virtualbox-5.2
-#  - VBoxManage -v
-#  - wget https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_x86_64.deb
-#  - sudo dpkg -i vagrant_2.0.1_x86_64.deb
-#  - pwd
-#  - echo $HOME
-#  - echo $TRAVIS_REPO_SLUG
-#  - git clone https://github.com/ludumdare/dairybox.git dairybox
-#  - sudo /opt/vagrant/bin/vagrant plugin install vagrant-exec
-#  - cd "dairybox/www"
-#  - git init
-#  - git remote add origin https://github.com/ludumdare/ludumdare.git
-#  - git fetch
-#  - git checkout -t origin/master
   
 script:
   - make
-  - ./sandbox/simulate_ld_event 5 actions
