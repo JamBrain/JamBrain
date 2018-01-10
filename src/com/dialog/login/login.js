@@ -62,6 +62,12 @@ export default class DialogLogin extends Component {
 			});
 	}
 
+	componentDidMount() {
+		if (this.nameInput) {
+			this.nameInput.focus();
+		}
+	}
+
 	render( props, {login, password, remember, error} ) {
 		var new_props = {
 			'title': 'Log in'
@@ -75,7 +81,7 @@ export default class DialogLogin extends Component {
 				<DialogCommon ok oktext="Log In" onok={this.doLogin} cancel {...new_props}>
 					<div>
 						<div class="-input-container">
-							<input autofocus id="dialog-login-login" onchange={this.onLoginChange} class="-text -block focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="254" value={login} />
+							<input autofocus id="dialog-login-login" onchange={this.onLoginChange} class="-text -block focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="254" value={login} ref={(input)=>{this.nameInput = input;}}/>
 						</div>
 					</div>
 					<div>
