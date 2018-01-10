@@ -26,39 +26,27 @@ function grade_GetByNodeAuthor( $node_id, $author_id ) {
 	);
 }
 
-// Output an object containing id'd key/value pairs
-function _grade_QueryFetchIdKeyValueMeta( $query, $metaName, ...$args ) {
-	$out = db_QueryFetchArray($query, ...$args);
-	
-	$ret = [];
-	if ( is_array($out) ) {
-		foreach ( $out as &$value ) {
-			if ( !isset($ret[$value[0]]) ) {
-				$ret[$value[0]] = [];
-			}
-			
-			$ret[$value[0]][$value[1]] = $value[2];			
-			$ret[$value[0]][$value[1] . $metaName] = $value[3];			
-		}
-	}
-	
-	return $ret;
-}
-
 function grade_GetByAuthorParent( $author_id, $parent_id ) {
-	return _grade_QueryFetchIdKeyValueMeta(
-		"SELECT
+	$ret = [];
+	$query = "SELECT
 			node AS id,
 			name,
 			value,
 			timestamp
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_GRADE."
 		WHERE author=? AND parent=?
-		;",
-		'-timestamp',
-		$author_id,
-		$parent_id
-	);
+		;";
+	$out = db_QueryFetchArray($query, $author_id, $parent_id);
+	if ( is_array($out) ) {
+		foreach ( $out as &$value ) {
+			if ( !isset($ret[$value[0]]) ) {
+				$ret[$value[0]] = [];
+			}
+			$ret[$value[0]][$value[1]] = $value[2];			
+			$ret[$value[0]][$value[1] . "-timestamp"] = $value[3];			
+		}
+	}	
+	return $ret;
 }
 
 function grade_GetNodeIdByAuthorParent( $author_id, $parent_id ) {
