@@ -1,7 +1,7 @@
 language: node_js
 #sudo: enabled
 before_install: 
-  - if [[ `npm -v` != 9* ]]; then npm i -g npm@9; fi
+  - if [[ `npm -v` != 5* ]]; then npm i -g npm@5.6.0; fi
   
 install:
   - sudo add-apt-repository -y ppa:ondrej/php
