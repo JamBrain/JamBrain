@@ -35,18 +35,37 @@ export default class InputTextarea extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		const {replaceText, cursorPos, replaceTextEvent} = nextProps;
+		let {replaceText, cursorPos, replaceTextEvent, maxlength} = nextProps;
 		const prevReplaceTextEvent = this.replaceTextEvent;
 		this.props.value = replaceText;
 		// console.log(!!replaceText, this.textarea, replaceTextEvent, prevReplaceTextEvent);
 		if ( replaceText && this.textarea && (replaceTextEvent != prevReplaceTextEvent) ) {
-			const {oncaret} = this.props;
+			const {oncaret, onmodify} = this.props;
+			let updated = false;
+			if (maxlength && replaceText.length > maxlength) {
+				replaceText = this.textarea.value;
+				updated = true;
+			}
 			this.textarea.value = replaceText;
 			this.textarea.focus();
+			this.replaceTextEvent = replaceTextEvent;
+
+			if (updated && onmodify) {
+				onmodify({
+					'target': {
+						'value': replaceText, 'selectionStart': cursorPos, 'selectionEnd': cursorPos
+					},
+				});
+			}
 			this.textarea.selectionStart = cursorPos;
 			this.textarea.selectionEnd = cursorPos;
-			this.replaceTextEvent = replaceTextEvent;
-			oncaret({'target': this.textarea, 'key': 'ImaginaryKey'});
+			if (oncaret) {
+				oncaret({
+					'target': {
+						'value': replaceText, 'selectionStart': cursorPos, 'selectionEnd': cursorPos
+					},
+					'key': 'ImaginaryKey'});
+			}
 		}
 	}
 
