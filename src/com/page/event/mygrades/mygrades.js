@@ -472,9 +472,9 @@ class GradeStats extends Component {
 	getVotesBias( jamGrades, compoGrades, gradeNames ) {
 		const bias = {};
 		for ( let gradeKey in gradeNames ) {
-			const jamAvg = this.getAverage(jamGrades, gradeKey, 1);
-			const compoAvg = this.getAverage(compoGrades, gradeKey, 1);
-			bias[gradeKey] = jamAvg - compoAvg;
+			const jamAvg = this.getAverage(jamGrades, gradeKey, 5);
+			const compoAvg = this.getAverage(compoGrades, gradeKey, 5);
+			bias[gradeKey] = Number((jamAvg - compoAvg).toFixed(1));
 		}
 		return bias;
 	}

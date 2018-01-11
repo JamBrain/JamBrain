@@ -14,12 +14,15 @@ export default class BarChart extends Component {
     scaleValues( values ) {
 
         let max = 1;
+		let min = 0;
         values.forEach( ( v ) => ( max = (v > max) ? v : max ) );
+        values.forEach( ( v ) => ( min = (v < min) ? v : min ) );
 
         // scale values based on max
-        let adjusted = values.map( ( v ) => ( 100 * (v / max) ) );
+		const zero = 100 * (0 - min) / (max - min);
+        const adjusted = values.map( ( v ) => ( 100 * v / (max - min) ) );
 
-        return adjusted;
+        return {'adjusted': adjusted, 'zero': zero};
     }
 
 
@@ -32,7 +35,7 @@ export default class BarChart extends Component {
             return <div>No Data!</div>;
         }
 
-        let adjusted = this.scaleValues(values);
+        let {adjusted, zero} = this.scaleValues(values);
 		let width = 100/values.length;
 
 		let total = values.reduce((a, b) => a + b, 0);
@@ -46,7 +49,7 @@ export default class BarChart extends Component {
 		for ( var i = 0; i < values.length; i++ ) {
 
 			let color = 1 + ( i % 6 );
-			Bars.push(<Bar height={adjusted[i]} width={width} index={i} color={color} />);
+			Bars.push(<Bar height={adjusted[i]} zero={zero} width={width} index={i} color={color} />);
 
 			if ( !hideLegend ) {
 				if ( use_percentages ) {
