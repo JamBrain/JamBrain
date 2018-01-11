@@ -469,12 +469,12 @@ class GradeStats extends Component {
 		return counter;
 	}
 
-	getVotesBias( grades, filter, gradeNames ) {
+	getVotesBias( jamGrades, compoGrades, gradeNames ) {
 		const bias = {};
 		for ( let gradeKey in gradeNames ) {
-			const groupA = this.getAverage(grades.filter((f, idx) => filter[idx]), gradeKey, 1);
-			const groupB = this.getAverage(grades.filter((f, idx) => !filter[idx]), gradeKey, 1);
-			bias[gradeKey] = groupA - groupB;
+			const jamAvg = this.getAverage(jamGrades, gradeKey, 1);
+			const compoAvg = this.getAverage(compoGrades, gradeKey, 1);
+			bias[gradeKey] = jamAvg - compoAvg;
 		}
 		return bias;
 	}
@@ -529,6 +529,9 @@ class GradeStats extends Component {
 	}
 
 	averageArray( arr, decimals ) {
+		if (arr.length == 0) {
+			return NaN;
+		}
 		return Number((arr.reduce((a, b) => a + b) / arr.length).toFixed(decimals));
 	}
 
@@ -601,9 +604,10 @@ class GradeStats extends Component {
 		else if ( showByType ) {
 			DetailGraphTitle = 'JAM vs COMPO average bias';
 			DetailLabels = GradeNamesList;
+			console.log(grades.map(grade => nodes.filter(node => node.id == grade.id)[0].subsubtype));
 			votesData = this.getVotesBias(
-				nodes.map(node => grades.filter(grade => grade.id == node.id)),
-				nodes.map(node => (node.subsubtype == 'jam')),
+				grades.filter(grade => nodes.filter(node => node.id == grade.id)[0].subsubtype == 'jam'),
+				grades.filter(grade => nodes.filter(node => node.id == grade.id)[0].subsubtype != 'jam'),
 				gradeNames);
 			DetailValues = [];
 			for ( let grade in gradeNames ) {
