@@ -6,6 +6,7 @@ export default class UIEmbedFrame extends Component {
 
 		this.state = {
 			"height": window.innerHeight + "px",
+			"width": window.innerWidth + "px",
 			"visible": false
 		};
 
@@ -26,15 +27,15 @@ export default class UIEmbedFrame extends Component {
 
 	onMessage(event) {
 		if (event.data.hasOwnProperty("request_height") && event.data.hasOwnProperty("url")) {
-			if (event.data.request_height > 0 && event.data.url == this.props.url) {
+			if (event.data.request_height > 0 && event.data.url == this.props.link.url) {
 				this.setState({"height": event.data.request_height, "visible": true});
 			}
 		}
 	}
 
 	render( props, state ) {
-		let {url} = this.props;
-		let {height, visible} = this.state;
+		let {url} = this.props.link;
+		let {height, width, visible} = this.state;
 
 		let src = API_ENDPOINT + "/vx/embed?url=" + url;
 
@@ -44,7 +45,7 @@ export default class UIEmbedFrame extends Component {
 		}
 
 		return (
-			<iframe style={style} height={height} sandbox="allow-same-origin allow-popups allow-forms allow-scripts allow-top-navigation" ref={(f) => this.ifr = f } frameborder="none" scrolling="no" width="100%" src={src} />
+			<iframe style={style} width="100%" height={height} sandbox="allow-same-origin allow-popups allow-forms allow-scripts allow-top-navigation" ref={(f) => this.ifr = f } frameborder="none" scrolling="no" src={src} />
 		);
 	}
 }

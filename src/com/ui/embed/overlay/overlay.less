@@ -1,0 +1,31 @@
+@import "defs.less";
+@import '../../../../custom/brandcolors/brandcolors.less';
+
+/*
+* Overrides 'video-embeds' styling with youtube specific brand colors.
+*/
+
+#content .embed-overlay {
+	& > .-thumbnail {
+		& > .-overlay {
+			&:hover > .-icon {
+				color: @COL_L;
+				background: @bc-youtube;
+			}
+
+			& > .-external {
+				color: @bc-youtube;
+				background: fade(@COL_D, 50%);
+
+				&:hover {
+					background: @bc-youtube;
+				}
+
+				& > a,
+				& > a:visited {
+					color: @COL_L;
+				}
+			}
+		}
+	}
+}

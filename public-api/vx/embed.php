@@ -2,6 +2,7 @@
   	header('Content-type: text/html');
   	header('Access-Control-Allow-Origin: *;');
 	$url = $_GET['url'];
+	$autoplay = (isset($_GET['autoplay']) ? $_GET['autoplay'] : 0);;
 
 	$embed_type = "none";
 	$regex_json = "{}";
@@ -16,6 +17,13 @@
 		$twitter_regex = "/twitter\.com\/(\w+)\/status(?:es)*\/(\d+)$/";
 		$itch_regex = "/(.*)\.itch\.io\/(.+)$/";
 		$gfycat_regex = "/gfycat\.com\/(\w+)/";
+		$streamable_regex = "/streamable\.com\/(\w+)/";
+		//Youtube regex's
+		$youtube_regex = "/(?:youtube\\.com\\/watch\\?v=)(.*)(?:)/";
+		$youtbe_regex = "/(?:youtu\\.be\\/)(.*)(?:)/";
+
+		$sketchfab_regex = "/sketchfab\.com\/models\/(\w+)/";
+
 		//$soundcloud_regex = "/^(?:http|https):\/\/(.*)\.itch\.io\/(.*+)$/";
 
 		if(preg_match($twitter_regex, $url_to_parse, $regex_json) == 1) {
@@ -24,6 +32,14 @@
 			$embed_type = "itch";
 		} else if(preg_match($gfycat_regex, $url_to_parse, $regex_json) == 1) {
 			$embed_type = "gfycat";
+		} else if(preg_match($streamable_regex, $url_to_parse, $regex_json) == 1) {
+			$embed_type = "streamable";
+		} else if(preg_match($youtube_regex, $url_to_parse, $regex_json) == 1) {
+			$embed_type = "youtube";
+		} else if(preg_match($youtbe_regex, $url_to_parse, $regex_json) == 1) {
+			$embed_type = "youtube";
+		} else if(preg_match($sketchfab_regex, $url_to_parse, $regex_json) == 1) {
+			$embed_type = "sketchfab";
 		}
 		/* else if(preg_match($soundcloud_regex, $url_to_parse, $regex_json) == 1) {
 			$embed_type = "soundcloud";
@@ -53,6 +69,10 @@
 		       max-width: 552px;
 		       width: 100%;
 	       }
+/*	       iframe.youtube {
+	       		width: 100vw; 
+    			height: 56.25vw;
+	       }*/
 
 	</style>
 
@@ -131,6 +151,7 @@
 		var EMBED_TYPE = "<?php echo $embed_type ?>";
 		var REGEX_JSON = <?php echo json_encode($regex_json) ?>;
 		var URL = "<?php echo $url ?>";
+		var AUTOPLAY = "<?php echo $autoplay ?>";
 
 		var client;
 
@@ -138,10 +159,10 @@
 			var target = document.getElementById('container');
 
 			var height = Math.max(
-					Math.max(target.scrollHeight, target.scrollHeight),
-					Math.max(target.offsetHeight, target.offsetHeight),
-					Math.max(target.clientHeight, target.clientHeight)
-				);
+					target.scrollHeight,
+					target.offsetHeight,
+					target.clientHeight
+			);
 
 			return height;
 		}
@@ -203,17 +224,29 @@
 				case "gfycat": 
 					target.innerHTML = "<div style='position:relative;padding-bottom:51%'><iframe src='https://gfycat.com/ifr/" + regexJson[1] + "' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen></iframe></div>";
 				  	break;
+				case "streamable": 
+					var params = "";
+					if(AUTOPLAY == 1) {
+						params = "?autoplay=" + AUTOPLAY;
+					}
+
+					target.innerHTML = "<div style='position:relative;padding-bottom:51%'><iframe src='https://streamable.com/o/" + regexJson[1] + params + "' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen></iframe></div>";
+				  	break;
+				case "youtube": 
+					target.innerHTML = "<div style='position:relative;padding-bottom:56.25%'><iframe class='youtube' src='https://www.youtube.com/embed/" + regexJson[1] + "?autoplay=" + AUTOPLAY + "' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen></iframe></div>";
+				  	break;
+				case "sketchfab":
+					target.innerHTML = "<div style='position:relative;padding-bottom:56.25%'><iframe src='https://sketchfab.com/models/" + regexJson[1] + "/embed?autostart=" + AUTOPLAY +"' style='position:absolute;top:0;left:0;' frameborder='0' scrolling='no' width='100%' height='100%'></iframe></div>";
+				  	break;
 			}
 		}
 	</script>
-</head>
-<body>
-	<center>
+	</head>
+	<body>
 		<div id="main">
 			<div id="container">
 			</div>
 		</div>
-	</center>
 	<script type="text/javascript">
 		handleEmbed(EMBED_TYPE, REGEX_JSON);
 	</script>

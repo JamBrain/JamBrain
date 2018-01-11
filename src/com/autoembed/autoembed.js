@@ -1,7 +1,7 @@
 import { h, Component } from "preact/preact";
 
 import YoutubeEmbed from "com/autoembed/youtube";
-import UIEmbedFrame from "com/ui/embed-frame/embed-frame";
+import UIEmbedFrame from "com/ui/embed/frame/frame";
 
 export default class AutoEmbed extends Component {
   constructor(props) {
@@ -9,6 +9,8 @@ export default class AutoEmbed extends Component {
   }
 
   render(props) {
+    if(props.link.info.heavy) {}
+
     switch (props.link.info.domain) {
       case "youtube.com":
       case "youtu.be":
@@ -19,6 +21,7 @@ export default class AutoEmbed extends Component {
       case "itch.io":
       case "twitter.com":
       case "gfycat.com":
+      case "streamable.com":
         return <UIEmbedFrame url={props.link.url} id={props.link.match} />;
         break;
       default:
