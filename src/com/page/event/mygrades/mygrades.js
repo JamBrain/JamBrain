@@ -604,7 +604,6 @@ class GradeStats extends Component {
 		else if ( showByType ) {
 			DetailGraphTitle = 'JAM vs COMPO average bias';
 			DetailLabels = GradeNamesList;
-			console.log(grades.map(grade => nodes.filter(node => node.id == grade.id)[0].subsubtype));
 			votesData = this.getVotesBias(
 				grades.filter(grade => nodes.filter(node => node.id == grade.id)[0].subsubtype == 'jam'),
 				grades.filter(grade => nodes.filter(node => node.id == grade.id)[0].subsubtype != 'jam'),
