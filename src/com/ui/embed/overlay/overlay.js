@@ -1,5 +1,6 @@
 import {h, Component} from 'preact/preact';
 import SVGIcon from 'com/svg-icon/icon';
+import NavSpinner from 'com/nav-spinner/spinner';
 
 export default class UIEmbedOverlay extends Component {
   constructor( props ) {
@@ -8,23 +9,16 @@ export default class UIEmbedOverlay extends Component {
     if (props.link.info.thumbnail) {
       let thumbnail = props.link.info.thumbnail(props);
 
-      console.log("t", thumbnail);
-
       Promise.resolve(thumbnail).then((url) => {
         this.setState({"thumbnail": url});
       });
 
-      // if(this.isPromise(thumbnail)) {
-      //   thumbnail.then((url) => {
-      //     console.log("u", url);
-      //   });
-      // } else {
-      //     this.setState({"thumbnail": thumbnail});
-      // }
+      this.onIframeLoad = this.onIframeLoad.bind(this);
     }
 
     this.state = {
-      'iframe': false
+      'iframe': false,
+      "loaded": false
     };
 
     this.onClick = this.onClick.bind(this);
@@ -34,33 +28,41 @@ export default class UIEmbedOverlay extends Component {
     this.setState({'iframe': true});
   }
 
-  isPromise(object){
-    if(Promise && Promise.resolve){
-      return Promise.resolve(object) == object;
+  onIframeLoad() {
+    this.setState({"loaded": true});
+  }
+
+  componentWillUpdate() {
+    if(this.component) {
+        this.component.base.addEventListener('load', this.onIframeLoad);
     }
   }
 
   render( props, state ) {
-    let { thumbnail, iframe } = state;
+    let { thumbnail, iframe, loaded } = state;
 
-    let Element = <props.link.info.component {...props} />;
+    let Element = (
+      <div class="-element">
+        <props.link.info.component {...props} ref={(component) => {this.component = component;}} onLoad={this.onIframeLoad} />
+      </div>
+    );
 
-    // if ( state.iframe ) {
-    //   return (
-    //     <props.link.info.component {...props} />
-    //   );
-    // }
+    let Icon = <SVGIcon middle>play</SVGIcon>;
+    if ( iframe && !loaded ) {
+      Icon = <NavSpinner />;
+    }
 
     if ( !thumbnail ) {
       return <div />;
     }
 
     return (
-      <div class="embed-video">
-        <div class="-thumbnail">
+      <div class="embed-overlay">
+        <div class="-preview">
+        {iframe ? Element : null}
           <div class="-overlay" onclick={this.onClick} >
-            <div class="-play ">
-              <SVGIcon middle>play</SVGIcon>
+            <div class="-icon ">
+              {Icon}
             </div>
             <div class="-external">
               <a href={props.link.url} target="_blank" onclick={(e) => {
@@ -70,10 +72,9 @@ export default class UIEmbedOverlay extends Component {
               </a>
             </div>
           </div>
-          <img src={thumbnail}/>
-
-          {iframe ? Element : null}
-        {/* src={yt_thumbnail_prefix + props.link.match + yt_thumbnail_suffix}/>*/}
+          <div class="-thumbnail">
+          </div>
+          <img style={loaded ? "visibility: hidden;" : ""} src={thumbnail}/>
         </div>
       </div>
     );

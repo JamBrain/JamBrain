@@ -41,19 +41,6 @@ export default SmartDomains = [
     },
     {
         "parent": "@base",
-        "name": "Streamable",
-        "domain": "streamable.com",
-        "embed_test": /streamable\.com\/(\w+)/,
-        "heavy": true,
-        "thumbnail": (props) => {
-            return Fetch.Get("https://api.streamable.com/oembed.json?url=" + props.link.url)
-            .then((res) => {
-                return Promise.resolve(res.thumbnail_url.replace("?height=100", "?height=720"));
-            });
-        }
-    },
-    {
-        "parent": "@base",
         "name": "Sketchfab",
         "domain": "sketchfab.com",
         "embed_test": /sketchfab\.com\/models\/(\w+)/,

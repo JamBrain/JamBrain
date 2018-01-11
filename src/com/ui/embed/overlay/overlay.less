@@ -1,9 +1,138 @@
 @import "defs.less";
 @import '../../../../custom/brandcolors/brandcolors.less';
 
-/*
-* Overrides 'video-embeds' styling with youtube specific brand colors.
-*/
+#content .embed-overlay {
+	max-width: 100%;
+	margin: auto;
+
+	position: relative;
+
+	cursor: pointer;
+
+	& > .-preview {
+		position: relative;
+
+		& > .-element {
+			position: absolute;
+
+			max-height: 720px;
+
+			& > iframe {
+				max-height: 720px;
+			}
+
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			z-index: 15;
+		}
+
+		& > .-thumbnail {
+		}
+
+		& > .-overlay {
+			position: absolute;
+
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			z-index: 10;
+
+			& > .-icon {
+				position: absolute;
+
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%,-50%);
+
+				font-size: 3em;
+				color: @COL_L;
+				background: fade(@COL_D, 50%);
+				transition: all 0.2s;
+
+				& > div {
+					display: block;
+				}
+			}
+
+			/* while hovering */
+			&:hover > .-icon {
+				font-size: 4em;
+				background: @COL_A;
+			}
+			/* squish effect on click */
+			&:active > .-icon {
+				font-size: 2.5em;
+			}
+
+			& > .-external {
+				position: absolute;
+				bottom: 1rem;
+				right: 1rem;
+
+				font-size: 1.5em;
+				color: @COL_L;
+
+				opacity: 0;
+				transform: scale(1, 1);
+				transition: all 0.2s;
+
+				padding: 0.5rem;
+				background: fade(@COL_D, 50%);
+
+				&:hover {
+					transform: scale(1.5, 1.5);
+					background: @COL_A;
+				}
+
+				& > a {
+					padding: 0px;
+					line-height: 1;
+				}
+
+				& > a,
+				& > a:visited {
+					color: @COL_L;
+				}
+			}
+
+			&:hover > .-external {
+				opacity: 1;
+				/*color: @COL_D;*/
+			}
+		}
+
+		& > img {
+			width: 100%;
+
+			max-height: 720px;
+
+			height: auto;
+			display: block;
+		}
+	}
+
+
+
+	& > .-video {
+		position: relative;
+
+		width: 100%;
+		height: 0;
+		padding-bottom: 100% * (9/16);
+
+		& > iframe {
+			position: absolute;
+
+			width: 100%;
+			height: 100%;
+			left: 0;
+			top: 0;
+		}
+	}
+}
 
 #content .embed-overlay {
 	& > .-thumbnail {

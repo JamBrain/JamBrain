@@ -25,10 +25,19 @@ export default class UIEmbedFrame extends Component {
 		window.removeEventListener('message', this.onMessage);
 	}
 
+	componentWillUpdate(nextProps, nextState) {
+		if(this.props.onLoad && nextState.visible && !this.state.visible) {
+			this.props.onLoad();
+		}
+	}
+
 	onMessage(event) {
 		if (event.data.hasOwnProperty("request_height") && event.data.hasOwnProperty("url")) {
 			if (event.data.request_height > 0 && event.data.url == this.props.link.url) {
 				this.setState({"height": event.data.request_height, "visible": true});
+				if(this.props.onLoad) {
+					this.props.onLoad();
+				}
 			}
 		}
 	}
@@ -45,7 +54,7 @@ export default class UIEmbedFrame extends Component {
 		}
 
 		return (
-			<iframeame style={style} width="100%" height={height} sandbox="allow-same-origin allow-popups allow-forms allow-scripts allow-top-navigation" ref={(f) => this.iframe = f } frameborder="none" scrolling="no" src={src} />
+			<iframe style={style} width="100%" height={height} sandbox="allow-same-origin allow-popups allow-forms allow-scripts allow-top-navigation" ref={(f) => this.iframe = f } frameborder="none" scrolling="no" src={src} />
 		);
 	}
 }
