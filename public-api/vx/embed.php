@@ -236,7 +236,7 @@
 					target.innerHTML = "<div style='position:relative;padding-bottom:56.25%'><iframe class='youtube' src='https://www.youtube.com/embed/" + regexJson[1] + "?autoplay=" + AUTOPLAY + "' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen></iframe></div>";
 				  	break;
 				case "sketchfab":
-					target.innerHTML = "<div style='position:relative;padding-bottom:56.25%'><iframe src='https://sketchfab.com/models/" + regexJson[1] + "/embed?autostart=" + AUTOPLAY +"' style='position:absolute;top:0;left:0;' frameborder='0' scrolling='no' width='100%' height='100%'></iframe></div>";
+					target.innerHTML = "<div style='position:relative;padding-bottom:56.25%'><iframe class='sketchfab' src='https://sketchfab.com/models/" + regexJson[1] + "/embed?autostart=" + AUTOPLAY + "' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen></iframe></div>";
 				  	break;
 			}
 		}

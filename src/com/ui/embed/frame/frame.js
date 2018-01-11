@@ -14,8 +14,8 @@ export default class UIEmbedFrame extends Component {
 	}
 
 	componentDidMount() {
-		this.ifr.onload = () => {
-			this.ifr.contentWindow.postMessage('request_height', "*");
+		this.iframe.onload = () => {
+			this.iframe.contentWindow.postMessage('request_height', "*");
 		};
 
 		window.addEventListener('message', this.onMessage);
@@ -45,7 +45,7 @@ export default class UIEmbedFrame extends Component {
 		}
 
 		return (
-			<iframe style={style} width="100%" height={height} sandbox="allow-same-origin allow-popups allow-forms allow-scripts allow-top-navigation" ref={(f) => this.ifr = f } frameborder="none" scrolling="no" src={src} />
+			<iframeame style={style} width="100%" height={height} sandbox="allow-same-origin allow-popups allow-forms allow-scripts allow-top-navigation" ref={(f) => this.iframe = f } frameborder="none" scrolling="no" src={src} />
 		);
 	}
 }
