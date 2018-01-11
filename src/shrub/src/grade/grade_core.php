@@ -27,7 +27,6 @@ function grade_GetByNodeAuthor( $node_id, $author_id ) {
 }
 
 function grade_GetByAuthorParent( $author_id, $parent_id ) {
-	$ret = [];
 	$query = "SELECT
 			node AS id,
 			name,
@@ -36,17 +35,7 @@ function grade_GetByAuthorParent( $author_id, $parent_id ) {
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_GRADE."
 		WHERE author=? AND parent=?
 		;";
-	$out = db_QueryFetchArray($query, $author_id, $parent_id);
-	if ( is_array($out) ) {
-		foreach ( $out as &$value ) {
-			if ( !isset($ret[$value[0]]) ) {
-				$ret[$value[0]] = [];
-			}
-			$ret[$value[0]][$value[1]] = $value[2];			
-			$ret[$value[0]][$value[1] . "-timestamp"] = $value[3];			
-		}
-	}	
-	return $ret;
+	return db_QueryFetch($query, $author_id, $parent_id);
 }
 
 function grade_GetNodeIdByAuthorParent( $author_id, $parent_id ) {
