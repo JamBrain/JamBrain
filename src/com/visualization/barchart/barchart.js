@@ -25,14 +25,12 @@ export default class BarChart extends Component {
 
     render( props ) {
 
-        if ( !(props && props.labels && props.values) ) {
+		props["use_percentages"] = (props.use_percentages && props.use_percentages == true)? true : false;
+        let {labels, values, use_percentages, hideLegend} = props;
+        if ( !((labels || hideLegend) && values) ) {
             console.warn('BarChart was created with invalid props', props);
             return <div>No Data!</div>;
         }
-
-		props["use_percentages"] = (props.use_percentages && props.use_percentages == true)? true : false;
-
-        let {labels, values, use_percentages} = props;
 
         let adjusted = this.scaleValues(values);
 		let width = 100/values.length;
@@ -44,19 +42,25 @@ export default class BarChart extends Component {
         let Names = [];
 		let Colors = [];
 
-        for ( var i = 0; i < values.length; i++ ) {
+		let ShowLegend = null;
+		for ( var i = 0; i < values.length; i++ ) {
 
-            let color = 1 + ( i % 6 );
+			let color = 1 + ( i % 6 );
 			Bars.push(<Bar height={adjusted[i]} width={width} index={i} color={color} />);
 
-			if (use_percentages) {
-				Names.push(labels[i] +" (" + values[i] + " : " + percentages[i] + "%)");
+			if ( !hideLegend ) {
+				if ( use_percentages ) {
+					Names.push(labels[i] +" (" + values[i] + " : " + percentages[i] + "%)");
+				}
+				else {
+					Names.push(labels[i] +" (" + values[i] + ")");
+				}
 			}
-			else {
-				Names.push(labels[i] +" (" + values[i] + ")");
-			}
-            Colors.push(color);
-        }
+			Colors.push(color);
+		}
+		if (!hideLegend) {
+			ShowLegend = <Legend names={Names} colors={Colors}/>;
+		}
 
         return (
             <div class="chart">
@@ -67,7 +71,7 @@ export default class BarChart extends Component {
 						</g>
                     </svg>
                 </div>
-				<Legend names={Names} colors={Colors}/>
+				{ShowLegend}
             </div>
         );
     }
