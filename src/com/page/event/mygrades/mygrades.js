@@ -33,8 +33,10 @@ export default class MyGrades extends Component {
 		const eventId = this.props.node.id;
 		$Grade.GetAllMy(eventId)
 			.then(r => {
+				console.log(r);
 				this.setState({'grades': r.grade});
-			});
+			})
+			.catch(err => console.log({'err': err}));
 		$Grade.GetMyList(this.props.node.id)
 			.then(r => {
 				this.setState({
@@ -212,21 +214,19 @@ export default class MyGrades extends Component {
 			case SORT_GRADE_AVERAGE:
 				return gameIds
 					.map(id => {
-						let currentGrades = grades[id];
-						let n = 0;
-						let total = 0;
-						for ( let grade in currentGrades ) {
-							n += 1;
-							total += currentGrades[grade];
-						}
-						return [id, total / n];
+						let itemGrades = grades.filter(grade => grade.id === id).map(grade => grade.value);
+						let sum = itemGrades.reduce((a, b) => a + b);
+						return [id, sum / itemGrades.length];
 					})
 					.sort((a, b) => (b[1] - a[1])) //Order by avg grade descending
 					.map(elem => elem[0]); //Return ids
 			default: // Sorting by one of the grades
 				const gradeKey = 'grade-' + pad(sortBy - SORT_GRADE_AVERAGE, 2);
 				return gameIds
-					.map(id => [id, grades[id][gradeKey] ? grades[id][gradeKey] : -1]) // Make those who don't have grade come last
+					.map(id => {
+						let grade = grades.filter(grade => grade.id === id && grade.name === gradeKey);
+						return [id, grade.length === 1 ? grade.value : -1];
+					}) // Make those who don't have grade come last
 					.sort((a, b) => (b[1] - a[1])) //Order by grade descending
 					.map(elem => elem[0]); //Return ids
 		}
@@ -278,7 +278,7 @@ export default class MyGrades extends Component {
 			gameIds.map(nodeId => {
 				Items.push((<GradedItem
 					node={nodes[nodeId]}
-					grades={grades[nodeId]}
+					grades={grades.map(grade => grade.id = nodeId)}
 					gradeNames={gradeNames}
 					focusGrade={gradeKey}
 					comments={myComments ? myComments[nodeId] : null}
@@ -405,9 +405,11 @@ class GradedItem extends Component {
 		}
 
 		const Grades = [];
-		for ( let grade in grades ) {
-			if ( gradeNames[grade] ) {
-				Grades.push(<div class={cN("-grade", (grade == focusGrade) ? "-focused" : "")} key={grade}><div class="-grade-label">{gradeNames[grade]}:</div>{grades[grade]}</div>);
+		for (let gradeIdx = 1; gradeIdx < gradeNames.length; gradeIdx += 1) {
+			const gradeKey = 'grade-' + (gradeIdx < 10 ? '0' + gradeIdx : gradeIdx);
+			const grade = grades.filter(grade => grade.name == gradeIdx);
+			if (gradeNames[gradeKey] && grade.length === 1) {
+				Grades.push(<div class={cN("-grade", (grade[0].name == focusGrade) ? "-focused" : "")} key={grade[0].name}><div class="-grade-label">{gradeNames[gradeKey]}:</div>{grade[0].value}</div>);
 			}
 		}
 		const ShowGrades = <div class="-grades">{Grades}</div>;
@@ -431,15 +433,13 @@ class GradeStats extends Component {
 		if ( !hist ) {
 			hist = {};
 		}
-		for ( let gradedItem in grades ) {
-			const grade = grades[gradedItem][gradeKey];
-			if ( grade ) {
-				if ( !hist[grade] ) {
-					hist[grade] = 1;
-				}
-				else {
-					hist[grade] += 1;
-				}
+		const filteredGrades = grades.filter(grade => grade.name == gradeKey);
+		for (let grade in filteredGrades) {
+			if ( !hist[grade] ) {
+				hist[grade] = 1;
+			}
+			else {
+				hist[grade] += 1;
 			}
 		}
 		return hist;
@@ -454,16 +454,9 @@ class GradeStats extends Component {
 	}
 
 	getAverage( grades, gradeKey ) {
-		let sum = 0;
-		let n = 0;
-		for ( let gradedItem in grades ) {
-			const grade = grades[gradedItem][gradeKey];
-			if ( grade ) {
-				sum += grade;
-				n += 1;
-			}
-		}
-		return sum / n;
+		grades.filter(grade => grade.name == gradeKey);
+		let sum = grades.reduce((a, b) => a + b);
+		return sum / grades.length;
 	}
 
 	countTypes( nodes ) {
@@ -490,23 +483,17 @@ class GradeStats extends Component {
 		return bias;
 	}
 
-	binGrades( grades, gradeNames ) {
+	binGrades( grades ) {
 		bins = {};
-		for ( let gradedItemId in grades ) {
-			const gradedItem = grades[gradedItemId];
-			for ( let gradeKey in gradeNames ) {
-				const grade = gradedItem[gradeKey];
-				if ( grade ) {
-					const bin = gradedItem[gradeKey + "-timestamp"].split(' ', 1)[0]; //Get date
-					if ( bins[bin] ) {
-						bins[bin].push([gradedItemId, grade]);
-					}
-					else {
-						bins[bin] = [[gradedItemId, grade]];
-					}
-				}
+		for ( let grade in grades ) {
+			const bin = grade.timestamp.split(' ', 1)[0]; //Get date
+			const {value, id} = grade;
+			if ( bins[bin] ) {
+				bins[bin].push([id, value]);
 			}
-
+			else {
+				bins[bin] = [[id, value]];
+			}
 		}
 		return bins;
 	}
@@ -556,7 +543,7 @@ class GradeStats extends Component {
 		const GradeNamesList = [];
 		let ShowSummaryGraph = null;
 		let ShowDetailGraph = null;
-		const binnedGrades = showTrend ? this.binGrades(grades, gradeNames) : null;
+		const binnedGrades = showTrend ? this.binGrades(grades) : null;
 		const binnedGradesDays = showTrend ? this.getDayLabels(binnedGrades) : null;
 		for ( let grade in gradeNames ) {
 			GradeNamesList.push(gradeNames[grade]);
@@ -618,7 +605,11 @@ class GradeStats extends Component {
 		else if ( showByType ) {
 			DetailGraphTitle = 'JAM vs COMPO average bias';
 			DetailLabels = GradeNamesList;
-			votesData = this.getVotesBias(nodes.map(node => grades[node.id]), nodes.map(node => (node.subsubtype == 'jam')), gradeNames);
+			votesData = this.getVotesBias(
+				nodes.map(node => grades.filter(grade => grade.id == node.id)),
+				nodes.map(node => (node.subsubtype == 'jam')),
+				gradeNames,
+			);
 			DetailValues = [];
 			for ( let grade in gradeNames ) {
 				DetailValues.push(votesData[grade]);
