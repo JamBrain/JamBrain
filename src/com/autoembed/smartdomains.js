@@ -50,7 +50,8 @@ export default SmartDomains = [
             .then((res) => {
                 return res.thumbnails.images[1].url;
             });
-        }
+        },
+        "autoplay": true
     },
     {
         "parent": "@base",
@@ -65,7 +66,8 @@ export default SmartDomains = [
             let video_id = props.link.match;
 
             return yt_thumbnail_prefix + video_id + yt_thumbnail_suffix;
-        }
+        },
+        "autoplay": true
     },
     {
         "parent": "youtube.com",

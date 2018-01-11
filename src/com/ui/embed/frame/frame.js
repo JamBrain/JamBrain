@@ -46,7 +46,13 @@ export default class UIEmbedFrame extends Component {
 		let {url} = this.props.link;
 		let {height, width, visible} = this.state;
 
-		let src = API_ENDPOINT + "/vx/embed?url=" + url;
+		let src = API_ENDPOINT + "/vx/embed?";
+
+		if (this.props.link.info.autoplay) {
+			src += "autoplay=1&";
+		}
+
+		src += "url=" + url;
 
 		let style;
 		if (!visible) {

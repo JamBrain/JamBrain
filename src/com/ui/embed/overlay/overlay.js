@@ -68,7 +68,7 @@ export default class UIEmbedOverlay extends Component {
               <a href={props.link.url} target="_blank" onclick={(e) => {
                 e.stopPropagation();
               }}>
-                <SVGIcon middle block>youtube</SVGIcon>
+                <SVGIcon middle block>earth</SVGIcon>
               </a>
             </div>
           </div>
