@@ -1,0 +1,128 @@
+#!/usr/bin/env php
+<?PHP
+const CONFIG_PATH = "../../";
+const SHRUB_PATH = "../../src/";
+
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."core/cli.php";		// Confirm CLI
+require_once __DIR__."/".SHRUB_PATH."global/global.php";
+require_once __DIR__."/".SHRUB_PATH."node/node.php";
+
+
+function User_Get($userSlug) {
+	$users = node_GetUserIdBySlug([$userSlug]);
+	if (!is_array($users)) {
+		return $users;
+	}
+	else if (sizeof($users) == 1) {
+		return $users[array_keys($users)[0]];
+	}
+	else if (sizeof($users) == 0) {
+		return null;
+	}
+	else {
+		foreach($users as $user) {
+			if ($user == $userSlug) {
+				return $users[$user];
+			}
+		}
+		return $users;
+	}
+};
+
+
+function CanCreateEvent_Add($user) {
+	return nodeMeta_Add($user, 0, SH_SCOPE_PUBLIC, 'can-create', 'event');
+};
+
+function CanCreateEvent_Remove($user) {
+	return nodeMeta_Remove($user, 0, SH_SCOPE_PUBLIC, 'can-create', 'event');
+};
+
+function CanCreateEvent_Check($user) {
+	return nodeMeta_CountByABKeyScope(null, $user, 0, 'can-create');
+};
+
+function AddUserRight($user, $right) {
+	if ($right == 'create-event') {
+		if (CanCreateEvent_Add($user)) {
+			print " + Added creating events.\n";
+		} else {
+			print " ! Failed to add right to create event.\n";
+			exit(1);
+		}
+	} else {
+		print " ! Unknown right '$right'\n";
+		exit(1);
+	}
+};
+
+function RemoveUserRight($user, $right) {
+	if ($right == 'create-event') {
+		if (CanCreateEvent_Remove($user)) {
+			print " - Removed creating events.\n";
+		} else {
+			print " ! Failed to remove right to create event.\n";
+			exit(1);
+		}
+	} else {
+		print " ! Unknown right '$right'\n";
+		exit(1);
+	}
+	
+};
+
+_db_Connect();
+
+if ( _db_IsConnected() ) {
+	global_Load();
+
+	if (count($argv) < 2) {
+		print "Updating:\n";
+		print "USAGE: user-management [USER] ADD|REMOVE RIGHT\n";
+		print "\nListing:\n";
+		print "USAGE: user-management [USER]\n";
+		exit(1);
+	}
+
+	$userName = $argv[1];
+	$user = User_Get($userName);
+
+	if (is_array($user)) {		
+		print "Multiple users partially match $userName:\n";
+		print "\n";
+		foreach($user as $userSlug => $userId) {
+			print " * $userSlug\n";
+		}
+		exit(1);
+	}
+
+	if (!$user) {
+		print "Unknown user '$userName'\n";
+		exit(1);
+	} 
+
+	print "Working on user: $userName ($user)\n";
+	
+	if (count($argv) < 3) {
+		if (CanCreateEvent_Check($user)) {
+			print " + Can create events (create-event)\n";
+		}
+		else {
+			print " - Can't create events (create-event)\n"; 
+		}
+	} else if (count($argv) > 3) {
+		switch ($argv[2]) {
+			case 'add':
+			case 'ADD':
+				AddUserRight($user, $argv[3]);
+				break;
+			case 'remove':
+			case 'REMOVE':
+				RemoveUserRight($user, $argv[3]);
+				break;
+		}
+	}
+}
+
+?>
