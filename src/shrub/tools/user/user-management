@@ -46,6 +46,8 @@ function GetCoreNodeIds() {
 }
 
 function CanCreateEvent_Add($user, $eventsId) {
+	//print "User: ".$user." EventsId: ".$eventsId."\n";
+	//exit(0);
 	return nodeMeta_Add($user, $eventsId, SH_SCOPE_PUBLIC, 'can-create', 'event');
 };
 
@@ -53,25 +55,15 @@ function CanCreateEvent_Remove($user, $eventsId) {
 	return nodeMeta_Remove($user, $eventsId, SH_SCOPE_PUBLIC, 'can-create', 'event');
 };
 
+
 function OutputCanCreateStatus($user, $coreIds) {
-	//print_r($coreIds);
-	$createNodes = nodeComplete_GetWhereIdCanCreate($user);
-	//print_r($createNodes);
-	foreach ($createNodes as $nodeType => $nodes) {
-		$allowed = sizeof($nodes) > 0; 
-		if ($allowed) {
-			foreach($nodes as $node) {
-				if (in_array($node, $coreIds)) {
-					print " + Can create new ".$nodeType."\n";
-				} else {
-					print " + Can create ".$nodeType." under ".$node."\n";
-				}
-			}
-		} else {
-			print " - Can't create ".$nodeType."\n";
-		}
+	$createEvents = nodeMeta_Get($user, $coreIds['events'], SH_SCOPE_PUBLIC, 'can-create');
+	if ($createEvents) {
+		print " + Can create new events (create-event).\n";
+	} else {
+		print " - Can't create new events (create-event).\n";
 	}
-};
+}
 
 function AddUserRight($user, $right, $coreIds) {
 	if ($right == 'create-event') {
@@ -89,7 +81,7 @@ function AddUserRight($user, $right, $coreIds) {
 
 function RemoveUserRight($user, $right, $coreIds) {
 	if ($right == 'create-event') {
-		if (CanCreateEvent_Remove($user, $coreIds)) {
+		if (CanCreateEvent_Remove($user, $coreIds['events'])) {
 			print " - Removed creating events.\n";
 		} else {
 			print " ! Failed to remove right to create event.\n";
