@@ -75,6 +75,7 @@ function OutputCanCreateStatus($user, $coreIds) {
 	} else {
 		print " - Can't create new events (create-event).\n";
 	}
+	print "\n";
 }
 
 function AddUserRight($user, $right, $coreIds) {
@@ -82,11 +83,11 @@ function AddUserRight($user, $right, $coreIds) {
 		if (CanCreateEvent_Add($user, $coreIds['events'])) {
 			print " + Added creating events.\n";
 		} else {
-			print " ! Failed to add right to create event.\n";
+			print " ! Failed to add right to create event.\n\n";
 			exit(1);
 		}
 	} else {
-		print " ! Unknown right '$right'\n";
+		print " ! Unknown right '$right'\n\n";
 		exit(1);
 	}
 };
@@ -96,11 +97,11 @@ function RemoveUserRight($user, $right, $coreIds) {
 		if (CanCreateEvent_Remove($user, $coreIds['events'])) {
 			print " - Removed creating events.\n";
 		} else {
-			print " ! Failed to remove right to create event.\n";
+			print " ! Failed to remove right to create event.\n\n";
 			exit(1);
 		}
 	} else {
-		print " ! Unknown right '$right'\n";
+		print " ! Unknown right '$right'\n\n";
 		exit(1);
 	}
 	
@@ -110,7 +111,7 @@ _db_Connect();
 
 if ( _db_IsConnected() ) {
 	global_Load();
-
+	print "\n";
 	if (count($argv) < 2) {
 		print "Updating:\n";
 		print "USAGE: user-management [USER] ADD|REMOVE RIGHT\n";
@@ -126,13 +127,13 @@ if ( _db_IsConnected() ) {
 		print "Multiple users partially match $userName:\n";
 		print "\n";
 		foreach($user as $userSlug => $userId) {
-			print " * $userSlug\n";
+			print " * $userSlug\n\n";
 		}
 		exit(1);
 	}
 
 	if (!$user) {
-		print "Unknown user '$userName'\n";
+		print "Unknown user '$userName'\n\n";
 		exit(1);
 	} 
 
@@ -152,6 +153,7 @@ if ( _db_IsConnected() ) {
 				RemoveUserRight($user, $argv[3], $coreIds);
 				break;
 		}
+		print "\n";
 	}
 }
 
