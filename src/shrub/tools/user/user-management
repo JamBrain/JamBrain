@@ -57,7 +57,19 @@ function CanCreateEvent_Remove($user, $eventsId) {
 
 
 function OutputCanCreateStatus($user, $coreIds) {
-	$createEvents = nodeMeta_Get($user, $coreIds['events'], SH_SCOPE_PUBLIC, 'can-create');
+	$userData = nodeComplete_GetById($user, F_NODE_NO_BODY | F_NODE_META);
+	$createEvents = false;
+	if (array_key_exists('meta', $userData)) {
+		$meta = $userData['meta'];
+		if (array_key_exists('can-create', $meta)) {
+			$canCreate = $meta['can-create'];
+			if (array_key_exists($coreIds['events'], $canCreate)) {
+				if (strpos('event', $canCreate[$coreIds['events']]) > -1) {
+					$createEvents = true;
+				}
+			}
+		}
+	}
 	if ($createEvents) {
 		print " + Can create new events (create-event).\n";
 	} else {
@@ -126,7 +138,6 @@ if ( _db_IsConnected() ) {
 
 	print "Working on user: $userName ($user)\n";
 	$coreIds = GetCoreNodeIds();
-	
 	if (count($argv) < 3) {
 		OutputCanCreateStatus($user, $coreIds);
 		exit(0);
