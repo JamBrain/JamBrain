@@ -487,22 +487,6 @@ function _nodeMetaVersion_Add( $a, $b, $scope, $key, $value = null ) {
 	);
 }
 
-function _nodeMeta_Get( $a, $b, $scope, $key) {
-	return db_QueryFetchValue(
-		"SELECT value FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." WHERE
-			a = ? AND
-			b = ? AND
-			scope = ? AND
-			`key` = ?
-			LIMIT 1
-		;",
-		$a,
-		$b,
-		$scope,
-		$key
-	);
-};
-
 function _nodeMeta_Add( $a, $b, $version, $scope, $key, $value = null, $timestamp = null ) {
 	if ( $timestamp ) {
 		return db_QueryInsert(
@@ -572,10 +556,6 @@ function _nodeMeta_Add( $a, $b, $version, $scope, $key, $value = null, $timestam
 		$key,
 		$value
 	);
-}
-
-function nodeMeta_Get( $a, $b, $scope, $key) {
-	return _nodeMeta_Get($a, $b, $scope, $key);
 }
 
 function nodeMeta_Add( $a, $b, $scope, $key, $value = null ) {
