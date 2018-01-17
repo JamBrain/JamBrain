@@ -114,9 +114,10 @@ if ( _db_IsConnected() ) {
 	print "\n";
 	if (count($argv) < 2) {
 		print "Updating:\n";
-		print "USAGE: user-management [USER] ADD|REMOVE RIGHT\n";
+		print "USAGE: user-rights [USER] ADD|REMOVE RIGHT\n";
 		print "\nListing:\n";
-		print "USAGE: user-management [USER]\n";
+		print "USAGE: user-rights [USER]\n";
+		print "\n";
 		exit(1);
 	}
 
