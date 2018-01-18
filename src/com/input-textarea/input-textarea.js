@@ -1,11 +1,11 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact/preact';
 import Shallow			 				from 'shallow/shallow';
 
 import NavLink							from 'com/nav-link/link';
 import ButtonLink						from 'com/button-link/link';
 import SVGIcon							from 'com/svg-icon/icon';
 
-import $Asset							from '../../shrub/js/asset/asset';
+import $Asset							from 'shrub/js/asset/asset';
 
 
 export default class InputTextarea extends Component {
@@ -15,15 +15,58 @@ export default class InputTextarea extends Component {
 		this.state = {
 			'cursorPos': (props.value || '').length,
 			'microsoftEdge': /Edge/.test(navigator.userAgent),
-			'prevHeight': -1	// This allows us to not scroll adjust wrong on first change
+			'prevHeight': -1,	// This allows us to not scroll adjust wrong on first change
 		};
 
 		this.onInput = this.onInput.bind(this);
+		this.onKeyUp = this.onKeyUp.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
 		this.onFileChange = this.onFileChange.bind(this);
+		this.onBlur = this.onBlur.bind(this);
+		this.onFocus = this.onFocus.bind(this);
+		this.onClick = this.onClick.bind(this);
+
+		//Needs to not be state and not trigger renders
+		this.replaceTextEvent = -1;
 	}
 
 	shouldComponentUpdate( nextProps ) {
 		return Shallow.Diff(this.props, nextProps);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		let {replaceText, cursorPos, replaceTextEvent, maxlength} = nextProps;
+		const prevReplaceTextEvent = this.replaceTextEvent;
+		this.props.value = replaceText;
+		// console.log(!!replaceText, this.textarea, replaceTextEvent, prevReplaceTextEvent);
+		if ( replaceText && this.textarea && (replaceTextEvent != prevReplaceTextEvent) ) {
+			const {oncaret, onmodify} = this.props;
+			let updated = false;
+			if (maxlength && replaceText.length > maxlength) {
+				replaceText = this.textarea.value;
+				updated = true;
+			}
+			this.textarea.value = replaceText;
+			this.textarea.focus();
+			this.replaceTextEvent = replaceTextEvent;
+
+			if (updated && onmodify) {
+				onmodify({
+					'target': {
+						'value': replaceText, 'selectionStart': cursorPos, 'selectionEnd': cursorPos
+					},
+				});
+			}
+			this.textarea.selectionStart = cursorPos;
+			this.textarea.selectionEnd = cursorPos;
+			if (oncaret) {
+				oncaret({
+					'target': {
+						'value': replaceText, 'selectionStart': cursorPos, 'selectionEnd': cursorPos
+					},
+					'key': 'ImaginaryKey'});
+			}
+		}
 	}
 
 	resizeTextarea() {
@@ -43,7 +86,7 @@ export default class InputTextarea extends Component {
 			this.textarea.style.height = this.textarea.scrollHeight + 'px';
 
 			// Calculate the size change since last time here
-			var delta = this.state.prevHeight > 0 ? this.textarea.scrollHeight - this.state.prevHeight : 0;
+			var delta = (this.state.prevHeight > 0) ? (this.textarea.scrollHeight - this.state.prevHeight) : 0;
 
 			// This works around the jumping by restoring the scroll positions to where they should have been
 			window.scrollTo(scrollLeft, scrollTop + delta);
@@ -73,7 +116,7 @@ export default class InputTextarea extends Component {
 		var ta = this.textarea;
 
 		// http://stackoverflow.com/a/11077016/5678759
-		if ( ta.selectionStart || ta.selectionStart == '0') {	// Is Number
+		if ( ta.selectionStart || (ta.selectionStart == '0') ) {	// Is Number
 			var startPos = ta.selectionStart;
 			var endPos = ta.selectionEnd;
 			ta.value = ta.value.substring(0, startPos) + Text + ta.value.substring(endPos, ta.value.length);
@@ -117,9 +160,63 @@ export default class InputTextarea extends Component {
 			this.props.onmodify(e);
 		}
 
-		if( this.state.microsoftEdge ) {
+		if ( this.state.microsoftEdge ) {
 			e.preventDefault();
 			this.setState({'cursorPos': e.target.selectionEnd});
+		}
+	}
+
+	onKeyDown( e ) {
+		const {onkeydown, oncaret} = this.props;
+		if ( onkeydown && !onkeydown(e) ) {
+			e.preventDefault();
+		}
+	}
+
+	onKeyUp( e ) {
+		const {onkeyup, oncaret} = this.props;
+		if ( onkeyup && !onkeyup(e) ) {
+			e.preventDefault();
+		}
+		else if (oncaret) {
+			switch (e.key) {
+				case "ArrowUp":
+				case "ArrowDown":
+				case "ArrowLeft":
+				case "ArrowRight":
+				case "Home":
+				case "End":
+				case "PageUp":
+				case "PageDown":
+					if (!oncaret(e)) {
+						e.preventDefault();
+					}
+					break;
+			}
+		}
+	}
+
+	onBlur( e ) {
+		const {onblur} = this.props;
+		if ( onblur && !onblur(e) ) {
+			e.preventDefault();
+		}
+	}
+
+	onFocus( e ) {
+		const {onfocus, oncaret} = this.props;
+		if ( onfocus && !onfocus(e) ) {
+			e.preventDefault();
+		}
+		if ( oncaret && !oncaret(e) ) {
+			e.preventDefault();
+		}
+	}
+
+	onClick( e ) {
+		const {oncaret} = this.props;
+		if ( oncaret && !oncaret(e) ) {
+			e.preventDefault();
 		}
 	}
 
@@ -133,6 +230,9 @@ export default class InputTextarea extends Component {
 				<div class="-textarea">
 					<textarea {...props}
 						oninput={this.onInput}
+						onkeydown={this.onKeyDown}
+						onkeyup={this.onKeyUp}
+						onclick={this.onClick}
 						ref={(input) => { this.textarea = input; }}
 					/>
 				</div>
