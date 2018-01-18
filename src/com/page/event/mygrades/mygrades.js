@@ -30,23 +30,25 @@ export default class MyGrades extends Component {
 
 	componentDidMount() {
 		const eventId = this.props.node.id;
-		$Grade.GetAllMy(eventId)
+		const promiseAllMy = $Grade.GetAllMy(eventId)
 			.then(r => {
 				this.setState({'grades': r.grade});
 			});
-		$Grade.GetMyList(this.props.node.id)
+		const promiseMyList = $Grade.GetMyList(this.props.node.id)
 			.then(r => {
 				this.setState({
 					'gameIds': r.items,
 					'nodes': new Map(),
-					'loading': true,
 					'error': null});
-				this.collectNodes(r.items, eventId);
+				return this.collectNodes(r.items, eventId);
 			})
 			.catch(r => {
-				this.setState({'error': r, 'gameIds': null, 'loading': false});
+				this.setState({'error': r, 'gameIds': null});
 			});
-		$Comment.GetMyListByParentNode(eventId).then(r => (this.collectComments(r.comment)));
+		const promiseComments = $Comment.GetMyListByParentNode(eventId).then(r => (this.collectComments(r.comment)));
+		Promise.all([promiseAllMy, promiseMyList, promiseComments]).then(() => {
+			this.setState({'loading': false});
+		});
 	}
 
 	collectComments( commentIds ) {
@@ -116,7 +118,7 @@ export default class MyGrades extends Component {
 		}
 		return Promise.all(promises)
 			.then(r => {
-				this.setState({'loading': false, 'nodes': nodeMapping, 'gradeNames': gradeMapping});
+				this.setState({'nodes': nodeMapping, 'gradeNames': gradeMapping});
 				return this.collectAuthors(nodeMapping, gameIds);
 			});
 	}
