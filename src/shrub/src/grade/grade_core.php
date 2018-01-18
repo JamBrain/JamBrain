@@ -26,19 +26,16 @@ function grade_GetByNodeAuthor( $node_id, $author_id ) {
 	);
 }
 
-
 function grade_GetByAuthorParent( $author_id, $parent_id ) {
-	return db_QueryFetchIdKeyValue(
-		"SELECT
+	$query = "SELECT
 			node AS id,
 			name,
-			value
+			value,
+			timestamp
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_GRADE."
 		WHERE author=? AND parent=?
-		;",
-		$author_id,
-		$parent_id
-	);
+		;";
+	return db_QueryFetch($query, $author_id, $parent_id);
 }
 
 function grade_GetNodeIdByAuthorParent( $author_id, $parent_id ) {
