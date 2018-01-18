@@ -16,7 +16,7 @@ const SORT_ALPHA = 1;
 const SORT_TYPE = 2;
 const SORT_GRADE_AVERAGE = 3; //The value should be the highest of the permanent sortings!
 
-const pad = (number, digits) => {
+const pad = ( number, digits ) => {
 	return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
 };
 
@@ -47,7 +47,7 @@ export default class MyGrades extends Component {
 			.catch(r => {
 				this.setState({'error': r, 'gameIds': null, 'loading': false});
 			});
-		$Comment.GetMyListByParentNode(eventId).then(r => this.collectComments(r.comment));
+		$Comment.GetMyListByParentNode(eventId).then(r => (this.collectComments(r.comment)));
 	}
 
 	collectComments( commentIds ) {
@@ -403,14 +403,14 @@ class GradedItem extends Component {
 		}
 
 		const Grades = [];
-		for (let gradeKey in gradeNames) {
-			const grade = grades.filter(grade => grade.name == gradeKey);
-			if (gradeNames[gradeKey] && grade.length === 1) {
+		for ( let gradeKey in gradeNames ) {
+			const grade = grades.filter(grade => (grade.name == gradeKey));
+			if ( gradeNames[gradeKey] && (grade.length === 1) ) {
 				Grades.push(<div class={cN("-grade", (grade[0].name == focusGrade) ? "-focused" : "")} key={gradeKey}><div class="-grade-label">{gradeNames[gradeKey]}:</div>{grade[0].value}</div>);
 			}
 		}
 		const ShowGrades = <div class="-grades">{Grades}</div>;
-		const ShowComments = comments ? <SVGIcon>{comments > 1 ? 'bubbles' : 'bubble'}</SVGIcon> : null;
+		const ShowComments = comments ? (<SVGIcon>{comments > 1 ? 'bubbles' : 'bubble'}</SVGIcon>) : null;
 
 		return (
 			<UIButtonLink class={cN("graded-item", props.class)} href={node.path}>
@@ -450,7 +450,7 @@ class GradeStats extends Component {
 		return hist;
 	}
 
-	getAverage( grades, gradeKey, decimals) {
+	getAverage( grades, gradeKey, decimals ) {
 		const values = grades.filter(grade => grade.name == gradeKey).map(grade => grade.value);
 		return this.averageArray(values, decimals);
 	}
@@ -480,7 +480,7 @@ class GradeStats extends Component {
 	}
 
 	binGrades( grades ) {
-		if (!grades) {
+		if ( !grades ) {
 			return NaN;
 		}
 		const bins = {};
@@ -529,7 +529,7 @@ class GradeStats extends Component {
 	}
 
 	averageArray( arr, decimals ) {
-		if (arr.length == 0) {
+		if ( arr.length == 0 ) {
 			return NaN;
 		}
 		return Number((arr.reduce((a, b) => a + b) / arr.length).toFixed(decimals));
