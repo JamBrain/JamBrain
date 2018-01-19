@@ -1,12 +1,12 @@
 import {h, Component} 				from 'preact/preact';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import SVGIcon 							from 'com/svg-icon/icon';
-
+import UIButton							from 'com/ui/button/button';
 import $ThemeIdea						from '../../shrub/js/theme/theme_idea';
 
 
 const MAX_IDEAS = 3;
-const canHaveMoreIdeas = (ideas) => Object.keys(ideas).length < MAX_IDEAS;
+const canHaveMoreIdeas = (ideas, submitting) => Object.keys(ideas).length + (submitting ? 1 : 0) < MAX_IDEAS;
 const hasSubmittedIdeas = (ideas) => Object.keys(ideas).length > 0;
 
 export default class ContentEventIdea extends Component {
@@ -16,12 +16,11 @@ export default class ContentEventIdea extends Component {
 		this.state = {
 			'idea': '',
 			'ideas': null,
-			'disableSubmit': true,
+			'enableSubmit': false,
 		};
 
 		this.onKeyDown = this.onKeyDown.bind(this);
 		this.textChange = this.textChange.bind(this);
-//		this.removeIdea = this.removeIdea.bind(this);
 		this.submitIdeaForm = this.submitIdeaForm.bind(this);
 
 		this.renderIdea = this.renderIdea.bind(this);
@@ -30,29 +29,34 @@ export default class ContentEventIdea extends Component {
 	componentDidMount() {
 		$ThemeIdea.GetMy([this.props.node.id])
 		.then(r => {
-			console.log(r);
+			//console.log(r);
 			if ( r.ideas ) {
-				this.setState({'ideas': r.ideas, 'disableSubmit': !canHaveMoreIdeas(r.ideas)});
+				this.setState({'ideas': r.ideas, 'enableSubmit': canHaveMoreIdeas(r.ideas)});
 			}
 			else {
-				this.setState({'ideas': {}, 'disableSubmit': false});
+				this.setState({'ideas': {}});
 			}
 		})
 		.catch(err => {
-			this.setState({'error': err});
+			this.setState({'error': 'Error fetching your previous suggestions. Make sure you are logged in.'});
 		});
 	}
 
-	textChange( e ) {
-		this.setState({'idea': e.target.value.trim()});
+	textChange( e, isSubmit ) {
+		let idea = e.target.value;
+		if (isSubmit) {
+			idea = idea.trim();
+		}
+		this.setState({'idea': idea, 'error': idea.length > 64 ? 'Suggestion is too long.' : null});
 	}
 
 	onKeyDown( e ) {
 		if (!e) {
 			e = window.event;
 		}
-		if (e.keyCode === 13) {
-			this.textChange(e);
+		const isSubmit = e.keyCode === 13;
+		this.textChange(e, isSubmit);
+		if (isSubmit) {
 			/*e.preventDefault();*/
 			this.submitIdeaForm();
 		}
@@ -61,40 +65,54 @@ export default class ContentEventIdea extends Component {
 	removeIdea( id, e ) {
 		id = parseInt(id);
 
-		console.log('remove:', id );
-
+		//console.log('remove:', id );
+		this.setState({'error': null});
 		if ( id ) {
 			$ThemeIdea.Remove(this.props.node.id, id)
 			.then(r => {
 				//console.log(r.ideas);
-				this.setState({'ideas': r.ideas, 'disableSubmit': !canHaveMoreIdeas(r.ideas)});
+				this.setState({'ideas': r.ideas, 'enableSubmit': canHaveMoreIdeas(r.ideas)});
 			})
 			.catch(err => {
-				this.setState({'error': err});
+				this.setState({'error': 'Error processing the request. Make sure you are still logged in.'});
 			});
 		}
 		else {
-			this.setState({'error': 'Problem with length'});
+			this.setState({'error': 'Unexpected error.'});
+		}
+	}
+
+	checkDuplicateIdea(idea) {
+		const {processingIdea, ideas} = this.state;
+		if (processingIdea && idea == processingIdea) {
+			return true;
+		}
+		else {
+			return Object.values(ideas).indexOf(idea) > -1;
 		}
 	}
 
 	submitIdeaForm( e ) {
-		this.setState({'disableSubmit': true});
 		let idea = this.state.idea.trim();
-		console.log('submit:', idea);
-
-		if ( idea.length > 0 && idea.length <= 64 ) {
+		//console.log('submit:', idea);
+		if (this.checkDuplicateIdea(idea)) {
+			this.setState({
+				'error': 'Duplicated suggestion! There\'s no point in supplying the same suggestion more than once.'
+			});
+		}
+		else if ( idea.length > 0 && idea.length <= 64 ) {
+			this.setState({'enableSubmit': canHaveMoreIdeas(this.state.ideas, true), 'processingIdea': idea, 'error': null});
 			$ThemeIdea.Add(this.props.node.id, idea)
 			.then(r => {
-				console.log('r', r);
-				this.setState({'ideas': r.ideas, 'idea': r.status === 201 ? '' : idea, 'disableSubmit': !canHaveMoreIdeas(r.ideas)});
+				//console.log('r', r);
+				this.setState({'ideas': r.ideas, 'idea': r.status === 201 ? '' : idea, 'enableSubmit': canHaveMoreIdeas(r.ideas), 'processingIdea': null});
 			})
 			.catch(err => {
-				this.setState({'error': err, 'disableSubmit': false});
+				this.setState({'error': 'Error processing the request. Make sure you are still logged in.', 'processingIdea': null});
 			});
 		}
 		else {
-			this.setState({'error': 'Problem with length'});
+			this.setState({'error': 'Suggestion is too ' + (idea.length == 0 ? 'short.' : 'long.')});
 		}
 	}
 
@@ -104,6 +122,7 @@ export default class ContentEventIdea extends Component {
 		return (
 			<div class="-item">
 				<div class="-x" onclick={this.removeIdea.bind(this, id)}><SVGIcon>cross</SVGIcon></div>
+				<SVGIcon>ticket</SVGIcon>
 				<div class="-text" title={idea}>{idea}</div>
 			</div>
 		);
@@ -112,40 +131,51 @@ export default class ContentEventIdea extends Component {
 		return Object.keys(this.state.ideas).map(this.renderIdea);
 	}
 
-	render( {node, user/*, path, extra*/}, {idea, ideas, error, disableSubmit} ) {
+	render( {node, user/*, path, extra*/}, {idea, ideas, error, enableSubmit} ) {
 		if ( node.slug && ideas ) {
 			if ( user && user['id'] ) {
+				const ShowError = error ? <div class="content-base content-post idea-error">{error}</div> : null;
 				let ShowSubmit = null;
-				if (!disableSubmit) {
+				if (enableSubmit) {
 					ShowSubmit = (
 						<div class="idea-form">
 							<input type="text"
-								class="-single"
+								class="-suggestion"
 								onchange={this.textChange} onkeydown={this.onKeyDown}
 								placeholder="Your suggestion" maxlength="64" value={idea} />
-							<button class="-submit" onclick={this.submitIdeaForm}>
+							<UIButton onclick={this.submitIdeaForm}>
 								<SVGIcon>suggestion</SVGIcon> Submit
-							</button>
+							</UIButton>
 						</div>
 					);
 				}
 				let ShowMySuggestions = null;
 				if (hasSubmittedIdeas(ideas)) {
 					ShowMySuggestions = (
-						<div>
-							<h3>My Suggestions</h3>
-							<div class="idea-mylist">
-								{ this.renderIdeas() }
-							</div>
+						<div class="idea-mylist">
+							{ this.renderIdeas() }
 						</div>
 					);
 				}
+				let ShowRemaining = null;
+				const remaining = Math.max(0, MAX_IDEAS - Object.keys(ideas).length);
+				if (remaining > 1) {
+					ShowRemaining = <div class="foot-note small">You have <strong>{remaining}</strong> suggestions left</div>;
+				}
+				else if (remaining == 1) {
+					ShowRemaining = <div class="foot-note small">You have <strong>1</strong> suggestion left</div>;
+				}
+				else {
+					ShowRemaining = <div class="foot-note small">You have no suggestions left</div>;
+				}
 				return (
-					<div class="-body">
+					<div class="idea-body">
 						<h3>Theme Suggestion Round</h3>
+						<h4>Your Suggestions</h4>
 						{ShowMySuggestions}
 						{ShowSubmit}
-						<div class="foot-note small">You have <strong>{Math.max(0, MAX_IDEAS - Object.keys(ideas).length)}</strong> suggestion(s) left</div>
+						{ShowError}
+						{ShowRemaining}
 					</div>
 				);
 			}
