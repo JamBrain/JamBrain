@@ -5,8 +5,7 @@ import UIButton							from 'com/ui/button/button';
 import $ThemeIdea						from '../../shrub/js/theme/theme_idea';
 
 
-const MAX_IDEAS = 3;
-const canHaveMoreIdeas = (ideas, submitting) => Object.keys(ideas).length + (submitting ? 1 : 0) < MAX_IDEAS;
+const canHaveMoreIdeas = (ideas, submitting, max) => Object.keys(ideas).length + (submitting ? 1 : 0) < max;
 const hasSubmittedIdeas = (ideas) => Object.keys(ideas).length > 0;
 
 export default class ContentEventIdea extends Component {
@@ -17,6 +16,7 @@ export default class ContentEventIdea extends Component {
 			'idea': '',
 			'ideas': null,
 			'enableSubmit': false,
+			'maxIdeas': props.node.meta && props.node.meta['theme-idea-limit'] ? props.node.meta['theme-idea-limit'] : 0,
 		};
 
 		this.onKeyDown = this.onKeyDown.bind(this);
@@ -31,7 +31,7 @@ export default class ContentEventIdea extends Component {
 		.then(r => {
 			//console.log(r);
 			if ( r.ideas ) {
-				this.setState({'ideas': r.ideas, 'enableSubmit': canHaveMoreIdeas(r.ideas)});
+				this.setState({'ideas': r.ideas, 'enableSubmit': canHaveMoreIdeas(r.ideas, false, this.state.maxIdeas)});
 			}
 			else {
 				this.setState({'ideas': {}});
@@ -71,7 +71,7 @@ export default class ContentEventIdea extends Component {
 			$ThemeIdea.Remove(this.props.node.id, id)
 			.then(r => {
 				//console.log(r.ideas);
-				this.setState({'ideas': r.ideas, 'enableSubmit': canHaveMoreIdeas(r.ideas)});
+				this.setState({'ideas': r.ideas, 'enableSubmit': canHaveMoreIdeas(r.ideas, false, this.state.maxIdeas)});
 			})
 			.catch(err => {
 				this.setState({'error': 'Error processing the request. Make sure you are still logged in.'});
@@ -101,11 +101,11 @@ export default class ContentEventIdea extends Component {
 			});
 		}
 		else if ( idea.length > 0 && idea.length <= 64 ) {
-			this.setState({'enableSubmit': canHaveMoreIdeas(this.state.ideas, true), 'processingIdea': idea, 'error': null});
+			this.setState({'enableSubmit': canHaveMoreIdeas(this.state.ideas, true, this.state.maxIdeas), 'processingIdea': idea, 'error': null});
 			$ThemeIdea.Add(this.props.node.id, idea)
 			.then(r => {
 				//console.log('r', r);
-				this.setState({'ideas': r.ideas, 'idea': r.status === 201 ? '' : idea, 'enableSubmit': canHaveMoreIdeas(r.ideas), 'processingIdea': null});
+				this.setState({'ideas': r.ideas, 'idea': r.status === 201 ? '' : idea, 'enableSubmit': canHaveMoreIdeas(r.ideas, false, this.state.maxIdeas), 'processingIdea': null});
 			})
 			.catch(err => {
 				this.setState({'error': 'Error processing the request. Make sure you are still logged in.', 'processingIdea': null});
@@ -131,9 +131,17 @@ export default class ContentEventIdea extends Component {
 		return Object.keys(this.state.ideas).map(this.renderIdea);
 	}
 
-	render( {node, user/*, path, extra*/}, {idea, ideas, error, enableSubmit} ) {
+	render( {node, user/*, path, extra*/}, {idea, ideas, error, enableSubmit, maxIdeas} ) {
 		if ( node.slug && ideas ) {
 			if ( user && user['id'] ) {
+				if (maxIdeas == 0) {
+					return (
+						<div class="idea-body">
+							<h3>Theme Suggestion Round</h3>
+							<div>This event doesn't allow suggesting themes.</div>
+						</div>
+					);
+				}
 				const ShowError = error ? <div class="content-base content-post idea-error">{error}</div> : null;
 				let ShowSubmit = null;
 				if (enableSubmit) {
@@ -158,7 +166,7 @@ export default class ContentEventIdea extends Component {
 					);
 				}
 				let ShowRemaining = null;
-				const remaining = Math.max(0, MAX_IDEAS - Object.keys(ideas).length);
+				const remaining = Math.max(0, maxIdeas - Object.keys(ideas).length);
 				if (remaining > 1) {
 					ShowRemaining = <div class="foot-note small">You have <strong>{remaining}</strong> suggestions left</div>;
 				}
@@ -181,7 +189,7 @@ export default class ContentEventIdea extends Component {
 			}
 			else {
 				return (
-					<div class="-body">
+					<div class="idea-body">
 						<h3>Theme Suggestion Round</h3>
 						<div>Please log in</div>
 					</div>
