@@ -12,9 +12,16 @@
 					// maybe animate the bar's changing
 				}
 
-				& > .-chart-axis {
-					width: 1px;
-					stroke: @COL_NDDDD;
+				& > g {
+					& .-chart-axis {
+						stroke-width: .4px;
+						stroke: @COL_NDDDD;
+					}
+
+					& > .-axis-tick {
+						stroke: @COL_NDDDD;
+						stroke-width: .3px;
+					}
 				}
 			}
 		}

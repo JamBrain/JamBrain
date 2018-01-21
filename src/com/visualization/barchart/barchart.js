@@ -3,8 +3,9 @@ import {h, Component} 				from 'preact/preact';
 import Bar							from 'com/visualization/barchart/bar';
 import Legend						from 'com/visualization/legend/legend';
 import XAxis						from './bar-x-axis';
+import YAxis						from './bar-y-axis';
 
-const AXIS_RESERVATION = 4;
+const AXIS_RESERVATION = 2;
 
 export default class BarChart extends Component {
 
@@ -59,7 +60,7 @@ export default class BarChart extends Component {
 		}
 		if (props.showYAxis) {
 			xZeroPos = yAxisWidth;
-			firstBarXStart = 0.1;
+			firstBarXStart = 0.2;
 		}
 		const xMaxValue = firstBarXStart + values.length;
 

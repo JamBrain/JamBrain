@@ -148,7 +148,7 @@ export default class GradeGraphs extends Component {
 			ShowSummaryGraph = (
 				<div class="-graph">
 					<h3>Graded items per day</h3>
-					<BarChart values={GradeCounts} labels={binnedGradesDays} use_percentages={false} hideLegend showXAxis />
+					<BarChart values={GradeCounts} labels={binnedGradesDays} use_percentages={false} hideLegend showXAxis showYAxis showYTicks />
 				</div>
 			);
 
@@ -160,7 +160,7 @@ export default class GradeGraphs extends Component {
 			ShowSummaryGraph = (
 				<div class="-graph">
 					<h3>Average grade per category</h3>
-					<BarChart values={gradeAvgs} labels={GradeNamesList} use_percentages={false} />
+					<BarChart values={gradeAvgs} labels={GradeNamesList} use_percentages={false} showXAxis showYAxis showYTicks />
 				</div>
 			);
 		}
@@ -178,6 +178,9 @@ export default class GradeGraphs extends Component {
 			DetailGraphTitle = 'Distribution of stars (' + gradeNames[focusGrade] + '):';
 			DetailValues = gradeLevels.map(v => votesData[v] ? votesData[v] : 0);
 			DetailLabels = gradeLevels.map(v => v + ' star' + (v > 1 ? 's' : ''));
+			DetailProps.showXAxis = true;
+			DetailProps.showYAxis = true;
+			DetailProps.showYTicks = true;
 		}
 		else if ( showByType ) {
 			DetailGraphTitle = 'JAM vs COMPO average bias';
@@ -192,6 +195,8 @@ export default class GradeGraphs extends Component {
 			}
 			DetailCaption = <div class="-caption">Positive values indicate you give higher grades to JAM items. Negative that you give higher grades to COMPO items.</div>;
 			DetailProps.showXAxis = true;
+			DetailProps.showYAxis = true;
+			DetailProps.showYTicks = true;
 		}
 		else if ( showTrend ) {
 			DetailGraphTitle = 'Total average grade per day';
@@ -199,12 +204,18 @@ export default class GradeGraphs extends Component {
 			DetailLabels = binnedGradesDays;
 			DetailProps.hideLegend = true;
 			DetailProps.showXAxis = true;
+			DetailProps.showYAxis = true;
+			DetailProps.showYTicks = true;
 		}
 		else {
 			votesData = this.getGlobalHistogram(grades, gradeNames);
 			DetailGraphTitle = 'Total distribution of stars';
 			DetailValues = gradeLevels.map(v => votesData[v] ? votesData[v] : 0);
 			DetailLabels = gradeLevels.map(v => v + ' star' + (v > 1 ? 's' : ''));
+			DetailProps.showXAxis = true;
+			DetailProps.showYAxis = true;
+			DetailProps.showYTicks = true;
+
 		}
 
 		ShowDetailGraph = (
