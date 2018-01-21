@@ -87,14 +87,15 @@ else if ($ACTION == "idea-limit") {
 		}
 	}
 	else if (ctype_digit($argv[0])) {
-		nodeMeta_Add($EVENT_ID, 0, SH_SCOPE_PUBLIC, $metaKey, intval($argv[0]));
-		print " SUCCESS! (max=".$argv[0].")\n";
+		$maxIdeas = intval($argv[0]);
+		nodeMeta_Add($EVENT_ID, 0, SH_SCOPE_PUBLIC, $metaKey, $maxIdeas);
+		print " SUCCESS! (max=".$maxIdeas.")\n";
 	}
 	else if ($argv[0] == 'disabled') {
 		nodeMeta_Remove($EVENT_ID, 0, SH_SCOPE_PUBLIC, $metaKey, $event['meta'][$metaKey]);
 		print " SUCCESS! (disabled)\n";
 	} else {
-		print " ** ERROR: Can only set a number or 'disabled'\n";
+		print " ** ERROR: Can only set a number >= 0 or 'disabled'\n";
 	}	
 } else {
 	if ($ACTION) {
