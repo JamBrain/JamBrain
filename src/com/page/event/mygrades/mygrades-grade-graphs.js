@@ -148,7 +148,7 @@ export default class GradeGraphs extends Component {
 			ShowSummaryGraph = (
 				<div class="-graph">
 					<h3>Graded items per day</h3>
-					<BarChart values={GradeCounts} labels={binnedGradesDays} use_percentages={false} hideLegend />
+					<BarChart values={GradeCounts} labels={binnedGradesDays} use_percentages={false} hideLegend showXAxis />
 				</div>
 			);
 
@@ -191,13 +191,14 @@ export default class GradeGraphs extends Component {
 				DetailValues.push(votesData[grade]);
 			}
 			DetailCaption = <div class="-caption">Positive values indicate you give higher grades to JAM items. Negative that you give higher grades to COMPO items.</div>;
+			DetailProps.showXAxis = true;
 		}
 		else if ( showTrend ) {
 			DetailGraphTitle = 'Total average grade per day';
 			DetailValues = binnedGradesDays.map(date => binnedGrades[date] ? this.averageArray(binnedGrades[date].map(e => e[1]), 1) : NaN);
 			DetailLabels = binnedGradesDays;
 			DetailProps.hideLegend = true;
-
+			DetailProps.showXAxis = true;
 		}
 		else {
 			votesData = this.getGlobalHistogram(grades, gradeNames);

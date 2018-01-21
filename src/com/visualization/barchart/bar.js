@@ -1,5 +1,7 @@
 import {h, Component} 				from 'preact/preact';
 
+const BAR_WIDTH_GAP_RATIO = 0.8;
+
 export default class Bar extends Component {
 
 	constructor( props ) {
@@ -7,31 +9,23 @@ export default class Bar extends Component {
 
     }
 
-    render( props ) {
+    render( {valuePos, zero, width, index, color, left} ) {
 
-        // it's valid for height/width/index to be zero so we have to check it against undefined.
-        if ( !(props && (props.height != null) && (props.index != null) && (props.width != null) && props.color) ) {
-            console.warn('Bar was created with invalid props', props);
+        // it's valid for valuePos/width/index to be zero so we have to check it against undefined.
+        if ( !(valuePos != null && index != null && width != null && left != null && color )) {
+            console.warn('Bar was created with invalid props', this.props);
             return;
         }
 
-        let {height, zero, width, index, color} = props;
-		if (height < 0) {
+		if (valuePos < zero) {
 			let tmp = zero;
-			zero += height;
-			height = tmp - zero;
+			zero = valuePos;
+			valuePos = tmp;
 		}
-		const width_gap_ratio = 0.8;
-
-        // drawing a bar of 0 height causes artifacting so bail out.
-        //if ( height == 0 || width == 0 ) {
-        //    return;
-        //}
-
-        let segmentclass = cN("-bar", "vis_fill_color_"+color, props.class);
+        let segmentclass = cN("-bar", "vis_fill_color_"+color, this.props.class);
 
         return (
-            <rect class={segmentclass} x={width * index} y={zero} width={width * width_gap_ratio} height={height}/>
+            <rect class={segmentclass} x={left} y={zero} width={width * BAR_WIDTH_GAP_RATIO} height={valuePos - zero}/>
         );
     }
 }
