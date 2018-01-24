@@ -3,7 +3,7 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
-import ButtonBase						from 'com/button-base/base';
+import UIButton							from 'com/ui/button/button';
 
 import $ThemeIdeaVote					from '../../shrub/js/theme/theme_idea_vote';
 
@@ -26,7 +26,8 @@ export default class ContentEventSlaughter extends Component {
 		this.submitYesVote = this.submitYesVote.bind(this);
 		this.submitNoVote = this.submitNoVote.bind(this);
 		this.submitFlagVote = this.submitFlagVote.bind(this);
-
+		this.hotkeyVoteYes = this.hotKeyVote.bind(this, 'YES', 'Y');
+		this.hotkeyVoteNo = this.hotKeyVote.bind(this, 'NO', 'N');
 		this.openLink = this.openLink.bind(this);
 
 		this._renderMyIdea = this._renderMyIdea.bind(this);
@@ -141,7 +142,7 @@ export default class ContentEventSlaughter extends Component {
 		return ret;
 	}
 
-	_submitVote( command, e ) {
+	_submitVote( command ) {
 		return $ThemeIdeaVote[command](this.state.current)
 		.then(r => {
 			if ( r.status === 200 ) {
@@ -158,14 +159,22 @@ export default class ContentEventSlaughter extends Component {
 			this.setState({'error': err});
 		});
 	}
+
 	submitYesVote( e ) {
-		return this._submitVote('Yes', e);
+		return this._submitVote('Yes');
 	}
 	submitNoVote( e ) {
-		return this._submitVote('No', e);
+		return this._submitVote('No');
 	}
 	submitFlagVote( e ) {
-		return this._submitVote('Flag', e);
+		return this._submitVote('Flag');
+	}
+
+	hotKeyVote( vote, key, e ) {
+		console.log(vote, key, e);
+		if (e.key == key) {
+			//this._submitVote(vote);
+		}
 	}
 
 	openLink( e ) {
@@ -240,10 +249,10 @@ export default class ContentEventSlaughter extends Component {
 						<div>{ThemeName}</div>
 					</div>
 					<div class="-buttons">
-						<button class="middle big -green" onclick={this.submitYesVote} title="Good">YES ✓</button>
-						<button class="middle big -red" onclick={this.submitNoVote} title="Bad">NO ✕</button>
+						<UIButton class="middle big -green" onclick={this.submitYesVote} title="Good">YES ✓</UIButton>
+						<UIButton class="middle big -red" onclick={this.submitNoVote} title="Bad">NO ✕</UIButton>
 
-						<div class="-title">If inappropriate or offensive, you can <button class="-tiny" onclick={this.submitFlagVote}>Flag ⚑</button> it.</div>
+						<div class="-title">If inappropriate or offensive, you can <UIButton class="-flag" onclick={this.submitFlagVote}>Flag ⚑</UIButton> it.</div>
 					</div>
 					<div class="-stats">
 						<div>

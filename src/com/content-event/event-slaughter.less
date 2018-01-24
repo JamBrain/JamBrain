@@ -30,9 +30,8 @@
 		margin:0.5em 0;
 		vertical-align: middle;
 
-		& button {
-			background: #AAA;
-			color: #DDD;
+		& .ui-button {
+			display: inline-block;
 
 			font-size: 1.2em;
 
@@ -41,22 +40,24 @@
 			cursor: pointer;
 
 			margin: 0.5em;
-			border-radius: 2.0em;
+			// border-radius: 2.0em;
 			font-weight: 700;
 			outline: none;
 
 			&.-green {
-				background:#4C4;
-				color:#8F8;
+				background: @COL_BC;
+				color: @COL_L;
 			}
 
 			&.-red {
-				background:#C44;
-				color:#F88;
+				background:@COL_CA;
+				color: @COL_L;
 			}
 
-			&.-tiny {
+			&.-flag {
 				font-size: 0.8em;
+				background: @COL_A;
+				color: @COL_L;
 			}
 
 			transition: transform 0.1s;
