@@ -78,7 +78,7 @@ export default class BarChart extends Component {
 		let barWidth = this.scale(1, xMaxValue, xZeroPos, 100 - padRight) - xZeroPos;
 
 		let total = values.reduce((a, b) => a + b, 0);
-		let percentages = values.map(x => Math.round((100*(x/total))*100)/100);
+		let percentages = values.map((x) => (Math.round((100*(x/total))*100)/100));
 
 		let Bars = [];
         let Names = [];
@@ -87,11 +87,11 @@ export default class BarChart extends Component {
 		let ShowLegend = null;
 		for ( let i = 0; i < values.length; i++ ) {
 
-			if (valuesYPos[i] == yZeroPos || isNaN(valuesYPos[i])) {
+			if ( (valuesYPos[i] == yZeroPos) || isNaN(valuesYPos[i]) ) {
 				//continue;
 			}
 
-			let color = 1 + ( i % 6 );
+			let color = 1 + (i % 6);
 			Bars.push(<Bar valuePos={valuesYPos[i]} zero={yZeroPos} width={barWidth} left={this.scale(firstBarXStart + i, xMaxValue, xZeroPos, 100)} index={i} color={color} />);
 
 			if ( !hideLegend ) {

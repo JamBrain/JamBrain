@@ -9,15 +9,17 @@ export default class Bar extends Component {
 
     }
 
-    render( {valuePos, zero, width, index, color, left} ) {
+    render( props ) {
 
-        // it's valid for valuePos/width/index to be zero so we have to check it against undefined.
-        if ( !(valuePos != null && index != null && width != null && left != null && color )) {
+		let {valuePos, zero} = props;
+		const {width, color, left} = props;
+        // it's valid for valuePos/width to be zero so we have to check it against undefined.
+        if ( !((valuePos != null) && (width != null) && (left != null) && color )) {
             console.warn('Bar was created with invalid props', this.props);
             return;
         }
 
-		if (valuePos < zero) {
+		if ( valuePos < zero ) {
 			let tmp = zero;
 			zero = valuePos;
 			valuePos = tmp;
