@@ -86,7 +86,7 @@ export default class BarChart extends Component {
 
 		let ShowLegend = null;
 		for ( let i = 0; i < values.length; i++ ) {
-			// FIXME: This doesn't seem to do anything. 
+			// FIXME: This doesn't seem to do anything.
 			if ( (valuesYPos[i] == yZeroPos) || isNaN(valuesYPos[i]) ) {
 				//continue;
 			}
