@@ -8,7 +8,7 @@ export default class GradeGraphs extends Component {
 		if ( !hist ) {
 			hist = {};
 		}
-		const filteredGrades = grades.filter(grade => grade.name == gradeKey).map(grade => grade.value);
+		const filteredGrades = grades.filter(grade => (grade.name == gradeKey)).map(grade => grade.value);
 		filteredGrades.forEach(grade => {
 			if ( !hist[grade] ) {
 				hist[grade] = 1;
@@ -29,14 +29,14 @@ export default class GradeGraphs extends Component {
 	}
 
 	getAverage( grades, gradeKey, decimals ) {
-		const values = grades.filter(grade => grade.name == gradeKey).map(grade => grade.value);
+		const values = grades.filter(grade => (grade.name == gradeKey)).map(grade => grade.value);
 		return this.averageArray(values, decimals);
 	}
 
 	countTypes( nodes ) {
 		const counter = {};
 		nodes.forEach(node => {
-			const nodeType = node.subsubtype.toUpperCase() + ': ' + node.subtype.toUpperCase();
+			const nodeType = node.subsubtype.toUpperCase() + ": " + node.subtype.toUpperCase();
 			if ( counter[nodeType] ) {
 				counter[nodeType] += 1;
 			}
@@ -63,7 +63,7 @@ export default class GradeGraphs extends Component {
 		}
 		const bins = {};
 		grades.forEach(grade => {
-			const bin = grade.timestamp.split(' ', 1)[0]; //Get date
+			const bin = grade.timestamp.split(" ", 1)[0]; //Get date
 			const {value, id} = grade;
 			if ( bins[bin] ) {
 				bins[bin].push([id, value]);
@@ -143,7 +143,7 @@ export default class GradeGraphs extends Component {
 			);
 		}
 		else if ( showTrend ) {
-			let GradeCounts = binnedGradesDays.map(date => binnedGrades[date] ? binnedGrades[date].map(e => e[0]) : []); //Get lists of item IDs per date
+			let GradeCounts = binnedGradesDays.map(date => (binnedGrades[date] ? binnedGrades[date].map(e => e[0]) : [])); //Get lists of item IDs per date
 			GradeCounts = GradeCounts.map(items => items.filter((itemId, idx) => (items.indexOf(itemId) == idx)).length); //Unique item ID count per date
 			ShowSummaryGraph = (
 				<div class="-graph">
@@ -175,20 +175,21 @@ export default class GradeGraphs extends Component {
 
 		if ( focusGrade ) {
 			votesData = this.getHistogram(grades, focusGrade);
-			DetailGraphTitle = 'Distribution of stars (' + gradeNames[focusGrade] + '):';
-			DetailValues = gradeLevels.map(v => votesData[v] ? votesData[v] : 0);
-			DetailLabels = gradeLevels.map(v => v + ' star' + (v > 1 ? 's' : ''));
+			DetailGraphTitle = "Distribution of stars (" + gradeNames[focusGrade] + "):";
+			DetailValues = gradeLevels.map(v => (votesData[v] ? votesData[v] : 0));
+			DetailLabels = gradeLevels.map(v => (v + " star" + (v > 1 ? "s" : "")));
 			DetailProps.showXAxis = true;
 			DetailProps.showYAxis = true;
 			DetailProps.showYTicks = true;
 		}
 		else if ( showByType ) {
-			DetailGraphTitle = 'JAM vs COMPO average bias';
+			DetailGraphTitle = "JAM vs COMPO average bias";
 			DetailLabels = GradeNamesList;
 			votesData = this.getVotesBias(
-				grades.filter(grade => nodes.filter(node => node.id == grade.id)[0].subsubtype == 'jam'),
-				grades.filter(grade => nodes.filter(node => node.id == grade.id)[0].subsubtype != 'jam'),
-				gradeNames);
+				grades.filter(grade => (nodes.filter(node => (node.id == grade.id))[0].subsubtype == 'jam')),
+				grades.filter(grade => (nodes.filter(node => (node.id == grade.id))[0].subsubtype != 'jam')),
+				gradeNames
+			);
 			DetailValues = [];
 			for ( let grade in gradeNames ) {
 				DetailValues.push(votesData[grade]);
@@ -199,8 +200,8 @@ export default class GradeGraphs extends Component {
 			DetailProps.showYTicks = true;
 		}
 		else if ( showTrend ) {
-			DetailGraphTitle = 'Total average grade per day';
-			DetailValues = binnedGradesDays.map(date => binnedGrades[date] ? this.averageArray(binnedGrades[date].map(e => e[1]), 1) : NaN);
+			DetailGraphTitle = "Total average grade per day";
+			DetailValues = binnedGradesDays.map(date => (binnedGrades[date] ? this.averageArray(binnedGrades[date].map(e => e[1]), 1) : NaN));
 			DetailLabels = binnedGradesDays;
 			DetailProps.hideLegend = true;
 			DetailProps.showXAxis = true;
@@ -209,13 +210,12 @@ export default class GradeGraphs extends Component {
 		}
 		else {
 			votesData = this.getGlobalHistogram(grades, gradeNames);
-			DetailGraphTitle = 'Total distribution of stars';
-			DetailValues = gradeLevels.map(v => votesData[v] ? votesData[v] : 0);
-			DetailLabels = gradeLevels.map(v => v + ' star' + (v > 1 ? 's' : ''));
+			DetailGraphTitle = "Total distribution of stars";
+			DetailValues = gradeLevels.map(v => (votesData[v] ? votesData[v] : 0));
+			DetailLabels = gradeLevels.map(v => (v + " star" + (v > 1 ? "s" : "")));
 			DetailProps.showXAxis = true;
 			DetailProps.showYAxis = true;
 			DetailProps.showYTicks = true;
-
 		}
 
 		ShowDetailGraph = (
