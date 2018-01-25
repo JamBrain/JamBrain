@@ -9,7 +9,7 @@ export default class XAxis extends Component {
 	// NOTE: This emits SVG, not HTML
 	render( props ) {
 		const {yZeroPos, padLeft, padRight} = props;
-		
+
 		// QUESTION: does this need to be inside <g>? Can this just be <line>? Please document if <g> is needed.
 		return (
 			<g>
