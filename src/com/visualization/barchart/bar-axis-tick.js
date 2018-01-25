@@ -4,6 +4,7 @@ const MAJOR_TICK_LENGTH = 1.5;
 const MINOR_TICK_LENGTH = 0.5;
 
 export default class Tick extends Component {
+	// NOTE: This emits SVG, not HTML
 	render( props ) {
 		const {major, horizontal, outside, axis, position} = props;
 		const pos0 = outside ? (axis - (major ? MAJOR_TICK_LENGTH : MINOR_TICK_LENGTH)) : (axis + (major ? MAJOR_TICK_LENGTH : MINOR_TICK_LENGTH));
