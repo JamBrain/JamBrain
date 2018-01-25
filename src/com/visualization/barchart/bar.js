@@ -6,7 +6,7 @@ export default class Bar extends Component {
 	constructor( props ) {
 		super(props);
 	}
-	
+
 	// NOTE: This emits SVG, not HTML
 	render( props ) {
 		let {valuePos, zero} = props;
