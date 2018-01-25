@@ -8,13 +8,11 @@ import YAxis						from './bar-y-axis';
 const AXIS_RESERVATION = 2;
 
 export default class BarChart extends Component {
-
-    scaleValues( values, minZero, posMin, posMax ) {
-
-        let max = 1;
+	scaleValues( values, minZero, posMin, posMax ) {
+		let max = 1;
 		let min = 0;
-        values.forEach( ( v ) => {
-			if (isFinite(v)) {
+		values.forEach((v) => {
+			if ( isFinite(v) ) {
 				max = Math.max(v, max);
 				min = Math.min(v, min);
 			}
@@ -22,27 +20,29 @@ export default class BarChart extends Component {
 
 		let yZeroPos = this.scale(0 - min, max - min, posMin, posMax);
 		//console.log(values, min, max, minZero, yZeroPos);
-		if (yZeroPos < minZero) {
+		if ( yZeroPos < minZero ) {
 			yZeroPos = minZero;
 		}
 		const yOnePos = this.scale(1, max, yZeroPos, posMax);
-        const valuesYPos = values.map( v => this.scale(v, max, yZeroPos, posMax));
+		const valuesYPos = values.map(v => this.scale(v, max, yZeroPos, posMax));
 		//console.log(values, valuesYPos, yZeroPos, yOnePos);
-        return {'valuesYPos': valuesYPos, 'yZeroPos': yZeroPos, 'yOnePos': yOnePos};
-    }
+		return {'valuesYPos': valuesYPos, 'yZeroPos': yZeroPos, 'yOnePos': yOnePos};
+	}
 
 	scale( value, valueMax, minPos, maxPos ) {
 		return ((maxPos - minPos) * value / valueMax) + minPos;
 	}
 
-    render( props ) {
+	// NOTE: This emits *BOTH* SVG and HTML
+	render( props ) {
+		// FIXME: This line seems redundant. Please document if there's a reason behind this.
+		props["use_percentages"] = (props.use_percentages && (props.use_percentages == true));
 
-		props["use_percentages"] = (props.use_percentages && props.use_percentages == true);
-        let {labels, values, use_percentages, hideLegend} = props;
-        if ( !((labels || hideLegend) && values) ) {
-            console.warn('BarChart was created with invalid props', props);
-            return <div>No Data!</div>;
-        }
+		let {labels, values, use_percentages, hideLegend} = props;
+		if ( !((labels || hideLegend) && values) ) {
+			console.warn("BarChart was created with invalid props", props);
+			return <div>No Data!</div>;
+		}
 
 		const padTop = 0;
 		const padBottom = 0;
@@ -55,38 +55,38 @@ export default class BarChart extends Component {
 		const yAxisWidth = props.yAxisWidth ? props.yAxisWidth : AXIS_RESERVATION;
 
 		let firstBarXStart = 0;
-		if (props.showXAxis) {
+		if ( props.showXAxis ) {
 			minYZeroPos = xAxisHeight;
 		}
-		if (props.showYAxis) {
+		if ( props.showYAxis ) {
 			xZeroPos = yAxisWidth;
 			firstBarXStart = 0.2;
 		}
 		const xMaxValue = firstBarXStart + values.length;
 
-        const {valuesYPos, yZeroPos, yOnePos} = this.scaleValues(values, minYZeroPos, padBottom, 100 - padTop);
+		const {valuesYPos, yZeroPos, yOnePos} = this.scaleValues(values, minYZeroPos, padBottom, 100 - padTop);
 
 		let ShowXAxis = null;
-		if (props.showXAxis) {
+		if ( props.showXAxis ) {
 			ShowXAxis = <XAxis padLeft={padLeft} padRight={padRight} height={xAxisHeight} yZeroPos={yZeroPos} />;
 		}
 		let ShowYAxis = null;
-		if (props.showYAxis) {
+		if ( props.showYAxis ) {
 			ShowYAxis = <YAxis yZeroPos={yZeroPos} yOnePos={yOnePos} xZeroPos={xZeroPos} padTop={padTop} padBottom={padBottom} width={yAxisWidth} showTicks={props.showYTicks} />;
 		}
 
 		let barWidth = this.scale(1, xMaxValue, xZeroPos, 100 - padRight) - xZeroPos;
 
-		let total = values.reduce((a, b) => a + b, 0);
-		let percentages = values.map((x) => (Math.round((100*(x/total))*100)/100));
+		let total = values.reduce((a, b) => (a + b), 0);
+		let percentages = values.map((x) => (Math.round((100 * (x / total)) * 100) / 100));
 
 		let Bars = [];
-        let Names = [];
+		let Names = [];
 		let Colors = [];
 
 		let ShowLegend = null;
 		for ( let i = 0; i < values.length; i++ ) {
-
+			// FIXME: This doesn't seem to do anything. 
 			if ( (valuesYPos[i] == yZeroPos) || isNaN(valuesYPos[i]) ) {
 				//continue;
 			}
@@ -104,23 +104,23 @@ export default class BarChart extends Component {
 			}
 			Colors.push(color);
 		}
-		if (!hideLegend) {
-			ShowLegend = <Legend names={Names} colors={Colors}/>;
+		if ( !hideLegend ) {
+			ShowLegend = <Legend names={Names} colors={Colors} />;
 		}
 
-        return (
-            <div class="chart">
-                <div class="-bar">
-                    <svg class="-svg" viewBox="0 0 100 100" width="100%" height="100%">
+		return (
+			<div class="chart">
+				<div class="-bar">
+					<svg class="-svg" viewBox="0 0 100 100" width="100%" height="100%">
 						<g transform="translate(0,100) scale(1,-1)">
 							{Bars}
 							{ShowYAxis}
 							{ShowXAxis}
 						</g>
-                    </svg>
-                </div>
+					</svg>
+				</div>
 				{ShowLegend}
-            </div>
-        );
-    }
+			</div>
+		);
+	}
 }
