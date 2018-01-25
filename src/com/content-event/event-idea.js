@@ -122,7 +122,7 @@ export default class ContentEventIdea extends Component {
 		return (
 			<div class="-item">
 				<div class="-x" onclick={this.removeIdea.bind(this, id)}><SVGIcon>cross</SVGIcon></div>
-				<SVGIcon>lightbuld</SVGIcon>
+				<SVGIcon>lightbulb</SVGIcon>
 				<div class="-text" title={idea}>{idea}</div>
 			</div>
 		);
