@@ -22,6 +22,7 @@ export default class YAxis extends Component {
 		return {'minorTick': minorTick, 'majorTick': majorTick};
 	}
 
+	// NOTE: This emits SVG, not HTML
 	render( props ) {
 		const {yZeroPos, yOnePos, showTicks, padBottom, padTop, width} = props;
 		let ShowTicks = null;
