@@ -182,6 +182,9 @@ function SetupEvent()
 	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'event-start', $formatStart);
 	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'event-end', $formatEnd);
 
+	// Add metadata number of theme-ideas per user
+	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-idea-limit', random_int(3, 5));	
+
 	// Create metadata for grading
 	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'grade-01', 'Overall');
 	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'grade-02', 'Silliness');

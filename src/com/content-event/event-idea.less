@@ -8,6 +8,31 @@
 		padding: 0.5em;
 	}
 
+	& > .previous-theme {
+		& > .previous-theme-item {
+			margin: 0.25em 1em;
+
+			& > .event-name {
+				background: @COL_G;
+				color: @COL_L;
+				display: inline-block;
+				padding: 0.5em 1em;
+			}
+
+			& > .event-theme {
+				margin-left: 1em;
+				display: inline-block;
+			}
+
+			& > .event-no-theme {
+				margin-left: 1em;
+				font-style: italic;
+				display: inline-block;
+				color: @COL_A;
+			}
+		}
+	}
+
 	& > .idea-form {
 		max-width: 30em;
 		margin-top: 0.5em;
