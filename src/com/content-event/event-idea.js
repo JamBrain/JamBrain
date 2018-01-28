@@ -49,14 +49,14 @@ export default class ContentEventIdea extends Component {
 		if ( isSubmit ) {
 			idea = idea.trim();
 		}
-		this.setState({'idea': idea, 'error': idea.length > 64 ? 'Suggestion is too long.' : null});
+		this.setState({'idea': idea, 'error': ((idea.length > 64) ? "Suggestion is too long." : null)});
 	}
 
 	onKeyDown( e ) {
 		if ( !e ) {
 			e = window.event;
 		}
-		const isSubmit = e.keyCode === 13;
+		const isSubmit = (e.keyCode === 13);
 		this.textChange(e, isSubmit);
 		if ( isSubmit ) {
 			/*e.preventDefault();*/
@@ -76,22 +76,28 @@ export default class ContentEventIdea extends Component {
 				this.setState({'ideas': r.ideas, 'enableSubmit': canHaveMoreIdeas(r.ideas)});
 			})
 			.catch(err => {
-				this.setState({'error': 'Error processing the request. Make sure you are still logged in.'});
+				this.setState({'error': "Error processing the request. Make sure you are still logged in."});
 			});
 		}
 		else {
-			this.setState({'error': 'Unexpected error.'});
+			this.setState({'error': "Unexpected error."});
 		}
 	}
 
 	checkDuplicateIdea( idea ) {
 		const {processingIdea, ideas} = this.state;
-		if ( processingIdea && (Sanitize.slugify_Name(idea) == Sanitize.slugify_Name(processingIdea)) ) {
+		idea = Sanitize.slugify_Name(idea);
+
+		if ( processingIdea && (idea == Sanitize.slugify_Name(processingIdea)) ) {
 			return true;
 		}
 		else {
-			return Object.values(ideas).indexOf(idea) > -1;
+			for ( var idx in ideas ) {
+				if ( idea == Sanitize.slugify_Name(ideas[idx]) )
+					return true;
+			}
 		}
+		return false;
 	}
 
 	submitIdeaForm( e ) {
@@ -147,7 +153,7 @@ export default class ContentEventIdea extends Component {
 								class="-suggestion"
 								onchange={this.textChange} onkeydown={this.onKeyDown}
 								placeholder="Your suggestion" maxlength="64" value={idea} />
-							<UIButton onclick={this.submitIdeaForm}>
+								<UIButton onclick={this.submitIdeaForm}>
 								<SVGIcon>suggestion</SVGIcon> Submit
 							</UIButton>
 						</div>
