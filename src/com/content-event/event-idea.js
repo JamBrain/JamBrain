@@ -17,6 +17,7 @@ export default class ContentEventIdea extends Component {
 			'idea': "",
 			'ideas': null,
 			'enableSubmit': false,
+			'processingIdea': null,
 		};
 
 		this.onKeyDown = this.onKeyDown.bind(this);
@@ -82,9 +83,9 @@ export default class ContentEventIdea extends Component {
 		}
 	}
 
-	checkDuplicateIdea(idea) {
+	checkDuplicateIdea( idea ) {
 		const {processingIdea, ideas} = this.state;
-		if ( processingIdea && (idea == processingIdea) ) {
+		if ( processingIdea && (slugify_Name(idea) == slugify_Name(processingIdea)) ) {
 			return true;
 		}
 		else {
@@ -97,7 +98,7 @@ export default class ContentEventIdea extends Component {
 		//console.log('submit:', idea);
 		if ( this.checkDuplicateIdea(idea) ) {
 			this.setState({
-				'error': "Duplicated suggestion! There\'s no point in supplying the same suggestion more than once."
+				'error': "Suggestion is too similar to one of your other suggestions."
 			});
 		}
 		else if ( (idea.length > 0) && (idea.length <= 64) ) {
@@ -155,7 +156,7 @@ export default class ContentEventIdea extends Component {
 				if ( hasSubmittedIdeas(ideas) ) {
 					ShowMySuggestions = (
 						<div class="idea-mylist">
-							{ this.renderIdeas() }
+							{this.renderIdeas()}
 						</div>
 					);
 				}
@@ -193,7 +194,7 @@ export default class ContentEventIdea extends Component {
 		else {
 			return (
 				<div class="content-base content-post">
-					{ error ? error : <NavSpinner /> }
+					{error ? error : <NavSpinner />}
 				</div>
 			);
 		}
