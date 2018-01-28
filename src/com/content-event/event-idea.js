@@ -2,7 +2,7 @@ import {h, Component} 				from 'preact/preact';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import SVGIcon 							from 'com/svg-icon/icon';
 import UIButton							from 'com/ui/button/button';
-import $ThemeIdea						from '../../shrub/js/theme/theme_idea';
+import $ThemeIdea						from 'shrub/js/theme/theme_idea';
 
 
 const MAX_IDEAS = 3;
