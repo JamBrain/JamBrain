@@ -1,8 +1,9 @@
-import {h, Component} 				from 'preact/preact';
+import {h, Component} 					from 'preact/preact';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import SVGIcon 							from 'com/svg-icon/icon';
 import UIButton							from 'com/ui/button/button';
 import $ThemeIdea						from 'shrub/js/theme/theme_idea';
+import Sanitize							from 'internal/sanitize/sanitize';
 
 
 const MAX_IDEAS = 3;
@@ -85,7 +86,7 @@ export default class ContentEventIdea extends Component {
 
 	checkDuplicateIdea( idea ) {
 		const {processingIdea, ideas} = this.state;
-		if ( processingIdea && (slugify_Name(idea) == slugify_Name(processingIdea)) ) {
+		if ( processingIdea && (Sanitize.slugify_Name(idea) == Sanitize.slugify_Name(processingIdea)) ) {
 			return true;
 		}
 		else {
