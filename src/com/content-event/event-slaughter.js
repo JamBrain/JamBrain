@@ -5,10 +5,12 @@ import SVGIcon 							from 'com/svg-icon/icon';
 
 import UIButton							from 'com/ui/button/button';
 
-import $ThemeIdeaVote					from '../../shrub/js/theme/theme_idea_vote';
+import $ThemeIdeaVote					from 'shrub/js/theme/theme_idea_vote';
 
 import PieChart							from 'com/visualization/piechart/piechart';
 
+RECENT_CACHE_LENGTH = 50;
+RECENT_CACHE_RENDER = 10;
 
 export default class ContentEventSlaughter extends Component {
 	constructor( props ) {
@@ -26,22 +28,19 @@ export default class ContentEventSlaughter extends Component {
 		this.submitYesVote = this.submitYesVote.bind(this);
 		this.submitNoVote = this.submitNoVote.bind(this);
 		this.submitFlagVote = this.submitFlagVote.bind(this);
-		this.hotkeyVoteYes = this.hotKeyVote.bind(this, 'YES', 'Y');
-		this.hotkeyVoteNo = this.hotKeyVote.bind(this, 'NO', 'N');
 		this.openLink = this.openLink.bind(this);
 
 		this._renderMyIdea = this._renderMyIdea.bind(this);
 	}
 
 	componentDidMount() {
-		window.addEventListener('keydown', console.log);
-		var onVotes = $ThemeIdeaVote.GetMy(this.props.node.id)
+		this.hotKeyVote = this.hotKeyVote.bind(this);
+		window.addEventListener('keyup', this.hotKeyVote);
+		const onVotes = $ThemeIdeaVote.GetMy(this.props.node.id)
 		.then(r => {
 			if ( r.votes ) {
-				var End = this.state.recent.length;
-				var Start = End - 50;
-				if ( Start < 0 )
-					Start = 0;
+				const End = this.state.recent.length;
+				const Start = Math.max(0, End - RECENT_CACHE_LENGTH);
 
 				// NOTE: The 'recent' order is quite random. Better than nothing though
 
@@ -55,7 +54,7 @@ export default class ContentEventSlaughter extends Component {
 			this.setState({'error': err});
 		});
 
-		var onIdeas = $ThemeIdeaVote.Get(this.props.node.id)
+		const onIdeas = $ThemeIdeaVote.Get(this.props.node.id)
 		.then(r => {
 			if ( r.ideas ) {
 				//console.log('get',r);
@@ -82,21 +81,31 @@ export default class ContentEventSlaughter extends Component {
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener('keydown', console.log);
+		window.removeEventListener('keyup', this.hotKeyVote);
+	}
+
+	hotKeyVote( e, f, g ) {
+		console.log(this, e, f, g);
+		if ( e.keyCode == 89 ) {
+			this._submitVote('Yes');
+		}
+		else if (e.keyCode == 78 ) {
+			this._submitVote('No');
+		}
 	}
 
 	pickRandomIdea() {
 		if ( this.state.votes && this.state.ideas ) {
-			var vote_keys = Object.keys(this.state.votes);
-			var idea_keys = Object.keys(this.state.ideas);
+			const voteKeys = Object.keys(this.state.votes);
+			const ideaKeys = Object.keys(this.state.ideas);
 
-			var available = idea_keys.filter(key => vote_keys.indexOf(key) === -1);
+			const available = ideaKeys.filter(key => voteKeys.indexOf(key) === -1);
 
 			if ( available.length === 0 ) {
 				this.setState({'done': true, 'votes-left': available.length});
 			}
 
-			var id = parseInt(Math.random() * available.length);
+			const id = parseInt(Math.random() * available.length);
 
 			this.setState({'current': available[id], 'votes-left': available.length});
 		}
@@ -108,8 +117,8 @@ export default class ContentEventSlaughter extends Component {
 	addToRecentQueue( id ) {
 		this.state.recent.push(id);
 
-		while (this.state.recent.length > 50) {
-			var junk = this.state.recent.shift();
+		while (this.state.recent.length > RECENT_CACHE_LENGTH) {
+			const junk = this.state.recent.shift();
 			console.log("trimmed", junk);
 		}
 
@@ -129,14 +138,10 @@ export default class ContentEventSlaughter extends Component {
 
 	renderRecentQueue() {
 		// Render the last 10
-		var End = this.state.recent.length;
-		var Start = End - 10;
-		if ( Start < 0 )
-			Start = 0;
-
-		var ret = [];
-//		for ( var idx = Start; idx < End; idx++ ) {		// Regular Order
-		for ( var idx = End; idx-- > Start; ) {			// Reverse Order
+		const End = this.state.recent.length;
+		const Start = Math.max(0, End - RECENT_CACHE_RENDER);
+		const ret = [];
+		for ( let idx = End - 1; idx >= Start; idx -= 1) {			// Reverse Order
 			ret.push(
 				<div class="-recent">
 					{this.renderIcon(this.state.votes[this.state.recent[idx]])}
@@ -175,22 +180,15 @@ export default class ContentEventSlaughter extends Component {
 		return this._submitVote('Flag');
 	}
 
-	hotKeyVote( vote, key, e ) {
-		console.log(vote, key, e);
-		if (e.key == key) {
-			//this._submitVote(vote);
-		}
-	}
-
 	openLink( e ) {
 		// Google link https://www.google.com/search?q=[query]
-		let url = "https://www.google.com/search?q="+encodeURIComponent(this.state.ideas[this.state.current]);
-		let win = window.open(url, '_blank');
+		const url = "https://www.google.com/search?q="+encodeURIComponent(this.state.ideas[this.state.current]);
+		const win = window.open(url, '_blank');
 		win.focus();
 	}
 
 	_renderMyIdea( id ) {
-		var idea = escape(this.state.ideas[id]);
+		const idea = escape(this.state.ideas[id]);
 
 		return (
 			<div class="-item">
@@ -198,21 +196,22 @@ export default class ContentEventSlaughter extends Component {
 			</div>
 		);
 	}
+
 	renderMyIdeas() {
 		return Object.keys(this.state.ideas).map(this._renderMyIdea);
 	}
 
 	renderBody( state ) {
 
-		let seen = Object.keys(state.votes).length;
+		const seen = Object.keys(state.votes).length;
 
-		var labels = [
+		const labels = [
 			'slaughtered',
 			'kept',
 			'left'
 		];
 
-		var values = [
+		const values = [
 			0,
 			0,
 			state['votes-left']
@@ -230,7 +229,7 @@ export default class ContentEventSlaughter extends Component {
 			});
 		}
 
-		var StatsAndDetails = (
+		const StatsAndDetails = (
 			<div class="history">
 				<h3>Recent Themes</h3>
 				{this.renderRecentQueue()}
@@ -246,7 +245,7 @@ export default class ContentEventSlaughter extends Component {
 			);
 		}
 		else if ( state.current ) {
-			var ThemeName = (state.ideas[state.current]);
+			const ThemeName = (state.ideas[state.current]);
 			return (
 				<div class="event-slaughter">
 					<div class="-title">Would this be a good Theme?</div>
@@ -254,10 +253,11 @@ export default class ContentEventSlaughter extends Component {
 						<div>{ThemeName}</div>
 					</div>
 					<div class="-buttons">
-						<UIButton class="middle big -green" onclick={this.submitYesVote} title="Good">YES ✓</UIButton>
-						<UIButton class="middle big -red" onclick={this.submitNoVote} title="Bad">NO ✕</UIButton>
+						<UIButton class="middle big -green" onclick={this.submitYesVote} title="Good">(Y)ES ✓</UIButton>
+						<UIButton class="middle big -red" onclick={this.submitNoVote} title="Bad">(N)O ✕</UIButton>
 
 						<div class="-title">If inappropriate or offensive, you can <UIButton class="-flag" onclick={this.submitFlagVote}>Flag ⚑</UIButton> it.</div>
+						<div>You may use hotkeys <b>Y</b> for yes and <b>N</b> for no votes.</div>
 					</div>
 					<div class="-stats">
 						<div>
@@ -273,9 +273,9 @@ export default class ContentEventSlaughter extends Component {
 		}
 	}
 
-	render( {node, user/*, path, extra*/}, state ) {
-
-		var Title = (<h3>Theme Slaughter Round</h3>);
+	render( props, state ) {
+		const {node, user} = props;
+		const Title = (<h3>Theme Slaughter Round</h3>);
 
 		if ( node.slug && state.votes && state.ideas ) {
 			if ( user && user['id'] ) {
