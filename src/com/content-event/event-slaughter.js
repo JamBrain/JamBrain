@@ -34,6 +34,7 @@ export default class ContentEventSlaughter extends Component {
 	}
 
 	componentDidMount() {
+		window.addEventListener('keydown', console.log);
 		var onVotes = $ThemeIdeaVote.GetMy(this.props.node.id)
 		.then(r => {
 			if ( r.votes ) {
@@ -78,6 +79,10 @@ export default class ContentEventSlaughter extends Component {
 		.catch(err => {
 			console.log("Boo hoo", err);
 		});
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('keydown', console.log);
 	}
 
 	pickRandomIdea() {
