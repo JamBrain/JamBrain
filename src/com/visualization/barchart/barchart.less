@@ -1,3 +1,4 @@
+@import 'defs.less';
 
 .chart {
 	& > .-bar {
@@ -6,8 +7,22 @@
 		align-self: center;
 
 		& > .-svg {
-			& > .-bar {
-				// maybe animate the bar's changing
+			& > g {
+				& > .-bar {
+					// maybe animate the bar's changing
+				}
+
+				& > g {
+					& .-chart-axis {
+						stroke-width: .4px;
+						stroke: @COL_NDDDD;
+					}
+
+					& > .-axis-tick {
+						stroke: @COL_NDDDD;
+						stroke-width: .3px;
+					}
+				}
 			}
 		}
 	}

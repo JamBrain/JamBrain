@@ -1,0 +1,161 @@
+#!/usr/bin/env php
+<?PHP
+const CONFIG_PATH = "../../";
+const SHRUB_PATH = "../../src/";
+
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."core/cli.php";		// Confirm CLI
+require_once __DIR__."/".SHRUB_PATH."global/global.php";
+require_once __DIR__."/".SHRUB_PATH."node/node.php";
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
+
+
+function User_Get($userSlug) {
+	$users = node_GetUserIdBySlug([$userSlug]);
+	if (!is_array($users)) {
+		return $users;
+	}
+	else if (sizeof($users) == 1) {
+		return $users[array_keys($users)[0]];
+	}
+	else if (sizeof($users) == 0) {
+		return null;
+	}
+	else {
+		foreach($users as $user) {
+			if ($user == $userSlug) {
+				return $users[$user];
+			}
+		}
+		return $users;
+	}
+};
+
+function GetCoreNodeIds() {
+	$ids = [];
+	$ids['events'] = db_QueryFetchValue(
+		"SELECT
+			n.id
+		FROM
+			".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
+		WHERE n.type = 'events'
+		LIMIT 1
+		;"
+	);
+	return $ids;
+}
+
+function CanCreateEvent_Add($user, $eventsId) {
+	//print "User: ".$user." EventsId: ".$eventsId."\n";
+	//exit(0);
+	return nodeMeta_Add($user, $eventsId, SH_SCOPE_PUBLIC, 'can-create', 'event');
+};
+
+function CanCreateEvent_Remove($user, $eventsId) {
+	return nodeMeta_Remove($user, $eventsId, SH_SCOPE_PUBLIC, 'can-create', 'event');
+};
+
+
+function OutputCanCreateStatus($user, $coreIds) {
+	$userData = nodeComplete_GetById($user, F_NODE_NO_BODY | F_NODE_META);
+	$createEvents = false;
+	if (array_key_exists('meta', $userData)) {
+		$meta = $userData['meta'];
+		if (array_key_exists('can-create', $meta)) {
+			$canCreate = $meta['can-create'];
+			if (array_key_exists($coreIds['events'], $canCreate)) {
+				if (strpos('event', $canCreate[$coreIds['events']]) > -1) {
+					$createEvents = true;
+				}
+			}
+		}
+	}
+	if ($createEvents) {
+		print " + Can create new events (create-event).\n";
+	} else {
+		print " - Can't create new events (create-event).\n";
+	}
+	print "\n";
+}
+
+function AddUserRight($user, $right, $coreIds) {
+	if ($right == 'create-event') {
+		if (CanCreateEvent_Add($user, $coreIds['events'])) {
+			print " + Added creating events.\n";
+		} else {
+			print " ! Failed to add right to create event.\n\n";
+			exit(1);
+		}
+	} else {
+		print " ! Unknown right '$right'\n\n";
+		exit(1);
+	}
+};
+
+function RemoveUserRight($user, $right, $coreIds) {
+	if ($right == 'create-event') {
+		if (CanCreateEvent_Remove($user, $coreIds['events'])) {
+			print " - Removed creating events.\n";
+		} else {
+			print " ! Failed to remove right to create event.\n\n";
+			exit(1);
+		}
+	} else {
+		print " ! Unknown right '$right'\n\n";
+		exit(1);
+	}
+	
+};
+
+_db_Connect();
+
+if ( _db_IsConnected() ) {
+	global_Load();
+	print "\n";
+	if (count($argv) < 2) {
+		print "Updating:\n";
+		print "USAGE: user-rights [USER] ADD|REMOVE RIGHT\n";
+		print "\nListing:\n";
+		print "USAGE: user-rights [USER]\n";
+		print "\n";
+		exit(1);
+	}
+
+	$userName = $argv[1];
+	$user = User_Get($userName);
+
+	if (is_array($user)) {		
+		print "Multiple users partially match $userName:\n";
+		print "\n";
+		foreach($user as $userSlug => $userId) {
+			print " * $userSlug\n\n";
+		}
+		exit(1);
+	}
+
+	if (!$user) {
+		print "Unknown user '$userName'\n\n";
+		exit(1);
+	} 
+
+	print "Working on user: $userName ($user)\n";
+	$coreIds = GetCoreNodeIds();
+	if (count($argv) < 3) {
+		OutputCanCreateStatus($user, $coreIds);
+		exit(0);
+	} else if (count($argv) > 3) {
+		switch ($argv[2]) {
+			case 'add':
+			case 'ADD':
+				AddUserRight($user, $argv[3], $coreIds);
+				break;
+			case 'remove':
+			case 'REMOVE':
+				RemoveUserRight($user, $argv[3], $coreIds);
+				break;
+		}
+		print "\n";
+	}
+}
+
+?>
