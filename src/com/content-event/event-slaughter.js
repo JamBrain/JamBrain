@@ -145,9 +145,21 @@ export default class ContentEventSlaughter extends Component {
 		const Start = Math.max(0, End - RECENT_CACHE_RENDER);
 		const ret = [];
 		for ( let idx = End - 1; idx >= Start; idx -= 1) {			// Reverse Order
+			const vote = this.state.votes[this.state.recent[idx]];
+			let VoteStyle = null;
+			if ( vote === VOTE_YES ) {
+				VoteStyle = '-green';
+			}
+			else if ( vote === VOTE_NO ) {
+				VoteStyle = '-red';
+			}
+			else if ( vote === VOTE_FLAG ) {
+				VoteStyle = '-flag';
+			}
+
 			ret.push(
-				<div class="-recent">
-					{this.renderIcon(this.state.votes[this.state.recent[idx]])}
+				<div class={cN('-recent', VoteStyle)} >
+					{this.renderIcon(vote)}
 					<span title={'Id: '+this.state.recent[idx]}>{this.state.ideas[this.state.recent[idx]]}</span>
 				</div>
 			);

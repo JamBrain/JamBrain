@@ -127,9 +127,30 @@
 
 	& .-recent {
 		margin: 0.5em 1em;
+		padding: 0.25em;
+
+		&.-green {
+			background: @COL_BC;
+			color: @COL_L;
+		}
+
+		&.-red {
+			background:@COL_CA;
+			color: @COL_L;
+		}
+
+		&.-flag {
+			font-size: 0.8em;
+			background: @COL_A;
+			color: @COL_L;
+		}
 
 		& > .vote-icon {
 			margin: 0em 0.5em;
+		}
+
+		& > .-redo {
+			float: right;
 		}
 	}
 }
