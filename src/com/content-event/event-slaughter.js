@@ -117,15 +117,21 @@ export default class ContentEventSlaughter extends Component {
 		}
 	}
 
+	redoVote(voteId) {
+		this.setState({'current': voteId, 'done': false});
+	}
+
 	addToRecentQueue( id ) {
-		this.state.recent.push(id);
+		let {recent} = this.state;
+		recent = recent.filter(voteId => voteId !== id);
+		recent.push(id);
 
 		while (this.state.recent.length > RECENT_CACHE_LENGTH) {
 			const junk = this.state.recent.shift();
 			console.log("trimmed", junk);
 		}
 
-		this.setState({'recent': this.state.recent});
+		this.setState({'recent': recent});
 	}
 
 	renderIcon( value ) {
@@ -146,6 +152,8 @@ export default class ContentEventSlaughter extends Component {
 		const ret = [];
 		for ( let idx = End - 1; idx >= Start; idx -= 1) {			// Reverse Order
 			const vote = this.state.votes[this.state.recent[idx]];
+			const voteId = this.state.recent[idx];
+
 			let VoteStyle = null;
 			if ( vote === VOTE_YES ) {
 				VoteStyle = '-green';
@@ -158,10 +166,10 @@ export default class ContentEventSlaughter extends Component {
 			}
 
 			ret.push(
-				<div class={cN('-recent', VoteStyle)} >
+				<UIButton class={cN('-recent', VoteStyle)} key={voteId} onclick={() => this.redoVote(voteId)}>
 					{this.renderIcon(vote)}
-					<span title={'Id: '+this.state.recent[idx]}>{this.state.ideas[this.state.recent[idx]]}</span>
-				</div>
+					<span title={'Id: ' + voteId}>{this.state.ideas[voteId]}</span>
+				</UIButton>
 			);
 		}
 		return ret;
