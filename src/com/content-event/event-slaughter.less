@@ -44,12 +44,12 @@
 			font-weight: 700;
 			outline: none;
 
-			&.-green {
+			&.-yes{
 				background: @COL_BC;
 				color: @COL_L;
 			}
 
-			&.-red {
+			&.-no {
 				background:@COL_CA;
 				color: @COL_L;
 			}
@@ -109,32 +109,52 @@
 				}
 			}
 		}
-		/*& .piechart-figure {
-			width: 100%;
 
-			@media (min-width: 768px) {
-				width: 50%;
-				display: inline-block;
+		& .chart {
+			& .vis_bg_color_yes {
+				background-color: @COL_BC;
 			}
 
-			& .piechart{
-				@media (min-width: 768px) {
-					width: 75%;
-				}
+			& .vis_stroke_color_yes {
+				stroke: @COL_BC;
 			}
-		}*/
+
+			& .vis_bg_color_no {
+				background-color: @COL_CA;
+			}
+
+			& .vis_stroke_color_no {
+				stroke: @COL_CA;
+			}
+
+			& .vis_bg_color_flag {
+				background-color: @COL_A;
+			}
+
+			& .vis_stroke_color_flag {
+				stroke: @COL_A;
+			}
+
+			& .vis_bg_color_remaining {
+				background-color: @COL_CM;
+			}
+
+			& .vis_stroke_color_remaining {
+				stroke: @COL_CM;
+			}
+		}
 	}
 
 	& .-recent {
 		margin: 0.25em;
 		padding: 0.25em;
 
-		&.-green {
+		&.-yes {
 			background: @COL_BC;
 			color: @COL_L;
 		}
 
-		&.-red {
+		&.-no {
 			background:@COL_CA;
 			color: @COL_L;
 		}

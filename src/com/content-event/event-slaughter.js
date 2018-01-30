@@ -14,6 +14,7 @@ RECENT_CACHE_RENDER = 10;
 VOTE_YES = 1;
 VOTE_NO = 0;
 VOTE_FLAG = -1;
+BETWEEN_VOTE_TIME = 1000;
 
 export default class ContentEventSlaughter extends Component {
 	constructor( props ) {
@@ -32,7 +33,7 @@ export default class ContentEventSlaughter extends Component {
 		this.submitNoVote = this.submitNoVote.bind(this);
 		this.submitFlagVote = this.submitFlagVote.bind(this);
 		this.openLink = this.openLink.bind(this);
-
+		this.hasWaited = this.hasWaited.bind(this);
 		this._renderMyIdea = this._renderMyIdea.bind(this);
 	}
 
@@ -87,8 +88,7 @@ export default class ContentEventSlaughter extends Component {
 		window.removeEventListener('keyup', this.hotKeyVote);
 	}
 
-	hotKeyVote( e, f, g ) {
-		console.log(this, e, f, g);
+	hotKeyVote( e ) {
 		if ( e.keyCode == 89 ) {
 			this._submitVote('Yes');
 		}
@@ -122,9 +122,10 @@ export default class ContentEventSlaughter extends Component {
 	}
 
 	addToRecentQueue( id ) {
-		let {recent} = this.state;
-		recent = recent.filter(voteId => voteId !== id);
-		recent.push(id);
+		const {recent} = this.state;
+		if ( recent.filter(voteId => voteId === id).length == 0 ) {
+			recent.push(id);
+		}
 
 		while (this.state.recent.length > RECENT_CACHE_LENGTH) {
 			const junk = this.state.recent.shift();
@@ -156,10 +157,10 @@ export default class ContentEventSlaughter extends Component {
 
 			let VoteStyle = null;
 			if ( vote === VOTE_YES ) {
-				VoteStyle = '-green';
+				VoteStyle = '-yes';
 			}
 			else if ( vote === VOTE_NO ) {
-				VoteStyle = '-red';
+				VoteStyle = '-no';
 			}
 			else if ( vote === VOTE_FLAG ) {
 				VoteStyle = '-flag';
@@ -176,6 +177,13 @@ export default class ContentEventSlaughter extends Component {
 	}
 
 	_submitVote( command ) {
+		if ( this.state.waitASecond ) {
+			this.setState({'eagerVoter': "Take it easy, don't rush things!"});
+			return;
+		}
+
+		this.setState({'waitASecond': true, 'flashButton': command, 'flashRecent': this.state.current});
+		setTimeout(this.hasWaited, BETWEEN_VOTE_TIME);
 		return $ThemeIdeaVote[command](this.state.current)
 		.then(r => {
 			if ( r.status === 200 ) {
@@ -193,12 +201,19 @@ export default class ContentEventSlaughter extends Component {
 		});
 	}
 
+	hasWaited() {
+		console.log('wait over');
+		this.setState({'waitASecond': false, 'flashButton': null, 'flashRecent': null, 'eagerVoter': null});
+	}
+
 	submitYesVote( e ) {
 		return this._submitVote('Yes');
 	}
+
 	submitNoVote( e ) {
 		return this._submitVote('No');
 	}
+
 	submitFlagVote( e ) {
 		return this._submitVote('Flag');
 	}
@@ -229,26 +244,37 @@ export default class ContentEventSlaughter extends Component {
 		const seen = Object.keys(state.votes).length;
 
 		const labels = [
-			'slaughtered',
-			'kept',
-			'left'
+			'Slaughtered',
+			'Kept',
+			'Flagged',
+			'Remaining',
+		];
+
+		const colors = [
+			'no',
+			'yes',
+			'flag',
+			'remaining',
 		];
 
 		const values = [
 			0,
 			0,
-			state['votes-left']
+			0,
+			state['votes-left'],
 		];
 
 		if ( seen != 0 ) {
 			Object.values(state.votes).forEach((v) => {
-				if ( v == 0 ) {
-					values[0]++;
+				if ( v == VOTE_NO ) {
+					values[0] += 1;
 				}
-				else if ( v == 1 ) {
-					values[1]++;
+				else if ( v == VOTE_YES ) {
+					values[1] += 1;
 				}
-				// else if v=2 it's flagged
+				else if ( v == VOTE_FLAG ) {
+					values[2] += 1;
+				}
 			});
 		}
 
@@ -260,7 +286,7 @@ export default class ContentEventSlaughter extends Component {
 				</div>
 				<div class="section -sixty vote-graph">
 					<h3>Vote distribution</h3>
-					<PieChart values={values} labels={labels} />
+					<PieChart values={values} labels={labels} colors={colors} />
 				</div>
 			</div>
 		);
@@ -276,25 +302,25 @@ export default class ContentEventSlaughter extends Component {
 		}
 		else if ( state.current ) {
 			const ThemeName = (state.ideas[state.current]);
+			const ShowEager = state.eagerVoter ? <div class='-error'>{state.eagerVoter}</div> : null;
 			return (
 				<div class="event-slaughter">
 					<div class="-title">Would this be a good Theme?</div>
 					<div class="-theme" onclick={this.openLink} title="Click to search Google for this">
 						<div>{ThemeName}</div>
 					</div>
+					{ShowEager}
 					<div class="-buttons">
-						<UIButton class="middle big -green" onclick={this.submitYesVote} title="Good">(Y)ES {this.renderIcon(VOTE_YES)}</UIButton>
-						<UIButton class="middle big -red" onclick={this.submitNoVote} title="Bad">(N)O {this.renderIcon(VOTE_NO)}</UIButton>
+						<UIButton class={cN("middle big -yes", state.flashButton == 'Yes' ? '-flash': null)} onclick={this.submitYesVote} title="Good" >(Y)ES {this.renderIcon(VOTE_YES)}</UIButton>
+						<UIButton class="middle big -no" onclick={this.submitNoVote} title="Bad" >(N)O {this.renderIcon(VOTE_NO)}</UIButton>
 
 						<div class="-title">If inappropriate or offensive, you can <UIButton class="-flag" onclick={this.submitFlagVote}>Flag {this.renderIcon(VOTE_FLAG)}</UIButton> it.</div>
 						<div>You may use hotkeys <b>Y</b> for yes and <b>N</b> for no votes.</div>
-					</div>
-					<div class="-stats">
 						<div>
 							<strong>Themes Slaughtered:</strong> <span>{Object.keys(state.votes).length}</span>
 						</div>
-						{StatsAndDetails}
 					</div>
+					{StatsAndDetails}
 				</div>
 			);
 		}
