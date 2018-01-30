@@ -11,6 +11,9 @@ import PieChart							from 'com/visualization/piechart/piechart';
 
 RECENT_CACHE_LENGTH = 50;
 RECENT_CACHE_RENDER = 10;
+VOTE_YES = 1;
+VOTE_NO = 0;
+VOTE_FLAG = -1;
 
 export default class ContentEventSlaughter extends Component {
 	constructor( props ) {
@@ -126,14 +129,14 @@ export default class ContentEventSlaughter extends Component {
 	}
 
 	renderIcon( value ) {
-		if ( value === 1 )
-			return <span title={value}><SVGIcon>checkmark</SVGIcon></span>;
-		else if ( value === 0 )
-			return <span title={value}><SVGIcon>cross</SVGIcon></span>;
-		else if ( value === -1 )
-			return <span title={value}><SVGIcon>flag</SVGIcon></span>;
+		if ( value === VOTE_YES )
+			return <span title={value} class="vote-icon"><SVGIcon>checkmark</SVGIcon></span>;
+		else if ( value === VOTE_NO )
+			return <span title={value} class="vote-icon"><SVGIcon>cross</SVGIcon></span>;
+		else if ( value === VOTE_FLAG )
+			return <span title={value} class="vote-icon"><SVGIcon>flag</SVGIcon></span>;
 
-		return <span title={value}><SVGIcon>fire</SVGIcon></span>;
+		return <span title={value} class="vote-icon"><SVGIcon>fire</SVGIcon></span>;
 	}
 
 	renderRecentQueue() {
@@ -230,17 +233,24 @@ export default class ContentEventSlaughter extends Component {
 		}
 
 		const StatsAndDetails = (
-			<div class="history">
-				<h3>Recent Themes</h3>
-				{this.renderRecentQueue()}
+			<div class="stats-details">
+				<div class="section -forty recent-votes">
+					<h3>Recent Themes</h3>
+					{this.renderRecentQueue()}
+				</div>
+				<div class="section -sixty vote-graph">
+					<h3>Vote distribution</h3>
+					<PieChart values={values} labels={labels} />
+				</div>
 			</div>
 		);
 
 		if ( state.done ) {
 			return (
-				<div class="-stats">
-					<div>Wow! You're totally done! Amazing! You slaughtered {Object.keys(state.votes).length} themes!</div>
-					<PieChart values={values} labels={labels} />
+				<div class="event-slaughter">
+					<div class="-title">Wow! You're totally done! Amazing!</div>
+					<div class="-title">You slaughtered {Object.keys(state.votes).length} themes!</div>
+					{StatsAndDetails}
 				</div>
 			);
 		}
@@ -253,20 +263,17 @@ export default class ContentEventSlaughter extends Component {
 						<div>{ThemeName}</div>
 					</div>
 					<div class="-buttons">
-						<UIButton class="middle big -green" onclick={this.submitYesVote} title="Good">(Y)ES ✓</UIButton>
-						<UIButton class="middle big -red" onclick={this.submitNoVote} title="Bad">(N)O ✕</UIButton>
+						<UIButton class="middle big -green" onclick={this.submitYesVote} title="Good">(Y)ES {this.renderIcon(VOTE_YES)}</UIButton>
+						<UIButton class="middle big -red" onclick={this.submitNoVote} title="Bad">(N)O {this.renderIcon(VOTE_NO)}</UIButton>
 
-						<div class="-title">If inappropriate or offensive, you can <UIButton class="-flag" onclick={this.submitFlagVote}>Flag ⚑</UIButton> it.</div>
+						<div class="-title">If inappropriate or offensive, you can <UIButton class="-flag" onclick={this.submitFlagVote}>Flag {this.renderIcon(VOTE_FLAG)}</UIButton> it.</div>
 						<div>You may use hotkeys <b>Y</b> for yes and <b>N</b> for no votes.</div>
 					</div>
 					<div class="-stats">
 						<div>
 							<strong>Themes Slaughtered:</strong> <span>{Object.keys(state.votes).length}</span>
 						</div>
-						<div>
-							<div class="section -onethird">{StatsAndDetails}</div>
-							<div class="section -twothird"><PieChart values={values} labels={labels} /></div>
-						</div>
+						{StatsAndDetails}
 					</div>
 				</div>
 			);

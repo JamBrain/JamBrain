@@ -68,11 +68,11 @@
 		}
 	}
 
-	& .-stats {
+	& > .stats-details {
 		text-align: left;
 
 
-		& > div .section {
+		& > .section {
 			width: 48%;
 			//height: 500px;
 			margin: 0;
@@ -81,12 +81,12 @@
 
 			vertical-align: top;
 
-			&.-onethird{
-				width: 32%;
+			&.-forty {
+				width: 39%;
 			}
 
-			&.-twothird{
-				width: 64%;
+			&.-sixty {
+				width: 57%;
 			}
 
 			@media (max-width: 768px) {
@@ -126,8 +126,10 @@
 	}
 
 	& .-recent {
-		& svg {
-			margin-right:0.5em;
+		margin: 0.5em 1em;
+
+		& > .vote-icon {
+			margin: 0em 0.5em;
 		}
 	}
 }
