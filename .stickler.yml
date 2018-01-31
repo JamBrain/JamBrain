@@ -9,5 +9,6 @@ linters:
   phpcs:
     standard: PSR2
 files:
-   ignore:
-     - 'node_modules/*'
+  ignore:
+    - 'node_modules/*'
+ 
