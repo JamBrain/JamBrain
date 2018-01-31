@@ -107,4 +107,3 @@ else if ($ACTION == "idea-limit") {
 }
 
 print "\n";
-?>
