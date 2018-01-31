@@ -16,6 +16,7 @@ VOTE_NO = 0;
 VOTE_FLAG = -1;
 BETWEEN_VOTE_TIME = 500;
 CALM_DOWN_MSG_TIME = 4000;
+RECENT_FLASH = 500;
 
 export default class ContentEventSlaughter extends Component {
 	constructor( props ) {
@@ -149,7 +150,7 @@ export default class ContentEventSlaughter extends Component {
 	}
 
 	renderRecentQueue() {
-		// Render the last 10
+		const {flashRecent} = this.state;
 		const End = this.state.recent.length;
 		const Start = Math.max(0, End - RECENT_CACHE_RENDER);
 		const ret = [];
@@ -169,7 +170,7 @@ export default class ContentEventSlaughter extends Component {
 			}
 
 			ret.push(
-				<UIButton class={cN('-recent', VoteStyle)} key={voteId} onclick={() => this.redoVote(voteId)}>
+				<UIButton class={cN('-recent', VoteStyle, flashRecent === voteId ? '-flash': null)} key={voteId} onclick={() => this.redoVote(voteId)}>
 					{this.renderIcon(vote)}
 					<span title={'Id: ' + voteId}>{this.state.ideas[voteId]}</span>
 				</UIButton>
