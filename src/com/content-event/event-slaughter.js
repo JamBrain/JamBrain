@@ -14,9 +14,16 @@ RECENT_CACHE_RENDER = 10;
 VOTE_YES = 1;
 VOTE_NO = 0;
 VOTE_FLAG = -1;
+
+// This sets shortest time between two votes and
+// also controls the flash CSS effects, so you are
+// to change this, also update the two animations in
+// the CSS.
 BETWEEN_VOTE_TIME = 500;
+
+// The extra time the warning message is shown about
+// having been too quick.
 CALM_DOWN_MSG_TIME = 4000;
-RECENT_FLASH = 500;
 
 export default class ContentEventSlaughter extends Component {
 	constructor( props ) {
@@ -185,7 +192,7 @@ export default class ContentEventSlaughter extends Component {
 			return;
 		}
 
-		this.setState({'waitASecond': true, 'flashButton': command, 'flashRecent': this.state.current});
+		this.setState({'waitASecond': true, 'flashButton': command, 'flashRecent': this.state.current, 'eagerVoter': null});
 		setTimeout(this.hasWaited, BETWEEN_VOTE_TIME);
 		return $ThemeIdeaVote[command](this.state.current)
 		.then(r => {
@@ -292,6 +299,7 @@ export default class ContentEventSlaughter extends Component {
 				<div class="section -forty recent-votes">
 					<h3>Recent Themes</h3>
 					{this.renderRecentQueue()}
+					<div class="-info">You can click on a previous vote to change it.</div>
 				</div>
 				<div class="section -sixty vote-graph">
 					<h3>Vote distribution</h3>
