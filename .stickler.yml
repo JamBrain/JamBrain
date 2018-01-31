@@ -11,4 +11,3 @@ linters:
 files:
   ignore:
     - 'node_modules/*'
- 
