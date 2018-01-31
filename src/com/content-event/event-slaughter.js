@@ -14,7 +14,8 @@ RECENT_CACHE_RENDER = 10;
 VOTE_YES = 1;
 VOTE_NO = 0;
 VOTE_FLAG = -1;
-BETWEEN_VOTE_TIME = 1000;
+BETWEEN_VOTE_TIME = 500;
+CALM_DOWN_MSG_TIME = 4000;
 
 export default class ContentEventSlaughter extends Component {
 	constructor( props ) {
@@ -34,6 +35,7 @@ export default class ContentEventSlaughter extends Component {
 		this.submitFlagVote = this.submitFlagVote.bind(this);
 		this.openLink = this.openLink.bind(this);
 		this.hasWaited = this.hasWaited.bind(this);
+		this.removeCalmDown = this.removeCalmDown.bind(this);
 		this._renderMyIdea = this._renderMyIdea.bind(this);
 	}
 
@@ -202,8 +204,14 @@ export default class ContentEventSlaughter extends Component {
 	}
 
 	hasWaited() {
-		console.log('wait over');
-		this.setState({'waitASecond': false, 'flashButton': null, 'flashRecent': null, 'eagerVoter': null});
+		this.setState({'waitASecond': false, 'flashButton': null, 'flashRecent': null});
+		if ( this.state.eagerVoter ) {
+			setTimeout(this.removeCalmDown, CALM_DOWN_MSG_TIME);
+		}
+	}
+
+	removeCalmDown() {
+		this.setState({'eagerVoter': null});
 	}
 
 	submitYesVote( e ) {
@@ -302,7 +310,7 @@ export default class ContentEventSlaughter extends Component {
 		}
 		else if ( state.current ) {
 			const ThemeName = (state.ideas[state.current]);
-			const ShowEager = state.eagerVoter ? <div class='-error'>{state.eagerVoter}</div> : null;
+			const ShowEager = state.eagerVoter ? <div class="-error">{state.eagerVoter}</div> : null;
 			return (
 				<div class="event-slaughter">
 					<div class="-title">Would this be a good Theme?</div>
@@ -312,7 +320,7 @@ export default class ContentEventSlaughter extends Component {
 					{ShowEager}
 					<div class="-buttons">
 						<UIButton class={cN("middle big -yes", state.flashButton == 'Yes' ? '-flash': null)} onclick={this.submitYesVote} title="Good" >(Y)ES {this.renderIcon(VOTE_YES)}</UIButton>
-						<UIButton class="middle big -no" onclick={this.submitNoVote} title="Bad" >(N)O {this.renderIcon(VOTE_NO)}</UIButton>
+						<UIButton class={cN("middle big -no", state.flashButton == 'No' ? '-flash': null)} onclick={this.submitNoVote} title="Bad" >(N)O {this.renderIcon(VOTE_NO)}</UIButton>
 
 						<div class="-title">If inappropriate or offensive, you can <UIButton class="-flag" onclick={this.submitFlagVote}>Flag {this.renderIcon(VOTE_FLAG)}</UIButton> it.</div>
 						<div>You may use hotkeys <b>Y</b> for yes and <b>N</b> for no votes.</div>

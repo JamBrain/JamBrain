@@ -9,6 +9,11 @@
 		font-size:1.2em;
 	}
 
+	& .-error {
+		padding: 0.5em 1em;
+		display: inline-block;
+	}
+
 	& .-theme {
 		font-size: 1.8em;
 
@@ -43,21 +48,39 @@
 			// border-radius: 2.0em;
 			font-weight: 700;
 			outline: none;
+			color: @COL_L;
 
 			&.-yes{
 				background: @COL_BC;
-				color: @COL_L;
 			}
 
 			&.-no {
 				background:@COL_CA;
-				color: @COL_L;
 			}
 
 			&.-flag {
 				font-size: 0.8em;
 				background: @COL_A;
-				color: @COL_L;
+				padding: 0.25em 0.5em;
+			}
+
+			&.-flash {
+				-webkit-animation-duration: 0.5s;
+				animation-duration: 0.5s;
+				-webkit-animation-fill-mode: both;
+				animation-fill-mode: both;
+				animation-name: flash;
+			}
+
+			@keyframes flash {
+				0%, 100% {
+					color: @COL_L;
+				}
+
+				25% {
+					color: @COL_W;
+					text-shadow: 0px 0px 2px @COL_W;
+				}
 			}
 
 			transition: transform 0.1s;
