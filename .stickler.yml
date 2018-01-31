@@ -5,6 +5,7 @@ linters:
   eslint:
     config: 'src/config/eslint.config.json'
     fixer: true
+  yamllint: {}
   phpcs:
     standard: PSR2
 files:
