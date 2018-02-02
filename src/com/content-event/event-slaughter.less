@@ -1,12 +1,15 @@
-
 @import "defs.less";
+
+@SL_YES: @COL_BC;
+@SL_NO: @COL_A; /*@COL_CA;*/
+@SL_FLAG: @COL_D; /*@COL_A;*/
 
 .event-slaughter {
 	text-align: center;
 
 	& .-title {
 		margin: 0.5em 0;
-		font-size:1.2em;
+		font-size: 1.2em;
 	}
 
 	& .-error {
@@ -31,71 +34,109 @@
 		}
 	}
 
-	& .-buttons {
-		margin:0.5em 0;
+	& .ui-button {
+		border: 0;
+		padding: 0.5em 1em;
+		cursor: pointer;
+
+		outline: none;
+		color: @COL_L;
+
+		& > span {
+			vertical-align: middle;
+			margin-left: 0.5em;
+
+			&:first-child {
+				margin-left: 0;
+			}
+
+			& > .hotkey {
+				text-decoration: underline;
+			}
+		}
+
+		&.-yes {
+			background: @SL_YES;
+		}
+
+		&.-no {
+			background: @SL_NO;
+		}
+
+		&.-flag {
+			font-size: 0.8em;
+			background: @SL_FLAG;
+			padding: 0.25em 0.5em;
+		}
+
+		&.-flash {
+			animation-duration: 0.5s;
+			animation-fill-mode: both;
+			animation-name: flash;
+		}
+
+		@keyframes flash {
+			0%, 100% {
+				color: @COL_L;
+			}
+
+			25% {
+				color: @COL_W;
+				text-shadow: 0px 0px 2px @COL_W;
+			}
+		}
+
+		transition: transform 0.1s;
+
+		&:hover {
+			transform: scale(1.15);
+		}
+	}
+
+	& > .-main-buttons {
+		margin: 0.5em 0;
 		vertical-align: middle;
+
+		& > * {
+			margin-left: 0.5em;
+
+			&:first-child {
+				margin-left: 0;
+			}
+		}
 
 		& .ui-button {
 			display: inline-block;
+			font-weight: bold;
 
 			font-size: 1.2em;
+		}
+	}
 
-			border: 0;
-			padding: 0.5em 1em;
-			cursor: pointer;
+	& > .-other-buttons {
+		& > div {
+			margin: 0.5em 0;
 
-			margin: 0.5em;
-			// border-radius: 2.0em;
-			font-weight: 700;
-			outline: none;
-			color: @COL_L;
-
-			&.-yes {
-				background: @COL_BC;
+			& > * {
+				vertical-align: middle;
 			}
 
-			&.-no {
-				background:@COL_CA;
+			& .ui-button {
+				display: inline-block;
 			}
+		}
 
-			&.-flag {
-				font-size: 0.8em;
-				background: @COL_A;
-				padding: 0.25em 0.5em;
-			}
-
-			&.-flash {
-				animation-duration: 0.5s;
-				animation-fill-mode: both;
-				animation-name: flash;
-			}
-
-			@keyframes flash {
-				0%, 100% {
-					color: @COL_L;
-				}
-
-				25% {
-					color: @COL_W;
-					text-shadow: 0px 0px 2px @COL_W;
-				}
-			}
-
-			transition: transform 0.1s;
-
-			&:hover {
-				transform: scale(1.2);
-			}
+		& > .-info {
+			font-size: 0.8em;
+			color: @COL_NLL;
 		}
 	}
 
 	& > .stats-details {
 		text-align: left;
 
-
 		& > .section {
 			width: 48%;
-			//height: 500px;
 			margin: 0;
 			padding: 1%;
 			display: inline-block;
@@ -138,27 +179,27 @@
 
 		& .chart {
 			& .vis_bg_color_yes {
-				background-color: @COL_BC;
+				background-color: @SL_YES;
 			}
 
 			& .vis_stroke_color_yes {
-				stroke: @COL_BC;
+				stroke: @SL_YES;
 			}
 
 			& .vis_bg_color_no {
-				background-color: @COL_CA;
+				background-color: @SL_NO;
 			}
 
 			& .vis_stroke_color_no {
-				stroke: @COL_CA;
+				stroke: @SL_NO;
 			}
 
 			& .vis_bg_color_flag {
-				background-color: @COL_A;
+				background-color: @SL_FLAG;
 			}
 
 			& .vis_stroke_color_flag {
-				stroke: @COL_A;
+				stroke: @SL_FLAG;
 			}
 
 			& .vis_bg_color_remaining {
@@ -172,27 +213,40 @@
 	}
 
 	& .-recent {
-		margin: 0.25em;
-		padding: 0.25em;
+		margin: 0.25em 0;
+		padding: 0.25em 0.5em;
+
+		/* use a smaller scale */
+		&:hover {
+			transform: scale(1.05);
+		}
 
 		&.-yes {
-			background: @COL_BC;
+			background: @SL_YES;
 			color: @COL_L;
 		}
 
 		&.-no {
-			background:@COL_CA;
+			background: @SL_NO;
 			color: @COL_L;
 		}
 
 		&.-flag {
 			font-size: 0.8em;
-			background: @COL_A;
+			background: @SL_FLAG;
 			color: @COL_L;
 		}
 
-		& > .vote-icon {
-			margin: 0em 0.5em;
+		& > * {
+			margin-left: 0.5em;
+
+			&:first-child {
+				margin-left: 0;
+			}
+		}
+
+		& > span {
+			vertical-align: middle;
 		}
 
 		&.-flash {
@@ -204,10 +258,12 @@
 		@keyframes flash-recent {
 			0%, 100% {
 				color: @COL_L;
+				transform: scale(1);
 			}
 
 			25% {
-				margin: -0.1em;
+				/*margin: -0.1em;*/
+				transform: scale(1.1);
 				color: @COL_W;
 				text-shadow: 0px 0px 2px @COL_W;
 			}
