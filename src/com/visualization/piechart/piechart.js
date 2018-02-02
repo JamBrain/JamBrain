@@ -31,8 +31,13 @@ export default class PieChart extends Component {
         let offset = 0;
         for ( var i = 0; i < percentages.length; i++ ) {
 
-            let color = 1 + ( i % 6 );
-            let legendclass = cN("-shape-circle", "vis_bg_color_"+color, props.class);
+			let color = null;
+			if (props.colors) {
+				color = props.colors[i];
+			} else {
+				color = 1 + ( i % 6 );
+			}
+			const legendclass = cN("-shape-circle", "vis_bg_color_"+color, props.class);
 
 			Segments.push(<PieSegment angle={percentages[i]} offset={offset} color={color} />);
 
