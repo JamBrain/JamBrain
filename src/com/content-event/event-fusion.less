@@ -1,0 +1,20 @@
+
+@import "defs.less";
+
+.event-fusion {
+	& > .fusion-box {
+		& > .-ideas {
+			display: flex;
+			max-width: 800px;
+
+			& > .-idea {
+				border: 1px @COL_K;
+
+				&.-selected {
+					background: @COL_A;
+					color: @COL_L;
+				}
+			}
+		}
+	}
+}
