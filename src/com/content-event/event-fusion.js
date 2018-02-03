@@ -61,7 +61,7 @@ export default class ContentEventFusion extends Component {
 		else {
 			console.log("TODO: Disable selecting only one");
 		}
-		this.getGroup();
+		this.getGroup(ideas);
 	}
 
 	getRandomSeed(ideas) {
