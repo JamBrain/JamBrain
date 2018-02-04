@@ -155,10 +155,28 @@ export default class ContentEventFusion extends Component {
 			let ShowGroup = null;
 			if (group) {
 				const Ideas = group.map(ideaId => <UIButton class={cN('-idea', selected.indexOf(ideaId) > -1 ? '-selected' : null)} key={ideaId} onclick={this.handleToggleIdea.bind(this, ideaId)}>{ideas[ideaId]}</UIButton>);
+				let ActionText = null;
+				let actionButtonClass = null;
+				let actionDisabled = null;
+				if ( selected.length === 0) {
+					ActionText = 'FISS';
+					actionButtonClass = '-fiss';
+				}
+				else if ( selected.length === 1 ) {
+					ActionText = '----';
+					actionButtonClass = '-disabled';
+					actionDisabled = 'disabled';
+				}
+				else {
+					ActionText = 'FUSE';
+					actionButtonClass = '-fuse';
+				}
 				ShowGroup = (
 					<div class="fusion-box">
 						<div class="-ideas">{Ideas}</div>
-						<UIButton onclick={this.handleFuseFiss}>Fuse</UIButton>
+						<div class="-button-box">
+							<UIButton onclick={this.handleFuseFiss} class={cN('fuse-fiss', actionButtonClass)} disabled={actionDisabled}>{ActionText}</UIButton>
+						</div>
 					</div>
 				);
 			}
@@ -167,7 +185,7 @@ export default class ContentEventFusion extends Component {
 				<div class="-body event-fusion">
 					{Title}
 					<div class="-warning">This is just a prototype and will not actually have any effect if you fuse or 'fiss'</div>
-					<div>
+					<div class="-instructions">
 						If any, mark the ones below that should be fused. You should only mark one group per set. Most of  the sets you will probably not find anything to fuse. This is expected and normal.
 					</div>
 					{ShowGroup}
