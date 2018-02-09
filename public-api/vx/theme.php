@@ -342,7 +342,7 @@ switch ( $action ) {
 				if ( $event = validateEvent($event_id) ) {
 					// Is Event Accepting Suggestions ?
 					if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) === 1 ) {
-						$theme_limit = isset($event['meta']['theme-idea-limit']) ? intval($event['meta']['theme-idea-limit']) : 3;
+						$theme_limit = isset($event['meta']['theme-idea-limit']) ? intval($event['meta']['theme-idea-limit']) : 0;
 						
 						$RESPONSE['response'] = themeIdea_Add($idea, $event_id, $user, $theme_limit);
 						

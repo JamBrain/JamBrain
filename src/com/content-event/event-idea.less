@@ -8,11 +8,37 @@
 		padding: 0.5em;
 	}
 
+	& > .previous-theme {
+		& > .previous-theme-item {
+			margin: 0.25em 1em;
+
+			& > .event-name {
+				background: @COL_G;
+				color: @COL_L;
+				display: inline-block;
+				padding: 0.5em 1em;
+			}
+
+			& > .event-theme {
+				margin-left: 1em;
+				display: inline-block;
+			}
+
+			& > .event-no-theme {
+				margin-left: 1em;
+				font-style: italic;
+				display: inline-block;
+				color: @COL_A;
+			}
+		}
+	}
+
 	& > .idea-form {
-		width: 26em;
+		max-width: 30em;
 		margin-top: 0.5em;
 		padding: 0em 0em 0em 0.5em;
 		display: flex;
+		flex-wrap: wrap;
 
 		& > .-suggestion {
 			border: 1px solid @COL_NLLL;
@@ -21,13 +47,16 @@
 			padding: 0.5em;
 			display: inline-block;
 			flex-grow: 1;
+			min-width: 20;
+			margin-right: 0.5em;
+			margin-top: 0.5em;
 		}
 
 		& > .ui-button {
 			color: @COL_NDD;
 			border: 1px solid;
 			padding: 0.5em;
-			margin: 0em 0.5em;
+			margin-top: 0.5em;
 
 			&:hover,
 			&:focus {
@@ -39,11 +68,17 @@
 	}
 
 	& > .idea-mylist {
-		width: 26em;
+		max-width: 30em;
 
 		& > .-item {
 			padding: 0.125em 0em 0em 1.0em;
 			margin-top: 0.5em;
+			display: flex;
+
+			& > svg {
+				margin-top: 0.2em;
+				line-height: 1em;
+			}
 
 			& > svg {
 				margin-bottom: 0.25em;
@@ -54,8 +89,6 @@
 			}
 
 			& > .-x {
-				position: relative;
-				float: right;
 				z-index: 1;
 
 				line-height: 1.0em;
@@ -64,18 +97,19 @@
 				cursor: pointer;
 
 				&:hover {
-					color:#F00;
+					color:@COL_A;
 				}
 
 				&:active {
-					color:#FFF;
-					text-shadow: 0 0px 6px #F00;
+					color:@COL_A;
+					text-shadow: 0 0px 6px @COL_A;
 				}
 			}
 
 			& > .-text {
 				padding:0 0.25em;
 				font-style: italic;
+				flex-grow: 1;
 			}
 		}
 	}

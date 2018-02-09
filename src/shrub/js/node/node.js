@@ -182,7 +182,7 @@ export function Walk( parent, slugs ) {
 	return Fetch.Get(API_ENDPOINT+'/vx/node/walk/'+parent+'/'+slugs.join('/'), true);
 }
 
-export function GetFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit ) {
+export function GetFeed( id, methods, types, subtypes, subsubtypes, tags, offset, limit ) {
 	let args = [];
 
 	args.push(id);
@@ -227,8 +227,8 @@ export function GetFeed( id, methods, types, subtypes, subsubtypes, tags, more, 
 		}
 	}
 
-	if ( more ) {
-		query.push("offset="+more);
+	if ( offset ) {
+		query.push("offset="+offset);
 	}
 	if ( limit ) {
 		query.push("limit="+limit);
