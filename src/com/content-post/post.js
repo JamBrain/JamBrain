@@ -39,6 +39,12 @@ export default class ContentPost extends Component {
 				//props.by = "INFO";
 				props.headerIcon = "gift";
 				props.headerClass = "-col-ab";
+				if ( props.single ) {
+					props.children = <div class="content-common-body -promo">You made it!</div>;
+				}
+				else {
+					props.children = <div class="content-common-body -promo">Click here yo</div>;
+				}
 			}
 		}
 
