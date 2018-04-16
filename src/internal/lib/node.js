@@ -85,7 +85,7 @@ window.node_CanCreate = function( node ) {
 	if ( !node )
 		return null;
 
-	return node.meta && parseInt(node.meta['can-create']);
+	return node.meta && node.meta['can-create'];
 };
 window.node_CanTheme = function( node ) {
 	// Return null if argument is invalid
@@ -99,7 +99,7 @@ window.node_CanGrade = function( node ) {
 	if ( !node )
 		return null;
 
-	return node.meta && node.meta['can-grade'];
+	return node.meta && parseInt(node.meta['can-grade']);
 };
 window.node_isEventFinished = function( node ) {
 	// Return null if argument is invalid
