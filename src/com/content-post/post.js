@@ -34,6 +34,12 @@ export default class ContentPost extends Component {
 				props.headerIcon = "article";
 				props.headerClass = "-col-nddd";
 			}
+			else if ( node.subtype === 'promo' ) {
+				//props.header = "INFO";
+				//props.by = "INFO";
+				props.headerIcon = "gift";
+				props.headerClass = "-col-ab";
+			}
 		}
 
 		props.limit = 1024*24;
