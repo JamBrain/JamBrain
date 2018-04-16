@@ -85,14 +85,14 @@ window.node_CanCreate = function( node ) {
 	if ( !node )
 		return null;
 
-	return node.meta && node.meta['can-create'];
+	return node.meta && parseInt(node.meta['can-create']);
 };
 window.node_CanTheme = function( node ) {
 	// Return null if argument is invalid
 	if ( !node )
 		return null;
 
-	return node.meta && node.meta['can-theme'];
+	return node.meta && parseInt(node.meta['can-theme']);
 };
 window.node_CanGrade = function( node ) {
 	// Return null if argument is invalid
@@ -106,14 +106,14 @@ window.node_isEventFinished = function( node ) {
 	if ( !node )
 		return null;
 
-	return node.meta && node.meta['event-finished'];
+	return node.meta && parseInt(node.meta['event-finished']);
 };
 window.node_CanPublish = function( node ) {
 	// Return null if argument is invalid
 	if ( !node )
 		return null;
 
-	return node.meta && node.meta['can-publish'];
+	return node.meta && parseInt(node.meta['can-publish']);
 };
 
 window.node_GetPlatforms = function( node ) {
