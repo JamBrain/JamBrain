@@ -1,5 +1,7 @@
 import {h, Component} 					from 'preact/preact';
 import ContentSimple					from 'com/content-simple/simple';
+import UIIcon							from 'com/ui/icon/icon';
+import UIButton							from 'com/ui/button/button';
 
 //import $Node							from '../../shrub/js/node/node';
 
@@ -40,10 +42,29 @@ export default class ContentPost extends Component {
 				props.headerIcon = "gift";
 				props.headerClass = "-col-ab";
 				if ( props.single ) {
-					props.children = <div class="content-common-body -promo">You made it!</div>;
+					if ( props.user && props.user.id ) {
+						props.children = (
+							<div class="content-common-body -promo">
+								<h2>Get Promo</h2>
+								<div>You made it!</div>
+							</div>
+						);
+					}
+					else {
+						props.children = (
+							<div class="content-common-body -promo">
+								<h2>Get Promo</h2>
+								<div>Login to claim</div>
+							</div>
+						);
+					}
 				}
 				else {
-					props.children = <div class="content-common-body -promo">Click here yo</div>;
+					props.children = (
+						<div class="content-common-body -promo">
+							<UIButton class="content-common-nav-button" href={node.path}><UIIcon src="gift" /><div>Continue</div></UIButton>
+						</div>
+					);
 				}
 			}
 		}
