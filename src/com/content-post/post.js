@@ -50,7 +50,7 @@ export default class ContentPost extends Component {
 							if ( node.meta['promo-code'] ) {
 								Body = (
 									<div>
-										<span>Code:</span> <span>{node.meta['promo-code']}</span>
+										<span>Code:</span> <strong>{node.meta['promo-code']}</strong>
 									</div>
 								);
 							}
