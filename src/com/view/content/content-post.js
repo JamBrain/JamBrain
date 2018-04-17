@@ -17,9 +17,9 @@ export default class ViewContentPost extends Component {
 
 		return (
 			<div id="content">
-				<ContentPost node={node} user={user} path={path} extra={extra} authored by love />
+				<ContentPost node={node} user={user} path={path} extra={extra} authored by love single />
 				{ShowComments}
 			</div>
 		);
 	}
-};
+}

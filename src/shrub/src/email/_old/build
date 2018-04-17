@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+
+$IN_FILE = "disposable_email_blacklist.conf";
+$OUT_FILE = "disposable_list.php";
+
+// Read blacklist
+$file = fopen($IN_FILE, "r");
+$data = [];
+while ( !feof($file) ) {
+	$line = trim(fgets($file));
+
+	if ( $line )
+		$data[] = $line;
+}
+fclose($file);
+
+// Write blacklist
+file_put_contents($OUT_FILE, var_export($data, true));
+
+exit(0);
