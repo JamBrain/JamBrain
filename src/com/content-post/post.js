@@ -43,10 +43,30 @@ export default class ContentPost extends Component {
 				props.headerClass = "-col-ab";
 				if ( props.single ) {
 					if ( props.user && props.user.id ) {
+						let Body = <div>Unknown Promo Type</div>;
+
+						// Shared promos have a single code used by many (associated with the node)
+						if ( node.subsubtype == 'shared' ) {
+							if ( node.meta['promo-code'] ) {
+								Body = (
+									<div>
+										<span>Code:</span> <span>{node.meta['promo-code']}</span>
+									</div>
+								);
+							}
+							else {
+								Body = <div>No `promo-code` associated with shared promo node.</div>;
+							}
+						}
+						// Single promos have a pool of codes, and each user must request one
+						else if ( node.subsubtype == 'single' ) {
+							Body = <div>{node.subsubtype}</div>;
+						}
+
 						props.children = (
 							<div class="content-common-body -promo">
 								<h2>Get Promo</h2>
-								<div>You made it!</div>
+								{Body}
 							</div>
 						);
 					}
