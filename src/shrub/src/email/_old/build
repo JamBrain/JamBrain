@@ -2,7 +2,7 @@
 <?php
 
 $IN_FILE = "disposable_email_blacklist.conf";
-$OUT_FILE = "blacklist.php";
+$OUT_FILE = "disposable_list.php";
 
 // Read blacklist
 $file = fopen($IN_FILE, "r");
