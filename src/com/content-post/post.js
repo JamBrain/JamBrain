@@ -1,6 +1,7 @@
 import {h, Component} 					from 'preact/preact';
 import ContentSimple					from 'com/content-simple/simple';
 import UIIcon							from 'com/ui/icon/icon';
+import UILink							from 'com/ui/link/link';
 import UIButton							from 'com/ui/button/button';
 
 //import $Node							from '../../shrub/js/node/node';
@@ -48,11 +49,32 @@ export default class ContentPost extends Component {
 						// Shared promos have a single code used by many (associated with the node)
 						if ( node.subsubtype == 'shared' ) {
 							if ( node.meta['promo-code'] ) {
-								Body = (
-									<div>
-										<span>Code:</span> <strong>{node.meta['promo-code']}</strong>
-									</div>
-								);
+								let PromoCode = node.meta['promo-code'].toLowerCase();
+
+								// TODO: Replace this with a library function that can detect URLs
+
+								let IsURL = false;
+								if ( PromoCode.indexOf("http://") === 0 )
+									IsURL = true;
+								if ( PromoCode.indexOf("https://") === 0 )
+									IsURL = true;
+								if ( PromoCode.indexOf("ftp://") === 0 )
+									IsURL = true;
+
+								if ( IsURL ) {
+									Body = (
+										<div>
+											<span>Link:</span> <strong><UILink href={node.meta['promo-code']}>{node.meta['promo-code']}</UILink></strong>
+										</div>
+									);
+								}
+								else {
+									Body = (
+										<div>
+											<span>Code:</span> <strong>{node.meta['promo-code']}</strong>
+										</div>
+									);
+								}
 							}
 							else {
 								Body = <div>No `promo-code` associated with shared promo node.</div>;
