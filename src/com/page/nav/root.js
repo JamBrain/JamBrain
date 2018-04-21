@@ -3,15 +3,15 @@ import ContentNavButton					from 'com/content-nav/nav-button';
 
 export default class PageNavRoot extends Component {
 	render( props ) {
-		let {node, user, extra} = props;
+		let {node, user, path, extra} = props;
 
-		//
-		let FirstPath = '/'+ (extra && extra.length ? extra[0] : '');
-		let FullPath = '/'+ (extra ? extra.join('/') : '');
+		// Build paths
+		let FullPath = path + ((extra && extra.length) ? ('/' + extra.join('/')) : '');
+		FullPath = FullPath ? FullPath : '/';
+		let FirstPath = FullPath.split('/', 2).join('/');
 
 		// Transform paths
-		if ( FirstPath == '/' )
-			FirstPath = '/home';
+		FirstPath = (FirstPath == '/') ? '/home': FirstPath;
 		const FullPathRemaps = {
 			'/': '/home',
 			'/news': '/feed/news'
@@ -19,20 +19,18 @@ export default class PageNavRoot extends Component {
 		if ( FullPathRemaps[FullPath] )
 			FullPath = FullPathRemaps[FullPath];
 
-		let IsHome = FullPath == '/home';
-
-
 		// Begin populating the list of Nav Buttons
 		let NavButtons = [];
 
 		// Home/Back button
-		if ( FullPath == '/home' )
+		let IsHome = (FullPath == '/home');
+		if ( IsHome )
 			NavButtons.push(<ContentNavButton path={FullPath} icon="home" href="/" match="/home" />);
 		else
 			NavButtons.push(<ContentNavButton path={FullPath} icon="previous" href="/" match="/home" />);
 
 //		// "Me" User Button (if home or logged in)
-//		if ( (FullPath == '/home') && user && (user.id !== 0) ) {
+//		if ( IsHome && user && (user.id !== 0) ) {
 //			NavButtons.push(<ContentNavButton path={FullPath} light={!IsHome} icon="user" href="/my">Me</ContentNavButton>);
 //		}
 
@@ -52,7 +50,7 @@ export default class PageNavRoot extends Component {
 			if ( FirstPath != '/home' ) {
 				// if ldjam.com vs jammer.vg
 				if ( true )
-					NavButtons.push(<ContentNavButton path={FirstPath} icon="trophy" href="/events/ludum-dare">Events</ContentNavButton>);
+					NavButtons.push(<ContentNavButton path={FirstPath} icon="trophy" href="/events/ludum-dare" match="/events">Events</ContentNavButton>);
 				else
 					NavButtons.push(<ContentNavButton path={FirstPath} icon="trophy" href="/events">Events</ContentNavButton>);
 

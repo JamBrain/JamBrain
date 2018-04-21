@@ -1,15 +1,15 @@
-import {h, Component} from 'preact/preact';
+import {h, Component}					from 'preact/preact';
+import PageNavRoot						from '../nav/root';
 
 import ContentGroup						from 'com/content-group/group';
 
 export default class PageEvents extends Component {
-    render( props, state ) {
-        let {node, user, path, extra} = props;
-
+    render( props ) {
         return (
-            <div id="content">
-                <ContentGroup node={node} user={user} path={path} extra={extra} />
-            </div>
+			<div id="content">
+				<PageNavRoot {...props} />
+				<ContentGroup {...props} />
+			</div>
         );
     }
 }
