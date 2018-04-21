@@ -8,8 +8,9 @@ import ContentTimeline					from 'com/content-timeline/timeline';
 import ContentNavRoot					from 'com/content-nav/nav-root';
 import ContentError						from 'com/content-error/error';
 
-import PageHomeFeed						from './feed/feed';
 import PageHomeHome						from './home/home';
+import PageHomeMy						from './my/my';
+import PageHomeFeed						from './feed/feed';
 import PageHomeNews						from './news/news';
 import PageHomeSearch					from './search/search';
 import PageHomeGames					from './games/games';
@@ -28,6 +29,7 @@ export default class PageHome extends Component {
 				<ContentNavRoot node={node} user={user} path={path} extra={extra} />
 				<Router node={node} props={props}>
 					<Route default={true} static path="/home" component={PageHomeHome} />
+					<Route static path="/my" component={PageHomeMy} />
 					<Route static path="/feed" component={PageHomeFeed} />
 					<Route static path="/news" component={PageHomeNews} />
 					<Route static path="/games/:filter?/:subfilter?/:target?" component={PageHomeGames} />

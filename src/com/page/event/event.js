@@ -33,6 +33,7 @@ export default class PageEvent extends Component {
 
         return (
             <div id="content">
+				<ContentNavEvent node={node} user={user} path={path} extra={extra} featured={featured} />
 				<ContentEvent node={node} user={user} path={path} extra={extra} featured={featured} />
                 <Router node={node} props={props}>
                     <Route default static path="/stats" component={EventStats} />
