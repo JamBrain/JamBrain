@@ -21,8 +21,8 @@ import PageUsers 						from 'com/page/users/users';
 import PageEvent 						from 'com/page/event/event';
 import PageEvents 						from 'com/page/events/events';
 import PageError 						from 'com/page/error/error';
-import PageMySettings 					from 'com/page/my/settings';
-import PageMyNotifications 				from 'com/page/my/notifications';
+import PageMySettings 					from 'com/page/home/my/settings';
+import PageMyNotifications 				from 'com/page/home/my/notifications';
 import PageDevPalette 					from 'com/page/dev/palette';
 
 import DialogUnfinished					from 'com/dialog/unfinished/unfinished';
