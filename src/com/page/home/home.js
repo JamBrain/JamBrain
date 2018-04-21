@@ -12,8 +12,11 @@ import PageHomeHome						from './home/home';
 import PageHomeMy						from './my/my';
 import PageHomeFeed						from './feed/feed';
 import PageHomeNews						from './news/news';
-import PageHomeSearch					from './search/search';
+import PageHomeExplore					from './explore/explore';
 import PageHomeGames					from './games/games';
+import PageHomeTools					from './tools/tools';
+import PageHomeCommunities				from './communities/communities';
+import PageHomeSearch					from './search/search';
 
 export default class PageHome extends Component {
 	render( props ) {
@@ -31,7 +34,9 @@ export default class PageHome extends Component {
 					<Route static path="/feed/news" component={PageHomeNews} />
 					<Route static path="/feed/hot" component={PageHomeNews} />
 					<Route static path="/games/:filter?/:subfilter?/:target?" component={PageHomeGames} />
-					<Route static path="/explore" component={PageHomeMy} />
+					<Route static path="/explore" component={PageHomeExplore} />
+					<Route static path="/tools" component={PageHomeTools} />
+					<Route static path="/communities" component={PageHomeCommunities} />
 					<Route static path="/search" component={PageHomeSearch} />
 					<Route type="error" component={ContentError} />
 				</Router>
