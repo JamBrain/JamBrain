@@ -29,10 +29,16 @@ export default class PageNavRoot extends Component {
 		else
 			NavButtons.push(<ContentNavButton path={FullPath} icon="previous" href="/" match="/home" />);
 
-//		// "Me" User Button (if home or logged in)
-//		if ( IsHome && user && (user.id !== 0) ) {
-//			NavButtons.push(<ContentNavButton path={FullPath} light={!IsHome} icon="user" href="/my">Me</ContentNavButton>);
-//		}
+		// "Me" User Button (if home or logged in)
+		if ( ['/home', '/my'].includes(FirstPath) && user && (user.id !== 0) ) {
+			NavButtons.push(<ContentNavButton path={FullPath} light={!IsHome} icon="user" href="/my">Me</ContentNavButton>);
+
+			if ( !IsHome ) {
+				NavButtons.push(<ContentNavButton path={FullPath} icon="bubble" href="/my/notifications">Notifications</ContentNavButton>);
+				NavButtons.push(<ContentNavButton path={FullPath} icon="stats" href="/my/stats">Stats</ContentNavButton>);
+				NavButtons.push(<ContentNavButton path={FullPath} icon="cog" href="/my/settings">Settings</ContentNavButton>);
+			}
+		}
 
 		if ( ['/home', '/feed', '/news'].includes(FirstPath) ) {
 			NavButtons.push(<ContentNavButton path={FullPath} light={!IsHome} icon="feed" href="/feed">Feed</ContentNavButton>);
