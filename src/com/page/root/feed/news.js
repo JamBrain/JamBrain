@@ -1,7 +1,7 @@
 import {h, Component}					from 'preact/preact';
 import ContentTimeline					from 'com/content-timeline/timeline';
 
-export default class PageHomeNews extends Component {
+export default class PageRootFeedNews extends Component {
     render( props ) {
         let {node, user, path, extra} = props;
 

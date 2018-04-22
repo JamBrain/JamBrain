@@ -31,6 +31,8 @@ export default class PageEvent extends Component {
         let NewPath = path + "/" + extra[0];
         let NewExtra = extra.slice(1);
 
+//				<ContentNavEvent node={node} user={user} path={path} extra={extra} featured={featured} />
+
         return (
             <div id="content">
 				<ContentEvent node={node} user={user} path={path} extra={extra} featured={featured} />

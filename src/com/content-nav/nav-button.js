@@ -1,37 +1,32 @@
-import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
-import NavLink 							from 'com/nav-link/link';
+import {h, Component} 					from 'preact/preact';
+import UIIcon 							from 'com/ui/icon/icon';
+import UIButton							from 'com/ui/button/button';
 
 
 export default class ContentNavButton extends Component {
-	constructor( props ) {
-		super(props);
-	}
+	render( props ) {
+		let Body = [];
+		let Classes = [
+			props.class
+		];
 
-	componentDidMount() {
-	}
-
-	render( props, {} ) {
-		if ( props.class ) {
-			props.class = props.class.split(' ');
-		}
-		else {
-			props.class = [];
-		}
-		props.class.push('-button');
-
-		if ( props.path === props.href ) {
-			props.class.push('-selected');
+		if ( (props.path === props.href) || (props.path === props.match) ) {
+			Classes.push('-selected');
 		}
 
-		var ShowIcon = null;
+		if ( props.light ) {
+			Classes.push('-light');
+		}
+
 		if ( props.icon ) {
-			ShowIcon = <SVGIcon>{props.icon}</SVGIcon>;
-			props.class.push('-has-icon');
+			Body.push(<UIIcon src={props.icon} />);
+			Classes.push('-has-icon');
 		}
+
+		Body.push(<span>{props.children}</span>);
 
 		return (
-			<NavLink {...props}>{ShowIcon}<span>{props.children}</span></NavLink>
+			<UIButton {...props} class={cN(Classes)}>{Body}</UIButton>
 		);
 	}
 }

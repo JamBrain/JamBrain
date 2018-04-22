@@ -4,7 +4,7 @@ import ContentList						from 'com/content-list/list';
 import ContentGames						from 'com/content-games/games';
 import GamesFilter						from 'com/content-games/filter';
 
-export default class PageHomeGames extends Component {
+export default class PageRootGames extends Component {
 	constructor( props ) {
 		super(props);
 

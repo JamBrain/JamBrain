@@ -1,5 +1,4 @@
 import {h, Component} 					from 'preact/preact';
-
 import ContentNavButton					from 'com/content-nav/nav-button';
 
 

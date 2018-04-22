@@ -11,19 +11,16 @@ import Route							from 'com/router/route';
 
 import Layout							from "com/page/layout";
 
-import PageHome 						from 'com/page/home/home';
-import PagePage 						from 'com/page/page/page';
-import PagePost 						from 'com/page/post/post';
-import PageItem 						from 'com/page/item/item';
-import PageTag 							from 'com/page/tag/tag';
-import PageUser 						from 'com/page/user/user';
-import PageUsers 						from 'com/page/users/users';
-import PageEvent 						from 'com/page/event/event';
-import PageEvents 						from 'com/page/events/events';
+import PageRoot 						from 'com/page/root/root';
+import PagePage 						from 'com/page/node/page/page';
+import PagePost 						from 'com/page/node/post/post';
+import PageItem 						from 'com/page/node/item/item';
+import PageTag 							from 'com/page/node/tag/tag';
+import PageUser 						from 'com/page/node/user/user';
+import PageUsers 						from 'com/page/node/users/users';
+import PageEvent 						from 'com/page/node/event/event';
+import PageEvents 						from 'com/page/node/events/events';
 import PageError 						from 'com/page/error/error';
-import PageMySettings 					from 'com/page/my/settings';
-import PageMyNotifications 				from 'com/page/my/notifications';
-import PageDevPalette 					from 'com/page/dev/palette';
 
 import DialogUnfinished					from 'com/dialog/unfinished/unfinished';
 import DialogLogin						from 'com/dialog/login/login';
@@ -537,15 +534,7 @@ class Main extends Component {
 		return (
 			<Layout {...this.state}>
 				<Router node={node} props={props} path={extra}>
-					<Route type="root" component={PageHome}>
-						<Route static path="/my">
-							<Route static path="/settings" component={PageMySettings} />
-							<Route static path="/notifications" component={PageMyNotifications} />
-						</Route>
-						<Route static path="/dev">
-							<Route static path="/palette" component={PageDevPalette} />
-						</Route>
-					</Route>
+					<Route type="root" component={PageRoot} />
 
 					<Route type="page" component={PagePage} />
 					<Route type="post" component={PagePost} />
