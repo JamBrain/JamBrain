@@ -49,12 +49,6 @@ export default class PageNavRoot extends Component {
 			NavButtons.push(<ContentNavButton path={FullPath} icon="news" href="/feed/news">News</ContentNavButton>);
 		}
 
-		if ( ['/dev'].includes(FirstPath) ) {
-			NavButtons.push(<ContentNavButton path={FullPath} light={!IsHome} icon="embed" href="/dev">Dev</ContentNavButton>);
-
-			NavButtons.push(<ContentNavButton path={FullPath} icon="image" href="/dev/palette">Palette</ContentNavButton>);
-		}
-
 		if ( ['/home', '/explore', '/games', '/events', '/tools', '/communities'].includes(FirstPath) ) {
 			NavButtons.push(<ContentNavButton path={FullPath} light={!IsHome} icon="browse" href="/explore">Explore</ContentNavButton>);
 			NavButtons.push(<ContentNavButton path={FirstPath} icon="gamepad" href="/games">Games</ContentNavButton>);
@@ -68,6 +62,14 @@ export default class PageNavRoot extends Component {
 
 				NavButtons.push(<ContentNavButton path={FullPath} icon="hammer" href="/tools">Tools</ContentNavButton>);
 				NavButtons.push(<ContentNavButton path={FullPath} icon="users" href="/communities">Communities</ContentNavButton>);
+			}
+		}
+
+		if ( ['/dev'].includes(FirstPath) || (location.search.indexOf('debug') >= 0) ) {
+			NavButtons.push(<ContentNavButton path={FullPath} light={!IsHome} icon="embed" href="/dev">Dev</ContentNavButton>);
+
+			if ( !IsHome ) {
+				NavButtons.push(<ContentNavButton path={FullPath} icon="image" href="/dev/palette">Palette</ContentNavButton>);
 			}
 		}
 
