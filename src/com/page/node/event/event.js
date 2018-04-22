@@ -1,5 +1,5 @@
 import {h, Component}					from "preact/preact";
-import PageNavContent					from '../../nav/content';
+import PageNavEvent						from '../../nav/event';
 
 import ContentEvent						from "com/content-event/event";
 import ContentNavEvent					from "com/content-nav/nav-event";
@@ -36,7 +36,7 @@ export default class PageEvent extends Component {
 
 		return (
 			<div id="content">
-				<PageNavContent {...props} />
+				<PageNavEvent {...props} />
 				<ContentEvent node={node} user={user} path={path} extra={extra} featured={featured} />
 				<Router node={node} props={props}>
 					<Route default static path="/stats" component={EventStats} />

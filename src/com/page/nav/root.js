@@ -11,9 +11,7 @@ export default class PageNavRoot extends Component {
 		let FirstPath = FullPath.split('/', 2).join('/');
 
 		// Transform paths
-//		FirstPath = (FirstPath == '/') ? '/home': FirstPath;
 		const FullPathRemaps = {
-//			'/': '/home',
 			'/news': '/feed/news'
 		};
 		if ( FullPathRemaps[FullPath] )
