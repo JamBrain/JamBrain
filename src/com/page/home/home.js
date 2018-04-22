@@ -20,10 +20,12 @@ import PageHomeSearch					from './search/search';
 
 export default class PageHome extends Component {
 	render( props ) {
+		// IMPORTANT NOTE: the ARGs for Router are bad. Please fix so {...props} works
+
 		return (
 			<ContentList class="page-home">
 				<PageNavRoot {...props} />
-				<Router {...props}>
+				<Router node={props.node} props={props}>
 					<Route static path="/home" default={true} component={PageHomeHome} />
 					<Route static path="/my" component={PageHomeMy} />
 					<Route static path="/my/settings" component={PageHomeMy} />
