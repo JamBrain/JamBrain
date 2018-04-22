@@ -43,10 +43,16 @@ export default class PageNavRoot extends Component {
 		if ( ['/home', '/feed', '/news'].includes(FirstPath) ) {
 			NavButtons.push(<ContentNavButton path={FullPath} light={!IsHome} icon="feed" href="/feed">Feed</ContentNavButton>);
 
-//			if ( FirstPath == '/feed' )
+//			if ( !IsHome )
 //				NavButtons.push(<ContentNavButton path={FullPath} icon="fire" href="/feed/hot">Hot</ContentNavButton>);
 
 			NavButtons.push(<ContentNavButton path={FullPath} icon="news" href="/feed/news">News</ContentNavButton>);
+		}
+
+		if ( ['/dev'].includes(FirstPath) ) {
+			NavButtons.push(<ContentNavButton path={FullPath} light={!IsHome} icon="embed" href="/dev">Dev</ContentNavButton>);
+
+			NavButtons.push(<ContentNavButton path={FullPath} icon="image" href="/dev/palette">Palette</ContentNavButton>);
 		}
 
 		if ( ['/home', '/explore', '/games', '/events', '/tools', '/communities'].includes(FirstPath) ) {
