@@ -320,7 +320,7 @@ class Main extends Component {
 	}
 
 	fetchNode() {
-		let NewNode = null;
+		let NewState = {};
 		console.log("[fetchNode]");
 
 		// Walk to the active node
@@ -328,7 +328,6 @@ class Main extends Component {
 		.then(r => {
 			// Store the path determined by the walk
 			if ( r && r.node ) {
-				let NewState = {};
 				NewState['path'] = (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/');
 				NewState['extra'] = r.extra;
 
@@ -340,22 +339,15 @@ class Main extends Component {
 		.then(r => {
 			// Process the node
 			if ( r && r.node && r.node.length ) {
-				NewNode = r.node[0];
-
-//				let NewState = {};
-//				NewState['node'] = NewNode;
-//				NewState['parent'] = null;
-//				NewState['superparent'] = null;
-//				NewState['author'] = null;
-//				this.setState(NewState);
+				NewState.node = r.node[0];
 
 				let Keys = [];
-				if ( NewNode.parent )
-					Keys.push(NewNode.parent);
-				if ( NewNode.superparent )
-					Keys.push(NewNode.superparent);
-				if ( NewNode.author )
-					Keys.push(NewNode.author);
+				if ( NewState.node.parent )
+					Keys.push(NewState.node.parent);
+				if ( NewState.node.superparent )
+					Keys.push(NewState.node.superparent);
+				if ( NewState.node.author )
+					Keys.push(NewState.node.author);
 
 				// Fetch related nodes
 				return $Node.GetKeyed(Keys);
@@ -364,18 +356,18 @@ class Main extends Component {
 		})
 		.then(r => {
 			if ( r && r.node ) {
-				let NewState = {};
-
-				NewState.node = NewNode;
-				NewState.parent = NewNode.parent ? r.node[NewNode.parent] : null;
-				NewState.superparent = NewNode.superparent ? r.node[NewNode.superparent] : null;
-				NewState.author = NewNode.author ? r.node[NewNode.author] : null;
-				this.setState(NewState);
+				NewState.parent = NewState.node.parent ? r.node[NewState.node.parent] : null;
+				NewState.superparent = NewState.node.superparent ? r.node[NewState.node.superparent] : null;
+				NewState.author = NewState.node.author ? r.node[NewState.node.author] : null;
 
 				// That's it, we're done
 				return true;
 			}
 			throw "[fetchNode] Related nodes not found";
+		})
+		.then(r => {
+			// Commit the changes to State
+			this.setState(NewState);
 		})
 		.catch(err => {
 			this.setState({'error': err});
