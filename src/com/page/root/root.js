@@ -9,7 +9,6 @@ import ContentError						from 'com/content-error/error';
 import PageNavRoot						from '../nav/root';
 
 import PageRootHome						from './home/home';
-import PageRootMy						from './my/my';
 import PageRootFeed						from './feed/feed';
 import PageRootFeedNews					from './feed/news';
 import PageRootExplore					from './explore/explore';
@@ -18,19 +17,30 @@ import PageRootTools					from './tools/tools';
 import PageRootCommunities				from './communities/communities';
 import PageRootSearch					from './search/search';
 
+import PageMyHome 						from 'com/page/root/my/home';
+import PageMySettings 					from 'com/page/root/my/settings';
+import PageMyStats	 					from 'com/page/root/my/stats';
+import PageMyNotifications 				from 'com/page/root/my/notifications';
+import PageDevPalette 					from 'com/page/dev/palette';
+
+
 export default class PageRoot extends Component {
 	render( props ) {
-		// IMPORTANT NOTE: the ARGs for Router are bad. Please fix so {...props} works
-
 		let Dummy = <div />;
 
 		return (
 			<ContentList class="page-root">
 				<PageNavRoot {...props} />
-				<Router node={props.node} props={props}>
+				<Router node={props.node} props={props} name="root">
 					<Route static path="/home" default={true} component={PageRootHome} />
-					<Route static path="/my" component={PageRootMy} />
-					<Route static path="/my/settings" component={Dummy} />
+					<Route static path="/my" component={PageMyHome}>
+						<Route static path="/notifications" component={PageMyNotifications} />
+						<Route static path="/stats" component={PageMyStats} />
+						<Route static path="/settings" component={PageMySettings} />
+					</Route>
+					<Route static path="/dev">
+						<Route static path="/palette" component={PageDevPalette} />
+					</Route>
 					<Route static path="/news" component={PageRootFeedNews} />
 					<Route static path="/feed" component={PageRootFeed} />
 					<Route static path="/feed/news" component={PageRootFeedNews} />

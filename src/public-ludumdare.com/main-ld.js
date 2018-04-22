@@ -21,9 +21,6 @@ import PageUsers 						from 'com/page/node/users/users';
 import PageEvent 						from 'com/page/node/event/event';
 import PageEvents 						from 'com/page/node/events/events';
 import PageError 						from 'com/page/error/error';
-import PageMySettings 					from 'com/page/root/my/settings';
-import PageMyNotifications 				from 'com/page/root/my/notifications';
-import PageDevPalette 					from 'com/page/dev/palette';
 
 import DialogUnfinished					from 'com/dialog/unfinished/unfinished';
 import DialogLogin						from 'com/dialog/login/login';
@@ -537,15 +534,7 @@ class Main extends Component {
 		return (
 			<Layout {...this.state}>
 				<Router node={node} props={props} path={extra}>
-					<Route type="root" component={PageRoot}>
-						<Route static path="/my">
-							<Route static path="/settings" component={PageMySettings} />
-							<Route static path="/notifications" component={PageMyNotifications} />
-						</Route>
-						<Route static path="/dev">
-							<Route static path="/palette" component={PageDevPalette} />
-						</Route>
-					</Route>
+					<Route type="root" component={PageRoot} />
 
 					<Route type="page" component={PagePage} />
 					<Route type="post" component={PagePost} />
