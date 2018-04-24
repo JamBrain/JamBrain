@@ -16,6 +16,7 @@ cd $SCRIPTPATH
 # Create upload folders
 mkdir public-static/content
 mkdir public-static/raw
+ln -s ../internal public-static/raw/internal
 
 # Setup Sphinx
 mv /etc/sphinxsearch/sphinx.conf /etc/sphinxsearch/_sphinx.conf
