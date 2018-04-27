@@ -70,10 +70,24 @@ export default class ContentCommentsComment extends Component {
 		return (this.props.comment.body.trim().length > 1);
 	}
 
+	badCommentWarning(txt) {
+		if (!txt || txt.length < 3) {
+			return;
+		}
+		else if (this.duplicatedComment()) {
+			return 'Writing the same comment several times is not a good sign. Take your time. Be respectful of the people who you comment to.';
+		}
+		else if ((txt.indexOf('http://') > -1) || (txt.indexOf('https://') > -1)) {
+			return 'Posting links to your game is not needed and a sign of bad community behaviour. The good way to get ratings and quality feedback is to spend time playing other peoples game, giving fair grades and valuable feedback.';
+		}
+		return;
+	}
+
 	onModify( e ) {
 		//console.log('modified', e.target, this.state.editText, this.state.editCursorPos, this.state.textareaFocus);
 		this.props.comment.body = e.target.value;
 		this.setState({
+			'qualityWarning': this.badCommentWarning(e.target.value),
 			'modified': this.canSave(),
 			'editText': e.target.value,
 			'editCursorPos': e.target.selectionStart,
@@ -141,18 +155,28 @@ export default class ContentCommentsComment extends Component {
 		});
 	}
 
+	duplicatedComment() {
+		const storage = window.localStorage;
+		const txt = this.props.comment.body;
+		return (txt && (txt == storage.getItem('cachedPreviousComment')));
+	}
+
 	onPublishAnon( e ) {
-		if ( this.canSave() ) {
+		if ( this.canSave() && !this.duplicatedComment() ) {
 			if ( this.props.onpublish ) {
 				this.props.onpublish(e, true);
+				const storage = window.localStorage;
+				storage.setItem('cachedPreviousComment', this.props.comment.body);
 			}
 		}
 	}
 
 	onPublish( e ) {
-		if ( this.canSave() ) {
+		if ( this.canSave() && !this.duplicatedComment() ) {
 			if ( this.props.onpublish ) {
 				this.props.onpublish(e);
+				const storage = window.localStorage;
+				storage.setItem('cachedPreviousComment', this.props.comment.body);
 
 				//this.setState({'modified': false, 'editing': true, 'preview': false});
 			}
@@ -324,25 +348,28 @@ export default class ContentCommentsComment extends Component {
 				}
 
 				var ShowRight = [];
-
-				if ( props.cansubscribe ) {
-					ShowRight.push(<div class={"-button -subscribe"} onclick={this.onSubscribe}><SVGIcon>bubble</SVGIcon><div>Follow Thread</div></div>);
+				if ( state.qualityWarning ) {
+					ShowRight = [<div class="quality-alert">{state.qualityWarning}</div>];
 				}
 				else {
-					ShowRight.push(<div class={"-button -unsubscribe"} onclick={this.onSubscribe}><SVGIcon>bubble-empty</SVGIcon><div>Unfollow Thread</div></div>);
-				}
-
-				if ( props.publish ) {
-					if ( props.allowAnonymous ) {
-						ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublishAnon}><SVGIcon>publish</SVGIcon><div>Publish Anonymously</div></div>);
+					if ( props.cansubscribe ) {
+						ShowRight.push(<div class={"-button -subscribe"} onclick={this.onSubscribe}><SVGIcon>bubble</SVGIcon><div>Follow Thread</div></div>);
 					}
-					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublish}><SVGIcon>publish</SVGIcon><div>Publish</div></div>);
-				}
-				else {
-					ShowRight.push(<div class="-button -cancel" onclick={this.onCancel}><SVGIcon>cross</SVGIcon><div class="if-sidebar-block">Cancel</div></div>);
-					ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onclick={this.onSave}><SVGIcon>save</SVGIcon><div>Save</div></div>);
-				}
+					else {
+						ShowRight.push(<div class={"-button -unsubscribe"} onclick={this.onSubscribe}><SVGIcon>bubble-empty</SVGIcon><div>Unfollow Thread</div></div>);
+					}
 
+					if ( props.publish ) {
+						if ( props.allowAnonymous ) {
+							ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublishAnon}><SVGIcon>publish</SVGIcon><div>Publish Anonymously</div></div>);
+						}
+						ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublish}><SVGIcon>publish</SVGIcon><div>Publish</div></div>);
+					}
+					else {
+						ShowRight.push(<div class="-button -cancel" onclick={this.onCancel}><SVGIcon>cross</SVGIcon><div class="if-sidebar-block">Cancel</div></div>);
+						ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onclick={this.onSave}><SVGIcon>save</SVGIcon><div>Save</div></div>);
+					}
+				}
 				ShowTopNav = (
 					<div class="-nav">
 						<div class="-right">{ShowRight}</div>
