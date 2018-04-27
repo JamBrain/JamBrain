@@ -69,36 +69,20 @@ export default class ContentCommentsComment extends Component {
 	canSave() {
 		return (this.props.comment.body.trim().length > 1);
 	}
-	
-	isCommentingOnOwnPost() {
-		let {node, user, path, extra, featured} = this.props;
-		return false;
-	}
-
-	badCommentWarning(txt) {
-		if (!txt || txt.length < 5 || this.isCommentingOnOwnPost()) {
-			return;
-		}
-		else if (this.duplicatedComment()) {
-			return 'Writing the same comment several times is not a good sign. Take your time. Be respectful of the people who you comment to.';
-		}
-		else if ((txt.indexOf('http://') > -1) || (txt.indexOf('https://') > -1)) {
-			return 'Posting links to your game is not needed and a sign of bad community behaviour. The good way to get ratings and quality feedback is to spend time playing other peoples game, giving fair grades and valuable feedback.';
-		}
-		return;
-	}
 
 	onModify( e ) {
 		//console.log('modified', e.target, this.state.editText, this.state.editCursorPos, this.state.textareaFocus);
 		this.props.comment.body = e.target.value;
 		this.setState({
-			'qualityWarning': this.badCommentWarning(e.target.value),
 			'modified': this.canSave(),
 			'editText': e.target.value,
 			'editCursorPos': e.target.selectionStart,
 			'replaceText': null,
 			'textareaFocus': true,
 		});
+		this.props.checkBadCommentWarning(e.target.value)
+			.then(msg => this.setState({'qualityWarning': msg}))
+			.catch(msg => this.setState({'qualityWarning': msg}));
 		return true;
 	}
 
@@ -160,14 +144,8 @@ export default class ContentCommentsComment extends Component {
 		});
 	}
 
-	duplicatedComment() {
-		const storage = window.localStorage;
-		const txt = this.props.comment.body;
-		return (txt && (txt == storage.getItem('cachedPreviousComment')));
-	}
-
 	onPublishAnon( e ) {
-		if ( this.canSave() && !this.duplicatedComment() ) {
+		if ( this.canSave() && !this.props.isDuplicatedComment(this.props.comment.body) ) {
 			if ( this.props.onpublish ) {
 				this.props.onpublish(e, true);
 				const storage = window.localStorage;
@@ -177,7 +155,7 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onPublish( e ) {
-		if ( this.canSave() && !this.duplicatedComment() ) {
+		if ( this.canSave() && !this.props.isDuplicatedComment(this.props.comment.body) ) {
 			if ( this.props.onpublish ) {
 				this.props.onpublish(e);
 				const storage = window.localStorage;
