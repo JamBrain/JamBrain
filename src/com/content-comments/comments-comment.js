@@ -69,9 +69,14 @@ export default class ContentCommentsComment extends Component {
 	canSave() {
 		return (this.props.comment.body.trim().length > 1);
 	}
+	
+	isCommentingOnOwnPost() {
+		let {node, user, path, extra, featured} = this.props;
+		return false;
+	}
 
 	badCommentWarning(txt) {
-		if (!txt || txt.length < 3) {
+		if (!txt || txt.length < 5 || this.isCommentingOnOwnPost()) {
 			return;
 		}
 		else if (this.duplicatedComment()) {
