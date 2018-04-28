@@ -110,6 +110,12 @@ function userSession_Start() {
 //		true
 //	);
 
+	$domain = $_SERVER['HTTP_HOST'];
+	$prefix = "api.";
+	if ( substr($domain, 0, strlen($prefix)) == $prefix ) {
+		$domain = substr($domain, strlen($prefix));
+	}
+
 	// Start Session	
 	session_start([
 		'name' => $sid_name,
@@ -117,7 +123,7 @@ function userSession_Start() {
 		'cookie_httponly' => 1,						// Don't pass SID to JavaScript
 		'cookie_secure' => $is_secure ? 1 : 0,
 		//'cookie_path' => '/',
-		'cookie_domain' => $_SERVER['HTTP_HOST'],
+		'cookie_domain' => $domain,
 //		'sid_length' => 64,							// As of PHP 7.1
 //		'sid_bits_per_character' => 5,				// As of PHP 7.1
 	]);
