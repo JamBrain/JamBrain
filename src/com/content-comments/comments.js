@@ -127,7 +127,7 @@ export default class ContentComments extends Component {
 				};
 			}
 			else {
-				console.log('[Comments] Unable to find parent for '+comments[idx].id);
+				console.log("[Comments] Unable to find parent for "+comments[idx].id);
 			}
 		}
 
@@ -192,13 +192,13 @@ export default class ContentComments extends Component {
 	}
 
 	checkBadCommentWarning(txt) {
-		if (!txt || txt.length < 5) {
+		if ( !txt || (txt.length < 5) ) {
 			return Promise.resolve();
 		}
-		else if (this.isDuplicatedComment(txt)) {
-			return Promise.reject('Writing the same comment several times is not good. Take your time. Be respectful of the people who you comment to.');
+		else if ( this.isDuplicatedComment(txt) ) {
+			return Promise.reject("Writing the same comment several times is not good. Take your time. Be respectful of the people who you comment to.");
 		}
-		else if (this.postIsAnItem() && !this.isCommentingOnOwnPost()) {
+		else if ( this.postIsAnItem() && !this.isCommentingOnOwnPost() ) {
 			const {user} = this.props;
 			const authoring = user.private.refs.author;
 			if (authoring && authoring.length > 0) {
