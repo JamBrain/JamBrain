@@ -22,7 +22,7 @@ export default class PageRootGames extends Component {
 		let DefaultSubFilter = 'all';
 
 		//TODO:: Make this automatically change between smart and danger
-		let DefaultFilter = 'danger';
+		let DefaultFilter = 'smart';
 
 		function EvalFilter(str) {
 			let MappingTable = {
