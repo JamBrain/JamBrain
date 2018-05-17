@@ -11,9 +11,7 @@ export default class PageNavRoot extends Component {
 		let FirstPath = FullPath.split('/', 2).join('/');
 
 		// Transform paths
-		FirstPath = (FirstPath == '/') ? '/home': FirstPath;
 		const FullPathRemaps = {
-			'/': '/home',
 			'/news': '/feed/news'
 		};
 		if ( FullPathRemaps[FullPath] )
@@ -23,14 +21,14 @@ export default class PageNavRoot extends Component {
 		let NavButtons = [];
 
 		// Home/Back button
-		let IsHome = (FullPath == '/home');
+		let IsHome = (FullPath == '/');
 		if ( IsHome )
-			NavButtons.push(<ContentNavButton path={FullPath} icon="home" href="/" match="/home" />);
+			NavButtons.push(<ContentNavButton path={FullPath} icon="home" href="/" />);
 		else
-			NavButtons.push(<ContentNavButton path={FullPath} icon="previous" href="/" match="/home" />);
+			NavButtons.push(<ContentNavButton path={FullPath} icon="previous" href="/" />);
 
 		// "Me" User Button (if home or logged in)
-		if ( ['/home', '/my'].includes(FirstPath) && user && (user.id !== 0) ) {
+		if ( ['/', '/my'].includes(FirstPath) && user && (user.id !== 0) ) {
 			NavButtons.push(<ContentNavButton path={FullPath} light={!IsHome} icon="user" href="/my">Me</ContentNavButton>);
 
 			if ( !IsHome ) {
@@ -40,7 +38,7 @@ export default class PageNavRoot extends Component {
 			}
 		}
 
-		if ( ['/home', '/feed', '/news'].includes(FirstPath) ) {
+		if ( ['/', '/feed', '/news'].includes(FirstPath) ) {
 			NavButtons.push(<ContentNavButton path={FullPath} light={!IsHome} icon="feed" href="/feed">Feed</ContentNavButton>);
 
 //			if ( !IsHome )
@@ -49,11 +47,11 @@ export default class PageNavRoot extends Component {
 			NavButtons.push(<ContentNavButton path={FullPath} icon="news" href="/feed/news">News</ContentNavButton>);
 		}
 
-		if ( ['/home', '/explore', '/games', '/events', '/tools', '/communities'].includes(FirstPath) ) {
+		if ( ['/', '/explore', '/games', '/events', '/tools', '/communities'].includes(FirstPath) ) {
 			NavButtons.push(<ContentNavButton path={FullPath} light={!IsHome} icon="browse" href="/explore">Explore</ContentNavButton>);
 			NavButtons.push(<ContentNavButton path={FirstPath} icon="gamepad" href="/games">Games</ContentNavButton>);
 
-			if ( FirstPath != '/home' ) {
+			if ( FirstPath != '/' ) {
 				// if ldjam.com vs jammer.vg
 				if ( true )
 					NavButtons.push(<ContentNavButton path={FirstPath} icon="trophy" href="/events/ludum-dare" match="/events">Events</ContentNavButton>);

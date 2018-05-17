@@ -32,7 +32,7 @@ export default class PageRoot extends Component {
 			<ContentList class="page-root">
 				<PageNavRoot {...props} />
 				<Router node={props.node} props={props} name="root">
-					<Route static path="/home" default={true} component={PageRootHome} />
+					<Route static path="/" default={true} component={PageRootHome} />
 					<Route static path="/my" component={PageMyHome}>
 						<Route static path="/notifications" component={PageMyNotifications} />
 						<Route static path="/stats" component={PageMyStats} />
