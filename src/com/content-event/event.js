@@ -187,14 +187,16 @@ export default class ContentEvent extends Component {
 		return (
 			<ContentSimple {...props}>
 				<ContentCommonNav>
-					{ShowHome}
                     {ShowJoin}
-					{ShowGame}
-					{ShowMyGrades}
-					{ShowFeed}
-					{ShowTheme}
 				</ContentCommonNav>
 			</ContentSimple>
 		);
 	}
+
+//					{ShowHome}
+//					{ShowGame}
+//					{ShowMyGrades}
+//					{ShowFeed}
+//					{ShowTheme}
+
 }
