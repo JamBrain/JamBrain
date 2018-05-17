@@ -180,7 +180,7 @@ export default class ContentEvent extends Component {
 			);
 		}
 
-		props.minmax = true;
+		//props.minmax = true;
 		if ( !IsHome )
 			props.minimized = true;
 
