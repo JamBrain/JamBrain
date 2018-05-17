@@ -1,4 +1,6 @@
 import {h, Component}					from 'preact/preact';
+import PageNavEventMy					from '../../../nav/event-my';
+
 import ContentList						from 'com/content-list/list';
 import ContentLoading					from 'com/content-loading/loading';
 import InputDropdown					from 'com/input-dropdown/dropdown';
@@ -231,7 +233,7 @@ export default class MyGrades extends Component {
 		}
 	}
 
-    render( props, state ) {
+	render( props, state ) {
 		const {error, nodes, loading, grades, gradeNames, sortBy, myComments} = state;
 		const gameIds = this.getSortedGames();
 		const shouldGradeNoGames = 20;
@@ -324,17 +326,20 @@ export default class MyGrades extends Component {
 			);
 		}
 
-        return (
-			<div class="content-common event-mygraded">
-				<h2>Items you have graded</h2>
-				{ShowLoading}
-				{ShowError}
-				{ShowWarning}
-				{ShowParagraph}
-				{ShowSorting}
-				{ShowStats}
-				{ShowResults}
+		return (
+			<div>
+				<PageNavEventMy {...props} />
+				<div class="content-common event-mygraded">
+					<h2>Items you have graded</h2>
+					{ShowLoading}
+					{ShowError}
+					{ShowWarning}
+					{ShowParagraph}
+					{ShowSorting}
+					{ShowStats}
+					{ShowResults}
+				</div>
 			</div>
-        );
-    }
+		);
+	}
 }

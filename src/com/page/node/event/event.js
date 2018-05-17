@@ -46,8 +46,8 @@ export default class PageEvent extends Component {
 					<Route static path="/stats" component={EventStats} />
 					<Route static path="/theme/:page?" component={EventTheme} />
 					<Route static path={["/games/:filter?/:subfilter?", "/results/:filter?/:subfilter?"]} component={EventGames} />
-					<Route static path="/my" component={EventMy} />
-					<Route static path="/my/grades" component={EventMyGrades} node={node} />
+					<Route static path="/my" component={EventMy} user={user} />
+					<Route static path="/my/grades" component={EventMyGrades} user={user} />
 					<Route type="error" component={ContentError} />
 				</Router>
 			</div>

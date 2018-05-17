@@ -21,20 +21,21 @@ export default class PageNavEvent extends Component {
 
 		NavButtons.push(<ContentNavButton path={path+FullPath} light={true} icon="trophy" href={path+'/'}>{node.name}</ContentNavButton>);
 
-		if ( !IsMe ) {
-			NavButtons.push(<ContentNavButton path={path+FirstPath} icon="gamepad" href={path+'/games'}>Games</ContentNavButton>);
-			NavButtons.push(<ContentNavButton path={path+FirstPath} icon="ticket" href={path+'/theme'}>Theme</ContentNavButton>);
-			NavButtons.push(<ContentNavButton path={path+FullPath} icon="stats" href={path+'/stats'}>Stats</ContentNavButton>);
+		NavButtons.push(<ContentNavButton path={path+FirstPath} icon="gamepad" href={path+'/games'}>Games</ContentNavButton>);
+		NavButtons.push(<ContentNavButton path={path+FirstPath} icon="ticket" href={path+'/theme'}>Theme</ContentNavButton>);
+		NavButtons.push(<ContentNavButton path={path+FullPath} icon="stats" href={path+'/stats'}>Stats</ContentNavButton>);
+
+		if ( IsLoggedIn ) {
+			/* light={FirstPath == '/my'} */
+			NavButtons.push(<ContentNavButton path={path+FirstPath} icon="user" href={path+'/my'}>Me</ContentNavButton>);
 		}
 
-		NavButtons.push(<ContentNavButton path={path+FullPath} light={FirstPath == '/my'} icon="user" href={path+'/my'}>Me</ContentNavButton>);
-
-		// "Me" User Button (if home or logged in)
-		if ( IsMe ) {
-			if ( user && (user.id !== 0) ) {
-				NavButtons.push(<ContentNavButton path={path+FullPath} icon="star-half" href={path+'/my/grades'}>My Grades</ContentNavButton>);
-			}
-		}
+//		// "Me" User Button (if home or logged in)
+//		if ( IsMe ) {
+//			if ( user && (user.id !== 0) ) {
+//				NavButtons.push(<ContentNavButton path={path+FullPath} icon="star-half" href={path+'/my/grades'}>My Grades</ContentNavButton>);
+//			}
+//		}
 
 		return (
 			<div class="content-base content-nav">
