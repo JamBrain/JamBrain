@@ -10,9 +10,12 @@ import ContentError						from "com/content-error/error";
 import Router							from "com/router/router";
 import Route							from "com/router/route";
 
+import EventHome						from "./home/home";
 import EventStats						from "./stats/stats";
 import EventTheme						from "./theme/theme";
 import EventGames						from "./games/games";
+
+import EventMy							from "./my/my";
 import EventMyGrades					from "./mygrades/mygrades";
 
 
@@ -39,10 +42,12 @@ export default class PageEvent extends Component {
 				<PageNavEvent {...props} />
 				<ContentEvent node={node} user={user} path={path} extra={extra} featured={featured} />
 				<Router node={node} props={props}>
-					<Route default static path="/stats" component={EventStats} />
+					<Route default static path="/home" component={EventHome} />
+					<Route static path="/stats" component={EventStats} />
 					<Route static path="/theme/:page?" component={EventTheme} />
 					<Route static path={["/games/:filter?/:subfilter?", "/results/:filter?/:subfilter?"]} component={EventGames} />
-					<Route static path="/mygrades" component={EventMyGrades} node={node} />
+					<Route static path="/my" component={EventMy} />
+					<Route static path="/my/grades" component={EventMyGrades} node={node} />
 					<Route type="error" component={ContentError} />
 				</Router>
 			</div>
