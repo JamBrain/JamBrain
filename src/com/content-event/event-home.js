@@ -2,10 +2,8 @@ import { h, Component } 				from 'preact/preact';
 import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
 
-import ButtonBase						from 'com/button-base/base';
-
-import $Theme							from '../../shrub/js/theme/theme';
-import marked 								from '../../internal/marked/marked';
+import $Theme							from 'shrub/js/theme/theme';
+import marked 							from 'internal/marked/marked';
 
 
 export default class ContentEventHome extends Component {

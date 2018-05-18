@@ -139,7 +139,7 @@ export default class marked {
     .replace(/`(.+?)`/g, '$1')
     .replace(/\n{2,}/g, '\n\n')
     //emoji
-    .replace(/^:([a-z_]+):/, '')
+    .replace(/^:([a-z_0-9]+):/, '')
     .replace("\n", " ");
 
     return output;

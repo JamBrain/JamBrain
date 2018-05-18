@@ -156,7 +156,8 @@ function SetupEvent()
 	// Now generate an event
 	global $event_nodeid;
 	global $eventindex;
-	$parentnode = 1; // Future: build out a more complex structure for this test.
+	global $eventsId;
+
 	$author = $event_admin_user["id"];
 	$eventname = "Testumdare " . ($eventindex);  
 	$event_name = $eventname;
@@ -175,11 +176,14 @@ function SetupEvent()
 
 
 	// Create event
-	$event_nodeid = node_Add( $parentnode, $author, "event", "", "", null, $eventname, $eventbody);
+	$event_nodeid = node_Add( $eventsId, $author, "event", "", "", null, $eventname, $eventbody);
 
 	// Add metadata
 	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'event-start', $formatStart);
 	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'event-end', $formatEnd);
+
+	// Add metadata number of theme-ideas per user
+	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-idea-limit', random_int(3, 5));	
 
 	// Create metadata for grading
 	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'grade-01', 'Overall');

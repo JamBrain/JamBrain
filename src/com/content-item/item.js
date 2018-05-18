@@ -365,6 +365,10 @@ export default class ContentItem extends Component {
 
 		let Category = '/';
 
+		if ( parent ) {
+			props.nopublish = !node_CanPublish(parent);
+		}
+
 		if ( node ) {
 			if ( node.subtype == 'game' ) {
 				props.by = "GAME";

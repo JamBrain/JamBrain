@@ -1,12 +1,20 @@
-
 @import "defs.less";
+
+@SL_YES: @COL_BC;
+@SL_NO: @COL_A; /*@COL_CA;*/
+@SL_FLAG: @COL_D; /*@COL_A;*/
 
 .event-slaughter {
 	text-align: center;
 
 	& .-title {
 		margin: 0.5em 0;
-		font-size:1.2em;
+		font-size: 1.2em;
+	}
+
+	& .-error {
+		padding: 0.5em 1em;
+		display: inline-block;
 	}
 
 	& .-theme {
@@ -26,66 +34,126 @@
 		}
 	}
 
-	& .-buttons {
-		margin:0.5em 0;
-		vertical-align: middle;
+	& .ui-button {
+		border: 0;
+		padding: 0.5em 1em;
+		cursor: pointer;
 
-		& button {
-			background: #AAA;
-			color: #DDD;
+		outline: none;
+		color: @COL_L;
 
-			font-size: 1.2em;
+		& > span {
+			vertical-align: middle;
+			margin-left: 0.5em;
 
-			border: 0;
-			padding: 0.5em 1em;
-			cursor: pointer;
-
-			margin: 0.5em;
-			border-radius: 2.0em;
-			font-weight: 700;
-			outline: none;
-
-			&.-green {
-				background:#4C4;
-				color:#8F8;
+			&:first-child {
+				margin-left: 0;
 			}
 
-			&.-red {
-				background:#C44;
-				color:#F88;
+			& > .hotkey {
+				text-decoration: underline;
+			}
+		}
+
+		&.-yes {
+			background: @SL_YES;
+		}
+
+		&.-no {
+			background: @SL_NO;
+		}
+
+		&.-flag {
+			font-size: 0.8em;
+			background: @SL_FLAG;
+			padding: 0.25em 0.5em;
+		}
+
+		&.-flash {
+			animation-duration: 0.5s;
+			animation-fill-mode: both;
+			animation-name: flash;
+		}
+
+		@keyframes flash {
+			0%, 100% {
+				color: @COL_L;
 			}
 
-			&.-tiny {
-				font-size: 0.8em;
+			25% {
+				color: @COL_W;
+				text-shadow: 0px 0px 2px @COL_W;
 			}
+		}
 
-			transition: transform 0.1s;
+		transition: transform 0.1s;
 
-			&:hover {
-				transform: scale(1.2);
-			}
+		&:hover {
+			transform: scale(1.15);
 		}
 	}
 
-	& .-stats {
+	& > .-main-buttons {
+		margin: 0.5em 0;
+		vertical-align: middle;
+
+		& > * {
+			margin-left: 0.5em;
+
+			&:first-child {
+				margin-left: 0;
+			}
+		}
+
+		& .ui-button {
+			display: inline-block;
+			font-weight: bold;
+
+			font-size: 1.2em;
+		}
+	}
+
+	& > .-other-buttons {
+		& > div {
+			margin: 0.5em 0;
+
+			& > * {
+				vertical-align: middle;
+			}
+
+			& .ui-button {
+				display: inline-block;
+			}
+		}
+
+		& > .-info {
+			font-size: 0.8em;
+			color: @COL_NLL;
+		}
+	}
+
+	& > .stats-details {
 		text-align: left;
 
-
-		& > div .section {
+		& > .section {
 			width: 48%;
-			//height: 500px;
 			margin: 0;
 			padding: 1%;
 			display: inline-block;
 
 			vertical-align: top;
 
-			&.-onethird{
-				width: 32%;
+			&.-forty {
+				width: 39%;
 			}
 
-			&.-twothird{
-				width: 64%;
+			&.-sixty {
+				width: 57%;
+			}
+
+			& > .-info {
+				font-size: 70%;
+				font-style: italic;
 			}
 
 			@media (max-width: 768px) {
@@ -108,25 +176,97 @@
 				}
 			}
 		}
-		/*& .piechart-figure {
-			width: 100%;
 
-			@media (min-width: 768px) {
-				width: 50%;
-				display: inline-block;
+		& .chart {
+			& .vis_bg_color_yes {
+				background-color: @SL_YES;
 			}
 
-			& .piechart{
-				@media (min-width: 768px) {
-					width: 75%;
-				}
+			& .vis_stroke_color_yes {
+				stroke: @SL_YES;
 			}
-		}*/
+
+			& .vis_bg_color_no {
+				background-color: @SL_NO;
+			}
+
+			& .vis_stroke_color_no {
+				stroke: @SL_NO;
+			}
+
+			& .vis_bg_color_flag {
+				background-color: @SL_FLAG;
+			}
+
+			& .vis_stroke_color_flag {
+				stroke: @SL_FLAG;
+			}
+
+			& .vis_bg_color_remaining {
+				background-color: @COL_CM;
+			}
+
+			& .vis_stroke_color_remaining {
+				stroke: @COL_CM;
+			}
+		}
 	}
 
 	& .-recent {
-		& svg {
-			margin-right:0.5em;
+		margin: 0.25em 0;
+		padding: 0.25em 0.5em;
+
+		/* use a smaller scale */
+		&:hover {
+			transform: scale(1.05);
+		}
+
+		&.-yes {
+			background: @SL_YES;
+			color: @COL_L;
+		}
+
+		&.-no {
+			background: @SL_NO;
+			color: @COL_L;
+		}
+
+		&.-flag {
+			font-size: 0.8em;
+			background: @SL_FLAG;
+			color: @COL_L;
+		}
+
+		& > * {
+			margin-left: 0.5em;
+
+			&:first-child {
+				margin-left: 0;
+			}
+		}
+
+		& > span {
+			vertical-align: middle;
+		}
+
+		&.-flash {
+			animation-duration: 0.5s;
+			animation-fill-mode: both;
+			animation-name: flash-recent;
+		}
+
+		@keyframes flash-recent {
+			0%, 100% {
+				color: @COL_L;
+				transform: scale(1);
+			}
+
+			25% {
+				/*margin: -0.1em;*/
+				transform: scale(1.1);
+				color: @COL_W;
+				text-shadow: 0px 0px 2px @COL_W;
+			}
 		}
 	}
 }

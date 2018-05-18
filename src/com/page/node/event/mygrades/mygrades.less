@@ -1,0 +1,116 @@
+@import "defs.less";
+
+.event-mygraded {
+	padding: 1em;
+
+	& > .-warning {
+		font-style: italic;
+		font-weight: bold;
+		max-width: 40em;
+		margin: 0.5em 0em;
+	}
+
+	& > .-info {
+		margin: 0.5em 0em;
+	}
+
+	& > .-sort-by {
+		display: inline-block;
+
+		& > .input-dropdown {
+			display: inline-block;
+			vertical-align: baseline;
+			width: 15em;
+			max-width: 80vw;
+		}
+
+		& > .-description {
+			font-size: 80%;
+		}
+	}
+
+	& > .-graphs {
+		display: flex;
+
+		& > .-graph {
+			margin: 0.5em;
+			flex-basis: 48%;
+
+			& > .-caption {
+				font-size: 80%;
+			}
+		}
+	}
+
+	& > .content-list {
+		margin-top: 0.5em;
+
+		& > .graded-item {
+			color: @COL_NDDD;
+			position: relative;
+			display: block;
+
+			overflow: auto;
+
+			border-top: 1px solid @COL_NLL;
+
+			padding: 0.5em 1em;
+
+			&:hover {
+				background: @COL_A;
+				color: @COL_NLLLLL;
+
+				& > .-authors {
+					& > .-at-name {
+						background: @COL_A;
+						color: @COL_NLLLLL;
+					}
+				}
+			}
+
+			& > * {
+				margin: 0em 0em 0em 0.5em;
+				padding: 0.1em 0em;
+			}
+
+			& > .-authors {
+				font-size: 80%;
+
+				& > .-at-name {
+					color: @COL_A;
+				}
+			}
+
+			& > .-item-type {
+				position: absolute;
+				top: 2px;
+				right: 0;
+				font-style: italic;
+			}
+
+			& > .-grades {
+				font-size: 80%;
+				padding: 0.5em;
+
+				& > .-grade {
+					display: inline-block;
+					margin-right: 0.75em;
+
+					&.-focused {
+						text-decoration: underline;
+
+						& > * {
+							text-decoration: underline;
+						}
+					}
+
+					& > .-grade-label {
+						display: inline-block;
+						font-weight: bold;
+						margin-right: 0.1em;
+					}
+				}
+			}
+		}
+	}
+}

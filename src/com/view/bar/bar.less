@@ -20,6 +20,9 @@
 .view-bar {
 	position: fixed;
 
+	/* Force on a new layer in an attempt to avoid jitter */
+	transform: translateZ(0);	/*will-change: transform;*/
+
 	/* Needed for click-off and drag un-highlighting buttons to work (i.e. no selections) */
 	user-select: none;
 

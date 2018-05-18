@@ -180,21 +180,23 @@ export default class ContentEvent extends Component {
 			);
 		}
 
-		props.minmax = true;
+		//props.minmax = true;
 		if ( !IsHome )
 			props.minimized = true;
 
 		return (
 			<ContentSimple {...props}>
 				<ContentCommonNav>
-					{ShowHome}
                     {ShowJoin}
-					{ShowGame}
-					{ShowMyGrades}
-					{ShowFeed}
-					{ShowTheme}
 				</ContentCommonNav>
 			</ContentSimple>
 		);
 	}
+
+//					{ShowHome}
+//					{ShowGame}
+//					{ShowMyGrades}
+//					{ShowFeed}
+//					{ShowTheme}
+
 }

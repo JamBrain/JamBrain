@@ -17,7 +17,7 @@
     "uglify-js": "*",
     "preprocess-cli-tool": "*",
 
-    "less": "*",
+    "less": "^2.0.0",
     "less-plugin-autoprefix": "*",
     "clean-css-cli": "*",
     "stylelint": "^8.2.0",
@@ -27,7 +27,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"WARN: no tests specified\" && exit 0"
   },
   "repository": {
     "type": "git",

@@ -15,46 +15,47 @@ export default class ViewSidebar extends Component {
 
 	render( props ) {
 		// TODO: cleanup
-		let ldStartDate = new Date(Date.UTC(2017, 11, 2, 2, 0, 0));
+		let ldName = "Ludum Dare 42";
+		let ldStartDate = new Date(Date.UTC(2018, 7, 10, 22, 0, 0));
 
-		let compoEndDate = new Date(Date.UTC(2017, 11, 4, 2, 0, 0));
-		let compoEndDate2 = new Date(Date.UTC(2017, 11, 4, 3, 0, 0));
+		let compoEndDate = new Date(Date.UTC(2018, 7, 12, 22, 0, 0));
+		let compoEndDate2 = new Date(Date.UTC(2018, 7, 12, 23, 0, 0));
 
-		let jamEndDate = new Date(Date.UTC(2017, 11, 5, 2, 0, 0));
-		let jamEndDate2 = new Date(Date.UTC(2017, 11, 5, 3, 0, 0));
+		let jamEndDate = new Date(Date.UTC(2018, 7, 13, 22, 0, 0));
+		let jamEndDate2 = new Date(Date.UTC(2018, 7, 13, 23, 0, 0));
 
-		let gradeEndDate = new Date(Date.UTC(2017, 11, 28, 16, 0, 0));
-		let resultsDate = new Date(Date.UTC(2017, 11, 29, 16, 0, 0));
+		let gradeEndDate = new Date(Date.UTC(2018, 8, 4, 20, 0, 0));
+		let resultsDate = new Date(Date.UTC(2018, 8, 4, 24, 0, 0));
 
 		let now = new Date();
 
 		let ShowCountdown = [];
 		if ( now < ldStartDate ) {
-			ShowCountdown.push(<SidebarCountdown date={ ldStartDate } nc="ld" tt="Starts" />); /*to="Ludum Dare"*/
+			ShowCountdown.push(<SidebarCountdown date={ ldStartDate } nc="ld" to={ldName} tt="Starts" />);
 		}
 		else {
-			if ( now < compoEndDate ) {
+			if ( (now < compoEndDate) && (ShowCountdown.length < 2) ) {
 				ShowCountdown.push(<SidebarCountdown date={ compoEndDate } nc="compo" to="Compo" tt="Ends" />);
 			}
-			else if ( now < compoEndDate2 ) {
+			else if ( (now < compoEndDate2) && (ShowCountdown.length < 2) ) {
 				ShowCountdown.push(<SidebarCountdown date={ compoEndDate2 } nc="compo" to="Submission Hour" tt="Ends" />);
 			}
 
-			if ( now < jamEndDate ) {
+			if ( (now < jamEndDate) && (ShowCountdown.length < 2) ) {
 				ShowCountdown.push(<SidebarCountdown date={ jamEndDate } nc="jam" to="Jam" tt="Ends" />);
 			}
-			else if ( now < jamEndDate2 ) {
+			else if ( (now < jamEndDate2) && (ShowCountdown.length < 2) ) {
 				ShowCountdown.push(<SidebarCountdown date={ jamEndDate2 } nc="jam" to="Submission Hour+" tt="Ends" />);
 			}
 
-			if ( props.featured && props.featured.meta && props.featured.meta['can-grade'] ) { //now < compoEndDate2 || now < jamEndDate2 || now < gradeEndDate ) {
+			if ( (now < gradeEndDate) && props.featured && props.featured.meta && props.featured.meta['can-grade'] && (ShowCountdown.length < 2) ) { //now < compoEndDate2 || now < jamEndDate2 || now < gradeEndDate ) {
 				ShowCountdown.push(<SidebarCountdown date={ gradeEndDate } nc="jam" to="Play+Rate games" tt="Ends" />);
 			}
 
-//			// TODO: make this only appear a few hours before grading ends
-//			if ( now < resultsDate ) {
-//				ShowCountdown.push(<SidebarCountdown date={ resultsDate } nc="jam" to="Results" tt="live" />);
-//			}
+			// TODO: make this only appear a few hours before grading ends
+			if ( (now < resultsDate) && (ShowCountdown.length < 2) ) {
+				ShowCountdown.push(<SidebarCountdown date={ resultsDate } nc="jam" to="Results" tt="" />);
+			}
 		}
 
 		return (

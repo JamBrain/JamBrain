@@ -11,19 +11,16 @@ import Route							from 'com/router/route';
 
 import Layout							from "com/page/layout";
 
-import PageHome 						from 'com/page/home/home';
-import PagePage 						from 'com/page/page/page';
-import PagePost 						from 'com/page/post/post';
-import PageItem 						from 'com/page/item/item';
-import PageTag 							from 'com/page/tag/tag';
-import PageUser 						from 'com/page/user/user';
-import PageUsers 						from 'com/page/users/users';
-import PageEvent 						from 'com/page/event/event';
-import PageEvents 						from 'com/page/events/events';
+import PageRoot 						from 'com/page/root/root';
+import PagePage 						from 'com/page/node/page/page';
+import PagePost 						from 'com/page/node/post/post';
+import PageItem 						from 'com/page/node/item/item';
+import PageTag 							from 'com/page/node/tag/tag';
+import PageUser 						from 'com/page/node/user/user';
+import PageUsers 						from 'com/page/node/users/users';
+import PageEvent 						from 'com/page/node/event/event';
+import PageEvents 						from 'com/page/node/events/events';
 import PageError 						from 'com/page/error/error';
-import PageMySettings 					from 'com/page/my/settings';
-import PageMyNotifications 				from 'com/page/my/notifications';
-import PageDevPalette 					from 'com/page/dev/palette';
 
 import DialogUnfinished					from 'com/dialog/unfinished/unfinished';
 import DialogLogin						from 'com/dialog/login/login';
@@ -54,7 +51,7 @@ window.SITE_ROOT = 1;
 
 // NOTE: Deprecated
 // Add special behavior: when class attribute is an array, flatten it to a string
-options.vnode = function(vnode) {
+options.vnode = function _CustomVNode(vnode) {
 	if ( vnode && vnode.attributes && Array.isArray(vnode.attributes.class) ) {
 		if ( vnode.attributes.class.length ) {
 			vnode.attributes.class = vnode.attributes.class.join(' ');
@@ -74,7 +71,7 @@ class Main extends Component {
 		console.log("Running in DEBUG mode");
 		// @endif
 
-		var clean = this.cleanLocation(window.location);
+		let clean = this.cleanLocation(window.location);
 		if ( window.location.origin+clean.path !== window.location.href ) {
 			// @ifdef DEBUG
 			console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
@@ -93,6 +90,9 @@ class Main extends Component {
 			'node': {
 				'id': 0
 			},
+			'parent': null,
+			'superparent': null,
+			'author': null,
 
 			// Root Node
 			'root': null,
@@ -109,8 +109,6 @@ class Main extends Component {
 		window.addEventListener('popstate', this.onPopState.bind(this));
 
 		this.onLogin = this.onLogin.bind(this);
-
-//        this.doEverything();
 	}
 
 	componentDidMount() {
@@ -143,7 +141,7 @@ class Main extends Component {
 
 	cleanLocation( location ) {
 		// Clean the URL
-		var clean = {
+		let clean = {
 			"pathname": Sanitize.clean_Path(location.pathname),
 			"search": Sanitize.clean_Query(location.search),
 			"hash": Sanitize.clean_Hash(location.hash),
@@ -158,7 +156,7 @@ class Main extends Component {
 	}
 
 	getDialog() {
-		var props = Sanitize.parseHash(window.location.hash);
+		let props = Sanitize.parseHash(window.location.hash);
 
 		if ( window.location.hash ) {
 			if ( window.location.hash.indexOf("/") != 1 && props.path !== "--") {
@@ -214,7 +212,7 @@ class Main extends Component {
 		return $Node.Get(SITE_ROOT)
 		.then(r => {
 			if ( r.node.length ) {
-				var node = r.node[0];
+				let node = r.node[0];
 
 				this.setState({
 					'root': node
@@ -238,7 +236,7 @@ class Main extends Component {
 		console.log("[fetchFeatured]");
 
 		// Used across everything below
-		var Node = null;
+		let Node = null;
 
 		return $Node.Get(node_id)
 			.then(r => {
@@ -271,12 +269,12 @@ class Main extends Component {
 				if ( r && r.node ) {
 					Node.what_node = r.node;
 
-					var Focus = 0;
-					var FocusDate = 0;
-					var LastPublished = 0;
+					let Focus = 0;
+					let FocusDate = 0;
+					let LastPublished = 0;
 
-					for ( var key in r.node ) {
-						var NewDate = new Date(r.node[key].modified).getTime();
+					for ( let key in r.node ) {
+						let NewDate = new Date(r.node[key].modified).getTime();
 						if ( NewDate > FocusDate ) {
 							FocusDate = NewDate;
 							Focus = key|0;
@@ -322,13 +320,13 @@ class Main extends Component {
 	}
 
 	fetchNode() {
-		//console.log("[fetchNode]");
-
-		var NewState = {};
+		let NewState = {};
+		console.log("[fetchNode]");
 
 		// Walk to the active node
 		return $Node.Walk(SITE_ROOT, this.state.slugs)
 		.then(r => {
+			// Store the path determined by the walk
 			if ( r && r.node ) {
 				NewState['path'] = (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/');
 				NewState['extra'] = r.extra;
@@ -336,23 +334,40 @@ class Main extends Component {
 				// Now, lookup the node
 				return $Node.Get(r.node);
 			}
-			else {
-				throw '[fetchNode] Unable to walk tree';
-			}
-			return null;
+			throw "[fetchNode] Unable to walk tree";
 		})
 		.then(r => {
-			// Process node
+			// Process the node
 			if ( r && r.node && r.node.length ) {
-				NewState['node'] = r.node[0];
-				this.setState(NewState);
+				NewState.node = r.node[0];
 
-				//console.log("[fetchNode] Done:", NewState['node'].id);
+				let Keys = [];
+				if ( NewState.node.parent )
+					Keys.push(NewState.node.parent);
+				if ( NewState.node.superparent )
+					Keys.push(NewState.node.superparent);
+				if ( NewState.node.author )
+					Keys.push(NewState.node.author);
+
+				// Fetch related nodes
+				return $Node.GetKeyed(Keys);
 			}
-			else {
-				throw '[fetchNode] No nodes found';
+			throw "[fetchNode] No nodes found";
+		})
+		.then(r => {
+			if ( r && r.node ) {
+				NewState.parent = NewState.node.parent ? r.node[NewState.node.parent] : null;
+				NewState.superparent = NewState.node.superparent ? r.node[NewState.node.superparent] : null;
+				NewState.author = NewState.node.author ? r.node[NewState.node.author] : null;
+
+				// That's it, we're done
+				return true;
 			}
-			return null;
+			throw "[fetchNode] Related nodes not found";
+		})
+		.then(r => {
+			// Commit the changes to State
+			this.setState(NewState);
 		})
 		.catch(err => {
 			this.setState({'error': err});
@@ -362,8 +377,8 @@ class Main extends Component {
 	fetchUser() {
 		console.log("[fetchUser]");
 
-		var Caller = 0;
-		var User = {
+		let Caller = 0;
+		let User = {
 			'id': 0
 		};
 
@@ -393,7 +408,6 @@ class Main extends Component {
 			// Process private User data
 			if ( r ) {
 				User['private']['meta'] = r.meta;
-//				User['private']['link'] = r.link;
 				User['private']['refs'] = r.refs;
 			}
 
@@ -440,7 +454,7 @@ class Main extends Component {
 	// Hash Changes are automatically differences
 	onHashChange( e ) {
 		console.log("hashchange: ", e.newURL);
-		var slugs = this.cleanLocation(window.location).slugs;
+		let slugs = this.cleanLocation(window.location).slugs;
 
 		if ( slugs.join() === this.state.slugs.join() ) {
 			this.setState({});
@@ -456,14 +470,14 @@ class Main extends Component {
 
 	handleAnchors() {
 		if ( window.location.hash ) {
-			var hash = Sanitize.parseHash(window.location.hash);
+			let hash = Sanitize.parseHash(window.location.hash);
 
 			if ( hash.path === "" && hash.extra.length > 0 ) {
-				var heading = document.getElementById(hash.extra[0]);
+				let heading = document.getElementById(hash.extra[0]);
 				if ( heading ) {
 					heading.scrollIntoView();
 
-					var viewBar = document.getElementsByClassName("view-bar")[0];
+					let viewBar = document.getElementsByClassName("view-bar")[0];
 					if ( viewBar ) {
 						window.scrollBy(0, -viewBar.clientHeight);
 					}
@@ -477,7 +491,7 @@ class Main extends Component {
 		console.log('navchange:', e.detail.old.href, '=>', e.detail.location.href);
 
 		if ( e.detail.location.href !== e.detail.old.href ) {
-			var slugs = this.cleanLocation(e.detail.location).slugs;
+			let slugs = this.cleanLocation(e.detail.location).slugs;
 
 			if ( slugs.join() !== this.state.slugs.join() ) {
 				history.pushState(null, null, e.detail.location.pathname + e.detail.location.search);
@@ -526,26 +540,17 @@ class Main extends Component {
 		return Title;
 	}
 
-	render( {}, {node, user, featured, path, extra, error} ) {
-		var ShowContent = null;
-		let props = {node, user, featured, path, extra, error};
+	render( {}, state ) {
+		let {node, parent, superparent, author, user, featured, path, extra} = state;
+		let NewProps = {node, parent, superparent, author, user, featured, path, extra};
 
-		if ( node ) {
+		if ( node )
 			document.title = this.getTitle(node);
-		}
 
 		return (
-			<Layout {...this.state}>
-				<Router node={node} props={props} path={extra}>
-					<Route type="root" component={PageHome}>
-						<Route static path="/my">
-							<Route static path="/settings" component={PageMySettings} />
-							<Route static path="/notifications" component={PageMyNotifications} />
-						</Route>
-						<Route static path="/dev">
-							<Route static path="/palette" component={PageDevPalette} />
-						</Route>
-					</Route>
+			<Layout {...state}>
+				<Router node={node} props={NewProps} path={extra}>
+					<Route type="root" component={PageRoot} />
 
 					<Route type="page" component={PagePage} />
 					<Route type="post" component={PagePost} />

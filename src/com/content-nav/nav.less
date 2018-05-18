@@ -21,8 +21,9 @@
 #content {
 	& .content-nav {
 		margin: 0.5em 0;
+		white-space: nowrap;
 
-		& > .-button {
+		& > .ui-button {
 			position: relative;
 			line-height: 2.0em;
 			height: 2.0em;
@@ -46,7 +47,7 @@
 			text-decoration: none;
 			font-weight: bold;
 
-			/*border: 1px solid;*/
+			border: 1px solid transparent;
 
 			& > span {
 				position: relative;
@@ -77,10 +78,17 @@
 				color: @NAV_BUTTON_COL;
 				background: @NAV_BUTTON_BG;
 
-				&.-selected {
+				&.-selected,
+				&.-selected.-light {
 					background: @COL_L;/*@NAV_BUTTON_COL;*/
 					color: @COL_NDDDD;/*@NAV_BUTTON_BG;*/
-					/*border: 1px solid transparent;*/
+					border: 1px solid transparent;
+				}
+
+				&.-light {
+					border: 1px solid;
+					color: @COL_L;
+					background: transparent;
 				}
 			}
 
@@ -90,7 +98,7 @@
 				&.-selected {
 					background: @NAV_BUTTON_LIT_BG;
 					color: @NAV_BUTTON_LIT;
-					/*border: 1px solid transparent;*/
+					border: 1px solid transparent;
 					z-index: 10;
 				}
 			}

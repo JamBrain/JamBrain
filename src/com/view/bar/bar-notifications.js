@@ -25,6 +25,7 @@ export default class DropdownNotification extends NotificationsBase {
 		};
 		this.hide = this.hide.bind(this);
 		this.clearNotifications = this.clearNotifications.bind(this);
+		this.markAndClearNotifications = this.markAndClearNotifications.bind(this);
 	}
 
 	componentDidMount() {
@@ -32,6 +33,9 @@ export default class DropdownNotification extends NotificationsBase {
 	}
 
 	hasNewNotification(feed) {
+		if (!feed) {
+			return;
+		}
 		const {notificationIds} = this.state;
 		for (let i=0; i<feed.length; i++) {
 			if (notificationIds.indexOf(feed[i].id) == -1) {
@@ -54,8 +58,12 @@ export default class DropdownNotification extends NotificationsBase {
 		}
 	}
 
-	clearNotifications() {
+	markAndClearNotifications() {
 		this.markReadHighest();
+		this.clearNotifications();
+	}
+
+	clearNotifications() {
 		if (this.props.clearCallback) {
 			this.props.clearCallback();
 		}
@@ -78,7 +86,7 @@ export default class DropdownNotification extends NotificationsBase {
 			if (loading) {
 				ShowSpinner = (<NavSpinner />);
 			}
-			Notifications = this.getNotifications(showMax);
+			Notifications = this.getNotifications(showMax, props.hideCallback);
 		}
 
 		if (ShowSpinner !== null) {
@@ -90,7 +98,7 @@ export default class DropdownNotification extends NotificationsBase {
 		}
 
 		if ( !loading && this.hasUnreadNotifications() ) {
-			Notifications.push([-2, (<ButtonLink onclick={this.clearNotifications} ><em>Mark all as read</em></ButtonLink>)]);
+			Notifications.push([-2, (<ButtonLink onclick={this.markAndClearNotifications} ><em>Mark all as read</em></ButtonLink>)]);
 		}
 
 		Notifications.push([-1, (<ButtonLink onclick={this.hide} href="/my/notifications"><em>Open notifications feed...</em></ButtonLink>)]);

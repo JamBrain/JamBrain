@@ -8,9 +8,9 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import IMG2 							from 'com/img2/img2';
 
 import ContentCommentsMarkup			from 'comments-markup';
-
-import $Note							from '../../shrub/js/note/note';
-import $NoteLove						from '../../shrub/js/note/note_love';
+import {AutocompleteAtNames, AutocompleteEmojis}			from 'comment-autocomplete';
+import $Comment							from 'shrub/js/comment/comment';
+import $CommentLove						from 'shrub/js/comment/comment_love';
 
 export default class ContentCommentsComment extends Component {
 	constructor( props ) {
@@ -24,16 +24,20 @@ export default class ContentCommentsComment extends Component {
 			// NOTE: Set this upon save, or use it to cancel
 			'original': props.comment.body,
 
-			'loved': props.comment.loved ? true: false,
+			'loved': props.comment.loved ? true : false,
 			'lovecount': props.comment.love,
 		};
 
+		// A bit of a hack but important that changing this doesn't trigger render
+		// and easier to keep outside state.
+		this.autocompleters = {};
 
 		this.onEditing = this.onEditing.bind(this);
 		this.onPreview = this.onPreview.bind(this);
 
 		this.onModify = this.onModify.bind(this);
-
+		this.onKeyDown = this.onKeyDown.bind(this);
+		this.onKeyUp = this.onKeyUp.bind(this);
 		this.onEdit = this.onEdit.bind(this);
 
 		this.onSave = this.onSave.bind(this);
@@ -43,6 +47,14 @@ export default class ContentCommentsComment extends Component {
 		this.onLove = this.onLove.bind(this);
 		this.onReply = this.onReply.bind(this);
 		this.onSubscribe = this.onSubscribe.bind(this);
+
+		this.onTextAreaBlur = this.onTextAreaBlur.bind(this);
+		this.onTextAreaFocus = this.onTextAreaFocus.bind(this);
+		this.onTextAreaCaret = this.onTextAreaCaret.bind(this);
+
+		this.onAutocompleteSelect = this.onAutocompleteSelect.bind(this);
+		this.onAutoselectCaptureKeyDown = this.onAutoselectCaptureKeyDown.bind(this);
+		this.onAutoselectCaptureKeyUp = this.onAutoselectCaptureKeyUp.bind(this);
 	}
 
 	onEditing( e ) {
@@ -55,16 +67,62 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	canSave() {
-		return this.props.comment.body.trim().length > 1;
+		return (this.props.comment.body.trim().length > 1);
 	}
 
 	onModify( e ) {
+		//console.log('modified', e.target, this.state.editText, this.state.editCursorPos, this.state.textareaFocus);
 		this.props.comment.body = e.target.value;
-		this.setState({'modified': this.canSave()});
+		this.setState({
+			'modified': this.canSave(),
+			'editText': e.target.value,
+			'editCursorPos': e.target.selectionStart,
+			'replaceText': null,
+			'textareaFocus': true,
+		});
+		return true;
+	}
+
+	onKeyDown( e ) {
+		const {autocompleters} = this;
+		for ( let autocompleter in autocompleters ) {
+			const state = autocompleters[autocompleter];
+			if ( state.captureKeyDown && !state.captureKeyDown(e) ) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	onKeyUp( e ) {
+		const {autocompleters} = this;
+		for ( let autocompleter in autocompleters ) {
+			const state = autocompleters[autocompleter];
+			if ( state.captureKeyUp && !state.captureKeyUp(e) ) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	onTextAreaFocus( e ) {
+		this.setState({'textareaFocus': true});
+		//console.log("TextAreaFocus");
+		return true;
+	}
+
+	onTextAreaBlur( e ) {
+		setTimeout(() => this.setState({'textareaFocus': false}), 300);
+		return true;
+	}
+
+	onTextAreaCaret( e ) {
+		this.setState({'editCursorPos': e.target.selectionStart});
+		//console.log("TextAreaCursor");
+		return true;
 	}
 
 	onCancel( e ) {
-		console.log('cancel');
 		this.props.comment.body = this.state.original;
 		this.setState({'modified': false, 'editing': false, 'preview': false});
 	}
@@ -72,7 +130,7 @@ export default class ContentCommentsComment extends Component {
 	onSave( e ) {
 		var comment = this.props.comment;
 
-		$Note.Update( comment.id, comment.node, comment.body )
+		$Comment.Update( comment.id, comment.node, comment.body )
 		.then(r => {
 			console.log(r);
 
@@ -84,7 +142,7 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onPublishAnon( e ) {
-		if (this.canSave() ) {
+		if ( this.canSave() ) {
 			if ( this.props.onpublish ) {
 				this.props.onpublish(e, true);
 			}
@@ -106,10 +164,10 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onLove( e ) {
-		if ( this.props.user.id != 0 && this.props.user.id != null ) {
+		if ( (this.props.user.id != 0) && (this.props.user.id != null) ) {
 			if ( this.props.comment.id != null ) {
 				if ( this.state.loved ) {
-					$NoteLove.Remove(this.props.comment.node, this.props.comment.id)
+					$CommentLove.Remove(this.props.comment.node, this.props.comment.id)
 					.then(r => {
 						if ( r.removed != 0 ) {
 							this.setState({'loved': false, 'lovecount': this.state.lovecount - 1});
@@ -117,7 +175,7 @@ export default class ContentCommentsComment extends Component {
 					});
 				}
 				else {
-					$NoteLove.Add(this.props.comment.node, this.props.comment.id)
+					$CommentLove.Add(this.props.comment.node, this.props.comment.id)
 					.then(r => {
 						if ( r.id != 0 ) {
 							this.setState({'loved': true, 'lovecount': this.state.lovecount + 1});
@@ -139,10 +197,37 @@ export default class ContentCommentsComment extends Component {
 		}
 	}
 
+	onAutocompleteSelect(replaceText, cursorPosAfterUpdate) {
+		this.props.comment.body = replaceText;
+		this.setState({
+			'modified': this.canSave(),
+			'editText': replaceText,
+			'replaceText': replaceText,
+			'replaceCursorPos': cursorPosAfterUpdate,
+			'replaceTextEvent': this.state.replaceTextEvent ? this.state.replaceTextEvent + 1 : 1,
+		});
+	}
+
+	onAutoselectCaptureKeyDown(autocompleter, callback) {
+		const {autocompleters} = this;
+		if ( !autocompleters[autocompleter] ) {
+			autocompleters[autocompleter] = {};
+		}
+		autocompleters[autocompleter].captureKeyDown = callback;
+	}
+
+	onAutoselectCaptureKeyUp(autocompleter, callback) {
+		const {autocompleters} = this;
+		if ( !autocompleters[autocompleter] ) {
+			autocompleters[autocompleter] = {};
+		}
+		autocompleters[autocompleter].captureKeyUp = callback;
+	}
+
 	render( props, state ) {
 		let {user, comment, author, error} = props;
 
-		if ( author || comment.author == 0 ) {
+		if ( author || (comment.author == 0) ) {
 			let Name = "Anonymous";
 			let Avatar = "///other/dummy/user64.png";
 
@@ -192,7 +277,7 @@ export default class ContentCommentsComment extends Component {
 			//	ShowReply = <div class="-button -reply" onclick={this.onReply}><SVGIcon>reply</SVGIcon><div>Reply</div></div>;
 
 			let ShowEdit = null;
-			if ( user && comment.author === user.id && !state.editing )
+			if ( user && (comment.author === user.id) && !state.editing )
 				ShowEdit = <div class="-button -edit" onclick={this.onEdit}><SVGIcon>edit</SVGIcon></div>;
 
 			let ShowLove = null;
@@ -248,7 +333,7 @@ export default class ContentCommentsComment extends Component {
 				}
 
 				if ( props.publish ) {
-					if (props.allowAnonymous) {
+					if ( props.allowAnonymous ) {
 						ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublishAnon}><SVGIcon>publish</SVGIcon><div>Publish Anonymously</div></div>);
 					}
 					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublish}><SVGIcon>publish</SVGIcon><div>Publish</div></div>);
@@ -281,15 +366,51 @@ export default class ContentCommentsComment extends Component {
 				ShowAvatar = <div class="-avatar"><IMG2 src={Avatar} /></div>;
 			}
 
+			const ShowAutocompleteAt = <AutocompleteAtNames
+				text={state.editText}
+				cursorPos={state.editCursorPos}
+				authors={props.authors}
+				textareaFocus={state.textareaFocus}
+				onSelect={this.onAutocompleteSelect}
+				captureKeyDown={this.onAutoselectCaptureKeyDown}
+				captureKeyUp={this.onAutoselectCaptureKeyUp}
+			/>;
+			const ShowAutocompleteEmoji = <AutocompleteEmojis
+				text={state.editText}
+				cursorPos={state.editCursorPos}
+				textareaFocus={state.textareaFocus}
+				onSelect={this.onAutocompleteSelect}
+				captureKeyDown={this.onAutoselectCaptureKeyDown}
+				captureKeyUp={this.onAutoselectCaptureKeyUp}
+			/>;
+
 			return (
 				<div id={"comment-"+comment.id} class={"-item -comment -indent-"+props.indent}>
 					{ShowAvatar}
+					{ShowAutocompleteAt}
+					{ShowAutocompleteEmoji}
 					<div class="-body">
 						{ShowTopNav}
 						{ShowError}
 						<div class="-text">
 							<div class="-title">{ShowTitle}</div>
-							<ContentCommentsMarkup user={user} editing={state.editing && !state.preview} onmodify={this.onModify} placeholder="type a comment here" limit={props.limit}>{comment.body}</ContentCommentsMarkup>
+							<ContentCommentsMarkup
+								user={user}
+								editing={state.editing && !state.preview}
+								onmodify={this.onModify}
+								onkeydown={this.onKeyDown}
+								onkeyup={this.onKeyUp}
+								onfocus={this.onTextAreaFocus}
+								onblur={this.onTextAreaBlur}
+								oncaret={this.onTextAreaCaret}
+								placeholder="type a comment here"
+								limit={props.limit}
+								replaceText={state.replaceText}
+								cursorPos={state.replaceCursorPos}
+								replaceTextEvent={state.replaceTextEvent}
+							>
+								{comment.body}
+							</ContentCommentsMarkup>
 						</div>
 						{ShowBottomNav}
 					</div>

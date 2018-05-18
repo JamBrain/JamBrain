@@ -13,6 +13,11 @@ cd $SCRIPTPATH
 # Create tables
 (cd /vagrant/www/src/shrub/tools; echo YES | php table-create)
 
+# Create upload folders
+mkdir /vagrant/www/public-static/content
+mkdir /vagrant/www/public-static/raw
+ln -s ../internal /vagrant/www/public-static/raw/internal
+
 # Setup Sphinx
 mv /etc/sphinxsearch/sphinx.conf /etc/sphinxsearch/_sphinx.conf
 ln -s /vagrant/www/private-search/sphinx.conf /etc/sphinxsearch/sphinx.conf

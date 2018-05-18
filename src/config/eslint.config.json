@@ -33,6 +33,7 @@
 		"block-spacing": "warn",
 		"brace-style": ["warn", "stroustrup"],
 		"comma-style": ["error", "last"],
+		"comma-dangle": ["error", {"arrays": "only-multiline", "objects": "only-multiline", "imports": "only-multiline", "exports": "only-multiline", "functions": "never"}],
 		"consistent-this": ["warn", "that"],
 		"func-call-spacing": ["error", "never"],
 		"func-names": ["warn", "as-needed"],
