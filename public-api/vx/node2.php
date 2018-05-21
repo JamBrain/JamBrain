@@ -40,6 +40,13 @@ function nodeAPI_Filter( $nodes, &$out ) {
 
 
 api_Exec([
+// Get nodes by their id
+/// Usage: node/get/:id[+:id+...]
+/// ?author: return the author of the node(s) as well
+/// ?authors: return the authors of the node(s) as well
+/// ?parent: return the parent of the node(s) as well
+/// ?parents: return the parents of the node(s) as well
+/// ?superparent: return the superparent of the node(s) as well
 ["node2/get", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
 	if ( !json_ArgCount() )
 		json_EmitFatalError_BadRequest(null, $RESPONSE);
@@ -100,16 +107,23 @@ api_Exec([
 	// Return the nodes
 	$RESPONSE['node'] = $out;
 }],
+/// Walk a node backwards to figure out where it is
+/// Usage: node/walk/:root_id/path/to/something/
 ["node2/walk", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
 	if ( !json_ArgCount() )
 		json_EmitFatalError_BadRequest(null, $RESPONSE);
 
+	// At this point we can bail if it's just a HEAD request
+	if ( $HEAD_REQUEST )
+		json_EmitHeadAndExit();
+
 	// TODO: Support Symlinks and HardLinks (?)
+	// TODO: Handle circular links
 
 	$root = intval(json_ArgShift());
 	$RESPONSE['root'] = $root;
 
-	$parent = $root;
+	$parent_id = $root;
 	$RESPONSE['path'] = [];
 	$RESPONSE['extra'] = [];
 
@@ -120,16 +134,16 @@ api_Exec([
 			$node = intval(substr($slug, 1));
 
 			// Validate that node's parent correct
-			if ( nodeCache_GetParentById($node) !== $parent ) {
+			if ( nodeCache_GetParentById($node) !== $parent_id ) {
 				$node = 0;
 			}
 		}
 		else {
-			$node = nodeCache_GetIdByParentSlug($parent, $slug);
+			$node = nodeCache_GetIdByParentSlug($parent_id, $slug);
 		}
 
 		if ( $node ) {
-			$parent = $node;
+			$parent_id = $node;
 			$RESPONSE['path'][] = $node;
 		}
 		else {
@@ -140,7 +154,7 @@ api_Exec([
 		}
 	}
 
-	$RESPONSE['node_id'] = $parent;
+	$RESPONSE['node_id'] = $parent_id;
 
 	// Fetch walked node too
 	//if ( isset($_GET['node']) ) {
@@ -150,5 +164,25 @@ api_Exec([
 		//if ( isset($_GET['parents']) )
 		//if ( isset($_GET['superparent']) )
 	//}
+}],
+["node2/where", API_GET | API_AUTH | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
+	// At this point we can bail if it's just a HEAD request
+	if ( $HEAD_REQUEST )
+		json_EmitHeadAndExit();
+
+	// if not logged in, where will be blank
+	$RESPONSE['where'] = nodeComplete_GetWhereIdCanCreate(userAuth_GetID());
+}],
+["node2/what", API_GET | API_AUTH | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
+	$parent_id = intval(json_ArgShift());
+	if ( !$parent_id )
+		json_EmitFatalError_BadRequest(null, $RESPONSE);
+
+	// At this point we can bail if it's just a HEAD request
+	if ( $HEAD_REQUEST )
+		json_EmitHeadAndExit();
+
+	// if not logged in, where will be blank
+	$RESPONSE['what'] = nodeComplete_GetWhatIdHasAuthoredByParent(userAuth_GetID(), $parent_id);
 }],
 ]);
