@@ -66,7 +66,7 @@ function nodeCache_GetById( $ids, &$cached_store = null ) {
 
 	$uncached_ids = array_values(array_diff($ids, $cached_ids));
 
-	if ( !is_null($cached_store) ) {
+	if ( is_array($cached_store) ) {
 		$cached_store = array_merge($cached_store, $cached_ids);
 	}
 

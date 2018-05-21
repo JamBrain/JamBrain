@@ -41,6 +41,9 @@ function nodeAPI_Filter( $nodes, &$out ) {
 
 api_Exec([
 ["node2/get", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
+	if ( !json_ArgCount() )
+		json_EmitFatalError_BadRequest(null, $RESPONSE);
+
 	$node_ids = explode('+', json_ArgGet(0));
 
 	// Sanitize inputs
@@ -54,14 +57,14 @@ api_Exec([
 	}
 	sort($node_ids);
 
-	// At this point we can bail if it's just a HEAD request
-	if ( $HEAD_REQUEST )
-		json_EmitHeadHeaderAndExit();
-
 	// Limit number of nodes
 	if ( $node_count = count($node_ids) > MAX_NODES ) {
 		json_EmitFatalError_BadRequest("Too many nodes requested: ".$node_count. "(MAX: ".MAX_NODES.")", $RESPONSE);
 	}
+
+	// At this point we can bail if it's just a HEAD request
+	if ( $HEAD_REQUEST )
+		json_EmitHeadAndExit();
 
 	// Fetch the nodes
 	$RESPONSE['nodes_cached'] = [];
@@ -92,5 +95,47 @@ api_Exec([
 
 	// Return the nodes
 	$RESPONSE['node'] = $out;
+}],
+["node2/walk", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
+	if ( !json_ArgCount() )
+		json_EmitFatalError_BadRequest(null, $RESPONSE);
+
+	// TODO: Support Symlinks and HardLinks (?)
+
+	$root = intval(json_ArgShift());
+	$RESPONSE['root'] = $root;
+
+	$parent = $root;
+	$RESPONSE['path'] = [];
+	$RESPONSE['extra'] = [];
+
+	foreach ( json_ArgGet() as $slug ) {
+		$slug = coreSlugify_PathName($slug);
+
+		if ( !empty($slug) && ($slug[0] == '$') ) {
+			$node = intval(substr($slug, 1));
+
+			// Validate that node's parent correct
+			if ( nodeCache_GetParentById($node) !== $parent ) {
+				$node = 0;
+			}
+		}
+		else {
+			$node = nodeCache_GetIdByParentSlug($parent, $slug);
+		}
+
+		if ( $node ) {
+			$parent = $node;
+			$RESPONSE['path'][] = $node;
+		}
+		else {
+			if ( empty($slug) )
+				json_EmitFatalError_BadRequest(null, $RESPONSE);
+
+			$RESPONSE['extra'][] = $slug;//coreSlugify_Name($slug); // already slugified
+		}
+	}
+
+	$RESPONSE['walk'] = $parent;
 }],
 ]);

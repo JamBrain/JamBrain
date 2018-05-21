@@ -135,7 +135,7 @@ function api_Exec( $api_descriptor ) {
 		if ( $api_found ) {
 			if ( json_IsHTTPOptionsMethod() ) {
 				// If it's an OPTIONS request, emit an OPTIONS response (headers only)
-				json_EmitOptionsHeadersAndExit($api_allowed);
+				json_EmitOptionsAndExit($api_allowed);
 			}
 			else {
 				// API was found, but not used due to invalid HTTP method
