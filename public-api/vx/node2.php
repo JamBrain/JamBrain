@@ -78,8 +78,12 @@ api_Exec([
 	$more_node_ids = [];
 	if ( isset($_GET['author']) )
 		$more_node_ids = array_merge($more_node_ids, nodeList_GetAuthors($nodes));
+//	if ( isset($_GET['authors']) )
+//		$more_node_ids = array_merge($more_node_ids, nodeList_GetAuthors($nodes));
 	if ( isset($_GET['parent']) )
 		$more_node_ids = array_merge($more_node_ids, nodeList_GetParents($nodes));
+//	if ( isset($_GET['parents']) )
+//		$more_node_ids = array_merge($more_node_ids, nodeList_GetParents($nodes));
 	if ( isset($_GET['superparent']) )
 		$more_node_ids = array_merge($more_node_ids, nodeList_GetSuperParents($nodes));
 
@@ -136,6 +140,15 @@ api_Exec([
 		}
 	}
 
-	$RESPONSE['walk'] = $parent;
+	$RESPONSE['node_id'] = $parent;
+
+	// Fetch walked node too
+	//if ( isset($_GET['node']) ) {
+		//if ( isset($_GET['author']) )
+		//if ( isset($_GET['authors']) )
+		//if ( isset($_GET['parent']) )
+		//if ( isset($_GET['parents']) )
+		//if ( isset($_GET['superparent']) )
+	//}
 }],
 ]);
