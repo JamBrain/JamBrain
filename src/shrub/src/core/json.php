@@ -2,18 +2,18 @@
 require_once __DIR__."/core.php";
 
 /// @defgroup JSON
-/// @brief JSON emitting module (typically for making APIs) 
+/// @brief JSON emitting module (typically for making APIs)
 /// @ingroup Core
 
 /// @addtogroup JSON
 /// @{
 
 /// Returns a response. It is empty. You should fill it with things.
-/// 
+///
 /// 	$MyResponse = json_NewResponse();
 /// 	$MyResponse['thing'] = "This is defifinitely a thing";
 /// 	$MyResponse['other-thing'] = "Also a thing";
-/// 
+///
 /// @param Integer $code (optional) Set an HTTP response code. See json_SetResponseCode.
 /// @retval Array (empty)
 function json_NewResponse( $code = null ) {
@@ -67,19 +67,21 @@ function json_RespondError() {
 /// @{
 
 /// Returns an error response.
-/// 
-/// **NOTE:** This function creates responses. 
+///
+/// **NOTE:** This function creates responses.
 /// If you are looking to emit errors, see #json_EmitError and #json_EmitServerError
-/// 
+///
 /// @param Integer $code HTTP response code (default: 400 Bad Request)
 /// @param String $msg (optional) Message
 /// @param Multi $data (optional) Any data you wish to attach to the response
 /// @retval Array
 function json_NewErrorResponse( $code = 400, $msg = null, $data = null ) {
+	// NOTE: $RESPONSE is not used here
+
 	// Set the error code in the response header //
 	$response = json_NewResponse($code);
 	$response['response'] = core_GetHTTPResponseText($code);
-	
+
 	// Return the response //
 	if ( is_string($msg) ) {
 		$response['message'] = $msg;
@@ -87,15 +89,15 @@ function json_NewErrorResponse( $code = 400, $msg = null, $data = null ) {
 	if ( $data ) {
 		$response['data'] = $data;
 	}
-	
+
 	return $response;
 }
 
 
 /// Confirms that a string is a valid name for a JSON-P callback.
-/// 
+///
 /// http://stackoverflow.com/questions/3128062/is-this-safe-for-providing-jsonp
-/// 
+///
 /// @param String $name Callback name
 /// @retval Boolean
 function json_IsValidJSONPCallback($name) {
@@ -103,11 +105,11 @@ function json_IsValidJSONPCallback($name) {
        = '/^[$_\p{L}][$_\p{L}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\x{200C}\x{200D}]*+$/u';
 
      $reserved_words = ['break', 'do', 'instanceof', 'typeof', 'case',
-       'else', 'new', 'var', 'catch', 'finally', 'return', 'void', 'continue', 
-       'for', 'switch', 'while', 'debugger', 'function', 'this', 'with', 
-       'default', 'if', 'throw', 'delete', 'in', 'try', 'class', 'enum', 
-       'extends', 'super', 'const', 'export', 'import', 'implements', 'let', 
-       'private', 'public', 'yield', 'interface', 'package', 'protected', 
+       'else', 'new', 'var', 'catch', 'finally', 'return', 'void', 'continue',
+       'for', 'switch', 'while', 'debugger', 'function', 'this', 'with',
+       'default', 'if', 'throw', 'delete', 'in', 'try', 'class', 'enum',
+       'extends', 'super', 'const', 'export', 'import', 'implements', 'let',
+       'private', 'public', 'yield', 'interface', 'package', 'protected',
        'static', 'null', 'true', 'false'];
 
      return preg_match($identifier_syntax, $name)
@@ -115,7 +117,7 @@ function json_IsValidJSONPCallback($name) {
 }
 
 /// Emit an error document and **Exit**. Use this when the user makes a mistake.
-/// 
+///
 /// @param Integer $code HTTP response code (default: 400).
 /// All codes are supported, but the following are recommended:
 /// * `400` (Bad Request)
@@ -177,9 +179,9 @@ function json_EmitFatalError_Unavailable( $msg = null, $data = null ) {
 /// @{
 
 /// Emit a JSON document.
-/// 
+///
 /// Typically this is the last command in your document, but it doesn't have to be.
-/// 
+///
 /// @param Array $out Response to output
 /// @param Boolean $allow_jsonp Should JSON-P Callbacks be allowed? (Default: true)
 function json_Emit( $out, $allow_jsonp = true ) {
@@ -189,12 +191,12 @@ function json_Emit( $out, $allow_jsonp = true ) {
 
 	// By default, PHP will make '/' slashes in to '\/'. These flags fix that //
 	$out_format = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
-	
+
 	// If 'pretty' mode (i.e. readable) //
 	if ( isset($_GET['pretty']) ) {
 		$out_format |= JSON_PRETTY_PRINT;
 	}
-		
+
 	// JSON-P //
 	if ( isset($_GET['callback']) ) {
 		if ( $allow_jsonp ) {
@@ -204,21 +206,22 @@ function json_Emit( $out, $allow_jsonp = true ) {
 				$suffix = ");";
 			}
 			else {
-				$out = json_NewErrorResponse(400,"Invalid JSON-P Callback");
+				$out = json_NewErrorResponse(400, "Invalid JSON-P Callback");
 			}
 		}
 		else {
-			$out = json_NewErrorResponse(401,"JSON-P Unavailable");
+			$out = json_NewErrorResponse(401, "JSON-P Unavailable");
 		}
 	}
 
 	// Prepend the status code //
 	$out = ['status' => http_response_code()]+$out;
-		
+
 	// Debug Info //
 	if ( defined('SH_PHP_DEBUG') && isset($_GET['debug']) ) {
-		$out['debug'] = [];
-		
+		global $DEBUG;
+		$out['debug'] = $DEBUG;
+
 		if ( isset($GLOBALS['_CORE_SCRIPT_TIMER']) ) {
 			$out['debug']['execute_time'] = core_MicrotimeToString($GLOBALS['_CORE_SCRIPT_TIMER']);
 		}
@@ -238,7 +241,7 @@ function json_Emit( $out, $allow_jsonp = true ) {
 		else {
 			$out['debug']['opcache'] = "unavailable";
 		}
-		
+
 		if ( isset($_SERVER['PATH_INFO']) ) {
 			$out['debug']['url'] = $_SERVER['PATH_INFO'];
 		}
@@ -248,32 +251,32 @@ function json_Emit( $out, $allow_jsonp = true ) {
 		if ( getenv('REDIRECT_QUERY_STRING') ) {
 			$out['debug']['redirect_query'] = getenv('REDIRECT_QUERY_STRING');
 		}
-		
+
 		global $json_starttime;
 		$json_endtime = microtime(true);
 		$totaltime = $json_endtime - $json_starttime;
-		
+
 		$out['debug']['request_time'] = $totaltime;
-		
+
 		global $DB_DEBUG_DATA;
 		$out['debug']['db_details'] = $DB_DEBUG_DATA;
 	}
-	
+
 	// Output the Page
 	header('Content-Type: application/json');
 	header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
 	//header("Pragma: no-cache"); // HTTP 1.0.
 	//header("Expires: 0"); // Proxies.
-	
+
 	if ( isset($_SERVER['HTTP_ORIGIN']) ) {
 		header('Access-Control-Allow-Origin: '.$_SERVER['HTTP_ORIGIN']);	// CORS: For 'fetch' with credentials, this can't be '*'
 		header('Access-Control-Allow-Credentials: true');					// CORS: Allow cookies
 	}
 	else {
-		header('Access-Control-Allow-Origin: *');	
+		header('Access-Control-Allow-Origin: *');
 	}
 	header('Access-Control-Allow-Headers: content-type');					// CORS: Allow requests that specify content-type
-	
+
 	echo $prefix, str_replace('</', '<\/', json_encode($out, $out_format)), $suffix;
 }
 
@@ -281,6 +284,13 @@ function json_Emit( $out, $allow_jsonp = true ) {
 
 /// @name Simplified API calls
 /// @{
+
+/// Doesn't actually emit JSON, but emits a HEAD-only document
+function json_EmitOptionsHeaders( $options ) {
+	header("Access-Control-Allow-Methods: ".implode(", ", $options));
+	header("Access-Control-Max-Age: ".(60*30));		// 30 minutes
+	header("Content-Length: 0");
+}
 
 /// After authenticating and loading globals, confirm that we're not in maintenence mode
 function json_CheckForMaintenence() {
@@ -290,6 +300,12 @@ function json_CheckForMaintenence() {
 	}
 }
 
+function json_IsHTTPOptionsMethod() {
+	return $_SERVER['REQUEST_METHOD'] == "OPTIONS";
+}
+function json_IsHTTPHeadMethod() {
+	return $_SERVER['REQUEST_METHOD'] == "HEAD";
+}
 function json_IsValidHTTPMethod( ...$args ) {
 	return in_array($_SERVER['REQUEST_METHOD'], $args);
 }
@@ -298,7 +314,7 @@ function json_ValidateHTTPMethod( ...$args ) {
 //	if ($_SERVER['REQUEST_METHOD'] === "OPTIONS" ) {
 //		die;
 //	}
-	
+
 	// Verify the method
 	if ( !json_IsValidHTTPMethod(...$args) ) {
 		json_EmitFatalError_BadMethod($_SERVER['REQUEST_METHOD']);
@@ -328,20 +344,23 @@ function json_ArgCount() {
 
 function json_Begin() {
 	global $RESPONSE, $REQUEST;
-	
+
 	// Track starting time
 	global $json_starttime;
 	$json_starttime = microtime(true);
-	
+
 	if ( defined('SH_PHP_DEBUG') && isset($_GET['debug']) ) {
 		// If debugging enabled, tell the system to track additional data.
-		global $DB_ENABLE_DEBUG;
+		global $DB_ENABLE_DEBUG, $DEBUG;
 		$DB_ENABLE_DEBUG = true;
+
+		$DEBUG = [];
+		$DEBUG['request_method'] = $_SERVER['REQUEST_METHOD'];
 	}
-	
+
 	// Begin
 	$RESPONSE = json_NewResponse();
-	
+
 	// Authenticate
 	userAuth_Start();
 	$RESPONSE['caller_id'] = userAuth_GetId();
@@ -351,12 +370,12 @@ function json_Begin() {
 //		$keys = ['id'];//,'admin','permission'];
 //		$RESPONSE['auth'] = array_intersect_key($_SESSION, array_flip($keys));
 //	}
-	
+
 	// Load Globals
 	global_Load();
-	
+
 	json_CheckForMaintenence();
-	
+
 	// Parse Arguments
 	$REQUEST = core_GetAPIRequest();
 //	if ( isset($_GET['request']) || isset($_GET['debug']) ) {
@@ -368,7 +387,7 @@ function json_End() {
 	global $RESPONSE;
 
 	// Emit Response
-	json_Emit( $RESPONSE );	
+	json_Emit( $RESPONSE );
 }
 
 /// @}
