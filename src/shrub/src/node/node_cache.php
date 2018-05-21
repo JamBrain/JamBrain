@@ -25,9 +25,9 @@ function _nodeCache_GetCached( $ids ) {
 	$multi = is_array($ids);
 	if ( !$multi )
 		$ids = [$ids];
-	
+
 	$nodes = [];
-	
+
 	foreach ( $ids as $id ) {
 		$key = _nodeCache_GenKey($id);
 		$node = cache_Fetch($key);
@@ -35,7 +35,7 @@ function _nodeCache_GetCached( $ids ) {
 			$nodes[] = $node;
 		}
 	}
-		
+
 	if ($multi)
 		return $nodes;
 	else
@@ -58,27 +58,27 @@ function nodeCache_GetById( $ids, &$cached_store = null ) {
 	$multi = is_array($ids);
 	if ( !$multi )
 		$ids = [$ids];
-	
+
 	$nodes = _nodeCache_GetCached($ids);
 	$cached_ids = nodeList_GetIds($nodes);
 
 	$CACHE_HIT += count($cached_ids);
-	
+
 	$uncached_ids = array_values(array_diff($ids, $cached_ids));
-	
-	if ( !is_null($cached_store) ) {
-		$cached_store = $cached_ids;
+
+	if ( is_array($cached_store) ) {
+		$cached_store = array_merge($cached_store, $cached_ids);
 	}
-	
+
 	if ( count($uncached_ids) ) {
 		$CACHE_MISS += count($uncached_ids);
 		if ( $uncached = nodeComplete_GetById($uncached_ids) ) {
 			_nodeCache_CacheNodes($uncached);
-		
+
 			$nodes = array_merge($nodes, $uncached);
 		}
 	}
-		
+
 	if ($multi)
 		return $nodes;
 	else
@@ -96,9 +96,9 @@ function nodeCache_CacheById( $ids ) {
 
 	$CACHE_SKIP += count($ids);
 	$nodes = nodeComplete_GetById($ids);
-	
+
 	_nodeCache_CacheNodes($nodes);
-		
+
 	if ($multi)
 		return $nodes;
 	else
@@ -110,7 +110,7 @@ function nodeCache_CacheById( $ids ) {
 function nodeCache_InvalidateById( $ids ) {
 	if ( is_integer($ids) )
 		$ids = [$ids];
-	
+
 	foreach ( $ids as $id ) {
 		cache_Delete(_nodeCache_GenKey($id));
 	}

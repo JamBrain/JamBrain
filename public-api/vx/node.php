@@ -166,7 +166,7 @@ switch ( $action ) {
 				json_EmitFatalError_BadRequest("Too many nodes", $RESPONSE);
 			}
 
-			$RESPONSE['cached'] = true;
+			$RESPONSE['cached'] = [];
 
 //			$nodes = nodeComplete_GetById($node_ids);
 			$nodes = nodeCache_GetById($node_ids, $RESPONSE['cached']);

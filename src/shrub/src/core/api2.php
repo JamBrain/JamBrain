@@ -15,16 +15,16 @@ const API_POST = 				0x00000002; // Require API call to use POST method
 const API_PUT = 				0x00000004; // Require API call to use PUT method
 const API_PATCH = 				0x00000008; // Require API call to use PATCH method
 const API_DELETE = 				0x00000010; // Require API call to use DELETE method
-//const API_CONNECT = 			0x00000020; // Require API call to use CONNECT method
-//const API_TRACE = 			0x00000040; // Require API call to use TRACE method
+//const API_CONNECT = 			0x00000020; // Require API call to use CONNECT method (Not sure this is useful)
+//const API_TRACE = 			0x00000040; // Require API call to use TRACE method (Not sure this is useful)
 //const API_HEAD = 				0x00000100; // Require API call to use HEAD method (NOTE: implied by GET)
 //const API_OPTIONS = 			0x00000200; // Require API call to use OPTIONS method (NOTE: Handled automatically)
 
 const API_AUTH = 				0x00001000; // Require calling user to be authenticated.
 
-const API_COST_NONE =			0x00000000;
-const API_COST_NORMAL =			0x00100000;
-const API_COST_SEARCH =			0x00200000;
+const API_CHARGE =				0x00100000;	// Charge 1 unit for use
+const API_CHARGE_NONE =			0x00000000; // Charge 0 units
+const API_CHARGE_SEARCH =		0x00200000; // Charge 1 "Search" unit
 
 
 function api_DecodeHTTPBitmask( $mask ) {
@@ -50,27 +50,27 @@ function api_DecodeHTTPBitmask( $mask ) {
 /// WARNING: Implementing `feed` and `feed/me` will only work if they are in reverse order (`feed` is last).
 
 function api_Exec( $api_descriptor ) {
-	json_Begin();
 	global $REQUEST, $RESPONSE, $DEBUG;
 
-	// Determine API file name from script filename (.../somefile.php)
-	// This should be reliable in all cases.
-	$pathparts = explode("/", $_SERVER['SCRIPT_NAME']);
-	$filename = "";
-	$file = $pathparts[count($pathparts)-1];
-	if ( substr($file, -4) != ".php") {
-		json_EmitFatalError("Unable to determine filename for API.", $RESPONSE);
+	json_Begin();
+
+	// Determine the API's PHP script file name (somefile.php)
+	// This should always be successful
+	$file_parts = explode("/", $_SERVER['SCRIPT_NAME']);
+	$file = end($file_parts);
+	if ( substr($file, -4) != ".php" ) {
+		json_EmitFatalError("Unable to determine API file", $RESPONSE);
 	}
-	$filename = substr($file, 0, strlen($file) - 4);
+	$file = substr($file, 0, strlen($file) - 4);
 
 	// Reconstruct the full request path (from sanitized request array) to match against the API prefixes.
-	$fullpath = $filename . "/" . implode("/", $REQUEST);
+	$fullpath = $file . "/" . implode("/", $REQUEST);
 	$fullpath_length = strlen($fullpath);
 
-	// Find first matching API record
-	$api_used = null;
-	$api_found = null;
-	$api_allowed = [];
+	// Find the matching API name and method(s)
+	$api_found = null;					// What API function was found (if any)
+	$api_called = null;					// What API function was called (if any)
+	$api_allowed = [];					// For tracking what HTTP methods are allowed (for an OPTIONS response)
 	foreach ( $api_descriptor as $api ) {
 		$api_base = $api[0];
 		$api_flags = $api[1];
@@ -80,26 +80,25 @@ function api_Exec( $api_descriptor ) {
 
 		// If the prefix matches, confirm that the path is the entire string or followed by a /
 		if ( (strncmp($fullpath, $api_base, $api_length) == 0) && (($fullpath_length == $api_length) || (substr($fullpath, $api_length, 1) == "/")) ) {
-			// In the unlikely case that we found a name match, from here on only consider name matches to be valid
+			// In the uncommon case that we find a name match, from here on only consider names that match the first to be valid
 			if ( $api_found && ($api_found[0] != $api[0]) )
 				continue;
 
-			// Note that the API was found (not necessarily that it was used
+			// Note that the API was found (not necessarily that it was used)
 			$api_found = $api;
 
 			// Decode the HTTP method bitflags as an array of strings, and store it for later (in case of an OPTIONS request)
 			$api_methods = api_DecodeHTTPBitmask($api_flags);
 			$api_allowed = array_merge($api_allowed, $api_methods);
 
-			// Next, confirm that HTTP method being requested matches the method we handle here
+			// Next, confirm that HTTP method being requested matches the method we handle in this index
 			if ( !json_IsValidHTTPMethod(...$api_methods) )
 				continue;
 
 			$DEBUG['api_base'] = $api_base;
 
 			// Yes, this API request is the one we will handle
-			$api_used = $api;
-			$GLOBALS["API_NAME"] = $api_base; // Used later for accumulating statistics per API.
+			$api_called = $api;
 
 			// Pull arguments off the request stack based on the number of elements in the request.
 			// Skip one though, as we added an artificial element for the filename.
@@ -130,15 +129,16 @@ function api_Exec( $api_descriptor ) {
 		}
 	}
 
-	if ( $api_used == null ) {
+	// If we didn't make an API call
+	if ( $api_called == null ) {
+		// But we found an API match
 		if ( $api_found ) {
 			if ( json_IsHTTPOptionsMethod() ) {
-				// If it's an OPTIONS request, emit an OPTIONS response
-				json_EmitOptionsHeaders($api_allowed);
-				exit;
+				// If it's an OPTIONS request, emit an OPTIONS response (headers only)
+				json_EmitOptionsAndExit($api_allowed);
 			}
 			else {
-				// API was found, but not used
+				// API was found, but not used due to invalid HTTP method
 				json_EmitFatalError_BadMethod($_SERVER['REQUEST_METHOD'], $RESPONSE);
 			}
 		}

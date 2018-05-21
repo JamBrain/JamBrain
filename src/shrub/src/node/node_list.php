@@ -3,7 +3,7 @@
 // nodeList are helper functions for dealing with arrays of nodes
 
 function nodeList_GetIds( &$nodes ) {
-	// A single node 
+	// A single node
 	if ( is_array($nodes) && isset($nodes['id']) ) {
 		return $nodes['id'];
 	}
@@ -22,24 +22,62 @@ function nodeList_GetIds( &$nodes ) {
 
 function nodeList_GetAuthors( &$_nodes ) {
 	$authors = [];
-	
+
 	if ( is_array($_nodes) && isset($_nodes['id']) ) {
 		$nodes = [&$_nodes];
 	}
 	else {
 		$nodes = &$_nodes;
 	}
-	
+
 	foreach ( $nodes as &$node ) {
 		$authors[] = $node['author'];
-		
+
 		if ( isset($node['meta']['author']) ) {
 			foreach ( $node['meta']['author'] as &$author ) {
 				$authors[] = $author;
 			}
 		}
 	}
-	
+
 	// Remove duplicates
 	return array_unique($authors);
+}
+
+
+function nodeList_GetParents( &$_nodes ) {
+	$parents = [];
+
+	if ( is_array($_nodes) && isset($_nodes['id']) ) {
+		$nodes = [&$_nodes];
+	}
+	else {
+		$nodes = &$_nodes;
+	}
+
+	foreach ( $nodes as &$node ) {
+		$parents[] = $node['parent'];
+	}
+
+	// Remove duplicates
+	return array_unique($parents);
+}
+
+
+function nodeList_GetSuperParents( &$_nodes ) {
+	$superparents = [];
+
+	if ( is_array($_nodes) && isset($_nodes['id']) ) {
+		$nodes = [&$_nodes];
+	}
+	else {
+		$nodes = &$_nodes;
+	}
+
+	foreach ( $nodes as &$node ) {
+		$superparents[] = $node['superparent'];
+	}
+
+	// Remove duplicates
+	return array_unique($superparents);
 }

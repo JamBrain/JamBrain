@@ -132,6 +132,7 @@ function json_EmitFatalError( $code = 400, $msg = null, $data = null ) {
 	exit;
 }
 
+
 /// @}
 
 /// @name Fatal Errors
@@ -286,11 +287,17 @@ function json_Emit( $out, $allow_jsonp = true ) {
 /// @{
 
 /// Doesn't actually emit JSON, but emits a HEAD-only document
-function json_EmitOptionsHeaders( $options ) {
+function json_EmitHeadAndExit() {
+	header("Content-Length: 0");
+	exit;
+}
+function json_EmitOptionsAndExit( $options ) {
 	header("Access-Control-Allow-Methods: ".implode(", ", $options));
 	header("Access-Control-Max-Age: ".(60*30));		// 30 minutes
 	header("Content-Length: 0");
+	exit;
 }
+
 
 /// After authenticating and loading globals, confirm that we're not in maintenence mode
 function json_CheckForMaintenence() {
