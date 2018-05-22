@@ -185,4 +185,10 @@ api_Exec([
 	// if not logged in, where will be blank
 	$RESPONSE['what'] = nodeComplete_GetWhatIdHasAuthoredByParent(userAuth_GetID(), $parent_id);
 }],
+/// IMPORTANT: Yes, this does not require auth. When auth is unavailable, the love belongs to the IP address.
+///    This does make it possible for every user to give 2 loves to a thing, but overall it's way better
+///    that a thing can be loved without a login than it is to force a user to create an account to love.
+["node2/love/add", API_POST | API_CHARGE, function(&$RESPONSE) {
+	$RESPONSE['got'] = true;
+}],
 ]);
