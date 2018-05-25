@@ -73,12 +73,11 @@ api_Exec([
 	if ( $HEAD_REQUEST )
 		json_EmitHeadAndExit();
 
-	// Fetch the nodes
-	$RESPONSE['nodes_cached'] = [];
-	$nodes = nodeCache_GetById($node_ids, $RESPONSE['nodes_cached']);
-
-	// Filter the nodes (if there is a reason to omit them)
 	$out = [];
+	$RESPONSE['nodes_cached'] = [];
+
+	// Fetch the nodes, and filter them (if there is a reason to omit them)
+	$nodes = nodeCache_GetById($node_ids, $RESPONSE['nodes_cached']);
 	nodeAPI_Filter($nodes, $out);
 
 	// Check if we need any more nodes
@@ -100,7 +99,6 @@ api_Exec([
 	// Fetch the additional nodes we need
 	if ( count($more_node_ids) ) {
 		$nodes = nodeCache_GetById($more_node_ids, $RESPONSE['nodes_cached']);
-
 		nodeAPI_Filter($nodes, $out);
 	}
 
@@ -157,13 +155,40 @@ api_Exec([
 	$RESPONSE['node_id'] = $parent_id;
 
 	// Fetch walked node too
-	//if ( isset($_GET['node']) ) {
-		//if ( isset($_GET['author']) )
-		//if ( isset($_GET['authors']) )
-		//if ( isset($_GET['parent']) )
-		//if ( isset($_GET['parents']) )
-		//if ( isset($_GET['superparent']) )
-	//}
+	if ( isset($_GET['node']) ) {
+		$out = [];
+		$RESPONSE['nodes_cached'] = [];
+
+		// One Fetch
+		$nodes = nodeCache_GetById([$parent_id], $RESPONSE['nodes_cached']);
+		nodeAPI_Filter($nodes, $out);
+
+		// Check if we need any more nodes
+		$more_node_ids = [];
+		if ( isset($_GET['author']) )
+			$more_node_ids = array_merge($more_node_ids, nodeList_GetAuthor($nodes));
+		if ( isset($_GET['authors']) )
+			$more_node_ids = array_merge($more_node_ids, nodeList_GetAuthors($nodes));
+		if ( isset($_GET['parent']) )
+			$more_node_ids = array_merge($more_node_ids, nodeList_GetParent($nodes));
+		if ( isset($_GET['parents']) )
+			$more_node_ids = array_merge($more_node_ids, nodeList_GetParents($nodes));
+		if ( isset($_GET['superparent']) )
+			$more_node_ids = array_merge($more_node_ids, nodeList_GetSuperParent($nodes));
+
+		$more_node_ids = array_unique($more_node_ids);
+		$more_node_ids = array_diff($more_node_ids, [$parent_id], [0]);
+
+		// Fetch the additional nodes we need
+		if ( count($more_node_ids) ) {
+			// Two Fetches
+			$nodes = nodeCache_GetById($more_node_ids, $RESPONSE['nodes_cached']);
+			nodeAPI_Filter($nodes, $out);
+		}
+
+		// Return the nodes
+		$RESPONSE['node'] = $out;
+	}
 }],
 ["node2/where", API_GET | API_AUTH | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
 	// At this point we can bail if it's just a HEAD request
