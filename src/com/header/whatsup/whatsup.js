@@ -1,6 +1,6 @@
 import {h, Component}				from 'preact/preact';
-import SVGIcon 						from 'com/svg-icon/icon';
-import NavLink 						from 'com/nav-link/link';
+import UIIcon 						from 'com/ui/icon/icon';
+import UILink 						from 'com/ui/link/link';
 
 export default class HeaderWhatsup extends Component {
 	constructor( props ) {
@@ -15,28 +15,28 @@ export default class HeaderWhatsup extends Component {
 				if ( parseInt(featured.meta['theme-mode']) == 1 ) {
 					return (
 						<div class="header-base header-whatsup outside">
-							<span class="-title _font2">ON NOW:</span> {featured.name} <NavLink href={featured.path+'/theme'}><SVGIcon baseline small gap>suggestion</SVGIcon>Theme Suggestions</NavLink> are open!
+							<span class="-title _font2">ON NOW:</span> {featured.name} <UILink href={featured.path+'/theme'}><UIIcon baseline small src="suggestions" /> Theme Suggestions</UILink> are open!
 						</div>
 					);
 				}
 				else if ( parseInt(featured.meta['theme-mode']) == 2 ) {
 					return (
 						<div class="header-base header-whatsup outside">
-							<span class="-title _font2">ON NOW:</span> {featured.name} <NavLink href={featured.path+'/theme'}><SVGIcon baseline small gap>fire</SVGIcon>Theme Slaughter Round</NavLink>
+							<span class="-title _font2">ON NOW:</span> {featured.name} <UILink href={featured.path+'/theme'}><UIIcon baseline small src="fire" /> Theme Slaughter Round</UILink>
 						</div>
 					);
 				}
 				else if ( parseInt(featured.meta['theme-mode']) == 3 ) {
 					return (
 						<div class="header-base header-whatsup outside">
-							<span class="-title _font2">ON NOW:</span> {featured.name} <NavLink href={featured.path+'/theme'}><SVGIcon baseline small gap>fire</SVGIcon>Theme Fusion Round</NavLink>
+							<span class="-title _font2">ON NOW:</span> {featured.name} <UILink href={featured.path+'/theme'}><UIIcon baseline small src="fire" /> Theme Fusion Round</UILink>
 						</div>
 					);
 				}
 				else if ( parseInt(featured.meta['theme-mode']) == 4 ) {
 					return (
 						<div class="header-base header-whatsup outside">
-							<span class="-title _font2">ON NOW:</span> {featured.name} <NavLink href={featured.path+'/theme'}><SVGIcon baseline small gap>ticket</SVGIcon>Theme Voting</NavLink>
+							<span class="-title _font2">ON NOW:</span> {featured.name} <UILink href={featured.path+'/theme'}><UIIcon baseline small src="ticket" /> Theme Voting</UILink>
 						</div>
 					);
 				}
@@ -45,7 +45,7 @@ export default class HeaderWhatsup extends Component {
 					if ( featured.meta['event-theme'] ) {
 						return (
 							<div class="header-base header-whatsup outside">
-								<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
+								<span class="-title _font2">ON NOW:</span> <UILink href={featured.path}><UIIcon baseline small src="trophy" /> {featured.name}</UILink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
 							</div>
 						);
 					}
@@ -53,7 +53,7 @@ export default class HeaderWhatsup extends Component {
 					else {
 						return (
 							<div class="header-base header-whatsup outside">
-								<span class="-title _font2">ON NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> Theme Announcement Soon! <NavLink href="https://twitter.com/ludumdare"><SVGIcon baseline small gap>twitter</SVGIcon>Check Twitter</NavLink>
+								<span class="-title _font2">ON NOW:</span> <UILink href={featured.path}><UIIcon baseline small src="trophy" /> {featured.name}</UILink> Theme Announcement Soon! <UILink href="https://twitter.com/ludumdare"><UIIcon baseline small src="twitter" /> Check Twitter</UILink>
 							</div>
 						);
 					}
@@ -61,21 +61,21 @@ export default class HeaderWhatsup extends Component {
 				else if ( parseInt(featured.meta['theme-mode']) == 6 && featured.meta['event-theme'] ) {
 					return (
 						<div class="header-base header-whatsup outside">
-							<span class="-title _font2">PLAY+RATE NOW:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
+							<span class="-title _font2">PLAY+RATE NOW:</span> <UILink href={featured.path}><UIIcon baseline small src="trophy" /> {featured.name}</UILink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
 						</div>
 					);
 				}
 				else if ( parseInt(featured.meta['theme-mode']) == 7 && featured.meta['event-theme'] ) {
 					return (
 						<div class="header-base header-whatsup outside">
-							<span class="-title _font2">RESULTS SOON:</span> <NavLink href={featured.path}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink>. This can take a while (hours). <NavLink href="https://twitter.com/ludumdare"><SVGIcon baseline small gap>twitter</SVGIcon>Stay tuned</NavLink>
+							<span class="-title _font2">RESULTS SOON:</span> <UILink href={featured.path}><UIIcon baseline small src="trophy" /> {featured.name}</UILink>. This can take a while (hours). <UILink href="https://twitter.com/ludumdare"><UIIcon baseline small src="twitter" /> Stay tuned</UILink>
 						</div>
 					);
 				}
 				else if ( parseInt(featured.meta['theme-mode']) == 8 && featured.meta['event-theme'] ) {
 					return (
 						<div class="header-base header-whatsup outside">
-							<span class="-title _font2">RESULTS:</span> <NavLink href={featured.path+'/results'}><SVGIcon baseline small gap>trophy</SVGIcon>{featured.name}</NavLink>
+							<span class="-title _font2">RESULTS:</span> <UILink href={featured.path+'/results'}><UIIcon baseline small src="trophy" /> {featured.name}</UILink>
 						</div>
 					);
 				}
