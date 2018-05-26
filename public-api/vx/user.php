@@ -414,7 +414,7 @@ switch ( $action ) {
 
 			// If name is too short
 			if ( strlen($name) < USERNAME_MIN_LENGTH ) {
-				json_EmitFatalError_Permission("Name is too short (minimum ".USERNAME_MIN_LENGTH.")", $RESPONSE);
+				json_EmitFatalError_Permission("Name is too short (minimum ".USERNAME_MIN_LENGTH." alphanumeric characters)", $RESPONSE);
 			}
 
 			$slug = coreSlugify_Name($name);

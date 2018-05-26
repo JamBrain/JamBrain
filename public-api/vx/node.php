@@ -806,7 +806,7 @@ switch ( $action ) {
 				$new_slug = node_GetUniqueSlugByParentSlug($node['parent'], $slug);
 
 				if ( strlen($new_slug) < 3 ) {
-					json_EmitFatalError_BadRequest("Name is too short (minumum 3 characters)", $RESPONSE);
+					json_EmitFatalError_BadRequest("Name is too short (minumum 3 alphanumeric characters)", $RESPONSE);
 				}
 
 				$RESPONSE['edit'] = node_Edit(
