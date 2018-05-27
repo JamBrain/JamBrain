@@ -25,6 +25,7 @@ export default class ContentComments extends Component {
 
 		this.onPublish = this.onPublish.bind(this);
 		this.onSubscribe = this.onSubscribe.bind(this);
+		this.checkBadCommentWarning = this.checkBadCommentWarning.bind(this);
 	}
 
 	componentWillMount() {
@@ -126,7 +127,7 @@ export default class ContentComments extends Component {
 				};
 			}
 			else {
-				console.log('[Comments] Unable to find parent for '+comments[idx].id);
+				console.log("[Comments] Unable to find parent for "+comments[idx].id);
 			}
 		}
 
@@ -175,6 +176,47 @@ export default class ContentComments extends Component {
 		}
 	}
 
+	isCommentingOnOwnPost() {
+		const {node, user} = this.props;
+		return node && user && ((node.author == user.id) || (node.meta && node.meta.authors && node.meta.authors.indexOf(user.id) > -1));
+	}
+
+	postIsAnItem() {
+		let {node} = this.props;
+		return node.type == 'item';
+	}
+
+	isDuplicatedComment(txt) {
+		const storage = window.localStorage;
+		return (txt && (txt == storage.getItem('cachedPreviousComment')));
+	}
+
+	checkBadCommentWarning(txt) {
+		if ( !txt || (txt.length < 5) ) {
+			return Promise.resolve();
+		}
+		else if ( this.isDuplicatedComment(txt) ) {
+			return Promise.reject("Writing the same comment several times is not good. Take your time. Be respectful of the people who you comment to.");
+		}
+		else if ( this.postIsAnItem() && !this.isCommentingOnOwnPost() ) {
+			const {user} = this.props;
+			const authoring = user.private.refs.author;
+			if (authoring && authoring.length > 0) {
+				return $Node.Get(authoring[authoring.length - 1])
+					.then(data => {
+						if (txt.indexOf(data.node[0].path) == -1) {
+							return Promise.resolve();
+						} else {
+							return Promise.resolve("Posting links to your game is not needed and bad community behaviour. To get ratings and quality feedback you should spend time playing other peoples' games. Give fair grades and valuable feedback.");
+						}
+					})
+					.catch(() => Promise.resolve());
+			}
+			return Promise.resolve();
+		}
+		return Promise.resolve();
+	}
+
 	renderComments( tree, indent = 0 ) {
 		var user = this.props.user;
 		var authors = this.state.authors;
@@ -214,7 +256,27 @@ export default class ContentComments extends Component {
 		// We can subscribe if we haven't subscribed and we don't have a comment in this thread, and we're not an author. Otherwise we can unsubscribe.
 		let canSubscribe = (this.state.subscribed === null) ? !( this.state.hascomment || this.state.isauthor ) : !this.state.subscribed;
 
-		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove allowAnonymous={allowAnonymous} error={error} cansubscribe={canSubscribe} onsubscribe={this.onSubscribe} authors={authors}/></div>;
+		return (
+			<div class="-new-comment">
+				<ContentCommentsComment
+					user={user}
+					comment={comment}
+					author={author}
+					indent={0}
+					editing
+					publish
+					onpublish={this.onPublish}
+					nolove
+					allowAnonymous={allowAnonymous}
+					error={error}
+					cansubscribe={canSubscribe}
+					onsubscribe={this.onSubscribe}
+					authors={authors}
+					checkBadCommentWarning={this.checkBadCommentWarning}
+					isDuplicatedComment={this.isDuplicatedComment}
+				/>
+			</div>
+		);
 	}
 
 	onPublish( e, publishAnon ) {

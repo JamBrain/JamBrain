@@ -80,6 +80,9 @@ export default class ContentCommentsComment extends Component {
 			'replaceText': null,
 			'textareaFocus': true,
 		});
+		this.props.checkBadCommentWarning(e.target.value)
+			.then(msg => this.setState({'qualityWarning': msg}))
+			.catch(msg => this.setState({'qualityWarning': msg}));
 		return true;
 	}
 
@@ -142,17 +145,21 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onPublishAnon( e ) {
-		if ( this.canSave() ) {
+		if ( this.canSave() && !this.props.isDuplicatedComment(this.props.comment.body) ) {
 			if ( this.props.onpublish ) {
 				this.props.onpublish(e, true);
+				const storage = window.localStorage;
+				storage.setItem('cachedPreviousComment', this.props.comment.body);
 			}
 		}
 	}
 
 	onPublish( e ) {
-		if ( this.canSave() ) {
+		if ( this.canSave() && !this.props.isDuplicatedComment(this.props.comment.body) ) {
 			if ( this.props.onpublish ) {
 				this.props.onpublish(e);
+				const storage = window.localStorage;
+				storage.setItem('cachedPreviousComment', this.props.comment.body);
 
 				//this.setState({'modified': false, 'editing': true, 'preview': false});
 			}
@@ -324,25 +331,28 @@ export default class ContentCommentsComment extends Component {
 				}
 
 				var ShowRight = [];
-
-				if ( props.cansubscribe ) {
-					ShowRight.push(<div class={"-button -subscribe"} onclick={this.onSubscribe}><SVGIcon>bubble</SVGIcon><div>Follow Thread</div></div>);
+				if ( state.qualityWarning ) {
+					ShowRight = [<div class="quality-alert">{state.qualityWarning}</div>];
 				}
 				else {
-					ShowRight.push(<div class={"-button -unsubscribe"} onclick={this.onSubscribe}><SVGIcon>bubble-empty</SVGIcon><div>Unfollow Thread</div></div>);
-				}
-
-				if ( props.publish ) {
-					if ( props.allowAnonymous ) {
-						ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublishAnon}><SVGIcon>publish</SVGIcon><div>Publish Anonymously</div></div>);
+					if ( props.cansubscribe ) {
+						ShowRight.push(<div class={"-button -subscribe"} onclick={this.onSubscribe}><SVGIcon>bubble</SVGIcon><div>Follow Thread</div></div>);
 					}
-					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublish}><SVGIcon>publish</SVGIcon><div>Publish</div></div>);
-				}
-				else {
-					ShowRight.push(<div class="-button -cancel" onclick={this.onCancel}><SVGIcon>cross</SVGIcon><div class="if-sidebar-block">Cancel</div></div>);
-					ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onclick={this.onSave}><SVGIcon>save</SVGIcon><div>Save</div></div>);
-				}
+					else {
+						ShowRight.push(<div class={"-button -unsubscribe"} onclick={this.onSubscribe}><SVGIcon>bubble-empty</SVGIcon><div>Unfollow Thread</div></div>);
+					}
 
+					if ( props.publish ) {
+						if ( props.allowAnonymous ) {
+							ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublishAnon}><SVGIcon>publish</SVGIcon><div>Publish Anonymously</div></div>);
+						}
+						ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublish}><SVGIcon>publish</SVGIcon><div>Publish</div></div>);
+					}
+					else {
+						ShowRight.push(<div class="-button -cancel" onclick={this.onCancel}><SVGIcon>cross</SVGIcon><div class="if-sidebar-block">Cancel</div></div>);
+						ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onclick={this.onSave}><SVGIcon>save</SVGIcon><div>Save</div></div>);
+					}
+				}
 				ShowTopNav = (
 					<div class="-nav">
 						<div class="-right">{ShowRight}</div>
