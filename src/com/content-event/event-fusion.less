@@ -1,0 +1,74 @@
+
+@import "defs.less";
+
+.event-fusion {
+	& > .-warning {
+		color: @COL_A;
+		margin: 1em;
+		font-weight: bold;
+	}
+
+	& > .-instructions {
+		font-style: italic;
+		margin: 0.5em;
+	}
+
+	& > .fusion-box {
+		& > .-progress {
+			margin: 1em;
+			font-weight: bold;
+		}
+
+		& > .-ideas {
+			display: flex;
+			max-width: 800px;
+			flex-wrap: wrap;
+			justify-content: center;
+
+			& > .-idea {
+				border: 1px @COL_K solid;
+				padding: 0.25em 0.5em;
+				margin: 0.5em 0.25em;
+
+				&.-selected {
+					background: @COL_A;
+					color: @COL_L;
+					border: 1px @COL_A solid;
+				}
+			}
+		}
+
+		& > .-button-box {
+			width: 100%;
+			max-width: 800px;
+			text-align: center;
+
+			& > .fuse-fiss {
+				margin: 0.5em;
+				border: 1px @COL_K solid;
+				padding: 0.25em 0.5em;
+				float: center;
+				display: inline-block;
+
+				&.-fiss {
+					color: @COL_L;
+					background: @COL_CA;
+					border: 1px @COL_CA solid;
+				}
+
+				&.-fuse {
+					color: @COL_L;
+					background: @COL_BC;
+					border: 1px @COL_BC solid;
+				}
+
+				&.-disabled
+				{
+					color: @COL_L;
+					background: @COL_NL;
+					border: 1px @COL_NL solid;
+				}
+			}
+		}
+	}
+}
