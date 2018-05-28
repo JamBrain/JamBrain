@@ -93,7 +93,7 @@ class Autocompletions extends Component {
 			return;
 		}
 		let {selected} = this.state;
-		selected = this.getOptions(selected ? selected : match).sort((a, b) => b.score - a.score)[0].name;
+		selected = this.getOptions(selected ? selected : match).sort((a, b) => b.score - a.score)[0].slug;
 		this.executeSelect(selected);
 	}
 
@@ -105,7 +105,7 @@ class Autocompletions extends Component {
 			return;
 		}
 
-		this.executeSelect(item.name);
+		this.executeSelect(item.slug);
 	}
 
 	executeSelect( selected ) {
@@ -129,7 +129,7 @@ class Autocompletions extends Component {
 			nextIndex %= options.length;
 		}
 		if ( nextIndex < options.length ) {
-			this.setState({'selected': options[nextIndex].name});
+			this.setState({'selected': options[nextIndex].slug});
 		}
 	}
 
@@ -161,7 +161,7 @@ class Autocompletions extends Component {
 		let selectedIndex = selected ? -1 : 0;
 		const options = this.getOptions(match).sort((a, b) => b.score - a.score).slice(0, maxItems);
 		if ( options ) {
-			const selectedMatch = options.map((opt, i) => [opt, i]).filter(item => item[0].name == selected);
+			const selectedMatch = options.map((opt, i) => [opt, i]).filter(item => item[0].slug == selected);
 			if ( selectedMatch.length == 1 ) {
 				selectedIndex = selectedMatch[0][1];
 			}
@@ -175,7 +175,7 @@ class Autocompletions extends Component {
 		if ( editMode && match && (match != selected) ) {
 			let {selected, options, selectedIndex} = this.getSelected();
 			if ( (options.length > 0) && (!selected || (selectedIndex < 0)) ) {
-				selected = options[0].name;
+				selected = options[0].slug;
 				if ( selectedIndex < 0 ) {
 					this.setState({'selected': selected});
 				}
@@ -279,6 +279,7 @@ export class AutocompleteAtNames extends Autocompletions {
 					score = Math.pow(hint.length / authorData.name.length, score);
 					options.push({
 						'name': '@' + authorData.name,
+						'slug': '@' + authorData.slug,
 						'score': score,
 						'matchStart': matchStart,
 						'matchEnd': matchEnd,
