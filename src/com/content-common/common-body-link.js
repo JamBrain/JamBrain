@@ -49,8 +49,7 @@ export default class ContentCommonBodyLink extends Component {
 	render( props, state ) {
 		let UrlPlaceholder = props.urlPlaceholder ? props.urlPlaceholder : 'URL (example: http://some.website.com/file.zip)';
 		const index = props.tag != null && state.indexes ? state.indexes[props.tag] : 0;
-		const tag = state.itemlist ? state.itemlist[index] : [0, null];
-
+		const tag = (state.itemlist && state.itemlist[index]) || [props.defaultValue, props.defaultText];
 		if ( props.editing && state.itemlist && state.indexes ) {
 			return (
 				<div class={cN('content-common-link', '-editing', props.class)}>

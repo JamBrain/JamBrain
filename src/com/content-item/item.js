@@ -326,6 +326,8 @@ export default class ContentItem extends Component {
 					onModifyName={this.onModifyLinkName.bind(this, idx)}
 					onModifyTag={this.onModifyLinkTag.bind(this, idx)}
 					onModifyUrl={this.onModifyLinkUrl.bind(this, idx)}
+					defaultValue={50}
+					defaultText="Source Code"
 				/>
 			);
 		}
