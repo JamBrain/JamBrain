@@ -7,6 +7,7 @@ import SVGIcon 							from 'com/svg-icon/icon';
 export default class ContentItemRulesCheck extends Component {
     constructor(props) {
         super(props);
+        this.state = {};
     }
 
     handleChange(field, nextValue) {
@@ -33,7 +34,7 @@ export default class ContentItemRulesCheck extends Component {
         if (!nextState.createdAll) return false;
         if (!nextState.createdWithin48) return false;
         if (!nextState.includedSource) return false;
-        if (nextstate.optedOut) return false; // This indicates you misunderstood the rules.
+        if (nextState.optedOut) return false; // This indicates you misunderstood the rules.
         return true;
     }
 
@@ -58,62 +59,62 @@ export default class ContentItemRulesCheck extends Component {
     }
 
     render(props, state) {
-        const Mandatory = <span class="-mandatory">*</span>;
+        const Mandatory = <span class="-mandatory">ALL</span>;
         const MandatoryCompo = <span class="-mandatory">COMPO</span>;
         const MandatoryJam = <span class="-mandatory">JAM</span>;
-        const IconUnChecked = <SVGIcon small baseline>checkbox-unchecked</SVGIcon>;
-        const IconChecked = <SVGIcon small baseline>checkbox-checked</SVGIcon>;
+        const IconUnChecked = <SVGIcon small baseline class="-checkbox">checkbox-unchecked</SVGIcon>;
+        const IconChecked = <SVGIcon small baseline class="-checkbox">checkbox-checked</SVGIcon>;
 
         return (
-            <ContentCommonBody class="-images">
+            <ContentCommonBody class="-rules-check">
                 <div class="-label">Rules</div>
                 <div>Please indicate what applies to you and your game.</div>
-                <div><strong>NOTE:</strong> Options marked with {Mandatory} is mandatory for all.</div>
-                <div><strong>NOTE:</strong> Options marked with {MandatoryCompo} is mandatory for compo submissions.</div>
-                <div><strong>NOTE:</strong> Options marked with {MandatoryJam} is mandatory for jam submissions.</div>
 				<ButtonBase onclick={this.handleChange.bind(this, 'readRules', !state.readRules)}>
                     {state.readRules ? IconChecked : IconUnChecked}
-                    I have read and understood <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>.
                     {Mandatory}
+                    I have read and understood <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>.
                 </ButtonBase>
                 <ButtonBase onclick={this.handleChange.bind(this, 'workedSolo', !state.workedSolo)}>
                     {state.workedSolo ? IconChecked : IconUnChecked}
-                    I worked <strong>alone</strong> on the game.
                     {MandatoryCompo}
+                    I worked <strong>alone</strong> on the game.
                 </ButtonBase>
                 <ButtonBase onclick={this.handleChange.bind(this, 'createdAll', !state.createdAll)}>
                     {state.createdAll ? IconChecked : IconUnChecked}
-                    I created all the code, art, music and sounds myself during the LD.
                     {MandatoryCompo}
+                    I created all the code, art, music and sounds myself during the LD.
                 </ButtonBase>
                 <ButtonBase onclick={this.handleChange.bind(this, 'createdWithin48', !state.createdWithin48)}>
                     {state.createdWithin48 ? IconChecked : IconUnChecked}
-                    I created everything during the 48h of the LD.
                     {MandatoryCompo}
+                    I created everything during the 48h of the LD.
                 </ButtonBase>
                 <ButtonBase onclick={this.handleChange.bind(this, 'includedSource', !state.includedSource)}>
                     {state.includedSource ? IconChecked : IconUnChecked}
-                    I included the source code
                     {MandatoryCompo}
+                    I included the source code.
                 </ButtonBase>
                 <ButtonBase onclick={this.handleChange.bind(this, 'createdWithin72', !state.createdWithin72)}>
                     {state.createdWithin72 ? IconChecked : IconUnChecked}
-                    I/We created all conents I/we want to be rated for during the 72h of LD.
                     {MandatoryJam}
+                    I/We created all conents I/we want to be rated for during the 72h of LD.
                 </ButtonBase>
                 <ButtonBase onclick={this.handleChange.bind(this, 'optedOut', !state.optedOut)}>
                     {state.optedOut ? IconChecked : IconUnChecked}
-                    I/We opt out of all voting categories for which we did not do everything ourselves.
                     {MandatoryJam}
+                    I/We opt out of all voting categories for which we did not do everything ourselves.
                 </ButtonBase>
                 <ButtonBase onclick={this.handleChange.bind(this, 'willVote', !state.willVote)}>
                     {state.willVote ? IconChecked : IconUnChecked}
-                    I/We will participate in playing and voting on other games.
                     {Mandatory}
+                    I/We will participate in playing and voting on other games.
                 </ButtonBase>
                 <div class="-footer">
                     The different submission options and ultimately the ability to publish the game
                     will become available depending on your answers.
+                    <div><strong>NOTE:</strong> Options marked with {Mandatory} is mandatory for all.</div>
+                    <div><strong>NOTE:</strong> Options marked with {MandatoryCompo} is mandatory for compo submissions.</div>
+                    <div><strong>NOTE:</strong> Options marked with {MandatoryJam} is mandatory for jam submissions.</div>
                 </div>
             </ContentCommonBody>
         );
