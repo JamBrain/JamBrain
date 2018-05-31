@@ -1,10 +1,10 @@
 ;(function(){
-	
+
 /**
 	Node Library - get information about nodes
-	
+
 	NOTE: these functions will be globally available. No need to include anything. Also you can't use ES6 here.
-	
+
 	Try to mirror what's available in "src/shrub/src/node/node_util.php"
 */
 
@@ -12,7 +12,7 @@ window.node_IsPublished = function( node ) {
 	// Return null if arguments are invalid
 	if ( !node )
 		return null;
-	
+
 	return node.published;
 }
 
@@ -20,20 +20,27 @@ window.node_IsAuthor = function( node, user ) {
 	// Return null if either arguments are invalid
 	if ( !user || !node )
 		return null;
-	
+
 	// Confirm non-zero
 	if ( !user.id )
 		return false;
-	
+
 	// Check if you are the node's author
 	if ( node.author == user.id )
 		return true;
-		
+
 	// Check if you are on the list of authors (metadata)
-	if ( node.meta && node.meta.author && node.meta.author.indexOf(user.id) != -1 )
+	if ( node.meta && node.meta.author && (node.meta.author.indexOf(user.id) != -1) )
 		return true;
-	
+
 	return false;
+}
+
+
+window.node_CountAuthors = function( node ) {
+	if ( !node.meta || !node.meta['author'] )
+		return 1;
+	return node.meta['author'].length;
 }
 
 
@@ -131,16 +138,16 @@ window.node_GetTags = function( node ) {
 
 
 //window.nodeUser_IsTeamLeader = function( user, project ) {
-//	
+//
 //}
 
 window.nodes_HasParent = function( nodes, parent_id ) {
 	// Return null if argument is invalid
 	if ( !nodes )
 		return null;
-		
+
 	// TODO: Confirm nodes is an array
-	
+
 	for ( idx = 0; idx < nodes.length; idx++ ) {
 		if ( nodes[idx].parent == parent_id )
 			return true;
@@ -152,9 +159,9 @@ window.nodeKeys_HasParent = function( nodes, parent_id ) {
 	// Return null if argument is invalid
 	if ( !nodes )
 		return null;
-		
+
 	// TODO: Confirm nodes is an array
-	
+
 	//for ( idx = 0; idx < nodes.length; idx++ ) {
 	for ( var key in nodes ) {
 		if ( nodes[key].parent == parent_id )
@@ -167,9 +174,9 @@ window.nodeKeys_HasPublishedParent = function( nodes, parent_id ) {
 	// Return null if argument is invalid
 	if ( !nodes )
 		return null;
-		
+
 	// TODO: Confirm nodes is an array
-	
+
 	//for ( idx = 0; idx < nodes.length; idx++ ) {
 	for ( var key in nodes ) {
 		if ( nodes[key].parent == parent_id && nodes[key].published )

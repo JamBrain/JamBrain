@@ -358,20 +358,11 @@ export default class ContentItem extends Component {
 		);
 	}
 
-	getNumberOfAuthors() {
-		const {node} = this.props;
-		if ( !node.meta || !node.meta['author'] ) return 1;
-		if (node.meta['author'].filter(n => n == node.author).length == 0) {
-			return node.meta['author'].length + 1;
-		}
-		return node.meta['author'].length;
-	}
-
 	render( props, state ) {
-		props = Object.assign({}, props);
+		props = Object.assign({}, props);			// Copy it because we're going to change it
 		let {node, user, path, extra, featured} = props;
 		let {parent} = state;
-		const allowCompo = this.getNumberOfAuthors() == 1;
+		const allowCompo = (node_CountAuthors(node) == 1);
 
 		let Category = '/';
 
