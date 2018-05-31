@@ -233,11 +233,10 @@ export default class ContentItem extends Component {
 		this.contentSimple.setState({'modified': true});
 	}
 
-	onModifyLinkTag( Index, e ) {
-		var Tags = this.state.linkTags;
-		Tags[Index] = e;//e.target.value;
-		this.setState({'modified': true, 'linkTags': Tags});
-		// Update save button
+	onModifyLinkTag( index, tagId ) {
+		const tags = this.state.linkTags.slice();
+		tags[index] = tagId;
+		this.setState({'modified': true, 'linkTags': tags});
 		this.contentSimple.setState({'modified': true});
 	}
 
@@ -327,6 +326,8 @@ export default class ContentItem extends Component {
 					onModifyName={this.onModifyLinkName.bind(this, idx)}
 					onModifyTag={this.onModifyLinkTag.bind(this, idx)}
 					onModifyUrl={this.onModifyLinkUrl.bind(this, idx)}
+					defaultValue={50}
+					defaultText="Source Code"
 				/>
 			);
 		}

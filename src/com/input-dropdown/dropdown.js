@@ -84,6 +84,7 @@ export default class InputDropdown extends Component {
 				if (SelectedField == null) {
 					SelectedField = (
 						<button type="button" onclick={this.onShow}>
+							<SVGIcon>hamburger</SVGIcon>
 							{props.items[0][1]}
 						</button>
 					);
@@ -140,7 +141,10 @@ export default class InputDropdown extends Component {
 
 
 			return (
-				<div class={cN('input-dropdown', props.class)} ref={(input) => { this.dropdown = input; }}>
+				<div
+					class={cN('input-dropdown', props.class)}
+					ref={(input) => { this.dropdown = input; }}
+				>
 					{SelectedField}
 					{ShowItems}
 				</div>
