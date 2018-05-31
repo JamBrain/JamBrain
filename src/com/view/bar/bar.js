@@ -173,10 +173,6 @@ export default class ViewBar extends Component {
 					class="-bar-button"
 					noblank
 					href={SecureURL}
-					onclick={ e => {
-						console.log('secure');
-						location.href = SecureURL;
-					}}
 				>
 					<SVGIcon>unlocked</SVGIcon>
 					<div class="if-sidebar-block">Go to Secure Site</div>
