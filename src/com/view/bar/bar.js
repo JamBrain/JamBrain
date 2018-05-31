@@ -171,6 +171,7 @@ export default class ViewBar extends Component {
 			GoSecure = (
 				<UIButton
 					class="-bar-button"
+					noblank
 					href={SecureURL}
 					onclick={ e => {
 						console.log('secure');

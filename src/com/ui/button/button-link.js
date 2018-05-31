@@ -11,7 +11,7 @@ export default class UIButtonLink extends UILink {
 
 		let doHistory;
 		if ( props.href ) {
-			if ( props.href.indexOf('//') !== -1 ) {
+			if ( !props.noblank && (props.href.indexOf('//') !== -1) ) {
 				props.target = "_blank";
 				props.rel = "noopener noreferrer";
 			}
