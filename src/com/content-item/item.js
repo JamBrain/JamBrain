@@ -358,10 +358,20 @@ export default class ContentItem extends Component {
 		);
 	}
 
+	getNumberOfAuthors() {
+		const {node} = this.props;
+		if ( !node.meta || !node.meta['author'] ) return 1;
+		if (node.meta['author'].filter(n => n == node.author).length == 0) {
+			return node.meta['author'].length + 1;
+		}
+		return node.meta['author'].length;
+	}
+
 	render( props, state ) {
 		props = Object.assign({}, props);
 		let {node, user, path, extra, featured} = props;
 		let {parent} = state;
+		const allowCompo = this.getNumberOfAuthors() == 1;
 
 		let Category = '/';
 
@@ -415,11 +425,12 @@ export default class ContentItem extends Component {
 				<ContentCommonNav>
 					<div class="-label">Event</div>
 					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
-					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
+					{allowCompo && <ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>}
 					<ContentCommonNavButton onclick={this.onSetUnfinished} class={Category == '/unfinished' ? "-selected" : ""}><SVGIcon>trash</SVGIcon><div>Unfinished</div></ContentCommonNavButton>
 					<div class="-footer">
 						<strong>NOTE</strong>: You <strong>MUST</strong> click this before you will be able to Publish.<br />
 						Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know what to pick, pick the <strong>Jam</strong>.
+						{!allowCompo && <div><strong>COMPO</strong> option disabled because: Too many authors.</div>}
 					</div>
 				</ContentCommonNav>
 			);
