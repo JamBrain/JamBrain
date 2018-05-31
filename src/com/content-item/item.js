@@ -13,6 +13,8 @@ import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
+import ContentItemRulesCheck			from './item-rulescheck';
+
 import InputStar						from 'com/input-star/star';
 
 import ContentSimple					from 'com/content-simple/simple';
@@ -55,6 +57,7 @@ export default class ContentItem extends Component {
 		this.onSetCompo = this.onSetCompo.bind(this);
 		this.onSetUnfinished = this.onSetUnfinished.bind(this);
 		this.onAnonymousComments = this.onAnonymousComments.bind(this);
+		this.handleAllowSubmission = this.handleAllowSubmission.bind(this);
 	}
 
 	componentDidMount() {
@@ -300,6 +303,10 @@ export default class ContentItem extends Component {
 		return $Node.AddMeta(node.id, Data);
 	}
 
+	handleAllowSubmission(allowed) {
+		this.setState(allowed);
+	}
+
 	// Generates JSX for the links, depending on whether the page is editing or viewing
 	makeLinks( editing ) {
 		let LinkMeta = [];
@@ -362,8 +369,9 @@ export default class ContentItem extends Component {
 	render( props, state ) {
 		props = Object.assign({}, props);			// Copy it because we're going to change it
 		let {node, user, path, extra, featured} = props;
-		let {parent} = state;
-		const allowCompo = (node_CountAuthors(node) == 1);
+		let {parent, allowCompo, allowJam, allowUnfinished} = state;
+		const tooManyAuthorsForCompo = (node_CountAuthors(node) != 1);
+		allowCompo = allowCompo && !tooManyAuthorsForCompo;
 
 		let Category = '/';
 
@@ -412,17 +420,19 @@ export default class ContentItem extends Component {
 		}
 
 		let ShowEventPicker = null;
+		let ShowRulesCheck = null;
 		if ( extra && extra.length && (extra[0] == 'edit') && node_CanPublish(parent) ) {
+			ShowRulesCheck = <ContentItemRulesCheck onAllowChange={this.handleAllowSubmission} />;
 			ShowEventPicker = (
 				<ContentCommonNav>
 					<div class="-label">Event</div>
-					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
-					{allowCompo && <ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>}
-					<ContentCommonNavButton onclick={this.onSetUnfinished} class={Category == '/unfinished' ? "-selected" : ""}><SVGIcon>trash</SVGIcon><div>Unfinished</div></ContentCommonNavButton>
+					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""} disabled={allowJam}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
+					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""} disabled={allowCompo}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>}
+					<ContentCommonNavButton onclick={this.onSetUnfinished} class={Category == '/unfinished' ? "-selected" : ""} disabled={allowUnfinished}><SVGIcon>trash</SVGIcon><div>Unfinished</div></ContentCommonNavButton>
 					<div class="-footer">
 						<strong>NOTE</strong>: You <strong>MUST</strong> click this before you will be able to Publish.<br />
 						Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know what to pick, pick the <strong>Jam</strong>.
-						{!allowCompo && <div><strong>COMPO</strong> option disabled because: Too many authors.</div>}
+						{tooManyAuthorsForCompo && <div><strong>COMPO</strong> option disabled because: Too many authors.</div>}
 					</div>
 				</ContentCommonNav>
 			);
@@ -801,6 +811,7 @@ export default class ContentItem extends Component {
 
 		props.editonly = (
 			<div>
+				{ShowRulesCheck}
 				{ShowEventPicker}
 				{ShowOptOut}
 				{ShowImages}
