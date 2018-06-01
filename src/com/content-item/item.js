@@ -426,9 +426,9 @@ export default class ContentItem extends Component {
 			ShowEventPicker = (
 				<ContentCommonNav>
 					<div class="-label">Event</div>
-					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""} disabled={!allowJam}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
-					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""} disabled={!allowCompo}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
-					<ContentCommonNavButton onclick={this.onSetUnfinished} class={Category == '/unfinished' ? "-selected" : ""} disabled={!allowUnfinished}><SVGIcon>trash</SVGIcon><div>Unfinished</div></ContentCommonNavButton>
+					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' && allowJam ? "-selected" : ""} disabled={!allowJam}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
+					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' && allowCompo ? "-selected" : ""} disabled={!allowCompo}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
+					<ContentCommonNavButton onclick={this.onSetUnfinished} class={Category == '/unfinished' && allowUnfinished ? "-selected" : ""} disabled={!allowUnfinished}><SVGIcon>trash</SVGIcon><div>Unfinished</div></ContentCommonNavButton>
 					<div class="-footer">
 						<strong>NOTE</strong>: You <strong>MUST</strong> click this before you will be able to Publish.<br />
 						Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know what to pick, pick the <strong>Jam</strong>.

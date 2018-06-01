@@ -1,5 +1,19 @@
+@import "defs.less";
 
 .button-base {
 	cursor: pointer;
 	user-select: none;
+
+	&.-disabled {
+		border: 1px solid @COL_NLLL;
+		color: @COL_NLLL;
+
+		&:active,
+		&:hover,
+		&:focus {
+			cursor: not-allowed;
+			border: 1px solid @COL_NLLL;
+			color: @COL_NLLL;
+		}
+	}
 }

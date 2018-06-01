@@ -11,6 +11,7 @@ export default class ButtonLink extends NavLink {
 			props.class = "button-base button-link " + props.class;
 		else
 			props.class = "button-base button-link";
+		if ( props.disabled ) props.class += " -disabled";
 
 		let doHistory;
 		if ( props.href ) {
@@ -30,6 +31,7 @@ export default class ButtonLink extends NavLink {
 		// Wrap onClick with a function that deselects current element //
 		let onClickFunc = props.onclick;
 		props.onclick = (e) => {
+			if ( props.disabled ) return;
 			if ( onClickFunc )
 				onClickFunc(e);
 
@@ -46,7 +48,7 @@ export default class ButtonLink extends NavLink {
 		};
 
 		props.onkeydown = (e) => {
-			if ( e.keyCode === 13 ) {
+			if ( e.keyCode === 13 && !props.disabled ) {
 				props.onclick();
 			}
 		};
