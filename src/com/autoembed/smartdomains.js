@@ -25,8 +25,11 @@ export default SmartDomains = [
         "embed_test": /twitter\.com\/(\w+)\/status(?:es)*\/(\d+)$/
     },
     {
+        "parent": "@base",
         "domain": "soundcloud.com",
-        "icon_name": "soundcloud"
+        "name": "Soundcloud",
+        "icon_name": "soundcloud",
+        "embed_test": /soundcloud\.com\/\S+\/(\S+$)/
     },
     {
         "parent": "@base",

@@ -43,12 +43,21 @@ export default class UIEmbedFrame extends Component {
 	}
 
 	render( props, state ) {
-		let {url} = this.props.link;
+		let {url, info} = this.props.link;
 		let {height, width, visible} = this.state;
 
-		let src = API_ENDPOINT + "/embed?";
+		const sandboxProperties = [
+			"allow-presentation",
+			"allow-same-origin",
+			"allow-popups",
+			"allow-forms",
+			"allow-scripts",
+			"allow-top-navigation"
+		];
 
-		if (this.props.link.info.autoplay) {
+		let src = API_ENDPOINT + "/vx/embed?";
+
+		if (info.autoplay) {
 			src += "autoplay=1&";
 		}
 
@@ -60,7 +69,7 @@ export default class UIEmbedFrame extends Component {
 		}
 
 		return (
-			<iframe style={style} width="100%" height={height} sandbox="allow-same-origin allow-popups allow-forms allow-scripts allow-top-navigation" ref={(f) => this.iframe = f } frameborder="none" scrolling="no" src={src} />
+			<iframe style={style} width="100%" height={height} allow="autoplay" sandbox={sandboxProperties.join(" ")} ref={(f) => this.iframe = f } frameborder="none" scrolling="no" src={src} />
 		);
 	}
 }

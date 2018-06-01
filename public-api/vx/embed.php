@@ -1,56 +1,3 @@
-<script type="text/javascript">
-
-	var params = parseQueryString();
-
-	var EMBED_TYPE = "none"
-	var REGEX_JSON = {}
-	var URL = params["url"]
-	var AUTOPLAY = params["autoplay"] ? params["autoplay"] : 0;
-
-	if (URL) {
-		EMBED_TYPE = getEmbedType(URL);
-	}
-
-	function parseQueryString() {
-		var str = window.location.search;
-		var objURL = {};
-
-		str.replace(
-			new RegExp("([^?=&]+)(=([^&]*))?", "g"),
-			function ($0, $1, $2, $3) {
-				objURL[$1] = $3;
-			}
-		);
-		return objURL;
-	};
-
-	function getEmbedType(url_to_parse) {
-		var twitter_regex = /twitter\.com\/(\w+)\/status(?:es)*\/(\d+)$/;
-		var itch_regex = /(.*)\.itch\.io\/(.+)$/;
-		var gfycat_regex = /gfycat\.com\/(\w+)/;
-		var youtube_regex = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/;
-
-		var sketchfab_regex = /sketchfab\.com\/models\/(\w+)/;
-
-		if (twitter_regex.test(url_to_parse)) {
-			REGEX_JSON = twitter_regex.exec(url_to_parse);
-			return "twitter";
-		} else if (itch_regex.test(url_to_parse)) {
-			REGEX_JSON = itch_regex.exec(url_to_parse);
-			return "itch";
-		} else if (gfycat_regex.test(url_to_parse)) {
-			REGEX_JSON = gfycat_regex.exec(url_to_parse);
-			return "gfycat";
-		} else if (youtube_regex.test(url_to_parse)) {
-			REGEX_JSON = youtube_regex.exec(url_to_parse);
-			return "youtube";
-		} else if (sketchfab_regex.test(url_to_parse)) {
-			REGEX_JSON = sketchfab_regex.exec(url_to_parse);
-			return "sketchfab";
-		}
-	}
-</script>
-
 <!DOCTYPE html>
 <html>
 
@@ -152,9 +99,60 @@
 				}
 			}
 		}());
-	</script>
 
-	<script type="text/javascript">
+		var params = parseQueryString();
+
+		var EMBED_TYPE = "none"
+		var REGEX_JSON = {}
+		var URL = params["url"]
+		var AUTOPLAY = params["autoplay"] ? params["autoplay"] : 0;
+
+		if (URL) {
+			EMBED_TYPE = getEmbedType(URL);
+		}
+
+		function parseQueryString() {
+			var str = window.location.search;
+			var objURL = {};
+
+			str.replace(
+				new RegExp("([^?=&]+)(=([^&]*))?", "g"),
+				function ($0, $1, $2, $3) {
+					objURL[$1] = $3;
+				}
+			);
+			return objURL;
+		};
+
+		function getEmbedType(url_to_parse) {
+			var twitter_regex = /twitter\.com\/(\w+)\/status(?:es)*\/(\d+)$/;
+			var itch_regex = /(.*)\.itch\.io\/(.+)$/;
+			var gfycat_regex = /gfycat\.com\/(\w+)/;
+			var youtube_regex = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/;
+			var sketchfab_regex = /sketchfab\.com\/models\/(\w+)/;
+			var soundcloud_regex = /soundcloud\.com\/\S+\/\S+$/
+
+			if (twitter_regex.test(url_to_parse)) {
+				REGEX_JSON = twitter_regex.exec(url_to_parse);
+				return "twitter";
+			} else if (itch_regex.test(url_to_parse)) {
+				REGEX_JSON = itch_regex.exec(url_to_parse);
+				return "itch";
+			} else if (gfycat_regex.test(url_to_parse)) {
+				REGEX_JSON = gfycat_regex.exec(url_to_parse);
+				return "gfycat";
+			} else if (youtube_regex.test(url_to_parse)) {
+				REGEX_JSON = youtube_regex.exec(url_to_parse);
+				return "youtube";
+			} else if (sketchfab_regex.test(url_to_parse)) {
+				REGEX_JSON = sketchfab_regex.exec(url_to_parse);
+				return "sketchfab";
+			} else if (soundcloud_regex.test(url_to_parse)) {
+				REGEX_JSON = soundcloud_regex.exec(url_to_parse);
+				return "soundcloud";
+			}
+		}
+		
 		var client;
 
 		function getHeight() {
@@ -227,7 +225,8 @@
 					target.innerHTML = "<div style='position:relative;padding-bottom:51%'><iframe src='https://gfycat.com/ifr/" + regexJson[1] + "' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen></iframe></div>";
 					break;
 				case "youtube":
-					target.innerHTML = "<div style='position:relative;padding-bottom:56.25%'><iframe class='youtube' src='https://www.youtube.com/embed/" + regexJson[1] + "?autoplay=" + AUTOPLAY + "' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen></iframe></div>";
+					console.log(AUTOPLAY);
+					target.innerHTML = "<div style='position:relative;padding-bottom:56.25%'><iframe class='youtube' src='https://www.youtube.com/embed/" + regexJson[1] + "?autoplay=" + AUTOPLAY + "' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allow='autoplay; encrypted-media' allowfullscreen></iframe></div>";
 					break;
 				case "sketchfab":
 					target.innerHTML = "<div style='position:relative;padding-bottom:56.25%'><iframe class='sketchfab' src='https://sketchfab.com/models/" + regexJson[1] + "/embed?autostart=" + AUTOPLAY + "' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen></iframe></div>";

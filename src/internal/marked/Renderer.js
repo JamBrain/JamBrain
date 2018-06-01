@@ -8,12 +8,10 @@ import NavLink 				from 'com/nav-link/link';
 import SmartLink 			from 'com/autoembed/smartlink';
 import LocalLink			from 'com/autoembed/locallink';
 
-import AutoEmbed 			from 'com/autoembed/autoembed';
 import SmartDomains			from 'com/autoembed/smartdomains';
 
 import BlockSpoiler 		from 'com/block-spoiler/spoiler';
 import UIEmbedOverlay 		from "com/ui/embed/overlay/overlay";
-import UIEmbedFrame 		from "com/ui/embed/frame/frame";
 
 export default class Renderer {
 	constructor( options ) {
@@ -291,7 +289,6 @@ export default class Renderer {
 				return <result.info.component link={result} title={title} text={(hasText) ? text : href} />;
 			}
 
-			//return <AutoEmbed link={result} title={title} text={(hasText) ? text : href} />;
 		}
 		else if ( result.type == "relative" ) {
 			return <LocalLink href={href} text={(hasText) ? text : href} title={title} target={"_blank"}/>;
