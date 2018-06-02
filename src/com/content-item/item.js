@@ -370,6 +370,19 @@ export default class ContentItem extends Component {
 		props = Object.assign({}, props);			// Copy it because we're going to change it
 		let {node, user, path, extra, featured} = props;
 		let {parent, allowCompo, allowJam, allowUnfinished} = state;
+		let shouldCheckRules = true;
+		if (node_IsPublished(node)) {
+			// Since we don't store answers to rules they would be
+			// annoying when editing
+			shouldCheckRules = false;
+			allowCompo = true;
+			allowJam = true;
+			allowUnfinished = true;
+
+			// Could possibly disable allowCompo if not already
+			// marked as compo?
+			// allowCompo = false;
+		}
 		const tooManyAuthorsForCompo = (node_CountAuthors(node) != 1);
 		allowCompo = allowCompo && !tooManyAuthorsForCompo;
 
@@ -394,10 +407,12 @@ export default class ContentItem extends Component {
 			if ( node.subsubtype == 'jam' ) {
 				props.by = "JAM "+props.by;
 				Category = '/jam';
+				props.nopublish = !allowJam;
 			}
 			else if ( node.subsubtype == 'compo' ) {
 				props.by = "COMPO "+props.by;
 				Category = '/compo';
+				props.nopublish = !allowCompo;
 			}
 			else if ( node.subsubtype == 'craft' ) {
 				props.by = "CRAFT";
@@ -411,6 +426,7 @@ export default class ContentItem extends Component {
 				props.headerClass = null;
 				props.by = "UNFINISHED "+props.by;
 				Category = '/unfinished';
+				props.nopublish = !allowUnfinished;
 			}
 			else {
 				props.nopublish = true;
@@ -422,17 +438,19 @@ export default class ContentItem extends Component {
 		let ShowEventPicker = null;
 		let ShowRulesCheck = null;
 		if ( extra && extra.length && (extra[0] == 'edit') && node_CanPublish(parent) ) {
-			ShowRulesCheck = <ContentItemRulesCheck
-				onAllowChange={this.handleAllowSubmission}
-				answers={state.rulesAnswers}
-			/>;
+			if (shouldCheckRules) {
+				ShowRulesCheck = <ContentItemRulesCheck
+					onAllowChange={this.handleAllowSubmission}
+					answers={state.rulesAnswers}
+				/>;
+			}
 			ShowEventPicker = (
 				<ContentCommonNav>
 					<div class="-label">Event</div>
 					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' && allowJam ? "-selected" : ""} disabled={!allowJam}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
 					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' && allowCompo ? "-selected" : ""} disabled={!allowCompo}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
 					<ContentCommonNavButton onclick={this.onSetUnfinished} class={Category == '/unfinished' && allowUnfinished ? "-selected" : ""} disabled={!allowUnfinished}><SVGIcon>trash</SVGIcon><div>Unfinished</div></ContentCommonNavButton>
-					{tooManyAuthorsForCompo && <div class='-warning'>COMPO option disabled because: Too many authors.</div>}
+					{tooManyAuthorsForCompo && <div class="-warning">COMPO option disabled because: Too many authors.</div>}
 					<div class="-footer">
 						<strong>NOTE</strong>: You <strong>MUST</strong> click this before you will be able to Publish.<br />
 						Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know what to pick, pick the <strong>Jam</strong>.
