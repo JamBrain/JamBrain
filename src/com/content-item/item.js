@@ -422,17 +422,20 @@ export default class ContentItem extends Component {
 		let ShowEventPicker = null;
 		let ShowRulesCheck = null;
 		if ( extra && extra.length && (extra[0] == 'edit') && node_CanPublish(parent) ) {
-			ShowRulesCheck = <ContentItemRulesCheck onAllowChange={this.handleAllowSubmission} />;
+			ShowRulesCheck = <ContentItemRulesCheck
+				onAllowChange={this.handleAllowSubmission}
+				answers={state.rulesAnswers}
+			/>;
 			ShowEventPicker = (
 				<ContentCommonNav>
 					<div class="-label">Event</div>
 					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' && allowJam ? "-selected" : ""} disabled={!allowJam}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
 					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' && allowCompo ? "-selected" : ""} disabled={!allowCompo}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
 					<ContentCommonNavButton onclick={this.onSetUnfinished} class={Category == '/unfinished' && allowUnfinished ? "-selected" : ""} disabled={!allowUnfinished}><SVGIcon>trash</SVGIcon><div>Unfinished</div></ContentCommonNavButton>
+					{tooManyAuthorsForCompo && <div class='-warning'>COMPO option disabled because: Too many authors.</div>}
 					<div class="-footer">
 						<strong>NOTE</strong>: You <strong>MUST</strong> click this before you will be able to Publish.<br />
 						Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know what to pick, pick the <strong>Jam</strong>.
-						{tooManyAuthorsForCompo && <div><strong>COMPO</strong> option disabled because: Too many authors.</div>}
 					</div>
 				</ContentCommonNav>
 			);
