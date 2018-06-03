@@ -277,7 +277,7 @@ export default class ContentCommentsComment extends Component {
 			//	ShowReply = <div class="-button -reply" onclick={this.onReply}><SVGIcon>reply</SVGIcon><div>Reply</div></div>;
 
 			let ShowEdit = null;
-			if ( user && (comment.author === user.id) && !state.editing )
+			if ( user && (comment.author > 0) && (comment.author === user.id) && !state.editing )
 				ShowEdit = <div class="-button -edit" onclick={this.onEdit}><SVGIcon>edit</SVGIcon></div>;
 
 			let ShowLove = null;
