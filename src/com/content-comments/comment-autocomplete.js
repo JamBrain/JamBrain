@@ -271,9 +271,9 @@ export class AutocompleteAtNames extends Autocompletions {
 		if ( authors ) {
 			for ( let author in authors ) {
 				const authorData = authors[author];
-				const matches = matcher.exec(authorData.name);
+				const matches = matcher.exec(authorData.slug);
 				if ( (hint.length == 0) || matches ) {
-					const matchStart = matches ? (authorData.name.indexOf(matches[0]) + 1) : 0;
+					const matchStart = matches ? (authorData.slug.indexOf(matches[0]) + 1) : 0;
 					const matchEnd = matches ? (matchStart + matches[0].length) : 0;
 					let score = (matchStart == 0) ? 0.5 : 1;
 					score = Math.pow(hint.length / authorData.name.length, score);
