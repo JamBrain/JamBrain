@@ -694,7 +694,7 @@ export default class ContentItem extends Component {
 						Lines.push({
 							'key': BaseKey,
 							'name': parent.meta[BaseKey],
-							'value': (node.meta ? !(node.meta[BaseKey+'-out']|0) : false)
+							'value': (node.meta ? node.meta[BaseKey+'-out'] : false)
 						});
 					}
 				}
@@ -704,7 +704,7 @@ export default class ContentItem extends Component {
 
 			for ( let idx = 0; idx < Lines.length; idx++ ) {
 				let Line = Lines[idx];
-				OptLines.push(<UICheckbox onclick={this.onOptOut.bind(this, Line.key, Line.value)} value={Line.value}>Do not rate me in <strong>{Line.name}</strong></UICheckbox>);
+				OptLines.push(<UICheckbox onclick={this.onOptOut.bind(this, Line.key, !Line.value)} value={Line.value}>Do not rate me in <strong>{Line.name}</strong></UICheckbox>);
 			}
 
 			ShowOptOut = (
