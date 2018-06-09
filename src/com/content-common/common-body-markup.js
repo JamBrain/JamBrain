@@ -41,9 +41,22 @@ export default class ContentCommonBodyMarkup extends Component {
       return (
         <div class={Class}>
           <div class="-label">{Label}</div>
-          <InputTextArea user={props.user} value={Text} onmodify={props.onmodify} placeholder={Placeholder} ref={(input) => {
-            this.textarea = input;
-          }} maxlength={Limit}/>
+          <InputTextArea
+            user={props.user}
+            value={Text}
+            onmodify={props.onmodify}
+						onkeydown={props.onkeydown}
+						onkeyup={props.onkeyup}
+						onblur={props.onblur}
+						onfocus={props.onfocus}
+						oncaret={props.oncaret}
+            placeholder={Placeholder}
+            ref={(input) => {this.textarea = input;}}
+            maxlength={Limit}
+						replaceText={props.replaceText}
+						replaceTextEvent={props.replaceTextEvent}
+						cursorPos={props.cursorPos}
+          />
         </div>
       );
 
