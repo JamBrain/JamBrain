@@ -6,6 +6,7 @@ import NavLink 							from 'com/nav-link/link';
 import ButtonLink 						from 'com/button-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 import IMG2 							from 'com/img2/img2';
+import UICheckbox from 'com/ui/checkbox/checkbox';
 
 import ContentCommentsMarkup			from 'comments-markup';
 import {AutocompleteAtNames, AutocompleteEmojis}			from 'comment-autocomplete';
@@ -42,8 +43,8 @@ export default class ContentCommentsComment extends Component {
 
 		this.onSave = this.onSave.bind(this);
 		this.onCancel = this.onCancel.bind(this);
+		this.onToggleAnon = this.onToggleAnon.bind(this);
 		this.onPublish = this.onPublish.bind(this);
-		this.onPublishAnon = this.onPublishAnon.bind(this);
 		this.onLove = this.onLove.bind(this);
 		this.onReply = this.onReply.bind(this);
 		this.onSubscribe = this.onSubscribe.bind(this);
@@ -141,20 +142,22 @@ export default class ContentCommentsComment extends Component {
 		});
 	}
 
-	onPublishAnon( e ) {
-		if ( this.canSave() ) {
-			if ( this.props.onpublish ) {
-				this.props.onpublish(e, true);
-			}
-		}
+	onToggleAnon() {
+		this.setState({"publishAnon": !this.state.publishAnon});
 	}
 
 	onPublish( e ) {
 		if ( this.canSave() ) {
-			if ( this.props.onpublish ) {
-				this.props.onpublish(e);
+			if ( this.state.publishAnon ) {
+				if ( this.props.onpublish ) {
+					this.props.onpublish(e, true);
+				}
+			} else {
+				if ( this.props.onpublish ) {
+					this.props.onpublish(e);
 
-				//this.setState({'modified': false, 'editing': true, 'preview': false});
+					//this.setState({'modified': false, 'editing': true, 'preview': false});
+				}
 			}
 		}
 	}
@@ -325,16 +328,11 @@ export default class ContentCommentsComment extends Component {
 
 				var ShowRight = [];
 
-				if ( props.cansubscribe ) {
-					ShowRight.push(<div class={"-button -subscribe"} onclick={this.onSubscribe}><SVGIcon>bubble</SVGIcon><div>Follow Thread</div></div>);
-				}
-				else {
-					ShowRight.push(<div class={"-button -unsubscribe"} onclick={this.onSubscribe}><SVGIcon>bubble-empty</SVGIcon><div>Unfollow Thread</div></div>);
-				}
+				ShowRight.push(<UICheckbox onclick={this.onSubscribe} value={props.cansubscribe} tooltip="You always receive notifications for mentions">Recieve notifications</UICheckbox>);
 
 				if ( props.publish ) {
 					if ( props.allowAnonymous ) {
-						ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublishAnon}><SVGIcon>publish</SVGIcon><div>Publish Anonymously</div></div>);
+						ShowRight.push(<UICheckbox onclick={this.onToggleAnon} value={state.publishAnon} tooltip="NOTE: Your identity is always available to the administrators.">Anonymous</UICheckbox>);
 					}
 					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublish}><SVGIcon>publish</SVGIcon><div>Publish</div></div>);
 				}
