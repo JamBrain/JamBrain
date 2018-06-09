@@ -8,7 +8,7 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import IMG2 							from 'com/img2/img2';
 
 import ContentCommentsMarkup			from 'comments-markup';
-import {AutocompleteAtNames, AutocompleteEmojis}			from 'comment-autocomplete';
+import {AutocompleteAtNames, AutocompleteEmojis}			from 'com/content-common/common-autocomplete';
 import $Comment							from 'shrub/js/comment/comment';
 import $CommentLove						from 'shrub/js/comment/comment_love';
 

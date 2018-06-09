@@ -18,7 +18,7 @@ import ContentCommonDraft				from 'com/content-common/common-draft';
 import ContentCommonEdit				from 'com/content-common/common-edit';
 
 import $Node							from '../../shrub/js/node/node';
-import {AutocompleteAtNames, AutocompleteEmojis}			from '../content-comments/comment-autocomplete';
+import {AutocompleteAtNames, AutocompleteEmojis}			from 'com/content-common/common-autocomplete';
 
 
 export default class ContentSimple extends Component {
