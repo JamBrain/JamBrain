@@ -15,13 +15,13 @@ export default class ContentCommonNavButton extends Component {
 
 		if ( props.href ) {
 			return (
-				<ButtonLink disabled={props.disabled} class={Class} href={props.href} onclick={props.onclick}>
+				<ButtonLink class={Class} href={props.href} onclick={props.onclick}>
 					{props.children}
 				</ButtonLink>
 			);
 		}
 		return (
-			<ButtonBase disabled={props.disabled} class={Class} onclick={props.onclick}>
+			<ButtonBase class={Class} onclick={props.onclick}>
 				{props.children}
 			</ButtonBase>
 		);
