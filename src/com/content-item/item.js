@@ -5,6 +5,7 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import IMG2 							from 'com/img2/img2';
 
 import ButtonBase						from 'com/button-base/base';
+import UIButton from 'com/ui/button/button';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonBodyField			from 'com/content-common/common-body-field';
@@ -360,7 +361,7 @@ export default class ContentItem extends Component {
 
 		if ( editing && this.state.linksShown < MAX_LINKS ) {
 			LinkMeta.push(
-				<button onclick={e => this.setState({'linksShown': ++this.state.linksShown})}>+</button>
+				<UIButton onclick={e => this.setState({'linksShown': ++this.state.linksShown})} class="content-common-nav-button"><SVGIcon>plus</SVGIcon><div>More links</div></UIButton>
 			);
 		}
 
