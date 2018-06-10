@@ -13,6 +13,8 @@ import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
+import ContentItemRulesCheck from 'com/content-item/item-rulescheck';
+
 import InputStar						from 'com/input-star/star';
 
 import ContentSimple					from 'com/content-simple/simple';
@@ -55,6 +57,7 @@ export default class ContentItem extends Component {
 		this.onSetCompo = this.onSetCompo.bind(this);
 		this.onSetUnfinished = this.onSetUnfinished.bind(this);
 		this.onAnonymousComments = this.onAnonymousComments.bind(this);
+		this.handleAllowSubmission = this.handleAllowSubmission.bind(this);
 	}
 
 	componentDidMount() {
@@ -300,6 +303,10 @@ export default class ContentItem extends Component {
 		return $Node.AddMeta(node.id, Data);
 	}
 
+	handleAllowSubmission(allowed) {
+		this.setState(allowed);
+	}
+
 	// Generates JSX for the links, depending on whether the page is editing or viewing
 	makeLinks( editing ) {
 		let LinkMeta = [];
@@ -429,6 +436,7 @@ export default class ContentItem extends Component {
 		}
 
 		let ShowEventPicker = null;
+		let ShowRulesCheck = null;
 		if ( extra && extra.length && (extra[0] == 'edit') && node_CanPublish(parent) ) {
 			if (shouldCheckRules) {
 				ShowRulesCheck = <ContentItemRulesCheck
@@ -824,6 +832,7 @@ export default class ContentItem extends Component {
 
 		props.editonly = (
 			<div>
+				{ShowRulesCheck}
 				{ShowEventPicker}
 				{ShowOptOut}
 				{ShowImages}
