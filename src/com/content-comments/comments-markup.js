@@ -6,6 +6,9 @@ import SVGIcon							from 'com/svg-icon/icon';
 import InputTextArea					from 'com/input-textarea/input-textarea';
 
 import marked 							from 'internal/marked/marked';
+import $Node							from 'shrub/js/node/node';
+
+const MAX_LENGTH = 4096;
 
 export default class ContentCommentsMarkup extends Component {
 	constructor( props ) {
@@ -16,7 +19,40 @@ export default class ContentCommentsMarkup extends Component {
 		return shallowDiff(this.props, nextProps);
 	}
 
-	render( props ) {
+	isCommentingOnOwnPost() {
+		const {node, user} = this.props;
+		return node && user && ((node.author == user.id) || (node.meta && node.meta.authors && node.meta.authors.indexOf(user.id) > -1));
+	}
+
+	postIsAnItem() {
+		let {node} = this.props;
+		return node.type == 'item';
+	}
+
+	checkSelfLinking() {
+		if (this.postIsAnItem() && !this.isCommentingOnOwnPost()) {
+			const txt = this.props.children.join('');
+			const {user} = this.props;
+			const authoring = user.private.refs.author;
+			if (authoring && authoring.length > 0) {
+				return $Node.Get(authoring)
+					.then(data=> {
+						let foundBad = false;
+						data.node.forEach(node => {
+							if (!foundBad && txt.indexOf(node.path) != -1) {
+								const err = "Posting links to your game is not needed and bad community behaviour. To get ratings and quality feedback you should spend time playing other peoples' games. Give fair grades and valuable feedback.";
+								this.setState({'warnSelfLinking': err});
+								foundBad = true;
+							}
+						});
+						if (!foundBad) this.setState({'warnSelfLinking': null});
+					});
+			}
+		}
+		return Promise.resolve();
+	}
+
+	render( props, state ) {
 		var Class = [
 //			"content-common-body",
 //			"-markup"
@@ -26,9 +62,17 @@ export default class ContentCommentsMarkup extends Component {
 
 		if ( props.editing ) {
 			//var Height = this.textarea ? this.textarea.scrollHeight : 0;
+			let ShowHelpText = [];
+			const {warnSelfLinking} = state;
 
-			var Limit = props.limit ? props.limit : 4096;
+			const Limit = props.limit ? props.limit : MAX_LENGTH;
 			//var Chars = props.children[0] ? props.children[0].length : 0;
+			if (Limit === Text.length) {
+				ShowHelpText.push(<div key="limit">You have reached the maximum comment length. If you want to write more, consider making it two comments.</div>);
+			}
+			if (warnSelfLinking) {
+				ShowHelpText.push(<div key="self-link">{warnSelfLinking}</div>);
+			}
 
 			return (
 				<div class={cN(Class, props.class)}>
@@ -49,6 +93,7 @@ export default class ContentCommentsMarkup extends Component {
 						ref={(input) => { this.textarea = input; }}
 						maxlength={Limit}
 					/>
+					{(ShowHelpText.length > 0) && <div class='-helparea'>{ShowHelpText}</div>}
 				</div>
 			);
 		}
@@ -76,5 +121,9 @@ export default class ContentCommentsMarkup extends Component {
 
 			return <div class={cN(Class, props.class)}>{markdown}</div>;
 		}
+	}
+
+	componentDidUpdate() {
+			this.checkSelfLinking();
 	}
 }

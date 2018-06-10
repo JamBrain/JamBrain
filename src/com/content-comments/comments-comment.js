@@ -225,7 +225,7 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	render( props, state ) {
-		let {user, comment, author, error} = props;
+		let {user, comment, author, error, node} = props;
 
 		if ( author || (comment.author == 0) ) {
 			let Name = "Anonymous";
@@ -396,6 +396,7 @@ export default class ContentCommentsComment extends Component {
 							<div class="-title">{ShowTitle}</div>
 							<ContentCommentsMarkup
 								user={user}
+								node={node}
 								editing={state.editing && !state.preview}
 								onmodify={this.onModify}
 								onkeydown={this.onKeyDown}

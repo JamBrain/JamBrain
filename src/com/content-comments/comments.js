@@ -176,16 +176,15 @@ export default class ContentComments extends Component {
 	}
 
 	renderComments( tree, indent = 0 ) {
-		var user = this.props.user;
-		var authors = this.state.authors;
+		const {user, node} = this.props;
+		const {authors, lovedComments} = this.state;
 
-		var lovedComments = this.state.lovedComments;
-		var actualLove = [];
+		const actualLove = [];
 		for ( var item in lovedComments ) {
 			actualLove.push(lovedComments[item]['note']);
 		}
 
-		var ret = [];
+		const ret = [];
 
 		for ( var item in tree ) {
 			var comment = tree[item].node;
@@ -193,10 +192,10 @@ export default class ContentComments extends Component {
 			var author = authors[comment.author];
 
 			if ( tree[item].child ) {
-				ret.push(<ContentCommentsComment user={user} comment={comment} author={author} indent={indent}><div class="-indent">{this.renderComments(tree[item].child, indent+1)}</div></ContentCommentsComment>);
+				ret.push(<ContentCommentsComment user={user} node={node} comment={comment} author={author} indent={indent}><div class="-indent">{this.renderComments(tree[item].child, indent+1)}</div></ContentCommentsComment>);
 			}
 			else {
-				ret.push(<ContentCommentsComment user={user} comment={comment} author={author} indent={indent}/>);
+				ret.push(<ContentCommentsComment user={user} node={node} comment={comment} author={author} indent={indent}/>);
 			}
 		}
 
@@ -204,17 +203,15 @@ export default class ContentComments extends Component {
 	}
 
 	renderPostNew() {
-		const user = this.props.user;
-		const authors = this.state.authors;
-		const comment = this.state.newcomment;
-		const error = this.state.error;
+		const {user, node} = this.props;
+		const {authors, error, "newcomment": comment} = this.state;
 		const author = authors[comment.author];
 		const allowAnonymous = parseInt(this.props.node.meta['allow-anonymous-comments']);
 
 		// We can subscribe if we haven't subscribed and we don't have a comment in this thread, and we're not an author. Otherwise we can unsubscribe.
 		let canSubscribe = (this.state.subscribed === null) ? !( this.state.hascomment || this.state.isauthor ) : !this.state.subscribed;
 
-		return <div class="-new-comment"><ContentCommentsComment user={user} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove allowAnonymous={allowAnonymous} error={error} cansubscribe={canSubscribe} onsubscribe={this.onSubscribe} authors={authors}/></div>;
+		return <div class="-new-comment"><ContentCommentsComment user={user} node={node} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove allowAnonymous={allowAnonymous} error={error} cansubscribe={canSubscribe} onsubscribe={this.onSubscribe} authors={authors}/></div>;
 	}
 
 	onPublish( e, publishAnon ) {
