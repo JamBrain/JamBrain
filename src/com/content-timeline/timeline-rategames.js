@@ -37,13 +37,17 @@ export default class TimelineRateGames extends Component {
     if (props.featured != nextprops.featured) this.getGames(nextprops);
   }
 
+  event_canRate(featured) {
+    if (!featured || featured.type !== 'event') return false;
+    if (!featured.published || !featured.meta) return false;
+    return featured.meta['can-grade'] == "1";
+  }
 
   getGames(props) {
     console.log('getGames', props);
-    const {featured} = props;
-    if (!featured) return;
+    if (!this.event_canRate(props.featured)) return;
 
-    const {id} = featured;
+    const {id} = props.featured;
     const methods = ['parent', 'superparent'];
     const types = ['item'];
     const subtypes = ['game'];
@@ -87,7 +91,7 @@ export default class TimelineRateGames extends Component {
   }
 
   render(props, {expanded, feed, pick, error, loading}) {
-    if (!props.featured) return null;
+    if (!this.event_canRate(props.featured)) return null;
     const HeaderClass = cN('content-common-header');
     const MainClass = cN('content-base', 'content-common', 'rate-games', !expanded && 'minimized');
 
