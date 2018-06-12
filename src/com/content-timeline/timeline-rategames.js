@@ -16,15 +16,30 @@ export const randomPick = (maxExclusive, n) => {
   return ret;
 };
 
+const N_RESHUFFLE_BEFORE_RELOAD = 6;
+const N_SHOW_MAX = 3;
+
 export default class TimelineRateGames extends Component {
   constructor(props) {
     super(props);
     this.state = {"expanded": true, "loading": true};
     this.handleMinMax = this.handleMinMax.bind(this);
+    this.handleRefresh = this.handleRefresh.bind(this);
   }
 
   handleMinMax() {
     this.setState({"expanded": !this.state.expanded});
+  }
+
+  handleRefresh() {
+    const {loading, reshuffles, feed} = this.state;
+    if (loading) return;
+    if (reshuffles < N_RESHUFFLE_BEFORE_RELOAD && feed) {
+      const l = feed.length;
+      this.setState({'reshuffles': reshuffles + 1, 'pick': randomPick(l, Math.min(l, N_SHOW_MAX))});
+    } else {
+      this.getGames(this.props);
+    }
   }
 
   componentDidMount() {
@@ -33,25 +48,26 @@ export default class TimelineRateGames extends Component {
 
   componentWillReceiveProps(nextprops) {
     const {props} = this;
-    //console.log('receiveProps', props, nextprops);
     if (props.featured != nextprops.featured) this.getGames(nextprops);
   }
 
   event_canRate(featured) {
     if (!featured || featured.type !== 'event') return false;
     if (!featured.published || !featured.meta) return false;
-    return featured.meta['can-grade'] == "1";
+
+    // Comment out below line and just return true if you want to always show the box
+    // even if users cant grade or event is finished. Instead just return true here.
+    return featured.meta['can-grade'] === "1" && featured.meta['event-finished'] !== '1';
   }
 
   getGames(props) {
-    console.log('getGames', props);
     if (!this.event_canRate(props.featured)) return;
 
     const {id} = props.featured;
-    const methods = ['parent', 'superparent'];
+    const methods = ['smart', 'parent'];
     const types = ['item'];
     const subtypes = ['game'];
-    const subsubtypes = 'compo+jam+craft+release';
+    const subsubtypes = 'compo+jam';
     const tags = null;
     const more = null;
     const limit = 30;
@@ -68,13 +84,12 @@ export default class TimelineRateGames extends Component {
             'reshuffles': 0,
           });
         }
-        else
-        {
+        else {
           $Node.Get(r.feed.map(elem => elem.id))
             .then(r => {
               this.setState({
                 'feed': r.node,
-                'pick': randomPick(l, 3),
+                'pick': randomPick(l, Math.min(l, N_SHOW_MAX)),
                 'loaded': new Date(),
                 'loading': false,
                 'reshuffles': 0,
@@ -106,22 +121,19 @@ export default class TimelineRateGames extends Component {
       Games = <ContentCommonBody>Sorry, there are no published games yet</ContentCommonBody>;
     }
     else {
-      //Continue here and don't forget all new imports
-      Games = pick.map(idx => (
-        <ContentItemBox
-            node={r.node}
-            user={props.user}
-            path={props.path}
-            noevent={props.noevent ? props.noevent : null}
-        />
-      ));
+      Games = <div class="games-pick">{pick.map(idx => <ContentItemBox node={feed[idx]} noevent />)}</div>;
     }
 
     const FooterLeft = [];
     const FooterRight = [];
     FooterLeft.push(<FooterButtonMinMax onclick={this.handleMinMax} />);
     FooterRight.push((
-      <UIButton class={cN("content-common-footer-button", '-all-games')} href={props.featured && `${props.featured.slug}/games`}>
+      <UIButton class={cN("content-common-footer-button", '-refresh')} title='Refresh' onclick={this.handleRefresh}>
+          <SVGIcon>reply</SVGIcon><div> Refresh</div>
+      </UIButton>
+    ));
+    FooterRight.push((
+      <UIButton class={cN("content-common-footer-button", '-all-games')} href={props.featured && `/events/${props.featured.slug}/games`}>
           <SVGIcon>forward</SVGIcon><div> All Games</div>
       </UIButton>
     ));
