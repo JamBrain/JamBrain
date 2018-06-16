@@ -122,8 +122,8 @@ export default class ItemTeambuilding extends Component {
       if (includeAdding && !Adder) {
         ShowTeamBuilding.push((
           <div class="-footer">
-            To be able to add people, they needs to be friends with you.
-            And all your friends are added to the game already.
+            To be able to add people, they need to be friends with you.
+            All your friends are already added to this game. Go team!
           </div>
         ));
       }
