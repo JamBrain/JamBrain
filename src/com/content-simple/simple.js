@@ -16,6 +16,7 @@ import ContentCommonBodyMarkup			from 'com/content-common/common-body-markup';
 import ContentCommonDraft				from 'com/content-common/common-draft';
 
 import ContentCommonEdit				from 'com/content-common/common-edit';
+import ItemTeambuilding from 'com/content-item/item-teambuilding';
 
 import $Node							from '../../shrub/js/node/node';
 
@@ -199,7 +200,7 @@ export default class ContentSimple extends Component {
 
 	render( props, state ) {
 		props = Object.assign({}, props);	// Shallow copy we can change props
-		let {node, user, path, extra} = props;
+		let {node, user, path, extra, featured} = props;
 		let {author, authors} = state;
 
 
@@ -243,6 +244,9 @@ export default class ContentSimple extends Component {
 			else if ( props.authors && props.by ) {
 				if ( !state.editing ) {
 					ShowByLine = <ContentCommonBodyBy node={node} authors={authors} by={typeof props.by == 'string' ? props.by : null} />;
+				}
+				else if (node.type == 'item') {
+					ShowByLine = <ItemTeambuilding node={node} authors={authors} featured={featured} user={user} />;
 				}
 				else {
 					ShowByLine = (

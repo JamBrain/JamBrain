@@ -1,0 +1,33 @@
+.team-building {
+  & > .-body {
+    & > .team-list {
+      list-style-type: none;
+      display: inline-block;
+      min-width: 20em;
+      max-width: 90%;
+
+      & > .team-list-member {
+        margin-bottom: 0.5em;
+        border-bottom: solid 1px;
+        padding-bottom: 0.2em;
+
+        & > * {
+          display: inline-block;
+        }
+
+        & > .team-member-remove {
+          float: right;
+          margin-left: 5em;
+
+          & > .svg-icon {
+            margin-bottom: 0.1em;
+          }
+        }
+
+        & > .svg-icon {
+          margin-right: 1em;
+        }
+      }
+    }
+  }
+}
