@@ -1,7 +1,6 @@
 import {h, Component} from 'preact/preact';
 import ContentCommonBody from 'com/content-common/common-body';
 import ContentLoading	from 'com/content-loading/loading';
-import ContentError	from 'com/content-error/error';
 import UIIcon	from 'com/ui/icon/icon';
 import UIButton	from 'com/ui/button/button';
 import UIDropdown	from 'com/ui/dropdown/dropdown';
@@ -16,26 +15,37 @@ export default class ItemTeambuilding extends Component {
     this.addToTeam = this.addToTeam.bind(this);
   }
 
+  componentDidMount() {
+      this.loadFriends();
+  }
+
   removeFromTeam(userId) {
     const {featured, node, onChange} = this.props;
     this.setState({'processing': userId});
 			$Node.RemoveLink(node.id, userId, {'author': null})
 			.then(() => {
-        this.setState({'processing': false});
-        onChange && onChange(userId, -1);
+        this.setState({
+          'processing': false,
+          'error': null,
+        });
+        onChange(userId, -1);
 			})
 			.catch( err => {
-				this.setState({'error': err, 'processing': false});
+				this.setState({
+          'error': `Requesting removing user ${userId} caused ${err}`,
+          'processing': false,
+        });
 			});
   }
 
   addToTeam(userId) {
     const {featured, node, onChange} = this.props;
+    console.log(userId);
     this.setState({'processing': userId});
 		$Node.AddLink(node.id, userId, {'author': null})
 			.then(() => {
         this.setState({'processing': false});
-        this.props.onChange && this.props.onChange(userId, 1);
+        onChange(userId, 1);
 			})
 			.catch( err => {
 				this.setState({'error': err, 'processing': false});
@@ -45,14 +55,14 @@ export default class ItemTeambuilding extends Component {
   loadFriends() {
     $Node.GetMy()
       .then(r => {
-        // Filter out friends
+
         $Node.Get(r.meta.star.filter(id => r.refs.star.indexOf(id) > -1))
           .then(r => {
-            this.setState({'friends': Object.assign({}, this.state.friends, r.node)});
+            this.setState({'friends': r.node});
           })
-          .catch(e => this.setState({'error': e}));
+          .catch(e => this.setState({'error': `Error fetching friends ${e}`}));
       })
-      .catch(e => this.setState({'error': e}));
+      .catch(e => this.setState({'error': `Error getting friends-list ${e}`}));
   }
 
   renderUser(user, me, mainAuthor) {
@@ -60,7 +70,7 @@ export default class ItemTeambuilding extends Component {
     const isMain = user.id === mainAuthor;
     const canBeRemoved = (isMe && !isMain) || (!isMe && mainAuthor === me);
     return (
-      <li class='team-list-member'>
+      <li class="team-list-member">
         <SVGIcon>user</SVGIcon>
         <strong>{user.name}</strong>
         {isMe && ' (you)'}
@@ -70,21 +80,31 @@ export default class ItemTeambuilding extends Component {
     );
   }
 
-  renderAdder(authors) {
-    const {friends} = this.state;
-    const authorIds = authors.map(author => author.id);
-    const Addable = friends
-      .filter(friend => authorsIds.indexOf(friend.id) === -1)
-      .map(friend => (
-        <UIButton onclick={() => this.addToTeam(friend.id)}>
+  renderAddUser(friend) {
+    console.log('render', friend.id);
+    return (
+        <UIButton onclick={() => this.addToTeam(friend.id)} key={friend.id}>
           <UIIcon>user</UIIcon><span>{friend.name}</span>
         </UIButton>
-      ));
+    );
+  }
+
+  renderAdder(authors) {
+    const {friends} = this.state;
+    if (!friends) return;
+    const authorIds = authors.map(author => author.id);
+    const Addable = friends
+      .filter(friend => authorIds.indexOf(friend.id) === -1)
+      .sort((a, b) => (a > b) ? -1 : 1)
+      .map(friend => this.renderAddUser(friend));
     if (Addable.length > 0) {
       return (
-        <UIDropdown>
-          {Addable}
-        </UIDropdown>
+        <div class="team-list-add">
+          <UIDropdown>
+            <div class="team-list-add-header">Add to team<SVGIcon>arrow-down</SVGIcon></div>
+            {Addable}
+          </UIDropdown>
+        </div>
       );
     }
   }
@@ -102,7 +122,7 @@ export default class ItemTeambuilding extends Component {
         includeBuilding = false;
       }
       else if (authors.length > 0) {
-        ShowTeamBuilding.push(<div class="-warning">Your {node.subtype} is competing in the compo, but you are more than one author. This is against the rules</div>);
+        ShowTeamBuilding.push(<div class="team-building-warning">Your {node.subtype} is competing in the compo, but you are more than one author. This is against the rules</div>);
         includeAdding = false;
       }
     }
@@ -113,7 +133,7 @@ export default class ItemTeambuilding extends Component {
         .map(author => this.renderUser(author, user.id, node.author));
       const Adder = includeAdding && this.renderAdder(authors);
       ShowTeamBuilding.push((
-        <ul class='team-list'>
+        <ul class="team-list">
           {Team}
           {Adder}
           {processing && <ContentLoading />}
@@ -131,8 +151,12 @@ export default class ItemTeambuilding extends Component {
     return (
 			<ContentCommonBody class="team-building">
 				<div class="-label">Team Building</div>
-        <div class="-body">{ShowTeamBuilding}</div>
-        {error && <ContentError>{error}</ContentError>}
+        <div class="-body">
+          {ShowTeamBuilding}
+          {error &&
+            <div class="team-building-warning">{error}</div>
+          }
+        </div>
 			</ContentCommonBody>
     );
   }

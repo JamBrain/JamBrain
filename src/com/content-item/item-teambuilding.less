@@ -1,3 +1,5 @@
+@import 'defs.less';
+
 .team-building {
   & > .-body {
     & > .team-list {
@@ -28,6 +30,56 @@
           margin-right: 1em;
         }
       }
+
+      & > .team-list-add {
+        margin-top: 1em;
+
+        & > .ui-dropdown {
+          border: 1px solid;
+          padding: 0.25em;
+
+          & .team-list-add-header {
+            & > .svg-icon {
+              float: right;
+              margin-right: 0.5em;
+              margin-top: 0.1em;
+            }
+          }
+
+          & > .-content {
+            margin-top: 0.3em;
+            padding: 0.5em 1.5em;
+        		background: @COL_L;
+        		box-shadow: 0 0 4px rgba(0,0,0,0.35);
+
+            & > .ui-button {
+              margin-bottom: 0.5em;
+
+              & > span {
+                margin-left: 0.75em;
+              }
+
+        			&:hover,
+        			&:focus,
+        			&:active,
+        			&:hover:active {
+        				background: @COL_A;
+
+        				& > * {
+        					color: @COL_W;
+        				}
+        			}
+            }
+          }
+        }
+      }
+    }
+
+    & > .team-building-warning {
+      font-size: 80%;
+      font-weight: bold;
+      color: @COL_A;
+      margin-top: 0.5em;
     }
   }
 }

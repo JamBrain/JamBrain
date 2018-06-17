@@ -63,22 +63,30 @@ export default class ContentSimple extends Component {
 			this.setState({'editing': true});
 		}
 
+		if ( this.props.authors ) {
+			this.getAuthors(newProps.node);
+		}
+
 		if ( this.props.node !== newProps.node ) {
 			if ( this.props.authored ) {
 				this.getAuthor(newProps.node);
 			}
-			if ( this.props.authors ) {
-				this.getAuthors(newProps.node);
-			}
 		}
+	}
+
+	isIdenticalAuthorLists(a, b) {
+		if (!a !== !b) return false;
+		if (!a) return true;
+		if (a.length !== b.length) return false;
+		return a.filter((a, idx) => b.indexOf(a) === idx).length === a.length;
 	}
 
 	getAuthors( node ) {
 		// Clear the Authors
 //		this.setState({ authors: [] });
-
-		if ( node.meta && node.meta['author'] ) {
+		if ( node.meta && node.meta.author && !this.isIdenticalAuthorLists(node.meta.author, this.state.authorIds)) {
 			// Lookup the authors
+			this.setState({'authorIds': node.meta.author.map(e => e)});
 			$Node.Get( node.meta['author'] )
 			.then(r => {
 				if ( r.node && r.node.length ) {
@@ -246,7 +254,7 @@ export default class ContentSimple extends Component {
 					ShowByLine = <ContentCommonBodyBy node={node} authors={authors} by={typeof props.by == 'string' ? props.by : null} />;
 				}
 				else if (node.type == 'item') {
-					ShowByLine = <ItemTeambuilding node={node} authors={authors} featured={featured} user={user} />;
+					ShowByLine = <ItemTeambuilding node={node} authors={authors} featured={featured} user={user} onChange={props.onChangeTeam} />;
 				}
 				else {
 					ShowByLine = (
