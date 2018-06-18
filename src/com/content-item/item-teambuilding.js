@@ -141,6 +141,8 @@ export default class ItemTeambuilding extends Component {
         ShowTeamBuilding.push((
           <div class="-footer">
             To be able to add people, they need to be friends with you.
+            Visit each others user pages and click the
+						<span><SVGIcon baseline small gap>user-plus</SVGIcon><strong>Follow</strong></span> button to become friends.
             All your friends are already added to this game. Go team!
           </div>
         ));
