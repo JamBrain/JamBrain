@@ -40,7 +40,6 @@ export default class ItemTeambuilding extends Component {
 
   addToTeam(userId) {
     const {featured, node, onChange} = this.props;
-    console.log(userId);
     this.setState({'processing': userId});
 		$Node.AddLink(node.id, userId, {'author': null})
 			.then(() => {
@@ -81,10 +80,10 @@ export default class ItemTeambuilding extends Component {
   }
 
   renderAddUser(friend) {
-    console.log('render', friend.id);
+    const friendId = friend.id;
     return (
-        <UIButton onclick={() => this.addToTeam(friend.id)} key={friend.id}>
-          <UIIcon>user</UIIcon><span>{friend.name}</span>
+        <UIButton onclick={() => this.addToTeam(friendId)} key={friend.id} title={`Click to add ${friend.name}`}>
+          <UIIcon>user</UIIcon><span>{friend.name} {friend.id}</span>
         </UIButton>
     );
   }
@@ -93,17 +92,16 @@ export default class ItemTeambuilding extends Component {
     const {friends} = this.state;
     if (!friends) return;
     const authorIds = authors.map(author => author.id);
-    const Addable = friends
+    const Addable = [
+        <div class="team-list-add-header">Add to team<SVGIcon>arrow-down</SVGIcon></div>
+    ].concat(friends
       .filter(friend => authorIds.indexOf(friend.id) === -1)
-      .sort((a, b) => (a > b) ? -1 : 1)
-      .map(friend => this.renderAddUser(friend));
-    if (Addable.length > 0) {
+      .sort((a, b) => (a.name > b.name) ? 1 : -1)
+      .map(friend => this.renderAddUser(friend)));
+    if (Addable.length > 1) {
       return (
         <div class="team-list-add">
-          <UIDropdown>
-            <div class="team-list-add-header">Add to team<SVGIcon>arrow-down</SVGIcon></div>
-            {Addable}
-          </UIDropdown>
+          <UIDropdown>{Addable}</UIDropdown>
         </div>
       );
     }
@@ -129,7 +127,7 @@ export default class ItemTeambuilding extends Component {
 
     if (includeBuilding) {
       const Team = authors
-        .sort((a, b) => (a.id === node.author && -1) || (b.id === node.author && 1) || (a.name > b.name ? -1 : 1))
+        .sort((a, b) => (a.id === node.author && -1) || (b.id === node.author && 1) || (a.name > b.name ? 1 : -1))
         .map(author => this.renderUser(author, user.id, node.author));
       const Adder = includeAdding && this.renderAdder(authors);
       ShowTeamBuilding.push((
