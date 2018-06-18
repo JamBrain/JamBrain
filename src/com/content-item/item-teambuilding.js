@@ -83,7 +83,7 @@ export default class ItemTeambuilding extends Component {
     const friendId = friend.id;
     return (
         <UIButton onclick={() => this.addToTeam(friendId)} key={friend.id} title={`Click to add ${friend.name}`}>
-          <UIIcon>user</UIIcon><span>{friend.name} {friend.id}</span>
+          <UIIcon>user</UIIcon><span>{friend.name}</span>
         </UIButton>
     );
   }
