@@ -40,7 +40,7 @@ export default class ContentCommentsMarkup extends Component {
 						let foundBad = false;
 						data.node.forEach(node => {
 							if (!foundBad && txt.indexOf(node.path) != -1) {
-								const err = "Posting links to your game is not needed and bad community behaviour. To get ratings and quality feedback you should spend time playing other peoples' games. Give fair grades and valuable feedback.";
+								const err = "Asking others to play your game is highly discouraged. To get ratings and feedback, play games and leave feedback. Also, give a like to any good feedback you see. This website rewards good community behavior with improved visibility. If we catch you abusing it, it can punish too.";
 								this.setState({'warnSelfLinking': err});
 								foundBad = true;
 							}
