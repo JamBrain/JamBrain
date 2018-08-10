@@ -30,7 +30,7 @@ const IFrame = (props) => {
 		}
 	}
 
-	return <iframe {...new_props} frameborder="0" scrolling="no" allowfullscreen />;
+	return <iframe {...new_props} frameborder="0" scrolling="no" allowfullscreen allow="autoplay; fullscreen" />;
 //	return <div class="embed-video"><iframe {...new_props} frameborder="0" scrolling="no" allowfullscreen /></div>;
 };
 
