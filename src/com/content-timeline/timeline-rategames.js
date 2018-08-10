@@ -1,11 +1,11 @@
-import {h, Component} from 'preact/preact';
-import SVGIcon from 'com/svg-icon/icon';
-import UIButton from 'com/ui/button/button';
-import FooterButtonMinMax from 'com/content-common/common-footer-button-minmax';
-import ContentItemBox from 'com/content-item/item-box';
-import ContentCommonBody from 'com/content-common/common-body';
-import ContentLoading from 'com/content-loading/loading';
-import $Node from '../../shrub/js/node/node';
+import {h, Component} 					from 'preact/preact';
+import UIIcon							from 'com/ui/icon/icon';
+import UIButton							from 'com/ui/button/button';
+import FooterButtonMinMax 				from 'com/content-common/common-footer-button-minmax';
+import ContentItemBox					from 'com/content-item/item-box';
+import ContentCommonBody				from 'com/content-common/common-body';
+import ContentLoading					from 'com/content-loading/loading';
+import $Node							from 'shrub/js/node/node';
 
 export const randomPick = (maxExclusive, n) => {
   const ret = [];
@@ -17,7 +17,7 @@ export const randomPick = (maxExclusive, n) => {
 };
 
 const N_RESHUFFLE_BEFORE_RELOAD = 6;
-const N_SHOW_MAX = 3;
+const N_SHOW_MAX = 4;
 
 export default class TimelineRateGames extends Component {
   constructor(props) {
@@ -112,7 +112,7 @@ export default class TimelineRateGames extends Component {
 
     let Games;
     if (error) {
-      Games = <div class="-warning"><SVGIcon>bug</SVGIcon><span>An error occurred while loading the games.</span></div>;
+      Games = <div class="-warning"><UIIcon src="bug" /><span>An error occurred while loading the games.</span></div>;
     }
     else if (loading) {
       Games = <ContentLoading />;
@@ -129,18 +129,18 @@ export default class TimelineRateGames extends Component {
     FooterLeft.push(<FooterButtonMinMax onclick={this.handleMinMax} />);
     FooterRight.push((
       <UIButton class={cN("content-common-footer-button", '-refresh')} title='Refresh' onclick={this.handleRefresh}>
-          <SVGIcon>reply</SVGIcon><div> Refresh</div>
+          <UIIcon src="refresh" /><div class="-count">Refresh</div>
       </UIButton>
     ));
     FooterRight.push((
       <UIButton class={cN("content-common-footer-button", '-all-games')} href={props.featured && `/events/${props.featured.slug}/games`}>
-          <SVGIcon>forward</SVGIcon><div> All Games</div>
+          <UIIcon src="gamepad" /><div class="-count">All Games</div>
       </UIButton>
     ));
 
     return (
       <div class={MainClass}>
-        <div class={HeaderClass}><SVGIcon>gamepad</SVGIcon> <span>RATE GAMES</span></div>
+        <div class={HeaderClass}><UIIcon src="gamepad" /> <span>PLAY AND RATE GAMES</span></div>
                 <div class="-bodies">
           <div class="-inline-if-not-minimized">
             {Games}
