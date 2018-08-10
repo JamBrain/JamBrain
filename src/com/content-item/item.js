@@ -15,6 +15,8 @@ import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
 import InputStar						from 'com/input-star/star';
 
+import UICheckbox from 'com/ui/checkbox/checkbox';
+
 import ContentSimple					from 'com/content-simple/simple';
 
 import $Node							from '../../shrub/js/node/node';
@@ -692,7 +694,7 @@ export default class ContentItem extends Component {
 						Lines.push({
 							'key': BaseKey,
 							'name': parent.meta[BaseKey],
-							'value': (node.meta ? !(node.meta[BaseKey+'-out']|0) : false)
+							'value': (node.meta ? node.meta[BaseKey+'-out'] : false)
 						});
 					}
 				}
@@ -702,14 +704,7 @@ export default class ContentItem extends Component {
 
 			for ( let idx = 0; idx < Lines.length; idx++ ) {
 				let Line = Lines[idx];
-
-				let Icon = null;
-				if ( Line.value )
-					Icon = <SVGIcon small baseline>checkbox-unchecked</SVGIcon>;
-				else
-					Icon = <SVGIcon small baseline>checkbox-checked</SVGIcon>;
-
-				OptLines.push(<ButtonBase onclick={this.onOptOut.bind(this, Line.key, Line.value)}>{Icon} Do not rate me in <strong>{Line.name}</strong></ButtonBase>);
+				OptLines.push(<UICheckbox onclick={this.onOptOut.bind(this, Line.key, !Line.value)} value={Line.value}>Do not rate me in <strong>{Line.name}</strong></UICheckbox>);
 			}
 
 			ShowOptOut = (
@@ -759,14 +754,11 @@ export default class ContentItem extends Component {
 		if ( true ) {
 			ShowAnonymousComments = (
 				<ContentCommonBody>
-					<ContentCommonNavButton onclick={this.onAnonymousComments} class={state.allowAnonymous ? "-selected" : ""}>
-						<SVGIcon>warning</SVGIcon>
-						<div>Allow anonymous comments</div>
-					</ContentCommonNavButton>
-					<br />
-					Click to <em>{state.allowAnonymous ? "deactivate" : "activate"}</em> anonymous comments.
+					<div class="-label">Feedback</div>
+					<UICheckbox onclick={this.onAnonymousComments} value={state.allowAnonymous}>
+						Allow anonymous comments <SVGIcon>warning</SVGIcon>
+					</UICheckbox>
 				</ContentCommonBody>);
-
 		}
 
 		let ShowUploadTips = null;
