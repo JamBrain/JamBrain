@@ -16,6 +16,7 @@ import ContentCommonBodyMarkup			from 'com/content-common/common-body-markup';
 import ContentCommonDraft				from 'com/content-common/common-draft';
 
 import ContentCommonEdit				from 'com/content-common/common-edit';
+import ItemTeambuilding from 'com/content-item/item-teambuilding';
 
 import $Node							from '../../shrub/js/node/node';
 
@@ -62,22 +63,30 @@ export default class ContentSimple extends Component {
 			this.setState({'editing': true});
 		}
 
+		if ( this.props.authors ) {
+			this.getAuthors(newProps.node);
+		}
+
 		if ( this.props.node !== newProps.node ) {
 			if ( this.props.authored ) {
 				this.getAuthor(newProps.node);
 			}
-			if ( this.props.authors ) {
-				this.getAuthors(newProps.node);
-			}
 		}
+	}
+
+	isIdenticalAuthorLists(a, b) {
+		if (!a !== !b) return false;
+		if (!a) return true;
+		if (a.length !== b.length) return false;
+		return a.filter((a, idx) => b.indexOf(a) === idx).length === a.length;
 	}
 
 	getAuthors( node ) {
 		// Clear the Authors
 //		this.setState({ authors: [] });
-
-		if ( node.meta && node.meta['author'] ) {
+		if ( node.meta && node.meta.author && !this.isIdenticalAuthorLists(node.meta.author, this.state.authorIds)) {
 			// Lookup the authors
+			this.setState({'authorIds': node.meta.author.map(e => e)});
 			$Node.Get( node.meta['author'] )
 			.then(r => {
 				if ( r.node && r.node.length ) {
@@ -199,7 +208,7 @@ export default class ContentSimple extends Component {
 
 	render( props, state ) {
 		props = Object.assign({}, props);	// Shallow copy we can change props
-		let {node, user, path, extra} = props;
+		let {node, user, path, extra, featured} = props;
 		let {author, authors} = state;
 
 
@@ -243,6 +252,9 @@ export default class ContentSimple extends Component {
 			else if ( props.authors && props.by ) {
 				if ( !state.editing ) {
 					ShowByLine = <ContentCommonBodyBy node={node} authors={authors} by={typeof props.by == 'string' ? props.by : null} />;
+				}
+				else if (node.type == 'item') {
+					ShowByLine = <ItemTeambuilding node={node} authors={authors} featured={featured} user={user} onChange={props.onChangeTeam} />;
 				}
 				else {
 					ShowByLine = (
