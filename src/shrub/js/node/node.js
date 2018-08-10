@@ -332,14 +332,16 @@ export function RemoveMeta( id, data ) {
 export function AddLink( a, b, data ) {
 	return Fetch.Post(API_ENDPOINT+'/vx/node/link/add/'+a+'/'+b, data)
 		.then( r => {
-			InvalidateNodeCache(id);
+			InvalidateNodeCache(a);
+			InvalidateNodeCache(b);
 			return r;
 		});
 }
 export function RemoveLink( a, b, data ) {
 	return Fetch.Post(API_ENDPOINT+'/vx/node/link/remove/'+a+'/'+b, data)
 		.then( r => {
-			InvalidateNodeCache(id);
+			InvalidateNodeCache(a);
+			InvalidateNodeCache(b);
 			return r;
 		});
 }

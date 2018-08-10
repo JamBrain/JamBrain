@@ -60,6 +60,7 @@ export default class ContentItem extends Component {
 		this.onSetCompo = this.onSetCompo.bind(this);
 		this.onSetUnfinished = this.onSetUnfinished.bind(this);
 		this.onAnonymousComments = this.onAnonymousComments.bind(this);
+		this.onChangeTeam = this.onChangeTeam.bind(this);
 	}
 
 	componentDidMount() {
@@ -163,6 +164,18 @@ export default class ContentItem extends Component {
 					return r;
 				});
 		}
+	}
+
+	onChangeTeam(userId, action) {
+		const team = (this.state.team ? this.state.team : this.props.node.meta.author)
+			.map(author => author);
+		if (action === 1) {
+			if (team.indexOf(userId) === -1) team.push(userId);
+		}
+		else if (action === -1) {
+			team.splice(team.indexOf(userId), 1);
+		}
+		this.setState({'team': team});
 	}
 
 	positionSuffix(position) {
@@ -391,10 +404,16 @@ export default class ContentItem extends Component {
 	render( props, state ) {
 		props = Object.assign({}, props);			// Copy it because we're going to change it
 		let {node, user, path, extra, featured} = props;
-		let {parent} = state;
+		let {parent, team} = state;
 		const allowCompo = (node_CountAuthors(node) == 1);
 
 		let Category = '/';
+
+		props.onChangeTeam = this.onChangeTeam;
+		if (team) {
+			props.node.meta.author = team;
+		}
+
 
 		if ( parent ) {
 			props.nopublish = !node_CanPublish(parent);

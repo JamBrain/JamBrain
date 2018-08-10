@@ -41,11 +41,10 @@ export default class UIDropdown extends Component {
 			let Content = [];
 			for ( let idx = 0; idx < Children.length; idx++ ) {
 				if ( Children[idx].attributes.onclick ) {
-					let OldClick = Children[idx].attributes.onclick;
 					Content.push(cloneElement(Children[idx], {
-						'onclick': function(e) {
+						'onclick': (e) => {
 							that.doHide();
-							OldClick();
+							Children[idx].attributes.onclick(e);
 						}
 					}));
 				}
