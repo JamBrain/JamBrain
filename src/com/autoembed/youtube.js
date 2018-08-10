@@ -31,7 +31,7 @@ export default class YoutubeEmbed extends Component {
       return (
         <div class="embed-video -youtube">
           <div class="-video">
-            <iframe src={'https://www.youtube.com/embed/' + video_id + '?' + args.join('&')} frameborder="0" allowfullscreen></iframe>
+            <iframe src={'https://www.youtube.com/embed/' + video_id + '?' + args.join('&')} frameborder="0" allowfullscreen allow="autoplay; fullscreen"></iframe>
           </div>
         </div>
       );
