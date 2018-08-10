@@ -1,0 +1,30 @@
+@import "defs.less";
+
+.-auto-complete {
+	position: fixed;
+	left: 0.5em;
+	bottom: 0;
+	z-index: 500;
+	background: @COL_L;
+	border: 1px solid @COL_NDDD;
+
+	& > .-selected {
+		background: @COL_A;
+		color: @COL_NLLLLL;
+	}
+
+	& > div {
+		border-top: 1px solid @COL_NDDD;
+		padding: 0.5em;
+
+		& .-emoji-autocomplete-markup {
+			display: inline-block;
+			margin-right: 0.5em;
+
+			& > p {
+				margin: 0;
+				padding: 0;
+			}
+		}
+	}
+}
