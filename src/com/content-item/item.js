@@ -5,6 +5,7 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import IMG2 							from 'com/img2/img2';
 
 import ButtonBase						from 'com/button-base/base';
+import UIButton from 'com/ui/button/button';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonBodyField			from 'com/content-common/common-body-field';
@@ -23,6 +24,8 @@ import $Node							from '../../shrub/js/node/node';
 //import $NodeMeta						from '../../shrub/js/node/node_meta';
 import $Grade							from '../../shrub/js/grade/grade';
 import $Asset							from '../../shrub/js/asset/asset';
+
+const MAX_LINKS = 9;
 
 export default class ContentItem extends Component {
 	constructor( props ) {
@@ -43,7 +46,7 @@ export default class ContentItem extends Component {
 			'allowAnonymous': parseInt(node.meta['allow-anonymous-comments']),
 		};
 
-		for ( let i = 0; i < 9; i++ ) {
+		for ( let i = 0; i < MAX_LINKS; i++ ) {
 			this.state.linkUrls[i] = node.meta['link-0'+(i+1)] ? node.meta['link-0'+(i+1)] : '';
 			this.state.linkTags[i] = node.meta['link-0'+(i+1)+'-tag'] ? parseInt(node.meta['link-0'+(i+1)+'-tag']) : 0;
 			this.state.linkNames[i] = node.meta['link-0'+(i+1)+'-name'] ? node.meta['link-0'+(i+1)+'-name'] : '';
@@ -250,6 +253,28 @@ export default class ContentItem extends Component {
 		this.contentSimple.setState({'modified': true});
 	}
 
+	onRemoveLink( index ) {
+		const {linkTags, linkNames, linkUrls, linksShown} = this.state;
+		if ((index < 0) || (index >= linkTags.length)) return;
+
+		// Never modify existing state directly and splice is in place
+		const newTags = linkTags.slice();
+		const newUrls = linkUrls.slice();
+		const newNames = linkNames.slice();
+
+		newTags.splice(index, 1);
+		newUrls.splice(index, 1);
+		newNames.splice(index, 1);
+
+		this.setState({
+			"linkTags": newTags,
+			"linkNames": newNames,
+			"linkUrls": newUrls,
+			"linksShown": Math.max(linksShown - 1, 1),
+		});
+		this.contentSimple.setState({'modified': true});
+	}
+
 	onSave( e ) {
 		let {node, user} = this.props;
 
@@ -328,15 +353,17 @@ export default class ContentItem extends Component {
 					onModifyName={this.onModifyLinkName.bind(this, idx)}
 					onModifyTag={this.onModifyLinkTag.bind(this, idx)}
 					onModifyUrl={this.onModifyLinkUrl.bind(this, idx)}
+					onRemove={this.onRemoveLink.bind(this, idx)}
+					defaultIndex={idx}
 					defaultValue={50}
 					defaultText="Source Code"
 				/>
 			);
 		}
 
-		if ( editing && this.state.linksShown < 9 ) {
+		if ( editing && this.state.linksShown < MAX_LINKS ) {
 			LinkMeta.push(
-				<button onclick={e => this.setState({'linksShown': ++this.state.linksShown})}>+</button>
+				<UIButton onclick={e => this.setState({'linksShown': ++this.state.linksShown})} class="content-common-nav-button"><SVGIcon>plus</SVGIcon><div>More links</div></UIButton>
 			);
 		}
 
