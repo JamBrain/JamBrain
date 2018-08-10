@@ -63,7 +63,9 @@ export default class InputDropdown extends Component {
 		}
 	}
 
-	render( props, {show, value} ) {
+	render( props, state ) {
+		const { show } = state;
+		let value = props.value != null ? props.value : state.value;
 		if ( props.items && props.items.length ) {
 			let {selfManaged, useClickCatcher} = props;
 			let ClickCatcher = null;

@@ -7,6 +7,7 @@ import SVGIcon							from 'com/svg-icon/icon';
 
 import InputText						from 'com/input-text/text';
 import InputDropdown					from 'com/input-dropdown/dropdown';
+import UIButton from 'com/ui/button/button';
 
 import $Tag								from 'shrub/js/tag/tag';
 
@@ -46,10 +47,24 @@ export default class ContentCommonBodyLink extends Component {
 			});
 	}
 
+	getTagAndIndex() {
+		const { state, props } = this;
+		const index = ((props.tag > 0) && state.indexes) ? state.indexes[props.tag] : props.defaultIndex;
+		const tag = (state.itemlist && state.itemlist[index]) || [props.defaultValue, props.defaultText];
+		return {index, tag};
+	}
+
+	componentDidUpdate() {
+		if (!this.props.tag && this.props.onModifyTag) {
+			const { index, tag } = this.getTagAndIndex();
+			this.props.onModifyTag(tag[0]);
+		}
+	}
+
 	render( props, state ) {
 		let UrlPlaceholder = props.urlPlaceholder ? props.urlPlaceholder : 'URL (example: http://some.website.com/file.zip)';
-		const index = ((props.tag != null) && state.indexes) ? state.indexes[props.tag] : 0;
-		const tag = (state.itemlist && state.itemlist[index]) || [props.defaultValue, props.defaultText];
+		const { index, tag } = this.getTagAndIndex();
+		console.log(index, tag, props.tag);
 		if ( props.editing && state.itemlist && state.indexes ) {
 			return (
 				<div class={cN('content-common-link', '-editing', props.class)}>
@@ -72,6 +87,7 @@ export default class ContentCommonBodyLink extends Component {
 						placeholder={UrlPlaceholder}
 						maxlength={512}
 					/>
+					<UIButton onclick={props.onRemove} title="Remove"><SVGIcon>cross</SVGIcon></UIButton>
 				</div>
 			);
 		}
