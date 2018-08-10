@@ -221,6 +221,7 @@ export class AutocompleteEmojis extends Autocompletions {
 				score = Math.pow(hint.length / emoji.length, score);
 				options.push({
 					'name': ':' + emoji + ':',
+					'slug': ':' + emoji + ':',
 					'score': score,
 					'matchStart': matchStart,
 					'matchEnd': matchEnd,

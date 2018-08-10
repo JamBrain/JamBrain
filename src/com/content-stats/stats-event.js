@@ -11,7 +11,6 @@ import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonBodyBy				from 'com/content-common/common-body-by';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonBodyAvatar			from 'com/content-common/common-body-avatar';
-import ContentCommonBodyMarkup			from 'com/content-common/common-body-markup';
 
 import PieChart							from 'com/visualization/piechart/piechart';
 import BarChart							from 'com/visualization/barchart/barchart';
