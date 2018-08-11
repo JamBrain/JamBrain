@@ -5,7 +5,7 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import IMG2 							from 'com/img2/img2';
 
 import ButtonBase						from 'com/button-base/base';
-import UIButton from 'com/ui/button/button';
+import UIButton							from 'com/ui/button/button';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonBodyField			from 'com/content-common/common-body-field';
@@ -14,16 +14,18 @@ import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
+import ContentItemRulesCheck 			from 'com/content-item/item-rulescheck';
+
 import InputStar						from 'com/input-star/star';
 
-import UICheckbox from 'com/ui/checkbox/checkbox';
+import UICheckbox						from 'com/ui/checkbox/checkbox';
 
 import ContentSimple					from 'com/content-simple/simple';
 
-import $Node							from '../../shrub/js/node/node';
-//import $NodeMeta						from '../../shrub/js/node/node_meta';
-import $Grade							from '../../shrub/js/grade/grade';
-import $Asset							from '../../shrub/js/asset/asset';
+import $Node							from 'shrub/js/node/node';
+//import $NodeMeta						from 'shrub/js/node/node_meta';
+import $Grade							from 'shrub/js/grade/grade';
+import $Asset							from 'shrub/js/asset/asset';
 
 const MAX_LINKS = 9;
 
@@ -61,6 +63,7 @@ export default class ContentItem extends Component {
 		this.onSetUnfinished = this.onSetUnfinished.bind(this);
 		this.onAnonymousComments = this.onAnonymousComments.bind(this);
 		this.onChangeTeam = this.onChangeTeam.bind(this);
+		this.handleAllowSubmission = this.handleAllowSubmission.bind(this);
 	}
 
 	componentDidMount() {
@@ -167,10 +170,10 @@ export default class ContentItem extends Component {
 	}
 
 	onChangeTeam(userId, action) {
-		const team = (this.state.team ? this.state.team : this.props.node.meta.author)
-			.map(author => author);
+		let team = (this.state.team ? this.state.team : this.props.node.meta.author).map(author => author);
 		if (action === 1) {
-			if (team.indexOf(userId) === -1) team.push(userId);
+			if (team.indexOf(userId) === -1)
+				team.push(userId);
 		}
 		else if (action === -1) {
 			team.splice(team.indexOf(userId), 1);
@@ -340,6 +343,10 @@ export default class ContentItem extends Component {
 		return $Node.AddMeta(node.id, Data);
 	}
 
+	handleAllowSubmission(allowed) {
+		this.setState(allowed);
+	}
+
 	// Generates JSX for the links, depending on whether the page is editing or viewing
 	makeLinks( editing ) {
 		let LinkMeta = [];
@@ -404,8 +411,22 @@ export default class ContentItem extends Component {
 	render( props, state ) {
 		props = Object.assign({}, props);			// Copy it because we're going to change it
 		let {node, user, path, extra, featured} = props;
-		let {parent, team} = state;
-		const allowCompo = (node_CountAuthors(node) == 1);
+		let {parent, team, allowCompo, allowJam, allowUnfinished} = state;
+		let shouldCheckRules = true;
+		if (node_IsPublished(node)) {
+			// Since we don't store answers to rules they would be
+			// annoying when editing
+			shouldCheckRules = false;
+			allowCompo = true;
+			allowJam = true;
+			allowUnfinished = true;
+
+			// Could possibly disable allowCompo if not already
+			// marked as compo?
+			// allowCompo = false;
+		}
+		const tooManyAuthorsForCompo = (node_CountAuthors(node) != 1);
+		allowCompo = allowCompo && !tooManyAuthorsForCompo;
 
 		let Category = '/';
 
@@ -434,10 +455,12 @@ export default class ContentItem extends Component {
 			if ( node.subsubtype == 'jam' ) {
 				props.by = "JAM "+props.by;
 				Category = '/jam';
+				props.nopublish = !allowJam;
 			}
 			else if ( node.subsubtype == 'compo' ) {
 				props.by = "COMPO "+props.by;
 				Category = '/compo';
+				props.nopublish = !allowCompo;
 			}
 			else if ( node.subsubtype == 'craft' ) {
 				props.by = "CRAFT";
@@ -451,6 +474,7 @@ export default class ContentItem extends Component {
 				props.headerClass = null;
 				props.by = "UNFINISHED "+props.by;
 				Category = '/unfinished';
+				props.nopublish = !allowUnfinished;
 			}
 			else {
 				props.nopublish = true;
@@ -460,17 +484,24 @@ export default class ContentItem extends Component {
 		}
 
 		let ShowEventPicker = null;
+		let ShowRulesCheck = null;
 		if ( extra && extra.length && (extra[0] == 'edit') && node_CanPublish(parent) ) {
+			if (shouldCheckRules) {
+				ShowRulesCheck = <ContentItemRulesCheck
+					onAllowChange={this.handleAllowSubmission}
+					answers={state.rulesAnswers}
+				/>;
+			}
 			ShowEventPicker = (
 				<ContentCommonNav>
 					<div class="-label">Event</div>
-					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' ? "-selected" : ""}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
-					{allowCompo && <ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' ? "-selected" : ""}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>}
-					<ContentCommonNavButton onclick={this.onSetUnfinished} class={Category == '/unfinished' ? "-selected" : ""}><SVGIcon>trash</SVGIcon><div>Unfinished</div></ContentCommonNavButton>
+					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' && allowJam ? "-selected" : ""} disabled={!allowJam}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
+					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' && allowCompo ? "-selected" : ""} disabled={!allowCompo}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
+					<ContentCommonNavButton onclick={this.onSetUnfinished} class={Category == '/unfinished' && allowUnfinished ? "-selected" : ""} disabled={!allowUnfinished}><SVGIcon>trash</SVGIcon><div>Unfinished</div></ContentCommonNavButton>
+					{tooManyAuthorsForCompo && <div class="-warning">COMPO option disabled because: Too many authors.</div>}
 					<div class="-footer">
 						<strong>NOTE</strong>: You <strong>MUST</strong> click this before you will be able to Publish.<br />
 						Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know what to pick, pick the <strong>Jam</strong>.
-						{!allowCompo && <div><strong>COMPO</strong> option disabled because: Too many authors.</div>}
 					</div>
 				</ContentCommonNav>
 			);
@@ -839,6 +870,7 @@ export default class ContentItem extends Component {
 
 		props.editonly = (
 			<div>
+				{ShowRulesCheck}
 				{ShowEventPicker}
 				{ShowOptOut}
 				{ShowImages}

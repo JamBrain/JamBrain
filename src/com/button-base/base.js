@@ -1,4 +1,4 @@
-import { h, Component } from 'preact/preact';
+import {h, Component}					from 'preact/preact';
 
 export default class ButtonBase extends Component {
 	constructor( props ) {
@@ -14,12 +14,17 @@ export default class ButtonBase extends Component {
 		else
 			props.class = "button-base";
 
+		if ( props.disabled )
+			props.class += " -disabled";
+
 		if ( props.onclick ) {
 			// As long as you don't set the "keep focus" property //
 			if ( !props.keepFocus ) {
 				// Wrap onClick with a function that deselects current element //
 				let func = props.onclick;
 				props.onclick = (e) => {
+					if (props.disabled)
+						return;
 					func(e);
 					if ( typeof document.activeElement.blur !== "undefined" ) {
 						document.activeElement.blur();
@@ -32,7 +37,7 @@ export default class ButtonBase extends Component {
 			}
 
 			props.onkeydown = (e) => {
-				if ( e.keyCode === 13 ) {
+				if ( e.keyCode === 13 && !props.disabled ) {
 					props.onclick();
 				}
 			};
