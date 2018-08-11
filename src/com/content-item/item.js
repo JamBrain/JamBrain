@@ -454,12 +454,12 @@ export default class ContentItem extends Component {
 			if ( node.subsubtype == 'jam' ) {
 				props.by = "JAM "+props.by;
 				Category = '/jam';
-				props.nopublish = !allowJam;
+				//props.nopublish = !allowJam;
 			}
 			else if ( node.subsubtype == 'compo' ) {
 				props.by = "COMPO "+props.by;
 				Category = '/compo';
-				props.nopublish = !allowCompo;
+				//props.nopublish = !allowCompo;
 			}
 			else if ( node.subsubtype == 'craft' ) {
 				props.by = "CRAFT";
@@ -473,7 +473,7 @@ export default class ContentItem extends Component {
 				props.headerClass = null;
 				props.by = "UNFINISHED "+props.by;
 				Category = '/unfinished';
-				props.nopublish = !allowUnfinished;
+				//props.nopublish = !allowUnfinished;
 			}
 			else {
 				props.nopublish = true;
