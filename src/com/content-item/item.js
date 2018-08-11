@@ -878,7 +878,7 @@ export default class ContentItem extends Component {
 					<div class="-footer">
 						<UIIcon small baseline src="info" />
 						<span>Add screenshots to your description via the <strong>Upload Image</strong> link above. Try to keep your GIFs less than 640 pixels wide.
-						You can embed <UILink href="https://youtube.com">YouTube</UILink> video in your description by pasting a link on a blank line.</span>
+						You can embed <UILink href="https://youtube.com">YouTube</UILink> video in your description by pasting a YouTube link on a blank line ("embed code" not required).</span>
 					</div>
 				</ContentCommonBody>
 			);

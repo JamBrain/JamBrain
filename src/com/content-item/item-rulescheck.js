@@ -2,14 +2,23 @@ import {h, Component}					from 'preact/preact';
 import ContentCommonBody				from 'com/content-common/common-body';
 import ButtonBase						from 'com/button-base/base';
 import NavLink							from 'com/nav-link/link';
-import SVGIcon							from 'com/svg-icon/icon';
-
 import UIIcon							from 'com/ui/icon/icon';
 
 export default class ContentItemRulesCheck extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
+	}
+
+	componentDidMount() {
+		const {onAllowChange, answers} = this.props;
+		const mountState = Object.assign({}, this.state, answers);
+		if (onAllowChange) onAllowChange({
+			'allowJam': this.allowJam(mountState),
+			'allowCompo': this.allowCompo(mountState),
+			'allowUnfinished': this.allowUnfinished(mountState),
+			'rulesAnswers': mountState,
+		});
 	}
 
 	handleChange(field, nextValue) {
@@ -21,10 +30,10 @@ export default class ContentItemRulesCheck extends Component {
 			{[field]: nextValue}
 		);
 		if (onAllowChange) onAllowChange({
-			allowJam: this.allowJam(nextState),
-			allowCompo: this.allowCompo(nextState),
-			allowUnfinished: this.allowUnfinished(nextState),
-			rulesAnswers: nextState,
+			'allowJam': this.allowJam(nextState),
+			'allowCompo': this.allowCompo(nextState),
+			'allowUnfinished': this.allowUnfinished(nextState),
+			'rulesAnswers': nextState,
 		});
 		this.setState({[field]: nextValue});
 	}
@@ -45,10 +54,6 @@ export default class ContentItemRulesCheck extends Component {
 		if (!nextState.createdWithin48) return false;
 		if (!nextState.includedSource) return false;
 
-		// This indicates you misunderstood the rules.
-		// but as it is now it would be too confusing to activate
-		//if (nextState.optedOut) return false;
-
 		return true;
 	}
 
@@ -62,21 +67,8 @@ export default class ContentItemRulesCheck extends Component {
 		return true;
 	}
 
-	componentDidMount() {
-		const { onAllowChange, answers } = this.props;
-		const mountState = Object.assign({}, this.state, answers);
-		if (onAllowChange) onAllowChange({
-			allowJam: this.allowJam(mountState),
-			allowCompo: this.allowCompo(mountState),
-			allowUnfinished: this.allowUnfinished(mountState),
-			rulesAnswers: mountState,
-		});
-	}
-
 	render(props, state) {
-		const Mandatory = <span class="-mandatory">ALL</span>;
 		const MandatoryCompo = <span class="-mandatory">(<span>COMPO ONLY</span>)</span>;
-		const MandatoryJam = <span class="-mandatory">JAM</span>;
 		const IconUnChecked = <UIIcon small baseline class="-checkbox" src="checkbox-unchecked" />;
 		const IconChecked = <UIIcon small baseline class="-checkbox" src="checkbox-checked" />;
 
@@ -96,7 +88,7 @@ export default class ContentItemRulesCheck extends Component {
 
 					<ButtonBase onclick={this.handleChange.bind(this, 'optedOut', !optedOut)}>
 						{optedOut ? IconChecked : IconUnChecked}
-						I have opted-out of any categories we are not eligible for.
+						If applicible, I have opted-out of any categories we are not eligible for.
 					</ButtonBase>
 					<ButtonBase onclick={this.handleChange.bind(this, 'willVote', !willVote)}>
 						{willVote ? IconChecked : IconUnChecked}

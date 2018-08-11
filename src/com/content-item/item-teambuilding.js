@@ -1,11 +1,10 @@
-import {h, Component} from 'preact/preact';
-import ContentCommonBody from 'com/content-common/common-body';
-import ContentLoading	from 'com/content-loading/loading';
-import UIIcon	from 'com/ui/icon/icon';
-import UIButton	from 'com/ui/button/button';
-import UIDropdown	from 'com/ui/dropdown/dropdown';
-import SVGIcon from 'com/svg-icon/icon';
-import $Node from '../../shrub/js/node/node';
+import {h, Component}					from 'preact/preact';
+import ContentCommonBody				from 'com/content-common/common-body';
+import ContentLoading					from 'com/content-loading/loading';
+import UIIcon							from 'com/ui/icon/icon';
+import UIButton							from 'com/ui/button/button';
+import UIDropdown						from 'com/ui/dropdown/dropdown';
+import $Node							from 'shrub/js/node/node';
 
 export default class ItemTeambuilding extends Component {
 	constructor(props) {
@@ -75,7 +74,7 @@ export default class ItemTeambuilding extends Component {
 				<strong>{user.name}</strong>
 				{isMe && ' (you)'}
 				{isMain && <span title="Primary Author">*</span>}
-				{canBeRemoved && <UIButton class="team-member-remove" onclick={() => this.removeFromTeam(user.id)} title="Remove from team"><SVGIcon>cross</SVGIcon></UIButton>}
+				{canBeRemoved && <UIButton class="team-member-remove" onclick={() => this.removeFromTeam(user.id)} title="Remove from team"><UIIcon src="cross" /></UIButton>}
 			</li>
 		);
 	}
@@ -95,7 +94,7 @@ export default class ItemTeambuilding extends Component {
 			return;
 		const authorIds = authors.map(author => author.id);
 		const Addable = [
-			<div class="team-list-add-header">Add to team<SVGIcon>arrow-down</SVGIcon></div>
+			<div class="team-list-add-header">Add to team<UIIcon src="arrow-down" /></div>
 		].concat(friends
 			.filter(friend => authorIds.indexOf(friend.id) === -1)
 			.sort((a, b) => (a.name > b.name) ? 1 : -1)
