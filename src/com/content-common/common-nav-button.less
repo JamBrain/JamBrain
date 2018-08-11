@@ -26,6 +26,19 @@
 				border: 1px solid @COL_W;
 				color: @COL_A;
 			}
+
+			&.-disabled {
+				border: 1px solid @COL_NLLL;
+				color: @COL_NLLL;
+
+				&:active,
+				&:hover,
+				&:focus {
+					cursor: not-allowed;
+					border: 1px solid @COL_NLLL;
+					color: @COL_NLLL;
+				}
+			}
 		}
 	}
 }
@@ -58,12 +71,34 @@
 	&.-disabled {
 		border: 1px solid @COL_NLLL;
 		color: @COL_NLLL;
+
+		&:active,
+		&:hover,
+		&:focus {
+			cursor: not-allowed;
+			border: 1px solid @COL_NLLL;
+			color: @COL_NLLL;
+			background: transparent;
+		}
 	}
 
 	&.-selected {
 		border: 1px solid @COL_N;
 		background: @COL_N;
 		color: @COL_L;
+
+		&.-disabled {
+			color: @COL_L;
+			background: @COL_NLLL;
+			border: 1px solid @COL_NLLL;
+
+			&:hover,
+			&:focus {
+				color: @COL_L;
+				background: @COL_NLLL;
+				border: 1px solid @COL_NLLL;
+			}
+		}
 	}
 
 	&:hover,

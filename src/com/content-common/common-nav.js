@@ -9,7 +9,7 @@ export default class ContentCommonNav extends Component {
 
 	render( props ) {
 		return (
-			<div class="content-common-body content-common-nav">
+			<div class={cN("content-common-body content-common-nav", props.class)}>
 				{props.children}
 			</div>
 		);

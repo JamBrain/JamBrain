@@ -1,13 +1,13 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component} 								from 'preact/preact';
 
-import NavLink							from 'com/nav-link/link';
+import NavLink										from 'com/nav-link/link';
 
-import ContentLoading					from 'com/content-loading/loading';
-import ContentError						from 'com/content-error/error';
+import ContentLoading								from 'com/content-loading/loading';
+import ContentError									from 'com/content-error/error';
 
-import ContentCommon					from 'com/content-common/common';
+import ContentCommon								from 'com/content-common/common';
 
-import ContentCommonBody				from 'com/content-common/common-body';
+import ContentCommonBody							from 'com/content-common/common-body';
 import ContentCommonBodyBy							from 'com/content-common/common-body-by';
 import ContentCommonBodyTitle						from 'com/content-common/common-body-title';
 import ContentCommonBodyAvatar						from 'com/content-common/common-body-avatar';

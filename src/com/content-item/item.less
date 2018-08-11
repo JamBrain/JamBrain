@@ -5,12 +5,29 @@
 	color: @MAJOR_LIGHT;
 }
 
+#content .-warning {
+	color: @MAJOR_COLOR1;
+	font-weight: bold;
+	font-size: 80%;
+}
+
 #content .content-item {
 	& .-links {
 		margin: 1rem;
 
 		& > .-header {
 			font-size: 0.75em;
+		}
+	}
+
+	& .icon-info {
+		padding-right: 0.5em;
+	}
+
+	& .team-building {
+		ul {
+			margin: 0;
+			padding: 0;
 		}
 	}
 
@@ -116,13 +133,20 @@
 		}
 	}
 
-	& .-opt-out,
-	& .-images,
-	& .-rating {
-		/* General footers have smaller text */
+	/* General footers have smaller text */
+	& .-body {
+		& > .-items {
+			margin: 0.25em;
+		}
+
+		& > .-info {
+			margin: 1em 0.5em;
+			font-size: 1em;
+		}
+
 		& > .-footer {
-			margin: 1em 0;
-			font-size: 1rem;
+			margin: 1em 0.5em 1.5em;
+			font-size: 0.8em;
 		}
 	}
 }

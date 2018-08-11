@@ -241,9 +241,9 @@ export default class InputTextarea extends Component {
 					<div class="-left">
 						<label>
 							<input type="file" name="asset" style="display: none;" onchange={this.onFileChange} />
-							<NavLink class="-upload"><SVGIcon baseline gap>upload</SVGIcon>Upload</NavLink>
+							<NavLink class="-upload"><SVGIcon baseline gap>upload</SVGIcon>Upload Image</NavLink>
 						</label>
-						<span class="if-sidebar-inline">. Supports <NavLink blank href="/markdown"><SVGIcon>markdown</SVGIcon> Markdown</NavLink> and :emoji_codes:</span>
+						<span class="if-sidebar-inline">. Supports <NavLink blank href="/markdown"><SVGIcon>markdown</SVGIcon> Markdown</NavLink> and <strong>:emoji_codes:</strong></span>
 					</div>
 				</div>
 			</div>
