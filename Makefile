@@ -192,7 +192,10 @@ clean-all-lint:
 	@$(foreach b,$(ALL_MAKEFILES),$(MAKE) clean-lint -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 
 clean-version:
-	rm $(OUT)/git-version.php
+	-rm $(OUT)/git-version.php
+
+clean-some:
+	@$(foreach b,$(THE_MAKEFILES),$(MAKE) clean-some -r --no-print-directory -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$(b));)
 
 mini: clean-version target
 
@@ -272,13 +275,16 @@ $(OUT)/%.min.svg:$(SRC)/%.svg
 clean:
 	rm -fr $(OUT) $(TARGET_FILES)
 clean-svg:
-	rm -fr $(OUT_FILES_SVG) $(OUT_FILES_SVG:.svg=.svg.out) $(TARGET_FILES_SVG) $(BUILD_FOLDER)/svg.svg $(BUILD_FOLDER)/all.svg 
+	rm -fr $(OUT_FILES_SVG) $(OUT_FILES_SVG:.svg=.svg.out) $(TARGET_FILES_SVG) $(BUILD_FOLDER)/svg.svg $(BUILD_FOLDER)/all.svg
 	-$(call RM_EMPTY_DIRS,.output)
 clean-css:
-	rm -fr $(OUT_CSS_FILES) $(OUT_LESS_FILES) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.css.dep) $(TARGET_FILES_CSS) $(BUILD_FOLDER)/less.css $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.lint $(BUILD_FOLDER)/all.css
+	rm -fr $(OUT_FILES_CSS) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.css.dep) $(TARGET_FILES_CSS) $(BUILD_FOLDER)/less.css $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.lint $(BUILD_FOLDER)/all.css
 	-$(call RM_EMPTY_DIRS,.output)
 clean-js:
-	rm -fr $(OUT_JS_FILES) $(OUT_ES_FILES) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILES_JS) $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/all.js
+	rm -fr $(OUT_FILES_JS) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILES_JS) $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/all.js
+	-$(call RM_EMPTY_DIRS,.output)
+clean-some:
+	rm -fr $(OUT_FILES) $(OUT_FILES_SVG:.svg=.svg.out) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.css.dep) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep)
 	-$(call RM_EMPTY_DIRS,.output)
 
 
@@ -332,7 +338,7 @@ $(TARGET_FOLDER)/all.debug.css: $(BUILD_FOLDER)/all.css
 # SVG # src/icons/icomoon/icons.svg
 $(BUILD_FOLDER)/svg.svg: $(OUT_SVG_FILES)
 	$(call SVG_PACK,$^,$@.out)
-	rm -f $@	
+	rm -f $@
 	mv $@.out $@
 	# NOTE: needs to work like this, 'cause SVG_PACK outputs to stdout. Otherwise we wont stop on SVG errors
 $(BUILD_FOLDER)/all.svg: $(BUILD_FOLDER)/svg.svg
