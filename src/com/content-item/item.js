@@ -27,7 +27,6 @@ import UICheckbox						from 'com/ui/checkbox/checkbox';
 import ContentSimple					from 'com/content-simple/simple';
 
 import $Node							from 'shrub/js/node/node';
-//import $NodeMeta						from 'shrub/js/node/node_meta';
 import $Grade							from 'shrub/js/grade/grade';
 import $Asset							from 'shrub/js/asset/asset';
 
@@ -72,6 +71,14 @@ export default class ContentItem extends Component {
 
 	componentDidMount() {
 		var node = this.props.node;
+
+		if (node_IsPublished(node)) {
+			this.setState({
+				'allowCompo': (node.subsubtype == 'compo'),
+				'allowJam': (node.subsubtype == 'jam'),
+				'allowUnfinished': (node.subsubtype == 'unfinished'),
+			});
+		}
 
 		$Node.Get(node.parent)
 		.then(r => {
@@ -417,19 +424,7 @@ export default class ContentItem extends Component {
 		let {node, user, path, extra, featured} = props;
 		let {parent, team, allowCompo, allowJam, allowUnfinished} = state;
 		let shouldCheckRules = true;
-		if (node_IsPublished(node)) {
-			// Since we don't store answers to rules they would be
-			// annoying when editing
-			shouldCheckRules = false;
-			allowCompo = true;
-			allowJam = true;
-			allowUnfinished = true;
-
-			// Could possibly disable allowCompo if not already
-			// marked as compo?
-			// allowCompo = false;
-		}
-		const tooManyAuthorsForCompo = (node_CountAuthors(node) != 1);
+		const tooManyAuthorsForCompo = (node_CountAuthors(node) > 1);
 		allowCompo = allowCompo && !tooManyAuthorsForCompo;
 
 		let Category = '/';
@@ -490,19 +485,14 @@ export default class ContentItem extends Component {
 		let ShowEventPicker = null;
 		let ShowRulesCheck = null;
 		if ( extra && extra.length && (extra[0] == 'edit') && node_CanPublish(parent) ) {
-			if (shouldCheckRules) {
-				ShowRulesCheck = <ContentItemRulesCheck
-					onAllowChange={this.handleAllowSubmission}
-					answers={state.rulesAnswers}
-				/>;
-			}
+			ShowRulesCheck = <ContentItemRulesCheck node={this.props.node} onAllowChange={this.handleAllowSubmission} answers={state.rulesAnswers} />;
 			ShowEventPicker = (
 				<ContentCommonBody class="-body">
 					<div class="-label">Event Selection</div>
 					<ContentCommonNav>
-						<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' && allowJam ? "-selected" : ""} disabled={!allowJam}><UIIcon src="users" /><div>Jam</div></ContentCommonNavButton>
-						<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' && allowCompo ? "-selected" : ""} disabled={!allowCompo}><UIIcon src="user" /><div>Compo</div></ContentCommonNavButton>
-						<ContentCommonNavButton onclick={this.onSetUnfinished} class={Category == '/unfinished' && allowUnfinished ? "-selected" : ""} disabled={!allowUnfinished}><UIIcon src="trash" /><div>Unfinished</div></ContentCommonNavButton>
+						<ContentCommonNavButton onclick={this.onSetJam} class={node.subsubtype == 'jam' ? "-selected" : ""} disabled={!allowJam}><UIIcon src="users" /><div>Jam</div></ContentCommonNavButton>
+						<ContentCommonNavButton onclick={this.onSetCompo} class={node.subsubtype == 'compo' ? "-selected" : ""} disabled={!allowCompo}><UIIcon src="user" /><div>Compo</div></ContentCommonNavButton>
+						<ContentCommonNavButton onclick={this.onSetUnfinished} class={node.subsubtype == 'unfinished' ? "-selected" : ""} disabled={!allowUnfinished}><UIIcon src="trash" /><div>Unfinished</div></ContentCommonNavButton>
 					</ContentCommonNav>
 					<div class="-info">
 						{tooManyAuthorsForCompo && <div class="-warning"><UIIcon baseline small src="warning" /> COMPO unavailable: Too many authors.</div>}

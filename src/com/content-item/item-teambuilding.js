@@ -119,11 +119,12 @@ export default class ItemTeambuilding extends Component {
 
 		if (node.subsubtype == 'compo') {
 			if (authors.length < 2) {
-				ShowTeamBuilding.push(<div>Since your {node.subtype} competing in the compo, you cannot add others to your game</div>);
+				ShowTeamBuilding.push(<div class="-items">You are competing in the {node.subsubtype}. You cannot add others to your {node.subtype}</div>);
+				ShowTeamBuilding.push(<div class="-footer"><UIIcon small baseline src="info" /> You can change this if you select a different event</div>);
 				includeBuilding = false;
 			}
 			else if (authors.length > 0) {
-				ShowTeamBuilding.push(<div class="team-building-warning">Your {node.subtype} is competing in the compo, but you are more than one author. This is against the rules</div>);
+				ShowTeamBuilding.push(<div class="team-building-warning -items">You are competing in the {node.subsubtype}, but your {node.subsubtype} has multiple authors. Please change the event</div>);
 				includeAdding = false;
 			}
 		}

@@ -88,34 +88,38 @@ export default class ContentItemRulesCheck extends Component {
 
 					<ButtonBase onclick={this.handleChange.bind(this, 'optedOut', !optedOut)}>
 						{optedOut ? IconChecked : IconUnChecked}
-						If applicible, I have opted-out of any categories we are not eligible for.
+						I have opted-out of any categories we are not eligible for (see opt-outs above).
 					</ButtonBase>
 					<ButtonBase onclick={this.handleChange.bind(this, 'willVote', !willVote)}>
 						{willVote ? IconChecked : IconUnChecked}
 						I understand that if we want a score at the end, we need to play and rate other participants games.
 					</ButtonBase>
-
-					<ButtonBase onclick={this.handleChange.bind(this, 'workedSolo', !workedSolo)}>
-						{workedSolo ? IconChecked : IconUnChecked}
-						I worked alone.
-						{MandatoryCompo}
-					</ButtonBase>
-					<ButtonBase onclick={this.handleChange.bind(this, 'createdAll', !createdAll)}>
-						{createdAll ? IconChecked : IconUnChecked}
-						I created all the code, art, sound, music, and other assets myself during the event.
-						{MandatoryCompo}
-					</ButtonBase>
-					<ButtonBase onclick={this.handleChange.bind(this, 'createdWithin48', !createdWithin48)}>
-						{createdWithin48 ? IconChecked : IconUnChecked}
-						I created everything in 48 hours.
-						{MandatoryCompo}
-					</ButtonBase>
-					<ButtonBase onclick={this.handleChange.bind(this, 'includedSource', !includedSource)}>
-						{includedSource ? IconChecked : IconUnChecked}
-						I have included source code.
-						{MandatoryCompo}
-					</ButtonBase>
 				</div>
+
+				{(node_CountAuthors(props.node) <= 1) && (
+					<div class="-items">
+						<ButtonBase onclick={this.handleChange.bind(this, 'workedSolo', !workedSolo)}>
+							{workedSolo ? IconChecked : IconUnChecked}
+							I worked alone.
+							{MandatoryCompo}
+						</ButtonBase>
+						<ButtonBase onclick={this.handleChange.bind(this, 'createdAll', !createdAll)}>
+							{createdAll ? IconChecked : IconUnChecked}
+							I created all the code, art, sound, music, and other assets myself during the event.
+							{MandatoryCompo}
+						</ButtonBase>
+						<ButtonBase onclick={this.handleChange.bind(this, 'createdWithin48', !createdWithin48)}>
+							{createdWithin48 ? IconChecked : IconUnChecked}
+							I created everything in 48 hours.
+							{MandatoryCompo}
+						</ButtonBase>
+						<ButtonBase onclick={this.handleChange.bind(this, 'includedSource', !includedSource)}>
+							{includedSource ? IconChecked : IconUnChecked}
+							I have included source code.
+							{MandatoryCompo}
+						</ButtonBase>
+					</div>
+				)}
 				<div class="-footer">
 					<UIIcon baseline src="warning" class="-warning" />
 					<span> Before you can select an Event and Publish, you must agree to <em>some</em> of the questions above.</span>
