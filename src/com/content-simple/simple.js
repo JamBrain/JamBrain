@@ -42,6 +42,7 @@ export default class ContentSimple extends Component {
 		this.onPreview = this.onPreview.bind(this);
 		this.onSave = this.onSave.bind(this);
 		this.onPublish = this.onPublish.bind(this);
+		this.onDone = this.onDone.bind(this);
 
 		this.onModifyTitle = this.onModifyTitle.bind(this);
 		this.onModifyText = this.onModifyText.bind(this);
@@ -268,6 +269,29 @@ export default class ContentSimple extends Component {
 		});
 	}
 
+	onDone( e ) {
+		if ( this.state.modified ) {
+			console.log('do save first');
+
+			return this.onSave( e )
+			.then( rr => {
+				if ( rr ) {
+					console.log('done');
+					window.location.href = this.props.node.path;
+				}
+			})
+			.catch(err => {
+				console.log(err);
+				this.setState({'error': err});
+				window.location.hash = "#error-publish/"+encodeURI(err.message);
+			});
+		}
+		else {
+			console.log('done');
+			window.location.href = this.props.node.path;
+		}
+	}
+
 	onModifyTitle( e ) {
 		this.setState({'modified': true, 'name': e.target.value});
 	}
@@ -316,6 +340,7 @@ export default class ContentSimple extends Component {
 					'onpreview': this.onPreview,
 					'onsave': this.onSave,
 					'onpublish': this.onPublish,
+					'ondone': this.onDone,
 				};
 
 				EditProps.nopublish = props.nopublish;
