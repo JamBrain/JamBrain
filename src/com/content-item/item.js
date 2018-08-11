@@ -4,6 +4,10 @@ import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 import IMG2 							from 'com/img2/img2';
 
+import UIIcon 							from 'com/ui/icon/icon';
+import UIImage 							from 'com/ui/image/image';
+import UILink 							from 'com/ui/link/link';
+
 import ButtonBase						from 'com/button-base/base';
 import UIButton							from 'com/ui/button/button';
 
@@ -383,7 +387,7 @@ export default class ContentItem extends Component {
 
 		if ( editing && this.state.linksShown < MAX_LINKS ) {
 			LinkMeta.push(
-				<UIButton onclick={e => this.setState({'linksShown': ++this.state.linksShown})} class="content-common-nav-button"><SVGIcon>plus</SVGIcon><div>More links</div></UIButton>
+				<UIButton onclick={e => this.setState({'linksShown': ++this.state.linksShown})} class="content-common-nav-button"><UIIcon src="plus" /><div>Add</div></UIButton>
 			);
 		}
 
@@ -399,9 +403,9 @@ export default class ContentItem extends Component {
 //					urlPlaceholder="http://example.com/source.zip"
 
 		return (
-			<ContentCommonBody>
+			<ContentCommonBody class="-body">
 				<div class="-label">Downloads and Links</div>
-				<div class="-links">
+				<div class="-items">
 					{LinkMeta}
 				</div>
 			</ContentCommonBody>
@@ -493,17 +497,21 @@ export default class ContentItem extends Component {
 				/>;
 			}
 			ShowEventPicker = (
-				<ContentCommonNav>
-					<div class="-label">Event</div>
-					<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' && allowJam ? "-selected" : ""} disabled={!allowJam}><SVGIcon>users</SVGIcon><div>Jam</div></ContentCommonNavButton>
-					<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' && allowCompo ? "-selected" : ""} disabled={!allowCompo}><SVGIcon>user</SVGIcon><div>Compo</div></ContentCommonNavButton>
-					<ContentCommonNavButton onclick={this.onSetUnfinished} class={Category == '/unfinished' && allowUnfinished ? "-selected" : ""} disabled={!allowUnfinished}><SVGIcon>trash</SVGIcon><div>Unfinished</div></ContentCommonNavButton>
-					{tooManyAuthorsForCompo && <div class="-warning">COMPO option disabled because: Too many authors.</div>}
-					<div class="-footer">
-						<strong>NOTE</strong>: You <strong>MUST</strong> click this before you will be able to Publish.<br />
-						Please refer to <NavLink blank href="/events/ludum-dare/rules"><strong>the rules</strong></NavLink>. If you {"don't"} know what to pick, pick the <strong>Jam</strong>.
+				<ContentCommonBody class="-body">
+					<div class="-label">Event Selection</div>
+					<ContentCommonNav>
+						<ContentCommonNavButton onclick={this.onSetJam} class={Category == '/jam' && allowJam ? "-selected" : ""} disabled={!allowJam}><UIIcon src="users" /><div>Jam</div></ContentCommonNavButton>
+						<ContentCommonNavButton onclick={this.onSetCompo} class={Category == '/compo' && allowCompo ? "-selected" : ""} disabled={!allowCompo}><UIIcon src="user" /><div>Compo</div></ContentCommonNavButton>
+						<ContentCommonNavButton onclick={this.onSetUnfinished} class={Category == '/unfinished' && allowUnfinished ? "-selected" : ""} disabled={!allowUnfinished}><UIIcon src="trash" /><div>Unfinished</div></ContentCommonNavButton>
+					</ContentCommonNav>
+					<div class="-info">
+						{tooManyAuthorsForCompo && <div class="-warning"><UIIcon baseline small src="warning" /> COMPO option unavailable: Too many authors.</div>}
 					</div>
-				</ContentCommonNav>
+					<div class="-footer">
+						<UIIcon baseline small src="info" />
+						<span>Select the event you are participating in. If the buttons are grayed out, then you haven't checked-off enough items in the Rules Checklist above. <strong>IMPORTANT:</strong> You can't <strong>Publish</strong> until you finish this step!</span>
+					</div>
+				</ContentCommonBody>
 			);
 		}
 
@@ -544,18 +552,18 @@ export default class ContentItem extends Component {
 					Title = "Ratings received";
 					Warning = Score < 20.0;
 					if ( !Warning ) {
-						Icon = <SVGIcon baseline small>checkmark</SVGIcon>;
+						Icon = <UIIcon baseline small src="checkmark" />;
 						HoverTitle = "This will be scored";
 					}
 					else {
-						Icon = <SVGIcon baseline small>warning</SVGIcon>;
+						Icon = <UIIcon baseline small src="warning" />;
 						HoverTitle = "The minimum needed to score is about 20";
 					}
 				}
 				else if ( Metric.key == 'given' ) {
 					Title = "Ratings given";
 					if ( Score > 25 ) {
-						Icon = <SVGIcon baseline small>checkmark</SVGIcon>;
+						Icon = <UIIcon baseline small src="checkmark" />;
 					}
 				}
 				else if ( Metric.key == 'feedback' ) {
@@ -573,7 +581,7 @@ export default class ContentItem extends Component {
 			}
 
 			ShowMetrics = (
-				<ContentCommonBody class="-rating">
+				<ContentCommonBody class="-rating -body">
 					<div class="-header">Metrics</div>
 					<div class="-subtext">Advanced data on this game</div>
 					<div class="-items">
@@ -620,7 +628,7 @@ export default class ContentItem extends Component {
 				}
 
 				ShowGrade = (
-					<ContentCommonBody class="-rating">
+					<ContentCommonBody class="-rating -body">
 						<div class="-header">Total Ratings</div>
 						<div class="-subtext">Votes on your game so far</div>
 						<div class="-items">{VoteLines}</div>
@@ -682,7 +690,7 @@ export default class ContentItem extends Component {
 					ShowRatingSubText = <div class="-subtext">Compo game</div>;
 
 				ShowGrade = (
-					<ContentCommonBody class="-rating">
+					<ContentCommonBody class="-rating -body">
 						<div class="-header">Ratings</div>
 						{ShowRatingSubText}
 						<div class="-items">{VoteLines}</div>
@@ -694,7 +702,7 @@ export default class ContentItem extends Component {
 			}
 			else if ( !user || !user.id ) {
 				ShowGrade = (
-					<ContentCommonBody class="-rating">
+					<ContentCommonBody class="-rating -body">
 						<div class="-header">Ratings</div>
 						<div class="-items">Please login to rate this game</div>
 					</ContentCommonBody>
@@ -702,7 +710,7 @@ export default class ContentItem extends Component {
 			}
 			else {
 				ShowGrade = (
-					<ContentCommonBody class="-rating">
+					<ContentCommonBody class="-rating -body">
 						<div class="-header">Ratings</div>
 						<div class="-items">Sorry! At this time, only participants are able to rate games.</div>
 					</ContentCommonBody>
@@ -747,7 +755,7 @@ export default class ContentItem extends Component {
 			}
 
 			ShowGrade = (
-				<ContentCommonBody class="-rating">
+				<ContentCommonBody class="-rating -body">
 					<div class="-header">Results</div>
 					<div class="-subtext">Final results</div>
 					<div class="-items">{ResultLines}</div>
@@ -785,13 +793,14 @@ export default class ContentItem extends Component {
 			}
 
 			ShowOptOut = (
-				<ContentCommonBody class="-opt-out">
+				<ContentCommonBody class="-opt-out -body">
 					<div class="-label">Voting Category Opt-outs</div>
 					{OptLines}
 					<div class="-footer">
-						Opt-out of categories here if your team didn't make all your graphics, audio, or music during the event.
+						<UIIcon small baseline src="info" />
+						<span>Opt-out of categories here if you and your team didn't make all your graphics, audio, or music during the event.
 						Many participants are making original graphics, audio and music from scratch during the event. As a courtesy, we ask you to opt-out if you didn't do the same.
-						Also, some games are not meant to be Humourous or Moody, so you can choose to opt-out of these too.
+						Also, some games are not meant to be Humourous or Moody, so you can choose to opt-out of these too.</span>
 					</div>
 				</ContentCommonBody>
 			);
@@ -805,10 +814,9 @@ export default class ContentItem extends Component {
 			}
 
 			ShowImages = (
-				<ContentCommonBody class="-images">
-					<div class="-label">Images</div>
-					<div>Cover Image</div>
-					<div class="-upload">
+				<ContentCommonBody class="-images -body">
+					<div class="-label">Cover Image</div>
+					<div class="-upload -items">
 						<div class="-path">{node.meta && node.meta.cover ? node.meta.cover : "" }</div>
 						<label>
 							<input type="file" name="asset" style="display: none;" onchange={this.onUpload.bind(this, 'cover')} />
@@ -816,7 +824,10 @@ export default class ContentItem extends Component {
 						</label>
 						{ShowImage}
 					</div>
-					<div class="-footer">Recommended Size: 640x512 (i.e. 5:4 aspect ratio). Other sizes will be scaled and cropped to fit. Animated GIFs will not work here.</div>
+					<div class="-footer">
+						<UIIcon small baseline src="info" />
+						<span>Recommended Size: 640x512 (i.e. 5:4 aspect ratio). Other sizes will be scaled+cropped to fit. Animated GIFs will not work here.</span>
+					</div>
 				</ContentCommonBody>
 			);
 		}
@@ -830,23 +841,27 @@ export default class ContentItem extends Component {
 		let ShowAnonymousComments = null;
 		if ( true ) {
 			ShowAnonymousComments = (
-				<ContentCommonBody>
+				<ContentCommonBody class="-show-comments -body">
 					<div class="-label">Feedback</div>
-					<UICheckbox onclick={this.onAnonymousComments} value={state.allowAnonymous}>
-						Allow anonymous comments <SVGIcon>warning</SVGIcon>
-					</UICheckbox>
-				</ContentCommonBody>);
+					<div class="-items">
+						<UICheckbox onclick={this.onAnonymousComments} value={state.allowAnonymous}>Allow anonymous comments <UIIcon src="warning" title="Do this at your own risk" /></UICheckbox>
+					</div>
+					<div class="-footer">
+						<UIIcon small baseline src="info" />
+						<span>You should only do this if you want the most critical of feedback.</span>
+					</div>
+				</ContentCommonBody>
+			);
 		}
 
 		let ShowUploadTips = null;
 		if ( true ) {
 			ShowUploadTips = (
-				<ContentCommonBody>
-					<br />
-					If you're new to Ludum Dare, you should know we don't host your downloads, just links to them. For recommendations where and how to host your files, check out the Hosting Guide:<br />
-					<br />
-					<NavLink blank href="/events/ludum-dare/hosting-guide">/ludum-dare/hosting-guide</NavLink><br />
-					<br />
+				<ContentCommonBody class="-hosting -body">
+					<div class="-footer">
+						<UIIcon small baseline src="info" />
+						<span>If you're new to Ludum Dare, you should know we don't host downloads, we link to them. For suggestions where to host your files, check out the <UILink blank href="/events/ludum-dare/hosting-guide">Hosting Guide</UILink>.</span>
+					</div>
 				</ContentCommonBody>
 			);
 		}
@@ -856,28 +871,29 @@ export default class ContentItem extends Component {
 			ShowLinkView = this.makeLinks(false /* editing */);
 		}
 
-		let ShowUnfinished = null;
+		let ShowPostTips = null;
 		if ( true ) {
-			ShowUnfinished = (
-				<ContentCommonBody>
-					<div class="-label">Images</div>
-					<div>Screen Shots - These go up top, in your game's description. Try to keep your GIFs less than 640 pixels wide.</div>
-					<div>Video - You can add a YouTube video to your description too.</div>
-					<br />
+			ShowPostTips = (
+				<ContentCommonBody class="-body">
+					<div class="-footer">
+						<UIIcon small baseline src="info" />
+						<span>Add screenshots to your description via the <strong>Upload Image</strong> link above. Try to keep your GIFs less than 640 pixels wide.
+						You can embed <UILink href="https://youtube.com">YouTube</UILink> video in your description by pasting a link on a blank line.</span>
+					</div>
 				</ContentCommonBody>
 			);
 		}
 
 		props.editonly = (
 			<div>
-				{ShowRulesCheck}
-				{ShowEventPicker}
-				{ShowOptOut}
+				{ShowPostTips}
 				{ShowImages}
 				{ShowLinkEntry}
 				{ShowUploadTips}
-				{ShowUnfinished}
 				{ShowAnonymousComments}
+				{ShowOptOut}
+				{ShowRulesCheck}
+				{ShowEventPicker}
 			</div>
 		);
 		props.onSave = this.onSave.bind(this);
