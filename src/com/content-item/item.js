@@ -505,11 +505,11 @@ export default class ContentItem extends Component {
 						<ContentCommonNavButton onclick={this.onSetUnfinished} class={Category == '/unfinished' && allowUnfinished ? "-selected" : ""} disabled={!allowUnfinished}><UIIcon src="trash" /><div>Unfinished</div></ContentCommonNavButton>
 					</ContentCommonNav>
 					<div class="-info">
-						{tooManyAuthorsForCompo && <div class="-warning"><UIIcon baseline small src="warning" /> COMPO option unavailable: Too many authors.</div>}
+						{tooManyAuthorsForCompo && <div class="-warning"><UIIcon baseline small src="warning" /> COMPO unavailable: Too many authors.</div>}
 					</div>
 					<div class="-footer">
 						<UIIcon baseline small src="info" />
-						<span>Select the event you are participating in. If the buttons are grayed out, then you haven't checked-off enough items in the Rules Checklist above. <strong>IMPORTANT:</strong> You can't <strong>Publish</strong> until you finish this step!</span>
+						<span>Select the event you are participating in. If the buttons are grayed out, then you haven't checked-off enough items in the Submission Checklist above. <strong>IMPORTANT:</strong> You can't <strong>Publish</strong> until you finish this step!</span>
 					</div>
 				</ContentCommonBody>
 			);
@@ -860,7 +860,7 @@ export default class ContentItem extends Component {
 				<ContentCommonBody class="-hosting -body">
 					<div class="-footer">
 						<UIIcon small baseline src="info" />
-						<span>If you're new to Ludum Dare, you should know we don't host downloads, we link to them. For suggestions where to host your files, check out the <UILink blank href="/events/ludum-dare/hosting-guide">Hosting Guide</UILink>.</span>
+						<span>If you're new to Ludum Dare, you should know we don't host downloads, we link to them. Check out the <UILink blank href="/events/ludum-dare/hosting-guide">Hosting Guide</UILink>.</span>
 					</div>
 				</ContentCommonBody>
 			);
