@@ -34,7 +34,7 @@ export default class ViewBarUser extends Component {
 		let UserURL = '/users/'+user.slug+'/';
 		let UserAvatar = '//'+STATIC_DOMAIN+'/other/dummy/user64.png';
 		if ( user.meta && user.meta.avatar )
-			UserAvatar = '//'+STATIC_DOMAIN+user.meta.avatar;
+			UserAvatar = '//'+STATIC_DOMAIN+user.meta.avatar+".40x40.fit.png";
 
 		return (
 			<UIDropdown class="-user" right>
