@@ -140,7 +140,7 @@ export default class TimelineRateGames extends Component {
 
     return (
       <div class={MainClass}>
-        <div class={HeaderClass}><UIIcon src="gamepad" /> <span>PLAY AND RATE GAMES</span></div>
+        <div class={HeaderClass}><UIIcon src="gamepad" /> <span>Play and Rate</span></div>
                 <div class="-bodies">
           <div class="-inline-if-not-minimized">
             {Games}
