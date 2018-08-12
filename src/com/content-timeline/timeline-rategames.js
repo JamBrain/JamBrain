@@ -133,7 +133,7 @@ export default class TimelineRateGames extends Component {
       </UIButton>
     ));
     FooterRight.push((
-      <UIButton class={cN("content-common-footer-button", '-all-games')} href={props.featured && `/events/${props.featured.slug}/games`}>
+      <UIButton class={cN("content-common-footer-button", '-all-games')} href={props.featured && `/events/ludum-dare/${props.featured.slug}/games/`}>
           <UIIcon src="gamepad" /><div class="-count">All Games</div>
       </UIButton>
     ));
