@@ -7,9 +7,8 @@ import ContentMore						from 'com/content-more/more';
 
 import ContentCommon					from 'com/content-common/common';
 import ContentCommonBody				from 'com/content-common/common-body';
-import TimelineRateGames from 'com/content-timeline/timeline-rategames';
 
-import $Node							from '../../shrub/js/node/node';
+import $Node							from 'shrub/js/node/node';
 
 export default class ContentTimeline extends Component {
 	constructor( props ) {
@@ -161,15 +160,13 @@ export default class ContentTimeline extends Component {
 		if ( error ) {
 			ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>error</ContentCommonBody></ContentCommon>);
 		}
-		else if ( feed && feed.length ) {
-			ShowFeed.push(<TimelineRateGames featured={props.featured} />);
-			ShowFeed = ShowFeed.concat(feed.map(this.makeFeedItem));
-		}
 		else if ( feed && (feed.length == 0) ) {
-			ShowFeed.push(<TimelineRateGames featured={props.featured} />);
 			if ( !props.noemptymessage ) {
 				ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>Feed is empty</ContentCommonBody></ContentCommon>);
 			}
+		}
+		else if ( feed && feed.length ) {
+			ShowFeed = ShowFeed.concat(feed.map(this.makeFeedItem));
 		}
 
 		if ( !props.nomore && (lastadded > 0) ) {
