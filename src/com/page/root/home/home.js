@@ -10,12 +10,6 @@ export default class PageRootHome extends Component {
         const {node, user, path, extra, featured} = props;
 
         let ShowHomework = null;
-
-        //featured.meta['can-grade'] === "1" && featured.meta['event-finished'] !== '1';
-
-        console.log(user);
-        console.log(featured);
-
 		if ( user && user.id && featured && featured.focus ) { //&& props.user.focus && props.user.node.what_node[props.user.focus].published && props.featured && props.featured.meta['can-grade'] && (props.meta['can-grade'] == "1") ) {
 			if ( (featured.meta['can-grade'] == "1") && featured.what_node && featured.what_node[featured.focus] && featured.what_node[featured.focus].published ) {
 				ShowHomework = <TimelineRateGames featured={props.featured} />;
