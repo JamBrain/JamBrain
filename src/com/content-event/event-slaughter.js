@@ -104,7 +104,6 @@ export default class ContentEventSlaughter extends Component {
 		const {loggedIn} = this.state;
 		$Node.GetMy()
 			.then(r => {
-				console.log(r, loggedIn);
 				if (r.status === 401 && loggedIn ) {
 					this.setState({"loggedIn": false});
 					window.removeEventListener('keyup', this.hotKeyVote);
