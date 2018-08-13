@@ -468,9 +468,9 @@ class Main extends Component {
 		this.handleAnchors();
 	}
 
-	handleAnchors() {
-		if ( window.location.hash ) {
-			let hash = Sanitize.parseHash(window.location.hash);
+	handleAnchors(evtHash) {
+		if ( window.location.hash || evtHash ) {
+			let hash = Sanitize.parseHash(evtHash || window.location.hash);
 
 			if ( hash.path === "" && hash.extra.length > 0 ) {
 				let heading = document.getElementById(hash.extra[0]);
@@ -509,7 +509,7 @@ class Main extends Component {
 		// Scroll to top
 		window.scrollTo(0, 0);
 
-		this.handleAnchors();
+		this.handleAnchors(e.detail.location.hash);
 	}
 	// When we navigate using back/forward buttons
 	onPopState( e ) {
