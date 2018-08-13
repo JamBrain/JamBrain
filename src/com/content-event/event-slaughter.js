@@ -6,6 +6,7 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import UIButton							from 'com/ui/button/button';
 
 import $ThemeIdeaVote					from 'shrub/js/theme/theme_idea_vote';
+import $Node from 'shrub/js/node/node';
 
 import PieChart							from 'com/visualization/piechart/piechart';
 
@@ -45,11 +46,11 @@ export default class ContentEventSlaughter extends Component {
 		this.hasWaited = this.hasWaited.bind(this);
 		this.removeCalmDown = this.removeCalmDown.bind(this);
 		this._renderMyIdea = this._renderMyIdea.bind(this);
+		this.monitorLoginState = this.monitorLoginState.bind(this);
 	}
 
 	componentDidMount() {
 		this.hotKeyVote = this.hotKeyVote.bind(this);
-		window.addEventListener('keyup', this.hotKeyVote);
 		const onVotes = $ThemeIdeaVote.GetMy(this.props.node.id)
 		.then(r => {
 			if ( r.votes ) {
@@ -82,6 +83,7 @@ export default class ContentEventSlaughter extends Component {
 			this.setState({'error': err});
 		});
 
+		this.monitorLoginState();
 		// Once Finished
 		Promise.all([onVotes, onIdeas])
 		.then(r => {
@@ -96,6 +98,26 @@ export default class ContentEventSlaughter extends Component {
 
 	componentWillUnmount() {
 		window.removeEventListener('keyup', this.hotKeyVote);
+	}
+
+	monitorLoginState() {
+		const {loggedIn} = this.state;
+		$Node.GetMy()
+			.then(r => {
+				console.log(r, loggedIn);
+				if (r.status === 401 && loggedIn ) {
+					this.setState({"loggedIn": false});
+					window.removeEventListener('keyup', this.hotKeyVote);
+				}
+				else if (r.status !== 401 && !loggedIn) {
+					this.setState({"loggedIn": true});
+					window.addEventListener('keyup', this.hotKeyVote);
+				}
+				else if (r.status === 401 && loggedIn == null) {
+					this.setState({"loggedIn": false});
+				}
+				setTimeout(this.monitorLoginState, 60 * 1000);
+			});
 	}
 
 	hotKeyVote( e ) {
@@ -204,6 +226,10 @@ export default class ContentEventSlaughter extends Component {
 			}
 			else {
 				location.href = "#expired";
+				if ( r.status === 401 ) {
+						window.removeEventListener('keyup', this.hotKeyVote);
+						this.setState({'loggedIn': false});
+				}
 			}
 		})
 		.catch(err => {
@@ -344,10 +370,11 @@ export default class ContentEventSlaughter extends Component {
 
 	render( props, state ) {
 		const {node, user} = props;
+		const {loggedIn} = state;
 		const Title = (<h3>Theme Slaughter Round</h3>);
 
 		if ( node.slug && state.votes && state.ideas ) {
-			if ( user && user['id'] ) {
+			if ( loggedIn && user && user['id'] ) {
 				return (
 					<div class="-body">
 						{Title}
@@ -359,7 +386,7 @@ export default class ContentEventSlaughter extends Component {
 				return (
 					<div class="-body">
 						{Title}
-						<div>Please log in</div>
+						<div>{loggedIn == null ? 'Checking logged in status...' : 'Please log in (hotkeys may not activate immediately)'}</div>
 					</div>
 				);
 			}
