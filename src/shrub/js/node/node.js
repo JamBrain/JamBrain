@@ -46,14 +46,15 @@ export function InvalidateNodeCache( node_id ) {
 
 // http://stackoverflow.com/a/4026828/5678759
 function ArrayDiff(a, b) {
-    return a.filter(function(i) {
+    return a.filter( i => {
 		return b.indexOf(i) < 0;
     });
 }
 
 
 // Gets 1 or more nodes. May pull from our local cache.
-export function Get( ids ) {
+// IMPORTANT: Does support Id+FeedDate syntax
+export function Get( ids, argArray ) {
 	if ( Number.isInteger(ids) ) {
 		ids = [ids];
 	}
@@ -61,14 +62,14 @@ export function Get( ids ) {
 	// Detect if the incoming data is in feed format
 	let feed = null;
 	if ( ids.length && ids[0].modified ) {
-		// ids is now feed, and we will rebuild ids
+		// 'ids' contains a feed. the rest of the code expects 'ids' to be an array of id's
 		feed = ids;
 		ids = [];
 		for (let idx = 0; idx < feed.length; idx++) {
 			let node_id = feed[idx].id;
 			ids.push(node_id);
 
-			// Fetch node if it's already in cache, and invalidate if the feed date is newer
+			// While we're rebuilding 'ids', scan the cache and invalidate if the feed date is newer
 			let node = _Get(node_id);
 			if ( node && (feed[idx].modified > node.modified) ) {
 				//console.log("Node "+node_id+" was Invalidated ("+feed[idx].modified+" > "+node.modified+")");
@@ -77,50 +78,89 @@ export function Get( ids ) {
 		}
 	}
 
-	var nodes = [];
-	var cached = [];
-	for ( var idx = 0; idx < ids.length; idx++ ) {
-		if ( _Exists(ids[idx]) ) {
-			nodes.push(_Get(ids[idx]));
-			cached.push(ids[idx]);
+	// Step one: Fetch everything we have in cache
+	let nodes = [];
+	let cachedIds = [];
+	let requestedIds = [];
+	for ( let idx = 0; idx < ids.length; ++idx ) {
+		let id = ids[idx];
+		if ( _Exists(id) ) {
+			cachedIds.push(id);
+			let node = _Get(id);
+			nodes.push(node);
+
+			// if any arguments were included, be sure we apply the same filters on anything we cached
+			if ( argArray && argArray.length ) {
+				if ( argArray.includes('author') )
+					requestedIds.push(node.author);
+				if ( argArray.includes('parent') )
+					requestedIds.push(node.parent);
+				if ( argArray.includes('superparent') )
+					requestedIds.push(node.superparent);
+
+				if ( argArray.includes('authors') && node.meta.authors )
+					requestedIds.concat(node.meta.authors);
+				if ( argArray.includes('parents') && node.parents )
+					requestedIds.concat(node.parents);
+			}
 		}
 	}
 
-	var uncached = ArrayDiff(ids, cached);
+	// Step two: scan the requests, and also add them
+	for ( let idx = 0; idx < requestedIds.length; ++idx ) {
+		let id = requestedIds[idx];
+		if ( !cached.includes(id) && _Exists(id) ) {
+			cachedIds.push(id);
+			let node = _Get(id);
+			nodes.push(node);
+		}
+	}
 
-	var ret = null;
-	if ( uncached.length > 0 ) {
-		ret = GetFresh(uncached);
+	let uncachedIds = ArrayDiff(ids, cachedIds);
+
+	let ret = null;
+	if ( uncachedIds.length > 0 ) {
+		ret = GetFresh(uncachedIds, argArray);
 	}
 	else {
 		ret = Promise.resolve({
-			'cached': [],
+			'nodes_cached': [],
 			'node': [],
 			'fresh': true,	// As fresh as nothing can be
 		});
 	}
 
 	return ret.then( r => {
-			// Append our locally cached values
-			r.node = r.node.concat(nodes);
-			r.cached = r.cached.concat(cached);
-			// Inform the caller which nodes came from the local cache
-			r.local = cached;
+		// Append our locally cached values
+		r.node = r.node.concat(nodes);
+		r.nodes_cached = r.nodes_cached.concat(cachedIds);
+		// Inform the caller which nodes came from the local cache
+		r.local = cachedIds;
 
-			if ( cached.length ) {
-				// Actually these aren't all fresh
-				r.fresh = false;
-			}
+		if ( cachedIds.length ) {
+			// Actually these aren't all fresh
+			r.fresh = false;
+		}
 
-			return r;
-		});
+		return r;
+	});
 }
-export function GetFresh( ids ) {
+
+// Always gets "fresh" nodes
+// IMPORTANT: Does NOT support Id+FeedDate syntax
+export function GetFresh( ids, argArray ) {
 	if ( Number.isInteger(ids) ) {
 		ids = [ids];
 	}
 
-	return Fetch.Get(API_ENDPOINT+'/vx/node/get/'+ids.join('+'), true)
+	// Build a querystring for arguments
+	let args = "";
+	if ( argArray && argArray.length ) {
+		args = "?" + argArray.join("&");
+	}
+
+	// Fetch the actual data
+	return Fetch.Get(API_ENDPOINT+'/vx/node2/get/'+ids.join('+')+args)
 		.then( r => {
 			// If any nodes were returned, update our cached copies
 			if ( r.node ) {
@@ -165,8 +205,8 @@ export function GetKeyed( ids ) {
 	});
 }
 
-export function GetFreshKeyed( ids ) {
-	return GetFresh(ids).then( r => {
+export function GetFreshKeyed( ids, argArray ) {
+	return GetFresh(ids, argArray).then( r => {
 		var node = r.node;
 		r.node = {};
 		for ( var idx = 0; idx < node.length; idx++ ) {
