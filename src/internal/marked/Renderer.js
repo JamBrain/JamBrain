@@ -186,6 +186,9 @@ export default class Renderer {
 			// relative domain link
 			return {"type": "relative"};
 		}
+		else if ( href.indexOf('#/') === 0 ) {
+			return {"type": "local"};
+		}
 
 		url = extractFromURL(href);
 
@@ -268,6 +271,9 @@ export default class Renderer {
 		}
 		else if ( result.type == "relative" ) {
 			return <LocalLink href={href} text={(hasText) ? text : href} title={title} target={"_blank"}/>;
+		}
+		else if ( result.type == "local" ) {
+			return <LocalLink href={href} text={(hasText) ? text : href} title={title} hashLink />;
 		}
 		else if ( result.type == "protocol" ) {
 			hasText = hasText && !/^\s+$/.test(joinedText); // make sure the link isn't all whitespace too
