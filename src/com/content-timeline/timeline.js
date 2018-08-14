@@ -75,7 +75,7 @@ export default class ContentTimeline extends Component {
 		var keys = this.getFeedIdsWithoutNodes();
 
 		if ( keys.length ) {
-			return $Node.GetKeyed( keys )
+			return $Node.GetKeyed(keys)//, ['author', 'parent', 'superparent'])
 				.then(r => {
 					var feed = this.state.feed;
 					var hash = this.state.hash;
