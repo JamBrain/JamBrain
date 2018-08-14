@@ -72,18 +72,16 @@ export default class ContentTimeline extends Component {
 	}
 
 	getMissingNodes() {
-		var keys = this.getFeedIdsWithoutNodes();
+		let keys = this.getFeedIdsWithoutNodes();
 
 		if ( keys.length ) {
-			return $Node.GetKeyed( keys )
+			return $Node.GetKeyed(keys, ['author', 'parent', 'superparent'])
 				.then(r => {
-					var feed = this.state.feed;
-					var hash = this.state.hash;
+					let feed = this.state.feed;
+					let hash = this.state.hash;
 
-					for ( var node_id in r.node ) {
-						var id = r.node[node_id].id;
-
-						feed[hash[id]].node = r.node[node_id];
+					for ( let id in hash ) {
+						feed[hash[id]].node = r.node[id];
 					}
 
 					this.setState({'feed': feed, 'hash': hash});
@@ -92,7 +90,6 @@ export default class ContentTimeline extends Component {
 					this.setState({'error': err});
 				});
 		}
-
 	}
 
 	getFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit ) {
