@@ -51,6 +51,18 @@
 		position: relative;
 		overflow: auto;
 
+		&.comment-self-authored {
+			border-left: 5px solid @COL_C;
+		}
+
+		&.comment-node-author {
+			border-left: 5px solid @COL_BC;
+		}
+
+		&.comment-mention {
+			border-left: 5px solid @COL_CA;
+		}
+
 		/*border-top: 1px solid @COL_NLL;*/
 
 		&:nth-child(odd) {

@@ -178,6 +178,8 @@ export default class ContentComments extends Component {
 	renderComments( tree, indent = 0 ) {
 		const {user, node} = this.props;
 		const {authors, lovedComments} = this.state;
+		const userId = user.id !== 0 && user.id;
+		const userSlug = userId && `@${user.slug}`;
 
 		const actualLove = [];
 		for ( var item in lovedComments ) {
@@ -190,12 +192,14 @@ export default class ContentComments extends Component {
 			var comment = tree[item].node;
 			comment.loved = (actualLove.indexOf(comment.id) !== -1) ? true : false;
 			var author = authors[comment.author];
-
+			const isMyComment = comment.author != null && comment.author === userId;
+			const isMention = !isMyComment && userSlug && comment.body.indexOf(userSlug) > -1;
+			const isNodeAuthor = !isMention && node_IsAuthor(node, {'id': comment.author});
 			if ( tree[item].child ) {
-				ret.push(<ContentCommentsComment user={user} node={node} comment={comment} author={author} indent={indent}><div class="-indent">{this.renderComments(tree[item].child, indent+1)}</div></ContentCommentsComment>);
+				ret.push(<ContentCommentsComment user={user} node={node} comment={comment} author={author} indent={indent} isMyComment={isMyComment} isNodeAuthor={isNodeAuthor} isMention={isMention}><div class="-indent">{this.renderComments(tree[item].child, indent+1)}</div></ContentCommentsComment>);
 			}
 			else {
-				ret.push(<ContentCommentsComment user={user} node={node} comment={comment} author={author} indent={indent}/>);
+				ret.push(<ContentCommentsComment user={user} node={node} comment={comment} author={author} indent={indent} isMyComment={isMyComment} isNodeAuthor={isNodeAuthor} isMention={isMention} />);
 			}
 		}
 
