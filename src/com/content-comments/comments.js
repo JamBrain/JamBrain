@@ -28,13 +28,6 @@ export default class ContentComments extends Component {
 	}
 
 	componentWillMount() {
-		$Node.GetMy()
-			.then(r => {
-				$Node.Get(r.id)
-					.then(r2 => {
-						this.setState({'userId': r.id, 'userSlug': `@${r2.node[0].slug}`});
-					});
-			});
 		this.getComments(this.props.node);
 	}
 
@@ -184,7 +177,9 @@ export default class ContentComments extends Component {
 
 	renderComments( tree, indent = 0 ) {
 		const {user, node} = this.props;
-		const {authors, lovedComments, userId, userSlug} = this.state;
+		const {authors, lovedComments} = this.state;
+		const userId = user.id !== 0 && user.id;
+		const userSlug = userId && `@${user.slug}`;
 
 		const actualLove = [];
 		for ( var item in lovedComments ) {
