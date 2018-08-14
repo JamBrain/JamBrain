@@ -99,6 +99,8 @@ api_Exec([
 		$more_node_ids = array_merge($more_node_ids, nodeList_GetParents($nodes));
 	if ( isset($_GET['superparent']) )
 		$more_node_ids = array_merge($more_node_ids, nodeList_GetSuperParent($nodes));
+	if ( isset($_GET['root']) )
+		$more_node_ids = array_merge($more_node_ids, [1]);
 
 	$more_node_ids = array_unique($more_node_ids);
 	$more_node_ids = array_diff($more_node_ids, $node_ids, [0]);
@@ -189,6 +191,8 @@ api_Exec([
 			$more_node_ids = array_merge($more_node_ids, nodeList_GetParents($nodes));
 		if ( isset($_GET['superparent']) )
 			$more_node_ids = array_merge($more_node_ids, nodeList_GetSuperParent($nodes));
+		if ( isset($_GET['root']) )
+			$more_node_ids = array_merge($more_node_ids, [1]);
 
 		$more_node_ids = array_unique($more_node_ids);
 		$more_node_ids = array_diff($more_node_ids, [$parent_id], [0]);

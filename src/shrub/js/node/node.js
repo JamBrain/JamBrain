@@ -53,7 +53,7 @@ function ArrayDiff(a, b) {
 
 
 // Gets 1 or more nodes. May pull from our local cache.
-// IMPORTANT: Does support Id+FeedDate syntax
+// Support Id+FeedDate syntax
 export function Get( ids, argArray ) {
 	if ( Number.isInteger(ids) ) {
 		ids = [ids];
@@ -147,7 +147,7 @@ export function Get( ids, argArray ) {
 }
 
 // Always gets "fresh" nodes
-// IMPORTANT: Does NOT support Id+FeedDate syntax
+// DOES NOT support Id+FeedDate format
 export function GetFresh( ids, argArray ) {
 	if ( Number.isInteger(ids) ) {
 		ids = [ids];
@@ -180,10 +180,10 @@ export function GetFresh( ids, argArray ) {
 // generic key extractor
 function _Keyed( promise, member = 'node', key = 'id' ) {
 	return promise.then( r => {
-		var node = r[member];
+		let node = r[member];
 
 		r[member] = {};
-		for ( var idx = 0; idx < node.length; idx++ ) {
+		for ( let idx = 0; idx < node.length; ++idx ) {
 			r[member][node[idx][key]] = node[idx];
 		}
 		return r;
@@ -192,24 +192,26 @@ function _Keyed( promise, member = 'node', key = 'id' ) {
 
 
 // Like Get, but nodes will be an object of keys rather than an array of objects
-export function GetKeyed( ids ) {
-	// TODO: decode feed format
-
-	return Get(ids).then( r => {
-		var node = r.node;
+// Supports Id+FeedDate format (because it uses Get)
+export function GetKeyed( ids, argArray ) {
+	return Get(ids, argArray).then( r => {
+		let node = r.node;
 		r.node = {};
-		for ( var idx = 0; idx < node.length; idx++ ) {
+		for ( let idx = 0; idx < node.length; ++idx ) {
+			_Cache(node[idx]);
 			r.node[node[idx].id] = node[idx];
 		}
 		return r;
 	});
 }
 
+// DOES NOT support Id+FeedDate format
 export function GetFreshKeyed( ids, argArray ) {
 	return GetFresh(ids, argArray).then( r => {
-		var node = r.node;
+		let node = r.node;
 		r.node = {};
-		for ( var idx = 0; idx < node.length; idx++ ) {
+		for ( let idx = 0; idx < node.length; ++idx ) {
+			_Cache(node[idx]);
 			r.node[node[idx].id] = node[idx];
 		}
 		return r;
@@ -217,9 +219,23 @@ export function GetFreshKeyed( ids, argArray ) {
 }
 
 
+export function Walk( parent, slugs, argArray ) {
+	// Build a querystring for arguments
+	let args = "";
+	if ( argArray && argArray.length ) {
+		args = "?" + argArray.join("&");
+	}
 
-export function Walk( parent, slugs ) {
-	return Fetch.Get(API_ENDPOINT+'/vx/node/walk/'+parent+'/'+slugs.join('/'), true);
+	// Do keyed fetch
+	return Fetch.Get(API_ENDPOINT+'/vx/node2/walk/'+parent+'/'+slugs.join('/')+args).then( r => {
+		let node = r.node;
+		r.node = {};
+		for ( let idx = 0; idx < node.length; ++idx ) {
+			_Cache(node[idx]);
+			r.node[node[idx].id] = node[idx];
+		}
+		return r;
+	});
 }
 
 export function GetFeed( id, methods, types, subtypes, subsubtypes, tags, offset, limit ) {
@@ -277,7 +293,7 @@ export function GetFeed( id, methods, types, subtypes, subsubtypes, tags, offset
 	if ( query.length )
 		query = "?"+query.join('&');
 
-	return Fetch.Get(API_ENDPOINT+'/vx/node/feed/'+args.join('/')+query, true)
+	return Fetch.Get(API_ENDPOINT+'/vx/node/feed/'+args.join('/')+query)
 		.then( r => {
 
 			return r;
