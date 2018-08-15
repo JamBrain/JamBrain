@@ -247,8 +247,8 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 	return $ret;
 }
 
-
-function nodeComplete_GetWhatIdHasAuthoredByParent( $id, $parent ) {
+// Legacy function. The new one returns the actual items
+function nodeComplete_GetWhatIdsIdHasAuthoredByParent( $id, $parent ) {
 	$node_ids = nodeComplete_GetAuthored($id);
 	if ( !empty($node_ids) ) {
 		$nodes = nodeCache_GetById($node_ids);
@@ -261,6 +261,24 @@ function nodeComplete_GetWhatIdHasAuthoredByParent( $id, $parent ) {
 		}
 
 		return $authored_ids;
+	}
+	return [];
+}
+
+// Modern function returns the actual nodes
+function nodeComplete_GetWhatIdHasAuthoredByParent( $id, $parent ) {
+	$node_ids = nodeComplete_GetAuthored($id);
+	if ( !empty($node_ids) ) {
+		$nodes = nodeCache_GetById($node_ids);
+
+		$authored = [];
+		foreach ( $nodes as &$node ) {
+			if ( $node['parent'] == $parent ) {
+				$authored[] = $node;
+			}
+		}
+
+		return $authored;
 	}
 	return [];
 }

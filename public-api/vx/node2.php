@@ -218,17 +218,56 @@ api_Exec([
 	// if not logged in, where will be blank
 	$RESPONSE['where'] = nodeComplete_GetWhereIdCanCreate(userAuth_GetID());
 }],
-["node2/what", API_GET | API_AUTH | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
-	$parent_id = intval(json_ArgShift());
-	if ( !$parent_id )
+// Figure out what's featured, and what you made for it
+["node2/what", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
+	$root_id = intval(json_ArgShift());
+	if ( !$root_id )
 		json_EmitFatalError_BadRequest(null, $RESPONSE);
 
 	// At this point we can bail if it's just a HEAD request
 	if ( $HEAD_REQUEST )
 		json_EmitHeadAndExit();
 
-	// if not logged in, where will be blank
-	$RESPONSE['what'] = nodeComplete_GetWhatIdHasAuthoredByParent(userAuth_GetID(), $parent_id);
+	// First, lookup the root node
+	$root = nodeCache_GetById($root_id);
+	$RESPONSE['root'] = $root;
+
+	$featured_id = 0;
+	if ( isset($root['meta']) && isset($root['meta']['featured']) ) {
+		$featured_id = intval($root['meta']['featured']);
+	}
+	$featured = $featured_id ? nodeCache_GetById($featured_id) : null;
+	$RESPONSE['featured'] = $featured;
+
+	$user_id = userAuth_GetID();
+	$RESPONSE['node'] = ($user_id && $featured_id) ? nodeComplete_GetWhatIdHasAuthoredByParent($user_id, $featured_id) : [];
+}],
+["node2/getmy", API_GET | API_AUTH | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
+	// At this point we can bail if it's just a HEAD request
+	if ( $HEAD_REQUEST )
+		json_EmitHeadAndExit();
+
+	$user_id = userAuth_GetID();
+	if ( $user_id ) {
+		$RESPONSE['cached'] = [];
+		$RESPONSE['node'] = nodeCache_GetById($user_id, $RESPONSE['cached']);
+
+		$meta = nodeMeta_ParseByNode($user_id);
+		$RESPONSE['meta'] = array_merge([],
+			// Public Meta from me (this is already in the node)
+			//isset($meta[0][SH_SCOPE_PUBLIC]) ? $meta[0][SH_SCOPE_PUBLIC] : [],
+			// Shared Meta from me
+			isset($meta[0][SH_SCOPE_SHARED]) ? $meta[0][SH_SCOPE_SHARED] : [],
+			// Procted Meta from me
+			isset($meta[0][SH_SCOPE_PRIVATE]) ? $meta[0][SH_SCOPE_PRIVATE] : []
+		);
+		$RESPONSE['refs'] = array_merge([],
+			// Public meta to me
+			isset($meta[1][SH_SCOPE_PUBLIC]) ? $meta[1][SH_SCOPE_PUBLIC] : [],
+			// Shared meta to me
+			isset($meta[1][SH_SCOPE_SHARED]) ? $meta[1][SH_SCOPE_SHARED] : []
+		);
+	}
 }],
 /// IMPORTANT: Yes, this does not require auth. When auth is unavailable, the love belongs to the IP address.
 ///    This does make it possible for every user to give 2 loves to a thing, but overall it's way better
