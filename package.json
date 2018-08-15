@@ -5,7 +5,7 @@
   "main": "gulpfile.js",
   "dependencies": {
     "buble": "^0.17.0",
-    "clean-css-cli": "*",
+    "clean-css-cli": "^4.1.11",
     "es6": "*",
     "es6-promise": "*",
     "eslint": "*",
@@ -16,13 +16,10 @@
     "rollup-plugin-nodent": "*",
     "uglify-js": "*",
     "preprocess-cli-tool": "*",
-
     "less": "^2.0.0",
     "less-plugin-autoprefix": "*",
-    "clean-css-cli": "*",
     "stylelint": "^8.2.0",
     "stylelint-config-recommended": "^1.0.0",
-
     "svgo": "*"
   },
   "devDependencies": {},

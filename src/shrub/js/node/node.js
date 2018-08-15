@@ -295,7 +295,6 @@ export function GetFeed( id, methods, types, subtypes, subsubtypes, tags, offset
 
 	return Fetch.Get(API_ENDPOINT+'/vx/node/feed/'+args.join('/')+query)
 		.then( r => {
-
 			return r;
 		});
 }
