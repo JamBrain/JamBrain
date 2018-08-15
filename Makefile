@@ -105,7 +105,7 @@ BUBLE_ARGS			:=	--no modules --jsx h --objectAssign Object.assign
 #endif # SOURCEMAPS
 BUBLE				=	$(NODEJS)/buble/bin/buble $(BUBLE_ARGS) -i $(1) -o $(2)
 # ES Include/Require Resolver: http://rollupjs.org/guide/
-ROLLUP_ARGS			:=	-c src/config/rollup.config.js --silent
+ROLLUP_ARGS			:=	-c src/config/rollup.config.js
 ifdef SOURCEMAPS
 ROLLUP_ARGS			+=	-m inline
 endif # SOURCEMAPS

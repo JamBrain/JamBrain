@@ -109,7 +109,7 @@ export function Get( ids, argArray ) {
 	// Step two: scan the requests, and also add them
 	for ( let idx = 0; idx < requestedIds.length; ++idx ) {
 		let id = requestedIds[idx];
-		if ( !cached.includes(id) && _Exists(id) ) {
+		if ( !cachedIds.includes(id) && _Exists(id) ) {
 			cachedIds.push(id);
 			let node = _Get(id);
 			nodes.push(node);
