@@ -48,23 +48,22 @@ export default class ContentCommonBodyLink extends Component {
 	}
 
 	getTagAndIndex() {
-		const { state, props } = this;
-		const index = ((props.tag > 0) && state.indexes) ? state.indexes[props.tag] : props.defaultIndex;
+		const {state, props} = this;
+		const index = ((props.tag > 0) && state.indexes && state.indexes[props.tag] != null) ? state.indexes[props.tag] : props.defaultIndex;
 		const tag = (state.itemlist && state.itemlist[index]) || [props.defaultValue, props.defaultText];
 		return {index, tag};
 	}
 
 	componentDidUpdate() {
 		if (!this.props.tag && this.props.onModifyTag) {
-			const { index, tag } = this.getTagAndIndex();
+			const {index, tag} = this.getTagAndIndex();
 			this.props.onModifyTag(tag[0]);
 		}
 	}
 
 	render( props, state ) {
 		let UrlPlaceholder = props.urlPlaceholder ? props.urlPlaceholder : 'URL (example: http://some.website.com/file.zip)';
-		const { index, tag } = this.getTagAndIndex();
-		console.log(index, tag, props.tag);
+		const {index, tag} = this.getTagAndIndex();
 		if ( props.editing && state.itemlist && state.indexes ) {
 			return (
 				<div class={cN('content-common-link', '-editing', props.class)}>
