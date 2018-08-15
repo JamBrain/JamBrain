@@ -24,6 +24,7 @@ export default class InputStar extends Component {
 
 	render( props, state ) {
 		let Value = state.value || parseFloat(props.value);
+		if (isNaN(Value)) Value = 0;
 		let Count = parseInt(props.max) || 5;
 		let Title = null;
 
