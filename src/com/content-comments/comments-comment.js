@@ -328,7 +328,7 @@ export default class ContentCommentsComment extends Component {
 
 				var ShowRight = [];
 
-				ShowRight.push(<UICheckbox onclick={this.onSubscribe} value={props.cansubscribe} tooltip="You always receive notifications for mentions">Recieve notifications</UICheckbox>);
+				ShowRight.push(<UICheckbox onclick={this.onSubscribe} value={props.subscribed} tooltip="You always receive notifications for mentions">Recieve notifications</UICheckbox>);
 
 				if ( props.publish ) {
 					if ( props.allowAnonymous ) {
