@@ -15,7 +15,7 @@ export default class DialogErrorUpload extends Component {
 				<p>Looks like the upload failed.</p>
 				<ul>
 					<li>Make sure your image is under 4MB</li>
-					<li>Make sure your trying to upload a bitmap image (png, jpeg, gif) vector images (svg) are not supported at the current time</li>
+					<li>Make sure the image you're trying to upload is a bitmap (png, jpeg, gif). Vector images (svg) are not supported at the current time</li>
 				</ul>
 				<p>Error: <i>{message}</i></p>
 			</DialogCommon>
