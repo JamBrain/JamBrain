@@ -81,7 +81,9 @@ export default class ContentTimeline extends Component {
 					let hash = this.state.hash;
 
 					for ( let id in hash ) {
-						feed[hash[id]].node = r.node[id];
+						if ( r.node[id] ) {
+							feed[hash[id]].node = r.node[id];
+						}
 					}
 
 					this.setState({'feed': feed, 'hash': hash});
@@ -94,19 +96,19 @@ export default class ContentTimeline extends Component {
 
 	getFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit ) {
 		this.setState({'loaded': false});
-		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit )
-		.then(r => {
-			this.setState({'loaded': true});
+		$Node.GetFeed(id, methods, types, subtypes, subsubtypes, tags, more, limit)
+			.then(r => {
+				this.setState({'loaded': true});
 
-			// make sure we have a feed
-			if ( r.feed && r.feed.length ) {
-				this.appendFeed(r.feed);
-				return this.getMissingNodes();
-			}
-		})
-		.catch(err => {
-			this.setState({'error': err});
-		});
+				// make sure we have a feed
+				if ( r.feed && r.feed.length ) {
+					this.appendFeed(r.feed);
+					return this.getMissingNodes();
+				}
+			})
+			.catch(err => {
+				this.setState({'error': err});
+			});
 	}
 
 	fetchMore( offset ) {
