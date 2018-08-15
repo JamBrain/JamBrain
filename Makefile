@@ -145,6 +145,7 @@ RM_EMPTY_DIRS		=	find $(1) -type d -empty -delete 2>/dev/null |true
 SIZE				=	cat $(1) | wc -c
 GZIP_SIZE			=	gzip -c $(1) | wc -c
 
+ifneq ($(NOCOLOR),1)
 COL_OFF				=	\e[0m
 COL_RED				=	\e[91m
 COL_GREEN			=	\e[92m
@@ -153,6 +154,7 @@ COL_BLUE			=	\e[94m
 COL_PURPLE			=	\e[95m
 COL_CYAN			=	\e[96m
 COL_WHITE			=	\e[97m
+endif
 
 # Rules #
 default: target
