@@ -24,7 +24,7 @@ export default class ContentComments extends Component {
 		};
 
 		this.onPublish = this.onPublish.bind(this);
-		this.onSubscribe = this.onSubscribe.bind(this);
+		this.onToggleSubscribe = this.onToggleSubscribe.bind(this);
 	}
 
 	componentWillMount() {
@@ -48,7 +48,7 @@ export default class ContentComments extends Component {
 			$Notification.GetSubscription( node.id )
 			.then(r => {
 				// Determine whether user is subscribed to the thread explicitly
-				this.setState({'subscribed': r['subscribed']});
+				if (r.status == 200) this.setState({'subscribed': r.subscribed});
 			});
 		}
 
@@ -208,23 +208,22 @@ export default class ContentComments extends Component {
 
 	renderPostNew() {
 		const {user, node} = this.props;
-		const {authors, error, "newcomment": comment} = this.state;
+		const {authors, error, "newcomment": comment, subscribed} = this.state;
 		const author = authors[comment.author];
 		const allowAnonymous = parseInt(this.props.node.meta['allow-anonymous-comments']);
 
-		// We can subscribe if we haven't subscribed and we don't have a comment in this thread, and we're not an author. Otherwise we can unsubscribe.
-		let canSubscribe = (this.state.subscribed === null) ? !( this.state.hascomment || this.state.isauthor ) : !this.state.subscribed;
-
-		return <div class="-new-comment"><ContentCommentsComment user={user} node={node} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove allowAnonymous={allowAnonymous} error={error} cansubscribe={canSubscribe} onsubscribe={this.onSubscribe} authors={authors}/></div>;
+		return <div class="-new-comment"><ContentCommentsComment user={user} node={node} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove allowAnonymous={allowAnonymous} error={error} subscribed={subscribed} onsubscribe={this.onToggleSubscribe} authors={authors}/></div>;
 	}
 
 	onPublish( e, publishAnon ) {
 		const {node} = this.props;
-		const {newcomment} = this.state;
+		const {newcomment, subscribed} = this.state;
+
 		this.setState({'error': null});
 
 		$Comment.Add(newcomment.parent, newcomment.node, newcomment.body, null, publishAnon)
 		.then(r => {
+			if (subscribed == null) this.onToggleSubscribe();
 			if ( r.note ) {
 				var Now = new Date();
 				var comment = Object.assign({
@@ -252,17 +251,24 @@ export default class ContentComments extends Component {
 		});
 	}
 
-	onSubscribe( e, subscribe ) {
+	onToggleSubscribe() {
+		const {subscribed} = this.state;
 		let promise = null;
-		if ( subscribe ) {
-			promise = $Notification.Subscribe( this.props.node.id );
+		if ( subscribed ) {
+			promise = $Notification.Unsubscribe( this.props.node.id );
 		}
 		else {
-			promise = $Notification.Unsubscribe( this.props.node.id );
+			promise = $Notification.Subscribe( this.props.node.id );
 		}
 
 		promise.then(r => {
-			this.setState({'subscribed': subscribe});
+			if (r.status == 200) {
+					this.setState({'subscribed': r.subscribed});
+			}
+			else
+			{
+					this.setState({'error': 'Could update subscription status'});
+			}
 		});
 	}
 
