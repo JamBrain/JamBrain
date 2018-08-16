@@ -58,6 +58,12 @@ export default class ContentCommentsComment extends Component {
 		this.onAutoselectCaptureKeyUp = this.onAutoselectCaptureKeyUp.bind(this);
 	}
 
+	componentWillUpdate( newProps, newState ) {
+		if (newState.preview && this.state.preview && newProps.comment.body !== this.props.comment.body && (!newProps.comment.body || newProps.comment.body.length === 0)) {
+			this.setState({'preview': false});
+		}
+	}
+
 	onEditing( e ) {
 //		console.log('** Edit Comment');
 		this.setState({'preview': false});
