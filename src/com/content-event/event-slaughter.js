@@ -46,7 +46,6 @@ export default class ContentEventSlaughter extends Component {
 		this.hasWaited = this.hasWaited.bind(this);
 		this.removeCalmDown = this.removeCalmDown.bind(this);
 		this._renderMyIdea = this._renderMyIdea.bind(this);
-		this.monitorLoginState = this.monitorLoginState.bind(this);
 	}
 
 	componentDidMount() {
@@ -63,6 +62,10 @@ export default class ContentEventSlaughter extends Component {
 			}
 			else {
 				this.setState({'votes': []});
+			}
+			if (r.status === 200) {
+				this.setState({"loggedIn": true});
+				window.addEventListener('keyup', this.hotKeyVote);
 			}
 		})
 		.catch(err => {
@@ -83,7 +86,6 @@ export default class ContentEventSlaughter extends Component {
 			this.setState({'error': err});
 		});
 
-		this.monitorLoginState();
 		// Once Finished
 		Promise.all([onVotes, onIdeas])
 		.then(r => {
@@ -98,25 +100,6 @@ export default class ContentEventSlaughter extends Component {
 
 	componentWillUnmount() {
 		window.removeEventListener('keyup', this.hotKeyVote);
-	}
-
-	monitorLoginState() {
-		const {loggedIn} = this.state;
-		$Node.GetMy()
-			.then(r => {
-				if (r.status === 401 && loggedIn ) {
-					this.setState({"loggedIn": false});
-					window.removeEventListener('keyup', this.hotKeyVote);
-				}
-				else if (r.status !== 401 && !loggedIn) {
-					this.setState({"loggedIn": true});
-					window.addEventListener('keyup', this.hotKeyVote);
-				}
-				else if (r.status === 401 && loggedIn == null) {
-					this.setState({"loggedIn": false});
-				}
-				setTimeout(this.monitorLoginState, 60 * 1000);
-			});
 	}
 
 	hotKeyVote( e ) {
@@ -208,6 +191,7 @@ export default class ContentEventSlaughter extends Component {
 	}
 
 	_submitVote( command ) {
+		const {loggedIn} = this.state;
 		if ( this.state.waitASecond ) {
 			this.setState({'eagerVoter': "Take it easy, don't rush things!"});
 			return;
@@ -222,12 +206,16 @@ export default class ContentEventSlaughter extends Component {
 				this.addToRecentQueue(this.state.current);
 
 				this.pickRandomIdea();
+				if (!loggedIn) {
+						this.setState({'loggedIn': false});
+						window.addEventListener('keyup', this.hotKeyVote);
+				}
 			}
 			else {
 				location.href = "#expired";
-				if ( r.status === 401 ) {
-						window.removeEventListener('keyup', this.hotKeyVote);
-						this.setState({'loggedIn': false});
+				if (loggedIn) {
+					window.removeEventListener('keyup', this.hotKeyVote);
+					this.setState({'loggedIn': false});
 				}
 			}
 		})
