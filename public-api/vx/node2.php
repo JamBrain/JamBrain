@@ -218,7 +218,8 @@ api_Exec([
 	// if not logged in, where will be blank
 	$RESPONSE['where'] = nodeComplete_GetWhereIdCanCreate(userAuth_GetID());
 }],
-// Figure out what's featured, and what you made for it
+// Figure out what event is featured, and if you are athenticated, what you made for it.
+// NOTE: This is slightly different than the original behavior, but it combines several requests in to a single batch
 ["node2/what", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
 	$root_id = intval(json_ArgShift());
 	if ( !$root_id )
@@ -239,10 +240,11 @@ api_Exec([
 	$featured = $featured_id ? nodeCache_GetById($featured_id) : null;
 	$RESPONSE['featured'] = $featured;
 
+	// Authentication: rather than error out (i.e. API_AUTH) we check user_id manually here
 	$user_id = userAuth_GetID();
 	$RESPONSE['node'] = ($user_id && $featured_id) ? nodeComplete_GetWhatIdHasAuthoredByParent($user_id, $featured_id) : [];
 }],
-["node2/getmy", API_GET | API_AUTH | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
+// If you are athenticated, return your node, and any metadata that is for your eyes only.["node2/getmy", API_GET | API_AUTH | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
 	// At this point we can bail if it's just a HEAD request
 	if ( $HEAD_REQUEST )
 		json_EmitHeadAndExit();
