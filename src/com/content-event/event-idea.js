@@ -4,6 +4,8 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import UIButton							from 'com/ui/button/button';
 import $Node							from 'shrub/js/node/node';
 import $ThemeIdea						from 'shrub/js/theme/theme_idea';
+import $ThemeIdeaVote from 'shrub/js/theme/theme_idea_vote';
+import $ThemeHistory from 'shrub/js/theme/theme_history';
 import Sanitize							from 'internal/sanitize/sanitize';
 
 const SHOW_PREVIOUS = 6;
@@ -32,6 +34,7 @@ export default class ContentEventIdea extends Component {
 
 	componentDidMount() {
 		this.getPreviousEventThemes();
+		this.getEveryonesIdeas();
 
 		$ThemeIdea.GetMy([this.props.node.id])
 		.then(r => {
@@ -45,6 +48,15 @@ export default class ContentEventIdea extends Component {
 		})
 		.catch(err => {
 			this.setState({'error': "Error fetching your previous suggestions. Make sure you are logged in."});
+		});
+	}
+
+	getEveryonesIdeas() {
+		$ThemeIdeaVote.Get(this.props.node.id)
+			.then((r) => {
+				if (r.status === 200 && r.ideas) {
+					this.setState({'everyonesIdeas': Object.values(r.ideas).map(idea => ({'theme': idea}))});
+				}
 		});
 	}
 
@@ -66,14 +78,97 @@ export default class ContentEventIdea extends Component {
 				.catch((err) => (this.setState({'error': "Could not retrieve previous events."})));
 			})
 			.catch((err) => (this.setState({'error': "Could not find list of previous events."})));
+		$ThemeHistory.Get()
+			.then(r => {
+				if (r.status === 200) {
+					const history = r.history.filter(evt => evt.name.indexOf('Ludum Dare') === 0);
+					this.setState({'history': history});
+				}
+			});
 	}
 
 	textChange( e, isSubmit ) {
 		let idea = e.target.value;
+		console.log(this.findSimilar(idea.trim()));
 		if ( isSubmit ) {
 			idea = idea.trim();
 		}
 		this.setState({'idea': idea, 'error': ((idea.length > 64) ? "Suggestion is too long." : null)});
+	}
+
+	levenshteinDistance(s, t) {
+		const m = s.length;
+		const n = t.length;
+		const v0 = Array(n + 1);
+		const v1 = Array(n + 1);
+		for (let i = 0; i<=n; i++) v0[i] = i;
+		for (let i = 0; i<=n; i++) v1[i] = 0;
+		for (let i = 0; i<m; i++) {
+			v1[0] = i + 1;
+			for (let j = 0; j<n; j++) {
+				const delCost = v0[j + 1] + 1;
+				const insCost = v1[j] + 1;
+				let subCost;
+				if (s[i] === t[j]) {
+					subCost = v0[j];
+				}
+				else
+				{
+					subCost = v0[j] + 1;
+				}
+				v1[j + 1] = Math.min(delCost, insCost, subCost);
+			}
+			v1.forEach((val, idx) => v0[idx] = val);
+		}
+		return v0[n];
+	}
+
+	cosineDistance(vec1, vec2) {
+			const keys1 = Object.keys(vec1);
+			const keys2 = Object.keys(vec2);
+			if (keys1.length === 0 || keys2.length === 0) return 0;
+			const intersection = keys1.filter(k => keys2.indexOf(k) >= 0);
+			if (intersection.length === 0) return 0;
+			const numerator = intersection
+				.map(k => vec1[k] * vec2[k])
+				.reduce((a, b) => a + b);
+			const sum1 = keys1
+				.map(k => Math.pow(vec1[k], 2))
+				.reduce((a, b) => a + b);
+			const sum2 = keys2
+				.map(k => Math.pow(vec2[k], 2))
+				.reduce((a, b) => a + b);
+			const denominator = Math.sqrt(sum1) * Math.sqrt(sum2);
+			return numerator / denominator;
+	}
+
+	wordVector(idea) {
+			const vec = {};
+			idea.match(/[\w\d]+/g).forEach(word => {
+				w = word.toLowerCase();
+				vec[w] = vec[w] ? vec[w] + 1 : 1;
+			});
+			return vec;
+	}
+
+	findSimilar(idea) {
+		if (!idea || idea.length === 0) return [];
+		const ideaVec = this.wordVector(idea);
+		const similar = [];
+		const {history, previousThemes, everyonesIdeas} = this.state;
+		console.log(everyonesIdeas
+			.map(id => ({
+				'lScore': this.levenshteinDistance(idea, id.theme),
+				'cScore': this.cosineDistance(ideaVec, this.wordVector(id.theme)),
+				'theme': id.theme
+			}))
+			.map(id => ({
+				'score': Math.log(id.lScore + 1) / (id.cScore + 1),
+				...id
+			}))
+			.sort((a, b) => a.score - b.score)
+		);
+		return similar;
 	}
 
 	onKeyDown( e ) {
