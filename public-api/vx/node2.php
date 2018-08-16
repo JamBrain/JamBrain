@@ -244,7 +244,8 @@ api_Exec([
 	$user_id = userAuth_GetID();
 	$RESPONSE['node'] = ($user_id && $featured_id) ? nodeComplete_GetWhatIdHasAuthoredByParent($user_id, $featured_id) : [];
 }],
-// If you are athenticated, return your node, and any metadata that is for your eyes only.["node2/getmy", API_GET | API_AUTH | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
+// If you are athenticated, return your node, and any metadata that is for your eyes only.
+["node2/getmy", API_GET | API_AUTH | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
 	// At this point we can bail if it's just a HEAD request
 	if ( $HEAD_REQUEST )
 		json_EmitHeadAndExit();
