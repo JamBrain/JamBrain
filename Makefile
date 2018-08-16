@@ -145,17 +145,25 @@ RM_EMPTY_DIRS		=	find $(1) -type d -empty -delete 2>/dev/null |true
 SIZE				=	cat $(1) | wc -c
 GZIP_SIZE			=	gzip -c $(1) | wc -c
 
+COL_OFF				=	\e[0m
+COL_RED				=	\e[91m
+COL_GREEN			=	\e[92m
+COL_YELLOW			=	\e[93m
+COL_BLUE			=	\e[94m
+COL_PURPLE			=	\e[95m
+COL_CYAN			=	\e[96m
+COL_WHITE			=	\e[97m
 
 # Rules #
 default: target
 
 report: $(TARGET_FILES)
 	@echo \
-		"[JS_RAW]  GZIP: `$(call GZIP_SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)` MINIFY: N/A	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`\n" \
-		"[JS_DEBUG]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.debug.js 2>/dev/null)` MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.debug.js 2>/dev/null)`*	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.debug.js 2>/dev/null)`\n" \
-		"[JS_RELEASE]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`   MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`    ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.release.js 2>/dev/null)`\n" \
-		"[CSS]     GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`  MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.css 2>/dev/null)`\n" \
-		"[SVG]     GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`  MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`\n" \
+		"[$(COL_GREEN)JS_RAW$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)` MINIFY: N/A	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`\n" \
+		"[$(COL_GREEN)JS_DEBUG$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.debug.js 2>/dev/null)` MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.debug.js 2>/dev/null)`*	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.debug.js 2>/dev/null)`\n" \
+		"[$(COL_GREEN)JS_RELEASE$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`   MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`    ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.release.js 2>/dev/null)`\n" \
+		"[$(COL_GREEN)CSS$(COL_OFF)]     GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`  MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.css 2>/dev/null)`\n" \
+		"[$(COL_GREEN)SVG$(COL_OFF)]     GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`  MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`\n" \
 		| column -t
 
 # If not called recursively, figure out who the targes are and call them #
@@ -225,7 +233,7 @@ target: $(BUILDS) $(OUT)/git-version.php
 # NOTE: git-version should be last! Generation of this file doubles as the "install complete" notification.
 
 $(ALL_BUILDS):
-	@echo "[+] Building \"$(subst /Makefile,,$(subst $(OUT)/$(.BUILD)/,,$@))\"..."
+	@echo "[$(COL_YELLOW)+$(COL_OFF)] Building \"$(subst /Makefile,,$(subst $(OUT)/$(.BUILD)/,,$@))\"..."
 	@$(MAKE) --no-print-directory $(JOBS) -C . -f $(subst $(OUT)/$(.BUILD)/,$(SRC)/,$@)
 
 else # MAIN_FOLDER # ---- #
@@ -237,9 +245,11 @@ $(OUT_FOLDERS):
 
 lint-svg:
 lint-css: $(LESS_FILES)
-	$(call STYLELINT,$^)
+	@echo "[$(COL_BLUE)LESS LINT BATCH$(COL_OFF)] $^"
+	@$(call STYLELINT,$^)
 lint-js: $(ES_FILES)
-	$(call ESLINT,$^)
+	@echo "[$(COL_GREEN)ES LINT BATCH$(COL_OFF)] $^"
+	@$(call ESLINT,$^)
 lint-php:
 
 clean-lint:
@@ -247,29 +257,36 @@ clean-lint:
 
 
 $(BUILD_FOLDER)/buble.lint: $(ES_FILES)
-	$(call ESLINT,$?)
+	@echo "[$(COL_GREEN)ES LINT$(COL_OFF)] $?"
+	@$(call ESLINT,$?)
 	@touch $@
 
 $(BUILD_FOLDER)/less.lint: $(LESS_FILES)
-	$(call STYLELINT,$?)
+	@echo "[$(COL_BLUE)LESS LINT$(COL_OFF)] $?"
+	@$(call STYLELINT,$?)
 	@touch $@
 
 
 # File Rules #
 $(OUT)/%.es.js:$(SRC)/%.js
-	$(call BUBLE,$<,$@)
+	@echo "[$(COL_GREEN)ES->JS$(COL_OFF)] $<"
+	@$(call BUBLE,$<,$@)
 
 $(OUT)/%.o.js:$(SRC)/%.js
-	cp $< $@
+	@echo "[$(COL_GREEN)Copy JS$(COL_OFF)] $<"
+	@cp $< $@
 
 $(OUT)/%.less.css:$(SRC)/%.less
-	$(call LESS,$<,$@); $(call LESS_DEP,$<,$@)
+	@echo "[$(COL_BLUE)LESS->CSS$(COL_OFF)] $<"
+	@$(call LESS,$<,$@); $(call LESS_DEP,$<,$@)
 
 $(OUT)/%.o.css:$(SRC)/%.css
-	cp $< $@
+	@echo "[$(COL_BLUE)Copy CSS$(COL_OFF)] $<"
+	@cp $< $@
 
 $(OUT)/%.min.svg:$(SRC)/%.svg
-	$(call SVGO,$<,$@)
+	@echo "[$(COL_CYAN)SVG MIN$(COL_OFF)] $<"
+	@$(call SVGO,$<,$@)
 
 
 clean:
@@ -293,21 +310,28 @@ OUT_MAIN_JS			:=	$(subst $(SRC)/,$(OUT)/,$(MAIN_JS:.js=.es.js))
 
 # JavaScript #
 $(BUILD_FOLDER)/js.js: $(OUT_JS_FILES)
-	cat $^ > $@
+	@echo "[$(COL_PURPLE)MERGE$(COL_OFF)] $@"
+	@cat $^ > $@
 $(BUILD_FOLDER)/buble.js: $(OUT_MAIN_JS) $(OUT_ES_FILES)
-	$(call ROLLUP,$<,$@.tmp)
-	rm -f $@
-	mv $@.tmp $@
+	@echo "[$(COL_PURPLE)ROLLUP$(COL_OFF)] $@"
+	@$(call ROLLUP,$<,$@.tmp)
+	@rm -f $@
+	@mv $@.tmp $@
 $(BUILD_FOLDER)/all.js: $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js
-	cat $^ > $@
+	@echo "[$(COL_PURPLE)MERGE$(COL_OFF)] $@"
+	@cat $^ > $@
 $(BUILD_FOLDER)/all.release.js: $(BUILD_FOLDER)/all.js
-	$(call JS_PP_RELEASE,$<,$@)
+	@echo "[$(COL_PURPLE)JS Preprocess Tool$(COL_OFF)] $@"
+	@$(call JS_PP_RELEASE,$<,$@)
 $(TARGET_FOLDER)/all.min.js: $(BUILD_FOLDER)/all.release.js
-	$(call MINIFY_JS,$<,$@)
+	@echo "[$(COL_PURPLE)JS MIN$(COL_OFF)] $@"
+	@$(call MINIFY_JS,$<,$@)
 $(BUILD_FOLDER)/all.debug.js: $(BUILD_FOLDER)/all.js
-	$(call JS_PP_DEBUG,$<,$@)
+	@echo "[$(COL_PURPLE)JS Preprocess Tool$(COL_OFF)] $@"
+	@$(call JS_PP_DEBUG,$<,$@)
 $(TARGET_FOLDER)/all.debug.js: $(BUILD_FOLDER)/all.debug.js
-	cp -f --remove-destination $< $@
+	@echo "[$(COL_PURPLE)Copy JS$(COL_OFF)] $@"
+	@cp -f --remove-destination $< $@
 
 #	$(call JS_PP_DEBUG,$<,$(@D)/all.debug.js)
 
@@ -349,7 +373,7 @@ $(TARGET_FOLDER)/all.min.svg: $(BUILD_FOLDER)/all.svg
 
 # Target #
 target: $(OUT_FOLDERS) $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/less.lint $(TARGET_FILES) report
-	@echo "[-] Done \"$(subst /,,$(TARGET))\""
+	@echo "[$(COL_YELLOW)-$(COL_OFF)] Done \"$(subst /,,$(TARGET))\""
 
 endif # MAIN_FOLDER # ---- #
 

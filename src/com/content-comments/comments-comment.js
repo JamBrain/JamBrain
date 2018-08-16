@@ -228,7 +228,7 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	render( props, state ) {
-		let {user, comment, author, error, node} = props;
+		let {user, comment, author, error, node, isNodeAuthor, isMyComment, isMention} = props;
 
 		if ( author || (comment.author == 0) ) {
 			let Name = "Anonymous";
@@ -328,7 +328,7 @@ export default class ContentCommentsComment extends Component {
 
 				var ShowRight = [];
 
-				ShowRight.push(<UICheckbox onclick={this.onSubscribe} value={props.cansubscribe} tooltip="You always receive notifications for mentions">Recieve notifications</UICheckbox>);
+				ShowRight.push(<UICheckbox onclick={this.onSubscribe} value={props.subscribed} tooltip="You always receive notifications for mentions">Recieve notifications</UICheckbox>);
 
 				if ( props.publish ) {
 					if ( props.allowAnonymous ) {
@@ -383,7 +383,15 @@ export default class ContentCommentsComment extends Component {
 			/>;
 
 			return (
-				<div id={"comment-"+comment.id} class={"-item -comment -indent-"+props.indent}>
+				<div
+					id={"comment-"+comment.id}
+					class={cN(
+						"-item", "-comment", "-indent-" + props.indent,
+						isNodeAuthor && "comment-node-author",
+						isMyComment && "comment-self-authored",
+						isMention && "comment-mention"
+					)}
+				>
 					{ShowAvatar}
 					{ShowAutocompleteAt}
 					{ShowAutocompleteEmoji}

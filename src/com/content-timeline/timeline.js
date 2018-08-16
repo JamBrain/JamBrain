@@ -72,44 +72,44 @@ export default class ContentTimeline extends Component {
 	}
 
 	getMissingNodes() {
-		var keys = this.getFeedIdsWithoutNodes();
+		let keys = this.getFeedIdsWithoutNodes();
 
 		if ( keys.length ) {
-			return $Node.GetKeyed( keys )
+			// Arguments here to pre-cache things for later (not actually used here, but they end up in the cache)
+			return $Node.GetKeyed(keys, ['author', 'parent', 'superparent'])
 				.then(r => {
-					var feed = this.state.feed;
-					var hash = this.state.hash;
+					let feed = this.state.feed;
+					let hash = this.state.hash;
 
-					for ( var node_id in r.node ) {
-						var id = r.node[node_id].id;
-
-						feed[hash[id]].node = r.node[node_id];
+					for ( let id in hash ) {
+						if ( r.node[id] ) {
+							feed[hash[id]].node = r.node[id];
+						}
 					}
 
 					this.setState({'feed': feed, 'hash': hash});
 				})
 				.catch(err => {
-					this.setState({'error': err});
+					this.setState({'error': ""+err});
 				});
 		}
-
 	}
 
 	getFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit ) {
 		this.setState({'loaded': false});
-		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit )
-		.then(r => {
-			this.setState({'loaded': true});
+		$Node.GetFeed(id, methods, types, subtypes, subsubtypes, tags, more, limit)
+			.then(r => {
+				this.setState({'loaded': true});
 
-			// make sure we have a feed
-			if ( r.feed && r.feed.length ) {
-				this.appendFeed(r.feed);
-				return this.getMissingNodes();
-			}
-		})
-		.catch(err => {
-			this.setState({'error': err});
-		});
+				// make sure we have a feed
+				if ( r.feed && r.feed.length ) {
+					this.appendFeed(r.feed);
+					return this.getMissingNodes();
+				}
+			})
+			.catch(err => {
+				this.setState({'error': ""+err});
+			});
 	}
 
 	fetchMore( offset ) {
@@ -158,7 +158,7 @@ export default class ContentTimeline extends Component {
 		let ShowFeed = [];
 
 		if ( error ) {
-			ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>error</ContentCommonBody></ContentCommon>);
+			ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>Error: {error}</ContentCommonBody></ContentCommon>);
 		}
 		else if ( feed && (feed.length == 0) ) {
 			if ( !props.noemptymessage ) {

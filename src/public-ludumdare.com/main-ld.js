@@ -324,47 +324,54 @@ class Main extends Component {
 		console.log("[fetchNode]");
 
 		// Walk to the active node
-		return $Node.Walk(SITE_ROOT, this.state.slugs)
+		return $Node.Walk(SITE_ROOT, this.state.slugs, ['node', 'parent', 'superparent', 'author'])
 		.then(r => {
 			// Store the path determined by the walk
-			if ( r && r.node ) {
+			if ( r && r.node_id ) {
 				NewState['path'] = (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/');
 				NewState['extra'] = r.extra;
 
-				// Now, lookup the node
-				return $Node.Get(r.node);
-			}
-			throw "[fetchNode] Unable to walk tree";
-		})
-		.then(r => {
-			// Process the node
-			if ( r && r.node && r.node.length ) {
-				NewState.node = r.node[0];
+//				// Now, lookup the node
+//				return $Node.Get(r.node_id);
 
-				let Keys = [];
-				if ( NewState.node.parent )
-					Keys.push(NewState.node.parent);
-				if ( NewState.node.superparent )
-					Keys.push(NewState.node.superparent);
-				if ( NewState.node.author )
-					Keys.push(NewState.node.author);
-
-				// Fetch related nodes
-				return $Node.GetKeyed(Keys);
-			}
-			throw "[fetchNode] No nodes found";
-		})
-		.then(r => {
-			if ( r && r.node ) {
+				NewState.node = r.node[r.node_id];
 				NewState.parent = NewState.node.parent ? r.node[NewState.node.parent] : null;
 				NewState.superparent = NewState.node.superparent ? r.node[NewState.node.superparent] : null;
 				NewState.author = NewState.node.author ? r.node[NewState.node.author] : null;
 
-				// That's it, we're done
 				return true;
 			}
-			throw "[fetchNode] Related nodes not found";
+			throw "[fetchNode] Unable to walk tree";
 		})
+//		.then(r => {
+//			// Process the node
+//			if ( r && r.node && r.node.length ) {
+//				NewState.node = r.node[0];
+//
+//				let Keys = [];
+//				if ( NewState.node.parent )
+//					Keys.push(NewState.node.parent);
+//				if ( NewState.node.superparent )
+//					Keys.push(NewState.node.superparent);
+//				if ( NewState.node.author )
+//					Keys.push(NewState.node.author);
+//
+//				// Fetch related nodes
+//				return $Node.GetKeyed(Keys);
+//			}
+//			throw "[fetchNode] No nodes found";
+//		})
+//		.then(r => {
+//			if ( r && r.node ) {
+//				NewState.parent = NewState.node.parent ? r.node[NewState.node.parent] : null;
+//				NewState.superparent = NewState.node.superparent ? r.node[NewState.node.superparent] : null;
+//				NewState.author = NewState.node.author ? r.node[NewState.node.author] : null;
+//
+//				// That's it, we're done
+//				return true;
+//			}
+//			throw "[fetchNode] Related nodes not found";
+//		})
 		.then(r => {
 			// Commit the changes to State
 			this.setState(NewState);
@@ -468,9 +475,9 @@ class Main extends Component {
 		this.handleAnchors();
 	}
 
-	handleAnchors() {
-		if ( window.location.hash ) {
-			let hash = Sanitize.parseHash(window.location.hash);
+	handleAnchors(evtHash) {
+		if ( window.location.hash || evtHash ) {
+			let hash = Sanitize.parseHash(evtHash || window.location.hash);
 
 			if ( hash.path === "" && hash.extra.length > 0 ) {
 				let heading = document.getElementById(hash.extra[0]);
@@ -509,7 +516,7 @@ class Main extends Component {
 		// Scroll to top
 		window.scrollTo(0, 0);
 
-		this.handleAnchors();
+		this.handleAnchors(e.detail.location.hash);
 	}
 	// When we navigate using back/forward buttons
 	onPopState( e ) {
