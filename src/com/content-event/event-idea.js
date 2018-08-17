@@ -147,10 +147,13 @@ export default class ContentEventIdea extends Component {
 
 	wordVector(idea) {
 			const vec = {};
-			idea.match(/[\w\d]+/g).forEach(word => {
-				w = word.toLowerCase();
-				vec[w] = vec[w] ? vec[w] + 1 : 1;
-			});
+			const wrds = idea.match(/[\w\d]+/g);
+			if (wrds) {
+					wrds.forEach(word => {
+					w = word.toLowerCase();
+					vec[w] = vec[w] ? vec[w] + 1 : 1;
+				});
+			}
 			return vec;
 	}
 
