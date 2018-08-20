@@ -75,8 +75,8 @@ export default class ContentBox extends Component {
 				ShowEvent = <div>{state.parent.name}</div>;
 			}
 
-			let ShowSubEvent;
-			let SubEventClass;
+			let ShowSubEvent = null;
+			let SubEventClass = null;
 			if ( !props.nosubevent && node.subtype ) {
 				if ( !node.published ) {
 					ShowSubEvent = <div><SVGIcon baseline small>cross</SVGIcon></div>;
