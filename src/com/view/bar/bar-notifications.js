@@ -25,32 +25,27 @@ export default class DropdownNotification extends NotificationsBase {
 		};
 		this.hide = this.hide.bind(this);
 		this.clearNotifications = this.clearNotifications.bind(this);
-		this.markAndClearNotifications = this.markAndClearNotifications.bind(this);
 	}
 
 	componentDidMount() {
 		this.processNotificationFeed(this.props.feed);
-		if (this.props.anythingToMark) this.markAndClearNotifications();
+		if (this.props.anythingToMark) this.markReadHighest();
 	}
 
 	hasNewNotification(feed) {
-		if (!feed) {
-			return;
-		}
-		const {notificationIds} = this.state;
-		for (let i=0; i<feed.length; i++) {
-			if (notificationIds.indexOf(feed[i].id) == -1) {
-				return true;
-			}
-		}
-		return notificationIds.length != feed.length;
+		if (!feed) return false;
+		const oldFeed = this.props.feed && this.props.feed.feed;
+		if (!oldFeed) return true;
+		return !oldFeed.map((e, i) => e == feed[i])
+				.concat(feed.map((e, i) => e == oldFeed[i]))
+				.reduce((a, b) => a && b);
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (this.hasNewNotification(nextProps.feed)) {
+		if (this.hasNewNotification(nextProps.feed.feed)) {
 			this.clearNotifications();
 			this.processNotificationFeed(nextProps.feed);
-			if (nextProps.anythingToMark) this.markAndClearNotifications();
+			if (nextProps.anythingToMark) this.markReadHighest();
 		}
 	}
 
@@ -58,11 +53,6 @@ export default class DropdownNotification extends NotificationsBase {
 		if (this.props.hideCallback) {
 			this.props.hideCallback();
 		}
-	}
-
-	markAndClearNotifications() {
-		this.markReadHighest();
-		this.clearNotifications();
 	}
 
 	clearNotifications() {

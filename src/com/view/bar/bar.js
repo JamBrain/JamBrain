@@ -113,7 +113,9 @@ export default class ViewBar extends Component {
 	componentDidMount() {
 		document.body.classList.add('_use-view-bar');
 
-		this.checkNotificationCount();
+		if ( !this.StartedNotificationLoop ) {
+			this.checkNotificationCount();
+		}
 	}
 
 	componentWillUnmount() {
