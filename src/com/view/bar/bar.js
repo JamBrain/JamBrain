@@ -43,7 +43,7 @@ export default class ViewBar extends Component {
 		this.setState({
 			'notifications': 0,
 			'notificationsHidden': 0,
-			'notificationsFeed': null,
+			//'notificationsFeed': null,
 			//'notificationsMore': false,
 		});
 	}
@@ -67,11 +67,21 @@ export default class ViewBar extends Component {
 				setTimeout(() => this.checkNotificationCount(), 20000);
 			}
 			else {
+				const {notifications, notificationsFeed} = this.state;
 				$Notification.GetCountUnread()
 				.then(r => {
+					if (r.status !== 200) {
+						location.href = '# expired';
+						setTimeout(() => this.checkNotificationCount(), 5 * 60000);
+						return Promise.reject();
+					}
 					const newUnfilteredCount = r.count;
-					const request = newUnfilteredCount > 0 ? $Notification.GetFeedUnreadFiltered : $Notification.GetFeedAllFiltered;
-					request(0, fetchCount)
+					// Only get unread if there's a possibility that there are new notifications
+					// Only get the feed in general if it hasn't been requested before.
+					const request = newUnfilteredCount > (notifications || 0) ?
+						$Notification.GetFeedUnreadFiltered :
+             !notificationsFeed && $Notification.GetFeedAllFiltered;
+					request && request(0, fetchCount)
 					.then(r => {
 						if (this.state.notifications != r.count) {
 							this.setState({
@@ -242,6 +252,7 @@ export default class ViewBar extends Component {
 				ShowNotifications = (
 					<BarNotification
 						feed={this.state.notificationsFeed}
+						anythingToMark={this.state.notifications > 0 || this.state.notificationsHidden > 0}
 						clearCallback={this.handleNotificationsClear}
 						hideCallback={this.handleNotificationsHide}
 					/>
