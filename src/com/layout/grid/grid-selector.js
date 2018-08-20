@@ -14,6 +14,7 @@ export default class GridSelector extends Component {
 
         this.onSelectLayout = this.onSelectLayout.bind(this);
         this.onToggleDropDown = this.onToggleDropDown.bind(this);
+        this.onHideDropDown = this.onHideDropDown.bind(this);
     }
 
     componentDidMount() {
@@ -38,6 +39,10 @@ export default class GridSelector extends Component {
     onToggleDropDown() {
         console.log('toggle dropdown', this.state);
         this.setState({'expanded': !this.state.expanded});
+    }
+
+    onHideDropDown() {
+      this.setState({'expanded': false});
     }
 
     onSelectLayout( index ) {
@@ -67,9 +72,10 @@ export default class GridSelector extends Component {
                <Dropdown
                     items={options}
                     onmodify={this.onSelectLayout}
-                    startExpanded={true}
+                    expanded={expanded}
                     value={selected}
                     selfManaged={false}
+                    onhide={this.onHideDropDown}
                 />
             );
        }

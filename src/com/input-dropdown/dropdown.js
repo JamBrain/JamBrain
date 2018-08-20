@@ -9,7 +9,7 @@ export default class InputDropdown extends Component {
 		super(props);
 
 		this.state = {
-			'show': props.startExpanded,
+			'show': false,
 			'value': props.value ? props.value : 0
 		};
 
@@ -17,6 +17,7 @@ export default class InputDropdown extends Component {
 
 		this.onShow = this.onShow.bind(this);
 		this.onHide = this.onHide.bind(this);
+		this.doShow = this.doShow.bind(this);
 	}
 
 	doShow( e ) {
@@ -27,6 +28,7 @@ export default class InputDropdown extends Component {
 	doHide( e ) {
 		this.setState({'show': false});
 		document.removeEventListener('click', this.onHide);
+		if (this.props.onhide) this.props.onhide(e);
 	}
 
 	// Clicking on the button
@@ -61,6 +63,20 @@ export default class InputDropdown extends Component {
 			this.setState({'value': parseInt(e.target.dataset.id)});
 			this.doHide(e);
 		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+			if (nextProps.expanded && !this.state.show) {
+				this.setState({'show': true});
+				setTimeout(this.doShow, 100);
+			}
+	}
+
+	componentDidMount() {
+			if (this.props.expanded && !this.state.show) {
+				this.setState({'show': true});
+				setTimeout(this.doShow, 100);
+			}
 	}
 
 	render( props, state ) {

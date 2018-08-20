@@ -30,6 +30,7 @@ export default class DropdownNotification extends NotificationsBase {
 
 	componentDidMount() {
 		this.processNotificationFeed(this.props.feed);
+		if (this.props.anythingToMark) this.markAndClearNotifications();
 	}
 
 	hasNewNotification(feed) {
@@ -49,6 +50,7 @@ export default class DropdownNotification extends NotificationsBase {
 		if (this.hasNewNotification(nextProps.feed)) {
 			this.clearNotifications();
 			this.processNotificationFeed(nextProps.feed);
+			if (nextProps.anythingToMark) this.markAndClearNotifications();
 		}
 	}
 
@@ -97,14 +99,10 @@ export default class DropdownNotification extends NotificationsBase {
 			Notifications.push([-3, (<div>You have no notifications.</div>)]);
 		}
 
-		if ( !loading && this.hasUnreadNotifications() ) {
-			Notifications.push([-2, (<ButtonLink onclick={this.markAndClearNotifications} ><em>Mark all as read</em></ButtonLink>)]);
-		}
-
 		Notifications.push([-1, (<ButtonLink onclick={this.hide} href="/my/notifications"><em>Open notifications feed...</em></ButtonLink>)]);
 
 		return (
-			<Dropdown class="-notifications" items={Notifications} startExpanded={true} hideSelectedField={true} />
+			<Dropdown class="-notifications" items={Notifications} expanded={true} hideSelectedField={true} onhide={this.hide} />
 		);
 	}
 }

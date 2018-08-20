@@ -75,8 +75,8 @@ export default class ContentBox extends Component {
 				ShowEvent = <div>{state.parent.name}</div>;
 			}
 
-			var ShowSubEvent = null;
-			var SubEventClass = null;
+			let ShowSubEvent = null;
+			let SubEventClass = null;
 			if ( !props.nosubevent && node.subtype ) {
 				if ( !node.published ) {
 					ShowSubEvent = <div><SVGIcon baseline small>cross</SVGIcon></div>;
@@ -85,7 +85,7 @@ export default class ContentBox extends Component {
 					ShowSubEvent = <div>GAME</div>;
 					if ( node.subsubtype ) {
 						if ( node.subsubtype == 'jam' ) {
-							ShowSubEvent = <div>JAM</div>;
+							ShowSubEvent = <div>JAM <SVGIcon baseline small>{node_CountAuthors(node) === 1 ? "user" : "users"}</SVGIcon></div>;
 							SubEventClass = '-col-a';
 						}
 						else if ( node.subsubtype == 'compo' ) {
