@@ -90,6 +90,7 @@ export default class NotificationsBase extends Component {
 	}
 
 	processNotificationFeed( r ) {
+		if (r == null) return;
 		const callerID = r.caller_id;
 		this.collectAllNodesAndNodes(r.feed, callerID);
 		let highestRead = (r.max_read !== undefined) ? r.max_read : this.state.highestRead;
