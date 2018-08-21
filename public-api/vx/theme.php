@@ -24,7 +24,7 @@ function GetEventNodes() {
 
 function validateEvent( $event_id, $optional = false ) {
 	global $RESPONSE;
-	
+
 	if ( $event_id !== 0 ) {
 		/// Check if $event_id is on the master list of event nodes.
 		if ( !in_array($event_id, GetEventNodes()) ) {
@@ -36,22 +36,22 @@ function validateEvent( $event_id, $optional = false ) {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
 		$event_id = 0;
 	}
-	
+
 	$event = nodeComplete_GetById($event_id);
-	
+
 	if ( !$event ) {
-		json_EmitFatalError_Server(null, $RESPONSE);		
+		json_EmitFatalError_Server(null, $RESPONSE);
 	}
-	
+
 	return $event;
 }
 
 function doThemeIdeaVote( $value ) {
 	global $RESPONSE;
-	
+
 	json_ValidateHTTPMethod('GET');
 	$idea_id = intval(json_ArgGet(0));
-	
+
 	if ( $idea_id ) {
 		$idea = themeIdea_GetById($idea_id);
 		if ( isset($idea) && isset($idea['node']) ) {
@@ -137,10 +137,10 @@ function getListPages( $lists ) {
 
 function doThemeListVote( $value ) {
 	global $RESPONSE;
-	
+
 	json_ValidateHTTPMethod('GET');
 	$theme_id = intval(json_ArgGet(0));
-	
+
 	if ( $theme_id ) {
 		$item = themeList_GetById($theme_id);
 		//$RESPONSE['item'] = $item;
@@ -175,7 +175,7 @@ function doThemeListVote( $value ) {
 	}
 	else {
 		json_EmitFatalError_BadRequest(null, $RESPONSE);
-	}	
+	}
 }
 
 
@@ -226,29 +226,29 @@ switch ( $action ) {
 
 	case 'get': //theme/get
 		json_ValidateHTTPMethod('GET');
-		
+
 		$event_id = intval(json_ArgGet(0));
-		
+
 		// NOTE: This is a special cache. The server is going to be hit HARD by this request.
-		
+
 		// TODO: Build Cache Key
 		// TODO: Check if it exists
 		// TODO: If it exists, check if it's allowed to be shown, and return immediately
-		
+
 		if ( $event = validateEvent($event_id) ) {
 			// If the theme is public knowledge
 			if ( isset($event['meta']['event-theme']) ) {
 				$RESPONSE['theme'] = $event['meta']['event-theme'];
 				break; // case 'get': //theme/get
 			}
-			
+
 			// If the event has a start time
 			if ( isset($event['meta']['event-start']) ) {
 				$start = strtotime($event['meta']['event-start']);
 				$now = time();
-				
+
 				$diff = $start - $now;
-				
+
 				$RESPONSE['countdown'] = $diff > 0 ? $diff : 0;
 
 				$event_priv = null;//nodeComplete_GetPrivateById($event_id);
@@ -264,10 +264,10 @@ switch ( $action ) {
 				else {
 					$RESPONSE['locked'] = false;
 				}
-				
+
 				break; // case 'get': //theme/get
 			}
-			
+
 			json_EmitFatalError_BadRequest("No theme is set", $RESPONSE);
 		}
 		break; // case 'get': //theme/get
@@ -296,20 +296,20 @@ switch ( $action ) {
 //			case 'get': //theme/idea/get
 //				json_ValidateHTTPMethod('GET');
 //				$event_id = intval(json_ArgGet(0));
-//				
+//
 //				if ( $event_id !== 0 ) {
 //					/// Broadphase: check if $event_id is on the master list of event nodes.
 //					if ( in_array($event_id, GetEventNodes()) ) {
 //						///	Narrowphase: Get the threshold from the node itself
 //						$threshold = nodeCache_GetMetaFieldById($event_id, 'theme_threshold', null);
 //						$cache_key = CACHE_KEY_PREFIX."IDEA!GET".$event_id."!".$threshold;
-//							
+//
 //						$RESPONSE['themes'] = cache_Fetch($cache_key);
 //						if ( !isset($RESPONSE['themes']) ) {
 //							$RESPONSE['themes'] = themeIdea_GetOriginal($event_id, null, $threshold);
 //							cache_Store($cache_key, $RESPONSE['themes'], CACHE_TTL);
 //						}
-//						
+//
 //						$RESPONSE['count'] = count($RESPONSE['themes']);
 //					}
 //					else {
@@ -343,12 +343,12 @@ switch ( $action ) {
 					// Is Event Accepting Suggestions ?
 					if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) === 1 ) {
 						$theme_limit = isset($event['meta']['theme-idea-limit']) ? intval($event['meta']['theme-idea-limit']) : 0;
-						
+
 						$RESPONSE['response'] = themeIdea_Add($idea, $event_id, $user, $theme_limit);
-						
+
 						$RESPONSE['ideas'] = themeIdea_Get($event_id, $user);
 						$RESPONSE['count'] = count($RESPONSE['ideas']);
-						
+
 						if ( $RESPONSE['response']['id'] )
 							json_RespondCreated();
 					}
@@ -402,7 +402,7 @@ switch ( $action ) {
 						$event_id = intval(json_ArgGet(0));
 
 						if ( $event = validateEvent($event_id) ) {
-							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) >= 2 ) {
+							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) >= 1 ) {
 								$author_id = userAuth_GetId();
 								if ( $author_id ) {
 									$threshold = 0.0;
@@ -451,7 +451,7 @@ switch ( $action ) {
 						break; // case 'flag': //theme/idea/vote/flag
 				}
 				break; // case 'vote': //theme/idea/vote
-				
+
 			default:
 				json_EmitFatalError_Forbidden(null, $RESPONSE);
 				break; // default
@@ -466,7 +466,7 @@ switch ( $action ) {
 //			case 'getmy': //theme/list/getmy
 //				json_ValidateHTTPMethod('GET');
 //				$event_id = intval(json_ArgGet(0));
-//				
+//
 //				if ( $event = validateEvent($event_id) ) {
 //					$author_id = userAuth_GetId();
 //					if ( $author_id ) {
@@ -482,7 +482,7 @@ switch ( $action ) {
 			case 'get': //theme/list/get
 				json_ValidateHTTPMethod('GET');
 				$event_id = intval(json_ArgGet(0));
-				
+
 				if ( $event = validateEvent($event_id) ) {
 					$page_id = json_ArgGet(1);
 
@@ -578,12 +578,12 @@ switch ( $action ) {
 								$author_id = userAuth_GetId();
 								if ( $author_id ) {
 									$votes = themeListVote_GetByNodeUser($event_id, $author_id);
-									
+
 									$ret = [];
 									foreach ( $votes as $vote ) {
 										$ret[$vote['theme']] = $vote['vote'];
 									}
-									
+
 									$RESPONSE['votes'] = $ret;
 								}
 								else {
