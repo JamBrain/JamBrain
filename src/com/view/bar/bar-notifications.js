@@ -69,17 +69,17 @@ export default class DropdownNotification extends NotificationsBase {
 			Notifications = [[null, <div class="-warning">Error: {props.error}</div>]];
 		}
 		else if (state.status != 200) {
-			Notifications = [[null, (<div>An error occurred retrieving the notifications...</div>)]];
+			Notifications = [[null, (<div class="-warning">An error occurred retrieving the notifications...</div>)]];
 		}
 		else {
 			if (state.loading) {
-				Notifications = [[null, <div>Loading...</div>]];
+				Notifications = [[null, <div class="-warning">Loading...</div>]];
 			}
 			Notifications = Notifications.concat(this.getNotifications(showMax, props.hideCallback));
 		}
 
 		if ( !state.loading && (state.count == 0) ) {
-			Notifications.push([-3, (<div>You have no notifications.</div>)]);
+			Notifications.push([null, <div class="-warning">You have no notifications.</div>]);
 		}
 
 		Notifications.push([-1, (<ButtonLink onclick={this.hide} href="/my/notifications"><em>Open notifications feed...</em></ButtonLink>)]);
