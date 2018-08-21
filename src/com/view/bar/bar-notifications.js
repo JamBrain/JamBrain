@@ -42,7 +42,7 @@ export default class DropdownNotification extends NotificationsBase {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (this.hasNewNotification(nextProps.feed.feed)) {
+		if (this.hasNewNotification(nextProps.feed && nextProps.feed.feed)) {
 			this.clearNotifications();
 			this.processNotificationFeed(nextProps.feed);
 			if (nextProps.anythingToMark) this.markReadHighest();
@@ -61,31 +61,24 @@ export default class DropdownNotification extends NotificationsBase {
 		}
 	}
 
-	render( props ) {
-		const state = this.state;
-		const loading = this.isLoading();
+	render( props, state ) {
 		const showMax = 8;
-		let ShowSpinner = null;
 		let Notifications = [];
 
-		if (state.loading) {
-			ShowSpinner = (<NavSpinner />);
+		if (props.error) {
+			Notifications = [[null, <div class="-warning">Error: {props.error}</div>]];
 		}
 		else if (state.status != 200) {
 			Notifications = [[null, (<div>An error occurred retrieving the notifications...</div>)]];
 		}
 		else {
-			if (loading) {
-				ShowSpinner = (<NavSpinner />);
+			if (state.loading) {
+				Notifications = [[null, <div>Loading...</div>]];
 			}
-			Notifications = this.getNotifications(showMax, props.hideCallback);
+			Notifications = Notifications.concat(this.getNotifications(showMax, props.hideCallback));
 		}
 
-		if (ShowSpinner !== null) {
-			Notifications.push([null, ShowSpinner]);
-		}
-
-		if ( !loading && (state.count == 0) ) {
+		if ( !state.loading && (state.count == 0) ) {
 			Notifications.push([-3, (<div>You have no notifications.</div>)]);
 		}
 

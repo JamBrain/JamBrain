@@ -89,16 +89,19 @@ export default class ViewBar extends Component {
 								'notificationsHidden': r.countFiltered,
 								//'notificationsMore': r.countFiltered + r.count == fetchCount,
 								'notificationsFeed': r,
+								'notificationsError': null,
 							});
 						}
 						setTimeout(() => this.checkNotificationCount(), 60000);
 					})
 					.catch((e) => {
+						this.setState({'notificationsError': 'Could not retrieve notifications feed.'});
 						setTimeout(() => this.checkNotificationCount(), 5 * 60000);
 						console.log('[Notificaton error]', e);
 					});
 				})
 				.catch((e) => {
+					this.setState({'notificationsError': 'Could not retrieve notifications count.'});
 					setTimeout(() => this.checkNotificationCount(), 5 * 60000);
 					console.log('[Notificaton count error]', e);
 				});
@@ -257,6 +260,7 @@ export default class ViewBar extends Component {
 						anythingToMark={this.state.notifications > 0 || this.state.notificationsHidden > 0}
 						clearCallback={this.handleNotificationsClear}
 						hideCallback={this.handleNotificationsHide}
+						error={this.state.notificationsError}
 					/>
 				);
 			}
