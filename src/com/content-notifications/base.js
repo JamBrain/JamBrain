@@ -56,8 +56,6 @@ export default class NotificationsBase extends Component {
 	}
 
 	markReadHighest() {
-		// TODO: Triggering this should immidiately update the counter on the
-		// icon in the top bar
 		if ( this.hasUnreadNotifications() ) {
 			const highestInFeed = this.getHighestNotificationInFeed();
 			$Notification.SetMarkRead(highestInFeed).then((r) => {
@@ -65,16 +63,17 @@ export default class NotificationsBase extends Component {
 					this.setState({'highestRead': highestInFeed});
 				}
 			});
+			if (this.props.clearCallback) this.props.clearCallback();
 		}
 	}
 
 	getHighestNotificationInFeed() {
 		const notificationsOrder = this.getNotificationsOrder();
-		const {filtered} = this.state;
+		const {feed} = this.state;
 		let highestFiltered = -1;
-		if ( filtered ) {
-			for ( let i = 0; i < filtered.length; i++ ) {
-				const nid = filtered[i].id;
+		if ( feed ) {
+			for ( let i = 0; i < feed.length; i++ ) {
+				const nid = feed[i].id;
 				if ( nid > highestFiltered ) {
 					highestFiltered = nid;
 				}
@@ -90,6 +89,18 @@ export default class NotificationsBase extends Component {
 	}
 
 	processNotificationFeed( r ) {
+		if (r == null) {
+			this.setState({
+				'feed': [],
+				'filtered': [],
+				'count': 0,
+				'status': 200,
+				'loading': false,
+				'highestRead': 0,
+			});
+			return;
+		}
+		this.setState({'loading': true});
 		const callerID = r.caller_id;
 		this.collectAllNodesAndNodes(r.feed, callerID);
 		let highestRead = (r.max_read !== undefined) ? r.max_read : this.state.highestRead;
@@ -98,7 +109,6 @@ export default class NotificationsBase extends Component {
 			'filtered': r.filtered,
 			'status': r.status,
 			'count': r.count,
-			'loading': true,
 			'highestRead': highestRead,
 		});
 	}
