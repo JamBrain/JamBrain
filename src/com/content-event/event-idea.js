@@ -343,7 +343,7 @@ export default class ContentEventIdea extends Component {
 						<div class="idea-similar-box">
 							<h5>Similar Themes</h5>
 							{SimilarThemes}
-							<div class="-info">Those themes without logo, are others' suggestions for the current event.</div>
+							<div class="-info">Themes with an "LD" are the winning themes from a prior event.</div>
 						</div>
 					);
 				}
