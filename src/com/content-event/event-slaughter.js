@@ -6,6 +6,7 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import UIButton							from 'com/ui/button/button';
 
 import $ThemeIdeaVote					from 'shrub/js/theme/theme_idea_vote';
+import $Node from 'shrub/js/node/node';
 
 import PieChart							from 'com/visualization/piechart/piechart';
 
@@ -49,7 +50,6 @@ export default class ContentEventSlaughter extends Component {
 
 	componentDidMount() {
 		this.hotKeyVote = this.hotKeyVote.bind(this);
-		window.addEventListener('keyup', this.hotKeyVote);
 		const onVotes = $ThemeIdeaVote.GetMy(this.props.node.id)
 		.then(r => {
 			if ( r.votes ) {
@@ -62,6 +62,10 @@ export default class ContentEventSlaughter extends Component {
 			}
 			else {
 				this.setState({'votes': []});
+			}
+			if (r.status === 200) {
+				this.setState({"loggedIn": true});
+				window.addEventListener('keyup', this.hotKeyVote);
 			}
 		})
 		.catch(err => {
@@ -187,6 +191,7 @@ export default class ContentEventSlaughter extends Component {
 	}
 
 	_submitVote( command ) {
+		const {loggedIn} = this.state;
 		if ( this.state.waitASecond ) {
 			this.setState({'eagerVoter': "Take it easy, don't rush things!"});
 			return;
@@ -201,9 +206,17 @@ export default class ContentEventSlaughter extends Component {
 				this.addToRecentQueue(this.state.current);
 
 				this.pickRandomIdea();
+				if (!loggedIn) {
+						this.setState({'loggedIn': false});
+						window.addEventListener('keyup', this.hotKeyVote);
+				}
 			}
 			else {
 				location.href = "#expired";
+				if (loggedIn) {
+					window.removeEventListener('keyup', this.hotKeyVote);
+					this.setState({'loggedIn': false});
+				}
 			}
 		})
 		.catch(err => {
@@ -344,10 +357,11 @@ export default class ContentEventSlaughter extends Component {
 
 	render( props, state ) {
 		const {node, user} = props;
+		const {loggedIn} = state;
 		const Title = (<h3>Theme Slaughter Round</h3>);
 
 		if ( node.slug && state.votes && state.ideas ) {
-			if ( user && user['id'] ) {
+			if ( loggedIn && user && user['id'] ) {
 				return (
 					<div class="-body">
 						{Title}
@@ -359,7 +373,7 @@ export default class ContentEventSlaughter extends Component {
 				return (
 					<div class="-body">
 						{Title}
-						<div>Please log in</div>
+						<div>{loggedIn == null ? 'Checking logged in status...' : 'Please log in (hotkeys may not activate immediately)'}</div>
 					</div>
 				);
 			}
