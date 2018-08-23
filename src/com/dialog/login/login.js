@@ -82,7 +82,7 @@ export default class DialogLogin extends Component {
 		};
 
 		return (
-			<form onsubmit={(e) => {e.preventDefault();}} ref={(form) => {this.submitForm = form;}}>
+			<form onsubmit={(e) => {e.preventDefault();}} ref={(form) => {this.submitForm = form;}} autocomplete="on">
 				<DialogCommon ok oktext="Log In" onok={this.doLogin} cancel {...new_props}>
 					<div>
 						<div class="-input-container">
@@ -91,7 +91,7 @@ export default class DialogLogin extends Component {
 					</div>
 					<div>
 						<div class="-input-container">
-							<input name="password" id="dialog-login-password" onchange={this.onPasswordChange} onkeydown={this.onKeyDownPwd} class="-text -block focusable" type="password" name="password" placeholder="Password" maxlength="128" value={password} autocomplete="on" />
+							<input name="password" id="dialog-login-password" onchange={this.onPasswordChange} onkeydown={this.onKeyDownPwd} class="-text -block focusable" type="password" name="password" placeholder="Password" maxlength="128" value={password} />
 						</div>
 					</div>
 					<div style="overflow:hidden">
