@@ -8,10 +8,10 @@ import NavLink 				from 'com/nav-link/link';
 import SmartLink 			from 'com/autoembed/smartlink';
 import LocalLink			from 'com/autoembed/locallink';
 
-import AutoEmbed 			from 'com/autoembed/autoembed';
 import SmartDomains			from 'com/autoembed/smartdomains';
 
 import BlockSpoiler 		from 'com/block-spoiler/spoiler';
+import UIEmbedOverlay 		from "com/ui/embed/overlay/overlay";
 
 export default class Renderer {
 	constructor( options ) {
@@ -172,6 +172,19 @@ export default class Renderer {
 		);
 	}
 
+	linkDomain( domain ) {
+		let parent = SmartDomains.find((element) => {
+			return element.domain == domain.parent;
+		});
+
+
+		if(parent.parent) {
+			parent = this.linkDomain(parent);
+		}
+
+		return {...parent, ...domain};
+	}
+
 	parseLink( href ) {
 
 		if ( href.indexOf('///') == 0 ) {
@@ -208,7 +221,13 @@ export default class Renderer {
 
 							if ( match !== null ) {
 								// embedable domain found, will embed this content in the page.
-								return {"type": "embed", "match": match[1], "info": smartdomain};
+								let info = smartdomain;
+
+								if( smartdomain.parent ) {
+									info = this.linkDomain(smartdomain);
+								}
+
+								return {"type": "embed", "match": match[1], "info": info, "url": url.href};
 							}
 						}
 						// smart but none embedable domain found, these get icons next to them
@@ -267,7 +286,12 @@ export default class Renderer {
 			return <SmartLink icon_name={result.info.icon_name} full_url={href} domain={(hasText) ? "" : result.info.domain} part_url={(hasText) ? text : partial}></SmartLink>;
 		}
 		else if ( result.type == "embed" ) {
-			return <AutoEmbed link={result} title={title} text={(hasText) ? text : href} />;
+			if(result.info.heavy) {
+				return <UIEmbedOverlay link={result} title={title} text={(hasText) ? text : href} />;
+			} else {
+				return <result.info.component link={result} title={title} text={(hasText) ? text : href} />;
+			}
+
 		}
 		else if ( result.type == "relative" ) {
 			return <LocalLink href={href} text={(hasText) ? text : href} title={title} target={"_blank"}/>;
