@@ -1,14 +1,38 @@
-.group-listing {
-  & .-description {
-    font-size: 90%;
-  }
-}
-.event-listing {
-  & .-theme-mode {
-    font-weight: bold;
+@import 'defs.less' ;
+
+.events-group {
+  & > .header-gap {
+    height: 3em;
   }
 
-  & .-theme {
-    font-style: italic;
+  & > .group-listing {
+    & > .-description {
+      font-size: 90%;
+    }
+  }
+
+  & > .event-listing {
+    display: block;
+    padding: 0.5em;
+    margin-bottom: 0.5em;
+    background: @COL_NLLLL;
+
+    & > .-old-event {
+      font-weight: bold;
+    }
+
+    & > .-theme-mode {
+      margin-left: 1em;
+      font-size: 80%;
+    }
+
+    & > .-theme {
+      font-style: italic;
+      margin-left: 1em;
+    }
+
+    & > .-your-game {
+      margin-left: 1em;
+    }
   }
 }

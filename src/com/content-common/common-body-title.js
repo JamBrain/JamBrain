@@ -47,7 +47,7 @@ export default class ContentCommonBodyTitle extends Component {
 		else {
 			props.class.push("_font2");
 
-			var Title = props.title.trim().length ? props.title.trim() : Placeholder;
+			var Title = props.title && props.title.trim().length ? props.title.trim() : Placeholder;
 			var Body = [];
 			if ( props.href )
 				Body.push(<NavLink class="-text" href={props.href} title={props.hover}>{Prefix}{Title}</NavLink>);
