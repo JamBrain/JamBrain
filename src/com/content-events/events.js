@@ -134,7 +134,7 @@ export default class ContentEvents extends Component {
           }
           else {
             ShowUtilPages.push(
-              <UIButton href={n.path}>{n.name}</UIButton>
+              <UILink href={n.path} class="ui-button">{n.name}</UILink>
             );
           }
         });
@@ -171,12 +171,12 @@ export default class ContentEvents extends Component {
       <Common node={node} user={user} header={node.name.toUpperCase()}>
         <CommonBody class="events-group">
           {Header}
-          {ShowUtilPages.length > 0 && (
-            <ContentCommonNav>{ShowUtilPages}</ContentCommonNav>
-          )}
           {ShowBody &&
             <ContentCommonBodyMarkup>{ShowBody}</ContentCommonBodyMarkup>
           }
+          {ShowUtilPages.length > 0 && (
+            <ContentCommonNav>{ShowUtilPages}</ContentCommonNav>
+          )}
           {ShowEvents}
         </CommonBody>
       </Common>
