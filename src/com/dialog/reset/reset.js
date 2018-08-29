@@ -85,7 +85,7 @@ export default class DialogReset extends Component {
 				<DialogCommon ok oktext="Send E-mail" onok={this.doReset} cancel explicit {...new_props}>
 					<div>
 						<div class="-input-container">
-							<input autofocus id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" maxlength="254" />
+							<input autofocus id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="email" name="email" placeholder="E-mail address" maxlength="254" />
 							<LabelYesNo value={Sanitize.validateMail(mail) ? 1 : -1} />
 						</div>
 					</div>
