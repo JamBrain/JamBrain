@@ -9,8 +9,9 @@ export default class PageEvents extends Component {
         return (
 			<div id="content">
 				<PageNavRoot {...props} />
-				<ContentEvents {...props} />
+        <ContentEvents {...props} />
 			</div>
         );
+      //<ContentGroup {...props} />
     }
 }

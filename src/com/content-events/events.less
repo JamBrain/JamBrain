@@ -1,47 +1,60 @@
 @import 'defs.less' ;
 
 .events-group {
-  & > .header-gap {
-    height: 3em;
-  }
+	& > .header-gap {
+		height: 3em;
+	}
 
-  & > .group-listing {
-    & > .-description {
-      font-size: 90%;
-    }
-  }
+	& > .group-listing {
+		& > .-description {
+			font-size: 90%;
+		}
+	}
 
-  & > .content-common-nav {
-    & > .ui-button {
-      padding: 0.25em 1em;
-      margin-right: 0.5em;
-      border: 1px solid @COL_NDDD;
-      display: inline-block;
-    }
-  }
+	& > .content-common-nav {
+		& > .ui-button {
+			padding: 0.25em 1em;
+			margin-right: 0.5em;
+			border: 1px solid @COL_NDDD;
+			display: inline-block;
+		}
+	}
 
-  & > .event-listing {
-    display: block;
-    padding: 0.5em;
-    margin-bottom: 0.5em;
-    background: @COL_NLLLL;
+	& > .event-listing {
+		display: block;
+		padding: 0.5em;
+		margin-bottom: 0.5em;
+		background: @COL_NLLLL;
 
-    & > .-old-event {
-      font-weight: bold;
-    }
+		& > .-old-event {
+			font-weight: bold;
+		}
 
-    & > .-theme-mode {
-      margin-left: 1em;
-      font-size: 80%;
-    }
+		& > .-theme-mode {
+			margin-left: 1em;
+			font-size: 80%;
+		}
 
-    & > .-theme {
-      font-style: italic;
-      margin-left: 1em;
-    }
+		& > .-theme {
+			font-style: italic;
+			margin-left: 1em;
+		}
 
-    & > .-your-game {
-      margin-left: 1em;
-    }
-  }
+		& > .-your-game {
+			margin-left: 1em;
+		}
+	}
+
+	& > .group-listing {
+		display: block;
+		padding: 0.5em;
+		margin-bottom: 0.5em;
+		background: @COL_NLLL;
+
+		& > .content-common-body {
+			& > p {
+				font-size: 80%;
+			}
+		}
+	}
 }

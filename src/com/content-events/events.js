@@ -5,6 +5,7 @@ import ContentCommonNav from 'com/content-common/common-nav';
 import ContentCommonNavButton from 'com/content-common/common-nav-button';
 import ContentCommonBodyMarkup from 'com/content-common/common-body-markup';
 import ContentLoading from 'com/content-loading/loading';
+import NavLink from 'com/nav-link/link';
 import SVGIcon from 'com/svg-icon/icon';
 import UIButton from 'com/ui/button/button';
 import UILink from 'com/ui/link/link';
@@ -75,7 +76,7 @@ export default class ContentEvents extends Component {
       case '8':
         return 'Completed';
       default:
-        return null;
+        return 'Unknown Status';
     }
   }
 
@@ -85,59 +86,73 @@ export default class ContentEvents extends Component {
     const {node, user} = props;
     const ShowBody = node && node.body;
     const ShowHeader = node && node.name;
+    let ShowNav;
+    if (node.type !== 'events') {
+      ShowNav = <NavLink href={node.path+'/..'}><SVGIcon gap>previous</SVGIcon>To parent</NavLink>;
+    }
     if (items && nodes) {
-        items.forEach(item => {
-          let n = nodes[item.id];
-          if (n.type === 'event') {
-            const isLD = n.name.indexOf('Ludum Dare') === 0;
-            let Icon = <SVGIcon gap>trophy</SVGIcon>;
-            if (isLD) {
-              Icon = (
-                <span>
-                  <SVGIcon gap>l-udum</SVGIcon>
-                  <SVGIcon gap>d-are</SVGIcon>
-                </span>
+        items
+          .map(item => nodes[item.id])
+          .filter(n => n != null)
+          .sort((a, b) => a.type === 'group' ? (b.type === 'group' ? 0 : -1) : (b.type === 'group' ? 1 : 0))
+          .forEach(n => {
+            if (n.type === 'event') {
+              const isLD = n.name.indexOf('Ludum Dare') === 0;
+              let Icon = <SVGIcon gap>trophy</SVGIcon>;
+              if (isLD) {
+                Icon = (
+                  <span>
+                    <SVGIcon gap>l-udum</SVGIcon>
+                    <SVGIcon gap>d-are</SVGIcon>
+                  </span>
+                );
+              }
+              const theme = n.meta['event-theme'] ? n.meta['event-theme'] : '???';
+              const ShowYourGames = [];
+              if (myGames && myGames[n.id]) {
+                myGames[n.id].forEach(g => {
+                  ShowYourGames.push((
+                    <div class="-your-game" key={g.id}>
+                      <SVGIcon gap>gamepad</SVGIcon>
+                      Your entry: <UILink href={g.path}>{g.name}</UILink>
+                    </div>
+                  ));
+                });
+              }
+              const themeMode = this.getThemeModeName(n.meta['theme-mode'], theme);
+              ShowEvents.push(
+                <div class="event-listing">
+                  {Icon}
+                  <UILink href={n.path}>{n.name}</UILink>
+                  {theme && theme.length > 0 && <span class="-theme">{theme}</span>}
+                  <span class="-theme-mode">[{themeMode}]</span>
+                  {ShowYourGames}
+                </div>
               );
             }
-            const theme = n.meta['event-theme'];
-            const ShowYourGames = [];
-            if (myGames && myGames[n.id]) {
-              myGames[n.id].forEach(g => {
-                ShowYourGames.push((
-                  <div class="-your-game" key={g.id}>
-                    <SVGIcon gap>gamepad</SVGIcon>
-                    Your entry: <UILink href={g.path}>{g.name}</UILink>
-                  </div>
-                ));
-              });
-            }
-            const themeMode = this.getThemeModeName(n.meta['theme-mode'], theme);
-            ShowEvents.push(
-              <div class="event-listing">
-                {Icon}
-                <UILink href={n.path}>{n.name}</UILink>
-                {theme && theme.length > 0 && <span class="-theme">{theme}</span>}
-                <span class="-theme-mode">[{themeMode}]</span>
-                {ShowYourGames}
-              </div>
-            );
-          }
-          else if (n.type === 'group') {
-            ShowEvents.push(
-              <div class="group-listing">
-                <SVGIcon gap>gamepad</SVGIcon>
-                <UILink href={n.path}>{n.name}</UILink>
-                {n.body && <ContentCommonBodyMarkup class="-description">{n.body}</ContentCommonBodyMarkup>}
-              </div>
-            );
+            else if (n.type === 'group') {
+              let ShowBody;
+              if (n.body) {
+                const m = n.body.match(/^[^.!?]+./);
+                if (m.length) {
+                  ShowBody = <ContentCommonBodyMarkup class="-description">{m[0]}</ContentCommonBodyMarkup>;
+                }
+              }
+              ShowEvents.push(
+                <div class="group-listing">
+                  <SVGIcon gap>checker</SVGIcon>
+                  <UILink href={n.path}>{n.name}</UILink>
+                  {ShowBody}
+                </div>
+              );
 
-          }
-          else {
-            ShowUtilPages.push(
-              <UILink href={n.path} class="ui-button">{n.name}</UILink>
-            );
-          }
-        });
+            }
+            else {
+              ShowUtilPages.push(
+                <UILink href={n.path} class="ui-button">{n.name}</UILink>
+              );
+            }
+          });
     }
     if (oldLD && node.name.indexOf('Ludum') === 0) {
       oldLD
@@ -171,6 +186,7 @@ export default class ContentEvents extends Component {
       <Common node={node} user={user} header={node.name.toUpperCase()}>
         <CommonBody class="events-group">
           {Header}
+          {ShowNav}
           {ShowBody &&
             <ContentCommonBodyMarkup>{ShowBody}</ContentCommonBodyMarkup>
           }
