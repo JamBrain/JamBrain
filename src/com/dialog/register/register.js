@@ -98,7 +98,7 @@ export default class DialogRegister extends Component {
 					</div>
 					<div>
 						<div class="-input-container">
-							<input autofocus id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="text" name="email" placeholder="E-mail address" maxlength="254" value={mail} />
+							<input autofocus id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="email" name="email" placeholder="E-mail address" maxlength="254" value={mail} />
 							<LabelYesNo value={mail.trim().length ? (Sanitize.validateMail(mail) ? 1 : -1) : 0} />
 						</div>
 					</div>
