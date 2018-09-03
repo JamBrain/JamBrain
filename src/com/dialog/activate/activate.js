@@ -16,7 +16,6 @@ export default class DialogActivate extends Component {
 		};
 
 		var Vars = Sanitize.getHTTPVars();
-		console.log("v",Vars);
 
 		// Get activation ID
 		this.ActID = Vars.id;
@@ -46,69 +45,93 @@ export default class DialogActivate extends Component {
 					'password': "",
 					'password2': "",
 
-					'valid_slug': 0,
+					'validSlug': 0,
 					'loading': false
 				});
 			}
 			else {
-				console.log(r);
 				this.setState({ 'error': r.response, 'loading': false });
 			}
 		})
 		.catch( err => {
-			console.log(err);
 			this.setState({ 'error': err, 'loading': false });
 		});
 	}
 
 	onNameChange( e ) {
-		var name = e.target.value.trim();
-		var slug = Sanitize.makeSlug(name);
+		const name = e.target.value.trim();
+		const slug = Sanitize.makeSlug(name);
+		const validSlug = slug !== "";
+		if (name.length > 0 && name.length < 3) {
+			this.setState({
+				'validSlug': -1,
+				'error': 'Username too short',
+				'name': name,
+				'slug': slug,
+			});
+			return;
+		}
+		if (!validSlug) {
+			this.setState({
+				'validSlug': -1,
+				'error': 'Not a valid username',
+				'name': name,
+				'slug': slug,
+			});
+			return;
+		}
 
 		$User.Have( name, this.state.mail )
 		.then( r => {
 			if ( r.status === 200 ) {
-				this.setState({ valid_slug: (r.available && slug !== "" ? 1 : -1) });
+				this.setState({
+					'validSlug': r.available && validSlug ? 1 : -1,
+					'name': name,
+					'slug': slug,
+					'error': !r.available && 'Name reserved or taken',
+				});
 			}
 			else {
-				//console.log(r);
-				this.setState({ 'error': r.message ? r.message : r.response, 'loading': false });
+				this.setState({
+					'error': r.message ? r.message : r.response,
+					'loading': false,
+					'name': name,
+					'slug': slug,
+					'validSlug': -1,
+				});
 			}
 			return r;
 		})
 		.catch( err => {
-			//console.log(err);
-			this.setState({ 'error': err, 'loading': false });
+			this.setState({
+				'error': err, 'loading': false, 'name': name, 'slug': slug, 'validSlug': -1 });
 		});
+	}
 
-		this.setState({ name: name, slug: slug, valid_slug: 0, error: null });
-	}
 	onPasswordChange( e ) {
-		this.setState({ password: e.target.value, error: null });
+		this.setState({'password': e.target.value, 'error': null});
 	}
+
 	onPassword2Change( e ) {
-		this.setState({ password2: e.target.value, error: null });
+		this.setState({'password2': e.target.value, 'error': null});
 	}
 
 
 	isValidName() {
-		var str = this.state.name.trim();
-		if ( str.length === 0 )
+		const {name, validSlug} = this.state;
+		const nameLength = name.trim().length;
+		if (validSlug < 0) {
+			return validSlug;
+		}
+		if ( nameLength === 0 ) {
 			return 0;
-		if ( str.length < 3 )
+		}
+		if ( nameLength < 3 ) {
 			return -1;
-
+		}
 		return 1;
 	}
-	isValidSlug() {
-		var str = this.state.slug.trim();
-		if ( str.length === 0 )
-			return 0;
-		if ( str.length < 3 )
-			return -1;
 
-		return 1;
-	}
 	isValidPassword() {
 		var pw = this.state.password.trim();
 		if ( pw.length === 0 )
@@ -144,23 +167,19 @@ export default class DialogActivate extends Component {
 			$User.Activate( this.ActID, this.ActHash.trim(), this.state.name.trim(), this.state.password.trim() )
 			.then( r => {
 				if ( r.status === 201 ) {
-					//console.log('success',r);
-					//location.href = "#user-activated";
-					this.setState({ 'created': true, 'loading': false, 'error': null });
+					this.setState({'created': true, 'loading': false, 'error': null});
 				}
 				else {
-					//console.log(r);
-					this.setState({ 'error': r.message ? r.message : r.response, 'loading': false });
+					this.setState({'error': r.message ? r.message : r.response, 'loading': false});
 				}
 				return r;
 			})
 			.catch( err => {
-				//console.log(err);
-				this.setState({ 'error': err, 'loading': false });
+				this.setState({'error': err, 'loading': false});
 			});
 		}
 		else {
-			this.setState({ error: "Form incomplete or invalid" });
+			this.setState({'error': "Form incomplete or invalid"});
 		}
 	}
 
@@ -169,7 +188,7 @@ export default class DialogActivate extends Component {
 		window.location.href = window.location.pathname;//+window.location.search;
 	}
 
-	render( props, {mail, name, slug, password, password2, valid_slug, created, loading, error} ) {
+	render( props, {mail, name, slug, password, password2, created, loading, error} ) {
 		var new_props = {
 			'title': 'Create Account: Step 2'
 		};
@@ -199,6 +218,7 @@ export default class DialogActivate extends Component {
 				</DialogCommon>
 			);
 		}
+		const validName = this.isValidName();
 
 		return (
 			<DialogCommon ok oktext="Create Account" onok={this.doActivate} cancel oncancel={this.doFinishActivation} explicit {...new_props}>
@@ -212,18 +232,20 @@ export default class DialogActivate extends Component {
 					<span class="-label">Name:</span>
 					<div class="-input-container">
 						<input autofocus id="dialog-activate-name" onchange={this.onNameChange} class="-text focusable" type="text" name="username" maxlength="32" placeholder="How your name appears" value={name} />
-						<LabelYesNo value={this.isValidName()} />
+						<LabelYesNo value={validName} />
 					</div>
 				</div>
-				<div>
-					<span class="-label">Account Name:</span>
-					<div class="-input-container">
-						<span id="dialog-activate-slug">
-							<code>{slug}</code>
-						</span>
-						<LabelYesNo value={valid_slug} />
+				{slug && slug.length > 0 && (
+					<div>
+						<span class="-label">Account Name:</span>
+						<div class="-input-container">
+							<span id="dialog-activate-slug">
+								<code>{slug}</code>
+							</span>
+							<LabelYesNo value={validName} />
+						</div>
 					</div>
-				</div>
+				)}
 				<div>
 					<span class="-label">Password:</span>
 					<div class="-input-container">
