@@ -50,11 +50,11 @@ export default class DialogActivate extends Component {
 				});
 			}
 			else {
-				this.setState({ 'error': r.response, 'loading': false });
+				this.setState({'error': r.response, 'loading': false});
 			}
 		})
 		.catch( err => {
-			this.setState({ 'error': err, 'loading': false });
+			this.setState({'error': err, 'loading': false});
 		});
 	}
 
@@ -104,7 +104,7 @@ export default class DialogActivate extends Component {
 		})
 		.catch( err => {
 			this.setState({
-				'error': err, 'loading': false, 'name': name, 'slug': slug, 'validSlug': -1 });
+				'error': err, 'loading': false, 'name': name, 'slug': slug, 'validSlug': -1});
 		});
 	}
 
