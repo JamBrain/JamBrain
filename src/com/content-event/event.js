@@ -45,8 +45,7 @@ export default class ContentEvent extends Component {
 //	}
 
 	onJoin( e ) {
-		var featured = this.props.featured;
-
+		const featured = this.props.featured;
 		window.location.hash = "#create/"+featured.id+"/item/game";
 	}
 
