@@ -2,8 +2,6 @@ import {h, Component}					from "preact/preact";
 import PageNavEvent						from '../../nav/event';
 
 import ContentEvent						from "com/content-event/event";
-import ContentNavEvent					from "com/content-nav/nav-event";
-import ContentNavTheme					from "com/content-nav/nav-theme";
 
 import ContentError						from "com/content-error/error";
 
@@ -34,8 +32,6 @@ export default class PageEvent extends Component {
 
 		let NewPath = path + "/" + extra[0];
 		let NewExtra = extra.slice(1);
-
-//				<ContentNavEvent node={node} user={user} path={path} extra={extra} featured={featured} />
 
 		return (
 			<div id="content">
