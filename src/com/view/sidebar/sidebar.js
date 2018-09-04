@@ -15,18 +15,18 @@ export default class ViewSidebar extends Component {
 
 	render( props ) {
 		// TODO: cleanup
-		let ldName = "Ludum Dare 42";
-		let ldStartDate = new Date(Date.UTC(2018, 7, 10, 22, 0, 0));
+		let ldName = "Ludum Dare 43";
+		let ldStartDate = new Date(Date.UTC(2018, 11, 1, 2, 0, 0));
 
-		let compoEndDate = new Date(Date.UTC(2018, 7, 12, 22, 0, 0));
-		let compoEndDate2 = new Date(Date.UTC(2018, 7, 12, 23, 0, 0));
+		let compoEndDate = new Date(Date.UTC(2018, 11, 3, 2, 0, 0));
+		let compoEndDate2 = new Date(Date.UTC(2018, 11, 3, 3, 0, 0));
 
-		let jamEndDate = new Date(Date.UTC(2018, 7, 13, 22, 0, 0));
-		//let jamEndDate2 = new Date(Date.UTC(2018, 7, 13, 23, 0, 0));
-		let jamEndDate2 = new Date(Date.UTC(2018, 7, 14, 22, 0, 0));
+		let jamEndDate = new Date(Date.UTC(2018, 11, 4, 2, 0, 0));
+		let jamEndDate2 = new Date(Date.UTC(2018, 11, 4, 3, 0, 0));
+		//let jamEndDate2 = new Date(Date.UTC(2018, 7, 14, 22, 0, 0));
 
-		let gradeEndDate = new Date(Date.UTC(2018, 8, 4, 20, 0, 0));
-		let resultsDate = new Date(Date.UTC(2018, 8, 4, 24, 0, 0));
+		let gradeEndDate = new Date(Date.UTC(2018, 11, 31, 20, 0, 0));
+		let resultsDate = new Date(Date.UTC(2018, 11, 31, 24, 0, 0));
 
 		let now = new Date();
 
