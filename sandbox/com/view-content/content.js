@@ -31,14 +31,8 @@ import ContentStatsEvent				from 'com/content-stats/stats-event';
 import ContentPalette					from 'com/content-palette/palette';
 
 import NavLink							from 'com/nav-link/link';
-//import SVGIcon							from 'com/svg-icon/icon';
 import Common							from 'com/content-common/common';
 import CommonBody						from 'com/content-common/common-body';
-//import CommonNav						from 'com/content-common/common-nav';
-//import CommonNavButton					from 'com/content-common/common-nav-button';
-
-//import HeadMan 							from '../../internal/headman/headman';
-//import marked 							from '../../internal/marked/marked';
 
 import ViewContentPost					from 'content-post';
 

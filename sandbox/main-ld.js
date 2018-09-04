@@ -2,15 +2,12 @@ import { diff_match_patch } from 'custom/diff_match_patch/diff_match_patch';
 
 import { h, render }	from 'preact/preact';
 import NavBar 			from 'com/nav-bar/bar';
-import SVGIcon 			from 'com/svg-icon/icon';
 import DarkOverlay		from 'com/dark-overlay/overlay';
 import Notify			from 'internal/notify/notify';
 
 import ContentPost		from 'com/content-post/post';
 
 render(<NavBar />, document.body);
-//render(<SVGIcon name="firefox" />, document.body);
-//render(<DarkOverlay />, document.body);
 
 
 var User = {
@@ -39,9 +36,9 @@ function diff_lineMode(text1, text2) {
 	var lineText1 = a[0];
 	var lineText2 = a[1];
 	var lineArray = a[2];
-	
+
 	var diffs = dmp.diff_main(lineText1, lineText2, false);
-	
+
 	dmp.diff_charsToLines(diffs, lineArray);
 	return diffs;
 }

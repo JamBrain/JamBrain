@@ -26,6 +26,7 @@ export default class UIIcon extends Component {
 		if ( props['inline'] )			svg_props.class += " -inline";
 
 		if ( props['pad'] )				svg_props.class += " -pad";
+		if ( props['gap'] )				svg_props.class += " -gap";
 
 		// What icon?
 		if ( props.name ) {

@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 				from 'preact/preact';
 
 import ButtonBase						from 'com/button-base/base';
 import ButtonLink						from 'com/button-link/link';
@@ -15,13 +15,13 @@ export default class ContentCommonNavButton extends Component {
 
 		if ( props.href ) {
 			return (
-				<ButtonLink disabled={props.disabled} class={Class} href={props.href} onclick={props.onclick}>
+				<ButtonLink disabled={props.disabled} class={Class} href={props.href} onclick={props.onclick} title={props.title}>
 					{props.children}
 				</ButtonLink>
 			);
 		}
 		return (
-			<ButtonBase disabled={props.disabled} class={Class} onclick={props.onclick}>
+			<ButtonBase disabled={props.disabled} class={Class} onclick={props.onclick} title={props.title}>
 				{props.children}
 			</ButtonBase>
 		);
