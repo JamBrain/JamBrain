@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 				from 'preact/preact';
 import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
 
@@ -59,7 +59,7 @@ export default class ContentNavTheme extends Component {
 						if ( node.meta['theme-page-name-'+idx] )
 							Name = node.meta['theme-page-name-'+idx];
 
-						ShowRounds.push(<ContentNavButton path={path+NewPath} icon='ticket' href={path+'/'+idx}>{Name}</ContentNavButton>);
+						ShowRounds.push(<ContentNavButton path={path+NewPath} icon="ticket" href={path+'/'+idx} title={Name}>{Name}</ContentNavButton>);
 					}
 				}
 			}
