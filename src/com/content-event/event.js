@@ -1,19 +1,10 @@
 import {h, Component} 				from 'preact/preact';
-import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import UIIcon from 'com/ui/icon/icon';
 
-import ContentEventHome					from 'com/content-event/event-home';
-import ContentEventIdea					from 'com/content-event/event-idea';
-import ContentEventSlaughter			from 'com/content-event/event-slaughter';
-import ContentEventFusion				from 'com/content-event/event-fusion';
-import ContentEventList					from 'com/content-event/event-list';
-
-import ContentCommon					from 'com/content-common/common';
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
-import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
 import ContentSimple					from 'com/content-simple/simple';
 
@@ -21,24 +12,11 @@ import ContentSimple					from 'com/content-simple/simple';
 export default class ContentEvent extends Component {
 	constructor( props ) {
 		super(props);
-//
-//		this.state = {
-//			'editing': this.isEditMode(),
-//			'modified': false,
-//
-//			'body': props.node.body,
-//		};
 		this.onJoin = this.onJoin.bind(this);
 	}
 
-//	isEditMode() {
-//		var extra = this.props.extra;
-//		return extra && extra.length && extra[extra.length-1] == 'edit';
-//	}
-
 	onJoin( e ) {
-		var featured = this.props.featured;
-
+		const featured = this.props.featured;
 		window.location.hash = "#create/"+featured.id+"/item/game";
 	}
 
@@ -50,58 +28,15 @@ export default class ContentEvent extends Component {
 			props.header = "EVENT";
 			props.headerIcon = "trophy";
 			props.headerClass = "-col-ab";
-//			props.titleIcon = "trophy";
 		}
 
-		var ShowHome = null;
-		var IsHome = false;
-		if ( true ) {
-			let Class = null;
-			if ( extra && extra.length == 0 ) {
-				Class = "-selected";
-				IsHome = true;
-			}
-
-			ShowHome = <ContentCommonNavButton href={path} class={Class} title="Event Home"><UIIcon>home</UIIcon><div class="if-sidebar-inline">Home</div></ContentCommonNavButton>;
-		}
-
-		var ShowGame = null;
-		if ( true ) {
-			let Class = null;
-			if ( extra && extra.length > 0 && extra[0] == "games") {
-				Class = "-selected";
-			}
-
-			ShowGame = <ContentCommonNavButton href={path+'/games'} class={Class} title="Games"><UIIcon>gamepad</UIIcon><div class="if-sidebar-inline">Games</div></ContentCommonNavButton>;
-		}
-
-		let ShowMyGrades = null;
-		//TODO: How to know if we're grading or have graded?
-		if ( true ) {
-			if ( extra && extra.length > 0 && extra[0] == "mygrades") {
-				Class = "-selected";
-			}
-
-			ShowMyGrades = <ContentCommonNavButton href={path+'/mygrades'} class={Class} title="My Grades"><UIIcon>star-half</UIIcon><div class="if-sidebar-inline">My Grades</div></ContentCommonNavButton>;
-		}
-
-//		if ( extra && extra.length ) {
-//			Class = "-disabled";
-//		}
-        var ShowJoin = null;
-        if ( user && user.id && node_CanCreate(node) ) {
-            var Class = "-diabled";
-            if ( extra && extra.length > 0 && extra[0] == "games") {
-                Class = "-selected";
-            }
-
-			// NOTE: THIS IS WRONG! We should be asking the event node (i.e. this) for `what`. Alas, with 1 event we can cheat
-			if ( featured && featured.what && featured.what.length ) {
-				var FeaturedGame = featured.what[featured.what.length-1]; // Hack
-//				ShowGame =
-
-			}
-			else {
+    let ShowJoin = null;
+    if ( user && user.id && node_CanCreate(node) ) {
+      let Class = "-diabled";
+      if ( extra && extra.length > 0 && extra[0] == "games") {
+          Class = "-selected";
+      }
+			if ( !(featured && featured.what && featured.what.length) ) {
 				ShowJoin = (
 					<ContentCommonNavButton onclick={this.onJoin} class={Class} title="Join Event">
 						<UIIcon>publish</UIIcon><div class="if-sidebar-inline">Join Event</div>
@@ -109,40 +44,6 @@ export default class ContentEvent extends Component {
 				);
 			}
 		}
-
-		var ShowFeed = null;
-//		if ( true ) {
-//			let Class = null;
-//			if ( extra && extra.length ) {
-//				if ( extra[0] === 'feed' || extra[0] === 'hot' || extra[0] === 'news' || extra[0] === 'games' ) {
-//					Class = "-selected";
-//				}
-//			}
-//			// Root node, context sensitive
-//			else {
-//				// If not logged in
-//				if ( user && user.id === 0 ) {
-//					Class = "-selected";
-//				}
-//			}
-//
-//			ShowFeed = <ContentCommonNavButton href={path} class={Class} title="Feed"><UIIcon>feed</UIIcon>Feed</ContentCommonNavButton>;
-//		}
-
-		var ShowTheme = null;
-		if ( node_CanTheme(node) ) {
-			let Class = null;
-			if ( extra && extra.length ) {
-				if ( extra[0] === 'theme' ) {
-					Class = "-selected";
-				}
-			}
-
-			ShowTheme = <ContentCommonNavButton href={path+'/theme'} class={Class} title="Theme Selection"><UIIcon>ticket</UIIcon><div class="if-sidebar-inline">Theme Selection</div></ContentCommonNavButton>;
-		}
-
-//		if ( !IsHome )
-//			props.nomarkup = true;
 
 		props.class = 'content-event';
 		props.above = [];
@@ -170,9 +71,9 @@ export default class ContentEvent extends Component {
 			);
 		}
 
-		//props.minmax = true;
-		if ( !IsHome )
+		if ( !(extra && extra.length == 0) ) {
 			props.minimized = true;
+		}
 
 		return (
 			<ContentSimple {...props}>
@@ -182,11 +83,4 @@ export default class ContentEvent extends Component {
 			</ContentSimple>
 		);
 	}
-
-//					{ShowHome}
-//					{ShowGame}
-//					{ShowMyGrades}
-//					{ShowFeed}
-//					{ShowTheme}
-
 }

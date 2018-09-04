@@ -19,4 +19,5 @@ node_modules/
 *.gz
 /src/shrub/docs
 /sandbox/ld_event.*
+/ld_event.*
 package-lock.json
