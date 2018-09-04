@@ -22,7 +22,6 @@ import ContentComments					from 'com/content-comments/comments';
 import ContentNavRoot					from 'com/content-nav/nav-root';
 import ContentNavUser					from 'com/content-nav/nav-user';
 import ContentNavItem					from 'com/content-nav/nav-item';
-import ContentNavEvent					from 'com/content-nav/nav-event';
 import ContentNavTheme					from 'com/content-nav/nav-theme';
 
 import ContentEventTheme				from 'com/content-event/event-theme';
@@ -384,7 +383,6 @@ export default class ViewContent extends Component {
 //				ShowPage = <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={['parent','smart']} subsubtypes={SubSubType ? SubSubType : null} />;
 			}
 			else {
-				//ShowNav = <ContentNavEvent node={node} user={user} path={path} extra={extra} />;
 				ShowPage = <ContentStatsEvent node={node} />;
 			}
 
