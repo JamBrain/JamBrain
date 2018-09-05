@@ -1,6 +1,7 @@
-const DefaultEvent = 97793;
+const DefaultEvent = 'next';
 const EventDetails = {
   '97793': {
+    'name': 'Ludum Dare 42',
 		'event-start': new Date(Date.UTC(2018, 7, 10, 22, 0, 0)),
 		'event-compo-end': new Date(Date.UTC(2018, 7, 12, 22, 0, 0)),
 		'event-compo-end-submission': new Date(Date.UTC(2018, 7, 12, 23, 0, 0)),
@@ -10,7 +11,14 @@ const EventDetails = {
 		'event-results-publish': new Date(Date.UTC(2018, 8, 4, 24, 0, 0)),
   },
   'next': {
-
+    'name': 'Ludum Dare 43',
+		'event-start': new Date(Date.UTC(2018, 11, 1, 2, 0, 0)),
+		'event-compo-end': new Date(Date.UTC(2018, 11, 3, 2, 0, 0)),
+		'event-compo-end-submission': new Date(Date.UTC(2018, 11, 3, 3, 0, 0)),
+    'event-jam-end': new Date(Date.UTC(2018, 11, 4, 2, 0, 0)),
+    'event-jam-end-submission': new Date(Date.UTC(2018, 11, 4, 3, 0, 0)),
+		'event-grade-end': new Date(Date.UTC(2018, 11, 31, 20, 0, 0)),
+		'event-results-publish': new Date(Date.UTC(2018, 11, 31, 24, 0, 0)),
   }
 };
 
@@ -103,11 +111,11 @@ const Calendar = {
 
 const GetEvent = (node) => {
   let calendar;
-  if ( History[node] ) {
-    calendar = Object.assign({}, History[node]);
+  if ( EventDetails[node] ) {
+    calendar = Object.assign({}, EventDetails[node]);
   }
-  else if ( !!node ) {
-    calendar = Object.assign({}, History[DefaultEvent]);
+  else if (!node) {
+    calendar = Object.assign({}, EventDetails[DefaultEvent]);
   }
   return Promise.resolve({
     'status': 200,

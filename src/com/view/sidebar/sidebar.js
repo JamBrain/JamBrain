@@ -17,27 +17,7 @@ export default class ViewSidebar extends Component {
 	}
 
 	componentDidMount() {
-		if (this.props.featured) {
-			this.fetchFeatured(this.props.featured);
-		}
-	}
-
-	componentWillReceiveProps(newProps) {
-		const oldProps = this.props;
-		if (
-			(!!oldProps.featured != !!newProps.featured)
-			|| (oldProps.featured && newProps.featured && oldProps.featured.id !== newProps.featured.id)
-		) {
-			this.fetchCalendar(newProps.featured);
-		}
-	}
-
-	fetchCalendar(featured) {
-		if (!featured) {
-			this.setState({'calendar': null});
-			return;
-		}
-		$Calendar.GetEvent(featured.id)
+		$Calendar.GetEvent()
 			.then(r => {
 				if (r.status === 200) {
 					this.setState({'calendar': r.calendar});
@@ -53,6 +33,7 @@ export default class ViewSidebar extends Component {
 		let jamEndDate2;
 		let gradeEndDate;
 		let resultsDate;
+		let ldName;
 		const {calendar} = state;
 		if (calendar) {
 			ldStartDate = calendar['event-start'];
@@ -62,8 +43,8 @@ export default class ViewSidebar extends Component {
 			jamEndDate2 = calendar['event-jam-end-submission'];
 			gradeEndDate = calendar['event-grade-end'];
 			resultsDate = calendar['event-results-publish'];
+			ldName = calendar.name;
 		}
-		let ldName = props.featured && props.featured.name;
 		let now = new Date();
 
 		let ShowCountdown = [];
