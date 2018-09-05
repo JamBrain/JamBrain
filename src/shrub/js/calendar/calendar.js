@@ -9,41 +9,44 @@ const EventDetails = {
 		'event-grade-end': new Date(Date.UTC(2018, 8, 4, 20, 0, 0)),
 		'event-results-publish': new Date(Date.UTC(2018, 8, 4, 24, 0, 0)),
   },
+  'next': {
+
+  }
 };
 
 const Calendar = {
   '0': {
-    'when': new Date(Date.UTC(2018, 2, 24)),
+    'when': new Date(Date.UTC(2017, 2, 24)),
     'what': 'Theme Suggestions Open',
     'icon': 'suggestion',
     'precision': 'day',
   },
   '1': {
-    'when': new Date(Date.UTC(2018, 3, 7)),
+    'when': new Date(Date.UTC(2017, 3, 7)),
     'what': 'Theme Selection Starts',
     'icon': 'mallet',
     'precision': 'day',
   },
   '2': {
-    'when': new Date(Date.UTC(2018, 3, 21)),
+    'when': new Date(Date.UTC(2017, 3, 21)),
     'what': 'Ludum Dare 38',
     'icon': 'trophy',
     'precision': 'day',
   },
   '3': {
-    'when': new Date(Date.UTC(2018, 4, 19)),
+    'when': new Date(Date.UTC(2017, 4, 19)),
     'what': 'Results',
     'icon': 'checker',
     'precision': 'day',
   },
   '4': {
-    'when': new Date(Date.UTC(2018, 5, 28)),
+    'when': new Date(Date.UTC(2017, 5, 28)),
     'what': 'Ludum Dare 39',
     'icon': 'trophy',
     'precision': 'day',
   },
   '5': {
-    'when': new Date(Date.UTC(2018, 7, 23)),
+    'when': new Date(Date.UTC(2017, 7, 23)),
     'what': 'Results',
     'icon': 'checker',
     'precision': 'day',
@@ -55,26 +58,44 @@ const Calendar = {
     'precision': 'day',
   },
   '7': {
-    'when': new Date(Date.UTC(2018, 11, 28)),
-    'what': 'Results',
-    'icon': 'checker',
-    'precision': 'day',
-  },
-  '8': {
     'when': new Date(Date.UTC(2018, 7, 10)),
     'what': 'Ludum Dare 42',
     'icon': 'trophy',
     'precision': 'day',
   },
+  '8': {
+    'when': new Date(Date.UTC(2018, 8, 5)),
+    'what': 'Results',
+    'icon': 'checker',
+    'precision': 'day',
+  },
   '9': {
-    'when': new Date(Date.UTC(2018, 11, 1)),
+    'when': new Date(Date.UTC(2018, 10, 30)),
     'what': 'Ludum Dare 43',
     'icon': 'trophy',
     'precision': 'month',
   },
   '10': {
     'when': new Date(Date.UTC(2019, 3, 1)),
-    'what': 'Ludum Dare 43',
+    'what': 'Ludum Dare 44',
+    'icon': 'trophy',
+    'precision': 'month',
+  },
+  '11': {
+    'when': new Date(Date.UTC(2019, 9, 1)),
+    'what': 'Ludum Dare 45',
+    'icon': 'trophy',
+    'precision': 'month',
+  },
+  '12': {
+    'when': new Date(Date.UTC(2020, 3, 1)),
+    'what': 'Ludum Dare 44',
+    'icon': 'trophy',
+    'precision': 'month',
+  },
+  '13': {
+    'when': new Date(Date.UTC(2020, 9, 1)),
+    'what': 'Ludum Dare 45',
     'icon': 'trophy',
     'precision': 'month',
   },
