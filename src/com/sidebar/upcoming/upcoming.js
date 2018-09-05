@@ -1,6 +1,6 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component} from 'preact/preact';
 import UIIcon from 'com/ui/icon/icon';
-import ButtonLink						from 'com/button-link/link';
+import ButtonLink from 'com/button-link/link';
 
 import $Calendar from 'shrub/js/calendar/calendar';
 
@@ -11,34 +11,40 @@ export default class SidebarUpcoming extends Component {
 	}
 
 	componentDidMount() {
-			$Calendar.Get(new Date(), null, 5).then(r => {
-				console.log(r);
-				if (r.status === 200) {
-					this.setState({'calendar': r.calendar});
-				}
-			});
+		$Calendar.Get(new Date(), null, 5).then(r => {
+			if (r.status === 200) {
+				this.setState({'calendar': r.calendar});
+			}
+		});
 	}
 
 	render( props, state ) {
 		const {calendar} = state;
 		const Items = [];
+		const currentYear = new Date().getFullYear();
 		if (calendar) {
-			Object.values(calendar).forEach(item => {
+			calendar.forEach(item => {
 				let options;
 				if (item.precision === 'month') {
-					options = {'year': 'numeric', 'month': 'long'};
+					if (item.when.getFullYear() === currentYear) {
+						options = {'month': 'long'};
+					}
+					else {
+						options = {'year': 'numeric', 'month': 'long'};
+					}
 				}
 				else if (item.precision === 'day') {
-					if (item.getFullYear() === currentYear) {
+					if (item.when.getFullYear() === currentYear) {
 						options = {'month': 'long', 'day': 'numeric'};
 					}
 					else {
 						options = {'year': 'numeric', 'month': 'short', 'day': 'numeric'};
 					}
 				}
+				const dateString = item.when.toLocaleDateString(undefined, options);
 				Items.push(
 					<div class="-item">
-						<strong>{item.when.toLocalDateString(undefined, options)}</strong> - {item.what} <UIIcon baseline small>{item.icon}</UIIcon>
+						<strong>{dateString}</strong> - {item.what} <UIIcon baseline small>{item.icon}</UIIcon>
 					</div>
 				);
 			});

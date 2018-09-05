@@ -95,24 +95,23 @@ const GetEvent = (node) => {
 };
 
 const Get = (fromDate=null, toDate=null, maxCount=null) => {
-    return Promise.resolve({
-      'status': 200,
-      'calendar':
-          Object.assign(...Object.entries(Calendar)
-            .filter(([id, val]) => {
-              if (!fromDate && !toDate) return true;
-              if (!(fromDate && fromDate <= val.when)) {
-                return false;
-              }
-              if (!(toDate && toDate >= val.when)) {
-                return false;
-              }
-              return true;
-            })
-            .sort(([id, val], [id2, val2]) => val2.when - val.when)
-            .slice(0, maxCount == null ? Object.keys(Calendar).length : maxCount)
-            .map(([k, v]) => ({[k]: v}))),
-    });
+  return Promise.resolve({
+    'status': 200,
+    'calendar': Object.entries(Calendar)
+        .filter(([id, val]) => {
+          if (!fromDate && !toDate) return true;
+          if (fromDate && fromDate > val.when) {
+            return false;
+          }
+          if (toDate && toDate < val.when) {
+            return false;
+          }
+          return true;
+        })
+        .sort(([id, val], [id2, val2]) => val2.when > val.when ? -1 : 1)
+        .slice(0, maxCount == null ? Object.keys(Calendar).length : maxCount)
+        .map(([k, v]) => v)
+  });
 };
 
 export default {
