@@ -6,7 +6,7 @@ https://ldjam.com/
 
 [![Build Status](https://travis-ci.org/ludumdare/ludumdare.svg?branch=master)](https://travis-ci.org/ludumdare/ludumdare)
 
-Wan't to help out? Setup Instructions are here:
+Want to help out? Setup Instructions are here:
 
 https://github.com/ludumdare/dairybox
 
