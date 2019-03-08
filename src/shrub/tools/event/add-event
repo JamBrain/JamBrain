@@ -1,0 +1,96 @@
+#!/usr/bin/env php
+<?php
+const CONFIG_PATH = "../../";
+const SHRUB_PATH = "../../src/";
+
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";        // Confirm CLI, Require ROOT
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
+require_once __DIR__."/".SHRUB_PATH."constants.php";            // For the SH_TABLE constants. run gen.sh if not up-to-date.
+require_once __DIR__."/".SHRUB_PATH."global/global.php";
+
+require_once __DIR__."/".SHRUB_PATH."node/node.php";
+
+if ( count($argv) < 2 ) {
+	echo "Usage: ".$argv[0]." event_number\n";
+	echo "\n";
+	die;
+}
+
+function AreYouSure() {
+	global $automatic;
+	if(!$automatic) {
+		print "\nAre you sure [type 'YES']? ";
+		flush();
+		$input = trim(fgets(STDIN));
+		if ( $input != "YES" ) {
+			print "Aborting...\n";
+			exit(1);
+		}
+	}
+}
+
+$parent = 9;	// Ludum Dare Group "ludum-dare", under "events"
+$author = 11;	// Mike
+
+$eventNumber = $argv[1];
+$slug = $eventNumber;
+$name = "Ludum Dare $eventNumber";
+$body = "EDIT ME";
+
+print "\n*** WARNING ***\n\n";
+print "You are about to create event \"$name\".\n";
+AreYouSure();
+
+$id = node_Add($parent, $author, "event", "ld", "", $slug, $name, $body);
+
+if ( !$id ) {
+	echo "Failed to create node";
+}
+
+const SCOPE_PUBLIC = 0;
+
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-create", "item/game");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-grade", "0");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-publish", "0");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-theme", "1");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-finished", "0");
+nodeMeta_Remove($id, 0, SCOPE_PUBLIC, "event-theme", "TBD");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "theme-mode", "1");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "theme-idea-limit", "3");
+
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-start", "2019-01-01T01:00:00Z");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-end", "2019-01-04T01:00:00Z");
+
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "theme-page-mode-1", "0");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "theme-page-mode-2", "0");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "theme-page-mode-3", "0");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "theme-page-mode-4", "0");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "theme-page-name-4", "Final Round");
+
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-slug-1", "jam");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-name-1", "Jam");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-closed-1", "0");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-slug-2", "compo");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-name-2", "Compo");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-closed-2", "0");
+
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-01", "Overall");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-02", "Fun");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-03", "Innovation");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-04", "Theme");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-05", "Graphics");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-05-optional", "1");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-06", "Audio");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-06-optional", "1");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-07", "Humor");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-07-optional", "1");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-08", "Mood");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-08-optional", "1");
+
+echo "Finished Meta\n";
+
+nodeMeta_Add(1, 0, SCOPE_PUBLIC, "featured", "$id");
+
+echo "Active Event Set\n";
+echo "Finished!\n";
