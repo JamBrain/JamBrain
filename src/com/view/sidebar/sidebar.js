@@ -21,8 +21,8 @@ export default class ViewSidebar extends Component {
 		let compoEndDate = new Date(Date.UTC(2019, 3, 29, 1, 0, 0));
 		let compoEndDate2 = new Date(Date.UTC(2019, 3, 29, 2, 0, 0));
 
-		let jamEndDate = new Date(Date.UTC(2019, 3, 4, 27, 0, 0));
-		let jamEndDate2 = new Date(Date.UTC(2019, 3, 4, 30, 0, 0));
+		let jamEndDate = new Date(Date.UTC(2019, 3, 30, 1, 0, 0));
+		let jamEndDate2 = new Date(Date.UTC(2019, 3, 30, 2, 0, 0));
 		//let jamEndDate2 = new Date(Date.UTC(2018, 7, 14, 22, 0, 0));
 
 		let gradeEndDate = new Date(Date.UTC(2019, 4, 21, 20, 0, 0));
