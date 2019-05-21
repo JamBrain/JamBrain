@@ -2,10 +2,10 @@ dist: xenial
 language: node_js
 node_js:
   - 9
-install:
+before_install:
   - sudo apt-get update
   - sudo apt-get install -y php7.0 php7.0-mbstring php7.0-xml ffmpeg imagemagick pngquant gifsicle webp
+install:
   - npm install
-  
 script:
   - make
