@@ -381,6 +381,8 @@ function UserVoteOnTheme(&$user, $phase)
 		for($i=0;$i<$suggest_count;$i++)
 		{
 			$suggestion = GenerateRandomPhrase(1,4);
+			$suggestion = (strlen($suggestion) > 63) ? substr($string,0,60).'...' : $suggestion;
+			
 			Verbose("Suggesting theme $suggestion");
 			if(null === ApiThemeIdeaAdd($user, $event_nodeid, $suggestion))
 			{
