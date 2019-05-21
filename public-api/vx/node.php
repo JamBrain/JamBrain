@@ -497,7 +497,11 @@ switch ( $action ) {
 			}
 		}
 		else {
-			json_EmitFatalError_Permission(null, $RESPONSE);
+			// This emits a 401 error that confuses some users
+			//json_EmitFatalError_Permission(null, $RESPONSE);
+
+			// To stop confusing people who look at the console, lets just say the un-logged in user has authored nothing
+			$RESPONSE['what'] = [];
 		}
 		break; //case 'what': //node/what
 
