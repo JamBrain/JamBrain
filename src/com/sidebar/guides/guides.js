@@ -1,8 +1,10 @@
 import {h, Component}	from 'preact/preact';
 import SVGIcon			from 'com/svg-icon/icon';
+import NavLink			from 'com/nav-link/link';
 
 export default class SidebarGuides extends Component {
-	constructor() {
+	constructor(props) {
+		super(props);
 	}
 
 	render(props, state) {
@@ -18,10 +20,10 @@ export default class SidebarGuides extends Component {
 				</div>
 				{Object.keys(Links).map(key => {
 					return (
-						<a class="-item" href={Links[key].href}>
-							{Links[key].icon != null ? <SVGIcon baseline gap>{Links[key].icon}</SVGIcon> : null}
-							<strong>{key}</strong>
-						</a>
+						<NavLink class="-item" href={Links[key].href}>
+							<SVGIcon baseline gap>{Links[key].icon != null ? Links[key].icon : 'article'}</SVGIcon>
+							{key}
+						</NavLink>
 					);
 				})}
 			</div>
