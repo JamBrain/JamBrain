@@ -16,7 +16,7 @@ if ( !isset($_GET['ignore']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE') !== f
 define( 'DEBUG', isset($_GET['debug'])?1:0 );
 define( 'USE_MINIFIED', DEBUG ? '.debug' : '.min' );
 define( 'VERSION_STRING', defined('GIT_VERSION') ? 'v='.GIT_VERSION : '' );
-const STATIC_DOMAINS = [ 
+const STATIC_DOMAINS = [
 	'ludumdare.org' => 'static.jammer.work',
 	'jammer.work' => 'static.jammer.work',
 	'ludumdare.dev' => 'static.jam.dev',
@@ -36,6 +36,7 @@ define( 'JS_FILE',   "/-/all".USE_MINIFIED.".js?".VERSION_STRING );
 define( 'CSS_FILE',  "/-/all".USE_MINIFIED.".css?".VERSION_STRING );
 define( 'SVG_FILE',  "/-/all.min.svg?".VERSION_STRING );
 define( 'FONT_FILE', "//fonts.googleapis.com/css?family=Raleway:600,600italic,800,800italic|Roboto:300,300italic,700,700italic" );
+define( 'FONT_DOMAIN', "//fonts.gstatic.com" );
 
 if ( !isset($_GET['nopreload']) ) {
 	header( "Link: <".JS_FILE.">; rel=preload; as=script".LINK_SUFFIX, false );
@@ -50,7 +51,12 @@ if ( !isset($_GET['nopreload']) ) {
 <head>
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="<?=FONT_FILE?>" type="text/css">
+	<link rel="preconnect" href="<?=FONT_DOMAIN?>">
+
 	<link rel="stylesheet" href="<?=CSS_FILE?>" type="text/css">
+
+	<link rel="preconnect" href="<?=API_DOMAIN?>">
+
 	<meta name=viewport content="width=device-width, initial-scale=1">
 </head>
 <body>
