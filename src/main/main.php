@@ -55,7 +55,9 @@ if ( !isset($_GET['nopreload']) ) {
 
 	<link rel="stylesheet" href="<?=CSS_FILE?>" type="text/css">
 
+	<!-- preconnect(tcp + ssl negoation) to our api and file domains -->
 	<link rel="preconnect" href="<?=API_DOMAIN?>">
+	<link rel="preconnect" href="<?=STATIC_DOMAIN?>">
 
 	<meta name=viewport content="width=device-width, initial-scale=1">
 </head>
