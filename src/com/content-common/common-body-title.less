@@ -38,8 +38,8 @@
 		}
 	}
 
-	& > .-text {
-		position: relative;
+	& > .-text,
+	& > .-shortner {
 
 		font-size: 1.75em;
 
@@ -47,6 +47,11 @@
 			font-size: 1.9em;
 		}
 	}
+
+	& > .-text {
+		position: relative;
+	}
+
 
 	& > .-subtext {
 		font-size: 1.5em;
@@ -65,7 +70,7 @@
 		}
 	}
 
-	& svg {
+	& .-prefix {
 		margin-right: 0.5em;
 	}
 }

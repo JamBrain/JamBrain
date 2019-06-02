@@ -1,10 +1,11 @@
-import { h, Component } 				from 'preact/preact';
-import { shallowDiff }	 				from 'shallow-compare/index';
+import {h, Component} 				from 'preact/preact';
+import {shallowDiff}	 				from 'shallow-compare/index';
 
 import NavLink							from 'com/nav-link/link';
 import SVGIcon							from 'com/svg-icon/icon';
 
 import InputText						from 'com/input-text/text';
+import CopyToClipboardButton from '../button-clipboard/clipboard';
 
 export default class ContentCommonBodyTitle extends Component {
 	constructor( props ) {
@@ -16,6 +17,7 @@ export default class ContentCommonBodyTitle extends Component {
 //	}
 
 	render( props ) {
+
 		props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 		props.class.push("content-common-body");
 		props.class.push("-title");
@@ -24,7 +26,7 @@ export default class ContentCommonBodyTitle extends Component {
 
 		var Prefix = null;
 		if ( props.titleIcon ) {
-			Prefix = <SVGIcon baseline small>{props.titleIcon}</SVGIcon>;
+			Prefix = <SVGIcon baseline small class="-prefix">{props.titleIcon}</SVGIcon>;
 		}
 
 		var Limit = props.limit ? props.limit : 64;	// True limit is 96
@@ -49,10 +51,18 @@ export default class ContentCommonBodyTitle extends Component {
 
 			var Title = props.title.trim().length ? props.title.trim() : Placeholder;
 			var Body = [];
-			if ( props.href )
+			if ( props.href ) {
 				Body.push(<NavLink class="-text" href={props.href} title={props.hover}>{Prefix}{Title}</NavLink>);
-			else
+				if (!props.minmax && props.id) {
+
+					//TODO:: that data url needs to be generated. Not sure how to get the link shortner address from javascript
+
+					Body.push(<CopyToClipboardButton class={"-shortner"} data={'https://url.ludumdare.org/$' + props.id}><SVGIcon baseline>link</SVGIcon></CopyToClipboardButton>);
+				}
+			}
+			else {
 				Body.push(<div class="-text" title={props.hover}>{Prefix}{Title}</div>);
+			}
 
 			if ( props.subtitle ) {
 				Body.push(<span class="-subtext"> ({props.subtitle})</span>);
