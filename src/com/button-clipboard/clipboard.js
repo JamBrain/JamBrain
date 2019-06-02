@@ -21,7 +21,7 @@ export default class CopyToClipboardButton extends ButtonBase {
 		let info = e.target.getElementsByTagName('div')[0];
 
 		this.copy(this.state.data).then( () => {
-			console.log("Copied to clipboard");
+			console.log("Copied " + this.state.data + " to clipboard");
 
 			if (this.state.state === "IDEL") {
 				this.setState({"state": "SUCCESS"});
@@ -33,7 +33,7 @@ export default class CopyToClipboardButton extends ButtonBase {
 			}
 
 		}).catch((e) => {
-			console.log("Error copying short link to clipborad", e);
+			console.log("Error copying short link to clipboard", e);
 
 			this.setState({"state": "ERROR"});
 
@@ -65,8 +65,27 @@ export default class CopyToClipboardButton extends ButtonBase {
 
 		let {children} = Object.assign({}, props);
 
+		let icon, style;
+		switch (state.state) {
+			case "SUCCESS":
+				icon = "checkmark";
+				style = "-success";
+				break;
+
+			case "ERROR":
+				icon = "cross";
+				style = "-error";
+				break;
+
+			case "IDEL":
+			default:
+				icon =(this.props.icon === undefined)? "link" : props.icon;
+				break;
+		}
+
 		return (
 			<div class={cN("-c2cbutton", props.class)} onclick={this.onClick}>
+				<SVGIcon class={(style === undefined) ? null : style} baseline>{icon}</SVGIcon>
 				{children}
 			</div>
 		);
