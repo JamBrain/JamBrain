@@ -27,11 +27,13 @@ export default class UIButtonLink extends UILink {
 		// Wrap onClick with a function that deselects current element //
 		let onClickFunc = props.onclick;
 		props.onclick = (e) => {
-			if ( onClickFunc )
+			if ( onClickFunc ) {
 				onClickFunc(e);
+			}
 
-			if ( doHistory )
+			if ( doHistory ) {
 				doHistory.call(this.base, e);
+			}
 
 			if ( typeof document.activeElement.blur !== "undefined" ) {
 				document.activeElement.blur();
