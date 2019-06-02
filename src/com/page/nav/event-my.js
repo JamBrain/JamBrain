@@ -13,14 +13,14 @@ export default class PageNavEventMy extends Component {
 		// Begin populating the list of Nav Buttons
 		let NavButtons = [];
 
-		NavButtons.push(<ContentNavButton path={path+FullPath} icon="home" href={path+"/my"}>Home</ContentNavButton>);
+		NavButtons.push(<ContentNavButton path={path+FullPath} title="Home" icon="home" href={path+"/my"}>Home</ContentNavButton>);
 
 //		let IsHome = (FullPath == '/');
 		let IsLoggedIn = user && (user.id !== 0);
 //		let IsMe = ['/my'].includes(FirstPath);
 
 		if ( IsLoggedIn ) {
-			NavButtons.push(<ContentNavButton path={path+FullPath} icon="star-half" href={path+'/my/grades'}>My Grades</ContentNavButton>);
+			NavButtons.push(<ContentNavButton path={path+FullPath} title="My Grades" icon="star-half" href={path+'/my/grades'}>My Grades</ContentNavButton>);
 		}
 
 		return (

@@ -38,7 +38,7 @@ export default class ViewBarUser extends Component {
 
 		return (
 			<UIDropdown class="-user" right>
-				<UIImage src={UserAvatar} block />
+				<UIImage alt="Your Profile" src={UserAvatar} block />
 				<UIButton href={UserURL}><UIIcon>user</UIIcon><span>My Profile</span></UIButton>
 				<UIButton href={UserURL+'games'}><UIIcon>gamepad</UIIcon><span>My Games</span></UIButton>
 				<div class="-gap" />

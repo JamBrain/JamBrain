@@ -361,7 +361,7 @@ export default class ViewBar extends Component {
 			<div class="view-bar">
 				<div class="-content">
 					<div class="-left">
-						<UIButton href="/" class="-logo">
+						<UIButton title="Ludum Dare" href="/" class="-logo">
 							<SVGIcon class="if-sidebar-block" baseline>ludum</SVGIcon><SVGIcon class="if-sidebar-block" baseline>dare</SVGIcon>
 							<SVGIcon class="if-no-sidebar-block" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-block" baseline>d-are</SVGIcon>
 						</UIButton>

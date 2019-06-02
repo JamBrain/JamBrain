@@ -13,7 +13,7 @@ export default class PageNavContent extends Component {
 		// Begin populating the list of Nav Buttons
 		let NavButtons = [];
 
-		NavButtons.push(<ContentNavButton path={path+FullPath} icon="previous" href="/" />);
+		NavButtons.push(<ContentNavButton path={path+FullPath} title="Go Back" icon="previous" href="/" />);
 
 		let IsHome = (FullPath == '/');
 		let IsLoggedIn = user && (user.id !== 0);
@@ -46,10 +46,10 @@ export default class PageNavContent extends Component {
 
 		console.log(path, FullPath, GamePath);
 
-		NavButtons.push(<ContentNavButton path={path+FullPath} light={true} icon="trophy" href={EventPath}>{EventName}</ContentNavButton>);
-		NavButtons.push(<ContentNavButton path={path+FullPath} light={true} icon="gamepad" href={EventPath+"/games"}>Games</ContentNavButton>);
+		NavButtons.push(<ContentNavButton path={path+FullPath} title={EventName} light={true} icon="trophy" href={EventPath}>{EventName}</ContentNavButton>);
+		NavButtons.push(<ContentNavButton path={path+FullPath} title="Games" light={true} icon="gamepad" href={EventPath+"/games"}>Games</ContentNavButton>);
 
-		NavButtons.push(<ContentNavButton path={path+((FullPath == '/') ? '' : FullPath)} icon="gamepad" href={GamePath}>{GameName}</ContentNavButton>);
+		NavButtons.push(<ContentNavButton path={path+((FullPath == '/') ? '' : FullPath)} title={GameName} icon="gamepad" href={GamePath}>{GameName}</ContentNavButton>);
 
 		return (
 			<div class="content-base content-nav">

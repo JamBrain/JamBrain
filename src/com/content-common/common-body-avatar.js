@@ -70,7 +70,7 @@ export default class ContentCommonBodyAvatar extends Component {
 		}
 		return (
 			<ButtonLink class={Classes} href={props.href}>
-				<IMG2 src={Avatar} failsrc={AvatarFail} />
+				<IMG2 alt={props.user + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
 			</ButtonLink>
 		);
 	}

@@ -31,7 +31,7 @@ export default class UIButtonLink extends UILink {
 				onClickFunc(e);
 
 			if ( doHistory )
-				doHistory.call(this.base,e);
+				doHistory.call(this.base, e);
 
 			if ( typeof document.activeElement.blur !== "undefined" ) {
 				document.activeElement.blur();

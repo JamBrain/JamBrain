@@ -21,13 +21,13 @@ export default class ContentNavEvent extends Component {
 		PartPath = path + PartPath;
 
 		let Buttons = [
-			<ContentNavButton path={PartPath} icon="previous" href="/" />,
-			<ContentNavButton path={NewPath} icon="trophy" href={path}>Event</ContentNavButton>
+			<ContentNavButton path={PartPath} title="Go back" icon="previous" href="/" />,
+			<ContentNavButton path={NewPath} title="Event" icon="trophy" href={path}>Event</ContentNavButton>
 		];
 
 //		var ShowMyFeed = null;
 //		if ( user && user.id ) {
-//			ShowMyFeed = <ContentNavButton path={NewPath} icon='feed' href={path}>Feed</ContentNavButton>;
+//			ShowMyFeed = <ContentNavButton path={NewPath} title="Your Feed" icon='feed' href={path}>Feed</ContentNavButton>;
 //		}
 //		// Default to /hot if not logged in
 //		else if ( NewPath === '/' ) {
@@ -36,21 +36,21 @@ export default class ContentNavEvent extends Component {
 
 		if ( user && user.id ) {
 			// TODO: Check if any games are submitted
-			Buttons.push(<ContentNavButton path={PartPath} icon="user" href={path+'/my'}>Me</ContentNavButton>);
+			Buttons.push(<ContentNavButton path={PartPath} title="Your Games" icon="user" href={path+'/my'}>Me</ContentNavButton>);
 		}
 
 		if ( node ) {
 			// TODO: Check if any games are submitted
-			Buttons.push(<ContentNavButton path={PartPath} icon="gamepad" href={path+'/games'}>Games</ContentNavButton>);
+			Buttons.push(<ContentNavButton path={PartPath} title="Games" icon="gamepad" href={path+'/games'}>Games</ContentNavButton>);
 		}
 
 		let ShowTheme = null;
 		if ( node ) {
 			// TODO: Check if Theme Mode > 0
-			Buttons.push(<ContentNavButton path={PartPath} icon="ticket" href={path+'/theme'}>Theme</ContentNavButton>);
+			Buttons.push(<ContentNavButton path={PartPath} title="Theme" icon="ticket" href={path+'/theme'}>Theme</ContentNavButton>);
 		}
 
-		Buttons.push(<ContentNavButton path={NewPath} icon="stats" href={path+'/stats'}>Stats</ContentNavButton>);
+		Buttons.push(<ContentNavButton path={NewPath} title="Statistics" icon="stats" href={path+'/stats'}>Stats</ContentNavButton>);
 
 		return (
 			<div class="-body">
@@ -61,8 +61,8 @@ export default class ContentNavEvent extends Component {
 		);
 
 //					{ShowMyFeed}
-//					<ContentNavButton path={NewPath} icon='heart' href={path+'/hot'}>Popular</ContentNavButton>
-//					<ContentNavButton path={NewPath} icon='news' href={path+'/news'}>News</ContentNavButton>
-//					<ContentNavButton path={NewPath} icon="gamepad" href={path+'/join'}>Join Event</ContentNavButton>
+//					<ContentNavButton path={NewPath} title="Popular" icon='heart' href={path+'/hot'}>Popular</ContentNavButton>
+//					<ContentNavButton path={NewPath} title="News feed" icon='news' href={path+'/news'}>News</ContentNavButton>
+//					<ContentNavButton path={NewPath} title="Join Event" icon="gamepad" href={path+'/join'}>Join Event</ContentNavButton>
 	}
 }
