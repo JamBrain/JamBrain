@@ -65,26 +65,29 @@ export default class CopyToClipboardButton extends ButtonBase {
 
 		let {children} = Object.assign({}, props);
 
-		let icon, style;
+		let icon, style, tooltip;
 		switch (state.state) {
 			case "SUCCESS":
 				icon = "checkmark";
 				style = "-success";
+				tooltip = "Copied to clipboard succesfully!";
 				break;
 
 			case "ERROR":
 				icon = "cross";
 				style = "-error";
+				tooltip = "Failed to copy to clipboard";
 				break;
 
 			case "IDEL":
 			default:
 				icon =(this.props.icon === undefined)? "link" : props.icon;
+				tooltip =(this.props.tooltip === undefined)? "Copy to clipboard" : props.tooltip;
 				break;
 		}
 
 		return (
-			<div class={cN("-c2cbutton", props.class)} onclick={this.onClick}>
+			<div title={tooltip} class={cN("-c2cbutton", props.class)} onclick={this.onClick}>
 				<SVGIcon class={(style === undefined) ? null : style} baseline>{icon}</SVGIcon>
 				{children}
 			</div>

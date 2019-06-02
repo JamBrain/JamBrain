@@ -57,7 +57,7 @@ export default class ContentCommonBodyTitle extends Component {
 
 					//TODO:: that data url needs to be generated. Not sure how to get the link shortner address from javascript
 
-					Body.push(<CopyToClipboardButton icon={"link"} class={"-shortner"} data={'https://url.ludumdare.org/$' + props.id}></CopyToClipboardButton>);
+					Body.push(<CopyToClipboardButton tooltip="Copy short link to clipboard" icon={"link"} class={"-shortner"} data={'https://url.ludumdare.org/$' + props.id}></CopyToClipboardButton>);
 				}
 			}
 			else {
