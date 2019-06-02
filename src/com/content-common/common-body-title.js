@@ -55,9 +55,7 @@ export default class ContentCommonBodyTitle extends Component {
 				Body.push(<NavLink class="-text" href={props.href} title={props.hover}>{Prefix}{Title}</NavLink>);
 				if (!props.minmax && props.id) {
 
-					//TODO:: that data url needs to be generated. Not sure how to get the link shortner address from javascript
-
-					Body.push(<CopyToClipboardButton tooltip="Copy short link to clipboard" icon={"link"} class={"-shortner"} data={'https://url.ludumdare.org/$' + props.id}></CopyToClipboardButton>);
+					Body.push(<CopyToClipboardButton tooltip="Copy short link to clipboard" icon={"link"} class={"-shortner"} data={SHORTNER_DOMAIN+"/$" + props.id}></CopyToClipboardButton>);
 				}
 			}
 			else {

@@ -63,6 +63,9 @@ export default class CopyToClipboardButton extends ButtonBase {
 
 	render(props, state) {
 
+		console.log(STATIC_DOMAIN);
+		console.log(SHORTNER_DOMAIN);
+
 		let {children} = Object.assign({}, props);
 
 		let icon, style, tooltip;
