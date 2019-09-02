@@ -1,5 +1,16 @@
 #sidebar > .sidebar-guides {
-	& > .-item {
+	& > .-item,
+	& > .-item:visited {
 		display: block;
+		color: inherit;
+
+		& .-title {
+			font-weight: bold;
+		}
+	}
+
+	& > .-item:hover,
+	& > .-item:active {
+		color: #FFF;
 	}
 }
