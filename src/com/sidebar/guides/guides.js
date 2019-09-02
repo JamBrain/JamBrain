@@ -9,20 +9,25 @@ export default class SidebarGuides extends Component {
 
 	render(props, state) {
 		var Links = {
-			"Rules": {"icon": "article", "href": "/events/ludum-dare/rules"},
-			"Game Hosting Guide": {"href": "/events/ludum-dare/hosting-guide"}
+			"Rules": {"href": "/events/ludum-dare/rules", "subtext": "for Ludum Dare events"},
+			"Game Hosting Guide": {"icon": "star-empty", "href": "/events/ludum-dare/hosting-guide"}
 		};
 
 		return (
 			<div class="sidebar-base sidebar-shortlist sidebar-guides">
 				<div class="-title _font2">
-					<SVGIcon baseline>question</SVGIcon> <span class="-text">Guides</span>
+					<SVGIcon baseline>article</SVGIcon> <span class="-text">Guides</span>
 				</div>
 				{Object.keys(Links).map(key => {
+					let subtext = "";
+					if (Links[key].subtext) {
+						subtext = " - " + Links[key].subtext;
+					}
+
 					return (
 						<NavLink class="-item" href={Links[key].href}>
-							<SVGIcon baseline gap>{Links[key].icon != null ? Links[key].icon : 'article'}</SVGIcon>
-							{key}
+							<SVGIcon baseline gap>{Links[key].icon != null ? Links[key].icon : 'star-full'}</SVGIcon>
+							<span class="-title">{key}</span>{subtext}
 						</NavLink>
 					);
 				})}
