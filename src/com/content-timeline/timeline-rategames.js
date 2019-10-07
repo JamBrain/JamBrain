@@ -138,10 +138,13 @@ export default class TimelineRateGames extends Component {
 
 		return (
 		<div class={MainClass}>
-			<div class={HeaderClass}><UIIcon src="gamepad" /> <span>Play and Rate</span></div>
+			<div class={HeaderClass}><UIIcon src="gamepad" /> <span>Play, Rate, and give Feedback</span></div>
 				<div class="-bodies">
 					<div class="-inline-if-not-minimized">
 					{Games}
+					</div>
+					<div class="-inline-if-not-minimized">
+					<strong>TIP</strong>: For more ratings and feedback, leave feedback on the games you play, and give <UIIcon src="heart" />'s to feedback you like.
 					</div>
 				</div>
 				<div class={cN('content-common-footer', (FooterLeft.length + FooterRight.length) ? '-has-items' : '')}>
