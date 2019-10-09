@@ -12,6 +12,8 @@
 				"severity": "warning"
 			} 
 		],
-		"indentation": ["tab", {"severity": "warning"}]
+		"indentation": ["tab", {"severity": "warning"}],
+		"no-descending-specificity": null,
+		"no-duplicate-selectors": null
 	}
 }
