@@ -4,7 +4,7 @@
 SRC					?=	src
 OUT					?=	.output
 .BUILD				?=	.build
-NODEJS				?=	/vagrant/www/node_modules
+NODEJS				?=	node_modules
 
 # Use 'TARGET=public-ludumdare.com' if you want to build a specific build (such as public-ludumdare.com) #
 ifneq ($(strip $(TARGET)),)
