@@ -25,14 +25,32 @@ import PageDevPalette 					from 'com/page/dev/palette';
 
 import HeaderNoob						from 'com/header/noob/noob';
 
+const STORAGE_HEADER_DISMISSED = 'isNoobHeaderDismissed';
+
 export default class PageRoot extends Component {
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			isNoobHeaderDisplayed: (!props.user || !props.user.id) &&
+				!localStorage.getItem(STORAGE_HEADER_DISMISSED),
+		};
+	}
+
+	dismissNoobHeader() {
+		localStorage.setItem(STORAGE_HEADER_DISMISSED, 'true');
+		this.setState({
+			isNoobHeaderDisplayed: false,
+		});
+	}
+
 	render( props ) {
 		const {node, user, path, extra, featured} = props;
 		let Dummy = <div />;
 
 		let ShowIntro = null;
-		if (!user || !user.id) {
-			ShowIntro = <HeaderNoob featured={props.featured} />;
+		if (this.state.isNoobHeaderDisplayed) {
+			ShowIntro = <HeaderNoob onDismiss={this.dismissNoobHeader.bind(this)} />;
 		}
 
 		return (
