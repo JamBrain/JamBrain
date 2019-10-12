@@ -155,28 +155,28 @@ export default class ViewBar extends Component {
 		// remove existing icon if any
 		const el = document.querySelector("link[rel='shortcut icon']");
 		if (el) el.parentNode.removeChild(el);
-		// reload LD favicon and paint it
-		const canvas = document.createElement('canvas');
-		canvas.setAttribute('width', 64);
-		canvas.setAttribute('height', 64);
-		const context = canvas.getContext('2d');
 		const icon = new Image();
 		icon.setAttribute('src', '/favicon.ico');
 		icon.onload = () => {
-			// LD favicon as background
+			// reload LD favicon and paint it
+			const canvas = document.createElement('canvas');
+			canvas.setAttribute('width', icon.naturalWidth);
+			canvas.setAttribute('height', icon.naturalHeight);
+			const context = canvas.getContext('2d');
+			// place LD image as background
 			context.drawImage(icon, 0, 0);
-			// We only draw text for # > 0
+			// draw text when # notifs > 0
 			if (notificationCount > 0) {
 				const text = notificationCount > 9 ? "9+" : String(notificationCount);
-				// Dark backdrop for contrast
-				context.fillStyle = '#0d4263';
+				// fill with a dark backdrop for contrast
+				context.fillStyle = '#6f7984';
 				context.rect(text.length > 1 ? 14 : 38, 30, 50, 50);
 				context.fill();
-				context.fillStyle = '#fff';
+				context.fillStyle = '#eef2f7';
 				context.font = 'bold 36px tahoma';
 				context.fillText(text, text.length > 1 ? 16 : 40, 64);
 			}
-			// Replace favicon
+			// replace favicon
 			const link = document.createElement('link');
 			link.type = 'image/x-icon';
 			link.rel = 'shortcut icon';
