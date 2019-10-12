@@ -25,7 +25,6 @@ function make_url( url ) {
 export default class ViewBar extends Component {
 	constructor( props ) {
 		super(props);
-
 		this.StartedNotificationLoop = false;
 
 		this.state - {
@@ -46,6 +45,7 @@ export default class ViewBar extends Component {
 			//'notificationsFeed': null,
 			//'notificationsMore': false,
 		});
+		this.refreshFavIconNotificationCount();
 	}
 
 	handleNotificationsHide() {
@@ -80,7 +80,7 @@ export default class ViewBar extends Component {
 					// Only get the feed in general if it hasn't been requested before.
 					const request = newUnfilteredCount > (notifications || 0) ?
 						$Notification.GetFeedUnreadFiltered :
-             !notificationsFeed && $Notification.GetFeedAllFiltered;
+						!notificationsFeed && $Notification.GetFeedAllFiltered;
 					request && request(0, fetchCount)
 					.then(r => {
 						if (this.state.notifications != r.count) {
@@ -91,6 +91,7 @@ export default class ViewBar extends Component {
 								'notificationsFeed': r,
 								'notificationsError': null,
 							});
+							this.refreshFavIconNotificationCount();
 						}
 						setTimeout(() => this.checkNotificationCount(), 60000);
 					})
@@ -143,6 +144,45 @@ export default class ViewBar extends Component {
 		if ( !this.StartedNotificationLoop ) {
 			this.checkNotificationCount();
 		}
+	}
+
+	/**
+	 * Adds the # of notifications in the favicon.
+	 * Shows individual numbers until 9, then 9+ for more.
+	 */
+	refreshFavIconNotificationCount() {
+		const notificationCount = this.state.notifications || 0;
+		// remove existing icon if any
+		const el = document.querySelector("link[rel='shortcut icon']");
+		if (el) el.parentNode.removeChild(el);
+		// reload LD favicon and paint it
+		const canvas = document.createElement('canvas');
+		canvas.setAttribute('width', 64);
+		canvas.setAttribute('height', 64);
+		const context = canvas.getContext('2d');
+		const icon = new Image();
+		icon.setAttribute('src', '/favicon.ico');
+		icon.onload = () => {
+			// LD favicon as background
+			context.drawImage(icon, 0, 0);
+			// We only draw text for # > 0
+			if (notificationCount > 0) {
+				const text = notificationCount > 9 ? "9+" : String(notificationCount);
+				// Dark backdrop for contrast
+				context.fillStyle = '#0d4263';
+				context.rect(text.length > 1 ? 14 : 38, 30, 50, 50);
+				context.fill();
+				context.fillStyle = '#fff';
+				context.font = 'bold 36px tahoma';
+				context.fillText(text, text.length > 1 ? 16 : 40, 64);
+			}
+			// Replace favicon
+			const link = document.createElement('link');
+			link.type = 'image/x-icon';
+			link.rel = 'shortcut icon';
+			link.href = canvas.toDataURL("image/x-icon");
+			document.getElementsByTagName('head')[0].appendChild(link);
+		};
 	}
 
 	renderLeft() {
