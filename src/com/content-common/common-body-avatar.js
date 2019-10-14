@@ -50,28 +50,31 @@ export default class ContentCommonBodyAvatar extends Component {
 		}
 	}
 	render( props ) {
-		let Classes = cN("content-common-body -avatar", props.class, props.editing ? '-editing' : '');
+		const isInProfile = props.node && (props.node.type === "user" && props.href === props.node.path);
+		const isInteractive = (isInProfile && props.editing) || (!isInProfile && !props.editing);
+		let Classes = cN("content-common-body -avatar", props.class,
+			isInProfile && props.editing ? '-editing' : '',
+			isInteractive ? '-interactive' : '');
 
 		let AvatarFail = '///content/internal/user64.png';
 		let Avatar = props.src ? props.src : AvatarFail;
-
+		const name = props.node && props.node.name || "User";
 		Avatar += ".64x64.fit.png";
-
-		if ( props.editing ) {
-			return (
-				<label>
+		if (isInteractive) {
+			return isInProfile && props.editing ?
+				(<label>
 					<input type="file" name="asset" style="display: none;" onchange={this.onEdit} />
 					<div class={Classes}>
 						<IMG2 src={Avatar} failsrc={AvatarFail} />
 						<SVGIcon>edit</SVGIcon>
 					</div>
-				</label>
-			);
+				</label>) :
+				(<ButtonLink class={Classes} href={props.href}>
+					<IMG2 alt={name + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
+				</ButtonLink>);
 		}
-		return (
-			<ButtonLink class={Classes} href={props.href}>
-				<IMG2 alt={props.user + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
-			</ButtonLink>
-		);
+		return (<span class={Classes}>
+					<IMG2 alt={name + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
+				</span>);
 	}
 }

@@ -33,10 +33,12 @@ export default class ContentUserBar extends Component {
 			}
 		}
 
+		const href = "/users/" + node.slug;
+
 		return (
 			<div class="content-user-bar">
-				<ContentCommonBodyAvatar src={node.meta && node.meta.avatar ? node.meta.avatar : ''} />
-				<ContentCommonBodyTitle href={"/users/"+node.slug} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.slug} />
+				<ContentCommonBodyAvatar href={href} src={node.meta && node.meta.avatar ? node.meta.avatar : ''} />
+				<ContentCommonBodyTitle href={href} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.slug} />
 
 				<ContentCommonNav>
 					{ShowFollow}
