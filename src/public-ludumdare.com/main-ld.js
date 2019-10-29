@@ -531,18 +531,22 @@ class Main extends Component {
 
 	getTitle( node ) {
 		let Title = "";
+		let TitleSuffix = window.location.host;
+		if (window.location.host == "ldjam.com") {
+			TitleSuffix += " | Ludum Dare game jam";
+		}
 
 		if ( node.name ) {
 			Title = titleParser.parse(node.name, true);		// What is titleParser?
 			if ( Title === "" ) {
-				Title = window.location.host;
+				Title = TitleSuffix;
 			}
 			else {
-				Title += " | " + window.location.host;
+				Title += " | " + TitleSuffix;
 			}
 		}
 		else {
-			Title = window.location.host;
+			Title = TitleSuffix;
 		}
 		return Title;
 	}
