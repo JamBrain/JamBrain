@@ -10,9 +10,6 @@ export default class HeaderWarning extends Component {
 	render( props ) {
 		let {root} = props;
 
-		console.log("roo:", root);
-		console.log("pro:", props);
-
 		if ( root ) {
 			if ( root.message ) {
 				return (
