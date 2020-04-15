@@ -11,12 +11,14 @@ export default class HeaderWarning extends Component {
 		let {root} = props;
 
 		if ( root ) {
-			if ( root.message ) {
-				return (
-					<div class="header-base header-warning outside">
-						<UIIcon baseline small src="warning" /> {root.message}
-					</div>
-				);
+			if ( root.meta ) {
+				if ( root.meta.message ) {
+					return (
+						<div class="header-base header-warning outside">
+							<UIIcon baseline small src="warning" /> {root.meta.message}
+						</div>
+					);
+				}
 			}
 		}
 
