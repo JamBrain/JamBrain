@@ -7,7 +7,7 @@ export default {
 
 const EndPoint = '//jammer.tv';
 const CacheName = "JammerTV|";
-const TTL = 60 * 1000;
+const TTL = 30 * 1000;
 
 export function GetLive( cats ) {
 	if ( Array.isArray(cats) ) {
