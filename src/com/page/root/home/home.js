@@ -11,14 +11,14 @@ export default class PageRootHome extends Component {
 		const {node, user, path, extra, featured} = props;
 
 		let ShowHomework = null;
-		if ( user && user.id && featured && featured.focus ) { //&& props.user.focus && props.user.node.what_node[props.user.focus].published && props.featured && props.featured.meta['can-grade'] && (props.meta['can-grade'] == "1") ) {
-			if ( (featured.meta['can-grade'] == "1") && featured.what_node && featured.what_node[featured.focus] && featured.what_node[featured.focus].published ) {
+		if ( user && user.id && featured && featured.focus_id ) {
+			if ( (featured.meta['can-grade'] == "1") && featured.what && featured.what[featured.focus_id] && featured.what[featured.focus_id].published ) {
 				ShowHomework = <TimelineRateGames featured={props.featured} />;
 			}
 		}
 
 		let ShowEvent = null;
-		if ( featured && (!user || !user.id || !featured.focus) ) {
+		if ( featured && (!user || !user.id || !featured.focus_id) ) {
 			ShowEvent = <ContentEvent node={featured} user={user} path={path} extra={extra} featured={featured} />;
 		}
 

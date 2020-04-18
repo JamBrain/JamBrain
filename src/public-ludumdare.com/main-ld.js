@@ -118,16 +118,14 @@ class Main extends Component {
 
 //		return Promise.all([
 //			this.fetchUser(),
-//			this.fetchFeatured()
+//			this.fetchFeatured(),
+//			this.fetchNode()
 //		]).then(r => {
 //
 //		});
 //		.catch(err => {
 //			this.setState({'error': err});
 //		});
-//
-//		this.fetchData(['root']);
-////		this.fetchRoot();
 	}
 
 	storeHistory( input, page_title = null, page_url = null ) {
@@ -234,9 +232,9 @@ class Main extends Component {
 			newState.featured = r.featured;
 			newState.featured.what = r.node;
 
-			console.log("root:", r.root);
-			console.log("featured:", r.featured);
-			console.log("node:", r.node);
+			//console.log("root:", r.root);
+			//console.log("featured:", r.featured);
+			//console.log("node:", r.node);
 
 			let focus = 0;
 			let focusDate = 0;
@@ -271,7 +269,7 @@ class Main extends Component {
 				newState.featured.focus_id = focus;
 			}
 
-			console.log('[fetchFeatured] '+newState.featured.focus_id+' chosen as focus_id');
+			console.log('[fetchFeatured] - '+newState.featured.focus_id+' chosen as focus_id');
 
 			this.setState(newState);
 		});
@@ -310,7 +308,7 @@ class Main extends Component {
 //					return this.fetchFeatured(r.node[SITE_ROOT].meta['featured']|0);
 //				}
 
-				console.log("[fetchNode] Node:", r.node_id);
+				console.log("[fetchNode] - Node:", r.node_id);
 
 				return null;
 			}
@@ -340,7 +338,7 @@ class Main extends Component {
 			// Finally, user is ready
 			this.setState({'user': User});
 
-			console.log("[fetchUser] You are", User.id, "("+User.name+")");
+			console.log("[fetchUser] - You are", User.id, "("+User.name+")");
 
 			// Pre-cache my Love (nothing to do with it)
 			return $NodeLove.GetMy();
