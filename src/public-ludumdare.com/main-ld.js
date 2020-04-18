@@ -113,7 +113,7 @@ class Main extends Component {
 
 	componentDidMount() {
 		this.fetchUser();
-		this.fetchFeatured();
+		this.fetchFeatured();	// Fetches root, featured, and all games associated with you
 		this.fetchNode();
 
 //		return Promise.all([
@@ -221,34 +221,8 @@ class Main extends Component {
 
 	// *** //
 
-//	fetchRoot() {
-//		console.log("[fetchRoot]");
-//
-//		return $Node.Get(SITE_ROOT)
-//		.then(r => {
-//			if ( r.node.length ) {
-//				let node = r.node[0];
-//
-//				this.setState({
-//					'root': node
-//				});
-//
-//				if ( node.meta['featured'] && (node.meta['featured']|0) > 0 ) {
-//					return this.fetchFeatured(node.meta['featured']|0);
-//				}
-//				console.log("[fetchRoot] Done:", node.id);
-//			}
-//			else {
-//				throw '[fetchRoot] Failed to load root node';
-//			}
-//		})
-//		.catch(err => {
-//			this.setState({'error': err});
-//		});
-//	}
-
 	fetchFeatured( node_id ) {
-		console.log("[fetchFeatured]");
+		console.log("[fetchFeatured] +");
 
 		// Used across everything below
 		let Node = null;
@@ -260,14 +234,15 @@ class Main extends Component {
 			newState.featured = r.featured;
 			newState.featured.what = r.node;
 
-			console.log(r.root);
-			console.log(r.featured);
-			console.log(r.node);
+			console.log("root:", r.root);
+			console.log("featured:", r.featured);
+			console.log("node:", r.node);
 
 			let focus = 0;
 			let focusDate = 0;
 			let lastPublished = 0;
 
+			console.log("[fetchFeatured] Hack! We don't support choosing your active game yes, so use logic to detect it");
 			for ( let key in r.node ) {
 				let newDate = new Date(r.node[key].modified).getTime();
 				if ( newDate > focusDate ) {
@@ -300,90 +275,10 @@ class Main extends Component {
 
 			this.setState(newState);
 		});
-
-//		return $Node.Get(node_id)
-//			.then(r => {
-//				// If
-//				if ( r && Array.isArray(r.node) && r.node.length ) {
-//					Node = r.node[0];
-//
-//					console.log("[fetchFeatured] +", Node.id);
-//
-//					return $Node.What(Node.id);
-//				}
-//
-//				// No featured event
-//				return null;
-//			})
-//			.then(r => {
-//				if ( r && r.what ) {
-//					Node.what = r.what;
-//
-//					console.log('[fetchFeatured] My Game(s):', Node.what);
-//
-//					if ( Node.what.length ) {
-//						return $Node.GetKeyed(r.what);
-//					}
-//				}
-//
-//				return Promise.resolve({});
-//			})
-//			.then( r => {
-//				if ( r && r.node ) {
-//					Node.what_node = r.node;
-//
-//					let Focus = 0;
-//					let FocusDate = 0;
-//					let LastPublished = 0;
-//
-//					for ( let key in r.node ) {
-//						let NewDate = new Date(r.node[key].modified).getTime();
-//						if ( NewDate > FocusDate ) {
-//							FocusDate = NewDate;
-//							Focus = key|0;
-//						}
-//						if ( r.node[key].published ) {
-//							LastPublished = key|0;
-//							console.log('[fetchFeatured] '+key+' is published');
-//						}
-//					}
-//					if ( Focus ) {
-//						console.log('[fetchFeatured] '+Focus+' was the last modified');
-//					}
-//
-//					// If the last updated is published, focus on that
-//					if ( r.node[Focus].published ) {
-//						Node.focus = Focus;
-//					}
-//					// If not, make it the last known published game
-//					else if ( LastPublished ) {
-//						Node.focus = Lastpublished;
-//					}
-//					// Otherwise, just the last one we found
-//					else if ( Focus > 0 ) {
-//						Node.focus = Focus;
-//					}
-//
-//					if ( Node.focus || Node.focus === 0 ) {
-//						console.log('[fetchFeatured] '+Node.focus+' chosen as Focus');
-//					}
-//				}
-//
-//				this.setState({
-//					'featured': Node
-//				});
-//
-//				console.log('[fetchFeatured] -', Node.id);
-//
-//				return r;
-//			})
-//			.catch(err => {
-//				this.setState({'error': err});
-//			});
 	}
 
 	fetchNode( newArgs ) {
-		console.log("[fetchNode]");
+		console.log("[fetchNode] +");
 
 		let args = ['node', 'parent', 'superparent', 'author'];
 		if ( newArgs ) {
@@ -415,7 +310,7 @@ class Main extends Component {
 //					return this.fetchFeatured(r.node[SITE_ROOT].meta['featured']|0);
 //				}
 
-				console.log("[fetchNode] " + r.node_id);
+				console.log("[fetchNode] Node:", r.node_id);
 
 				return null;
 			}
@@ -427,12 +322,13 @@ class Main extends Component {
 	}
 
 	fetchUser() {
-		console.log("[fetchUser]");
+		console.log("[fetchUser] +");
 
 		let User = {
 			'id': 0
 		};
 
+		// Fetch Active User
 		return $Node.GetMy().then(r => {
 			if ( r.node ) {
 				User = Object.assign({}, r.node);
@@ -444,82 +340,16 @@ class Main extends Component {
 			// Finally, user is ready
 			this.setState({'user': User});
 
-			console.log("[fetchUser] ", User.id);
+			console.log("[fetchUser] You are", User.id, "("+User.name+")");
 
 			// Pre-cache my Love (nothing to do with it)
 			return $NodeLove.GetMy();
 		})
-
-//		// Fetch the Active User
-//		return $User.Get().then(r => {
-//			Caller = r.caller_id|0;
-//			console.log("[fetchUser] caller_id:", Caller);
-//
-//			// Process my User
-//			if ( Caller && r.node ) {
-//				User = Object.assign({}, r.node);
-//				User['private'] = {};
-//
-//				// Pre-cache my Love (not returned)
-//				$NodeLove.GetMy();
-//			}
-//			return null;	// Do we need this?
-//		})
-//		.then(r => {
-//			if ( Caller && User.id ) {
-//				// Load user's private data
-//				return $Node.GetMy();
-//			}
-//			return null;	// Do we need this?
-//		})
-//		.then(r => {
-//			// Process private User data
-//			if ( r ) {
-//				User['private']['meta'] = r.meta;
-//				User['private']['refs'] = r.refs;
-//			}
-//
-//			// Finally, user is ready
-//			this.setState({'user': User});
-//
-//			console.log("[fetchUser] Done:", Caller);
-//
-//			return null;	// Do we need this?
-//		})
 		.catch(err => {
 			// An error here isn't actually an error. It just means we have no user
 			this.setState({'user': User});
 		});
 	}
-
-
-//	fetchData( args ) {
-//		console.log("[fetchData]");
-//
-//		if ( !this.state.node.id ) {
-//			this.fetchNode(args);
-//		}
-////		if ( !this.state.user ) {
-////			this.fetchUser();
-////		}
-//
-////		// If no user
-////		if ( !this.state.user ) {
-////			// First, fetch the user
-////			return this.fetchUser().then(() => {
-////				// Next, fetch the node (if not loaded)
-////				if ( this.state.node && !this.state.node.id ) {
-////					return this.fetchNode(args);
-////				}
-////				return null;
-////			});
-////		}
-////		// Fetch the node (if not loaded)
-////		else if ( this.state.node && !this.state.node.id ) {
-////			return this.fetchNode(args);
-////		}
-//		return null;
-//	}
 
 	// *** //
 

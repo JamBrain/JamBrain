@@ -10,6 +10,9 @@ import IMG	 							from 'com/img2/img2';
 import ButtonBase						from 'com/button-base/base';
 import ButtonLink						from 'com/button-link/link';
 
+
+const RequiredStreams = 5;
+
 export default class SidebarTV extends Component {
 	constructor( props ) {
 		super(props);
@@ -60,7 +63,7 @@ export default class SidebarTV extends Component {
 			}
 
 			// Fetch more (if needed)
-			if ( NewStreams.length < 10 ) {
+			if ( NewStreams.length < RequiredStreams ) {
 				return $JammerTV.GetLive([
 					'game-jam',
 					'game-jam-art',
@@ -78,7 +81,7 @@ export default class SidebarTV extends Component {
 			}
 
 			// Fetch more (if needed)
-			if ( NewStreams.length < 10 ) {
+			if ( NewStreams.length < RequiredStreams ) {
 				return $JammerTV.GetLive([
 					'game-dev',
 					'game-art',
