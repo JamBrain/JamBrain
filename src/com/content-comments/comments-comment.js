@@ -58,6 +58,12 @@ export default class ContentCommentsComment extends Component {
 		this.onAutoselectCaptureKeyUp = this.onAutoselectCaptureKeyUp.bind(this);
 	}
 
+	componentWillUpdate( newProps, newState ) {
+		if (newState.preview && this.state.preview && newProps.comment.body !== this.props.comment.body && (!newProps.comment.body || newProps.comment.body.length === 0)) {
+			this.setState({'preview': false});
+		}
+	}
+
 	onEditing( e ) {
 //		console.log('** Edit Comment');
 		this.setState({'preview': false});
@@ -152,7 +158,8 @@ export default class ContentCommentsComment extends Component {
 				if ( this.props.onpublish ) {
 					this.props.onpublish(e, true);
 				}
-			} else {
+			}
+			else {
 				if ( this.props.onpublish ) {
 					this.props.onpublish(e);
 
@@ -358,7 +365,7 @@ export default class ContentCommentsComment extends Component {
 
 			let ShowAvatar = null;
 			if ( author ) {
-				ShowAvatar = <ButtonLink class="-avatar" href={author.path}><IMG2 src={Avatar} /></ButtonLink>;
+				ShowAvatar = <ButtonLink class="-avatar" href={author.path}><IMG2 alt={author.slug + "'s avatar image"} src={Avatar} /></ButtonLink>;
 			}
 			else {
 				ShowAvatar = <div class="-avatar"><IMG2 src={Avatar} /></div>;

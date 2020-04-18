@@ -89,16 +89,19 @@ export default class ViewBar extends Component {
 								'notificationsHidden': r.countFiltered,
 								//'notificationsMore': r.countFiltered + r.count == fetchCount,
 								'notificationsFeed': r,
+								'notificationsError': null,
 							});
 						}
 						setTimeout(() => this.checkNotificationCount(), 60000);
 					})
 					.catch((e) => {
+						this.setState({'notificationsError': 'Could not retrieve notifications feed.'});
 						setTimeout(() => this.checkNotificationCount(), 5 * 60000);
 						console.log('[Notificaton error]', e);
 					});
 				})
 				.catch((e) => {
+					this.setState({'notificationsError': 'Could not retrieve notifications count.'});
 					setTimeout(() => this.checkNotificationCount(), 5 * 60000);
 					console.log('[Notificaton count error]', e);
 				});
@@ -113,7 +116,9 @@ export default class ViewBar extends Component {
 	componentDidMount() {
 		document.body.classList.add('_use-view-bar');
 
-		this.checkNotificationCount();
+		if ( !this.StartedNotificationLoop ) {
+			this.checkNotificationCount();
+		}
 	}
 
 	componentWillUnmount() {
@@ -255,6 +260,7 @@ export default class ViewBar extends Component {
 						anythingToMark={this.state.notifications > 0 || this.state.notificationsHidden > 0}
 						clearCallback={this.handleNotificationsClear}
 						hideCallback={this.handleNotificationsHide}
+						error={this.state.notificationsError}
 					/>
 				);
 			}
@@ -355,7 +361,7 @@ export default class ViewBar extends Component {
 			<div class="view-bar">
 				<div class="-content">
 					<div class="-left">
-						<UIButton href="/" class="-logo">
+						<UIButton title="Ludum Dare" href="/" class="-logo">
 							<SVGIcon class="if-sidebar-block" baseline>ludum</SVGIcon><SVGIcon class="if-sidebar-block" baseline>dare</SVGIcon>
 							<SVGIcon class="if-no-sidebar-block" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-block" baseline>d-are</SVGIcon>
 						</UIButton>

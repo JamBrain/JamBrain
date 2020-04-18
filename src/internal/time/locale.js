@@ -45,6 +45,7 @@ var LocaleZoneRemaps = {
 	"Romance Daylight Time":"CEST"/*"GMT+2"*/,				// was RDT, but uncommon
 	"Mitteleuropäische Zeit":"MEZ"/*"GMT+1"*/,
 	"Mitteleuropäische Sommerzeit":"MESZ"/*"GMT+2"*/,
+	"Moscow Standard Time":"MSK"/*"GMT+3"*/,
 	
 	"Paris, Madrid (heure d’été)":"CEST"/*"GMT+2"*/,		// was PM, completely wrong
 

@@ -17,9 +17,12 @@ export default class SidebarUpcoming extends Component {
 //			<div class="-item"><strong>August 23rd</strong> - Results <SVGIcon baseline small>checker</SVGIcon></div>,
 //			<div class="-item"><strong>April 20th</strong> - Ludum Dare 41 <SVGIcon baseline small>trophy</SVGIcon></div>,
 //			<div class="-item"><strong>December 28th</strong> - Results <SVGIcon baseline small>checker</SVGIcon></div>,
-			<div class="-item"><strong>August 10th</strong> - Ludum Dare 42 <SVGIcon baseline small>trophy</SVGIcon></div>,
-			<div class="-item"><strong>December 2018</strong> - Ludum Dare 43 <SVGIcon baseline small>trophy</SVGIcon></div>,
-			<div class="-item"><strong>April 2019</strong> - Ludum Dare 44 <SVGIcon baseline small>trophy</SVGIcon></div>,
+//			<div class="-item"><strong>November 30</strong> - Ludum Dare 43 <SVGIcon baseline small>trophy</SVGIcon></div>,
+//			<div class="-item"><strong>April 26th-29th</strong> - Ludum Dare 44 <SVGIcon baseline small>trophy</SVGIcon></div>,
+//			<div class="-item"><strong>October 4th-7th 2019</strong> - Ludum Dare 45 <SVGIcon baseline small>trophy</SVGIcon></div>,
+			<div class="-item"><strong>April 17-20th 2020</strong> - Ludum Dare 46 <SVGIcon baseline small>trophy</SVGIcon></div>,
+			<div class="-item"><strong>October 2020</strong> - Ludum Dare 47 <SVGIcon baseline small>trophy</SVGIcon></div>,
+			<div class="-item"><strong>April 2021</strong> - Ludum Dare 48 <SVGIcon baseline small>trophy</SVGIcon></div>,
 		];
 
 		return (

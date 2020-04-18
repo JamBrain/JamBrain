@@ -178,7 +178,7 @@ export default class ContentComments extends Component {
 	renderComments( tree, indent = 0 ) {
 		const {user, node} = this.props;
 		const {authors, lovedComments} = this.state;
-		const userId = user.id !== 0 && user.id;
+		const userId = user && user.id !== 0 && user.id;
 		const userSlug = userId && `@${user.slug}`;
 
 		const actualLove = [];

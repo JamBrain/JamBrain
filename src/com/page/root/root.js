@@ -23,13 +23,21 @@ import PageMyStats	 					from 'com/page/root/my/stats';
 import PageMyNotifications 				from 'com/page/root/my/notifications';
 import PageDevPalette 					from 'com/page/dev/palette';
 
+import HeaderNoob						from 'com/header/noob/noob';
 
 export default class PageRoot extends Component {
 	render( props ) {
+		const {node, user, path, extra, featured} = props;
 		let Dummy = <div />;
+
+		let ShowIntro = null;
+		if (!user || !user.id) {
+			ShowIntro = <HeaderNoob featured={props.featured} />;
+		}
 
 		return (
 			<ContentList class="page-root">
+				{ShowIntro}
 				<PageNavRoot {...props} />
 				<Router node={props.node} props={props} name="root">
 					<Route static path="/" default={true} component={PageRootHome} />

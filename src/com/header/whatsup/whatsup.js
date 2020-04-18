@@ -15,7 +15,7 @@ export default class HeaderWhatsup extends Component {
 				if ( parseInt(featured.meta['theme-mode']) == 1 ) {
 					return (
 						<div class="header-base header-whatsup outside">
-							<span class="-title _font2">ON NOW:</span> {featured.name} <UILink href={featured.path+'/theme'}><UIIcon baseline small src="suggestions" /> Theme Suggestions</UILink> are open!
+							<span class="-title _font2">ON NOW:</span> {featured.name} <UILink href={featured.path+'/theme'}><UIIcon baseline small src="lightbulb" /> Theme Suggestions</UILink> are open!
 						</div>
 					);
 				}

@@ -22,34 +22,35 @@ export default class ContentNavUser extends Component {
 		PartPath = path + PartPath;
 
 		var ShowGames = null;
+		console.log(node);
 		// TODO: Remove `true` when endpoint actually returns number of games user participated on!
 		if ( true || node['games'] > 0 ) {
-			ShowGames = <ContentNavButton path={NewPath} icon="gamepad" href={path+'/games'}>Games</ContentNavButton>;
+			ShowGames = <ContentNavButton path={NewPath} title={node.name + "'s Games"} icon="gamepad" href={path+'/games'}>Games</ContentNavButton>;
 		}
 
 		var ShowArticles = null;
 		if ( node['articles'] > 0 ) {
-			ShowArticles = <ContentNavButton path={NewPath} icon="article" href={path+'/articles'}>Articles</ContentNavButton>;
+			ShowArticles = <ContentNavButton path={NewPath} title={node.name + "'s Articles"} icon="article" href={path+'/articles'}>Articles</ContentNavButton>;
 		}
 
-		var ShowFeed = <ContentNavButton path={NewPath} icon="feed" href={path+'/feed'}>Feed</ContentNavButton>;
+		var ShowFeed = <ContentNavButton path={NewPath} title={node.name + "'s Feed"} icon="feed" href={path+'/feed'}>Feed</ContentNavButton>;
 
 		var ShowFollowing = null;
 		if ( user && (user.id == node.id) && user.private /*&& user.private["meta"] && user.private.meta["star"]*/ ) {
-			ShowFollowing = <ContentNavButton path={NewPath} icon="user-check" href={path+'/following'}>Following</ContentNavButton>;
+			ShowFollowing = <ContentNavButton path={NewPath} title={"Followed by " + user.name} icon="user-check" href={path+'/following'}>Following</ContentNavButton>;
 		}
 
 		var ShowFollowers = null;
 //		if ( user && (user.id == node.id) && user["private"] && user.private["refs"] && user.private.refs["star"]  ) {
-//			ShowFollowers = <ContentNavButton path={NewPath} icon='users' href={path+'/followers'}>Followers</ContentNavButton>;
+//			ShowFollowers = <ContentNavButton path={NewPath} title={user.name + "'s Followers"} icon='users' href={path+'/followers'}>Followers</ContentNavButton>;
 //		}
 
-		var ShowStats = <ContentNavButton path={NewPath} icon="stats" href={path+'/stats'}>Stats</ContentNavButton>;
+		var ShowStats = <ContentNavButton path={NewPath} title={user.slug + "'s Statistics"} icon="stats" href={path+'/stats'}>Stats</ContentNavButton>;
 
 		return (
 			<div class="content-base content-nav content-nav-user">
-				<ContentNavButton path={PartPath} icon="previous" href="/" />
-				<ContentNavButton path={PartPath} icon="user" href={path+'/'}>User</ContentNavButton>
+				<ContentNavButton path={PartPath} title="Go Back" icon="previous" href="/" />
+				<ContentNavButton path={PartPath} title={user.slug} icon="user" href={path+'/'}>User</ContentNavButton>
                 {ShowGames}
 				{ShowArticles}
 				{ShowFeed}

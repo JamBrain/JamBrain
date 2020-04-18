@@ -1,14 +1,12 @@
 @import "defs.less";
 
-#header .header-noob {
+#content .content-base.content-noob {
 	/*font-size: 1.1em;*/
 	line-height: 1.5em;
 
-	padding: 1em;
-	border-radius: 0.5em;
+	padding: 1rem;
 
 	margin: auto;
-	margin-bottom: 1rem;
 	max-width: 1024px;
 
 	@media (max-width: (@BASE_WIDTH - 20em)) {
@@ -16,20 +14,27 @@
 		padding: 0.5em;
 	}
 
+	color: @COL_NLLL;
 	background: @COL_NDDD;
+
+	& a,
+	& a:visited {
+		color: #F80;
+	}
 
 	& > .-gap {
 		margin-bottom: 1rem;
 	}
 
 	& > .-title {
-		font-size: 1.4em;
+		font-size: 1.8em;
 		font-weight: bold;
+		color: #FC0;
+		margin-bottom: 1rem;
 	}
 
 	& .-close {
 		float: right;
-		padding: 0.5em;
 
 		&:hover {
 			color: @COL_A;

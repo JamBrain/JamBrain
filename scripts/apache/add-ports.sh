@@ -19,9 +19,6 @@ ln -s ../sites-available/custom-port.conf /etc/apache2/sites-enabled/001-custom-
 ln -s ../sites-available/jammer-work.conf /etc/apache2/sites-enabled/010-jammer-work.conf
 ln -s ../sites-available/ludumdare-org.conf /etc/apache2/sites-enabled/011-ludumdare-org.conf
 
-# Disable default ScotchBox mount
-rm /etc/apache2/sites-enabled/scotchbox.local.conf
-
 echo "Restarting Apache..."
 apache2ctl restart
 echo "Done (Apache Ports)."
