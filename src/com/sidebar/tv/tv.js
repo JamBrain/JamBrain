@@ -144,7 +144,9 @@ export default class SidebarTV extends Component {
 
 	componentDidMount() {
 //		console.log("SideBarTV: componentDidMount");
-		this.refreshStreams();
+		setTimeout(() => {
+			this.refreshStreams();
+		}, 250);
 	}
 
 	componentWillUnmount() {

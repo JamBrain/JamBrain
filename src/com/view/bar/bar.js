@@ -53,6 +53,8 @@ export default class ViewBar extends Component {
 	}
 
 	checkNotificationCount() {
+		return; // HACK! Uncomment me to restore notifications
+
 		const {user} = this.props;
 		const loggedIn = user && (user.id > 0);
 		const fetchCount = 40;
