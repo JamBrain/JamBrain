@@ -312,10 +312,12 @@ export function Where() {
 
 export function What( id ) {
 	return Fetch.Get(API_ENDPOINT+'/vx/node2/what/'+id, true).then(r => {
-		if ( r.root )
+		if ( r.root ) {
 			_Cache(r.root);
-		if ( r.featured )
+		}
+		if ( r.featured ) {
 			_Cache(r.featured);
+		}
 
 		let node = r.node;
 		r.node = {};
