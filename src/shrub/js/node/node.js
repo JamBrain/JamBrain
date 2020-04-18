@@ -294,13 +294,16 @@ export function GetFeed( id, methods, types, subtypes, subsubtypes, tags, offset
 		query = "?"+query.join('&');
 
 	return Fetch.Get(API_ENDPOINT+'/vx/node/feed/'+args.join('/')+query)
-		.then( r => {
+		.then(r => {
 			return r;
 		});
 }
 
 export function GetMy() {
-	return Fetch.Get(API_ENDPOINT+'/vx/node/getmy', true);
+	return Fetch.Get(API_ENDPOINT+'/vx/node2/getmy', true).then(r => {
+		_Cache(r.node);
+		return r;
+	});
 }
 
 export function Where() {
@@ -308,7 +311,22 @@ export function Where() {
 }
 
 export function What( id ) {
-	return Fetch.Get(API_ENDPOINT+'/vx/node/what/'+id, true);
+	return Fetch.Get(API_ENDPOINT+'/vx/node2/what/'+id, true).then(r => {
+		if ( r.root ) {
+			_Cache(r.root);
+		}
+		if ( r.featured ) {
+			_Cache(r.featured);
+		}
+
+		let node = r.node;
+		r.node = {};
+		for ( let idx = 0; idx < node.length; ++idx ) {
+			_Cache(node[idx]);
+			r.node[node[idx].id] = node[idx];
+		}
+		return r;
+	});
 }
 
 

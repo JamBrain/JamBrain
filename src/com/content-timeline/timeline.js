@@ -90,7 +90,7 @@ export default class ContentTimeline extends Component {
 					this.setState({'feed': feed, 'hash': hash});
 				})
 				.catch(err => {
-					this.setState({'error': ""+err});
+					this.setState({'error': err});
 				});
 		}
 	}
@@ -108,7 +108,7 @@ export default class ContentTimeline extends Component {
 				}
 			})
 			.catch(err => {
-				this.setState({'error': ""+err});
+				this.setState({'error': err});
 			});
 	}
 
@@ -158,7 +158,7 @@ export default class ContentTimeline extends Component {
 		let ShowFeed = [];
 
 		if ( error ) {
-			ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>Error: {error}</ContentCommonBody></ContentCommon>);
+			ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>Error: {""+error}</ContentCommonBody></ContentCommon>);
 		}
 		else if ( feed && (feed.length == 0) ) {
 			if ( !props.noemptymessage ) {

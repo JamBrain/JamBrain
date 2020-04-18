@@ -53,6 +53,8 @@ export default class ViewBar extends Component {
 	}
 
 	checkNotificationCount() {
+		//return; // HACK! Comment me to restore notifications
+
 		const {user} = this.props;
 		const loggedIn = user && (user.id > 0);
 		const fetchCount = 40;
@@ -197,9 +199,10 @@ export default class ViewBar extends Component {
 		// Both user and user.id means logged in
 		else if ( user && user.id ) {
 			if ( featured && featured.id ) {
-				if ( featured.focus ) {
+				// Has a game
+				if ( featured.focus_id && featured.what ) {
 					ShowMyGame = (
-						<UIButton href={featured.what_node[featured.focus].path} class="-bar-button">
+						<UIButton href={featured.what[featured.focus_id].path} class="-bar-button">
 							<SVGIcon>gamepad</SVGIcon>
 							<div class="if-sidebar-block">My Game</div>
 						</UIButton>
@@ -209,7 +212,7 @@ export default class ViewBar extends Component {
 						<UIButton
 							class="-bar-button"
 							onclick={e => {
-								window.location.hash = "#create/"+featured.focus+"/post";
+								window.location.hash = "#create/"+featured.focus_id+"/post";
 							}}
 						>
 							<SVGIcon>edit</SVGIcon>
@@ -217,6 +220,7 @@ export default class ViewBar extends Component {
 						</UIButton>
 					);
 				}
+				// Let them create a game
 				else if ( node_CanCreate(featured) ) {
 					ShowJoin = (
 						<UIButton

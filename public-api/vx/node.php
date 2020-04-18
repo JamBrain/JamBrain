@@ -490,7 +490,7 @@ switch ( $action ) {
 		if ( $user_id = userAuth_GetID() ) {
 			$parent = intval(json_ArgShift());
 			if ( $parent ) {
-				$RESPONSE['what'] = nodeComplete_GetWhatIdHasAuthoredByParent($user_id, $parent);
+				$RESPONSE['what'] = nodeComplete_GetWhatIdsIdHasAuthoredByParent($user_id, $parent);
 			}
 			else {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);

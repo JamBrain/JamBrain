@@ -627,7 +627,7 @@ export default class ContentItem extends Component {
 				);
 			}
 			// Judging
-			else if ( featured && featured.what_node && nodeKeys_HasPublishedParent(featured.what_node, node.parent) ) {
+			else if ( featured && featured.what && nodeKeys_HasPublishedParent(featured.what, node.parent) ) {
 				let Lines = [];
 
 				for ( var key in parent.meta ) {

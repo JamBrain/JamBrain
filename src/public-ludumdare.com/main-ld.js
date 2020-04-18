@@ -112,8 +112,20 @@ class Main extends Component {
 	}
 
 	componentDidMount() {
-		this.fetchData();
-		this.fetchRoot();
+		this.fetchUser();
+		this.fetchFeatured();	// Fetches root, featured, and all games associated with you
+		this.fetchNode();
+
+//		return Promise.all([
+//			this.fetchUser(),
+//			this.fetchFeatured(),
+//			this.fetchNode()
+//		]).then(r => {
+//
+//		});
+//		.catch(err => {
+//			this.setState({'error': err});
+//		});
 	}
 
 	storeHistory( input, page_title = null, page_url = null ) {
@@ -201,180 +213,106 @@ class Main extends Component {
 	// Called by the login dialog
 	onLogin() {
 		this.setState({'user': null});
-		this.fetchData();
+//		this.fetchUser();
+//		this.fetchFeatured();
 	}
 
 	// *** //
 
-	fetchRoot() {
-		console.log("[fetchRoot]");
-
-		return $Node.Get(SITE_ROOT)
-		.then(r => {
-			if ( r.node.length ) {
-				let node = r.node[0];
-
-				this.setState({
-					'root': node
-				});
-
-				if ( node.meta['featured'] && (node.meta['featured']|0) > 0 ) {
-					return this.fetchFeatured(node.meta['featured']|0);
-				}
-				console.log("[fetchRoot] Done:", node.id);
-			}
-			else {
-				throw '[fetchRoot] Failed to load root node';
-			}
-		})
-		.catch(err => {
-			this.setState({'error': err});
-		});
-	}
-
 	fetchFeatured( node_id ) {
-		console.log("[fetchFeatured]");
+		console.log("[fetchFeatured] +");
 
 		// Used across everything below
 		let Node = null;
 
-		return $Node.Get(node_id)
-			.then(r => {
-				// If
-				if ( r && Array.isArray(r.node) && r.node.length ) {
-					Node = r.node[0];
+		return $Node.What(SITE_ROOT).then(r => {
+			let newState = {};
 
-					console.log("[fetchFeatured] +", Node.id);
+			newState.root = r.root;
+			newState.featured = r.featured;
+			newState.featured.what = r.node;
 
-					return $Node.What(Node.id);
+			//console.log("root:", r.root);
+			//console.log("featured:", r.featured);
+			//console.log("node:", r.node);
+
+			let focus = 0;
+			let focusDate = 0;
+			let lastPublished = 0;
+
+			console.log("[fetchFeatured] Hack! We don't support choosing your active game yes, so use logic to detect it");
+			for ( let key in r.node ) {
+				let newDate = new Date(r.node[key].modified).getTime();
+				if ( newDate > focusDate ) {
+					focusDate = newDate;
+					focus = key|0;
 				}
-
-				// No featured event
-				return null;
-			})
-			.then(r => {
-				if ( r && r.what ) {
-					Node.what = r.what;
-
-					console.log('[fetchFeatured] My Game(s):', Node.what);
-
-					if ( Node.what.length ) {
-						return $Node.GetKeyed(r.what);
-					}
+				if ( r.node[key].published ) {
+					lastPublished = key|0;
+					console.log('[fetchFeatured] '+key+' is published');
 				}
+			}
+			if ( focus ) {
+				console.log('[fetchFeatured] '+focus+' was the last modified');
+			}
 
-				return Promise.resolve({});
-			})
-			.then( r => {
-				if ( r && r.node ) {
-					Node.what_node = r.node;
+			// If the last updated is published, focus on that
+			if ( r.node[focus] && r.node[focus].published ) {
+				newState.featured.focus_id = focus;
+			}
+			// If not, make it the last known published game
+			else if ( lastPublished ) {
+				newState.featured.focus_id = lastPublished;
+			}
+			// Otherwise, just the last one we found
+			else { //if ( focus > 0 ) {
+				newState.featured.focus_id = focus;
+			}
 
-					let Focus = 0;
-					let FocusDate = 0;
-					let LastPublished = 0;
+			console.log('[fetchFeatured] - '+newState.featured.focus_id+' chosen as focus_id');
 
-					for ( let key in r.node ) {
-						let NewDate = new Date(r.node[key].modified).getTime();
-						if ( NewDate > FocusDate ) {
-							FocusDate = NewDate;
-							Focus = key|0;
-						}
-						if ( r.node[key].published ) {
-							LastPublished = key|0;
-							console.log('[fetchFeatured] '+key+' is published');
-						}
-					}
-					if ( Focus ) {
-						console.log('[fetchFeatured] '+Focus+' was the last modified');
-					}
-
-					// If the last updated is published, focus on that
-					if ( r.node[Focus].published ) {
-						Node.focus = Focus;
-					}
-					// If not, make it the last known published game
-					else if ( LastPublished ) {
-						Node.focus = Lastpublished;
-					}
-					// Otherwise, just the last one we found
-					else if ( Focus > 0 ) {
-						Node.focus = Focus;
-					}
-
-					if ( Node.focus || Node.focus === 0 ) {
-						console.log('[fetchFeatured] '+Node.focus+' chosen as Focus');
-					}
-				}
-
-				this.setState({
-					'featured': Node
-				});
-
-				console.log('[fetchFeatured] -', Node.id);
-
-				return r;
-			})
-			.catch(err => {
-				this.setState({'error': err});
-			});
+			this.setState(newState);
+		});
 	}
 
-	fetchNode() {
-		let NewState = {};
-		console.log("[fetchNode]");
+	fetchNode( newArgs ) {
+		console.log("[fetchNode] +");
+
+		let args = ['node', 'parent', 'superparent', 'author'];
+		if ( newArgs ) {
+			args = args.concat(newArgs);
+		}
 
 		// Walk to the active node
-		return $Node.Walk(SITE_ROOT, this.state.slugs, ['node', 'parent', 'superparent', 'author'])
-		.then(r => {
+		return $Node.Walk(SITE_ROOT, this.state.slugs, args).then(r => {
 			// Store the path determined by the walk
-			if ( r && r.node_id ) {
-				NewState['path'] = (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/');
-				NewState['extra'] = r.extra;
+			if ( r.node_id ) {
+				let NewState = {};
 
-//				// Now, lookup the node
-//				return $Node.Get(r.node_id);
+				NewState.path = (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/');
+				NewState.extra = r.extra;
 
 				NewState.node = r.node[r.node_id];
 				NewState.parent = NewState.node.parent ? r.node[NewState.node.parent] : null;
 				NewState.superparent = NewState.node.superparent ? r.node[NewState.node.superparent] : null;
 				NewState.author = NewState.node.author ? r.node[NewState.node.author] : null;
+//
+//				if ( r.node[SITE_ROOT] ) {
+//					NewState.root = r.node[SITE_ROOT];
+//				}
 
-				return true;
+				this.setState(NewState);
+
+//				// If root was returned, then trigger a featured lookup ("|0" is string-to-integer conversion)
+//				if ( r.node[SITE_ROOT] && r.node[SITE_ROOT].meta['featured'] && ((r.node[SITE_ROOT].meta['featured']|0) > 0) ) {
+//					return this.fetchFeatured(r.node[SITE_ROOT].meta['featured']|0);
+//				}
+
+				console.log("[fetchNode] - Node:", r.node_id);
+
+				return null;
 			}
 			throw "[fetchNode] Unable to walk tree";
-		})
-//		.then(r => {
-//			// Process the node
-//			if ( r && r.node && r.node.length ) {
-//				NewState.node = r.node[0];
-//
-//				let Keys = [];
-//				if ( NewState.node.parent )
-//					Keys.push(NewState.node.parent);
-//				if ( NewState.node.superparent )
-//					Keys.push(NewState.node.superparent);
-//				if ( NewState.node.author )
-//					Keys.push(NewState.node.author);
-//
-//				// Fetch related nodes
-//				return $Node.GetKeyed(Keys);
-//			}
-//			throw "[fetchNode] No nodes found";
-//		})
-//		.then(r => {
-//			if ( r && r.node ) {
-//				NewState.parent = NewState.node.parent ? r.node[NewState.node.parent] : null;
-//				NewState.superparent = NewState.node.superparent ? r.node[NewState.node.superparent] : null;
-//				NewState.author = NewState.node.author ? r.node[NewState.node.author] : null;
-//
-//				// That's it, we're done
-//				return true;
-//			}
-//			throw "[fetchNode] Related nodes not found";
-//		})
-		.then(r => {
-			// Commit the changes to State
-			this.setState(NewState);
 		})
 		.catch(err => {
 			this.setState({'error': err});
@@ -382,78 +320,33 @@ class Main extends Component {
 	}
 
 	fetchUser() {
-		console.log("[fetchUser]");
+		console.log("[fetchUser] +");
 
-		let Caller = 0;
 		let User = {
 			'id': 0
 		};
 
-		// Fetch the Active User
-		return $User.Get().then(r => {
-			Caller = r.caller_id|0;
-			console.log("[fetchUser] caller_id:", Caller);
-
-			// Process my User
-			if ( Caller && r.node ) {
+		// Fetch Active User
+		return $Node.GetMy().then(r => {
+			if ( r.node ) {
 				User = Object.assign({}, r.node);
 				User['private'] = {};
-
-				// Pre-cache my Love (not returned)
-				$NodeLove.GetMy();
-			}
-			return null;	// Do we need this?
-		})
-		.then(r => {
-			if ( Caller && User.id ) {
-				// Load user's private data
-				return $Node.GetMy();
-			}
-			return null;	// Do we need this?
-		})
-		.then(r => {
-			// Process private User data
-			if ( r ) {
 				User['private']['meta'] = r.meta;
 				User['private']['refs'] = r.refs;
 			}
 
 			// Finally, user is ready
-			this.setState({
-				'user': User
-			});
+			this.setState({'user': User});
 
-			console.log("[fetchUser] Done:", Caller);
+			console.log("[fetchUser] - You are", User.id, "("+User.name+")");
 
-			return null;	// Do we need this?
+			// Pre-cache my Love (nothing to do with it)
+			return $NodeLove.GetMy();
 		})
 		.catch(err => {
-			this.setState({
-				'error': err
-			});
+			// An error here isn't actually an error. It just means we have no user
+			this.setState({'user': User});
 		});
-	}
-
-
-	fetchData() {
-		console.log("[fetchData]");
-
-		// If no user
-		if ( !this.state.user ) {
-			// First, fetch the user
-			return this.fetchUser().then(() => {
-				// Next, fetch the node (if not loaded)
-				if ( this.state.node && !this.state.node.id ) {
-					return this.fetchNode();
-				}
-				return null;
-			});
-		}
-		// Fetch the node (if not loaded)
-		else if ( this.state.node && !this.state.node.id ) {
-			return this.fetchNode();
-		}
-		return null;
 	}
 
 	// *** //
