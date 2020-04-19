@@ -33,15 +33,19 @@ export default class ContentUserBar extends Component {
 			}
 		}
 
-		return (
-			<div class="content-user-bar">
-				<ContentCommonBodyAvatar src={node.meta && node.meta.avatar ? node.meta.avatar : ''} />
-				<ContentCommonBodyTitle href={"/users/"+node.slug} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.slug} />
+		if ( node && user ) {
+			return (
+				<div class="content-user-bar">
+					<ContentCommonBodyAvatar src={node.meta && node.meta.avatar ? node.meta.avatar : ''} />
+					<ContentCommonBodyTitle href={"/users/"+node.slug} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.slug} />
 
-				<ContentCommonNav>
-					{ShowFollow}
-				</ContentCommonNav>
-			</div>
-		);
+					<ContentCommonNav>
+						{ShowFollow}
+					</ContentCommonNav>
+				</div>
+			);
+		}
+
+		return null;
 	}
 }
