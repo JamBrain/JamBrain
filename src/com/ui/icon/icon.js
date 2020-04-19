@@ -28,16 +28,12 @@ export default class UIIcon extends Component {
 		if ( props['pad'] )				svg_props.class += " -pad";
 
 		// What icon?
-		if ( props.name ) {
-			svg_props.class += " icon-"+props.name;
-			use_props.xlinkHref = "#icon-"+props.name;
-		}
-		else if ( props.src ) {
+		if ( props.src ) {
 			svg_props.class += " icon-"+props.src;
 			use_props.xlinkHref = "#icon-"+props.src;
 		}
 		else {
-			let name = props.children;
+			let name = props.children.slice(0, 1);
 			svg_props.class += " icon-"+name;
 			use_props.xlinkHref = "#icon-"+name;
 		}

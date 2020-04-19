@@ -1,0 +1,187 @@
+@import "defs.less";
+
+#content .content-itemfilter {
+	& > .-header {
+		overflow: hidden;
+		position: relative;
+	}
+	& > .-footer {
+		overflow: hidden;
+		position: relative;
+	}
+
+	& .ui-help {
+		float: right;
+
+		& > .-button {
+			padding: 0.25em;
+			margin: -0.25em 0;
+			color: @COL_NLL;
+
+			&:hover {
+				background: @COL_A;
+				color: @COL_W;
+			}
+		}
+
+		& > .ui-dialog > .-window {
+			color: @COL_W;
+			padding: 1em;
+			background: @COL_N;
+		}
+	}
+
+	& .ui-dropdown-list {
+		background: @COL_NLLLL;
+
+		& > .-button {
+			line-height: 2em;
+			padding: 0 0.5em;
+		}
+	}
+
+	& .ui-dropdown {
+		&.-show {
+			& > .-button {
+				background: @COL_W;
+				box-shadow: 0 0 4px rgba(0,0,0,0.25);
+			}
+		}
+
+		& > .-button {
+			&:hover {
+				background: @COL_A;
+				color: @COL_W;
+			}
+		}
+
+		& > .-content {
+			box-shadow: 0 0 4px rgba(0,0,0,0.25);
+
+			/* gaps and headers */
+			& > .-null {
+				background: @COL_NLLLL;
+				line-height: 1.5em;
+				padding: 0 1rem;
+
+				user-select: none;
+			}
+
+			/* items */
+			& > .-item {
+				background: @COL_W;
+				line-height: 2em;
+				padding: 0 1rem;
+
+				&:hover {
+					background: @COL_A;
+					color: @COL_W;
+				}
+			}
+		}
+
+		& > .-button > *,
+		& > .-content > .-item {
+			& > .ui-icon {
+				margin-right: 0.5em;
+			}
+
+			& > span {
+				vertical-align: middle;
+			}
+		}
+	}
+
+
+	& .ui-dropdown.-grid {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		margin: 1rem;
+		line-height: 1.25em;
+
+		& > .-button {
+			padding: 0.5em;
+			margin: -0.5em;
+		}
+		& > .-content {
+			top: 1.75em;
+			right: -0.5em;
+		}
+	}
+
+	& > .-body {
+		& > .-title,
+		& > * > .-title {
+			margin: 0 0 0.25em;
+			font-size: 0.75em;
+
+			& > span {
+				vertical-align: middle;
+			}
+		}
+
+		&.-flex {
+			display: flex;
+
+			& > div {
+				margin-right: 0.5em;
+
+				&:last-child {
+					margin-right: 0;
+				}
+			}
+
+			& > .-query {
+				flex: 5;
+			}
+			& > .-event {
+				flex: 4;
+			}
+			& > .-category {
+				flex: 4;
+			}
+			& > .-order {
+				flex: 3;
+			}
+		}
+
+		& > * {
+			& > .-tag {
+				display: inline-block;
+				margin-right: 0.5rem;
+
+				& > .-text,
+				& > .-tail-icon {
+					color: @COL_NLLLLL;
+					background: @COL_CM;
+
+					line-height: 2em;
+				}
+
+				& > .-text {
+					padding: 0 0.5em;
+				}
+
+				& > .-tail-icon {
+				}
+
+				& > .-tail {
+					color: @COL_CM;
+				}
+
+				&:hover {
+					& > .-text,
+					& > .-tail-icon {
+						color: @COL_L;
+						background: @COL_A;
+					}
+
+					& > .-tail {
+						color: @COL_A;
+					}
+				}
+			}
+		}
+	}
+}
