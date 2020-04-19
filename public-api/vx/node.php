@@ -431,7 +431,7 @@ switch ( $action ) {
 				$RESPONSE['feed'] = nodeFeed_GetByMethod($methods, $root, $types, $subtypes, $subsubtypes, $score_op, $RESPONSE['limit'], $RESPONSE['offset']);
 //				$RESPONSE['feed'] = nodeFeed_GetByNodeMethodType($root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset']);
 
-				cache_Store($CACHE_KEY, $RESPONSE['feed'], 15);
+				cache_Store($CACHE_KEY, $RESPONSE['feed'], 10);
 			}
 			else {
 				$RESPONSE['cached'] = true;
