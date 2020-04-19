@@ -113,8 +113,8 @@ export default class PageHomeGames extends Component {
 
 		SubFilter = EvalFilter(SubFilter);
 
-
-		let ShowNewFilterbox = <ContentItemFilter />;
+		// Temporarily disabled the new filter code
+		let ShowNewFilterbox = null;//<ContentItemFilter />;
 
 		return (
 			<ContentList class="page-home-games">

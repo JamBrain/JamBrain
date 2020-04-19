@@ -30,6 +30,9 @@ const MAX_SLUG_LENGTH = 64;
 // b_value: if true, store value in `b` instead of `value`
 // b_constraint: if false, the unique constraint should be a+key, not a+b+key as is usual
 
+// The purpose of the b_constraint is that it pairs with b_value, to limit the meta value to have
+// only a single entry per a_value.
+
 // TODO: MK Rename and adjust this for privileged users, not Admins
 const ADMIN_VALID_META = [
 	'event' => [
@@ -66,6 +69,17 @@ const VALID_META = [
 		'link-07' => ['url' => true],
 		'link-08' => ['url' => true],
 		'link-09' => ['url' => true],
+		'link-01-tag' => ['integer' => true],
+		'link-02-tag' => ['integer' => true],
+		'link-03-tag' => ['integer' => true],
+		'link-04-tag' => ['integer' => true],
+		'link-05-tag' => ['integer' => true],
+		'link-06-tag' => ['integer' => true],
+		'link-07-tag' => ['integer' => true],
+		'link-08-tag' => ['integer' => true],
+		'link-09-tag' => ['integer' => true],
+		/*
+		// TODO: move all tag values (above) to b_values (belowe)
 		'link-01-tag' => ['b_value' => true, 'b_constraint' => false],
 		'link-02-tag' => ['b_value' => true, 'b_constraint' => false],
 		'link-03-tag' => ['b_value' => true, 'b_constraint' => false],
@@ -75,6 +89,7 @@ const VALID_META = [
 		'link-07-tag' => ['b_value' => true, 'b_constraint' => false],
 		'link-08-tag' => ['b_value' => true, 'b_constraint' => false],
 		'link-09-tag' => ['b_value' => true, 'b_constraint' => false],
+		*/
 		'link-01-name' => ['length' => 64],
 		'link-02-name' => ['length' => 64],
 		'link-03-name' => ['length' => 64],
