@@ -39,7 +39,7 @@ export default class ContentGroup extends Component {
 	}
 
 
-	render( {node, user, extra, featured}, {items, nodes} ) {
+	render( {node, user}, {items, nodes} ) {
 		let ShowBody = [];
 		if ( items && items.length && nodes ) {
 			ShowBody.push(<div><NavLink href={node.path+'/..'}>/..</NavLink></div>);

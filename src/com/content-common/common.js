@@ -36,7 +36,7 @@ export default class ContentCommon extends Component {
 			minimized = !minimized;
 		}
 
-		if ( node && node.slug ) {
+		if ( node && node.slug && user ) {
 			let MainClass = [
 				'content-base',
 				'content-common'
