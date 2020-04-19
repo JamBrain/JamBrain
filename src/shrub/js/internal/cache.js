@@ -1,8 +1,14 @@
 export default {
 	Store,
-	Fetch
+	Fetch,
 //	Touch,
-//	Expire
+	Remove,
+	Exists,
+
+	_Store,
+	_Remove,
+	_Fetch,
+	_Exists
 };
 
 
@@ -21,7 +27,7 @@ function CollectGarbage() {
 			// Check if it's expired
 			if ( timestamp ) {
 				if ( Date.now() > timestamp ) {
-					_Remove('!'+key);
+					_Remove('!'+key.substr(1));
 					_Remove('$'+key.substr(1));
 				}
 			}
@@ -37,6 +43,9 @@ export function _Remove( key ) {
 }
 export function _Fetch( key ) {
 	return STORAGE.getItem(key);
+}
+export function _Exists( key ) {
+	return !!STORAGE.getItem(key);// !== null;
 }
 
 
@@ -77,4 +86,13 @@ export function Fetch( key, ttl = null ) {
 
 	// Return the parsed data
 	return JSON.parse(ret);
+}
+
+export function Remove( key ) {
+	_Remove('!'+key);
+	_Remove('$'+key);
+}
+
+export function Exists( key ) {
+	return _Exists('$'+key);
 }

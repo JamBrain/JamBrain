@@ -1,4 +1,5 @@
 import Fetch	 				from '../internal/fetch';
+import Cache					from '../internal/cache';
 
 export default {
 	Get,
@@ -27,21 +28,35 @@ export default {
 	InvalidateNodeCache,
 };
 
-var NODE_CACHE = {};
-function _Cache( node ) {
+//var NODE_CACHE = {};
+const NODE_TTL = 15*1000;
+
+function _MakeKey( id ) {
+	return "NODE|" + id;
+}
+function _Store( node ) {
 	if ( node.id ) {
-		NODE_CACHE[node.id] = node;
+		//NODE_CACHE[node.id] = node;
+		Cache.Store(_MakeKey(node.id), node, NODE_TTL);
 	}
 }
-function _Exists( node_id ) {
-	return !!NODE_CACHE[node_id];
-}
-function _Get( node_id ) {
-	return NODE_CACHE[node_id];
+function _Fetch( node_id ) {
+	var node = null;
+	if ( node_id ) {
+		//node = NODE_CACHE[node_id];
+		//if ( !node ) {
+			node = Cache.Fetch(_MakeKey(node_id));
+			//NODE_CACHE[node_id] = node;
+		//}
+	}
+	return node;
 }
 
 export function InvalidateNodeCache( node_id ) {
-	NODE_CACHE[node_id] = null;
+	if ( node_id ) {
+		//NODE_CACHE[node_id] = null;
+		Cache.Remove(_MakeKey(node_id));
+	}
 }
 
 // http://stackoverflow.com/a/4026828/5678759
@@ -52,7 +67,7 @@ function ArrayDiff(a, b) {
 }
 
 
-// Gets 1 or more nodes. May pull from our local cache.
+// Gets 1 or more nodes. May pull from our local cache
 // Support Id+FeedDate syntax
 export function Get( ids, argArray ) {
 	if ( Number.isInteger(ids) ) {
@@ -70,9 +85,9 @@ export function Get( ids, argArray ) {
 			ids.push(node_id);
 
 			// While we're rebuilding 'ids', scan the cache and invalidate if the feed date is newer
-			let node = _Get(node_id);
+			let node = _Fetch(node_id);
 			if ( node && (feed[idx].modified > node.modified) ) {
-				//console.log("Node "+node_id+" was Invalidated ("+feed[idx].modified+" > "+node.modified+")");
+				console.log("Node "+node_id+" was Invalidated ("+feed[idx].modified+" > "+node.modified+")");
 				InvalidateNodeCache(node_id);
 			}
 		}
@@ -84,9 +99,10 @@ export function Get( ids, argArray ) {
 	let requestedIds = [];
 	for ( let idx = 0; idx < ids.length; ++idx ) {
 		let id = ids[idx];
-		if ( _Exists(id) ) {
+		let node = _Fetch(id);
+		if ( node ) {
 			cachedIds.push(id);
-			let node = _Get(id);
+			//let node = _Fetch(id);
 			nodes.push(node);
 
 			// if any arguments were included, be sure we apply the same filters on anything we cached
@@ -109,10 +125,12 @@ export function Get( ids, argArray ) {
 	// Step two: scan the requests, and also add them
 	for ( let idx = 0; idx < requestedIds.length; ++idx ) {
 		let id = requestedIds[idx];
-		if ( !cachedIds.includes(id) && _Exists(id) ) {
-			cachedIds.push(id);
-			let node = _Get(id);
-			nodes.push(node);
+		if ( !cachedIds.includes(id) ) {
+			let node = _Fetch(id);
+			if ( node ) {
+				cachedIds.push(id);
+				nodes.push(node);
+			}
 		}
 	}
 
@@ -165,7 +183,7 @@ export function GetFresh( ids, argArray ) {
 			// If any nodes were returned, update our cached copies
 			if ( r.node ) {
 				for ( var idx = 0; idx < r.node.length; idx++ ) {
-					_Cache(r.node[idx]);
+					_Store(r.node[idx]);
 				}
 			}
 
@@ -198,7 +216,7 @@ export function GetKeyed( ids, argArray ) {
 		let node = r.node;
 		r.node = {};
 		for ( let idx = 0; idx < node.length; ++idx ) {
-			_Cache(node[idx]);
+			//_Store(node[idx]);	// Don't do a store, because Get does one
 			r.node[node[idx].id] = node[idx];
 		}
 		return r;
@@ -211,7 +229,7 @@ export function GetFreshKeyed( ids, argArray ) {
 		let node = r.node;
 		r.node = {};
 		for ( let idx = 0; idx < node.length; ++idx ) {
-			_Cache(node[idx]);
+			//_Store(node[idx]);	// Don't do a store, because GetFresh does one
 			r.node[node[idx].id] = node[idx];
 		}
 		return r;
@@ -231,7 +249,7 @@ export function Walk( parent, slugs, argArray ) {
 		let node = r.node;
 		r.node = {};
 		for ( let idx = 0; idx < node.length; ++idx ) {
-			_Cache(node[idx]);
+			_Store(node[idx]);
 			r.node[node[idx].id] = node[idx];
 		}
 		return r;
@@ -301,7 +319,7 @@ export function GetFeed( id, methods, types, subtypes, subsubtypes, tags, offset
 
 export function GetMy() {
 	return Fetch.Get(API_ENDPOINT+'/vx/node2/getmy', true).then(r => {
-		_Cache(r.node);
+		_Store(r.node);
 		return r;
 	});
 }
@@ -313,16 +331,16 @@ export function Where() {
 export function What( id ) {
 	return Fetch.Get(API_ENDPOINT+'/vx/node2/what/'+id, true).then(r => {
 		if ( r.root ) {
-			_Cache(r.root);
+			_Store(r.root);
 		}
 		if ( r.featured ) {
-			_Cache(r.featured);
+			_Store(r.featured);
 		}
 
 		let node = r.node;
 		r.node = {};
 		for ( let idx = 0; idx < node.length; ++idx ) {
-			_Cache(node[idx]);
+			_Store(node[idx]);
 			r.node[node[idx].id] = node[idx];
 		}
 		return r;
@@ -346,7 +364,6 @@ export function Add( id, node_type, node_subtype, node_subsubtype ) {
 	}
 
 	return Fetch.Post(API_ENDPOINT+'/vx/node/add/'+args.join('/'), {});
-
 }
 export function Publish( id ) {
 	return Fetch.Post(API_ENDPOINT+'/vx/node/publish/'+id, {})
