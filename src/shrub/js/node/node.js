@@ -28,33 +28,33 @@ export default {
 	InvalidateNodeCache,
 };
 
-var NODE_CACHE = {};
-const NODE_TTL = 30*1000;
+//var NODE_CACHE = {};
+const NODE_TTL = 15*1000;
 
 function _MakeKey( id ) {
 	return "NODE|" + id;
 }
 function _Store( node ) {
 	if ( node.id ) {
-		NODE_CACHE[node.id] = node;
+		//NODE_CACHE[node.id] = node;
 		Cache.Store(_MakeKey(node.id), node, NODE_TTL);
 	}
 }
 function _Fetch( node_id ) {
 	var node = null;
 	if ( node_id ) {
-		node = NODE_CACHE[node_id];
-		if ( !node ) {
+		//node = NODE_CACHE[node_id];
+		//if ( !node ) {
 			node = Cache.Fetch(_MakeKey(node_id));
-			NODE_CACHE[node_id] = node;
-		}
+			//NODE_CACHE[node_id] = node;
+		//}
 	}
 	return node;
 }
 
 export function InvalidateNodeCache( node_id ) {
 	if ( node_id ) {
-		NODE_CACHE[node_id] = null;
+		//NODE_CACHE[node_id] = null;
 		Cache.Remove(_MakeKey(node_id));
 	}
 }
@@ -87,7 +87,7 @@ export function Get( ids, argArray ) {
 			// While we're rebuilding 'ids', scan the cache and invalidate if the feed date is newer
 			let node = _Fetch(node_id);
 			if ( node && (feed[idx].modified > node.modified) ) {
-				//console.log("Node "+node_id+" was Invalidated ("+feed[idx].modified+" > "+node.modified+")");
+				console.log("Node "+node_id+" was Invalidated ("+feed[idx].modified+" > "+node.modified+")");
 				InvalidateNodeCache(node_id);
 			}
 		}
@@ -216,7 +216,7 @@ export function GetKeyed( ids, argArray ) {
 		let node = r.node;
 		r.node = {};
 		for ( let idx = 0; idx < node.length; ++idx ) {
-			_Store(node[idx]);
+			//_Store(node[idx]);	// Don't do a store, because Get does one
 			r.node[node[idx].id] = node[idx];
 		}
 		return r;
@@ -229,7 +229,7 @@ export function GetFreshKeyed( ids, argArray ) {
 		let node = r.node;
 		r.node = {};
 		for ( let idx = 0; idx < node.length; ++idx ) {
-			_Store(node[idx]);
+			//_Store(node[idx]);	// Don't do a store, because GetFresh does one
 			r.node[node[idx].id] = node[idx];
 		}
 		return r;
@@ -364,7 +364,6 @@ export function Add( id, node_type, node_subtype, node_subsubtype ) {
 	}
 
 	return Fetch.Post(API_ENDPOINT+'/vx/node/add/'+args.join('/'), {});
-
 }
 export function Publish( id ) {
 	return Fetch.Post(API_ENDPOINT+'/vx/node/publish/'+id, {})

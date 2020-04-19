@@ -73,7 +73,7 @@ export default class ContentGames extends Component {
 	}
 
 	getMissingNodes() {
-		var keys = this.getFeedIdsWithoutNodes();
+		var keys = this.state.feed;//this.getFeedIdsWithoutNodes();
 
 		if ( keys.length ) {
 			return $Node.GetKeyed( keys )

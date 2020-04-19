@@ -56,12 +56,12 @@ export default class ContentTimeline extends Component {
 				added++;
 			}
 		}
+
 		this.setState({'feed': feed, 'hash': hash, 'lastadded': added});
 	}
 
 	getFeedIdsWithoutNodes() {
 		var feed = this.state.feed;
-		var hash = this.state.hash;
 
 		var keys = [];
 		for (var idx = 0; idx < feed.length; idx++ ) {
@@ -72,7 +72,7 @@ export default class ContentTimeline extends Component {
 	}
 
 	getMissingNodes() {
-		let keys = this.getFeedIdsWithoutNodes();
+		let keys = this.state.feed;
 
 		if ( keys.length ) {
 			// Arguments here to pre-cache things for later (not actually used here, but they end up in the cache)

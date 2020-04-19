@@ -83,7 +83,7 @@ export default class TimelineRateGames extends Component {
 				});
 			}
 			else {
-				$Node.Get(r.feed.map(elem => elem.id))
+				$Node.Get(r.feed /*.map(elem => elem.id)*/)
 				.then(r => {
 					this.setState({
 						'feed': r.node,
