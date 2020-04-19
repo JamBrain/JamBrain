@@ -88,7 +88,53 @@
 }
 
 *:hover > ._on-parent-hover-show,
+*:hover > * > ._on-parent-parent-hover-show,
+*:hover > * > * > ._on-parent-parent-parent-hover-show,
 *:active > ._on-parent-active-show,
 *:focus > ._on-parent-focus-show {
 	display: inline !important;
+}
+
+
+
+* > ._if-parent-no-hover-inline,
+* > * > ._if-parent-parent-no-hover-inline,
+* > * > * > ._if-parent-parent-parent-no-hover-inline {
+	display: inline-block !important;
+}
+
+* > ._if-parent-no-hover-block,
+* > * > ._if-parent-parent-no-hover-block,
+* > * > * > ._if-parent-parent-parent-no-hover-block {
+	display: block !important;
+}
+
+* > ._if-parent-hover-inline,
+* > * > ._if-parent-parent-hover-inline,
+* > * > * > ._if-parent-parent-parent-hover-inline,
+* > ._if-parent-hover-block,
+* > * > ._if-parent-parent-hover-block,
+* > * > * > ._if-parent-parent-parent-hover-block {
+	display: none !important;
+}
+
+*:hover > ._if-parent-no-hover-inline,
+*:hover > * > ._if-parent-parent-no-hover-inline,
+*:hover > * > * > ._if-parent-parent-parent-no-hover-inline,
+*:hover > ._if-parent-no-hover-block,
+*:hover > * > ._if-parent-parent-no-hover-block,
+*:hover > * > * > ._if-parent-parent-parent-no-hover-block {
+	display: none !important;
+}
+
+*:hover > ._if-parent-hover-inline,
+*:hover > * > ._if-parent-parent-hover-inline,
+*:hover > * > * > ._if-parent-parent-parent-hover-inline {
+	display: inline-block !important;
+}
+
+*:hover > ._if-parent-hover-block,
+*:hover > * > ._if-parent-parent-hover-block,
+*:hover > * > * > ._if-parent-parent-parent-hover-block {
+	display: block !important;
 }

@@ -1,0 +1,25 @@
+
+.ui-dialog {
+	background: fade(black, 75%);
+	z-index: 9999;
+
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	animation: dialog-background-fadein 0.5s;
+	@keyframes dialog-background-fadein {
+		0%		{ opacity: 0; }
+		50%		{ opacity: 1; }
+	}
+
+	& > .-window {
+		z-index: 10000;
+	}
+}
