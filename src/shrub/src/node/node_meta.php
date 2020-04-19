@@ -525,6 +525,10 @@ function __nodeMeta_Insert( $a, $b, $version, $scope, $key, $value = null, $time
 //		);
 //	}
 
+	// We can't rely on "NOW()" here, so we have to do this
+	if ( !$timestamp )
+		$timestamp = (new DateTime())->format('Y-m-d H:i:s');
+
 	return db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." (
 			a,
@@ -542,7 +546,7 @@ function __nodeMeta_Insert( $a, $b, $version, $scope, $key, $value = null, $time
 			?,
 			?,
 			?,
-			".($timestamp ? '?' : 'NOW()')."
+			?
 		)
 		ON DUPLICATE KEY UPDATE
 			version=VALUES(version),
@@ -605,7 +609,6 @@ function __nodeMeta_Update( $a, $b, $version, $scope, $key, $value = null, $time
 		// SET
 		$version,
 		$scope,
-		$key,
 		$value,
 		$timestamp,
 		// WHERE
@@ -615,22 +618,26 @@ function __nodeMeta_Update( $a, $b, $version, $scope, $key, $value = null, $time
 	);
 }
 
+
 function _nodeMeta_Add( $a, $b, $version, $scope, $key, $value = null, $timestamp = null, $b_constraint = true ) {
-	$ret = __nodeMeta_Update($a, $b, $version, $scope, $key, $value, $timestamp, $b_constraint);
-	if ( $ret )
+	if ( $ret = __nodeMeta_Update($a, $b, $version, $scope, $key, $value, $timestamp, $b_constraint) ) {
 		return $ret;
+	}
+	// $b_constraint constraining only applies to updating
 	return __nodeMeta_Insert($a, $b, $version, $scope, $key, $value, $timestamp);
 }
 
 
 function nodeMeta_Add( $a, $b, $scope, $key, $value = null, $b_constraint = true ) {
 	$version = _nodeMetaVersion_Add($a, $b, $scope, $key, $value);
-	return _nodeMeta_Add($a, $b, $version, $scope, $key, $value, $b_constraint);
+	return _nodeMeta_Add($a, $b, $version, $scope, $key, $value, null, $b_constraint);
 }
 // NOTE: Doesn't actually remove, but adds an "ignore-me" entry
+// ALSO: It calls nodeMeta_Add directly, so to correctly create history
 function nodeMeta_Remove( $a, $b, $scope, $key, $value = null, $b_constraint = true ) {
 	return nodeMeta_Add($a, $b, $scope^-1, $key, $value, $b_constraint);
 }
+
 
 // Orphaned Metedata is metadata without versions (history)
 function nodeMeta_AddOrphan( $a, $b, $scope, $key, $value = null ) {
@@ -639,6 +646,7 @@ function nodeMeta_AddOrphan( $a, $b, $scope, $key, $value = null ) {
 function nodeMeta_RemoveOrphan( $a, $b, $scope, $key, $value = null ) {
 	return nodeMeta_AddOrphan($a, $b, $scope^-1, $key, $value);
 }
+
 
 function nodeMeta_GetAuthors( $node_id ) {
 	$authorlinks = nodeMeta_GetByKeyNode('author', $node_id);
