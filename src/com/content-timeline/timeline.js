@@ -135,7 +135,7 @@ export default class ContentTimeline extends Component {
 	makeFeedItem( node ) {
 		node = node.node;
 
-		if ( node ) {
+		if ( node && this.props && this.props.user ) {
 			var path = this.props.path+'/'+node.slug;
 			var user = this.props.user;
 			var extra = this.props.extra;

@@ -50,7 +50,7 @@ export default class ContentBox extends Component {
 
 	render( props, state ) {
 		props = Object.assign({}, props);
-		const {node, user, path, extra} = props;
+		const {node, path, extra} = props;
 
 		if ( node /* && state.authors */ ) {
 			var Class = ["content-box"];

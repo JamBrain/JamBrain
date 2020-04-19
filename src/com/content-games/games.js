@@ -177,7 +177,6 @@ export default class ContentGames extends Component {
 					return (
 						<ContentItemBox
 							node={r.node}
-							user={props.user}
 							path={props.path}
 							noevent={props.noevent ? props.noevent : null}
 						/>
