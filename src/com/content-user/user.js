@@ -28,7 +28,7 @@ export default class ContentUser extends Component {
 		let {node, user, path, extra} = props;
 
 		if ( !node || !user )
-			return;
+			return null;
 
 		// HACK! This should not need to be here
 		if ( node.type != 'user' )

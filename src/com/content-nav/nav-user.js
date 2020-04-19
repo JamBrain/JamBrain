@@ -10,6 +10,9 @@ export default class ContentNavUser extends Component {
 	render( props ) {
 		let {node, user, path, extra} = props;
 
+		if ( !node || !user )
+			return null;
+
         let NewPath = '/'+ (extra ? extra.join('/') : '');
 		let PartPath = '/'+ (extra && extra.length ? extra[0] : '');
 
