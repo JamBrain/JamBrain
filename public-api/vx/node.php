@@ -386,31 +386,27 @@ switch ( $action ) {
 						json_EmitFatalError_BadRequest("Invalid type: $type", $RESPONSE);
 					}
 				}
-
-				if ( count($types) == 1 )
-					$types = $types[0];
-
-				$RESPONSE['types'] = $types;
 			}
+			$RESPONSE['types'] = $types;
 
 			$subtypes = json_ArgShift();
 			if ( !empty($subtypes) ) {
 				$subtypes = array_map("coreSlugify_Name", explode('+', $subtypes));
 
-				if ( count($subtypes) == 1 )
-					$subtypes = $subtypes[0];
-
 				$RESPONSE['subtypes'] = $subtypes;
+			}
+			else {
+				$subtypes = [];
 			}
 
 			$subsubtypes = json_ArgShift();
 			if ( !empty($subsubtypes) ) {
 				$subsubtypes = array_map("coreSlugify_Name", explode('+', $subsubtypes));
 
-				if ( count($subsubtypes) == 1 )
-					$subsubtypes = $subsubtypes[0];
-
 				$RESPONSE['subsubtypes'] = $subsubtypes;
+			}
+			else {
+				$subsubtypes = [];
 			}
 
 			$RESPONSE['offset'] = 0;
@@ -427,9 +423,19 @@ switch ( $action ) {
 					$RESPONSE['limit'] = 50;
 			}
 
-			$RESPONSE['feed'] = nodeFeed_GetByMethod( $methods, $root, $types, $subtypes, $subsubtypes, $score_op, $RESPONSE['limit'], $RESPONSE['offset'] );
+			$CACHE_KEY = "!node/feed|".implode('+', $methods)."|".$root."|".implode('+', $types)."|".implode('+', $subtypes)."|".implode('+', $subsubtypes)."|".$score_op."|".$RESPONSE['limit']."|".$RESPONSE['offset'];
 
-//			$RESPONSE['feed'] = nodeFeed_GetByNodeMethodType( $root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset'] );
+			$RESPONSE['feed'] = cache_Fetch($CACHE_KEY);
+
+			if ( $RESPONSE['feed'] == null ) {
+				$RESPONSE['feed'] = nodeFeed_GetByMethod($methods, $root, $types, $subtypes, $subsubtypes, $score_op, $RESPONSE['limit'], $RESPONSE['offset']);
+//				$RESPONSE['feed'] = nodeFeed_GetByNodeMethodType($root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset']);
+
+				cache_Store($CACHE_KEY, $RESPONSE['feed'], 15);
+			}
+			else {
+				$RESPONSE['cached'] = true;
+			}
 		}
 		else {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
