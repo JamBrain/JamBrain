@@ -29,10 +29,6 @@ export default class ContentStatsEvent extends Component {
 	}
 
 	componentDidMount() {
-		//var props = this.props;
-		var state = this.state;
-
-//		if ( state.stats )
 		this.getStats();
 	}
 
@@ -50,11 +46,13 @@ export default class ContentStatsEvent extends Component {
 	getStats() {
 		var props = this.props;
 
-		$Stats.Get(props.node.id).then(r => {
-			if ( r.stats ) {
-				this.setState({'stats': r.stats});
-			}
-		});
+		if ( props.node && props.node.id ) {
+			$Stats.Get(props.node.id).then(r => {
+				if ( r.stats ) {
+					this.setState({'stats': r.stats});
+				}
+			});
+		}
 	}
 
 	render( props, state ) {
@@ -62,9 +60,6 @@ export default class ContentStatsEvent extends Component {
 		var Class = [];
 
 		var node = props.node;
-		var user = props.user;
-		var path = props.path;
-		var extra = props.extra;
 
 		if ( node && node.slug && state.stats ) {
 			var stats = state.stats;
@@ -75,8 +70,9 @@ export default class ContentStatsEvent extends Component {
 			//console.log(state.stats);
 
 			var EventMode = 0;
-			if ( node && node.meta && node.meta['theme-mode'] )
+			if ( node && node.meta && node.meta['theme-mode'] ) {
 				EventMode = parseInt(node.meta['theme-mode']);
+			}
 
 			var Data = [];
 			if ( EventMode ) {
