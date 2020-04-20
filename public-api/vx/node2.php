@@ -136,21 +136,25 @@ api_Exec([
 	$RESPONSE['path'] = [];
 	$RESPONSE['extra'] = [];
 
+	$searching = true;
+
 	foreach ( json_ArgGet() as $slug ) {
 		$slug = coreSlugify_PathName($slug);
 
-		// Search by specific ID (i.e. $)
-		if ( !empty($slug) && ($slug[0] == '$') ) {
-			$node = intval(substr($slug, 1));
+		if ( $searching ) {
+			// Search by specific ID (i.e. $)
+			if ( !empty($slug) && ($slug[0] == '$') ) {
+				$node = intval(substr($slug, 1));
 
-			// Validate that node's parent correct
-			if ( nodeCache_GetParentById($node) !== $parent_id ) {
-				$node = 0;
+				// Validate that node's parent correct
+				if ( nodeCache_GetParentById($node) !== $parent_id ) {
+					$node = 0;
+				}
 			}
-		}
-		// Search by slug
-		else {
-			$node = nodeCache_GetIdByParentSlug($parent_id, $slug);
+			// Search by slug
+			else {
+				$node = nodeCache_GetIdByParentSlug($parent_id, $slug);
+			}
 		}
 
 		// If a valid node was found in the search
@@ -163,7 +167,11 @@ api_Exec([
 			if ( empty($slug) )
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
 
-			$RESPONSE['extra'][] = $slug;//coreSlugify_Name($slug); // already slugified
+			$RESPONSE['extra'][] = $slug; // already slugified
+
+			// Stop searching for new nodes. Everything else should be considered an extra
+			$searching = false;
+			$node = null;
 		}
 	}
 
