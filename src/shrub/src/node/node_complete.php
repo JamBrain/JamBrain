@@ -112,15 +112,15 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 
 	// Populate Counts
 	if ( $flags & F_NODE_COUNT ) {
-		$games = node_IdToIndex(node_CountByAuthorType($ids, false, 'item', 'game'));
-		$articles = node_IdToIndex(node_CountByAuthorType($ids, false, 'page', 'article'));
-		$posts = node_IdToIndex(node_CountByAuthorType($ids, false, 'post'));
+		//$games = node_IdToIndex(node_CountByAuthorType($ids, false, 'item', 'game'));
+		//$articles = node_IdToIndex(node_CountByAuthorType($ids, false, 'page', 'article'));
+		//$posts = node_IdToIndex(node_CountByAuthorType($ids, false, 'post'));
 
 		foreach ( $nodes as &$node ) {
 			if ( $node['type'] == 'user' ) {
-				$node['games'] = isset($games[$node['id']]) ? $games[$node['id']]['count'] : 0;
-				$node['articles'] = isset($articles[$node['id']]) ? $articles[$node['id']]['count'] : 0;
-				$node['posts'] = isset($posts[$node['id']]) ? $posts[$node['id']]['count'] : 0;
+				$node['games'] = 0; //isset($games[$node['id']]) ? $games[$node['id']]['count'] : 0;
+				$node['articles'] = 0; //isset($articles[$node['id']]) ? $articles[$node['id']]['count'] : 0;
+				$node['posts'] = 0; //isset($posts[$node['id']]) ? $posts[$node['id']]['count'] : 0;
 			}
 		}
 	}
