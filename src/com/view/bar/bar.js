@@ -53,7 +53,7 @@ export default class ViewBar extends Component {
 	}
 
 	checkNotificationCount() {
-		//return; // HACK! Comment me to restore notifications
+		return; // HACK! Comment me to restore notifications
 
 		const {user} = this.props;
 		const loggedIn = user && (user.id > 0);
