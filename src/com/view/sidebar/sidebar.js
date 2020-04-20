@@ -23,7 +23,8 @@ export default class ViewSidebar extends Component {
 		let compoEndDate2 = new Date(Date.UTC(2020, 3, 20, 2, 0, 0));
 
 		let jamEndDate = new Date(Date.UTC(2020, 3, 21, 1, 0, 0));
-		let jamEndDate2 = new Date(Date.UTC(2020, 3, 21, 2, 0, 0));
+		//let jamEndDate2 = new Date(Date.UTC(2020, 3, 21, 2, 0, 0));
+		let jamEndDate2 = new Date(Date.UTC(2020, 3, 21, 3, 0, 0));
 
 		let gradeEndDate = new Date(Date.UTC(2020, 4, 12, 20, 0, 0));
 		let resultsDate = new Date(Date.UTC(2020, 4, 12, 24, 0, 0));
@@ -58,8 +59,8 @@ export default class ViewSidebar extends Component {
 				ShowCountdown.push(<SidebarCountdown date={ jamEndDate } nc="jam" to="Jam" tt="Ends" />);
 			}
 			else if ( (now < jamEndDate2) && (ShowCountdown.length < 2) ) {
-				//ShowCountdown.push(<SidebarCountdown date={ jamEndDate2 } nc="jam" to="Submission Hour+" tt="Ends" />);
-				ShowCountdown.push(<SidebarCountdown date={ jamEndDate2 } nc="jam" to="Submission Hour" tt="Ends" />);
+				ShowCountdown.push(<SidebarCountdown date={ jamEndDate2 } nc="jam" to="Submission Hour+" tt="Ends" />);
+				//ShowCountdown.push(<SidebarCountdown date={ jamEndDate2 } nc="jam" to="Submission Hour" tt="Ends" />);
 			}
 
 			if ( (now < gradeEndDate) && props.featured && props.featured.meta && props.featured.meta['can-grade'] && (ShowCountdown.length < 2) ) { //now < compoEndDate2 || now < jamEndDate2 || now < gradeEndDate ) {
