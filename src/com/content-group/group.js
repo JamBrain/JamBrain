@@ -49,7 +49,6 @@ export default class ContentGroup extends Component {
 	makePath(n) {
 		let ret = "";
 
-		console.log("EEE",n);
 		if ( n.type ) {
 			ret += n.type;
 		}
