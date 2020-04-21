@@ -92,8 +92,8 @@ if ( in_array($table, $TABLE_LIST) ) {
 	// Generate Nodes
 	if ( isset($created) ) {
 		// Create necessary nodes
-		$root = MakeKeyNode('SH_NODE_ID_ROOT', 0, SH_NODE_TYPE_ROOT, 'root', '' );
-		$users = MakeKeyNode('SH_NODE_ID_USERS', $root, SH_NODE_TYPE_USERS, 'users', 'Users' );
+		$root = MakeKeyNode('SH_NODE_ID_ROOT', 0, SH_NODE_TYPE_ROOT, '', '', 'root', '' );
+		$users = MakeKeyNode('SH_NODE_ID_USERS', $root, SH_NODE_TYPE_USERS, '', '', 'users', 'Users' );
 	}
 	table_Exit($table);
 }
