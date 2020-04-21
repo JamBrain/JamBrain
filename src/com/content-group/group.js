@@ -12,7 +12,6 @@ import $Node							from '../../shrub/js/node/node';
 
 const GROUP_ICONS = {
 	'tag': 'tag',
-	'tag/platform': 'tag',
 	'tag/platform/source-code': 'embed',
 	'tag/platform/microsoft-windows': 'windows',
 	'tag/platform/linux': 'linux',
@@ -26,6 +25,7 @@ const GROUP_ICONS = {
 	'group/tags': 'tags',
 	'group/events': 'trophys',
 	'event': 'trophy',
+	'page': 'article',
 };
 
 const GROUP_SUFFIX = {
