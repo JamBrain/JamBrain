@@ -103,7 +103,7 @@ export default class ContentGroup extends Component {
 				let n = nodes[items[idx].id];
 
 				let prefix = <span>[{this.makePath(n)}]</span>;
-				if ( GROUP_ICONS[this.makePath(n)] ) {
+				if ( this.getIconName(n) ) {
 					prefix = <span><UIIcon src={this.getIconName(n)} /> </span>;
 				}
 
