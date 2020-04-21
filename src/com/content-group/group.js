@@ -13,6 +13,13 @@ import $Node							from '../../shrub/js/node/node';
 const GROUP_ICONS = {
 	'tag': 'tag',
 	'tag/platform': 'tag',
+	'tag/platform/source-code': 'embed',
+	'tag/platform/microsoft-windows': 'windows',
+	'tag/platform/linux': 'linux',
+	'tag/platform/google-android': 'android',
+	'tag/platform/apple-mac': 'apple',
+	'tag/platform/apple-ios': 'apple',
+	'tag/platform/html5': 'html5',
 	'tag/genre': 'lightbulb',
 	'tag/input': 'gamepad',
 	'group': 'folder-open',
@@ -39,7 +46,10 @@ export default class ContentGroup extends Component {
 
 	getIconName(n) {
 		let name = this.makePath(n);
-		if ( GROUP_ICONS[name] ) {
+		if ( GROUP_ICONS[name+'/'+n.slug] ) {
+			return GROUP_ICONS[name+'/'+n.slug];
+		}
+		else if ( GROUP_ICONS[name] ) {
 			return GROUP_ICONS[name];
 		}
 		else if ( GROUP_ICONS[n.type] ) {
