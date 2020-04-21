@@ -12,7 +12,6 @@ import $Node							from '../../shrub/js/node/node';
 
 const GROUP_ICONS = {
 	'tag': 'tag',
-	'tag/platform': 'tag',
 	'tag/platform/source-code': 'embed',
 	'tag/platform/microsoft-windows': 'windows',
 	'tag/platform/linux': 'linux',
@@ -26,6 +25,7 @@ const GROUP_ICONS = {
 	'group/tags': 'tags',
 	'group/events': 'trophys',
 	'event': 'trophy',
+	'page': 'article',
 };
 
 const GROUP_SUFFIX = {
@@ -103,7 +103,7 @@ export default class ContentGroup extends Component {
 				let n = nodes[items[idx].id];
 
 				let prefix = <span>[{this.makePath(n)}]</span>;
-				if ( GROUP_ICONS[this.makePath(n)] ) {
+				if ( this.getIconName(n) ) {
 					prefix = <span><UIIcon src={this.getIconName(n)} /> </span>;
 				}
 
@@ -129,7 +129,7 @@ export default class ContentGroup extends Component {
 			}
 
 			return (
-				<Common node={node} user={user} header={node.name.toUpperCase()+suffix} headerIcon={this.getIconName(node)}>
+				<Common node={node} user={user} header={node.name+suffix} headerIcon={this.getIconName(node)}>
 					<CommonBody>
 						<br /><br /><br />
 						{ShowBody}
