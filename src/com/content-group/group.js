@@ -129,7 +129,7 @@ export default class ContentGroup extends Component {
 			}
 
 			return (
-				<Common node={node} user={user} header={node.name.toUpperCase()+suffix} headerIcon={this.getIconName(node)}>
+				<Common node={node} user={user} header={node.name+suffix} headerIcon={this.getIconName(node)}>
 					<CommonBody>
 						<br /><br /><br />
 						{ShowBody}
