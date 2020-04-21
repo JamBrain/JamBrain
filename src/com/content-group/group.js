@@ -17,11 +17,14 @@ const GROUP_ICONS = {
 	'tag/input': 'gamepad',
 	'group': 'folder-open',
 	'group/tags': 'tags',
+	'group/events': 'trophys',
+	'event': 'trophy',
 };
 
 const GROUP_SUFFIX = {
 	'group': '/',
 	'group/tags': '/',
+	'group/events': '/',
 };
 
 export default class ContentGroup extends Component {
