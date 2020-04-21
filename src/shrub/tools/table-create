@@ -134,7 +134,7 @@ function table_Exit($table) {
 	}
 }
 
-function MakeKeyNode( $key, $parent, $type, $slug, $name ) {
+function MakeKeyNode( $key, $parent, $type, $subtype, $subsubtype, $slug, $name ) {
 	global $SH;
 	
 	if ( !isset($SH[$key]) || !$SH[$key] ) {
@@ -142,7 +142,7 @@ function MakeKeyNode( $key, $parent, $type, $slug, $name ) {
 			$parent,						// parent
 			0,								// superparent (0 = don't care)
 			0,								// author (0 = orphaned)
-			$type,'','',					// type, subtype, subsubtype
+			$type,$subtype,$subsubtype,					// type, subtype, subsubtype
 			$slug,$name,					// slug, name
 			''								// body
 		);
