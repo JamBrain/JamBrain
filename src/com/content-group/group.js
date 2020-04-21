@@ -83,11 +83,14 @@ export default class ContentGroup extends Component {
 				if ( r && r.feed ) {
 					this.setState({'items': r.feed});
 
-					return $Node.GetKeyed(r.feed);
+					//return $Node.GetKeyed(r.feed);
+					return $Node.Get(r.feed);
 				}
 			})
 			.then( r => {
 				if ( r && r.node ) {
+					r.node.sort((a, b) => a.slug > b.slug ? 1 : a.slug < b.slug ? -1 : 0 );
+
 					this.setState({'nodes': r.node});
 				}
 			});
@@ -99,8 +102,10 @@ export default class ContentGroup extends Component {
 		if ( items && items.length && nodes ) {
 			ShowBody.push(<div><NavLink href={node.path+'/..'}><span><UIIcon src="previous" /> </span>../</NavLink></div>);
 
-			for (let idx = 0; idx < items.length; idx++) {
-				let n = nodes[items[idx].id];
+			//for (let idx = 0; idx < items.length; idx++) {
+			for (let idx = 0; idx < nodes.length; idx++) {
+				//let n = nodes[items[idx].id];
+				let n = nodes[idx];
 
 				let prefix = <span>[{this.makePath(n)}]</span>;
 				if ( this.getIconName(n) ) {
