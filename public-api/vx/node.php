@@ -419,8 +419,8 @@ switch ( $action ) {
 				$RESPONSE['limit'] = intval($_GET['limit']);
 				if ( $RESPONSE['limit'] < 1 )
 					$RESPONSE['limit'] = 1;
-				if ( $RESPONSE['limit'] > 50 )
-					$RESPONSE['limit'] = 50;
+				if ( $RESPONSE['limit'] > 250 )
+					$RESPONSE['limit'] = 250;
 			}
 
 			$CACHE_KEY = "!node/feed|".implode('+', $methods)."|".$root."|".implode('+', $types)."|".implode('+', $subtypes)."|".implode('+', $subsubtypes)."|".$score_op."|".$RESPONSE['limit']."|".$RESPONSE['offset'];
