@@ -18,7 +18,7 @@ const GROUP_ICONS = {
 	'tag/platform/google-android': 'android',
 	'tag/platform/apple-mac': 'apple',
 	'tag/platform/apple-ios': 'apple',
-	'tag/platform/html5': 'html5',
+	'tag/platform/web-html5': 'html5',
 	'tag/genre': 'lightbulb',
 	'tag/input': 'gamepad',
 	'group': 'folder-open',

@@ -30,6 +30,7 @@ export default class ContentCommentsMarkup extends Component {
 	}
 
 	checkSelfLinking() {
+		const {user} = this.props;
 		if (this.postIsAnItem() && !this.isCommentingOnOwnPost() && user && user.private && user.private.refs ) {
 			const txt = this.props.children.join('');
 			const {user} = this.props;
