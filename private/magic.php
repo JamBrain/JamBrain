@@ -18,7 +18,7 @@ const FEEDBACK_PER_NOTE = 2.0;
 const COOL_MIN_POINTS = 1;		// In the future, set this to 3 or 4
 const COOL_MIN_GRADES = 1;		// In the future, set this to 3 or 4
 const COOL_MIN_FEEDBACK = 1;	// In the future, set this to 3 or 4
-const COOL_MAX_GRADES = 50;
+const COOL_MAX_GRADES = 5;//50;
 const COOL_MAX_FEEDBACK = 50;
 
 const CLASSIC_MAX_GRADES = 100;
@@ -74,32 +74,32 @@ if ( $featured_id ) {
 				}
 			}
 		}
-		
+
 		// ** Find items that don't have magic **
 		{
 			// Get all published item ids
 			$node_ids = node_GetIdByParentTypePublished($featured_id, 'item');
-	
+
 			AddMagic('grade', $featured_id);
 			AddMagic('given', $featured_id);
 			AddMagic('feedback', $featured_id);
 			AddMagic('smart', $featured_id);
 			AddMagic('cool', $featured_id);
 		}
-		
-		
+
+
 		// ** Find a bunch of the oldest games with cool magic **
 		{
 			$magics = nodeMagic_GetOldestByParentName($featured_id, 'cool', MAX_ITEMS_TO_CALC);
-			
+
 			$node_ids = array_map(function($value) { return $value['node']; }, $magics);
 			// Bail if no nodes
 			if ( !count($node_ids) )
 				exit();
 			$nodes = node_IdToIndex(nodeComplete_GetById($node_ids, F_NODE_NO_BODY | F_NODE_META | F_NODE_LINK|F_NODE_NO_LINKVALUE));
-	
+
 			$scores = [];
-			
+
 			// Calculate their scores
 			foreach ( $magics as &$magic ) {
 				// The old Formula
@@ -140,7 +140,7 @@ if ( $featured_id ) {
 				// 100, 50 = 141.41
 				// 100, 75 = 115.47
 				// 100, 100 = 100
-	
+
 				$smart = 0;
 				$unbound = 0;
 				$cool = 0;
@@ -158,7 +158,7 @@ if ( $featured_id ) {
 				$node = &$nodes[$magic['node']];
 				if ( $node ) {
 					$authors = $node['meta']['author'];
-					
+
 					$node_grades_out = [];
 					foreach ( $node['meta'] as $key => &$value ) {
 						if ( strpos($key, 'grade-') === 0 && substr($key, strpos($key, '-out')) === '-out' ) {
@@ -202,7 +202,7 @@ if ( $featured_id ) {
 					// Final
 					//$smart = $bound_grade + $bound_feedback;				// bound, so it will hit upper limits
 					//$unbound = $unbound_grade + $unbound_feedback;			// unbound
-					
+
 //					$smart_for = max(COOL_MIN_POINTS, (min(COOL_MAX_GRADES, $team_grades) + min(COOL_MAX_FEEDBACK, $team_feedback));
 //					$smart_against = max(1.0, (min(COOL_MAX_GRADES, $given_grades) + min(COOL_MAX_FEEDBACK, $given_feedback));
 
@@ -213,7 +213,7 @@ if ( $featured_id ) {
 
 					$cool = $classic_grade;									// ratings only, old algorithm
 				}
-	
+
 				// Prefer $magic['node'] to $node['id'] in case it fails to load
 				$scores[] = [
 					'node' => $magic['node'],
@@ -224,7 +224,7 @@ if ( $featured_id ) {
 					'feedback' => $raw_team_feedback	// Karma on feedback team has given (i.e. people who are working hard)
 				];
 			}
-	
+
 			// Update scores
 			$db->begin_transaction();
 			foreach ( $scores as &$sc ) {
@@ -237,7 +237,7 @@ if ( $featured_id ) {
 			$db->commit();
 		}
 	}
-	
+
 	// Invalidate cached object that selects random games based on smart ratings.
 	nodeRandomGames_InvalidateCache();
 }
