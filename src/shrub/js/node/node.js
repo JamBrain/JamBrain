@@ -28,7 +28,7 @@ export default {
 	InvalidateNodeCache,
 };
 
-//var NODE_CACHE = {};
+var NODE_CACHE = {};
 const NODE_TTL = 15*1000;
 
 function _MakeKey( id ) {
@@ -36,17 +36,16 @@ function _MakeKey( id ) {
 }
 function _Store( node ) {
 	if ( node.id ) {
-		//NODE_CACHE[node.id] = node;
-		Cache.Store(_MakeKey(node.id), node, NODE_TTL);
+		NODE_CACHE[node.id] = node;
+		//Cache.Store(_MakeKey(node.id), node, NODE_TTL);
 	}
 }
 function _Fetch( node_id ) {
 	var node = null;
 	if ( node_id ) {
-		//node = NODE_CACHE[node_id];
+		node = NODE_CACHE[node_id];
 		//if ( !node ) {
-			node = Cache.Fetch(_MakeKey(node_id));
-			//NODE_CACHE[node_id] = node;
+		//	node = Cache.Fetch(_MakeKey(node_id));
 		//}
 	}
 	return node;
@@ -54,8 +53,8 @@ function _Fetch( node_id ) {
 
 export function InvalidateNodeCache( node_id ) {
 	if ( node_id ) {
-		//NODE_CACHE[node_id] = null;
-		Cache.Remove(_MakeKey(node_id));
+		NODE_CACHE[node_id] = null;
+		//Cache.Remove(_MakeKey(node_id));
 	}
 }
 
