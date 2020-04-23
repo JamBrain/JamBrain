@@ -6,7 +6,7 @@ require_once __DIR__."/".SHRUB_PATH."api2.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
 
 
-const MAX_NODES = 250;
+const MAX_NODES = 500;
 
 
 function nodeAPI_Filter( $nodes, &$more_nodes ) {
