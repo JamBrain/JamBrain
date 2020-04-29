@@ -18,7 +18,7 @@ const FEEDBACK_PER_NOTE = 2.0;
 const COOL_MIN_POINTS = 1;		// In the future, set this to 3 or 4
 const COOL_MIN_GRADES = 1;		// In the future, set this to 3 or 4
 const COOL_MIN_FEEDBACK = 1;	// In the future, set this to 3 or 4
-const COOL_MAX_GRADES = 5;//50;
+const COOL_MAX_GRADES = 25;//50;
 const COOL_MAX_FEEDBACK = 50;
 
 const CLASSIC_MAX_GRADES = 100;
@@ -66,6 +66,7 @@ if ( $featured_id ) {
 	if ( $featured && isset($featured['id']) && $featured['id'] == $featured_id ) {
 		$grades = [];
 		$grades_out = [];	// optimization
+		$event_start = null;
 		foreach ( $featured['meta'] as $key => &$value ) {
 			if ( strpos($key, 'grade-') === 0 ) {
 				if ( count(explode('-', $key)) == 2 ) {
@@ -73,7 +74,31 @@ if ( $featured_id ) {
 					$grades_out[] = $key.'-out';
 				}
 			}
+			else if ( $key == 'event-start' ) {
+				$event_start = new DateTime($featured['meta'][$key]);
+			}
 		}
+
+		// initialize to max grades
+		$cool_max_grades = COOL_MAX_GRADES;
+
+		// If start time is set
+		if ( $event_start ) {
+			// use the number of days since the start as the max grade
+			$event_diff = $event_start->diff(new DateTime("now"));
+			$cool_max_grades = intval($event_diff->format('%a'));
+
+			// Clamp to max grade
+			if ( $cool_max_grades > COOL_MAX_GRADES ) {
+				$cool_max_grades = COOL_MAX_GRADES;
+			}
+		}
+
+		echo($event_start->format('Y-m-d H:i:s'));
+		echo("\n");
+		echo($event_diff->format('%a'));
+		echo("\n");
+		echo("dood:".$cool_max_grades."\n");
 
 		// ** Find items that don't have magic **
 		{
@@ -178,7 +203,7 @@ if ( $featured_id ) {
 					$given_grades = $raw_given_grades / $given_grade_value;
 
 					// Given grade is unbound, so inactive participants will still get seen and get a few grades
-					$bound_grade = (sqrt(min(COOL_MAX_GRADES, max(COOL_MIN_GRADES, $team_grades)) * 100.0 / max(1.0, $given_grades)) * 100.0 / 10.0) - 100.0;
+					$bound_grade = (sqrt(min($cool_max_grades, max(COOL_MIN_GRADES, $team_grades)) * 100.0 / max(1.0, $given_grades)) * 100.0 / 10.0) - 100.0;
 					$unbound_grade = (sqrt(max(COOL_MIN_GRADES, $team_grades) * 100.0 / max(1.0, $given_grades)) * 100.0 / 10.0) - 100.0;
 
 					// ** Classic Grade Algorithm **************************************
@@ -203,11 +228,11 @@ if ( $featured_id ) {
 					//$smart = $bound_grade + $bound_feedback;				// bound, so it will hit upper limits
 					//$unbound = $unbound_grade + $unbound_feedback;			// unbound
 
-//					$smart_for = max(COOL_MIN_POINTS, (min(COOL_MAX_GRADES, $team_grades) + min(COOL_MAX_FEEDBACK, $team_feedback));
-//					$smart_against = max(1.0, (min(COOL_MAX_GRADES, $given_grades) + min(COOL_MAX_FEEDBACK, $given_feedback));
+//					$smart_for = max(COOL_MIN_POINTS, (min($cool_max_grades, $team_grades) + min(COOL_MAX_FEEDBACK, $team_feedback));
+//					$smart_against = max(1.0, (min($cool_max_grades, $given_grades) + min(COOL_MAX_FEEDBACK, $given_feedback));
 
 					// Bound everything except given grades, so a game can score below a game with no votes
-					$smart_for = max(COOL_MIN_POINTS, (min(COOL_MAX_GRADES, $team_grades) + min(COOL_MAX_FEEDBACK, $team_feedback)));
+					$smart_for = max(COOL_MIN_POINTS, (min($cool_max_grades, $team_grades) + min(COOL_MAX_FEEDBACK, $team_feedback)));
 					$smart_against = max(1.0, ($given_grades + min(COOL_MAX_FEEDBACK, $given_feedback)));
 					$smart = (sqrt($smart_for * 100.0 / $smart_against) * 100.0 / 10.0) - 100.0;
 
