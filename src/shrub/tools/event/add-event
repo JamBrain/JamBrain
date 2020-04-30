@@ -43,6 +43,7 @@ print "You are about to create event \"$name\".\n";
 AreYouSure();
 
 $id = node_Add($parent, $author, "event", "ld", "", $slug, $name, $body);
+node_Publish($id);
 
 if ( !$id ) {
 	echo "Failed to create node";
