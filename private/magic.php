@@ -18,7 +18,7 @@ const FEEDBACK_PER_NOTE = 2.0;
 const COOL_MIN_POINTS = 1;		// In the future, set this to 3 or 4
 const COOL_MIN_GRADES = 1;		// In the future, set this to 3 or 4
 const COOL_MIN_FEEDBACK = 1;	// In the future, set this to 3 or 4
-const COOL_MAX_GRADES = 25;//50;
+const COOL_MAX_GRADES = 15;//50;
 const COOL_MAX_FEEDBACK = 50;
 
 const CLASSIC_MAX_GRADES = 100;
@@ -94,11 +94,11 @@ if ( $featured_id ) {
 			}
 		}
 
-		echo($event_start->format('Y-m-d H:i:s'));
-		echo("\n");
-		echo($event_diff->format('%a'));
-		echo("\n");
-		echo("dood:".$cool_max_grades."\n");
+		//echo($event_start->format('Y-m-d H:i:s'));
+		//echo("\n");
+		//echo($event_diff->format('%a'));
+		//echo("\n");
+		//echo("dood:".$cool_max_grades."\n");
 
 		// ** Find items that don't have magic **
 		{
