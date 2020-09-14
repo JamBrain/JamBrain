@@ -109,7 +109,7 @@ ROLLUP_ARGS			:=	-c src/config/rollup.config.js
 ifdef SOURCEMAPS
 ROLLUP_ARGS			+=	-m inline
 endif # SOURCEMAPS
-ROLLUP				=	$(NODEJS)/rollup/bin/rollup $(ROLLUP_ARGS) $(1) > $(2)
+ROLLUP				=	$(NODEJS)/rollup/dist/bin/rollup $(ROLLUP_ARGS) $(1) > $(2)
 # JS Preprocessor: https://github.com/moisesbaez/preprocess-cli-tool
 JS_PP_DEBUG			=	$(NODEJS)/preprocess-cli-tool/bin/preprocess.js -f $(1) -d $(2) -c '{"DEBUG": true}' -t js
 JS_PP_RELEASE		=	$(NODEJS)/preprocess-cli-tool/bin/preprocess.js -f $(1) -d $(2) -t js
