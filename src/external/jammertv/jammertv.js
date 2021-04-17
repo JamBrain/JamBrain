@@ -5,7 +5,7 @@ export default {
 	GetLive
 };
 
-const EndPoint = '//jammer.tv';
+const EndPoint = '//api.jammer.tv';
 const CacheName = "JammerTV|";
 const TTL = 30 * 1000;
 
@@ -20,7 +20,7 @@ export function GetLive( cats ) {
 		return Promise.resolve(data);
 	}
 
-	return Get(EndPoint+'/v1/live.php/'+cats)
+	return Get(EndPoint+'/v1/get/cat/'+cats)
 		.then((r) => {
 			Cache.Store(CacheName+cats, r, TTL);
 

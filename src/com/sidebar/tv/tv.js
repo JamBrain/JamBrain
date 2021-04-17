@@ -49,11 +49,11 @@ export default class SidebarTV extends Component {
 		// Fetch Ludum Dare streams first
 		return $JammerTV.GetLive([
 			'ludum-dare',
-			'ludum-dare-art',
+			/*'ludum-dare-art',
 			'ludum-dare-music',
 			'ludum-dare-craft',
 			'ludum-dare-play',
-			'ludum-dare-talk'
+			'ludum-dare-talk'*/
 		])
 		// Fetch Game Jam streams next (if we don't have enough)
 		.then(data => {
@@ -66,9 +66,9 @@ export default class SidebarTV extends Component {
 			if ( NewStreams.length < RequiredStreams ) {
 				return $JammerTV.GetLive([
 					'game-jam',
-					'game-jam-art',
+					/*'game-jam-art',
 					'game-jam-music',
-					'demoscene',
+					'demoscene',*/
 				]);
 			}
 			return null;
@@ -84,8 +84,6 @@ export default class SidebarTV extends Component {
 			if ( NewStreams.length < RequiredStreams ) {
 				return $JammerTV.GetLive([
 					'game-dev',
-					'game-art',
-					'game-music'
 				]);
 			}
 			return null;
@@ -161,8 +159,8 @@ export default class SidebarTV extends Component {
 	showOthers( others, active ) {
 		return others.map((other, index) => {
 			return (
-				<div class={cN(other === active ? "selected" : "")} onclick={this.setActive.bind(this, index)} title={other && other.meta.name ? other.meta.name : ""}>
-					<div><IMG src={ other && other.meta ? other.meta.thumbnail : ""} failsrc={this.FailImage} /></div>
+				<div class={cN(other === active ? "selected" : "")} onclick={this.setActive.bind(this, index)} title={other && other.user_name ? other.user_name : ""}>
+					<div><IMG src={ other ? other.thumbnail_180p : ""} failsrc={this.FailImage} /></div>
 				</div>
 			);
 		});
@@ -204,26 +202,26 @@ export default class SidebarTV extends Component {
 					<div class="-active" onclick={e => {
 							console.log('tv');
 							/*window.open("https://www.twitch.tv/directory/game/Creative/ldjam", '_blank');*/
-							window.location.hash = "#tv/"+this.services[active.service_id]+'/'+active.meta.name;
+							window.location.hash = "#tv/"+this.services[active.service_id]+'/'+active.user_slug;
 						}}>
-						<div class="-img"><IMG src={active.meta.thumbnail} failsrc={this.FailImage} /></div>
+						<div class="-img"><IMG src={active.thumbnail_180p} failsrc={this.FailImage} /></div>
 						<div class="-live"><SVGIcon baseline small>circle</SVGIcon> <span class="-text">LIVE</span></div>
-						<div class={'-name stream-'+this.services[active.service_id]}>{this.serviceIcons[active.service_id]} <span class="-text">{active.meta.name}</span></div>
+						<div class={'-name stream-'+this.services[active.service_id]}>{this.serviceIcons[active.service_id]} <span class="-text">{active.user_name}</span></div>
 						<div class="-viewers"><SVGIcon baseline>tv</SVGIcon> <span class="-text">{active.viewers}</span></div>
 						<div class="-external" onclick={e => {
 							e.stopPropagation();
 							if ( this.services[active.service_id] == "twitch" ) {
-									window.open("https://www.twitch.tv/"+active.meta.slug, "_blank");
+									window.open("https://www.twitch.tv/"+active.user_slug, "_blank");
 							} else if ( this.services[active.service_id] == "youtube" ) {
 									//TODO: add youtube action, when youtube displays in TV
 							}
 						}}><SVGIcon>twitch</SVGIcon></div>
 						<div class="-play"><SVGIcon>play</SVGIcon></div>
 					</div>
-					<div class="-detail" title={active.meta.status}>
+					<div class="-detail" title={active.title}>
 						<SVGIcon top>quotes-left</SVGIcon>
 						<SVGIcon bottom>quotes-right</SVGIcon>
-						<div>{active.meta.status}</div>
+						<div>{active.title}</div>
 					</div>
 					<div class="-browse">
 						{this.showOthers(others,active)}
