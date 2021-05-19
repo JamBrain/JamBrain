@@ -16,30 +16,30 @@ export default class ViewSidebar extends Component {
 
 	render( props ) {
 		// TODO: cleanup
-		let ldName = "Ludum Dare 48";
-		let ldStartDate = new Date(Date.UTC(2021, 3, 24, 1, 0, 0));
-
-		let compoEndDate = new Date(Date.UTC(2021, 3, 26, 1, 0, 0));
-		let compoEndDate2 = new Date(Date.UTC(2021, 3, 26, 2, 0, 0));
-
-		let jamEndDate = new Date(Date.UTC(2021, 3, 27, 1, 0, 0));
-		let jamEndDate2 = new Date(Date.UTC(2021, 3, 27, 2, 0, 0));
-		//let jamEndDate2 = new Date(Date.UTC(2021, 3, 27, 3, 0, 0));
-
-		let gradeEndDate = new Date(Date.UTC(2021, 4, 18, 20, 0, 0));
-		let resultsDate = new Date(Date.UTC(2021, 4, 18, 24, 0, 0));
-
-//		let ldName = "Ludum Dare 47";
-//		let ldStartDate = new Date(Date.UTC(2020, 9, 2, 22, 0, 0));
+//		let ldName = "Ludum Dare 48";
+//		let ldStartDate = new Date(Date.UTC(2021, 3, 24, 1, 0, 0));
 //
-//		let compoEndDate = new Date(Date.UTC(2020, 9, 4, 22, 0, 0));
-//		let compoEndDate2 = new Date(Date.UTC(2020, 9, 4, 23, 0, 0));
+//		let compoEndDate = new Date(Date.UTC(2021, 3, 26, 1, 0, 0));
+//		let compoEndDate2 = new Date(Date.UTC(2021, 3, 26, 2, 0, 0));
 //
-//		let jamEndDate = new Date(Date.UTC(2020, 9, 5, 22, 0, 0));
-//		let jamEndDate2 = new Date(Date.UTC(2020, 9, 5, 23, 0, 0));
+//		let jamEndDate = new Date(Date.UTC(2021, 3, 27, 1, 0, 0));
+//		let jamEndDate2 = new Date(Date.UTC(2021, 3, 27, 2, 0, 0));
+//		//let jamEndDate2 = new Date(Date.UTC(2021, 3, 27, 3, 0, 0));
 //
-//		let gradeEndDate = new Date(Date.UTC(2020, 9, 27, 20, 0, 0));
-//		let resultsDate = new Date(Date.UTC(2020, 9, 27, 24, 0, 0));
+//		let gradeEndDate = new Date(Date.UTC(2021, 4, 18, 20, 0, 0));
+//		let resultsDate = new Date(Date.UTC(2021, 4, 18, 24, 0, 0));
+
+		let ldName = "Ludum Dare 49";
+		let ldStartDate = new Date(Date.UTC(2021, 9, 1 22, 0, 0));
+
+		let compoEndDate = new Date(Date.UTC(2021, 9, 3, 22, 0, 0));
+		let compoEndDate2 = new Date(Date.UTC(2021, 9, 3, 23, 0, 0));
+
+		let jamEndDate = new Date(Date.UTC(2021, 9, 4, 22, 0, 0));
+		let jamEndDate2 = new Date(Date.UTC(2021, 9, 4, 23, 0, 0));
+
+		let gradeEndDate = new Date(Date.UTC(2021, 9, 26, 20, 0, 0));
+		let resultsDate = new Date(Date.UTC(2021, 9, 26, 24, 0, 0));
 
 		let now = new Date();
 
