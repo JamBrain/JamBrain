@@ -30,7 +30,7 @@ export default class ViewSidebar extends Component {
 //		let resultsDate = new Date(Date.UTC(2021, 4, 18, 24, 0, 0));
 
 		let ldName = "Ludum Dare 49";
-		let ldStartDate = new Date(Date.UTC(2021, 9, 1 22, 0, 0));
+		let ldStartDate = new Date(Date.UTC(2021, 9, 1, 22, 0, 0));
 
 		let compoEndDate = new Date(Date.UTC(2021, 9, 3, 22, 0, 0));
 		let compoEndDate2 = new Date(Date.UTC(2021, 9, 3, 23, 0, 0));
