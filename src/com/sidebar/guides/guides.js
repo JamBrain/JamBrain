@@ -10,13 +10,17 @@ export default class SidebarGuides extends Component {
 	render(props, state) {
 		var Links = {
 			"Rules": {"href": "/events/ludum-dare/rules", "subtext": "for Ludum Dare events"},
-			"Game Hosting Guide": {"icon": "star-empty", "href": "/events/ludum-dare/hosting-guide"}
+			"Game Hosting Guide": {"icon": "star-empty", "href": "/events/ludum-dare/hosting-guide"},
+			"E-mail Newsletter": {"icon": "news", "href": "https://newsletter.ldjam.com"},
+			"YouTube": {"icon": "youtube", "href": "https://youtube.com/ludumdare"},
+			"Twitch": {"icon": "twitch", "href": "https://twitch.tv/ludumdare"},
+			"Twitter": {"icon": "twitter", "href": "https://twitter.com/ludumdare", "subtext": "breaking news"}
 		};
 
 		return (
 			<div class="sidebar-base sidebar-shortlist sidebar-guides">
 				<div class="-title _font2">
-					<SVGIcon baseline>article</SVGIcon> <span class="-text">Guides</span>
+					<SVGIcon baseline>article</SVGIcon> <span class="-text">Community & Guides</span>
 				</div>
 				{Object.keys(Links).map(key => {
 					let subtext = "";
