@@ -130,12 +130,12 @@ STYLELINT_ARGS			:=	--syntax less --config src/config/.stylelintrc --config-base
 STYLELINT				=	$(NODEJS)/stylelint/bin/stylelint.js $(1) $(STYLELINT_ARGS)
 
 # SVG "Compiler", same as the minifier: https://github.com/svg/svgo
-SVGO_ARGS			:=	-q --disable=removeTitle --disable=removeDimensions --disable=removeViewBox
+SVGO_ARGS			:=	-q --config src/config/svgo.config.js
 SVGO				=	$(NODEJS)/svgo/bin/svgo $(SVGO_ARGS) -i $(1) -o $(2)
 # Mike's SVG Sprite Packer: https://github.com/povrazor/svg-sprite-tools
 SVG_PACK			=	src/tools/svg-sprite-pack $(1) > $(2)
 # SVG Minifier: https://github.com/svg/svgo
-MINIFY_SVG_ARGS		:=	--multipass --disable=cleanupIDs -q
+MINIFY_SVG_ARGS		:=	--multipass --config src/config/svgo_minify.config.js -q
 MINIFY_SVG			=	$(NODEJS)/svgo/bin/svgo $(MINIFY_SVG_ARGS) -i $(1) -o $(2)
 
 # Remove Empty Directories
