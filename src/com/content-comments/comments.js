@@ -31,6 +31,13 @@ export default class ContentComments extends Component {
 		this.getComments(this.props.node);
 	}
 
+	componentDidUpdate(previousProps) {
+		//If the user was fetched after the component has rendered, the state needs to be updated
+		if (!previousProps.user && this.props.user) {
+			this.updateUser(this.props.user);
+		}
+	}
+
 	genComment() {
 		return {
 			'parent': 0,
@@ -43,43 +50,11 @@ export default class ContentComments extends Component {
 	}
 
 	getComments( node ) {
-		let user = this.props.user;
-		if ( user && user.id ) {
-			$Notification.GetSubscription( node.id )
-			.then(r => {
-				// Determine whether user is subscribed to the thread explicitly
-				if (r.status == 200) this.setState({'subscribed': r.subscribed});
-			});
-		}
-
 		$Comment.GetByNode(node.id)
 		.then(r => {
-			// Determine if current user is one of the authors of this node
-			let isauthor = false;
-			if ( node.meta && node.meta.authors ) {
-				for ( const index in node.meta.authors ) {
-					if ( node.meta.authors[index] == user.id ) {
-						isauthor = true;
-						break;
-					}
-				}
-			}
-			if ( node.author == user.id ) {
-				isauthor = true;
-			}
-			this.setState({'isauthor': isauthor});
-
 			// Has comments
 			if ( r.note && r.note.length ) {
-				// Determine whether the user has made a comment in this thread.
-				let hasComment = false;
-				for ( const index in r.note ) {
-					if ( r.note[index].author == user.id ) {
-						hasComment = true;
-						break;
-					}
-				}
-				this.setState({'comments': r.note, 'tree': null, 'authors': null, 'hascomment': hasComment});
+				this.setState({'comments': r.note, 'tree': null, 'authors': null});
 			}
 			// Does not have comments
 			else if ( r.note ) {
@@ -98,10 +73,56 @@ export default class ContentComments extends Component {
 					// Sync last
 					this.setState({'tree': this.buildTree()});
 			});
+			//User is already loaded
+			if ( this.props.user ) {
+				this.updateUser(this.props.user);
+			}
 		})
 		.catch(err => {
 			this.setState({'error': err});
 		});
+	}
+
+	updateUser(user) {
+		//User is still not set, or comments still not loaded, we will update later
+		if ( !user || !user.id || !this.comments ) {
+			return;
+		}
+
+		const node = this.props.node;
+		//Handle user subscription
+		$Notification.GetSubscription( node.id )
+		.then(r => {
+			// Determine whether user is subscribed to the thread explicitly
+			if (r.status == 200) this.setState({'subscribed': r.subscribed});
+		}).catch(err => {
+			this.setState({'error': err});
+		});
+
+		// Determine if current user is one of the authors of this node
+		let isauthor = false;
+		if ( node.meta && node.meta.authors ) {
+			for ( const index in node.meta.authors ) {
+				if ( node.meta.authors[index] == user.id ) {
+					isauthor = true;
+					break;
+				}
+			}
+		}
+		if ( node.author == user.id ) {
+			isauthor = true;
+		}
+		this.setState({'isauthor': isauthor});
+
+		// Determine whether the user has made a comment in this thread.
+		let hasComment = false;
+		for ( const index in this.state.comments ) {
+			if ( this.state.comments[index].author == user.id ) {
+				hasComment = true;
+				break;
+			}
+		}
+		this.setState({'hascomment': hasComment});
 	}
 
 	buildTree() {
@@ -265,8 +286,7 @@ export default class ContentComments extends Component {
 			if (r.status == 200) {
 					this.setState({'subscribed': r.subscribed});
 			}
-			else
-			{
+			else {
 					this.setState({'error': 'Could update subscription status'});
 			}
 		});
@@ -287,7 +307,9 @@ export default class ContentComments extends Component {
 		if ( user && user['id'] && newcomment ) {
 			ShowPostNew = this.renderPostNew();
 		}
-		else {
+		//Only show "Sign in to post comments" if there user is not logged in (Id: 0)
+		//If the user is null, means the user is logged in but the state has not updated it yet
+		else if (user && user['id'] === 0) {
 			ShowPostNew = <div class="-new-comment" style="padding:0"><div class={"-item -comment -indent-0"}><div class="-nothing">Sign in to post a comment</div></div></div>;
 		}
 
