@@ -52,6 +52,7 @@ Usage:
     * `make all` - Build all targets (default, until you set TARGET in `config.mk`)
     * `make TARGET=public-ludumdare.com` - Make a specific target (in this case, `public-ludumdare.com`)
     * `make mini` - Like `make`, but refreshes the UID (used to bypass caching proxies, etc)
+    * `make clean-some` - Clean, but don't delete the output files (useful when clean building on live)
     * `make clean-all` - Clean all targets
     * `make clean-svg`, `make clean-css`, `make clean-js` - Clean specifically the SVG, CSS, or JS
     * `make clean-all-svg`, `make clean-all-css`, `make clean-all-js` - Clean specifically the SVG, CSS, or JS of all targets
