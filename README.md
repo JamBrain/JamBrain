@@ -28,8 +28,6 @@ These folders contain the live sites that are served. They tend to be simple `PH
 
 * [/public-ludumdare.com](public-ludumdare.com/) - Ludum Dare focused version of the common site -- https://ldjam.com
   * This will be moving to `ludumdare.com` eventually.
-* /public-jammer.tv - Not yet in this repository. Coming soon. -- https://jammer.tv
-  * The TV widget uses the backend. The frontend site is not currently in active development.
 * [/public-url.shortener](public-url.shortener) - A variety of URL shortening services. -- https://ldj.am, https://jam.mr
   * At the moment only https://ldj.am/$id is supported, where $id is the node_id to redirect to. e.g. https://ldj.am/$11
   
