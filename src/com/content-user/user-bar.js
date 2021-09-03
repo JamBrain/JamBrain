@@ -34,8 +34,8 @@ export default class ContentUserBar extends Component {
 		}
 
 		if ( node && user ) {
-      const href = "/users/" + node.slug;
-      
+			const href = "/users/" + node.slug;
+
 			return (
 				<div class="content-user-bar">
 					<ContentCommonBodyAvatar href={href} src={node.meta && node.meta.avatar ? node.meta.avatar : ''} />
