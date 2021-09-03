@@ -6,7 +6,6 @@ import ViewSidebar						from 'com/view/sidebar/sidebar';
 import ViewContent						from 'com/view/content/content';
 import ViewFooter						from 'com/view/footer/footer';
 
-
 export default class Layout extends Component {
 	render( props ) {
 		let {user, featured, node, root} = props;

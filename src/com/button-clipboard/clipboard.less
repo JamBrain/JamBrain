@@ -1,0 +1,33 @@
+@import 'defs.less';
+
+#content .content-base .content-common-body .-c2cbutton {
+
+	padding: 0.1em;
+	color: @COL_NLLLL;
+
+	margin: 0em 0.25em;
+
+	display:inline-block;
+	vertical-align: middle;
+
+	&:hover,
+	&:focus {
+		background: @COL_A;
+		color: @COL_L;
+	}
+
+	&:active {
+		background: @COL_L;
+		color: @COL_A;
+	}
+
+	& > .svg-icon {
+		&.-success {
+			color: @COL_BC;
+		}
+
+		&.-error{
+			color: @COL_A;
+		}
+	}
+}

@@ -315,6 +315,7 @@ export default class ContentSimple extends Component {
 	}
 
 	render( props, state ) {
+
 		props = Object.assign({}, props);	// Shallow copy we can change props
 		let {node, user, path, extra, featured} = props;
 		let {author, authors} = state;
@@ -424,6 +425,8 @@ export default class ContentSimple extends Component {
 			if ( !props.notitle ) {
 				ShowTitle = <ContentCommonBodyTitle
 					href={node.path}
+					id={node.id}
+					minmax={props.minmax}
 					title={state.name}
 					hover={node.slug+' [$'+node.id+']'}
 					subtitle={props.subtitle}

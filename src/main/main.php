@@ -26,6 +26,17 @@ const DEFAULT_STATIC_DOMAIN = 'static.jam.vg';
 
 define( 'STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : DEFAULT_STATIC_DOMAIN );
 define( 'STATIC_ENDPOINT', '//'.STATIC_DOMAIN );
+const SHORTNER_DOMAINS = [
+	'ludumdare.org' => 'url.ludumdare.org',
+	'ludumdare.dev' => 'url.ludumdare.dev',
+	'jammer.work' => 'url.jammer.work',
+	'jammer.dev' => 'url.jammer.dev',
+	'ldjam.com' => 'ldj.am',
+	'jammer.vg' => 'jam.mr',
+];
+const DEFAULT_SHORTNER_DOMAIN = 'ldj.am';
+
+define( 'SHORTNER_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], SHORTNER_DOMAINS ) ? SHORTNER_DOMAINS[$_SERVER['SERVER_NAME']] : DEFAULT_SHORTNER_DOMAIN );
 define( 'LINK_SUFFIX', isset($_GET['nopush']) ? '; nopush' : '' );
 if ( !defined('API_DOMAIN') ) {
 	define( 'API_DOMAIN', 'api.'.$_SERVER['SERVER_NAME'] );
@@ -68,6 +79,7 @@ if ( !isset($_GET['nopreload']) ) {
 		var VERSION_STRING = "<?=VERSION_STRING?>";
 		var STATIC_DOMAIN = "<?=STATIC_DOMAIN?>";
 		var STATIC_ENDPOINT = "<?=STATIC_ENDPOINT?>";
+		var SHORTNER_DOMAIN = "<?=SHORTNER_DOMAIN?>";
 		var API_DOMAIN = "<?=API_DOMAIN?>";
 		var API_ENDPOINT = "<?=API_ENDPOINT?>";
 		var SERVER_TIMESTAMP = "<?=gmdate('Y-m-d\TH:i:s.000\Z'/*DATE_W3C*/);?>";
