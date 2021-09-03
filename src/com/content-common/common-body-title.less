@@ -38,15 +38,22 @@
 		}
 	}
 
-	& > .-text {
-		position: relative;
+	& > .-shortener {
+		font-size: 1.25em;
+	}
 
+	& > .-text {
 		font-size: 1.75em;
 
 		@media (max-width: (@BASE_WIDTH - 20em)) {
 			font-size: 1.9em;
 		}
 	}
+
+	& > .-text {
+		position: relative;
+	}
+
 
 	& > .-subtext {
 		font-size: 1.5em;
@@ -65,7 +72,7 @@
 		}
 	}
 
-	& svg {
+	& .-prefix {
 		margin-right: 0.5em;
 	}
 }
