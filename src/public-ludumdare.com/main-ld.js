@@ -10,6 +10,7 @@ import Router							from 'com/router/router';
 import Route							from 'com/router/route';
 
 import Layout							from "com/page/layout";
+import ViewFooter						from 'com/view/footer/footer';
 
 import PageRoot 						from 'com/page/root/root';
 import PagePage 						from 'com/page/node/page/page';
@@ -452,29 +453,32 @@ class Main extends Component {
 			document.title = this.getTitle(node);
 
 		return (
-			<Layout {...state}>
-				<Router node={node} props={NewProps} path={extra}>
-					<Route type="root" component={PageRoot} />
+			<div>
+				<Layout {...state}>
+					<Router node={node} props={NewProps} path={extra}>
+						<Route type="root" component={PageRoot} />
 
-					<Route type="page" component={PagePage} />
-					<Route type="post" component={PagePost} />
+						<Route type="page" component={PagePage} />
+						<Route type="post" component={PagePost} />
 
-					<Route type="item">
-						<Route subtype="game" component={PageItem} />
-					</Route>
+						<Route type="item">
+							<Route subtype="game" component={PageItem} />
+						</Route>
 
-					<Route type="tag" component={PageTag} />
+						<Route type="tag" component={PageTag} />
 
-					<Route type="user" component={PageUser} />
-					<Route type="users" component={PageUsers} />
+						<Route type="user" component={PageUser} />
+						<Route type="users" component={PageUsers} />
 
-					<Route type="event" component={PageEvent} />
-					<Route type={["events", "group", "tags"]} component={PageEvents} />
+						<Route type="event" component={PageEvent} />
+						<Route type={["events", "group", "tags"]} component={PageEvents} />
 
-					<Route type="error" component={PageError} />
-				</Router>
-				{this.getDialog()}
-			</Layout>
+						<Route type="error" component={PageError} />
+					</Router>
+					{this.getDialog()}
+				</Layout>
+				<ViewFooter/>
+			</div>
 		);
 	}
 }
