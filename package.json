@@ -4,7 +4,7 @@
   "description": "Custom CMS Platform",
   "main": "gulpfile.js",
   "dependencies": {
-    "babel-eslint": "^10.0.3",
+    "babel-eslint": "^10.1.0",
     "buble": "^0.20.0",
     "clean-css-cli": "^5.3.3",
     "es6": "^0.0.7",
