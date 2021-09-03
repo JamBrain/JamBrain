@@ -16,11 +16,13 @@
 
 	& > .-stars {
 		display: inline-block;
+
 		& > * {
 			display: inline-block;
 		}
 
 		color: @COL_ND;
+
 		& > .-lit {
 			color: @COL_AB;
 		}
@@ -31,6 +33,7 @@
 		& .-star.-hover:hover ~ .-star.-hover {
 			color: @COL_ND;
 		}
+
 		&:hover > .-star.-hover {
 			color: @COL_A;
 		}
