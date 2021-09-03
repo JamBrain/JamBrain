@@ -5,23 +5,23 @@
   "main": "gulpfile.js",
   "dependencies": {
     "babel-eslint": "^10.0.3",
-    "buble": "^0.17.3",
-    "clean-css-cli": "^4.3.0",
+    "buble": "^0.20.0",
+    "clean-css-cli": "^5.3.3",
     "es6": "^0.0.7",
     "es6-promise": "^4.2.8",
-    "eslint": "^6.5.1",
-    "less": "^3.10.3",
+    "eslint": "^7.32.0",
+    "less": "^4.1.1",
     "less-plugin-autoprefix": "^2.0.0",
-    "nodent": "^3.2.11",
+    "nodent": "^3.2.13",
     "preprocess-cli-tool": "^1.0.1",
     "rollup": "^1.23.1",
     "rollup-plugin-includepaths": "^0.2.3",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-nodent": "^0.2.2",
-    "stylelint": "^11.0.0",
-    "stylelint-config-recommended": "^3.0.0",
-    "svgo": "^1.3.0",
-    "uglify-js": "^3.6.1"
+    "stylelint": "^13.13.1",
+    "stylelint-config-recommended": "^5.0.0",
+    "svgo": "*",
+    "uglify-js": "^3.14.1"
   },
   "scripts": {
     "test": "echo \"WARN: no tests specified\" && exit 0"
