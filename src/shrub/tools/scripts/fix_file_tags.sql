@@ -1,0 +1,1 @@
+UPDATE `sh_node_meta` SET `b` = `value` WHERE `key` LIKE '%-tag';

@@ -27,6 +27,9 @@ export default class ContentUser extends Component {
 		props = Object.assign({}, props);	// Shallow copy we can change props
 		let {node, user, path, extra} = props;
 
+		if ( !node || !user )
+			return null;
+
 		// HACK! This should not need to be here
 		if ( node.type != 'user' )
 			return <ContentError>User {extra.length ? '"'+extra[0]+'"' : ''} not found</ContentError>;

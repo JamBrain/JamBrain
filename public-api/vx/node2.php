@@ -6,7 +6,7 @@ require_once __DIR__."/".SHRUB_PATH."api2.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
 
 
-const MAX_NODES = 250;
+const MAX_NODES = 500;
 
 
 function nodeAPI_Filter( $nodes, &$more_nodes ) {
@@ -136,21 +136,25 @@ api_Exec([
 	$RESPONSE['path'] = [];
 	$RESPONSE['extra'] = [];
 
+	$searching = true;
+
 	foreach ( json_ArgGet() as $slug ) {
 		$slug = coreSlugify_PathName($slug);
 
-		// Search by specific ID (i.e. $)
-		if ( !empty($slug) && ($slug[0] == '$') ) {
-			$node = intval(substr($slug, 1));
+		if ( $searching ) {
+			// Search by specific ID (i.e. $)
+			if ( !empty($slug) && ($slug[0] == '$') ) {
+				$node = intval(substr($slug, 1));
 
-			// Validate that node's parent correct
-			if ( nodeCache_GetParentById($node) !== $parent_id ) {
-				$node = 0;
+				// Validate that node's parent correct
+				if ( nodeCache_GetParentById($node) !== $parent_id ) {
+					$node = 0;
+				}
 			}
-		}
-		// Search by slug
-		else {
-			$node = nodeCache_GetIdByParentSlug($parent_id, $slug);
+			// Search by slug
+			else {
+				$node = nodeCache_GetIdByParentSlug($parent_id, $slug);
+			}
 		}
 
 		// If a valid node was found in the search
@@ -163,7 +167,11 @@ api_Exec([
 			if ( empty($slug) )
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
 
-			$RESPONSE['extra'][] = $slug;//coreSlugify_Name($slug); // already slugified
+			$RESPONSE['extra'][] = $slug; // already slugified
+
+			// Stop searching for new nodes. Everything else should be considered an extra
+			$searching = false;
+			$node = null;
 		}
 	}
 
@@ -218,17 +226,59 @@ api_Exec([
 	// if not logged in, where will be blank
 	$RESPONSE['where'] = nodeComplete_GetWhereIdCanCreate(userAuth_GetID());
 }],
-["node2/what", API_GET | API_AUTH | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
-	$parent_id = intval(json_ArgShift());
-	if ( !$parent_id )
+// Figure out what event is featured, and if you are athenticated, what you made for it.
+// NOTE: This is slightly different than the original behavior, but it combines several requests in to a single batch
+["node2/what", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
+	$root_id = intval(json_ArgShift());
+	if ( !$root_id )
 		json_EmitFatalError_BadRequest(null, $RESPONSE);
 
 	// At this point we can bail if it's just a HEAD request
 	if ( $HEAD_REQUEST )
 		json_EmitHeadAndExit();
 
-	// if not logged in, where will be blank
-	$RESPONSE['what'] = nodeComplete_GetWhatIdHasAuthoredByParent(userAuth_GetID(), $parent_id);
+	// First, lookup the root node
+	$root = nodeCache_GetById($root_id);
+	$RESPONSE['root'] = $root;
+
+	$featured_id = 0;
+	if ( isset($root['meta']) && isset($root['meta']['featured']) ) {
+		$featured_id = intval($root['meta']['featured']);
+	}
+	$featured = $featured_id ? nodeCache_GetById($featured_id) : null;
+	$RESPONSE['featured'] = $featured;
+
+	// Authentication: rather than error out (i.e. API_AUTH) we check user_id manually here
+	$user_id = userAuth_GetID();
+	$RESPONSE['node'] = ($user_id && $featured_id) ? nodeComplete_GetWhatIdHasAuthoredByParent($user_id, $featured_id) : [];
+}],
+// If you are athenticated, return your node, and any metadata that is for your eyes only.
+["node2/getmy", API_GET | API_AUTH | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
+	// At this point we can bail if it's just a HEAD request
+	if ( $HEAD_REQUEST )
+		json_EmitHeadAndExit();
+
+	$user_id = userAuth_GetID();
+	if ( $user_id ) {
+		$RESPONSE['cached'] = [];
+		$RESPONSE['node'] = nodeCache_GetById($user_id, $RESPONSE['cached']);
+
+		$meta = nodeMeta_ParseByNode($user_id);
+		$RESPONSE['meta'] = array_merge([],
+			// Public Meta from me (this is already in the node)
+			//isset($meta[0][SH_SCOPE_PUBLIC]) ? $meta[0][SH_SCOPE_PUBLIC] : [],
+			// Shared Meta from me
+			isset($meta[0][SH_SCOPE_SHARED]) ? $meta[0][SH_SCOPE_SHARED] : [],
+			// Procted Meta from me
+			isset($meta[0][SH_SCOPE_PRIVATE]) ? $meta[0][SH_SCOPE_PRIVATE] : []
+		);
+		$RESPONSE['refs'] = array_merge([],
+			// Public meta to me
+			isset($meta[1][SH_SCOPE_PUBLIC]) ? $meta[1][SH_SCOPE_PUBLIC] : [],
+			// Shared meta to me
+			isset($meta[1][SH_SCOPE_SHARED]) ? $meta[1][SH_SCOPE_SHARED] : []
+		);
+	}
 }],
 /// IMPORTANT: Yes, this does not require auth. When auth is unavailable, the love belongs to the IP address.
 ///    This does make it possible for every user to give 2 loves to a thing, but overall it's way better

@@ -72,7 +72,7 @@ switch ( $action ) {
 
 		// Determine the user's game in the referenced event.
 		$published_game = false;
-		$authored_ids = nodeComplete_GetWhatIdHasAuthoredByParent($user_id, $parent_id);
+		$authored_ids = nodeComplete_GetWhatIdsIdHasAuthoredByParent($user_id, $parent_id);
 		if ( !empty($authored_ids) ) {
 			$authored_list = nodeCache_GetById($authored_ids);
 			foreach ( $authored_list as $authored ) {

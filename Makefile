@@ -109,13 +109,13 @@ ROLLUP_ARGS			:=	-c src/config/rollup.config.js
 ifdef SOURCEMAPS
 ROLLUP_ARGS			+=	-m inline
 endif # SOURCEMAPS
-ROLLUP				=	$(NODEJS)/rollup/bin/rollup $(ROLLUP_ARGS) $(1) > $(2)
+ROLLUP				=	$(NODEJS)/rollup/dist/bin/rollup $(ROLLUP_ARGS) $(1) > $(2)
 # JS Preprocessor: https://github.com/moisesbaez/preprocess-cli-tool
 JS_PP_DEBUG			=	$(NODEJS)/preprocess-cli-tool/bin/preprocess.js -f $(1) -d $(2) -c '{"DEBUG": true}' -t js
 JS_PP_RELEASE		=	$(NODEJS)/preprocess-cli-tool/bin/preprocess.js -f $(1) -d $(2) -t js
-# JS Minifier: https://github.com/mishoo/UglifyJS2
+# JS Minifier: https://www.npmjs.com/package/uglify-js
 MINIFY_JS_RESERVED	:=	VERSION_STRING,STATIC_DOMAIN
-MINIFY_JS_ARGS		:=	--compress --mangle -r "$(MINIFY_JS_RESERVED)"
+MINIFY_JS_ARGS		:=	--compress --mangle reserved=["$(MINIFY_JS_RESERVED)"]
 MINIFY_JS			=	$(NODEJS)/uglify-js/bin/uglifyjs $(MINIFY_JS_ARGS) -o $(2) -- $(1)
 
 # CSS Compiler: http://lesscss.org/
@@ -130,12 +130,12 @@ STYLELINT_ARGS			:=	--syntax less --config src/config/.stylelintrc --config-base
 STYLELINT				=	$(NODEJS)/stylelint/bin/stylelint.js $(1) $(STYLELINT_ARGS)
 
 # SVG "Compiler", same as the minifier: https://github.com/svg/svgo
-SVGO_ARGS			:=	-q --disable=removeTitle --disable=removeDimensions --disable=removeViewBox
+SVGO_ARGS			:=	-q --config src/config/svgo.config.js
 SVGO				=	$(NODEJS)/svgo/bin/svgo $(SVGO_ARGS) -i $(1) -o $(2)
 # Mike's SVG Sprite Packer: https://github.com/povrazor/svg-sprite-tools
 SVG_PACK			=	src/tools/svg-sprite-pack $(1) > $(2)
 # SVG Minifier: https://github.com/svg/svgo
-MINIFY_SVG_ARGS		:=	--multipass --disable=cleanupIDs -q
+MINIFY_SVG_ARGS		:=	--multipass --config src/config/svgo_minify.config.js -q
 MINIFY_SVG			=	$(NODEJS)/svgo/bin/svgo $(MINIFY_SVG_ARGS) -i $(1) -o $(2)
 
 # Remove Empty Directories
@@ -145,6 +145,7 @@ RM_EMPTY_DIRS		=	find $(1) -type d -empty -delete 2>/dev/null |true
 SIZE				=	cat $(1) | wc -c
 GZIP_SIZE			=	gzip -c $(1) | wc -c
 
+ifneq ($(NOCOLOR),1)
 COL_OFF				=	\e[0m
 COL_RED				=	\e[91m
 COL_GREEN			=	\e[92m
@@ -153,6 +154,7 @@ COL_BLUE			=	\e[94m
 COL_PURPLE			=	\e[95m
 COL_CYAN			=	\e[96m
 COL_WHITE			=	\e[97m
+endif
 
 # Rules #
 default: target

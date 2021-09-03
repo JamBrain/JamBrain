@@ -28,22 +28,26 @@ export default class ContentUserBar extends Component {
 			ShowFollow = <CommonButtonFollow node={node} user={user} />;
 
 			// Only team leaders can add team members
-			if ( featured && featured.focus && featured.what_node && featured.what_node[featured.focus] && featured.what_node[featured.focus].author == user.id ) {
+			if ( featured && featured.focus_id && featured.what && featured.what[featured.focus_id] && featured.what[featured.focus_id].author == user.id ) {
 				// You can only add friends
 			}
 		}
 
-		const href = "/users/" + node.slug;
+		if ( node && user ) {
+      const href = "/users/" + node.slug;
+      
+			return (
+				<div class="content-user-bar">
+					<ContentCommonBodyAvatar href={href} src={node.meta && node.meta.avatar ? node.meta.avatar : ''} />
+					<ContentCommonBodyTitle href={href} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.slug} />
 
-		return (
-			<div class="content-user-bar">
-				<ContentCommonBodyAvatar href={href} src={node.meta && node.meta.avatar ? node.meta.avatar : ''} />
-				<ContentCommonBodyTitle href={href} title={node.meta['real-name'] ? node.meta['real-name'] : node.name} subtitle={'@'+node.slug} />
+					<ContentCommonNav>
+						{ShowFollow}
+					</ContentCommonNav>
+				</div>
+			);
+		}
 
-				<ContentCommonNav>
-					{ShowFollow}
-				</ContentCommonNav>
-			</div>
-		);
+		return null;
 	}
 }

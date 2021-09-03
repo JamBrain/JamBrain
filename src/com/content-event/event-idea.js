@@ -52,7 +52,7 @@ export default class ContentEventIdea extends Component {
 		//TODO: Handle more than 50 events with offsets
 		$Node.GetFeed(this.props.node.parent, 'parent', 'event', null, null, null, null, 50)
 			.then((r) => {
-				const events = r.feed.map((e) => (e.id));
+				const events = r.feed;//.map((e) => (e.id));
 				$Node.Get(events).then((r2) => {
 					const eventThemes = r2.node
 						.sort((n) => (n.meta['event-start']))

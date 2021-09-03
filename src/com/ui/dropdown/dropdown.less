@@ -4,13 +4,34 @@
 	vertical-align: top;
 	position: relative;
 
+	&.-show {
+		& > .-button {
+			z-index: 10001;
+		}
+
+		& > .-content {
+			z-index: 10000;
+		}
+
+		& > .-click-catcher {
+			z-index: 9999;
+		}
+	}
+
 	& > .-button {
-		z-index: 10001;
 		overflow: auto;
+		position: relative;
+
+		& > .-tick {
+			position: absolute;
+			margin: auto 0.5em;
+			top: 0;
+			bottom: 0;
+			right: 0;
+		}
 	}
 
 	& > .-content {
-		z-index: 10000;
 		position: absolute;
 
 		white-space: nowrap;
@@ -21,8 +42,6 @@
 	}
 
 	& > .-click-catcher {
-		z-index: 9999;
-
 		position: fixed;
 		left: 0px;
 		right: 0px;

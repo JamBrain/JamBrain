@@ -154,7 +154,7 @@ export default class DialogTV extends Component {
 			if ( props.extra[0] == "twitch" ) {
 				ShowStream = Video.EmbedTwitch(
 					"-tv",
-					"//player.twitch.tv/?channel="+props.extra[1],
+					"//player.twitch.tv/?channel="+props.extra[1]+"&parent="+window.location.host,
 					state.video[0],
 					state.video[1]
 				);
@@ -162,7 +162,7 @@ export default class DialogTV extends Component {
 				if ( state.showchat ) {
 					ShowSide = Video.EmbedTwitch(
 						"-chat",
-						"//www.twitch.tv/"+props.extra[1]+"/chat?popout=",
+						"//www.twitch.tv/embed/"+props.extra[1]+"/chat?parent="+window.location.host,
 						state.chat[0],
 						state.chat[1]
 					);

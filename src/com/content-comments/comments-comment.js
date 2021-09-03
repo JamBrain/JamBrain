@@ -237,10 +237,12 @@ export default class ContentCommentsComment extends Component {
 	render( props, state ) {
 		let {user, comment, author, error, node, isNodeAuthor, isMyComment, isMention} = props;
 
-		if ( author || (comment.author == 0) ) {
+		// Allow authored comments, or non-authored (i.e. anonymous)
+		if ( comment && (author || (comment.author == 0)) ) {
 			let Name = "Anonymous";
 			let Avatar = "///other/dummy/user64.png";
 
+			// Only if authored
 			if ( author ) {
 				Name = author.name;
 
@@ -266,6 +268,7 @@ export default class ContentCommentsComment extends Component {
 					<span>by <span class="-author">{Name}</span></span>
 				);
 
+				// Again, also only if authored
 				if ( author ) {
 					ShowTitle.push(
 						<span>&nbsp;(<NavLink class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</NavLink>){comment.anonymous ? " (Published Anonymously)" : ""}</span>
@@ -274,7 +277,7 @@ export default class ContentCommentsComment extends Component {
 
 				if ( comment.created ) {
 					ShowTitle.push(
-						<span>, published <span class="-date" title={getLocaleTimeStamp(Created)}>{getRoughAge(DateDiff)}</span><span title={getLocaleDate(Modified)}>{HasEdited?" (edited)":""}</span></span>
+						<span>, <span title={comment.id}>published</span> <span class="-date" title={getLocaleTimeStamp(Created)}>{getRoughAge(DateDiff)}</span><span title={getLocaleDate(Modified)}>{HasEdited?" (edited)":""}</span></span>
 					);
 				}
 				else {
@@ -287,7 +290,7 @@ export default class ContentCommentsComment extends Component {
 			//	ShowReply = <div class="-button -reply" onclick={this.onReply}><SVGIcon>reply</SVGIcon><div>Reply</div></div>;
 
 			let ShowEdit = null;
-			if ( user && (comment.author > 0) && (comment.author === user.id) && !state.editing )
+			if ( user && comment && (comment.author > 0) && (comment.author === user.id) && !state.editing )
 				ShowEdit = <div class="-button -edit" onclick={this.onEdit}><SVGIcon>edit</SVGIcon></div>;
 
 			let ShowLove = null;

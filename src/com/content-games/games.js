@@ -73,7 +73,7 @@ export default class ContentGames extends Component {
 	}
 
 	getMissingNodes() {
-		var keys = this.getFeedIdsWithoutNodes();
+		var keys = this.state.feed;//this.getFeedIdsWithoutNodes();
 
 		if ( keys.length ) {
 			return $Node.GetKeyed( keys )
@@ -177,7 +177,6 @@ export default class ContentGames extends Component {
 					return (
 						<ContentItemBox
 							node={r.node}
-							user={props.user}
 							path={props.path}
 							noevent={props.noevent ? props.noevent : null}
 						/>

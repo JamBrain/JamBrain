@@ -57,11 +57,11 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 
 					$pre_query[] = 'b'.$node_query;
 					if ( isset($node_args) ) $ARGS[] = $node_args;
-					
+
 					$post_query[] = "id IN (SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY a, b, `key`)";
 					$post_query[] = "scope=?";
 					$ARGS[] = 0;
-					
+
 					$authors = true;
 				break;
 				case 'unpublished':
@@ -112,7 +112,7 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 		else {
 			return null;	// Non strings, non arrays
 		}
-	
+
 		// Build query fragment for the subtypes check
 		if ( is_array($subtypes) ) {
 			$QUERY[] = 'subtype IN ("'.implode('","', $subtypes).'")';
@@ -126,7 +126,7 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 		else {
 			return null;	// Non strings, non arrays
 		}
-	
+
 		// Build query fragment for the subsubtypes check
 		if ( is_array($subsubtypes) ) {
 			$QUERY[] = 'subsubtype IN ("'.implode('","', $subsubtypes).'")';
@@ -167,7 +167,7 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 
 	$ARGS[] = $limit;
 	$ARGS[] = $offset;
-	
+
 	if ( $magic ) {
 		// NOTE: Timestamp is wrong! It should be the modified date of the original
 		return db_QueryFetch(
@@ -266,7 +266,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 	$NODE_ARGS = [];
 	$LINK_QUERY = [];
 	$LINK_ARGS = [];
-	
+
 	$JOIN_QUERY = [];
 	$JOIN_ARGS = [];
 
@@ -278,51 +278,51 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 	if ( !count($methods) ) {
 		return null;
 	}
-	
+
 	// Make sure $node_ids are usable
 	$valid_ids = dbQuery_AreIdsValid($node_ids);
 
 	$published = true;
 	$magic = null;
 	$link = null;
-	
+
 	$SORT_ORDER = 'DESC';
-	
+
 	// Build Method Queries
 	foreach ( $methods as &$method ) {
 		switch ( $method ) {
 			case 'all':
 				break;
-	
+
 			case 'parent':
 			case 'superparent':
 			case 'author':
 				if ( !$valid_ids )
 					return null;
-			
+
 //				dbQuery_MakeId($node_ids, 'm.'.$method, $MAGIC_QUERY, $MAGIC_ARGS);
 				dbQuery_MakeId($node_ids, 'n.'.$method, $NODE_QUERY, $NODE_ARGS);
 				break;
-	
+
 			case 'authors':
 				if ( !$valid_ids )
 					return null;
 
 				// 1st join limits our scope, binds ourself to the node table
-				$JOIN_QUERY[] = 
+				$JOIN_QUERY[] =
 					"INNER JOIN (
 						SELECT
 							id, a, b
-						FROM 
+						FROM
 							".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 						WHERE
 							scope=0
-					) 
-					AS authors ON 
+					)
+					AS authors ON
 						n.id = authors.a
 					";
 				// 2nd join limits us to only the newest IDs (and only authors as key never changes)
-				$JOIN_QUERY[] = 
+				$JOIN_QUERY[] =
 					"INNER JOIN (
 						SELECT
 							MAX(id) AS max
@@ -330,10 +330,10 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 							".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 						WHERE
 							`key`='author'
-						GROUP BY 
+						GROUP BY
 							a, b, `key`
 					)
-					AS sub_authors ON 
+					AS sub_authors ON
 						authors.id = sub_authors.max
 					";
 
@@ -346,15 +346,34 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 			case 'unpublished':
 				$published = false;
 				break;
-			
+
 			case 'reverse':
 				$SORT_ORDER = 'ASC';
 				break;
 
+			// All links that reference this
 			case 'target':
-				// All links that reference this
+				if ( !$valid_ids )
+					return null;
 
-				// NOTE: This WAS a double inner join, but maybe it's worth fixing this.
+				// join limits our scope, binds ourself to the node table
+				$JOIN_QUERY[] =
+					"INNER JOIN (
+						SELECT
+							id, a, b
+						FROM
+							".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
+						WHERE
+							scope=0
+					)
+					AS target ON
+						n.id = target.a
+					";
+
+				// Build an IN statement that confirms b points to us (i.e. the tag/target)
+				dbQuery_MakeId($node_ids, 'target.b', $LINK_QUERY, $LINK_ARGS);
+
+				$link = 'target';
 
 				break;
 
@@ -383,12 +402,12 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 				break;
 		};
 	}
-	
+
 	// Build published query
 	if ( $published ) {
 		$NODE_QUERY[] = "published > CONVERT(0, DATETIME)";
 	}
-	
+
 	// Build type queries
 	if ( $types )
 		dbQuery_Make($types, 'n.type', $NODE_QUERY, $NODE_ARGS);
@@ -401,7 +420,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 	if ( is_string($score_op) ) {
 		$MAGIC_QUERY[] = "m.score".$score_op;
 	}
-	
+
 	if ( $magic ) {
 		$MAGIC_QUERY[] = 'm.name=?';
 		$MAGIC_ARGS[] = $magic;
@@ -417,11 +436,13 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 		$LIMIT_QUERY[] = 'OFFSET ?';
 		$LIMIT_ARGS[] = $offset;
 	}
-	
-	// Execute Query
+
+	// Execute Query!
+	// We don't support combined LINK and SCORE queries (yet)
 	if ( $magic && $link ) {
-		
+
 	}
+	// LINK queries match something from the metadata table
 	else if ( $link ) {
 		if ( $published )
 			$ORDER_BY = "ORDER BY n.published $SORT_ORDER";
@@ -448,8 +469,9 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 			$LIMITS
 			;",
 			...$ARGS
-		);		
+		);
 	}
+	// SCORE queries are ordered by the result of something from the magic table
 	else if ( $magic ) {
 		$ORDER_BY = "ORDER BY m.score $SORT_ORDER";
 
@@ -475,6 +497,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 			...$ARGS
 		);
 	}
+	// Neither a LINK or SCORE query
 	else {
 		if ( $published )
 			$ORDER_BY = "ORDER BY n.published $SORT_ORDER";

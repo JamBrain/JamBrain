@@ -28,8 +28,6 @@ These folders contain the live sites that are served. They tend to be simple `PH
 
 * [/public-ludumdare.com](public-ludumdare.com/) - Ludum Dare focused version of the common site -- https://ldjam.com
   * This will be moving to `ludumdare.com` eventually.
-* /public-jammer.tv - Not yet in this repository. Coming soon. -- https://jammer.tv
-  * The TV widget uses the backend. The frontend site is not currently in active development.
 * [/public-url.shortener](public-url.shortener) - A variety of URL shortening services. -- https://ldj.am, https://jam.mr
   * At the moment only https://ldj.am/$id is supported, where $id is the node_id to redirect to. e.g. https://ldj.am/$11
   
@@ -54,6 +52,7 @@ Usage:
     * `make all` - Build all targets (default, until you set TARGET in `config.mk`)
     * `make TARGET=public-ludumdare.com` - Make a specific target (in this case, `public-ludumdare.com`)
     * `make mini` - Like `make`, but refreshes the UID (used to bypass caching proxies, etc)
+    * `make clean-some` - Clean, but don't delete the output files (useful when clean building on live)
     * `make clean-all` - Clean all targets
     * `make clean-svg`, `make clean-css`, `make clean-js` - Clean specifically the SVG, CSS, or JS
     * `make clean-all-svg`, `make clean-all-css`, `make clean-all-js` - Clean specifically the SVG, CSS, or JS of all targets

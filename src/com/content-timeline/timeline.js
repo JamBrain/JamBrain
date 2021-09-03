@@ -56,12 +56,12 @@ export default class ContentTimeline extends Component {
 				added++;
 			}
 		}
+
 		this.setState({'feed': feed, 'hash': hash, 'lastadded': added});
 	}
 
 	getFeedIdsWithoutNodes() {
 		var feed = this.state.feed;
-		var hash = this.state.hash;
 
 		var keys = [];
 		for (var idx = 0; idx < feed.length; idx++ ) {
@@ -72,7 +72,7 @@ export default class ContentTimeline extends Component {
 	}
 
 	getMissingNodes() {
-		let keys = this.getFeedIdsWithoutNodes();
+		let keys = this.state.feed;
 
 		if ( keys.length ) {
 			// Arguments here to pre-cache things for later (not actually used here, but they end up in the cache)
@@ -90,7 +90,7 @@ export default class ContentTimeline extends Component {
 					this.setState({'feed': feed, 'hash': hash});
 				})
 				.catch(err => {
-					this.setState({'error': ""+err});
+					this.setState({'error': err});
 				});
 		}
 	}
@@ -108,7 +108,7 @@ export default class ContentTimeline extends Component {
 				}
 			})
 			.catch(err => {
-				this.setState({'error': ""+err});
+				this.setState({'error': err});
 			});
 	}
 
@@ -135,7 +135,7 @@ export default class ContentTimeline extends Component {
 	makeFeedItem( node ) {
 		node = node.node;
 
-		if ( node ) {
+		if ( node && this.props ) {
 			var path = this.props.path+'/'+node.slug;
 			var user = this.props.user;
 			var extra = this.props.extra;
@@ -158,7 +158,7 @@ export default class ContentTimeline extends Component {
 		let ShowFeed = [];
 
 		if ( error ) {
-			ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>Error: {error}</ContentCommonBody></ContentCommon>);
+			ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>Error: {""+error}</ContentCommonBody></ContentCommon>);
 		}
 		else if ( feed && (feed.length == 0) ) {
 			if ( !props.noemptymessage ) {
