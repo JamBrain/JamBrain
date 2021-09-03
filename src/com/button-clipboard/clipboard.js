@@ -33,7 +33,7 @@ export default class CopyToClipboardButton extends ButtonBase {
 			}
 
 		}).catch((e) => {
-			console.log("Error copying short link to clipboard", e);
+			console.log("Error copying shortlink to clipboard", e);
 
 			this.setState({"state": "ERROR"});
 

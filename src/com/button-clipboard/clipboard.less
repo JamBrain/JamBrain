@@ -7,8 +7,12 @@
 
 	margin: 0em 0.25em;
 
-	display:inline-block;
-	vertical-align: middle;
+	display: inline-block;
+	/*vertical-align: middle;*/
+
+	&:hover {
+		cursor: pointer;
+	}
 
 	&:hover,
 	&:focus {
@@ -22,6 +26,8 @@
 	}
 
 	& > .svg-icon {
+		display: block;
+
 		&.-success {
 			color: @COL_BC;
 		}
