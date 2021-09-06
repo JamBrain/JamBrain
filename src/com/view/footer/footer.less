@@ -72,7 +72,7 @@
 		}
 
 		/* Grid */
-		> div {
+		.col {
 			//flex: 1;
 			width: 20%;
 
@@ -92,16 +92,49 @@
 		.tm {
 			margin: auto 0; /* align to middle */
 			width: 25%;
+		}
 
-			img {
-				max-width: 70%;
+		.nav {
+			width: 40%;
+			display: flex;
+			justify-content: space-between;
+
+			> div {
+				width: 45%;
 			}
 		}
 
 		.legal {
-			text-align: justify;
 			margin: auto 0; /* align to middle */
 			width: 25%;
+
+			text-align: justify;
+		}
+
+		@media (max-width: (@BASE_WIDTH - 20em)) {
+			width: 100%;
+			display: block;
+
+			.connect {
+				text-align: right;
+			}
+
+			.tm {
+				text-align: center;
+			}
+
+			.col {
+				margin: 3rem auto;
+				width: 90%;
+
+				&:first-child {
+					margin-top: 0;
+				}
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
 		}
 	}
 
@@ -129,8 +162,8 @@
 
 		@media (max-width: (@BASE_WIDTH - 20em)) {
 			width: 100%;
-
 			display: block;
+
 			letter-spacing: 0.1rem;
 			text-align: center;
 
