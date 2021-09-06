@@ -1,16 +1,134 @@
 @import "defs.less";
 
+@width: 1280px;
+
 #footer {
-	line-height: 1.5em;
-
 	color: @COL_NLLL;
-	background: @COL_NDDD;
-	padding: 2em;
+	background: @COL_NDDDDD;
 
-	& a,
-	& a:visited {
-		color: #F80;
+	letter-spacing: 0.05rem;
+
+	a {
+		text-decoration: none;
 	}
 
+	& h1 {
+		margin: 0;
+		padding: 0;
+		font-size: 1.1rem;
+		font-weight: normal;
 
+		color: white;
+
+		text-transform: uppercase;
+		letter-spacing: 0.2rem;
+	}
+
+	& .body {
+		width: @width;
+		margin: auto;
+		padding: 3rem 0;
+
+		font-size: 0.75rem;
+		color: #777;
+
+		display: flex;
+		justify-content: space-between;
+
+		& .icons svg {
+			fill: currentColor;
+			width: 24px;
+			height: 24px;
+		}
+
+		& .icons > a {
+			margin: 0.35rem;
+
+			&:first-child {
+				margin-left: 0;
+			}
+
+			&:last-child {
+				margin-right: 0;
+			}
+		}
+
+		& a {
+			color: #BBB;
+
+			&:hover {
+				color: #F80;
+			}
+		}
+
+		& section > section {
+			display: inline-block;
+			//margin: 0.5rem;
+			/*
+			&:first-child {
+				margin-left: 0;
+			}
+
+			&:last-child {
+				margin-right: 0;
+			}*/
+		}
+
+		/* Grid */
+		& > div {
+			//flex: 1;
+			width: 20%;
+
+			& section {
+				margin: 1.25rem 0;
+
+				&:first-child {
+					margin-top: 0;
+				}
+
+				&:last-child {
+					margin-bottom: 0;
+				}
+			}
+		}
+
+		& .tm {
+			margin: auto 0; /* align to middle */
+			width: 25%;
+
+			& img {
+				max-width: 70%;
+			}
+		}
+
+		& .legal {
+			text-align: justify;
+			margin: auto 0; /* align to middle */
+			width: 25%;
+		}
+
+
+	}
+
+	& .copyright {
+		border-top: 1px solid white;
+		padding: 1rem 0 3rem 0;
+		width: @width;
+		margin: auto;
+
+		font-size: 0.9rem;
+		text-transform: uppercase;
+		letter-spacing: 0.2rem;
+
+		display: flex;
+		justify-content: space-between;
+
+		& a {
+			color: white;
+
+			&:hover {
+				color: #F80;
+			}
+		}
+	}
 }
