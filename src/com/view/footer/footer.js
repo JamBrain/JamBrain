@@ -45,7 +45,7 @@ export default class ViewFooter extends Component {
 				</div>
 				</div>
 				<div class="copyright">
-					<section class="policies"><a href="/privacy">Privacy</a> | <a href="/terms">Terms</a> | <a href="/cookie">Cookie</a></section>
+					<section class="policies"><a href="/privacy">Privacy</a> | <a href="/cookie">🍪</a> | <a href="/terms">Terms</a></section>
 					<section>© {new Date().getFullYear()} <a href="https://interactivesnacks.com">Interactive Snacks Limited</a> 🍁</section>
 				</div>
 			</div>
