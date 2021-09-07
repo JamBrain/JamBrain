@@ -29,6 +29,7 @@ export default class ViewFooter extends Component {
 					<div class="connect">
 						<h1>CONNECT</h1>
 						<section><a href="https://ldjam.com/contact">Contact</a></section>
+						<section><a href="https://interactivesnacks.com/jobs">Jobs</a></section>
 						<section><a href="https://ldjam.com/support">Support Us!</a></section>
 						<section><a href="https://newsletter.ldjam.com" target="_blank">Email Newsletter</a></section>
 						<section class="icons">
