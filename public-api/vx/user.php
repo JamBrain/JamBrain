@@ -101,7 +101,7 @@ function mailSend_Now( $mail, $subject, $message ) {
 			}
 
 			$m->isSMTP();
-			$m->host = SMTP_SERVER;
+			$m->Host = SMTP_SERVER;
 
 			if ( defined("SMTP_USER") && defined("SMTP_PASSWORD") ) {
 				$m->SMTPAuth = true;
@@ -109,7 +109,7 @@ function mailSend_Now( $mail, $subject, $message ) {
 				$m->Password = SMTP_PASSWORD;
 			}
 
-			if ( defined(SMTP_PORT) ) {
+			if ( defined("SMTP_PORT") ) {
 				if ( SMTP_PORT == 465 ) {
 					$m->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
 				}
