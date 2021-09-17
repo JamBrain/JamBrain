@@ -48,10 +48,13 @@ json_Begin();
 
 // *** //
 
-const SH_MAIL_DOMAIN = "jammer.vg";
+#const SH_MAIL_DOMAIN = "jammer.vg";
+const SH_MAIL_DOMAIN = "ldjam.com";
 const SH_MAILER_RETURN = "hello@".SH_MAIL_DOMAIN;
+const SH_MAILER_SUPPORT = "support@".SH_MAIL_DOMAIN;
 
-const SH_SITE = "Jammer";
+#const SH_SITE = "Jammer";
+const SH_SITE = "LDJAM";
 const SH_MAILER = SH_SITE." <hello@".SH_MAIL_DOMAIN.">";
 //const SH_DOMAIN = "ldjam.com";
 define('SH_URL_SITE', isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : 'http://ludumdare.org');
@@ -98,6 +101,8 @@ function mailSend_UserAdd( $mail, $id, $key ) {
 		"Someone signed up on ".SH_URL_SITE." using your e-mail address.",
 		"",
 		"If that wasn't you then oops! Feel free to ignore this e-mail.",
+		"",
+		"If you have any issues, you can contact support at ".SH_MAILER_SUPPORT,
 		""
 	];
 
