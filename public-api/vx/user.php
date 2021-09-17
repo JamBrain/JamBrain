@@ -6,6 +6,13 @@ require_once __DIR__."/".SHRUB_PATH."api.php";
 require_once __DIR__."/".SHRUB_PATH."plugin.php";
 require_once __DIR__."/".SHRUB_PATH."user/user.php";
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require_once __DIR__."/".SHRUB_PATH.'external/PHPMailer/src/Exception.php';
+require_once __DIR__."/".SHRUB_PATH.'external/PHPMailer/src/PHPMailer.php';
+require_once __DIR__."/".SHRUB_PATH.'external/PHPMailer/src/SMTP.php';
+
 json_Begin();
 
 // *** Some older notes. Remove these *** //
@@ -48,10 +55,13 @@ json_Begin();
 
 // *** //
 
-const SH_MAIL_DOMAIN = "jammer.vg";
+#const SH_MAIL_DOMAIN = "jammer.vg";
+const SH_MAIL_DOMAIN = "ldjam.com";
 const SH_MAILER_RETURN = "hello@".SH_MAIL_DOMAIN;
+const SH_MAILER_SUPPORT = "support@".SH_MAIL_DOMAIN;
 
-const SH_SITE = "Jammer";
+#const SH_SITE = "Jammer";
+const SH_SITE = "LDJAM";
 const SH_MAILER = SH_SITE." <hello@".SH_MAIL_DOMAIN.">";
 //const SH_DOMAIN = "ldjam.com";
 define('SH_URL_SITE', isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : 'http://ludumdare.org');
@@ -79,13 +89,49 @@ function mailGen_Headers() {
 }
 
 function mailSend_Now( $mail, $subject, $message ) {
-	$headers = mailGen_Headers();
-	return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers), '-f '.SH_MAILER_RETURN);
+	//$headers = mailGen_Headers();
+
+	$m = new PHPMailer();
+
+	if ( defined("SMTP_SERVER") ) {
+		$m->isSMTP();
+		$m->host = SMTP_SERVER;
+
+		if ( defined("SMTP_USER") && defined("SMTP_PASSWORD") ) {
+			$m->SMTPAuth = true;
+			$m->Username = SMTP_USER;
+			$m->Password = SMTP_PASSWORD;
+		}
+
+		if ( defined(SMTP_PORT) ) {
+			$m->Port = SMTP_PORT;
+
+			if ( SMTP_PORT == 465 ) {
+				$m->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+			}
+		}
+	}
+
+	$m->CharSet = "UTF-8";
+	//$m->ContentType = CONTENT_TYPE_PLAINTEXT;
+	$m->XMailer = null;
+
+	$m->setFrom(SH_MAILER_RETURN, SH_SITE);
+	//$m->addReplyTo(SH_MAILER);
+	$m->addAddress($mail);
+
+	$m->Subject = $subject;
+	$m->Body = implode(CRLF, $message);		// HTML
+//	$m->AltBody = implode(CRLF, $message);	// TEXT
+
+	return $m->send();
+
+	//return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers), '-f '.SH_MAILER_RETURN);
 }
 
 
 function mailSend_UserAdd( $mail, $id, $key ) {
-	$subject = mailGen_Subject("Confirming your e-mail address");
+	$subject = mailGen_Subject("Confirm your e-mail address");
 	$message = [
 		"Here is your confirmation e-mail.",
 		"",
@@ -98,6 +144,9 @@ function mailSend_UserAdd( $mail, $id, $key ) {
 		"Someone signed up on ".SH_URL_SITE." using your e-mail address.",
 		"",
 		"If that wasn't you then oops! Feel free to ignore this e-mail.",
+		"",
+		"",
+		"If you have any issues, you can contact support at ".SH_MAILER_SUPPORT,
 		""
 	];
 
@@ -110,6 +159,9 @@ function mailSend_UserCreate( $mail, $slug ) {
 		"Your account \"$slug\" has been created!",
 		"",
 		"You can now log in on: ".SH_URL_SITE,
+		"",
+		"",
+		"If you have any issues, you can contact support at ".SH_MAILER_SUPPORT,
 		""
 	];
 
@@ -126,6 +178,9 @@ function mailSend_UserPasswordReset( $mail, $slug, $id, $key ) {
 		SH_URL_SITE."?".SH_ARGS."id=$id&key=$key".SH_PASSWORD,
 		"",
 		"If you do not wish to reset your password, or it was sent in error, then feel free to ignore this email.",
+		"",
+		"",
+		"If you have any issues, you can contact support at ".SH_MAILER_SUPPORT,
 		""
 	];
 
