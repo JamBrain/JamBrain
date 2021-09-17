@@ -8,6 +8,7 @@ require_once __DIR__."/".SHRUB_PATH."user/user.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
 
 require_once __DIR__."/".SHRUB_PATH.'external/PHPMailer/src/Exception.php';
 require_once __DIR__."/".SHRUB_PATH.'external/PHPMailer/src/PHPMailer.php';
@@ -91,40 +92,45 @@ function mailGen_Headers() {
 function mailSend_Now( $mail, $subject, $message ) {
 	//$headers = mailGen_Headers();
 
-	$m = new PHPMailer();
+	$m = new PHPMailer(true);
 
-	if ( defined("SMTP_SERVER") ) {
-		$m->isSMTP();
-		$m->host = SMTP_SERVER;
+	try {
+		if ( defined("SMTP_SERVER") ) {
+			//$m->SMTPDebug = SMTP::DEBUG_SERVER;
+			$m->isSMTP();
+			$m->host = SMTP_SERVER;
 
-		if ( defined("SMTP_USER") && defined("SMTP_PASSWORD") ) {
-			$m->SMTPAuth = true;
-			$m->Username = SMTP_USER;
-			$m->Password = SMTP_PASSWORD;
-		}
+			if ( defined("SMTP_USER") && defined("SMTP_PASSWORD") ) {
+				$m->SMTPAuth = true;
+				$m->Username = SMTP_USER;
+				$m->Password = SMTP_PASSWORD;
+			}
 
-		if ( defined(SMTP_PORT) ) {
-			$m->Port = SMTP_PORT;
+			if ( defined(SMTP_PORT) ) {
+				$m->Port = SMTP_PORT;
 
-			if ( SMTP_PORT == 465 ) {
-				$m->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+				if ( SMTP_PORT == 465 ) {
+					$m->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+				}
 			}
 		}
+
+		$m->CharSet = "UTF-8";
+		//$m->ContentType = CONTENT_TYPE_PLAINTEXT;
+		$m->XMailer = null;
+
+		$m->setFrom(SH_MAILER_RETURN, SH_SITE);
+		//$m->addReplyTo(SH_MAILER);
+		$m->addAddress($mail);
+
+		$m->Subject = $subject;
+		$m->Body = implode(CRLF, $message);		// HTML
+	//	$m->AltBody = implode(CRLF, $message);	// TEXT
+
+		return $m->send();
+	} catch (Exception $e) {
+		trigger_error("Message could not be sent: ".$m->ErrorInfo, E_USER_ERROR);
 	}
-
-	$m->CharSet = "UTF-8";
-	//$m->ContentType = CONTENT_TYPE_PLAINTEXT;
-	$m->XMailer = null;
-
-	$m->setFrom(SH_MAILER_RETURN, SH_SITE);
-	//$m->addReplyTo(SH_MAILER);
-	$m->addAddress($mail);
-
-	$m->Subject = $subject;
-	$m->Body = implode(CRLF, $message);		// HTML
-//	$m->AltBody = implode(CRLF, $message);	// TEXT
-
-	return $m->send();
 
 	//return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers), '-f '.SH_MAILER_RETURN);
 }
