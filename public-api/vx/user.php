@@ -115,6 +115,10 @@ function mailSend_Now( $mail, $subject, $message ) {
 				if ( SMTP_PORT == 465 ) {
 					$m->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
 				}
+
+				if ( SMTP_PORT == 587 ) {
+					$m->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+				}
 			}
 		}
 
@@ -133,7 +137,7 @@ function mailSend_Now( $mail, $subject, $message ) {
 
 		return $m->send();
 	} catch (Exception $e) {
-		trigger_error("Message could not be sent: ".$m->ErrorInfo, E_USER_ERROR);
+		trigger_error("Message could not be sent [".(extension_loaded('openssl')?"SSL":"No SSL")."]: ".$m->ErrorInfo." [".$m->Host.":".$m->Port.", ".(int)$m->SMTPSecure."]", E_USER_ERROR);
 	}
 
 	//return mail($mail, $subject, implode(CRLF, $message), implode(CRLF, $headers), '-f '.SH_MAILER_RETURN);
