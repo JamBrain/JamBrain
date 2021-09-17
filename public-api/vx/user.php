@@ -96,7 +96,10 @@ function mailSend_Now( $mail, $subject, $message ) {
 
 	try {
 		if ( defined("SMTP_SERVER") ) {
-			//$m->SMTPDebug = SMTP::DEBUG_SERVER;
+			if ( defined("SMTP_DEBUG") ) {
+				$m->SMTPDebug = SMTP::DEBUG_SERVER;
+			}
+
 			$m->isSMTP();
 			$m->host = SMTP_SERVER;
 
@@ -124,7 +127,8 @@ function mailSend_Now( $mail, $subject, $message ) {
 		$m->addAddress($mail);
 
 		$m->Subject = $subject;
-		$m->Body = implode(CRLF, $message);		// HTML
+		//$mail->isHTML(true);
+		$m->Body = implode(CRLF, $message);		// HTML (if set)
 	//	$m->AltBody = implode(CRLF, $message);	// TEXT
 
 		return $m->send();
