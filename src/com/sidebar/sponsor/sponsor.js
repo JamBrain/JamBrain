@@ -11,19 +11,23 @@ export default class ViewSidebar extends Component {
 
 	render( {}, {} ) {
 		/* If event is active, and it's sponsored */
-		if ( false ) {
+		if ( true ) {
 			return (
-				<div class="sidebar-base sidebar-shortlist sidebar-sponsor _hidden">
+				<div class="sidebar-base sidebar-shortlist sidebar-sponsor">
 					<div class="-title _font2"><SVGIcon baseline>trophy</SVGIcon> <span class="-text">Sponsored by</span></div>
+					<div><IMG2 src="///other/event/sample/sponsor/product.png" /></div>
+				</div>
+			);
+		}
+
+/*
 					<div><IMG2 src="///other/event/sample/sponsor/product.png" /></div>
 					<div><IMG2 src="///other/event/sample/sponsor/company.png" /></div>
 					<div class="-silver">
 						<div><IMG2 src="///other/event/sample/sponsor/tagline.png" /></div>
 						<div><IMG2 src="///other/event/sample/sponsor/example.png" /></div>
 					</div>
-				</div>
-			);
-		}
+*/
 		return null;
 	}
 };
