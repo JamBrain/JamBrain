@@ -15,7 +15,7 @@ export default class ViewSidebar extends Component {
 			return (
 				<div class="sidebar-base sidebar-shortlist sidebar-sponsor">
 					<div class="-title _font2"><SVGIcon baseline>trophy</SVGIcon> <span class="-text">Sponsored by</span></div>
-					<div><IMG2 src="///other/event/sample/sponsor/product.png" /></div>
+					<div><a href="/events/ludum-dare/49/$258334/ann-intel-sponsors-ludum-dare-49"><IMG2 src="///content/b/z/42d0f.png.w240.png" /></a></div>
 				</div>
 			);
 		}
