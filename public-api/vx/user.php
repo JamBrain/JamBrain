@@ -656,11 +656,8 @@ switch ( $action ) {
 
 			// Success
 			$RESPONSE['id'] = $user['node'];
+			userAuth_SetId($user['node']);
 
-			userSession_Start();
-			$_SESSION['id'] = $user['node'];
-			$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
-			userSession_End();
 
 			break; // case 'login': //user/login
 		}
