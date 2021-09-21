@@ -1,6 +1,6 @@
 # Ludum Dare
 
-This is the source code for the Ludum Dare family of websites! It's currently live here: 
+This is the source code for the Ludum Dare event website(s)! It's currently live here: 
 
 https://ldjam.com/
 
