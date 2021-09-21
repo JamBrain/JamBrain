@@ -12,12 +12,14 @@ const DOMAIN_REDIRECT_TABLE = [
 	'url.ldjam.work' => 'ldjam.work',
 	'url.ldjam.dev' => 'ldjam.dev',
 	'url.jammer.work' => 'jammer.work',
-	'url.jammer.dev' => 'jammer.dev',
+	//'url.jammer.dev' => 'jammer.dev',
+	'url.bio.jammer.work' => 'bio.jammer.work',
+	//'url.bio.jammer.dev' => 'bio.jammer.dev',
 
 	'ldj.am' => 'ldjam.com',
 	'jam.vg' => 'jammer.vg',
 	'jam.bio' => 'jammer.bio',
-	//'jam.mr' => 'jammer.vg',
+	//'jam.mr' => 'jammer.vg', 
 ];
 
 $action = json_ArgShift();
