@@ -31,7 +31,7 @@ Inside you will find a variety of code in a variety of formats.
 ## Sites
 The data shared across sites is called the **Jammer Core**. Each site is a different interpretation of **Jammer Core**'s data.
 
-* [/public-ludumdare.com/](public-ludumdare.com/) - Ludum Dare (ludumdare.com) - Ludum Dare focused View
+* [/public-ludumdare.com/](public-ludumdare.com/) - Ludum Dare (ldjam.com) - Ludum Dare focused View
 * [/public-jammer.vg/](public-jammer.vg/) - Jammer (jammer.vg) - Normal View
 * [/public-jammer.bio/](public-jammer.bio/) - Jammer.Bio - User Page and Content View (like a portfolio)
 
