@@ -18,15 +18,15 @@ function userAuth_Start() {
 
 	// IP Check. If different, expire the session
 	if (isset($_SESSION['ip']) && ($_SESSION['ip'] !== $_SERVER['REMOTE_ADDR'])) {
-		// If it's been less than 24 hours, allow IP changing (i.e. Wifi to Mobile Data switching)
+		// If it's been more than 24 hours, expire the session (logout)
+		// This allows IP changing (i.e. Wifi to Mobile Data switching)
 		if (isset($_SESSION['LAST_ACTIVITY']) && (time() - intval($_SESSION['LAST_ACTIVITY']) > (24*60*60))) {
 			userSession_Expire();
 			return;
 		}
 	}
 
-	// Take note of when you last did something
-	// If it was 3 days hours ago, log you out
+	// If it the last time you did anything was 3 days ago, expire the session (logout)
 	if (isset($_SESSION['LAST_ACTIVITY']) && (time() - intval($_SESSION['LAST_ACTIVITY']) > (3*24*60*60))) {
 		userSession_Expire();
 		return;
@@ -57,7 +57,7 @@ function userAuth_Start() {
 // Is active user a user (i.e. logged in)
 function userAuth_GetId() {
 	global $USER;
-	return isset($USER['id']) ? $USER['id'] : 0;
+	return (isset($USER) && isset($USER['id'])) ? $USER['id'] : 0;
 	//return isset($_SESSION['id']) ? intval($_SESSION['id']) : 0;
 }
 
