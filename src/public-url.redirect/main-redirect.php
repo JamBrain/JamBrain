@@ -7,13 +7,17 @@ require_once __DIR__."/".SHRUB_PATH."api.php";
 json_Begin();
 
 const DOMAIN_REDIRECT_TABLE = [
-	'url.ludumdare.org' => 'ludumdare.org',
-	'url.ludumdare.dev' => 'ludumdare.dev',
+	'url.ludumdare.org' => 'ludumdare.org',	// legacy
+	'url.ludumdare.dev' => 'ludumdare.dev',	// legacy
+	'url.ldjam.work' => 'ldjam.work',
+	'url.ldjam.dev' => 'ldjam.dev',
 	'url.jammer.work' => 'jammer.work',
 	'url.jammer.dev' => 'jammer.dev',
 
 	'ldj.am' => 'ldjam.com',
-	'jam.mr' => 'jammer.vg',
+	'jam.vg' => 'jammer.vg',
+	'jam.bio' => 'jammer.bio',
+	//'jam.mr' => 'jammer.vg',
 ];
 
 $action = json_ArgShift();
