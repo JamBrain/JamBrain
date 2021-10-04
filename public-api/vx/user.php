@@ -79,6 +79,7 @@ const PASSWORD_MIN_LENGTH = 8;
 function mailGen_Subject( $subject ) {
 	return "[".SH_SITE."] ".$subject;
 }
+/*
 function mailGen_Headers() {
 	return [
 		"MIME-Version: 1.0",
@@ -88,8 +89,9 @@ function mailGen_Headers() {
 //		"Return-Path: ".SH_MAILER_RETURN,
 	];
 }
+*/
 
-function mailSend_Now( $mail, $subject, $message ) {
+function mailSend_Now( $mail, $subject, $message, $pm_stream = null ) {
 	//$headers = mailGen_Headers();
 
 	$m = new PHPMailer(true);
@@ -102,6 +104,10 @@ function mailSend_Now( $mail, $subject, $message ) {
 
 			$m->isSMTP();
 			$m->Host = SMTP_SERVER;
+
+			if ( is_string($pm_stream) ) {
+				$m->addCustomHeader('X-PM-Message-Stream', $pm_stream);
+			}
 
 			if ( defined("SMTP_USER") && defined("SMTP_PASSWORD") ) {
 				$m->SMTPAuth = true;
@@ -168,7 +174,7 @@ function mailSend_UserAdd( $mail, $id, $key ) {
 		""
 	];
 
-	return mailSend_Now($mail, $subject, $message);
+	return mailSend_Now($mail, $subject, $message, 'user-confirm');
 }
 
 function mailSend_UserCreate( $mail, $slug ) {
@@ -183,7 +189,7 @@ function mailSend_UserCreate( $mail, $slug ) {
 		""
 	];
 
-	return mailSend_Now($mail, $subject, $message);
+	return mailSend_Now($mail, $subject, $message, 'user-new');
 }
 
 function mailSend_UserPasswordReset( $mail, $slug, $id, $key ) {
@@ -202,7 +208,7 @@ function mailSend_UserPasswordReset( $mail, $slug, $id, $key ) {
 		""
 	];
 
-	return mailSend_Now($mail, $subject, $message);
+	return mailSend_Now($mail, $subject, $message, 'user-password-reset');
 }
 
 
