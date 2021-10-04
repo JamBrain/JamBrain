@@ -79,6 +79,7 @@ const PASSWORD_MIN_LENGTH = 8;
 function mailGen_Subject( $subject ) {
 	return "[".SH_SITE."] ".$subject;
 }
+/*
 function mailGen_Headers() {
 	return [
 		"MIME-Version: 1.0",
@@ -88,6 +89,7 @@ function mailGen_Headers() {
 //		"Return-Path: ".SH_MAILER_RETURN,
 	];
 }
+*/
 
 function mailSend_Now( $mail, $subject, $message, $pm_stream = null ) {
 	//$headers = mailGen_Headers();
