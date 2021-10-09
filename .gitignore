@@ -15,6 +15,7 @@ config.php
 config.js
 config.mk
 node_modules/
+.npmrc
 -/
 *.gz
 /src/shrub/docs

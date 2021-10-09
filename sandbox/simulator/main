@@ -47,12 +47,12 @@ if ( count($argv) < 3  || ($argv[2] != "actions" && $argv[2] != "minutes")) {
 }
 
 
-# Decide what model to use for this run
+// Decide what model to use for this run
 $model = "model_default";
 
 
 
-# Load model
+// Load model
 include __DIR__."/".$model;
 
 
@@ -105,7 +105,7 @@ $eventsId = db_QueryFetchValue(
 			n.id
 		FROM
 			".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
-		WHERE n.type = 'events'
+		WHERE n.type = 'group' AND n.subtype = 'events' AND n.slug = 'ludum-dare'
 		LIMIT 1
 		;"
 	);

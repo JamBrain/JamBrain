@@ -42,7 +42,7 @@ function GenerateRandomPostTitle()
 	return GenerateRandomPhrase(2,7);
 }
 
-// Future: something much more meaningful. Also figure out how to include image uploads, links, other fun features.
+// Future: something much more meaningful.
 function GenerateRandomPostText($maxParagraphs = 8)
 {
 	global $usewikitext;
@@ -50,7 +50,7 @@ function GenerateRandomPostText($maxParagraphs = 8)
 	{
 		$stack = 10;
 		$paragraphs = 0;
-		for($i=0;$i<$stack;$i++) { $paragraphs += random_int(-$maxParagraphs,$maxParagraphs); }
+		for($i=0;$i<$stack;$i++) { $paragraphs += random_int(-0.5*$maxParagraphs,$maxParagraphs); }
 		
 		$paragraphs = ceil($paragraphs/$stack);
 		if($paragraphs < 1) $paragraphs = 1;
@@ -162,18 +162,31 @@ function AddWikipediaText()
 		return;
 	}
 	
-	// Get data between '<div class="mw-parser-output">' and '<div class="printfooter">'
+	// We don't care about the header is site nav so discard anthing before the main content
 	$parts1 = explode('<div class="mw-parser-output">', $data, 2);
-	if(count($parts1) != 2) { ReportError("Error in parsing wikipedia page"); return; }
-	$parts2 = explode('<div class="printfooter">',$parts1[1], 2);
-	if(count($parts2) != 2) { ReportError("Error in parsing wikipedia page"); return; }
-	
+	if(count($parts1) != 2) { print("Error in parsing wikipedia page"); return; }
+
+	// We also don't want references or the page footer
+	$parts2 = explode('<span class="mw-headline" id="References">References</span>',$parts1[1], 2);
+	if(count($parts2) != 2) {
+		$parts2 = explode('<footer id="footer"',$parts1[1], 2);
+		if(count($parts2) != 2) {
+			print("Error in parsing wikipedia page");
+			return;
+		}
+	}
+
+
+	$content = $parts2[0];
 	// Remove all html tags and [#] references. Remove quotation marks. Remove commas.
-	$content = preg_replace('/<[^>]+>/','',$parts2[0]);
-	$content = preg_replace('/\[\d+\]/','',$content);
-	$content = str_replace('"','',$content);
-	$content = str_replace(',','',$content);
-	
+	$content = preg_replace('/<style([\s\S]+?)<\/style>/m','',$content); // styles
+	$content = preg_replace('/<script([\s\S]+?)<\/script>/m','',$content); // scripts
+	$content = preg_replace('/<[^>]+>/','',$content); // html tags
+	$content = preg_replace('/&#91;\d*&#93;/m','',$content); // [1] refs
+	$content = preg_replace('/&#\d*;/m','',$content); // special chars
+
+	$content = preg_replace('/^\n\n*/m','',$content); // multiplenew lines
+
 	// Split on period and newline, eliminate duplicate spaces
 	$content = str_replace('.',"\n",$content);
 	
@@ -388,6 +401,7 @@ function RandomLink()
 			"github.com/ludumdare/ludumdare",
 			"twitch.tv",
 			"twitch.tv/quill18",
+			"twitch.tv/directory/all/tags/c8d6d6ee-3b02-4ae7-81e9-4c0f434941cc",
 			"reddit.com",
 			"reddit.com/r/ludumdare",
 			"twitter.com",
@@ -395,10 +409,13 @@ function RandomLink()
 			"twitter.com/ludumdarefeed/status/870705616175603712",
 			"soundcloud.com",
 			"soundcloud.com/ludumdare",
-			"soundcloud.com/ludumdare/amen"
+			"soundcloud.com/ludumdare/amen",
+			"itch.io",
+			"itch.io/games/tag-ludum-dare-49",
+			"itch.io/search?q=LudumDare"
 		);
 
-		// chose which video to display and build it's url
+		// chose which link to display and build it's url
 		$index = random_int(0,count($links)-1);
 		$url = $links[$index];
 

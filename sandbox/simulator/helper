@@ -8,7 +8,7 @@
 
 function RunMagic()
 {
-	Verbose("Kickoff cron magic.php task to update necessary values in the db.");
+	Verbose("Kicking off cron magic.php task to update necessary values in the db.");
 	exec("php ~/www/private/magic.php");
 }
 
@@ -475,7 +475,7 @@ function CreateComment(&$user, $nodeid, $body, $anonymous = null)
 
 function LikeNode(&$user, $nodeid)
 {
-	# If we haven't already, add a like to this node. 
+	// If we haven't already, add a like to this node. 
 	if(array_key_exists($nodeid, $user["love"])) return;
 
 	Verbose("Add like for Node " . $nodeid);
@@ -489,7 +489,7 @@ function LikeNode(&$user, $nodeid)
 
 function LikeComment(&$user, $commentid)
 {
-	# If we haven't already, add a like to this comment
+	// If we haven't already, add a like to this comment
 	if(array_key_exists(-$commentid, $user["love"])) return;
 	
 	Verbose("Add like for Note " . $commentid);
@@ -605,7 +605,7 @@ function AddMissingTags()
 		"Toaster" => "Please remember to warn your users to unplug the appliance while inserting and removing games"
 	];
 	
-	# Enumerate existing tags in category.
+	// Enumerate existing tags in category.
 	function LoadTagsForCategory($category)
 	{
 		$simple = node_GetSimpleByType("tag",$category);
@@ -615,7 +615,7 @@ function AddMissingTags()
 			$tagids[] = $s["id"];
 		}
 		
-		# Get complete nodes for the tags.
+		// Get complete nodes for the tags.
 		if(count($tagids) > 0)
 		{
 			$nodes = nodeComplete_GetById($tagids);

@@ -176,7 +176,7 @@ function SetupEvent()
 
 
 	// Create event
-	$event_nodeid = node_Add( $eventsId, $author, "event", "", "", null, $eventname, $eventbody);
+	$event_nodeid = node_Add( $eventsId, $author, "event", "ld", "", $eventindex, $eventname, $eventbody);
 
 	// Add metadata
 	nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'event-start', $formatStart);
@@ -341,8 +341,8 @@ function EndCompo()
 	global $event_nodeid, $event_admin_user;
 	
 	Verbose("Computing results...");
-	LogExec("sudo php ../src/shrub/tools/grade/grade itsautomatic score compo 7"); # Require 7 ratings to be placed.
-	LogExec("sudo php ../src/shrub/tools/grade/grade itsautomatic score jam 7"); # Require 7 ratings to be placed.
+	LogExec("sudo php ../src/shrub/tools/grade/grade itsautomatic score compo 7"); // Require 7 ratings to be placed.
+	LogExec("sudo php ../src/shrub/tools/grade/grade itsautomatic score jam 7"); // Require 7 ratings to be placed.
 	
 	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '8')) ReportError("Failed to add event meta through API");
 	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-grade', '0')) ReportError("Failed to add event meta through API");
