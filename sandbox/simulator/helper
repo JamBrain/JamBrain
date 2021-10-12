@@ -594,31 +594,29 @@ function PublishGame(&$user)
 
 function AddMissingTags()
 {
-	global $event_admin_user;
-	
+	global $tagsId;
+
+	VerboseAction("Checking Tags");
+
 	// Platform tags
-	$defaulttags = [
-		"Source Code", "Windows", "Linux", "Html5 (Web)", "macOS", "Android", "Gameboy", "Toaster"
+	$defaults = [
+		"platform" => ["Source Code", "Windows", "Linux", "Html5 (Web)", "macOS", "Android", "Gameboy", "Toaster"],
+		"genre" => ["Arcade", "FPS", "Strategy", "RPG", "Puzzle"],		
 	];
-	$defaultwarnings = [
+	$warnings = [
 		"Linux" => "If you used the default Unity export options for Linux, you may want to re-export with the 'Universal' preset to make the game playable by more Linux users.",
 		"Toaster" => "Please remember to warn your users to unplug the appliance while inserting and removing games"
 	];
 	
 	// Enumerate existing tags in category.
-	function LoadTagsForCategory($category)
+	function LoadTagsForCategory($catid)
 	{
-		$simple = node_GetSimpleByType("tag",$category);
-		$tagids = [];
-		foreach($simple as $s)
-		{
-			$tagids[] = $s["id"];
-		}
-		
+		$tag = node_GetIdByParentType($catid,"tag");
+
 		// Get complete nodes for the tags.
-		if(count($tagids) > 0)
+		if(count($tag) > 0)
 		{
-			$nodes = nodeComplete_GetById($tagids);
+			$nodes = nodeComplete_GetById($tag);
 			return $nodes;
 		}
 		return [];
@@ -626,46 +624,63 @@ function AddMissingTags()
 
 	function SetWarning($id, $warning)
 	{
+		Verbose("\t\tSet Warning for ". $id);
 		nodeMeta_AddOrphan($id, 0, SH_SCOPE_PUBLIC, 'tag-warning', $warning);
 	}
-	Function AddNewTag($userid, $category, $name, $warning = null)
-	{
-		$parent = 1; // For now hardcode root = 1
-		$slug = coreSlugify_Name($name);
-		$newtag = node_Add( $parent, $userid, "tag", $category, "", $slug, $name, "");
 
-		if($warning != null)
-		{
-			SetWarning($newtag, $warning);
+	$category_ids = node_GetIdByParentType($tagsId, "group", "tags", null);
+	$categories = [];
+	foreach($category_ids as $c)
+	{
+		$categories[] = node_GetById($c);
+	}
+
+	foreach ($defaults as $default_cat => $default_tags)
+	{
+		// see if the category we want to add already exists
+		$catid = false;
+		foreach($categories as $cat) {
+
+			if ($default_cat == $cat["name"]){
+				$catid = $cat["id"];
+				Verbose("Found category ".$default_cat);
+			}
 		}
-	}
 
-
-	$category = "platform";
-	$userid = $event_admin_user["id"];
-	$nodes = LoadTagsForCategory($category);
-
-	$nodebyname = [];
-	foreach($nodes as $n)
-	{
-		$nodebyname[$n["name"]] = $n;
-	}
-	
-	foreach($defaulttags as $tag)
-	{
-		$warning = null;
-		if(key_exists($tag, $defaultwarnings))
-		{
-			$warning = $defaultwarnings[$tag];
+		// If we couldn't find it, the add it
+		if(!$catid) { 
+			$catid = node_Add($tagsId, 0, 'group', 'tags', '', coreSlugify_Name($default_cat), $default_cat, '');
+			node_Publish($catid, true);
+			Verbose("Added category ".$default_cat);
 		}
 		
-		if(!key_exists($tag, $nodebyname))
-		{
-			Verbose("Adding missing platform tag '$tag'");
-			
-			AddNewTag($userid, $category, $tag, $warning);
+		$tags = LoadTagsForCategory($catid);
+		foreach($default_tags as $default_tag) {
+
+			// see if the category we want to add already exists
+			$tagid = false;
+			if (count($tags) > 0){
+				foreach($tags as $tag) {
+					if ($default_tag == $tag["name"]){
+						$tagid = $tag["id"];
+						Verbose("\tFound tag ".$default_tag);
+					}
+				}
+			}
+
+			// If we couldn't find it, the add it
+			if(!$tagid) {
+				$tagid = node_Add($catid, 0, 'tag', '', '', coreSlugify_Name($default_tag), $default_tag, '');
+				node_Publish($tagid, true);
+				Verbose("\tAdded tag ".$default_tag);
+			}
+
+			// Add any warnings
+			if (array_key_exists($default_tag,$warnings)){
+				SetWarning($tagid, $warnings[$default_tag]);
+			}
+
+
 		}
 	}
 }
-
-

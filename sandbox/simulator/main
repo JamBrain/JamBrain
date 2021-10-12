@@ -46,7 +46,6 @@ if ( count($argv) < 3  || ($argv[2] != "actions" && $argv[2] != "minutes")) {
 	exit(1);
 }
 
-
 // Decide what model to use for this run
 $model = "model_default";
 
@@ -110,7 +109,17 @@ $eventsId = db_QueryFetchValue(
 		;"
 	);
 
-if ($eventsId == null) {
+$tagsId = db_QueryFetchValue(
+		"SELECT
+			n.id
+		FROM
+			".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
+		WHERE n.type = 'group' AND n.subtype = 'tags'
+		LIMIT 1
+		;"
+	);
+
+if ($eventsId == null or $tagsId == null) {
 	ReportError("Your databases are not correctly setup");
 	print "\n";
 	print "  In the home directory of your scotch box, run db-create.sh\n";
