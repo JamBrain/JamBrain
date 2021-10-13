@@ -674,7 +674,7 @@ function AddMissingTags()
 
 			// If we couldn't find it, the add it
 			if(!$tagid) {
-				$tagid = node_Add($catid, 0, 'tag', '', '', coreSlugify_Name($default_tag), $default_tag, '');
+				$tagid = node_Add($catid, 0, 'tag', $default_cat, '', coreSlugify_Name($default_tag), $default_tag, '');
 				node_Publish($tagid, true);
 				Verbose("\tAdded tag ".$default_tag);
 			}
