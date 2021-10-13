@@ -131,6 +131,7 @@ function GenerateRandomPhrase($minWords, $maxWords)
 function SetupTextGeneration($articles = 10)
 {
 	MarkovReset();
+	Message("Reading Wikipedia ".$articles." Articles");
 	for($i=0; $i < $articles; $i++)
 	{
 		AddWikipediaText();
@@ -154,7 +155,7 @@ function AddWikipediaText()
 	// Determine what article we got from the page- class in the body tag.
 	if(preg_match('/<body[^>]*page-([^\s]+) [^>]+>/', $data, $matches))
 	{
-		Message("Reading Wikipedia Article " . $matches[1]);
+		Verbose("Reading Wikipedia Article " . $matches[1]);
 	}
 	else
 	{
@@ -164,14 +165,14 @@ function AddWikipediaText()
 	
 	// We don't care about the header is site nav so discard anthing before the main content
 	$parts1 = explode('<div class="mw-parser-output">', $data, 2);
-	if(count($parts1) != 2) { print("Error in parsing wikipedia page"); return; }
+	if(count($parts1) != 2) { ReportError("Error in parsing wikipedia page"); return; }
 
 	// We also don't want references or the page footer
 	$parts2 = explode('<span class="mw-headline" id="References">References</span>',$parts1[1], 2);
 	if(count($parts2) != 2) {
 		$parts2 = explode('<footer id="footer"',$parts1[1], 2);
 		if(count($parts2) != 2) {
-			print("Error in parsing wikipedia page");
+			ReportError("Error in parsing wikipedia page");
 			return;
 		}
 	}

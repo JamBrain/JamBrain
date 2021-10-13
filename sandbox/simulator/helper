@@ -33,7 +33,7 @@ function LoadPreviousUsers()
 	$f = OpenPreviousEventFile();
 	$users=[];
 	if($f === false) { return false; }
-	Verbose("Loading users from previous event...");
+	VerboseAction("Loading users from previous event...");
 	while(!feof($f))
 	{
 		$line = fgets($f);
@@ -69,7 +69,7 @@ function Create_Users($usercount, $user_churn = 0)
 	$created = 0;
 	if(count($event_users) < $usercount)
 	{
-		Verbose("Not enough users to start event, creating some more users.");
+		VerboseAction("Not enough users to start event, creating some more users.");
 	}
 	while(count($event_users) < $usercount)
 	{
@@ -78,7 +78,7 @@ function Create_Users($usercount, $user_churn = 0)
 	}
 	if($created < $user_churn)
 	{
-		Verbose("Creating a few additional users to churn the userbase.");
+		VerboseAction("Creating a few additional users to churn the userbase.");
 	}
 	while($created < $user_churn)
 	{
@@ -108,7 +108,7 @@ function Create_Users($usercount, $user_churn = 0)
 	fclose($f);
 	
 	// Now, select the set of users to use for this event and log them in.
-	
+	VerboseAction("Logging in users");
 	if(!User_Login($event_admin_user))
 	{
 		return false;
@@ -616,10 +616,24 @@ function AddMissingTags()
 		// Get complete nodes for the tags.
 		if(count($tag) > 0)
 		{
-			$nodes = nodeComplete_GetById($tag);
+			$nodes = [];
+			foreach(nodeComplete_GetById($tag) as $n){
+				$nodes += array($n["name"] => $n);
+
+			}
 			return $nodes;
 		}
-		return [];
+		return false;
+	}
+
+	function LoadTagCategories($tagsId){
+		$category_ids = node_GetIdByParentType($tagsId, "group", "tags", null);
+		$categories = [];
+		foreach($category_ids as $c)
+		{
+			$categories += array(node_GetById($c)["name"] => node_GetById($c));
+		}
+		return $categories;
 	}
 
 	function SetWarning($id, $warning)
@@ -628,27 +642,19 @@ function AddMissingTags()
 		nodeMeta_AddOrphan($id, 0, SH_SCOPE_PUBLIC, 'tag-warning', $warning);
 	}
 
-	$category_ids = node_GetIdByParentType($tagsId, "group", "tags", null);
-	$categories = [];
-	foreach($category_ids as $c)
-	{
-		$categories[] = node_GetById($c);
-	}
+	$categories = LoadTagCategories($tagsId);
+	
 
 	foreach ($defaults as $default_cat => $default_tags)
 	{
 		// see if the category we want to add already exists
 		$catid = false;
-		foreach($categories as $cat) {
-
-			if ($default_cat == $cat["name"]){
-				$catid = $cat["id"];
-				Verbose("Found category ".$default_cat);
-			}
+		if (array_key_exists($default_cat, $categories)) {
+			$catid = $categories[$default_cat]["id"];
+			Verbose("Found category ".$default_cat);
 		}
-
-		// If we couldn't find it, the add it
-		if(!$catid) { 
+		else { 
+			// If we couldn't find it, the add it
 			$catid = node_Add($tagsId, 0, 'group', 'tags', '', coreSlugify_Name($default_cat), $default_cat, '');
 			node_Publish($catid, true);
 			Verbose("Added category ".$default_cat);
@@ -657,14 +663,12 @@ function AddMissingTags()
 		$tags = LoadTagsForCategory($catid);
 		foreach($default_tags as $default_tag) {
 
-			// see if the category we want to add already exists
+			// see if the tag we want to add already exists
 			$tagid = false;
 			if (count($tags) > 0){
-				foreach($tags as $tag) {
-					if ($default_tag == $tag["name"]){
-						$tagid = $tag["id"];
-						Verbose("\tFound tag ".$default_tag);
-					}
+				if (array_key_exists($default_tag, $tags)){
+					$tagid = $tags[$default_tag]["id"];
+					Verbose("\tFound tag ".$default_tag);
 				}
 			}
 
