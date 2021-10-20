@@ -95,9 +95,10 @@ export default class ViewSidebar extends Component {
 				<SidebarTV />
 				<SidebarUpcoming />
 				<SidebarSponsor />
-				<SidebarJobs />
 			</div>
 		);
+
+		/*<SidebarJobs />*/
 
 		/*<SidebarGuides />*/
 		/*<SidebarSupport />*/
