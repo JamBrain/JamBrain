@@ -71,9 +71,9 @@ function userAuth_GetId() {
 function userAuth_IsAdmin() {
 	global $USER;
 	// TODO: MK Remove this! This is not a legal way to check for admin (there was a bug with $USER['private'], sorry).
-	if ( isset($USER) && isset($USER['meta']) && isset($USER['meta']['can-create']) && $USER['meta']['can-create'] === "event") {
-		return true;
-	}
+	//if ( isset($USER) && isset($USER['meta']) && isset($USER['meta']['can-create']) && $USER['meta']['can-create'] === "event") {
+	//	return true;
+	//}
 	return isset($USER) && isset($USER['private']) && isset($USER['private']['admin']) && ($USER['private']['admin'] === 1);
 }
 
@@ -88,7 +88,7 @@ function userAuth_Has(...$args) {
 
 	// Check if user has all permissions
 	foreach ( $args as $arg ) {
-		if ( !in_array($arg, $USER['private']) ) {
+		if ( !in_array($arg, $USER['private']) || intval($USER['private'][$arg]) == 0 ) {
 			return false;
 		}
 	}

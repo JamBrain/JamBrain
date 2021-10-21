@@ -583,6 +583,14 @@ export default class ContentItem extends Component {
 			);
 		}
 
+        const urlParams = new URLSearchParams(window.location.search);
+		const requestAdmin = parseInt(urlParams.get('admin'));
+		const isAdmin = user && user.private && user.private.meta && user.private.meta.admin;
+
+		if (isAdmin) {
+			console.log("Requested Admin Display: " + requestAdmin);
+		}
+
 		let ShowGrade = null;
 		// Show Grading or Results
 		if ( parseInt(node_CanGrade(parent)) ) {
@@ -708,18 +716,20 @@ export default class ContentItem extends Component {
 			}
 		}
 		// Final Results
-		else if ( !parseInt(node_CanGrade(parent)) && node_isEventFinished(parent) ) {
+		else if ( (isAdmin && requestAdmin) || (!parseInt(node_CanGrade(parent)) && node_isEventFinished(parent)) ) {
 			// grading is closed
 			let Lines = [];
 
-			for ( var key in parent.meta ) {
-				// Is it a valid grade ?
-				let parts = key.split('-');
-				if ( parts.length == 2 && parts[0] == 'grade' ) {
-					// Make sure they user hasn't opted out
+			if ( parent && parent.meta ) {
+				for ( var key in parent.meta ) {
+					// Is it a valid grade ?
+					let parts = key.split('-');
+					if ( parts.length == 2 && parts[0] == 'grade' ) {
+						// Make sure they user hasn't opted out
 
-					if ( node.meta && !(node.meta[key+'-out']|0) ) {
-						Lines.push({'key': key, 'value': parent.meta[key]});
+						if ( node.meta && !(node.meta[key+'-out']|0) ) {
+							Lines.push({'key': key, 'value': parent.meta[key]});
+						}
 					}
 				}
 			}
