@@ -97,8 +97,29 @@ export default class EventGames extends Component {
             Methods = [EvalFilter2(DefaultFilter)];
         }
 
-        if ( node && node.meta && (node.meta['theme-mode'] < 8) ) {
-            ShowFilters = <GamesFilter
+        const urlParams = new URLSearchParams(window.location.search);
+		const requestAdmin = parseInt(urlParams.get('admin'));
+		const isAdmin = user && user.private && user.private.meta && user.private.meta.admin;
+
+		if (isAdmin) {
+			console.log("Requested Admin Display: " + requestAdmin);
+		}
+
+        if ( node && node.meta && (node.meta['theme-mode'] >= 8 || (isAdmin && requestAdmin)) ) {
+             // Results
+             ShowFilters = <GamesFilter
+                    Filter={Filter}
+                    SubFilter={SubFilter}
+                    Path={this.props.path+'/'+extra[0]+'/'}
+                    node={node}
+                    onchangefilter={(filter)=>{this.setState({'gamesFilter': filter});}}
+                    showEvent={true}
+                    showVotingCategory={true}
+                />;
+        }
+        else {
+			// Voting
+			ShowFilters = <GamesFilter
                     Filter={Filter}
                     SubFilter={SubFilter}
                     Path={this.props.path+'/'+extra[0]+'/'}
@@ -107,17 +128,6 @@ export default class EventGames extends Component {
                     showEvent={true}
                     showRatingSort={true}
                     showRatingSortDesc={true}
-                />;
-        }
-        else {	// results
-            ShowFilters = <GamesFilter
-                    Filter={Filter}
-                    SubFilter={SubFilter}
-                    Path={this.props.path+'/'+extra[0]+'/'}
-                    node={node}
-                    onchangefilter={(filter)=>{this.setState({'gamesFilter': filter});}}
-                    showEvent={true}
-                    showVotingCategory={true}
                 />;
         }
 
