@@ -101,9 +101,9 @@ export default class EventGames extends Component {
 		const requestAdmin = parseInt(urlParams.get('admin'));
 		const isAdmin = user && user.private && user.private.meta && user.private.meta.admin;
 
-		if (isAdmin) {
-			console.log("Requested Admin Display: " + requestAdmin);
-		}
+//		if (isAdmin) {
+//			console.log("Requested Admin Display: " + requestAdmin);
+//		}
 
         if ( node && node.meta && (node.meta['theme-mode'] >= 8 || (isAdmin && requestAdmin)) ) {
              // Results
