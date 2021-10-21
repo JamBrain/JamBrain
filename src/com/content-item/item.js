@@ -587,9 +587,9 @@ export default class ContentItem extends Component {
 		const requestAdmin = parseInt(urlParams.get('admin'));
 		const isAdmin = user && user.private && user.private.meta && user.private.meta.admin;
 
-		if (isAdmin) {
-			console.log("Requested Admin Display: " + requestAdmin);
-		}
+//		if (isAdmin) {
+//			console.log("Requested Admin Display: " + requestAdmin);
+//		}
 
 		let ShowGrade = null;
 		// Show Grading or Results
