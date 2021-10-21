@@ -593,7 +593,7 @@ export default class ContentItem extends Component {
 
 		let ShowGrade = null;
 		// Show Grading or Results
-		if ( parseInt(node_CanGrade(parent)) ) {
+		if ( !(isAdmin && requestAdmin) && parseInt(node_CanGrade(parent)) ) {
 			// If it's your game, show some stats
 			if ( node_IsAuthor(node, user) ) {
 				let Lines = [];
@@ -638,14 +638,16 @@ export default class ContentItem extends Component {
 			else if ( featured && featured.what && nodeKeys_HasPublishedParent(featured.what, node.parent) ) {
 				let Lines = [];
 
-				for ( var key in parent.meta ) {
-					// Is it a valid grade ?
-					let parts = key.split('-');
-					if ( parts.length == 2 && parts[0] == 'grade' ) {
-						// Make sure they user hasn't opted out
+				if ( parent && parent.meta ) {
+					for ( var key in parent.meta ) {
+						// Is it a valid grade ?
+						let parts = key.split('-');
+						if ( parts.length == 2 && parts[0] == 'grade' ) {
+							// Make sure they user hasn't opted out
 
-						if ( node.meta && !(node.meta[key+'-out']|0) ) {
-							Lines.push({'key': key, 'value': parent.meta[key]});
+							if ( node.meta && !(node.meta[key+'-out']|0) ) {
+								Lines.push({'key': key, 'value': parent.meta[key]});
+							}
 						}
 					}
 				}
