@@ -1,8 +1,5 @@
-# Ludum Dare
-
-This is the source code for the Ludum Dare event website(s)! It's currently live here: 
-
-https://ldjam.com/
+# Jammer Core
+Jammer Core is the software that runs Ludum Dare game jam events. It is currently live on [ldjam.com](https://ldjam.com/)
 
 [![Build Status](https://travis-ci.org/ludumdare/ludumdare.svg?branch=master)](https://travis-ci.org/ludumdare/ludumdare)
 
