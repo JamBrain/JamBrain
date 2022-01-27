@@ -21,7 +21,7 @@ echo "Migrating requires you to do a few steps manually. We'll walk through them
 echo "\n";
 echo "1. Rename the 'sh_node_meta' table to 'sh_node_meta_version'.\n";
 echo "\n";
-echo "   Open up http://192.168.48.48/dev/phpmyadmin/ and find 'sh_node_meta' inside the scotchbox DB.\n";
+echo "   Open up http://192.168.56.48/dev/phpmyadmin/ and find 'sh_node_meta' inside the scotchbox DB.\n";
 echo "   Table rename can be found in the 'Operations' tab.\n";
 
 echo "\nContinue [type 'YES']? ";

@@ -660,9 +660,9 @@ if ( $mode > 0 ) {
 					echo '<div class="header emoji">';
 						if ( !empty($item['author']) && $authors[$item['author']]['slug'] == 'pov' ) {
 							// Image Version //
-							echo '<img class="avatar" src="//192.168.48.48:8080/logo/mike/Chicken64.png" />';
+							echo '<img class="avatar" src="//192.168.56.48:8080/logo/mike/Chicken64.png" />';
 							// Div Version //
-							//echo '<div class="avatar" style="background-image:url(//192.168.48.48:8080/logo/mike/Chicken64.png);"></div>';
+							//echo '<div class="avatar" style="background-image:url(//192.168.56.48:8080/logo/mike/Chicken64.png);"></div>';
 						}
 						echo '<h1>' . $item['name'] .'</h1>';
 						echo '<div class="info">';
