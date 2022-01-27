@@ -101,7 +101,7 @@ export default class PageHomeGames extends Component {
 				showFeatured={true}
 				showEvent={true}
 				showRatingSort={true}
-				showRatingSort={true}
+				showRatingSortDesc={true}
 			/>;
 		}
 
