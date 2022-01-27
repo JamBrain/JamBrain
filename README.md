@@ -1,16 +1,17 @@
 # Jammer Core
 Jammer Core is the software that runs Ludum Dare game jam events. It is currently live on [ldjam.com](https://ldjam.com/)
 
+**NOTE**: For better clarity, we are rebranding this software to **Jammer Core** (formerly `ludumdare`). The Ludum Dare game jam is still Ludum Dare, but to avoid confusion with Ludum Dare the event, the software powering Ludum Dare has a new name.
+
 [![Build Status](https://travis-ci.org/ludumdare/ludumdare.svg?branch=master)](https://travis-ci.org/ludumdare/ludumdare)
 
 Want to help out? Setup Instructions are here:
 
-https://github.com/ludumdare/dairybox
+https://github.com/JammerCore/DairyBox
 
 Development discussion (site-dev only please): 
 
 * **Web:** https://gitter.im/ludumdare/ludumdare (Slack-like)
-* **IRC:** https://irc.gitter.im/
 
 # Structure
 Many folder are documented. Just browse the tree to learn about the contents.
