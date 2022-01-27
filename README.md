@@ -1,7 +1,7 @@
 # Jammer Core
 Jammer Core is the software that runs Ludum Dare game jam events. It is currently live on [ldjam.com](https://ldjam.com/)
 
-**NOTE**: For better clarity, we are rebranding this software to **Jammer Core** (formerly `ludumdare`). The Ludum Dare game jam is still Ludum Dare, but to avoid confusion with Ludum Dare the event, the software powering Ludum Dare has a new name.
+**NOTE**: For better clarity, we are rebranding this software to **Jammer Core** (formerly `ludumdare`). The Ludum Dare game jam is still Ludum Dare, but to help reduce confusion with everything else called Ludum Dare, the software powering Ludum Dare has a new name.
 
 [![Build Status](https://travis-ci.org/ludumdare/ludumdare.svg?branch=master)](https://travis-ci.org/ludumdare/ludumdare)
 
