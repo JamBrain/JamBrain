@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TARGET=http://192.168.48.48:8082
+TARGET=http://192.168.56.48:8082
 COOKIE="lusha=100.this_is_fake"
 
 if [ -n "$1" ]; then

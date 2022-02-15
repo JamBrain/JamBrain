@@ -341,6 +341,11 @@ class Main extends Component {
 
 			console.log("[fetchUser] - You are", User.id, "("+User.name+")");
 
+			// This should be a function
+			if ( User && User.private && User.private.meta && User.private.meta.admin ) {
+				console.log("[fetchUser] - Administrator");
+			}
+
 			// Pre-cache my Love (nothing to do with it)
 			return $NodeLove.GetMy();
 		})
