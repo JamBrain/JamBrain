@@ -67,6 +67,9 @@ if ( !isset($_GET['nopreload']) ) {
 }
 //header("Link: </blah">; rel=canonical"); // https://yoast.com/rel-canonical/
 
+// This is insane, but necessary to stop iframing your website
+header("X-Frame-Options: DENY");
+
 ?><!doctype html>
 <html lang="en">
 <head>
