@@ -63,6 +63,7 @@ export default class ContentItem extends Component {
 
 		this.onSetJam = this.onSetJam.bind(this);
 		this.onSetCompo = this.onSetCompo.bind(this);
+		this.onSetExtra = this.onSetExtra.bind(this);
 		this.onSetUnfinished = this.onSetUnfinished.bind(this);
 		this.onAnonymousComments = this.onAnonymousComments.bind(this);
 		this.onChangeTeam = this.onChangeTeam.bind(this);
@@ -76,6 +77,7 @@ export default class ContentItem extends Component {
 			this.setState({
 				'allowCompo': (node.subsubtype == 'compo'),
 				'allowJam': (node.subsubtype == 'jam'),
+				'allowExtra': (node.subsubtype == 'extra'),
 				'allowUnfinished': (node.subsubtype == 'unfinished'),
 			});
 		}
@@ -123,6 +125,11 @@ export default class ContentItem extends Component {
 	}
 	onSetCompo( e ) {
 		return this.setSubSubType('compo')
+			.then( r => {
+			});
+	}
+	onSetExtra( e ) {
+		return this.setSubSubType('extra')
 			.then( r => {
 			});
 	}
@@ -422,7 +429,7 @@ export default class ContentItem extends Component {
 	render( props, state ) {
 		props = Object.assign({}, props);			// Copy it because we're going to change it
 		let {node, user, path, extra, featured} = props;
-		let {parent, team, allowCompo, allowJam, allowUnfinished} = state;
+		let {parent, team, allowCompo, allowJam, allowExtra, allowUnfinished} = state;
 		let shouldCheckRules = true;
 		const tooManyAuthorsForCompo = (node_CountAuthors(node) > 1);
 		allowCompo = allowCompo && !tooManyAuthorsForCompo;
@@ -461,6 +468,11 @@ export default class ContentItem extends Component {
 				Category = '/compo';
 				//props.nopublish = !allowCompo;
 			}
+			else if ( node.subsubtype == 'extra' ) {
+				props.by = "EXTRA "+props.by;
+				Category = '/extra';
+				//props.nopublish = !allowExtra;
+			}
 			else if ( node.subsubtype == 'craft' ) {
 				props.by = "CRAFT";
 				Category = '/craft';
@@ -492,6 +504,7 @@ export default class ContentItem extends Component {
 					<ContentCommonNav>
 						<ContentCommonNavButton onclick={this.onSetJam} class={node.subsubtype == 'jam' ? "-selected" : ""} disabled={!allowJam}><UIIcon src="users" /><div>Jam</div></ContentCommonNavButton>
 						<ContentCommonNavButton onclick={this.onSetCompo} class={node.subsubtype == 'compo' ? "-selected" : ""} disabled={!allowCompo}><UIIcon src="user" /><div>Compo</div></ContentCommonNavButton>
+						<ContentCommonNavButton onclick={this.onSetExtra} class={node.subsubtype == 'extra' ? "-selected" : ""} disabled={!allowExtra}><UIIcon src="users" /><div>Extra</div></ContentCommonNavButton>
 						<ContentCommonNavButton onclick={this.onSetUnfinished} class={node.subsubtype == 'unfinished' ? "-selected" : ""} disabled={!allowUnfinished}><UIIcon src="trash" /><div>Unfinished</div></ContentCommonNavButton>
 					</ContentCommonNav>
 					<div class="-info">
@@ -688,6 +701,8 @@ export default class ContentItem extends Component {
 					ShowRatingSubText = <div class="-subtext">Jam game</div>;
 				else if ( node.subsubtype == 'compo' )
 					ShowRatingSubText = <div class="-subtext">Compo game</div>;
+				else if ( node.subsubtype == 'extra' )
+					ShowRatingSubText = <div class="-subtext">Extra game</div>;
 
 				ShowGrade = (
 					<ContentCommonBody class="-rating -body">

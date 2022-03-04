@@ -14,7 +14,7 @@ switch ( $action ) {
 		$old_action = $action;
 		$action = json_ArgShift();
 		switch ( $action ) {
-			case 'get': //random/game/get[/compo|jam]
+			case 'get': //random/game/get[/compo|jam|extra]
 				json_ValidateHTTPMethod('GET');
 				$filter = null;
 				if ( json_ArgCount() > 0 ) {
@@ -52,7 +52,7 @@ switch ( $action ) {
 				$RESPONSE['listenabled'] = ($gamelist != null);
 				$RESPONSE['games'] = ($gamelist != null) ? $gamelist : [];
 
-				break; //case 'get': //random/game/get[/compo|jam]
+				break; //case 'get': //random/game/get[/compo|jam|extra]
 
 			default:
 				json_EmitFatalError_Forbidden(null, $RESPONSE);

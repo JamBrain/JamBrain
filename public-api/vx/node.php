@@ -125,40 +125,68 @@ const VALID_TRANSFORMS = [
 	'item/game' => [
 		'item/game/jam',
 		'item/game/compo',
+		'item/game/extra',
 		'item/game/unfinished',
-		'item/craft/jam',
-		'item/craft/unfinished',
+		// 'item/craft/jam',
+		// 'item/craft/extra',
+		// 'item/craft/unfinished',
 	],
 	'item/game/compo' => [
 		'item/game/jam',
+		'item/game/extra',
 		'item/game/unfinished',
-		'item/craft/jam',
-		'item/craft/unfinished',
+		// 'item/craft/jam',
+		// 'item/craft/extra',
+		// 'item/craft/unfinished',
 	],
 	'item/game/jam' => [
 		'item/game/compo',
+		'item/game/extra',
 		'item/game/unfinished',
-		'item/craft/jam',
-		'item/craft/unfinished',
+		// 'item/craft/jam',
+		// 'item/craft/extra',
+		// 'item/craft/unfinished',
 	],
-	'item/craft/jam' => [
-		'item/game/jam',
+	'item/game/extra' => [
 		'item/game/compo',
+		'item/game/jam',
 		'item/game/unfinished',
-		'item/craft/unfinished',
+		// 'item/craft/jam',
+		// 'item/craft/extra',
+		// 'item/craft/unfinished',
 	],
+	// 'item/craft/jam' => [
+	// 	'item/game/jam',
+	// 	'item/game/compo',
+	// 	'item/game/extra',
+	// 	'item/game/unfinished',
+	// 	'item/craft/extra',
+	// 	'item/craft/unfinished',
+	// ],
+	// 'item/craft/extra' => [
+	// 	'item/game/jam',
+	// 	'item/game/compo',
+	// 	'item/game/extra',
+	// 	'item/game/unfinished',
+	// 	'item/craft/jam',
+	// 	'item/craft/unfinished',
+	// ],
 	'item/game/unfinished' => [
 		'item/game/jam',
 		'item/game/compo',
-		'item/craft/jam',
-		'item/craft/unfinished',
+		'item/game/extra',
+		// 'item/craft/jam',
+		// 'item/craft/extra',
+		// 'item/craft/unfinished',
 	],
-	'item/craft/unfinished' => [
-		'item/game/jam',
-		'item/game/compo',
-		'item/game/unfinished',
-		'item/craft/jam',
-	],
+	// 'item/craft/unfinished' => [
+	// 	'item/game/jam',
+	// 	'item/game/compo',
+	// 	'item/game/extra',
+	// 	'item/game/unfinished',
+	// 	'item/craft/jam',
+	// 	'item/craft/extra',
+	// ],
 ];
 
 const THINGS_I_CAN_FEED = [
@@ -574,12 +602,14 @@ switch ( $action ) {
 				'item/game' => 1,
 				'item/game/jam' => 1,
 				'item/game/compo' => 1,
+				'item/game/extra' => 1,
 				'item/game/warmup' => 1,
 				'item/game/incomplete' => 1,
 				'item/game/release' => -1,	// i.e. unlimited
 
 				'item/craft' => 0,			// i.e. can't create
 				'item/craft/jam' => 0,		// i.e. can't create
+				'item/craft/extra' => 0,	// i.e. can't create
 
 				'post' => -50,				// i.e. unlimited (was -25, but I haven't finished karma checking)
 				'post/news' => 0,			// i.e. can't create
@@ -821,7 +851,7 @@ switch ( $action ) {
 //			else
 //				json_EmitFatalError_BadRequest("'parent' not found in POST", $RESPONSE);
 
-//			if ( $event === 'compo' || $event === 'jam' ) {
+//			if ( $event === 'compo' || $event === 'jam' || $event === 'extra' ) {
 //			}
 //			else {
 //				json_EmitFatalError_BadRequest("Unsupported 'event'", $RESPONSE);

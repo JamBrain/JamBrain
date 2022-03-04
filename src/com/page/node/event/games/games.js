@@ -22,7 +22,7 @@ export default class EventGames extends Component {
 
         function EvalFilter2(str) {
             let MappingTable = {
-                'all': 'compo+jam',
+                'all': 'compo+jam+extra',
                 'classic': 'cool',
 
                 'overall': 'grade-01-result',
@@ -79,6 +79,7 @@ export default class EventGames extends Component {
                 case 'jam':
                 case 'compo':
                 case 'craft':
+                case 'extra':
                 case 'late':
                 case 'release':
                 case 'unfinished':

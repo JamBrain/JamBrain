@@ -88,6 +88,10 @@ export default class ContentBox extends Component {
 							ShowSubEvent = <div>JAM <SVGIcon baseline small>{node_CountAuthors(node) === 1 ? "user" : "users"}</SVGIcon></div>;
 							SubEventClass = '-col-a';
 						}
+						else if ( node.subsubtype == 'extra' ) {
+							ShowSubEvent = <div>EXTRA <SVGIcon baseline small>{node_CountAuthors(node) === 1 ? "user" : "users"}</SVGIcon></div>;
+							SubEventClass = '-col-bc';
+						}
 						else if ( node.subsubtype == 'compo' ) {
 							ShowSubEvent = <div>COMPO</div>;
 							SubEventClass = '-col-ab';

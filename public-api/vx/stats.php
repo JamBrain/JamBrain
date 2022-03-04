@@ -113,9 +113,9 @@ switch ( $node['type'] ) {
 				$node['id'], null, null,
 				'item', null, 'warmup'
 			);
-			$stats['late'] = node_CountByParentAuthorType(
+			$stats['extra'] = node_CountByParentAuthorType(
 				$node['id'], null, null,
-				'item', null, 'late'
+				'item', null, 'extra'
 			);
 			$stats['release'] = node_CountByParentAuthorType(
 				$node['id'], null, null,

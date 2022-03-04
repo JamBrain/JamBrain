@@ -16,6 +16,7 @@ export default class ContentItemRulesCheck extends Component {
 		if (onAllowChange) onAllowChange({
 			'allowJam': this.allowJam(mountState),
 			'allowCompo': this.allowCompo(mountState),
+			'allowExtra': this.allowExtra(mountState),
 			'allowUnfinished': this.allowUnfinished(mountState),
 			'rulesAnswers': mountState,
 		});
@@ -32,6 +33,7 @@ export default class ContentItemRulesCheck extends Component {
 		if (onAllowChange) onAllowChange({
 			'allowJam': this.allowJam(nextState),
 			'allowCompo': this.allowCompo(nextState),
+			'allowExtra': this.allowExtra(nextState),
 			'allowUnfinished': this.allowUnfinished(nextState),
 			'rulesAnswers': nextState,
 		});
@@ -39,6 +41,13 @@ export default class ContentItemRulesCheck extends Component {
 	}
 
 	allowJam(nextState) {
+		if (!this.allowByCommonRules(nextState)) return false;
+		if (!nextState.willVote) return false;
+		if (!nextState.optedOut) return false;
+		return true;
+	}
+
+	allowExtra(nextState) {
 		if (!this.allowByCommonRules(nextState)) return false;
 		if (!nextState.willVote) return false;
 		if (!nextState.optedOut) return false;

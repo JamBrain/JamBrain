@@ -29,7 +29,7 @@ export default class PageHomeGames extends Component {
 
 		function EvalFilter(str) {
 			let MappingTable = {
-				'all': 'compo+jam+craft+release',
+				'all': 'compo+jam+extra+craft+release',
 				'classic': 'cool',
 			};
 
@@ -68,6 +68,7 @@ export default class PageHomeGames extends Component {
 
 				case 'jam':
 				case 'compo':
+				case 'extra':
 				case 'craft':
 				case 'late':
 				case 'release':

@@ -26,6 +26,7 @@ const HelpItemCategory = [
 	<p><strong>Jam:</strong> Things created for the 72 hour <strong>Jam</strong> event.</p>,
 	<p><strong>Compo:</strong> Things created for the 48 hour <strong>Compo</strong> event.</p>,
 	<p><strong>Craft:</strong> Things created for the <strong>Craft</strong> event, or things impractical to rate by normal means.</p>,
+	<p><strong>Extra:</strong> Things created after the event.</p>,
 	<p><strong>Unfinished:</strong> Unfinished things from any event.</p>,
 	<p><strong>Warmup:</strong> Things created in preparation for an event.</p>,
 	<p><strong>Release:</strong> Things created after the event, based on something created for the event.</p>,
@@ -61,10 +62,11 @@ export default class ItemFilter extends Component {
 
 			'category': 'all',
 			'categories': [
-				['all', [<UIIcon src="trophys" />, <span>Jam+Compo</span>]],
+				['all', [<UIIcon src="trophys" />, <span>Jam+Compo+Extra</span>]],
 				['jam', [<UIIcon src="trophy" />, <span>Jam</span>]],
 				['compo', [<UIIcon src="trophy" />, <span>Compo</span>]],
 //				['craft', [<UIIcon src="craft" />, <span>Craft</span>]],
+				['extra', [<UIIcon src="trophy" />, <span>Extra</span>]],
 				['unfinished', [<UIIcon src="trash" />, <span>Unfinished</span>]],
 				['warmup', [<UIIcon src="science" />, <span>Warmup</span>]],
 //				['release', [<UIIcon src="publish" />, <span>Release</span>]],
