@@ -16,7 +16,7 @@ export default class ContentHeadlineEdit extends Component {
 			this.props.published !== nextProps.published;
 	}
 
-	render( {edit, modified, published, onedit, onpreview, onsave, onpublish, onpublish2}, state ) {
+	render( {edit, modified, published, onedit, onpreview, onsave, onpublish, onpublish2, onpublish3}, state ) {
 		var ShowEdit = null;
 		var ShowPreview = null;
 		var ShowSave = null;
@@ -44,7 +44,8 @@ export default class ContentHeadlineEdit extends Component {
 		else {
 			ShowPublish = [
 				<ButtonBase class="-available -green" onclick={onpublish}><SVGIcon>publish</SVGIcon> Publish Compo</ButtonBase>,
-				<ButtonBase class="-available -green" onclick={onpublish2}><SVGIcon>publish</SVGIcon> Publish Jam</ButtonBase>
+				<ButtonBase class="-available -green" onclick={onpublish2}><SVGIcon>publish</SVGIcon> Publish Jam</ButtonBase>,
+				<ButtonBase class="-available -green" onclick={onpublish3}><SVGIcon>publish</SVGIcon> Publish Extra</ButtonBase>
 			];
 		}
 

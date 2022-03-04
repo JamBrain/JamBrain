@@ -75,6 +75,9 @@ nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-closed-1", "0");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-slug-2", "compo");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-name-2", "Compo");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-closed-2", "0");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-slug-3", "extra");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-name-3", "Extra");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-closed-3", "0");
 
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-01", "Overall");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-02", "Fun");
