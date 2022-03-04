@@ -185,11 +185,13 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 
 	// Add public nodes
 	foreach( $public_metas as &$meta ) {
-		if ( !isset($ret[$meta['value']]) ) {
-			$ret[$meta['value']] = [];
-		}
+		if ( !empty($meta['value']) ) {
+			if ( !isset($ret[$meta['value']]) ) {
+				$ret[$meta['value']] = [];
+			}
 
-		$ret[$meta['value']][] = $meta['a'];
+			$ret[$meta['value']][] = $meta['a'];
+		}
 	}
 
 
@@ -201,12 +203,14 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 
 		// Add shared nodes
 		foreach( $shared_metas as &$meta ) {
-			if ( in_array($meta['a'], $authored_ids) ) {
-				if ( !isset($ret[$meta['value']]) ) {
-					$ret[$meta['value']] = [];
-				}
+			if ( !empty($meta['value']) ) {
+				if ( in_array($meta['a'], $authored_ids) ) {
+					if ( !isset($ret[$meta['value']]) ) {
+						$ret[$meta['value']] = [];
+					}
 
-				$ret[$meta['value']][] = $meta['a'];
+					$ret[$meta['value']][] = $meta['a'];
+				}
 			}
 		}
 	}

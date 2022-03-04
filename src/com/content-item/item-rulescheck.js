@@ -49,7 +49,6 @@ export default class ContentItemRulesCheck extends Component {
 
 	allowExtra(nextState) {
 		if (!this.allowByCommonRules(nextState)) return false;
-		if (!nextState.willVote) return false;
 		if (!nextState.optedOut) return false;
 		return true;
 	}
@@ -92,7 +91,7 @@ export default class ContentItemRulesCheck extends Component {
 				<div class="-items">
 					<ButtonBase onclick={this.handleChange.bind(this, 'readRules', !readRules)}>
 						{readRules ? IconChecked : IconUnChecked}
-						I have read and understood <NavLink blank href="/events/ludum-dare/rules/"><strong>the rules</strong></NavLink>.
+						I have read and understood <NavLink blank href="//ludumdare.com/rules/"><strong>the rules</strong></NavLink>.
 					</ButtonBase>
 
 					<ButtonBase onclick={this.handleChange.bind(this, 'optedOut', !optedOut)}>
