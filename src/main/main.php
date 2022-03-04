@@ -16,6 +16,7 @@ if ( !isset($_GET['ignore']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE') !== f
 define( 'DEBUG', isset($_GET['debug'])?1:0 );
 define( 'USE_MINIFIED', DEBUG ? '.debug' : '.min' );
 define( 'VERSION_STRING', defined('GIT_VERSION') ? 'v='.GIT_VERSION : '' );
+
 const STATIC_DOMAINS = [
 	'ludumdare.org' => 'static.jammer.work',	// legacy
 	'jammer.work' => 'static.jammer.work',		// jammer.vg public
@@ -29,9 +30,9 @@ const STATIC_DOMAINS = [
 	'jammer.bio' => 'static.jam.vg',
 ];
 const DEFAULT_STATIC_DOMAIN = 'static.jam.vg';
-
 define( 'STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : DEFAULT_STATIC_DOMAIN );
 define( 'STATIC_ENDPOINT', '//'.STATIC_DOMAIN );
+
 const SHORTENER_DOMAINS = [
 	'ludumdare.org' => 'url.ludumdare.org',	// legacy
 	'jammer.work' => 'url.jammer.work',	// jammer.vg public
@@ -45,8 +46,8 @@ const SHORTENER_DOMAINS = [
 	//'jammer.bio' => '???',
 ];
 const DEFAULT_SHORTENER_DOMAIN = 'ldj.am';
-
 define( 'SHORTENER_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], SHORTENER_DOMAINS ) ? SHORTENER_DOMAINS[$_SERVER['SERVER_NAME']] : DEFAULT_SHORTENER_DOMAIN );
+
 define( 'LINK_SUFFIX', isset($_GET['nopush']) ? '; nopush' : '' );
 if ( !defined('API_DOMAIN') ) {
 	define( 'API_DOMAIN', 'api.'.$_SERVER['SERVER_NAME'] );
