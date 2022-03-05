@@ -64,14 +64,16 @@ function nodeMeta_GetByKey( $keys, $values = null, $scope_check = ">=0", $scope_
 		return null;
 	}
 
-	// Values
+	// Convert number Values to string
 	if ( is_integer($values) ) {
 		$values = strval($values);
 	}
+	// Is Values a String?
 	if ( is_string($values) ) {
 		$WHERE[] = "`value`=?";
 		$ARGS[] = $values;
 	}
+	// Is Values an Array?
 	else if ( is_array($values) ) {
 		$WHERE[] = '`value` IN ("'.implode('","', $values).'")';
 	}
@@ -96,7 +98,7 @@ function nodeMeta_GetByKey( $keys, $values = null, $scope_check = ">=0", $scope_
 }
 
 // Please sanitize before calling
-function nodeMeta_GetByKeyNode( $keys, $nodes, $scope_check = ">=0", $scope_check_values = null ) {
+function nodeMeta_GetByKeyNode( $keys, $nodes, $scope_check = ">=0", $scope_check_values = null, $check_a = true, $check_b = true ) {
 	$WHERE = [];
 	$ARGS = [];
 
@@ -134,13 +136,37 @@ function nodeMeta_GetByKeyNode( $keys, $nodes, $scope_check = ">=0", $scope_chec
 //	}
 
 	// Nodes
-	if ( is_integer($nodes) ) {
-		$WHERE[] = "(`a`=? OR `b`=?)";
-		$ARGS[] = $nodes;
-		$ARGS[] = $nodes;
+	if ( $check_a && $check_b ) {
+		if ( is_integer($nodes) ) {
+			$WHERE[] = "(`a`=? OR `b`=?)";
+			$ARGS[] = $nodes;
+			$ARGS[] = $nodes;
+		}
+		else if ( is_array($nodes) ) {
+			$WHERE[] = '(`a` IN ('.implode(',', $nodes).') OR `b` IN ('.implode(',', $nodes).'))';
+		}
 	}
-	else if ( is_array($nodes) ) {
-		$WHERE[] = '(`a` IN ('.implode(',', $nodes).') OR `b` IN ('.implode(',', $nodes).'))';
+	else if ( $check_a ) {
+		if ( is_integer($nodes) ) {
+			$WHERE[] = "(`a`=?)";
+			$ARGS[] = $nodes;
+		}
+		else if ( is_array($nodes) ) {
+			$WHERE[] = '(`a` IN ('.implode(',', $nodes).'))';
+		}
+	}
+	else if ( $check_b ) {
+		if ( is_integer($nodes) ) {
+			$WHERE[] = "(`b`=?)";
+			$ARGS[] = $nodes;
+		}
+		else if ( is_array($nodes) ) {
+			$WHERE[] = '(`b` IN ('.implode(',', $nodes).'))';
+		}
+	}
+	else {
+		// No node(s), bail
+		return null;
 	}
 
 	$where_string = implode(' AND ', $WHERE);

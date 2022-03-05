@@ -73,6 +73,8 @@ export default class ContentItem extends Component {
 	componentDidMount() {
 		var node = this.props.node;
 
+		// Cleverness: All allowed type states default to false (null) if unpublished. If published,
+		// they get explicitly set to false, all except for the actual type's state (eg. item/game/compo).
 		if (node_IsPublished(node)) {
 			this.setState({
 				'allowCompo': (node.subsubtype == 'compo'),
@@ -361,6 +363,7 @@ export default class ContentItem extends Component {
 		return $Node.AddMeta(node.id, Data);
 	}
 
+	// Used by item-rulescheck to enable allowed properties
 	handleAllowSubmission(allowed) {
 		this.setState(allowed);
 	}
@@ -437,7 +440,7 @@ export default class ContentItem extends Component {
 		let Category = '/';
 
 		props.onChangeTeam = this.onChangeTeam;
-		if (team) {
+		if ( team ) {
 			props.node.meta.author = team;
 		}
 
@@ -497,7 +500,7 @@ export default class ContentItem extends Component {
 		let ShowEventPicker = null;
 		let ShowRulesCheck = null;
 		if ( extra && extra.length && (extra[0] == 'edit') && node_CanPublish(parent) ) {
-			ShowRulesCheck = <ContentItemRulesCheck node={this.props.node} onAllowChange={this.handleAllowSubmission} answers={state.rulesAnswers} />;
+			ShowRulesCheck = <ContentItemRulesCheck node={this.props.node} parent={this.state.parent} onAllowChange={this.handleAllowSubmission} answers={state.rulesAnswers} />;
 			ShowEventPicker = (
 				<ContentCommonBody class="-body">
 					<div class="-label">Event Selection</div>
@@ -606,7 +609,7 @@ export default class ContentItem extends Component {
 
 		let ShowGrade = null;
 		// Show Grading or Results
-		if ( !(isAdmin && requestAdmin) && parseInt(node_CanGrade(parent)) ) {
+		if ( !(isAdmin && requestAdmin) && parseInt(nodeEvent_CanGrade(parent)) ) {
 			// If it's your game, show some stats
 			if ( node_IsAuthor(node, user) ) {
 				let Lines = [];
@@ -733,7 +736,7 @@ export default class ContentItem extends Component {
 			}
 		}
 		// Final Results
-		else if ( (isAdmin && requestAdmin) || (!parseInt(node_CanGrade(parent)) && node_isEventFinished(parent)) ) {
+		else if ( (isAdmin && requestAdmin) || (!parseInt(nodeEvent_CanGrade(parent)) && nodeEvent_IsFinished(parent)) ) {
 			// grading is closed
 			let Lines = [];
 

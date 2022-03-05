@@ -138,7 +138,7 @@ export default class ContentEvent extends Component {
 //		}
 
 		var ShowTheme = null;
-		if ( node_CanTheme(node) ) {
+		if ( nodeEvent_CanTheme(node) ) {
 			let Class = null;
 			if ( extra && extra.length ) {
 				if ( extra[0] === 'theme' ) {

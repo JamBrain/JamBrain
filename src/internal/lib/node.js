@@ -39,7 +39,7 @@ window.node_IsAuthor = function( node, user ) {
 
 window.node_CountAuthors = function( node ) {
 	if ( !node.meta || !node.meta['author'] )
-		return 1;
+		return node.author ? 1 : 0;
 	return node.meta['author'].length;
 }
 
@@ -87,49 +87,129 @@ window.nodeUser_GetFriends = function( user ) {
 	return [];
 }
 
-window.node_CanCreate = function( node ) {
+// Is creating allowed on this node? Optionally specify the fulltype
+window.node_CanCreate = function( node, fulltype = null ) {
 	// Return null if argument is invalid
-	if ( !node )
+	if ( !node && !node.meta )
 		return null;
 
-	return node.meta && node.meta['can-create'];
+	// If omitted, then the answer is no
+	if ( ('can-create' in node.meta) === false ) {
+		return false;
+	}
+
+	// If length is 1, it's a legacy value (i.e. 0 or 1)
+	if ( node.meta['can-create'].length == 1 ) {
+		return parseInt(node.meta['can-create']) == 1;
+	}
+	// Otherwise it's a v2 value. If no fulltype is specified, the answer is either no (false) or maybe (true).
+	else if ( fulltype === null ) {
+		return (node.meta['can-create'].length > 0);
+	}
+
+	// Get the keys
+	var keys = node.meta['can-create'].split('+');
+
+	// the answer is yes (true) if fulltype is one of the keys
+	return (keys.indexOf(fulltype) >= 0);
 };
-window.node_CanTheme = function( node ) {
+
+// Is transforming (type changing) allowed on this node? Optionally specify the fulltype
+window.node_CanTransform = function( node, fulltype = null ) {
+	// Return null if argument is invalid
+	if ( !node && !node.meta )
+		return null;
+
+	// If omitted, then the answer is no
+	if ( ('can-transform' in node.meta) === false ) {
+		return false;
+	}
+
+	// If no fulltype is specified, the answer is either no (false) or maybe (true).
+	if ( fulltype === null ) {
+		return (node.meta['can-transform'].length > 0);
+	}
+
+	// Get the keys
+	var keys = node.meta['can-transform'].split('+');
+
+	// the answer is yes (true) if fulltype is one of the keys
+	return (keys.indexOf(fulltype) >= 0);
+};
+
+window.nodeEvent_CanTheme = function( node ) {
 	// Return null if argument is invalid
 	if ( !node )
 		return null;
 
 	return node.meta && parseInt(node.meta['can-theme']);
 };
-window.node_CanGrade = function( node ) {
+window.nodeEvent_CanGrade = function( node ) {
 	// Return null if argument is invalid
 	if ( !node )
 		return null;
 
 	return node.meta && parseInt(node.meta['can-grade']);
 };
-window.node_isEventFinished = function( node ) {
+// TODO: Obsolete the 'event-finished' metadata
+window.nodeEvent_IsFinished = function( node ) {
 	// Return null if argument is invalid
 	if ( !node )
 		return null;
 
 	return node.meta && parseInt(node.meta['event-finished']);
 };
-window.node_CanPublish = function( node ) {
+
+// Is publishing allowed on this node? Optionally specify the fulltype
+window.node_CanPublish = function( node, fulltype = null ) {
+	// Return null if argument is invalid
+	if ( !node && !node.meta )
+		return null;
+
+	// If omitted, then the answer is no
+	if ( ('can-publish' in node.meta) === false ) {
+		return false;
+	}
+
+	// If length is 1, it's a legacy value (i.e. 0 or 1)
+	if ( node.meta['can-publish'].length == 1 ) {
+		return parseInt(node.meta['can-publish']) == 1;
+	}
+	// Otherwise it's a v2 value. If no fulltype is specified, the answer is either no (false) or maybe (true).
+	else if ( fulltype === null ) {
+		return (node.meta['can-publish'].length > 0);
+	}
+
+	// Get the keys
+	var keys = node.meta['can-publish'].split('+');
+
+	// the answer is yes (true) if fulltype is one of the keys
+	return (keys.indexOf(fulltype) >= 0);
+};
+
+window.node_GetFullType = function( node ) {
 	// Return null if argument is invalid
 	if ( !node )
 		return null;
 
-	return node.meta && parseInt(node.meta['can-publish']);
-};
+	// Construct fulltype
+	var fulltype = node.type;
+	if (node.subtype)
+		fulltype += '/' + node.subtype;
+	if (node.subsubtype)
+		fulltype += '/' + node.subsubtype;
 
-window.node_GetPlatforms = function( node ) {
+	// return fulltype
+	return fulltype;
+}
+
+window.nodeItem_GetPlatforms = function( node ) {
 	if ( node && node.meta && node.meta.platform ) {
 		return node.meta.platform;
 	}
 	return [];
 }
-window.node_GetTags = function( node ) {
+window.nodeItem_GetTags = function( node ) {
 	if ( node && node.meta && node.meta.tag ) {
 		return node.meta.tag;
 	}

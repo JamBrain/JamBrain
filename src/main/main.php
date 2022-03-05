@@ -18,28 +18,22 @@ define( 'USE_MINIFIED', DEBUG ? '.debug' : '.min' );
 define( 'VERSION_STRING', defined('GIT_VERSION') ? 'v='.GIT_VERSION : '' );
 
 const STATIC_DOMAINS = [
-	'ludumdare.org' => 'static.jammer.work',	// legacy
-	'jammer.work' => 'static.jammer.work',		// jammer.vg public
-	//'jammer.dev' => 'static.jam.dev',		// jammer.vg hostfile
-	'jammer.vg' => 'static.jam.vg',
-	'ldjam.work' => 'static.jammer.work',		// ldjam.com public
-	//'ldjam.dev' => 'static.jam.dev',		// ldjam.com hostfile
+	'jammer.work' => 'static.jammer.work',		// jammer.vg dev [deprecated]
+	'jammer.vg' => 'static.jam.vg',				// [deprecated]
+	'ldjam.work' => 'static.jammer.work',		// ldjam.com dev
 	'ldjam.com' => 'static.jam.vg',
-	'bio.jammer.work' => 'static.jammer.work',	// jammer.bio public
-	//'bio.jammer.dev' => 'static.jam.dev',		// jammer.bio hostfile
+	'bio.jammer.work' => 'static.jammer.work',	// jammer.bio dev
 	'jammer.bio' => 'static.jam.vg',
+	//'jam.host' => 'static.jam.host',
 ];
 const DEFAULT_STATIC_DOMAIN = 'static.jam.vg';
 define( 'STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : DEFAULT_STATIC_DOMAIN );
 define( 'STATIC_ENDPOINT', '//'.STATIC_DOMAIN );
 
 const SHORTENER_DOMAINS = [
-	'ludumdare.org' => 'url.ludumdare.org',	// legacy
-	'jammer.work' => 'url.jammer.work',	// jammer.vg public
-	//'jammer.dev' => 'url.jammer.dev',	// jammer.vg hostfile
-	'jammer.vg' => 'jam.mr',
-	'ldjam.work' => 'url.ldjam.work',	// ldjam.com public
-	//'ldjam.dev' => 'url.ldjam.dev',	// ldjam.com hostfile
+	'jammer.work' => 'url.jammer.work',			// jammer.vg dev [deprecated]
+	'jammer.vg' => 'jam.mr',					// [deprecated]
+	'ldjam.work' => 'url.ldjam.work',			// ldjam.com dev
 	'ldjam.com' => 'ldj.am',
 	//'bio.jammer.work' => '???',
 	//'bio.jammer.dev' => '???',
@@ -68,6 +62,10 @@ if ( !isset($_GET['nopreload']) ) {
 }
 //header("Link: </blah">; rel=canonical"); // https://yoast.com/rel-canonical/
 
+if ( defined('ONION_LOCATION') ) {
+	header("Onion-Location: ".ONION_LOCATION);
+}
+
 // This is insane, but necessary to stop iframing your website
 header("X-Frame-Options: DENY");
 
@@ -84,7 +82,7 @@ header("X-Frame-Options: DENY");
 	<link rel="preconnect" href="<?=API_DOMAIN?>">
 	<link rel="preconnect" href="<?=STATIC_DOMAIN?>">
 
-	<meta name=viewport content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 	<script>

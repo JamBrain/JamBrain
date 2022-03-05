@@ -66,7 +66,7 @@ export default class ContentItemRulesCheck extends Component {
 	}
 
 	allowUnfinished(nextState) {
-		if (!this.allowByCommonRules(nextState)) return false;
+		//if (!this.allowByCommonRules(nextState)) return false;
 		return true;
 	}
 
@@ -98,13 +98,16 @@ export default class ContentItemRulesCheck extends Component {
 						{optedOut ? IconChecked : IconUnChecked}
 						I have opted-out of any categories we are not eligible for (see opt-outs above).
 					</ButtonBase>
+
+					{node_CanPublish(props.parent, "item/game/jam") && (
 					<ButtonBase onclick={this.handleChange.bind(this, 'willVote', !willVote)}>
 						{willVote ? IconChecked : IconUnChecked}
 						I understand that if we want a score at the end, we need to play and rate other participants games.
 					</ButtonBase>
+					)}
 				</div>
 
-				{(node_CountAuthors(props.node) <= 1) && (
+				{node_CanPublish(props.parent, "item/game/compo") && (node_CountAuthors(props.node) <= 1) && (
 					<div class="-items">
 						<ButtonBase onclick={this.handleChange.bind(this, 'workedSolo', !workedSolo)}>
 							{workedSolo ? IconChecked : IconUnChecked}
