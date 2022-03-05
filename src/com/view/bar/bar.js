@@ -261,7 +261,7 @@ export default class ViewBar extends Component {
 					);
 				}
 				// Let them create a game
-				else if ( node_CanCreate(featured) ) {
+				else if ( node_CanCreate(featured, "item/game") ) {
 					ShowJoin = (
 						<UIButton
 							class="-bar-button"
