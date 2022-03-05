@@ -10,7 +10,7 @@ function commentComplete_GetByNode( $node ) {
 		$comment['love'] = 0;
 
 		foreach ( $loves as $love ) {
-			if ( $comment['id'] === $love['note'] ) {
+			if ( $comment['id'] === $love['comment'] ) {
 				$comment['love'] = $love['count'];
 				$comment['love-timestamp'] = $love['timestamp'];
 			}
@@ -35,7 +35,7 @@ function commentComplete_Get( $ids ) {
 			$comment['love'] = 0;
 
 			foreach ( $loves as $love ) {
-				if ( $comment['id'] === $love['note'] ) {
+				if ( $comment['id'] === $love['comment'] ) {
 					$comment['love'] = $love['count'];
 					$comment['love-timestamp'] = $love['timestamp'];
 				}

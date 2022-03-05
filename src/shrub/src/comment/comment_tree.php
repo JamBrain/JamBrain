@@ -2,9 +2,9 @@
 
 function commentTree_Add( $node, $comment, $ancestor, $hops ) {
 	$ret = db_QueryInsert(
-		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NOTE_TREE." (
+		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_COMMENT_TREE." (
 			node,
-			note,
+			comment,
 			ancestor,
 			hops
 		)

@@ -36,7 +36,7 @@ function comment_CountByNode( $ids ) {
 
 		$ret = db_QueryFetch(
 			"SELECT node, COUNT(node) AS count, ".DB_FIELD_DATE('MAX(modified)','timestamp')."
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE."
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."
 			WHERE node IN ($ids_string)
 			GROUP BY node".($multi?';':' LIMIT 1;')
 		);
@@ -73,8 +73,8 @@ function _comment_FetchTree( $ids, $threshold = null ) {
 		}
 
 		$ret = db_QueryFetch(
-			"SELECT node, note, ancestor, hops
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE_TREE."
+			"SELECT node, comment, ancestor, hops
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT_TREE."
 			WHERE node IN ($ids_string)
 			$threshold_string
 			;"
@@ -139,7 +139,7 @@ function _comment_GetByNode( $ids ) {
 				".DB_FIELD_DATE('modified').",
 				version, flags,
 				body
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE."
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."
 			WHERE node IN ($ids_string)
 			;"
 		);
@@ -176,7 +176,7 @@ function comment_GetByNode( $ids ) {
 function comment_GetNodeIdBySuperNodeAuthor( $supernode_id, $author_id ) {
 	return db_QueryFetchSingle(
 		"SELECT id
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE."
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."
 		WHERE supernode=? AND author=?
 		;",
 		$supernode_id,
@@ -189,7 +189,7 @@ function comment_InterestedUsers( $node )
 {
 	return db_QueryFetchSingle(
 		"SELECT DISTINCT author
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE."
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."
 		WHERE node = ?;",
 		$node
 	);
@@ -219,7 +219,7 @@ function comment_GetById( $ids ) {
 				".DB_FIELD_DATE('modified').",
 				version, flags,
 				body
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE."
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."
 			WHERE id IN ($ids_string)
 			;"
 		);
@@ -237,7 +237,7 @@ function comment_GetById( $ids ) {
 function _comment_AddByNode( $node, $supernode, $author, $parent, $body, $version_tag, $flags ) {
 	// Insert Proxy
 	$comment_id = db_QueryInsert(
-		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NOTE." (
+		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_COMMENT." (
 			parent,
 			node, supernode,
 			author, flags,
@@ -272,7 +272,7 @@ function comment_SafeEdit( $comment_id, $author, $body, $version_tag, $flags ) {
 	$version_id = commentVersion_Add($comment_id, $author, $body, $version_tag, $flags);
 
 	return db_QueryUpdate(
-		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NOTE."
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."
 		SET
 			modified=NOW(),
 			version=?,

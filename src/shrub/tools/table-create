@@ -116,6 +116,20 @@ function table_Update( $table, ...$args ) {
 	echo( $ret ? ($table." updated\n") : ("Error updating ".$table."\n") );
 	return $ret;
 }
+/// Functionally the same as table_Create, but does different logging
+function table_Query( $table, ...$args ) {
+	global $TABLE_VERSION;
+
+	echo "Querying table...\n";
+
+	if ( getenv('MAX_VERSION') !== false && $TABLE_VERSION > intval(getenv('MAX_VERSION')) )
+		return false;
+
+	$ret = db_Query( ...$args );
+
+	echo( $ret ? ($table." queried\n") : ("Error querying ".$table."\n") );
+	return $ret;
+}
 /// Like table_Update, but it doesn't do a query (No-Op); Use this when you want to flag a table as upgraded, but do nothing
 function table_Nop( $table ) {
 	global $TABLE_VERSION;

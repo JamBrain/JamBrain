@@ -6,12 +6,12 @@
 function commentLove_CountByNode( $node ) {
 	$ret = db_QueryFetch(
 		"SELECT
-			note,
-			COUNT(note) AS count,
+			comment,
+			COUNT(comment) AS count,
 			".DB_FIELD_DATE('MAX(timestamp)','timestamp')."
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT_LOVE."
 		WHERE node=?
-		GROUP BY note;",
+		GROUP BY comment;",
 		$node
 	);
 
@@ -28,7 +28,7 @@ function commentLove_CountBySuperNotNodeAuthorKnownNotAuthor( $supernode_id, $no
 		"SELECT
 			COUNT(id) AS count
 		FROM
-			".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
+			".SH_TABLE_PREFIX.SH_TABLE_COMMENT_LOVE."
 		WHERE
 			supernode=?
 			AND node!=?
@@ -51,7 +51,7 @@ function commentLove_CountBySuperNodeNotAuthorKnownNotAuthor( $supernode_id, $no
 		"SELECT
 			COUNT(id) AS count
 		FROM
-			".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
+			".SH_TABLE_PREFIX.SH_TABLE_COMMENT_LOVE."
 		WHERE
 			supernode=?
 			AND node=?
@@ -82,10 +82,10 @@ function commentLove_GetByComment( $comments ) {
 		$comment_string = implode(',', $comments);
 
 		$ret = db_QueryFetch(
-			"SELECT note, COUNT(note) AS count, ".DB_FIELD_DATE('MAX(timestamp)','timestamp')."
-			FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
-			WHERE note IN ($comment_string)
-			GROUP BY note".($multi?';':' LIMIT 1;')
+			"SELECT comment, COUNT(comment) AS count, ".DB_FIELD_DATE('MAX(timestamp)','timestamp')."
+			FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT_LOVE."
+			WHERE comment IN ($comment_string)
+			GROUP BY comment".($multi?';':' LIMIT 1;')
 		);
 
 		if ( $multi )
@@ -116,8 +116,8 @@ function commentLove_AddByComment( $id, $author, $node, $supernode, $authornode 
 	}
 
 	return db_QueryInsert(
-		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE." (
-			note,
+		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_COMMENT_LOVE." (
+			comment,
 			node,
 			supernode,
 			authornode,
@@ -161,8 +161,8 @@ function commentLove_RemoveByComment( $id, $author ) {
 	}
 
 	return db_QueryDelete(
-		"DELETE FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
-		WHERE note=? AND author=? AND ip=INET6_ATON(?);",
+		"DELETE FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT_LOVE."
+		WHERE comment=? AND author=? AND ip=INET6_ATON(?);",
 		$id,
 		$author,
 		$ip
@@ -199,8 +199,8 @@ function commentLove_GetByAuthor( $author, $node = null, $limit = 200 ) {
 	$full_query = '('.implode(' AND ', $QUERY).')';
 
 	return db_QueryFetch(
-		"SELECT note
-		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTE_LOVE."
+		"SELECT comment
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT_LOVE."
 		WHERE $full_query
 		$limit_string;",
 		...$ARGS
