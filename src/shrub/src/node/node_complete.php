@@ -397,10 +397,8 @@ function nodeComplete_CanIPublishHere( $id, $fulltype ) {
 		}
 	}
 
-	return false;
-
 	// By default publishing is allowed (so not to break every post that omits "can-publish")
-	//return true;
+	return true;
 }
 
 
