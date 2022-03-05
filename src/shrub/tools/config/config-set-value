@@ -25,8 +25,7 @@ _db_Connect();
 if ( _db_IsConnected() ) {
 	global_Load();
 
-	global $SH;
-	if ( isset($SH[$key]) ) {
+	if ( global_Exists($key) ) {
 		if ( global_Set($key, $value) ) {
 			exit(0);
 		}

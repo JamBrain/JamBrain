@@ -5,7 +5,7 @@
 /// @cond INTERNAL
 $SH_GLOBAL_DEFAULT['ludumdare-root'] = 0;
 $SH_GLOBAL_DEFAULT['ludumdare-alert'] = "";		// Short alert message shown by the Ludum Dare site
-$SH_GLOBAL_DEFAULT['ludumdare-event'] = 0;		// Currently Active Ludum Dare Event
+$SH_GLOBAL_DEFAULT['ludumdare-event'] = 0;		// Node where Ludum Dare events go
 
 $SH_GLOBAL_DEFAULT['jammer-root'] = 0;
 $SH_GLOBAL_DEFAULT['jammer-alert'] = "";		// Short alert message shown by the Jammer site

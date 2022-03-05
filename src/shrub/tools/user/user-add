@@ -24,12 +24,9 @@ _db_Connect();
 
 if ( _db_IsConnected() ) {
 	global_Load();
+
+	// NOTE: THIS IS A STUB! IT DOESN'T DO ANYTHING
 	
-	if ( isset($SH) ) {
-		ksort($SH);
-		echo json_encode($SH, JSON_PRETTY_PRINT)."\n";
-		exit(0);
-	}
 }
 
 exit(1);

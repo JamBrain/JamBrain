@@ -10,4 +10,4 @@ MakeKeyNode('jammer-root', SH_NODE_ID_ROOT, SH_NODE_TYPE_SITE, '', '', 'jammer',
 MakeKeyNode('ludumdare-root', SH_NODE_ID_ROOT, SH_NODE_TYPE_SITE, '', '', 'ludum-dare', 'Ludum Dare' );
 MakeKeyNode('jammer.bio-root', SH_NODE_ID_ROOT, SH_NODE_TYPE_SITE, '', '', 'jammer-bio', 'Jammer.bio' );
 
-MakeKeyNode('ludum-dare-event', $events_id /*SH_NODE_ID_EVENTS*/, 'group', SH_NODE_TYPE_EVENTS, '', 'ludum-dare', 'Ludum Dare' );
+MakeKeyNode('ludumdare-event', $events_id /*SH_NODE_ID_EVENTS*/, 'group', SH_NODE_TYPE_EVENTS, '', 'ludum-dare', 'Ludum Dare' );

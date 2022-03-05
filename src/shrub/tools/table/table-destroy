@@ -51,7 +51,7 @@ if ( !_db_IsConnected() ) {
 
 /// Drop a table
 function table_Drop($table) {
-	global $TABLE_LIST, $FULL_TABLE_LIST, $SH;
+	global $TABLE_LIST, $FULL_TABLE_LIST;
 	/// @todo make sure $table is a valid name (alphanumeric, underscores, etc)
 	
 	if ( in_array($table, $FULL_TABLE_LIST) ) {
@@ -61,12 +61,12 @@ function table_Drop($table) {
 	
 			// Special case: If the globals table, do a purge //	
 			if ( $ret && constant($table) === "global" ) {
-				echo "Purging \$SH...\n";
+				echo "Purging Globals...\n";
 				global_Purge();
 			}
 			
-			// Don't do if there's no $SH global
-			if ( $ret && count($SH) ) {
+			// Don't do if there's no global
+			if ( $ret && global_Count() ) {
 				global_Set($table, '0');
 			}
 		}

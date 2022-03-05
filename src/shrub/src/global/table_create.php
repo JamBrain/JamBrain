@@ -1,5 +1,7 @@
 <?php
 
+// MK: This file creates the $SH table, so I'm okay with it using it
+
 $table = 'SH_TABLE_GLOBAL';
 if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
