@@ -47,7 +47,7 @@ export default class PageNavRoot extends Component {
 			NavButtons.push(<ContentNavButton path={FullPath} title="News" icon="news" href="/feed/news">News</ContentNavButton>);
 		}
 
-		if ( ['/', '/explore', '/games', '/events', '/tools', '/communities'].includes(FirstPath) ) {
+		if ( ['/', '/explore', '/games', '/events'/*, '/tools', '/communities'*/].includes(FirstPath) ) {
 			NavButtons.push(<ContentNavButton path={FullPath} title="Explore" light={!IsHome} icon="browse" href="/explore">Explore</ContentNavButton>);
 			NavButtons.push(<ContentNavButton path={FirstPath} title="Games" icon="gamepad" href="/games">Games</ContentNavButton>);
 
@@ -58,8 +58,8 @@ export default class PageNavRoot extends Component {
 				else
 					NavButtons.push(<ContentNavButton path={FirstPath} title="Events" icon="trophy" href="/events">Events</ContentNavButton>);
 
-				NavButtons.push(<ContentNavButton path={FullPath} title="Tools" icon="hammer" href="/tools">Tools</ContentNavButton>);
-				NavButtons.push(<ContentNavButton path={FullPath} title="Communities" icon="users" href="/communities">Communities</ContentNavButton>);
+				//NavButtons.push(<ContentNavButton path={FullPath} title="Tools" icon="hammer" href="/tools">Tools</ContentNavButton>);
+				//NavButtons.push(<ContentNavButton path={FullPath} title="Communities" icon="users" href="/communities">Communities</ContentNavButton>);
 			}
 		}
 
