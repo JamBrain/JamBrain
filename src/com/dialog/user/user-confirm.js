@@ -16,7 +16,7 @@ export default class DialogUserConfirm extends Component {
 		return (
 			<DialogCommon title="Cookie Problem" ok explicit onok={this.onClick}>
 				<div>{"If you are seeing this message, then we were not able to set your login cookie."}</div>
-				<div>Please whitelist <code>https://api.ludumdare.com</code> (and <code>https://api.jam.vg</code>) so we can log you in.</div>
+				<div>Please whitelist <code>https://api.ldjam.com</code> (and <code>https://api.jam.host</code>) so we can log you in.</div>
 			</DialogCommon>
 		);
 	}

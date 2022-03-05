@@ -180,33 +180,64 @@ function nodeComplete_GetAuthored( $id ) {
 function nodeComplete_GetWhereIdCanCreate( $id ) {
 	$ret = [];
 
-	// Scan for public nodes with 'can-create' metadata
+	// Fetch every public 'can-create' meta entry
 	$public_metas = nodeMeta_GetByKey("can-create", null, '='.SH_SCOPE_PUBLIC);
 
-	// Add public nodes
+	// For each meta entry
 	foreach( $public_metas as &$meta ) {
-		if ( !isset($ret[$meta['value']]) ) {
-			$ret[$meta['value']] = [];
-		}
+		// Assuming its not empty
+		if ( !empty($meta['value']) ) {
+			// For each of the individual keys
+			$keys = explode('+', $meta['value']);
+			foreach( $keys as &$key ) {
+				// Create an array if none exists
+				if ( !isset($ret[$key]) ) {
+					$ret[$key] = [];
+				}
 
-		$ret[$meta['value']][] = $meta['a'];
+				// Append the id
+				$ret[$key][] = $meta['a'];
+			}
+
+			//if ( !isset($ret[$meta['value']]) ) {
+			//	$ret[$meta['value']] = [];
+			//}
+
+			//$ret[$meta['value']][] = $meta['a'];
+		}
 	}
 
 
-	// Scan for things I am the author of
+	// Get list of nodes I share authorship of
 	$authored_ids = nodeComplete_GetAuthored($id);
 	if ( !empty($authored_ids) ) {
-		// Scan for shared nodes I authored
-		$shared_metas = nodeMeta_GetByKeyNode("can-create", $authored_ids, '='.SH_SCOPE_SHARED);
+		// Fetch every 'can-create' metadata associated with the nodes I share authorship of
+		$shared_metas = nodeMeta_GetByKeyNode("can-create", $authored_ids, '='.SH_SCOPE_SHARED, null, true, false);
 
-		// Add shared nodes
+		// For each meta entry
 		foreach( $shared_metas as &$meta ) {
-			if ( in_array($meta['a'], $authored_ids) ) {
-				if ( !isset($ret[$meta['value']]) ) {
-					$ret[$meta['value']] = [];
+			// Assuming it's not empty
+			if ( !empty($meta['value']) ) {
+				// For each of the individual keys
+				$keys = explode('+', $meta['value']);
+				foreach( $keys as &$key ) {
+					// Create an array if none exists
+					if ( !isset($ret[$key]) ) {
+						$ret[$key] = [];
+					}
+
+					// Append the Id
+					$ret[$key][] = $meta['a'];
 				}
 
-				$ret[$meta['value']][] = $meta['a'];
+				//if ( in_array($meta['a'], $authored_ids) ) {
+				//	if ( !isset($ret[$meta['value']]) ) {
+				//		$ret[$meta['value']] = [];
+				//	}
+
+				//	//$ret[$meta['value']][] = $meta['a'];
+				//	array_push($ret[$meta['value']], explode('+', $meta['a']));
+				//}
 			}
 		}
 	}
@@ -246,6 +277,132 @@ function nodeComplete_GetWhereIdCanCreate( $id ) {
 
 	return $ret;
 }
+
+
+// Might not be needed
+/*
+function nodeComplete_GetWhereIdCanTransform( $id ) {
+	$ret = [];
+
+	// Fetch every public 'can-create' meta entry
+	$public_metas = nodeMeta_GetByKey("can-transform", null, '='.SH_SCOPE_PUBLIC);
+
+	// For each meta entry
+	foreach( $public_metas as &$meta ) {
+		// Assuming its not empty
+		if ( !empty($meta['value']) ) {
+			// For each of the individual keys
+			$keys = explode('+', $meta['value']);
+			foreach( $keys as &$key ) {
+				// Create an array if none exists
+				if ( !isset($ret[$key]) ) {
+					$ret[$key] = [];
+				}
+
+				// Append the id
+				$ret[$key][] = $meta['a'];
+			}
+		}
+	}
+
+
+	// Get list of nodes I share authorship of
+	$authored_ids = nodeComplete_GetAuthored($id);
+	if ( !empty($authored_ids) ) {
+		// Fetch every 'can-create' metadata associated with the nodes I share authorship of
+		$shared_metas = nodeMeta_GetByKeyNode("can-transform", $authored_ids, '='.SH_SCOPE_SHARED, null, true, false);
+
+		// For each meta entry
+		foreach( $shared_metas as &$meta ) {
+			// Assuming it's not empty
+			if ( !empty($meta['value']) ) {
+				// For each of the individual keys
+				$keys = explode('+', $meta['value']);
+				foreach( $keys as &$key ) {
+					// Create an array if none exists
+					if ( !isset($ret[$key]) ) {
+						$ret[$key] = [];
+					}
+
+					// Append the Id
+					$ret[$key][] = $meta['a'];
+				}
+			}
+		}
+	}
+
+	return $ret;
+}
+*/
+
+// MK: This only checks public `can-transform` metadatas, since that's all we currently use.
+function nodeComplete_CanITransformHere( $id, $fulltype ) {
+	// Lookup the public 'can-transform' of the specified node
+	$public_metas = nodeMeta_GetByKeyNode("can-transform", $id, '='.SH_SCOPE_PUBLIC);
+
+	// If any nodes were found, process them
+	foreach( $public_metas as &$meta ) {
+		// If not empty, we found a match
+		if ( !empty($meta['value']) ) {
+			// For each of the keys found in the value string, see if they match fulltype
+			$keys = explode('+', $meta['value']);
+			return in_array($fulltype, $keys);
+			//foreach( $keys as &$key ) {
+			//	if ( $key == $fulltype ) {
+			//		return true;
+			//	}
+			//}
+
+			//// Assume that since we found matching metadata that publishing is not allowed
+			//return false;
+		}
+	}
+
+	// By default, transforming isn't allowed
+	return false;
+}
+
+
+// MK: This only checks public `can-publish` metadatas, since that's all we currently use.
+// MK: In the future it may be worth checking against authored (SHARED) can-publish entries too, but TBD.
+function nodeComplete_CanIPublishHere( $id, $fulltype ) {
+	// TODO: Is this the best place to have the implied "I can publish" logic seen at the end of this function?
+
+	// Lookup the public 'can-publish' of the specified node
+	$public_metas = nodeMeta_GetByKeyNode("can-publish", $id, '='.SH_SCOPE_PUBLIC);
+
+	// If any nodes were found, process them
+	foreach( $public_metas as &$meta ) {
+		// If not empty, we found a match
+		if ( !empty($meta['value']) ) {
+			// Legacy, return true or false
+			if ( $meta['value'] == "1" ) {
+				return true;
+			}
+			else if ( $meta['value'] == "0" ) {
+				return false;
+			}
+
+			// For each of the keys found in the value string, see if they match fulltype
+			$keys = explode('+', $meta['value']);
+			return in_array($fulltype, $keys);
+			//foreach( $keys as &$key ) {
+			//	if ( $key == $fulltype ) {
+			//		return true;
+			//	}
+			//}
+
+			//// Assume that since we found matching metadata that publishing is not allowed
+			//return false;
+		}
+	}
+
+	return false;
+
+	// By default publishing is allowed (so not to break every post that omits "can-publish")
+	//return true;
+}
+
 
 // Legacy function. The new one returns the actual items
 function nodeComplete_GetWhatIdsIdHasAuthoredByParent( $id, $parent ) {

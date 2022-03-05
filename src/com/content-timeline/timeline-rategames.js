@@ -65,7 +65,7 @@ export default class TimelineRateGames extends Component {
 		const methods = ['smart', 'parent'];
 		const types = ['item'];
 		const subtypes = ['game'];
-		const subsubtypes = 'compo+jam';
+		const subsubtypes = 'compo+jam+extra';
 		const tags = null;
 		const more = null;
 		const limit = 30;

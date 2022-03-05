@@ -82,6 +82,8 @@ global_AddReservedName(
 	'tool',
 	'crafts',
 	'craft',
+	'extra',
+	'extras',
 	'medias',
 	'media',
 	'tags',

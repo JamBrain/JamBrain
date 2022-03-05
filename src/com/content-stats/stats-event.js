@@ -85,14 +85,16 @@ export default class ContentStatsEvent extends Component {
 				if ( EventMode >= 5 ) {
 					let submissions = [];
 
-					submissions.push(<div class="-gap"><span class="-title">Number of Submissions:</span> <span class="-value -title">{stats.jam+stats.compo+stats.craft}</span></div>);
+					submissions.push(<div class="-gap"><span class="-title">Number of Submissions:</span> <span class="-value -title">{stats.jam+stats.compo+stats.extra+stats.craft}</span></div>);
 					let entries = [
 						stats.jam,
-						stats.compo
+						stats.compo,
+						stats.extra
 					];
 					let entrienames = [
 						'Jam',
-						'Compo'
+						'Compo',
+						'Extra'
 					];
 
 					submissions.push(<PieChart values={entries} labels={entrienames} use_percentages={true}></PieChart>);

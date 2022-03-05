@@ -41,7 +41,7 @@ function nodeRandomGames_CurrentGamesList( ) {
 			"SELECT id, subsubtype
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE." 
 			WHERE type='item' AND subtype='game' AND parent=? AND
-				subsubtype IN ('compo','jam') AND published>0;",
+				subsubtype IN ('compo','jam','extra') AND published>0;",
 			$featured_event
 		);
 		
@@ -68,6 +68,7 @@ function nodeRandomGames_CurrentGamesList( ) {
 		$totalweight = 0;
 		$compoweight = 0;
 		$jamweight = 0;
+		$extraweight = 0;
 		foreach( $magic as $node => $magicdata ) {
 			if ( isset($magicdata['grade']) && isset($magicdata['smart']) ) {
 				$votecount = $magicdata['grade'];
@@ -82,8 +83,11 @@ function nodeRandomGames_CurrentGamesList( ) {
 					if ( $gametype[$node] == 'compo' ) {
 						$compoweight += $weight;
 					}
-					else {
+					else if ( $gametype[$node] == 'jam' ) {
 						$jamweight += $weight;
+					}					
+					else {
+						$extraweight += $weight;
 					}
 				}
 			}
@@ -103,6 +107,7 @@ function nodeRandomGames_CurrentGamesList( ) {
 		$data['totalweight'] = $totalweight;
 		$data['compoweight'] = $compoweight;
 		$data['jamweight'] = $jamweight;
+		$data['extraweight'] = $extraweight;
 		
 		cache_Store(SH_NODERG_CACHE_KEY, $data, SH_NODERG_CACHE_TTL);
 	}
@@ -134,6 +139,10 @@ function nodeRandomGames_GetGames( $count, $removegames, $filter = null ) {
 	if ( $filter == 'jam' ) {
 		$totalweight = $gamedata['jamweight'];
 		$filterfunc = function($a) { return $a['type'] == 'jam'; };
+	}
+	if ( $filter == 'extra' ) {
+		$totalweight = $gamedata['extraweight'];
+		$filterfunc = function($a) { return $a['type'] == 'extra'; };
 	}
 	
 	$weightedlist = $gamedata['weightedgames'];

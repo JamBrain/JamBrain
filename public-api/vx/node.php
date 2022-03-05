@@ -125,40 +125,68 @@ const VALID_TRANSFORMS = [
 	'item/game' => [
 		'item/game/jam',
 		'item/game/compo',
+		'item/game/extra',
 		'item/game/unfinished',
-		'item/craft/jam',
-		'item/craft/unfinished',
+		// 'item/craft/jam',
+		// 'item/craft/extra',
+		// 'item/craft/unfinished',
 	],
 	'item/game/compo' => [
 		'item/game/jam',
+		'item/game/extra',
 		'item/game/unfinished',
-		'item/craft/jam',
-		'item/craft/unfinished',
+		// 'item/craft/jam',
+		// 'item/craft/extra',
+		// 'item/craft/unfinished',
 	],
 	'item/game/jam' => [
 		'item/game/compo',
+		'item/game/extra',
 		'item/game/unfinished',
-		'item/craft/jam',
-		'item/craft/unfinished',
+		// 'item/craft/jam',
+		// 'item/craft/extra',
+		// 'item/craft/unfinished',
 	],
-	'item/craft/jam' => [
-		'item/game/jam',
+	'item/game/extra' => [
 		'item/game/compo',
+		'item/game/jam',
 		'item/game/unfinished',
-		'item/craft/unfinished',
+		// 'item/craft/jam',
+		// 'item/craft/extra',
+		// 'item/craft/unfinished',
 	],
+	// 'item/craft/jam' => [
+	// 	'item/game/jam',
+	// 	'item/game/compo',
+	// 	'item/game/extra',
+	// 	'item/game/unfinished',
+	// 	'item/craft/extra',
+	// 	'item/craft/unfinished',
+	// ],
+	// 'item/craft/extra' => [
+	// 	'item/game/jam',
+	// 	'item/game/compo',
+	// 	'item/game/extra',
+	// 	'item/game/unfinished',
+	// 	'item/craft/jam',
+	// 	'item/craft/unfinished',
+	// ],
 	'item/game/unfinished' => [
 		'item/game/jam',
 		'item/game/compo',
-		'item/craft/jam',
-		'item/craft/unfinished',
+		'item/game/extra',
+		// 'item/craft/jam',
+		// 'item/craft/extra',
+		// 'item/craft/unfinished',
 	],
-	'item/craft/unfinished' => [
-		'item/game/jam',
-		'item/game/compo',
-		'item/game/unfinished',
-		'item/craft/jam',
-	],
+	// 'item/craft/unfinished' => [
+	// 	'item/game/jam',
+	// 	'item/game/compo',
+	// 	'item/game/extra',
+	// 	'item/game/unfinished',
+	// 	'item/craft/jam',
+	// 	'item/craft/extra',
+	// ],
 ];
 
 const THINGS_I_CAN_FEED = [
@@ -565,6 +593,7 @@ switch ( $action ) {
 			$where = nodeComplete_GetWhereIdCanCreate($user_id);
 			//$RESPONSE['where'] = $where;
 
+			// If 'id' isn't array
 			if ( !isset($where[$fulltype]) || !in_array($parent, $where[$fulltype]) ) {
 				json_EmitFatalError_BadRequest("Can't create a $fulltype under this node", $RESPONSE);
 			}
@@ -574,12 +603,14 @@ switch ( $action ) {
 				'item/game' => 1,
 				'item/game/jam' => 1,
 				'item/game/compo' => 1,
+				'item/game/extra' => 1,
 				'item/game/warmup' => 1,
 				'item/game/incomplete' => 1,
 				'item/game/release' => -1,	// i.e. unlimited
 
 				'item/craft' => 0,			// i.e. can't create
 				'item/craft/jam' => 0,		// i.e. can't create
+				'item/craft/extra' => 0,	// i.e. can't create
 
 				'post' => -50,				// i.e. unlimited (was -25, but I haven't finished karma checking)
 				'post/news' => 0,			// i.e. can't create
@@ -787,10 +818,18 @@ switch ( $action ) {
 
 				$RESPONSE['after'] = $new_type;
 
+				// No change
 				if ( $new_type == $old_type ) {
 					$RESPONSE['changed'] = 0;
 				}
+				// If transform is an allowed transform
 				else if ( in_array($new_type, VALID_TRANSFORMS[$old_type]) ) {
+					// Confirm that parent allows this transform
+					if ( !nodeComplete_CanITransformHere($node['parent'], $fulltype) ) {
+						json_EmitFatalError_BadRequest("Transforming to '$fulltype' not allowed by parent", $RESPONSE);
+					}
+
+					// Transform Node
 					$RESPONSE['changed'] = node_SetType($node_id, $type ? $type : "", $subtype ? $subtype : "", $subsubtype ? $subsubtype : "");
 
 					nodeCache_InvalidateById($node_id);
@@ -815,24 +854,42 @@ switch ( $action ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
 			}
 
-			// Parse POST
-//			if ( isset($_POST['parent']) )
-//				$parent = intval($_POST['parent']);
-//			else
-//				json_EmitFatalError_BadRequest("'parent' not found in POST", $RESPONSE);
-
-//			if ( $event === 'compo' || $event === 'jam' ) {
+//			if ( $event === 'compo' || $event === 'jam' || $event === 'extra' ) {
 //			}
 //			else {
 //				json_EmitFatalError_BadRequest("Unsupported 'event'", $RESPONSE);
 //			}
 
-			// Fetch Node
+			// Fetch node
 			$node = nodeComplete_GetById($node_id);
+
+			// Bail if already published
 			if ( $node['published'] ) {
 				json_EmitFatalError_BadRequest("Already published", $RESPONSE);
 			}
 
+			// Build the fulltype
+			$fulltype = $node['type'];
+			if ( !empty($node['subtype']) )
+				$fulltype .= '/'.$node['subtype'];
+			if ( !empty($node['subsubtype']) )
+				$fulltype .= '/'.$node['subsubtype'];
+
+			// Check if publishing is allowed (according to the parent)
+			// NOTE: by default publishing is allowed, unless 'can-publish' metadata exists.
+			if ( !nodeComplete_CanIPublishHere($node['parent'], $fulltype) ) {
+				json_EmitFatalError_BadRequest("Publishing not allowed by parent", $RESPONSE);
+			}
+
+			//// Fetch parent node
+			//$parent = nodeComplete_GetById($node['parent']);
+			//
+			//// Bail if parent doesn't allow publishing
+			//if ( isset($parent) && isset($parent['meta']) && isset($parent['meta']['can-publish']) && ($parent['meta']['can-publish'] == "0") ) {
+			//	json_EmitFatalError_BadRequest("Publishing not allowed by parent", $RESPONSE);
+			//}
+
+			// Fetch authors of the node
 			$authors = nodeList_GetAuthors($node);
 
 			// If you are authorized to edit
@@ -842,12 +899,15 @@ switch ( $action ) {
 					json_EmitFatalError_BadRequest("Name is a reserved word", $RESPONSE);
 				}
 
+				// Generate a valid slug from the desired slug
 				$new_slug = node_GetUniqueSlugByParentSlug($node['parent'], $slug);
 
+				// Bail if too short
 				if ( strlen($new_slug) < 3 ) {
 					json_EmitFatalError_BadRequest("Name is too short (minimum 3 alphanumeric characters)", $RESPONSE);
 				}
 
+				// Add a history entry
 				$RESPONSE['edit'] = node_Edit(
 					$node_id,
 					$node['parent'], $node['author'],
@@ -857,13 +917,16 @@ switch ( $action ) {
 					$node['body'],
 					"!PUBLISH");
 
+				// Do it
 				$RESPONSE['publish'] = node_Publish(
 					$node_id
 				);
 
 				nodeCache_InvalidateById($node_id);
 
+				// If published
 				if ( $RESPONSE['publish'] ) {
+					// Include the full path to the node in the response
 					$RESPONSE['path'] = node_GetPathById($node_id, 1)['path']; // Root node
 
 					// notify users watching the author of the published node

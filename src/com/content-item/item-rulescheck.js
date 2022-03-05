@@ -16,6 +16,7 @@ export default class ContentItemRulesCheck extends Component {
 		if (onAllowChange) onAllowChange({
 			'allowJam': this.allowJam(mountState),
 			'allowCompo': this.allowCompo(mountState),
+			'allowExtra': this.allowExtra(mountState),
 			'allowUnfinished': this.allowUnfinished(mountState),
 			'rulesAnswers': mountState,
 		});
@@ -32,6 +33,7 @@ export default class ContentItemRulesCheck extends Component {
 		if (onAllowChange) onAllowChange({
 			'allowJam': this.allowJam(nextState),
 			'allowCompo': this.allowCompo(nextState),
+			'allowExtra': this.allowExtra(nextState),
 			'allowUnfinished': this.allowUnfinished(nextState),
 			'rulesAnswers': nextState,
 		});
@@ -41,6 +43,12 @@ export default class ContentItemRulesCheck extends Component {
 	allowJam(nextState) {
 		if (!this.allowByCommonRules(nextState)) return false;
 		if (!nextState.willVote) return false;
+		if (!nextState.optedOut) return false;
+		return true;
+	}
+
+	allowExtra(nextState) {
+		if (!this.allowByCommonRules(nextState)) return false;
 		if (!nextState.optedOut) return false;
 		return true;
 	}
@@ -58,7 +66,7 @@ export default class ContentItemRulesCheck extends Component {
 	}
 
 	allowUnfinished(nextState) {
-		if (!this.allowByCommonRules(nextState)) return false;
+		//if (!this.allowByCommonRules(nextState)) return false;
 		return true;
 	}
 
@@ -83,20 +91,23 @@ export default class ContentItemRulesCheck extends Component {
 				<div class="-items">
 					<ButtonBase onclick={this.handleChange.bind(this, 'readRules', !readRules)}>
 						{readRules ? IconChecked : IconUnChecked}
-						I have read and understood <NavLink blank href="/events/ludum-dare/rules/"><strong>the rules</strong></NavLink>.
+						I have read and understood <NavLink blank href="//ludumdare.com/rules/"><strong>the rules</strong></NavLink>.
 					</ButtonBase>
 
 					<ButtonBase onclick={this.handleChange.bind(this, 'optedOut', !optedOut)}>
 						{optedOut ? IconChecked : IconUnChecked}
 						I have opted-out of any categories we are not eligible for (see opt-outs above).
 					</ButtonBase>
+
+					{node_CanPublish(props.parent, "item/game/jam") && (
 					<ButtonBase onclick={this.handleChange.bind(this, 'willVote', !willVote)}>
 						{willVote ? IconChecked : IconUnChecked}
 						I understand that if we want a score at the end, we need to play and rate other participants games.
 					</ButtonBase>
+					)}
 				</div>
 
-				{(node_CountAuthors(props.node) <= 1) && (
+				{node_CanPublish(props.parent, "item/game/compo") && (node_CountAuthors(props.node) <= 1) && (
 					<div class="-items">
 						<ButtonBase onclick={this.handleChange.bind(this, 'workedSolo', !workedSolo)}>
 							{workedSolo ? IconChecked : IconUnChecked}

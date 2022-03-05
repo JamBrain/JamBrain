@@ -126,6 +126,11 @@ export default class GamesFilter extends Component {
 				],
 				[
 					4,
+					<div><SVGIcon>trophy</SVGIcon><div>Extra</div></div>,
+					<NavLink href={Path+Filter+'/extra'+WithSubSubFilter} class="-click-catcher" />,
+				],
+				[
+					5,
 					<div><SVGIcon>trash</SVGIcon><div>Unfinished</div></div>,
 					<NavLink href={Path+Filter+'/unfinished'+WithSubSubFilter} class="-click-catcher" />,
 				],
@@ -137,8 +142,11 @@ export default class GamesFilter extends Component {
 			else if (SubFilter == 'compo') {
 				value = 3;
 			}
-			else if (SubFilter == 'unfinished') {
+			else if (SubFilter == 'extra') {
 				value = 4;
+			}
+			else if (SubFilter == 'unfinished') {
+				value = 5;
 			}
 			ShowEvent = (
 				<InputDropdown

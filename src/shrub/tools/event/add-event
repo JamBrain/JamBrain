@@ -52,12 +52,14 @@ if ( !$id ) {
 const SCOPE_PUBLIC = 0;
 
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-create", "item/game");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-transform", "item/game+item/game/compo+item/game/jam+item/game/extra");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-grade", "0");
-nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-publish", "0");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-publish", "");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-theme", "1");
-nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-finished", "0");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-finished", "0");	// TODO: obsolete
 nodeMeta_Remove($id, 0, SCOPE_PUBLIC, "event-theme", "TBD");
-nodeMeta_Add($id, 0, SCOPE_PUBLIC, "theme-mode", "1");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "theme-mode", "1");		// TODO: rename to event-mode
+//nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-mode", "1");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "theme-idea-limit", "3");
 
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-start", "2019-01-01T01:00:00Z");
@@ -71,10 +73,13 @@ nodeMeta_Add($id, 0, SCOPE_PUBLIC, "theme-page-name-4", "Final Round");
 
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-slug-1", "jam");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-name-1", "Jam");
-nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-closed-1", "0");
+//nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-closed-1", "0");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-slug-2", "compo");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-name-2", "Compo");
-nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-closed-2", "0");
+//nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-closed-2", "0");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-slug-3", "extra");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-name-3", "Extra");
+//nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-group-closed-3", "0");
 
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-01", "Overall");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-02", "Fun");
