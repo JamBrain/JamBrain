@@ -20,8 +20,8 @@ _db_Connect();
 if ( _db_IsConnected() ) {
 	global_Load();
 	
-	if ( isset($SH[$key]) ) {
-		echo $SH[$key];
+	if ( global_Exists($key) ) {
+		echo global_Get($key);
 		exit(0);
 	}
 }

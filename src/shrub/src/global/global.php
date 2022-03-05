@@ -7,10 +7,11 @@ require_once __DIR__."/../core/cache.php";
 /// @{
 
 /// @cond INTERNAL
+// MK: This file is the home of $SH. Try to avoid using $SH directly.
 $SH = [];
 
 const _SH_GLOBAL_CACHE_KEY = "SH";
-const _SH_GLOBAL_CACHE_TTL = 3*60; // Every 3 minutes.
+const _SH_GLOBAL_CACHE_TTL = 10*60; // Every 10 minutes.
 /// @endcond
 
 /// @cond INTERNAL
@@ -30,7 +31,33 @@ function _global_Set($key, $value) {
 /// Set a global key to a new value
 function global_Set($key, $value) {
 	global $SH;
-	
+
+	if ( !isset($SH[$key]) || $SH[$key] !== $value ) {
+		if ( !_global_Set($key,$value) )
+			return false;
+		$SH[$key] = $value;
+		cache_Store(_SH_GLOBAL_CACHE_KEY,$SH,_SH_GLOBAL_CACHE_TTL);
+		return true;
+	}
+	return false;
+}
+$value) {
+	return db_Query(
+		"INSERT ".SH_TABLE_PREFIX.SH_TABLE_GLOBAL." (
+			`key`, `value`, `timestamp`
+		)
+		VALUES (
+			?, ?, NOW()
+		);",
+		$key,
+		$value
+	);
+}
+/// @endcond
+/// Set a global key to a new value
+function global_Set($key, $value) {
+	global $SH;
+
 	if ( !isset($SH[$key]) || $SH[$key] !== $value ) {
 		if ( !_global_Set($key,$value) )
 			return false;
@@ -43,43 +70,37 @@ function global_Set($key, $value) {
 
 /// @cond INTERNAL
 function _global_Load() {
-	$ret = cache_Fetch(_SH_GLOBAL_CACHE_KEY);
-	
-	if ( $ret === null ) {
-		// Fetch the newest version of every key //
-		$ret = db_QueryFetchPair(
-			"SELECT `key`,`value` FROM ".SH_TABLE_PREFIX.SH_TABLE_GLOBAL."
-			WHERE id IN (
-				SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_GLOBAL." GROUP BY `key`
-			);"
-		);
-		
-		if ( !is_array($ret) )
-			return [];
-		
-		// Convert types of the values of certain keys found in globals //
-		foreach ( $ret as $key => &$value ) {
-			if ( strcmp($key, "active") === 0 ) {
-				$value = intval($value);
-				continue;
-			}
-			else if ( strpos($key, "-active") !== false ) {
-				$value = intval($value);
-				continue;
-			}
-			else if ( strpos($key, "SH_TABLE_") === 0 ) {
-				$value = intval($value);
-				continue;
-			}
+	// Fetch the newest version of every key //
+	$ret = db_QueryFetchPair(
+/// @cond INTERNAL
+function _global_Load() {
+	// Fetch the newest version of every key //
+	$ret = db_QueryFetchPair(
+		"SELECT `key`,`value` FROM ".SH_TABLE_PREFIX.SH_TABLE_GLOBAL."
+		WHERE id IN (
+			SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_GLOBAL." GROUP BY `key`
+		);"
+	);
+
+	if ( !is_array($ret) )
+		return [];
+
+	// Convert types of the values of certain keys found in globals //
+	foreach ( $ret as $key => &$value ) {
+		if ( strcmp($key, "active") === 0 ) {
+			$value = intval($value);
+			continue;
 		}
-		
-		if ( $ret ) {
-			cache_Store(_SH_GLOBAL_CACHE_KEY,$ret,_SH_GLOBAL_CACHE_TTL);
+		else if ( strpos($key, "-active") !== false ) {
+			$value = intval($value);
+			continue;
 		}
-		else {
-			$ret = [];
+		else if ( strpos($key, "SH_TABLE_") === 0 ) {
+			$value = intval($value);
+			continue;
 		}
 	}
+
 	return $ret;
 }
 /// @endcond
@@ -87,7 +108,12 @@ function _global_Load() {
 function global_Load() {
 	global $SH;
 	
-	$SH = _global_Load();
+	$SH = cache_Fetch(_SH_GLOBAL_CACHE_KEY);
+
+	if ( $SH === null ) {
+		$SH = _global_Load();
+		cache_Store(_SH_GLOBAL_CACHE_KEY,$SH,_SH_GLOBAL_CACHE_TTL);
+	}
 }
 
 /// Purge the cached globals
@@ -104,14 +130,27 @@ function global_IsActive() {
 	return isset($SH['active']) && $SH['active'];
 }
 
-//function global_Has(...$args) {
-//	global $SH;
-//	foreach ( $args as $arg ) {
-//		if ( !isset($SH[$arg]) || (!$SH[$arg]) ) {
-//			return false;
-//		}
-//	}
-//	return true;
-//}
+function global_Get($key) {
+	global $SH;
+
+	return isset($SH[$key]) ? $SH[$key] : null;
+}
+function global_GetInt($key) {
+	global $SH;
+
+	return isset($SH[$key]) ? intval($SH[$key]) : 0;
+}
+
+function global_Exists($key) {
+	global $SH;
+
+	return isset($SH[$key]);
+}
+
+function global_Count() {
+	global $SH;
+
+	return count($SH);
+}
 
 /// @}

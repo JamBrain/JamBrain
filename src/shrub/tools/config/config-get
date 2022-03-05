@@ -13,6 +13,7 @@ _db_Connect();
 if ( _db_IsConnected() ) {
 	global_Load();
 	
+	// MK: I'm allowing this use of $SH because there's no reason to make a one-off function
 	if ( isset($SH) ) {
 		ksort($SH);
 		echo json_encode($SH, JSON_PRETTY_PRINT)."\n";

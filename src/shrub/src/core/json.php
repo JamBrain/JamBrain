@@ -301,9 +301,9 @@ function json_EmitOptionsAndExit( $options ) {
 
 /// After authenticating and loading globals, confirm that we're not in maintenence mode
 function json_CheckForMaintenence() {
-	global $SH, $RESPONSE;
+	global $RESPONSE;
 	if ( !userAuth_IsAdmin() && !global_IsActive() ) {
-		json_EmitFatalError_Unavailable( isset($SH['alert']) && strlen($SH['alert']) ? $SH['alert'] : null, $RESPONSE );
+		json_EmitFatalError_Unavailable( global_Get('alert'), $RESPONSE );
 	}
 }
 
