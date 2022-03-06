@@ -267,7 +267,7 @@ export default class ViewContent extends Component {
 				let DefaultFilter = 'smart';
 
 				// Results
-				if ( node && node.meta && node.meta['theme-mode'] >= 8 ) {
+				if ( node && node.meta && node.meta['event-mode'] >= 8 ) {
 					DefaultSubFilter = 'jam';//'all';
 					DefaultFilter = 'overall';
 				}
@@ -349,7 +349,7 @@ export default class ViewContent extends Component {
 					Methods = [EvalFilter2(DefaultFilter)];
 				}
 
-				if ( node && node.meta && node.meta['theme-mode'] < 8 ) {
+				if ( node && node.meta && node.meta['event-mode'] < 8 ) {
 					ShowFilters = <GamesFilter
 							Filter={Filter}
 							SubFilter={SubFilter}
@@ -454,7 +454,7 @@ export default class ViewContent extends Component {
 			}
 //			else if ( Viewing == '/games' ) {
 			else if ( extra && extra.length && extra[0] == 'games' ) {
-				let DefaultSubSubFilter = (featured && (featured.meta['theme-mode'] > 5)) ? 'featured' : 'all';
+				let DefaultSubSubFilter = (featured && (featured.meta['event-mode'] > 5)) ? 'featured' : 'all';
 				let DefaultSubFilter = 'all';
 				let DefaultFilter = 'danger';//'smart';
 

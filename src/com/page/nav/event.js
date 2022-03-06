@@ -18,11 +18,11 @@ export default class PageNavEvent extends Component {
 		let IsHome = (FullPath == '/');
 		let IsLoggedIn = user && (user.id !== 0);
 		let IsMe = ['/my'].includes(FirstPath);
-		let ThemeMode = (node.meta['theme-mode']) ? parseInt(node.meta['theme-mode']) : 0;
+		let EventMode = (node.meta['event-mode']) ? parseInt(node.meta['event-mode']) : 0;
 
 		NavButtons.push(<ContentNavButton path={path+FullPath} title={node.name} light={true} icon="trophy" href={path+'/'}>{node.name}</ContentNavButton>);
 
-		if ( ThemeMode >= 8 ) {
+		if ( EventMode >= 8 ) {
 			NavButtons.push(<ContentNavButton path={path+FirstPath} title="Results" icon="gamepad" href={path+'/results'}>Results</ContentNavButton>);
 		}
 

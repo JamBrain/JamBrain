@@ -33,22 +33,22 @@ export default class ContentEventTheme extends Component {
 		var extra = props.extra;
 
 		if ( node.slug ) {
-			let ThemeMode = (node.meta['theme-mode']) ? parseInt(node.meta['theme-mode']) : 0;
+			let EventMode = (node.meta['event-mode']) ? parseInt(node.meta['event-mode']) : 0;
 
 			var NewPath = '/'+ (extra ? extra.join('/') : '');
 
 			// Figure out Round Name (this needs to be done first, otherwise Defaults are set wrong)
 			var RoundName = '';
-			if ( ThemeMode >= 1 ) {
+			if ( EventMode >= 1 ) {
 				RoundName = 'idea';
 			}
-			if ( ThemeMode >= 2 ) {
+			if ( EventMode >= 2 ) {
 				RoundName = 'slaughter';
 			}
-			if ( ThemeMode >= 3 ) {
+			if ( EventMode >= 3 ) {
 				RoundName = 'fusion';
 			}
-			if ( ThemeMode >= 4 ) {
+			if ( EventMode >= 4 ) {
 				for ( var idx = 1; idx <= 5; idx++ ) {	// 5 rounds max
 					let Page = node.meta['theme-page-mode-'+idx];
 					if ( parseInt(Page) > 0 ) {

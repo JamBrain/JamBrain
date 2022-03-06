@@ -27,7 +27,7 @@ export default class PageEvent extends Component {
 		let DefaultFilter = "smart";
 
 		// Results
-		if ( node && node.meta && (node.meta["theme-mode"] >= 8) ) {
+		if ( node && node.meta && (node.meta["event-mode"] >= 8) ) {
 			DefaultSubFilter = "jam";//"all";
 			DefaultFilter = "overall";
 		}

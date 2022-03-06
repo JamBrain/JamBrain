@@ -13,7 +13,7 @@ export default class EventGames extends Component {
         let DefaultFilter = 'smart';
 
         // Results
-        if ( node && node.meta && (node.meta['theme-mode'] >= 8) ) {
+        if ( node && node.meta && (node.meta['event-mode'] >= 8) ) {
             DefaultSubFilter = 'all';
             DefaultFilter = 'overall';
         }
@@ -106,7 +106,7 @@ export default class EventGames extends Component {
 //			console.log("Requested Admin Display: " + requestAdmin);
 //		}
 
-        if ( node && node.meta && (node.meta['theme-mode'] >= 8 || (isAdmin && requestAdmin)) ) {
+        if ( node && node.meta && (node.meta['event-mode'] >= 8 || (isAdmin && requestAdmin)) ) {
              // Results
              ShowFilters = <GamesFilter
                     Filter={Filter}

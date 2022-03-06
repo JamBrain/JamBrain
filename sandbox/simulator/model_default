@@ -226,7 +226,7 @@ function SetupThemePhase($phase)
 	case 0: // Theme Suggestion
 		Message("Starting Theme Suggestion");
 		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-theme', '1')) ReportError("Failed to add event meta through API");
-		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '1')) ReportError("Failed to add event meta through API");
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'event-mode', '1')) ReportError("Failed to add event meta through API");
 		break;
 		
 	case 1: // Theme Slaughter
@@ -234,7 +234,7 @@ function SetupThemePhase($phase)
 		Verbose("Run external tool to perform suggestion deduplication");
 		LogExec("sudo php ~/www/src/shrub/tools/theme/theme itsautomatic dupes");
 	
-		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '2')) ReportError("Failed to add event meta through API");
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'event-mode', '2')) ReportError("Failed to add event meta through API");
 		break;
 	
 	case 2: // Theme voting
@@ -246,19 +246,19 @@ function SetupThemePhase($phase)
 		LogExec("sudo php ../src/shrub/tools/theme/theme itsautomatic simple-vote 3");
 	
 		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-1', 1); // This meta isn't yet supported to be added by admin.
-		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '4')) ReportError("Failed to add event meta through API");
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'event-mode', '4')) ReportError("Failed to add event meta through API");
 		break;
 		
 	case 3:
 		Message("Starting Theme Voting Round 2");	
 		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-2', 1);
-		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '4')) ReportError("Failed to add event meta through API");
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'event-mode', '4')) ReportError("Failed to add event meta through API");
 		break;
 		
 	case 4:
 		Message("Starting Theme Voting Round 3");	
 		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-3', 1);
-		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '4')) ReportError("Failed to add event meta through API");
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'event-mode', '4')) ReportError("Failed to add event meta through API");
 		break;
 
 	case 5:
@@ -271,7 +271,7 @@ function SetupThemePhase($phase)
 		
 		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-4', 1);
 		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-name-4', "Final Round");
-		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '4')) ReportError("Failed to add event meta through API");
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'event-mode', '4')) ReportError("Failed to add event meta through API");
 		break;
 
 	case 6: // Final theme selection
@@ -279,7 +279,7 @@ function SetupThemePhase($phase)
 		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-2', 2);
 		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-3', 2);
 		nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-page-mode-4', 2);
-		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '5')) ReportError("Failed to add event meta through API");
+		if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'event-mode', '5')) ReportError("Failed to add event meta through API");
 		
 		
 		Verbose("Run external tool to compute stats for final round");
@@ -313,7 +313,7 @@ function SetupThemePhase($phase)
 function StartCompo()
 {
 	global $event_nodeid, $event_admin_user;
-	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '5')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'event-mode', '5')) ReportError("Failed to add event meta through API");
 	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-publish', '1')) ReportError("Failed to add event meta through API");
 }
 
@@ -321,7 +321,7 @@ function StartCompo()
 function SetupSubmission()
 {
 	global $event_nodeid, $event_admin_user;
-	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '6')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'event-mode', '6')) ReportError("Failed to add event meta through API");
 	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-publish', '1')) ReportError("Failed to add event meta through API");
 	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-grade', '1')) ReportError("Failed to add event meta through API");
 }
@@ -330,7 +330,7 @@ function SetupSubmission()
 function SetupVoting()
 {
 	global $event_nodeid, $event_admin_user;
-	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '6')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'event-mode', '6')) ReportError("Failed to add event meta through API");
 	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-publish', '0')) ReportError("Failed to add event meta through API");
 	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-grade', '1')) ReportError("Failed to add event meta through API");
 }
@@ -344,7 +344,7 @@ function EndCompo()
 	LogExec("sudo php ../src/shrub/tools/grade/grade itsautomatic score compo 7"); # Require 7 ratings to be placed.
 	LogExec("sudo php ../src/shrub/tools/grade/grade itsautomatic score jam 7"); # Require 7 ratings to be placed.
 	
-	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'theme-mode', '8')) ReportError("Failed to add event meta through API");
+	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'event-mode', '8')) ReportError("Failed to add event meta through API");
 	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'can-grade', '0')) ReportError("Failed to add event meta through API");
 	if(!ApiNodeMetaAdd($event_admin_user, $event_nodeid, 'event-finished', '1')) ReportError("Failed to add event meta through API");
 }

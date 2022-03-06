@@ -70,8 +70,8 @@ export default class ContentStatsEvent extends Component {
 			//console.log(state.stats);
 
 			var EventMode = 0;
-			if ( node && node.meta && node.meta['theme-mode'] ) {
-				EventMode = parseInt(node.meta['theme-mode']);
+			if ( node && node.meta && node.meta['event-mode'] ) {
+				EventMode = parseInt(node.meta['event-mode']);
 			}
 
 			var Data = [];

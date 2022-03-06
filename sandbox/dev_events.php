@@ -107,7 +107,7 @@ if($_POST)
 			nodeMeta_Add($newevent, 0, SH_SCOPE_PUBLIC, 'event-end', $cmdend);
 
 			nodeMeta_Add($newevent, 0, SH_SCOPE_PUBLIC, 'can-theme', $cmdcantheme);
-			nodeMeta_Add($newevent, 0, SH_SCOPE_PUBLIC, 'theme-mode', $cmdthememode);
+			nodeMeta_Add($newevent, 0, SH_SCOPE_PUBLIC, 'event-mode', $cmdthememode);
 			
 			// Make featured
 			nodeMeta_Add(1, 0, SH_SCOPE_PUBLIC, 'featured', "$newevent");
@@ -133,23 +133,23 @@ if($_GET)
 			switch($state)
 			{
 				case 1: // Theme Suggestion
-					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-mode', 1);
+					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'event-mode', 1);
 					break;
 				case 2: // Theme Slaughter
-					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-mode', 2);
+					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'event-mode', 2);
 					break;
 				case 3: // Theme Voting
 				case 4: // Theme Final Voting
-					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-mode', 4);
+					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'event-mode', 4);
 					break;
 				case 5: // Compo Running
-					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-mode', 5);
+					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'event-mode', 5);
 					break;
 				case 6: // Voting
-					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-mode', 6);
+					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'event-mode', 6);
 					break;
 				case 7: // Closed
-					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'theme-mode', 8);
+					nodeMeta_Add($event_nodeid, 0, SH_SCOPE_PUBLIC, 'event-mode', 8);
 					break;
 			}
 			
@@ -247,7 +247,7 @@ Event Root ID: <input type="text" name="eventRoot" value="1"/><br />
 Event Start Time: <input type="text" name="eventStart" value="<?=$suggeststart?>"/> (Default: Now)<br />
 Event End Time: <input type="text" name="eventEnd" value="<?=$suggestend?>"/> (Default: Now+48h)<br />
 can-theme: <input type="text" name="canTheme" value="1"/><br />
-theme-mode: <input type="text" name="themeMode" value="1"/><br />
+event-mode: <input type="text" name="themeMode" value="1"/><br />
 
 <input type="hidden" name="eventCount" value="<?=$eventcount?>"/>
 <input type="submit" name="command" value="Add Event"/>

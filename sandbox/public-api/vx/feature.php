@@ -23,8 +23,8 @@ switch ( $action ) {
 			$RESPONSE['name'] = $featured['name'];
 			$RESPONSE['path'] = $featured['path'];
 			
-			if ( isset($featured['meta']['theme-mode']) ) {
-				$mode = intval($featured['meta']['theme-mode']);
+			if ( isset($featured['meta']['event-mode']) ) {
+				$mode = intval($featured['meta']['event-mode']);
 				if ( $mode == 0 ) {
 					$RESPONSE['state'] = "Inactive";
 				}
