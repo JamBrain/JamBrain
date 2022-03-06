@@ -155,7 +155,7 @@ function do_proc($cmd,&$data) {
 		$code = proc_close($proc);
 		
 		if ( $code ) {
-			EmitError(500, 'PROC ERROR ['.$code.']: '.$err);
+			EmitError(500, '['.$cmd.'] PROC ERROR ['.$code.']: '.$err);
 			exit;
 		}
 		
