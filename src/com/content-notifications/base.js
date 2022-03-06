@@ -132,26 +132,26 @@ export default class NotificationsBase extends Component {
 			notificationLookup.set(notification.id, notification);
 		});
 
-		let node2notes = new Map();
-		let notification2nodeAndNote = new Map();
-		let noteLookup = new Map();
+		let node2comments = new Map();
+		let notification2nodeAndComment = new Map();
+		let commentLookup = new Map();
 		let users = [];
 		let usersLookup = new Map();
 
 		users.push(callerID);
-		let notes = [];
+		let comments = [];
 
-		feed.forEach(({id, node, note}) => {
-			if ( note ) {
-				// Only fetch nonzero notes. Don't add zero notes to the list of notes in a node
-				if ( node2notes.has(node) ) {
-					node2notes.get(node).push(note);
+		feed.forEach(({id, node, comment}) => {
+			if ( comment ) {
+				// Only fetch nonzero comments. Don't add zero comments to the list of comments in a node
+				if ( node2comments.has(node) ) {
+					node2comments.get(node).push(comment);
 				}
 				else {
-					node2notes.set(node, [note]);
+					node2comments.set(node, [comment]);
 				}
-				notes.push(note);
-				notification2nodeAndNote.set(id, {'node': node, 'note': note});
+				comments.push(comment);
+				notification2nodeAndComment.set(id, {'node': node, 'comment': comment});
 			}
 		});
 
@@ -183,24 +183,24 @@ export default class NotificationsBase extends Component {
 
 		});
 
-		let notesPromise = $Comment.Get(notes).then((response) => {
-			//console.log('[Notifications:Notes]', response.note);
+		let commentsPromise = $Comment.Get(comments).then((response) => {
+			//console.log('[Notifications:Comments]', response.comment);
 			if ( response.comment ) {
-				response.comment.forEach((note) => {
-					noteLookup.set(note.id, note);
+				response.comment.forEach((comment) => {
+					commentLookup.set(comment.id, comment);
 
-					if ( (note.author > 0) && (users.indexOf(note.author) < 0) ) {
-						users.push(note.author);
+					if ( (comment.author > 0) && (users.indexOf(comment.author) < 0) ) {
+						users.push(comment.author);
 					}
 				});
 			}
 		});
 
-		Promise.all([nodesPromise, notesPromise, soicialPromise])
+		Promise.all([nodesPromise, commentsPromise, soicialPromise])
 			.then(() => {
-				noteLookup.forEach((note, id) => {
-					if ( note.node ) {
-						note.isNodeAuthor = nodeLookup.get(note.node).authors.indexOf(note.author) > -1;
+				commentLookup.forEach((comment, id) => {
+					if ( comment.node ) {
+						comment.isNodeAuthor = nodeLookup.get(comment.node).authors.indexOf(comment.author) > -1;
 					}
 				});
 				return $Node.Get(users);
@@ -219,16 +219,16 @@ export default class NotificationsBase extends Component {
 					});
 				}
 
-				this.composeNotifications(feed, callerID, notification2nodeAndNote, node2notes, nodeLookup, noteLookup, usersLookup, notificationLookup, social);
+				this.composeNotifications(feed, callerID, notification2nodeAndComment, node2comments, nodeLookup, commentLookup, usersLookup, notificationLookup, social);
 			});
 	}
 
-	composeNotifications( feed, callerID, notification2nodeAndNote, node2notes, nodeLookup, noteLookup, usersLookup, notificationLookup, social ) {
+	composeNotifications( feed, callerID, notification2nodeAndComment, node2comments, nodeLookup, commentLookup, usersLookup, notificationLookup, social ) {
 
 		const myAtName = '@' + usersLookup.get(callerID).name;
-		noteLookup.forEach((note, id) => {
-			note.selfauthored = note.author == callerID;
-			note.mention = note.body.indexOf(myAtName) >= 0;
+		commentLookup.forEach((comment, id) => {
+			comment.selfauthored = comment.author == callerID;
+			comment.mention = comment.body.indexOf(myAtName) >= 0;
 		});
 
 		nodeLookup.forEach((node, id) => {
@@ -258,9 +258,9 @@ export default class NotificationsBase extends Component {
 				let node = nodeLookup.get(notification.node);
 				let data = {
 					'node': node,
-					'note': undefined,
+					'comment': undefined,
 					'time': new Date(notification.created).getTime(),
-					'earliestNoteId': undefined, // Track the note id to link to for this notification.
+					'earliestCommentId': undefined, // Track the comment id to link to for this notification.
 					'unread': notification.id > this.state.highestRead,
 					'notification': [notification],
 					'mergeable': false,
@@ -283,14 +283,14 @@ export default class NotificationsBase extends Component {
 					});
 				}
 
-				// Add author for note, check if this notification be merged
-				// Allow merge if it's a note, and if it doesn't contain a mention, isn't self authored, and isn't written by the note author.
-				if ( notification.note ) {
-					let note = noteLookup.get(notification.note);
-					data.note = [note];
-					data.earliestNote = notification.note;
-					data.users.set(note.author, usersLookup.get(note.author));
-					if ( !note.mention && !note.selfauthored && !note.isNodeAuthor ) {
+				// Add author for comment, check if this notification be merged
+				// Allow merge if it's a comment, and if it doesn't contain a mention, isn't self authored, and isn't written by the comment author.
+				if ( notification.comment ) {
+					let comment = commentLookup.get(notification.comment);
+					data.comment = [comment];
+					data.earliestComment = notification.comment;
+					data.users.set(comment.author, usersLookup.get(comment.author));
+					if ( !comment.mention && !comment.selfauthored && !comment.isNodeAuthor ) {
 						data.mergeable = true;
 					}
 				}
@@ -310,8 +310,8 @@ export default class NotificationsBase extends Component {
 				let notificationId = data.notification[0].id;
 				processedNotifications.push(notification.id);
 
-				// Skip processing if notification is malformed (note.node == 0)
-				if ( data.note && (data.note[0].node == 0) ) {
+				// Skip processing if notification is malformed (comment.node == 0)
+				if ( data.comment && (data.comment[0].node == 0) ) {
 					// Don't use this notification
 				}
 				else if ( doMerge ) {
@@ -319,11 +319,11 @@ export default class NotificationsBase extends Component {
 					previousData.multi = true;
 					previousData.notification.push(notification);
 
-					// Add this note and note's author to the previousData lists.
-					let note = noteLookup.get(notification.note);
-					previousData.note.push(note);
-					previousData.users.set(note.author, usersLookup.get(note.author));
-					previousData.earliestNote = Math.min(previousData.earliestNote, notification.note);
+					// Add this comment and comment's author to the previousData lists.
+					let comment = commentLookup.get(notification.comment);
+					previousData.comment.push(comment);
+					previousData.users.set(comment.author, usersLookup.get(comment.author));
+					previousData.earliestComment = Math.min(previousData.earliestComment, notification.comment);
 				}
 				else {
 					// Not merged into another notification, just add the data structure to output.

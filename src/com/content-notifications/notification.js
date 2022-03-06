@@ -4,9 +4,9 @@ import ButtonLink						from 'com/button-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 
 
-export const noteAuthorIsAmongNodeAuthors = ( notification ) => {
-	const {node, note} = notification;
-	return note
+export const commentAuthorIsAmongNodeAuthors = ( notification ) => {
+	const {node, comment} = notification;
+	return comment
 		.map(n => node.authors.indexOf(n.author) > -1)
 		.indexOf(true) > -1;
 };
@@ -26,7 +26,7 @@ export const isNotificationMention = (notification) => {
 };
 
 export const isNotificationFeedback = (notification) => {
-	return isNotificationType(notification, 'feedback') || (isNotificationType(notification, 'note') && callerIDIsAmongNodeAuthors(notification));
+	return isNotificationType(notification, 'feedback') || (isNotificationType(notification, 'comment') && callerIDIsAmongNodeAuthors(notification));
 };
 
 export const isNotificationFriendGame = (notification) => {
@@ -38,11 +38,11 @@ export const isNotificationFriendPost = (notification) => {
 };
 
 export const isNotificationComment = (notification) => {
-	return isNotificationType(notification, 'note') && !callerIDIsAmongNodeAuthors(notification);
+	return isNotificationType(notification, 'comment') && !callerIDIsAmongNodeAuthors(notification);
 };
 
 export const isNotificationOther = (notification) => {
-	return !isNotificationType(notification, 'note') && !isNotificationType(notification, 'node') && !isNotificationType(notification, 'item') && !isNotificationType(notification, 'post') && !isNotificationType(notification, 'mention') && !isNotificationType(notification, 'feedback');
+	return !isNotificationType(notification, 'comment') && !isNotificationType(notification, 'node') && !isNotificationType(notification, 'item') && !isNotificationType(notification, 'post') && !isNotificationType(notification, 'mention') && !isNotificationType(notification, 'feedback');
 };
 
 export default class NotificationItem extends Component {
@@ -88,8 +88,8 @@ export default class NotificationItem extends Component {
 		return {"count": count, "content": Relations};
 	}
 
-	isNoteNodeAuthor( node, note ) {
-		return note && note.length == 1 ? node.authors.indexOf(note[0].author) > -1 : false;
+	isCommentNodeAuthor( node, comment ) {
+		return comment && comment.length == 1 ? node.authors.indexOf(comment[0].author) > -1 : false;
 	}
 
 	getNodeAuthorAsSubjectJSX( notification ) {
@@ -113,12 +113,12 @@ export default class NotificationItem extends Component {
 	}
 
 	getNodeAuthorAsObjectJSX( notification ) {
-		const {node, social, users, callerID, note} = notification;
+		const {node, social, users, callerID, comment} = notification;
 		const friends = this.getSocial(users, node.authors, social.friends, true);
 		if ( node.authors.indexOf(callerID) > -1) {
 			return <span>your</span>;
 		}
-		else if (this.isNoteNodeAuthor(node, note)) {
+		else if (this.isCommentNodeAuthor(node, comment)) {
 			return <span>their</span>;
 		}
 		else if ( friends.count > 0 ) {
@@ -135,27 +135,27 @@ export default class NotificationItem extends Component {
 		}
 	}
 
-	getNoteAuthorAsSubjectJSX( notification ) {
-		const {note, social, users, callerID} = notification;
-		const noteAuthors = note.map(n => n.author);
-		const friends = this.getSocial(users, noteAuthors, social.friends);
+	getCommentAuthorAsSubjectJSX( notification ) {
+		const {comment, social, users, callerID} = notification;
+		const commentAuthors = comment.map(n => n.author);
+		const friends = this.getSocial(users, commentAuthors, social.friends);
 
-		if ( noteAuthors.indexOf(callerID) > -1) {
+		if ( commentAuthors.indexOf(callerID) > -1) {
 			return <span>You</span>;
 		}
 		else if ( friends.count > 0 ) {
 			return (<span>Your friend{friends.count > 1 ? 's' : ''} {friends.content}</span>);
 		}
 		else {
-			const following = this.getSocial(users, noteAuthors, social.following);
+			const following = this.getSocial(users, commentAuthors, social.following);
 			if ( following.count > 0 ) {
 				return <span>{following.content}</span>;
 			}
-			else if (noteAuthors.length > 1) {
-				return <span>{noteAuthors.length} users</span>;
+			else if (commentAuthors.length > 1) {
+				return <span>{commentAuthors.length} users</span>;
 			}
-			else if (noteAuthors.length == 1 && users.get(noteAuthors[0])) {
-				return <span><NavLink class="-at-name">@{users.get(noteAuthors[0]).name}</NavLink></span>;
+			else if (commentAuthors.length == 1 && users.get(commentAuthors[0])) {
+				return <span><NavLink class="-at-name">@{users.get(commentAuthors[0]).name}</NavLink></span>;
 			}
 			else {
 				return <span>Someone</span>;
@@ -182,8 +182,8 @@ export default class NotificationItem extends Component {
 			'onclick': props.onclick,
 		};
 
-		if ( notification.note ) {
-			navProps.href += "#/comment-" + notification.earliestNote;
+		if ( notification.comment ) {
+			navProps.href += "#/comment-" + notification.earliestComment;
 		}
 		return navProps;
 	}
@@ -200,12 +200,12 @@ export default class NotificationItem extends Component {
 		const NotificationType = notification.notification[0].type;
 		const {node} = notification;
 
-		if (notification.note) {
-			const NoteAuthor = this.getNoteAuthorAsSubjectJSX(notification);
+		if (notification.comment) {
+			const CommentAuthor = this.getCommentAuthorAsSubjectJSX(notification);
 			const NodeAuthor = this.getNodeAuthorAsObjectJSX(notification);
 			return (
 				<ButtonLink {...navProps} >
-					<SVGIcon>quesition</SVGIcon>{timePrefix} {NoteAuthor} caused unhandled notification {NotificationType} for {NodeAuthor} {NodeType} "<em>{node.name}</em>"
+					<SVGIcon>quesition</SVGIcon>{timePrefix} {CommentAuthor} caused unhandled notification {NotificationType} for {NodeAuthor} {NodeType} "<em>{node.name}</em>"
 				</ButtonLink>
 			);
 		}
@@ -220,26 +220,26 @@ export default class NotificationItem extends Component {
 	}
 
 	renderFeedback( notification, timePrefix, navProps) {
-		const NoteAuthor = this.getNoteAuthorAsSubjectJSX(notification);
+		const CommentAuthor = this.getCommentAuthorAsSubjectJSX(notification);
 		const NodeType = this.getNodeType(notification);
 		const {node} = notification;
 
 		return (
 			<ButtonLink {...navProps} >
-				<SVGIcon>bubble-empty</SVGIcon>{timePrefix} {NoteAuthor} commented on your {NodeType} "<em>{node.name}</em>"
+				<SVGIcon>bubble-empty</SVGIcon>{timePrefix} {CommentAuthor} commented on your {NodeType} "<em>{node.name}</em>"
 			</ButtonLink>
 		);
 	}
 
 	renderComment( notification, timePrefix, navProps) {
-		const NoteAuthor = this.getNoteAuthorAsSubjectJSX(notification);
+		const CommentAuthor = this.getCommentAuthorAsSubjectJSX(notification);
 		const NodeAuthor = this.getNodeAuthorAsObjectJSX(notification);
 		const NodeType = this.getNodeType(notification);
-		const {node, note} = notification;
+		const {node, comment} = notification;
 
 		return (
 			<ButtonLink {...navProps} >
-				<SVGIcon>{note.length > 1 ? 'bubbles' : 'bubble'}</SVGIcon>{timePrefix} {NoteAuthor} commented on {NodeAuthor} {NodeType} "<em>{node.name}</em>"
+				<SVGIcon>{comment.length > 1 ? 'bubbles' : 'bubble'}</SVGIcon>{timePrefix} {CommentAuthor} commented on {NodeAuthor} {NodeType} "<em>{node.name}</em>"
 			</ButtonLink>
 		);
 	}
@@ -271,12 +271,12 @@ export default class NotificationItem extends Component {
 		const {node} = notification;
 		const NodeType = this.getNodeType(notification);
 
-		if (notification.note) {
-			const NoteAuthor = this.getNoteAuthorAsSubjectJSX(notification);
+		if (notification.comment) {
+			const CommentAuthor = this.getCommentAuthorAsSubjectJSX(notification);
 			const NodeAuthor = this.getNodeAuthorAsObjectJSX(notification);
 			return (
 				<ButtonLink {...navProps} >
-					<SVGIcon>at</SVGIcon> {timePrefix} {NoteAuthor} mentioned you in a comment on {NodeAuthor} {NodeType} "<em>{node.name}</em>"
+					<SVGIcon>at</SVGIcon> {timePrefix} {CommentAuthor} mentioned you in a comment on {NodeAuthor} {NodeType} "<em>{node.name}</em>"
 				</ButtonLink>
 			);
 		}

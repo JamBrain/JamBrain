@@ -34,7 +34,12 @@ if ( in_array($table, $TABLE_LIST) ) {
 				AUTO_INCREMENT = 1;"
 		);
 		if (!$ok) break; $TABLE_VERSION++;
-
+	case 2:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN note comment ".DB_TYPE_ID.";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 
 	table_Exit($table);
