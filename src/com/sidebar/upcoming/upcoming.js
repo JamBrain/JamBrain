@@ -27,8 +27,8 @@ export default class SidebarUpcoming extends Component {
 			<div class="-item"><strong>April 1st-4th, 2022</strong> - Ludum Dare 50 <SVGIcon baseline small>trophy</SVGIcon></div>,
 			<div class="-item">The 20th anniversary of Ludum Dare!</div>,
 			<div class="-item">&nbsp;</div>,
-			<div class="-item"><strong>October 2022</strong> - Ludum Dare 5X <SVGIcon baseline small>trophy</SVGIcon></div>,
-			<div class="-item"><strong>April 2023</strong> - Ludum Dare 5X <SVGIcon baseline small>trophy</SVGIcon></div>,
+			<div class="-item"><strong>September 30th 2022</strong> - Ludum Dare 51 <SVGIcon baseline small>trophy</SVGIcon></div>,
+			<div class="-item"><strong>April 2023</strong> - Ludum Dare 52 <SVGIcon baseline small>trophy</SVGIcon></div>,
 		];
 
 		return (
