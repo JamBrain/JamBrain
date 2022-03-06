@@ -57,7 +57,6 @@ export default class ContentEventIdea extends Component {
 					const eventThemes = r2.node
 						.sort((a,b) => (new Date(b.meta['event-start']) - new Date(a.meta['event-start'])))
 						.filter((n) => n.id !== this.props.node.id)
-						.reverse()
 						.map((n) => {
 							return {'id': n.id, 'start': n.meta['event-start'], 'theme': n.meta['event-theme'], 'name': n.name};
 						});
