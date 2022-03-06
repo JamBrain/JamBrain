@@ -162,6 +162,7 @@ global_AddReservedName(
 	'permission',
 	'permissions',
 
+	'all',
 	'jam',
 	'compo',
 	'extra',
