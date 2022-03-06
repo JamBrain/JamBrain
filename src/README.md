@@ -22,7 +22,7 @@ Inside you will find a variety of code in a variety of formats.
 
 * [/external/](external/) - 3rd party libraries
 * [/custom/](custom/) - Modified/customized versions of 3rd party libraries. Will require extra work to upgrade
-* [/compat/](compat/) - Compatibility (Polyfills) for modern and upcoming features (Ecmascript, DOM, etc)
+* [/polyfill/](polyfill/) - Compatibility (Polyfills) for modern and upcoming features (Ecmascript, DOM, etc)
 
 ## Assets
 

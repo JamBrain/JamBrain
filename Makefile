@@ -43,7 +43,7 @@ endif # WINDOWS_HOST
 
 # Include Folders (modified by recursive scripts) #
 ifdef INCLUDE_FOLDERS
-INCLUDE_FOLDERS		+=	src/compat/
+INCLUDE_FOLDERS		+=	src/polyfill/
 endif # INCLUDE_FOLDERS
 INCLUDE_FOLDERS		?=	$(SRC)/
 BUILD_FOLDER		:=	$(OUT)/$(.BUILD)/$(subst /,,$(TARGET))
