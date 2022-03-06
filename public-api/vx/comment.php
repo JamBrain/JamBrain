@@ -9,7 +9,7 @@ require_once __DIR__."/".SHRUB_PATH."node/node.php";
 
 json_Begin();
 
-const CACHE_KEY_PREFIX = "SH!NOTE!";
+const CACHE_KEY_PREFIX = "SH!COMMENT!";
 const CACHE_TTL = 60;
 
 
@@ -39,7 +39,7 @@ switch ( $action ) {
 			json_EmitFatalError_BadRequest(null, $RESPONSE);
 		}
 
-		$RESPONSE['note'] = commentFlags_Filter(commentComplete_GetByNode($ids[0]), userAuth_GetID());
+		$RESPONSE['comment'] = commentFlags_Filter(commentComplete_GetByNode($ids[0]), userAuth_GetID());
 
 		break; //case 'getbynode': //comment/getbynode
 
@@ -108,12 +108,12 @@ switch ( $action ) {
 				if ( $parent !== 0 )
 					json_EmitFatalError_Permission("Temporary: No children", $RESPONSE);
 
-				$RESPONSE['note'] = comment_AddByNode($node['id'], $node['parent'], $author, $parent, $body, $version_tag, $flags);
+				$RESPONSE['comment'] = comment_AddByNode($node['id'], $node['parent'], $author, $parent, $body, $version_tag, $flags);
 
 				// Add notifications for users watching this thread
-				if ( $RESPONSE['note'] ) {
+				if ( $RESPONSE['comment'] ) {
 					$mentions = notification_GetMentionedUsers($body);
-					notification_AddForComment($node['id'], $RESPONSE['note'], $author, $mentions);
+					notification_AddForComment($node['id'], $RESPONSE['comment'], $author, $mentions);
 				}
 
 				// Invalidate the cache for the containing node so we recompute the comment count immediately on the site.

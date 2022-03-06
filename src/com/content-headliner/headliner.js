@@ -31,7 +31,7 @@ export default class ContentHeadliner extends Component {
 			if ( props.comments ) {
 				Subtext.push(
 					<span title="Comments">
-						<SVGIcon small>bubble</SVGIcon> <span>{node.notes}</span>
+						<SVGIcon small>bubble</SVGIcon> <span>{node.comments}</span>
 					</span>
 				);
 			}

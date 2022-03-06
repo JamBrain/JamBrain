@@ -11,18 +11,18 @@ export default class ContentCommonFooterButtonComments extends Component {
 		let {node} = props;
 
 		let CountClass = '';
-		if ( node.notes >= 10 )
+		if ( node.comments >= 10 )
 			CountClass = '-count-10';
-		else if ( node.notes >= 4 )
+		else if ( node.comments >= 4 )
 			CountClass = '-count-4';
-		else if ( node.notes >= 1 )
+		else if ( node.comments >= 1 )
 			CountClass = '-count-1';
 
-		if ( node && Number.isInteger(node.notes) ) {
+		if ( node && Number.isInteger(node.comments) ) {
 			return (
 				<NavLink href={node.path} class={cN("content-common-footer-button -comments", CountClass)} title="Comments">
 					<SVGIcon>bubbles</SVGIcon>
-					<div class="-count">{node.notes}</div>
+					<div class="-count">{node.comments}</div>
 				</NavLink>
 			);
 		}

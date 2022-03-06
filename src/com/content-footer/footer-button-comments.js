@@ -13,11 +13,11 @@ export default class ContentFooterButtonComments extends Component {
 	}
 
 	render( {node, href}, {} ) {
-		if ( node && Number.isInteger(node.notes) ) {
+		if ( node && Number.isInteger(node.comments) ) {
 			return (
 				<NavLink href={href} class="footer-button footer-button-comments" title="Comments">
 					<SVGIcon>bubbles</SVGIcon>
-					<div class="-count">{node.notes}</div>
+					<div class="-count">{node.comments}</div>
 				</NavLink>
 			);
 		}

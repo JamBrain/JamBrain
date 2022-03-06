@@ -92,18 +92,18 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 		}
 	}
 
-	// Populate Note (comment) Count
+	// Populate Comment Count
 	if ( $flags & F_NODE_COMMENT ) {
 		$comments = comment_CountByNode($ids);
 		foreach ( $nodes as &$node ) {
 			// Check if comment data is public for this Node type
 			if ( comment_IsCommentPublicByNode($node) ) {
-				$node['notes'] = 0;
+				$node['comments'] = 0;
 
 				foreach ( $comments as $comment ) {
 					if ( $node['id'] === $comment['node'] ) {
-						$node['notes'] = $comment['count'];
-						$node['notes-timestamp'] = $comment['timestamp'];
+						$node['comments'] = $comment['count'];
+						$node['comments-timestamp'] = $comment['timestamp'];
 					}
 				}
 			}
