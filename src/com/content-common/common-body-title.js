@@ -55,7 +55,7 @@ export default class ContentCommonBodyTitle extends Component {
 				Body.push(<NavLink class="-text" href={props.href} title={props.hover}>{Prefix}{Title}</NavLink>);
 				if (!props.minmax && props.id) {
 
-					Body.push(<CopyToClipboardButton tooltip="Copy shortlink to clipboard" icon={"link"} class={"-shortener"} data={SHORTENER_DOMAIN+"/$" + props.id}></CopyToClipboardButton>);
+					Body.push(<CopyToClipboardButton tooltip="Copy shortlink to clipboard" icon={"link"} class={"-shortener"} data={window.location.protocol + "//" + SHORTENER_DOMAIN + "/$" + props.id}></CopyToClipboardButton>);
 				}
 			}
 			else {
