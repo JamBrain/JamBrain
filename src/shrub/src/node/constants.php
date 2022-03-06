@@ -89,6 +89,10 @@ global_AddReservedName(
 
 	'likes',
 	'like',
+	'vote',
+	'votes',
+	'rate',
+	'rating',
 
 	'edit',
 	'update',
@@ -157,11 +161,6 @@ global_AddReservedName(
 	'files',
 	'permission',
 	'permissions',
-
-	'vote',
-	'votes',
-	'rate',
-	'rating',
 
 	'jam',
 	'compo',
