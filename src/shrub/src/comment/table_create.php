@@ -7,7 +7,8 @@ const DB_TYPE_COMMENT_HOPS = 'INT NOT NULL';			// INT: 2^16 signed (32k)
 // Simliar to the regular COMMENT, but just a snapshot
 // IMPORTANT: This has to come first, just in case the COMMENT table needs to make comments
 $table = 'SH_TABLE_NOTE_VERSION';
-if ( in_array($table, $TABLE_LIST) ) {
+$new_table = 'SH_TABLE_COMMENT_VERSION';
+if ( in_array($table, $TABLE_LIST) && in_array($new_table, $TABLE_LIST) ) {
 	$ok = null;
 
 	table_Init($table);
@@ -35,12 +36,39 @@ if ( in_array($table, $TABLE_LIST) ) {
 					AFTER timestamp;"
 			);
 		if (!$ok) break; $TABLE_VERSION++;
+	case 2:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN note comment ".DB_TYPE_ID.";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+	case 3:
+		$ok = table_Update( $table,
+			"RENAME TABLE ".SH_TABLE_PREFIX.constant($table)." TO ".SH_TABLE_PREFIX.constant($new_table).";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+	};
+	// IMPORTANT! DO NOT ADD ANY MORE STEPS HERE! THE TABLE WAS RENAMED! ADD THEM BELOW!
+	table_Exit($table);
+}
+$table = 'SH_TABLE_COMMENT_VERSION';
+if ( in_array($table, $TABLE_LIST) && (global_GetInt('SH_TABLE_NOTE_VERSION') == 3+1) ) {
+	$ok = null;
+
+	table_Init($table);
+	switch ( $TABLE_VERSION ) {
+	case 0:
+		$ok = table_Query( $table,
+			"SELECT * from ".SH_TABLE_PREFIX.constant($table)." LIMIT 1;");
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
 }
 
+
 $table = 'SH_TABLE_NOTE_TREE';
-if ( in_array($table, $TABLE_LIST) ) {
+$new_table = 'SH_TABLE_COMMENT_TREE';
+if ( in_array($table, $TABLE_LIST) && in_array($new_table, $TABLE_LIST) ) {
 	$ok = null;
 
 	table_Init($table);
@@ -60,12 +88,39 @@ if ( in_array($table, $TABLE_LIST) ) {
 			)".DB_CREATE_SUFFIX);
 		$created = true;
 		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN note comment ".DB_TYPE_ID.";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+	case 2:
+		$ok = table_Update( $table,
+			"RENAME TABLE ".SH_TABLE_PREFIX.constant($table)." TO ".SH_TABLE_PREFIX.constant($new_table).";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+	};
+	// IMPORTANT! DO NOT ADD ANY MORE STEPS HERE! THE TABLE WAS RENAMED! ADD THEM BELOW!
+	table_Exit($table);
+}
+$table = 'SH_TABLE_COMMENT_TREE';
+if ( in_array($table, $TABLE_LIST) && (global_GetInt('SH_TABLE_NOTE_TREE') == 2+1) ) {
+	$ok = null;
+
+	table_Init($table);
+	switch ( $TABLE_VERSION ) {
+	case 0:
+		$ok = table_Query( $table,
+			"SELECT * from ".SH_TABLE_PREFIX.constant($table)." LIMIT 1;");
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
 }
 
+
 $table = 'SH_TABLE_NOTE';
-if ( in_array($table, $TABLE_LIST) ) {
+$new_table = 'SH_TABLE_COMMENT';
+if ( in_array($table, $TABLE_LIST) && in_array($new_table, $TABLE_LIST) ) {
 	$ok = null;
 
 	table_Init($table);
@@ -115,13 +170,33 @@ if ( in_array($table, $TABLE_LIST) ) {
 					AFTER version;"
 			);
 		if (!$ok) break; $TABLE_VERSION++;
+	case 5:
+		$ok = table_Update( $table,
+			"RENAME TABLE ".SH_TABLE_PREFIX.constant($table)." TO ".SH_TABLE_PREFIX.constant($new_table).";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
+	// IMPORTANT! DO NOT ADD ANY MORE STEPS HERE! THE TABLE WAS RENAMED! ADD THEM BELOW!
+	table_Exit($table);
+}
+$table = 'SH_TABLE_COMMENT';
+if ( in_array($table, $TABLE_LIST) && (global_GetInt('SH_TABLE_NOTE') == 5+1) ) {
+	$ok = null;
 
+	table_Init($table);
+	switch ( $TABLE_VERSION ) {
+	case 0:
+		$ok = table_Query( $table,
+			"SELECT * from ".SH_TABLE_PREFIX.constant($table)." LIMIT 1;");
+		if (!$ok) break; $TABLE_VERSION++;
+	};
 	table_Exit($table);
 }
 
+
 $table = 'SH_TABLE_NOTE_LOVE';
-if ( in_array($table, $TABLE_LIST) ) {
+$new_table = 'SH_TABLE_COMMENT_LOVE';
+if ( in_array($table, $TABLE_LIST) && in_array($new_table, $TABLE_LIST) ) {
 	$ok = null;
 
 	// NOTE: What is love(d), baby don't hurt me
@@ -182,7 +257,31 @@ if ( in_array($table, $TABLE_LIST) ) {
 				ADD INDEX authornode (authornode);"
 			);
 		if (!$ok) break; $TABLE_VERSION++;
+	case 7:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN note comment ".DB_TYPE_ID.";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+	case 8:
+		$ok = table_Update( $table,
+			"RENAME TABLE ".SH_TABLE_PREFIX.constant($table)." TO ".SH_TABLE_PREFIX.constant($new_table).";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+	};
+	// IMPORTANT! DO NOT ADD ANY MORE STEPS HERE! THE TABLE WAS RENAMED! ADD THEM BELOW!
+	table_Exit($table);
+}
+$table = 'SH_TABLE_COMMENT_LOVE';
+if ( in_array($table, $TABLE_LIST) && (global_GetInt('SH_TABLE_NOTE_LOVE') == 8+1) ) {
+	$ok = null;
+
+	table_Init($table);
+	switch ( $TABLE_VERSION ) {
+	case 0:
+		$ok = table_Query( $table,
+			"SELECT * from ".SH_TABLE_PREFIX.constant($table)." LIMIT 1;");
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
 }
-

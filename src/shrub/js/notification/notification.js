@@ -55,7 +55,7 @@ export const GetFilters = () => {
 
 const ShouldShow = (notification, settings) => {
 	switch (notification.type) {
-		case 'note':
+		case 'comment':
 			return settings.Comment;
 		case 'mention':
 			return settings.Mention;

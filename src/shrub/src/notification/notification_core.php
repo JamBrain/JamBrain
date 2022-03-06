@@ -15,7 +15,7 @@ function notification_Add( $user, $node, $comment, $type ) {
 	$notification_id = db_QueryInsert(
 		"INSERT INTO ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION." (
 			user,
-			node, note,
+			node, comment,
 			type,
 			created
 		)
@@ -39,7 +39,7 @@ function notification_AddMultiple($notifications) {
 	$values = [];
 	foreach($notifications as $n) {
 		$user = intval($n['user']);
-		$comment = intval($n['note']);
+		$comment = intval($n['comment']);
 		$node = intval($n['node']);
 		$type = str_replace("'","''",$n['type']); // Note string originates from website code, not user data.
 		$values[] = "($user, $node, $comment, '$type', NOW())";
@@ -47,7 +47,7 @@ function notification_AddMultiple($notifications) {
 	db_QueryInsert(
 		"INSERT INTO ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION." (
 			user,
-			node, note,
+			node, comment,
 			type,
 			created
 		)
@@ -83,7 +83,7 @@ function notification_CountUnread( $user ) {
 function notification_GetUnread( $user, $limit = 20, $offset = 0 ) {
 	$last_read = notification_GetLastReadNotification( $user );
 	return db_QueryFetch(
-		"SELECT id, node, note, type, ".DB_FIELD_DATE('created')."
+		"SELECT id, node, comment, type, ".DB_FIELD_DATE('created')."
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION."
 		WHERE user=? AND id > ?
 		ORDER BY id DESC
@@ -108,7 +108,7 @@ function notification_Count( $user ) {
 
 function notification_Get( $user, $limit = 20, $offset = 0 ) {
 	return db_QueryFetch(
-		"SELECT id, node, note, type, ".DB_FIELD_DATE('created')."
+		"SELECT id, node, comment, type, ".DB_FIELD_DATE('created')."
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NOTIFICATION."
 		WHERE user=?
 		ORDER BY id DESC
@@ -142,14 +142,14 @@ function notification_AddForPublishedNode( $node, $author, $type, $mentions = []
 		$starusers = array_diff($starusers, $mentions);
 		foreach($starusers as $user)
 		{
-			$notifications[] = ['user' => $user, 'node' => $node, 'note' => 0, 'type' => $type];
+			$notifications[] = ['user' => $user, 'node' => $node, 'comment' => 0, 'type' => $type];
 		}
 		foreach($mentions as $user)
 		{
 			if ( $user == $author ) {
 				continue; // don't inform author that they mentioned themselves. That would be silly.
 			}
-			$notifications[] = ['user' => $user, 'node' => $node, 'note' => 0, 'type' => SH_NOTIFICATION_MENTION];
+			$notifications[] = ['user' => $user, 'node' => $node, 'comment' => 0, 'type' => SH_NOTIFICATION_MENTION];
 		}
 
 		notification_AddMultiple($notifications);
@@ -178,7 +178,7 @@ function notification_AddForComment( $node_id, $comment, $author, $mentions = []
 
 	// Find other authors linked to this node.
 	// Allow the link to be in either direction, Currently website adds author links as <game node>, <user id>
-	// No need to add all authors to users though since they will get feedback type instead of note
+	// No need to add all authors to users though since they will get feedback type instead of comment
 	$feedback_notify = nodeMeta_GetAuthors($node_id);
 	if ($nodeauthor) {
 		$feedback_notify[] = $nodeauthor;
@@ -207,21 +207,21 @@ function notification_AddForComment( $node_id, $comment, $author, $mentions = []
 	$notifications = [];
 	foreach($base_notify as $uid)	{
 		if ( $uid == $author )
-			continue; // Don't bother sending the author of the note a notification for their own note.
+			continue; // Don't bother sending the author of the comment a notification for their own comment.
 
-		$notifications[] = ['user' => $uid, 'node' => $node_id, 'note' => $comment, 'type' => SH_NOTIFICATION_NOTE];
+		$notifications[] = ['user' => $uid, 'node' => $node_id, 'comment' => $comment, 'type' => SH_NOTIFICATION_COMMENT];
 	}
 	foreach($mentions as $uid)	{
 		if ( $uid == $author )
-			continue; // Don't bother sending the author of the note a notification for their own note.
+			continue; // Don't bother sending the author of the comment a notification for their own comment.
 
-		$notifications[] = ['user' => $uid, 'node' => $node_id, 'note' => $comment, 'type' => SH_NOTIFICATION_MENTION];
+		$notifications[] = ['user' => $uid, 'node' => $node_id, 'comment' => $comment, 'type' => SH_NOTIFICATION_MENTION];
 	}
 	foreach($feedback_notify as $uid)	{
 		if ( $uid == $author )
-			continue; // Don't bother sending the author of the note a notification for their own note.
+			continue; // Don't bother sending the author of the comment a notification for their own comment.
 
-		$notifications[] = ['user' => $uid, 'node' => $node_id, 'note' => $comment, 'type' => SH_NOTIFICATION_FEEDBACK];
+		$notifications[] = ['user' => $uid, 'node' => $node_id, 'comment' => $comment, 'type' => SH_NOTIFICATION_FEEDBACK];
 	}
 
 	notification_AddMultiple($notifications);
@@ -234,7 +234,7 @@ function notification_AddForEdit($node, $comment, $author, $mentions = []) {
 		if ( $uid == $author )
 			continue; // Don't bother sending the author of the comment a notification for their own comment.
 
-		$notifications[] = ['user' => $uid, 'node' => $node, 'note' => $comment, 'type' => SH_NOTIFICATION_MENTION];
+		$notifications[] = ['user' => $uid, 'node' => $node, 'comment' => $comment, 'type' => SH_NOTIFICATION_MENTION];
 	}
 
 	notification_AddMultiple($notifications);

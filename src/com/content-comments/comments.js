@@ -53,11 +53,11 @@ export default class ContentComments extends Component {
 		$Comment.GetByNode(node.id)
 		.then(r => {
 			// Has comments
-			if ( r.note && r.note.length ) {
-				this.setState({'comments': r.note, 'tree': null, 'authors': null});
+			if ( r.comment && r.comment.length ) {
+				this.setState({'comments': r.comment, 'tree': null, 'authors': null});
 			}
 			// Does not have comments
-			else if ( r.note ) {
+			else if ( r.comment ) {
 				this.setState({'comments': [], 'tree': null, 'authors': null});
 			}
 
@@ -204,7 +204,7 @@ export default class ContentComments extends Component {
 
 		const actualLove = [];
 		for ( var item in lovedComments ) {
-			actualLove.push(lovedComments[item]['note']);
+			actualLove.push(lovedComments[item]['comment']);
 		}
 
 		const ret = [];
@@ -245,10 +245,10 @@ export default class ContentComments extends Component {
 		$Comment.Add(newcomment.parent, newcomment.node, newcomment.body, null, publishAnon)
 		.then(r => {
 			if (subscribed == null) this.onToggleSubscribe();
-			if ( r.note ) {
+			if ( r.comment ) {
 				var Now = new Date();
 				var comment = Object.assign({
-					'id': r.note,
+					'id': r.comment,
 					'created': Now.toISOString(),
 					'modified': Now.toISOString(),
 					'anonymous': publishAnon,
