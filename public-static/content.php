@@ -309,11 +309,12 @@ if ( hasChanges($out) ) {
 				// https://pngquant.org/
 				// https://pngquant.org/php.html
 				
-				$file_out_min_quality = 60;
-				$file_out_max_quality = 95;
+				//$file_out_min_quality = 60;
+				//$file_out_max_quality = 95;
 
 				$data = do_proc(
-					'pngquant --quality='.$file_out_min_quality.'-'.$file_out_max_quality.' -',
+					//'pngquant --quality='.$file_out_min_quality.'-'.$file_out_max_quality.' -',
+					'pngquant -',
 					$data
 				);
 			}
