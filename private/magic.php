@@ -13,7 +13,7 @@ const MAX_ITEMS_TO_ADD = 500;
 const MAX_ITEMS_TO_CALC = 500;
 
 // TODO: Adjust the maximum effectiveness as the weeks go by. Start with like 50 initially (more than enough), but let it go up after.
-const FEEDBACK_PER_NOTE = 2.0;
+const FEEDBACK_PER_COMMENT = 2.0;
 
 const COOL_MIN_POINTS = 1;		// In the future, set this to 3 or 4
 const COOL_MIN_GRADES = 1;		// In the future, set this to 3 or 4
@@ -216,8 +216,8 @@ if ( $featured_id ) {
 					$raw_team_feedback = commentLove_CountBySuperNotNodeAuthorKnownNotAuthor($node['parent'], $node['id'], $authors);
 					$raw_given_feedback = commentLove_CountBySuperNodeNotAuthorKnownNotAuthor($node['parent'], $node['id'], $authors);
 
-					$team_feedback = $raw_team_feedback / FEEDBACK_PER_NOTE;
-					$given_feedback = $raw_given_feedback / FEEDBACK_PER_NOTE;
+					$team_feedback = $raw_team_feedback / FEEDBACK_PER_COMMENT;
+					$given_feedback = $raw_given_feedback / FEEDBACK_PER_COMMENT;
 
 					// Unlke grade, given feedback is bound, so excessive feedback doesn't accidentially drown-out the grades
 					$bound_feedback = (sqrt(min(COOL_MAX_FEEDBACK, max(COOL_MIN_FEEDBACK, $team_feedback)) * 100.0 / min(COOL_MAX_FEEDBACK, max(1.0, $given_feedback))) * 100.0 / 10.0) - 100.0;

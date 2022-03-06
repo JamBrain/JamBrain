@@ -13,7 +13,7 @@ export default {
 //var STORAGE = Memory;
 
 //export function SetMy( node, Data ) {
-//	var key = 'NOTE|LOVE|MINE|'+node;
+//	var key = 'COMMENT|LOVE|MINE|'+node;
 //	return STORAGE.Store(key, Data);
 //}
 
@@ -24,12 +24,12 @@ function GetMy( node ) {
 
 // Add/Remove love from a specific comment * -- node is necessary, for when we start remembering what we've loved locally
 export function Add( node, comment ) {
-//	STORAGE.Push('NOTE|LOVE|MINE|'+node, comment);
+//	STORAGE.Push('COMMENT|LOVE|MINE|'+node, comment);
 
 	return Fetch.Get(API_ENDPOINT+'/vx/comment/love/add/'+comment, true);
 }
 export function Remove( node, comment ) {
-//	STORAGE.Pop('NOTE|LOVE|MINE|'+node, comment);
+//	STORAGE.Pop('COMMENT|LOVE|MINE|'+node, comment);
 
 	return Fetch.Get(API_ENDPOINT+'/vx/comment/love/remove/'+comment, true);
 }
