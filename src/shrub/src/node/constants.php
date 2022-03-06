@@ -158,5 +158,18 @@ global_AddReservedName(
 	'permission',
 	'permissions',
 
+	'vote',
+	'votes',
+	'rate',
+	'rating',
+
+	'jam',
+	'compo',
+	'extra',
+	'craft',
+	'release',
+	'releases',
+	'unfinished',
+
 	'news'
 );
