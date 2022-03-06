@@ -4,7 +4,7 @@ TARGET				:=	public-jammer.bio
 MAIN_FOLDER			:=	src/$(TARGET)
 TARGET_FOLDER		:=	$(TARGET)/-/
 
-INCLUDE_FOLDERS		:=	src/core-data/ \
+INCLUDE_FOLDERS		:=	\
 						src/shrub/js/ \
 						src/com/ \
 						src/custom/ \
