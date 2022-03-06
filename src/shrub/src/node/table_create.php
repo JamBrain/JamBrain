@@ -99,7 +99,6 @@ if ( in_array($table, $TABLE_LIST) ) {
 }
 
 
-//$table = 'SH_TABLE_NODE_META';
 $table = 'SH_TABLE_NODE_META_VERSION';
 if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
@@ -191,6 +190,13 @@ if ( in_array($table, $TABLE_LIST) ) {
 			);
 			// Allow null `value`
 		if (!$ok) break; $TABLE_VERSION++;
+	case 11:
+		// LDJAM specific change. Rather than a separate migration script, just do it here.
+		$ok = table_Update( $table,
+			"UPDATE ".SH_TABLE_PREFIX.constant($table)."
+				SET `key`='event-mode' WHERE `key`='theme-mode';"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
 }
@@ -220,14 +226,20 @@ if ( in_array($table, $TABLE_LIST) ) {
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
 	case 1:
+		// NOTE: `value` cannot be indexed, since it is not a VARCHAR
+		// NOTE: `scope` needs to be indexed, so we can do >= 0 check
 		$ok = table_Update( $table,
 			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
 				ADD UNIQUE `a_b_key` (`a`, `b`, `key`);"
 			);
 		if (!$ok) break; $TABLE_VERSION++;
-
-		// NOTE: `value` cannot be indexed, since it is not a VARCHAR
-		// NOTE: `scope` needs to be indexed, so we can do >= 0 check
+	case 2:
+		// LDJAM specific change. Rather than a separate migration script, just do it here.
+		$ok = table_Update( $table,
+			"UPDATE ".SH_TABLE_PREFIX.constant($table)."
+				SET `key`='event-mode' WHERE `key`='theme-mode';"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
 }

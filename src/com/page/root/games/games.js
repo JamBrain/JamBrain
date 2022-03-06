@@ -21,7 +21,7 @@ export default class PageHomeGames extends Component {
 
 		const GamesFeedFilter = state.gamesFilter;
 
-		let DefaultSubSubFilter = (featured && (featured.meta['theme-mode'] >= 5)) ? 'featured' : 'everything';
+		let DefaultSubSubFilter = (featured && (featured.meta['event-mode'] >= 5)) ? 'featured' : 'everything';
 		let DefaultSubFilter = 'all';
 
 		//TODO:: Make this automatically change between smart and danger

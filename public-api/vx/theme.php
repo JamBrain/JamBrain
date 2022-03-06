@@ -56,7 +56,7 @@ function doThemeIdeaVote( $value ) {
 		$idea = themeIdea_GetById($idea_id);
 		if ( isset($idea) && isset($idea['node']) ) {
 			if ( $event = validateEvent($idea['node']) ) {
-				if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) === 2 ) {
+				if ( isset($event['meta']) && isset($event['meta']['event-mode']) && intval($event['meta']['event-mode']) === 2 ) {
 					$author_id = userAuth_GetId();
 					if ( $author_id ) {
 						$RESPONSE['id'] = themeIdeaVote_Add($idea['node'], $idea_id, $author_id, $value);
@@ -149,7 +149,7 @@ function doThemeListVote( $value ) {
 				// TODO: Check Page activity too
 				$page = $item['page'];
 				//$RESPONSE['event'] = $event;
-				if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) === 4 ) {
+				if ( isset($event['meta']) && isset($event['meta']['event-mode']) && intval($event['meta']['event-mode']) === 4 ) {
 					if ( isset($event['meta']["theme-page-mode-$page"]) && intval($event['meta']["theme-page-mode-$page"]) === 1 ) {
 						$author_id = userAuth_GetId();
 						if ( $author_id ) {
@@ -190,14 +190,14 @@ switch ( $action ) {
 		if ( $event = validateEvent($event_id) ) {
 			$ret = [];
 
-			if ( isset($event['meta']) && isset($event['meta']['theme-mode']) ) {
-				if ( intval($event['meta']['theme-mode']) >= 1 ) {
+			if ( isset($event['meta']) && isset($event['meta']['event-mode']) ) {
+				if ( intval($event['meta']['event-mode']) >= 1 ) {
 					$ret['idea'] = themeIdea_GetStats($event_id);
 				}
-//				if ( intval($event['meta']['theme-mode']) >= 2 ) {
+//				if ( intval($event['meta']['event-mode']) >= 2 ) {
 //					$ret['idea'] = themeIdeaVote_GetStats($event_id);
 //				}
-//				if ( intval($event['meta']['theme-mode']) >= 3 ) {
+//				if ( intval($event['meta']['event-mode']) >= 3 ) {
 //					$ret['idea'] = themeIdeaCompare_GetStats($event_id);
 //				}
 			}
@@ -341,7 +341,7 @@ switch ( $action ) {
 				$event_id = intval(json_ArgGet(0));
 				if ( $event = validateEvent($event_id) ) {
 					// Is Event Accepting Suggestions ?
-					if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) === 1 ) {
+					if ( isset($event['meta']) && isset($event['meta']['event-mode']) && intval($event['meta']['event-mode']) === 1 ) {
 						$theme_limit = isset($event['meta']['theme-idea-limit']) ? intval($event['meta']['theme-idea-limit']) : 0;
 
 						$RESPONSE['response'] = themeIdea_Add($idea, $event_id, $user, $theme_limit);
@@ -378,7 +378,7 @@ switch ( $action ) {
 				$event_id = intval(json_ArgGet(0));
 				if ( $event = validateEvent($event_id) ) {
 					// Is Event Accepting Suggestions ?
-					if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) === 1 ) {
+					if ( isset($event['meta']) && isset($event['meta']['event-mode']) && intval($event['meta']['event-mode']) === 1 ) {
 						$RESPONSE['response'] = themeIdea_Remove($id, $user);
 
 						$RESPONSE['ideas'] = themeIdea_Get($event_id, $user);
@@ -402,7 +402,7 @@ switch ( $action ) {
 						$event_id = intval(json_ArgGet(0));
 
 						if ( $event = validateEvent($event_id) ) {
-							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) >= 1 ) {
+							if ( isset($event['meta']) && isset($event['meta']['event-mode']) && intval($event['meta']['event-mode']) >= 1 ) {
 								$author_id = userAuth_GetId();
 								if ( $author_id ) {
 									$threshold = 0.0;
@@ -423,7 +423,7 @@ switch ( $action ) {
 						$event_id = intval(json_ArgGet(0));
 
 						if ( $event = validateEvent($event_id) ) {
-							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) >= 2 ) {
+							if ( isset($event['meta']) && isset($event['meta']['event-mode']) && intval($event['meta']['event-mode']) >= 2 ) {
 								$author_id = userAuth_GetId();
 								if ( $author_id ) {
 									$RESPONSE['votes'] = themeIdeaVote_GetMy($event_id, $author_id);
@@ -553,7 +553,7 @@ switch ( $action ) {
 //						$event_id = intval(json_ArgGet(0));
 //
 //						if ( $event = validateEvent($event_id) ) {
-//							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) >= 2 ) {
+//							if ( isset($event['meta']) && isset($event['meta']['event-mode']) && intval($event['meta']['event-mode']) >= 2 ) {
 //								$author_id = userAuth_GetId();
 //								if ( $author_id ) {
 //									$threshold = 0.0;
@@ -574,7 +574,7 @@ switch ( $action ) {
 						$event_id = intval(json_ArgGet(0));
 
 						if ( $event = validateEvent($event_id) ) {
-							if ( isset($event['meta']) && isset($event['meta']['theme-mode']) && intval($event['meta']['theme-mode']) >= 4 ) {
+							if ( isset($event['meta']) && isset($event['meta']['event-mode']) && intval($event['meta']['event-mode']) >= 4 ) {
 								$author_id = userAuth_GetId();
 								if ( $author_id ) {
 									$votes = themeListVote_GetByNodeUser($event_id, $author_id);

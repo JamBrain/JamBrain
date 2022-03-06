@@ -32,28 +32,28 @@ export default class ContentEventHome extends Component {
 
 
 	render( {node, /*user,*/ path, extra}, {stats /*, error*/} ) {
-		let ThemeMode = (node.meta['theme-mode']) ? parseInt(node.meta['theme-mode']) : 0;
+		let EventMode = (node.meta['event-mode']) ? parseInt(node.meta['event-mode']) : 0;
 
-		var ThemeModeText = "";
-		switch ( ThemeMode ) {
+		var EventModeText = "";
+		switch ( EventMode ) {
 			case 1:
-				ThemeModeText = "Suggest Themes";
+				EventModeText = "Suggest Themes";
 				break;
 			case 2:
-				ThemeModeText = "Slaughter Themes";
+				EventModeText = "Slaughter Themes";
 				break;
 			case 3:
-				ThemeModeText = "Fuse Themes";
+				EventModeText = "Fuse Themes";
 				break;
 			case 4:
-				ThemeModeText = "Vote for Themes";
+				EventModeText = "Vote for Themes";
 				break;
 			case 5:
-				ThemeModeText = "Vote for Final Theme";
+				EventModeText = "Vote for Final Theme";
 				break;
 		};
 
-		var ThemeModeName = [
+		var EventModeName = [
 			"",
 			"Theme Suggestion",
 			"Theme Slaughter",
@@ -63,7 +63,7 @@ export default class ContentEventHome extends Component {
 			""
 		];
 
-		var ThemeSelectionDiv = ThemeModeText ? <NavLink href={path+'/theme'} class="-item"><SVGIcon>mallet</SVGIcon> {ThemeModeText}</NavLink> : "";
+		var ThemeSelectionDiv = EventModeText ? <NavLink href={path+'/theme'} class="-item"><SVGIcon>mallet</SVGIcon> {EventModeText}</NavLink> : "";
 
 		var ShowStats = null;
 		if ( stats ) {
@@ -86,8 +86,8 @@ export default class ContentEventHome extends Component {
 		}
 
 		var ShowEventMode = null;
-		if ( node.meta && node.meta['theme-mode'] > 0 ) {
-			ShowEventMode = (<div><strong>ON NOW:</strong> {ThemeModeName[node.meta['theme-mode']]}</div>);
+		if ( node.meta && node.meta['event-mode'] > 0 ) {
+			ShowEventMode = (<div><strong>ON NOW:</strong> {EventModeName[node.meta['event-mode']]}</div>);
 		}
 
 		var markedOptions = {

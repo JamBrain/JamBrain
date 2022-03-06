@@ -58,8 +58,7 @@ nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-publish", "");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-theme", "1");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-finished", "0");	// TODO: obsolete
 nodeMeta_Remove($id, 0, SCOPE_PUBLIC, "event-theme", "TBD");
-nodeMeta_Add($id, 0, SCOPE_PUBLIC, "theme-mode", "1");		// TODO: rename to event-mode
-//nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-mode", "1");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-mode", "1");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "theme-idea-limit", "3");
 
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "event-start", "2019-01-01T01:00:00Z");

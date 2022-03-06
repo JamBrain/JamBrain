@@ -19,7 +19,7 @@ api_Exec([
 	$event = GetActiveEvent();
 	$user_id = userAuth_GetID();
 	
-	$mode = intval($event['meta']['theme-mode']);
+	$mode = intval($event['meta']['event-mode']);
 	$making_what = substr(strrchr($event['meta']['can-create'], '/'), 1);
 
 	//$RESPONSE['ev'] = $event;
