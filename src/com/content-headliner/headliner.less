@@ -3,43 +3,43 @@
 #content .content-headliner {
 	overflow: hidden;
 
-	/* Default Palette */
-	--headlinerMainColor: @COL_NDDD;
-	--headlinerLitColor: @COL_A;
-	--headlinerBGColor: @COL_L;
-
-	/* When hovering we switch the active color */
-	--headlinerActiveColor: var(--headlinerMainColor);
-
-	/* Alternative Palettes */
-	&.-col-a {
-		--headlinerMainColor: @COL_A;
-		--headlinerLitColor: @COL_AB;
-	}
-
-	&.-col-ab {
-		--headlinerMainColor: @COL_AB;
-	}
-
-	&.-col-b {
-		--headlinerMainColor: @COL_B;
-	}
-
-	&.-col-bc {
-		--headlinerMainColor: @COL_BC;
-	}
-
-	&.-col-c {
-		--headlinerMainColor: @COL_C;
-	}
-
-	&.-col-ca {
-		--headlinerMainColor: @COL_CA;
-	}
-
-
 	/* Set the colors on the children so they can be changed */
 	& > * {
+		/* Default Palette */
+		--headlinerMainColor: @COL_NDDD;
+		--headlinerLitColor: @COL_A;
+		--headlinerBGColor: @COL_L;
+
+		/* When hovering we switch the active color */
+		--headlinerActiveColor: var(--headlinerMainColor);
+
+		/* Alternative Palettes */
+		&.-col-a {
+			--headlinerMainColor: @COL_A;
+			--headlinerLitColor: @COL_AB;
+		}
+
+		&.-col-ab {
+			--headlinerMainColor: @COL_AB;
+		}
+
+		&.-col-b {
+			--headlinerMainColor: @COL_B;
+		}
+
+		&.-col-bc {
+			--headlinerMainColor: @COL_BC;
+		}
+
+		&.-col-c {
+			--headlinerMainColor: @COL_C;
+		}
+
+		&.-col-ca {
+			--headlinerMainColor: @COL_CA;
+		}
+
+
 		/* Base colors */
 		--mainColor: var(--headlinerActiveColor);
 		--invColor: var(--headlinerBGColor);
@@ -78,7 +78,7 @@
 		float: left;
 		padding-left: 1rem;
 		padding-right: 0.5rem;
-		margin-right: (3.5rem - 1.75rem + 1rem);
+		margin-right: (3.5rem - 1.75rem);
 		height: 3.5rem;
 		font-size: 1.5rem;
 		font-weight: bold;
@@ -110,27 +110,6 @@
 	& > .item {
 		background: var(--mainColor);
 		color: var(--invColor);
-
-		& > .-top-bot {
-			display: flex;
-			flex-wrap: wrap;
-			height: 100%;
-			align-content: space-between;
-
-			& .-title {
-				font-size: 1.25rem;
-			}
-		}
-
-		& > .-fill {
-			display: flex;
-			height: 100%;
-			align-items: center;
-
-			& .-title {
-				font-size: 1.75rem;
-			}
-		}
 
 		& .-title,
 		& .-subtext {
@@ -176,8 +155,28 @@
 
 	/* Special Items */
 	& > .-list-item {
-		padding: 0.25rem 1rem;
-		height: 3rem;
+		& > .-top-bot {
+			display: flex;
+			flex-wrap: wrap;
+			height: 3rem;
+			padding: 0.25rem 1rem;
+			align-content: space-between;
+
+			& .-title {
+				font-size: 1.25rem;
+			}
+		}
+
+		& > .-fill {
+			display: flex;
+			height: 3.5rem;
+			padding: 0 1rem;
+			align-items: center;
+
+			& .-title {
+				font-size: 1.75rem;
+			}
+		}
 	}
 
 	& > .-footer-item {

@@ -19,11 +19,11 @@ export default class PageRootHome extends Component {
 			}
 			// Give the abbreviated view
 			else {
-				ShowEvent = <ContentHeadlinerEvent node={featured} name="event" icon="trophy" class="-col-ab" />;
+				ShowEvent = <ContentHeadlinerEvent node={featured} name="event" icon="trophy" flagclass="-col-ab" childclass="-col-a -inv-lit" />;
 			}
 		}
 
-		let ShowNews = <ContentHeadlinerFeed node={node} types={['post']} subtypes={['news']} methods={['all']} limit={1} name="news" icon="news" class="-col-c" published love comments href="/news" />;
+		let ShowNews = <ContentHeadlinerFeed node={node} types={['post']} subtypes={['news']} methods={['all']} limit={1} name="news" icon="news" flagclass="-col-c -inv -inv-lit" childclass="-col-c" published love comments href="/news" />;
 
 		let ShowHomework = null;
 		// Only show homework if you're logged in and you have a game in the current event

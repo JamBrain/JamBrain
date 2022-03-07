@@ -62,7 +62,7 @@ export default class ContentHeadliner extends Component {
 			// Render
 			if ( Subtext.length ) {
 				return (
-					<ButtonLink class="item -list-item" href={node.path}>
+					<ButtonLink class={cN("item -list-item", props.childclass)} href={node.path}>
 						<div class="-top-bot">
 							<div class="-title _font2">{Title}</div>
 							<div class="-subtext">{Subtext}</div>
@@ -72,7 +72,7 @@ export default class ContentHeadliner extends Component {
 			}
 			else {
 				return (
-					<ButtonLink class="item -list-item" href={node.path}>
+					<ButtonLink class={cN("item -list-item", props.childclass)} href={node.path}>
 						<div class="-fill">
 							<div class="-title _font2">{Title}</div>
 						</div>
@@ -137,7 +137,7 @@ export default class ContentHeadliner extends Component {
 		}
 		// The Name
 		if ( props.name ) {
-			// Optionally hide the name sidebar is hidden
+			// If there's an icon, optionally hide the name if sidebar is hidden
 			let NameClass = cN('-text', props.icon ? 'if-sidebar-inline' : '');
 			// Add name text
 			Flag.push(<span class={NameClass}>{props.name.toUpperCase()}</span>);
@@ -148,10 +148,10 @@ export default class ContentHeadliner extends Component {
 		// Show the flag (if it was built)
 		if ( Flag.length ) {
 			if ( props.href ) {
-				ShowCornerFlag = <ButtonLink class="corner-flag -inv -inv-lit" href={props.href}>{Flag}</ButtonLink>;
+				ShowCornerFlag = <ButtonLink class={cN("corner-flag", props.flagclass)} href={props.href}>{Flag}</ButtonLink>;
 			}
 			else {
-				ShowCornerFlag = <div class="corner-flag -inv">{Flag}</div>;
+				ShowCornerFlag = <div class={cN("corner-flag", props.flagclass)}>{Flag}</div>;
 			}
 		}
 
@@ -160,16 +160,16 @@ export default class ContentHeadliner extends Component {
 		// Show the footer
 		if ( props.footer ) {
 			if ( props.footerhref ) {
-				ShowFooter = <ButtonLink class="item -footer-item" href={props.footerhref}>{props.footer}</ButtonLink>;
+				ShowFooter = <ButtonLink class={cN("item -footer-item", props.childclass)} href={props.footerhref}>{props.footer}</ButtonLink>;
 			}
 			else {
-				ShowFooter = <div class="item -footer-item">{props.footer}</div>;
+				ShowFooter = <div class={cN("item -footer-item", props.childclass)}>{props.footer}</div>;
 			}
 		}
 		// Show the more footer
 		else if ( props.more ) {
 			ShowFooter = (
-				<ButtonLink class="item -more-item" href={props.more}>
+				<ButtonLink class={cN("item -more-item", props.childclass)} href={props.more}>
 					<SVGIcon>circle</SVGIcon><SVGIcon>circle</SVGIcon><SVGIcon>circle</SVGIcon>
 				</ButtonLink>
 			);
