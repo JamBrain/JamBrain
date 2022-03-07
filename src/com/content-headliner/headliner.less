@@ -4,163 +4,136 @@
 	overflow: hidden;
 
 	/* Default Palette */
-	background: @COL_NDDD;
-	color: @COL_L;
+	--headlinerMainColor: @COL_NDDD;
+	--headlinerLitColor: @COL_A;
+	--headlinerBGColor: @COL_L;
 
-	& .-inv {
-		background: @COL_L;
-		color: @COL_NDDD;
-	}
+	/* When hovering we switch the active color */
+	--headlinerActiveColor: var(--headlinerMainColor);
 
-	/* Specific Palettes */
+	/* Alternative Palettes */
 	&.-col-a {
-		background: @COL_A;
-		color: @COL_L;
-
-		& .-inv {
-			background: @COL_L;
-			color: @COL_A;
-		}
+		--headlinerMainColor: @COL_A;
+		--headlinerLitColor: @COL_AB;
 	}
 
 	&.-col-ab {
-		background: @COL_AB;
-		color: @COL_L;
-
-		& .-inv {
-			background: @COL_L;
-			color: @COL_AB;
-		}
+		--headlinerMainColor: @COL_AB;
 	}
 
 	&.-col-b {
-		background: @COL_B;
-		color: @COL_L;
-
-		& .-inv {
-			background: @COL_L;
-			color: @COL_B;
-		}
+		--headlinerMainColor: @COL_B;
 	}
 
 	&.-col-bc {
-		background: @COL_BC;
-		color: @COL_L;
-
-		& .-inv {
-			background: @COL_L;
-			color: @COL_BC;
-		}
+		--headlinerMainColor: @COL_BC;
 	}
 
 	&.-col-c {
-		background: @COL_C;
-		color: @COL_L;
-
-		& .-inv {
-			background: @COL_L;
-			color: @COL_C;
-		}
+		--headlinerMainColor: @COL_C;
 	}
 
 	&.-col-ca {
-		background: @COL_CA;
-		color: @COL_L;
+		--headlinerMainColor: @COL_CA;
+	}
 
-		& .-inv {
-			background: @COL_L;
-			color: @COL_CA;
+
+	/* Set the colors on the children so they can be changed */
+	& > * {
+		/* Base colors */
+		--mainColor: var(--headlinerActiveColor);
+		--invColor: var(--headlinerBGColor);
+
+		&.-inv-lit:hover {
+			--mainColor: var(--headlinerBGColor);
+			--invColor: var(--headlinerActiveColor);
+		}
+
+		/* Inverted Colors */
+		&.-inv {
+			--mainColor: var(--headlinerBGColor);
+			--invColor: var(--headlinerActiveColor);
+
+			&.-inv-lit:hover {
+				--mainColor: var(--headlinerActiveColor);
+				--invColor: var(--headlinerBGColor);
+			}
+		}
+
+		/* Buttons */
+		&.button-base:hover {
+			--headlinerActiveColor: var(--headlinerLitColor);
 		}
 	}
 
 
-	/* Styles */
-	& > .-name {
-		&.button-base:hover {
-			background: @COL_A;
-			color: @COL_L;
+	/* Corner Flag Styles */
+	& > .-corner-flag {
+		background: var(--mainColor);
+		color: var(--invColor);
 
-			&::after {
-				color: @COL_A;
-			}
-		}
+		display: flex;
+		align-items: center;
 
 		float: left;
 		padding-left: 1rem;
-		margin-right: 2.25em;
-		/*line-height: 1.45em;*/	/* hack for better alignment (should be 1.5) */
-		line-height: 2.2em;
-		height: 2.25em;			/* Need this, otherwise vertical-align: middle makes line height report wrong height */
-		font-size: 1.5em;
+		margin-right: 3.5rem;
+		height: 3.5rem;
+		font-size: 1.5rem;
 		font-weight: bold;
 		font-style: italic;
 
 		position: relative;
 
-		& > .-text {
-			vertical-align: middle;
-		}
-
-		& > svg {
-			font-size: 1em;/*0.75em;*/
-		}
-
 		&::after {
 			position: absolute;
 			display: block;
 			content: '';
-			right: -2.25em;
+			right: -3.5rem;
 			top: 0;
-			border-top: 1.125em solid;
-			border-right: 1.125em solid transparent;
-			border-bottom: 1.125em solid transparent;
-			border-left: 1.125em solid;
+			border-top: 1.75rem solid;
+			border-right: 1.75rem solid transparent;
+			border-bottom: 1.75rem solid transparent;
+			border-left: 1.75rem solid;
 
-			color: @COL_L;
+			color: var(--mainColor);
+		}
+
+		/* Gaps */
+		& > :not(:first-child) {
+			margin-left: 0.5em; /* em */
 		}
 	}
 
+	/* Item Styles */
 	& > .-item {
-		padding: 0.25rem 1rem;
+		background: var(--mainColor);
+		color: var(--invColor);
 
-		& > .-text,
+
+		& > .-title,
 		& > .-subtext {
 			white-space: nowrap;
-			overflow: hidden;
 			text-overflow: ellipsis;
 		}
 
-		& > .-text {
-			font-size: 1.25em;
+		& > .-title {
+			overflow: hidden;
+			font-size: 1.25rem;
 
-			& .-title {
+			& > .-main {
 				font-weight: bold;
-			}
-
-			& .-subtitle {
-				font-size: 0.8em;
-				opacity: 0.7;
 			}
 		}
 
 		& > .-subtext {
-			font-size: 0.75em;
-			/*padding: 0.125rem 0;*/
+			font-size: 0.75rem;
 
-			& span {
-				vertical-align: middle;
-			}
+			& > div {
+				display: inline-block;
 
-			& .-label {
-				font-size: 0.75em;
-				padding: 0.1em 0.3em;
-				border-radius: 0.3em;
-			}
-
-			/* gaps */
-			& > span {
-				padding-left: 1em;
-				padding-right: 1em;
+				padding-left: 1rem;
+				padding-right: 1rem;
 
 				&:first-child {
 					padding-left: 0;
@@ -169,24 +142,37 @@
 				&:last-child {
 					padding-right: 0;
 				}
-			}
-		}
 
-		&.button-base:hover {
-			background: @COL_A;
+				& .-label {
+					background: var(--invColor);
+					color: var(--mainColor);
 
-			& .-inv {
-				color: @COL_A;
+					font-size: 0.75rem;
+					padding: 0 0.5rem;
+					border-radius: 0.6rem;
+				}
 			}
 		}
 	}
 
-	& > .-more {
+	/* Special Items */
+	& > .-list-item {
+		padding: 0.25rem 1rem;
+		height: 3rem;
+	}
+
+	& > .-footer-item {
+		font-size: 1.5rem;
+	}
+
+	& > .-more-item {
+		padding: 0.25rem 1rem;
+
 		text-align: center;
-		font-size: 0.5em;
+		font-size: 0.5rem;
 
 		& > svg {
-			margin: 0.25em;
+			margin: 0.25rem;
 		}
 	}
 }
