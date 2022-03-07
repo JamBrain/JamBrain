@@ -1,5 +1,5 @@
 import {h, Component}					from "preact/preact";
-import PageNavEvent						from '../../nav/event';
+import PageNavEvent						from 'com/page/nav/event';
 
 import ContentEvent						from "com/content-event/event";
 import ContentNavEvent					from "com/content-nav/nav-event";

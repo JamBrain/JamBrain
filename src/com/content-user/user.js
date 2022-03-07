@@ -72,6 +72,6 @@ export default class ContentUser extends Component {
 			);
 		}
 
-		return <ContentHeadliner node={node} name="user" icon="user" class="-col-bc" published="Joined" at games articles trophies />;
+		return <ContentHeadliner node={node} name="user" icon="user" flagclass="-col-bc" published="Joined" at games articles trophies />;
 	}
 }

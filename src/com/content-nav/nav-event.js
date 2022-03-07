@@ -44,7 +44,6 @@ export default class ContentNavEvent extends Component {
 			Buttons.push(<ContentNavButton path={PartPath} title="Games" icon="gamepad" href={path+'/games'}>Games</ContentNavButton>);
 		}
 
-		let ShowTheme = null;
 		if ( node ) {
 			// TODO: Check if Theme Mode > 0
 			Buttons.push(<ContentNavButton path={PartPath} title="Theme" icon="ticket" href={path+'/theme'}>Theme</ContentNavButton>);

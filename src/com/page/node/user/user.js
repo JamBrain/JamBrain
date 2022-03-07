@@ -1,4 +1,5 @@
 import {h, Component}					from 'preact/preact';
+import PageNavUser						from 'com/page/nav/user';
 
 import ContentList						from 'com/content-list/list';
 import ContentUser						from 'com/content-user/user';
@@ -29,7 +30,7 @@ export default class PageUser extends Component {
 
 		let ShowNav = null;
 		if ( !editing ) {
-			ShowNav = <ContentNavUser node={node} user={user} path={path} extra={extra} />;
+			ShowNav = <PageNavUser {...props} />;
 		}
 
 		return (
