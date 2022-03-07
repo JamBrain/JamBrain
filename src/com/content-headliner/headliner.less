@@ -3,6 +3,9 @@
 #content .content-headliner {
 	overflow: hidden;
 
+	--headlinerSize: 3.0rem;
+	--headlinerHalf: calc(var(--headlinerSize) / 2);
+
 	/* Set the colors on the children so they can be changed */
 	& > * {
 		/* Default Palette */
@@ -78,8 +81,8 @@
 		float: left;
 		padding-left: 1rem;
 		padding-right: 0.5rem;
-		margin-right: (3.5rem - 1.75rem);
-		height: 3.5rem;
+		margin-right: calc(var(--headlinerSize) - var(--headlinerHalf));
+		height: var(--headlinerSize);
 		font-size: 1.5rem;
 		font-weight: bold;
 		font-style: italic;
@@ -90,12 +93,12 @@
 			position: absolute;
 			display: block;
 			content: '';
-			right: (-3.5rem + 1.75rem);
+			right: calc(-1 * (var(--headlinerSize) - var(--headlinerHalf)));
 			top: 0;
-			border-top: 1.75rem solid transparent;
-			border-right: (1.75rem - 1.75rem) solid transparent;
-			border-bottom: 1.75rem solid transparent;
-			border-left: 1.75rem solid;
+			border-top: var(--headlinerHalf) solid transparent;
+			border-right: calc(var(--headlinerHalf) - var(--headlinerHalf)) solid transparent;
+			border-bottom: var(--headlinerHalf) solid transparent;
+			border-left: var(--headlinerHalf) solid;
 
 			color: var(--mainColor);
 		}
@@ -158,8 +161,8 @@
 		& > .-top-bot {
 			display: flex;
 			flex-wrap: wrap;
-			height: 3rem;
-			padding: 0.25rem 1rem;
+			height: 2.75rem;
+			padding: 0.125rem 1rem;
 			align-content: space-between;
 
 			& .-title {
@@ -169,7 +172,7 @@
 
 		& > .-fill {
 			display: flex;
-			height: 3.5rem;
+			height: var(--headlinerSize);
 			padding: 0 1rem;
 			align-items: center;
 

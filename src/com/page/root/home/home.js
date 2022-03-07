@@ -19,7 +19,7 @@ export default class PageRootHome extends Component {
 			}
 			// Give the abbreviated view
 			else {
-				ShowEvent = <ContentHeadlinerEvent node={featured} name="event" icon="trophy" flagclass="-col-ab" childclass="-col-a -inv-lit" />;
+				ShowEvent = <ContentHeadlinerEvent node={featured} name="event" icon="trophy" flagclass="-col-ab" childclass="-col-a -inv-lit" style="--headlinerSize: 2.5rem;" />;
 			}
 		}
 
