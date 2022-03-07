@@ -3,7 +3,6 @@ import PageNavUser						from 'com/page/nav/user';
 
 import ContentList						from 'com/content-list/list';
 import ContentUser						from 'com/content-user/user';
-import ContentNavUser					from 'com/content-nav/nav-user';
 import ContentError						from 'com/content-error/error';
 
 import UserFeed							from './feed/feed';

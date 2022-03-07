@@ -59,32 +59,47 @@ export default class ContentHeadliner extends Component {
 			}
 
 
-			// Render
+			let Body = null;
 			if ( Subtext.length ) {
-				return (
-					<ButtonLink class={cN("item -list-item", props.childclass)} href={node.path}>
-						<div class="-top-bot">
-							<div class="-title _font2">{Title}</div>
-							<div class="-subtext">{Subtext}</div>
-						</div>
-					</ButtonLink>
+				Body = (
+					<div class="-top-bot">
+						<div class="-title _font2">{Title}</div>
+						<div class="-subtext">{Subtext}</div>
+					</div>
 				);
 			}
 			else {
-				return (
-					<ButtonLink class={cN("item -list-item", props.childclass)} href={node.path}>
-						<div class="-fill">
-							<div class="-title _font2">{Title}</div>
-						</div>
-					</ButtonLink>
+				Body = (
+					<div class="-fill">
+						<div class="-title _font2">{Title}</div>
+					</div>
 				);
 			}
+
+
+			// Render
+			return <ButtonLink class={cN("item -list-item", props.childclass)} href={node.path}>{Body}</ButtonLink>;
 		}
 		return null;
 	}
 
+	renderNullItem() {
+		let props = this.props;
+
+		let Body = (
+			<div class="-fill">
+				<div class="-title _font2">{props.title}</div>
+			</div>
+		);
+
+		return <div class={cN("item -list-item", props.childclass)} >{Body}</div>;
+	}
+
 	renderItems( node ) {
-		if ( Array.isArray(node) ) {
+		if ( !node ) {
+			return this.renderNullItem();
+		}
+		else if ( Array.isArray(node) ) {
 			let ret = [];
 			for ( let idx = 0; idx < node.length; idx++ ) {
 				ret.push(this.renderItem(node[idx]));
@@ -177,15 +192,13 @@ export default class ContentHeadliner extends Component {
 
 
 		// Render
-		if ( node ) {
-			return (
-				<div class={cN('content-base content-headliner', props.class)} style={props.style}>
-					{ShowCornerFlag}
-					{this.renderItems(node)}
-					{ShowFooter}
-				</div>
-			);
-		}
+		return (
+			<div class={cN('content-base content-headliner', props.class)} style={props.style}>
+				{ShowCornerFlag}
+				{this.renderItems(node)}
+				{ShowFooter}
+			</div>
+		);
 		return null;
 	}
 }
