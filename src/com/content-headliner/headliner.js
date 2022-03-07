@@ -28,7 +28,7 @@ export default class ContentHeadliner extends Component {
 
 			if ( props.love ) {
 				Subtext.push(
-					<div title="Love">
+					<div title="Love" class="-statistic">
 						<SVGIcon small baseline>heart</SVGIcon> <span>{node.love}</span>
 					</div>
 				);
@@ -36,7 +36,7 @@ export default class ContentHeadliner extends Component {
 
 			if ( props.comments ) {
 				Subtext.push(
-					<div title="Comments">
+					<div title="Comments" class="-statistic">
 						<SVGIcon small baseline>bubble</SVGIcon> <span>{node.comments}</span>
 					</div>
 				);
@@ -44,7 +44,7 @@ export default class ContentHeadliner extends Component {
 
 			if ( props.games && node.games ) {
 				Subtext.push(
-					<div title="Games">
+					<div title="Games" class="-statistic">
 						<SVGIcon small baseline>gamepad</SVGIcon> <span>{node.games}</span>
 					</div>
 				);
@@ -52,7 +52,7 @@ export default class ContentHeadliner extends Component {
 
 			if ( props.articles && node.articles ) {
 				Subtext.push(
-					<div title="Articles">
+					<div title="Articles" class="-statistic">
 						<SVGIcon small baseline>article</SVGIcon> <span>{node.articles}</span>
 					</div>
 				);
@@ -60,12 +60,25 @@ export default class ContentHeadliner extends Component {
 
 
 			// Render
-			return (
-				<ButtonLink class="-item -list-item" href={node.path}>
-					<div class="-title _font2">{Title}</div>
-					<div class="-subtext">{Subtext}</div>
-				</ButtonLink>
-			);
+			if ( Subtext.length ) {
+				return (
+					<ButtonLink class="item -list-item" href={node.path}>
+						<div class="-top-bot">
+							<div class="-title _font2">{Title}</div>
+							<div class="-subtext">{Subtext}</div>
+						</div>
+					</ButtonLink>
+				);
+			}
+			else {
+				return (
+					<ButtonLink class="item -list-item" href={node.path}>
+						<div class="-fill">
+							<div class="-title _font2">{Title}</div>
+						</div>
+					</ButtonLink>
+				);
+			}
 		}
 		return null;
 	}
@@ -135,10 +148,10 @@ export default class ContentHeadliner extends Component {
 		// Show the flag (if it was built)
 		if ( Flag.length ) {
 			if ( props.href ) {
-				ShowCornerFlag = <ButtonLink class="-corner-flag -inv -inv-lit" href={props.href}>{Flag}</ButtonLink>;
+				ShowCornerFlag = <ButtonLink class="corner-flag -inv -inv-lit" href={props.href}>{Flag}</ButtonLink>;
 			}
 			else {
-				ShowCornerFlag = <div class="-corner-flag -inv">{Flag}</div>;
+				ShowCornerFlag = <div class="corner-flag -inv">{Flag}</div>;
 			}
 		}
 
@@ -147,16 +160,16 @@ export default class ContentHeadliner extends Component {
 		// Show the footer
 		if ( props.footer ) {
 			if ( props.footerhref ) {
-				ShowFooter = <ButtonLink class="-item -footer-item" href={props.footerhref}>{props.footer}</ButtonLink>;
+				ShowFooter = <ButtonLink class="item -footer-item" href={props.footerhref}>{props.footer}</ButtonLink>;
 			}
 			else {
-				ShowFooter = <div class="-item -footer-item">{props.footer}</div>;
+				ShowFooter = <div class="item -footer-item">{props.footer}</div>;
 			}
 		}
 		// Show the more footer
 		else if ( props.more ) {
 			ShowFooter = (
-				<ButtonLink class="-item -more-item" href={props.more}>
+				<ButtonLink class="item -more-item" href={props.more}>
 					<SVGIcon>circle</SVGIcon><SVGIcon>circle</SVGIcon><SVGIcon>circle</SVGIcon>
 				</ButtonLink>
 			);

@@ -33,7 +33,7 @@ export default class ContentHeadlinerEvent extends Component {
 
 	render( props, state ) {
 		if ( state.stats ) {
-            let footer = "NERDS!";
+            let footer = null;
 
 			return <ContentHeadliner {...props} node={props.node} footer={footer} />;
 		}
