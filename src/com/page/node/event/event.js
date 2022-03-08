@@ -1,7 +1,7 @@
 import {h, Component}					from "preact/preact";
 import PageNavEvent						from 'com/page/nav/event';
 
-import ContentEvent						from "com/content-event/event";
+import ContentHeadlinerEvent			from 'com/content-headliner/headliner-event';
 import ContentNavEvent					from "com/content-nav/nav-event";
 import ContentNavTheme					from "com/content-nav/nav-theme";
 
@@ -23,6 +23,10 @@ export default class PageEvent extends Component {
 	render( props, state ) {
 		let {node, user, featured, path, extra} = props;
 
+		if ( !node ) return null;
+
+		let IsThisFeatured = featured && (node.id == featured.id);
+
 		let DefaultSubFilter = "all";
 		let DefaultFilter = "smart";
 
@@ -39,8 +43,8 @@ export default class PageEvent extends Component {
 
 		return (
 			<div id="content">
+				<ContentHeadlinerEvent node={node} name="event" icon="trophy" flagclass="-col-ab" childclass={IsThisFeatured ? "-col-a -inv-lit" : "-inv -inv-lit"} style="--headlinerSize: 2.5rem;" />
 				<PageNavEvent {...props} />
-				<ContentEvent node={node} user={user} path={path} extra={extra} featured={featured} />
 				<Router node={node} props={props}>
 					<Route default static path="/home" component={EventHome} />
 					<Route static path="/stats" component={EventStats} />

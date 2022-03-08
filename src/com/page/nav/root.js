@@ -6,7 +6,6 @@ export default class PageNavRoot extends Component {
 		let {node, user, path, extra} = props;
 
 		if ( !node ) return null;
-		if ( !path ) return null;
 
 		// Build paths
 		let FullPath = path + ((extra && extra.length) ? ('/' + extra.join('/')) : '');

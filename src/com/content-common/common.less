@@ -9,8 +9,11 @@
 #content .content-common {
 	position: relative;
 
-	color: @DARK;
+	overflow: hidden;
+	overflow-wrap: break-word;
+	hyphens: auto;
 
+	color: @DARK;
 	background: @BG;
 	/*box-shadow: 0px 0px 3px rgba(64,0,0,0.2);*/
 
@@ -48,12 +51,5 @@
 		& .-inline-if-minimized {
 			display: inline-block;
 		}
-	}
-
-	& > .-bodies {
-		overflow: hidden;
-
-		overflow-wrap: break-word;
-		hyphens: auto;
 	}
 }

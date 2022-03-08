@@ -10,6 +10,7 @@ import ContentCommon								from 'com/content-common/common';
 import ContentCommonBody							from 'com/content-common/common-body';
 import ContentCommonBodyBy							from 'com/content-common/common-body-by';
 import ContentCommonBodyTitle						from 'com/content-common/common-body-title';
+import ContentCommonBodyFlag						from 'com/content-common/common-body-flag';
 import ContentCommonBodyAvatar						from 'com/content-common/common-body-avatar';
 import ContentCommonBodyMarkup						from 'com/content-common/common-body-markup';
 
@@ -315,13 +316,12 @@ export default class ContentSimple extends Component {
 	}
 
 	render( props, state ) {
-
 		props = Object.assign({}, props);	// Shallow copy we can change props
 		let {node, user, path, extra, featured} = props;
 		let {author, authors} = state;
 
 
-		if ( node && ((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length) ) {
+		if ( node && (((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length)) ) {
 			var ShowEditBar = null;
 			var ShowOnly = null;
 			let ShowAutocompleteEmoji;
@@ -421,13 +421,28 @@ export default class ContentSimple extends Component {
 //					</ContentCommonBody>;
 //			}
 
+			let ShowFlag = null;
+			if ( !props.noflag && !props.noheader && (props.flag || props.flagIcon) ) {
+				let FlagTitle = null;
+				if ( props.flag ) {
+					FlagTitle = <span>{props.flag}</span>;
+				}
+
+				ShowFlag = (
+					<ContentCommonBodyFlag class={props.flagClass} icon={props.flagIcon}>
+						{FlagTitle}
+					</ContentCommonBodyFlag>
+				);
+			}
+
 			let ShowTitle = null;
-			if ( !props.notitle ) {
+			if ( !props.notitle && !props.noheader ) {
 				ShowTitle = <ContentCommonBodyTitle
-					href={node.path}
+					href={!props.title ? node.path : null}
 					id={node.id}
 					minmax={props.minmax}
-					title={state.name}
+					title={props.title ? props.title : state.name}
+					shortlink={!props.title}
 					hover={node.slug+' [$'+node.id+']'}
 					subtitle={props.subtitle}
 					titleIcon={props.titleIcon}
@@ -485,6 +500,7 @@ export default class ContentSimple extends Component {
 					{ShowEditBar}
 					{ShowDraft}
 					{ShowAvatar}
+					{ShowFlag}
 					{ShowTitle}
 					{ShowAbove}
 					{ShowByLine}

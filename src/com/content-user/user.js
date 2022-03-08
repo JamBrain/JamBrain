@@ -39,9 +39,9 @@ export default class ContentUser extends Component {
 			IsHome = true;
 		}
 
-		//props.header = "USER";
-		props.headerIcon = "user";
-		props.headerClass = "-col-bc";
+		//props.flag = "USER";
+		props.flagIcon = "user";
+		props.flagClass = "-col-bc";
 
 		props.subtitle = '@'+node.slug;
 		props.notitleedit = true;

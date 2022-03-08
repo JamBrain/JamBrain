@@ -4,6 +4,7 @@ import ViewBar							from 'com/view/bar/bar';
 import ViewHeader						from 'com/view/header/header';
 import ViewSidebar						from 'com/view/sidebar/sidebar';
 import ViewContent						from 'com/view/content/content';
+import ViewFooter						from 'com/view/footer/footer';
 
 export default class Layout extends Component {
 	render( props ) {
@@ -15,7 +16,7 @@ export default class Layout extends Component {
 		return (
 			<div id="layout">
 				<ViewBar user={user} featured={featured} loading={loading}/>
-				<div class="body">
+				<div id="body">
 					<ViewHeader user={user} featured={featured} root={root}/>
 					<div id="content-sidebar">
 						<ViewContent>
@@ -24,6 +25,7 @@ export default class Layout extends Component {
 						{ShowSidebar}
 					</div>
 				</div>
+				<ViewFooter/>
 			</div>
 		);
 	}

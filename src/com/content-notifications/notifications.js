@@ -118,7 +118,7 @@ export default class NotificationsFeed extends NotificationsBase {
 			);
 
 		return (
-			<ContentSimple class="content-notifications" {...props} notitle nofooter nomarkup viewonly={view} header={"NOTIFICATIONS"} headerIcon="bubble" />
+			<ContentSimple class="content-notifications" {...props} notitle nofooter nomarkup viewonly={view} flag={"NOTIFICATIONS"} flagIcon="bubble" />
 		);
 	}
 

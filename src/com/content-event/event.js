@@ -55,9 +55,9 @@ export default class ContentEvent extends Component {
 		props = Object.assign({}, props);
 
 		if ( node ) {
-			props.header = "EVENT";
-			props.headerIcon = "trophy";
-			props.headerClass = "-col-ab";
+			props.flag = "EVENT";
+			props.flagIcon = "trophy";
+			props.flagClass = "-col-ab";
 //			props.titleIcon = "trophy";
 		}
 

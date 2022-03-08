@@ -51,32 +51,12 @@ export default class ContentCommon extends Component {
 			if ( minimized )
 				MainClass.push('minimized');
 
-			let HasOldHeader = null;
-//			if ( props.oldheader ) {
-//				let HeaderClass = cN('content-common-old-header', props.headerClass ? props.headerClass : '');
-//
-//				if ( props.headerIcon )
-//					HasOldHeader = <div class={HeaderClass}><SVGIcon small>{props.headerIcon}</SVGIcon> {props.oldheader}</div>;
-//				else
-//					HasOldHeader = <div class={HeaderClass}>{props.oldheader}</div>;
-//			}
-
-			let HasHeader = null;
-			if ( props.header || props.headerIcon ) {
-				let HeaderClass = cN('content-common-header', props.headerClass ? props.headerClass : '');
-
-				if ( props.headerIcon )
-					HasHeader = <div class={HeaderClass}><SVGIcon>{props.headerIcon}</SVGIcon> <span>{props.header}</span></div>;
-				else if ( props.header )
-					HasHeader = <div class={HeaderClass}><span>{props.header}</span></div>;
-			}
-
 
 //			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 
 
-			let HasFooter = null;
-			if ( true ) {
+			let Footer = null;
+			if ( !props.nofooter ) {
 				let Left = [];
 				if ( props['minmax'] ) {
 					Left.push(<FooterButtonMinMax user={user} node={node} onclick={this.onMinMax} />);
@@ -92,7 +72,7 @@ export default class ContentCommon extends Component {
 				if ( props['edit'] )
 					Right.push(<FooterButtonEdit node={node} user={user} path={path} />);
 
-				HasFooter = (
+				Footer = (
 					<div class={cN('content-common-footer', (Left.length + Right.length) ? '-has-items' : '')}>
 						<div class="-left">
 							{Left}
@@ -106,12 +86,8 @@ export default class ContentCommon extends Component {
 
 			return (
 				<div class={MainClass}>
-					{HasOldHeader}
-					<div class="-bodies">
-						{HasHeader}
-						{props.children}
-					</div>
-					{HasFooter}
+					{props.children}
+					{Footer}
 				</div>
 			);
 		}

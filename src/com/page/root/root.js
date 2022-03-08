@@ -4,7 +4,10 @@ import Router							from 'com/router/router';
 import Route							from 'com/router/route';
 
 import ContentList						from 'com/content-list/list';
+import ContentEvent						from "com/content-event/event";
+import ContentHeadlinerEvent			from 'com/content-headliner/headliner-event';
 import ContentError						from 'com/content-error/error';
+
 
 import PageNavRoot						from '../nav/root';
 
@@ -32,12 +35,25 @@ export default class PageRoot extends Component {
 
 		let ShowIntro = null;
 		if (!user || !user.id) {
-			ShowIntro = <HeaderNoob featured={props.featured} />;
+			ShowIntro = <HeaderNoob featured={featured} />;
+		}
+
+		let ActiveEvent = null;
+		if ( featured && featured.id ) {
+			// If logged in and you have a game in the current event (focus_id)
+			if ( user && user.id && featured.focus_id ) {
+				ActiveEvent = <ContentHeadlinerEvent node={featured} name="event" icon="trophy" flagclass="-col-ab" childclass="-col-a -inv-lit" style="--headlinerSize: 2.5rem;" />;
+			}
+			// Give more information about the event
+			else {
+				ActiveEvent = <ContentEvent node={featured} user={user} path={path} extra={extra} featured={featured} />;
+			}
 		}
 
 		return (
 			<ContentList class="page-root">
 				{ShowIntro}
+				{ActiveEvent}
 				<PageNavRoot {...props} />
 				<Router node={props.node} props={props} name="root">
 					<Route static path="/" default={true} component={PageRootHome} />
