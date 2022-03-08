@@ -5,6 +5,9 @@ export default class PageNavRoot extends Component {
 	render( props ) {
 		let {node, user, path, extra} = props;
 
+		if ( !node ) return null;
+		if ( !path ) return null;
+
 		// Build paths
 		let FullPath = path + ((extra && extra.length) ? ('/' + extra.join('/')) : '');
 		FullPath = FullPath ? FullPath : '/';
@@ -20,15 +23,17 @@ export default class PageNavRoot extends Component {
 		// Begin populating the list of Nav Buttons
 		let NavButtons = [];
 
-		// Home/Back button
 		let IsHome = (FullPath == '/');
+		let IsLoggedIn = user && (user.id !== 0);
+
+		// Home/Back button
 		if ( IsHome )
 			NavButtons.push(<ContentNavButton path={FullPath} title="Home" icon="home" href="/" />);
 		else
 			NavButtons.push(<ContentNavButton path={FullPath} title="Go Back" icon="previous" href="/" />);
 
 		// "Me" User Button (if home or logged in)
-		if ( ['/', '/my'].includes(FirstPath) && user && (user.id !== 0) ) {
+		if ( ['/', '/my'].includes(FirstPath) && IsLoggedIn ) {
 			NavButtons.push(<ContentNavButton path={FullPath} title="Me" light={!IsHome} icon="user" href="/my">Me</ContentNavButton>);
 
 			if ( !IsHome ) {

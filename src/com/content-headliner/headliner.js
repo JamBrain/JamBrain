@@ -199,6 +199,6 @@ export default class ContentHeadliner extends Component {
 				{ShowFooter}
 			</div>
 		);
-		return null;
+		//return null;
 	}
 }
