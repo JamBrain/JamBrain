@@ -5,6 +5,9 @@ export default class PageNavContent extends Component {
 	render( props ) {
 		let {node, parent, superparent, author, user, path, extra} = props;
 
+		// Knowing node is required. Knowing parent or superparent is optional.
+		if ( !node ) return null;
+
 		// Build paths
 		let FullPath = ((extra && extra.length) ? ('/' + extra.join('/')) : '');
 		FullPath = FullPath ? FullPath : '/';
@@ -20,7 +23,7 @@ export default class PageNavContent extends Component {
 
 		let EventName = "Event";
 		let EventPath = path+'/';
-		if ( node && (node.type == 'event') ) {
+		if ( node.type == 'event' ) {
 			EventName = node.name;
 			EventPath = node.path;
 		}
@@ -35,7 +38,7 @@ export default class PageNavContent extends Component {
 
 		let GameName = "Game";
 		let GamePath = path+'/';
-		if ( node && (node.type == 'item') ) {
+		if ( node.type == 'item' ) {
 			GameName = node.name ? node.name : "Untitled";
 			GamePath = node.path;
 		}

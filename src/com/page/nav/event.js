@@ -5,6 +5,9 @@ export default class PageNavEvent extends Component {
 	render( props ) {
 		let {node, parent, superparent, author, user, path, extra} = props;
 
+		if ( !node ) return null;
+		if ( !path ) return null;
+
 		// Build paths
 		let FullPath = ((extra && extra.length) ? ('/' + extra.join('/')) : '');
 		FullPath = FullPath ? FullPath : '/';

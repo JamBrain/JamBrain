@@ -15,7 +15,10 @@ export default class ContentHeadlinerEvent extends Component {
 
 	componentDidMount() {
 		let props = this.props;
-		this.getStats(props.node.id);
+
+		if ( props.node ) {
+			this.getStats(props.node.id);
+		}
 	}
 
 	getStats( id ) {
@@ -32,7 +35,7 @@ export default class ContentHeadlinerEvent extends Component {
 	}
 
 	render( props, state ) {
-		if ( state.stats ) {
+		if ( props.node && state.stats ) {
             let footer = null;
 
 			return <ContentHeadliner {...props} node={props.node} footer={footer} />;

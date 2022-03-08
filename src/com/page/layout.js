@@ -15,7 +15,7 @@ export default class Layout extends Component {
 		return (
 			<div id="layout">
 				<ViewBar user={user} featured={featured} loading={loading}/>
-				<div class="view">
+				<div class="body">
 					<ViewHeader user={user} featured={featured} root={root}/>
 					<div id="content-sidebar">
 						<ViewContent>
