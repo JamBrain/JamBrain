@@ -14,7 +14,9 @@ export default class UITextarea extends Component {
 
 		this.state = {
 			'cursorPos': (props.value || '').length,
-			'microsoftEdge': /Edge/.test(navigator.userAgent),
+			// MK: Chrome dev tools discourage the use of userAgent
+			// MK: Also, since Edge is Chromium based this might not be needed
+			//'microsoftEdge': /Edge/.test(navigator.userAgent),
 			'prevHeight': -1	// This allows us to not scroll adjust wrong on first change
 		};
 
@@ -62,9 +64,12 @@ export default class UITextarea extends Component {
 
 	// After every update
 	componentDidUpdate() {
+		// MK: Disabled because Edge is now Chromium based
+		/*
 		if ( this.textarea && this.state.microsoftEdge ) {
 			this.textarea.setSelectionRange(this.state.cursorPos, this.state.cursorPos);
 		}
+		*/
 
 		this.resizeTextarea();
 	}
@@ -113,10 +118,13 @@ export default class UITextarea extends Component {
 			this.props.onmodify(e);
 		}
 
+		// MK: Disabled because Edge is now Chromium based
+		/*
 		if( this.state.microsoftEdge ) {
 			e.preventDefault();
 			this.setState({'cursorPos': e.target.selectionEnd});
 		}
+		*/
 	}
 
 	render( props ) {

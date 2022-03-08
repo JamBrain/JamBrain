@@ -1,4 +1,5 @@
-
+// MK: Disabled this since Chrome discourages the use of userAgent
+/*
 // We only care about 2 things:
 // - If legacy Internet Explorer (versions before IE 11/Trident 7)
 // - If the webkit android browser, not powered by chrome.
@@ -57,3 +58,4 @@ function ua_IsLegacyAndroid() {
 	return (ua_GetAndroidVersion() > 0) && (ua_GetWebkitVersion() > 0) && (ua_GetChromeVersion() === 0);
 }
 
+*/
