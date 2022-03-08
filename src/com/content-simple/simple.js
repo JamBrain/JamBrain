@@ -423,15 +423,16 @@ export default class ContentSimple extends Component {
 
 			let ShowFlag = null;
 			if ( !props.noflag && !props.noheader && (props.flag || props.flagIcon) ) {
-				ShowFlag = <ContentCommonBodyFlag class={props.flagClass} icon={props.flagIcon}>{props.flag}</ContentCommonBodyFlag>;
-/*
-				let FlagClass = cN('content-common-flag', props.flagClass ? props.flagClass : '');
+				let FlagTitle = null;
+				if ( props.flag ) {
+					FlagTitle = <span>{props.flag}</span>;
+				}
 
-				if ( props.flagIcon )
-					ShowFlag = <div class={FlagClass}><SVGIcon>{props.flagIcon}</SVGIcon> <span>{props.flag}</span></div>;
-				else if ( props.flag )
-					ShowFlag = <div class={FlagClass}><span>{props.flag}</span></div>;
-					*/
+				ShowFlag = (
+					<ContentCommonBodyFlag class={props.flagClass} icon={props.flagIcon}>
+						{FlagTitle}
+					</ContentCommonBodyFlag>
+				);
 			}
 
 			let ShowTitle = null;
