@@ -3,190 +3,197 @@
 #content .content-headliner {
 	overflow: hidden;
 
-	/* Default Palette */
-	background: @COL_NDDD;
-	color: @COL_L;
+	--headlinerSize: 3.0rem;
+	--headlinerHalf: calc(var(--headlinerSize) / 2);
 
-	& .-inv {
-		background: @COL_L;
-		color: @COL_NDDD;
-	}
+	/* Set the colors on the children so they can be changed */
+	& > * {
+		/* Default Palette */
+		--headlinerMainColor: @COL_NDDD;
+		--headlinerLitColor: @COL_A;
+		--headlinerBGColor: @COL_L;
 
-	/* Specific Palettes */
-	&.-col-a {
-		background: @COL_A;
-		color: @COL_L;
+		/* When hovering we switch the active color */
+		--headlinerActiveColor: var(--headlinerMainColor);
 
-		& .-inv {
-			background: @COL_L;
-			color: @COL_A;
+		/* Alternative Palettes */
+		&.-col-a {
+			--headlinerMainColor: @COL_A;
+			--headlinerLitColor: @COL_AB;
 		}
-	}
 
-	&.-col-ab {
-		background: @COL_AB;
-		color: @COL_L;
-
-		& .-inv {
-			background: @COL_L;
-			color: @COL_AB;
+		&.-col-ab {
+			--headlinerMainColor: @COL_AB;
 		}
-	}
 
-	&.-col-b {
-		background: @COL_B;
-		color: @COL_L;
-
-		& .-inv {
-			background: @COL_L;
-			color: @COL_B;
+		&.-col-b {
+			--headlinerMainColor: @COL_B;
 		}
-	}
 
-	&.-col-bc {
-		background: @COL_BC;
-		color: @COL_L;
-
-		& .-inv {
-			background: @COL_L;
-			color: @COL_BC;
+		&.-col-bc {
+			--headlinerMainColor: @COL_BC;
 		}
-	}
 
-	&.-col-c {
-		background: @COL_C;
-		color: @COL_L;
-
-		& .-inv {
-			background: @COL_L;
-			color: @COL_C;
+		&.-col-c {
+			--headlinerMainColor: @COL_C;
 		}
-	}
 
-	&.-col-ca {
-		background: @COL_CA;
-		color: @COL_L;
-
-		& .-inv {
-			background: @COL_L;
-			color: @COL_CA;
+		&.-col-ca {
+			--headlinerMainColor: @COL_CA;
 		}
-	}
 
 
-	/* Styles */
-	& > .-name {
-		&.button-base:hover {
-			background: @COL_A;
-			color: @COL_L;
+		/* Base colors */
+		--mainColor: var(--headlinerActiveColor);
+		--invColor: var(--headlinerBGColor);
 
-			&::after {
-				color: @COL_A;
+		&.-inv-lit:hover {
+			--mainColor: var(--headlinerBGColor);
+			--invColor: var(--headlinerActiveColor);
+		}
+
+		/* Inverted Colors */
+		&.-inv {
+			--mainColor: var(--headlinerBGColor);
+			--invColor: var(--headlinerActiveColor);
+
+			&.-inv-lit:hover {
+				--mainColor: var(--headlinerActiveColor);
+				--invColor: var(--headlinerBGColor);
 			}
 		}
 
+		/* Buttons */
+		&.button-base:hover {
+			--headlinerActiveColor: var(--headlinerLitColor);
+		}
+	}
+
+
+	/* Corner Flag Styles */
+	& > .corner-flag {
+		background: var(--mainColor);
+		color: var(--invColor);
+
+		display: flex;
+		align-items: center;
+
 		float: left;
 		padding-left: 1rem;
-		margin-right: 2.25em;
-		/*line-height: 1.45em;*/	/* hack for better alignment (should be 1.5) */
-		line-height: 2.2em;
-		height: 2.25em;			/* Need this, otherwise vertical-align: middle makes line height report wrong height */
-		font-size: 1.5em;
+		padding-right: 0.5rem;
+		margin-right: calc(var(--headlinerSize) - var(--headlinerHalf));
+		height: var(--headlinerSize);
+		font-size: 1.5rem;
 		font-weight: bold;
 		font-style: italic;
 
 		position: relative;
 
-		& > .-text {
-			vertical-align: middle;
-		}
-
-		& > svg {
-			font-size: 1em;/*0.75em;*/
-		}
-
 		&::after {
 			position: absolute;
 			display: block;
 			content: '';
-			right: -2.25em;
+			right: calc(-1 * (var(--headlinerSize) - var(--headlinerHalf)));
 			top: 0;
-			border-top: 1.125em solid;
-			border-right: 1.125em solid transparent;
-			border-bottom: 1.125em solid transparent;
-			border-left: 1.125em solid;
+			border-top: var(--headlinerHalf) solid transparent;
+			border-right: calc(var(--headlinerHalf) - var(--headlinerHalf)) solid transparent;
+			border-bottom: var(--headlinerHalf) solid transparent;
+			border-left: var(--headlinerHalf) solid;
 
-			color: @COL_L;
+			color: var(--mainColor);
+		}
+
+		/* Gaps */
+		& > :not(:first-child) {
+			margin-left: 0.5em; /* em */
 		}
 	}
 
-	& > .-item {
-		padding: 0.25rem 1rem;
+	/* Item Styles */
+	& > .item {
+		background: var(--mainColor);
+		color: var(--invColor);
 
-		& > .-text,
-		& > .-subtext {
+		& .-title,
+		& .-subtext {
 			white-space: nowrap;
-			overflow: hidden;
 			text-overflow: ellipsis;
+			width: 100%;
 		}
 
-		& > .-text {
-			font-size: 1.25em;
+		& .-title {
+			overflow: hidden;
 
-			& .-title {
+			& > .-main {
 				font-weight: bold;
 			}
-
-			& .-subtitle {
-				font-size: 0.8em;
-				opacity: 0.7;
-			}
 		}
 
-		& > .-subtext {
-			font-size: 0.75em;
-			/*padding: 0.125rem 0;*/
+		& .-subtext {
+			font-size: 0.85rem;
 
-			& span {
-				vertical-align: middle;
+			& > :not(:first-child) {
+				padding-left: 1.5rem;
 			}
 
-			& .-label {
-				font-size: 0.75em;
-				padding: 0.1em 0.3em;
-				border-radius: 0.3em;
+			& > .-statistic {
+				font-size: 1rem;
 			}
 
-			/* gaps */
-			& > span {
-				padding-left: 1em;
-				padding-right: 1em;
+			& > div {
+				display: inline-block;
 
-				&:first-child {
-					padding-left: 0;
+				& .-label {
+					background: var(--invColor);
+					color: var(--mainColor);
+
+					padding: 0 0.5rem;
+					margin-left: -0.5rem;
+					margin-right: 0.25rem;
+					border-radius: 0.6rem;
 				}
-
-				&:last-child {
-					padding-right: 0;
-				}
-			}
-		}
-
-		&.button-base:hover {
-			background: @COL_A;
-
-			& .-inv {
-				color: @COL_A;
 			}
 		}
 	}
 
-	& > .-more {
+	/* Special Items */
+	& > .-list-item {
+		& > .-top-bot {
+			display: flex;
+			flex-wrap: wrap;
+			height: 2.75rem;
+			padding: 0.125rem 1rem;
+			align-content: space-between;
+
+			& .-title {
+				font-size: 1.25rem;
+			}
+		}
+
+		& > .-fill {
+			display: flex;
+			height: var(--headlinerSize);
+			padding: 0 1rem;
+			align-items: center;
+
+			& .-title {
+				font-size: 1.75rem;
+			}
+		}
+	}
+
+	& > .-footer-item {
+		font-size: 1.5rem;
+	}
+
+	& > .-more-item {
+		padding: 0.25rem 1rem;
+
 		text-align: center;
-		font-size: 0.5em;
+		font-size: 0.5rem;
 
 		& > svg {
-			margin: 0.25em;
+			margin: 0.25rem;
 		}
 	}
 }

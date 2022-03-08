@@ -14,67 +14,92 @@ export default class ContentHeadliner extends Component {
 		let props = this.props;
 
 		if ( node ) {
+			// Build Title
+			let Title = [];
+			Title.push(<span class="-main">{node.name}</span>);
+
+
+			// Build Subtext
 			let Subtext = [];
 
 			if ( props.published ) {
-				Subtext.push(this.getWhen(node, (typeof props.published == 'string') ? props.published : 'published'));
+				Subtext.push(this.renderWhen(node, (typeof props.published == 'string') ? props.published : 'published'));
 			}
 
 			if ( props.love ) {
 				Subtext.push(
-					<span title="Love">
-						<SVGIcon small>heart</SVGIcon> <span>{node.love}</span>
-					</span>
+					<div title="Love" class="-statistic">
+						<SVGIcon small baseline>heart</SVGIcon> <span>{node.love}</span>
+					</div>
 				);
 			}
 
 			if ( props.comments ) {
 				Subtext.push(
-					<span title="Comments">
-						<SVGIcon small>bubble</SVGIcon> <span>{node.comments}</span>
-					</span>
+					<div title="Comments" class="-statistic">
+						<SVGIcon small baseline>bubble</SVGIcon> <span>{node.comments}</span>
+					</div>
 				);
 			}
 
 			if ( props.games && node.games ) {
 				Subtext.push(
-					<span title="Games">
-						<SVGIcon small>gamepad</SVGIcon> <span>{node.games}</span>
-					</span>
+					<div title="Games" class="-statistic">
+						<SVGIcon small baseline>gamepad</SVGIcon> <span>{node.games}</span>
+					</div>
 				);
 			}
 
 			if ( props.articles && node.articles ) {
 				Subtext.push(
-					<span title="Articles">
-						<SVGIcon small>article</SVGIcon> <span>{node.articles}</span>
-					</span>
+					<div title="Articles" class="-statistic">
+						<SVGIcon small baseline>article</SVGIcon> <span>{node.articles}</span>
+					</div>
 				);
 			}
 
-			let ShowSubTitle = null;
-			if ( props.at ) {
-				ShowSubTitle = [
-					' ',
-					<span class="-subtitle -at">(@{node.slug})</span>
-				];
+
+			let Body = null;
+			if ( Subtext.length ) {
+				Body = (
+					<div class="-top-bot">
+						<div class="-title _font2">{Title}</div>
+						<div class="-subtext">{Subtext}</div>
+					</div>
+				);
+			}
+			else {
+				Body = (
+					<div class="-fill">
+						<div class="-title _font2">{Title}</div>
+					</div>
+				);
 			}
 
-			return (
-				<ButtonLink class="-item" href={node.path}>
-					<div class="-text _font2">
-						<span class="-title">{node.name}</span>
-						{ShowSubTitle}
-					</div>
-					<div class="-subtext">{Subtext}</div>
-				</ButtonLink>
-			);
+
+			// Render
+			return <ButtonLink class={cN("item -list-item", props.childclass)} href={node.path}>{Body}</ButtonLink>;
 		}
 		return null;
 	}
 
+	renderNullItem() {
+		let props = this.props;
+
+		let Body = (
+			<div class="-fill">
+				<div class="-title _font2">{props.title}</div>
+			</div>
+		);
+
+		return <div class={cN("item -list-item", props.childclass)} >{Body}</div>;
+	}
+
 	renderItems( node ) {
-		if ( Array.isArray(node) ) {
+		if ( !node ) {
+			return this.renderNullItem();
+		}
+		else if ( Array.isArray(node) ) {
 			let ret = [];
 			for ( let idx = 0; idx < node.length; idx++ ) {
 				ret.push(this.renderItem(node[idx]));
@@ -86,7 +111,7 @@ export default class ContentHeadliner extends Component {
 		}
 	}
 
-	getWhen( node, label, newage ) {
+	renderWhen( node, label, show_new_for_minutes = 24*60 ) {
 		if ( node.published ) {
 			let date_pub = new Date(node.published);
 			if ( node.meta['origin-date'] ) {
@@ -97,9 +122,9 @@ export default class ContentHeadliner extends Component {
 
 			let ret = [];
 
-			// TODO: optionally include [NEW] label if <24 hours old
-			if ( pub_diff < (newage ? parseInt(newage) : (24*60*60*1000)) ) {
-				ret.push(<span class="-label -inv">NEW</span>);
+			// Optionally include [NEW] label
+			if ( (show_new_for_minutes !== null) && (pub_diff < (parseInt(show_new_for_minutes)*60*1000)) ) {
+				ret.push(<span class="-label">NEW</span>);
 				ret.push(' ');
 			}
 
@@ -108,48 +133,72 @@ export default class ContentHeadliner extends Component {
 			ret.push(<span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span>);
 
 			// x minutes ago
-			return <span>{ret}</span>;
+			return <div>{ret}</div>;
 		}
 		else {
-			return <span>not {label} yet</span>;
+			return <div>not {label} yet</div>;
 		}
 	}
 
 	render( props ) {
 		let {node} = props;
 
-		let ShowMore = null;
-		if ( props.more ) {
-			ShowMore = (
-				<ButtonLink class="-item -more" href={props.more}>
+
+		// Build the corner flag
+		let Flag = [];
+		// The Icon
+		if ( props.icon ) {
+			Flag.push(<SVGIcon big>{props.icon}</SVGIcon>);
+		}
+		// The Name
+		if ( props.name ) {
+			// If there's an icon, optionally hide the name if sidebar is hidden
+			let NameClass = cN('-text', props.icon ? 'if-sidebar-inline' : '');
+			// Add name text
+			Flag.push(<span class={NameClass}>{props.name.toUpperCase()}</span>);
+		}
+
+
+		let ShowCornerFlag = null;
+		// Show the flag (if it was built)
+		if ( Flag.length ) {
+			if ( props.href ) {
+				ShowCornerFlag = <ButtonLink class={cN("corner-flag", props.flagclass)} href={props.href}>{Flag}</ButtonLink>;
+			}
+			else {
+				ShowCornerFlag = <div class={cN("corner-flag", props.flagclass)}>{Flag}</div>;
+			}
+		}
+
+
+		let ShowFooter = null;
+		// Show the footer
+		if ( props.footer ) {
+			if ( props.footerhref ) {
+				ShowFooter = <ButtonLink class={cN("item -footer-item", props.childclass)} href={props.footerhref}>{props.footer}</ButtonLink>;
+			}
+			else {
+				ShowFooter = <div class={cN("item -footer-item", props.childclass)}>{props.footer}</div>;
+			}
+		}
+		// Show the more footer
+		else if ( props.more ) {
+			ShowFooter = (
+				<ButtonLink class={cN("item -more-item", props.childclass)} href={props.more}>
 					<SVGIcon>circle</SVGIcon><SVGIcon>circle</SVGIcon><SVGIcon>circle</SVGIcon>
 				</ButtonLink>
 			);
 		}
 
-		let Name = [];
-		let NameClass = cN('-text', props.icon ? 'if-sidebar-inline' : '');
-		if ( props.icon ) {
-			Name.push(<SVGIcon>{props.icon}</SVGIcon>);
-			Name.push(' ');
-		}
-		Name.push(<span class={NameClass}>{props.name.toUpperCase()}</span>);
 
-		let ShowName = null;
-		if ( props.href )
-			ShowName = <ButtonLink class="-name -inv" href={props.href}>{Name}</ButtonLink>;
-		else
-			ShowName = <div class="-name -inv">{Name}</div>;
-
-		if ( node ) {
-			return (
-				<div class={cN('content-base content-headliner', props.class)}>
-					{ShowName}
-					{this.renderItems(node)}
-					{ShowMore}
-				</div>
-			);
-		}
+		// Render
+		return (
+			<div class={cN('content-base content-headliner', props.class)} style={props.style}>
+				{ShowCornerFlag}
+				{this.renderItems(node)}
+				{ShowFooter}
+			</div>
+		);
 		return null;
 	}
 }

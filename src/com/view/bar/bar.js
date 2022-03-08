@@ -242,7 +242,7 @@ export default class ViewBar extends Component {
 				// Has a game
 				if ( featured.focus_id && featured.what ) {
 					ShowMyGame = (
-						<UIButton href={featured.what[featured.focus_id].path} class="-bar-button">
+						<UIButton title="My Game" href={featured.what[featured.focus_id].path} class="-bar-button">
 							<SVGIcon>gamepad</SVGIcon>
 							<div class="if-sidebar-block">My Game</div>
 						</UIButton>
@@ -250,13 +250,14 @@ export default class ViewBar extends Component {
 
 					NewPost = (
 						<UIButton
+							title="New Post"
 							class="-bar-button"
 							onclick={e => {
 								window.location.hash = "#create/"+featured.focus_id+"/post";
 							}}
 						>
 							<SVGIcon>edit</SVGIcon>
-							<div class="if-sidebar-block">New</div>
+							<div class="if-sidebar-block">New Post</div>
 						</UIButton>
 					);
 				}
@@ -264,6 +265,7 @@ export default class ViewBar extends Component {
 				else if ( node_CanCreate(featured, "item/game") ) {
 					ShowJoin = (
 						<UIButton
+							title="Join Event"
 							class="-bar-button"
 							onclick={e => {
 								window.location.hash = "#create/"+featured.id+"/item/game";
@@ -310,7 +312,7 @@ export default class ViewBar extends Component {
 			}
 
 			Notification = (
-				<UIButton class="-bar-icon" onclick={(e) => {
+				<UIButton title="Notifications" class="-bar-icon" onclick={(e) => {
 					// TODO: if the main content is the notifications feed, clicking the button should
 					// probably not show the dropdown, but load new comments into the feed.
 					this.setState({'showNotifications': !this.state.showNotifications});
@@ -380,7 +382,6 @@ export default class ViewBar extends Component {
 					{ShowJoin}
 					{ShowMyGame}
 					{NewPost}
-					{ShowCalendar}
 					{Search}
 					{Notification}
 					{ShowNotifications}
@@ -392,6 +393,8 @@ export default class ViewBar extends Component {
 			);
 		}
 	}
+
+	/*{ShowCalendar}*/
 
 	render( props ) {
 		let {user, featured, loading} = props;
