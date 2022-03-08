@@ -141,9 +141,6 @@ export default class ContentHeadliner extends Component {
 	}
 
 	render( props ) {
-		let {node} = props;
-
-
 		// Build the corner flag
 		let Flag = [];
 		// The Icon
@@ -195,10 +192,9 @@ export default class ContentHeadliner extends Component {
 		return (
 			<div class={cN('content-base content-headliner', props.class)} style={props.style}>
 				{ShowCornerFlag}
-				{this.renderItems(node)}
+				{this.renderItems(props.node)}
 				{ShowFooter}
 			</div>
 		);
-		//return null;
 	}
 }
