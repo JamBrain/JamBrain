@@ -452,13 +452,13 @@ export default class ContentItem extends Component {
 		if ( node ) {
 			if ( node.subtype == 'game' ) {
 				props.by = "GAME";
-				props.headerIcon = "gamepad";
-				props.headerClass = "-col-a";
+				props.flagIcon = "gamepad";
+				props.flagClass = "-col-a";
 			}
 			else if ( node.subtype == 'tool' ) {
 				props.by = "TOOL";
-				props.headerIcon = "hammer";
-				props.headerClass = "-col-c";
+				props.flagIcon = "hammer";
+				props.flagClass = "-col-c";
 			}
 
 			if ( node.subsubtype == 'jam' ) {
@@ -485,7 +485,7 @@ export default class ContentItem extends Component {
 				Category = '/release';
 			}
 			else if ( node.subsubtype == 'unfinished' ) {
-				props.headerClass = null;
+				props.flagClass = null;
 				props.by = "UNFINISHED "+props.by;
 				Category = '/unfinished';
 				//props.nopublish = !allowUnfinished;

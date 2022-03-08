@@ -20,28 +20,29 @@ export default class ContentPost extends Component {
 
 		if ( node ) {
 			if ( node.subtype === 'news' ) {
-				//props.header = "NEWS";
+				//props.flag = "NEWS";
 				props.by = "NEWS";
-				props.headerIcon = "news";
-				props.headerClass = "-col-c";
+				props.flagIcon = "news";
+				props.flagClass = "-col-c";
 			}
 			else if ( node.subtype === 'info' ) {
-				//props.header = "INFO";
+				//props.flag = "INFO";
 				props.by = "INFO";
-				props.headerIcon = "info";
-				props.headerClass = "-col-nddd";
+				props.flagIcon = "info";
+				props.flagClass = "-col-nddd";
 			}
 			else if ( node.subtype === 'guide' ) {
-				//props.header = "GUIDE";
+				//props.flag = "GUIDE";
 				props.by = "GUIDE";
-				props.headerIcon = "article";
-				props.headerClass = "-col-nddd";
+				props.flagIcon = "article";
+				props.flagClass = "-col-nddd";
 			}
 			else if ( node.subtype === 'promo' ) {
-				//props.header = "INFO";
+				//props.flag = "INFO";
 				//props.by = "INFO";
-				props.headerIcon = "gift";
-				props.headerClass = "-col-ab";
+				props.flagIcon = "gift";
+				props.flagClass = "-col-ab";
+
 				if ( props.single ) {
 					if ( props.user && props.user.id ) {
 						let Body = <div>Unknown Promo Type</div>;

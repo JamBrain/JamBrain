@@ -12,6 +12,7 @@ export default class PageRootHome extends Component {
 		const {node, user, path, extra, featured} = props;
 
 		let ShowEvent = null;
+		/*
 		if ( featured ) {
 			// If not logged in or I don't have a game in the current event (focus_id)
 			if ( !user || !user.id || !featured.focus_id ) {
@@ -22,6 +23,7 @@ export default class PageRootHome extends Component {
 				ShowEvent = <ContentHeadlinerEvent node={featured} name="event" icon="trophy" flagclass="-col-ab" childclass="-col-a -inv-lit" style="--headlinerSize: 2.5rem;" />;
 			}
 		}
+		*/
 
 		let ShowNews = <ContentHeadlinerFeed node={node} types={['post']} subtypes={['news']} methods={['all']} limit={1} name="news" icon="news" flagclass="-col-c -inv -inv-lit" childclass="-col-c" published love comments href="/news" />;
 
