@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-include __DIR__.'/../external/SimpleDOM/SimpleDOM.php';
+include __DIR__.'/./SimpleDOM/SimpleDOM.php';
 
 if ( count($argv) < 2 ) {
 	echo "Usage: ".$argv[0]." output_prefix < input_via_stdin\n";

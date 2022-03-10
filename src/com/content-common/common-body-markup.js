@@ -1,4 +1,4 @@
-import {h, Component} 				from 'preact/preact';
+import {h, Component, toChildArray} 				from 'preact/preact';
 import {shallowDiff} 					from 'shallow-compare/index';
 
 import NavLink 								from 'com/nav-link/link';
@@ -11,6 +11,7 @@ export default class ContentCommonBodyMarkup extends Component {
     super(props);
   }
 
+  // MK: This normal checks children. Is this correct?
   shouldComponentUpdate(nextProps) {
     return shallowDiff(this.props, nextProps);
   }
@@ -28,7 +29,7 @@ export default class ContentCommonBodyMarkup extends Component {
       ? props.placeholder
       : "Description";
 
-    var Text = props.children.join('');
+    var Text = toChildArray(props.children).join('');
 
     if (props.editing) {
       //var Height = this.textarea ? this.textarea.scrollHeight : 0;
@@ -98,7 +99,7 @@ export default class ContentCommonBodyMarkup extends Component {
 			var mrkd = new marked();
       markdown = mrkd.parse(Text, markedOptions);
 
-      return (<div class={Class}>{markdown}</div>);
+      return (<div class={cN(Class)}>{markdown}</div>);
     }
   }
 }

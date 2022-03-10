@@ -1,4 +1,4 @@
-import { h, Component }								from 'preact/preact';
+import { h, Component, toChildArray }				from 'preact/preact';
 import { shallowDiff }	 							from 'shallow-compare/index';
 
 import SVGIcon										from 'com/svg-icon/icon';
@@ -8,11 +8,11 @@ export default class ContentCommonFlag extends Component {
 		super(props);
 	}
 
-	shouldComponentUpdate( nextProps ) {
-		return shallowDiff(this.props.children, nextProps.children);
+    shouldComponentUpdate( nextProps ) {
+		return shallowDiff(toChildArray(this.props.children), toChildArray(nextProps.children));
 	}
 
-	render( props ) {
+    render( props ) {
 		//var _class = "content-common-flag" + (props.class ? " "+props.class : "");
 
         let Icon = null;

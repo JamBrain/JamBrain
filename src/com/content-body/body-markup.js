@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import { h, Component, toChildArray } 				from 'preact/preact';
 import { shallowDiff }	 				from 'shallow-compare/index';
 import marked 								from '../../internal/marked/marked';
 
@@ -8,7 +8,7 @@ export default class ContentBodyMarkup extends Component {
 	}
 
 	shouldComponentUpdate( nextProps ) {
-		return shallowDiff(this.props.children, nextProps.children);
+		return shallowDiff(toChildArray(this.props.children), toChildArray(nextProps.children));
 	}
 
 	render( props ) {
@@ -27,7 +27,7 @@ export default class ContentBodyMarkup extends Component {
 		};
 
 		// NOTE: only parses the first child
-		var _body = props.children.length ? mrkd.parse(props.children[0], markedOptions) : "";
+		var _body = toChildArray(props.children).length ? mrkd.parse(toChildArray(props.children)[0], markedOptions) : "";
 
 		// '-body' for backwards compatibility (remove me)
 		var _class = "content-body content-body-markup -body markup" + (props.class ? " "+props.class : "");

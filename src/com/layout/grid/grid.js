@@ -1,4 +1,4 @@
-import {h, Component} from 'preact/preact';
+import {h, Component, toChildArray} from 'preact/preact';
 import LayoutCol from 'com/layout/col/col';
 import LayoutRow from 'com/layout/row/row';
 import LayoutContainer from 'com/layout/container/container';
@@ -14,7 +14,7 @@ export default class LayoutGrid extends Component {
     return (
       <LayoutContainer {...props} class={cN(props.class, "-grid")}>
         {
-            props.children.map((child, index) => {
+            toChildArray(props.children).map((child, index) => {
               return (
                 <LayoutCol flexGrow={0} flexBasis={100 / columns}>{child}</LayoutCol>
               );

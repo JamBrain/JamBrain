@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component, toChildArray } 	from 'preact/preact';
 import {shallowDiff}	 				from 'shallow-compare/index';
 
 import NavLink							from 'com/nav-link/link';
@@ -9,7 +9,7 @@ export default class ContentCommonBodyBy extends Component {
 	}
 
 	shouldComponentUpdate( nextProps ) {
-		return shallowDiff(this.props.children, nextProps.children);
+		return shallowDiff(toChildArray(this.props.children), toChildArray(nextProps.children));
 	}
 
 	getName( node ) {

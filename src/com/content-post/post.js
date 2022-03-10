@@ -86,6 +86,7 @@ export default class ContentPost extends Component {
 							Body = <div>{node.subsubtype}</div>;
 						}
 
+						// MK: Is this safe?
 						props.children = (
 							<div class="content-common-body -promo">
 								<h2>Get Promo</h2>
@@ -94,6 +95,7 @@ export default class ContentPost extends Component {
 						);
 					}
 					else {
+						// MK: Is this safe?
 						props.children = (
 							<div class="content-common-body -promo">
 								<h2>Get Promo</h2>
@@ -103,6 +105,7 @@ export default class ContentPost extends Component {
 					}
 				}
 				else {
+					// MK: Is this safe?
 					props.children = (
 						<div class="content-common-body -promo">
 							<UIButton class="content-common-nav-button" href={node.path}><UIIcon src="gift" /><div>Continue</div></UIButton>

@@ -85,7 +85,7 @@ export default class ContentCommon extends Component {
 			}
 
 			return (
-				<div class={MainClass}>
+				<div class={cN(MainClass)}>
 					{props.children}
 					{Footer}
 				</div>

@@ -56,24 +56,24 @@ export default class PageRoot extends Component {
 				{ActiveEvent}
 				<PageNavRoot {...props} />
 				<Router node={props.node} props={props} name="root">
-					<Route static path="/" default={true} component={PageRootHome} />
-					<Route static path="/my" component={PageMyHome}>
-						<Route static path="/notifications" component={PageMyNotifications} />
-						<Route static path="/stats" component={PageMyStats} />
-						<Route static path="/settings" component={PageMySettings} />
+					<Route default path="/home" component={PageRootHome} />
+					<Route path="/my" component={PageMyHome}>
+						<Route path="/notifications" component={PageMyNotifications} />
+						<Route path="/stats" component={PageMyStats} />
+						<Route path="/settings" component={PageMySettings} />
 					</Route>
-					<Route static path="/dev">
-						<Route static path="/palette" component={PageDevPalette} />
+					<Route path="/dev">
+						<Route path="/palette" component={PageDevPalette} />
 					</Route>
-					<Route static path="/news" component={PageRootFeedNews} />
-					<Route static path="/feed" component={PageRootFeed} />
-					<Route static path="/feed/news" component={PageRootFeedNews} />
-					<Route static path="/feed/hot" component={Dummy} />
-					<Route static path="/games/:filter?/:subfilter?/:target?" component={PageRootGames} />
-					<Route static path="/explore" component={PageRootExplore} />
-					<Route static path="/tools" component={PageRootTools} />
-					<Route static path="/communities" component={PageRootCommunities} />
-					<Route static path="/search" component={PageRootSearch} />
+					<Route path="/news" component={PageRootFeedNews} />
+					<Route path="/feed" component={PageRootFeed} />
+					<Route path="/feed/news" component={PageRootFeedNews} />
+					<Route path="/feed/hot" component={Dummy} />
+					<Route path="/games/:filter?/:subfilter?/:target?" component={PageRootGames} />
+					<Route path="/explore" component={PageRootExplore} />
+					<Route path="/tools" component={PageRootTools} />
+					<Route path="/communities" component={PageRootCommunities} />
+					<Route path="/search" component={PageRootSearch} />
 					<Route type="error" component={ContentError} />
 				</Router>
 			</ContentList>

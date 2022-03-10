@@ -99,11 +99,11 @@ TARGET_FILES		:=	$(TARGET_FILES_SVG) $(TARGET_FILES_CSS) $(TARGET_FILES_JS)
 ESLINT_ARGS			:=	--config src/config/eslint.config.json
 ESLINT				=	$(NODEJS)/eslint/bin/eslint.js $(1) $(ESLINT_ARGS)
 # ES Compiler: https://buble.surge.sh/guide/
-BUBLE_ARGS			:=	--no modules --jsx h --objectAssign Object.assign
+BUBLE_ARGS			:=	--no modules,forOf --jsx h --jsx-fragment Fragment --objectAssign Object.assign
 #ifdef SOURCEMAPS
 #BUBLE_ARGS			+=	-m inline
 #endif # SOURCEMAPS
-BUBLE				=	$(NODEJS)/buble/bin/buble $(BUBLE_ARGS) -i $(1) -o $(2)
+BUBLE				=	$(NODEJS)/@jammercore/buble/bin/buble $(BUBLE_ARGS) -i $(1) -o $(2)
 # ES Include/Require Resolver: http://rollupjs.org/guide/
 ROLLUP_ARGS			:=	-c src/config/rollup.config.js
 ifdef SOURCEMAPS
@@ -111,6 +111,7 @@ ROLLUP_ARGS			+=	-m inline
 endif # SOURCEMAPS
 ROLLUP				=	$(NODEJS)/rollup/dist/bin/rollup $(ROLLUP_ARGS) $(1) > $(2)
 # JS Preprocessor: https://github.com/moisesbaez/preprocess-cli-tool
+#                  https://github.com/jsoverson/preprocess
 JS_PP_DEBUG			=	$(NODEJS)/preprocess-cli-tool/bin/preprocess.js -f $(1) -d $(2) -c '{"DEBUG": true}' -t js
 JS_PP_RELEASE		=	$(NODEJS)/preprocess-cli-tool/bin/preprocess.js -f $(1) -d $(2) -t js
 # JS Minifier: https://www.npmjs.com/package/uglify-js
@@ -132,8 +133,8 @@ STYLELINT				=	$(NODEJS)/stylelint/bin/stylelint.js $(1) $(STYLELINT_ARGS)
 # SVG "Compiler", same as the minifier: https://github.com/svg/svgo
 SVGO_ARGS			:=	-q --config src/config/svgo.config.js
 SVGO				=	$(NODEJS)/svgo/bin/svgo $(SVGO_ARGS) -i $(1) -o $(2)
-# Mike's SVG Sprite Packer: https://github.com/povrazor/svg-sprite-tools
-SVG_PACK			=	src/tools/svg-sprite-pack $(1) > $(2)
+# Mike's SVG Sprite Packer: https://github.com/mikekasprzak/svg-sprite-tools
+SVG_PACK			=	src/tools/svg-sprite-tools/svg-sprite-pack $(1) > $(2)
 # SVG Minifier: https://github.com/svg/svgo
 MINIFY_SVG_ARGS		:=	--multipass --config src/config/svgo_minify.config.js -q
 MINIFY_SVG			=	$(NODEJS)/svgo/bin/svgo $(MINIFY_SVG_ARGS) -i $(1) -o $(2)
@@ -300,7 +301,7 @@ clean-css:
 	rm -fr $(OUT_FILES_CSS) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.css.dep) $(TARGET_FILES_CSS) $(BUILD_FOLDER)/less.css $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.lint $(BUILD_FOLDER)/all.css
 	-$(call RM_EMPTY_DIRS,.output)
 clean-js:
-	rm -fr $(OUT_FILES_JS) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILES_JS) $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/all.js
+	rm -fr $(OUT_FILES_JS) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILES_JS) $(BUILD_FOLDER)/raw.js $(BUILD_FOLDER)/compiled.js $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/all.js
 	-$(call RM_EMPTY_DIRS,.output)
 clean-some:
 	rm -fr $(OUT_FILES) $(OUT_FILES_SVG:.svg=.svg.out) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.css.dep) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep)
@@ -311,15 +312,15 @@ OUT_MAIN_JS			:=	$(subst $(SRC)/,$(OUT)/,$(MAIN_JS:.js=.es.js))
 
 
 # JavaScript #
-$(BUILD_FOLDER)/js.js: $(OUT_JS_FILES)
+$(BUILD_FOLDER)/raw.js: $(OUT_JS_FILES)
 	@echo "[$(COL_PURPLE)MERGE$(COL_OFF)] $@"
 	@cat $^ > $@
-$(BUILD_FOLDER)/buble.js: $(OUT_MAIN_JS) $(OUT_ES_FILES)
+$(BUILD_FOLDER)/compiled.js: $(OUT_MAIN_JS) $(OUT_ES_FILES)
 	@echo "[$(COL_PURPLE)ROLLUP$(COL_OFF)] $@"
 	@$(call ROLLUP,$<,$@.tmp)
 	@rm -f $@
 	@mv $@.tmp $@
-$(BUILD_FOLDER)/all.js: $(BUILD_FOLDER)/js.js $(BUILD_FOLDER)/buble.js
+$(BUILD_FOLDER)/all.js: $(BUILD_FOLDER)/raw.js $(BUILD_FOLDER)/compiled.js
 	@echo "[$(COL_PURPLE)MERGE$(COL_OFF)] $@"
 	@cat $^ > $@
 $(BUILD_FOLDER)/all.release.js: $(BUILD_FOLDER)/all.js

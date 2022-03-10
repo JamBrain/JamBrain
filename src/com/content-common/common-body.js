@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import { h, Component, toChildArray } 	from 'preact/preact';
 import { shallowDiff }	 				from 'shallow-compare/index';
 
 export default class ContentCommonBody extends Component {
@@ -7,7 +7,7 @@ export default class ContentCommonBody extends Component {
 	}
 
 	shouldComponentUpdate( nextProps ) {
-		return shallowDiff(this.props.children, nextProps.children);
+		return shallowDiff(toChildArray(this.props.children), toChildArray(nextProps.children));
 	}
 
 	render( props ) {

@@ -1,7 +1,7 @@
 import {h, render, Component, options}	from 'preact/preact';
 
 // @ifdef DEBUG
-import {}								from 'preact-devtools/devtools';
+//import {}								from 'preact-devtools/devtools';
 // @endif
 
 import Sanitize							from 'internal/sanitize/sanitize';
@@ -66,9 +66,9 @@ options.vnode = function _CustomVNode(vnode) {
 class Main extends Component {
 	constructor( props ) {
 		super(props);
-		console.log("[constructor]");
 		// @ifdef DEBUG
 		console.log("Running in DEBUG mode");
+		console.log("[constructor]");
 		// @endif
 
 		let clean = this.cleanLocation(window.location);
@@ -112,9 +112,11 @@ class Main extends Component {
 	}
 
 	componentDidMount() {
+		let clean = this.cleanLocation(window.location);
+
 		this.fetchUser();
 		this.fetchFeatured();	// Fetches root, featured, and all games associated with you
-		this.fetchNode();
+		this.fetchNode(clean.slugs);
 
 //		return Promise.all([
 //			this.fetchUser(),
@@ -220,10 +222,9 @@ class Main extends Component {
 	// *** //
 
 	fetchFeatured( node_id ) {
+		// @ifdef DEBUG
 		console.log("[fetchFeatured] +");
-
-		// Used across everything below
-		let Node = null;
+		// @endif
 
 		return $Node.What(SITE_ROOT).then(r => {
 			let newState = {};
@@ -240,7 +241,9 @@ class Main extends Component {
 			let focusDate = 0;
 			let lastPublished = 0;
 
+			// @ifdef DEBUG
 			console.log("[fetchFeatured] Hack! We don't support choosing your active game yes, so use logic to detect it");
+			// @endif
 			for ( let key in r.node ) {
 				let newDate = new Date(r.node[key].modified).getTime();
 				if ( newDate > focusDate ) {
@@ -249,11 +252,15 @@ class Main extends Component {
 				}
 				if ( r.node[key].published ) {
 					lastPublished = key|0;
+					// @ifdef DEBUG
 					console.log('[fetchFeatured] '+key+' is published');
+					// @endif
 				}
 			}
 			if ( focus ) {
+				// @ifdef DEBUG
 				console.log('[fetchFeatured] '+focus+' was the last modified');
+				// @endif
 			}
 
 			// If the last updated is published, focus on that
@@ -269,14 +276,18 @@ class Main extends Component {
 				newState.featured.focus_id = focus;
 			}
 
+			// @ifdef DEBUG
 			console.log('[fetchFeatured] - '+newState.featured.focus_id+' chosen as focus_id');
+			// @endif
 
 			this.setState(newState);
 		});
 	}
 
-	fetchNode( newArgs ) {
-		console.log("[fetchNode] +");
+	fetchNode( slugs, newArgs ) {
+		// @ifdef DEBUG
+		console.log("[fetchNode] +", slugs, this.state);
+		// @endif
 
 		let args = ['node', 'parent', 'superparent', 'author'];
 		if ( newArgs ) {
@@ -284,10 +295,12 @@ class Main extends Component {
 		}
 
 		// Walk to the active node
-		return $Node.Walk(SITE_ROOT, this.state.slugs, args).then(r => {
+		return $Node.Walk(SITE_ROOT, slugs, args).then(r => {
 			// Store the path determined by the walk
 			if ( r.node_id ) {
 				let NewState = {};
+
+				console.log("walked", r);
 
 				NewState.path = (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/');
 				NewState.extra = r.extra;
@@ -308,7 +321,9 @@ class Main extends Component {
 //					return this.fetchFeatured(r.node[SITE_ROOT].meta['featured']|0);
 //				}
 
+				// @ifdef DEBUG
 				console.log("[fetchNode] - Node:", r.node_id);
+				// @endif
 
 				return null;
 			}
@@ -320,7 +335,9 @@ class Main extends Component {
 	}
 
 	fetchUser() {
+		// @ifdef DEBUG
 		console.log("[fetchUser] +");
+		// @endif
 
 		let User = {
 			'id': 0
@@ -338,12 +355,14 @@ class Main extends Component {
 			// Finally, user is ready
 			this.setState({'user': User});
 
+			// @ifdef DEBUG
 			console.log("[fetchUser] - You are", User.id, "("+User.name+")");
 
 			// This should be a function
 			if ( User && User.private && User.private.meta && User.private.meta.admin ) {
 				console.log("[fetchUser] - Administrator");
 			}
+			// @endif
 
 			// Pre-cache my Love (nothing to do with it)
 			return $NodeLove.GetMy();
@@ -358,10 +377,13 @@ class Main extends Component {
 
 	// Hash Changes are automatically differences
 	onHashChange( e ) {
+		// @ifdef DEBUG
 		console.log("hashchange: ", e.newURL);
+		// @endif
 		let slugs = this.cleanLocation(window.location).slugs;
 
 		if ( slugs.join() === this.state.slugs.join() ) {
+			// MK: Might not be necessary
 			this.setState({});
 		}
 		else {
@@ -393,21 +415,25 @@ class Main extends Component {
 
 	// When we navigate by clicking forward
 	onNavChange( e ) {
+		// @ifdef DEBUG
 		console.log('navchange:', e.detail.old.href, '=>', e.detail.location.href);
+		// @endif
 
 		if ( e.detail.location.href !== e.detail.old.href ) {
-			let slugs = this.cleanLocation(e.detail.location).slugs;
+			let clean = this.cleanLocation(e.detail.location);
 
-			if ( slugs.join() !== this.state.slugs.join() ) {
+			if ( clean.slugs.join() !== this.state.slugs.join() ) {
 				history.pushState(null, null, e.detail.location.pathname + e.detail.location.search);
 
+				/*
 				this.setState({
-					'slugs': slugs,
+					'slugs': clean.slugs,
 					'node': {
 						'id': 0
 					}
 				});
-				this.fetchNode();
+				*/
+				this.fetchNode(clean.slugs);
 			}
 		}
 
@@ -418,7 +444,9 @@ class Main extends Component {
 	}
 	// When we navigate using back/forward buttons
 	onPopState( e ) {
+		// @ifdef DEBUG
 		console.log("popstate: ", e.state);
+		// @endif
 		// NOTE: This is sometimes called on a HashChange with a null state
 		if ( e.state ) {
 			this.setState(e.state);
@@ -458,7 +486,7 @@ class Main extends Component {
 
 		return (
 			<Layout {...state}>
-				<Router node={node} props={NewProps} path={extra}>
+				<Router props={NewProps}>
 					<Route type="root" component={PageRoot} />
 
 					<Route type="page" component={PagePage} />
@@ -466,6 +494,7 @@ class Main extends Component {
 
 					<Route type="item">
 						<Route subtype="game" component={PageItem} />
+						<Route subtype="tool" component={PageItem} />
 					</Route>
 
 					<Route type="tag" component={PageTag} />

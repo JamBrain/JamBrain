@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import { h, Component, toChildArray } 	from 'preact/preact';
 import {shallowDiff}	 				from 'shallow-compare/index';
 
 export default class ContentHeaderEdit extends Component {
@@ -6,6 +6,7 @@ export default class ContentHeaderEdit extends Component {
 		super(props);
 	}
 
+	// MK: This normally checks children. Is this correct?
 	shouldComponentUpdate( nextProps ) {
 		return shallowDiff(this.props, nextProps);
 	}

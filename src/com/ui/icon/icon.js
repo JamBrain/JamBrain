@@ -33,7 +33,7 @@ export default class UIIcon extends Component {
 			use_props.xlinkHref = "#icon-"+props.src;
 		}
 		else {
-			let name = props.children.slice(0, 1);
+			let name = toChildArray(props.children).slice(0, 1);
 			svg_props.class += " icon-"+name;
 			use_props.xlinkHref = "#icon-"+name;
 		}

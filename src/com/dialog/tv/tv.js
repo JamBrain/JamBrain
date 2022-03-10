@@ -10,8 +10,10 @@ export default class DialogTV extends Component {
 	constructor( props ) {
 		super(props);
 
-		this.state = this.calcSizes();
-		this.state.showchat = false;
+		this.state = {
+			showchat: false
+		};
+		Object.assign(this.state, this.calcSizes());
 
 		this.onResize = this.onResize.bind(this);
 		this.onChatClick = this.onChatClick.bind(this);

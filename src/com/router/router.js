@@ -1,71 +1,161 @@
-import {h, Component, cloneElement}		from 'preact/preact';
-import Route							from './route';
-import {pathToRegexp, compile}			from 'external/path-to-regexp/index';
+import {h, Component, cloneElement, toChildArray}		from 'preact/preact';
+import Route											from './route';
+import {pathToRegexp, compile}							from 'external/path-to-regexp/index';
 
 export default class Router extends Component {
-	constructor( props ) {
+/*	constructor( props ) {
 		super(props);
 
-		let match = this.props.match ? this.props.match : ["type", "subtype", "subsubtype"];
+		// @ifdef DEBUG
+		console.log("[com/router]", "constructor", props);
+		// @endif
 
-		this.state = {
-			"routes": [],
-			"current": null,
-			"match": match,
-			"params": {}
-		};
+		//this.state = {
+			//"routes": [],
+		//	"params": {},
+			//"current": null
+		//};
 
-		if ( this.props.node.id !== 0 ) {
-			this.flattenRoutes(this.props.children);
-			this.getCurrentRoute();
+//		console.log("Router", "constructor", this.state);
+	}
+
+/*
+	componentDidMount() {
+		let props = this.props;
+
+		if ( props.node && props.node.id ) {
+			this.setState({
+				"routes": this._parseRoutes(props.children)
+			});
+			this._getCurrentRoute(props);
+
+			console.log("Router", "componentDidMount", this.state);
 		}
 	}
 
-	// Works out what the current route is
-	getCurrentRoute( nextProps ) {
-		let {node} = nextProps ? nextProps : this.props;
-		let {routes} = this.state;
 
-		if ( !node ) {
+	getDerivedStateFromProps( nextProps ) {
+		if ( nextProps && nextProps.node && nextProps.node.id ) {
+			this.setState({
+				"routes": this._parseRoutes(nextProps.children),
+				"params": {}
+			});
+			this._getCurrentRoute(nextProps);
+
+			console.log("Router", "componentWillRecieveProps", this.state);
+		}
+	}
+
+	shouldComponentUpdate( nextProps ) {
+		console.log("[com/router]", "shouldComponentUpdate", nextProps, this.props );
+		return true;
+	}
+*/
+
+	// Works out what the current route is
+	_getRoute( routes ) {
+		let {node} = this.props.props;
+
+		if ( !node /* || !node.id*/ ) {
 			return;
 		}
 
-		let currentRoute, errorRoute;
+		let currentRoute = null;
+		let errorRoute = null;
 
-		for ( let i in routes ) {
-			let route = routes[i];
-
-			if ( this.matchRoute(route.attributes, node) ) {
-				if ( route.attributes.static && route.attributes.path ) {
-					if ( !this.matchPath(route.attributes.path) ) {
+		for ( let route of routes ) {
+			// Does the node match this route's required properties?
+			if ( this._doesNodeMatchRoute(route.props, node) ) {
+				// Does the node match this route's path
+				if ( route.props.path ) {
+					if ( !this._doesPropsMatchRoutePath(route.props.path) ) {
 						continue;
 					}
 				}
+
 				currentRoute = route;
 			}
 
-			if ( route.attributes.type == "error" ) {
+			if ( route.props.type == "error" ) {
 				errorRoute = route;
 			}
 		}
 
 		if ( !currentRoute && errorRoute ) {
-			currentRoute = errorRoute;
+			return errorRoute;
 		}
 
-		this.setState({"current": currentRoute});
+		//this.setState({"current": currentRoute});
+		return currentRoute;
 	}
 
-	matchPath ( path ) {
-		if ( Array.isArray(path) ) {
-			for ( let v in path ) {
-				if ( this.matchPath(path[v]) ) {
+
+	_doesPropsMatchRoutePath( routePath ) {
+		// @ifdef DEBUG
+		//console.log("[com/router]", "_doesPathMatchRoute", routePath, this.props);
+		// @endif
+
+		if ( Array.isArray(routePath) ) {
+			for ( let path of routePath ) {
+				if ( this._doesPropsMatchRoutePath(path) ) {
 					return true;
 				}
 			}
 			return false;
 		}
 
+		let routePathTokens = routePath.split("/").slice(1);
+		let propsPathTokens = this.props.props.extra;
+
+		for ( let idx = 0; idx < routePathTokens.length; ++idx ) {
+			let token = routePathTokens[idx];
+
+			if ( !token ) {
+				// @ifdef DEBUG
+				if ( !this.props.children[idx].props.default ) {
+					console.warn("Route has blank path token:", idx, routePath, this.props);
+				}
+				// @endif
+
+				continue;
+			}
+
+			// If token is a variable
+			if ( token.charAt(0) == ":" ) {
+				// If it ends with ? the token is optional
+				if ( token.charAt(token.length - 1) == "?" ) {
+					continue;
+				}
+			}
+
+			// Fail if props has no tokens left
+			if ( idx >= propsPathTokens.length ) {
+				return false;
+			}
+
+			// Fail if token and props token aren't the same
+			if ( token != propsPathTokens[idx] ) {
+				return false;
+			}
+		}
+
+		// Success
+		return true;
+	}
+
+/*
+	_matchPath( path ) {
+		// If path is an array, this becomes a recursive function
+		if ( Array.isArray(path) ) {
+			for ( let v in path ) {
+				if ( this._matchPath(path[v]) ) {
+					return true;
+				}
+			}
+			return false;
+		}
+
+		// If path isn't an array
 		let keys = [];
 		let pathRegex = pathToRegexp(path, keys);
 		let url = window.location.pathname
@@ -93,81 +183,146 @@ export default class Router extends Component {
 		this.setState({"params": params});
 		return true;
 	}
+*/
 
-	// Checks if route is a match
-	matchRoute( a, b ) {
-		for ( let i in this.state.match ) {
-			let aMatch = a[this.state.match[i]] == "" ? null : a[this.state.match[i]];
-			let bMatch = b[this.state.match[i]] == "" ? null : b[this.state.match[i]];
+	// Checks if a node matches the properties required by the route
+	_doesNodeMatchRoute( route, node ) {
+		// Optionally let the properties checked be changed by <Router>
+		let matchProps = this.props.match ? this.props.match : ["type", "subtype", "subsubtype"];
 
-			if ( (aMatch == null) || (bMatch == null) ) {
+		for ( let prop of matchProps ) {
+			let routeValue = route[prop];
+			let nodeValue = node[prop];
+
+			// If the route omits it, continue
+			if ( !routeValue ) {
 				continue;
 			}
 
-			if ( Array.isArray(aMatch) ) {
-				if ( !aMatch.includes(bMatch) ) {
+			// If the node omits it, fail
+			if ( !nodeValue ) {
+				return false;
+			}
+
+			// If route has an array of values, fail if not included
+			if ( Array.isArray(routeValue) ) {
+				if ( !routeValue.includes(nodeValue) ) {
 					return false;
 				}
 			}
-			else if ( aMatch != bMatch ) {
+			// Otherwise, fail if not equal
+			else if ( routeValue != nodeValue ) {
 				return false;
 			}
 		}
 
+		// Success
 		return true;
 	}
 
-	// Iterate through all routes and flatten them
-	flattenRoutes( children, parent, reset ) {
-		for ( let i in children ) {
-			let child = children[i];
 
-			if ( child.nodeName !== Route ) {
+	_parseRoutes( children, parent ) {
+		children = toChildArray(children);
+
+		let newRoutes = [];
+
+		// Iterate through all children, merging and flattening
+		for ( let child of children ) {
+
+			// Bail if not a Route
+			if ( !child || (child.type !== Route) ) {
 				continue;
 			}
 
-			let node = child;
+			let newProps = {...child.props};
+			// Optionally merge properties with parent
 			if ( parent ) {
-				node = parent;
+				newProps = {...parent.props};
+
+				// Delete children inherited from parent
+				if ( parent.props.children ) {
+					delete newProps.children;
+				}
+
+				// Overwrite newProps with child's props
+				Object.assign(newProps, child.props);
 			}
 
-			let props = {
-				...node.attributes,
-				...child.attributes
-			};
+			// @ifdef DEBUG
+			// MK: This errors when path isn't a string (i.e. Games Filter vs Results Filter)
+			//if ( child.props.path && child.props.path.charAt(0) != "/" ) {
+			//	console.warn("Route.path does not begin with '/'", child);
+			//}
+			// @endif
 
-			if ( props.static && parent && parent.attributes.path && child.attributes.path ) {
-				props.path = parent.attributes.path + child.attributes.path;
+			// If parent and child both have paths, concatenate them
+			if ( /*newProps.static &&*/ parent && parent.props.path && child.props.path ) {
+				// MK: Array version is untested (unsure if 2nd argument to map is needed given scope)
+				newProps.path = Array.isArray(child.props.path) ?
+					child.props.path.map(path => parent.props.path + path) :
+					parent.props.path + child.props.path;
 			}
 
-			if ( props.default && props.static && props.path ) {
-				props.path = ["/", ...props.path];
+			if ( newProps.path ) {
+				newProps.pathVars = [];
+
+				// Handle path arrays
+				let paths = newProps.path;
+				if ( !Array.isArray(paths) ) {
+					paths = [paths];
+				}
+
+				for ( let path of paths ) {
+					// Tokenize the path and extract the path variable names
+					let tokenizedPath = path.split("/").slice(1);
+					for ( let token of tokenizedPath ) {
+						if ( !token ) {
+							continue;
+						}
+
+						// If token begins with a colon, it's a path variable
+						if ( token.charAt(0) == ":" ) {
+							newProps.pathVars.push(token);
+						}
+					}
+				}
 			}
 
-			child = cloneElement(child, props);
+			// If a "default", promote the path to an array (if not) and prefix with the '/' path
+			if ( newProps.default && newProps.path ) {
+				newProps.path = Array.isArray(newProps.path) ?
+					["/", ...newProps.path] :
+					["/", newProps.path];
+			}
 
-			this.state.routes.push(child);
+			// Clone the Route
+			// MK: This might not have to be a vnode
+			let newChild = cloneElement(child, newProps);
+			newRoutes.push(newChild);
 
-			if ( child.children.length > 0 ) {
-				this.flattenRoutes(child.children, child);
+			// If child has children, recursively parse again
+			if ( newChild.props.children ) {
+				newRoutes = newRoutes.concat(this._parseRoutes(newChild.props.children, newChild));
 			}
 		}
+
+		return newRoutes;
 	}
 
-	//Re-calculate routes when router props change
-	componentWillReceiveProps( nextProps ) {
-		if ( nextProps && nextProps.node && nextProps.node.id ) {
-			this.setState({"routes": [], "params": {}});
-			this.flattenRoutes(nextProps.children);
-			this.getCurrentRoute(nextProps);
-		}
-	}
 
-	render( props, state ) {
-		if ( !state.current ) {
-			return <div id="content" />;
+	render( props ) {
+		let routes = this._parseRoutes(props.children);
+		let route = this._getRoute(routes);
+
+		// @ifdef DEBUG
+		//console.log("[com/router]", "render", props, routes, route);
+		// @endif
+
+		if ( !route ) {
+			return <div id="router" />; //null;
 		}
 
-		return cloneElement(state.current, {...props, "params": state.params});
+		return cloneElement(route, {...props});//, "params": state.params});
+		//return cloneElement(route.props.component, {...props});
 	}
 }

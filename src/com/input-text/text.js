@@ -11,6 +11,7 @@ export default class InputText extends Component {
 		this.onModify = this.onModify.bind(this);
 	}
 
+	// MK: This normally checks children. Is this correct?
 	shouldComponentUpdate( nextProps ) {
 		return shallowDiff(this.props, nextProps);
 	}

@@ -1,4 +1,4 @@
-import { h, Component } from 'preact/preact';
+import { h, Component, toChildArray } from 'preact/preact';
 
 export default class SVGIcon extends Component {
 //	setIcon( name ) {
@@ -37,7 +37,7 @@ export default class SVGIcon extends Component {
 			use_props['xlinkHref'] = "#icon-"+props.src;
 		}
 		else {
-			let name = props.children;
+			let name = toChildArray(props.children);
 			svg_props['class'] += " icon-"+name;
 			use_props['xlinkHref'] = "#icon-"+name;
 		}

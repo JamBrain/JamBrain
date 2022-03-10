@@ -1,4 +1,4 @@
-import {h, Component, cloneElement}		from 'preact/preact';
+import {h, Component, cloneElement, toChildArray}		from 'preact/preact';
 import UIButton							from 'com/ui/button/button';
 import UIIcon							from 'com/ui/icon/icon';
 
@@ -32,12 +32,12 @@ export default class UIDropdown extends Component {
 	}
 
 	render( props, state ) {
-		let Button = props.children.slice(0, 1);
+		let Button = toChildArray(props.children).slice(0, 1);
 
 		let ShowContent = null;
 		if ( state.show ) {
 			let that = this;
-			let Children = props.children.slice(1);
+			let Children = toChildArray(props.children).slice(1);
 
 			let Content = [];
 			for ( let idx = 0; idx < Children.length; idx++ ) {

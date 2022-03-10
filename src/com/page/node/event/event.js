@@ -45,13 +45,13 @@ export default class PageEvent extends Component {
 			<div id="content">
 				<ContentHeadlinerEvent node={node} name="event" icon="trophy" flagclass="-col-ab" childclass={IsThisFeatured ? "-col-a -inv-lit" : "-inv -inv-lit"} style="--headlinerSize: 2.5rem;" />
 				<PageNavEvent {...props} />
-				<Router node={node} props={props}>
-					<Route default static path="/home" component={EventHome} />
-					<Route static path="/stats" component={EventStats} />
-					<Route static path="/theme/:page?" component={EventTheme} />
-					<Route static path={["/games/:filter?/:subfilter?", "/results/:filter?/:subfilter?"]} component={EventGames} />
-					<Route static path="/my" component={EventMy} user={user} />
-					<Route static path="/my/grades" component={EventMyGrades} user={user} />
+				<Router props={props}>
+					<Route default path="/home" component={EventHome} />
+					<Route path="/stats" component={EventStats} />
+					<Route path="/theme/:page?" component={EventTheme} />
+					<Route path={["/games/:filter?/:subfilter?", "/results/:filter?/:subfilter?"]} component={EventGames} />
+					<Route path="/my" component={EventMy} user={user} />
+					<Route path="/my/grades" component={EventMyGrades} user={user} />
 					<Route type="error" component={ContentError} />
 				</Router>
 			</div>
