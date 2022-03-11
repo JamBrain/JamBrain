@@ -78,7 +78,7 @@ export default class ContentComments extends Component {
 					this.setState({'comments': []});//, 'tree': null, 'authors': null});
 				}
 				*/
-				console.log("got comments", r.comment);
+				//console.log("got comments", r.comment);
 
 				this.setState({'comments': r.comment});
 
@@ -176,6 +176,13 @@ export default class ContentComments extends Component {
 				};
 			}
 			else if ( comment.parent && tree[comment.parent] ) {
+				/*
+				// If we can't find parent, create a stub
+				if ( !tree[comment.parent] ) {
+					tree[comment.parent] = {};
+				}
+				*/
+				// If parent doesn't have a child, create stub
 				if ( !tree[comment.parent].child ) {
 					tree[comment.parent].child = {};
 				}
@@ -185,7 +192,7 @@ export default class ContentComments extends Component {
 				};
 			}
 			else {
-				console.log('[Comments] Unable to find parent for '+comment.id);
+				console.warn('[Comments] Unable to find parent for '+comment.id);
 			}
 		}
 
@@ -247,12 +254,10 @@ export default class ContentComments extends Component {
 		// Skip anonymous comments (user 0)
 		author_ids = author_ids.filter((item, i, ar) => (ar.indexOf(item) === i) && (item > 0));
 
-		console.log("GetAuthors", author_ids);
 		// Fetch authors
 		return $Node.GetKeyed( author_ids )
 		.then(r => {
 			// NOTE: No status code because of GetKeyed
-			console.log("GetAuthors R", r);
 			this.setState({'authors': r.node});
 		})
 		.catch(err => {
@@ -274,8 +279,8 @@ export default class ContentComments extends Component {
 
 		let ret = [];
 
-		for ( let branch of tree ) {
-			let comment = branch.node;
+		for ( let branch in tree ) {
+			let comment = tree[branch].node;
 			comment.loved = (actualLove.indexOf(comment.id) !== -1) ? true : false;
 
 			let author = authors[comment.author];
@@ -283,7 +288,7 @@ export default class ContentComments extends Component {
 			const isMention = !isMyComment && userSlug && (comment.body.indexOf(userSlug) > -1);
 			const isNodeAuthor = !isMention && node_IsAuthor(node, {'id': comment.author});
 
-			if ( branch.child ) {
+			if ( tree[branch].child ) {
 				ret.push(<ContentCommentsComment user={user} node={node} comment={comment} author={author} indent={indent} isMyComment={isMyComment} isNodeAuthor={isNodeAuthor} isMention={isMention}><div class="-indent">{this.renderComments(state, branch.child, indent+1)}</div></ContentCommentsComment>);
 			}
 			else {
@@ -344,7 +349,7 @@ export default class ContentComments extends Component {
 	onToggleSubscription() {
 		const {node} = this.props;
 
-		$Notification.Toggle(node.id).then(r => {
+		$Notification.ToggleSubscription(node.id).then(r => {
 			if (r.status == 200) {
 				this.setState({isUserSubscribed: r.subscribed});
 			}
@@ -361,7 +366,7 @@ export default class ContentComments extends Component {
 
 		let tree = this._buildTree(comments);
 
-		console.log("[com/comments]","render",comments, authors);
+		//console.log("[com/comments]", "render", comments, authors, tree);
 
 		let ShowComments = <NavSpinner />;
 		if ( comments && authors ) {

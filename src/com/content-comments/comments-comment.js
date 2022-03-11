@@ -255,11 +255,8 @@ export default class ContentCommentsComment extends Component {
 					Name = author.meta['real-name'];
 
 				if ( author.meta['avatar'] )
-					Avatar = author.meta['avatar'];
+					Avatar = author.meta['avatar'] + ".64x64.fit.png";
 			}
-
-			Avatar += ".64x64.fit.png";
-
 
 			let ShowTitle = [];
 			if ( !state.editing || state.preview ) {
