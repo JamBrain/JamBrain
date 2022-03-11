@@ -9,19 +9,17 @@ export default class ContentCommonNavButton extends Component {
 	}
 
 	render( props ) {
-		var Class = ['content-common-nav-button'];
-		if ( props.class )
-			Class = Class.concat(props.class.split(' '));
+		var newClass = cN('content-common-nav-button', props.class);
 
 		if ( props.href ) {
 			return (
-				<ButtonLink disabled={props.disabled} class={Class} href={props.href} onclick={props.onclick}>
+				<ButtonLink disabled={props.disabled} class={newClass} href={props.href} onclick={props.onclick}>
 					{props.children}
 				</ButtonLink>
 			);
 		}
 		return (
-			<ButtonBase disabled={props.disabled} class={Class} onclick={props.onclick}>
+			<ButtonBase disabled={props.disabled} class={newClass} onclick={props.onclick}>
 				{props.children}
 			</ButtonBase>
 		);

@@ -130,6 +130,11 @@ export function Unsubscribe( id ) {
 	return Fetch.Post(API_ENDPOINT+'/vx/notification/subscription/remove/' + id, {});
 }
 
+export function ToggleSubscription( id ) {
+	return Fetch.Post(API_ENDPOINT+'/vx/notification/subscription/toggle/' + id, {});
+}
+
+
 export default {
 	GetCountUnread,
 	GetCountAll,
@@ -139,6 +144,7 @@ export default {
 	GetSubscription,
 	Subscribe,
 	Unsubscribe,
+	ToggleSubscription,
 	SetFilters,
 	GetFilters,
 	GetFeedAllFiltered,

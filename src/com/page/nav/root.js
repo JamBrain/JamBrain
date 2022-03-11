@@ -37,7 +37,7 @@ export default class PageNavRoot extends Component {
 
 			if ( !IsHome ) {
 				NavButtons.push(<ContentNavButton path={FullPath} title="Notifications" icon="bubble" href="/my/notifications">Notifications</ContentNavButton>);
-				NavButtons.push(<ContentNavButton path={FullPath} title="Stats" icon="stats" href="/my/stats">Stats</ContentNavButton>);
+				//NavButtons.push(<ContentNavButton path={FullPath} title="Stats" icon="stats" href="/my/stats">Stats</ContentNavButton>);
 				NavButtons.push(<ContentNavButton path={FullPath} title="Settings" icon="cog" href="/my/settings">Settings</ContentNavButton>);
 			}
 		}
@@ -67,7 +67,7 @@ export default class PageNavRoot extends Component {
 			}
 		}
 
-		if ( ['/dev'].includes(FirstPath) || (location.search.indexOf('debug') >= 0) ) {
+		if ( ['/dev'].includes(FirstPath) && (location.search.indexOf('debug') >= 0) ) {
 			NavButtons.push(<ContentNavButton path={FullPath} title="Dev" light={!IsHome} icon="embed" href="/dev">Dev</ContentNavButton>);
 
 			if ( !IsHome ) {

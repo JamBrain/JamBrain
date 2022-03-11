@@ -16,20 +16,20 @@ import LayoutChangeableGrid 			from 'com/layout/grid/changeable-grid';
 import $Node							from '../../shrub/js/node/node';
 
 export default class ContentGames extends Component {
-
 	constructor( props ) {
 		super(props);
 
 		this.state = {
-			'feed': [],
+			'feed': null,
 			'hash': {},
 			'offset': 24-5, //10-5
 			'added': null,
-			'loaded': false
 		};
 
-		this.fetchMore = this.fetchMore.bind(this);
+		// Bound in the definition, so we can include state
+		//this.fetchMore = this.fetchMore.bind(this);
 	}
+
 
 	componentDidMount() {
 		let props = this.props;
@@ -46,23 +46,27 @@ export default class ContentGames extends Component {
 		);
 	}
 
-	appendFeed( newfeed ) {
-		var feed = this.state.feed;
-		var hash = this.state.hash;
 
-		for ( var idx = 0; idx < newfeed.length; idx++ ) {
-			var info = newfeed[idx];
-			if ( !hash[info['id']] ) {
-				hash[info['id']] = feed.length;
-				feed.push(info);
+	appendFeed( newfeed ) {
+		this.setState(prevState => {
+			let feed = prevState.feed;
+			let hash = prevState.hash;
+
+			for ( let info of newfeed ) {
+				if ( !hash[info.id] ) {
+					hash[info.id] = feed.length;
+					feed.push(info);
+				}
 			}
-		}
-		this.setState({'feed': feed, 'hash': hash, 'added': newfeed.length});
+
+			return {'feed': feed, 'hash': hash, 'added': newfeed.length};
+		});
 	}
 
+	/*
 	getFeedIdsWithoutNodes() {
 		var feed = this.state.feed;
-		var hash = this.state.hash;
+		//var hash = this.state.hash;
 
 		var keys = [];
 		for (var idx = 0; idx < feed.length; idx++ ) {
@@ -71,23 +75,26 @@ export default class ContentGames extends Component {
 		}
 		return keys;
 	}
+	*/
 
-	getMissingNodes() {
+	getMissingNodes( newFeed ) {
 		var keys = this.state.feed;//this.getFeedIdsWithoutNodes();
+
+		console.log("MEOOO", this.state.feed, newFeed);
 
 		if ( keys.length ) {
 			return $Node.GetKeyed( keys )
 				.then(r => {
-					var feed = this.state.feed;
-					var hash = this.state.hash;
+					this.setState(prevState => {
+						let feed = prevState.feed;
+						const hash = prevState.hash;
 
-					for ( var node_id in r.node ) {
-						var id = r.node[node_id].id;
+						for ( let node of r.node ) {
+							feed[hash[node.id]].node = node;
+						}
 
-						feed[hash[id]].node = r.node[node_id];
-					}
-
-					this.setState({'feed': feed, 'hash': hash});
+						return {'feed': feed};
+					});
 				})
 				.catch(err => {
 					this.setState({ 'error': err });
@@ -99,11 +106,11 @@ export default class ContentGames extends Component {
 	getFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit ) {
 		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit )
 		.then(r => {
-			this.setState({ 'loaded': true });
+			//this.setState({ 'loaded': true });
 
 			if ( r.feed && r.feed.length ) {
 				this.appendFeed(r.feed);
-				return this.getMissingNodes();
+				return this.getMissingNodes(r.feed);
 			}
 		})
 		.catch(err => {
@@ -111,15 +118,20 @@ export default class ContentGames extends Component {
 		});
 	}
 
-	fetchMore( offset ) {
 
-		console.log("loading more");
+	fetchMore( offset ) {
+		// @ifdef DEBUG
+		console.log("[com/ContentGames]", "fetchMore", offset);
+		// @endif
 
 		var props = this.props;
-		var offset = this.state.offset;
 //		var morenode = this.state.feed[this.state.feed.length-1];
 //		var more = morenode.created ? morenode.created : morenode.modified;
 
+		// Step the offset
+		this.setState({'offset': offset + 24});
+
+		// Fetch the feed (given the old offset)
 		this.getFeed(
 			props.node.id,
 			props.methods ? props.methods : ['parent', 'superparent'],
@@ -130,8 +142,6 @@ export default class ContentGames extends Component {
 			offset,
 			this.props.limit ? this.props.limit : 24+5
 		);
-
-		this.setState({'offset': offset + 24});
 	}
 
 	static matchesFilter(node, filter) {
@@ -159,7 +169,7 @@ export default class ContentGames extends Component {
 
 	render( props, state ) {
 		const {filter} = props;
-		let {feed, added, error, loaded, defaultLayout, layout} = state;
+		let {feed, offset, added, error, loaded, defaultLayout, layout} = state;
 
 		let LoadMore = null;
 
@@ -169,7 +179,7 @@ export default class ContentGames extends Component {
 		}
 		else if ( feed && (feed.length > 0) ) {
 			if ( !props.nomore /*|| added >= 10*/ ) {
-				LoadMore = <ContentMore onclick={this.fetchMore} />;
+				LoadMore = <ContentMore onclick={this.fetchMore.bind(this, offset)} />;
 			}
 
 			let Games = feed.map((r, index) => {
@@ -194,7 +204,7 @@ export default class ContentGames extends Component {
 				</div>
 			);
 		}
-		else if ( loaded && feed && (feed.length == 0) ){
+		else if ( /*loaded &&*/ feed && (feed.length == 0) ){
 			return (
 				<ContentCommon {...props}>
 					<ContentCommonBodyTitle href={""} title={"No Games!"} />

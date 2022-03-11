@@ -40,7 +40,7 @@ export default class ContentCommonBodyMarkup extends Component {
       //var Chars = props.children[0] ? props.children[0].length : 0;
 
       return (
-        <div class={Class}>
+        <div class={cN(Class)}>
           <div class="-label">{Label}</div>
           <InputTextArea
             user={props.user}

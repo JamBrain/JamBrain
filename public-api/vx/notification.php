@@ -23,13 +23,13 @@ function GetFeed($notification_type, &$RESPONSE) {
 		if ( $RESPONSE['limit'] > 100 )
 			$RESPONSE['limit'] = 100;
 	}
-	
+
 	$RESPONSE['max_read'] = notification_GetLastReadNotification($user_id);
-	
+
 	if ( $notification_type == 'unread' ) {
 		$RESPONSE['count'] = notification_CountUnread($user_id);
 		$RESPONSE['feed'] = notification_GetUnread($user_id, $RESPONSE['limit'], $RESPONSE['offset']);
-	} 
+	}
 	else {
 		$RESPONSE['count'] = notification_Count($user_id);
 		$RESPONSE['feed'] = notification_Get($user_id, $RESPONSE['limit'], $RESPONSE['offset']);
@@ -42,7 +42,7 @@ function GetSubscription(&$RESPONSE) {
 	if ( $node_id === 0 ) {
 		json_EmitFatalError_BadRequest("Missing node ID parameter", $RESPONSE);
 	}
-	
+
 	$RESPONSE['node'] = $node_id;
 	$RESPONSE['subscribed'] = notification_GetSubscriptionForNode($user_id, $node_id);
 }
@@ -55,11 +55,16 @@ function SetSubscription($value, &$RESPONSE) {
 	}
 
 	$RESPONSE['node'] = $node_id;
-	
+
 	// Verify that this node makes sense to subscribe to (use the same rules as comment posting)
 	$node = node_GetById($node_id);
 	if ( !comment_IsCommentPublicByNode($node) ) {
 		json_EmitFatalError_Permission("You don't have permission to subscribe to this node.", $RESPONSE);
+	}
+
+	// If value is null, fetch it and toggle
+	if ( is_null($value) ) {
+		$value = !notification_GetSubscriptionForNode($user_id, $node_id);
 	}
 
 	notification_SetSubscriptionForNode($user_id, $node_id, $value);
@@ -94,26 +99,30 @@ api_Exec([
 	// User doesn't want notifications for this thread.
 	SetSubscription(false, $RESPONSE);
 }],
+["notification/subscription/toggle", API_POST | API_AUTH, API_CHARGE_1, function(&$RESPONSE) {
+	// User wants to toggle notifications for this thread.
+	SetSubscription(null, $RESPONSE);
+}],
 ["notification/markread", API_POST | API_AUTH, API_CHARGE_1, function(&$RESPONSE) {
 	$user_id = userAuth_GetID();
 
 	if ( !isset($_POST['max_read']) )
 		json_EmitFatalError_BadRequest("Missing max_read parameter", $RESPONSE);
 	$max_read = intval($_POST['max_read']);
-	
+
 	// Sanity check the value being passed in here.
 	$prev_cursor = notification_GetLastReadNotification($user_id);
 	$max_notification = notification_Max($user_id);
-	
+
 	if ( ($max_read < $prev_cursor) || ($max_read > $max_notification) ) {
 		json_EmitFatalError_BadRequest("New max_read notification index is out of range", $RESPONSE);
 	}
-	
+
 	$success = notification_SetLastReadNotification($user_id, $max_read);
 	if ( !$success ) {
 		json_EmitFatalError_Server(null, $RESPONSE);
 	}
-	
+
 	$RESPONSE['max_read'] = $max_read;
 }],
 ]);

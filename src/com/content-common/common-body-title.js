@@ -21,6 +21,7 @@ export default class ContentCommonBodyTitle extends Component {
 		props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
 		props.class.push("content-common-body");
 		props.class.push("-title");
+
 		if ( props.subtitle )
 			props.class.push("-has-subtitle");
 
@@ -35,7 +36,7 @@ export default class ContentCommonBodyTitle extends Component {
 		if (props.editing) {
 			props.class.push('-editing');
 			return (
-				<div class={props.class}>
+				<div class={cN(props.class)}>
 					<div class="-label">Title</div>
 					<InputText
 						value={props.title}

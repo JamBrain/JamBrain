@@ -38,7 +38,7 @@ export default class PageNavUser extends Component {
 		//}
 
 		NavButtons.push(<ContentNavButton path={path+FullPath} title={node.name + "'s Feed"} icon="feed" href={path+'/feed'}>Feed</ContentNavButton>);
-		NavButtons.push(<ContentNavButton path={path+FullPath} title={node.name + "'s Statistics"} icon="stats" href={path+'/stats'}>Stats</ContentNavButton>);
+		//NavButtons.push(<ContentNavButton path={path+FullPath} title={node.name + "'s Statistics"} icon="stats" href={path+'/stats'}>Stats</ContentNavButton>);
 
 		if ( IsNodeMe /*&& user.private && user.private["meta"] && user.private.meta["star"]*/ ) {
 			NavButtons.push(<ContentNavButton path={path+FullPath} title={"Followed by " + user.name} icon="user-check" href={path+'/following'}>Following</ContentNavButton>);

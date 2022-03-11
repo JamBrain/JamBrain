@@ -152,13 +152,13 @@ export default class DialogPassword extends Component {
 				<DialogCommon ok oktext="Save" onok={this.doResetPassword} cancel explicit {...new_props}>
 					<div>
 						<div class="-input-container">
-							<input autofocus id="dialog-password-password2" oninput={this.onPasswordChange} class="-text focusable" type="password" name="password" maxlength="128" placeholder="Password" value={password} />
+							<input autofocus id="dialog-password-password2" autocomplete="new-password" oninput={this.onPasswordChange} class="-text focusable" type="password" name="password" maxlength="128" placeholder="Password" value={password} />
 							<LabelYesNo value={this.isValidPassword()} />
 						</div>
 					</div>
 					<div>
 						<div class="-input-container">
-							<input id="dialog-password-password2" oninput={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxlength="128" placeholder="Password again" value={password2} />
+							<input id="dialog-password-password2" autocomplete="new-password" oninput={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxlength="128" placeholder="Password again" value={password2} />
 							<LabelYesNo value={this.isValidPassword2()} />
 						</div>
 					</div>

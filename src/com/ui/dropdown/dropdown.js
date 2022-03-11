@@ -7,7 +7,7 @@ export default class UIDropdown extends Component {
 		super(props);
 
 		this.state = {
-			'show': props.show ? true : false,
+			'show': !!props.show,
 		};
 
 		this.onButton = this.onButton.bind(this);
@@ -25,15 +25,13 @@ export default class UIDropdown extends Component {
 
 	// Clicking on the button
 	onButton( e ) {
-		if ( !this.state.show )
-			this.doShow(e);
-		else
-			this.doHide(e);
+		this.setState(prevState => ({'show': !prevState.show}));
 	}
 
 	render( props, state ) {
 		let Button = toChildArray(props.children).slice(0, 1);
 
+		// MK: I don't like how this uses children. Previously it was using '.attribute' directly. It shouldn't need it
 		let ShowContent = null;
 		if ( state.show ) {
 			let that = this;
@@ -41,15 +39,15 @@ export default class UIDropdown extends Component {
 
 			let Content = [];
 			for ( let idx = 0; idx < Children.length; idx++ ) {
-				if ( Children[idx].attributes.onclick ) {
+				if ( Children[idx].props.onclick ) {
 					Content.push(cloneElement(Children[idx], {
 						'onclick': (e) => {
 							that.doHide();
-							Children[idx].attributes.onclick(e);
+							Children[idx].props.onclick(e);
 						}
 					}));
 				}
-				else if ( Children[idx].attributes.href ) {
+				else if ( Children[idx].props.href ) {
 					Content.push(cloneElement(Children[idx], {
 						'onclick': function(e) {
 							that.doHide();

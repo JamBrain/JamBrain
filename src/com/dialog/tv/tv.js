@@ -28,10 +28,12 @@ export default class DialogTV extends Component {
 		};
 	}
 
+	/*
 	shouldComponentUpdate( nextProps, nextState ) {
 		// At the moment, there are no external events that should trigger an update (I ignore my props)
 		return true;
 	}
+	*/
 
 	componentDidMount() {
 		window.addEventListener('resize', this.onResize);
@@ -52,7 +54,7 @@ export default class DialogTV extends Component {
 
 		var WindowWidth = window.innerWidth;
 		var WindowHeight = window.innerHeight - 64; /* Chop off 64 pixels from height to not hide the View Bar */
-		ret.showchat = this.state.showchat;
+		//ret.showchat = this.state.showchat;
 
 		// Hitbox: 288 wide minimum
 
@@ -143,7 +145,7 @@ export default class DialogTV extends Component {
 	onChatClick( e ) {
 		if ( this.canShowChat() ) {
 			//console.log("chat: ",this.state.showchat);
-			this.setState({'showchat': !this.state.showchat});
+			this.setState(prevState => ({'showchat': !prevState.showchat}));
 			this.onResize(e);
 		}
 	}

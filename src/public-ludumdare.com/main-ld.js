@@ -286,7 +286,7 @@ class Main extends Component {
 
 	fetchNode( slugs, newArgs ) {
 		// @ifdef DEBUG
-		console.log("[fetchNode] +", slugs, this.state);
+		console.log("[fetchNode] +", slugs);
 		// @endif
 
 		let args = ['node', 'parent', 'superparent', 'author'];
@@ -302,7 +302,7 @@ class Main extends Component {
 
 				console.log("walked", r);
 
-				NewState.path = (r.path.length ? '/' : '') +this.state.slugs.slice(0, r.path.length).join('/');
+				NewState.path = (r.path.length ? '/' : '') +slugs.slice(0, r.path.length).join('/');
 				NewState.extra = r.extra;
 
 				NewState.node = r.node[r.node_id];
@@ -380,17 +380,17 @@ class Main extends Component {
 		// @ifdef DEBUG
 		console.log("hashchange: ", e.newURL);
 		// @endif
-		let slugs = this.cleanLocation(window.location).slugs;
 
-		if ( slugs.join() === this.state.slugs.join() ) {
-			// MK: Might not be necessary
-			this.setState({});
-		}
-		else {
-			this.setState({
-				'slugs': slugs
-			});
-		}
+		this.setState(prevState => {
+			let {slugs} = this.cleanLocation(window.location);
+
+			// If slugs are the same, we don't need to change them
+			if ( slugs.join() === prevState.slugs.join() ) {
+				return {};
+			}
+
+			return {'slugs': slugs};
+		});
 
 		this.handleAnchors();
 	}

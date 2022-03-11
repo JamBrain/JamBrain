@@ -74,7 +74,7 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	canSave() {
-		return (this.props.comment.body.trim().length > 1);
+		return (this.props.comment.body.trim().length >= 1);
 	}
 
 	onModify( e ) {
@@ -93,8 +93,8 @@ export default class ContentCommentsComment extends Component {
 	onKeyDown( e ) {
 		const {autocompleters} = this;
 		for ( let autocompleter in autocompleters ) {
-			const state = autocompleters[autocompleter];
-			if ( state.captureKeyDown && !state.captureKeyDown(e) ) {
+			const ac = autocompleters[autocompleter];
+			if ( ac.captureKeyDown && !ac.captureKeyDown(e) ) {
 				return false;
 			}
 		}
@@ -104,8 +104,8 @@ export default class ContentCommentsComment extends Component {
 	onKeyUp( e ) {
 		const {autocompleters} = this;
 		for ( let autocompleter in autocompleters ) {
-			const state = autocompleters[autocompleter];
-			if ( state.captureKeyUp && !state.captureKeyUp(e) ) {
+			const ac = autocompleters[autocompleter];
+			if ( ac.captureKeyUp && !ac.captureKeyUp(e) ) {
 				return false;
 			}
 		}
@@ -130,8 +130,11 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onCancel( e ) {
-		this.props.comment.body = this.state.original;
-		this.setState({'modified': false, 'editing': false, 'preview': false});
+		this.setState(prevState => {
+			// MK: Is this allowed?
+			this.props.comment.body = prevState.original;
+			return {'modified': false, 'editing': false, 'preview': false};
+		});
 	}
 
 	onSave( e ) {
@@ -139,7 +142,7 @@ export default class ContentCommentsComment extends Component {
 
 		$Comment.Update( comment.id, comment.node, comment.body )
 		.then(r => {
-			console.log(r);
+			//console.log(r);
 
 			this.setState({'modified': false, 'editing': false, 'preview': false, 'original': this.props.comment.body});
 		})
@@ -149,10 +152,11 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onToggleAnon() {
-		this.setState({"publishAnon": !this.state.publishAnon});
+		this.setState(prevState => ({"publishAnon": !prevState.publishAnon}));
 	}
 
 	onPublish( e ) {
+		// MK: Uses state
 		if ( this.canSave() ) {
 			if ( this.state.publishAnon ) {
 				if ( this.props.onpublish ) {
@@ -174,6 +178,7 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onLove( e ) {
+		// MK: uses state
 		if ( (this.props.user.id != 0) && (this.props.user.id != null) ) {
 			if ( this.props.comment.id != null ) {
 				if ( this.state.loved ) {
@@ -209,13 +214,13 @@ export default class ContentCommentsComment extends Component {
 
 	onAutocompleteSelect(replaceText, cursorPosAfterUpdate) {
 		this.props.comment.body = replaceText;
-		this.setState({
+		this.setState(prevState => ({
 			'modified': this.canSave(),
 			'editText': replaceText,
 			'replaceText': replaceText,
 			'replaceCursorPos': cursorPosAfterUpdate,
-			'replaceTextEvent': this.state.replaceTextEvent ? this.state.replaceTextEvent + 1 : 1,
-		});
+			'replaceTextEvent': prevState.replaceTextEvent ? prevState.replaceTextEvent + 1 : 1,
+		}));
 	}
 
 	onAutoselectCaptureKeyDown(autocompleter, callback) {
@@ -250,8 +255,11 @@ export default class ContentCommentsComment extends Component {
 					Name = author.meta['real-name'];
 
 				if ( author.meta['avatar'] )
-					Avatar = author.meta['avatar'] + ".64x64.fit.png";
+					Avatar = author.meta['avatar'];
 			}
+
+			Avatar += ".64x64.fit.png";
+
 
 			let ShowTitle = [];
 			if ( !state.editing || state.preview ) {
