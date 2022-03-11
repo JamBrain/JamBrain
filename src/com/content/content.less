@@ -1,5 +1,5 @@
 
-#content > .content-base {
+#content > .content {
 	animation: anim-fadein 0.2s ease-in;
 	@keyframes anim-fadein {
 		0%   { opacity: 0; }
@@ -10,6 +10,15 @@
 	}
 }
 
-#content .content-base {
+#content .content {
 	position: relative;
+	margin: 0.5rem 0;
+
+	&:first-child {
+		margin-top: 0;
+	}
+
+	&:last-child {
+		margin-bottom: 0;
+	}
 }

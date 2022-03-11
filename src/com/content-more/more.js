@@ -12,13 +12,13 @@ export default class ContentMore extends Component {
 		// MK: This is fine as a prop, but don't do loading states, mmkay
 		if ( props.loading ) {
 			return (
-				<div class="content-base content-more">
+				<div class="content content-more">
 					<NavSpinner />
 				</div>
 			);
 		}
 		return (
-			<div class="content-base content-more">
+			<div class="content content-more">
 				<ButtonBase class='-button' onclick={props.onclick}>MORE</ButtonBase>
 			</div>
 		);

@@ -8,7 +8,7 @@ export default class ContentLoading extends Component {
 
 	render( {error} ) {
 		return (
-			<div class="content-base">
+			<div class="content">
 				{ error ? error : <NavSpinner /> }
 			</div>
 		);

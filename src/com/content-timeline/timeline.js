@@ -147,7 +147,7 @@ export default class ContentTimeline extends Component {
 				return <ContentUser node={node} user={user} path={path} extra={extra} minmax />;
 			}
 			else {
-				return <div class="content-base">Unsupported Node Type: {""+node.type}</div>;
+				return <div class="content">Unsupported Node Type: {""+node.type}</div>;
 			}
 		}
 		return null;

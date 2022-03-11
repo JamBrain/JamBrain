@@ -202,7 +202,7 @@ export default class ContentGames extends Component {
 			});
 
 			return (
-				<div class={cN('content-base', props.class)}>
+				<div class={cN('content', props.class)}>
 					{props.children}
 					<LayoutChangeableGrid columns={layout}>
 						{Games}

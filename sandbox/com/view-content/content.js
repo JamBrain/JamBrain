@@ -561,7 +561,7 @@ export default class ViewContent extends Component {
 			}
 		}
 		else {
-			return <div id="content"><div class="content-base">Unsupported Node Type: {""+node.type}</div></div>;
+			return <div id="content"><div class="content">Unsupported Node Type: {""+node.type}</div></div>;
 		}
 	}
 

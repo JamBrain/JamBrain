@@ -167,7 +167,7 @@ export default class ItemFilter extends Component {
 			ShowFilters = <div>None</div>;
 
 		return (
-			<div class="content-base content-common content-itemfilter">
+			<div class="content content-common content-itemfilter">
 				<div class="-header"></div>
 				<div class="-body -flex">
 					<div class="-query">

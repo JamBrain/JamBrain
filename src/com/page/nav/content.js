@@ -55,7 +55,7 @@ export default class PageNavContent extends Component {
 		NavButtons.push(<ContentNavButton path={path+((FullPath == '/') ? '' : FullPath)} title={GameName} icon="gamepad" href={GamePath}>{GameName}</ContentNavButton>);
 
 		return (
-			<div class="content-base content-nav">
+			<div class="content content-nav">
 				{NavButtons}
 			</div>
 		);

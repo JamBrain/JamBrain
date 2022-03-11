@@ -190,7 +190,7 @@ export default class ContentHeadliner extends Component {
 
 		// Render
 		return (
-			<div class={cN('content-base content-headliner', props.class)} style={props.style}>
+			<div class={cN('content content-headliner', props.class)} style={props.style}>
 				{ShowCornerFlag}
 				{this.renderItems(props.node)}
 				{ShowFooter}

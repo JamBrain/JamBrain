@@ -20,7 +20,7 @@ export default class ContentNavItem extends Component {
 
 		return (
 			<div class="-body">
-				<div class="content-base content-nav content-nav-root">
+				<div class="content content-nav content-nav-root">
 					<ContentNavButton path={path+NewPath} title="Comments" icon="bubbles" href={path+'/comments'}>Comments</ContentNavButton>
 				</div>
 			</div>

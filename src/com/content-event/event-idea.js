@@ -210,7 +210,7 @@ export default class ContentEventIdea extends Component {
 						</div>
 					);
 				}
-				const ShowError = error ? <div class="content-base content-post idea-error">{error}</div> : null;
+				const ShowError = error ? <div class="content content-post idea-error">{error}</div> : null;
 				let ShowSubmit = null;
 				if ( enableSubmit ) {
 					ShowSubmit = (
@@ -267,7 +267,7 @@ export default class ContentEventIdea extends Component {
 		}
 		else {
 			return (
-				<div class="content-base content-post">
+				<div class="content content-post">
 					{error ? error : <NavSpinner />}
 				</div>
 			);

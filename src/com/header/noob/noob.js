@@ -23,7 +23,7 @@ export default class HeaderNoob extends Component {
 		}
 
 		return (
-			<div class="content-base content-common content-simple content-noob">
+			<div class="content content-common content-simple -noob">
 				<div class="-close" onclick={this.onClick}><SVGIcon>cross</SVGIcon></div>
 				<div class="-title -gap _font2">What is Ludum Dare?</div>
 				<div><NavLink href="/about"><strong>Ludum Dare</strong></NavLink> is an online event where games are made from scratch in a weekend. Check us out every April and October!</div>

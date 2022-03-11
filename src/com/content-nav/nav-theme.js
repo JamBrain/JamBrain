@@ -65,7 +65,7 @@ export default class ContentNavTheme extends Component {
 			}
 
 			return (
-				<div class="content-base content-nav content-nav-root">
+				<div class="content content-nav content-nav-root">
 					{ShowRounds}
 				</div>
 			);

@@ -38,7 +38,7 @@ export default class ContentCommon extends Component {
 
 		if ( node && node.slug ) {
 			let MainClass = [
-				'content-base',
+				'content',
 				'content-common'
 			];
 

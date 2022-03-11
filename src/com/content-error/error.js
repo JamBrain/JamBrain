@@ -8,7 +8,7 @@ export default class ContentError extends Component {
 	render( props ) {
 		var Code = props.code ? props.code : '404';
 		return (
-			<div class="content-base content-error">
+			<div class="content content-error">
 				<div class='-title'>{Code}</div>
 				<div>{props.children}</div>
 			</div>

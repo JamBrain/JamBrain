@@ -52,7 +52,7 @@ export default class ContentNavUser extends Component {
 		Buttons.push(<ContentNavButton path={NewPath} title={user.slug + "'s Statistics"} icon="stats" href={path+'/stats'}>Stats</ContentNavButton>);
 
 		return (
-			<div class="content-base content-nav content-nav-user">
+			<div class="content content-nav content-nav-user">
                 {Buttons}
 			</div>
 		);

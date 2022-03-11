@@ -53,7 +53,7 @@ export default class ContentNavEvent extends Component {
 
 		return (
 			<div class="-body">
-				<div class="content-base content-nav content-nav-event">
+				<div class="content content-nav content-nav-event">
 					{Buttons}
 				</div>
 			</div>

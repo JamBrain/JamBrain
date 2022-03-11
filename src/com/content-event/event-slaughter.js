@@ -380,7 +380,7 @@ export default class ContentEventSlaughter extends Component {
 		}
 		else {
 			return (
-				<div class="content-base content-post">
+				<div class="content content-post">
 					{ state.error ? state.error : <NavSpinner /> }
 				</div>
 			);

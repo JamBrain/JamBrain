@@ -27,7 +27,7 @@ export default class ContentNavRoot extends Component {
 		}
 
 		return (
-			<div class="content-base content-nav content-nav-root">
+			<div class="content content-nav content-nav-root">
 				<ContentNavButton path={PartPath} title="Home" icon="home" href="/"></ContentNavButton>
 				<ContentNavButton path={NewPath} title="News feed" icon="news" href="/news">News</ContentNavButton>
 				<ContentNavButton path={NewPath} title="Your feed" icon="feed" href="/feed">Feed</ContentNavButton>

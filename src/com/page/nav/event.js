@@ -46,7 +46,7 @@ export default class PageNavEvent extends Component {
 //		}
 
 		return (
-			<div class="content-base content-nav">
+			<div class="content content-nav">
 				{NavButtons}
 			</div>
 		);
