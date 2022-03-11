@@ -4,11 +4,10 @@
 SRC					?=	src
 OUT					?=	.output
 .BUILD				?=	.build
-NODEJS				?=	node_modules
 
 # Use 'TARGET=public-ludumdare.com' if you want to build a specific build (such as public-ludumdare.com) #
 ifneq ($(strip $(TARGET)),)
-THE_MAKEFILES			:=	$(SRC)/$(subst /,,$(TARGET))/Makefile
+THE_MAKEFILES		:=	$(SRC)/$(subst /,,$(TARGET))/Makefile
 endif # BUILD
 
 # if JOBS are specified in config.mk, then use that to start a parallel build
@@ -56,6 +55,7 @@ FIND_FILE			=	$(call REMOVE_UNDERSCORE,$(call INCLUDE_INCLUDES,$(shell find $(1)
 
 # Files #
 ALL_JS_FILES		:=	$(filter-out %.min.js,$(call FIND_FILE,$(SRC)/,*.js))
+ALL_TS_FILES		:=	$(filter-out %.min.ts,$(call FIND_FILE,$(SRC)/,*.ts))
 ALL_LESS_FILES		:=	$(filter-out %.min.less,$(call FIND_FILE,$(SRC)/,*.less))
 ALL_CSS_FILES		:=	$(filter-out %.min.css,$(call FIND_FILE,$(SRC)/,*.css))
 ALL_SVG_FILES		:=	$(filter-out %.min.svg,$(call FIND_FILE,$(SRC)/,*.svg))
@@ -66,28 +66,30 @@ ESIGNORE_FOLDERS	:=	$(addsuffix %,$(dir $(ALL_ESIGNORE_FILES)))
 # Transforms #
 ES_FILES 			:=	$(filter-out $(ESIGNORE_FOLDERS),$(ALL_JS_FILES))
 JS_FILES 			:=	$(filter $(ESIGNORE_FOLDERS),$(ALL_JS_FILES))
+TS_FILES 			:=	$(ALL_TS_FILES)
 LESS_FILES			:=	$(ALL_LESS_FILES)
 CSS_FILES			:=	$(ALL_CSS_FILES)
 SVG_FILES			:=	$(ALL_SVG_FILES)
 
 OUT_ES_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(ES_FILES:.js=.es.js))
 OUT_JS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(JS_FILES:.js=.o.js))
+OUT_TS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(TS_FILES:.ts=.ts.js))
 OUT_LESS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(LESS_FILES:.less=.less.css))
 OUT_CSS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(CSS_FILES:.css=.o.css))
 OUT_SVG_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(SVG_FILES:.svg=.min.svg))
 
 OUT_FILES_SVG		:=	$(OUT_SVG_FILES)
 OUT_FILES_CSS		:=	$(OUT_CSS_FILES) $(OUT_LESS_FILES)
-OUT_FILES_JS		:=	$(OUT_JS_FILES) $(OUT_ES_FILES)
+OUT_FILES_JS		:=	$(OUT_JS_FILES) $(OUT_ES_FILES) $(OUT_TS_FILES)
 OUT_FILES			:=	$(OUT_FILES_SVG) $(OUT_FILES_CSS) $(OUT_FILES_JS)
 DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES_FILES) $(OUT_LESS_FILES))
 OUT_FOLDERS			:=	$(sort $(dir $(OUT_FILES) $(BUILD_FOLDER)/))
 
-TARGET_FILES_SVG		:=	$(TARGET_FOLDER)/all.min.svg
-TARGET_FILES_CSS		:=	$(TARGET_FOLDER)/all.min.css
+TARGET_FILES_SVG	:=	$(TARGET_FOLDER)/all.min.svg
+TARGET_FILES_CSS	:=	$(TARGET_FOLDER)/all.min.css
 TARGET_FILES_JS		:=	$(TARGET_FOLDER)/all.min.js
 ifdef DEBUG
-TARGET_FILES_CSS		+=	$(TARGET_FOLDER)/all.debug.css
+TARGET_FILES_CSS	+=	$(TARGET_FOLDER)/all.debug.css
 TARGET_FILES_JS		+=	$(TARGET_FOLDER)/all.debug.js
 endif # DEBUG
 TARGET_FILES		:=	$(TARGET_FILES_SVG) $(TARGET_FILES_CSS) $(TARGET_FILES_JS)
@@ -97,47 +99,50 @@ TARGET_FILES		:=	$(TARGET_FILES_SVG) $(TARGET_FILES_CSS) $(TARGET_FILES_JS)
 
 # Ecmascript Linter: http://eslint.org/
 ESLINT_ARGS			:=	--config src/config/eslint.config.json
-ESLINT				=	$(NODEJS)/eslint/bin/eslint.js $(1) $(ESLINT_ARGS)
+ESLINT				=	npx eslint $(1) $(ESLINT_ARGS)
 # ES Compiler: https://buble.surge.sh/guide/
 BUBLE_ARGS			:=	--no modules,forOf --jsx h --jsx-fragment Fragment --objectAssign Object.assign
 #ifdef SOURCEMAPS
 #BUBLE_ARGS			+=	-m inline
 #endif # SOURCEMAPS
-BUBLE				=	$(NODEJS)/@jammercore/buble/bin/buble $(BUBLE_ARGS) -i $(1) -o $(2)
+BUBLE				=	npx buble $(BUBLE_ARGS) -i $(1) -o $(2)
+# TS Compiler: https://swc.rs/
+SWC_ARGS			:=	--config-file src/config/swc.json
+SWC					=	npx swc $(SWC_ARGS) $(1) -o $(2)
 # ES Include/Require Resolver: http://rollupjs.org/guide/
 ROLLUP_ARGS			:=	-c src/config/rollup.config.js
 ifdef SOURCEMAPS
 ROLLUP_ARGS			+=	-m inline
 endif # SOURCEMAPS
-ROLLUP				=	$(NODEJS)/rollup/dist/bin/rollup $(ROLLUP_ARGS) $(1) > $(2)
+ROLLUP				=	npx rollup $(ROLLUP_ARGS) $(1) > $(2)
 # JS Preprocessor: https://github.com/moisesbaez/preprocess-cli-tool
 #                  https://github.com/jsoverson/preprocess
-JS_PP_DEBUG			=	$(NODEJS)/preprocess-cli-tool/bin/preprocess.js -f $(1) -d $(2) -c '{"DEBUG": true}' -t js
-JS_PP_RELEASE		=	$(NODEJS)/preprocess-cli-tool/bin/preprocess.js -f $(1) -d $(2) -t js
+JS_PP_DEBUG			=	npx preprocess -f $(1) -d $(2) -c '{"DEBUG": true}' -t js
+JS_PP_RELEASE		=	npx preprocess -f $(1) -d $(2) -t js
 # JS Minifier: https://www.npmjs.com/package/uglify-js
 MINIFY_JS_RESERVED	:=	VERSION_STRING,STATIC_DOMAIN
 MINIFY_JS_ARGS		:=	--compress --mangle reserved=["$(MINIFY_JS_RESERVED)"]
-MINIFY_JS			=	$(NODEJS)/uglify-js/bin/uglifyjs $(MINIFY_JS_ARGS) -o $(2) -- $(1)
+MINIFY_JS			=	npx uglifyjs $(MINIFY_JS_ARGS) -o $(2) -- $(1)
 
 # CSS Compiler: http://lesscss.org/
 LESS_COMMON			:=	--global-var='STATIC_DOMAIN="$(STATIC_DOMAIN)"' --include-path=$(MAIN_FOLDER)
 LESS_ARGS			:=	--autoprefix
-LESS_DEP			=	$(NODEJS)/less/bin/lessc $(LESS_COMMON) --depends $(1) $(2)>$(2).dep
-LESS				=	$(NODEJS)/less/bin/lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
+LESS_DEP			=	npx lessc $(LESS_COMMON) --depends $(1) $(2)>$(2).dep
+LESS				=	npx lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
 # CSS Minifier: https://github.com/jakubpawlowicz/clean-css/
-MINIFY_CSS			=	cat $(1) | $(NODEJS)/clean-css-cli/bin/cleancss -o $(2)
+MINIFY_CSS			=	cat $(1) | npx cleancss -o $(2)
 # CSS Linter: http://stylelint.io/
-STYLELINT_ARGS			:=	--syntax less --config src/config/.stylelintrc --config-basedir ../../ --fix
-STYLELINT				=	$(NODEJS)/stylelint/bin/stylelint.js $(1) $(STYLELINT_ARGS)
+STYLELINT_ARGS		:=	--syntax less --config src/config/.stylelintrc --config-basedir ../../ --fix
+STYLELINT			=	npx stylelint $(1) $(STYLELINT_ARGS)
 
 # SVG "Compiler", same as the minifier: https://github.com/svg/svgo
 SVGO_ARGS			:=	-q --config src/config/svgo.config.js
-SVGO				=	$(NODEJS)/svgo/bin/svgo $(SVGO_ARGS) -i $(1) -o $(2)
+SVGO				=	npx svgo $(SVGO_ARGS) -i $(1) -o $(2)
 # Mike's SVG Sprite Packer: https://github.com/mikekasprzak/svg-sprite-tools
 SVG_PACK			=	src/tools/svg-sprite-tools/svg-sprite-pack $(1) > $(2)
 # SVG Minifier: https://github.com/svg/svgo
 MINIFY_SVG_ARGS		:=	--multipass --config src/config/svgo_minify.config.js -q
-MINIFY_SVG			=	$(NODEJS)/svgo/bin/svgo $(MINIFY_SVG_ARGS) -i $(1) -o $(2)
+MINIFY_SVG			=	npx svgo $(MINIFY_SVG_ARGS) -i $(1) -o $(2)
 
 # Remove Empty Directories
 RM_EMPTY_DIRS		=	find $(1) -type d -empty -delete 2>/dev/null |true
@@ -275,6 +280,10 @@ $(OUT)/%.es.js:$(SRC)/%.js
 	@echo "[$(COL_GREEN)ES->JS$(COL_OFF)] $<"
 	@$(call BUBLE,$<,$@)
 
+$(OUT)/%.ts.js:$(SRC)/%.ts
+	@echo "[$(COL_GREEN)TS->JS$(COL_OFF)] $<"
+	@$(call SWC,$<,$@)
+
 $(OUT)/%.o.js:$(SRC)/%.js
 	@echo "[$(COL_GREEN)Copy JS$(COL_OFF)] $<"
 	@cp $< $@
@@ -315,7 +324,7 @@ OUT_MAIN_JS			:=	$(subst $(SRC)/,$(OUT)/,$(MAIN_JS:.js=.es.js))
 $(BUILD_FOLDER)/raw.js: $(OUT_JS_FILES)
 	@echo "[$(COL_PURPLE)MERGE$(COL_OFF)] $@"
 	@cat $^ > $@
-$(BUILD_FOLDER)/compiled.js: $(OUT_MAIN_JS) $(OUT_ES_FILES)
+$(BUILD_FOLDER)/compiled.js: $(OUT_MAIN_JS) $(OUT_ES_FILES) $(OUT_TS_FILES)
 	@echo "[$(COL_PURPLE)ROLLUP$(COL_OFF)] $@"
 	@$(call ROLLUP,$<,$@.tmp)
 	@rm -f $@

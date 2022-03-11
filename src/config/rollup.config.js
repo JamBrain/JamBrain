@@ -17,7 +17,7 @@ export default {
 //			'include': {
 //				'preact':'output/external/preact/preact.o.js'
 //			},
-			'extensions': ['.es.js'],
+			'extensions': ['.es.js', '.ts.js'],
 		}),
 
 		// NOTE: nodent doesn't fully supports rest-spread (yet). Neither does Buble/Rollup though

@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component} 					from 'preact';
 
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
@@ -30,15 +30,18 @@ import $Node							from 'shrub/js/node/node';
 import $Grade							from 'shrub/js/grade/grade';
 import $Asset							from 'shrub/js/asset/asset';
 
+
 const MAX_LINKS = 9;
+
 
 export default class ContentItem extends Component {
 	constructor( props ) {
 		super(props);
 
-		var node = props.node;
+		let {node} = props;
 
 		this.state = {
+			/*node: node,*/
 			'parent': null,
 			'grade': null,
 
@@ -65,13 +68,16 @@ export default class ContentItem extends Component {
 		this.onSetCompo = this.onSetCompo.bind(this);
 		this.onSetExtra = this.onSetExtra.bind(this);
 		this.onSetUnfinished = this.onSetUnfinished.bind(this);
+
 		this.onAnonymousComments = this.onAnonymousComments.bind(this);
 		this.onChangeTeam = this.onChangeTeam.bind(this);
 		this.handleAllowSubmission = this.handleAllowSubmission.bind(this);
 	}
 
+
 	componentDidMount() {
-		var node = this.props.node;
+		let {node} = this.props;
+
 
 		// Cleverness: All allowed type states default to false (null) if unpublished. If published,
 		// they get explicitly set to false, all except for the actual type's state (eg. item/game/compo).
@@ -84,6 +90,9 @@ export default class ContentItem extends Component {
 			});
 		}
 
+
+		// Once mounted, I need to know my parent
+		// MK: TODO: Fetch both parent and author(s)
 		$Node.Get(node.parent)
 		.then(r => {
 			if ( r.node && r.node.length ) {
@@ -107,44 +116,45 @@ export default class ContentItem extends Component {
 		});
 	}
 
-	setSubSubType( type ) {
+
+	_setSubSubType( type ) {
 		return $Node.Transform(this.props.node.id, 'item', 'game', type)
 		.then( r => {
-			if ( r ) {
-				if ( r && r.changed ) {
-					this.props.node.subsubtype = type;
-					this.setState({});
-				}
+			if ( r && r.changed ) {
+				// MK: THIS IS BAD!
+				this.props.node.subsubtype = type;
+				this.setState({});
 			}
+
 			return r;
 		});
 	}
 
 	onSetJam( e ) {
-		return this.setSubSubType('jam')
+		return this._setSubSubType('jam')
 			.then( r => {
 			});
 	}
 	onSetCompo( e ) {
-		return this.setSubSubType('compo')
+		return this._setSubSubType('compo')
 			.then( r => {
 			});
 	}
 	onSetExtra( e ) {
-		return this.setSubSubType('extra')
+		return this._setSubSubType('extra')
 			.then( r => {
 			});
 	}
 	onSetUnfinished( e ) {
-		return this.setSubSubType('unfinished')
+		return this._setSubSubType('unfinished')
 			.then( r => {
 			});
 	}
 
 	onGrade( name, value ) {
-		let Node = this.props.node;
+		let {node} = this.props;
 
-		return $Grade.Add(Node.id, name, value)
+		return $Grade.Add(node.id, name, value)
 			.then(r => {
 				if ( (r && r.id) || !!r.changed ) {
 					var Grades = this.state.grade;
@@ -158,7 +168,7 @@ export default class ContentItem extends Component {
 	}
 
 	onOptOut( name, value ) {
-		var Node = this.props.node;
+		let {node} = this.props;
 
 		let Name = name+'-out';
 		let Data = {};
@@ -166,9 +176,10 @@ export default class ContentItem extends Component {
 		if ( value ) {
 			Data[Name] = 1;
 
-			return $Node.AddMeta(Node.id, Data)
+			return $Node.AddMeta(node.id, Data)
 				.then(r => {
 					if ( r && r.changed ) {
+						// MK: THIS IS BAD
 						this.props.node.meta[Name] = Data[Name];
 						this.setState({});
 					}
@@ -178,9 +189,10 @@ export default class ContentItem extends Component {
 		else {
 			Data[Name] = 0;
 
-			return $Node.RemoveMeta(Node.id, Data)
+			return $Node.RemoveMeta(node.id, Data)
 				.then(r => {
 					if ( r && r.changed ) {
+						// MK: THIS IS BAD
 						this.props.node.meta[Name] = Data[Name];
 						this.setState({});
 					}
@@ -238,6 +250,7 @@ export default class ContentItem extends Component {
 				})
 				.then(r => {
 					if ( r && r.changed ) {
+						// MK: THIS IS BAD
 						this.props.node.meta[name] = FileName;
 						this.setState({});
 					}
@@ -329,6 +342,7 @@ export default class ContentItem extends Component {
 
 				if ( Old != New ) {
 					Data[Base] = this.state.linkUrls[i];
+					// MK: THIS IS BAD
 					this.props.node.meta[Base] = Data[Base];
 					Changes++;
 				}
@@ -340,6 +354,7 @@ export default class ContentItem extends Component {
 
 				if ( Old != New ) {
 					Data[Base+'-tag'] = this.state.linkTags[i];
+					// MK: THIS IS BAD
 					this.props.node.meta[Base+'-tag'] = Data[Base+'-tag'];
 					Changes++;
 				}
@@ -351,6 +366,7 @@ export default class ContentItem extends Component {
 
 				if ( Old != New ) {
 					Data[Base+'-name'] = this.state.linkNames[i];
+					// MK: THIS IS BAD
 					this.props.node.meta[Base+'-name'] = Data[Base+'-name'];
 					Changes++;
 				}
@@ -429,8 +445,9 @@ export default class ContentItem extends Component {
 		);
 	}
 
+
 	render( props, state ) {
-		props = Object.assign({}, props);			// Copy it because we're going to change it
+		props = {...props};			// Copy it because we're going to change it
 		let {node, user, path, extra, featured} = props;
 		let {parent, team, allowCompo, allowJam, allowExtra, allowUnfinished} = state;
 		let shouldCheckRules = true;
@@ -933,6 +950,6 @@ export default class ContentItem extends Component {
 			this.contentSimple = c;
 		};
 
-		return <ContentSimple {...props} authors />;
+		return <ContentSimple key={props.node.id} {...props} authors />;
 	}
 }

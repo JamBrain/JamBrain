@@ -20,6 +20,8 @@
     "stylelint": "^13.13.1",
     "stylelint-config-recommended": "^5.0.0",
     "svgo": "*",
+    "@swc/cli": "^0.1.55",
+    "@swc/core": "^1.2.152",
     "uglify-js": "^3.14.1"
   },
   "scripts": {

@@ -94,7 +94,7 @@ window.node_CanCreate = function( node, fulltype = null ) {
 		return null;
 
 	// If omitted, then the answer is no
-	if ( ('can-create' in node.meta) === false ) {
+	if ( !node.meta['can-create'] ) {
 		return false;
 	}
 
@@ -115,13 +115,13 @@ window.node_CanCreate = function( node, fulltype = null ) {
 };
 
 // Is transforming (type changing) allowed on this node? Optionally specify the fulltype
-window.node_CanTransform = function( node, fulltype = null ) {
+window.node_CanTransform = function( node, fulltype ) {
 	// Return null if argument is invalid
 	if ( !node && !node.meta )
 		return null;
 
 	// If omitted, then the answer is no
-	if ( ('can-transform' in node.meta) === false ) {
+	if ( !node.meta['can-transform'] ) {
 		return false;
 	}
 
@@ -161,13 +161,13 @@ window.nodeEvent_IsFinished = function( node ) {
 };
 
 // Is publishing allowed on this node? Optionally specify the fulltype
-window.node_CanPublish = function( node, fulltype = null ) {
+window.node_CanPublish = function( node, fulltype ) {
 	// Return null if argument is invalid
 	if ( !node && !node.meta )
 		return null;
 
 	// If omitted, then the answer is no
-	if ( ('can-publish' in node.meta) === false ) {
+	if ( !node.meta['can-publish]'] ) {
 		return false;
 	}
 

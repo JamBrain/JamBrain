@@ -1,4 +1,4 @@
-import {h, Component}	 				from 'preact/preact';
+import {h, Component}	 				from 'preact';
 
 import ContentLoading					from 'com/content-loading/loading';
 import ContentError						from 'com/content-error/error';
@@ -13,7 +13,8 @@ import ContentMore						from 'com/content-more/more';
 
 import LayoutChangeableGrid 			from 'com/layout/grid/changeable-grid';
 
-import $Node							from '../../shrub/js/node/node';
+import $Node							from 'shrub/js/node/node';
+
 
 export default class ContentGames extends Component {
 	constructor( props ) {
@@ -23,7 +24,7 @@ export default class ContentGames extends Component {
 			'feed': null,
 			'hash': {},
 			'offset': 24-5, //10-5
-			'added': null,
+			//'added': null,
 		};
 
 		// Bound in the definition, so we can include state
@@ -34,7 +35,7 @@ export default class ContentGames extends Component {
 	componentDidMount() {
 		let props = this.props;
 
-		this.getFeed(
+		this._getFeed(
 			props.node.id,
 			props.methods ? props.methods : ['parent', 'superparent'],
 			props.types ? props.types : ['item'],
@@ -47,7 +48,7 @@ export default class ContentGames extends Component {
 	}
 
 
-	appendFeed( newfeed ) {
+	_appendFeed( newfeed ) {
 		this.setState(prevState => {
 			let feed = prevState.feed;
 			let hash = prevState.hash;
@@ -59,7 +60,11 @@ export default class ContentGames extends Component {
 				}
 			}
 
-			return {'feed': feed, 'hash': hash, 'added': newfeed.length};
+			return {
+				'feed': feed,
+				'hash': hash,
+				//'added': newfeed.length
+			};
 		});
 	}
 
@@ -77,7 +82,7 @@ export default class ContentGames extends Component {
 	}
 	*/
 
-	getMissingNodes( newFeed ) {
+	_getMissingNodes( newFeed ) {
 		var keys = this.state.feed;//this.getFeedIdsWithoutNodes();
 
 		console.log("MEOOO", this.state.feed, newFeed);
@@ -103,14 +108,16 @@ export default class ContentGames extends Component {
 
 	}
 
-	getFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit ) {
-		$Node.GetFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit )
+
+	_getFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit ) {
+		return $Node.GetFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit )
 		.then(r => {
 			//this.setState({ 'loaded': true });
 
-			if ( r.feed && r.feed.length ) {
-				this.appendFeed(r.feed);
-				return this.getMissingNodes(r.feed);
+			if ( r.status == 200 ) {
+				this._appendFeed(r.feed);
+
+				return this._getMissingNodes(r.feed);
 			}
 		})
 		.catch(err => {
@@ -119,7 +126,7 @@ export default class ContentGames extends Component {
 	}
 
 
-	fetchMore( offset ) {
+	_fetchMore( offset ) {
 		// @ifdef DEBUG
 		console.log("[com/ContentGames]", "fetchMore", offset);
 		// @endif
@@ -132,7 +139,7 @@ export default class ContentGames extends Component {
 		this.setState({'offset': offset + 24});
 
 		// Fetch the feed (given the old offset)
-		this.getFeed(
+		this._getFeed(
 			props.node.id,
 			props.methods ? props.methods : ['parent', 'superparent'],
 			props.types ? props.types : ['item'],
@@ -144,7 +151,7 @@ export default class ContentGames extends Component {
 		);
 	}
 
-	static matchesFilter(node, filter) {
+	static _matchesFilter(node, filter) {
 		if ( node === undefined ) {
 			return false;
 		}
@@ -169,7 +176,7 @@ export default class ContentGames extends Component {
 
 	render( props, state ) {
 		const {filter} = props;
-		let {feed, offset, added, error, loaded, defaultLayout, layout} = state;
+		let {feed, offset, /*added,*/ error, /*loaded,*/ defaultLayout, layout} = state;
 
 		let LoadMore = null;
 
@@ -179,11 +186,11 @@ export default class ContentGames extends Component {
 		}
 		else if ( feed && (feed.length > 0) ) {
 			if ( !props.nomore /*|| added >= 10*/ ) {
-				LoadMore = <ContentMore onclick={this.fetchMore.bind(this, offset)} />;
+				LoadMore = <ContentMore onclick={this._fetchMore.bind(this, offset)} />;
 			}
 
 			let Games = feed.map((r, index) => {
-				if ( ContentGames.matchesFilter(r.node, filter) ) {
+				if ( ContentGames._matchesFilter(r.node, filter) ) {
 					return (
 						<ContentItemBox
 							node={r.node}
