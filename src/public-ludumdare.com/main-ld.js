@@ -1,8 +1,11 @@
-import {h, render, Component, options}	from 'preact/preact';
+/* DO NOT REMOVE THIS LINE. IT BREAKS THE DEBUG IMPORT BELOW */
 
 // @ifdef DEBUG
-//import {}								from 'preact-devtools/devtools';
+import "preact/debug";
 // @endif
+
+
+import {h, render, Component, options}	from 'preact/preact';
 
 import Sanitize							from 'internal/sanitize/sanitize';
 

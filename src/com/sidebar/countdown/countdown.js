@@ -6,13 +6,15 @@ export default class SidebarCountdown extends Component {
 	constructor( props ) {
 		super(props);
 
-			this.countdown_interval = null;
-			this.total_seconds = 0;
-			this.$ = {};
-			this.values = {};
-			this.class = this.props.nc;
-			this.setState({loaded: false});
-			//this.init(this.props.date);
+		this.countdown_interval = null;
+		this.total_seconds = 0;
+		this.$ = {};
+		this.values = {};
+		this.class = this.props.nc;
+
+		this.state = {
+			loaded: false,
+		};
 	}
 
 	init( countdownTo ) {

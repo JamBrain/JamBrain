@@ -11,6 +11,7 @@ export default {
 			'paths': [
 				'.output',
 				'.output/external',
+				'.output/external/preact',
 				'.output/custom',
 			],
 //			'include': {
