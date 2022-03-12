@@ -261,10 +261,10 @@ lint-js: $(ES_FILES)
 lint-php:
 
 clean-lint:
-	rm -fr $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/less.lint
+	rm -fr $(BUILD_FOLDER)/js.lint $(BUILD_FOLDER)/less.lint
 
 
-$(BUILD_FOLDER)/buble.lint: $(ES_FILES)
+$(BUILD_FOLDER)/js.lint: $(ES_FILES)
 	@echo "[$(COL_GREEN)ES LINT$(COL_OFF)] $?"
 	@$(call ESLINT,$?)
 	@touch $@
@@ -310,7 +310,7 @@ clean-css:
 	rm -fr $(OUT_FILES_CSS) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.css.dep) $(TARGET_FILES_CSS) $(BUILD_FOLDER)/less.css $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.lint $(BUILD_FOLDER)/all.css
 	-$(call RM_EMPTY_DIRS,.output)
 clean-js:
-	rm -fr $(OUT_FILES_JS) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILES_JS) $(BUILD_FOLDER)/raw.js $(BUILD_FOLDER)/compiled.js $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/all.js
+	rm -fr $(OUT_FILES_JS) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILES_JS) $(BUILD_FOLDER)/raw.js $(BUILD_FOLDER)/compiled.js $(BUILD_FOLDER)/js.lint $(BUILD_FOLDER)/all.js
 	-$(call RM_EMPTY_DIRS,.output)
 clean-some:
 	rm -fr $(OUT_FILES) $(OUT_FILES_SVG:.svg=.svg.out) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.css.dep) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep)
@@ -384,7 +384,7 @@ $(TARGET_FOLDER)/all.min.svg: $(BUILD_FOLDER)/all.svg
 
 
 # Target #
-target: $(OUT_FOLDERS) $(BUILD_FOLDER)/buble.lint $(BUILD_FOLDER)/less.lint $(TARGET_FILES) report
+target: $(OUT_FOLDERS) $(BUILD_FOLDER)/js.lint $(BUILD_FOLDER)/less.lint $(TARGET_FILES) report
 	@echo "[$(COL_YELLOW)-$(COL_OFF)] Done \"$(subst /,,$(TARGET))\""
 
 endif # MAIN_FOLDER # ---- #

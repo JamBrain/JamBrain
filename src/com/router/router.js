@@ -1,140 +1,143 @@
-import {h, Component, cloneElement, toChildArray}		from 'preact/preact';
-import Route											from './route';
-import {pathToRegexp, compile}							from 'external/path-to-regexp/index';
-
-export default class Router extends Component {
-/*	constructor( props ) {
-		super(props);
-
-		// @ifdef DEBUG
-		console.log("[com/router]", "constructor", props);
-		// @endif
-
-		//this.state = {
-			//"routes": [],
-		//	"params": {},
-			//"current": null
-		//};
-
-//		console.log("Router", "constructor", this.state);
-	}
-
-/*
-	componentDidMount() {
-		let props = this.props;
-
-		if ( props.node && props.node.id ) {
-			this.setState({
-				"routes": this._parseRoutes(props.children)
-			});
-			this._getCurrentRoute(props);
-
-			console.log("Router", "componentDidMount", this.state);
-		}
-	}
+import {h, Component, Fragment, toChildArray} from 'preact';
 
 
-	getDerivedStateFromProps( nextProps ) {
-		if ( nextProps && nextProps.node && nextProps.node.id ) {
-			this.setState({
-				"routes": this._parseRoutes(nextProps.children),
-				"params": {}
-			});
-			this._getCurrentRoute(nextProps);
+export function Route(props) {
+	return <Fragment />;
+}
 
-			console.log("Router", "componentWillRecieveProps", this.state);
-		}
-	}
 
-	shouldComponentUpdate( nextProps ) {
-		console.log("[com/router]", "shouldComponentUpdate", nextProps, this.props );
-		return true;
-	}
-*/
-
-	// Works out what the current route is
-	_getRoute( routes ) {
-		let {node} = this.props.props;
-
-		if ( !node /* || !node.id*/ ) {
-			return;
-		}
-
-		let currentRoute = null;
-		let errorRoute = null;
+export class Router extends Component {
+	_findRoute( routes, node, pathTokens ) {
+		let ret = null;
+		let error = null;
 
 		for ( let route of routes ) {
-			// Does the node match this route's required properties?
-			if ( this._doesNodeMatchRoute(route.props, node) ) {
-				// Does the node match this route's path
-				if ( route.props.path ) {
-					if ( !this._doesPropsMatchRoutePath(route.props.path) ) {
-						continue;
-					}
+			// Does the node match the route's required properties?
+			if ( this._doesNodeMatchRoute(route, node) ) {
+				// Bail if the node doesn't match one of route's path(s)
+				if ( route.path && !this._doesPathMatchRoutePath(route.path, pathTokens) ) {
+					continue;
 				}
 
-				currentRoute = route;
-			}
-
-			if ( route.props.type == "error" ) {
-				errorRoute = route;
+				// If not an error route, we have a candidate!
+				if ( !route.error ) {
+					ret = route;
+				}
+				// Remember the error only if we haven't encountered one
+				else if ( !error ) {
+					error = route;
+				}
 			}
 		}
 
-		if ( !currentRoute && errorRoute ) {
-			return errorRoute;
-		}
-
-		//this.setState({"current": currentRoute});
-		return currentRoute;
+		// Return the last found route, or an error
+		return ret ? ret : error;
 	}
 
 
-	_doesPropsMatchRoutePath( routePath ) {
-		// @ifdef DEBUG
-		//console.log("[com/router]", "_doesPathMatchRoute", routePath, this.props);
-		// @endif
-
+	_doesPathMatchRoutePath( routePath, pathTokens ) {
+		// If routePath is an array, recursively call self
 		if ( Array.isArray(routePath) ) {
 			for ( let path of routePath ) {
-				if ( this._doesPropsMatchRoutePath(path) ) {
+				if ( this._doesPathMatchRoutePath(path, pathTokens) ) {
 					return true;
 				}
 			}
 			return false;
 		}
 
-		let routePathTokens = routePath.split("/").slice(1);
-		let propsPathTokens = this.props.props.extra;
+		// If not "/", split the path at the slashes, then remove the first (i.e. it should be blank)
+		// CLEVER: splitting an empty string, then slicing off the first element makes it an empty array.
+		//   The alternative would be to slice before splitting (removing the "/"), but then you'd have
+		//   to deal with an array containing a single empty string (which the initial check resolves).
+		let routeTokens = (routePath == "/") ? [] : routePath.split("/").slice(1);
 
-		for ( let idx = 0; idx < routePathTokens.length; ++idx ) {
-			let token = routePathTokens[idx];
+		for ( let idx = 0; idx < routeTokens.length; ++idx ) {
+			let routeToken = routeTokens[idx];
 
-			if ( !token ) {
-				// @ifdef DEBUG
-				if ( !this.props.children[idx].props.default ) {
-					console.warn("Route has blank path token:", idx, routePath, this.props);
-				}
-				// @endif
-
+			// Bail if token is invalid or optional (ends with a ?)
+			if ( !routeToken || routeToken.charAt(routeToken.length - 1) == "?" ) {
 				continue;
 			}
 
-			// If token is a variable
-			if ( token.charAt(0) == ":" ) {
-				// If it ends with ? the token is optional
-				if ( token.charAt(token.length - 1) == "?" ) {
-					continue;
-				}
+			// Success if we hit an asterisk
+			if ( routeToken == "*" ) {
+				return true;
 			}
 
-			// Fail if props has no tokens left
-			if ( idx >= propsPathTokens.length ) {
+			// Fail if path has no tokens left
+			if ( idx >= pathTokens.length ) {
 				return false;
 			}
 
-			// Fail if token and props token aren't the same
-			if ( token != propsPathTokens[idx] ) {
+			let pathToken = pathTokens[idx];
+
+			// Bail if route token is a variable and not empty (NOTE: make optional if empty should be allowed)
+			if ( routeToken.charAt(0) == ":" && pathToken ) {
+				continue;
+			}
+
+			// Fail if token's aren't the same
+			if ( routeToken != pathToken ) {
+				return false;
+			}
+		}
+
+		// Success if path is no larger than the route (NOTE: include an asterisk to allow larger)
+		return pathTokens.length <= routeTokens.length;
+	}
+
+/*
+	_lookupPathVars( routePath, pathTokens ) {
+		let pathVars = {};
+
+		// // If routePath is an array, recursively call self
+		// if ( Array.isArray(routePath) ) {
+		// 	for ( let path of routePath ) {
+		// 		if ( this._doesPathMatchRoutePath(path, pathTokens) ) {
+		// 			return true;
+		// 		}
+		// 	}
+		// 	return false;
+		// }
+
+		let routeTokens = routePath.split("/").slice(1);
+
+		for ( let idx = 0; idx < routeTokens.length; ++idx ) {
+			let routeToken = routeTokens[idx];
+
+			// Bail if token is invalid or not a variable
+			if ( !routeToken && (routeToken.charAt(0) != ":") ) {
+				continue;
+			}
+
+			// Slice off ":" prefix
+			routeToken = routeToken.slice(1);
+
+			// Bail if token is invalid
+			if ( !routeToken ) {
+				continue;
+			}
+
+			// If optional
+			if ( routeToken.charAt(routeToken.length - 1) == "?" ) {
+
+			}
+
+			// Fail if props has no tokens left
+			if ( idx >= pathTokens.length ) {
+				return false;
+			}
+
+			let pathToken = pathTokens[idx];
+
+			// Bail if route token is a variable and not empty (NOTE: make it optional if empty is allowed)
+			if ( !routeToken && !routeToken.charAt(0) == ":" ) {
+				continue;
+			}
+
+			// Fail if token's aren't the same
+			if ( routeToken != pathToken ) {
 				return false;
 			}
 		}
@@ -142,52 +145,11 @@ export default class Router extends Component {
 		// Success
 		return true;
 	}
-
-/*
-	_matchPath( path ) {
-		// If path is an array, this becomes a recursive function
-		if ( Array.isArray(path) ) {
-			for ( let v in path ) {
-				if ( this._matchPath(path[v]) ) {
-					return true;
-				}
-			}
-			return false;
-		}
-
-		// If path isn't an array
-		let keys = [];
-		let pathRegex = pathToRegexp(path, keys);
-		let url = window.location.pathname
-			.replace(this.props.node.path, "") //remove path
-			.replace("/$" + this.props.node.id, ""); //remove /${nodeid}
-
-		if ( url === "" ) {
-			url = "/";
-		}
-
-		let params = {};
-		let out = pathRegex.exec(url);
-
-		if ( !out ) {
-			return false;
-		}
-
-		if ( keys.length > 0 ) {
-			for ( let i in keys ) {
-				let index = parseInt((i) + 1);
-				params[keys[i]["name"]] = out[index];
-			}
-		}
-
-		this.setState({"params": params});
-		return true;
-	}
 */
 
 	// Checks if a node matches the properties required by the route
 	_doesNodeMatchRoute( route, node ) {
-		// Optionally let the properties checked be changed by <Router>
+		// Optionally let the Router change what properties are checked
 		let matchProps = this.props.match ? this.props.match : ["type", "subtype", "subsubtype"];
 
 		for ( let prop of matchProps ) {
@@ -228,101 +190,69 @@ export default class Router extends Component {
 
 		// Iterate through all children, merging and flattening
 		for ( let child of children ) {
-
 			// Bail if not a Route
 			if ( !child || (child.type !== Route) ) {
 				continue;
 			}
 
-			let newProps = {...child.props};
-			// Optionally merge properties with parent
-			if ( parent ) {
-				newProps = {...parent.props};
+			// Copy props, optionally merging it with parent
+			let newProps = parent ?
+				{...parent.props, ...child.props} :
+				{...child.props};
 
-				// Delete children inherited from parent
-				if ( parent.props.children ) {
-					delete newProps.children;
-				}
-
-				// Overwrite newProps with child's props
-				Object.assign(newProps, child.props);
+			// Remove children
+			if ( newProps.children ) {
+				delete newProps.children;
 			}
 
-			// @ifdef DEBUG
-			// MK: This errors when path isn't a string (i.e. Games Filter vs Results Filter)
-			//if ( child.props.path && child.props.path.charAt(0) != "/" ) {
-			//	console.warn("Route.path does not begin with '/'", child);
-			//}
-			// @endif
-
 			// If parent and child both have paths, concatenate them
-			if ( /*newProps.static &&*/ parent && parent.props.path && child.props.path ) {
+			if ( parent && parent.props.path && child.props.path ) {
 				// MK: Array version is untested (unsure if 2nd argument to map is needed given scope)
 				newProps.path = Array.isArray(child.props.path) ?
 					child.props.path.map(path => parent.props.path + path) :
 					parent.props.path + child.props.path;
 			}
 
-			if ( newProps.path ) {
-				newProps.pathVars = [];
+			// Add the route
+			newRoutes.push(newProps);
 
-				// Handle path arrays
-				let paths = newProps.path;
-				if ( !Array.isArray(paths) ) {
-					paths = [paths];
-				}
-
-				for ( let path of paths ) {
-					// Tokenize the path and extract the path variable names
-					let tokenizedPath = path.split("/").slice(1);
-					for ( let token of tokenizedPath ) {
-						if ( !token ) {
-							continue;
-						}
-
-						// If token begins with a colon, it's a path variable
-						if ( token.charAt(0) == ":" ) {
-							newProps.pathVars.push(token);
-						}
-					}
-				}
-			}
-
-			// If a "default", promote the path to an array (if not) and prefix with the '/' path
-			if ( newProps.default && newProps.path ) {
-				newProps.path = Array.isArray(newProps.path) ?
-					["/", ...newProps.path] :
-					["/", newProps.path];
-			}
-
-			// Clone the Route
-			// MK: This might not have to be a vnode
-			let newChild = cloneElement(child, newProps);
-			newRoutes.push(newChild);
-
-			// If child has children, recursively parse again
-			if ( newChild.props.children ) {
-				newRoutes = newRoutes.concat(this._parseRoutes(newChild.props.children, newChild));
+			// If child has children, recursively parse their routes
+			if ( child.props.children ) {
+				// Instead of calling cloneElement, we fake it, since all we actually use are the parent's props
+				newRoutes = newRoutes.concat(this._parseRoutes(child.props.children, {props: newProps}));
 			}
 		}
 
+		// Return routes
 		return newRoutes;
 	}
 
 
 	render( props ) {
-		let routes = this._parseRoutes(props.children);
-		let route = this._getRoute(routes);
+		let outputProps = props.props;
 
-		// @ifdef DEBUG
-		//console.log("[com/router]", "render", props, routes, route);
-		// @endif
-
-		if ( !route ) {
-			return <div id="router" />; //null;
+		// If no node, we're done
+		if ( !outputProps || !outputProps.node || !outputProps.node.id ) {
+			return <Fragment />;
 		}
 
-		return cloneElement(route, {...props});//, "params": state.params});
-		//return cloneElement(route.props.component, {...props});
+		// Pre-populate the routes list with some defaults
+		let routes = props.nodefault ? [] : [
+			{path: "/edit"},	// Black hole for edit
+		];
+
+		// Parse the routes and append them to the list
+		routes = routes.concat(this._parseRoutes(props.children));
+
+		// Find the route to the node
+		let route = this._findRoute(routes, outputProps.node, outputProps.extra);
+
+		// If no route or route doesn't have a component, then we're done
+		if ( !route || !route.component ) {
+			return <Fragment />;
+		}
+
+		// TODO: Parse path args. {pathArgs, ...outputProps}
+		return h(route.component, outputProps);
 	}
 }

@@ -12,46 +12,29 @@ import UserFollowing					from './following/following';
 import UserFollowers					from './followers/followers';
 import UserStats						from './stats/stats';
 
-import Router							from 'com/router/router';
-import Route							from 'com/router/route';
+import {Router, Route}					from "com/router/router";
+
 
 export default class PageUser extends Component {
 	render( props ) {
-		let {node, user, path, extra} = props;
-
-//		let userDefault = 'feed';
-//		if ( node['games'] > 0 )
-//			userDefault = 'games';
-//		else if ( node['articles'] > 0 )
-//			userDefault = 'articles';
-
-		let editing = extra[extra.length - 1] == "edit";
-
-		let ShowNav = null;
-		if ( !editing ) {
-			ShowNav = <PageNavUser {...props} />;
-		}
+		let {extra} = props;
+		let isEditing = extra[extra.length - 1] == "edit";
 
 		return (
 			<Fragment class="page-user">
-				{ShowNav}
-				<ContentUser node={node} user={user} path={path} extra={extra}/>
-				<Router node={node} props={props}>
-					<Route default={true} static path="/home" />
-					<Route static path="/games" component={UserGames} />
-					<Route static path="/articles" component={UserArticles} />
-					<Route static path="/feed" component={UserFeed} />
-					<Route static path="/following" component={UserFollowing} />
-					<Route static path="/followers" component={UserFollowers} />
-					<Route static path="/stats" component={UserStats} />
-					<Route static path="/edit" />
-					<Route type="error" component={ContentError} />
+				{!isEditing ? <PageNavUser {...props} /> : null}
+				<ContentUser {...props} />
+				<Router props={props} key="user">
+					<Route path="/" />
+					<Route path="/games/*" component={UserGames} />
+					<Route path="/articles" component={UserArticles} />
+					<Route path="/feed" component={UserFeed} />
+					<Route path="/following" component={UserFollowing} />
+					<Route path="/followers" component={UserFollowers} />
+					<Route path="/stats" component={UserStats} />
+					<Route error component={ContentError} />
 				</Router>
 			</Fragment>
 		);
 	}
 }
-
-//					<Route default={userDefault == 'games'} static path="/games" component={UserGames} />
-//					<Route default={userDefault == 'articles'} static path="/articles" component={UserArticles} />
-//					<Route default={userDefault == 'feed'} static path="/feed" component={UserFeed} />

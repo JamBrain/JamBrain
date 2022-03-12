@@ -7,8 +7,8 @@ import ContentNavTheme					from "com/content-nav/nav-theme";
 
 import ContentError						from "com/content-error/error";
 
-import Router							from "com/router/router";
-import Route							from "com/router/route";
+import {Router, Route}					from "com/router/router";
+//import Route							from "com/router/route";
 
 import EventHome						from "./home/home";
 import EventStats						from "./stats/stats";
@@ -45,14 +45,14 @@ export default class PageEvent extends Component {
 			<div id="content">
 				<ContentHeadlinerEvent node={node} name="event" icon="trophy" flagclass="-col-ab" childclass={IsThisFeatured ? "-col-a -inv-lit" : "-inv -inv-lit"} style="--headlinerSize: 2.5rem;" />
 				<PageNavEvent {...props} />
-				<Router props={props}>
-					<Route default path="/home" component={EventHome} />
+				<Router props={props} key="event">
+					<Route path="/" component={EventHome} />
 					<Route path="/stats" component={EventStats} />
 					<Route path="/theme/:page?" component={EventTheme} />
 					<Route path={["/games/:filter?/:subfilter?", "/results/:filter?/:subfilter?"]} component={EventGames} />
 					<Route path="/my" component={EventMy} user={user} />
 					<Route path="/my/grades" component={EventMyGrades} user={user} />
-					<Route type="error" component={ContentError} />
+					<Route error component={ContentError} />
 				</Router>
 			</div>
 		);

@@ -9,8 +9,10 @@ import {h, render, Component, options}	from 'preact/preact';
 
 import Sanitize							from 'internal/sanitize/sanitize';
 
-import Router							from 'com/router/router';
-import Route							from 'com/router/route';
+import {Router, Route}					from "com/router/router";
+
+//import Router							from 'com/router/router';
+//import Route							from 'com/router/route';
 
 import Layout							from "com/page/layout";
 
@@ -489,7 +491,7 @@ class Main extends Component {
 
 		return (
 			<Layout {...state}>
-				<Router props={NewProps}>
+				<Router nodefault props={NewProps} key="main">
 					<Route type="root" component={PageRoot} />
 
 					<Route type="page" component={PagePage} />
@@ -508,7 +510,7 @@ class Main extends Component {
 					<Route type="event" component={PageEvent} />
 					<Route type={["events", "group", "tags"]} component={PageEvents} />
 
-					<Route type="error" component={PageError} />
+					<Route error component={PageError} />
 				</Router>
 				{this.getDialog()}
 			</Layout>
