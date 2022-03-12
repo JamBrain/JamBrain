@@ -1,6 +1,6 @@
-import {h, Component}					from 'preact/preact';
-import UIIcon							from 'com/ui/icon/icon';
-import UIButton							from 'com/ui/button/button';
+import {h, Component} from 'preact';
+import UIIcon from '../icon';
+import UIButton from '../button';
 
 export default class UITagbox extends Component {
 	constructor( props ) {

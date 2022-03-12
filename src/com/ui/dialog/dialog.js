@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component} from 'preact';
 
 export default class UIDialog extends Component {
 	constructor( props ) {
@@ -38,9 +38,9 @@ export default class UIDialog extends Component {
 
 	render( props ) {
 		return (
-			<div class="ui-dialog" onclick={this.onCancel}>
-				<div {...props} class={cN('-window', props.class)} onclick={this.onClickWindow} />
-			</div>
+			<section class="ui-dialog" onclick={this.onCancel}>
+				<aside {...props} class={cN('window', props.class)} onclick={this.onClickWindow} />
+			</section>
 		);
 	}
 }

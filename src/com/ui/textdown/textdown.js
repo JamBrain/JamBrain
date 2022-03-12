@@ -1,6 +1,6 @@
-import {h, Component}					from 'preact/preact';
-import UIButton							from 'com/ui/button/button';
-import UIText							from 'com/ui/text/text';
+import {h, Component} from 'preact';
+import UIButton from '../button';
+import UIText from '../text';
 
 export default class UITextdown extends Component {
 	constructor( props ) {

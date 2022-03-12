@@ -1,11 +1,11 @@
-import { h, Component } 				from 'preact/preact';
-import Shallow			 				from 'shallow/shallow';
+import {h, Component} from 'preact';
+import Shallow from 'shallow/shallow';
 
-import NavLink							from 'com/nav-link/link';
-import ButtonLink						from 'com/button-link/link';
-import SVGIcon							from 'com/svg-icon/icon';
+import NavLink from 'com/nav-link/link';
+import ButtonLink from 'com/button-link/link';
+import SVGIcon from 'com/svg-icon/icon';
 
-import $Asset							from 'shrub/js/asset/asset';		// For image uploading
+import $Asset from 'shrub/js/asset/asset';		// For image uploading
 
 
 export default class UITextarea extends Component {

@@ -1,7 +1,7 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component} from 'preact';
 
-import UIButton							from '../button/button-div';	// NOTE: we don't need -link
-import UIIcon							from '../icon/icon';
+import UIButton from '../button';
+import UIIcon from '../icon';
 
 export default class UICheckbox extends Component {
 	render( props ) {

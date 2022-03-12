@@ -1,8 +1,8 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component} from 'preact';
 
-import UIIcon							from '../icon/icon';
-import UIButton							from '../button/button';
-import UIDialog							from '../dialog/dialog';
+import UIIcon from '../icon';
+import UIButton from '../button';
+import UIDialog from '../dialog';
 
 export default class UIHelp extends Component {
 	constructor( props ) {

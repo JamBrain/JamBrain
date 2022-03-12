@@ -1,6 +1,6 @@
-import {h, Component, cloneElement, toChildArray}		from 'preact/preact';
-import UIButton							from 'com/ui/button/button';
-import UIIcon							from 'com/ui/icon/icon';
+import {h, Component, cloneElement, toChildArray} from 'preact';
+import UIButton from '../button';
+import UIIcon from '../icon';
 
 export default class UIDropdown extends Component {
 	constructor( props ) {
