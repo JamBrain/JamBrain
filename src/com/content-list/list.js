@@ -1,11 +1,15 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component, Fragment}					from 'preact';
 
 export default class ContentList extends Component {
 	render( props ) {
+		return <Fragment>{props.children}</Fragment>;
+
+/*
 		return (
-			<div class={cN("content content-list", props.class)}>
+			<section {...props} class={cN("content -list", props.class)}>
 				{props.children}
-			</div>
+			</section>
 		);
+*/
 	}
 }

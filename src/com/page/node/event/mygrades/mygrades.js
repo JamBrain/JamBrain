@@ -1,7 +1,7 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component, Fragment}			from 'preact';
 import PageNavEventMy					from '../../../nav/event-my';
 
-import ContentList						from 'com/content-list/list';
+//import ContentList						from 'com/content-list/list';
 import ContentLoading					from 'com/content-loading/loading';
 import InputDropdown					from 'com/input-dropdown/dropdown';
 
@@ -286,7 +286,7 @@ export default class MyGrades extends Component {
 					authors={this.getItemAuthorsFromState(nodeId)}
 					key={nodeId} />));
 			});
-			ShowResults = <ContentList>{Items}</ContentList>;
+			ShowResults = <div class="graded">{Items}</div>;
 			let SortDescription = null;
 			sortOptions = [
 				[SORT_ORDER, 'Grading order'],
@@ -327,7 +327,7 @@ export default class MyGrades extends Component {
 		}
 
 		return (
-			<div>
+			<Fragment>
 				<PageNavEventMy {...props} />
 				<div class="content-common event-mygraded">
 					<h2>Items you have graded</h2>
@@ -339,7 +339,7 @@ export default class MyGrades extends Component {
 					{ShowStats}
 					{ShowResults}
 				</div>
-			</div>
+			</Fragment>
 		);
 	}
 }

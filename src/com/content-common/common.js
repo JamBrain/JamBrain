@@ -73,22 +73,22 @@ export default class ContentCommon extends Component {
 					Right.push(<FooterButtonEdit node={node} user={user} path={path} />);
 
 				Footer = (
-					<div class={cN('content-common-footer', (Left.length + Right.length) ? '-has-items' : '')}>
+					<footer class={cN('content-common-footer', (Left.length + Right.length) ? '-has-items' : '')}>
 						<div class="-left">
 							{Left}
 						</div>
 						<div class="-right">
 							{Right}
 						</div>
-					</div>
+					</footer>
 				);
 			}
 
 			return (
-				<div class={cN(MainClass)}>
+				<article class={cN(MainClass)}>
 					{props.children}
 					{Footer}
-				</div>
+				</article>
 			);
 		}
 		else {

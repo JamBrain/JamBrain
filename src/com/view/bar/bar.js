@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component} 					from 'preact';
 import Shallow			 				from 'shallow/shallow';
 
 import ButtonBase						from 'com/button-base/base';
@@ -193,14 +193,14 @@ export default class ViewBar extends Component {
 	renderRight( user, featured ) {
 		var Search = null;
 //		var Search = (
-//			<ButtonBase class="-bar-icon" onclick={e => { console.log('search'); window.location.hash = "#search"; }}>
+//			<ButtonBase class="bar-icon" onclick={e => { console.log('search'); window.location.hash = "#search"; }}>
 //				<SVGIcon baseline>search</SVGIcon>
 //			</ButtonBase>
 //		);
 
 		var ShowCalendar = (
 			<UIButton
-				class="-bar-button if-no-sidebar-block"
+				class="bar-button if-no-sidebar-block"
 				onclick={e => {
 						console.log('calendar');
 						window.location.hash = "#cal";
@@ -227,7 +227,7 @@ export default class ViewBar extends Component {
 			let SecureURL = 'https://'+location.hostname+location.pathname+location.search+location.hash;
 			GoSecure = (
 				<UIButton
-					class="-bar-button"
+					class="bar-button"
 					noblank
 					href={SecureURL}
 				>
@@ -242,7 +242,7 @@ export default class ViewBar extends Component {
 				// Has a game
 				if ( featured.focus_id && featured.what ) {
 					ShowMyGame = (
-						<UIButton title="My Game" href={featured.what[featured.focus_id].path} class="-bar-button">
+						<UIButton title="My Game" href={featured.what[featured.focus_id].path} class="bar-button">
 							<SVGIcon>gamepad</SVGIcon>
 							<div class="if-sidebar-block">My Game</div>
 						</UIButton>
@@ -251,7 +251,7 @@ export default class ViewBar extends Component {
 					NewPost = (
 						<UIButton
 							title="New Post"
-							class="-bar-button"
+							class="bar-button"
 							onclick={e => {
 								window.location.hash = "#create/"+featured.focus_id+"/post";
 							}}
@@ -266,7 +266,7 @@ export default class ViewBar extends Component {
 					ShowJoin = (
 						<UIButton
 							title="Join Event"
-							class="-bar-button"
+							class="bar-button"
 							onclick={e => {
 								window.location.hash = "#create/"+featured.id+"/item/game";
 							}}
@@ -312,7 +312,7 @@ export default class ViewBar extends Component {
 			}
 
 			Notification = (
-				<UIButton title="Notifications" class="-bar-icon" onclick={(e) => {
+				<UIButton title="Notifications" class="bar-icon" onclick={(e) => {
 					// TODO: if the main content is the notifications feed, clicking the button should
 					// probably not show the dropdown, but load new comments into the feed.
 					this.setState({'showNotifications': !this.state.showNotifications});
@@ -341,7 +341,7 @@ export default class ViewBar extends Component {
 		else if ( user ) {
 			Register = (
 				<UIButton
-					class="-bar-button"
+					class="bar-button"
 					onclick={e => {
 						console.log('register');
 						window.location.hash = "#user-register";
@@ -353,7 +353,7 @@ export default class ViewBar extends Component {
 			);
 			Login = (
 				<UIButton
-					class="-bar-button"
+					class="bar-button"
 					onclick={e => {
 						console.log('login');
 						window.location.hash = "#user-login";
@@ -371,14 +371,14 @@ export default class ViewBar extends Component {
 
 		if ( ShowSpinner ) {
 			return (
-				<div class="-fake-right">
+				<section class="fake-right">
 					{ShowSpinner}
-				</div>
+				</section>
 			);
 		}
 		else {
 			return (
-				<div class="-right">
+				<section class="right">
 					{ShowJoin}
 					{ShowMyGame}
 					{NewPost}
@@ -389,7 +389,7 @@ export default class ViewBar extends Component {
 					{Register}
 					{Login}
 					{GoSecure}
-				</div>
+				</section>
 			);
 		}
 	}
@@ -405,18 +405,18 @@ export default class ViewBar extends Component {
 		}
 
 		return (
-			<div class="view-bar">
-				<div class="-content">
-					<div class="-left">
-						<UIButton title="Ludum Dare" href="/" class="-logo">
+			<nav id="navbar">
+				<section>
+					<section class="left">
+						<UIButton title="Ludum Dare" href="/" class="logo">
 							<SVGIcon class="if-sidebar-block" baseline>ludum</SVGIcon><SVGIcon class="if-sidebar-block" baseline>dare</SVGIcon>
 							<SVGIcon class="if-no-sidebar-block" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-block" baseline>d-are</SVGIcon>
 						</UIButton>
-					</div>
+					</section>
 					{ShowLoading}
 					{this.renderRight(user, featured)}
-				</div>
-			</div>
+				</section>
+			</nav>
 		);
 	}
 }

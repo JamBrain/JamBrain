@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component}					from 'preact';
 import ClockFlip 						from 'com/clock-flip/flip';
 
 
@@ -8,7 +8,7 @@ export default class HeaderClock extends Component {
 	}
 
 	render( props ) {
-		return <div></div>;
+		return null;
 
 //		let EventDate = Date.UTC(2016,11,10, 2,0,0);
 //

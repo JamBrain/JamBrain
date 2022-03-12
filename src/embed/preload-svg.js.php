@@ -9,7 +9,8 @@
 			var svg = x.getElementsByTagName('svg')[0];
 			if ( svg ) {
 				svg.setAttribute( 'aria-hidden', 'true' );
-				svg.style.position = 'absolute';
+				svg.style.position = 'fixed';
+				svg.style.top = 0;
 				svg.style.width = 0;
 				svg.style.height = 0;
 				svg.style.overflow = 'hidden';

@@ -1,8 +1,8 @@
-import {h, Component}	 				from 'preact/preact';
+import {h, Component, Fragment}			from 'preact';
 
 import ContentError						from 'com/content-error/error';
 
-import ContentList						from 'com/content-list/list';
+//import ContentList						from 'com/content-list/list';
 import ContentSimple					from 'com/content-simple/simple';
 import ContentHeadliner					from 'com/content-headliner/headliner';
 

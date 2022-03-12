@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component}					from 'preact';
 
 import ViewBar							from 'com/view/bar/bar';
 import ViewHeader						from 'com/view/header/header';
@@ -14,19 +14,17 @@ export default class Layout extends Component {
 		let loading = !node || (node.id == 0);
 
 		return (
-			<div id="layout">
+			<section id="layout">
 				<ViewBar user={user} featured={featured} loading={loading}/>
-				<div id="body">
-					<ViewHeader user={user} featured={featured} root={root}/>
-					<div id="content-sidebar">
-						<ViewContent>
-							{props.children}
-						</ViewContent>
-						{ShowSidebar}
-					</div>
-				</div>
+				<ViewHeader user={user} featured={featured} root={root}/>
+				<section id="body">
+					<ViewContent>
+						{props.children}
+					</ViewContent>
+					{ShowSidebar}
+				</section>
 				<ViewFooter/>
-			</div>
+			</section>
 		);
 	}
 }

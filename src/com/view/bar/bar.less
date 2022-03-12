@@ -1,7 +1,7 @@
 @import "defs.less";
 
-@VIEWBAR_HEIGHT: 4rem;
-@VIEWBAR_COL: fade(@COL_D, 100%); /* was 80% */
+@NAVBAR_HEIGHT: 4rem;
+@NAVBAR_BG: fade(@COL_D, 100%); /* was 80% */
 
 @LOGO_COL_A: @COL_A;
 @LOGO_COL_B: @COL_AB;
@@ -17,11 +17,13 @@
 @BUTTON_LIT_SVG: @COL_W;
 @BUTTON_LIT_BG: @COL_A;
 
-.view-bar {
+
+#navbar {
 	position: fixed;
 
 	/* Force on a new layer in an attempt to avoid jitter */
-	transform: translateZ(0);	/*will-change: transform;*/
+	transform: translateZ(0);
+	/*will-change: transform;*/
 
 	/* Needed for click-off and drag un-highlighting buttons to work (i.e. no selections) */
 	user-select: none;
@@ -31,25 +33,25 @@
 	right: 0;
 	z-index: 1000;
 
-	height: @VIEWBAR_HEIGHT;
-	background: @VIEWBAR_COL;
+	height: @NAVBAR_HEIGHT;
+	background: @NAVBAR_BG;
 
-	& > .-content {
+	& > section {
 		position: relative;
 
 		margin: auto;
-		max-width: @BASE_WIDTH + 2rem; /* 2rem, so when we lose our full width, it's padded */
-		height: @VIEWBAR_HEIGHT;
+		max-width: @BASE_WIDTH + 2rem;	/* 2rem, so when we lose our full width, it's padded */
+		height: @NAVBAR_HEIGHT;
 
-		& > .-left {
+		& > .left {
 			position: absolute;
 
-			left: 1rem; 	/* 1rem, so when we lose our full width, it's padded */
+			left: 1rem; 				/* 1rem, so when we lose our full width, it's padded */
 			bottom: 0;
 			top: 0;
-			height: 2.5em; 	/* Required, otherwise top+bottom fills the whole parent div */
+			height: @NAVBAR_HEIGHT; 	/* Required, otherwise top+bottom fills the whole parent div */
 
-			& > .-logo {
+			& > .logo {
 				font-size: 2.5em;
 				display: flex;
 
@@ -97,19 +99,19 @@
 			}
 		}
 
-		& > .-fake-right,
-		& > .-right {
+		& > .fake-right,
+		& > .right {
 			position: absolute;
 
 			right: 1rem;	/* 1rem, so when we lose our full width, it's padded */
 			bottom: 0;
 			top: 0;
 			margin: auto;
-			height: 3em; 	/* Required, otherwise top+bottom fills the whole parent div */
-			min-width: 3em;
+			height: 3rem; 	/* Required, otherwise top+bottom fills the whole parent div */
+			/*min-width: 3em;*/
 		}
 
-		& > .-right {
+		& > .right {
 			/* Everything */
 			& > * {
 				margin-left: 0.5em;
@@ -148,7 +150,7 @@
 			}
 
 			/* Buttons (Text with SVG) */
-			& > .-bar-button {
+			& > .bar-button {
 				position: relative;
 
 				line-height: 2em;
@@ -209,7 +211,7 @@
 			}*/
 
 			/* Icon-only Button (with overlays) */
-			& > .-bar-icon {
+			& > .bar-icon {
 				position: relative;
 
 				height: 3em;
@@ -273,8 +275,8 @@
 	}
 }
 
-/* When using the view-bar, we offset the body */
+/* When using the navbar, we offset the body */
 #layout {
 	position: relative;
-	top: @VIEWBAR_HEIGHT;
+	top: @NAVBAR_HEIGHT;
 }

@@ -1,7 +1,7 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component, Fragment}			from 'preact';
 import PageNavUser						from 'com/page/nav/user';
 
-import ContentList						from 'com/content-list/list';
+//import ContentList						from 'com/content-list/list';
 import ContentUser						from 'com/content-user/user';
 import ContentError						from 'com/content-error/error';
 
@@ -33,7 +33,7 @@ export default class PageUser extends Component {
 		}
 
 		return (
-			<ContentList class="page-user">
+			<Fragment class="page-user">
 				{ShowNav}
 				<ContentUser node={node} user={user} path={path} extra={extra}/>
 				<Router node={node} props={props}>
@@ -47,7 +47,7 @@ export default class PageUser extends Component {
 					<Route static path="/edit" />
 					<Route type="error" component={ContentError} />
 				</Router>
-			</ContentList>
+			</Fragment>
 		);
 	}
 }

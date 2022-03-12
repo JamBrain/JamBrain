@@ -1,6 +1,6 @@
 @import "defs.less";
 
-#content .content.-noob {
+#content .content.-header.-noob {
 	/*font-size: 1.1em;*/
 	line-height: 1.5em;
 
@@ -21,19 +21,17 @@
 		color: #F80;
 	}
 
-	& > .-gap {
-		margin-bottom: 1rem;
-	}
-
-	& > .-title {
+	& h1 {
 		font-size: 1.8em;
 		font-weight: bold;
 		color: #FC0;
 		margin-bottom: 1rem;
 	}
 
-	& .-close {
-		float: right;
+	& .close {
+		position: absolute;
+		right: 1rem;
+		top: 1rem;
 
 		&:hover {
 			color: @COL_A;

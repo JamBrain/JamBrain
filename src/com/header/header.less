@@ -1,0 +1,17 @@
+
+/* Styles */
+#header .header {
+	margin: 1rem 0;
+
+	/*&:first-child,*/
+	& article > :first-child,
+	& aside > :first-child {
+		margin-top: 0;
+	}
+
+	/*&:last-child,*/
+	& article > :last-child,
+	& aside > :last-child {
+		margin-bottom: 0;
+	}
+}

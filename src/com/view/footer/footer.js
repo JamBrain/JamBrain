@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component}					from 'preact';
 import SVGIcon 							from 'com/svg-icon/icon';
 
 
@@ -9,7 +9,7 @@ export default class ViewFooter extends Component {
 
 	render( /*props, state*/ ) {
 		return (
-			<div id="footer">
+			<footer id="footer">
 				<div class="body">
 				<div class="tm col">
 					<section class="logo">
@@ -49,7 +49,7 @@ export default class ViewFooter extends Component {
 					<section class="policies"><a href="/privacy">Privacy</a> | <a href="/cookie">🍪</a> | <a href="/terms">Terms</a></section>
 					<section>© {new Date().getFullYear()} <a href="https://interactivesnacks.com">Interactive Snacks Limited</a> 🍁</section>
 				</div>
-			</div>
+			</footer>
 		);
 	}
 }

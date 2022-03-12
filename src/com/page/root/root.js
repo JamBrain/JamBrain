@@ -1,9 +1,9 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component, Fragment}			from 'preact';
 
 import Router							from 'com/router/router';
 import Route							from 'com/router/route';
 
-import ContentList						from 'com/content-list/list';
+//import ContentList						from 'com/content-list/list';
 import ContentEvent						from "com/content-event/event";
 import ContentHeadlinerEvent			from 'com/content-headliner/headliner-event';
 import ContentError						from 'com/content-error/error';
@@ -51,7 +51,7 @@ export default class PageRoot extends Component {
 		}
 
 		return (
-			<ContentList class="page-root">
+			<Fragment class="page-root">
 				{ShowIntro}
 				{ActiveEvent}
 				<PageNavRoot {...props} />
@@ -76,7 +76,7 @@ export default class PageRoot extends Component {
 					<Route path="/search" component={PageRootSearch} />
 					<Route type="error" component={ContentError} />
 				</Router>
-			</ContentList>
+			</Fragment>
 		);
 	}
 }

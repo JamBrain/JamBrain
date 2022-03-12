@@ -1,5 +1,73 @@
+@import "defs.less";
 
-#content > .content {
+/* Variables */
+#content .content {
+	--content-col: @COL_NDDD;
+	--content-bg: @COL_L;
+	--content-a: @COL_A;
+	/*--content-a-bg: transparent;*/
+
+	--content-a-lit: @COL_L;
+	--content-a-lit-bg: var(--content-a);
+}
+
+
+/* Styles */
+#content .content {
+	position: relative;
+	overflow: hidden;
+	overflow-wrap: break-word;
+	hyphens: auto;
+
+	margin: 0.5rem 0;
+
+	&:first-child,
+	& article > :first-child,
+	& aside > :first-child {
+		margin-top: 0;
+	}
+
+	&:last-child,
+	& article > :last-child,
+	& aside > :last-child {
+		margin-bottom: 0;
+	}
+
+	& a,
+	& a:visited {
+		text-decoration: none;
+		/*border-radius: 0.25em;*/
+		padding: 0.125em 0.25em;
+		margin: -0.125em -0.25em;
+	}
+}
+
+
+/* Colors */
+#content .content {
+	color: var(--content-col);
+
+	/* .content.-base */
+	&.-base {
+		background: var(--content-bg);
+	}
+
+	& a,
+	& a:visited {
+		color: var(--content-a);
+		/*background: var(--content-a-bg);*/
+	}
+
+	& a:hover,
+	& a:focus {
+		color: var(--content-a-lit);
+		background: var(--content-a-lit-bg);
+	}
+}
+
+
+/* Animation */
+#content .content {
 	animation: anim-fadein 0.2s ease-in;
 	@keyframes anim-fadein {
 		0%   { opacity: 0; }
@@ -7,18 +75,5 @@
 		50%  { opacity: 0; }
 
 		100% { opacity: 1; }
-	}
-}
-
-#content .content {
-	position: relative;
-	margin: 0.5rem 0;
-
-	&:first-child {
-		margin-top: 0;
-	}
-
-	&:last-child {
-		margin-bottom: 0;
 	}
 }

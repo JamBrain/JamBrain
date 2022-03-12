@@ -1,6 +1,6 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component, Fragment}			from 'preact';
 
-import ContentList						from 'com/content-list/list';
+//import ContentList						from 'com/content-list/list';
 import ContentPost						from 'com/content-post/post';
 import ContentUser						from 'com/content-user/user';
 import ContentMore						from 'com/content-more/more';
@@ -174,9 +174,10 @@ export default class ContentTimeline extends Component {
 		}
 
 		return (
-			<ContentList class={cN("content-timeline", props.class)}>
+			//<Fragment class={cN("content-timeline", props.class)}>
+			<Fragment>
 				{ShowFeed}
-			</ContentList>
+			</Fragment>
 		);
 	}
 }

@@ -15,11 +15,11 @@ export default class ViewHeader extends Component {
 		let ShowClock = <HeaderClock featured={props.featured} />;
 
 		return (
-			<div id="header">
+			<header id="header">
 				{ShowWarning}
 				{ShowWhatsup}
 				{ShowClock}
-			</div>
+			</header>
 		);
 	}
 }
