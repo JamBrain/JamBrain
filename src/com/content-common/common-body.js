@@ -1,5 +1,5 @@
-import { h, Component, toChildArray } 	from 'preact/preact';
-import { shallowDiff }	 				from 'shallow-compare/index';
+import { h, Component, toChildArray } from 'preact';
+import { shallowDiff } from 'shallow-compare/index';
 
 export default class ContentCommonBody extends Component {
 	constructor( props ) {
@@ -11,8 +11,6 @@ export default class ContentCommonBody extends Component {
 	}
 
 	render( props ) {
-		var _class = "content-common-body" + (props.class ? " "+props.class : "");
-
-		return <div class={_class}>{props.children}</div>;
+		return <div class={cN("body", props.class)}>{props.children}</div>;
 	}
 }

@@ -17,7 +17,7 @@ export default class ContentCommonBodyMarkup extends Component {
   }
 
   render(props) {
-    var Class = ["content-common-body", "-markup"];
+    var Class = ["body", "-markup"];
     if (typeof props.class == 'string') {
       Class = Class.concat(props.class.split(' '));
     }

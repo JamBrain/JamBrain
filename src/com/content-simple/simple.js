@@ -390,8 +390,8 @@ export default class ContentSimple extends Component {
 				}
 				else {
 					ShowByLine = (
-						<div class="content-common-body">
-							<div class="-label">Authors</div>
+						<div class="body">
+							<div class="body -label">Authors</div>
 							Visit <NavLink blank href={user.path+'/following'}>your userpage</NavLink> to add authors. <br />
 							<strong>NOTE:</strong> You can only add friends (users that follow each other).
 						</div>

@@ -21,7 +21,7 @@ export default class ContentCommonFlag extends Component {
         }
 
         return (
-            <div class={cN('content-common-flag', props.class)}>
+            <div class={cN('flag', props.class)}>
                 {Icon}
                 {props.children}
             </div>

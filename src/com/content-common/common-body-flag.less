@@ -3,7 +3,7 @@
 @BG: @COL_L;
 @DARK: @COL_NDDD;
 
-#content .content-common-flag {
+#content .content.-common .flag {
 	position: relative;
 	display: flex;
 	align-items: center;
@@ -11,14 +11,14 @@
 	background: @DARK;
 	color: @BG;
 
-	font-size: 1.5em;
-	line-height: 2.2em;
-	height: 2.25em;
+	font-size: 1.5rem;
+	line-height: 3em;
+	height: 3rem;
 	font-weight: bold;
 	font-style: italic;
 
 	padding-left: 1rem;
-	margin-right: 2.25em;
+	margin-right: 3rem;
 
 	float: left;
 
@@ -26,18 +26,18 @@
 		position: absolute;
 		display: block;
 		content: '';
-		right: -2.25em;
+		right: -3rem;
 		top: 0;
-		border-top: 1.125em solid;
-		border-right: 1.125em solid transparent;
-		border-bottom: 1.125em solid transparent;
-		border-left: 1.125em solid;
+		border-top: 1.5rem solid;
+		border-right: 1.5rem solid transparent;
+		border-bottom: 1.5rem solid transparent;
+		border-left: 1.5rem solid;
 
 		color: @DARK;
 	}
 
 	& > :not(:first-child) {
-		margin: 0.25em;
+		margin: 0.25rem;
 	}
 
 	&.-col-a {

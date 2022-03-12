@@ -1,8 +1,6 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component}					from 'preact';
 
 import ContentLoading					from 'com/content-loading/loading';
-
-import SVGIcon							from 'com/svg-icon/icon';
 
 import FooterButtonMinMax				from 'com/content-common/common-footer-button-minmax';
 import FooterButtonStar					from 'com/content-common/common-footer-button-star';
@@ -28,7 +26,7 @@ export default class ContentCommon extends Component {
 	}
 
 	render( props, state ) {
-		let {node, user, path, extra} = props;
+		let {node, user, path, extra, editing} = props;
 		let {minimized, error} = state;
 
 		// If a Minimized property was included, invert the internal state
@@ -37,8 +35,10 @@ export default class ContentCommon extends Component {
 		}
 
 		if ( node && node.slug ) {
+			/*
 			let MainClass = [
 				'content',
+				'-base',
 				'content-common'
 			];
 
@@ -50,6 +50,7 @@ export default class ContentCommon extends Component {
 				MainClass.push('edit');
 			if ( minimized )
 				MainClass.push('minimized');
+			*/
 
 
 //			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
@@ -59,33 +60,29 @@ export default class ContentCommon extends Component {
 			if ( !props.nofooter ) {
 				let Left = [];
 				if ( props['minmax'] ) {
-					Left.push(<FooterButtonMinMax user={user} node={node} onclick={this.onMinMax} />);
+					Left.push(<FooterButtonMinMax {...props} onclick={this.onMinMax} />);
 				}
 
 				let Right = [];
-				if ( props['love'] )
-					Right.push(<FooterButtonLove node={node} user={user} path={path} />);
-				if ( props['comments'] )
-					Right.push(<FooterButtonComments node={node} user={user} path={path} />);
 				if ( props['star'] )
-					Right.push(<FooterButtonStar node={node} user={user} path={path} />);
+					Right.push(<FooterButtonStar {...props} />);
+				if ( props['love'] )
+					Right.push(<FooterButtonLove {...props} />);
+				if ( props['comments'] )
+					Right.push(<FooterButtonComments {...props} />);
 				if ( props['edit'] )
-					Right.push(<FooterButtonEdit node={node} user={user} path={path} />);
+					Right.push(<FooterButtonEdit {...props} />);
 
 				Footer = (
-					<footer class={cN('content-common-footer', (Left.length + Right.length) ? '-has-items' : '')}>
-						<div class="-left">
-							{Left}
-						</div>
-						<div class="-right">
-							{Right}
-						</div>
+					<footer class={cN('footer', (Left.length + Right.length) ? '-has-items' : '')}>
+						<section class="left">{Left}</section>
+						<section class="right">{Right}</section>
 					</footer>
 				);
 			}
 
 			return (
-				<article class={cN(MainClass)}>
+				<article class={cN("content -base -common content-common", (minimized ? "-minimized" : null), (editing ? "-edit" : null))}>
 					{props.children}
 					{Footer}
 				</article>

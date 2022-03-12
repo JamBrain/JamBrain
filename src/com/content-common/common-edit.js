@@ -47,7 +47,7 @@ export default class ContentCommonEdit extends Component {
 		}
 
 		return (
-			<div class="content-common-body -edit">
+			<div class="body -edit">
 				<div class="-right">
 					{ShowSave}
 					{ShowPublish}

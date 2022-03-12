@@ -55,7 +55,7 @@ export default class ContentCommentsMarkup extends Component {
 
 	render( props, state ) {
 		var Class = [
-//			"content-common-body",
+//			"body",
 //			"-markup"
 		];
 

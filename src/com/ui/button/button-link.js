@@ -1,5 +1,5 @@
-import {h, Component}					from 'preact/preact';
-import UILink							from '../link/link';
+import {h, Component} from 'preact';
+import UILink from '../link/link';
 
 export default class UIButtonLink extends UILink {
 	constructor( props ) {
@@ -50,6 +50,7 @@ export default class UIButtonLink extends UILink {
 			}
 		};
 
-		return <a {...props} class={cN("ui-button", props.class)} />;
+		//return super.render({...props, class={cN("ui-button", props.disabled ? "-disabled" : null, props.class)});
+		return <a {...props} class={cN("ui-button", props.disabled ? "-disabled" : null, props.class)} />;
 	}
 }

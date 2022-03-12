@@ -17,26 +17,24 @@ export default class ContentCommonBodyTitle extends Component {
 //	}
 
 	render( props ) {
-
-		props.class = typeof props.class == 'string' ? props.class.split(' ') : [];
-		props.class.push("content-common-body");
-		props.class.push("-title");
+		let titleClass = "body -title";
 
 		if ( props.subtitle )
-			props.class.push("-has-subtitle");
+			titleClass += " -has-subtitle";
 
 		var Prefix = null;
 		if ( props.titleIcon ) {
-			Prefix = <SVGIcon baseline small class="-prefix">{props.titleIcon}</SVGIcon>;
+			Prefix = <SVGIcon baseline small class="prefix">{props.titleIcon}</SVGIcon>;
 		}
 
 		var Limit = props.limit ? props.limit : 64;	// True limit is 96
 		var Placeholder = props.placeholder ? props.placeholder : 'Title';
 
-		if (props.editing) {
-			props.class.push('-editing');
+		if ( props.editing ) {
+			titleClass += ' -editing';
+
 			return (
-				<div class={cN(props.class)}>
+				<div class={cN(titleClass, props.class)}>
 					<div class="-label">Title</div>
 					<InputText
 						value={props.title}
@@ -48,26 +46,26 @@ export default class ContentCommonBodyTitle extends Component {
 			);
 		}
 		else {
-			props.class.push("_font2");
+			titleClass += " _font2";
 
 			var Title = props.title.trim().length ? props.title.trim() : Placeholder;
 			var Body = [];
 			if ( props.href ) {
-				Body.push(<NavLink class="-text" href={props.href} title={props.hover}>{Prefix}{Title}</NavLink>);
+				Body.push(<NavLink class="title" href={props.href} title={props.hover}>{Prefix}{Title}</NavLink>);
 				if ( props.shortlink && !props.minmax && props.id ) {
 
-					Body.push(<CopyToClipboardButton tooltip="Copy shortlink to clipboard" icon={"link"} class={"-shortener"} data={window.location.protocol + "//" + SHORTENER_DOMAIN + "/$" + props.id}></CopyToClipboardButton>);
+					Body.push(<CopyToClipboardButton title="Copy shortlink to clipboard" icon={"link"} class="shortlink" value={window.location.protocol + "//" + SHORTENER_DOMAIN + "/$" + props.id}></CopyToClipboardButton>);
 				}
 			}
 			else {
-				Body.push(<div class="-text" title={props.hover}>{Prefix}{Title}</div>);
+				Body.push(<div class="title" title={props.hover}>{Prefix}{Title}</div>);
 			}
 
 			if ( props.subtitle ) {
-				Body.push(<span class="-subtext"> ({props.subtitle})</span>);
+				Body.push(<span class="subtitle">{props.subtitle}</span>);
 			}
 
-			return <div class={cN(props.class)}>{Body}</div>;
+			return <div class={cN(titleClass, props.class)}>{Body}</div>;
 		}
 	}
 }

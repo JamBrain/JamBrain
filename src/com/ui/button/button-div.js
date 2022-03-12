@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component} from 'preact';
 
 export default class UIButtonDiv extends Component {
 	constructor( props ) {
@@ -36,6 +36,6 @@ export default class UIButtonDiv extends Component {
 			};
 		}
 
-		return <div {...props} class={cN("ui-button", props.class)} />;
+		return <div {...props} class={cN("ui-button", props.disabled ? "-disabled" : null, props.class)} />;
 	}
 }

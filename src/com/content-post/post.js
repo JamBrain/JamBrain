@@ -88,7 +88,7 @@ export default class ContentPost extends Component {
 
 						// MK: Is this safe?
 						props.children = (
-							<div class="content-common-body -promo">
+							<div class="body -promo">
 								<h2>Get Promo</h2>
 								{Body}
 							</div>
@@ -97,7 +97,7 @@ export default class ContentPost extends Component {
 					else {
 						// MK: Is this safe?
 						props.children = (
-							<div class="content-common-body -promo">
+							<div class="body -promo">
 								<h2>Get Promo</h2>
 								<div>Login to claim</div>
 							</div>
@@ -107,7 +107,7 @@ export default class ContentPost extends Component {
 				else {
 					// MK: Is this safe?
 					props.children = (
-						<div class="content-common-body -promo">
+						<div class="body -promo">
 							<UIButton class="content-common-nav-button" href={node.path}><UIIcon src="gift" /><div>Continue</div></UIButton>
 						</div>
 					);

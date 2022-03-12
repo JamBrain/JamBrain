@@ -12,7 +12,7 @@ export default class ContentCommonBodyField extends Component {
 	}
 
 	render( props ) {
-		var Class = ["content-common-body","-field"];
+		var Class = ["body","-field"];
 
 //		var Prefix = null;
 //		if ( props.titleIcon ) {

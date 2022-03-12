@@ -1,6 +1,6 @@
-import {h, Component}					from 'preact/preact';
-import UIButtonDiv						from 'button-div';
-import UIButtonLink						from 'button-link';
+import {h, Component} from 'preact';
+import UIButtonDiv from 'button-div';
+import UIButtonLink from 'button-link';
 
 export default class UIButton extends Component {
 	constructor( props ) {
@@ -8,8 +8,6 @@ export default class UIButton extends Component {
 	}
 
 	render( props ) {
-		if ( props.href )
-			return <UIButtonLink {...props} />;
-		return <UIButtonDiv {...props} />;
+		return (props.href) ? <UIButtonLink {...props} /> : <UIButtonDiv {...props} />;
 	}
 }

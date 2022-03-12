@@ -43,7 +43,7 @@ export default class ContentUser extends Component {
 		props.flagIcon = "user";
 		props.flagClass = "-col-bc";
 
-		props.subtitle = '@'+node.slug;
+		props.subtitle = '(@'+node.slug+")";
 		props.notitleedit = true;
 
 		props.authored = true;

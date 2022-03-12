@@ -1,19 +1,16 @@
 @import 'defs.less';
 
-#content .content-common-body.-title {
+#content .content.-common .body.-title {
 	position: relative;
 	margin: 1rem 1rem 0;
-	line-height: 1.75em;
+	line-height: 2rem;
 
-	& a,
-	& a:visited {
-		line-height: 1.2em;
-		color: @COL_NDDD;
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
 
-		&:hover,
-		&:focus {
-			color: @COL_L;
-		}
+	& a {
+		--content-a: @COL_NDDD;
 	}
 
 	&.-editing {
@@ -38,11 +35,11 @@
 		}
 	}
 
-	& > .-shortener {
+	& > .shortlink {
 		font-size: 1.25em;
 	}
 
-	& > .-text {
+	& > .title {
 		font-size: 1.75em;
 
 		@media (max-width: (@BASE_WIDTH - 20em)) {
@@ -50,12 +47,12 @@
 		}
 	}
 
-	& > .-text {
+	& > .title {
 		position: relative;
 	}
 
 
-	& > .-subtext {
+	& > .subtitle {
 		font-size: 1.5em;
 
 		color: @COL_NL;
@@ -67,12 +64,12 @@
 
 
 	&.-has-subtitle {
-		& > .-text {
+		& > .title {
 			font-weight: bold;
 		}
 	}
 
-	& .-prefix {
+	& .prefix {
 		margin-right: 0.5em;
 	}
 }

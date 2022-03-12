@@ -92,7 +92,7 @@ export default class ContentCommonBodyBy extends Component {
 		}
 
 		return (
-			<div class={cN('content-common-body', '-by', props.class)}>
+			<div class={cN('body', '-by', props.class)}>
 				{ret}
 				{props.children}
 			</div>

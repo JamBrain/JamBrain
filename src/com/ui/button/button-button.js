@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component} from 'preact';
 
 export default class UIButtonButton extends Component {
 	constructor( props ) {
@@ -6,6 +6,6 @@ export default class UIButtonButton extends Component {
 	}
 
 	render( props ) {
-		return <button {...props} type="button" class={cN("ui-button", props.class)} />;
+		return <button type="button" {...props} class={cN("ui-button", props.disabled ? "-disabled" : null, props.class)} />;
 	}
 }

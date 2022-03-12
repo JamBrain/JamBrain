@@ -1,46 +1,66 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component, Fragment} from 'preact';
 import ButtonBase						from 'com/button-base/base';
 import SVGIcon							from 'com/svg-icon/icon';
 
-export default class CopyToClipboardButton extends ButtonBase {
+import UIButton from 'com/ui/button';
+import UIIcon from 'com/ui/icon';
 
+export default class CopyToClipboardButton extends Component {
 	constructor( props ) {
 		super(props);
-		this.onClick = this.onClick.bind(this);
-
+/*
 		this.state = {
-			"data": props.data,
-			"state": "IDEL"
-		};
+			"status": "IDEL"
+		};*/
+
+		this.onClick = this.onClick.bind(this);
 	}
 
 
 
-	onClick(e) {
+	onClick( e ) {
+		if ( navigator.clipboard ) {
+			navigator.clipboard.writeText(this.props.value).then(r => {
+				// TODO: Trigger event that notifies user of action
 
+				console.log("Written to clipboard");
+			})
+			.catch(r => {
+				console.log("Failed to write to clipboard");
+			});
+		}
+		else {
+			console.log("Clipboard unavailable (are you connected via HTTPS?)");
+		}
+		/*
 		let info = e.target.getElementsByTagName('div')[0];
 
-		this.copy(this.state.data).then( () => {
-			console.log("Copied " + this.state.data + " to clipboard");
+		this.copy(this.props.data).then( () => {
+			// @ifdef DEBUG
+			console.log("Copied " + this.props.data + " to clipboard");
+			// @endif
 
-			if (this.state.state === "IDEL") {
-				this.setState({"state": "SUCCESS"});
+			if (this.state.status === "IDEL") {
+				this.setState({status: "SUCCESS"});
 				window.setTimeout(() => {
-					if (this.state.state === "SUCCESS") {
-						this.setState({"state": "IDEL"});
+					if (this.state.status === "SUCCESS") {
+						this.setState({status: "IDEL"});
 					}
 				}, 2000);
 			}
 
 		}).catch((e) => {
+			// @ifdef DEBUG
 			console.log("Error copying shortlink to clipboard", e);
+			// @endif
 
 			this.setState({"state": "ERROR"});
 
 		});
-
+		*/
 	}
 
+/*
 	// Edited from https://gist.github.com/lgarron/d1dee380f4ed9d825ca7
 	copy(str) {
 		return new Promise(
@@ -56,41 +76,27 @@ export default class CopyToClipboardButton extends ButtonBase {
 				document.addEventListener("copy", listener);
 				document.execCommand("copy");
 				document.removeEventListener("copy", listener);
-				success ? resolve(): reject();
+				success ? resolve() : reject();
 			}
 		);
 	}
+	*/
 
-	render(props, state) {
 
-		let {children} = Object.assign({}, props);
+	render( props ) {
+		let {value} = props;
 
-		let icon, style, tooltip;
-		switch (state.state) {
-			case "SUCCESS":
-				icon = "checkmark";
-				style = "-success";
-				tooltip = "Copied to clipboard succesfully!";
-				break;
-
-			case "ERROR":
-				icon = "cross";
-				style = "-error";
-				tooltip = "Failed to copy to clipboard";
-				break;
-
-			case "IDEL":
-			default:
-				icon =(this.props.icon === undefined)? "link" : props.icon;
-				tooltip =(this.props.tooltip === undefined)? "Copy to clipboard" : props.tooltip;
-				break;
+		// @ifndef DEBUG
+		if ( !value || !navigator.clipboard ) {
+			return <Fragment />;
 		}
+		// @endif
 
 		return (
-			<div title={tooltip} class={cN("-c2cbutton", props.class)} onclick={this.onClick}>
-				<SVGIcon class={(style === undefined) ? null : style} baseline>{icon}</SVGIcon>
-				{children}
-			</div>
+			<UIButton title={'Copy "'+value+'" to clipboard'} {...props} class={cN("-clipboard a", props.class)} onclick={this.onClick}>
+				{props.icon ? <UIIcon src={props.icon} /> : null}
+				{props.children}
+			</UIButton>
 		);
 	}
 }

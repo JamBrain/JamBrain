@@ -1,4 +1,4 @@
-import {h, Component, toChildArray}					from 'preact/preact';
+import {h, Component, toChildArray} from 'preact';
 
 // MK TODO: tidy up.
 
