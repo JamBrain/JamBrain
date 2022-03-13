@@ -82,7 +82,7 @@ export default class ContentCommon extends Component {
 			}
 
 			return (
-				<article class={cN("content -base -common content-common", (minimized ? "-minimized" : null), (editing ? "-edit" : null))}>
+				<article class={cN("content -base -common", (minimized ? "-minimized" : null), (editing ? "-edit" : null), props.class)}>
 					{props.children}
 					{Footer}
 				</article>

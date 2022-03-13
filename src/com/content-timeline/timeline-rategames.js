@@ -106,7 +106,7 @@ export default class TimelineRateGames extends Component {
 	render(props, {expanded, feed, pick, error, loading}) {
 		//    if (!this.event_canRate(props.featured)) return null;
 		const HeaderClass = cN('content-common-header');
-		const MainClass = cN('content', 'content-common', 'rate-games', !expanded && 'minimized');
+		const MainClass = cN('content -common rate-games', !expanded && 'minimized');
 
 		let Games;
 		if (error) {

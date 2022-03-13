@@ -10,7 +10,7 @@ export default class Home extends Component {
 		let {node, user, featured, path, extra} = props;
 
 		return (
-			<div class="content-common event-home">
+			<div class="content -common event-home">
 				<ContentEvent node={node} user={user} path={path} extra={extra} featured={featured} noflag title="Event Details" />
 			</div>
 		);

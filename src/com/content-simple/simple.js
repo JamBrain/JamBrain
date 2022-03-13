@@ -338,6 +338,7 @@ export default class ContentSimple extends Component {
 
 
 		if ( node && (((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length)) ) {
+			let PreHeader = [];
 			let Header = [];
 			let Body = [];
 			let Footer = [];
@@ -365,7 +366,7 @@ export default class ContentSimple extends Component {
 					'nopublish': props.nopublish,
 				};*/
 
-				Header.push(<ContentCommonEdit
+				PreHeader.push(<ContentCommonEdit
 					editing={state.editing}
 					modified={state.modified}
 					published={!!node.published}
@@ -454,7 +455,7 @@ export default class ContentSimple extends Component {
 			if ( !props.noflag && !props.noheader && (props.flag || props.flagIcon) ) {
 				let FlagTitle = props.flag ? <span>{props.flag}</span> : null;
 
-				ShowFlag = <ContentCommonBodyFlag class={props.flagClass} icon={props.flagIcon} children={FlagTitle} />;
+				Header.push(<ContentCommonBodyFlag class={props.flagClass} icon={props.flagIcon} children={FlagTitle} />);
 			}
 
 			let ShowTitle = null;
@@ -469,7 +470,7 @@ export default class ContentSimple extends Component {
 
 				let Subtitle = props.subtitle ? <span>{props.subtitle}</span> : null;
 
-				ShowTitle = (<ContentCommonBodyTitle
+				Header.push(<ContentCommonBodyTitle
 					href={!props.title ? node.path : null}
 					minmax={props.minmax}
 					title={props.title ? props.title : state.name}
@@ -527,13 +528,14 @@ export default class ContentSimple extends Component {
 				props.minimized = null;
 			}
 
+				Header = !props.noheader ? <header>{Header}</header> : null;
+
 			return (
 				<ContentCommon {...props}>
-					{Body}
+					{PreHeader}
 					{ShowDraft}
 					{ShowAvatar}
-					{ShowFlag}
-					{ShowTitle}
+					{Header}
 					{ShowAbove}
 					{ShowByLine}
 					{ShowMarkup}

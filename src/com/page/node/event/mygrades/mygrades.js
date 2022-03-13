@@ -329,7 +329,7 @@ export default class MyGrades extends Component {
 		return (
 			<Fragment>
 				<PageNavEventMy {...props} />
-				<div class="content-common event-mygraded">
+				<div class="content -common event-mygraded">
 					<h2>Items you have graded</h2>
 					{ShowLoading}
 					{ShowError}
