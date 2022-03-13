@@ -528,7 +528,7 @@ export default class ContentSimple extends Component {
 				props.minimized = null;
 			}
 
-				Header = !props.noheader ? <header>{Header}</header> : null;
+			//Header = !props.noheader ? <header>{Header}</header> : null;
 
 			return (
 				<ContentCommon {...props}>
