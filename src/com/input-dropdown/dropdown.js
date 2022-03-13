@@ -1,5 +1,5 @@
-import {h, Component}	 				from 'preact/preact';
-import {shallowDiff}	 				from 'shallow-compare/index';
+import {h, Component} from 'preact';
+import {shallowDiff} from 'shallow-compare';
 
 import NavLink							from 'com/nav-link/link';
 import SVGIcon							from 'com/svg-icon/icon';
@@ -78,6 +78,7 @@ export default class InputDropdown extends Component {
 				setTimeout(this.doShow, 100);
 			}
 	}
+
 
 	render( props, state ) {
 		const { show } = state;

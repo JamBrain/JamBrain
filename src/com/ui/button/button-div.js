@@ -36,6 +36,6 @@ export default class UIButtonDiv extends Component {
 			};
 		}
 
-		return <div {...props} class={cN("ui-button", props.disabled ? "-disabled" : null, props.class)} />;
+		return <div {...props} class={cN("ui-button", props.disabled ? "-disabled" : null, !props.onclick ? "-null" : null, props.class)} />;
 	}
 }

@@ -1,4 +1,4 @@
-import {h, Component, Fragment}			from 'preact';
+import {h, Component, Fragment} from 'preact';
 
 import ContentError						from 'com/content-error/error';
 
@@ -18,10 +18,12 @@ export default class ContentUser extends Component {
 		super(props);
 	}
 
+
 	isEditMode() {
 		let {extra} = this.props;
 		return extra && extra.length && (extra[extra.length-1] == 'edit');
 	}
+
 
 	render( props ) {
 		props = Object.assign({}, props);	// Shallow copy we can change props
@@ -57,7 +59,7 @@ export default class ContentUser extends Component {
 //			props.minimized = true;
 //		}
 
-		if ( IsHome || this.isEditMode() ) {
+		//if ( IsHome || this.isEditMode() ) {
 			let BodyNavBar = [];
 			if ( !this.isEditMode() ) {
 				if ( user && user.id && (node.id !== user.id) ) {
@@ -70,8 +72,8 @@ export default class ContentUser extends Component {
 					<ContentCommonNav>{BodyNavBar}</ContentCommonNav>
 				</ContentSimple>
 			);
-		}
+		//}
 
-		return <ContentHeadliner node={node} name="user" icon="user" flagclass={node.id == user.id ? "-col-bc -inv" : "-col-bc"} childclass={node.id == user.id ? "-col-bc" : "-inv -inv-lit"} at />;// published="Joined" at games articles trophies />;
+		//return <ContentHeadliner node={node} name="user" icon="user" flagclass={node.id == user.id ? "-col-bc -inv" : "-col-bc"} childclass={node.id == user.id ? "-col-bc" : "-inv -inv-lit"} at />;// published="Joined" at games articles trophies />;
 	}
 }

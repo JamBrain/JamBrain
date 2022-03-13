@@ -2,19 +2,40 @@
 
 #content .content.-common .body.-title {
 	position: relative;
-	margin: 1rem 1rem 0;
-	line-height: 2rem;
-
-	display: flex;
-	gap: 0.5rem;
-	align-items: center;
 
 	& a {
 		--content-a: @COL_NDDD;
 	}
 
+	&:not(.-editing) {
+		margin: 1rem 1rem 0;
+		font-size: 1.5rem;
+		line-height: 2rem;
+		/*
+		@media (max-width: (@BASE_WIDTH - 20em)) {
+			font-size: 1.9em;
+		}
+*/
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+
+		& > .title {
+			font-size: 2rem;
+
+			& .prefix {
+				margin-right: 0.5em;
+			}
+		}
+
+		& > :not(.title) {
+			color: @COL_NLL;
+		}
+	}
+
 	&.-editing {
 		overflow: hidden; /* without this, the input will get pushed to the next line by the floating div */
+
 		& > input {
 			display: block;
 			box-sizing: border-box;
@@ -34,11 +55,13 @@
 			}
 		}
 	}
-
+	/*
 	& > .shortlink {
 		font-size: 1.25em;
 	}
+*/
 
+	/*
 	& > .title {
 		font-size: 1.75em;
 
@@ -68,8 +91,5 @@
 			font-weight: bold;
 		}
 	}
-
-	& .prefix {
-		margin-right: 0.5em;
-	}
+*/
 }

@@ -1,12 +1,48 @@
-import {h, Component} 				from 'preact/preact';
-import {shallowDiff}	 				from 'shallow-compare/index';
+import {h} from 'preact';
 
-import NavLink							from 'com/nav-link/link';
-import SVGIcon							from 'com/svg-icon/icon';
+import {UILink, UIIcon} from 'com/ui';
+import InputText from 'com/input-text/text';
+import BodyLabel from "./body/body-label";
 
-import InputText						from 'com/input-text/text';
-import CopyToClipboardButton from '../button-clipboard/clipboard';
 
+export function BodyTitle( props ) {
+	let titlePrefix = props.titleIcon ? (<UIIcon baseline small class="prefix" src={props.titleIcon} />) : null;
+	let titleText = props.title ? props.title : "Untitled";
+
+	let titleBody = props.href ?
+		<UILink class="title" href={props.href} title={props.tooltip}>{titlePrefix}{titleText}</UILink> :
+		<span class="title" title={props.tooltip}>{titlePrefix}{titleText}</span>;
+
+	return (
+		<div class={cN("body -title _font2", props.class)}>
+			{titleBody}
+			{props.children}
+		</div>
+	);
+}
+
+export default function BodyTitleEditable( props ) {
+	if ( props.editing ) {
+		let placeholderTitle = props.placeholder ? props.placeholder : "Title";
+		let titleLimit = props.limit ? props.limit : 64;
+
+		return (
+			<div class={cN("body -title", props.class, "-editing")}>
+				<BodyLabel>Title</BodyLabel>
+				<InputText
+					value={props.title}
+					onmodify={props.onmodify}
+					placeholder={placeholderTitle}
+					maxlength={titleLimit}
+				/>
+			</div>
+		);
+	}
+
+	return <BodyTitle {...props} />;
+}
+
+/*
 export default class ContentCommonBodyTitle extends Component {
 	constructor( props ) {
 		super(props);
@@ -17,55 +53,50 @@ export default class ContentCommonBodyTitle extends Component {
 //	}
 
 	render( props ) {
-		let titleClass = "body -title";
-
-		if ( props.subtitle )
-			titleClass += " -has-subtitle";
-
-		var Prefix = null;
-		if ( props.titleIcon ) {
-			Prefix = <SVGIcon baseline small class="prefix">{props.titleIcon}</SVGIcon>;
-		}
-
-		var Limit = props.limit ? props.limit : 64;	// True limit is 96
-		var Placeholder = props.placeholder ? props.placeholder : 'Title';
+		let placeholderTitle = props.placeholder ? props.placeholder : "Untitled";
 
 		if ( props.editing ) {
-			titleClass += ' -editing';
+			let titleLimit = props.limit ? props.limit : 64;
 
 			return (
-				<div class={cN(titleClass, props.class)}>
-					<div class="-label">Title</div>
+				<div class={cN("body -title -editing", props.class)}>
+					<BodyLabel>Title</BodyLabel>
 					<InputText
 						value={props.title}
 						onmodify={props.onmodify}
-						placeholder={Placeholder}
-						maxlength={Limit}
+						placeholder={placeholderTitle}
+						maxlength={titleLimit}
 					/>
 				</div>
 			);
 		}
 		else {
-			titleClass += " _font2";
+			let titleClass = cN("body -title", props.subtitle ? " -has-subtitle" : null, " _font2");
+			let titlePrefix = props.titleIcon ? <UIIcon baseline small class="prefix" src={props.titleIcon} /> : null;
+			var titleText = props.title ? props.title : placeholderTitle;
 
-			var Title = props.title.trim().length ? props.title.trim() : Placeholder;
 			var Body = [];
 			if ( props.href ) {
-				Body.push(<NavLink class="title" href={props.href} title={props.hover}>{Prefix}{Title}</NavLink>);
-				if ( props.shortlink && !props.minmax && props.id ) {
+				Body.push(<UILink class="title" href={props.href} title={props.tooltip}>{titlePrefix}{titleText}</UILink>);
 
+				// MK: Shortlink should not be implemented here
+				if ( props.shortlink && !props.minmax && props.id ) {
 					Body.push(<CopyToClipboardButton title="Copy shortlink to clipboard" icon={"link"} class="shortlink" value={window.location.protocol + "//" + SHORTENER_DOMAIN + "/$" + props.id}></CopyToClipboardButton>);
 				}
+
 			}
 			else {
-				Body.push(<div class="title" title={props.hover}>{Prefix}{Title}</div>);
+				Body.push(<span class="title" title={props.tooltip}>{titlePrefix}{titleText}</span>);
 			}
+
 
 			if ( props.subtitle ) {
 				Body.push(<span class="subtitle">{props.subtitle}</span>);
 			}
 
-			return <div class={cN(titleClass, props.class)}>{Body}</div>;
+
+			return <div class={cN(titleClass, props.class)}>{Body}{props.children}</div>;
 		}
 	}
 }
+*/

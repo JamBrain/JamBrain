@@ -1,7 +1,7 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component} from 'preact';
 
-import ContentHeadliner					from 'com/content-headliner/headliner';
-import $Node							from 'shrub/js/node/node';
+import ContentHeadliner from './headliner';
+import $Node from 'shrub/js/node/node';
 
 export default class ContentHeadlinerFeed extends Component {
 	constructor( props ) {

@@ -1,7 +1,8 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} from 'preact';
 
-import SVGIcon 							from 'com/svg-icon/icon';
-import ButtonBase 						from 'com/button-base/base';
+import SVGIcon from 'com/svg-icon/icon';
+import ButtonBase from 'com/button-base/base';
+
 
 export default class ContentCommonEdit extends Component {
 	constructor( props ) {

@@ -1,14 +1,13 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component}					from 'preact';
 
-import UIIcon							from 'com/ui/icon/icon';
-import UIButton							from 'com/ui/button/button';
-import UITagbox							from 'com/ui/tagbox/tagbox';
-import UIText							from 'com/ui/text/text';
-import UIDropdown						from 'com/ui/dropdown/dropdown';
-import UIDropdownList					from 'com/ui/dropdown/dropdown-list';
-import UITextdown						from 'com/ui/textdown/textdown';
+import UIIcon							from 'com/ui/icon';
+import UIButton							from 'com/ui/button';
+import UITagbox							from 'com/ui/tagbox';
+import UIText							from 'com/ui/text';
+import {UIDropdown, UIDropdownList}		from 'com/ui/dropdown';
+import UITextdown						from 'com/ui/textdown';
 
-import UIHelp							from 'com/ui/help/help';
+import UIHelp							from 'com/ui/help';
 
 import $Tag								from 'shrub/js/tag/tag';
 
@@ -167,7 +166,7 @@ export default class ItemFilter extends Component {
 			ShowFilters = <div>None</div>;
 
 		return (
-			<div class="content content-common content-itemfilter">
+			<div class="content -itemfilter">
 				<div class="-header"></div>
 				<div class="-body -flex">
 					<div class="-query">

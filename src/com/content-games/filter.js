@@ -1,5 +1,5 @@
-import {h, Component}					from 'preact/preact';
-import Common							from 'com/content-common/common';
+import {h, Component}					from 'preact';
+import ContentCommon					from 'com/content-common/common';
 import CommonBody						from 'com/content-common/common-body';
 import SVGIcon							from 'com/svg-icon/icon';
 import InputText						from 'com/input-text/text';
@@ -306,13 +306,13 @@ export default class GamesFilter extends Component {
 
 		//				{ShowTextFilter}
 		return (
-			<Common node={node} class="filter-item filter-game">
+			<ContentCommon node={node} class="filter-item filter-game">
 				{ShowFeatured}
 				{ShowEvent}
 				{ShowVotingCategory}
 				{ShowRatingSort}
 				{ShowRatingSortDesc}
-			</Common>
+			</ContentCommon>
 		);
 	}
 }

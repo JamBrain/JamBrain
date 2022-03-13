@@ -1,14 +1,13 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component} from 'preact';
+import {UIIcon, UIButton} from 'com/ui';
 
-import SVGIcon							from 'com/svg-icon/icon';
-import ButtonLink						from 'com/button-link/link';
-
-//import $Node							from 'shrub/js/node/node';
+//import $Node from 'shrub/js/node/node';
 
 export default class ContentHeadliner extends Component {
 	constructor( props ) {
 		super(props);
 	}
+
 
 	renderItem( node ) {
 		let props = this.props;
@@ -29,7 +28,7 @@ export default class ContentHeadliner extends Component {
 			if ( props.love ) {
 				Subtext.push(
 					<div title="Love" class="-statistic">
-						<SVGIcon small baseline>heart</SVGIcon> <span>{node.love}</span>
+						<UIIcon small baseline>heart</UIIcon> <span>{node.love}</span>
 					</div>
 				);
 			}
@@ -37,7 +36,7 @@ export default class ContentHeadliner extends Component {
 			if ( props.comments ) {
 				Subtext.push(
 					<div title="Comments" class="-statistic">
-						<SVGIcon small baseline>bubble</SVGIcon> <span>{node.comments}</span>
+						<UIIcon small baseline>bubble</UIIcon> <span>{node.comments}</span>
 					</div>
 				);
 			}
@@ -45,7 +44,7 @@ export default class ContentHeadliner extends Component {
 			if ( props.games && node.games ) {
 				Subtext.push(
 					<div title="Games" class="-statistic">
-						<SVGIcon small baseline>gamepad</SVGIcon> <span>{node.games}</span>
+						<UIIcon small baseline>gamepad</UIIcon> <span>{node.games}</span>
 					</div>
 				);
 			}
@@ -53,7 +52,7 @@ export default class ContentHeadliner extends Component {
 			if ( props.articles && node.articles ) {
 				Subtext.push(
 					<div title="Articles" class="-statistic">
-						<SVGIcon small baseline>article</SVGIcon> <span>{node.articles}</span>
+						<UIIcon small baseline>article</UIIcon> <span>{node.articles}</span>
 					</div>
 				);
 			}
@@ -78,10 +77,11 @@ export default class ContentHeadliner extends Component {
 
 
 			// Render
-			return <ButtonLink class={cN("item -list-item", props.childclass)} href={node.path}>{Body}</ButtonLink>;
+			return <UIButton class={cN("item -list-item", props.childclass)} href={node.path}>{Body}</UIButton>;
 		}
 		return null;
 	}
+
 
 	renderNullItem() {
 		let props = this.props;
@@ -94,6 +94,7 @@ export default class ContentHeadliner extends Component {
 
 		return <div class={cN("item -list-item", props.childclass)} >{Body}</div>;
 	}
+
 
 	renderItems( node ) {
 		if ( !node ) {
@@ -110,6 +111,7 @@ export default class ContentHeadliner extends Component {
 			return this.renderItem(node);
 		}
 	}
+
 
 	renderWhen( node, label, show_new_for_minutes = 24*60 ) {
 		if ( node.published ) {
@@ -140,12 +142,13 @@ export default class ContentHeadliner extends Component {
 		}
 	}
 
+
 	render( props ) {
-		// Build the corner flag
+		// Build the flag
 		let Flag = [];
 		// The Icon
 		if ( props.icon ) {
-			Flag.push(<SVGIcon big>{props.icon}</SVGIcon>);
+			Flag.push(<UIIcon big>{props.icon}</UIIcon>);
 		}
 		// The Name
 		if ( props.name ) {
@@ -156,45 +159,31 @@ export default class ContentHeadliner extends Component {
 		}
 
 
-		let ShowCornerFlag = null;
-		// Show the flag (if it was built)
-		if ( Flag.length ) {
-			if ( props.href ) {
-				ShowCornerFlag = <ButtonLink class={cN("corner-flag", props.flagclass)} href={props.href}>{Flag}</ButtonLink>;
-			}
-			else {
-				ShowCornerFlag = <div class={cN("corner-flag", props.flagclass)}>{Flag}</div>;
-			}
-		}
+		let ShowFlag = Flag.length ? <UIButton class={cN("flag", props.flagclass)} href={props.href}>{Flag}</UIButton> : null;
 
 
 		let ShowFooter = null;
 		// Show the footer
 		if ( props.footer ) {
-			if ( props.footerhref ) {
-				ShowFooter = <ButtonLink class={cN("item -footer-item", props.childclass)} href={props.footerhref}>{props.footer}</ButtonLink>;
-			}
-			else {
-				ShowFooter = <div class={cN("item -footer-item", props.childclass)}>{props.footer}</div>;
-			}
+			ShowFooter = <UIButton class={cN("item -footer-item", props.childclass)} href={props.footerhref}>{props.footer}</UIButton>;
 		}
 		// Show the more footer
 		else if ( props.more ) {
 			ShowFooter = (
-				<ButtonLink class={cN("item -more-item", props.childclass)} href={props.more}>
-					<SVGIcon>circle</SVGIcon><SVGIcon>circle</SVGIcon><SVGIcon>circle</SVGIcon>
-				</ButtonLink>
+				<UIButton class={cN("item -more-item", props.childclass)} href={props.more}>
+					<UIIcon>circle</UIIcon><UIIcon>circle</UIIcon><UIIcon>circle</UIIcon>
+				</UIButton>
 			);
 		}
 
 
 		// Render
 		return (
-			<div class={cN('content content-headliner', props.class)} style={props.style}>
-				{ShowCornerFlag}
+			<header class={cN('content -headliner', props.class)} style={props.style}>
+				{ShowFlag}
 				{this.renderItems(props.node)}
 				{ShowFooter}
-			</div>
+			</header>
 		);
 	}
 }

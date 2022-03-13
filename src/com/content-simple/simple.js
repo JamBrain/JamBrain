@@ -1,4 +1,4 @@
-import {h, Component} 								from 'preact/preact';
+import {h, Component} 								from 'preact';
 
 import NavLink										from 'com/nav-link/link';
 
@@ -13,6 +13,8 @@ import ContentCommonBodyTitle						from 'com/content-common/common-body-title';
 import ContentCommonBodyFlag						from 'com/content-common/common-body-flag';
 import ContentCommonBodyAvatar						from 'com/content-common/common-body-avatar';
 import ContentCommonBodyMarkup						from 'com/content-common/common-body-markup';
+
+import CopyToClipboardButton from 'com/button-clipboard/clipboard';
 
 import ContentCommonDraft							from 'com/content-common/common-draft';
 
@@ -60,6 +62,7 @@ export default class ContentSimple extends Component {
 		this.autocompleters = {};
 	}
 
+
 	componentDidMount() {
 		var props = this.props;
 
@@ -68,6 +71,7 @@ export default class ContentSimple extends Component {
 		if ( props.authors )
 			this.getAuthors(props.node);
 	}
+
 
 	componentWillUpdate( newProps, newState ) {
 		//Editing is done in constructor and since this isn't reloaded in most instances it requires a hack
@@ -87,12 +91,14 @@ export default class ContentSimple extends Component {
 		}
 	}
 
+
 	isIdenticalAuthorLists(a, b) {
 		if (!a !== !b) return false;
 		if (!a) return true;
 		if (a.length !== b.length) return false;
 		return a.filter((a, idx) => b.indexOf(a) === idx).length === a.length;
 	}
+
 
 	onAutocompleteSelect(replaceText, cursorPosAfterUpdate) {
 		this.setState({
@@ -104,7 +110,6 @@ export default class ContentSimple extends Component {
 			'replaceTextEvent': this.state.replaceTextEvent ? this.state.replaceTextEvent + 1 : 1,
 		});
 	}
-
 	onAutoselectCaptureKeyDown(autocompleter, callback) {
 		const {autocompleters} = this;
 		if ( !autocompleters[autocompleter] ) {
@@ -112,7 +117,6 @@ export default class ContentSimple extends Component {
 		}
 		autocompleters[autocompleter].captureKeyDown = callback;
 	}
-
 	onAutoselectCaptureKeyUp(autocompleter, callback) {
 		const {autocompleters} = this;
 		if ( !autocompleters[autocompleter] ) {
@@ -120,6 +124,7 @@ export default class ContentSimple extends Component {
 		}
 		autocompleters[autocompleter].captureKeyUp = callback;
 	}
+
 
 	onKeyDown( e ) {
 		const {autocompleters} = this;
@@ -131,7 +136,6 @@ export default class ContentSimple extends Component {
 		}
 		return true;
 	}
-
 	onKeyUp( e ) {
 		const {autocompleters} = this;
 		for ( let autocompleter in autocompleters ) {
@@ -143,22 +147,24 @@ export default class ContentSimple extends Component {
 		return true;
 	}
 
+
 	onTextAreaFocus( e ) {
 		this.setState({'textareaFocus': true});
 		//console.log("TextAreaFocus");
 		return true;
 	}
-
 	onTextAreaBlur( e ) {
 		setTimeout(() => this.setState({'textareaFocus': false}), 300);
 		return true;
 	}
+
 
 	onTextAreaCaret( e ) {
 		this.setState({'editCursorPos': e.target.selectionStart});
 		//console.log("TextAreaCursor");
 		return true;
 	}
+
 
 	getAuthors( node ) {
 		// Clear the Authors
@@ -201,12 +207,15 @@ export default class ContentSimple extends Component {
 		});
 	}
 
+
 	onEdit( e ) {
 		this.setState({'editing': true});
 	}
 	onPreview( e ) {
 		this.setState({'editing': false});
 	}
+
+
 	onSave( e ) {
 		var Title = this.state.name ? this.state.name : this.props.node.name;
 		var Body = this.state.body ? this.state.body : this.props.node.body;
@@ -236,6 +245,8 @@ export default class ContentSimple extends Component {
 			this.setState({'error': err});
 		});
 	}
+
+
 	onPublish( e ) {
 		// TODO: Confirm
 		console.log('do save first');
@@ -270,6 +281,7 @@ export default class ContentSimple extends Component {
 		});
 	}
 
+
 	onDone( e ) {
 		if ( this.state.modified ) {
 			console.log('do save first');
@@ -293,6 +305,7 @@ export default class ContentSimple extends Component {
 		}
 	}
 
+
 	onModifyTitle( e ) {
 		this.setState({'modified': true, 'name': e.target.value});
 	}
@@ -310,19 +323,26 @@ export default class ContentSimple extends Component {
 		this.setState({/*'modified': true,*/'avatar': avatar});
 	}
 
+
 	isEditMode() {
 		let {extra} = this.props;
 		return extra && extra.length && (extra[extra.length-1] == 'edit');
 	}
 
+
 	render( props, state ) {
-		props = Object.assign({}, props);	// Shallow copy we can change props
 		let {node, user, path, extra, featured} = props;
 		let {author, authors} = state;
 
+		props = {...props};	// Shallow copy so we can change props
+
 
 		if ( node && (((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length)) ) {
-			var ShowEditBar = null;
+			let Header = [];
+			let Body = [];
+			let Footer = [];
+
+
 			var ShowOnly = null;
 			let ShowAutocompleteEmoji;
 			let ShowAutocompleteAt;
@@ -332,7 +352,7 @@ export default class ContentSimple extends Component {
 				if ( !node_IsAuthor(node, user) ) {
 					return <ContentError code="403">Forbidden: You do not have permission to edit this</ContentError>;
 				}
-
+/*
 				let EditProps = {
 					'editing': state.editing,
 					'modified': state.modified,
@@ -342,11 +362,20 @@ export default class ContentSimple extends Component {
 					'onsave': this.onSave,
 					'onpublish': this.onPublish,
 					'ondone': this.onDone,
-				};
+					'nopublish': props.nopublish,
+				};*/
 
-				EditProps.nopublish = props.nopublish;
-
-				ShowEditBar = <ContentCommonEdit {...EditProps} />;
+				Header.push(<ContentCommonEdit
+					editing={state.editing}
+					modified={state.modified}
+					published={!!node.published}
+					onedit={this.onEdit}
+					onpreview={this.onPreview}
+					onsave={this.onSave}
+					onpublish={this.onPublish}
+					ondone={this.onDone}
+					nopublish={props.nopublish}
+				/>);
 
 				ShowAutocompleteAt = <AutocompleteAtNames
 					text={state.editText}
@@ -423,33 +452,36 @@ export default class ContentSimple extends Component {
 
 			let ShowFlag = null;
 			if ( !props.noflag && !props.noheader && (props.flag || props.flagIcon) ) {
-				let FlagTitle = null;
-				if ( props.flag ) {
-					FlagTitle = <span>{props.flag}</span>;
-				}
+				let FlagTitle = props.flag ? <span>{props.flag}</span> : null;
 
-				ShowFlag = (
-					<ContentCommonBodyFlag class={props.flagClass} icon={props.flagIcon}>
-						{FlagTitle}
-					</ContentCommonBodyFlag>
-				);
+				ShowFlag = <ContentCommonBodyFlag class={props.flagClass} icon={props.flagIcon} children={FlagTitle} />;
 			}
 
 			let ShowTitle = null;
 			if ( !props.notitle && !props.noheader ) {
-				ShowTitle = <ContentCommonBodyTitle
+				// MK: I've disabled copyshortlink for the moment. Need to figure out the style ripple issue
+				let CopyShortlinkButton = false && !props.title ? (<CopyToClipboardButton
+					title="Copy shortlink to clipboard"
+					icon={"link"}
+					class="shortlink"
+					value={window.location.protocol + "//" + SHORTENER_DOMAIN + "/$" + node.id}
+				/>) : null;
+
+				let Subtitle = props.subtitle ? <span>{props.subtitle}</span> : null;
+
+				ShowTitle = (<ContentCommonBodyTitle
 					href={!props.title ? node.path : null}
-					id={node.id}
 					minmax={props.minmax}
 					title={props.title ? props.title : state.name}
-					shortlink={!props.title}
-					hover={node.slug+' [$'+node.id+']'}
-					subtitle={props.subtitle}
+					tooltip={node.slug + ' [$'+node.id+']'}
 					titleIcon={props.titleIcon}
 					editing={props.notitleedit ? false : state.editing}
 					onmodify={this.onModifyTitle}
 					limit="80"
-				/>;
+				>
+					{CopyShortlinkButton}
+					{Subtitle}
+				</ContentCommonBodyTitle>);
 			}
 
 			let ShowMarkup = null;
@@ -497,7 +529,7 @@ export default class ContentSimple extends Component {
 
 			return (
 				<ContentCommon {...props}>
-					{ShowEditBar}
+					{Body}
 					{ShowDraft}
 					{ShowAvatar}
 					{ShowFlag}
@@ -512,8 +544,7 @@ export default class ContentSimple extends Component {
 				</ContentCommon>
 			);
 		}
-		else {
-			return <ContentLoading />;
-		}
+
+		return <ContentLoading />;
 	}
 }

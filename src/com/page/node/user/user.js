@@ -4,6 +4,7 @@ import PageNavUser						from 'com/page/nav/user';
 //import ContentList						from 'com/content-list/list';
 import ContentUser						from 'com/content-user/user';
 import ContentError						from 'com/content-error/error';
+import ContentHeadliner					from 'com/content-headliner/headliner';
 
 import UserFeed							from './feed/feed';
 import UserArticles						from './articles/articles';
@@ -17,15 +18,24 @@ import {Router, Route}					from "com/router/router";
 
 export default class PageUser extends Component {
 	render( props ) {
-		let {extra} = props;
+		let {node, user, extra} = props;
+		let isMe = node && user && node.id && (node.id == user.id);
 		let isEditing = extra[extra.length - 1] == "edit";
+
+		let Header = <ContentHeadliner
+			node={node}
+			name="user"
+			icon="user"
+			flagclass={isMe ? "-col-bc -inv" : "-col-bc"}
+			childclass={isMe ? "-col-bc" : "-inv -inv-lit"}
+		/>;
 
 		return (
 			<Fragment class="page-user">
+				{!isEditing ? Header : null}
 				{!isEditing ? <PageNavUser {...props} /> : null}
-				<ContentUser {...props} />
 				<Router props={props} key="user">
-					<Route path="/" />
+					<Route path="/" component={ContentUser} />
 					<Route path="/games/*" component={UserGames} />
 					<Route path="/articles" component={UserArticles} />
 					<Route path="/feed" component={UserFeed} />
