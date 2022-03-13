@@ -71,7 +71,7 @@ export default class ContentEventTheme extends Component {
 			else if ( NewPath == '/fusion' ) {
 				ShowBody = <ContentEventFusion node={node} user={user} path={path} extra={extra} />;
 			}
-			else if ( parseInt(NewPath.substr(1)) > 0 ) {
+			else if ( parseInt(NewPath.slice(1)) > 0 ) {
 				ShowBody = <ContentEventList node={node} user={user} path={path} extra={extra} />;
 			}
 

@@ -27,10 +27,10 @@ export default class IMG extends Component {
 
 		// if your URL begins with a triple slash, append the static endpoint
 		if ( props.src && props.src.indexOf('///') === 0 ) {
-			props.src = STATIC_ENDPOINT + props.src.substr(2);
+			props.src = STATIC_ENDPOINT + props.src.slice(2);
 		}
 		if ( props.failsrc && props.failsrc.indexOf('///') === 0 ) {
-			props.failsrc = STATIC_ENDPOINT + props.failsrc.substr(2);
+			props.failsrc = STATIC_ENDPOINT + props.failsrc.slice(2);
 		}
 
 		if ( error ) {

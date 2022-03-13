@@ -27,8 +27,8 @@ function CollectGarbage() {
 			// Check if it's expired
 			if ( timestamp ) {
 				if ( Date.now() > timestamp ) {
-					_Remove('!'+key.substr(1));
-					_Remove('$'+key.substr(1));
+					_Remove('!'+key.slice(1));
+					_Remove('$'+key.slice(1));
 				}
 			}
 		}

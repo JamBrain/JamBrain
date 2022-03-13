@@ -13,6 +13,7 @@ export default class GradedItem extends Component {
 	}
 
 	trimDescriptionToLength( description, targetLength, maxLength ) {
+		// MK: substr is deprecated. Use slice or substring.
 		const maxDescription = description.substr(0, maxLength);
 		let lastPunctuation = Math.max(maxDescription.lastIndexOf('.'), maxDescription.lastIndexOf('?'), maxDescription.lastIndexOf('!'));
 		if ( lastPunctuation < targetLength ) {

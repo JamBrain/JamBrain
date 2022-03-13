@@ -1,6 +1,7 @@
 
 (function(){
 	window.extractFromURL = function( str ) {
+		// MK: substr is deprecated. Use slice or substring.
 		var ret = {};
 		ret.origin = str.substr();
 

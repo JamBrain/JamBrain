@@ -41,15 +41,15 @@ class Autocompletions extends Component {
 		cursorPos = cursorPos ? cursorPos : 0;
 		if ( !textareaFocus ) {
 			text = text ? text : '';
-			//console.log("No focus", textareaFocus, text.substr(0, cursorPos) + '|' + text.substr(cursorPos));
+
 			this.setState({'match': null, 'cursorPos': cursorPos, 'editMode': false, 'text': text});
 		}
 		else if ( text ) {
 			const matchObj = this.getMatch(text, cursorPos);
-			// console.log('Autocomplete props', matchObj, `'${this.state.selected}'`, text.substr(0, cursorPos) + '|' + text.substr(cursorPos));
+
 			if ( matchObj ) {
 				const editMode = (text !== this.state.text) || this.state.editMode;
-				//console.log('Matching', matchObj, editMode, `'${this.state.selected}'`, text.substr(0, cursorPos) + '|' + text.substr(cursorPos));
+
 				this.setState({
 					'editMode': editMode,
 					'text': text,
@@ -211,7 +211,7 @@ export class AutocompleteEmojis extends Autocompletions {
 	getOptions( hint ) {
 		const {emojiList} = window.emoji;
 		const options = [];
-		const matcher = new RegExp(hint ? hint.trim().substr(1).replace(':', '').replace('-', '_') : '', 'i');
+		const matcher = new RegExp(hint ? hint.trim().slice(1).replace(':', '').replace('-', '_') : '', 'i');
 		for ( let emoji in emojiList ) {
 			const matches = matcher.exec(emoji);
 			if ( (hint.length == 0) || matches ) {
@@ -237,6 +237,7 @@ export class AutocompleteEmojis extends Autocompletions {
 		let ShowMatch = null;
 		let ShowRight = null;
 		if ( matchEnd != matchStart ) {
+			// MK: substr is deprecated. Use slice or substring.
 			ShowLeft = name.substr(0, matchStart);
 			ShowMatch = <b>{name.substr(matchStart, matchEnd - matchStart)}</b>;
 			ShowRight = name.substr(matchEnd);
@@ -268,7 +269,7 @@ export class AutocompleteAtNames extends Autocompletions {
 	getOptions( hint ) {
 		const {authors} = this.props;
 		const options = [];
-		const matcher = new RegExp(hint ? hint.trim().substr(1) : '', 'i');
+		const matcher = new RegExp(hint ? hint.trim().slice(1) : '', 'i');
 		if ( authors ) {
 			for ( let author in authors ) {
 				const authorData = authors[author];
@@ -297,6 +298,7 @@ export class AutocompleteAtNames extends Autocompletions {
 		let ShowMatch = null;
 		let ShowRight = null;
 		if ( matchStart != matchEnd ) {
+			// MK: substr is deprecated. Use slice or substring.
 			ShowLeft = name.substr(0, matchStart);
 			ShowMatch = <b>{name.substr(matchStart, matchEnd - matchStart)}</b>;
 			ShowRight = name.substr(matchEnd);

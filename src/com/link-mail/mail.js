@@ -13,7 +13,7 @@ export default class LinkMail extends Component {
 		let Mail = '???';
 
 		if ( Href.indexOf('mailto:') === 0 ) {
-			Mail = props.substr(7); // strlen('mailto:')
+			Mail = props.slice(7); // strlen('mailto:')
 		}
 		else {
 			Mail = Href;

@@ -1,17 +1,5 @@
-import { h, Component } 				from 'preact/preact';
+import {h} from 'preact';
 
-import ContentLoading					from 'com/content-loading/loading';
-
-export default class ContentCommonNav extends Component {
-	constructor( props ) {
-		super(props);
-	}
-
-	render( props ) {
-		return (
-			<div class={cN("body content-common-nav", props.class)}>
-				{props.children}
-			</div>
-		);
-	}
+export default function BodyNav( props ) {
+	return <div {...props} class={cN("body -nav", props.class)} />;
 }

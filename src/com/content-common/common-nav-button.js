@@ -1,27 +1,24 @@
-import { h, Component } 				from 'preact/preact';
+import {h} from 'preact';
+import {UIButton} from 'com/ui';
 
-import ButtonBase						from 'com/button-base/base';
-import ButtonLink						from 'com/button-link/link';
-
-export default class ContentCommonNavButton extends Component {
-	constructor( props ) {
-		super(props);
-	}
-
-	render( props ) {
+export default function BodyNavButton( props ) {
+	return <UIButton {...props} />;
+}
+/*
 		var newClass = cN('content-common-nav-button', props.class);
 
 		if ( props.href ) {
 			return (
-				<ButtonLink disabled={props.disabled} class={newClass} href={props.href} onclick={props.onclick}>
+				<UILink disabled={props.disabled} class={newClass} href={props.href} onclick={props.onclick}>
 					{props.children}
-				</ButtonLink>
+				</UILink>
 			);
 		}
 		return (
-			<ButtonBase disabled={props.disabled} class={newClass} onclick={props.onclick}>
+			<UIButton disabled={props.disabled} class={newClass} onclick={props.onclick}>
 				{props.children}
-			</ButtonBase>
+			</UIButton>
 		);
 	}
 }
+*/

@@ -147,6 +147,7 @@ class Main extends Component {
 	}
 
 	componentDidUpdate( prevProps, prevState ) {
+		// MK: substr is deprecated. Use slice or substring.
 		if (window.location.href.substr(-3) == "#--") {
 			history.replaceState({}, '', window.location.href.replace("#--", ""));
 		}

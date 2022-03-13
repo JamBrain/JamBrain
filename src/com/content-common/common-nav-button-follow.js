@@ -1,11 +1,10 @@
-import { h, Component } 				from 'preact/preact';
-import SVGIcon							from 'com/svg-icon/icon';
+import {h, Component, Fragment} from 'preact';
+import {UIIcon} from 'com/ui';
+import BodyNavButton from './common-nav-button';
+import $NodeStar from 'shrub/js/node/node_star';
 
-import NavButton						from 'com/content-common/common-nav-button';
 
-import $NodeStar						from '../shrub/js/node/node_star';
-
-export default class ContentCommonNavButtonFollow extends Component {
+export default class BodyNavButtonFollow extends Component {
 	constructor( props ) {
 		super(props);
 
@@ -19,16 +18,15 @@ export default class ContentCommonNavButtonFollow extends Component {
 		this.onClick = this.onClick.bind(this);
 	}
 
-	isFollowing() {
-		var node = this.props.node;
-		var user = this.props.user;
-		var following = this.state.isFollowing;
 
-		return following !== null ? following : user.private && user.private.meta && user.private.meta.star && user.private.meta.star.indexOf(node.id) !== -1;
+	isFollowing() {
+		let {node, user} = this.props;
+		let following = this.state.isFollowing;
+
+		return following !== null ? following : user.private && user.private.meta && user.private.meta.star && (user.private.meta.star.indexOf(node.id) !== -1);
 	}
 	isFriend() {
-		var node = this.props.node;
-		var user = this.props.user;
+		let {node, user} = this.props;
 
 		return user.private.refs.star && user.private.refs.star.indexOf(node.id) !== -1;
 	}
@@ -48,7 +46,7 @@ export default class ContentCommonNavButtonFollow extends Component {
 	onUnfollow( e ) {
 		return $NodeStar.Remove(this.props.node.id)
 		.then(r => {
-			this.setState({ 'isFollowing': false });
+			this.setState({'isFollowing': false});
 
 			// TODO: Tell parent user has changed
 		})
@@ -57,61 +55,51 @@ export default class ContentCommonNavButtonFollow extends Component {
 		});
 	}
 
+
 	onClick( e ) {
-		if ( this.isFollowing() ) {
-			return this.onUnfollow(e);
-		}
-		else {
-			return this.onFollow(e);
-		}
+		return this.isFollowing() ? this.onUnfollow(e) : this.onFollow(e);
 	}
 
+
 	render( props ) {
-		var node = props.node;
-		var user = props.user;
+		let {node, user} = props;
 
-		if ( user && user.id !== 0 ) {
-			var isFriend = false;
-			var isFollowing = this.isFollowing();
-			if ( isFollowing )
-				isFriend = this.isFriend();
+		if ( user && user.id && node && node.id ) {
+			let isFollowing = this.isFollowing();
+			let isFriend = isFollowing ? this.isFriend() : false;
 
-			var Class = [];
-			if ( props.class )
-				Class = Class.concat(props.class.split(' '));
-			Class.push('-follow');
+			let newClass = "-follow";
 
-			var Icon = <SVGIcon class="if-not-hover-block">user</SVGIcon>;
-			var HoverIcon = <SVGIcon class="if-hover-block">user-plus</SVGIcon>;
+			var Icon = <UIIcon class="if-not-hover-block">user</UIIcon>;
+			var HoverIcon = <UIIcon class="if-hover-block">user-plus</UIIcon>;
 			var Text = <div>Follow</div>;
 
 			// Following or Friend
 			if ( isFollowing ) {
-				HoverIcon = <SVGIcon class="if-hover-block">user-minus</SVGIcon>;
+				HoverIcon = <UIIcon class="if-hover-block">user-minus</UIIcon>;
 			}
 			// Friend only
 			if ( isFriend ) {
-				Icon = <SVGIcon class="if-not-hover-block">users</SVGIcon>;
+				Icon = <UIIcon class="if-not-hover-block">users</UIIcon>;
 				Text = <div>Friends</div>;
-				Class.push('-friends');
+				newClass += " -friends";
 			}
 			// Following only
 			else if ( isFollowing ) {
-				Icon = <SVGIcon class="if-not-hover-block">user-check</SVGIcon>;
+				Icon = <UIIcon class="if-not-hover-block">user-check</UIIcon>;
 				Text = <div>Following</div>;
-				Class.push('-following');
+				newClass += "-following";
 			}
 
-			if ( node && node.slug ) {
-				return (
-					<NavButton class={Class} onclick={this.onClick}>
-						{Icon}
-						{HoverIcon}
-						{Text}
-					</NavButton>
-				);
-			}
+			return (
+				<BodyNavButton class={cN(newClass, props.class)} onclick={this.onClick}>
+					{Icon}
+					{HoverIcon}
+					{Text}
+				</BodyNavButton>
+			);
 		}
-		return null;
+
+		return <Fragment />;
 	}
 }

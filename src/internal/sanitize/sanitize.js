@@ -20,7 +20,7 @@ class CSanitize {
 	slugify_PathName( str ) {
 		// Node slugs must be > 0
 		if ( str.length && str[0] == '$' ) {
-			var _id = Number.parseInt(str.substr(1));
+			var _id = Number.parseInt(str.slice(1));
 			return (_id > 0 ? '$'+_id : '');
 		}
 
@@ -60,6 +60,7 @@ class CSanitize {
 		// Hashes must be prefixed with "#"
 		if ( str.length && str[0] == "#" ) {
 			var query_pos = str.indexOf('?');
+			// MK: substr is deprecated. Use slice or substring.
 			var query = (query_pos != -1) ? this.clean_Query(str.substr(str.indexOf('?'))) : "";
 			str = (query_pos != -1) ? str.substr(0, query_pos) : str;
 
@@ -101,7 +102,7 @@ class CSanitize {
 			return ret;
 
 		var query_pos = raw_hash.indexOf('?');
-		var query = (query_pos != -1) ? raw_hash.substr(query_pos+1) : '';
+		var query = (query_pos != -1) ? raw_hash.slice(query_pos+1) : '';
 		if ( query.length ) {
 			query.split('&').forEach(v => {
 				let _var = v.split('=');
@@ -109,6 +110,7 @@ class CSanitize {
 			});
 		}
 
+		// MK: substr is deprecated. Use slice or substring.
 		var full_path = (query_pos != -1) ? raw_hash.substr(1, query_pos-1) : raw_hash.substr(1);
 		ret.extra = full_path.split('/');
 		ret.path = ret.extra.shift();

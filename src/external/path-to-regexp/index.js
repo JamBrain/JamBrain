@@ -99,7 +99,7 @@ function parse (str, options) {
 
   // Push any remaining characters.
   if (path || index < str.length) {
-    tokens.push(path + str.substr(index));
+    tokens.push(path + str.slice(index));
   }
 
   return tokens;

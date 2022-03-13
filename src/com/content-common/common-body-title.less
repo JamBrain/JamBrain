@@ -8,7 +8,8 @@
 	}
 
 	&:not(.-editing) {
-		margin: 1rem 1rem 0;
+		margin: 0 1rem;
+		padding-top: 1rem; /* this used to be in margin above, but flex triggers different margin behavior */
 		font-size: 1.5rem;
 		line-height: 2rem;
 		/*

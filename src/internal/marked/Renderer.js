@@ -277,11 +277,11 @@ export default class Renderer {
 		}
 		else if ( result.type == "protocol" ) {
 			hasText = hasText && !/^\s+$/.test(joinedText); // make sure the link isn't all whitespace too
-			return <NavLink href={href} text={(hasText) ? joinedText : href.substr(2)} title={title} target={"_blank"}/>;
+			return <NavLink href={href} text={(hasText) ? joinedText : href.slice(2)} title={title} target={"_blank"}/>;
 		}
 		else if ( result.type == "static" ) {
 			hasText = hasText && !/^\s+$/.test(joinedText); // make sure the link isn't all whitespace too
-			return <NavLink href={"//" + STATIC_DOMAIN + href.substr(2)} text={(hasText) ? joinedText : (STATIC_DOMAIN + href.substr(2))} title={title} target={"_blank"}/>;
+			return <NavLink href={"//" + STATIC_DOMAIN + href.slice(2)} text={(hasText) ? joinedText : (STATIC_DOMAIN + href.slice(2))} title={title} target={"_blank"}/>;
 		}
 	}
 
@@ -317,7 +317,7 @@ export default class Renderer {
 
 		if ( href.indexOf("///") === 0 ) {
 		// Rewrite URL to replace the first two slashes with the endpoint
-			href = STATIC_ENDPOINT + href.substr(2);
+			href = STATIC_ENDPOINT + href.slice(2);
 		}
 		// Disabled this. Only Triple slash URLs should be allow.
 		//  else if ( href.indexOf(STATIC_ENDPOINT) >= 0 && href.indexOf(STATIC_ENDPOINT) <= 5 ) {
