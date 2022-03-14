@@ -11,11 +11,19 @@ export default class UILink extends Component {
 		super(props);
 
 		this.onClick = this.onClick.bind(this);
-		this.dispatchNavChangeEvent = this.dispatchNavChangeEvent.bind(this);
+		//this.dispatchNavChangeEvent = this.dispatchNavChangeEvent.bind(this);
 	}
 
-
+/*
 	dispatchNavChangeEvent( navState ) {
+		window.dispatchEvent(new CustomEvent('navchange', {
+			'detail': {
+				...new URL(this.props.href, window.location.href),
+			    ...navState
+			}
+		}));
+
+		/*
 		console.log("DISZZZBPATH", this);
 		// MK: Is this legal?
 		let base = this.base;
@@ -44,8 +52,9 @@ export default class UILink extends Component {
 		});
 
 		window.dispatchEvent(new_event);
-	}
 
+	}
+*/
 
 	onClick( e ) {
 		// Bail if we're trying to open link in a new window using a modifer+click shortcut
@@ -54,24 +63,28 @@ export default class UILink extends Component {
 
 		// If the origin (http+domain) of the current and next URL is the same, navigate by manipulating the history
 		if ( origin === window.location.origin ) {
-			let navState = {
-				'old': {...window.location},
-				'top': window.pageYOffset || document.documentElement.scrollTop,
-				'left': window.pageXOffset || document.documentElement.scrollLeft,
-			};
-
 			// Stop the page from reloading after the click
 			e.preventDefault();
 
-//			// Store
-//			console.log('replaceState', window.history.state);
-//			history.replaceState(window.history.state, null, window.location.pathname+window.location.search);
-//			// Advance history by pushing a state (that will be updated by the 'navchange' event)
-//			console.log('pushState', null);
-//			history.pushState(null, null, this.base.pathname+this.base.search);
+			let newURL = new URL(this.props.href, window.location.href);
+			newURL.hash = newURL.hash ? newURL.hash : window.location.hash;
+
+			// Append window's query string
+			for (let [key, value] of new URLSearchParams(window.location.search).entries()) {
+				newURL.searchParams.append(key, value);
+			}
 
 			// Trigger a 'navchange' event to cleanup what we've done here
-			this.dispatchNavChangeEvent(navState);
+			window.dispatchEvent(new CustomEvent('navchange', {
+				'detail': {
+					'location': newURL,
+					'old': {...window.location},
+					'top': window.pageYOffset || document.documentElement.scrollTop,
+					'left': window.pageXOffset || document.documentElement.scrollLeft,
+				}
+			}));
+
+			//this.dispatchNavChangeEvent(navState);
 		}
 
 		e.stopPropagation();

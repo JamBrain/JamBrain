@@ -50,23 +50,24 @@ import $User							from 'shrub/js/user/user';
 import $NodeLove						from 'shrub/js/node/node_love';
 
 
-window.LUDUMDARE_ROOT = '/';
-window.SITE_ROOT = 1;
+const SITE_ROOT = 1;
 
 
 // NOTE: Deprecated
 // Add special behavior: when class attribute is an array, flatten it to a string
+/*
 options.vnode = function _CustomVNode(vnode) {
-	if ( vnode && vnode.attributes && Array.isArray(vnode.attributes.class) ) {
-		if ( vnode.attributes.class.length ) {
-			vnode.attributes.class = vnode.attributes.class.join(' ');
+	if ( vnode && vnode.props && vnode.props.class && Array.isArray(vnode.props.class) ) {
+		if ( vnode.props.class.length ) {
+			vnode.props.class = vnode.props.class.join(' ');
 		}
 		else {
 			// NOTE: this might be slow. You can disable this, and the .length check for a potential speedup
-			delete vnode.attributes.class;
+			delete vnode.props.class;
 		}
 	}
 };
+*/
 
 class Main extends Component {
 	constructor( props ) {
@@ -157,6 +158,16 @@ class Main extends Component {
 		if (this.state.node != prevState.node) {
 			this.handleAnchors();
 		}
+	}
+
+
+	cleanURL( url ) {
+		url.pathname = Sanitize.clean_Path(url.pathname);
+		url.search = Sanitize.clean_Query(url.search);
+		url.hash = Sanitize.clean_Hash(url.hash);
+		url.slugs = Sanitize.trimSlashes(url.pathname).split('/');
+
+		return url;
 	}
 
 	cleanLocation( location ) {
@@ -425,23 +436,25 @@ class Main extends Component {
 		console.log('navchange:', e.detail.old.href, '=>', e.detail.location.href);
 		// @endif
 
+		this.cleanURL(e.detail.location);
+
+		if ( e.detail.location.href !== e.detail.old.href ) {
+			history.pushState(null, null, e.detail.location.href);
+
+			this.fetchNode(e.detail.location.slugs);
+		}
+
+		/*
 		if ( e.detail.location.href !== e.detail.old.href ) {
 			let clean = this.cleanLocation(e.detail.location);
 
 			if ( clean.slugs.join() !== this.state.slugs.join() ) {
 				history.pushState(null, null, e.detail.location.pathname + e.detail.location.search);
 
-				/*
-				this.setState({
-					'slugs': clean.slugs,
-					'node': {
-						'id': 0
-					}
-				});
-				*/
 				this.fetchNode(clean.slugs);
 			}
 		}
+		*/
 
 		// Scroll to top
 		window.scrollTo(0, 0);
