@@ -75,11 +75,7 @@ export default class ContentEventTheme extends Component {
 				ShowBody = <ContentEventList node={node} user={user} path={path} extra={extra} />;
 			}
 
-			return (
-				<ContentCommon {...props}>
-					<ContentCommonBody>{ShowBody}</ContentCommonBody>
-				</ContentCommon>
-			);
+			return ShowBody;
 		}
 		else {
 			return <ContentError />;

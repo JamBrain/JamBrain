@@ -1,5 +1,5 @@
-import {h, Fragment} from 'preact';
+import {h} from 'preact';
 
 export default function CommonFooter(props) {
-	return <Fragment />;
+	return <footer />;
 }

@@ -1,4 +1,4 @@
-import {h, Component} 				from 'preact/preact';
+import {h, Component, Fragment} from 'preact';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
@@ -166,7 +166,7 @@ export default class ContentEvent extends Component {
 
 			ShowEventTheme = null;
 			if ( node.meta['event-theme'] ) {
-				ShowEventTheme = <div><SVGIcon small baseline gap>lightbulb</SVGIcon> Theme: <strong>{node.meta['event-theme']}</strong></div>;
+				ShowEventTheme = <Fragment><SVGIcon small baseline gap>lightbulb</SVGIcon> Theme: <strong>{node.meta['event-theme']}</strong></Fragment>;
 			}
 
 			props.above.push(

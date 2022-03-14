@@ -1,6 +1,9 @@
 import {h, Component, Fragment} from 'preact';
+import cN from 'classnames';
+
 import {UIIcon, UIButton} from 'com/ui';
 import ContentSimple from 'com/content/simple';
+
 import NavSpinner						from 'com/nav-spinner/spinner';
 import $Node							from 'shrub/js/node/node';
 import $ThemeIdea						from 'shrub/js/theme/theme_idea';
@@ -177,7 +180,8 @@ export default class ContentEventIdea extends Component {
 		const {node, user} = props;
 		const {idea, ideas, error, enableSubmit, maxIdeas, previousThemes} = state;
 
-		const title = "Theme Selection Round";
+		const title = "Theme Suggestion Round";
+		const titleClass = cN("-event -ideas", props.class);
 
 		if ( !node || !node.slug || !ideas ) {
 			return <Fragment />;
@@ -185,7 +189,7 @@ export default class ContentEventIdea extends Component {
 
 		if ( !user || !user.id ) {
 			// TODO: insert a login button
-			return <ContentSimple title={title} href="stats"><p>Please log in</p></ContentSimple>;
+			return <ContentSimple title={title} class={titleClass}><p>Please log in</p></ContentSimple>;
 
 			/*
 			return (
@@ -198,13 +202,16 @@ export default class ContentEventIdea extends Component {
 		}
 
 
-		if (!maxIdeas) {
+		if ( !maxIdeas ) {
+			return <ContentSimple title={title} class={titleClass}><p>This event doesn't allow suggesting themes</p></ContentSimple>;
+			/*
 			return (
 				<div class="idea-body">
 					<h3>Theme Suggestion Round</h3>
 					<div>This event doesn't allow suggesting themes.</div>
 				</div>
 			);
+			*/
 		}
 		let ShowPrevious = null;
 		if ( previousThemes && previousThemes.length > 0 ) {
@@ -265,15 +272,14 @@ export default class ContentEventIdea extends Component {
 			ShowRemaining = <div class="foot-note small">You have no suggestions left</div>;
 		}
 		return (
-			<div class="idea-body">
-				<h3>Theme Suggestion Round</h3>
+			<ContentSimple title={title} class={titleClass}>
 				{ShowPrevious}
 				<h4>Your Suggestions</h4>
 				{ShowMySuggestions}
 				{ShowSubmit}
 				{ShowError}
 				{ShowRemaining}
-			</div>
+			</ContentSimple>
 		);
 
 		/*
