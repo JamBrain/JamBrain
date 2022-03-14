@@ -122,7 +122,7 @@ export default class SidebarCalendar extends Component {
 			if ( col.weekday == 0 || col.weekday == 6 ) {
 				props.class.push('weekend');
 			}
-			props.onclick = (e) => {
+			props.onClick = (e) => {
 				console.log('cal: ',col);
 				window.location.hash = "#cal/"+col.year+"/"+(col.month+1)+"/"+col.day;
 			};

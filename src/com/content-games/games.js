@@ -187,7 +187,7 @@ export default class ContentGames extends Component {
 		}
 		else if ( feed && (feed.length > 0) ) {
 			if ( !props.nomore /*|| added >= 10*/ ) {
-				LoadMore = <ContentMore onclick={this._fetchMore.bind(this, offset)} />;
+				LoadMore = <ContentMore onClick={this._fetchMore.bind(this, offset)} />;
 			}
 
 			let Games = feed.map((r, index) => {

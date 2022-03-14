@@ -74,7 +74,7 @@ export default class ItemTeambuilding extends Component {
 				<strong>{user.name}</strong>
 				{isMe && ' (you)'}
 				{isMain && <span title="Primary Author">*</span>}
-				{canBeRemoved && <UIButton class="team-member-remove" onclick={() => this.removeFromTeam(user.id)} title="Remove from team"><UIIcon src="cross" /></UIButton>}
+				{canBeRemoved && <UIButton class="team-member-remove" onClick={() => this.removeFromTeam(user.id)} title="Remove from team"><UIIcon src="cross" /></UIButton>}
 			</li>
 		);
 	}
@@ -82,7 +82,7 @@ export default class ItemTeambuilding extends Component {
 	renderAddUser(friend) {
 		const friendId = friend.id;
 		return (
-			<UIButton onclick={() => this.addToTeam(friendId)} key={friend.id} title={`Click to add ${friend.name}`}>
+			<UIButton onClick={() => this.addToTeam(friendId)} key={friend.id} title={`Click to add ${friend.name}`}>
 				<UIIcon>user</UIIcon><span>{friend.name}</span>
 			</UIButton>
 		);

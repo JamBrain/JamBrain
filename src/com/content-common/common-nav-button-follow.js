@@ -94,7 +94,7 @@ export default class BodyNavButtonFollow extends Component {
 			}
 
 			return (
-				<BodyNavButton class={cN(newClass, props.class)} onclick={this.onClick}>
+				<BodyNavButton class={cN(newClass, props.class)} onClick={this.onClick}>
 					{Icon}
 					{HoverIcon}
 					{Text}

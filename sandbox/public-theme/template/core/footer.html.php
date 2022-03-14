@@ -1,4 +1,4 @@
-<?php 
+<?php
 	if (!isset($GLOBALS['HTML_NO_FOOTER'])) {
 		if (isset($GLOBALS['HTML_SHOW_FOOTER'])) {
 			echo "<!-- ";
@@ -22,16 +22,16 @@
 		if (defined('VERSION')) {
 			echo "[v".VERSION."] ";
 		}
-		
-		$FOOTER_DATA_POINT=0; 		
-		echo "Generated in <strong onclick='__();'>".core_GetExecutionTime()."</strong>";
-		
-		if (function_exists('db_GetQueryCount')) { 
+
+		$FOOTER_DATA_POINT=0;
+		echo "Generated in <strong onClick='__();'>".core_GetExecutionTime()."</strong>";
+
+		if (function_exists('db_GetQueryCount')) {
 			if ($FOOTER_DATA_POINT++ > 0) { echo ','; }
 			echo ' using ' . db_GetQueryCount() . ((db_GetQueryCount() == 1)?' query':' queries');
 		}
 		if (function_exists('cache_GetReads')) {
-			if ($FOOTER_DATA_POINT++ > 0) { echo ','; } 
+			if ($FOOTER_DATA_POINT++ > 0) { echo ','; }
 			echo ' ' . cache_GetReads() . ' cache read(s), '. cache_GetWrites() .' cache write(s)';
 		}
 
@@ -46,10 +46,10 @@
 			if ($FOOTER_DATA_POINT++ > 0) { echo ','; }
 			echo " without opcache";
 		}
-				
+
 		echo " <span class='view-mode'></span>";
 
-		echo (isset($GLOBALS['HTML_SHOW_FOOTER'])) ? ' -->' : '</div>'; 
+		echo (isset($GLOBALS['HTML_SHOW_FOOTER'])) ? ' -->' : '</div>';
 	}
 ?>
 

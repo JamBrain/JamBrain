@@ -190,7 +190,7 @@ export default class DialogTV extends Component {
 			ShowBar = (
 				<div class="-bar">
 					<div class="-right">
-						<div class={["-button", this.canShowChat() ? "" : "-disabled"]} onclick={this.onChatClick}>
+						<div class={["-button", this.canShowChat() ? "" : "-disabled"]} onClick={this.onChatClick}>
 							<SVGIcon baseline>{state.showchat ? 'bubble' : 'bubble-empty'}</SVGIcon>
 							<div>Chat</div>
 						</div>

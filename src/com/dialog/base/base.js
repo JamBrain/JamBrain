@@ -85,12 +85,12 @@ export default class DialogBase extends Component {
 			'class': 'dialog-background'
 		};
 		if ( !props.explicit ) {
-			parent_props.onclick = props.oncancel ? props.oncancel : this.onAbort;
+			parent_props.onClick = props.oncancel ? props.oncancel : this.onAbort;
 		}
 
 		var child_props = {
 			'class': 'dialog-base'+(props.class ? ' '+props.class : ''),
-			'onclick': this.onDialogClick
+			'onClick': this.onDialogClick
 		};
 
 		return (

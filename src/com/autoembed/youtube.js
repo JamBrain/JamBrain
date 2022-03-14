@@ -40,12 +40,12 @@ export default class YoutubeEmbed extends Component {
     return (
       <div class="embed-video -youtube">
         <div class="-thumbnail">
-          <div class="-overlay" onclick={this.onClick} >
+          <div class="-overlay" onClick={this.onClick} >
             <div class="-play">
               <SVGIcon middle>play</SVGIcon>
             </div>
             <div class="-external">
-              <a title="Open in new tab" href={"//www.youtube.com/watch?v="+video_id} target="_blank" rel="noopener" onclick={(e) => {
+              <a title="Open in new tab" href={"//www.youtube.com/watch?v="+video_id} target="_blank" rel="noopener" onClick={(e) => {
                 e.stopPropagation();
               }}>
                 <SVGIcon middle block>youtube</SVGIcon>

@@ -28,7 +28,7 @@ export default class ContentHeaderNoob extends Component {
 					<h1>What is Ludum Dare?</h1>
 					<p><NavLink href="/about">Ludum Dare</NavLink> is an online event where games are made from scratch in a weekend. Check us out every April and October!</p>
 				</article>
-				<div class="close" onclick={this.onClick}><SVGIcon>cross</SVGIcon></div>
+				<div class="close" onClick={this.onClick}><SVGIcon>cross</SVGIcon></div>
 			</aside>
 		);
 	}

@@ -1,7 +1,7 @@
 <?php
 /*
 	stats		Statistical tracking for API information
- 
+
  * Keep track of most expensive API requests overall and by type of API request. (to granularity of 2 levels, /vx/aaa/bbb)
  * Keep track of most expensive DB queries overall and by type of API request.
 
@@ -30,7 +30,7 @@ function stats_accumulate($type, $url, $postdata, &$response, &$user)
 	// For each DB request in the response, also make an entry
 
 	unset($statsobj["response"]["debug"]); // Avoid storing / printing out entire DB debug path for every DB response.
-	
+
 	foreach($response["debug"]["db_details"] as $detail)
 	{
 		if($detail["action"] == "query")
@@ -55,11 +55,11 @@ function histogram_accumulate(&$stats, $value)
 {
 	if($value == 0) $value = 0.000001; // Avoid errors in output.
 	$index = intval(round(log($value)/log(HISTOGRAM_POWER)));
-	if(!isset($stats['histogram'][$index])) 
-	{ 
-		$stats['histogram'][$index] = 1; 
+	if(!isset($stats['histogram'][$index]))
+	{
+		$stats['histogram'][$index] = 1;
 	} else {
-		$stats['histogram'][$index]++; 
+		$stats['histogram'][$index]++;
 	}
 }
 // Resolve histogram into a 101-entry sequence of 0th to 100th percentiles (minimum through maximum values in accordance with how frequently they are encountered
@@ -89,7 +89,7 @@ function histogram_complete(&$stats)
 	return $outdata;
 }
 
-// Stats $obj will have at least a "time" element, which will be used to keep track of top stats objects and 
+// Stats $obj will have at least a "time" element, which will be used to keep track of top stats objects and
 function stats_accumulateobject($var, &$obj, $path)
 {
 	$target = &$GLOBALS[$var];
@@ -110,9 +110,9 @@ function stats_adddata(&$target, &$obj)
 	$target["time"] += $obj["time"];
 	if($target["maxtime"] === null) $target["maxtime"] = $obj["time"]; else $target["maxtime"] = max($target["maxtime"],$obj["time"]);
 	if($target["mintime"] === null) $target["mintime"] = $obj["time"]; else $target["mintime"] = min($target["mintime"],$obj["time"]);
-	
+
 	histogram_accumulate($target, $obj["time"]);
-	
+
 	if(count($target["top"]) < TOP_STATS || end($target["top"])["time"] < $obj["time"])
 	{
 		// Merge new object into the array
@@ -132,7 +132,7 @@ function sign($n)
 function statobj_sortfunc($a, $b) // Sort by time descending.
 {
 	return sign($b["time"]-$a["time"]);
-}	
+}
 
 function format_time($t)
 {
@@ -153,7 +153,7 @@ function time_color($t, $basevalue)
 	$green_time = $basevalue;
 	$yellow_time = $basevalue*5;
 	$red_time = $basevalue*25;
-	
+
 	$rgb = [0,0,0];
 	if($t < $green_time)
 	{
@@ -177,7 +177,7 @@ function time_color($t, $basevalue)
 	{
 		$rgb[0] = 1;
 	}
-	
+
 	# Setup color
 	for($i=0;$i<3;$i++)
 	{
@@ -193,7 +193,7 @@ function dump_stat_node(&$f, &$node, $prefix="root")
 	$min = $node["mintime"];
 	$max = $node["maxtime"];
 	$avg = 0;
-	if($count > 0) { $avg = $time / $count; }	
+	if($count > 0) { $avg = $time / $count; }
 
 	fwrite($f, ">>>> Stats ($prefix)\n");
 	fwrite($f, "  Request count: $count\n");
@@ -205,7 +205,7 @@ function dump_stat_node(&$f, &$node, $prefix="root")
 		fwrite($f, print_r($topobj,true) . "\n\n");
 	}
 	fwrite($f, "\n");
-	
+
 	foreach($node["children"] as $key => $child)
 	{
 		dump_stat_node( $f, $child, $prefix . " / " . $key );
@@ -230,14 +230,14 @@ function dump_stat_html_node(&$f, &$node, $prefix="root", $timebasevalue)
 	$color = time_color($node["maxtime"], $timebasevalue);
 
 	$summary = "$prefix - Count: $count, Total Time: $time, Min $min / Avg $avg / Max $max";
-	
+
 	$html = <<<HTMLCHUNK
 <div class="hierarchy">
   <div class="container">
-  <div class="summary" style="background-color:$color" onclick="ShowHideElement(this.parentElement)">$summary</div>
+  <div class="summary" style="background-color:$color" onClick="ShowHideElement(this.parentElement)">$summary</div>
   <div class="collapse" style="display:none">
   <div class="longcontent">
-  <pre>	
+  <pre>
 HTMLCHUNK;
 	fwrite($f, $html);
 
@@ -246,16 +246,16 @@ HTMLCHUNK;
 		fwrite($f, print_r($topobj,true) . "\n\n");
 	}
 	fwrite($f, "  </pre></div></div></div>\n");
-	
+
 	foreach($node["children"] as $key => $child)
 	{
 		dump_stat_html_node( $f, $child, $prefix . " / " . $key, $timebasevalue );
 	}
-	fwrite($f, "</div>\n");	
+	fwrite($f, "</div>\n");
 }
 
 function dump_stat_html_var(&$f, $var)
-{	
+{
 	$node = &$GLOBALS[$var];
 	$basevalue = 0.005;
 	$count = $node["count"];
@@ -268,9 +268,9 @@ function dump_stat_html_var(&$f, $var)
 function dump_stat_csv_node(&$f, &$node, $prefix="root")
 {
 	$hist = histogram_complete($node);
-	
+
 	fwrite($f, $prefix . "," . implode(",",$hist) . "\n");
-		
+
 	foreach($node["children"] as $key => $child)
 	{
 		dump_stat_csv_node( $f, $child, $prefix . "/" . $key );
@@ -294,15 +294,15 @@ function dump_stats()
 
 	fwrite($f, "\n\n####################\nDB Query stats:\n");
 	dump_stat_var($f, "stats_db");
-	
+
 	fclose($f);
-	
-	
-	
+
+
+
 	// Also generate HTML report
-	
+
 	global $event_name;
-	
+
 	$f = OpenHtmlStatsFile();
 	$html = <<<HTMLSTART
 <html>
@@ -346,8 +346,8 @@ HTMLSTART;
 
 	fwrite($f, "</body></html>\n");
 	fclose($f);
-	
-	
+
+
 	// Also generate a CSV file that can be used to graph performance in a spreadsheet program.
 	$f = OpenRawStatsFile();
 	dump_stat_csv_var($f, "stats_dbconnect");

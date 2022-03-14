@@ -46,7 +46,7 @@ export default class UIDropdownList extends Component {
 						Value = <div>{itemName}</div>;
 
 					Items.push(
-						<UIButton class="-item" onclick={this.onModify.bind(this, itemValue, idx)}>
+						<UIButton class="-item" onClick={this.onModify.bind(this, itemValue, idx)}>
 							{itemName}
 						</UIButton>
 					);
@@ -70,7 +70,7 @@ export default class UIDropdownList extends Component {
 					Value = <div>{itemName}</div>;
 
 				Items.push(
-					<UIButton class="-item" onclick={this.onModify.bind(this, itemValue, idx)}>
+					<UIButton class="-item" onClick={this.onModify.bind(this, itemValue, idx)}>
 						{itemName}
 					</UIButton>
 				);

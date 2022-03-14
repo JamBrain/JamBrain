@@ -61,7 +61,7 @@ export default class ContentCommon extends Component {
 			if ( !props.nofooter ) {
 				let Left = [];
 				if ( props['minmax'] ) {
-					Left.push(<FooterButtonMinMax {...props} onclick={this.onMinMax} />);
+					Left.push(<FooterButtonMinMax {...props} onClick={this.onMinMax} />);
 				}
 
 				let Right = [];

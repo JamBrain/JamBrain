@@ -54,7 +54,7 @@ export default class GridSelector extends Component {
        let ShowDropDown = null;
 
        const ShowToggle = (
-            <ButtonBase onclick={this.onToggleDropDown}>
+            <ButtonBase onClick={this.onToggleDropDown}>
                 <SVGIcon>cog</SVGIcon>
             </ButtonBase>
        );

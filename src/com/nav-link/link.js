@@ -120,11 +120,11 @@ export default class NavLink extends Component {
 			}
 			else {
 //				if ( props.replace ) {
-//					props.onclick = this.onClickReplace.bind(this);
+//					props.onClick = this.onClickReplace.bind(this);
 //					delete props.replace;
 //				}
 //				else {
-					props.onclick = this.onClick;
+					props.onClick = this.onClick;
 //				}
 			}
 

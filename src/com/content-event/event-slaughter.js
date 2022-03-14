@@ -183,7 +183,7 @@ export default class ContentEventSlaughter extends Component {
 			}
 
 			ret.push(
-				<UIButton title={vote} class={cN('-recent', VoteStyle, flashRecent === voteId ? '-flash': null)} key={voteId} onclick={() => this.redoVote(voteId)}>
+				<UIButton title={vote} class={cN('-recent', VoteStyle, flashRecent === voteId ? '-flash': null)} key={voteId} onClick={() => this.redoVote(voteId)}>
 					{this.renderIcon(vote)}
 					<span title={'Id: ' + voteId}>{this.state.ideas[voteId]}</span>
 				</UIButton>
@@ -343,11 +343,11 @@ export default class ContentEventSlaughter extends Component {
 					</div>
 					{ShowEager}
 					<div class="-main-buttons">
-						<UIButton class={cN("middle big -yes", state.flashButton == 'Yes' ? '-flash': null)} onclick={this.submitYesVote} title="Good" >{this.renderIcon(VOTE_YES)}<span><span class="hotkey">Y</span>ES</span></UIButton>
-						<UIButton class={cN("middle big -no", state.flashButton == 'No' ? '-flash': null)} onclick={this.submitNoVote} title="Bad" >{this.renderIcon(VOTE_NO)}<span><span class="hotkey">N</span>O</span></UIButton>
+						<UIButton class={cN("middle big -yes", state.flashButton == 'Yes' ? '-flash': null)} onClick={this.submitYesVote} title="Good" >{this.renderIcon(VOTE_YES)}<span><span class="hotkey">Y</span>ES</span></UIButton>
+						<UIButton class={cN("middle big -no", state.flashButton == 'No' ? '-flash': null)} onClick={this.submitNoVote} title="Bad" >{this.renderIcon(VOTE_NO)}<span><span class="hotkey">N</span>O</span></UIButton>
 					</div>
 					<div class="-other-buttons">
-						<div class="-title"><span>If inappropriate or offensive, you can </span><UIButton class="-flag" onclick={this.submitFlagVote}>{this.renderIcon(VOTE_FLAG)}<span>Flag</span></UIButton><span> it.</span></div>
+						<div class="-title"><span>If inappropriate or offensive, you can </span><UIButton class="-flag" onClick={this.submitFlagVote}>{this.renderIcon(VOTE_FLAG)}<span>Flag</span></UIButton><span> it.</span></div>
 						<div class="-info"><SVGIcon>info</SVGIcon><span> You can use <strong>Y</strong> and <strong>N</strong> as hotkeys.</span></div>
 						<div><strong>Themes Slaughtered:</strong> <span>{Object.keys(state.votes).length}</span></div>
 					</div>

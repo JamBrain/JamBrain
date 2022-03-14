@@ -13,8 +13,8 @@ export default class InputStar extends Component {
 	}
 
 	onClick( index, e ) {
-		if ( this.props.onclick ) {
-			this.props.onclick(index, e);
+		if ( this.props.onClick ) {
+			this.props.onClick(index, e);
 		}
 	}
 
@@ -41,24 +41,24 @@ export default class InputStar extends Component {
 		if ( props.edit ) {
 			// First star is a full star
 			Stars.push(
-				<ButtonBase class={cN("-star -hover", (Value >= 1) ? '-lit' : '')} onclick={this.onClick.bind(this, 1)} title={1}>
+				<ButtonBase class={cN("-star -hover", (Value >= 1) ? '-lit' : '')} onClick={this.onClick.bind(this, 1)} title={1}>
 					<SVGIcon baseline>{'star-full'}</SVGIcon>
 				</ButtonBase>
 			);
 
 			// Half Stars
 			for ( var idx = 3.0/*1.0*/; idx <= Math.floor(Value*2.0); idx++ ) {
-				Stars.push(<ButtonBase class="-star -hover -lit" onclick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon baseline>{'star-'+(idx&1?'left':'right')+'-full'}</SVGIcon></ButtonBase>);
+				Stars.push(<ButtonBase class="-star -hover -lit" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon baseline>{'star-'+(idx&1?'left':'right')+'-full'}</SVGIcon></ButtonBase>);
 			}
 			for ( /*let idx = Math.ceil(Value*2.0)+1*/; idx <= (Count*2.0); idx++ ) {
-				Stars.push(<ButtonBase class="-star -hover" onclick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon baseline>{'star-'+(idx&1?'left':'right')+'-full'/*'-empty'*/}</SVGIcon></ButtonBase>);
-//				Stars.push(<ButtonBase class="-star -hover" onclick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon baseline>{'star-'+(idx&1?'left':'right')+'-empty'}</SVGIcon></ButtonBase>);
+				Stars.push(<ButtonBase class="-star -hover" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon baseline>{'star-'+(idx&1?'left':'right')+'-full'/*'-empty'*/}</SVGIcon></ButtonBase>);
+//				Stars.push(<ButtonBase class="-star -hover" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon baseline>{'star-'+(idx&1?'left':'right')+'-empty'}</SVGIcon></ButtonBase>);
 			}
 
 			// Delete button
 			if ( props.delete ) {
 				ShowDelete = (
-					<ButtonBase class="-delete -hover" onclick={this.onDelete.bind(this)}>
+					<ButtonBase class="-delete -hover" onClick={this.onDelete.bind(this)}>
 						<SVGIcon small baseline>cross</SVGIcon>
 					</ButtonBase>
 				);

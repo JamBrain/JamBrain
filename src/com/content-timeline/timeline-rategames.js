@@ -125,9 +125,9 @@ export default class TimelineRateGames extends Component {
 
 		const FooterLeft = [];
 		const FooterRight = [];
-		FooterLeft.push(<FooterButtonMinMax onclick={this.handleMinMax} />);
+		FooterLeft.push(<FooterButtonMinMax onClick={this.handleMinMax} />);
 		FooterRight.push((
-			<UIButton class={cN("content-common-footer-button", '-refresh')} title='Refresh' onclick={this.handleRefresh}>
+			<UIButton class={cN("content-common-footer-button", '-refresh')} title='Refresh' onClick={this.handleRefresh}>
 				<UIIcon src="refresh" /><div class="-count">Refresh</div>
 			</UIButton>
 		));

@@ -13,12 +13,12 @@ export default class UIButtonDiv extends Component {
 		if ( props.tabIndex != null )
 			props.tabIndex = "0";
 
-		if ( props.onclick ) {
+		if ( props.onClick ) {
 			// As long as you don't set the "keep focus" property //
 			if ( !props.keepFocus ) {
 				// Wrap onClick with a function that deselects current element //
-				let func = props.onclick;
-				props.onclick = (e) => {
+				let func = props.onClick;
+				props.onClick = (e) => {
 					func(e);
 					if ( typeof document.activeElement.blur !== "undefined" ) {
 						document.activeElement.blur();
@@ -32,11 +32,11 @@ export default class UIButtonDiv extends Component {
 
 			props.onkeydown = (e) => {
 				if ( e.keyCode === 13 ) {
-					props.onclick();
+					props.onClick();
 				}
 			};
 		}
 
-		return <div {...props} class={cN("ui-button", props.disabled ? "-disabled" : null, !props.onclick ? "-null" : null, props.class)} />;
+		return <div {...props} class={cN("ui-button", props.disabled ? "-disabled" : null, !props.onClick ? "-null" : null, props.class)} />;
 	}
 }

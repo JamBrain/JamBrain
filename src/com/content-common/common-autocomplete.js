@@ -250,7 +250,7 @@ export class AutocompleteEmojis extends Autocompletions {
 		const ShowEmoji = mrkd.parse(name, {});
 
 		return (
-			<UIButton key={name} class={cN(classModifier)} onclick={this.handleSelect.bind(this, item)}>
+			<UIButton key={name} class={cN(classModifier)} onClick={this.handleSelect.bind(this, item)}>
 				<div class="-emoji-autocomplete-markup">{ShowEmoji}</div>{ShowLeft}{ShowMatch}{ShowRight}
 			</UIButton>);
 	}
@@ -307,6 +307,6 @@ export class AutocompleteAtNames extends Autocompletions {
 		else {
 			ShowLeft = name;
 		}
-		return <UIButton key={name} class={cN(classModifier)} onclick={this.handleSelect.bind(this, item)}>{ShowLeft}{ShowMatch}{ShowRight}</UIButton>;
+		return <UIButton key={name} class={cN(classModifier)} onClick={this.handleSelect.bind(this, item)}>{ShowLeft}{ShowMatch}{ShowRight}</UIButton>;
 	}
 }

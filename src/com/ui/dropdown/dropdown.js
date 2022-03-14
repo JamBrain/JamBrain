@@ -41,17 +41,17 @@ export default class UIDropdown extends Component {
 
 			let Content = [];
 			for ( let idx = 0; idx < Children.length; idx++ ) {
-				if ( Children[idx].props.onclick ) {
+				if ( Children[idx].props.onClick ) {
 					Content.push(cloneElement(Children[idx], {
-						'onclick': (e) => {
+						'onClick': (e) => {
 							that.doHide();
-							Children[idx].props.onclick(e);
+							Children[idx].props.onClick(e);
 						}
 					}));
 				}
 				else if ( Children[idx].props.href ) {
 					Content.push(cloneElement(Children[idx], {
-						'onclick': function(e) {
+						'onClick': function(e) {
 							that.doHide();
 						}
 					}));
@@ -88,7 +88,7 @@ export default class UIDropdown extends Component {
 
 		return (
 			<div class={Classes} ref={(input) => { this.dropdown = input; }}>
-				<UIButton class="-button" onclick={this.onButton}>{ShowTick}{Button}</UIButton>
+				<UIButton class="-button" onClick={this.onButton}>{ShowTick}{Button}</UIButton>
 				{ShowContent}
 			</div>
 		);

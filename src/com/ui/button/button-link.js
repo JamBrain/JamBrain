@@ -26,8 +26,8 @@ export default class UIButtonLink extends UILink {
 		}
 
 		// Wrap onClick with a function that deselects current element //
-		let onClickFunc = props.onclick;
-		props.onclick = (e) => {
+		let onClickFunc = props.onClick;
+		props.onClick = (e) => {
 			if ( onClickFunc ) {
 				onClickFunc(e);
 			}
@@ -47,7 +47,7 @@ export default class UIButtonLink extends UILink {
 
 		props.onkeydown = (e) => {
 			if ( e.keyCode === 13 ) {
-				props.onclick();
+				props.onClick();
 			}
 		};
 

@@ -161,7 +161,7 @@ export default class ItemFilter extends Component {
 
 		let ShowFilters = null;
 		if ( state.mytags && state.mytags.length )
-			ShowFilters = <UITagbox tags={state.mytags} onclick={this.onTagClick} />;
+			ShowFilters = <UITagbox tags={state.mytags} onClick={this.onTagClick} />;
 		else
 			ShowFilters = <div>None</div>;
 
@@ -191,12 +191,12 @@ export default class ItemFilter extends Component {
 					{ShowFilters}
 					<UIDropdown class="-grid" value={state.grid} right>
 						<UIIcon src="grid" />
-						<UIButton class="-item if-no-sidebar-block" onclick={this.onModifyGrid.bind(this, 1)}>1 Wide</UIButton>
-						<UIButton class="-item if-no-sidebar-block" onclick={this.onModifyGrid.bind(this, 2)}>2 Wide</UIButton>
-						<UIButton class="-item" onclick={this.onModifyGrid.bind(this, 3)}>3 Wide</UIButton>
-						<UIButton class="-item" onclick={this.onModifyGrid.bind(this, 4)}>4 Wide</UIButton>
-						<UIButton class="-item if-sidebar-block" onclick={this.onModifyGrid.bind(this, 5)}>5 Wide</UIButton>
-						<UIButton class="-item if-sidebar-block" onclick={this.onModifyGrid.bind(this, 6)}>6 Wide</UIButton>
+						<UIButton class="-item if-no-sidebar-block" onClick={this.onModifyGrid.bind(this, 1)}>1 Wide</UIButton>
+						<UIButton class="-item if-no-sidebar-block" onClick={this.onModifyGrid.bind(this, 2)}>2 Wide</UIButton>
+						<UIButton class="-item" onClick={this.onModifyGrid.bind(this, 3)}>3 Wide</UIButton>
+						<UIButton class="-item" onClick={this.onModifyGrid.bind(this, 4)}>4 Wide</UIButton>
+						<UIButton class="-item if-sidebar-block" onClick={this.onModifyGrid.bind(this, 5)}>5 Wide</UIButton>
+						<UIButton class="-item if-sidebar-block" onClick={this.onModifyGrid.bind(this, 6)}>6 Wide</UIButton>
 					</UIDropdown>
 				</div>
 				<div class="-footer">

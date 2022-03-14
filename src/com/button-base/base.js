@@ -17,12 +17,12 @@ export default class ButtonBase extends Component {
 		if ( props.disabled )
 			props.class += " -disabled";
 
-		if ( props.onclick ) {
+		if ( props.onClick ) {
 			// As long as you don't set the "keep focus" property //
 			if ( !props.keepFocus ) {
 				// Wrap onClick with a function that deselects current element //
-				let func = props.onclick;
-				props.onclick = (e) => {
+				let func = props.onClick;
+				props.onClick = (e) => {
 					if (props.disabled)
 						return;
 					func(e);
@@ -38,7 +38,7 @@ export default class ButtonBase extends Component {
 
 			props.onkeydown = (e) => {
 				if ( e.keyCode === 13 && !props.disabled ) {
-					props.onclick();
+					props.onClick();
 				}
 			};
 		}

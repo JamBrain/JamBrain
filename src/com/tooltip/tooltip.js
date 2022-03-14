@@ -88,7 +88,7 @@ export default class ToolTip extends Component {
 		return (
 			<div class='tooltip-container' ref={(div) => this.tooltipContainerDiv = div}>
 			{popUp}
-			<ButtonBase	class="-button -tooltip-icon" onclick={(evt) => this.toggleShow(evt)} hoverCallback={ (hover) => hover ? this.showNow() : this.delayHide() } >{ToolTipButtonContent}</ButtonBase>
+			<ButtonBase	class="-button -tooltip-icon" onClick={(evt) => this.toggleShow(evt)} hoverCallback={ (hover) => hover ? this.showNow() : this.delayHide() } >{ToolTipButtonContent}</ButtonBase>
 			</div>
 		);
 	}

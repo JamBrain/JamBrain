@@ -239,7 +239,7 @@ export default class ContentEventIdea extends Component {
 						class="-suggestion"
 						onChange={this.textChange} onKeyDown={this.onKeyDown}
 						placeholder="Your suggestion" maxLength={64} value={idea} />
-						<UIButton onclick={this.submitIdeaForm}>
+						<UIButton onClick={this.submitIdeaForm}>
 						<UIIcon>suggestion</UIIcon> Submit
 					</UIButton>
 				</div>

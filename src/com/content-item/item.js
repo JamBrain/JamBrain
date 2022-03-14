@@ -421,7 +421,7 @@ export default class ContentItem extends Component {
 
 		if ( editing && this.state.linksShown < MAX_LINKS ) {
 			LinkMeta.push(
-				<UIButton onclick={e => this.setState({'linksShown': ++this.state.linksShown})} class="content-common-nav-button"><UIIcon src="plus" /><div>Add</div></UIButton>
+				<UIButton onClick={e => this.setState({'linksShown': ++this.state.linksShown})} class="content-common-nav-button"><UIIcon src="plus" /><div>Add</div></UIButton>
 			);
 		}
 
@@ -523,10 +523,10 @@ export default class ContentItem extends Component {
 				<ContentCommonBody class="-body">
 					<div class="-label">Event Selection</div>
 					<ContentCommonNav>
-						<ContentCommonNavButton onclick={this.onSetJam} class={node.subsubtype == 'jam' ? "-selected" : ""} disabled={!allowJam}><UIIcon src="users" /><div>Jam</div></ContentCommonNavButton>
-						<ContentCommonNavButton onclick={this.onSetCompo} class={node.subsubtype == 'compo' ? "-selected" : ""} disabled={!allowCompo}><UIIcon src="user" /><div>Compo</div></ContentCommonNavButton>
-						<ContentCommonNavButton onclick={this.onSetExtra} class={node.subsubtype == 'extra' ? "-selected" : ""} disabled={!allowExtra}><UIIcon src="users" /><div>Extra</div></ContentCommonNavButton>
-						<ContentCommonNavButton onclick={this.onSetUnfinished} class={node.subsubtype == 'unfinished' ? "-selected" : ""} disabled={!allowUnfinished}><UIIcon src="trash" /><div>Unfinished</div></ContentCommonNavButton>
+						<ContentCommonNavButton onClick={this.onSetJam} class={node.subsubtype == 'jam' ? "-selected" : ""} disabled={!allowJam}><UIIcon src="users" /><div>Jam</div></ContentCommonNavButton>
+						<ContentCommonNavButton onClick={this.onSetCompo} class={node.subsubtype == 'compo' ? "-selected" : ""} disabled={!allowCompo}><UIIcon src="user" /><div>Compo</div></ContentCommonNavButton>
+						<ContentCommonNavButton onClick={this.onSetExtra} class={node.subsubtype == 'extra' ? "-selected" : ""} disabled={!allowExtra}><UIIcon src="users" /><div>Extra</div></ContentCommonNavButton>
+						<ContentCommonNavButton onClick={this.onSetUnfinished} class={node.subsubtype == 'unfinished' ? "-selected" : ""} disabled={!allowUnfinished}><UIIcon src="trash" /><div>Unfinished</div></ContentCommonNavButton>
 					</ContentCommonNav>
 					<div class="-info">
 						{tooManyAuthorsForCompo && <div class="-warning"><UIIcon baseline small src="warning" /> COMPO unavailable: Too many authors.</div>}
@@ -698,21 +698,21 @@ export default class ContentItem extends Component {
 
 //					let Stars = [];
 //					for ( let idx2 = 0; idx2 < Score; idx2++ ) {
-//						Stars.push(<ButtonBase class="-star" onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
+//						Stars.push(<ButtonBase class="-star" onClick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
 //					}
 //					for ( let idx2 = Score; idx2 < 5; idx2++ ) {
-//						Stars.push(<ButtonBase class="-star" onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
+//						Stars.push(<ButtonBase class="-star" onClick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
 //					}
-//					Stars.push(<ButtonBase class="-delete" onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
+//					Stars.push(<ButtonBase class="-delete" onClick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
 
 //					Stars.push(<InputStar value='2.5' max='5' small number />);
 //					Stars.push(<InputStar value='2.5' max='5' number />);
-//					Stars.push(<InputStar value={Score} onclick={this.onGrade.bind(this, Line.key)} ondelete={this.onGrade.bind(this, Line.key, 0)} edit delete number />);
+//					Stars.push(<InputStar value={Score} onClick={this.onGrade.bind(this, Line.key)} ondelete={this.onGrade.bind(this, Line.key, 0)} edit delete number />);
 
 					VoteLines.push(
 						<div class="-grade">
 							<span class="-title">{Title}:</span>
-							<InputStar value={Score} onclick={this.onGrade.bind(this, Line.key)} ondelete={this.onGrade.bind(this, Line.key, 0)} edit delete number />
+							<InputStar value={Score} onClick={this.onGrade.bind(this, Line.key)} ondelete={this.onGrade.bind(this, Line.key, 0)} edit delete number />
 						</div>
 					);
 				}
@@ -827,7 +827,7 @@ export default class ContentItem extends Component {
 
 			for ( let idx = 0; idx < Lines.length; idx++ ) {
 				let Line = Lines[idx];
-				OptLines.push(<UICheckbox onclick={this.onOptOut.bind(this, Line.key, !Line.value)} value={Line.value}>Do not rate me in <strong>{Line.name}</strong></UICheckbox>);
+				OptLines.push(<UICheckbox onClick={this.onOptOut.bind(this, Line.key, !Line.value)} value={Line.value}>Do not rate me in <strong>{Line.name}</strong></UICheckbox>);
 			}
 
 			ShowOptOut = (
@@ -882,7 +882,7 @@ export default class ContentItem extends Component {
 				<ContentCommonBody class="-show-comments -body">
 					<div class="-label">Feedback</div>
 					<div class="-items">
-						<UICheckbox onclick={this.onAnonymousComments} value={state.allowAnonymous}>Allow anonymous comments <UIIcon src="warning" title="Do this at your own risk" /></UICheckbox>
+						<UICheckbox onClick={this.onAnonymousComments} value={state.allowAnonymous}>Allow anonymous comments <UIIcon src="warning" title="Do this at your own risk" /></UICheckbox>
 					</div>
 					<div class="-footer">
 						<UIIcon small baseline src="info" />

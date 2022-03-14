@@ -3,20 +3,20 @@
 	// NOTE: be sure to hidden/un-hidden the "sorted by popularity" text when you score a round //
 
 	// TODO: Set different tab styles when a Theme Round is unavailable (i.e. coming soon)
-	
+
 	// NOTE: Lists aren't immediately updated after you do a ./theme calc #. The cached
 	//   theme list in RAM needs to be purged by the theme script.
 
 function ShowVoting( $logged_in ) {
-	//if ( $GLOBALS['EVENT_MODE_DIFF'] > 0 ) 
+	//if ( $GLOBALS['EVENT_MODE_DIFF'] > 0 )
 	{	// Confirm the round is still on
 ?>
 	<div class="action" id="action-vote">
-		<div id="vote-tab-0" class="tab big del" onclick="vote_ShowPage(0);">Round 1</div>
-		<div id="vote-tab-1" class="tab big del" onclick="vote_ShowPage(1);">Round 2</div>
-		<div id="vote-tab-2" class="tab big del" onclick="vote_ShowPage(2);">Round 3</div>
-		<div id="vote-tab-3" class="tab big" onclick="vote_ShowPage(3);">Round 4</div>
-		
+		<div id="vote-tab-0" class="tab big del" onClick="vote_ShowPage(0);">Round 1</div>
+		<div id="vote-tab-1" class="tab big del" onClick="vote_ShowPage(1);">Round 2</div>
+		<div id="vote-tab-2" class="tab big del" onClick="vote_ShowPage(2);">Round 3</div>
+		<div id="vote-tab-3" class="tab big" onClick="vote_ShowPage(3);">Round 4</div>
+
 		<div id="vote-page-0" class="page hidden">
 			<div id="vote-page-when-0" class="title"></div>
 			<div class="info bold">Sorted by popularity (most popular to least)</div>
@@ -56,7 +56,7 @@ function ShowVoting( $logged_in ) {
 
 		function vote_AddItem(page,id,text,data) {
 			id = Number(id);
-			
+
 			var node = document.createElement('div');
 			node.setAttribute("class",'item');
 			node.setAttribute("id","vote-item-"+id);
@@ -68,11 +68,11 @@ function ShowVoting( $logged_in ) {
 			?>
 				// Voting is Active!! //
 				if ( VoteRoundEnd[page] > 0 ) {
-					node.innerHTML = 
+					node.innerHTML =
 						"<span>"+
-							"<button class='middle button small yes_button' onclick='vote_SetVote("+id+",1);'>✓</button>"+
-							"<button class='middle button small dunno_button' onclick='vote_SetVote("+id+",0);'>?</button>"+
-							"<button class='middle button small no_button' onclick='vote_SetVote("+id+",-1);'>✕</button>"+
+							"<button class='middle button small yes_button' onClick='vote_SetVote("+id+",1);'>✓</button>"+
+							"<button class='middle button small dunno_button' onClick='vote_SetVote("+id+",0);'>?</button>"+
+							"<button class='middle button small no_button' onClick='vote_SetVote("+id+",-1);'>✕</button>"+
 						"</span>"+
 						"<span class='middle label normal'>"+text+"</span>"+
 						"<sup class='hidden' id='vote-item-sup-"+id+"'></sup>"+
@@ -80,7 +80,7 @@ function ShowVoting( $logged_in ) {
 				}
 				// Voting is Inactive!! //
 				else {
-					node.innerHTML = 
+					node.innerHTML =
 						"<span class='middle label normal'>"+text+"</span>"+
 						"<sup class='hidden' id='vote-item-sup-"+id+"'></sup>";
 //					if ( data && data['score'] !== null ) {
@@ -93,16 +93,16 @@ function ShowVoting( $logged_in ) {
 			else {
 			?>
 				// Not Logged In!! //
-				node.innerHTML = 
+				node.innerHTML =
 					"<span class='middle label normal'>"+text+"</span>"+
 					"<sup class='hidden' id='vote-item-sup-"+id+"'></sup>";
 			<?php
 			}
 			?>
-			
+
 			document.getElementById('vote-page-list-'+page).appendChild( node );
 		}
-		
+
 		function vote_UpdateVote(id,value) {
 			dom_ToggleClass('vote-item-'+id,'green_selected',false);
 			dom_ToggleClass('vote-item-'+id,'yellow_selected',false);
@@ -117,8 +117,8 @@ function ShowVoting( $logged_in ) {
 				dom_ToggleClass('vote-item-'+id,'red_selected',true);
 			}
 		}
-		
-		
+
+
 		var _VOTE_ACTIVE = false;
 		function vote_ReactivateVote(delay) {
 			window.setTimeout(
@@ -128,19 +128,19 @@ function ShowVoting( $logged_in ) {
 				delay?delay:300
 			);
 		}
-		
+
 		function vote_SetVote(id,value) {
 			if ( _VOTE_ACTIVE )
 				return;
 			_VOTE_ACTIVE = true;
-			
+
 			xhr_PostJSON(
 				"/api-theme.php",
 				serialize({"action":"VOTE",'id':id,'value':value}),
 				// On success //
 				function(response,code) {
 					console.log("VOTE:",response);
-					
+
 					// Success //
 					if ( response.id > 0 ) {
 						vote_UpdateVote(id,value);
@@ -152,18 +152,18 @@ function ShowVoting( $logged_in ) {
 			);
 			vote_ReactivateVote();
 		}
-		
+
 		xhr_PostJSON(
 			"/api-theme.php",
 			serialize({"action":"GET_VOTING_LIST"}),
 			// On success //
 			function(response,code) {
 				console.log("GET_VOTING_LIST:",response);
-				
+
 				// Populate Choices //
 				for( var idx = 0; idx < response.themes.length; idx++ ) {
 					var Theme = response.themes[idx];
-					
+
 					if ( VoteRoundEnd[Theme.page] <= 0 ) {
 						vote_AddItem(Theme.page,Theme.id,Theme.theme,
 							Theme.data ? Theme.data : null
@@ -173,13 +173,13 @@ function ShowVoting( $logged_in ) {
 						vote_AddItem(Theme.page,Theme.id,Theme.theme);
 					}
 				}
-				
+
 				// Mark which choices were prior themes //
 				theme_GetHistory(function(HashTable) {
 					//console.log("Theme Hashes:",HashTable);
-					
+
 					var item = document.getElementsByClassName("item");
-					
+
 					for ( var idx = 0; idx < item.length; idx++ ) {
 						var Hash = theme_MakeHash(""+item[idx].attributes.raw_value.value);
 						//console.log(idx,item[idx].attributes,Hash);
@@ -193,7 +193,7 @@ function ShowVoting( $logged_in ) {
 						}
 					}
 				});
-				
+
 				// Update Choices with my selections //
 				xhr_PostJSON(
 					"/api-theme.php",
@@ -201,7 +201,7 @@ function ShowVoting( $logged_in ) {
 					// On success //
 					function(response,code) {
 						console.log("GETVOTES:",response);
-						
+
 						// Determine success //
 						if ( response.votes ) {
 							// Refresh Display //
@@ -212,17 +212,17 @@ function ShowVoting( $logged_in ) {
 						}
 					}
 				);
-				
+
 			}
-		);		
-		
+		);
+
 		function UpdateVoteRoundClocks() {
 			var LocalTimeDiff = Date.now() - _LOCAL_TIME;
-			
+
 			for ( var idx = 0; idx < 4; idx++ ) {
 				var StartDiff = VoteRoundStart[idx] - Math.ceil(LocalTimeDiff*0.001);
 				var EndDiff = VoteRoundEnd[idx] - Math.ceil(LocalTimeDiff*0.001);
-				
+
 				if ( StartDiff > 0 ) {
 					dom_SetText('vote-page-when-'+idx,"Voting starts in "+getCountdownInWeeks(StartDiff,3,true));
 				}
@@ -233,7 +233,7 @@ function ShowVoting( $logged_in ) {
 					dom_SetText('vote-page-when-'+idx,"This voting round has ended.");
 				}
 			}
-			
+
 			time_CallNextSecond(UpdateVoteRoundClocks);
 		}
 		UpdateVoteRoundClocks();
@@ -245,17 +245,17 @@ function ShowVoting( $logged_in ) {
 			if ( ActivePage === Number(num) ) {
 				return;
 			}
-			
+
 			if ( ActivePage >= 0 ) {
 				dom_ToggleClass("vote-page-"+ActivePage,"hidden",true);
 				dom_ToggleClass("vote-tab-"+ActivePage,"active",false);
 			}
-			
+
 			ActivePage = Number(num);
-			
+
 			dom_ToggleClass("vote-page-"+ActivePage,"hidden",false);
 			dom_ToggleClass("vote-tab-"+ActivePage,"active",true);
-			
+
 			if ( !keep_history ) {
 				window.history.replaceState({},null,"?<?=isset($GLOBALS['DO_BETA'])?'beta&':''?>page="+(ActivePage+1));
 			}
@@ -280,7 +280,7 @@ function ShowFinalVoting( $logged_in ) {
 
 		function fvote_AddItem(page,id,text,data) {
 			id = Number(id);
-			
+
 			var node = document.createElement('div');
 			node.setAttribute("class",'item');
 			node.setAttribute("id","fvote-item-"+id);
@@ -289,17 +289,17 @@ function ShowFinalVoting( $logged_in ) {
 			if ( $logged_in ) {
 			?>
 				if ( VoteRoundEnd > 0 ) {
-					node.innerHTML = 
+					node.innerHTML =
 						"<span>"+
-							"<button class='middle button small yes_button' onclick='fvote_SetVote("+id+",1);'>✓</button>"+
-							"<button class='middle button small dunno_button' onclick='fvote_SetVote("+id+",0);'>?</button>"+
-							"<button class='middle button small no_button' onclick='fvote_SetVote("+id+",-1);'>✕</button>"+
+							"<button class='middle button small yes_button' onClick='fvote_SetVote("+id+",1);'>✓</button>"+
+							"<button class='middle button small dunno_button' onClick='fvote_SetVote("+id+",0);'>?</button>"+
+							"<button class='middle button small no_button' onClick='fvote_SetVote("+id+",-1);'>✕</button>"+
 						"</span>"+
 						"<span class='middle label normal'>"+text+"</span>"+
 						"<span class='middle small myidea hidden' id='fvote-myidea-"+id+"'>MY IDEA</span>";
 				}
 				else {
-					node.innerHTML = 
+					node.innerHTML =
 						"<span class='middle label normal'>"+text+"</span>";
 //					if ( data && data['score'] !== null ) {
 //						node.innerHTML +=
@@ -310,15 +310,15 @@ function ShowFinalVoting( $logged_in ) {
 			}
 			else {
 			?>
-				node.innerHTML = 
+				node.innerHTML =
 					"<span class='middle label normal'>"+text+"</span>";
 			<?php
 			}
 			?>
-			
+
 			document.getElementById('fvote-page-list').appendChild( node );
 		}
-		
+
 		function fvote_UpdateVote(id,value) {
 			dom_ToggleClass('fvote-item-'+id,'green_selected',false);
 			dom_ToggleClass('fvote-item-'+id,'yellow_selected',false);
@@ -333,8 +333,8 @@ function ShowFinalVoting( $logged_in ) {
 				dom_ToggleClass('fvote-item-'+id,'red_selected',true);
 			}
 		}
-		
-		
+
+
 		var _VOTE_ACTIVE = false;
 		function fvote_ReactivateVote(delay) {
 			window.setTimeout(
@@ -344,19 +344,19 @@ function ShowFinalVoting( $logged_in ) {
 				delay?delay:300
 			);
 		}
-		
+
 		function fvote_SetVote(id,value) {
 			if ( _VOTE_ACTIVE )
 				return;
 			_VOTE_ACTIVE = true;
-			
+
 			xhr_PostJSON(
 				"/api-theme.php",
 				serialize({"action":"FVOTE",'id':id,'value':value}),
 				// On success //
 				function(response,code) {
 					console.log("FVOTE:",response);
-					
+
 					// Success //
 					if ( response.id > 0 ) {
 						fvote_UpdateVote(id,value);
@@ -368,18 +368,18 @@ function ShowFinalVoting( $logged_in ) {
 			);
 			fvote_ReactivateVote();
 		}
-		
+
 		xhr_PostJSON(
 			"/api-theme.php",
 			serialize({"action":"GET_FVOTING_LIST"}),
 			// On success //
 			function(response,code) {
 				console.log("GET_FVOTING_LIST:",response);
-				
+
 				// Populate Choices //
 				for( var idx = 0; idx < response.themes.length; idx++ ) {
 					var Theme = response.themes[idx];
-					
+
 					if ( VoteRoundEnd <= 0 ) {
 						fvote_AddItem(Theme.page,Theme.id,Theme.theme,
 							Theme.data ? Theme.data : null
@@ -389,7 +389,7 @@ function ShowFinalVoting( $logged_in ) {
 						fvote_AddItem(Theme.page,Theme.id,Theme.theme);
 					}
 				}
-				
+
 				// Update Choices with my selections //
 				xhr_PostJSON(
 					"/api-theme.php",
@@ -397,7 +397,7 @@ function ShowFinalVoting( $logged_in ) {
 					// On success //
 					function(response,code) {
 						console.log("GETFVOTES:",response);
-						
+
 						// Determine success //
 						if ( response.votes ) {
 							// Refresh Display //
@@ -408,16 +408,16 @@ function ShowFinalVoting( $logged_in ) {
 						}
 					}
 				);
-				
+
 			}
 		);
-		
+
 		function fvote_UpdateRoundClocks() {
 			var LocalTimeDiff = Date.now() - _LOCAL_TIME;
-			
+
 			var StartDiff = VoteRoundStart - Math.ceil(LocalTimeDiff*0.001);
 			var EndDiff = VoteRoundEnd - Math.ceil(LocalTimeDiff*0.001);
-			
+
 			if ( StartDiff > 0 ) {
 				dom_SetText('fvote-page-when',"Voting starts in "+getCountdownInWeeks(StartDiff,3,true));
 			}
@@ -427,7 +427,7 @@ function ShowFinalVoting( $logged_in ) {
 			else {
 				dom_SetText('fvote-page-when',"This voting round has ended.");
 			}
-			
+
 			time_CallNextSecond(fvote_UpdateRoundClocks);
 		}
 		fvote_UpdateRoundClocks();

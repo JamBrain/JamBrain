@@ -62,42 +62,42 @@ export default class NotificationsFilter extends Component {
 				<UICheckbox
 					class="-filter"
 					value={Mention !== false}
-					onclick={this.onToggleMention}
+					onClick={this.onToggleMention}
 				>
 					<SVGIcon>at</SVGIcon><span>Mentions{hiddenMention}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={Feedback !== false}
-					onclick={this.onToggleFeedback}
+					onClick={this.onToggleFeedback}
 				>
 					<SVGIcon>bubble-empty</SVGIcon><span>Feedback{hiddenFeedback}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={Comment !== false}
-					onclick={this.onToggleComments}
+					onClick={this.onToggleComments}
 				>
 					<SVGIcon>bubble</SVGIcon><span>Comments{hiddenComments}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={FriendGame !== false}
-					onclick={this.onToggleFriendGame}
+					onClick={this.onToggleFriendGame}
 				>
 					<SVGIcon>gamepad</SVGIcon><span>Friend's games{hiddenFriendGame}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={FriendPost !== false}
-					onclick={this.onToggleFriendPost}
+					onClick={this.onToggleFriendPost}
 				>
 					<SVGIcon>feed</SVGIcon><span>Friend's posts{hiddenFriendPost}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={Other !== false}
-					onclick={this.onToggleOther}
+					onClick={this.onToggleOther}
 				>
 					<SVGIcon>question</SVGIcon><span>Other{hiddenOther}</span>
 				</UICheckbox>

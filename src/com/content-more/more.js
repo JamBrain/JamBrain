@@ -19,7 +19,7 @@ export default class ContentMore extends Component {
 		}
 		return (
 			<div class="content content-more">
-				<ButtonBase class='-button' onclick={props.onclick}>MORE</ButtonBase>
+				<ButtonBase class='-button' onClick={props.onClick}>MORE</ButtonBase>
 			</div>
 		);
 	}

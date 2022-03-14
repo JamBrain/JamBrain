@@ -3,15 +3,15 @@ import SVGIcon							from 'com/svg-icon/icon';
 
 export default class FilterSpecial extends Component {
 
-    render ( {text, icon, onclick}, state ) {
+    render ( {text, icon, onClick}, state ) {
 
         let ShowRemove = null;
-        if (onclick) {
+        if (onClick) {
             let { value } = this.props;
             if (!value) {
                 value = text;
             }
-            ShowRemove = <button onclick={() => onclick(value)}><SVGIcon>cross</SVGIcon></button>;
+            ShowRemove = <button onClick={() => onClick(value)}><SVGIcon>cross</SVGIcon></button>;
         }
 
         return (

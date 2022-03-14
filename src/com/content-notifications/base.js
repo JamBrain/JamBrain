@@ -365,7 +365,7 @@ export default class NotificationsBase extends Component {
 			notificationsOrder.forEach((id) => {
 				let notification = notifications.get(id);
 				if ( (maxCount > 0) && this.shouldShowNotification(notification) ) {
-					Notifications.push([id, <Notification notification={notification} onclick={clickCallback} />]);
+					Notifications.push([id, <Notification notification={notification} onClick={clickCallback} />]);
 					maxCount -= 1;
 				}
 			});

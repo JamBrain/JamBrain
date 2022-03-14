@@ -179,7 +179,7 @@ export default class NotificationItem extends Component {
 			"title": ('Notification Id: ' + notificationData.id),
 			"class": props.class,
 			"id": props.id,
-			'onclick': props.onclick,
+			'onClick': props.onClick,
 		};
 
 		if ( notification.comment ) {

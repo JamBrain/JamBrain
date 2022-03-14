@@ -88,13 +88,13 @@ export default class NotificationsFeed extends NotificationsBase {
 			));
 		}
 
-		const ShowGetMore = hasMore ? (<ContentMore onclick={this.fetchMore} />) : null;
+		const ShowGetMore = hasMore ? (<ContentMore onClick={this.fetchMore} />) : null;
 
 		const ShowSetAllRead = hasUnread ? (
 			<ButtonBase
 				class="-button -light focusable"
 				id="button-mark-read"
-				onclick={
+				onClick={
 					(e) => {
 						this.markReadHighest();
 					}

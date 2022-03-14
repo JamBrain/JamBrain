@@ -14,15 +14,15 @@ export default class UITagbox extends Component {
 	onClick( index ) {
 		let {props} = this;
 
-		if ( props.onclick ) {
-			props.onclick(index);
+		if ( props.onClick ) {
+			props.onClick(index);
 		}
 	}
 
 	renderTag( tag, index ) {
 		if ( tag && tag.name ) {
 			return (
-				<UIButton class="-tag" title={tag.id+' - '+tag.slug} onclick={this.onClick.bind(this, index)}>
+				<UIButton class="-tag" title={tag.id+' - '+tag.slug} onClick={this.onClick.bind(this, index)}>
 					<div class="-text">{tag.name}</div>
 					<div class="-tail-icon">
 						<UIIcon class="_if-parent-parent-no-hover-inline" src="circle" small />

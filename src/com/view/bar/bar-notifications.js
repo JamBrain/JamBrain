@@ -82,7 +82,7 @@ export default class DropdownNotification extends NotificationsBase {
 			Notifications.push([null, <div class="-warning">You have no notifications.</div>]);
 		}
 
-		Notifications.push([-1, (<ButtonLink onclick={this.hide} href="/my/notifications"><em>Open notifications feed...</em></ButtonLink>)]);
+		Notifications.push([-1, (<ButtonLink onClick={this.hide} href="/my/notifications"><em>Open notifications feed...</em></ButtonLink>)]);
 
 		return (
 			<Dropdown class="-notifications" items={Notifications} expanded={true} hideSelectedField={true} onhide={this.hide} />

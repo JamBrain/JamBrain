@@ -95,7 +95,7 @@ export default class DialogLogin extends Component {
 						</div>
 					</div>
 					<div style="overflow:hidden">
-						<div class="_float-right -link" id="dialog-login-forgot" onclick={e => {
+						<div class="_float-right -link" id="dialog-login-forgot" onClick={e => {
 							location.href = "#user-reset";
 							/*e.stopPropagation(); e.preventDefault();*/
 						} }>

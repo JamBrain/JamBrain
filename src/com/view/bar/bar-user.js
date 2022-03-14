@@ -42,7 +42,7 @@ export default class ViewBarUser extends Component {
 				<UIButton href={UserURL}><UIIcon>user</UIIcon><span>My Profile</span></UIButton>
 				<UIButton href={UserURL+'games'}><UIIcon>gamepad</UIIcon><span>My Games</span></UIButton>
 				<div class="-gap" />
-				<UIButton onclick={this.onLogout}><UIIcon>logout</UIIcon><span>Logout</span></UIButton>
+				<UIButton onClick={this.onLogout}><UIIcon>logout</UIIcon><span>Logout</span></UIButton>
 			</UIDropdown>
 		);
 	}

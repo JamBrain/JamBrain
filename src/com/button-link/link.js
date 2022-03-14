@@ -30,8 +30,8 @@ export default class ButtonLink extends NavLink {
 		}
 
 		// Wrap onClick with a function that deselects current element //
-		let onClickFunc = props.onclick;
-		props.onclick = (e) => {
+		let onClickFunc = props.onClick;
+		props.onClick = (e) => {
 			if ( props.disabled )
 				return;
 			if ( onClickFunc )
@@ -51,7 +51,7 @@ export default class ButtonLink extends NavLink {
 
 		props.onkeydown = (e) => {
 			if ( e.keyCode === 13 && !props.disabled ) {
-				props.onclick();
+				props.onClick();
 			}
 		};
 

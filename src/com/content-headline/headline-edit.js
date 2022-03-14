@@ -24,15 +24,15 @@ export default class ContentHeadlineEdit extends Component {
 
 		if ( edit ) {
 			ShowEdit = <ButtonBase class="-selected"><SVGIcon>edit</SVGIcon> Edit</ButtonBase>;
-			ShowPreview = <ButtonBase onclick={onpreview}><SVGIcon>preview</SVGIcon> Preview</ButtonBase>;
+			ShowPreview = <ButtonBase onClick={onpreview}><SVGIcon>preview</SVGIcon> Preview</ButtonBase>;
 		}
 		else {
-			ShowEdit = <ButtonBase onclick={onedit}><SVGIcon>edit</SVGIcon> Edit</ButtonBase>;
+			ShowEdit = <ButtonBase onClick={onedit}><SVGIcon>edit</SVGIcon> Edit</ButtonBase>;
 			ShowPreview = <ButtonBase class="-selected"><SVGIcon>preview</SVGIcon> Preview</ButtonBase>;
 		}
 
 		if ( modified ) {
-			ShowSave = <ButtonBase class="-available -blue" onclick={onsave}><SVGIcon>save</SVGIcon> Save</ButtonBase>;
+			ShowSave = <ButtonBase class="-available -blue" onClick={onsave}><SVGIcon>save</SVGIcon> Save</ButtonBase>;
 		}
 		else {
 			ShowSave = <ButtonBase><SVGIcon>save</SVGIcon> Saved</ButtonBase>;
@@ -43,9 +43,9 @@ export default class ContentHeadlineEdit extends Component {
 		}
 		else {
 			ShowPublish = [
-				<ButtonBase class="-available -green" onclick={onpublish}><SVGIcon>publish</SVGIcon> Publish Compo</ButtonBase>,
-				<ButtonBase class="-available -green" onclick={onpublish2}><SVGIcon>publish</SVGIcon> Publish Jam</ButtonBase>,
-				<ButtonBase class="-available -green" onclick={onpublish3}><SVGIcon>publish</SVGIcon> Publish Extra</ButtonBase>
+				<ButtonBase class="-available -green" onClick={onpublish}><SVGIcon>publish</SVGIcon> Publish Compo</ButtonBase>,
+				<ButtonBase class="-available -green" onClick={onpublish2}><SVGIcon>publish</SVGIcon> Publish Jam</ButtonBase>,
+				<ButtonBase class="-available -green" onClick={onpublish3}><SVGIcon>publish</SVGIcon> Publish Extra</ButtonBase>
 			];
 		}
 

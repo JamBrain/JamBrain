@@ -10,13 +10,13 @@ export default function BodyNavButton( props ) {
 
 		if ( props.href ) {
 			return (
-				<UILink disabled={props.disabled} class={newClass} href={props.href} onclick={props.onclick}>
+				<UILink disabled={props.disabled} class={newClass} href={props.href} onClick={props.onClick}>
 					{props.children}
 				</UILink>
 			);
 		}
 		return (
-			<UIButton disabled={props.disabled} class={newClass} onclick={props.onclick}>
+			<UIButton disabled={props.disabled} class={newClass} onClick={props.onClick}>
 				{props.children}
 			</UIButton>
 		);

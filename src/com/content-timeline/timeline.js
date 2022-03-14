@@ -171,7 +171,7 @@ export default class ContentTimeline extends Component {
 		}
 
 		if ( !props.nomore && (lastadded > 0) ) {
-			ShowFeed.push(<ContentMore loading={!loaded} onclick={this.fetchMore} />);
+			ShowFeed.push(<ContentMore loading={!loaded} onClick={this.fetchMore} />);
 		}
 
 		return (

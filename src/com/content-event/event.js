@@ -111,7 +111,7 @@ export default class ContentEvent extends Component {
 			}
 			else {
 				ShowJoin = (
-					<ContentCommonNavButton onclick={this.onJoin} class={Class}>
+					<ContentCommonNavButton onClick={this.onJoin} class={Class}>
 						<SVGIcon>publish</SVGIcon><div class="if-sidebar-inline">Join Event</div>
 					</ContentCommonNavButton>
 				);

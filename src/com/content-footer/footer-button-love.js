@@ -44,7 +44,7 @@ export default class ContentFooterButtonLove extends Component {
 	render( {node}, {loved, lovecount} ) {
 		var _class = "footer-button footer-button-love" + (loved ? " loved" : "");
 		return (
-			<div class={_class} onclick={this.onLove}>
+			<div class={_class} onClick={this.onLove}>
 				<SVGIcon class="-hover-hide">heart</SVGIcon>
 				<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
 				<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>

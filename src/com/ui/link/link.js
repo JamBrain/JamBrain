@@ -95,7 +95,7 @@ export default class UILink extends Component {
 			else {
 				// If not blank, set onClick event
 				if ( !props.blank ) {
-					props.onclick = this.onClick;
+					props.onClick = this.onClick;
 				}
 				// Open in a new window
 				else {

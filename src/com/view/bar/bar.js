@@ -193,7 +193,7 @@ export default class ViewBar extends Component {
 	renderRight( user, featured ) {
 		var Search = null;
 //		var Search = (
-//			<ButtonBase class="bar-icon" onclick={e => { console.log('search'); window.location.hash = "#search"; }}>
+//			<ButtonBase class="bar-icon" onClick={e => { console.log('search'); window.location.hash = "#search"; }}>
 //				<SVGIcon baseline>search</SVGIcon>
 //			</ButtonBase>
 //		);
@@ -201,7 +201,7 @@ export default class ViewBar extends Component {
 		var ShowCalendar = (
 			<UIButton
 				class="bar-button if-no-sidebar-block"
-				onclick={e => {
+				onClick={e => {
 						console.log('calendar');
 						window.location.hash = "#cal";
 				}}
@@ -252,7 +252,7 @@ export default class ViewBar extends Component {
 						<UIButton
 							title="New Post"
 							class="bar-button"
-							onclick={e => {
+							onClick={e => {
 								window.location.hash = "#create/"+featured.focus_id+"/post";
 							}}
 						>
@@ -267,7 +267,7 @@ export default class ViewBar extends Component {
 						<UIButton
 							title="Join Event"
 							class="bar-button"
-							onclick={e => {
+							onClick={e => {
 								window.location.hash = "#create/"+featured.id+"/item/game";
 							}}
 						>
@@ -312,7 +312,7 @@ export default class ViewBar extends Component {
 			}
 
 			Notification = (
-				<UIButton title="Notifications" class="bar-icon" onclick={(e) => {
+				<UIButton title="Notifications" class="bar-icon" onClick={(e) => {
 					// TODO: if the main content is the notifications feed, clicking the button should
 					// probably not show the dropdown, but load new comments into the feed.
 					this.setState({'showNotifications': !this.state.showNotifications});
@@ -342,7 +342,7 @@ export default class ViewBar extends Component {
 			Register = (
 				<UIButton
 					class="bar-button"
-					onclick={e => {
+					onClick={e => {
 						console.log('register');
 						window.location.hash = "#user-register";
 					}}
@@ -354,7 +354,7 @@ export default class ViewBar extends Component {
 			Login = (
 				<UIButton
 					class="bar-button"
-					onclick={e => {
+					onClick={e => {
 						console.log('login');
 						window.location.hash = "#user-login";
 					}}

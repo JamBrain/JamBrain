@@ -87,7 +87,7 @@ export default class ContentCommonBodyLink extends Component {
 						placeholder={UrlPlaceholder}
 						maxlength={512}
 					/>
-					<UIButton onclick={props.onRemove} title="Remove"><SVGIcon>cross</SVGIcon></UIButton>
+					<UIButton onClick={props.onRemove} title="Remove"><SVGIcon>cross</SVGIcon></UIButton>
 				</div>
 			);
 		}

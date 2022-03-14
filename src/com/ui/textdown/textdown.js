@@ -76,7 +76,7 @@ export default class UITextdown extends Component {
 	renderItem( item, index ) {
 		if ( item && item.name ) {
 			return (
-				<UIButton class="-item" title={item.id+' - '+item.slug} onclick={this.onClickItem.bind(this, item)}>
+				<UIButton class="-item" title={item.id+' - '+item.slug} onClick={this.onClickItem.bind(this, item)}>
 					{item.name}
 				</UIButton>
 			);

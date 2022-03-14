@@ -22,7 +22,7 @@ export default class DialogOverlay extends Component {
 					35, 36,				// End, Home
 					37, 38, 39, 40,		// Left, Up, Right, Down
 				];
-				
+
 				if( keys_to_disable.indexOf(e.keyCode) >= 0) {
 					e.preventDefault();
 					//return false;
@@ -35,23 +35,23 @@ export default class DialogOverlay extends Component {
 			//return true;
 		}.bind(this), false);
 	}
-	
+
 	abort() {
 		//location.href = location.pathname+location.search;//"#";
 		//history.pushState(history.state, null, location.pathname+location.search);
-		
-		//this.dispatchNavChangeEvent(this.state);		
+
+		//this.dispatchNavChangeEvent(this.state);
 		window.location.hash = "#";
 	}
-	
+
 	render( props ) {
 		props.id = "dialog-overlay";
 		props.class = "dialog-overlay effect-fadein" + (props.class ? (" " + props.class) : "");
-			
-		props.onclick = function(e) {
+
+		props.onClick = function(e) {
 			this.abort();
 		}.bind(this);
-		
+
 		return (
 			<div {...props} />
 		);
