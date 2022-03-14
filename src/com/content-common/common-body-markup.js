@@ -46,11 +46,11 @@ export default class ContentCommonBodyMarkup extends Component {
           <InputTextArea
             user={props.user}
             value={Text}
-            onmodify={props.onmodify}
-						onkeydown={props.onkeydown}
-						onkeyup={props.onkeyup}
-						onblur={props.onblur}
-						onfocus={props.onfocus}
+            onModify={props.onModify}
+						onKeyDown={props.onKeyDown}
+						onKeyUp={props.onKeyUp}
+						onBlur={props.onBlur}
+						onFocus={props.onFocus}
 						oncaret={props.oncaret}
             placeholder={Placeholder}
             ref={(input) => {this.textarea = input;}}
@@ -66,7 +66,7 @@ export default class ContentCommonBodyMarkup extends Component {
       //						<InputTextArea
       //							name="paragraph_text"
       //							value={props.children}
-      //							onmodify={props.onmodify}
+      //							onModify={props.onModify}
       //							placeholder={props.placeholder}
       //							ref={(input) => { this.textarea = input; }}
       //							maxlength={Limit}

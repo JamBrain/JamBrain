@@ -82,11 +82,11 @@ export default class ContentCommentsMarkup extends Component {
 					<InputTextArea
 						user={props.user}
 						value={Text}
-						onmodify={props.onmodify}
-						onkeydown={props.onkeydown}
-						onkeyup={props.onkeyup}
-						onblur={props.onblur}
-						onfocus={props.onfocus}
+						onModify={props.onModify}
+						onKeyDown={props.onKeyDown}
+						onKeyUp={props.onKeyUp}
+						onBlur={props.onBlur}
+						onFocus={props.onFocus}
 						oncaret={props.oncaret}
 						placeholder={props.placeholder}
 						replaceText={props.replaceText}

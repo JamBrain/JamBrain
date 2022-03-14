@@ -71,7 +71,7 @@ export default class GamesFilter extends Component {
 			<div class="feed-filter">
 				<label><div class="-label">Filter:</div>
 				<InputText
-					onmodify={this.onModifyTextFilter}
+					onModify={this.onModifyTextFilter}
 					onBlur={this.onTextFilerBlur}
 					onFocus={this.onTextFilerFocus}
 				/>

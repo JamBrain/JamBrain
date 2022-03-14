@@ -688,7 +688,7 @@ if ( $mode > 0 ) {
 							// https://github.com/alexdunphy/flexText
 							echo '<div class="flextext" id="flextext-'.$item['id'].'" style="display:none;">';
 								echo '<pre><span id="flextext-span-'.$item['id'].'"></span><br /><br /></pre>';
-								echo '<textarea class="edit" id="edit-'.$item['id'].'" oninput="flextext_Update('.$item['id'].');" onpropertychange="flextext_Update('.$item['id'].');" onkeyup="flextext_Update('.$item['id'].');" onchange="flextext_Update('.$item['id'].');">' . $item['body'] . '</textarea>';
+								echo '<textarea class="edit" id="edit-'.$item['id'].'" oninput="flextext_Update('.$item['id'].');" onpropertychange="flextext_Update('.$item['id'].');" onKeyUp="flextext_Update('.$item['id'].');" onchange="flextext_Update('.$item['id'].');">' . $item['body'] . '</textarea>';
 							echo '</div>';
 							echo '<div class="preview" id="preview-'.$item['id'].'"></div>';
 						}

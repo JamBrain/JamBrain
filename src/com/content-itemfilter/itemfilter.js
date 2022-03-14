@@ -171,19 +171,19 @@ export default class ItemFilter extends Component {
 				<div class="-body -flex">
 					<div class="-query">
 						<div class="-title"><UIHelp>{HelpItemSearch}</UIHelp>Platform/Tag filters:</div>
-						<UITextdown onmodify={this.onModifyQuery} onselect={this.onTagAdd} maxlength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
+						<UITextdown onModify={this.onModifyQuery} onselect={this.onTagAdd} maxlength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
 					</div>
 					<div class="-event">
 						<div class="-title"><UIHelp>{HelpItemEvent}</UIHelp><span>Event:</span></div>
-						<UIDropdownList onmodify={this.onModifyEvent} value={state.event} items={state.events} right />
+						<UIDropdownList onModify={this.onModifyEvent} value={state.event} items={state.events} right />
 					</div>
 					<div class="-category">
 						<div class="-title"><UIHelp>{HelpItemCategory}</UIHelp>Category:</div>
-						<UIDropdownList onmodify={this.onModifyCategory} value={state.category} items={state.categories} right />
+						<UIDropdownList onModify={this.onModifyCategory} value={state.category} items={state.categories} right />
 					</div>
 					<div class="-order">
 						<div class="-title"><UIHelp>{HelpItemOrder}</UIHelp>Order by:</div>
-						<UIDropdownList onmodify={this.onModifyOrder} value={state.order} items={state.orders} right />
+						<UIDropdownList onModify={this.onModifyOrder} value={state.order} items={state.orders} right />
 					</div>
 				</div>
 				<div class="-body">

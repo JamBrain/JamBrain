@@ -18,8 +18,8 @@ export default class InputText extends Component {
 	}
 
 	onModify( e ) {
-		if ( this.props.onmodify )
-			this.props.onmodify(e);
+		if ( this.props.onModify )
+			this.props.onModify(e);
 	}
 
 	render( props ) {

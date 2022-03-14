@@ -317,7 +317,7 @@ export default class MyGrades extends Component {
 					<InputDropdown class="-tag"
 						items={sortOptions}
 						value={state.sortBy}
-						onmodify={this.onSortByChange}
+						onModify={this.onSortByChange}
 						useClickCatcher={false}
 						selfManaged={true}
 					/>

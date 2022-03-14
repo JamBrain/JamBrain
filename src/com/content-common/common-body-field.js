@@ -30,7 +30,7 @@ export default class ContentCommonBodyField extends Component {
 					<div class="-label">{props.label ? props.label : ""}</div>
 					<InputText
 						value={props.value}
-						onmodify={props.onmodify}
+						onModify={props.onModify}
 						placeholder={Placeholder}
 						maxlength={Limit}
 					/>

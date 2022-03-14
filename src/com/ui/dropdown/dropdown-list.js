@@ -11,8 +11,8 @@ export default class UIDropdownList extends Component {
 
 	// Does not need to be bound in constructor
 	onModify( value, index ) {
-		if ( this.props.onmodify ) {
-			this.props.onmodify(value, index);
+		if ( this.props.onModify ) {
+			this.props.onModify(value, index);
 		}
 	}
 

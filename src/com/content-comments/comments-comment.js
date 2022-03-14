@@ -420,11 +420,11 @@ export default class ContentCommentsComment extends Component {
 								user={user}
 								node={node}
 								editing={state.editing && !state.preview}
-								onmodify={this.onModify}
-								onkeydown={this.onKeyDown}
-								onkeyup={this.onKeyUp}
-								onfocus={this.onTextAreaFocus}
-								onblur={this.onTextAreaBlur}
+								onModify={this.onModify}
+								onKeyDown={this.onKeyDown}
+								onKeyUp={this.onKeyUp}
+								onFocus={this.onTextAreaFocus}
+								onBlur={this.onTextAreaBlur}
 								oncaret={this.onTextAreaCaret}
 								placeholder="type a comment here"
 								limit={props.limit}

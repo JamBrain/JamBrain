@@ -114,8 +114,8 @@ export default class UITextarea extends Component {
 	}
 
 	onInput( e ) {
-		if ( this.props.onmodify ) {
-			this.props.onmodify(e);
+		if ( this.props.onModify ) {
+			this.props.onModify(e);
 		}
 
 		// MK: Disabled because Edge is now Chromium based

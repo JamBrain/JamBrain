@@ -72,7 +72,7 @@ export default class GridSelector extends Component {
            ShowDropDown = (
                <Dropdown
                     items={options}
-                    onmodify={this.onSelectLayout}
+                    onModify={this.onSelectLayout}
                     expanded={expanded}
                     value={selected}
                     selfManaged={false}

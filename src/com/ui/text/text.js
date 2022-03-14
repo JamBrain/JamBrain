@@ -14,8 +14,8 @@ export default class UIText extends Component {
 //	}
 
 	onModify( e ) {
-		if ( this.props.onmodify )
-			this.props.onmodify(e, this.textinput);
+		if ( this.props.onModify )
+			this.props.onModify(e, this.textinput);
 	}
 
 	onKey( e ) {

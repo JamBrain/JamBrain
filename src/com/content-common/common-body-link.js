@@ -71,19 +71,19 @@ export default class ContentCommonBodyLink extends Component {
 					<InputDropdown class="-tag"
 						items={state.itemlist}
 						value={tag[0]}
-						onmodify={props.onModifyTag}
+						onModify={props.onModifyTag}
 						useClickCatcher={true}
 						selfManaged={true}
 					/>
 					<InputText class="-name"
 						value={props.name}
-						onmodify={props.onModifyName}
+						onModify={props.onModifyName}
 						placeholder={tag[1]}
 						maxlength={64}
 					/>
 					<InputText class="-url"
 						value={props.url}
-						onmodify={props.onModifyUrl}
+						onModify={props.onModifyUrl}
 						placeholder={UrlPlaceholder}
 						maxlength={512}
 					/>

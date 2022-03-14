@@ -42,7 +42,7 @@ export default class InputTextarea extends Component {
 		this.props.value = replaceText;
 		// console.log(!!replaceText, this.textarea, replaceTextEvent, prevReplaceTextEvent);
 		if ( replaceText && this.textarea && (replaceTextEvent != prevReplaceTextEvent) ) {
-			const {oncaret, onmodify} = this.props;
+			const {oncaret, onModify} = this.props;
 			let updated = false;
 			if (maxlength && replaceText.length > maxlength) {
 				replaceText = this.textarea.value;
@@ -52,8 +52,8 @@ export default class InputTextarea extends Component {
 			this.textarea.focus();
 			this.replaceTextEvent = replaceTextEvent;
 
-			if (updated && onmodify) {
-				onmodify({
+			if (updated && onModify) {
+				onModify({
 					'target': {
 						'value': replaceText, 'selectionStart': cursorPos, 'selectionEnd': cursorPos
 					},
@@ -161,8 +161,8 @@ export default class InputTextarea extends Component {
 	}
 
 	onInput( e ) {
-		if ( this.props.onmodify ) {
-			this.props.onmodify(e);
+		if ( this.props.onModify ) {
+			this.props.onModify(e);
 		}
 
 		// MK: Disabled because Edge is now Chromium based
@@ -175,15 +175,15 @@ export default class InputTextarea extends Component {
 	}
 
 	onKeyDown( e ) {
-		const {onkeydown, oncaret} = this.props;
-		if ( onkeydown && !onkeydown(e) ) {
+		const {onKeyDown, oncaret} = this.props;
+		if ( onKeyDown && !onKeyDown(e) ) {
 			e.preventDefault();
 		}
 	}
 
 	onKeyUp( e ) {
-		const {onkeyup, oncaret} = this.props;
-		if ( onkeyup && !onkeyup(e) ) {
+		const {onKeyUp, oncaret} = this.props;
+		if ( onKeyUp && !onKeyUp(e) ) {
 			e.preventDefault();
 		}
 		else if (oncaret) {
@@ -205,15 +205,15 @@ export default class InputTextarea extends Component {
 	}
 
 	onBlur( e ) {
-		const {onblur} = this.props;
-		if ( onblur && !onblur(e) ) {
+		const {onBlur} = this.props;
+		if ( onBlur && !onBlur(e) ) {
 			e.preventDefault();
 		}
 	}
 
 	onFocus( e ) {
-		const {onfocus, oncaret} = this.props;
-		if ( onfocus && !onfocus(e) ) {
+		const {onFocus, oncaret} = this.props;
+		if ( onFocus && !onFocus(e) ) {
 			e.preventDefault();
 		}
 		if ( oncaret && !oncaret(e) ) {
@@ -238,8 +238,8 @@ export default class InputTextarea extends Component {
 				<div class="-textarea">
 					<textarea {...props}
 						oninput={this.onInput}
-						onkeydown={this.onKeyDown}
-						onkeyup={this.onKeyUp}
+						onKeyDown={this.onKeyDown}
+						onKeyUp={this.onKeyUp}
 						onClick={this.onClick}
 						ref={(input) => { this.textarea = input; }}
 					/>

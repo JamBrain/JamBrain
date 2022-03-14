@@ -30,7 +30,7 @@ export default class UIButtonDiv extends Component {
 				};
 			}
 
-			props.onkeydown = (e) => {
+			props.onKeyDown = (e) => {
 				if ( e.keyCode === 13 ) {
 					props.onClick();
 				}

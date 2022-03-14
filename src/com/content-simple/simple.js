@@ -478,7 +478,7 @@ export default class ContentSimple extends Component {
 					tooltip={node.slug + ' [$'+node.id+']'}
 					titleIcon={props.titleIcon}
 					editing={props.notitleedit ? false : state.editing}
-					onmodify={this.onModifyTitle}
+					onModify={this.onModifyTitle}
 					limit="80"
 				>
 					{CopyShortlinkButton}
@@ -496,13 +496,13 @@ export default class ContentSimple extends Component {
 						editing={state.editing}
 						placeholder="Say something"
 						class="-block-if-not-minimized"
-						onmodify={this.onModifyText}
+						onModify={this.onModifyText}
 						minimized={props.minimized}
 						limit={props.limit}
-						onkeydown={this.onKeyDown}
-						onkeyup={this.onKeyUp}
-						onfocus={this.onTextAreaFocus}
-						onblur={this.onTextAreaBlur}
+						onKeyDown={this.onKeyDown}
+						onKeyUp={this.onKeyUp}
+						onFocus={this.onTextAreaFocus}
+						onBlur={this.onTextAreaBlur}
 						oncaret={this.onTextAreaCaret}
 						replaceText={state.replaceText}
 						cursorPos={state.replaceCursorPos}

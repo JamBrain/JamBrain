@@ -32,7 +32,7 @@ export default function BodyTitleEditable( props ) {
 				<BodyLabel>Title</BodyLabel>
 				<InputText
 					value={props.title}
-					onmodify={props.onmodify}
+					onModify={props.onModify}
 					placeholder={placeholderTitle}
 					maxlength={titleLimit}
 				/>
@@ -64,7 +64,7 @@ export default class ContentCommonBodyTitle extends Component {
 					<BodyLabel>Title</BodyLabel>
 					<InputText
 						value={props.title}
-						onmodify={props.onmodify}
+						onModify={props.onModify}
 						placeholder={placeholderTitle}
 						maxlength={titleLimit}
 					/>

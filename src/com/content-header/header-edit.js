@@ -11,7 +11,7 @@ export default class ContentHeaderEdit extends Component {
 		return shallowDiff(this.props, nextProps);
 	}
 
-	render( {title, authors, link, published, onmodify}, {} ) {
+	render( {title, authors, link, published, onModify}, {} ) {
 		//console.log('here', authors);
 		var ShowAuthors = null;
 		if ( authors ) {
@@ -34,7 +34,7 @@ export default class ContentHeaderEdit extends Component {
 		return (
 			<div class="content-header content-header-common content-header-edit">
 				<div class="-label">Title:</div>
-				<input type="text" value={title} oninput={onmodify} placeholder="Titles can use **bold** markup" />
+				<input type="text" value={title} oninput={onModify} placeholder="Titles can use **bold** markup" />
 				{ShowAuthors}
 				{ShowLink}
 			</div>
