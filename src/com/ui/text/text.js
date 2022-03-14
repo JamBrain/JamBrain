@@ -1,4 +1,5 @@
 import {h, Component} from 'preact';
+import cN from 'classnames';
 
 export default class UIText extends Component {
 	constructor( props ) {
@@ -34,10 +35,10 @@ export default class UIText extends Component {
 				<input
 					value={props.value}
 					placeholder={props.placeholder}
-					maxlength={props.maxlength}
+					maxLength={props.maxlength}
 					type="text"
-					oninput={this.onModify}
-					onkeypress={this.onKey}
+					onInput={this.onModify}
+					onKeyPress={this.onKey}
 					ref={(input) => { this.textinput = input; }}
 				/>
 				<div class="-footer">

@@ -1,4 +1,5 @@
-import {h, Component} 				from 'preact/preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
 
 // Non used prop `height` is the expected maximum extent of axis
 // content down from the `yZeroPos` y.

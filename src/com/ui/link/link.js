@@ -1,4 +1,6 @@
 import {h, Component} from 'preact';
+import cN from 'classnames';
+
 import Sanitize from 'internal/sanitize/sanitize';
 
 // TODO: Push the state (arg1 of pushShate/replaceState (MK: what?)
@@ -9,26 +11,33 @@ export default class UILink extends Component {
 		super(props);
 
 		this.onClick = this.onClick.bind(this);
+		this.dispatchNavChangeEvent = this.dispatchNavChangeEvent.bind(this);
 	}
 
-	dispatchNavChangeEvent( state ) {
-		let that = this.base;
 
-		let _href = that.href + ((that.search && that.search.length !== 0) ? "" : state.old.search);
-		let _search = (that.search && that.search.length !== 0) ? that.search : state.old.search;
+	dispatchNavChangeEvent( navState ) {
+		console.log("DISZZZBPATH", this);
+		// MK: Is this legal?
+		let base = this.base;
+
+		// MK: No it isn't. Base isn't guarenteed to be set. Reference URL should be checked another way.
+		// use this.props.href
+
+		let _href = base.href + ((base.search && base.search.length !== 0) ? "" : navState.old.search);
+		let _search = (base.search && base.search.length !== 0) ? base.search : navState.old.search;
 
 		let new_event = new CustomEvent('navchange', {
-			'detail': Object.assign(state, {
+			'detail': Object.assign(navState, {
 				'location': {
-					'baseURI': that.baseURI,		// without query string
-					'hash': that.hash,				// #hash
-					'host': that.host,				// host with port
-					'hostname': that.hostname,		// without port
+					'baseURI': base.baseURI,		// without query string
+					'hash': base.hash,				// #hash
+					'host': base.host,				// host with port
+					'hostname': base.hostname,		// without port
 					'href': _href,					// full
-					'origin': that.origin,			// protocol+host
-					'pathname': that.pathname,		// just the path
-					'port': that.port,				// port
-					'protocol': that.protocol,		// http:, https:, etc
+					'origin': base.origin,			// protocol+host
+					'pathname': base.pathname,		// just the path
+					'port': base.port,				// port
+					'protocol': base.protocol,		// http:, https:, etc
 					'search': _search,				// query string
 				}
 			})
@@ -37,23 +46,16 @@ export default class UILink extends Component {
 		window.dispatchEvent(new_event);
 	}
 
-	onClick( e ) {
-		// Bail if blanking behavior is requested
-		if ( this.props.blank )
-			return;
 
-		//fixes shift, cmd, ctrl, and alt clicking links
+	onClick( e ) {
+		// Bail if we're trying to open link in a new window using a modifer+click shortcut
 		if ( e.shiftKey || e.metaKey || e.ctrlKey || e.altKey )
 			return;
 
-		// Internet Explorer 11 doesn't set the origin, so we need to extract it
-		// Cleverness: we slice at the 1st slash, but offset by length of 'https://' first, so it's after the domain
-		let origin = this.base && (this.base.origin || (this.base.href && this.base.href.slice(0, this.base.href.indexOf('/', 'https://'.length))));
-
 		// If the origin (http+domain) of the current and next URL is the same, navigate by manipulating the history
 		if ( origin === window.location.origin ) {
-			let NewState = {
-				'old': Object.assign({}, window.location),
+			let navState = {
+				'old': {...window.location},
 				'top': window.pageYOffset || document.documentElement.scrollTop,
 				'left': window.pageXOffset || document.documentElement.scrollLeft,
 			};
@@ -69,65 +71,43 @@ export default class UILink extends Component {
 //			history.pushState(null, null, this.base.pathname+this.base.search);
 
 			// Trigger a 'navchange' event to cleanup what we've done here
-			UILink.prototype.dispatchNavChangeEvent.call(this, NewState);
-			// WARNING! this might not be the right way to do this!
+			this.dispatchNavChangeEvent(navState);
 		}
-		e.stopPropagation();
 
-		//return false; /* Internet Explorer 11 can also stop clicks with this */
+		e.stopPropagation();
 	}
 
-//	onClickReplace( e ) {
-//		// Internet Explorer 11 doesn't set the origin, so we need to extract it
-//		// Cleverness: we slice at the 1st slash, but offset by length of 'https://' first, so it's after the domain
-//		let origin = this.base && (this.base.origin || (this.base.href && this.base.href.slice(0, this.base.href.indexOf('/','https://'.length))));
-//
-//		// If the origin (http+domain) of the current and next URL is the same, navigate by manipulating the history
-//		if ( origin === window.location.origin ) {
-//			var old = Object.assign({}, window.location);
-//
-////			window.history.state.top = window.pageYOffset || document.documentElement.scrollTop;
-////    		window.history.state.left = window.pageXOffset || document.documentElement.scrollLeft;
-//
-//			// Stop the page from reloading after the click
-//			e.preventDefault();
-//			// Unlike above, we only replace the state
-//			console.log('replaceState', window.history.state);
-//			history.replaceState(window.history.state, null, this.base.pathname+this.base.search);
-//
-//			// Trigger a 'navchange' event to cleanup what we've done here
-//			UILink.prototype.dispatchNavChangeEvent.call(this, old);
-//		}
-//		e.stopPropagation();
-//
-//		//return false; /* Internet Explorer 11 can also stop clicks with this */
-//	}
 
 	render( props ) {
-		props = Object.assign({}, props);
-
 		if ( props.href ) {
+			props = {...props};
+
 			props.href = Sanitize.sanitize_URI(props.href);
 
+			// Is this an external link?
 			if ( props.href.indexOf('//') !== -1 ) {
+				// Open in a new window
 				props.target = "_blank";
+				// Tell browser to discard opener (new window) and referrer (link) details
 				props.rel = "noopener noreferrer";
 			}
+			// If not, it's an internal link
 			else {
-//				if ( props.replace ) {
-//					props.onclick = this.onClickReplace.bind(this);
-//					delete props.replace;
-//				}
-//				else {
+				// If not blank, set onClick event
+				if ( !props.blank ) {
 					props.onclick = this.onClick;
-//				}
+				}
+				// Open in a new window
+				else {
+					props.target = "_blank";
+				}
 			}
 
-			if ( props.blank ) {
-				props.target = "_blank";
-			}
+			// Return a link
+			return <a {...props} class={cN("ui-link", props.class)} />;
 		}
 
-		return <a {...props} />;
+		// Return a span
+		return <span {...props} class={cN("ui-link", props.class)} />;
 	}
 }

@@ -1,5 +1,6 @@
 import {h, Component} from 'preact';
-import UILink from '../link/link';
+import cN from 'classnames';
+import UILink from '../link';
 
 export default class UIButtonLink extends UILink {
 	constructor( props ) {

@@ -1,4 +1,5 @@
-import {h, Component} 					from 'preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
 
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
@@ -856,7 +857,7 @@ export default class ContentItem extends Component {
 					<div class="-upload -items">
 						<div class="-path">{node.meta && node.meta.cover ? node.meta.cover : "" }</div>
 						<label>
-							<input type="file" name="asset" style="display: none;" onchange={this.onUpload.bind(this, 'cover')} />
+							<input type="file" name="asset" style="display: none;" onChange={this.onUpload.bind(this, 'cover')} />
 							<ButtonBase class="-button"><SVGIcon small baseline gap>upload</SVGIcon>Upload</ButtonBase>
 						</label>
 						{ShowImage}

@@ -1,4 +1,5 @@
-import {h, Component} 				from 'preact/preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
 
 import Dropdown							from 'com/input-dropdown/dropdown';
 import ButtonBase						from 'com/button-base/base';
@@ -60,12 +61,12 @@ export default class GridSelector extends Component {
 
        if ( expanded ) {
            const options = [
-               [1, '1 per line', <div onclick={()=>this.onSelectLayout(1)} class="-click-catcher" />],
-               [1, '2 per line', <div onclick={()=>this.onSelectLayout(2)} class="-click-catcher" />],
-               [1, '3 per line', <div onclick={()=>this.onSelectLayout(3)} class="-click-catcher" />],
-               [1, '4 per line', <div onclick={()=>this.onSelectLayout(4)} class="-click-catcher" />],
-               [1, '5 per line', <div onclick={()=>this.onSelectLayout(5)} class="-click-catcher" />],
-               [1, '6 per line', <div onclick={()=>this.onSelectLayout(6)} class="-click-catcher" />],
+               [1, '1 per line', <div onClick={()=>this.onSelectLayout(1)} class="-click-catcher" />],
+               [1, '2 per line', <div onClick={()=>this.onSelectLayout(2)} class="-click-catcher" />],
+               [1, '3 per line', <div onClick={()=>this.onSelectLayout(3)} class="-click-catcher" />],
+               [1, '4 per line', <div onClick={()=>this.onSelectLayout(4)} class="-click-catcher" />],
+               [1, '5 per line', <div onClick={()=>this.onSelectLayout(5)} class="-click-catcher" />],
+               [1, '6 per line', <div onClick={()=>this.onSelectLayout(6)} class="-click-catcher" />],
            ];
 
            ShowDropDown = (

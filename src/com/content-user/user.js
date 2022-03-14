@@ -1,4 +1,5 @@
 import {h, Component, Fragment} from 'preact';
+import cN from 'classnames';
 
 import ContentError						from 'com/content-error/error';
 

@@ -1,4 +1,5 @@
-import {h, Component}	 				from 'preact/preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
 import {shallowDiff}	 				from 'shallow-compare/index';
 
 import NavLink							from 'com/nav-link/link';
@@ -33,9 +34,9 @@ export default class InputText extends Component {
 				<input
 					value={props.value}
 					placeholder={props.placeholder}
-					maxlength={props.maxlength}
+					maxLength={props.maxlength}
 					type="text"
-					oninput={this.onModify}
+					onInput={this.onModify}
 					ref={(input) => { this.textinput = input; }}
 				/>
 				<div class="-footer">

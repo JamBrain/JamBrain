@@ -1,4 +1,5 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
 import SVGIcon 							from 'com/svg-icon/icon';
 import UIButtonLink						from 'com/ui/button/button-link';
 

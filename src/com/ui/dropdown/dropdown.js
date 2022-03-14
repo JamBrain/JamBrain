@@ -1,4 +1,6 @@
 import {h, Component, cloneElement, toChildArray} from 'preact';
+import cN from 'classnames';
+
 import UIButton from '../button';
 import UIIcon from '../icon';
 
@@ -63,7 +65,7 @@ export default class UIDropdown extends Component {
 				<div class="-content">
 					{Content}
 				</div>,
-				<div class="-click-catcher" onclick={this.doHide} />
+				<div class="-click-catcher" onClick={this.doHide} />
 			];
 		}
 

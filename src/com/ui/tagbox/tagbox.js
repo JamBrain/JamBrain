@@ -1,4 +1,6 @@
 import {h, Component} from 'preact';
+import cN from 'classnames';
+
 import UIIcon from '../icon';
 import UIButton from '../button';
 

@@ -1,5 +1,6 @@
-import { h, Component, toChildArray }				from 'preact/preact';
-import { shallowDiff }	 							from 'shallow-compare/index';
+import {h, Component, toChildArray} from 'preact/preact';
+import cN from 'classnames';
+import {shallowDiff}	 							from 'shallow-compare/index';
 
 import SVGIcon										from 'com/svg-icon/icon';
 

@@ -1,4 +1,5 @@
 import {h, Component} 				from 'preact/preact';
+import cN from 'classnames';
 
 const MAJOR_TICK_LENGTH = 1.5;
 const MINOR_TICK_LENGTH = 0.5;

@@ -1,5 +1,6 @@
-import {h, Component} 				from 'preact/preact';
-import UIButton						from 'com/ui/button/button';
+import {h, Component} from 'preact';
+import cN from 'classnames';
+import {UIButton} from 'com/ui';
 import marked 						from 'internal/marked/marked';
 
 

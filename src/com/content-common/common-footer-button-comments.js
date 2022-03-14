@@ -1,4 +1,6 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
+
 import SVGIcon 							from 'com/svg-icon/icon';
 import NavLink 							from 'com/nav-link/link';
 

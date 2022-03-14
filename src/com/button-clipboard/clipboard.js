@@ -1,4 +1,5 @@
 import {h, Component, Fragment} from 'preact';
+import cN from 'classnames';
 import {UIButton, UIIcon} from 'com/ui';
 
 export default class CopyToClipboardButton extends Component {
@@ -36,7 +37,7 @@ export default class CopyToClipboardButton extends Component {
 		// @endif
 
 		return (
-			<UIButton title={'Copy "'+value+'" to clipboard'} {...props} class={cN("-clipboard a", props.class)} onclick={this.onClick}>
+			<UIButton title={'Copy "'+value+'" to clipboard'} {...props} class={cN("-clipboard a", props.class)} onClick={this.onClick}>
 				{props.icon ? <UIIcon src={props.icon} /> : null}
 				{props.children}
 			</UIButton>

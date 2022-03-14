@@ -1,4 +1,5 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
 import Shallow							from 'shallow/shallow';
 
 import ContentLoading					from 'com/content-loading/loading';
@@ -7,7 +8,7 @@ import IMG2								from 'com/img2/img2';
 
 import ButtonLink						from 'com/button-link/link';
 
-import $Node							from '../../shrub/js/node/node';
+import $Node							from 'shrub/js/node/node';
 
 export default class ContentBox extends Component {
 	constructor( props ) {

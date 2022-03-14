@@ -1,4 +1,6 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
+
 import {shallowDiff}	 				from 'shallow-compare/index';
 
 import SVGIcon							from 'com/svg-icon/icon';

@@ -1,4 +1,5 @@
-import {h, Component}	 				from 'preact/preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
 import {shallowDiff}	 				from 'shallow-compare/index';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
@@ -8,7 +9,7 @@ import SVGIcon 							from 'com/svg-icon/icon';
 import IMG2 							from 'com/img2/img2';
 import UICheckbox from 'com/ui/checkbox/checkbox';
 
-import ContentCommentsMarkup			from 'comments-markup';
+import ContentCommentsMarkup			from './comments-markup';
 import {AutocompleteAtNames, AutocompleteEmojis}			from 'com/content-common/common-autocomplete';
 import $Comment							from 'shrub/js/comment/comment';
 import $CommentLove						from 'shrub/js/comment/comment_love';
@@ -292,16 +293,16 @@ export default class ContentCommentsComment extends Component {
 
 			let ShowReply = null;
 			//if ( user && user.id )
-			//	ShowReply = <div class="-button -reply" onclick={this.onReply}><SVGIcon>reply</SVGIcon><div>Reply</div></div>;
+			//	ShowReply = <div class="-button -reply" onClick={this.onReply}><SVGIcon>reply</SVGIcon><div>Reply</div></div>;
 
 			let ShowEdit = null;
 			if ( user && comment && (comment.author > 0) && (comment.author === user.id) && !state.editing )
-				ShowEdit = <div class="-button -edit" onclick={this.onEdit}><SVGIcon>edit</SVGIcon></div>;
+				ShowEdit = <div class="-button -edit" onClick={this.onEdit}><SVGIcon>edit</SVGIcon></div>;
 
 			let ShowLove = null;
 			if ( !props.nolove ) {
 				ShowLove = (
-					<div class={"-button -love"+(state.loved?" -loved":"")} onclick={this.onLove}>
+					<div class={"-button -love"+(state.loved?" -loved":"")} onClick={this.onLove}>
 						<SVGIcon class="-hover-hide">heart</SVGIcon>
 						<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
 						<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
@@ -330,30 +331,30 @@ export default class ContentCommentsComment extends Component {
 				let ShowLeft = [];
 				if ( !state.preview ) {
 					ShowLeft = [
-						<div class="-button -preview" onclick={this.onPreview}><SVGIcon>preview</SVGIcon><div class="if-sidebar-block">Preview</div></div>,
+						<div class="-button -preview" onClick={this.onPreview}><SVGIcon>preview</SVGIcon><div class="if-sidebar-block">Preview</div></div>,
 						<div class="-button -editing -selected"><SVGIcon>edit</SVGIcon><div class="if-sidebar-block">Edit</div></div>,
 					];
 				}
 				else {
 					ShowLeft = [
 						<div class="-button -preview -selected"><SVGIcon>preview</SVGIcon><div class="if-sidebar-block">Preview</div></div>,
-						<div class="-button -editing" onclick={this.onEditing}><SVGIcon>edit</SVGIcon><div class="if-sidebar-block">Edit</div></div>,
+						<div class="-button -editing" onClick={this.onEditing}><SVGIcon>edit</SVGIcon><div class="if-sidebar-block">Edit</div></div>,
 					];
 				}
 
 				var ShowRight = [];
 
-				ShowRight.push(<UICheckbox onclick={this.onSubscribe} value={props.subscribed} tooltip="You always receive notifications for mentions">Receive notifications</UICheckbox>);
+				ShowRight.push(<UICheckbox onClick={this.onSubscribe} value={props.subscribed} tooltip="You always receive notifications for mentions">Receive notifications</UICheckbox>);
 
 				if ( props.publish ) {
 					if ( props.allowAnonymous ) {
-						ShowRight.push(<UICheckbox onclick={this.onToggleAnon} value={state.publishAnon} tooltip="NOTE: Your identity is always available to the administrators.">Anonymous</UICheckbox>);
+						ShowRight.push(<UICheckbox onClick={this.onToggleAnon} value={state.publishAnon} tooltip="NOTE: Your identity is always available to the administrators.">Anonymous</UICheckbox>);
 					}
-					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onclick={this.onPublish}><SVGIcon>publish</SVGIcon><div>Publish</div></div>);
+					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onClick={this.onPublish}><SVGIcon>publish</SVGIcon><div>Publish</div></div>);
 				}
 				else {
-					ShowRight.push(<div class="-button -cancel" onclick={this.onCancel}><SVGIcon>cross</SVGIcon><div class="if-sidebar-block">Cancel</div></div>);
-					ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onclick={this.onSave}><SVGIcon>save</SVGIcon><div>Save</div></div>);
+					ShowRight.push(<div class="-button -cancel" onClick={this.onCancel}><SVGIcon>cross</SVGIcon><div class="if-sidebar-block">Cancel</div></div>);
+					ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onClick={this.onSave}><SVGIcon>save</SVGIcon><div>Save</div></div>);
 				}
 
 				ShowTopNav = (

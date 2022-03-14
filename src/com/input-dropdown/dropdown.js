@@ -1,4 +1,5 @@
 import {h, Component} from 'preact';
+import cN from 'classnames';
 import {shallowDiff} from 'shallow-compare';
 
 import NavLink							from 'com/nav-link/link';
@@ -93,7 +94,7 @@ export default class InputDropdown extends Component {
 				props.items.forEach(([dataId, Contents, Overlay]) => {
 					if ( dataId == value ) {
 						SelectedField = (
-							<button type="button" onclick={this.onShow}>
+							<button type="button" onClick={this.onShow}>
 								<SVGIcon>hamburger</SVGIcon>
 								{Contents}
 							</button>
@@ -102,7 +103,7 @@ export default class InputDropdown extends Component {
 				});
 				if (SelectedField == null) {
 					SelectedField = (
-						<button type="button" onclick={this.onShow}>
+						<button type="button" onClick={this.onShow}>
 							<SVGIcon>hamburger</SVGIcon>
 							{props.items[0][1]}
 						</button>
@@ -118,7 +119,7 @@ export default class InputDropdown extends Component {
 					if ( !props.hideSelectedField && dataId == value ) {
 
 						SelectedField = (
-							<button type="button" onclick={this.onShow}>
+							<button type="button" onClick={this.onShow}>
 								{Contents}
 							</button>
 						);
@@ -128,7 +129,7 @@ export default class InputDropdown extends Component {
 						ClickCatcher = (
 							<div
 								class="-click-catcher"
-								onclick={selfManaged ? this.onClickItem : ()=>{}}
+								onClick={selfManaged ? this.onClickItem : ()=>{}}
 								data-index={idx}
 								data-id={dataId}
 							/>
@@ -140,7 +141,7 @@ export default class InputDropdown extends Component {
 
 					ShowItems.push(
 						<div class="-item"
-							onclick={selfManaged && !useClickCatcher ? this.onClickItem : ()=>{}}
+							onClick={selfManaged && !useClickCatcher ? this.onClickItem : ()=>{}}
 							data-index={idx++}
 							data-id={dataId}
 						>

@@ -1,4 +1,5 @@
 import {h, Component} from 'preact';
+import cN from 'classnames';
 
 export default class UIImage extends Component {
 	constructor( props ) {

@@ -1,7 +1,8 @@
-import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import {h, Component} from 'preact';
+import cN from 'classnames';
 
-import $NodeLove						from '../../shrub/js/node/node_love';
+import SVGIcon 							from 'com/svg-icon/icon';
+import $NodeLove						from 'shrub/js/node/node_love';
 
 export default class ContentCommonFooterButtonLove extends Component {
 	constructor( props ) {
@@ -54,7 +55,7 @@ export default class ContentCommonFooterButtonLove extends Component {
 		let Classes = cN("content-common-footer-button -love", (loved ? " loved" : ""), LoveClass );
 
 		return (
-			<div class={Classes} onclick={this.onLove}>
+			<div class={Classes} onClick={this.onLove}>
 				<SVGIcon class="-hover-hide">heart</SVGIcon>
 				<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
 				<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>

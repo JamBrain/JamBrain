@@ -1,4 +1,5 @@
-import {h, Component} 								from 'preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
 
 import NavLink										from 'com/nav-link/link';
 

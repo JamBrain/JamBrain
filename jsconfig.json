@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"checkJs": true,
+		"target": "ES2015",
+		"module": "ES6",
+		"jsx": "react",
+		"jsxFactory": "h",
+		"jsxFragmentFactory": "Fragment",
+		"moduleResolution": "Node",
+		"allowSyntheticDefaultImports": true,
+		"baseUrl": "./",
+		"paths": {
+			"*": ["src/*", "src/external/*", "src/custom/*"],
+			"preact": ["src/external/preact/preact/index"],
+			"classnames": ["src/external/classnames/index"]
+		}
+	},
+	"include": [
+		"src/**/*"
+	],
+	"excludeDirectories": ["**/node_modules", "**/.*", "src/config/*"]
+}

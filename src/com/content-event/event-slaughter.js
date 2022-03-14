@@ -1,4 +1,6 @@
-import {h, Component} 				from 'preact/preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
+
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
@@ -10,21 +12,21 @@ import $Node from 'shrub/js/node/node';
 
 import PieChart							from 'com/visualization/piechart/piechart';
 
-RECENT_CACHE_LENGTH = 50;
-RECENT_CACHE_RENDER = 10;
-VOTE_YES = 1;
-VOTE_NO = 0;
-VOTE_FLAG = -1;
+const RECENT_CACHE_LENGTH = 50;
+const RECENT_CACHE_RENDER = 10;
+const VOTE_YES = 1;
+const VOTE_NO = 0;
+const VOTE_FLAG = -1;
 
 // This sets shortest time between two votes and
 // also controls the flash CSS effects, so you are
 // to change this, also update the two animations in
 // the CSS.
-BETWEEN_VOTE_TIME = 500;
+const BETWEEN_VOTE_TIME = 500;
 
 // The extra time the warning message is shown about
 // having been too quick.
-CALM_DOWN_MSG_TIME = 4000;
+const CALM_DOWN_MSG_TIME = 4000;
 
 export default class ContentEventSlaughter extends Component {
 	constructor( props ) {
@@ -122,7 +124,7 @@ export default class ContentEventSlaughter extends Component {
 				this.setState({'done': true, 'votes-left': available.length});
 			}
 
-			const id = parseInt(Math.random() * available.length);
+			const id = Math.random() * available.length;
 
 			this.setState({'current': available[id], 'votes-left': available.length});
 		}
@@ -336,7 +338,7 @@ export default class ContentEventSlaughter extends Component {
 			return (
 				<div class="event-slaughter">
 					<div class="-title">Would this be a good Theme?</div>
-					<div class="-theme" onclick={this.openLink} title="Click to search Google for this">
+					<div class="-theme" onClick={this.openLink} title="Click to search Google for this">
 						<div>{ThemeName}</div>
 					</div>
 					{ShowEager}

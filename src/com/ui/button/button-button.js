@@ -1,4 +1,5 @@
 import {h, Component} from 'preact';
+import cN from 'classnames';
 
 export default class UIButtonButton extends Component {
 	constructor( props ) {

@@ -1,4 +1,5 @@
-import { h, Component } 				from 'preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
 
 import ButtonBase						from 'com/button-base/base';
 import ButtonLink						from 'com/button-link/link';

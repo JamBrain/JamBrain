@@ -1,8 +1,9 @@
-import {h, Component}	 				from 'preact/preact';
+import {h, Component, Fragment} from 'preact';
+import cN from 'classnames';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
 
-import ContentCommentsComment			from 'comments-comment';
+import ContentCommentsComment			from './comments-comment';
 
 import $Comment							from 'shrub/js/comment/comment';
 import $Node							from 'shrub/js/node/node';
@@ -289,14 +290,14 @@ export default class ContentComments extends Component {
 			const isNodeAuthor = !isMention && node_IsAuthor(node, {'id': comment.author});
 
 			if ( tree[branch].child ) {
-				ret.push(<ContentCommentsComment user={user} node={node} comment={comment} author={author} indent={indent} isMyComment={isMyComment} isNodeAuthor={isNodeAuthor} isMention={isMention}><div class="-indent">{this.renderComments(state, branch.child, indent+1)}</div></ContentCommentsComment>);
+				ret.push(<ContentCommentsComment user={user} node={node} comment={comment} author={author} indent={indent} isMyComment={isMyComment} isNodeAuthor={isNodeAuthor} isMention={isMention}><div class="-indent">{this.renderComments(state, tree[branch].child, indent+1)}</div></ContentCommentsComment>);
 			}
 			else {
 				ret.push(<ContentCommentsComment user={user} node={node} comment={comment} author={author} indent={indent} isMyComment={isMyComment} isNodeAuthor={isNodeAuthor} isMention={isMention} />);
 			}
 		}
 
-		return ret;
+		return <Fragment>ret</Fragment>;
 	}
 
 

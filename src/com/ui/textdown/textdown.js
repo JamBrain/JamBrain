@@ -1,4 +1,6 @@
 import {h, Component} from 'preact';
+import cN from 'classnames';
+
 import UIButton from '../button';
 import UIText from '../text';
 
@@ -104,12 +106,12 @@ export default class UITextdown extends Component {
 			if ( state.items.length )
 				ShowItems = this.renderItems(state.items);
 			else
-				ShowItems = <div class="-items" tabindex="-1"><div class="-item -fail">No match found</div></div>;
+				ShowItems = <div class="-items" tabIndex={-1}><div class="-item -fail">No match found</div></div>;
 		}
 
 		// NOTE: a tabindex is required to use focus and blur
 		return (
-			<div class={Classes} tabindex="-1" onfocus={this.doShow} onblur={this.doHide} ref={(input) => { this.ref = input; }}>
+			<div class={Classes} tabIndex={-1} onFocus={this.doShow} onBlur={this.doHide} ref={(input) => { this.ref = input; }}>
 				<UIText class="-text" value={props.value} placeholder={props.placeholder} onmodify={this.onModify} onselect={this.onSelect} maxlength={props.maxlength} showlength={false} />
 				{ShowItems}
 			</div>

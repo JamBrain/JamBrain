@@ -1,6 +1,7 @@
-import {h, Component} 					from 'preact/preact';
-import UIIcon							from 'com/ui/icon/icon';
-import UIButton							from 'com/ui/button/button';
+import {h, Component} from 'preact';
+import cN from 'classnames';
+
+import {UIIcon, UIButton} from 'com/ui';
 import FooterButtonMinMax 				from 'com/content-common/common-footer-button-minmax';
 import ContentItemBox					from 'com/content-item/item-box';
 import ContentCommonBody				from 'com/content-common/common-body';

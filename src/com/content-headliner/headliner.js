@@ -1,4 +1,6 @@
 import {h, Component} from 'preact';
+import cN from 'classnames';
+
 import {UIIcon, UIButton} from 'com/ui';
 
 //import $Node from 'shrub/js/node/node';
@@ -125,7 +127,7 @@ export default class ContentHeadliner extends Component {
 			let ret = [];
 
 			// Optionally include [NEW] label
-			if ( (show_new_for_minutes !== null) && (pub_diff < (parseInt(show_new_for_minutes)*60*1000)) ) {
+			if ( (show_new_for_minutes !== null) && (pub_diff < (show_new_for_minutes*60*1000)) ) {
 				ret.push(<span class="-label">NEW</span>);
 				ret.push(' ');
 			}

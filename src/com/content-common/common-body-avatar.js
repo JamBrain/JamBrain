@@ -1,4 +1,5 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
 import Shallow			 				from 'shallow/shallow';
 
 import NavLink							from 'com/nav-link/link';
@@ -63,7 +64,7 @@ export default class ContentCommonBodyAvatar extends Component {
 		if (isInteractive) {
 			return isInProfile && props.editing ?
 				(<label>
-					<input type="file" name="asset" style="display: none;" onchange={this.onEdit} />
+					<input type="file" name="asset" style="display: none;" onChange={this.onEdit} />
 					<div class={Classes}>
 						<IMG2 src={Avatar} failsrc={AvatarFail} />
 						<SVGIcon>edit</SVGIcon>

@@ -1,4 +1,6 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
+
 import ShallowCompare	 				from 'shallow-compare/index';
 
 import $JammerTV						from 'external/jammertv/jammertv';
@@ -159,7 +161,7 @@ export default class SidebarTV extends Component {
 	showOthers( others, active ) {
 		return others.map((other, index) => {
 			return (
-				<div class={cN(other === active ? "selected" : "")} onclick={this.setActive.bind(this, index)} title={other && other.user_name ? other.user_name : ""}>
+				<div class={cN(other === active ? "selected" : "")} onClick={this.setActive.bind(this, index)} title={other && other.user_name ? other.user_name : ""}>
 					<div><IMG src={ other ? other.thumbnail_180p : ""} failsrc={this.FailImage} /></div>
 				</div>
 			);
@@ -199,7 +201,7 @@ export default class SidebarTV extends Component {
 
 			return (
 				<div class="sidebar-base sidebar-tv">
-					<div class="-active" onclick={e => {
+					<div class="-active" onClick={e => {
 							console.log('tv');
 							/*window.open("https://www.twitch.tv/directory/game/Creative/ldjam", '_blank');*/
 							window.location.hash = "#tv/"+this.services[active.service_id]+'/'+active.user_slug;
@@ -208,7 +210,7 @@ export default class SidebarTV extends Component {
 						<div class="-live"><SVGIcon baseline small>circle</SVGIcon> <span class="-text">LIVE</span></div>
 						<div class={'-name stream-'+this.services[active.service_id]}>{this.serviceIcons[active.service_id]} <span class="-text">{active.user_name}</span></div>
 						<div class="-viewers"><SVGIcon baseline>tv</SVGIcon> <span class="-text">{active.viewers}</span></div>
-						<div class="-external" onclick={e => {
+						<div class="-external" onClick={e => {
 							e.stopPropagation();
 							if ( this.services[active.service_id] == "twitch" ) {
 									window.open("https://www.twitch.tv/"+active.user_slug, "_blank");

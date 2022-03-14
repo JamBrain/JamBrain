@@ -1,4 +1,5 @@
-import {h, Component} 				from 'preact/preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
 
 import PieSegment					from 'com/visualization/piechart/piesegment';
 import Legend						from 'com/visualization/legend/legend';

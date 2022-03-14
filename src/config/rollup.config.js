@@ -11,8 +11,9 @@ export default {
 			'paths': [
 				'.output',
 				'.output/external',
-				'.output/external/preact',
 				'.output/custom',
+				'.output/external/preact',
+				'.output/external/classnames',
 			],
 //			'include': {
 //				'preact':'output/external/preact/preact.o.js'

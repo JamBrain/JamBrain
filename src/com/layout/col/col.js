@@ -1,4 +1,5 @@
 import {h, Component} from 'preact/preact';
+import cN from 'classnames';
 
 export default class LayoutCol extends Component {
   constructor( props ) {

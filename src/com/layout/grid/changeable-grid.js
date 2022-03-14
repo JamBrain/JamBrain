@@ -1,4 +1,6 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
+
 import LayoutGrid						from 'com/layout/grid/grid';
 import GridSelector						from 'com/layout/grid/grid-selector';
 

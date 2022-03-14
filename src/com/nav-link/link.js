@@ -1,4 +1,6 @@
-import { h, Component }					from 'preact';
+import {h, Component} from 'preact';
+import cN from 'classnames';
+
 import Sanitize							from 'internal/sanitize/sanitize';
 
 // TODO: Push the state (arg1 of pushShate/replaceState
@@ -11,6 +13,7 @@ export default class NavLink extends Component {
 	}
 
 	dispatchNavChangeEvent( state ) {
+		// MK: THIS IS BAD! DON'T DO THIS! USE this.props.href (or delete this class entirely)
 		let that = this.base;
 
 		let _href = that.href + ((that.search && that.search.length !== 0) ? "" : state.old.search);

@@ -1,4 +1,5 @@
-import {h, Component, Fragment}			from 'preact';
+import {h, Component, Fragment} from 'preact';
+import cN from 'classnames';
 
 //import ContentList						from 'com/content-list/list';
 import ContentPost						from 'com/content-post/post';
@@ -112,7 +113,7 @@ export default class ContentTimeline extends Component {
 			});
 	}
 
-	fetchMore( offset ) {
+	fetchMore( /*offset*/ ) {
 		var props = this.props;
 		var offset = this.state.offset;
 //		var morenode = this.state.feed[this.state.feed.length-1];

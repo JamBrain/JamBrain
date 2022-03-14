@@ -1,4 +1,6 @@
 import {h, Component, Fragment} from 'preact';
+import cN from 'classnames';
+
 import {UIIcon} from 'com/ui';
 import BodyNavButton from './common-nav-button';
 import $NodeStar from 'shrub/js/node/node_star';

@@ -1,4 +1,5 @@
-import {h, Component, toChildArray} 	from 'preact/preact';
+import {h, Component, toChildArray} from 'preact';
+import cN from 'classnames';
 import {shallowDiff}	 				from 'shallow-compare/index';
 
 import NavLink							from 'com/nav-link/link';
@@ -32,7 +33,7 @@ export default class ContentCommentsMarkup extends Component {
 
 	checkSelfLinking() {
 		if (this.postIsAnItem() && !this.isCommentingOnOwnPost() ) {
-			const txt = this.toChildArray(props.children).join('');
+			const txt = toChildArray(this.props.children).join('');
 			const {user} = this.props;
 			const authoring = (user && user.private && user.private.refs) ? user.private.refs.author : null;
 			if (authoring && authoring.length > 0) {
@@ -125,6 +126,6 @@ export default class ContentCommentsMarkup extends Component {
 	}
 
 	componentDidUpdate() {
-			this.checkSelfLinking();
+		this.checkSelfLinking();
 	}
 }
