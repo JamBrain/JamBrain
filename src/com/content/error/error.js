@@ -2,10 +2,9 @@ import {h} from 'preact';
 
 /**
  * @component
- * @param {{code: ?number, children: ?any}} props
- *
- * TODO: Figure out how to make this associated with "code"
- * ### HTTP Response codes
+ * @param {object} props
+ * @param {any} props.children
+ * @param {number} [props.code=404] HTTP Response code
  * * 400 - **Bad Request** - client error
  * * 401 - **Unauthorized** - requires authentication
  * * 403 - **Forbidden** - you are authenticated, but you can't access this
@@ -16,7 +15,7 @@ import {h} from 'preact';
  * * 418 - **I'm a teapot**
  * * 429 - **Too Many Requests** - rate limiting
  * * 451 - **Unavailable For Legal Reasons** - (government) censorship
-*/
+ */
 export default function ContentError( props ) {
 	let errorCode = props.code ? props.code : 404;
 
