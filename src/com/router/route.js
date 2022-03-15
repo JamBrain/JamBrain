@@ -1,5 +1,6 @@
 import {h, Component}		from 'preact/preact';
 
+/** @deprecated */
 export default class Route extends Component {
 	/*
 	shouldComponentUpdate(nextProps, nextState) {

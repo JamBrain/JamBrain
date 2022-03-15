@@ -1,9 +1,7 @@
-import {h, Component, Fragment}			from 'preact';
+import {h, Component, Fragment} from 'preact';
 import PageNavUser						from 'com/page/nav/user';
 
-//import ContentList						from 'com/content-list/list';
 import ContentUser						from 'com/content-user/user';
-import ContentError						from 'com/content-error/error';
 import ContentHeadliner					from 'com/content-headliner/headliner';
 
 import UserFeed							from './feed/feed';
@@ -13,7 +11,7 @@ import UserFollowing					from './following/following';
 import UserFollowers					from './followers/followers';
 import UserStats						from './stats/stats';
 
-import {Router, Route}					from "com/router/router";
+import {ContentRouter, Route} from "com/router";
 
 
 export default class PageUser extends Component {
@@ -31,19 +29,18 @@ export default class PageUser extends Component {
 		/>;
 
 		return (
-			<Fragment class="page-user">
+			<Fragment>
 				{!isEditing ? Header : null}
 				{!isEditing ? <PageNavUser {...props} /> : null}
-				<Router props={props} key="user">
+				<ContentRouter props={props} key="user">
 					<Route path="/" component={ContentUser} />
 					<Route path="/games/*" component={UserGames} />
-					<Route path="/articles" component={UserArticles} />
+					<Route path="/articles/*" component={UserArticles} />
 					<Route path="/feed" component={UserFeed} />
 					<Route path="/following" component={UserFollowing} />
 					<Route path="/followers" component={UserFollowers} />
-					<Route path="/stats" component={UserStats} />
-					<Route error component={ContentError} />
-				</Router>
+					<Route path="/stats/*" component={UserStats} />
+				</ContentRouter>
 			</Fragment>
 		);
 	}

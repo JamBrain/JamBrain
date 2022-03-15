@@ -183,36 +183,21 @@ export default class ContentEventIdea extends Component {
 		const title = "Theme Suggestion Round";
 		const titleClass = cN("-event -ideas", props.class);
 
-		if ( !node || !node.slug || !ideas ) {
+		// While node or ideas haven't finished loading
+		if ( !node || !node.id || !ideas ) {
 			return <Fragment />;
 		}
 
 		if ( !user || !user.id ) {
 			// TODO: insert a login button
 			return <ContentSimple title={title} class={titleClass}><p>Please log in</p></ContentSimple>;
-
-			/*
-			return (
-				<div class="idea-body">
-					<h3>Theme Suggestion Round</h3>
-					<div>Please log in</div>
-				</div>
-			);
-			*/
 		}
 
 
 		if ( !maxIdeas ) {
 			return <ContentSimple title={title} class={titleClass}><p>This event doesn't allow suggesting themes</p></ContentSimple>;
-			/*
-			return (
-				<div class="idea-body">
-					<h3>Theme Suggestion Round</h3>
-					<div>This event doesn't allow suggesting themes.</div>
-				</div>
-			);
-			*/
 		}
+
 		let ShowPrevious = null;
 		if ( previousThemes && previousThemes.length > 0 ) {
 			const ShowThemeList = previousThemes.slice(0, SHOW_PREVIOUS).map((prevEvent) => {
@@ -224,10 +209,10 @@ export default class ContentEventIdea extends Component {
 					Theme = <div class="event-no-theme">Event did not have a theme</div>;
 				}
 				return (
-					<div class="previous-theme previous-theme-item" key={prevEvent.id}>
+					<p class="previous-theme previous-theme-item" key={prevEvent.id}>
 						<div class="event-name">{prevEvent.name}</div>
 						{Theme}
-					</div>
+					</p>
 				);
 			});
 			ShowPrevious = (
@@ -241,40 +226,40 @@ export default class ContentEventIdea extends Component {
 		let ShowSubmit = null;
 		if ( enableSubmit ) {
 			ShowSubmit = (
-				<div class="idea-form">
+				<p class="idea-form">
 					<input type="text"
 						class="-suggestion"
 						onChange={this.textChange} onKeyDown={this.onKeyDown}
 						placeholder="Your suggestion" maxLength={64} value={idea} />
-						<UIButton onClick={this.submitIdeaForm}>
+					<UIButton onClick={this.submitIdeaForm}>
 						<UIIcon>suggestion</UIIcon> Submit
 					</UIButton>
-				</div>
+				</p>
 			);
 		}
+
 		let ShowMySuggestions = null;
 		if ( hasSubmittedIdeas(ideas) ) {
-			ShowMySuggestions = (
-				<div class="idea-mylist">
-					{this.renderIdeas()}
-				</div>
-			);
+			ShowMySuggestions = <p class="idea-mylist">{this.renderIdeas()}</p>;
 		}
+
 		let ShowRemaining = null;
 		const remaining = Math.max(0, maxIdeas - Object.keys(ideas).length);
 		if ( remaining > 1 ) {
-			ShowRemaining = <div class="foot-note small">You have <strong>{remaining}</strong> suggestions left</div>;
+			ShowRemaining = <p class="foot-note small">You have <strong>{remaining}</strong> suggestions left</p>;
 		}
 		else if ( remaining == 1 ) {
-			ShowRemaining = <div class="foot-note small">You have <strong>1</strong> suggestion left</div>;
+			ShowRemaining = <p class="foot-note small">You have <strong>1</strong> suggestion left</p>;
 		}
 		else {
-			ShowRemaining = <div class="foot-note small">You have no suggestions left</div>;
+			ShowRemaining = <p class="foot-note small">You have no suggestions left</p>;
 		}
+
+		// Render
 		return (
 			<ContentSimple title={title} class={titleClass}>
 				{ShowPrevious}
-				<h4>Your Suggestions</h4>
+				<h2>Your Suggestions</h2>
 				{ShowMySuggestions}
 				{ShowSubmit}
 				{ShowError}

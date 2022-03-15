@@ -1,13 +1,11 @@
-import {h, Component}					from "preact/preact";
+import {h, Component} from "preact";
 import PageNavEvent						from 'com/page/nav/event';
 
 import ContentHeadlinerEvent			from 'com/content-headliner/headliner-event';
 import ContentNavEvent					from "com/content-nav/nav-event";
 import ContentNavTheme					from "com/content-nav/nav-theme";
 
-import ContentError						from "com/content-error/error";
-
-import {Router, Route}					from "com/router/router";
+import {ContentRouter, Route} from "com/router";
 //import Route							from "com/router/route";
 
 import EventHome						from "./home/home";
@@ -45,15 +43,15 @@ export default class PageEvent extends Component {
 			<div id="content">
 				<ContentHeadlinerEvent node={node} name="event" icon="trophy" flagclass="-col-ab" childclass={IsThisFeatured ? "-col-a -inv-lit" : "-inv -inv-lit"} style="--headlinerSize: 2.5rem;" />
 				<PageNavEvent {...props} />
-				<Router props={props} key="event">
+				<ContentRouter props={props} key="event">
 					<Route path="/" component={EventHome} />
-					<Route path="/stats" component={EventStats} />
-					<Route path="/theme/:page?" component={EventTheme} />
+					<Route path="/stats/*" component={EventStats} />
+					<Route path="/theme/*" component={EventTheme} />
 					<Route path={["/games/:filter?/:subfilter?", "/results/:filter?/:subfilter?"]} component={EventGames} />
-					<Route path="/my" component={EventMy} user={user} />
-					<Route path="/my/grades" component={EventMyGrades} user={user} />
-					<Route error component={ContentError} />
-				</Router>
+					<Route path="/my" user={user} component={EventMy}>
+						<Route path="/grades" component={EventMyGrades} />
+					</Route>
+				</ContentRouter>
 			</div>
 		);
 	}

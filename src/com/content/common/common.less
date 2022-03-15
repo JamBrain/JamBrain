@@ -1,19 +1,43 @@
 @import "defs.less";
 
+
 @COL: @COL_NLLLLL;
 @DARK: @COL_NLLL;
 @BUTTON_LIT: @COL_A;
 @BUTTON_LIT_BG: @COL_L;
 
-/* NOTE: header not .header */
-#content .content.-common > header {
-	font-size: 1.75rem;
-	padding-top: 1rem;
-}
 
-#content .content.-common > footer {
-	margin-top: 1.5rem;
-	border-bottom: 8px solid @DARK;
+/* Common's are the standard boxes with footers in the #content section */
+#content .content.-common {
+	/* Document stylings, include a margin */
+	p,
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	pre,
+	blockquote {
+		margin-left: 1rem;
+		margin-right: 1rem;
+	}
+
+	/* NOTE: header not .header */
+	> header {
+		font-size: 1.75rem;
+		padding-top: 1rem;
+
+		h1 {
+			margin-top: 0;
+		}
+	}
+
+	/* NOTE: footer not .footer */
+	> footer {
+		margin-top: 1.5rem;
+		border-bottom: 8px solid @DARK;
+	}
 }
 
 /*

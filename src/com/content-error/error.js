@@ -1,17 +1,12 @@
-import { h, Component } 				from 'preact/preact';
+import {h} from 'preact';
 
-export default class ContentError extends Component {
-	constructor( props ) {
-		super(props);
-	}
+export default function ContentError( props ) {
+	let errorCode = props.code ? props.code : '404';
 
-	render( props ) {
-		var Code = props.code ? props.code : '404';
-		return (
-			<div class="content content-error">
-				<div class='-title'>{Code}</div>
-				<div>{props.children}</div>
-			</div>
-		);
-	}
+	return (
+		<article class="content -error">
+			<h1>{errorCode}</h1>
+			{props.children}
+		</article>
+	);
 }

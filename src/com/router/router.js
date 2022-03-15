@@ -1,4 +1,4 @@
-import {h, Component, Fragment, toChildArray} from 'preact';
+import {h, Component, Fragment, toChildArray, cloneElement} from 'preact';
 
 
 export function Route(props) {
@@ -238,7 +238,7 @@ export class Router extends Component {
 
 		// Pre-populate the routes list with some defaults
 		let routes = props.nodefault ? [] : [
-			{path: "/edit"},	// Black hole for edit
+			{path: "/edit"},	// Black hole (no component) for edit
 		];
 
 		// Parse the routes and append them to the list
@@ -247,12 +247,29 @@ export class Router extends Component {
 		// Find the route to the node
 		let route = this._findRoute(routes, outputProps.node, outputProps.extra);
 
-		// If no route or route doesn't have a component, then we're done
-		if ( !route || !route.component ) {
+		// MK: TODO consider https://preactjs.com/tutorial/06-context
+		// MK: The preact tutorial describes a Router where the component uses its
+		// children rather than a property "component" we instantiate. I guess we
+		// could do that too, essentially make the final return handle arrays
+		// (i.e. toChildArray) and merge the props.
+
+		// If no route, we 404
+		if ( !route ) {
+			return props.on404 ? props.on404 : <Fragment />;
+		}
+
+		// If route doesn't have a component, then we're done
+		if ( !route.component ) {
 			return <Fragment />;
 		}
 
 		// TODO: Parse path args. {pathArgs, ...outputProps}
 		return h(route.component, outputProps);
+
+		// MK: Possible implementation of the above. Right now we're passing functions
+		// around, functions that get instantiated above. Switching to children would
+		// mean we instantiate earlier (i.e children={<SomePage/>}), before we know
+		// any values. This has the added effect of
+		//return cloneElement(route.props.children, outputProps);
 	}
 }

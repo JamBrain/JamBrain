@@ -1,5 +1,6 @@
 import {h, Component}					from 'preact/preact';
 
+/** @deprecated use \{UIButton} from "com/ui" */
 export default class ButtonBase extends Component {
 	constructor( props ) {
 		super(props);

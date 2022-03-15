@@ -1,5 +1,6 @@
 import { h, Component } from 'preact/preact';
 
+/** @deprecated use \{UIImage} from "com/ui" */
 export default class IMG extends Component {
 	constructor( props ) {
 		super(props);

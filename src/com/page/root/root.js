@@ -1,10 +1,9 @@
 import {h, Component, Fragment}			from 'preact';
 
-import {Router, Route}					from "com/router/router";
+import {ContentRouter, Route} from "com/router";
 
 import ContentEvent						from "com/content-event/event";
 import ContentHeadlinerEvent			from 'com/content-headliner/headliner-event';
-import ContentError						from 'com/content-error/error';
 
 import PageNavRoot						from '../nav/root';
 
@@ -29,7 +28,6 @@ import HeaderNoob						from 'com/header/noob/noob';
 export default class PageRoot extends Component {
 	render( props ) {
 		const {node, user, path, extra, featured} = props;
-		let Dummy = <div />;
 
 		let ShowIntro = null;
 		if (!user || !user.id) {
@@ -53,7 +51,7 @@ export default class PageRoot extends Component {
 				{ShowIntro}
 				{ActiveEvent}
 				<PageNavRoot {...props} />
-				<Router props={props} key="root">
+				<ContentRouter props={props} key="root">
 					<Route path="/" component={PageRootHome} />
 					<Route path="/my" component={PageMyHome}>
 						<Route path="/notifications" component={PageMyNotifications} />
@@ -64,16 +62,16 @@ export default class PageRoot extends Component {
 						<Route path="/palette" component={PageDevPalette} />
 					</Route>
 					<Route path="/news" component={PageRootFeedNews} />
-					<Route path="/feed" component={PageRootFeed} />
-					<Route path="/feed/news" component={PageRootFeedNews} />
-					<Route path="/feed/hot" component={Dummy} />
+					<Route path="/feed" component={PageRootFeed}>
+						<Route path="/news" component={PageRootFeedNews} />
+						<Route path="/hot" />
+					</Route>
 					<Route path="/games/:filter?/:subfilter?/:target?/*" component={PageRootGames} />
 					<Route path="/explore/*" component={PageRootExplore} />
-					<Route path="/tools" component={PageRootTools} />
-					<Route path="/communities" component={PageRootCommunities} />
-					<Route path="/search" component={PageRootSearch} />
-					<Route error component={ContentError} />
-				</Router>
+					<Route path="/tools/*" component={PageRootTools} />
+					<Route path="/communities/*" component={PageRootCommunities} />
+					<Route path="/search/*" component={PageRootSearch} />
+				</ContentRouter>
 			</Fragment>
 		);
 	}

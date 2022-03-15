@@ -1,15 +1,15 @@
 @import 'defs.less';
 
-#content {
-	& .content-error {
-		text-align: center;
 
-		color: @COL_NLLL;
-		margin: 2em;
+#content .content.-error {
+	text-align: center;
+	color: @COL_NLLL;
 
-		& > .-title {
-			color: @COL_L;
-			font-size: 8em;
-		}
+	& > h1 {
+		color: @COL_L;
+		font-size: 8rem;
+
+		// MK: Hack, until we more generally fix hx margins
+		margin: 2rem;
 	}
 }

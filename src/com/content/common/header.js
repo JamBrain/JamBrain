@@ -7,7 +7,7 @@ export default function CommonHeader(props) {
 
 	return (
 		<header class={props.class}>
-			{props.title ? <UILink href={props.href}>{titlePrefix}{props.title}</UILink> : null}
+			{props.title ? <h1><UILink href={props.href}>{titlePrefix}{props.title}</UILink></h1> : null}
 			{props.children}
 		</header>
 	);

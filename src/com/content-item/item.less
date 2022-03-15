@@ -1,17 +1,18 @@
 @import "defs.less";
 
-#content .-error {
-	background: @MAJOR_COLOR1;
-	color: @MAJOR_LIGHT;
-}
+#content .content .content-item {
+	&.-error {
+		background: @MAJOR_COLOR1;
+		color: @MAJOR_LIGHT;
+	}
 
-#content .-warning {
-	color: @MAJOR_COLOR1;
-	font-weight: bold;
-	font-size: 80%;
-}
+	&.-warning {
+		color: @MAJOR_COLOR1;
+		font-weight: bold;
+		font-size: 80%;
+	}
 
-#content .content-item {
+	// MK TODO: fix me
 	& .-links {
 		margin: 1rem;
 

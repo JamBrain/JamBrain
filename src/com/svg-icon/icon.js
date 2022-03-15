@@ -1,5 +1,6 @@
 import { h, Component, toChildArray } from 'preact/preact';
 
+/** @deprecated use \{UIIcon} from "com/ui" */
 export default class SVGIcon extends Component {
 //	setIcon( name ) {
 //		//el.firstChild.firstChild.setAttributeNS('http://www.w3.org/1999/xlink','href','/static/all.min.svg?v=1017-d0abbd8#icon-home3');

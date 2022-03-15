@@ -1,6 +1,7 @@
 import { h, Component } from 'preact/preact';
 import NavLink 			from 'com/nav-link/link';
 
+/** @deprecated use \{UIButton} (or \{UIButtonLink}) from "com/ui" */
 export default class ButtonLink extends NavLink {
 	constructor( props ) {
 		super(props);

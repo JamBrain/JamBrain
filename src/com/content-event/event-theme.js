@@ -1,14 +1,11 @@
-import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
-import NavLink 							from 'com/nav-link/link';
+import {h, Component} from 'preact';
 
 import ContentError						from 'com/content-error/error';
 
-import ContentEventHome					from 'com/content-event/event-home';
-import ContentEventIdea					from 'com/content-event/event-idea';
-import ContentEventSlaughter			from 'com/content-event/event-slaughter';
-import ContentEventFusion				from 'com/content-event/event-fusion';
-import ContentEventList					from 'com/content-event/event-list';
+import EventThemeIdea					from 'com/content-event/event-idea';
+import EventThemeSlaughter			from 'com/content-event/event-slaughter';
+import EventThemeFusion				from 'com/content-event/event-fusion';
+import EventThemeList					from 'com/content-event/event-list';
 //import ContentEventFinal				from 'com/content-event/event-final';
 //import ContentEventJudging				from 'com/content-event/event-judging';
 //import ContentEventResults				from 'com/content-event/event-results';
@@ -63,16 +60,16 @@ export default class ContentEventTheme extends Component {
 
 			var ShowBody = null;
 			if ( NewPath == '/idea' ) {
-				ShowBody = <ContentEventIdea node={node} user={user} path={path} extra={extra} />;
+				ShowBody = <EventThemeIdea node={node} user={user} path={path} extra={extra} />;
 			}
 			else if ( NewPath == '/slaughter' ) {
-				ShowBody = <ContentEventSlaughter node={node} user={user} path={path} extra={extra} />;
+				ShowBody = <EventThemeSlaughter node={node} user={user} path={path} extra={extra} />;
 			}
 			else if ( NewPath == '/fusion' ) {
-				ShowBody = <ContentEventFusion node={node} user={user} path={path} extra={extra} />;
+				ShowBody = <EventThemeFusion node={node} user={user} path={path} extra={extra} />;
 			}
 			else if ( parseInt(NewPath.slice(1)) > 0 ) {
-				ShowBody = <ContentEventList node={node} user={user} path={path} extra={extra} />;
+				ShowBody = <EventThemeList node={node} user={user} path={path} extra={extra} />;
 			}
 
 			return ShowBody;

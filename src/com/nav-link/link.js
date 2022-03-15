@@ -5,6 +5,7 @@ import Sanitize							from 'internal/sanitize/sanitize';
 
 // TODO: Push the state (arg1 of pushShate/replaceState
 
+/** @deprecated use \{UILink} from "com/ui" */
 export default class NavLink extends Component {
 	constructor( props ) {
 		super(props);
