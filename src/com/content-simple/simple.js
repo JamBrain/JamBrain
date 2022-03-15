@@ -4,7 +4,7 @@ import cN from 'classnames';
 import NavLink										from 'com/nav-link/link';
 
 import ContentLoading								from 'com/content-loading/loading';
-import ContentError									from 'com/content-error/error';
+import ContentError from 'com/content/error';
 
 import ContentCommon								from 'com/content-common/common';
 

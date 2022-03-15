@@ -2,7 +2,7 @@ import {h, Component} from 'preact';
 import cN from 'classnames';
 
 import ContentLoading					from 'com/content-loading/loading';
-import ContentError						from 'com/content-error/error';
+import ContentError						from 'com/content/error';
 
 import ContentCommon					from 'com/content-common/common';
 import ContentItemBox					from 'com/content-item/item-box';

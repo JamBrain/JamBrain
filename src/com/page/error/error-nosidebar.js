@@ -1,10 +1,6 @@
-import {h, Component}					from 'preact/preact';
-import ContentError						from 'com/content-error/error';
+import {h} from 'preact';
+import ContentError from 'com/content/error';
 
-export default class PageError extends Component {
-    render( /*props, state*/ ) {
-        return (
-            <ContentError />
-        );
-    }
+export default function PageError( props ) {
+    return <ContentError {...props} />;
 }

@@ -1,9 +1,9 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} from 'preact';
 
 import SVGIcon							from 'com/svg-icon/icon';
 
 import ContentLoading					from 'com/content-loading/loading';
-import ContentError						from 'com/content-error/error';
+import ContentError from 'com/content/error';
 
 import ContentSimple					from 'com/content-simple/simple';
 import ContentUserBar from 'com/content-user/user-bar';

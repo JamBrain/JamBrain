@@ -1,9 +1,6 @@
-import {h, Component} 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
-import NavLink 							from 'com/nav-link/link';
+import {h, Component} from 'preact';
 
 import ContentNavButton					from 'com/content-nav/nav-button';
-import ContentError						from 'com/content-error/error';
 
 
 export default class ContentNavTheme extends Component {

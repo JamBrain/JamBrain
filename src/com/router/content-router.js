@@ -1,6 +1,6 @@
 import {h} from 'preact';
 import {Router} from './router';
-import ContentError from 'com/content-error/error';
+import ContentError from 'com/content/error';
 
 export {Route} from './router';
 

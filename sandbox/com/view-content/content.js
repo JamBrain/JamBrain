@@ -14,7 +14,7 @@ import GamesFilter from 'com/content-games/filter';
 import ContentEvent						from 'com/content-event/event';
 //import ContentEvents					from 'com/content-events/events';
 import ContentGroup						from 'com/content-group/group';
-import ContentError						from 'com/content-error/error';
+import ContentError						from 'com/content/error';
 import ContentItem						from 'com/content-item/item';
 
 import ContentComments					from 'com/content-comments/comments';

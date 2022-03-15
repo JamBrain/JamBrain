@@ -1,7 +1,7 @@
 import {h, Component, Fragment} from 'preact';
 import cN from 'classnames';
 
-import ContentError						from 'com/content-error/error';
+import ContentError from 'com/content/error';
 
 //import ContentList						from 'com/content-list/list';
 import ContentSimple					from 'com/content-simple/simple';

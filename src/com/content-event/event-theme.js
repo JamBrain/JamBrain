@@ -1,6 +1,6 @@
 import {h, Component} from 'preact';
 
-import ContentError						from 'com/content-error/error';
+import ContentError from 'com/content/error';
 
 import EventThemeIdea					from 'com/content-event/event-idea';
 import EventThemeSlaughter			from 'com/content-event/event-slaughter';

@@ -1,5 +1,8 @@
 {
 "files.trimTrailingWhitespace": true,
 "editor.tabSize": 4,
-"editor.insertSpaces": false
+"editor.insertSpaces": false,
+"files.exclude": {
+	"**/node_modules": true
+}
 }
