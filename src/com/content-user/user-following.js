@@ -61,7 +61,7 @@ export default class ContentUserFollowing extends Component {
         // display a loading bar whilst we wait
         if (!this.hasPermission()){
             // if were not allowed to see the nodes following then display an error
-            return <ContentError code="403">Forbidden: You do not have permission to see who this user is following</ContentError>;
+            return <ContentError code={403}>Forbidden: You do not have permission to see who this user is following</ContentError>;
         }
         else if (!this.hasFollowing())
         {
