@@ -1,5 +1,17 @@
 -include config.mk	# Create and use this file to override any of 'Settings' #
 
+REQUIRED_USER		=	vagrant
+
+# Bail if the user isn't 'vagrant'
+ifneq ($(REQUIRED_USER),)
+ifneq ($(REQUIRED_USER),$(USER))
+dummy:
+	@echo "******* USER isn't $(REQUIRED_USER), aborting build *********"
+	@echo "To disable this behavior, add a line 'REQUIRE_USER =' to your config.mk"
+endif
+endif
+
+
 # Settings #
 SRC					?=	src
 OUT					?=	.output

@@ -56,7 +56,6 @@ json_Begin();
 
 // *** //
 
-#const SH_MAIL_DOMAIN = "jammer.vg";
 const SH_MAIL_DOMAIN = "ldjam.com";
 const SH_MAILER_RETURN = "hello@".SH_MAIL_DOMAIN;
 const SH_MAILER_SUPPORT = "support@".SH_MAIL_DOMAIN;

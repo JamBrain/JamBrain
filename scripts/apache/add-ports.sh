@@ -12,12 +12,12 @@ cat apache-default-conf.txt>/etc/apache2/sites-available/000-default.conf
 
 echo "Adding additional virtual hosts"
 cat custom-port.conf>/etc/apache2/sites-available/custom-port.conf
-cat jammer-work.conf>/etc/apache2/sites-available/jammer-work.conf
-cat ludumdare-org.conf>/etc/apache2/sites-available/ludumdare-org.conf
+cat jammer.conf>/etc/apache2/sites-available/jammer.conf
+cat ludumdare.conf>/etc/apache2/sites-available/ludumdare.conf
 
 ln -s ../sites-available/custom-port.conf /etc/apache2/sites-enabled/001-custom-port.conf
-ln -s ../sites-available/jammer-work.conf /etc/apache2/sites-enabled/010-jammer-work.conf
-ln -s ../sites-available/ludumdare-org.conf /etc/apache2/sites-enabled/011-ludumdare-org.conf
+ln -s ../sites-available/jammer.conf /etc/apache2/sites-enabled/010-jammer.conf
+ln -s ../sites-available/ludumdare.conf /etc/apache2/sites-enabled/011-ludumdare.conf
 
 echo "Restarting Apache..."
 apache2ctl restart

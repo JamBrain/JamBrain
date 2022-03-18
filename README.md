@@ -30,7 +30,6 @@ These folders contain the live sites that are served. They tend to be simple `PH
   * At the moment only https://ldj.am/$id is supported, where $id is the node_id to redirect to. e.g. https://ldj.am/$11
   
 These are not currently in active development.
-* [/public-jammer.vg](public-jammer.vg/) - Jammer, the general version of the common site -- https://jammer.vg
 * [/public-jammer.bio](public-jammer.bio/) - Jammer Bio's, a variant focused on user pages. i.e. `jammer.bio/your-user-name`
 
 ### Other 

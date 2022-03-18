@@ -18,26 +18,32 @@ define( 'USE_MINIFIED', DEBUG ? '.debug' : '.min' );
 define( 'VERSION_STRING', defined('GIT_VERSION') ? 'v='.GIT_VERSION : '' );
 
 const STATIC_DOMAINS = [
-	'jammer.work' => 'static.jammer.work',		// jammer.vg dev [deprecated]
-	'jammer.vg' => 'static.jam.vg',				// [deprecated]
 	'ldjam.work' => 'static.jammer.work',		// ldjam.com dev
-	'ldjam.com' => 'static.jam.vg',
+	'jam.ludumdare.work' => 'static.jammer.work',	// jam.ludumdare.com dev
 	'bio.jammer.work' => 'static.jammer.work',	// jammer.bio dev
-	'jammer.bio' => 'static.jam.vg',
-	//'jam.host' => 'static.jam.host',
+	'id.jammer.work' => 'static.jammer.work',	// jammer.id dev
+	'host.jammer.work' => 'static.jammer.work',	// jam.host dev
+	'jammer.work' => 'static.jammer.work',
+
+	'ldjam.com' => 'static.jam.vg',			// Legacy static
+	'ldjam.io' => 'static.jam.host',
+	'ldjam.dev' => 'static.jam.host',
+	'jam.ludumdare.com' => 'static.jam.host',
+	'jammer.bio' => 'static.jam.host',
+	'jammer.id' => 'static.jam.host',
+	'jam.host' => 'static.jam.host',
 ];
-const DEFAULT_STATIC_DOMAIN = 'static.jam.vg';
+const DEFAULT_STATIC_DOMAIN = 'static.jam.vg';		// Legacy static
 define( 'STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : DEFAULT_STATIC_DOMAIN );
 define( 'STATIC_ENDPOINT', '//'.STATIC_DOMAIN );
 
 const SHORTENER_DOMAINS = [
-	'jammer.work' => 'url.jammer.work',			// jammer.vg dev [deprecated]
-	'jammer.vg' => 'jam.mr',					// [deprecated]
-	'ldjam.work' => 'url.ldjam.work',			// ldjam.com dev
+	'ldjam.work' => 'url.ldjam.work',		// ldjam.com dev
+	'jam.ludumdare.work' => 'url.jam.ludumdare.work',
+	'jammer.work' => 'url.jammer.work',
+
 	'ldjam.com' => 'ldj.am',
-	//'bio.jammer.work' => '???',
-	//'bio.jammer.dev' => '???',
-	//'jammer.bio' => '???',
+	'jammer.bio' => 'jam.bio',
 ];
 const DEFAULT_SHORTENER_DOMAIN = 'ldj.am';
 define( 'SHORTENER_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], SHORTENER_DOMAINS ) ? SHORTENER_DOMAINS[$_SERVER['SERVER_NAME']] : DEFAULT_SHORTENER_DOMAIN );
