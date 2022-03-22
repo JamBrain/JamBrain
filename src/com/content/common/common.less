@@ -8,19 +8,22 @@
 
 
 #content .content {
-	/* NEW: Ensures that floats fit and grow their parent, and it stops margins from collapsing outside */
-	/* Deprecates the 'clearfix' hack */
+	/* Ensures that floats fit and grow their parent, and stop margins from collapsing outside */
+	/* This obsoletes the 'clearfix hack'. Introduced in Blink and Gecko in 2017, Webkit in 2019 */
+	/* https://caniuse.com/flow-root (As of March 2022: 91.97%) */
 	display: flow-root;
 
-	/* The 'clearfix' hack - ensures floats fill their parent */
-	/* MK NOTE: I was able to get similar behavior to flow-root with display: float instead of block below */
-	/*/
+	/* MK NOTE: If we receive any complaints about funny looking layouts, enabling this will fix it */
+	/* Modified 'clearfix hack' - ensures floats fill their parent, and margins don't collapse with outsiders */
+	/* MK: display is typically block, but flex (like flow-root) triggers a new block formatting context */
+	/* https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Block_formatting_context */
+	/*
 	&:after {
 		content: "";
-		display: block;
+		display: flex;
 		clear: both;
 	}
-	/*/
+	*/
 }
 
 /* Common's are the standard boxes with footers in the #content section */
