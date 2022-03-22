@@ -1,5 +1,7 @@
 import {h} from 'preact';
+import cN from 'classnames';
 
 export default function CommonFooter(props) {
-	return <footer />;
+	let newClass = cN(props.nav ? "nav" : "", props.class);
+	return <footer class={newClass} />;
 }

@@ -7,6 +7,22 @@
 @BUTTON_LIT_BG: @COL_L;
 
 
+#content .content {
+	/* NEW: Ensures that floats fit and grow their parent, and it stops margins from collapsing outside */
+	/* Deprecates the 'clearfix' hack */
+	display: flow-root;
+
+	/* The 'clearfix' hack - ensures floats fill their parent */
+	/* MK NOTE: I was able to get similar behavior to flow-root with display: float instead of block below */
+	/*/
+	&:after {
+		content: "";
+		display: block;
+		clear: both;
+	}
+	/*/
+}
+
 /* Common's are the standard boxes with footers in the #content section */
 #content .content.-common {
 	/* Document stylings, include a margin */
@@ -36,7 +52,10 @@
 	/* NOTE: footer not .footer */
 	> footer {
 		margin-top: 1.5rem;
-		border-bottom: 8px solid @DARK;
+
+		&.-nav {
+			border-bottom: 8px solid @DARK;
+		}
 	}
 }
 

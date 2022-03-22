@@ -3,6 +3,8 @@
 "editor.tabSize": 4,
 "editor.insertSpaces": false,
 "files.exclude": {
-	"**/node_modules": true
+	"**/node_modules": true,
+	".output": true,
+	".vscode": true
 }
 }
