@@ -1,3 +1,61 @@
+**TODO:** Rework this page. The original page can be found below.
+
+**TODO:** This first part should probably be a `language.md` file.
+
+## Compatibility Targets
+**EDIT:** This wording below isn't accurate. What needs to be identified are language syntax, language features, and browser features. The transpiler handles language syntax (and is nearly up to date),
+
+General speaking, Safari 14 is our minimum spec. ~~The transpiler will accept most modern syntaxes, and generate code conforming to the ES2017 spec. If it will improve the code quality (simplify), any browser features introduced in Chrome and Firefox **BEFORE** 2018 can be used without checking if they exist, assuming it's also available in Safari 14 and Edge 97. Checking is still encouraged.~~
+
+
+### Browser Engines
+* ~~Any Blink (Chrome) and Gekko (Firefox) features from _before 2018_~~
+* Webkit/Safari 14 from 2020
+  * Introduced in iOS/iPadOS 14
+    * Compatible with iOS devices from 2017+ (some 2015 too)
+  * Compatible on MacOS 10.14 (Mojave) from 2018
+    * Mojave is available for machines from as far back as 2012
+* Edge 79 (Chromium) from 2020
+* ~~Internet Explorer~~
+
+
+### JavaScript Syntax
+Handled by the transpler. We generate code according to the ES2017 spec, but other syntaxes are available.
+
+* ES2021
+  * `??=` <https://caniuse.com/mdn-javascript_operators_logical_nullish_assignment>
+  * `&&=`
+  * `||=`
+* ES2020
+  * `?.` <https://caniuse.com/mdn-javascript_operators_optional_chaining>
+  * `??` <https://caniuse.com/mdn-javascript_operators_nullish_coalescing>
+* ES2019
+  * tbd
+* ES2018
+  * tbd
+* ES2017
+  * `async` `await` <https://caniuse.com/async-functions>
+* ES2016 (ES7)
+  * `**` <https://caniuse.com/mdn-javascript_operators_exponentiation>
+* ES2015 (ES6)
+  * let, const, class
+  * [`function*`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*) <https://caniuse.com/es6-generators>
+
+### JavaScript Language
+  * ES2017
+    * Object.entries() <https://caniuse.com/object-entries>
+    * Object.values() <https://caniuse.com/object-values>
+  * ES2016 (ES7)
+	* Array.prototype.includes() <https://caniuse.com/array-includes>
+  * ES2015 (ES6)
+	* isInteger <https://caniuse.com/es6-number>
+    * String.prototype.includes() <https://caniuse.com/array-includes>
+	* Typed Arrays (Int8Array, etc) <https://caniuse.com/typedarrays>
+
+
+
+---
+
 # Source Code Home
 
 Welcome to the source folder!
