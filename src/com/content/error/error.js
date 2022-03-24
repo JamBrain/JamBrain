@@ -3,7 +3,7 @@ import {h} from 'preact';
 /**
  * @component
  * @param {object} props
- * @param {any} props.children
+ * @param {any} [props.children]
  * @param {number} [props.code=404] HTTP Response code
  * * 400 - **Bad Request** - client error
  * * 401 - **Unauthorized** - requires authentication
@@ -20,9 +20,9 @@ export default function ContentError( props ) {
 	let errorCode = props.code ? props.code : 404;
 
 	return (
-		<article class="content -error">
+		<section class="content -error">
 			<h1>{errorCode}</h1>
 			{props.children}
-		</article>
+		</section>
 	);
 }

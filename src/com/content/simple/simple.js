@@ -1,15 +1,14 @@
 import {h} from 'preact';
 import cN from 'classnames';
-import {CommonHeader, CommonFooter} from "com/content/common";
+import {CommonSection, Header, Section, Footer} from "com/content/common";
 
 export default function ContentSimple( props ) {
-	let Tag = props.article ? "article" : props.aside ? "aside" : "div";
-
+	/* Simple documents have only a single sub-section. For more complicated documents, make your own */
 	return (
-		<Tag {...props} class={cN("content -common -simple", props.class)}>
-			{props.title ? <CommonHeader title={props.title} href={props.href} /> : null}
-			{props.children}
-			{props.footer ? <CommonFooter {...(props.footer)} /> : null}
-		</Tag>
+		<CommonSection {...props} class={cN("-simple", props.class)}>
+			{props.title ? <Header title={props.title} href={props.href} /> : null}
+			<Section children={props.children} />
+			{props.footer ? <Footer {...(props.footer)} /> : null}
+		</CommonSection>
 	);
 }

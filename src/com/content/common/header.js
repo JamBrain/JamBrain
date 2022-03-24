@@ -1,8 +1,8 @@
 import {h} from "preact";
-import cN from "classnames";
+//import cN from "classnames";
 import {UIIcon, UILink} from "com/ui";
 
-export default function CommonHeader(props) {
+export default function Header( props ) {
 	let titlePrefix = props.titleIcon ? <UIIcon baseline small src={props.titleIcon} /> : null;
 
 	return (

@@ -1,7 +1,8 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
 
-export default class LayoutRow extends Component {
+/** @deprecated */
+export default class GridRow extends Component {
 	constructor( props ) {
 		super(props);
 	}

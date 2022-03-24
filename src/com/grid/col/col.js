@@ -1,7 +1,8 @@
-import {h, Component} from 'preact/preact';
+import {h, Component} from 'preact';
 import cN from 'classnames';
 
-export default class LayoutCol extends Component {
+/** @deprecated */
+export default class GridCol extends Component {
   constructor( props ) {
     super(props);
   }

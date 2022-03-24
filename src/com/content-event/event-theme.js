@@ -49,7 +49,8 @@ export default class ContentEventTheme extends Component {
 				for ( var idx = 1; idx <= 5; idx++ ) {	// 5 rounds max
 					let Page = node.meta['theme-page-mode-'+idx];
 					if ( parseInt(Page) > 0 ) {
-						RoundName = idx;
+						// MK NOTE: Should this be something more interesting then a number?
+						RoundName = ""+idx;
 					}
 				}
 			}
@@ -58,21 +59,20 @@ export default class ContentEventTheme extends Component {
 			}
 
 
-			var ShowBody = null;
 			if ( NewPath == '/idea' ) {
-				ShowBody = <EventThemeIdea node={node} user={user} path={path} extra={extra} />;
+				return <EventThemeIdea node={node} user={user} path={path} extra={extra} />;
 			}
 			else if ( NewPath == '/slaughter' ) {
-				ShowBody = <EventThemeSlaughter node={node} user={user} path={path} extra={extra} />;
+				return <EventThemeSlaughter node={node} user={user} path={path} extra={extra} />;
 			}
 			else if ( NewPath == '/fusion' ) {
-				ShowBody = <EventThemeFusion node={node} user={user} path={path} extra={extra} />;
+				return <EventThemeFusion node={node} user={user} path={path} extra={extra} />;
 			}
 			else if ( parseInt(NewPath.slice(1)) > 0 ) {
-				ShowBody = <EventThemeList node={node} user={user} path={path} extra={extra} />;
+				return <EventThemeList node={node} user={user} path={path} extra={extra} />;
 			}
 
-			return ShowBody;
+			return null;
 		}
 		else {
 			return <ContentError />;

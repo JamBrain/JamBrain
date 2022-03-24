@@ -1,4 +1,4 @@
-import {h, Component} from 'preact';
+import {h, Component, Fragment} from 'preact';
 
 import ContentNavButton					from 'com/content-nav/nav-button';
 
@@ -61,15 +61,11 @@ export default class ContentNavTheme extends Component {
 				}
 			}
 
-			return (
-				<div class="content content-nav content-nav-root">
-					{ShowRounds}
-				</div>
-			);
+			if ( ShowRounds.length ) {
+				return <nav class="content content-nav content-nav-root">{ShowRounds}</nav>;
+			}
 		}
-		else {
-			return null;
-//			return <ContentError />;
-		}
+
+		return <Fragment />;
 	}
 }

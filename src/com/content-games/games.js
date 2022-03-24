@@ -12,7 +12,7 @@ import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
 import ContentMore						from 'com/content-more/more';
 
-import LayoutChangeableGrid 			from 'com/layout/grid/changeable-grid';
+import ChangeableGrid 					from 'com/grid/changeable-grid';
 
 import $Node							from 'shrub/js/node/node';
 
@@ -183,7 +183,7 @@ export default class ContentGames extends Component {
 
 
 		if ( error ) {
-			return <ContentError code="400">"Bad Request : Couldn't load games"</ContentError>;
+			return <ContentError code={400}>"Bad Request : Couldn't load games"</ContentError>;
 		}
 		else if ( feed && (feed.length > 0) ) {
 			if ( !props.nomore /*|| added >= 10*/ ) {
@@ -205,9 +205,9 @@ export default class ContentGames extends Component {
 			return (
 				<div class={cN('content', props.class)}>
 					{props.children}
-					<LayoutChangeableGrid columns={layout}>
+					<ChangeableGrid columns={layout}>
 						{Games}
-					</LayoutChangeableGrid>
+					</ChangeableGrid>
 					{LoadMore}
 				</div>
 			);

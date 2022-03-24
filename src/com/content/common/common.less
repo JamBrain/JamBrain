@@ -1,34 +1,25 @@
 @import "defs.less";
 
 
-@COL: @COL_NLLLLL;
-@DARK: @COL_NLLL;
-@BUTTON_LIT: @COL_A;
-@BUTTON_LIT_BG: @COL_L;
+/* Variables */
+#content .content.-common {
+	--common-col: @COL_NDDD;
+	--common-bg: @COL_L;
+	--common-a: @COL_A;
+	/*--content-a-bg: transparent;*/
 
-
-#content .content {
-	/* Ensures that floats fit and grow their parent, and stop margins from collapsing outside */
-	/* This obsoletes the 'clearfix hack'. Introduced in Blink and Gecko in 2017, Webkit (13) in 2019 */
-	/* https://caniuse.com/flow-root (As of March 2022: 91.97%) */
-	display: flow-root;
-
-	/* MK NOTE: If we receive any complaints about funny looking layouts, enabling this will fix it */
-	/* Modified 'clearfix hack' - ensures floats fill their parent, and margins don't collapse with outsiders */
-	/* MK: display is typically block, but flex (like flow-root) triggers a new block formatting context */
-	/* https://developer.mozilla.org/en-US/docs/Web/Guide/CSS/Block_formatting_context */
-	/*
-	&:after {
-		content: "";
-		display: flex;
-		clear: both;
-	}
-	*/
+	--common-a-lit: @COL_L;
+	--common-a-lit-bg: var(--common-a);
 }
 
-/* Common's are the standard boxes with footers in the #content section */
+
+/* Styles */
 #content .content.-common {
-	/* Document stylings, include a margin */
+	position: relative;
+	overflow-wrap: break-word;
+	hyphens: auto;
+
+	/* Include a margin on all document blocks */
 	p,
 	h1,
 	h2,
@@ -37,10 +28,26 @@
 	h5,
 	h6,
 	pre,
-	blockquote {
+	blockquote,
+	table {
 		margin-left: 1rem;
 		margin-right: 1rem;
 	}
+
+
+	/* Disable underlines on links */
+	& a {
+		text-decoration: none;
+	}
+
+	/* Add false padding to links by removing it with margin */
+	& .a,
+	& a {
+		/*border-radius: 0.25em;*/
+		padding: 0.125em 0.25em;
+		margin: -0.125em -0.25em;
+	}
+
 
 	/* NOTE: header not .header */
 	> header {
@@ -54,22 +61,51 @@
 
 	/* NOTE: footer not .footer */
 	> footer {
-		margin-top: 1.5rem;
-
-		&.-nav {
-			border-bottom: 8px solid @DARK;
-		}
+		margin-top: 1rem; /*1.5rem;*/
+		border-bottom: 8px solid @DARK;
 	}
 }
 
-/*
-#content .content.-common.-base > footer {
-	position: relative;
 
-	color: @COL;
-	border-bottom: 8px solid @DARK;
+/* Colors */
+#content .content.-common {
+	color: var(--common-col);
 
-	margin-top: 1.5rem;
+	/* Optionally don't fill the background */
+	&:not(.-transparent) {
+		background: var(--common-bg);
+	}
+
+	/* Links */
+	& .a,
+	& a {
+		color: var(--common-a);
+		/*background: var(--content-a-bg);*/
+	}
+
+	& a:visited {
+		color: var(--common-a);
+	}
+
+	& .a:hover,
+	& .a:focus,
+	& a:hover,
+	& a:focus {
+		color: var(--common-a-lit);
+		background: var(--common-a-lit-bg);
+	}
 }
-*/
 
+
+/* Fade-in Animation */
+#content .content.-common {
+	animation: anim-fadein 0.2s ease-in;
+	@keyframes anim-fadein {
+		/* invisible for 50% of time */
+		0%   { opacity: 0; }
+		/* fade in for remaining 50% */
+		50%  { opacity: 0; }
+		/* done */
+		100% { opacity: 1; }
+	}
+}

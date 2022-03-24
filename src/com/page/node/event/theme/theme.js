@@ -1,9 +1,10 @@
-import {h, Component} from 'preact/preact';
+import {h, Component, Fragment} from 'preact';
 
+import ContentHeadliner from 'com/content-headliner/headliner';
 import ContentEventTheme				from 'com/content-event/event-theme';
 import ContentNavTheme					from 'com/content-nav/nav-theme';
 
-export default class UserStats extends Component {
+export default class EventTheme extends Component {
     constructor( props ) {
         super(props);
     }
@@ -19,10 +20,11 @@ export default class UserStats extends Component {
         }
 
         return (
-            <div>
+            <Fragment>
+                <ContentHeadliner />
                 <ContentNavTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />
                 <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />
-            </div>
+            </Fragment>
         );
     }
 }

@@ -94,7 +94,7 @@ export default class ContentHeadliner extends Component {
 			</div>
 		);
 
-		return <div class={cN("item -list-item", props.childclass)} >{Body}</div>;
+		return <div class={cN("item -list-item", props.childclass)}>{Body}</div>;
 	}
 
 
@@ -145,7 +145,7 @@ export default class ContentHeadliner extends Component {
 	}
 
 
-	render( props ) {
+	renderFlag( props ) {
 		// Build the flag
 		let Flag = [];
 		// The Icon
@@ -160,32 +160,33 @@ export default class ContentHeadliner extends Component {
 			Flag.push(<span class={NameClass}>{props.name.toUpperCase()}</span>);
 		}
 
+		// Only show the flag if it contains something
+		return Flag.length ? <UIButton class={cN("flag", props.flagclass)} href={props.href}>{Flag}</UIButton> : null;
+	}
 
-		let ShowFlag = Flag.length ? <UIButton class={cN("flag", props.flagclass)} href={props.href}>{Flag}</UIButton> : null;
 
-
-		let ShowFooter = null;
+	renderFooter( props ) {
 		// Show the footer
 		if ( props.footer ) {
-			ShowFooter = <UIButton class={cN("item -footer-item", props.childclass)} href={props.footerhref}>{props.footer}</UIButton>;
+			return <UIButton class={cN("item -footer-item", props.childclass)} href={props.footerhref}>{props.footer}</UIButton>;
 		}
 		// Show the more footer
 		else if ( props.more ) {
-			ShowFooter = (
+			return (
 				<UIButton class={cN("item -more-item", props.childclass)} href={props.more}>
 					<UIIcon>circle</UIIcon><UIIcon>circle</UIIcon><UIIcon>circle</UIIcon>
 				</UIButton>
 			);
 		}
+	}
 
+
+	render( props ) {
+		let Flag = this.renderFlag(props);
+		let Items = this.renderItems(props.node);
+		let Footer = this.renderFooter(props);
 
 		// Render
-		return (
-			<header class={cN('content -headliner', props.class)} style={props.style}>
-				{ShowFlag}
-				{this.renderItems(props.node)}
-				{ShowFooter}
-			</header>
-		);
+		return <header class={cN('content -headliner', props.class)} style={props.style}>{Flag}{Items}{Footer}</header>;
 	}
 }
