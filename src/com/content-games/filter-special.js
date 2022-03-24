@@ -1,8 +1,7 @@
-import { h, Component } from 'preact/preact';
-import SVGIcon							from 'com/svg-icon/icon';
+import {h, Component} from 'preact';
+import {UIIcon} from 'com/ui';
 
 export default class FilterSpecial extends Component {
-
     render ( {text, icon, onClick}, state ) {
 
         let ShowRemove = null;
@@ -11,12 +10,12 @@ export default class FilterSpecial extends Component {
             if (!value) {
                 value = text;
             }
-            ShowRemove = <button onClick={() => onClick(value)}><SVGIcon>cross</SVGIcon></button>;
+            ShowRemove = <button onClick={() => onClick(value)}><UIIcon>cross</UIIcon></button>;
         }
 
         return (
             <div class='filter-special'>
-                <SVGIcon class='icon'>{icon}</SVGIcon>{text}
+                <UIIcon class='icon'>{icon}</UIIcon>{text}
                 {ShowRemove}
             </div>
         );

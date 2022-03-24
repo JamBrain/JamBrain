@@ -58,7 +58,7 @@ export default class ContentEventTheme extends Component {
 				NewPath = '/'+RoundName;
 			}
 
-
+			// MK NOTE: This could be replaced by router
 			if ( NewPath == '/idea' ) {
 				return <EventThemeIdea node={node} user={user} path={path} extra={extra} />;
 			}

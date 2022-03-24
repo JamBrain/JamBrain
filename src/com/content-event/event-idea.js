@@ -2,7 +2,7 @@ import {h, Component, Fragment} from 'preact';
 import cN from 'classnames';
 
 import {UIIcon, UIButton} from 'com/ui';
-import ContentSimple from 'com/content/simple';
+import {ContentSimple} from 'com/content/simple';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
 import $Node							from 'shrub/js/node/node';
@@ -190,12 +190,12 @@ export default class ContentEventIdea extends Component {
 
 		if ( !user || !user.id ) {
 			// TODO: insert a login button
-			return <ContentSimple article title={title} class={titleClass}><p>Please log in</p></ContentSimple>;
+			return <ContentSimple title={title} class={titleClass}><p>Please log in</p></ContentSimple>;
 		}
 
 
 		if ( !maxIdeas ) {
-			return <ContentSimple article title={title} class={titleClass}><p>This event doesn't allow suggesting themes</p></ContentSimple>;
+			return <ContentSimple title={title} class={titleClass}><p>This event doesn't allow suggesting themes</p></ContentSimple>;
 		}
 
 		let ShowPrevious = null;
@@ -257,7 +257,7 @@ export default class ContentEventIdea extends Component {
 
 		// Render
 		return (
-			<ContentSimple article title={title} class={titleClass}>
+			<ContentSimple title={title} class={titleClass}>
 				{ShowPrevious}
 				<h2>Your Suggestions</h2>
 				{ShowMySuggestions}

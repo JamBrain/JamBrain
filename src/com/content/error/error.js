@@ -1,4 +1,5 @@
 import {h} from 'preact';
+import {CommonSection} from "../common";
 
 /**
  * @component
@@ -20,9 +21,9 @@ export default function ContentError( props ) {
 	let errorCode = props.code ? props.code : 404;
 
 	return (
-		<section class="content -error">
+		<CommonSection class="-error -transparent">
 			<h1>{errorCode}</h1>
-			{props.children}
-		</section>
+			<p>{props.children}</p>
+		</CommonSection>
 	);
 }

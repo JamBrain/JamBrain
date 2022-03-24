@@ -1,5 +1,6 @@
-import {h, Component}					from 'preact';
-import ContentCommon					from 'com/content-common/common';
+import {h, Component, Fragment} from 'preact';
+import OldContentCommon					from 'com/content-common/common';
+import {CommonSection}					from 'com/content/common';
 import CommonBody						from 'com/content-common/common-body';
 import SVGIcon							from 'com/svg-icon/icon';
 import InputText						from 'com/input-text/text';
@@ -290,7 +291,7 @@ export default class GamesFilter extends Component {
 			}
 
 			ShowRatingSortDesc = (
-				<CommonBody>{FilterDesc[Filter]}</CommonBody>
+				<p>{FilterDesc[Filter]}</p>
 			);
 
 			ShowRatingSort = (
@@ -306,13 +307,15 @@ export default class GamesFilter extends Component {
 
 		//				{ShowTextFilter}
 		return (
-			<ContentCommon node={node} class="filter-item filter-game">
-				{ShowFeatured}
-				{ShowEvent}
-				{ShowVotingCategory}
-				{ShowRatingSort}
+			<CommonSection class="filter-item filter-game">
+				<p>
+					{ShowFeatured}
+					{ShowEvent}
+					{ShowVotingCategory}
+					{ShowRatingSort}
+				</p>
 				{ShowRatingSortDesc}
-			</ContentCommon>
+			</CommonSection>
 		);
 	}
 }

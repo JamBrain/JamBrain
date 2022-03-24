@@ -2,7 +2,7 @@
 
 
 /* Variables */
-#content .content.-common {
+#content .content.-basic {
 	--common-col: @COL_NDDD;
 	--common-bg: @COL_L;
 	--common-a: @COL_A;
@@ -10,11 +10,13 @@
 
 	--common-a-lit: @COL_L;
 	--common-a-lit-bg: var(--common-a);
+
+	--common-footer: @COL_NDDDD;
 }
 
 
 /* Styles */
-#content .content.-common {
+#content .content.-basic {
 	position: relative;
 	overflow-wrap: break-word;
 	hyphens: auto;
@@ -62,13 +64,13 @@
 	/* NOTE: footer not .footer */
 	> footer {
 		margin-top: 1rem; /*1.5rem;*/
-		border-bottom: 8px solid @DARK;
+		border-bottom: 8px solid var(--common-footer);
 	}
 }
 
 
 /* Colors */
-#content .content.-common {
+#content .content.-basic {
 	color: var(--common-col);
 
 	/* Optionally don't fill the background */
@@ -98,7 +100,7 @@
 
 
 /* Fade-in Animation */
-#content .content.-common {
+#content .content.-basic {
 	animation: anim-fadein 0.2s ease-in;
 	@keyframes anim-fadein {
 		/* invisible for 50% of time */
