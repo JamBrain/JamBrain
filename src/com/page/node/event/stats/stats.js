@@ -1,13 +1,17 @@
-import {h, Component} from 'preact/preact';
+import {h, Component, Fragment} from 'preact';
 
-import ContentStatsEvent				from 'com/content-stats/stats-event';
+import {ContentHeadliner} from "com/content/headliner";
+import ContentStatsEvent from 'com/content-stats/stats-event';
 
 export default class EventStats extends Component {
     render( props, state ) {
         let {node} = props;
 
         return (
-            <ContentStatsEvent node={node} />
+            <Fragment>
+                <ContentHeadliner title="Statistics" icon="stats" flagclass="-col-a" />
+                <ContentStatsEvent node={node} />
+            </Fragment>
         );
     }
 }

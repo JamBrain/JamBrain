@@ -5,6 +5,7 @@ import {UIIcon, UIButton} from 'com/ui';
 
 //import $Node from 'shrub/js/node/node';
 
+/** @deprecated */
 export default class ContentHeadliner extends Component {
 	constructor( props ) {
 		super(props);

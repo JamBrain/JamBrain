@@ -1,7 +1,9 @@
-import {h, Component, Fragment} from 'preact/preact';
+import {h, Component, Fragment} from 'preact';
 
-import ContentGames						from 'com/content-games/games';
+import ContentHeadliner from 'com/content/headliner';
+import ContentGames from 'com/content-games/games';
 import GamesFilter from 'com/content-games/filter';
+
 
 export default class EventGames extends Component {
     render( props, state ) {
@@ -139,10 +141,11 @@ export default class EventGames extends Component {
         //Methods.push('superparent');	// Why doesn't this work? It's unnecssary, but it should still work
 
         return (
-            <>
+            <Fragment>
+                <ContentHeadliner title="Games" icon="gamepad" flagclass="-col-a" />
                 {ShowFilters}
                 <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={Methods} subsubtypes={SubFilter ? SubFilter : null} filter={GamesFeedFilter} />
-            </>
+            </Fragment>
         );
     }
 }
