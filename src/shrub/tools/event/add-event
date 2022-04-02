@@ -52,7 +52,7 @@ if ( !$id ) {
 const SCOPE_PUBLIC = 0;
 
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-create", "item/game");
-nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-transform", "item/game+item/game/compo+item/game/jam+item/game/extra");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-transform", "item/game+item/game/compo+item/game/jam+item/game/extra+item/game/unfinished");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-grade", "0");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-publish", "");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-theme", "1");
