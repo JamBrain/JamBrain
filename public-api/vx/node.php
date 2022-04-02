@@ -842,11 +842,11 @@ switch ( $action ) {
 				if ( $new_type == $old_type ) {
 					$RESPONSE['changed'] = 0;
 				}
-				// If transform is an allowed transform
+				// If transform is an allowed
 				else if ( in_array($new_type, VALID_TRANSFORMS[$old_type]) ) {
 					// Confirm that parent allows this transform
-					if ( !nodeComplete_CanITransformHere($node['parent'], $fulltype) ) {
-						json_EmitFatalError_BadRequest("Transforming to '$fulltype' not allowed by parent", $RESPONSE);
+					if ( !nodeComplete_CanITransformHere($node['parent'], $new_type) ) {
+						json_EmitFatalError_BadRequest("Transforming to '$new_type' not allowed by parent", $RESPONSE);
 					}
 
 					// Transform Node
