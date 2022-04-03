@@ -401,6 +401,9 @@ function validateUserWithLogin( $login ) {
 		$user = user_GetBySlug( $name );
 	}
 
+	// WARNING: data leak, enable only for testing
+	$RESPONSE['found'] = !!$user;
+
 	// Bail if no user was found, or if their node is zero (not associated with an account)
 	if ( !isset($user) || !($user['node'] > 0) ) {
 		json_EmitFatalError_Permission(null, $RESPONSE);
