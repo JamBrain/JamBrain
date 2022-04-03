@@ -402,7 +402,7 @@ function validateUserWithLogin( $login ) {
 	}
 
 	// WARNING: data leak, enable only for testing
-	$RESPONSE['found'] = !!$user;
+	$RESPONSE['found'] = isset($user);
 
 	// Bail if no user was found, or if their node is zero (not associated with an account)
 	if ( !isset($user) || !($user['node'] > 0) ) {
