@@ -559,7 +559,7 @@ export default class ContentItem extends Component {
 
 		// Metrics
 		let ShowMetrics = null;
-		if ( competitive && node.magic ) {
+		if ( node.magic ) {
 			let Lines = [];
 			for ( var key in node.magic ) {
 				let parts = key.split('-');
@@ -592,6 +592,10 @@ export default class ContentItem extends Component {
 					Star = true;
 				}
 				else if ( Metric.key == 'grade' ) {
+					if ( dontRateMe ) {
+						continue;
+					}
+
 					Title = "Ratings received";
 					Warning = Score < 20.0;
 					if ( !Warning ) {
@@ -610,7 +614,7 @@ export default class ContentItem extends Component {
 					}
 				}
 				else if ( Metric.key == 'feedback' ) {
-					Title = "Karma for Feedback given";
+					Title = "Karma from Feedback given";
 				}
 
 				let SmallScore = Score.toFixed(4);
