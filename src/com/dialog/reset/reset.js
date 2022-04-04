@@ -5,7 +5,7 @@ import DialogCommon						from 'com/dialog/common/common';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import LabelYesNo						from 'com/label-yesno/yesno';
 
-import UILink							from 'com/ui/link';
+import UILink							from 'com/ui/link/link';
 
 import $User							from 'shrub/js/user/user';
 
