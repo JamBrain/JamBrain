@@ -96,7 +96,7 @@ export default class ContentItemRulesCheck extends Component {
 
 					<ButtonBase onclick={this.handleChange.bind(this, 'optedOut', !optedOut)}>
 						{optedOut ? IconChecked : IconUnChecked}
-						I have opted-out of any categories we are not eligible for (see opt-outs above).
+						I have opted-out of all or any categories we are not eligible for (see opt-outs above).
 					</ButtonBase>
 
 					{node_CanPublish(props.parent, "item/game/jam") && (
