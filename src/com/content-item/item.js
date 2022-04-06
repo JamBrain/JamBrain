@@ -540,6 +540,9 @@ export default class ContentItem extends Component {
 			ShowEventPicker = (
 				<ContentCommonBody class="-body">
 					<div class="-label">Event Format Selection</div>
+					<p>
+						<span>Choose the event format of your game</span>
+					</p>
 					<ContentCommonNav>
 						<ContentCommonNavButton onclick={this.onSetJam} class={node.subsubtype == 'jam' ? "-selected" : ""} disabled={!allowJam}><UIIcon src="users" /><div>Jam</div></ContentCommonNavButton>
 						<ContentCommonNavButton onclick={this.onSetCompo} class={node.subsubtype == 'compo' ? "-selected" : ""} disabled={!allowCompo}><UIIcon src="user" /><div>Compo</div></ContentCommonNavButton>
@@ -550,8 +553,17 @@ export default class ContentItem extends Component {
 						{tooManyAuthorsForCompo && <div class="-warning"><UIIcon baseline small src="warning" /> COMPO unavailable: Too many authors.</div>}
 					</div>
 					<div class="-footer">
-						<UIIcon baseline small src="info" />
-						<span>Select the event you are participating in. If the buttons are grayed out, then you haven't checked-off enough items in the Submission Checklist above. <strong>IMPORTANT:</strong> You can't <strong>Publish</strong> until you finish this step!</span>
+						<p>
+							<UIIcon baseline small src="info" />
+							<span>If the buttons are grayed out, you haven't checked-off enough items in the Submission Checklist above.</span>
+						</p>
+						<p>
+							If your event format is correct (filled background), you <strong>don't</strong> need to change or update this.
+						</p>
+						<p>
+							<UIIcon baseline src="warning" class="-warning" />
+							<span> <strong>IMPORTANT:</strong> You can't <strong>Publish</strong> until you finish this step!</span>
+						</p>
 					</div>
 				</ContentCommonBody>
 			);
@@ -846,7 +858,7 @@ export default class ContentItem extends Component {
 
 			for ( let idx = 0; idx < Lines.length; idx++ ) {
 				let Line = Lines[idx];
-				OptLines.push(<UICheckbox onclick={this.onOptOut.bind(this, Line.key, !Line.value)} value={Line.value}>Do not rate me in <strong>{Line.name}</strong>{Line.required ? " (Required)" : ""}</UICheckbox>);
+				OptLines.push(<UICheckbox onclick={this.onOptOut.bind(this, Line.key, !Line.value)} value={Line.value}>Do not rate me in <strong>{Line.name}</strong>{Line.required ? " (required, see below)" : ""}</UICheckbox>);
 			}
 
 			ShowOptOut = (
@@ -854,10 +866,14 @@ export default class ContentItem extends Component {
 					<div class="-label">Rating Category Opt-outs</div>
 					{OptLines}
 					<div class="-footer">
-						<UIIcon small baseline src="info" />
-						<span>Opt-out of categories here if you and your team didn't make all your graphics, audio, or music during the event.
-						Many participants are making original graphics, audio and music from scratch during the event. As a courtesy, we ask you to opt-out if you didn't do the same.
-						Since some games are not meant to be Humourous or Moody, or don't make good use of the theme, you can choose to opt-out of these too.</span>
+						<p>
+							<UIIcon small baseline src="info" />
+							<span>Opt-out of categories here if you and your team didn't make all your graphics, audio, or music during the event.
+							Many participants are making original graphics, audio and music from scratch during the event. As a courtesy, we ask you to opt-out if you didn't do the same. See <UILink href="http://ludumdare.com/rules/">the rules</UILink>.</span>
+						</p>
+						<p>
+							<span>Since some games are not meant to be Humourous or Moody, or they don't make good use of the theme, you can choose to opt-out of these categories too. Opting out of these is optional.</span>
+						</p>
 					</div>
 				</ContentCommonBody>
 			);

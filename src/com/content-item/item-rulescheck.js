@@ -1,8 +1,8 @@
 import {h, Component}					from 'preact/preact';
 import ContentCommonBody				from 'com/content-common/common-body';
 import ButtonBase						from 'com/button-base/base';
-import NavLink							from 'com/nav-link/link';
 import UIIcon							from 'com/ui/icon/icon';
+import UILink							from 'com/ui/link/link';
 
 export default class ContentItemRulesCheck extends Component {
 	constructor(props) {
@@ -66,13 +66,27 @@ export default class ContentItemRulesCheck extends Component {
 	}
 
 	allowUnfinished(nextState) {
-		//if (!this.allowByCommonRules(nextState)) return false;
+		if (!this.allowByCommonRules(nextState)) return false;
 		return true;
 	}
 
 	allowByCommonRules(nextState) {
+		if (node_IsPublished(this.props.node) && !nextState.changeFormat) return false;
 		if (!nextState.readRules) return false;
 		return true;
+	}
+
+	// TODO: Make and use a global/external function instead
+	getFormatName() {
+		const formatNames = {
+			"jam": "Jam",
+			"compo": "Compo",
+			"extra": "Extra",
+			"unfinished": "Unfinished",
+			"release": "Release"
+		};
+
+		return (this.props.node.subsubtype && formatNames[this.props.node.subsubtype]) ? formatNames[this.props.node.subsubtype] : this.props.node.subsubtype;
 	}
 
 	render(props, state) {
@@ -81,7 +95,7 @@ export default class ContentItemRulesCheck extends Component {
 		const IconChecked = <UIIcon small baseline class="-checkbox" src="checkbox-checked" />;
 
 		const {
-			readRules, workedSolo, createdAll, createdWithin48,
+			changeFormat, readRules, workedSolo, createdAll, createdWithin48,
 			includedSource, willVote, optedOut,
 		} = (props.answers ? props.answers : state);
 
@@ -89,9 +103,17 @@ export default class ContentItemRulesCheck extends Component {
 			<ContentCommonBody class="-rules-check -body">
 				<div class="-label">Submission Checklist</div>
 				<div class="-items">
+					{node_IsPublished(props.node) && (
+					<ButtonBase onclick={this.handleChange.bind(this, 'changeFormat', !changeFormat)}>
+						{changeFormat ? IconChecked : IconUnChecked}
+						I wish to change my event format.
+						{props.node.subsubtype ? "(currently: "+this.getFormatName()+")" : ""}
+					</ButtonBase>
+					)}
+
 					<ButtonBase onclick={this.handleChange.bind(this, 'readRules', !readRules)}>
 						{readRules ? IconChecked : IconUnChecked}
-						I have read and understood <NavLink blank href="//ludumdare.com/rules/"><strong>the rules</strong></NavLink>.
+						I have read and understood <UILink blank href="//ludumdare.com/rules/"><strong>the rules</strong></UILink>.
 					</ButtonBase>
 
 					<ButtonBase onclick={this.handleChange.bind(this, 'optedOut', !optedOut)}>
@@ -99,16 +121,15 @@ export default class ContentItemRulesCheck extends Component {
 						I have opted-out of all or any categories we are not eligible for (see opt-outs above).
 					</ButtonBase>
 
-					{node_CanPublish(props.parent, "item/game/jam") && (
+					{(node_CanPublish(props.parent, "item/game/jam") || node_CanPublish(props.parent, "item/game/compo")) && (
 					<ButtonBase onclick={this.handleChange.bind(this, 'willVote', !willVote)}>
 						{willVote ? IconChecked : IconUnChecked}
-						I understand that if we want a score at the end, we need to play and rate other participants games.
+						I understand that if we want a score at the end, we need to play, rate, and give feedback on other games.
 					</ButtonBase>
 					)}
-				</div>
 
-				{node_CanPublish(props.parent, "item/game/compo") && (node_CountAuthors(props.node) <= 1) && (
-					<div class="-items">
+					{node_CanPublish(props.parent, "item/game/compo") && (node_CountAuthors(props.node) <= 1) && (
+					<div>
 						<ButtonBase onclick={this.handleChange.bind(this, 'workedSolo', !workedSolo)}>
 							{workedSolo ? IconChecked : IconUnChecked}
 							I worked alone.
@@ -130,10 +151,16 @@ export default class ContentItemRulesCheck extends Component {
 							{MandatoryCompo}
 						</ButtonBase>
 					</div>
-				)}
+					)}
+				</div>
 				<div class="-footer">
-					<UIIcon baseline src="warning" class="-warning" />
-					<span> Before you can select an Event and Publish, you must agree to <em>some</em> of the questions above.</span>
+					<p>
+						<UIIcon baseline src="warning" class="-warning" />
+						<span> <strong>IMPORTANT:</strong> Before you can select an Event Format and Publish, you must agree to <em>some</em> questions above.</span>
+					</p>
+					<p>
+						<span>You can change your format at any time, but be aware: Once a format has closed, it can no longer be selected. Contact <UILink href="https://ludumdare.com/support">support</UILink> for assistance.</span>
+					</p>
 				</div>
 			</ContentCommonBody>
 		);
