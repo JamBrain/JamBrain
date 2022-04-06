@@ -874,6 +874,9 @@ export default class ContentItem extends Component {
 						<p>
 							<span>Since some games are not meant to be Humourous or Moody, or they don't make good use of the theme, you can choose to opt-out of these categories too. Opting out of these is optional.</span>
 						</p>
+						<p>
+							<span>NOTE: If you opted out of a category by mistake, you will need more ratings to ensure you get a score.</span>
+						</p>
 					</div>
 				</ContentCommonBody>
 			);
