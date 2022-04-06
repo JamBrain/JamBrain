@@ -833,7 +833,7 @@ export default class ContentItem extends Component {
 		}
 
 		let ShowOptOut = null;
-		if ( parent && node_CanPublish(parent) && !dontRateMe ) {
+		if ( parent /*&& node_CanPublish(parent)*/ && !dontRateMe ) {
 			let Lines = [];
 
 			for ( var key in parent.meta ) {
