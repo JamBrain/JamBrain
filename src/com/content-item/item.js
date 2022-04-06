@@ -833,7 +833,8 @@ export default class ContentItem extends Component {
 		}
 
 		let ShowOptOut = null;
-		if ( parent /*&& node_CanPublish(parent)*/ && !dontRateMe ) {
+		// Check state.dontRateMe instead of dontRateMe, so the options are only hidden if opted out of everything
+		if ( parent && !state.dontRateMe ) {
 			let Lines = [];
 
 			for ( var key in parent.meta ) {
