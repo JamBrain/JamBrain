@@ -95,7 +95,7 @@ window.node_CanCreate = function( node, fulltype = null ) {
 	}
 
 	// If omitted, then the answer is no
-	if ( ('can-create' in node.meta) === false ) {
+	if ( !node.meta['can-create'] || (typeof node.meta['can-create'] != 'string') ) {
 		return false;
 	}
 
