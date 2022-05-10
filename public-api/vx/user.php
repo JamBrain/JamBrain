@@ -400,10 +400,15 @@ function validateUserWithLogin( $login ) {
 		$user = user_GetBySlug( $name );
 	}
 
+	// WARNING: data leak, enable only for testing
+	//$RESPONSE['found'] = isset($user);
+	
+	/*
 	// Bail if no user was found, or if their node is zero (not associated with an account)
 	if ( !isset($user) || !($user['node'] > 0) ) {
 		json_EmitFatalError_Permission(null, $RESPONSE);
 	}
+	*/
 
 	return $user;
 }
@@ -613,7 +618,7 @@ switch ( $action ) {
 	case 'login': //user/login
 		json_ValidateHTTPMethod('POST');
 
-		// NOTE: You can login while logged in. Weird huh.
+		// MK NOTE: You can login while logged in. Weird huh.
 
 		$login = getSanitizedLoginFromPost();
 		$pw = getSanitizedPwFromPost();
@@ -626,43 +631,13 @@ switch ( $action ) {
 
 		$user = validateUserWithLogin($login);
 
-//		$name = null;
-//		$mail = null;
-//		$user = null;
-//
-//		// Decode the login as either an e-mail address, or a username
-//		if ( coreValidate_Mail($login) ) {
-//			$mail = coreSanitize_Mail($login);
-//			$RESPONSE['mail'] = $mail;
-//		}
-//		else {
-//			$name = coreSlugify_Name($login);
-//			$RESPONSE['name'] = $name;
-//		}
-//
-//		// If an e-mail login attempt
-//		if ( $mail ) {
-//			$user = user_GetByMail( $mail );
-//		}
-//		// If a username login attempt
-//		else if ( $name ) {
-//			$user = user_GetBySlug( $name );
-//		}
-//
-//		// Bail if no user was found, or if their node is zero (not associated with an account)
-//		if ( !isset($user) || !($user['node'] > 0) ) {
-//			json_EmitFatalError_Permission(null, $RESPONSE);
-//		}
-
 		// If hashes match, it's a success, so log the user in
-		if ( isset($user['hash']) && userPassword_Verify($pw, $user['hash']) ) {
+		if ( isset($user) && isset($user['node']) && ($user['node'] > 0) && isset($user['hash']) && userPassword_Verify($pw, $user['hash']) ) {
 			// Does the user have a secret?
-
 
 			// Success
 			$RESPONSE['id'] = $user['node'];
 			userAuth_SetId($user['node']);
-
 
 			break; // case 'login': //user/login
 		}
@@ -693,15 +668,19 @@ switch ( $action ) {
 				$ex_new = user_AuthKeyGen($user['id']);
 
 				// Send an e-mail
-				$RESPONSE['sent'] = intval(mailSend_UserPasswordReset($user['mail'], $node['slug'], $ex_new['id'], $ex_new['auth_key']));
+				$sent = intval(mailSend_UserPasswordReset($user['mail'], $node['slug'], $ex_new['id'], $ex_new['auth_key']));
+
+				// WARNING: data leak, enable only for testing
+				//$RESPONSE['sent'] = $sent;
 			}
 			else {
 				json_EmitFatalError_Server(null, $RESPONSE);
 			}
 		}
-		else {
-			json_EmitFatalError_Permission(null, $RESPONSE);
-		}
+		// WARNING: data leak
+		//else {
+		//	json_EmitFatalError_Permission(null, $RESPONSE);
+		//}
 		break; // case 'reset': //user/reset
 
 	case 'have': //user/have
@@ -757,6 +736,23 @@ switch ( $action ) {
 			}
 		}
 		break; // case 'get': //user/get
+
+	// Returns your email address
+	case 'whoami': //user/whoami
+		json_ValidateHTTPMethod('GET');
+
+		$id = userAuth_GetId();
+
+		if ( $id > 0 ) {
+			$userInfo = user_GetByNode($id);
+
+			$RESPONSE['mail'] = [];
+			foreach ($userInfo as $info) {
+				$RESPONSE['mail'][] = $info['mail'];
+			}
+		}
+
+		break;
 
 //	case 'test': //user/test
 //		$RESPONSE['server'] = $_SERVER;

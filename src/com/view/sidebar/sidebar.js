@@ -31,7 +31,7 @@ export default class ViewSidebar extends Component {
 		let gradeEndDate = new Date(Date.UTC(2022, 3, 21, 20, 0, 0));
 		let resultsDate = new Date(Date.UTC(2022, 3, 21, 26, 0, 0));
 
-		//liveShowDate = new Date(Date.UTC(2022, 3, 21, 23, 30, 0));
+		liveShowDate = new Date(Date.UTC(2022, 3, 21, 23, 30, 0));
 
 		let nextEventName = "Ludum Dare 51";
 		let nextEventStartDate = new Date(Date.UTC(2022, 8, 30, 22, 0, 0));
@@ -80,7 +80,7 @@ export default class ViewSidebar extends Component {
 			}
 
 			if ( (now < gradeEndDate) && props.featured && props.featured.meta && props.featured.meta['can-grade'] && (ShowCountdown.length < ItemsToShow) ) { //now < compoEndDate2 || now < jamEndDate2 || now < gradeEndDate ) {
-				ShowCountdown.push(<SidebarCountdown date={ gradeEndDate } nc="jam" to="Play+Rate games" tt="Ends" />);
+				ShowCountdown.push(<SidebarCountdown date={ gradeEndDate } nc="jam" to="Rating games" tt="Ends" />);
 			}
 
 			// Figure out the date a few days before grading ends
