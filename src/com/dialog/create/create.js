@@ -13,36 +13,51 @@ export default class DialogCreate extends Component {
 	}
 
 	doCreate( e ) {
-		var event_id = this.props.extra.length ? Number.parseInt(this.props.extra[0]) : 0;
-		var node_type = this.props.extra.length > 1 ? (this.props.extra[1]) : "";
-		var node_subtype = this.props.extra.length > 2 ? (this.props.extra[2]) : "";
+		const eventId = this.props.extra.length ? Number.parseInt(this.props.extra[0]) : 0;
+		const nodeType = this.props.extra.length > 1 ? (this.props.extra[1]) : "";
+		const nodeSubtype = this.props.extra.length > 2 ? (this.props.extra[2]) : "";
 
-		console.log(event_id, node_type, node_subtype);
-
-		if ( event_id ) {
-			$Node.Add(event_id, node_type, node_subtype)
+		if ( eventId ) {
+			$Node.Add(eventId, nodeType, nodeSubtype)
 			.then(r => {
-				console.log('hurr', r);
-
 				if ( r.path ) {
-					if ( r.type == 'post' ) {
+					if ( r.type === 'post' ) {
 						window.location.href = r.path+'/edit';
+					}
+					else if ( r.type === 'item' ) {
+						$Node.Get(r.id)
+							.then(r2 => $Node.Get(r2.node[0].parent).then(r3 => {
+								if (r3.node[0].meta && r3.node[0].meta['event-join-page']) {
+									$Node.Get(r3.node[0].meta['event-join-page'])
+										.then(r4 => {
+											window.location.href = r4.node[0].path;
+										})
+										.catch(err => {
+											window.location.href = r.path;
+										});
+								}
+								else {
+									window.location.href = r.path;
+								}
+							}))
+							.catch(err => {
+								window.location.href = r.path;
+							});
 					}
 					else {
 						window.location.href = r.path;
 					}
 				}
 				else {
-					this.setState({'error': r.message});
+					window.location.href = r.path;
 				}
-
-				// This was the the old else
-//				else
-//					window.location.href = window.location.pathname;
 			})
 			.catch(err => {
-				this.setState({'error': err});
+				this.setState({'error': 'Could not create node.'});
 			});
+		}
+		else {
+			this.setState({'error': `No path for post ${r.message}`});
 		}
 	}
 
