@@ -1,7 +1,6 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
 
-import NavLink 							from 'com/nav-link/link';
 import SVGIcon 							from 'com/svg-icon/icon';
 import IMG2 							from 'com/img2/img2';
 

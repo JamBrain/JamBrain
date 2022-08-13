@@ -20,7 +20,7 @@ General speaking, Safari 14 is our minimum spec. ~~The transpiler will accept mo
 
 
 ### JavaScript Syntax
-Handled by the transpler. We generate code according to the ES2017 spec, but other syntaxes are available.
+Handled by the transpiler. We generate code according to the ES2017 spec, but other syntaxes are available.
 
 * ES2021
   * `??=` <https://caniuse.com/mdn-javascript_operators_logical_nullish_assignment>

@@ -2,7 +2,7 @@ import {h, Component, Fragment} from 'preact';
 import cN from 'classnames';
 import {UIButton, UIIcon} from 'com/ui';
 
-export default class CopyToClipboardButton extends Component {
+export default class UIButtonClipboard extends Component {
 	constructor( props ) {
 		super(props);
 

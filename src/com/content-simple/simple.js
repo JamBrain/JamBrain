@@ -15,7 +15,7 @@ import ContentCommonBodyFlag						from 'com/content-common/common-body-flag';
 import ContentCommonBodyAvatar						from 'com/content-common/common-body-avatar';
 import ContentCommonBodyMarkup						from 'com/content-common/common-body-markup';
 
-import CopyToClipboardButton from 'com/button-clipboard/clipboard';
+import UIButtonClipboard from 'com/ui/button/button-clipboard';
 
 import ContentCommonDraft							from 'com/content-common/common-draft';
 
@@ -462,7 +462,7 @@ export default class ContentSimple extends Component {
 			let ShowTitle = null;
 			if ( !props.notitle && !props.noheader ) {
 				// MK: I've disabled copyshortlink for the moment. Need to figure out the style ripple issue
-				let CopyShortlinkButton = false && !props.title ? (<CopyToClipboardButton
+				let CopyShortlinkButton = false && !props.title ? (<UIButtonClipboard
 					title="Copy shortlink to clipboard"
 					icon={"link"}
 					class="shortlink"
