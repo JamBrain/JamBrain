@@ -1,7 +1,4 @@
 {
-  "name": "jammercore",
-  "version": "0.1.0",
-  "description": "Custom CMS Platform",
   "dependencies": {
     "babel-eslint": "^10.1.0",
     "@jammercore/buble": "^0.20.0",
