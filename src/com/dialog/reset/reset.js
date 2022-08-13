@@ -5,6 +5,8 @@ import DialogCommon						from 'com/dialog/common/common';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import LabelYesNo						from 'com/label-yesno/yesno';
 
+import UILink							from 'com/ui/link/link';
+
 import $User							from 'shrub/js/user/user';
 
 
@@ -88,6 +90,7 @@ export default class DialogReset extends Component {
 							<input autofocus id="dialog-register-mail" autocomplete="email" onchange={this.onChange} class="-text focusable" type="email" name="email" placeholder="E-mail address" maxlength="254" />
 							<LabelYesNo value={Sanitize.validateMail(mail) ? 1 : -1} />
 						</div>
+						<p>See <UILink href="https://ludumdare.com/resources/questions/how-do-i-reset-password/">this article</UILink> for help</p>
 					</div>
 				</DialogCommon>
 			);

@@ -60,7 +60,7 @@ export default class HeaderWhatsup extends Component {
 			else if ( parseInt(featured.meta['event-mode']) == 6 && featured.meta['event-theme'] ) {
 				return (
 					<aside class="header -whatsup outside">
-						<span class="-title _font2">PLAY+RATE NOW:</span> <UILink href={featured.path}><UIIcon baseline small src="trophy" /> {featured.name}</UILink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
+						<span class="-title _font2">RATINGS+FEEDBACK & EXTRA ON NOW:</span> <UILink href={featured.path}><UIIcon baseline small src="trophy" /> {featured.name}</UILink> <span class="-title _font2">Theme:</span> {featured.meta['event-theme']}
 					</aside>
 				);
 			}

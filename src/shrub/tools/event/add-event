@@ -52,7 +52,7 @@ if ( !$id ) {
 const SCOPE_PUBLIC = 0;
 
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-create", "item/game");
-nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-transform", "item/game+item/game/compo+item/game/jam+item/game/extra");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-transform", "item/game+item/game/compo+item/game/jam+item/game/extra+item/game/unfinished");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-grade", "0");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-publish", "");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "can-theme", "1");
@@ -87,8 +87,10 @@ nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-04", "Theme");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-04-optional", "1");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-05", "Graphics");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-05-optional", "1");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-05-required", "1");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-06", "Audio");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-06-optional", "1");
+nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-06-required", "1");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-07", "Humor");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-07-optional", "1");
 nodeMeta_Add($id, 0, SCOPE_PUBLIC, "grade-08", "Mood");

@@ -52,6 +52,7 @@ export default class ContentItem extends Component {
 			'linksShown': 1,
 
 			'allowAnonymous': parseInt(node.meta['allow-anonymous-comments']),
+			'dontRateMe': parseInt(node.meta['dont-rate-me']),
 		};
 
 		for ( let i = 0; i < MAX_LINKS; i++ ) {
@@ -70,6 +71,7 @@ export default class ContentItem extends Component {
 		this.onSetUnfinished = this.onSetUnfinished.bind(this);
 
 		this.onAnonymousComments = this.onAnonymousComments.bind(this);
+		this.onDontRateMe = this.onDontRateMe.bind(this);
 		this.onChangeTeam = this.onChangeTeam.bind(this);
 		this.handleAllowSubmission = this.handleAllowSubmission.bind(this);
 	}
@@ -261,7 +263,7 @@ export default class ContentItem extends Component {
 		}
 	}
 
-	onAnonymousComments () {
+	onAnonymousComments() {
 		const anon = this.state.allowAnonymous;
 		const node = this.props.node;
 		let update = null;
@@ -273,10 +275,29 @@ export default class ContentItem extends Component {
 		}
 
 		return update.then(r => {
-				if ( r && r.changed ) {
-					this.setState({'allowAnonymous': !anon});
-				}
-			});
+			if ( r && r.changed ) {
+				this.setState({'allowAnonymous': !anon});
+			}
+		});
+	}
+
+	onDontRateMe() {
+		const noRate = this.state.dontRateMe;
+		const node = this.props.node;
+
+		let update = null;
+		if (noRate) {
+			update = $Node.RemoveMeta(node.id, {'dont-rate-me': 0});
+		}
+		else {
+			update = $Node.AddMeta(node.id, {'dont-rate-me': 1});
+		}
+
+		return update.then(r => {
+			if ( r && r.changed ) {
+				this.setState({'dontRateMe': !noRate});
+			}
+		});
 	}
 
 	onModifyLinkName( Index, e ) {
@@ -456,6 +477,10 @@ export default class ContentItem extends Component {
 
 		let Category = '/';
 
+		let competitive = false;
+		let dontRateMe = state.dontRateMe;
+		let canRate = false;
+
 		props.onChangeTeam = this.onChangeTeam;
 		if ( team ) {
 			props.node.meta.author = team;
@@ -482,16 +507,24 @@ export default class ContentItem extends Component {
 				props.by = "JAM "+props.by;
 				Category = '/jam';
 				//props.nopublish = !allowJam;
+
+				competitive = true;
+				canRate = true;
 			}
 			else if ( node.subsubtype == 'compo' ) {
 				props.by = "COMPO "+props.by;
 				Category = '/compo';
 				//props.nopublish = !allowCompo;
+
+				competitive = true;
+				canRate = true;
 			}
 			else if ( node.subsubtype == 'extra' ) {
 				props.by = "EXTRA "+props.by;
 				Category = '/extra';
 				//props.nopublish = !allowExtra;
+
+				canRate = true;
 			}
 			else if ( node.subsubtype == 'craft' ) {
 				props.by = "CRAFT";
@@ -506,6 +539,8 @@ export default class ContentItem extends Component {
 				props.by = "UNFINISHED "+props.by;
 				Category = '/unfinished';
 				//props.nopublish = !allowUnfinished;
+
+				dontRateMe = true;
 			}
 			else {
 				props.nopublish = true;
@@ -514,13 +549,17 @@ export default class ContentItem extends Component {
 			props.draft = "Game";
 		}
 
+		// Event Picker
 		let ShowEventPicker = null;
 		let ShowRulesCheck = null;
 		if ( extra && extra.length && (extra[0] == 'edit') && node_CanPublish(parent) ) {
 			ShowRulesCheck = <ContentItemRulesCheck node={this.props.node} parent={this.state.parent} onAllowChange={this.handleAllowSubmission} answers={state.rulesAnswers} />;
 			ShowEventPicker = (
 				<ContentCommonBody class="-body">
-					<div class="-label">Event Selection</div>
+					<div class="-label">Event Format Selection</div>
+					<p>
+						<span>Choose the event format of your game</span>
+					</p>
 					<ContentCommonNav>
 						<ContentCommonNavButton onclick={this.onSetJam} class={node.subsubtype == 'jam' ? "-selected" : ""} disabled={!allowJam}><UIIcon src="users" /><div>Jam</div></ContentCommonNavButton>
 						<ContentCommonNavButton onclick={this.onSetCompo} class={node.subsubtype == 'compo' ? "-selected" : ""} disabled={!allowCompo}><UIIcon src="user" /><div>Compo</div></ContentCommonNavButton>
@@ -531,13 +570,23 @@ export default class ContentItem extends Component {
 						{tooManyAuthorsForCompo && <div class="-warning"><UIIcon baseline small src="warning" /> COMPO unavailable: Too many authors.</div>}
 					</div>
 					<div class="-footer">
-						<UIIcon baseline small src="info" />
-						<span>Select the event you are participating in. If the buttons are grayed out, then you haven't checked-off enough items in the Submission Checklist above. <strong>IMPORTANT:</strong> You can't <strong>Publish</strong> until you finish this step!</span>
+						<p>
+							<UIIcon baseline small src="info" />
+							<span>If the buttons are grayed out, you haven't checked-off enough items in the Submission Checklist above.</span>
+						</p>
+						<p>
+							If your event format is correct (filled background), you <strong>don't</strong> need to change or update this.
+						</p>
+						<p>
+							<UIIcon baseline src="warning" class="-warning" />
+							<span> <strong>IMPORTANT:</strong> You can't <strong>Publish</strong> until you finish this step!</span>
+						</p>
 					</div>
 				</ContentCommonBody>
 			);
 		}
 
+		// Metrics
 		let ShowMetrics = null;
 		if ( node.magic ) {
 			let Lines = [];
@@ -572,6 +621,10 @@ export default class ContentItem extends Component {
 					Star = true;
 				}
 				else if ( Metric.key == 'grade' ) {
+					if ( dontRateMe ) {
+						continue;
+					}
+
 					Title = "Ratings received";
 					Warning = Score < 20.0;
 					if ( !Warning ) {
@@ -590,7 +643,7 @@ export default class ContentItem extends Component {
 					}
 				}
 				else if ( Metric.key == 'feedback' ) {
-					Title = "Karma for Feedback given";
+					Title = "Karma from Feedback given";
 				}
 
 				let SmallScore = Score.toFixed(4);
@@ -624,116 +677,110 @@ export default class ContentItem extends Component {
 //			console.log("Requested Admin Display: " + requestAdmin);
 //		}
 
+
+		// Ratings/Grading/Results
 		let ShowGrade = null;
-		// Show Grading or Results
+		// If grading is enabled
 		if ( !(isAdmin && requestAdmin) && parseInt(nodeEvent_CanGrade(parent)) ) {
-			// If it's your game, show some stats
+			// My game
 			if ( node_IsAuthor(node, user) ) {
-				let Lines = [];
+				// Only show Total Ratings for competitive events
+				if ( canRate && competitive ) {
+					let Lines = [];
 
-				for ( var key in parent.meta ) {
-					// Is it a valid grade ?
-					let parts = key.split('-');
-					if ( parts.length == 2 && parts[0] == 'grade' ) {
-						// Make sure they user hasn't opted out
-
-						if ( node.meta && !(node.meta[key+'-out']|0) ) {
-							Lines.push({'key': key, 'value': parent.meta[key]});
-						}
-					}
-				}
-
-				let VoteLines = [];
-				for ( let idx = 0; idx < Lines.length; idx++ ) {
-					let Line = Lines[idx];
-
-					let Title = Line.value;
-					let Score = 0;
-					if ( node.grade ) {
-						Score = node.grade[Line.key];
-					}
-
-					//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
-
-					VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
-				}
-
-				ShowGrade = (
-					<ContentCommonBody class="-rating -body">
-						<div class="-header">Total Ratings</div>
-						<div class="-subtext">Votes on your game so far</div>
-						<div class="-items">{VoteLines}</div>
-						<div class="-footer">To get a score at the end, you need about <strong>20</strong> ratings in a category. To get ratings: play, rate, and leave feedback on games. Every game you rate and leave quality feedback on scores you <strong>Coolness</strong> points. Having a high "Coolness" prioritizes your game.</div>
-					</ContentCommonBody>
-				);
-			}
-			// Judging
-			else if ( featured && featured.what && nodeKeys_HasPublishedParent(featured.what, node.parent) ) {
-				let Lines = [];
-
-				if ( parent && parent.meta ) {
+					// For all the parent's metadata
 					for ( var key in parent.meta ) {
-						// Is it a valid grade ?
+						// Is this meta a grade (i.e. grade-01)?
 						let parts = key.split('-');
 						if ( parts.length == 2 && parts[0] == 'grade' ) {
 							// Make sure they user hasn't opted out
-
 							if ( node.meta && !(node.meta[key+'-out']|0) ) {
 								Lines.push({'key': key, 'value': parent.meta[key]});
 							}
 						}
 					}
-				}
 
-				let VoteLines = [];
-				for ( let idx = 0; idx < Lines.length; idx++ ) {
-					let Line = Lines[idx];
+					let VoteLines = [];
+					for ( let idx = 0; idx < Lines.length; idx++ ) {
+						let Line = Lines[idx];
 
-					let Title = Line.value;
-					let Score = '?';
-					if ( state.grade ) {
-						Score = state.grade[Line.key] ? state.grade[Line.key] : 0;
+						let Title = Line.value;
+						let Score = 0;
+						if ( node.grade ) {
+							Score = node.grade[Line.key];
+						}
+
+						//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
+
+						VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
 					}
 
-//					let Stars = [];
-//					for ( let idx2 = 0; idx2 < Score; idx2++ ) {
-//						Stars.push(<ButtonBase class="-star" onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-full</SVGIcon></ButtonBase>);
-//					}
-//					for ( let idx2 = Score; idx2 < 5; idx2++ ) {
-//						Stars.push(<ButtonBase class="-star" onclick={this.onGrade.bind(this, Line.key, idx2+1)}><SVGIcon small baseline>star-empty</SVGIcon></ButtonBase>);
-//					}
-//					Stars.push(<ButtonBase class="-delete" onclick={this.onGrade.bind(this, Line.key, 0)}><SVGIcon small>cross</SVGIcon></ButtonBase>);
+					ShowGrade = (
+						<ContentCommonBody class="-rating -body">
+							<div class="-header">Total Ratings</div>
+							<div class="-subtext">Votes on your game so far</div>
+							<div class="-items">{VoteLines}</div>
+							<div class="-footer">To get a score at the end, you need about <strong>20</strong> ratings in a category. To get ratings: play, rate, and leave feedback on games. Every game you rate and leave quality feedback on scores you <strong>Coolness</strong> points. Having a high "Coolness" prioritizes your game.</div>
+						</ContentCommonBody>
+					);
+				}
+			}
+			// Other games
+			else if ( featured && featured.what && nodeKeys_HasPublishedParent(featured.what, node.parent) ) {
 
-//					Stars.push(<InputStar value='2.5' max='5' small number />);
-//					Stars.push(<InputStar value='2.5' max='5' number />);
-//					Stars.push(<InputStar value={Score} onclick={this.onGrade.bind(this, Line.key)} ondelete={this.onGrade.bind(this, Line.key, 0)} edit delete number />);
+				if ( canRate && !dontRateMe ) {
+					let Lines = [];
 
-					VoteLines.push(
-						<div class="-grade">
-							<span class="-title">{Title}:</span>
-							<InputStar value={Score} onclick={this.onGrade.bind(this, Line.key)} ondelete={this.onGrade.bind(this, Line.key, 0)} edit delete number />
-						</div>
+					if ( parent && parent.meta ) {
+						for ( var key in parent.meta ) {
+							// Is it a valid grade ?
+							let parts = key.split('-');
+							if ( parts.length == 2 && parts[0] == 'grade' ) {
+								// Make sure they user hasn't opted out
+
+								if ( node.meta && !(node.meta[key+'-out']|0) ) {
+									Lines.push({'key': key, 'value': parent.meta[key]});
+								}
+							}
+						}
+					}
+
+					let VoteLines = [];
+					for ( let idx = 0; idx < Lines.length; idx++ ) {
+						let Line = Lines[idx];
+
+						let Title = Line.value;
+						let Score = '?';
+						if ( state.grade ) {
+							Score = state.grade[Line.key] ? state.grade[Line.key] : 0;
+						}
+
+						VoteLines.push(
+							<div class="-grade">
+								<span class="-title">{Title}:</span>
+								<InputStar value={Score} onclick={this.onGrade.bind(this, Line.key)} ondelete={this.onGrade.bind(this, Line.key, 0)} edit delete number />
+							</div>
+						);
+					}
+
+					let ShowRatingSubText = null;
+					if ( node.subsubtype == 'jam' )
+						ShowRatingSubText = <div class="-subtext">Jam game</div>;
+					else if ( node.subsubtype == 'compo' )
+						ShowRatingSubText = <div class="-subtext">Compo game</div>;
+					else if ( node.subsubtype == 'extra' )
+						ShowRatingSubText = <div class="-subtext">Extra game</div>;
+
+					ShowGrade = (
+						<ContentCommonBody class="-rating -body">
+							<div class="-header">Ratings</div>
+							{ShowRatingSubText}
+							<div class="-items">{VoteLines}</div>
+							<div class="-footer">Ratings are saved automatically when you click. When they change, they're saved.</div>
+						</ContentCommonBody>
 					);
 				}
 
-				let ShowRatingSubText = null;
-				if ( node.subsubtype == 'jam' )
-					ShowRatingSubText = <div class="-subtext">Jam game</div>;
-				else if ( node.subsubtype == 'compo' )
-					ShowRatingSubText = <div class="-subtext">Compo game</div>;
-				else if ( node.subsubtype == 'extra' )
-					ShowRatingSubText = <div class="-subtext">Extra game</div>;
-
-				ShowGrade = (
-					<ContentCommonBody class="-rating -body">
-						<div class="-header">Ratings</div>
-						{ShowRatingSubText}
-						<div class="-items">{VoteLines}</div>
-						<div class="-footer">Ratings are saved automatically when you click. When they change, they're saved.</div>
-					</ContentCommonBody>
-				);
-
-				//'
 			}
 			else if ( !user || !user.id ) {
 				ShowGrade = (
@@ -752,57 +799,59 @@ export default class ContentItem extends Component {
 				);
 			}
 		}
-		// Final Results
+		// Final Results, grading is closed
 		else if ( (isAdmin && requestAdmin) || (!parseInt(nodeEvent_CanGrade(parent)) && nodeEvent_IsFinished(parent)) ) {
-			// grading is closed
-			let Lines = [];
+			if ( canRate && !dontRateMe ) {
+				let Lines = [];
 
-			if ( parent && parent.meta ) {
-				for ( var key in parent.meta ) {
-					// Is it a valid grade ?
-					let parts = key.split('-');
-					if ( parts.length == 2 && parts[0] == 'grade' ) {
-						// Make sure they user hasn't opted out
+				if ( parent && parent.meta ) {
+					for ( var key in parent.meta ) {
+						// Is it a valid grade ?
+						let parts = key.split('-');
+						if ( parts.length == 2 && parts[0] == 'grade' ) {
+							// Make sure they user hasn't opted out
 
-						if ( node.meta && !(node.meta[key+'-out']|0) ) {
-							Lines.push({'key': key, 'value': parent.meta[key]});
+							if ( node.meta && !(node.meta[key+'-out']|0) ) {
+								Lines.push({'key': key, 'value': parent.meta[key]});
+							}
 						}
 					}
 				}
+
+				let ResultLines = [];
+				for ( let idx = 0; idx < Lines.length; idx++ ) {
+					let Line = Lines[idx];
+
+					let Title = Line.value;
+					let Place = "N/A";
+					if ( node.magic && node.magic[Line.key+'-result'] )
+						Place = node.magic[Line.key+'-result'];
+					let Average = 0;
+					if ( node.magic && node.magic[Line.key+'-average'] )
+						Average = node.magic[Line.key+'-average'];
+					let Count = 0;
+					if ( node.grade && node.grade[Line.key] )
+						Count = node.grade[Line.key];
+
+					//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
+
+					ResultLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Place}</strong><sup>{this.positionSuffix(Place)}</sup> ({Average} average from {Count} ratings)</div>);
+				}
+
+				ShowGrade = (
+					<ContentCommonBody class="-rating -body">
+						<div class="-header">Results</div>
+						<div class="-subtext">Final results</div>
+						<div class="-items">{ResultLines}</div>
+						<div class="-footer">When a line is <strong>N/A</strong>, it means there weren't enough ratings for a reliable score. Don't forget to play and rate other people's games during events to prioritize your game.</div>
+					</ContentCommonBody>
+				);
 			}
-
-			let ResultLines = [];
-			for ( let idx = 0; idx < Lines.length; idx++ ) {
-				let Line = Lines[idx];
-
-				let Title = Line.value;
-				let Place = "N/A";
-				if ( node.magic && node.magic[Line.key+'-result'] )
-					Place = node.magic[Line.key+'-result'];
-				let Average = 0;
-				if ( node.magic && node.magic[Line.key+'-average'] )
-					Average = node.magic[Line.key+'-average'];
-				let Count = 0;
-				if ( node.grade && node.grade[Line.key] )
-					Count = node.grade[Line.key];
-
-				//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
-
-				ResultLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Place}</strong><sup>{this.positionSuffix(Place)}</sup> ({Average} average from {Count} ratings)</div>);
-			}
-
-			ShowGrade = (
-				<ContentCommonBody class="-rating -body">
-					<div class="-header">Results</div>
-					<div class="-subtext">Final results</div>
-					<div class="-items">{ResultLines}</div>
-					<div class="-footer">When a line is <strong>N/A</strong>, it means there weren't enough ratings for a reliable score. Don't forget to play and rate other people's games during events to prioritize your game.</div>
-				</ContentCommonBody>
-			); //'
 		}
 
 		let ShowOptOut = null;
-		if ( parent && node_CanPublish(parent) ) {
+		// Check state.dontRateMe instead of dontRateMe, so the options are only hidden if opted out of everything
+		if ( parent && !state.dontRateMe ) {
 			let Lines = [];
 
 			for ( var key in parent.meta ) {
@@ -816,7 +865,8 @@ export default class ContentItem extends Component {
 						Lines.push({
 							'key': BaseKey,
 							'name': parent.meta[BaseKey],
-							'value': (node.meta ? node.meta[BaseKey+'-out'] : false)
+							'value': (node.meta ? node.meta[BaseKey+'-out'] : false),
+							'required': parent.meta[BaseKey+"-required"] === "1",
 						});
 					}
 				}
@@ -826,18 +876,25 @@ export default class ContentItem extends Component {
 
 			for ( let idx = 0; idx < Lines.length; idx++ ) {
 				let Line = Lines[idx];
-				OptLines.push(<UICheckbox onclick={this.onOptOut.bind(this, Line.key, !Line.value)} value={Line.value}>Do not rate me in <strong>{Line.name}</strong></UICheckbox>);
+				OptLines.push(<UICheckbox onclick={this.onOptOut.bind(this, Line.key, !Line.value)} value={Line.value}>Do not rate me in <strong>{Line.name}</strong>{Line.required ? " (required, see below)" : ""}</UICheckbox>);
 			}
 
 			ShowOptOut = (
 				<ContentCommonBody class="-opt-out -body">
-					<div class="-label">Voting Category Opt-outs</div>
+					<div class="-label">Rating Category Opt-outs</div>
 					{OptLines}
 					<div class="-footer">
-						<UIIcon small baseline src="info" />
-						<span>Opt-out of categories here if you and your team didn't make all your graphics, audio, or music during the event.
-						Many participants are making original graphics, audio and music from scratch during the event. As a courtesy, we ask you to opt-out if you didn't do the same.
-						Also, some games are not meant to be Humourous or Moody, so you can choose to opt-out of these too.</span>
+						<p>
+							<UIIcon small baseline src="info" />
+							<span>Opt-out of categories here if you and your team didn't make all your graphics, audio, or music during the event.
+							Many participants are making original graphics, audio and music from scratch during the event. As a courtesy, we ask you to opt-out if you didn't do the same. See <UILink href="http://ludumdare.com/rules/">the rules</UILink>.</span>
+						</p>
+						<p>
+							<span>Since some games are not meant to be Humourous or Moody, or they don't make good use of the theme, you can choose to opt-out of these categories too. Opting out of these is optional.</span>
+						</p>
+						<p>
+							<span>NOTE: If you opted out of a category by mistake, you may need more ratings to ensure you get a score in that category.</span>
+						</p>
 					</div>
 				</ContentCommonBody>
 			);
@@ -873,6 +930,22 @@ export default class ContentItem extends Component {
 		let ShowLinkEntry = null;
 		if ( true ) {
 			ShowLinkEntry = this.makeLinks(true /* editing */);
+		}
+
+		let ShowDontRateMe = null;
+		if ( true ) {
+			ShowDontRateMe = (
+				<ContentCommonBody class="-show-comments -body">
+					<div class="-label">Casual</div>
+					<div class="-items">
+						<UICheckbox onclick={this.onDontRateMe} value={state.dontRateMe}>Opt-out of ratings</UICheckbox>
+					</div>
+					<div class="-footer">
+						<UIIcon small baseline src="info" />
+						<span>If you'd like to entirely opt-out of ratings, choose this, and the Extra format below.</span>
+					</div>
+				</ContentCommonBody>
+			);
 		}
 
 		let ShowAnonymousComments = null;
@@ -928,6 +1001,7 @@ export default class ContentItem extends Component {
 				{ShowLinkEntry}
 				{ShowUploadTips}
 				{ShowAnonymousComments}
+				{ShowDontRateMe}
 				{ShowOptOut}
 				{ShowRulesCheck}
 				{ShowEventPicker}
