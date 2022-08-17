@@ -4,6 +4,33 @@ require_once __DIR__."/../config.php";
 include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."api2.php";
 require_once __DIR__."/".SHRUB_PATH."file/file.php";
+require_once __DIR__."/".SHRUB_PATH."file/constants.php";
+
+require_once __DIR__.'/vendor/autoload.php';
+
+
+function generate_akamai_headers( $filePath, $action = "upload", $fileSize = null, $serveFromZip = false ) {
+    $signer = new \Akamai\NetStorage\Authentication();
+    $signer->setKey(AKAMAI_NETSTORAGE_FILE_KEY, AKAMAI_NETSTORAGE_FILE_USER);
+
+    $action = "version=1&action=".$action;
+    $filePath = "/".AKAMAI_NETSTORAGE_FILE_CPCODE.'/'.$filePath;
+    
+    $signer->setNonce();
+    $signer->setTimestamp();
+    $signer->setPath($filePath);
+    $signer->setAction($action);
+
+    $headers = [];
+    $headers["X-Akamai-ACS-Action"] = $action;
+    $headers = array_merge($headers, $signer->createAuthHeaders());
+    $headers["url"] = AKAMAI_NETSTORAGE_FILE_HOST.$filePath;
+
+    // TODO: Be sure client includes an Origin
+    // $headers["Origin"] = "https://ldjam.com";
+
+    return $headers;
+}
 
 
 api_Exec([
@@ -33,23 +60,30 @@ api_Exec([
 		json_EmitHeadAndExit();
     }
 
-    // TODO: Is this the best way to know the ID of the calling user?
-    //$author_id = $RESPONSE['caller_id'];
-    
-    // TODO: Confirm that the user is the author of the node
-    $node_id = 10;
+    $_JSON = json_decode(file_get_contents('php://input'), true);
 
-    // TODO: Use a tag
-    //$tag_id = 0;
+    // TODO: Is this the best way to know the ID of the calling user?
+    $author_id = intval($RESPONSE['caller_id']); // or $_JSON['author']
+
+    // confirm they have permission to upload on this users behalf
+    
+    $node_id = intval($_JSON['node']);
+
+    // TODO: Confirm that the user is the author of the node OR has permission to upload on their behalf
+
+    $tag_id = intval($_JSON['tag']);
 
     // TODO: retrieve and sanitize filename
-    $file_name = "taste.zip";
+    $file_name = $_JSON['name'];
 
     // TODO: use file size
-    //$file_size = 128;
+    $file_size = intval($_JSON['size']);
 
-    $RESPONSE['path'] = 'http://'.AKAMAI_NETSTORAGE_FILE_HOST.'/'.AKAMAI_NETSTORAGE_FILE_CPCODE.'/$'.$node_id.'/'.$file_name;
+    // Write data to Database
+    $ret = file_Add($author_id, $node_id, $tag_id, $file_name, $file_size, SH_FILE_STATUS_ALLOCATED);
     
+    // Generate Akamai headers
+    $RESPONSE = array_merge($RESPONSE, generate_akamai_headers('uploads/$'.$node_id.'/'.$file_name, 'upload'));
 }],
 /*
 ["file/get", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {

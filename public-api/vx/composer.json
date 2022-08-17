@@ -1,0 +1,13 @@
+{
+    "name": "jammer/core",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Mike Kasprzak",
+            "email": "mike@interactivesnacks.com"
+        }
+    ],
+    "require": {
+        "akamai-open/netstorage": "^0.2.0"
+    }
+}
