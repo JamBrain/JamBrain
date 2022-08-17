@@ -14,6 +14,15 @@ function generate_akamai_headers( $filePath, $action = "upload", $fileSize = nul
     $signer->setKey(AKAMAI_NETSTORAGE_FILE_KEY, AKAMAI_NETSTORAGE_FILE_USER);
 
     $action = "version=1&action=".$action;
+
+    if ( $fileSize ) {
+        $action .= "&size=".$fileSize;
+    }
+
+    if ( $serveFromZip ) {
+        $action .= "&index-zip=1";
+    }
+
     $filePath = "/".AKAMAI_NETSTORAGE_FILE_CPCODE.'/'.$filePath;
     
     $signer->setNonce();
@@ -73,17 +82,19 @@ api_Exec([
 
     $tag_id = intval($_JSON['tag']);
 
-    // TODO: retrieve and sanitize filename
+    // TODO: sanitize filename
     $file_name = $_JSON['name'];
 
-    // TODO: use file size
     $file_size = intval($_JSON['size']);
+
+    // TODO: Have some user way to enable this
+    $serveFromZip = false;
 
     // Write data to Database
     $ret = file_Add($author_id, $node_id, $tag_id, $file_name, $file_size, SH_FILE_STATUS_ALLOCATED);
     
     // Generate Akamai headers
-    $RESPONSE = array_merge($RESPONSE, generate_akamai_headers('uploads/$'.$node_id.'/'.$file_name, 'upload'));
+    $RESPONSE = array_merge($RESPONSE, generate_akamai_headers('uploads/$'.$node_id.'/'.$file_name, 'upload', $file_size, $serveFromZip));
 }],
 /*
 ["file/get", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {

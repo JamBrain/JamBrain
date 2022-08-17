@@ -20,6 +20,7 @@ import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
 import ContentItemRulesCheck 			from 'com/content-item/item-rulescheck';
 import ContentItemFiles from './item-files';
+import ContentItemEmbed from './item-embed';
 
 import InputStar						from 'com/input-star/star';
 
@@ -535,6 +536,8 @@ export default class ContentItem extends Component {
 
 		let ShowFiles = <ContentItemFiles node={this.props.node} parent={this.state.parent} user={this.props.user} />;
 
+		let ShowEmbed = <ContentItemEmbed node={this.props.node} parent={this.state.parent} user={this.props.user} />;
+
 		// Event Picker
 		let ShowEventPicker = null;
 		let ShowRulesCheck = null;
@@ -998,6 +1001,7 @@ export default class ContentItem extends Component {
 
 		props.viewonly = (
 			<div>
+				{ShowEmbed}
 				{ShowLinkView}
 				{ShowGrade}
 				{ShowMetrics}
