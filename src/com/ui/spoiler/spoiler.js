@@ -1,7 +1,7 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
 
-export default class BlockSpoiler extends Component {
+export default class UISpoiler extends Component {
 	constructor( props ) {
 		super(props);
 
@@ -18,7 +18,7 @@ export default class BlockSpoiler extends Component {
 
 	render( props, state ) {
 		return (
-			<blockquote class={cN('block-spoiler', state.visible ? '-visible' : '')} onClick={this.onClick}>
+			<blockquote class={cN('ui-spoiler', state.visible ? '-visible' : '')} onClick={this.onClick}>
 				{props.children}
 			</blockquote>
 		);
