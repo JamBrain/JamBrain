@@ -1,13 +1,14 @@
 <?php
 require_once __DIR__."/../comment/comment_core.php";
 require_once __DIR__."/../grade/grade_core.php";
+require_once __DIR__."/../file/file_core.php";
 
 const F_NODE_ALL = 0xFFFFFF;			// NOTE: 24bit. Bits above 24bit must be explicitly included
 
 const F_NODE_META = 0x1;
 const F_NODE_LINK = 0x2;
 const F_NODE_PATH = 0x4;
-//const F_NODE_ = 0x8;
+const F_NODE_FILES = 0x8;
 const F_NODE_LOVE = 0x10;
 const F_NODE_COMMENT = 0x20;
 const F_NODE_COUNT = 0x40;
@@ -72,6 +73,15 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 			$paths = nodeCache_GetPathById($node['id'], 1);	// 1 = root node
 			$node['path'] = $paths['path'];
 			$node['parents'] = $paths['parent'];
+		}
+	}
+
+	// **** //
+
+	// Populate Files
+	if ( $flags & F_NODE_FILES ) {
+		foreach ( $nodes as &$node ) {
+			$node['files'] = file_GetByNode($node['id']);
 		}
 	}
 

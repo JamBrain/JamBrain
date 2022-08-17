@@ -1,6 +1,7 @@
 import {h, Component}					from 'preact/preact';
 import ContentCommonBody				from 'com/content-common/common-body';
 import UIButton							from 'com/ui/button/button';
+import UILink							from 'com/ui/link/link';
 
 import $File							from 'shrub/js/file/file';
 
@@ -13,7 +14,7 @@ export default class ContentItemFiles extends Component {
     onUpload( e ) {
 		let {node, user} = this.props;
 
-        if ( !user || !user.id )
+        if ( !user || !user.id || !node )
             return null;
 
         if ( e.target.files && e.target.files.length ) {
@@ -30,14 +31,42 @@ export default class ContentItemFiles extends Component {
     }
 
     render(props, state) {
+        let {node} = props;
+
+        if ( props.edit ) {
+            let files = [];
+            node.files.forEach(e => {
+                files.push(<li>{e.name} - {e.size} bytes</li>);
+            });
+
+            return (
+                <ContentCommonBody class="-files -body -upload">
+                    <div class="-label">Files and Downloads</div>
+                    <ul>{files}</ul>
+                    <label>
+                        <input type="file" name="file" style="display: none;" onchange={this.onUpload} />
+                        <UIButton class="-button">Upload New File</UIButton>
+                    </label>
+                </ContentCommonBody>
+            );
+        }
+
+        if ( !node || !node.files || !node.files.length ) {
+            return <div />;
+        }
+
+        // View //
+
+        let files = [];
+        node.files.forEach(e => {
+            files.push(<li><UILink href={"http://files.jam.host/uploads/$"+node.id+"/"+e.name}>{e.name}</UILink> - {e.size} bytes</li>);
+        });
+
         return (
-        <ContentCommonBody class="-files -body">
-            <div class="-label">Files List</div>
-            <label>
-                <input type="file" name="file" style="display: none;" onchange={this.onUpload} />
-                <UIButton>Upload</UIButton>
-            </label>
-        </ContentCommonBody>
+            <ContentCommonBody class="-files -body -upload">
+                <div class="-label">Files and Downloads</div>
+                <ul>{files}</ul>
+            </ContentCommonBody>
         );
     }
 }

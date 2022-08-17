@@ -534,7 +534,7 @@ export default class ContentItem extends Component {
 			props.draft = "Game";
 		}
 
-		let ShowFiles = <ContentItemFiles node={this.props.node} parent={this.state.parent} user={this.props.user} />;
+		let ShowFiles = <ContentItemFiles node={this.props.node} parent={this.state.parent} user={this.props.user} edit={extra && extra.length && (extra[0] == 'edit')} />;
 
 		let ShowEmbed = <ContentItemEmbed node={this.props.node} parent={this.state.parent} user={this.props.user} />;
 
@@ -918,7 +918,7 @@ export default class ContentItem extends Component {
 		// Where you can enter your game links
 		let ShowLinkEntry = null;
 		if ( true ) {
-			ShowLinkEntry = this.makeLinks(true /* editing */);
+			//ShowLinkEntry = this.makeLinks(true /* editing */);
 		}
 
 		let ShowDontRateMe = null;
@@ -967,7 +967,7 @@ export default class ContentItem extends Component {
 
 		let ShowLinkView = null;
 		if ( true ) {
-			ShowLinkView = this.makeLinks(false /* editing */);
+			//ShowLinkView = this.makeLinks(false /* editing */);
 		}
 
 		let ShowPostTips = null;
@@ -987,9 +987,9 @@ export default class ContentItem extends Component {
 			<div>
 				{ShowPostTips}
 				{ShowImages}
+				{ShowFiles}
 				{ShowLinkEntry}
 				{ShowUploadTips}
-				{ShowFiles}
 				{ShowAnonymousComments}
 				{ShowDontRateMe}
 				{ShowOptOut}
@@ -1002,6 +1002,7 @@ export default class ContentItem extends Component {
 		props.viewonly = (
 			<div>
 				{ShowEmbed}
+				{ShowFiles}
 				{ShowLinkView}
 				{ShowGrade}
 				{ShowMetrics}
