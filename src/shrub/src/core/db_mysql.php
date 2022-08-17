@@ -28,6 +28,11 @@ function db_GetQueryCount() {
 function DB_FIELD_DATE( $field, $name = null) {
 	return "DATE_FORMAT(CONVERT_TZ($field, @@session.time_zone, '+00:00'), '%Y-%m-%dT%TZ') AS ".(isset($name) ? $name : $field);
 }
+/// Wraps MySQL datetime fields in SELECT queries so they are returned as UNIX timestamps
+function DB_FIELD_TIMESTAMP( $field, $name = null) {
+	return "UNIX_TIMESTAMP($field) AS ".(isset($name) ? $name : $field);
+}
+
 
 function DB_FIELD_IP_TO_STRING($field) {
 	return "INET6_NTOA(".$field.") AS ".$field;
@@ -42,6 +47,8 @@ const DB_TYPE_UID = "BIGINT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE"; 				///< U
 const DB_TYPE_ID = "BIGINT UNSIGNED NOT NULL";										///< Use for all other IDs
 const DB_TYPE_IP = "VARBINARY(16) NOT NULL";										///< IP Addresses (IPv6 and IPv4)
 const DB_TYPE_TIMESTAMP = "DATETIME NOT NULL";										///< Timestamps
+const DB_TYPE_SHA256 = "VARBINARY(32) NOT NULL";									///< SHA-512 hash
+const DB_TYPE_SHA512 = "VARBINARY(64) NOT NULL";									///< SHA-512 hash
 //const DB_TYPE_ASCII = "CHARSET latin1 NOT NULL";									///< Use with VarChar(x)
 //const DB_TYPE_UNICODE = "NOT NULL"; /*CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci*/	///< Use with VarChar(x)
 
