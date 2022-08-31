@@ -24,7 +24,12 @@ export default class ContentItemFiles extends Component {
             return $File.RequestUpload(user.id, node.id, 0, file)
                 .then( r => {
                     if ( r.ok ) {
-                        return $File.Upload(r, file);
+                        return $File.Upload(r, file)
+                            .then(r2 => {
+                                if ( r2.ok ) {
+                                    return $File.ConfirmUpload(r.id, r.name, r.token, user.id);
+                                }
+                            });
                     }
                     else {
                         alert(r.message);
@@ -52,7 +57,12 @@ export default class ContentItemFiles extends Component {
             return $File.RequestUpload(user.id, node.id, 0, file, "$$embed.zip")
                 .then( r => {
                     if ( r.ok ) {
-                        return $File.Upload(r, file);
+                        return $File.Upload(r, file)
+                            .then(r2 => {
+                                if ( r2.ok ) {
+                                    return $File.ConfirmUpload(r.id, r.name, r.token, user.id);
+                                }
+                            });
                     }
                     else {
                         alert(r.message);

@@ -66,17 +66,17 @@ function file_Add( $author, $node, $tag, $name, $size, $status, $token = "" ) {
 }
 
 
-function file_SetStatusById( $id, $status, $token = "", $only_if_token = null) {
+function file_SetStatusById( $id, $status, $token = "", $only_if_token = null, $only_if_author = null) {
 	$set = [];
 	$vars = [];
 	$where = [];
 
-	$set[] = "status=?";
+	$set[] = "`status`=?";
 	$vars[] = $status;
 	$set[] = "token=?";
 	$vars[] = $token;
 
-	$where[] = "id=?";
+	$where[] = "`id`=?";
 	$vars[] = $id;
 
 	if ( $only_if_token ) {
@@ -84,10 +84,15 @@ function file_SetStatusById( $id, $status, $token = "", $only_if_token = null) {
 		$vars[] = $only_if_token;
 	}
 
+	if ( $only_if_author ) {
+		$where[] = "author=?";
+		$vars[] = $only_if_author;
+	}
+
 	return db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_FILE."
-		SET".join(',', $set)."
-		WHERE ".join(' AND ', $where).";",
+		SET".join(', ', $set)."
+		\nWHERE ".join(' AND ', $where).";",
 		...$vars
 	);
 }

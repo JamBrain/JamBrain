@@ -1,6 +1,7 @@
 export default {
 	Upload,
-	RequestUpload
+	RequestUpload,
+	ConfirmUpload
 };
 
 export function RequestUpload( author, node, tag, data, other_file_name ) {
@@ -17,6 +18,24 @@ export function RequestUpload( author, node, tag, data, other_file_name ) {
 			'tag': tag,
 			'name': other_file_name ? other_file_name : data.name,
 			'size': data.size,
+		})
+	})
+	.then(r => r.json().then(data => ({'ok': r.ok, ...data})));
+}
+
+export function ConfirmUpload( id, name, token, author ) {
+	return fetch(API_ENDPOINT+'/vx/file/confirm', {
+		'method': 'POST',
+		'credentials': 'include',
+		'mode': 'cors',
+		'headers': {
+			'Accept': 'application/json'
+		},
+		'body': JSON.stringify({
+			'id': id,
+			'name': name,
+			'token': token,
+			'author': author,
 		})
 	})
 	.then(r => r.json().then(data => ({'ok': r.ok, ...data})));

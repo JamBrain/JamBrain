@@ -147,6 +147,7 @@ api_Exec([
     if ( !strlen($file_name) ) {
         json_EmitFatalError_BadRequest("Invalid file name", $RESPONSE);
     }
+    $RESPONSE['name'] = $file_name;
 
     // Check if the given file extension is allowed
     if ( !has_extension($file_name) ) {
@@ -218,10 +219,29 @@ api_Exec([
         json_EmitFatalError_BadRequest(null, $RESPONSE);
     }
 
+    // Get the file_id
+    $file_id = intval($_JSON['id']);
+    if ( !$file_id ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
 
-    // id
-    // token
+    // Get the token
+    $token = $_JSON['token'];
+    if ( strlen($token) > 16 ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
 
+    $flags = SH_FILE_STATUS_ALLOCATED | SH_FILE_STATUS_UPLOADED;
+
+    $name = $_JSON['name'];
+    if ( !$name ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
+    else if ( $name == EMBED_FILE ) {
+        $flags |= SH_FILE_STATUS_AKAMAI_ZIP;
+    }
+
+    $RESPONSE['confirmed'] = file_SetStatusById($file_id, $flags, "", $token, $author_id);
 }],
 /*
 ["file/get", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
