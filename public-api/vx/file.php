@@ -5,11 +5,67 @@ include_once __DIR__."/".CONFIG_PATH."config.php";
 require_once __DIR__."/".SHRUB_PATH."api2.php";
 require_once __DIR__."/".SHRUB_PATH."file/file.php";
 require_once __DIR__."/".SHRUB_PATH."file/constants.php";
+require_once __DIR__."/".SHRUB_PATH."node/node.php";
+require_once __DIR__."/".SHRUB_PATH."core/core.php";
 
 require_once __DIR__.'/vendor/autoload.php';
 
 
-function generate_akamai_headers( $filePath, $action = "upload", $fileSize = null, $serveFromZip = false ) {
+const EMBED_FILE = '$$embed.zip';
+const MAX_FILE_SIZE = 256*1024*1024;
+
+const VALID_FILE_EXTENSIONS = [
+    // Archives
+    '.zip',
+    '.tar.gz',
+    '.tar.bz2',
+    '.7z',
+    
+    // Windows //
+    '.exe',
+    '.msi',
+
+    // Mac //
+    '.dmg',
+    
+    // Linux
+    '.deb',
+    '.rpm',
+    '.pkg',
+    '.flatpak',
+    '.snap',
+    //'.appimage', //AppImage
+
+    // Pico8
+    '.p8',
+    //'.p8.png',
+];
+
+
+// Generate a series token. Unique but not necessarily cryptographically secure.
+function generate_series_token() {
+    return bin2hex(random_bytes(8));
+}
+
+
+// Does the filename in the path contain a valid file extension
+function has_extension($path, $ext_list = VALID_FILE_EXTENSIONS) {
+    $path = strtolower($path);
+
+    foreach( $ext_list as $index => $ext ) {
+        $pos = strpos($path, $ext);
+        if ( $pos !== false ) {
+            if ( $pos == strlen($path)-strlen($ext) ) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+
+
+function generate_netstorage_headers( $filePath, $action = "upload", $fileSize = null, $serveFromZip = false ) {
     $signer = new \Akamai\NetStorage\Authentication();
     $signer->setKey(AKAMAI_NETSTORAGE_FILE_KEY, AKAMAI_NETSTORAGE_FILE_USER);
 
@@ -60,41 +116,111 @@ api_Exec([
     // Return file list
     $RESPONSE['files'] = $ret;
 }],
-//["file/list/author", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
-//["file/list/authors", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
-["file/upload", API_POST | API_CHARGE /*| API_AUTH*/, function(&$RESPONSE, $HEAD_REQUEST) {
+//["file/list/author", API_GET, function(&$RESPONSE, $HEAD_REQUEST) {
+//["file/list/authors", API_GET, function(&$RESPONSE, $HEAD_REQUEST) {
+["file/upload", API_POST /*| API_AUTH*/, function(&$RESPONSE, $HEAD_REQUEST) {
     // At this point we can bail if it's just a HEAD request
     // TODO: should we?
 	if ( $HEAD_REQUEST ) {
 		json_EmitHeadAndExit();
     }
 
+    // Parse the POST data as JSON
     $_JSON = json_decode(file_get_contents('php://input'), true);
 
     // TODO: Is this the best way to know the ID of the calling user?
+    // Get the author_id
     $author_id = intval($RESPONSE['caller_id']); // or $_JSON['author']
+    if ( !$author_id ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
 
-    // confirm they have permission to upload on this users behalf
-    
-    $node_id = intval($_JSON['node']);
-
-    // TODO: Confirm that the user is the author of the node OR has permission to upload on their behalf
-
+    // Get the tag_id
     $tag_id = intval($_JSON['tag']);
+    //if ( !$tag_id ) {
+    //    json_EmitFatalError_BadRequest(null, $RESPONSE);
+    //}
 
-    // TODO: sanitize filename
-    $file_name = $_JSON['name'];
+    // Sanitize the filename (if it's not the SPECIAL file)
+    $file_name = ($_JSON['name'] == EMBED_FILE) ? EMBED_FILE : coreSanitize_File($_JSON['name']);
+    if ( !strlen($file_name) ) {
+        json_EmitFatalError_BadRequest("Invalid file name", $RESPONSE);
+    }
 
+    // Check if the given file extension is allowed
+    if ( !has_extension($file_name) ) {
+        json_EmitFatalError_BadRequest("Invalid file extension", $RESPONSE);
+    }
+
+    // Get the file size
     $file_size = intval($_JSON['size']);
+    if ( !$file_size ) {
+        json_EmitFatalError_BadRequest("Invalid file size", $RESPONSE);
+    }
+    else if ( $file_size > MAX_FILE_SIZE ) {
+        json_EmitFatalError_BadRequest("File is too large! Max size is ".MAX_FILE_SIZE, $RESPONSE);
+    }
 
-    // TODO: Have some user way to enable this
-    $serveFromZip = false;
+    // TODO: Check against file storage quota
 
-    // Write data to Database
-    $ret = file_Add($author_id, $node_id, $tag_id, $file_name, $file_size, SH_FILE_STATUS_ALLOCATED);
+    // Should we enable "serve from zip" (i.e. indexing)?
+    $serveFromZip = ($file_name == EMBED_FILE);
+
+    // IMPORTANT: Do node stuff last, since it's expensive (requires DB)
+
+    // Get the node_id
+    $node_id = intval($_JSON['node']);
+    if ( !$node_id ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
+
+    // Get the node
+    $node = nodeComplete_GetById($node_id);
+
+    // Are you an author?
+    // TODO: Confirm you have permission (may include non-authors)
+    if ( !node_IsAuthor($node, $author_id) ) {
+        json_EmitFatalError_Forbidden(null, $RESPONSE);
+    }
+
+    // Generate a session token (to pair with file/confirm)
+    $token = generate_series_token();
+    $RESPONSE['token'] = $token;
+  
+    // TODO: If it exists, mark the old file as deprecated
+
+    // Store in database
+    $RESPONSE['id'] = file_Add($author_id, $node_id, $tag_id, $file_name, $file_size, SH_FILE_STATUS_ALLOCATED, $token);
     
-    // Generate Akamai headers
-    $RESPONSE = array_merge($RESPONSE, generate_akamai_headers('uploads/$'.$node_id.'/'.$file_name, 'upload', $file_size, $serveFromZip));
+    // Generate Akamai Netstorage headers, so client can do the work
+    $RESPONSE = array_merge($RESPONSE, generate_netstorage_headers('uploads/$'.$node_id.'/'.$file_name, 'upload', $file_size, $serveFromZip));
+
+    // Respond with 202, meaning we've accepted the request, but the job isn't necessarily done
+    json_RespondAccepted();
+    // Respond with 201, meaning a new resource was created
+    //json_RespondCreated();
+}],
+["file/confirm", API_POST /*| API_AUTH*/, function(&$RESPONSE, $HEAD_REQUEST) {
+    // At this point we can bail if it's just a HEAD request
+    // TODO: should we?
+	if ( $HEAD_REQUEST ) {
+		json_EmitHeadAndExit();
+    }
+
+    // Parse the POST data as JSON
+    $_JSON = json_decode(file_get_contents('php://input'), true);
+
+    // TODO: Is this the best way to know the ID of the calling user?
+    // Get the author_id
+    $author_id = intval($RESPONSE['caller_id']); // or $_JSON['author']
+    if ( !$author_id ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
+
+
+    // id
+    // token
+
 }],
 /*
 ["file/get", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {

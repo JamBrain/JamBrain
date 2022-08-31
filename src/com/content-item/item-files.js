@@ -36,7 +36,9 @@ export default class ContentItemFiles extends Component {
         if ( props.edit ) {
             let files = [];
             node.files.forEach(e => {
-                files.push(<li>{e.name} - {e.size} bytes</li>);
+                if ( !(files.status & 0x40) ) {
+                    files.push(<li>{e.name} - {e.size} bytes</li>);
+                }
             });
 
             return (
@@ -59,14 +61,20 @@ export default class ContentItemFiles extends Component {
 
         let files = [];
         node.files.forEach(e => {
-            files.push(<li><UILink href={"http://files.jam.host/uploads/$"+node.id+"/"+e.name}>{e.name}</UILink> - {e.size} bytes</li>);
+            if ( !(e.status & 0x40) ) {
+                files.push(<li><UILink href={"http://files.jam.host/uploads/$"+node.id+"/"+e.name}>{e.name}</UILink> - {e.size} bytes</li>);
+            }
         });
 
-        return (
-            <ContentCommonBody class="-files -body -upload">
-                <div class="-label">Files and Downloads</div>
-                <ul>{files}</ul>
-            </ContentCommonBody>
-        );
+        if ( files.length ) {
+            return (
+                <ContentCommonBody class="-files -body -upload">
+                    <div class="-label">Files and Downloads</div>
+                    <ul>{files}</ul>
+                </ContentCommonBody>
+            );
+        }
+
+        return <div />;
     }
 }

@@ -10,11 +10,20 @@ function file_GetById( $ids ) {
 }
 */
 
-function file_GetByNode( $node, $op = "" ) {
+function file_GetByNode( $node, ...$ops) {
+	$where = [];
+	$vars = [];
+
+	$where[] = "node=?";
+	$vars[] = $node;
+
+	array_merge($where, $ops);
+
     return db_QueryFetch(
         "SELECT id, author, node, tag, name, size, ".DB_FIELD_DATE("timestamp").", status
         FROM ".SH_TABLE_PREFIX.SH_TABLE_FILE."
-        WHERE node=".$node." ".$op.";"
+        WHERE ".join(' AND ', $where).";",
+		...$vars
     );
 }
 
@@ -24,7 +33,7 @@ function file_GetIdsByNode( $node ) {
 */
 
 
-function file_Add( $author, $node, $tag, $name, $size, $status ) {
+function file_Add( $author, $node, $tag, $name, $size, $status, $token = "" ) {
 	return db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_FILE." (
 			author,
@@ -33,7 +42,8 @@ function file_Add( $author, $node, $tag, $name, $size, $status ) {
 			name,
 			size,
 			timestamp,
-			status
+			status,
+			token
 		)
 		VALUES (
 			?,
@@ -42,6 +52,7 @@ function file_Add( $author, $node, $tag, $name, $size, $status ) {
 			?,
 			?,
 			NOW(),
+			?,
 			?
 		);",
 		$author,
@@ -49,6 +60,34 @@ function file_Add( $author, $node, $tag, $name, $size, $status ) {
 		$tag,
         $name,
 		$size,
-		$status
+		$status,
+		$token
+	);
+}
+
+
+function file_SetStatusById( $id, $status, $token = "", $only_if_token = null) {
+	$set = [];
+	$vars = [];
+	$where = [];
+
+	$set[] = "status=?";
+	$vars[] = $status;
+	$set[] = "token=?";
+	$vars[] = $token;
+
+	$where[] = "id=?";
+	$vars[] = $id;
+
+	if ( $only_if_token ) {
+		$where[] = "token=?";
+		$vars[] = $only_if_token;
+	}
+
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_FILE."
+		SET".join(',', $set)."
+		WHERE ".join(' AND ', $where).";",
+		...$vars
 	);
 }
