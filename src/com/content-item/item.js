@@ -999,9 +999,10 @@ export default class ContentItem extends Component {
 		);
 		props.onSave = this.onSave.bind(this);
 
+		props.prefix = ShowEmbed;
+
 		props.viewonly = (
 			<div>
-				{ShowEmbed}
 				{ShowFiles}
 				{ShowLinkView}
 				{ShowGrade}

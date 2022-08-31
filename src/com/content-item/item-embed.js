@@ -20,8 +20,8 @@ export default class ContentItemEmbed extends Component {
         }
 
         if ( embed ) {
-            let width = node.meta['embed-width'] ? node.meta['embed-width'] : 920;
-            let height = node.meta['embed-height'] ? node.meta['embed-height'] : 480;
+            let width = node.meta['embed-width'] ? node.meta['embed-width'] : 948;
+            let height = node.meta['embed-height'] ? node.meta['embed-height'] : 533;
 
             // allow-same-origin -- allow cookie access (MK: Might not need this)
             // allow-scripts -- allow JavaScript
@@ -31,12 +31,12 @@ export default class ContentItemEmbed extends Component {
             // allow="xr-spatial-tracking" -- AR/VR support
             // allow="cross-origin-isolated"
             return (
-                <ContentCommonBody class="-embed -body">
+                <div class="embed">
                     <iframe sandbox="allow-scripts allow-pointer-lock" allowfullscreen src={embed} style={"margin: auto; display: block; width: "+width+"px; height: "+height+"px;"} />
-                </ContentCommonBody>
+                </div>
             );
         }
 
-        return <ContentCommonBody class="-embed -body" />;
+        return <div class="embed" />;
     }
 }
