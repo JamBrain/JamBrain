@@ -114,7 +114,7 @@ export default class ContentItemFiles extends Component {
         let files = [];
         node.files.forEach(e => {
             if ( !(e.status & 0x40) ) {
-                files.push(<li><UILink href={"http://files.jam.host/uploads/$"+node.id+"/"+e.name}>{e.name}</UILink> - {e.size} bytes</li>);
+                files.push(<li><UILink href={"//files.jam.host/uploads/$"+node.id+"/"+e.name}>{e.name}</UILink> - {e.size} bytes</li>);
             }
         });
 
