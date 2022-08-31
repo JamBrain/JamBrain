@@ -81,7 +81,7 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 	// Populate Files
 	if ( $flags & F_NODE_FILES ) {
 		foreach ( $nodes as &$node ) {
-			$node['files'] = file_GetByNode($node['id']);
+			$node['files'] = file_GetByNode($node['id']);//, "name='\$\$embed.zip'");//"`status`=9");
 		}
 	}
 
