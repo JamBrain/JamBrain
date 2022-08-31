@@ -9,7 +9,17 @@ export default class ContentItemEmbed extends Component {
     render(props, state) {
         let {node} = props;
 
+        let embed = null;
+        if ( node_HasEmbed(node) ) {
+            embed = '//files.jam.host/embed/$'+node.id+'/index.html';
+        }
+
+        // Deprecated
         if ( node.meta && node.meta.embed ) {
+            embed = node.meta.embed;
+        }
+
+        if ( embed ) {
             let width = node.meta['embed-width'] ? node.meta['embed-width'] : 920;
             let height = node.meta['embed-height'] ? node.meta['embed-height'] : 480;
 
@@ -22,7 +32,7 @@ export default class ContentItemEmbed extends Component {
             // allow="cross-origin-isolated"
             return (
                 <ContentCommonBody class="-embed -body">
-                    <iframe sandbox="allow-scripts allow-pointer-lock" allowfullscreen src={node.meta.embed} style={"margin: auto; display: block; width: "+width+"px; height: "+height+"px;"} />
+                    <iframe sandbox="allow-scripts allow-pointer-lock" allowfullscreen src={embed} style={"margin: auto; display: block; width: "+width+"px; height: "+height+"px;"} />
                 </ContentCommonBody>
             );
         }

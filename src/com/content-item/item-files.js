@@ -9,6 +9,7 @@ export default class ContentItemFiles extends Component {
 	constructor(props) {
 		super(props);
         this.onUpload = this.onUpload.bind(this);
+        this.onUploadAndEmbed = this.onUploadAndEmbed.bind(this);
 	}
 
     onUpload( e ) {
@@ -22,9 +23,46 @@ export default class ContentItemFiles extends Component {
 
             return $File.RequestUpload(user.id, node.id, 0, file)
                 .then( r => {
-                    return $File.Upload(r, file);
+                    if ( r.ok ) {
+                        return $File.Upload(r, file);
+                    }
+                    else {
+                        alert(r.message);
+                    }
+                })
+                .then( r => {
+                    console.log("Uploaded", r);
                 })
                 .catch(err => {
+                    alert(err);
+                    this.setState({'error': err});
+                });
+        }
+    }
+
+    onUploadAndEmbed( e ) {
+		let {node, user} = this.props;
+
+        if ( !user || !user.id || !node )
+            return null;
+
+        if ( e.target.files && e.target.files.length ) {
+            let file = e.target.files[0];
+
+            return $File.RequestUpload(user.id, node.id, 0, file, "$$embed.zip")
+                .then( r => {
+                    if ( r.ok ) {
+                        return $File.Upload(r, file);
+                    }
+                    else {
+                        alert(r.message);
+                    }
+                })
+                .then( r => {
+                    console.log("Uploaded", r);
+                })
+                .catch(err => {
+                    alert(err);
                     this.setState({'error': err});
                 });
         }
@@ -47,7 +85,11 @@ export default class ContentItemFiles extends Component {
                     <ul>{files}</ul>
                     <label>
                         <input type="file" name="file" style="display: none;" onchange={this.onUpload} />
-                        <UIButton class="-button">Upload New File</UIButton>
+                        <UIButton class="-button">Upload</UIButton>
+                    </label>
+                    <label>
+                        <input type="file" name="file" style="display: none;" onchange={this.onUploadAndEmbed} />
+                        <UIButton class="-button">Upload & Embed</UIButton>
                     </label>
                 </ContentCommonBody>
             );

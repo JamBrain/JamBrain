@@ -65,7 +65,7 @@ function has_extension($path, $ext_list = VALID_FILE_EXTENSIONS) {
 
 
 
-function generate_netstorage_headers( $filePath, $action = "upload", $fileSize = null, $serveFromZip = false ) {
+function generate_netstorage_headers( $filePath, $action = "upload", $fileSize = null, $serveFromZip = false, $binary = false ) {
     $signer = new \Akamai\NetStorage\Authentication();
     $signer->setKey(AKAMAI_NETSTORAGE_FILE_KEY, AKAMAI_NETSTORAGE_FILE_USER);
 
@@ -73,6 +73,10 @@ function generate_netstorage_headers( $filePath, $action = "upload", $fileSize =
 
     if ( $fileSize ) {
         $action .= "&size=".$fileSize;
+    }
+
+    if ( $binary ) {
+        $action .= "&upload-type=binary";
     }
 
     if ( $serveFromZip ) {
@@ -91,15 +95,12 @@ function generate_netstorage_headers( $filePath, $action = "upload", $fileSize =
     $headers = array_merge($headers, $signer->createAuthHeaders());
     $headers["url"] = AKAMAI_NETSTORAGE_FILE_HOST.$filePath;
 
-    // TODO: Be sure client includes an Origin
-    // $headers["Origin"] = "https://ldjam.com";
-
     return $headers;
 }
 
 
 api_Exec([
-["file/list/node", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
+["file/list/node", API_GET, function(&$RESPONSE, $HEAD_REQUEST) {
 	if ( !json_ArgCount() )
 		json_EmitFatalError_BadRequest(null, $RESPONSE);
 
@@ -118,7 +119,7 @@ api_Exec([
 }],
 //["file/list/author", API_GET, function(&$RESPONSE, $HEAD_REQUEST) {
 //["file/list/authors", API_GET, function(&$RESPONSE, $HEAD_REQUEST) {
-["file/upload", API_POST /*| API_AUTH*/, function(&$RESPONSE, $HEAD_REQUEST) {
+["file/upload", API_POST | API_AUTH, function(&$RESPONSE, $HEAD_REQUEST) {
     // At this point we can bail if it's just a HEAD request
     // TODO: should we?
 	if ( $HEAD_REQUEST ) {
@@ -149,7 +150,7 @@ api_Exec([
 
     // Check if the given file extension is allowed
     if ( !has_extension($file_name) ) {
-        json_EmitFatalError_BadRequest("Invalid file extension", $RESPONSE);
+        json_EmitFatalError_BadRequest("Unsupported file type", $RESPONSE);
     }
 
     // Get the file size
@@ -200,7 +201,7 @@ api_Exec([
     // Respond with 201, meaning a new resource was created
     //json_RespondCreated();
 }],
-["file/confirm", API_POST /*| API_AUTH*/, function(&$RESPONSE, $HEAD_REQUEST) {
+["file/confirm", API_POST | API_AUTH, function(&$RESPONSE, $HEAD_REQUEST) {
     // At this point we can bail if it's just a HEAD request
     // TODO: should we?
 	if ( $HEAD_REQUEST ) {
