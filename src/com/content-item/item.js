@@ -19,6 +19,8 @@ import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
 import ContentItemRulesCheck 			from 'com/content-item/item-rulescheck';
+import ContentItemFiles from './item-files';
+import ContentItemEmbed from './item-embed';
 
 import InputStar						from 'com/input-star/star';
 
@@ -532,6 +534,10 @@ export default class ContentItem extends Component {
 			props.draft = "Game";
 		}
 
+		let ShowFiles = <ContentItemFiles node={this.props.node} parent={this.state.parent} user={this.props.user} edit={extra && extra.length && (extra[0] == 'edit')} />;
+
+		let ShowEmbed = <ContentItemEmbed node={this.props.node} parent={this.state.parent} user={this.props.user} />;
+
 		// Event Picker
 		let ShowEventPicker = null;
 		let ShowRulesCheck = null;
@@ -912,7 +918,7 @@ export default class ContentItem extends Component {
 		// Where you can enter your game links
 		let ShowLinkEntry = null;
 		if ( true ) {
-			ShowLinkEntry = this.makeLinks(true /* editing */);
+			//ShowLinkEntry = this.makeLinks(true /* editing */);
 		}
 
 		let ShowDontRateMe = null;
@@ -961,7 +967,7 @@ export default class ContentItem extends Component {
 
 		let ShowLinkView = null;
 		if ( true ) {
-			ShowLinkView = this.makeLinks(false /* editing */);
+			//ShowLinkView = this.makeLinks(false /* editing */);
 		}
 
 		let ShowPostTips = null;
@@ -981,6 +987,7 @@ export default class ContentItem extends Component {
 			<div>
 				{ShowPostTips}
 				{ShowImages}
+				{ShowFiles}
 				{ShowLinkEntry}
 				{ShowUploadTips}
 				{ShowAnonymousComments}
@@ -992,8 +999,11 @@ export default class ContentItem extends Component {
 		);
 		props.onSave = this.onSave.bind(this);
 
+		props.prefix = ShowEmbed;
+
 		props.viewonly = (
 			<div>
+				{ShowFiles}
 				{ShowLinkView}
 				{ShowGrade}
 				{ShowMetrics}
