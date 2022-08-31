@@ -222,11 +222,11 @@ class Main extends Component {
 	fetchFeatured( node_id ) {
 		console.log("[fetchFeatured] +");
 
-		// Used across everything below
-		let Node = null;
-
 		return $Node.What(SITE_ROOT).then(r => {
 			let newState = {};
+
+			if ( !r.featured )
+				return;
 
 			newState.root = r.root;
 			newState.featured = r.featured;

@@ -241,16 +241,21 @@ api_Exec([
 	$root = nodeCache_GetById($root_id);
 	$RESPONSE['root'] = $root;
 
+	$focus_id = $root_id;
 	$featured_id = 0;
 	if ( isset($root['meta']) && isset($root['meta']['featured']) ) {
 		$featured_id = intval($root['meta']['featured']);
+		$focus_id = $featured_id;
+
+		$featured = $featured_id ? nodeCache_GetById($featured_id) : null;
+		$RESPONSE['featured'] = $featured;
 	}
-	$featured = $featured_id ? nodeCache_GetById($featured_id) : null;
-	$RESPONSE['featured'] = $featured;
+	//$featured = $featured_id ? nodeCache_GetById($featured_id) : null;
+	//$RESPONSE['featured'] = $featured;
 
 	// Authentication: rather than error out (i.e. API_AUTH) we check user_id manually here
 	$user_id = userAuth_GetID();
-	$RESPONSE['node'] = ($user_id && $featured_id) ? nodeComplete_GetWhatIdHasAuthoredByParent($user_id, $featured_id) : [];
+	$RESPONSE['node'] = ($user_id && $focus_id) ? nodeComplete_GetWhatIdHasAuthoredByParent($user_id, $focus_id) : [];
 }],
 // If you are athenticated, return your node, and any metadata that is for your eyes only.
 ["node2/getmy", API_GET | API_AUTH | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
