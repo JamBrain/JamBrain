@@ -194,7 +194,7 @@ api_Exec([
     // Store in database
     $RESPONSE['id'] = file_Add($author_id, $node_id, $tag_id, $file_name, $file_size, SH_FILE_STATUS_ALLOCATED, $token);
     
-    // Generate Akamai Netstorage headers, so client can do the work
+    // Generate Akamai NetStorage headers, so client can do the work
     $RESPONSE = array_merge($RESPONSE, generate_netstorage_headers('uploads/$'.$node_id.'/'.$file_name, 'upload', $file_size, $serveFromZip));
 
     // Respond with 202, meaning we've accepted the request, but the job isn't necessarily done
