@@ -442,14 +442,18 @@ export default class ContentItem extends Component {
 //					namePlaceholder="Source"
 //					urlPlaceholder="http://example.com/source.zip"
 
-		return (
-			<ContentCommonBody class="-body">
-				<div class="-label">Downloads and Links</div>
-				<div class="-items">
-					{LinkMeta}
-				</div>
-			</ContentCommonBody>
-		);
+		if ( this.state.linksShown > 1 ) {
+			return (
+				<ContentCommonBody class="-body">
+					<div class="-label">Links</div>
+					<div class="-items">
+						{LinkMeta}
+					</div>
+				</ContentCommonBody>
+			);
+		}
+		// TODO: return <Fragement />
+		return <ContentCommonBody />;
 	}
 
 	render( props, state ) {
@@ -918,7 +922,7 @@ export default class ContentItem extends Component {
 		// Where you can enter your game links
 		let ShowLinkEntry = null;
 		if ( true ) {
-			//ShowLinkEntry = this.makeLinks(true /* editing */);
+			ShowLinkEntry = this.makeLinks(true /* editing */);
 		}
 
 		let ShowDontRateMe = null;
@@ -954,7 +958,7 @@ export default class ContentItem extends Component {
 		}
 
 		let ShowUploadTips = null;
-		if ( true ) {
+		/*if ( true ) {
 			ShowUploadTips = (
 				<ContentCommonBody class="-hosting -body">
 					<div class="-footer">
@@ -963,11 +967,11 @@ export default class ContentItem extends Component {
 					</div>
 				</ContentCommonBody>
 			);
-		}
+		}*/
 
 		let ShowLinkView = null;
 		if ( true ) {
-			//ShowLinkView = this.makeLinks(false /* editing */);
+			ShowLinkView = this.makeLinks(false /* editing */);
 		}
 
 		let ShowPostTips = null;

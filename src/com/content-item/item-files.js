@@ -91,7 +91,7 @@ export default class ContentItemFiles extends Component {
 
             return (
                 <ContentCommonBody class="-files -body -upload">
-                    <div class="-label">Files and Downloads</div>
+                    <div class="-label">Downloads</div>
                     <ul>{files}</ul>
                     <label>
                         <input type="file" name="file" style="display: none;" onchange={this.onUpload} />
@@ -121,7 +121,7 @@ export default class ContentItemFiles extends Component {
         if ( files.length ) {
             return (
                 <ContentCommonBody class="-files -body -upload">
-                    <div class="-label">Files and Downloads</div>
+                    <div class="-label">Downloads</div>
                     <ul>{files}</ul>
                 </ContentCommonBody>
             );
