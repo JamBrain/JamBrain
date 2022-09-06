@@ -20,10 +20,17 @@ import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
 import ContentSimple					from 'com/content-simple/simple';
 
+import $Node							from 'shrub/js/node/node';
+
+
 
 export default class ContentEvent extends Component {
 	constructor( props ) {
 		super(props);
+
+		this.state = {
+			'what': null
+		};
 //
 //		this.state = {
 //			'editing': this.isEditMode(),
@@ -34,8 +41,20 @@ export default class ContentEvent extends Component {
 		this.onJoin = this.onJoin.bind(this);
 	}
 
-//	componentDidMount() {
-//	}
+	componentDidMount() {
+		$Node.What(this.props.node.id).then(r => {
+			console.log("arr", r);
+
+			// HACK: Gets the first game I'm an author of
+			if ( r.node && Object.keys(r.node).length ) {
+				let newState = {};
+
+				newState.what = r.node[Object.keys(r.node)[0]];
+
+				this.setState(newState);
+			}
+		});
+	}
 //	componentWillUnmount() {
 //	}
 
@@ -45,9 +64,9 @@ export default class ContentEvent extends Component {
 //	}
 
 	onJoin( e ) {
-		var featured = this.props.featured;
+		//var featured = this.props.featured;
 
-		window.location.hash = "#create/"+featured.id+"/item/game";
+		window.location.hash = "#create/"+this.props.node.id+"/item/game";
 	}
 
 	render( props, state ) {
@@ -103,11 +122,17 @@ export default class ContentEvent extends Component {
                 Class = "-selected";
             }
 
-			// NOTE: THIS IS WRONG! We should be asking the event node (i.e. this) for `what`. Alas, with 1 event we can cheat
-			if ( featured && featured.what && featured.focus_id ) {
-//				var FeaturedGame = featured.what[featured.focus_id]; // Hack
-//				ShowGame =
+			console.log("state", state);
 
+			// NOTE: THIS IS WRONG! We should be asking the event node (i.e. this) for `what`. Alas, with 1 event we can cheat
+			//if ( featured && featured.what && featured.focus_id ) {
+			if ( state && state.what && state.what.id ) {
+//				var FeaturedGame = featured.what[featured.focus_id]; // Hack
+				ShowJoin = (
+					<ContentCommonNavButton href={state.what.slug} class={Class}>
+						<SVGIcon>gamepad</SVGIcon><div class="if-sidebar-inline">My Game</div>
+					</ContentCommonNavButton>
+				);
 			}
 			else {
 				ShowJoin = (

@@ -19,6 +19,8 @@ import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
 import ContentItemRulesCheck 			from 'com/content-item/item-rulescheck';
+import ContentItemFiles from './item-files';
+import ContentItemEmbed from './item-embed';
 
 import InputStar						from 'com/input-star/star';
 
@@ -456,14 +458,18 @@ export default class ContentItem extends Component {
 //					namePlaceholder="Source"
 //					urlPlaceholder="http://example.com/source.zip"
 
-		return (
-			<ContentCommonBody class="-body">
-				<div class="-label">Downloads and Links</div>
-				<div class="-items">
-					{LinkMeta}
-				</div>
-			</ContentCommonBody>
-		);
+		if ( this.state.linksShown > 1 ) {
+			return (
+				<ContentCommonBody class="-body">
+					<div class="-label">Links</div>
+					<div class="-items">
+						{LinkMeta}
+					</div>
+				</ContentCommonBody>
+			);
+		}
+		// TODO: return <Fragement />
+		return <ContentCommonBody />;
 	}
 
 
@@ -548,6 +554,10 @@ export default class ContentItem extends Component {
 
 			props.draft = "Game";
 		}
+
+		let ShowFiles = <ContentItemFiles node={this.props.node} parent={this.state.parent} user={this.props.user} edit={extra && extra.length && (extra[0] == 'edit')} />;
+
+		let ShowEmbed = <ContentItemEmbed node={this.props.node} parent={this.state.parent} user={this.props.user} />;
 
 		// Event Picker
 		let ShowEventPicker = null;
@@ -965,7 +975,7 @@ export default class ContentItem extends Component {
 		}
 
 		let ShowUploadTips = null;
-		if ( true ) {
+		/*if ( true ) {
 			ShowUploadTips = (
 				<ContentCommonBody class="-hosting -body">
 					<div class="-footer">
@@ -974,7 +984,7 @@ export default class ContentItem extends Component {
 					</div>
 				</ContentCommonBody>
 			);
-		}
+		}*/
 
 		let ShowLinkView = null;
 		if ( true ) {
@@ -998,6 +1008,7 @@ export default class ContentItem extends Component {
 			<div>
 				{ShowPostTips}
 				{ShowImages}
+				{ShowFiles}
 				{ShowLinkEntry}
 				{ShowUploadTips}
 				{ShowAnonymousComments}
@@ -1009,8 +1020,11 @@ export default class ContentItem extends Component {
 		);
 		props.onSave = this.onSave.bind(this);
 
+		props.prefix = ShowEmbed;
+
 		props.viewonly = (
 			<div>
+				{ShowFiles}
 				{ShowLinkView}
 				{ShowGrade}
 				{ShowMetrics}

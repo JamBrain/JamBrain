@@ -206,6 +206,25 @@ window.node_GetFullType = function( node ) {
 	return fulltype;
 }
 
+window.node_HasEmbed = function( node ) {
+	// Return null if argument is invalid
+	if ( !node )
+		return null;
+
+	// Return null if node has no files
+	if ( !node.files )
+		return null;
+
+	// Iterate over all files, and return true if we find the embedded file
+	for ( var idx = 0; idx < node.files.length; idx++ ) {
+		if ( node.files[idx].name == "$$embed.zip" ) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
 window.nodeItem_GetPlatforms = function( node ) {
 	if ( node && node.meta && node.meta.platform ) {
 		return node.meta.platform;

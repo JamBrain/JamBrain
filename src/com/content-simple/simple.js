@@ -529,12 +529,16 @@ export default class ContentSimple extends Component {
 				props.minimized = null;
 			}
 
-			//Header = !props.noheader ? <header>{Header}</header> : null;
+			let ShowPrefix = null;
+			if ( props.prefix ) {
+				ShowPrefix = props.prefix;
+			}
 
 			return (
 				<ContentCommon {...props}>
 					{PreHeader}
 					{ShowDraft}
+					{ShowPrefix}
 					{ShowAvatar}
 					{Header}
 					{ShowAbove}

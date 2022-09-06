@@ -243,6 +243,9 @@ class Main extends Component {
 		return $Node.What(SITE_ROOT).then(r => {
 			let newState = {};
 
+			if ( !r.featured )
+				return;
+
 			newState.root = r.root;
 			newState.featured = r.featured;
 			newState.featured.what = r.node;

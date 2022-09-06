@@ -35,24 +35,37 @@ const SH_SEARCHDB_PORT = 9306;
 //const SH_REDIS_HOST = 'localhost';
 
 // Debug Flags //
-//const SH_PHP_DEBUG = true;			// PHP Debug Mode: Extra logging, query debug features.
-//const SH_CSS_DEBUG = true;			// CSS Debug Mode: Not minified, src includes.
-//const SH_JS_DEBUG = true;			// JavaScript Debug Mode: Not minified, src includes.
+const SH_PHP_DEBUG = true;			// PHP Debug Mode: Extra logging, query debug features.
+const SH_CSS_DEBUG = true;			// CSS Debug Mode: Not minified, src includes.
+const SH_JS_DEBUG = true;			// JavaScript Debug Mode: Not minified, src includes.
 
 // Paths //
 //const API_DOMAIN = 'api.use.default';
-//const SH_STATIC_DIR = '/public-static';
+const SH_STATIC_DIR = '/public-static';
 //if ( isset($_SERVER['SERVER_ADDR']) ) define("SH_STATIC_URL",'//'.$_SERVER['SERVER_ADDR'].':8080');
 
 // Access Permission Whitelist (Can be arrays on PHP 5.6+) //
-//const SH_ACCESS_DATA = "192.168.48.1";
+const SH_ACCESS_DATA = "192.168.56.1";
 
 //const SECURE_LOGIN_ONLY = true;
 
-// API Keys //
-const GOOGLE_API_KEY = '';
-const TWITCH_API_KEY = '';
-const TWITTER_API_KEY = '';
-const FACEBOOK_API_KEY = '';
-const INSTAGRAM_API_KEY = '';
-const TUMBLR_API_KEY = '';
+// EXTERNAL APIs //
+const GOOGLE_KEY = '';
+const TWITCH_KEY = '';
+const TWITTER_KEY = '';
+
+// EXTERNAL API: AKAMAI //
+const AKAMAI_NETSTORAGE_MEDIA_HOST = '';
+const AKAMAI_NETSTORAGE_MEDIA_CPCODE = '';
+const AKAMAI_NETSTORAGE_MEDIA_USER = '';
+const AKAMAI_NETSTORAGE_MEDIA_KEY = '';
+
+const AKAMAI_NETSTORAGE_FILE_HOST = '';
+const AKAMAI_NETSTORAGE_FILE_CPCODE = '';
+const AKAMAI_NETSTORAGE_FILE_USER = '';
+const AKAMAI_NETSTORAGE_FILE_KEY = '';
+
+const AKAMAI_CCU_CLIENT_SECRET = '';
+const AKAMAI_CCU_HOST = '';
+const AKAMAI_CCU_ACCESS_TOKEN = '';
+const AKAMAI_CCU_CLIENT_TOKEN = '';
