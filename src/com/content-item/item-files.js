@@ -57,6 +57,37 @@ export default class ContentItemFiles extends Component {
         }
     }
 
+    onDelete( e ) {
+        let {node, user} = this.props;
+
+        if ( !user || !user.id || !node )
+            return null;
+
+        console.log("onDelete", e.id, e.name);
+
+        return $File.RequestDelete(e.id, e.name, node.id)
+            .then( r => {
+                if ( r.ok ) {
+                    return $File.Delete(r);
+                        /*.then(r2 => {
+                            if ( r2.ok ) {
+                                return $File.ConfirmDelete(r.id, r.name, r.token, user.id);
+                            }
+                        });*/
+                }
+                else {
+                    alert(r.message);
+                }
+            })
+            .then( r => {
+                console.log("Deleted", r);
+            })
+            .catch(err => {
+                alert(err);
+                this.setState({'error': err});
+            });
+    }
+
     render(props, state) {
         let {node, parent} = props;
 
@@ -74,7 +105,8 @@ export default class ContentItemFiles extends Component {
             let files = [];
             Object.values(latestFiles).forEach(e => {
                 if ( !(e.status & 0x40) ) {
-                    files.push(<li>{e.name} - {e.size} bytes</li>);
+                    let func = this.onDelete.bind(this, e);
+                    files.push(<li>{e.name} - {e.size} bytes - <UIButton style="display: inline;" onclick={func}>delete</UIButton></li>);
                 }
             });
 
