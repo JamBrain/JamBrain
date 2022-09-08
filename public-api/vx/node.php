@@ -681,12 +681,12 @@ switch ( $action ) {
 						nodeMeta_Add($new_node, 0, SH_SCOPE_SHARED, 'can-create', 'post');
 						// Add yourself as an author of the game
 						nodeMeta_Add($new_node, $user_id, SH_SCOPE_PUBLIC, 'author');
+
+						nodeCache_InvalidateById([$new_node, $user_id]);
 					}
 					else {
 						json_EmitFatalError_Server(null, $RESPONSE);
 					}
-
-					nodeCache_InvalidateById($new_node);
 
 					$RESPONSE['type'] = $type;
 					$RESPONSE['path'] = node_GetPathById($new_node, 1)['path']; // Root node
@@ -1105,8 +1105,9 @@ switch ( $action ) {
 								// TODO: Check if this exact value isn't the newest
 
 								$RESPONSE['id'] = nodeMeta_Add($user_id, $node_id, SH_SCOPE_SHARED, 'star');
+
 								if ( $RESPONSE['id'] ) {
-									nodeCache_InvalidateById($node_id);
+									nodeCache_InvalidateById([$user_id, $node_id]);
 								}
 							}
 							else {
@@ -1139,8 +1140,9 @@ switch ( $action ) {
 								// TODO: Check if this exact value isn't the newest
 
 								$RESPONSE['id'] = nodeMeta_Remove($user_id, $node_id, SH_SCOPE_SHARED, 'star');
+
 								if ( $RESPONSE['id'] ) {
-									nodeCache_InvalidateById($node_id);
+									nodeCache_InvalidateById([$user_id, $node_id]);
 								}
 							}
 							else {
@@ -1244,16 +1246,22 @@ switch ( $action ) {
 							else
 								json_EmitFatalError_BadRequest("Internal error while applying '$key' metadata in '".$node['type']."'", $RESPONSE);
 
-							if ( $action == 'add' )
+							$changed = 0;
+							if ( $action == 'add' ) {
 								$changed = nodeMeta_Add($node_id, $b, $scope, $key, $v, $b_constraint);
-							else if ( $action == 'remove' )
+							}
+							else if ( $action == 'remove' ) {
 								$changed = nodeMeta_Remove($node_id, $b, $scope, $key, $v, $b_constraint);
+							}
 
-							if ( $changed )
+							$RESPONSE['chia'] = $changed;
+
+							if ( $changed ) {
 								$RESPONSE['changed'][$key] = $v;
+							}
 						}
 						if ( count($RESPONSE['changed']) ) {
-							nodeCache_InvalidateById($node_id);
+							nodeCache_InvalidateById([$node_id, $b]);
 						}
 					}
 					else {
@@ -1332,12 +1340,12 @@ switch ( $action ) {
 							else if ( $action == 'remove' )
 								$changed = nodeMeta_Remove($node_a_id, $node_b_id, $scope, $key, $v);
 
-							if ( $changed )
+							if ( $changed ) {
 								$RESPONSE['changed'][$key] = $v;
+							}
 						}
 						if ( count($RESPONSE['changed']) ) {
-							nodeCache_InvalidateById($node_a_id);
-							nodeCache_InvalidateById($node_b_id);
+							nodeCache_InvalidateById([$node_a_id, $node_b_id]);
 						}
 
 					}

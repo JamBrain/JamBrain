@@ -36,7 +36,7 @@ export default class ContentItemEmbedFile extends Component {
                             .then(r2 => {
                                 if ( r2.ok ) {
                                     this.setState({'status': 4});
-                                    return $File.ConfirmUpload(r.id, r.name, r.token, user.id);
+                                    return $File.ConfirmUpload(r.id, node.id, r.name, r.token, user.id);
                                 }
                             });
                     }

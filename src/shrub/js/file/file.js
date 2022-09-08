@@ -26,7 +26,7 @@ export function RequestUpload( author, node, tag, data, other_file_name ) {
 	.then(r => r.json().then(data => ({'ok': r.ok, ...data})));
 }
 
-export function ConfirmUpload( id, name, token, author ) {
+export function ConfirmUpload( id, node, name, token, author ) {
 	return fetch(API_ENDPOINT+'/vx/file/confirm', {
 		'method': 'POST',
 		'credentials': 'include',
@@ -36,6 +36,7 @@ export function ConfirmUpload( id, name, token, author ) {
 		},
 		'body': JSON.stringify({
 			'id': id,
+			'node': node,
 			'name': name,
 			'token': token,
 			'author': author,

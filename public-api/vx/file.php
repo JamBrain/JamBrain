@@ -248,7 +248,15 @@ api_Exec([
         $flags |= SH_FILE_STATUS_AKAMAI_ZIP;
     }
 
+    // Get the node_id
+    $node_id = intval($_JSON['node']);
+    if ( !$node_id ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
+
     $RESPONSE['confirmed'] = file_SetStatusById($file_id, $flags, "", $token, $author_id);
+
+    nodeCache_InvalidateById($node_id);
 }],
 ["file/delete", API_POST | API_AUTH, function(&$RESPONSE, $HEAD_REQUEST) {
     // At this point we can bail if it's just a HEAD request
@@ -325,6 +333,12 @@ api_Exec([
         json_EmitFatalError_BadRequest(null, $RESPONSE);
     }
 
+    // Get the node_id
+    $node_id = intval($_JSON['node']);
+    if ( !$node_id ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
+
     // Get the token
     $token = $_JSON['token'];
     if ( strlen($token) > 16 ) {
@@ -342,6 +356,8 @@ api_Exec([
     }
 
     $RESPONSE['confirmed'] = file_SetStatusById($file_id, $flags, "", $token, $author_id);
+
+    nodeCache_InvalidateById($node_id);
 }],
 /*
 ["file/get", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
