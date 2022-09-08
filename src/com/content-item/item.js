@@ -881,14 +881,14 @@ export default class ContentItem extends Component {
 					{OptLines}
 					<div class="-footer">
 						<p>
-							<UIIcon small baseline src="info" />
 							<span>Opt-out of categories here if you and your team didn't make all your graphics, audio, or music during the event.
 							Many participants are making original graphics, audio and music from scratch during the event. As a courtesy, we ask you to opt-out if you didn't do the same. See <UILink href="http://ludumdare.com/rules/">the rules</UILink>.</span>
 						</p>
 						<p>
-							<span>Since some games are not meant to be Humourous or Moody, or they don't make good use of the theme, you can choose to opt-out of these categories too. Opting out of these is optional.</span>
+							<span>Since some games are not meant to be Funny or Moody, or they don't make good use of the theme, you can choose to opt-out of these categories too. Opting out of these is optional.</span>
 						</p>
 						<p>
+							<UIIcon small baseline src="info" />
 							<span>NOTE: If you opted out of a category by mistake, you may need more ratings to ensure you get a score in that category.</span>
 						</p>
 					</div>
@@ -915,8 +915,8 @@ export default class ContentItem extends Component {
 						{ShowImage}
 					</div>
 					<div class="-footer">
-						<UIIcon small baseline src="info" />
-						<span>Recommended Size: 640x512 (i.e. 5:4 aspect ratio). Other sizes will be scaled+cropped to fit. Animated GIFs will not work here.</span>
+						<div>A cover image is the artwork that appears in the game browser. They don't appear on game pages.</div>
+						<div><UIIcon small baseline src="info" /> Recommended Size: 640x512 (i.e. 5:4 aspect ratio). Other sizes will be scaled+cropped to fit. GIFs will not animate.</div>
 					</div>
 				</ContentCommonBody>
 			);
@@ -982,9 +982,8 @@ export default class ContentItem extends Component {
 			ShowPostTips = (
 				<ContentCommonBody class="-body">
 					<div class="-footer">
-						<UIIcon small baseline src="info" />
-						<span>Add screenshots to your description via the <strong>Upload Image</strong> link above. Try to keep your GIFs less than 640 pixels wide.
-						You can embed <UILink href="https://youtube.com">YouTube</UILink> video in your description by pasting a YouTube link on a blank line ("embed code" not required).</span>
+						<div><UIIcon small baseline src="info" /> Add screenshots to your description via the <strong>Upload Image</strong> link above. Keep GIFs less than 640 pixels wide.</div>
+						<div><UIIcon small baseline src="info" /> You can embed <UILink href="https://youtube.com">YouTube</UILink> video in your description by pasting a YouTube link on a blank line ("embed code" not required).</div>
 					</div>
 				</ContentCommonBody>
 			);
