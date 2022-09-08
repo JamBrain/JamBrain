@@ -144,10 +144,9 @@ export default class ItemTeambuilding extends Component {
 			//if (includeAdding && !Adder) {
 				ShowTeamBuilding.push((
 					<div class="-footer">
-						<UIIcon small baseline src="info" />
-						<span>To add members to a team, you first need to add them as friends. Visit each others user pages and click the
+						<span>To add team members, you first need to add them as friends. Visit each-others user pages and click the
 						<span class="_nowrap"><UIIcon baseline small src="user-plus" /> <strong>Follow</strong></span> button to become friends.
-						When you are done, return here and you will be able to add them to your team.</span>
+						When you are done, return here and you can add them to your team.</span>
 					</div>
 				));
 

@@ -1,7 +1,34 @@
 @import "defs.less";
 
 .content-common .embed {
-	& iframe {
+	position: relative;
+
+	& > iframe {
 		border: 0;
+	}
+
+	& > * {
+		margin: auto;
+		display: block;
+	}
+}
+
+.content-common .embed.-preview {
+	& > .icon-play {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		font-size: 5rem;
+		background: rgba(0,0,0,0.35);
+		color: white;
+
+		transition: all .2s;
+	}
+
+	&:hover > .icon-play {
+		font-size: 6rem;
+		background: @COL_A;
 	}
 }
