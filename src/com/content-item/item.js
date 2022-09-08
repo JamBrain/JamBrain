@@ -21,6 +21,7 @@ import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 import ContentItemRulesCheck 			from 'com/content-item/item-rulescheck';
 import ContentItemFiles from './item-files';
 import ContentItemEmbed from './item-embed';
+import ContentItemEmbedFile from './item-embed-file';
 
 import InputStar						from 'com/input-star/star';
 
@@ -464,6 +465,8 @@ export default class ContentItem extends Component {
 		const tooManyAuthorsForCompo = (node_CountAuthors(node) > 1);
 		allowCompo = allowCompo && !tooManyAuthorsForCompo;
 
+		let isEditing = extra && extra.length && (extra[0] == 'edit');
+
 		let Category = '/';
 
 		let competitive = false;
@@ -539,16 +542,17 @@ export default class ContentItem extends Component {
 		}
 
 		// NOTE: 'edit' is not the preview (editing) toggle. That is a member of <ContentSimple /> (which we SHOULD derive from)
-		let ShowFiles = <ContentItemFiles node={this.props.node} parent={this.state.parent} user={this.props.user} edit={extra && extra.length && (extra[0] == 'edit')} />;
+		let ShowFiles = <ContentItemFiles node={this.props.node} parent={this.state.parent} user={this.props.user} edit={isEditing} />;
 		// HACK because we don't know if we're editing or not
 		let ShowFilesView = <ContentItemFiles node={this.props.node} parent={this.state.parent} user={this.props.user} />;
 
-		let ShowEmbed = <ContentItemEmbed node={this.props.node} parent={this.state.parent} user={this.props.user} />;
+		let ShowEmbedFile = <ContentItemEmbedFile node={this.props.node} parent={this.state.parent} user={this.props.user} edit={isEditing} />;
+		let ShowEmbedView = <ContentItemEmbed node={this.props.node} parent={this.state.parent} user={this.props.user} />;
 
 		// Event Picker
 		let ShowEventPicker = null;
 		let ShowRulesCheck = null;
-		if ( extra && extra.length && (extra[0] == 'edit') && node_CanPublish(parent) ) {
+		if ( isEditing && node_CanPublish(parent) ) {
 			ShowRulesCheck = <ContentItemRulesCheck node={this.props.node} parent={this.state.parent} onAllowChange={this.handleAllowSubmission} answers={state.rulesAnswers} />;
 			ShowEventPicker = (
 				<ContentCommonBody class="-body">
@@ -993,6 +997,7 @@ export default class ContentItem extends Component {
 			<div>
 				{ShowPostTips}
 				{ShowImages}
+				{ShowEmbedFile}
 				{ShowFiles}
 				{ShowLinkEntry}
 				{ShowUploadTips}
@@ -1005,7 +1010,9 @@ export default class ContentItem extends Component {
 		);
 		props.onSave = this.onSave.bind(this);
 
-		props.prefix = ShowEmbed;
+		if ( !isEditing ) {
+			props.prefix = ShowEmbedView;
+		}
 
 		props.viewonly = (
 			<div>

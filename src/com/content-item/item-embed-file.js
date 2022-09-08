@@ -5,7 +5,7 @@ import UILink							from 'com/ui/link/link';
 
 import $File							from 'shrub/js/file/file';
 
-export default class ContentItemFiles extends Component {
+export default class ContentItemEmbedFile extends Component {
 	constructor(props) {
 		super(props);
 
@@ -27,7 +27,7 @@ export default class ContentItemFiles extends Component {
 
             this.setState({'status': 2});
 
-            return $File.RequestUpload(user.id, node.id, 0, file)
+            return $File.RequestUpload(user.id, node.id, 0, file, "$$embed.zip")
                 .then( r => {
                     if ( r.ok ) {
                         this.setState({'status': 3});
@@ -73,8 +73,8 @@ export default class ContentItemFiles extends Component {
 
             let files = [];
             Object.values(latestFiles).forEach(e => {
-                if ( !(e.status & 0x40) ) {
-                    files.push(<li>{e.name} - {e.size} bytes</li>);
+                if ( (e.status & 0x40) ) {
+                    files.push(<li>{e.timestamp} - {e.size} bytes</li>);
                 }
             });
 
@@ -89,7 +89,8 @@ export default class ContentItemFiles extends Component {
 
             return (
                 <ContentCommonBody class="-files -body -upload">
-                    <div class="-label">Downloads</div>
+                    <div class="-label">Embed HTML5</div>
+                    <div class="-footer">Use this to embed an HTML5 version of your game.</div>
                     <ul>{files}</ul>
                     <label>
                         <input type="file" name="file" style="display: none;" onchange={this.onUpload} onprogress={this.onProgress} />
@@ -99,14 +100,14 @@ export default class ContentItemFiles extends Component {
             );
         }
 
-        if ( !node || !node.files || !node.files.length || !Object.values(latestFiles).length ) {
+        if ( !node || !node.files || !node.files.length ) {
             return <div />;
         }
 
         // View //
-
+/*
         let files = [];
-        Object.values(latestFiles).forEach(e => {
+        node.files.forEach(e => {
             if ( !(e.status & 0x40) ) {
                 files.push(<li><UILink href={"//files.jam.host/uploads/$"+node.id+"/"+e.name}>{e.name}</UILink> - {e.size} bytes</li>);
             }
@@ -120,6 +121,7 @@ export default class ContentItemFiles extends Component {
                 </ContentCommonBody>
             );
         }
+*/
 
         return <div />;
     }
