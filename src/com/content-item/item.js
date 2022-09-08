@@ -919,7 +919,6 @@ export default class ContentItem extends Component {
 						{ShowImage}
 					</div>
 					<div class="-footer">
-						<div>A cover image is the artwork that appears in the game browser. They don't appear on game pages.</div>
 						<div><UIIcon small baseline src="info" /> Recommended Size: 640x512 (i.e. 5:4 aspect ratio). Other sizes will be scaled+cropped to fit. GIFs will not animate.</div>
 					</div>
 				</ContentCommonBody>

@@ -79,12 +79,12 @@ export default class ContentItemEmbedFile extends Component {
             });
 
             const status = [
-                "UPLOAD",
-                "UPLOAD: ERROR",
-                "UPLOAD: Requested...",
-                "UPLOAD: Uploading...",
-                "UPLOAD: Verifying...",
-                "UPLOAD: Success",
+                "Upload Embed",
+                "Upload Embed: ERROR",
+                "Upload Embed: Requested...",
+                "Upload Embed: Uploading...",
+                "Upload Embed: Verifying...",
+                "Upload Embed: Success",
             ];
 
             return (

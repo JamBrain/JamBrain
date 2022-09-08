@@ -79,12 +79,12 @@ export default class ContentItemFiles extends Component {
             });
 
             const status = [
-                "UPLOAD",
-                "UPLOAD: ERROR",
-                "UPLOAD: Requested...",
-                "UPLOAD: Uploading...",
-                "UPLOAD: Verifying...",
-                "UPLOAD: Success",
+                "Upload File",
+                "Upload File: ERROR",
+                "Upload File: Requested...",
+                "Upload File: Uploading...",
+                "Upload File: Verifying...",
+                "Upload File: Success",
             ];
 
             return (

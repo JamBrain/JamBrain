@@ -2,6 +2,7 @@ import {h, Component}					from 'preact/preact';
 import ContentCommonBody				from 'com/content-common/common-body';
 import UIIcon from 'com/ui/icon/icon';
 import UIButton from 'com/ui/button/button';
+import IMG2 from 'com/img2/img2';
 
 export default class ContentItemEmbed extends Component {
 	constructor(props) {
@@ -41,7 +42,8 @@ export default class ContentItemEmbed extends Component {
             width = (width > max_embed_width) ? max_embed_width : width;
             height = (height > max_embed_height) ? max_embed_height : height;
 
-            let cover = node.meta['embed-cover'] ? node.meta['embed-cover'] : null;
+            //let cover = node.meta['embed-cover'] ? node.meta['embed-cover'] : null;
+            let cover = node.meta.cover ? node.meta.cover+'.'+width+'x'+height+'.fit.jpg' : null;
 
             if ( state.play ) {
                 // allow-same-origin -- allow cookie access (MK: Might not need this)
@@ -58,7 +60,7 @@ export default class ContentItemEmbed extends Component {
                 );
             }
             else {
-                let placeHolder = cover ? <img src={cover} style={"width: "+width+"px; height: "+height+"px;"} /> : <div style={"width: "+width+"px; height: "+height+"px;"} />;
+                let placeHolder = cover ? <IMG2 src={cover} style={"width: "+width+"px; height: "+height+"px;"} /> : <div style={"width: "+width+"px; height: "+height+"px;"} />;
 
                 return (
                     <UIButton class="embed -preview" onclick={this.onPlay}>
