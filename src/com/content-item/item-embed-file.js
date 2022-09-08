@@ -96,6 +96,7 @@ export default class ContentItemEmbedFile extends Component {
                         <input type="file" name="file" style="display: none;" onchange={this.onUpload} onprogress={this.onProgress} />
                         <UIButton class="-button">{status[state.status]}</UIButton>
                     </label>
+                    <div class="-footer">For details on how to prepare a file for embedding, see the <UILink href="//ludumdare.com/resources/guides/embedding/">Embedding Guide</UILink>.</div>
                 </ContentCommonBody>
             );
         }
