@@ -17,6 +17,7 @@ config.mk
 node_modules/
 -/
 *.gz
+*.bak
 /src/shrub/docs
 /sandbox/ld_event.*
 package-lock.json

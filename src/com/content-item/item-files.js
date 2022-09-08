@@ -79,9 +79,14 @@ export default class ContentItemFiles extends Component {
     }
 
     render(props, state) {
-        let {node} = props;
+        let {node, parent} = props;
 
+        // Show the upload interface
         if ( props.edit ) {
+            if ( !node || !parent || !node_CanUpload(parent) ) {
+                return <div />;
+            }
+
             let files = [];
             node.files.forEach(e => {
                 if ( !(files.status & 0x40) ) {
