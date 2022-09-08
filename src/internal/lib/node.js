@@ -161,6 +161,15 @@ window.nodeEvent_IsFinished = function( node ) {
 
 	return node.meta && parseInt(node.meta['event-finished']);
 };
+// NOTE: this expects you to call it with the parent. A better function
+// should be able to lookup the parent itself given the node.
+window.node_CanUpload = function( node ) {
+	// Return null if argument is invalid
+	if ( !node )
+		return null;
+
+	return node.meta && parseInt(node.meta['can-upload']);
+};
 
 // Is publishing allowed on this node? Optionally specify the fulltype
 window.node_CanPublish = function( node, fulltype = null ) {

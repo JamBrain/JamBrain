@@ -129,7 +129,7 @@ export default class ContentEvent extends Component {
 			if ( state && state.what && state.what.id ) {
 //				var FeaturedGame = featured.what[featured.focus_id]; // Hack
 				ShowJoin = (
-					<ContentCommonNavButton href={state.what.slug} class={Class}>
+					<ContentCommonNavButton href={path + '/' + state.what.slug} class={Class}>
 						<SVGIcon>gamepad</SVGIcon><div class="if-sidebar-inline">My Game</div>
 					</ContentCommonNavButton>
 				);

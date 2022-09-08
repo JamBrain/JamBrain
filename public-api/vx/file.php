@@ -185,6 +185,13 @@ api_Exec([
         json_EmitFatalError_Forbidden(null, $RESPONSE);
     }
 
+    $parent = nodeComplete_GetById($node['parent']);
+
+    // Bail if the parent doesn't have the upload enabled flag
+    if ( !isset($parent['meta']) || !isset($parent['meta']['can-upload']) || !intval($parent['meta']['can-upload']) ) {
+        json_EmitFatalError_Forbidden("Uploading is not enabled", $RESPONSE);
+    }
+
     // Generate a session token (to pair with file/confirm)
     $token = generate_series_token();
     $RESPONSE['token'] = $token;

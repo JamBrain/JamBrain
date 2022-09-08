@@ -538,7 +538,10 @@ export default class ContentItem extends Component {
 			props.draft = "Game";
 		}
 
+		// NOTE: 'edit' is not the preview (editing) toggle. That is a member of <ContentSimple /> (which we SHOULD derive from)
 		let ShowFiles = <ContentItemFiles node={this.props.node} parent={this.state.parent} user={this.props.user} edit={extra && extra.length && (extra[0] == 'edit')} />;
+		// HACK because we don't know if we're editing or not
+		let ShowFilesView = <ContentItemFiles node={this.props.node} parent={this.state.parent} user={this.props.user} />;
 
 		let ShowEmbed = <ContentItemEmbed node={this.props.node} parent={this.state.parent} user={this.props.user} />;
 
@@ -1007,7 +1010,7 @@ export default class ContentItem extends Component {
 
 		props.viewonly = (
 			<div>
-				{ShowFiles}
+				{ShowFilesView}
 				{ShowLinkView}
 				{ShowGrade}
 				{ShowMetrics}
