@@ -37,12 +37,21 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 
 	// Populate Metadata
 	if ( $flags & F_NODE_META ) {
-		$metas = nodeMeta_ParseByNode($ids);//, !($flags & F_NODE_NO_LINKVALUE));
+		$data = nodeMeta_ParseByNode($ids, true, true);//, !($flags & F_NODE_NO_LINKVALUE));
+		$metas = $data[0];
+		$modified = $data[1];
 		foreach ( $nodes as &$node ) {
 			// Store Public Metadata
 			if ( isset($metas[$node['id']][0][SH_SCOPE_PUBLIC]) ) {
 				$node['meta'] = $metas[$node['id']][0][SH_SCOPE_PUBLIC];
 //				$node['refs'] = $metas[$node['id']][0][SH_SCOPE_PUBLIC];
+
+				$index = strval($node['id']);
+
+				// If the modified date of the metadata is newer, change the modified date
+				if ( isset($modified[$index]) && (strtotime($modified[$index]) > strtotime($node['modified'])) ) {
+					$node['modified'] = $modified[$index];
+				}
 			}
 			else {
 				$node['meta'] = [];
