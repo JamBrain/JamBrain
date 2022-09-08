@@ -35,6 +35,11 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 	if ( !$nodes )
 		return null;
 
+	// Copy modified so we can check it
+	foreach ( $nodes as &$node ) {
+		$node['node-timestamp'] = $node['modified'];
+	}
+
 	// Populate Metadata
 	if ( $flags & F_NODE_META ) {
 		$data = nodeMeta_ParseByNode($ids, true, true);//, !($flags & F_NODE_NO_LINKVALUE));
@@ -47,6 +52,8 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 //				$node['refs'] = $metas[$node['id']][0][SH_SCOPE_PUBLIC];
 
 				$index = strval($node['id']);
+
+				$node['meta-timestamp'] = $modified[$index];
 
 				// If the modified date of the metadata is newer, change the modified date
 				if ( isset($modified[$index]) && (strtotime($modified[$index]) > strtotime($node['modified'])) ) {
@@ -91,6 +98,16 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 	if ( $flags & F_NODE_FILES ) {
 		foreach ( $nodes as &$node ) {
 			$node['files'] = file_GetByNode($node['id']);//, "name='\$\$embed.zip'");//"`status`=9");
+			$node['files-timestamp'] = 0;
+			foreach ( $node['files'] as $file ) {
+				if ( strtotime($file['timestamp']) > strtotime($node['files-timestamp']) ) {
+					$node['files-timestamp'] = $file['timestamp'];
+				}
+
+				if ( strtotime($file['timestamp']) > strtotime($node['modified']) ) {
+					$node['modified'] = $file['timestamp'];
+				}
+			}
 		}
 	}
 
@@ -106,6 +123,11 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 				if ( $node['id'] === $love['node'] ) {
 					$node['love'] = $love['count'];
 					$node['love-timestamp'] = $love['timestamp'];
+
+					// If the timestamp is newer, change the modified date
+					if ( isset($love['timestamp']) && (strtotime($love['timestamp']) > strtotime($node['modified'])) ) {
+						$node['modified'] = $love['timestamp'];
+					}
 				}
 			}
 		}
@@ -123,6 +145,11 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 					if ( $node['id'] === $comment['node'] ) {
 						$node['comments'] = $comment['count'];
 						$node['comments-timestamp'] = $comment['timestamp'];
+
+						// If the timestamp is newer, change the modified date
+						if ( isset($comment['timestamp']) && (strtotime($comment['timestamp']) > strtotime($node['modified'])) ) {
+							$node['modified'] = $comment['timestamp'];
+						}
 					}
 				}
 			}
