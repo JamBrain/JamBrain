@@ -24,8 +24,10 @@ export default class ContentItemEmbed extends Component {
 
         let embed = null;
         if ( node_HasEmbed(node) ) {
+            let file = node_GetEmbed(node);
+
             let path = node.meta['embed-path'] ? node.meta['embed-path'] : 'index.html';
-            embed = '//files.jam.host/embed/$'+node.id+'/'+path;
+            embed = '//files.jam.host/embed/$'+node.id+'/'+file.id+'/'+path;
         }
 
         if ( embed ) {
