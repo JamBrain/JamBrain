@@ -26,10 +26,12 @@ export function Get( _url, _credentials /*false*/, _json_only /*true*/, _headers
 	.then(r => {
 		if ( r ) {
 			var contentType = r.headers.get('content-type');
-			if ( contentType && (contentType.indexOf("application/json") != -1) )
+			if ( contentType && (contentType.indexOf("application/json") != -1) ) {
 				return r.json();
-			if ( _json_only === false )
+			}
+			if ( _json_only === false ) {
 				return r.text();
+			}
 		}
 		return null;
 	});
@@ -67,10 +69,12 @@ export function Post( _url, _data, _credentials /*true*/, _json_only /*true*/, _
 	.then(r => {
 		if ( r ) {
 			var contentType = r.headers.get('content-type');
-			if ( contentType && (contentType.indexOf("application/json") != -1) )
+			if ( contentType && (contentType.indexOf("application/json") != -1) ) {
 				return r.json();
-			if ( _json_only === false )
+			}
+			if ( _json_only === false ) {
 				return r.text();
+			}
 		}
 		return null;
 	});

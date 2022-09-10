@@ -115,22 +115,24 @@ class Main extends Component {
 	}
 
 	componentDidMount() {
+		// @ifdef DEBUG
+		console.log("[componentDidMount] +");
+		// @endif
+
 		let clean = this.cleanLocation(window.location);
 
-		this.fetchUser();
-		this.fetchFeatured();	// Fetches root, featured, and all games associated with you
-		this.fetchNode(clean.slugs);
-
-//		return Promise.all([
-//			this.fetchUser(),
-//			this.fetchFeatured(),
-//			this.fetchNode()
-//		]).then(r => {
-//
-//		});
-//		.catch(err => {
-//			this.setState({'error': err});
-//		});
+		return Promise.all([
+			this.fetchUser(),
+			this.fetchRoot(),	// Fetches root, featured, and id's of all games associated with you
+			this.fetchNode(clean.slugs)
+		]).then(r => {
+			// @ifdef DEBUG
+			console.log("[componentDidMount] -");
+			// @endif
+		})
+		.catch(err => {
+			this.setState({'error': err});
+		});
 	}
 
 	storeHistory( input, page_title = null, page_url = null ) {
@@ -229,81 +231,89 @@ class Main extends Component {
 	// Called by the login dialog
 	onLogin() {
 		this.setState({'user': null});
-//		this.fetchUser();
-//		this.fetchFeatured();
 	}
 
 	// *** //
 
-	fetchFeatured( node_id ) {
+	// Fetch the root (and featured game). DOES NOT require user to be loaded first!
+	fetchRoot() {
 		// @ifdef DEBUG
-		console.log("[fetchFeatured] +");
+		console.log("[fetchRoot] +");
 		// @endif
 
 		return $Node.What(SITE_ROOT).then(r => {
-			let newState = {};
-
-			if ( !r.featured )
-				return;
-
-			newState.root = r.root;
-			newState.featured = r.featured;
-			newState.featured.what = r.node;
-
-			//console.log("root:", r.root);
-			//console.log("featured:", r.featured);
-			//console.log("node:", r.node);
-
-			let focus = 0;
-			let focusDate = 0;
-			let lastPublished = 0;
-
 			// @ifdef DEBUG
-			console.log("[fetchFeatured] Hack! We don't support choosing your active game yes, so use logic to detect it");
+			console.log("[fetchRoot] * Root: ", r.root.id, r.root);
 			// @endif
-			for ( let key in r.node ) {
-				let newDate = new Date(r.node[key].modified).getTime();
-				if ( newDate > focusDate ) {
-					focusDate = newDate;
-					focus = key|0;
+
+			let newState = {};
+			newState.root = r.root;
+
+			if ( r.featured ) {
+				// @ifdef DEBUG
+				console.log("[fetchRoot] * Featured: ", r.featured.id, "("+r.featured.name+")", r.featured);
+				console.log("[fetchRoot] * What you made: ", r.node);
+				// @endif
+
+				newState.featured = r.featured;
+				newState.featured.what = r.node;
+
+				let focus = 0;
+				let focusDate = 0;
+				let lastPublished = 0;
+
+				// @ifdef DEBUG
+				console.log("[fetchRoot] * Hack! We don't support choosing your active game yes, so use logic to detect it");
+				// @endif
+				for ( let key in r.node ) {
+					let newDate = new Date(r.node[key].modified).getTime();
+					if ( newDate > focusDate ) {
+						focusDate = newDate;
+						focus = key|0;
+					}
+					if ( r.node[key].published ) {
+						lastPublished = key|0;
+						// @ifdef DEBUG
+						console.log('[fetchRoot] * '+key+' is published');
+						// @endif
+					}
 				}
-				if ( r.node[key].published ) {
-					lastPublished = key|0;
+				if ( focus ) {
 					// @ifdef DEBUG
-					console.log('[fetchFeatured] '+key+' is published');
+					console.log('[fetchRoot] * '+focus+' was the last modified');
 					// @endif
 				}
-			}
-			if ( focus ) {
+
+				// If the last updated is published, focus on that
+				if ( r.node[focus] && r.node[focus].published ) {
+					newState.featured.focus_id = focus;
+				}
+				// If not, make it the last known published game
+				else if ( lastPublished ) {
+					newState.featured.focus_id = lastPublished;
+				}
+				// Otherwise, just the last one we found
+				else { //if ( focus > 0 ) {
+					newState.featured.focus_id = focus;
+				}
+
 				// @ifdef DEBUG
-				console.log('[fetchFeatured] '+focus+' was the last modified');
+				console.log('[fetchRoot] * '+newState.featured.focus_id+' chosen as focus_id');
 				// @endif
 			}
 
-			// If the last updated is published, focus on that
-			if ( r.node[focus] && r.node[focus].published ) {
-				newState.featured.focus_id = focus;
-			}
-			// If not, make it the last known published game
-			else if ( lastPublished ) {
-				newState.featured.focus_id = lastPublished;
-			}
-			// Otherwise, just the last one we found
-			else { //if ( focus > 0 ) {
-				newState.featured.focus_id = focus;
-			}
+			this.setState(newState);
 
 			// @ifdef DEBUG
-			console.log('[fetchFeatured] - '+newState.featured.focus_id+' chosen as focus_id');
+			console.log('[fetchRoot] - ');
 			// @endif
-
-			this.setState(newState);
 		});
 	}
 
+	// Fetch the node our current URL points at
 	fetchNode( slugs, newArgs ) {
 		// @ifdef DEBUG
-		console.log("[fetchNode] +", slugs);
+		console.log("[fetchNode] + Slugs:", slugs);
 		// @endif
 
 		let args = ['node', 'parent', 'superparent', 'author'];
@@ -315,10 +325,11 @@ class Main extends Component {
 		return $Node.Walk(SITE_ROOT, slugs, args).then(r => {
 			// Store the path determined by the walk
 			if ( r.node_id ) {
+				// @ifdef DEBUG
+				console.log("[fetchNode] * Walked", r.node_id, r);
+				// @endif
+
 				let NewState = {};
-
-				console.log("walked", r);
-
 				NewState.path = (r.path.length ? '/' : '') +slugs.slice(0, r.path.length).join('/');
 				NewState.extra = r.extra;
 
@@ -326,24 +337,16 @@ class Main extends Component {
 				NewState.parent = NewState.node.parent ? r.node[NewState.node.parent] : null;
 				NewState.superparent = NewState.node.superparent ? r.node[NewState.node.superparent] : null;
 				NewState.author = NewState.node.author ? r.node[NewState.node.author] : null;
-//
-//				if ( r.node[SITE_ROOT] ) {
-//					NewState.root = r.node[SITE_ROOT];
-//				}
 
 				this.setState(NewState);
-
-//				// If root was returned, then trigger a featured lookup ("|0" is string-to-integer conversion)
-//				if ( r.node[SITE_ROOT] && r.node[SITE_ROOT].meta['featured'] && ((r.node[SITE_ROOT].meta['featured']|0) > 0) ) {
-//					return this.fetchFeatured(r.node[SITE_ROOT].meta['featured']|0);
-//				}
 
 				// @ifdef DEBUG
 				console.log("[fetchNode] - Node:", r.node_id);
 				// @endif
 
-				return null;
+				return r;
 			}
+			// MK TODO: Should we do this?
 			throw "[fetchNode] Unable to walk tree";
 		})
 		.catch(err => {
@@ -351,17 +354,16 @@ class Main extends Component {
 		});
 	}
 
+	// Fetch the active user (if logged in)
 	fetchUser() {
 		// @ifdef DEBUG
 		console.log("[fetchUser] +");
 		// @endif
 
-		let User = {
-			'id': 0
-		};
-
 		// Fetch Active User
 		return $Node.GetMy().then(r => {
+			let User = {};
+
 			if ( r.node ) {
 				User = Object.assign({}, r.node);
 				User['private'] = {};
@@ -373,20 +375,26 @@ class Main extends Component {
 			this.setState({'user': User});
 
 			// @ifdef DEBUG
-			console.log("[fetchUser] - You are", User.id, "("+User.name+")");
+			console.log("[fetchUser] * You are", User.id, "("+User.name+")", User);
 
-			// This should be a function
+			// TODO: This test should be a function
 			if ( User && User.private && User.private.meta && User.private.meta.admin ) {
-				console.log("[fetchUser] - Administrator");
+				console.log("[fetchUser] * Administrator");
 			}
 			// @endif
 
-			// Pre-cache my Love (nothing to do with it)
-			return $NodeLove.GetMy();
+			// Pre-cache my Love (for later)
+			return r.node ? $NodeLove.GetMy() : r;
 		})
+		// @ifdef DEBUG
+		.then(r => {
+			console.log("[fetchUser] - User: ", this.state.user);
+			return r;
+		})
+		// @endif
 		.catch(err => {
 			// An error here isn't actually an error. It just means we have no user
-			this.setState({'user': User});
+			this.setState({'user': {'id': 0}});
 		});
 	}
 
@@ -412,6 +420,7 @@ class Main extends Component {
 		this.handleAnchors();
 	}
 
+	// TODO: stop doing this, and remove the funny anchor feature
 	handleAnchors(evtHash) {
 		if ( window.location.hash || evtHash ) {
 			let hash = Sanitize.parseHash(evtHash || window.location.hash);
@@ -500,8 +509,9 @@ class Main extends Component {
 		let {node, parent, superparent, author, user, featured, path, extra} = state;
 		let NewProps = {node, parent, superparent, author, user, featured, path, extra};
 
-		if ( node )
+		if ( node ) {
 			document.title = this.getTitle(node);
+		}
 
 		return (
 			<Layout {...state}>

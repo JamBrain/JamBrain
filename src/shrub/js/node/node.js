@@ -318,7 +318,9 @@ export function GetFeed( id, methods, types, subtypes, subsubtypes, tags, offset
 
 export function GetMy() {
 	return Fetch.Get(API_ENDPOINT+'/vx/node2/getmy', true).then(r => {
-		_Store(r.node);
+		if ( r.node ) {
+			_Store(r.node);
+		}
 		return r;
 	});
 }
