@@ -501,33 +501,8 @@ switch ( $action ) {
 			// NOTE: It is not an issue that these get merged. Different scopes do not make metadata in to unique indexes.
 			// WARNING: Don't ever send the full ParseByNode response to the user. SH_SCOPE_SERVER scope data must never be seen by a client.
 
-//			$metas = nodeMeta_ParseByNode($user_id);
-//			$meta_out = array_merge([],
-//				// Public metadata (this is already in the node)
-//				//isset($metas[SH_SCOPE_PUBLIC]) ? $metas[SH_SCOPE_PUBLIC] : [],
-//				// Shared metadata (authors??)
-//				isset($metas[SH_SCOPE_SHARED]) ? $metas[SH_SCOPE_SHARED] : [],
-//				// Private metadata
-//				isset($metas[SH_SCOPE_PRIVATE]) ? $metas[SH_SCOPE_PRIVATE] : []
-//			);
-//
-//			$links = nodeLink_ParseByNode($user_id);
-//			$link_out = array_merge([],
-//				// Public Links from me (this is already in the node)
-//				//isset($links[0][SH_SCOPE_PUBLIC]) ? $links[0][SH_SCOPE_PUBLIC] : [],
-//				// Shared Links from me
-//				isset($links[0][SH_SCOPE_SHARED]) ? $links[0][SH_SCOPE_SHARED] : [],
-//				// Procted Links from me
-//				isset($links[0][SH_SCOPE_PRIVATE]) ? $links[0][SH_SCOPE_PRIVATE] : []
-//			);
-//			$refs_out = array_merge([],
-//				// Public links to me
-//				isset($links[1][SH_SCOPE_PUBLIC]) ? $links[1][SH_SCOPE_PUBLIC] : [],
-//				// Shared links to me
-//				isset($links[1][SH_SCOPE_SHARED]) ? $links[1][SH_SCOPE_SHARED] : []
-//			);
-
 			$meta = nodeMeta_ParseByNode($user_id);
+
 			$meta_out = array_merge([],
 				// Public Meta from me (this is already in the node)
 				//isset($meta[0][SH_SCOPE_PUBLIC]) ? $meta[0][SH_SCOPE_PUBLIC] : [],
@@ -545,7 +520,6 @@ switch ( $action ) {
 
 			$RESPONSE['id'] = $user_id;
 			$RESPONSE['meta'] = $meta_out;
-//			$RESPONSE['link'] = $link_out;
 			$RESPONSE['refs'] = $refs_out;
 		}
 		else {
@@ -1005,7 +979,7 @@ switch ( $action ) {
 				break; // case 'getmy': //node/love/getmy
 
 			case 'add': //node/love/add/:node_id
-				json_ValidateHTTPMethod('GET');
+				json_ValidateHTTPMethod('POST');
 
 				if ( json_ArgCount() ) {
 					$node_id = intval(json_ArgGet(0));
@@ -1041,7 +1015,7 @@ switch ( $action ) {
 				break; // case 'add': //node/love/add
 
 			case 'remove': //node/love/remove/:node_id
-				json_ValidateHTTPMethod('GET');
+				json_ValidateHTTPMethod('POST');
 
 				if ( json_ArgCount() ) {
 					$node_id = intval(json_ArgGet(0));
@@ -1093,7 +1067,7 @@ switch ( $action ) {
 		$action = json_ArgShift();
 		switch ( $action ) {
 			case 'add': //node/star/add/:node_id
-				json_ValidateHTTPMethod('GET');
+				json_ValidateHTTPMethod('POST');
 
 				if ( json_ArgCount() ) {
 					$node_id = intval(json_ArgGet(0));
@@ -1104,9 +1078,9 @@ switch ( $action ) {
 							if ( in_array($node['type'], THINGS_I_CAN_STAR) ) {
 								// TODO: Check if this exact value isn't the newest
 
-								$RESPONSE['id'] = nodeMeta_Add($user_id, $node_id, SH_SCOPE_SHARED, 'star');
+								$RESPONSE['change'] = nodeMeta_Add($user_id, $node_id, SH_SCOPE_SHARED, 'star');
 
-								if ( $RESPONSE['id'] ) {
+								if ( $RESPONSE['change'] ) {
 									nodeCache_InvalidateById([$user_id, $node_id]);
 								}
 							}
@@ -1128,7 +1102,7 @@ switch ( $action ) {
 				break; // case 'add': //node/love/add
 
 			case 'remove': //node/star/remove/:node_id
-				json_ValidateHTTPMethod('GET');
+				json_ValidateHTTPMethod('POST');
 
 				if ( json_ArgCount() ) {
 					$node_id = intval(json_ArgGet(0));
@@ -1139,9 +1113,9 @@ switch ( $action ) {
 							if ( in_array($node['type'], THINGS_I_CAN_STAR) ) {
 								// TODO: Check if this exact value isn't the newest
 
-								$RESPONSE['id'] = nodeMeta_Remove($user_id, $node_id, SH_SCOPE_SHARED, 'star');
+								$RESPONSE['change'] = nodeMeta_Remove($user_id, $node_id, SH_SCOPE_SHARED, 'star');
 
-								if ( $RESPONSE['id'] ) {
+								if ( $RESPONSE['change'] ) {
 									nodeCache_InvalidateById([$user_id, $node_id]);
 								}
 							}

@@ -26,10 +26,10 @@ function GetMy( node ) {
 export function Add( node, comment ) {
 //	STORAGE.Push('COMMENT|LOVE|MINE|'+node, comment);
 
-	return Fetch.Get(API_ENDPOINT+'/vx/comment/love/add/'+comment, true);
+	return Fetch.Post(API_ENDPOINT+'/vx/comment/love/add/'+comment, true);
 }
 export function Remove( node, comment ) {
 //	STORAGE.Pop('COMMENT|LOVE|MINE|'+node, comment);
 
-	return Fetch.Get(API_ENDPOINT+'/vx/comment/love/remove/'+comment, true);
+	return Fetch.Post(API_ENDPOINT+'/vx/comment/love/remove/'+comment, true);
 }

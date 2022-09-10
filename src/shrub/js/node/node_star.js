@@ -9,7 +9,7 @@ export default {
 // TODO: Consider removing this... though I think these have a specific SCOPE set
 
 export function Add( node ) {
-	return Fetch.Get(API_ENDPOINT+'/vx/node/star/add/'+node, true)
+	return Fetch.Post(API_ENDPOINT+'/vx/node/star/add/'+node, true)
 		.then( r => {
 			//InvalidateNodeCache(node);
 			if ( r && r.caller_id ) {
@@ -21,7 +21,7 @@ export function Add( node ) {
 }
 
 export function Remove( node ) {
-	return Fetch.Get(API_ENDPOINT+'/vx/node/star/remove/'+node, true)
+	return Fetch.Post(API_ENDPOINT+'/vx/node/star/remove/'+node, true)
 		.then( r => {
 			//InvalidateNodeCache(node);
 			if ( r && r.caller_id ) {
