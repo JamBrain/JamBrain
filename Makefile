@@ -85,7 +85,7 @@ SVG_FILES			:=	$(ALL_SVG_FILES)
 
 OUT_ES_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(ES_FILES:.js=.es.js))
 OUT_JS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(JS_FILES:.js=.o.js))
-OUT_TS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(TS_FILES:.ts=.ts.js))
+OUT_TS_FILES		:=	#$(subst $(SRC)/,$(OUT)/,$(TS_FILES:.ts=.ts.js))
 OUT_LESS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(LESS_FILES:.less=.less.css))
 OUT_CSS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(CSS_FILES:.css=.o.css))
 OUT_SVG_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(SVG_FILES:.svg=.min.svg))
