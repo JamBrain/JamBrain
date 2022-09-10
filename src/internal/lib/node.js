@@ -161,6 +161,15 @@ window.nodeEvent_IsFinished = function( node ) {
 
 	return node.meta && parseInt(node.meta['event-finished']);
 };
+// NOTE: this expects you to call it with the parent. A better function
+// should be able to lookup the parent itself given the node.
+window.node_CanUpload = function( node ) {
+	// Return null if argument is invalid
+	if ( !node )
+		return null;
+
+	return node.meta && parseInt(node.meta['can-upload']);
+};
 
 // Is publishing allowed on this node? Optionally specify the fulltype
 window.node_CanPublish = function( node, fulltype ) {
@@ -223,6 +232,29 @@ window.node_HasEmbed = function( node ) {
 	}
 	
 	return false;
+}
+
+window.node_GetEmbed = function( node ) {
+	// Return null if argument is invalid
+	if ( !node )
+		return null;
+
+	// Return null if node has no files
+	if ( !node.files )
+		return null;
+
+	let file = null;
+
+	// Iterate over all files, and return true if we find the embedded file
+	for ( var idx = 0; idx < node.files.length; idx++ ) {
+		if ( node.files[idx].name == "$$embed.zip" ) {
+			if ( !file || (node.files[idx].id > file.id) ) {
+				file = node.files[idx];
+			}
+		}
+	}
+	
+	return file;
 }
 
 window.nodeItem_GetPlatforms = function( node ) {

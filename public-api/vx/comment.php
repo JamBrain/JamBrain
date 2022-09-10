@@ -239,7 +239,7 @@ switch ( $action ) {
 //				break; // case 'getmy': //comment/love/getmy
 
 			case 'add': //comment/love/add
-				json_ValidateHTTPMethod('GET');
+				json_ValidateHTTPMethod('POST');
 
 				if ( json_ArgCount() ) {
 					$comment_id = intval(json_ArgGet(0));
@@ -275,7 +275,7 @@ switch ( $action ) {
 				break; // case 'add': //comment/love/add
 
 			case 'remove': //comment/love/remove
-				json_ValidateHTTPMethod('GET');
+				json_ValidateHTTPMethod('POST');
 
 				if ( json_ArgCount() ) {
 					$comment_id = intval(json_ArgGet(0));

@@ -21,6 +21,7 @@ import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 import ContentItemRulesCheck 			from 'com/content-item/item-rulescheck';
 import ContentItemFiles from './item-files';
 import ContentItemEmbed from './item-embed';
+import ContentItemEmbedFile from './item-embed-file';
 
 import InputStar						from 'com/input-star/star';
 
@@ -458,7 +459,7 @@ export default class ContentItem extends Component {
 //					namePlaceholder="Source"
 //					urlPlaceholder="http://example.com/source.zip"
 
-		if ( this.state.linksShown > 1 ) {
+		if ( editing || (this.state.linksShown > 1) ) {
 			return (
 				<ContentCommonBody class="-body">
 					<div class="-label">Links</div>
@@ -480,6 +481,8 @@ export default class ContentItem extends Component {
 		let shouldCheckRules = true;
 		const tooManyAuthorsForCompo = (node_CountAuthors(node) > 1);
 		allowCompo = allowCompo && !tooManyAuthorsForCompo;
+
+		let isEditing = extra && extra.length && (extra[0] == 'edit');
 
 		let Category = '/';
 
@@ -555,14 +558,18 @@ export default class ContentItem extends Component {
 			props.draft = "Game";
 		}
 
-		let ShowFiles = <ContentItemFiles node={this.props.node} parent={this.state.parent} user={this.props.user} edit={extra && extra.length && (extra[0] == 'edit')} />;
+		// NOTE: 'edit' is not the preview (editing) toggle. That is a member of <ContentSimple /> (which we SHOULD derive from)
+		let ShowFiles = <ContentItemFiles node={this.props.node} parent={this.state.parent} user={this.props.user} edit={isEditing} />;
+		// HACK because we don't know if we're editing or not
+		let ShowFilesView = <ContentItemFiles node={this.props.node} parent={this.state.parent} user={this.props.user} />;
 
-		let ShowEmbed = <ContentItemEmbed node={this.props.node} parent={this.state.parent} user={this.props.user} />;
+		let ShowEmbedFile = <ContentItemEmbedFile node={this.props.node} parent={this.state.parent} user={this.props.user} edit={isEditing} />;
+		let ShowEmbedView = <ContentItemEmbed node={this.props.node} parent={this.state.parent} user={this.props.user} />;
 
 		// Event Picker
 		let ShowEventPicker = null;
 		let ShowRulesCheck = null;
-		if ( extra && extra.length && (extra[0] == 'edit') && node_CanPublish(parent) ) {
+		if ( isEditing && node_CanPublish(parent) ) {
 			ShowRulesCheck = <ContentItemRulesCheck node={this.props.node} parent={this.state.parent} onAllowChange={this.handleAllowSubmission} answers={state.rulesAnswers} />;
 			ShowEventPicker = (
 				<ContentCommonBody class="-body">
@@ -895,14 +902,14 @@ export default class ContentItem extends Component {
 					{OptLines}
 					<div class="-footer">
 						<p>
-							<UIIcon small baseline src="info" />
 							<span>Opt-out of categories here if you and your team didn't make all your graphics, audio, or music during the event.
 							Many participants are making original graphics, audio and music from scratch during the event. As a courtesy, we ask you to opt-out if you didn't do the same. See <UILink href="http://ludumdare.com/rules/">the rules</UILink>.</span>
 						</p>
 						<p>
-							<span>Since some games are not meant to be Humourous or Moody, or they don't make good use of the theme, you can choose to opt-out of these categories too. Opting out of these is optional.</span>
+							<span>Since some games are not meant to be Funny or Moody, or they don't make good use of the theme, you can choose to opt-out of these categories too. Opting out of these is optional.</span>
 						</p>
 						<p>
+							<UIIcon small baseline src="info" />
 							<span>NOTE: If you opted out of a category by mistake, you may need more ratings to ensure you get a score in that category.</span>
 						</p>
 					</div>
@@ -929,8 +936,7 @@ export default class ContentItem extends Component {
 						{ShowImage}
 					</div>
 					<div class="-footer">
-						<UIIcon small baseline src="info" />
-						<span>Recommended Size: 640x512 (i.e. 5:4 aspect ratio). Other sizes will be scaled+cropped to fit. Animated GIFs will not work here.</span>
+						<div><UIIcon small baseline src="info" /> Recommended Size: 640x512 (i.e. 5:4 aspect ratio). Other sizes will be scaled+cropped to fit. GIFs will not animate.</div>
 					</div>
 				</ContentCommonBody>
 			);
@@ -996,9 +1002,8 @@ export default class ContentItem extends Component {
 			ShowPostTips = (
 				<ContentCommonBody class="-body">
 					<div class="-footer">
-						<UIIcon small baseline src="info" />
-						<span>Add screenshots to your description via the <strong>Upload Image</strong> link above. Try to keep your GIFs less than 640 pixels wide.
-						You can embed <UILink href="https://youtube.com">YouTube</UILink> video in your description by pasting a YouTube link on a blank line ("embed code" not required).</span>
+						<div><UIIcon small baseline src="info" /> Add screenshots to your description via the <strong>Upload Image</strong> link above. Keep GIFs less than 640 pixels wide.</div>
+						<div><UIIcon small baseline src="info" /> You can embed <UILink href="https://youtube.com">YouTube</UILink> video in your description by pasting a YouTube link on a blank line ("embed code" not required).</div>
 					</div>
 				</ContentCommonBody>
 			);
@@ -1008,6 +1013,7 @@ export default class ContentItem extends Component {
 			<div>
 				{ShowPostTips}
 				{ShowImages}
+				{ShowEmbedFile}
 				{ShowFiles}
 				{ShowLinkEntry}
 				{ShowUploadTips}
@@ -1020,11 +1026,13 @@ export default class ContentItem extends Component {
 		);
 		props.onSave = this.onSave.bind(this);
 
-		props.prefix = ShowEmbed;
+		if ( !isEditing ) {
+			props.prefix = ShowEmbedView;
+		}
 
 		props.viewonly = (
 			<div>
-				{ShowFiles}
+				{ShowFilesView}
 				{ShowLinkView}
 				{ShowGrade}
 				{ShowMetrics}

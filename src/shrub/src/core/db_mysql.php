@@ -518,7 +518,7 @@ function db_QueryInsert( $query, ...$args ) {
 		$st->close();
 		return $index;
 	}
-	return false;
+	return 0;
 }
 
 /// Primarily for **DELETE** queries; Returns the number of rows changed
@@ -528,12 +528,12 @@ function db_QueryInsert( $query, ...$args ) {
 function db_QueryDelete( $query, ...$args ) {
 	$st = _db_Query($query, $args);
 	if ( $st ) {
-		_db_DebugEndQuery($st, $null);		
+		_db_DebugEndQuery($st, $null);
 		$index = $st->affected_rows;
 		$st->close();
 		return $index;
 	}
-	return false;
+	return 0;
 }
 
 function db_QueryUpdate( $query, ...$args ) {

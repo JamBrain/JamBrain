@@ -2,13 +2,14 @@
 
 // This isn't what you want. You don't care about Metadata Ids. You want Node Ids.
 // No scope check required, as this function is explicit
+/*
 function nodeMeta_GetById( $ids ) {
 	if ( is_integer($ids) ) {
 		if ( intval($ids) == 0 )
 			return null;
 
 		return db_QueryFetch(
-			"SELECT a, b, scope, `key`, `value`
+			"SELECT a, b, scope, `key`, `value`, ".DB_FIELD_DATE('timestamp')."
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 			WHERE id=?;",
 			$ids
@@ -25,7 +26,7 @@ function nodeMeta_GetById( $ids ) {
 		$ids_string = implode(',', $ids);
 
 		return db_QueryFetch(
-			"SELECT a, b, scope, `key`, `value`
+			"SELECT a, b, scope, `key`, `value`, ".DB_FIELD_DATE('timestamp')."
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 			WHERE id IN ($ids_string);"
 		);
@@ -33,6 +34,7 @@ function nodeMeta_GetById( $ids ) {
 
 	return null;
 }
+*/
 
 
 // Please sanitize before calling
@@ -81,14 +83,14 @@ function nodeMeta_GetByKey( $keys, $values = null, $scope_check = ">=0", $scope_
 	$where_string = implode(' AND ', $WHERE);
 
 	return db_QueryFetch(
-		"SELECT a, b, scope, `key`, `value`
+		"SELECT a, b, scope, `key`, `value`, ".DB_FIELD_DATE('timestamp')."
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 		WHERE $where_string;",
 		...$ARGS
 	);
 
 //	return db_QueryFetch(
-//		"SELECT node, scope, `key`, `value`
+//		"SELECT node, scope, `key`, `value`, ".DB_FIELD_DATE('timestamp')."
 //		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 //		WHERE $where_string AND id IN (
 //			SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
@@ -172,14 +174,14 @@ function nodeMeta_GetByKeyNode( $keys, $nodes, $scope_check = ">=0", $scope_chec
 	$where_string = implode(' AND ', $WHERE);
 
 	return db_QueryFetch(
-		"SELECT a, b, scope, `key`, `value`
+		"SELECT a, b, scope, `key`, `value`, ".DB_FIELD_DATE('timestamp')."
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 		WHERE $where_string;",
 		...$ARGS
 	);
 
 //	return db_QueryFetch(
-//		"SELECT node, scope, `key`, `value`
+//		"SELECT node, scope, `key`, `value`, ".DB_FIELD_DATE('timestamp')."
 //		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 //		WHERE $where_string AND id IN (
 //			SELECT MAX(id) FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." GROUP BY node, `key`
@@ -191,20 +193,25 @@ function nodeMeta_GetByKeyNode( $keys, $nodes, $scope_check = ">=0", $scope_chec
 
 /// NOTE: By default, this ignores any node with a scope less than 0 (that is how deleting works)
 /// Pass $scope_check as null to get everything, or "=64" to get specific
-function nodeMeta_GetByNode( $nodes, $scope_check = ">=0", $all_null_values = false ) {
-	$multi = is_array($nodes);
+function nodeMeta_GetByNode( $node_ids, $scope_check = ">=0", $all_null_values = false ) {
+	$multi = is_array($node_ids);
 	if ( !$multi )
-		$nodes = [$nodes];
+		$node_ids = [$node_ids];
 
-	if ( is_array($nodes) ) {
+	$ret = [];
+
+	if ( is_array($node_ids) ) {
+		/*
 		// Confirm that all Nodes are not zero
-		foreach( $nodes as $node ) {
-			if ( intval($node) == 0 )
+		foreach( $node_ids as $node_id ) {
+			if ( intval($node_id) == 0 ) {
 				return null;
+			}
 		}
+		*/
 
 		// Build IN string
-		$node_string = implode(',', $nodes);
+		$node_string = implode(',', $node_ids);
 
 		if ( empty($scope_check) ) {
 			$scope_check_string = "";
@@ -216,14 +223,14 @@ function nodeMeta_GetByNode( $nodes, $scope_check = ">=0", $all_null_values = fa
 		// Allows you to get all null's for values, for a slight performance boost
 		if ( $all_null_values ) {
 			$ret = db_QueryFetch(
-				"SELECT a, b, scope, `key`, null AS `value`
+				"SELECT a, b, scope, `key`, null AS `value`, ".DB_FIELD_DATE('timestamp')."
 				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 				WHERE $scope_check_string (a IN ($node_string) OR b IN ($node_string));"
 			);
 		}
 		else {
 			$ret = db_QueryFetch(
-				"SELECT a, b, scope, `key`, `value`
+				"SELECT a, b, scope, `key`, `value`, ".DB_FIELD_DATE('timestamp')."
 				FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 				WHERE $scope_check_string (a IN ($node_string) OR b IN ($node_string));"
 			);
@@ -277,17 +284,18 @@ function nodeMeta_GetByNode( $nodes, $scope_check = ">=0", $all_null_values = fa
 //			);"
 //		);
 
-		if ( $multi )
-			return $ret;
-		else
-			return $ret ? $ret[0] : null;
+		//if ( $multi )
+		//	return $ret;
+		//else
+		//	return $ret ? $ret[0] : null;
 	}
 
-	return null;
+	//return null;
+	return $ret;
 }
 
 
-function nodeMeta_ParseByNode( $node_ids, $get_values = true ) {
+function nodeMeta_ParseByNode( $node_ids, $get_values = true, $get_modified = false ) {
 	$multi = is_array($node_ids);
 	if ( !$multi )
 		$node_ids = [$node_ids];
@@ -295,15 +303,18 @@ function nodeMeta_ParseByNode( $node_ids, $get_values = true ) {
 	$metas = nodeMeta_GetByNode($node_ids, ">=0", !$get_values);
 
 	$ret = [];
+	$modified = [];
 
 	// Populate Metadata (NOTE: This is a full-scan per node requested. Could be quicker)
 	foreach ( $node_ids as $node_id ) {
-//		$raw_meta = [];
+		$modified[$node_id] = 0;
 		$raw_a = [];
 		$raw_b = [];
 
 		foreach ( $metas as $meta ) {
-			// If 'b' is zero, it's regular solo metedata
+			$modified[$node_id] = ($meta['timestamp'] > $modified[$node_id]) ? $meta['timestamp'] : $modified[$node_id];
+
+			// If 'b' is zero, it's regular solo metadata
 			if ( $meta['b'] == 0 ) {
 				// If this item in the meta list belongs to us
 				if ( $node_id === $meta['a'] ) {
@@ -373,7 +384,11 @@ function nodeMeta_ParseByNode( $node_ids, $get_values = true ) {
 		$ret[$node_id] = [$raw_a, $raw_b];
 	}
 
-	if ($multi)
+	if ($get_modified) {
+		$ret = [$ret, $modified];
+	}
+
+	if ( $multi )
 		return $ret;
 	else
 		return $ret[$node_ids[0]];
@@ -514,7 +529,7 @@ function _nodeMetaVersion_Add( $a, $b, $scope, $key, $value = null ) {
 }
 
 // NOTE: Do not use directly! Use _nodeMeta_Add instead!
-function __nodeMeta_Insert( $a, $b, $version, $scope, $key, $value = null, $timestamp = null ) {
+function __nodeMeta_Insert( $a, $b, $version, $scope, $key, $value = null/*, $timestamp = null*/ ) {
 //	if ( $timestamp ) {
 //		return db_QueryInsert(
 //			"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." (
@@ -552,8 +567,8 @@ function __nodeMeta_Insert( $a, $b, $version, $scope, $key, $value = null, $time
 //	}
 
 	// We can't rely on "NOW()" here, so we have to do this
-	if ( !$timestamp )
-		$timestamp = (new DateTime())->format('Y-m-d H:i:s');
+//	if ( !$timestamp )
+//		$timestamp = (new DateTime())->format('Y-m-d H:i:s');
 
 	return db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." (
@@ -572,40 +587,39 @@ function __nodeMeta_Insert( $a, $b, $version, $scope, $key, $value = null, $time
 			?,
 			?,
 			?,
-			?
+			NOW()
 		)
 		ON DUPLICATE KEY UPDATE
 			version=VALUES(version),
 			scope=VALUES(scope),
 			`value`=VALUES(`value`),
-			timestamp=VALUES(timestamp)
+			timestamp=NOW()
 		;",
 		$a,
 		$b,
 		$version,
 		$scope,
 		$key,
-		$value,
-		$timestamp
+		$value
 	);
 }
 
 // NOTE: Do not use directly! Use _nodeMeta_Add instead!
-function __nodeMeta_Update( $a, $b, $version, $scope, $key, $value = null, $timestamp = null, $b_constraint = true ) {
+function __nodeMeta_Update( $a, $b, $version, $scope, $key, $value = null/*, $timestamp = null*/, $b_constraint = true ) {
 	// We can't rely on "NOW()" here, so we have to do this
-	if ( !$timestamp )
-		$timestamp = (new DateTime())->format('Y-m-d H:i:s');
+	//if ( !$timestamp )
+	//	$timestamp = (new DateTime())->format('Y-m-d H:i:s');
 
 	// If no b_constraint, then we only want to constrain by `a` and `key`
 	if ( !$b_constraint ) {
-		return db_QueryInsert(
+		return db_QueryUpdate(
 			"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 			SET
 				b=?,
 				version=?,
 				scope=?,
 				`value`=?,
-				timestamp=?
+				timestamp=NOW()
 			WHERE
 				a=? AND `key`=?
 			;",
@@ -614,7 +628,6 @@ function __nodeMeta_Update( $a, $b, $version, $scope, $key, $value = null, $time
 			$version,
 			$scope,
 			$value,
-			$timestamp,
 			// WHERE
 			$a,
 			$key
@@ -622,13 +635,13 @@ function __nodeMeta_Update( $a, $b, $version, $scope, $key, $value = null, $time
 	}
 
 	// Regular update (a, b, key constraints)
-	return db_QueryInsert(
+	return db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE_META."
 		SET
 			version=?,
 			scope=?,
 			`value`=?,
-			timestamp=?
+			timestamp=NOW()
 		WHERE
 			a=? AND b=? AND `key`=?
 		;",
@@ -636,7 +649,6 @@ function __nodeMeta_Update( $a, $b, $version, $scope, $key, $value = null, $time
 		$version,
 		$scope,
 		$value,
-		$timestamp,
 		// WHERE
 		$a,
 		$b,
@@ -645,18 +657,18 @@ function __nodeMeta_Update( $a, $b, $version, $scope, $key, $value = null, $time
 }
 
 
-function _nodeMeta_Add( $a, $b, $version, $scope, $key, $value = null, $timestamp = null, $b_constraint = true ) {
-	if ( $ret = __nodeMeta_Update($a, $b, $version, $scope, $key, $value, $timestamp, $b_constraint) ) {
+function _nodeMeta_Add( $a, $b, $version, $scope, $key, $value = null/*, $timestamp = null*/, $b_constraint = true ) {
+	if ( $ret = __nodeMeta_Update($a, $b, $version, $scope, $key, $value/*, $timestamp*/, $b_constraint) ) {
 		return $ret;
 	}
 	// $b_constraint constraining only applies to updating
-	return __nodeMeta_Insert($a, $b, $version, $scope, $key, $value, $timestamp);
+	return __nodeMeta_Insert($a, $b, $version, $scope, $key, $value/*, $timestamp*/);
 }
 
 
 function nodeMeta_Add( $a, $b, $scope, $key, $value = null, $b_constraint = true ) {
 	$version = _nodeMetaVersion_Add($a, $b, $scope, $key, $value);
-	return _nodeMeta_Add($a, $b, $version, $scope, $key, $value, null, $b_constraint);
+	return _nodeMeta_Add($a, $b, $version, $scope, $key, $value/*, null*/, $b_constraint);
 }
 // NOTE: Doesn't actually remove, but adds an "ignore-me" entry
 // ALSO: It calls nodeMeta_Add directly, so to correctly create history

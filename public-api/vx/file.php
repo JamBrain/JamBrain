@@ -185,6 +185,13 @@ api_Exec([
         json_EmitFatalError_Forbidden(null, $RESPONSE);
     }
 
+    $parent = nodeComplete_GetById($node['parent']);
+
+    // Bail if the parent doesn't have the upload enabled flag
+    if ( !isset($parent['meta']) || !isset($parent['meta']['can-upload']) || !intval($parent['meta']['can-upload']) ) {
+        json_EmitFatalError_Forbidden("Uploading is not enabled", $RESPONSE);
+    }
+
     // Generate a session token (to pair with file/confirm)
     $token = generate_series_token();
     $RESPONSE['token'] = $token;
@@ -241,7 +248,116 @@ api_Exec([
         $flags |= SH_FILE_STATUS_AKAMAI_ZIP;
     }
 
+    // Get the node_id
+    $node_id = intval($_JSON['node']);
+    if ( !$node_id ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
+
     $RESPONSE['confirmed'] = file_SetStatusById($file_id, $flags, "", $token, $author_id);
+
+    nodeCache_InvalidateById($node_id);
+}],
+["file/delete", API_POST | API_AUTH, function(&$RESPONSE, $HEAD_REQUEST) {
+    // At this point we can bail if it's just a HEAD request
+    // TODO: should we?
+	if ( $HEAD_REQUEST ) {
+		json_EmitHeadAndExit();
+    }
+
+    // Parse the POST data as JSON
+    $_JSON = json_decode(file_get_contents('php://input'), true);
+
+    // TODO: Is this the best way to know the ID of the calling user?
+    // Get the author_id
+    $author_id = intval($RESPONSE['caller_id']); // or $_JSON['author']
+    if ( !$author_id ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
+
+    // Get the file_id
+    $file_id = intval($_JSON['id']);
+    if ( !$file_id ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
+
+    // Get the node_id
+    $node_id = intval($_JSON['node']);
+    if ( !$node_id ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
+    
+    // Generate a session token (to pair with file/confirm)
+    $token = generate_series_token();
+    $RESPONSE['token'] = $token;
+
+    $flags = 0;// SH_FILE_STATUS_UPLOADED;
+
+    $file_name = $_JSON['name'];
+    if ( !$file_name ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
+    else if ( $file_name == EMBED_FILE ) {
+        $flags |= SH_FILE_STATUS_AKAMAI_ZIP;
+    }
+
+    // use a better name than confirmed. 'status', but that name may have conflicts
+    $RESPONSE['confirmed'] = file_SetStatusById($file_id, $flags, $token, null, $author_id);
+
+    // Generate Akamai NetStorage headers, so client can do the work
+    $RESPONSE = array_merge($RESPONSE, generate_netstorage_headers('uploads/$'.$node_id.'/'.$file_name, 'delete'));
+
+    // Respond with 202, meaning we've accepted the request, but the job isn't necessarily done
+    json_RespondAccepted();
+}],
+["file/confirmdelete", API_POST | API_AUTH, function(&$RESPONSE, $HEAD_REQUEST) {
+    // At this point we can bail if it's just a HEAD request
+    // TODO: should we?
+	if ( $HEAD_REQUEST ) {
+		json_EmitHeadAndExit();
+    }
+
+    // Parse the POST data as JSON
+    $_JSON = json_decode(file_get_contents('php://input'), true);
+
+    // TODO: Is this the best way to know the ID of the calling user?
+    // Get the author_id
+    $author_id = intval($RESPONSE['caller_id']); // or $_JSON['author']
+    if ( !$author_id ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
+
+    // Get the file_id
+    $file_id = intval($_JSON['id']);
+    if ( !$file_id ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
+
+    // Get the node_id
+    $node_id = intval($_JSON['node']);
+    if ( !$node_id ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
+
+    // Get the token
+    $token = $_JSON['token'];
+    if ( strlen($token) > 16 ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
+
+    $flags = 0;
+
+    $name = $_JSON['name'];
+    if ( !$name ) {
+        json_EmitFatalError_BadRequest(null, $RESPONSE);
+    }
+    else if ( $name == EMBED_FILE ) {
+        $flags |= SH_FILE_STATUS_AKAMAI_ZIP;
+    }
+
+    $RESPONSE['confirmed'] = file_SetStatusById($file_id, $flags, "", $token, $author_id);
+
+    nodeCache_InvalidateById($node_id);
 }],
 /*
 ["file/get", API_GET | API_CHARGE, function(&$RESPONSE, $HEAD_REQUEST) {
