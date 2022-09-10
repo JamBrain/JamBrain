@@ -388,10 +388,10 @@ function nodeMeta_ParseByNode( $node_ids, $get_values = true, $get_modified = fa
 		$ret = [$ret, $modified];
 	}
 
-	//if ($multi || $get_modified)
-	return $ret;
-	//else
-	//	return $ret[$node_ids[0]];
+	if ( $multi )
+		return $ret;
+	else
+		return $ret[$node_ids[0]];
 }
 
 

@@ -267,6 +267,7 @@ api_Exec([
 	if ( $user_id ) {
 		$RESPONSE['cached'] = [];
 		$RESPONSE['node'] = nodeCache_GetById($user_id, $RESPONSE['cached']);
+		//$RESPONSE['node']['scope'] = 'private';
 
 		$meta = nodeMeta_ParseByNode($user_id);
 		$RESPONSE['meta'] = array_merge([],

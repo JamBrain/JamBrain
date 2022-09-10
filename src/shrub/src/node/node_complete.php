@@ -35,8 +35,9 @@ function nodeComplete_GetById( $ids, $flags = F_NODE_ALL ) {
 	if ( !$nodes )
 		return null;
 
-	// Copy modified so we can check it
+	// Populate some additional fields
 	foreach ( $nodes as &$node ) {
+		$node['scope'] = 'public';
 		$node['node-timestamp'] = $node['modified'];
 	}
 

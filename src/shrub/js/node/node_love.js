@@ -59,10 +59,10 @@ export function SetMy( Data ) {
 export function Add( node ) {
 	STORAGE.Push('NODE|LOVE|MINE', node);
 
-	return Fetch.Get(API_ENDPOINT+'/vx/node/love/add/'+node, true);
+	return Fetch.Post(API_ENDPOINT+'/vx/node/love/add/'+node, true);
 }
 export function Remove( node ) {
 	STORAGE.Pop('NODE|LOVE|MINE', node);
 
-	return Fetch.Get(API_ENDPOINT+'/vx/node/love/remove/'+node, true);
+	return Fetch.Post(API_ENDPOINT+'/vx/node/love/remove/'+node, true);
 }
