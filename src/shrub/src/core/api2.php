@@ -108,8 +108,18 @@ function api_Exec( $api_descriptor ) {
 			}
 
 			// Require user to be authenticated.
-			if ( ($api_flags & API_AUTH) && !userAuth_GetID() ) {
-				json_EmitFatalError_Permission("You must be authenticated in to access this resource", $RESPONSE);
+			if ( ($api_flags & API_AUTH) ) {
+				if ( !userAuth_GetID() ) {
+					json_EmitFatalError_Permission("You must be authenticated in to access this resource", $RESPONSE);
+				}
+
+				// I'm not sure why, but this suddenly became necessary in FireFox
+				header("Access-Control-Allow-Credentials: true");
+
+				// 
+				if ( isset($_SERVER['HTTP_ORIGIN']) ) {
+					header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
+				}
 			}
 
 			// Charge the user's pool based on the rate limiting settings
@@ -120,7 +130,6 @@ function api_Exec( $api_descriptor ) {
 //				}
 //				$RESPONSE['rate_limit'] = ['cost' => $ratelimit, 'remaining' => rateLimit_RemainingCharge()];
 //			}
-
 
 			// Call the API function
 			$api_function($RESPONSE, json_IsHTTPHeadMethod());

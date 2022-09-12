@@ -66,29 +66,73 @@ function file_Add( $author, $node, $tag, $name, $size, $status, $token = "" ) {
 }
 
 
-function file_SetStatusById( $id, $status, $token = "", $only_if_token = null, $only_if_author = null) {
+function file_SetNameById( $id, $name, $token = null, $only_if_token = null, $only_if_author = null ) {
 	$set = [];
 	$vars = [];
 	$where = [];
 
-	$set[] = "`status`=?";
-	$vars[] = $status;
-	$set[] = "token=?";
-	$vars[] = $token;
+	// SET
+	$set[] = "`name`=?";
+	$vars[] = $name;
 
+	if ( $token !== null ) {
+		$set[] = "token=?";
+		$vars[] = $token;
+	}
+
+	// WHERE
 	$where[] = "`id`=?";
 	$vars[] = $id;
 
-	if ( $only_if_token ) {
+	if ( $only_if_token !== null ) {
 		$where[] = "token=?";
 		$vars[] = $only_if_token;
 	}
 
-	if ( $only_if_author ) {
+	if ( $only_if_author !== null ) {
 		$where[] = "author=?";
 		$vars[] = $only_if_author;
 	}
 
+	// DO
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_FILE."
+		SET".join(', ', $set)."
+		\nWHERE ".join(' AND ', $where).";",
+		...$vars
+	);
+}
+
+
+function file_SetStatusById( $id, $status, $token = null, $only_if_token = null, $only_if_author = null ) {
+	$set = [];
+	$vars = [];
+	$where = [];
+
+	// SET
+	$set[] = "`status`=?";
+	$vars[] = $status;
+
+	if ( $token !== null ) {
+		$set[] = "token=?";
+		$vars[] = $token;
+	}
+
+	// WHERE
+	$where[] = "`id`=?";
+	$vars[] = $id;
+
+	if ( $only_if_token !== null ) {
+		$where[] = "token=?";
+		$vars[] = $only_if_token;
+	}
+
+	if ( $only_if_author !== null ) {
+		$where[] = "author=?";
+		$vars[] = $only_if_author;
+	}
+
+	// DO
 	return db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_FILE."
 		SET".join(', ', $set)."
