@@ -11,7 +11,8 @@ require_once __DIR__."/".SHRUB_PATH."core/core.php";
 require_once __DIR__.'/vendor/autoload.php';
 
 
-const EMBED_FILE = '$$embed.zip';
+const EMBED_FILE_PREFIX = '$$embed';
+const EMBED_FILE_EXT = '.zip';
 const MAX_FILE_SIZE = 256*1024*1024;
 
 const VALID_FILE_EXTENSIONS = [
@@ -63,6 +64,19 @@ function has_extension($path, $ext_list = VALID_FILE_EXTENSIONS) {
     return false;
 }
 
+
+function is_embed($name/*, $debug = false*/) {
+    $has_prefix = strpos($name, EMBED_FILE_PREFIX) === 0;
+    //$has_ext = strpos($name, EMBED_FILE_EXT, -strlen(EMBED_FILE_EXT)) !== false; // PHP 7.1+
+    $has_ext = strpos($name, EMBED_FILE_EXT, strlen($name) - strlen(EMBED_FILE_EXT)) !== false;
+
+    /*
+    if ($debug)
+        echo $name." -- ".strlen($name)." -- ".strlen(EMBED_FILE_EXT)." -- ".EMBED_FILE_EXT." -- ".$has_prefix." ".$has_ext;
+    */
+
+    return ($has_prefix && $has_ext);
+}
 
 
 function generate_netstorage_headers( $filePath, $action = "upload", $fileSize = null, $serveFromZip = false, $binary = false ) {
@@ -142,8 +156,10 @@ api_Exec([
     //    json_EmitFatalError_BadRequest(null, $RESPONSE);
     //}
 
-    // Sanitize the filename (if it's not the SPECIAL file)
-    $file_name = ($_JSON['name'] == EMBED_FILE) ? EMBED_FILE : coreSanitize_File($_JSON['name']);
+    // Sanitize the filename
+    // If the file is special (an embed), use a different sanitizer
+    $file_is_embed = is_embed($_JSON['name']);
+    $file_name = $file_is_embed ? coreSanitize_FileWithDollar($_JSON['name']) : coreSanitize_File($_JSON['name']);
     if ( !strlen($file_name) ) {
         json_EmitFatalError_BadRequest("Invalid file name", $RESPONSE);
     }
@@ -166,7 +182,7 @@ api_Exec([
     // TODO: Check against file storage quota
 
     // Should we enable "serve from zip" (i.e. indexing)?
-    $serveFromZip = ($file_name == EMBED_FILE);
+    $serveFromZip = $file_is_embed;//is_embed($file_name);
 
     // IMPORTANT: Do node stuff last, since it's expensive (requires DB)
 
@@ -200,6 +216,13 @@ api_Exec([
 
     // Store in database
     $RESPONSE['id'] = file_Add($author_id, $node_id, $tag_id, $file_name, $file_size, SH_FILE_STATUS_ALLOCATED, $token);
+
+    // If the file is an embed file, then the name is wrong. Regenerate and update it
+    if ( $serveFromZip ) {
+        $file_name = EMBED_FILE_PREFIX.'-'.$RESPONSE['id'].EMBED_FILE_EXT;
+        $RESPONSE['name'] = $file_name;
+        $RESPONSE['confirmed'] = file_SetNameById($RESPONSE['id'], $file_name, null, $token);
+    }
     
     // Generate Akamai NetStorage headers, so client can do the work
     $RESPONSE = array_merge($RESPONSE, generate_netstorage_headers('uploads/$'.$node_id.'/'.$file_name, 'upload', $file_size, $serveFromZip));
@@ -238,14 +261,16 @@ api_Exec([
         json_EmitFatalError_BadRequest(null, $RESPONSE);
     }
 
-    $flags = SH_FILE_STATUS_ALLOCATED | SH_FILE_STATUS_UPLOADED;
-
-    $name = $_JSON['name'];
-    if ( !$name ) {
+    $file_name = $_JSON['name'];
+    if ( !$file_name ) {
         json_EmitFatalError_BadRequest(null, $RESPONSE);
     }
-    else if ( $name == EMBED_FILE ) {
+    $RESPONSE['name'] = $file_name;
+
+    $flags = SH_FILE_STATUS_ALLOCATED | SH_FILE_STATUS_UPLOADED;
+    if ( is_embed($file_name, true) ) {
         $flags |= SH_FILE_STATUS_AKAMAI_ZIP;
+        $RESPONSE['embed'] = true;
     }
 
     // Get the node_id
@@ -291,14 +316,15 @@ api_Exec([
     $token = generate_series_token();
     $RESPONSE['token'] = $token;
 
-    $flags = 0;// SH_FILE_STATUS_UPLOADED;
-
     $file_name = $_JSON['name'];
     if ( !$file_name ) {
         json_EmitFatalError_BadRequest(null, $RESPONSE);
     }
-    else if ( $file_name == EMBED_FILE ) {
+    
+    $flags = 0;// SH_FILE_STATUS_UPLOADED;
+    if ( is_embed($file_name) ) {
         $flags |= SH_FILE_STATUS_AKAMAI_ZIP;
+        $RESPONSE['embed'] = true;
     }
 
     // use a better name than confirmed. 'status', but that name may have conflicts
@@ -306,6 +332,9 @@ api_Exec([
 
     // Generate Akamai NetStorage headers, so client can do the work
     $RESPONSE = array_merge($RESPONSE, generate_netstorage_headers('uploads/$'.$node_id.'/'.$file_name, 'delete'));
+
+    // MK: Temporary (?) fix to ensure the cache gets invalidated.
+    nodeCache_InvalidateById($node_id);
 
     // Respond with 202, meaning we've accepted the request, but the job isn't necessarily done
     json_RespondAccepted();
@@ -345,16 +374,20 @@ api_Exec([
         json_EmitFatalError_BadRequest(null, $RESPONSE);
     }
 
-    $flags = 0;
-
-    $name = $_JSON['name'];
-    if ( !$name ) {
+    $file_name = $_JSON['name'];
+    if ( !$file_name ) {
         json_EmitFatalError_BadRequest(null, $RESPONSE);
     }
-    else if ( $name == EMBED_FILE ) {
+    $RESPONSE['name'] = $file_name;
+
+
+    $flags = 0;
+    if ( is_embed($file_name) ) {
         $flags |= SH_FILE_STATUS_AKAMAI_ZIP;
+        $RESPONSE['embed'] = true;
     }
 
+    
     $RESPONSE['confirmed'] = file_SetStatusById($file_id, $flags, "", $token, $author_id);
 
     nodeCache_InvalidateById($node_id);
