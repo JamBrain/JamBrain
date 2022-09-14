@@ -10,7 +10,8 @@ export default class ContentItemFiles extends Component {
 		super(props);
 
         this.state = {
-            'status': 0
+            'status': 0,
+            'uploads': []
         };
 
         this.onUpload = this.onUpload.bind(this);
@@ -36,7 +37,14 @@ export default class ContentItemFiles extends Component {
                             .then(r2 => {
                                 if ( r2.ok ) {
                                     this.setState({'status': 4});
-                                    return $File.ConfirmUpload(r.id, node.id, r.name, r.token, user.id);
+                                    return $File.ConfirmUpload(r.id, node.id, r.name, r.token, user.id)
+                                    .then( r3 => {
+                                        // Terrible hack
+                                        let newState = this.state.uploads;
+                                        newState.push(r3);
+                                        this.setState(newState);
+                                        return r3;
+                                    });
                                 }
                             });
                     }
@@ -104,28 +112,36 @@ export default class ContentItemFiles extends Component {
 
             let files = [];
             Object.values(latestFiles).forEach(e => {
-                if ( !(e.status & 0x40) ) {
+                if ( (e.status & 0x1) && !(e.status & 0x40) ) {
                     let func = this.onDelete.bind(this, e);
-                    files.push(<li>{e.name} - {e.size} bytes - <UIButton style="display: inline;" onclick={func}>delete</UIButton></li>);
+                    files.push(<li>{e.name} [{e.status.toString(16)}] - {e.timestamp} - {e.size} bytes - <UIButton style="display: inline;" onclick={func}>delete</UIButton></li>);
                 }
             });
 
+            for ( let idx = 0; idx < state.uploads.length; ++idx ) {
+                files.push(<li>{state.uploads[idx].name}</li>);
+            }
+
             const status = [
-                "Upload File",
-                "Upload File: ERROR",
-                "Upload File: Requested...",
-                "Upload File: Uploading...",
-                "Upload File: Verifying...",
-                "Upload File: Success",
+                "",
+                "ERROR",
+                "Requested...",
+                "Uploading...",
+                "Verifying...",
+                "Successfully uploaded file",
             ];
+
+            const isUploading = (state.status > 0 && state.status < 5);
+            const uploadButton = isUploading ? "" : <UIButton class="-button">Upload file</UIButton>;
 
             return (
                 <ContentCommonBody class="-files -body -upload">
                     <div class="-label">Downloads</div>
                     <ul>{files}</ul>
+                    {(state.status > 0) ? <div class="-footer">Status: {status[state.status]}</div> : ""}
                     <label>
-                        <input type="file" name="file" style="display: none;" onchange={this.onUpload} onprogress={this.onProgress} />
-                        <UIButton class="-button">{status[state.status]}</UIButton>
+                        <input type="file" name="file" style="display: none;" onchange={this.onUpload} />
+                        {uploadButton}
                     </label>
                 </ContentCommonBody>
             );

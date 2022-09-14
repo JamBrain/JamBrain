@@ -161,6 +161,17 @@ function coreSanitize_File( $str ) {
 	return $str;
 }
 
+function coreSanitize_FileWithDollar( $str ) {
+	$str = mb_convert_encoding($str, 'UTF-8', 'UTF-8');				// Remove invalid UTF-8 characters
+	$str = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $str);			// Remove accents, non-ascii characters
+	$str = strip_tags($str);										// Remove any XML/HTML tags
+	$str = preg_replace("/[^a-zA-Z0-9\$_.\- ]/", '', $str);			// Keep only these
+	$str = preg_replace("/[ ]+/", '_', $str);						// Replace other symbols with an underscore
+	$str = trim($str, '- ');										// Trim all dashes and spaces from the start and end
+	
+	return $str;
+}
+
 
 function coreSlugify_PathName( $str ) {
 	// Node slugs must be > 0
