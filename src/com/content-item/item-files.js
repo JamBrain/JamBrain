@@ -10,7 +10,8 @@ export default class ContentItemFiles extends Component {
 		super(props);
 
         this.state = {
-            'status': 0
+            'status': 0,
+            'uploads': []
         };
 
         this.onUpload = this.onUpload.bind(this);
@@ -36,7 +37,14 @@ export default class ContentItemFiles extends Component {
                             .then(r2 => {
                                 if ( r2.ok ) {
                                     this.setState({'status': 4});
-                                    return $File.ConfirmUpload(r.id, node.id, r.name, r.token, user.id);
+                                    return $File.ConfirmUpload(r.id, node.id, r.name, r.token, user.id)
+                                    .then( r3 => {
+                                        // Terrible hack
+                                        let newState = this.state.uploads;
+                                        newState.push(r3);
+                                        this.setState(newState);
+                                        return r3;
+                                    });
                                 }
                             });
                     }
@@ -109,6 +117,10 @@ export default class ContentItemFiles extends Component {
                     files.push(<li>{e.name} [{e.status.toString(16)}] - {e.timestamp} - {e.size} bytes - <UIButton style="display: inline;" onclick={func}>delete</UIButton></li>);
                 }
             });
+
+            for ( let idx = 0; idx < state.uploads.length; ++idx ) {
+                files.push(<li>{state.uploads[idx].name}</li>);
+            }
 
             const status = [
                 "",
