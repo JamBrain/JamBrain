@@ -111,21 +111,25 @@ export default class ContentItemFiles extends Component {
             });
 
             const status = [
-                "Upload File",
-                "Upload File: ERROR",
-                "Upload File: Requested...",
-                "Upload File: Uploading...",
-                "Upload File: Verifying...",
-                "Upload File: Success",
+                "",
+                "ERROR",
+                "Requested...",
+                "Uploading...",
+                "Verifying...",
+                "Successfully uploaded file",
             ];
+
+            const isUploading = (state.status > 0 && state.status < 5);
+            const uploadButton = isUploading ? "" : <UIButton class="-button">Upload file</UIButton>;
 
             return (
                 <ContentCommonBody class="-files -body -upload">
                     <div class="-label">Downloads</div>
                     <ul>{files}</ul>
+                    {(state.status > 0) ? <div class="-footer">Status: {status[state.status]}</div> : ""}
                     <label>
-                        <input type="file" name="file" style="display: none;" onchange={this.onUpload} onprogress={this.onProgress} />
-                        <UIButton class="-button">{status[state.status]}</UIButton>
+                        <input type="file" name="file" style="display: none;" onchange={this.onUpload} />
+                        {uploadButton}
                     </label>
                 </ContentCommonBody>
             );

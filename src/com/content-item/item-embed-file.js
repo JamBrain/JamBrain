@@ -111,22 +111,26 @@ export default class ContentItemEmbedFile extends Component {
             });
 
             const status = [
-                "Upload Embed",
-                "Upload Embed: ERROR",
-                "Upload Embed: Requested...",
-                "Upload Embed: Uploading...",
-                "Upload Embed: Verifying...",
-                "Upload Embed: Success",
+                "",
+                "ERROR",
+                "Requested...",
+                "Uploading...",
+                "Verifying...",
+                "Successfully uploaded file",
             ];
+
+            const isUploading = (state.status > 0 && state.status < 5);
+            const uploadButton = isUploading ? "" : <UIButton class="-button">Upload .zip file</UIButton>;
 
             return (
                 <ContentCommonBody class="-files -body -upload">
                     <div class="-label">Embed HTML5</div>
                     <div class="-footer">Use this to embed an HTML5 version of your game.</div>
                     <ul>{files}</ul>
+                    {(state.status > 0) ? <div class="-footer">Status: {status[state.status]}</div> : ""}
                     <label>
-                        <input type="file" name="file" style="display: none;" onchange={this.onUpload} onprogress={this.onProgress} />
-                        <UIButton class="-button">{status[state.status]}</UIButton>
+                        <input type="file" name="file" style="display: none;" onchange={this.onUpload} />
+                        {uploadButton}
                     </label>
                     <div class="-footer">For details on how to prepare a file for embedding, see the <UILink href="//ludumdare.com/resources/guides/embedding/">Embedding Guide</UILink>.</div>
                 </ContentCommonBody>
