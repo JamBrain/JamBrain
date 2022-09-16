@@ -98,9 +98,10 @@ export default class ContentItem extends Component {
 
 		// Once mounted, I need to know my parent
 		// MK: TODO: Fetch both parent and author(s)
+		// NOTE: If user isn't set before this page renders, my "ratings" will never load
 		$Node.Get(node.parent)
 		.then(r => {
-			if ( r.node && r.node.length ) {
+			if ( r.user && r.user.id && r.node && r.node.length ) {
 				var Parent = r.node[0];
 				this.setState({'parent': Parent});
 

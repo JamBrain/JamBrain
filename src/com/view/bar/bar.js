@@ -11,8 +11,8 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 import UIButton							from 'com/ui/button/button';
 
 //import DropdownUser 					from 'com/dropdown-user/user';
-import BarNotification					from 'bar-notifications';
-import BarUser							from 'bar-user';
+import BarNotification					from './bar-notifications';
+import BarUser							from './bar-user';
 
 //import $Node							from 'shrub/js/node/node';
 import $Notification					from 'shrub/js/notification/notification';
@@ -27,7 +27,7 @@ export default class ViewBar extends Component {
 		super(props);
 		this.StartedNotificationLoop = false;
 
-		this.state - {
+		this.state = {
 			'notifications': 0,
 			'notificationsHidden': 0,
 			'notificationsFeed': null,
@@ -162,8 +162,8 @@ export default class ViewBar extends Component {
 		icon.onload = () => {
 			// reload LD favicon and paint it
 			const canvas = document.createElement('canvas');
-			canvas.setAttribute('width', icon.naturalWidth);
-			canvas.setAttribute('height', icon.naturalHeight);
+			canvas.setAttribute('width', icon.naturalWidth.toString());
+			canvas.setAttribute('height', icon.naturalHeight.toString());
 			const context = canvas.getContext('2d');
 			// place LD image as background
 			context.drawImage(icon, 0, 0);
