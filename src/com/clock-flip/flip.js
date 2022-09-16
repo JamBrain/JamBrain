@@ -8,7 +8,7 @@ export default class ClockFlip extends Component {
 		let diff = props.date ? props.date.getTime() - now.getTime() : 0;
 		let ts = Math.abs(diff/1000);
 
-		let ss = String(parseInt(ts % 60));
+		let ss = String(ts % 60);
 		let mm = String(Math.floor(ts / 60) % 60);
 		let hh = String(Math.floor(ts / 60 / 60) % 24);
 		let dd = String(Math.floor(ts / 60 / 60 / 24));
@@ -32,44 +32,44 @@ export default class ClockFlip extends Component {
 	}
 
 	count() {
-		let that = this;
-		let d = that.daysblock.children[1];
-		let h = that.hoursblock.children[1];
-		let m = that.minutesblock.children[1];
-		let s = that.secondsblock.children[1];
+		// MK NOTE: Fix me! Don't do this! Also PLEASE stop using this.state
+		let d = this.daysblock.children[1];
+		let h = this.hoursblock.children[1];
+		let m = this.minutesblock.children[1];
+		let s = this.secondsblock.children[1];
 		let ci = setInterval(function() {
-			if(that.state.total_seconds > 0) {
-				--that.state.values.seconds;
+			if(this.state.total_seconds > 0) {
+				--this.state.values.seconds;
 
-				if(that.state.values.minutes >= 0 && that.state.values.seconds < 0) {
+				if(this.state.values.minutes >= 0 && this.state.values.seconds < 0) {
 
-					that.state.values.seconds = 59;
-					--that.state.values.minutes;
+					this.state.values.seconds = 59;
+					--this.state.values.minutes;
 				}
 
-				if(that.state.values.hours >= 0 && that.state.values.minutes < 0) {
+				if(this.state.values.hours >= 0 && this.state.values.minutes < 0) {
 
-					that.state.values.minutes = 59;
-					--that.state.values.hours;
+					this.state.values.minutes = 59;
+					--this.state.values.hours;
 				}
 
-				if(that.state.values.days >= 0 && that.state.values.hours < 0) {
-					that.state.values.hours = 23;
-					--that.state.values.days;
+				if(this.state.values.days >= 0 && this.state.values.hours < 0) {
+					this.state.values.hours = 23;
+					--this.state.values.days;
 				}
 
 				// Days
-				that.checkHour(that.state.values.days, d.children[0], d.children[1]);
+				this.checkHour(this.state.values.days, d.children[0], d.children[1]);
 				// Hours
-				that.checkHour(that.state.values.hours, h.children[0], h.children[1]);
+				this.checkHour(this.state.values.hours, h.children[0], h.children[1]);
 				// Minutes
-				that.checkHour(that.state.values.minutes, m.children[0], m.children[1]);
+				this.checkHour(this.state.values.minutes, m.children[0], m.children[1]);
 				// Seconds
-				that.checkHour(that.state.values.seconds, s.children[0], s.children[1]);
+				this.checkHour(this.state.values.seconds, s.children[0], s.children[1]);
 
-				--that.state.total_seconds;
+				--this.state.total_seconds;
 			} else {
-				clearInterval(that.state.countdown_interval);
+				clearInterval(this.state.countdown_interval);
 			}
 		}, 1000);
 
@@ -160,7 +160,7 @@ export default class ClockFlip extends Component {
 		);
 	}
 
-	render( props ) {
+	render( props, state ) {
 		let size = "font-size: 1em";
 		if(props.comSize)
 			size = "font-size: "+props.comSize+"em";
@@ -171,23 +171,23 @@ export default class ClockFlip extends Component {
 		if(props.displayAfterDays)
 			displayAfterDays = props.displayAfterDays;
 		if(props.displayAfterHours && props.displayAfterHours != 0) {
-			if(this.state.values.days < displayAfterDays && this.state.values.hours < props.displayAfterHours)
+			if(state.values.days < displayAfterDays && state.values.hours < props.displayAfterHours)
 				display = "display: block";
 			else
 				display = "display: none";
 		}
 		if(props.urgentAfterHours && props.urgentAfterHours != 0) {
-			if(this.state.values.days < 6 && this.state.values.hours < props.urgentAfterHours)
+			if(state.values.days < 6 && state.values.hours < props.urgentAfterHours)
 			urgent = "-countdown urgent";
 		}
 
 		let daysblock = "display: inline-block";
 		let secondsblock = "display: inline-block";
-		if(!this.props.jumbo) {
+		if(!props.jumbo) {
 			daysblock = "display: none";
 			secondsblock = "display: inline-block";
 		}
-		if(!this.props.jumbo && this.state.values.days > displayAfterDays) {
+		if(!props.jumbo && state.values.days > displayAfterDays) {
 			daysblock = "display: inline-block";
 			secondsblock = "display: none";
 		}
@@ -199,22 +199,22 @@ export default class ClockFlip extends Component {
 					<div class={ urgent }>
 						<div class="bloc-time days" data-init-value="00" ref={c => this.daysblock=c} style={ daysblock }>
 							<span class="count-title _font2">Days</span>
-							{ this.renderDigit(this.state.values.days, "days") }
+							{ this.renderDigit(state.values.days, "days") }
 						</div>
 
 						<div class="bloc-time hours" data-init-value="00" ref={c => this.hoursblock=c}>
 							<span class="count-title _font2">Hours</span>
-							{ this.renderDigit(this.state.values.hours, "hours") }
+							{ this.renderDigit(state.values.hours, "hours") }
 						</div>
 
-						<div class="bloc-time min" data-init-value="0" ref={c => this.minutesblock=c} style={this.state.ShowDays ? "margin-right: 0px;" : ""}>
+						<div class="bloc-time min" data-init-value="0" ref={c => this.minutesblock=c} style={state.ShowDays ? "margin-right: 0px;" : ""}>
 							<span class="count-title _font2">Minutes</span>
-							{ this.renderDigit(this.state.values.minutes, "minutes") }
+							{ this.renderDigit(state.values.minutes, "minutes") }
 						</div>
 
 						<div class="bloc-time sec" data-init-value="0" style={ secondsblock } ref={c => this.secondsblock=c}>
 							<span class="count-title _font2">Seconds</span>
-							{ this.renderDigit(this.state.values.seconds, "seconds") }
+							{ this.renderDigit(state.values.seconds, "seconds") }
 						</div>
 					</div>
 				</div>

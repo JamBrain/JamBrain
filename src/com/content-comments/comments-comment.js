@@ -1,18 +1,18 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
-import {shallowDiff}	 				from 'shallow-compare/index';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import ButtonLink 						from 'com/button-link/link';
-import SVGIcon 							from 'com/svg-icon/icon';
+import UIIcon 							from 'com/ui/icon';
 import IMG2 							from 'com/img2/img2';
 import UICheckbox from 'com/ui/checkbox/checkbox';
 
-import ContentCommentsMarkup			from './comments-markup';
-import {AutocompleteAtNames, AutocompleteEmojis}			from 'com/content-common/common-autocomplete';
-import $Comment							from 'shrub/js/comment/comment';
-import $CommentLove						from 'shrub/js/comment/comment_love';
+import ContentCommentsMarkup from './comments-markup';
+import {AutocompleteAtNames, AutocompleteEmojis} from 'com/content-common/common-autocomplete';
+import $Comment from 'shrub/js/comment/comment';
+import $CommentLove from 'shrub/js/comment/comment_love';
+
 
 export default class ContentCommentsComment extends Component {
 	constructor( props ) {
@@ -26,7 +26,7 @@ export default class ContentCommentsComment extends Component {
 			// NOTE: Set this upon save, or use it to cancel
 			'original': props.comment.body,
 
-			'loved': props.comment.loved ? true : false,
+			'loved': !!props.comment.loved,
 			'lovecount': props.comment.love,
 		};
 
@@ -66,11 +66,9 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onEditing( e ) {
-//		console.log('** Edit Comment');
 		this.setState({'preview': false});
 	}
 	onPreview( e ) {
-//		console.log('** Preview Comment');
 		this.setState({'preview': true});
 	}
 
@@ -79,7 +77,6 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onModify( e ) {
-		//console.log('modified', e.target, this.state.editText, this.state.editCursorPos, this.state.textareaFocus);
 		this.props.comment.body = e.target.value;
 		this.setState({
 			'modified': this.canSave(),
@@ -139,7 +136,7 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onSave( e ) {
-		var comment = this.props.comment;
+		let comment = this.props.comment;
 
 		$Comment.Update( comment.id, comment.node, comment.body )
 		.then(r => {
@@ -240,6 +237,7 @@ export default class ContentCommentsComment extends Component {
 		autocompleters[autocompleter].captureKeyUp = callback;
 	}
 
+
 	render( props, state ) {
 		let {user, comment, author, error, node, isNodeAuthor, isMyComment, isMention} = props;
 
@@ -261,14 +259,14 @@ export default class ContentCommentsComment extends Component {
 
 			let ShowTitle = [];
 			if ( !state.editing || state.preview ) {
-				var Created = new Date(comment.created);
-				var Modified = new Date(comment.modified);
-				var Now = new Date();
-				var DateDiff = (Now.getTime() - Created.getTime());
-				var ModDiff = (Modified.getTime() - Created.getTime());
+				let Created = new Date(comment.created);
+				let Modified = new Date(comment.modified);
+				let Now = new Date();
+				let DateDiff = (Now.getTime() - Created.getTime());
+				let ModDiff = (Modified.getTime() - Created.getTime());
 
 				// 1 minute leeway on edits
-				var HasEdited = ModDiff > (60*1000);
+				let HasEdited = ModDiff > (60*1000);
 
 				ShowTitle.push(
 					<span>by <span class="-author">{Name}</span></span>
@@ -297,15 +295,15 @@ export default class ContentCommentsComment extends Component {
 
 			let ShowEdit = null;
 			if ( user && comment && (comment.author > 0) && (comment.author === user.id) && !state.editing )
-				ShowEdit = <div class="-button -edit" onClick={this.onEdit}><SVGIcon>edit</SVGIcon></div>;
+				ShowEdit = <div class="-button -edit" onClick={this.onEdit}><UIIcon>edit</UIIcon></div>;
 
 			let ShowLove = null;
 			if ( !props.nolove ) {
 				ShowLove = (
 					<div class={"-button -love"+(state.loved?" -loved":"")} onClick={this.onLove}>
-						<SVGIcon class="-hover-hide">heart</SVGIcon>
-						<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
-						<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
+						<UIIcon class="-hover-hide">heart</UIIcon>
+						<UIIcon class="-hover-show -loved-hide">heart-plus</UIIcon>
+						<UIIcon class="-hover-show -loved-show">heart-minus</UIIcon>
 						<div>{Number.isInteger(state.lovecount) ? state.lovecount : comment.love}</div>
 					</div>
 				);
@@ -331,18 +329,18 @@ export default class ContentCommentsComment extends Component {
 				let ShowLeft = [];
 				if ( !state.preview ) {
 					ShowLeft = [
-						<div class="-button -preview" onClick={this.onPreview}><SVGIcon>preview</SVGIcon><div class="if-sidebar-block">Preview</div></div>,
-						<div class="-button -editing -selected"><SVGIcon>edit</SVGIcon><div class="if-sidebar-block">Edit</div></div>,
+						<div class="-button -preview" onClick={this.onPreview}><UIIcon>preview</UIIcon><div class="if-sidebar-block">Preview</div></div>,
+						<div class="-button -editing -selected"><UIIcon>edit</UIIcon><div class="if-sidebar-block">Edit</div></div>,
 					];
 				}
 				else {
 					ShowLeft = [
-						<div class="-button -preview -selected"><SVGIcon>preview</SVGIcon><div class="if-sidebar-block">Preview</div></div>,
-						<div class="-button -editing" onClick={this.onEditing}><SVGIcon>edit</SVGIcon><div class="if-sidebar-block">Edit</div></div>,
+						<div class="-button -preview -selected"><UIIcon>preview</UIIcon><div class="if-sidebar-block">Preview</div></div>,
+						<div class="-button -editing" onClick={this.onEditing}><UIIcon>edit</UIIcon><div class="if-sidebar-block">Edit</div></div>,
 					];
 				}
 
-				var ShowRight = [];
+				let ShowRight = [];
 
 				ShowRight.push(<UICheckbox onClick={this.onSubscribe} value={props.subscribed} tooltip="You always receive notifications for mentions">Receive notifications</UICheckbox>);
 
@@ -350,11 +348,11 @@ export default class ContentCommentsComment extends Component {
 					if ( props.allowAnonymous ) {
 						ShowRight.push(<UICheckbox onClick={this.onToggleAnon} value={state.publishAnon} tooltip="NOTE: Your identity is always available to the administrators.">Anonymous</UICheckbox>);
 					}
-					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onClick={this.onPublish}><SVGIcon>publish</SVGIcon><div>Publish</div></div>);
+					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onClick={this.onPublish}><UIIcon>publish</UIIcon><div>Publish</div></div>);
 				}
 				else {
-					ShowRight.push(<div class="-button -cancel" onClick={this.onCancel}><SVGIcon>cross</SVGIcon><div class="if-sidebar-block">Cancel</div></div>);
-					ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onClick={this.onSave}><SVGIcon>save</SVGIcon><div>Save</div></div>);
+					ShowRight.push(<div class="-button -cancel" onClick={this.onCancel}><UIIcon>cross</UIIcon><div class="if-sidebar-block">Cancel</div></div>);
+					ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onClick={this.onSave}><UIIcon>save</UIIcon><div>Save</div></div>);
 				}
 
 				ShowTopNav = (

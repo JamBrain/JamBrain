@@ -2,8 +2,6 @@ import {h, Component, Fragment} from "preact";
 import PageNavEvent						from 'com/page/nav/event';
 
 import ContentHeadlinerEvent			from 'com/content-headliner/headliner-event';
-import ContentNavEvent					from "com/content-nav/nav-event";
-import ContentNavTheme					from "com/content-nav/nav-theme";
 
 import {ContentRouter, Route} from "com/router";
 //import Route							from "com/router/route";

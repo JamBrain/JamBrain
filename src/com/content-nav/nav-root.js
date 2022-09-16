@@ -1,13 +1,8 @@
-import {h, Component}	 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
-import ContentNavButton					from 'com/content-nav/nav-button';
+import {h, Component}	from 'preact';
+import ContentNavButton	from './nav-button';
 
 
 export default class ContentNavRoot extends Component {
-	constructor( props ) {
-		super(props);
-	}
-
 	render( props ) {
 		let {node, user, path, extra} = props;
 
@@ -27,13 +22,13 @@ export default class ContentNavRoot extends Component {
 		}
 
 		return (
-			<div class="content content-nav content-nav-root">
+			<nav class="content -nav -root">
 				<ContentNavButton path={PartPath} title="Home" icon="home" href="/"></ContentNavButton>
 				<ContentNavButton path={NewPath} title="News feed" icon="news" href="/news">News</ContentNavButton>
 				<ContentNavButton path={NewPath} title="Your feed" icon="feed" href="/feed">Feed</ContentNavButton>
 				<ContentNavButton path={PartPath} title="Games" icon="gamepad" href="/games">Games</ContentNavButton>
 				{ShowEvents}
-			</div>
+			</nav>
 		);
 //				<ContentNavButton path={PartPath} title="Community" icon='earth' href='/community'>Community</ContentNavButton>
 	}

@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component}					from 'preact';
 import ContentNavButton					from 'com/content-nav/nav-button';
 
 export default class PageNavRoot extends Component {
@@ -76,9 +76,9 @@ export default class PageNavRoot extends Component {
 		}
 
 		return (
-			<div class="content content-nav">
+			<nav class="content -nav">
 				{NavButtons}
-			</div>
+			</nav>
 		);
 	}
 }

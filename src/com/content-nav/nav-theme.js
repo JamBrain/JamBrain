@@ -1,13 +1,8 @@
 import {h, Component, Fragment} from 'preact';
-
-import ContentNavButton					from 'com/content-nav/nav-button';
+import ContentNavButton	from './nav-button';
 
 
 export default class ContentNavTheme extends Component {
-	constructor( props ) {
-		super(props);
-	}
-
 	render( {node, user, path, extra}, {} ) {
 		if ( node.slug ) {
 			let EventMode = (node.meta['event-mode']) ? parseInt(node.meta['event-mode']) : 0;
@@ -62,7 +57,7 @@ export default class ContentNavTheme extends Component {
 			}
 
 			if ( ShowRounds.length ) {
-				return <nav class="content content-nav content-nav-root">{ShowRounds}</nav>;
+				return <nav class="content -nav -theme">{ShowRounds}</nav>;
 			}
 		}
 

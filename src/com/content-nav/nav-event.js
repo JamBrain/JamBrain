@@ -1,12 +1,8 @@
-import {h, Component} 					from 'preact/preact';
-import ContentNavButton					from 'com/content-nav/nav-button';
+import {h, Component}		from 'preact';
+import ContentNavButton		from './nav-button';
 
 
 export default class ContentNavEvent extends Component {
-	constructor( props ) {
-		super(props);
-	}
-
 	render( props ) {
 		let {node, user, path, extra} = props;
 
@@ -52,11 +48,9 @@ export default class ContentNavEvent extends Component {
 		Buttons.push(<ContentNavButton path={NewPath} title="Statistics" icon="stats" href={path+'/stats'}>Stats</ContentNavButton>);
 
 		return (
-			<div class="-body">
-				<div class="content content-nav content-nav-event">
-					{Buttons}
-				</div>
-			</div>
+			<nav class="content -nav -event">
+				{Buttons}
+			</nav>
 		);
 
 //					{ShowMyFeed}

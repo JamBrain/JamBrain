@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component}					from 'preact';
 import ContentNavButton					from 'com/content-nav/nav-button';
 
 export default class PageNavContent extends Component {
@@ -55,9 +55,9 @@ export default class PageNavContent extends Component {
 		NavButtons.push(<ContentNavButton path={path+((FullPath == '/') ? '' : FullPath)} title={GameName} icon="gamepad" href={GamePath}>{GameName}</ContentNavButton>);
 
 		return (
-			<div class="content content-nav">
+			<nav class="content -nav">
 				{NavButtons}
-			</div>
+			</nav>
 		);
 	}
 }

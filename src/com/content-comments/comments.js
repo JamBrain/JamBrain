@@ -38,20 +38,6 @@ export default class ContentComments extends Component {
 		}
 	}
 
-/*
-	getDerivedStateFromProps( newProps, prevState ) {
-
-	}
-
-/*
-	componentDidUpdate(previousProps) {
-		// If the user was fetched after the component has rendered, the state needs to be updated
-		if ( !previousProps.user && this.props.user ) {
-			this.updateUser(this.props.user);
-		}
-	}
-*/
-
 
 	_newComment() {
 		return {
