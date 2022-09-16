@@ -297,7 +297,7 @@ export default class ContentComments extends Component {
 			}
 		}
 
-		return <Fragment>ret</Fragment>;
+		return <Fragment>{ret}</Fragment>;
 	}
 
 
