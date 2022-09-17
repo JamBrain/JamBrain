@@ -1,15 +1,21 @@
 import {h, Component, Fragment} from 'preact';
 import cN from 'classnames';
 
-//import ContentList						from 'com/content-list/list';
-import ContentPost						from 'com/content-post/post';
-import ContentUser						from 'com/content-user/user';
-import ContentMore						from 'com/content-more/more';
+import ContentPost				from 'com/content-post/post';
+import ContentUser				from 'com/content-user/user';
+import ContentMore				from 'com/content-more/more';
 
-import ContentCommon					from 'com/content-common/common';
-import ContentCommonBody				from 'com/content-common/common-body';
+import NavSpinner 				from 'com/nav-spinner/spinner';
 
-import $Node							from 'shrub/js/node/node';
+import ContentCommon			from 'com/content-common/common';
+import ContentCommonBody		from 'com/content-common/common-body';
+
+import $Node					from 'shrub/js/node/node';
+
+
+const TIMELINE_STEP_BUFFER = 5;
+const TIMELINE_STEP = 10;
+
 
 export default class ContentTimeline extends Component {
 	constructor( props ) {
@@ -17,19 +23,19 @@ export default class ContentTimeline extends Component {
 
 		this.state = {
 			'feed': [],
-			'hash': {},
-			'offset': 5, //10
-			'lastadded': null,
-			'loaded': false
+			'inFeed': {},
+			'nodes': {},
+			//'hash': {},
+			'position': TIMELINE_STEP_BUFFER,
+			'isLoading': false,		// if currently loading
+			'hasLoaded': false,		// has loaded at least once
 		};
 
 		this.makeFeedItem = this.makeFeedItem.bind(this);
-		this.fetchMore = this.fetchMore.bind(this);
-
 	}
 
 	componentDidMount() {
-		var props = this.props;
+		let props = this.props;
 
 		this.getFeed(
 			props.node.id,
@@ -39,18 +45,19 @@ export default class ContentTimeline extends Component {
 			props.subsubtypes ? props.subsubtypes : null,
 			props.tags ? props.tags : null,
 			null,
-			this.props.limit
+			props.limit ? props.limit : TIMELINE_STEP - TIMELINE_STEP_BUFFER
 		);
 	}
 
+	/*
 	appendFeed( newfeed ) {
-		var feed = this.state.feed;
-		var hash = this.state.hash;
+		let feed = this.state.feed;
+		let hash = this.state.hash;
 
-		var added = 0;
+		let added = 0;
 
-		for ( var idx = 0; idx < newfeed.length; idx++ ) {
-			var info = newfeed[idx];
+		for ( let idx = 0; idx < newfeed.length; idx++ ) {
+			let info = newfeed[idx];
 			if ( !hash[info['id']] ) {
 				hash[info['id']] = feed.length;
 				feed.push(info);
@@ -62,10 +69,10 @@ export default class ContentTimeline extends Component {
 	}
 
 	getFeedIdsWithoutNodes() {
-		var feed = this.state.feed;
+		let feed = this.state.feed;
 
-		var keys = [];
-		for (var idx = 0; idx < feed.length; idx++ ) {
+		let keys = [];
+		for (let idx = 0; idx < feed.length; idx++ ) {
 			if ( !feed[idx]['node'] )
 				keys.push(feed[idx]['id']);
 		}
@@ -95,30 +102,81 @@ export default class ContentTimeline extends Component {
 				});
 		}
 	}
+	*/
 
 	getFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit ) {
-		this.setState({'loaded': false});
-		$Node.GetFeed(id, methods, types, subtypes, subsubtypes, tags, more, limit)
-			.then(r => {
-				this.setState({'loaded': true});
+		this.setState({'isLoading': true});
 
-				// make sure we have a feed
-				if ( r.feed && r.feed.length ) {
-					this.appendFeed(r.feed);
-					return this.getMissingNodes();
-				}
-			})
-			.catch(err => {
-				this.setState({'error': err});
-			});
+		return $Node.GetFeed(id, methods, types, subtypes, subsubtypes, tags, more, limit)
+		.then(r => {
+			if ( !r || !r.feed ) {
+				// MK: Is this even needed?
+				return null;
+			}
+
+			const newFeed = r.feed;
+
+			// if we have new feed items
+			if ( newFeed.length ) {
+				return $Node.GetKeyed(newFeed, ['author', 'parent', 'superparent'])
+				.then( r => {
+					if ( !r || !r.node ) {
+						// MK: Is this even needed?
+						return null;
+					}
+
+					const newNodes = r.node;
+
+					this.setState( prevState => {
+						let feed = [...prevState.feed];
+						let inFeed = {...prevState.inFeed};
+						let nodes = {...prevState.nodes};
+
+						for (let idx = 0; idx < newFeed.length; ++idx) {
+							let newItem = newFeed[idx];
+
+							// If item is already in the feed
+							if (inFeed[newItem.id]) {
+								let oldItem = feed[inFeed[newItem.id]];
+
+								if (Date.parse(newItem.modified) > Date.parse(oldItem.modified)) {
+									feed[inFeed[newItem.id]] = newItem;
+									nodes[newItem.id] = newNodes[newItem.id];
+								}
+							}
+							// Otherwise, add it
+							else {
+								inFeed[newItem.id] = feed.length;
+								feed.push(newItem);
+								nodes[newItem.id] = newNodes[newItem.id];
+							}
+						}
+
+						// Do this after, so
+						//let nodes = {...prevState.nodes, ...newNodes};
+
+						console.log(feed);
+
+						return {'feed': feed, 'inFeed': inFeed, 'nodes': nodes};
+					});
+
+					return r;
+				});
+			}
+
+			return null;
+		})
+		.then( r => {
+			this.setState({'hasLoaded': true, 'isLoading': false});
+			return r;
+		})
+		.catch(err => {
+			this.setState({'error': err});
+		});
 	}
 
-	fetchMore( /*offset*/ ) {
-		var props = this.props;
-		var offset = this.state.offset;
-//		var morenode = this.state.feed[this.state.feed.length-1];
-//		var more = morenode.created ? morenode.created : morenode.modified;
 
+	fetchMore( props, position ) {
 		this.getFeed(
 			props.node.id,
 			props.methods ? props.methods : ['parent', 'superparent'],
@@ -126,59 +184,69 @@ export default class ContentTimeline extends Component {
 			props.subtypes ? props.subtypes : null,
 			props.subsubtypes ? props.subsubtypes : null,
 			props.tags ? props.tags : null,
-			offset,
-			this.props.limit ? this.props.limit : 15
+			position,
+			props.limit ? props.limit : (TIMELINE_STEP + TIMELINE_STEP_BUFFER)
 		);
 
-		this.setState({'offset': offset+10});
+		this.setState({'position': position + TIMELINE_STEP});
 	}
 
-	makeFeedItem( node ) {
-		node = node.node;
+
+	makeFeedItem( item ) {
+		let node = this.state.nodes[item.id];
+		console.log(item);
 
 		if ( node && this.props ) {
-			var path = this.props.path+'/'+node.slug;
-			var user = this.props.user;
-			var extra = this.props.extra;
+			let path = this.props.path+'/'+node.slug;
+			let user = this.props.user;
+			let extra = this.props.extra;
+
+			let key = 'node-'+node.id;
 
 			if ( node.type === 'post' || node.type === 'game' ) {
-				return <ContentPost node={node} user={user} path={path} extra={extra} authored by minmax love comments minimized={this.props.minimized} />;
+				return <ContentPost key={key} node={node} user={user} path={path} extra={extra} authored by minmax love comments minimized={this.props.minimized} />;
 			}
 			else if ( node.type === 'user' ) {
-				return <ContentUser node={node} user={user} path={path} extra={extra} minmax />;
+				return <ContentUser key={key} node={node} user={user} path={path} extra={extra} minmax />;
 			}
 			else {
-				return <div class="content">Unsupported Node Type: {""+node.type}</div>;
+				return <div key={key} class="content">Unsupported Node Type: {""+node.type}</div>;
 			}
 		}
 		return null;
 	}
 
-	render( props, state ) {
-		let {feed, lastadded, error, loaded} = state;
-		let ShowFeed = [];
 
+	render( props, state ) {
+		let {feed, error, hasLoaded, isLoading} = state;
+		let content = [];
+
+		// Error section at the start
 		if ( error ) {
-			ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>Error: {""+error}</ContentCommonBody></ContentCommon>);
+			content.push(<ContentCommon key="error" node={props.node}><ContentCommonBody>Error: {""+error}</ContentCommonBody></ContentCommon>);
 		}
-		else if ( feed && (feed.length == 0) ) {
+		// If not errored and not loaded anything, show a spinner
+		else if ( !hasLoaded ) {
+			return <NavSpinner />;
+		}
+
+		// Feed
+		if ( feed.length > 0 ) {
+			console.log("start");
+			content = [...content, ...feed.map(this.makeFeedItem)];
+		}
+		// Empty Feed
+		else {
 			if ( !props.noemptymessage ) {
-				ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>Feed is empty</ContentCommonBody></ContentCommon>);
+				content.push(<ContentCommon key="empty" node={props.node}><ContentCommonBody>Feed is empty</ContentCommonBody></ContentCommon>);
 			}
 		}
-		else if ( feed && feed.length ) {
-			ShowFeed = ShowFeed.concat(feed.map(this.makeFeedItem));
+
+		// More button at the end
+		if ( !props.nomore ) {
+			content.push(<ContentMore key="more" loading={isLoading} onClick={this.fetchMore.bind(this, props, state.position)} />);
 		}
 
-		if ( !props.nomore && (lastadded > 0) ) {
-			ShowFeed.push(<ContentMore loading={!loaded} onClick={this.fetchMore} />);
-		}
-
-		return (
-			//<Fragment class={cN("content-timeline", props.class)}>
-			<Fragment>
-				{ShowFeed}
-			</Fragment>
-		);
+		return <Fragment>{content}</Fragment>;
 	}
 }

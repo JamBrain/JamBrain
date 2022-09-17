@@ -1,15 +1,7 @@
-import {h, Component} from 'preact/preact';
+import {h, Component} from 'preact';
+import ContentPost from 'com/content-post/post';
 
-import ContentPost						from 'com/content-post/post';
 
-export default class PagePage extends Component {
-    render( props, state ) {
-        let {node, user, path, extra} = props;
-
-        return (
-            <div id="content">
-				<ContentPost node={node} user={user} path={path} extra={extra} updated />
-			</div>
-        );
-    }
+export default function PagePage( props ) {
+    return <ContentPost {...props} updated />;
 }

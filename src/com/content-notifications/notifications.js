@@ -4,7 +4,6 @@ import cN from 'classnames';
 import ButtonBase						from '../button-base/base';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
-import NavLink 							from 'com/nav-link/link';
 import ContentMore						from 'com/content-more/more';
 
 import NotificationsBase				from 'com/content-notifications/base';

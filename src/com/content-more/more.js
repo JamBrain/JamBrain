@@ -1,26 +1,22 @@
-import { h, Component } 				from 'preact/preact';
+import { h, Component }		from 'preact';
 
-import ButtonBase						from 'com/button-base/base';
-import NavSpinner						from 'com/nav-spinner/spinner';
+import UIButton				from 'com/ui/button';
+import NavSpinner			from 'com/nav-spinner/spinner';
 
 export default class ContentMore extends Component {
-	constructor( props ) {
-		super(props);
-	}
-
 	render( props ) {
 		// MK: This is fine as a prop, but don't do loading states, mmkay
 		if ( props.loading ) {
 			return (
-				<div class="content content-more">
+				<nav class="content -more">
 					<NavSpinner />
-				</div>
+				</nav>
 			);
 		}
 		return (
-			<div class="content content-more">
-				<ButtonBase class='-button' onClick={props.onClick}>MORE</ButtonBase>
-			</div>
+			<nav class="content -more">
+				<UIButton onClick={props.onClick}>MORE</UIButton>
+			</nav>
 		);
 	}
 }

@@ -1,4 +1,4 @@
-import {h, Component, Fragment}	from 'preact/preact';
+import {h, Component, Fragment}	from 'preact';
 import ContentPost				from 'com/content-post/post';
 import ContentComments			from 'com/content-comments/comments';
 

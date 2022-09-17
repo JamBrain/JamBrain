@@ -337,7 +337,6 @@ export default class ContentSimple extends Component {
 
 		props = {...props};	// Shallow copy so we can change props
 
-
 		if ( node && (((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length)) ) {
 			let PreHeader = [];
 			let Header = [];

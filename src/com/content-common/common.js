@@ -9,21 +9,20 @@ import FooterButtonLove					from 'com/content-common/common-footer-button-love';
 import FooterButtonComments				from 'com/content-common/common-footer-button-comments';
 import FooterButtonEdit					from 'com/content-common/common-footer-button-edit';
 
+
 export default class ContentCommon extends Component {
 	constructor( props ) {
 		super(props);
 
 		this.state = {
-			'minimized': false
+			'minimized': false // (props.minimized !== undefined) ? true : false
 		};
 
 		this.onMinMax = this.onMinMax.bind(this);
 	}
 
-	onMinMax( e ) {
-		this.setState({
-			'minimized': !this.state.minimized
-		});
+	onMinMax() {
+		this.setState(prevState => ({'minimized': !prevState.minimized}));
 	}
 
 	render( props, state ) {
@@ -36,24 +35,6 @@ export default class ContentCommon extends Component {
 		}
 
 		if ( node && node.slug ) {
-			/*
-			let MainClass = [
-				'content',
-				'-base',
-				'content-common'
-			];
-
-			if ( typeof props.class == 'string' ) {
-				MainClass = MainClass.concat(props.class.split(' '));
-			}
-
-			if ( props.editing )
-				MainClass.push('edit');
-			if ( minimized )
-				MainClass.push('minimized');
-			*/
-
-
 //			var dangerousParsedTitle = { __html:titleParser.parse(node.name) };
 
 

@@ -38,7 +38,7 @@ export default class PageRootHome extends Component {
 		let ShowPosts = <ContentTimeline class="content-timeline-posts" types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra} featured={featured} />;
 
 		return (
-			<Fragment class="page-home-home">
+			<Fragment>
 				{ShowEvent}
 				{ShowNews}
 				{ShowHomework}

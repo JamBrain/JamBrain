@@ -1,7 +1,6 @@
-import {h, Component}					from 'preact/preact';
-import PageNavContent					from '../../nav/content';
-
-import ViewContentPost					from 'com/view/content/content-post';
+import {h, Component, Fragment}	from 'preact';
+import PageNavContent			from '../../nav/content';
+import ViewContentPost			from 'com/view/content/content-post';
 
 export default class PagePost extends Component {
 	render( props ) {
@@ -10,10 +9,10 @@ export default class PagePost extends Component {
 		let EditMode = extra && extra.length && (extra[extra.length-1] == 'edit');
 
 		return (
-			<div>
+			<Fragment>
 				<PageNavContent {...props} />
 				<ViewContentPost node={node} user={user} path={path} extra={extra} edit={EditMode} />
-			</div>
+			</Fragment>
 		);
 	}
 }
