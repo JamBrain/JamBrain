@@ -233,7 +233,7 @@ export default class ContentTimeline extends Component {
 		// Feed
 		if ( feed.length > 0 ) {
 			console.log("start");
-			content = [...content, ...feed.map(this.makeFeedItem)];
+			content.push(<Fragment>{feed.map(this.makeFeedItem)}</Fragment>);
 		}
 		// Empty Feed
 		else {

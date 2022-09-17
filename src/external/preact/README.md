@@ -1,5 +1,5 @@
 ## Preact
-<https://github.com/preactjs/preactjs>
+<https://github.com/preactjs/preact>
 
 * `/src/` is `/preact/`
 * `/debug/src/` is `/debug/`
