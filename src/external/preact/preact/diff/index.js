@@ -170,15 +170,29 @@ export function diff(
 
 			c.context = componentContext;
 			c.props = newProps;
-			c.state = c._nextState;
-
-			if ((tmp = options._render)) tmp(newVNode);
-
-			c._dirty = false;
 			c._vnode = newVNode;
 			c._parentDom = parentDom;
 
-			tmp = c.render(c.props, c.state, c.context);
+			let renderHook = options._render,
+				count = 0;
+			if ('prototype' in newType && newType.prototype.render) {
+				c.state = c._nextState;
+				c._dirty = false;
+
+				if (renderHook) renderHook(newVNode);
+
+				tmp = c.render(c.props, c.state, c.context);
+			} else {
+				do {
+					c._dirty = false;
+					if (renderHook) renderHook(newVNode);
+
+					tmp = c.render(c.props, c.state, c.context);
+
+					// Handle setState called in render, see #2553
+					c.state = c._nextState;
+				} while (c._dirty && ++count < 25);
+			}
 
 			// Handle setState called in render, see #2553
 			c.state = c._nextState;
@@ -483,7 +497,9 @@ export function unmount(vnode, parentVNode, skipRemove) {
 	if (options.unmount) options.unmount(vnode);
 
 	if ((r = vnode.ref)) {
-		if (!r.current || r.current === vnode._dom) applyRef(r, null, parentVNode);
+		if (!r.current || r.current === vnode._dom) {
+			applyRef(r, null, parentVNode);
+		}
 	}
 
 	if ((r = vnode._component) != null) {
@@ -496,6 +512,7 @@ export function unmount(vnode, parentVNode, skipRemove) {
 		}
 
 		r.base = r._parentDom = null;
+		vnode._component = undefined;
 	}
 
 	if ((r = vnode._children)) {
@@ -506,11 +523,13 @@ export function unmount(vnode, parentVNode, skipRemove) {
 		}
 	}
 
-	if (!skipRemove && vnode._dom != null) removeNode(vnode._dom);
+	if (!skipRemove && vnode._dom != null) {
+		removeNode(vnode._dom);
+	}
 
 	// Must be set to `undefined` to properly clean up `_nextDom`
 	// for which `null` is a valid value. See comment in `create-element.js`
-	vnode._dom = vnode._nextDom = undefined;
+	vnode._parent = vnode._dom = vnode._nextDom = undefined;
 }
 
 /** The `.render()` method for a PFC backing instance. */

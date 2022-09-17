@@ -4,6 +4,9 @@
 import {
 	ClassAttributes,
 	Component,
+	ComponentChild,
+	ComponentType,
+	FunctionComponent,
 	PreactDOMAttributes,
 	VNode
 } from './index';
@@ -26,9 +29,15 @@ export namespace JSXInternal {
 		key?: any;
 	}
 
+	export type ElementType<P = any> =
+		| {
+				[K in keyof IntrinsicElements]: P extends IntrinsicElements[K]
+					? K
+					: never;
+		  }[keyof IntrinsicElements]
+		| ComponentType<P>;
 	export interface Element extends VNode<any> {}
-
-	export interface ElementClass extends Component<any, any> {}
+	export type ElementClass = Component<any, any> | FunctionComponent<any>;
 
 	export interface ElementAttributesProperty {
 		props: any;
@@ -647,8 +656,8 @@ export namespace JSXInternal {
 		challenge?: string;
 		checked?: boolean;
 		cite?: string;
-		class?: string;
-		className?: string;
+		class?: string | undefined;
+		className?: string | undefined;
 		cols?: number;
 		colSpan?: number;
 		content?: string;
@@ -661,6 +670,8 @@ export namespace JSXInternal {
 		data?: string;
 		dateTime?: string;
 		default?: boolean;
+		defaultChecked?: boolean;
+		defaultValue?: string;
 		defer?: boolean;
 		dir?: 'auto' | 'rtl' | 'ltr';
 		disabled?: boolean;
@@ -725,6 +736,7 @@ export namespace JSXInternal {
 		noValidate?: boolean;
 		open?: boolean;
 		optimum?: number;
+		part?: string;
 		pattern?: string;
 		ping?: string;
 		placeholder?: string;
@@ -819,6 +831,11 @@ export namespace JSXInternal {
 		itemRef?: string;
 	}
 
+	export type DetailedHTMLProps<
+		HA extends HTMLAttributes<RefType>,
+		RefType extends EventTarget = EventTarget
+	> = HA;
+
 	export interface HTMLMarqueeElement extends HTMLElement {
 		behavior?: 'scroll' | 'slide' | 'alternate';
 		bgColor?: string;
@@ -888,7 +905,7 @@ export namespace JSXInternal {
 		i: HTMLAttributes<HTMLElement>;
 		iframe: HTMLAttributes<HTMLIFrameElement>;
 		img: HTMLAttributes<HTMLImageElement>;
-		input: HTMLAttributes<HTMLInputElement>;
+		input: HTMLAttributes<HTMLInputElement> & { defaultValue?: string };
 		ins: HTMLAttributes<HTMLModElement>;
 		kbd: HTMLAttributes<HTMLElement>;
 		keygen: HTMLAttributes<HTMLUnknownElement>;
@@ -999,6 +1016,7 @@ export namespace JSXInternal {
 		stop: SVGAttributes<SVGStopElement>;
 		symbol: SVGAttributes<SVGSymbolElement>;
 		text: SVGAttributes<SVGTextElement>;
+		textPath: SVGAttributes<SVGTextPathElement>;
 		tspan: SVGAttributes<SVGTSpanElement>;
 		use: SVGAttributes<SVGUseElement>;
 	}
