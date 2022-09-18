@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import { h, Component }	from 'preact';
 
 export default class ClockFlip extends Component {
 	constructor( props ) {
@@ -14,66 +14,72 @@ export default class ClockFlip extends Component {
 		let dd = String(Math.floor(ts / 60 / 60 / 24));
 
 		this.state = {
-			countdown_interval: null,
-			total_seconds: ts,
-			values: {
-				days: dd,
-				hours: hh,
-				minutes: mm,
-				seconds: ss
-			},
-			loaded: false
+			'countdown_interval': null,
+			'total_seconds': ts,
+			'values': {
+				'days': dd,
+				'hours': hh,
+				'minutes': mm,
+				'seconds': ss
+			}
 		};
 	}
 
 	componentDidMount() {
-		this.setState({loaded: true});
-		this.count();
+		this.updateClock();
 	}
 
-	count() {
-		// MK NOTE: Fix me! Don't do this! Also PLEASE stop using this.state
+	updateClock() {
 		let d = this.daysblock.children[1];
 		let h = this.hoursblock.children[1];
 		let m = this.minutesblock.children[1];
 		let s = this.secondsblock.children[1];
+
 		let ci = setInterval(function() {
-			if(this.state.total_seconds > 0) {
-				--this.state.values.seconds;
+			this.setState( prevState => {
+				let values = {...prevState.values};
+				let total_seconds = prevState.total_seconds;
 
-				if(this.state.values.minutes >= 0 && this.state.values.seconds < 0) {
+				if (total_seconds > 0) {
+					values.seconds--;
 
-					this.state.values.seconds = 59;
-					--this.state.values.minutes;
+					if (values.minutes >= 0 && values.seconds < 0) {
+
+						values.seconds = 59;
+						values.minutes--;
+					}
+
+					if (values.hours >= 0 && values.minutes < 0) {
+
+						values.minutes = 59;
+						values.hours--;
+					}
+
+					if (values.days >= 0 &&values.hours < 0) {
+						values.hours = 23;
+						values.days--;
+					}
+
+					// Days
+					this.checkHour(values.days, d.children[0], d.children[1]);
+					// Hours
+					this.checkHour(values.hours, h.children[0], h.children[1]);
+					// Minutes
+					this.checkHour(values.minutes, m.children[0], m.children[1]);
+					// Seconds
+					this.checkHour(values.seconds, s.children[0], s.children[1]);
+
+					total_seconds--;
+
+					return {'total_seconds': total_seconds, 'values': values};
 				}
 
-				if(this.state.values.hours >= 0 && this.state.values.minutes < 0) {
-
-					this.state.values.minutes = 59;
-					--this.state.values.hours;
-				}
-
-				if(this.state.values.days >= 0 && this.state.values.hours < 0) {
-					this.state.values.hours = 23;
-					--this.state.values.days;
-				}
-
-				// Days
-				this.checkHour(this.state.values.days, d.children[0], d.children[1]);
-				// Hours
-				this.checkHour(this.state.values.hours, h.children[0], h.children[1]);
-				// Minutes
-				this.checkHour(this.state.values.minutes, m.children[0], m.children[1]);
-				// Seconds
-				this.checkHour(this.state.values.seconds, s.children[0], s.children[1]);
-
-				--this.state.total_seconds;
-			} else {
-				clearInterval(this.state.countdown_interval);
-			}
+				clearInterval(prevState.countdown_interval);
+				return null;
+			});
 		}, 1000);
 
-		this.setState({countdown_interval: ci});
+		this.setState({'countdown_interval': ci});
 	}
 
 	animateFigure( $el, value ) {

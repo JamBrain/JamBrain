@@ -236,10 +236,8 @@ export default class ContentTimeline extends Component {
 			content.push(<Fragment>{feed.map(this.makeFeedItem)}</Fragment>);
 		}
 		// Empty Feed
-		else {
-			if ( !props.noemptymessage ) {
-				content.push(<ContentCommon key="empty" node={props.node}><ContentCommonBody>Feed is empty</ContentCommonBody></ContentCommon>);
-			}
+		else if ( !props.noemptymessage ) {
+			content.push(<ContentCommon key="empty" node={props.node}><ContentCommonBody>Feed is empty</ContentCommonBody></ContentCommon>);
 		}
 
 		// More button at the end
