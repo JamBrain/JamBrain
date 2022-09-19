@@ -27,7 +27,7 @@ export default class DialogAuth extends Component {
 				<div>
 					<span class="-label">Code:</span>
 					<div class="-input-container">
-						<input autofocus id="dialog-auth-secret" class="-text focusable" onchange={this.onChange.bind(this)} type="text" name="secret" autocomplete="off" value={this.state.secret} />
+						<input autofocus id="dialog-auth-secret" class="-text focusable" onChange={this.onChange.bind(this)} type="text" name="secret" autocomplete="off" value={this.state.secret} />
 					</div>
 				</div>
 			</DialogCommon>

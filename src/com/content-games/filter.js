@@ -26,7 +26,10 @@ export default class GamesFilter extends Component {
 	constructor ( props ) {
 		super(props);
 
-		this.state = {"allowShowFilters": true, "simpleFilter": true};
+		this.state = {
+			"allowShowFilters": true,
+			"simpleFilter": true
+		};
 
 		this.onModifyTextFilter = this.onModifyTextFilter.bind(this);
 		this.onTextFilerFocus = this.onTextFilerFocus.bind(this);

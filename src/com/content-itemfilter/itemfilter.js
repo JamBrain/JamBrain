@@ -113,13 +113,16 @@ export default class ItemFilter extends Component {
 	}
 
 	onTagClick( index ) {
-		let mytags = this.state.mytags.slice();		// copy
-		mytags.splice(index, 1);					// remove
-		this.setState({'mytags': mytags});
+		this.setState(prevState => {
+			let mytags = prevState.mytags.slice();		// copy
+			mytags.splice(index, 1);					// remove
+			return {'mytags': mytags};
+		});
 	}
 	onTagAdd( item ) {
 		// Only allow add if we have an item
 		if ( item ) {
+			// MK: Not a great solution, reading it here...
 			let mytags = this.state.mytags;
 
 			for ( let idx = 0; idx < mytags.length; idx++ ) {
@@ -129,8 +132,12 @@ export default class ItemFilter extends Component {
 				}
 			}
 
-			mytags.push(item);
-			this.setState({'mytags': mytags, 'query': ''});
+			// MK: ...then re-reading again here inside the callback
+			this.setState(prevState => {
+				let mytags = prevState.mytags;
+				mytags.push(item);
+				this.setState({'mytags': mytags, 'query': ''});
+			});
 		}
 	}
 

@@ -33,19 +33,23 @@ export default class TimelineRateGames extends Component {
 	}
 
 	handleMinMax() {
-		this.setState({"expanded": !this.state.expanded});
+		this.setState(prevState => ({"expanded": !prevState.expanded}));
 	}
 
 	handleRefresh() {
-		const {loading, reshuffles, feed} = this.state;
-		if (loading) return;
-		if (reshuffles < N_RESHUFFLE_BEFORE_RELOAD && feed) {
-			const l = feed.length;
-			this.setState({'reshuffles': reshuffles + 1, 'pick': randomPick(l, Math.min(l, N_SHOW_MAX))});
-		}
-		else {
+		if (this.state.loading) return;
+
+		this.setState(prevState => {
+			const {reshuffles, feed} = prevState;
+
+			if (reshuffles < N_RESHUFFLE_BEFORE_RELOAD && feed) {
+				const l = feed.length;
+				return {'reshuffles': reshuffles + 1, 'pick': randomPick(l, Math.min(l, N_SHOW_MAX))};
+			}
+
 			this.getGames(this.props);
-		}
+			return null;
+		});
 	}
 
 	componentDidMount() {
@@ -54,13 +58,15 @@ export default class TimelineRateGames extends Component {
 
 	componentWillReceiveProps(nextprops) {
 		const {props} = this;
-		if (props.featured && props.featured != nextprops.featured)
+		if (props.featured && props.featured != nextprops.featured) {
 			this.getGames(nextprops);
+		}
 	}
 
 	getGames(props) {
-		if ( !props.featured || !props.featured.id )
+		if ( !props.featured || !props.featured.id ) {
 			return;
+		}
 
 		const {id} = props.featured;
 		const methods = ['smart', 'parent'];

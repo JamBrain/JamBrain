@@ -1,7 +1,7 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
 
-import SVGIcon 			from 'com/svg-icon/icon';
+import UIIcon 			from 'com/ui/icon';
 import NavLink			from 'com/nav-link/link';
 
 export default class SidebarCountdown extends Component {

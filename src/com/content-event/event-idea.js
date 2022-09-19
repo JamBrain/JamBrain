@@ -40,7 +40,7 @@ export default class ContentEventIdea extends Component {
 		.then(r => {
 			//console.log(r);
 			if ( r.ideas ) {
-				this.setState({'ideas': r.ideas, 'enableSubmit': canHaveMoreIdeas(r.ideas, false, this.state.maxIdeas)});
+				this.setState(prevState => ({'ideas': r.ideas, 'enableSubmit': canHaveMoreIdeas(r.ideas, false, prevState.maxIdeas)}));
 			}
 			else {
 				this.setState({'ideas': {}});
@@ -99,7 +99,7 @@ export default class ContentEventIdea extends Component {
 			$ThemeIdea.Remove(this.props.node.id, id)
 			.then(r => {
 				//console.log(r.ideas);
-				this.setState({'ideas': r.ideas, 'enableSubmit': canHaveMoreIdeas(r.ideas, false, this.state.maxIdeas)});
+				this.setState(prevState => ({'ideas': r.ideas, 'enableSubmit': canHaveMoreIdeas(r.ideas, false, prevState.maxIdeas)}));
 			})
 			.catch(err => {
 				this.setState({'error': "Error processing the request. Make sure you are still logged in."});
@@ -135,20 +135,20 @@ export default class ContentEventIdea extends Component {
 			});
 		}
 		else if ( (idea.length > 0) && (idea.length <= 64) ) {
-			this.setState({
-				'enableSubmit': canHaveMoreIdeas(this.state.ideas, true, this.state.maxIdeas),
+			this.setState(prevState => ({
+				'enableSubmit': canHaveMoreIdeas(prevState.ideas, true, prevState.maxIdeas),
 				'processingIdea': idea,
 				'error': null,
-			});
+			}));
 			$ThemeIdea.Add(this.props.node.id, idea)
 			.then(r => {
 				//console.log('r', r);
-				this.setState({
+				this.setState(prevState => ({
 					'ideas': r.ideas,
 					'idea': (r.status === 201) ? '' : idea,
-					'enableSubmit': canHaveMoreIdeas(r.ideas, false, this.state.maxIdeas),
+					'enableSubmit': canHaveMoreIdeas(r.ideas, false, prevState.maxIdeas),
 					'processingIdea': null,
-				});
+				}));
 			})
 			.catch(err => {
 				this.setState({'error': "Error processing the request. Make sure you are still logged in.", 'processingIdea': null});
@@ -172,6 +172,7 @@ export default class ContentEventIdea extends Component {
 			</div>
 		);
 	}
+
 	renderIdeas() {
 		return Object.keys(this.state.ideas).map(this.renderIdea);
 	}

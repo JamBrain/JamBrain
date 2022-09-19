@@ -1,5 +1,6 @@
-import {h, Component} 					from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import {h, Component} 					from 'preact';
+import cN from 'classnames';
+import UIIcon 							from 'com/ui/icon';
 
 import DialogBase 						from 'com/dialog/base/base';
 
@@ -11,7 +12,7 @@ export default class DialogTV extends Component {
 		super(props);
 
 		this.state = {
-			showchat: false
+			'showchat': false
 		};
 		Object.assign(this.state, this.calcSizes());
 
@@ -182,7 +183,7 @@ export default class DialogTV extends Component {
 					<div class="-left">
 						<div class="">User</div>
 						<div class="">Project Name</div>
-						<div class="-button"><SVGIcon baseline>{props.following ? 'star-full' : 'star-empty'}</SVGIcon><div>Follow Project</div></div>
+						<div class="-button"><UIIcon baseline>{props.following ? 'star-full' : 'star-empty'}</UIIcon><div>Follow Project</div></div>
 					</div>
 				);
 			}
@@ -190,8 +191,8 @@ export default class DialogTV extends Component {
 			ShowBar = (
 				<div class="-bar">
 					<div class="-right">
-						<div class={["-button", this.canShowChat() ? "" : "-disabled"]} onClick={this.onChatClick}>
-							<SVGIcon baseline>{state.showchat ? 'bubble' : 'bubble-empty'}</SVGIcon>
+						<div class={cN("-button", this.canShowChat() ? "" : "-disabled")} onClick={this.onChatClick}>
+							<UIIcon baseline>{state.showchat ? 'bubble' : 'bubble-empty'}</UIIcon>
 							<div>Chat</div>
 						</div>
 					</div>

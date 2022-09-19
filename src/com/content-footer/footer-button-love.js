@@ -1,7 +1,7 @@
 import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import UIIcon 							from 'com/ui/icon';
 
-import $NodeLove						from '../../shrub/js/node/node_love';
+import $NodeLove						from 'shrub/js/node/node_love';
 
 export default class ContentFooterButtonLove extends Component {
 	constructor( props ) {
@@ -26,7 +26,7 @@ export default class ContentFooterButtonLove extends Component {
 		}
 	}
 
-	onLove( e ) {
+	onLove() {
 		if ( this.state.loved ) {
 			$NodeLove.Remove(this.props.node.id)
 			.then(r => {
@@ -45,9 +45,9 @@ export default class ContentFooterButtonLove extends Component {
 		var _class = "footer-button footer-button-love" + (loved ? " loved" : "");
 		return (
 			<div class={_class} onClick={this.onLove}>
-				<SVGIcon class="-hover-hide">heart</SVGIcon>
-				<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
-				<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
+				<UIIcon class="-hover-hide">heart</UIIcon>
+				<UIIcon class="-hover-show -loved-hide">heart-plus</UIIcon>
+				<UIIcon class="-hover-show -loved-show">heart-minus</UIIcon>
 				<div class="-count">{Number.isInteger(lovecount) ? lovecount : node.love}</div>
 			</div>
 		);

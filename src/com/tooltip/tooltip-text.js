@@ -5,6 +5,8 @@ import ToolTip						from 'com/tooltip/tooltip';
 
 export default class ToolTipText extends ToolTip {
 	constructor( props ) {
+		super(props);
+
 		if (!props.lineHeight) {
 			props.lineHeight = 18;
 		}
@@ -23,8 +25,8 @@ export default class ToolTipText extends ToolTip {
 				const bestWidth = Math.min(maxWidth, Math.floor(rect.height / this.props.lineHeight) * rect.width);
 				this.textSpan.style.width = bestWidth + 'px';
 			}
-
-		} else {
+		}
+		else {
 			this.textSpan = null;
 		}
 	}

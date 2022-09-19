@@ -1,7 +1,7 @@
 import {h, Component, Fragment} from 'preact';
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
-import SVGIcon 							from 'com/svg-icon/icon';
+import UIIcon 							from 'com/ui/icon';
 
 import ContentEventHome					from 'com/content-event/event-home';
 import ContentEventIdea					from 'com/content-event/event-idea';
@@ -89,7 +89,7 @@ export default class ContentEvent extends Component {
 				IsHome = true;
 			}
 
-			ShowHome = <ContentCommonNavButton href={path} class={Class}><SVGIcon>home</SVGIcon><div class="if-sidebar-inline">Home</div></ContentCommonNavButton>;
+			ShowHome = <ContentCommonNavButton href={path} class={Class}><UIIcon>home</UIIcon><div class="if-sidebar-inline">Home</div></ContentCommonNavButton>;
 		}
 
 		var ShowGame = null;
@@ -99,7 +99,7 @@ export default class ContentEvent extends Component {
 				Class = "-selected";
 			}
 
-			ShowGame = <ContentCommonNavButton href={path+'/games'} class={Class}><SVGIcon>gamepad</SVGIcon><div class="if-sidebar-inline">Games</div></ContentCommonNavButton>;
+			ShowGame = <ContentCommonNavButton href={path+'/games'} class={Class}><UIIcon>gamepad</UIIcon><div class="if-sidebar-inline">Games</div></ContentCommonNavButton>;
 		}
 
 		let ShowMyGrades = null;
@@ -109,7 +109,7 @@ export default class ContentEvent extends Component {
 				Class = "-selected";
 			}
 
-			ShowMyGrades = <ContentCommonNavButton href={path+'/mygrades'} class={Class}><SVGIcon>star-half</SVGIcon><div class="if-sidebar-inline">My Grades</div></ContentCommonNavButton>;
+			ShowMyGrades = <ContentCommonNavButton href={path+'/mygrades'} class={Class}><UIIcon>star-half</UIIcon><div class="if-sidebar-inline">My Grades</div></ContentCommonNavButton>;
 		}
 
 //		if ( extra && extra.length ) {
@@ -130,14 +130,14 @@ export default class ContentEvent extends Component {
 //				var FeaturedGame = featured.what[featured.focus_id]; // Hack
 				ShowJoin = (
 					<ContentCommonNavButton href={path + '/' + state.what.slug} class={Class}>
-						<SVGIcon>gamepad</SVGIcon><div class="if-sidebar-inline">My Game</div>
+						<UIIcon>gamepad</UIIcon><div class="if-sidebar-inline">My Game</div>
 					</ContentCommonNavButton>
 				);
 			}
 			else {
 				ShowJoin = (
 					<ContentCommonNavButton onClick={this.onJoin} class={Class}>
-						<SVGIcon>publish</SVGIcon><div class="if-sidebar-inline">Join Event</div>
+						<UIIcon>publish</UIIcon><div class="if-sidebar-inline">Join Event</div>
 					</ContentCommonNavButton>
 				);
 			}
@@ -159,7 +159,7 @@ export default class ContentEvent extends Component {
 //				}
 //			}
 //
-//			ShowFeed = <ContentCommonNavButton href={path} class={Class}><SVGIcon>feed</SVGIcon>Feed</ContentCommonNavButton>;
+//			ShowFeed = <ContentCommonNavButton href={path} class={Class}><UIIcon>feed</UIIcon>Feed</ContentCommonNavButton>;
 //		}
 
 		var ShowTheme = null;
@@ -171,7 +171,7 @@ export default class ContentEvent extends Component {
 				}
 			}
 
-			ShowTheme = <ContentCommonNavButton href={path+'/theme'} class={Class}><SVGIcon>ticket</SVGIcon><div class="if-sidebar-inline">Theme Selection</div></ContentCommonNavButton>;
+			ShowTheme = <ContentCommonNavButton href={path+'/theme'} class={Class}><UIIcon>ticket</UIIcon><div class="if-sidebar-inline">Theme Selection</div></ContentCommonNavButton>;
 		}
 
 //		if ( !IsHome )
@@ -189,16 +189,16 @@ export default class ContentEvent extends Component {
 				LanguagePrefix += "["+navigator.languages.join(',')+"] ";
 			}
 
-			ShowEventTheme = null;
+			let ShowEventTheme = null;
 			if ( node.meta['event-theme'] ) {
-				ShowEventTheme = <Fragment><SVGIcon small baseline gap>lightbulb</SVGIcon> Theme: <strong>{node.meta['event-theme']}</strong></Fragment>;
+				ShowEventTheme = <Fragment><UIIcon small baseline gap>lightbulb</UIIcon> Theme: <strong>{node.meta['event-theme']}</strong></Fragment>;
 			}
 
 			props.above.push(
 				<ContentCommonBody>
 					{ShowEventTheme}
-					<div><SVGIcon small baseline gap>calendar</SVGIcon> {getLocaleDay(Start)} {getLocaleMonthDay(Start)} to <span class="if-sidebar-inline">{getLocaleDay(End)}</span> {getLocaleDate(End)}</div>
-					<div title={LanguagePrefix+Start.toString()}><SVGIcon small baseline gap>clock</SVGIcon> Starts at <strong>{getLocaleTime(Start)}</strong> {getLocaleTimeZone(Start)} <NavLink href="https://github.com/ludumdare/ludumdare/issues/589"><strong title="Adjusted for your local timezone. If this is not your timezone, click here and let us know!">*</strong></NavLink></div>
+					<div><UIIcon small baseline gap>calendar</UIIcon> {getLocaleDay(Start)} {getLocaleMonthDay(Start)} to <span class="if-sidebar-inline">{getLocaleDay(End)}</span> {getLocaleDate(End)}</div>
+					<div title={LanguagePrefix+Start.toString()}><UIIcon small baseline gap>clock</UIIcon> Starts at <strong>{getLocaleTime(Start)}</strong> {getLocaleTimeZone(Start)} <NavLink href="https://github.com/ludumdare/ludumdare/issues/589"><strong title="Adjusted for your local timezone. If this is not your timezone, click here and let us know!">*</strong></NavLink></div>
 				</ContentCommonBody>
 			);
 		}

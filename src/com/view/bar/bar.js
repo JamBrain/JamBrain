@@ -3,7 +3,7 @@ import Shallow			 				from 'shallow/shallow';
 
 import ButtonBase						from 'com/button-base/base';
 import ButtonLink						from 'com/button-link/link';
-import SVGIcon 							from 'com/svg-icon/icon';
+import UIIcon 							from 'com/ui/icon';
 import NavLink 							from 'com/nav-link/link';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
@@ -206,7 +206,7 @@ export default class ViewBar extends Component {
 						window.location.hash = "#cal";
 				}}
 			>
-				<SVGIcon baseline>calendar</SVGIcon>
+				<UIIcon baseline>calendar</UIIcon>
 				<div class="if-sidebar-block">Schedule</div>
 			</UIButton>
 		);
@@ -231,7 +231,7 @@ export default class ViewBar extends Component {
 					noblank
 					href={SecureURL}
 				>
-					<SVGIcon>unlocked</SVGIcon>
+					<UIIcon>unlocked</UIIcon>
 					<div class="if-sidebar-block">Go to Secure Site</div>
 				</UIButton>
 			);
@@ -243,7 +243,7 @@ export default class ViewBar extends Component {
 				if ( featured.focus_id && featured.what ) {
 					ShowMyGame = (
 						<UIButton title="My Game" href={featured.what[featured.focus_id].path} class="bar-button">
-							<SVGIcon>gamepad</SVGIcon>
+							<UIIcon>gamepad</UIIcon>
 							<div class="if-sidebar-block">My Game</div>
 						</UIButton>
 					);
@@ -256,7 +256,7 @@ export default class ViewBar extends Component {
 								window.location.hash = "#create/"+featured.focus_id+"/post";
 							}}
 						>
-							<SVGIcon>edit</SVGIcon>
+							<UIIcon>edit</UIIcon>
 							<div class="if-sidebar-block">New Post</div>
 						</UIButton>
 					);
@@ -271,7 +271,7 @@ export default class ViewBar extends Component {
 								window.location.hash = "#create/"+featured.id+"/item/game";
 							}}
 						>
-							<SVGIcon>publish</SVGIcon>
+							<UIIcon>publish</UIIcon>
 							<div class="if-sidebar-block">Join Event</div>
 						</UIButton>
 					);
@@ -317,7 +317,7 @@ export default class ViewBar extends Component {
 					// probably not show the dropdown, but load new comments into the feed.
 					this.setState({'showNotifications': !this.state.showNotifications});
 				}}>
-					<SVGIcon baseline>bubble</SVGIcon>
+					<UIIcon baseline>bubble</UIIcon>
 					{NotificationCount}
 				</UIButton>
 			);
@@ -347,7 +347,7 @@ export default class ViewBar extends Component {
 						window.location.hash = "#user-register";
 					}}
 				>
-					<SVGIcon>user-plus</SVGIcon>
+					<UIIcon>user-plus</UIIcon>
 					<div class="if-sidebar-block">Create Account</div>
 				</UIButton>
 			);
@@ -359,7 +359,7 @@ export default class ViewBar extends Component {
 						window.location.hash = "#user-login";
 					}}
 				>
-					<SVGIcon>key</SVGIcon>
+					<UIIcon>key</UIIcon>
 					<div class="if-sidebar-block">Login</div>
 				</UIButton>
 			);
@@ -409,8 +409,8 @@ export default class ViewBar extends Component {
 				<section>
 					<section class="left">
 						<UIButton title="Ludum Dare" href="/" class="logo">
-							<SVGIcon class="if-sidebar-block" baseline>ludum</SVGIcon><SVGIcon class="if-sidebar-block" baseline>dare</SVGIcon>
-							<SVGIcon class="if-no-sidebar-block" baseline>l-udum</SVGIcon><SVGIcon class="if-no-sidebar-block" baseline>d-are</SVGIcon>
+							<UIIcon class="if-sidebar-block" baseline>ludum</UIIcon><UIIcon class="if-sidebar-block" baseline>dare</UIIcon>
+							<UIIcon class="if-no-sidebar-block" baseline>l-udum</UIIcon><UIIcon class="if-no-sidebar-block" baseline>d-are</UIIcon>
 						</UIButton>
 					</section>
 					{ShowLoading}

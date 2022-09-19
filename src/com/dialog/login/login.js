@@ -38,7 +38,7 @@ export default class DialogLogin extends Component {
 
 	onKeyDown( callback, e ) {
 		if (!e) {
-			var e = window.event;
+			e = window.event;
 		}
 		if (e.keyCode === 13) {
 			callback(e);
@@ -82,16 +82,16 @@ export default class DialogLogin extends Component {
 		};
 
 		return (
-			<form onsubmit={(e) => {e.preventDefault();}} ref={(form) => {this.submitForm = form;}} autocomplete="on">
+			<form onSubmit={(e) => {e.preventDefault();}} ref={(form) => {this.submitForm = form;}} autocomplete="on">
 				<DialogCommon ok oktext="Log In" onok={this.doLogin} cancel {...new_props}>
 					<div>
 						<div class="-input-container">
-							<input name="user" autofocus autocomplete="username" id="dialog-login-login" onchange={this.onLoginChange} onKeyDown={this.onKeyDownUser} class="-text -block focusable" type="text" name="username" placeholder="Name, account name, or e-mail" maxlength="254" value={login} ref={(input)=>{this.nameInput = input;}}/>
+							<input name="username" autofocus autocomplete="username" id="dialog-login-login" onChange={this.onLoginChange} onKeyDown={this.onKeyDownUser} class="-text -block focusable" type="text" placeholder="Name, account name, or e-mail" maxlength="254" value={login} ref={(input)=>{this.nameInput = input;}}/>
 						</div>
 					</div>
 					<div>
 						<div class="-input-container">
-							<input name="password" autocomplete="current-password" id="dialog-login-password" onchange={this.onPasswordChange} onKeyDown={this.onKeyDownPwd} class="-text -block focusable" type="password" name="password" placeholder="Password" maxlength="128" value={password} />
+							<input name="password" autocomplete="current-password" id="dialog-login-password" onChange={this.onPasswordChange} onKeyDown={this.onKeyDownPwd} class="-text -block focusable" type="password" placeholder="Password" maxlength="128" value={password} />
 						</div>
 					</div>
 					<div style="overflow:hidden">
@@ -102,7 +102,7 @@ export default class DialogLogin extends Component {
 							Forgot Password?
 						</div>
 						<div title="LOL. This is broken. Sorry!" class="_hidden">
-							<input id="dialog-login-remember" onchange={this.onRememberChange} class="focusable" type="checkbox" name="remember" checked={remember} />
+							<input id="dialog-login-remember" onChange={this.onRememberChange} class="focusable" type="checkbox" name="remember" checked={remember} />
 							<span>Stay Logged In</span>
 						</div>
 					</div>

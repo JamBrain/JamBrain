@@ -163,11 +163,13 @@ export default class ContentItem extends Component {
 		return $Grade.Add(node.id, name, value)
 			.then(r => {
 				if ( (r && r.id) || !!r.changed ) {
-					var Grades = this.state.grade;
+					this.setState(prevState => {
+						let grade = prevState.grade;
 
-					Grades[name] = value;
+						grade[name] = value;
 
-					this.setState({'grade': Grades});
+						return {'grade': grade};
+					});
 				}
 				return r;
 			});
@@ -208,15 +210,19 @@ export default class ContentItem extends Component {
 	}
 
 	onChangeTeam(userId, action) {
-		let team = (this.state.team ? this.state.team : this.props.node.meta.author).map(author => author);
-		if (action === 1) {
-			if (team.indexOf(userId) === -1)
-				team.push(userId);
-		}
-		else if (action === -1) {
-			team.splice(team.indexOf(userId), 1);
-		}
-		this.setState({'team': team});
+		this.setState(prevState => {
+			let team = (prevState.team ? prevState.team : this.props.node.meta.author).map(author => author);
+			if (action === 1) {
+				if (team.indexOf(userId) === -1) {
+					team.push(userId);
+				}
+			}
+			else if (action === -1) {
+				team.splice(team.indexOf(userId), 1);
+			}
+
+			return {'team': team};
+		});
 	}
 
 	positionSuffix(position) {

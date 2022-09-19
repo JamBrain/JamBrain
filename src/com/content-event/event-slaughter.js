@@ -55,12 +55,14 @@ export default class ContentEventSlaughter extends Component {
 		const onVotes = $ThemeIdeaVote.GetMy(this.props.node.id)
 		.then(r => {
 			if ( r.votes ) {
-				const End = this.state.recent.length;
-				const Start = Math.max(0, End - RECENT_CACHE_LENGTH);
+				this.setState(prevState => {
+					const End = prevState.recent.length;
+					const Start = Math.max(0, End - RECENT_CACHE_LENGTH);
 
-				// NOTE: The 'recent' order is quite random. Better than nothing though
+					// NOTE: The 'recent' order is quite random. Better than nothing though
 
-				this.setState({'votes': r.votes, 'recent': Object.keys(r.votes).slice(Start).reverse()});
+					return {'votes': r.votes, 'recent': Object.keys(r.votes).slice(Start).reverse()};
+				});
 			}
 			else {
 				this.setState({'votes': []});
@@ -115,18 +117,20 @@ export default class ContentEventSlaughter extends Component {
 
 	pickRandomIdea() {
 		if ( this.state.votes && this.state.ideas ) {
-			const voteKeys = Object.keys(this.state.votes);
-			const ideaKeys = Object.keys(this.state.ideas);
+			this.setState(prevState => {
+				const voteKeys = Object.keys(prevState.votes);
+				const ideaKeys = Object.keys(prevState.ideas);
 
-			const available = ideaKeys.filter(key => voteKeys.indexOf(key) === -1);
+				const available = ideaKeys.filter(key => voteKeys.indexOf(key) === -1);
 
-			if ( available.length === 0 ) {
-				this.setState({'done': true, 'votes-left': available.length});
-			}
+				if ( available.length === 0 ) {
+					return {'done': true, 'votes-left': available.length};
+				}
 
-			const id = Math.random() * available.length;
+				const id = Math.random() * available.length;
 
-			this.setState({'current': available[id], 'votes-left': available.length});
+				return {'current': available[id], 'votes-left': available.length};
+			});
 		}
 		else {
 			this.setState({'error': 'Not loaded'});
@@ -138,17 +142,19 @@ export default class ContentEventSlaughter extends Component {
 	}
 
 	addToRecentQueue( id ) {
-		const {recent} = this.state;
-		if ( recent.filter(voteId => voteId === id).length == 0 ) {
-			recent.push(id);
-		}
+		this.setState(prevState => {
+			const {recent} = prevState;
+			if ( recent.filter(voteId => voteId === id).length == 0 ) {
+				recent.push(id);
+			}
 
-		while (this.state.recent.length > RECENT_CACHE_LENGTH) {
-			const junk = this.state.recent.shift();
-			console.log("trimmed", junk);
-		}
+			while (recent.length > RECENT_CACHE_LENGTH) {
+				const junk = recent.shift();
+				console.log("trimmed", junk);
+			}
 
-		this.setState({'recent': recent});
+			return {'recent': recent};
+		});
 	}
 
 	renderIcon( value ) {
@@ -199,7 +205,7 @@ export default class ContentEventSlaughter extends Component {
 			return;
 		}
 
-		this.setState({'waitASecond': true, 'flashButton': command, 'flashRecent': this.state.current, 'eagerVoter': null});
+		this.setState(prevState => ({'waitASecond': true, 'flashButton': command, 'flashRecent': prevState.current, 'eagerVoter': null}));
 		setTimeout(this.hasWaited, BETWEEN_VOTE_TIME);
 		return $ThemeIdeaVote[command](this.state.current)
 		.then(r => {
@@ -209,8 +215,8 @@ export default class ContentEventSlaughter extends Component {
 
 				this.pickRandomIdea();
 				if (!loggedIn) {
-						this.setState({'loggedIn': false});
-						window.addEventListener('keyup', this.hotKeyVote);
+					this.setState({'loggedIn': false});
+					window.addEventListener('keyup', this.hotKeyVote);
 				}
 			}
 			else {
@@ -257,7 +263,7 @@ export default class ContentEventSlaughter extends Component {
 	}
 
 	_renderMyIdea( id ) {
-		const idea = escape(this.state.ideas[id]);
+		const idea = this.state.ideas[id];
 
 		return (
 			<div class="-item">

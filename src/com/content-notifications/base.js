@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component, Fragment}	from 'preact';
 
 import Notification, {
 	isNotificationComment,
@@ -103,14 +103,13 @@ export default class NotificationsBase extends Component {
 		this.setState({'loading': true});
 		const callerID = r.caller_id;
 		this.collectAllNodesAndNodes(r.feed, callerID);
-		let highestRead = (r.max_read !== undefined) ? r.max_read : this.state.highestRead;
-		this.setState({
+		this.setState(prevState => ({
 			'feed': r.feed,
 			'filtered': r.filtered,
 			'status': r.status,
 			'count': r.count,
-			'highestRead': highestRead,
-		});
+			'highestRead': (r.max_read !== undefined) ? r.max_read : prevState.highestRead,
+		}));
 	}
 
 	collectAllNodesAndNodes( feed, callerID ) {
@@ -401,5 +400,9 @@ export default class NotificationsBase extends Component {
 		$Notification.SetFilters(myFilter);
 		this.setState({'filters': isFinite(this.state.filters) ? (this.state.filters + 1) : 1});
 		//this.setState({'filters': myFilter});
+	}
+
+	render() {
+		return <Fragment />;
 	}
 }

@@ -33,7 +33,7 @@ export default class DialogRegister extends Component {
 	}
 
 	doRegister() {
-		mail = this.state.mail.trim();
+		let mail = this.state.mail.trim();
 
 		if ( Sanitize.validateMail(mail) ) {
 			this.setState({ 'loading': true, 'error': null });
@@ -98,7 +98,7 @@ export default class DialogRegister extends Component {
 					</div>
 					<div>
 						<div class="-input-container">
-							<input autofocus id="dialog-register-mail" autocomplete="email" onchange={this.onChange} class="-text focusable" type="email" name="email" placeholder="E-mail address" maxlength="254" value={mail} />
+							<input autofocus id="dialog-register-mail" autocomplete="email" onChange={this.onChange} class="-text focusable" type="email" name="email" placeholder="E-mail address" maxlength="254" value={mail} />
 							<LabelYesNo value={mail.trim().length ? (Sanitize.validateMail(mail) ? 1 : -1) : 0} />
 						</div>
 					</div>

@@ -3,7 +3,7 @@ import Shallow from 'shallow/shallow';
 
 import NavLink from 'com/nav-link/link';
 import ButtonLink from 'com/button-link/link';
-import SVGIcon from 'com/svg-icon/icon';
+import UIIcon from 'com/ui/icon';
 
 import $Asset from 'shrub/js/asset/asset';		// For image uploading
 
@@ -17,11 +17,13 @@ export default class UITextarea extends Component {
 			// MK: Chrome dev tools discourage the use of userAgent
 			// MK: Also, since Edge is Chromium based this might not be needed
 			//'microsoftEdge': /Edge/.test(navigator.userAgent),
-			'prevHeight': -1	// This allows us to not scroll adjust wrong on first change
+			//'prevHeight': -1	// This allows us to not scroll adjust wrong on first change
 		};
 
 		this.onInput = this.onInput.bind(this);
 		this.onFileChange = this.onFileChange.bind(this);
+
+		this.prevHeight = -1;
 	}
 
 	shouldComponentUpdate( nextProps ) {
@@ -45,7 +47,7 @@ export default class UITextarea extends Component {
 			this.textarea.style.height = this.textarea.scrollHeight + 'px';
 
 			// Calculate the size change since last time here
-			var delta = this.state.prevHeight > 0 ? this.textarea.scrollHeight - this.state.prevHeight : 0;
+			var delta = this.prevHeight > 0 ? this.textarea.scrollHeight - this.prevHeight : 0;
 
 			// This works around the jumping by restoring the scroll positions to where they should have been
 			window.scrollTo(scrollLeft, scrollTop + delta);
@@ -53,7 +55,7 @@ export default class UITextarea extends Component {
 //			window.onscroll = null;
 
 			//Save current height for next round
-			this.state.prevHeight = this.textarea.scrollHeight;
+			this.prevHeight = this.textarea.scrollHeight;
 		}
 	}
 
@@ -78,7 +80,7 @@ export default class UITextarea extends Component {
 		var ta = this.textarea;
 
 		// http://stackoverflow.com/a/11077016/5678759
-		if ( ta.selectionStart || ta.selectionStart == '0') {	// Is Number
+		if ( ta.selectionStart || ta.selectionStart === 0) {	// Is Number
 			var startPos = ta.selectionStart;
 			var endPos = ta.selectionEnd;
 			ta.value = ta.value.substring(0, startPos) + Text + ta.value.substring(endPos, ta.value.length);
@@ -144,10 +146,10 @@ export default class UITextarea extends Component {
 					{ShowLimit}
 					<div class="-left">
 						<label>
-							<input type="file" name="asset" style="display: none;" onchange={this.onFileChange} />
-							<NavLink class="-upload"><SVGIcon baseline gap>upload</SVGIcon>Upload</NavLink>
+							<input type="file" name="asset" style="display: none;" onChange={this.onFileChange} />
+							<NavLink class="-upload"><UIIcon baseline gap>upload</UIIcon>Upload</NavLink>
 						</label>
-						<span class="if-sidebar-inline">. Supports <NavLink blank href="/markdown"><SVGIcon>markdown</SVGIcon> Markdown</NavLink> and <NavLink href="//emoji.codes/">:emoji_codes:</NavLink></span>
+						<span class="if-sidebar-inline">. Supports <NavLink blank href="/markdown"><UIIcon>markdown</UIIcon> Markdown</NavLink> and <NavLink href="//emoji.codes/">:emoji_codes:</NavLink></span>
 					</div>
 				</div>
 			</div>

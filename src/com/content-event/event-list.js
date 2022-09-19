@@ -84,9 +84,11 @@ export default class ContentEventList extends Component {
 	}
 
 	addToVotes( id, value ) {
-		var votes = Object.assign({}, this.state.votes);
-		votes[id] = value;
-		this.setState({ 'votes': votes });
+		this.setState(prevState => {
+			let votes = {...prevState.votes};
+			votes[id] = value;
+			return {'votes': votes};
+		});
 	}
 
 	_submitVote( command, id, e ) {

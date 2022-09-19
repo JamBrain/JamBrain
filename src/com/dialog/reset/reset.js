@@ -33,7 +33,7 @@ export default class DialogReset extends Component {
 	}
 
 	doReset() {
-		mail = this.state.mail.trim();
+		let mail = this.state.mail.trim();
 
 		if ( Sanitize.validateMail(mail) ) {
 			this.setState({ 'loading': true, 'error': null });
@@ -87,7 +87,7 @@ export default class DialogReset extends Component {
 				<DialogCommon ok oktext="Send E-mail" onok={this.doReset} cancel explicit {...new_props}>
 					<div>
 						<div class="-input-container">
-							<input autofocus id="dialog-register-mail" autocomplete="email" onchange={this.onChange} class="-text focusable" type="email" name="email" placeholder="E-mail address" maxlength="254" />
+							<input autofocus id="dialog-register-mail" autocomplete="email" onChange={this.onChange} class="-text focusable" type="email" name="email" placeholder="E-mail address" maxlength="254" />
 							<LabelYesNo value={Sanitize.validateMail(mail) ? 1 : -1} />
 						</div>
 						<p>See <UILink href="https://ludumdare.com/resources/questions/how-do-i-reset-password/">this article</UILink> for help</p>

@@ -3,7 +3,7 @@ import cN from 'classnames';
 import {shallowDiff} from 'shallow-compare';
 
 import NavLink							from 'com/nav-link/link';
-import SVGIcon							from 'com/svg-icon/icon';
+import UIIcon							from 'com/ui/icon';
 
 export default class InputDropdown extends Component {
 	constructor( props ) {
@@ -95,7 +95,7 @@ export default class InputDropdown extends Component {
 					if ( dataId == value ) {
 						SelectedField = (
 							<button type="button" onClick={this.onShow}>
-								<SVGIcon>hamburger</SVGIcon>
+								<UIIcon>hamburger</UIIcon>
 								{Contents}
 							</button>
 						);
@@ -104,7 +104,7 @@ export default class InputDropdown extends Component {
 				if (SelectedField == null) {
 					SelectedField = (
 						<button type="button" onClick={this.onShow}>
-							<SVGIcon>hamburger</SVGIcon>
+							<UIIcon>hamburger</UIIcon>
 							{props.items[0][1]}
 						</button>
 					);

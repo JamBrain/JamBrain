@@ -4,7 +4,9 @@ import SVGIcon 							from 'com/svg-icon/icon';
 export default class SidebarCalendar extends Component {
 	constructor( props ) {
 		super(props);
-		this.state.date = new Date();
+		this.state = {
+			'date': new Date()
+		};
 	}
 
 	componentDidMount() {
