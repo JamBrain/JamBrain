@@ -1,9 +1,10 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component}					from 'preact';
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentLoading					from 'com/content-loading/loading';
 import UIIcon							from 'com/ui/icon/icon';
 import UIButton							from 'com/ui/button/button';
 import UIDropdown						from 'com/ui/dropdown/dropdown';
+
 import $Node							from 'shrub/js/node/node';
 
 export default class ItemTeambuilding extends Component {

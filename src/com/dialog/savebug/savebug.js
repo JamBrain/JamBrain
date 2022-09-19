@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component} 					from 'preact';
 import DialogCommon						from 'com/dialog/common/common';
 
 export default class DialogSavebug extends Component {
@@ -6,7 +6,7 @@ export default class DialogSavebug extends Component {
 		super(props);
 	}
 
-	render( props ) {
+	render() {
 		return (
 			<DialogCommon title="Oops!" ok>
 				<div>Oops!! It looks like the website logged you out! This is a bug. :(</div>

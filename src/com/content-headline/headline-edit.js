@@ -1,7 +1,6 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact';
 
 import UIIcon 							from 'com/ui/icon';
-
 import ButtonBase 						from 'com/button-base/base';
 
 

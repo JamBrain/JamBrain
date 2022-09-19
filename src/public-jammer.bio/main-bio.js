@@ -1,12 +1,13 @@
-import { h, render, Component }			from 'preact/preact';
+import {h, render, Component}			from 'preact';
 import ContentPost						from 'com/content-post/post';
 
 class Main extends Component {
-	constructor() {
-		this.state = {};
-		this.state.posts = [
-			"jammer bio"
-		];
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			'posts': "jammer bio"
+		};
 	}
 
 	componentDidMount() {

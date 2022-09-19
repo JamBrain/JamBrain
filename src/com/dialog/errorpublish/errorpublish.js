@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component} 					from 'preact';
 import DialogCommon						from 'com/dialog/common/common';
 
 export default class DialogErrorPublish extends Component {
@@ -7,7 +7,6 @@ export default class DialogErrorPublish extends Component {
 	}
 
 	render( props ) {
-
 		let message = decodeURI(props.extra);
 
 		return (

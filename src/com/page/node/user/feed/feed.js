@@ -1,4 +1,4 @@
-import {h, Component} from 'preact/preact';
+import {h, Component}					from 'preact';
 
 import ContentTimeline					from 'com/content-timeline/timeline';
 
@@ -7,7 +7,7 @@ export default class UserFeed extends Component {
 		super(props);
 	}
 
-	render( props, state ) {
+	render( props ) {
 		let {node, user, path, extra} = props;
 
 		if ( !node || !user )

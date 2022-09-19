@@ -1,4 +1,4 @@
-import { h, Component } from 'preact/preact';
+import { h, Component } from 'preact';
 import ButtonLink		from 'com/button-link/link';
 
 export default class SidebarDummyTV extends Component {

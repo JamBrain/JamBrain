@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component}					from 'preact';
 import PageNavEventMy					from '../../../nav/event-my';
 
 export default class EventMy extends Component {

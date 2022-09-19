@@ -1,4 +1,5 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact';
+import classNames						from 'classnames';
 
 import DropdownBase						from 'com/dropdown-base/base';
 
@@ -8,14 +9,6 @@ export default class DropdownCommon extends Component {
 	}
 
 	render( props ) {
-		var new_props = {
-			'class': 'dropdown-common' + (props.class ? ' '+props.class : '')
-		};
-
-		return (
-			<DropdownBase {...new_props}>
-				{props.children}
-			</DropdownBase>
-		);
+		return <DropdownBase {...props} class={classNames(props.class, 'dropdown-common')} />;
 	}
 }

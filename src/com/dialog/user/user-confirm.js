@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component} 					from 'preact';
 import DialogCommon						from 'com/dialog/common/common';
 
 export default class DialogUserConfirm extends Component {

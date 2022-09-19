@@ -1,6 +1,6 @@
-import { h } 				from 'preact/preact';
+import {h} 						from 'preact';
 
-import ToolTip						from 'com/tooltip/tooltip';
+import ToolTip					from 'com/tooltip/tooltip';
 
 
 export default class ToolTipText extends ToolTip {

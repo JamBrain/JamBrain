@@ -1,4 +1,4 @@
-import {h, Component} 				from 'preact/preact';
+import {h, Component} 				from 'preact';
 import cN from 'classnames';
 
 const MAJOR_TICK_LENGTH = 1.5;

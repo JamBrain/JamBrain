@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component}					from 'preact';
 
 /** @deprecated use \{UIButton} from "com/ui" */
 export default class ButtonBase extends Component {

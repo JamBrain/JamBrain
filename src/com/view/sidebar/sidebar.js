@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component}					from 'preact';
 
 import SidebarCountdown					from 'com/sidebar/countdown/countdown';
 import SidebarCalendar					from 'com/sidebar/calendar/calendar';

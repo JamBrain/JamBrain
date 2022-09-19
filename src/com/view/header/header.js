@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component}					from 'preact';
 
 import HeaderWarning					from 'com/header/warning/warning';
 import HeaderWhatsup					from 'com/header/whatsup/whatsup';

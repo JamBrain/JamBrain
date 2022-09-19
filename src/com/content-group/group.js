@@ -1,4 +1,4 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact';
 
 import NavLink 							from 'com/nav-link/link';
 import NavSpinner 						from 'com/nav-spinner/spinner';
@@ -7,7 +7,7 @@ import UIIcon							from 'com/ui/icon/icon';
 import Common							from 'com/content-common/common';
 import CommonBody						from 'com/content-common/common-body';
 
-import $Node							from '../../shrub/js/node/node';
+import $Node							from 'shrub/js/node/node';
 
 const GROUP_ICONS = {
 	'tag': 'tag',

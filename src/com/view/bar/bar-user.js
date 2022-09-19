@@ -1,5 +1,4 @@
-import {h, Component} 					from 'preact/preact';
-//import Shallow			 				from 'shallow/shallow';
+import {h, Component} 					from 'preact';
 
 import UIIcon							from 'com/ui/icon/icon';
 import UIImage							from 'com/ui/image/image';

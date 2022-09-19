@@ -1,8 +1,8 @@
-import {h, Component, toChildArray} from 'preact/preact';
-import cN from 'classnames';
-import {shallowDiff}	 							from 'shallow-compare/index';
+import {h, Component, toChildArray}	from 'preact';
+import {shallowDiff}				from 'shallow-compare/index';
+import cN							from 'classnames';
 
-import UIIcon										from 'com/ui/icon';
+import UIIcon						from 'com/ui/icon';
 
 export default class ContentCommonFlag extends Component {
 	constructor( props ) {

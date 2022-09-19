@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component} 					from 'preact';
 import Sanitize							from 'internal/sanitize/sanitize';
 
 import DialogCommon						from 'com/dialog/common/common';
@@ -16,7 +16,7 @@ export default class DialogActivate extends Component {
 		};
 
 		var Vars = Sanitize.getHTTPVars();
-		console.log("v",Vars);
+		//console.log("v",Vars);
 
 		// Get activation ID
 		this.ActID = Vars.id;
@@ -51,12 +51,12 @@ export default class DialogActivate extends Component {
 				});
 			}
 			else {
-				console.log(r);
+				//console.log(r);
 				this.setState({ 'error': r.response, 'loading': false });
 			}
 		})
 		.catch( err => {
-			console.log(err);
+			//console.log(err);
 			this.setState({ 'error': err, 'loading': false });
 		});
 	}

@@ -1,5 +1,4 @@
-import { h, Component } 				from 'preact/preact';
-import { shallowDiff }	 				from 'shallow-compare/index';
+import {h, Component} 					from 'preact';
 
 import ContentFooterButtonLove			from 'com/content-footer/footer-button-love';
 
@@ -8,11 +7,7 @@ export default class ContentFooterCommon extends Component {
 		super(props);
 	}
 
-//	shouldComponentUpdate( nextProps ) {
-//		return shallowDiff(this.props.love, nextProps.love);
-//	}
-
-	render( {node, user, love}, state ) {
+	render( {node, user, love} ) {
 		var ShowLove = null;
 		if ( love ) {
 			ShowLove = <ContentFooterButtonLove node={node} user={user} wedge_left_bottom />;

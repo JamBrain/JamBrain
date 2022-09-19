@@ -1,13 +1,12 @@
-import {h, Component} from 'preact/preact';
-import cN from 'classnames';
-import {shallowDiff}	 				from 'shallow-compare/index';
+import {h, Component}					from 'preact';
+import cN								from 'classnames';
 import Sanitize							from 'internal/sanitize/sanitize';
 
 import UIIcon							from 'com/ui/icon';
 
 import InputText						from 'com/input-text/text';
 import InputDropdown					from 'com/input-dropdown/dropdown';
-import UIButton from 'com/ui/button/button';
+import UIButton							from 'com/ui/button/button';
 
 import $Tag								from 'shrub/js/tag/tag';
 

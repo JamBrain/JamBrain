@@ -1,4 +1,4 @@
-import {h}				from 'preact/preact';
+import {h}				from 'preact';
 import UIIcon			from 'com/ui/icon';
 import ButtonLink		from 'com/button-link/link';
 
@@ -33,4 +33,4 @@ export default function SidebarUpcoming() {
 		</div>
 	);
 }
-//				<ButtonLink class="-footer" href="/cal">Full Schedule</ButtonLink>
+//			<ButtonLink class="-footer" href="/cal">Full Schedule</ButtonLink>

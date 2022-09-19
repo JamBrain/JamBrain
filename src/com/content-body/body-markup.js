@@ -1,6 +1,6 @@
-import { h, Component, toChildArray } 				from 'preact/preact';
-import { shallowDiff }	 				from 'shallow-compare/index';
-import marked 								from '../../internal/marked/marked';
+import {h, Component, toChildArray} 	from 'preact';
+import {shallowDiff}	 				from 'shallow-compare/index';
+import marked 							from 'internal/marked/marked';
 
 export default class ContentBodyMarkup extends Component {
 	constructor( props ) {

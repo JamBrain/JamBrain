@@ -1,8 +1,8 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact';
 import UIIcon 							from 'com/ui/icon';
 import NavLink 							from 'com/nav-link/link';
 
-import $Node							from '../../shrub/js/node/node';
+import $Node							from 'shrub/js/node/node';
 
 export default class ContentFooterButtonComments extends Component {
 	constructor( props ) {

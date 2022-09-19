@@ -1,4 +1,5 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component}		from 'preact';
+import cN					from 'classnames';
 
 export default class DropdownBase extends Component {
 	constructor( props ) {
@@ -6,14 +7,6 @@ export default class DropdownBase extends Component {
 	}
 
 	render( props ) {
-		var new_props = {
-			'class': 'dropdown-base' + (props.class ? ' '+props.class : '')
-		};
-
-		return (
-			<div {...new_props}>
-				{props.children}
-			</div>
-		);
+		return <div {...props} class={cN(props.class, 'dropdown-base')} />;
 	}
 }

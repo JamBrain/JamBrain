@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component}					from 'preact';
 import PageNavRoot						from '../../nav/root';
 
 import ContentGames						from 'com/content-games/games';
@@ -14,7 +14,7 @@ export default class PageTag extends Component {
 		super(props);
 	}
 
-	render( props, state ) {
+	render( props ) {
 		let {node, user, path, extra} = props;
 
 		let Methods = ['target'];

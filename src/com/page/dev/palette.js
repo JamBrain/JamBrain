@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component}					from 'preact';
 import ContentPalette					from 'com/content-palette/palette';
 
 export default class PageDevPalette extends Component {

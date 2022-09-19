@@ -1,17 +1,17 @@
-import {h, Component} from 'preact/preact';
+import {h, Component}		from 'preact';
 
 import ContentUserFollowers from 'com/content-user/user-followers';
 
 export default class UserFollowers extends Component {
-    constructor( props ) {
-        super(props);
-    }
+	constructor( props ) {
+		super(props);
+	}
 
-    render( props, state ) {
-        let {node, user, featured, path, extra} = props;
+	render( props, state ) {
+		let {node, user, featured, path, extra} = props;
 
-        return (
-            <ContentUserFollowers node={node} user={user} path={path} extra={extra} featured={featured} />
-        );
-    }
+		return (
+			<ContentUserFollowers node={node} user={user} path={path} extra={extra} featured={featured} />
+		);
+	}
 }

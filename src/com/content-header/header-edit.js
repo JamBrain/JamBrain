@@ -1,4 +1,4 @@
-import { h, Component, toChildArray } 	from 'preact/preact';
+import {h, Component, toChildArray} 	from 'preact';
 import {shallowDiff}	 				from 'shallow-compare/index';
 
 export default class ContentHeaderEdit extends Component {
@@ -34,7 +34,7 @@ export default class ContentHeaderEdit extends Component {
 		return (
 			<div class="content-header content-header-common content-header-edit">
 				<div class="-label">Title:</div>
-				<input type="text" value={title} oninput={onModify} placeholder="Titles can use **bold** markup" />
+				<input type="text" value={title} onInput={onModify} placeholder="Titles can use **bold** markup" />
 				{ShowAuthors}
 				{ShowLink}
 			</div>

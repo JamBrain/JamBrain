@@ -1,4 +1,4 @@
-import { h }		 				from 'preact/preact';
+import {h}		 				from 'preact';
 
 export default {
 	EmbedTwitch,

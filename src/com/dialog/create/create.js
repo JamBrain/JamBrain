@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component} 					from 'preact';
 import Sanitize							from 'internal/sanitize/sanitize';
 
 import DialogCommon						from 'com/dialog/common/common';
@@ -17,12 +17,12 @@ export default class DialogCreate extends Component {
 		var node_type = this.props.extra.length > 1 ? (this.props.extra[1]) : "";
 		var node_subtype = this.props.extra.length > 2 ? (this.props.extra[2]) : "";
 
-		console.log(event_id, node_type, node_subtype);
+		//console.log(event_id, node_type, node_subtype);
 
 		if ( event_id ) {
 			$Node.Add(event_id, node_type, node_subtype)
 			.then(r => {
-				console.log('hurr', r);
+				//console.log('hurr', r);
 
 				if ( r.path ) {
 					if ( r.type == 'post' ) {

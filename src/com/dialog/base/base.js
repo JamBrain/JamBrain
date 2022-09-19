@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact/preact';
+import {h, Component} 					from 'preact';
 
 export default class DialogBase extends Component {
 	constructor( props ) {

@@ -1,10 +1,10 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact';
 import UIIcon 							from 'com/ui/icon';
 import NavLink 							from 'com/nav-link/link';
 
 import ButtonBase						from 'com/button-base/base';
 
-import $ThemeIdea						from '../../shrub/js/theme/theme_idea';
+import $ThemeIdea						from 'shrub/js/theme/theme_idea';
 
 
 export default class ContentEventFusion extends Component {
@@ -12,10 +12,6 @@ export default class ContentEventFusion extends Component {
 		super(props);
 
 	}
-
-	componentDidMount() {
-	}
-
 
 	render( {/*node,*/ user/*, path, extra*/} ) {
 		var Title = <h3>Theme Fusion Round</h3>;

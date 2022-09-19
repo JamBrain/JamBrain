@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component}					from 'preact';
 
 import ClockComponent					from 'com/clock-base/clock';
 import SidebarCountdown					from 'com/sidebar/countdown/countdown';

@@ -1,6 +1,5 @@
-import {h, Component}	from 'preact/preact';
+import {h, Component}	from 'preact';
 import ContentNavButton	from './nav-button';
-
 
 export default class ContentNavUser extends Component {
 	render( props ) {

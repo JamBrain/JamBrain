@@ -1,4 +1,4 @@
-import {h, Component} 				from 'preact/preact';
+import {h, Component} 				from 'preact';
 
 import Bar							from 'com/visualization/barchart/bar';
 import Legend						from 'com/visualization/legend/legend';
