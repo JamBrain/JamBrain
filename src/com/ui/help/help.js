@@ -18,11 +18,11 @@ export default class UIHelp extends Component {
 	}
 
 	onShow( e ) {
-		console.log('t');
+		//console.log('t');
 		this.setState({'show': true});
 	}
 	onHide( e ) {
-		console.log('h');
+		//console.log('h');
 		this.setState({'show': false});
 	}
 

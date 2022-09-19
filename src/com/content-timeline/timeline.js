@@ -155,7 +155,7 @@ export default class ContentTimeline extends Component {
 						// Do this after, so
 						//let nodes = {...prevState.nodes, ...newNodes};
 
-						console.log(feed);
+						//console.log(feed);
 
 						return {'feed': feed, 'inFeed': inFeed, 'nodes': nodes};
 					});
@@ -194,7 +194,7 @@ export default class ContentTimeline extends Component {
 
 	makeFeedItem( item ) {
 		let node = this.state.nodes[item.id];
-		console.log(item);
+		//console.log(item);
 
 		if ( node && this.props ) {
 			let path = this.props.path+'/'+node.slug;
@@ -232,7 +232,7 @@ export default class ContentTimeline extends Component {
 
 		// Feed
 		if ( feed.length > 0 ) {
-			console.log("start");
+			//console.log("start");
 			content.push(<Fragment>{feed.map(this.makeFeedItem)}</Fragment>);
 		}
 		// Empty Feed

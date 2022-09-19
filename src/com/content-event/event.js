@@ -43,7 +43,7 @@ export default class ContentEvent extends Component {
 
 	componentDidMount() {
 		$Node.What(this.props.node.id).then(r => {
-			console.log("arr", r);
+			//console.log("arr", r);
 
 			// HACK: Gets the first game I'm an author of
 			if ( r.node && Object.keys(r.node).length ) {
@@ -122,7 +122,7 @@ export default class ContentEvent extends Component {
                 Class = "-selected";
             }
 
-			console.log("state", state);
+			//console.log("state", state);
 
 			// NOTE: THIS IS WRONG! We should be asking the event node (i.e. this) for `what`. Alas, with 1 event we can cheat
 			//if ( featured && featured.what && featured.focus_id ) {

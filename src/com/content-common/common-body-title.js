@@ -34,7 +34,7 @@ export default function BodyTitleEditable( props ) {
 					value={props.title}
 					onModify={props.onModify}
 					placeholder={placeholderTitle}
-					maxlength={titleLimit}
+					maxLength={titleLimit}
 				/>
 			</div>
 		);
@@ -66,7 +66,7 @@ export default class ContentCommonBodyTitle extends Component {
 						value={props.title}
 						onModify={props.onModify}
 						placeholder={placeholderTitle}
-						maxlength={titleLimit}
+						maxLength={titleLimit}
 					/>
 				</div>
 			);

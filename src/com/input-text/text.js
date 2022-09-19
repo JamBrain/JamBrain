@@ -20,18 +20,18 @@ export default class InputText extends Component {
 	}
 
 	render( props ) {
-		const {maxlength} = props;
+		const {maxLength} = props;
 
 		let ShowLimit = null;
-		if ( maxlength )
-			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{maxlength}</span></div>;
+		if ( maxLength )
+			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{maxLength}</span></div>;
 
 		return (
 			<div class={cN('input-text', props.class)}>
 				<input
 					value={props.value}
 					placeholder={props.placeholder}
-					maxLength={props.maxlength}
+					maxLength={props.maxLength}
 					type="text"
 					onInput={this.onModify}
 					ref={(input) => { this.textinput = input; }}

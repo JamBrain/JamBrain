@@ -91,7 +91,7 @@ export default class ContentCommentsMarkup extends Component {
 						replaceTextEvent={props.replaceTextEvent}
 						cursorPos={props.cursorPos}
 						ref={(input) => { this.textarea = input; }}
-						maxlength={Limit}
+						maxLength={Limit}
 					/>
 					{(ShowHelpText.length > 0) && <div class='-helparea'>{ShowHelpText}</div>}
 				</div>

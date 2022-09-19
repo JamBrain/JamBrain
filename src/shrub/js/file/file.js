@@ -63,7 +63,7 @@ export function Upload( request, data ) {
 
 
 export function RequestDelete( id, name, node ) {
-	console.log("REQUESTDELETE", id, name, node);
+	//console.log("REQUESTDELETE", id, name, node);
 	return fetch(API_ENDPOINT+'/vx/file/delete', {
 		'method': 'POST',
 		'credentials': 'include',

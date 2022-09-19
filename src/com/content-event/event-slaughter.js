@@ -93,12 +93,14 @@ export default class ContentEventSlaughter extends Component {
 		// Once Finished
 		Promise.all([onVotes, onIdeas])
 		.then(r => {
+			// @ifdef DEBUG
 			console.log("Loaded my Ideas and Themes", r);
+			// @endif
 
 			this.pickRandomIdea();
 		})
 		.catch(err => {
-			console.log("Boo hoo", err);
+			//console.log("Boo hoo", err);
 		});
 	}
 
@@ -150,7 +152,7 @@ export default class ContentEventSlaughter extends Component {
 
 			while (recent.length > RECENT_CACHE_LENGTH) {
 				const junk = recent.shift();
-				console.log("trimmed", junk);
+				//console.log("trimmed", junk);
 			}
 
 			return {'recent': recent};

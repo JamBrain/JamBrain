@@ -41,7 +41,7 @@ export default class UITextarea extends Component {
 
 			//			window.onscroll = function() {}; // I don't think this has any effect
 
-			this.textarea.style.height = 0;	// Shockingly, this is necessary. textarea wont shrink otherwise.
+			this.textarea.style.height = "0";	// Shockingly, this is necessary. textarea wont shrink otherwise.
 
 			// Unfortunately if the textarea is larger than the screen, this `= 0` line causes the focus to jump to the top of the textarea.
 			this.textarea.style.height = this.textarea.scrollHeight + 'px';
@@ -131,8 +131,8 @@ export default class UITextarea extends Component {
 
 	render( props ) {
 		var ShowLimit = null;
-		if ( props.maxlength )
-			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{props.maxlength}</span></div>;
+		if ( props.maxLength )
+			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{props.maxLength}</span></div>;
 
 		return (
 			<div class="ui-textarea">

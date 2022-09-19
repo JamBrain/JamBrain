@@ -77,13 +77,13 @@ export default class ContentCommonBodyLink extends Component {
 						value={props.name}
 						onModify={props.onModifyName}
 						placeholder={tag[1]}
-						maxlength={64}
+						maxLength={64}
 					/>
 					<InputText class="-url"
 						value={props.url}
 						onModify={props.onModifyUrl}
 						placeholder={UrlPlaceholder}
-						maxlength={512}
+						maxLength={512}
 					/>
 					<UIButton onClick={props.onRemove} title="Remove"><UIIcon>cross</UIIcon></UIButton>
 				</div>

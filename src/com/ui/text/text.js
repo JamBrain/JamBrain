@@ -27,15 +27,15 @@ export default class UIText extends Component {
 
 	render( props ) {
 		let ShowLimit = null;
-		if ( props.maxlength && (props.showlength != false) )
-			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{props.maxlength}</span></div>;
+		if ( props.maxLength && (props.showLength != false) )
+			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{props.maxLength}</span></div>;
 
 		return (
 			<div class={cN('ui-text', props.class)}>
 				<input
 					value={props.value}
 					placeholder={props.placeholder}
-					maxLength={props.maxlength}
+					maxLength={props.maxLength}
 					type="text"
 					onInput={this.onModify}
 					onKeyPress={this.onKey}

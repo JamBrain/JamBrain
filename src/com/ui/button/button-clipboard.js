@@ -14,15 +14,20 @@ export default class UIButtonClipboard extends Component {
 		if ( navigator.clipboard ) {
 			navigator.clipboard.writeText(this.props.value).then(r => {
 				// TODO: Trigger event that notifies user of action
-
+				// @ifdef DEBUG
 				console.log("Written to clipboard");
+				// @endif
 			})
 			.catch(r => {
-				console.log("Failed to write to clipboard");
+				// @ifdef DEBUG
+				console.error("Failed to write to clipboard");
+				// @endif
 			});
 		}
 		else {
+			// @ifdef DEBUG
 			console.log("Clipboard unavailable (are you connected via HTTPS?)");
+			// @endif
 		}
 	}
 

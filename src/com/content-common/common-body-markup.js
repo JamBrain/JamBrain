@@ -52,7 +52,7 @@ export default class ContentCommonBodyMarkup extends Component {
 						oncaret={props.oncaret}
             placeholder={Placeholder}
             ref={(input) => {this.textarea = input;}}
-            maxlength={Limit}
+            maxLength={Limit}
 						replaceText={props.replaceText}
 						replaceTextEvent={props.replaceTextEvent}
 						cursorPos={props.cursorPos}
@@ -67,7 +67,7 @@ export default class ContentCommonBodyMarkup extends Component {
       //							onModify={props.onModify}
       //							placeholder={props.placeholder}
       //							ref={(input) => { this.textarea = input; }}
-      //							maxlength={Limit}
+      //							maxLength={Limit}
       //						/>
       //					</div>
       //					<div class="-footer">

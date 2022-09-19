@@ -158,7 +158,7 @@ export default class ItemFilter extends Component {
 	}
 
 	onModifyGrid( value, index ) {
-		console.log(value);
+		//console.log(value);
 		this.setState({'grid': value});
 	}
 
@@ -178,7 +178,7 @@ export default class ItemFilter extends Component {
 				<div class="-body -flex">
 					<div class="-query">
 						<div class="-title"><UIHelp>{HelpItemSearch}</UIHelp>Platform/Tag filters:</div>
-						<UITextdown onModify={this.onModifyQuery} onselect={this.onTagAdd} maxlength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
+						<UITextdown onModify={this.onModifyQuery} onselect={this.onTagAdd} maxLength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
 					</div>
 					<div class="-event">
 						<div class="-title"><UIHelp>{HelpItemEvent}</UIHelp><span>Event:</span></div>

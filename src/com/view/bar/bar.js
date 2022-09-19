@@ -100,13 +100,17 @@ export default class ViewBar extends Component {
 					.catch((e) => {
 						this.setState({'notificationsError': 'Could not retrieve notifications feed.'});
 						setTimeout(() => this.checkNotificationCount(), 5 * 60000);
+						// @ifdef DEBUG
 						console.log('[Notificaton error]', e);
+						// @endif
 					});
 				})
 				.catch((e) => {
 					this.setState({'notificationsError': 'Could not retrieve notifications count.'});
 					setTimeout(() => this.checkNotificationCount(), 5 * 60000);
+					// @ifdef DEBUG
 					console.log('[Notificaton count error]', e);
+					// @endif
 				});
 			}
 		}
@@ -202,8 +206,8 @@ export default class ViewBar extends Component {
 			<UIButton
 				class="bar-button if-no-sidebar-block"
 				onClick={e => {
-						console.log('calendar');
-						window.location.hash = "#cal";
+					//console.log('calendar');
+					window.location.hash = "#cal";
 				}}
 			>
 				<UIIcon baseline>calendar</UIIcon>
@@ -343,7 +347,7 @@ export default class ViewBar extends Component {
 				<UIButton
 					class="bar-button"
 					onClick={e => {
-						console.log('register');
+						//console.log('register');
 						window.location.hash = "#user-register";
 					}}
 				>
@@ -355,7 +359,7 @@ export default class ViewBar extends Component {
 				<UIButton
 					class="bar-button"
 					onClick={e => {
-						console.log('login');
+						//console.log('login');
 						window.location.hash = "#user-login";
 					}}
 				>

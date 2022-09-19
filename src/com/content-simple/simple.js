@@ -242,7 +242,7 @@ export default class ContentSimple extends Component {
 			return false;
 		})
 		.catch(err => {
-			console.log(err);
+			//console.log(err);
 			this.setState({'error': err});
 		});
 	}
@@ -250,16 +250,20 @@ export default class ContentSimple extends Component {
 
 	onPublish( e ) {
 		// TODO: Confirm
+		// @ifdef DEBUG
 		console.log('do save first');
+		// @endif
 
 		return this.onSave( e )
 		.then( rr => {
 			if ( rr ) {
+				// @ifdef DEBUG
 				console.log('do publish');
+				// @endif
 
 				$Node.Publish(this.props.node.id)
 				.then(r => {
-					console.log(r);
+					//console.log(r);
 					if ( (r.status == 200) && r.path ) {
 						window.location.href = r.path;
 						//this.setState({ 'modified': false });
@@ -269,14 +273,14 @@ export default class ContentSimple extends Component {
 					}
 				})
 				.catch(err => {
-					console.log(err);
+					//console.log(err);
 					this.setState({'error': err});
 					window.location.hash = "#error-publish/"+encodeURI(err.message);
 				});
 			}
 		})
 		.catch(err => {
-			console.log(err);
+			//console.log(err);
 			this.setState({'error': err});
 			window.location.hash = "#error-publish/"+encodeURI(err.message);
 		});
@@ -285,23 +289,29 @@ export default class ContentSimple extends Component {
 
 	onDone( e ) {
 		if ( this.state.modified ) {
+			// @ifdef DEBUG
 			console.log('do save first');
+			// @endif
 
 			return this.onSave( e )
 			.then( rr => {
 				if ( rr ) {
+					// @ifdef DEBUG
 					console.log('done');
+					// @endif
 					window.location.href = this.props.node.path;
 				}
 			})
 			.catch(err => {
-				console.log(err);
+				//console.log(err);
 				this.setState({'error': err});
 				window.location.hash = "#error-publish/"+encodeURI(err.message);
 			});
 		}
 		else {
+			// @ifdef DEBUG
 			console.log('done');
+			// @endif
 			window.location.href = this.props.node.path;
 		}
 	}

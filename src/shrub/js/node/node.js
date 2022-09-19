@@ -86,7 +86,9 @@ export function Get( ids, argArray ) {
 			// While we're rebuilding 'ids', scan the cache and invalidate if the feed date is newer
 			let node = _Fetch(node_id);
 			if ( node && (feed[idx].modified > node.modified) ) {
+				// @ifdef DEBUG
 				console.log("Node "+node_id+" was Invalidated ("+feed[idx].modified+" > "+node.modified+")");
+				// @endif
 				InvalidateNodeCache(node_id);
 			}
 		}

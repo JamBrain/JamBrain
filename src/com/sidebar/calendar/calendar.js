@@ -1,12 +1,16 @@
-import {h, Component}	from 'preact';
-import UIIcon			from 'com/ui/icon';
+import {h, Component}			from 'preact';
+import cN						from 'classnames';
+import UIIcon					from 'com/ui/icon';
 
 export default class SidebarCalendar extends Component {
 	constructor( props ) {
 		super(props);
+
 		this.state = {
 			'date': new Date()
 		};
+
+		this.timer = null;
 	}
 
 	componentDidMount() {
@@ -20,14 +24,14 @@ export default class SidebarCalendar extends Component {
 	minuteTick() {
 		/* Update the current time, which will rerender if the day changes */
 		let currentDate = new Date();
-		this.setState({ date: currentDate });
+		this.setState({'date': currentDate});
 
 		/* Schedule an event to occur at the next minute change. */
-		var delayTime = 60000 - currentDate.getMilliseconds() - currentDate.getSeconds()*1000;
+		let delayTime = 60000 - currentDate.getMilliseconds() - (currentDate.getSeconds() * 1000);
 		if ( delayTime < 1000 ) {
 			delayTime = 1000;
 		}
-		this.timer = setTimeout(() => { this.minuteTick(); }, delayTime);
+		this.timer = setTimeout(this.minuteTick.bind(this), delayTime);
 	}
 
 	shouldComponentUpdate( nextProps, nextState ) {
@@ -72,7 +76,7 @@ export default class SidebarCalendar extends Component {
 		let monthEndsOn = new Date(thisYear, thisMonth+1, 0).getDate();
 
 		// TODO: Insert scheduled events here
-		let data = Array(...Array(rows)).map(() => Array.from( Array(cols),function(){
+		let data = Array(...Array(rows)).map(() => Array.from(Array(cols), () => {
 			let ret = {
 				'year': thisYear,
 				'month': thisMonth,
@@ -83,7 +87,7 @@ export default class SidebarCalendar extends Component {
 			if ( nextDay === thisDay ) {
 				ret['selected'] = true;
 			}
-			if ( (originalMonth ^ thisMonth) & 1 === 1 ) {
+			if ( ((originalMonth ^ thisMonth) & 1) === 1 ) {
 				ret['toggle'] = true;
 			}
 
@@ -125,7 +129,7 @@ export default class SidebarCalendar extends Component {
 				props.class.push('weekend');
 			}
 			props.onClick = (e) => {
-				console.log('cal: ',col);
+				//console.log('cal: ',col);
 				window.location.hash = "#cal/"+col.year+"/"+(col.month+1)+"/"+col.day;
 			};
 			// In case Intl extensions are not available
@@ -133,7 +137,7 @@ export default class SidebarCalendar extends Component {
 			if ( window.Intl ) {
 				// http://stackoverflow.com/a/18648314/5678759
 				let objDate = new Date(col.year, col.month, col.day);
-				props.title = objDate.toLocaleString("en-us", {month:"long", day:"numeric", year:"numeric"});
+				props.title = objDate.toLocaleString("en-us", {'month': "long", 'day': "numeric", 'year': "numeric"});
 			}
 
 			// Hack
@@ -168,6 +172,8 @@ export default class SidebarCalendar extends Component {
 //				ShowIcon = <UIIcon class="-icon">mallet</UIIcon>;
 //				props.class.push('scheduled');
 //			}
+
+			props.class = cN(props.class);
 
 			return (
 				<div {...props}>

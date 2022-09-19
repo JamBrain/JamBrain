@@ -18,7 +18,9 @@ export default class ContentNavUser extends Component {
 		NewPath = path + NewPath;
 		PartPath = path + PartPath;
 
+		// @ifdef DEBUG
 		console.log("PATH", NewPath, PartPath);
+		// @endif
 
 		let Buttons = [
 			<ContentNavButton path={PartPath} title="Go Back" icon="previous" href="/" />,

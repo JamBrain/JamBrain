@@ -211,7 +211,7 @@ export default class DialogActivate extends Component {
 				<div>
 					<span class="-label">Name:</span>
 					<div class="-input-container">
-						<input autofocus id="dialog-activate-name" autocomplete="username" onChange={this.onNameChange} class="-text focusable" type="text" name="username" maxlength="32" placeholder="How your name appears" value={name} />
+						<input autofocus id="dialog-activate-name" autocomplete="username" onChange={this.onNameChange} class="-text focusable" type="text" name="username" maxLength={32} placeholder="How your name appears" value={name} />
 						<LabelYesNo value={this.isValidName()} />
 					</div>
 				</div>
@@ -227,14 +227,14 @@ export default class DialogActivate extends Component {
 				<div>
 					<span class="-label">Password:</span>
 					<div class="-input-container">
-						<input id="dialog-activate-password" autocomplete="new-password" onInput={this.onPasswordChange} class="-text focusable" type="password" name="password" maxlength="128" value={password} />
+						<input id="dialog-activate-password" autocomplete="new-password" onInput={this.onPasswordChange} class="-text focusable" type="password" name="password" maxLength={128} value={password} />
 						<LabelYesNo value={this.isValidPassword()} />
 					</div>
 				</div>
 				<div>
 					<span class="-label">Password Again:</span>
 					<div class="-input-container">
-						<input id="dialog-activate-password2" autocomplete="new-password" onInput={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxlength="128" placeholder="Confirmation" value={password2} />
+						<input id="dialog-activate-password2" autocomplete="new-password" onInput={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxLength={128} placeholder="Confirmation" value={password2} />
 						<LabelYesNo value={this.isValidPassword2()} />
 					</div>
 				</div>

@@ -200,7 +200,7 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onReply( e ) {
-		console.log('reply');
+		//console.log('reply');
 	}
 
 	onSubscribe( e ) {

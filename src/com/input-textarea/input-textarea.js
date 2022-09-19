@@ -38,14 +38,14 @@ export default class InputTextarea extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		let {replaceText, cursorPos, replaceTextEvent, maxlength} = nextProps;
+		let {replaceText, cursorPos, replaceTextEvent, maxLength} = nextProps;
 		const prevReplaceTextEvent = this.replaceTextEvent;
 		this.props.value = replaceText;
 		// console.log(!!replaceText, this.textarea, replaceTextEvent, prevReplaceTextEvent);
 		if ( replaceText && this.textarea && (replaceTextEvent != prevReplaceTextEvent) ) {
 			const {oncaret, onModify} = this.props;
 			let updated = false;
-			if (maxlength && replaceText.length > maxlength) {
+			if (maxLength && replaceText.length > maxLength) {
 				replaceText = this.textarea.value;
 				updated = true;
 			}
@@ -231,8 +231,8 @@ export default class InputTextarea extends Component {
 
 	render( props ) {
 		var ShowLimit = null;
-		if ( props.maxlength )
-			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{props.maxlength}</span></div>;
+		if ( props.maxLength )
+			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{props.maxLength}</span></div>;
 
 		return (
 			<div class="input-textarea">

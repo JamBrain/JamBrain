@@ -55,7 +55,9 @@ export default class ContentItemEmbedFile extends Component {
                 })
                 .then( r => {
                     this.setState({'status': 5});
+                    // @ifdef DEBUG
                     console.log("Uploaded", r);
+                    // @endif
                 })
                 .catch(err => {
                     this.setState({'status': 5});
@@ -71,7 +73,9 @@ export default class ContentItemEmbedFile extends Component {
         if ( !user || !user.id || !node )
             return null;
 
+        // @ifdef DEBUG
         console.log("onDelete", e.id, e.name);
+        // @endif
 
         return $File.RequestDelete(e.id, e.name, node.id)
             .then( r => {
@@ -88,7 +92,9 @@ export default class ContentItemEmbedFile extends Component {
                 }
             })
             .then( r => {
+                // @ifdef DEBUG
                 console.log("Deleted", r);
+                // @endif
             })
             .catch(err => {
                 alert(err);

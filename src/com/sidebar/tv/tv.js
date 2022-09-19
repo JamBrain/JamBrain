@@ -20,8 +20,8 @@ export default class SidebarTV extends Component {
 		super(props);
 
 		this.state = {
-			active: 0,
-			streams: []
+			'active': 0,
+			'streams': []
 		};
 
 		this.services = [
@@ -31,7 +31,7 @@ export default class SidebarTV extends Component {
 		];
 
 		this.serviceIcons = [
-			(<div />),						// Null //
+			(<div />),					// Null //
 			(<UIIcon>twitch</UIIcon>),	// Twitch //
 			(<UIIcon>youtube</UIIcon>),	// YouTube //
 			(<div></div>),
@@ -155,7 +155,7 @@ export default class SidebarTV extends Component {
 	}
 
 	setActive( id, e ) {
-		this.setState({ active: id });
+		this.setState({'active': id});
 	}
 
 	showOthers( others, active ) {
@@ -202,7 +202,7 @@ export default class SidebarTV extends Component {
 			return (
 				<div class="sidebar-base sidebar-tv">
 					<div class="-active" onClick={e => {
-							console.log('tv');
+							//console.log('tv');
 							/*window.open("https://www.twitch.tv/directory/game/Creative/ldjam", '_blank');*/
 							window.location.hash = "#tv/"+this.services[active.service_id]+'/'+active.user_slug;
 						}}>
@@ -214,7 +214,8 @@ export default class SidebarTV extends Component {
 							e.stopPropagation();
 							if ( this.services[active.service_id] == "twitch" ) {
 									window.open("https://www.twitch.tv/"+active.user_slug, "_blank");
-							} else if ( this.services[active.service_id] == "youtube" ) {
+							}
+							else if ( this.services[active.service_id] == "youtube" ) {
 									//TODO: add youtube action, when youtube displays in TV
 							}
 						}}><UIIcon>twitch</UIIcon></div>
@@ -226,7 +227,7 @@ export default class SidebarTV extends Component {
 						<div>{active.title}</div>
 					</div>
 					<div class="-browse">
-						{this.showOthers(others,active)}
+						{this.showOthers(others, active)}
 						<ButtonLink class="-more" href="https://www.twitch.tv/directory/all/tags/c8d6d6ee-3b02-4ae7-81e9-4c0f434941cc" title="MORE">
 							<div><UIIcon>circle</UIIcon> <UIIcon>circle</UIIcon> <UIIcon>circle</UIIcon></div>
 						</ButtonLink>

@@ -315,8 +315,7 @@ export default class NotificationItem extends Component {
 			return this.renderOther(notification, timePrefix, navProps);
 		}
 		else {
-			//ERROR
-			console.log("[ERROR: bad notification]", notification);
+			console.error("[ERROR: bad notification]", notification);
 		}
 	}
 }

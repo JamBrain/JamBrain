@@ -42,12 +42,12 @@ export default class DialogPassword extends Component {
 				});
 			}
 			else {
-				console.log(r);
+				//console.log(r);
 				this.setState({ 'error': r.response, 'loading': false });
 			}
 		})
 		.catch( err => {
-			console.log(err);
+			//console.log(err);
 			this.setState({ 'error': err, 'loading': false });
 		});
 	}
@@ -93,7 +93,7 @@ export default class DialogPassword extends Component {
 			$User.Password( this.ActID, this.ActHash.trim(), this.state.password.trim() )
 			.then( r => {
 				if ( r.status === 200 ) {
-					console.log('success',r);
+					//console.log('success',r);
 					//location.href = "#";//user-loggedin";
 					this.setState({ 'success': true, 'error': null });
 				}
@@ -152,13 +152,13 @@ export default class DialogPassword extends Component {
 				<DialogCommon ok oktext="Save" onok={this.doResetPassword} cancel explicit {...new_props}>
 					<div>
 						<div class="-input-container">
-							<input autofocus id="dialog-password-password2" autocomplete="new-password" onInput={this.onPasswordChange} class="-text focusable" type="password" name="password" maxlength="128" placeholder="Password" value={password} />
+							<input autofocus id="dialog-password-password2" autocomplete="new-password" onInput={this.onPasswordChange} class="-text focusable" type="password" name="password" maxLength={128} placeholder="Password" value={password} />
 							<LabelYesNo value={this.isValidPassword()} />
 						</div>
 					</div>
 					<div>
 						<div class="-input-container">
-							<input id="dialog-password-password2" autocomplete="new-password" onInput={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxlength="128" placeholder="Password again" value={password2} />
+							<input id="dialog-password-password2" autocomplete="new-password" onInput={this.onPassword2Change} class="-text focusable" type="password" name="password2" maxLength={128} placeholder="Password again" value={password2} />
 							<LabelYesNo value={this.isValidPassword2()} />
 						</div>
 					</div>

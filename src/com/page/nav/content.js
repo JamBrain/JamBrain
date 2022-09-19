@@ -47,7 +47,7 @@ export default class PageNavContent extends Component {
 			GamePath = parent.path;
 		}
 
-		console.log(path, FullPath, GamePath);
+		//console.log(path, FullPath, GamePath);
 
 		NavButtons.push(<ContentNavButton path={path+FullPath} title={EventName} light={true} icon="trophy" href={EventPath}>{EventName}</ContentNavButton>);
 		NavButtons.push(<ContentNavButton path={path+FullPath} title="Games" light={true} icon="gamepad" href={EventPath+"/games"}>Games</ContentNavButton>);
