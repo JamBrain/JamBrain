@@ -1,5 +1,5 @@
-import { h, Component, toChildArray } 	from 'preact';
-import { shallowDiff }	 				from 'shallow-compare/index';
+import {h, Component, toChildArray} 	from 'preact';
+import {shallowDiff}	 				from 'shallow-compare/index';
 
 export default class ContentBodyCommon extends Component {
 	constructor( props ) {

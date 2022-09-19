@@ -65,7 +65,7 @@ export default class DialogLogin extends Component {
 			})
 			.catch( err => {
 				//console.log(err);
-				this.setState({'error': err });
+				this.setState({'error': err});
 			});
 	}
 

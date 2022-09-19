@@ -23,7 +23,7 @@ export default class PieChart extends Component {
 		let {labels, values, use_percentages} = props;
 
         let total = values.reduce((a, b) => a + b, 0);
-		let percentages = values.map((x) => { return Math.round((100*(x/total))*100)/100; });
+		let percentages = values.map((x) => (Math.round((100*(x/total))*100)/100));
 
         let Segments = [];
 		let Names = [];

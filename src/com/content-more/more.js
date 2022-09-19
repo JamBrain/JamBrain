@@ -1,4 +1,4 @@
-import { h, Component }		from 'preact';
+import {h, Component}		from 'preact';
 
 import UIButton				from 'com/ui/button';
 import NavSpinner			from 'com/nav-spinner/spinner';

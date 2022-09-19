@@ -1,4 +1,4 @@
-import { h, Component } from 'preact';
+import {h, Component}	from 'preact';
 import NavLink 			from 'com/nav-link/link';
 
 /** @deprecated use \{UIButton} (or \{UIButtonLink}) from "com/ui" */
@@ -7,7 +7,7 @@ export default class ButtonLink extends NavLink {
 		super(props);
 	}
 
-	render(props,state) {
+	render(props) {
 		if ( props.class )
 			props.class = "button-base button-link " + props.class;
 		else
@@ -33,13 +33,17 @@ export default class ButtonLink extends NavLink {
 		// Wrap onClick with a function that deselects current element //
 		let onClickFunc = props.onClick;
 		props.onClick = (e) => {
-			if ( props.disabled )
+			if ( props.disabled ) {
 				return;
-			if ( onClickFunc )
-				onClickFunc(e);
+			}
 
-			if ( doHistory )
-				doHistory.call(this.base,e);
+			if ( onClickFunc ) {
+				onClickFunc(e);
+			}
+
+			if ( doHistory ) {
+				doHistory.call(this.base, e);
+			}
 
 			if ( typeof document.activeElement.blur !== "undefined" ) {
 				document.activeElement.blur();
