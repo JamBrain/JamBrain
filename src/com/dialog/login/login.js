@@ -86,7 +86,7 @@ export default class DialogLogin extends Component {
 				<DialogCommon ok oktext="Log In" onok={this.doLogin} cancel {...new_props}>
 					<div>
 						<div class="-input-container">
-							<input name="username" autofocus autocomplete="username" id="dialog-login-login" onChange={this.onLoginChange} onKeyDown={this.onKeyDownUser} class="-text -block focusable" type="text" placeholder="Name, account name, or e-mail" maxlength="254" value={login} ref={(input)=>{this.nameInput = input;}}/>
+							<input name="user" autofocus autocomplete="username" id="dialog-login-login" onChange={this.onLoginChange} onKeyDown={this.onKeyDownUser} class="-text -block focusable" type="text" placeholder="Name, account name, or e-mail" maxlength="254" value={login} ref={(input)=>{this.nameInput = input;}}/>
 						</div>
 					</div>
 					<div>
