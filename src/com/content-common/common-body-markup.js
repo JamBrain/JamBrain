@@ -51,7 +51,7 @@ export default class ContentCommonBodyMarkup extends Component {
 						onFocus={props.onFocus}
 						oncaret={props.oncaret}
             placeholder={Placeholder}
-            ref={(input) => {this.textarea = input;}}
+            ref={(input) => (this.textarea = input)}
             maxLength={Limit}
 						replaceText={props.replaceText}
 						replaceTextEvent={props.replaceTextEvent}
@@ -74,23 +74,24 @@ export default class ContentCommonBodyMarkup extends Component {
       //						<div class="-right"><span class="-chars">{Chars}</span>/<span class="-limit">{Limit}</span></div>
       //						<div class="-left">Supports <NavLink blank href="/markdown"><UIIcon>markdown</UIIcon> <strong>Markdown</strong></NavLink> and <strong>:emoji_codes:</strong></div>
       //					</div>
-    } else {
+    }
+    else {
       Class.push("markup");
 
       if (!Text.trim().length) {
         Text = Placeholder;
       }
 
-      var markedOptions = {
-        highlight: function(code, lang) {
+      let markedOptions = {
+        'highlight': function(code, lang) {
           var language = Prism.languages.clike;
           if (Prism.languages[lang])
             language = Prism.languages[lang];
           return Prism.highlight(code, language);
         },
-        sanitize: true, // disable HTML
-        smartypants: true, // enable automatic fancy quotes, ellipses, dashes
-        langPrefix: 'language-'
+        'sanitize': true, // disable HTML
+        'smartypants': true, // enable automatic fancy quotes, ellipses, dashes
+        'langPrefix': 'language-'
       };
 
       // NOTE: only parses the first child

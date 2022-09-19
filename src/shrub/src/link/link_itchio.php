@@ -1,22 +1,21 @@
-<?PHP
+<?php
 require_once __DIR__."/link_util.php";
 
 function link_ScrapeItchIO( $html, $link ) {
-	
 	//Downloads
 	$items = array();
 	foreach($html->find('.upload') as $downloadable) {
 		$item = null;
 		$dl_link = $downloadable->find('a', 0);
-		
+
 		$item['name'] = $downloadable->find('.upload_name', 0)->find('strong', 0)->innertext;
 		$item['platforms'] = array();
-		
+
 		if ($dl_link === null) {
 			//This is a priced result
 			$item['uri'] = null;
-		} else {
-			
+		}
+		else {
 			//This is a free result
 			$item['version'] =  $dl_link -> getAttribute('data-upload_id');
 			$game_link = link_Parse($dl_link -> href);
@@ -32,13 +31,14 @@ function link_ScrapeItchIO( $html, $link ) {
 		if (count($item['platforms']) === 0) {
 			$item['error-message'] = 'You have forgotten to mark download type on your game on itch.io. Please fix this.';
 			$item['valid'] = false;
-		} else {
+		}
+		else {
 			$item['valid'] = true;
 		}
 
 		array_push($items, $item);
 	}
-	
+
 	//Web
 	$web = $html->find('div.game_frame');
 	if (count($web) === 1) {
@@ -48,11 +48,10 @@ function link_ScrapeItchIO( $html, $link ) {
 		$item['platforms'][] =  link_resolvePlaformAlias('webGL');
 		array_push($items, $item);
 	}
-	
+
 	$response['items'] = $items;
 	$response['user-page'] = implode(".", [$link['subdomain'], $link['domain']]);
 	$response['provider-name'] = 'Itch.io';
-	
+
 	return $response;
 }
-?>

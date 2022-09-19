@@ -1,4 +1,4 @@
-import { h, Component }	from 'preact';
+import {h, Component}	from 'preact';
 
 export default class ClockFlip extends Component {
 	constructor( props ) {
@@ -35,7 +35,7 @@ export default class ClockFlip extends Component {
 		let m = this.minutesblock.children[1];
 		let s = this.secondsblock.children[1];
 
-		let ci = setInterval(function() {
+		let ci = setInterval(() => {
 			this.setState( prevState => {
 				let values = {...prevState.values};
 				let total_seconds = prevState.total_seconds;
@@ -92,26 +92,26 @@ export default class ClockFlip extends Component {
 		$back_bottom.children[0].innerHTML = value;
 
 		$top.setAttribute('style', 'transition: 0.8s all ease-out; transform: matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1)');
-		setTimeout(function(){
+		setTimeout(() => {
 			$top.setAttribute('style', 'transition: 0.0s all ease-out; transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)');
 			$top.innerHTML = value;
 			$bottom.innerHTML = value;
 		}, 800);
 
 		$back_top.setAttribute('style', 'transition: 0.8s all ease-out; transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)');
-		setTimeout(function(){
+		setTimeout(() => {
 			$back_top.setAttribute('style', 'transition: 0.0s all ease-out; transform: matrix3d(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1)');
 		}, 800);
 
 		/*$top.setAttribute('style', 'transition: 0.4s all ease-out; transform: rotateX(-180deg) perspective(300px)');
-		setTimeout(function() {
+		setTimeout(() => {
 		$top.setAttribute('style', 'transition: 0.4s all ease-out; transform: rotateX(-0deg) perspective(0px)');
 		$top.innerHTML = value;
 		$bottom.innerHTML = value;
 		}, 400);
 
 		$back_top.setAttribute('style', 'transition: 0.4s all ease-out; transform: rotateX(0deg) perspective(300px)');
-		setTimeout(function() {
+		setTimeout(() => {
 		$back_top.setAttribute('style', 'transition: 0.4s all ease-out; transform: rotateX(180deg) perspective(000px)');
 		}, 400);*/
 	}
@@ -121,16 +121,16 @@ export default class ClockFlip extends Component {
 		let val_2 = value.toString().charAt(1);
 		let fig_1_value = arguments[1].children[0].innerHTML;
 		let fig_2_value = arguments[2].children[0].innerHTML;
-		if(value >= 10) {
+		if (value >= 10) {
 			//Animate only if the figure has changed
 			// Something weird is happening here, that's why I'm using arguments[1] rather than el...
-			if(fig_1_value !== val_1) this.animateFigure( arguments[1], val_1 );
-			if(fig_2_value !== val_2) this.animateFigure( arguments[2], val_2 );
+			if (fig_1_value !== val_1) this.animateFigure( arguments[1], val_1 );
+			if (fig_2_value !== val_2) this.animateFigure( arguments[2], val_2 );
 		}
 		else {
 			// If we are under 10, replace first figure with 0
-			if(fig_1_value !== '0') this.animateFigure(arguments[1], 0);
-			if(fig_2_value !== val_1) this.animateFigure(arguments[2], val_1);
+			if (fig_1_value !== '0') this.animateFigure(arguments[1], 0);
+			if (fig_2_value !== val_1) this.animateFigure(arguments[2], val_1);
 		}
 	}
 
@@ -168,32 +168,32 @@ export default class ClockFlip extends Component {
 
 	render( props, state ) {
 		let size = "font-size: 1em";
-		if(props.comSize)
+		if (props.comSize)
 			size = "font-size: "+props.comSize+"em";
 
 		let display = "display: block";
 		let urgent = "-countdown";
 		let displayAfterDays = 1;
-		if(props.displayAfterDays)
+		if (props.displayAfterDays)
 			displayAfterDays = props.displayAfterDays;
-		if(props.displayAfterHours && props.displayAfterHours != 0) {
-			if(state.values.days < displayAfterDays && state.values.hours < props.displayAfterHours)
+		if (props.displayAfterHours && props.displayAfterHours != 0) {
+			if (state.values.days < displayAfterDays && state.values.hours < props.displayAfterHours)
 				display = "display: block";
 			else
 				display = "display: none";
 		}
-		if(props.urgentAfterHours && props.urgentAfterHours != 0) {
-			if(state.values.days < 6 && state.values.hours < props.urgentAfterHours)
+		if (props.urgentAfterHours && props.urgentAfterHours != 0) {
+			if (state.values.days < 6 && state.values.hours < props.urgentAfterHours)
 			urgent = "-countdown urgent";
 		}
 
 		let daysblock = "display: inline-block";
 		let secondsblock = "display: inline-block";
-		if(!props.jumbo) {
+		if (!props.jumbo) {
 			daysblock = "display: none";
 			secondsblock = "display: inline-block";
 		}
-		if(!props.jumbo && state.values.days > displayAfterDays) {
+		if (!props.jumbo && state.values.days > displayAfterDays) {
 			daysblock = "display: inline-block";
 			secondsblock = "display: none";
 		}
@@ -203,22 +203,22 @@ export default class ClockFlip extends Component {
 				<div class="-clock" id={ props.id } style={ display }>
 					<h1 class="_font2">{ props.h1 } <strong>{ props.h2 }</strong></h1>
 					<div class={ urgent }>
-						<div class="bloc-time days" data-init-value="00" ref={c => this.daysblock=c} style={ daysblock }>
+						<div class="bloc-time days" data-init-value="00" ref={c => (this.daysblock=c)} style={ daysblock }>
 							<span class="count-title _font2">Days</span>
 							{ this.renderDigit(state.values.days, "days") }
 						</div>
 
-						<div class="bloc-time hours" data-init-value="00" ref={c => this.hoursblock=c}>
+						<div class="bloc-time hours" data-init-value="00" ref={c => (this.hoursblock=c)}>
 							<span class="count-title _font2">Hours</span>
 							{ this.renderDigit(state.values.hours, "hours") }
 						</div>
 
-						<div class="bloc-time min" data-init-value="0" ref={c => this.minutesblock=c} style={state.ShowDays ? "margin-right: 0px;" : ""}>
+						<div class="bloc-time min" data-init-value="0" ref={c => (this.minutesblock=c)} style={state.ShowDays ? "margin-right: 0px;" : ""}>
 							<span class="count-title _font2">Minutes</span>
 							{ this.renderDigit(state.values.minutes, "minutes") }
 						</div>
 
-						<div class="bloc-time sec" data-init-value="0" style={ secondsblock } ref={c => this.secondsblock=c}>
+						<div class="bloc-time sec" data-init-value="0" style={ secondsblock } ref={c => (this.secondsblock=c)}>
 							<span class="count-title _font2">Seconds</span>
 							{ this.renderDigit(state.values.seconds, "seconds") }
 						</div>

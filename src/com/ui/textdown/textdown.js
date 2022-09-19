@@ -111,7 +111,7 @@ export default class UITextdown extends Component {
 
 		// NOTE: a tabindex is required to use focus and blur
 		return (
-			<div class={Classes} tabIndex={-1} onFocus={this.doShow} onBlur={this.doHide} ref={(input) => { this.ref = input; }}>
+			<div class={Classes} tabIndex={-1} onFocus={this.doShow} onBlur={this.doHide}>
 				<UIText class="-text" value={props.value} placeholder={props.placeholder} onModify={this.onModify} onselect={this.onSelect} maxLength={props.maxLength} showLength={false} />
 				{ShowItems}
 			</div>

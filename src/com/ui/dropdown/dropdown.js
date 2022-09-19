@@ -87,7 +87,7 @@ export default class UIDropdown extends Component {
 		);
 
 		return (
-			<div class={Classes} ref={(input) => { this.dropdown = input; }}>
+			<div class={Classes} ref={(div) => (this.dropdown = div)}>
 				<UIButton class="-button" onClick={this.onButton}>{ShowTick}{Button}</UIButton>
 				{ShowContent}
 			</div>

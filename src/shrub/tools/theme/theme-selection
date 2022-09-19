@@ -51,7 +51,7 @@ if ($EVENT_ID > 0) {
 		print " ** Error: The node '".$event['name']."' is not a properly setup event.\n";
 		exit(1);
 	}
-} 
+}
 else {
 	$ACTION = null;
 }
@@ -62,8 +62,9 @@ if ($ACTION == "has-selection") {
 	if (sizeof($argv) == 0) {
 		if (array_key_exists($metaKey, $event['meta'])) {
 			print "\t* Theme selection enabled.\n";
-		} else {
-			print "\t* Theme selection disabled.\n";			
+		}
+		else {
+			print "\t* Theme selection disabled.\n";
 		}
 	}
 	else if ($argv[0] == 'enabled') {
@@ -73,7 +74,8 @@ if ($ACTION == "has-selection") {
 	else if ($argv[0] == 'disabled') {
 		nodeMeta_Remove($EVENT_ID, 0, SH_SCOPE_PUBLIC, $metaKey, 'enabled');
 		print " SUCCESS! (disabled)\n";
-	} else {
+	}
+	else {
 		print " ** ERROR: Can only set 'enabled' or 'disabled'\n";
 	}
 }
@@ -82,7 +84,8 @@ else if ($ACTION == "idea-limit") {
 	if (sizeof($argv) == 0) {
 		if (array_key_exists($metaKey, $event['meta'])) {
 			print "\t* ".$event['meta'][$metaKey]." suggestions per user.\n";
-		} else {
+		}
+		else {
 			print "\t* No suggestions from users.\n";
 		}
 	}
@@ -94,10 +97,12 @@ else if ($ACTION == "idea-limit") {
 	else if ($argv[0] == 'disabled') {
 		nodeMeta_Remove($EVENT_ID, 0, SH_SCOPE_PUBLIC, $metaKey, $event['meta'][$metaKey]);
 		print " SUCCESS! (disabled)\n";
-	} else {
+	}
+	else {
 		print " ** ERROR: Can only set a number >= 0 or 'disabled'\n";
-	}	
-} else {
+	}
+}
+else {
 	if ($ACTION) {
 		print " ** ERROR: Action '".$ACTION."' unknown.\n";
 	}

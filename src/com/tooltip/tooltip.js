@@ -7,6 +7,9 @@ import ContentCommonBody				from 'com/content-common/common-body';
 
 export default class ToolTip extends Component {
 	constructor( props ) {
+		super(props);
+
+		// MK: THIS IS BAD
 		if (!props.maxWidth) {
 			props.maxWidth = 0.5;
 		}
@@ -20,10 +23,8 @@ export default class ToolTip extends Component {
 			props.touchNoDoubleClick = 0.1;
 		}
 
-		super(props);
-
 		this.state = {
-			showPopUp: false,
+			'showPopUp': false,
 		};
 
 		this.delayHideCounter = 0;
@@ -42,15 +43,16 @@ export default class ToolTip extends Component {
 
 		if (state.showPopUp) {
 			this.delayHideCounter++;
-			this.setState({showPopUp: false});
-		} else {
+			this.setState({'showPopUp': false});
+		}
+		else {
 			this.showNow();
 		}
 	}
 
 	showNow() {
 		this.delayHideCounter++;
-		this.setState({showPopUp: true});
+		this.setState({'showPopUp': true});
 	}
 
 	delayHide() {
@@ -61,29 +63,31 @@ export default class ToolTip extends Component {
 		const myHide = this.delayHideCounter;
 
 		setTimeout(
-			() => this.delayHideCounter == myHide ? this.setState({showPopUp: false}) : null
-			, this.props.hideDelay);
+			() => ((this.delayHideCounter == myHide) ? this.setState({'showPopUp': false}) : null),
+			this.props.hideDelay
+		);
 	}
 
 	render (props, state) {
-
 		let popUp = null;
 		if (state.showPopUp && props.PopUpContent) {
-			popUp = (<div onmouseover={() => this.showNow()} onmouseout={() => this.delayHide()} class="-tooltip" ref={(div) => this.tooltipDiv = div}>{props.PopUpContent}</div>);
-		} else {
+			popUp = (<div onMouseOver={() => this.showNow()} onMouseOut={() => this.delayHide()} class="-tooltip" ref={(div) => (this.tooltipDiv = div)}>{props.PopUpContent}</div>);
+		}
+		else {
 			this.tooltipDiv	= null;
 		}
 
 		let ToolTipButtonContent = null;
 		if (props.ToolTipButtonContent) {
 			ToolTipButtonContent = props.ToolTipButtonContent;
-		} else {
+		}
+		else {
 			ToolTipButtonContent = (<UIIcon small baseline gap>info</UIIcon>);
 
 		}
 
 		return (
-			<div class='tooltip-container' ref={(div) => this.tooltipContainerDiv = div}>
+			<div class="tooltip-container" ref={(div) => (this.tooltipContainerDiv = div)}>
 			{popUp}
 			<ButtonBase	class="-button -tooltip-icon" onClick={(evt) => this.toggleShow(evt)} hoverCallback={ (hover) => hover ? this.showNow() : this.delayHide() } >{ToolTipButtonContent}</ButtonBase>
 			</div>
@@ -93,10 +97,10 @@ export default class ToolTip extends Component {
 	componentDidUpdate() {
 		this.reshapeIfNeeded();
 		this.alignTooltipHorizontallyIfNeeded();
-
 	}
 
-	reshapeIfNeeded() {}
+	reshapeIfNeeded() {
+	}
 
 	alignTooltipHorizontallyIfNeeded() {
 		const props = this.props;

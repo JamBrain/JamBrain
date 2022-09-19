@@ -12,7 +12,7 @@ export default class ToolTipText extends ToolTip {
 		}
 
 		this.textSpan = null;
-		props.PopUpContent = <div class='-tooltip-text' ref={(span) => this.textSpan = span}>{props.Text}</div>;
+		props.PopUpContent = <div class="-tooltip-text" ref={(span) => (this.textSpan = span)}>{props.Text}</div>;
 		super(props);
 	}
 

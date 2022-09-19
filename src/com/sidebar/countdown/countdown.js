@@ -1,7 +1,6 @@
-import {h, Component} from 'preact';
-import cN from 'classnames';
+import {h, Component}	from 'preact';
+import cN				from 'classnames';
 
-import UIIcon 			from 'com/ui/icon';
 import NavLink			from 'com/nav-link/link';
 
 export default class SidebarCountdown extends Component {
@@ -15,40 +14,35 @@ export default class SidebarCountdown extends Component {
 		this.class = this.props.nc;
 
 		this.state = {
-			loaded: false,
+			'loaded': false,
 		};
 	}
 
 	init( countdownTo ) {
-		let that = this;
-		//document.addEventListener("DOMContentLoaded", function(event) {
+		let n = new Date();
+		let diff = countdownTo.getTime() - n.getTime();
+		let ts = Math.abs(diff/1000);
+		let s = ts % 60;
+		let m = Math.floor(ts / 60) % 60;
+		let h = Math.floor(ts / 60 / 60) % 24;
+		let d = Math.floor(ts / 60 / 60 / 24);
+		//let d = Math.floor(countdownTo / (1000 * 60 * 60 * 24));
 
-			let n = new Date();
-			let diff = countdownTo.getTime() - n.getTime();
-			let ts = Math.abs(diff/1000);
-			let s = ts % 60;
-			let m = Math.floor(ts / 60) % 60;
-			let h = Math.floor(ts / 60 / 60) % 24;
-			let d = Math.floor(ts / 60 / 60 / 24);
-			//let d = Math.floor(countdownTo / (1000 * 60 * 60 * 24));
+		this.values = {
+			'days': d,
+			'hours': h,
+			'minutes': m,
+			'seconds': s
+		};
+		if (d > 0) {
+			this.setState({"ShowDays": true});
+		}
 
-			that.values = {
-				days: d,
-				hours: h,
-				minutes: m,
-				seconds: s
-			};
-			if(d > 0) {
-				that.setState({"ShowDays": true});
-			}
+		//that.total_seconds = (((that.values.days * 24) * 60) * 60) + that.values.hours * 60 * 60 + (that.values.minutes * 60) + that.values.seconds;
+		this.total_seconds = ts;
+		this.setState({'values': {'days': d, 'hours': h, 'minutes': m, 'seconds': s}, 'fvalues': {'d1': 0, 'd2': 0, 'h1': 0, 'h2': 0, 'm1': 0, 'm2': 0, 's1': 0, 's2': 0}, 'animate': false});
 
-			//that.total_seconds = (((that.values.days * 24) * 60) * 60) + that.values.hours * 60 * 60 + (that.values.minutes * 60) + that.values.seconds;
-			that.total_seconds = ts;
-			that.setState({'values': {'days': d, 'hours': h, 'minutes': m, 'seconds': s}, 'fvalues': {'d1': 0, 'd2': 0, 'h1': 0, 'h2': 0, 'm1': 0, 'm2': 0, 's1': 0, 's2': 0}, 'animate': false});
-
-			that.count();
-
-		//});
+		this.count();
 	}
 
 	componentDidMount() {
@@ -65,92 +59,88 @@ export default class SidebarCountdown extends Component {
 		$back_bottom.children[0].innerHTML = value;
 
 		$top.setAttribute('style', 'transition: 0.8s all ease-out; transform: rotateX(-180deg) perspective(300px)');
-		setTimeout(function() {
+		setTimeout(() => {
 			$top.setAttribute('style', 'transition: 0.0s all ease-out; transform: rotateX(0deg) perspective(0px)');
 			$top.innerHTML = value;
 			$bottom.innerHTML = value;
 		}, 800);
 
 		$back_top.setAttribute('style', 'transition: 0.8s all ease-out; transform: rotateX(0deg) perspective(300px)');
-		setTimeout(function() {
+		setTimeout(() => {
 			$back_top.setAttribute('style', 'transition: 0.0s all ease-out; transform: rotateX(180deg) perspective(0px)');
 		}, 800);
 	}
 
-	checkHour(value, e1, elc)
-	{
+	checkHour(value, e1, elc) {
 		let val_1 = value.toString().charAt(0);
 		let val_2 = value.toString().charAt(1);
 		let fig_1_value = arguments[1].children[0].innerHTML;
 		let fig_2_value = arguments[2].children[0].innerHTML;
-		if(value >= 10) {
-				//Animate only if the figure has changed
-				// Something weird is happening here, that's why I'm using arguments[1] rather than el...
-        if(fig_1_value !== val_1) this.animateFigure( arguments[1], val_1 );
-        if(fig_2_value !== val_2) this.animateFigure( arguments[2], val_2 );
-    }
-    else {
-        // If we are under 10, replace first figure with 0
-        if(fig_1_value !== '0') this.animateFigure(arguments[1], 0);
-        if(fig_2_value !== val_1) this.animateFigure(arguments[2], val_1);
-    }
+		if (value >= 10) {
+			//Animate only if the figure has changed
+			// Something weird is happening here, that's why I'm using arguments[1] rather than el...
+			if (fig_1_value !== val_1) this.animateFigure( arguments[1], val_1 );
+			if (fig_2_value !== val_2) this.animateFigure( arguments[2], val_2 );
+		}
+		else {
+			// If we are under 10, replace first figure with 0
+			if (fig_1_value !== '0') this.animateFigure(arguments[1], 0);
+			if (fig_2_value !== val_1) this.animateFigure(arguments[2], val_1);
+		}
 	}
 
 	count() {
-		let that = this;
-		let d = that.daysblock.children[1];
-		let h = that.hoursblock.children[1];
-		let m = that.minutesblock.children[1];
-		let s = that.secondsblock.children[1];
-		this.countdown_interval = setInterval(function() {
-			if(that.total_seconds > 0) {
-				--that.values.seconds;
+		let d = this.daysblock.children[1];
+		let h = this.hoursblock.children[1];
+		let m = this.minutesblock.children[1];
+		let s = this.secondsblock.children[1];
+		this.countdown_interval = setInterval(() => {
+			if (this.total_seconds > 0) {
+				--this.values.seconds;
 
-				if(that.values.minutes >= 0 && that.values.seconds < 0) {
-
-            that.values.seconds = 59;
-            --that.values.minutes;
-        }
-
-        if(that.values.hours >= 0 && that.values.minutes < 0) {
-
-            that.values.minutes = 59;
-            --that.values.hours;
-        }
-
-				if(that.values.days >= 0 && that.values.hours < 0) {
-					that.values.hours = 23;
-					--that.values.days;
+				if (this.values.minutes >= 0 && this.values.seconds < 0) {
+					this.values.seconds = 59;
+					--this.values.minutes;
 				}
 
-				if(that.values.days < 1 && that.state.ShowDays === true) {
-					that.setState({"ShowDays": false});
+				if (this.values.hours >= 0 && this.values.minutes < 0) {
+					this.values.minutes = 59;
+					--this.values.hours;
 				}
 
-				if(that.values.days < 1 && that.values.hours <= 6)
-				{
-					if(!that.state.Urgent)
-					{
-						that.setState({'Urgent': true});
+				if (this.values.days >= 0 && this.values.hours < 0) {
+					this.values.hours = 23;
+					--this.values.days;
+				}
+
+				if (this.values.days < 1 && this.state.ShowDays === true) {
+					this.setState({"ShowDays": false});
+				}
+
+				if (this.values.days < 1 && this.values.hours <= 6) {
+					if (!this.state.Urgent) {
+						this.setState({'Urgent': true});
 					}
 				}
-        // Update DOM values
-        // Days
+				// Update DOM values
+				// Days
 
-				if(!that.state.loaded)
-					that.setState({loaded: true});
+				if (!this.state.loaded) {
+					this.setState({'loaded': true});
+				}
 
-        that.checkHour(that.values.days, d.children[0], d.children[1]);
-        // Hours
-        that.checkHour(that.values.hours, h.children[0], h.children[1]);
-        // Minutes
-        that.checkHour(that.values.minutes, m.children[0], m.children[1]);
-        // Seconds
-        that.checkHour(that.values.seconds, s.children[0], s.children[1]);
+				this.checkHour(this.values.days, d.children[0], d.children[1]);
+				// Hours
+				this.checkHour(this.values.hours, h.children[0], h.children[1]);
+				// Minutes
+				this.checkHour(this.values.minutes, m.children[0], m.children[1]);
+				// Seconds
+				this.checkHour(this.values.seconds, s.children[0], s.children[1]);
 
-        --that.total_seconds;
-			} else {
-				clearInterval(that.countdown_interval);
+				--this.total_seconds;
+			}
+			else {
+				clearInterval(this.countdown_interval);
 			}
 		}, 1000);
 	}
@@ -182,76 +172,49 @@ export default class SidebarCountdown extends Component {
 		Digits.push(this.renderDigit(Digit2, cN(classname, classname+'-2')));
 
 		return <div>{Digits}</div>;
-
-//		return (
-//			<div>
-//				<div class={ "figure " + classname + " " + classname + "-1" }>
-//					<span class="top">{ Digit1 }</span>
-//					<span class="top-back">
-//						<span>{ Digit1 }</span>
-//					</span>
-//					<span class="bottom">{ Digit1 }</span>
-//					<span class="bottom-back">
-//						<span >{ Digit1 }</span>
-//					</span>
-//				</div>
-//
-//				<div class={ "figure " + classname + " " + classname + "-2" }>
-//					<span class="top">{ Digit2 }</span>
-//					<span class="top-back">
-//						<span>{ Digit2 }</span>
-//					</span>
-//					<span class="bottom">{ Digit2 }</span>
-//					<span class="bottom-back">
-//						<span >{ Digit2 }</span>
-//					</span>
-//				</div>
-//			</div>
-//		);
 	}
 
 	render( props ) {
-
-		let days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+		let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 		let utcCode = (props.date.getTimezoneOffset()/60)*-1;
 		let utcCodep = "";
-		if(utcCode > 0)
+		if (utcCode > 0) {
 			utcCodep = "+";
+		}
 
-		if(utcCode % 1 !== 0)
-		{
-			utcCode = parseInt(utcCode)+":30";
-		} else {
-			utcCode = parseInt(utcCode)+":00";
+		if (utcCode % 1 !== 0) {
+			utcCode = (utcCode)+":30";
+		}
+		else {
+			utcCode = (utcCode)+":00";
 		}
 
 		let daysblock = "display: none";
 		let secondsblock = "display: inline-block";
-		if(this.state.ShowDays){
+		if (this.state.ShowDays) {
 			daysblock = "display: inline-block";
 			secondsblock = "display: none";
 		}
 
 		utcCode = utcCodep+utcCode;
 		let urgentclass = "-countdown";
-		if(this.state.Urgent && this.state.Urgent === true)
+		if (this.state.Urgent && this.state.Urgent === true)
 			urgentclass = "-countdown urgent";
 
-		if(!this.state.loaded)
-		{
+		if (!this.state.loaded) {
 			let n = new Date();
 			let diff = props.date.getTime() - n.getTime();
 			let ts = Math.abs(diff/1000);
-			let ss = String(parseInt(ts % 60));
+			let ss = String(ts % 60);
 			let mm = String(Math.floor(ts / 60) % 60);
 			let hh = String(Math.floor(ts / 60 / 60) % 24);
 			let dd = String(Math.floor(ts / 60 / 60 / 24));
 
 			this.values = {
-				days: dd,
-				hours: hh,
-				minutes: mm,
-				seconds: ss
+				'days': dd,
+				'hours': hh,
+				'minutes': mm,
+				'seconds': ss
 			};
 		}
 
@@ -264,34 +227,35 @@ export default class SidebarCountdown extends Component {
 		if ( props.to ) {
 			Title = <h1 class="_font2">{ props.to } <strong>{ props.tt }</strong></h1>;
 		}
+
 		return (
 			<div class="sidebar-base sidebar-countdown">
 				<div class="-clock" id={ this.class }>
 					{Title}
 					<div class={ urgentclass }>
 
-					<div class="bloc-time days" data-init-value="00" ref={c => this.daysblock=c} style={ daysblock }>
+					<div class="bloc-time days" data-init-value="00" ref={c => (this.daysblock=c)} style={ daysblock }>
 						<span class="count-title _font2">Days</span>
 
 						{ this.renderDigits(this.values.days, "days") }
 
 					</div>
 
-						<div class="bloc-time hours" data-init-value="00" ref={c => this.hoursblock=c}>
+						<div class="bloc-time hours" data-init-value="00" ref={c => (this.hoursblock=c)}>
 							<span class="count-title _font2">Hours</span>
 
 							{ this.renderDigits(this.values.hours, "hours") }
 
 						</div>
 
-						<div class="bloc-time min" data-init-value="0" ref={c => this.minutesblock=c} style={this.state.ShowDays ? "margin-right: 0px;" : ""}>
+						<div class="bloc-time min" data-init-value="0" ref={c => (this.minutesblock=c)} style={this.state.ShowDays ? "margin-right: 0px;" : ""}>
 							<span class="count-title _font2">Minutes</span>
 
 							{ this.renderDigits(this.values.minutes, "minutes") }
 
 						</div>
 
-						<div class="bloc-time sec" data-init-value="0" style={ secondsblock } ref={c => this.secondsblock=c}>
+						<div class="bloc-time sec" data-init-value="0" style={ secondsblock } ref={c => (this.secondsblock=c)}>
 							<span class="count-title _font2">Seconds</span>
 
 							{ this.renderDigits(this.values.seconds, "seconds") }

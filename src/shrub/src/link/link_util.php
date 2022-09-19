@@ -1,8 +1,8 @@
-<?
+<?php
 
 function link_resolvePlaformAlias($platform) {
 	$platform = strtolower(trim($platform));
-	
+
 	switch($platform) {
 		case "win":
 		case "windows":
@@ -24,7 +24,6 @@ function link_resolvePlaformAlias($platform) {
 }
 
 function link_GuessPlatforms($text) {
-
 	$lowertext = strtolower($text);
 
 	if (strpos($lowertext, '.jar') !== false) {
@@ -40,7 +39,7 @@ function link_GuessPlatforms($text) {
 	}
 
 	$platforms = array();
-	
+
 	if (strpos($lowertext, 'win') !== false) {
 		array_push($platforms, link_resolvePlaformAlias('windows'));
 	}
@@ -53,16 +52,16 @@ function link_GuessPlatforms($text) {
 	if (strpos($lowertext, 'android') !== false) {
 		array_push($platforms, link_resolvePlaformAlias('android'));
 	}
-	
+
 	if (count($platforms) === 0) {
-		if (strpos($lowertext, 'web') !== false || strpos($lowertext, 'html') !== false){ 
+		if (strpos($lowertext, 'web') !== false || strpos($lowertext, 'html') !== false){
 			array_push($platforms, link_resolvePlaformAlias('web'));
 		}
-		if (strpos($lowertext, 'source') !== false){ 
+		if (strpos($lowertext, 'source') !== false){
 			array_push($platforms, link_resolvePlaformAlias('source'));
 		}
 	}
-	
+
 	return $platforms;
 }
 
@@ -73,20 +72,22 @@ function link_Parse( $uri, $default_protocol = 'http://' ) {
 		$protocol = $default_protocol;
 		$domain_start = 0;
 		$full_uri = $protocol . $uri;
-	} else {
+	}
+	else {
 		$protocol = substr($uri, 0, $protocol_end + 3);
 		$domain_start = $protocol_end + 3;
 		$full_uri = $uri;
 	}
-	
+
 	$domain_end = strpos($uri, '/', $domain_start);
-	$relative = null;	
-	
+	$relative = null;
+
 	if ($domain_end === false) {
 		$domain = null;
 		$subdomain = null;
 		$valid = false;
-	} else {
+	}
+	else {
 		$domain_parts = explode('.', substr($uri, $domain_start, $domain_end - $domain_start));
 		$n_parts = count($domain_parts);
 		switch ($n_parts) {
@@ -103,7 +104,8 @@ function link_Parse( $uri, $default_protocol = 'http://' ) {
 				if ($domain_parts[$n_parts - 2] === 'co' && $domain_parts[$n_parts - 1] === 'uk') {
 					$domain = implode('.', $domain_parts);
 					$subdomain = null;
-				} else {
+				}
+				else {
 					$domain = implode('.', array_slice($domain_parts, 1));
 					$subdomain = $domain_parts[0];
 				}
@@ -112,19 +114,20 @@ function link_Parse( $uri, $default_protocol = 'http://' ) {
 				if ($domain_parts[$n_parts - 2] === 'co' && $domain_parts[$n_parts - 1] === 'uk') {
 					$domain = implode('.', array_slice($domain_parts, 1));
 					$subdomain = $domain_parts[0];
-				} else {
+				}
+				else {
 					$domain = implode('.', array_slice($domain_parts, 1));
 					$subdomain = $domain_parts[0];
-					$valid = false;										
+					$valid = false;
 				}
 				break;
 			default:
 				$domain = implode('.', array_slice($domain_parts, 1));
 				$subdomain = $domain_parts[0];
-				$valid = false;										
-				break;		
+				$valid = false;
+				break;
 		}
-		
+
 		$relative = substr($uri, $domain_end);
 	}
 
@@ -132,7 +135,8 @@ function link_Parse( $uri, $default_protocol = 'http://' ) {
 	if ($params_start === false) {
 		$params = null;
 		$without_params = $full_uri;
-	} else {
+	}
+	else {
 		$params = substr($uri, $params_start + 1);
 		$without_params = substr($uri, 0, $params_start);
 		if (strpos($without_params, $protocol) === false) {
@@ -142,7 +146,7 @@ function link_Parse( $uri, $default_protocol = 'http://' ) {
 			$relative = substr($relative, 0, strpos($relative, '?'));
 		}
 	}
-	
+
 	$link['valid'] = $valid;
 	$link['protocol'] = $protocol;
 	$link['domain'] = $domain;
@@ -152,21 +156,19 @@ function link_Parse( $uri, $default_protocol = 'http://' ) {
 	$link['relative'] = $relative;
 	$link['params'] = $params;
 	$link['without_params'] = $without_params;
-	return $link;	
+	return $link;
 }
 
 function link_GetParamValue($params, $key) {
 	$params = explode('+', $params);
-	foreach($params as $value) {		
-		$kvp = explode('=', $value);		
+	foreach($params as $value) {
+		$kvp = explode('=', $value);
 		if ($kvp[0] === $key) {
 			return $kvp[1];
-		}		
+		}
 	}
 }
 
 function link_NoContent($text) {
 	return is_null($text) || trim($text) === '';
 }
-
-?>
