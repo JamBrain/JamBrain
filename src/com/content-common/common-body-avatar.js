@@ -4,7 +4,7 @@ import Shallow			 				from 'shallow/shallow';
 
 import NavLink							from 'com/nav-link/link';
 import ButtonLink						from 'com/button-link/link';
-import IMG2								from 'com/img2/img2';
+import UIImage							from 'com/ui/image';
 import UIIcon							from 'com/ui/icon';
 
 import $Node							from 'shrub/js/node/node';
@@ -66,16 +66,16 @@ export default class ContentCommonBodyAvatar extends Component {
 				(<label>
 					<input type="file" name="asset" style="display: none;" onChange={this.onEdit} />
 					<div class={Classes}>
-						<IMG2 src={Avatar} failsrc={AvatarFail} />
+						<UIImage src={Avatar} failsrc={AvatarFail} />
 						<UIIcon>edit</UIIcon>
 					</div>
 				</label>) :
 				(<ButtonLink class={Classes} href={props.href}>
-					<IMG2 alt={name + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
+					<UIImage alt={name + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
 				</ButtonLink>);
 		}
 		return (<span class={Classes}>
-					<IMG2 alt={name + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
+					<UIImage alt={name + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
 				</span>);
 	}
 }

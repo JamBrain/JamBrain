@@ -5,7 +5,7 @@ import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import ButtonLink 						from 'com/button-link/link';
 import UIIcon 							from 'com/ui/icon';
-import IMG2 							from 'com/img2/img2';
+import UIImage 							from 'com/ui/image';
 import UICheckbox from 'com/ui/checkbox/checkbox';
 
 import ContentCommentsMarkup from './comments-markup';
@@ -372,10 +372,10 @@ export default class ContentCommentsComment extends Component {
 
 			let ShowAvatar = null;
 			if ( author ) {
-				ShowAvatar = <ButtonLink class="-avatar" href={author.path}><IMG2 alt={author.slug + "'s avatar image"} src={Avatar} /></ButtonLink>;
+				ShowAvatar = <ButtonLink class="-avatar" href={author.path}><UIImage alt={author.slug + "'s avatar image"} src={Avatar} /></ButtonLink>;
 			}
 			else {
-				ShowAvatar = <div class="-avatar"><IMG2 src={Avatar} /></div>;
+				ShowAvatar = <div class="-avatar"><UIImage src={Avatar} /></div>;
 			}
 
 			const ShowAutocompleteAt = <AutocompleteAtNames

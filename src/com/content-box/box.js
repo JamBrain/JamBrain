@@ -4,7 +4,7 @@ import Shallow							from 'shallow/shallow';
 
 import ContentLoading					from 'com/content-loading/loading';
 import UIIcon							from 'com/ui/icon';
-import IMG2								from 'com/img2/img2';
+import UIImage							from 'com/ui/image';
 
 import ButtonLink						from 'com/button-link/link';
 
@@ -68,7 +68,7 @@ export default class ContentBox extends Component {
 
 			var ShowHoverCover = null;
 			if ( node.meta['cover-hover'] ) {
-				ShowHoverCover = <IMG2 class="-cover-hover" src={HoverCover} failsrc={CoverFail} />;
+				ShowHoverCover = <UIImage class="-cover-hover" src={HoverCover} failsrc={CoverFail} />;
 			}
 
 			var ShowEvent = null;
@@ -141,7 +141,7 @@ export default class ContentBox extends Component {
 			return (
 				<ButtonLink class={cN(Class, props.class)} href={node.path}>
 					{ShowHoverCover}
-					<IMG2 class="-cover" src={Cover} failsrc={CoverFail} />
+					<UIImage class="-cover" src={Cover} failsrc={CoverFail} />
 					<div class="-top-bar">
 						{ShowEvent}
 					</div>
