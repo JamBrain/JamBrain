@@ -2,7 +2,6 @@ import { h, Component } 				from 'preact/preact';
 
 import NavLink 							from 'com/nav-link/link';
 import NavSpinner 						from 'com/nav-spinner/spinner';
-import SVGIcon							from 'com/svg-icon/icon';
 import UIIcon							from 'com/ui/icon/icon';
 
 import Common							from 'com/content-common/common';

@@ -1,6 +1,6 @@
 import {h, Component} from 'preact';
 
-import SVGIcon							from 'com/svg-icon/icon';
+import UIIcon							from 'com/ui/icon';
 
 import ContentLoading					from 'com/content-loading/loading';
 import ContentError from 'com/content/error';
@@ -106,8 +106,8 @@ export default class ContentUserFollowing extends Component {
             return (
                 <ContentCommon {...props}>
 					<ContentCommonBody>
-						<p>To add someone to your team, you need to both follow each other. Do so by visiting each others user pages, and clicking the <span><SVGIcon baseline small gap>user-plus</SVGIcon><strong>Follow</strong></span> button.</p>
-						<p>Users that follow each other will be shown below as <span><SVGIcon baseline small gap>users</SVGIcon><strong>Friends</strong></span>.</p>
+						<p>To add someone to your team, you need to both follow each other. Do so by visiting each others user pages, and clicking the <span><UIIcon baseline small gap>user-plus</UIIcon><strong>Follow</strong></span> button.</p>
+						<p>Users that follow each other will be shown below as <span><UIIcon baseline small gap>users</UIIcon><strong>Friends</strong></span>.</p>
 					</ContentCommonBody>
 					{following}
                 </ContentCommon>

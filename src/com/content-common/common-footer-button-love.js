@@ -1,7 +1,7 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
 
-import SVGIcon 							from 'com/svg-icon/icon';
+import UIIcon 							from 'com/ui/icon';
 import $NodeLove						from 'shrub/js/node/node_love';
 
 export default class ContentCommonFooterButtonLove extends Component {
@@ -56,9 +56,9 @@ export default class ContentCommonFooterButtonLove extends Component {
 
 		return (
 			<div class={Classes} onClick={this.onLove}>
-				<SVGIcon class="-hover-hide">heart</SVGIcon>
-				<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
-				<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>
+				<UIIcon class="-hover-hide">heart</UIIcon>
+				<UIIcon class="-hover-show -loved-hide">heart-plus</UIIcon>
+				<UIIcon class="-hover-show -loved-show">heart-minus</UIIcon>
 				<div class="-count">{Love}</div>
 			</div>
 		);

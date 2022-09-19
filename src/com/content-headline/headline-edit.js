@@ -1,6 +1,6 @@
 import { h, Component } 				from 'preact/preact';
 
-import SVGIcon 							from 'com/svg-icon/icon';
+import UIIcon 							from 'com/ui/icon';
 
 import ButtonBase 						from 'com/button-base/base';
 
@@ -23,29 +23,29 @@ export default class ContentHeadlineEdit extends Component {
 		var ShowPublish = null;
 
 		if ( edit ) {
-			ShowEdit = <ButtonBase class="-selected"><SVGIcon>edit</SVGIcon> Edit</ButtonBase>;
-			ShowPreview = <ButtonBase onClick={onpreview}><SVGIcon>preview</SVGIcon> Preview</ButtonBase>;
+			ShowEdit = <ButtonBase class="-selected"><UIIcon>edit</UIIcon> Edit</ButtonBase>;
+			ShowPreview = <ButtonBase onClick={onpreview}><UIIcon>preview</UIIcon> Preview</ButtonBase>;
 		}
 		else {
-			ShowEdit = <ButtonBase onClick={onedit}><SVGIcon>edit</SVGIcon> Edit</ButtonBase>;
-			ShowPreview = <ButtonBase class="-selected"><SVGIcon>preview</SVGIcon> Preview</ButtonBase>;
+			ShowEdit = <ButtonBase onClick={onedit}><UIIcon>edit</UIIcon> Edit</ButtonBase>;
+			ShowPreview = <ButtonBase class="-selected"><UIIcon>preview</UIIcon> Preview</ButtonBase>;
 		}
 
 		if ( modified ) {
-			ShowSave = <ButtonBase class="-available -blue" onClick={onsave}><SVGIcon>save</SVGIcon> Save</ButtonBase>;
+			ShowSave = <ButtonBase class="-available -blue" onClick={onsave}><UIIcon>save</UIIcon> Save</ButtonBase>;
 		}
 		else {
-			ShowSave = <ButtonBase><SVGIcon>save</SVGIcon> Saved</ButtonBase>;
+			ShowSave = <ButtonBase><UIIcon>save</UIIcon> Saved</ButtonBase>;
 		}
 
 		if ( published ) {
-			ShowPublish = <ButtonBase><SVGIcon>publish</SVGIcon> Published</ButtonBase>;
+			ShowPublish = <ButtonBase><UIIcon>publish</UIIcon> Published</ButtonBase>;
 		}
 		else {
 			ShowPublish = [
-				<ButtonBase class="-available -green" onClick={onpublish}><SVGIcon>publish</SVGIcon> Publish Compo</ButtonBase>,
-				<ButtonBase class="-available -green" onClick={onpublish2}><SVGIcon>publish</SVGIcon> Publish Jam</ButtonBase>,
-				<ButtonBase class="-available -green" onClick={onpublish3}><SVGIcon>publish</SVGIcon> Publish Extra</ButtonBase>
+				<ButtonBase class="-available -green" onClick={onpublish}><UIIcon>publish</UIIcon> Publish Compo</ButtonBase>,
+				<ButtonBase class="-available -green" onClick={onpublish2}><UIIcon>publish</UIIcon> Publish Jam</ButtonBase>,
+				<ButtonBase class="-available -green" onClick={onpublish3}><UIIcon>publish</UIIcon> Publish Extra</ButtonBase>
 			];
 		}
 

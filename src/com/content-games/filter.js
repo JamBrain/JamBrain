@@ -2,7 +2,7 @@ import {h, Component, Fragment} from 'preact';
 import OldContentCommon					from 'com/content-common/common';
 import {CommonSection}					from 'com/content/common';
 import CommonBody						from 'com/content-common/common-body';
-import SVGIcon							from 'com/svg-icon/icon';
+import UIIcon							from 'com/ui/icon';
 import InputText						from 'com/input-text/text';
 import FilterSpecial					from 'com/content-games/filter-special';
 import InputDropdown					from 'com/input-dropdown/dropdown';
@@ -89,12 +89,12 @@ export default class GamesFilter extends Component {
 			let Items = [
 				[
 					1,
-					<div><SVGIcon>tag</SVGIcon><div>Featured Event</div></div>,
+					<div><UIIcon>tag</UIIcon><div>Featured Event</div></div>,
 					<NavLink href={Path+Filter+WithSubFilter+''} class="-click-catcher" />,
 				],
 				[
 					2,
-					<div><SVGIcon>tag</SVGIcon><div>All Events</div></div>,
+					<div><UIIcon>tag</UIIcon><div>All Events</div></div>,
 					<NavLink href={Path+Filter+WithSubFilter+'/everything'} class="-click-catcher" />,
 				],
 			];
@@ -115,27 +115,27 @@ export default class GamesFilter extends Component {
 			let Items = [
 				[
 					1,
-					<div><SVGIcon>gamepad</SVGIcon><div>All</div></div>,
+					<div><UIIcon>gamepad</UIIcon><div>All</div></div>,
 					<NavLink href={Path+Filter+'/all'+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					2,
-					<div><SVGIcon>trophy</SVGIcon><div>Jam</div></div>,
+					<div><UIIcon>trophy</UIIcon><div>Jam</div></div>,
 					<NavLink href={Path+Filter+'/jam'+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					3,
-					<div><SVGIcon>trophy</SVGIcon><div>Compo</div></div>,
+					<div><UIIcon>trophy</UIIcon><div>Compo</div></div>,
 					<NavLink href={Path+Filter+'/compo'+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					4,
-					<div><SVGIcon>trophy</SVGIcon><div>Extra</div></div>,
+					<div><UIIcon>trophy</UIIcon><div>Extra</div></div>,
 					<NavLink href={Path+Filter+'/extra'+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					5,
-					<div><SVGIcon>trash</SVGIcon><div>Unfinished</div></div>,
+					<div><UIIcon>trash</UIIcon><div>Unfinished</div></div>,
 					<NavLink href={Path+Filter+'/unfinished'+WithSubSubFilter} class="-click-catcher" />,
 				],
 			];
@@ -247,32 +247,32 @@ export default class GamesFilter extends Component {
 			let Items = [
 				[
 					1,
-					<div><SVGIcon>ticket</SVGIcon><div>Smart</div></div>,
+					<div><UIIcon>ticket</UIIcon><div>Smart</div></div>,
 					<NavLink href={Path+'smart'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					2,
-					<div><SVGIcon>ticket</SVGIcon><div>Classic</div></div>,
+					<div><UIIcon>ticket</UIIcon><div>Classic</div></div>,
 					<NavLink href={Path+'classic'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					3,
-					<div><SVGIcon>help</SVGIcon><div>Danger</div></div>,
+					<div><UIIcon>help</UIIcon><div>Danger</div></div>,
 					<NavLink href={Path+'danger'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					4,
-					<div><SVGIcon>gift</SVGIcon><div>Zero</div></div>,
+					<div><UIIcon>gift</UIIcon><div>Zero</div></div>,
 					<NavLink href={Path+'zero'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					5,
-					<div><SVGIcon>bubbles</SVGIcon><div>Feedback</div></div>,
+					<div><UIIcon>bubbles</UIIcon><div>Feedback</div></div>,
 					<NavLink href={Path+'feedback'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					6,
-					<div><SVGIcon>todo</SVGIcon><div>Grade</div></div>,
+					<div><UIIcon>todo</UIIcon><div>Grade</div></div>,
 					<NavLink href={Path+'grade'+WithSubFilter} class="-click-catcher" />,
 				],
 			];

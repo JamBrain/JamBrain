@@ -1,5 +1,5 @@
-import {h, Component}	from 'preact/preact';
-import SVGIcon			from 'com/svg-icon/icon';
+import {h, Component}	from 'preact';
+import UIIcon			from 'com/ui/icon';
 import NavLink			from 'com/nav-link/link';
 
 export default class SidebarGuides extends Component {
@@ -20,7 +20,7 @@ export default class SidebarGuides extends Component {
 		return (
 			<div class="sidebar-base sidebar-shortlist sidebar-guides">
 				<div class="-title _font2">
-					<SVGIcon baseline>article</SVGIcon> <span class="-text">Community & Guides</span>
+					<UIIcon baseline>article</UIIcon> <span class="-text">Community & Guides</span>
 				</div>
 				{Object.keys(Links).map(key => {
 					let subtext = "";
@@ -30,7 +30,7 @@ export default class SidebarGuides extends Component {
 
 					return (
 						<NavLink class="-item" href={Links[key].href}>
-							<SVGIcon baseline gap>{Links[key].icon != null ? Links[key].icon : 'star-full'}</SVGIcon>
+							<UIIcon baseline gap>{Links[key].icon != null ? Links[key].icon : 'star-full'}</UIIcon>
 							<span class="-title">{key}</span>{subtext}
 						</NavLink>
 					);

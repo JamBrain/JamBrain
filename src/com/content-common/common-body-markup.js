@@ -2,8 +2,6 @@ import {h, Component, toChildArray} from 'preact';
 import cN from 'classnames';
 import {shallowDiff} 					from 'shallow-compare/index';
 
-import NavLink 								from 'com/nav-link/link';
-import SVGIcon 								from 'com/svg-icon/icon';
 import InputTextArea 					from 'com/input-textarea/input-textarea';
 import marked 								from 'internal/marked/marked';
 
@@ -74,7 +72,7 @@ export default class ContentCommonBodyMarkup extends Component {
       //					</div>
       //					<div class="-footer">
       //						<div class="-right"><span class="-chars">{Chars}</span>/<span class="-limit">{Limit}</span></div>
-      //						<div class="-left">Supports <NavLink blank href="/markdown"><SVGIcon>markdown</SVGIcon> <strong>Markdown</strong></NavLink> and <strong>:emoji_codes:</strong></div>
+      //						<div class="-left">Supports <NavLink blank href="/markdown"><UIIcon>markdown</UIIcon> <strong>Markdown</strong></NavLink> and <strong>:emoji_codes:</strong></div>
       //					</div>
     } else {
       Class.push("markup");

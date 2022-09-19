@@ -154,9 +154,5 @@ export default class UITextarea extends Component {
 				</div>
 			</div>
 		);
-//						<NavLink class="-upload" onClick={e => {window.location = "#upload";}}><SVGIcon baseline gap>upload</SVGIcon>Upload</NavLink>
-
-//		<NavLink class="-upload" href="#upload"><SVGIcon baseline gap>upload</SVGIcon>Upload</NavLink>
-//		<span class="-upload" onClick={e => {window.location = "#upload";}}><SVGIcon baseline gap>upload</SVGIcon>Upload</span>
 	}
 }

@@ -1,6 +1,5 @@
 import {h, Component} 					from 'preact/preact';
 
-import SVGIcon							from 'com/svg-icon/icon';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import CommonButton						from 'com/content-common/common-nav-button';
 import CommonButtonFollow				from 'com/content-common/common-nav-button-follow';

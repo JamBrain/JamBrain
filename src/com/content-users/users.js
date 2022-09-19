@@ -1,6 +1,4 @@
-import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
-import NavLink 							from 'com/nav-link/link';
+import {h, Component}	from 'preact';
 
 export default class ContentUsers extends Component {
 	constructor( props ) {

@@ -2,7 +2,7 @@ import {h, Component, toChildArray} from 'preact/preact';
 import cN from 'classnames';
 import {shallowDiff}	 							from 'shallow-compare/index';
 
-import SVGIcon										from 'com/svg-icon/icon';
+import UIIcon										from 'com/ui/icon';
 
 export default class ContentCommonFlag extends Component {
 	constructor( props ) {
@@ -18,7 +18,7 @@ export default class ContentCommonFlag extends Component {
 
         let Icon = null;
         if ( props.icon ) {
-            Icon = <SVGIcon>{props.icon}</SVGIcon>;
+            Icon = <UIIcon>{props.icon}</UIIcon>;
         }
 
         return (
@@ -33,7 +33,7 @@ export default class ContentCommonFlag extends Component {
             let FlagClass = cN('content-common-flag', props.flagClass ? props.flagClass : '');
 
             if ( props.flagIcon )
-                ShowFlag = <div class={FlagClass}><SVGIcon>{props.flagIcon}</SVGIcon> <span>{props.flag}</span></div>;
+                ShowFlag = <div class={FlagClass}><UIIcon>{props.flagIcon}</UIIcon> <span>{props.flag}</span></div>;
             else if ( props.flag )
                 ShowFlag = <div class={FlagClass}><span>{props.flag}</span></div>;
         }

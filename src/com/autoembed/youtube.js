@@ -1,5 +1,5 @@
 import {h, Component} from 'preact/preact';
-import SVGIcon from 'com/svg-icon/icon';
+import UIIcon from 'com/ui/icon';
 
 export default class YoutubeEmbed extends Component {
   constructor( props ) {
@@ -42,13 +42,13 @@ export default class YoutubeEmbed extends Component {
         <div class="-thumbnail">
           <div class="-overlay" onClick={this.onClick} >
             <div class="-play">
-              <SVGIcon middle>play</SVGIcon>
+              <UIIcon middle>play</UIIcon>
             </div>
             <div class="-external">
               <a title="Open in new tab" href={"//www.youtube.com/watch?v="+video_id} target="_blank" rel="noopener" onClick={(e) => {
                 e.stopPropagation();
               }}>
-                <SVGIcon middle block>youtube</SVGIcon>
+                <UIIcon middle block>youtube</UIIcon>
               </a>
             </div>
           </div>

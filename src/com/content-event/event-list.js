@@ -1,7 +1,7 @@
 import { h, Component } 				from 'preact/preact';
 import Sanitize							from '../../internal/sanitize/sanitize';
 
-import SVGIcon 							from 'com/svg-icon/icon';
+import UIIcon 							from 'com/ui/icon';
 import NavLink 							from 'com/nav-link/link';
 import NavSpinner						from 'com/nav-spinner/spinner';
 
@@ -259,7 +259,7 @@ export default class ContentEventList extends Component {
 			// Generate the page
 			return (
 				<div class="-body">
-					<h2><SVGIcon small baseline gap>ticket</SVGIcon>{Title}</h2>
+					<h2><UIIcon small baseline gap>ticket</UIIcon>{Title}</h2>
 					{Navigation}
 					{Body}
 				</div>

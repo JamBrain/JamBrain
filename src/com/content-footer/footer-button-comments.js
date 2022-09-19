@@ -1,5 +1,5 @@
 import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import UIIcon 							from 'com/ui/icon';
 import NavLink 							from 'com/nav-link/link';
 
 import $Node							from '../../shrub/js/node/node';
@@ -16,7 +16,7 @@ export default class ContentFooterButtonComments extends Component {
 		if ( node && Number.isInteger(node.comments) ) {
 			return (
 				<NavLink href={href} class="footer-button footer-button-comments" title="Comments">
-					<SVGIcon>bubbles</SVGIcon>
+					<UIIcon>bubbles</UIIcon>
 					<div class="-count">{node.comments}</div>
 				</NavLink>
 			);
@@ -24,7 +24,3 @@ export default class ContentFooterButtonComments extends Component {
 		return null;
 	}
 }
-
-//					<SVGIcon class="-hover-hide">bubbles</SVGIcon>
-//					<SVGIcon class="-hover-show -loved-hide">heart-plus</SVGIcon>
-//					<SVGIcon class="-hover-show -loved-show">heart-minus</SVGIcon>

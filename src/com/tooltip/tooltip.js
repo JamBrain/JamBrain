@@ -1,14 +1,11 @@
-import { h, Component } 				from 'preact/preact';
+import {h, Component} 					from 'preact';
 
-import SVGIcon 							from 'com/svg-icon/icon';
-
+import UIIcon 							from 'com/ui/icon';
 import ButtonBase						from 'com/button-base/base';
-
 import ContentCommonBody				from 'com/content-common/common-body';
 
 
 export default class ToolTip extends Component {
-
 	constructor( props ) {
 		if (!props.maxWidth) {
 			props.maxWidth = 0.5;
@@ -81,7 +78,7 @@ export default class ToolTip extends Component {
 		if (props.ToolTipButtonContent) {
 			ToolTipButtonContent = props.ToolTipButtonContent;
 		} else {
-			ToolTipButtonContent = (<SVGIcon small baseline gap>info</SVGIcon>);
+			ToolTipButtonContent = (<UIIcon small baseline gap>info</UIIcon>);
 
 		}
 

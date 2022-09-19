@@ -3,7 +3,7 @@ import cN from 'classnames';
 
 import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
-import SVGIcon 							from 'com/svg-icon/icon';
+import UIIcon 							from 'com/ui/icon';
 
 import UIButton							from 'com/ui/button/button';
 
@@ -159,13 +159,13 @@ export default class ContentEventSlaughter extends Component {
 
 	renderIcon( value ) {
 		if ( value === VOTE_YES )
-			return <SVGIcon>checkmark</SVGIcon>;
+			return <UIIcon>checkmark</UIIcon>;
 		else if ( value === VOTE_NO )
-			return <SVGIcon>cross</SVGIcon>;
+			return <UIIcon>cross</UIIcon>;
 		else if ( value === VOTE_FLAG )
-			return <SVGIcon>flag</SVGIcon>;
+			return <UIIcon>flag</UIIcon>;
 
-		return <SVGIcon>fire</SVGIcon>;
+		return <UIIcon>fire</UIIcon>;
 	}
 
 	renderRecentQueue() {
@@ -354,7 +354,7 @@ export default class ContentEventSlaughter extends Component {
 					</div>
 					<div class="-other-buttons">
 						<div class="-title"><span>If inappropriate or offensive, you can </span><UIButton class="-flag" onClick={this.submitFlagVote}>{this.renderIcon(VOTE_FLAG)}<span>Flag</span></UIButton><span> it.</span></div>
-						<div class="-info"><SVGIcon>info</SVGIcon><span> You can use <strong>Y</strong> and <strong>N</strong> as hotkeys.</span></div>
+						<div class="-info"><UIIcon>info</UIIcon><span> You can use <strong>Y</strong> and <strong>N</strong> as hotkeys.</span></div>
 						<div><strong>Themes Slaughtered:</strong> <span>{Object.keys(state.votes).length}</span></div>
 					</div>
 					{StatsAndDetails}

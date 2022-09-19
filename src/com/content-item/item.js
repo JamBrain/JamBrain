@@ -1,9 +1,6 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
 
-import SVGIcon 							from 'com/svg-icon/icon';
-import IMG2 							from 'com/img2/img2';
-
 import UIIcon 							from 'com/ui/icon/icon';
 import UIImage 							from 'com/ui/image/image';
 import UILink 							from 'com/ui/link/link';
@@ -734,7 +731,7 @@ export default class ContentItem extends Component {
 							Score = node.grade[Line.key];
 						}
 
-						//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
+						//  {Score >= 20 ? <UIIcon small baseline>check</UIIcon> : <UIIcon small baseline>cross</UIIcon>}
 
 						VoteLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Score}</strong></div>);
 					}
@@ -857,7 +854,7 @@ export default class ContentItem extends Component {
 					if ( node.grade && node.grade[Line.key] )
 						Count = node.grade[Line.key];
 
-					//  {Score >= 20 ? <SVGIcon small baseline>check</SVGIcon> : <SVGIcon small baseline>cross</SVGIcon>}
+					//  {Score >= 20 ? <UIIcon small baseline>check</UIIcon> : <UIIcon small baseline>cross</UIIcon>}
 
 					ResultLines.push(<div class="-grade"><span class="-title">{Title}:</span> <strong>{Place}</strong><sup>{this.positionSuffix(Place)}</sup> ({Average} average from {Count} ratings)</div>);
 				}
@@ -928,7 +925,7 @@ export default class ContentItem extends Component {
 		if ( true ) {
 			let ShowImage = null;
 			if ( node.meta && node.meta.cover ) {
-				ShowImage = <IMG2 class="-img" src={node.meta && node.meta.cover ? node.meta.cover+'.320x256.fit.jpg' : "" } />;
+				ShowImage = <UIImage class="-img" src={node.meta && node.meta.cover ? node.meta.cover+'.320x256.fit.jpg' : "" } />;
 			}
 
 			ShowImages = (
@@ -938,7 +935,7 @@ export default class ContentItem extends Component {
 						<div class="-path">{node.meta && node.meta.cover ? node.meta.cover : "" }</div>
 						<label>
 							<input type="file" name="asset" style="display: none;" onChange={this.onUpload.bind(this, 'cover')} />
-							<ButtonBase class="-button"><SVGIcon small baseline gap>upload</SVGIcon>Upload</ButtonBase>
+							<ButtonBase class="-button"><UIIcon small baseline gap>upload</UIIcon>Upload</ButtonBase>
 						</label>
 						{ShowImage}
 					</div>

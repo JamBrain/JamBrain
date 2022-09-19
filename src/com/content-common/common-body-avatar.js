@@ -5,7 +5,7 @@ import Shallow			 				from 'shallow/shallow';
 import NavLink							from 'com/nav-link/link';
 import ButtonLink						from 'com/button-link/link';
 import IMG2								from 'com/img2/img2';
-import SVGIcon							from 'com/svg-icon/icon';
+import UIIcon							from 'com/ui/icon';
 
 import $Node							from 'shrub/js/node/node';
 import $Asset							from 'shrub/js/asset/asset';
@@ -67,7 +67,7 @@ export default class ContentCommonBodyAvatar extends Component {
 					<input type="file" name="asset" style="display: none;" onChange={this.onEdit} />
 					<div class={Classes}>
 						<IMG2 src={Avatar} failsrc={AvatarFail} />
-						<SVGIcon>edit</SVGIcon>
+						<UIIcon>edit</UIIcon>
 					</div>
 				</label>) :
 				(<ButtonLink class={Classes} href={props.href}>

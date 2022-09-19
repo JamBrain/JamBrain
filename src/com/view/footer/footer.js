@@ -1,5 +1,5 @@
 import {h, Component}					from 'preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import UIIcon 							from 'com/ui/icon';
 
 
 export default class ViewFooter extends Component {
@@ -13,7 +13,7 @@ export default class ViewFooter extends Component {
 				<div class="body">
 				<div class="tm col">
 					<section class="logo">
-						<SVGIcon class="ludum" baseline>ludum</SVGIcon><SVGIcon class="dare" baseline>dare</SVGIcon>
+						<UIIcon class="ludum" baseline>ludum</UIIcon><UIIcon class="dare" baseline>dare</UIIcon>
 					</section>
 					<section>Ludum Dare and LDJAM are trademarks of Interactive Snacks Limited</section>
 				</div>

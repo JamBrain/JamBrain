@@ -1,7 +1,7 @@
-import {h, Component} from 'preact';
-import cN from 'classnames';
-import SVGIcon 							from 'com/svg-icon/icon';
-import UIButtonLink						from 'com/ui/button/button-link';
+import {h, Component}	from 'preact';
+import cN				from 'classnames';
+import UIIcon			from 'com/ui/icon';
+import UIButtonLink		from 'com/ui/button/button-link';
 
 export default class GradedItem extends Component {
 	cleanGameDescription( description ) {
@@ -76,7 +76,7 @@ export default class GradedItem extends Component {
 			}
 		}
 		const ShowGrades = <div class="-grades">{Grades}</div>;
-		const ShowComments = comments ? (<SVGIcon>{comments > 1 ? 'bubbles' : 'bubble'}</SVGIcon>) : null;
+		const ShowComments = comments ? (<UIIcon>{comments > 1 ? 'bubbles' : 'bubble'}</UIIcon>) : null;
 
 		return (
 			<UIButtonLink class={cN("graded-item", props.class)} href={node.path}>

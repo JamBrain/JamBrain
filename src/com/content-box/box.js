@@ -3,7 +3,7 @@ import cN from 'classnames';
 import Shallow							from 'shallow/shallow';
 
 import ContentLoading					from 'com/content-loading/loading';
-import SVGIcon							from 'com/svg-icon/icon';
+import UIIcon							from 'com/ui/icon';
 import IMG2								from 'com/img2/img2';
 
 import ButtonLink						from 'com/button-link/link';
@@ -80,17 +80,17 @@ export default class ContentBox extends Component {
 			let SubEventClass = null;
 			if ( !props.nosubevent && node.subtype ) {
 				if ( !node.published ) {
-					ShowSubEvent = <div><SVGIcon baseline small>cross</SVGIcon></div>;
+					ShowSubEvent = <div><UIIcon baseline small>cross</UIIcon></div>;
 				}
 				else if ( node.subtype == 'game' ) {
 					ShowSubEvent = <div>GAME</div>;
 					if ( node.subsubtype ) {
 						if ( node.subsubtype == 'jam' ) {
-							ShowSubEvent = <div>JAM <SVGIcon baseline small>{node_CountAuthors(node) === 1 ? "user" : "users"}</SVGIcon></div>;
+							ShowSubEvent = <div>JAM <UIIcon baseline small>{node_CountAuthors(node) === 1 ? "user" : "users"}</UIIcon></div>;
 							SubEventClass = '-col-a';
 						}
 						else if ( node.subsubtype == 'extra' ) {
-							ShowSubEvent = <div>EXTRA <SVGIcon baseline small>{node_CountAuthors(node) === 1 ? "user" : "users"}</SVGIcon></div>;
+							ShowSubEvent = <div>EXTRA <UIIcon baseline small>{node_CountAuthors(node) === 1 ? "user" : "users"}</UIIcon></div>;
 							SubEventClass = '-col-bc';
 						}
 						else if ( node.subsubtype == 'compo' ) {
@@ -106,7 +106,7 @@ export default class ContentBox extends Component {
 							SubEventClass = '-col-ca';
 						}
 						else if ( node.subsubtype == 'unfinished' ) {
-							ShowSubEvent = <div><SVGIcon baseline small>cross</SVGIcon></div>;
+							ShowSubEvent = <div><UIIcon baseline small>cross</UIIcon></div>;
 						}
 					}
 				}
@@ -124,11 +124,11 @@ export default class ContentBox extends Component {
 					let parts = key.split('-');
 					if ( /*ShowTrophies.length < 6 &&*/ parts.length == 3 && parts[0] == 'grade' && parts[2] == 'result' ) {
 						if ( node.magic[key] == 1 )
-							ShowTrophies.push(<span class="-first"><SVGIcon>trophy</SVGIcon></span>);
+							ShowTrophies.push(<span class="-first"><UIIcon>trophy</UIIcon></span>);
 						else if ( node.magic[key] == 2 )
-							ShowTrophies.push(<span class="-second"><SVGIcon>trophy</SVGIcon></span>);
+							ShowTrophies.push(<span class="-second"><UIIcon>trophy</UIIcon></span>);
 						else if ( node.magic[key] == 3 )
-							ShowTrophies.push(<span class="-third"><SVGIcon>trophy</SVGIcon></span>);
+							ShowTrophies.push(<span class="-third"><UIIcon>trophy</UIIcon></span>);
 					}
 				}
 //				ShowTrophies.sort(function(a, b) {

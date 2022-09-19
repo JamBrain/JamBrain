@@ -1,13 +1,13 @@
 import { h, Component } from 'preact/preact';
-import SVGIcon 			from 'com/svg-icon/icon';
+import UIIcon 			from 'com/ui/icon';
 
 export default class ContentPicture extends Component {
 	render( props, state ) {
 		props.title = (props.post && props.post.title) ? props.post.title : props.title;
 		props.user = props.user ? props.user : {};
 
-		var hasTwitter = props.user.twitter ? <span class="-twitter"> (<SVGIcon>twitter</SVGIcon> {props.user.twitter})</span> : <span />;
-		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <SVGIcon>users</SVGIcon></span> : <span />;
+		var hasTwitter = props.user.twitter ? <span class="-twitter"> (<UIIcon>twitter</UIIcon> {props.user.twitter})</span> : <span />;
+		var hasTeam = props.user.team ? <span class="-team"> of <em>{props.user.team}</em> <UIIcon>users</UIIcon></span> : <span />;
 
 		return (
 			<div class="content content-picture" style={'background:url('+props.img+')'}>
@@ -23,7 +23,7 @@ export default class ContentPicture extends Component {
 					</div>
 				</div>
 				<div class="-space">
-					<SVGIcon>image</SVGIcon>
+					<UIIcon>image</UIIcon>
 				</div>
 				<div class="-footer">
 				</div>

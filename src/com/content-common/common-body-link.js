@@ -3,8 +3,7 @@ import cN from 'classnames';
 import {shallowDiff}	 				from 'shallow-compare/index';
 import Sanitize							from 'internal/sanitize/sanitize';
 
-import NavLink							from 'com/nav-link/link';
-import SVGIcon							from 'com/svg-icon/icon';
+import UIIcon							from 'com/ui/icon';
 
 import InputText						from 'com/input-text/text';
 import InputDropdown					from 'com/input-dropdown/dropdown';
@@ -87,7 +86,7 @@ export default class ContentCommonBodyLink extends Component {
 						placeholder={UrlPlaceholder}
 						maxlength={512}
 					/>
-					<UIButton onClick={props.onRemove} title="Remove"><SVGIcon>cross</SVGIcon></UIButton>
+					<UIButton onClick={props.onRemove} title="Remove"><UIIcon>cross</UIIcon></UIButton>
 				</div>
 			);
 		}
@@ -106,7 +105,7 @@ export default class ContentCommonBodyLink extends Component {
 
 			return (
 				<div class={cN('link', props.class)}>
-					<div class="-name" title={'$'+tag[0]+" - "+tag[1]}><SVGIcon small>{Icon}</SVGIcon> <span>{ShowName}</span></div>
+					<div class="-name" title={'$'+tag[0]+" - "+tag[1]}><UIIcon small>{Icon}</UIIcon> <span>{ShowName}</span></div>
 					<div class="-url">{ShowLink}</div>
 				</div>
 			);

@@ -3,7 +3,7 @@ import cN from 'classnames';
 
 import Dropdown							from 'com/input-dropdown/dropdown';
 import ButtonBase						from 'com/button-base/base';
-import SVGIcon 							from 'com/svg-icon/icon';
+import UIIcon 							from 'com/ui/icon';
 
 /** @deprecated */
 export default class GridSelector extends Component {
@@ -56,7 +56,7 @@ export default class GridSelector extends Component {
 
        const ShowToggle = (
             <ButtonBase onClick={this.onToggleDropDown}>
-                <SVGIcon>cog</SVGIcon>
+                <UIIcon>cog</UIIcon>
             </ButtonBase>
        );
 

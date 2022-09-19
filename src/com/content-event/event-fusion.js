@@ -1,5 +1,5 @@
 import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import UIIcon 							from 'com/ui/icon';
 import NavLink 							from 'com/nav-link/link';
 
 import ButtonBase						from 'com/button-base/base';

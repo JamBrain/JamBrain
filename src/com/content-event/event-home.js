@@ -1,5 +1,5 @@
 import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import UIIcon 							from 'com/ui/icon';
 import NavLink 							from 'com/nav-link/link';
 
 import $Theme							from 'shrub/js/theme/theme';
@@ -63,7 +63,7 @@ export default class ContentEventHome extends Component {
 			""
 		];
 
-		var ThemeSelectionDiv = EventModeText ? <NavLink href={path+'/theme'} class="-item"><SVGIcon>mallet</SVGIcon> {EventModeText}</NavLink> : "";
+		var ThemeSelectionDiv = EventModeText ? <NavLink href={path+'/theme'} class="-item"><UIIcon>mallet</UIIcon> {EventModeText}</NavLink> : "";
 
 		var ShowStats = null;
 		if ( stats ) {
@@ -78,7 +78,7 @@ export default class ContentEventHome extends Component {
 
 			ShowStats = (
 				<div class="">
-					<h2><SVGIcon baseline small>stats</SVGIcon> Theme Selection Stats</h2>
+					<h2><UIIcon baseline small>stats</UIIcon> Theme Selection Stats</h2>
 					{ShowIdeaCount}
 					{ShowUsersWithIdeas}
 				</div>
@@ -115,9 +115,9 @@ export default class ContentEventHome extends Component {
 					{ShowEventMode}
 				</div>
 				<div class="event-nav">
-					<NavLink class="-item -selected"><SVGIcon>feed</SVGIcon> Feed</NavLink>
-					<NavLink class="-item"><SVGIcon>news</SVGIcon> News</NavLink>
-					<NavLink class="-item"><SVGIcon>gamepad</SVGIcon> Join Event</NavLink>
+					<NavLink class="-item -selected"><UIIcon>feed</UIIcon> Feed</NavLink>
+					<NavLink class="-item"><UIIcon>news</UIIcon> News</NavLink>
+					<NavLink class="-item"><UIIcon>gamepad</UIIcon> Join Event</NavLink>
 					{ThemeSelectionDiv}
 				</div>
 				{ShowStats}

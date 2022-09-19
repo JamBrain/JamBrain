@@ -1,9 +1,7 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
 
-import {shallowDiff}	 				from 'shallow-compare/index';
-
-import SVGIcon							from 'com/svg-icon/icon';
+import UIIcon							from 'com/ui/icon';
 import ButtonBase						from 'com/button-base/base';
 
 
@@ -42,37 +40,37 @@ export default class InputStar extends Component {
 			// First star is a full star
 			Stars.push(
 				<ButtonBase class={cN("-star -hover", (Value >= 1) ? '-lit' : '')} onClick={this.onClick.bind(this, 1)} title={1}>
-					<SVGIcon baseline>{'star-full'}</SVGIcon>
+					<UIIcon baseline>{'star-full'}</UIIcon>
 				</ButtonBase>
 			);
 
 			// Half Stars
 			for ( var idx = 3.0/*1.0*/; idx <= Math.floor(Value*2.0); idx++ ) {
-				Stars.push(<ButtonBase class="-star -hover -lit" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon baseline>{'star-'+(idx&1?'left':'right')+'-full'}</SVGIcon></ButtonBase>);
+				Stars.push(<ButtonBase class="-star -hover -lit" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><UIIcon baseline>{'star-'+(idx&1?'left':'right')+'-full'}</UIIcon></ButtonBase>);
 			}
 			for ( /*let idx = Math.ceil(Value*2.0)+1*/; idx <= (Count*2.0); idx++ ) {
-				Stars.push(<ButtonBase class="-star -hover" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon baseline>{'star-'+(idx&1?'left':'right')+'-full'/*'-empty'*/}</SVGIcon></ButtonBase>);
-//				Stars.push(<ButtonBase class="-star -hover" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><SVGIcon baseline>{'star-'+(idx&1?'left':'right')+'-empty'}</SVGIcon></ButtonBase>);
+				Stars.push(<ButtonBase class="-star -hover" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><UIIcon baseline>{'star-'+(idx&1?'left':'right')+'-full'/*'-empty'*/}</UIIcon></ButtonBase>);
+//				Stars.push(<ButtonBase class="-star -hover" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><UIIcon baseline>{'star-'+(idx&1?'left':'right')+'-empty'}</UIIcon></ButtonBase>);
 			}
 
 			// Delete button
 			if ( props.delete ) {
 				ShowDelete = (
 					<ButtonBase class="-delete -hover" onClick={this.onDelete.bind(this)}>
-						<SVGIcon small baseline>cross</SVGIcon>
+						<UIIcon small baseline>cross</UIIcon>
 					</ButtonBase>
 				);
 			}
 		}
 		else {
 			for ( let idx = 0; idx < Math.floor(Value); idx++ ) {
-				Stars.push(<div class="-star"><SVGIcon small={props.small} baseline>star-full</SVGIcon></div>);
+				Stars.push(<div class="-star"><UIIcon small={props.small} baseline>star-full</UIIcon></div>);
 			}
 			if ( Value % 1 ) {
-				Stars.push(<div class="-star"><SVGIcon small={props.small} baseline>star-half</SVGIcon></div>);
+				Stars.push(<div class="-star"><UIIcon small={props.small} baseline>star-half</UIIcon></div>);
 			}
 			for ( let idx = Math.ceil(Value); idx < Count; idx++ ) {
-				Stars.push(<div class="-star"><SVGIcon small={props.small} baseline>star-empty</SVGIcon></div>);
+				Stars.push(<div class="-star"><UIIcon small={props.small} baseline>star-empty</UIIcon></div>);
 			}
 
 			Title = Value+' of '+Count;

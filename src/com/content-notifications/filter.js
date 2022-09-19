@@ -1,5 +1,5 @@
 import {h, Component}	 				from 'preact/preact';
-import SVGIcon							from 'com/svg-icon/icon';
+import UIIcon							from 'com/ui/icon';
 import UICheckbox						from 'com/ui/checkbox/checkbox';
 import {
 	isNotificationComment,
@@ -64,42 +64,42 @@ export default class NotificationsFilter extends Component {
 					value={Mention !== false}
 					onClick={this.onToggleMention}
 				>
-					<SVGIcon>at</SVGIcon><span>Mentions{hiddenMention}</span>
+					<UIIcon>at</UIIcon><span>Mentions{hiddenMention}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={Feedback !== false}
 					onClick={this.onToggleFeedback}
 				>
-					<SVGIcon>bubble-empty</SVGIcon><span>Feedback{hiddenFeedback}</span>
+					<UIIcon>bubble-empty</UIIcon><span>Feedback{hiddenFeedback}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={Comment !== false}
 					onClick={this.onToggleComments}
 				>
-					<SVGIcon>bubble</SVGIcon><span>Comments{hiddenComments}</span>
+					<UIIcon>bubble</UIIcon><span>Comments{hiddenComments}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={FriendGame !== false}
 					onClick={this.onToggleFriendGame}
 				>
-					<SVGIcon>gamepad</SVGIcon><span>Friend's games{hiddenFriendGame}</span>
+					<UIIcon>gamepad</UIIcon><span>Friend's games{hiddenFriendGame}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={FriendPost !== false}
 					onClick={this.onToggleFriendPost}
 				>
-					<SVGIcon>feed</SVGIcon><span>Friend's posts{hiddenFriendPost}</span>
+					<UIIcon>feed</UIIcon><span>Friend's posts{hiddenFriendPost}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={Other !== false}
 					onClick={this.onToggleOther}
 				>
-					<SVGIcon>question</SVGIcon><span>Other{hiddenOther}</span>
+					<UIIcon>question</UIIcon><span>Other{hiddenOther}</span>
 				</UICheckbox>
 			</div>
 		);

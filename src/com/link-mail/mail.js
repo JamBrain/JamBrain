@@ -1,7 +1,7 @@
-import {h, Component} from 'preact';
-import cN from 'classnames';
+import {h, Component}	from 'preact';
+import cN				from 'classnames';
 
-import SVGIcon 						from 'com/svg-icon/icon';
+import UIIcon			from 'com/ui/icon';
 
 // TODO: Migrate me in to `NavLink`/`Link`
 
@@ -23,7 +23,7 @@ export default class LinkMail extends Component {
 		}
 
 		return (
-			<a class={cN("link-mail", props.class)} href={Href} title={Mail}><SVGIcon gap small baseline>mail</SVGIcon>{Mail}</a>
+			<a class={cN("link-mail", props.class)} href={Href} title={Mail}><UIIcon gap small baseline>mail</UIIcon>{Mail}</a>
 		);
 	}
 }

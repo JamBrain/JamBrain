@@ -1,5 +1,5 @@
-import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import {h, Component}	from 'preact';
+import UIIcon			from 'com/ui/icon';
 
 export default class SidebarCalendar extends Component {
 	constructor( props ) {
@@ -140,32 +140,32 @@ export default class SidebarCalendar extends Component {
 			var ShowIcon = null;
 			if ( col.year == 2018 && col.month == 4 /*6*/ ) { // borken
 				if ( col.day === 15 ) {
-					ShowIcon = <SVGIcon class="-icon">checker</SVGIcon>;
+					ShowIcon = <UIIcon class="-icon">checker</UIIcon>;
 				}
 			}
 			if ( col.year == 2018 && col.month == 3 && (col.day >= 20 && col.day <= 23) ) {
 				if ( col.day === 1 ) {
-					ShowIcon = <SVGIcon class="-icon">trophy</SVGIcon>;
+					ShowIcon = <UIIcon class="-icon">trophy</UIIcon>;
 				}
 				props.class.push('scheduled');
 			}
 
 //			if ( col.year == 2017 && col.month == 3 && (col.day >= 21 && col.day <= 24) ) {
 //				if ( col.day === 21 ) {
-//					ShowIcon = <SVGIcon class="-icon">trophy</SVGIcon>;
+//					ShowIcon = <UIIcon class="-icon">trophy</UIIcon>;
 //				}
 //				props.class.push('scheduled');
 //			}
 //			else if ( col.year == 2017 && col.month == 4 /*4*/ && col.day == 19 ) {
-//				ShowIcon = <SVGIcon class="-icon">checker</SVGIcon>;
+//				ShowIcon = <UIIcon class="-icon">checker</UIIcon>;
 //				props.class.push('scheduled');
 //			}
 //			else if ( col.year == 2017 && col.month == 2 && col.day == 24 ) {
-//				ShowIcon = <SVGIcon class="-icon">suggestion</SVGIcon>;
+//				ShowIcon = <UIIcon class="-icon">suggestion</UIIcon>;
 //				props.class.push('scheduled');
 //			}
 //			else if ( col.year == 2017 && col.month == 3 && col.day == 7 ) {
-//				ShowIcon = <SVGIcon class="-icon">mallet</SVGIcon>;
+//				ShowIcon = <UIIcon class="-icon">mallet</UIIcon>;
 //				props.class.push('scheduled');
 //			}
 

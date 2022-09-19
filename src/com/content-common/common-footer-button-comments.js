@@ -1,7 +1,7 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
 
-import SVGIcon 							from 'com/svg-icon/icon';
+import UIIcon 							from 'com/ui/icon';
 import NavLink 							from 'com/nav-link/link';
 
 export default class ContentCommonFooterButtonComments extends Component {
@@ -23,7 +23,7 @@ export default class ContentCommonFooterButtonComments extends Component {
 		if ( node && Number.isInteger(node.comments) ) {
 			return (
 				<NavLink href={node.path} class={cN("content-common-footer-button -comments", CountClass)} title="Comments">
-					<SVGIcon>bubbles</SVGIcon>
+					<UIIcon>bubbles</UIIcon>
 					<div class="-count">{node.comments}</div>
 				</NavLink>
 			);

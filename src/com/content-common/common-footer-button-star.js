@@ -1,5 +1,5 @@
 import {h, Component} 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import UIIcon 							from 'com/ui/icon';
 
 import $NodeStar						from '../../shrub/js/node/node_star';
 
@@ -44,7 +44,7 @@ export default class ContentCommonFooterButtonStar extends Component {
 		var _class = "content-common-footer-button -star" + (starred ? " starred" : "");
 		return (
 			<div class={_class} onClick={this.onStar}>
-				<SVGIcon>star-full</SVGIcon>
+				<UIIcon>star-full</UIIcon>
 			</div>
 		);
 	}

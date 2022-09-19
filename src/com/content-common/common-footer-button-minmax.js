@@ -1,5 +1,5 @@
 import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import UIIcon 							from 'com/ui/icon';
 
 export default class ContentCommonFooterButtonMinMax extends Component {
 	constructor( props ) {
@@ -12,8 +12,8 @@ export default class ContentCommonFooterButtonMinMax extends Component {
 
 		return (
 			<div class="content-common-footer-button -minmax" onClick={onClick}>
-				<SVGIcon class="-inline-if-not-minimized">arrow-up</SVGIcon>
-				<SVGIcon class="-inline-if-minimized">arrow-down</SVGIcon>
+				<UIIcon class="-inline-if-not-minimized">arrow-up</UIIcon>
+				<UIIcon class="-inline-if-minimized">arrow-down</UIIcon>
 			</div>
 		);
 	}

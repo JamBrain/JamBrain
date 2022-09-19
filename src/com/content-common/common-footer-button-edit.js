@@ -1,5 +1,5 @@
-import { h, Component } 				from 'preact/preact';
-import SVGIcon 							from 'com/svg-icon/icon';
+import { h, Component } 				from 'preact';
+import UIIcon 							from 'com/ui/icon';
 import NavLink 							from 'com/nav-link/link';
 
 export default class ContentCommonFooterButtonEdit extends Component {
@@ -10,7 +10,7 @@ export default class ContentCommonFooterButtonEdit extends Component {
 	render( props ) {
 		return (
 			<NavLink href={props.node.path+"/edit"} class="content-common-footer-button -edit">
-				<SVGIcon>edit</SVGIcon>
+				<UIIcon>edit</UIIcon>
 			</NavLink>
 		);
 	}

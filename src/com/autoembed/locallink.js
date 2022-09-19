@@ -1,7 +1,7 @@
 import {h, Component} from 'preact/preact';
 
 import NavLink from 'com/nav-link/link';
-import SVGIcon from 'com/svg-icon/icon';
+import UIIcon from 'com/ui/icon';
 
 export default class LocalLink extends Component {
   constructor( props ) {
@@ -13,15 +13,15 @@ export default class LocalLink extends Component {
     if (props.hashLink) {
 			ShowIcon = (
         <span class="-icon-domain">
-          <SVGIcon baseline small name={'link'}/>
+          <UIIcon baseline small name={'link'}/>
         </span>
 			);
 		}
 		else {
 			ShowIcon = (
         <span class="-icon-domain">
-          <SVGIcon baseline small name={'l-udum'}/>
-          <SVGIcon baseline small name={'d-are'}/>
+          <UIIcon baseline small name={'l-udum'}/>
+          <UIIcon baseline small name={'d-are'}/>
         </span>
 			);
 		}

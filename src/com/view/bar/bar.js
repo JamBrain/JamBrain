@@ -194,7 +194,7 @@ export default class ViewBar extends Component {
 		var Search = null;
 //		var Search = (
 //			<ButtonBase class="bar-icon" onClick={e => { console.log('search'); window.location.hash = "#search"; }}>
-//				<SVGIcon baseline>search</SVGIcon>
+//				<UIIcon baseline>search</UIIcon>
 //			</ButtonBase>
 //		);
 
