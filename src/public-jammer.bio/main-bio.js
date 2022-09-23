@@ -16,7 +16,7 @@ class Main extends Component {
 
 	render( props, state ) {
 		return (
-			<div id="layout">
+			<div id="layout-page">
 				<div id="content">{
 					state.posts.map(function(e) {
 						return <ContentPost title={e} />;

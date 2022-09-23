@@ -21,7 +21,7 @@ export default class Dialog {
 
 		return new Promise(function(resolve, reject) {
 			try {
-				render(<DialogPromise resolve={resolve} reject={reject} {...props}> {body} </DialogPromise>, document.getElementById("layout"));
+				render(<DialogPromise resolve={resolve} reject={reject} {...props}> {body} </DialogPromise>, document.getElementById("layout-page"));
 			}
 			catch (e) {
 				console.error(e);

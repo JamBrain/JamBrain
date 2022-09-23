@@ -430,6 +430,7 @@ class Main extends Component {
 				if ( heading ) {
 					heading.scrollIntoView();
 
+					/* MK: I can't find a "view-bar" */
 					let viewBar = document.getElementsByClassName("view-bar")[0];
 					if ( viewBar ) {
 						window.scrollBy(0, -viewBar.clientHeight);

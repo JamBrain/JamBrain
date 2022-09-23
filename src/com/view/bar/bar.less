@@ -18,7 +18,7 @@
 @BUTTON_LIT_BG: @COL_A;
 
 
-#navbar {
+#layout-top {
 	position: fixed;
 
 	/* Force on a new layer in an attempt to avoid jitter */
@@ -36,7 +36,7 @@
 	height: @NAVBAR_HEIGHT;
 	background: @NAVBAR_BG;
 
-	& > section {
+	& > nav {
 		position: relative;
 
 		margin: auto;
@@ -276,7 +276,7 @@
 }
 
 /* When using the navbar, we offset the body */
-#layout {
+#layout-page {
 	position: relative;
 	top: @NAVBAR_HEIGHT;
 }

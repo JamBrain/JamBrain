@@ -121,7 +121,7 @@ export default class ViewBar extends Component {
 	}
 
 	componentDidMount() {
-		document.body.classList.add('_use-view-bar');
+		//document.body.classList.add('_use-view-bar');
 
 		if ( !this.StartedNotificationLoop ) {
 			this.checkNotificationCount();
@@ -129,8 +129,8 @@ export default class ViewBar extends Component {
 	}
 
 	componentWillUnmount() {
-		document.body.classList.remove('_use-view-bar');
-		document.body.classList.remove('_static-view-bar');
+		//document.body.classList.remove('_use-view-bar');
+		//document.body.classList.remove('_static-view-bar');
 	}
 
 //	componentWillReceiveProps( nextProps ) {
@@ -409,8 +409,8 @@ export default class ViewBar extends Component {
 		}
 
 		return (
-			<nav id="navbar">
-				<section>
+			<section id="layout-top">
+				<nav id="navbar">
 					<section class="left">
 						<UIButton title="Ludum Dare" href="/" class="logo">
 							<UIIcon class="if-sidebar-block" baseline>ludum</UIIcon><UIIcon class="if-sidebar-block" baseline>dare</UIIcon>
@@ -419,8 +419,8 @@ export default class ViewBar extends Component {
 					</section>
 					{ShowLoading}
 					{this.renderRight(user, featured)}
-				</section>
-			</nav>
+				</nav>
+			</section>
 		);
 	}
 }
