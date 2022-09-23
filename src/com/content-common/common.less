@@ -23,30 +23,30 @@
 	}
 	*/
 
-	& .-block-if-minimized,
-	& .-inline-if-minimized {
+	& ._block-if-minimized,
+	& ._inline-if-minimized {
 		display: none;
 	}
 
-	& .-block-if-not-minimized {
+	& ._block-if-not-minimized {
 		display: block;
 	}
 
-	& .-inline-if-not-minimized {
+	& ._inline-if-not-minimized {
 		display: inline-block;
 	}
 
 	&.-minimized {
-		& .-block-if-not-minimized,
-		& .-inline-if-not-minimized {
+		& ._block-if-not-minimized,
+		& ._inline-if-not-minimized {
 			display: none;
 		}
 
-		& .-block-if-minimized {
+		& ._block-if-minimized {
 			display: block;
 		}
 
-		& .-inline-if-minimized {
+		& ._inline-if-minimized {
 			display: inline-block;
 		}
 	}

@@ -1,5 +1,7 @@
 import {h, Component} from 'preact';
 import {UIIcon, UILink, UIButton} from 'com/ui';
+import {BasicAside, Header, Section, Footer} from "com/content/basic";
+
 import ContentSimple from 'com/content/simple';
 
 export default class ContentHeaderNoob extends Component {
@@ -19,21 +21,13 @@ export default class ContentHeaderNoob extends Component {
 
 	render( props, state ) {
 		return state.hidden ? null : (
-			<ContentSimple aside class="-header -noob" title="What is Ludum Dare?">
-				<p><UILink href="/about">Ludum Dare</UILink> is an online event where games are made from scratch in a weekend. Check us out every April and October!</p>
-				<UIButton class="close" onClick={this.onClick}><UIIcon>cross</UIIcon></UIButton>
-			</ContentSimple>
-		);
-		/*
-		return (
-			<aside class="content -header -noob">
-				<article>
-					<h1>What is Ludum Dare?</h1>
+			<BasicAside class="-noob">
+				<Header class="_font2" title="What is Ludum Dare?" />
+				<Section>
 					<p><UILink href="/about">Ludum Dare</UILink> is an online event where games are made from scratch in a weekend. Check us out every April and October!</p>
-				</article>
-				<div class="close" onClick={this.onClick}><UIIcon>cross</UIIcon></div>
-			</aside>
+					<UIButton class="close" onClick={this.onClick}><UIIcon>cross</UIIcon></UIButton>
+				</Section>
+			</BasicAside>
 		);
-		*/
 	}
 }

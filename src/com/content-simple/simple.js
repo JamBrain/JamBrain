@@ -504,7 +504,7 @@ export default class ContentSimple extends Component {
 						label={props.label ? props.label : "Description"}
 						editing={state.editing}
 						placeholder="Say something"
-						class="-block-if-not-minimized"
+						class="_block-if-not-minimized"
 						onModify={this.onModifyText}
 						minimized={props.minimized}
 						limit={props.limit}

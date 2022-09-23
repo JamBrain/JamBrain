@@ -12,8 +12,8 @@ export default class ContentCommonFooterButtonMinMax extends Component {
 
 		return (
 			<div class="content-common-footer-button -minmax" onClick={onClick}>
-				<UIIcon class="-inline-if-not-minimized">arrow-up</UIIcon>
-				<UIIcon class="-inline-if-minimized">arrow-down</UIIcon>
+				<UIIcon class="_inline-if-not-minimized">arrow-up</UIIcon>
+				<UIIcon class="_inline-if-minimized">arrow-down</UIIcon>
 			</div>
 		);
 	}

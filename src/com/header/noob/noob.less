@@ -1,13 +1,6 @@
 @import "defs.less";
 
-#content .content.-header.-noob {
-	/*font-size: 1.1em;*/
-	/*
-	line-height: 1.5em;
-
-	padding: 1rem;
-	*/
-
+#content .content.-basic.-noob {
 	max-width: 1024px;
 
 	@media (max-width: (@BASE_WIDTH - 20em)) {
@@ -15,22 +8,24 @@
 		padding: 0.5em;
 	}
 
-	color: @COL_NLLL;
-	background: @COL_NDDD;
+	/*color: @COL_NLLL;
+	background: @COL_NDDD;*/
 
-	/*
-	& a,
-	& a:visited {
-		color: #F80;
+	--common-col: @COL_NLLL;
+	--common-bg: @COL_NDDD;
+	--common-a: @COL_AB;
+
+	& header {
+		color: @COL_B;
+
+		& > h1 {
+			margin-bottom: 1.5rem;
+		}
 	}
 
-	& h1 {
-		font-size: 1.8em;
+	& a {
 		font-weight: bold;
-		color: #FC0;
-		margin-bottom: 1rem;
 	}
-	*/
 
 	& .close {
 		position: absolute;
