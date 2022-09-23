@@ -1,5 +1,4 @@
 import {h, Component, Fragment} from 'preact';
-import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 import UIIcon 							from 'com/ui/icon';
 

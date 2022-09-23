@@ -2,8 +2,7 @@ import {h, Component} 					from 'preact';
 import Sanitize							from 'internal/sanitize/sanitize';
 
 import UIIcon 							from 'com/ui/icon';
-import NavLink 							from 'com/nav-link/link';
-import NavSpinner						from 'com/nav-spinner/spinner';
+import UISpinner						from 'com/ui/spinner';
 
 import ButtonBase						from 'com/button-base/base';
 
@@ -253,7 +252,7 @@ export default class ContentEventList extends Component {
 				Body = <div>{error}</div>;
 			}
 			else {
-				Body = <NavSpinner />;
+				Body = <UISpinner />;
 			}
 
 			// Generate the page

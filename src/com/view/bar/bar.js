@@ -6,7 +6,7 @@ import ButtonLink						from 'com/button-link/link';
 import UIIcon 							from 'com/ui/icon';
 import NavLink 							from 'com/nav-link/link';
 
-import NavSpinner						from 'com/nav-spinner/spinner';
+import UISpinner						from 'com/ui/spinner';
 
 import UIButton							from 'com/ui/button/button';
 
@@ -370,7 +370,7 @@ export default class ViewBar extends Component {
 		}
 		// Still waiting
 		else {
-			ShowSpinner = <NavSpinner />;
+			ShowSpinner = <UISpinner />;
 		}
 
 		if ( ShowSpinner ) {
@@ -405,7 +405,7 @@ export default class ViewBar extends Component {
 		let ShowLoading;
 
 		if ( loading ) {
-			ShowLoading = (<NavSpinner />);
+			ShowLoading = (<UISpinner />);
 		}
 
 		return (

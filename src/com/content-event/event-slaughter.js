@@ -1,7 +1,7 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
 
-import NavSpinner						from 'com/nav-spinner/spinner';
+import UISpinner						from 'com/ui/spinner';
 import NavLink 							from 'com/nav-link/link';
 import UIIcon 							from 'com/ui/icon';
 
@@ -391,7 +391,7 @@ export default class ContentEventSlaughter extends Component {
 		else {
 			return (
 				<div class="content content-post">
-					{ state.error ? state.error : <NavSpinner /> }
+					{ state.error ? state.error : <UISpinner /> }
 				</div>
 			);
 		}

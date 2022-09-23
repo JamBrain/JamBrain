@@ -1,6 +1,5 @@
 import {h, Component} 					from 'preact';
 
-import NavSpinner						from 'com/nav-spinner/spinner';
 import NavLink 							from 'com/nav-link/link';
 
 import ContentBody						from 'com/content-body/body';

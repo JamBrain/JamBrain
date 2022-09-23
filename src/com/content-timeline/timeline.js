@@ -5,7 +5,7 @@ import ContentPost				from 'com/content-post/post';
 import ContentUser				from 'com/content-user/user';
 import ContentMore				from 'com/content-more/more';
 
-import NavSpinner 				from 'com/nav-spinner/spinner';
+import UISpinner 				from 'com/ui/spinner';
 
 import ContentCommon			from 'com/content-common/common';
 import ContentCommonBody		from 'com/content-common/common-body';
@@ -227,7 +227,7 @@ export default class ContentTimeline extends Component {
 		}
 		// If not errored and not loaded anything, show a spinner
 		else if ( !hasLoaded ) {
-			return <NavSpinner />;
+			return <UISpinner />;
 		}
 
 		// Feed

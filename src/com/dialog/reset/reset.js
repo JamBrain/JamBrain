@@ -2,7 +2,7 @@ import {h, Component} 					from 'preact';
 import Sanitize							from 'internal/sanitize/sanitize';
 
 import DialogCommon						from 'com/dialog/common/common';
-import NavSpinner						from 'com/nav-spinner/spinner';
+import UISpinner						from 'com/ui/spinner';
 import LabelYesNo						from 'com/label-yesno/yesno';
 
 import UILink							from 'com/ui/link/link';
@@ -73,7 +73,7 @@ export default class DialogReset extends Component {
 		if ( loading ) {
 			return (
 				<DialogCommon empty explicit {...new_props}>
-					<NavSpinner />
+					<UISpinner />
 				</DialogCommon>
 			);
 		}

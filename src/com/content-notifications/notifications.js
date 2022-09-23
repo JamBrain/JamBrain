@@ -3,7 +3,7 @@ import cN from 'classnames';
 
 import ButtonBase						from '../button-base/base';
 
-import NavSpinner						from 'com/nav-spinner/spinner';
+import UISpinner						from 'com/ui/spinner';
 import ContentMore						from 'com/content-more/more';
 
 import NotificationsBase				from 'com/content-notifications/base';
@@ -101,7 +101,7 @@ export default class NotificationsFeed extends NotificationsBase {
 				Mark all notifications as read
 			</ButtonBase>) : null;
 
-		const ShowSpinner = processing ? <NavSpinner /> : null;
+		const ShowSpinner = processing ? <UISpinner /> : null;
 
 		const ShowError = state.errorStatus ? ( <div class="-error">Error code {state.errorStatus} while fetching notifications</div> ) : null;
 

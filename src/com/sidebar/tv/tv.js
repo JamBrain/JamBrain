@@ -6,7 +6,7 @@ import ShallowCompare	 				from 'shallow-compare/index';
 import $JammerTV						from 'external/jammertv/jammertv';
 
 import UIIcon 							from 'com/ui/icon';
-import NavSpinner						from 'com/nav-spinner/spinner';
+import UISpinner						from 'com/ui/spinner';
 import UIImage	 						from 'com/ui/image';
 
 import ButtonBase						from 'com/button-base/base';
@@ -181,7 +181,7 @@ export default class SidebarTV extends Component {
 		else if ( state.streams.length == 0 ) {
 			return (
 				<div class="sidebar-base sidebar-tv">
-					<NavSpinner />
+					<UISpinner />
 				</div>
 			);
 		}

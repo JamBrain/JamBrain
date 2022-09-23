@@ -1,7 +1,7 @@
 import {h, Component, Fragment} from 'preact';
 import cN from 'classnames';
 
-import NavSpinner						from 'com/nav-spinner/spinner';
+import UISpinner						from 'com/ui/spinner';
 
 import ContentCommentsComment			from './comments-comment';
 
@@ -355,7 +355,7 @@ export default class ContentComments extends Component {
 
 		//console.log("[com/comments]", "render", comments, authors, tree);
 
-		let ShowComments = <NavSpinner />;
+		let ShowComments = <UISpinner />;
 		if ( comments && authors ) {
 			if ( comments.length )
 				ShowComments = this.renderComments(state, tree);

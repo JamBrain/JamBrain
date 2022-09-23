@@ -1,7 +1,7 @@
 import {h, Component}		from 'preact';
 
 import UIButton				from 'com/ui/button';
-import NavSpinner			from 'com/nav-spinner/spinner';
+import UISpinner			from 'com/ui/spinner';
 
 export default class ContentMore extends Component {
 	render( props ) {
@@ -9,7 +9,7 @@ export default class ContentMore extends Component {
 		if ( props.loading ) {
 			return (
 				<nav class="content -more">
-					<NavSpinner />
+					<UISpinner />
 				</nav>
 			);
 		}

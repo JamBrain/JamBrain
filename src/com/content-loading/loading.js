@@ -1,5 +1,5 @@
 import {h, Component} 					from 'preact';
-import NavSpinner						from 'com/nav-spinner/spinner';
+import UISpinner						from 'com/ui/spinner';
 
 export default class ContentLoading extends Component {
 	constructor( props ) {
@@ -9,7 +9,7 @@ export default class ContentLoading extends Component {
 	render( {error} ) {
 		return (
 			<div class="content">
-				{ error ? error : <NavSpinner /> }
+				{ error ? error : <UISpinner /> }
 			</div>
 		);
 	}

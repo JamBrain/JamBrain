@@ -4,7 +4,6 @@ import cN from 'classnames';
 import {UIIcon, UIButton} from 'com/ui';
 import {ContentSimple} from 'com/content/simple';
 
-import NavSpinner						from 'com/nav-spinner/spinner';
 import $Node							from 'shrub/js/node/node';
 import $ThemeIdea						from 'shrub/js/theme/theme_idea';
 import Sanitize							from 'internal/sanitize/sanitize';

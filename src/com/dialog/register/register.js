@@ -1,7 +1,7 @@
 import {h, Component} 					from 'preact';
 import Sanitize							from 'internal/sanitize/sanitize';
 
-import NavSpinner						from 'com/nav-spinner/spinner';
+import UISpinner						from 'com/ui/spinner';
 
 import DialogBase						from 'com/dialog/base/base';
 import DialogCommon						from 'com/dialog/common/common';
@@ -79,7 +79,7 @@ export default class DialogRegister extends Component {
 		if ( loading ) {
 			return (
 				<DialogCommon empty explicit {...new_props}>
-					<NavSpinner />
+					<UISpinner />
 				</DialogCommon>
 			);
 		}
