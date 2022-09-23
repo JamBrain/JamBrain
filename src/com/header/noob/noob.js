@@ -2,8 +2,6 @@ import {h, Component} from 'preact';
 import {UIIcon, UILink, UIButton} from 'com/ui';
 import {BasicAside, Header, Section, Footer} from "com/content/basic";
 
-import ContentSimple from 'com/content/simple';
-
 export default class ContentHeaderNoob extends Component {
 	constructor( props ) {
 		super(props);
@@ -15,7 +13,7 @@ export default class ContentHeaderNoob extends Component {
 		this.onClick = this.onClick.bind(this);
 	}
 
-	onClick( e ) {
+	onClick() {
 		this.setState({'hidden': true});
 	}
 
@@ -24,9 +22,9 @@ export default class ContentHeaderNoob extends Component {
 			<BasicAside class="-noob">
 				<Header class="_font2" title="What is Ludum Dare?" />
 				<Section>
-					<p><UILink href="/about">Ludum Dare</UILink> is an online event where games are made from scratch in a weekend. Check us out every April and October!</p>
-					<UIButton class="close" onClick={this.onClick}><UIIcon>cross</UIIcon></UIButton>
+					<UILink href="/about">Ludum Dare</UILink> is an online event where games are made from scratch in a weekend. Check us out every April and October!
 				</Section>
+				<UIButton class="close" onClick={this.onClick}><UIIcon>cross</UIIcon></UIButton>
 			</BasicAside>
 		);
 	}
