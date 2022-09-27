@@ -1,5 +1,5 @@
 import {h, Component}					from 'preact/preact';
-import SVGIcon							from 'com/svg-icon/icon';
+import UIIcon							from 'com/svg-icon/icon';
 import ButtonLink						from 'com/button-link/link';
 
 export default class SidebarUpcoming extends Component {
@@ -27,13 +27,15 @@ export default class SidebarUpcoming extends Component {
 //			<div class="-item"><strong>April 1st-4th, 2022</strong> - Ludum Dare 50 <SVGIcon baseline small>trophy</SVGIcon></div>,
 //			<div class="-item">The 20th anniversary of Ludum Dare!</div>,
 //			<div class="-item">&nbsp;</div>,
-			<div class="-item"><strong>September 30th 2022</strong> - Ludum Dare 51 <SVGIcon baseline small>trophy</SVGIcon></div>,
-			<div class="-item"><strong>April 2023</strong> - Ludum Dare 52 <SVGIcon baseline small>trophy</SVGIcon></div>,
+//			<div class="-item"><strong>September 30th 2022</strong> - Ludum Dare 51 <SVGIcon baseline small>trophy</SVGIcon></div>,
+			<div class="-item"><strong>January 6th, 2023</strong> - Ludum Dare 52 <UIIcon baseline small>trophy</UIIcon></div>,
+			<div class="-item"><strong>April 21st, 2023</strong> - Ludum Dare 53 <UIIcon baseline small>trophy</UIIcon></div>,
+			<div class="-item"><strong>September 29th, 2023</strong> - Ludum Dare 54 <UIIcon baseline small>trophy</UIIcon></div>,
 		];
 
 		return (
 			<div class="sidebar-base sidebar-shortlist sidebar-upcoming">
-				<div class="-title _font2"><SVGIcon baseline>calendar-wide</SVGIcon> <span class="-text">Coming Up</span></div>
+				<div class="-title _font2"><UIIcon baseline>calendar-wide</UIIcon> <span class="-text">Coming Up</span></div>
 				{Items}
 			</div>
 		);
