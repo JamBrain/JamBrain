@@ -19,6 +19,7 @@ export default class ViewSidebar extends Component {
 		let liveShowDate = null;
 
 		// TODO: cleanup
+		/*
 		let ldName = "Ludum Dare 50";
 		let ldStartDate = new Date(Date.UTC(2022, 3, 2, 1, 0, 0));
 
@@ -35,24 +36,25 @@ export default class ViewSidebar extends Component {
 
 		let nextEventName = "Ludum Dare 51";
 		let nextEventStartDate = new Date(Date.UTC(2022, 8, 30, 22, 0, 0));
+		*/
 
 
-		// let ldName = "Ludum Dare 49";
-		// let ldStartDate = new Date(Date.UTC(2021, 9, 1, 22, 0, 0));
+		let ldName = "Ludum Dare 51";
+		let ldStartDate = new Date(Date.UTC(2022, 8, 30, 22, 0, 0));
 
-		// let compoEndDate = new Date(Date.UTC(2021, 9, 3, 22, 0, 0));
-		// let compoEndDate2 = new Date(Date.UTC(2021, 9, 3, 23, 0, 0));
+		let compoEndDate = new Date(Date.UTC(2022, 8, 32, 22, 0, 0));
+		let compoEndDate2 = new Date(Date.UTC(2022, 8, 32, 23, 0, 0));
 
-		// let jamEndDate = new Date(Date.UTC(2021, 9, 4, 22, 0, 0));
-		// let jamEndDate2 = new Date(Date.UTC(2021, 9, 4, 23, 0, 0));
+		let jamEndDate = new Date(Date.UTC(2022, 8, 33, 22, 0, 0));
+		let jamEndDate2 = new Date(Date.UTC(2022, 8, 33, 23, 0, 0));
 
-		// let gradeEndDate = new Date(Date.UTC(2021, 9, 21, 20, 0, 0));
-		// let resultsDate = new Date(Date.UTC(2021, 9, 21, 26, 5, 0));
+		let gradeEndDate = new Date(Date.UTC(2022, 9, 21, 22, 0, 0));
+		let resultsDate = new Date(Date.UTC(2022, 9, 22, 16, 5, 0));
 
-		// liveShowDate = new Date(Date.UTC(2021, 9, 21, 23, 30, 0));
+		liveShowDate = new Date(Date.UTC(2022, 9, 22, 13, 30, 0));
 
-		// let nextEventName = "Ludum Dare 50";
-		// let nextEventStartDate = new Date(Date.UTC(2022, 3, 1, 25, 0, 0));
+		let nextEventName = "Ludum Dare 52";
+		let nextEventStartDate = new Date(Date.UTC(2023, 0, 6, 22, 0, 0));
 
 
 		let ItemsToShow = 3;
@@ -116,6 +118,7 @@ export default class ViewSidebar extends Component {
 				{ShowCountdown}
 				<SidebarTV />
 				<SidebarUpcoming />
+				<SidebarSponsor />
 			</div>
 		);
 
@@ -123,7 +126,6 @@ export default class ViewSidebar extends Component {
 
 		/*<SidebarGuides />*/
 		/*<SidebarSupport />*/
-		/*<SidebarSponsor />*/
 
 		/*<SidebarCalendar rows={ShowCountdown.length ? 2 : 3} />*/
 	}
