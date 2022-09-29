@@ -1,6 +1,6 @@
 import { h, Component } from 'preact/preact';
 
-export default class IMG extends Component {
+export default class IMG2 extends Component {
 	constructor( props ) {
 		super(props);
 
@@ -20,29 +20,29 @@ export default class IMG extends Component {
 	}
 
 	render( props, {error} ) {
+		let newProps = {...props};
+		newProps.onError = this.onError;
+
 		// If you have no src, but have a failsrc
-		if ( !props.src && props.failsrc ) {
-			props.src = props.failsrc;
+		if ( !newProps.src && newProps.failsrc ) {
+			newProps.src = newProps.failsrc;
 		}
 
-		// if your URL begins with a triple slash, append the static endpoint
-		if ( props.src && props.src.indexOf('///') === 0 ) {
-			props.src = STATIC_ENDPOINT + props.src.substr(2);
+		// prepend the static endpoint if a URL begins with a triple slash
+		if ( newProps.src && newProps.src.indexOf('///') === 0 ) {
+			newProps.src = STATIC_ENDPOINT + newProps.src.substr(2);
 		}
-		if ( props.failsrc && props.failsrc.indexOf('///') === 0 ) {
-			props.failsrc = STATIC_ENDPOINT + props.failsrc.substr(2);
+		if ( newProps.failsrc && newProps.failsrc.indexOf('///') === 0 ) {
+			newProps.failsrc = STATIC_ENDPOINT + newProps.failsrc.substr(2);
 		}
 
-		if ( error ) {
-			props.src = props.failsrc;
-			return (
-				<img {...props} />
-			);
+		// If an error, use failsrc
+		if ( error && newProps.failsrc ) {
+			newProps.src = newProps.failsrc;
 		}
-		else {
-			return (
-				<img {...props} onerror={this.onError} />
-			);
-		}
+
+		return (
+			<img {...newProps} />
+		);
 	}
 }
