@@ -15,7 +15,7 @@ export default class ViewSidebar extends Component {
 			return (
 				<div class="sidebar-base sidebar-shortlist sidebar-sponsor">
 					<div class="-title _font2"><SVGIcon baseline>trophy</SVGIcon> <span class="-text">Sponsors</span></div>
-					<div><a href="/events/ludum-dare/50/test-node/results-for-ludum-dare-50"><UIImage src="///content/b/z/4ee45.w200.png" /></a></div>
+					<div><a href="/events/ludum-dare/50/test-node/results-for-ludum-dare-50"><UIImage src="///content/b/z/4ee45.png.w200.png" /></a></div>
 				</div>
 			);
 		//}
