@@ -25,7 +25,7 @@ export default class PageRootHome extends Component {
 		}
 		*/
 
-		let ShowNews = <ContentHeadlinerFeed node={node} types={['post']} subtypes={['news']} methods={['all']} limit={3} name="news" icon="news" flagclass="-col-c -inv -inv-lit" childclass="-col-c" published love comments href="/news" />;
+		let ShowNews = <ContentHeadlinerFeed node={node} types={['post']} subtypes={['news']} methods={['all']} limit={1} name="news" icon="news" flagclass="-col-c -inv -inv-lit" childclass="-col-c" published love comments href="/news" />;
 
 		let ShowHomework = null;
 		// Only show homework if you're logged in and you have a game in the current event
