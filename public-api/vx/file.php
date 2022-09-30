@@ -44,6 +44,7 @@ const VALID_FILE_EXTENSIONS = [
 	// Document //
 	'.pdf',
 	'.epub',
+	'.txt',
 
 	// Legacy //
 	'.jar',		// Java
