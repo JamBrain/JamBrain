@@ -226,7 +226,7 @@ window.node_HasEmbed = function( node ) {
 
 	// Iterate over all files, and return true if we find the embedded file
 	for ( var idx = 0; idx < node.files.length; idx++ ) {
-		if ( node.files[idx].name.indexOf("$$embed") !== -1 ) {
+		if ( (node.files[idx].name.indexOf("$$embed") !== -1) && (node.files[idx].status & 0x8) ) {
 			return true;
 		}
 	}
@@ -248,7 +248,7 @@ window.node_GetEmbed = function( node ) {
 	// Iterate over all files, and return true if we find the embedded file
 	for ( var idx = 0; idx < node.files.length; idx++ ) {
 		if ( node.files[idx].name.indexOf("$$embed") !== -1 ) {
-			if ( !file || (node.files[idx].id > file.id) ) {
+			if ( !file || ((node.files[idx].status & 0x8) && (node.files[idx].id > file.id)) ) {
 				file = node.files[idx];
 			}
 		}
