@@ -21,8 +21,9 @@ const VALID_FILE_EXTENSIONS = [
 	'.tar.gz',
 	'.tar.bz2',
 	'.7z',
+	'.rar',
 	
-	// Windows/Microsoft //
+	// Microsoft //
 	'.exe',
 	'.msi',		// Windows Installer
 	'.com',		// DOS
@@ -40,13 +41,14 @@ const VALID_FILE_EXTENSIONS = [
 	'.pkg',		// Pacman
 	'.apk',		// Android
 
-	// Java //
-	'.jar',
-
 	// Document //
 	'.pdf',
 	'.epub',
 
+	// Legacy //
+	'.jar',		// Java
+	'.swf',		// Adobe Flash
+	
 	// Pico8 //
 	'.p8',
 	//'.p8.png',
