@@ -16,7 +16,7 @@ const EMBED_FILE_EXT = '.zip';
 const MAX_FILE_SIZE = 256*1024*1024;
 
 const VALID_FILE_EXTENSIONS = [
-	// Archives //
+	// Archive //
 	'.zip',
 	'.tar.gz',
 	'.tar.bz2',
@@ -50,8 +50,8 @@ const VALID_FILE_EXTENSIONS = [
 	'.jar',		// Java
 	'.swf',		// Adobe Flash
 	
-	// Pico8 //
-	'.p8',
+	// Pico-8 //
+	//'.p8',
 	//'.p8.png',
 ];
 
