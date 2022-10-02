@@ -166,7 +166,7 @@ window.getLocaleFullTimeStamp = function( date ) {
 }
 
 window.getLocaleTimeStamp = function( date ) {
-    return getLocaleDate(date) + " " + getLocaleTime(date) + " " + getLocaleTimeZone(date);
+    return getLocaleDate(date) + " " + getLocaleTime(date);
 }
 
 
