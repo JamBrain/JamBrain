@@ -35,7 +35,7 @@ const VALID_FILE_EXTENSIONS = [
 	// Linux //
 	'.flatpak',
 	'.snap',
-	//'.appimage',
+	'.appimage',
 	'.deb',		// APT (Debian, Ubuntu)
 	'.rpm',		// Redhat
 	'.pkg',		// Pacman

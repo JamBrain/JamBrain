@@ -496,7 +496,7 @@ export default class ContentSimple extends Component {
 			}
 
 			let ShowPrefix = null;
-			if ( props.prefix ) {
+			if ( props.prefix && !props.editonly ) {
 				ShowPrefix = props.prefix;
 			}
 

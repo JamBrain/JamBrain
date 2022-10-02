@@ -1009,9 +1009,9 @@ export default class ContentItem extends Component {
 		);
 		props.onSave = this.onSave.bind(this);
 
-		if ( !isEditing ) {
+		//if ( !isEditing ) {
 			props.prefix = ShowEmbedView;
-		}
+		//}
 
 		props.viewonly = (
 			<div>
