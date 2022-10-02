@@ -110,16 +110,31 @@ export default class ContentItemEmbedFile extends Component {
                 return <div />;
             }
 
-            let files = [];
-            Object.values(latestFiles).forEach(e => {
-                if ( (e.status & 0x1) && (e.status & 0x40) ) {
-                    let func = this.onDelete.bind(this, e);
-                    files.push(<li>{e.name} [{e.status.toString(16)}] - {e.timestamp} - {e.size} bytes - <UIButton style="display: inline;" onclick={func}>delete</UIButton></li>);
-                }
-            });
+            let whichEmbed = node_GetEmbed(node);
 
+            let files = [];
+            if (whichEmbed) {
+                Object.values(latestFiles).forEach(e => {
+                    if ( (e.status & 0x1) && (e.status & 0x40) ) {
+                        let func = this.onDelete.bind(this, e);
+                        if ( whichEmbed.id == e.id ) {
+                            files.push(<li><strong>{e.name} [{e.status.toString(16)}] - {e.timestamp} - {e.size} bytes - <UIButton class="-button" style="display: inline;" onclick={func}>delete</UIButton></strong></li>);
+                        }
+                        else {
+                            files.push(<li>{e.name} [{e.status.toString(16)}] - {e.timestamp} - {e.size} bytes - <UIButton class="-button" style="display: inline;" onclick={func}>delete</UIButton></li>);
+                        }
+                    }
+                });
+            }
+
+            // Hack, append a few more items
             for ( let idx = 0; idx < state.uploads.length; ++idx ) {
-                files.push(<li>{state.uploads[idx].name}</li>);
+                if ( idx == (state.uploads.length - 1) ) {
+                    files.push(<li><strong>{state.uploads[idx].name}</strong></li>);
+                }
+                else {
+                    files.push(<li>{state.uploads[idx].name}</li>);
+                }
             }
 
             const status = [
