@@ -119,11 +119,11 @@ export default class ContentItemEmbedFile extends Component {
                         let func = this.onDelete.bind(this, e);
                         if ( whichEmbed.id == e.id ) {
                             //[{e.status.toString(16)}]
-                            files.push(<li><strong>{e.name} - {getLocaleTimeStamp(e.timestamp)} - {e.size} bytes <UIButton class="-button" style="display: inline;" onclick={func}>delete</UIButton></strong></li>);
+                            files.push(<li><strong>{e.name} - {getLocaleTimeStamp(new Date(e.timestamp))} - {e.size} bytes <UIButton class="-button" style="display: inline;" onclick={func}>delete</UIButton></strong></li>);
                         }
                         else {
                             //[{e.status.toString(16)}]
-                            files.push(<li>{e.name} - {getLocaleTimeStamp(e.timestamp)} - {e.size} bytes <UIButton class="-button" style="display: inline;" onclick={func}>delete</UIButton></li>);
+                            files.push(<li>{e.name} - {getLocaleTimeStamp(new Date(e.timestamp))} - {e.size} bytes <UIButton class="-button" style="display: inline;" onclick={func}>delete</UIButton></li>);
                         }
                     }
                 });
