@@ -115,7 +115,7 @@ export default class ContentItemFiles extends Component {
                 if ( (e.status & 0x1) && !(e.status & 0x40) ) {
                     let func = this.onDelete.bind(this, e);
                     //[{e.status.toString(16)}]
-                    files.push(<li>{e.name} - {getLocaleTimeStamp(e.timestamp)} - {e.size} bytes <UIButton class="-button" style="display: inline;" onclick={func}>delete</UIButton></li>);
+                    files.push(<li>{e.name} - {getLocaleTimeStamp(new Date(e.timestamp))} - {e.size} bytes <UIButton class="-button" style="display: inline;" onclick={func}>delete</UIButton></li>);
                 }
             });
 
