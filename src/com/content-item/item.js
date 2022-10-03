@@ -443,7 +443,7 @@ export default class ContentItem extends Component {
 //					namePlaceholder="Source"
 //					urlPlaceholder="http://example.com/source.zip"
 
-		if ( editing || (this.state.linksShown > 1) ) {
+		if ( editing || (this.state.linksShown >= 1) ) {
 			return (
 				<ContentCommonBody class="-body">
 					<div class="-label">Links</div>
