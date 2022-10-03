@@ -44,7 +44,12 @@ define( 'SHORTENER_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], SHORTENER
 
 define( 'LINK_SUFFIX', isset($_GET['nopush']) ? '; nopush' : '' );
 if ( !defined('API_DOMAIN') ) {
-	define( 'API_DOMAIN', 'api.'.$_SERVER['SERVER_NAME'] );
+	if ( $_SERVER['SERVER_NAME'] == 'jam.ludumdare.com' ) {
+		define( 'API_DOMAIN', 'api-jam.ludumdare.com' );
+	}
+	else {
+		define( 'API_DOMAIN', 'api.'.$_SERVER['SERVER_NAME'] );
+	}
 }
 define( 'API_ENDPOINT', '//'.API_DOMAIN );
 
