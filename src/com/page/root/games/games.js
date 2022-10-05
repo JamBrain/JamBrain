@@ -121,7 +121,7 @@ export default class PageHomeGames extends Component {
 			<ContentList class="page-home-games">
 				{ShowFilters}
 				{ShowNewFilterbox}
-				<ContentGames node={NodeArg} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} filter={GamesFeedFilter}/>
+				<ContentGames node={NodeArg} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} filter={GamesFeedFilter} filterout />
 			</ContentList>
 		);
 	}
