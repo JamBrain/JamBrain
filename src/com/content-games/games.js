@@ -170,6 +170,9 @@ export default class ContentGames extends Component {
 				if (i && i.node && i.node.meta && i.node.meta['dont-rate-me']) {
 					return i.node.meta['dont-rate-me'] != "1";
 				}
+				else if (i && i.node && i.node.meta && i.node.meta['dont-show-me']) {
+					return i.node.meta['dont-show-me'] != "1";
+				}
 				return true;
 			});
 		}
