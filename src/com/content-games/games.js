@@ -166,9 +166,11 @@ export default class ContentGames extends Component {
 		// Filter out "dont-rate-me"
 		if (feed && feed.length) {
 			feed = feed.filter(i => {
-				console.log(i);
 				if (i && i.node && i.node.meta && i.node.meta['dont-rate-me']) {
 					return i.node.meta['dont-rate-me'] != "1";
+				}
+				else if (i && i.node && i.node.meta && i.node.meta['dont-show-me']) {
+					return i.node.meta['dont-show-me'] != "1";
 				}
 				return true;
 			});
