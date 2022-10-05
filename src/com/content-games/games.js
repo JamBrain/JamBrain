@@ -164,7 +164,7 @@ export default class ContentGames extends Component {
 		let LoadMore = null;
 
 		// Filter out "dont-rate-me"
-		if (feed && feed.length) {
+		if (props.filterout && feed && feed.length) {
 			feed = feed.filter(i => {
 				if (i && i.node && i.node.meta && i.node.meta['dont-rate-me']) {
 					return i.node.meta['dont-rate-me'] != "1";

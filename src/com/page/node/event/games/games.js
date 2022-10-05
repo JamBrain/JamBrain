@@ -141,7 +141,7 @@ export default class EventGames extends Component {
         return (
             <div>
                 {ShowFilters}
-                <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={Methods} subsubtypes={SubFilter ? SubFilter : null} filter={GamesFeedFilter} />
+                <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={Methods} subsubtypes={SubFilter ? SubFilter : null} filter={GamesFeedFilter} filterout />
             </div>
         );
     }
