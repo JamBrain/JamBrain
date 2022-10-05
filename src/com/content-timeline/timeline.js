@@ -141,10 +141,10 @@ export default class ContentTimeline extends Component {
 			var extra = this.props.extra;
 
 			if ( node.type === 'post' || node.type === 'game' ) {
-				return <ContentPost node={node} user={user} path={path} extra={extra} authored by minmax love comments minimized={this.props.minimized} />;
+				return <ContentPost node={node} user={user} path={path} extra={extra} authored by minmax love comments minimized={this.props.minimized} filterout />;
 			}
 			else if ( node.type === 'user' ) {
-				return <ContentUser node={node} user={user} path={path} extra={extra} minmax />;
+				return <ContentUser node={node} user={user} path={path} extra={extra} minmax filterout />;
 			}
 			else {
 				return <div class="content-base">Unsupported Node Type: {""+node.type}</div>;
@@ -156,6 +156,16 @@ export default class ContentTimeline extends Component {
 	render( props, state ) {
 		let {feed, lastadded, error, loaded} = state;
 		let ShowFeed = [];
+
+		// Filter out
+		if (feed && feed.length) {
+			feed = feed.filter(i => {
+				if (i && i.node && i.node.meta && i.node.meta['dont-show-me']) {
+					return i.node.meta['dont-show-me'] != "1";
+				}
+				return true;
+			});
+		}
 
 		if ( error ) {
 			ShowFeed.push(<ContentCommon node={props.node}><ContentCommonBody>Error: {""+error}</ContentCommonBody></ContentCommon>);

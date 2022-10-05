@@ -321,6 +321,11 @@ export default class ContentSimple extends Component {
 		let {author, authors} = state;
 
 
+		// Hide if filter-out is enabled
+		if ( props.filterout && author && author.meta && author.meta['dont-show-me'] == "1" ) {
+			return <div />;
+		}
+
 		if ( node && (((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length)) ) {
 			var ShowEditBar = null;
 			var ShowOnly = null;
