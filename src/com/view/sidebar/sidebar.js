@@ -16,8 +16,6 @@ export default class ViewSidebar extends Component {
 	}
 
 	render( props ) {
-		let liveShowDate = null;
-
 		// TODO: cleanup
 		/*
 		let ldName = "Ludum Dare 50";
@@ -32,7 +30,7 @@ export default class ViewSidebar extends Component {
 		let gradeEndDate = new Date(Date.UTC(2022, 3, 21, 20, 0, 0));
 		let resultsDate = new Date(Date.UTC(2022, 3, 21, 26, 0, 0));
 
-		liveShowDate = new Date(Date.UTC(2022, 3, 21, 23, 30, 0));
+		let liveShowDate = new Date(Date.UTC(2022, 3, 21, 23, 30, 0));
 
 		let nextEventName = "Ludum Dare 51";
 		let nextEventStartDate = new Date(Date.UTC(2022, 8, 30, 22, 0, 0));
@@ -51,7 +49,7 @@ export default class ViewSidebar extends Component {
 		let gradeEndDate = new Date(Date.UTC(2022, 9, 21, 22, 0, 0));
 		let resultsDate = new Date(Date.UTC(2022, 9, 22, 16, 5, 0));
 
-		liveShowDate = new Date(Date.UTC(2022, 9, 22, 13, 30, 0));
+		let liveShowDate = new Date(Date.UTC(2022, 9, 22, 13, 30, 0));
 
 		let nextEventName = "Ludum Dare 52";
 		let nextEventStartDate = new Date(Date.UTC(2023, 0, 6, 22, 0, 0));
@@ -62,9 +60,14 @@ export default class ViewSidebar extends Component {
 		let now = new Date();
 
 		let ShowCountdown = [];
-		if ( now < ldStartDate ) {
+		if ( !props.featured ) {
+			// Featured event hasn't loaded yet
+		}
+		// If before the start
+		else if ( now < ldStartDate ) {
 			ShowCountdown.push(<SidebarCountdown date={ ldStartDate } nc="ld" to={ldName} tt="Starts" />);
 		}
+		// If after the start
 		else {
 			if ( (now < compoEndDate) && (ShowCountdown.length < ItemsToShow) ) {
 				ShowCountdown.push(<SidebarCountdown date={ compoEndDate } nc="compo" to="Compo" tt="Ends" />);
