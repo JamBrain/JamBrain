@@ -472,13 +472,14 @@ switch ( $action ) {
 				if ( $RESPONSE['limit'] > 250 )
 					$RESPONSE['limit'] = 250;
 			}
+			$stable = $_GET['stable'] == 'true';
 
-			$CACHE_KEY = "!node/feed|".implode('+', $methods)."|".$root."|".implode('+', $types)."|".implode('+', $subtypes)."|".implode('+', $subsubtypes)."|".$score_op."|".$RESPONSE['limit']."|".$RESPONSE['offset'];
+			$CACHE_KEY = "!node/feed|".implode('+', $methods)."|".$root."|".implode('+', $types)."|".implode('+', $subtypes)."|".implode('+', $subsubtypes)."|".$score_op."|".$RESPONSE['limit']."|".$RESPONSE['offset']."|".$stable;
 
 			$RESPONSE['feed'] = cache_Fetch($CACHE_KEY);
 
 			if ( $RESPONSE['feed'] == null ) {
-				$RESPONSE['feed'] = nodeFeed_GetByMethod($methods, $root, $types, $subtypes, $subsubtypes, $score_op, $RESPONSE['limit'], $RESPONSE['offset']);
+				$RESPONSE['feed'] = nodeFeed_GetByMethod($methods, $root, $types, $subtypes, $subsubtypes, $score_op, $RESPONSE['limit'], $RESPONSE['offset'], $stable);
 //				$RESPONSE['feed'] = nodeFeed_GetByNodeMethodType($root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset']);
 
 				cache_Store($CACHE_KEY, $RESPONSE['feed'], 10);
