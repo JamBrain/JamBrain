@@ -85,6 +85,14 @@ if ( in_array($table, $TABLE_LIST) ) {
 				ADD INDEX superparent (superparent);"
 			);
 		if (!$ok) break; $TABLE_VERSION++;
+	case 3:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD INDEX stable_published (published, id);
+			ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD INDEX stable_modified (modified, id);"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 
 	// NOTE: Store "extra" in body for symlinks
