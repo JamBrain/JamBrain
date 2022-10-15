@@ -265,7 +265,7 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 
 
 
-function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subtypes = null, $subsubtypes = null, $magic_op = null, $limit = 20, $offset = 0, $trust_op = '>= 0' ) {
+function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subtypes = null, $subsubtypes = null, $magic_op = null, $limit = 20, $offset = 0, $trust_op = '>= 0', $stable = false ) {
 	$MAGIC_QUERY = [];
 	$MAGIC_ARGS = [];
 	$NODE_QUERY = [];
@@ -510,10 +510,14 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 	}
 	// Neither a LINK or MAGIC query
 	else {
-		if ( $published )
-			$ORDER_BY = "ORDER BY n.published $SORT_ORDER";
+		if ( $stable )
+			$SORT_BY_ID = ', n.id';
 		else
-			$ORDER_BY = "ORDER BY n.modified $SORT_ORDER";
+			$SORT_BY_ID = '';
+		if ( $published )
+			$ORDER_BY = "ORDER BY n.published$SORT_BY_ID $SORT_ORDER";
+		else
+			$ORDER_BY = "ORDER BY n.modified$SORT_BY_ID $SORT_ORDER";
 
 		$QUERY = $NODE_QUERY;
 		$ARGS = array_merge($NODE_ARGS, $LIMIT_ARGS);
