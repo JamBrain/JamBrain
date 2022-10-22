@@ -47,12 +47,12 @@ export default class ViewSidebar extends Component {
 		let jamEndDate2 = new Date(Date.UTC(2022, 8, 33, 23, 0, 0));
 
 		let gradeEndDate = new Date(Date.UTC(2022, 9, 21, 22, 0, 0));
-		let resultsDate = new Date(Date.UTC(2022, 9, 22, 16, 5, 0));
+		let resultsDate = new Date(Date.UTC(2022, 9, 22, 19, 5, 0));
 
-		let liveShowDate = new Date(Date.UTC(2022, 9, 22, 13, 30, 0));
+		let liveShowDate = new Date(Date.UTC(2022, 9, 22, 16, 30, 0));
 
 		let nextEventName = "Ludum Dare 52";
-		let nextEventStartDate = new Date(Date.UTC(2023, 0, 6, 22, 0, 0));
+		let nextEventStartDate = new Date(Date.UTC(2023, 0, 6, 20, 0, 0));
 
 
 		let ItemsToShow = 3;
