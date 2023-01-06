@@ -17,26 +17,25 @@ export default class ViewSidebar extends Component {
 
 	render( props ) {
 		// TODO: cleanup
+
+		let ldName = "Ludum Dare 52";
+		let ldStartDate = new Date(Date.UTC(2023, 0, 6, 20, 0, 0));
+
+		let compoEndDate = new Date(Date.UTC(2023, 0, 8, 20, 0, 0));
+		let compoEndDate2 = new Date(Date.UTC(2023, 0, 8, 21, 0, 0));
+
+		let jamEndDate = new Date(Date.UTC(2023, 0, 9, 20, 0, 0));
+		let jamEndDate2 = new Date(Date.UTC(2023, 0, 9, 21, 0, 0));
+
+		let gradeEndDate = new Date(Date.UTC(2023, 0, 27, 20, 0, 0));
+		let resultsDate = new Date(Date.UTC(2023, 0, 28, 23, 5, 0));
+
+		let liveShowDate = new Date(Date.UTC(2023, 0, 28, 20, 30, 0, 0));
+
+		let nextEventName = "Ludum Dare 53";
+		let nextEventStartDate = new Date(Date.UTC(2023, 3, 29, 1, 0, 0));
+
 		/*
-		let ldName = "Ludum Dare 50";
-		let ldStartDate = new Date(Date.UTC(2022, 3, 2, 1, 0, 0));
-
-		let compoEndDate = new Date(Date.UTC(2022, 3, 4, 1, 0, 0));
-		let compoEndDate2 = new Date(Date.UTC(2022, 3, 4, 2, 0, 0));
-
-		let jamEndDate = new Date(Date.UTC(2022, 3, 5, 1, 0, 0));
-		let jamEndDate2 = new Date(Date.UTC(2022, 3, 5, 2, 0, 0));
-
-		let gradeEndDate = new Date(Date.UTC(2022, 3, 21, 20, 0, 0));
-		let resultsDate = new Date(Date.UTC(2022, 3, 21, 26, 0, 0));
-
-		let liveShowDate = new Date(Date.UTC(2022, 3, 21, 23, 30, 0));
-
-		let nextEventName = "Ludum Dare 51";
-		let nextEventStartDate = new Date(Date.UTC(2022, 8, 30, 22, 0, 0));
-		*/
-
-
 		let ldName = "Ludum Dare 51";
 		let ldStartDate = new Date(Date.UTC(2022, 8, 30, 22, 0, 0));
 
@@ -53,9 +52,9 @@ export default class ViewSidebar extends Component {
 
 		let nextEventName = "Ludum Dare 52";
 		let nextEventStartDate = new Date(Date.UTC(2023, 0, 6, 20, 0, 0));
+		*/
 
-
-		let ItemsToShow = 3;
+		let ItemsToShow = 2;
 
 		let now = new Date();
 
