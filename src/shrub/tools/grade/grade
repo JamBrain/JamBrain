@@ -126,6 +126,12 @@ if ( $COMMAND === "score" ) {
 			if ( $THRESHOLD >= 5 ) {
 				array_shift($grade);		// Remove Top
 				array_pop($grade);			// Remove Bottom
+
+				// Be sure we modify our thresholds too!
+				$THRESHOLD -= 2;
+				if ($THRESHOLD2) {
+					$THRESHOLD2 -= 2;
+				}
 			}
 
 			if ( !count($grade) )
@@ -165,12 +171,13 @@ if ( $COMMAND === "score" ) {
 		$prev_average = -1;
 		foreach ( $result as &$item ) {
 			if ( !$THRESHOLD || $item['count'] >= $THRESHOLD ) {
-				// Ties
+				// If not a tie, update the recorded placement and average
 				if ( $item['average'] !== $prev_average ) {
 					$next_place = $place;
 					$prev_average = $item['average'];
 				}
 
+				// Record the placement (if tied, the placement doesn't change from the previous)
 				$item['place'] = $next_place;
 				$place++;
 			}
