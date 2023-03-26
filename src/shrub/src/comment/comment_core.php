@@ -73,9 +73,9 @@ function _comment_FetchTree( $ids, $threshold = null ) {
 		}
 
 		$ret = db_QueryFetch(
-			"SELECT node, comment, ancestor, hops
+			"SELECT _node, comment, ancestor, hops
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT_TREE."
-			WHERE node IN ($ids_string)
+			WHERE _node IN ($ids_string)
 			$threshold_string
 			;"
 		);
@@ -133,7 +133,7 @@ function _comment_GetByNode( $ids ) {
 
 		$ret = db_QueryFetch(
 			"SELECT id, parent,
-				node, supernode,
+				node, _supernode,
 				author,
 				".DB_FIELD_DATE('created').",
 				".DB_FIELD_DATE('modified').",
@@ -177,7 +177,7 @@ function comment_GetNodeIdBySuperNodeAuthor( $supernode_id, $author_id ) {
 	return db_QueryFetchSingle(
 		"SELECT id
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."
-		WHERE supernode=? AND author=?
+		WHERE _supernode=? AND author=?
 		;",
 		$supernode_id,
 		$author_id
@@ -213,7 +213,7 @@ function comment_GetById( $ids ) {
 
 		$ret = db_QueryFetch(
 			"SELECT id, parent,
-				node, supernode,
+				node, _supernode,
 				author,
 				".DB_FIELD_DATE('created').",
 				".DB_FIELD_DATE('modified').",
@@ -239,7 +239,7 @@ function _comment_AddByNode( $node, $supernode, $author, $parent, $body, $versio
 	$comment_id = db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_COMMENT." (
 			parent,
-			node, supernode,
+			node, _supernode,
 			author, flags,
 			created
 		)

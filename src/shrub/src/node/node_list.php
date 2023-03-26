@@ -118,7 +118,7 @@ function nodeList_GetSuperParent( &$_nodes ) {
 	}
 
 	foreach ( $nodes as &$node ) {
-		$superparents[] = $node['superparent'];
+		$superparents[] = $node['_superparent'];
 	}
 
 	// Remove duplicates

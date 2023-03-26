@@ -41,7 +41,7 @@ function AddMagic( $name, $parent ) {
 				nodeMagic_Add(
 					$node['id'],
 					$node['parent'],
-					$node['superparent'],
+					$node['_superparent'],
 					$node['author'],
 					0,	// score
 					$name

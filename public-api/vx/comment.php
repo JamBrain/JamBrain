@@ -252,7 +252,7 @@ switch ( $action ) {
 							if ( $comment['id'] ) {
 
 //							if ( in_array($node['type'], THINGS_I_CAN_LOVE) ) {
-								$RESPONSE['id'] = commentLove_AddByComment($comment_id, $user_id, $comment['node'], $comment['supernode'], $comment['author'] );
+								$RESPONSE['id'] = commentLove_AddByComment($comment_id, $user_id, $comment['node'], $comment['_supernode'], $comment['author'] );
 
 //								$RESPONSE['love'] = commentLove_GetByNode($node_id);
 //							}

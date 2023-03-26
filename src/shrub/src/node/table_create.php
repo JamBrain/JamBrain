@@ -12,6 +12,7 @@ const DB_TYPE_NODE_SCORE = 'DOUBLE NOT NULL';
 
 // Simliar to the regular NODE, but just a snapshot
 // IMPORTANT: This has to come first, as with the node table, we need to make nodes
+// TODO: author here should be who made the change, irregardless of who it is credited to
 $table = 'SH_TABLE_NODE_VERSION';
 if ( in_array($table, $TABLE_LIST) ) {
 	$ok = null;
@@ -85,9 +86,18 @@ if ( in_array($table, $TABLE_LIST) ) {
 				ADD INDEX superparent (superparent);"
 			);
 		if (!$ok) break; $TABLE_VERSION++;
+	case 3:
+		// Rename superparent to _superparent. NOTE: had to use CHANGE because old MariaDB version
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN `superparent` `_superparent` ".DB_TYPE_ID.";"
+			);
+				//RENAME COLUMN `superparent` TO `_superparent`;"
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 
 	// NOTE: Store "extra" in body for symlinks
+	// MK: What does this actually mean? What's an extra?
 
 	// Generate Nodes
 	if ( isset($created) ) {
@@ -98,6 +108,8 @@ if ( in_array($table, $TABLE_LIST) ) {
 	table_Exit($table);
 }
 
+
+// BUG: We don't know who to credit for creating this
 
 $table = 'SH_TABLE_NODE_META_VERSION';
 if ( in_array($table, $TABLE_LIST) ) {
@@ -133,6 +145,7 @@ if ( in_array($table, $TABLE_LIST) ) {
 	// *** This was formerly SH_TABLE_NODE_META. As of now it's SH_TABLE_NODE_META_VERSION *** //
 	
 	case 3:
+		// NOTE: RENAME isn't supported in older MariaDB. You need to use CHANGE instead.
 		$ok = table_Update( $table,
 			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
 				CHANGE `node` `a` ".DB_TYPE_ID.";"
@@ -152,14 +165,14 @@ if ( in_array($table, $TABLE_LIST) ) {
 			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
 				DROP INDEX node;"
 			);
-			// remove the old 'node' index (MariaDB can't rename)
+			// remove the old 'node' index (MariaDB can't rename indexes)
 		if (!$ok) break; $TABLE_VERSION++;
 	case 6:
 		$ok = table_Update( $table,
 			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
 				ADD INDEX a (a);"
 			);
-			// Add a new index for `a` (MariaDB can't rename)
+			// Add a new index for `a` (MariaDB can't rename indexes)
 		if (!$ok) break; $TABLE_VERSION++;
 	case 7:
 		$ok = table_Update( $table,
@@ -274,6 +287,11 @@ if ( in_array($table, $TABLE_LIST) ) {
 		if (!$ok) break; $TABLE_VERSION++;
 
 		// NOTE: `value` cannot be indexed, since it is not a VARCHAR
+	/*case 2:
+		// This table is obsolete, as the data was merged into META
+		$ok = table_Update( $table,
+			"DROP TABLE ".SH_TABLE_PREFIX.constant($table).";");
+		if (!$ok) break; $TABLE_VERSION++;*/
 	};
 	table_Exit($table);
 }
@@ -392,6 +410,19 @@ if ( in_array($table, $TABLE_LIST) ) {
 					UNIQUE `node_name` (node, name)
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN `superparent` `_superparent` ".DB_TYPE_ID.";"
+			);
+				//RENAME COLUMN `superparent` TO `_superparent`;"
+		if (!$ok) break; $TABLE_VERSION++;
+	/*case 2:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				RENAME COLUMN `score` to `value`;"
+			);
+		if (!$ok) break; $TABLE_VERSION++;*/
 	};
 	table_Exit($table);
 }

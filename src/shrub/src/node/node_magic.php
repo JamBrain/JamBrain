@@ -67,7 +67,7 @@ function nodeMagic_GetOldestByParentName( $parent, $name, $limit = null ) {
 		"SELECT 
 			node,
 			parent,
-			superparent,
+			_superparent,
 			author,
 			score,
 			".DB_FIELD_DATE('timestamp').",
@@ -87,7 +87,7 @@ function nodeMagic_Add( $node, $parent, $superparent, $author, $score, $name ) {
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC." (
 			node,
 			parent,
-			superparent,
+			_superparent,
 			author,
 			score,
 			timestamp,

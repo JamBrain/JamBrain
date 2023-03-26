@@ -223,7 +223,7 @@ function node_CustomGetTagByType( $type, $subtype = null ) {
 function node_GetSearchIndexes( $timestamp, $limit = 50 ) {
 	return db_QueryFetchWithIntKey(
 		'id',
-		"SELECT id, parent, superparent, author, type, subtype, subsubtype,
+		"SELECT id, parent, _superparent, author, type, subtype, subsubtype,
 			UNIX_TIMESTAMP(published) AS published, UNIX_TIMESTAMP(created) AS created, UNIX_TIMESTAMP(modified) AS modified, slug, name, body
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 		WHERE UNIX_TIMESTAMP(modified)>=?
@@ -253,7 +253,7 @@ function node_GetById( $ids ) {
 		$ids_string = implode(',', $ids);
 
 		$ret = db_QueryFetch(
-			"SELECT id, parent, superparent, author,
+			"SELECT id, parent, _superparent, author,
 				type, subtype, subsubtype,
 				".DB_FIELD_DATE('published').",
 				".DB_FIELD_DATE('created').",
@@ -290,7 +290,7 @@ function node_GetNoBodyById( $ids ) {
 		$ids_string = implode(',', $ids);
 
 		$ret = db_QueryFetch(
-			"SELECT id, parent, superparent, author,
+			"SELECT id, parent, _superparent, author,
 				type, subtype, subsubtype,
 				".DB_FIELD_DATE('published').",
 				".DB_FIELD_DATE('created').",
@@ -315,7 +315,7 @@ function node_CountByParentAuthorType( $parent = null, $superparent = null, $aut
 	$ARGS = [];
 
 	dbQuery_MakeEq('parent', $parent, $QUERY, $ARGS);
-	dbQuery_MakeEq('superparent', $superparent, $QUERY, $ARGS);
+	dbQuery_MakeEq('_superparent', $superparent, $QUERY, $ARGS);
 	dbQuery_MakeEq('author', $author, $QUERY, $ARGS);
 	dbQuery_MakeEq('type', $type, $QUERY, $ARGS);
 	dbQuery_MakeEq('subtype', $subtype, $QUERY, $ARGS);
@@ -497,7 +497,7 @@ function _node_Edit( $node, $parent, $superparent, $author, $type, $subtype, $su
 	$success = db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 		SET
-			parent=?, superparent=?, author=?,
+			parent=?, _superparent=?, author=?,
 			type=?, subtype=?, subsubtype=?,
 			modified=NOW(),
 			version=?,
@@ -526,7 +526,7 @@ function node_SafeEdit( $node, $slug, $name, $body, $tag = "" ) {
 	// TODO: wrap in a db lock
 	$old = node_GetById($node);		// uncached
 
-	return _node_Edit($node, $old['parent'], $old['superparent'], $old['author'], $old['type'], $old['subtype'], $old['subsubtype'], $slug, $name, $body, $tag);
+	return _node_Edit($node, $old['parent'], $old['_superparent'], $old['author'], $old['type'], $old['subtype'], $old['subsubtype'], $slug, $name, $body, $tag);
 }
 
 

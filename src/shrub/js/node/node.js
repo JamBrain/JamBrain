@@ -111,7 +111,7 @@ export function Get( ids, argArray ) {
 				if ( argArray.includes('parent') )
 					requestedIds.push(node.parent);
 				if ( argArray.includes('superparent') )
-					requestedIds.push(node.superparent);
+					requestedIds.push(node._superparent);
 
 				if ( argArray.includes('authors') && node.meta.authors )
 					requestedIds.concat(node.meta.authors);

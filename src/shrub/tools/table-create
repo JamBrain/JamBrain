@@ -153,7 +153,7 @@ function MakeKeyNode( $key, $parent, $type, $subtype, $subsubtype, $slug, $name 
 	if ( !global_Exists($key) || !global_GetInt($key) ) {
 		$node = _node_Add(
 			$parent,						// parent
-			0,								// superparent (0 = don't care)
+			0,								// _superparent (0 = don't care)
 			0,								// author (0 = orphaned)
 			$type,$subtype,$subsubtype,		// type, subtype, subsubtype
 			$slug,$name,					// slug, name
