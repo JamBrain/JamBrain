@@ -234,7 +234,7 @@ function comment_GetById( $ids ) {
 }
 
 
-function _comment_AddByNode( $node, $supernode, $author, $parent, $body, $version_tag, $flags ) {
+function _comment_AddByNode( $node, $supernode, $author, $parent, $body, $version_detail, $flags ) {
 	// Insert Proxy
 	$comment_id = db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_COMMENT." (
@@ -254,13 +254,13 @@ function _comment_AddByNode( $node, $supernode, $author, $parent, $body, $versio
 		$author, $flags
 	);
 
-	$edit = comment_SafeEdit( $comment_id, $author, $body, $version_tag, $flags );
+	$edit = comment_SafeEdit( $comment_id, $author, $body, $version_detail, $flags );
 
 	return $comment_id;
 }
 
-function comment_AddByNode( $node, $supernode, $author, $parent, $body, $version_tag, $flags = 0 ) {
-	$comment_id = _comment_AddByNode($node, $supernode, $author, $parent, $body, $version_tag, $flags);
+function comment_AddByNode( $node, $supernode, $author, $parent, $body, $version_detail, $flags = 0 ) {
+	$comment_id = _comment_AddByNode($node, $supernode, $author, $parent, $body, $version_detail, $flags);
 
 	// Hack: Adding just the root entry to the tree
 	$tree = commentTree_Add($node, $comment_id, 0, 1);
@@ -268,8 +268,8 @@ function comment_AddByNode( $node, $supernode, $author, $parent, $body, $version
 	return $comment_id;
 }
 
-function comment_SafeEdit( $comment_id, $author, $body, $version_tag, $flags ) {
-	$version_id = commentVersion_Add($comment_id, $author, $body, $version_tag, $flags);
+function comment_SafeEdit( $comment_id, $author, $body, $version_detail, $flags ) {
+	$version_id = commentVersion_Add($comment_id, $author, $body, $version_detail, $flags);
 
 	return db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."

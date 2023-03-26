@@ -37,6 +37,13 @@ if ( in_array($table, $TABLE_LIST) ) {
 				tag ".DB_TYPE_ASCII(32)."
 			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		// Rename tag to detail
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN `tag` `detail` ".DB_TYPE_ASCII(32).";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
 }
@@ -108,8 +115,6 @@ if ( in_array($table, $TABLE_LIST) ) {
 	table_Exit($table);
 }
 
-
-// BUG: We don't know who to credit for creating this
 
 $table = 'SH_TABLE_NODE_META_VERSION';
 if ( in_array($table, $TABLE_LIST) ) {
@@ -208,6 +213,14 @@ if ( in_array($table, $TABLE_LIST) ) {
 		$ok = table_Update( $table,
 			"UPDATE ".SH_TABLE_PREFIX.constant($table)."
 				SET `key`='event-mode' WHERE `key`='theme-mode';"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+	case 12:
+		// Add an author column to track who what user to credit for making a change
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD COLUMN author ".DB_TYPE_ID."
+					AFTER id;"
 			);
 		if (!$ok) break; $TABLE_VERSION++;
 	};

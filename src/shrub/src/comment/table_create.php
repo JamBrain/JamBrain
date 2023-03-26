@@ -62,6 +62,13 @@ if ( in_array($table, $TABLE_LIST) && (global_GetInt('SH_TABLE_NOTE_VERSION') ==
 		$ok = table_Query( $table,
 			"SELECT * from ".SH_TABLE_PREFIX.constant($table)." LIMIT 1;");
 		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		// Rename tag to detail
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN `tag` `detail` ".DB_TYPE_ASCII(32).";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
 }

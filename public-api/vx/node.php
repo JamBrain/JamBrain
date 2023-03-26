@@ -652,9 +652,9 @@ switch ( $action ) {
 					$new_node = node_Add($parent, $user_id, $type, $subtype, "", null, "", "");
 					if ( $new_node ) {
 						// Allow posts under the game
-						nodeMeta_Add($new_node, 0, SH_SCOPE_SHARED, 'can-create', 'post');
+						nodeMeta_Add($new_node, 0, SH_SCOPE_SHARED, 'can-create', 'post' /*,change_author: $user_id*/);
 						// Add yourself as an author of the game
-						nodeMeta_Add($new_node, $user_id, SH_SCOPE_PUBLIC, 'author');
+						nodeMeta_Add($new_node, $user_id, SH_SCOPE_PUBLIC, 'author' /*,change_author: $user_id*/);
 
 						nodeCache_InvalidateById([$new_node, $user_id]);
 					}
@@ -730,13 +730,13 @@ switch ( $action ) {
 				$body = $node['body'];
 			}
 
-			if ( isset($_POST['tag']) ) {
-				$version_tag = coreSlugify_Name(substr($_POST['tag'], 0, 32));
-				if ( !empty($version_tag) )
+			if ( isset($_POST['detail']) ) {
+				$version_detail = coreSlugify_Name(substr($_POST['detail'], 0, 32));
+				if ( !empty($version_detail) )
 					$changes++;
 			}
 			else {
-				$version_tag = "";
+				$version_detail = "";
 			}
 
 			// If you are authorized to edit
@@ -754,7 +754,7 @@ switch ( $action ) {
 						$node['slug'],
 						$name,
 						$body,
-						$version_tag
+						$version_detail
 					);
 
 					nodeCache_InvalidateById($node_id);
@@ -1222,10 +1222,10 @@ switch ( $action ) {
 
 							$changed = 0;
 							if ( $action == 'add' ) {
-								$changed = nodeMeta_Add($node_id, $b, $scope, $key, $v, $b_constraint);
+								$changed = nodeMeta_Add($node_id, $b, $scope, $key, $v, $b_constraint /*,change_author: $user_id*/);
 							}
 							else if ( $action == 'remove' ) {
-								$changed = nodeMeta_Remove($node_id, $b, $scope, $key, $v, $b_constraint);
+								$changed = nodeMeta_Remove($node_id, $b, $scope, $key, $v, $b_constraint /*,change_author: $user_id*/);
 							}
 
 							$RESPONSE['chia'] = $changed;

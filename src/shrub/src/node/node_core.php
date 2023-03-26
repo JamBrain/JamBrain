@@ -491,8 +491,8 @@ function node_Add( $parent, $author, $type, $subtype, $subsubtype, $slug, $name,
 }
 
 
-function _node_Edit( $node, $parent, $superparent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag = "" ) {
-	$version = nodeVersion_Add($node, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag);
+function _node_Edit( $node, $parent, $superparent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $detail = "" ) {
+	$version = nodeVersion_Add($node, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $detail);
 
 	$success = db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
@@ -515,18 +515,18 @@ function _node_Edit( $node, $parent, $superparent, $author, $type, $subtype, $su
 
 	return $success;
 }
-function node_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag = "" ) {
+function node_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $detail = "" ) {
 	// Lookup superpaprent (skip this step by calling _node_Edit directly)
 	$superparent = $parent ? node_GetParentById($parent) : 0;
-	return _node_Edit($node, $parent, $superparent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag);
+	return _node_Edit($node, $parent, $superparent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $detail);
 }
 
 // Safe version of the edit function. Only allows you to change things users are allowed to change (i.e. slug, name, body).
-function node_SafeEdit( $node, $slug, $name, $body, $tag = "" ) {
+function node_SafeEdit( $node, $slug, $name, $body, $detail = "" ) {
 	// TODO: wrap in a db lock
 	$old = node_GetById($node);		// uncached
 
-	return _node_Edit($node, $old['parent'], $old['_superparent'], $old['author'], $old['type'], $old['subtype'], $old['subsubtype'], $slug, $name, $body, $tag);
+	return _node_Edit($node, $old['parent'], $old['_superparent'], $old['author'], $old['type'], $old['subtype'], $old['subsubtype'], $slug, $name, $body, $detail);
 }
 
 
