@@ -72,6 +72,8 @@ function _comment_FetchTree( $ids, $threshold = null ) {
 			$threshold_string = " AND hops <= $threshold";
 		}
 
+		// NOTE: I've seen "hops" also called depth
+
 		$ret = db_QueryFetch(
 			"SELECT _node, comment, ancestor, hops
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT_TREE."
@@ -137,6 +139,7 @@ function _comment_GetByNode( $ids ) {
 				author,
 				".DB_FIELD_DATE('created').",
 				".DB_FIELD_DATE('modified').",
+				_trust,
 				version, flags,
 				body
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."
@@ -217,6 +220,7 @@ function comment_GetById( $ids ) {
 				author,
 				".DB_FIELD_DATE('created').",
 				".DB_FIELD_DATE('modified').",
+				_trust,
 				version, flags,
 				body
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."

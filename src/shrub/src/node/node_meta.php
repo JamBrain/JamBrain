@@ -410,6 +410,8 @@ function nodeMeta_CountByABKeyScope( $parent = null, $a = null, $b = null, $key 
 	if ( $scope_op )
 		$OUTER_QUERY[] = 'scope'.$scope_op;
 
+	// TODO: Consider including or using trust
+
 //	return db_Echo(
 	return db_QueryFetchValue(
 		"SELECT

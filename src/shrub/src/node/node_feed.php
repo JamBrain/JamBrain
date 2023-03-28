@@ -198,6 +198,7 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 			...$ARGS
 		);
 	}
+	// TODO: Consider including or using trust
 	return db_QueryFetch(
 		"SELECT
 			id,
@@ -457,6 +458,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 		$JOIN = count($JOIN_QUERY) ? implode(' ', $JOIN_QUERY) : '';
 		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
 
+		// TODO: Consider including or using trust
 		return db_QueryFetch(
 			"SELECT
 				n.id,
@@ -482,6 +484,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 
 		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
 
+		// TODO: Consider including or using trust
 		return db_QueryFetch(
 			"SELECT
 				n.id,
@@ -511,6 +514,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 
 		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
 
+		// TODO: Consider including or using trust
 		return db_QueryFetch(
 			"SELECT
 				n.id,

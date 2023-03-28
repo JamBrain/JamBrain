@@ -209,6 +209,13 @@ if ( in_array($table, $TABLE_LIST) && (global_GetInt('SH_TABLE_NOTE') == 5+1) ) 
 				CHANGE COLUMN `supernode` `_supernode` ".DB_TYPE_ID.";"
 			);
 		if (!$ok) break; $TABLE_VERSION++;
+	case 2:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD COLUMN _trust ".DB_TYPE_TRUST."
+					AFTER modified;"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
 }

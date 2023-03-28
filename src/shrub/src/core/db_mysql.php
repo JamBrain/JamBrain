@@ -51,6 +51,7 @@ const DB_TYPE_SHA256 = "VARBINARY(32) NOT NULL";									///< SHA-512 hash
 const DB_TYPE_SHA512 = "VARBINARY(64) NOT NULL";									///< SHA-512 hash
 //const DB_TYPE_ASCII = "CHARSET latin1 NOT NULL";									///< Use with VarChar(x)
 //const DB_TYPE_UNICODE = "NOT NULL"; /*CHARSET utf8mb4 COLLATE utf8mb4_unicode_ci*/	///< Use with VarChar(x)
+const DB_TYPE_TRUST = "SMALLINT NOT NULL";											///< Cached trust scores
 
 const DB_TYPE_INT64 = "BIGINT NOT NULL";											///< 64bit Integer
 const DB_TYPE_UINT64 = "BIGINT UNSIGNED NOT NULL";									///< 64bit Unsigned Integer

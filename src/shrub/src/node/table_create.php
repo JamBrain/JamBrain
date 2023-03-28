@@ -101,6 +101,13 @@ if ( in_array($table, $TABLE_LIST) ) {
 			);
 				//RENAME COLUMN `superparent` TO `_superparent`;"
 		if (!$ok) break; $TABLE_VERSION++;
+	case 4:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD COLUMN _trust ".DB_TYPE_TRUST."
+					AFTER modified;"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 
 	// NOTE: Store "extra" in body for symlinks

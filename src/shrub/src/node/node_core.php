@@ -224,7 +224,7 @@ function node_GetSearchIndexes( $timestamp, $limit = 50 ) {
 	return db_QueryFetchWithIntKey(
 		'id',
 		"SELECT id, parent, _superparent, author, type, subtype, subsubtype,
-			UNIX_TIMESTAMP(published) AS published, UNIX_TIMESTAMP(created) AS created, UNIX_TIMESTAMP(modified) AS modified, slug, name, body
+			UNIX_TIMESTAMP(published) AS published, UNIX_TIMESTAMP(created) AS created, UNIX_TIMESTAMP(modified) AS modified, _trust, slug, name, body
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 		WHERE UNIX_TIMESTAMP(modified)>=?
 		ORDER BY modified ASC
@@ -258,6 +258,7 @@ function node_GetById( $ids ) {
 				".DB_FIELD_DATE('published').",
 				".DB_FIELD_DATE('created').",
 				".DB_FIELD_DATE('modified').",
+				_trust,
 				version,
 				slug, name, body
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
@@ -295,6 +296,7 @@ function node_GetNoBodyById( $ids ) {
 				".DB_FIELD_DATE('published').",
 				".DB_FIELD_DATE('created').",
 				".DB_FIELD_DATE('modified').",
+				_trust,
 				version,
 				slug, name
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
