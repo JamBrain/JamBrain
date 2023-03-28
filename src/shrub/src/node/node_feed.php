@@ -1,7 +1,7 @@
 <?php
 
 // For fetching subscriptions
-function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subtypes = null, $subsubtypes = null, $score_minimum = null, $limit = 20, $offset = 0 ) {
+function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subtypes = null, $subsubtypes = null, $value_minimum = null, $limit = 20, $offset = 0 ) {
 	$published = true;
 	$magic = null;
 	$authors = null;
@@ -92,7 +92,7 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 	}
 
 	if ( $magic ) {
-		$orderby_query = "ORDER BY score DESC";
+		$orderby_query = "ORDER BY value DESC";
 		$QUERY[] = 'name=?';
 		$ARGS[] = $magic;
 	}
@@ -151,11 +151,11 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 		}
 	}
 
-	// Build query fragment for score
-	if ( is_integer($score_minimum) ) {
-		$QUERY[] = "score >= ".$score_minimum;
+	// Build query fragment for value
+	if ( is_integer($value_minimum) ) {
+		$QUERY[] = "value >= ".$value_minimum;
 	}
-	else if ( is_null($score_minimum) ) {
+	else if ( is_null($value_minimum) ) {
 	}
 	else {
 		return null;
@@ -259,7 +259,7 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 }
 
 
-function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subtypes = null, $subsubtypes = null, $score_op = null, $limit = 20, $offset = 0 ) {
+function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subtypes = null, $subsubtypes = null, $value_op = null, $limit = 20, $offset = 0 ) {
 	$MAGIC_QUERY = [];
 	$MAGIC_ARGS = [];
 	$NODE_QUERY = [];
@@ -416,9 +416,9 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 	if ( $subsubtypes )
 		dbQuery_Make($subsubtypes, 'n.subsubtype', $NODE_QUERY, $NODE_ARGS);
 
-	// Build score-op query
-	if ( is_string($score_op) ) {
-		$MAGIC_QUERY[] = "m.score".$score_op;
+	// Build value-op query
+	if ( is_string($value_op) ) {
+		$MAGIC_QUERY[] = "m.value".$value_op;
 	}
 
 	if ( $magic ) {
@@ -438,7 +438,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 	}
 
 	// Execute Query!
-	// We don't support combined LINK and SCORE queries (yet)
+	// We don't support combined LINK and VALUE queries (yet)
 	if ( $magic && $link ) {
 
 	}
@@ -471,9 +471,9 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 			...$ARGS
 		);
 	}
-	// SCORE queries are ordered by the result of something from the magic table
+	// VALUE queries are ordered by the result of something from the magic table
 	else if ( $magic ) {
-		$ORDER_BY = "ORDER BY m.score $SORT_ORDER";
+		$ORDER_BY = "ORDER BY m.value $SORT_ORDER";
 
 		$QUERY = array_merge($MAGIC_QUERY, $NODE_QUERY);
 		$ARGS = array_merge($MAGIC_ARGS, $NODE_ARGS, $LIMIT_ARGS);
@@ -486,7 +486,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 			"SELECT
 				n.id,
 				".DB_FIELD_DATE('n.modified', 'modified').",
-				m.score
+				m.value
 			FROM
 				".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n
 				INNER JOIN ".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC." AS m ON n.id=m.node
@@ -497,7 +497,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 			...$ARGS
 		);
 	}
-	// Neither a LINK or SCORE query
+	// Neither a LINK or VALUE query
 	else {
 		if ( $published )
 			$ORDER_BY = "ORDER BY n.published $SORT_ORDER";

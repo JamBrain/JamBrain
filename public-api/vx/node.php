@@ -345,12 +345,12 @@ switch ( $action ) {
 			$RESPONSE['root'] = $root;
 
 			// Do this first, so we methods can change it
-			$score_op = null;
+			$value_op = null;
 			if ( isset($_GET['max']) ) {
-				$score_op = '<='.floatval($_GET['max']);
+				$value_op = '<='.floatval($_GET['max']);
 			}
 			else if ( isset($_GET['min']) ) {
-				$score_op = '>='.floatval($_GET['min']);
+				$value_op = '>='.floatval($_GET['min']);
 			}
 
 			$tags = null;
@@ -412,7 +412,7 @@ switch ( $action ) {
 						}
 						case 'danger': {
 							$method = 'grade';
-							$score_op = '<='.floatval(19.9999);
+							$value_op = '<='.floatval(19.9999);
 							break;
 						}
 					}
@@ -473,12 +473,12 @@ switch ( $action ) {
 					$RESPONSE['limit'] = 250;
 			}
 
-			$CACHE_KEY = "!node/feed|".implode('+', $methods)."|".$root."|".implode('+', $types)."|".implode('+', $subtypes)."|".implode('+', $subsubtypes)."|".$score_op."|".$RESPONSE['limit']."|".$RESPONSE['offset'];
+			$CACHE_KEY = "!node/feed|".implode('+', $methods)."|".$root."|".implode('+', $types)."|".implode('+', $subtypes)."|".implode('+', $subsubtypes)."|".$value_op."|".$RESPONSE['limit']."|".$RESPONSE['offset'];
 
 			$RESPONSE['feed'] = cache_Fetch($CACHE_KEY);
 
 			if ( $RESPONSE['feed'] == null ) {
-				$RESPONSE['feed'] = nodeFeed_GetByMethod($methods, $root, $types, $subtypes, $subsubtypes, $score_op, $RESPONSE['limit'], $RESPONSE['offset']);
+				$RESPONSE['feed'] = nodeFeed_GetByMethod($methods, $root, $types, $subtypes, $subsubtypes, $value_op, $RESPONSE['limit'], $RESPONSE['offset']);
 //				$RESPONSE['feed'] = nodeFeed_GetByNodeMethodType($root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset']);
 
 				cache_Store($CACHE_KEY, $RESPONSE['feed'], 10);

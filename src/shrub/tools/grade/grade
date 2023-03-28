@@ -215,8 +215,8 @@ if ( $COMMAND === "score" ) {
 				$NODE_DATA[$node['id']]['parent'],
 				$NODE_DATA[$node['id']]['_superparent'],
 				$NODE_DATA[$node['id']]['author'],
-				$node['average'],
-				$key.'-average'
+				$key.'-average',
+				$node['average']
 			);
 			if ( isset($node['place']) ) {
 				nodeMagic_Add(
@@ -224,8 +224,8 @@ if ( $COMMAND === "score" ) {
 					$NODE_DATA[$node['id']]['parent'],
 					$NODE_DATA[$node['id']]['_superparent'],
 					$NODE_DATA[$node['id']]['author'],
-					$node['place'],
-					$key.'-result'
+					$key.'-result',
+					$node['place']
 				);
 			}
 			else {

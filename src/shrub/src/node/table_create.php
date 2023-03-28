@@ -300,11 +300,11 @@ if ( in_array($table, $TABLE_LIST) ) {
 		if (!$ok) break; $TABLE_VERSION++;
 
 		// NOTE: `value` cannot be indexed, since it is not a VARCHAR
-	/*case 2:
+	case 2:
 		// This table is obsolete, as the data was merged into META
 		$ok = table_Update( $table,
 			"DROP TABLE ".SH_TABLE_PREFIX.constant($table).";");
-		if (!$ok) break; $TABLE_VERSION++;*/
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
 }
@@ -430,12 +430,12 @@ if ( in_array($table, $TABLE_LIST) ) {
 			);
 				//RENAME COLUMN `superparent` TO `_superparent`;"
 		if (!$ok) break; $TABLE_VERSION++;
-	/*case 2:
+	case 2:
 		$ok = table_Update( $table,
 			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
-				RENAME COLUMN `score` to `value`;"
+				CHANGE COLUMN `score` `value` ".DB_TYPE_NODE_SCORE." AFTER `name`;"
 			);
-		if (!$ok) break; $TABLE_VERSION++;*/
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
 }
