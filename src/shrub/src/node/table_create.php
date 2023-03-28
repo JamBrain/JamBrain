@@ -436,6 +436,18 @@ if ( in_array($table, $TABLE_LIST) ) {
 				CHANGE COLUMN `score` `value` ".DB_TYPE_NODE_SCORE." AFTER `name`;"
 			);
 		if (!$ok) break; $TABLE_VERSION++;
+	case 3:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN `parent` `_parent` ".DB_TYPE_ID.";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+	case 4:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN `author` `_author` ".DB_TYPE_ID.";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
 }
