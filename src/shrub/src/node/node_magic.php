@@ -8,7 +8,7 @@ function nodeMagic_GetByNode( $nodes, $offset = null, $limit = null ) {
 
 	return db_QueryFetchIdKeyValue(
 		"SELECT
-			node, name, score
+			node, name, value
 		FROM
 			".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC."
 		".dbQuery_MakeQuery($QUERY)."
@@ -18,15 +18,15 @@ function nodeMagic_GetByNode( $nodes, $offset = null, $limit = null ) {
 	);
 }
 
-function nodeMagic_CountByParentName( $parent, $name, $score_op = null ) {
+function nodeMagic_CountByParentName( $parent, $name, $value_op = null ) {
 	$QUERY = [];
 	$ARGS = [];
 	
-	dbQuery_MakeEq('parent', $parent, $QUERY, $ARGS);
+	dbQuery_MakeEq('_parent', $parent, $QUERY, $ARGS);
 	dbQuery_MakeEq('name', $name, $QUERY, $ARGS);
 	
-	if ( $score_op )
-		$QUERY[] = 'score'.$score_op;
+	if ( $value_op )
+		$QUERY[] = 'value'.$value_op;
 
 	return db_QueryFetchValue(
 		"SELECT
@@ -50,7 +50,7 @@ function nodeMagic_GetNodeIdByParentName( $parent, $name, $limit = null ) {
 			node
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC." 
 		WHERE 
-			parent=? AND name=?
+			_parent=? AND name=?
 		$LIMIT_QUERY
 		;",
 		$parent,
@@ -66,15 +66,15 @@ function nodeMagic_GetOldestByParentName( $parent, $name, $limit = null ) {
 	return db_QueryFetch(
 		"SELECT 
 			node,
-			parent,
-			superparent,
-			author,
-			score,
+			_parent,
+			_superparent,
+			_author,
 			".DB_FIELD_DATE('timestamp').",
-			name
+			name,
+			value
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC." 
 		WHERE 
-			parent=? AND name=?
+			_parent=? AND name=?
 		ORDER BY timestamp ASC
 		$LIMIT_QUERY;",
 		$parent,
@@ -82,49 +82,49 @@ function nodeMagic_GetOldestByParentName( $parent, $name, $limit = null ) {
 	);	
 }
 
-function nodeMagic_Add( $node, $parent, $superparent, $author, $score, $name ) {
+function nodeMagic_Add( $node, $parent, $superparent, $author, $name, $value ) {
 	return db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC." (
 			node,
-			parent,
-			superparent,
-			author,
-			score,
+			_parent,
+			_superparent,
+			_author,
 			timestamp,
-			name
+			name,
+			value
 		)
 		VALUES ( 
 			?,
 			?,
 			?,
 			?,
-			?,
 			NOW(),
+			?,
 			?
 		)
 		ON DUPLICATE KEY UPDATE
-			score=VALUES(score), 
+			value=VALUES(value), 
 			timestamp=VALUES(timestamp)		
 		;",
 		$node,
 		$parent,
 		$superparent,
 		$author,
-		$score,
-		$name
+		$name,
+		$value
 	);
 }
 
-function nodeMagic_Update( $node, $name, $score ) {
+function nodeMagic_Update( $node, $name, $value ) {
 	return db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC."
 		SET
-			score=?, 
+			value=?, 
 			timestamp=NOW()
 		WHERE
 			node=? AND name=?
 		;",
-		$score,
+		$value,
 
 		$node,
 		$name

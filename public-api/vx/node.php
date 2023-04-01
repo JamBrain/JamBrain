@@ -345,12 +345,12 @@ switch ( $action ) {
 			$RESPONSE['root'] = $root;
 
 			// Do this first, so we methods can change it
-			$score_op = null;
+			$value_op = null;
 			if ( isset($_GET['max']) ) {
-				$score_op = '<='.floatval($_GET['max']);
+				$value_op = '<='.floatval($_GET['max']);
 			}
 			else if ( isset($_GET['min']) ) {
-				$score_op = '>='.floatval($_GET['min']);
+				$value_op = '>='.floatval($_GET['min']);
 			}
 
 			$tags = null;
@@ -412,7 +412,7 @@ switch ( $action ) {
 						}
 						case 'danger': {
 							$method = 'grade';
-							$score_op = '<='.floatval(19.9999);
+							$value_op = '<='.floatval(19.9999);
 							break;
 						}
 					}
@@ -473,12 +473,12 @@ switch ( $action ) {
 					$RESPONSE['limit'] = 250;
 			}
 
-			$CACHE_KEY = "!node/feed|".implode('+', $methods)."|".$root."|".implode('+', $types)."|".implode('+', $subtypes)."|".implode('+', $subsubtypes)."|".$score_op."|".$RESPONSE['limit']."|".$RESPONSE['offset'];
+			$CACHE_KEY = "!node/feed|".implode('+', $methods)."|".$root."|".implode('+', $types)."|".implode('+', $subtypes)."|".implode('+', $subsubtypes)."|".$value_op."|".$RESPONSE['limit']."|".$RESPONSE['offset'];
 
 			$RESPONSE['feed'] = cache_Fetch($CACHE_KEY);
 
 			if ( $RESPONSE['feed'] == null ) {
-				$RESPONSE['feed'] = nodeFeed_GetByMethod($methods, $root, $types, $subtypes, $subsubtypes, $score_op, $RESPONSE['limit'], $RESPONSE['offset']);
+				$RESPONSE['feed'] = nodeFeed_GetByMethod($methods, $root, $types, $subtypes, $subsubtypes, $value_op, $RESPONSE['limit'], $RESPONSE['offset']);
 //				$RESPONSE['feed'] = nodeFeed_GetByNodeMethodType($root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset']);
 
 				cache_Store($CACHE_KEY, $RESPONSE['feed'], 10);
@@ -569,6 +569,15 @@ switch ( $action ) {
 		// NOTE: This doesn't actually use POST data
 
 		if ( $user_id = userAuth_GetID() ) {
+			// Fetch user
+			$user = node_GetById($user_id);
+
+			// Is user trusted?
+			if ( $user['_trust'] < 0 ) {
+				json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+			}
+
+			// Populate values based on URL
 			$parent = intval(json_ArgShift());
 			$type = coreSlugify_Name(json_ArgShift());
 			$subtype = coreSlugify_Name(json_ArgShift());
@@ -652,9 +661,9 @@ switch ( $action ) {
 					$new_node = node_Add($parent, $user_id, $type, $subtype, "", null, "", "");
 					if ( $new_node ) {
 						// Allow posts under the game
-						nodeMeta_Add($new_node, 0, SH_SCOPE_SHARED, 'can-create', 'post');
+						nodeMeta_Add($new_node, 0, SH_SCOPE_SHARED, 'can-create', 'post' /*,change_author: $user_id*/);
 						// Add yourself as an author of the game
-						nodeMeta_Add($new_node, $user_id, SH_SCOPE_PUBLIC, 'author');
+						nodeMeta_Add($new_node, $user_id, SH_SCOPE_PUBLIC, 'author' /*,change_author: $user_id*/);
 
 						nodeCache_InvalidateById([$new_node, $user_id]);
 					}
@@ -697,6 +706,14 @@ switch ( $action ) {
 		json_ValidateHTTPMethod('POST');
 
 		if ( $user_id = userAuth_GetID() ) {
+			// Fetch user
+			$user = node_GetById($user_id);
+
+			// Is user trusted?
+			if ( $user['_trust'] < 0 ) {
+				json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+			}
+
 			$node_id = intval(json_ArgShift());
 			if ( empty($node_id) ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
@@ -730,13 +747,13 @@ switch ( $action ) {
 				$body = $node['body'];
 			}
 
-			if ( isset($_POST['tag']) ) {
-				$version_tag = coreSlugify_Name(substr($_POST['tag'], 0, 32));
-				if ( !empty($version_tag) )
+			if ( isset($_POST['detail']) ) {
+				$version_detail = coreSlugify_Name(substr($_POST['detail'], 0, 32));
+				if ( !empty($version_detail) )
 					$changes++;
 			}
 			else {
-				$version_tag = "";
+				$version_detail = "";
 			}
 
 			// If you are authorized to edit
@@ -754,7 +771,7 @@ switch ( $action ) {
 						$node['slug'],
 						$name,
 						$body,
-						$version_tag
+						$version_detail
 					);
 
 					nodeCache_InvalidateById($node_id);
@@ -783,6 +800,14 @@ switch ( $action ) {
 		$user_id = userAuth_GetID();
 
 		if ( $node_id && $user_id ) {
+			// Fetch user
+			$user = node_GetById($user_id);
+
+			// Is user trusted?
+			if ( $user['_trust'] < 0 ) {
+				json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+			}
+
 			if ( $node = nodeComplete_GetById($node_id) ) {
 				if ( !node_IsAuthor($node, $user_id) ) { // NEEDS LINKS!
 					json_EmitFatalError_Forbidden("Forbidden: You don't have permission to transform this", $RESPONSE);
@@ -854,6 +879,14 @@ switch ( $action ) {
 //			else {
 //				json_EmitFatalError_BadRequest("Unsupported 'event'", $RESPONSE);
 //			}
+
+			// Fetch user
+			$user = node_GetById($user_id);
+
+			// Is user trusted?
+			if ( $user['_trust'] < 0 ) {
+				json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+			}
 
 			// Fetch node
 			$node = nodeComplete_GetById($node_id);
@@ -1156,6 +1189,14 @@ switch ( $action ) {
 				$node_id = intval(json_ArgGet(0));
 				$user_id = userAuth_GetID();
 
+				// Fetch user
+				$user = node_GetById($user_id);
+
+				// Is user trusted?
+				if ( $user['_trust'] < 0 ) {
+					json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+				}
+
 				if ( $node_id && $user_id ) {
 					if ( $node = nodeComplete_GetById($node_id) ) {
 						if ( !node_IsAuthor($node, $user_id) )
@@ -1222,10 +1263,10 @@ switch ( $action ) {
 
 							$changed = 0;
 							if ( $action == 'add' ) {
-								$changed = nodeMeta_Add($node_id, $b, $scope, $key, $v, $b_constraint);
+								$changed = nodeMeta_Add($node_id, $b, $scope, $key, $v, $b_constraint /*,change_author: $user_id*/);
 							}
 							else if ( $action == 'remove' ) {
-								$changed = nodeMeta_Remove($node_id, $b, $scope, $key, $v, $b_constraint);
+								$changed = nodeMeta_Remove($node_id, $b, $scope, $key, $v, $b_constraint /*,change_author: $user_id*/);
 							}
 
 							$RESPONSE['chia'] = $changed;

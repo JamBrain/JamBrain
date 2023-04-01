@@ -54,7 +54,7 @@ function nodeRandomGames_CurrentGamesList( ) {
 
 		$magic = db_QueryFetchIdKeyValue(
 			"SELECT
-				node, name, score
+				node, name, value
 			FROM
 				".SH_TABLE_PREFIX.SH_TABLE_NODE_MAGIC."
 			WHERE node in (" . $nodeidlist . ") AND

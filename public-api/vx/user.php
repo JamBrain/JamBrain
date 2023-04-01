@@ -431,19 +431,21 @@ switch ( $action ) {
 		require_once __DIR__."/".SHRUB_PATH."email/blacklist.php";
 
 		if ( is_disposable_email($mail) ) {
+			userLog_Add(0, "!CREATE_BLACKLIST");
 			json_EmitFatalError_Server("This address is blacklisted.", $RESPONSE);
 		}
 		/*|| plugin_Call('api_user_create_mail_allowed', $mail)*/
 
-		$ex_user = user_GetByMail($mail);
+		$user = user_GetByMail($mail);
 
 		// Is the email provided one that already exists?
-		if ( isset($ex_user) ) {
-			if ( !$ex_user['node'] ) {
-				$ex_new = user_AuthKeyGen($ex_user['id']);
+		if ( isset($user) ) {
+			if ( !$user['node'] ) {
+				$ex_new = user_AuthKeyGen($user['id']);
 
 				// Resend activation e-mail
 				if ( isset($ex_new) ) {
+					userLog_Add($user['id'], "!CREATE_RETRY");
 					$RESPONSE['sent'] = intval(mailSend_UserAdd($mail, $ex_new['id'], $ex_new['auth_key']));
 				}
 				else {
@@ -451,6 +453,7 @@ switch ( $action ) {
 				}
 			}
 			else {
+				userLog_Add($user['id'], "!CREATE_EXISTING");
 				json_EmitFatalError_Server("Address already registered. Did you mean to reset your password?", $RESPONSE);
 			}
 		}
@@ -458,6 +461,7 @@ switch ( $action ) {
 			$user = user_Add($mail);
 			if ( $user ) {
 				// Send an e-mail
+				userLog_Add($user['id'], "!CREATE");
 				$RESPONSE['sent'] = intval(mailSend_UserAdd($mail, $user['id'], $user['auth_key']));
 
 				// Successfully Created.
@@ -498,22 +502,26 @@ switch ( $action ) {
 
 			// If name is too short
 			if ( strlen($name) < USERNAME_MIN_LENGTH ) {
+				userLog_Add($user['id'], "!ACTIVATE_NAME_SHORT");
 				json_EmitFatalError_Permission("Name is too short (minimum ".USERNAME_MIN_LENGTH." alphanumeric characters)", $RESPONSE);
 			}
 
 			$slug = coreSlugify_Name($name);
 
 			if ( in_array($slug, $SH_NAME_RESERVED) ) {
-				json_EmitFatalError_BadRequest("Sorry. '$slug' is reserved", $RESPONSE);
+				userLog_Add($user['id'], "!ACTIVATE_INVALID");
+				json_EmitFatalError_BadRequest("Sorry. '$slug' is invalid", $RESPONSE);
 			}
 
 			// If password is too short
 			if ( strlen($pw) < PASSWORD_MIN_LENGTH ) {
+				userLog_Add($user['id'], "!ACTIVATE_PW_SHORT");
 				json_EmitFatalError_Permission("Password is too short (minimum ".PASSWORD_MIN_LENGTH." characters)", $RESPONSE);
 			}
 
 			// Does that name already exist?
 			if ( node_GetIdByParentSlug(SH_NODE_ID_USERS, $slug) ) {
+				userLog_Add($user['id'], "!ACTIVATE_SLUG_EXISTS");
 				json_EmitFatalError_Server("Sorry. Account \"$slug\" already exists", $RESPONSE);
 			}
 			else {
@@ -522,6 +530,7 @@ switch ( $action ) {
 				if ( count($reserved) ) {
 					// Does this e-mail address match the one on the reserve list?
 					if ( !in_array(strtolower($user['mail']), $reserved) ) {
+						userLog_Add($user['id'], "!ACTIVATE_RESERVED");
 						json_EmitFatalError_Server("Sorry. \"$slug\" is reserved. Is this you? Try using your original e-mail address", $RESPONSE);
 					}
 				}
@@ -552,6 +561,7 @@ switch ( $action ) {
 					}
 
 					// Send an e-mail
+					userLog_Add($user['id'], "!ACTIVATED");
 					$RESPONSE['sent'] = intval(mailSend_UserCreate($user['mail'], $slug));
 
 					// Successfully Created.
@@ -581,6 +591,7 @@ switch ( $action ) {
 
 			// In the unlikely situation where there is no node associated with a user
 			if ( !$node && !isset($node['id']) && !isset($node['slug']) ) {
+				userLog_Add($user['id'], "!PASSWORD_NULL");
 				json_EmitFatalError_Server(null, $RESPONSE);
 			}
 
@@ -592,6 +603,7 @@ switch ( $action ) {
 
 			// If password is too short
 			if ( strlen($pw) < PASSWORD_MIN_LENGTH ) {
+				userLog_Add($user['id'], "!PASSWORD_SHORT");
 				json_EmitFatalError_Permission("Password is too short (minimum ".PASSWORD_MIN_LENGTH." characters)", $RESPONSE);
 			}
 
@@ -609,6 +621,7 @@ switch ( $action ) {
 			//$RESPONSE['sent'] = intval(mailSend_UserPasswordReset($user['mail'], $node['slug'], $id, $key));
 
 			// Need to do something to inform the user the password was successfully reset
+			userLog_Add($user['id'], "!PASSWORD_SET");
 			$RESPONSE['sent'] = 1;
 		}
 		else {
@@ -636,7 +649,17 @@ switch ( $action ) {
 		if ( isset($user) && isset($user['node']) && ($user['node'] > 0) && isset($user['hash']) && userPassword_Verify($pw, $user['hash']) ) {
 			// Does the user have a secret?
 
+			// Fetch user
+			$node = node_GetById($user['node']);
+
+			// Is user trusted?
+			if ( $node['_trust'] < 0 ) {
+				userLog_Add($user['id'], "!LOGIN_UNTRUSTED");
+				json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+			}
+
 			// Success
+			userLog_Add($user['id'], "!LOGIN_SUCCESS");
 			$RESPONSE['id'] = $user['node'];
 			userAuth_SetId($user['node']);
 
@@ -644,11 +667,12 @@ switch ( $action ) {
 		}
 
 		// Permission denied on fail
+		userLog_Add($user['id'], "!LOGIN_FAIL");
 		json_EmitFatalError_Permission(null, $RESPONSE);
 		break; // case 'login': //user/login
 
 	case 'logout': //user/logout
-		//json_ValidateHTTPMethod('GET');
+		//json_ValidateHTTPMethod('POST');
 
 		$RESPONSE['id'] = userAuth_Logout();
 		break; // case 'logout': //user/logout
@@ -669,6 +693,7 @@ switch ( $action ) {
 				$ex_new = user_AuthKeyGen($user['id']);
 
 				// Send an e-mail
+				userLog_Add($user['id'], "!RESET");
 				$sent = intval(mailSend_UserPasswordReset($user['mail'], $node['slug'], $ex_new['id'], $ex_new['auth_key']));
 
 				// WARNING: data leak, enable only for testing

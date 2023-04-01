@@ -24,7 +24,7 @@ const COOL_MAX_FEEDBACK = 50;
 const CLASSIC_MAX_GRADES = 100;
 
 
-function AddMagic( $name, $parent ) {
+function AddMagic( $name, $parent, $initial_value = 0 ) {
 	global $node_ids, $db;
 	$magic_ids = nodeMagic_GetNodeIdByParentName($parent, $name);
 
@@ -41,10 +41,10 @@ function AddMagic( $name, $parent ) {
 				nodeMagic_Add(
 					$node['id'],
 					$node['parent'],
-					$node['superparent'],
+					$node['_superparent'],
 					$node['author'],
-					0,	// score
-					$name
+					$name,
+					$initial_value
 				);
 			}
 		}

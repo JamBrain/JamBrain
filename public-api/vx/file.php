@@ -163,6 +163,14 @@ api_Exec([
 		json_EmitFatalError_BadRequest(null, $RESPONSE);
 	}
 
+	// Fetch user
+	$user = node_GetById($author_id);
+
+	// Is user trusted?
+	if ( $user['_trust'] < 0 ) {
+		json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+	}
+
 	// Get the tag_id
 	$tag_id = intval($_JSON['tag']);
 	//if ( !$tag_id ) {
@@ -262,6 +270,14 @@ api_Exec([
 		json_EmitFatalError_BadRequest(null, $RESPONSE);
 	}
 
+	// Fetch user
+	$user = node_GetById($author_id);
+
+	// Is user trusted?
+	if ( $user['_trust'] < 0 ) {
+		json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+	}
+
 	// Get the file_id
 	$file_id = intval($_JSON['id']);
 	if ( !$file_id ) {
@@ -311,6 +327,14 @@ api_Exec([
 	$author_id = intval($RESPONSE['caller_id']); // or $_JSON['author']
 	if ( !$author_id ) {
 		json_EmitFatalError_BadRequest(null, $RESPONSE);
+	}
+
+	// Fetch user
+	$user = node_GetById($author_id);
+
+	// Is user trusted?
+	if ( $user['_trust'] < 0 ) {
+		json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
 	}
 
 	// Get the file_id
@@ -367,6 +391,14 @@ api_Exec([
 	$author_id = intval($RESPONSE['caller_id']); // or $_JSON['author']
 	if ( !$author_id ) {
 		json_EmitFatalError_BadRequest(null, $RESPONSE);
+	}
+
+	// Fetch user
+	$user = node_GetById($author_id);
+
+	// Is user trusted?
+	if ( $user['_trust'] < 0 ) {
+		json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
 	}
 
 	// Get the file_id

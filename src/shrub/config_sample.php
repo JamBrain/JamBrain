@@ -53,6 +53,7 @@ const SH_ACCESS_DATA = "192.168.56.1";
 const GOOGLE_KEY = '';
 const TWITCH_KEY = '';
 const TWITTER_KEY = '';
+const AKISMET_KEY = '';
 
 // EXTERNAL API: AKAMAI //
 const AKAMAI_NETSTORAGE_MEDIA_HOST = '';
@@ -69,3 +70,4 @@ const AKAMAI_CCU_CLIENT_SECRET = '';
 const AKAMAI_CCU_HOST = '';
 const AKAMAI_CCU_ACCESS_TOKEN = '';
 const AKAMAI_CCU_CLIENT_TOKEN = '';
+
