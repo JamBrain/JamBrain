@@ -1,7 +1,8 @@
 <?php
 
+/*
 // For fetching subscriptions
-function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subtypes = null, $subsubtypes = null, $value_minimum = null, $limit = 20, $offset = 0 ) {
+function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subtypes = null, $subsubtypes = null, $magic_minimum = null, $limit = 20, $offset = 0, $trust_op = '>= 0') {
 	$published = true;
 	$magic = null;
 	$authors = null;
@@ -151,11 +152,11 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 		}
 	}
 
-	// Build query fragment for value
-	if ( is_integer($value_minimum) ) {
-		$QUERY[] = "value >= ".$value_minimum;
+	// Build query fragment for MAGIC
+	if ( is_integer($magic_minimum) ) {
+		$QUERY[] = "value >= ".$magic_minimum;
 	}
-	else if ( is_null($value_minimum) ) {
+	else if ( is_null($magic_minimum) ) {
 	}
 	else {
 		return null;
@@ -198,6 +199,7 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 			...$ARGS
 		);
 	}
+
 	// TODO: Consider including or using trust
 	return db_QueryFetch(
 		"SELECT
@@ -258,9 +260,12 @@ function nodeFeed_GetByNodeMethodType( $node_ids, $methods, $types = null, $subt
 
 	return null;
 }
+*/
 
 
-function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subtypes = null, $subsubtypes = null, $value_op = null, $limit = 20, $offset = 0 ) {
+
+
+function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subtypes = null, $subsubtypes = null, $magic_op = null, $limit = 20, $offset = 0, $trust_op = '>= 0' ) {
 	$MAGIC_QUERY = [];
 	$MAGIC_ARGS = [];
 	$NODE_QUERY = [];
@@ -288,6 +293,11 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 	$link = null;
 
 	$SORT_ORDER = 'DESC';
+
+	// If using a trust op
+	if ( !is_null($trust_op) ) {
+		$NODE_QUERY[] = '_trust '.$trust_op;
+	}
 
 	// Build Method Queries
 	foreach ( $methods as &$method ) {
@@ -417,9 +427,9 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 	if ( $subsubtypes )
 		dbQuery_Make($subsubtypes, 'n.subsubtype', $NODE_QUERY, $NODE_ARGS);
 
-	// Build value-op query
-	if ( is_string($value_op) ) {
-		$MAGIC_QUERY[] = "m.value".$value_op;
+	// Build magic-op query
+	if ( is_string($magic_op) ) {
+		$MAGIC_QUERY[] = "m.value".$magic_op;
 	}
 
 	if ( $magic ) {
@@ -439,7 +449,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 	}
 
 	// Execute Query!
-	// We don't support combined LINK and VALUE queries (yet)
+	// We don't support combined LINK and MAGIC queries (yet)
 	if ( $magic && $link ) {
 
 	}
@@ -458,7 +468,6 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 		$JOIN = count($JOIN_QUERY) ? implode(' ', $JOIN_QUERY) : '';
 		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
 
-		// TODO: Consider including or using trust
 		return db_QueryFetch(
 			"SELECT
 				n.id,
@@ -473,7 +482,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 			...$ARGS
 		);
 	}
-	// VALUE queries are ordered by the result of something from the magic table
+	// MAGIC queries are ordered by the result of something from the magic table
 	else if ( $magic ) {
 		$ORDER_BY = "ORDER BY m.value $SORT_ORDER";
 
@@ -484,7 +493,6 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 
 		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
 
-		// TODO: Consider including or using trust
 		return db_QueryFetch(
 			"SELECT
 				n.id,
@@ -500,7 +508,7 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 			...$ARGS
 		);
 	}
-	// Neither a LINK or VALUE query
+	// Neither a LINK or MAGIC query
 	else {
 		if ( $published )
 			$ORDER_BY = "ORDER BY n.published $SORT_ORDER";
@@ -514,7 +522,6 @@ function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subty
 
 		$WHERE = count($QUERY) ? 'WHERE '.implode(' AND ', $QUERY) : '';
 
-		// TODO: Consider including or using trust
 		return db_QueryFetch(
 			"SELECT
 				n.id,

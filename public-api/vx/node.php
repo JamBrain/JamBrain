@@ -569,6 +569,15 @@ switch ( $action ) {
 		// NOTE: This doesn't actually use POST data
 
 		if ( $user_id = userAuth_GetID() ) {
+			// Fetch user
+			$user = node_GetById($user_id);
+
+			// Is user trusted?
+			if ( $user['_trust'] < 0 ) {
+				json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+			}
+
+			// Populate values based on URL
 			$parent = intval(json_ArgShift());
 			$type = coreSlugify_Name(json_ArgShift());
 			$subtype = coreSlugify_Name(json_ArgShift());
@@ -697,6 +706,14 @@ switch ( $action ) {
 		json_ValidateHTTPMethod('POST');
 
 		if ( $user_id = userAuth_GetID() ) {
+			// Fetch user
+			$user = node_GetById($user_id);
+
+			// Is user trusted?
+			if ( $user['_trust'] < 0 ) {
+				json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+			}
+
 			$node_id = intval(json_ArgShift());
 			if ( empty($node_id) ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
@@ -783,6 +800,14 @@ switch ( $action ) {
 		$user_id = userAuth_GetID();
 
 		if ( $node_id && $user_id ) {
+			// Fetch user
+			$user = node_GetById($user_id);
+
+			// Is user trusted?
+			if ( $user['_trust'] < 0 ) {
+				json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+			}
+
 			if ( $node = nodeComplete_GetById($node_id) ) {
 				if ( !node_IsAuthor($node, $user_id) ) { // NEEDS LINKS!
 					json_EmitFatalError_Forbidden("Forbidden: You don't have permission to transform this", $RESPONSE);
@@ -854,6 +879,14 @@ switch ( $action ) {
 //			else {
 //				json_EmitFatalError_BadRequest("Unsupported 'event'", $RESPONSE);
 //			}
+
+			// Fetch user
+			$user = node_GetById($user_id);
+
+			// Is user trusted?
+			if ( $user['_trust'] < 0 ) {
+				json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+			}
 
 			// Fetch node
 			$node = nodeComplete_GetById($node_id);
@@ -1155,6 +1188,14 @@ switch ( $action ) {
 
 				$node_id = intval(json_ArgGet(0));
 				$user_id = userAuth_GetID();
+
+				// Fetch user
+				$user = node_GetById($user_id);
+
+				// Is user trusted?
+				if ( $user['_trust'] < 0 ) {
+					json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+				}
 
 				if ( $node_id && $user_id ) {
 					if ( $node = nodeComplete_GetById($node_id) ) {

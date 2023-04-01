@@ -65,6 +65,14 @@ switch ( $action ) {
 		json_ValidateHTTPMethod('POST');
 
 		if ( $user_id = userAuth_GetID() ) {
+			// Fetch user
+			$user = nodeComplete_GetById($user_id);
+
+			// Is user trusted?
+			if ( $user['_trust'] < 0 ) {
+				json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+			}
+
 			$node_id = intval(json_ArgShift());
 			if ( empty($node_id) ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
@@ -133,6 +141,15 @@ switch ( $action ) {
 		json_ValidateHTTPMethod('POST');
 
 		if ( $user_id = userAuth_GetID() ) {
+			// Fetch user
+			$user = node_GetById($user_id);
+
+			// Is user trusted?
+			if ( $user['_trust'] < 0 ) {
+				json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+			}
+
+
 			$comment_id = intval(json_ArgShift());
 			if ( empty($comment_id) ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);

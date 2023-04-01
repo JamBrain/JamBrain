@@ -111,7 +111,7 @@ function commentLove_AddByComment( $id, $author, $node, $supernode, $authorcomme
 		$ip = '0.0.0.0';
 	}
 	else {
-		$ip = $_SERVER['REMOTE_ADDR'];
+		$ip = core_GetClientIP();
 	}
 
 	return db_QueryInsert(
@@ -156,7 +156,7 @@ function commentLove_RemoveByComment( $id, $author ) {
 		$ip = '0.0.0.0';
 	}
 	else {
-		$ip = $_SERVER['REMOTE_ADDR'];
+		$ip = core_GetClientIP();
 	}
 
 	return db_QueryDelete(

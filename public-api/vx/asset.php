@@ -84,8 +84,17 @@ switch ( $action ) {
 
 		// Authenticate User
 		$user_id = userAuth_GetId();
-		if ( !$user_id )
+		if ( !$user_id ) {
 			json_EmitFatalError_Permission(null, $RESPONSE);
+		}
+
+		// Fetch user
+		$user = node_GetById($user_id);
+
+		// Is user trusted?
+		if ( $user['_trust'] < 0 ) {
+			json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+		}
 
 		$user_hash = strrev(dechex($user_id));	// hex it, then reverse the order of the characters
 		$user_path = str_split($user_hash, 3);	// Break every 3 characters

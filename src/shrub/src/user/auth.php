@@ -17,7 +17,7 @@ function userAuth_Start() {
 	}
 
 	// IP Check. If different, expire the session
-	if (isset($_SESSION['ip']) && ($_SESSION['ip'] !== $_SERVER['REMOTE_ADDR'])) {
+	if (isset($_SESSION['ip']) && ($_SESSION['ip'] !== core_GetClientIP())) {
 		// If it's been more than 24 hours, expire the session (logout)
 		// This allows IP changing (i.e. Wifi to Mobile Data switching)
 		if (isset($_SESSION['LAST_ACTIVITY']) && (time() - intval($_SESSION['LAST_ACTIVITY']) > (24*60*60))) {
@@ -34,7 +34,7 @@ function userAuth_Start() {
 
 	// Update IP and timestamp
 	$_SESSION['LAST_ACTIVITY'] = time();
-	$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
+	$_SESSION['ip'] = core_GetClientIP();
 	// Done, close session
 	userSession_End();
 
@@ -108,7 +108,7 @@ function userAuth_SetId($id) {
 	userSession_Start(true); // regenerate SID
 	$_SESSION['id'] = $id;
 	$_SESSION['LAST_ACTIVITY'] = time();
-	$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
+	$_SESSION['ip'] = core_GetClientIP();
 	userSession_End();
 }
 
