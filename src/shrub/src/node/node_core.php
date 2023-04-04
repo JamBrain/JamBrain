@@ -533,15 +533,17 @@ function node_SafeEdit( $node, $slug, $name, $body, $detail = "" ) {
 
 
 // TODO: optional 'set slug' (... why?)
-function node_Publish( $node, $state = true ) {
+function node_Publish( $node, $state = true, $trust = 0 ) {
 	if ( $state ) {
 		return db_QueryUpdate(
 			"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 			SET
 				published=NOW(),
-				modified=NOW()
+				modified=NOW(),
+				_trust=?
 			WHERE
 				id=?;",
+			$trust,
 			$node
 		);
 	}

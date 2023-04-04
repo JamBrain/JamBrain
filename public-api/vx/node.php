@@ -478,7 +478,8 @@ switch ( $action ) {
 			$RESPONSE['feed'] = cache_Fetch($CACHE_KEY);
 
 			if ( $RESPONSE['feed'] == null ) {
-				$RESPONSE['feed'] = nodeFeed_GetByMethod($methods, $root, $types, $subtypes, $subsubtypes, $value_op, $RESPONSE['limit'], $RESPONSE['offset']);
+				// HACK: only fetch nodes with a positive trust score (rather than 0+)
+				$RESPONSE['feed'] = nodeFeed_GetByMethod($methods, $root, $types, $subtypes, $subsubtypes, $value_op, $RESPONSE['limit'], $RESPONSE['offset'], '> 0');
 //				$RESPONSE['feed'] = nodeFeed_GetByNodeMethodType($root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset']);
 
 				cache_Store($CACHE_KEY, $RESPONSE['feed'], 10);
@@ -947,7 +948,9 @@ switch ( $action ) {
 
 				// Do it
 				$RESPONSE['publish'] = node_Publish(
-					$node_id
+					$node_id,
+					true,
+					$user['_trust']	// HACK: use the user's trust score
 				);
 
 				nodeCache_InvalidateById($node_id);
