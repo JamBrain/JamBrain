@@ -255,7 +255,7 @@ export function Walk( parent, slugs, argArray ) {
 	});
 }
 
-export function GetFeed( id, methods, types, subtypes, subsubtypes, tags, offset, limit ) {
+export function GetFeed( id, methods, types, subtypes, subsubtypes, tags, offset, limit, raw ) {
 	let args = [];
 
 	args.push(id);
@@ -310,7 +310,8 @@ export function GetFeed( id, methods, types, subtypes, subsubtypes, tags, offset
 	if ( query.length )
 		query = "?"+query.join('&');
 
-	return Fetch.Get(API_ENDPOINT+'/vx/node/feed/'+args.join('/')+query)
+	let which_feed = raw ? 'rawfeed' : 'feed';
+	return Fetch.Get(API_ENDPOINT+'/vx/node/'+which_feed+'/'+args.join('/')+query)
 		.then(r => {
 			return r;
 		});
