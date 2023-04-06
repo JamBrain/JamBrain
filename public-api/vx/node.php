@@ -338,7 +338,10 @@ switch ( $action ) {
 		break; // case 'walk': //node/walk
 
 	case 'feed': //node/feed/:node_id/:methods[]/:type/[:subtype]/[:subsubtype]
+	case 'rawfeed': //node/rawfeed/:node_id/:methods[]/:type/[:subtype]/[:subsubtype]
 		json_ValidateHTTPMethod('GET');
+
+		$rawfeed = ($action === 'rawfeed');
 
 		if ( json_ArgCount() ) {
 			$root = intval(json_ArgShift());
@@ -473,13 +476,15 @@ switch ( $action ) {
 					$RESPONSE['limit'] = 250;
 			}
 
-			$CACHE_KEY = "!node/feed|".implode('+', $methods)."|".$root."|".implode('+', $types)."|".implode('+', $subtypes)."|".implode('+', $subsubtypes)."|".$value_op."|".$RESPONSE['limit']."|".$RESPONSE['offset'];
+			$which_feed = $rawfeed ? 'rawfeed' : 'feed';
+
+			$CACHE_KEY = "!node/$which_feed|".implode('+', $methods)."|".$root."|".implode('+', $types)."|".implode('+', $subtypes)."|".implode('+', $subsubtypes)."|".$value_op."|".$RESPONSE['limit']."|".$RESPONSE['offset'];
 
 			$RESPONSE['feed'] = cache_Fetch($CACHE_KEY);
 
 			if ( $RESPONSE['feed'] == null ) {
 				// HACK: only fetch nodes with a positive trust score (rather than 0+)
-				$RESPONSE['feed'] = nodeFeed_GetByMethod($methods, $root, $types, $subtypes, $subsubtypes, $value_op, $RESPONSE['limit'], $RESPONSE['offset'], '> 0');
+				$RESPONSE['feed'] = nodeFeed_GetByMethod($methods, $root, $types, $subtypes, $subsubtypes, $value_op, $RESPONSE['limit'], $RESPONSE['offset'], $rawfeed ? '>= 0' : '> 0');
 //				$RESPONSE['feed'] = nodeFeed_GetByNodeMethodType($root, $methods, $types, $subtypes, $subsubtypes, null, $RESPONSE['limit'], $RESPONSE['offset']);
 
 				cache_Store($CACHE_KEY, $RESPONSE['feed'], 10);

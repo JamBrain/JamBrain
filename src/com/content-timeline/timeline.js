@@ -96,8 +96,10 @@ export default class ContentTimeline extends Component {
 	}
 
 	getFeed( id, methods, types, subtypes, subsubtypes, tags, more, limit ) {
+		var props = this.props;
+
 		this.setState({'loaded': false});
-		$Node.GetFeed(id, methods, types, subtypes, subsubtypes, tags, more, limit)
+		$Node.GetFeed(id, methods, types, subtypes, subsubtypes, tags, more, limit, props.raw)
 			.then(r => {
 				this.setState({'loaded': true});
 

@@ -13,6 +13,7 @@ import PageNavRoot						from '../nav/root';
 
 import PageRootHome						from './home/home';
 import PageRootFeed						from './feed/feed';
+import PageRootFeedRaw					from './feed/raw';
 import PageRootFeedNews					from './feed/news';
 import PageRootExplore					from './explore/explore';
 import PageRootGames					from './games/games';
@@ -67,6 +68,7 @@ export default class PageRoot extends Component {
 					</Route>
 					<Route static path="/news" component={PageRootFeedNews} />
 					<Route static path="/feed" component={PageRootFeed} />
+					<Route static path="/feed/raw" component={PageRootFeedRaw} />
 					<Route static path="/feed/news" component={PageRootFeedNews} />
 					<Route static path="/feed/hot" component={Dummy} />
 					<Route static path="/games/:filter?/:subfilter?/:target?" component={PageRootGames} />
