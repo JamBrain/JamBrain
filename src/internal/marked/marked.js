@@ -15,6 +15,7 @@ export default class marked {
       mangle: true,
       smartLists: false,
       silent: false,
+      showLinks: true,
       highlight: null,
       langPrefix: 'lang-',
       smartypants: false,

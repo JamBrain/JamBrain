@@ -425,6 +425,7 @@ export default class ContentCommentsComment extends Component {
 								replaceText={state.replaceText}
 								cursorPos={state.replaceCursorPos}
 								replaceTextEvent={state.replaceTextEvent}
+								untrusted={author._trust <= 0}
 							>
 								{comment.body}
 							</ContentCommentsMarkup>

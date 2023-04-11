@@ -478,6 +478,7 @@ export default class ContentSimple extends Component {
 						replaceText={state.replaceText}
 						cursorPos={state.replaceCursorPos}
 						replaceTextEvent={state.replaceTextEvent}
+						untrusted={node._trust <= 0}
 					>
 						{state.body}
 					</ContentCommonBodyMarkup>
