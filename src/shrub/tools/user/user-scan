@@ -1,0 +1,123 @@
+#!/usr/bin/env php
+<?php
+const CONFIG_PATH = "../../";
+const SHRUB_PATH = "../../src/";
+
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
+require_once __DIR__."/".SHRUB_PATH."core/core.php";
+require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
+require_once __DIR__."/".SHRUB_PATH."global/global.php";
+require_once __DIR__."/".SHRUB_PATH."node/node.php";
+require_once __DIR__."/".SHRUB_PATH."comment/comment.php";
+
+/*
+if ( count($argv) < 2 ) {
+	echo "Usage: ".$argv[0]." [command]\n";
+	echo "\n";
+	echo "  dupes         - Remove Duplicate Ideas\n";
+	echo "  score         - Score Ideas\n";
+//	echo "  promote       - Promote highest scored Ideas to Themes\n";
+//	echo "  page          - Assign pages to themes\n";
+	echo "  simple-vote # - Simple method to assign highest scored ideas to first # voting pages\n";
+	echo "  calc #        - Calculate Score for Page \"#\" (starts at 1)\n";
+	echo "  finalize #    - Take the top # themes and make a new (Final) Round\n";
+//	echo "  calc-final    - Calculate the Final Score\n";
+	echo "\n";
+	die;
+}
+*/
+
+const SPAM = -1000;
+const GOOD = 1;
+
+function PushEnter() {
+    flush();
+    fgets(STDIN);
+}
+
+function Confirm($prompt, $answers = ["YES"], $abortable = true) {
+    $input = "";
+    do {
+        print $prompt;
+        flush();
+        $input = trim(fgets(STDIN));
+    } while (!(in_array($input, $answers) || ($input == "" && $abortable)));
+
+    return $input;
+}
+
+function AreYouSure() {
+    $ret = (Confirm("Are you sure [type 'YES']? ") == "YES");
+    if (!$ret) {
+        print("Aborted...\n");
+    }
+    return $ret;
+}
+
+
+
+global_Load();
+
+$id = 999999999;
+if (count($argv) > 1) {
+    if (intval($argv[1]) > 0) {
+        $id = intval($argv[1]);
+    }
+}
+
+echo "Starting with node $id\n";
+
+while (true) {
+    $id = node_GetLastZeroTrust($id);
+    echo "Found zerotrust node $id\n";
+
+    $node = nodeComplete_GetById($id);
+    $author = nodeComplete_GetById($node['author']);
+
+    echo "\n###################################################################################\n";
+    echo "### ".$id." -- ".$node['type']."/".$node['subtype']."/".$node['subsubtype']." by ".$author['name']." (".$author['id'].")";
+    echo "\n###################################################################################\n";
+
+    echo $node['body'];
+
+    echo "\n###################################################################################\n";
+    echo "### ".$id." -- ".$node['type']."/".$node['subtype']."/".$node['subsubtype']." by ".$author['name']." (".$author['id'].")";
+    echo "\n###################################################################################\n";
+
+    echo "\n";
+
+    do {
+        $should_i_trust = Confirm("Should I trust node $id? [YES or NO. Leave blank to ignore]: ", ["YES", "NO"]);
+        if ($should_i_trust == "YES") {
+            if (Confirm("Should I trust the author (".$author['name'].")? [YES. Leave blank to abort]: ")) {
+                $nodes = node_SetAuthorTrust($author['id'], GOOD);
+                $comments = comment_SetAuthorTrust($author['id'], GOOD);
+
+                print "Trusted $nodes nodes and $comments comments. Press enter to continue. ";
+                PushEnter();
+
+                break;
+            }
+		}
+		else if ( $should_i_trust == "NO" ) {
+            if (Confirm("Should I disable all their content (".$author['name'].")? [YES. Leave blank to abort]: ")) {
+                if (AreYouSure()) {
+                    $nodes = node_SetAuthorTrust($author['id'], SPAM);
+                    $comments = comment_SetAuthorTrust($author['id'], SPAM);
+
+                    print "Flagged $nodes nodes and $comments comments. Press enter to continue. ";
+                    PushEnter();
+
+                    break;
+                }
+            }
+		}
+    } while ($should_i_trust != "");
+ 
+    //var_dump($node);
+ //   echo json_encode($node, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+
+   // echo json_encode($author, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+}

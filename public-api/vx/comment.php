@@ -149,7 +149,6 @@ switch ( $action ) {
 				json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
 			}
 
-
 			$comment_id = intval(json_ArgShift());
 			if ( empty($comment_id) ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
