@@ -291,3 +291,28 @@ function comment_SafeEdit( $comment_id, $author, $body, $version_detail, $flags 
 		$comment_id
 	);
 }
+
+
+function comment_SetAuthorTrust($author_id, $value) {
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."
+		SET
+			_trust=?
+		WHERE
+			author=?;",
+		$value,
+		$author_id
+	);
+}
+
+function comment_SetIdTrust($comment_id, $value) {
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."
+		SET
+			_trust=?
+		WHERE
+			id=?;",
+		$value,
+		$comment_id
+	);
+}

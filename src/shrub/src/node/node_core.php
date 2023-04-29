@@ -312,6 +312,42 @@ function node_GetNoBodyById( $ids ) {
 	return null;
 }
 
+// Hacky function for fetching zero trust nodes (reverse order)
+function node_GetLastZeroTrust($id) {
+	return db_QueryFetch(
+		"SELECT id
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		WHERE _trust = 0 AND id < ?
+		ORDER BY id DESC
+		LIMIT 1;",
+		$id
+	)[0]['id'];
+}
+
+function node_SetAuthorTrust($author_id, $value) {
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		SET
+			_trust=?
+		WHERE
+			author=?;",
+		$value,
+		$author_id
+	);
+}
+
+function node_SetIdTrust($node_id, $value) {
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		SET
+			_trust=?
+		WHERE
+			id=?;",
+		$value,
+		$node_id
+	);
+}
+
 function node_CountByParentAuthorType( $parent = null, $superparent = null, $author = null, $type = null, $subtype = null, $subsubtype = null, $published = true ) {
 	$QUERY = [];
 	$ARGS = [];
