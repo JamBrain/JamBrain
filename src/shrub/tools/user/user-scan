@@ -87,6 +87,8 @@ while (true) {
     echo "\n###################################################################################\n";
 
     echo "\n";
+    echo "Posts: ".$author['posts']."   Games: ".$author['games']."\n";
+    echo "\n";
 
     do {
         $should_i_trust = Confirm("Should I trust node $id? [YES or NO. Leave blank to ignore]: ", ["YES", "NO"]);
