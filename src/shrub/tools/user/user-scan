@@ -11,6 +11,7 @@ require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE consta
 require_once __DIR__."/".SHRUB_PATH."global/global.php";
 require_once __DIR__."/".SHRUB_PATH."node/node.php";
 require_once __DIR__."/".SHRUB_PATH."comment/comment.php";
+require_once __DIR__."/".SHRUB_PATH."user/user.php";
 
 /*
 if ( count($argv) < 2 ) {
@@ -86,8 +87,10 @@ while (true) {
     echo "### ".$id." -- ".$node['type']."/".$node['subtype']."/".$node['subsubtype']." by ".$author['name']." (".$author['id'].")";
     echo "\n###################################################################################\n";
 
+    $info = userLog_GetLastIPByNode($author['id']);
+
     echo "\n";
-    echo "Posts: ".$author['posts']."   Games: ".$author['games']."\n";
+    echo $info['mail']."   IP: ".$info['ip']."   Posts: ".$author['posts']."   Games: ".$author['games']."\n";
     echo "\n";
 
     do {
