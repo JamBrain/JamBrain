@@ -90,7 +90,7 @@ while (true) {
     $info = userLog_GetLastIPByNode($author['id']);
 
     echo "\n";
-    echo $info['mail']."   IP: ".$info['ip']."   Posts: ".$author['posts']."   Games: ".$author['games']."\n";
+    echo $author['name']." (".$author['id'].")   ".$info['mail']."   IP: ".$info['ip']."   Posts: ".$author['posts']."   Games: ".$author['games']."\n";
     echo "\n";
 
     do {
