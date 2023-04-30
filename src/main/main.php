@@ -68,7 +68,7 @@ if ( !isset($_GET['nopreload']) ) {
 //header("Link: </blah">; rel=canonical"); // https://yoast.com/rel-canonical/
 
 if ( defined('ONION_LOCATION') ) {
-	header("Onion-Location: ".ONION_LOCATION);
+	//header("Onion-Location: ".ONION_LOCATION);
 }
 
 // This is insane, but necessary to stop iframing your website
@@ -76,6 +76,9 @@ header("X-Frame-Options: DENY");
 
 $inline_js_nonce = bin2hex(random_bytes(8));
 //header("Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-$inline_js_nonce'; connect-src 'self' ".API_DOMAIN." api.jammer.tv; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: ".STATIC_DOMAIN." static-cdn.jtvnw.net i.ytimg.com cdn.jsdelivr.net; child-src 'self' files.jam.host www.youtube.com player.twitch.tv;");
+
+// https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag
+// FYI: check out 'googlebot' and 'googlebot-news'
 
 ?><!doctype html>
 <html lang="en">
@@ -91,6 +94,7 @@ $inline_js_nonce = bin2hex(random_bytes(8));
 	<link rel="preconnect" href="<?=STATIC_DOMAIN?>">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="noindex">
 </head>
 <body>
 	<script nonce="<?=$inline_js_nonce?>">

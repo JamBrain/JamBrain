@@ -453,8 +453,16 @@ class Main extends Component {
 		let {node, parent, _superparent, author, user, featured, path, extra} = state;
 		let NewProps = {node, parent, _superparent, author, user, featured, path, extra};
 
-		if ( node )
+		if ( node ) {
 			document.title = this.getTitle(node);
+
+			// Set the robots meta tag
+			let robots_value = "noindex";
+			if (node._trust > 0) {
+				robots_value = "all";
+			}
+			document.querySelector('meta[name="robots"]').setAttribute("content", robots_value);
+		}
 
 		return (
 			<Layout {...state}>
