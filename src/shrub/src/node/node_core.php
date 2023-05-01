@@ -317,7 +317,7 @@ function node_GetLastZeroTrust($id) {
 	return db_QueryFetch(
 		"SELECT id
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
-		WHERE _trust = 0 AND id < ?
+		WHERE _trust = 0 AND id < ? AND published != 0
 		ORDER BY id DESC
 		LIMIT 1;",
 		$id
