@@ -326,7 +326,11 @@ export default class ContentSimple extends Component {
 			return <div />;
 		}
 
-		if ( node && (((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length)) ) {
+
+		if ( (node && node._trust < 0) ) {
+			return <div>💩</div>;
+		}
+		else if ( node && (((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length)) ) {
 			var ShowEditBar = null;
 			var ShowOnly = null;
 			let ShowAutocompleteEmoji;
