@@ -70,8 +70,9 @@ if (count($argv) > 1) {
 
 echo "Starting with node $id\n";
 
-while ($id = node_GetLastZeroTrust($id)) {
-    echo "Found zerotrust node $id\n";
+do {
+    $id = node_GetLastZeroTrust($id);
+    //echo "Found zerotrust node $id\n";
 
     $node = nodeComplete_GetById($id);
     $author = nodeComplete_GetById($node['author']);
@@ -81,17 +82,38 @@ while ($id = node_GetLastZeroTrust($id)) {
     echo "### ".$id." -- ".$node['type']."/".$node['subtype']."/".$node['subsubtype']." by ".$author['name']." (".$author['id'].")";
     echo "\n###################################################################################\n";
 
-    echo $node['body'];
-
-    echo "\n###################################################################################\n";
-    echo "### ".$node['name']."\n";
-    echo "### ".$id." -- ".$node['type']."/".$node['subtype']."/".$node['subsubtype']." by ".$author['name']." (".$author['id'].")";
-    echo "\n###################################################################################\n";
-
     $info = userLog_GetLastIPByNode($author['id']);
+    // Skip if not owned
     if (!$info) {
-        echo "Skipping...\n";
+        echo "Unowned. Skipping...\n\n";
         continue;
+    }
+
+    $body = trim($node['body']);
+    $title = trim($node['name']);
+
+    //var_dump($body);
+    //var_dump($title);
+    //var_dump($id);
+    //var_dump($author);
+
+    // Skip if empty
+    if ($body === "" && $title === "") {
+        echo "Empty. Skipping...\n\n";
+        continue;
+    }
+    // Skip if an empty user
+    else if ($body === "" && $author['id'] == $id) {
+        echo "Empty User. Skipping...\n\n";
+        continue;
+    }
+    else {
+        echo $body;
+
+        echo "\n###################################################################################\n";
+        echo "### ".$node['name']."\n";
+        echo "### ".$id." -- ".$node['type']."/".$node['subtype']."/".$node['subsubtype']." by ".$author['name']." (".$author['id'].")";
+        echo "\n###################################################################################\n";
     }
 
     echo "\n";
@@ -130,6 +152,6 @@ while ($id = node_GetLastZeroTrust($id)) {
  //   echo json_encode($node, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
    // echo json_encode($author, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-}
+} while ($id > 1);
 
-echo "you finished!?\n";
+echo "*** FINISHED ***\n";
