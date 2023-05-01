@@ -139,7 +139,7 @@ export default class ContentCommentsComment extends Component {
 
 		$Comment.Update( comment.id, comment.node, comment.body )
 		.then(r => {
-			console.log(r);
+			//console.log(r);
 
 			this.setState({'modified': false, 'editing': false, 'preview': false, 'original': this.props.comment.body});
 		})
@@ -197,7 +197,7 @@ export default class ContentCommentsComment extends Component {
 	}
 
 	onReply( e ) {
-		console.log('reply');
+		//console.log('reply');
 	}
 
 	onSubscribe( e ) {
@@ -238,7 +238,7 @@ export default class ContentCommentsComment extends Component {
 		let {user, comment, author, error, node, isNodeAuthor, isMyComment, isMention} = props;
 
 		// Allow authored comments, or non-authored (i.e. anonymous)
-		if ( comment && (author || (comment.author == 0)) ) {
+		if ( comment && ((author && author._trust >= 0 && comment._trust >= 0) || (comment.author == 0 && comment._trust > 0)) ) {
 			let Name = "Anonymous";
 			let Avatar = "///other/dummy/user64.png";
 
@@ -436,10 +436,25 @@ export default class ContentCommentsComment extends Component {
 				</div>
 			);
 		}
+		else if ( comment && ((author && author._trust < 0) || (comment && comment._trust <= 0)) ) {
+			return (
+				<div
+					id={"comment-"+comment.id}
+					class={"-item -comment -indent-"+props.indent}
+				>
+					<div class="-body"><div class="-text">-</div></div>
+				</div>
+			);
+		}
 		else {
 			return (
-				<div class={"-item -comment -indent-"+props.indent}>
-					<div class="-body">There was a problem with this node</div>
+				<div
+					id={"comment-"+comment.id}
+					class={"-item -comment -indent-"+props.indent}
+				>
+					<div class="-body">
+						<div class="-text">There was a problem with this node</div>
+					</div>
 				</div>
 			);
 		}

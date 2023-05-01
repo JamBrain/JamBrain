@@ -35,7 +35,7 @@ function _MakeKey( id ) {
 	return "NODE|" + id;
 }
 function _Store( node ) {
-	if ( node.id ) {
+	if ( node && node.id ) {
 		NODE_CACHE[node.id] = node;
 		//Cache.Store(_MakeKey(node.id), node, NODE_TTL);
 	}
