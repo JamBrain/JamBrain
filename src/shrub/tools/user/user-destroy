@@ -1,0 +1,57 @@
+#!/usr/bin/env php
+<?php
+const CONFIG_PATH = "../../";
+const SHRUB_PATH = "../../src/";
+
+include_once __DIR__."/".CONFIG_PATH."config.php";
+require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
+require_once __DIR__."/".SHRUB_PATH."core/db.php";
+require_once __DIR__."/".SHRUB_PATH."core/core.php";
+require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
+require_once __DIR__."/".SHRUB_PATH."global/global.php";
+require_once __DIR__."/".SHRUB_PATH."node/node.php";
+require_once __DIR__."/".SHRUB_PATH."comment/comment.php";
+require_once __DIR__."/".SHRUB_PATH."user/user.php";
+
+const SPAM = -1000;
+const GOOD = 1;
+
+
+function PushEnter() {
+    flush();
+    fgets(STDIN);
+}
+
+function Confirm($prompt, $answers = ["YES"], $abortable = true) {
+    $input = "";
+    do {
+        print $prompt;
+        flush();
+        $input = trim(fgets(STDIN));
+    } while (!(in_array($input, $answers) || ($input == "" && $abortable)));
+
+    return $input;
+}
+
+function AreYouSure() {
+    $ret = (Confirm("Are you sure [type 'YES']? ") == "YES");
+    if (!$ret) {
+        print("Aborted...\n");
+    }
+    return $ret;
+}
+
+
+
+
+$nodes = db_QueryFetch("SELECT n.*, u.mail FROM `sh_user` AS u JOIN `sh_node` AS n ON n.id = u.node WHERE type = 'user' AND _trust = 0;");// AND `mail` LIKE '%outlook.com' AND node > 300000 AND `slug` REGEXP '^[0-9]{1}[a-z]{2,}[A-Z]{0,1}[a-z]+$'");
+
+if (Confirm(count($nodes)." nodes match. Type 'YES' to flag them? ")) {
+    foreach ($nodes as $key => &$node) {
+        $node_count = node_SetAuthorTrust($node['id'], SPAM);
+        $comment_count = comment_SetAuthorTrust($node['id'], SPAM);
+        print "[".$node['id']."] Flagged $node_count nodes and $comment_count comments.\n";
+    }
+}
+
+
