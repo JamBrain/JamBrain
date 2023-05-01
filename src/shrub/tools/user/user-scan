@@ -70,8 +70,7 @@ if (count($argv) > 1) {
 
 echo "Starting with node $id\n";
 
-while (true) {
-    $id = node_GetLastZeroTrust($id);
+while ($id = node_GetLastZeroTrust($id)) {
     echo "Found zerotrust node $id\n";
 
     $node = nodeComplete_GetById($id);
@@ -88,9 +87,13 @@ while (true) {
     echo "\n###################################################################################\n";
 
     $info = userLog_GetLastIPByNode($author['id']);
+    if (!$info) {
+        echo "Skipping...\n";
+        continue;
+    }
 
     echo "\n";
-    echo $author['name']." (".$author['id'].")   ".$info['mail']."   IP: ".$info['ip']."   Posts: ".$author['posts']."   Games: ".$author['games']."\n";
+    echo "[".$author['id']."]   ".$author['name']." (".$author['slug'].")   ".$info['mail']."   IP: ".$info['ip']."   Posts: ".$author['posts']."   Games: ".$author['games']."\n";
     echo "\n";
 
     do {
@@ -126,3 +129,5 @@ while (true) {
 
    // echo json_encode($author, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 }
+
+echo "you finished!?\n";

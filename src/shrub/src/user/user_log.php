@@ -32,8 +32,24 @@ function userLog_GetLastIPByUserId( $user_id ) {
 }
 
 function userLog_GetLastIPByNode( $node_id ) {
-	$user = user_GetByNode($node_id)[0];
-	$log =  userLog_GetLastIPByUserId($user['id'])[0];
+	if ($node_id == 0) {
+		return null;
+	}
+
+	$user = user_GetByNode($node_id);
+	if (!count($user)) {
+		return null;
+	}
+	$user = $user[0];
+
+	$log = userLog_GetLastIPByUserId($user['id']);
+	if (!count($log)) {
+		$ret = [];
+		$ret['mail'] = $user['mail'];
+		$ret['ip'] = "???";
+		return $ret;
+	}
+	$log = $log[0];
 
 	$ret = [];
 	$ret['mail'] = $user['mail'];
