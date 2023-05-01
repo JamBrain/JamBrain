@@ -77,12 +77,14 @@ while ($id = node_GetLastZeroTrust($id)) {
     $author = nodeComplete_GetById($node['author']);
 
     echo "\n###################################################################################\n";
+    echo "### ".$node['name']."\n";
     echo "### ".$id." -- ".$node['type']."/".$node['subtype']."/".$node['subsubtype']." by ".$author['name']." (".$author['id'].")";
     echo "\n###################################################################################\n";
 
     echo $node['body'];
 
     echo "\n###################################################################################\n";
+    echo "### ".$node['name']."\n";
     echo "### ".$id." -- ".$node['type']."/".$node['subtype']."/".$node['subsubtype']." by ".$author['name']." (".$author['id'].")";
     echo "\n###################################################################################\n";
 
