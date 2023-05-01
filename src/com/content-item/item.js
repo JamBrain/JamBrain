@@ -572,7 +572,7 @@ export default class ContentItem extends Component {
 					<div class="-footer">
 						<p>
 							<UIIcon baseline small src="info" />
-							<span>If the buttons are grayed out, you haven't checked-off enough items in the Submission Checklist above.</span>
+							<span>If a button is disabled, you haven't checked-off enough items in the <strong>Submission Checklist</strong> above to qualify for the category.</span>
 						</p>
 						<p>
 							If your event format is correct (filled background), you <strong>don't</strong> need to change or update this.
