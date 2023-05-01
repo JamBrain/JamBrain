@@ -45,7 +45,8 @@ export default class ContentComments extends Component {
 			'author': this.props.user.id,
 			'body': '',
 			'love': 0,
-			'loved': false
+			'loved': false,
+			'_trust': 0
 		};
 	}
 
@@ -232,6 +233,9 @@ export default class ContentComments extends Component {
 		const {authors, error, "newcomment": comment, subscribed} = this.state;
 		const author = (authors && comment && comment.author) ? authors[comment.author] : 0;
 		const allowAnonymous = parseInt(this.props.node.meta['allow-anonymous-comments']);
+
+		//console.log(author);
+		//console.log(comment);
 
 		return <div class="-new-comment"><ContentCommentsComment user={user} node={node} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove allowAnonymous={allowAnonymous} error={error} subscribed={subscribed} onsubscribe={this.onToggleSubscribe} authors={authors}/></div>;
 	}
