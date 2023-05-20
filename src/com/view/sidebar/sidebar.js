@@ -59,8 +59,8 @@ export default class ViewSidebar extends Component {
 		let gradeEndDate = new Date(ldStartDate.getTime() + (3 * oneWeek));
 
 		let resultsDay = new Date(ldStartDay.getTime() + (3*oneWeek) + oneDay);		// NOTE: again "day", not date
-		let liveShowDate = new Date(resultsDay.getTime() + (16 * oneHour) + (30 * oneMinute));
-		let resultsDate = new Date(resultsDay.getTime() + (19 * oneHour) + (5 * oneMinute));
+		let liveShowDate = new Date(resultsDay.getTime() + (17 * oneHour) + (30 * oneMinute));
+		let resultsDate = new Date(resultsDay.getTime() + (20 * oneHour) + (5 * oneMinute));
 
 		let nextEventName = "Ludum Dare 54";
 		let nextEventStartDate = new Date(Date.UTC(2023, 8, 29, 1, 0, 0));
