@@ -427,6 +427,9 @@ switch ( $action ) {
 		$mail = getSanitizedMailFromPost();
 		$RESPONSE['mail'] = $mail;
 
+		// HACK: DISABLE ACCOUNT CREATION
+		json_EmitFatalError_Permission("Creating accounts is currently disabled. Check back later.", $RESPONSE);
+
 		/// Confirm it's not a blacklisted email domain (i.e. disposables)
 		require_once __DIR__."/".SHRUB_PATH."email/blacklist.php";
 

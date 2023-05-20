@@ -92,18 +92,25 @@ export default class DialogRegister extends Component {
 		}
 		else {
 			return (
-				<DialogCommon ok oktext="Send Activation E-mail" onok={this.doRegister} cancel explicit {...new_props}>
+				<DialogCommon cancel explicit {...new_props}>
 					<div class="-info">
-						Enter your e-mail address to begin activating your account
-					</div>
-					<div>
-						<div class="-input-container">
-							<input autofocus id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="email" name="email" placeholder="E-mail address" maxlength="254" value={mail} />
-							<LabelYesNo value={mail.trim().length ? (Sanitize.validateMail(mail) ? 1 : -1) : 0} />
-						</div>
+						Creating accounts is currently disabled. Please check back in a few days.
 					</div>
 				</DialogCommon>
 			);
+/*
+			<DialogCommon ok oktext="Send Activation E-mail" onok={this.doRegister} cancel explicit {...new_props}>
+			<div class="-info">
+				Enter your e-mail address to begin activating your account
+			</div>
+			<div>
+				<div class="-input-container">
+					<input autofocus id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="email" name="email" placeholder="E-mail address" maxlength="254" value={mail} />
+					<LabelYesNo value={mail.trim().length ? (Sanitize.validateMail(mail) ? 1 : -1) : 0} />
+				</div>
+			</div>
+			</DialogCommon>
+*/
 //					<div class="-info">
 //						<ul>
 //							<li><strong>Hotmail</strong>, <strong>Outlook</strong>, <strong>Live.com</strong>: Add <code>hello@jammer.vg</code> to your contacts</li>
