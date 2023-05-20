@@ -21,6 +21,13 @@ if ( count($argv) < 2 ) {
 	exit;
 }
 
+const EVENT_NAMES = [
+	"compo",
+	"jam",
+	"extra",
+	"unfinished"
+]
+
 global_Load();
 
 $ARG_COMMAND = array_shift($argv);
@@ -58,12 +65,25 @@ function AreYouSure() {
 
 if ( $COMMAND === "score" ) {
 	$SUBSUBTYPE = array_shift($argv);
+
+	if ( !in_array($SUBSUBTYPE, EVENT_NAMES) ) {
+		print "Invalid event: " . $SUBSUBTYPE . "\n";
+		exit(1);
+	}
+
 	$THRESHOLD = array_shift($argv);
 	$THRESHOLD2 = array_shift($argv);
 	
 	if ( !is_numeric($THRESHOLD) ) {
 		print "No Threshold\n";
 		exit(1);
+	}
+
+	if ( $THRESHOLD >= 5 ) {
+		$THRESHOLD -= 2;
+		if ($THRESHOLD2) {
+			$THRESHOLD2 -= 2;
+		}
 	}
 	
 	print "\n*** WARNING ***\n\n";
@@ -123,15 +143,9 @@ if ( $COMMAND === "score" ) {
 		$average = [];
 		foreach ( $ordered as $key => &$grade ) {
 			sort($grade, SORT_NUMERIC);
-			if ( $THRESHOLD >= 5 ) {
+			if ( $THRESHOLD >= 3 ) {
 				array_shift($grade);		// Remove Top
 				array_pop($grade);			// Remove Bottom
-
-				// Be sure we modify our thresholds too!
-				$THRESHOLD -= 2;
-				if ($THRESHOLD2) {
-					$THRESHOLD2 -= 2;
-				}
 			}
 
 			if ( !count($grade) )
