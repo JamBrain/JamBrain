@@ -26,7 +26,7 @@ const EVENT_NAMES = [
 	"jam",
 	"extra",
 	"unfinished"
-]
+];
 
 global_Load();
 
