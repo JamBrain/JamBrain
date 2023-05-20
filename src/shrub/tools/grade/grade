@@ -78,13 +78,6 @@ if ( $COMMAND === "score" ) {
 		print "No Threshold\n";
 		exit(1);
 	}
-
-	if ( $THRESHOLD >= 5 ) {
-		$THRESHOLD -= 2;
-		if ($THRESHOLD2) {
-			$THRESHOLD2 -= 2;
-		}
-	}
 	
 	print "\n*** WARNING ***\n\n";
 	print "You are about to generate scores for \"$SUBSUBTYPE\".\n";
@@ -143,7 +136,7 @@ if ( $COMMAND === "score" ) {
 		$average = [];
 		foreach ( $ordered as $key => &$grade ) {
 			sort($grade, SORT_NUMERIC);
-			if ( $THRESHOLD >= 3 ) {
+			if ( $THRESHOLD >= 5 ) {
 				array_shift($grade);		// Remove Top
 				array_pop($grade);			// Remove Bottom
 			}
@@ -200,6 +193,14 @@ if ( $COMMAND === "score" ) {
 					print $item['id']." with ".$item['count']." ratings would have placed $place in $key\n";
 				}
 			}
+		}
+	}
+
+	// Reduce threshold values here, so the check above doesn't include lesser values by mistake
+	if ( $THRESHOLD >= 5 ) {
+		$THRESHOLD -= 2;
+		if ($THRESHOLD2) {
+			$THRESHOLD2 -= 2;
 		}
 	}
 
