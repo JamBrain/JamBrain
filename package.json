@@ -20,7 +20,7 @@
     "rollup-plugin-nodent": "^0.2.2",
     "stylelint": "^13.13.1",
     "stylelint-config-recommended": "^5.0.0",
-    "svgo": "*",
+    "svgo": "^2.8",
     "uglify-js": "^3.14.1"
   },
   "scripts": {
