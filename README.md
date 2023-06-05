@@ -13,6 +13,7 @@ Development discussion (site-dev only please):
 
 * **Web:** https://gitter.im/ludumdare/ludumdare (Slack-like)
 
+
 # Structure
 Many folder are documented. Just browse the tree to learn about the contents.
 
