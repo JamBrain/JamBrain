@@ -514,13 +514,12 @@ class Main extends Component {
 			document.title = this.getTitle(node);
 		}
 
-			// Set the robots meta tag
-			let robots_value = "noindex";
-			if (node._trust > 0) {
-				robots_value = "all";
-			}
-			document.querySelector('meta[name="robots"]').setAttribute("content", robots_value);
+		// Set the robots meta tag
+		let robots_value = "noindex";
+		if (node._trust > 0) {
+			robots_value = "all";
 		}
+		document.querySelector('meta[name="robots"]').setAttribute("content", robots_value);
 
 		return (
 			<Layout {...state}>

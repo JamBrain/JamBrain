@@ -73,7 +73,6 @@ export default class PageRoot extends Component {
 					<Route path="/tools/*" component={PageRootTools} />
 					<Route path="/communities/*" component={PageRootCommunities} />
 					<Route path="/search/*" component={PageRootSearch} />
-					<Route type="error" component={ContentError} />
 				</ContentRouter>
 			</Fragment>
 		);
