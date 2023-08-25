@@ -23,6 +23,7 @@ export default class ContentBodyMarkup extends Component {
 			},
 			sanitize: true, // disable HTML
 			smartypants: true, // enable automatic fancy quotes, ellipses, dashes
+			showLinks: !props.untrusted,
 			langPrefix: 'language-'
 		};
 

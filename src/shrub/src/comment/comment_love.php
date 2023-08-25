@@ -1,7 +1,6 @@
 <?php
 
-// BUG: authornode should be authorcomment *
-// supernode (event), node (game), then author of the comment (i.e. authorcomment), and finally the author of the love
+// _supernode (event), _node (game), _authorcomment (the author of the comment), and finally author (the author of the love)
 
 function commentLove_CountByNode( $node ) {
 	$ret = db_QueryFetch(
@@ -10,7 +9,7 @@ function commentLove_CountByNode( $node ) {
 			COUNT(comment) AS count,
 			".DB_FIELD_DATE('MAX(timestamp)','timestamp')."
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT_LOVE."
-		WHERE node=?
+		WHERE _node=?
 		GROUP BY comment;",
 		$node
 	);
@@ -30,9 +29,9 @@ function commentLove_CountBySuperNotNodeAuthorKnownNotAuthor( $supernode_id, $no
 		FROM
 			".SH_TABLE_PREFIX.SH_TABLE_COMMENT_LOVE."
 		WHERE
-			supernode=?
-			AND node!=?
-			AND authornode IN (".implode(',', $author_ids).")
+			_supernode=?
+			AND _node!=?
+			AND _authorcomment IN (".implode(',', $author_ids).")
 			AND author > 0
 			AND author NOT IN (".implode(',', $author_ids).")
 		;",
@@ -53,9 +52,9 @@ function commentLove_CountBySuperNodeNotAuthorKnownNotAuthor( $supernode_id, $no
 		FROM
 			".SH_TABLE_PREFIX.SH_TABLE_COMMENT_LOVE."
 		WHERE
-			supernode=?
-			AND node=?
-			AND authornode NOT IN (".implode(',', $author_ids).")
+			_supernode=?
+			AND _node=?
+			AND _authorcomment NOT IN (".implode(',', $author_ids).")
 			AND author > 0
 			AND author NOT IN (".implode(',', $author_ids).")
 		;",
@@ -99,12 +98,12 @@ function commentLove_GetByComment( $comments ) {
 
 
 /// Can only add 1 love at a time (NOTE: has an extra arguments versus the node code)
-function commentLove_AddByComment( $id, $author, $node, $supernode, $authornode ) {
+function commentLove_AddByComment( $id, $author, $node, $supernode, $authorcomment ) {
 	if ( is_array($id) ) {
 		return null;
 	}
 
-	if ( !$id || !$node || !is_int($supernode) || !$authornode )
+	if ( !$id || !$node || !is_int($supernode) || !$authorcomment )
 		return null;
 
 	// Anonymous Love support requires newer MYSQL 5.6.3+. Scotchbox ships with 5.5.x.
@@ -112,15 +111,15 @@ function commentLove_AddByComment( $id, $author, $node, $supernode, $authornode 
 		$ip = '0.0.0.0';
 	}
 	else {
-		$ip = $_SERVER['REMOTE_ADDR'];
+		$ip = core_GetClientIP();
 	}
 
 	return db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_COMMENT_LOVE." (
 			comment,
-			node,
-			supernode,
-			authornode,
+			_node,
+			_supernode,
+			_authorcomment,
 			author,
 			ip,
 			timestamp
@@ -137,7 +136,7 @@ function commentLove_AddByComment( $id, $author, $node, $supernode, $authornode 
 		$id,
 		$node,
 		$supernode,
-		$authornode,
+		$authorcomment,
 		$author,
 		$ip
 	);
@@ -157,7 +156,7 @@ function commentLove_RemoveByComment( $id, $author ) {
 		$ip = '0.0.0.0';
 	}
 	else {
-		$ip = $_SERVER['REMOTE_ADDR'];
+		$ip = core_GetClientIP();
 	}
 
 	return db_QueryDelete(
@@ -186,7 +185,7 @@ function commentLove_GetByAuthor( $author, $node = null, $limit = 200 ) {
 	}
 
 	if ( is_integer($node) ) {
-		$QUERY[] = 'node=?';
+		$QUERY[] = '_node=?';
 		$ARGS[] = $node;
 	}
 

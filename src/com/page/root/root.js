@@ -9,6 +9,7 @@ import PageNavRoot						from '../nav/root';
 
 import PageRootHome						from './home/home';
 import PageRootFeed						from './feed/feed';
+import PageRootFeedRaw					from './feed/raw';
 import PageRootFeedNews					from './feed/news';
 import PageRootExplore					from './explore/explore';
 import PageRootGames					from './games/games';
@@ -63,6 +64,7 @@ export default class PageRoot extends Component {
 					</Route>
 					<Route path="/news" component={PageRootFeedNews} />
 					<Route path="/feed" component={PageRootFeed}>
+						<Route path="/raw" component={PageRootFeedRaw} />
 						<Route path="/news" component={PageRootFeedNews} />
 						<Route path="/hot" />
 					</Route>
@@ -71,6 +73,7 @@ export default class PageRoot extends Component {
 					<Route path="/tools/*" component={PageRootTools} />
 					<Route path="/communities/*" component={PageRootCommunities} />
 					<Route path="/search/*" component={PageRootSearch} />
+					<Route type="error" component={ContentError} />
 				</ContentRouter>
 			</Fragment>
 		);

@@ -16,53 +16,88 @@ export default class ViewSidebar extends Component {
 	}
 
 	render( props ) {
-		let liveShowDate = null;
-
 		// TODO: cleanup
-		let ldName = "Ludum Dare 50";
-		let ldStartDate = new Date(Date.UTC(2022, 3, 2, 1, 0, 0));
 
-		let compoEndDate = new Date(Date.UTC(2022, 3, 4, 1, 0, 0));
-		let compoEndDate2 = new Date(Date.UTC(2022, 3, 4, 2, 0, 0));
+		const oneSecond = 1000;
+		const oneMinute = 60*oneSecond;
+		const oneHour = 60*oneMinute;
+		const oneDay = 24*oneHour;
+		const oneWeek = 7*oneDay;
 
-		let jamEndDate = new Date(Date.UTC(2022, 3, 5, 1, 0, 0));
-		let jamEndDate2 = new Date(Date.UTC(2022, 3, 5, 2, 0, 0));
+		/*
+		// January Event //
+		let ldName = "Ludum Dare 52";
+		let ldStartDate = new Date(Date.UTC(2023, 0, 6, 20, 0, 0));
 
-		let gradeEndDate = new Date(Date.UTC(2022, 3, 21, 20, 0, 0));
-		let resultsDate = new Date(Date.UTC(2022, 3, 21, 26, 0, 0));
+		let compoEndDate = new Date(Date.UTC(2023, 0, 8, 20, 0, 0));
+		let compoEndDate2 = new Date(Date.UTC(2023, 0, 8, 21, 0, 0));
 
-		liveShowDate = new Date(Date.UTC(2022, 3, 21, 23, 30, 0));
+		let jamEndDate = new Date(Date.UTC(2023, 0, 9, 20, 0, 0));
+		let jamEndDate2 = new Date(Date.UTC(2023, 0, 9, 21, 0, 0));
 
-		let nextEventName = "Ludum Dare 51";
-		let nextEventStartDate = new Date(Date.UTC(2022, 8, 30, 22, 0, 0));
+		let gradeEndDate = new Date(Date.UTC(2023, 0, 27, 20, 0, 0));
+		let resultsDate = new Date(Date.UTC(2023, 0, 28, 23, 5, 0));
 
+		let liveShowDate = new Date(Date.UTC(2023, 0, 28, 20, 30, 0, 0));
 
-		// let ldName = "Ludum Dare 49";
-		// let ldStartDate = new Date(Date.UTC(2021, 9, 1, 22, 0, 0));
+		let nextEventName = "Ludum Dare 53";
+		let nextEventStartDate = new Date(Date.UTC(2023, 3, 29, 1, 0, 0));
 
-		// let compoEndDate = new Date(Date.UTC(2021, 9, 3, 22, 0, 0));
-		// let compoEndDate2 = new Date(Date.UTC(2021, 9, 3, 23, 0, 0));
+		/*/
 
-		// let jamEndDate = new Date(Date.UTC(2021, 9, 4, 22, 0, 0));
-		// let jamEndDate2 = new Date(Date.UTC(2021, 9, 4, 23, 0, 0));
+		// April Event //
+		let ldName = "Ludum Dare 53";
+		let ldStartDay = new Date(Date.UTC(2023, 3, 28, 0, 0, 0));					// NOTE: The day, not the date
+		let ldStartDate = new Date(ldStartDay.getTime() + ((24+1) * oneHour));		// 9 PM EST
 
-		// let gradeEndDate = new Date(Date.UTC(2021, 9, 21, 20, 0, 0));
-		// let resultsDate = new Date(Date.UTC(2021, 9, 21, 26, 5, 0));
+		let compoEndDate = new Date(ldStartDate.getTime() + (2 * oneDay));
+		let compoEndDate2 = new Date(compoEndDate.getTime() + oneHour);
 
-		// liveShowDate = new Date(Date.UTC(2021, 9, 21, 23, 30, 0));
+		let jamEndDate = new Date(ldStartDate.getTime() + (3 * oneDay));
+		let jamEndDate2 = new Date(jamEndDate.getTime() + oneHour);
 
-		// let nextEventName = "Ludum Dare 50";
-		// let nextEventStartDate = new Date(Date.UTC(2022, 3, 1, 25, 0, 0));
+		let gradeEndDate = new Date(ldStartDate.getTime() + (3 * oneWeek));
 
+		let resultsDay = new Date(ldStartDay.getTime() + (3*oneWeek) + oneDay);		// NOTE: again "day", not date
+		let liveShowDate = new Date(resultsDay.getTime() + (17 * oneHour) + (30 * oneMinute));
+		let resultsDate = new Date(resultsDay.getTime() + (20 * oneHour) + (5 * oneMinute));
 
-		let ItemsToShow = 3;
+		let nextEventName = "Ludum Dare 54";
+		let nextEventStartDate = new Date(Date.UTC(2023, 8, 30, 1, 0, 0));
+
+		/*/
+		// October Event//
+		let ldName = "Ludum Dare 54";
+		let ldStartDate = new Date(Date.UTC(2023, 7, 29, 1, 0, 0));
+
+		let compoEndDate = new Date(Date.UTC(2022, 8, 32, 22, 0, 0));
+		let compoEndDate2 = new Date(Date.UTC(2022, 8, 32, 23, 0, 0));
+
+		let jamEndDate = new Date(Date.UTC(2022, 8, 33, 22, 0, 0));
+		let jamEndDate2 = new Date(Date.UTC(2022, 8, 33, 23, 0, 0));
+
+		let gradeEndDate = new Date(Date.UTC(2022, 9, 21, 22, 0, 0));
+		let resultsDate = new Date(Date.UTC(2022, 9, 22, 19, 5, 0));
+
+		let liveShowDate = new Date(Date.UTC(2022, 9, 22, 16, 30, 0));
+
+		let nextEventName = "Ludum Dare 54";
+		let nextEventStartDate = new Date(Date.UTC(2023, 0, 6, 20, 0, 0));
+		/*/
+
+		let ItemsToShow = 2;
 
 		let now = new Date();
 
 		let ShowCountdown = [];
-		if ( now < ldStartDate ) {
+		if ( !props.featured ) {
+			// Featured event hasn't loaded yet
+		}
+		// If before the start
+		else if ( now < ldStartDate ) {
 			ShowCountdown.push(<SidebarCountdown date={ ldStartDate } nc="ld" to={ldName} tt="Starts" />);
 		}
+		// If after the start
 		else {
 			if ( (now < compoEndDate) && (ShowCountdown.length < ItemsToShow) ) {
 				ShowCountdown.push(<SidebarCountdown date={ compoEndDate } nc="compo" to="Compo" tt="Ends" />);
@@ -116,6 +151,7 @@ export default class ViewSidebar extends Component {
 				{ShowCountdown}
 				<SidebarTV />
 				<SidebarUpcoming />
+				<SidebarSponsor />
 			</aside>
 		);
 
@@ -123,7 +159,6 @@ export default class ViewSidebar extends Component {
 
 		/*<SidebarGuides />*/
 		/*<SidebarSupport />*/
-		/*<SidebarSponsor />*/
 
 		/*<SidebarCalendar rows={ShowCountdown.length ? 2 : 3} />*/
 	}

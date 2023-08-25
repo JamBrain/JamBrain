@@ -6,6 +6,7 @@ const DB_TYPE_COMMENT_HOPS = 'INT NOT NULL';			// INT: 2^16 signed (32k)
 
 // Simliar to the regular COMMENT, but just a snapshot
 // IMPORTANT: This has to come first, just in case the COMMENT table needs to make comments
+// TODO: author here should be who made the change, irregardless of who it is credited to
 $table = 'SH_TABLE_NOTE_VERSION';
 $new_table = 'SH_TABLE_COMMENT_VERSION';
 if ( in_array($table, $TABLE_LIST) && in_array($new_table, $TABLE_LIST) ) {
@@ -61,6 +62,13 @@ if ( in_array($table, $TABLE_LIST) && (global_GetInt('SH_TABLE_NOTE_VERSION') ==
 		$ok = table_Query( $table,
 			"SELECT * from ".SH_TABLE_PREFIX.constant($table)." LIMIT 1;");
 		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		// Rename tag to detail
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN `tag` `detail` ".DB_TYPE_ASCII(32).";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
 }
@@ -91,7 +99,7 @@ if ( in_array($table, $TABLE_LIST) && in_array($new_table, $TABLE_LIST) ) {
 	case 1:
 		$ok = table_Update( $table,
 			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
-				CHANGE COLUMN note comment ".DB_TYPE_ID.";"
+				CHANGE COLUMN `note` `comment` ".DB_TYPE_ID.";"
 			);
 		if (!$ok) break; $TABLE_VERSION++;
 	case 2:
@@ -112,6 +120,12 @@ if ( in_array($table, $TABLE_LIST) && (global_GetInt('SH_TABLE_NOTE_TREE') == 2+
 	case 0:
 		$ok = table_Query( $table,
 			"SELECT * from ".SH_TABLE_PREFIX.constant($table)." LIMIT 1;");
+		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN `node` `_node` ".DB_TYPE_ID.";"
+			);
 		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
@@ -188,6 +202,19 @@ if ( in_array($table, $TABLE_LIST) && (global_GetInt('SH_TABLE_NOTE') == 5+1) ) 
 	case 0:
 		$ok = table_Query( $table,
 			"SELECT * from ".SH_TABLE_PREFIX.constant($table)." LIMIT 1;");
+		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN `supernode` `_supernode` ".DB_TYPE_ID.";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+	case 2:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				ADD COLUMN _trust ".DB_TYPE_TRUST."
+					AFTER modified;"
+			);
 		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
@@ -281,6 +308,27 @@ if ( in_array($table, $TABLE_LIST) && (global_GetInt('SH_TABLE_NOTE_LOVE') == 8+
 	case 0:
 		$ok = table_Query( $table,
 			"SELECT * from ".SH_TABLE_PREFIX.constant($table)." LIMIT 1;");
+		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		// supernode is redundant (stored only for performance), hence the underscore
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN `supernode` `_supernode` ".DB_TYPE_ID.";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+	case 2:
+		// node is redundant data (hence the underscore)
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN `authornode` `_authorcomment` ".DB_TYPE_ID.";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
+	case 3:
+		// node is redundant data (hence the underscore)
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN `node` `_node` ".DB_TYPE_ID.";"
+			);
 		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);

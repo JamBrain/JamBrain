@@ -72,10 +72,12 @@ function _comment_FetchTree( $ids, $threshold = null ) {
 			$threshold_string = " AND hops <= $threshold";
 		}
 
+		// NOTE: I've seen "hops" also called depth
+
 		$ret = db_QueryFetch(
-			"SELECT node, comment, ancestor, hops
+			"SELECT _node, comment, ancestor, hops
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT_TREE."
-			WHERE node IN ($ids_string)
+			WHERE _node IN ($ids_string)
 			$threshold_string
 			;"
 		);
@@ -133,10 +135,11 @@ function _comment_GetByNode( $ids ) {
 
 		$ret = db_QueryFetch(
 			"SELECT id, parent,
-				node, supernode,
+				node, _supernode,
 				author,
 				".DB_FIELD_DATE('created').",
 				".DB_FIELD_DATE('modified').",
+				_trust,
 				version, flags,
 				body
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."
@@ -177,7 +180,7 @@ function comment_GetNodeIdBySuperNodeAuthor( $supernode_id, $author_id ) {
 	return db_QueryFetchSingle(
 		"SELECT id
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."
-		WHERE supernode=? AND author=?
+		WHERE _supernode=? AND author=?
 		;",
 		$supernode_id,
 		$author_id
@@ -213,10 +216,11 @@ function comment_GetById( $ids ) {
 
 		$ret = db_QueryFetch(
 			"SELECT id, parent,
-				node, supernode,
+				node, _supernode,
 				author,
 				".DB_FIELD_DATE('created').",
 				".DB_FIELD_DATE('modified').",
+				_trust,
 				version, flags,
 				body
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."
@@ -234,12 +238,12 @@ function comment_GetById( $ids ) {
 }
 
 
-function _comment_AddByNode( $node, $supernode, $author, $parent, $body, $version_tag, $flags ) {
+function _comment_AddByNode( $node, $supernode, $author, $parent, $body, $version_detail, $flags ) {
 	// Insert Proxy
 	$comment_id = db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_COMMENT." (
 			parent,
-			node, supernode,
+			node, _supernode,
 			author, flags,
 			created
 		)
@@ -254,13 +258,13 @@ function _comment_AddByNode( $node, $supernode, $author, $parent, $body, $versio
 		$author, $flags
 	);
 
-	$edit = comment_SafeEdit( $comment_id, $author, $body, $version_tag, $flags );
+	$edit = comment_SafeEdit( $comment_id, $author, $body, $version_detail, $flags );
 
 	return $comment_id;
 }
 
-function comment_AddByNode( $node, $supernode, $author, $parent, $body, $version_tag, $flags = 0 ) {
-	$comment_id = _comment_AddByNode($node, $supernode, $author, $parent, $body, $version_tag, $flags);
+function comment_AddByNode( $node, $supernode, $author, $parent, $body, $version_detail, $flags = 0 ) {
+	$comment_id = _comment_AddByNode($node, $supernode, $author, $parent, $body, $version_detail, $flags);
 
 	// Hack: Adding just the root entry to the tree
 	$tree = commentTree_Add($node, $comment_id, 0, 1);
@@ -268,8 +272,8 @@ function comment_AddByNode( $node, $supernode, $author, $parent, $body, $version
 	return $comment_id;
 }
 
-function comment_SafeEdit( $comment_id, $author, $body, $version_tag, $flags ) {
-	$version_id = commentVersion_Add($comment_id, $author, $body, $version_tag, $flags);
+function comment_SafeEdit( $comment_id, $author, $body, $version_detail, $flags ) {
+	$version_id = commentVersion_Add($comment_id, $author, $body, $version_detail, $flags);
 
 	return db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."
@@ -284,6 +288,31 @@ function comment_SafeEdit( $comment_id, $author, $body, $version_tag, $flags ) {
 		$flags,
 		$body,
 
+		$comment_id
+	);
+}
+
+
+function comment_SetAuthorTrust($author_id, $value) {
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."
+		SET
+			_trust=?
+		WHERE
+			author=?;",
+		$value,
+		$author_id
+	);
+}
+
+function comment_SetIdTrust($comment_id, $value) {
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_COMMENT."
+		SET
+			_trust=?
+		WHERE
+			id=?;",
+		$value,
 		$comment_id
 	);
 }

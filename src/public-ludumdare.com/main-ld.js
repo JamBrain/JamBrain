@@ -94,7 +94,7 @@ class Main extends Component {
 				'id': 0
 			},
 			'parent': null,
-			'superparent': null,
+			'_superparent': null,
 			'author': null,
 
 			// Root Node
@@ -316,7 +316,7 @@ class Main extends Component {
 		console.log("[fetchNode] + Slugs:", slugs);
 		// @endif
 
-		let args = ['node', 'parent', 'superparent', 'author'];
+		let args = ['node', 'parent', '_superparent', 'author'];
 		if ( newArgs ) {
 			args = args.concat(newArgs);
 		}
@@ -335,7 +335,7 @@ class Main extends Component {
 
 				NewState.node = r.node[r.node_id];
 				NewState.parent = NewState.node.parent ? r.node[NewState.node.parent] : null;
-				NewState.superparent = NewState.node.superparent ? r.node[NewState.node.superparent] : null;
+				NewState._superparent = NewState.node._superparent ? r.node[NewState.node._superparent] : null;
 				NewState.author = NewState.node.author ? r.node[NewState.node.author] : null;
 
 				this.setState(NewState);
@@ -507,11 +507,19 @@ class Main extends Component {
 	}
 
 	render( {}, state ) {
-		let {node, parent, superparent, author, user, featured, path, extra} = state;
-		let NewProps = {node, parent, superparent, author, user, featured, path, extra};
+		let {node, parent, _superparent, author, user, featured, path, extra} = state;
+		let NewProps = {node, parent, _superparent, author, user, featured, path, extra};
 
 		if ( node ) {
 			document.title = this.getTitle(node);
+		}
+
+			// Set the robots meta tag
+			let robots_value = "noindex";
+			if (node._trust > 0) {
+				robots_value = "all";
+			}
+			document.querySelector('meta[name="robots"]').setAttribute("content", robots_value);
 		}
 
 		return (

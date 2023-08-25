@@ -21,7 +21,7 @@ require_once __DIR__."/".SHRUB_PATH."user/user.php";
 
 
 # Identify existing events
-# function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subtypes = null, $subsubtypes = null, $score_op = null, $limit = 20, $offset = 0 ) {
+# function nodeFeed_GetByMethod( $methods, $node_ids = null, $types = null, $subtypes = null, $subsubtypes = null, $value_op = null, $limit = 20, $offset = 0 ) {
 function loadEvents()
 {
 	global $events, $eventcount, $suggestname;

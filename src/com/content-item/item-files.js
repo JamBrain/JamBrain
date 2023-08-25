@@ -119,9 +119,10 @@ export default class ContentItemFiles extends Component {
 
             let files = [];
             Object.values(latestFiles).forEach(e => {
-                if ( (e.status & 0x1) && !(e.status & 0x40) ) {
+                if ( (e.status & 0x8) && !(e.status & 0x40) ) {
                     let func = this.onDelete.bind(this, e);
-                    files.push(<li>{e.name} [{e.status.toString(16)}] - {e.timestamp} - {e.size} bytes - <UIButton style="display: inline;" onclick={func}>delete</UIButton></li>);
+                    //[{e.status.toString(16)}]
+                    files.push(<li>{e.name} - {getLocaleTimeStamp(new Date(e.timestamp))} - {e.size} bytes <UIButton class="-button" style="display: inline;" onclick={func}>delete</UIButton></li>);
                 }
             });
 
@@ -162,7 +163,7 @@ export default class ContentItemFiles extends Component {
 
         let files = [];
         Object.values(latestFiles).forEach(e => {
-            if ( !(e.status & 0x40) ) {
+            if ( (e.status & 0x8) && !(e.status & 0x40) ) {
                 files.push(<li><UILink href={"//files.jam.host/uploads/$"+node.id+"/"+e.name}>{e.name}</UILink> - {e.size} bytes</li>);
             }
         });

@@ -22,8 +22,10 @@ export default function SidebarUpcoming() {
 //		<div class="-item"><strong>April 1st-4th, 2022</strong> - Ludum Dare 50 <UIIcon baseline small>trophy</UIIcon></div>,
 //		<div class="-item">The 20th anniversary of Ludum Dare!</div>,
 //		<div class="-item">&nbsp;</div>,
-		<div class="-item"><strong>September 30th 2022</strong> - Ludum Dare 51 <UIIcon baseline small>trophy</UIIcon></div>,
-		<div class="-item"><strong>April 2023</strong> - Ludum Dare 52 <UIIcon baseline small>trophy</UIIcon></div>,
+//		<div class="-item"><strong>September 30th 2022</strong> - Ludum Dare 51 <SVGIcon baseline small>trophy</SVGIcon></div>,
+//		<div class="-item"><strong>January 6th, 2023</strong> - Ludum Dare 52 <UIIcon baseline small>trophy</UIIcon></div>,
+//		<div class="-item"><strong>April 28th, 2023</strong> - Ludum Dare 53 <UIIcon baseline small>trophy</UIIcon></div>,
+		<div class="-item"><strong>September 29th, 2023</strong> - Ludum Dare 54 <UIIcon baseline small>trophy</UIIcon></div>,
 	];
 
 	return (

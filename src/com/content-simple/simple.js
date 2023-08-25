@@ -347,7 +347,16 @@ export default class ContentSimple extends Component {
 
 		props = {...props};	// Shallow copy so we can change props
 
-		if ( node && (((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length)) ) {
+		// Hide if filter-out is enabled
+		if ( props.filterout && author && author.meta && author.meta['dont-show-me'] == "1" ) {
+			return <div />;
+		}
+
+
+		if ( (node && node._trust < 0) ) {
+			return <div>💩</div>;
+		}
+		else if ( node && (((node.slug && !props.authored && !props.authors) || (node.slug && author && author.slug)) || (node.slug && authors.length)) ) {
 			let PreHeader = [];
 			let Header = [];
 			let Body = [];
@@ -516,6 +525,7 @@ export default class ContentSimple extends Component {
 						replaceText={state.replaceText}
 						cursorPos={state.replaceCursorPos}
 						replaceTextEvent={state.replaceTextEvent}
+						untrusted={node._trust <= 0}
 					>
 						{state.body}
 					</ContentCommonBodyMarkup>
@@ -539,7 +549,7 @@ export default class ContentSimple extends Component {
 			}
 
 			let ShowPrefix = null;
-			if ( props.prefix ) {
+			if ( props.prefix && !state.editing ) {
 				ShowPrefix = props.prefix;
 			}
 

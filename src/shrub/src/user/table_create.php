@@ -82,6 +82,12 @@ if ( in_array($table, $TABLE_LIST) ) {
 //				total ".DB_TYPE_UINT64."
 //			)".DB_CREATE_SUFFIX);
 		if (!$ok) break; $TABLE_VERSION++;
+	case 1:
+		$ok = table_Update( $table,
+			"ALTER TABLE ".SH_TABLE_PREFIX.constant($table)."
+				CHANGE COLUMN `value` `detail` ".DB_TYPE_ASCII(32).";"
+			);
+		if (!$ok) break; $TABLE_VERSION++;
 	};
 	table_Exit($table);
 }

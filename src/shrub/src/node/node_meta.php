@@ -410,6 +410,8 @@ function nodeMeta_CountByABKeyScope( $parent = null, $a = null, $b = null, $key 
 	if ( $scope_op )
 		$OUTER_QUERY[] = 'scope'.$scope_op;
 
+	// TODO: Consider including or using trust
+
 //	return db_Echo(
 	return db_QueryFetchValue(
 		"SELECT
@@ -502,7 +504,7 @@ function nodeMeta_CountByABKeyScope( $parent = null, $a = null, $b = null, $key 
 //}
 
 
-function _nodeMetaVersion_Add( $a, $b, $scope, $key, $value = null ) {
+function _nodeMetaVersion_Add( $a, $b, $scope, $key, $value = null, $change_author = 0 ) {
 	return db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_META_VERSION." (
 			a,
@@ -510,9 +512,11 @@ function _nodeMetaVersion_Add( $a, $b, $scope, $key, $value = null ) {
 			scope,
 			`key`,
 			`value`,
+			author,
 			timestamp
 		)
 		VALUES (
+			?,
 			?,
 			?,
 			?,
@@ -524,52 +528,13 @@ function _nodeMetaVersion_Add( $a, $b, $scope, $key, $value = null ) {
 		$b,
 		$scope,
 		$key,
-		$value
+		$value,
+		$change_author
 	);
 }
 
 // NOTE: Do not use directly! Use _nodeMeta_Add instead!
-function __nodeMeta_Insert( $a, $b, $version, $scope, $key, $value = null/*, $timestamp = null*/ ) {
-//	if ( $timestamp ) {
-//		return db_QueryInsert(
-//			"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." (
-//				a,
-//				b,
-//				version,
-//				scope,
-//				`key`,
-//				`value`,
-//				timestamp
-//			)
-//			VALUES (
-//				?,
-//				?,
-//				?,
-//				?,
-//				?,
-//				?,
-//				?
-//			)
-//			ON DUPLICATE KEY UPDATE
-//				version=VALUES(version),
-//				scope=VALUES(scope),
-//				`value`=VALUES(`value`),
-//				timestamp=VALUES(timestamp)
-//			;",
-//			$a,
-//			$b,
-//			$version,
-//			$scope,
-//			$key,
-//			$value,
-//			$timestamp
-//		);
-//	}
-
-	// We can't rely on "NOW()" here, so we have to do this
-//	if ( !$timestamp )
-//		$timestamp = (new DateTime())->format('Y-m-d H:i:s');
-
+function __nodeMeta_Insert( $a, $b, $version, $scope, $key, $value = null ) {
 	return db_QueryInsert(
 		"INSERT IGNORE INTO ".SH_TABLE_PREFIX.SH_TABLE_NODE_META." (
 			a,
@@ -605,11 +570,7 @@ function __nodeMeta_Insert( $a, $b, $version, $scope, $key, $value = null/*, $ti
 }
 
 // NOTE: Do not use directly! Use _nodeMeta_Add instead!
-function __nodeMeta_Update( $a, $b, $version, $scope, $key, $value = null/*, $timestamp = null*/, $b_constraint = true ) {
-	// We can't rely on "NOW()" here, so we have to do this
-	//if ( !$timestamp )
-	//	$timestamp = (new DateTime())->format('Y-m-d H:i:s');
-
+function __nodeMeta_Update( $a, $b, $version, $scope, $key, $value = null, $b_constraint = true ) {
 	// If no b_constraint, then we only want to constrain by `a` and `key`
 	if ( !$b_constraint ) {
 		return db_QueryUpdate(
@@ -657,18 +618,18 @@ function __nodeMeta_Update( $a, $b, $version, $scope, $key, $value = null/*, $ti
 }
 
 
-function _nodeMeta_Add( $a, $b, $version, $scope, $key, $value = null/*, $timestamp = null*/, $b_constraint = true ) {
-	if ( $ret = __nodeMeta_Update($a, $b, $version, $scope, $key, $value/*, $timestamp*/, $b_constraint) ) {
+function _nodeMeta_Add( $a, $b, $version, $scope, $key, $value = null, $b_constraint = true ) {
+	if ( $ret = __nodeMeta_Update($a, $b, $version, $scope, $key, $value, $b_constraint) ) {
 		return $ret;
 	}
 	// $b_constraint constraining only applies to updating
-	return __nodeMeta_Insert($a, $b, $version, $scope, $key, $value/*, $timestamp*/);
+	return __nodeMeta_Insert($a, $b, $version, $scope, $key, $value);
 }
 
 
-function nodeMeta_Add( $a, $b, $scope, $key, $value = null, $b_constraint = true ) {
-	$version = _nodeMetaVersion_Add($a, $b, $scope, $key, $value);
-	return _nodeMeta_Add($a, $b, $version, $scope, $key, $value/*, null*/, $b_constraint);
+function nodeMeta_Add( $a, $b, $scope, $key, $value = null, $b_constraint = true, $change_author = 0 ) {
+	$version = _nodeMetaVersion_Add($a, $b, $scope, $key, $value, $change_author);
+	return _nodeMeta_Add($a, $b, $version, $scope, $key, $value, $b_constraint);
 }
 // NOTE: Doesn't actually remove, but adds an "ignore-me" entry
 // ALSO: It calls nodeMeta_Add directly, so to correctly create history

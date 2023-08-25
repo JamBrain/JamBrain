@@ -228,7 +228,7 @@ export default class SidebarTV extends Component {
 					</div>
 					<div class="-browse">
 						{this.showOthers(others, active)}
-						<ButtonLink class="-more" href="https://www.twitch.tv/directory/all/tags/c8d6d6ee-3b02-4ae7-81e9-4c0f434941cc" title="MORE">
+						<ButtonLink class="-more" href="https://www.twitch.tv/directory/all/tags/ludumdare" title="MORE">
 							<div><UIIcon>circle</UIIcon> <UIIcon>circle</UIIcon> <UIIcon>circle</UIIcon></div>
 						</ButtonLink>
 					</div>

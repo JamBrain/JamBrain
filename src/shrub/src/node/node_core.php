@@ -223,8 +223,8 @@ function node_CustomGetTagByType( $type, $subtype = null ) {
 function node_GetSearchIndexes( $timestamp, $limit = 50 ) {
 	return db_QueryFetchWithIntKey(
 		'id',
-		"SELECT id, parent, superparent, author, type, subtype, subsubtype,
-			UNIX_TIMESTAMP(published) AS published, UNIX_TIMESTAMP(created) AS created, UNIX_TIMESTAMP(modified) AS modified, slug, name, body
+		"SELECT id, parent, _superparent, author, type, subtype, subsubtype,
+			UNIX_TIMESTAMP(published) AS published, UNIX_TIMESTAMP(created) AS created, UNIX_TIMESTAMP(modified) AS modified, _trust, slug, name, body
 		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 		WHERE UNIX_TIMESTAMP(modified)>=?
 		ORDER BY modified ASC
@@ -253,11 +253,12 @@ function node_GetById( $ids ) {
 		$ids_string = implode(',', $ids);
 
 		$ret = db_QueryFetch(
-			"SELECT id, parent, superparent, author,
+			"SELECT id, parent, _superparent, author,
 				type, subtype, subsubtype,
 				".DB_FIELD_DATE('published').",
 				".DB_FIELD_DATE('created').",
 				".DB_FIELD_DATE('modified').",
+				_trust,
 				version,
 				slug, name, body
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
@@ -290,11 +291,12 @@ function node_GetNoBodyById( $ids ) {
 		$ids_string = implode(',', $ids);
 
 		$ret = db_QueryFetch(
-			"SELECT id, parent, superparent, author,
+			"SELECT id, parent, _superparent, author,
 				type, subtype, subsubtype,
 				".DB_FIELD_DATE('published').",
 				".DB_FIELD_DATE('created').",
 				".DB_FIELD_DATE('modified').",
+				_trust,
 				version,
 				slug, name
 			FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
@@ -310,12 +312,48 @@ function node_GetNoBodyById( $ids ) {
 	return null;
 }
 
+// Hacky function for fetching zero trust nodes (reverse order)
+function node_GetLastZeroTrust($id) {
+	return db_QueryFetch(
+		"SELECT id
+		FROM ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		WHERE _trust = 0 AND id < ? AND published != 0
+		ORDER BY id DESC
+		LIMIT 1;",
+		$id
+	)[0]['id'];
+}
+
+function node_SetAuthorTrust($author_id, $value) {
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		SET
+			_trust=?
+		WHERE
+			author=?;",
+		$value,
+		$author_id
+	);
+}
+
+function node_SetIdTrust($node_id, $value) {
+	return db_QueryUpdate(
+		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
+		SET
+			_trust=?
+		WHERE
+			id=?;",
+		$value,
+		$node_id
+	);
+}
+
 function node_CountByParentAuthorType( $parent = null, $superparent = null, $author = null, $type = null, $subtype = null, $subsubtype = null, $published = true ) {
 	$QUERY = [];
 	$ARGS = [];
 
 	dbQuery_MakeEq('parent', $parent, $QUERY, $ARGS);
-	dbQuery_MakeEq('superparent', $superparent, $QUERY, $ARGS);
+	dbQuery_MakeEq('_superparent', $superparent, $QUERY, $ARGS);
 	dbQuery_MakeEq('author', $author, $QUERY, $ARGS);
 	dbQuery_MakeEq('type', $type, $QUERY, $ARGS);
 	dbQuery_MakeEq('subtype', $subtype, $QUERY, $ARGS);
@@ -491,13 +529,13 @@ function node_Add( $parent, $author, $type, $subtype, $subsubtype, $slug, $name,
 }
 
 
-function _node_Edit( $node, $parent, $superparent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag = "" ) {
-	$version = nodeVersion_Add($node, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag);
+function _node_Edit( $node, $parent, $superparent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $detail = "" ) {
+	$version = nodeVersion_Add($node, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $detail);
 
 	$success = db_QueryUpdate(
 		"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 		SET
-			parent=?, superparent=?, author=?,
+			parent=?, _superparent=?, author=?,
 			type=?, subtype=?, subsubtype=?,
 			modified=NOW(),
 			version=?,
@@ -515,31 +553,33 @@ function _node_Edit( $node, $parent, $superparent, $author, $type, $subtype, $su
 
 	return $success;
 }
-function node_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag = "" ) {
+function node_Edit( $node, $parent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $detail = "" ) {
 	// Lookup superpaprent (skip this step by calling _node_Edit directly)
 	$superparent = $parent ? node_GetParentById($parent) : 0;
-	return _node_Edit($node, $parent, $superparent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $tag);
+	return _node_Edit($node, $parent, $superparent, $author, $type, $subtype, $subsubtype, $slug, $name, $body, $detail);
 }
 
 // Safe version of the edit function. Only allows you to change things users are allowed to change (i.e. slug, name, body).
-function node_SafeEdit( $node, $slug, $name, $body, $tag = "" ) {
+function node_SafeEdit( $node, $slug, $name, $body, $detail = "" ) {
 	// TODO: wrap in a db lock
 	$old = node_GetById($node);		// uncached
 
-	return _node_Edit($node, $old['parent'], $old['superparent'], $old['author'], $old['type'], $old['subtype'], $old['subsubtype'], $slug, $name, $body, $tag);
+	return _node_Edit($node, $old['parent'], $old['_superparent'], $old['author'], $old['type'], $old['subtype'], $old['subsubtype'], $slug, $name, $body, $detail);
 }
 
 
 // TODO: optional 'set slug' (... why?)
-function node_Publish( $node, $state = true ) {
+function node_Publish( $node, $state = true, $trust = 0 ) {
 	if ( $state ) {
 		return db_QueryUpdate(
 			"UPDATE ".SH_TABLE_PREFIX.SH_TABLE_NODE."
 			SET
 				published=NOW(),
-				modified=NOW()
+				modified=NOW(),
+				_trust=?
 			WHERE
 				id=?;",
+			$trust,
 			$node
 		);
 	}

@@ -242,7 +242,7 @@ export default class ContentCommentsComment extends Component {
 		let {user, comment, author, error, node, isNodeAuthor, isMyComment, isMention} = props;
 
 		// Allow authored comments, or non-authored (i.e. anonymous)
-		if ( comment && (author || (comment.author == 0)) ) {
+		if ( comment && ((author && author._trust >= 0 && comment._trust >= 0) || (comment.author == 0 && comment._trust > 0)) ) {
 			let Name = "Anonymous";
 			let Avatar = "///other/dummy/user64.png";
 
@@ -281,7 +281,7 @@ export default class ContentCommentsComment extends Component {
 
 				if ( comment.created ) {
 					ShowTitle.push(
-						<span>, <span title={comment.id}>published</span> <span class="-date" title={getLocaleTimeStamp(Created)}>{getRoughAge(DateDiff)}</span><span title={getLocaleDate(Modified)}>{HasEdited?" (edited)":""}</span></span>
+						<span>, <span title={comment.id}>published</span> <span class="-date" title={getLocaleFullTimeStamp(Created)}>{getRoughAge(DateDiff)}</span><span title={getLocaleDate(Modified)}>{HasEdited?" (edited)":""}</span></span>
 					);
 				}
 				else {
@@ -429,6 +429,7 @@ export default class ContentCommentsComment extends Component {
 								replaceText={state.replaceText}
 								cursorPos={state.replaceCursorPos}
 								replaceTextEvent={state.replaceTextEvent}
+								untrusted={!!author && author._trust <= 0}
 							>
 								{comment.body}
 							</ContentCommentsMarkup>
@@ -439,10 +440,25 @@ export default class ContentCommentsComment extends Component {
 				</div>
 			);
 		}
+		else if ( comment && ((author && author._trust < 0) || (comment && comment._trust <= 0)) ) {
+			return (
+				<div
+					id={"comment-"+comment.id}
+					class={"-item -comment -indent-"+props.indent}
+				>
+					<div class="-body"><div class="-text">-</div></div>
+				</div>
+			);
+		}
 		else {
 			return (
-				<div class={"-item -comment -indent-"+props.indent}>
-					<div class="-body">There was a problem with this node</div>
+				<div
+					id={"comment-"+comment.id}
+					class={"-item -comment -indent-"+props.indent}
+				>
+					<div class="-body">
+						<div class="-text">There was a problem with this node</div>
+					</div>
 				</div>
 			);
 		}

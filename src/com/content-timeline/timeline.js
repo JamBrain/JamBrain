@@ -221,6 +221,16 @@ export default class ContentTimeline extends Component {
 		let {feed, error, hasLoaded, isLoading} = state;
 		let content = [];
 
+		// Filter out
+		if (feed && feed.length) {
+			feed = feed.filter(i => {
+				if (i && i.node && i.node.meta && i.node.meta['dont-show-me']) {
+					return i.node.meta['dont-show-me'] != "1";
+				}
+				return true;
+			});
+		}
+
 		// Error section at the start
 		if ( error ) {
 			content.push(<ContentCommon key="error" node={props.node}><ContentCommonBody>Error: {""+error}</ContentCommonBody></ContentCommon>);

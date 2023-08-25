@@ -4,25 +4,26 @@ import Renderer from './Renderer';
 import Util from './Util';
 
 export default class marked {
-	static defaults() {
-		return {
-			gfm: true,
-			tables: true,
-			breaks: false,
-			pedantic: false,
-			sanitize: false,
-			sanitizer: null,
-			mangle: true,
-			smartLists: false,
-			silent: false,
-			highlight: null,
-			langPrefix: 'lang-',
-			smartypants: false,
-			headerPrefix: '',
-			renderer: null,
-			xhtml: false
-		};
-	}
+  static defaults() {
+    return {
+      gfm: true,
+      tables: true,
+      breaks: false,
+      pedantic: false,
+      sanitize: false,
+      sanitizer: null,
+      mangle: true,
+      smartLists: false,
+      silent: false,
+      showLinks: true,
+      highlight: null,
+      langPrefix: 'lang-',
+      smartypants: false,
+      headerPrefix: '',
+      renderer: null,
+      xhtml: false
+    };
+  }
 
 	parse(src, opt, callback) {
 		this.constructor.defaults().renderer = new Renderer((opt || this.constructor.defaults()));

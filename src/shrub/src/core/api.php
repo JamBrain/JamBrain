@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__."/core.php";
 require_once __DIR__."/json.php";
-require_once __DIR__."/ratelimit.php";
+//require_once __DIR__."/ratelimit.php";
 
 /// @defgroup API
 /// @brief API Framework - Accept a data structure describing API calls and dispatch the call appropriately.
@@ -95,13 +95,13 @@ function api_Exec( $apidesc ) {
 			}
 
 			// Charge the user's pool based on the rate limiting settings
-			$ratelimit = $api[2];
-			if ( $ratelimit ) {
-				if ( !rateLimit_Charge($ratelimit) ) {
-					json_EmitFatalError_Permission("Rate limit exceeded. Please try again later.", $RESPONSE);
-				}
-				$RESPONSE['rate_limit'] = ['cost' => $ratelimit, 'remaining' => rateLimit_RemainingCharge()];
-			}
+			//$ratelimit = $api[2];
+			//if ( $ratelimit ) {
+				//if ( !rateLimit_Charge($ratelimit) ) {
+				//	json_EmitFatalError_Permission("Rate limit exceeded. Please try again later.", $RESPONSE);
+				//}
+				//$RESPONSE['rate_limit'] = ['cost' => $ratelimit, 'remaining' => rateLimit_RemainingCharge()];
+			//}
 
 
 			// Pass control on to the method specified in the API definition to do the work.

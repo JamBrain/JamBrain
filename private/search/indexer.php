@@ -76,7 +76,7 @@ foreach ( $nodes as &$node ) {
 		REPLACE INTO node_rt (
 			id,
 			parent,
-			superparent,
+			_superparent,
 			author,
 
 			type,
@@ -97,7 +97,7 @@ foreach ( $nodes as &$node ) {
 		VALUES (
 			".$node['id'].",
 			".$node['parent'].",
-			".$node['superparent'].",
+			".$node['_superparent'].",
 			".$node['author'].",
 			".searchDB_String($node['type']).",
 			".searchDB_String($node['subtype']).",

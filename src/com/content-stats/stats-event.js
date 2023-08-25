@@ -150,7 +150,7 @@ export default class ContentStatsEvent extends Component {
 
 				}
 
-				Data.push(<div class="-gap">Last Updated: {stats.timestamp}</div>);
+				Data.push(<div class="-gap">Last Updated: {getLocaleTimeStamp(new Date(stats.timestamp))}</div>);
 
 				return (
 					<ContentCommon {...props} class={cN(Class)}>

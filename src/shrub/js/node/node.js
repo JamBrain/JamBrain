@@ -35,7 +35,7 @@ function _MakeKey( id ) {
 	return "NODE|" + id;
 }
 function _Store( node ) {
-	if ( node.id ) {
+	if ( node && node.id ) {
 		NODE_CACHE[node.id] = node;
 		//Cache.Store(_MakeKey(node.id), node, NODE_TTL);
 	}
@@ -113,7 +113,7 @@ export function Get( ids, argArray ) {
 				if ( argArray.includes('parent') )
 					requestedIds.push(node.parent);
 				if ( argArray.includes('superparent') )
-					requestedIds.push(node.superparent);
+					requestedIds.push(node._superparent);
 
 				if ( argArray.includes('authors') && node.meta.authors )
 					requestedIds.concat(node.meta.authors);
@@ -257,7 +257,7 @@ export function Walk( parent, slugs, argArray ) {
 	});
 }
 
-export function GetFeed( id, methods, types, subtypes, subsubtypes, tags, offset, limit ) {
+export function GetFeed( id, methods, types, subtypes, subsubtypes, tags, offset, limit, raw ) {
 	let args = [];
 
 	args.push(id);
@@ -312,7 +312,8 @@ export function GetFeed( id, methods, types, subtypes, subsubtypes, tags, offset
 	if ( query.length )
 		query = "?"+query.join('&');
 
-	return Fetch.Get(API_ENDPOINT+'/vx/node/feed/'+args.join('/')+query)
+	let which_feed = raw ? 'rawfeed' : 'feed';
+	return Fetch.Get(API_ENDPOINT+'/vx/node/'+which_feed+'/'+args.join('/')+query)
 		.then(r => {
 			return r;
 		});

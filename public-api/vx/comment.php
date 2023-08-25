@@ -65,6 +65,14 @@ switch ( $action ) {
 		json_ValidateHTTPMethod('POST');
 
 		if ( $user_id = userAuth_GetID() ) {
+			// Fetch user
+			$user = nodeComplete_GetById($user_id);
+
+			// Is user trusted?
+			if ( $user['_trust'] < 0 ) {
+				json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+			}
+
 			$node_id = intval(json_ArgShift());
 			if ( empty($node_id) ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
@@ -81,9 +89,9 @@ switch ( $action ) {
 				json_EmitFatalError_BadRequest("No body", $RESPONSE);
 			$body = coreSanitize_Body(substr($_POST['body'], 0, 4096));
 
-			$version_tag = "";
-			if ( isset($_POST['tag']) )
-				$version_tag = coreSlugify_Name($_POST['tag']);
+			$version_detail = "";
+			if ( isset($_POST['detail']) )
+				$version_detail = coreSlugify_Name($_POST['detail']);
 
 			$parent = intval($_POST['parent']);
 
@@ -108,7 +116,7 @@ switch ( $action ) {
 				if ( $parent !== 0 )
 					json_EmitFatalError_Permission("Temporary: No children", $RESPONSE);
 
-				$RESPONSE['comment'] = comment_AddByNode($node['id'], $node['parent'], $author, $parent, $body, $version_tag, $flags);
+				$RESPONSE['comment'] = comment_AddByNode($node['id'], $node['parent'], $author, $parent, $body, $version_detail, $flags);
 
 				// Add notifications for users watching this thread
 				if ( $RESPONSE['comment'] ) {
@@ -133,6 +141,14 @@ switch ( $action ) {
 		json_ValidateHTTPMethod('POST');
 
 		if ( $user_id = userAuth_GetID() ) {
+			// Fetch user
+			$user = node_GetById($user_id);
+
+			// Is user trusted?
+			if ( $user['_trust'] < 0 ) {
+				json_EmitFatalError_Forbidden("Failed trust check", $RESPONSE);
+			}
+
 			$comment_id = intval(json_ArgShift());
 			if ( empty($comment_id) ) {
 				json_EmitFatalError_BadRequest(null, $RESPONSE);
@@ -151,9 +167,9 @@ switch ( $action ) {
 				json_EmitFatalError_BadRequest("No body", $RESPONSE);
 			$body = coreSanitize_Body(substr($_POST['body'], 0, 4096));
 
-			$version_tag = "";
-			if ( isset($_POST['tag']) )
-				$version_tag = coreSlugify_Name($_POST['tag']);
+			$version_detail = "";
+			if ( isset($_POST['detail']) )
+				$version_detail = coreSlugify_Name($_POST['detail']);
 
 			// Load Comment
 			$comment = comment_GetById($comment_id);
@@ -171,7 +187,7 @@ switch ( $action ) {
 
 				// Check if you have permission to add comment to node
 				if ( comment_IsCommentPublicByNode($node) ) {
-					$RESPONSE['updated'] = comment_SafeEdit($comment_id, $author, $body, $version_tag, $comment['flags']);
+					$RESPONSE['updated'] = comment_SafeEdit($comment_id, $author, $body, $version_detail, $comment['flags']);
 
 					// Add mention notifications for at-mentions of users that were added in this edit.
 					$newmentions = notification_GetMentionedUsers($body, $comment['body']);
@@ -252,7 +268,7 @@ switch ( $action ) {
 							if ( $comment['id'] ) {
 
 //							if ( in_array($node['type'], THINGS_I_CAN_LOVE) ) {
-								$RESPONSE['id'] = commentLove_AddByComment($comment_id, $user_id, $comment['node'], $comment['supernode'], $comment['author'] );
+								$RESPONSE['id'] = commentLove_AddByComment($comment_id, $user_id, $comment['node'], $comment['_supernode'], $comment['author'] );
 
 //								$RESPONSE['love'] = commentLove_GetByNode($node_id);
 //							}

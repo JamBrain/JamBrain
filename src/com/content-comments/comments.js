@@ -46,7 +46,8 @@ export default class ContentComments extends Component {
 			'author': this.props.user.id,
 			'body': '',
 			'love': 0,
-			'loved': false
+			'loved': false,
+			'_trust': 0
 		};
 	}
 

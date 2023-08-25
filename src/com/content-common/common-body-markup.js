@@ -91,13 +91,14 @@ export default class ContentCommonBodyMarkup extends Component {
         },
         'sanitize': true, // disable HTML
         'smartypants': true, // enable automatic fancy quotes, ellipses, dashes
+        'showLinks': !props.untrusted,
         'langPrefix': 'language-'
       };
 
       // NOTE: only parses the first child
       //var Text = props.children.length ? marked.parse(props.children[0]) : "";
-			var mrkd = new marked();
-      markdown = mrkd.parse(Text, markedOptions);
+			let mrkd = new marked();
+      let markdown = mrkd.parse(Text, markedOptions);
 
       return (<div class={cN(Class)}>{markdown}</div>);
     }

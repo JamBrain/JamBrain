@@ -463,7 +463,7 @@ export default class ContentItem extends Component {
 //					namePlaceholder="Source"
 //					urlPlaceholder="http://example.com/source.zip"
 
-		if ( editing || (this.state.linksShown > 1) ) {
+		if ( editing || (this.state.linksShown >= 1) ) {
 			return (
 				<ContentCommonBody class="-body">
 					<div class="-label">Links</div>
@@ -593,7 +593,7 @@ export default class ContentItem extends Component {
 					<div class="-footer">
 						<p>
 							<UIIcon baseline small src="info" />
-							<span>If the buttons are grayed out, you haven't checked-off enough items in the Submission Checklist above.</span>
+							<span>If a button is disabled, you haven't checked-off enough items in the <strong>Submission Checklist</strong> above to qualify for the category.</span>
 						</p>
 						<p>
 							If your event format is correct (filled background), you <strong>don't</strong> need to change or update this.
@@ -1030,9 +1030,9 @@ export default class ContentItem extends Component {
 		);
 		props.onSave = this.onSave.bind(this);
 
-		if ( !isEditing ) {
+		//if ( !isEditing ) {
 			props.prefix = ShowEmbedView;
-		}
+		//}
 
 		props.viewonly = (
 			<div>

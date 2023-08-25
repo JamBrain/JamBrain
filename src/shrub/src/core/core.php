@@ -281,6 +281,22 @@ function core_GetAPIRequest() {
 }
 
 
+function core_GetClientIP() {
+	// NOTE: You should also confirm that the incoming IP (REMOTE_ADDR) is one that belongs to the CDN.
+	// You could alternatively check "X_FORWARDED_FOR", but be aware the string will contain multiple IP's 
+	if (defined("CLOUDFLARE")) {
+		// Incoming IP list: https://www.cloudflare.com/ips/
+		return $_SERVER["HTTP_CF_CONNECTING_IP"];
+	}
+	else if (defined("AKAMAI")) {
+		// Incoming IP list: ???
+		return $_SERVER['HTTP_TRUE_CLIENT_IP'];
+	}
+
+	return $_SERVER['REMOTE_ADDR'];
+}
+
+
 /// @name HTTP
 /// Convert response codes in to text
 function core_GetHTTPResponseText($code){

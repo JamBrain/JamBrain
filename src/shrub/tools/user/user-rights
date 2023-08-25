@@ -71,10 +71,10 @@ function OutputCanCreateStatus($user, $coreIds) {
 		}
 	}
 	if ($createEvents) {
-		print " + Can create new events (create-event).\n";
+		print " * User can create new events (create-event).\n";
 	}
 	else {
-		print " - Can't create new events (create-event).\n";
+		print " * User can't create new events (create-event).\n";
 	}
 	print "\n";
 }

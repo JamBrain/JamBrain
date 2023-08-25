@@ -245,6 +245,11 @@ export default class Renderer {
 
 		href = extractFromURL(href).href;
 
+		// hide links from untrusted users
+		if ( this.options.showLinks == false ) {
+			return <span title="This hyperlink is hidden while the trustworthiness of the user is evaluated" alt="hidden hyperlink">&lt;link /&gt;</span>;
+		}
+
 		// If text is blank, use the URL itself
 		let hasText = text && (text.length > 0);
 		let joinedText = Array.isArray(text) ? text.join("") : text;
