@@ -1,4 +1,5 @@
 import {h, Component} 					from 'preact';
+import titleParser						from 'internal/titleparser';
 
 import NavLink 							from 'com/nav-link/link';
 
@@ -13,7 +14,7 @@ export default class ContentHeaderCommon extends Component {
 	}
 
 	render( {title, path}, state ) {
-		var dangerousParsedTitle = { __html:titleParser.parse(title) };
+		var dangerousParsedTitle = { __html:titleParser(title) };
 
 		return (
 			<div class="content-header content-header-common">

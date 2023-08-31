@@ -1,6 +1,5 @@
 
-(function(){
-	window.extractFromURL = function( str ) {
+export function extractFromURL( str ) {
 		// MK: substr is deprecated. Use slice or substring.
 		var ret = {};
 		ret.origin = str.substr();
@@ -94,4 +93,3 @@
 
 		return ret;
 	}
-}());

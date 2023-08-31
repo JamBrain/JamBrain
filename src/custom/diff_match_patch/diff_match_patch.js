@@ -1314,7 +1314,7 @@ diff_match_patch.prototype.diff_fromDelta = function(text1, delta) {
       case '-':
         // Fall through.
       case '=':
-        var n = parseInt(param, 10);
+        var n = Number(param, 10);
         if (isNaN(n) || n < 0) {
           throw new Error('Invalid number in diff_fromDelta: ' + param);
         }
@@ -2015,7 +2015,7 @@ diff_match_patch.prototype.patch_fromText = function(textline) {
     }
     var patch = new patch_obj();
     patches.push(patch);
-    patch.start1 = parseInt(m[1], 10);
+    patch.start1 = Number(m[1], 10);
     if (m[2] === '') {
       patch.start1--;
       patch.length1 = 1;
@@ -2023,10 +2023,10 @@ diff_match_patch.prototype.patch_fromText = function(textline) {
       patch.length1 = 0;
     } else {
       patch.start1--;
-      patch.length1 = parseInt(m[2], 10);
+      patch.length1 = Number(m[2], 10);
     }
 
-    patch.start2 = parseInt(m[3], 10);
+    patch.start2 = Number(m[3], 10);
     if (m[4] === '') {
       patch.start2--;
       patch.length2 = 1;
@@ -2034,7 +2034,7 @@ diff_match_patch.prototype.patch_fromText = function(textline) {
       patch.length2 = 0;
     } else {
       patch.start2--;
-      patch.length2 = parseInt(m[4], 10);
+      patch.length2 = Number(m[4], 10);
     }
     textPointer++;
 

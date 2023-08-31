@@ -2,6 +2,8 @@ import {h, Component, toChildArray} from 'preact';
 import cN from 'classnames';
 import {shallowDiff}	 				from 'shallow-compare/index';
 
+import {getLocaleDate, getRoughAge}	from 'internal/time';
+
 import NavLink							from 'com/nav-link/link';
 
 export default class ContentCommonBodyBy extends Component {

@@ -7,14 +7,14 @@ export default class LabelYesNo extends Component {
 	}
 
 	render( props ) {
-		if ( parseInt(props.value) > 0 ) {
+		if ( Number(props.value) > 0 ) {
 			return (
 				<div class="label-yesno">
 					<UIIcon>checkmark</UIIcon>
 				</div>
 			);
 		}
-		else if ( parseInt(props.value) <= 0 ) {
+		else if ( Number(props.value) <= 0 ) {
 			return (
 				<div class="label-yesno">
 					<UIIcon>cross</UIIcon>

@@ -90,7 +90,7 @@ export default class ContentEventIdea extends Component {
 	}
 
 	removeIdea( id, e ) {
-		id = parseInt(id);
+		id = Number(id);
 
 		//console.log('remove:', id );
 		this.setState({'error': null});

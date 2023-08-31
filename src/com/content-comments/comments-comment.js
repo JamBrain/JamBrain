@@ -1,6 +1,8 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
 
+import { getRoughAge, getLocaleFullTimeStamp, getLocaleDate } from 'internal/time';
+
 import UISpinner						from 'com/ui/spinner';
 import NavLink 							from 'com/nav-link/link';
 import ButtonLink 						from 'com/button-link/link';

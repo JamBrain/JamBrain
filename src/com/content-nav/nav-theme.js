@@ -5,7 +5,7 @@ import ContentNavButton	from './nav-button';
 export default class ContentNavTheme extends Component {
 	render( {node, user, path, extra}, {} ) {
 		if ( node.slug ) {
-			let EventMode = (node.meta['event-mode']) ? parseInt(node.meta['event-mode']) : 0;
+			let EventMode = (node.meta['event-mode']) ? Number(node.meta['event-mode']) : 0;
 
 			var NewPath = '/'+ (extra ? extra.join('/') : '');
 
@@ -23,7 +23,7 @@ export default class ContentNavTheme extends Component {
 			if ( EventMode >= 4 ) {
 				for ( var idx = 1; idx <= 5; idx++ ) {	// 5 rounds max
 					let Page = node.meta['theme-page-mode-'+idx];
-					if ( parseInt(Page) > 0 ) {
+					if ( Number(Page) > 0 ) {
 						DefaultPath = '/'+idx;
 					}
 				}

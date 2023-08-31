@@ -1,4 +1,6 @@
 import {h, Component}					from 'preact';
+import {node_IsAuthor}					from 'internal/lib';
+
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentLoading					from 'com/content-loading/loading';
 import UIIcon							from 'com/ui/icon/icon';
@@ -113,8 +115,9 @@ export default class ItemTeambuilding extends Component {
 	render(props, {processing, error}) {
 		const {node, user, authors} = props;
 		const ShowTeamBuilding = [];
-		if (node.type != 'item')
+		if (node.type != 'item') {
 			return;
+		}
 		let includeBuilding = true;
 		let includeAdding = node_IsAuthor(node, user) && !processing;
 

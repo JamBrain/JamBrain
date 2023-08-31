@@ -58,10 +58,10 @@ export default class InputDropdown extends Component {
 		e.preventDefault();
 		if ( e.target.dataset.hasOwnProperty('index') ) {
 			if ( this.props.onModify ) {
-				this.props.onModify(parseInt(e.target.dataset.id));
+				this.props.onModify(Number(e.target.dataset.id));
 			}
 
-			this.setState({'value': parseInt(e.target.dataset.id)});
+			this.setState({'value': Number(e.target.dataset.id)});
 			this.doHide(e);
 		}
 	}

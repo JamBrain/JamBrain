@@ -25,7 +25,7 @@ export default class YoutubeEmbed extends Component {
 		var args = ['autoplay=1'];
 		// MK: Is this a bug or is this code unused?
 		if ( url.args.t ) {
-			args.push('start=' + parseInt(url.args.t));
+			args.push('start=' + Number(url.args.t));
 		}
 
 		if ( state.iframe ) {

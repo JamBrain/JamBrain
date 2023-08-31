@@ -13,7 +13,7 @@ export default class DialogCreate extends Component {
 	}
 
 	doCreate( e ) {
-		var event_id = this.props.extra.length ? Number.parseInt(this.props.extra[0]) : 0;
+		var event_id = this.props.extra.length ? Number(this.props.extra[0]) : 0;
 		var node_type = this.props.extra.length > 1 ? (this.props.extra[1]) : "";
 		var node_subtype = this.props.extra.length > 2 ? (this.props.extra[2]) : "";
 
@@ -58,7 +58,7 @@ export default class DialogCreate extends Component {
 		var What = "";
 
 		if ( props.extra && props.extra.length ) {
-			TargetNode = Number.parseInt(props.extra[0]);
+			TargetNode = Number(props.extra[0]);
 
 			if ( props.extra.length > 1 ) {
 				What = props.extra.slice(1).join('/');

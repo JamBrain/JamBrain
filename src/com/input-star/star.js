@@ -24,7 +24,7 @@ export default class InputStar extends Component {
 
 	render( props, state ) {
 		let Value = state.value || parseFloat(props.value);
-		let Count = parseInt(props.max) || 5;
+		let Count = Number(props.max) || 5;
 		let Title = null;
 
 		let ShowNumber = null;

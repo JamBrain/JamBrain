@@ -6,8 +6,8 @@ import "preact/debug";
 
 
 import {h, render, Component, options} from 'preact';
-
-import Sanitize							from 'internal/sanitize/sanitize';
+import titleParser						from 'internal/titleparser';
+import Sanitize							from 'internal/sanitize';
 
 import {ContentRouter, Route} from "com/router";
 
@@ -265,14 +265,16 @@ class Main extends Component {
 				// @ifdef DEBUG
 				console.log("[fetchRoot] * Hack! We don't support choosing your active game yes, so use logic to detect it");
 				// @endif
+
+				// TODO: according to TS, r.node is not an integer, but rather a string. Number should not be needed here.
 				for ( let key in r.node ) {
 					let newDate = new Date(r.node[key].modified).getTime();
 					if ( newDate > focusDate ) {
 						focusDate = newDate;
-						focus = key|0;
+						focus = Number(key);
 					}
 					if ( r.node[key].published ) {
-						lastPublished = key|0;
+						lastPublished = Number(key);
 						// @ifdef DEBUG
 						console.log('[fetchRoot] * '+key+' is published');
 						// @endif
@@ -492,7 +494,7 @@ class Main extends Component {
 		}
 
 		if ( node.name ) {
-			Title = titleParser.parse(node.name, true);		// What is titleParser?
+			Title = titleParser(node.name, true);
 			if ( Title === "" ) {
 				Title = TitleSuffix;
 			}

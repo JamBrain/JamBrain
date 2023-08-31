@@ -30,7 +30,7 @@ export default class ContentEventTheme extends Component {
 		var extra = props.extra;
 
 		if ( node.slug ) {
-			let EventMode = (node.meta['event-mode']) ? parseInt(node.meta['event-mode']) : 0;
+			let EventMode = (node.meta['event-mode']) ? Number(node.meta['event-mode']) : 0;
 
 			var NewPath = '/'+ (extra ? extra.join('/') : '');
 
@@ -48,7 +48,7 @@ export default class ContentEventTheme extends Component {
 			if ( EventMode >= 4 ) {
 				for ( var idx = 1; idx <= 5; idx++ ) {	// 5 rounds max
 					let Page = node.meta['theme-page-mode-'+idx];
-					if ( parseInt(Page) > 0 ) {
+					if ( Number(Page) > 0 ) {
 						// MK NOTE: Should this be something more interesting then a number?
 						RoundName = ""+idx;
 					}
@@ -68,7 +68,7 @@ export default class ContentEventTheme extends Component {
 			else if ( NewPath == '/fusion' ) {
 				return <EventThemeFusion node={node} user={user} path={path} extra={extra} />;
 			}
-			else if ( parseInt(NewPath.slice(1)) > 0 ) {
+			else if ( Number(NewPath.slice(1)) > 0 ) {
 				return <EventThemeList node={node} user={user} path={path} extra={extra} />;
 			}
 

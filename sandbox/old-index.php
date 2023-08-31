@@ -982,7 +982,7 @@ if ( $mode > 0 ) {
 					// 12 hour Timezone (if we can detect it) //
 					if ( PostDate.toLocaleTimeString().split(" ").length > 1 ) {
 						var TimeParts = Parts[4].split(':');
-						var Hour = parseInt(TimeParts[0]);
+						var Hour = Number(TimeParts[0]);
 						var AMPM = 'AM';
 						if ( Hour == 0 ) {
 							Hour = 12;

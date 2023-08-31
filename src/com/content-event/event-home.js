@@ -32,7 +32,7 @@ export default class ContentEventHome extends Component {
 
 
 	render( {node, /*user,*/ path, extra}, {stats /*, error*/} ) {
-		let EventMode = (node.meta['event-mode']) ? parseInt(node.meta['event-mode']) : 0;
+		let EventMode = (node.meta['event-mode']) ? Number(node.meta['event-mode']) : 0;
 
 		var EventModeText = "";
 		switch ( EventMode ) {

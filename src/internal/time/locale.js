@@ -1,8 +1,6 @@
-;(function(){
-	
 /**
 	Locale Library - Convert Date and Number types to locale appropriate English strings.
-	
+
 	NOTE: If using timestamps, convert them with 'new Date(MyTimestamp)' first.
 */
 
@@ -46,7 +44,7 @@ var LocaleZoneRemaps = {
 	"Mitteleuropäische Zeit":"MEZ"/*"GMT+1"*/,
 	"Mitteleuropäische Sommerzeit":"MESZ"/*"GMT+2"*/,
 	"Moscow Standard Time":"MSK"/*"GMT+3"*/,
-	
+
 	"Paris, Madrid (heure d’été)":"CEST"/*"GMT+2"*/,		// was PM, completely wrong
 
 	"Eastern Europe Daylight Time":"EEST"/*"GMT+3"*/,		// was EEDT, but uncommon
@@ -58,7 +56,7 @@ var LocaleZoneRemaps = {
 // * https://gist.github.com/stemar/5556910e99e8df2fd21d - I'm not sure I trust this
 // * https://msdn.microsoft.com/en-us/library/ms912391(v=winembedded.11).aspx
 
-// Locale dependent changes 
+// Locale dependent changes
 var LocaleCustomZoneRemaps = {
 	'en-IE': {
 		"GMT Standard Time":"IST"/*"GMT+1"*/,				// Irish Standard Time
@@ -78,12 +76,12 @@ if ( navigator.languages ) {
 }
 
 // I don't see this being used much, but a way to get the internal locale //
-window.getLocale = function() {
+export function getLocale() {
 	return time_locale;
 }
 
 // Get the suffix you'd append on a numer (i.e. 10th, 31st, just the TH, RD, ST, ND part) //
-window.getLocaleNumberSuffix = function( num ) {
+export function getLocaleNumberSuffix( num ) {
 	var Digit = Math.abs(num) % 100;
 	if ( (Digit > 10) && (Digit < 20) )
 		return "th";
@@ -92,18 +90,18 @@ window.getLocaleNumberSuffix = function( num ) {
 }
 
 // Time, as either 12 hour (i.e. 2:35 AM) or 24 hour (i.e. 02:30) form, depending on browser locale //
-window.getLocaleTime = function( date ) {
-	// Check toLocaleTimeString for 12 hour clock, or if language is English, assume 12 hour clock //				
+export function getLocaleTime( date ) {
+	// Check toLocaleTimeString for 12 hour clock, or if language is English, assume 12 hour clock //
 	if ( ('toLocaleTimeString' in Date.prototype )
 		&& (date.toLocaleTimeString(time_locale).indexOf('M') > -1)	// AM PM both have M's
-		|| (time_locale.indexOf("en-") >= 0) ) 
+		|| (time_locale.indexOf("en-") >= 0) )
 	{
 		var HalfDay = (date.getHours() - 12) >= 0;
 		var Hours = (date.getHours() % 12);
 		if ( Hours == 0 )
 			Hours = 12;
-		return Hours + ":" + 
-			new String("00"+date.getMinutes()).slice(-2) + 
+		return Hours + ":" +
+			new String("00"+date.getMinutes()).slice(-2) +
 			(HalfDay?" PM":" AM");
 	}
 	else {
@@ -112,25 +110,25 @@ window.getLocaleTime = function( date ) {
 }
 
 // Day of the Week (i.e. Sunday to Saturday) //
-window.getLocaleDay = function( date ) {
+export function getLocaleDay( date ) {
 	return DayOfTheWeekTable[date.getDay()];
 }
 
 // Date (i.e. January 21st, 2015) //
-window.getLocaleDate = function( date ) {
-	return MonthOfTheYearTable[date.getMonth()] + " " + 
-		date.getDate() + DateSuffixTable[date.getDate() % 20] + ", " + 
+export function getLocaleDate( date ) {
+	return MonthOfTheYearTable[date.getMonth()] + " " +
+		date.getDate() + DateSuffixTable[date.getDate() % 20] + ", " +
 		date.getFullYear();
 }
 
 // Date (i.e. January 21st) //
-window.getLocaleMonthDay = function( date ) {
-	return MonthOfTheYearTable[date.getMonth()] + " " + 
+export function getLocaleMonthDay( date ) {
+	return MonthOfTheYearTable[date.getMonth()] + " " +
 		date.getDate() + DateSuffixTable[date.getDate() % 20];
 }
 
 // Time Zone, short abbreviated form (i.e. EST, CET) //
-window.getLocaleTimeZone = function( date ) {
+export function getLocaleTimeZone( date ) {
 	// http://stackoverflow.com/a/12496442
 	date = date.toString();
 	for (var key in LocaleZoneRemaps) {
@@ -152,22 +150,32 @@ window.getLocaleTimeZone = function( date ) {
 	else {
 		TZ = date.match(/[A-Z]{3,4}/)[0];
 	}
-		
+
 //	var TZ = date.indexOf('(') > -1 ?
 //		date.match(/\([^\)]+\)/)[0].match(/[A-Z]/g).join('') :
 //		date.match(/[A-Z]{3,4}/)[0];
-	if (TZ == "GMT" && /(GMT\W*\d{4})/.test(date)) 
+	if (TZ == "GMT" && /(GMT\W*\d{4})/.test(date))
 		TZ = RegExp.$1;
 	return TZ;
 }
 
-window.getLocaleFullTimeStamp = function( date ) {
+export function getLocaleFullTimeStamp( date ) {
     return getLocaleDay(date) + " " + getLocaleDate(date) + " " + getLocaleTime(date) + " " + getLocaleTimeZone(date);
 }
 
-window.getLocaleTimeStamp = function( date ) {
+export function getLocaleTimeStamp( date ) {
     return getLocaleDate(date) + " " + getLocaleTime(date);
 }
 
 
-})();
+export default {
+	getLocale,
+	getLocaleNumberSuffix,
+	getLocaleTime,
+	getLocaleDay,
+	getLocaleDate,
+	getLocaleMonthDay,
+	getLocaleTimeZone,
+	getLocaleFullTimeStamp,
+	getLocaleTimeStamp,
+};

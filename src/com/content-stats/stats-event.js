@@ -69,7 +69,7 @@ export default class ContentStatsEvent extends Component {
 
 			var EventMode = 0;
 			if ( node && node.meta && node.meta['event-mode'] ) {
-				EventMode = parseInt(node.meta['event-mode']);
+				EventMode = Number(node.meta['event-mode']);
 			}
 
 			var Data = [];

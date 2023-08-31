@@ -101,7 +101,7 @@ export default class EventGames extends Component {
         }
 
         const urlParams = new URLSearchParams(window.location.search);
-		const requestAdmin = parseInt(urlParams.get('admin'));
+		const requestAdmin = Number(urlParams.get('admin'));
 		const isAdmin = user && user.private && user.private.meta && user.private.meta.admin;
 
 //		if (isAdmin) {

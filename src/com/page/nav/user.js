@@ -20,7 +20,7 @@ export default class PageNavUser extends Component {
 		//let IsLoggedIn = user && (user.id !== 0);
 		let IsNodeMe = user && (user.id == node.id);
 		//let IsMe = ['/my'].includes(FirstPath);
-		//let EventMode = (node.meta['event-mode']) ? parseInt(node.meta['event-mode']) : 0;
+		//let EventMode = (node.meta['event-mode']) ? Number(node.meta['event-mode']) : 0;
 
 		// Back Button
 		NavButtons.push(<ContentNavButton path={path+FullPath} title="Go Back" icon="previous" href="/" />);

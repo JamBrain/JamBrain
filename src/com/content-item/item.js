@@ -1,5 +1,6 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
+import {node_IsPublished, nodeEvent_CanGrade, node_CountAuthors, node_CanPublish, node_IsAuthor, nodeKeys_HasPublishedParent, nodeEvent_IsFinished} from 'internal/lib';
 
 import UIIcon 							from 'com/ui/icon/icon';
 import UIImage 							from 'com/ui/image/image';
@@ -51,13 +52,13 @@ export default class ContentItem extends Component {
 
 			'linksShown': 1,
 
-			'allowAnonymous': parseInt(node.meta['allow-anonymous-comments']),
-			'dontRateMe': parseInt(node.meta['dont-rate-me']),
+			'allowAnonymous': Number(node.meta['allow-anonymous-comments']),
+			'dontRateMe': Number(node.meta['dont-rate-me']),
 		};
 
 		for ( let i = 0; i < MAX_LINKS; i++ ) {
 			this.state.linkUrls[i] = node.meta['link-0'+(i+1)] ? node.meta['link-0'+(i+1)] : '';
-			this.state.linkTags[i] = node.meta['link-0'+(i+1)+'-tag'] ? parseInt(node.meta['link-0'+(i+1)+'-tag']) : 0;
+			this.state.linkTags[i] = node.meta['link-0'+(i+1)+'-tag'] ? Number(node.meta['link-0'+(i+1)+'-tag']) : 0;
 			this.state.linkNames[i] = node.meta['link-0'+(i+1)+'-name'] ? node.meta['link-0'+(i+1)+'-name'] : '';
 
 			if ( this.state.linkUrls[i] && i+1 > this.state.linksShown ) {
@@ -377,8 +378,8 @@ export default class ContentItem extends Component {
 			}
 
 			{
-				let Old = node.meta[Base+'-tag'] ? parseInt(node.meta[Base+'-tag']) : 0;
-				let New = parseInt(this.state.linkTags[i]);
+				let Old = node.meta[Base+'-tag'] ? Number(node.meta[Base+'-tag']) : 0;
+				let New = Number(this.state.linkTags[i]);
 
 				if ( Old != New ) {
 					Data[Base+'-tag'] = this.state.linkTags[i];
@@ -691,7 +692,7 @@ export default class ContentItem extends Component {
 		}
 
         const urlParams = new URLSearchParams(window.location.search);
-		const requestAdmin = parseInt(urlParams.get('admin'));
+		const requestAdmin = Number(urlParams.get('admin'));
 		const isAdmin = user && user.private && user.private.meta && user.private.meta.admin;
 
 //		if (isAdmin) {
@@ -702,7 +703,7 @@ export default class ContentItem extends Component {
 		// Ratings/Grading/Results
 		let ShowGrade = null;
 		// If grading is enabled
-		if ( !(isAdmin && requestAdmin) && parseInt(nodeEvent_CanGrade(parent)) ) {
+		if ( !(isAdmin && requestAdmin) && nodeEvent_CanGrade(parent) ) {
 			// My game
 			if ( node_IsAuthor(node, user) ) {
 				// Only show Total Ratings for competitive events
@@ -821,7 +822,7 @@ export default class ContentItem extends Component {
 			}
 		}
 		// Final Results, grading is closed
-		else if ( (isAdmin && requestAdmin) || (!parseInt(nodeEvent_CanGrade(parent)) && nodeEvent_IsFinished(parent)) ) {
+		else if ( (isAdmin && requestAdmin) || (!nodeEvent_CanGrade(parent) && nodeEvent_IsFinished(parent)) ) {
 			if ( canRate && !dontRateMe ) {
 				let Lines = [];
 

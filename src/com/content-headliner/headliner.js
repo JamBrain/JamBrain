@@ -1,6 +1,8 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
 
+import {getLocaleDate, getRoughAge} from 'internal/time';
+
 import {UIIcon, UIButton} from 'com/ui';
 
 //import $Node from 'shrub/js/node/node';

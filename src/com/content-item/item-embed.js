@@ -38,8 +38,8 @@ export default class ContentItemEmbed extends Component {
 
 			// TODO: add support for aspect ratio
 
-			let width = node.meta['embed-width'] ? parseInt(node.meta['embed-width']) : default_embed_width;
-			let height = node.meta['embed-height'] ? parseInt(node.meta['embed-height']) : default_embed_height;
+			let width = node.meta['embed-width'] ? Number(node.meta['embed-width']) : default_embed_width;
+			let height = node.meta['embed-height'] ? Number(node.meta['embed-height']) : default_embed_height;
 
 			width = (width > max_embed_width) ? max_embed_width : width;
 			height = (height > max_embed_height) ? max_embed_height : height;

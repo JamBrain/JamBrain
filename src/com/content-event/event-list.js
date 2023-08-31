@@ -127,7 +127,7 @@ export default class ContentEventList extends Component {
 
 	renderList( list ) {
 		if ( this.state.lists[list] ) {
-			var ThemeMode = Number.parseInt(this.props.node.meta['theme-page-mode-'+list]);
+			var ThemeMode = Number(this.props.node.meta['theme-page-mode-'+list]);
 			if ( this.state.votes && ThemeMode === 1 ) {
 				var _class = "theme-item";
 
@@ -215,7 +215,7 @@ export default class ContentEventList extends Component {
 	render( {/*node,*/ user, path, extra}, {lists, names, votes, page, error} ) {
 		// By default, the page is the last available round
 		if ( (extra && extra.length && extra[0]) ) {
-			page = Number.parseInt(extra[0]);
+			page = Number(extra[0]);
 		}
 
 		if ( names ) {

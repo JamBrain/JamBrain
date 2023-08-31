@@ -1,4 +1,5 @@
 import {h, Component}					from 'preact/preact';
+import titleParser						from 'internal/titleparser';
 
 import ContentPost						from 'com/content-post/post';
 
@@ -92,7 +93,7 @@ export default class ViewContent extends Component {
 	getTitle( {node} ) {
 		let Title = "";
 		if ( node.name ) {
-			Title = titleParser.parse(node.name, true);		// What is titleParser?
+			Title = titleParser(node.name, true);
 			if ( Title === "" )
 				Title = window.location.host;
 			else
@@ -529,7 +530,6 @@ export default class ViewContent extends Component {
 						onchangefilter={(filter)=>{this.setState({'gamesFilter': filter});}}
 						showFeatured={true}
 						showEvent={true}
-						showRatingSort={true}
 						showRatingSort={true}
 					/>;
 				}

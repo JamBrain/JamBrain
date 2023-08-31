@@ -1,5 +1,6 @@
 import {h, Component, Fragment} from 'preact';
 import cN from 'classnames';
+import {node_IsAuthor} from 'internal/lib';
 
 import UISpinner						from 'com/ui/spinner';
 
@@ -253,7 +254,6 @@ export default class ContentComments extends Component {
 		});
 	}
 
-
 	renderComments( state, tree, indent = 0 ) {
 		const {user, node} = this.props;
 		const {authors, lovedComments} = state;
@@ -292,7 +292,7 @@ export default class ContentComments extends Component {
 		const {user, node} = this.props;
 		const {authors, error, myNewComment: comment, isUserSubscribed} = state;
 		const author = (authors && comment && comment.author) ? authors[comment.author] : 0;
-		const allowAnonymous = parseInt(node.meta['allow-anonymous-comments']);
+		const allowAnonymous = Number(node.meta['allow-anonymous-comments']);
 
 		return <div class="-new-comment"><ContentCommentsComment user={user} node={node} comment={comment} author={author} indent={0} editing publish onpublish={this.onPublish} nolove allowAnonymous={allowAnonymous} error={error} subscribed={isUserSubscribed} onsubscribe={this.onToggleSubscription} authors={authors}/></div>;
 	}

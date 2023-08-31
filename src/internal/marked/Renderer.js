@@ -1,4 +1,5 @@
 import {h} 					from 'preact';
+import { extractFromURL } from 'internal/autoembed';
 
 import Util					from './Util';
 
@@ -25,7 +26,7 @@ export default class Renderer {
 				escaped = true;
 				code = out;
 
-				return (<pre><code class={this.options.langPrefix + escape(lang, true)} dangerouslySetInnerHTML={{"__html": out}}></code></pre>);
+				return (<pre><code class={this.options.langPrefix + Util.escape(lang, true)} dangerouslySetInnerHTML={{"__html": out}}></code></pre>);
 			}
 		}
 
@@ -38,7 +39,7 @@ export default class Renderer {
 		}
 
 		return (
-			<pre><code class={this.options.langPrefix + escape(lang, true)}>
+			<pre><code class={this.options.langPrefix + Util.escape(lang, true)}>
 				{(escaped ? code : Util.escape(code, true))}
 			</code></pre>
 		);
@@ -173,7 +174,6 @@ export default class Renderer {
 	}
 
 	parseLink( href ) {
-
 		if ( href.indexOf('///') == 0 ) {
 			// static domain link, something on our static server
 			return {"type": "static"};
@@ -190,7 +190,7 @@ export default class Renderer {
 			return {"type": "local"};
 		}
 
-		url = extractFromURL(href);
+		let url = extractFromURL(href);
 
 		if ( url.domain ) {
 
@@ -291,7 +291,7 @@ export default class Renderer {
 	}
 
 	mail( leftSide, rightSide, text ) {
-		href = '{0}@{1}'.replace('{1}', rightSide, 1).replace('{0}', leftSide, 1);
+		let href = '{0}@{1}'.replace('{1}', rightSide, 1).replace('{0}', leftSide, 1);
 		if ( this.options.sanitize ) {
 			try {
 				var prot = decodeURIComponent(unescape(href)).replace(/[^\w:]/g, '').toLowerCase();

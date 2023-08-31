@@ -21,7 +21,7 @@ export default class PageNavEvent extends Component {
 		let IsHome = (FullPath == '/');
 		let IsLoggedIn = user && (user.id !== 0);
 		let IsMe = ['/my'].includes(FirstPath);
-		let EventMode = (node.meta['event-mode']) ? parseInt(node.meta['event-mode']) : 0;
+		let EventMode = (node.meta['event-mode']) ? Number(node.meta['event-mode']) : 0;
 
 		NavButtons.push(<ContentNavButton path={path+FullPath} title={node.name} light={true} icon="trophy" href={path+'/'}>{node.name}</ContentNavButton>);
 
