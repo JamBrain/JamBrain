@@ -255,7 +255,7 @@ export default class InlineLexer {
 
 		//Text is too aggressive so we only parse it until first space in case
 		//there's an email comming in the text
-		l = cap[0].indexOf(' ');
+		var l = cap[0].indexOf(' ');
 		if (l === -1) {
 			l = cap[0].length;
 		} else {

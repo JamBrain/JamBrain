@@ -15,7 +15,7 @@ export function slugify_PathName( str ) {
 		return (_id > 0 ? '$'+_id : '');
 	}
 
-	return this.slugify_Name(str);
+	return slugify_Name(str);
 }
 
 export function sanitize_URI( str ) {
@@ -35,11 +35,11 @@ export function sanitize_URI( str ) {
 
 // Backwards Compatible
 export function makeSlug( str ) {
-	return this.slugify_Name(str);
+	return slugify_Name(str);
 }
 
 export function clean_Path( str ) {
-	var parts = str.split('/').map(this.slugify_PathName);
+	var parts = str.split('/').map(slugify_PathName);
 	return parts.join('/');
 }
 
@@ -52,10 +52,10 @@ export function clean_Hash( str ) {
 	if ( str.length && str[0] == "#" ) {
 		var query_pos = str.indexOf('?');
 		// MK: substr is deprecated. Use slice or substring.
-		var query = (query_pos != -1) ? this.clean_Query(str.substr(str.indexOf('?'))) : "";
+		var query = (query_pos != -1) ? clean_Query(str.substr(str.indexOf('?'))) : "";
 		str = (query_pos != -1) ? str.substr(0, query_pos) : str;
 
-		var ret = '#'+this.clean_Path(str.substr(1))+query;
+		var ret = '#'+clean_Path(str.substr(1))+query;
 		if ( ret != '#' )
 			return ret;
 	}

@@ -2,7 +2,8 @@
 	"jsc": {
 		"parser": {
 			"syntax": "typescript",
-			"tsx": true
+			"tsx": true,
+			"isolatedModules": true
 		},
 		"target": "es2015",
 		"transform": {
