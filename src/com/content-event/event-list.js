@@ -1,5 +1,5 @@
 import {h, Component} 					from 'preact';
-import Sanitize							from 'internal/sanitize/sanitize';
+import Sanitize							from 'internal/sanitize';
 
 import UIIcon 							from 'com/ui/icon';
 import UISpinner						from 'com/ui/spinner';

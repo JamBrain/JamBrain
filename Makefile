@@ -291,6 +291,7 @@ $(BUILD_FOLDER)/less.lint: $(LESS_FILES)
 $(OUT)/%.es.js:$(SRC)/%.js
 	@echo "[$(COL_GREEN)ES->JS$(COL_OFF)] $<"
 	@$(call BUBLE,$<,$@)
+#	@$(call SWC,$<,$@.swc.js)
 
 $(OUT)/%.ts.js:$(SRC)/%.ts
 	@echo "[$(COL_GREEN)TS->JS$(COL_OFF)] $<"

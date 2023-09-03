@@ -51,7 +51,7 @@ var LocaleZoneRemaps = {
 
 	// Microsoft
 	"W. Europe Standard Time":"CET"/*"GMT+1"*/,
-}
+};
 // References:
 // * https://gist.github.com/stemar/5556910e99e8df2fd21d - I'm not sure I trust this
 // * https://msdn.microsoft.com/en-us/library/ms912391(v=winembedded.11).aspx

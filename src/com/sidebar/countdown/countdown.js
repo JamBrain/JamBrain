@@ -1,6 +1,8 @@
 import {h, Component}	from 'preact';
 import cN				from 'classnames';
 
+import { getLocaleDay, getLocaleTime, getLocaleTimeZone } from 'internal/time';
+
 import NavLink			from 'com/nav-link/link';
 
 export default class SidebarCountdown extends Component {

@@ -1,6 +1,8 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
 
+import { node_IsAuthor }								from 'internal/lib';
+
 import NavLink										from 'com/nav-link/link';
 
 import ContentLoading								from 'com/content-loading/loading';
@@ -370,7 +372,7 @@ export default class ContentSimple extends Component {
 
 			if ( this.isEditMode() ) {
 				if ( !node_IsAuthor(node, user) ) {
-					return <ContentError code="403">Forbidden: You do not have permission to edit this</ContentError>;
+					return <ContentError code={403}>Forbidden: You do not have permission to edit this</ContentError>;
 				}
 /*
 				let EditProps = {

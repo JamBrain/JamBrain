@@ -1,5 +1,5 @@
 import {h, Component} 					from 'preact';
-import Sanitize							from 'internal/sanitize/sanitize';
+import Sanitize							from 'internal/sanitize';
 
 import DialogCommon						from 'com/dialog/common/common';
 import UISpinner						from 'com/ui/spinner';

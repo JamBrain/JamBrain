@@ -2,13 +2,17 @@
 	"jsc": {
 		"parser": {
 			"syntax": "typescript",
-			"jsx": true
+			"tsx": true
 		},
+		"target": "es2015",
 		"transform": {
 			"react": {
 				"pragma": "h",
 				"pragmaFrag": "Fragment"
 			}
 		}
+	},
+	"module": {
+		"type": "es6"
 	}
 }

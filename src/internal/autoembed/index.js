@@ -71,7 +71,7 @@ export function extractFromURL( str ) {
 //			var url_body = ret.url.split('//');
 //			ret.protocol = url_body[0].slice(0,-1).toLowerCase();
 			ret.protocol = ret.url.substr(0, body_pos).toLowerCase();
-			ret.body = ret.url.substr(body_pos+2)
+			ret.body = ret.url.substr(body_pos+2);
 
 			ret.paths = ret.body.split('/');
 			ret.domain = ret.paths.shift().toLowerCase();

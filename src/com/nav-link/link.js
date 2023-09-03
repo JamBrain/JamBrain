@@ -1,7 +1,7 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
 
-import Sanitize							from 'internal/sanitize/sanitize';
+import Sanitize							from 'internal/sanitize';
 
 // TODO: Push the state (arg1 of pushShate/replaceState
 
