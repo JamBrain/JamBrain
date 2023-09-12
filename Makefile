@@ -93,7 +93,7 @@ OUT_SVG_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(SVG_FILES:.svg=.min.svg))
 
 OUT_FILES_SVG		:=	$(OUT_SVG_FILES)
 OUT_FILES_CSS		:=	$(OUT_CSS_FILES) $(OUT_LESS_FILES)
-OUT_FILES_JS		:=	$(OUT_JS_FILES) $(OUT_ES_FILES) $(OUT_TS_FILES)
+#OUT_FILES_JS		:=	$(OUT_JS_FILES) $(OUT_ES_FILES) $(OUT_TS_FILES)
 OUT_FILES			:=	$(OUT_FILES_SVG) $(OUT_FILES_CSS) $(OUT_FILES_JS)
 DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES_FILES) $(OUT_LESS_FILES))
 OUT_FOLDERS			:=	$(sort $(dir $(OUT_FILES) $(BUILD_FOLDER)/))
@@ -105,7 +105,8 @@ ifdef DEBUG
 TARGET_FILES_CSS	+=	$(TARGET_FOLDER)/all.debug.css
 TARGET_FILES_JS		+=	$(TARGET_FOLDER)/all.debug.js
 endif # DEBUG
-TARGET_FILES		:=	$(TARGET_FILES_SVG) $(TARGET_FILES_CSS) $(TARGET_FILES_JS)
+TARGET_FILES		:=	$(TARGET_FILES_SVG) $(TARGET_FILES_CSS)
+#$(TARGET_FILES_JS)
 
 
 # Tools #
@@ -180,6 +181,14 @@ default: target
 
 report: $(TARGET_FILES)
 	@echo \
+		"[$(COL_GREEN)JS_DEBUG$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.debug.js 2>/dev/null)` MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.debug.js 2>/dev/null)`*	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.debug.js 2>/dev/null)`\n" \
+		"[$(COL_GREEN)JS_RELEASE$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`   MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`    ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.release.js 2>/dev/null)`\n" \
+		"[$(COL_GREEN)CSS$(COL_OFF)]     GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`  MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.css 2>/dev/null)`\n" \
+		"[$(COL_GREEN)SVG$(COL_OFF)]     GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`  MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`\n" \
+		| column -t
+
+#report: $(TARGET_FILES)
+#	@echo \
 		"[$(COL_GREEN)JS_RAW$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)` MINIFY: N/A	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`\n" \
 		"[$(COL_GREEN)JS_DEBUG$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.debug.js 2>/dev/null)` MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.debug.js 2>/dev/null)`*	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.debug.js 2>/dev/null)`\n" \
 		"[$(COL_GREEN)JS_RELEASE$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`   MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`    ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.release.js 2>/dev/null)`\n" \
@@ -398,7 +407,8 @@ $(TARGET_FOLDER)/all.min.svg: $(BUILD_FOLDER)/all.svg
 
 
 # Target #
-target: $(OUT_FOLDERS) $(BUILD_FOLDER)/js.lint $(BUILD_FOLDER)/less.lint $(TARGET_FILES) report
+#target: $(OUT_FOLDERS) $(BUILD_FOLDER)/js.lint $(BUILD_FOLDER)/less.lint $(TARGET_FILES) report
+target: $(OUT_FOLDERS) $(BUILD_FOLDER)/less.lint $(TARGET_FILES) report
 	@echo "[$(COL_YELLOW)-$(COL_OFF)] Done \"$(subst /,,$(TARGET))\""
 
 endif # MAIN_FOLDER # ---- #
