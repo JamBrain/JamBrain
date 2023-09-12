@@ -1,18 +1,14 @@
 {
-	"extends": "stylelint-config-recommended",
+	"extends": "stylelint-config-recommended-less",
 	"rules": {
-		"block-closing-brace-newline-after": "always",
 		"block-no-empty": null,
-		"no-eol-whitespace": true,
-		"no-extra-semicolons": true,
 		"rule-empty-line-before": [
 			"always", {
 				"except": ["first-nested"],
 				"ignore": ["after-comment"],
 				"severity": "warning"
-			} 
+			}
 		],
-		"indentation": ["tab", {"severity": "warning"}],
 		"no-descending-specificity": null,
 		"no-duplicate-selectors": null
 	}

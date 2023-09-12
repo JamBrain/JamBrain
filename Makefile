@@ -146,7 +146,7 @@ LESS				=	$(JSRUN) lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
 # CSS Minifier: https://github.com/jakubpawlowicz/clean-css/
 MINIFY_CSS			=	cat $(1) | $(JSRUN) cleancss -o $(2)
 # CSS Linter: http://stylelint.io/
-STYLELINT_ARGS		:=	--syntax less --config src/config/.stylelintrc --config-basedir ../../ --fix
+STYLELINT_ARGS		:=	--config src/config/.stylelintrc --config-basedir ../../ --fix
 STYLELINT			=	$(JSRUN) stylelint $(1) $(STYLELINT_ARGS)
 
 # SVG "Compiler", same as the minifier: https://github.com/svg/svgo
