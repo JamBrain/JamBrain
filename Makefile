@@ -1,13 +1,14 @@
 -include config.mk	# Create and use this file to override any of 'Settings' #
 
-REQUIRED_USER		=	vagrant
+REQUIRED_USER		?=	vagrant
+JSRUN			?=	npx
 
 # Bail if the user isn't 'vagrant'
 ifneq ($(REQUIRED_USER),)
 ifneq ($(REQUIRED_USER),$(USER))
 dummy:
 	@echo "******* USER isn't $(REQUIRED_USER), aborting build *********"
-	@echo "To disable this behavior, add a line 'REQUIRE_USER =' to your config.mk"
+	@echo "To disable this behavior, add a line 'REQUIRED_USER=$(USER)' to your config.mk"
 endif
 endif
 
@@ -111,50 +112,50 @@ TARGET_FILES		:=	$(TARGET_FILES_SVG) $(TARGET_FILES_CSS) $(TARGET_FILES_JS)
 
 # Ecmascript Linter: http://eslint.org/
 ESLINT_ARGS			:=	--config src/config/eslint.config.json
-ESLINT				=	npx eslint $(1) $(ESLINT_ARGS)
+ESLINT				=	$(JSRUN) eslint $(1) $(ESLINT_ARGS)
 # ES Compiler: https://buble.surge.sh/guide/
 BUBLE_ARGS			:=	--no modules,forOf --jsx h --jsx-fragment Fragment --objectAssign Object.assign
 #ifdef SOURCEMAPS
 #BUBLE_ARGS			+=	-m inline
 #endif # SOURCEMAPS
-BUBLE				=	npx buble $(BUBLE_ARGS) -i $(1) -o $(2)
+BUBLE				=	$(JSRUN) buble $(BUBLE_ARGS) -i $(1) -o $(2)
 # TS Compiler: https://swc.rs/
 SWC_ARGS			:=	--config-file src/config/swc.json
-SWC					=	npx swc $(SWC_ARGS) $(1) -o $(2)
+SWC					=	$(JSRUN) swc $(SWC_ARGS) $(1) -o $(2)
 # ES Include/Require Resolver: http://rollupjs.org/guide/
 ROLLUP_ARGS			:=	-c src/config/rollup.config.js
 ifdef SOURCEMAPS
 ROLLUP_ARGS			+=	-m inline
 endif # SOURCEMAPS
-ROLLUP				=	npx rollup $(ROLLUP_ARGS) $(1) > $(2)
+ROLLUP				=	$(JSRUN) rollup $(ROLLUP_ARGS) $(1) > $(2)
 # JS Preprocessor: https://github.com/moisesbaez/preprocess-cli-tool
 #                  https://github.com/jsoverson/preprocess
-JS_PP_DEBUG			=	npx preprocess -f $(1) -d $(2) -c '{"DEBUG": true}' -t js
-JS_PP_RELEASE		=	npx preprocess -f $(1) -d $(2) -t js
+JS_PP_DEBUG			=	$(JSRUN) preprocess -f $(1) -d $(2) -c '{"DEBUG": true}' -t js
+JS_PP_RELEASE		=	$(JSRUN) preprocess -f $(1) -d $(2) -t js
 # JS Minifier: https://www.npmjs.com/package/uglify-js
 MINIFY_JS_RESERVED	:=	VERSION_STRING,STATIC_DOMAIN
 MINIFY_JS_ARGS		:=	--compress --mangle reserved=["$(MINIFY_JS_RESERVED)"]
-MINIFY_JS			=	npx uglifyjs $(MINIFY_JS_ARGS) -o $(2) -- $(1)
+MINIFY_JS			=	$(JSRUN) uglifyjs $(MINIFY_JS_ARGS) -o $(2) -- $(1)
 
 # CSS Compiler: http://lesscss.org/
 LESS_COMMON			:=	--global-var='STATIC_DOMAIN="$(STATIC_DOMAIN)"' --include-path=$(MAIN_FOLDER)
 LESS_ARGS			:=	--autoprefix
-LESS_DEP			=	npx lessc $(LESS_COMMON) --depends $(1) $(2)>$(2).dep
-LESS				=	npx lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
+LESS_DEP			=	$(JSRUN) lessc $(LESS_COMMON) --depends $(1) $(2)>$(2).dep
+LESS				=	$(JSRUN) lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
 # CSS Minifier: https://github.com/jakubpawlowicz/clean-css/
-MINIFY_CSS			=	cat $(1) | npx cleancss -o $(2)
+MINIFY_CSS			=	cat $(1) | $(JSRUN) cleancss -o $(2)
 # CSS Linter: http://stylelint.io/
 STYLELINT_ARGS		:=	--syntax less --config src/config/.stylelintrc --config-basedir ../../ --fix
-STYLELINT			=	npx stylelint $(1) $(STYLELINT_ARGS)
+STYLELINT			=	$(JSRUN) stylelint $(1) $(STYLELINT_ARGS)
 
 # SVG "Compiler", same as the minifier: https://github.com/svg/svgo
 SVGO_ARGS			:=	-q --config src/config/svgo.config.js
-SVGO				=	npx svgo $(SVGO_ARGS) -i $(1) -o $(2)
+SVGO				=	$(JSRUN) svgo $(SVGO_ARGS) -i $(1) -o $(2)
 # Mike's SVG Sprite Packer: https://github.com/mikekasprzak/svg-sprite-tools
 SVG_PACK			=	src/tools/svg-sprite-tools/svg-sprite-pack $(1) > $(2)
 # SVG Minifier: https://github.com/svg/svgo
 MINIFY_SVG_ARGS		:=	--multipass --config src/config/svgo_minify.config.js -q
-MINIFY_SVG			=	npx svgo $(MINIFY_SVG_ARGS) -i $(1) -o $(2)
+MINIFY_SVG			=	$(JSRUN) svgo $(MINIFY_SVG_ARGS) -i $(1) -o $(2)
 
 # Remove Empty Directories
 RM_EMPTY_DIRS		=	find $(1) -type d -empty -delete 2>/dev/null |true

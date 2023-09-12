@@ -22,6 +22,7 @@
  * @property {Object} [files]
  */
 
+
 /**
  *
  * @param {Node} node
@@ -165,7 +166,7 @@ export function node_CanCreate( node, fulltype = null ) {
 
 	// the answer is yes (true) if fulltype is one of the keys
 	return (keys.indexOf(fulltype) >= 0);
-};
+}
 
 // Is transforming (type changing) allowed on this node? Optionally specify the fulltype
 /**
@@ -195,7 +196,7 @@ export function node_CanTransform( node, fulltype = null ) {
 
 	// the answer is yes (true) if fulltype is one of the keys
 	return (keys.indexOf(fulltype) >= 0);
-};
+}
 
 /**
  *
@@ -208,7 +209,7 @@ export function nodeEvent_CanTheme( node ) {
 		return null;
 
 	return node.meta && (Number(node.meta['can-theme']) > 0);
-};
+}
 /**
  *
  * @param {Node} node
@@ -220,7 +221,7 @@ export function nodeEvent_CanGrade( node ) {
 		return null;
 
 	return node.meta && (Number(node.meta['can-grade']) > 0);
-};
+}
 // TODO: Obsolete the 'event-finished' metadata
 /**
  *
@@ -233,7 +234,7 @@ export function nodeEvent_IsFinished( node ) {
 		return null;
 
 	return node.meta && (Number(node.meta['event-finished']) > 0);
-};
+}
 // NOTE: this expects you to call it with the parent. A better function
 // should be able to lookup the parent itself given the node.
 /**
@@ -247,7 +248,7 @@ export function node_CanUpload( node ) {
 		return null;
 
 	return node.meta && (Number(node.meta['can-upload']) > 0);
-};
+}
 
 // Is publishing allowed on this node? Optionally specify the fulltype
 /**
@@ -281,7 +282,7 @@ export function node_CanPublish( node, fulltype = null ) {
 
 	// the answer is yes (true) if fulltype is one of the keys
 	return (keys.indexOf(fulltype) >= 0);
-};
+}
 
 /**
  *
@@ -402,7 +403,7 @@ export function nodes_HasParent( nodes, parent_id ) {
 			return true;
 	}
 	return false;
-};
+}
 
 /**
  *
@@ -423,7 +424,7 @@ export function nodeKeys_HasParent( nodes, parent_id ) {
 			return true;
 	}
 	return false;
-};
+}
 
 /**
  *
@@ -444,7 +445,7 @@ export function nodeKeys_HasPublishedParent( nodes, parent_id ) {
 			return true;
 	}
 	return false;
-};
+}
 
 
 export default {

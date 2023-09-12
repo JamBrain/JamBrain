@@ -1,4 +1,4 @@
-import {h, Component} from 'preact';
+import {h} from 'preact';
 import UIButtonDiv from './button-div';
 import UIButtonLink from './button-link';
 

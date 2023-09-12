@@ -10,8 +10,9 @@ export default class UIButtonDiv extends Component {
 		props = Object.assign({}, props);
 
 //		if ( !props.hasOwnProperty('tabIndex') )
-		if ( props.tabIndex != null )
+		if ( props.tabIndex != null ) {
 			props.tabIndex = "0";
+		}
 
 		if ( props.onClick ) {
 			// As long as you don't set the "keep focus" property //
@@ -20,11 +21,11 @@ export default class UIButtonDiv extends Component {
 				let func = props.onClick;
 				props.onClick = (e) => {
 					func(e);
-					if ( typeof document.activeElement.blur !== "undefined" ) {
+					if (document.activeElement instanceof HTMLElement) {
 						document.activeElement.blur();
 					}
 					// SVG Elements on Internet Explorer have no blur() method, so call the parent's blur //
-					else if ( document.activeElement.parentNode.blur ) {
+					else if (document.activeElement.parentNode instanceof HTMLElement) {
 						document.activeElement.parentNode.blur();
 					}
 				};

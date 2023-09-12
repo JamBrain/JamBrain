@@ -5,7 +5,7 @@
     "clean-css-cli": "^5.3.3",
     "es6": "^0.0.7",
     "es6-promise": "^4.2.8",
-    "eslint": "^7.32.0",
+    "eslint": "^8.49.0",
     "less": "^4.1.1",
     "less-plugin-autoprefix": "^2.0.0",
     "nodent": "^3.2.13",

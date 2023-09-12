@@ -36,11 +36,11 @@ export default class UIButtonLink extends UILink {
 				doHistory.call(this.base, e);
 			}
 
-			if ( typeof document.activeElement.blur !== "undefined" ) {
+			if ( document.activeElement instanceof HTMLElement ) {
 				document.activeElement.blur();
 			}
 			// SVG Elements on Internet Explorer have no blur() method, so call the parent's blur //
-			else if ( document.activeElement.parentNode.blur ) {
+			else if ( document.activeElement.parentNode instanceof HTMLElement ) {
 				document.activeElement.parentNode.blur();
 			}
 		};
