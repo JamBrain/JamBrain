@@ -5,7 +5,7 @@ import "preact/debug";
 // @endif
 
 
-import {h, render, Component, options} from 'preact';
+import {h, render, Component} from 'preact';
 import titleParser						from 'internal/titleparser';
 import Sanitize							from 'internal/sanitize';
 

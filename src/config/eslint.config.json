@@ -1,12 +1,15 @@
 {
 	"parserOptions": {
 		"requireConfigFile": false,
-		"ecmaVersion": 2020,
+		"ecmaVersion": 2021,
 		"sourceType": "module",
 		"ecmaFeatures": {
 			"jsx": true,
 			"experimentalObjectRestSpread": true
 		}
+	},
+	"globals": {
+		"SECURE_LOGIN_ONLY": "readable"
 	},
 	"rules": {
 		"semi": ["error", "always"],

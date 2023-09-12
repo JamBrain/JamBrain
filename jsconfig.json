@@ -1,8 +1,8 @@
 {
 	"compilerOptions": {
 		"checkJs": true,
-		"target": "ES2015",
-		"module": "ES6",
+		"target": "ES2021",
+		"module": "ESNext",
 		"jsx": "react",
 		"jsxFactory": "h",
 		"jsxFragmentFactory": "Fragment",

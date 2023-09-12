@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "core-js": "^3.15.0",
+    "preact": "^10.17.1",
+    "preact-devtools": "^4.2.1",
+    "@preact/signals": "^1.2.1"
+  },
+  "devDependencies": {
     "babel-eslint": "^10.1.0",
     "@jammercore/buble": "^0.20.0",
     "clean-css-cli": "^5.3.3",
@@ -25,9 +31,23 @@
   "scripts": {
     "test": "echo \"WARN: no tests specified\" && exit 0",
 
-    "build-debug-js": "esbuild src/public-ludumdare.com/main-ld.js --bundle --sourcemap --loader:.js=jsx --outfile=public-ludumdare.com/-/all.debug.js",
-    "build-min-js": "esbuild src/public-ludumdare.com/main-ld.js --bundle --minify --sourcemap --loader:.js=jsx --outfile=public-ludumdare.com/-/all.min.js",
+    "build-debug-js": "esbuild src/public-ludumdare.com/main-ld.js --bundle --sourcemap --loader:.js=jsx --define:DEBUG=true --outfile=public-ludumdare.com/-/all.debug.js --target=es2021,chrome90,firefox90,safari14.5",
+    "build-min-js": "esbuild src/public-ludumdare.com/main-ld.js --bundle --minify --sourcemap --loader:.js=jsx --define:DEBUG=false --drop:debugger --analyze --legal-comments=external --outfile=public-ludumdare.com/-/all.min.js --target=es2021,chrome90,firefox90,safari14.5",
     "build": "npm run build-debug-js && npm run build-min-js",
+
+    "safari12": "Released in 2018, last OS for iPhone 6 (2014), iPhone 5s (2013).",
+    "safari13": "Released in 2019.",
+    "safari14": "Released in 2020. Includes BigInt, Promise.any, Promise.allSettled, string.matchAll, ??, ??=, ?., WebP images, CSS :is() selector,",
+    "safari14.5": "Released in April 2021. Includes CSS inset, CSS gap in flex/flexbox, Weakref, Finalization registry, export * as namespace,",
+    "safari15": "Released in 2021, last OS for iPhone 7 (2016), iPhone SE gen 1 (2016), iPhone 6s (2015).",
+    "safari15.4": "Released in 2022. Includes Array.at, Object.hasOwn, #private class fields, CSS Cascade layers, CSS Gradients are now premultiplied,",
+    "safari16": "Released in 2022. Includes CSS Container Queries (size), CSS Overflow: clip, CSS Subgrid, ",
+    "safari16.6": "Released in 2023. Includes CSS Nesting, CSS3 Colors, class static init blocks, await in module",
+    "future0": "--target=chrome85,firefox80,safari14",
+    "future1": "--target=chrome87,firefox80,safari14.5 for CSS inset & gap",
+    "future2": "--target=chrome93,firefox92,safari15.4 (89.38%)",
+    "future3": "--target=chrome94,firefox93,safari16.4 (83.47%)",
+    "coolstuff": "CSS View Transitions API (Chromium only), CSS Subgrid",
 
     "bun-build-debug-js": "bun build src/public-ludumdare.com/main-ld.js --outfile=public-ludumdare.com/-/all.debug.js --sourcemap=inline",
     "bun-build-min-js": "bun build src/public-ludumdare.com/main-ld.js --outfile=public-ludumdare.com/-/all.min.js --minify",

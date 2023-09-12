@@ -1,5 +1,6 @@
 import {h, Component} 					from 'preact';
 import Shallow			 				from 'shallow/shallow';
+import { node_CanCreate } from 'internal/lib';
 
 import ButtonBase						from 'com/button-base/base';
 import ButtonLink						from 'com/button-link/link';

@@ -1,0 +1,1 @@
+declare var SECURE_LOGIN_ONLY: boolean;
