@@ -1,4 +1,4 @@
-import { Component } from 'preact';
+import { h, Component } from 'preact';
 
 /** @deprecated */
 export default class Route extends Component {
