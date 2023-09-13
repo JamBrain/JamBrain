@@ -1,5 +1,5 @@
 import {h, Component} 					from 'preact';
-import Shallow			 				from 'shallow/shallow';
+import Shallow			 				from 'shallow';
 import { node_CanCreate } from 'internal/lib';
 
 import ButtonBase						from 'com/button-base/base';
@@ -101,17 +101,14 @@ export default class ViewBar extends Component {
 					.catch((e) => {
 						this.setState({'notificationsError': 'Could not retrieve notifications feed.'});
 						setTimeout(() => this.checkNotificationCount(), 5 * 60000);
-						// @ifdef DEBUG
-						console.log('[Notificaton error]', e);
+						DEBUG && console.log('[Notificaton error]', e);
 						// @endif
 					});
 				})
 				.catch((e) => {
 					this.setState({'notificationsError': 'Could not retrieve notifications count.'});
 					setTimeout(() => this.checkNotificationCount(), 5 * 60000);
-					// @ifdef DEBUG
-					console.log('[Notificaton count error]', e);
-					// @endif
+					DEBUG && console.log('[Notificaton count error]', e);
 				});
 			}
 		}

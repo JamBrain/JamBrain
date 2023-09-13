@@ -21,7 +21,7 @@ import PageMyHome 						from 'com/page/root/my/home';
 import PageMySettings 					from 'com/page/root/my/settings';
 import PageMyStats	 					from 'com/page/root/my/stats';
 import PageMyNotifications 				from 'com/page/root/my/notifications';
-import PageDevPalette 					from 'com/page/dev/palette';
+//import PageDevPalette 					from 'com/page/dev/palette';
 
 import HeaderNoob						from 'com/header/noob/noob';
 
@@ -60,7 +60,6 @@ export default class PageRoot extends Component {
 						<Route path="/settings" component={PageMySettings} />
 					</Route>
 					<Route path="/dev">
-						<Route path="/palette" component={PageDevPalette} />
 					</Route>
 					<Route path="/news" component={PageRootFeedNews} />
 					<Route path="/feed" component={PageRootFeed}>

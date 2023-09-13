@@ -1,6 +1,5 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
-import {shallowDiff} from 'shallow-compare';
 
 import NavLink							from 'com/nav-link/link';
 import UIIcon							from 'com/ui/icon';

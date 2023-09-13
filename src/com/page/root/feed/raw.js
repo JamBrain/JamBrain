@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import {h, Component}					from 'preact';
 import ContentHeadliner					from 'com/content-headliner/headliner';
 
 import ContentList						from 'com/content-list/list';

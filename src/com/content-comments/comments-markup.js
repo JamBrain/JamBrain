@@ -1,6 +1,6 @@
 import {h, Component, toChildArray} from 'preact';
 import cN from 'classnames';
-import {shallowDiff}	 				from 'shallow-compare/index';
+import {Diff}	 				from 'shallow';
 
 import InputTextArea					from 'com/input-textarea/input-textarea';
 
@@ -16,7 +16,7 @@ export default class ContentCommentsMarkup extends Component {
 
 	// MK: Normally this checks children. Is this correct?
 	shouldComponentUpdate( nextProps ) {
-		return shallowDiff(this.props, nextProps);
+		return Diff(this.props, nextProps);
 	}
 
 	isCommentingOnOwnPost() {

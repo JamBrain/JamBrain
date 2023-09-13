@@ -1,8 +1,6 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
 
-import ShallowCompare	 				from 'shallow-compare/index';
-
 import $JammerTV						from 'external/jammertv/jammertv';
 
 import UIIcon 							from 'com/ui/icon';

@@ -252,16 +252,12 @@ export default class ContentSimple extends Component {
 
 	onPublish( e ) {
 		// TODO: Confirm
-		// @ifdef DEBUG
-		console.log('do save first');
-		// @endif
+		DEBUG && console.log('do save first');
 
 		return this.onSave( e )
 		.then( rr => {
 			if ( rr ) {
-				// @ifdef DEBUG
-				console.log('do publish');
-				// @endif
+				DEBUG && console.log('do publish');
 
 				$Node.Publish(this.props.node.id)
 				.then(r => {
@@ -291,16 +287,13 @@ export default class ContentSimple extends Component {
 
 	onDone( e ) {
 		if ( this.state.modified ) {
-			// @ifdef DEBUG
-			console.log('do save first');
-			// @endif
+			DEBUG && console.log('do save first');
 
 			return this.onSave( e )
 			.then( rr => {
 				if ( rr ) {
-					// @ifdef DEBUG
-					console.log('done');
-					// @endif
+					DEBUG && console.log('done');
+
 					window.location.href = this.props.node.path;
 				}
 			})
@@ -311,9 +304,8 @@ export default class ContentSimple extends Component {
 			});
 		}
 		else {
-			// @ifdef DEBUG
-			console.log('done');
-			// @endif
+			DEBUG && console.log('done');
+
 			window.location.href = this.props.node.path;
 		}
 	}

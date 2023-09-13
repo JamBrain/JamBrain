@@ -1,6 +1,6 @@
 import {h, Component, toChildArray} from 'preact';
 import cN from 'classnames';
-import {shallowDiff} 					from 'shallow-compare/index';
+import {Diff} 					from 'shallow';
 
 import InputTextArea 					from 'com/input-textarea/input-textarea';
 import marked 								from 'internal/marked/marked';
@@ -12,7 +12,7 @@ export default class ContentCommonBodyMarkup extends Component {
 
   // MK: This normal checks children. Is this correct?
   shouldComponentUpdate(nextProps) {
-    return shallowDiff(this.props, nextProps);
+    return Diff(this.props, nextProps);
   }
 
   render(props) {

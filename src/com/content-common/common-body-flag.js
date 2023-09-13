@@ -1,5 +1,5 @@
 import {h, Component, toChildArray}	from 'preact';
-import {shallowDiff}				from 'shallow-compare/index';
+import {Diff}				from 'shallow';
 import cN							from 'classnames';
 
 import UIIcon						from 'com/ui/icon';
@@ -10,7 +10,7 @@ export default class ContentCommonFlag extends Component {
 	}
 
     shouldComponentUpdate( nextProps ) {
-		return shallowDiff(toChildArray(this.props.children), toChildArray(nextProps.children));
+		return Diff(toChildArray(this.props.children), toChildArray(nextProps.children));
 	}
 
     render( props ) {

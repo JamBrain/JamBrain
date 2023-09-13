@@ -1,8 +1,6 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
-import Shallow			 				from 'shallow/shallow';
 
-import NavLink							from 'com/nav-link/link';
 import ButtonLink						from 'com/button-link/link';
 import UIImage							from 'com/ui/image';
 import UIIcon							from 'com/ui/icon';

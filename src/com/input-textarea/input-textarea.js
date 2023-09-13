@@ -1,5 +1,5 @@
 import {h, Component} 					from 'preact';
-import Shallow			 				from 'shallow/shallow';
+import Shallow			 				from 'shallow';
 
 import NavLink							from 'com/nav-link/link';
 import ButtonLink						from 'com/button-link/link';

@@ -1,9 +1,5 @@
-/* DO NOT REMOVE THIS LINE. IT BREAKS THE DEBUG IMPORT BELOW */
-
-// @ifdef DEBUG
-import "preact/debug";
-// @endif
-
+//import 'preact/devtools';
+import 'preact/debug';
 
 import {h, render, Component} from 'preact';
 import titleParser						from 'internal/titleparser';
@@ -69,16 +65,12 @@ options.vnode = function _CustomVNode(vnode) {
 class Main extends Component {
 	constructor( props ) {
 		super(props);
-		// @ifdef DEBUG
-		console.log("Running in DEBUG mode");
-		console.log("[constructor]");
-		// @endif
+		DEBUG && console.log("Running in DEBUG mode");
+		DEBUG && console.log("[constructor]");
 
 		let clean = this.cleanLocation(window.location);
 		if ( window.location.origin+clean.path !== window.location.href ) {
-			// @ifdef DEBUG
-			console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
-			// @endif
+			DEBUG && console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
 
 			this.storeHistory(window.history.state, null, clean.path);
 		}
@@ -115,9 +107,7 @@ class Main extends Component {
 	}
 
 	componentDidMount() {
-		// @ifdef DEBUG
-		console.log("[componentDidMount] +");
-		// @endif
+		DEBUG && console.log("[componentDidMount] +");
 
 		let clean = this.cleanLocation(window.location);
 
@@ -126,9 +116,7 @@ class Main extends Component {
 			this.fetchRoot(),	// Fetches root, featured, and id's of all games associated with you
 			this.fetchNode(clean.slugs)
 		]).then(r => {
-			// @ifdef DEBUG
-			console.log("[componentDidMount] -");
-			// @endif
+			DEBUG && console.log("[componentDidMount] -");
 		})
 		.catch(err => {
 			this.setState({'error': err});
@@ -237,23 +225,17 @@ class Main extends Component {
 
 	// Fetch the root (and featured game). DOES NOT require user to be loaded first!
 	fetchRoot() {
-		// @ifdef DEBUG
-		console.log("[fetchRoot] +");
-		// @endif
+		DEBUG && console.log("[fetchRoot] +");
 
 		return $Node.What(SITE_ROOT).then(r => {
-			// @ifdef DEBUG
-			console.log("[fetchRoot] * Root: ", r.root.id, r.root);
-			// @endif
+			DEBUG && console.log("[fetchRoot] * Root: ", r.root.id, r.root);
 
 			let newState = {};
 			newState.root = r.root;
 
 			if ( r.featured ) {
-				// @ifdef DEBUG
-				console.log("[fetchRoot] * Featured: ", r.featured.id, "("+r.featured.name+")", r.featured);
-				console.log("[fetchRoot] * What you made: ", r.node);
-				// @endif
+				DEBUG && console.log("[fetchRoot] * Featured: ", r.featured.id, "("+r.featured.name+")", r.featured);
+				DEBUG && console.log("[fetchRoot] * What you made: ", r.node);
 
 				newState.featured = r.featured;
 				newState.featured.what = r.node;
@@ -262,9 +244,7 @@ class Main extends Component {
 				let focusDate = 0;
 				let lastPublished = 0;
 
-				// @ifdef DEBUG
-				console.log("[fetchRoot] * Hack! We don't support choosing your active game yes, so use logic to detect it");
-				// @endif
+				DEBUG && console.log("[fetchRoot] * Hack! We don't support choosing your active game yes, so use logic to detect it");
 
 				// TODO: according to TS, r.node is not an integer, but rather a string. Number should not be needed here.
 				for ( let key in r.node ) {
@@ -275,15 +255,11 @@ class Main extends Component {
 					}
 					if ( r.node[key].published ) {
 						lastPublished = Number(key);
-						// @ifdef DEBUG
-						console.log('[fetchRoot] * '+key+' is published');
-						// @endif
+						DEBUG && console.log('[fetchRoot] * '+key+' is published');
 					}
 				}
 				if ( focus ) {
-					// @ifdef DEBUG
-					console.log('[fetchRoot] * '+focus+' was the last modified');
-					// @endif
+					DEBUG && console.log('[fetchRoot] * '+focus+' was the last modified');
 				}
 
 				// If the last updated is published, focus on that
@@ -299,24 +275,18 @@ class Main extends Component {
 					newState.featured.focus_id = focus;
 				}
 
-				// @ifdef DEBUG
-				console.log('[fetchRoot] * '+newState.featured.focus_id+' chosen as focus_id');
-				// @endif
+				DEBUG && console.log('[fetchRoot] * '+newState.featured.focus_id+' chosen as focus_id');
 			}
 
 			this.setState(newState);
 
-			// @ifdef DEBUG
-			console.log('[fetchRoot] - ');
-			// @endif
+			DEBUG && console.log('[fetchRoot] - ');
 		});
 	}
 
 	// Fetch the node our current URL points at
 	fetchNode( slugs, newArgs ) {
-		// @ifdef DEBUG
-		console.log("[fetchNode] + Slugs:", slugs);
-		// @endif
+		DEBUG && console.log("[fetchNode] + Slugs:", slugs);
 
 		let args = ['node', 'parent', '_superparent', 'author'];
 		if ( newArgs ) {
@@ -327,9 +297,7 @@ class Main extends Component {
 		return $Node.Walk(SITE_ROOT, slugs, args).then(r => {
 			// Store the path determined by the walk
 			if ( r.node_id ) {
-				// @ifdef DEBUG
-				console.log("[fetchNode] * Walked", r.node_id, r);
-				// @endif
+				DEBUG && console.log("[fetchNode] * Walked", r.node_id, r);
 
 				let NewState = {};
 				NewState.path = (r.path.length ? '/' : '') +slugs.slice(0, r.path.length).join('/');
@@ -342,9 +310,7 @@ class Main extends Component {
 
 				this.setState(NewState);
 
-				// @ifdef DEBUG
-				console.log("[fetchNode] - Node:", r.node_id);
-				// @endif
+				DEBUG && console.log("[fetchNode] - Node:", r.node_id);
 
 				return r;
 			}
@@ -358,9 +324,7 @@ class Main extends Component {
 
 	// Fetch the active user (if logged in)
 	fetchUser() {
-		// @ifdef DEBUG
-		console.log("[fetchUser] +");
-		// @endif
+		DEBUG && console.log("[fetchUser] +");
 
 		// Fetch Active User
 		return $Node.GetMy().then(r => {
@@ -376,11 +340,10 @@ class Main extends Component {
 			// Finally, user is ready
 			this.setState({'user': User});
 
-			// @ifdef DEBUG
-			console.log("[fetchUser] * You are", User.id, "("+User.name+")", User);
+			DEBUG && console.log("[fetchUser] * You are", User.id, "("+User.name+")", User);
 
 			// TODO: This test should be a function
-			if ( User && User.private && User.private.meta && User.private.meta.admin ) {
+			if ( DEBUG && User && User.private && User.private.meta && User.private.meta.admin ) {
 				console.log("[fetchUser] * Administrator");
 			}
 			// @endif
@@ -388,12 +351,10 @@ class Main extends Component {
 			// Pre-cache my Love (for later)
 			return r.node ? $NodeLove.GetMy() : r;
 		})
-		// @ifdef DEBUG
 		.then(r => {
-			console.log("[fetchUser] - User: ", this.state.user);
+			DEBUG && console.log("[fetchUser] - User: ", this.state.user);
 			return r;
 		})
-		// @endif
 		.catch(err => {
 			// An error here isn't actually an error. It just means we have no user
 			this.setState({'user': {'id': 0}});
@@ -404,9 +365,7 @@ class Main extends Component {
 
 	// Hash Changes are automatically differences
 	onHashChange( e ) {
-		// @ifdef DEBUG
-		console.log("hashchange: ", e.newURL);
-		// @endif
+		DEBUG && console.log("hashchange: ", e.newURL);
 
 		this.setState(prevState => {
 			let {slugs} = this.cleanLocation(window.location);
@@ -444,9 +403,7 @@ class Main extends Component {
 
 	// When we navigate by clicking forward
 	onNavChange( e ) {
-		// @ifdef DEBUG
-		console.log('navchange:', e.detail.old.href, '=>', e.detail.location.href);
-		// @endif
+		DEBUG && console.log('navchange:', e.detail.old.href, '=>', e.detail.location.href);
 
 		this.cleanURL(e.detail.location);
 
@@ -475,9 +432,8 @@ class Main extends Component {
 	}
 	// When we navigate using back/forward buttons
 	onPopState( e ) {
-		// @ifdef DEBUG
-		console.log("popstate: ", e.state);
-		// @endif
+		DEBUG && console.log("popstate: ", e.state);
+
 		// NOTE: This is sometimes called on a HashChange with a null state
 		if ( e.state ) {
 			this.setState(e.state);

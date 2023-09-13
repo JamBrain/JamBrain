@@ -1,6 +1,6 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
-import {shallowDiff}	 				from 'shallow-compare/index';
+import {Diff}	 				from 'shallow';
 
 export default class InputText extends Component {
 	constructor( props ) {
@@ -11,7 +11,7 @@ export default class InputText extends Component {
 
 	// MK: This normally checks children. Is this correct?
 	shouldComponentUpdate( nextProps ) {
-		return shallowDiff(this.props, nextProps);
+		return Diff(this.props, nextProps);
 	}
 
 	onModify( e ) {

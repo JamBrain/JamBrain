@@ -1,6 +1,6 @@
 import {h, Component} from 'preact';
 import cN from 'classnames';
-import Shallow							from 'shallow/shallow';
+import Shallow							from 'shallow';
 
 import ContentLoading					from 'com/content-loading/loading';
 import UIIcon							from 'com/ui/icon';

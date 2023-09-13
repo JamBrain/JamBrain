@@ -14,20 +14,14 @@ export default class UIButtonClipboard extends Component {
 		if ( navigator.clipboard ) {
 			navigator.clipboard.writeText(this.props.value).then(r => {
 				// TODO: Trigger event that notifies user of action
-				// @ifdef DEBUG
-				console.log("Written to clipboard");
-				// @endif
+				DEBUG && console.log("Written to clipboard");
 			})
 			.catch(r => {
-				// @ifdef DEBUG
-				console.error("Failed to write to clipboard");
-				// @endif
+				DEBUG && console.error("Failed to write to clipboard");
 			});
 		}
 		else {
-			// @ifdef DEBUG
-			console.log("Clipboard unavailable (are you connected via HTTPS?)");
-			// @endif
+			DEBUG && console.log("Clipboard unavailable (are you connected via HTTPS?)");
 		}
 	}
 
@@ -35,11 +29,9 @@ export default class UIButtonClipboard extends Component {
 	render( props ) {
 		let {value} = props;
 
-		// @ifndef DEBUG
-		if ( !value || !navigator.clipboard ) {
+		if ( DEBUG && (!value || !navigator.clipboard) ) {
 			return <Fragment />;
 		}
-		// @endif
 
 		return (
 			<UIButton title={'Copy "'+value+'" to clipboard'} {...props} class={cN("-clipboard a", props.class)} onClick={this.onClick}>

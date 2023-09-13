@@ -3,6 +3,11 @@ export default {
 	Compare
 };
 
+/**
+ * @param {*} a
+ * @param {*} b
+ * @returns {boolean}
+ */
 export function Diff( a, b ) {
 	for ( let i in a )
 		if ( !(i in b) )

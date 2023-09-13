@@ -3,6 +3,8 @@ import ContentCommonBody				from 'com/content-common/common-body';
 import UIButton							from 'com/ui/button/button';
 import UILink							from 'com/ui/link/link';
 
+import { node_CanUpload } from 'internal/lib';
+
 import $File							from 'shrub/js/file/file';
 
 export default class ContentItemFiles extends Component {
@@ -55,9 +57,7 @@ export default class ContentItemFiles extends Component {
                 })
                 .then( r => {
                     this.setState({'status': 5});
-                    // @ifdef DEBUG
-                    console.log("Uploaded", r);
-                    // @endif
+                    DEBUG && console.log("Uploaded", r);
                 })
                 .catch(err => {
                     this.setState({'status': 5});
@@ -74,9 +74,7 @@ export default class ContentItemFiles extends Component {
             return null;
         }
 
-        // @ifdef DEBUG
-        console.log("onDelete", e.id, e.name);
-        // @endif
+        DEBUG && console.log("onDelete", e.id, e.name);
 
         return $File.RequestDelete(e.id, e.name, node.id)
             .then( r => {
@@ -93,9 +91,7 @@ export default class ContentItemFiles extends Component {
                 }
             })
             .then( r => {
-                // @ifdef DEBUG
-                console.log("Deleted", r);
-                // @endif
+                DEBUG && console.log("Deleted", r);
             })
             .catch(err => {
                 alert(err);

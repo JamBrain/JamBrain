@@ -93,9 +93,7 @@ export default class ContentEventSlaughter extends Component {
 		// Once Finished
 		Promise.all([onVotes, onIdeas])
 		.then(r => {
-			// @ifdef DEBUG
-			console.log("Loaded my Ideas and Themes", r);
-			// @endif
+			DEBUG && console.log("Loaded my Ideas and Themes", r);
 
 			this.pickRandomIdea();
 		})

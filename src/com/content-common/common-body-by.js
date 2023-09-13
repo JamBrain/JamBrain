@@ -1,6 +1,6 @@
 import {h, Component, toChildArray} from 'preact';
 import cN from 'classnames';
-import {shallowDiff}	 				from 'shallow-compare/index';
+import {Diff}	 				from 'shallow';
 
 import {getLocaleDate, getRoughAge}	from 'internal/time';
 
@@ -12,7 +12,7 @@ export default class ContentCommonBodyBy extends Component {
 	}
 
 	shouldComponentUpdate( nextProps ) {
-		return shallowDiff(toChildArray(this.props.children), toChildArray(nextProps.children));
+		return Diff(toChildArray(this.props.children), toChildArray(nextProps.children));
 	}
 
 	getName( node ) {

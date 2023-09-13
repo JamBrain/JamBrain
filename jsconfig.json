@@ -3,20 +3,22 @@
 		"checkJs": true,
 		"target": "ES2021",
 		"module": "ESNext",
+		"moduleResolution": "bundler",
 		"jsx": "react",
 		"jsxFactory": "h",
 		"jsxFragmentFactory": "Fragment",
-		"moduleResolution": "Node",
+		"allowUnreachableCode": false,
+		"allowUnusedLabels": false,
+		"strict": false,
 		"allowSyntheticDefaultImports": true,
-		"baseUrl": "./",
+		"types": ["preact"],
+		"baseUrl": "./src/",
 		"paths": {
-			"preact": ["src/external/preact/preact/index"],
-			"classnames": ["src/external/classnames/index"],
-			"*": ["src/*", "src/external/*", "src/custom/*"]
+			"classnames": ["external/classnames/index"],
+			"shallow-compare": ["external/shallow-compare/index"],
+			"shallow": ["custom/shallow/shallow"]
 		}
 	},
-	"include": [
-		"src/**/*"
-	],
-	"excludeDirectories": ["**/node_modules", "**/.*", "src/config/*"]
+	"include": ["src/**/*"],
+	"excludeDirectories": ["node_modules", "**/node_modules/*", "**/.*", "src/config/*"]
 }

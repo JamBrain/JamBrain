@@ -41,8 +41,7 @@ export default class DialogReset extends Component {
 			$User.Reset( mail )
 			.then( r => {
 				if ( r.status === 200 ) {
-					// @ifdef DEBUG
-					console.log('sent', r.sent);
+					DEBUG && console.log('sent', r.sent);
 					// @endif
 					this.setState({'sent': true, 'loading': false});
 				}

@@ -243,9 +243,7 @@ export default class ContentGames extends Component {
 
 
 	_fetchMore( offset ) {
-		// @ifdef DEBUG
-		console.log("[com/ContentGames]", "fetchMore", offset);
-		// @endif
+		DEBUG && console.log("[com/ContentGames]", "fetchMore", offset);
 
 		var props = this.props;
 //		var morenode = this.state.feed[this.state.feed.length-1];

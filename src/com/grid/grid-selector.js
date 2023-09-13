@@ -39,9 +39,8 @@ export default class GridSelector extends Component {
     }
 
     onToggleDropDown() {
-        // @ifdef DEBUG
-        console.log('toggle dropdown', this.state);
-        // @endif
+        DEBUG && console.log('toggle dropdown', this.state);
+
         this.setState({'expanded': !this.state.expanded});
     }
 
