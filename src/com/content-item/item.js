@@ -1051,6 +1051,6 @@ export default class ContentItem extends Component {
 			this.contentSimple = c;
 		};
 
-		return <ContentSimple key={props.node.id} {...props} authors />;
+		return <ContentSimple {...props} authors key={props.node.id} />;
 	}
 }
