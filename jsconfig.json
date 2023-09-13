@@ -19,5 +19,5 @@
 		}
 	},
 	"include": ["src/**/*"],
-	"excludeDirectories": ["node_modules", "**/node_modules/*", "**/.*", "src/config/*"]
+	"excludeDirectories": ["node_modules", "**/node_modules/*", "**/.*", "config/**/*"]
 }

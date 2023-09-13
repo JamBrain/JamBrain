@@ -1,7 +1,7 @@
 # Shrub Backend Internals
 These are the internal calls and libraries used by the API and the server side tools.
 
-Each folder has one or more optional files that tie it to the internals. If writing a backend plugin, this is where you do it. Create your own folder, and make sure these files exist. You can use other folders as reference, but do note `src/config/` is different then the rest, and `src/core/` doesn't have database tables (but it does define some of the Doxygen root data).
+Each folder has one or more optional files that tie it to the internals. If writing a backend plugin, this is where you do it. Create your own folder, and make sure these files exist. You can use other folders as reference, but do note `config/` is different then the rest, and `src/core/` doesn't have database tables (but it does define some of the Doxygen root data).
 
 * `item/constants.php` - run `src/gen.sh` to update
 

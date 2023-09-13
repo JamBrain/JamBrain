@@ -112,7 +112,7 @@ TARGET_FILES		:=	$(TARGET_FILES_SVG) $(TARGET_FILES_CSS)
 # Tools #
 
 # Ecmascript Linter: http://eslint.org/
-ESLINT_ARGS			:=	--config src/config/eslint.config.json
+ESLINT_ARGS			:=
 ESLINT				=	$(JSRUN) eslint $(1) $(ESLINT_ARGS)
 # ES Compiler: https://buble.surge.sh/guide/
 BUBLE_ARGS			:=	--no modules,forOf --jsx h --jsx-fragment Fragment --objectAssign Object.assign
@@ -120,11 +120,8 @@ BUBLE_ARGS			:=	--no modules,forOf --jsx h --jsx-fragment Fragment --objectAssig
 #BUBLE_ARGS			+=	-m inline
 #endif # SOURCEMAPS
 BUBLE				=	$(JSRUN) buble $(BUBLE_ARGS) -i $(1) -o $(2)
-# TS Compiler: https://swc.rs/
-SWC_ARGS			:=	--config-file src/config/swc.json
-SWC					=	$(JSRUN) swc $(SWC_ARGS) $(1) -o $(2)
 # ES Include/Require Resolver: http://rollupjs.org/guide/
-ROLLUP_ARGS			:=	-c src/config/rollup.config.js
+ROLLUP_ARGS			:=	-c config/rollup.config.cjs
 ifdef SOURCEMAPS
 ROLLUP_ARGS			+=	-m inline
 endif # SOURCEMAPS
@@ -146,16 +143,16 @@ LESS				=	$(JSRUN) lessc $(LESS_COMMON) $(LESS_ARGS) $(1) $(2)
 # CSS Minifier: https://github.com/jakubpawlowicz/clean-css/
 MINIFY_CSS			=	cat $(1) | $(JSRUN) cleancss -o $(2)
 # CSS Linter: http://stylelint.io/
-STYLELINT_ARGS		:=	--config src/config/.stylelintrc --config-basedir ../../ --fix
+STYLELINT_ARGS		:=	--config-basedir ../../ --fix
 STYLELINT			=	$(JSRUN) stylelint $(1) $(STYLELINT_ARGS)
 
 # SVG "Compiler", same as the minifier: https://github.com/svg/svgo
-SVGO_ARGS			:=	-q --config src/config/svgo.config.js
+SVGO_ARGS			:=	-q --config config/svgo.config.cjs
 SVGO				=	$(JSRUN) svgo $(SVGO_ARGS) -i $(1) -o $(2)
 # Mike's SVG Sprite Packer: https://github.com/mikekasprzak/svg-sprite-tools
 SVG_PACK			=	src/tools/svg-sprite-tools/svg-sprite-pack $(1) > $(2)
 # SVG Minifier: https://github.com/svg/svgo
-MINIFY_SVG_ARGS		:=	--multipass --config src/config/svgo_minify.config.js -q
+MINIFY_SVG_ARGS		:=	--multipass --config config/svgo_minify.config.cjs -q
 MINIFY_SVG			=	$(JSRUN) svgo $(MINIFY_SVG_ARGS) -i $(1) -o $(2)
 
 # Remove Empty Directories
@@ -301,11 +298,6 @@ $(BUILD_FOLDER)/less.lint: $(LESS_FILES)
 $(OUT)/%.es.js:$(SRC)/%.js
 	@echo "[$(COL_GREEN)ES->JS$(COL_OFF)] $<"
 	@$(call BUBLE,$<,$@)
-#	@$(call SWC,$<,$@.swc.js)
-
-$(OUT)/%.ts.js:$(SRC)/%.ts
-	@echo "[$(COL_GREEN)TS->JS$(COL_OFF)] $<"
-	@$(call SWC,$<,$@)
 
 $(OUT)/%.o.js:$(SRC)/%.js
 	@echo "[$(COL_GREEN)Copy JS$(COL_OFF)] $<"
