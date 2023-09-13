@@ -14,10 +14,9 @@
 		"baseUrl": "./src/",
 		"paths": {
 			"classnames": ["external/classnames/index"],
-			"shallow-compare": ["external/shallow-compare/index"],
 			"shallow": ["custom/shallow/shallow"]
 		}
 	},
 	"include": ["src/**/*"],
-	"excludeDirectories": ["node_modules", "**/node_modules/*", "**/.*", "config/**/*"]
+	"excludeDirectories": ["node_modules", "**/node_modules/*", "**/.*", "config/**/*", "sandbox/**/*"]
 }
