@@ -12,7 +12,7 @@ export default class ContentNavRoot extends Component {
 		if ( NewPath == '/' )
 			NewPath = '/home';
 
-		// TODO: Check if Jammer.vg vs ludumdare. Use different path on each
+		// TODO: Check if jam.host vs ludumdare. Use different path on each
 		let ShowEvents = null;
 		if ( true ) {
 			ShowEvents = <ContentNavButton path={PartPath} title="Winners" icon="trophy" href="/events/ludum-dare">Events</ContentNavButton>;

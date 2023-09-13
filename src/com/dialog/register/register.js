@@ -113,7 +113,7 @@ export default class DialogRegister extends Component {
 */
 //					<div class="-info">
 //						<ul>
-//							<li><strong>Hotmail</strong>, <strong>Outlook</strong>, <strong>Live.com</strong>: Add <code>hello@jammer.vg</code> to your contacts</li>
+//							<li><strong>Hotmail</strong>, <strong>Outlook</strong>, <strong>Live.com</strong>: Add <code>hello@jam.vg</code> to your contacts</li>
 //							<li><strong>Free.fr</strong>: Probably wont work. We've sent a whitelisting request</li>
 //							<li><strong>Laposte.net</strong>: We can't find any info on how to fix them. <strong>SORRY!</strong> :(</li>
 //						</ul>

@@ -56,7 +56,7 @@ export default class PageNavRoot extends Component {
 			NavButtons.push(<ContentNavButton path={FirstPath} title="Games" icon="gamepad" href="/games">Games</ContentNavButton>);
 
 			if ( FirstPath != '/' ) {
-				// if ldjam.com vs jammer.vg
+				// if ldjam.com vs jam.vg
 				if ( true )
 					NavButtons.push(<ContentNavButton path={FirstPath} title="Events" icon="trophy" href="/events/ludum-dare" match="/events">Events</ContentNavButton>);
 				else
