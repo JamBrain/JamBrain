@@ -1,4 +1,4 @@
-import {h, Component, Fragment} from 'preact';
+import {Component} from 'preact';
 import NavLink 							from 'com/nav-link/link';
 import UIIcon 							from 'com/ui/icon';
 import { getLocaleDay, getLocaleMonthDay, getLocaleDate, getLocaleTime, getLocaleTimeZone } from 'internal/time';
@@ -192,7 +192,7 @@ export default class ContentEvent extends Component {
 
 			let ShowEventTheme = null;
 			if ( node.meta['event-theme'] ) {
-				ShowEventTheme = <Fragment><UIIcon small baseline gap>lightbulb</UIIcon> Theme: <strong>{node.meta['event-theme']}</strong></Fragment>;
+				ShowEventTheme = <><UIIcon small baseline gap>lightbulb</UIIcon> Theme: <strong>{node.meta['event-theme']}</strong></>;
 			}
 
 			props.above.push(

@@ -1,5 +1,5 @@
-import {h, Component}		from 'preact';
-import ContentNavButton		from './nav-button';
+import { Component } from 'preact';
+import ContentNavButton from './nav-button';
 
 
 export default class ContentNavEvent extends Component {

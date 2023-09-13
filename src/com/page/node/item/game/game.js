@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact';
+import { Component } from 'preact';
 
 import ContentComments					from 'com/content-comments/comments';
 import ContentNavItem					from 'com/content-nav/nav-item';

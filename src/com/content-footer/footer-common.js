@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact';
+import {Component} from 'preact';
 
 import ContentFooterButtonLove			from 'com/content-footer/footer-button-love';
 

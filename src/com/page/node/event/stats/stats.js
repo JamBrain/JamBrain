@@ -1,4 +1,4 @@
-import {h, Component, Fragment} from 'preact';
+import {Component} from 'preact';
 
 import {ContentHeadliner} from "com/content/headliner";
 import ContentStatsEvent from 'com/content-stats/stats-event';
@@ -8,10 +8,10 @@ export default class EventStats extends Component {
         let {node} = props;
 
         return (
-            <Fragment>
+            <>
                 <ContentHeadliner title="Statistics" icon="stats" flagclass="-col-a" />
                 <ContentStatsEvent node={node} />
-            </Fragment>
+            </>
         );
     }
 }

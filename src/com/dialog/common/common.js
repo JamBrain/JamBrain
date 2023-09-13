@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact';
+import { Component } from 'preact';
 
 import DialogBase						from 'com/dialog/base/base';
 import ButtonBase						from 'com/button-base/base';

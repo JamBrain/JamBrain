@@ -1,6 +1,5 @@
-import {h, Component}				from 'preact';
-
-import ContentGames					from 'com/content-games/games';
+import { Component } from 'preact';
+import ContentGames from 'com/content-games/games';
 
 export default class UserGames extends Component {
 	render( props ) {

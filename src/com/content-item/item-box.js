@@ -1,6 +1,6 @@
-import {h, Component} 					from 'preact';
+import { Component } from 'preact';
 
-import ContentBox						from 'com/content-box/box';
+import ContentBox from 'com/content-box/box';
 
 export default class ContentItemBox extends Component {
 	constructor( props ) {

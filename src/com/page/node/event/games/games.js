@@ -1,4 +1,4 @@
-import {h, Component, Fragment} from 'preact';
+import {Component} from 'preact';
 
 import ContentHeadliner from 'com/content/headliner';
 import ContentGames from 'com/content-games/games';
@@ -141,11 +141,11 @@ export default class EventGames extends Component {
         //Methods.push('superparent');	// Why doesn't this work? It's unnecssary, but it should still work
 
         return (
-            <Fragment>
+            <>
                 <ContentHeadliner title="Games" icon="gamepad" flagclass="-col-a" />
                 {ShowFilters}
                 <ContentGames node={node} user={user} path={path} extra={extra} noevent methods={Methods} subsubtypes={SubFilter ? SubFilter : null} filter={GamesFeedFilter} />
-            </Fragment>
+            </>
         );
     }
 }

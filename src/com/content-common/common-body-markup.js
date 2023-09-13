@@ -1,4 +1,4 @@
-import {h, Component, toChildArray} from 'preact';
+import {Component, toChildArray} from 'preact';
 import cN from 'classnames';
 import {Diff} 					from 'shallow';
 

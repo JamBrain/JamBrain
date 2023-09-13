@@ -1,5 +1,4 @@
-import {h, Component}		from 'preact';
-
+import { Component } from 'preact';
 import ContentUserFollowing from 'com/content-user/user-following';
 
 export default class UserFollowing extends Component {

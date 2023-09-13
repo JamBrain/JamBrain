@@ -1,4 +1,4 @@
-import { h, Component } from 'preact/preact';
+import { Component } from 'preact/preact';
 
 export default class DialogLoginOrig extends Component {
 	constructor() {

@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact';
+import { Component } from 'preact';
 import Sanitize							from 'internal/sanitize';
 
 import DialogCommon						from 'com/dialog/common/common';

@@ -1,4 +1,4 @@
-import {h, Component, Fragment}	from 'preact';
+import {Component}	from 'preact';
 
 import Notification, {
 	isNotificationComment,
@@ -403,6 +403,6 @@ export default class NotificationsBase extends Component {
 	}
 
 	render() {
-		return <Fragment />;
+		return null;
 	}
 }

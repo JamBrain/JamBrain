@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact/preact';
+import { Component }					from 'preact';
 import titleParser						from 'internal/titleparser';
 
 import ContentPost						from 'com/content-post/post';

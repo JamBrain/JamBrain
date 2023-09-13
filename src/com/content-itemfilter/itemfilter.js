@@ -1,10 +1,10 @@
-import {h, Component}					from 'preact';
+import { Component } from 'preact';
 
 import UIIcon							from 'com/ui/icon';
 import UIButton							from 'com/ui/button';
 import UITagbox							from 'com/ui/tagbox';
 import UIText							from 'com/ui/text';
-import {UIDropdown, UIDropdownList}		from 'com/ui/dropdown';
+import { UIDropdown, UIDropdownList } from 'com/ui/dropdown';
 import UITextdown						from 'com/ui/textdown';
 
 import UIHelp							from 'com/ui/help';

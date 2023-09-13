@@ -1,4 +1,4 @@
-import {h, Component} from 'preact';
+import { Component } from 'preact';
 
 import ContentHeadliner from './headliner';
 import $Stats from 'shrub/js/stats/stats';

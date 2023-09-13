@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact';
+import { Component } from 'preact';
 import ContentNavButton					from 'com/content-nav/nav-button';
 
 export default class PageNavContent extends Component {

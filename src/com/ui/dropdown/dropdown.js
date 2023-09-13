@@ -1,4 +1,4 @@
-import {h, Component, cloneElement, toChildArray} from 'preact';
+import { Component, cloneElement, toChildArray } from 'preact';
 import cN from 'classnames';
 
 import UIButton from '../button';

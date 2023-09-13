@@ -1,4 +1,4 @@
-import { h, Component } from 'preact/preact';
+import { Component } from 'preact/preact';
 
 export default class CoreButton extends Component {
 	render(props,state) {
@@ -9,7 +9,7 @@ export default class CoreButton extends Component {
 			props.class += " core-button";
 		else
 			props.class = "core-button";
-			
+
 		if ( props.hasOwnProperty('onClick') ) {
 			// As long as you don't set the "keep focus" property //
 			if ( !props.hasOwnProperty('keepFocus') ) {
@@ -20,14 +20,14 @@ export default class CoreButton extends Component {
 					document.activeElement.blur();
 				}
 			}
-			
+
 			props.onKeyDown = (e) => {
 				if ( e.keyCode === 13 ) {
 					props.onClick()
 				}
 			};
 		}
-			
+
 		return (
 			<div {...props} />
 		);

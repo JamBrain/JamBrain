@@ -1,4 +1,4 @@
-import {h, Component, Fragment}			from 'preact';
+import {Component}			from 'preact';
 
 import ContentEvent						from "com/content-event/event";
 //import ContentList						from 'com/content-list/list';
@@ -38,12 +38,12 @@ export default class PageRootHome extends Component {
 		let ShowPosts = <ContentTimeline class="content-timeline-posts" types={['post']} methods={['all']} node={node} user={user} path={path} extra={extra} featured={featured} />;
 
 		return (
-			<Fragment>
+			<>
 				{ShowEvent}
 				{ShowNews}
 				{ShowHomework}
 				{ShowPosts}
-			</Fragment>
+			</>
 		);
 	}
 //                <ContentTimeline class="content-timeline-news" types={['post']} subtypes={['news']} methods={['all']} minimized nomore noemptymessage limit={1} node={node} user={user} path={path} extra={extra} />

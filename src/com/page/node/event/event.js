@@ -1,4 +1,4 @@
-import {h, Component, Fragment} from "preact";
+import {Component} from "preact";
 import PageNavEvent						from 'com/page/nav/event';
 
 import ContentHeadlinerEvent			from 'com/content-headliner/headliner-event';
@@ -38,7 +38,7 @@ export default class PageEvent extends Component {
 //				<ContentNavEvent node={node} user={user} path={path} extra={extra} featured={featured} />
 
 		return (
-			<Fragment>
+			<>
 				<ContentHeadlinerEvent node={node} name="event" icon="trophy" flagclass="-col-ab" childclass={IsThisFeatured ? "-col-a -inv-lit" : "-inv -inv-lit"} style="--headlinerSize: 2.5rem;" />
 				<PageNavEvent {...props} />
 				<ContentRouter props={props} key="event">
@@ -50,7 +50,7 @@ export default class PageEvent extends Component {
 						<Route path="/grades" component={EventMyGrades} />
 					</Route>
 				</ContentRouter>
-			</Fragment>
+			</>
 		);
 	}
 }

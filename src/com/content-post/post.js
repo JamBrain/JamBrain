@@ -1,4 +1,3 @@
-import {h, Component} 					from 'preact';
 import ContentSimple					from 'com/content-simple/simple';
 import {UIIcon, UILink, UIButton}		from 'com/ui';
 

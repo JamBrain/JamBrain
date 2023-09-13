@@ -1,4 +1,4 @@
-import {h, Component}				from 'preact';
+import { Component }				from 'preact';
 import UIIcon 						from 'com/ui/icon/icon';
 import UILink 						from 'com/ui/link/link';
 

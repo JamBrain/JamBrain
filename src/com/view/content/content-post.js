@@ -1,4 +1,4 @@
-import {h, Component, Fragment}	from 'preact';
+import {Component}	from 'preact';
 import ContentPost				from 'com/content-post/post';
 import ContentComments			from 'com/content-comments/comments';
 
@@ -13,10 +13,10 @@ export default class ViewContentPost extends Component {
 		}
 
 		return (
-			<Fragment>
+			<>
 				<ContentPost node={node} user={user} path={path} extra={extra} authored by love single />
 				{ShowComments}
-			</Fragment>
+			</>
 		);
 	}
 }

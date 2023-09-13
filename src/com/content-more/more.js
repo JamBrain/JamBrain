@@ -1,7 +1,7 @@
-import {h, Component}		from 'preact';
+import { Component } from 'preact';
 
-import UIButton				from 'com/ui/button';
-import UISpinner			from 'com/ui/spinner';
+import UIButton from 'com/ui/button';
+import UISpinner from 'com/ui/spinner';
 
 export default class ContentMore extends Component {
 	render( props ) {

@@ -1,4 +1,4 @@
-import {h, Component} from 'preact';
+import {Component} from 'preact';
 import cN from 'classnames';
 
 import ContentLoading					from 'com/content-loading/loading';

@@ -1,4 +1,4 @@
-import {h, render, Component}			from 'preact';
+import { render, Component } from 'preact';
 import ContentPost						from 'com/content-post/post';
 
 class Main extends Component {

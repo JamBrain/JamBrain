@@ -1,4 +1,4 @@
-import {h, Component} from 'preact';
+import {Component} from 'preact';
 
 import YoutubeEmbed from 'com/autoembed/youtube';
 

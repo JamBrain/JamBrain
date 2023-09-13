@@ -1,5 +1,3 @@
-import {h} from 'preact';
-
 /**
  * @param {*} _props
  * @returns {*|null}

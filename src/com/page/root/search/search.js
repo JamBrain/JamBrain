@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact';
+import { Component } from 'preact';
 
 export default class PageRootSearch extends Component {
 	render( props ) {

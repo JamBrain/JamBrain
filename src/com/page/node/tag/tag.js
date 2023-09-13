@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact';
+import { Component } from 'preact';
 import PageNavRoot						from '../../nav/root';
 
 import ContentGames						from 'com/content-games/games';

@@ -1,5 +1,3 @@
-import {h} 						from 'preact';
-
 import ToolTip					from 'com/tooltip/tooltip';
 
 

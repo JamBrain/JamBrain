@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact';
+import {Component} from 'preact';
 import titleParser						from 'internal/titleparser';
 
 import NavLink 							from 'com/nav-link/link';

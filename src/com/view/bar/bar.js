@@ -1,5 +1,5 @@
-import {h, Component} 					from 'preact';
-import Shallow			 				from 'shallow';
+import { Component } from 'preact';
+import Shallow from 'shallow';
 import { node_CanCreate } from 'internal/lib';
 
 import ButtonBase						from 'com/button-base/base';

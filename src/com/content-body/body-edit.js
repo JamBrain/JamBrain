@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact';
+import {Component} 					from 'preact';
 import InputTextArea					from 'com/input-textarea/input-textarea';
 
 export default class ContentBodyEdit extends Component {

@@ -1,4 +1,4 @@
-import {h, Component}	 				from 'preact';
+import { Component } from 'preact';
 import UIIcon							from 'com/ui/icon';
 import UICheckbox						from 'com/ui/checkbox/checkbox';
 import {
@@ -8,10 +8,10 @@ import {
 	isNotificationFriendPost,
 	isNotificationMention,
 	isNotificationOther
-}						from 'com/content-notifications/notification';
+} from 'com/content-notifications/notification';
+
 
 export default class NotificationsFilter extends Component {
-
 	constructor(props) {
 		super(props);
 		this.onToggleComments = () => props.handleFilterChange('Comment');

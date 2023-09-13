@@ -1,4 +1,4 @@
-import {h, Component, toChildArray} 	from 'preact';
+import {Component, toChildArray} 	from 'preact';
 import {Diff}	 				from 'shallow';
 import marked 							from 'internal/marked/marked';
 

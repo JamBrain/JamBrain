@@ -1,5 +1,3 @@
-import {h} from 'preact';
-
 export default function UIButtonDiv( props ) {
 	props = {...props};
 

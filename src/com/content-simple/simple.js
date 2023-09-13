@@ -1,4 +1,4 @@
-import {h, Component} from 'preact';
+import { Component } from 'preact';
 import cN from 'classnames';
 
 import { node_IsAuthor }								from 'internal/lib';

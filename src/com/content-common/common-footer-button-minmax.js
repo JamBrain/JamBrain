@@ -1,5 +1,5 @@
-import {h, Component} 				from 'preact';
-import UIIcon 						from 'com/ui/icon';
+import {Component} from 'preact';
+import UIIcon from 'com/ui/icon';
 
 export default class ContentCommonFooterButtonMinMax extends Component {
 	constructor( props ) {

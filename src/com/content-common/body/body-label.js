@@ -1,4 +1,3 @@
-import {h} from 'preact';
 import cN from 'classnames';
 
 export default function BodyLabel(props) {

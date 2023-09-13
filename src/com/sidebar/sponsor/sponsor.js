@@ -1,5 +1,3 @@
-import {h}				from 'preact';
-
 import UIImage			from 'com/ui/image';
 import UIIcon 			from 'com/ui/icon';
 import NavLink 			from 'com/nav-link/link';

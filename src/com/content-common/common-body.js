@@ -1,5 +1,4 @@
-import {h, Component, toChildArray} from 'preact';
-import cN from 'classnames';
+import {Component, toChildArray} from 'preact';
 import {Diff} from 'shallow';
 
 export default class ContentCommonBody extends Component {
@@ -12,6 +11,6 @@ export default class ContentCommonBody extends Component {
 	}
 
 	render( props ) {
-		return <div class={cN("body", props.class)}>{props.children}</div>;
+		return <div class={`body ${props.class ?? ''}`}>{props.children}</div>;
 	}
 }

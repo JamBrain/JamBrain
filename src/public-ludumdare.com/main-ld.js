@@ -1,11 +1,11 @@
-//import 'preact/devtools';
-import 'preact/debug';
+import 'preact/devtools';
+//import 'preact/debug';
 
-import {h, render, Component} from 'preact';
+import { render, Component } from 'preact';
 import titleParser						from 'internal/titleparser';
 import Sanitize							from 'internal/sanitize';
 
-import {ContentRouter, Route} from "com/router";
+import { ContentRouter, Route } from "com/router";
 
 import Layout							from "com/page/layout";
 

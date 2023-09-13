@@ -1,4 +1,3 @@
-import {h} from 'preact';
 import cN from 'classnames';
 import {BasicSection, Header, Section, Footer} from "com/content/basic";
 

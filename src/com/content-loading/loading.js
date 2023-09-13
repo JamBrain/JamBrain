@@ -1,5 +1,5 @@
-import {h, Component} 					from 'preact';
-import UISpinner						from 'com/ui/spinner';
+import { Component } from 'preact';
+import UISpinner from 'com/ui/spinner';
 
 export default class ContentLoading extends Component {
 	constructor( props ) {

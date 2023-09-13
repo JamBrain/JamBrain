@@ -1,4 +1,4 @@
-import {h, Component, Fragment} from 'preact';
+import {Component} from 'preact';
 import PageNavUser						from 'com/page/nav/user';
 
 import ContentUser						from 'com/content-user/user';
@@ -29,7 +29,7 @@ export default class PageUser extends Component {
 		/>;
 
 		return (
-			<Fragment>
+			<>
 				{!isEditing ? Header : null}
 				{!isEditing ? <PageNavUser {...props} /> : null}
 				<ContentRouter props={props} key="user">
@@ -41,7 +41,7 @@ export default class PageUser extends Component {
 					<Route path="/followers" component={UserFollowers} />
 					<Route path="/stats/*" component={UserStats} />
 				</ContentRouter>
-			</Fragment>
+			</>
 		);
 	}
 }

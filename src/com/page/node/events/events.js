@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact';
+import { Component } from 'preact';
 import PageNavRoot						from '../../nav/root';
 
 import ContentGroup						from 'com/content-group/group';

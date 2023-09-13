@@ -1,4 +1,4 @@
-import {h, Component, Fragment} from 'preact';
+import {Component} from 'preact';
 
 import ContentHeadliner from 'com/content/headliner';
 import ContentEventTheme				from 'com/content-event/event-theme';
@@ -20,11 +20,11 @@ export default class EventTheme extends Component {
         }
 
         return (
-            <Fragment>
+            <>
                 <ContentHeadliner title="Theme Selection" icon="ticket" flagclass="-col-a" />
                 <ContentNavTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />
                 <ContentEventTheme node={node} user={user} path={NewPath} extra={NewExtra} featured={featured} />
-            </Fragment>
+            </>
         );
     }
 }

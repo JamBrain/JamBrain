@@ -1,5 +1,3 @@
-import {h} from 'preact';
-import cN from 'classnames';
 import {UIButton} from 'com/ui';
 
 export default function BodyNavButton( props ) {

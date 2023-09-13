@@ -1,4 +1,4 @@
-import {h, Component} from 'preact';
+import { Component } from 'preact';
 import cN from 'classnames';
 
 import Sanitize							from 'internal/sanitize';
@@ -21,18 +21,18 @@ export default class NavLink extends Component {
 		let _search = (that.search && that.search.length !== 0) ? that.search : state.old.search;
 
 		let new_event = new CustomEvent('navchange', {
-			detail: Object.assign(state, {
-				location: {
-					baseURI: that.baseURI,			// without query string
-					hash: that.hash,				// #hash
-					host: that.host,				// host with port
-					hostname: that.hostname,		// without port
-					href: _href,					// full
-					origin: that.origin,			// protocol+host
-					pathname: that.pathname,		// just the path
-					port: that.port,				// port
-					protocol: that.protocol,		// http:, https:, etc
-					search: _search,				// query string
+			'detail': Object.assign(state, {
+				'location': {
+					'baseURI': that.baseURI,			// without query string
+					'hash': that.hash,				// #hash
+					'host': that.host,				// host with port
+					'hostname': that.hostname,		// without port
+					'href': _href,					// full
+					'origin': that.origin,			// protocol+host
+					'pathname': that.pathname,		// just the path
+					'port': that.port,				// port
+					'protocol': that.protocol,		// http:, https:, etc
+					'search': _search,				// query string
 				}
 			})
 		});

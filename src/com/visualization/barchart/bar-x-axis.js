@@ -1,4 +1,4 @@
-import {h, Component} from 'preact';
+import { Component } from 'preact';
 import cN from 'classnames';
 
 // Non used prop `height` is the expected maximum extent of axis

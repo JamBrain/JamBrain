@@ -1,5 +1,5 @@
-import {h, Component}					from 'preact';
-import {node_IsAuthor}					from 'internal/lib';
+import { Component } from 'preact';
+import { node_IsAuthor } from 'internal/lib';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentLoading					from 'com/content-loading/loading';

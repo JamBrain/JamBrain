@@ -1,4 +1,4 @@
-import {h, Component, Fragment}			from 'preact';
+import {Component}			from 'preact';
 import PageNavEventMy					from '../../../nav/event-my';
 
 //import ContentList						from 'com/content-list/list';
@@ -327,7 +327,7 @@ export default class MyGrades extends Component {
 		}
 
 		return (
-			<Fragment>
+			<>
 				<PageNavEventMy {...props} />
 				<div class="content -common event-mygraded">
 					<h2>Items you have graded</h2>
@@ -339,7 +339,7 @@ export default class MyGrades extends Component {
 					{ShowStats}
 					{ShowResults}
 				</div>
-			</Fragment>
+			</>
 		);
 	}
 }

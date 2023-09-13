@@ -1,4 +1,4 @@
-import {h, Component, Fragment}			from 'preact';
+import {Component}			from 'preact';
 
 import ViewBar							from 'com/view/bar/bar';
 import ViewHeader						from 'com/view/header/header';
@@ -14,7 +14,7 @@ export default class Layout extends Component {
 		let loading = !node || (node.id == 0);
 
 		return (
-			<Fragment>
+			<>
 				<ViewBar user={user} featured={featured} loading={loading}/>
 				<section id="layout-page">
 					<ViewHeader user={user} featured={featured} root={root}/>
@@ -26,7 +26,7 @@ export default class Layout extends Component {
 					</section>
 					<ViewFooter/>
 				</section>
-			</Fragment>
+			</>
 		);
 	}
 }

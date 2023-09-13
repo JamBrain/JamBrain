@@ -1,5 +1,4 @@
-import {h, Component}					from 'preact';
-
+import { Component } from 'preact';
 import ContentTimeline					from 'com/content-timeline/timeline';
 
 export default class UserFeed extends Component {

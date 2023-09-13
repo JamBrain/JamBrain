@@ -1,4 +1,4 @@
-import {h, Component}	from 'preact';
+import {Component}	from 'preact';
 
 export default class ClockFlip extends Component {
 	constructor( props ) {

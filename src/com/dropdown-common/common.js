@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact';
+import { Component } from 'preact';
 import classNames						from 'classnames';
 
 import DropdownBase						from 'com/dropdown-base/base';

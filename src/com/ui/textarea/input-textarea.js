@@ -1,4 +1,4 @@
-import {h, Component} from 'preact';
+import { Component } from 'preact';
 import Shallow from 'shallow';
 
 import NavLink from 'com/nav-link/link';

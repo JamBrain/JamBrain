@@ -1,4 +1,3 @@
-import {h, Component}	from 'preact';
 import NavLink 			from 'com/nav-link/link';
 
 /** @deprecated use \{UIButton} (or \{UIButtonLink}) from "com/ui" */

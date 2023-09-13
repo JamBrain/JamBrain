@@ -1,4 +1,4 @@
-import {h, Component, Fragment} from 'preact';
+import {Component} from 'preact';
 import cN from 'classnames';
 
 import {UIIcon} from 'com/ui';
@@ -102,6 +102,6 @@ export default class BodyNavButtonFollow extends Component {
 			);
 		}
 
-		return <Fragment />;
+		return null;
 	}
 }

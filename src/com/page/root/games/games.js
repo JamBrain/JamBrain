@@ -1,4 +1,4 @@
-import {h, Component, Fragment}			from 'preact';
+import {Component}			from 'preact';
 
 //import ContentList						from 'com/content-list/list';
 import ContentGames						from 'com/content-games/games';
@@ -118,11 +118,11 @@ export default class PageHomeGames extends Component {
 		let ShowNewFilterbox = null;//<ContentItemFilter />;
 
 		return (
-			<Fragment class="page-home-games">
+			<div class="page-home-games">
 				{ShowFilters}
 				{ShowNewFilterbox}
 				<ContentGames node={NodeArg} user={user} path={path} extra={extra} methods={Methods} subsubtypes={SubFilter ? SubFilter : null} filter={GamesFeedFilter} filterout />
-			</Fragment>
+			</div>
 		);
 	}
 }

@@ -1,4 +1,3 @@
-import {h} from "preact";
 import {UIIcon, UILink} from "com/ui";
 
 /**

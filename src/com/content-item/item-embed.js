@@ -1,4 +1,4 @@
-import {h, Component}		from 'preact';
+import { Component } from 'preact';
 import ContentCommonBody	from 'com/content-common/common-body';
 import UIIcon				from 'com/ui/icon/icon';
 import UIButton				from 'com/ui/button/button';

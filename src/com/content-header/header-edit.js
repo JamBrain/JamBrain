@@ -1,5 +1,5 @@
-import {h, Component, toChildArray} 	from 'preact';
-import {Diff}	 				from 'shallow';
+import { Component } from 'preact';
+import { Diff } from 'shallow';
 
 export default class ContentHeaderEdit extends Component {
 	constructor( props ) {

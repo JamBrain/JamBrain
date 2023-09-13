@@ -8,7 +8,7 @@
   "devDependencies": {
     "clean-css-cli": "^5.3.3",
     "eslint": "^8.49.0",
-    "less": "^4.1.1",
+    "less": "^4.2.0",
     "less-plugin-autoprefix": "^2.0.0",
     "stylelint": "^15.10.0",
     "stylelint-config-recommended-less": "^2.0.0",
@@ -18,8 +18,8 @@
   "scripts": {
     "test": "echo \"WARN: no tests specified\" && exit 0",
 
-    "build-debug-js": "esbuild src/public-ludumdare.com/main-ld.js --bundle --sourcemap --loader:.js=jsx --define:DEBUG=true --analyze --outfile=public-ludumdare.com/-/all.debug.js --target=es2021,chrome90,firefox90,safari14.5",
-    "build-min-js": "esbuild src/public-ludumdare.com/main-ld.js --bundle --minify --sourcemap --loader:.js=jsx --define:DEBUG=false --drop:debugger --analyze --legal-comments=external --outfile=public-ludumdare.com/-/all.min.js --target=es2021,chrome90,firefox90,safari14.5",
+    "build-debug-js": "esbuild src/public-ludumdare.com/main-ld.js --bundle --sourcemap --loader:.js=jsx --jsx=automatic --jsx-import-source=preact --jsx-dev --define:DEBUG=true --analyze --outfile=public-ludumdare.com/-/all.debug.js --target=es2021,chrome90,firefox90,safari14.5",
+    "build-min-js": "esbuild src/public-ludumdare.com/main-ld.js --bundle --minify --sourcemap --loader:.js=jsx --jsx=automatic --jsx-import-source=preact --define:DEBUG=false --drop:debugger --analyze --legal-comments=external --outfile=public-ludumdare.com/-/all.min.js --target=es2021,chrome90,firefox90,safari14.5",
     "build": "npm run build-debug-js && npm run build-min-js",
 
     "safari12": "Released in 2018, last OS for iPhone 6 (2014), iPhone 5s (2013).",

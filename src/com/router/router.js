@@ -1,4 +1,4 @@
-import {h, Component, Fragment, toChildArray, cloneElement} from 'preact';
+import { Component, Fragment, toChildArray } from 'preact';
 
 
 export function Route(props) {

@@ -1,5 +1,3 @@
-import {h, Component} 					from 'preact';
-
 import ButtonLink						from 'com/button-link/link';
 
 import NotificationsBase				from 'com/content-notifications/base';

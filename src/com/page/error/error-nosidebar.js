@@ -1,4 +1,3 @@
-import {h} from 'preact';
 import ContentError from 'com/content/error';
 
 /** @deprecated */

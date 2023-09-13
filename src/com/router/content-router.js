@@ -1,8 +1,7 @@
-import {h} from 'preact';
-import {Router} from './router';
+import { Router } from './router';
 import ContentError from 'com/content/error';
 
-export {Route} from './router';
+export { Route } from './router';
 
 /**
  * @component

@@ -1,5 +1,4 @@
-import {h, Component, Fragment} from 'preact';
-import cN from 'classnames';
+import {Component} from 'preact';
 
 import ContentPost				from 'com/content-post/post';
 import ContentUser				from 'com/content-user/user';
@@ -243,7 +242,7 @@ export default class ContentTimeline extends Component {
 		// Feed
 		if ( feed.length > 0 ) {
 			//console.log("start");
-			content.push(<Fragment>{feed.map(this.makeFeedItem)}</Fragment>);
+			content.push(<>{feed.map(this.makeFeedItem)}</>);
 		}
 		// Empty Feed
 		else if ( !props.noemptymessage ) {
@@ -255,6 +254,6 @@ export default class ContentTimeline extends Component {
 			content.push(<ContentMore key="more" loading={isLoading} onClick={this.fetchMore.bind(this, props, state.position)} />);
 		}
 
-		return <Fragment>{content}</Fragment>;
+		return <>{content}</>;
 	}
 }

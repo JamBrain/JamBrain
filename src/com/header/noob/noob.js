@@ -1,4 +1,4 @@
-import {h, Component} from 'preact';
+import { Component } from 'preact';
 import {UIIcon, UILink, UIButton} from 'com/ui';
 import {BasicAside, Header, Section, Footer} from "com/content/basic";
 

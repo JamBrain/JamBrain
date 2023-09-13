@@ -1,4 +1,4 @@
-import {h, Component, toChildArray} 	from 'preact';
+import {Component, toChildArray} 	from 'preact';
 import {Diff}	 				from 'shallow';
 
 export default class ContentBodyCommon extends Component {

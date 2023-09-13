@@ -1,4 +1,3 @@
-import {h}				from 'preact';
 import UIIcon			from 'com/ui/icon';
 import ButtonLink		from 'com/button-link/link';
 

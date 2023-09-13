@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact';
+import { Component } from 'preact';
 
 export default class PageMySettings extends Component {
 	render( /*props, state*/ ) {

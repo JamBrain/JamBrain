@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact';
+import { Component } 					from 'preact';
 import DialogCommon						from 'com/dialog/common/common';
 
 export default class DialogErrorPublish extends Component {

@@ -1,4 +1,4 @@
-import {h, Component, Fragment} from 'preact';
+import {Component} from 'preact';
 import cN from 'classnames';
 import {node_IsAuthor} from 'internal/lib';
 
@@ -284,7 +284,7 @@ export default class ContentComments extends Component {
 			}
 		}
 
-		return <Fragment>{ret}</Fragment>;
+		return <>{ret}</>;
 	}
 
 

@@ -1,4 +1,4 @@
-import {h, Component}	from 'preact';
+import { Component } from 'preact';
 import ButtonLink		from 'com/button-link/link';
 
 export default class SidebarNode extends Component {

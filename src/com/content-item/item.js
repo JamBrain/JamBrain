@@ -1,6 +1,6 @@
-import {h, Component} from 'preact';
+import { Component } from 'preact';
 import cN from 'classnames';
-import {node_IsPublished, nodeEvent_CanGrade, node_CountAuthors, node_CanPublish, node_IsAuthor, nodeKeys_HasPublishedParent, nodeEvent_IsFinished} from 'internal/lib';
+import { node_IsPublished, nodeEvent_CanGrade, node_CountAuthors, node_CanPublish, node_IsAuthor, nodeKeys_HasPublishedParent, nodeEvent_IsFinished } from 'internal/lib';
 
 import UIIcon 							from 'com/ui/icon/icon';
 import UIImage 							from 'com/ui/image/image';

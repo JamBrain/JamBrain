@@ -1,4 +1,3 @@
-import {h} 					from 'preact';
 import { extractFromURL } from 'internal/autoembed';
 
 import Util					from './Util';

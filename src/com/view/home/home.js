@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact';
+import { Component } from 'preact';
 import Notifications					from 'com/content-notifications/notifications';
 
 export default class ViewHome extends Component {

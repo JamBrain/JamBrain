@@ -1,7 +1,7 @@
-import {h, Component} from 'preact';
+import { Component } from 'preact';
 import cN from 'classnames';
 
-import {UIIcon, UIButton} from 'com/ui';
+import { UIIcon, UIButton } from 'com/ui';
 
 
 export default class ContentNavButton extends Component {

@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact';
+import { Component } from 'preact';
 import DialogCommon						from 'com/dialog/common/common';
 
 export default class DialogAuth extends Component {
@@ -6,7 +6,7 @@ export default class DialogAuth extends Component {
 		super(props);
 
 		this.state = {
-			secret: ""
+			'secret': ""
 		};
 	}
 

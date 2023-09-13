@@ -1,4 +1,4 @@
-import {h, Component, Fragment} from 'preact';
+import {Component} from 'preact';
 import cN from 'classnames';
 
 import {UIIcon, UIButton} from 'com/ui';
@@ -185,7 +185,7 @@ export default class ContentEventIdea extends Component {
 
 		// While node or ideas haven't finished loading
 		if ( !node || !node.id || !ideas ) {
-			return <Fragment />;
+			return null;
 		}
 
 		if ( !user || !user.id ) {

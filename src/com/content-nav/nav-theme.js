@@ -1,4 +1,4 @@
-import {h, Component, Fragment} from 'preact';
+import {Component} from 'preact';
 import ContentNavButton	from './nav-button';
 
 
@@ -61,6 +61,6 @@ export default class ContentNavTheme extends Component {
 			}
 		}
 
-		return <Fragment />;
+		return null;
 	}
 }

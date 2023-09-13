@@ -1,4 +1,3 @@
-import {h} 					from 'preact';
 import UIIcon 				from 'com/ui/icon';
 
 export default function UISpinner() {

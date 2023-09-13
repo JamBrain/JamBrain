@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact';
+import { Component } 					from 'preact';
 
 import ContentCommonNav					from 'com/content-common/common-nav';
 import CommonButton						from 'com/content-common/common-nav-button';

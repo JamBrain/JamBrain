@@ -1,4 +1,4 @@
-import {h, Component}					from 'preact';
+import { Component }					from 'preact';
 import ClockFlip 						from 'com/clock-flip/flip';
 
 

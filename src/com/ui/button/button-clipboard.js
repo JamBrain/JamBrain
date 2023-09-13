@@ -1,4 +1,4 @@
-import {h, Component, Fragment} from 'preact';
+import {Component} from 'preact';
 import cN from 'classnames';
 import {UIButton, UIIcon} from 'com/ui';
 
@@ -30,7 +30,7 @@ export default class UIButtonClipboard extends Component {
 		let {value} = props;
 
 		if ( DEBUG && (!value || !navigator.clipboard) ) {
-			return <Fragment />;
+			return null;
 		}
 
 		return (

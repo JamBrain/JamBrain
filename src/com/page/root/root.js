@@ -1,4 +1,4 @@
-import {h, Component, Fragment}			from 'preact';
+import {Component}			from 'preact';
 
 import {ContentRouter, Route} from "com/router";
 
@@ -48,7 +48,7 @@ export default class PageRoot extends Component {
 		}
 
 		return (
-			<Fragment>
+			<>
 				{ShowIntro}
 				{ActiveEvent}
 				<PageNavRoot {...props} />
@@ -73,7 +73,7 @@ export default class PageRoot extends Component {
 					<Route path="/communities/*" component={PageRootCommunities} />
 					<Route path="/search/*" component={PageRootSearch} />
 				</ContentRouter>
-			</Fragment>
+			</>
 		);
 	}
 }

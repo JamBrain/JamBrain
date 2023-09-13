@@ -1,4 +1,4 @@
-import {h, Component} 					from 'preact';
+import { Component } from 'preact';
 import UIIcon 							from 'com/ui/icon';
 
 import $NodeLove						from 'shrub/js/node/node_love';

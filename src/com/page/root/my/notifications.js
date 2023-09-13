@@ -1,5 +1,5 @@
-import {h, Component}					from 'preact';
-import Notifications					from 'com/content-notifications/notifications';
+import { Component } from 'preact';
+import Notifications from 'com/content-notifications/notifications';
 
 export default class PageMyNotifications extends Component {
 	render( props, state ) {
