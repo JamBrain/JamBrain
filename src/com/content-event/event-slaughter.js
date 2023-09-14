@@ -191,7 +191,7 @@ export default class ContentEventSlaughter extends Component {
 			}
 
 			ret.push(
-				<UIButton title={vote} class={cN('-recent', VoteStyle, flashRecent === voteId ? '-flash': null)} key={voteId} onClick={() => this.redoVote(voteId)}>
+				<UIButton title={vote} class={`-recent ${VoteStyle} ${flashRecent === voteId ? '-flash': ''}`} key={voteId} onClick={() => this.redoVote(voteId)}>
 					{this.renderIcon(vote)}
 					<span title={'Id: ' + voteId}>{this.state.ideas[voteId]}</span>
 				</UIButton>
@@ -351,8 +351,8 @@ export default class ContentEventSlaughter extends Component {
 					</div>
 					{ShowEager}
 					<div class="-main-buttons">
-						<UIButton class={cN("middle big -yes", state.flashButton == 'Yes' ? '-flash': null)} onClick={this.submitYesVote} title="Good" >{this.renderIcon(VOTE_YES)}<span><span class="hotkey">Y</span>ES</span></UIButton>
-						<UIButton class={cN("middle big -no", state.flashButton == 'No' ? '-flash': null)} onClick={this.submitNoVote} title="Bad" >{this.renderIcon(VOTE_NO)}<span><span class="hotkey">N</span>O</span></UIButton>
+						<UIButton class={`middle big -yes ${state.flashButton == 'Yes' ? '-flash': ''}`} onClick={this.submitYesVote} title="Good" >{this.renderIcon(VOTE_YES)}<span><span class="hotkey">Y</span>ES</span></UIButton>
+						<UIButton class={`middle big -no ${state.flashButton == 'No' ? '-flash': ''}`} onClick={this.submitNoVote} title="Bad" >{this.renderIcon(VOTE_NO)}<span><span class="hotkey">N</span>O</span></UIButton>
 					</div>
 					<div class="-other-buttons">
 						<div class="-title"><span>If inappropriate or offensive, you can </span><UIButton class="-flag" onClick={this.submitFlagVote}>{this.renderIcon(VOTE_FLAG)}<span>Flag</span></UIButton><span> it.</span></div>

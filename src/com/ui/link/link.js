@@ -117,10 +117,10 @@ export default class UILink extends Component {
 			}
 
 			// Return a link
-			return <a {...props} class={cN("ui-link", props.class)} />;
+			return <a {...props} class={`ui-link ${props.class ?? ''}`} />;
 		}
 
 		// Return a span
-		return <span {...props} class={cN("ui-link", props.class)} />;
+		return <span {...props} class={`ui-link ${props.class ?? ''}`} />;
 	}
 }

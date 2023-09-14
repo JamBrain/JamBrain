@@ -7,6 +7,6 @@ export default class DropdownBase extends Component {
 	}
 
 	render( props ) {
-		return <div {...props} class={cN(props.class, 'dropdown-base')} />;
+		return <div {...props} class={`dropdown-base ${props.class ?? ''}`} />;
 	}
 }

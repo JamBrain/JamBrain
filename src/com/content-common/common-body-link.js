@@ -67,7 +67,7 @@ export default class ContentCommonBodyLink extends Component {
 		const {index, tag} = this.getTagAndIndex();
 		if ( props.editing && state.itemlist && state.indexes ) {
 			return (
-				<div class={cN('link', '-editing', props.class)}>
+				<div class={`link -editing ${props.class ?? ''}`}>
 					<InputDropdown class="-tag"
 						items={state.itemlist}
 						value={tag[0]}
@@ -105,7 +105,7 @@ export default class ContentCommonBodyLink extends Component {
 			}
 
 			return (
-				<div class={cN('link', props.class)}>
+				<div class={`link ${props.class ?? ''}`}>
 					<div class="-name" title={'$'+tag[0]+" - "+tag[1]}><UIIcon small>{Icon}</UIIcon> <span>{ShowName}</span></div>
 					<div class="-url">{ShowLink}</div>
 				</div>

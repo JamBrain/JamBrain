@@ -58,7 +58,7 @@ export default class ContentCommon extends Component {
 					Right.push(<FooterButtonEdit {...props} />);
 
 				Footer = (
-					<footer class={cN('footer', (Left.length + Right.length) ? '-has-items' : '')}>
+					<footer class={`footer ${(Left.length + Right.length) ? '-has-items' : ''}`}>
 						<section class="left">{Left}</section>
 						<section class="right">{Right}</section>
 					</footer>
@@ -66,7 +66,7 @@ export default class ContentCommon extends Component {
 			}
 
 			return (
-				<article class={cN("content -common", (minimized ? "-minimized" : null), (editing ? "-edit" : null), props.class)}>
+				<article class={`content -common ${(minimized ? "-minimized" : '')} ${(editing ? "-edit" : '')} ${props.class ?? ''}`}>
 					{props.children}
 					{Footer}
 				</article>

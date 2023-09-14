@@ -176,7 +176,7 @@ export default class SidebarCalendar extends Component {
 //				props.class.push('scheduled');
 //			}
 
-			props.class = cN(props.class);
+			props.class = props.class.join(' ');
 
 			return (
 				<div {...props}>

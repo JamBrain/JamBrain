@@ -162,7 +162,7 @@ export default class InputDropdown extends Component {
 
 			return (
 				<div
-					class={cN('input-dropdown', props.class)}
+					class={`input-dropdown ${props.class ?? ''}`}
 					ref={(input) => { this.dropdown = input; }}
 				>
 					{SelectedField}

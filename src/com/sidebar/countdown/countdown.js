@@ -152,7 +152,7 @@ export default class SidebarCountdown extends Component {
 
 	renderDigit( value, Classes ) {
 		return (
-			<div class={cN("figure", Classes)}>
+			<div class={`figure ${Classes ?? ''}`}>
 				<span class="top">{ value }</span>
 				<span class="top-back">
 					<span>{ value }</span>
@@ -172,9 +172,9 @@ export default class SidebarCountdown extends Component {
 
 		let Digits = [];
 		if ( Math.abs(Digit0) )
-			Digits.push(this.renderDigit(Digit0, cN(classname, classname+'-0')));
-		Digits.push(this.renderDigit(Digit1, cN(classname, classname+'-1')));
-		Digits.push(this.renderDigit(Digit2, cN(classname, classname+'-2')));
+			Digits.push(this.renderDigit(Digit0, `${classname} ${classname}-0`));
+		Digits.push(this.renderDigit(Digit1, `${classname} ${classname}-1`));
+		Digits.push(this.renderDigit(Digit2, `${classname} ${classname}-2`));
 
 		return <div>{Digits}</div>;
 	}

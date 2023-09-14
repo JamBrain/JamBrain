@@ -23,7 +23,7 @@ export default class Legend extends Component {
 			let name = names[index];
 			let color = colors[index];
 
-			let legendclass = cN("-shape-circle", "vis_bg_color_"+color, props.class);
+			let legendclass = `-shape-circle vis_bg_color_${color} ${props.class ?? ''}`;
 
 			Legend.push(
                 <li>

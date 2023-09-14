@@ -77,7 +77,7 @@ export default class ContentCommentsMarkup extends Component {
 			}
 
 			return (
-				<div class={cN(Class, props.class)}>
+				<div class={`${Class ?? ''} ${props.class ?? ''}`}>
 					<div class="-label">{props.label}</div>
 					<InputTextArea
 						user={props.user}
@@ -122,7 +122,7 @@ export default class ContentCommentsMarkup extends Component {
 
 			markdown = mrkd.parse(Text, markedOptions);
 
-			return <div class={cN(Class, props.class)}>{markdown}</div>;
+			return <div class={`${Class ?? ''} ${props.class ?? ''}`}>{markdown}</div>;
 		}
 	}
 

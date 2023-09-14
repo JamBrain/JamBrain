@@ -401,12 +401,7 @@ export default class ContentCommentsComment extends Component {
 			return (
 				<div
 					id={"comment-"+comment.id}
-					class={cN(
-						"-item", "-comment", "-indent-" + props.indent,
-						isNodeAuthor && "comment-node-author",
-						isMyComment && "comment-self-authored",
-						isMention && "comment-mention"
-					)}
+					class={`-item -comment -indent-${props.indent} ${isNodeAuthor ? "comment-node-author" : ''} ${isMyComment ? "comment-self-authored" : ''} ${isMention ? "comment-mention" : ''}`}
 				>
 					{ShowAvatar}
 					{ShowAutocompleteAt}

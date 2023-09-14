@@ -162,7 +162,7 @@ export default class SidebarTV extends Component {
 	showOthers( others, active ) {
 		return others.map((other, index) => {
 			return (
-				<div class={cN(other === active ? "selected" : "")} onClick={this.setActive.bind(this, index)} title={other && other.user_name ? other.user_name : ""}>
+				<div class={other === active ? "selected" : ""} onClick={this.setActive.bind(this, index)} title={other && other.user_name ? other.user_name : ""}>
 					<div><UIImage src={ other ? other.thumbnail_180p : ""} failsrc={this.FailImage} /></div>
 				</div>
 			);

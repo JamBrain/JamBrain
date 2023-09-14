@@ -1,6 +1,5 @@
 import { Component } from 'preact';
 import './container.less';
-import cN from 'classnames';
 
 /** @deprecated */
 export default class GridContainer extends Component {
@@ -10,7 +9,7 @@ export default class GridContainer extends Component {
 
   render( props ) {
     return (
-      <div {...props} class={cN("grid-container", props.class)}>
+      <div {...props} class={`grid-container ${props.class ?? ''}`}>
         {props.children}
       </div>
     );

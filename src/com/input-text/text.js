@@ -28,7 +28,7 @@ export default class InputText extends Component {
 			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{maxLength}</span></div>;
 
 		return (
-			<div class={cN('input-text', props.class)}>
+			<div class={`input-text ${props.class ?? ''}`}>
 				<input
 					value={props.value}
 					placeholder={props.placeholder}

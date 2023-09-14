@@ -52,9 +52,7 @@ export default class ContentCommonBodyAvatar extends Component {
 	render( props ) {
 		const isInProfile = props.node && (props.node.type === "user" && props.href === props.node.path);
 		const isInteractive = (isInProfile && props.editing) || (!isInProfile && !props.editing);
-		let Classes = cN("body -avatar", props.class,
-			isInProfile && props.editing ? '-editing' : '',
-			isInteractive ? '-interactive' : '');
+		const Classes = `body -avatar ${props.class ?? ''} ${isInProfile && props.editing ? '-editing' : ''} ${isInteractive ? '-interactive' : ''}`;
 
 		let AvatarFail = '///content/internal/user64.png';
 		let Avatar = props.src ? props.src : AvatarFail;

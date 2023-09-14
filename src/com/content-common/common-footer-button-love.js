@@ -46,7 +46,7 @@ export default class ContentCommonFooterButtonLove extends Component {
 	}
 
 	render( {node}, {loved, lovecount} ) {
-		let Love = Number.isInteger(lovecount) ? lovecount : node.love;
+		const Love = Number.isInteger(lovecount) ? lovecount : node.love;
 		let LoveClass = '';
 		if ( Love >= 10 )
 			LoveClass = '-count-10';
@@ -55,7 +55,7 @@ export default class ContentCommonFooterButtonLove extends Component {
 		else if ( Love >= 1 )
 			LoveClass = '-count-1';
 
-		let Classes = cN("content-common-footer-button -love", (loved ? " loved" : ""), LoveClass );
+		const Classes = `content-common-footer-button -love ${loved ? "loved" : ''} ${LoveClass}`;
 
 		return (
 			<div class={Classes} onClick={this.onLove}>

@@ -28,7 +28,7 @@ export default class ContentNavButton extends Component {
 		Body.push(<span>{props.children}</span>);
 
 		return (
-			<UIButton {...props} class={cN(Classes)}>{Body}</UIButton>
+			<UIButton {...props} class={Classes.join(' ')}>{Body}</UIButton>
 		);
 	}
 }

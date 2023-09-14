@@ -192,7 +192,7 @@ export default class DialogTV extends Component {
 			ShowBar = (
 				<div class="-bar">
 					<div class="-right">
-						<div class={cN("-button", this.canShowChat() ? "" : "-disabled")} onClick={this.onChatClick}>
+						<div class={`-button ${this.canShowChat() ? '' : "-disabled"}`} onClick={this.onChatClick}>
 							<UIIcon baseline>{state.showchat ? 'bubble' : 'bubble-empty'}</UIIcon>
 							<div>Chat</div>
 						</div>

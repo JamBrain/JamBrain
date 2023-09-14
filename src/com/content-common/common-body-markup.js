@@ -41,7 +41,7 @@ export default class ContentCommonBodyMarkup extends Component {
       //var Chars = props.children[0] ? props.children[0].length : 0;
 
       return (
-        <div class={cN(Class)}>
+        <div class={Class.join(' ')}>
           <div class="-label">{Label}</div>
           <InputTextArea
             user={props.user}
@@ -102,7 +102,7 @@ export default class ContentCommonBodyMarkup extends Component {
 			let mrkd = new marked();
       let markdown = mrkd.parse(Text, markedOptions);
 
-      return (<div class={cN(Class)}>{markdown}</div>);
+      return (<div class={Class.join(' ')}>{markdown}</div>);
     }
   }
 }

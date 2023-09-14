@@ -13,9 +13,9 @@ export default class ContentCommonNavButton extends Component {
 
 	render( props ) {
 		if ( props.href ) {
-			return <ButtonLink {...props} class={cN('button', props.class)} />;
+			return <ButtonLink {...props} class={`button ${props.class ?? ''}`} />;
 		}
 
-		return <ButtonBase {...props} class={cN('button', props.class)} />;
+		return <ButtonBase {...props} class={`button ${props.class ?? ''}`} />;
 	}
 }

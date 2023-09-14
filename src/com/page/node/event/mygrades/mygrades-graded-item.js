@@ -72,14 +72,14 @@ export default class GradedItem extends Component {
 		for ( let gradeKey in gradeNames ) {
 			const grade = grades.filter(grade => (grade.name == gradeKey));
 			if ( gradeNames[gradeKey] && (grade.length === 1) ) {
-				Grades.push(<div class={cN("-grade", (grade[0].name == focusGrade) ? "-focused" : "")} key={gradeKey}><div class="-grade-label">{gradeNames[gradeKey]}:</div>{grade[0].value}</div>);
+				Grades.push(<div class={`-grade ${(grade[0].name == focusGrade) ? "-focused" : ""}`} key={gradeKey}><div class="-grade-label">{gradeNames[gradeKey]}:</div>{grade[0].value}</div>);
 			}
 		}
 		const ShowGrades = <div class="-grades">{Grades}</div>;
 		const ShowComments = comments ? (<UIIcon>{comments > 1 ? 'bubbles' : 'bubble'}</UIIcon>) : null;
 
 		return (
-			<UIButtonLink class={cN("graded-item", props.class)} href={node.path}>
+			<UIButtonLink class={`graded-item ${props.class ?? ''}`} href={node.path}>
 				{this.getItemType(node)}
 				<strong>{node.name}</strong>
 				{ShowComments}

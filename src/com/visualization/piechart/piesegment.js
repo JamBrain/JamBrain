@@ -26,7 +26,7 @@ export default class PieSegment extends Component {
 
         let offset = 100 - props.offset + 25;
         let color = props.color;
-        let segmentclass = cN("-segment", "vis_stroke_color_"+color, props.class);
+        let segmentclass = `-segment vis_stroke_color_${color} ${props.class ?? ''}`;
         let dash = angle + " " + (100 - angle);
 
         return (

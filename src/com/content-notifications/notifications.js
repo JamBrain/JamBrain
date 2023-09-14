@@ -75,7 +75,7 @@ export default class NotificationsFeed extends NotificationsBase {
 				ShowNotifications.push((
 					<Notification
 						notification={notification}
-						class={cN("-item -notification", (notification.notification[0].id>maxReadId)?'-new-comment':'')}
+						class={`-item -notification ${(notification.notification[0].id>maxReadId)?'-new-comment':''}`}
 						id={'notification-' + identifier}
 					/>
 				));

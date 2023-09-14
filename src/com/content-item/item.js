@@ -421,7 +421,7 @@ export default class ContentItem extends Component {
 
 		if ( editing ) {
 			LinkMeta.push(
-				<div class={cN('content-common-link', '-editing', '-header')}>
+				<div class={`content-common-link -editing -header`}>
 					<div class="-tag">Platform</div>
 					<div class="-name">Description (optional)</div>
 					<div class="-url">URL (leave blank to omit)</div>
@@ -677,7 +677,7 @@ export default class ContentItem extends Component {
 				if ( Star )
 					AdvancedLines.push(<div class="-metric"><span class="-title">{Title}:</span> <span class="-value" title={HoverTitle}>{SmallScore} *{Icon}</span></div>);
 				else
-					SimpleLines.push(<div class={cN("-metric", Warning ? "-warning" : "")}><span class="-title">{Title}:</span> <span class="-value" title={HoverTitle}>{SmallScore}{Icon}</span></div>);
+					SimpleLines.push(<div class={`-metric ${Warning ? "-warning" : ''}`}><span class="-title">{Title}:</span> <span class="-value" title={HoverTitle}>{SmallScore}{Icon}</span></div>);
 			}
 
 			ShowMetrics = (
@@ -1046,7 +1046,7 @@ export default class ContentItem extends Component {
 			</div>
 		);
 
-		props.class = cN("content-item", props.class);
+		props.class = `content-item ${props.class ?? ''}`;
 
 		// Shim to update the save button from this method. See https://facebook.github.io/react/docs/refs-and-the-dom.html
 		props.ref = c => {

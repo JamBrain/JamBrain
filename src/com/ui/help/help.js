@@ -34,7 +34,7 @@ export default class UIHelp extends Component {
 		}
 
 		return (
-			<div class={cN('ui-help', props.class)}>
+			<div class={`ui-help ${props.class ?? ''}`}>
 				<UIButton class="-button" onClick={this.onShow}><UIIcon src="question" /></UIButton>
 				{ShowDialog}
 			</div>

@@ -536,7 +536,7 @@ export default class ContentSimple extends Component {
 				ShowDraft = <ContentCommonDraft draft={props.draft} />;
 			}
 
-			props.class = cN('-simple', props.class);
+			props.class = `-simple ${props.class ?? ''}`;
 			if ( this.isEditMode() ) {
 				props.minmax = null;
 				props.minimized = null;

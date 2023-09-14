@@ -95,12 +95,12 @@ export default class UITextdown extends Component {
 	}
 
 	render( props, state ) {
-		let Classes = cN(
+		let Classes = [
 			'ui-textdown',
 			props.class,
-			props.left ? '-left' : null,
-			props.right ? '-right' : null
-		);
+			props.left ? '-left' : '',
+			props.right ? '-right' : ''
+		].join(' ');
 
 		let ShowItems = null;
 		if ( state.items && state.query && state.show ) {

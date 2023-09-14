@@ -70,7 +70,7 @@ export default class ContentUser extends Component {
 			}
 
 			return (
-				<ContentSimple {...props} class={cN("content-user", props.class)}>
+				<ContentSimple {...props} class={`content-user ${props.class ?? ''}`}>
 					<ContentCommonNav>{BodyNavBar}</ContentCommonNav>
 				</ContentSimple>
 			);

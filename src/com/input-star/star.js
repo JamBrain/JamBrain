@@ -40,7 +40,7 @@ export default class InputStar extends Component {
 		if ( props.edit ) {
 			// First star is a full star
 			Stars.push(
-				<ButtonBase class={cN("-star -hover", (Value >= 1) ? '-lit' : '')} onClick={this.onClick.bind(this, 1)} title={1}>
+				<ButtonBase class={`-star -hover ${(Value >= 1) ? '-lit' : ''}`} onClick={this.onClick.bind(this, 1)} title={1}>
 					<UIIcon baseline>{'star-full'}</UIIcon>
 				</ButtonBase>
 			);

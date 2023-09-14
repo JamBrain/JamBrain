@@ -83,7 +83,7 @@ export default class ContentHeadliner extends Component {
 
 
 			// Render
-			return <UIButton class={cN("item -list-item", props.childclass)} href={node.path}>{Body}</UIButton>;
+			return <UIButton class={`item -list-item ${props.childclass ?? ''}`} href={node.path}>{Body}</UIButton>;
 		}
 		return null;
 	}
@@ -98,7 +98,7 @@ export default class ContentHeadliner extends Component {
 			</div>
 		);
 
-		return <div class={cN("item -list-item", props.childclass)}>{Body}</div>;
+		return <div class={`item -list-item ${props.childclass ?? ''}`}>{Body}</div>;
 	}
 
 
@@ -159,25 +159,25 @@ export default class ContentHeadliner extends Component {
 		// The Name
 		if ( props.name ) {
 			// If there's an icon, optionally hide the name if sidebar is hidden
-			let NameClass = cN('-text', props.icon ? 'if-sidebar-inline' : '');
+			let NameClass = `-text ${props.icon ? 'if-sidebar-inline' : ''}`;
 			// Add name text
 			Flag.push(<span class={NameClass}>{props.name.toUpperCase()}</span>);
 		}
 
 		// Only show the flag if it contains something
-		return Flag.length ? <UIButton class={cN("flag", props.flagclass)} href={props.href}>{Flag}</UIButton> : null;
+		return Flag.length ? <UIButton class={`flag ${props.flagclass ?? ''}`} href={props.href}>{Flag}</UIButton> : null;
 	}
 
 
 	renderFooter( props ) {
 		// Show the footer
 		if ( props.footer ) {
-			return <UIButton class={cN("item -footer-item", props.childclass)} href={props.footerhref}>{props.footer}</UIButton>;
+			return <UIButton class={`item -footer-item ${props.childclass ?? ''}`} href={props.footerhref}>{props.footer}</UIButton>;
 		}
 		// Show the more footer
 		else if ( props.more ) {
 			return (
-				<UIButton class={cN("item -more-item", props.childclass)} href={props.more}>
+				<UIButton class={`item -more-item ${props.childclass ?? ''}`} href={props.more}>
 					<UIIcon>circle</UIIcon><UIIcon>circle</UIIcon><UIIcon>circle</UIIcon>
 				</UIButton>
 			);
@@ -191,6 +191,6 @@ export default class ContentHeadliner extends Component {
 		let Footer = this.renderFooter(props);
 
 		// Render
-		return <header class={cN('content -headliner', props.class)} style={props.style}>{Flag}{Items}{Footer}</header>;
+		return <header class={`content -headliner ${props.class ?? ''}`} style={props.style}>{Flag}{Items}{Footer}</header>;
 	}
 }

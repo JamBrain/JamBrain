@@ -16,7 +16,7 @@ export default class GridCol extends Component {
     let style = "flex: " + flexGrow + " " + flexShrink + "" + flexBasis + "%; max-width: " + flexBasis + "%;";
 
     return (
-      <div class={cN(props.class, "-col")} style={style} {...props}>
+      <div class={`${props.class ?? ''} -col`} style={style} {...props}>
         {props.children}
       </div>
     );

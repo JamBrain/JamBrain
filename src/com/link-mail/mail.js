@@ -24,7 +24,7 @@ export default class LinkMail extends Component {
 		}
 
 		return (
-			<a class={cN("link-mail", props.class)} href={Href} title={Mail}><UIIcon gap small baseline>mail</UIIcon>{Mail}</a>
+			<a class={`link-mail ${props.class ?? ''}`} href={Href} title={Mail}><UIIcon gap small baseline>mail</UIIcon>{Mail}</a>
 		);
 	}
 }

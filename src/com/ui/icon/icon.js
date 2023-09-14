@@ -45,7 +45,7 @@ export default class UIIcon extends Component {
 		}
 
 		// Any other classes
-		svg_props.class = cN(svg_props.class, props.class);
+		svg_props.class = `${svg_props.class ?? ''} ${props.class ?? ''}`;
 
 		// Render
 		return <svg {...svg_props}><use {...use_props}></use></svg>;

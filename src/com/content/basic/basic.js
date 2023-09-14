@@ -1,4 +1,3 @@
-import cN from 'classnames';
 import './basic.less';
 
 /**
@@ -13,7 +12,7 @@ import './basic.less';
  * @param {string} [props.class]
  */
  export function BasicHeader( props ) {
-	return <header {...props} class={cN("content -basic", props.class)}/>;
+	return <header {...props} class={`content -basic ${props.class ?? ''}`}/>;
 }
 
 
@@ -29,7 +28,7 @@ import './basic.less';
  * @param {string} [props.class]
 */
 export function BasicSection( props ) {
-	return <section {...props} class={cN("content -basic", props.class)}/>;
+	return <section {...props} class={`content -basic ${props.class ?? ''}`}/>;
 }
 
 
@@ -45,7 +44,7 @@ export function BasicSection( props ) {
  * @param {string} [props.class]
  */
  export function BasicArticle( props ) {
-	return <article {...props} class={cN("content -basic", props.class)}/>;
+	return <article {...props} class={`content -basic ${props.class ?? ''}`}/>;
 }
 
 
@@ -61,7 +60,7 @@ export function BasicSection( props ) {
  * @param {string} [props.class]
  */
  export function BasicAside( props ) {
-	return <aside {...props} class={cN("content -basic", props.class)}/>;
+	return <aside {...props} class={`content -basic ${props.class ?? ''}`}/>;
 }
 
 
@@ -77,5 +76,5 @@ export function BasicSection( props ) {
  * @param {string} [props.class]
  */
  export function BasicFooter( props ) {
-	return <footer {...props} class={cN("content -basic", props.class)}/>;
+	return <footer {...props} class={`content -basic ${props.class ?? ''}`}/>;
 }

@@ -24,7 +24,7 @@ export default class ContentCommonFooterButtonComments extends Component {
 
 		if ( node && Number.isInteger(node.comments) ) {
 			return (
-				<NavLink href={node.path} class={cN("content-common-footer-button -comments", CountClass)} title="Comments">
+				<NavLink href={node.path} class={`content-common-footer-button -comments ${CountClass}`} title="Comments">
 					<UIIcon>bubbles</UIIcon>
 					<div class="-count">{node.comments}</div>
 				</NavLink>

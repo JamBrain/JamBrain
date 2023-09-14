@@ -72,7 +72,7 @@ export default class YAxis extends Component {
 		}
 		return (
 			<g>
-				<line class={cN('-chart-axis', 'y-axis', props.class)} x1={width} y1={padBottom} x2={width} y2={100 - padTop} />
+				<line class={`-chart-axis y-axis ${props.class ?? ''}`} x1={width} y1={padBottom} x2={width} y2={100 - padTop} />
 				{ShowTicks}
 			</g>
         );

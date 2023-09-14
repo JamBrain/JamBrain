@@ -1,4 +1,3 @@
-import cN from 'classnames';
 import {Section} from "../basic/contents";
 
 /**
@@ -11,7 +10,7 @@ import {Section} from "../basic/contents";
  * @param {string} [props.class]
  */
  export function CommonHeader( props ) {
-	return <header {...props} class={cN("content -basic", props.class)} children={<Section children={props.children}/>}/>;
+	return <header {...props} class={`content -basic ${props.class ?? ''}`} children={<Section children={props.children}/>}/>;
 }
 
 
@@ -25,7 +24,7 @@ import {Section} from "../basic/contents";
  * @param {string} [props.class]
  */
 export function CommonSection( props ) {
-	return <section {...props} class={cN("content -basic", props.class)} children={<Section children={props.children}/>}/>;
+	return <section {...props} class={`content -basic ${props.class ?? ''}`} children={<Section children={props.children}/>}/>;
 }
 
 
@@ -39,7 +38,7 @@ export function CommonSection( props ) {
  * @param {string} [props.class]
  */
  export function CommonArticle( props ) {
-	return <article {...props} class={cN("content -basic", props.class)} children={<Section children={props.children}/>}/>;
+	return <article {...props} class={`content -basic ${props.class ?? ''}`} children={<Section children={props.children}/>}/>;
 }
 
 
@@ -53,7 +52,7 @@ export function CommonSection( props ) {
  * @param {string} [props.class]
  */
  export function CommonAside( props ) {
-	return <aside {...props} class={cN("content -basic", props.class)} children={<Section children={props.children}/>}/>;
+	return <aside {...props} class={`content -basic ${props.class ?? ''}`} children={<Section children={props.children}/>}/>;
 }
 
 
@@ -67,5 +66,5 @@ export function CommonSection( props ) {
  * @param {string} [props.class]
  */
  export function CommonFooter( props ) {
-	return <footer {...props} class={cN("content -basic", props.class)} children={<Section children={props.children}/>}/>;
+	return <footer {...props} class={`content -basic ${props.class ?? ''}`} children={<Section children={props.children}/>}/>;
 }

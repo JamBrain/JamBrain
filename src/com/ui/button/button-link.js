@@ -54,6 +54,6 @@ export default class UIButtonLink extends UILink {
 		};
 
 		//return super.render({...props, class={cN("ui-button", props.disabled ? "-disabled" : null, props.class)});
-		return <a {...props} class={cN("ui-button", props.disabled ? "-disabled" : null, props.class)} />;
+		return <a {...props} class={`ui-button ${props.disabled ? "-disabled" : ''} ${props.class ?? ''}`} />;
 	}
 }

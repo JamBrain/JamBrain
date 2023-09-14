@@ -27,7 +27,7 @@ export default class ChangeableGrid extends Component {
             }
           }
         />
-        <Grid {...props} columns={columns} class={cN(props.class, "-selectable")}>
+        <Grid {...props} columns={columns} class={`${props.class ?? ''} -selectable`}>
           {props.children}
         </Grid>
       </div>

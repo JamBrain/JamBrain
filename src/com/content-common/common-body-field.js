@@ -17,7 +17,7 @@ export default class ContentCommonBodyField extends Component {
 		if (props.editing) {
 			Class.push('-editing');
 			return (
-				<div class={cN(Class, props.class)}>
+				<div class={`${Class ?? ''} ${props.class ?? ''}`}>
 					<div class="-label">{props.label ? props.label : ""}</div>
 					<InputText
 						value={props.value}
@@ -29,7 +29,7 @@ export default class ContentCommonBodyField extends Component {
 			);
 		}
 		else {
-			return <div class={cN(Class, props.class)}>{props.value}</div>;
+			return <div class={`${Class ?? ''} ${props.class ?? ``}`}>{props.value}</div>;
 		}
 	}
 }

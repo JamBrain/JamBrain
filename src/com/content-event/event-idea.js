@@ -183,7 +183,7 @@ export default class ContentEventIdea extends Component {
 		const {idea, ideas, error, enableSubmit, maxIdeas, previousThemes} = state;
 
 		const title = "Theme Suggestion Round";
-		const titleClass = cN("-event -ideas", props.class);
+		const titleClass = `-event -ideas ${props.class ?? ''}`;
 
 		// While node or ideas haven't finished loading
 		if ( !node || !node.id || !ideas ) {

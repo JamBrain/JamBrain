@@ -79,13 +79,13 @@ export default class UIDropdown extends Component {
 				ShowTick = <UIIcon src="tick-down" class="-tick" />;
 		}
 
-		let Classes = cN(
+		let Classes = [
 			'ui-dropdown',
 			props.class,
-			ShowContent ? '-show' : null,
-			props.left ? '-left' : null,
-			props.right ? '-right' : null
-		);
+			ShowContent ? '-show' : '',
+			props.left ? '-left' : '',
+			props.right ? '-right' : ''
+		].join(' ');
 
 		return (
 			<div class={Classes} ref={(div) => (this.dropdown = div)}>

@@ -41,7 +41,7 @@ export default class UIDialog extends Component {
 	render( props ) {
 		return (
 			<section class="ui-dialog" onClick={this.onCancel}>
-				<aside {...props} class={cN('window', props.class)} onClick={this.onClickWindow} />
+				<aside {...props} class={`window ${props.class ?? ''}`} onClick={this.onClickWindow} />
 			</section>
 		);
 	}

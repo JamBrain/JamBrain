@@ -35,7 +35,7 @@ export default class UIButtonClipboard extends Component {
 		}
 
 		return (
-			<UIButton title={'Copy "'+value+'" to clipboard'} {...props} class={cN("-clipboard a", props.class)} onClick={this.onClick}>
+			<UIButton title={'Copy "'+value+'" to clipboard'} {...props} class={`-clipboard a ${props.class ?? ''}`} onClick={this.onClick}>
 				{props.icon ? <UIIcon src={props.icon} /> : null}
 				{props.children}
 			</UIButton>

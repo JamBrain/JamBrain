@@ -1,4 +1,3 @@
-import cN from 'classnames';
 import {BasicSection, Header, Section, Footer} from "com/content/basic";
 
 /**
@@ -14,7 +13,7 @@ import {BasicSection, Header, Section, Footer} from "com/content/basic";
 export default function ContentSimple( props ) {
 	/* Simple documents have only a single sub-section. For more complicated documents, make your own */
 	return (
-		<BasicSection {...props} class={cN("-simple", props.class)}>
+		<BasicSection {...props} class={`-simple ${props.class ?? ''}`}>
 			{props.title ? <Header title={props.title} href={props.href} /> : null}
 			<Section children={props.children} />
 			{props.footer ? <Footer {...(props.footer)} /> : null}

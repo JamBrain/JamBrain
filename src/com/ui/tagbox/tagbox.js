@@ -49,7 +49,7 @@ export default class UITagbox extends Component {
 	render( props ) {
 		if ( props.tags ) {
 			return (
-				<div class={cN("ui-tagbox", props.class)}>
+				<div class={`ui-tagbox ${props.class ?? ''}`}>
 					{this.renderTags(props.tags)}
 				</div>
 			);

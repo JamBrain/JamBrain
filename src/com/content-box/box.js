@@ -143,13 +143,13 @@ export default class ContentBox extends Component {
 			}
 
 			return (
-				<ButtonLink class={cN(Class, props.class)} href={node.path}>
+				<ButtonLink class={`${Class ?? ''} ${props.class ?? ''}`} href={node.path}>
 					{ShowHoverCover}
 					<UIImage class="-cover" src={Cover} failsrc={CoverFail} />
 					<div class="-top-bar">
 						{ShowEvent}
 					</div>
-					<div class={cN("-sub-event", SubEventClass)}>
+					<div class={`-sub-event ${SubEventClass ?? ''}`}>
 						{ShowSubEvent}
 					</div>
 					<div class="-bot-left">
@@ -164,7 +164,7 @@ export default class ContentBox extends Component {
 			);
 		}
 		else if (props.placeHolder) {
-			return <div class={cN(Class, props.class, '-place-holder')} />;
+			return <div class={`${Class ?? ''} ${props.class ?? ''} -place-holder`} />;
 		}
 		else {
 			return <ContentLoading />;

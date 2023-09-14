@@ -113,8 +113,8 @@ export default class TimelineRateGames extends Component {
 
 	render(props, {expanded, feed, pick, error, loading}) {
 		//    if (!this.event_canRate(props.featured)) return null;
-		const HeaderClass = cN('content-common-header');
-		const MainClass = cN('content -common rate-games', !expanded && 'minimized');
+		const HeaderClass = `content-common-header`;
+		const MainClass = `content -common rate-games ${!expanded && 'minimized'}`;
 
 		let Games;
 		if (error) {
@@ -134,12 +134,12 @@ export default class TimelineRateGames extends Component {
 		const FooterRight = [];
 		FooterLeft.push(<FooterButtonMinMax onClick={this.handleMinMax} />);
 		FooterRight.push((
-			<UIButton class={cN("content-common-footer-button", '-refresh')} title='Refresh' onClick={this.handleRefresh}>
+			<UIButton class={`content-common-footer-button -refresh`} title='Refresh' onClick={this.handleRefresh}>
 				<UIIcon src="refresh" /><div class="-count">Refresh</div>
 			</UIButton>
 		));
 		FooterRight.push((
-			<UIButton class={cN("content-common-footer-button", '-all-games')} href={props.featured && `/events/ludum-dare/${props.featured.slug}/games/`}>
+			<UIButton class={`content-common-footer-button -all-games`} href={props.featured && `/events/ludum-dare/${props.featured.slug}/games/`}>
 				<UIIcon src="gamepad" /><div class="-count">All Games</div>
 			</UIButton>
 		));
@@ -155,7 +155,7 @@ export default class TimelineRateGames extends Component {
 					<strong>TIP</strong>: For more ratings and feedback, leave feedback on the games you play, and give <UIIcon src="heart" />'s to feedback you like.
 					</div>
 				</div>
-				<div class={cN('content-common-footer', (FooterLeft.length + FooterRight.length) ? '-has-items' : '')}>
+				<div class={`content-common-footer ${(FooterLeft.length + FooterRight.length) ? '-has-items' : ''}`}>
 				<div class="-left">
 					{FooterLeft}
 				</div>

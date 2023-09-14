@@ -187,7 +187,7 @@ class Autocompletions extends Component {
 			if ( selected ? ((options.length > 1) || ((options.length == 1) && (options[0].name != match) && (match != selected))) : (options.length > 0) ) {
 				props.captureKeyDown(name, this.onKeyDown);
 				return (
-					<div class={cN("-auto-complete", props.class)}>
+					<div class={`-auto-complete ${props.class ?? ''}`}>
 						{options.map((m, i) => this.renderSuggestion(m, i == selectedIndex ? '-selected' : ''))}
 					</div>
 				);
@@ -252,7 +252,7 @@ export class AutocompleteEmojis extends Autocompletions {
 		const ShowEmoji = mrkd.parse(name, {});
 
 		return (
-			<UIButton key={name} class={cN(classModifier)} onClick={this.handleSelect.bind(this, item)}>
+			<UIButton key={name} class={classModifier} onClick={this.handleSelect.bind(this, item)}>
 				<div class="-emoji-autocomplete-markup">{ShowEmoji}</div>{ShowLeft}{ShowMatch}{ShowRight}
 			</UIButton>);
 	}
@@ -309,6 +309,6 @@ export class AutocompleteAtNames extends Autocompletions {
 		else {
 			ShowLeft = name;
 		}
-		return <UIButton key={name} class={cN(classModifier)} onClick={this.handleSelect.bind(this, item)}>{ShowLeft}{ShowMatch}{ShowRight}</UIButton>;
+		return <UIButton key={name} class={classModifier} onClick={this.handleSelect.bind(this, item)}>{ShowLeft}{ShowMatch}{ShowRight}</UIButton>;
 	}
 }

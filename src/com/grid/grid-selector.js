@@ -85,7 +85,7 @@ export default class GridSelector extends Component {
        }
 
        return (
-           <div class={cN(props.class, 'grid-selector')}>
+           <div class={`${props.class ?? ''} grid-selector`}>
                 {ShowToggle}
                 {ShowDropDown}
            </div>

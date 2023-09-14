@@ -32,7 +32,7 @@ export default class UIText extends Component {
 			ShowLimit = <div class="-right"><span class="-chars">{props.value.length}</span>/<span class="-limit">{props.maxLength}</span></div>;
 
 		return (
-			<div class={cN('ui-text', props.class)}>
+			<div class={`ui-text ${props.class ?? ''}`}>
 				<input
 					value={props.value}
 					placeholder={props.placeholder}

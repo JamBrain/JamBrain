@@ -109,7 +109,7 @@ export default class NavLink extends Component {
 		props = Object.assign({}, props);
 
 		if ( props.strong ) {
-			props.class = cN(props.class, "_strong");
+			props.class = `${props.class ?? ''} _strong`;
 		}
 
 		if ( props.href ) {

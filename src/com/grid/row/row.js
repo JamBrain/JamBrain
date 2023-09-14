@@ -9,7 +9,7 @@ export default class GridRow extends Component {
 
 	render( props ) {
 		return (
-			<div {...props} class={cN(props.class, "-row")}>
+			<div {...props} class={`${props.class ?? ''} -row`}>
 				{props.children}
 			</div>
 		);

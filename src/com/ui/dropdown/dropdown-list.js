@@ -21,7 +21,7 @@ export default class UIDropdownList extends Component {
 			return null;
 
 		let NewProps = {
-			'class': cN('ui-dropdown-list', props.class),
+			'class': `ui-dropdown-list ${props.class ?? ''}`,
 
 			// Passthrough here
 			'show': props.show,

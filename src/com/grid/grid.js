@@ -16,7 +16,7 @@ export default class Grid extends Component {
 		let {columns = 3} = props;
 
 		return (
-			<GridContainer {...props} class={cN(props.class, "-grid")}>
+			<GridContainer {...props} class={`-grid ${props.class ?? ''}`}>
 				{
 						toChildArray(props.children).map((child, index) => {
 							return (

@@ -16,7 +16,7 @@ export function BodyTitle( props ) {
 		<span class="title" title={props.tooltip}>{titlePrefix}{titleText}</span>;
 
 	return (
-		<div class={cN("body -title _font2", props.class)}>
+		<div class={`body -title _font2 ${props.class ?? ''}`}>
 			{titleBody}
 			{props.children}
 		</div>
@@ -29,7 +29,7 @@ export default function BodyTitleEditable( props ) {
 		let titleLimit = props.limit ? props.limit : 64;
 
 		return (
-			<div class={cN("body -title", props.class, "-editing")}>
+			<div class={`body -title ${props.class ?? ''} -editing`}>
 				<BodyLabel>Title</BodyLabel>
 				<InputText
 					value={props.title}

@@ -40,7 +40,7 @@ export default class PieChart extends Component {
             else {
 				color = 1 + ( i % 6 );
 			}
-			const legendclass = cN("-shape-circle", "vis_bg_color_"+color, props.class);
+			const legendclass = `-shape-circle vis_bg_color_${color} ${props.class ?? ''}`;
 
 			Segments.push(<PieSegment angle={percentages[i]} offset={offset} color={color} />);
 

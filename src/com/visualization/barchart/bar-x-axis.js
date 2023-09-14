@@ -14,7 +14,7 @@ export default class XAxis extends Component {
 		// FIXME: does this need to be inside <g>? Can this just be <line>? Please document if <g> is needed.
 		return (
 			<g>
-				<line class={cN('-chart-axis', 'x-axis', this.props.class)} x1={padLeft} y1={yZeroPos} x2={100 - padRight} y2={yZeroPos} />
+				<line class={`-chart-axis x-axis ${props.class ?? ''}`} x1={padLeft} y1={yZeroPos} x2={100 - padRight} y2={yZeroPos} />
 			</g>
 		);
 	}
