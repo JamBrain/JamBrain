@@ -95,10 +95,12 @@ class Main extends Component {
 							const url = new URL(link.href);
 
 							if (url.host === location.host && url.pathname === updated[0]) {
-								const next = link.cloneNode();
+								const next = /** @type {HTMLLinkElement} */ (link.cloneNode());
+
 								next.href = updated[0] + '?' + Math.random().toString(36).slice(2);
 								next.onload = () => link.remove();
 								link.parentNode.insertBefore(next, link.nextSibling);
+
 								return;
 							}
 						}
@@ -162,7 +164,7 @@ class Main extends Component {
 			DEBUG && console.log("[componentDidMount] -");
 		})
 		.catch(err => {
-			this.setState({'error': err});
+			this.setState({ 'error': err });
 		});
 	}
 
@@ -261,7 +263,7 @@ class Main extends Component {
 
 	// Called by the login dialog
 	onLogin() {
-		this.setState({'user': null});
+		this.setState({ 'user': null });
 	}
 
 	// *** //
@@ -361,7 +363,7 @@ class Main extends Component {
 			throw "[fetchNode] Unable to walk tree";
 		})
 		.catch(err => {
-			this.setState({'error': err});
+			this.setState({ 'error': err });
 		});
 	}
 
@@ -381,7 +383,7 @@ class Main extends Component {
 			}
 
 			// Finally, user is ready
-			this.setState({'user': User});
+			this.setState({ 'user': User });
 
 			DEBUG && console.log("[fetchUser] * You are", User.id, "("+User.name+")", User);
 
@@ -400,7 +402,7 @@ class Main extends Component {
 		})
 		.catch(err => {
 			// An error here isn't actually an error. It just means we have no user
-			this.setState({'user': {'id': 0}});
+			this.setState({ 'user': { 'id': 0 } });
 		});
 	}
 
@@ -411,14 +413,14 @@ class Main extends Component {
 		DEBUG && console.log("hashchange: ", e.newURL);
 
 		this.setState(prevState => {
-			let {slugs} = this.cleanLocation(window.location);
+			let { slugs } = this.cleanLocation(window.location);
 
 			// If slugs are the same, we don't need to change them
 			if ( slugs.join() === prevState.slugs.join() ) {
 				return {};
 			}
 
-			return {'slugs': slugs};
+			return { 'slugs': slugs };
 		});
 
 		this.handleAnchors();
@@ -508,8 +510,8 @@ class Main extends Component {
 	}
 
 	render( {}, state ) {
-		let {node, parent, _superparent, author, user, featured, path, extra} = state;
-		let NewProps = {node, parent, _superparent, author, user, featured, path, extra};
+		let { node, parent, _superparent, author, user, featured, path, extra } = state;
+		let NewProps = { node, parent, _superparent, author, user, featured, path, extra };
 
 		if ( node ) {
 			document.title = this.getTitle(node);

@@ -48,7 +48,7 @@
 		"no-whitespace-before-property": "error",
 		"array-bracket-spacing": ["warn", "never"],
 		"comma-spacing": ["warn", {"before": false, "after": true}],
-		"object-curly-spacing": ["warn", "never"],
+		"object-curly-spacing": ["warn", "always"],
 		"quote-props": ["warn", "always"],
 		"space-before-blocks": "warn",
 		"switch-colon-spacing": "error",
