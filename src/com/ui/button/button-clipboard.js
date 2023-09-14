@@ -1,4 +1,5 @@
 import {Component} from 'preact';
+import './button-clipboard.less';
 import cN from 'classnames';
 import {UIButton, UIIcon} from 'com/ui';
 

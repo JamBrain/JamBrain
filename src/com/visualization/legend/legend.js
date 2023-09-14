@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './legend.less';
 import cN from 'classnames';
 
 export default class Legend extends Component {

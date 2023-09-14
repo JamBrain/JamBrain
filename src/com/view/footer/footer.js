@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './footer.less';
 import UIIcon 							from 'com/ui/icon';
 
 

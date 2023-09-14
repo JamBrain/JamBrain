@@ -1,3 +1,4 @@
+import './spinner.less';
 import UIIcon 				from 'com/ui/icon';
 
 export default function UISpinner() {

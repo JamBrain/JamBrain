@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './tagbox.less';
 import cN from 'classnames';
 
 import UIIcon from '../icon';

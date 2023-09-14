@@ -2,6 +2,12 @@ import 'preact/devtools';
 //import 'preact/debug';
 
 import { render, Component } from 'preact';
+import './main-ld.less';
+import 'com/defaults.less';
+import 'com/fonts.less';
+import 'com/helpers.less';
+import 'com/markup.less';
+
 import titleParser						from 'internal/titleparser';
 import Sanitize							from 'internal/sanitize';
 

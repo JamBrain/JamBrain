@@ -89,6 +89,9 @@ const esbuildOptions = {
 				'src',
 				'src/public-ludumdare.com'
 			],
+			'globalVars': {
+				'STATIC_DOMAIN': '"static.jammer.work"'
+			}
 		})
 	]
 };
@@ -123,7 +126,7 @@ else {
 			}
 		})
 		.catch(async (error) => {
-			console.log('');	// newline
-			console.log(error);
+			//console.log('');	// newline
+			//console.log(error);
 		});
 }

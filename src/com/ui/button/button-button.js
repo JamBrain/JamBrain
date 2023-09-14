@@ -1,3 +1,5 @@
+import './button-button.less';
+
 /**
  * @param {*} _props
  * @returns {*|null}

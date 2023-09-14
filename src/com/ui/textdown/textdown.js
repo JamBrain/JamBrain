@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './textdown.less';
 import cN from 'classnames';
 
 import UIButton from '../button';

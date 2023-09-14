@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './help.less';
 import cN from 'classnames';
 
 import UIIcon from '../icon';

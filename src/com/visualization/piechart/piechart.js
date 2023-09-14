@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './piechart.less';
 import cN from 'classnames';
 
 import PieSegment					from 'com/visualization/piechart/piesegment';

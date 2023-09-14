@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './piechart.less';
 import cN from 'classnames';
 
 export default class PieSegment extends Component {

@@ -1,3 +1,5 @@
+import './button.less';
+
 export default function UIButtonDiv( props ) {
 	props = {...props};
 

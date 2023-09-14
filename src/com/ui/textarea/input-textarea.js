@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './input-textarea.less';
 import Shallow from 'shallow';
 
 import NavLink from 'com/nav-link/link';

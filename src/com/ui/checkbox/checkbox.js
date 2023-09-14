@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './checkbox.less';
 
 import UIButton from '../button';
 import UIIcon from '../icon';

@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './dialog.less';
 import cN from 'classnames';
 
 export default class UIDialog extends Component {
