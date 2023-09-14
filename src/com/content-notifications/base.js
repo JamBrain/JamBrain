@@ -10,9 +10,9 @@ import Notification, {
 	isNotificationOther
 }										from 'com/content-notifications/notification';
 
-import $Node							from 'shrub/js/node/node';
-import $Comment							from 'shrub/js/comment/comment';
-import $Notification					from 'shrub/js/notification/notification';
+import $Node							from 'backend/js/node/node';
+import $Comment							from 'backend/js/comment/comment';
+import $Notification					from 'backend/js/notification/notification';
 
 export default class NotificationsBase extends Component {
 	constructor( props ) {

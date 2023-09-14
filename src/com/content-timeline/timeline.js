@@ -9,7 +9,7 @@ import UISpinner 				from 'com/ui/spinner';
 import ContentCommon			from 'com/content-common/common';
 import ContentCommonBody		from 'com/content-common/common-body';
 
-import $Node					from 'shrub/js/node/node';
+import $Node					from 'backend/js/node/node';
 
 
 const TIMELINE_STEP_BUFFER = 5;

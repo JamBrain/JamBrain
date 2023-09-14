@@ -2,8 +2,8 @@
 require_once __DIR__."/../config.php";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/".SHRUB_PATH."api.php";
-require_once __DIR__."/".SHRUB_PATH."node/node.php";
+require_once __DIR__."/".BACKEND_PATH."api.php";
+require_once __DIR__."/".BACKEND_PATH."node/node.php";
 
 const CACHE_TTL = 60+30;
 
@@ -23,7 +23,7 @@ if ( !$node ) {
 
 if ( $node['id'] )
 	$RESPONSE['id'] = $node['id'];
-	
+
 if ( $node['type'] )
 	$RESPONSE['type'] = $node['type'];
 if ( $node['subtype'] )
@@ -42,10 +42,10 @@ switch ( $node['type'] ) {
 		switch ( $node['subtype'] ) {
 			case 'game':
 				// Games Only
-				
+
 				break;
 		};
-		
+
 		// Items Only
 
 		break;
@@ -53,7 +53,7 @@ switch ( $node['type'] ) {
 
 	case 'event': {
 		$CACHE_KEY = '!API!STATS!'.$node['id'];
-		
+
 		if ( $stats = cache_Fetch($CACHE_KEY) ) {
 			$RESPONSE['cached'] = [$node['id']];
 		}
@@ -67,13 +67,13 @@ switch ( $node['type'] ) {
 			$stats['authors'] = nodeMeta_CountByABKeyScope(
 				$node['id'], null, null, 'author'
 			);
-			
+
 			$stats['unpublished'] = node_CountByParentAuthorType(
 				$node['id'], null, null,
 				'item', null, null,
 				false
 			);
-			
+
 			// Item Types
 			$stats['game'] = node_CountByParentAuthorType(
 				$node['id'], null, null,
@@ -99,7 +99,7 @@ switch ( $node['type'] ) {
 	//			$node['id'], null, null,
 	//			'item', 'media', null
 	//		);
-	
+
 			// Item SubTypes
 			$stats['jam'] = node_CountByParentAuthorType(
 				$node['id'], null, null,
@@ -125,19 +125,19 @@ switch ( $node['type'] ) {
 				$node['id'], null, null,
 				'item', null, 'unfinished'
 			);
-	
+
 			$stats['grade-20-plus'] = nodeMagic_CountByParentName($node['id'], 'grade', '>=20');
 			$stats['grade-15-20'] = nodeMagic_CountByParentName($node['id'], 'grade', '>=15') - ($stats['grade-20-plus']);
 			$stats['grade-10-15'] = nodeMagic_CountByParentName($node['id'], 'grade', '>=10') - ($stats['grade-20-plus'] + $stats['grade-15-20']);
 			$stats['grade-5-10'] = nodeMagic_CountByParentName($node['id'], 'grade', '>=5') - ($stats['grade-20-plus'] + $stats['grade-15-20'] + $stats['grade-10-15']);
 			$stats['grade-0-5'] = nodeMagic_CountByParentName($node['id'], 'grade', '<5');
 			$stats['grade-0-only'] = nodeMagic_CountByParentName($node['id'], 'grade', '=0');
-	
+
 			$stats['timestamp'] = str_replace('+00:00', 'Z', date(DATE_W3C, time()));
-			
+
 			cache_Store($CACHE_KEY, $stats, CACHE_TTL);
 		}
-		
+
 		break;
 	}
 };
@@ -153,8 +153,8 @@ $RESPONSE['stats'] = $stats;
 //		//$event_id = intval(json_ArgGet(0));
 //
 //	default:
-//		
-//		
+//
+//
 //		break; // default
 //};
 

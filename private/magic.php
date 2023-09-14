@@ -1,12 +1,12 @@
 <?php
-const CONFIG_PATH = "../src/shrub";
-const SHRUB_PATH = "../src/shrub/src";
+const CONFIG_PATH = "../src/backend";
+const BACKEND_PATH = "../src/backend/src";
 
 include_once __DIR__."/".CONFIG_PATH."/config.php";
-require_once __DIR__."/".SHRUB_PATH."/cron.php";
-require_once __DIR__."/".SHRUB_PATH."/node/node.php";
-require_once __DIR__."/".SHRUB_PATH."/comment/comment.php";
-require_once __DIR__."/".SHRUB_PATH."/grade/grade.php";
+require_once __DIR__."/".BACKEND_PATH."/cron.php";
+require_once __DIR__."/".BACKEND_PATH."/node/node.php";
+require_once __DIR__."/".BACKEND_PATH."/comment/comment.php";
+require_once __DIR__."/".BACKEND_PATH."/grade/grade.php";
 
 // This is a CRON job that regularly updates magic
 const MAX_ITEMS_TO_ADD = 500;

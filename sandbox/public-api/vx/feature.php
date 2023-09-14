@@ -2,7 +2,7 @@
 require_once __DIR__."/../config.php";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/".SHRUB_PATH."api.php";
+require_once __DIR__."/".BACKEND_PATH."api.php";
 
 json_Begin();
 
@@ -11,18 +11,18 @@ $action = json_ArgShift();
 switch ( $action ) {
 	case 'get': //feature/get
 		json_ValidateHTTPMethod('GET');
-		
+
 		$root = nodeCache_GetById(1);
-		
+
 		if ( isset($root['meta']) && isset($root['meta']['featured']) ) {
 			$featured = nodeCache_GetById(intval($root['meta']['featured']));
-			
+
 			//$RESPONSE['no'] = $featured;
 			$RESPONSE['id'] = $featured['id'];
 			$RESPONSE['slug'] = $featured['slug'];
 			$RESPONSE['name'] = $featured['name'];
 			$RESPONSE['path'] = $featured['path'];
-			
+
 			if ( isset($featured['meta']['event-mode']) ) {
 				$mode = intval($featured['meta']['event-mode']);
 				if ( $mode == 0 ) {

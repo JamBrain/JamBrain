@@ -11,7 +11,7 @@ import ButtonLink						from 'com/button-link/link';
 
 import { node_CountAuthors } from 'internal/lib';
 
-import $Node							from 'shrub/js/node/node';
+import $Node							from 'backend/js/node/node';
 
 export default class ContentBox extends Component {
 	constructor( props ) {

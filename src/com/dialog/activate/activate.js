@@ -5,7 +5,7 @@ import DialogCommon						from 'com/dialog/common/common';
 import UISpinner						from 'com/ui/spinner';
 import LabelYesNo						from 'com/label-yesno/yesno';
 
-import $User							from 'shrub/js/user/user';
+import $User							from 'backend/js/user/user';
 
 export default class DialogActivate extends Component {
 	constructor( props ) {

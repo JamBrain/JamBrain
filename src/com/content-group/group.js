@@ -7,7 +7,7 @@ import UIIcon							from 'com/ui/icon/icon';
 import Common							from 'com/content-common/common';
 import CommonBody						from 'com/content-common/common-body';
 
-import $Node							from 'shrub/js/node/node';
+import $Node							from 'backend/js/node/node';
 
 const GROUP_ICONS = {
 	'tag': 'tag',

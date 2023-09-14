@@ -8,9 +8,9 @@ import InputDropdown					from 'com/input-dropdown/dropdown';
 import GradedItem						from './mygrades-graded-item';
 import GradeGraphs						from './mygrades-grade-graphs';
 
-import $Grade							from 'shrub/js/grade/grade';
-import $Node							from 'shrub/js/node/node';
-import $Comment							from 'shrub/js/comment/comment';
+import $Grade							from 'backend/js/grade/grade';
+import $Node							from 'backend/js/node/node';
+import $Comment							from 'backend/js/comment/comment';
 
 const SORT_ORDER = 0;
 const SORT_ALPHA = 1;

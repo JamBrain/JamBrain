@@ -1,8 +1,8 @@
 <?php
-const CONFIG_PATH = "../shrub/";
-const SHRUB_PATH = "../shrub/src/";
+const CONFIG_PATH = "../backend/";
+const BACKEND_PATH = "../backend/src/";
 include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/".SHRUB_PATH."api.php";
+require_once __DIR__."/".BACKEND_PATH."api.php";
 
 json_Begin();
 
@@ -38,7 +38,7 @@ switch ( $action ) {
 		if ( !isset(DOMAIN_REDIRECT_TABLE[$_SERVER['SERVER_NAME']]) ) {
 			json_EmitFatalError_BadRequest('Unknown domain mapping: '.$_SERVER['SERVER_NAME'], $RESPONSE);
 		}
-		
+
 		$url = '//'.DOMAIN_REDIRECT_TABLE[$_SERVER['SERVER_NAME']];
 
 		// Do a raw ID decode
@@ -49,7 +49,7 @@ switch ( $action ) {
 			// TODO: munger
 			$node_id = 0;
 		}
-	
+
 		if ( !$node_id ) {
 			json_EmitFatalError_BadRequest('Unknown request', $RESPONSE);
 		}
@@ -59,14 +59,14 @@ switch ( $action ) {
 			json_EmitFatalError_BadRequest('Unable to trace node: '.$node_id, $RESPONSE);
 		}
 		$RESPONSE['paths'] = $paths;
-		
+
 		$url .= $paths['path'];
 		$RESPONSE['url'] = $url;
-		
+
 		// Redirect
 		header('Location: '.$url, true, /*301*/307);
 		die;
-	
+
 		break;
 };
 

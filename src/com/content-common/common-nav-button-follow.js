@@ -3,7 +3,7 @@ import './common-nav-button-follow.less';
 
 import {UIIcon} from 'com/ui';
 import BodyNavButton from './common-nav-button';
-import $NodeStar from 'shrub/js/node/node_star';
+import $NodeStar from 'backend/js/node/node_star';
 
 
 export default class BodyNavButtonFollow extends Component {

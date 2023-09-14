@@ -11,7 +11,7 @@ import ContentUserBar from 'com/content-user/user-bar';
 import ContentCommon					from 'com/content-common/common';
 import ContentCommonBody				from 'com/content-common/common-body';
 
-import $Node							from '../../shrub/js/node/node';
+import $Node							from '../../backend/js/node/node';
 
 export default class ContentUserFollowing extends Component {
 	constructor( props ) {

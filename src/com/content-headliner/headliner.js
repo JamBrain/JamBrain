@@ -5,7 +5,7 @@ import {getLocaleDate, getRoughAge} from 'internal/time';
 
 import {UIIcon, UIButton} from 'com/ui';
 
-//import $Node from 'shrub/js/node/node';
+//import $Node from 'backend/js/node/node';
 
 /** @deprecated */
 export default class ContentHeadliner extends Component {

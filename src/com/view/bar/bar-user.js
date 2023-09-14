@@ -6,7 +6,7 @@ import UIImage							from 'com/ui/image/image';
 import UIButton							from 'com/ui/button/button';
 import UIDropdown						from 'com/ui/dropdown/dropdown';
 
-import $User							from 'shrub/js/user/user';
+import $User							from 'backend/js/user/user';
 
 export default class ViewBarUser extends Component {
 	constructor( props ) {

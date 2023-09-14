@@ -18,7 +18,7 @@ node_modules/
 -/
 *.gz
 *.bak
-/src/shrub/docs
+/src/backend/docs
 /sandbox/ld_event.*
 package-lock.json
 *.code-workspace

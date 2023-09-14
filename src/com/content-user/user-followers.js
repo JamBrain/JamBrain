@@ -7,7 +7,7 @@ import ContentSimple					from 'com/content-simple/simple';
 import ContentUserBar from 'com/content-user/user-bar';
 import ContentCommon					from 'com/content-common/common';
 
-import $Node							from '../../shrub/js/node/node';
+import $Node							from '../../backend/js/node/node';
 
 export default class ContentUserFollowers extends Component {
 	constructor( props ) {

@@ -9,7 +9,7 @@ import InputText						from 'com/input-text/text';
 import InputDropdown					from 'com/input-dropdown/dropdown';
 import UIButton							from 'com/ui/button/button';
 
-import $Tag								from 'shrub/js/tag/tag';
+import $Tag								from 'backend/js/tag/tag';
 
 
 export default class ContentCommonBodyLink extends Component {

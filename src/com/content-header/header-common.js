@@ -7,7 +7,7 @@ import NavLink 							from 'com/nav-link/link';
 import ContentBody						from 'com/content-body/body';
 import ContentBodyMarkup				from 'com/content-body/body-markup';
 
-import $Node							from 'shrub/js/node/node';
+import $Node							from 'backend/js/node/node';
 
 export default class ContentHeaderCommon extends Component {
 	constructor( props ) {

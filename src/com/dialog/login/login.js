@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import DialogCommon						from 'com/dialog/common/common';
 import NavLink							from 'com/nav-link/link';
 
-import $User							from 'shrub/js/user/user';
+import $User							from 'backend/js/user/user';
 
 export default class DialogLogin extends Component {
 	constructor( props ) {

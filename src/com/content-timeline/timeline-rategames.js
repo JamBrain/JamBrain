@@ -6,7 +6,7 @@ import FooterButtonMinMax 				from 'com/content-common/common-footer-button-minm
 import ContentItemBox					from 'com/content-item/item-box';
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentLoading					from 'com/content-loading/loading';
-import $Node							from 'shrub/js/node/node';
+import $Node							from 'backend/js/node/node';
 
 export const randomPick = (maxExclusive, n) => {
 	const ret = [];

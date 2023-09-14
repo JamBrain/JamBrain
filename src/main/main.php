@@ -10,7 +10,7 @@ if ( !isset($_GET['ignore']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE') !== f
 	die();
 }
 
-@include __DIR__."/../shrub/config.php";
+@include __DIR__."/../backend/config.php";
 
 // TODO: Figure out if this is the live server, and disable this feature if it is //
 define( 'DEBUG', isset($_GET['debug'])?1:0 );

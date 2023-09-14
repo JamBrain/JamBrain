@@ -1,7 +1,7 @@
 <?php
 /*
 	Summary of this program and its intent:
-	
+
 This is an API test for the ludumdare website. It's goal is to interact with all API functionality by simulating a ludumdare.
 Users will be created, an event will be created, users will post, read other users posts, post comments, like, etc.
 Users will interact with the theme creation process stages, will publish games, will rate each other's games, and will observe the results.
@@ -12,17 +12,17 @@ The exact flow will be documented in the data structures that guide the process,
 
 */
 
-const CONFIG_PATH = "../../src/shrub/";
-const SHRUB_PATH = "../../src/shrub/src/";
+const CONFIG_PATH = "../../src/backend/";
+const BACKEND_PATH = "../../src/backend/src/";
 
-# Use shrub wrapper for db access
+# Use backend wrapper for db access
 include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/".SHRUB_PATH."constants.php";
-require_once __DIR__."/".SHRUB_PATH."core/core.php";
-require_once __DIR__."/".SHRUB_PATH."core/db.php";
-require_once __DIR__."/".SHRUB_PATH."node/node.php";
-require_once __DIR__."/".SHRUB_PATH."user/user.php";
-require_once __DIR__."/".SHRUB_PATH."theme/theme.php";
+require_once __DIR__."/".BACKEND_PATH."constants.php";
+require_once __DIR__."/".BACKEND_PATH."core/core.php";
+require_once __DIR__."/".BACKEND_PATH."core/db.php";
+require_once __DIR__."/".BACKEND_PATH."node/node.php";
+require_once __DIR__."/".BACKEND_PATH."user/user.php";
+require_once __DIR__."/".BACKEND_PATH."theme/theme.php";
 
 # Include subcomponents
 include __DIR__."/api";
@@ -61,8 +61,8 @@ $runactions = null;
 if($argv[2] == "minutes")
 {
 	$runminutes = intval($argv[1]);
-} 
-else 
+}
+else
 {
 	$runactions = intval($argv[1]);
 }
@@ -75,7 +75,7 @@ $enable_file_logs = true;
 $logbase = "/tmp/ld_event"; // Logs and scratch data will be put in /tmp
 $eventbase = "ld_event"; // Put event related files in current directory
 $htmlbase = "ld_event"; // Put html report in current directory.
-// Generate 3 kinds of log. 
+// Generate 3 kinds of log.
 //   <name>.<eventIndex>.event (Event information, user/password list)
 //   <name>.<eventIndex>.log (Full Detail Verbose log)
 //   <name>.<eventIndex>.err (Summary log and errors)
@@ -115,12 +115,12 @@ if ($eventsId == null) {
 	print "\n";
 	print "  In the home directory of your scotch box, run db-create.sh\n";
 	print "  Then you can return and simulate an event.\n";
-	exit(1);	
+	exit(1);
 }
 
 $events = db_QueryFetch(
 		"SELECT
-			n.id, n.name, n.slug, 
+			n.id, n.name, n.slug,
 			".DB_FIELD_DATE('n.modified', 'modified')."
 		FROM
 			".SH_TABLE_PREFIX.SH_TABLE_NODE." AS n

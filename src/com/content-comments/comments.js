@@ -8,10 +8,10 @@ import UISpinner						from 'com/ui/spinner';
 
 import ContentCommentsComment			from './comments-comment';
 
-import $Comment							from 'shrub/js/comment/comment';
-import $Node							from 'shrub/js/node/node';
-import $CommentLove						from 'shrub/js/comment/comment_love';
-import $Notification					from 'shrub/js/notification/notification';
+import $Comment							from 'backend/js/comment/comment';
+import $Node							from 'backend/js/node/node';
+import $CommentLove						from 'backend/js/comment/comment_love';
+import $Notification					from 'backend/js/notification/notification';
 
 export default class ContentComments extends Component {
 	constructor( props ) {

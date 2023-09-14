@@ -7,7 +7,7 @@ import LabelYesNo						from 'com/label-yesno/yesno';
 
 import UILink							from 'com/ui/link/link';
 
-import $User							from 'shrub/js/user/user';
+import $User							from 'backend/js/user/user';
 
 
 export default class DialogReset extends Component {

@@ -4,7 +4,7 @@ import './footer-button-star.less';
 
 import UIIcon from 'com/ui/icon';
 
-import $NodeStar						from 'shrub/js/node/node_star';
+import $NodeStar						from 'backend/js/node/node_star';
 
 export default class ContentFooterButtonStar extends Component {
 	constructor( props ) {

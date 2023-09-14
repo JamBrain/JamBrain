@@ -6,7 +6,7 @@ import UIIcon from 'com/ui/icon/icon';
 
 import { node_CanUpload } from 'internal/lib';
 
-import $File							from 'shrub/js/file/file';
+import $File							from 'backend/js/file/file';
 
 export default class ContentItemEmbedFile extends Component {
 	constructor(props) {

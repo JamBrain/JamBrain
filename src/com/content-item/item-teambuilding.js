@@ -9,7 +9,7 @@ import UIIcon							from 'com/ui/icon/icon';
 import UIButton							from 'com/ui/button/button';
 import UIDropdown						from 'com/ui/dropdown/dropdown';
 
-import $Node							from 'shrub/js/node/node';
+import $Node							from 'backend/js/node/node';
 
 export default class ItemTeambuilding extends Component {
 	constructor(props) {

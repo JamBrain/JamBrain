@@ -14,7 +14,7 @@ import PieChart							from 'com/visualization/piechart/piechart';
 import BarChart							from 'com/visualization/barchart/barchart';
 
 
-import $Stats							from '../../shrub/js/stats/stats';
+import $Stats							from '../../backend/js/stats/stats';
 
 
 export default class ContentStatsEvent extends Component {

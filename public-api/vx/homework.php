@@ -2,9 +2,9 @@
 require_once __DIR__."/../config.php";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/".SHRUB_PATH."api.php";
-require_once __DIR__."/".SHRUB_PATH."node/node.php";
-require_once __DIR__."/".SHRUB_PATH."theme/theme.php";
+require_once __DIR__."/".BACKEND_PATH."api.php";
+require_once __DIR__."/".BACKEND_PATH."node/node.php";
+require_once __DIR__."/".BACKEND_PATH."theme/theme.php";
 
 function GetActiveEvent() {
 	$root = nodeCache_GetById(1);
@@ -18,12 +18,12 @@ api_Exec([
 ["homework/get", API_GET | API_AUTH, API_CHARGE_1, function(&$RESPONSE) {
 	$event = GetActiveEvent();
 	$user_id = userAuth_GetID();
-	
+
 	$mode = intval($event['meta']['event-mode']);
 	$making_what = substr(strrchr($event['meta']['can-create'], '/'), 1);
 
 	//$RESPONSE['ev'] = $event;
-	
+
 	$RESPONSE['homework'] = [];
 
 	// task: brief description of task
@@ -43,7 +43,7 @@ api_Exec([
 			'complete' => true,
 		];
 	}
-	
+
 	// Pre-Event Tasks that are per-round
 	if ( $mode == 1 ) {
 		$ideas_required = isset($event['meta']['theme-idea-limit']) ? intval($event['meta']['theme-idea-limit']) : 3;
@@ -66,11 +66,11 @@ api_Exec([
 			'task' => "Decide what tools you are going to use",
 			'user' => true,		// the user decides when they are done
 		];
-		
-		// TODO: detect when the user has submitted a warmup game		
+
+		// TODO: detect when the user has submitted a warmup game
 		$submitted_warmup = false;
 		$warmup_complete = $submitted_warmup;
-		
+
 		$RESPONSE['homework'][] = [
 			'task' => "Make a warmup ".$making_what,
 			'children' => [

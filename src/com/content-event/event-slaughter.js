@@ -7,8 +7,8 @@ import UIIcon 							from 'com/ui/icon';
 
 import UIButton							from 'com/ui/button/button';
 
-import $ThemeIdeaVote					from 'shrub/js/theme/theme_idea_vote';
-import $Node from 'shrub/js/node/node';
+import $ThemeIdeaVote					from 'backend/js/theme/theme_idea_vote';
+import $Node from 'backend/js/node/node';
 
 import PieChart							from 'com/visualization/piechart/piechart';
 

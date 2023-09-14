@@ -1,21 +1,21 @@
 #!/usr/bin/env php
 <?php
 // Migrating SH_NODE_LINK to SH_NODE_META_VERSION
-// 
+//
 // - follow the steps of 'meta-to-version' and 'link-to-version' first
 // - scan sh_node_meta_version
 //   - Find newest version of each
 //   - Add to to sh_node_meta, referencing the version found
 
-const CONFIG_PATH = "../../src/shrub/";
-const SHRUB_PATH = "../../src/shrub/src/";
+const CONFIG_PATH = "../../src/backend/";
+const BACKEND_PATH = "../../src/backend/src/";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/".SHRUB_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
-require_once __DIR__."/".SHRUB_PATH."core/db.php";
-require_once __DIR__."/".SHRUB_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
+require_once __DIR__."/".BACKEND_PATH."core/cli_root.php";	// Confirm CLI, Require ROOT
+require_once __DIR__."/".BACKEND_PATH."core/db.php";
+require_once __DIR__."/".BACKEND_PATH."constants.php";		// For the SH_TABLE constants. run gen.sh if not up-to-date.
 
-require_once __DIR__."/".SHRUB_PATH."node/node_meta.php";
+require_once __DIR__."/".BACKEND_PATH."node/node_meta.php";
 
 
 echo "\n** LINK MIGRATION -- STAGE 3 **\n";

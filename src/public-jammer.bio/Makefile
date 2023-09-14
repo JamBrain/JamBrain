@@ -5,7 +5,7 @@ MAIN_FOLDER			:=	src/$(TARGET)
 TARGET_FOLDER		:=	$(TARGET)/-/
 
 INCLUDE_FOLDERS		:=	\
-						src/shrub/js/ \
+						src/backend/js/ \
 						src/com/ \
 						src/custom/ \
 						src/external/ \

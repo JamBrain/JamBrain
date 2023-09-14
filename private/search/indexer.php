@@ -1,13 +1,13 @@
 #!/usr/bin/env php
 <?php
-const CONFIG_PATH = "../src/shrub";
-const SHRUB_PATH = "../src/shrub/src";
+const CONFIG_PATH = "../src/backend";
+const BACKEND_PATH = "../src/backend/src";
 
 include_once __DIR__."/".CONFIG_PATH."/config.php";
-require_once __DIR__."/".SHRUB_PATH."/core/cli.php";	// Confirm CLI
-require_once __DIR__."/".SHRUB_PATH."/cron.php";
-require_once __DIR__."/".SHRUB_PATH."/node/node.php";
-require_once __DIR__."/".SHRUB_PATH."/core/db_sphinx.php";
+require_once __DIR__."/".BACKEND_PATH."/core/cli.php";	// Confirm CLI
+require_once __DIR__."/".BACKEND_PATH."/cron.php";
+require_once __DIR__."/".BACKEND_PATH."/node/node.php";
+require_once __DIR__."/".BACKEND_PATH."/core/db_sphinx.php";
 
 // Usage
 if ( count($argv) < 2 ) {
@@ -90,7 +90,7 @@ foreach ( $nodes as &$node ) {
 			slug,
 			name,
 			body,
-			
+
 			authors,
 			tags
 		)

@@ -3,7 +3,7 @@ import './common-footer-button.less';
 
 import { UIIcon } from 'com/ui';
 
-import $NodeStar						from 'shrub/js/node/node_star';
+import $NodeStar						from 'backend/js/node/node_star';
 
 export default class ContentCommonFooterButtonStar extends Component {
 	constructor( props ) {

@@ -105,7 +105,7 @@ ifdef DEBUG
 TARGET_FILES_CSS	+=	$(TARGET_FOLDER)/app.debug.css
 TARGET_FILES_JS		+=	$(TARGET_FOLDER)/app.debug.js
 endif # DEBUG
-TARGET_FILES		:=	$(TARGET_FILES_SVG) $(TARGET_FILES_CSS)
+TARGET_FILES		:=	$(TARGET_FILES_SVG)
 #$(TARGET_FILES_JS)
 
 
@@ -186,11 +186,11 @@ report: $(TARGET_FILES)
 
 #report: $(TARGET_FILES)
 #	@echo \
-		"[$(COL_GREEN)JS_RAW$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)` MINIFY: N/A	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.js 2>/dev/null)`\n" \
-		"[$(COL_GREEN)JS_DEBUG$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.debug.js 2>/dev/null)` MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.debug.js 2>/dev/null)`*	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.debug.js 2>/dev/null)`\n" \
-		"[$(COL_GREEN)JS_RELEASE$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`   MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`    ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.release.js 2>/dev/null)`\n" \
-		"[$(COL_GREEN)CSS$(COL_OFF)]     GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`  MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.css 2>/dev/null)`\n" \
-		"[$(COL_GREEN)SVG$(COL_OFF)]     GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`  MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`\n" \
+		"[$(COL_GREEN)JS_RAW$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(BUILD_FOLDER)/app.js 2>/dev/null)` MINIFY: N/A	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/app.js 2>/dev/null)`\n" \
+		"[$(COL_GREEN)JS_DEBUG$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/app.debug.js 2>/dev/null)` MINIFY: `$(call SIZE,$(TARGET_FOLDER)/app.debug.js 2>/dev/null)`*	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/app.debug.js 2>/dev/null)`\n" \
+		"[$(COL_GREEN)JS_RELEASE$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/app.min.js 2>/dev/null)`   MINIFY: `$(call SIZE,$(TARGET_FOLDER)/app.min.js 2>/dev/null)`    ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/app.release.js 2>/dev/null)`\n" \
+		"[$(COL_GREEN)CSS$(COL_OFF)]     GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/app.min.css 2>/dev/null)`  MINIFY: `$(call SIZE,$(TARGET_FOLDER)/app.min.css 2>/dev/null)`	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/app.css 2>/dev/null)`\n" \
+		"[$(COL_GREEN)SVG$(COL_OFF)]     GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/app.min.svg 2>/dev/null)`  MINIFY: `$(call SIZE,$(TARGET_FOLDER)/app.min.svg 2>/dev/null)`	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/app.svg 2>/dev/null)`\n" \
 		| column -t
 
 # If not called recursively, figure out who the targes are and call them #
@@ -360,12 +360,12 @@ $(TARGET_FOLDER)/app.debug.js: $(BUILD_FOLDER)/app.debug.js
 	@echo "[$(COL_PURPLE)Copy JS$(COL_OFF)] $@"
 	@cp -f --remove-destination $< $@
 
-#	$(call JS_PP_DEBUG,$<,$(@D)/all.debug.js)
+#	$(call JS_PP_DEBUG,$<,$(@D)/app.debug.js)
 
 #	$(call MINIFY_JS,$<,$@)
 #
 #ifdef DEBUG
-#	cp -f --remove-destination $(<D)/all.debug.js $(@D)/all.debug.js
+#	cp -f --remove-destination $(<D)/app.debug.js $(@D)/app.debug.js
 #endif
 
 

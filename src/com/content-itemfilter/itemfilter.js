@@ -10,7 +10,7 @@ import UITextdown						from 'com/ui/textdown';
 
 import UIHelp							from 'com/ui/help';
 
-import $Tag								from 'shrub/js/tag/tag';
+import $Tag								from 'backend/js/tag/tag';
 
 
 const HelpItemSearch = [

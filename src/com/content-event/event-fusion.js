@@ -4,7 +4,7 @@ import NavLink 							from 'com/nav-link/link';
 
 import ButtonBase						from 'com/button-base/base';
 
-import $ThemeIdea						from 'shrub/js/theme/theme_idea';
+import $ThemeIdea						from 'backend/js/theme/theme_idea';
 
 
 export default class ContentEventFusion extends Component {

@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__."/../src/shrub/src/core/core.php";
+require_once __DIR__."/../src/backend/src/core/core.php";
 
 $RESPONSE = [];
 
@@ -56,7 +56,7 @@ function Emit( $response ) {
 	http_response_code($response['status']);
 	header('Content-Type: application/json');
 	header('Cache-Control: no-cache, no-store, must-revalidate'); // HTTP 1.1.
-	
+
 	$json_format = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
 	if ( isset($_GET['pretty']) ) {
 		$json_format |= JSON_PRETTY_PRINT;
@@ -73,7 +73,7 @@ function EmitError( $code, $message = null ) {
 
 	if ( $message )
 		$ERROR['message'] = $message;
-		
+
 	$ERROR['data'] = $RESPONSE;
 
 	Emit($ERROR);
@@ -119,10 +119,10 @@ function hasChanges( &$arr ) {
 
 function redirectToSelfAndExit() {
 	global $out_file;
-	
+
 	http_response_code(302);			// Temporary
 	header('Cache-Control: no-cache');	// Should stop CloudFlare from caching this response
-	
+
 	// Force redirect to data
 	header('Location: '.
 		isset($_SERVER['HTTPS']) ? 'https://' : 'http://'.
@@ -144,7 +144,7 @@ function do_proc($cmd,&$data) {
 		],
 		$pipes
 	);
-	
+
 	if ($proc) {
 		fwrite($pipes[0],$data);
 		fclose($pipes[0]);
@@ -153,19 +153,19 @@ function do_proc($cmd,&$data) {
 		$err = stream_get_contents($pipes[2]);
 		fclose($pipes[2]);
 		$code = proc_close($proc);
-		
+
 		if ( $code ) {
 			EmitError(500, '['.$cmd.'] PROC ERROR ['.$code.']: '.$err);
 			exit;
 		}
-		
+
 		return $ret;
 	}
 	return null;
 }
 
 
-// If there are any extensions left left, use them as arguments 
+// If there are any extensions left left, use them as arguments
 foreach( $in_ext_part as &$value ) {
 	if ( strlen($value) < 1 ) {
 		EmitError(400, "Invalid property");
@@ -216,15 +216,15 @@ if ( hasChanges($out) ) {
 	if ( ($of = $in_paths[count($in_paths)-1]) && ($of == 'debug' || array_search($of, IMAGE_TYPE) !== false) ) {
 		EmitError(400, "Final extension must be an output format. Invalid format '$of'");
 	}
-	
+
 	// Glob and make sure there are not too many files already
 	if ( ($globs = count(glob($out_path."/".$in_name.'.'.$in_ext.'.*'))) > 64 ) {
 		EmitError(400, "Too many variations of file: $globs. TODO: Purge");
 	}
-	
+
 	$data = null;
 	$in = $src_fullfile;
-	
+
 	// Step 0: Read file
 	if ( /*$src_is_video ||*/ $in_ext == 'gif' ) {
 		$dummy = "";
@@ -241,11 +241,11 @@ if ( hasChanges($out) ) {
 	else {
 		EmitError(400, "Unsupported input");
 	}
-	
+
 	// Step 1: Parse file
 	$image_info = getimagesizefromstring($data);
 //	$image_info = getimagesize($src_fullfile);
-	
+
 	if ( $image_info ) {
 		// It's faster to re-extract the data then ask the database
 		$asset = [
@@ -254,14 +254,14 @@ if ( hasChanges($out) ) {
 			'mime' => $image_info['mime'],
 			'size' => strlen($data),	// getimagesizefromstring only
 		];
-		
+
 		$RESPONSE['asset'] = $asset;
 
 		// Step 2: Resize, Crop, and/or Convert the file
 		if ( $out['width'] || $out['height'] || $out['format'] != $in_ext ) {
 			// Strip extra data //
 			$option = '-strip';
-			
+
 			// http://www.imagemagick.org/Usage/resize/
 			if ( $out['width'] || $out['height'] ) {
 				if ( $out['width'] && $out['height'] ) {
@@ -289,7 +289,7 @@ if ( hasChanges($out) ) {
 					$option .= '\>';
 				}
 			}
-			
+
 			// Run ImageMagick //
 			// NOTE: This will fail if there exists a file named "png:-", "webp:-", etc.
 			$data = do_proc(
@@ -304,11 +304,11 @@ if ( hasChanges($out) ) {
 //				// http://www.lcdf.org/gifsicle/
 //				EmitErrorAndExit("ERROR: Unsupported optimizer GIF");
 //			}
-//			else 
+//			else
 			if ( ($out['format'] == 'png') ) {
 				// https://pngquant.org/
 				// https://pngquant.org/php.html
-				
+
 				//$file_out_min_quality = 60;
 				//$file_out_max_quality = 95;
 
@@ -324,12 +324,12 @@ if ( hasChanges($out) ) {
 //				else if ( ($file_out_ext == 'webp') ) {
 //					EmitErrorAndExit("ERROR: Unsupported optimizer WEBP");
 //				}
-		}	
+		}
 
 		// Debug mode, output JSON instead of an image
 		if ( $out['debug'] ) {
 			$RESPONSE['args'] = $in_ext_part;
-			
+
 			Emit($RESPONSE);
 		}
 		// Image output mode
@@ -342,11 +342,11 @@ if ( hasChanges($out) ) {
 
 			// Step 5: Redirect to self and exit
 			//redirectToSelfAndExit();
-			
+
 			header("Content-Type: ".IMAGE_MIME[$out['format']]);
 			header("Content-Length: ".strlen($data));
 			header('Expires: 0');
-			
+
 			echo $data;
 			exit;
 		}
@@ -366,7 +366,7 @@ else {
 	header("Content-Type: ".IMAGE_MIME[$in_ext]);
 	header("Content-Length: ".filesize($out_file));
 	header('Expires: 0');
-	
+
 	readfile($out_file);
 	exit;
 }

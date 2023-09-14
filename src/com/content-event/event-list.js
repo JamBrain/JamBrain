@@ -8,9 +8,9 @@ import UISpinner						from 'com/ui/spinner';
 
 import ButtonBase						from 'com/button-base/base';
 
-import $ThemeList						from 'shrub/js/theme/theme_list';
-import $ThemeListVote					from 'shrub/js/theme/theme_list_vote';
-import $ThemeHistory					from 'shrub/js/theme/theme_history';
+import $ThemeList						from 'backend/js/theme/theme_list';
+import $ThemeListVote					from 'backend/js/theme/theme_list_vote';
+import $ThemeHistory					from 'backend/js/theme/theme_history';
 
 
 export default class ContentEventList extends Component {

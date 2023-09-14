@@ -28,9 +28,9 @@ import UICheckbox						from 'com/ui/checkbox/checkbox';
 
 import ContentSimple					from 'com/content-simple/simple';
 
-import $Node							from 'shrub/js/node/node';
-import $Grade							from 'shrub/js/grade/grade';
-import $Asset							from 'shrub/js/asset/asset';
+import $Node							from 'backend/js/node/node';
+import $Grade							from 'backend/js/grade/grade';
+import $Asset							from 'backend/js/asset/asset';
 
 
 const MAX_LINKS = 9;

@@ -2,11 +2,11 @@
 require_once __DIR__."/../config.php";
 
 include_once __DIR__."/".CONFIG_PATH."config.php";
-require_once __DIR__."/".SHRUB_PATH."api2.php";
-require_once __DIR__."/".SHRUB_PATH."file/file.php";
-require_once __DIR__."/".SHRUB_PATH."file/constants.php";
-require_once __DIR__."/".SHRUB_PATH."node/node.php";
-require_once __DIR__."/".SHRUB_PATH."core/core.php";
+require_once __DIR__."/".BACKEND_PATH."api2.php";
+require_once __DIR__."/".BACKEND_PATH."file/file.php";
+require_once __DIR__."/".BACKEND_PATH."file/constants.php";
+require_once __DIR__."/".BACKEND_PATH."node/node.php";
+require_once __DIR__."/".BACKEND_PATH."core/core.php";
 
 require_once __DIR__.'/vendor/autoload.php';
 
@@ -22,7 +22,7 @@ const VALID_FILE_EXTENSIONS = [
 	'.tar.bz2',
 	'.7z',
 	'.rar',
-	
+
 	// Microsoft //
 	'.exe',
 	'.msi',		// Windows Installer
@@ -31,7 +31,7 @@ const VALID_FILE_EXTENSIONS = [
 	// Apple //
 	'.dmg',		// Mac
 	'.ipa',		// iOS
-	
+
 	// Linux //
 	'.flatpak',
 	'.snap',
@@ -49,7 +49,7 @@ const VALID_FILE_EXTENSIONS = [
 	// Legacy //
 	'.jar',		// Java
 	'.swf',		// Adobe Flash
-	
+
 	// Pico-8 //
 	//'.p8',
 	//'.p8.png',
@@ -111,7 +111,7 @@ function generate_netstorage_headers( $filePath, $action = "upload", $fileSize =
 	}
 
 	$filePath = "/".AKAMAI_NETSTORAGE_FILE_CPCODE.'/'.$filePath;
-	
+
 	$signer->setNonce();
 	$signer->setTimestamp();
 	$signer->setPath($filePath);
@@ -232,7 +232,7 @@ api_Exec([
 	// Generate a session token (to pair with file/confirm)
 	$token = generate_series_token();
 	$RESPONSE['token'] = $token;
-  
+
 	// TODO: If it exists, mark the old file as deprecated
 
 	// Store in database
@@ -244,7 +244,7 @@ api_Exec([
 		$RESPONSE['name'] = $file_name;
 		$RESPONSE['confirmed'] = file_SetNameById($RESPONSE['id'], $file_name, null, $token);
 	}
-	
+
 	// Generate Akamai NetStorage headers, so client can do the work
 	$RESPONSE = array_merge($RESPONSE, generate_netstorage_headers('uploads/$'.$node_id.'/'.$file_name, 'upload', $file_size, $serveFromZip));
 
@@ -348,7 +348,7 @@ api_Exec([
 	if ( !$node_id ) {
 		json_EmitFatalError_BadRequest(null, $RESPONSE);
 	}
-	
+
 	// Generate a session token (to pair with file/confirm)
 	$token = generate_series_token();
 	$RESPONSE['token'] = $token;
@@ -357,7 +357,7 @@ api_Exec([
 	if ( !$file_name ) {
 		json_EmitFatalError_BadRequest(null, $RESPONSE);
 	}
-	
+
 	$flags = 0;// SH_FILE_STATUS_UPLOADED;
 	if ( is_embed($file_name) ) {
 		$flags |= SH_FILE_STATUS_AKAMAI_ZIP;
@@ -432,7 +432,7 @@ api_Exec([
 		$RESPONSE['embed'] = true;
 	}
 
-	
+
 	$RESPONSE['confirmed'] = file_SetStatusById($file_id, $flags, "", $token, $author_id);
 
 	nodeCache_InvalidateById($node_id);
@@ -461,7 +461,7 @@ api_Exec([
 	if ( !$file_id )
 		json_EmitFatalError_BadRequest("Bad file_id: ".$file_id, $RESPONSE);
 
-	
+
 
 	$RESPONSE['file'] = ['moon'=>$file_id];
 }],

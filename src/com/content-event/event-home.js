@@ -3,7 +3,7 @@ import UIIcon 							from 'com/ui/icon';
 import NavLink 							from 'com/nav-link/link';
 import marked 							from 'internal/marked/marked';
 
-import $Theme							from 'shrub/js/theme/theme';
+import $Theme							from 'backend/js/theme/theme';
 
 
 export default class ContentEventHome extends Component {

@@ -4,7 +4,7 @@ import './footer-button-comments.less';
 
 import { UIIcon } from 'com/ui';
 
-import $NodeLove						from 'shrub/js/node/node_love';
+import $NodeLove						from 'backend/js/node/node_love';
 
 export default class ContentFooterButtonLove extends Component {
 	constructor( props ) {

@@ -4,8 +4,8 @@ import './event-idea.less';
 import {UIIcon, UIButton} from 'com/ui';
 import {ContentSimple} from 'com/content/simple';
 
-import $Node							from 'shrub/js/node/node';
-import $ThemeIdea						from 'shrub/js/theme/theme_idea';
+import $Node							from 'backend/js/node/node';
+import $ThemeIdea						from 'backend/js/theme/theme_idea';
 import Sanitize							from 'internal/sanitize';
 
 const SHOW_PREVIOUS = 6;

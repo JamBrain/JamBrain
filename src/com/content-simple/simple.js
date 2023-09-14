@@ -23,7 +23,7 @@ import ContentCommonDraft							from 'com/content-common/common-draft';
 import ContentCommonEdit							from 'com/content-common/common-edit';
 import ItemTeambuilding								from 'com/content-item/item-teambuilding';
 
-import $Node										from 'shrub/js/node/node';
+import $Node										from 'backend/js/node/node';
 import {AutocompleteAtNames, AutocompleteEmojis}	from 'com/content-common/common-autocomplete';
 
 

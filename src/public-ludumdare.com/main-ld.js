@@ -44,9 +44,9 @@ import DialogErrorPublish				from 'com/dialog/errorpublish/errorpublish';
 
 //import AlertBase						from 'com/alert-base/base';
 
-import $Node							from 'shrub/js/node/node';
-import $User							from 'shrub/js/user/user';
-import $NodeLove						from 'shrub/js/node/node_love';
+import $Node							from 'backend/js/node/node';
+import $User							from 'backend/js/user/user';
+import $NodeLove						from 'backend/js/node/node_love';
 
 
 const SITE_ROOT = 1;

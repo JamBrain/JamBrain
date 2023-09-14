@@ -11,7 +11,7 @@ import ContentCommonNav					from 'com/content-common/common-nav';
 
 import ButtonFollow						from 'com/content-common/common-nav-button-follow';
 
-//import $Node							from 'shrub/js/node/node';
+//import $Node							from 'backend/js/node/node';
 
 
 export default class ContentUser extends Component {

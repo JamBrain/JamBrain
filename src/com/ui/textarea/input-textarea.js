@@ -6,7 +6,7 @@ import NavLink from 'com/nav-link/link';
 import ButtonLink from 'com/button-link/link';
 import UIIcon from 'com/ui/icon';
 
-import $Asset from 'shrub/js/asset/asset';		// For image uploading
+import $Asset from 'backend/js/asset/asset';		// For image uploading
 
 
 export default class UITextarea extends Component {

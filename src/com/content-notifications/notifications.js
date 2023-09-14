@@ -9,7 +9,7 @@ import NotificationsBase				from 'com/content-notifications/base';
 import Notification						from 'com/content-notifications/notification';
 import NotificationsFilter				from 'com/content-notifications/filter';
 
-import $Notification					from 'shrub/js/notification/notification';
+import $Notification					from 'backend/js/notification/notification';
 
 import ContentSimple					from 'com/content-simple/simple';
 

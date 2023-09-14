@@ -3,7 +3,7 @@ import Sanitize							from 'internal/sanitize';
 
 import DialogCommon						from 'com/dialog/common/common';
 
-import $Node							from 'shrub/js/node/node';
+import $Node							from 'backend/js/node/node';
 
 export default class DialogCreate extends Component {
 	constructor( props ) {

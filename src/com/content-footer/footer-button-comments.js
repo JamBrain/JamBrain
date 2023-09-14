@@ -4,7 +4,7 @@ import './footer-button.less';
 import UIIcon 							from 'com/ui/icon';
 import NavLink 							from 'com/nav-link/link';
 
-import $Node							from 'shrub/js/node/node';
+import $Node							from 'backend/js/node/node';
 
 export default class ContentFooterButtonComments extends Component {
 	constructor( props ) {

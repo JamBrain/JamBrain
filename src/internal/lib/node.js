@@ -3,7 +3,7 @@
 
 	NOTE: these functions will be globally available. No need to include anything. Also you can't use ES6 here.
 
-	Try to mirror what's available in "src/shrub/src/node/node_util.php"
+	Try to mirror what's available in "src/backend/src/node/node_util.php"
 */
 
 /**

@@ -48,7 +48,7 @@ const esbuildOptions = {
 	'bundle': true,
 	'minify': action?.release ? true : undefined,
 	'drop': action.release ? ['debugger'] : undefined,
-	'legalComments': action.release ? 'external' : undefined,
+	'legalComments': 'none', //action.release ? 'external' : undefined,
 	'sourcemap': true,
 	'metafile':	true,	// required for debug information
 

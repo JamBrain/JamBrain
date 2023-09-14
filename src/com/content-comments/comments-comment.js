@@ -11,8 +11,8 @@ import UICheckbox from 'com/ui/checkbox/checkbox';
 
 import ContentCommentsMarkup from './comments-markup';
 import {AutocompleteAtNames, AutocompleteEmojis} from 'com/content-common/common-autocomplete';
-import $Comment from 'shrub/js/comment/comment';
-import $CommentLove from 'shrub/js/comment/comment_love';
+import $Comment from 'backend/js/comment/comment';
+import $CommentLove from 'backend/js/comment/comment_love';
 
 
 export default class ContentCommentsComment extends Component {

@@ -14,7 +14,7 @@ import ContentMore						from 'com/content-more/more';
 
 import ChangeableGrid 					from 'com/grid/changeable-grid';
 
-import $Node							from 'shrub/js/node/node';
+import $Node							from 'backend/js/node/node';
 
 
 export default class ContentGames extends Component {

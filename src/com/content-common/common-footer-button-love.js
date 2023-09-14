@@ -3,7 +3,7 @@ import './common-footer-button.less';
 import './common-footer-button-love.less';
 
 import UIIcon 							from 'com/ui/icon';
-import $NodeLove						from 'shrub/js/node/node_love';
+import $NodeLove						from 'backend/js/node/node_love';
 
 export default class ContentCommonFooterButtonLove extends Component {
 	constructor( props ) {

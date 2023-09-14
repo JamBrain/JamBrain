@@ -11,7 +11,7 @@ cd $SCRIPTPATH
 (cd apache ; sh add-ports.sh)
 
 # Create tables
-(cd /vagrant/www/src/shrub/tools; echo YES | php table-create)
+(cd /vagrant/www/src/backend/tools; echo YES | php table-create)
 
 # Create upload folders if they don't exist
 mkdir -p /vagrant/www/public-static/content

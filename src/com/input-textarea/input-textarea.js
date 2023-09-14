@@ -7,7 +7,7 @@ import NavLink							from 'com/nav-link/link';
 import ButtonLink						from 'com/button-link/link';
 import UIIcon							from 'com/ui/icon';
 
-import $Asset							from 'shrub/js/asset/asset';
+import $Asset							from 'backend/js/asset/asset';
 
 
 export default class InputTextarea extends Component {

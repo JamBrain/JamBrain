@@ -5,7 +5,7 @@ import ButtonLink						from 'com/button-link/link';
 import NotificationsBase				from 'com/content-notifications/base';
 import Dropdown							from 'com/input-dropdown/dropdown';
 
-import $Notification					from 'shrub/js/notification/notification';
+import $Notification					from 'backend/js/notification/notification';
 
 export default class DropdownNotification extends NotificationsBase {
 

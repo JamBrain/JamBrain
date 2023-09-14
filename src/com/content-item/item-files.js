@@ -5,7 +5,7 @@ import UILink							from 'com/ui/link/link';
 
 import { node_CanUpload } from 'internal/lib';
 
-import $File							from 'shrub/js/file/file';
+import $File							from 'backend/js/file/file';
 
 export default class ContentItemFiles extends Component {
 	constructor(props) {

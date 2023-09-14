@@ -23,7 +23,7 @@ import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 
 import ContentSimple					from 'com/content-simple/simple';
 
-import $Node							from 'shrub/js/node/node';
+import $Node							from 'backend/js/node/node';
 
 
 

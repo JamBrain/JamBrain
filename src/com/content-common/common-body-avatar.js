@@ -5,8 +5,8 @@ import ButtonLink						from 'com/button-link/link';
 import UIImage							from 'com/ui/image';
 import UIIcon							from 'com/ui/icon';
 
-import $Node							from 'shrub/js/node/node';
-import $Asset							from 'shrub/js/asset/asset';
+import $Node							from 'backend/js/node/node';
+import $Asset							from 'backend/js/asset/asset';
 
 export default class ContentCommonBodyAvatar extends Component {
 	constructor( props ) {

@@ -6,7 +6,7 @@ import { Diff } from 'shallow';
 import InputTextArea					from 'com/input-textarea/input-textarea';
 
 import marked 							from 'internal/marked/marked';
-import $Node							from 'shrub/js/node/node';
+import $Node							from 'backend/js/node/node';
 
 const MAX_LENGTH = 4096;
 

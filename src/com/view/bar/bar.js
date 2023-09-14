@@ -16,8 +16,8 @@ import UIButton							from 'com/ui/button/button';
 import BarNotification					from './bar-notifications';
 import BarUser							from './bar-user';
 
-//import $Node							from 'shrub/js/node/node';
-import $Notification					from 'shrub/js/notification/notification';
+//import $Node							from 'backend/js/node/node';
+import $Notification					from 'backend/js/notification/notification';
 
 
 function make_url( url ) {
