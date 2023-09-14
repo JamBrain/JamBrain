@@ -1,5 +1,7 @@
 import {Component, toChildArray}	from 'preact';
 import {Diff}				from 'shallow';
+import './common-body-flag.less';
+
 import cN							from 'classnames';
 
 import UIIcon						from 'com/ui/icon';

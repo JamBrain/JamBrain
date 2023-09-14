@@ -1,3 +1,5 @@
+import './post.less';
+
 import ContentSimple					from 'com/content-simple/simple';
 import {UIIcon, UILink, UIButton}		from 'com/ui';
 

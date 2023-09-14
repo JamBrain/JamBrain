@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './more.less';
 
 import UIButton from 'com/ui/button';
 import UISpinner from 'com/ui/spinner';

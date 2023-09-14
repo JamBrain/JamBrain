@@ -1,4 +1,6 @@
 import { Component } from 'preact';
+import './notifications.less';
+
 import UIIcon							from 'com/ui/icon';
 import UICheckbox						from 'com/ui/checkbox/checkbox';
 import {

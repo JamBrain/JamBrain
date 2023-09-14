@@ -1,5 +1,7 @@
 import {Component} from 'preact';
 import cN								from 'classnames';
+import './common-body-link.less';
+
 import Sanitize							from 'internal/sanitize';
 
 import UIIcon							from 'com/ui/icon';

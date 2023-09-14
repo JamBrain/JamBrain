@@ -1,4 +1,7 @@
 import { Component } from 'preact';
+import './tv.less';
+import '../base/base.less';
+
 import cN from 'classnames';
 
 import $JammerTV						from 'external/jammertv/jammertv';

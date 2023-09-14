@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './bar.less';
 import Shallow from 'shallow';
 import { node_CanCreate } from 'internal/lib';
 

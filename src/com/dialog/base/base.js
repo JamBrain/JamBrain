@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './base.less';
 
 export default class DialogBase extends Component {
 	constructor( props ) {

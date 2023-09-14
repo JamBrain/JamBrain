@@ -1,5 +1,7 @@
-import {Component} from 'preact';
+import { Component } from 'preact';
 import cN from 'classnames';
+import './box.less';
+
 import Shallow							from 'shallow';
 
 import ContentLoading					from 'com/content-loading/loading';
@@ -7,6 +9,8 @@ import UIIcon							from 'com/ui/icon';
 import UIImage							from 'com/ui/image';
 
 import ButtonLink						from 'com/button-link/link';
+
+import { node_CountAuthors } from 'internal/lib';
 
 import $Node							from 'shrub/js/node/node';
 
@@ -38,7 +42,7 @@ export default class ContentBox extends Component {
 				.then(r => {
 					if ( r && r.node && r.node.length ) {
 						var Parent = r.node[0];
-						this.setState({'parent': Parent});
+						this.setState({ 'parent': Parent });
 					}
 				});
 		}
@@ -51,7 +55,7 @@ export default class ContentBox extends Component {
 
 	render( props, state ) {
 		props = Object.assign({}, props);
-		const {node, path, extra} = props;
+		const { node, path, extra } = props;
 
 		if ( node /* && state.authors */ ) {
 			var Class = ["content-box"];

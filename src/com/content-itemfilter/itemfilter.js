@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './itemfilter.less';
 
 import UIIcon							from 'com/ui/icon';
 import UIButton							from 'com/ui/button';

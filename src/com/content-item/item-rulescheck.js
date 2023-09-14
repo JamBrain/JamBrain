@@ -1,4 +1,6 @@
 import { Component } from 'preact';
+import './item-rulescheck.less';
+
 import { node_CanPublish, node_CountAuthors, node_IsPublished } from 'internal/lib';
 import ContentCommonBody				from 'com/content-common/common-body';
 import ButtonBase						from 'com/button-base/base';

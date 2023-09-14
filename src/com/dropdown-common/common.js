@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './common.less';
 import classNames						from 'classnames';
 
 import DropdownBase						from 'com/dropdown-base/base';

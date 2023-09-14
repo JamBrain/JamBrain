@@ -1,4 +1,8 @@
 import {Component, toChildArray} from 'preact';
+import './common-body.less';
+import './common-footer.less';
+import './common-header.less';
+
 import {Diff} from 'shallow';
 
 export default class ContentCommonBody extends Component {

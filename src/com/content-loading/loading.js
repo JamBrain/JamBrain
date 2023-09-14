@@ -1,16 +1,9 @@
-import { Component } from 'preact';
-import UISpinner from 'com/ui/spinner';
+import { UISpinner } from 'com/ui';
 
-export default class ContentLoading extends Component {
-	constructor( props ) {
-		super(props);
-	}
-
-	render( {error} ) {
-		return (
-			<div class="content">
-				{ error ? error : <UISpinner /> }
-			</div>
-		);
-	}
+export default function ContentLoading( props ) {
+	return (
+		<div class="content">
+			{ props.error ? props.error : <UISpinner /> }
+		</div>
+	);
 }

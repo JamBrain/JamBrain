@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './nav.less';
 import ContentNavButton	from './nav-button';
 
 

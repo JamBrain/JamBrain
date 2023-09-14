@@ -1,4 +1,5 @@
 import {Component} from 'preact';
+import './header-common.less';
 import titleParser						from 'internal/titleparser';
 
 import NavLink 							from 'com/nav-link/link';

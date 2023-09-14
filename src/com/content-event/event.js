@@ -1,4 +1,6 @@
 import {Component} from 'preact';
+import './event.less';
+
 import NavLink 							from 'com/nav-link/link';
 import UIIcon 							from 'com/ui/icon';
 import { getLocaleDay, getLocaleMonthDay, getLocaleDate, getLocaleTime, getLocaleTimeZone } from 'internal/time';

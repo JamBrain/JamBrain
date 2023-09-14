@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './container.less';
 import cN from 'classnames';
 
 /** @deprecated */

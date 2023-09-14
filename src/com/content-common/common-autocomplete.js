@@ -1,6 +1,8 @@
-import {Component} from 'preact';
+import { Component } from 'preact';
 import cN from 'classnames';
-import {UIButton} from 'com/ui';
+import './common-autocomplete.less';
+
+import { UIButton } from 'com/ui';
 import marked 						from 'internal/marked/marked';
 
 

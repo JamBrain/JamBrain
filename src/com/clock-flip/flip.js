@@ -1,4 +1,5 @@
-import {Component}	from 'preact';
+import { Component } from 'preact';
+import './flip.less';
 
 export default class ClockFlip extends Component {
 	constructor( props ) {

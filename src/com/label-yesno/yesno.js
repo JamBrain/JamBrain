@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './yesno.less';
 import UIIcon from 'com/ui/icon';
 
 export default class LabelYesNo extends Component {

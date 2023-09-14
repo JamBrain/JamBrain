@@ -1,3 +1,5 @@
+import './common-body-title.less';
+
 import cN from 'classnames';
 
 import {UILink, UIIcon} from 'com/ui';

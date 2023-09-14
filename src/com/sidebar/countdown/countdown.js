@@ -1,4 +1,7 @@
 import { Component }	from 'preact';
+import './countdown.less';
+import '../base/base.less';
+
 import cN				from 'classnames';
 
 import { getLocaleDay, getLocaleTime, getLocaleTimeZone } from 'internal/time';

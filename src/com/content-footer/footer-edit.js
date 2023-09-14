@@ -1,4 +1,5 @@
 import {Component} from 'preact';
+import './footer-common.less';
 
 export default class ContentFooterEdit extends Component {
 	constructor( props ) {

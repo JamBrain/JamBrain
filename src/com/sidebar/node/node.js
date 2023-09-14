@@ -1,4 +1,6 @@
 import { Component } from 'preact';
+import '../base/base.less';
+
 import ButtonLink		from 'com/button-link/link';
 
 export default class SidebarNode extends Component {

@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './header-edit.less';
 import { Diff } from 'shallow';
 
 export default class ContentHeaderEdit extends Component {

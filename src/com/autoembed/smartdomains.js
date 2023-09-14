@@ -1,5 +1,5 @@
 
-export default SmartDomains = [
+export const SmartDomains = [
     {
         "domain": "youtube.com",
         "icon_name": "youtube",
@@ -33,3 +33,4 @@ export default SmartDomains = [
     }
 ];
 
+export default SmartDomains;

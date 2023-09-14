@@ -1,4 +1,5 @@
 import {Component}					from 'preact';
+import './base.less';
 
 /** @deprecated use \{UIButton} from "com/ui" */
 export default class ButtonBase extends Component {

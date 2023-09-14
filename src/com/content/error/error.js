@@ -1,4 +1,5 @@
-import {CommonSection} from "../common";
+import { CommonSection } from "../common";
+import './error.less';
 
 /**
  * @component

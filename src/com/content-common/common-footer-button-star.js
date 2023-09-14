@@ -1,5 +1,7 @@
-import {Component} from 'preact';
-import UIIcon 							from 'com/ui/icon';
+import { Component } from 'preact';
+import './common-footer-button.less';
+
+import { UIIcon } from 'com/ui';
 
 import $NodeStar						from 'shrub/js/node/node_star';
 

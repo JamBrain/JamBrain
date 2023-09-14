@@ -1,3 +1,5 @@
+import './notifications.less';
+
 import cN from 'classnames';
 
 import ButtonBase						from '../button-base/base';

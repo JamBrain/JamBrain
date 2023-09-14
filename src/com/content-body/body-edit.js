@@ -1,5 +1,6 @@
-import {Component} 					from 'preact';
-import InputTextArea					from 'com/input-textarea/input-textarea';
+import { Component } from 'preact';
+import InputTextArea from 'com/input-textarea/input-textarea';
+import './body-edit.less';
 
 export default class ContentBodyEdit extends Component {
 	constructor( props ) {

@@ -1,5 +1,6 @@
 import {Component} from 'preact';
 import UIIcon from 'com/ui/icon';
+import './youtube.less';
 
 export default class YoutubeEmbed extends Component {
 	constructor( props ) {
@@ -32,7 +33,7 @@ export default class YoutubeEmbed extends Component {
 			return (
 				<div class="embed-video -youtube">
 					<div class="-video">
-						<iframe src={'https://www.youtube.com/embed/' + video_id + '?' + args.join('&')} frameborder="0" allowfullscreen allow="autoplay; fullscreen"></iframe>
+						<iframe src={'https://www.youtube.com/embed/' + video_id + '?' + args.join('&')} frameBorder="0" allowFullScreen allow="autoplay; fullscreen"></iframe>
 					</div>
 				</div>
 			);

@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './palette.less';
 
 export default class ContentPalette extends Component {
 	constructor( props ) {

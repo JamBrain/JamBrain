@@ -1,4 +1,5 @@
 import {Component} from 'preact';
+import './footer-common.less';
 
 import ContentFooterButtonLove			from 'com/content-footer/footer-button-love';
 

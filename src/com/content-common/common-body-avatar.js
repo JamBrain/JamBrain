@@ -1,5 +1,6 @@
-import {Component} from 'preact';
+import { Component } from 'preact';
 import cN from 'classnames';
+import './common-body-avatar.less';
 
 import ButtonLink						from 'com/button-link/link';
 import UIImage							from 'com/ui/image';

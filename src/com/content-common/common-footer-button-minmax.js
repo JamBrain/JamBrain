@@ -1,4 +1,6 @@
 import {Component} from 'preact';
+import './common-footer-button.less';
+
 import UIIcon from 'com/ui/icon';
 
 export default class ContentCommonFooterButtonMinMax extends Component {

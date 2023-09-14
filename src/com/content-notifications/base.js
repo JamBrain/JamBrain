@@ -1,4 +1,5 @@
 import {Component}	from 'preact';
+import './notifications.less';
 
 import Notification, {
 	isNotificationComment,

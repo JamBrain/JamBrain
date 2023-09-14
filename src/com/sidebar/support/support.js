@@ -1,3 +1,5 @@
+import '../base/base.less';
+
 import UIIcon 			from 'com/ui/icon';
 import NavLink 			from 'com/nav-link/link';
 

@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './headliner.less';
 
 import ContentHeadliner from './headliner';
 import $Stats from 'shrub/js/stats/stats';

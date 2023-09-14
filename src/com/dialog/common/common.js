@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './common.less';
 
 import DialogBase						from 'com/dialog/base/base';
 import ButtonBase						from 'com/button-base/base';

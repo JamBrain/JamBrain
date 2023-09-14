@@ -1,3 +1,5 @@
+import './bar-notifications.less';
+
 import ButtonLink						from 'com/button-link/link';
 
 import NotificationsBase				from 'com/content-notifications/base';

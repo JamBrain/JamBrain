@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './text.less';
 import cN from 'classnames';
 import {Diff}	 				from 'shallow';
 

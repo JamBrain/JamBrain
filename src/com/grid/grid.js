@@ -1,4 +1,5 @@
 import { Component, toChildArray } from 'preact';
+import './grid.less';
 import cN							from 'classnames';
 
 import GridCol from 'com/grid/col/col';

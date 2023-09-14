@@ -84,7 +84,12 @@ const esbuildOptions = {
 				});
 			}
 		},
-		lessLoader()
+		lessLoader({
+			'paths': [
+				'src',
+				'src/public-ludumdare.com'
+			],
+		})
 	]
 };
 

@@ -1,3 +1,6 @@
+import './upcoming.less';
+import '../base/base.less';
+
 import UIIcon			from 'com/ui/icon';
 import ButtonLink		from 'com/button-link/link';
 

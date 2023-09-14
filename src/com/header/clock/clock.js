@@ -1,4 +1,5 @@
 import { Component }					from 'preact';
+import '../header.less';
 import ClockFlip 						from 'com/clock-flip/flip';
 
 

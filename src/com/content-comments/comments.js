@@ -1,6 +1,9 @@
-import {Component} from 'preact';
+import { Component } from 'preact';
 import cN from 'classnames';
-import {node_IsAuthor} from 'internal/lib';
+
+import './comments.less';
+
+import { node_IsAuthor } from 'internal/lib';
 
 import UISpinner						from 'com/ui/spinner';
 

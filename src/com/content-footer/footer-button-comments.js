@@ -1,4 +1,6 @@
 import {Component} from 'preact';
+import './footer-button.less';
+
 import UIIcon 							from 'com/ui/icon';
 import NavLink 							from 'com/nav-link/link';
 

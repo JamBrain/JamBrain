@@ -1,4 +1,5 @@
 import { Component } 					from 'preact';
+import './bar-user.less';
 
 import UIIcon							from 'com/ui/icon/icon';
 import UIImage							from 'com/ui/image/image';

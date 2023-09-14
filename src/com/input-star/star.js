@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './star.less';
 import cN from 'classnames';
 
 import UIIcon							from 'com/ui/icon';

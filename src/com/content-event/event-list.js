@@ -1,4 +1,6 @@
 import {Component} from 'preact';
+import './event-list.less';
+
 import Sanitize							from 'internal/sanitize';
 
 import UIIcon 							from 'com/ui/icon';

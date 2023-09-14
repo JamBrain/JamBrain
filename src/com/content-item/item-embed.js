@@ -1,4 +1,6 @@
 import { Component } from 'preact';
+import './item-embed.less';
+
 import ContentCommonBody	from 'com/content-common/common-body';
 import UIIcon				from 'com/ui/icon/icon';
 import UIButton				from 'com/ui/button/button';

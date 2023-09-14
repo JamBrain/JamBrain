@@ -1,5 +1,5 @@
 import cN from 'classnames';
-
+import './basic.less';
 
 /**
  * Basic content header type

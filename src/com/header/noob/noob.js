@@ -1,4 +1,7 @@
 import { Component } from 'preact';
+import './noob.less';
+import '../header.less';
+
 import {UIIcon, UILink, UIButton} from 'com/ui';
 import {BasicAside, Header, Section, Footer} from "com/content/basic";
 

@@ -1,4 +1,6 @@
 import { Component } from 'preact';
+import './item-teambuilding.less';
+
 import { node_IsAuthor } from 'internal/lib';
 
 import ContentCommonBody				from 'com/content-common/common-body';

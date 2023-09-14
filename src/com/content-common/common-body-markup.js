@@ -1,5 +1,7 @@
 import {Component, toChildArray} from 'preact';
 import cN from 'classnames';
+import './common-body-markup.less';
+
 import {Diff} 					from 'shallow';
 
 import InputTextArea 					from 'com/input-textarea/input-textarea';

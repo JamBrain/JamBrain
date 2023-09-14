@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './notifications.less';
 
 import { getRoughAge } from 'internal/time';
 import NavLink 							from 'com/nav-link/link';

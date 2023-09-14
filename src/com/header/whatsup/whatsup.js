@@ -1,4 +1,7 @@
 import { Component } from 'preact';
+import './whatsup.less';
+import '../header.less';
+
 import UIIcon 						from 'com/ui/icon/icon';
 import UILink 						from 'com/ui/link/link';
 

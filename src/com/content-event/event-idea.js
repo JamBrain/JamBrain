@@ -1,4 +1,6 @@
 import {Component} from 'preact';
+import './event-idea.less';
+
 import cN from 'classnames';
 
 import {UIIcon, UIButton} from 'com/ui';

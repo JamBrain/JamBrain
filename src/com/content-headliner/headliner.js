@@ -1,4 +1,5 @@
 import { Component } from 'preact';
+import './headliner.less';
 import cN from 'classnames';
 
 import {getLocaleDate, getRoughAge} from 'internal/time';

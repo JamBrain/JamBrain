@@ -1,4 +1,6 @@
 import {Component} from 'preact';
+import './event-slaughter.less';
+
 import cN from 'classnames';
 
 import UISpinner						from 'com/ui/spinner';

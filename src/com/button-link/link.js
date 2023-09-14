@@ -1,4 +1,5 @@
 import NavLink 			from 'com/nav-link/link';
+import './link.less';
 
 /** @deprecated use \{UIButton} (or \{UIButtonLink}) from "com/ui" */
 export default class ButtonLink extends NavLink {

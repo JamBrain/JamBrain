@@ -1,3 +1,5 @@
+import './common-nav-button.less';
+
 import {UIButton} from 'com/ui';
 
 export default function BodyNavButton( props ) {

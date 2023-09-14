@@ -1,5 +1,8 @@
 import { Component } from 'preact';
-import UIIcon 							from 'com/ui/icon';
+import './footer-button.less';
+import './footer-button-comments.less';
+
+import { UIIcon } from 'com/ui';
 
 import $NodeLove						from 'shrub/js/node/node_love';
 

@@ -1,4 +1,6 @@
 import {Component} from 'preact';
+import './common-nav-button-follow.less';
+
 import cN from 'classnames';
 
 import {UIIcon} from 'com/ui';
