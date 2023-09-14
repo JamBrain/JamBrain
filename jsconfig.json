@@ -14,7 +14,7 @@
 		"baseUrl": "./src/",
 		"paths": {
 			"classnames": ["external/classnames/index"],
-			"shallow": ["custom/shallow/shallow"]
+			"shallow": ["internal/shallow/shallow"]
 		}
 	},
 	"include": ["src/**/*"],

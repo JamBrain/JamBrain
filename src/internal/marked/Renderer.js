@@ -3,7 +3,7 @@ import { createElement } from 'preact';
 import Util					from './Util';
 
 import { extractFromURL } from 'internal/autoembed';
-import { shortnameToURL } from 'custom/emoji/emoji';
+import { shortnameToURL } from 'external/emoji/emoji';
 
 //COMPONENT IMPORTS
 import LinkMail				from 'com/link-mail/mail';		// TODO: Obsolete me

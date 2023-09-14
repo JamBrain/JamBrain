@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import './common-autocomplete.less';
 
 import { UIButton } from 'com/ui';
-import { emojiList } from 'custom/emoji/emoji';
+import { emojiList } from 'external/emoji/emoji';
 import marked from 'internal/marked/marked';
 
 
