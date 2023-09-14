@@ -6,7 +6,7 @@ if ( !defined('GIT_VERSION') ) {
 }
 
 if ( !isset($_GET['ignore']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE') !== false ) {
-	include __DIR__."/../embed/obsolete-browser.php";
+	include __DIR__."/obsolete-browser.php";
 	die();
 }
 
@@ -117,7 +117,7 @@ $inline_js_nonce = bin2hex(random_bytes(8));
 		var CLIENT_TIMESTAMP = new Date().toISOString();
 		var SECURE_LOGIN_ONLY = <?= defined('SECURE_LOGIN_ONLY') ? ((constant('SECURE_LOGIN_ONLY') && !isset($_GET['insecure']))?'true':'false') : 'false' ?>;
 		<?php /* Load SVG */ ?>
-		<?php include __DIR__."/../embed/preload-svg.js.php"; ?>
+		<?php include __DIR__."/preload-svg.js.php"; ?>
 	</script>
 	<script src="<?=JS_FILE?>"></script>
 	<noscript>This website requires JavaScript</noscript>
