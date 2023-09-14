@@ -1,7 +1,5 @@
 import { Component } from 'preact';
-import cN from 'classnames';
-
-import Tick							from './bar-axis-tick';
+import Tick from './bar-axis-tick';
 
 export default class YAxis extends Component {
 	getMinorMajorTickSteps( axisMinPos, axisMaxPos, valueStep ) {

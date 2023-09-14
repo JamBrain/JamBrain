@@ -1,7 +1,6 @@
 import { Component } from 'preact';
-import cN from 'classnames';
 
-import { node_IsAuthor }								from 'internal/lib';
+import { node_IsAuthor } from 'internal/lib';
 
 import NavLink										from 'com/nav-link/link';
 

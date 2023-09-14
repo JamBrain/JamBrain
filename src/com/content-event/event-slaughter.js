@@ -1,8 +1,6 @@
 import {Component} from 'preact';
 import './event-slaughter.less';
 
-import cN from 'classnames';
-
 import UISpinner						from 'com/ui/spinner';
 import NavLink 							from 'com/nav-link/link';
 import UIIcon 							from 'com/ui/icon';

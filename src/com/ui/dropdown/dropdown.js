@@ -1,6 +1,5 @@
 import { Component, cloneElement, toChildArray } from 'preact';
 import './dropdown.less';
-import cN from 'classnames';
 
 import UIButton from '../button';
 import UIIcon from '../icon';

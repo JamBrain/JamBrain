@@ -1,7 +1,6 @@
 import { Component } from 'preact';
 import './tv.less';
-import cN from 'classnames';
-import UIIcon 							from 'com/ui/icon';
+import { UIIcon } from 'com/ui';
 
 import DialogBase 						from 'com/dialog/base/base';
 

@@ -1,5 +1,4 @@
 import { Component } from 'preact';
-import cN from 'classnames';
 
 import './comments.less';
 

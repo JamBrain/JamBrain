@@ -1,5 +1,4 @@
 import {Component} from 'preact';
-import cN from 'classnames';
 
 import { getRoughAge, getLocaleFullTimeStamp, getLocaleDate } from 'internal/time';
 

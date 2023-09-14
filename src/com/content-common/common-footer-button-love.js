@@ -2,8 +2,6 @@ import {Component} from 'preact';
 import './common-footer-button.less';
 import './common-footer-button-love.less';
 
-import cN from 'classnames';
-
 import UIIcon 							from 'com/ui/icon';
 import $NodeLove						from 'shrub/js/node/node_love';
 

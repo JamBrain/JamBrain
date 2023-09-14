@@ -1,6 +1,5 @@
 import { Component } from 'preact';
 import './timeline-rategames.less';
-import cN from 'classnames';
 
 import {UIIcon, UIButton} from 'com/ui';
 import FooterButtonMinMax 				from 'com/content-common/common-footer-button-minmax';

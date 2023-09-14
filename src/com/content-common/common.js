@@ -1,8 +1,6 @@
 import {Component} from 'preact';
 import './common.less';
 
-import cN from 'classnames';
-
 import ContentLoading					from 'com/content-loading/loading';
 
 import FooterButtonMinMax				from 'com/content-common/common-footer-button-minmax';

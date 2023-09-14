@@ -1,8 +1,6 @@
 import {Component} from 'preact';
 import './games.less';
 
-import cN from 'classnames';
-
 import ContentLoading					from 'com/content-loading/loading';
 import ContentError						from 'com/content/error';
 

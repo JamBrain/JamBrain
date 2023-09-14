@@ -1,6 +1,5 @@
 import { Component } from 'preact';
 import './image.less';
-import cN from 'classnames';
 
 export default class UIImage extends Component {
 	constructor( props ) {

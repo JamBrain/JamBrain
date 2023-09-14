@@ -1,6 +1,3 @@
-import { Component } from 'preact';
-import cN from 'classnames';
-
 const BAR_WIDTH_GAP_RATIO = 0.8;
 
 // NOTE: This emits SVG, not HTML

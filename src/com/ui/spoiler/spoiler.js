@@ -1,6 +1,5 @@
 import { Component } from 'preact';
 import './spoiler.less';
-import cN from 'classnames';
 
 export default class UISpoiler extends Component {
 	constructor( props ) {

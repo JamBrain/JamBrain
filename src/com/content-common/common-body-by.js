@@ -1,5 +1,4 @@
 import {Component, toChildArray} from 'preact';
-import cN from 'classnames';
 import './common-body-by.less';
 
 import {Diff}	 				from 'shallow';

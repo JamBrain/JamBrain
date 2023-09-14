@@ -1,5 +1,4 @@
 import { Component } from 'preact';
-import cN from 'classnames';
 import './common-autocomplete.less';
 
 import { UIButton } from 'com/ui';

@@ -1,5 +1,4 @@
 import { Component, toChildArray } from 'preact';
-import cN from 'classnames';
 import './comments-markup.less';
 
 import { Diff } from 'shallow';

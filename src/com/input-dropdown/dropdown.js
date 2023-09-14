@@ -1,6 +1,5 @@
 import { Component } from 'preact';
 import './dropdown.less';
-import cN from 'classnames';
 
 import NavLink							from 'com/nav-link/link';
 import UIIcon							from 'com/ui/icon';

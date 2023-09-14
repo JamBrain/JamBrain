@@ -1,7 +1,5 @@
 import './common-body-title.less';
 
-import cN from 'classnames';
-
 import {UILink, UIIcon} from 'com/ui';
 import InputText from 'com/input-text/text';
 import BodyLabel from "./body/body-label";

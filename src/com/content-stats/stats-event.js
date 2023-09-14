@@ -1,6 +1,5 @@
 import { Component } from 'preact';
 import './stats.less';
-import cN from 'classnames';
 
 import ContentLoading					from 'com/content-loading/loading';
 

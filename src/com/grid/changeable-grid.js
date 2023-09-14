@@ -1,5 +1,4 @@
 import { Component } from 'preact';
-import cN from 'classnames';
 
 import Grid from 'com/grid/grid';
 import GridSelector from 'com/grid/grid-selector';

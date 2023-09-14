@@ -1,6 +1,5 @@
 import {Component} from 'preact';
 import './user.less';
-import cN from 'classnames';
 
 import ContentError from 'com/content/error';
 

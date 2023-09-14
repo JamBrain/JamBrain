@@ -1,6 +1,5 @@
 import { Component } from 'preact';
 import './grid-selector.less';
-import cN from 'classnames';
 
 import Dropdown							from 'com/input-dropdown/dropdown';
 import ButtonBase						from 'com/button-base/base';

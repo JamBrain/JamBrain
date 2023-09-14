@@ -1,6 +1,5 @@
 import { Component } from 'preact';
 import './text.less';
-import cN from 'classnames';
 
 export default class UIText extends Component {
 	constructor( props ) {

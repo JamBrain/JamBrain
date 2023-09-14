@@ -1,5 +1,4 @@
 import { Component } from 'preact';
-import cN from 'classnames';
 
 import UIButton from '../button';
 import UIDropdown from './dropdown';

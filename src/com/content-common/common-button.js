@@ -1,8 +1,6 @@
 import {Component} from 'preact';
 import './common-button.less';
 
-import cN from 'classnames';
-
 import ButtonBase						from 'com/button-base/base';
 import ButtonLink						from 'com/button-link/link';
 
