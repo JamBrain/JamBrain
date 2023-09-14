@@ -1,6 +1,9 @@
-import { extractFromURL } from 'internal/autoembed';
+import { createElement } from 'preact';
 
 import Util					from './Util';
+
+import { extractFromURL } from 'internal/autoembed';
+import { shortnameToURL } from 'custom/emoji/emoji';
 
 //COMPONENT IMPORTS
 import LinkMail				from 'com/link-mail/mail';		// TODO: Obsolete me
@@ -45,15 +48,11 @@ export default class Renderer {
 	}
 
 	spoiler( secret ) {
-		return (
-			<UISpoiler>{secret}</UISpoiler>
-		);
+		return <UISpoiler>{secret}</UISpoiler>;
 	}
 
 	blockquote( quote ) {
-		return (
-			<blockquote>{quote}</blockquote>
-		);
+		return <blockquote>{quote}</blockquote>;
 	}
 
 	html( html ) {
@@ -62,34 +61,27 @@ export default class Renderer {
 
 	heading( text, level, raw ) {
 		const HeaderTag = `h${level}`;
-		return (
-			<HeaderTag id={this.options.headerPrefix + raw.toLowerCase().replace(/[^\w]+/g, '-').replace(/-$/, "")}>{text}</HeaderTag>
-		);
+		return createElement(HeaderTag, {
+			'id': this.options.headerPrefix + raw.toLowerCase().replace(/[^\w]+/g, '-').replace(/-$/, ""),
+			'children': text
+		});
 	}
 
-	hr( ) {
-		return (<hr/>);
+	hr() {
+		return <hr/>;
 	}
 
 	list( body, ordered ) {
-		var Type = ordered
-			? 'ol'
-			: 'ul';
-		return (
-			<Type>{'\n'}{body}</Type>
-		);
+		const Type = ordered ? 'ol' : 'ul';
+		return <Type>{'\n'}{body}</Type>;
 	}
 
 	listitem( text ) {
-		return (
-			<li>{text}</li>
-		);
+		return <li>{text}</li>;
 	}
 
 	paragraph( text ) {
-		return (
-			<p>{text}</p>
-		);
+		return <p>{text}</p>;
 	}
 
 	table( header, body ) {
@@ -102,47 +94,31 @@ export default class Renderer {
 	}
 
 	tablerow( content ) {
-		return (
-			<tr>{content}</tr>
-		);
+		return <tr>{content}</tr>;
 	}
 
 	tablecell( content, flags ) {
-		var Type = flags.header
-			? 'th'
-			: 'td';
-		return (
-			<Type style={"text-align:" + flags.align
-				? flags.align
-				: ''}>{content}</Type>
-		);
+		const Type = flags.header ? 'th' : 'td';
+		return <Type style={flags?.align ? `text-align: ${flags.align}` : undefined}>{content}</Type>;
 	}
 
 	// span level renderer
 	strong( text ) {
-		return (
-			<strong>{text}</strong>
-		);
+		return <strong>{text}</strong>;
 	}
 
 	em( text ) {
-		return (
-			<em>{text}</em>
-		);
+		return <em>{text}</em>;
 	}
 
 	emoji( text ) {
 		text = Array.isArray(text) ? text.join('') : text;
-		let shortname = window.emoji.shortnameToURL(text);
+		let shortname = shortnameToURL(text);
 		if ( shortname ) {
-			return <img class="emoji" alt={text} title={':'+text+':'} src={shortname} />;
+			return <img class="emoji" alt={text} title={`:${text}:`} src={shortname} />;
 		}
-		return ':'+text+':';
+		return `:${text}:`;
 	}
-
-	//email(text) {
-	//  return 'VEOO'+text+'OOEV';
-	//};
 
 	atname( text ) {
 		return (
@@ -151,25 +127,16 @@ export default class Renderer {
 	}
 
 	codespan( text ) {
-		return (
-			<code>{Util.htmldecode(text)}</code>
-		);
+		return <code>{Util.htmldecode(text)}</code>;
 		// text.replace('\n','') // ??
 	}
 
-	br( ) {
-		//    if(this.options.xhtml) {
-		return (<br/>);
-		// } else {
-		//   return (<br>);
-		// }
-
+	br() {
+		return <br/>;
 	}
 
 	del( text ) {
-		return (
-			<del>{text}</del>
-		);
+		return <del>{text}</del>;
 	}
 
 	parseLink( href ) {
@@ -192,9 +159,7 @@ export default class Renderer {
 		let url = extractFromURL(href);
 
 		if ( url.domain ) {
-
 			if ( SmartDomains ) {
-
 				for ( var i=0; i < SmartDomains.length; i++ ) {
 					let smartdomain = SmartDomains[i];
 
@@ -217,7 +182,7 @@ export default class Renderer {
 			}
 
 			// "simple link", no special behaviour
-			return {"type": "simple"};
+			return { "type": "simple" };
 		}
 
 		// We tried to parse something that dosen't apear to be a link
@@ -290,7 +255,7 @@ export default class Renderer {
 	}
 
 	mail( leftSide, rightSide, text ) {
-		let href = '{0}@{1}'.replace('{1}', rightSide, 1).replace('{0}', leftSide, 1);
+		let href = '{0}@{1}'.replace('{1}', rightSide).replace('{0}', leftSide);
 		if ( this.options.sanitize ) {
 			try {
 				var prot = decodeURIComponent(unescape(href)).replace(/[^\w:]/g, '').toLowerCase();

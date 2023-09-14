@@ -381,10 +381,6 @@ export function nodeItem_GetTags( node ) {
 }
 
 
-//window.nodeUser_IsTeamLeader = function( user, project ) {
-//
-//}
-
 /**
  *
  * @param {Node[]} nodes

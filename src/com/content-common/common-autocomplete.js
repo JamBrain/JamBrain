@@ -3,7 +3,8 @@ import cN from 'classnames';
 import './common-autocomplete.less';
 
 import { UIButton } from 'com/ui';
-import marked 						from 'internal/marked/marked';
+import { emojiList } from 'custom/emoji/emoji';
+import marked from 'internal/marked/marked';
 
 
 class Autocompletions extends Component {
@@ -212,7 +213,6 @@ export class AutocompleteEmojis extends Autocompletions {
 	}
 
 	getOptions( hint ) {
-		const {emojiList} = window.emoji;
 		const options = [];
 		const matcher = new RegExp(hint ? hint.trim().slice(1).replace(':', '').replace('-', '_') : '', 'i');
 		for ( let emoji in emojiList ) {

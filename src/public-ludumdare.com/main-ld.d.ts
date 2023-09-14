@@ -1,14 +1,14 @@
-declare var DEBUG: boolean;
-declare var LIVE: boolean;
-declare var VERSION_STRING: string;
+declare const DEBUG: boolean;
+declare const LIVE: boolean;
+declare const VERSION_STRING: string;
 
-declare var STATIC_DOMAIN: string;
-declare var STATIC_ENDPONT: string;
-declare var SHORTENER_DOMAIN: string;
-declare var API_DOMAIN: string;
-declare var API_ENDPOINT: string;
+declare const STATIC_DOMAIN: string;
+declare const STATIC_ENDPOINT: string;
+declare const SHORTENER_DOMAIN: string;
+declare const API_DOMAIN: string;
+declare const API_ENDPOINT: string;
 
-declare var SERVER_TIMESTAMP: string;
-declare var CLIENT_TIMESTAMP: string;
+declare const SERVER_TIMESTAMP: string;
+declare const CLIENT_TIMESTAMP: string;
 
-declare var SECURE_LOGIN_ONLY: boolean;
+declare const SECURE_LOGIN_ONLY: boolean;
