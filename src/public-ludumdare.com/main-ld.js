@@ -65,8 +65,51 @@ options.vnode = function _CustomVNode(vnode) {
 class Main extends Component {
 	constructor( props ) {
 		super(props);
-		DEBUG && console.log("Running in DEBUG mode");
 		DEBUG && console.log("[constructor]");
+
+		if ( DEBUG ) {
+			const urlParams = new URLSearchParams(window.location.search);
+			const debugParam = urlParams.get('debug');
+			const debugPort = debugParam ? parseInt(debugParam) : 0;
+			const hasValidPort = LIVE && debugPort > 0;
+
+			console.log(hasValidPort ? "Running in LIVE DEBUG mode" : "Running in DEBUG mode");
+
+			if ( hasValidPort ) {
+				const buildServerURL = `http://ldjam.work:${debugPort}/esbuild`;
+
+				let liveBuild = new EventSource(buildServerURL);
+
+				liveBuild.addEventListener('open', (e) => {
+					console.log(`Connected to local build.js server: ${buildServerURL}`, e);
+				});
+				liveBuild.addEventListener('error', (e) => {
+					console.log('Unable to connect to local build.js server.', e);
+				});
+				liveBuild.addEventListener('change', (e) => {
+					const { added, removed, updated } = JSON.parse(e.data);
+
+					// CSS reloading (inline)
+					if (!added.length && !removed.length && updated.length === 1) {
+						for (const link of document.getElementsByTagName('link')) {
+							const url = new URL(link.href);
+
+							if (url.host === location.host && url.pathname === updated[0]) {
+								const next = link.cloneNode();
+								next.href = updated[0] + '?' + Math.random().toString(36).slice(2);
+								next.onload = () => link.remove();
+								link.parentNode.insertBefore(next, link.nextSibling);
+								return;
+							}
+						}
+					}
+
+					// JS reloading (full reload)
+					location.reload();
+				});
+			}
+		}
+
 
 		let clean = this.cleanLocation(window.location);
 		if ( window.location.origin+clean.path !== window.location.href ) {

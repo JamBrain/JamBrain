@@ -98,12 +98,12 @@ OUT_FILES			:=	$(OUT_FILES_SVG) $(OUT_FILES_CSS) $(OUT_FILES_JS)
 DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES_FILES) $(OUT_LESS_FILES))
 OUT_FOLDERS			:=	$(sort $(dir $(OUT_FILES) $(BUILD_FOLDER)/))
 
-TARGET_FILES_SVG	:=	$(TARGET_FOLDER)/all.min.svg
-TARGET_FILES_CSS	:=	$(TARGET_FOLDER)/all.min.css
-TARGET_FILES_JS		:=	$(TARGET_FOLDER)/all.min.js
+TARGET_FILES_SVG	:=	$(TARGET_FOLDER)/app.min.svg
+TARGET_FILES_CSS	:=	$(TARGET_FOLDER)/app.min.css
+TARGET_FILES_JS		:=	$(TARGET_FOLDER)/app.min.js
 ifdef DEBUG
-TARGET_FILES_CSS	+=	$(TARGET_FOLDER)/all.debug.css
-TARGET_FILES_JS		+=	$(TARGET_FOLDER)/all.debug.js
+TARGET_FILES_CSS	+=	$(TARGET_FOLDER)/app.debug.css
+TARGET_FILES_JS		+=	$(TARGET_FOLDER)/app.debug.js
 endif # DEBUG
 TARGET_FILES		:=	$(TARGET_FILES_SVG) $(TARGET_FILES_CSS)
 #$(TARGET_FILES_JS)
@@ -178,10 +178,10 @@ default: target
 
 report: $(TARGET_FILES)
 	@echo \
-		"[$(COL_GREEN)JS_DEBUG$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.debug.js 2>/dev/null)` MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.debug.js 2>/dev/null)`*	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.debug.js 2>/dev/null)`\n" \
-		"[$(COL_GREEN)JS_RELEASE$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`   MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.js 2>/dev/null)`    ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.release.js 2>/dev/null)`\n" \
-		"[$(COL_GREEN)CSS$(COL_OFF)]     GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`  MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.css 2>/dev/null)`	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.css 2>/dev/null)`\n" \
-		"[$(COL_GREEN)SVG$(COL_OFF)]     GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`  MINIFY: `$(call SIZE,$(TARGET_FOLDER)/all.min.svg 2>/dev/null)`	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/all.svg 2>/dev/null)`\n" \
+		"[$(COL_GREEN)JS_DEBUG$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/app.debug.js 2>/dev/null)` MINIFY: `$(call SIZE,$(TARGET_FOLDER)/app.debug.js 2>/dev/null)`*	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/app.debug.js 2>/dev/null)`\n" \
+		"[$(COL_GREEN)JS_RELEASE$(COL_OFF)]  GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/app.min.js 2>/dev/null)`   MINIFY: `$(call SIZE,$(TARGET_FOLDER)/app.min.js 2>/dev/null)`    ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/app.release.js 2>/dev/null)`\n" \
+		"[$(COL_GREEN)CSS$(COL_OFF)]     GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/app.min.css 2>/dev/null)`  MINIFY: `$(call SIZE,$(TARGET_FOLDER)/app.min.css 2>/dev/null)`	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/app.css 2>/dev/null)`\n" \
+		"[$(COL_GREEN)SVG$(COL_OFF)]     GZIP: `$(call GZIP_SIZE,$(TARGET_FOLDER)/app.min.svg 2>/dev/null)`  MINIFY: `$(call SIZE,$(TARGET_FOLDER)/app.min.svg 2>/dev/null)`	ORIGINAL: `$(call SIZE,$(BUILD_FOLDER)/app.svg 2>/dev/null)`\n" \
 		| column -t
 
 #report: $(TARGET_FILES)
@@ -319,13 +319,13 @@ $(OUT)/%.min.svg:$(SRC)/%.svg
 clean:
 	rm -fr $(OUT) $(TARGET_FILES)
 clean-svg:
-	rm -fr $(OUT_FILES_SVG) $(OUT_FILES_SVG:.svg=.svg.out) $(TARGET_FILES_SVG) $(BUILD_FOLDER)/svg.svg $(BUILD_FOLDER)/all.svg
+	rm -fr $(OUT_FILES_SVG) $(OUT_FILES_SVG:.svg=.svg.out) $(TARGET_FILES_SVG) $(BUILD_FOLDER)/svg.svg $(BUILD_FOLDER)/app.svg
 	-$(call RM_EMPTY_DIRS,.output)
 clean-css:
-	rm -fr $(OUT_FILES_CSS) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.css.dep) $(TARGET_FILES_CSS) $(BUILD_FOLDER)/less.css $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.lint $(BUILD_FOLDER)/all.css
+	rm -fr $(OUT_FILES_CSS) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.css.dep) $(TARGET_FILES_CSS) $(BUILD_FOLDER)/less.css $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.lint $(BUILD_FOLDER)/app.css
 	-$(call RM_EMPTY_DIRS,.output)
 clean-js:
-	rm -fr $(OUT_FILES_JS) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILES_JS) $(BUILD_FOLDER)/raw.js $(BUILD_FOLDER)/compiled.js $(BUILD_FOLDER)/js.lint $(BUILD_FOLDER)/all.js
+	rm -fr $(OUT_FILES_JS) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep) $(TARGET_FILES_JS) $(BUILD_FOLDER)/raw.js $(BUILD_FOLDER)/compiled.js $(BUILD_FOLDER)/js.lint $(BUILD_FOLDER)/app.js
 	-$(call RM_EMPTY_DIRS,.output)
 clean-some:
 	rm -fr $(OUT_FILES) $(OUT_FILES_SVG:.svg=.svg.out) $(OUT_LESS_FILES:.less.css=.less) $(OUT_LESS_FILES:.less.css=.less.css.dep) $(OUT_ES_FILES:.es.js=.js) $(OUT_ES_FILES:.es.js=.js.dep)
@@ -344,19 +344,19 @@ $(BUILD_FOLDER)/compiled.js: $(OUT_MAIN_JS) $(OUT_ES_FILES) $(OUT_TS_FILES)
 	@$(call ROLLUP,$<,$@.tmp)
 	@rm -f $@
 	@mv $@.tmp $@
-$(BUILD_FOLDER)/all.js: $(BUILD_FOLDER)/raw.js $(BUILD_FOLDER)/compiled.js
+$(BUILD_FOLDER)/app.js: $(BUILD_FOLDER)/raw.js $(BUILD_FOLDER)/compiled.js
 	@echo "[$(COL_PURPLE)MERGE$(COL_OFF)] $@"
 	@cat $^ > $@
-$(BUILD_FOLDER)/all.release.js: $(BUILD_FOLDER)/all.js
+$(BUILD_FOLDER)/app.release.js: $(BUILD_FOLDER)/app.js
 	@echo "[$(COL_PURPLE)JS Preprocess Tool$(COL_OFF)] $@"
 	@$(call JS_PP_RELEASE,$<,$@)
-$(TARGET_FOLDER)/all.min.js: $(BUILD_FOLDER)/all.release.js
+$(TARGET_FOLDER)/app.min.js: $(BUILD_FOLDER)/app.release.js
 	@echo "[$(COL_PURPLE)JS MIN$(COL_OFF)] $@"
 	@$(call MINIFY_JS,$<,$@)
-$(BUILD_FOLDER)/all.debug.js: $(BUILD_FOLDER)/all.js
+$(BUILD_FOLDER)/app.debug.js: $(BUILD_FOLDER)/app.js
 	@echo "[$(COL_PURPLE)JS Preprocess Tool$(COL_OFF)] $@"
 	@$(call JS_PP_DEBUG,$<,$@)
-$(TARGET_FOLDER)/all.debug.js: $(BUILD_FOLDER)/all.debug.js
+$(TARGET_FOLDER)/app.debug.js: $(BUILD_FOLDER)/app.debug.js
 	@echo "[$(COL_PURPLE)Copy JS$(COL_OFF)] $@"
 	@cp -f --remove-destination $< $@
 
@@ -374,15 +374,15 @@ $(BUILD_FOLDER)/css.css: $(OUT_CSS_FILES)
 	cat $^ > $@
 $(BUILD_FOLDER)/less.css: $(OUT_LESS_FILES)
 	cat $^ > $@
-$(BUILD_FOLDER)/all.css: $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.css
+$(BUILD_FOLDER)/app.css: $(BUILD_FOLDER)/css.css $(BUILD_FOLDER)/less.css
 	cat $^ > $@
-$(TARGET_FOLDER)/all.min.css: $(BUILD_FOLDER)/all.css
+$(TARGET_FOLDER)/app.min.css: $(BUILD_FOLDER)/app.css
 	$(call MINIFY_CSS,$<,$@)
-$(TARGET_FOLDER)/all.debug.css: $(BUILD_FOLDER)/all.css
+$(TARGET_FOLDER)/app.debug.css: $(BUILD_FOLDER)/app.css
 	cp -f --remove-destination $< $@
 
 #ifdef DEBUG
-#	cp -f --remove-destination $< $(@D)/all.debug.css
+#	cp -f --remove-destination $< $(@D)/app.debug.css
 #endif
 
 
@@ -392,9 +392,9 @@ $(BUILD_FOLDER)/svg.svg: $(OUT_SVG_FILES)
 	rm -f $@
 	mv $@.out $@
 	# NOTE: needs to work like this, 'cause SVG_PACK outputs to stdout. Otherwise we wont stop on SVG errors
-$(BUILD_FOLDER)/all.svg: $(BUILD_FOLDER)/svg.svg
+$(BUILD_FOLDER)/app.svg: $(BUILD_FOLDER)/svg.svg
 	cat $^ > $@
-$(TARGET_FOLDER)/all.min.svg: $(BUILD_FOLDER)/all.svg
+$(TARGET_FOLDER)/app.min.svg: $(BUILD_FOLDER)/app.svg
 	$(call MINIFY_SVG,$<,$@)
 
 

@@ -14,8 +14,9 @@ if ( !isset($_GET['ignore']) && strpos($_SERVER['HTTP_USER_AGENT'],'MSIE') !== f
 
 // TODO: Figure out if this is the live server, and disable this feature if it is //
 define( 'DEBUG', isset($_GET['debug'])?1:0 );
-define( 'USE_MINIFIED', DEBUG ? '.debug' : '.min' );
-define( 'VERSION_STRING', defined('GIT_VERSION') ? 'v='.GIT_VERSION : '' );
+define( 'DEV', isset($_GET['dev'])?1:0 );
+define( 'BUILD_PREFIX', DEBUG ? '.debug' : (DEV ? '.dev' : '.min') );
+define( 'VERSION_STRING', defined('GIT_VERSION') ? 'v='.constant('GIT_VERSION') : '' );
 
 const STATIC_DOMAINS = [
 	'ldjam.work' => 'static.jammer.work',		// ldjam.com dev
@@ -59,9 +60,9 @@ if ( !defined('API_DOMAIN') ) {
 }
 define( 'API_ENDPOINT', '//'.API_DOMAIN );
 
-define( 'JS_FILE',   "/-/all".USE_MINIFIED.".js?".VERSION_STRING );
-define( 'CSS_FILE',  "/-/all".USE_MINIFIED.".css?".VERSION_STRING );
-define( 'SVG_FILE',  "/-/all.min.svg?".VERSION_STRING );
+define( 'JS_FILE',   "/-/app".BUILD_PREFIX.".js?".VERSION_STRING );
+define( 'CSS_FILE',  "/-/app".BUILD_PREFIX.".css?".VERSION_STRING );
+define( 'SVG_FILE',  "/-/app.min.svg?".VERSION_STRING );
 define( 'FONT_FILE', "//fonts.googleapis.com/css?family=Raleway:600,600italic,800,800italic|Roboto:300,300italic,700,700italic&display=swap" );
 define( 'FONT_DOMAIN', "//fonts.gstatic.com" );
 
@@ -114,7 +115,7 @@ $inline_js_nonce = bin2hex(random_bytes(8));
 		var API_ENDPOINT = "<?=API_ENDPOINT?>";
 		var SERVER_TIMESTAMP = "<?=gmdate('Y-m-d\TH:i:s.000\Z'/*DATE_W3C*/);?>";
 		var CLIENT_TIMESTAMP = new Date().toISOString();
-		var SECURE_LOGIN_ONLY = <?= defined('SECURE_LOGIN_ONLY') ? ((SECURE_LOGIN_ONLY && !isset($_GET['insecure']))?'true':'false') : 'false' ?>;
+		var SECURE_LOGIN_ONLY = <?= defined('SECURE_LOGIN_ONLY') ? ((constant('SECURE_LOGIN_ONLY') && !isset($_GET['insecure']))?'true':'false') : 'false' ?>;
 		<?php /* Load SVG */ ?>
 		<?php include __DIR__."/../embed/preload-svg.js.php"; ?>
 	</script>

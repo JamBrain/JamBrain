@@ -1,16 +1,23 @@
 #!/usr/bin/env bun
+// For fastest builds, install bun and invoke with `./build.js`. Otherwise, build with `node build.js`.
+//
+// We also recommend you create ~/.bunfig.toml with the following configuration:
+//
+// [install.lockfile]
+// path = ".bunfig.lockb"
+// savePath = ".bunfig.lockb"
+
 import * as esbuild from 'esbuild';
+import { lessLoader } from 'esbuild-plugin-less';
 
-//	"esbuild src/public-ludumdare.com/main-ld.js --bundle --sourcemap --loader:.js=jsx --jsx=automatic --jsx-import-source=preact --jsx-dev --define:DEBUG=true --analyze --outfile=public-ludumdare.com/-/all.debug.js --target=es2021,chrome90,firefox90,safari14.5",
-//  "esbuild src/public-ludumdare.com/main-ld.js --bundle --minify --sourcemap --loader:.js=jsx --jsx=automatic --jsx-import-source=preact --define:DEBUG=false --drop:debugger --analyze --legal-comments=external --outfile=public-ludumdare.com/-/all.min.js --target=es2021,chrome90,firefox90,safari14.5",
 
-const ACTIONS = ['debug', 'release', 'live'];
+const VALID_ACTIONS = ['debug', 'release', 'live', 'quiet'];
 let action = {};
 
 if (process.argv.length > 2) {
 	for (let idx = 2; idx < process.argv.length; idx++) {
 		let newAction = process.argv[idx].toLowerCase().trim();
-		if (ACTIONS.indexOf(newAction) != -1) {
+		if (VALID_ACTIONS.indexOf(newAction) !== -1) {
 			action[newAction] = true;
 		}
 		else {
@@ -19,22 +26,27 @@ if (process.argv.length > 2) {
 		}
 	}
 }
+if (!action.release) {
+	action.debug = true;
+}
 
-console.log("Build started with actions:", action);
 
-const nameExt = action.debug ? 'debug' : action.release ? 'min' : 'dev';
+const buildMode = action.debug ? 'debug' : action.release ? 'min' : 'dev';
+console.log(`[${new Date().toLocaleTimeString()}] build.js initialized in '${buildMode}' mode.`);// with actions:`, action);
+
+
 const esbuildOptions = {
 	'entryPoints': [
-		{'in': 'src/public-ludumdare.com/main-ld.js', 'out': `app.${nameExt}`}
+		{'in': 'src/public-ludumdare.com/main-ld.js', 'out': `app.${buildMode}`}
 	],
 	'outdir': 'public-ludumdare.com/-/',
 	'loader': { '.js': 'jsx' },
 	'jsx': 'automatic',
 	'jsxImportSource': 'preact',
-	'jsxDev': action.debug ?? undefined,
+	'jsxDev': action?.release ? undefined : true,
 
 	'bundle': true,
-	'minify': action.release ?? undefined,
+	'minify': action?.release ? true : undefined,
 	'drop': action.release ? ['debugger'] : undefined,
 	'legalComments': action.release ? 'external' : undefined,
 	'sourcemap': true,
@@ -42,6 +54,7 @@ const esbuildOptions = {
 
 	'define': {
 		'DEBUG': `${action.debug ?? false}`,
+		'LIVE': `${action.live ?? false}`
 	},
 
 	'target': [
@@ -49,17 +62,63 @@ const esbuildOptions = {
 		'chrome90',
 		'firefox90',
 		'safari14.5'
+	],
+
+	'plugins': [
+		{
+			'name': "InternalBuildLogging",
+			'setup': (build) => {
+				build.onStart(() => {
+					console.log(`[${new Date().toLocaleTimeString()}] Build started.`);
+					console.time('Build time');
+				});
+
+				build.onEnd((r) => {
+					console.timeEnd('Build time');
+					if (r.errors.length > 0) {
+						console.log(`[${new Date().toLocaleTimeString()}] Build failed with ${r.errors.length} error(s).`);
+					}
+					else {
+						console.log(`[${new Date().toLocaleTimeString()}] Build finished successfully.`);
+					}
+				});
+			}
+		},
+		lessLoader()
 	]
 };
 
 if (action.live) {
 	let context = await esbuild.context(esbuildOptions);
-	console.log("Watching for changes... (press Ctrl+C to stop)");
+
+	// Begin watching and serving
 	await context.watch();
+	let { port } = await context.serve({
+		'onRequest': async (args) => {
+			console.log(`[${new Date().toLocaleTimeString()}] New request from ${args.remoteAddress}`);
+		}
+	});
+	console.log(`[${new Date().toLocaleTimeString()}] Live coding server started. Use this URL: http://ldjam.work/?debug=${port}`);
+
+	// Handle Ctrl+C
+	console.log(`[${new Date().toLocaleTimeString()}] Press Ctrl+C to stop.`);
+	process.on('SIGINT', async () => {
+		console.log('');	// newline
+		console.log(`[${new Date().toLocaleTimeString()}] Stopping...`);
+		await context.dispose();
+		console.log(`[${new Date().toLocaleTimeString()}] Done.`);
+		process.exit();
+	});
 }
 else {
-	console.time('esbuild.build');
-	let result = await esbuild.build(esbuildOptions);
-	console.timeEnd('esbuild.build');
-	console.log(await esbuild.analyzeMetafile(result.metafile));
+	await esbuild.build(esbuildOptions)
+		.then(async (result) => {
+			if (!action.quiet) {
+				console.log(await esbuild.analyzeMetafile(result.metafile));
+			}
+		})
+		.catch(async (error) => {
+			console.log('');	// newline
+			console.log(error);
+		});
 }

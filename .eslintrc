@@ -9,7 +9,7 @@
 		}
 	},
 	"globals": {
-		"SECURE_LOGIN_ONLY": "readable"
+		"SECURE_LOGIN_ONLY": "readonly"
 	},
 	"rules": {
 		"semi": ["error", "always"],

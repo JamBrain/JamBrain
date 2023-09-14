@@ -1,4 +1,5 @@
 declare var DEBUG: boolean;
+declare var LIVE: boolean;
 declare var VERSION_STRING: string;
 
 declare var STATIC_DOMAIN: string;
