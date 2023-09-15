@@ -5,9 +5,7 @@ import { node_IsAuthor } from 'internal/lib';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentLoading					from 'com/content-loading/loading';
-import UIIcon							from 'com/ui/icon/icon';
-import UIButton							from 'com/ui/button/button';
-import UIDropdown						from 'com/ui/dropdown/dropdown';
+import {UIButton, UIIcon, UIDropdown} from 'com/ui';
 
 import $Node							from 'backend/js/node/node';
 

@@ -3,12 +3,8 @@ import './item.less';
 
 import { node_IsPublished, nodeEvent_CanGrade, node_CountAuthors, node_CanPublish, node_IsAuthor, nodeKeys_HasPublishedParent, nodeEvent_IsFinished } from 'internal/lib';
 
-import UIIcon 							from 'com/ui/icon/icon';
-import UIImage 							from 'com/ui/image/image';
-import UILink 							from 'com/ui/link/link';
-
 import ButtonBase						from 'com/button-base/base';
-import UIButton							from 'com/ui/button/button';
+import {UIButton, UIIcon, UIImage, UILink} from 'com/ui';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonBodyField			from 'com/content-common/common-body-field';

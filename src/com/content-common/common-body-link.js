@@ -7,7 +7,7 @@ import UIIcon							from 'com/ui/icon';
 
 import InputText						from 'com/input-text/text';
 import InputDropdown					from 'com/input-dropdown/dropdown';
-import UIButton							from 'com/ui/button/button';
+import {UIButton} from 'com/ui';
 
 import $Tag								from 'backend/js/tag/tag';
 

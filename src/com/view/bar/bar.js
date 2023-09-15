@@ -3,14 +3,7 @@ import './bar.less';
 import Shallow from 'shallow';
 import { node_CanCreate } from 'internal/lib';
 
-import ButtonBase						from 'com/button-base/base';
-import ButtonLink						from 'com/button-link/link';
-import UIIcon 							from 'com/ui/icon';
-import NavLink 							from 'com/nav-link/link';
-
-import UISpinner						from 'com/ui/spinner';
-
-import UIButton							from 'com/ui/button/button';
+import {UIIcon, UIButton, UISpinner} from 'com/ui';
 
 //import DropdownUser 					from 'com/dropdown-user/user';
 import BarNotification					from './bar-notifications';

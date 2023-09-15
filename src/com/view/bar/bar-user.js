@@ -1,10 +1,7 @@
 import { Component } 					from 'preact';
 import './bar-user.less';
 
-import UIIcon							from 'com/ui/icon/icon';
-import UIImage							from 'com/ui/image/image';
-import UIButton							from 'com/ui/button/button';
-import UIDropdown						from 'com/ui/dropdown/dropdown';
+import {UIButton, UIImage, UIIcon, UIDropdown} from 'com/ui';
 
 import $User							from 'backend/js/user/user';
 

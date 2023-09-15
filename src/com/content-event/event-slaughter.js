@@ -1,11 +1,7 @@
 import {Component} from 'preact';
 import './event-slaughter.less';
 
-import UISpinner						from 'com/ui/spinner';
-import NavLink 							from 'com/nav-link/link';
-import UIIcon 							from 'com/ui/icon';
-
-import UIButton							from 'com/ui/button/button';
+import {UIButton, UIIcon, UISpinner} from 'com/ui';
 
 import $ThemeIdeaVote					from 'backend/js/theme/theme_idea_vote';
 import $Node from 'backend/js/node/node';

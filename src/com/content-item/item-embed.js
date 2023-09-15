@@ -1,10 +1,7 @@
 import { Component } from 'preact';
 import './item-embed.less';
 
-import ContentCommonBody	from 'com/content-common/common-body';
-import UIIcon				from 'com/ui/icon/icon';
-import UIButton				from 'com/ui/button/button';
-import UIImage				from 'com/ui/image';
+import {UIButton, UIIcon, UIImage} from 'com/ui';
 
 export default class ContentItemEmbed extends Component {
 	constructor(props) {

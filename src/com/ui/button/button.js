@@ -39,13 +39,3 @@ export function UIButtonCheck( props ) {
 export function UIButtonRadio( props ) {
 	return <UIButtonCheck {...props} type="radio" />;
 }
-
-export default UIButton;
-/*
-export default {
-	UIButton,
-	UIButtonSubmit,
-	UIButtonCheck,
-	UIButtonRadio,
-};
-*/
