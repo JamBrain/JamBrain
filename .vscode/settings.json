@@ -6,5 +6,8 @@
 	"**/node_modules": true,
 	".output": true,
 	".vscode": true
-}
+},
+"less.lint.validProperties": [
+	"composes"
+]
 }

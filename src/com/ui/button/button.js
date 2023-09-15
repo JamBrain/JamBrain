@@ -1,9 +1,9 @@
-import {UIButton as cUIButton} from './button.module.less';
+import {ui_button} from './button.module.less';
 
 export default function UIButton( props ) {
-	const {'class': className, ...otherProps} = props;
-	const classes = `${cUIButton} ${className ?? ''}`;
+	const {'class': classProp, ...otherProps} = props;
+	const classNames = `${ui_button} ${classProp ?? ''}`;
 	return (props.href)
-		? <a {...otherProps} class={classes} />
-		: <button {...otherProps} type="button" class={classes} />;
+		? <a {...otherProps} class={classNames} />
+		: <button {...otherProps} type="button" class={classNames} />;
 }

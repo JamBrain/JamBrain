@@ -1,7 +1,7 @@
+@import '../clickable/clickable.module.less';
 
-.UIButton {
-	cursor: pointer;			/* default to the pointer cursor (like: a) */
-	user-select: none;			/* stop users from selecting the text (like: button) */
+.ui_button {
+	composes: ui_clickable;
 
 	display: block;
 	text-align: inherit;		/* rather than left align, inherit */
@@ -10,10 +10,6 @@
 	border: 0;
 	padding: 0;
 	overflow: auto;				/* otherwise images wont work */
-
-	&:disabled {
-		cursor: not-allowed;
-	}
 }
 
 /* Make a 'button' act identical to a 'div' */
