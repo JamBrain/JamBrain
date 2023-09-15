@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 
-import UIButton from '../button';
-import UIDropdown from './dropdown';
+import {UIButton} from '../button';
+import {UIDropdown} from './dropdown';
 
 export default class UIDropdownList extends Component {
 	constructor( props ) {

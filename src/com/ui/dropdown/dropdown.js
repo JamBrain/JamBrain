@@ -1,10 +1,10 @@
 import { Component, cloneElement, toChildArray } from 'preact';
 import './dropdown.less';
 
-import UIButton from '../button';
-import UIIcon from '../icon';
+import {UIButton} from '../button';
+import {UIIcon} from '../icon';
 
-export default class UIDropdown extends Component {
+export class UIDropdown extends Component {
 	constructor( props ) {
 		super(props);
 
@@ -94,3 +94,5 @@ export default class UIDropdown extends Component {
 		);
 	}
 }
+
+export default UIDropdown;

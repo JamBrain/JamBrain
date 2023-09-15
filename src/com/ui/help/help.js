@@ -1,9 +1,9 @@
 import { Component } from 'preact';
 import './help.less';
 
-import UIIcon from '../icon';
-import UIButton from '../button';
-import UIDialog from '../dialog';
+import {UIIcon} from '../icon';
+import {UIButton} from '../button';
+import {UIDialog} from '../dialog';
 
 export default class UIHelp extends Component {
 	constructor( props ) {

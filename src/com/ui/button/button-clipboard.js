@@ -2,8 +2,8 @@
 //import './button-clipboard.less';
 //import {UIButton, UIIcon} from 'com/ui';
 
-import { signal } from '@preact/signals';
-import UIButton from '../button/button';
+//import { signal } from '@preact/signals';
+import { UIButton } from './button';
 
 function onClick( e ) {
 	if ( navigator.clipboard ) {

@@ -5,6 +5,43 @@ import Sanitize from 'internal/sanitize';
 // TODO: Push the state (arg1 of pushShate/replaceState (MK: what?)
 // MK TODO: give this file a serious look. tidy up
 
+function navigateToHref( e ) {
+	// Bail if we're trying to open link in a new window using a modifer+click shortcut
+	if ( e.shiftKey || e.metaKey || e.ctrlKey || e.altKey ) {
+		return;
+	}
+
+	// If it's a local link, prevent the browser from navigating
+	let newURL = new URL(e.target.href, window.location.href);
+	if (newURL.origin === window.location.origin) {
+		e.preventDefault();
+
+		// Merge the query parameters
+		const mergedSearch = new URLSearchParams({
+			...Object.fromEntries(new URLSearchParams(window.location.search)),
+			...Object.fromEntries(new URLSearchParams(newURL.search))
+		});
+
+		newURL.search = mergedSearch.toString();
+
+		window.location.assign(newURL.href);
+		window.dispatchEvent(new CustomEvent('navChange', {
+			'detail': {
+				'location': newURL.toString()
+			}
+		}));
+
+		//e.stopPropagation();	// Do we need this?
+	}
+}
+
+
+export function UILink2( props ) {
+	// MK NOTE: We technically aren't handling spacebar
+	return <a {...props} onClick={navigateToHref} />;
+}
+
+
 export default class UILink extends Component {
 	constructor( props ) {
 		super(props);

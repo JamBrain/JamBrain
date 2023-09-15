@@ -1,8 +1,8 @@
 import { Component } from 'preact';
 import './textdown.less';
 
-import UIButton from '../button';
-import UIText from '../text';
+import {UIButton} from '../button';
+import {UIText} from '../text';
 
 export default class UITextdown extends Component {
 	constructor( props ) {

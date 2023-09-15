@@ -1,8 +1,8 @@
 import { Component } from 'preact';
 import './checkbox.less';
 
-import UIButton from '../button';
-import UIIcon from '../icon';
+import { UIButton } from '../button';
+import { UIIcon } from '../icon';
 
 export default class UICheckbox extends Component {
 	render( props ) {

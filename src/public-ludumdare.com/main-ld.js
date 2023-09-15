@@ -1,5 +1,7 @@
-import 'preact/devtools';
-//import 'preact/debug';
+//import 'preact/devtools';
+import 'preact/debug';
+
+//import '../polyfill';
 
 import { render, Component } from 'preact';
 import './main-ld.less';
