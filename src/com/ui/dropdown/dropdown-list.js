@@ -1,6 +1,6 @@
 import { Component } from 'preact';
 
-import {UIButton} from '../button';
+import {Button} from '../button';
 import {UIDropdown} from './dropdown';
 
 export default class UIDropdownList extends Component {
@@ -45,9 +45,9 @@ export default class UIDropdownList extends Component {
 						Value = <div>{itemName}</div>;
 
 					Items.push(
-						<UIButton class="-item" onClick={this.onModify.bind(this, itemValue, idx)}>
+						<Button class="-item" onClick={this.onModify.bind(this, itemValue, idx)}>
 							{itemName}
-						</UIButton>
+						</Button>
 					);
 				}
 				else {
@@ -69,9 +69,9 @@ export default class UIDropdownList extends Component {
 					Value = <div>{itemName}</div>;
 
 				Items.push(
-					<UIButton class="-item" onClick={this.onModify.bind(this, itemValue, idx)}>
+					<Button class="-item" onClick={this.onModify.bind(this, itemValue, idx)}>
 						{itemName}
-					</UIButton>
+					</Button>
 				);
 			}
 		}

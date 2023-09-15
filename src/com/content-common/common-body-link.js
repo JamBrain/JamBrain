@@ -5,7 +5,7 @@ import Sanitize							from 'internal/sanitize';
 
 import InputText						from 'com/input-text/text';
 import InputDropdown					from 'com/input-dropdown/dropdown';
-import {UIButton, UIIcon} from 'com/ui';
+import {Button, Icon} from 'com/ui';
 
 import $Tag								from 'backend/js/tag/tag';
 
@@ -84,7 +84,7 @@ export default class ContentCommonBodyLink extends Component {
 						placeholder={UrlPlaceholder}
 						maxLength={512}
 					/>
-					<UIButton onClick={props.onRemove} title="Remove"><UIIcon>cross</UIIcon></UIButton>
+					<Button onClick={props.onRemove} title="Remove"><Icon>cross</Icon></Button>
 				</div>
 			);
 		}
@@ -103,7 +103,7 @@ export default class ContentCommonBodyLink extends Component {
 
 			return (
 				<div class={`link ${props.class ?? ''}`}>
-					<div class="-name" title={'$'+tag[0]+" - "+tag[1]}><UIIcon small>{Icon}</UIIcon> <span>{ShowName}</span></div>
+					<div class="-name" title={'$'+tag[0]+" - "+tag[1]}><Icon small>{Icon}</Icon> <span>{ShowName}</span></div>
 					<div class="-url">{ShowLink}</div>
 				</div>
 			);

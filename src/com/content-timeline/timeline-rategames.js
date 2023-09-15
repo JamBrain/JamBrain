@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './timeline-rategames.less';
 
-import {UIIcon, UIButton} from 'com/ui';
+import {Icon, Button} from 'com/ui';
 import FooterButtonMinMax 				from 'com/content-common/common-footer-button-minmax';
 import ContentItemBox					from 'com/content-item/item-box';
 import ContentCommonBody				from 'com/content-common/common-body';
@@ -117,7 +117,7 @@ export default class TimelineRateGames extends Component {
 
 		let Games;
 		if (error) {
-			Games = <div class="-warning"><UIIcon src="bug" /><span>An error occurred while loading the games.</span></div>;
+			Games = <div class="-warning"><Icon src="bug" /><span>An error occurred while loading the games.</span></div>;
 		}
 		else if (loading) {
 			Games = <ContentLoading />;
@@ -133,25 +133,25 @@ export default class TimelineRateGames extends Component {
 		const FooterRight = [];
 		FooterLeft.push(<FooterButtonMinMax onClick={this.handleMinMax} />);
 		FooterRight.push((
-			<UIButton class={`content-common-footer-button -refresh`} title='Refresh' onClick={this.handleRefresh}>
-				<UIIcon src="refresh" /><div class="-count">Refresh</div>
-			</UIButton>
+			<Button class={`content-common-footer-button -refresh`} title='Refresh' onClick={this.handleRefresh}>
+				<Icon src="refresh" /><div class="-count">Refresh</div>
+			</Button>
 		));
 		FooterRight.push((
-			<UIButton class={`content-common-footer-button -all-games`} href={props.featured && `/events/ludum-dare/${props.featured.slug}/games/`}>
-				<UIIcon src="gamepad" /><div class="-count">All Games</div>
-			</UIButton>
+			<Button class={`content-common-footer-button -all-games`} href={props.featured && `/events/ludum-dare/${props.featured.slug}/games/`}>
+				<Icon src="gamepad" /><div class="-count">All Games</div>
+			</Button>
 		));
 
 		return (
 		<div class={MainClass}>
-			<div class={HeaderClass}><UIIcon src="gamepad" /> <span>Play, Rate, and give Feedback</span></div>
+			<div class={HeaderClass}><Icon src="gamepad" /> <span>Play, Rate, and give Feedback</span></div>
 				<div class="-bodies">
 					<div class="_inline-if-not-minimized">
 					{Games}
 					</div>
 					<div class="_inline-if-not-minimized">
-					<strong>TIP</strong>: For more ratings and feedback, leave feedback on the games you play, and give <UIIcon src="heart" />'s to feedback you like.
+					<strong>TIP</strong>: For more ratings and feedback, leave feedback on the games you play, and give <Icon src="heart" />'s to feedback you like.
 					</div>
 				</div>
 				<div class={`content-common-footer ${(FooterLeft.length + FooterRight.length) ? '-has-items' : ''}`}>

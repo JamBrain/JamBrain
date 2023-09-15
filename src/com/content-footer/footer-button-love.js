@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import './footer-button.less';
 import './footer-button-comments.less';
 
-import { UIIcon } from 'com/ui';
+import { Icon } from 'com/ui';
 
 import $NodeLove						from 'backend/js/node/node_love';
 
@@ -48,9 +48,9 @@ export default class ContentFooterButtonLove extends Component {
 		var _class = "footer-button footer-button-love" + (loved ? " loved" : "");
 		return (
 			<div class={_class} onClick={this.onLove}>
-				<UIIcon class="-hover-hide">heart</UIIcon>
-				<UIIcon class="-hover-show -loved-hide">heart-plus</UIIcon>
-				<UIIcon class="-hover-show -loved-show">heart-minus</UIIcon>
+				<Icon class="-hover-hide">heart</Icon>
+				<Icon class="-hover-show -loved-hide">heart-plus</Icon>
+				<Icon class="-hover-show -loved-show">heart-minus</Icon>
 				<div class="-count">{Number.isInteger(lovecount) ? lovecount : node.love}</div>
 			</div>
 		);

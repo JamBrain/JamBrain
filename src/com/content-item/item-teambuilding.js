@@ -5,7 +5,7 @@ import { node_IsAuthor } from 'internal/lib';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentLoading					from 'com/content-loading/loading';
-import {UIButton, UIIcon, UIDropdown} from 'com/ui';
+import {Button, Icon, UIDropdown} from 'com/ui';
 
 import $Node							from 'backend/js/node/node';
 
@@ -73,11 +73,11 @@ export default class ItemTeambuilding extends Component {
 		const canBeRemoved = (isMe && !isMain) || (!isMe && mainAuthor === me);
 		return (
 			<li class="team-list-member">
-				<UIIcon baseline small src="user" />
+				<Icon baseline small src="user" />
 				<strong>{user.name}</strong>
 				{isMe && ' (you)'}
 				{isMain && <span title="Primary Author">*</span>}
-				{canBeRemoved && <UIButton class="team-member-remove" onClick={() => this.removeFromTeam(user.id)} title="Remove from team"><UIIcon src="cross" /></UIButton>}
+				{canBeRemoved && <Button class="team-member-remove" onClick={() => this.removeFromTeam(user.id)} title="Remove from team"><Icon src="cross" /></Button>}
 			</li>
 		);
 	}
@@ -85,9 +85,9 @@ export default class ItemTeambuilding extends Component {
 	renderAddUser(friend) {
 		const friendId = friend.id;
 		return (
-			<UIButton onClick={() => this.addToTeam(friendId)} key={friend.id} title={`Click to add ${friend.name}`}>
-				<UIIcon>user</UIIcon><span>{friend.name}</span>
-			</UIButton>
+			<Button onClick={() => this.addToTeam(friendId)} key={friend.id} title={`Click to add ${friend.name}`}>
+				<Icon>user</Icon><span>{friend.name}</span>
+			</Button>
 		);
 	}
 
@@ -97,7 +97,7 @@ export default class ItemTeambuilding extends Component {
 			return;
 		const authorIds = authors.map(author => author.id);
 		const Addable = [
-			<div class="team-list-add-header">Add to team<UIIcon src="arrow-down" /></div>
+			<div class="team-list-add-header">Add to team<Icon src="arrow-down" /></div>
 		].concat(friends
 			.filter(friend => authorIds.indexOf(friend.id) === -1)
 			.sort((a, b) => (a.name > b.name) ? 1 : -1)
@@ -124,7 +124,7 @@ export default class ItemTeambuilding extends Component {
 		if (node.subsubtype == 'compo') {
 			if (authors.length < 2) {
 				ShowTeamBuilding.push(<div class="-items">You are competing in the {node.subsubtype}. You cannot add others to your {node.subtype}</div>);
-				ShowTeamBuilding.push(<div class="-footer"><UIIcon small baseline src="info" /> You can change this if you select a different event</div>);
+				ShowTeamBuilding.push(<div class="-footer"><Icon small baseline src="info" /> You can change this if you select a different event</div>);
 				includeBuilding = false;
 			}
 			else if (authors.length > 0) {
@@ -149,7 +149,7 @@ export default class ItemTeambuilding extends Component {
 				ShowTeamBuilding.push((
 					<div class="-footer">
 						<span>To add team members, you first need to add them as friends. Visit each-others user pages and click the
-						<span class="_nowrap"><UIIcon baseline small src="user-plus" /> <strong>Follow</strong></span> button to become friends.
+						<span class="_nowrap"><Icon baseline small src="user-plus" /> <strong>Follow</strong></span> button to become friends.
 						When you are done, return here and you can add them to your team.</span>
 					</div>
 				));

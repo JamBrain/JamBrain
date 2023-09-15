@@ -4,7 +4,7 @@ import './box.less';
 import Shallow from 'shallow';
 
 import ContentLoading from 'com/content-loading/loading';
-import {UIButton, UIIcon, UIImage} from 'com/ui';
+import {Button, Icon, Image} from 'com/ui';
 
 import { node_CountAuthors } from 'internal/lib';
 
@@ -68,7 +68,7 @@ export default class ContentBox extends Component {
 
 			var ShowHoverCover = null;
 			if ( node.meta['cover-hover'] ) {
-				ShowHoverCover = <UIImage class="-cover-hover" src={HoverCover} failsrc={CoverFail} />;
+				ShowHoverCover = <Image class="-cover-hover" src={HoverCover} failsrc={CoverFail} />;
 			}
 
 			var ShowEvent = null;
@@ -80,17 +80,17 @@ export default class ContentBox extends Component {
 			let SubEventClass = null;
 			if ( !props.nosubevent && node.subtype ) {
 				if ( !node.published ) {
-					ShowSubEvent = <div><UIIcon baseline small>cross</UIIcon></div>;
+					ShowSubEvent = <div><Icon baseline small>cross</Icon></div>;
 				}
 				else if ( node.subtype == 'game' ) {
 					ShowSubEvent = <div>GAME</div>;
 					if ( node.subsubtype ) {
 						if ( node.subsubtype == 'jam' ) {
-							ShowSubEvent = <div>JAM <UIIcon baseline small>{node_CountAuthors(node) === 1 ? "user" : "users"}</UIIcon></div>;
+							ShowSubEvent = <div>JAM <Icon baseline small>{node_CountAuthors(node) === 1 ? "user" : "users"}</Icon></div>;
 							SubEventClass = '-col-a';
 						}
 						else if ( node.subsubtype == 'extra' ) {
-							ShowSubEvent = <div>EXTRA <UIIcon baseline small>{node_CountAuthors(node) === 1 ? "user" : "users"}</UIIcon></div>;
+							ShowSubEvent = <div>EXTRA <Icon baseline small>{node_CountAuthors(node) === 1 ? "user" : "users"}</Icon></div>;
 							SubEventClass = '-col-bc';
 						}
 						else if ( node.subsubtype == 'compo' ) {
@@ -106,7 +106,7 @@ export default class ContentBox extends Component {
 							SubEventClass = '-col-ca';
 						}
 						else if ( node.subsubtype == 'unfinished' ) {
-							ShowSubEvent = <div><UIIcon baseline small>cross</UIIcon></div>;
+							ShowSubEvent = <div><Icon baseline small>cross</Icon></div>;
 						}
 					}
 				}
@@ -124,11 +124,11 @@ export default class ContentBox extends Component {
 					let parts = key.split('-');
 					if ( /*ShowTrophies.length < 6 &&*/ parts.length == 3 && parts[0] == 'grade' && parts[2] == 'result' ) {
 						if ( node.magic[key] == 1 )
-							ShowTrophies.push(<span class="-first"><UIIcon>trophy</UIIcon></span>);
+							ShowTrophies.push(<span class="-first"><Icon>trophy</Icon></span>);
 						else if ( node.magic[key] == 2 )
-							ShowTrophies.push(<span class="-second"><UIIcon>trophy</UIIcon></span>);
+							ShowTrophies.push(<span class="-second"><Icon>trophy</Icon></span>);
 						else if ( node.magic[key] == 3 )
-							ShowTrophies.push(<span class="-third"><UIIcon>trophy</UIIcon></span>);
+							ShowTrophies.push(<span class="-third"><Icon>trophy</Icon></span>);
 					}
 				}
 //				ShowTrophies.sort(function(a, b) {
@@ -139,9 +139,9 @@ export default class ContentBox extends Component {
 			}
 
 			return (
-				<UIButton class={`${Class ?? ''} ${props.class ?? ''}`} href={node.path}>
+				<Button class={`${Class ?? ''} ${props.class ?? ''}`} href={node.path}>
 					{ShowHoverCover}
-					<UIImage class="-cover" src={Cover} failsrc={CoverFail} />
+					<Image class="-cover" src={Cover} failsrc={CoverFail} />
 					<div class="-top-bar">
 						{ShowEvent}
 					</div>
@@ -156,7 +156,7 @@ export default class ContentBox extends Component {
 					<div class="-bot-bar">
 						<div class="-title">{Title}</div>
 					</div>
-				</UIButton>
+				</Button>
 			);
 		}
 		else if (props.placeHolder) {

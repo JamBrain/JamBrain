@@ -6,7 +6,7 @@ import 'icons/custom/icons.less';
 
 // MK TODO: tidy up.
 
-export function UIIcon( props ) {
+export function Icon( props ) {
 	let svg_props = {'class': "ui-icon"};
 	let use_props = {};
 

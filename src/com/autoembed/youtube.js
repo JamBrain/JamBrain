@@ -1,5 +1,5 @@
 import {Component} from 'preact';
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 import './youtube.less';
 
 export default class YoutubeEmbed extends Component {
@@ -44,13 +44,13 @@ export default class YoutubeEmbed extends Component {
 				<div class="-thumbnail">
 					<div class="-overlay" onClick={this.onClick} >
 						<div class="-play">
-							<UIIcon middle>play</UIIcon>
+							<Icon middle>play</Icon>
 						</div>
 						<div class="-external">
 							<a title="Open in new tab" href={"//www.youtube.com/watch?v="+video_id} target="_blank" rel="noopener" onClick={(e) => {
 								e.stopPropagation();
 							}}>
-								<UIIcon middle block>youtube</UIIcon>
+								<Icon middle block>youtube</Icon>
 							</a>
 						</div>
 					</div>

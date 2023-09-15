@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './common-footer-button.less';
 
-import { UIIcon } from 'com/ui';
+import { Icon } from 'com/ui';
 
 import $NodeStar						from 'backend/js/node/node_star';
 
@@ -46,7 +46,7 @@ export default class ContentCommonFooterButtonStar extends Component {
 		var _class = "content-common-footer-button -star" + (starred ? " starred" : "");
 		return (
 			<div class={_class} onClick={this.onStar}>
-				<UIIcon>star-full</UIIcon>
+				<Icon>star-full</Icon>
 			</div>
 		);
 	}

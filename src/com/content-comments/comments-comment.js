@@ -3,7 +3,7 @@ import {Component} from 'preact';
 import { getRoughAge, getLocaleFullTimeStamp, getLocaleDate } from 'internal/time';
 
 import NavLink 							from 'com/nav-link/link';
-import {UIButton, UIIcon, UIImage, UICheckbox} from 'com/ui';
+import {Button, Icon, Image, UICheckbox} from 'com/ui';
 
 import ContentCommentsMarkup from './comments-markup';
 import {AutocompleteAtNames, AutocompleteEmojis} from 'com/content-common/common-autocomplete';
@@ -292,15 +292,15 @@ export default class ContentCommentsComment extends Component {
 
 			let ShowEdit = null;
 			if ( user && comment && (comment.author > 0) && (comment.author === user.id) && !state.editing )
-				ShowEdit = <div class="-button -edit" onClick={this.onEdit}><UIIcon>edit</UIIcon></div>;
+				ShowEdit = <div class="-button -edit" onClick={this.onEdit}><Icon>edit</Icon></div>;
 
 			let ShowLove = null;
 			if ( !props.nolove ) {
 				ShowLove = (
 					<div class={"-button -love"+(state.loved?" -loved":"")} onClick={this.onLove}>
-						<UIIcon class="-hover-hide">heart</UIIcon>
-						<UIIcon class="-hover-show -loved-hide">heart-plus</UIIcon>
-						<UIIcon class="-hover-show -loved-show">heart-minus</UIIcon>
+						<Icon class="-hover-hide">heart</Icon>
+						<Icon class="-hover-show -loved-hide">heart-plus</Icon>
+						<Icon class="-hover-show -loved-show">heart-minus</Icon>
 						<div>{Number.isInteger(state.lovecount) ? state.lovecount : comment.love}</div>
 					</div>
 				);
@@ -326,14 +326,14 @@ export default class ContentCommentsComment extends Component {
 				let ShowLeft = [];
 				if ( !state.preview ) {
 					ShowLeft = [
-						<div class="-button -preview" onClick={this.onPreview}><UIIcon>preview</UIIcon><div class="if-sidebar-block">Preview</div></div>,
-						<div class="-button -editing -selected"><UIIcon>edit</UIIcon><div class="if-sidebar-block">Edit</div></div>,
+						<div class="-button -preview" onClick={this.onPreview}><Icon>preview</Icon><div class="if-sidebar-block">Preview</div></div>,
+						<div class="-button -editing -selected"><Icon>edit</Icon><div class="if-sidebar-block">Edit</div></div>,
 					];
 				}
 				else {
 					ShowLeft = [
-						<div class="-button -preview -selected"><UIIcon>preview</UIIcon><div class="if-sidebar-block">Preview</div></div>,
-						<div class="-button -editing" onClick={this.onEditing}><UIIcon>edit</UIIcon><div class="if-sidebar-block">Edit</div></div>,
+						<div class="-button -preview -selected"><Icon>preview</Icon><div class="if-sidebar-block">Preview</div></div>,
+						<div class="-button -editing" onClick={this.onEditing}><Icon>edit</Icon><div class="if-sidebar-block">Edit</div></div>,
 					];
 				}
 
@@ -345,11 +345,11 @@ export default class ContentCommentsComment extends Component {
 					if ( props.allowAnonymous ) {
 						ShowRight.push(<UICheckbox onClick={this.onToggleAnon} value={state.publishAnon} tooltip="NOTE: Your identity is always available to the administrators.">Anonymous</UICheckbox>);
 					}
-					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onClick={this.onPublish}><UIIcon>publish</UIIcon><div>Publish</div></div>);
+					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onClick={this.onPublish}><Icon>publish</Icon><div>Publish</div></div>);
 				}
 				else {
-					ShowRight.push(<div class="-button -cancel" onClick={this.onCancel}><UIIcon>cross</UIIcon><div class="if-sidebar-block">Cancel</div></div>);
-					ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onClick={this.onSave}><UIIcon>save</UIIcon><div>Save</div></div>);
+					ShowRight.push(<div class="-button -cancel" onClick={this.onCancel}><Icon>cross</Icon><div class="if-sidebar-block">Cancel</div></div>);
+					ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onClick={this.onSave}><Icon>save</Icon><div>Save</div></div>);
 				}
 
 				ShowTopNav = (
@@ -369,10 +369,10 @@ export default class ContentCommentsComment extends Component {
 
 			let ShowAvatar = null;
 			if ( author ) {
-				ShowAvatar = <UIButton class="-avatar" href={author.path}><UIImage alt={author.slug + "'s avatar image"} src={Avatar} /></UIButton>;
+				ShowAvatar = <Button class="-avatar" href={author.path}><Image alt={author.slug + "'s avatar image"} src={Avatar} /></Button>;
 			}
 			else {
-				ShowAvatar = <div class="-avatar"><UIImage src={Avatar} /></div>;
+				ShowAvatar = <div class="-avatar"><Image src={Avatar} /></div>;
 			}
 
 			const ShowAutocompleteAt = <AutocompleteAtNames

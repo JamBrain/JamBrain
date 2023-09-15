@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './itemfilter.less';
 
-import {UIIcon, UIButton, UITagbox, UIText, UIDropdown, UIDropdownList, UITextdown, UIHelp} from 'com/ui';
+import {Icon, Button, Tagbox, TextField, UIDropdown, UIDropdownList, TextDropdown, Help} from 'com/ui';
 
 import $Tag								from 'backend/js/tag/tag';
 
@@ -49,19 +49,19 @@ export default class ItemFilter extends Component {
 
 			'event': 'featured',
 			'events': [
-				['featured', [<UIIcon src="calendar-event" />, <span>Featured Event</span>]],
-				['all', [<UIIcon src="calendar-wide" />, <span>All Events</span>]],
+				['featured', [<Icon src="calendar-event" />, <span>Featured Event</span>]],
+				['all', [<Icon src="calendar-wide" />, <span>All Events</span>]],
 			],
 
 			'category': 'all',
 			'categories': [
-				['all', [<UIIcon src="trophys" />, <span>Jam+Compo+Extra</span>]],
-				['jam', [<UIIcon src="trophy" />, <span>Jam</span>]],
-				['compo', [<UIIcon src="trophy" />, <span>Compo</span>]],
+				['all', [<Icon src="trophys" />, <span>Jam+Compo+Extra</span>]],
+				['jam', [<Icon src="trophy" />, <span>Jam</span>]],
+				['compo', [<Icon src="trophy" />, <span>Compo</span>]],
 //				['craft', [<UIIcon src="craft" />, <span>Craft</span>]],
-				['extra', [<UIIcon src="trophy" />, <span>Extra</span>]],
-				['unfinished', [<UIIcon src="trash" />, <span>Unfinished</span>]],
-				['warmup', [<UIIcon src="science" />, <span>Warmup</span>]],
+				['extra', [<Icon src="trophy" />, <span>Extra</span>]],
+				['unfinished', [<Icon src="trash" />, <span>Unfinished</span>]],
+				['warmup', [<Icon src="science" />, <span>Warmup</span>]],
 //				['release', [<UIIcon src="publish" />, <span>Release</span>]],
 			],
 
@@ -75,12 +75,12 @@ export default class ItemFilter extends Component {
 //				['az-desc', [<UIIcon src="sort-amount-desc" />, <span>Descending Z-A</span>]],
 
 				[null, <span>Event Specific</span>],
-				['smart', [<UIIcon src="meter" />, <span>Smart</span>]],
-				['classic', [<UIIcon src="meter" />, <span>Classic</span>]],
-				['danger', [<UIIcon src="help" />, <span>Danger</span>]],
-				['zero', [<UIIcon src="no" />, <span>Zero</span>]],
-				['feedback', [<UIIcon src="bubbles" />, <span>Feedback</span>]],
-				['grade', [<UIIcon src="todo" />, <span>Grade</span>]],
+				['smart', [<Icon src="meter" />, <span>Smart</span>]],
+				['classic', [<Icon src="meter" />, <span>Classic</span>]],
+				['danger', [<Icon src="help" />, <span>Danger</span>]],
+				['zero', [<Icon src="no" />, <span>Zero</span>]],
+				['feedback', [<Icon src="bubbles" />, <span>Feedback</span>]],
+				['grade', [<Icon src="todo" />, <span>Grade</span>]],
 			],
 
 			'grid': 4,
@@ -162,7 +162,7 @@ export default class ItemFilter extends Component {
 
 		let ShowFilters = null;
 		if ( state.mytags && state.mytags.length )
-			ShowFilters = <UITagbox tags={state.mytags} onClick={this.onTagClick} />;
+			ShowFilters = <Tagbox tags={state.mytags} onClick={this.onTagClick} />;
 		else
 			ShowFilters = <div>None</div>;
 
@@ -171,19 +171,19 @@ export default class ItemFilter extends Component {
 				<div class="-header"></div>
 				<div class="-body -flex">
 					<div class="-query">
-						<div class="-title"><UIHelp>{HelpItemSearch}</UIHelp>Platform/Tag filters:</div>
-						<UITextdown onModify={this.onModifyQuery} onselect={this.onTagAdd} maxLength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
+						<div class="-title"><Help>{HelpItemSearch}</Help>Platform/Tag filters:</div>
+						<TextDropdown onModify={this.onModifyQuery} onselect={this.onTagAdd} maxLength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
 					</div>
 					<div class="-event">
-						<div class="-title"><UIHelp>{HelpItemEvent}</UIHelp><span>Event:</span></div>
+						<div class="-title"><Help>{HelpItemEvent}</Help><span>Event:</span></div>
 						<UIDropdownList onModify={this.onModifyEvent} value={state.event} items={state.events} right />
 					</div>
 					<div class="-category">
-						<div class="-title"><UIHelp>{HelpItemCategory}</UIHelp>Category:</div>
+						<div class="-title"><Help>{HelpItemCategory}</Help>Category:</div>
 						<UIDropdownList onModify={this.onModifyCategory} value={state.category} items={state.categories} right />
 					</div>
 					<div class="-order">
-						<div class="-title"><UIHelp>{HelpItemOrder}</UIHelp>Order by:</div>
+						<div class="-title"><Help>{HelpItemOrder}</Help>Order by:</div>
 						<UIDropdownList onModify={this.onModifyOrder} value={state.order} items={state.orders} right />
 					</div>
 				</div>
@@ -191,13 +191,13 @@ export default class ItemFilter extends Component {
 					<div class="-title">Filtering by:</div>
 					{ShowFilters}
 					<UIDropdown class="-grid" value={state.grid} right>
-						<UIIcon src="grid" />
-						<UIButton class="-item if-no-sidebar-block" onClick={this.onModifyGrid.bind(this, 1)}>1 Wide</UIButton>
-						<UIButton class="-item if-no-sidebar-block" onClick={this.onModifyGrid.bind(this, 2)}>2 Wide</UIButton>
-						<UIButton class="-item" onClick={this.onModifyGrid.bind(this, 3)}>3 Wide</UIButton>
-						<UIButton class="-item" onClick={this.onModifyGrid.bind(this, 4)}>4 Wide</UIButton>
-						<UIButton class="-item if-sidebar-block" onClick={this.onModifyGrid.bind(this, 5)}>5 Wide</UIButton>
-						<UIButton class="-item if-sidebar-block" onClick={this.onModifyGrid.bind(this, 6)}>6 Wide</UIButton>
+						<Icon src="grid" />
+						<Button class="-item if-no-sidebar-block" onClick={this.onModifyGrid.bind(this, 1)}>1 Wide</Button>
+						<Button class="-item if-no-sidebar-block" onClick={this.onModifyGrid.bind(this, 2)}>2 Wide</Button>
+						<Button class="-item" onClick={this.onModifyGrid.bind(this, 3)}>3 Wide</Button>
+						<Button class="-item" onClick={this.onModifyGrid.bind(this, 4)}>4 Wide</Button>
+						<Button class="-item if-sidebar-block" onClick={this.onModifyGrid.bind(this, 5)}>5 Wide</Button>
+						<Button class="-item if-sidebar-block" onClick={this.onModifyGrid.bind(this, 6)}>6 Wide</Button>
 					</UIDropdown>
 				</div>
 				<div class="-footer">

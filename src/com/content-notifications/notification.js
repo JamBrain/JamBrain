@@ -3,7 +3,7 @@ import './notifications.less';
 
 import { getRoughAge } from 'internal/time';
 import NavLink 							from 'com/nav-link/link';
-import {UIButton, UIIcon} from  'com/ui';
+import {Button, Icon} from  'com/ui';
 
 
 export const commentAuthorIsAmongNodeAuthors = ( notification ) => {
@@ -206,17 +206,17 @@ export default class NotificationItem extends Component {
 			const CommentAuthor = this.getCommentAuthorAsSubjectJSX(notification);
 			const NodeAuthor = this.getNodeAuthorAsObjectJSX(notification);
 			return (
-				<UIButton {...navProps} >
-					<UIIcon>quesition</UIIcon>{timePrefix} {CommentAuthor} caused unhandled notification {NotificationType} for {NodeAuthor} {NodeType} "<em>{node.name}</em>"
-				</UIButton>
+				<Button {...navProps} >
+					<Icon>quesition</Icon>{timePrefix} {CommentAuthor} caused unhandled notification {NotificationType} for {NodeAuthor} {NodeType} "<em>{node.name}</em>"
+				</Button>
 			);
 		}
 		else {
 			const NodeAuthor = this.getNodeAuthorAsSubjectJSX(notification);
 			return (
-				<UIButton {...navProps} >
-					<UIIcon>quesition</UIIcon>{timePrefix} {NodeAuthor} caused unhandled notification {NotificationType} with their {NodeType} "<em>{node.name}</em>"
-				</UIButton>
+				<Button {...navProps} >
+					<Icon>quesition</Icon>{timePrefix} {NodeAuthor} caused unhandled notification {NotificationType} with their {NodeType} "<em>{node.name}</em>"
+				</Button>
 			);
 		}
 	}
@@ -227,9 +227,9 @@ export default class NotificationItem extends Component {
 		const {node} = notification;
 
 		return (
-			<UIButton {...navProps} >
-				<UIIcon>bubble-empty</UIIcon>{timePrefix} {CommentAuthor} commented on your {NodeType} "<em>{node.name}</em>"
-			</UIButton>
+			<Button {...navProps} >
+				<Icon>bubble-empty</Icon>{timePrefix} {CommentAuthor} commented on your {NodeType} "<em>{node.name}</em>"
+			</Button>
 		);
 	}
 
@@ -240,9 +240,9 @@ export default class NotificationItem extends Component {
 		const {node, comment} = notification;
 
 		return (
-			<UIButton {...navProps} >
-				<UIIcon>{comment.length > 1 ? 'bubbles' : 'bubble'}</UIIcon>{timePrefix} {CommentAuthor} commented on {NodeAuthor} {NodeType} "<em>{node.name}</em>"
-			</UIButton>
+			<Button {...navProps} >
+				<Icon>{comment.length > 1 ? 'bubbles' : 'bubble'}</Icon>{timePrefix} {CommentAuthor} commented on {NodeAuthor} {NodeType} "<em>{node.name}</em>"
+			</Button>
 		);
 	}
 
@@ -252,9 +252,9 @@ export default class NotificationItem extends Component {
 		const {node} = notification;
 
 		return (
-			<UIButton {...navProps} >
-				<UIIcon>gamepad</UIIcon> {timePrefix} {NodeAuthor} published a {NodeType} "<em>{node.name}</em>"
-			</UIButton>
+			<Button {...navProps} >
+				<Icon>gamepad</Icon> {timePrefix} {NodeAuthor} published a {NodeType} "<em>{node.name}</em>"
+			</Button>
 		);
 	}
 
@@ -263,9 +263,9 @@ export default class NotificationItem extends Component {
 		const {node} = notification;
 
 		return (
-			<UIButton {...navProps} >
-				<UIIcon>feed</UIIcon> {timePrefix} {NodeAuthor} posted "<em>{node.name}</em>"
-			</UIButton>
+			<Button {...navProps} >
+				<Icon>feed</Icon> {timePrefix} {NodeAuthor} posted "<em>{node.name}</em>"
+			</Button>
 		);
 	}
 
@@ -277,17 +277,17 @@ export default class NotificationItem extends Component {
 			const CommentAuthor = this.getCommentAuthorAsSubjectJSX(notification);
 			const NodeAuthor = this.getNodeAuthorAsObjectJSX(notification);
 			return (
-				<UIButton {...navProps} >
-					<UIIcon>at</UIIcon> {timePrefix} {CommentAuthor} mentioned you in a comment on {NodeAuthor} {NodeType} "<em>{node.name}</em>"
-				</UIButton>
+				<Button {...navProps} >
+					<Icon>at</Icon> {timePrefix} {CommentAuthor} mentioned you in a comment on {NodeAuthor} {NodeType} "<em>{node.name}</em>"
+				</Button>
 			);
 		}
 		else {
 			const NodeAuthor = this.getNodeAuthorAsSubjectJSX(notification);
 			return (
-				<UIButton {...navProps} >
-					<UIIcon>at</UIIcon> {timePrefix} {NodeAuthor} mentioned you in their {NodeType} "<em>{node.name}</em>"
-				</UIButton>
+				<Button {...navProps} >
+					<Icon>at</Icon> {timePrefix} {NodeAuthor} mentioned you in their {NodeType} "<em>{node.name}</em>"
+				</Button>
 			);
 		}
 	}

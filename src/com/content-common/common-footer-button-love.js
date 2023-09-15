@@ -2,7 +2,7 @@ import {Component} from 'preact';
 import './common-footer-button.less';
 import './common-footer-button-love.less';
 
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 import $NodeLove						from 'backend/js/node/node_love';
 
 export default class ContentCommonFooterButtonLove extends Component {
@@ -57,9 +57,9 @@ export default class ContentCommonFooterButtonLove extends Component {
 
 		return (
 			<div class={Classes} onClick={this.onLove}>
-				<UIIcon class="-hover-hide">heart</UIIcon>
-				<UIIcon class="-hover-show -loved-hide">heart-plus</UIIcon>
-				<UIIcon class="-hover-show -loved-show">heart-minus</UIIcon>
+				<Icon class="-hover-hide">heart</Icon>
+				<Icon class="-hover-show -loved-hide">heart-plus</Icon>
+				<Icon class="-hover-show -loved-show">heart-minus</Icon>
 				<div class="-count">{Love}</div>
 			</div>
 		);

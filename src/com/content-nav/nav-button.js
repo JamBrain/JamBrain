@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './nav.less';
 
-import { UIIcon, UIButton } from 'com/ui';
+import { Icon, Button } from 'com/ui';
 
 
 export default class ContentNavButton extends Component {
@@ -20,14 +20,14 @@ export default class ContentNavButton extends Component {
 		}
 
 		if ( props.icon ) {
-			Body.push(<UIIcon src={props.icon} />);
+			Body.push(<Icon src={props.icon} />);
 			Classes.push('-has-icon');
 		}
 
 		Body.push(<span>{props.children}</span>);
 
 		return (
-			<UIButton {...props} class={Classes.join(' ')}>{Body}</UIButton>
+			<Button {...props} class={Classes.join(' ')}>{Body}</Button>
 		);
 	}
 }

@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import './noob.less';
 import '../header.less';
 
-import {UIIcon, UILink, UIButton} from 'com/ui';
+import {Icon, Link, Button} from 'com/ui';
 import {BasicAside, Header, Section, Footer} from "com/content/basic";
 
 export default class ContentHeaderNoob extends Component {
@@ -26,10 +26,10 @@ export default class ContentHeaderNoob extends Component {
 				<Header class="_font2" title="What is Ludum Dare?" />
 				<Section>
 					<p>
-						<UILink href="/about">Ludum Dare</UILink> is an online event where games are made from scratch in a weekend. Check us out every April and October!
+						<Link href="/about">Ludum Dare</Link> is an online event where games are made from scratch in a weekend. Check us out every April and October!
 					</p>
 				</Section>
-				<UIButton class="close" onClick={this.onClick}><UIIcon>cross</UIIcon></UIButton>
+				<Button class="close" onClick={this.onClick}><Icon>cross</Icon></Button>
 			</BasicAside>
 		);
 	}

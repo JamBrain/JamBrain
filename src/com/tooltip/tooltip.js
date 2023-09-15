@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './tooltip.less';
 
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 import ButtonBase						from 'com/button-base/base';
 import ContentCommonBody				from 'com/content-common/common-body';
 
@@ -83,7 +83,7 @@ export default class ToolTip extends Component {
 			ToolTipButtonContent = props.ToolTipButtonContent;
 		}
 		else {
-			ToolTipButtonContent = (<UIIcon small baseline gap>info</UIIcon>);
+			ToolTipButtonContent = (<Icon small baseline gap>info</Icon>);
 
 		}
 

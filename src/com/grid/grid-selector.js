@@ -3,7 +3,7 @@ import './grid-selector.less';
 
 import Dropdown							from 'com/input-dropdown/dropdown';
 import ButtonBase						from 'com/button-base/base';
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 
 /** @deprecated */
 export default class GridSelector extends Component {
@@ -57,7 +57,7 @@ export default class GridSelector extends Component {
 
        const ShowToggle = (
             <ButtonBase onClick={this.onToggleDropDown}>
-                <UIIcon>cog</UIIcon>
+                <Icon>cog</Icon>
             </ButtonBase>
        );
 

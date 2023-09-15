@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './item-embed.less';
 
-import {UIButton, UIIcon, UIImage} from 'com/ui';
+import {Button, Icon, Image} from 'com/ui';
 
 export default class ContentItemEmbed extends Component {
 	constructor(props) {
@@ -61,13 +61,13 @@ export default class ContentItemEmbed extends Component {
 				);
 			}
 			else {
-				let placeHolder = cover ? <UIImage src={cover} style={"width: "+width+"px; height: "+height+"px;"} /> : <div style={"width: "+width+"px; height: "+height+"px;"} />;
+				let placeHolder = cover ? <Image src={cover} style={"width: "+width+"px; height: "+height+"px;"} /> : <div style={"width: "+width+"px; height: "+height+"px;"} />;
 
 				return (
-					<UIButton class="embed -preview" onclick={this.onPlay}>
+					<Button class="embed -preview" onclick={this.onPlay}>
 						{placeHolder}
-						<UIIcon>play</UIIcon>
-					</UIButton>
+						<Icon>play</Icon>
+					</Button>
 				);
 			}
 		}

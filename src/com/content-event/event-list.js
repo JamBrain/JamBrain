@@ -3,7 +3,7 @@ import './event-list.less';
 
 import Sanitize							from 'internal/sanitize';
 
-import {UIIcon, UISpinner} from 'com/ui';
+import {Icon, UISpinner} from 'com/ui';
 
 import ButtonBase						from 'com/button-base/base';
 
@@ -259,7 +259,7 @@ export default class ContentEventList extends Component {
 			// Generate the page
 			return (
 				<div class="-body">
-					<h2><UIIcon small baseline gap>ticket</UIIcon>{Title}</h2>
+					<h2><Icon small baseline gap>ticket</Icon>{Title}</h2>
 					{Navigation}
 					{Body}
 				</div>

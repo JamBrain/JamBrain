@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './notifications.less';
 
-import {UIIcon, UICheckbox} from 'com/ui';
+import {Icon, UICheckbox} from 'com/ui';
 import {
 	isNotificationComment,
 	isNotificationFeedback,
@@ -65,42 +65,42 @@ export default class NotificationsFilter extends Component {
 					value={Mention !== false}
 					onClick={this.onToggleMention}
 				>
-					<UIIcon>at</UIIcon><span>Mentions{hiddenMention}</span>
+					<Icon>at</Icon><span>Mentions{hiddenMention}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={Feedback !== false}
 					onClick={this.onToggleFeedback}
 				>
-					<UIIcon>bubble-empty</UIIcon><span>Feedback{hiddenFeedback}</span>
+					<Icon>bubble-empty</Icon><span>Feedback{hiddenFeedback}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={Comment !== false}
 					onClick={this.onToggleComments}
 				>
-					<UIIcon>bubble</UIIcon><span>Comments{hiddenComments}</span>
+					<Icon>bubble</Icon><span>Comments{hiddenComments}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={FriendGame !== false}
 					onClick={this.onToggleFriendGame}
 				>
-					<UIIcon>gamepad</UIIcon><span>Friend's games{hiddenFriendGame}</span>
+					<Icon>gamepad</Icon><span>Friend's games{hiddenFriendGame}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={FriendPost !== false}
 					onClick={this.onToggleFriendPost}
 				>
-					<UIIcon>feed</UIIcon><span>Friend's posts{hiddenFriendPost}</span>
+					<Icon>feed</Icon><span>Friend's posts{hiddenFriendPost}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={Other !== false}
 					onClick={this.onToggleOther}
 				>
-					<UIIcon>question</UIIcon><span>Other{hiddenOther}</span>
+					<Icon>question</Icon><span>Other{hiddenOther}</span>
 				</UICheckbox>
 			</div>
 		);

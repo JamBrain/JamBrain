@@ -1,10 +1,10 @@
 import { Component } from 'preact';
 import './textdown.less';
 
-import {UIButton} from '../button';
-import {UIText} from '../text';
+import {Button} from '../button';
+import {TextField} from '../text';
 
-export class UITextdown extends Component {
+export class TextDropdown extends Component {
 	constructor( props ) {
 		super(props);
 
@@ -76,9 +76,9 @@ export class UITextdown extends Component {
 	renderItem( item, index ) {
 		if ( item && item.name ) {
 			return (
-				<UIButton class="-item" title={item.id+' - '+item.slug} onClick={this.onClickItem.bind(this, item)}>
+				<Button class="-item" title={item.id+' - '+item.slug} onClick={this.onClickItem.bind(this, item)}>
 					{item.name}
-				</UIButton>
+				</Button>
 			);
 		}
 
@@ -112,7 +112,7 @@ export class UITextdown extends Component {
 		// NOTE: a tabindex is required to use focus and blur
 		return (
 			<div class={Classes} tabIndex={-1} onFocus={this.doShow} onBlur={this.doHide}>
-				<UIText class="-text" value={props.value} placeholder={props.placeholder} onModify={this.onModify} onselect={this.onSelect} maxLength={props.maxLength} showLength={false} />
+				<TextField class="-text" value={props.value} placeholder={props.placeholder} onModify={this.onModify} onselect={this.onSelect} maxLength={props.maxLength} showLength={false} />
 				{ShowItems}
 			</div>
 		);

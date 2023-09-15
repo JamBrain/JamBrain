@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './image.less';
 
-export class UIImage extends Component {
+export class Image extends Component {
 	constructor( props ) {
 		super(props);
 

@@ -3,7 +3,7 @@
 //import {UIButton, UIIcon} from 'com/ui';
 
 //import { signal } from '@preact/signals';
-import { UIButton } from './button';
+import { Button } from './button';
 
 function onClick( e ) {
 	if ( navigator.clipboard ) {
@@ -21,9 +21,10 @@ function onClick( e ) {
 	}
 }
 
+/** @deprecated */
 export default function UIButtonClipboard( props ) {
 	const {...otherProps} = props;
-	return <UIButton {...otherProps} onClick={onClick} />;
+	return <Button {...otherProps} onClick={onClick} />;
 }
 
 /*

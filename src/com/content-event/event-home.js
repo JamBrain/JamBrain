@@ -1,5 +1,5 @@
 import {Component} from 'preact';
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 import NavLink 							from 'com/nav-link/link';
 import marked 							from 'internal/marked/marked';
 
@@ -63,7 +63,7 @@ export default class ContentEventHome extends Component {
 			""
 		];
 
-		var ThemeSelectionDiv = EventModeText ? <NavLink href={path+'/theme'} class="-item"><UIIcon>mallet</UIIcon> {EventModeText}</NavLink> : "";
+		var ThemeSelectionDiv = EventModeText ? <NavLink href={path+'/theme'} class="-item"><Icon>mallet</Icon> {EventModeText}</NavLink> : "";
 
 		var ShowStats = null;
 		if ( stats ) {
@@ -78,7 +78,7 @@ export default class ContentEventHome extends Component {
 
 			ShowStats = (
 				<div class="">
-					<h2><UIIcon baseline small>stats</UIIcon> Theme Selection Stats</h2>
+					<h2><Icon baseline small>stats</Icon> Theme Selection Stats</h2>
 					{ShowIdeaCount}
 					{ShowUsersWithIdeas}
 				</div>
@@ -115,9 +115,9 @@ export default class ContentEventHome extends Component {
 					{ShowEventMode}
 				</div>
 				<div class="event-nav">
-					<NavLink class="-item -selected"><UIIcon>feed</UIIcon> Feed</NavLink>
-					<NavLink class="-item"><UIIcon>news</UIIcon> News</NavLink>
-					<NavLink class="-item"><UIIcon>gamepad</UIIcon> Join Event</NavLink>
+					<NavLink class="-item -selected"><Icon>feed</Icon> Feed</NavLink>
+					<NavLink class="-item"><Icon>news</Icon> News</NavLink>
+					<NavLink class="-item"><Icon>gamepad</Icon> Join Event</NavLink>
 					{ThemeSelectionDiv}
 				</div>
 				{ShowStats}

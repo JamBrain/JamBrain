@@ -1,7 +1,7 @@
 import {Component} from 'preact';
 import './event-slaughter.less';
 
-import {UIButton, UIIcon, UISpinner} from 'com/ui';
+import {Button, Icon, UISpinner} from 'com/ui';
 
 import $ThemeIdeaVote					from 'backend/js/theme/theme_idea_vote';
 import $Node from 'backend/js/node/node';
@@ -155,13 +155,13 @@ export default class ContentEventSlaughter extends Component {
 
 	renderIcon( value ) {
 		if ( value === VOTE_YES )
-			return <UIIcon>checkmark</UIIcon>;
+			return <Icon>checkmark</Icon>;
 		else if ( value === VOTE_NO )
-			return <UIIcon>cross</UIIcon>;
+			return <Icon>cross</Icon>;
 		else if ( value === VOTE_FLAG )
-			return <UIIcon>flag</UIIcon>;
+			return <Icon>flag</Icon>;
 
-		return <UIIcon>fire</UIIcon>;
+		return <Icon>fire</Icon>;
 	}
 
 	renderRecentQueue() {
@@ -185,10 +185,10 @@ export default class ContentEventSlaughter extends Component {
 			}
 
 			ret.push(
-				<UIButton title={vote} class={`-recent ${VoteStyle} ${flashRecent === voteId ? '-flash': ''}`} key={voteId} onClick={() => this.redoVote(voteId)}>
+				<Button title={vote} class={`-recent ${VoteStyle} ${flashRecent === voteId ? '-flash': ''}`} key={voteId} onClick={() => this.redoVote(voteId)}>
 					{this.renderIcon(vote)}
 					<span title={'Id: ' + voteId}>{this.state.ideas[voteId]}</span>
-				</UIButton>
+				</Button>
 			);
 		}
 		return ret;
@@ -345,12 +345,12 @@ export default class ContentEventSlaughter extends Component {
 					</div>
 					{ShowEager}
 					<div class="-main-buttons">
-						<UIButton class={`middle big -yes ${state.flashButton == 'Yes' ? '-flash': ''}`} onClick={this.submitYesVote} title="Good" >{this.renderIcon(VOTE_YES)}<span><span class="hotkey">Y</span>ES</span></UIButton>
-						<UIButton class={`middle big -no ${state.flashButton == 'No' ? '-flash': ''}`} onClick={this.submitNoVote} title="Bad" >{this.renderIcon(VOTE_NO)}<span><span class="hotkey">N</span>O</span></UIButton>
+						<Button class={`middle big -yes ${state.flashButton == 'Yes' ? '-flash': ''}`} onClick={this.submitYesVote} title="Good" >{this.renderIcon(VOTE_YES)}<span><span class="hotkey">Y</span>ES</span></Button>
+						<Button class={`middle big -no ${state.flashButton == 'No' ? '-flash': ''}`} onClick={this.submitNoVote} title="Bad" >{this.renderIcon(VOTE_NO)}<span><span class="hotkey">N</span>O</span></Button>
 					</div>
 					<div class="-other-buttons">
-						<div class="-title"><span>If inappropriate or offensive, you can </span><UIButton class="-flag" onClick={this.submitFlagVote}>{this.renderIcon(VOTE_FLAG)}<span>Flag</span></UIButton><span> it.</span></div>
-						<div class="-info"><UIIcon>info</UIIcon><span> You can use <strong>Y</strong> and <strong>N</strong> as hotkeys.</span></div>
+						<div class="-title"><span>If inappropriate or offensive, you can </span><Button class="-flag" onClick={this.submitFlagVote}>{this.renderIcon(VOTE_FLAG)}<span>Flag</span></Button><span> it.</span></div>
+						<div class="-info"><Icon>info</Icon><span> You can use <strong>Y</strong> and <strong>N</strong> as hotkeys.</span></div>
 						<div><strong>Themes Slaughtered:</strong> <span>{Object.keys(state.votes).length}</span></div>
 					</div>
 					{StatsAndDetails}

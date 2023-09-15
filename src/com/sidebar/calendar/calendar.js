@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import './calendar.less';
 import '../base/base.less';
 
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 
 export default class SidebarCalendar extends Component {
 	constructor( props ) {
@@ -146,12 +146,12 @@ export default class SidebarCalendar extends Component {
 			var ShowIcon = null;
 			if ( col.year == 2018 && col.month == 4 /*6*/ ) { // borken
 				if ( col.day === 15 ) {
-					ShowIcon = <UIIcon class="-icon">checker</UIIcon>;
+					ShowIcon = <Icon class="-icon">checker</Icon>;
 				}
 			}
 			if ( col.year == 2018 && col.month == 3 && (col.day >= 20 && col.day <= 23) ) {
 				if ( col.day === 1 ) {
-					ShowIcon = <UIIcon class="-icon">trophy</UIIcon>;
+					ShowIcon = <Icon class="-icon">trophy</Icon>;
 				}
 				props.class.push('scheduled');
 			}

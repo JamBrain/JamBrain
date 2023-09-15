@@ -1,7 +1,7 @@
 import './post.less';
 
 import ContentSimple					from 'com/content-simple/simple';
-import {UIIcon, UILink, UIButton}		from 'com/ui';
+import {Icon, Link, Button}		from 'com/ui';
 
 export default function ContentPost( props ) {
 	let {node} = props;
@@ -58,7 +58,7 @@ export default function ContentPost( props ) {
 							if ( isURL ) {
 								body = (
 									<div>
-										<span>Link:</span> <strong><UILink href={node.meta['promo-code']}>{node.meta['promo-code']}</UILink></strong>
+										<span>Link:</span> <strong><Link href={node.meta['promo-code']}>{node.meta['promo-code']}</Link></strong>
 									</div>
 								);
 							}
@@ -101,7 +101,7 @@ export default function ContentPost( props ) {
 				// MK: Is this safe?
 				newProps.children = (
 					<div class="body -promo">
-						<UIButton class="content-common-nav-button" href={node.path}><UIIcon src="gift" /><div>Continue</div></UIButton>
+						<Button class="content-common-nav-button" href={node.path}><Icon src="gift" /><div>Continue</div></Button>
 					</div>
 				);
 			}

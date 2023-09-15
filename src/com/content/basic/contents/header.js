@@ -1,4 +1,4 @@
-import {UIIcon, UILink} from "com/ui";
+import {Icon, Link} from "com/ui";
 
 /**
  * Header inside content
@@ -11,11 +11,11 @@ import {UIIcon, UILink} from "com/ui";
  * @param {string} [props.href]
  */
 export default function Header( props ) {
-	let titlePrefix = props.titleIcon ? <UIIcon baseline small src={props.titleIcon} /> : null;
+	let titlePrefix = props.titleIcon ? <Icon baseline small src={props.titleIcon} /> : null;
 
 	return (
 		<header class={props.class}>
-			{props.title ? <h1><UILink href={props.href}>{titlePrefix}{props.title}</UILink></h1> : null}
+			{props.title ? <h1><Link href={props.href}>{titlePrefix}{props.title}</Link></h1> : null}
 			{props.children}
 		</header>
 	);

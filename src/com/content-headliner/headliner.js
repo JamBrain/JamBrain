@@ -3,7 +3,7 @@ import './headliner.less';
 
 import {getLocaleDate, getRoughAge} from 'internal/time';
 
-import {UIIcon, UIButton} from 'com/ui';
+import {Icon, Button} from 'com/ui';
 
 //import $Node from 'backend/js/node/node';
 
@@ -33,7 +33,7 @@ export default class ContentHeadliner extends Component {
 			if ( props.love ) {
 				Subtext.push(
 					<div title="Love" class="-statistic">
-						<UIIcon small baseline>heart</UIIcon> <span>{node.love}</span>
+						<Icon small baseline>heart</Icon> <span>{node.love}</span>
 					</div>
 				);
 			}
@@ -41,7 +41,7 @@ export default class ContentHeadliner extends Component {
 			if ( props.comments ) {
 				Subtext.push(
 					<div title="Comments" class="-statistic">
-						<UIIcon small baseline>bubble</UIIcon> <span>{node.comments}</span>
+						<Icon small baseline>bubble</Icon> <span>{node.comments}</span>
 					</div>
 				);
 			}
@@ -49,7 +49,7 @@ export default class ContentHeadliner extends Component {
 			if ( props.games && node.games ) {
 				Subtext.push(
 					<div title="Games" class="-statistic">
-						<UIIcon small baseline>gamepad</UIIcon> <span>{node.games}</span>
+						<Icon small baseline>gamepad</Icon> <span>{node.games}</span>
 					</div>
 				);
 			}
@@ -57,7 +57,7 @@ export default class ContentHeadliner extends Component {
 			if ( props.articles && node.articles ) {
 				Subtext.push(
 					<div title="Articles" class="-statistic">
-						<UIIcon small baseline>article</UIIcon> <span>{node.articles}</span>
+						<Icon small baseline>article</Icon> <span>{node.articles}</span>
 					</div>
 				);
 			}
@@ -82,7 +82,7 @@ export default class ContentHeadliner extends Component {
 
 
 			// Render
-			return <UIButton class={`item -list-item ${props.childclass ?? ''}`} href={node.path}>{Body}</UIButton>;
+			return <Button class={`item -list-item ${props.childclass ?? ''}`} href={node.path}>{Body}</Button>;
 		}
 		return null;
 	}
@@ -153,7 +153,7 @@ export default class ContentHeadliner extends Component {
 		let Flag = [];
 		// The Icon
 		if ( props.icon ) {
-			Flag.push(<UIIcon big>{props.icon}</UIIcon>);
+			Flag.push(<Icon big>{props.icon}</Icon>);
 		}
 		// The Name
 		if ( props.name ) {
@@ -164,21 +164,21 @@ export default class ContentHeadliner extends Component {
 		}
 
 		// Only show the flag if it contains something
-		return Flag.length ? <UIButton class={`flag ${props.flagclass ?? ''}`} href={props.href}>{Flag}</UIButton> : null;
+		return Flag.length ? <Button class={`flag ${props.flagclass ?? ''}`} href={props.href}>{Flag}</Button> : null;
 	}
 
 
 	renderFooter( props ) {
 		// Show the footer
 		if ( props.footer ) {
-			return <UIButton class={`item -footer-item ${props.childclass ?? ''}`} href={props.footerhref}>{props.footer}</UIButton>;
+			return <Button class={`item -footer-item ${props.childclass ?? ''}`} href={props.footerhref}>{props.footer}</Button>;
 		}
 		// Show the more footer
 		else if ( props.more ) {
 			return (
-				<UIButton class={`item -more-item ${props.childclass ?? ''}`} href={props.more}>
-					<UIIcon>circle</UIIcon><UIIcon>circle</UIIcon><UIIcon>circle</UIIcon>
-				</UIButton>
+				<Button class={`item -more-item ${props.childclass ?? ''}`} href={props.more}>
+					<Icon>circle</Icon><Icon>circle</Icon><Icon>circle</Icon>
+				</Button>
 			);
 		}
 	}

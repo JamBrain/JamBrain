@@ -4,7 +4,7 @@ import './filter.less';
 import OldContentCommon					from 'com/content-common/common';
 import {CommonSection}					from 'com/content/common';
 import CommonBody						from 'com/content-common/common-body';
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 import InputText						from 'com/input-text/text';
 import FilterSpecial					from 'com/content-games/filter-special';
 import InputDropdown					from 'com/input-dropdown/dropdown';
@@ -91,12 +91,12 @@ export default class GamesFilter extends Component {
 			let Items = [
 				[
 					1,
-					<div><UIIcon>tag</UIIcon><div>Featured Event</div></div>,
+					<div><Icon>tag</Icon><div>Featured Event</div></div>,
 					<NavLink href={Path+Filter+WithSubFilter+''} class="-click-catcher" />,
 				],
 				[
 					2,
-					<div><UIIcon>tag</UIIcon><div>All Events</div></div>,
+					<div><Icon>tag</Icon><div>All Events</div></div>,
 					<NavLink href={Path+Filter+WithSubFilter+'/everything'} class="-click-catcher" />,
 				],
 			];
@@ -117,27 +117,27 @@ export default class GamesFilter extends Component {
 			let Items = [
 				[
 					1,
-					<div><UIIcon>gamepad</UIIcon><div>All</div></div>,
+					<div><Icon>gamepad</Icon><div>All</div></div>,
 					<NavLink href={Path+Filter+'/all'+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					2,
-					<div><UIIcon>trophy</UIIcon><div>Jam</div></div>,
+					<div><Icon>trophy</Icon><div>Jam</div></div>,
 					<NavLink href={Path+Filter+'/jam'+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					3,
-					<div><UIIcon>trophy</UIIcon><div>Compo</div></div>,
+					<div><Icon>trophy</Icon><div>Compo</div></div>,
 					<NavLink href={Path+Filter+'/compo'+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					4,
-					<div><UIIcon>trophy</UIIcon><div>Extra</div></div>,
+					<div><Icon>trophy</Icon><div>Extra</div></div>,
 					<NavLink href={Path+Filter+'/extra'+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					5,
-					<div><UIIcon>trash</UIIcon><div>Unfinished</div></div>,
+					<div><Icon>trash</Icon><div>Unfinished</div></div>,
 					<NavLink href={Path+Filter+'/unfinished'+WithSubSubFilter} class="-click-catcher" />,
 				],
 			];
@@ -249,32 +249,32 @@ export default class GamesFilter extends Component {
 			let Items = [
 				[
 					1,
-					<div><UIIcon>ticket</UIIcon><div>Smart</div></div>,
+					<div><Icon>ticket</Icon><div>Smart</div></div>,
 					<NavLink href={Path+'smart'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					2,
-					<div><UIIcon>ticket</UIIcon><div>Classic</div></div>,
+					<div><Icon>ticket</Icon><div>Classic</div></div>,
 					<NavLink href={Path+'classic'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					3,
-					<div><UIIcon>help</UIIcon><div>Danger</div></div>,
+					<div><Icon>help</Icon><div>Danger</div></div>,
 					<NavLink href={Path+'danger'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					4,
-					<div><UIIcon>gift</UIIcon><div>Zero</div></div>,
+					<div><Icon>gift</Icon><div>Zero</div></div>,
 					<NavLink href={Path+'zero'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					5,
-					<div><UIIcon>bubbles</UIIcon><div>Feedback</div></div>,
+					<div><Icon>bubbles</Icon><div>Feedback</div></div>,
 					<NavLink href={Path+'feedback'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					6,
-					<div><UIIcon>todo</UIIcon><div>Grade</div></div>,
+					<div><Icon>todo</Icon><div>Grade</div></div>,
 					<NavLink href={Path+'grade'+WithSubFilter} class="-click-catcher" />,
 				],
 			];

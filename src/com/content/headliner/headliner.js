@@ -1,6 +1,6 @@
 import {Component} from 'preact';
 
-import {UIIcon, UIButton} from 'com/ui';
+import {Icon, Button} from 'com/ui';
 
 /**
  * @param {object} props
@@ -21,11 +21,11 @@ export default class ContentHeadliner extends Component {
 
 	renderItem( props ) {
 		return (
-			<UIButton class={`item -list-item ${props.childclass ?? ''}`}>
+			<Button class={`item -list-item ${props.childclass ?? ''}`}>
 				<div class="-fill">
 					<div class="-title _font2">{props.title ? props.title : null}</div>
 				</div>
-			</UIButton>
+			</Button>
 		);
 	}
 
@@ -35,7 +35,7 @@ export default class ContentHeadliner extends Component {
 		let Flag = [];
 		// The Icon
 		if ( props.icon ) {
-			Flag.push(<UIIcon big>{props.icon}</UIIcon>);
+			Flag.push(<Icon big>{props.icon}</Icon>);
 		}
 		// The Name
 		if ( props.name ) {
@@ -46,21 +46,21 @@ export default class ContentHeadliner extends Component {
 		}
 
 		// Only show the flag if it contains something
-		return Flag.length ? <UIButton class={`flag ${props.flagclass ?? ''}`} href={props.href}>{Flag}</UIButton> : null;
+		return Flag.length ? <Button class={`flag ${props.flagclass ?? ''}`} href={props.href}>{Flag}</Button> : null;
 	}
 
 
 	renderFooter( props ) {
 		// Show the footer
 		if ( props.footer ) {
-			return <UIButton class={`item -footer-item ${props.childclass ?? ''}`} href={props.footerhref}>{props.footer}</UIButton>;
+			return <Button class={`item -footer-item ${props.childclass ?? ''}`} href={props.footerhref}>{props.footer}</Button>;
 		}
 		// Show the more footer
 		else if ( props.more ) {
 			return (
-				<UIButton class={`item -more-item ${props.childclass}`} href={props.more}>
-					<UIIcon>circle</UIIcon><UIIcon>circle</UIIcon><UIIcon>circle</UIIcon>
-				</UIButton>
+				<Button class={`item -more-item ${props.childclass}`} href={props.more}>
+					<Icon>circle</Icon><Icon>circle</Icon><Icon>circle</Icon>
+				</Button>
 			);
 		}
 	}

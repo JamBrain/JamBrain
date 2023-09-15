@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './common-autocomplete.less';
 
-import { UIButton } from 'com/ui';
+import { Button } from 'com/ui';
 import { emojiList } from 'external/emoji/emoji';
 import marked from 'internal/marked/marked';
 
@@ -251,9 +251,9 @@ export class AutocompleteEmojis extends Autocompletions {
 		const ShowEmoji = mrkd.parse(name, {});
 
 		return (
-			<UIButton key={name} class={classModifier} onClick={this.handleSelect.bind(this, item)}>
+			<Button key={name} class={classModifier} onClick={this.handleSelect.bind(this, item)}>
 				<div class="-emoji-autocomplete-markup">{ShowEmoji}</div>{ShowLeft}{ShowMatch}{ShowRight}
-			</UIButton>);
+			</Button>);
 	}
 }
 
@@ -308,6 +308,6 @@ export class AutocompleteAtNames extends Autocompletions {
 		else {
 			ShowLeft = name;
 		}
-		return <UIButton key={name} class={classModifier} onClick={this.handleSelect.bind(this, item)}>{ShowLeft}{ShowMatch}{ShowRight}</UIButton>;
+		return <Button key={name} class={classModifier} onClick={this.handleSelect.bind(this, item)}>{ShowLeft}{ShowMatch}{ShowRight}</Button>;
 	}
 }

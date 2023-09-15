@@ -51,7 +51,7 @@ export function UILink2( props ) {
 }
 
 
-export class UILink extends Component {
+export class Link extends Component {
 	constructor( props ) {
 		super(props);
 

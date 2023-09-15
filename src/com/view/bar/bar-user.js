@@ -1,7 +1,7 @@
 import { Component } 					from 'preact';
 import './bar-user.less';
 
-import {UIButton, UIImage, UIIcon, UIDropdown} from 'com/ui';
+import {Button, Image, Icon, UIDropdown} from 'com/ui';
 
 import $User							from 'backend/js/user/user';
 
@@ -35,11 +35,11 @@ export default class ViewBarUser extends Component {
 
 		return (
 			<UIDropdown class="-user" right>
-				<UIImage alt="Your Profile" src={UserAvatar} block />
-				<UIButton href={UserURL}><UIIcon>user</UIIcon><span>My Profile</span></UIButton>
-				<UIButton href={UserURL+'games'}><UIIcon>gamepad</UIIcon><span>My Games</span></UIButton>
+				<Image alt="Your Profile" src={UserAvatar} block />
+				<Button href={UserURL}><Icon>user</Icon><span>My Profile</span></Button>
+				<Button href={UserURL+'games'}><Icon>gamepad</Icon><span>My Games</span></Button>
 				<div class="-gap" />
-				<UIButton onClick={this.onLogout}><UIIcon>logout</UIIcon><span>Logout</span></UIButton>
+				<Button onClick={this.onLogout}><Icon>logout</Icon><span>Logout</span></Button>
 			</UIDropdown>
 		);
 	}

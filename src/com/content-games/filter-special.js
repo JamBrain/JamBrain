@@ -1,5 +1,5 @@
 import {Component} from 'preact';
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 
 export default class FilterSpecial extends Component {
     render ( {text, icon, onClick}, state ) {
@@ -10,12 +10,12 @@ export default class FilterSpecial extends Component {
             if (!value) {
                 value = text;
             }
-            ShowRemove = <button onClick={() => onClick(value)}><UIIcon>cross</UIIcon></button>;
+            ShowRemove = <button onClick={() => onClick(value)}><Icon>cross</Icon></button>;
         }
 
         return (
             <div class='filter-special'>
-                <UIIcon class='icon'>{icon}</UIIcon>{text}
+                <Icon class='icon'>{icon}</Icon>{text}
                 {ShowRemove}
             </div>
         );

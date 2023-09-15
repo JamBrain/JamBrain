@@ -2,7 +2,7 @@ import {Component, toChildArray}	from 'preact';
 import {Diff}				from 'shallow';
 import './common-body-flag.less';
 
-import { UIIcon } from 'com/ui';
+import { Icon } from 'com/ui';
 
 export default class ContentCommonFlag extends Component {
 	constructor( props ) {
@@ -18,7 +18,7 @@ export default class ContentCommonFlag extends Component {
 
         let Icon = null;
         if ( props.icon ) {
-            Icon = <UIIcon>{props.icon}</UIIcon>;
+            Icon = <Icon>{props.icon}</Icon>;
         }
 
         return (

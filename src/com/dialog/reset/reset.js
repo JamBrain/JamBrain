@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import Sanitize							from 'internal/sanitize';
 
 import DialogCommon						from 'com/dialog/common/common';
-import {UILink, UISpinner} from 'com/ui';
+import {Link, UISpinner} from 'com/ui';
 import LabelYesNo						from 'com/label-yesno/yesno';
 
 import $User							from 'backend/js/user/user';
@@ -89,7 +89,7 @@ export default class DialogReset extends Component {
 							<input autofocus id="dialog-register-mail" autocomplete="email" onChange={this.onChange} class="-text focusable" type="email" name="email" placeholder="E-mail address" maxLength={254} />
 							<LabelYesNo value={Sanitize.validateMail(mail) ? 1 : -1} />
 						</div>
-						<p>See <UILink href="https://ludumdare.com/resources/questions/how-do-i-reset-password/">this article</UILink> for help</p>
+						<p>See <Link href="https://ludumdare.com/resources/questions/how-do-i-reset-password/">this article</Link> for help</p>
 					</div>
 				</DialogCommon>
 			);

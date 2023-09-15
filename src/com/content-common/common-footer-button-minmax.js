@@ -1,7 +1,7 @@
 import {Component} from 'preact';
 import './common-footer-button.less';
 
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 
 export default class ContentCommonFooterButtonMinMax extends Component {
 	constructor( props ) {
@@ -14,8 +14,8 @@ export default class ContentCommonFooterButtonMinMax extends Component {
 
 		return (
 			<div class="content-common-footer-button -minmax" onClick={onClick}>
-				<UIIcon class="_inline-if-not-minimized">arrow-up</UIIcon>
-				<UIIcon class="_inline-if-minimized">arrow-down</UIIcon>
+				<Icon class="_inline-if-not-minimized">arrow-up</Icon>
+				<Icon class="_inline-if-minimized">arrow-down</Icon>
 			</div>
 		);
 	}

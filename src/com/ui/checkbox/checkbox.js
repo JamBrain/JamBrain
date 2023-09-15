@@ -1,18 +1,18 @@
 import { Component } from 'preact';
 import './checkbox.less';
 
-import { UIButton } from '../button';
-import { UIIcon } from '../icon';
+import { Button } from '../button';
+import { Icon } from '../icon';
 
 /** @deprecated */
 export class UICheckbox extends Component {
 	render( props ) {
 		const iconName = (props.radio ? 'radio' : 'checkbox') + (props.value ? '-checked' : '-unchecked');
 		return (
-			<UIButton class={`ui-checkbox ${props.class ?? ''}`} onClick={props.onClick} title={props.tooltip} >
-				<UIIcon src={iconName} />
+			<Button class={`ui-checkbox ${props.class ?? ''}`} onClick={props.onClick} title={props.tooltip} >
+				<Icon src={iconName} />
 				<span class="-text">{props.children}</span>
-			</UIButton>
+			</Button>
 		);
 	}
 }

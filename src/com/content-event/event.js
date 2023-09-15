@@ -2,7 +2,7 @@ import {Component} from 'preact';
 import './event.less';
 
 import NavLink 							from 'com/nav-link/link';
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 import { getLocaleDay, getLocaleMonthDay, getLocaleDate, getLocaleTime, getLocaleTimeZone } from 'internal/time';
 import { node_CanCreate, nodeEvent_CanTheme } from 'internal/lib';
 
@@ -92,7 +92,7 @@ export default class ContentEvent extends Component {
 				IsHome = true;
 			}
 
-			ShowHome = <ContentCommonNavButton href={path} class={Class}><UIIcon>home</UIIcon><div class="if-sidebar-inline">Home</div></ContentCommonNavButton>;
+			ShowHome = <ContentCommonNavButton href={path} class={Class}><Icon>home</Icon><div class="if-sidebar-inline">Home</div></ContentCommonNavButton>;
 		}
 
 		var ShowGame = null;
@@ -102,7 +102,7 @@ export default class ContentEvent extends Component {
 				Class = "-selected";
 			}
 
-			ShowGame = <ContentCommonNavButton href={path+'/games'} class={Class}><UIIcon>gamepad</UIIcon><div class="if-sidebar-inline">Games</div></ContentCommonNavButton>;
+			ShowGame = <ContentCommonNavButton href={path+'/games'} class={Class}><Icon>gamepad</Icon><div class="if-sidebar-inline">Games</div></ContentCommonNavButton>;
 		}
 
 		let ShowMyGrades = null;
@@ -112,7 +112,7 @@ export default class ContentEvent extends Component {
 				Class = "-selected";
 			}
 
-			ShowMyGrades = <ContentCommonNavButton href={path+'/mygrades'} class={Class}><UIIcon>star-half</UIIcon><div class="if-sidebar-inline">My Grades</div></ContentCommonNavButton>;
+			ShowMyGrades = <ContentCommonNavButton href={path+'/mygrades'} class={Class}><Icon>star-half</Icon><div class="if-sidebar-inline">My Grades</div></ContentCommonNavButton>;
 		}
 
 //		if ( extra && extra.length ) {
@@ -133,14 +133,14 @@ export default class ContentEvent extends Component {
 //				var FeaturedGame = featured.what[featured.focus_id]; // Hack
 				ShowJoin = (
 					<ContentCommonNavButton href={path + '/' + state.what.slug} class={Class}>
-						<UIIcon>gamepad</UIIcon><div class="if-sidebar-inline">My Game</div>
+						<Icon>gamepad</Icon><div class="if-sidebar-inline">My Game</div>
 					</ContentCommonNavButton>
 				);
 			}
 			else {
 				ShowJoin = (
 					<ContentCommonNavButton onClick={this.onJoin} class={Class}>
-						<UIIcon>publish</UIIcon><div class="if-sidebar-inline">Join Event</div>
+						<Icon>publish</Icon><div class="if-sidebar-inline">Join Event</div>
 					</ContentCommonNavButton>
 				);
 			}
@@ -174,7 +174,7 @@ export default class ContentEvent extends Component {
 				}
 			}
 
-			ShowTheme = <ContentCommonNavButton href={path+'/theme'} class={Class}><UIIcon>ticket</UIIcon><div class="if-sidebar-inline">Theme Selection</div></ContentCommonNavButton>;
+			ShowTheme = <ContentCommonNavButton href={path+'/theme'} class={Class}><Icon>ticket</Icon><div class="if-sidebar-inline">Theme Selection</div></ContentCommonNavButton>;
 		}
 
 //		if ( !IsHome )
@@ -194,14 +194,14 @@ export default class ContentEvent extends Component {
 
 			let ShowEventTheme = null;
 			if ( node.meta['event-theme'] ) {
-				ShowEventTheme = <><UIIcon small baseline gap>lightbulb</UIIcon> Theme: <strong>{node.meta['event-theme']}</strong></>;
+				ShowEventTheme = <><Icon small baseline gap>lightbulb</Icon> Theme: <strong>{node.meta['event-theme']}</strong></>;
 			}
 
 			props.above.push(
 				<ContentCommonBody>
 					{ShowEventTheme}
-					<div><UIIcon small baseline gap>calendar</UIIcon> {getLocaleDay(Start)} {getLocaleMonthDay(Start)} to <span class="if-sidebar-inline">{getLocaleDay(End)}</span> {getLocaleDate(End)}</div>
-					<div title={LanguagePrefix+Start.toString()}><UIIcon small baseline gap>clock</UIIcon> Starts at <strong>{getLocaleTime(Start)}</strong> {getLocaleTimeZone(Start)} <NavLink href="https://github.com/ludumdare/ludumdare/issues/589"><strong title="Adjusted for your local timezone. If this is not your timezone, click here and let us know!">*</strong></NavLink></div>
+					<div><Icon small baseline gap>calendar</Icon> {getLocaleDay(Start)} {getLocaleMonthDay(Start)} to <span class="if-sidebar-inline">{getLocaleDay(End)}</span> {getLocaleDate(End)}</div>
+					<div title={LanguagePrefix+Start.toString()}><Icon small baseline gap>clock</Icon> Starts at <strong>{getLocaleTime(Start)}</strong> {getLocaleTimeZone(Start)} <NavLink href="https://github.com/ludumdare/ludumdare/issues/589"><strong title="Adjusted for your local timezone. If this is not your timezone, click here and let us know!">*</strong></NavLink></div>
 				</ContentCommonBody>
 			);
 		}

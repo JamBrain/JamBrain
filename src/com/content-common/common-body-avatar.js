@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './common-body-avatar.less';
 
-import {UIButton, UIImage, UIIcon} from 'com/ui';
+import {Button, Image, Icon} from 'com/ui';
 
 import $Node from 'backend/js/node/node';
 import $Asset from 'backend/js/asset/asset';
@@ -60,16 +60,16 @@ export default class ContentCommonBodyAvatar extends Component {
 				(<label>
 					<input type="file" name="asset" style="display: none;" onChange={this.onEdit} />
 					<div class={Classes}>
-						<UIImage src={Avatar} failsrc={AvatarFail} />
-						<UIIcon>edit</UIIcon>
+						<Image src={Avatar} failsrc={AvatarFail} />
+						<Icon>edit</Icon>
 					</div>
 				</label>) :
-				(<UIButton class={Classes} href={props.href}>
-					<UIImage alt={name + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
-				</UIButton>);
+				(<Button class={Classes} href={props.href}>
+					<Image alt={name + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
+				</Button>);
 		}
 		return (<span class={Classes}>
-					<UIImage alt={name + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
+					<Image alt={name + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
 				</span>);
 	}
 }

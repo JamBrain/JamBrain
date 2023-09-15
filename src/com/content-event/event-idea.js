@@ -1,7 +1,7 @@
 import {Component} from 'preact';
 import './event-idea.less';
 
-import {UIIcon, UIButton} from 'com/ui';
+import {Icon, Button} from 'com/ui';
 import {ContentSimple} from 'com/content/simple';
 
 import $Node							from 'backend/js/node/node';
@@ -163,10 +163,10 @@ export default class ContentEventIdea extends Component {
 
 		return (
 			<div class="-item">
-				<UIIcon>lightbulb</UIIcon>
+				<Icon>lightbulb</Icon>
 				<div class="-text" title={idea}>{idea}</div>
 				<div class="-x" onClick={this.removeIdea.bind(this, id)}>
-					<UIIcon>cross</UIIcon>
+					<Icon>cross</Icon>
 				</div>
 			</div>
 		);
@@ -231,9 +231,9 @@ export default class ContentEventIdea extends Component {
 						class="-suggestion"
 						onChange={this.textChange} onKeyDown={this.onKeyDown}
 						placeholder="Your suggestion" maxLength={64} value={idea} />
-					<UIButton onClick={this.submitIdeaForm}>
-						<UIIcon>suggestion</UIIcon> Submit
-					</UIButton>
+					<Button onClick={this.submitIdeaForm}>
+						<Icon>suggestion</Icon> Submit
+					</Button>
 				</p>
 			);
 		}

@@ -1,9 +1,9 @@
 import './common-nav-button.less';
 
-import {UIButton} from 'com/ui';
+import {Button} from 'com/ui';
 
 export default function BodyNavButton( props ) {
-	return <UIButton {...props} />;
+	return <Button {...props} />;
 }
 /*
 		var newClass = cN('content-common-nav-button', props.class);

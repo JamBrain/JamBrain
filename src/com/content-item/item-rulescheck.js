@@ -4,7 +4,7 @@ import './item-rulescheck.less';
 import { node_CanPublish, node_CountAuthors, node_IsPublished } from 'internal/lib';
 import ContentCommonBody				from 'com/content-common/common-body';
 import ButtonBase						from 'com/button-base/base';
-import {UIIcon, UILink} from 'com/ui';
+import {Icon, Link} from 'com/ui';
 
 export default class ContentItemRulesCheck extends Component {
 	constructor(props) {
@@ -93,8 +93,8 @@ export default class ContentItemRulesCheck extends Component {
 
 	render(props, state) {
 		const MandatoryCompo = <span class="-mandatory">(<span>COMPO ONLY</span>)</span>;
-		const IconUnChecked = <UIIcon small baseline class="-checkbox" src="checkbox-unchecked" />;
-		const IconChecked = <UIIcon small baseline class="-checkbox" src="checkbox-checked" />;
+		const IconUnChecked = <Icon small baseline class="-checkbox" src="checkbox-unchecked" />;
+		const IconChecked = <Icon small baseline class="-checkbox" src="checkbox-checked" />;
 
 		const {
 			changeFormat, readRules, workedSolo, createdAll, createdWithin48,
@@ -115,7 +115,7 @@ export default class ContentItemRulesCheck extends Component {
 
 					<ButtonBase onclick={this.handleChange.bind(this, 'readRules', !readRules)}>
 						{readRules ? IconChecked : IconUnChecked}
-						I have read and understood <UILink blank href="//ludumdare.com/rules/"><strong>the rules</strong></UILink>.
+						I have read and understood <Link blank href="//ludumdare.com/rules/"><strong>the rules</strong></Link>.
 					</ButtonBase>
 
 					<ButtonBase onClick={this.handleChange.bind(this, 'optedOut', !optedOut)}>
@@ -157,11 +157,11 @@ export default class ContentItemRulesCheck extends Component {
 				</div>
 				<div class="-footer">
 					<p>
-						<UIIcon baseline src="warning" class="-warning" />
+						<Icon baseline src="warning" class="-warning" />
 						<span> <strong>IMPORTANT:</strong> Before you can select an Event Format and Publish, you must agree to <em>some</em> questions above.</span>
 					</p>
 					<p>
-						<span>You can change your format at any time, but be aware: Once a format has closed, it can no longer be selected. Contact <UILink href="https://ludumdare.com/support">support</UILink> for assistance.</span>
+						<span>You can change your format at any time, but be aware: Once a format has closed, it can no longer be selected. Contact <Link href="https://ludumdare.com/support">support</Link> for assistance.</span>
 					</p>
 				</div>
 			</ContentCommonBody>

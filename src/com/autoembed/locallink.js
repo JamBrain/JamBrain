@@ -1,5 +1,5 @@
 import NavLink from 'com/nav-link/link';
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 import './locallink.less';
 
 export default function LocalLink( props ) {
@@ -7,15 +7,15 @@ export default function LocalLink( props ) {
 	if (props.hashLink) {
 		ShowIcon = (
 			<span class="-icon-domain">
-				<UIIcon baseline small name={'link'}/>
+				<Icon baseline small name={'link'}/>
 			</span>
 		);
 	}
 	else {
 		ShowIcon = (
 			<span class="-icon-domain">
-				<UIIcon baseline small name={'l-udum'}/>
-				<UIIcon baseline small name={'d-are'}/>
+				<Icon baseline small name={'l-udum'}/>
+				<Icon baseline small name={'d-are'}/>
 			</span>
 		);
 	}

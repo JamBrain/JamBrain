@@ -1,6 +1,6 @@
 import { Component } from 'preact';
 import ContentCommonBody from 'com/content-common/common-body';
-import {UIButton, UILink, UIIcon} from 'com/ui';
+import {Button, Link, Icon} from 'com/ui';
 
 import { node_CanUpload } from 'internal/lib';
 
@@ -120,11 +120,11 @@ export default class ContentItemEmbedFile extends Component {
 						let func = this.onDelete.bind(this, e);
 						if ( whichEmbed.id == e.id ) {
 							//[{e.status.toString(16)}]
-							files.push(<li><strong>{e.name} - {getLocaleTimeStamp(new Date(e.timestamp))} - {e.size} bytes <UIButton class="-button" style="display: inline;" onclick={func}>delete</UIButton></strong></li>);
+							files.push(<li><strong>{e.name} - {getLocaleTimeStamp(new Date(e.timestamp))} - {e.size} bytes <Button class="-button" style="display: inline;" onclick={func}>delete</Button></strong></li>);
 						}
 						else {
 							//[{e.status.toString(16)}]
-							files.push(<li>{e.name} - {getLocaleTimeStamp(new Date(e.timestamp))} - {e.size} bytes <UIButton class="-button" style="display: inline;" onclick={func}>delete</UIButton></li>);
+							files.push(<li>{e.name} - {getLocaleTimeStamp(new Date(e.timestamp))} - {e.size} bytes <Button class="-button" style="display: inline;" onclick={func}>delete</Button></li>);
 						}
 					}
 				});
@@ -133,7 +133,7 @@ export default class ContentItemEmbedFile extends Component {
 			// Hack, append a few more items
 			for ( let idx = 0; idx < state.uploads.length; ++idx ) {
 				if ( idx == (state.uploads.length - 1) ) {
-					files.push(<li><strong>{state.uploads[idx].name}</strong> <UIIcon>info</UIIcon></li>);
+					files.push(<li><strong>{state.uploads[idx].name}</strong> <Icon>info</Icon></li>);
 				}
 				else {
 					files.push(<li>{state.uploads[idx].name}</li>);
@@ -150,7 +150,7 @@ export default class ContentItemEmbedFile extends Component {
 			];
 
 			const isUploading = (state.status > 0 && state.status < 5);
-			const uploadButton = isUploading ? "" : <UIButton class="-button">Upload .zip file</UIButton>;
+			const uploadButton = isUploading ? "" : <Button class="-button">Upload .zip file</Button>;
 
 			return (
 				<ContentCommonBody class="-files -body -upload">
@@ -162,8 +162,8 @@ export default class ContentItemEmbedFile extends Component {
 						<input type="file" name="file" style="display: none;" onchange={this.onUpload} />
 						{uploadButton}
 					</label>
-					<div class="-footer">For details on how to prepare a file for embedding, see the <UILink href="//ludumdare.com/resources/guides/embedding/">Embedding Guide</UILink>.</div>
-					<div class="-footer"><UIIcon>info</UIIcon> It can take a few minutes for an embedded game to update.</div>
+					<div class="-footer">For details on how to prepare a file for embedding, see the <Link href="//ludumdare.com/resources/guides/embedding/">Embedding Guide</Link>.</div>
+					<div class="-footer"><Icon>info</Icon> It can take a few minutes for an embedded game to update.</div>
 				</ContentCommonBody>
 			);
 		}

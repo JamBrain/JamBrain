@@ -1,4 +1,4 @@
-import { UIIcon } from 'com/ui';
+import { Icon } from 'com/ui';
 import './smartlink.less';
 
 export default function SmartLink(props, {}) {
@@ -6,7 +6,7 @@ export default function SmartLink(props, {}) {
 		<span class="smart-link">
 			<a href={props.full_url} target="_blank" rel="noopener noreferrer">
 				<span class="-icon-domain">
-					<UIIcon baseline small>{props.icon_name}</UIIcon>
+					<Icon baseline small>{props.icon_name}</Icon>
 					<span class="-domain">{props.domain}</span>
 				</span>
 				<span class="-the-rest">{props.part_url}</span>

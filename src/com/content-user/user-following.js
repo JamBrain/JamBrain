@@ -1,6 +1,6 @@
 import { Component } from 'preact';
 
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 
 import ContentLoading					from 'com/content-loading/loading';
 import ContentError from 'com/content/error';
@@ -101,8 +101,8 @@ export default class ContentUserFollowing extends Component {
             return (
                 <ContentCommon {...props}>
 					<ContentCommonBody>
-						<p>To add someone to your team, you need to both follow each other. Do so by visiting each others user pages, and clicking the <span><UIIcon baseline small gap>user-plus</UIIcon><strong>Follow</strong></span> button.</p>
-						<p>Users that follow each other will be shown below as <span><UIIcon baseline small gap>users</UIIcon><strong>Friends</strong></span>.</p>
+						<p>To add someone to your team, you need to both follow each other. Do so by visiting each others user pages, and clicking the <span><Icon baseline small gap>user-plus</Icon><strong>Follow</strong></span> button.</p>
+						<p>Users that follow each other will be shown below as <span><Icon baseline small gap>users</Icon><strong>Friends</strong></span>.</p>
 					</ContentCommonBody>
 					{following}
                 </ContentCommon>

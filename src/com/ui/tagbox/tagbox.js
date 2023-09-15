@@ -1,10 +1,10 @@
 import { Component } from 'preact';
 import './tagbox.less';
 
-import {UIIcon} from '../icon';
-import {UIButton} from '../button';
+import {Icon} from '../icon';
+import {Button} from '../button';
 
-export class UITagbox extends Component {
+export class Tagbox extends Component {
 	constructor( props ) {
 		super(props);
 
@@ -22,14 +22,14 @@ export class UITagbox extends Component {
 	renderTag( tag, index ) {
 		if ( tag && tag.name ) {
 			return (
-				<UIButton class="-tag" title={tag.id+' - '+tag.slug} onClick={this.onClick.bind(this, index)}>
+				<Button class="-tag" title={tag.id+' - '+tag.slug} onClick={this.onClick.bind(this, index)}>
 					<div class="-text">{tag.name}</div>
 					<div class="-tail-icon">
-						<UIIcon class="_if-parent-parent-no-hover-inline" src="circle" small />
-						<UIIcon class="_if-parent-parent-hover-inline" src="cross" small />
+						<Icon class="_if-parent-parent-no-hover-inline" src="circle" small />
+						<Icon class="_if-parent-parent-hover-inline" src="cross" small />
 					</div>
 					<div class="-tail" />
-				</UIButton>
+				</Button>
 			);
 		}
 		return null;

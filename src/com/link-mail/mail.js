@@ -1,7 +1,7 @@
 import { Component} from 'preact';
 import './mail.less';
 
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 
 // TODO: Migrate me in to `NavLink`/`Link`
 
@@ -23,7 +23,7 @@ export default class LinkMail extends Component {
 		}
 
 		return (
-			<a class={`link-mail ${props.class ?? ''}`} href={Href} title={Mail}><UIIcon gap small baseline>mail</UIIcon>{Mail}</a>
+			<a class={`link-mail ${props.class ?? ''}`} href={Href} title={Mail}><Icon gap small baseline>mail</Icon>{Mail}</a>
 		);
 	}
 }

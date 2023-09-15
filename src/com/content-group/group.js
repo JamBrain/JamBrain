@@ -1,7 +1,7 @@
 import {Component} from 'preact';
 
 import NavLink 							from 'com/nav-link/link';
-import {UIIcon, UISpinner} from 'com/ui';
+import {Icon, UISpinner} from 'com/ui';
 
 import Common							from 'com/content-common/common';
 import CommonBody						from 'com/content-common/common-body';
@@ -99,7 +99,7 @@ export default class ContentGroup extends Component {
 	render( {node, user}, {items, nodes} ) {
 		let ShowBody = [];
 		if ( items && items.length && nodes ) {
-			ShowBody.push(<div><NavLink href={node.path+'/..'}><span><UIIcon src="previous" /> </span>../</NavLink></div>);
+			ShowBody.push(<div><NavLink href={node.path+'/..'}><span><Icon src="previous" /> </span>../</NavLink></div>);
 
 			//for (let idx = 0; idx < items.length; idx++) {
 			for (let idx = 0; idx < nodes.length; idx++) {
@@ -108,7 +108,7 @@ export default class ContentGroup extends Component {
 
 				let prefix = <span>[{this.makePath(n)}]</span>;
 				if ( this.getIconName(n) ) {
-					prefix = <span><UIIcon src={this.getIconName(n)} /> </span>;
+					prefix = <span><Icon src={this.getIconName(n)} /> </span>;
 				}
 
 				let suffix = '';
@@ -120,7 +120,7 @@ export default class ContentGroup extends Component {
 			}
 		}
 		else if ( items && items.length == 0 ) {
-			ShowBody.push(<div><NavLink href={node.path+'/..'}><span><UIIcon src="previous" /> </span>../</NavLink></div>);
+			ShowBody.push(<div><NavLink href={node.path+'/..'}><span><Icon src="previous" /> </span>../</NavLink></div>);
 		}
 		else {
 			ShowBody.push(<UISpinner />);

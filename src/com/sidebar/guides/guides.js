@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import './guides.less';
 import '../base/base.less';
 
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 import NavLink			from 'com/nav-link/link';
 
 export default class SidebarGuides extends Component {
@@ -23,7 +23,7 @@ export default class SidebarGuides extends Component {
 		return (
 			<div class="sidebar-base sidebar-shortlist sidebar-guides">
 				<div class="-title _font2">
-					<UIIcon baseline>article</UIIcon> <span class="-text">Community & Guides</span>
+					<Icon baseline>article</Icon> <span class="-text">Community & Guides</span>
 				</div>
 				{Object.keys(Links).map(key => {
 					let subtext = "";
@@ -33,7 +33,7 @@ export default class SidebarGuides extends Component {
 
 					return (
 						<NavLink class="-item" href={Links[key].href}>
-							<UIIcon baseline gap>{Links[key].icon != null ? Links[key].icon : 'star-full'}</UIIcon>
+							<Icon baseline gap>{Links[key].icon != null ? Links[key].icon : 'star-full'}</Icon>
 							<span class="-title">{key}</span>{subtext}
 						</NavLink>
 					);

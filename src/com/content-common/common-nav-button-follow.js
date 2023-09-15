@@ -1,7 +1,7 @@
 import {Component} from 'preact';
 import './common-nav-button-follow.less';
 
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 import BodyNavButton from './common-nav-button';
 import $NodeStar from 'backend/js/node/node_star';
 
@@ -72,23 +72,23 @@ export default class BodyNavButtonFollow extends Component {
 
 			let newClass = "-follow";
 
-			var Icon = <UIIcon class="if-not-hover-block">user</UIIcon>;
-			var HoverIcon = <UIIcon class="if-hover-block">user-plus</UIIcon>;
+			var Icon = <Icon class="if-not-hover-block">user</Icon>;
+			var HoverIcon = <Icon class="if-hover-block">user-plus</Icon>;
 			var Text = <div>Follow</div>;
 
 			// Following or Friend
 			if ( isFollowing ) {
-				HoverIcon = <UIIcon class="if-hover-block">user-minus</UIIcon>;
+				HoverIcon = <Icon class="if-hover-block">user-minus</Icon>;
 			}
 			// Friend only
 			if ( isFriend ) {
-				Icon = <UIIcon class="if-not-hover-block">users</UIIcon>;
+				Icon = <Icon class="if-not-hover-block">users</Icon>;
 				Text = <div>Friends</div>;
 				newClass += " -friends";
 			}
 			// Following only
 			else if ( isFollowing ) {
-				Icon = <UIIcon class="if-not-hover-block">user-check</UIIcon>;
+				Icon = <Icon class="if-not-hover-block">user-check</Icon>;
 				Text = <div>Following</div>;
 				newClass += "-following";
 			}

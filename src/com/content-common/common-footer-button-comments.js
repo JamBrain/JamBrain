@@ -1,7 +1,7 @@
 import {Component} from 'preact';
 import './common-footer-button.less';
 
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 import NavLink from 'com/nav-link/link';
 
 export default class ContentCommonFooterButtonComments extends Component {
@@ -23,7 +23,7 @@ export default class ContentCommonFooterButtonComments extends Component {
 		if ( node && Number.isInteger(node.comments) ) {
 			return (
 				<NavLink href={node.path} class={`content-common-footer-button -comments ${CountClass}`} title="Comments">
-					<UIIcon>bubbles</UIIcon>
+					<Icon>bubbles</Icon>
 					<div class="-count">{node.comments}</div>
 				</NavLink>
 			);

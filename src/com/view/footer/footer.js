@@ -1,5 +1,5 @@
 import './footer.less';
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 
 
 export default function ViewFooter( /*props, state*/ ) {
@@ -8,7 +8,7 @@ export default function ViewFooter( /*props, state*/ ) {
 			<div class="body">
 			<div class="tm col">
 				<section class="logo">
-					<UIIcon class="ludum" baseline>ludum</UIIcon><UIIcon class="dare" baseline>dare</UIIcon>
+					<Icon class="ludum" baseline>ludum</Icon><Icon class="dare" baseline>dare</Icon>
 				</section>
 				<section>Ludum Dare and LDJAM are trademarks of Interactive Snacks Limited</section>
 			</div>

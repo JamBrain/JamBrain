@@ -1,6 +1,6 @@
 import { Component } from 'preact';
 import './tv.less';
-import { UIIcon } from 'com/ui';
+import { Icon } from 'com/ui';
 
 import DialogBase 						from 'com/dialog/base/base';
 
@@ -183,7 +183,7 @@ export default class DialogTV extends Component {
 					<div class="-left">
 						<div class="">User</div>
 						<div class="">Project Name</div>
-						<div class="-button"><UIIcon baseline>{props.following ? 'star-full' : 'star-empty'}</UIIcon><div>Follow Project</div></div>
+						<div class="-button"><Icon baseline>{props.following ? 'star-full' : 'star-empty'}</Icon><div>Follow Project</div></div>
 					</div>
 				);
 			}
@@ -192,7 +192,7 @@ export default class DialogTV extends Component {
 				<div class="-bar">
 					<div class="-right">
 						<div class={`-button ${this.canShowChat() ? '' : "-disabled"}`} onClick={this.onChatClick}>
-							<UIIcon baseline>{state.showchat ? 'bubble' : 'bubble-empty'}</UIIcon>
+							<Icon baseline>{state.showchat ? 'bubble' : 'bubble-empty'}</Icon>
 							<div>Chat</div>
 						</div>
 					</div>

@@ -14,7 +14,7 @@ import LocalLink			from 'com/autoembed/locallink';
 import AutoEmbed 			from 'com/autoembed/autoembed';
 import SmartDomains			from 'com/autoembed/smartdomains';
 
-import {UISpoiler} from 'com/ui';
+import {Spoiler} from 'com/ui';
 
 export default class Renderer {
 	constructor( options ) {
@@ -48,7 +48,7 @@ export default class Renderer {
 	}
 
 	spoiler( secret ) {
-		return <UISpoiler>{secret}</UISpoiler>;
+		return <Spoiler>{secret}</Spoiler>;
 	}
 
 	blockquote( quote ) {

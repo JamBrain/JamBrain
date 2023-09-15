@@ -1,7 +1,7 @@
 import './warning.less';
 import '../header.less';
 
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 
 export default function HeaderWarning( props ) {
 	let {root} = props;
@@ -9,7 +9,7 @@ export default function HeaderWarning( props ) {
 	if ( root && root.meta && root.meta.message ) {
 		return (
 			<section class="header -warning outside">
-				<UIIcon baseline small src="warning" />
+				<Icon baseline small src="warning" />
 				{root.meta.message}
 			</section>
 		);

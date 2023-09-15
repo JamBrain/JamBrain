@@ -6,7 +6,7 @@ import Common							from 'com/content-common/common';
 import CommonBody						from 'com/content-common/common-body';
 
 import NavLink 							from 'com/nav-link/link';
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 
 
 export default class PageTag extends Component {
@@ -19,7 +19,7 @@ export default class PageTag extends Component {
 
 		let Methods = ['target'];
 
-		let body = <div><NavLink href={node.path+'/..'}><span><UIIcon src="previous" /> </span>../</NavLink></div>;
+		let body = <div><NavLink href={node.path+'/..'}><span><Icon src="previous" /> </span>../</NavLink></div>;
 		return (
 			<div id="content">
 				<PageNavRoot {...props} />

@@ -1,16 +1,16 @@
 import './common-body-title.less';
 
-import {UILink, UIIcon} from 'com/ui';
+import {Link, Icon} from 'com/ui';
 import InputText from 'com/input-text/text';
 import BodyLabel from "./body/body-label";
 
 
 export function BodyTitle( props ) {
-	let titlePrefix = props.titleIcon ? (<UIIcon baseline small class="prefix" src={props.titleIcon} />) : null;
+	let titlePrefix = props.titleIcon ? (<Icon baseline small class="prefix" src={props.titleIcon} />) : null;
 	let titleText = props.title ? props.title : "Untitled";
 
 	let titleBody = props.href ?
-		<UILink class="title" href={props.href} title={props.tooltip}>{titlePrefix}{titleText}</UILink> :
+		<Link class="title" href={props.href} title={props.tooltip}>{titlePrefix}{titleText}</Link> :
 		<span class="title" title={props.tooltip}>{titlePrefix}{titleText}</span>;
 
 	return (

@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './star.less';
 
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 import ButtonBase						from 'com/button-base/base';
 
 
@@ -40,16 +40,16 @@ export default class InputStar extends Component {
 			// First star is a full star
 			Stars.push(
 				<ButtonBase class={`-star -hover ${(Value >= 1) ? '-lit' : ''}`} onClick={this.onClick.bind(this, 1)} title={1}>
-					<UIIcon baseline>{'star-full'}</UIIcon>
+					<Icon baseline>{'star-full'}</Icon>
 				</ButtonBase>
 			);
 
 			// Half Stars
 			for ( var idx = 3.0/*1.0*/; idx <= Math.floor(Value*2.0); idx++ ) {
-				Stars.push(<ButtonBase class="-star -hover -lit" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><UIIcon baseline>{'star-'+(idx&1?'left':'right')+'-full'}</UIIcon></ButtonBase>);
+				Stars.push(<ButtonBase class="-star -hover -lit" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><Icon baseline>{'star-'+(idx&1?'left':'right')+'-full'}</Icon></ButtonBase>);
 			}
 			for ( /*let idx = Math.ceil(Value*2.0)+1*/; idx <= (Count*2.0); idx++ ) {
-				Stars.push(<ButtonBase class="-star -hover" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><UIIcon baseline>{'star-'+(idx&1?'left':'right')+'-full'/*'-empty'*/}</UIIcon></ButtonBase>);
+				Stars.push(<ButtonBase class="-star -hover" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><Icon baseline>{'star-'+(idx&1?'left':'right')+'-full'/*'-empty'*/}</Icon></ButtonBase>);
 //				Stars.push(<ButtonBase class="-star -hover" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><UIIcon baseline>{'star-'+(idx&1?'left':'right')+'-empty'}</UIIcon></ButtonBase>);
 			}
 
@@ -57,20 +57,20 @@ export default class InputStar extends Component {
 			if ( props.delete ) {
 				ShowDelete = (
 					<ButtonBase class="-delete -hover" onClick={this.onDelete.bind(this)}>
-						<UIIcon small baseline>cross</UIIcon>
+						<Icon small baseline>cross</Icon>
 					</ButtonBase>
 				);
 			}
 		}
 		else {
 			for ( let idx = 0; idx < Math.floor(Value); idx++ ) {
-				Stars.push(<div class="-star"><UIIcon small={props.small} baseline>star-full</UIIcon></div>);
+				Stars.push(<div class="-star"><Icon small={props.small} baseline>star-full</Icon></div>);
 			}
 			if ( Value % 1 ) {
-				Stars.push(<div class="-star"><UIIcon small={props.small} baseline>star-half</UIIcon></div>);
+				Stars.push(<div class="-star"><Icon small={props.small} baseline>star-half</Icon></div>);
 			}
 			for ( let idx = Math.ceil(Value); idx < Count; idx++ ) {
-				Stars.push(<div class="-star"><UIIcon small={props.small} baseline>star-empty</UIIcon></div>);
+				Stars.push(<div class="-star"><Icon small={props.small} baseline>star-empty</Icon></div>);
 			}
 
 			Title = Value+' of '+Count;

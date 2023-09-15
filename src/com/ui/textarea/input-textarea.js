@@ -3,7 +3,7 @@ import './input-textarea.less';
 import Shallow from 'shallow';
 
 import NavLink from 'com/nav-link/link';
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 
 import $Asset from 'backend/js/asset/asset';		// For image uploading
 
@@ -147,9 +147,9 @@ export class UITextarea extends Component {
 					<div class="-left">
 						<label>
 							<input type="file" name="asset" style="display: none;" onChange={this.onFileChange} />
-							<NavLink class="-upload"><UIIcon baseline gap>upload</UIIcon>Upload</NavLink>
+							<NavLink class="-upload"><Icon baseline gap>upload</Icon>Upload</NavLink>
 						</label>
-						<span class="if-sidebar-inline">. Supports <NavLink blank href="/markdown"><UIIcon>markdown</UIIcon> Markdown</NavLink> and <NavLink href="//emoji.codes/">:emoji_codes:</NavLink></span>
+						<span class="if-sidebar-inline">. Supports <NavLink blank href="/markdown"><Icon>markdown</Icon> Markdown</NavLink> and <NavLink href="//emoji.codes/">:emoji_codes:</NavLink></span>
 					</div>
 				</div>
 			</div>

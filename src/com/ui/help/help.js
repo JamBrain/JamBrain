@@ -1,11 +1,11 @@
 import { Component } from 'preact';
 import './help.less';
 
-import {UIIcon} from '../icon';
-import {UIButton} from '../button';
+import {Icon} from '../icon';
+import {Button} from '../button';
 import {UIDialog} from '../dialog';
 
-export class UIHelp extends Component {
+export class Help extends Component {
 	constructor( props ) {
 		super(props);
 
@@ -34,7 +34,7 @@ export class UIHelp extends Component {
 
 		return (
 			<div class={`ui-help ${props.class ?? ''}`}>
-				<UIButton class="-button" onClick={this.onShow}><UIIcon src="question" /></UIButton>
+				<Button class="-button" onClick={this.onShow}><Icon src="question" /></Button>
 				{ShowDialog}
 			</div>
 		);

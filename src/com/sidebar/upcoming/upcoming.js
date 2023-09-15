@@ -1,7 +1,7 @@
 import './upcoming.less';
 import '../base/base.less';
 
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 
 export default function SidebarUpcoming() {
 	let Items = [
@@ -26,12 +26,12 @@ export default function SidebarUpcoming() {
 //		<div class="-item"><strong>September 30th 2022</strong> - Ludum Dare 51 <SVGIcon baseline small>trophy</SVGIcon></div>,
 //		<div class="-item"><strong>January 6th, 2023</strong> - Ludum Dare 52 <UIIcon baseline small>trophy</UIIcon></div>,
 //		<div class="-item"><strong>April 28th, 2023</strong> - Ludum Dare 53 <UIIcon baseline small>trophy</UIIcon></div>,
-		<div class="-item"><strong>September 29th, 2023</strong> - Ludum Dare 54 <UIIcon baseline small>trophy</UIIcon></div>,
+		<div class="-item"><strong>September 29th, 2023</strong> - Ludum Dare 54 <Icon baseline small>trophy</Icon></div>,
 	];
 
 	return (
 		<div class="sidebar-base sidebar-shortlist sidebar-upcoming">
-			<div class="-title _font2"><UIIcon baseline>calendar-wide</UIIcon> <span class="-text">Coming Up</span></div>
+			<div class="-title _font2"><Icon baseline>calendar-wide</Icon> <span class="-text">Coming Up</span></div>
 			{Items}
 		</div>
 	);

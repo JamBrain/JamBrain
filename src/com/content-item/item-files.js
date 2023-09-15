@@ -1,6 +1,6 @@
 import { Component } from 'preact';
 import ContentCommonBody				from 'com/content-common/common-body';
-import {UIButton, UILink} from 'com/ui';
+import {Button, Link} from 'com/ui';
 
 import { node_CanUpload } from 'internal/lib';
 
@@ -117,7 +117,7 @@ export default class ContentItemFiles extends Component {
                 if ( (e.status & 0x8) && !(e.status & 0x40) ) {
                     let func = this.onDelete.bind(this, e);
                     //[{e.status.toString(16)}]
-                    files.push(<li>{e.name} - {getLocaleTimeStamp(new Date(e.timestamp))} - {e.size} bytes <UIButton class="-button" style="display: inline;" onclick={func}>delete</UIButton></li>);
+                    files.push(<li>{e.name} - {getLocaleTimeStamp(new Date(e.timestamp))} - {e.size} bytes <Button class="-button" style="display: inline;" onclick={func}>delete</Button></li>);
                 }
             });
 
@@ -135,7 +135,7 @@ export default class ContentItemFiles extends Component {
             ];
 
             const isUploading = (state.status > 0 && state.status < 5);
-            const uploadButton = isUploading ? "" : <UIButton class="-button">Upload file</UIButton>;
+            const uploadButton = isUploading ? "" : <Button class="-button">Upload file</Button>;
 
             return (
                 <ContentCommonBody class="-files -body -upload">
@@ -159,7 +159,7 @@ export default class ContentItemFiles extends Component {
         let files = [];
         Object.values(latestFiles).forEach(e => {
             if ( (e.status & 0x8) && !(e.status & 0x40) ) {
-                files.push(<li><UILink href={"//files.jam.host/uploads/$"+node.id+"/"+e.name}>{e.name}</UILink> - {e.size} bytes</li>);
+                files.push(<li><Link href={"//files.jam.host/uploads/$"+node.id+"/"+e.name}>{e.name}</Link> - {e.size} bytes</li>);
             }
         });
 

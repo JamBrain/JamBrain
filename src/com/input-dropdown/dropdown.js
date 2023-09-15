@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import './dropdown.less';
 
 import NavLink							from 'com/nav-link/link';
-import {UIIcon} from 'com/ui';
+import {Icon} from 'com/ui';
 
 export default class InputDropdown extends Component {
 	constructor( props ) {
@@ -94,7 +94,7 @@ export default class InputDropdown extends Component {
 					if ( dataId == value ) {
 						SelectedField = (
 							<button type="button" onClick={this.onShow}>
-								<UIIcon>hamburger</UIIcon>
+								<Icon>hamburger</Icon>
 								{Contents}
 							</button>
 						);
@@ -103,7 +103,7 @@ export default class InputDropdown extends Component {
 				if (SelectedField == null) {
 					SelectedField = (
 						<button type="button" onClick={this.onShow}>
-							<UIIcon>hamburger</UIIcon>
+							<Icon>hamburger</Icon>
 							{props.items[0][1]}
 						</button>
 					);

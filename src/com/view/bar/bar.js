@@ -3,7 +3,7 @@ import './bar.less';
 import Shallow from 'shallow';
 import { node_CanCreate } from 'internal/lib';
 
-import {UIIcon, UIButton, UISpinner} from 'com/ui';
+import {Icon, Button, UISpinner} from 'com/ui';
 
 //import DropdownUser 					from 'com/dropdown-user/user';
 import BarNotification					from './bar-notifications';
@@ -195,16 +195,16 @@ export default class ViewBar extends Component {
 //		);
 
 		var ShowCalendar = (
-			<UIButton
+			<Button
 				class="bar-button if-no-sidebar-block"
 				onClick={e => {
 					//console.log('calendar');
 					window.location.hash = "#cal";
 				}}
 			>
-				<UIIcon baseline>calendar</UIIcon>
+				<Icon baseline>calendar</Icon>
 				<div class="if-sidebar-block">Schedule</div>
-			</UIButton>
+			</Button>
 		);
 
 		let ShowJoin = null;
@@ -222,14 +222,14 @@ export default class ViewBar extends Component {
 		if ( SECURE_LOGIN_ONLY && (location.protocol !== 'https:') ) {
 			let SecureURL = 'https://'+location.hostname+location.pathname+location.search+location.hash;
 			GoSecure = (
-				<UIButton
+				<Button
 					class="bar-button"
 					noblank
 					href={SecureURL}
 				>
-					<UIIcon>unlocked</UIIcon>
+					<Icon>unlocked</Icon>
 					<div class="if-sidebar-block">Go to Secure Site</div>
-				</UIButton>
+				</Button>
 			);
 		}
 		// Both user and user.id means logged in
@@ -238,38 +238,38 @@ export default class ViewBar extends Component {
 				// Has a game
 				if ( featured.focus_id && featured.what ) {
 					ShowMyGame = (
-						<UIButton title="My Game" href={featured.what[featured.focus_id].path} class="bar-button">
-							<UIIcon>gamepad</UIIcon>
+						<Button title="My Game" href={featured.what[featured.focus_id].path} class="bar-button">
+							<Icon>gamepad</Icon>
 							<div class="if-sidebar-block">My Game</div>
-						</UIButton>
+						</Button>
 					);
 
 					NewPost = (
-						<UIButton
+						<Button
 							title="New Post"
 							class="bar-button"
 							onClick={e => {
 								window.location.hash = "#create/"+featured.focus_id+"/post";
 							}}
 						>
-							<UIIcon>edit</UIIcon>
+							<Icon>edit</Icon>
 							<div class="if-sidebar-block">New Post</div>
-						</UIButton>
+						</Button>
 					);
 				}
 				// Let them create a game
 				else if ( node_CanCreate(featured, "item/game") ) {
 					ShowJoin = (
-						<UIButton
+						<Button
 							title="Join Event"
 							class="bar-button"
 							onClick={e => {
 								window.location.hash = "#create/"+featured.id+"/item/game";
 							}}
 						>
-							<UIIcon>publish</UIIcon>
+							<Icon>publish</Icon>
 							<div class="if-sidebar-block">Join Event</div>
-						</UIButton>
+						</Button>
 					);
 				}
 			}
@@ -308,14 +308,14 @@ export default class ViewBar extends Component {
 			}
 
 			Notification = (
-				<UIButton title="Notifications" class="bar-icon" onClick={(e) => {
+				<Button title="Notifications" class="bar-icon" onClick={(e) => {
 					// TODO: if the main content is the notifications feed, clicking the button should
 					// probably not show the dropdown, but load new comments into the feed.
 					this.setState({'showNotifications': !this.state.showNotifications});
 				}}>
-					<UIIcon baseline>bubble</UIIcon>
+					<Icon baseline>bubble</Icon>
 					{NotificationCount}
-				</UIButton>
+				</Button>
 			);
 
 /*
@@ -336,28 +336,28 @@ export default class ViewBar extends Component {
 		// If user has finished loading (and is not logged in)
 		else if ( user ) {
 			Register = (
-				<UIButton
+				<Button
 					class="bar-button"
 					onClick={e => {
 						//console.log('register');
 						window.location.hash = "#user-register";
 					}}
 				>
-					<UIIcon>user-plus</UIIcon>
+					<Icon>user-plus</Icon>
 					<div class="if-sidebar-block">Create Account</div>
-				</UIButton>
+				</Button>
 			);
 			Login = (
-				<UIButton
+				<Button
 					class="bar-button"
 					onClick={e => {
 						//console.log('login');
 						window.location.hash = "#user-login";
 					}}
 				>
-					<UIIcon>key</UIIcon>
+					<Icon>key</Icon>
 					<div class="if-sidebar-block">Login</div>
-				</UIButton>
+				</Button>
 			);
 		}
 		// Still waiting
@@ -404,10 +404,10 @@ export default class ViewBar extends Component {
 			<section id="layout-top">
 				<nav id="navbar">
 					<section class="left">
-						<UIButton title="Ludum Dare" href="/" class="logo">
-							<UIIcon class="if-sidebar-block" baseline>ludum</UIIcon><UIIcon class="if-sidebar-block" baseline>dare</UIIcon>
-							<UIIcon class="if-no-sidebar-block" baseline>l-udum</UIIcon><UIIcon class="if-no-sidebar-block" baseline>d-are</UIIcon>
-						</UIButton>
+						<Button title="Ludum Dare" href="/" class="logo">
+							<Icon class="if-sidebar-block" baseline>ludum</Icon><Icon class="if-sidebar-block" baseline>dare</Icon>
+							<Icon class="if-no-sidebar-block" baseline>l-udum</Icon><Icon class="if-no-sidebar-block" baseline>d-are</Icon>
+						</Button>
 					</section>
 					{ShowLoading}
 					{this.renderRight(user, featured)}

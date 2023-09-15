@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './more.less';
 
-import {UIButton} from 'com/ui/button';
+import {Button} from 'com/ui/button';
 import {UISpinner} from 'com/ui/spinner';
 
 export default class ContentMore extends Component {
@@ -16,7 +16,7 @@ export default class ContentMore extends Component {
 		}
 		return (
 			<nav class="content -more">
-				<UIButton onClick={props.onClick}>MORE</UIButton>
+				<Button onClick={props.onClick}>MORE</Button>
 			</nav>
 		);
 	}

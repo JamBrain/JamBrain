@@ -1,8 +1,8 @@
 import { Component, cloneElement, toChildArray } from 'preact';
 import './dropdown.less';
 
-import {UIButton} from '../button';
-import {UIIcon} from '../icon';
+import {Button} from '../button';
+import {Icon} from '../icon';
 
 export class UIDropdown extends Component {
 	constructor( props ) {
@@ -73,9 +73,9 @@ export class UIDropdown extends Component {
 		let ShowTick = null;
 		if ( props.tick ) {
 			if ( ShowContent )
-				ShowTick = <UIIcon src="tick-up" class="-tick" />;
+				ShowTick = <Icon src="tick-up" class="-tick" />;
 			else
-				ShowTick = <UIIcon src="tick-down" class="-tick" />;
+				ShowTick = <Icon src="tick-down" class="-tick" />;
 		}
 
 		let Classes = [
@@ -88,7 +88,7 @@ export class UIDropdown extends Component {
 
 		return (
 			<div class={Classes} ref={(div) => (this.dropdown = div)}>
-				<UIButton class="-button" onClick={this.onButton}>{ShowTick}{Button}</UIButton>
+				<Button class="-button" onClick={this.onButton}>{ShowTick}{Button}</Button>
 				{ShowContent}
 			</div>
 		);
