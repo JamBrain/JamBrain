@@ -1,7 +1,32 @@
-import {Component} from 'preact';
-import './button-clipboard.less';
-import {UIButton, UIIcon} from 'com/ui';
+//import {Component} from 'preact';
+//import './button-clipboard.less';
+//import {UIButton, UIIcon} from 'com/ui';
 
+import { signal } from '@preact/signals';
+import UIButton from '../button/button';
+
+function onClick( e ) {
+	if ( navigator.clipboard ) {
+		const value = e.target.value;
+		navigator.clipboard.writeText(value).then(r => {
+			// TODO: Trigger event that notifies user of action
+			DEBUG && console.log("[UIButtonClipboard]", `"${value}" written to navigator.clipboard`);
+		})
+		.catch(r => {
+			DEBUG && console.warn("[UIButtonClipboard]", "Failed to write navigator.clipboard");
+		});
+	}
+	else {
+		DEBUG && console.warn("[UIButtonClipboard]", "navigator.clipboard unavailable (are you connected via HTTPS?)");
+	}
+}
+
+export default function UIButtonClipboard( props ) {
+	const {...otherProps} = props;
+	return <UIButton {...otherProps} onClick={onClick} />;
+}
+
+/*
 export default class UIButtonClipboard extends Component {
 	constructor( props ) {
 		super(props);
@@ -17,11 +42,11 @@ export default class UIButtonClipboard extends Component {
 				DEBUG && console.log("Written to clipboard");
 			})
 			.catch(r => {
-				DEBUG && console.error("Failed to write to clipboard");
+				DEBUG && console.warn("Failed to write to clipboard");
 			});
 		}
 		else {
-			DEBUG && console.log("Clipboard unavailable (are you connected via HTTPS?)");
+			DEBUG && console.warn("Clipboard unavailable (are you connected via HTTPS?)");
 		}
 	}
 
@@ -41,3 +66,4 @@ export default class UIButtonClipboard extends Component {
 		);
 	}
 }
+*/

@@ -1,19 +1,25 @@
 @import '../clickable/clickable.module.less';
 
+/* Buttons are assumed to "div-like" in appearance, able to contain several elements inlcuding images and text */
 .ui_button {
 	composes: ui_clickable;
 
-	display: block;
+	display: block;				/* div-like */
+	//position: relative;
+
 	text-align: inherit;		/* rather than left align, inherit */
 	box-sizing: border-box;		/* uses other weird metrics */
-	background: transparent;	/* has a pre-defined color, border, padding */
-	border: 0;
-	padding: 0;
 	overflow: auto;				/* otherwise images wont work */
 }
 
-/* Make a 'button' act identical to a 'div' */
-//button.UIButton {}
 
-/* Link style buttons */
-//a.UIButton {}
+/* Cancel out the default styles */
+button.ui_button {
+	border: 0;
+	padding: 0;
+	background: transparent;
+}
+a.ui_button {
+	color: inherit;
+	text-decoration: inherit;
+}
