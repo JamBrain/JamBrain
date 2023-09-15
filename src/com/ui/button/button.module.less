@@ -1,23 +1,8 @@
 
-.ui-button {
+.UIButton {
 	cursor: pointer;			/* default to the pointer cursor (like: a) */
 	user-select: none;			/* stop users from selecting the text (like: button) */
 
-	&.-disabled {
-		&:active,
-		&:hover,
-		&:focus {
-			cursor: not-allowed;
-		}
-	}
-
-	&.-null {
-		cursor: auto;
-	}
-}
-
-/* Make a 'button' act identical to a 'div' */
-button.ui-button {
 	display: block;
 	text-align: inherit;		/* rather than left align, inherit */
 	box-sizing: border-box;		/* uses other weird metrics */
@@ -25,8 +10,14 @@ button.ui-button {
 	border: 0;
 	padding: 0;
 	overflow: auto;				/* otherwise images wont work */
+
+	&:disabled {
+		cursor: not-allowed;
+	}
 }
 
-.uiButton {
-	display: block;
-}
+/* Make a 'button' act identical to a 'div' */
+//button.UIButton {}
+
+/* Link style buttons */
+//a.UIButton {}

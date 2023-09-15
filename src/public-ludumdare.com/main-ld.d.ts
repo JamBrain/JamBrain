@@ -12,3 +12,5 @@ declare const SERVER_TIMESTAMP: string;
 declare const CLIENT_TIMESTAMP: string;
 
 declare const SECURE_LOGIN_ONLY: boolean;
+
+declare module "*.module.less";

@@ -1,5 +1,5 @@
 {
-	"extends": "stylelint-config-recommended-less",
+	"extends": ["stylelint-config-recommended-less", "stylelint-config-css-modules"],
 	"rules": {
 		"block-no-empty": null,
 		"rule-empty-line-before": [

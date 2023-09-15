@@ -8,7 +8,8 @@
 // savePath = ".bunfig.lockb"
 
 import * as esbuild from 'esbuild';
-import { lessLoader } from 'esbuild-plugin-less';
+import { lessLoader } from '@mikekasprzak/esbuild-plugin-less'; //'esbuild-plugin-less';
+//import stylePlugin from 'esbuild-style-plugin';
 
 
 const VALID_ACTIONS = ['debug', 'release', 'live', 'quiet'];
@@ -40,7 +41,9 @@ const esbuildOptions = {
 		{'in': 'src/public-ludumdare.com/main-ld.js', 'out': `app.${buildMode}`}
 	],
 	'outdir': 'public-ludumdare.com/-/',
-	'loader': { '.js': 'jsx' },
+	'loader': {
+		'.js': 'jsx'
+	},
 	'jsx': 'automatic',
 	'jsxImportSource': 'preact',
 	'jsxDev': action?.release ? undefined : true,
@@ -92,7 +95,22 @@ const esbuildOptions = {
 			'globalVars': {
 				'STATIC_DOMAIN': '"static.jammer.work"'
 			}
-		})
+		}),
+/*
+		stylePlugin({
+			'renderOptions': {
+				'lessOptions': {
+					'paths': [
+						'src',
+						'src/public-ludumdare.com'
+					],
+					'globalVars': {
+						'STATIC_DOMAIN': '"static.jammer.work"'
+					}
+				}
+			}
+		}),
+*/
 	]
 };
 
@@ -126,7 +144,6 @@ else {
 			}
 		})
 		.catch(async (error) => {
-			//console.log('');	// newline
 			//console.log(error);
 		});
 }

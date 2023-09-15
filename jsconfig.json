@@ -15,7 +15,8 @@
 		"paths": {
 			"classnames": ["external/classnames/index"],
 			"shallow": ["internal/shallow/shallow"]
-		}
+		},
+		"plugins": [{ "name": "typescript-plugin-css-modules" }]
 	},
 	"include": ["src/**/*"],
 	"excludeDirectories": ["node_modules", "**/node_modules/*", "**/.*", "config/**/*", "sandbox/**/*"]
