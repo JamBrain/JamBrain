@@ -63,7 +63,7 @@ export default class ViewSidebar extends Component {
 		let resultsDate = new Date(resultsDay.getTime() + (20 * oneHour) + (5 * oneMinute));
 
 		let nextEventName = "Ludum Dare 54";
-		let nextEventStartDate = new Date(Date.UTC(2023, 8, 30, 1, 0, 0));
+		let nextEventStartDate = new Date(Date.UTC(2023, 8, 29, 22, 0, 0));
 
 		/*/
 		// October Event//
