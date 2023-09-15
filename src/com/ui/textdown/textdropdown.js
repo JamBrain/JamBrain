@@ -1,5 +1,5 @@
 import { Component } from 'preact';
-import './textdown.less';
+import './textdropdown.module.less';
 
 import {Button} from '../button';
 import {TextField} from '../text';
