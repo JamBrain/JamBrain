@@ -1,1 +1,1 @@
-export {default, default as UIHelp} from "./help";
+export * from "./help";

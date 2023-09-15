@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './text.less';
 
-export default class UIText extends Component {
+export class UIText extends Component {
 	constructor( props ) {
 		super(props);
 

@@ -4,7 +4,7 @@ import './comments.less';
 
 import { node_IsAuthor } from 'internal/lib';
 
-import UISpinner						from 'com/ui/spinner';
+import {UISpinner} from 'com/ui';
 
 import ContentCommentsComment			from './comments-comment';
 

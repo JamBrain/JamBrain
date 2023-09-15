@@ -1,7 +1,7 @@
 import { Component} from 'preact';
 import './mail.less';
 
-import UIIcon			from 'com/ui/icon';
+import {UIIcon} from 'com/ui';
 
 // TODO: Migrate me in to `NavLink`/`Link`
 

@@ -3,8 +3,7 @@ import './event-list.less';
 
 import Sanitize							from 'internal/sanitize';
 
-import UIIcon 							from 'com/ui/icon';
-import UISpinner						from 'com/ui/spinner';
+import {UIIcon, UISpinner} from 'com/ui';
 
 import ButtonBase						from 'com/button-base/base';
 

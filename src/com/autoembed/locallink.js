@@ -1,5 +1,5 @@
 import NavLink from 'com/nav-link/link';
-import UIIcon from 'com/ui/icon';
+import {UIIcon} from 'com/ui';
 import './locallink.less';
 
 export default function LocalLink( props ) {

@@ -1,7 +1,7 @@
 import {Component} from 'preact';
 import './footer-button.less';
 
-import UIIcon 							from 'com/ui/icon';
+import {UIIcon} from 'com/ui';
 import NavLink 							from 'com/nav-link/link';
 
 import $Node							from 'backend/js/node/node';

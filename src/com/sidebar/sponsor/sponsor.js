@@ -1,8 +1,7 @@
 import './sponsor.less';
 import '../base/base.less';
 
-import UIImage			from 'com/ui/image';
-import UIIcon 			from 'com/ui/icon';
+import {UIIcon, UIImage} from 'com/ui';
 import NavLink 			from 'com/nav-link/link';
 
 export default function ViewSponsor() {

@@ -1,14 +1,7 @@
 import { Component } from 'preact';
 import './itemfilter.less';
 
-import {UIIcon}							from 'com/ui/icon';
-import {UIButton}							from 'com/ui/button';
-import {UITagbox}							from 'com/ui/tagbox';
-import {UIText}							from 'com/ui/text';
-import { UIDropdown, UIDropdownList } from 'com/ui/dropdown';
-import UITextdown						from 'com/ui/textdown';
-
-import UIHelp							from 'com/ui/help';
+import {UIIcon, UIButton, UITagbox, UIText, UIDropdown, UIDropdownList, UITextdown, UIHelp} from 'com/ui';
 
 import $Tag								from 'backend/js/tag/tag';
 

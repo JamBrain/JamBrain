@@ -4,7 +4,8 @@ import './checkbox.less';
 import { UIButton } from '../button';
 import { UIIcon } from '../icon';
 
-export default class UICheckbox extends Component {
+/** @deprecated */
+export class UICheckbox extends Component {
 	render( props ) {
 		const iconName = (props.radio ? 'radio' : 'checkbox') + (props.value ? '-checked' : '-unchecked');
 		return (

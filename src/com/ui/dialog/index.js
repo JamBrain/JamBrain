@@ -1,1 +1,1 @@
-export {default, default as UIDialog} from "./dialog";
+export * from "./dialog";

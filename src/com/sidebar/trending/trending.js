@@ -1,5 +1,5 @@
 import '../base/base.less';
-import UIIcon 			from 'com/ui/icon';
+import {UIIcon} from 'com/ui';
 
 export default function SidebarTrending() {
 	return (

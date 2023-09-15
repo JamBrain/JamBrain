@@ -4,7 +4,7 @@ import './tagbox.less';
 import {UIIcon} from '../icon';
 import {UIButton} from '../button';
 
-export default class UITagbox extends Component {
+export class UITagbox extends Component {
 	constructor( props ) {
 		super(props);
 

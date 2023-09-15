@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import './dropdown.less';
 
 import NavLink							from 'com/nav-link/link';
-import UIIcon							from 'com/ui/icon';
+import {UIIcon} from 'com/ui';
 
 export default class InputDropdown extends Component {
 	constructor( props ) {

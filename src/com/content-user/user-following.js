@@ -1,6 +1,6 @@
 import { Component } from 'preact';
 
-import UIIcon							from 'com/ui/icon';
+import {UIIcon} from 'com/ui';
 
 import ContentLoading					from 'com/content-loading/loading';
 import ContentError from 'com/content/error';

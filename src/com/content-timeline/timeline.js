@@ -4,7 +4,7 @@ import ContentPost				from 'com/content-post/post';
 import ContentUser				from 'com/content-user/user';
 import ContentMore				from 'com/content-more/more';
 
-import UISpinner 				from 'com/ui/spinner';
+import {UISpinner} from 'com/ui';
 
 import ContentCommon			from 'com/content-common/common';
 import ContentCommonBody		from 'com/content-common/common-body';

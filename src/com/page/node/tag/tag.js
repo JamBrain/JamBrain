@@ -6,7 +6,7 @@ import Common							from 'com/content-common/common';
 import CommonBody						from 'com/content-common/common-body';
 
 import NavLink 							from 'com/nav-link/link';
-import UIIcon							from 'com/ui/icon/icon';
+import {UIIcon} from 'com/ui';
 
 
 export default class PageTag extends Component {

@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import './calendar.less';
 import '../base/base.less';
 
-import UIIcon					from 'com/ui/icon';
+import {UIIcon} from 'com/ui';
 
 export default class SidebarCalendar extends Component {
 	constructor( props ) {

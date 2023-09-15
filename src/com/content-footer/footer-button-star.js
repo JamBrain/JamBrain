@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import './footer-button.less';
 import './footer-button-star.less';
 
-import UIIcon from 'com/ui/icon';
+import {UIIcon} from 'com/ui';
 
 import $NodeStar						from 'backend/js/node/node_star';
 

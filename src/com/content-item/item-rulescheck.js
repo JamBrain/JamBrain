@@ -4,8 +4,7 @@ import './item-rulescheck.less';
 import { node_CanPublish, node_CountAuthors, node_IsPublished } from 'internal/lib';
 import ContentCommonBody				from 'com/content-common/common-body';
 import ButtonBase						from 'com/button-base/base';
-import UIIcon							from 'com/ui/icon/icon';
-import UILink							from 'com/ui/link/link';
+import {UIIcon, UILink} from 'com/ui';
 
 export default class ContentItemRulesCheck extends Component {
 	constructor(props) {

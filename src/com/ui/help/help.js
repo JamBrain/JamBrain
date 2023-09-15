@@ -5,7 +5,7 @@ import {UIIcon} from '../icon';
 import {UIButton} from '../button';
 import {UIDialog} from '../dialog';
 
-export default class UIHelp extends Component {
+export class UIHelp extends Component {
 	constructor( props ) {
 		super(props);
 

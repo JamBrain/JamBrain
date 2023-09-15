@@ -1,7 +1,7 @@
 import {Component} from 'preact';
 import './common-footer-button.less';
 
-import UIIcon from 'com/ui/icon';
+import {UIIcon} from 'com/ui';
 
 export default class ContentCommonFooterButtonMinMax extends Component {
 	constructor( props ) {

@@ -1,1 +1,1 @@
-export {default, default as UITextdown} from "./textdown";
+export * from "./textdown";

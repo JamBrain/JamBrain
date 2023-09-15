@@ -1,36 +1,19 @@
-import {Component} from 'preact';
-import UIIcon 							from 'com/ui/icon';
-import NavLink 							from 'com/nav-link/link';
-
-import ButtonBase						from 'com/button-base/base';
-
 import $ThemeIdea						from 'backend/js/theme/theme_idea';
 
+export default function ContentEventFusion( props ) {
+	const {user} = props;
+	const Title = <h3>Theme Fusion Round</h3>;
 
-export default class ContentEventFusion extends Component {
-	constructor( props ) {
-		super(props);
-
+	if ( user && user['id'] ) {
+		return <div class="-body">
+			{Title}
+			<div>welcome</div>
+		</div>;
 	}
-
-	render( {/*node,*/ user/*, path, extra*/} ) {
-		var Title = <h3>Theme Fusion Round</h3>;
-
-		if ( user && user['id'] ) {
-			return (
-				<div class="-body">
-					{Title}
-					<div>welcome</div>
-				</div>
-			);
-		}
-		else {
-			return (
-				<div class="-body">
-					{Title}
-					<div>Please log in</div>
-				</div>
-			);
-		}
+	else {
+		return <div class="-body">
+			{Title}
+			<div>Please log in</div>
+		</div>;
 	}
 }

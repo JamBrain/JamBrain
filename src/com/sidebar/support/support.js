@@ -1,6 +1,6 @@
 import '../base/base.less';
 
-import UIIcon 			from 'com/ui/icon';
+import {UIIcon} from 'com/ui';
 import NavLink 			from 'com/nav-link/link';
 
 export default function SidebarSupport() {

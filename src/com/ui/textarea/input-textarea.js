@@ -8,7 +8,7 @@ import {UIIcon} from 'com/ui';
 import $Asset from 'backend/js/asset/asset';		// For image uploading
 
 
-export default class UITextarea extends Component {
+export class UITextarea extends Component {
 	constructor( props ) {
 		super(props);
 

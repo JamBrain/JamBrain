@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './spoiler.less';
 
-export default class UISpoiler extends Component {
+export class UISpoiler extends Component {
 	constructor( props ) {
 		super(props);
 

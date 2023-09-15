@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './tooltip.less';
 
-import UIIcon 							from 'com/ui/icon';
+import {UIIcon} from 'com/ui';
 import ButtonBase						from 'com/button-base/base';
 import ContentCommonBody				from 'com/content-common/common-body';
 

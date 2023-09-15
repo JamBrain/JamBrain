@@ -1,1 +1,1 @@
-export {default, default as UICheckbox} from "./checkbox";
+export * from "./checkbox";

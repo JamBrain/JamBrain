@@ -1,1 +1,1 @@
-export {default, default as UITextarea} from "./input-textarea";
+export * from "./input-textarea";

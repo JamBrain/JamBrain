@@ -11,3 +11,4 @@ export * from "./text";
 export * from "./textarea";
 export * from "./textdown";
 export * from "./spinner";
+export * from "./spoiler";

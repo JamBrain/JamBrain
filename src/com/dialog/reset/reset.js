@@ -2,10 +2,8 @@ import { Component } from 'preact';
 import Sanitize							from 'internal/sanitize';
 
 import DialogCommon						from 'com/dialog/common/common';
-import UISpinner						from 'com/ui/spinner';
+import {UILink, UISpinner} from 'com/ui';
 import LabelYesNo						from 'com/label-yesno/yesno';
-
-import UILink							from 'com/ui/link/link';
 
 import $User							from 'backend/js/user/user';
 

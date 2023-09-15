@@ -1,1 +1,1 @@
-export {default, default as UIIcon} from "./icon";
+export * from "./icon";

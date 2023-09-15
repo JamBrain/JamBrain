@@ -2,7 +2,7 @@ import {Component} from 'preact';
 import './event.less';
 
 import NavLink 							from 'com/nav-link/link';
-import UIIcon 							from 'com/ui/icon';
+import {UIIcon} from 'com/ui';
 import { getLocaleDay, getLocaleMonthDay, getLocaleDate, getLocaleTime, getLocaleTimeZone } from 'internal/time';
 import { node_CanCreate, nodeEvent_CanTheme } from 'internal/lib';
 

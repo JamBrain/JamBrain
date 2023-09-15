@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './dialog.less';
 
-export default class UIDialog extends Component {
+export class UIDialog extends Component {
 	constructor( props ) {
 		super(props);
 

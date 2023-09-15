@@ -1,5 +1,5 @@
 import {Component} from 'preact';
-import UIIcon from 'com/ui/icon';
+import {UIIcon} from 'com/ui';
 import './youtube.less';
 
 export default class YoutubeEmbed extends Component {

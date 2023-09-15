@@ -2,7 +2,7 @@ import './notifications.less';
 
 import ButtonBase						from '../button-base/base';
 
-import UISpinner						from 'com/ui/spinner';
+import {UISpinner} from 'com/ui';
 import ContentMore						from 'com/content-more/more';
 
 import NotificationsBase				from 'com/content-notifications/base';

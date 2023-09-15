@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import Sanitize							from 'internal/sanitize';
 
-import UISpinner						from 'com/ui/spinner';
+import {UISpinner} from 'com/ui';
 
 import DialogBase						from 'com/dialog/base/base';
 import DialogCommon						from 'com/dialog/common/common';

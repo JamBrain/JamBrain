@@ -4,7 +4,7 @@ import './filter.less';
 import OldContentCommon					from 'com/content-common/common';
 import {CommonSection}					from 'com/content/common';
 import CommonBody						from 'com/content-common/common-body';
-import UIIcon							from 'com/ui/icon';
+import {UIIcon} from 'com/ui';
 import InputText						from 'com/input-text/text';
 import FilterSpecial					from 'com/content-games/filter-special';
 import InputDropdown					from 'com/input-dropdown/dropdown';

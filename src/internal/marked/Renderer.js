@@ -14,7 +14,7 @@ import LocalLink			from 'com/autoembed/locallink';
 import AutoEmbed 			from 'com/autoembed/autoembed';
 import SmartDomains			from 'com/autoembed/smartdomains';
 
-import UISpoiler 		from 'com/ui/spoiler/spoiler';
+import {UISpoiler} from 'com/ui';
 
 export default class Renderer {
 	constructor( options ) {

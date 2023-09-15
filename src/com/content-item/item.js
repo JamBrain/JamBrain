@@ -4,7 +4,7 @@ import './item.less';
 import { node_IsPublished, nodeEvent_CanGrade, node_CountAuthors, node_CanPublish, node_IsAuthor, nodeKeys_HasPublishedParent, nodeEvent_IsFinished } from 'internal/lib';
 
 import ButtonBase						from 'com/button-base/base';
-import {UIButton, UIIcon, UIImage, UILink} from 'com/ui';
+import {UIButton, UIIcon, UIImage, UILink, UICheckbox} from 'com/ui';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonBodyField			from 'com/content-common/common-body-field';
@@ -19,8 +19,6 @@ import ContentItemEmbed from './item-embed';
 import ContentItemEmbedFile from './item-embed-file';
 
 import InputStar						from 'com/input-star/star';
-
-import UICheckbox						from 'com/ui/checkbox/checkbox';
 
 import ContentSimple					from 'com/content-simple/simple';
 

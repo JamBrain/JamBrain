@@ -1,1 +1,1 @@
-export {default, default as UILink} from "./link";
+export * from "./link";

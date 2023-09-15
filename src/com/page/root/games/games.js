@@ -5,7 +5,7 @@ import ContentGames						from 'com/content-games/games';
 import GamesFilter						from 'com/content-games/filter';
 
 import ContentItemFilter				from 'com/content-itemfilter/itemfilter';
-import UITagbox							from 'com/ui/tagbox/tagbox';
+import {UITagbox} from 'com/ui';
 
 export default class PageHomeGames extends Component {
 	constructor( props ) {

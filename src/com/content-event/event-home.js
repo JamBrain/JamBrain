@@ -1,5 +1,5 @@
 import {Component} from 'preact';
-import UIIcon 							from 'com/ui/icon';
+import {UIIcon} from 'com/ui';
 import NavLink 							from 'com/nav-link/link';
 import marked 							from 'internal/marked/marked';
 

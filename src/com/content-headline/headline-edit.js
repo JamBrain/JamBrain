@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 import './headline-edit.less';
 
-import UIIcon from 'com/ui/icon';
+import {UIIcon} from 'com/ui';
 import ButtonBase from 'com/button-base/base';
 
 

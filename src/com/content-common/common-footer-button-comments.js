@@ -1,8 +1,8 @@
 import {Component} from 'preact';
 import './common-footer-button.less';
 
-import UIIcon 							from 'com/ui/icon';
-import NavLink 							from 'com/nav-link/link';
+import {UIIcon} from 'com/ui';
+import NavLink from 'com/nav-link/link';
 
 export default class ContentCommonFooterButtonComments extends Component {
 	constructor( props ) {

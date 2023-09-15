@@ -24,15 +24,24 @@ function navigateToHref( e ) {
 
 		newURL.search = mergedSearch.toString();
 
-		window.location.assign(newURL.href);
-		window.dispatchEvent(new CustomEvent('navChange', {
-			'detail': {
-				'location': newURL.toString()
-			}
-		}));
+		//window.location.assign(newURL.href);
+		window.dispatchEvent(new CustomEvent('navChange2', {'detail': newURL.toString()}));
 
 		//e.stopPropagation();	// Do we need this?
 	}
+}
+
+export function setupNavigation( navchangeCallback, popstateCallback ) {
+	window.addEventListener('navChange2', /** @param {CustomEvent} e */ (e) => {
+		DEBUG && console.log('navChange2:', window.location.href, '=>', e.detail);
+		history.pushState(null, null, navchangeCallback(e.detail));
+		window.location.assign(e.detail);
+	});
+
+	window.addEventListener('popstate', (e) => {
+		DEBUG && console.log("popstate: ", e.state);
+		popstateCallback(e.state);
+	});
 }
 
 
@@ -42,7 +51,7 @@ export function UILink2( props ) {
 }
 
 
-export default class UILink extends Component {
+export class UILink extends Component {
 	constructor( props ) {
 		super(props);
 

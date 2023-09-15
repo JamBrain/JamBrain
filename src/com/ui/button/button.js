@@ -1,3 +1,4 @@
+import {UILink2 as UILink} from '../link';
 import {ui_button} from './button.module.less';
 
 // <button type="button" /> has no side effects when clicked.
@@ -5,7 +6,7 @@ export function UIButton( props ) {
 	const {'type': typeProp = "button", 'class': classProp, ...otherProps} = props;
 	const classNames = `${ui_button} ${classProp ?? ''}`;
 	return (props.href)
-		? <a {...otherProps} class={classNames} role="button" />
+		? <UILink {...otherProps} class={classNames} role="button" />
 		: <button {...otherProps} class={classNames} type={typeProp} />;
 }
 

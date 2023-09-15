@@ -1,8 +1,7 @@
 import {Component} from 'preact';
 
 import NavLink 							from 'com/nav-link/link';
-import UISpinner 						from 'com/ui/spinner';
-import UIIcon							from 'com/ui/icon/icon';
+import {UIIcon, UISpinner} from 'com/ui';
 
 import Common							from 'com/content-common/common';
 import CommonBody						from 'com/content-common/common-body';
