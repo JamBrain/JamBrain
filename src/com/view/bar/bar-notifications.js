@@ -1,6 +1,6 @@
 import './bar-notifications.less';
 
-import ButtonLink						from 'com/button-link/link';
+import {UIButton} from 'com/ui';
 
 import NotificationsBase				from 'com/content-notifications/base';
 import Dropdown							from 'com/input-dropdown/dropdown';
@@ -81,7 +81,7 @@ export default class DropdownNotification extends NotificationsBase {
 			Notifications.push([null, <div class="-warning">You have no notifications.</div>]);
 		}
 
-		Notifications.push([-1, (<ButtonLink onClick={this.hide} href="/my/notifications"><em>Open notifications feed...</em></ButtonLink>)]);
+		Notifications.push([-1, (<UIButton onClick={this.hide} href="/my/notifications"><em>Open notifications feed...</em></UIButton>)]);
 
 		return (
 			<Dropdown class="-notifications" items={Notifications} expanded={true} hideSelectedField={true} onhide={this.hide} />

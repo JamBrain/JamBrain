@@ -2,12 +2,8 @@ import {Component} from 'preact';
 
 import { getRoughAge, getLocaleFullTimeStamp, getLocaleDate } from 'internal/time';
 
-import UISpinner						from 'com/ui/spinner';
 import NavLink 							from 'com/nav-link/link';
-import ButtonLink 						from 'com/button-link/link';
-import UIIcon 							from 'com/ui/icon';
-import UIImage 							from 'com/ui/image';
-import UICheckbox from 'com/ui/checkbox/checkbox';
+import {UIButton, UIIcon, UIImage, UICheckbox} from 'com/ui';
 
 import ContentCommentsMarkup from './comments-markup';
 import {AutocompleteAtNames, AutocompleteEmojis} from 'com/content-common/common-autocomplete';
@@ -373,7 +369,7 @@ export default class ContentCommentsComment extends Component {
 
 			let ShowAvatar = null;
 			if ( author ) {
-				ShowAvatar = <ButtonLink class="-avatar" href={author.path}><UIImage alt={author.slug + "'s avatar image"} src={Avatar} /></ButtonLink>;
+				ShowAvatar = <UIButton class="-avatar" href={author.path}><UIImage alt={author.slug + "'s avatar image"} src={Avatar} /></UIButton>;
 			}
 			else {
 				ShowAvatar = <div class="-avatar"><UIImage src={Avatar} /></div>;

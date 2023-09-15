@@ -1,12 +1,10 @@
 import { Component } from 'preact';
 import './common-body-avatar.less';
 
-import ButtonLink						from 'com/button-link/link';
-import UIImage							from 'com/ui/image';
-import UIIcon							from 'com/ui/icon';
+import {UIButton, UIImage, UIIcon} from 'com/ui';
 
-import $Node							from 'backend/js/node/node';
-import $Asset							from 'backend/js/asset/asset';
+import $Node from 'backend/js/node/node';
+import $Asset from 'backend/js/asset/asset';
 
 export default class ContentCommonBodyAvatar extends Component {
 	constructor( props ) {
@@ -66,9 +64,9 @@ export default class ContentCommonBodyAvatar extends Component {
 						<UIIcon>edit</UIIcon>
 					</div>
 				</label>) :
-				(<ButtonLink class={Classes} href={props.href}>
+				(<UIButton class={Classes} href={props.href}>
 					<UIImage alt={name + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
-				</ButtonLink>);
+				</UIButton>);
 		}
 		return (<span class={Classes}>
 					<UIImage alt={name + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />

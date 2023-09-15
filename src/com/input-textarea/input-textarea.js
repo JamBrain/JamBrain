@@ -3,11 +3,10 @@ import './input-textarea.less';
 
 import Shallow from 'shallow';
 
-import NavLink							from 'com/nav-link/link';
-import ButtonLink						from 'com/button-link/link';
-import UIIcon							from 'com/ui/icon';
+import NavLink from 'com/nav-link/link';
+import {UIIcon} from 'com/ui';
 
-import $Asset							from 'backend/js/asset/asset';
+import $Asset from 'backend/js/asset/asset';
 
 
 export default class InputTextarea extends Component {

@@ -1,8 +1,7 @@
 import './upcoming.less';
 import '../base/base.less';
 
-import UIIcon			from 'com/ui/icon';
-import ButtonLink		from 'com/button-link/link';
+import {UIIcon} from 'com/ui';
 
 export default function SidebarUpcoming() {
 	let Items = [
@@ -37,4 +36,4 @@ export default function SidebarUpcoming() {
 		</div>
 	);
 }
-//			<ButtonLink class="-footer" href="/cal">Full Schedule</ButtonLink>
+//			<UIButton class="-footer" href="/cal">Full Schedule</UIButton>

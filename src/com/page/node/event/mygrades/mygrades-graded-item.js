@@ -1,6 +1,5 @@
 import { Component } from 'preact';
-import UIIcon			from 'com/ui/icon';
-import UIButtonLink		from 'com/ui/button/button-link';
+import {UIIcon, UIButton}		from 'com/ui';
 
 export default class GradedItem extends Component {
 	cleanGameDescription( description ) {
@@ -78,14 +77,14 @@ export default class GradedItem extends Component {
 		const ShowComments = comments ? (<UIIcon>{comments > 1 ? 'bubbles' : 'bubble'}</UIIcon>) : null;
 
 		return (
-			<UIButtonLink class={`graded-item ${props.class ?? ''}`} href={node.path}>
+			<UIButton class={`graded-item ${props.class ?? ''}`} href={node.path}>
 				{this.getItemType(node)}
 				<strong>{node.name}</strong>
 				{ShowComments}
 				{ShowAuthors}
 				<p>{description}</p>
 				{ShowGrades}
-			</UIButtonLink>
+			</UIButton>
 		);
 	}
 }

@@ -2,14 +2,8 @@ import { Component } from 'preact';
 import './tv.less';
 import '../base/base.less';
 
-import $JammerTV						from 'external/jammertv/jammertv';
-
-import UIIcon 							from 'com/ui/icon';
-import UISpinner						from 'com/ui/spinner';
-import UIImage	 						from 'com/ui/image';
-
-import ButtonBase						from 'com/button-base/base';
-import ButtonLink						from 'com/button-link/link';
+import {UIButton, UIIcon, UIImage, UISpinner} from 'com/ui';
+import $JammerTV from 'external/jammertv/jammertv';
 
 
 const RequiredStreams = 5;
@@ -227,9 +221,9 @@ export default class SidebarTV extends Component {
 					</div>
 					<div class="-browse">
 						{this.showOthers(others, active)}
-						<ButtonLink class="-more" href="https://www.twitch.tv/directory/all/tags/ludumdare" title="MORE">
+						<UIButton class="-more" href="https://www.twitch.tv/directory/all/tags/ludumdare" title="MORE">
 							<div><UIIcon>circle</UIIcon> <UIIcon>circle</UIIcon> <UIIcon>circle</UIIcon></div>
-						</ButtonLink>
+						</UIButton>
 					</div>
 				</div>
 			);

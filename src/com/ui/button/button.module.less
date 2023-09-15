@@ -1,15 +1,14 @@
-@import '../clickable/clickable.module.less';
-
 /* Buttons are assumed to "div-like" in appearance, able to contain several elements inlcuding images and text */
 .ui_button {
-	composes: ui_clickable;
-
 	display: block;				/* div-like */
 	//position: relative;
 
-	text-align: inherit;		/* rather than left align, inherit */
-	box-sizing: border-box;		/* uses other weird metrics */
-	overflow: auto;				/* otherwise images wont work */
+	cursor: pointer;			/* default to the pointer cursor (like: a) */
+	user-select: none;			/* stop users from selecting the text (like: button) */
+
+	&:disabled {
+		cursor: not-allowed;
+	}
 }
 
 
@@ -19,7 +18,16 @@ button.ui_button {
 	padding: 0;
 	background: transparent;
 }
+
 a.ui_button {
 	color: inherit;
 	text-decoration: inherit;
+}
+
+
+// TODO: Move these into the specific specializations above
+.ui_button {
+	text-align: inherit;		/* rather than left align, inherit */
+	box-sizing: border-box;		/* uses other weird metrics */
+	overflow: auto;				/* otherwise images wont work */
 }

@@ -3,6 +3,7 @@ import './button-link.less';
 
 import {UILink} from '../link';
 
+/** @deprecated */
 export default class UIButtonLink extends UILink {
 	constructor( props ) {
 		super(props);

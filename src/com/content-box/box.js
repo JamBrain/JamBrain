@@ -1,17 +1,14 @@
 import { Component } from 'preact';
 import './box.less';
 
-import Shallow							from 'shallow';
+import Shallow from 'shallow';
 
-import ContentLoading					from 'com/content-loading/loading';
-import UIIcon							from 'com/ui/icon';
-import UIImage							from 'com/ui/image';
-
-import ButtonLink						from 'com/button-link/link';
+import ContentLoading from 'com/content-loading/loading';
+import {UIButton, UIIcon, UIImage} from 'com/ui';
 
 import { node_CountAuthors } from 'internal/lib';
 
-import $Node							from 'backend/js/node/node';
+import $Node from 'backend/js/node/node';
 
 export default class ContentBox extends Component {
 	constructor( props ) {
@@ -142,7 +139,7 @@ export default class ContentBox extends Component {
 			}
 
 			return (
-				<ButtonLink class={`${Class ?? ''} ${props.class ?? ''}`} href={node.path}>
+				<UIButton class={`${Class ?? ''} ${props.class ?? ''}`} href={node.path}>
 					{ShowHoverCover}
 					<UIImage class="-cover" src={Cover} failsrc={CoverFail} />
 					<div class="-top-bar">
@@ -159,7 +156,7 @@ export default class ContentBox extends Component {
 					<div class="-bot-bar">
 						<div class="-title">{Title}</div>
 					</div>
-				</ButtonLink>
+				</UIButton>
 			);
 		}
 		else if (props.placeHolder) {
