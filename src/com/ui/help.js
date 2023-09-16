@@ -1,9 +1,9 @@
 import { Component } from 'preact';
-import './help.less';
+import './help.module.less';
 
-import {Icon} from '../icon';
-import {Button} from '../button';
-import {UIDialog} from '../dialog';
+import {Icon} from './icon';
+import {Button} from './button';
+import {Dialog} from './dialog';
 
 export class Help extends Component {
 	constructor( props ) {
@@ -29,7 +29,7 @@ export class Help extends Component {
 	render( props, state ) {
 		let ShowDialog = null;
 		if ( state.show ) {
-			ShowDialog = <UIDialog class="-dialog" oncancel={this.onHide}>{props.children}</UIDialog>;
+			ShowDialog = <Dialog class="-dialog" oncancel={this.onHide}>{props.children}</Dialog>;
 		}
 
 		return (

@@ -1,4 +1,4 @@
-import {UILink2 as UILink} from '../link';
+import {UILink2 as UILink} from './link';
 import {ui_button} from './button.module.less';
 
 // <button type="button" /> has no side effects when clicked.

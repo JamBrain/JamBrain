@@ -1,5 +1,5 @@
 import { Component } from 'preact';
-import './spoiler.less';
+import './spoiler.module.less';
 
 export class Spoiler extends Component {
 	constructor( props ) {

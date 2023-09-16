@@ -1,8 +1,8 @@
 import { Component } from 'preact';
-import './tagbox.less';
+import './tagbox.module.less';
 
-import {Icon} from '../icon';
-import {Button} from '../button';
+import {Icon} from './icon';
+import {Button} from './button';
 
 export class Tagbox extends Component {
 	constructor( props ) {

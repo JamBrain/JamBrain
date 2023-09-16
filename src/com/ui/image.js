@@ -1,5 +1,5 @@
 import { Component } from 'preact';
-import './image.less';
+import './image.module.less';
 
 export class Image extends Component {
 	constructor( props ) {

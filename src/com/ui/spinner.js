@@ -1,5 +1,5 @@
-import './spinner.less';
-import {Icon} from '../icon';
+import './spinner.module.less';
+import {Icon} from './icon';
 
 export function UISpinner() {
 	// NOTE: We used to need an extra div for IE, which can't apply transformations to SVG elements

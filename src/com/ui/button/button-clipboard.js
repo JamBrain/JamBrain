@@ -3,7 +3,7 @@
 //import {UIButton, UIIcon} from 'com/ui';
 
 //import { signal } from '@preact/signals';
-import { Button } from './button';
+import { Button } from '../button';
 
 function onClick( e ) {
 	if ( navigator.clipboard ) {

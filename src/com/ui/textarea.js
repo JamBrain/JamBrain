@@ -3,7 +3,7 @@ import './textarea.module.less';
 import Shallow from 'shallow';
 
 import NavLink from 'com/nav-link/link';
-import {Icon} from 'com/ui';
+import {Icon} from './icon';
 
 import $Asset from 'backend/js/asset/asset';		// For image uploading
 
