@@ -1,2 +1,2 @@
-export {default, default as UIDropdown} from "./dropdown";
-export {default as UIDropdownList} from "./dropdown-list";
+export * from "./dropdown";
+export * from "./dropdown-list";

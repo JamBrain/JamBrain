@@ -86,15 +86,15 @@ SVG_FILES			:=	$(ALL_SVG_FILES)
 
 OUT_ES_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(ES_FILES:.js=.es.js))
 OUT_JS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(JS_FILES:.js=.o.js))
-OUT_TS_FILES		:=	#$(subst $(SRC)/,$(OUT)/,$(TS_FILES:.ts=.ts.js))
+OUT_TS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(TS_FILES:.ts=.ts.js))
 OUT_LESS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(LESS_FILES:.less=.less.css))
 OUT_CSS_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(CSS_FILES:.css=.o.css))
 OUT_SVG_FILES		:=	$(subst $(SRC)/,$(OUT)/,$(SVG_FILES:.svg=.min.svg))
 
 OUT_FILES_SVG		:=	$(OUT_SVG_FILES)
 OUT_FILES_CSS		:=	$(OUT_CSS_FILES) $(OUT_LESS_FILES)
-#OUT_FILES_JS		:=	$(OUT_JS_FILES) $(OUT_ES_FILES) $(OUT_TS_FILES)
-OUT_FILES			:=	$(OUT_FILES_SVG) $(OUT_FILES_CSS) $(OUT_FILES_JS)
+OUT_FILES_JS		:=	$(OUT_JS_FILES) $(OUT_ES_FILES) $(OUT_TS_FILES)
+OUT_FILES			:=	$(OUT_FILES_SVG) #$(OUT_FILES_CSS) $(OUT_FILES_JS)
 DEP_FILES			:=	$(addsuffix .dep,$(OUT_ES_FILES) $(OUT_LESS_FILES))
 OUT_FOLDERS			:=	$(sort $(dir $(OUT_FILES) $(BUILD_FOLDER)/))
 
@@ -400,7 +400,7 @@ $(TARGET_FOLDER)/app.min.svg: $(BUILD_FOLDER)/app.svg
 
 # Target #
 #target: $(OUT_FOLDERS) $(BUILD_FOLDER)/js.lint $(BUILD_FOLDER)/less.lint $(TARGET_FILES) report
-target: $(OUT_FOLDERS) $(BUILD_FOLDER)/less.lint $(TARGET_FILES) report
+target: $(OUT_FOLDERS) $(TARGET_FILES) report
 	@echo "[$(COL_YELLOW)-$(COL_OFF)] Done \"$(subst /,,$(TARGET))\""
 
 endif # MAIN_FOLDER # ---- #

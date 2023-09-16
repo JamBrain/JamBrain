@@ -1,13 +1,13 @@
-import { Component } from 'preact';
+import {Component} from 'preact';
 import './bar.less';
-import Shallow from 'shallow';
-import { node_CanCreate } from 'internal/lib';
+import {Compare} from 'shallow';
+import {node_CanCreate} from 'internal/lib';
 
 import {Icon, Button, IconButton, UISpinner} from 'com/ui';
 
 //import DropdownUser 					from 'com/dropdown-user/user';
 import BarNotification					from './bar-notifications';
-import BarUser							from './bar-user';
+import {PageBarUser} from './bar-user';
 
 //import $Node							from 'backend/js/node/node';
 import $Notification					from 'backend/js/notification/notification';
@@ -83,10 +83,8 @@ export default class PageNavBar extends Component {
 	}
 
 	checkNotificationCount() {
-		//return; // HACK! Comment me to restore notifications
-
-		const {user} = this.props;
-		const loggedIn = user && (user.id > 0);
+		const {user, ...otherProps} = this.props;
+		const loggedIn = user && user.id;
 		const fetchCount = 40;
 
 		if (loggedIn) {
@@ -163,7 +161,7 @@ export default class PageNavBar extends Component {
 //	}
 
 	shouldComponentUpdate( nextProps, nextState ) {
-		var ret = Shallow.Compare(this, nextProps, nextState);
+		var ret = Compare(this, nextProps, nextState);
 		//console.log(ret, nextProps.featured);
 		return ret;
 	}
@@ -218,6 +216,8 @@ export default class PageNavBar extends Component {
 	}
 
 	renderRight( user, featured ) {
+		const loggedIn = user && user.id;
+
 		let Notification = null;
 		let ShowUser = null;
 		let ShowNotifications = null;
@@ -232,18 +232,22 @@ export default class PageNavBar extends Component {
 			</>;
 		}
 		// Both user and user.id means logged in
-		else if ( user && user.id ) {
+		else if ( loggedIn ) {
 			if ( featured && featured.id ) {
 				// Has a game
 				if ( featured.focus_id && featured.what ) {
 					return <>
 						<MyGameButton href={featured.what[featured.focus_id].path} />
 						<NewPostButton focusId={featured.focus_id} />
+						<PageBarUser user={user} />
 					</>;
 				}
 				// Let them create a game
 				else if ( node_CanCreate(featured, "item/game") ) {
-					return <JoinEventButton eventId={featured.id} />;
+					return <>
+						<JoinEventButton eventId={featured.id} />
+						<PageBarUser user={user} />
+					</>;
 				}
 			}
 
@@ -303,26 +307,29 @@ export default class PageNavBar extends Component {
 //				<DropdownUser />
 			];
 */
-
-			ShowUser = <BarUser user={user} />;
 		}
-		// If user has finished loading (and is not logged in)
+		// However if user has finished loading and is not logged in....
 		else if ( user ) {
 			return <>
 				<RegisterNewUserButton />
 				<LoginButton />
 			</>;
 		}
+/*
 		// Still waiting
 		else {
-			return <UISpinner />;	// was wrapped in a "fakeright" section
+			// was wrapped in a "fakeright" section
+			return <>
+				<UISpinner />
+			</>;
 		}
-
+*/
 		return <>
-			<SearchButton />
-			{Notification}
-			{ShowNotifications}
-			{ShowUser}
+			<UISpinner />
+			{/*<SearchButton />*/}
+			{/*Notification*/}
+			{/*ShowNotifications*/}
+			{/*<PageBarUser user={user} />*/}
 			{/*<CalendarButton />*/}
 		</>;
 	}

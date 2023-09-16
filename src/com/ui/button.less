@@ -6,6 +6,10 @@
 	cursor: pointer;			/* default to the pointer cursor (like: a) */
 	user-select: none;			/* stop users from selecting the text (like: button) */
 
+	> * {
+		pointer-events: none;	/* stopping children from being clickable means the event.target will be the button, not the child */
+	}
+
 	&:disabled {
 		cursor: not-allowed;
 	}

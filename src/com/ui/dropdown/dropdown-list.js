@@ -3,11 +3,7 @@ import { Component } from 'preact';
 import {Button} from '../button';
 import {UIDropdown} from './dropdown';
 
-export default class UIDropdownList extends Component {
-	constructor( props ) {
-		super(props);
-	}
-
+export class UIDropdownList extends Component {
 	// Does not need to be bound in constructor
 	onModify( value, index ) {
 		if ( this.props.onModify ) {
