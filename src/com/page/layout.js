@@ -1,4 +1,4 @@
-import PageBar							from './bar/bar';
+import PageNavBar						from './bar/bar';
 import ViewHeader						from 'com/view/header/header';
 import ViewSidebar						from 'com/view/sidebar/sidebar';
 import ViewContent						from 'com/view/content/content';
@@ -10,7 +10,7 @@ export default function Layout( props ) {
 
 	return <>
 		<section id="layout-top">
-			<PageBar user={user} featured={featured} loading={isLoading}/>
+			<PageNavBar user={user} featured={featured} loading={isLoading}/>
 		</section>
 		<section id="layout-page">
 			<ViewHeader user={user} featured={featured} root={root}/>

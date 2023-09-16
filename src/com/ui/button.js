@@ -17,7 +17,7 @@ export function Button( props ) {
 export function IconButton( props ) {
 	const {icon, children, ...otherProps} = props;
 	return <Button {...otherProps}>
-		<Icon src={icon} />
+		{icon ? <Icon src={icon} /> : null}
 		<span>{children}</span>
 	</Button>;
 }

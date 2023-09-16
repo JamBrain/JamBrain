@@ -3,7 +3,7 @@ import './bar.less';
 import Shallow from 'shallow';
 import { node_CanCreate } from 'internal/lib';
 
-import {Icon, Button, UISpinner} from 'com/ui';
+import {Icon, Button, IconButton, UISpinner} from 'com/ui';
 
 //import DropdownUser 					from 'com/dropdown-user/user';
 import BarNotification					from './bar-notifications';
@@ -13,11 +13,46 @@ import BarUser							from './bar-user';
 import $Notification					from 'backend/js/notification/notification';
 
 
-function make_url( url ) {
-	return url + window.location.search;
-}
+const LogoButton = () =>
+<Button title="Ludum Dare" href="/" class="logo">
+	<Icon class="if-sidebar-block" baseline src="ludum" /><Icon class="if-sidebar-block" baseline src="dare" />
+	<Icon class="if-no-sidebar-block" baseline src="l-udum" /><Icon class="if-no-sidebar-block" baseline src="d-are" />
+</Button>;
 
-export default class PageBar extends Component {
+const SearchButton = () => <IconButton icon="search" class="bar-icon" onClick={e => {window.location.hash = "#search";}} />;
+
+const CalendarButton = () =>
+<IconButton class="bar-button if-no-sidebar-block" icon="calendar" /*baseline*/ onClick={e => {window.location.hash = "#cal";}}>
+	<div class="if-sidebar-block">Schedule</div>
+</IconButton>;
+
+const RegisterNewUserButton = () =>
+<IconButton icon="user-plus" class="bar-button" onClick={e => {window.location.hash = "#user-register";}}>
+	<div class="if-sidebar-block">Create Account</div>
+</IconButton>;
+
+const LoginButton = () =>
+<IconButton icon="key" class="bar-button" onClick={e => {window.location.hash = "#user-login";}}>
+	<div class="if-sidebar-block">Login</div>
+</IconButton>;
+
+const JoinEventButton = (props) =>
+<IconButton icon="publish" title="Join Event" class="bar-button" onClick={e => {window.location.hash = `#create/${props.eventId}/item/game`;}}>
+	<div class="if-sidebar-block">Join Event</div>
+</IconButton>;
+
+const MyGameButton = (props) =>
+<IconButton icon="gamepad" title="My Game" href={props.href} class="bar-button">
+	<div class="if-sidebar-block">My Game</div>
+</IconButton>;
+
+const NewPostButton = (props) =>
+<IconButton icon="edit" title="New Post" class="bar-button" onClick={e => {window.location.hash = `#create/${props.focusId}/post`;}}>
+	<div class="if-sidebar-block">New Post</div>
+</IconButton>;
+
+
+export default class PageNavBar extends Component {
 	constructor( props ) {
 		super(props);
 		this.StartedNotificationLoop = false;
@@ -183,90 +218,32 @@ export default class PageBar extends Component {
 	}
 
 	renderRight( user, featured ) {
-		var Search = null;
-//		var Search = (
-//			<ButtonBase class="bar-icon" onClick={e => { console.log('search'); window.location.hash = "#search"; }}>
-//				<UIIcon baseline>search</UIIcon>
-//			</ButtonBase>
-//		);
-
-		var ShowCalendar = (
-			<Button
-				class="bar-button if-no-sidebar-block"
-				onClick={e => {
-					//console.log('calendar');
-					window.location.hash = "#cal";
-				}}
-			>
-				<Icon baseline>calendar</Icon>
-				<div class="if-sidebar-block">Schedule</div>
-			</Button>
-		);
-
-		let ShowJoin = null;
-		let ShowMyGame = null;
-		let NewPost = null;
 		let Notification = null;
 		let ShowUser = null;
-		let Register = null;
-		let Login = null;
-		let GoSecure = null;
-		let ShowSpinner = null;
 		let ShowNotifications = null;
 
 		// Disallow insecure login
 		if ( SECURE_LOGIN_ONLY && (location.protocol !== 'https:') ) {
-			let SecureURL = 'https://'+location.hostname+location.pathname+location.search+location.hash;
-			GoSecure = (
-				<Button
-					class="bar-button"
-					noblank
-					href={SecureURL}
-				>
-					<Icon>unlocked</Icon>
+			const SecureURL = 'https://'+location.hostname+location.pathname+location.search+location.hash;
+			return <>
+				<IconButton icon="unlocked" class="bar-button" noblank href={SecureURL}>
 					<div class="if-sidebar-block">Go to Secure Site</div>
-				</Button>
-			);
+				</IconButton>
+			</>;
 		}
 		// Both user and user.id means logged in
 		else if ( user && user.id ) {
 			if ( featured && featured.id ) {
 				// Has a game
 				if ( featured.focus_id && featured.what ) {
-					ShowMyGame = (
-						<Button title="My Game" href={featured.what[featured.focus_id].path} class="bar-button">
-							<Icon>gamepad</Icon>
-							<div class="if-sidebar-block">My Game</div>
-						</Button>
-					);
-
-					NewPost = (
-						<Button
-							title="New Post"
-							class="bar-button"
-							onClick={e => {
-								window.location.hash = "#create/"+featured.focus_id+"/post";
-							}}
-						>
-							<Icon>edit</Icon>
-							<div class="if-sidebar-block">New Post</div>
-						</Button>
-					);
+					return <>
+						<MyGameButton href={featured.what[featured.focus_id].path} />
+						<NewPostButton focusId={featured.focus_id} />
+					</>;
 				}
 				// Let them create a game
 				else if ( node_CanCreate(featured, "item/game") ) {
-					ShowJoin = (
-						<Button
-							title="Join Event"
-							class="bar-button"
-							onClick={e => {
-								window.location.hash = "#create/"+featured.id+"/item/game";
-							}}
-						>
-							<Icon>publish</Icon>
-							<div class="if-sidebar-block">Join Event</div>
-						</Button>
-					);
+					return <JoinEventButton eventId={featured.id} />;
 				}
 			}
 
@@ -331,81 +308,38 @@ export default class PageBar extends Component {
 		}
 		// If user has finished loading (and is not logged in)
 		else if ( user ) {
-			Register = (
-				<Button
-					class="bar-button"
-					onClick={e => {
-						//console.log('register');
-						window.location.hash = "#user-register";
-					}}
-				>
-					<Icon>user-plus</Icon>
-					<div class="if-sidebar-block">Create Account</div>
-				</Button>
-			);
-			Login = (
-				<Button
-					class="bar-button"
-					onClick={e => {
-						//console.log('login');
-						window.location.hash = "#user-login";
-					}}
-				>
-					<Icon>key</Icon>
-					<div class="if-sidebar-block">Login</div>
-				</Button>
-			);
+			return <>
+				<RegisterNewUserButton />
+				<LoginButton />
+			</>;
 		}
 		// Still waiting
 		else {
-			ShowSpinner = <UISpinner />;
+			return <UISpinner />;	// was wrapped in a "fakeright" section
 		}
 
-		if ( ShowSpinner ) {
-			return (
-				<section class="fake-right">
-					{ShowSpinner}
-				</section>
-			);
-		}
-		else {
-			return (
-				<section class="right">
-					{ShowJoin}
-					{ShowMyGame}
-					{NewPost}
-					{Search}
-					{Notification}
-					{ShowNotifications}
-					{ShowUser}
-					{Register}
-					{Login}
-					{GoSecure}
-				</section>
-			);
-		}
+		return <>
+			<SearchButton />
+			{Notification}
+			{ShowNotifications}
+			{ShowUser}
+			{/*<CalendarButton />*/}
+		</>;
 	}
 
-	/*{ShowCalendar}*/
 
 	render( props ) {
-		let {user, featured, loading, ...otherProps} = props;
-		let ShowLoading;
-
-		if ( loading ) {
-			ShowLoading = (<UISpinner />);
-		}
+		const {user, featured, loading, ...otherProps} = props;
 
 		return (
 			<nav id="navbar">
 				<section class="left">
-					<Button title="Ludum Dare" href="/" class="logo">
-						<Icon class="if-sidebar-block" baseline src="ludum" /><Icon class="if-sidebar-block" baseline src="dare" />
-						<Icon class="if-no-sidebar-block" baseline src="l-udum" /><Icon class="if-no-sidebar-block" baseline src="d-are" />
-					</Button>
+					<LogoButton />
 				</section>
-				{ShowLoading}
-				{this.renderRight(user, featured)}
+				{loading ? <UISpinner /> : null}
+				<section class="right">
+					{this.renderRight(user, featured)}
+				</section>
 			</nav>
 		);
 	}

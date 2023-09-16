@@ -10,7 +10,7 @@ function onLogout() {
 	});
 }
 
-export default function ViewBarUser( props ) {
+export default function PageBarUser( props ) {
 	const {user, ...otherProps} = props;
 
 	// Bail if we don't have a valid user
