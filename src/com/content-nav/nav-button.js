@@ -1,33 +1,15 @@
-import { Component } from 'preact';
 import './nav.less';
-
 import { Icon, Button } from 'com/ui';
 
+export default function ContentNavButton( props ) {
+	const {'class': classProp, children, ...otherProps} = props;
 
-export default class ContentNavButton extends Component {
-	render( props ) {
-		let Body = [];
-		let Classes = [
-			props.class
-		];
+	const selected = ((props.path === props.href) || (props.path === props.match)) ? '-selected' : '';
+	const light = props.light ? '-light' : '';
+	const icon = props.icon ? '-has-icon' : '';
 
-		if ( (props.path === props.href) || (props.path === props.match) ) {
-			Classes.push('-selected');
-		}
-
-		if ( props.light ) {
-			Classes.push('-light');
-		}
-
-		if ( props.icon ) {
-			Body.push(<Icon src={props.icon} />);
-			Classes.push('-has-icon');
-		}
-
-		Body.push(<span>{props.children}</span>);
-
-		return (
-			<Button {...props} class={Classes.join(' ')}>{Body}</Button>
-		);
-	}
+	return <Button {...otherProps} class={`${classProp ?? ''} ${selected} ${light} ${icon}`}>
+		{props.icon ? <Icon src={props.icon} /> : null}
+		{children}
+	</Button>;
 }

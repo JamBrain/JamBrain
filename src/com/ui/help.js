@@ -1,5 +1,5 @@
 import { Component } from 'preact';
-import './help.module.less';
+import './help.less';
 
 import {Icon} from './icon';
 import {Button} from './button';

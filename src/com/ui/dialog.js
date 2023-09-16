@@ -1,5 +1,7 @@
 import { Component } from 'preact';
-import {ui_dialog, ui_window} from './dialog.module.less';
+import './dialog.less';
+const ui_dialog = 'ui_dialog';
+const ui_window = 'ui_window';
 
 function handleKeys( e ) {
 	// ESC key

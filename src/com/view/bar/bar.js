@@ -393,7 +393,7 @@ export default class ViewBar extends Component {
 	/*{ShowCalendar}*/
 
 	render( props ) {
-		let {user, featured, loading} = props;
+		let {user, featured, loading, ...otherProps} = props;
 		let ShowLoading;
 
 		if ( loading ) {
@@ -405,8 +405,8 @@ export default class ViewBar extends Component {
 				<nav id="navbar">
 					<section class="left">
 						<Button title="Ludum Dare" href="/" class="logo">
-							<Icon class="if-sidebar-block" baseline>ludum</Icon><Icon class="if-sidebar-block" baseline>dare</Icon>
-							<Icon class="if-no-sidebar-block" baseline>l-udum</Icon><Icon class="if-no-sidebar-block" baseline>d-are</Icon>
+							<Icon class="if-sidebar-block" baseline src="ludum" /><Icon class="if-sidebar-block" baseline src="dare" />
+							<Icon class="if-no-sidebar-block" baseline src="l-udum" /><Icon class="if-no-sidebar-block" baseline src="d-are" />
 						</Button>
 					</section>
 					{ShowLoading}

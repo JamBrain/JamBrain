@@ -1,5 +1,5 @@
 import {UILink2 as UILink} from './link';
-//import {ui_button} from './button.module.less';
+//import {ui_button} from './button.less';
 import './button.less';
 const ui_button = 'ui_button';
 

@@ -1,5 +1,5 @@
 import { Component } from 'preact';
-import './tagbox.module.less';
+import './tagbox.less';
 
 import {Icon} from './icon';
 import {Button} from './button';

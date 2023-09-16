@@ -1,9 +1,8 @@
 import { Component } from 'preact';
 import './itemfilter.less';
-import "com/ui/dialog.module.less";
 
 
-import {Icon, Button, Tagbox, TextField, UIDropdown, UIDropdownList, TextDropdown, Help} from 'com/ui';
+import {Icon, Button, Tagbox, TextField, UIDropdown, UIDropdownList, DropdownText, Help} from 'com/ui';
 
 import $Tag								from 'backend/js/tag/tag';
 
@@ -174,7 +173,7 @@ export default class ItemFilter extends Component {
 				<div class="-body -flex">
 					<div class="-query">
 						<div class="-title"><Help>{HelpItemSearch}</Help>Platform/Tag filters:</div>
-						<TextDropdown onModify={this.onModifyQuery} onselect={this.onTagAdd} maxLength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
+						<DropdownText onModify={this.onModifyQuery} onselect={this.onTagAdd} maxLength={128} value={state.query} placeholder={state.tags[state.randomtag].name} items={state.tags} />
 					</div>
 					<div class="-event">
 						<div class="-title"><Help>{HelpItemEvent}</Help><span>Event:</span></div>

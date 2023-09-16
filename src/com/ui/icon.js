@@ -1,5 +1,5 @@
 import { toChildArray } from 'preact';
-import './icon.module.less';
+import './icon.less';
 import 'icons/ludumdare/ludumdare.less';
 import 'icons/icomoon/icons.less';
 import 'icons/custom/icons.less';

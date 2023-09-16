@@ -1,4 +1,4 @@
-import './spinner.module.less';
+import './spinner.less';
 import {Icon} from './icon';
 
 export function UISpinner() {

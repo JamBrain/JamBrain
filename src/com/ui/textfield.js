@@ -1,5 +1,5 @@
 import { Component } from 'preact';
-import './textfield.module.less';
+import './textfield.less';
 
 export class TextField extends Component {
 	constructor( props ) {

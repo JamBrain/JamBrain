@@ -1,10 +1,10 @@
 import { Component } from 'preact';
-import './textdropdown.module.less';
+import './textdropdown.less';
 
 import {Button} from './button';
 import {TextField} from './textfield';
 
-export class TextDropdown extends Component {
+export class DropdownText extends Component {
 	constructor( props ) {
 		super(props);
 
