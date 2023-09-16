@@ -1,4 +1,6 @@
-import {UILink2 as UILink} from './link';
+import {UILink2 as Link} from './link';
+import {Icon} from './icon';
+
 //import {ui_button} from './button.less';
 import './button.less';
 const ui_button = 'ui_button';
@@ -8,10 +10,17 @@ export function Button( props ) {
 	const {'type': typeProp = "button", 'class': classProp, ...otherProps} = props;
 	const classNames = `${ui_button} ${classProp ?? ''}`;
 	return (props.href)
-		? <UILink {...otherProps} class={classNames} role="button" />
+		? <Link {...otherProps} class={classNames} role="button" />
 		: <button {...otherProps} class={classNames} type={typeProp} />;
 }
 
+export function IconButton( props ) {
+	const {icon, children, ...otherProps} = props;
+	return <Button {...otherProps}>
+		<Icon src={icon} />
+		<span>{children}</span>
+	</Button>;
+}
 
 // For submitting HTTP forms.
 // Wrap this in a <form action='someurl'></form> or use the 'formaction' attribute to specify the URL to submit to.

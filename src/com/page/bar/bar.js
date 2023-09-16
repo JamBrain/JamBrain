@@ -17,7 +17,7 @@ function make_url( url ) {
 	return url + window.location.search;
 }
 
-export default class ViewBar extends Component {
+export default class PageBar extends Component {
 	constructor( props ) {
 		super(props);
 		this.StartedNotificationLoop = false;
@@ -113,16 +113,12 @@ export default class ViewBar extends Component {
 	}
 
 	componentDidMount() {
-		//document.body.classList.add('_use-view-bar');
-
 		if ( !this.StartedNotificationLoop ) {
 			this.checkNotificationCount();
 		}
 	}
 
 	componentWillUnmount() {
-		//document.body.classList.remove('_use-view-bar');
-		//document.body.classList.remove('_static-view-bar');
 	}
 
 //	componentWillReceiveProps( nextProps ) {
@@ -401,18 +397,16 @@ export default class ViewBar extends Component {
 		}
 
 		return (
-			<section id="layout-top">
-				<nav id="navbar">
-					<section class="left">
-						<Button title="Ludum Dare" href="/" class="logo">
-							<Icon class="if-sidebar-block" baseline src="ludum" /><Icon class="if-sidebar-block" baseline src="dare" />
-							<Icon class="if-no-sidebar-block" baseline src="l-udum" /><Icon class="if-no-sidebar-block" baseline src="d-are" />
-						</Button>
-					</section>
-					{ShowLoading}
-					{this.renderRight(user, featured)}
-				</nav>
-			</section>
+			<nav id="navbar">
+				<section class="left">
+					<Button title="Ludum Dare" href="/" class="logo">
+						<Icon class="if-sidebar-block" baseline src="ludum" /><Icon class="if-sidebar-block" baseline src="dare" />
+						<Icon class="if-no-sidebar-block" baseline src="l-udum" /><Icon class="if-no-sidebar-block" baseline src="d-are" />
+					</Button>
+				</section>
+				{ShowLoading}
+				{this.renderRight(user, featured)}
+			</nav>
 		);
 	}
 }
