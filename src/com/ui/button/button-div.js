@@ -31,5 +31,5 @@ export default function UIButtonDiv( props ) {
 		};
 	}
 
-	return <div {...props} class={`ui-button ${props.disabled ? "-disabled" : ''} ${!props.onClick ? "-null" : ''} ${props.class ?? ''}`} />;
+	return <div {...props} class={`ui_button ${props.disabled ? "-disabled" : ''} ${!props.onClick ? "-null" : ''} ${props.class ?? ''}`} />;
 }

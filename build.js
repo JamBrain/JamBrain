@@ -124,10 +124,12 @@ if (action.live) {
 			console.log(`[${new Date().toLocaleTimeString()}] New request from ${args.remoteAddress}`);
 		}
 	});
-	console.log(`[${new Date().toLocaleTimeString()}] Live coding server started. Use this URL: http://ldjam.work/?debug=${port}`);
+	console.log(`[${new Date().toLocaleTimeString()}] Live coding server started. Press Ctrl+C to stop. URL: http://ldjam.work/?debug=${port}`);
+	if (global.Bun) {
+		console.error("Warning: Connections to the live coding server may not work with Bun.\nTry `node ./build.js live` instead.");
+	}
 
 	// Handle Ctrl+C
-	console.log(`[${new Date().toLocaleTimeString()}] Press Ctrl+C to stop.`);
 	process.on('SIGINT', async () => {
 		console.log('');	// newline
 		console.log(`[${new Date().toLocaleTimeString()}] Stopping...`);

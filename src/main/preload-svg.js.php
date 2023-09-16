@@ -9,11 +9,12 @@
 			var svg = x.getElementsByTagName('svg')[0];
 			if ( svg ) {
 				svg.setAttribute( 'aria-hidden', 'true' );
-				svg.style.position = 'fixed';
-				svg.style.top = 0;
-				svg.style.width = 0;
-				svg.style.height = 0;
-				svg.style.overflow = 'hidden';
+				/*svg.style.position = 'fixed';*/
+				/*svg.style.inset = 0;*/
+				/*svg.style.top = 0;*/
+				/*svg.style.width = 0;*/
+				/*svg.style.height = 0;*/
+				/*svg.style.overflow = 'hidden';*/
 				document.body.insertBefore( svg, document.body.firstChild );
 			}
 		}

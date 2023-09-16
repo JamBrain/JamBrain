@@ -1,7 +1,26 @@
 import { Component } from 'preact';
-import './dialog.module.less';
+import {ui_dialog, ui_window} from './dialog.module.less';
+
+function handleKeys( e ) {
+	// ESC key
+	if ( e.keyCode == 27 ) {
+		e.preventDefault();
+		e.target.onCancel();
+	}
+}
+
+function onCancel( e ) {
+	if ( e.target.onCancel && !e.target.explicit ) {
+		e.target.onCancel();
+	}
+}
+
+function onClickWindow( e ) {
+	e.stopPropagation();
+}
 
 export class Dialog extends Component {
+/*
 	constructor( props ) {
 		super(props);
 
@@ -9,7 +28,16 @@ export class Dialog extends Component {
 		this.onCancel = this.onCancel.bind(this);
 		this.onClickWindow = this.onClickWindow.bind(this);
 	}
+*/
 
+	componentDidMount() {
+		document.body.addEventListener('keydown', handleKeys);
+	}
+
+	componentWillUnmount() {
+		document.body.removeEventListener('keydown', handleKeys);
+	}
+/*
 	componentDidMount() {
 		document.body.addEventListener('keydown', this.onKey);
 	}
@@ -35,13 +63,13 @@ export class Dialog extends Component {
 			this.onCancel();
 		}
 	}
-
+*/
 
 	render( props ) {
-		return (
-			<section class="ui-dialog" onClick={this.onCancel}>
-				<aside {...props} class={`window ${props.class ?? ''}`} onClick={this.onClickWindow} />
-			</section>
-		);
+		const {'class': classProp, ...otherProps} = props;
+
+		return <section class={`${ui_dialog} ${classProp ?? ''}`} onClick={onCancel}>
+			<aside class={ui_window} onClick={onClickWindow} />
+		</section>;
 	}
 }

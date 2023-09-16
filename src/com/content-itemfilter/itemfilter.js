@@ -1,5 +1,7 @@
 import { Component } from 'preact';
 import './itemfilter.less';
+import "com/ui/dialog.module.less";
+
 
 import {Icon, Button, Tagbox, TextField, UIDropdown, UIDropdownList, TextDropdown, Help} from 'com/ui';
 

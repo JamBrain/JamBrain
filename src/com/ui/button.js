@@ -1,5 +1,7 @@
 import {UILink2 as UILink} from './link';
-import {ui_button} from './button.module.less';
+//import {ui_button} from './button.module.less';
+import './button.less';
+const ui_button = 'ui_button';
 
 // <button type="button" /> has no side effects when clicked.
 export function Button( props ) {
