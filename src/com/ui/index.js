@@ -1,14 +1,20 @@
+// Core UI components
+export * from "./link";
 export * from "./button";
-export * from "./checkbox";
-export * from "./dialog";
-export * from "./dropdown";
-export * from "./help";
+export * from "./textfield";
+export * from "./spoiler";
 export * from "./icon";
 export * from "./image";
-export * from "./link";
-export * from "./tagbox";
-export * from "./textfield";
-export * from "./textarea";
-export * from "./textdropdown";
+
+export * from "./dialog";
+
+// Composite UI components
+export * from "./help";
 export * from "./spinner";
-export * from "./spoiler";
+export * from "./tagbox";
+export * from "./textarea";
+export * from "./dropdown";
+export * from "./textdropdown";
+
+// Deprecated
+export * from "./checkbox";
