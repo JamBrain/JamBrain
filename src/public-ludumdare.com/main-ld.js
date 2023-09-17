@@ -55,6 +55,10 @@ import $NodeLove						from 'backend/js/node/node_love';
 
 const SITE_ROOT = 1;
 
+function getSlugsFromURL( url ) {
+	const newURL = new URL(url);
+	return Sanitize.trimSlashes(newURL.pathname).split('/');
+}
 
 class Main extends Component {
 	constructor( props ) {
@@ -108,7 +112,7 @@ class Main extends Component {
 			}
 		}
 
-
+		/*
 		// Start by cleaning the URL
 		let clean = this.cleanLocation(window.location);
 		if ( window.location.origin+clean.path !== window.location.href ) {
@@ -116,12 +120,13 @@ class Main extends Component {
 
 			this.storeHistory(window.history.state, null, clean.path);
 		}
+		*/
 
 
 		this.state = {
 			// URL walking
 			'path': '',
-			'slugs': clean.slugs,
+			'slugs': getSlugsFromURL(window.location.href),
 			'extra': [],
 
 			// Active Node
@@ -142,12 +147,12 @@ class Main extends Component {
 			'user': null
 		};
 
-		window.addEventListener('hashchange', this.onHashChange.bind(this));
+		//window.addEventListener('hashchange', this.onHashChange.bind(this));
 		//window.addEventListener('navchange', this.onNavChange.bind(this));
 		//window.addEventListener('popstate', this.onPopState.bind(this));
 
 		setupNavigation((newURL) => {
-			const newSlugs = Sanitize.trimSlashes(new URL(newURL).pathname).split('/');
+			const newSlugs = getSlugsFromURL(newURL);//Sanitize.trimSlashes(new URL(newURL).pathname).split('/');
 			this.fetchNode(newSlugs);
 
 			const newState = {
@@ -159,8 +164,13 @@ class Main extends Component {
 
 			return newState;
 		},
-		(newState) => {
-			window.scrollTo(newState.scrollX, newState.scrollY);
+		(newState, newURL) => {
+			const newSlugs = getSlugsFromURL(newURL);
+
+			this.fetchNode(newSlugs).then(() => {
+				if (!newState) return;
+				window.scrollTo(newState.scrollX, newState.scrollY);
+			});
 		});
 
 		this.onLogin = this.onLogin.bind(this);
@@ -169,12 +179,12 @@ class Main extends Component {
 	componentDidMount() {
 		DEBUG && console.log("[componentDidMount] +");
 
-		let clean = this.cleanLocation(window.location);
+		const newSlugs = getSlugsFromURL(window.location.href);
 
 		return Promise.all([
 			this.fetchUser(),
 			this.fetchRoot(),	// Fetches root, featured, and id's of all games associated with you
-			this.fetchNode(clean.slugs)
+			this.fetchNode(newSlugs)
 		]).then(r => {
 			DEBUG && console.log("[componentDidMount] -");
 		})
@@ -183,6 +193,7 @@ class Main extends Component {
 		});
 	}
 
+	/*
 	storeHistory( input, page_title = null, page_url = null ) {
 		if ( window.history && window.history.replaceState && input ) {
 			history.replaceState({
@@ -232,45 +243,68 @@ class Main extends Component {
 
 		return clean;
 	}
+*/
 
-	getDialog() {
-		let props = Sanitize.parseHash(window.location.hash);
+	/**
+	 * @typedef {Object} DialogProps
+	 * @prop {string} dialog
+	 * @prop {string[]} args
+	 */
 
-		if ( window.location.hash ) {
-			if ( window.location.hash.indexOf("/") != 1 && props.path !== "--") {
-				switch (props.path) {
-					case 'user-login':
-						props.onlogin = this.onLogin;
-						return <DialogLogin {...props} />;
-					case 'user-confirm':
-						return <DialogUserConfirm {...props} />;
-					case 'user-activate':
-						return <DialogActivate {...props} />;
-					case 'user-register':
-						return <DialogRegister {...props} />;
-					case 'user-auth':
-						return <DialogAuth {...props} />;
-					case 'user-reset':
-						return <DialogReset {...props} />;
-					case 'user-password':
-						return <DialogPassword {...props} />;
-					case 'expired':
-						return <DialogSession {...props} />;
-					case 'savebug':
-						return <DialogSavebug {...props} />;
-					case 'create':
-						return <DialogCreate {...props} />;
-					case 'submit':
-						return <DialogSubmit {...props} />;
-					case 'tv':
-						return <DialogTV {...props} />;
-					case 'error-upload':
-						return <DialogErrorUpload {...props} />;
-					case 'error-publish':
-						return <DialogErrorPublish {...props} />;
-					default:
-						return <DialogUnfinished {...props} />;
-				}
+	/**
+	 * @param {string} url
+	 * @returns {DialogProps}
+	 */
+	getDialogProps( url ) {
+		const newURL = new URL(url);
+
+		const dialogPath = newURL.searchParams.get("dialog");
+		if (!dialogPath) return null;
+
+		const dialogPathParts = dialogPath.split("!");
+		if (!dialogPathParts.length) return null;
+
+		return {
+			"dialog": dialogPathParts[0],
+			"args": dialogPathParts.slice(1)
+		};
+	}
+
+	showDialog() {
+		let props = this.getDialogProps(window.location.href);
+
+		if ( props ) {
+			switch (props.dialog) {
+				case 'user-login':
+					return <DialogLogin {...props} onLogin={this.onLogin} />;
+				case 'user-confirm':
+					return <DialogUserConfirm {...props} />;
+				case 'user-activate':
+					return <DialogActivate {...props} />;
+				case 'user-register':
+					return <DialogRegister {...props} />;
+				case 'user-auth':
+					return <DialogAuth {...props} />;
+				case 'user-reset':
+					return <DialogReset {...props} />;
+				case 'user-password':
+					return <DialogPassword {...props} />;
+				case 'expired':
+					return <DialogSession {...props} />;
+				case 'savebug':
+					return <DialogSavebug {...props} />;
+				case 'create':
+					return <DialogCreate {...props} />;
+				case 'submit':
+					return <DialogSubmit {...props} />;
+				case 'tv':
+					return <DialogTV {...props} />;
+				case 'error-upload':
+					return <DialogErrorUpload {...props} />;
+				case 'error-publish':
+					return <DialogErrorPublish {...props} />;
+				default:
+					return <DialogUnfinished {...props} />;
 			}
 		}
 		return null;
@@ -422,7 +456,7 @@ class Main extends Component {
 	}
 
 	// *** //
-
+/*
 	// Hash Changes are automatically differences
 	onHashChange( e ) {
 		DEBUG && console.log("hashchange: ", e.newURL);
@@ -440,6 +474,18 @@ class Main extends Component {
 
 		this.handleAnchors();
 	}
+*/
+
+/*
+	handleDialog( url ) {
+		const newURL = new URL(url);
+		const dialogPath = newURL.searchParams.get("dialog");
+
+		if ( dialogPath ) {
+
+		}
+
+	}
 
 	// TODO: stop doing this, and remove the funny anchor feature
 	handleAnchors(evtHash) {
@@ -452,15 +498,18 @@ class Main extends Component {
 					heading.scrollIntoView();
 
 					/* MK: I can't find a "view-bar" */
-					let viewBar = document.getElementsByClassName("view-bar")[0];
-					if ( viewBar ) {
-						window.scrollBy(0, -viewBar.clientHeight);
-					}
+					/*
+					//let viewBar = document.getElementsByClassName("view-bar")[0];
+					//if ( viewBar ) {
+					//	window.scrollBy(0, -viewBar.clientHeight);
+					//}
 				}
 			}
 		}
 	}
+*/
 
+/*
 	// When we navigate by clicking forward
 	onNavChange( e ) {
 		DEBUG && console.log('navchange:', e.detail.old.href, '=>', e.detail.location.href);
@@ -473,17 +522,16 @@ class Main extends Component {
 			this.fetchNode(e.detail.location.slugs);
 		}
 
-		/*
-		if ( e.detail.location.href !== e.detail.old.href ) {
-			let clean = this.cleanLocation(e.detail.location);
 
-			if ( clean.slugs.join() !== this.state.slugs.join() ) {
-				history.pushState(null, null, e.detail.location.pathname + e.detail.location.search);
+		//if ( e.detail.location.href !== e.detail.old.href ) {
+		//	let clean = this.cleanLocation(e.detail.location);
 
-				this.fetchNode(clean.slugs);
-			}
-		}
-		*/
+		//	if ( clean.slugs.join() !== this.state.slugs.join() ) {
+		//		history.pushState(null, null, e.detail.location.pathname + e.detail.location.search);
+
+		//		this.fetchNode(clean.slugs);
+		//	}
+		//}
 
 		// Scroll to top
 		window.scrollTo(0, 0);
@@ -501,8 +549,9 @@ class Main extends Component {
 
 		this.handleAnchors();
 	}
+*/
 
-	getTitle( node ) {
+	generateTitle( node ) {
 		let Title = "";
 		let TitleSuffix = window.location.host;
 		if (window.location.host == "ldjam.com") {
@@ -526,10 +575,10 @@ class Main extends Component {
 
 	render( {}, state ) {
 		let { node, parent, _superparent, author, user, featured, path, extra } = state;
-		let NewProps = { node, parent, _superparent, author, user, featured, path, extra };
+		let props = { node, parent, _superparent, author, user, featured, path, extra };
 
 		if ( node ) {
-			document.title = this.getTitle(node);
+			document.title = this.generateTitle(node);
 		}
 
 		// Set the robots meta tag
@@ -541,7 +590,7 @@ class Main extends Component {
 
 		return (
 			<Layout {...state}>
-				<ContentRouter nodefault props={NewProps} key="main">
+				<ContentRouter nodefault props={props} key="main">
 					<Route type="root" component={PageRoot} />
 
 					<Route type="page" component={PagePage} />
@@ -560,7 +609,7 @@ class Main extends Component {
 					<Route type="event" component={PageEvent} />
 					<Route type={["events", "group", "tags"]} component={PageEvents} />
 				</ContentRouter>
-				{this.getDialog()}
+				{this.showDialog()}
 			</Layout>
 		);
 	}

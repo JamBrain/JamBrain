@@ -13,9 +13,9 @@ export default class DialogCreate extends Component {
 	}
 
 	doCreate( e ) {
-		var event_id = this.props.extra.length ? Number(this.props.extra[0]) : 0;
-		var node_type = this.props.extra.length > 1 ? (this.props.extra[1]) : "";
-		var node_subtype = this.props.extra.length > 2 ? (this.props.extra[2]) : "";
+		var event_id = this.props.args.length ? Number(this.props.args[0]) : 0;
+		var node_type = this.props.args.length > 1 ? (this.props.args[1]) : "";
+		var node_subtype = this.props.args.length > 2 ? (this.props.args[2]) : "";
 
 		//console.log(event_id, node_type, node_subtype);
 
@@ -57,11 +57,11 @@ export default class DialogCreate extends Component {
 		var TargetNode = null;
 		var What = "";
 
-		if ( props.extra && props.extra.length ) {
-			TargetNode = Number(props.extra[0]);
+		if ( props.args && props.args.length ) {
+			TargetNode = Number(props.args[0]);
 
-			if ( props.extra.length > 1 ) {
-				What = props.extra.slice(1).join('/');
+			if ( props.args.length > 1 ) {
+				What = props.args.slice(1).join('/');
 			}
 		}
 

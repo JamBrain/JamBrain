@@ -19,35 +19,35 @@ const LogoButton = () =>
 	<Icon class="if-no-sidebar-block" baseline src="l-udum" /><Icon class="if-no-sidebar-block" baseline src="d-are" />
 </Button>;
 
-const SearchButton = () => <IconButton icon="search" class="bar-icon" onClick={e => {window.location.hash = "#search";}} />;
+const SearchButton = () => <IconButton icon="search" class="bar-icon" href="?dialog=search" />;
 
 const CalendarButton = () =>
-<IconButton class="bar-button if-no-sidebar-block" icon="calendar" /*baseline*/ onClick={e => {window.location.hash = "#cal";}}>
+<IconButton class="bar-button if-no-sidebar-block" icon="calendar" /*baseline*/ href="?dialog=cal">
 	<div class="if-sidebar-block">Schedule</div>
 </IconButton>;
 
 const RegisterNewUserButton = () =>
-<IconButton icon="user-plus" class="bar-button" onClick={e => {window.location.hash = "#user-register";}}>
+<IconButton icon="user-plus" class="bar-button" href="?dialog=user-register">
 	<div class="if-sidebar-block">Create Account</div>
 </IconButton>;
 
 const LoginButton = () =>
-<IconButton icon="key" class="bar-button" onClick={e => {window.location.hash = "#user-login";}}>
+<IconButton icon="key" class="bar-button" href="?dialog=user-login">
 	<div class="if-sidebar-block">Login</div>
 </IconButton>;
 
 const JoinEventButton = (props) =>
-<IconButton icon="publish" title="Join Event" class="bar-button" onClick={e => {window.location.hash = `#create/${props.eventId}/item/game`;}}>
+<IconButton icon="publish" title="Join Event" class="bar-button" href={`?dialog=create!${props.eventId}!item!game`}>
 	<div class="if-sidebar-block">Join Event</div>
 </IconButton>;
 
 const MyGameButton = (props) =>
-<IconButton icon="gamepad" title="My Game" href={props.href} class="bar-button">
+<IconButton icon="gamepad" title="My Game" class="bar-button" href={props.href}>
 	<div class="if-sidebar-block">My Game</div>
 </IconButton>;
 
 const NewPostButton = (props) =>
-<IconButton icon="edit" title="New Post" class="bar-button" onClick={e => {window.location.hash = `#create/${props.focusId}/post`;}}>
+<IconButton icon="edit" title="New Post" class="bar-button" props={`?dialog=create!${props.focusId}!post`}>
 	<div class="if-sidebar-block">New Post</div>
 </IconButton>;
 

@@ -7,7 +7,7 @@ export default class DialogErrorPublish extends Component {
 	}
 
 	render( props ) {
-		let message = decodeURI(props.extra);
+		let message = decodeURI(props.args);
 
 		return (
 			<DialogCommon title="Publish failed" ok>

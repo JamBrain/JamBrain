@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import './common.less';
 
 import DialogBase						from 'com/dialog/base/base';
-import {Button} from 'com/ui';
+import {Button, navigateToLocalURL} from 'com/ui';
 
 export default class DialogCommon extends Component {
 	constructor( props ) {
@@ -95,9 +95,10 @@ export default class DialogCommon extends Component {
 //	}
 
 	onAbort() {
+		navigateToLocalURL('?dialog=');
 		//console.log(location.pathname + location.search);
 		//window.history.pushState(null, null, location.pathname + location.search);
-    window.location.hash = "--";
+    	//window.location.hash = "--";
 		//location.href = location.pathname+location.search;
 	}
 

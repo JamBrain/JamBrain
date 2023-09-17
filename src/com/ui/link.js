@@ -1,35 +1,52 @@
-import { Component } from 'preact';
 import Sanitize from 'internal/sanitize';
-
-// TODO: Push the state (arg1 of pushShate/replaceState (MK: what?)
-// MK TODO: give this file a serious look. tidy up
 
 export const navigationEvent = 'navChange';
 
-function navigateToHref( e ) {
+
+/**
+ * @param {string} search
+ * @returns {string}
+ */
+export function cleanSearchParams( search ) {
+	return search.split('&').map((arg) => (arg.slice(-1) === '=') ? arg.slice(0, -1) : arg).join('&');
+}
+
+export function navigateToLocalURL( url ) {
+	let newURL = new URL(url, window.location.href);
+
+	// Merge the query parameters
+	const mergedSearch = new URLSearchParams({
+		...Object.fromEntries(new URLSearchParams(window.location.search)),
+		...Object.fromEntries(new URLSearchParams(newURL.search)),
+	});
+
+	// Special case for dialog, if it's ever blank remove it
+	if (mergedSearch.has('dialog') && mergedSearch.get('dialog') === '') {
+		mergedSearch.delete('dialog');
+	}
+
+	// NOTE: Dialogs should probably not populate history.
+
+	// Remove tailing '=' from query parameters
+	newURL.search = cleanSearchParams(mergedSearch.toString());
+
+	//window.location.assign(newURL.href);
+	window.dispatchEvent(new CustomEvent(navigationEvent, {'detail': newURL.href}));
+}
+
+function handleTargetHref( e ) {
 	// Bail if we're trying to open link in a new window using a modifer+click shortcut
-	if ( e.shiftKey || e.metaKey || e.ctrlKey || e.altKey ) {
-		return;
-	}
+	if ( e.shiftKey || e.metaKey || e.ctrlKey || e.altKey ) return;
 
-	// If it's a local link, prevent the browser from navigating
-	let newURL = new URL(e.target.href, window.location.href);
-	if (newURL.origin === window.location.origin) {
-		e.preventDefault();
+	const url = e.target.href;
 
-		// Merge the query parameters
-		const mergedSearch = new URLSearchParams({
-			...Object.fromEntries(new URLSearchParams(window.location.search)),
-			...Object.fromEntries(new URLSearchParams(newURL.search))
-		});
+	// Bail if the link is to an external website
+	if (new URL( e.target.href, window.location.href).origin !== window.location.origin) return;
 
-		newURL.search = mergedSearch.toString();
+	navigateToLocalURL(url);
 
-		//window.location.assign(newURL.href);
-		window.dispatchEvent(new CustomEvent(navigationEvent, {'detail': newURL.toString()}));
-
-		//e.stopPropagation();	// Do we need this?
-	}
+	e.preventDefault();
+	//e.stopPropagation();	// Do we need this?
 }
 
 /**
@@ -41,6 +58,7 @@ function navigateToHref( e ) {
 /**
  * @callback PopstateCallback
  * @param {any} newState
+ * @param {any} newURL
  * */
 
 /**
@@ -55,7 +73,7 @@ export function setupNavigation( pushstateCallback, popstateCallback ) {
 
 	window.addEventListener('popstate', (e) => {
 		DEBUG && console.log("popstate: ", e.state);
-		popstateCallback?.(e.state);
+		popstateCallback?.(e.state, window.location.href);
 	});
 }
 
@@ -72,7 +90,7 @@ export function Link( props ) {
 		const newRel = isExternal ? `noopener noreferrer ${rel ?? ''}` : undefined;
 
 		// MK NOTE: We aren't handling spacebar, when this is used as a button.
-		return <a {...otherProps} rel={newRel} target={newTarget} href={href} onClick={navigateToHref} />;
+		return <a {...otherProps} rel={newRel} target={newTarget} href={href} onClick={handleTargetHref} />;
 	}
 	catch (e) {
 		console.error(`Bad href: ${href}\n`, e.message);

@@ -7,7 +7,7 @@ export default class DialogErrorUpload extends Component {
 	}
 
 	render( props ) {
-		let message = decodeURI(props.extra);
+		let message = decodeURI(props.args);
 
 		return (
 			<DialogCommon title="Upload failed" ok>

@@ -1,5 +1,6 @@
 import { Component } from 'preact';
 import './base.less';
+import {navigateToLocalURL} from 'com/ui';
 
 export default class DialogBase extends Component {
 	constructor( props ) {
@@ -71,7 +72,8 @@ export default class DialogBase extends Component {
 
 
 	onAbort() {
-		window.location.hash = "--";
+		navigateToLocalURL('?dialog=');
+		//window.location.hash = "--";
 		//location.href = location.pathname+location.search;
 	}
 

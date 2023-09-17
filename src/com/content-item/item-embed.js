@@ -2,6 +2,7 @@ import { Component } from 'preact';
 import './item-embed.less';
 
 import {Button, Icon, Image} from 'com/ui';
+import {node_HasEmbed, node_GetEmbed} from 'internal/lib';
 
 export default class ContentItemEmbed extends Component {
 	constructor(props) {
@@ -56,7 +57,7 @@ export default class ContentItemEmbed extends Component {
 				// allow="cross-origin-isolated"
 				return (
 					<div class="embed">
-						<iframe sandbox="allow-scripts allow-pointer-lock" allowfullscreen src={embed} style={"width: "+width+"px; height: "+height+"px;"} />
+						<iframe sandbox="allow-scripts allow-pointer-lock" allowFullScreen src={embed} style={"width: "+width+"px; height: "+height+"px;"} />
 					</div>
 				);
 			}
