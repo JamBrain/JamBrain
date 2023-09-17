@@ -1,8 +1,7 @@
 import { Component } from 'preact';
 import './headline-edit.less';
 
-import {Icon} from 'com/ui';
-import ButtonBase from 'com/button-base/base';
+import {Icon, Button} from 'com/ui';
 
 
 export default class ContentHeadlineEdit extends Component {
@@ -16,36 +15,38 @@ export default class ContentHeadlineEdit extends Component {
 			this.props.published !== nextProps.published;
 	}
 
-	render( {edit, modified, published, onedit, onpreview, onsave, onpublish, onpublish2, onpublish3}, state ) {
+	render( props ) {
+		const {edit, modified, published, onedit, onpreview, onsave, onpublish, onpublish2, onpublish3, ...otherProps} = props;
+
 		var ShowEdit = null;
 		var ShowPreview = null;
 		var ShowSave = null;
 		var ShowPublish = null;
 
 		if ( edit ) {
-			ShowEdit = <ButtonBase class="-selected"><Icon>edit</Icon> Edit</ButtonBase>;
-			ShowPreview = <ButtonBase onClick={onpreview}><Icon>preview</Icon> Preview</ButtonBase>;
+			ShowEdit = <Button class="-selected"><Icon>edit</Icon> Edit</Button>;
+			ShowPreview = <Button onClick={onpreview}><Icon>preview</Icon> Preview</Button>;
 		}
 		else {
-			ShowEdit = <ButtonBase onClick={onedit}><Icon>edit</Icon> Edit</ButtonBase>;
-			ShowPreview = <ButtonBase class="-selected"><Icon>preview</Icon> Preview</ButtonBase>;
+			ShowEdit = <Button onClick={onedit}><Icon>edit</Icon> Edit</Button>;
+			ShowPreview = <Button class="-selected"><Icon>preview</Icon> Preview</Button>;
 		}
 
 		if ( modified ) {
-			ShowSave = <ButtonBase class="-available -blue" onClick={onsave}><Icon>save</Icon> Save</ButtonBase>;
+			ShowSave = <Button class="-available -blue" onClick={onsave}><Icon>save</Icon> Save</Button>;
 		}
 		else {
-			ShowSave = <ButtonBase><Icon>save</Icon> Saved</ButtonBase>;
+			ShowSave = <Button><Icon>save</Icon> Saved</Button>;
 		}
 
 		if ( published ) {
-			ShowPublish = <ButtonBase><Icon>publish</Icon> Published</ButtonBase>;
+			ShowPublish = <Button><Icon>publish</Icon> Published</Button>;
 		}
 		else {
 			ShowPublish = [
-				<ButtonBase class="-available -green" onClick={onpublish}><Icon>publish</Icon> Publish Compo</ButtonBase>,
-				<ButtonBase class="-available -green" onClick={onpublish2}><Icon>publish</Icon> Publish Jam</ButtonBase>,
-				<ButtonBase class="-available -green" onClick={onpublish3}><Icon>publish</Icon> Publish Extra</ButtonBase>
+				<Button class="-available -green" onClick={onpublish}><Icon>publish</Icon> Publish Compo</Button>,
+				<Button class="-available -green" onClick={onpublish2}><Icon>publish</Icon> Publish Jam</Button>,
+				<Button class="-available -green" onClick={onpublish3}><Icon>publish</Icon> Publish Extra</Button>
 			];
 		}
 

@@ -2,8 +2,7 @@ import { Component } from 'preact';
 import './notifications.less';
 
 import { getRoughAge } from 'internal/time';
-import NavLink 							from 'com/nav-link/link';
-import {Button, Icon} from  'com/ui';
+import {Link, Button, Icon} from 'com/ui';
 
 
 export const commentAuthorIsAmongNodeAuthors = ( notification ) => {
@@ -64,10 +63,10 @@ export default class NotificationItem extends Component {
 			isRelation.forEach((e, i) => {
 				if ( e ) {
 					if (possesive) {
-						Relations.push(<span><NavLink class="-at-name" key={i}>{'@' + users.get(uniqueAuthors[i]).name}</NavLink>'s</span>);
+						Relations.push(<span><Link class="-at-name" key={i}>{'@' + users.get(uniqueAuthors[i]).name}</Link>'s</span>);
 					}
 					else {
-						Relations.push(<NavLink class="-at-name" key={i}>{'@' + users.get(uniqueAuthors[i]).name}</NavLink>);
+						Relations.push(<Link class="-at-name" key={i}>{'@' + users.get(uniqueAuthors[i]).name}</Link>);
 					}
 				}
 			});
@@ -109,7 +108,7 @@ export default class NotificationItem extends Component {
 				return <span>{following.content}</span>;
 			}
 			else {
-				return (<span><NavLink class="-at-name">@{users.get(node.author).name}</NavLink></span>);
+				return (<span><Link class="-at-name">@{users.get(node.author).name}</Link></span>);
 			}
 		}
 	}
@@ -132,7 +131,7 @@ export default class NotificationItem extends Component {
 				return (<span>{following.content}</span>);
 			}
 			else {
-				return (<span><NavLink class="-at-name">@{users.get(node.author).name}</NavLink>'s</span>);
+				return (<span><Link class="-at-name">@{users.get(node.author).name}</Link>'s</span>);
 			}
 		}
 	}
@@ -157,7 +156,7 @@ export default class NotificationItem extends Component {
 				return <span>{commentAuthors.length} users</span>;
 			}
 			else if (commentAuthors.length == 1 && users.get(commentAuthors[0])) {
-				return <span><NavLink class="-at-name">@{users.get(commentAuthors[0]).name}</NavLink></span>;
+				return <span><Link class="-at-name">@{users.get(commentAuthors[0]).name}</Link></span>;
 			}
 			else {
 				return <span>Someone</span>;

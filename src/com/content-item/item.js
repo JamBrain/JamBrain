@@ -3,7 +3,6 @@ import './item.less';
 
 import { node_IsPublished, nodeEvent_CanGrade, node_CountAuthors, node_CanPublish, node_IsAuthor, nodeKeys_HasPublishedParent, nodeEvent_IsFinished } from 'internal/lib';
 
-import ButtonBase						from 'com/button-base/base';
 import {Button, Icon, Image, Link, UICheckbox} from 'com/ui';
 
 import ContentCommonBody				from 'com/content-common/common-body';
@@ -11,7 +10,6 @@ import ContentCommonBodyField			from 'com/content-common/common-body-field';
 import ContentCommonBodyLink			from 'com/content-common/common-body-link';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 import ContentCommonNav					from 'com/content-common/common-nav';
-import ContentCommonNavButton			from 'com/content-common/common-nav-button';
 
 import ContentItemRulesCheck 			from 'com/content-item/item-rulescheck';
 import ContentItemFiles from './item-files';
@@ -578,10 +576,10 @@ export default class ContentItem extends Component {
 						<span>Choose the event format of your game</span>
 					</p>
 					<ContentCommonNav>
-						<ContentCommonNavButton onClick={this.onSetJam} class={node.subsubtype == 'jam' ? "-selected" : ""} disabled={!allowJam}><Icon src="users" /><div>Jam</div></ContentCommonNavButton>
-						<ContentCommonNavButton onClick={this.onSetCompo} class={node.subsubtype == 'compo' ? "-selected" : ""} disabled={!allowCompo}><Icon src="user" /><div>Compo</div></ContentCommonNavButton>
-						<ContentCommonNavButton onClick={this.onSetExtra} class={node.subsubtype == 'extra' ? "-selected" : ""} disabled={!allowExtra}><Icon src="users" /><div>Extra</div></ContentCommonNavButton>
-						<ContentCommonNavButton onClick={this.onSetUnfinished} class={node.subsubtype == 'unfinished' ? "-selected" : ""} disabled={!allowUnfinished}><Icon src="trash" /><div>Unfinished</div></ContentCommonNavButton>
+						<Button onClick={this.onSetJam} class={node.subsubtype == 'jam' ? "-selected" : ""} disabled={!allowJam}><Icon src="users" /><div>Jam</div></Button>
+						<Button onClick={this.onSetCompo} class={node.subsubtype == 'compo' ? "-selected" : ""} disabled={!allowCompo}><Icon src="user" /><div>Compo</div></Button>
+						<Button onClick={this.onSetExtra} class={node.subsubtype == 'extra' ? "-selected" : ""} disabled={!allowExtra}><Icon src="users" /><div>Extra</div></Button>
+						<Button onClick={this.onSetUnfinished} class={node.subsubtype == 'unfinished' ? "-selected" : ""} disabled={!allowUnfinished}><Icon src="trash" /><div>Unfinished</div></Button>
 					</ContentCommonNav>
 					<div class="-info">
 						{tooManyAuthorsForCompo && <div class="-warning"><Icon baseline small src="warning" /> COMPO unavailable: Too many authors.</div>}
@@ -931,7 +929,7 @@ export default class ContentItem extends Component {
 						<div class="-path">{node.meta && node.meta.cover ? node.meta.cover : "" }</div>
 						<label>
 							<input type="file" name="asset" style="display: none;" onChange={this.onUpload.bind(this, 'cover')} />
-							<ButtonBase class="-button"><Icon small baseline gap>upload</Icon>Upload</ButtonBase>
+							<Button class="-button"><Icon small baseline gap>upload</Icon>Upload</Button>
 						</label>
 						{ShowImage}
 					</div>

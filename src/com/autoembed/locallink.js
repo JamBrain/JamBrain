@@ -1,5 +1,4 @@
-import NavLink from 'com/nav-link/link';
-import {Icon} from 'com/ui';
+import {Link, Icon} from 'com/ui';
 import './locallink.less';
 
 export default function LocalLink( props ) {
@@ -22,11 +21,11 @@ export default function LocalLink( props ) {
 
 	return (
 		<span class="smart-link local-link">
-			<NavLink href={props.href} title={props.title} target={props.target}>
+			<Link href={props.href} title={props.title} target={props.target}>
 				<span class="-the-rest">
 					{props.text}
 				</span>
-			</NavLink>
+			</Link>
 		</span>
 	);
 }

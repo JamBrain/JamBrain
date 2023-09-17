@@ -1,6 +1,5 @@
 import { Component } from 'preact';
 import DialogCommon						from 'com/dialog/common/common';
-import NavLink							from 'com/nav-link/link';
 
 import $User							from 'backend/js/user/user';
 

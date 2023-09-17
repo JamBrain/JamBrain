@@ -1,11 +1,9 @@
 import {Component, toChildArray} from 'preact';
 import './common-body-by.less';
 
-import {Diff}	 				from 'shallow';
-
+import {Diff} from 'shallow';
 import {getLocaleDate, getRoughAge}	from 'internal/time';
-
-import NavLink							from 'com/nav-link/link';
+import {Link} from 'com/ui';
 
 export default class ContentCommonBodyBy extends Component {
 	constructor( props ) {
@@ -71,7 +69,7 @@ export default class ContentCommonBodyBy extends Component {
 					ret.push(" ");
 					ret.push(
 						<span>
-							(<NavLink class="-at-name" href={this.getURL(props.authors[idx])}>@{this.getAtName(props.authors[idx])}</NavLink>)
+							(<Link class="-at-name" href={this.getURL(props.authors[idx])}>@{this.getAtName(props.authors[idx])}</Link>)
 							{((props.authors.length > 1) && (props.authors[idx].id == props.node.author)) ? <span title="Team Leader">*</span> : ''}
 						</span>
 					);
@@ -84,7 +82,7 @@ export default class ContentCommonBodyBy extends Component {
 			else if ( props.author ) {
 				ret.push(<span class="-name">{this.getName(props.author)}</span>);
 				ret.push(" ");
-				ret.push(<span>(<NavLink class="-at-name" href={this.getURL(props.author)}>@{this.getAtName(props.author)}</NavLink>)</span>);
+				ret.push(<span>(<Link class="-at-name" href={this.getURL(props.author)}>@{this.getAtName(props.author)}</Link>)</span>);
 			}
 		}
 

@@ -2,7 +2,6 @@ import { Component } 					from 'preact';
 import './user-bar.less';
 
 import ContentCommonNav					from 'com/content-common/common-nav';
-import CommonButton						from 'com/content-common/common-nav-button';
 import CommonButtonFollow				from 'com/content-common/common-nav-button-follow';
 
 import ContentCommon					from 'com/content-common/common';

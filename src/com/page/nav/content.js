@@ -3,7 +3,7 @@ import ContentNavButton					from 'com/content-nav/nav-button';
 
 export default class PageNavContent extends Component {
 	render( props ) {
-		let {node, parent, superparent, author, user, path, extra} = props;
+		const {node, parent, superparent, author, user, path, extra} = props;
 
 		// Knowing node is required. Knowing parent or superparent is optional.
 		if ( !node ) return null;

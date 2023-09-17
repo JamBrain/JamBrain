@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import './common.less';
 
 import DialogBase						from 'com/dialog/base/base';
-import ButtonBase						from 'com/button-base/base';
+import {Button} from 'com/ui';
 
 export default class DialogCommon extends Component {
 	constructor( props ) {
@@ -118,17 +118,17 @@ export default class DialogCommon extends Component {
 		var ShowButtonOK = null;
 		if ( props.ok ) {
 			let Click = props.onok ? { 'onClick': props.onok } : (props.cancel ? {} : { 'onClick': this.onAbort });
-			ShowButtonOK = <ButtonBase class="-button -light focusable" id="dialog-button-ok" {...Click}>
+			ShowButtonOK = <Button class="-button -light focusable" id="dialog-button-ok" {...Click}>
 				{props.oktext ? props.oktext : "OK"}
-			</ButtonBase>;
+			</Button>;
 		}
 
 		var ShowButtonCancel = null;
 		if ( props.cancel ) {
 			let Click = props.oncancel ? { 'onClick': props.oncancel } : { 'onClick': this.onAbort };
-			ShowButtonCancel = <ButtonBase class="-button focusable" id="dialog-button-cancel" {...Click}>
+			ShowButtonCancel = <Button class="-button focusable" id="dialog-button-cancel" {...Click}>
 				{props.canceltext ? props.canceltext : "Cancel"}
-			</ButtonBase>;
+			</Button>;
 		}
 
 		if ( props.empty ) {

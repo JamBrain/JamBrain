@@ -1,8 +1,7 @@
 import { Component } from 'preact';
 
 import { node_IsAuthor } from 'internal/lib';
-
-import NavLink										from 'com/nav-link/link';
+import {Link} from 'com/ui';
 
 import ContentLoading								from 'com/content-loading/loading';
 import ContentError from 'com/content/error';
@@ -434,7 +433,7 @@ export default class ContentSimple extends Component {
 					ShowByLine = (
 						<div class="body">
 							<div class="body -label">Authors</div>
-							Visit <NavLink blank href={user.path+'/following'}>your userpage</NavLink> to add authors. <br />
+							Visit <Link blank href={user.path+'/following'}>your userpage</Link> to add authors. <br />
 							<strong>NOTE:</strong> You can only add friends (users that follow each other).
 						</div>
 					);

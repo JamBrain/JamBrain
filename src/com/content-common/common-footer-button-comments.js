@@ -1,33 +1,27 @@
-import {Component} from 'preact';
 import './common-footer-button.less';
 
-import {Icon} from 'com/ui';
-import NavLink from 'com/nav-link/link';
+import {Link, Icon} from 'com/ui';
 
-export default class ContentCommonFooterButtonComments extends Component {
-	constructor( props ) {
-		super(props);
-	}
+export default function ContentCommonFooterButtonComments( props ) {
+	const {node, ...otherProps} = props;
 
-	render( props ) {
-		let {node} = props;
-
-		let CountClass = '';
+	if (node) {
+		let countStyle = '';
 		if ( node.comments >= 10 )
-			CountClass = '-count-10';
+			countStyle = '-count-10';
 		else if ( node.comments >= 4 )
-			CountClass = '-count-4';
+			countStyle = '-count-4';
 		else if ( node.comments >= 1 )
-			CountClass = '-count-1';
+			countStyle = '-count-1';
 
-		if ( node && Number.isInteger(node.comments) ) {
-			return (
-				<NavLink href={node.path} class={`content-common-footer-button -comments ${CountClass}`} title="Comments">
-					<Icon>bubbles</Icon>
+		if ( Number.isInteger(node.comments) ) {
+			return <>
+				<Link href={node.path} class={`content-common-footer-button -comments ${countStyle}`} title="Comments">
+					<Icon src="bubbles" />
 					<div class="-count">{node.comments}</div>
-				</NavLink>
-			);
+				</Link>
+			</>;
 		}
-		return null;
 	}
+	return null;
 }

@@ -1,4 +1,4 @@
-import {Link2 as Link} from './link';
+import {Link as Link} from './link';
 import {Icon} from './icon';
 
 //import {ui_button} from './button.less';

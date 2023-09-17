@@ -2,8 +2,7 @@ import {Component} from 'preact';
 
 import { getRoughAge, getLocaleFullTimeStamp, getLocaleDate } from 'internal/time';
 
-import NavLink 							from 'com/nav-link/link';
-import {Button, Icon, Image, UICheckbox} from 'com/ui';
+import {Link, Button, Icon, Image, UICheckbox} from 'com/ui';
 
 import ContentCommentsMarkup from './comments-markup';
 import {AutocompleteAtNames, AutocompleteEmojis} from 'com/content-common/common-autocomplete';
@@ -272,7 +271,7 @@ export default class ContentCommentsComment extends Component {
 				// Again, also only if authored
 				if ( author ) {
 					ShowTitle.push(
-						<span>&nbsp;(<NavLink class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</NavLink>){comment.anonymous ? " (Published Anonymously)" : ""}</span>
+						<span>&nbsp;(<Link class="-atname" href={"/users/"+author.slug}>{"@"+author.slug}</Link>){comment.anonymous ? " (Published Anonymously)" : ""}</span>
 					);
 				}
 

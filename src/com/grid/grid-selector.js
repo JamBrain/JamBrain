@@ -2,8 +2,7 @@ import { Component } from 'preact';
 import './grid-selector.less';
 
 import Dropdown							from 'com/input-dropdown/dropdown';
-import ButtonBase						from 'com/button-base/base';
-import {Icon} from 'com/ui';
+import {Icon, Button} from 'com/ui';
 
 /** @deprecated */
 export default class GridSelector extends Component {
@@ -56,9 +55,9 @@ export default class GridSelector extends Component {
        let ShowDropDown = null;
 
        const ShowToggle = (
-            <ButtonBase onClick={this.onToggleDropDown}>
+            <Button onClick={this.onToggleDropDown}>
                 <Icon>cog</Icon>
-            </ButtonBase>
+            </Button>
        );
 
        if ( expanded ) {

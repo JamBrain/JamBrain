@@ -2,9 +2,7 @@ import { Component } from 'preact';
 import './input-textarea.less';
 
 import Shallow from 'shallow';
-
-import NavLink from 'com/nav-link/link';
-import {Icon} from 'com/ui';
+import {Link, Icon} from 'com/ui';
 
 import $Asset from 'backend/js/asset/asset';
 
@@ -251,9 +249,9 @@ export default class InputTextarea extends Component {
 					<div class="-left">
 						<label>
 							<input type="file" name="asset" style="display: none;" onChange={this.onFileChange} />
-							<NavLink class="-upload"><Icon baseline gap>upload</Icon>Upload Image</NavLink>
+							<Link class="-upload"><Icon baseline gap src="upload" />Upload Image</Link>
 						</label>
-						<span class="if-sidebar-inline">. Supports <NavLink blank href="/markdown"><Icon>markdown</Icon> Markdown</NavLink> and <strong>:emoji_codes:</strong></span>
+						<span class="if-sidebar-inline">. Supports <Link blank href="/markdown"><Icon src="markdown" /> Markdown</Link> and <strong>:emoji_codes:</strong></span>
 					</div>
 				</div>
 			</div>

@@ -31,12 +31,9 @@ import ContentStatsEvent				from 'com/content-stats/stats-event';
 
 import ContentPalette					from 'com/content-palette/palette';
 
-import NavLink							from 'com/nav-link/link';
-//import SVGIcon							from 'com/svg-icon/icon';
 import Common							from 'com/content-common/common';
 import CommonBody						from 'com/content-common/common-body';
 //import CommonNav						from 'com/content-common/common-nav';
-//import CommonNavButton					from 'com/content-common/common-nav-button';
 
 //import HeadMan 							from '../../internal/headman/headman';
 //import marked 							from '../../internal/marked/marked';
@@ -434,7 +431,7 @@ export default class ViewContent extends Component {
 //				if ( featured && featured.what && featured.what.length && featured.what[0] && featured.what_node && featured.what_node[featured.what[0]] && featured.what_node[featured.what[0]].published ) {
 //					ShowHome = (
 //						<Common node={node} user={user}>
-//							<CommonBody>You can start playing and rating games <NavLink href={featured.path+'/games'}>here</NavLink>.</CommonBody>
+//							<CommonBody>You can start playing and rating games <Link href={featured.path+'/games'}>here</Link>.</CommonBody>
 //						</Common>
 //					);
 //				}

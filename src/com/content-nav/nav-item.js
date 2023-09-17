@@ -9,8 +9,10 @@ export default function ContentNavItem( props ) {
 	if ( NewPath === '/' )
 		NewPath = '/comments';
 
-	return <nav class="content -nav -item">
-		<ContentNavButton path={path+NewPath} title="Comments" icon="bubbles" href={path+'/comments'}>Comments</ContentNavButton>
-		{/*<ContentNavButton path={path+NewPath} icon='feed' title="Feed" href={path+'/feed'}>Feed</ContentNavButton>*/}
-	</nav>;
+	return <>
+		<nav class="content -nav -item">
+			<ContentNavButton path={path+NewPath} title="Comments" icon="bubbles" href={path+'/comments'}>Comments</ContentNavButton>
+			{/*<ContentNavButton path={path+NewPath} icon='feed' title="Feed" href={path+'/feed'}>Feed</ContentNavButton>*/}
+		</nav>
+	</>;
 }

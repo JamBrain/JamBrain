@@ -1,15 +1,13 @@
 import {Component} from 'preact';
 import './event-list.less';
 
-import Sanitize							from 'internal/sanitize';
+import Sanitize from 'internal/sanitize';
 
-import {Icon, UISpinner} from 'com/ui';
+import {Icon, Button, UISpinner} from 'com/ui';
 
-import ButtonBase						from 'com/button-base/base';
-
-import $ThemeList						from 'backend/js/theme/theme_list';
-import $ThemeListVote					from 'backend/js/theme/theme_list_vote';
-import $ThemeHistory					from 'backend/js/theme/theme_history';
+import $ThemeList from 'backend/js/theme/theme_list';
+import $ThemeListVote from 'backend/js/theme/theme_list_vote';
+import $ThemeHistory from 'backend/js/theme/theme_history';
 
 
 export default class ContentEventList extends Component {
@@ -28,7 +26,7 @@ export default class ContentEventList extends Component {
 	}
 
 	componentDidMount() {
-		var event_id = this.props.node.id;
+		const event_id = this.props.node.id;
 
 		$ThemeList.Get(event_id)
 		.then(r => {
@@ -79,7 +77,7 @@ export default class ContentEventList extends Component {
 			}
 		})
 		.catch(err => {
-			this.setState({ error: err });
+			this.setState({ 'error': err });
 		});
 	}
 
@@ -102,7 +100,7 @@ export default class ContentEventList extends Component {
 			}
 		})
 		.catch(err => {
-			this.setState({ error: err });
+			this.setState({ 'error': err });
 		});
 	}
 
@@ -151,9 +149,9 @@ export default class ContentEventList extends Component {
 							}
 
 							return <div class={_class + this.voteToClass(this.state.votes[r.id])}>
-								<ButtonBase class="-button -no" onClick={this.onNo.bind(this, r.id)}>-1</ButtonBase>
-								<ButtonBase class="-button -maybe" onClick={this.onMaybe.bind(this, r.id)}>0</ButtonBase>
-								<ButtonBase class="-button -yes" onClick={this.onYes.bind(this, r.id)}>+1</ButtonBase>
+								<Button class="-button -no" onClick={this.onNo.bind(this, r.id)}>-1</Button>
+								<Button class="-button -maybe" onClick={this.onMaybe.bind(this, r.id)}>0</Button>
+								<Button class="-button -yes" onClick={this.onYes.bind(this, r.id)}>+1</Button>
 								<span class="-text">{r.theme}</span>
 								{ShowHistory}
 							</div>;
@@ -213,32 +211,24 @@ export default class ContentEventList extends Component {
 		return null;
 	}
 
-	render( {/*node,*/ user, path, extra}, {lists, names, votes, page, error} ) {
+	render( props, state ) {
+		const {user, path, extra, ...otherProps} = props;
+		const {lists, names, votes, page, error, ...otherStates} = state;
+
 		// By default, the page is the last available round
-		if ( (extra && extra.length && extra[0]) ) {
-			page = Number(extra[0]);
-		}
+		const activePage = (extra && extra.length && extra[0]) ? Number(extra[0]) : page;
 
 		if ( names ) {
-			var Title = "Theme Voting "+names[page];
-
-			var Navigation = null;
-	//		if ( names ) {
-	//			Navigation = (
-	//				<div class="event-nav">
-	//					{Object.keys(names).map(v => <NavLink class={"-item" + ((v == page) ? " -selected" : "")} href={path+'/'+v}>{names[v]}</NavLink>)}
-	//				</div>
-	//			);
-	//		}
+			const Title = "Theme Voting "+names[activePage];
 
 			//console.log('lister',user,lists,votes);
 
 			// Page bodies
 			var Body = null;
 			if ( user && user['id'] && lists && votes ) {
-				Body = page ? this.renderList(page) : null;
+				Body = activePage ? this.renderList(activePage) : null;
 			}
-			else if ( lists && !lists[page] ) {
+			else if ( lists && !lists[activePage] ) {
 				Body = [
 					"This round hasn't started yet. Stay tuned!"
 				];
@@ -246,7 +236,7 @@ export default class ContentEventList extends Component {
 			else if ( lists ) {
 				Body = [
 					<div class="-info"><h3>Please log in to vote</h3></div>,
-					page ? this.renderList(page) : null
+					activePage ? this.renderList(activePage) : null
 				];
 			}
 			else if ( error ) {
@@ -260,13 +250,11 @@ export default class ContentEventList extends Component {
 			return (
 				<div class="-body">
 					<h2><Icon small baseline gap>ticket</Icon>{Title}</h2>
-					{Navigation}
 					{Body}
 				</div>
 			);
 		}
-		else {
-			return null;
-		}
+
+		return null;
 	}
 }

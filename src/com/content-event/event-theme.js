@@ -11,8 +11,6 @@ import EventThemeList					from 'com/content-event/event-list';
 //import ContentEventResults				from 'com/content-event/event-results';
 
 
-import ButtonBase						from 'com/button-base/base';
-
 import ContentCommon					from 'com/content-common/common';
 import ContentCommonBody				from 'com/content-common/common-body';
 

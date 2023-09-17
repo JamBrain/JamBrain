@@ -2,11 +2,12 @@ import './nav.less';
 import ContentNavButton	from './nav-button';
 
 export default function ContentNavRoot( props ) {
-	let {node, user, path, extra, ...otherProps} = props;
+	const {node, user, path, extra, ...otherProps} = props;
 
-	var NewPath = '/'+ (extra ? extra.join('/') : '');
-	var PartPath = '/'+ (extra && extra.length ? extra[0] : '');
+	var NewPath = `/${Array.isArray(extra) ? extra.join('/') : ''}`;
+	const PartPath = `/${extra && extra.length ? extra[0] : ''}`;
 
+	// MK TODO: is this logic necessary?
 	if ( NewPath == '/' )
 		NewPath = '/home';
 

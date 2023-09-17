@@ -1,8 +1,7 @@
 import { Component } from 'preact';
 import './tooltip.less';
 
-import {Icon} from 'com/ui';
-import ButtonBase						from 'com/button-base/base';
+import {Icon, Button} from 'com/ui';
 import ContentCommonBody				from 'com/content-common/common-body';
 
 
@@ -90,7 +89,7 @@ export default class ToolTip extends Component {
 		return (
 			<div class="tooltip-container" ref={(div) => (this.tooltipContainerDiv = div)}>
 			{popUp}
-			<ButtonBase	class="-button -tooltip-icon" onClick={(evt) => this.toggleShow(evt)} hoverCallback={ (hover) => hover ? this.showNow() : this.delayHide() } >{ToolTipButtonContent}</ButtonBase>
+			<Button	class="-button -tooltip-icon" onClick={(evt) => this.toggleShow(evt)} hoverCallback={ (hover) => hover ? this.showNow() : this.delayHide() } >{ToolTipButtonContent}</Button>
 			</div>
 		);
 	}

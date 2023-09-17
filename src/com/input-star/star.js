@@ -1,8 +1,7 @@
 import { Component } from 'preact';
 import './star.less';
 
-import {Icon} from 'com/ui';
-import ButtonBase						from 'com/button-base/base';
+import {Icon, Button} from 'com/ui';
 
 
 export default class InputStar extends Component {
@@ -39,26 +38,26 @@ export default class InputStar extends Component {
 		if ( props.edit ) {
 			// First star is a full star
 			Stars.push(
-				<ButtonBase class={`-star -hover ${(Value >= 1) ? '-lit' : ''}`} onClick={this.onClick.bind(this, 1)} title={1}>
+				<Button class={`-star -hover ${(Value >= 1) ? '-lit' : ''}`} onClick={this.onClick.bind(this, 1)} title={1}>
 					<Icon baseline>{'star-full'}</Icon>
-				</ButtonBase>
+				</Button>
 			);
 
 			// Half Stars
 			for ( var idx = 3.0/*1.0*/; idx <= Math.floor(Value*2.0); idx++ ) {
-				Stars.push(<ButtonBase class="-star -hover -lit" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><Icon baseline>{'star-'+(idx&1?'left':'right')+'-full'}</Icon></ButtonBase>);
+				Stars.push(<Button class="-star -hover -lit" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><Icon baseline>{'star-'+(idx&1?'left':'right')+'-full'}</Icon></Button>);
 			}
 			for ( /*let idx = Math.ceil(Value*2.0)+1*/; idx <= (Count*2.0); idx++ ) {
-				Stars.push(<ButtonBase class="-star -hover" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><Icon baseline>{'star-'+(idx&1?'left':'right')+'-full'/*'-empty'*/}</Icon></ButtonBase>);
-//				Stars.push(<ButtonBase class="-star -hover" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><UIIcon baseline>{'star-'+(idx&1?'left':'right')+'-empty'}</UIIcon></ButtonBase>);
+				Stars.push(<Button class="-star -hover" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><Icon baseline>{'star-'+(idx&1?'left':'right')+'-full'/*'-empty'*/}</Icon></Button>);
+//				Stars.push(<Button class="-star -hover" onClick={this.onClick.bind(this, idx*0.5)} title={idx*0.5}><Icon baseline>{'star-'+(idx&1?'left':'right')+'-empty'}</Icon></Button>);
 			}
 
 			// Delete button
 			if ( props.delete ) {
 				ShowDelete = (
-					<ButtonBase class="-delete -hover" onClick={this.onDelete.bind(this)}>
+					<Button class="-delete -hover" onClick={this.onDelete.bind(this)}>
 						<Icon small baseline>cross</Icon>
-					</ButtonBase>
+					</Button>
 				);
 			}
 		}

@@ -1,8 +1,6 @@
 import './notifications.less';
 
-import ButtonBase						from '../button-base/base';
-
-import {UISpinner} from 'com/ui';
+import {Button, UISpinner} from 'com/ui';
 import ContentMore						from 'com/content-more/more';
 
 import NotificationsBase				from 'com/content-notifications/base';
@@ -89,7 +87,7 @@ export default class NotificationsFeed extends NotificationsBase {
 		const ShowGetMore = hasMore ? (<ContentMore onClick={this.fetchMore} />) : null;
 
 		const ShowSetAllRead = hasUnread ? (
-			<ButtonBase
+			<Button
 				class="-button -light focusable"
 				id="button-mark-read"
 				onClick={
@@ -98,7 +96,7 @@ export default class NotificationsFeed extends NotificationsBase {
 					}
 				}>
 				Mark all notifications as read
-			</ButtonBase>) : null;
+			</Button>) : null;
 
 		const ShowSpinner = processing ? <UISpinner /> : null;
 

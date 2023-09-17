@@ -1,36 +1,26 @@
-import { Component } from 'preact';
 import PageNavRoot						from '../../nav/root';
 
 import ContentGames						from 'com/content-games/games';
 import Common							from 'com/content-common/common';
 import CommonBody						from 'com/content-common/common-body';
 
-import NavLink 							from 'com/nav-link/link';
-import {Icon} from 'com/ui';
+import {Link, Icon} from 'com/ui';
 
 
-export default class PageTag extends Component {
-	constructor( props ) {
-		super(props);
-	}
+export default function PageTag( props ) {
+	const {node, user, path, extra, ...otherProps} = props;
+	const methods = ['target'];
 
-	render( props ) {
-		let {node, user, path, extra} = props;
-
-		let Methods = ['target'];
-
-		let body = <div><NavLink href={node.path+'/..'}><span><Icon src="previous" /> </span>../</NavLink></div>;
-		return (
-			<div id="content">
-				<PageNavRoot {...props} />
-				<Common node={node} user={user} header={node.name} headerIcon='tag'>
-					<CommonBody>
-						<br /><br /><br />
-						{body}
-					</CommonBody>
-				</Common>
-				<ContentGames node={node} user={user} path={path} extra={extra} methods={Methods} tags={node.id} />
-			</div>
-		);
-	}
+	return <>
+		<div id="content">
+			<PageNavRoot {...props} />
+			<Common node={node} user={user} header={node.name} headerIcon='tag'>
+				<CommonBody>
+					<br /><br /><br />
+					<div><Link href={node.path+'/..'}><span><Icon src="previous" /> </span>../</Link></div>;
+				</CommonBody>
+			</Common>
+			<ContentGames node={node} user={user} path={path} extra={extra} methods={methods} tags={node.id} />
+		</div>
+	</>;
 }

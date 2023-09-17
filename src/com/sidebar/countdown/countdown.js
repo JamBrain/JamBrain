@@ -1,10 +1,10 @@
-import { Component }	from 'preact';
+import { Component } from 'preact';
 import './countdown.less';
 import '../base/base.less';
 
 import { getLocaleDay, getLocaleTime, getLocaleTimeZone } from 'internal/time';
 
-import NavLink			from 'com/nav-link/link';
+import {Link} from 'com/ui';
 
 export default class SidebarCountdown extends Component {
 	constructor( props ) {
@@ -178,7 +178,7 @@ export default class SidebarCountdown extends Component {
 	}
 
 	render( props ) {
-		let days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+		const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 		let utcCode = (props.date.getTimezoneOffset()/60)*-1;
 		let utcCodep = "";
 		if (utcCode > 0) {
@@ -266,7 +266,7 @@ export default class SidebarCountdown extends Component {
 						</div>
 					</div>
 				</div>
-				<div id={this.class} class="-info" title={LanguagePrefix+props.date.toString()}>{props.tt} {getLocaleDay(props.date)} at <strong>{getLocaleTime(props.date)} {getLocaleTimeZone(props.date)}</strong> <NavLink href="https://github.com/ludumdare/ludumdare/issues/589"><strong title="Adjusted for your local timezone. If this is not your timezone, click here and let us know!">*</strong></NavLink></div>
+				<div id={this.class} class="-info" title={LanguagePrefix+props.date.toString()}>{props.tt} {getLocaleDay(props.date)} at <strong>{getLocaleTime(props.date)} {getLocaleTimeZone(props.date)}</strong> <Link href="https://github.com/ludumdare/ludumdare/issues/589"><strong title="Adjusted for your local timezone. If this is not your timezone, click here and let us know!">*</strong></Link></div>
 			</div>
 		);
 	}

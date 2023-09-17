@@ -1,7 +1,7 @@
 import {Component}					from 'preact';
 import './base.less';
 
-/** @deprecated use \{UIButton} from "com/ui" */
+/** @deprecated use \{Button} from "com/ui" */
 export default class ButtonBase extends Component {
 	constructor( props ) {
 		super(props);

@@ -143,14 +143,24 @@ class Main extends Component {
 		};
 
 		window.addEventListener('hashchange', this.onHashChange.bind(this));
-		window.addEventListener('navchange', this.onNavChange.bind(this));
-		window.addEventListener('popstate', this.onPopState.bind(this));
+		//window.addEventListener('navchange', this.onNavChange.bind(this));
+		//window.addEventListener('popstate', this.onPopState.bind(this));
 
 		setupNavigation((newURL) => {
 			const newSlugs = Sanitize.trimSlashes(new URL(newURL).pathname).split('/');
 			this.fetchNode(newSlugs);
 
-			return {}; // state
+			const newState = {
+				'scrollX': window.scrollX,
+				'scrollY': window.scrollY
+			};
+
+			window.scrollTo(0, 0);
+
+			return newState;
+		},
+		(newState) => {
+			window.scrollTo(newState.scrollX, newState.scrollY);
 		});
 
 		this.onLogin = this.onLogin.bind(this);

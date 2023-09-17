@@ -1,20 +1,19 @@
 import { createElement } from 'preact';
 
-import Util					from './Util';
+import Util from './Util';
 
 import { extractFromURL } from 'internal/autoembed';
 import { shortnameToURL } from 'external/emoji/emoji';
 
 //COMPONENT IMPORTS
 import LinkMail				from 'com/link-mail/mail';		// TODO: Obsolete me
-import NavLink 				from 'com/nav-link/link';
 import SmartLink 			from 'com/autoembed/smartlink';
 import LocalLink			from 'com/autoembed/locallink';
 
 import AutoEmbed 			from 'com/autoembed/autoembed';
 import SmartDomains			from 'com/autoembed/smartdomains';
 
-import {Spoiler} from 'com/ui';
+import {Link, Spoiler} from 'com/ui';
 
 export default class Renderer {
 	constructor( options ) {
@@ -121,14 +120,11 @@ export default class Renderer {
 	}
 
 	atname( text ) {
-		return (
-			<NavLink href={"/users/" + text}>@{text}</NavLink>
-		);
+		return <Link href={`/users/${text}`}>@{text}</Link>;
 	}
 
 	codespan( text ) {
 		return <code>{Util.htmldecode(text)}</code>;
-		// text.replace('\n','') // ??
 	}
 
 	br() {
@@ -228,7 +224,7 @@ export default class Renderer {
 
 		if ( result.type == "simple" ) {
 			hasText = hasText && !/^\s+$/.test(text); // make sure the link isn't all whitespace too
-			return <NavLink href={href} title={title} target={"_blank"}>{(hasText) ? text : href}</NavLink>;
+			return <Link href={href} title={title} target={"_blank"}>{(hasText) ? text : href}</Link>;
 		}
 		else if ( result.type == "smart" ) {
 			hasText = hasText && !/^\s+$/.test(joinedText); // make sure the link isn't all whitespace too
@@ -246,11 +242,11 @@ export default class Renderer {
 		}
 		else if ( result.type == "protocol" ) {
 			hasText = hasText && !/^\s+$/.test(joinedText); // make sure the link isn't all whitespace too
-			return <NavLink href={href} text={(hasText) ? joinedText : href.slice(2)} title={title} target={"_blank"}/>;
+			return <Link href={href} text={(hasText) ? joinedText : href.slice(2)} title={title} target={"_blank"}/>;
 		}
 		else if ( result.type == "static" ) {
 			hasText = hasText && !/^\s+$/.test(joinedText); // make sure the link isn't all whitespace too
-			return <NavLink href={"//" + STATIC_DOMAIN + href.slice(2)} text={(hasText) ? joinedText : (STATIC_DOMAIN + href.slice(2))} title={title} target={"_blank"}/>;
+			return <Link href={"//" + STATIC_DOMAIN + href.slice(2)} text={(hasText) ? joinedText : (STATIC_DOMAIN + href.slice(2))} title={title} target={"_blank"}/>;
 		}
 	}
 

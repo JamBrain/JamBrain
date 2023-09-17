@@ -1,8 +1,7 @@
 import {Component} from 'preact';
 import './common-nav-button-follow.less';
 
-import {Icon} from 'com/ui';
-import BodyNavButton from './common-nav-button';
+import {Icon, Button} from 'com/ui';
 import $NodeStar from 'backend/js/node/node_star';
 
 
@@ -64,7 +63,7 @@ export default class BodyNavButtonFollow extends Component {
 
 
 	render( props ) {
-		let {node, user} = props;
+		const {node, user, ...otherProps} = props;
 
 		if ( user && user.id && node && node.id ) {
 			let isFollowing = this.isFollowing();
@@ -72,33 +71,33 @@ export default class BodyNavButtonFollow extends Component {
 
 			let newClass = "-follow";
 
-			var Icon = <Icon class="if-not-hover-block">user</Icon>;
-			var HoverIcon = <Icon class="if-hover-block">user-plus</Icon>;
-			var Text = <div>Follow</div>;
+			var icon = <Icon class="if-not-hover-block">user</Icon>;
+			var hoverIcon = <Icon class="if-hover-block">user-plus</Icon>;
+			var text = <div>Follow</div>;
 
 			// Following or Friend
 			if ( isFollowing ) {
-				HoverIcon = <Icon class="if-hover-block">user-minus</Icon>;
+				hoverIcon = <Icon class="if-hover-block">user-minus</Icon>;
 			}
 			// Friend only
 			if ( isFriend ) {
-				Icon = <Icon class="if-not-hover-block">users</Icon>;
-				Text = <div>Friends</div>;
+				icon = <Icon class="if-not-hover-block">users</Icon>;
+				text = <div>Friends</div>;
 				newClass += " -friends";
 			}
 			// Following only
 			else if ( isFollowing ) {
-				Icon = <Icon class="if-not-hover-block">user-check</Icon>;
-				Text = <div>Following</div>;
+				icon = <Icon class="if-not-hover-block">user-check</Icon>;
+				text = <div>Following</div>;
 				newClass += "-following";
 			}
 
 			return (
-				<BodyNavButton class={`${newClass ?? ''} ${props.class ?? ''}`} onClick={this.onClick}>
-					{Icon}
-					{HoverIcon}
-					{Text}
-				</BodyNavButton>
+				<Button class={`${newClass ?? ''} ${props.class ?? ''}`} onClick={this.onClick}>
+					{icon}
+					{hoverIcon}
+					{text}
+				</Button>
 			);
 		}
 

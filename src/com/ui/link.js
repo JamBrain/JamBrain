@@ -4,6 +4,8 @@ import Sanitize from 'internal/sanitize';
 // TODO: Push the state (arg1 of pushShate/replaceState (MK: what?)
 // MK TODO: give this file a serious look. tidy up
 
+export const navigationEvent = 'navChange';
+
 function navigateToHref( e ) {
 	// Bail if we're trying to open link in a new window using a modifer+click shortcut
 	if ( e.shiftKey || e.metaKey || e.ctrlKey || e.altKey ) {
@@ -24,7 +26,7 @@ function navigateToHref( e ) {
 		newURL.search = mergedSearch.toString();
 
 		//window.location.assign(newURL.href);
-		window.dispatchEvent(new CustomEvent('navChange2', {'detail': newURL.toString()}));
+		window.dispatchEvent(new CustomEvent(navigationEvent, {'detail': newURL.toString()}));
 
 		//e.stopPropagation();	// Do we need this?
 	}
@@ -38,7 +40,7 @@ function navigateToHref( e ) {
 
 /**
  * @callback PopstateCallback
- * @param {any} restoredState
+ * @param {any} newState
  * */
 
 /**
@@ -46,10 +48,9 @@ function navigateToHref( e ) {
  * @param {PopstateCallback} [popstateCallback]
  * */
 export function setupNavigation( pushstateCallback, popstateCallback ) {
-	window.addEventListener('navChange2', /** @param {CustomEvent} e */ (e) => {
-		DEBUG && console.log('navChange2:', window.location.href, '=>', e.detail);
+	window.addEventListener(navigationEvent, /** @param {CustomEvent} e */ (e) => {
+		DEBUG && console.log(`[${navigationEvent}]:`, window.location.href, '=>', e.detail);
 		history.pushState(pushstateCallback?.(e.detail), null, e.detail);
-		//window.location.assign(e.detail);
 	});
 
 	window.addEventListener('popstate', (e) => {
@@ -59,27 +60,27 @@ export function setupNavigation( pushstateCallback, popstateCallback ) {
 }
 
 
-export function Link2( props ) {
+export function Link( props ) {
 	const {rel, target, href, ...otherProps} = props;
 
+	// MK: URL() will throw if invalid. In theory this replaces the need for my sanitization code.
 	try {
-		const sanitizedHref = href ?? '';
 		//const sanitizedHref = href ? Sanitize.sanitize_URI(href) : '';
-		const newURL = new URL(sanitizedHref, window.location.href);
-		const isExternal = newURL.origin !== window.location.origin;
+		const sanitizedURL = new URL(href ?? '', window.location.href);
+		const isExternal = sanitizedURL.origin !== window.location.origin;
 		const newTarget = isExternal ? "_blank" : target;
 		const newRel = isExternal ? `noopener noreferrer ${rel ?? ''}` : undefined;
 
 		// MK NOTE: We aren't handling spacebar, when this is used as a button.
-		return <a {...otherProps} rel={newRel} target={newTarget} href={sanitizedHref} onClick={navigateToHref} />;
+		return <a {...otherProps} rel={newRel} target={newTarget} href={href} onClick={navigateToHref} />;
 	}
 	catch (e) {
-		console.error(`Bad URL: ${href}\n`, e.message);
+		console.error(`Bad href: ${href}\n`, e.message);
 		return <a />;
 	}
 }
 
-
+/*
 export class Link extends Component {
 	constructor( props ) {
 		super(props);
@@ -129,7 +130,7 @@ export class Link extends Component {
 
 	}
 */
-
+/*
 	onClick( e ) {
 		// Bail if we're trying to open link in a new window using a modifer+click shortcut
 		if ( e.shiftKey || e.metaKey || e.ctrlKey || e.altKey )
@@ -198,3 +199,4 @@ export class Link extends Component {
 		return <span {...props} class={`ui-link ${props.class ?? ''}`} />;
 	}
 }
+*/

@@ -188,8 +188,8 @@ export default class SidebarTV extends Component {
 
 					// This is the above stuff (LIVE vs VOD). disabled for now
 //					<div class="-view">
-//						<ButtonBase class="-live selected"><UIIcon baseline small>video-camera</UIIcon> <span>LIVE</span></ButtonBase>
-//						<ButtonBase class="-vod "><UIIcon baseline small>video</UIIcon> <span>VIDEO</span></ButtonBase>
+//						<Button class="-live selected"><UIIcon baseline small>video-camera</UIIcon> <span>LIVE</span></Button>
+//						<Button class="-vod "><UIIcon baseline small>video</UIIcon> <span>VIDEO</span></Button>
 //					</div>
 
 			return (
