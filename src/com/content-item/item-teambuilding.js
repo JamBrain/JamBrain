@@ -5,7 +5,7 @@ import { node_IsAuthor } from 'internal/lib';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentLoading					from 'com/content-loading/loading';
-import {Button, Icon, UIDropdown} from 'com/ui';
+import {Button, Icon, Dropdown} from 'com/ui';
 
 import $Node							from 'backend/js/node/node';
 
@@ -106,7 +106,7 @@ export default class ItemTeambuilding extends Component {
 		if (Addable.length > 1) {
 			return (
 				<div class="team-list-add">
-					<UIDropdown>{Addable}</UIDropdown>
+					<Dropdown>{Addable}</Dropdown>
 				</div>
 			);
 		}

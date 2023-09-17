@@ -2,7 +2,7 @@ import { Component } from 'preact';
 import './itemfilter.less';
 
 
-import {Icon, Button, Tagbox, TextField, UIDropdown, UIDropdownList, DropdownText, Help} from 'com/ui';
+import {Icon, Button, Tagbox, TextField, Dropdown, UIDropdownList, DropdownText, Help} from 'com/ui';
 
 import $Tag								from 'backend/js/tag/tag';
 
@@ -191,7 +191,7 @@ export default class ItemFilter extends Component {
 				<div class="-body">
 					<div class="-title">Filtering by:</div>
 					{ShowFilters}
-					<UIDropdown class="-grid" value={state.grid} right>
+					<Dropdown class="-grid" value={state.grid} right>
 						<Icon src="grid" />
 						<Button class="-item if-no-sidebar-block" onClick={this.onModifyGrid.bind(this, 1)}>1 Wide</Button>
 						<Button class="-item if-no-sidebar-block" onClick={this.onModifyGrid.bind(this, 2)}>2 Wide</Button>
@@ -199,7 +199,7 @@ export default class ItemFilter extends Component {
 						<Button class="-item" onClick={this.onModifyGrid.bind(this, 4)}>4 Wide</Button>
 						<Button class="-item if-sidebar-block" onClick={this.onModifyGrid.bind(this, 5)}>5 Wide</Button>
 						<Button class="-item if-sidebar-block" onClick={this.onModifyGrid.bind(this, 6)}>6 Wide</Button>
-					</UIDropdown>
+					</Dropdown>
 				</div>
 				<div class="-footer">
 				</div>

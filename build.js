@@ -8,8 +8,7 @@
 // savePath = ".bunfig.lockb"
 
 import * as esbuild from 'esbuild';
-import { lessLoader } from '@mikekasprzak/esbuild-plugin-less'; //'esbuild-plugin-less';
-//import stylePlugin from 'esbuild-style-plugin';
+import { lessLoader } from 'esbuild-plugin-less';
 
 
 const VALID_ACTIONS = ['debug', 'release', 'live', 'quiet'];

@@ -1,15 +1,12 @@
-@import 'defs.less';
+//@import 'defs.less';
 
-.ui-dropdown {
+.ui_dropdown {
 	vertical-align: top;
 	position: relative;
+	z-index: 10000;
 
-	> * {
-		z-index: 10000;
-
-		&.-gap {
-			height: 0.5rem;
-		}
+	> .ui_gap {
+		height: 0.5rem;
 	}
 
 	> :first-child {
@@ -37,7 +34,7 @@
 			visibility: hidden;
 		}
 	}
-
+/*
 	&.-show {
 		& > .-button {
 			z-index: 10001;
@@ -51,7 +48,7 @@
 			z-index: 9999;
 		}
 	}
-
+*/
 	& > .ui_button {
 		overflow: auto;
 		position: relative;
@@ -64,7 +61,7 @@
 			right: 0;
 		}
 	}
-
+/*
 	& > .-content {
 		position: absolute;
 
@@ -82,17 +79,13 @@
 		top: 0px;
 		bottom: 0px;
 	}
-
+*/
 	/* Alignment */
-	&.-right {
-		& > .-content {
-			right: 0;
-		}
+	&.-right > * {
+		right: 0;
 	}
 
-	&.-left {
-		& > .-content {
-			left: 0;
-		}
+	&.-left > * {
+		left: 0;
 	}
 }

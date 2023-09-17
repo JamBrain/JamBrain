@@ -1,5 +1,4 @@
 import { Component } from 'preact';
-
 import Sanitize from 'internal/sanitize';
 
 // TODO: Push the state (arg1 of pushShate/replaceState (MK: what?)
@@ -31,23 +30,53 @@ function navigateToHref( e ) {
 	}
 }
 
-export function setupNavigation( navchangeCallback, popstateCallback ) {
+/**
+ * @callback PushstateCallback
+ * @param {any} newURL
+ * @returns {any} newState
+ * */
+
+/**
+ * @callback PopstateCallback
+ * @param {any} restoredState
+ * */
+
+/**
+ * @param {PushstateCallback} [pushstateCallback]
+ * @param {PopstateCallback} [popstateCallback]
+ * */
+export function setupNavigation( pushstateCallback, popstateCallback ) {
 	window.addEventListener('navChange2', /** @param {CustomEvent} e */ (e) => {
 		DEBUG && console.log('navChange2:', window.location.href, '=>', e.detail);
-		history.pushState(null, null, navchangeCallback(e.detail));
-		window.location.assign(e.detail);
+		history.pushState(pushstateCallback?.(e.detail), null, e.detail);
+		//window.location.assign(e.detail);
 	});
 
 	window.addEventListener('popstate', (e) => {
 		DEBUG && console.log("popstate: ", e.state);
-		popstateCallback(e.state);
+		popstateCallback?.(e.state);
 	});
 }
 
 
-export function UILink2( props ) {
-	// MK NOTE: We technically aren't handling spacebar
-	return <a {...props} onClick={navigateToHref} />;
+export function Link2( props ) {
+	const {rel, target, href, ...otherProps} = props;
+
+	try {
+		const sanitizedHref = href ?? '';
+		//const sanitizedHref = href ? Sanitize.sanitize_URI(href) : '';
+		const newURL = new URL(sanitizedHref, window.location.href);
+		const isExternal = newURL.origin !== window.location.origin;
+		const newTarget = isExternal ? "_blank" : target;
+		const newRel = isExternal ? `noopener noreferrer ${rel ?? ''}` : undefined;
+
+		// MK NOTE: We aren't handling spacebar, when this is used as a button.
+		return <a {...otherProps} rel={newRel} target={newTarget} href={sanitizedHref} onClick={navigateToHref} />;
+	}
+	catch (e) {
+		console.error(`Bad URL: ${href}\n`, e.message);
+		return <a />;
+	}
 }
 
 

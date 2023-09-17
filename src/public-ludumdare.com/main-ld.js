@@ -1,7 +1,7 @@
 //import 'preact/devtools';
 import 'preact/debug';
 
-//import '../polyfill';
+import '../polyfill';	// So we can use .at()
 
 import { render, Component } from 'preact';
 import './main-ld.less';
@@ -9,6 +9,8 @@ import 'com/defaults.less';
 import 'com/fonts.less';
 import 'com/helpers.less';
 import 'com/markup.less';
+
+import { setupNavigation } from 'com/ui/link';
 
 import titleParser						from 'internal/titleparser';
 import Sanitize							from 'internal/sanitize';
@@ -54,27 +56,12 @@ import $NodeLove						from 'backend/js/node/node_love';
 const SITE_ROOT = 1;
 
 
-// NOTE: Deprecated
-// Add special behavior: when class attribute is an array, flatten it to a string
-/*
-options.vnode = function _CustomVNode(vnode) {
-	if ( vnode && vnode.props && vnode.props.class && Array.isArray(vnode.props.class) ) {
-		if ( vnode.props.class.length ) {
-			vnode.props.class = vnode.props.class.join(' ');
-		}
-		else {
-			// NOTE: this might be slow. You can disable this, and the .length check for a potential speedup
-			delete vnode.props.class;
-		}
-	}
-};
-*/
-
 class Main extends Component {
 	constructor( props ) {
 		super(props);
-		DEBUG && console.log("[constructor]");
 
+		// Debug mode
+		DEBUG && console.log("[constructor]");
 		if ( DEBUG ) {
 			const urlParams = new URLSearchParams(window.location.search);
 			const debugParam = urlParams.get('debug');
@@ -98,6 +85,7 @@ class Main extends Component {
 					const { added, removed, updated } = JSON.parse(e.data);
 
 					// CSS reloading (inline)
+					// MK NOTE: this doesn't seem to work. Was copy+pasted from sample, so it's not really verified.
 					if (!added.length && !removed.length && updated.length === 1) {
 						for (const link of document.getElementsByTagName('link')) {
 							const url = new URL(link.href);
@@ -121,12 +109,14 @@ class Main extends Component {
 		}
 
 
+		// Start by cleaning the URL
 		let clean = this.cleanLocation(window.location);
 		if ( window.location.origin+clean.path !== window.location.href ) {
 			DEBUG && console.log("Cleaned URL: "+window.location.href+" => "+window.location.origin+clean.path);
 
 			this.storeHistory(window.history.state, null, clean.path);
 		}
+
 
 		this.state = {
 			// URL walking
@@ -155,6 +145,13 @@ class Main extends Component {
 		window.addEventListener('hashchange', this.onHashChange.bind(this));
 		window.addEventListener('navchange', this.onNavChange.bind(this));
 		window.addEventListener('popstate', this.onPopState.bind(this));
+
+		setupNavigation((newURL) => {
+			const newSlugs = Sanitize.trimSlashes(new URL(newURL).pathname).split('/');
+			this.fetchNode(newSlugs);
+
+			return {}; // state
+		});
 
 		this.onLogin = this.onLogin.bind(this);
 	}

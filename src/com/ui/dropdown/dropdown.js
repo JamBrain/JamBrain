@@ -1,5 +1,6 @@
-import { Component, cloneElement, toChildArray } from 'preact';
+import { toChildArray } from 'preact';
 import './dropdown.less';
+const ui_dropdown = 'ui_dropdown';
 
 import {Button} from '../button';
 import {Icon} from '../icon';
@@ -11,14 +12,15 @@ function defocus( e ) {
 	}
 }
 
-export function UIDropdown( props ) {
-	const {children, tick, 'class': classProp, ...otherProps} = props;
+// 'tick' is a little up/down arrow that appears on the right side of the button
+export function Dropdown( props ) {
+	const {children, showTick, leftAlign, rightAlign, 'class': classProp, ...otherProps} = props;
 	const firstChild = toChildArray(children).slice(0, 1);
 	const otherChildren = toChildArray(children).slice(1);
-	return <form {...otherProps} class={`ui-dropdown ${classProp ?? ''}`}>
+	return <form {...otherProps} class={`${ui_dropdown} ${classProp ?? ''} ${leftAlign ? '-left' : ''} ${rightAlign ? '-right' : ''}`}>
 		<Button /*onClick={defocus}*/>
 			{firstChild}
-			{tick ? <><Icon class="ui_tick up" src="tick-up" /><Icon class="ui_tick down" src="tick-down" /></> : null}
+			{showTick ? <><Icon class="ui_tick up" src="tick-up" /><Icon class="ui_tick down" src="tick-down" /></> : null}
 		</Button>
 		{otherChildren}
 	</form>;

@@ -1,7 +1,7 @@
 import { Component } from 'preact';
 
 import {Button} from '../button';
-import {UIDropdown} from './dropdown';
+import {Dropdown} from './dropdown';
 
 export class UIDropdownList extends Component {
 	// Does not need to be bound in constructor
@@ -73,10 +73,10 @@ export class UIDropdownList extends Component {
 		}
 
 		return (
-			<UIDropdown {...NewProps}>
+			<Dropdown {...NewProps}>
 				{Value}
 				{Items}
-			</UIDropdown>
+			</Dropdown>
 		);
 	}
 }
