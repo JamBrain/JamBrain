@@ -84,7 +84,7 @@ export default class ContentCommonBodyLink extends Component {
 						placeholder={urlPlaceholder}
 						maxLength={512}
 					/>
-					<Tooltip text="Remove"><Button onClick={props.onRemove}><Icon src="cross" /></Button></Tooltip>
+					<Button onClick={props.onRemove} tooltip="Remove"><Icon src="cross" /></Button>
 				</div>
 			);
 		}

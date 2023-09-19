@@ -1,5 +1,5 @@
 import {Component} from 'preact';
-import {Icon, Button, Tooltip} from 'com/ui';
+import {Icon, Button} from 'com/ui';
 import './youtube.less';
 
 // MK TODO: Can this be stateless? i.e. "on click", replace the element entirely
@@ -45,11 +45,9 @@ export default class YoutubeEmbed extends Component {
 							<Icon class="-middle" src="play" />
 						</div>
 						<div class="-external">
-							<Tooltip text="Open in new tab">
-								<Button href={`https://www.youtube.com/watch?v=${video_id}`}>
-									<Icon class="-middle -block" src="youtube" />
-								</Button>
-							</Tooltip>
+							<Button href={`https://www.youtube.com/watch?v=${video_id}`} tooltip="Open in new tab">
+								<Icon class="-middle -block" src="youtube" />
+							</Button>
 						</div>
 					</div>
 					<img alt="Youtube video thumbnail" src={`https://i.ytimg.com/vi/${video_id}/mqdefault.jpg`}/>
