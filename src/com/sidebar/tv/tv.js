@@ -155,7 +155,7 @@ export default class SidebarTV extends Component {
 		return others.map((other, index) => {
 			return (
 				<div class={other === active ? "selected" : ""} onClick={this.setActive.bind(this, index)} title={other && other.user_name ? other.user_name : ""}>
-					<div><Image src={ other ? other.thumbnail_180p : ""} failsrc={this.FailImage} /></div>
+					<div><Image src={ other ? other.thumbnail_180p : ""} srcError={this.FailImage} /></div>
 				</div>
 			);
 		});
@@ -199,7 +199,7 @@ export default class SidebarTV extends Component {
 							/*window.open("https://www.twitch.tv/directory/game/Creative/ldjam", '_blank');*/
 							window.location.hash = "#tv/"+this.services[active.service_id]+'/'+active.user_slug;
 						}}>
-						<div class="-img"><Image src={active.thumbnail_180p} failsrc={this.FailImage} /></div>
+						<div class="-img"><Image src={active.thumbnail_180p} srcError={this.FailImage} /></div>
 						<div class="-live"><Icon baseline small>circle</Icon> <span class="-text">LIVE</span></div>
 						<div class={'-name stream-'+this.services[active.service_id]}>{this.serviceIcons[active.service_id]} <span class="-text">{active.user_name}</span></div>
 						<div class="-viewers"><Icon baseline>tv</Icon> <span class="-text">{active.viewers}</span></div>

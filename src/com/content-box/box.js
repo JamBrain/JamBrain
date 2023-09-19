@@ -68,7 +68,7 @@ export default class ContentBox extends Component {
 
 			var ShowHoverCover = null;
 			if ( node.meta['cover-hover'] ) {
-				ShowHoverCover = <Image class="-cover-hover" src={HoverCover} failsrc={CoverFail} />;
+				ShowHoverCover = <Image class="-cover-hover" src={HoverCover} srcError={CoverFail} />;
 			}
 
 			var ShowEvent = null;
@@ -141,7 +141,7 @@ export default class ContentBox extends Component {
 			return (
 				<Button class={`${Class ?? ''} ${props.class ?? ''}`} href={node.path}>
 					{ShowHoverCover}
-					<Image class="-cover" src={Cover} failsrc={CoverFail} />
+					<Image class="-cover" src={Cover} srcError={CoverFail} />
 					<div class="-top-bar">
 						{ShowEvent}
 					</div>

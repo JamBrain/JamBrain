@@ -60,16 +60,16 @@ export default class ContentCommonBodyAvatar extends Component {
 				(<label>
 					<input type="file" name="asset" style="display: none;" onChange={this.onEdit} />
 					<div class={Classes}>
-						<Image src={Avatar} failsrc={AvatarFail} />
+						<Image src={Avatar} srcError={AvatarFail} />
 						<Icon>edit</Icon>
 					</div>
 				</label>) :
 				(<Button class={Classes} href={props.href}>
-					<Image alt={name + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
+					<Image alt={name + "'s avatar image"} src={Avatar} srcError={AvatarFail} />
 				</Button>);
 		}
 		return (<span class={Classes}>
-					<Image alt={name + "'s avatar image"} src={Avatar} failsrc={AvatarFail} />
+					<Image alt={name + "'s avatar image"} src={Avatar} srcError={AvatarFail} />
 				</span>);
 	}
 }

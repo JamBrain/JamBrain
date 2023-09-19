@@ -1,48 +1,62 @@
-import { Component } from 'preact';
 import './image.less';
 
-export class Image extends Component {
-	constructor( props ) {
-		super(props);
+function onImgError( e ) {
+	const srcError = e.target.getAttribute('srcError');
+	if ( srcError ) {
+		e.target.src = srcError;
 
-		this.state = {
-			'error': false
-		};
+		// NOTE: This event does not buble, so there's no need to call stopPropagation()
+	}
+}
 
-		this.onError = this.onError.bind(this);
+
+/**
+ * @typedef {Object} ImageProps
+ * @prop {string} src - the image source
+ * @prop {string} [srcError] - fallback image source if the image is blank or it fails to load
+ * @prop {string} [alt] - alt text for the image
+ * @prop {string} [class] - css classes applied to the image. To align the image, use '-left', '-right', or '-center'.
+ * @prop {number} [width]
+ * @prop {number} [height]
+ * @prop {boolean} [eager] - load the image immediately instead of lazily
+ * @prop {boolean} [decorative] - image is decorative and should be ignored by screen readers
+ */
+
+/**
+ * @param {ImageProps} props
+ */
+export function Image( props ) {
+	let {src, srcError, alt, eager, decorative, ...otherProps} = props;
+	// NOTE: eager loading is the default, but we're lazy the default instead
+
+	/** @type {{"loading" ?: "eager" | "lazy"}} */
+	const lazyProps = eager ? {} : {'loading': 'lazy'};
+
+	// NOTE: Per MDN, an empty alt tag means that the image is decorative and should be ignored by screen readers.
+	//   To make this intention more obvious, we add an empty alt tag if Image is marked as decorative.
+	const altProps = alt ? {alt} : (decorative ? {'alt': ''} : {});
+
+	srcError = srcError ? (srcError.startsWith('///') ? STATIC_ENDPOINT + srcError.slice(2) : srcError) : undefined;
+	src = src ? (src.startsWith('///') ? STATIC_ENDPOINT + src.slice(2) : src) : undefined;
+
+	let errorProps = {};
+	if ( srcError ) {
+		// If we have a fallback and src is invalid, we can use srcError as the src
+		if ( !src || src === "" ) {
+			src = srcError;
+		}
+		// Otherwise, add an error handler
+		else {
+			errorProps = {
+				'onError': onImgError,
+				'srcError': srcError
+			};
+		}
 	}
 
-	// TODO: if props change, clear the error state. right now any error will forever lock this in an error state
-//	shouldComponentUpdate( nextProps, nextState ) {
-//		return this.state.error !== nextState.error;
-//	}
+	// MK LEGACY NOTE: there was a `block` property here. It added a '-block' style. It's unclear to me the intent.
+	//  I've added -left, -right, and -center styles instead. I'm assuming the intent was centering, but if not, then that's why it broke.
 
-	onError() {
-		this.setState({'error': true});
-	}
-
-	render( props, state ) {
-		props = Object.assign({}, props);
-
-		// If you have no 'src' or an error, and have a failsrc
-		if ( (!props.src || state.error) && props.failsrc ) {
-			props.src = props.failsrc;
-		}
-
-		// If your URL begins with a triple slash, append the static endpoint
-		if ( props.src && (props.src.indexOf('///') === 0) ) {
-			props.src = STATIC_ENDPOINT + props.src.slice(2);
-		}
-		if ( props.failsrc && (props.failsrc.indexOf('///') === 0) ) {
-			props.failsrc = STATIC_ENDPOINT + props.failsrc.slice(2);
-		}
-
-		let Classes = [
-			'ui-image',
-			props.class,
-			props.block ? '-block' : ''
-		].join(' ');
-
-		return <img {...props} class={Classes} onerror={this.onError} />;
-	}
+	// NOTE: errorProps comes before otherProps so that the error handler can be overridden
+	return <img src={src} {...altProps} {...errorProps} {...otherProps} {...lazyProps} />;
 }
