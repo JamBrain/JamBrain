@@ -18,7 +18,7 @@ export default class ContentCommonFlag extends Component {
 
         let Icon = null;
         if ( props.icon ) {
-            Icon = <Icon>{props.icon}</Icon>;
+            Icon = <Icon src={props.icon} />;
         }
 
         return (

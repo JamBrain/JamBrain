@@ -25,8 +25,8 @@ export class Tagbox extends Component {
 				<Button class="-tag" title={tag.id+' - '+tag.slug} onClick={this.onClick.bind(this, index)}>
 					<div class="-text">{tag.name}</div>
 					<div class="-tail-icon">
-						<Icon class="_if-parent-parent-no-hover-inline" src="circle" small />
-						<Icon class="_if-parent-parent-hover-inline" src="cross" small />
+						<Icon class="_if-parent-parent-no-hover-inline -small" src="circle" />
+						<Icon class="_if-parent-parent-hover-inline -small" src="cross" />
 					</div>
 					<div class="-tail" />
 				</Button>

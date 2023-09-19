@@ -6,6 +6,7 @@ import {Icon} from 'com/ui';
 
 import $NodeStar						from 'backend/js/node/node_star';
 
+// @deprecated
 export default class ContentFooterButtonStar extends Component {
 	constructor( props ) {
 		super(props);
@@ -47,7 +48,7 @@ export default class ContentFooterButtonStar extends Component {
 		var _class = "footer-button footer-button-star" + (starred ? " starred" : "");
 		return (
 			<div class={_class} onClick={this.onStar}>
-				<Icon>star-full</Icon>
+				<Icon src="star-full" />
 			</div>
 		);
 	}

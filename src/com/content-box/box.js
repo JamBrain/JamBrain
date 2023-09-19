@@ -80,17 +80,17 @@ export default class ContentBox extends Component {
 			let SubEventClass = null;
 			if ( !props.nosubevent && node.subtype ) {
 				if ( !node.published ) {
-					ShowSubEvent = <div><Icon baseline small>cross</Icon></div>;
+					ShowSubEvent = <div><Icon class="-baseline -small" src="cross" /></div>;
 				}
 				else if ( node.subtype == 'game' ) {
 					ShowSubEvent = <div>GAME</div>;
 					if ( node.subsubtype ) {
 						if ( node.subsubtype == 'jam' ) {
-							ShowSubEvent = <div>JAM <Icon baseline small>{node_CountAuthors(node) === 1 ? "user" : "users"}</Icon></div>;
+							ShowSubEvent = <div>JAM <Icon class="-baseline -small" src={node_CountAuthors(node) === 1 ? "user" : "users"} /></div>;
 							SubEventClass = '-col-a';
 						}
 						else if ( node.subsubtype == 'extra' ) {
-							ShowSubEvent = <div>EXTRA <Icon baseline small>{node_CountAuthors(node) === 1 ? "user" : "users"}</Icon></div>;
+							ShowSubEvent = <div>EXTRA <Icon class="-baseline -small" src={node_CountAuthors(node) === 1 ? "user" : "users"} /></div>;
 							SubEventClass = '-col-bc';
 						}
 						else if ( node.subsubtype == 'compo' ) {
@@ -106,7 +106,7 @@ export default class ContentBox extends Component {
 							SubEventClass = '-col-ca';
 						}
 						else if ( node.subsubtype == 'unfinished' ) {
-							ShowSubEvent = <div><Icon baseline small>cross</Icon></div>;
+							ShowSubEvent = <div><Icon class="-baseline -small" src="cross" /></div>;
 						}
 					}
 				}
@@ -124,11 +124,11 @@ export default class ContentBox extends Component {
 					let parts = key.split('-');
 					if ( /*ShowTrophies.length < 6 &&*/ parts.length == 3 && parts[0] == 'grade' && parts[2] == 'result' ) {
 						if ( node.magic[key] == 1 )
-							ShowTrophies.push(<span class="-first"><Icon>trophy</Icon></span>);
+							ShowTrophies.push(<span class="-first"><Icon src="trophy" /></span>);
 						else if ( node.magic[key] == 2 )
-							ShowTrophies.push(<span class="-second"><Icon>trophy</Icon></span>);
+							ShowTrophies.push(<span class="-second"><Icon src="trophy" /></span>);
 						else if ( node.magic[key] == 3 )
-							ShowTrophies.push(<span class="-third"><Icon>trophy</Icon></span>);
+							ShowTrophies.push(<span class="-third"><Icon src="trophy" /></span>);
 					}
 				}
 //				ShowTrophies.sort(function(a, b) {

@@ -94,7 +94,7 @@ export default class InputDropdown extends Component {
 					if ( dataId == value ) {
 						SelectedField = (
 							<button type="button" onClick={this.onShow}>
-								<Icon>hamburger</Icon>
+								<Icon src="hamburger" />
 								{Contents}
 							</button>
 						);
@@ -103,7 +103,7 @@ export default class InputDropdown extends Component {
 				if (SelectedField == null) {
 					SelectedField = (
 						<button type="button" onClick={this.onShow}>
-							<Icon>hamburger</Icon>
+							<Icon src="hamburger" />
 							{props.items[0][1]}
 						</button>
 					);

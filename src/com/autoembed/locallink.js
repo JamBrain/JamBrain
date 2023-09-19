@@ -6,15 +6,15 @@ export default function LocalLink( props ) {
 	if (props.hashLink) {
 		ShowIcon = (
 			<span class="-icon-domain">
-				<Icon baseline small name={'link'}/>
+				<Icon class="-baseline -small" src="link" />
 			</span>
 		);
 	}
 	else {
 		ShowIcon = (
 			<span class="-icon-domain">
-				<Icon baseline small name={'l-udum'}/>
-				<Icon baseline small name={'d-are'}/>
+				<Icon class="-baseline -small" src="l-udum" />
+				<Icon class="-baseline -small" src="d-are" />
 			</span>
 		);
 	}

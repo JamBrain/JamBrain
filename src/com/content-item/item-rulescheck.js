@@ -92,8 +92,9 @@ export default class ContentItemRulesCheck extends Component {
 
 	render(props, state) {
 		const MandatoryCompo = <span class="-mandatory">(<span>COMPO ONLY</span>)</span>;
-		const IconUnChecked = <Icon small baseline class="-checkbox" src="checkbox-unchecked" />;
-		const IconChecked = <Icon small baseline class="-checkbox" src="checkbox-checked" />;
+		// MK TODO: remove the dash from the "-checkbox" style
+		const IconUnChecked = <Icon class="-checkbox -small -baseline" src="checkbox-unchecked" />;
+		const IconChecked = <Icon class="-checkbox -small -baseline" src="checkbox-checked" />;
 
 		const {
 			changeFormat, readRules, workedSolo, createdAll, createdWithin48,
@@ -156,7 +157,8 @@ export default class ContentItemRulesCheck extends Component {
 				</div>
 				<div class="-footer">
 					<p>
-						<Icon baseline src="warning" class="-warning" />
+						{/* MK TODO: Remove the dash from the -warning style */}
+						<Icon class="-warning -baseline" src="warning" />
 						<span> <strong>IMPORTANT:</strong> Before you can select an Event Format and Publish, you must agree to <em>some</em> questions above.</span>
 					</p>
 					<p>

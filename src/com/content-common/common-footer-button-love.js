@@ -57,9 +57,9 @@ export default class ContentCommonFooterButtonLove extends Component {
 
 		return (
 			<div class={Classes} onClick={this.onLove}>
-				<Icon class="-hover-hide">heart</Icon>
-				<Icon class="-hover-show -loved-hide">heart-plus</Icon>
-				<Icon class="-hover-show -loved-show">heart-minus</Icon>
+				<Icon class="-hover-hide" src="heart" />
+				<Icon class="-hover-show -loved-hide" src="heart-plus" />
+				<Icon class="-hover-show -loved-show" src="heart-minus" />
 				<div class="-count">{Love}</div>
 			</div>
 		);

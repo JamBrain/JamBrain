@@ -8,7 +8,7 @@ export default function ViewFooter( /*props, state*/ ) {
 			<div class="body">
 			<div class="tm col">
 				<section class="logo">
-					<Icon class="ludum" baseline>ludum</Icon><Icon class="dare" baseline>dare</Icon>
+					<Icon class="ludum -baseline" src="ludum" /><Icon class="dare -baseline" src="dare" />
 				</section>
 				<section>Ludum Dare and LDJAM are trademarks of Interactive Snacks Limited</section>
 			</div>

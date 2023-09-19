@@ -291,15 +291,15 @@ export default class ContentCommentsComment extends Component {
 
 			let ShowEdit = null;
 			if ( user && comment && (comment.author > 0) && (comment.author === user.id) && !state.editing )
-				ShowEdit = <div class="-button -edit" onClick={this.onEdit}><Icon>edit</Icon></div>;
+				ShowEdit = <div class="-button -edit" onClick={this.onEdit}><Icon src="edit" /></div>;
 
 			let ShowLove = null;
 			if ( !props.nolove ) {
 				ShowLove = (
 					<div class={"-button -love"+(state.loved?" -loved":"")} onClick={this.onLove}>
-						<Icon class="-hover-hide">heart</Icon>
-						<Icon class="-hover-show -loved-hide">heart-plus</Icon>
-						<Icon class="-hover-show -loved-show">heart-minus</Icon>
+						<Icon class="-hover-hide" src="heart" />
+						<Icon class="-hover-show -loved-hide" src="heart-plus" />
+						<Icon class="-hover-show -loved-show" src="heart-minus" />
 						<div>{Number.isInteger(state.lovecount) ? state.lovecount : comment.love}</div>
 					</div>
 				);
@@ -325,14 +325,14 @@ export default class ContentCommentsComment extends Component {
 				let ShowLeft = [];
 				if ( !state.preview ) {
 					ShowLeft = [
-						<div class="-button -preview" onClick={this.onPreview}><Icon>preview</Icon><div class="if-sidebar-block">Preview</div></div>,
-						<div class="-button -editing -selected"><Icon>edit</Icon><div class="if-sidebar-block">Edit</div></div>,
+						<div class="-button -preview" onClick={this.onPreview}><Icon src="preview" /><div class="if-sidebar-block">Preview</div></div>,
+						<div class="-button -editing -selected"><Icon src="edit" /><div class="if-sidebar-block">Edit</div></div>,
 					];
 				}
 				else {
 					ShowLeft = [
-						<div class="-button -preview -selected"><Icon>preview</Icon><div class="if-sidebar-block">Preview</div></div>,
-						<div class="-button -editing" onClick={this.onEditing}><Icon>edit</Icon><div class="if-sidebar-block">Edit</div></div>,
+						<div class="-button -preview -selected"><Icon src="preview" /><div class="if-sidebar-block">Preview</div></div>,
+						<div class="-button -editing" onClick={this.onEditing}><Icon src="edit" /><div class="if-sidebar-block">Edit</div></div>,
 					];
 				}
 
@@ -344,11 +344,11 @@ export default class ContentCommentsComment extends Component {
 					if ( props.allowAnonymous ) {
 						ShowRight.push(<UICheckbox onClick={this.onToggleAnon} value={state.publishAnon} tooltip="NOTE: Your identity is always available to the administrators.">Anonymous</UICheckbox>);
 					}
-					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onClick={this.onPublish}><Icon>publish</Icon><div>Publish</div></div>);
+					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onClick={this.onPublish}><Icon src="publish" /><div>Publish</div></div>);
 				}
 				else {
-					ShowRight.push(<div class="-button -cancel" onClick={this.onCancel}><Icon>cross</Icon><div class="if-sidebar-block">Cancel</div></div>);
-					ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onClick={this.onSave}><Icon>save</Icon><div>Save</div></div>);
+					ShowRight.push(<div class="-button -cancel" onClick={this.onCancel}><Icon src="cross" /><div class="if-sidebar-block">Cancel</div></div>);
+					ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onClick={this.onSave}><Icon src="save" /><div>Save</div></div>);
 				}
 
 				ShowTopNav = (

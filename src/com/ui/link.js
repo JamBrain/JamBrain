@@ -1,6 +1,7 @@
 import Sanitize from 'internal/sanitize';
+import "./link.less";
 
-export const navigationEvent = 'navChange';
+const navigationEvent = 'navChange';
 
 
 /**

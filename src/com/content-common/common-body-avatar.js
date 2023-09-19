@@ -61,7 +61,7 @@ export default class ContentCommonBodyAvatar extends Component {
 					<input type="file" name="asset" style="display: none;" onChange={this.onEdit} />
 					<div class={Classes}>
 						<Image src={Avatar} srcError={AvatarFail} />
-						<Icon>edit</Icon>
+						<Icon src="edit" />
 					</div>
 				</label>) :
 				(<Button class={Classes} href={props.href}>

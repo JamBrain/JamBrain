@@ -71,23 +71,23 @@ export default class BodyNavButtonFollow extends Component {
 
 			let newClass = "-follow";
 
-			var icon = <Icon class="if-not-hover-block">user</Icon>;
-			var hoverIcon = <Icon class="if-hover-block">user-plus</Icon>;
+			var icon = <Icon class="if-not-hover-block" src="user" />;
+			var hoverIcon = <Icon class="if-hover-block" src="user-plus" />;
 			var text = <div>Follow</div>;
 
 			// Following or Friend
 			if ( isFollowing ) {
-				hoverIcon = <Icon class="if-hover-block">user-minus</Icon>;
+				hoverIcon = <Icon class="if-hover-block" src="user-minus" />;
 			}
 			// Friend only
 			if ( isFriend ) {
-				icon = <Icon class="if-not-hover-block">users</Icon>;
+				icon = <Icon class="if-not-hover-block" src="users" />;
 				text = <div>Friends</div>;
 				newClass += " -friends";
 			}
 			// Following only
 			else if ( isFollowing ) {
-				icon = <Icon class="if-not-hover-block">user-check</Icon>;
+				icon = <Icon class="if-not-hover-block" src="user-check" />;
 				text = <div>Following</div>;
 				newClass += "-following";
 			}

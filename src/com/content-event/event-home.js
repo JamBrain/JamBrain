@@ -77,7 +77,7 @@ export default class ContentEventHome extends Component {
 
 			ShowStats = (
 				<div class="">
-					<h2><Icon baseline small src="stats" /> Theme Selection Stats</h2>
+					<h2><Icon class="-baseline -small" src="stats" /> Theme Selection Stats</h2>
 					{ShowIdeaCount}
 					{ShowUsersWithIdeas}
 				</div>

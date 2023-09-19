@@ -35,7 +35,7 @@ export default class ContentHeadliner extends Component {
 		let Flag = [];
 		// The Icon
 		if ( props.icon ) {
-			Flag.push(<Icon big>{props.icon}</Icon>);
+			Flag.push(<Icon class="-big" src={props.icon} />);
 		}
 		// The Name
 		if ( props.name ) {
@@ -59,7 +59,7 @@ export default class ContentHeadliner extends Component {
 		else if ( props.more ) {
 			return (
 				<Button class={`item -more-item ${props.childclass}`} href={props.more}>
-					<Icon>circle</Icon><Icon>circle</Icon><Icon>circle</Icon>
+					<Icon src="circle" /><Icon src="circle" /><Icon src="circle" />
 				</Button>
 			);
 		}

@@ -54,11 +54,7 @@ export default class GridSelector extends Component {
     render( props, {expanded, selected} ) {
        let ShowDropDown = null;
 
-       const ShowToggle = (
-            <Button onClick={this.onToggleDropDown}>
-                <Icon>cog</Icon>
-            </Button>
-       );
+       const ShowToggle = <Button onClick={this.onToggleDropDown}><Icon src="cog" /></Button>;
 
        if ( expanded ) {
            const options = [

@@ -2,9 +2,10 @@ import { Component } from 'preact';
 import ContentCommonBody from 'com/content-common/common-body';
 import {Button, Link, Icon} from 'com/ui';
 
-import { node_CanUpload } from 'internal/lib';
+import { node_CanUpload, node_GetEmbed } from 'internal/lib';
+import { getLocaleTimeStamp } from 'internal/time';
 
-import $File							from 'backend/js/file/file';
+import $File from 'backend/js/file/file';
 
 export default class ContentItemEmbedFile extends Component {
 	constructor(props) {
@@ -133,7 +134,7 @@ export default class ContentItemEmbedFile extends Component {
 			// Hack, append a few more items
 			for ( let idx = 0; idx < state.uploads.length; ++idx ) {
 				if ( idx == (state.uploads.length - 1) ) {
-					files.push(<li><strong>{state.uploads[idx].name}</strong> <Icon>info</Icon></li>);
+					files.push(<li><strong>{state.uploads[idx].name}</strong> <Icon src="info" /></li>);
 				}
 				else {
 					files.push(<li>{state.uploads[idx].name}</li>);
@@ -159,11 +160,11 @@ export default class ContentItemEmbedFile extends Component {
 					<ul>{files}</ul>
 					{(state.status > 0) ? <div class="-footer">Status: {status[state.status]}</div> : ""}
 					<label>
-						<input type="file" name="file" style="display: none;" onchange={this.onUpload} />
+						<input type="file" name="file" style="display: none;" onChange={this.onUpload} />
 						{uploadButton}
 					</label>
 					<div class="-footer">For details on how to prepare a file for embedding, see the <Link href="//ludumdare.com/resources/guides/embedding/">Embedding Guide</Link>.</div>
-					<div class="-footer"><Icon>info</Icon> It can take a few minutes for an embedded game to update.</div>
+					<div class="-footer"><Icon src="info" /> It can take a few minutes for an embedded game to update.</div>
 				</ContentCommonBody>
 			);
 		}

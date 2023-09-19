@@ -177,28 +177,30 @@ export default class DialogTV extends Component {
 
 		var ShowBar = null;
 		if ( true ) {
-			var Left = null;
+			const Left = null;
+			/*
 			if ( false ) {
 				Left = (
 					<div class="-left">
 						<div class="">User</div>
 						<div class="">Project Name</div>
-						<div class="-button"><Icon baseline>{props.following ? 'star-full' : 'star-empty'}</Icon><div>Follow Project</div></div>
+						<div class="-button"><Icon class="-baseline" src={props.following ? 'star-full' : 'star-empty'} /><div>Follow Project</div></div>
 					</div>
 				);
 			}
+			*/
 
-			ShowBar = (
+			ShowBar = <>
 				<div class="-bar">
 					<div class="-right">
 						<div class={`-button ${this.canShowChat() ? '' : "-disabled"}`} onClick={this.onChatClick}>
-							<Icon baseline>{state.showchat ? 'bubble' : 'bubble-empty'}</Icon>
+							<Icon class="-baseline" src={state.showchat ? 'bubble' : 'bubble-empty'} />
 							<div>Chat</div>
 						</div>
 					</div>
 					{Left}
 				</div>
-			);
+			</>;
 		}
 
 		// TODO: Make DialogBase more simple (and move current DialogBase to DialogCommon)

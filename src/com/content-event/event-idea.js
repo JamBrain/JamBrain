@@ -163,10 +163,10 @@ export default class ContentEventIdea extends Component {
 
 		return (
 			<div class="-item">
-				<Icon>lightbulb</Icon>
+				<Icon src="lightbulb" />
 				<div class="-text" title={idea}>{idea}</div>
 				<div class="-x" onClick={this.removeIdea.bind(this, id)}>
-					<Icon>cross</Icon>
+					<Icon src="cross" />
 				</div>
 			</div>
 		);
@@ -230,10 +230,9 @@ export default class ContentEventIdea extends Component {
 					<input type="text"
 						class="-suggestion"
 						onChange={this.textChange} onKeyDown={this.onKeyDown}
-						placeholder="Your suggestion" maxLength={64} value={idea} />
-					<Button onClick={this.submitIdeaForm}>
-						<Icon>suggestion</Icon> Submit
-					</Button>
+						placeholder="Your suggestion" maxLength={64} value={idea}
+						/>
+					<Button onClick={this.submitIdeaForm}><Icon src="suggestion" /> Submit</Button>
 				</p>
 			);
 		}

@@ -74,7 +74,7 @@ export default class GradedItem extends Component {
 			}
 		}
 		const ShowGrades = <div class="-grades">{Grades}</div>;
-		const ShowComments = comments ? (<Icon>{comments > 1 ? 'bubbles' : 'bubble'}</Icon>) : null;
+		const ShowComments = comments ? (<Icon src={comments > 1 ? 'bubbles' : 'bubble'} />) : null;
 
 		return (
 			<Button class={`graded-item ${props.class ?? ''}`} href={node.path}>

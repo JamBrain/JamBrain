@@ -249,7 +249,7 @@ export default class InputTextarea extends Component {
 					<div class="-left">
 						<label>
 							<input type="file" name="asset" style="display: none;" onChange={this.onFileChange} />
-							<Link class="-upload"><Icon baseline gap src="upload" />Upload Image</Link>
+							<Link class="-upload"><Icon class="-baseline -gap" src="upload" />Upload Image</Link>
 						</label>
 						<span class="if-sidebar-inline">. Supports <Link blank href="/markdown"><Icon src="markdown" /> Markdown</Link> and <strong>:emoji_codes:</strong></span>
 					</div>

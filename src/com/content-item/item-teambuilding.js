@@ -73,7 +73,7 @@ export default class ItemTeambuilding extends Component {
 		const canBeRemoved = (isMe && !isMain) || (!isMe && mainAuthor === me);
 		return (
 			<li class="team-list-member">
-				<Icon baseline small src="user" />
+				<Icon class="-baseline -small" src="user" />
 				<strong>{user.name}</strong>
 				{isMe && ' (you)'}
 				{isMain && <span title="Primary Author">*</span>}
@@ -86,7 +86,7 @@ export default class ItemTeambuilding extends Component {
 		const friendId = friend.id;
 		return (
 			<Button onClick={() => this.addToTeam(friendId)} key={friend.id} title={`Click to add ${friend.name}`}>
-				<Icon>user</Icon><span>{friend.name}</span>
+				<Icon src="user" /><span>{friend.name}</span>
 			</Button>
 		);
 	}
@@ -124,7 +124,7 @@ export default class ItemTeambuilding extends Component {
 		if (node.subsubtype == 'compo') {
 			if (authors.length < 2) {
 				ShowTeamBuilding.push(<div class="-items">You are competing in the {node.subsubtype}. You cannot add others to your {node.subtype}</div>);
-				ShowTeamBuilding.push(<div class="-footer"><Icon small baseline src="info" /> You can change this if you select a different event</div>);
+				ShowTeamBuilding.push(<div class="-footer"><Icon class="-small -baseline" src="info" /> You can change this if you select a different event</div>);
 				includeBuilding = false;
 			}
 			else if (authors.length > 0) {
@@ -149,7 +149,7 @@ export default class ItemTeambuilding extends Component {
 				ShowTeamBuilding.push((
 					<div class="-footer">
 						<span>To add team members, you first need to add them as friends. Visit each-others user pages and click the
-						<span class="_nowrap"><Icon baseline small src="user-plus" /> <strong>Follow</strong></span> button to become friends.
+						<span class="_nowrap"><Icon class="-baseline -small" src="user-plus" /> <strong>Follow</strong></span> button to become friends.
 						When you are done, return here and you can add them to your team.</span>
 					</div>
 				));
@@ -162,9 +162,7 @@ export default class ItemTeambuilding extends Component {
 				<div class="-label">Author(s)</div>
 				<div class="-body">
 					{ShowTeamBuilding}
-					{error &&
-						<div class="team-building-warning">{error}</div>
-					}
+					{error && <div class="team-building-warning">{error}</div>}
 				</div>
 			</ContentCommonBody>
 		);

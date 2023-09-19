@@ -16,7 +16,7 @@ export default function SidebarGuides() {
 	return <>
 		<div class="sidebar-base sidebar-shortlist sidebar-guides">
 			<div class="-title _font2">
-				<Icon baseline src="article" />
+				<Icon class="-baseline" src="article" />
 				<span class="-text">Community & Guides</span>
 			</div>
 			{Object.keys(links).map(key => {
@@ -24,7 +24,7 @@ export default function SidebarGuides() {
 
 				return <>
 					<Link class="-item" href={links[key].href}>
-						<Icon baseline gap>{links[key].icon != null ? links[key].icon : 'star-full'}</Icon>
+						<Icon class="-baseline -gap" src={links[key].icon != null ? links[key].icon : 'star-full'} />
 						<span class="-title">{key}</span>{subtext}
 					</Link>
 				</>;

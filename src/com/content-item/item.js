@@ -582,18 +582,19 @@ export default class ContentItem extends Component {
 						<Button onClick={this.onSetUnfinished} class={node.subsubtype == 'unfinished' ? "-selected" : ""} disabled={!allowUnfinished}><Icon src="trash" /><div>Unfinished</div></Button>
 					</ContentCommonNav>
 					<div class="-info">
-						{tooManyAuthorsForCompo && <div class="-warning"><Icon baseline small src="warning" /> COMPO unavailable: Too many authors.</div>}
+						{tooManyAuthorsForCompo && <div class="-warning"><Icon class="-baseline -small" src="warning" /> COMPO unavailable: Too many authors.</div>}
 					</div>
 					<div class="-footer">
 						<p>
-							<Icon baseline small src="info" />
+							<Icon class="-baseline -small" src="info" />
 							<span>If a button is disabled, you haven't checked-off enough items in the <strong>Submission Checklist</strong> above to qualify for the category.</span>
 						</p>
 						<p>
 							If your event format is correct (filled background), you <strong>don't</strong> need to change or update this.
 						</p>
 						<p>
-							<Icon baseline src="warning" class="-warning" />
+							{/* MK TODO: Remove the dash from -warmning */}
+							<Icon class="-warning -baseline" src="warning" />
 							<span> <strong>IMPORTANT:</strong> You can't <strong>Publish</strong> until you finish this step!</span>
 						</p>
 					</div>
@@ -643,18 +644,18 @@ export default class ContentItem extends Component {
 					Title = "Ratings received";
 					Warning = Score < 20.0;
 					if ( !Warning ) {
-						Icon = <Icon baseline small src="checkmark" />;
+						Icon = <Icon class="-baseline -small" src="checkmark" />;
 						HoverTitle = "This will be scored";
 					}
 					else {
-						Icon = <Icon baseline small src="warning" />;
+						Icon = <Icon class="-baseline -small" src="warning" />;
 						HoverTitle = "The minimum needed to score is about 20";
 					}
 				}
 				else if ( Metric.key == 'given' ) {
 					Title = "Ratings given";
 					if ( Score > 25 ) {
-						Icon = <Icon baseline small src="checkmark" />;
+						Icon = <Icon class="-baseline -small" src="checkmark" />;
 					}
 				}
 				else if ( Metric.key == 'feedback' ) {
@@ -907,7 +908,7 @@ export default class ContentItem extends Component {
 							<span>Since some games are not meant to be Funny or Moody, or they don't make good use of the theme, you can choose to opt-out of these categories too. Opting out of these is optional.</span>
 						</p>
 						<p>
-							<Icon small baseline src="info" />
+							<Icon class="-baseline -small" src="info" />
 							<span>NOTE: If you opted out of a category by mistake, you may need more ratings to ensure you get a score in that category.</span>
 						</p>
 					</div>
@@ -929,12 +930,12 @@ export default class ContentItem extends Component {
 						<div class="-path">{node.meta && node.meta.cover ? node.meta.cover : "" }</div>
 						<label>
 							<input type="file" name="asset" style="display: none;" onChange={this.onUpload.bind(this, 'cover')} />
-							<Button class="-button"><Icon small baseline gap>upload</Icon>Upload</Button>
+							<Button class="-button"><Icon class="-small -baseline -gap" src="upload" />Upload</Button>
 						</label>
 						{ShowImage}
 					</div>
 					<div class="-footer">
-						<div><Icon small baseline src="info" /> Recommended Size: 640x512 (i.e. 5:4 aspect ratio). Other sizes will be scaled+cropped to fit. GIFs will not animate.</div>
+						<div><Icon class="-small -baseline" src="info" /> Recommended Size: 640x512 (i.e. 5:4 aspect ratio). Other sizes will be scaled+cropped to fit. GIFs will not animate.</div>
 					</div>
 				</ContentCommonBody>
 			);
@@ -955,7 +956,7 @@ export default class ContentItem extends Component {
 						<UICheckbox onClick={this.onDontRateMe} value={state.dontRateMe}>Opt-out of ratings</UICheckbox>
 					</div>
 					<div class="-footer">
-						<Icon small baseline src="info" />
+						<Icon class="-small -baseline" src="info" />
 						<span>If you'd like to entirely opt-out of ratings, choose this, and the Extra format below.</span>
 					</div>
 				</ContentCommonBody>
@@ -968,10 +969,11 @@ export default class ContentItem extends Component {
 				<ContentCommonBody class="-show-comments -body">
 					<div class="-label">Feedback</div>
 					<div class="-items">
+						{/* MK TODO: title should not necssarily be used here */}
 						<UICheckbox onClick={this.onAnonymousComments} value={state.allowAnonymous}>Allow anonymous comments <Icon src="warning" title="Do this at your own risk" /></UICheckbox>
 					</div>
 					<div class="-footer">
-						<Icon small baseline src="info" />
+						<Icon class="-small -baseline" src="info" />
 						<span>You should only do this if you want the most critical of feedback.</span>
 					</div>
 				</ContentCommonBody>
@@ -1000,8 +1002,8 @@ export default class ContentItem extends Component {
 			ShowPostTips = (
 				<ContentCommonBody class="-body">
 					<div class="-footer">
-						<div><Icon small baseline src="info" /> Add screenshots to your description via the <strong>Upload Image</strong> link above. Keep GIFs less than 640 pixels wide.</div>
-						<div><Icon small baseline src="info" /> You can embed <Link href="https://youtube.com">YouTube</Link> video in your description by pasting a YouTube link on a blank line ("embed code" not required).</div>
+						<div><Icon class="-small -baseline" src="info" /> Add screenshots to your description via the <strong>Upload Image</strong> link above. Keep GIFs less than 640 pixels wide.</div>
+						<div><Icon class="-small -baseline" src="info" /> You can embed <Link href="https://youtube.com">YouTube</Link> video in your description by pasting a YouTube link on a blank line ("embed code" not required).</div>
 					</div>
 				</ContentCommonBody>
 			);

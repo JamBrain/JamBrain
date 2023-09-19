@@ -62,12 +62,12 @@ export default class ContentItemEmbed extends Component {
 				);
 			}
 			else {
-				let placeHolder = cover ? <Image src={cover} style={"width: "+width+"px; height: "+height+"px;"} /> : <div style={"width: "+width+"px; height: "+height+"px;"} />;
+				let placeHolder = cover ? <Image src={cover} width={width} height={height} /> : <div style={"width: "+width+"px; height: "+height+"px;"} />;
 
 				return (
 					<Button class="embed -preview" onclick={this.onPlay}>
 						{placeHolder}
-						<Icon>play</Icon>
+						<Icon src="play" />
 					</Button>
 				);
 			}

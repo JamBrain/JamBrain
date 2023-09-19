@@ -10,12 +10,12 @@ export default class FilterSpecial extends Component {
             if (!value) {
                 value = text;
             }
-            ShowRemove = <button onClick={() => onClick(value)}><Icon>cross</Icon></button>;
+            ShowRemove = <button onClick={() => onClick(value)}><Icon src="cross" /></button>;
         }
 
         return (
-            <div class='filter-special'>
-                <Icon class='icon'>{icon}</Icon>{text}
+            <div class="filter-special">
+                <Icon class='icon' src={icon} />{text}
                 {ShowRemove}
             </div>
         );

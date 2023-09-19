@@ -155,13 +155,13 @@ export default class ContentEventSlaughter extends Component {
 
 	renderIcon( value ) {
 		if ( value === VOTE_YES )
-			return <Icon>checkmark</Icon>;
+			return <Icon src="checkmark" />;
 		else if ( value === VOTE_NO )
-			return <Icon>cross</Icon>;
+			return <Icon src="cross" />;
 		else if ( value === VOTE_FLAG )
-			return <Icon>flag</Icon>;
+			return <Icon src="flag" />;
 
-		return <Icon>fire</Icon>;
+		return <Icon src="fire" />;
 	}
 
 	renderRecentQueue() {
@@ -350,7 +350,7 @@ export default class ContentEventSlaughter extends Component {
 					</div>
 					<div class="-other-buttons">
 						<div class="-title"><span>If inappropriate or offensive, you can </span><Button class="-flag" onClick={this.submitFlagVote}>{this.renderIcon(VOTE_FLAG)}<span>Flag</span></Button><span> it.</span></div>
-						<div class="-info"><Icon>info</Icon><span> You can use <strong>Y</strong> and <strong>N</strong> as hotkeys.</span></div>
+						<div class="-info"><Icon src="info" /><span> You can use <strong>Y</strong> and <strong>N</strong> as hotkeys.</span></div>
 						<div><strong>Themes Slaughtered:</strong> <span>{Object.keys(state.votes).length}</span></div>
 					</div>
 					{StatsAndDetails}

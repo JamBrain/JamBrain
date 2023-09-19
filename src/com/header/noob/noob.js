@@ -29,7 +29,7 @@ export default class ContentHeaderNoob extends Component {
 						<Link href="/about">Ludum Dare</Link> is an online event where games are made from scratch in a weekend. Check us out every April and October!
 					</p>
 				</Section>
-				<Button class="close" onClick={this.onClick}><Icon>cross</Icon></Button>
+				<Button class="close" onClick={this.onClick}><Icon src="cross" /></Button>
 			</BasicAside>
 		);
 	}

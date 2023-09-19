@@ -2,59 +2,57 @@ import {Component} from 'preact';
 import {Icon} from 'com/ui';
 import './youtube.less';
 
+// MK TODO: Can this be stateless? i.e. "on click", replace the element entirely
+
 export default class YoutubeEmbed extends Component {
 	constructor( props ) {
 		super(props);
 
 		this.state = {
-			'iframe': false
+			'show': false
 		};
 
 		this.onClick = this.onClick.bind(this);
 	}
 
 	onClick( e ) {
-		this.setState({'iframe': true});
+		this.setState({'show': true});
 	}
 
 	render( props, state ) {
-		var yt_thumbnail_prefix = "https://i.ytimg.com/vi/";
-		var yt_thumbnail_suffix = "/mqdefault.jpg";
+		const {'id': video_id, time, ...otherProps} = props;
+		let args = new URLSearchParams('autoplay=1');
 
-		var video_id = props.id;
-
-		var args = ['autoplay=1'];
-		// MK: Is this a bug or is this code unused?
-		if ( url.args.t ) {
-			args.push('start=' + Number(url.args.t));
+		if ( time ) {
+			args.append('start', time);
 		}
 
-		if ( state.iframe ) {
+		if ( state.show ) {
 			return (
-				<div class="embed-video -youtube">
+				<div class="embed-video youtube">
 					<div class="-video">
-						<iframe src={'https://www.youtube.com/embed/' + video_id + '?' + args.join('&')} frameBorder="0" allowFullScreen allow="autoplay; fullscreen"></iframe>
+						<iframe src={`https://www.youtube.com/embed/${video_id}?${args}`} frameBorder="0" allowFullScreen allow="autoplay; fullscreen" />
 					</div>
 				</div>
 			);
 		}
 
 		return (
-			<div class="embed-video -youtube">
+			<div class="embed-video youtube">
 				<div class="-thumbnail">
 					<div class="-overlay" onClick={this.onClick} >
 						<div class="-play">
-							<Icon middle>play</Icon>
+							<Icon class="-middle" src="play" />
 						</div>
 						<div class="-external">
 							<a title="Open in new tab" href={"//www.youtube.com/watch?v="+video_id} target="_blank" rel="noopener" onClick={(e) => {
 								e.stopPropagation();
 							}}>
-								<Icon middle block>youtube</Icon>
+								<Icon class="-middle -block" src="youtube" />
 							</a>
 						</div>
 					</div>
-					<img alt="Youtube video thumbnail" src={yt_thumbnail_prefix + video_id + yt_thumbnail_suffix}/>
+					<img alt="Youtube video thumbnail" src={`https://i.ytimg.com/vi/${video_id}/mqdefault.jpg`}/>
 				</div>
 			</div>
 		);

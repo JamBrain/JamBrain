@@ -15,8 +15,8 @@ import $Notification					from 'backend/js/notification/notification';
 
 const LogoButton = () =>
 <Button title="Ludum Dare" href="/" class="logo">
-	<Icon class="if-sidebar-block" baseline src="ludum" /><Icon class="if-sidebar-block" baseline src="dare" />
-	<Icon class="if-no-sidebar-block" baseline src="l-udum" /><Icon class="if-no-sidebar-block" baseline src="d-are" />
+	<Icon class="if-sidebar-block -baseline" src="ludum" /><Icon class="if-sidebar-block -baseline" src="dare" />
+	<Icon class="if-no-sidebar-block -baseline" src="l-udum" /><Icon class="if-no-sidebar-block -baseline" src="d-are" />
 </Button>;
 
 const SearchButton = () => <IconButton icon="search" class="bar-icon" href="?dialog=search" />;
@@ -290,7 +290,7 @@ export default class PageNavBar extends Component {
 					// probably not show the dropdown, but load new comments into the feed.
 					this.setState({'showNotifications': !this.state.showNotifications});
 				}}>
-					<Icon baseline>bubble</Icon>
+					<Icon class="-baseline" src="bubble" />
 					{NotificationCount}
 				</Button>
 			);

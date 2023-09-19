@@ -249,7 +249,7 @@ export default class ContentEventList extends Component {
 			// Generate the page
 			return (
 				<div class="-body">
-					<h2><Icon small baseline gap>ticket</Icon>{Title}</h2>
+					<h2><Icon class="-small -baseline -gap" src="ticket" />{Title}</h2>
 					{Body}
 				</div>
 			);

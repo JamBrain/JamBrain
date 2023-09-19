@@ -206,7 +206,7 @@ export default class NotificationItem extends Component {
 			const NodeAuthor = this.getNodeAuthorAsObjectJSX(notification);
 			return (
 				<Button {...navProps} >
-					<Icon>quesition</Icon>{timePrefix} {CommentAuthor} caused unhandled notification {NotificationType} for {NodeAuthor} {NodeType} "<em>{node.name}</em>"
+					<Icon src="quesition" />{timePrefix} {CommentAuthor} caused unhandled notification {NotificationType} for {NodeAuthor} {NodeType} "<em>{node.name}</em>"
 				</Button>
 			);
 		}
@@ -214,7 +214,7 @@ export default class NotificationItem extends Component {
 			const NodeAuthor = this.getNodeAuthorAsSubjectJSX(notification);
 			return (
 				<Button {...navProps} >
-					<Icon>quesition</Icon>{timePrefix} {NodeAuthor} caused unhandled notification {NotificationType} with their {NodeType} "<em>{node.name}</em>"
+					<Icon src="quesition" />{timePrefix} {NodeAuthor} caused unhandled notification {NotificationType} with their {NodeType} "<em>{node.name}</em>"
 				</Button>
 			);
 		}
@@ -227,7 +227,7 @@ export default class NotificationItem extends Component {
 
 		return (
 			<Button {...navProps} >
-				<Icon>bubble-empty</Icon>{timePrefix} {CommentAuthor} commented on your {NodeType} "<em>{node.name}</em>"
+				<Icon src="bubble-empty" />{timePrefix} {CommentAuthor} commented on your {NodeType} "<em>{node.name}</em>"
 			</Button>
 		);
 	}
@@ -240,7 +240,7 @@ export default class NotificationItem extends Component {
 
 		return (
 			<Button {...navProps} >
-				<Icon>{comment.length > 1 ? 'bubbles' : 'bubble'}</Icon>{timePrefix} {CommentAuthor} commented on {NodeAuthor} {NodeType} "<em>{node.name}</em>"
+				<Icon src={comment.length > 1 ? 'bubbles' : 'bubble'} />{timePrefix} {CommentAuthor} commented on {NodeAuthor} {NodeType} "<em>{node.name}</em>"
 			</Button>
 		);
 	}
@@ -252,7 +252,7 @@ export default class NotificationItem extends Component {
 
 		return (
 			<Button {...navProps} >
-				<Icon>gamepad</Icon> {timePrefix} {NodeAuthor} published a {NodeType} "<em>{node.name}</em>"
+				<Icon src="gamepad" /> {timePrefix} {NodeAuthor} published a {NodeType} "<em>{node.name}</em>"
 			</Button>
 		);
 	}
@@ -263,7 +263,7 @@ export default class NotificationItem extends Component {
 
 		return (
 			<Button {...navProps} >
-				<Icon>feed</Icon> {timePrefix} {NodeAuthor} posted "<em>{node.name}</em>"
+				<Icon src="feed" /> {timePrefix} {NodeAuthor} posted "<em>{node.name}</em>"
 			</Button>
 		);
 	}
@@ -277,7 +277,7 @@ export default class NotificationItem extends Component {
 			const NodeAuthor = this.getNodeAuthorAsObjectJSX(notification);
 			return (
 				<Button {...navProps} >
-					<Icon>at</Icon> {timePrefix} {CommentAuthor} mentioned you in a comment on {NodeAuthor} {NodeType} "<em>{node.name}</em>"
+					<Icon src="at" /> {timePrefix} {CommentAuthor} mentioned you in a comment on {NodeAuthor} {NodeType} "<em>{node.name}</em>"
 				</Button>
 			);
 		}
@@ -285,7 +285,7 @@ export default class NotificationItem extends Component {
 			const NodeAuthor = this.getNodeAuthorAsSubjectJSX(notification);
 			return (
 				<Button {...navProps} >
-					<Icon>at</Icon> {timePrefix} {NodeAuthor} mentioned you in their {NodeType} "<em>{node.name}</em>"
+					<Icon src="at" /> {timePrefix} {NodeAuthor} mentioned you in their {NodeType} "<em>{node.name}</em>"
 				</Button>
 			);
 		}

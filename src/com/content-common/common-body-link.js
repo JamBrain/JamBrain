@@ -60,7 +60,7 @@ export default class ContentCommonBodyLink extends Component {
 	}
 
 	render( props, state ) {
-		let UrlPlaceholder = props.urlPlaceholder ? props.urlPlaceholder : 'URL (example: http://some.website.com/file.zip)';
+		let urlPlaceholder = props.urlPlaceholder ?? 'URL (example: http://some.website.com/file.zip)';
 		const {index, tag} = this.getTagAndIndex();
 		if ( props.editing && state.itemlist && state.indexes ) {
 			return (
@@ -81,30 +81,30 @@ export default class ContentCommonBodyLink extends Component {
 					<InputText class="-url"
 						value={props.url}
 						onModify={props.onModifyUrl}
-						placeholder={UrlPlaceholder}
+						placeholder={urlPlaceholder}
 						maxLength={512}
 					/>
-					<Button onClick={props.onRemove} title="Remove"><Icon>cross</Icon></Button>
+					<Button onClick={props.onRemove} title="Remove"><Icon src="cross" /></Button>
 				</div>
 			);
 		}
 		else if ( state.itemlist && props.url ) {
-			let Text = Sanitize.sanitize_URI(props.url);
-			let Href = Text.indexOf('//') != -1 ? Text : '';
+			let text = Sanitize.sanitize_URI(props.url);
+			let href = text.indexOf('//') != -1 ? text : '';
 
-			let ShowLink = Href ? (<a href={Href} target="_blank">{Text}</a>) : <span>{Text}</span>;
+			let showLink = href ? (<a href={href} target="_blank">{text}</a>) : <span>{text}</span>;
 
-			let ShowName = props.name ? props.name : tag[1];
+			let showName = props.name ? props.name : tag[1];
 
-			let Icon = 'earth';
+			let icon = 'earth';
 			if ( state.items[index].icon ) {
-				Icon = state.items[index].icon;
+				icon = state.items[index].icon;
 			}
 
 			return (
 				<div class={`link ${props.class ?? ''}`}>
-					<div class="-name" title={'$'+tag[0]+" - "+tag[1]}><Icon small>{Icon}</Icon> <span>{ShowName}</span></div>
-					<div class="-url">{ShowLink}</div>
+					<div class="-name" title={'$'+tag[0]+" - "+tag[1]}><Icon class="-small" src={icon} /> <span>{showName}</span></div>
+					<div class="-url">{showLink}</div>
 				</div>
 			);
 		}

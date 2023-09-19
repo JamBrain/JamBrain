@@ -1,26 +1,20 @@
-import { Component } from 'preact';
 import './yesno.less';
 import {Icon} from 'com/ui';
 
-export default class LabelYesNo extends Component {
-	constructor( props ) {
-		super(props);
+export default function LabelYesNo( props ) {
+	const {value} = props;
+	if ( Number(value) > 0 ) {
+		return (
+			<div class="label-yesno">
+				<Icon src="checkmark" />
+			</div>
+		);
 	}
-
-	render( props ) {
-		if ( Number(props.value) > 0 ) {
-			return (
-				<div class="label-yesno">
-					<Icon>checkmark</Icon>
-				</div>
-			);
-		}
-		else if ( Number(props.value) <= 0 ) {
-			return (
-				<div class="label-yesno">
-					<Icon>cross</Icon>
-				</div>
-			);
-		}
+	else if ( Number(value) <= 0 ) {
+		return (
+			<div class="label-yesno">
+				<Icon src="cross" />
+			</div>
+		);
 	}
 }

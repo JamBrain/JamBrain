@@ -90,12 +90,12 @@ export default class GamesFilter extends Component {
 			let Items = [
 				[
 					1,
-					<div><Icon>tag</Icon><div>Featured Event</div></div>,
+					<div><Icon src="tag" /><div>Featured Event</div></div>,
 					<Link href={Path+Filter+WithSubFilter+''} class="-click-catcher" />,
 				],
 				[
 					2,
-					<div><Icon>tag</Icon><div>All Events</div></div>,
+					<div><Icon src="tag" /><div>All Events</div></div>,
 					<Link href={Path+Filter+WithSubFilter+'/everything'} class="-click-catcher" />,
 				],
 			];
@@ -116,27 +116,27 @@ export default class GamesFilter extends Component {
 			let Items = [
 				[
 					1,
-					<div><Icon>gamepad</Icon><div>All</div></div>,
+					<div><Icon src="gamepad" /><div>All</div></div>,
 					<Link href={Path+Filter+'/all'+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					2,
-					<div><Icon>trophy</Icon><div>Jam</div></div>,
+					<div><Icon src="trophy" /><div>Jam</div></div>,
 					<Link href={Path+Filter+'/jam'+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					3,
-					<div><Icon>trophy</Icon><div>Compo</div></div>,
+					<div><Icon src="trophy" /><div>Compo</div></div>,
 					<Link href={Path+Filter+'/compo'+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					4,
-					<div><Icon>trophy</Icon><div>Extra</div></div>,
+					<div><Icon src="trophy" /><div>Extra</div></div>,
 					<Link href={Path+Filter+'/extra'+WithSubSubFilter} class="-click-catcher" />,
 				],
 				[
 					5,
-					<div><Icon>trash</Icon><div>Unfinished</div></div>,
+					<div><Icon src="trash" /><div>Unfinished</div></div>,
 					<Link href={Path+Filter+'/unfinished'+WithSubSubFilter} class="-click-catcher" />,
 				],
 			];
@@ -248,32 +248,32 @@ export default class GamesFilter extends Component {
 			let Items = [
 				[
 					1,
-					<div><Icon>ticket</Icon><div>Smart</div></div>,
+					<div><Icon src="ticket" /><div>Smart</div></div>,
 					<Link href={Path+'smart'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					2,
-					<div><Icon>ticket</Icon><div>Classic</div></div>,
+					<div><Icon src="ticket" /><div>Classic</div></div>,
 					<Link href={Path+'classic'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					3,
-					<div><Icon>help</Icon><div>Danger</div></div>,
+					<div><Icon src="help" /><div>Danger</div></div>,
 					<Link href={Path+'danger'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					4,
-					<div><Icon>gift</Icon><div>Zero</div></div>,
+					<div><Icon src="gift" /><div>Zero</div></div>,
 					<Link href={Path+'zero'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					5,
-					<div><Icon>bubbles</Icon><div>Feedback</div></div>,
+					<div><Icon src="bubbles" /><div>Feedback</div></div>,
 					<Link href={Path+'feedback'+WithSubFilter} class="-click-catcher" />,
 				],
 				[
 					6,
-					<div><Icon>todo</Icon><div>Grade</div></div>,
+					<div><Icon src="todo" /><div>Grade</div></div>,
 					<Link href={Path+'grade'+WithSubFilter} class="-click-catcher" />,
 				],
 			];

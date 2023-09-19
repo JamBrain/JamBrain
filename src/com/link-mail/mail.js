@@ -1,29 +1,21 @@
-import { Component} from 'preact';
 import './mail.less';
 
 import {Icon} from 'com/ui';
 
-// TODO: Migrate me in to `NavLink`/`Link`
+// MK TODO: Migrate me to <Link />
+// TODO: obfuscate this somehow so it's not so easy to scrape
 
-export default class LinkMail extends Component {
-	constructor( props ) {
-		super(props);
+export default function LinkMail( props ) {
+	let {href, ...otherProps} = props;// || (props.children && props.children.length && props.children[0]) || "";
+	let mail = '???';
+
+	if ( href.startsWith('mailto:') ) {
+		mail = href.slice(7); // strlen('mailto:')
+	}
+	else {
+		mail = href;
+		href = 'mailto:' + href;
 	}
 
-	render( props/*, state*/ ) {
-		let Href = props.href;// || (props.children && props.children.length && props.children[0]) || "";
-		let Mail = '???';
-
-		if ( Href.indexOf('mailto:') === 0 ) {
-			Mail = props.slice(7); // strlen('mailto:')
-		}
-		else {
-			Mail = Href;
-			Href = 'mailto:' + Href;
-		}
-
-		return (
-			<a class={`link-mail ${props.class ?? ''}`} href={Href} title={Mail}><Icon gap small baseline>mail</Icon>{Mail}</a>
-		);
-	}
+	return <a class={`link-mail ${props.class ?? ''}`} href={href} title={mail}><Icon class="-gap -small -baseline" src=">mail" />{mail}</a>;
 }

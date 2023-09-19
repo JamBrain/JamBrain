@@ -101,8 +101,8 @@ export default class ContentUserFollowing extends Component {
             return (
                 <ContentCommon {...props}>
 					<ContentCommonBody>
-						<p>To add someone to your team, you need to both follow each other. Do so by visiting each others user pages, and clicking the <span><Icon baseline small gap>user-plus</Icon><strong>Follow</strong></span> button.</p>
-						<p>Users that follow each other will be shown below as <span><Icon baseline small gap>users</Icon><strong>Friends</strong></span>.</p>
+						<p>To add someone to your team, you need to both follow each other. Do so by visiting each others user pages, and clicking the <span><Icon class="-baseline -small -gap" src="user-plus" /><strong>Follow</strong></span> button.</p>
+						<p>Users that follow each other will be shown below as <span><Icon class="-baseline -small -gap" src="users" /><strong>Friends</strong></span>.</p>
 					</ContentCommonBody>
 					{following}
                 </ContentCommon>

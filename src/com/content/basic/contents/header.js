@@ -11,7 +11,7 @@ import {Icon, Link} from "com/ui";
  * @param {string} [props.href]
  */
 export default function Header( props ) {
-	let titlePrefix = props.titleIcon ? <Icon baseline small src={props.titleIcon} /> : null;
+	let titlePrefix = props.titleIcon ? <Icon class="-baseline -small" src={props.titleIcon} /> : null;
 
 	return (
 		<header class={props.class}>

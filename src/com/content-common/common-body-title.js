@@ -6,7 +6,7 @@ import BodyLabel from "./body/body-label";
 
 
 export function BodyTitle( props ) {
-	let titlePrefix = props.titleIcon ? (<Icon baseline small class="prefix" src={props.titleIcon} />) : null;
+	let titlePrefix = props.titleIcon ? <Icon class="prefix -baseline -small" src={props.titleIcon} /> : null;
 	let titleText = props.title ? props.title : "Untitled";
 
 	let titleBody = props.href ?

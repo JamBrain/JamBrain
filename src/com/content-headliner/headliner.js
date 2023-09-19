@@ -33,7 +33,7 @@ export default class ContentHeadliner extends Component {
 			if ( props.love ) {
 				Subtext.push(
 					<div title="Love" class="-statistic">
-						<Icon small baseline>heart</Icon> <span>{node.love}</span>
+						<Icon class="-small -baseline" src="heart" /> <span>{node.love}</span>
 					</div>
 				);
 			}
@@ -41,7 +41,7 @@ export default class ContentHeadliner extends Component {
 			if ( props.comments ) {
 				Subtext.push(
 					<div title="Comments" class="-statistic">
-						<Icon small baseline>bubble</Icon> <span>{node.comments}</span>
+						<Icon class="-small -baseline" src="bubble" /> <span>{node.comments}</span>
 					</div>
 				);
 			}
@@ -49,7 +49,7 @@ export default class ContentHeadliner extends Component {
 			if ( props.games && node.games ) {
 				Subtext.push(
 					<div title="Games" class="-statistic">
-						<Icon small baseline>gamepad</Icon> <span>{node.games}</span>
+						<Icon class="-small -baseline" src="gamepad" /> <span>{node.games}</span>
 					</div>
 				);
 			}
@@ -57,7 +57,7 @@ export default class ContentHeadliner extends Component {
 			if ( props.articles && node.articles ) {
 				Subtext.push(
 					<div title="Articles" class="-statistic">
-						<Icon small baseline>article</Icon> <span>{node.articles}</span>
+						<Icon class="-small -baseline" src="article" /> <span>{node.articles}</span>
 					</div>
 				);
 			}
@@ -153,7 +153,7 @@ export default class ContentHeadliner extends Component {
 		let Flag = [];
 		// The Icon
 		if ( props.icon ) {
-			Flag.push(<Icon big>{props.icon}</Icon>);
+			Flag.push(<Icon class="-big" src={props.icon} />);
 		}
 		// The Name
 		if ( props.name ) {
@@ -177,7 +177,7 @@ export default class ContentHeadliner extends Component {
 		else if ( props.more ) {
 			return (
 				<Button class={`item -more-item ${props.childclass ?? ''}`} href={props.more}>
-					<Icon>circle</Icon><Icon>circle</Icon><Icon>circle</Icon>
+					<Icon src="circle" /><Icon src="circle" /><Icon src="circle" />
 				</Button>
 			);
 		}

@@ -82,7 +82,7 @@ export default class ToolTip extends Component {
 			ToolTipButtonContent = props.ToolTipButtonContent;
 		}
 		else {
-			ToolTipButtonContent = (<Icon small baseline gap>info</Icon>);
+			ToolTipButtonContent = <Icon class="-small -baseline -gap" src="info" />;
 
 		}
 

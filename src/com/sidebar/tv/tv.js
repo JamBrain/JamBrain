@@ -25,8 +25,8 @@ export default class SidebarTV extends Component {
 
 		this.serviceIcons = [
 			(<div />),					// Null //
-			(<Icon>twitch</Icon>),	// Twitch //
-			(<Icon>youtube</Icon>),	// YouTube //
+			(<Icon src="twitch" />),	// Twitch //
+			(<Icon src="youtube" />),	// YouTube //
 			(<div></div>),
 			(<div></div>),
 			(<div></div>),
@@ -200,9 +200,9 @@ export default class SidebarTV extends Component {
 							window.location.hash = "#tv/"+this.services[active.service_id]+'/'+active.user_slug;
 						}}>
 						<div class="-img"><Image src={active.thumbnail_180p} srcError={this.FailImage} /></div>
-						<div class="-live"><Icon baseline small>circle</Icon> <span class="-text">LIVE</span></div>
+						<div class="-live"><Icon class="-baseline -small" src="circle" /> <span class="-text">LIVE</span></div>
 						<div class={'-name stream-'+this.services[active.service_id]}>{this.serviceIcons[active.service_id]} <span class="-text">{active.user_name}</span></div>
-						<div class="-viewers"><Icon baseline>tv</Icon> <span class="-text">{active.viewers}</span></div>
+						<div class="-viewers"><Icon class="-baseline" src="tv" /> <span class="-text">{active.viewers}</span></div>
 						<div class="-external" onClick={e => {
 							e.stopPropagation();
 							if ( this.services[active.service_id] == "twitch" ) {
@@ -211,18 +211,18 @@ export default class SidebarTV extends Component {
 							else if ( this.services[active.service_id] == "youtube" ) {
 									//TODO: add youtube action, when youtube displays in TV
 							}
-						}}><Icon>twitch</Icon></div>
-						<div class="-play"><Icon>play</Icon></div>
+						}}><Icon src="twitch" /></div>
+						<div class="-play"><Icon src="play" /></div>
 					</div>
 					<div class="-detail" title={active.title}>
-						<Icon top>quotes-left</Icon>
-						<Icon bottom>quotes-right</Icon>
+						<Icon class="-top" src="quotes-left" />
+						<Icon class="bottom" src="quotes-right" />
 						<div>{active.title}</div>
 					</div>
 					<div class="-browse">
 						{this.showOthers(others, active)}
 						<Button class="-more" href="https://www.twitch.tv/directory/all/tags/ludumdare" title="MORE">
-							<div><Icon>circle</Icon> <Icon>circle</Icon> <Icon>circle</Icon></div>
+							<div><Icon src="circle" /> <Icon src="circle" /> <Icon src="circle" /></div>
 						</Button>
 					</div>
 				</div>

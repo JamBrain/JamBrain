@@ -146,12 +146,12 @@ export default class SidebarCalendar extends Component {
 			var ShowIcon = null;
 			if ( col.year == 2018 && col.month == 4 /*6*/ ) { // borken
 				if ( col.day === 15 ) {
-					ShowIcon = <Icon class="-icon">checker</Icon>;
+					ShowIcon = <Icon class="-icon" src="checker" />;
 				}
 			}
 			if ( col.year == 2018 && col.month == 3 && (col.day >= 20 && col.day <= 23) ) {
 				if ( col.day === 1 ) {
-					ShowIcon = <Icon class="-icon">trophy</Icon>;
+					ShowIcon = <Icon class="-icon" src="trophy" />;
 				}
 				props.class.push('scheduled');
 			}

@@ -11,10 +11,11 @@ export default function PageTag( props ) {
 	const {node, user, path, extra, ...otherProps} = props;
 	const methods = ['target'];
 
+	// TODO: the <br />'s are gross
 	return <>
 		<div id="content">
 			<PageNavRoot {...props} />
-			<Common node={node} user={user} header={node.name} headerIcon='tag'>
+			<Common node={node} user={user} header={node.name} headerIcon="tag">
 				<CommonBody>
 					<br /><br /><br />
 					<div><Link href={node.path+'/..'}><span><Icon src="previous" /> </span>../</Link></div>;

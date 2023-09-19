@@ -65,42 +65,42 @@ export default class NotificationsFilter extends Component {
 					value={Mention !== false}
 					onClick={this.onToggleMention}
 				>
-					<Icon>at</Icon><span>Mentions{hiddenMention}</span>
+					<Icon src="at" /><span>Mentions{hiddenMention}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={Feedback !== false}
 					onClick={this.onToggleFeedback}
 				>
-					<Icon>bubble-empty</Icon><span>Feedback{hiddenFeedback}</span>
+					<Icon src="bubble-empty" /><span>Feedback{hiddenFeedback}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={Comment !== false}
 					onClick={this.onToggleComments}
 				>
-					<Icon>bubble</Icon><span>Comments{hiddenComments}</span>
+					<Icon src="bubble" /><span>Comments{hiddenComments}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={FriendGame !== false}
 					onClick={this.onToggleFriendGame}
 				>
-					<Icon>gamepad</Icon><span>Friend's games{hiddenFriendGame}</span>
+					<Icon src="gamepad" /><span>Friend's games{hiddenFriendGame}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={FriendPost !== false}
 					onClick={this.onToggleFriendPost}
 				>
-					<Icon>feed</Icon><span>Friend's posts{hiddenFriendPost}</span>
+					<Icon src="feed" /><span>Friend's posts{hiddenFriendPost}</span>
 				</UICheckbox>
 				<UICheckbox
 					class="-filter"
 					value={Other !== false}
 					onClick={this.onToggleOther}
 				>
-					<Icon>question</Icon><span>Other{hiddenOther}</span>
+					<Icon src="question" /><span>Other{hiddenOther}</span>
 				</UICheckbox>
 			</div>
 		);

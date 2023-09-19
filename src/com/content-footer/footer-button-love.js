@@ -48,9 +48,9 @@ export default class ContentFooterButtonLove extends Component {
 		var _class = "footer-button footer-button-love" + (loved ? " loved" : "");
 		return (
 			<div class={_class} onClick={this.onLove}>
-				<Icon class="-hover-hide">heart</Icon>
-				<Icon class="-hover-show -loved-hide">heart-plus</Icon>
-				<Icon class="-hover-show -loved-show">heart-minus</Icon>
+				<Icon class="-hover-hide" src="heart" />
+				<Icon class="-hover-show -loved-hide" src="heart-plus" />
+				<Icon class="-hover-show -loved-show" src="heart-minus" />
 				<div class="-count">{Number.isInteger(lovecount) ? lovecount : node.love}</div>
 			</div>
 		);

@@ -24,29 +24,29 @@ export default class ContentHeadlineEdit extends Component {
 		var ShowPublish = null;
 
 		if ( edit ) {
-			ShowEdit = <Button class="-selected"><Icon>edit</Icon> Edit</Button>;
-			ShowPreview = <Button onClick={onpreview}><Icon>preview</Icon> Preview</Button>;
+			ShowEdit = <Button class="-selected"><Icon src="edit" /> Edit</Button>;
+			ShowPreview = <Button onClick={onpreview}><Icon src="preview" /> Preview</Button>;
 		}
 		else {
-			ShowEdit = <Button onClick={onedit}><Icon>edit</Icon> Edit</Button>;
-			ShowPreview = <Button class="-selected"><Icon>preview</Icon> Preview</Button>;
+			ShowEdit = <Button onClick={onedit}><Icon src="edit" /> Edit</Button>;
+			ShowPreview = <Button class="-selected"><Icon src="preview" /> Preview</Button>;
 		}
 
 		if ( modified ) {
-			ShowSave = <Button class="-available -blue" onClick={onsave}><Icon>save</Icon> Save</Button>;
+			ShowSave = <Button class="-available -blue" onClick={onsave}><Icon src="save" /> Save</Button>;
 		}
 		else {
-			ShowSave = <Button><Icon>save</Icon> Saved</Button>;
+			ShowSave = <Button><Icon src="save" /> Saved</Button>;
 		}
 
 		if ( published ) {
-			ShowPublish = <Button><Icon>publish</Icon> Published</Button>;
+			ShowPublish = <Button><Icon src="publish" /> Published</Button>;
 		}
 		else {
 			ShowPublish = [
-				<Button class="-available -green" onClick={onpublish}><Icon>publish</Icon> Publish Compo</Button>,
-				<Button class="-available -green" onClick={onpublish2}><Icon>publish</Icon> Publish Jam</Button>,
-				<Button class="-available -green" onClick={onpublish3}><Icon>publish</Icon> Publish Extra</Button>
+				<Button class="-available -green" onClick={onpublish}><Icon src="publish" /> Publish Compo</Button>,
+				<Button class="-available -green" onClick={onpublish2}><Icon src="publish" /> Publish Jam</Button>,
+				<Button class="-available -green" onClick={onpublish3}><Icon src="publish" /> Publish Extra</Button>
 			];
 		}
 
