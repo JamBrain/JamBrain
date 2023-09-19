@@ -1,5 +1,5 @@
 import './bar-user.less';
-import {IconButton, Image, Dropdown} from 'com/ui';
+import {ButtonIcon, Image, Dropdown} from 'com/ui';
 
 import $User from 'backend/js/user/user';
 
@@ -27,10 +27,10 @@ export function PageBarUser( props ) {
 		<Dropdown class="-user" right>
 			{/* MK TODO: this Image used block. Was it necessary? Should it use '-center'? */}
 			<Image alt="Your Profile" src={userAvatar} />
-			<IconButton icon="user" href={userURL}>My Profile</IconButton>
-			<IconButton icon="gamepad" href={userURL+'games'}>My Games</IconButton>
+			<ButtonIcon icon="user" href={userURL}>My Profile</ButtonIcon>
+			<ButtonIcon icon="gamepad" href={userURL+'games'}>My Games</ButtonIcon>
 			<div class="-gap" />
-			<IconButton icon="logout" onClick={onLogout}>Logout</IconButton>
+			<ButtonIcon icon="logout" onClick={onLogout}>Logout</ButtonIcon>
 		</Dropdown>
 	);
 }

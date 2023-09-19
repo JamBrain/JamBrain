@@ -5,16 +5,49 @@ import {Icon} from './icon';
 import './button.less';
 const ui_button = 'ui_button';
 
-// <button type="button" /> has no side effects when clicked.
+/**
+ * @callback TargetedMouseEvent
+ * @param {MouseEvent} event
+ */
+
+/**
+ * @typedef ButtonProps
+ * @property {string} [class]
+ * @property {string} [href] - If present, renders as a link instead of a button
+ * @property {string} [target] - Changes the target when 'href' is present
+ * @property {*} [children]
+ * @property {TargetedMouseEvent} [onClick]
+ * @property {string} [type] - button, submit, reset
+ * @property {string} [title] - DON'T USE THIS! Wrap in <Tooltip> instead!
+ */
+
+/**
+ * @param {ButtonProps} props
+ */
+// NOTE: <button type="button" /> has no side effects when clicked.
 export function Button( props ) {
-	const {'type': typeProp = "button", 'class': classProp, ...otherProps} = props;
+	const {href, 'type': typeProp = "button", 'class': classProp, ...otherProps} = props;
 	const classNames = `${ui_button} ${classProp ?? ''}`;
-	return (props.href)
-		? <Link {...otherProps} class={classNames} role="button" />
-		: <button {...otherProps} class={classNames} type={typeProp} />;
+	return href ?
+		<Link href={href} {...otherProps} class={classNames} role="button" /> :
+		<button {...otherProps} class={classNames} type={typeProp} />;
 }
 
-export function IconButton( props ) {
+/**
+ * @typedef IconButtonProps
+ * @property {string} icon - Name of the \<Icon\> to insert
+ * @property {string} [class]
+ * @property {string} [href] - If present, renders as a link instead of a button
+ * @property {string} [target] - Changes the target when 'href' is present
+ * @property {*} [children]
+ * @property {TargetedMouseEvent} [onClick]
+ * @property {string} [type] - button, submit, reset
+*/
+
+/**
+ * @param {IconButtonProps} props
+ */
+export function ButtonIcon( props ) {
 	const {icon, children, ...otherProps} = props;
 	return <Button {...otherProps}>
 		{icon ? <Icon src={icon} /> : null}

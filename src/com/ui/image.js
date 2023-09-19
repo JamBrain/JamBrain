@@ -16,17 +16,21 @@ function onImgError( e ) {
  * @prop {string} [srcError] - fallback image source if the image is blank or it fails to load
  * @prop {string} [alt] - alt text for the image
  * @prop {string} [class] - css classes applied to the image. To align the image, use '-left', '-right', or '-center'.
- * @prop {number} [width]
- * @prop {number} [height]
+ * @prop {number} [width] - width of the image
+ * @prop {number} [height] - height of the image
  * @prop {boolean} [eager] - load the image immediately instead of lazily
+ * @prop {boolean} [internalOnly] - only allow internal or static URLs. i.e. (///image.png) or (/image.png)
  * @prop {boolean} [decorative] - image is decorative and should be ignored by screen readers
  */
 
+// MK TODO: add a flag that allows (disallows) external URLs
+
 /**
+ * Component that wraps \<img\>. Lazy loads images by default, and supports a fallback image.
  * @param {ImageProps} props
  */
 export function Image( props ) {
-	let {src, srcError, alt, eager, decorative, ...otherProps} = props;
+	let {src, srcError, alt, eager, internalOnly, decorative, ...otherProps} = props;
 	// NOTE: eager loading is the default, but we're lazy the default instead
 
 	/** @type {{"loading" ?: "eager" | "lazy"}} */
@@ -36,8 +40,8 @@ export function Image( props ) {
 	//   To make this intention more obvious, we add an empty alt tag if Image is marked as decorative.
 	const altProps = alt ? {alt} : (decorative ? {'alt': ''} : {});
 
-	srcError = srcError ? (srcError.startsWith('///') ? STATIC_ENDPOINT + srcError.slice(2) : srcError) : undefined;
-	src = src ? (src.startsWith('///') ? STATIC_ENDPOINT + src.slice(2) : src) : undefined;
+	srcError = srcError ? (srcError.startsWith('///') ? STATIC_ENDPOINT + srcError.slice(2) : (internalOnly && !srcError.startsWith('/') ? undefined : srcError)) : undefined;
+	src = src ? (src.startsWith('///') ? STATIC_ENDPOINT + src.slice(2) : (internalOnly && !src.startsWith('/') ? undefined : src)) : undefined;
 
 	let errorProps = {};
 	if ( srcError ) {

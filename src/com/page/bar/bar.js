@@ -3,7 +3,7 @@ import './bar.less';
 import {Compare} from 'shallow';
 import {node_CanCreate} from 'internal/lib';
 
-import {Icon, Button, IconButton, UISpinner} from 'com/ui';
+import {Icon, Button, ButtonIcon, UISpinner} from 'com/ui';
 
 //import DropdownUser 					from 'com/dropdown-user/user';
 import BarNotification					from './bar-notifications';
@@ -19,37 +19,37 @@ const LogoButton = () =>
 	<Icon class="if-no-sidebar-block -baseline" src="l-udum" /><Icon class="if-no-sidebar-block -baseline" src="d-are" />
 </Button>;
 
-const SearchButton = () => <IconButton icon="search" class="bar-icon" href="?dialog=search" />;
+const SearchButton = () => <ButtonIcon icon="search" class="bar-icon" href="?dialog=search" />;
 
 const CalendarButton = () =>
-<IconButton class="bar-button if-no-sidebar-block" icon="calendar" /*baseline*/ href="?dialog=cal">
+<ButtonIcon class="bar-button if-no-sidebar-block" icon="calendar" /*baseline*/ href="?dialog=cal">
 	<div class="if-sidebar-block">Schedule</div>
-</IconButton>;
+</ButtonIcon>;
 
 const RegisterNewUserButton = () =>
-<IconButton icon="user-plus" class="bar-button" href="?dialog=user-register">
+<ButtonIcon icon="user-plus" class="bar-button" href="?dialog=user-register">
 	<div class="if-sidebar-block">Create Account</div>
-</IconButton>;
+</ButtonIcon>;
 
 const LoginButton = () =>
-<IconButton icon="key" class="bar-button" href="?dialog=user-login">
+<ButtonIcon icon="key" class="bar-button" href="?dialog=user-login">
 	<div class="if-sidebar-block">Login</div>
-</IconButton>;
+</ButtonIcon>;
 
 const JoinEventButton = (props) =>
-<IconButton icon="publish" title="Join Event" class="bar-button" href={`?dialog=create!${props.eventId}!item!game`}>
+<ButtonIcon icon="publish" title="Join Event" class="bar-button" href={`?dialog=create!${props.eventId}!item!game`}>
 	<div class="if-sidebar-block">Join Event</div>
-</IconButton>;
+</ButtonIcon>;
 
 const MyGameButton = (props) =>
-<IconButton icon="gamepad" title="My Game" class="bar-button" href={props.href}>
+<ButtonIcon icon="gamepad" title="My Game" class="bar-button" href={props.href}>
 	<div class="if-sidebar-block">My Game</div>
-</IconButton>;
+</ButtonIcon>;
 
 const NewPostButton = (props) =>
-<IconButton icon="edit" title="New Post" class="bar-button" props={`?dialog=create!${props.focusId}!post`}>
+<ButtonIcon icon="edit" title="New Post" class="bar-button" props={`?dialog=create!${props.focusId}!post`}>
 	<div class="if-sidebar-block">New Post</div>
-</IconButton>;
+</ButtonIcon>;
 
 
 export default class PageNavBar extends Component {
@@ -226,9 +226,9 @@ export default class PageNavBar extends Component {
 		if ( SECURE_LOGIN_ONLY && (location.protocol !== 'https:') ) {
 			const SecureURL = 'https://'+location.hostname+location.pathname+location.search+location.hash;
 			return <>
-				<IconButton icon="unlocked" class="bar-button" noblank href={SecureURL}>
+				<ButtonIcon icon="unlocked" class="bar-button" noblank href={SecureURL}>
 					<div class="if-sidebar-block">Go to Secure Site</div>
-				</IconButton>
+				</ButtonIcon>
 			</>;
 		}
 		// Both user and user.id means logged in

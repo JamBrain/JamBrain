@@ -79,6 +79,20 @@ export function setupNavigation( pushstateCallback, popstateCallback ) {
 }
 
 
+/**
+ * @typedef LinkProps
+ * @property {string} href - the link destination
+ * @property {string} [class] - css classes applied to the link
+ * @property {string} [rel] - if omitted, defaults to "noopener noreferrer" for external links
+ * @property {string} [target] - if omitted, defaults to "_blank" for external links
+ * @property {'button'} [role] - lets you change the aria role.
+ * @property {string} [title] - DON'T USE THIS! Wrap in <Tooltip> instead!
+ */
+
+/**
+ * Component that wraps the anchor \<a\> tag. Handles internal and external links, and sets good defaults.
+ * @param {LinkProps} props
+ */
 export function Link( props ) {
 	const {rel, target, href, ...otherProps} = props;
 
@@ -87,8 +101,8 @@ export function Link( props ) {
 		//const sanitizedHref = href ? Sanitize.sanitize_URI(href) : '';
 		const sanitizedURL = new URL(href ?? '', window.location.href);
 		const isExternal = sanitizedURL.origin !== window.location.origin;
-		const newTarget = isExternal ? "_blank" : target;
-		const newRel = isExternal ? `noopener noreferrer ${rel ?? ''}` : undefined;
+		const newTarget = isExternal ? (target ?? '_blank') : target;
+		const newRel = isExternal ? (rel ?? 'noopener noreferrer') : rel;
 
 		// MK NOTE: We aren't handling spacebar, when this is used as a button.
 		return <a {...otherProps} rel={newRel} target={newTarget} href={href} onClick={handleTargetHref} />;
