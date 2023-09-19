@@ -2,6 +2,8 @@ import { Component } from 'preact';
 import './base.less';
 import {navigateToLocalURL} from 'com/ui';
 
+let dialogList = {};
+
 export default class DialogBase extends Component {
 	constructor( props ) {
 		super(props);
@@ -40,6 +42,9 @@ export default class DialogBase extends Component {
 		}
 	}
 
+	/**
+	 * @param {KeyboardEvent} e
+	 */
 	eventKey( e ) {
 		// Tab
 		if ( e.keyCode == 9 ) {
@@ -72,7 +77,7 @@ export default class DialogBase extends Component {
 
 
 	onAbort() {
-		navigateToLocalURL('?dialog=');
+		navigateToLocalURL('?a=');
 		//window.location.hash = "--";
 		//location.href = location.pathname+location.search;
 	}

@@ -5,6 +5,7 @@ export * from "./textfield";
 export * from "./spoiler";
 export * from "./icon";
 export * from "./image";
+export * from "./tooltip";
 
 export * from "./dialog";
 

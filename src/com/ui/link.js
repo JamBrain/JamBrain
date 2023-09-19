@@ -87,6 +87,7 @@ export function setupNavigation( pushstateCallback, popstateCallback ) {
  * @property {string} [target] - if omitted, defaults to "_blank" for external links
  * @property {'button'} [role] - lets you change the aria role.
  * @property {string} [title] - DON'T USE THIS! Wrap in <Tooltip> instead!
+ * @property {*} [children]
  */
 
 /**

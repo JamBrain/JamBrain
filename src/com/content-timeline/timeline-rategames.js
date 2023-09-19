@@ -133,7 +133,7 @@ export default class TimelineRateGames extends Component {
 		const FooterRight = [];
 		FooterLeft.push(<FooterButtonMinMax onClick={this.handleMinMax} />);
 		FooterRight.push((
-			<Button class={`content-common-footer-button -refresh`} title='Refresh' onClick={this.handleRefresh}>
+			<Button class={`content-common-footer-button -refresh`} tooltip="Refresh" onClick={this.handleRefresh}>
 				<Icon src="refresh" /><div class="-count">Refresh</div>
 			</Button>
 		));

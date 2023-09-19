@@ -8,7 +8,7 @@ import { shortnameToURL } from 'external/emoji/emoji';
 //COMPONENT IMPORTS
 import LinkMail				from 'com/link-mail/mail';		// TODO: Obsolete me
 import SmartLink 			from 'com/autoembed/smartlink';
-import LocalLink			from 'com/autoembed/locallink';
+//import LocalLink			from 'com/autoembed/locallink';
 
 import AutoEmbed 			from 'com/autoembed/autoembed';
 import SmartDomains			from 'com/autoembed/smartdomains';
@@ -234,12 +234,12 @@ export default class Renderer {
 		else if ( result.type == "embed" ) {
 			return <AutoEmbed link={result} title={title} text={(hasText) ? text : href} />;
 		}
-		else if ( result.type == "relative" ) {
-			return <LocalLink href={href} text={(hasText) ? text : href} title={title} target={"_blank"}/>;
-		}
-		else if ( result.type == "local" ) {
-			return <LocalLink href={href} text={(hasText) ? text : href} title={title} hashLink />;
-		}
+//		else if ( result.type == "relative" ) {
+//			return <LocalLink href={href} text={(hasText) ? text : href} title={title} target={"_blank"}/>;
+//		}
+//		else if ( result.type == "local" ) {
+//			return <LocalLink href={href} text={(hasText) ? text : href} title={title} hashLink />;
+//		}
 		else if ( result.type == "protocol" ) {
 			hasText = hasText && !/^\s+$/.test(joinedText); // make sure the link isn't all whitespace too
 			return <Link href={href} text={(hasText) ? joinedText : href.slice(2)} title={title} target={"_blank"}/>;

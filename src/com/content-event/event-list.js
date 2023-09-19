@@ -3,7 +3,7 @@ import './event-list.less';
 
 import Sanitize from 'internal/sanitize';
 
-import {Icon, Button, UISpinner} from 'com/ui';
+import {Icon, Button, Tooltip, UISpinner} from 'com/ui';
 
 import $ThemeList from 'backend/js/theme/theme_list';
 import $ThemeListVote from 'backend/js/theme/theme_list_vote';
@@ -141,9 +141,9 @@ export default class ContentEventList extends Component {
 								let theme_slug = Sanitize.makeSlug(r.theme);
 								if ( this.state.history[theme_slug] ) {
 									ShowHistory = (
-										<span class="-label" title={this.state.history[theme_slug]['name']}>
+										<Tooltip class="-label" text={this.state.history[theme_slug]['name']}>
 											{this.state.history[theme_slug]['shorthand']}
-										</span>
+										</Tooltip>
 									);
 								}
 							}
@@ -175,9 +175,9 @@ export default class ContentEventList extends Component {
 								let theme_slug = Sanitize.makeSlug(r.theme);
 								if ( this.state.history[theme_slug] ) {
 									ShowHistory = (
-										<span class="-label" title={this.state.history[theme_slug]['name']}>
+										<Tooltip class="-label" title={this.state.history[theme_slug]['name']}>
 											{this.state.history[theme_slug]['shorthand']}
-										</span>
+										</Tooltip>
 									);
 								}
 							}

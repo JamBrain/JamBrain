@@ -5,7 +5,7 @@ import Sanitize							from 'internal/sanitize';
 
 import InputText						from 'com/input-text/text';
 import InputDropdown					from 'com/input-dropdown/dropdown';
-import {Button, Icon} from 'com/ui';
+import {Button, Icon, Tooltip} from 'com/ui';
 
 import $Tag								from 'backend/js/tag/tag';
 
@@ -84,7 +84,7 @@ export default class ContentCommonBodyLink extends Component {
 						placeholder={urlPlaceholder}
 						maxLength={512}
 					/>
-					<Button onClick={props.onRemove} title="Remove"><Icon src="cross" /></Button>
+					<Tooltip text="Remove"><Button onClick={props.onRemove}><Icon src="cross" /></Button></Tooltip>
 				</div>
 			);
 		}

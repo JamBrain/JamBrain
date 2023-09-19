@@ -1,6 +1,19 @@
 import {Link, Icon} from 'com/ui';
 import './locallink.less';
 
+/**
+ * @typedef LocalLinkProps
+ * @property {string} href
+ * @property {string} [text]
+ * @property {string} [title]
+ * @property {string} [target]
+ * @property {boolean} [hashLink]
+ */
+
+/**
+ * @deprecated
+ * @param {LocalLinkProps} props
+ * */
 export default function LocalLink( props ) {
 	let ShowIcon;
 	if (props.hashLink) {

@@ -1,7 +1,7 @@
 import {Component} from 'preact';
 import './event-slaughter.less';
 
-import {Button, Icon, UISpinner} from 'com/ui';
+import {Button, Icon, Tooltip, UISpinner} from 'com/ui';
 
 import $ThemeIdeaVote					from 'backend/js/theme/theme_idea_vote';
 import $Node from 'backend/js/node/node';
@@ -184,12 +184,12 @@ export default class ContentEventSlaughter extends Component {
 				VoteStyle = '-flag';
 			}
 
-			ret.push(
-				<Button title={vote} class={`-recent ${VoteStyle} ${flashRecent === voteId ? '-flash': ''}`} key={voteId} onClick={() => this.redoVote(voteId)}>
+			ret.push(<Tooltip text={vote}>
+				<Button class={`-recent ${VoteStyle} ${flashRecent === voteId ? '-flash': ''}`} key={voteId} onClick={() => this.redoVote(voteId)}>
 					{this.renderIcon(vote)}
-					<span title={'Id: ' + voteId}>{this.state.ideas[voteId]}</span>
+					<Tooltip text={'Id: ' + voteId}>{this.state.ideas[voteId]}</Tooltip>
 				</Button>
-			);
+			</Tooltip>);
 		}
 		return ret;
 	}
@@ -263,7 +263,7 @@ export default class ContentEventSlaughter extends Component {
 
 		return (
 			<div class="-item">
-				<div class="-text" title={idea}>{idea}</div>
+				<div class="-text">{idea}</div>
 			</div>
 		);
 	}
@@ -340,13 +340,13 @@ export default class ContentEventSlaughter extends Component {
 			return (
 				<div class="event-slaughter">
 					<div class="-title">Would this be a good Theme?</div>
-					<div class="-theme" onClick={this.openLink} title="Click to search Google for this">
-						<div>{ThemeName}</div>
-					</div>
+					<Button class="-theme" href={`https://www.google.com/search?q=${encodeURIComponent(state.ideas[state.current])}`}>
+						{ThemeName}
+					</Button>
 					{ShowEager}
 					<div class="-main-buttons">
-						<Button class={`middle big -yes ${state.flashButton == 'Yes' ? '-flash': ''}`} onClick={this.submitYesVote} title="Good" >{this.renderIcon(VOTE_YES)}<span><span class="hotkey">Y</span>ES</span></Button>
-						<Button class={`middle big -no ${state.flashButton == 'No' ? '-flash': ''}`} onClick={this.submitNoVote} title="Bad" >{this.renderIcon(VOTE_NO)}<span><span class="hotkey">N</span>O</span></Button>
+						<Button class={`middle big -yes ${state.flashButton == 'Yes' ? '-flash': ''}`} onClick={this.submitYesVote}>{this.renderIcon(VOTE_YES)}<span><span class="hotkey">Y</span>ES</span></Button>
+						<Button class={`middle big -no ${state.flashButton == 'No' ? '-flash': ''}`} onClick={this.submitNoVote}>{this.renderIcon(VOTE_NO)}<span><span class="hotkey">N</span>O</span></Button>
 					</div>
 					<div class="-other-buttons">
 						<div class="-title"><span>If inappropriate or offensive, you can </span><Button class="-flag" onClick={this.submitFlagVote}>{this.renderIcon(VOTE_FLAG)}<span>Flag</span></Button><span> it.</span></div>

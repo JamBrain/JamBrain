@@ -3,7 +3,7 @@ import './item.less';
 
 import { node_IsPublished, nodeEvent_CanGrade, node_CountAuthors, node_CanPublish, node_IsAuthor, nodeKeys_HasPublishedParent, nodeEvent_IsFinished } from 'internal/lib';
 
-import {Button, Icon, Image, Link, UICheckbox} from 'com/ui';
+import {Button, Icon, Image, Link, Tooltip, UICheckbox} from 'com/ui';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonBodyField			from 'com/content-common/common-body-field';
@@ -667,9 +667,9 @@ export default class ContentItem extends Component {
 					SmallScore = Score.toString();
 
 				if ( Star )
-					AdvancedLines.push(<div class="-metric"><span class="-title">{Title}:</span> <span class="-value" title={HoverTitle}>{SmallScore} *{Icon}</span></div>);
+					AdvancedLines.push(<div class="-metric"><span class="-title">{Title}:</span> <Tooltip class="-value" text={HoverTitle}>{SmallScore} *{Icon}</Tooltip></div>);
 				else
-					SimpleLines.push(<div class={`-metric ${Warning ? "-warning" : ''}`}><span class="-title">{Title}:</span> <span class="-value" title={HoverTitle}>{SmallScore}{Icon}</span></div>);
+					SimpleLines.push(<div class={`-metric ${Warning ? "-warning" : ''}`}><span class="-title">{Title}:</span> <Tooltip class="-value" text={HoverTitle}>{SmallScore}{Icon}</Tooltip></div>);
 			}
 
 			ShowMetrics = (
@@ -970,7 +970,7 @@ export default class ContentItem extends Component {
 					<div class="-label">Feedback</div>
 					<div class="-items">
 						{/* MK TODO: title should not necssarily be used here */}
-						<UICheckbox onClick={this.onAnonymousComments} value={state.allowAnonymous}>Allow anonymous comments <Icon src="warning" title="Do this at your own risk" /></UICheckbox>
+						<UICheckbox onClick={this.onAnonymousComments} value={state.allowAnonymous}>Allow anonymous comments <Icon src="warning" tooltip="Do this at your own risk" /></UICheckbox>
 					</div>
 					<div class="-footer">
 						<Icon class="-small -baseline" src="info" />

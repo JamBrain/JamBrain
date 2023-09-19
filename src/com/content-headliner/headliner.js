@@ -3,7 +3,7 @@ import './headliner.less';
 
 import {getLocaleDate, getRoughAge} from 'internal/time';
 
-import {Icon, Button} from 'com/ui';
+import {Icon, Button, Tooltip} from 'com/ui';
 
 //import $Node from 'backend/js/node/node';
 
@@ -32,33 +32,33 @@ export default class ContentHeadliner extends Component {
 
 			if ( props.love ) {
 				Subtext.push(
-					<div title="Love" class="-statistic">
+					<Tooltip text="Love" class="-statistic -block">
 						<Icon class="-small -baseline" src="heart" /> <span>{node.love}</span>
-					</div>
+					</Tooltip>
 				);
 			}
 
 			if ( props.comments ) {
 				Subtext.push(
-					<div title="Comments" class="-statistic">
+					<Tooltip text="Comments" class="-statistic">
 						<Icon class="-small -baseline" src="bubble" /> <span>{node.comments}</span>
-					</div>
+					</Tooltip>
 				);
 			}
 
 			if ( props.games && node.games ) {
 				Subtext.push(
-					<div title="Games" class="-statistic">
+					<Tooltip text="Games" class="-statistic">
 						<Icon class="-small -baseline" src="gamepad" /> <span>{node.games}</span>
-					</div>
+					</Tooltip>
 				);
 			}
 
 			if ( props.articles && node.articles ) {
 				Subtext.push(
-					<div title="Articles" class="-statistic">
+					<Tooltip text="Articles" class="-statistic">
 						<Icon class="-small -baseline" src="article" /> <span>{node.articles}</span>
-					</div>
+					</Tooltip>
 				);
 			}
 
@@ -137,7 +137,7 @@ export default class ContentHeadliner extends Component {
 
 			ret.push(<span>{label}</span>);
 			ret.push(' ');
-			ret.push(<span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span>);
+			ret.push(<Tooltip text={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</Tooltip>);
 
 			// x minutes ago
 			return <div>{ret}</div>;

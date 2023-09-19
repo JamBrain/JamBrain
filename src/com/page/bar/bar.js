@@ -19,25 +19,25 @@ const LogoButton = () =>
 	<Icon class="if-no-sidebar-block -baseline" src="l-udum" /><Icon class="if-no-sidebar-block -baseline" src="d-are" />
 </Button>;
 
-const SearchButton = () => <ButtonIcon icon="search" class="bar-icon" href="?dialog=search" />;
+const SearchButton = () => <ButtonIcon icon="search" class="bar-icon" href="?a=search" />;
 
 const CalendarButton = () =>
-<ButtonIcon class="bar-button if-no-sidebar-block" icon="calendar" /*baseline*/ href="?dialog=cal">
+<ButtonIcon class="bar-button if-no-sidebar-block" icon="calendar" /*baseline*/ href="?a=cal">
 	<div class="if-sidebar-block">Schedule</div>
 </ButtonIcon>;
 
 const RegisterNewUserButton = () =>
-<ButtonIcon icon="user-plus" class="bar-button" href="?dialog=user-register">
+<ButtonIcon icon="user-plus" class="bar-button" href="?a=user-register">
 	<div class="if-sidebar-block">Create Account</div>
 </ButtonIcon>;
 
 const LoginButton = () =>
-<ButtonIcon icon="key" class="bar-button" href="?dialog=user-login">
+<ButtonIcon icon="key" class="bar-button" href="?a=user-login">
 	<div class="if-sidebar-block">Login</div>
 </ButtonIcon>;
 
 const JoinEventButton = (props) =>
-<ButtonIcon icon="publish" title="Join Event" class="bar-button" href={`?dialog=create!${props.eventId}!item!game`}>
+<ButtonIcon icon="publish" title="Join Event" class="bar-button" href={`?a=create!${props.eventId}!item!game`}>
 	<div class="if-sidebar-block">Join Event</div>
 </ButtonIcon>;
 
@@ -47,7 +47,7 @@ const MyGameButton = (props) =>
 </ButtonIcon>;
 
 const NewPostButton = (props) =>
-<ButtonIcon icon="edit" title="New Post" class="bar-button" props={`?dialog=create!${props.focusId}!post`}>
+<ButtonIcon icon="edit" title="New Post" class="bar-button" props={`?a=create!${props.focusId}!post`}>
 	<div class="if-sidebar-block">New Post</div>
 </ButtonIcon>;
 

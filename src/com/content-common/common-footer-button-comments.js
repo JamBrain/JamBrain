@@ -1,6 +1,6 @@
 import './common-footer-button.less';
 
-import {Link, Icon} from 'com/ui';
+import {Link, Icon, Tooltip} from 'com/ui';
 
 export default function ContentCommonFooterButtonComments( props ) {
 	const {node, ...otherProps} = props;
@@ -15,12 +15,12 @@ export default function ContentCommonFooterButtonComments( props ) {
 			countStyle = '-count-1';
 
 		if ( Number.isInteger(node.comments) ) {
-			return <>
-				<Link href={node.path} class={`content-common-footer-button -comments ${countStyle}`} title="Comments">
+			return <Tooltip text="Comments">
+				<Link href={node.path} class={`content-common-footer-button -comments ${countStyle}`}>
 					<Icon src="bubbles" />
 					<div class="-count">{node.comments}</div>
 				</Link>
-			</>;
+			</Tooltip>;
 		}
 	}
 	return null;

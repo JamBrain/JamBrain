@@ -95,7 +95,7 @@ export default class DialogCommon extends Component {
 //	}
 
 	onAbort() {
-		navigateToLocalURL('?dialog=');
+		navigateToLocalURL('?a=');
 		//console.log(location.pathname + location.search);
 		//window.history.pushState(null, null, location.pathname + location.search);
     	//window.location.hash = "--";

@@ -1,3 +1,5 @@
+import {Tooltip} from "./tooltip";
+
 import './icon.less';
 import 'icons/ludumdare/ludumdare.less';
 import 'icons/icomoon/icons.less';
@@ -8,7 +10,7 @@ import 'icons/custom/icons.less';
  * @property {string} src
  * @property {string} [alt]
  * @property {string} [class] - Legacy styles: -baseline, -top, -bottom, -text-top, -text-bottom, -small, -half, -quarter, -block, -inline, -pad
- * @property {string} [title] - DON'T USE THIS! Wrap in <Tooltip> instead!
+ * @property {string} [tooltip] - If present, wraps the icon in a tooltip
  */
 
 /**
@@ -16,7 +18,10 @@ import 'icons/custom/icons.less';
  * @param {IconProps} props
  */
 export function Icon( props ) {
-	const {src, alt, 'class': classProp, ...otherProps} = props;
+	const {src, alt, tooltip, 'class': classProp, ...otherProps} = props;
 
-	return <svg class={`ui-icon icon-${src} ${classProp ?? ''}`} alt={alt ?? src} {...otherProps}><use xlinkHref={`#icon-${src}`} /></svg>;
+	const newIcon = <svg class={`ui-icon icon-${src} ${classProp ?? ''}`} alt={alt ?? src} {...otherProps}><use xlinkHref={`#icon-${src}`} /></svg>;
+
+	// MK NOTE: Does this need to have an inline-block style?
+	return tooltip ? <Tooltip text={tooltip}>{newIcon}</Tooltip> : newIcon;
 }

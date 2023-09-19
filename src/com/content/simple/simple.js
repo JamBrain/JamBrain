@@ -15,7 +15,7 @@ export default function ContentSimple( props ) {
 	return (
 		<BasicSection {...props} class={`-simple ${props.class ?? ''}`}>
 			{props.title ? <Header title={props.title} href={props.href} /> : null}
-			<Section children={props.children} />
+			<Section>{props.children}</Section>
 			{props.footer ? <Footer {...(props.footer)} /> : null}
 		</BasicSection>
 	);

@@ -1,6 +1,6 @@
 import './common-body-title.less';
 
-import {Link, Icon} from 'com/ui';
+import {Link, Icon, Tooltip} from 'com/ui';
 import InputText from 'com/input-text/text';
 import BodyLabel from "./body/body-label";
 
@@ -10,8 +10,8 @@ export function BodyTitle( props ) {
 	let titleText = props.title ? props.title : "Untitled";
 
 	let titleBody = props.href ?
-		<Link class="title" href={props.href} title={props.tooltip}>{titlePrefix}{titleText}</Link> :
-		<span class="title" title={props.tooltip}>{titlePrefix}{titleText}</span>;
+		<Tooltip text={props.tooltip}><Link class="title" href={props.href}>{titlePrefix}{titleText}</Link></Tooltip> :
+		<Tooltip text={props.tooltip}><span class="title">{titlePrefix}{titleText}</span></Tooltip>;
 
 	return (
 		<div class={`body -title _font2 ${props.class ?? ''}`}>

@@ -3,7 +3,7 @@ import './common-body-by.less';
 
 import {Diff} from 'shallow';
 import {getLocaleDate, getRoughAge}	from 'internal/time';
-import {Link} from 'com/ui';
+import {Link, Tooltip} from 'com/ui';
 
 export default class ContentCommonBodyBy extends Component {
 	constructor( props ) {
@@ -38,7 +38,7 @@ export default class ContentCommonBodyBy extends Component {
 			var pub_diff = (date_now.getTime() - date_pub.getTime());// - (date_now.getTimezoneOffset()*60);
 
 			// x minutes ago
-			return <span>{label} <span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span></span>;
+			return <span>{label} <Tooltip text={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</Tooltip></span>;
 		}
 		else {
 			return <span>not {label} yet</span>;
@@ -50,7 +50,7 @@ export default class ContentCommonBodyBy extends Component {
 		let pub_diff = (date_now.getTime() - date_pub.getTime());// - (date_now.getTimezoneOffset()*60);
 
 		// x minutes ago
-		return <span>{label} <span title={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</span></span>;
+		return <span>{label} <Tooltip text={getLocaleDate(date_pub)}>{getRoughAge(pub_diff)}</Tooltip></span>;
 	}
 
 	render( props ) {
@@ -70,7 +70,7 @@ export default class ContentCommonBodyBy extends Component {
 					ret.push(
 						<span>
 							(<Link class="-at-name" href={this.getURL(props.authors[idx])}>@{this.getAtName(props.authors[idx])}</Link>)
-							{((props.authors.length > 1) && (props.authors[idx].id == props.node.author)) ? <span title="Team Leader">*</span> : ''}
+							{((props.authors.length > 1) && (props.authors[idx].id == props.node.author)) ? <Tooltip text="Team Leader">*</Tooltip> : ''}
 						</span>
 					);
 					if ( idx < props.authors.length-2 )

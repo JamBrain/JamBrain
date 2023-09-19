@@ -248,7 +248,7 @@ class Main extends Component {
 	/**
 	 * @typedef {Object} DialogProps
 	 * @prop {string} dialog
-	 * @prop {string[]} args
+	 * @prop {string[]} [args]
 	 */
 
 	/**
@@ -258,7 +258,7 @@ class Main extends Component {
 	getDialogProps( url ) {
 		const newURL = new URL(url);
 
-		const dialogPath = newURL.searchParams.get("dialog");
+		const dialogPath = newURL.searchParams.get("a");
 		if (!dialogPath) return null;
 
 		const dialogPathParts = dialogPath.split("!");
@@ -477,16 +477,6 @@ class Main extends Component {
 */
 
 /*
-	handleDialog( url ) {
-		const newURL = new URL(url);
-		const dialogPath = newURL.searchParams.get("dialog");
-
-		if ( dialogPath ) {
-
-		}
-
-	}
-
 	// TODO: stop doing this, and remove the funny anchor feature
 	handleAnchors(evtHash) {
 		if ( window.location.hash || evtHash ) {

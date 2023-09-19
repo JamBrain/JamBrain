@@ -2,7 +2,7 @@ import {Component} from 'preact';
 
 import { getRoughAge, getLocaleFullTimeStamp, getLocaleDate } from 'internal/time';
 
-import {Link, Button, Icon, Image, UICheckbox} from 'com/ui';
+import {Link, Button, Icon, Image, Tooltip, UICheckbox} from 'com/ui';
 
 import ContentCommentsMarkup from './comments-markup';
 import {AutocompleteAtNames, AutocompleteEmojis} from 'com/content-common/common-autocomplete';
@@ -277,7 +277,7 @@ export default class ContentCommentsComment extends Component {
 
 				if ( comment.created ) {
 					ShowTitle.push(
-						<span>, <span title={comment.id}>published</span> <span class="-date" title={getLocaleFullTimeStamp(Created)}>{getRoughAge(DateDiff)}</span><span title={getLocaleDate(Modified)}>{HasEdited?" (edited)":""}</span></span>
+						<span>, <Tooltip text={comment.id}>published</Tooltip> <Tooltip class="-date" text={getLocaleFullTimeStamp(Created)}>{getRoughAge(DateDiff)}</Tooltip><Tooltip text={getLocaleDate(Modified)}>{HasEdited?" (edited)":""}</Tooltip></span>
 					);
 				}
 				else {

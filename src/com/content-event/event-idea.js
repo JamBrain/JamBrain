@@ -164,7 +164,7 @@ export default class ContentEventIdea extends Component {
 		return (
 			<div class="-item">
 				<Icon src="lightbulb" />
-				<div class="-text" title={idea}>{idea}</div>
+				<div class="-text">{idea}</div>
 				<div class="-x" onClick={this.removeIdea.bind(this, id)}>
 					<Icon src="cross" />
 				</div>

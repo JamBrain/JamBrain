@@ -5,7 +5,7 @@ import { node_IsAuthor } from 'internal/lib';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentLoading					from 'com/content-loading/loading';
-import {Button, Icon, Dropdown} from 'com/ui';
+import {Button, Icon, Tooltip, Dropdown} from 'com/ui';
 
 import $Node							from 'backend/js/node/node';
 
@@ -76,8 +76,8 @@ export default class ItemTeambuilding extends Component {
 				<Icon class="-baseline -small" src="user" />
 				<strong>{user.name}</strong>
 				{isMe && ' (you)'}
-				{isMain && <span title="Primary Author">*</span>}
-				{canBeRemoved && <Button class="team-member-remove" onClick={() => this.removeFromTeam(user.id)} title="Remove from team"><Icon src="cross" /></Button>}
+				{isMain && <Tooltip text="Primary Author">*</Tooltip>}
+				{canBeRemoved && <Button class="team-member-remove" onClick={() => this.removeFromTeam(user.id)} tooltip="Remove from team"><Icon src="cross" /></Button>}
 			</li>
 		);
 	}
@@ -85,7 +85,7 @@ export default class ItemTeambuilding extends Component {
 	renderAddUser(friend) {
 		const friendId = friend.id;
 		return (
-			<Button onClick={() => this.addToTeam(friendId)} key={friend.id} title={`Click to add ${friend.name}`}>
+			<Button onClick={() => this.addToTeam(friendId)} key={friend.id} tooltip={`Click to add ${friend.name}`}>
 				<Icon src="user" /><span>{friend.name}</span>
 			</Button>
 		);

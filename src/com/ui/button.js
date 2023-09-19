@@ -1,5 +1,6 @@
-import {Link as Link} from './link';
+import {Link} from './link';
 import {Icon} from './icon';
+import {Tooltip} from './tooltip';
 
 //import {ui_button} from './button.less';
 import './button.less';
@@ -12,13 +13,13 @@ const ui_button = 'ui_button';
 
 /**
  * @typedef ButtonProps
- * @property {string} [class]
  * @property {string} [href] - If present, renders as a link instead of a button
- * @property {string} [target] - Changes the target when 'href' is present
+ * @property {string} [class] - Additional class names to add to the button
+ * @property {string} [tooltip] - If present, wraps the button in a tooltip
  * @property {*} [children]
  * @property {TargetedMouseEvent} [onClick]
- * @property {string} [type] - button, submit, reset
- * @property {string} [title] - DON'T USE THIS! Wrap in <Tooltip> instead!
+ * @property {'_blank'} [target] - Changes the target when 'href' is present
+ * @property {'button' | 'submit' | 'reset'} [type]
  */
 
 /**
@@ -26,26 +27,30 @@ const ui_button = 'ui_button';
  */
 // NOTE: <button type="button" /> has no side effects when clicked.
 export function Button( props ) {
-	const {href, 'type': typeProp = "button", 'class': classProp, ...otherProps} = props;
+	const {href, tooltip, 'type': typeProp = "button", 'class': classProp, ...otherProps} = props;
 	const classNames = `${ui_button} ${classProp ?? ''}`;
-	return href ?
+
+	const newButton = href ?
 		<Link href={href} {...otherProps} class={classNames} role="button" /> :
 		<button {...otherProps} class={classNames} type={typeProp} />;
+
+	return tooltip ? <Tooltip text={tooltip}>{newButton}</Tooltip> : newButton;
 }
 
 /**
- * @typedef IconButtonProps
+ * @typedef ButtonIconProps
  * @property {string} icon - Name of the \<Icon\> to insert
- * @property {string} [class]
  * @property {string} [href] - If present, renders as a link instead of a button
- * @property {string} [target] - Changes the target when 'href' is present
+ * @property {string} [class] - Additional class names to add to the button
+ * @property {string} [tooltip] - If present, wraps the button in a tooltip
  * @property {*} [children]
  * @property {TargetedMouseEvent} [onClick]
- * @property {string} [type] - button, submit, reset
+ * @property {'_blank'} [target] - Changes the target when 'href' is present
+ * @property {'button' | 'submit' | 'reset'} [type]
 */
 
 /**
- * @param {IconButtonProps} props
+ * @param {ButtonIconProps} props
  */
 export function ButtonIcon( props ) {
 	const {icon, children, ...otherProps} = props;

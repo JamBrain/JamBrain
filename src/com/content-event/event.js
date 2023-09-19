@@ -1,7 +1,7 @@
 import {Component} from 'preact';
 import './event.less';
 
-import {Link, Icon, Button} from 'com/ui';
+import {Link, Icon, Button, Tooltip} from 'com/ui';
 import { getLocaleDay, getLocaleMonthDay, getLocaleDate, getLocaleTime, getLocaleTimeZone } from 'internal/time';
 import { node_CanCreate, nodeEvent_CanTheme } from 'internal/lib';
 
@@ -199,7 +199,7 @@ export default class ContentEvent extends Component {
 				<ContentCommonBody>
 					{ShowEventTheme}
 					<div><Icon class="-small -baseline -gap" src="calendar" /> {getLocaleDay(Start)} {getLocaleMonthDay(Start)} to <span class="if-sidebar-inline">{getLocaleDay(End)}</span> {getLocaleDate(End)}</div>
-					<div title={LanguagePrefix+Start.toString()}><Icon class="-small -baseline -gap" src="clock" /> Starts at <strong>{getLocaleTime(Start)}</strong> {getLocaleTimeZone(Start)} <Link href="https://github.com/ludumdare/ludumdare/issues/589"><strong title="Adjusted for your local timezone. If this is not your timezone, click here and let us know!">*</strong></Link></div>
+					<Tooltip class="-block" text={LanguagePrefix+Start.toString()}><Icon class="-small -baseline -gap" src="clock" /> Starts at <strong>{getLocaleTime(Start)}</strong> {getLocaleTimeZone(Start)} <Link href="https://github.com/ludumdare/ludumdare/issues/589"><Tooltip text="Adjusted for your local timezone. If this is not your timezone, click here and let us know!">*</Tooltip></Link></Tooltip>
 				</ContentCommonBody>
 			);
 		}
