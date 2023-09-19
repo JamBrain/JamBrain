@@ -123,7 +123,7 @@ try {
     //Content
     $mail->isHTML(true);                                  //Set email format to HTML
     $mail->Subject = 'Here is the subject';
-    $mail->Body    = 'This is the HTML message body <b>in bold!</b>';
+    $mail->Body    = 'This is the HTML message body <strong>in bold!</strong>';
     $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
     $mail->send();
@@ -172,7 +172,7 @@ If this isn't passing, is there something you can do to help?
 ## Security
 Please disclose any vulnerabilities found responsibly – report security issues to the maintainers privately.
 
-See [SECURITY](https://github.com/PHPMailer/PHPMailer/tree/master/SECURITY.md) and [PHPMailer's security advisories on GitHub](https://github.com/PHPMailer/PHPMailer/security). 
+See [SECURITY](https://github.com/PHPMailer/PHPMailer/tree/master/SECURITY.md) and [PHPMailer's security advisories on GitHub](https://github.com/PHPMailer/PHPMailer/security).
 
 ## Contributing
 Please submit bug reports, suggestions and pull requests to the [GitHub issue tracker](https://github.com/PHPMailer/PHPMailer/issues).

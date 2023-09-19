@@ -241,7 +241,7 @@ export class AutocompleteEmojis extends Autocompletions {
 		if ( matchEnd != matchStart ) {
 			// MK: substr is deprecated. Use slice or substring.
 			ShowLeft = name.substr(0, matchStart);
-			ShowMatch = <b>{name.substr(matchStart, matchEnd - matchStart)}</b>;
+			ShowMatch = <strong>{name.substr(matchStart, matchEnd - matchStart)}</strong>;
 			ShowRight = name.substr(matchEnd);
 		}
 		else {
@@ -302,7 +302,7 @@ export class AutocompleteAtNames extends Autocompletions {
 		if ( matchStart != matchEnd ) {
 			// MK: substr is deprecated. Use slice or substring.
 			ShowLeft = name.substr(0, matchStart);
-			ShowMatch = <b>{name.substr(matchStart, matchEnd - matchStart)}</b>;
+			ShowMatch = <strong>{name.substr(matchStart, matchEnd - matchStart)}</strong>;
 			ShowRight = name.substr(matchEnd);
 		}
 		else {
