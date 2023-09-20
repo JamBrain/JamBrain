@@ -9,10 +9,10 @@ export default function Layout( props ) {
 	const isLoading = !node || (node.id == 0);
 
 	return <>
-		<section id="layout-top">
+		<header id="layout-top">
 			<PageNavBar user={user} featured={featured} loading={isLoading}/>
-		</section>
-		<section id="layout-page">
+		</header>
+		<main id="layout-page">
 			<ViewHeader user={user} featured={featured} root={root}/>
 			<section id="body">
 				<ViewContent>
@@ -20,7 +20,7 @@ export default function Layout( props ) {
 				</ViewContent>
 				{!props.noSidebar ? <ViewSidebar user={user} featured={featured} /> : null}
 			</section>
-			<ViewFooter/>
-		</section>
+		</main>
+		<ViewFooter/>
 	</>;
 }

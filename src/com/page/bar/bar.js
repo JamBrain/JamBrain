@@ -14,40 +14,40 @@ import $Notification					from 'backend/js/notification/notification';
 
 
 const LogoButton = () =>
-<Button title="Ludum Dare" href="/" class="logo">
-	<Icon class="if-sidebar-block -baseline" src="ludum" /><Icon class="if-sidebar-block -baseline" src="dare" />
-	<Icon class="if-no-sidebar-block -baseline" src="l-udum" /><Icon class="if-no-sidebar-block -baseline" src="d-are" />
+<Button aria-label="Ludum Dare" href="/" class="logo">
+	<Icon class="if-sidebar-block -baseline" src="ludum" alt="" /><Icon class="if-sidebar-block -baseline" src="dare" alt="" />
+	<Icon class="if-no-sidebar-block -baseline" src="l-udum" alt="" /><Icon class="if-no-sidebar-block -baseline" src="d-are" alt="" />
 </Button>;
 
-const SearchButton = () => <ButtonIcon icon="search" class="bar-icon" href="?a=search" />;
+const SearchButton = () => <ButtonIcon icon="search" alt="Search" class="bar-icon" href="?a=search" />;
 
 const CalendarButton = () =>
-<ButtonIcon class="bar-button if-no-sidebar-block" icon="calendar" /*baseline*/ href="?a=cal">
+<ButtonIcon icon="calendar" alt="" class="bar-button if-no-sidebar-block" href="?a=cal">
 	<div class="if-sidebar-block">Schedule</div>
 </ButtonIcon>;
 
 const RegisterNewUserButton = () =>
-<ButtonIcon icon="user-plus" class="bar-button" href="?a=user-register">
+<ButtonIcon icon="user-plus" alt="" class="bar-button" href="?a=user-register">
 	<div class="if-sidebar-block">Create Account</div>
 </ButtonIcon>;
 
 const LoginButton = () =>
-<ButtonIcon icon="key" class="bar-button" href="?a=user-login">
+<ButtonIcon icon="key" alt="" class="bar-button" href="?a=user-login">
 	<div class="if-sidebar-block">Login</div>
 </ButtonIcon>;
 
 const JoinEventButton = (props) =>
-<ButtonIcon icon="publish" title="Join Event" class="bar-button" href={`?a=create!${props.eventId}!item!game`}>
+<ButtonIcon icon="publish" alt="" class="bar-button" href={`?a=create!${props.eventId}!item!game`}>
 	<div class="if-sidebar-block">Join Event</div>
 </ButtonIcon>;
 
 const MyGameButton = (props) =>
-<ButtonIcon icon="gamepad" title="My Game" class="bar-button" href={props.href}>
+<ButtonIcon icon="gamepad" alt="" class="bar-button" href={props.href}>
 	<div class="if-sidebar-block">My Game</div>
 </ButtonIcon>;
 
 const NewPostButton = (props) =>
-<ButtonIcon icon="edit" title="New Post" class="bar-button" props={`?a=create!${props.focusId}!post`}>
+<ButtonIcon icon="edit" alt="" class="bar-button" href={`?a=create!${props.focusId}!post`}>
 	<div class="if-sidebar-block">New Post</div>
 </ButtonIcon>;
 
@@ -340,13 +340,13 @@ export default class PageNavBar extends Component {
 
 		return (
 			<nav id="navbar">
-				<section class="left">
+				<div class="left" role="none">
 					<LogoButton />
-				</section>
+				</div>
 				{loading ? <UISpinner /> : null}
-				<section class="right">
+				<div class="right" role="none">
 					{this.renderRight(user, featured)}
-				</section>
+				</div>
 			</nav>
 		);
 	}

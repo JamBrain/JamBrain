@@ -14,13 +14,12 @@ function onImgError( e ) {
  * @typedef {Object} ImageProps
  * @prop {string} src - the image source
  * @prop {string} [srcError] - fallback image source if the image is blank or it fails to load
- * @prop {string} [alt] - alt text for the image
+ * @prop {string | ''} [alt] - Description of the image. If the image is purely decorative and not part of the document or UX, use an empty string.
  * @prop {string} [class] - css classes applied to the image. To align the image, use '-left', '-right', or '-center'.
  * @prop {number} [width] - width of the image
  * @prop {number} [height] - height of the image
  * @prop {boolean} [eager] - load the image immediately instead of lazily
  * @prop {boolean} [internalOnly] - only allow internal or static URLs. i.e. (///image.png) or (/image.png)
- * @prop {boolean} [decorative] - image is decorative and should be ignored by screen readers
  */
 
 // MK TODO: add a flag that allows (disallows) external URLs
@@ -30,15 +29,11 @@ function onImgError( e ) {
  * @param {ImageProps} props
  */
 export function Image( props ) {
-	let {src, srcError, alt, eager, internalOnly, decorative, ...otherProps} = props;
+	let {src, srcError, eager, internalOnly, ...otherProps} = props;
 	// NOTE: eager loading is the default, but we're lazy the default instead
 
 	/** @type {{"loading" ?: "eager" | "lazy"}} */
 	const lazyProps = eager ? {} : {'loading': 'lazy'};
-
-	// NOTE: Per MDN, an empty alt tag means that the image is decorative and should be ignored by screen readers.
-	//   To make this intention more obvious, we add an empty alt tag if Image is marked as decorative.
-	const altProps = alt ? {alt} : (decorative ? {'alt': ''} : {});
 
 	srcError = srcError ? (srcError.startsWith('///') ? STATIC_ENDPOINT + srcError.slice(2) : (internalOnly && !srcError.startsWith('/') ? undefined : srcError)) : undefined;
 	src = src ? (src.startsWith('///') ? STATIC_ENDPOINT + src.slice(2) : (internalOnly && !src.startsWith('/') ? undefined : src)) : undefined;
@@ -62,5 +57,5 @@ export function Image( props ) {
 	//  I've added -left, -right, and -center styles instead. I'm assuming the intent was centering, but if not, then that's why it broke.
 
 	// NOTE: errorProps comes before otherProps so that the error handler can be overridden
-	return <img src={src} {...altProps} {...errorProps} {...otherProps} {...lazyProps} />;
+	return <img src={src} {...errorProps} {...otherProps} {...lazyProps} />;
 }

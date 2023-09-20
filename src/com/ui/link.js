@@ -22,8 +22,8 @@ export function navigateToLocalURL( url ) {
 	});
 
 	// Special case for dialog, if it's ever blank remove it
-	if (mergedSearch.has('dialog') && mergedSearch.get('dialog') === '') {
-		mergedSearch.delete('dialog');
+	if (mergedSearch.has('a') && mergedSearch.get('a') === '') {
+		mergedSearch.delete('a');
 	}
 
 	// NOTE: Dialogs should probably not populate history.
