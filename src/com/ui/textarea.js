@@ -149,7 +149,7 @@ export class UITextarea extends Component {
 							<input type="file" name="asset" style="display: none;" onChange={this.onFileChange} />
 							<Link class="-upload"><Icon class="-baseline -gap" src="upload" />Upload</Link>
 						</label>
-						<span class="if-sidebar-inline">. Supports <Link blank href="/markdown"><Icon src="markdown" /> Markdown</Link> and <Link href="//emoji.codes/">:emoji_codes:</Link></span>
+						<span class="_inline_if-sidebar">. Supports <Link blank href="/markdown"><Icon src="markdown" /> Markdown</Link> and <Link href="//emoji.codes/">:emoji_codes:</Link></span>
 					</div>
 				</div>
 			</div>

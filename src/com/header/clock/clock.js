@@ -15,7 +15,7 @@ export default class HeaderClock extends Component {
 //
 //		return (
 //			<div class="header-base header-clock outside">
-//				<ClockFlip date={new Date(EventDate)} h1="Ludum Dare" h2="Starts" class="if-no-sidebar-block" comSize="1.3" jumbo={true} />
+//				<ClockFlip date={new Date(EventDate)} h1="Ludum Dare" h2="Starts" class="_block_if-no-sidebar" comSize="1.3" jumbo={true} />
 //			</div>
 //		);
 	}

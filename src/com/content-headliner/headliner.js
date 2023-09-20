@@ -158,7 +158,7 @@ export default class ContentHeadliner extends Component {
 		// The Name
 		if ( props.name ) {
 			// If there's an icon, optionally hide the name if sidebar is hidden
-			let NameClass = `-text ${props.icon ? 'if-sidebar-inline' : ''}`;
+			let NameClass = `-text ${props.icon ? '_inline_if-sidebar' : ''}`;
 			// Add name text
 			Flag.push(<span class={NameClass}>{props.name.toUpperCase()}</span>);
 		}

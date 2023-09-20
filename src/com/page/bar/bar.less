@@ -10,7 +10,7 @@
 @BUTTON_LIT_BG: @COL_A;
 
 
-#layout-top {
+body > header {
 	position: fixed;
 
 	--logo-col-a: @COL_A;
@@ -275,8 +275,8 @@
 	}
 }
 
-/* When using the navbar, we offset the body */
-#layout-page {
+/* Offset the body to fit around the nav bar */
+body > main {
 	position: relative;
 	top: @NAVBAR_HEIGHT;
 }

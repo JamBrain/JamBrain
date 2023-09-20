@@ -325,14 +325,14 @@ export default class ContentCommentsComment extends Component {
 				let ShowLeft = [];
 				if ( !state.preview ) {
 					ShowLeft = [
-						<div class="-button -preview" onClick={this.onPreview}><Icon src="preview" /><div class="if-sidebar-block">Preview</div></div>,
-						<div class="-button -editing -selected"><Icon src="edit" /><div class="if-sidebar-block">Edit</div></div>,
+						<div class="-button -preview" onClick={this.onPreview}><Icon src="preview" /><div class="_block_if-sidebar">Preview</div></div>,
+						<div class="-button -editing -selected"><Icon src="edit" /><div class="_block_if-sidebar">Edit</div></div>,
 					];
 				}
 				else {
 					ShowLeft = [
-						<div class="-button -preview -selected"><Icon src="preview" /><div class="if-sidebar-block">Preview</div></div>,
-						<div class="-button -editing" onClick={this.onEditing}><Icon src="edit" /><div class="if-sidebar-block">Edit</div></div>,
+						<div class="-button -preview -selected"><Icon src="preview" /><div class="_block_if-sidebar">Preview</div></div>,
+						<div class="-button -editing" onClick={this.onEditing}><Icon src="edit" /><div class="_block_if-sidebar">Edit</div></div>,
 					];
 				}
 
@@ -347,7 +347,7 @@ export default class ContentCommentsComment extends Component {
 					ShowRight.push(<div class={"-button -publish"+(state.modified?" -modified":"")} onClick={this.onPublish}><Icon src="publish" /><div>Publish</div></div>);
 				}
 				else {
-					ShowRight.push(<div class="-button -cancel" onClick={this.onCancel}><Icon src="cross" /><div class="if-sidebar-block">Cancel</div></div>);
+					ShowRight.push(<div class="-button -cancel" onClick={this.onCancel}><Icon src="cross" /><div class="_block_if-sidebar">Cancel</div></div>);
 					ShowRight.push(<div class={"-button -save"+(state.modified?" -modified":"")} onClick={this.onSave}><Icon src="save" /><div>Save</div></div>);
 				}
 

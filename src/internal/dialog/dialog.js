@@ -2,6 +2,7 @@ import { render } from 'preact';
 
 import DialogPromise from "com/dialog/promise/promise";
 
+/** @deprecated */
 export default class Dialog {
 	static popup(title, body, props) {
 		if (props == null) {
@@ -19,9 +20,10 @@ export default class Dialog {
 
 		props = Object.assign({}, defaults, props);
 
+		// MK NOTE: This is very obsolete
 		return new Promise(function(resolve, reject) {
 			try {
-				render(<DialogPromise resolve={resolve} reject={reject} {...props}> {body} </DialogPromise>, document.getElementById("layout-page"));
+				render(<DialogPromise resolve={resolve} reject={reject} {...props}> {body} </DialogPromise>, document.getElementsByTagName("main")[0]);
 			}
 			catch (e) {
 				console.error(e);

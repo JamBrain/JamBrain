@@ -4,7 +4,7 @@ import {Icon} from 'com/ui';
 
 export default function ViewFooter( /*props, state*/ ) {
 	return (
-		<footer id="footer">
+		<footer>
 			<div class="body">
 			<div class="tm col">
 				<section class="logo">

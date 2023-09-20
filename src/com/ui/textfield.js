@@ -43,7 +43,7 @@ export class TextField extends Component {
 				/>
 				<div class="-footer">
 					{ShowLimit}
-					<div class="-left if-sidebar-block"></div>
+					<div class="-left _block_if-sidebar"></div>
 				</div>
 			</div>
 		);

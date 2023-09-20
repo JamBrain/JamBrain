@@ -9,10 +9,10 @@ export default function Layout( props ) {
 	const isLoading = !node || (node.id == 0);
 
 	return <>
-		<header id="layout-top">
+		<header aria-label="Ludum Dare">
 			<PageNavBar user={user} featured={featured} loading={isLoading}/>
 		</header>
-		<main id="layout-page">
+		<main>
 			<ViewHeader user={user} featured={featured} root={root}/>
 			<section id="body">
 				<ViewContent>

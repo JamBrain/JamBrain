@@ -193,12 +193,12 @@ export default class ItemFilter extends Component {
 					{ShowFilters}
 					<Dropdown class="-grid" value={state.grid} right>
 						<Icon src="grid" />
-						<Button class="-item if-no-sidebar-block" onClick={this.onModifyGrid.bind(this, 1)}>1 Wide</Button>
-						<Button class="-item if-no-sidebar-block" onClick={this.onModifyGrid.bind(this, 2)}>2 Wide</Button>
+						<Button class="-item _block_if-no-sidebar" onClick={this.onModifyGrid.bind(this, 1)}>1 Wide</Button>
+						<Button class="-item _block_if-no-sidebar" onClick={this.onModifyGrid.bind(this, 2)}>2 Wide</Button>
 						<Button class="-item" onClick={this.onModifyGrid.bind(this, 3)}>3 Wide</Button>
 						<Button class="-item" onClick={this.onModifyGrid.bind(this, 4)}>4 Wide</Button>
-						<Button class="-item if-sidebar-block" onClick={this.onModifyGrid.bind(this, 5)}>5 Wide</Button>
-						<Button class="-item if-sidebar-block" onClick={this.onModifyGrid.bind(this, 6)}>6 Wide</Button>
+						<Button class="-item _block_if-sidebar" onClick={this.onModifyGrid.bind(this, 5)}>5 Wide</Button>
+						<Button class="-item _block_if-sidebar" onClick={this.onModifyGrid.bind(this, 6)}>6 Wide</Button>
 					</Dropdown>
 				</div>
 				<div class="-footer">

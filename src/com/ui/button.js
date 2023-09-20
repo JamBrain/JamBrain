@@ -6,22 +6,6 @@ import {Tooltip} from './tooltip';
 import './button.less';
 const ui_button = 'ui_button';
 
-// MK TODO: Consider moving away from the 'ui_button' class and instead use the aria role as the selector.
-// i.e. [role="button"] { ... }
-// This should give me a similar effect without the need for a class.
-// https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/button_role
-
-
-export function onKeyEnterSpaceCallOnClick( e ) {
-	// Keypresses other then Enter and Space should not trigger a command
-	if ( (e instanceof KeyboardEvent) && (e.key !== "Enter") && (e.key !== " ") ) {
-		return;
-	}
-
-	e.target.onClick(e);
-	//e.preventDefault(); // TBD: Should this be here?
-}
-
 
 /**
  * @callback TargetedMouseEvent
@@ -47,8 +31,9 @@ export function Button( props ) {
 	const {href, tooltip, 'type': typeProp = "button", 'class': classProp, ...otherProps} = props;
 	const classNames = `${ui_button} ${classProp ?? ''}`;
 
+	// Conceptually it's a button, but if it has an href, it's a link. Lets not pretend you aren't a link.
 	const newButton = href ?
-		<Link href={href} {...otherProps} class={classNames} role="button" /> :
+		<Link href={href} {...otherProps} class={classNames} /> :
 		<button {...otherProps} class={classNames} type={typeProp} />;
 
 	return tooltip ? <Tooltip text={tooltip}>{newButton}</Tooltip> : newButton;
@@ -57,7 +42,7 @@ export function Button( props ) {
 /**
  * @typedef ButtonIconProps
  * @property {string} icon - Name of the \<Icon\> to insert
- * @property {string | ''} alt - Description of the icon, or the role implied by it. If the button contains a text label, you can pass a blank string to this.
+ * @property {string | ''} [alt] - Optional descirption of the button, if no text is provided
  * @property {string} [href] - If present, renders as a link instead of a button
  * @property {string} [class] - Additional class names to add to the button
  * @property {string} [tooltip] - If present, wraps the button in a tooltip

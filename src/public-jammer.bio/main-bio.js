@@ -1,5 +1,5 @@
 import { render, Component } from 'preact';
-import ContentPost						from 'com/content-post/post';
+import ContentPost from 'com/content-post/post';
 
 class Main extends Component {
 	constructor(props) {
@@ -16,13 +16,13 @@ class Main extends Component {
 
 	render( props, state ) {
 		return (
-			<div id="layout-page">
+			<main>
 				<div id="content">{
-					state.posts.map(function(e) {
+					state.posts.map((e) => {
 						return <ContentPost title={e} />;
 					})
 				}</div>
-			</div>
+			</main>
 		);
 	}
 };

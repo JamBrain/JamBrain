@@ -90,7 +90,7 @@ export default class ContentEvent extends Component {
 				IsHome = true;
 			}
 
-			ShowHome = <Button href={path} class={Class}><Icon src="home" /><div class="if-sidebar-inline">Home</div></Button>;
+			ShowHome = <Button href={path} class={Class}><Icon src="home" /><div class="_inline_if-sidebar">Home</div></Button>;
 		}
 
 		var ShowGame = null;
@@ -100,7 +100,7 @@ export default class ContentEvent extends Component {
 				Class = "-selected";
 			}
 
-			ShowGame = <Button href={path+'/games'} class={Class}><Icon src="gamepad" /><div class="if-sidebar-inline">Games</div></Button>;
+			ShowGame = <Button href={path+'/games'} class={Class}><Icon src="gamepad" /><div class="_inline_if-sidebar">Games</div></Button>;
 		}
 
 		let ShowMyGrades = null;
@@ -110,7 +110,7 @@ export default class ContentEvent extends Component {
 				Class = "-selected";
 			}
 
-			ShowMyGrades = <Button href={path+'/mygrades'} class={Class}><Icon src="star-half" /><div class="if-sidebar-inline">My Grades</div></Button>;
+			ShowMyGrades = <Button href={path+'/mygrades'} class={Class}><Icon src="star-half" /><div class="_inline_if-sidebar">My Grades</div></Button>;
 		}
 
 //		if ( extra && extra.length ) {
@@ -131,14 +131,14 @@ export default class ContentEvent extends Component {
 //				var FeaturedGame = featured.what[featured.focus_id]; // Hack
 				ShowJoin = (
 					<Button href={path + '/' + state.what.slug} class={Class}>
-						<Icon src="gamepad" /><div class="if-sidebar-inline">My Game</div>
+						<Icon src="gamepad" /><div class="_inline_if-sidebar">My Game</div>
 					</Button>
 				);
 			}
 			else {
 				ShowJoin = (
 					<Button onClick={this.onJoin} class={Class}>
-						<Icon src="publish" /><div class="if-sidebar-inline">Join Event</div>
+						<Icon src="publish" /><div class="_inline_if-sidebar">Join Event</div>
 					</Button>
 				);
 			}
@@ -172,7 +172,7 @@ export default class ContentEvent extends Component {
 				}
 			}
 
-			ShowTheme = <Button href={path+'/theme'} class={Class}><Icon src="ticket" /><div class="if-sidebar-inline">Theme Selection</div></Button>;
+			ShowTheme = <Button href={path+'/theme'} class={Class}><Icon src="ticket" /><div class="_inline_if-sidebar">Theme Selection</div></Button>;
 		}
 
 //		if ( !IsHome )
@@ -198,7 +198,7 @@ export default class ContentEvent extends Component {
 			props.above.push(
 				<ContentCommonBody>
 					{ShowEventTheme}
-					<div><Icon class="-small -baseline -gap" src="calendar" /> {getLocaleDay(Start)} {getLocaleMonthDay(Start)} to <span class="if-sidebar-inline">{getLocaleDay(End)}</span> {getLocaleDate(End)}</div>
+					<div><Icon class="-small -baseline -gap" src="calendar" /> {getLocaleDay(Start)} {getLocaleMonthDay(Start)} to <span class="_inline_if-sidebar">{getLocaleDay(End)}</span> {getLocaleDate(End)}</div>
 					<Tooltip class="-block" text={LanguagePrefix+Start.toString()}><Icon class="-small -baseline -gap" src="clock" /> Starts at <strong>{getLocaleTime(Start)}</strong> {getLocaleTimeZone(Start)} <Link href="https://github.com/ludumdare/ludumdare/issues/589"><Tooltip text="Adjusted for your local timezone. If this is not your timezone, click here and let us know!">*</Tooltip></Link></Tooltip>
 				</ContentCommonBody>
 			);

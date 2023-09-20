@@ -17,12 +17,14 @@ body {
 }
 
 /* Page Layout - Everything on a page goes here */
-#layout-page {
+body > main {
 }
 
 /* Top of Layout */
-#header {
+body > header {
 }
+
+/* html > body > main > #body > #content , #sidebar */
 
 /* Fit to Browser Width, but cap at BASE_WIDTH */
 #body {
@@ -59,11 +61,13 @@ body {
 }
 
 
+/* These are used to show or hide elements if the sidebar is also shown or hidden */
+
 /* Has Sidebar */
-.if-sidebar-block { display: block !important; }
-.if-sidebar-inline { display: inline-block !important; }
-.if-no-sidebar-block { display: none !important; }
-.if-no-sidebar-inline { display: none !important; }
+._block_if-sidebar { display: block !important; }
+._inline_if-sidebar { display: inline-block !important; }
+._block_if-no-sidebar { display: none !important; }
+._inline_if-no-sidebar { display: none !important; }
 
 /* No Sidebar */
 @media (max-width: (@BASE_WIDTH - 20em)) {
@@ -71,22 +75,8 @@ body {
 		display: none;
 	}
 
-	.if-no-sidebar-block { display: block !important; }
-	.if-no-sidebar-inline { display: inline-block !important; }
-	.if-sidebar-block { display: none !important; }
-	.if-sidebar-inline { display: none !important; }
-}
-
-/* Not Small Mode */
-.if-small-block { display: none !important; }
-.if-small-inline { display: none !important; }
-.if-not-small-block { display: block !important; }
-.if-not-small-inline { display: inline-block !important; }
-
-/* Small Mode */
-@media (max-width: (@BASE_WIDTH - 320px - 320px)) {
-	.if-small-block { display: block !important; }
-	.if-small-inline { display: inline-block !important; }
-	.if-not-small-block { display: none !important; }
-	.if-not-small-inline { display: none !important; }
+	._block_if-no-sidebar { display: block !important; }
+	._inline_if-no-sidebar { display: inline-block !important; }
+	._block_if-sidebar { display: none !important; }
+	._inline_if-sidebar { display: none !important; }
 }
