@@ -23,32 +23,32 @@ const SearchButton = () => <ButtonIcon icon="search" alt="Search" class="bar-ico
 
 const CalendarButton = () =>
 <ButtonIcon icon="calendar" alt="" class="bar-button _block_if-no-sidebar" href="?a=cal">
-	<div class="_block_if-sidebar">Schedule</div>
+	<span class="_block_if-sidebar" role="none">Schedule</span>
 </ButtonIcon>;
 
 const RegisterNewUserButton = () =>
 <ButtonIcon icon="user-plus" alt="" class="bar-button" href="?a=user-register">
-	<div class="_block_if-sidebar">Create Account</div>
+	<span class="_block_if-sidebar" role="none">Create Account</span>
 </ButtonIcon>;
 
 const LoginButton = () =>
 <ButtonIcon icon="key" alt="" class="bar-button" href="?a=user-login">
-	<div class="_block_if-sidebar">Login</div>
+	<span class="_block_if-sidebar" role="none">Login</span>
 </ButtonIcon>;
 
 const JoinEventButton = (props) =>
 <ButtonIcon icon="publish" alt="" class="bar-button" href={`?a=create!${props.eventId}!item!game`}>
-	<div class="_block_if-sidebar">Join Event</div>
+	<span class="_block_if-sidebar" role="none">Join Event</span>
 </ButtonIcon>;
 
 const MyGameButton = (props) =>
 <ButtonIcon icon="gamepad" alt="" class="bar-button" href={props.href}>
-	<div class="_block_if-sidebar">My Game</div>
+	<span class="_block_if-sidebar" role="none">My Game</span>
 </ButtonIcon>;
 
 const NewPostButton = (props) =>
 <ButtonIcon icon="edit" alt="" class="bar-button" href={`?a=create!${props.focusId}!post`}>
-	<div class="_block_if-sidebar">New Post</div>
+	<span class="_block_if-sidebar" role="none">New Post</span>
 </ButtonIcon>;
 
 
@@ -226,7 +226,7 @@ export default class PageNavBar extends Component {
 		if ( SECURE_LOGIN_ONLY && (location.protocol !== 'https:') ) {
 			const SecureURL = 'https://'+location.hostname+location.pathname+location.search+location.hash;
 			return <>
-				<ButtonIcon icon="unlocked" class="bar-button" noblank href={SecureURL}>
+				<ButtonIcon icon="unlocked" class="bar-button" target="_self" href={SecureURL}>
 					<div class="_block_if-sidebar">Go to Secure Site</div>
 				</ButtonIcon>
 			</>;
@@ -285,7 +285,7 @@ export default class PageNavBar extends Component {
 			}
 
 			Notification = (
-				<Button title="Notifications" class="bar-icon" onClick={(e) => {
+				<Button tooltip="Notifications" class="bar-icon" onClick={(e) => {
 					// TODO: if the main content is the notifications feed, clicking the button should
 					// probably not show the dropdown, but load new comments into the feed.
 					this.setState({'showNotifications': !this.state.showNotifications});

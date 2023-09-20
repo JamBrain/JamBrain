@@ -19,7 +19,7 @@ const ui_button = 'ui_button';
  * @property {string} [tooltip] - If present, wraps the button in a tooltip
  * @property {*} [children]
  * @property {TargetedMouseEvent} [onClick]
- * @property {'_blank'} [target] - Changes the target when 'href' is present
+ * @property {'_blank' | '_self'} [target] - Changes the target when 'href' is present
  * @property {'button' | 'submit' | 'reset'} [type]
  */
 
@@ -48,7 +48,7 @@ export function Button( props ) {
  * @property {string} [tooltip] - If present, wraps the button in a tooltip
  * @property {*} [children]
  * @property {TargetedMouseEvent} [onClick]
- * @property {'_blank'} [target] - Changes the target when 'href' is present
+ * @property {'_blank' | '_self'} [target] - Changes the target when 'href' is present
  * @property {'button' | 'submit' | 'reset'} [type]
 */
 
