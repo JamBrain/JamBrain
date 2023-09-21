@@ -18,57 +18,65 @@ export default class DialogRegister extends Component {
 
 		this.state = {
 			'mail': "",
+			'invite': "",
 			'error': null,
 			'loading': false
 		};
 
 		// Bind functions (avoiding the need to rebind every render)
-		this.onChange = this.onChange.bind(this);
+		this.onChangeMail = this.onChangeMail.bind(this);
+		this.onChangeInvite = this.onChangeInvite.bind(this);
 		this.doRegister = this.doRegister.bind(this);
 		this.doFinish = this.doFinish.bind(this);
 	}
 
-	onChange( e ) {
+	onChangeMail( e ) {
 		this.setState({ 'mail': e.target.value.trim() });
+	}
+	onChangeInvite( e ) {
+		this.setState({ 'invite': e.target.value.trim() });
 	}
 
 	doRegister() {
 		mail = this.state.mail.trim();
+		invite = this.state.invite.trim();
 
-		if ( Sanitize.validateMail(mail) ) {
-			this.setState({ 'loading': true, 'error': null });
-
-			$User.Register( mail )
-			.then( r => {
-				if ( r.status === 201 ) {
-					//console.log('sent', r.sent);
-					this.setState({'sent': true, 'loading': false});
-				}
-				else if ( r.status === 200 ) {
-					//console.log('resent', r.sent);
-					this.setState({'sent': true, 'resent': true, 'loading': false});
-				}
-				else {
-					//console.log(r);
-					this.setState({ 'error': r.message ? r.message : r.response, 'loading': false });
-				}
-				return r;
-			})
-			.catch( err => {
-				//console.log(err);
-				this.setState({ 'error': err, 'loading': false });
-			});
-		}
-		else {
+		if ( !Sanitize.validateMail(mail) ) {
 			this.setState({ 'error': "Incorrectly formatted e-mail address" });
+			return;
 		}
+
+		// TODO: sanitize invite code
+
+		this.setState({ 'loading': true, 'error': null });
+
+		$User.Register( mail, invite )
+		.then( r => {
+			if ( r.status === 201 ) {
+				//console.log('sent', r.sent);
+				this.setState({'sent': true, 'loading': false});
+			}
+			else if ( r.status === 200 ) {
+				//console.log('resent', r.sent);
+				this.setState({'sent': true, 'resent': true, 'loading': false});
+			}
+			else {
+				//console.log(r);
+				this.setState({ 'error': r.message ? r.message : r.response, 'loading': false });
+			}
+			return r;
+		})
+		.catch( err => {
+			//console.log(err);
+			this.setState({ 'error': err, 'loading': false });
+		});
 	}
 
 	doFinish() {
 		location.href = location.pathname + location.search;
 	}
 
-	render( props, {mail, sent, resent, loading, error} ) {
+	render( props, {mail, invite, sent, resent, loading, error} ) {
 		var new_props = {
 			'title': 'Create Account'
 		};
@@ -91,6 +99,7 @@ export default class DialogRegister extends Component {
 			);
 		}
 		else {
+/*
 			return (
 				<DialogCommon cancel explicit {...new_props}>
 					<div class="-info">
@@ -98,19 +107,25 @@ export default class DialogRegister extends Component {
 					</div>
 				</DialogCommon>
 			);
-/*
-			<DialogCommon ok oktext="Send Activation E-mail" onok={this.doRegister} cancel explicit {...new_props}>
-			<div class="-info">
-				Enter your e-mail address to begin activating your account
-			</div>
-			<div>
-				<div class="-input-container">
-					<input autofocus id="dialog-register-mail" onchange={this.onChange} class="-text focusable" type="email" name="email" placeholder="E-mail address" maxlength="254" value={mail} />
-					<LabelYesNo value={mail.trim().length ? (Sanitize.validateMail(mail) ? 1 : -1) : 0} />
-				</div>
-			</div>
-			</DialogCommon>
 */
+			return (
+				<DialogCommon ok oktext="Send Activation E-mail" onok={this.doRegister} cancel explicit {...new_props}>
+					<div class="-info">
+						Enter your e-mail address to begin activating your account
+					</div>
+					<div>
+						<div class="-input-container">
+							<input autofocus id="dialog-register-mail" onChange={this.onChangeMail} class="-text focusable" type="email" name="email" placeholder="E-mail address" maxlength="254" value={mail} />
+							<LabelYesNo value={mail.trim().length ? (Sanitize.validateMail(mail) ? 1 : -1) : 0} />
+						</div>
+					</div>
+					<div>
+						<div class="-input-container">
+							<input id="dialog-register-invite" onChange={this.onChangeInvite} class="-text focusable" type="text" name="invite" placeholder="Invite code (required)" maxlength="64" value={invite} />
+						</div>
+					</div>
+				</DialogCommon>
+			);
 //					<div class="-info">
 //						<ul>
 //							<li><strong>Hotmail</strong>, <strong>Outlook</strong>, <strong>Live.com</strong>: Add <code>hello@jammer.vg</code> to your contacts</li>

@@ -238,6 +238,21 @@ function getSanitizedMailFromPost( $optional = false ) {
 	return $mail;
 }
 
+function getSanitizedInviteFromPost( $isOptional = false ) {
+	global $RESPONSE;
+	$invite = null;
+
+	if ( isset($_POST['invite']) ) {
+		$invite = coreSanitize_Password($_POST['invite']);
+	}
+	else {
+		if ( !$isOptional )
+			json_EmitFatalError_BadRequest("'invite' not found in POST", $RESPONSE);
+		$invite = "";
+	}
+	return $invite;
+}
+
 
 // User ID (not Node ID)
 function getSanitizedIdFromPost( $optional = false ) {
@@ -415,6 +430,12 @@ function validateUserWithLogin( $login ) {
 }
 
 
+function isValidInvite( $invite ) {
+	// To start, we'll hardcode the invite code
+	return defined("INVITE_CODES") ? in_array($invite, constant("INVITE_CODES")) : true;
+}
+
+
 // Do Actions
 $action = json_ArgShift();
 switch ( $action ) {
@@ -424,11 +445,17 @@ switch ( $action ) {
 
 		// NOTE: Accounts can be created while logged in. Should we do anything about that?
 
-		$mail = getSanitizedMailFromPost();
-		$RESPONSE['mail'] = $mail;
+		$invite = getSanitizedInviteFromPost();
+		if ( isValidInvite($invite) ) {
+			userLog_Add(0, "!CREATE_BAD_INVITE");
+			json_EmitFatalError_Server("The invitation code is invalid.", $RESPONSE);
+		}
 
 		// HACK: DISABLE ACCOUNT CREATION
-		json_EmitFatalError_Permission("Creating accounts is currently disabled. Check back later.", $RESPONSE);
+		//json_EmitFatalError_Permission("Creating accounts is currently disabled. Check back later.", $RESPONSE);
+
+		$mail = getSanitizedMailFromPost();
+		$RESPONSE['mail'] = $mail;
 
 		/// Confirm it's not a blacklisted email domain (i.e. disposables)
 		require_once __DIR__."/".SHRUB_PATH."email/blacklist.php";
