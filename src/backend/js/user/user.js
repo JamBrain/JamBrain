@@ -11,9 +11,10 @@ export default {
 	Have
 };
 
-export function Register( mail ) {
+export function Register( mail, invite ) {
 	return Fetch.Post(API_ENDPOINT+'/vx/user/create', {
-		'mail': mail
+		'mail': mail,
+		'invite': invite
 	});
 }
 
