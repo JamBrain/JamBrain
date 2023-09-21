@@ -18,38 +18,51 @@ define( 'USE_MINIFIED', DEBUG ? '.debug' : '.min' );
 define( 'VERSION_STRING', defined('GIT_VERSION') ? 'v='.GIT_VERSION : '' );
 
 const STATIC_DOMAINS = [
-	'jammer.work' => 'static.jammer.work',		// jammer.vg dev [deprecated]
-	'jammer.vg' => 'static.jam.vg',				// [deprecated]
+	'ldjam.com' => 'static.jam.host',
+	'beta.ldjam.com' => 'static.jam.host',
+	'jammer.bio' => 'static.jam.host',
+	'jam.host' => 'static.jam.host',
+
 	'ldjam.work' => 'static.jammer.work',		// ldjam.com dev
-	'ldjam.com' => 'static.jam.vg',
 	'bio.jammer.work' => 'static.jammer.work',	// jammer.bio dev
-	'jammer.bio' => 'static.jam.vg',
-	//'jam.host' => 'static.jam.host',
+	'host.jammer.work' => 'static.jammer.work',	// jam.host dev
 ];
 const DEFAULT_STATIC_DOMAIN = 'static.jam.vg';
-define( 'STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : DEFAULT_STATIC_DOMAIN );
+if ( !defined('STATIC_DOMAIN') ) {
+	define( 'STATIC_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], STATIC_DOMAINS ) ? STATIC_DOMAINS[$_SERVER['SERVER_NAME']] : DEFAULT_STATIC_DOMAIN );
+}
 define( 'STATIC_ENDPOINT', '//'.STATIC_DOMAIN );
 
 const SHORTENER_DOMAINS = [
-	'jammer.work' => 'url.jammer.work',			// jammer.vg dev [deprecated]
-	'jammer.vg' => 'jam.mr',					// [deprecated]
-	'ldjam.work' => 'url.ldjam.work',			// ldjam.com dev
+	'ldjam.work' => 'url.ldjam.work',			// dev
 	'ldjam.com' => 'ldj.am',
+	'beta.ldjam.com' => 'ldj.am',
 	//'bio.jammer.work' => '???',
 	//'bio.jammer.dev' => '???',
 	//'jammer.bio' => '???',
 ];
 const DEFAULT_SHORTENER_DOMAIN = 'ldj.am';
-define( 'SHORTENER_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], SHORTENER_DOMAINS ) ? SHORTENER_DOMAINS[$_SERVER['SERVER_NAME']] : DEFAULT_SHORTENER_DOMAIN );
+if ( !defined('SHORTENER_DOMAIN') ) {
+	define( 'SHORTENER_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], SHORTENER_DOMAINS ) ? SHORTENER_DOMAINS[$_SERVER['SERVER_NAME']] : DEFAULT_SHORTENER_DOMAIN );
+}
 
+const API_DOMAINS = [
+	'ldjam.work' => 'api.ldjam.work',				// dev
+	'ldjam.com' => 'api.ldjam.com',
+	'beta.ldjam.com' => 'api.ldjam.com',
+	'jam.ludumdare.com' => 'api-jam.ludumdare.com', // ???
+
+	'bio.jammer.work' => 'api.jammer.work',			// dev
+	'jammer.bio' => 'api.jammer.bio',
+
+	'host.jammer.work' => 'api.jammer.work',		// dev
+	'jam.host' => 'api.jam.host',
+];
+
+const DEFAULT_API_DOMAIN = 'api.jam.host';
 define( 'LINK_SUFFIX', isset($_GET['nopush']) ? '; nopush' : '' );
 if ( !defined('API_DOMAIN') ) {
-	if ( $_SERVER['SERVER_NAME'] == 'jam.ludumdare.com' ) {
-		define( 'API_DOMAIN', 'api-jam.ludumdare.com' );
-	}
-	else {
-		define( 'API_DOMAIN', 'api.'.$_SERVER['SERVER_NAME'] );
-	}
+	define( 'API_DOMAIN', array_key_exists( $_SERVER['SERVER_NAME'], API_DOMAINS ) ? API_DOMAINS[$_SERVER['SERVER_NAME']] : DEFAULT_API_DOMAIN );
 }
 define( 'API_ENDPOINT', '//'.API_DOMAIN );
 
@@ -100,7 +113,6 @@ $inline_js_nonce = bin2hex(random_bytes(8));
 	<script nonce="<?=$inline_js_nonce?>">
 		<?php /* Output PHP Variables for JS */ ?>
 		var DEBUG = <?=DEBUG?>;
-		var VERSION_STRING = "<?=VERSION_STRING?>";
 		var STATIC_DOMAIN = "<?=STATIC_DOMAIN?>";
 		var STATIC_ENDPOINT = "<?=STATIC_ENDPOINT?>";
 		var SHORTENER_DOMAIN = "<?=SHORTENER_DOMAIN?>";
@@ -108,7 +120,7 @@ $inline_js_nonce = bin2hex(random_bytes(8));
 		var API_ENDPOINT = "<?=API_ENDPOINT?>";
 		var SERVER_TIMESTAMP = "<?=gmdate('Y-m-d\TH:i:s.000\Z'/*DATE_W3C*/);?>";
 		var CLIENT_TIMESTAMP = new Date().toISOString();
-		var SECURE_LOGIN_ONLY = <?= defined('SECURE_LOGIN_ONLY') ? ((SECURE_LOGIN_ONLY && !isset($_GET['insecure']))?'true':'false') : 'false' ?>;
+		var SECURE_LOGIN_ONLY = <?= defined('SECURE_LOGIN_ONLY') ? ((constant("SECURE_LOGIN_ONLY") && !isset($_GET['insecure']))?'true':'false') : 'false' ?>;
 		<?php /* Load SVG */ ?>
 		<?php include __DIR__."/../embed/preload-svg.js.php"; ?>
 	</script>
