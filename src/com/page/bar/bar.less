@@ -5,21 +5,21 @@
 
 @BUTTON_COL_TEXT: var(--COL-A);
 @BUTTON_COL_SVG: @COL_NLLL;
-@BUTTON_LIT_TEXT: @COL_W;
-@BUTTON_LIT_SVG: @COL_W;
+@BUTTON_LIT_TEXT: var(--COL-W);
+@BUTTON_LIT_SVG: var(--COL-W);
 @BUTTON_LIT_BG: var(--COL-A);
 
 
 body > header {
 	position: fixed;
 
-	--logo-col-a: @COL_A;
-	--logo-col-b: @COL_AB;
-	--logo-col-c: @COL_B;
-	--logo-lit-a: @COL_W;
-	--logo-lit-b: @COL_B;
-	--logo-lit-c: @COL_W;
-	--logo-lit-bg: @COL_A;
+	--LOGO-COL-A: var(--COL-A);
+	--LOGO-COL-B: var(--COL-AB);
+	--LOGO-COL-C: var(--COL-B);
+	--LOGO-LIT-A: var(--COL-W);
+	--LOGO-LIT-B: var(--COL-B);
+	--LOGO-LIT-C: var(--COL-W);
+	--LOGO-LIT-BG: var(--COL-A);
 
 	/* Force on a new layer in an attempt to avoid jitter */
 	transform: translateZ(0);
@@ -66,34 +66,34 @@ body > header {
 
 				& > .icon-ludum,
 				& > .icon-l-udum {
-					color: var(--logo-col-a);
+					color: var(--LOGO-COL-A);
 				}
 
 				& > .icon-dare,
 				& > .icon-d-are {
-					color: var(--logo-col-b);
+					color: var(--LOGO-COL-B);
 				}
 
 				& > .icon-ldnum {
-					color:var(--logo-col-c);
+					color:var(--LOGO-COL-C);
 				}
 
 				&:hover,
 				&:focus {
-					background: var(--logo-lit-bg);
+					background: var(--LOGO-LIT-BG);
 
 					& > .icon-ludum,
 					& > .icon-l-udum {
-						color: var(--logo-lit-a);
+						color: var(--LOGO-LIT-A);
 					}
 
 					& > .icon-dare,
 					& > .icon-d-are {
-						color: var(--logo-lit-b);
+						color: var(--LOGO-LIT-B);
 					}
 
 					& > .icon-ldnum {
-						color: var(--logo-lit-c);
+						color: var(--LOGO-LIT-C);
 					}
 				}
 			}
