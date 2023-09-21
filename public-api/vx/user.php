@@ -432,7 +432,7 @@ function validateUserWithLogin( $login ) {
 
 function isValidInvite( $invite ) {
 	// To start, we'll hardcode the invite code
-	return defined("INVITE_CODES") ? in_array($invite, constant("INVITE_CODES")) : true;
+	return defined("INVITE_CODES") ? in_array(strtolower($invite), constant("INVITE_CODES")) : true;
 }
 
 
@@ -446,9 +446,9 @@ switch ( $action ) {
 		// NOTE: Accounts can be created while logged in. Should we do anything about that?
 
 		$invite = getSanitizedInviteFromPost();
-		if ( isValidInvite($invite) ) {
+		if ( !isValidInvite($invite) ) {
 			userLog_Add(0, "!CREATE_BAD_INVITE");
-			json_EmitFatalError_Server("The invitation code is invalid.", $RESPONSE);
+			json_EmitFatalError_Permission("The invitation code is invalid.", $RESPONSE);
 		}
 
 		// HACK: DISABLE ACCOUNT CREATION
@@ -462,7 +462,7 @@ switch ( $action ) {
 
 		if ( is_disposable_email($mail) ) {
 			userLog_Add(0, "!CREATE_BLACKLIST");
-			json_EmitFatalError_Server("This address is blacklisted.", $RESPONSE);
+			json_EmitFatalError_Permission("This address is blacklisted.", $RESPONSE);
 		}
 		/*|| plugin_Call('api_user_create_mail_allowed', $mail)*/
 
@@ -484,7 +484,7 @@ switch ( $action ) {
 			}
 			else {
 				userLog_Add($user['id'], "!CREATE_EXISTING");
-				json_EmitFatalError_Server("Address already registered. Did you mean to reset your password?", $RESPONSE);
+				json_EmitFatalError_BadRequest("Address already registered. Did you mean to reset your password?", $RESPONSE);
 			}
 		}
 		else {
