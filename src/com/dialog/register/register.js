@@ -124,6 +124,9 @@ export default class DialogRegister extends Component {
 							<input id="dialog-register-invite" onChange={this.onChangeInvite} class="-text focusable" type="text" name="invite" placeholder="Invite code (required)" maxlength="64" value={invite} />
 						</div>
 					</div>
+					<div class="-info">
+						If you need an invitation code, ask a friend or check our social media.
+					</div>
 				</DialogCommon>
 			);
 //					<div class="-info">
