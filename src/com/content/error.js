@@ -1,10 +1,9 @@
-import { CommonSection } from "../common";
+import { ContentAside } from "./types";
 import './error.less';
 
 /**
- * @component
  * @param {object} props
- * @param {any} [props.children]
+ * @param {string} [props.class]
  * @param {number} [props.code=404] HTTP Response code
  * * 400 - **Bad Request** - client error
  * * 401 - **Unauthorized** - requires authentication
@@ -16,14 +15,15 @@ import './error.less';
  * * 418 - **I'm a teapot**
  * * 429 - **Too Many Requests** - rate limiting
  * * 451 - **Unavailable For Legal Reasons** - (government) censorship
+ * @param {any} [props.children]
  */
-export default function ContentError( props ) {
-	let errorCode = props.code ? props.code : 404;
+export function ContentError( props ) {
+	const {code, children, 'class': classProp, ...otherProps} = props;
 
 	return (
-		<CommonSection class="-error -transparent">
-			<h1>{errorCode}</h1>
-			<p>{props.children}</p>
-		</CommonSection>
+		<ContentAside class={`error ${classProp ?? ''}`} {...otherProps}>
+			<h1>{code ?? 404}</h1>
+			{children}
+		</ContentAside>
 	);
 }

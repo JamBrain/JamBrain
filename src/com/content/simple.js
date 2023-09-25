@@ -1,4 +1,4 @@
-import {BasicSection, Header, Section, Footer} from "com/content/basic";
+import {BasicSection, Header, Section, Footer} from "./basic";
 
 /**
  * Simple section type with optional title and footer
@@ -10,13 +10,13 @@ import {BasicSection, Header, Section, Footer} from "com/content/basic";
  * @param {string} [props.href]
  * @param {object} [props.footer]
  */
-export default function ContentSimple( props ) {
-	/* Simple documents have only a single sub-section. For more complicated documents, make your own */
+export function ContentSimple( props ) {
+	const {...otherProps} = props;
 	return (
-		<BasicSection {...props} class={`-simple ${props.class ?? ''}`}>
+		<section {...otherProps}>
 			{props.title ? <Header title={props.title} href={props.href} /> : null}
 			<Section>{props.children}</Section>
 			{props.footer ? <Footer {...(props.footer)} /> : null}
-		</BasicSection>
+		</section>
 	);
 }

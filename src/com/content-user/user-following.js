@@ -3,7 +3,7 @@ import { Component } from 'preact';
 import {Icon} from 'com/ui';
 
 import ContentLoading					from 'com/content-loading/loading';
-import ContentError from 'com/content/error';
+import {ContentError} from 'com/content';
 
 import ContentSimple					from 'com/content-simple/simple';
 import ContentUserBar from 'com/content-user/user-bar';

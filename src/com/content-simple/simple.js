@@ -4,7 +4,7 @@ import { node_IsAuthor } from 'internal/lib';
 import {Link, ButtonClipboard} from 'com/ui';
 
 import ContentLoading								from 'com/content-loading/loading';
-import ContentError from 'com/content/error';
+import {ContentError} from 'com/content';
 
 import ContentArticle								from 'com/content-common/common';
 

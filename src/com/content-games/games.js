@@ -2,7 +2,7 @@ import {Component} from 'preact';
 import './games.less';
 
 import ContentLoading					from 'com/content-loading/loading';
-import ContentError						from 'com/content/error';
+import {ContentError} from 'com/content';
 
 import ContentArticle					from 'com/content-common/common';
 import ContentItemBox					from 'com/content-item/item-box';

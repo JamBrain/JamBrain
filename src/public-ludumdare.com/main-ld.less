@@ -1,14 +1,11 @@
 @import "defs.less";
 
-@MAIN_BG: @COL_N;		/*@MAJOR_MUTE_D4; /* radial-gradient(ellipse, @MAIN_BACKGROUND 75%, @MAIN_BACKGROUND2 100%); */
-@MAIN_COL: @COL_D;		/*@MAJOR_DARK;*/
-
 :root {
-	--COL-A: @COL_A;	/* Red (Main) */
-	--COL-B: @COL_B;	/* Yellow (Pair) */
-	--COL-C: @COL_C;	/* Blue (Triadic) */
+	--COL-A: @COL_A;			/* Red (Main) */
+	--COL-B: @COL_B;			/* Yellow (Pair) */
+	--COL-C: @COL_C;			/* Blue (Triadic) */
 
-	--COL-N: @COL_N;	/* Neutral -- Center color used as the backdrop */
+	--COL-N: @COL_N;			/* Neutral -- Center color used as the backdrop */
 
 	--COL-AB: @COL_AB;
 	--COL-BC: @COL_BC;
@@ -18,6 +15,9 @@
 	--COL-W: @COL_W;
 	--COL-G: @COL_G;
 	--COL-K: @COL_K;
+
+	--TEXT-COL: @COL_D;			/*@MAJOR_DARK;*/
+	--BG-COL: var(--COL-N);		/*@MAJOR_MUTE_D4; /* radial-gradient(ellipse, @MAIN_BACKGROUND 75%, @MAIN_BACKGROUND2 100%); */
 }
 
 html {
@@ -26,17 +26,25 @@ html {
 }
 
 body {
-	color: @MAIN_COL;
-	background: @MAIN_BG;
+	color: var(--TEXT-COL);
+	background: var(--BG-COL);
+
+	a {
+		text-decoration: none;
+	}
+	a:visited {
+		color: inherit;
+	}
+}
+
+/* Top of Layout */
+body > header {
 }
 
 /* Page Layout - Everything on a page goes here */
 body > main {
 }
 
-/* Top of Layout */
-body > header {
-}
 
 /* html > body > main > #body > #content , #sidebar */
 

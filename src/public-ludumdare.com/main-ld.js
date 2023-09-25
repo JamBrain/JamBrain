@@ -28,7 +28,6 @@ import PageUser 						from 'com/page/node/user/user';
 import PageUsers 						from 'com/page/node/users/users';
 import PageEvent 						from 'com/page/node/event/event';
 import PageEvents 						from 'com/page/node/events/events';
-import PageError 						from 'com/page/error/error';
 
 import DialogUnfinished					from 'com/dialog/unfinished/unfinished';
 import DialogLogin						from 'com/dialog/login/login';

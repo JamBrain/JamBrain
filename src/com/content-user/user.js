@@ -1,7 +1,7 @@
 import {Component} from 'preact';
 import './user.less';
 
-import ContentError from 'com/content/error';
+import {ContentError} from 'com/content';
 
 //import ContentList						from 'com/content-list/list';
 import ContentSimple					from 'com/content-simple/simple';

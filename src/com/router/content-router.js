@@ -1,5 +1,5 @@
 import { Router } from './router';
-import ContentError from 'com/content/error';
+import {ContentError} from 'com/content';
 
 export { Route } from './router';
 

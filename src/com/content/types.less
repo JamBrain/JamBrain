@@ -1,0 +1,149 @@
+@import "defs.less";
+
+@CONTENT-BG: @COL_L;
+@CONTENT-TEXT: @COL_NDDD;
+@CONTENT-BORDER: @COL_NLLL; /* that dropshadow'y effect */
+
+@FOOTER_BUTTON_TEXT: @COL_NLLLLL;
+@FOOTER_BUTTON_LIT: @COL_A;
+@FOOTER_BUTTON_LIT_BG: @COL_L;
+
+
+#content .content {
+	position: relative;
+
+	/*overflow: hidden;*/
+	display: flow-root;
+	overflow-wrap: break-word;
+	hyphens: auto;
+
+	color: @CONTENT-TEXT;
+	background: @CONTENT-BG;
+	/*box-shadow: 0px 0px 3px rgba(64,0,0,0.2);*/
+
+	&.-border {
+		border-bottom: 8px solid @CONTENT-BORDER;
+	}
+}
+
+
+#content .content {
+	& ._block-if-minimized,
+	& ._inline-if-minimized {
+		display: none;
+	}
+
+	& ._block-if-not-minimized {
+		display: block;
+	}
+
+	& ._inline-if-not-minimized {
+		display: inline-block;
+	}
+
+	&.-minimized {
+		& ._block-if-not-minimized,
+		& ._inline-if-not-minimized {
+			display: none;
+		}
+
+		& ._block-if-minimized {
+			display: block;
+		}
+
+		& ._inline-if-minimized {
+			display: inline-block;
+		}
+	}
+}
+
+#content .content > footer {
+	position: relative;
+	color: @FOOTER_BUTTON_TEXT;
+
+	margin-top: 1.5rem; /*-4px; /* Not sure why this needs to be -4px, and not -8px */
+
+	&:not(:empty) {
+		height: 2em;
+	}
+
+	& a {
+		margin: 0;
+		padding-top: 0;
+		padding-bottom: 0;
+		color: @FOOTER_BUTTON_TEXT;
+
+		&:hover,
+		&:focus {
+			color: @FOOTER_BUTTON_LIT_BG;
+
+			&:active {
+				color: @FOOTER_BUTTON_LIT;
+			}
+		}
+	}
+
+	& > .left {
+		position: absolute;
+
+		left: 0;
+		bottom: -8px;
+		display: flex;
+
+		& > .ui_button {
+			padding-left: 2.5rem;
+
+			&:first-child {
+				padding-left: 0; /*1rem;	/* match whatever button uses */
+			}
+
+			/* Right Wedge */
+			&:after {
+				position: absolute;
+				display: block;
+
+				content: '';
+				right: -2.5rem;
+				top: 0;
+				border-top: calc(2.5rem / 2) solid transparent;
+				border-right: calc(2.5rem / 2) solid transparent;
+				border-bottom: calc(2.5rem / 2) solid;
+				border-left: calc(2.5rem / 2) solid;
+			}
+		}
+	}
+
+	& > .right {
+		position: absolute;
+
+		right: 0;
+		bottom: -8px;
+		display: flex;
+
+		& > .ui_button {
+			padding-right: 2.5rem;
+
+			&:last-child {
+				padding-right: 1rem;	/* match whatever button uses */
+			}
+
+			&.-edit {
+				padding-right: 0;
+			}
+
+			/* Left Wedge */
+			&:before {
+				position: absolute;
+				display: block;
+
+				content: '';
+				left: -2.5rem;
+				top: 0;
+				border-top: calc(2.5rem / 2) solid transparent;
+				border-right: calc(2.5rem / 2) solid;
+				border-bottom: calc(2.5rem / 2) solid;
+				border-left: calc(2.5rem / 2) solid transparent;
+			}
+		}
+	}
+}
