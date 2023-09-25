@@ -1,12 +1,12 @@
 import { Component } from 'preact';
 
 import { node_IsAuthor } from 'internal/lib';
-import {Link} from 'com/ui';
+import {Link, ButtonClipboard} from 'com/ui';
 
 import ContentLoading								from 'com/content-loading/loading';
 import ContentError from 'com/content/error';
 
-import ContentCommon								from 'com/content-common/common';
+import ContentArticle								from 'com/content-common/common';
 
 import ContentCommonBody							from 'com/content-common/common-body';
 import ContentCommonBodyBy							from 'com/content-common/common-body-by';
@@ -14,8 +14,6 @@ import ContentCommonBodyTitle						from 'com/content-common/common-body-title';
 import ContentCommonBodyFlag						from 'com/content-common/common-body-flag';
 import ContentCommonBodyAvatar						from 'com/content-common/common-body-avatar';
 import ContentCommonBodyMarkup						from 'com/content-common/common-body-markup';
-
-import UIButtonClipboard from 'com/ui/button/button-clipboard';
 
 import ContentCommonDraft							from 'com/content-common/common-draft';
 
@@ -472,7 +470,7 @@ export default class ContentSimple extends Component {
 			let ShowTitle = null;
 			if ( !props.notitle && !props.noheader ) {
 				// MK: I've disabled copyshortlink for the moment. Need to figure out the style ripple issue
-				let CopyShortlinkButton = false && !props.title ? (<UIButtonClipboard
+				let CopyShortlinkButton = false && !props.title ? (<ButtonClipboard
 					title="Copy shortlink to clipboard"
 					icon={"link"}
 					class="shortlink"
@@ -546,7 +544,7 @@ export default class ContentSimple extends Component {
 			}
 
 			return (
-				<ContentCommon {...props}>
+				<ContentArticle {...props}>
 					{PreHeader}
 					{ShowDraft}
 					{ShowPrefix}
@@ -559,7 +557,7 @@ export default class ContentSimple extends Component {
 					{ShowAutocompleteEmoji}
 					{ShowOnly}
 					{props.children}
-				</ContentCommon>
+				</ContentArticle>
 			);
 		}
 

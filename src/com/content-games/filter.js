@@ -1,7 +1,6 @@
 import {Component} from 'preact';
 import './filter.less';
 
-import OldContentCommon					from 'com/content-common/common';
 import {CommonSection}					from 'com/content/common';
 import CommonBody						from 'com/content-common/common-body';
 import {Link, Icon} from 'com/ui';

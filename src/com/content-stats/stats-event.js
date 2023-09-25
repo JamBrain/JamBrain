@@ -3,7 +3,7 @@ import './stats.less';
 
 import ContentLoading					from 'com/content-loading/loading';
 
-import ContentCommon					from 'com/content-common/common';
+import ContentArticle					from 'com/content-common/common';
 
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonBodyBy				from 'com/content-common/common-body-by';
@@ -153,12 +153,12 @@ export default class ContentStatsEvent extends Component {
 				Data.push(<div class="-gap">Last Updated: {getLocaleTimeStamp(new Date(stats.timestamp))}</div>);
 
 				return (
-					<ContentCommon {...props} class={Class.join(' ')}>
+					<ContentArticle {...props} class={Class.join(' ')}>
 						<ContentCommonBodyTitle title="Statistics" />
 						<ContentCommonBody>
 							{Data}
 						</ContentCommonBody>
-					</ContentCommon>
+					</ContentArticle>
 				);
 			}
 			return <div />;

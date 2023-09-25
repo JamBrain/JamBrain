@@ -14,7 +14,6 @@ import ContentEventList					from 'com/content-event/event-list';
 //import ContentEventJudging				from 'com/content-event/event-judging';
 //import ContentEventResults				from 'com/content-event/event-results';
 
-import ContentCommon					from 'com/content-common/common';
 import ContentCommonBody				from 'com/content-common/common-body';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';

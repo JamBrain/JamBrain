@@ -16,6 +16,7 @@ const ui_button = 'ui_button';
  * @typedef ButtonProps
  * @property {string} [href] - If present, renders as a link instead of a button
  * @property {string} [class] - Additional class names to add to the button
+ * @property {boolean} [disabled] - If present, disables the button
  * @property {string} [tooltip] - If present, wraps the button in a tooltip
  * @property {*} [children]
  * @property {TargetedMouseEvent} [onClick]

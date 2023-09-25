@@ -6,7 +6,7 @@ import ContentMore				from 'com/content-more/more';
 
 import {UISpinner} from 'com/ui';
 
-import ContentCommon			from 'com/content-common/common';
+import ContentArticle			from 'com/content-common/common';
 import ContentCommonBody		from 'com/content-common/common-body';
 
 import $Node					from 'backend/js/node/node';
@@ -232,7 +232,7 @@ export default class ContentTimeline extends Component {
 
 		// Error section at the start
 		if ( error ) {
-			content.push(<ContentCommon key="error" node={props.node}><ContentCommonBody>Error: {""+error}</ContentCommonBody></ContentCommon>);
+			content.push(<ContentArticle key="error" node={props.node}><ContentCommonBody>Error: {""+error}</ContentCommonBody></ContentArticle>);
 		}
 		// If not errored and not loaded anything, show a spinner
 		else if ( !hasLoaded ) {
@@ -246,7 +246,7 @@ export default class ContentTimeline extends Component {
 		}
 		// Empty Feed
 		else if ( !props.noemptymessage ) {
-			content.push(<ContentCommon key="empty" node={props.node}><ContentCommonBody>Feed is empty</ContentCommonBody></ContentCommon>);
+			content.push(<ContentArticle key="empty" node={props.node}><ContentCommonBody>Feed is empty</ContentCommonBody></ContentArticle>);
 		}
 
 		// More button at the end

@@ -2,10 +2,10 @@ import {Component} from 'preact';
 
 import {Link, Icon, UISpinner} from 'com/ui';
 
-import Common							from 'com/content-common/common';
-import CommonBody						from 'com/content-common/common-body';
+import ContentArticle from 'com/content-common/common';
+import CommonBody from 'com/content-common/common-body';
 
-import $Node							from 'backend/js/node/node';
+import $Node from 'backend/js/node/node';
 
 const GROUP_ICONS = {
 	'tag': 'tag',
@@ -132,12 +132,12 @@ export default class ContentGroup extends Component {
 			}
 
 			return (
-				<Common node={node} user={user} header={node.name+suffix} headerIcon={this.getIconName(node)}>
+				<ContentArticle node_id={node.id} user_id={user.id} header={node.name+suffix} headerIcon={this.getIconName(node)}>
 					<CommonBody>
 						<br /><br /><br />
 						{ShowBody}
 					</CommonBody>
-				</Common>
+				</ContentArticle>
 			);
 		}
 	}

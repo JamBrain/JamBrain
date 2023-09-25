@@ -4,7 +4,7 @@ import './games.less';
 import ContentLoading					from 'com/content-loading/loading';
 import ContentError						from 'com/content/error';
 
-import ContentCommon					from 'com/content-common/common';
+import ContentArticle					from 'com/content-common/common';
 import ContentItemBox					from 'com/content-item/item-box';
 
 import ContentCommonBody				from 'com/content-common/common-body';
@@ -341,10 +341,10 @@ export default class ContentGames extends Component {
 		}
 		else if ( firstLoad && (feed.length == 0) ) {
 			return (
-				<ContentCommon {...props}>
+				<ContentArticle {...props}>
 					<ContentCommonBodyTitle href={""} title={"No Games!"} />
 					<ContentCommonBody>Sorry, no published games found</ContentCommonBody>
-				</ContentCommon>
+				</ContentArticle>
 			);
 		}
 

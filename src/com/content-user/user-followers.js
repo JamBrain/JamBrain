@@ -5,7 +5,7 @@ import ContentError from 'com/content/error';
 
 import ContentSimple					from 'com/content-simple/simple';
 import ContentUserBar from 'com/content-user/user-bar';
-import ContentCommon					from 'com/content-common/common';
+import ContentArticle					from 'com/content-common/common';
 
 import $Node							from '../../backend/js/node/node';
 
@@ -59,9 +59,9 @@ export default class ContentUserFollowers extends Component {
         }
         else if (!this.hasFollowers()) {
             return (
-                <ContentCommon {...props}>
+                <ContentArticle {...props}>
                     <h1> No one is currently following you </h1>
-                </ContentCommon>
+                </ContentArticle>
             );
         }
         else if (state.followerNodes && state.followerNodes.length > 0) {
@@ -89,9 +89,9 @@ export default class ContentUserFollowers extends Component {
             });
 
             return (
-                <ContentCommon {...props}>
+                <ContentArticle {...props}>
                     {followers}
-                </ContentCommon>
+                </ContentArticle>
             );
         }
         else {

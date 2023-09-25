@@ -4,7 +4,7 @@ import './user-bar.less';
 import ContentCommonNav					from 'com/content-common/common-nav';
 import CommonButtonFollow				from 'com/content-common/common-nav-button-follow';
 
-import ContentCommon					from 'com/content-common/common';
+import ContentArticle					from 'com/content-common/common';
 import ContentCommonBodyAvatar			from 'com/content-common/common-body-avatar';
 import ContentCommonBodyTitle			from 'com/content-common/common-body-title';
 

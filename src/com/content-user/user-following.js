@@ -8,7 +8,7 @@ import ContentError from 'com/content/error';
 import ContentSimple					from 'com/content-simple/simple';
 import ContentUserBar from 'com/content-user/user-bar';
 
-import ContentCommon					from 'com/content-common/common';
+import ContentArticle					from 'com/content-common/common';
 import ContentCommonBody				from 'com/content-common/common-body';
 
 import $Node							from '../../backend/js/node/node';
@@ -65,9 +65,9 @@ export default class ContentUserFollowing extends Component {
         }
         else if (!this.hasFollowing()) {
             return (
-                <ContentCommon {...props}>
+                <ContentArticle {...props}>
                     <ContentCommonBody>You are not following anyone</ContentCommonBody>
-                </ContentCommon>
+                </ContentArticle>
             );
         }
         else if (state.followingNodes && state.followingNodes.length > 0) {
@@ -99,13 +99,13 @@ export default class ContentUserFollowing extends Component {
             });
 
             return (
-                <ContentCommon {...props}>
+                <ContentArticle node_id={node.id}>
 					<ContentCommonBody>
 						<p>To add someone to your team, you need to both follow each other. Do so by visiting each others user pages, and clicking the <span><Icon class="-baseline -small -gap" src="user-plus" /><strong>Follow</strong></span> button.</p>
 						<p>Users that follow each other will be shown below as <span><Icon class="-baseline -small -gap" src="users" /><strong>Friends</strong></span>.</p>
 					</ContentCommonBody>
 					{following}
-                </ContentCommon>
+                </ContentArticle>
             );
         }
         else {
