@@ -194,14 +194,14 @@ export default class DialogActivate extends Component {
 
 		if ( created ) {
 			return (
-				<DialogCommon ok onok={this.doFinishActivation} explicit {...new_props}>
+				<DialogCommon ok={this.doFinishActivation} explicit {...new_props}>
 					Account <code>{slug}</code> Created. You can now <strong>Log In</strong>.
 				</DialogCommon>
 			);
 		}
 
 		return (
-			<DialogCommon ok oktext="Create Account" onok={this.doActivate} cancel oncancel={this.doFinishActivation} explicit {...new_props}>
+			<DialogCommon oktext="Create Account" ok={this.doActivate} cancel={this.doFinishActivation} explicit {...new_props}>
 				<div>
 					<span class="-label">E-mail:</span>
 					<div class="-input-container">

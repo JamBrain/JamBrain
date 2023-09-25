@@ -1,6 +1,6 @@
 @import "defs.less";
 
-.dialog-background {
+#dialog-background {
 	background: fade(@COL_D, 75%);
 
 	position: fixed;
@@ -19,8 +19,20 @@
 
 	@keyframes dialog-background-fadein {
 		0%		{ opacity: 0; }
-
 		50%		{ opacity: 1; }
+	}
+
+	& > form {
+		position: relative;
+		z-index: 10000;
+
+		animation: dialog-base-fadein 0.5s;
+
+		@keyframes dialog-base-fadein {
+			0%		{ opacity: 0; }
+			25%		{ opacity: 0; }
+			75%		{ opacity: 1; }
+		}
 	}
 }
 
@@ -50,22 +62,5 @@
 
 	.if-dialog-small-inline {
 		display: inline-block;
-	}
-}
-
-
-
-.dialog-base {
-	position: relative;
-	z-index: 10000;
-
-	animation: dialog-base-fadein 0.5s;
-
-	@keyframes dialog-base-fadein {
-		0%		{ opacity: 0; }
-
-		25%		{ opacity: 0; }
-
-		75%		{ opacity: 1; }
 	}
 }

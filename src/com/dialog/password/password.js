@@ -142,14 +142,14 @@ export default class DialogPassword extends Component {
 		}
 		else if ( success ) {
 			return (
-				<DialogCommon ok onok={this.doFinishReset} explicit {...new_props}>
+				<DialogCommon ok={this.doFinishReset} explicit {...new_props}>
 					Password Reset. You can now <strong>Log In</strong>.
 				</DialogCommon>
 			);
 		}
 		else {
 			return (
-				<DialogCommon ok oktext="Save" onok={this.doResetPassword} cancel explicit {...new_props}>
+				<DialogCommon oktext="Save" ok={this.doResetPassword} cancel explicit {...new_props}>
 					<div>
 						<div class="-input-container">
 							<input autofocus id="dialog-password-password2" autocomplete="new-password" onInput={this.onPasswordChange} class="-text focusable" type="password" name="password" maxLength={128} placeholder="Password" value={password} />

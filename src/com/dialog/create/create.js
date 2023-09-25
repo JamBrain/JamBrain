@@ -112,7 +112,7 @@ export default class DialogCreate extends Component {
 		new_props.canceltext = "No";
 
 		return (
-			<DialogCommon ok onok={this.doCreate} cancel explicit {...new_props}>
+			<DialogCommon ok={this.doCreate} cancel explicit {...new_props}>
 				<div>{"Would you like to create a game?"}</div>
 			</DialogCommon>
 		);

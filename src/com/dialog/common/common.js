@@ -1,10 +1,17 @@
 import { Component } from 'preact';
 import './common.less';
 
-import DialogBase						from 'com/dialog/base/base';
+import DialogBase from 'com/dialog/base/base';
 import {Button, navigateToLocalURL} from 'com/ui';
 
+
+function closeDialog() {
+	navigateToLocalURL('?a=');
+}
+
+
 export default class DialogCommon extends Component {
+/*
 	constructor( props ) {
 		super(props);
 
@@ -96,16 +103,27 @@ export default class DialogCommon extends Component {
 
 	onAbort() {
 		navigateToLocalURL('?a=');
-		//console.log(location.pathname + location.search);
-		//window.history.pushState(null, null, location.pathname + location.search);
-    	//window.location.hash = "--";
-		//location.href = location.pathname+location.search;
 	}
-
+*/
 	render( props ) {
+		const {
+			'class': classProp,
+			ok,
+			okText = "OK",
+			cancel,
+			cancelText = "Cancel",
+			error,
+			children,
+			...otherProps
+		} = props;
+
+		const okFunc = (ok && ok instanceof Function) ? ok : closeDialog;
+		const cancelFunc = (cancel && cancel instanceof Function) ? cancel : closeDialog;
+
+		/*
 		var new_props = {
 			'class': "dialog-common" + (props.class ? ' '+props.class : ''),
-			'oncancel': props.oncancel ? props.oncancel : this.onAbort
+			'oncancel': props.oncancel ? props.oncancel : onDialogCancel
 		};
 		if ( props.explicit ) {
 			new_props.explicit = props.explicit;
@@ -113,12 +131,12 @@ export default class DialogCommon extends Component {
 
 		var ShowError = null;
 		if ( props.error ) {
-			ShowError = <div class="-error"><strong>Error:</strong> {props.error}</div>;
+			ShowError = <div class="error"><strong>Error:</strong> {error}</div>;
 		}
 
 		var ShowButtonOK = null;
 		if ( props.ok ) {
-			let Click = props.onok ? { 'onClick': props.onok } : (props.cancel ? {} : { 'onClick': this.onAbort });
+			let Click = props.onok ? { 'onClick': props.onok } : (props.cancel ? {} : { 'onClick': closeDialog });
 			ShowButtonOK = <Button class="-button -light focusable" id="dialog-button-ok" {...Click}>
 				{props.oktext ? props.oktext : "OK"}
 			</Button>;
@@ -126,7 +144,7 @@ export default class DialogCommon extends Component {
 
 		var ShowButtonCancel = null;
 		if ( props.cancel ) {
-			let Click = props.oncancel ? { 'onClick': props.oncancel } : { 'onClick': this.onAbort };
+			let Click = props.oncancel ? { 'onClick': props.oncancel } : { 'onClick': closeDialog };
 			ShowButtonCancel = <Button class="-button focusable" id="dialog-button-cancel" {...Click}>
 				{props.canceltext ? props.canceltext : "Cancel"}
 			</Button>;
@@ -134,25 +152,24 @@ export default class DialogCommon extends Component {
 
 		if ( props.empty ) {
 			return (
-				<DialogBase {...new_props}>
+				<DialogBase {...otherProps}>
 					{props.children}
 				</DialogBase>
 			);
 		}
+*/
 
 		return (
-			<DialogBase {...new_props}>
-				<div class="-header">
-					<div class="-title _font2">{props.title}</div>
+			<DialogBase class={`dialog-common ${classProp ?? ''}`} {...otherProps}>
+				<header class="_font2">{props.title}</header>
+				{error ? <div class="error"><strong>Error:</strong> {error}</div> : null}
+				<div class="body">
+					{children}
 				</div>
-				{ShowError}
-				<div class="-body">
-					{props.children}
-				</div>
-				<div class="-footer">
-					{ShowButtonOK}
-					{ShowButtonCancel}
-				</div>
+				<footer>
+					{ok ? <Button class="lit focusable" onClick={okFunc}>{okText}</Button> : null}
+					{cancel ? <Button class="focusable" onClick={cancelFunc}>{cancelText}</Button> : null}
+				</footer>
 			</DialogBase>
 		);
 	}

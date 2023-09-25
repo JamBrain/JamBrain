@@ -36,7 +36,6 @@ import DialogRegister					from 'com/dialog/register/register';
 import DialogActivate					from 'com/dialog/activate/activate';
 import DialogReset						from 'com/dialog/reset/reset';
 import DialogPassword					from 'com/dialog/password/password';
-import DialogAuth						from 'com/dialog/auth/auth';
 import DialogSession					from 'com/dialog/session/session';
 import DialogSavebug					from 'com/dialog/savebug/savebug';
 import DialogUserConfirm				from 'com/dialog/user/user-confirm';
@@ -283,8 +282,6 @@ class Main extends Component {
 					return <DialogActivate {...props} />;
 				case 'user-register':
 					return <DialogRegister {...props} />;
-				case 'user-auth':
-					return <DialogAuth {...props} />;
 				case 'user-reset':
 					return <DialogReset {...props} />;
 				case 'user-password':

@@ -3,7 +3,6 @@ import Sanitize							from 'internal/sanitize';
 
 import {UISpinner} from 'com/ui';
 
-import DialogBase						from 'com/dialog/base/base';
 import DialogCommon						from 'com/dialog/common/common';
 import LabelYesNo						from 'com/label-yesno/yesno';
 
@@ -93,7 +92,7 @@ export default class DialogRegister extends Component {
 		}
 		else if ( sent ) {
 			return (
-				<DialogCommon ok onok={this.doFinish} explicit {...new_props}>
+				<DialogCommon ok={this.doFinish} explicit {...new_props}>
 					<div>Activation e-mail {resent ? 'resent' : 'sent'} to <code>{mail}</code></div>
 				</DialogCommon>
 			);
@@ -109,19 +108,19 @@ export default class DialogRegister extends Component {
 			);
 */
 			return (
-				<DialogCommon ok oktext="Send Activation E-mail" onok={this.doRegister} cancel explicit {...new_props}>
+				<DialogCommon okText="Send Activation E-mail" ok={this.doRegister} cancel explicit {...new_props}>
 					<div class="-info">
 						Enter your e-mail address to begin activating your account
 					</div>
 					<div>
 						<div class="-input-container">
-							<input autofocus id="dialog-register-mail" onChange={this.onChangeMail} class="-text focusable" type="email" name="email" placeholder="E-mail address" maxlength="254" value={mail} />
+							<input autofocus id="dialog-register-mail" onChange={this.onChangeMail} class="-text focusable" type="email" name="email" placeholder="E-mail address" maxLength={254} value={mail} />
 							<LabelYesNo value={mail.trim().length ? (Sanitize.validateMail(mail) ? 1 : -1) : 0} />
 						</div>
 					</div>
 					<div>
 						<div class="-input-container">
-							<input id="dialog-register-invite" onChange={this.onChangeInvite} class="-text focusable" type="text" name="invite" placeholder="Invite code (required)" maxlength="64" value={invite} />
+							<input id="dialog-register-invite" onChange={this.onChangeInvite} class="-text focusable" type="text" name="invite" placeholder="Invite code (required)" maxLength={64} value={invite} />
 						</div>
 					</div>
 					<div class="-info">

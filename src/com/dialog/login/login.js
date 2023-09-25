@@ -75,14 +75,9 @@ export default class DialogLogin extends Component {
 	}
 
 	render( props, {login, password, remember, error} ) {
-		const new_props = {
-			'title': 'Log in',
-			'error': error,
-		};
-
 		return (
 			<form onSubmit={(e) => e.preventDefault} ref={(form) => (this.submitForm = form)} autocomplete="on">
-				<DialogCommon ok oktext="Log In" onok={this.doLogin} cancel {...new_props}>
+				<DialogCommon okText="Log in" ok={this.doLogin} cancel title="Log in" error={error}>
 					<div>
 						<div class="-input-container">
 							<input name="user" autofocus autocomplete="username" id="dialog-login-login" onChange={this.onLoginChange} onKeyDown={this.onKeyDownUser} class="-text -block focusable" type="text" placeholder="Name, account name, or e-mail" maxLength={254} value={login} ref={(input) => (this.nameInput = input)}/>
