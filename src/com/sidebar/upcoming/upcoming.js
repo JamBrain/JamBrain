@@ -30,7 +30,7 @@ export default function SidebarUpcoming() {
 	];
 
 	return (
-		<div class="sidebar-base sidebar-shortlist sidebar-upcoming">
+		<div class="side-item sidebar-shortlist sidebar-upcoming">
 			<div class="-title _font2"><Icon class="-baseline" src="calendar-wide" /> <span class="-text">Coming Up</span></div>
 			{Items}
 		</div>

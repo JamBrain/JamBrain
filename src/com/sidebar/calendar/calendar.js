@@ -201,7 +201,7 @@ export default class SidebarCalendar extends Component {
 		let data = this.genCalendar(this.state.date, rows ? rows : 3);
 
 		return (
-			<div class="sidebar-base sidebar-calendar">
+			<div class="side-item sidebar-calendar">
 				{data.map(row => this.genWeek(row))}
 			</div>
 		);

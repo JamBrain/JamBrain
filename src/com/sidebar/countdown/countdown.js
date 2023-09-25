@@ -232,7 +232,7 @@ export default class SidebarCountdown extends Component {
 		}
 
 		return (
-			<div class="sidebar-base sidebar-countdown">
+			<div class="side-item sidebar-countdown">
 				<div class="-clock" id={ this.class }>
 					{Title}
 					<div class={ urgentclass }>

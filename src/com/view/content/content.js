@@ -3,9 +3,9 @@ import { Component } from 'preact';
 export default class ViewContent extends Component {
 	render( props ) {
 		return (
-			<main id="content">
+			<div id="content" role="none">
 				{props.children}
-			</main>
+			</div>
 		);
 	}
 }

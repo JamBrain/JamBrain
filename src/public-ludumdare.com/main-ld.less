@@ -16,8 +16,8 @@
 	--COL-G: @COL_G;
 	--COL-K: @COL_K;
 
-	--TEXT-COL: @COL_D;			/*@MAJOR_DARK;*/
-	--BG-COL: var(--COL-N);		/*@MAJOR_MUTE_D4; /* radial-gradient(ellipse, @MAIN_BACKGROUND 75%, @MAIN_BACKGROUND2 100%); */
+	--TEXT: @COL_D;				/*@MAJOR_DARK;*/
+	--BG: var(--COL-N);			/*@MAJOR_MUTE_D4; /* radial-gradient(ellipse, @MAIN_BACKGROUND 75%, @MAIN_BACKGROUND2 100%); */
 }
 
 html {
@@ -26,8 +26,8 @@ html {
 }
 
 body {
-	color: var(--TEXT-COL);
-	background: var(--BG-COL);
+	color: var(--TEXT);
+	background: var(--BG);
 
 	a {
 		text-decoration: none;
@@ -59,9 +59,22 @@ body > main {
 /* Content Section */
 #content {
 	flex: 3;
+
+	.content,
+	.content-item {
+		margin: 1rem 0;
+
+		&:first-child {
+			margin-top: 0;
+		}
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
 }
 
-/* Content's Sidebar */
+/* Sidebar */
 #sidebar {
 	flex: 1;
 
@@ -73,10 +86,14 @@ body > main {
 	min-width: 16em;
 	margin-left: 1rem;
 
-	& > div {
-		margin-top: 1em;
+	.side-item {
+		margin: 1rem 0;
 
 		&:first-child {
+			margin-top: 0;
+		}
+
+		&:last-child {
 			margin-top: 0;
 		}
 	}

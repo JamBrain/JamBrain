@@ -14,7 +14,7 @@ export default function SidebarGuides() {
 	};
 
 	return <>
-		<div class="sidebar-base sidebar-shortlist sidebar-guides">
+		<div class="side-item sidebar-shortlist sidebar-guides">
 			<div class="-title _font2">
 				<Icon class="-baseline" src="article" />
 				<span class="-text">Community & Guides</span>

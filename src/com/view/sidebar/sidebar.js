@@ -147,12 +147,12 @@ export default class ViewSidebar extends Component {
 		}
 
 		return (
-			<aside id="sidebar">
+			<div id="sidebar" role="none">
 				{ShowCountdown}
 				<SidebarTV />
 				<SidebarUpcoming />
 				<SidebarSponsor />
-			</aside>
+			</div>
 		);
 
 		/*<SidebarJobs />*/

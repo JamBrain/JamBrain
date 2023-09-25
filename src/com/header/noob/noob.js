@@ -1,36 +1,28 @@
-import { Component } from 'preact';
+import {signal} from "@preact/signals";
+
 import './noob.less';
 import '../header.less';
 
-import {Icon, Link, Button} from 'com/ui';
-import {BasicAside, Header, Section, Footer} from "com/content/basic";
+import {Link, ButtonIcon} from 'com/ui';
+import {ContentAside} from "com/content";
 
-export default class ContentHeaderNoob extends Component {
-	constructor( props ) {
-		super(props);
+const isNoobHidden = signal(sessionStorage.getItem('noob-hidden') === 'true');
 
-		this.state = {
-			'hidden': false
-		};
+function hideNoob() {
+	isNoobHidden.value = true;
+	sessionStorage.setItem('noob-hidden', isNoobHidden.value.toString());
+}
 
-		this.onClick = this.onClick.bind(this);
-	}
-
-	onClick() {
-		this.setState({'hidden': true});
-	}
-
-	render( props, state ) {
-		return state.hidden ? null : (
-			<BasicAside class="-noob">
-				<Header class="_font2" title="What is Ludum Dare?" />
-				<Section>
-					<p>
-						<Link href="/about">Ludum Dare</Link> is an online event where games are made from scratch in a weekend. Check us out every April and October!
-					</p>
-				</Section>
-				<Button class="close" onClick={this.onClick}><Icon src="cross" /></Button>
-			</BasicAside>
-		);
-	}
+export default function ContentHeaderNoob() {
+	return isNoobHidden.value ? null : (
+		<ContentAside class="noob -bg">
+			<header class="_font2"><h1>What is Ludum Dare?</h1></header>
+			<section>
+				<p>
+					<Link href="/about">Ludum Dare</Link> is an online event where games are made from scratch in a weekend. Check us out every April and October!
+				</p>
+			</section>
+			<ButtonIcon aria-label="close" class="close" onClick={hideNoob} icon="cross" />
+		</ContentAside>
+	);
 }

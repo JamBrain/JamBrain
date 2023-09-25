@@ -1,6 +1,7 @@
 @import "defs.less";
 
-#content .content.-basic.-noob {
+#content .content.noob,
+#content .content-item.noob {
 	max-width: 1024px;
 
 	@media (max-width: (@BASE_WIDTH - 20em)) {
@@ -8,12 +9,9 @@
 		padding: 0.5em;
 	}
 
-	/*color: @COL_NLLL;
-	background: @COL_NDDD;*/
-
-	--common-col: @COL_NLLL;
-	--common-bg: @COL_NDDD;
-	--common-a: @COL_AB;
+	--CONTENT-TEXT: @COL_NLLL;
+	--CONTENT-BG: @COL_NDDD;
+	--CONTENT-LINK-TEXT: @COL_AB;
 
 	& header {
 		color: @COL_B;

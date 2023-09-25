@@ -164,7 +164,7 @@ export default class SidebarTV extends Component {
 	render( props, state ) {
 		if ( state.error ) {
 			return (
-				<div class="sidebar-base sidebar-tv">
+				<div class="side-item sidebar-tv">
 					<div class="-detail">
 						{""+state.error}
 					</div>
@@ -173,7 +173,7 @@ export default class SidebarTV extends Component {
 		}
 		else if ( state.streams.length == 0 ) {
 			return (
-				<div class="sidebar-base sidebar-tv">
+				<div class="side-item sidebar-tv">
 					<UISpinner />
 				</div>
 			);
@@ -193,7 +193,7 @@ export default class SidebarTV extends Component {
 //					</div>
 
 			return (
-				<div class="sidebar-base sidebar-tv">
+				<div class="side-item sidebar-tv">
 					<div class="-active" onClick={e => {
 							//console.log('tv');
 							/*window.open("https://www.twitch.tv/directory/game/Creative/ldjam", '_blank');*/
