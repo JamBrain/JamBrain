@@ -10,7 +10,7 @@ import SidebarSponsor					from 'com/sidebar/sponsor/sponsor';
 import SidebarSupport					from 'com/sidebar/support/support';
 import SidebarGuides					from 'com/sidebar/guides/guides';
 
-export default function ViewSidebar( props ) {
+export default function PageSidebar( props ) {
 	// TODO: cleanup
 
 	const oneSecond = 1000;

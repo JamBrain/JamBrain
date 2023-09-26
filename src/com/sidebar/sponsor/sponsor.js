@@ -3,7 +3,7 @@ import '../base/base.less';
 
 import {Link, Icon, Image} from 'com/ui';
 
-export default function ViewSponsor() {
+export default function PageSponsor() {
 	return <>
 		<div class="side-item sidebar-shortlist sidebar-sponsor">
 			<div class="-title _font2"><Icon class="-baseline" src="trophy" /> <span class="-text">Sponsored by</span></div>

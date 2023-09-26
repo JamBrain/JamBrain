@@ -1,4 +1,4 @@
 
-export default function ViewContent( props ) {
+export default function PageContent( props ) {
 	return <div id="content" role="none" {...props} />;
 }

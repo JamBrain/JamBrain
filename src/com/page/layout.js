@@ -1,8 +1,8 @@
 import PageNavBar						from './bar/bar';
-import ViewHeader						from 'com/view/header/header';
-import ViewSidebar						from 'com/view/sidebar/sidebar';
-import ViewContent						from 'com/view/content/content';
-import PageFooter						from 'com/view/footer/footer';
+import PageHeader						from './header/header';
+import PageSidebar						from './sidebar/sidebar';
+import PageContent						from './content/content';
+import PageFooter						from './footer/footer';
 
 export default function Layout( props ) {
 	const {user, featured, node, root, ...otherProps} = props;
@@ -13,12 +13,12 @@ export default function Layout( props ) {
 			<PageNavBar user={user} featured={featured} loading={isLoading}/>
 		</header>
 		<main>
-			<ViewHeader user={user} featured={featured} root={root}/>
+			<PageHeader user={user} featured={featured} root={root}/>
 			<section id="body">
-				<ViewContent>
+				<PageContent>
 					{props.children}
-				</ViewContent>
-				{!props.noSidebar ? <ViewSidebar user={user} featured={featured} /> : null}
+				</PageContent>
+				{!props.noSidebar ? <PageSidebar user={user} featured={featured} /> : null}
 			</section>
 		</main>
 		<PageFooter/>

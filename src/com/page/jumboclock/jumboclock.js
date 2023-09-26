@@ -3,7 +3,7 @@ import { Component } from 'preact';
 import ClockComponent					from 'com/clock-base/clock';
 import SidebarCountdown					from 'com/sidebar/countdown/countdown';
 
-export default class ViewJumboClock extends Component {
+export default class PageJumboClock extends Component {
 	constructor( props ) {
 		super(props);
 	}

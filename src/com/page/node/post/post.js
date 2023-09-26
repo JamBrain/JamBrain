@@ -1,18 +1,12 @@
-import {Component}	from 'preact';
-import PageNavContent			from '../../nav/content';
-import ViewContentPost			from 'com/view/content/content-post';
+import PageNavContent from '../../nav/content';
+import PageContentPost from 'com/page/content/content-post';
 
-export default class PagePost extends Component {
-	render( props ) {
-		let {node, user, path, extra} = props;
+export default function PagePost( props ) {
+	const {node, user, path, extra} = props;
+	const editMode = extra && extra.length && (extra[extra.length-1] === 'edit');
 
-		let EditMode = extra && extra.length && (extra[extra.length-1] == 'edit');
-
-		return (
-			<>
-				<PageNavContent {...props} />
-				<ViewContentPost node={node} user={user} path={path} extra={extra} edit={EditMode} />
-			</>
-		);
-	}
+	return <>
+		<PageNavContent {...props} />
+		<PageContentPost node={node} user={user} path={path} extra={extra} edit={editMode} />
+	</>;
 }
